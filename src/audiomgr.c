@@ -171,7 +171,7 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     }
     /* last buffer already linked, but still needs buffer */
     dmaBuffs[i].ptr = alHeapAlloc(c->heap, 1, DMA_BUFFER_LENGTH);
-
+#ifdef ANTI_TAMPER
     // Antipiracy measure
     gAntiPiracyCRCStart = DMA_BUFFER_LENGTH;
     checksum = (s32) &func_80019808 - gAntiPiracyCRCStart;
@@ -186,6 +186,7 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     if (checksum != gFunc80019808Checksum) {
         gAntiPiracyAudioFreq = TRUE;
     }
+#endif
 
     for (i = 0; i < NUM_ACMD_LISTS; i++) {
         __am.ACMDList[i] = (Acmd *) alHeapAlloc(c->heap, 1, 0xA000); // sizeof(Acmd) * DMA_BUFFER_LENGTH * 5?
@@ -302,11 +303,12 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
         gLastAudioPtr = outputDataPointer = lastInfo->data;
         gLastAudioFrameSamples = frameSamples = lastInfo->frameSamples << 2;
         osAiSetNextBuffer(outputDataPointer, frameSamples);
-
+#ifdef ANTI_TAMPER
         // Antipiracy measure
-        if (gAntiPiracyAudioFreq != 0) {
+        if (gAntiPiracyAudioFreq) {
             osAiSetFrequency(get_random_number_from_range(0, 10000) + OUTPUT_RATE);
         }
+#endif
     }
 
     /* calculate how many samples needed for this frame to keep the DAC full */

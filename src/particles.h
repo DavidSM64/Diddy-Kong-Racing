@@ -5,6 +5,26 @@
 #include "structs.h"
 #include "libultra_internal.h"
 
+enum ObjectEmitterFlags {
+    OBJ_EMIT_OFF,
+    OBJ_EMIT_PARTICLE_1 = (1 << 0),
+    OBJ_EMIT_PARTICLE_2 = (1 << 1),
+    OBJ_EMIT_PARTICLE_3 = (1 << 2),
+    OBJ_EMIT_PARTICLE_4 = (1 << 3),
+    OBJ_EMIT_UNK_10 = (1 << 4),
+    OBJ_EMIT_UNK_20 = (1 << 5),
+    OBJ_EMIT_UNK_40 = (1 << 6),
+    OBJ_EMIT_UNK_80 = (1 << 7),
+    OBJ_EMIT_UNK_100 = (1 << 8),
+    OBJ_EMIT_UNK_200 = (1 << 9),
+    OBJ_EMIT_UNK_400 = (1 << 10),
+    OBJ_EMIT_UNK_800 = (1 << 11),
+    OBJ_EMIT_UNK_1000 = (1 << 12),
+    OBJ_EMIT_UNK_2000 = (1 << 13),
+    OBJ_EMIT_UNK_4000 = (1 << 14),
+    OBJ_EMIT_UNK_8000 = (1 << 15),
+};
+
 enum ParticleFlags {
     PARTICLE_FLAGS_NONE,
     PARTICLE_GRAVITY = (1 << 0),
@@ -305,7 +325,7 @@ void func_800AF134(Particle *particle, s32 behaviourID, s32 propertyID, s16 velX
 void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags);
 void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);
-void func_800AFC3C(Object *obj, s32 updateRate);
+void obj_spawn_particle(Object *obj, s32 updateRate);
 void func_800B3E64(Object *obj);
 void func_800B26E0(Particle *particle);
 void func_800AF714(Object *racerObj, s32 updateRate);

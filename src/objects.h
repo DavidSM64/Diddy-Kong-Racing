@@ -18,6 +18,8 @@
     entryVar.objectID = (s8)(entryId);                                     \
 }
 
+#define NODE_NONE 255
+
 enum ObjectBehaviours {
     BHV_NONE,
     BHV_RACER,
@@ -77,7 +79,7 @@ enum ObjectBehaviours {
     BHV_TRIGGER,
     BHV_VEHICLE_ANIMATION,
     BHV_ZIPPER_WATER,
-    BHV_UNK_3A,
+    BHV_TIMETRIAL_GHOST,
     BHV_WAVE_GENERATOR,
     BHV_WAVE_POWER,
     BHV_BUTTERFLY,
@@ -185,6 +187,12 @@ enum ContPakErrors {
     CONTPAK_ERROR_UNKNOWN,
     CONTPAK_ERROR_FULL,
     CONTPAK_ERROR_DAMAGED
+};
+
+enum TajChallengeReasons {
+    CHALLENGE_END_FINISH,
+    CHALLENGE_END_QUIT,
+    CHALLENGE_END_OOB // out of bounds
 };
 
 typedef struct RacerShieldGfx {
@@ -353,9 +361,9 @@ s32 get_object_count(void);
 s32 get_particle_count(void);
 void func_8000E9D0(Object *arg0);
 void free_object(Object *);
-s32 func_80010018(void);
-s32 func_80010028(s32 arg0);
-void func_80011390(void);
+s32 obj_table_ids(void);
+s32 obj_id_valid(s32 arg0);
+void path_enable(void);
 s32 get_race_countdown(void);
 s32 get_race_start_timer(void);
 void ignore_bounds_check(void);
@@ -372,15 +380,15 @@ u32 func_800179D0(void);
 void set_taj_challenge_type(s32 vehicleID);
 s16 get_taj_challenge_type(void);
 Object *find_taj_object(void);
-void func_8001A8D4(s32 arg0);
-s16 func_8001AE44(void);
+void race_finish_adventure(s32 unusedArg);
+s16 race_finish_timer(void);
 u32 get_balloon_cutscene_timer(void);
-s32 func_8001B288(void);
-Object *func_8001B2E0(void);
-s32 is_time_trial_ghost(Object* obj);
-Object *get_time_trial_ghost(void);
-s32 unbeaten_staff_time(void);
-SIDeviceStatus func_8001B738(s32 controllerIndex);
+s32 timetrial_valid_player_ghost(void);
+Object *timetrial_player_ghost(void);
+s32 timetrial_staff_ghost_check(Object* obj);
+Object *timetrial_ghost_staff(void);
+s32 timetrial_staff_unbeaten(void);
+SIDeviceStatus timetrial_save_player_ghost(s32 controllerIndex);
 u8 has_ghost_to_save(void);
 void set_ghost_none(void);
 f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2);
@@ -392,20 +400,20 @@ Object **get_racer_objects_by_port(s32 *numRacers);
 Object **get_racer_objects_by_position(s32 *numRacers);
 Object *get_racer_object(s32 index);
 void debug_render_checkpoint_node(s32 checkpointID, s32 pathID, Gfx** dList, MatrixS **mtx, Vertex **vtx);
-Object *get_camera_object(s32 cameraIndex);
-void func_8001D1AC(void);
-void func_8001D1BC(s32 arg0);
-Object *func_8001D1E4(s32 *arg0);
-Object *func_8001D214(s32 arg0);
+Object *spectate_object(s32 cameraIndex);
+void ainode_enable(void);
+void ainode_tail_set(s32 nodeID);
+Object *ainode_tail(s32 *nodeID);
+Object *ainode_get(s32 nodeID);
 void set_world_shading(f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ);
 void set_shading_properties(ShadeProperties *arg0, f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ);
 void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 intensity);
 s32 *get_misc_asset(s32 index);
 s32 func_8001E2EC(s32 arg0);
 void func_8001E344(s32 arg0);
-void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3);
-s16 get_cutscene_id(void);
-void set_cutscene_id(s32 cutsceneID);
+void obj_bridge_pos(s32 timing, f32 *x, f32 *y, f32 *z);
+s16 cutscene_id(void);
+void cutscene_id_set(s32 cutsceneID);
 void func_8001E45C(s32 cutsceneID);
 s32 get_object_list_index(void);
 s8 func_8001F3B8(void);
@@ -418,8 +426,8 @@ void func_800228DC(s32 arg0, s32 arg1, s32 arg2);
 void init_racer_for_challenge(s32 vehicleID);
 s8 is_taj_challenge(void);
 s32 func_80023568(void);
-s8 func_800235C0(void);
-void func_800235D0(s32 arg0);
+s8 obj_door_override(void);
+void obj_door_open(s32 setting);
 void run_object_init_func(Object *obj, void *entry, s32 param);
 void run_object_loop_func(Object *obj, s32 updateRate);
 s16 *func_80024594(s32 *currentCount, s32 *maxCount);
@@ -427,23 +435,23 @@ void func_800245B4(s16 arg0);
 void object_do_player_tumble(Object *this);
 f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x);
 f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative);
-s16 func_8001C418(f32 yPos);
+s16 obj_elevation(f32 yPos);
 void func_80021400(s32 arg0);
-s32 func_8001B668(s32 arg0);
+s32 timetrial_init_player_ghost(s32 playerID);
 s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 Object *get_racer_object_by_port(s32 index);
 void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void update_envmap_position(f32 x, f32 y, f32 z);
 s32 init_object_water_effect(Object *obj, WaterEffect *waterEffect);
-s32 func_8001B2F0(s32 mapId);
+s32 timetrial_load_staff_ghost(s32 mapId);
 void render_3d_billboard(Object *obj);
 void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles,
                        TextureHeader *tex, u32 flags, u32 texOffset, f32 scale);
 void func_8000B290(void);
 void func_80016BC4(Object *obj);
-s32 func_8001C48C(Object *obj);
-void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z);
+s32 ainode_register(Object *obj);
+void obj_taj_create_balloon(s32 blockID, f32 x, f32 y, f32 z);
 Object *func_8001B7A8(Object *racer, s32 position, f32 *distance);
 s32 func_8000FD34(Object *obj, Object_5C *matrices);
 void func_8000E4E8(s32 index);
@@ -451,7 +459,7 @@ void objFreeAssets(Object *obj, s32 count, s32 objType);
 void func_8001709C(Object *obj);
 s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoundId);
 void render_3d_misc(Object *obj);
-Object *find_nearest_spectate_camera(Object *obj, s32 *cameraId);
+Object *spectate_nearest(Object *obj, s32 *cameraId);
 s32 init_object_shadow(Object *obj, ShadowData *shadow);
 s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
 void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
@@ -463,32 +471,32 @@ void try_free_object_header(s32 index);
 s32 get_object_property_size(Object *obj, Object_64 *obj64);
 void light_setup_light_sources(Object *obj);
 s32 init_object_interaction_data(Object *obj, ObjectInteraction *interactObj);
-s32 func_8000FAC4(Object *obj, Object_6C *arg1);
+s32 obj_init_emitter(Object *obj, ParticleEmitter *emitter);
 s32 obj_init_property_flags(s32 behaviorId);
 void tt_ghost_beaten(s32 arg0, s16 *playerId);
-void func_8001EFA4(Object *, Object *);
-Object *func_80016C68(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis);
+void obj_init_animcamera(Object *, Object *);
+Object *obj_butterfly_node(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis);
 void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_CharacterSelect *charSelect, UNUSED s32 index);
 void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry);
 s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY, f32 *outZ);
 void func_80016500(Object *obj, Object_Racer *racer);
 void func_8000C8F8(s32, s32);
-u8 func_8001B4FC(s32 trackId);
+u8 timetrial_init_staff_ghost(s32 trackId);
 s8 set_course_finish_flags(Settings *settings);
 void process_object_interactions(void);
 void render_3d_model(Object *obj);
-void func_80022E18(s32 arg0);
-void func_8001BF20(void);
+void mode_end_taj_race(s32 reason);
+void ainode_update(void);
 void func_8001E6EC(s8);
 Object *func_8000FD54(s32 objectHeaderIndex);
 void sort_objects_by_dist(s32 startIndex, s32 lastIndex);
 void func_80016748(Object *obj0, Object *obj1);
-void func_8001AE64(void);
-s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5);
-void func_80022948(void);
+void race_finish_time_trial(void);
+s32 obj_dist_racer(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **sortObj);
+void mode_init_taj_race(void);
 void func_8000BADC(s32 updateRate);
 f32 func_8002277C(f32 *data, s32 index, f32 x);
-void func_8001A8F4(s32 updateRate);
+void race_transition_adventure(s32 updateRate);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -509,7 +517,7 @@ void func_800135B8(Object *);
 void func_8000CC7C(Vehicle, u32, s32);
 void func_8000B020(s32, s32);
 void func_80017E98(void);
-void func_8001BC54(void);
+void spectate_update(void);
 void func_8001E93C(void);
 void func_80019808(s32 updateRate);
 void func_80014090(Object*, s32, ObjectHeader*);

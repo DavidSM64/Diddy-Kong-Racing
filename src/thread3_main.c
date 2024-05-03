@@ -173,10 +173,12 @@ void init_game(void) {
     stubbed_printf(sDebugRomBuildInfo);
     init_main_memory_pool();
     init_rzip(); // Initialise gzip decompression related things
+#ifdef ANTI_TAMPER
     sAntiPiracyTriggered = TRUE;
     if (check_imem_validity()) {
         sAntiPiracyTriggered = FALSE;
     }
+#endif
     gIsLoading = FALSE;
     gLevelDefaultVehicleID = VEHICLE_CAR;
 
@@ -189,11 +191,13 @@ void init_game(void) {
     }
 
     osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, viMode, 1);
+#ifdef ANTI_TAMPER
     // Antipiracy measure.
     gDmemInvalid = FALSE;
     if (check_dmem_validity() == FALSE) {
         gDmemInvalid = TRUE;
     }
+#endif
     init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     init_PI_mesg_queue();
     setup_gfx_mesg_queues(&gMainSched);
@@ -373,7 +377,7 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, gGameCurrentCutscene);
     init_hud(get_viewport_count());
     func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
-    func_8001BF20();
+    ainode_update();
     osSetTime(0);
     set_free_queue_state(2);
     rumble_init(TRUE);
@@ -419,10 +423,12 @@ void ingame_logic_loop(s32 updateRate) {
         buttonHeldInputs |= get_buttons_held_from_player(i);
         buttonPressedInputs |= get_buttons_pressed_from_player(i);
     }
+#ifdef ANTI_TAMPER
     // Spam the start button, making the game unplayable because it's constantly paused.
     if (sAntiPiracyTriggered) {
         buttonPressedInputs |= START_BUTTON;
     }
+#endif
     // Update all objects
     if (!gIsPaused) {
         func_80010994(updateRate);
@@ -446,7 +452,7 @@ void ingame_logic_loop(s32 updateRate) {
         gIsPaused = FALSE;
     }
     gParticlePtrList_flush();
-    func_8001BF20();
+    ainode_update();
     render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
     if (gGameMode == GAMEMODE_INGAME) {
         // Ignore the user's L/R/Z buttons.
@@ -491,12 +497,12 @@ void ingame_logic_loop(s32 updateRate) {
         }
     }
     process_onscreen_textbox(updateRate);
-    i = func_800C3400();
+    i = textbox_visible();
     if (i != 0) {
         if (i == 2) {
             gIsPaused = TRUE;
         }
-        if (func_800C3400() != 2) {
+        if (textbox_visible() != 2) {
             gIsPaused = FALSE;
             n_alSeqpDelete();
         }
@@ -537,7 +543,7 @@ void ingame_logic_loop(s32 updateRate) {
                 gIsPaused = FALSE;
                 break;
             case 6:
-                func_80022E18(1);
+                mode_end_taj_race(CHALLENGE_END_QUIT);
                 gIsPaused = FALSE;
                 break;
             case 3:
@@ -550,9 +556,9 @@ void ingame_logic_loop(s32 updateRate) {
         }
     }
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_borders_for_multiplayer(&gCurrDisplayList);
+    divider_draw(&gCurrDisplayList);
     render_minimap_and_misc_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
-    render_second_multiplayer_borders(&gCurrDisplayList);
+    divider_clear_coverage(&gCurrDisplayList);
     if (gFutureFunLandLevelTarget) {
         if (func_800214C4() != 0) {
             gPlayableMapId = ASSET_LEVEL_FUTUREFUNLANDHUB;
@@ -858,7 +864,7 @@ void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
     init_hud(get_viewport_count());
     func_800AE728(4, 4, 0x6E, 0x30, 0x20, 0);
-    func_8001BF20();
+    ainode_update();
     osSetTime(0);
     set_free_queue_state(2);
 }
@@ -889,12 +895,12 @@ void update_menu_scene(s32 updateRate) {
     if (get_thread30_level_id_to_load() == NULL) {
         func_80010994(updateRate);
         gParticlePtrList_flush();
-        func_8001BF20();
+        ainode_update();
         render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
         process_onscreen_textbox(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);
-        render_borders_for_multiplayer(&gCurrDisplayList);
-        render_second_multiplayer_borders(&gCurrDisplayList);
+        divider_draw(&gCurrDisplayList);
+        divider_clear_coverage(&gCurrDisplayList);
     }
 }
 
@@ -1573,6 +1579,7 @@ s32 is_controller_missing(void) {
     }
 }
 
+#ifdef ANTI_TAMPER
 /**
  * Ran on boot, will make sure the CIC chip (CIC6103) is to spec. Will return true if it's all good, otherwise it
  * returns false. The intention of this function, is an attempt to check that the cartridge is a legitimate copy. A
@@ -1585,3 +1592,4 @@ s32 check_imem_validity(void) {
     }
     return TRUE;
 }
+#endif

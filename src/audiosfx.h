@@ -152,11 +152,11 @@ u16 get_sound_channel_volume(u8 channel);
 void set_sound_channel_volume(u8 channel, u16 volume);
 void func_8000418C(ALVoiceState *voiceState);
 void func_800048D8(u8 event);
+INCONSISTENT void sound_stop();
 
 // Non Matching
 void func_80004520(ALSoundState *);
 s32 func_80004668(ALBank *bnk, s16 sndIndx, u8, SoundMask *soundMask);
-INCONSISTENT void func_8000488C();
 void _handleEvent(unk800DC6BC *sndp, ALSndpEvent *event);
 
 #endif

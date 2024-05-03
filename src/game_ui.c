@@ -305,7 +305,7 @@ void init_hud(UNUSED s32 viewportCount) {
         gHudAudioData[i].volumeRamp = 0;
         gHudAudioData[i].playerIndex = PLAYER_COMPUTER;
         if (gHudAudioData[i].soundMask) {
-            func_8000488C(gHudAudioData[i].soundMask);
+            sound_stop(gHudAudioData[i].soundMask);
         }
     }
 }
@@ -360,7 +360,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
     }
     gHudLevelHeader = get_current_level_header();
     if (obj == NULL) {
-        if (get_cutscene_id() == 10) {
+        if (cutscene_id() == 10) {
             obj = get_racer_object_by_port(PLAYER_ONE);
         }
     }
@@ -389,7 +389,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                     D_80126D10 = racer->playerIndex;
                 }
                 gCurrentHud = gPlayerHud[gHudCurrentViewport];
-                if (get_cutscene_id() != 10) {
+                if (cutscene_id() != 10) {
                     if (gHUDNumPlayers == ONE_PLAYER) {
                         if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->raceFinished == FALSE &&
                             ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) ||
@@ -482,7 +482,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                 if (is_in_time_trial()) {
                     func_800A277C(countdown, obj, updateRate);
                 } else {
-                    if (get_cutscene_id() == 10) {
+                    if (cutscene_id() == 10) {
                         sprite_anim_off(TRUE);
                         render_balloon_count(racer);
                         sprite_anim_off(FALSE);
@@ -555,7 +555,7 @@ void hud_audio_init(void) {
     s32 i;
     for (i = 0; i < 2; i++) {
         if (gHudAudioData[i].soundMask) {
-            func_8000488C(gHudAudioData[i].soundMask);
+            sound_stop(gHudAudioData[i].soundMask);
             gHudAudioData[i].soundMask = NULL;
             gHudAudioData[i].volume = 0;
         }
@@ -605,7 +605,7 @@ void hud_audio_update(s32 updateRate) {
             }
         } else {
             if (gHudAudioData[i].soundMask) {
-                func_8000488C(gHudAudioData[i].soundMask);
+                sound_stop(gHudAudioData[i].soundMask);
                 gHudAudioData[i].soundMask = 0;
             }
         }
@@ -1322,8 +1322,8 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
                 }
             }
         }
-        if (func_8001B288()) {
-            ttSWBodyObject = func_8001B2E0();
+        if (timetrial_valid_player_ghost()) {
+            ttSWBodyObject = timetrial_player_ghost();
             if (ttSWBodyObject != NULL) {
                 if ((get_race_countdown() == 0) && (curRacer->raceFinished == 0)) {
                     posY = ttSWBodyObject->segment.trans.y_position - playerRacerObj->segment.trans.y_position;
@@ -1443,9 +1443,9 @@ void set_stopwatch_face(u8 arg0, u8 arg1, u8 faceID, u8 arg3, u8 arg4) {
     }
 }
 
-/** 
+/**
  * Reset the angle of the speedometre's needle to the starting position.
-*/
+ */
 void hud_speedometre_reset(void) {
     gCurrentHud->speedometreArrow.z_rotation = 0x6490;
 }
@@ -1596,7 +1596,7 @@ void render_race_start(s32 countdown, s32 updateRate) {
             }
             if (gRaceStartShowHudStep == 3) {
                 sound_play(SOUND_VOICE_TT_GO, &gHUDVoiceSoundMask);
-                if (get_time_trial_ghost() && unbeaten_staff_time() == FALSE) {
+                if (timetrial_ghost_staff() && timetrial_staff_unbeaten() == FALSE) {
                     hud_sound_play_delayed(SOUND_VOICE_TT_BEAT_MY_TIME, 1.7f, PLAYER_ONE);
                     set_delayed_text(ASSET_GAME_TEXT_82, 1.7f); // Now try and beat my time!
                 }
@@ -2388,7 +2388,7 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                                 sound_play(SOUND_VOICE_TT_UNLUCKY, &gHUDVoiceSoundMask);
                                 break;
                         }
-                    } else if (get_time_trial_ghost() == NULL) {
+                    } else if (timetrial_ghost_staff() == NULL) {
                         play_time_trial_end_message(&racer->playerIndex);
                     }
                 }
@@ -2552,11 +2552,11 @@ void render_balloon_count(UNUSED Object_Racer *racer) {
     if (settings->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
         gCurrentHud->balloonCountIcon.spriteID = HUD_SPRITE_BALLOON_DIAMOND; // Use the adventure two balloon sprite.
     }
-    if (get_cutscene_id() == 10 && get_balloon_cutscene_timer() < balloonTickTimer) {
+    if (cutscene_id() == 10 && get_balloon_cutscene_timer() < balloonTickTimer) {
         balloonCount = *settings->balloonsPtr - 1;
     } else {
         balloonCount = *settings->balloonsPtr;
-        if (get_cutscene_id() == 10) {
+        if (cutscene_id() == 10) {
             if (get_balloon_cutscene_timer() < balloonTickTimer + 8 && D_80126D44 == NULL) {
                 sound_play(SOUND_HUD_LAP_TICK, &D_80126D44);
             }
@@ -3244,8 +3244,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
             sp118 = coss_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
             sp114 = sins_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
-            if (is_in_time_trial() && func_8001B288()) {
-                temp_v0_8 = func_8001B2E0();
+            if (is_in_time_trial() && timetrial_valid_player_ghost()) {
+                temp_v0_8 = timetrial_player_ghost();
                 if (temp_v0_8 != NULL) {
                     minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
                                        sp118, sp11C);
@@ -3257,7 +3257,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->minimapMarker);
                 }
             }
-            temp_v0_8 = get_time_trial_ghost();
+            temp_v0_8 = timetrial_ghost_staff();
             if (temp_v0_8 != NULL) {
                 minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
                                    sp118, sp11C);
@@ -3317,15 +3317,15 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                             gCurrentHud->minimapMarker.x -= 4.0f;
                         }
                         if (get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE) {
-                            switch (someRacer->unk212) {
-                                case 0:
+                            switch (someRacer->elevation) {
+                                case ELEVATION_LOW:
                                     gCurrentHud->minimapMarker.scale = 0.8f;
                                     break;
-                                case 1:
+                                case ELEVATION_NORMAL:
                                     gCurrentHud->minimapMarker.scale = 1.0f;
                                     break;
-                                case 2:
-                                case 3:
+                                case ELEVATION_HIGH:
+                                case ELEVATION_HIGHEST:
                                     gCurrentHud->minimapMarker.scale = 1.2f;
                                     break;
                             }
@@ -3368,22 +3368,18 @@ void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspec
     scaledY = (lvlMdl->minimapYScale * -60.0f * (z - lvlMdl->lowerZBounds)) / b;
 
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) { // Is adventure 2?
-        gCurrentHud->minimapMarker.x = (((f32) gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) +
-                                        (f32) lvlMdl->minimapOffsetXAdv2) -
-                                       (f32) gMinimapDotOffsetX;
-        gCurrentHud->minimapMarker.y =
-            ((f32) (lvlMdl->minimapOffsetYAdv2 + gMinimapScreenY) - ((scaledX * angleSin) - (scaledY * angleCos))) +
-            (f32) gMinimapDotOffsetY;
+        gCurrentHud->minimapMarker.x = (gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) +
+                                       lvlMdl->minimapOffsetXAdv2 - gMinimapDotOffsetX;
+        gCurrentHud->minimapMarker.y = (lvlMdl->minimapOffsetYAdv2 + gMinimapScreenY) -
+                                       ((scaledX * angleSin) - (scaledY * angleCos)) + gMinimapDotOffsetY;
         return;
     }
     // Final x position on minimap
-    gCurrentHud->minimapMarker.x =
-        ((f32) gMinimapScreenX + ((scaledX * angleCos) + (scaledY * angleSin)) + (f32) lvlMdl->minimapOffsetXAdv1) -
-        (f32) gMinimapDotOffsetX;
+    gCurrentHud->minimapMarker.x = gMinimapScreenX + ((scaledX * angleCos) + (scaledY * angleSin)) +
+                                   (f32) lvlMdl->minimapOffsetXAdv1 - gMinimapDotOffsetX;
     // Final y position on minimap
-    gCurrentHud->minimapMarker.y =
-        ((f32) (lvlMdl->minimapOffsetYAdv1 + gMinimapScreenY) - ((scaledX * angleSin) - (scaledY * angleCos))) +
-        (f32) gMinimapDotOffsetY;
+    gCurrentHud->minimapMarker.y = (lvlMdl->minimapOffsetYAdv1 + gMinimapScreenY) -
+                                   ((scaledX * angleSin) - (scaledY * angleCos)) + gMinimapDotOffsetY;
 }
 
 // hud_draw_element

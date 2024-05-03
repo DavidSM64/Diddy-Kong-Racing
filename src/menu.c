@@ -56,9 +56,7 @@ unk801263C0 gMenuCurrentCharacter;
 
 s32 gIgnorePlayerInputTime;  // A set amount of time to ignore player input.
 UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
-CharacterSelectData (
-    *gCurrCharacterSelectData)[10]; // Some sort of character list? Cares if T.T. and Drumstick are unlocked
-
+CharacterSelectData (*gCurrCharacterSelectData)[10];
 s32 D_801263D0;                         // Compared for equality to gTrackIdForPreview
 s8 gActivePlayersArray[MAXCONTROLLERS]; // Boolean value for each controller if it's active with a player.
 s32 gOpacityDecayTimer;
@@ -4306,7 +4304,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
                     sound_play(SOUND_VOICE_DIDDY_POSITIVE5, (s32 *) &D_801269FC);
                 }
             } else if (D_801269FC != NULL) {
-                func_8000488C((u8 *) D_801269FC);
+                sound_stop((u8 *) D_801269FC);
             }
             if (sp30 == 3) {
                 sound_play(SOUND_MENU_BACK3, NULL);
@@ -4328,7 +4326,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
 
 void func_800851FC(void) {
     if (D_801269FC != NULL) {
-        func_8000488C(D_801269FC);
+        sound_stop(D_801269FC);
     }
     if (gOpacityDecayTimer >= 0) {
         music_voicelimit_set(24);
@@ -6813,7 +6811,7 @@ void func_8008B4C8(void) {
             }
         }
         if (D_80126808[characterSelected] != 0) {
-            func_8000488C(D_80126808[characterSelected]);
+            sound_stop(D_80126808[characterSelected]);
         }
         sound_play(((*gCurrCharacterSelectData)[gPlayersCharacterArray[characterSelected]].voiceID +
                     SOUND_VOICE_CHARACTER_SELECTED),
@@ -6831,7 +6829,7 @@ void func_8008B4C8(void) {
                     D_801263DC[i] = 0;
                     gNumberOfReadyPlayers--;
                     if (D_80126808[i] != 0) {
-                        func_8000488C(D_80126808[i]);
+                        sound_stop(D_80126808[i]);
                     }
                     sound_play(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID +
                                 SOUND_VOICE_CHARACTER_DESELECTED),
@@ -6855,7 +6853,7 @@ void func_8008B758(s8 *activePlayers) {
                     D_801263DC[i] = 0;
                     gNumberOfReadyPlayers -= 1;
                     if (D_80126808[i] != 0) {
-                        func_8000488C(D_80126808[i]);
+                        sound_stop(D_80126808[i]);
                     }
                     sound_play(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID +
                                 SOUND_VOICE_CHARACTER_DESELECTED),
@@ -6890,7 +6888,7 @@ void func_8008B758(s8 *activePlayers) {
                     D_801263DC[i] = 1;
                     gNumberOfReadyPlayers++;
                     if (D_80126808[i] != 0) {
-                        func_8000488C(D_80126808[i]);
+                        sound_stop(D_80126808[i]);
                     }
                     sound_play(
                         ((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID + SOUND_VOICE_CHARACTER_SELECT),
@@ -10298,9 +10296,9 @@ s32 func_80095728(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 update
                 D_80126A98++;
                 if (D_80126A98 >= 5) {
                     sound_volume_change(3);
-                    sp54 = func_8001B738(0);
+                    sp54 = timetrial_save_player_ghost(0);
                     if ((sp54 & 0xFF) == 5) {
-                        sp54 = func_8001B738(0);
+                        sp54 = timetrial_save_player_ghost(0);
                     }
                     sound_volume_change(2);
                     if (sp54 != 0) {
@@ -12427,7 +12425,7 @@ s8 *func_8009C274(void) {
  * Returns the character Id from a controller index.
  */
 s8 get_player_character(s32 controllerIndex) {
-    if (controllerIndex < 0 || controllerIndex >= 4) {
+    if (controllerIndex < 0 || controllerIndex >= MAXCONTROLLERS) {
         return -1;
     }
     if (!gActivePlayersArray[controllerIndex]) {
@@ -12789,7 +12787,7 @@ s32 npc_dialogue_loop(u32 dialogueOption) {
     s32 result;
 
     gDoneTalkingToNPC[dialogueOption] = 0;
-    if ((func_800C3400() != 0) && (dialogueOption != DIALOGUE_CHALLENGE)) {
+    if ((textbox_visible() != 0) && (dialogueOption != DIALOGUE_CHALLENGE)) {
         return 0;
     }
     if (gNeedToCloseDialogueBox) {
@@ -13294,9 +13292,9 @@ s32 tt_menu_loop(void) {
                                  HORZ_ALIGN_CENTER); // PLEASE WAIT
             gSaveGhostDelayCounter++;
             if (gSaveGhostDelayCounter >= 5) {
-                result = func_8001B738(0);
+                result = timetrial_save_player_ghost(0);
                 if (result == CONTROLLER_PAK_CHANGED) {
-                    result = func_8001B738(0);
+                    result = timetrial_save_player_ghost(0);
                 }
                 switch (result) {
                     case CONTROLLER_PAK_GOOD:

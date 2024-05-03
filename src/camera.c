@@ -973,11 +973,13 @@ void func_8006807C(Gfx **dlist, MatrixS **mtx) {
  */
 void viewport_rsp_set(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
     s32 tempWidth = (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) ? -width : width;
+#ifdef ANTI_TAMPER
     // Antipiracy measure. Flips the screen upside down.
     if (gAntiPiracyViewport) {
         height = -height;
         tempWidth = -width;
     }
+#endif
     if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG)) {
         gViewportStack[gActiveCameraID].vp.vtrans[0] = posX * 4;
         gViewportStack[gActiveCameraID].vp.vtrans[1] = posY * 4;

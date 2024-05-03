@@ -26,9 +26,9 @@ typedef struct ObjPropertySpeed {
 } ObjPropertySpeed;
 
 typedef struct ObjPropertyBanana {
-    s32 unk0;
-    s16 unk4;
-    s16 unk6;
+    s32 status;
+    s16 intangibleTimer;
+    s16 destroyTimer;
 } ObjPropertyBanana;
 
 typedef struct ObjPropertyName {
@@ -141,7 +141,7 @@ typedef struct ObjPropertyWorldKey {
 
 typedef struct ObjPropertyWeaponBalloon {
 	s32 balloonID;
-    s32 unk4;
+    s32 particleTimer;
 } ObjPropertyWeaponBalloon;
 
 typedef struct ObjPropertyRacer {
@@ -150,16 +150,25 @@ typedef struct ObjPropertyRacer {
 } ObjPropertyRacer;
 
 typedef struct ObjPropertySetupPoint {
-    s32 unk0; 
-    s32 unk4; 
+    s32 racerIndex; 
+    s32 entranceID; 
 } ObjPropertySetupPoint;
 
 typedef struct ObjPropertyWeapon {
-    s32 unk0;
-    u8 unk4;
-    u8 unk5;
-    s16 unk6;
+    s32 decayTimer;
+    u8 status;
+    u8 submerged;
+    s16 scale;
 } ObjPropertyWeapon;
+
+typedef struct ObjPropertyCamControl {
+    s32 cameraID; 
+} ObjPropertyCamControl;
+
+typedef struct ObjPropertyTimeTrial {
+    s32 timestamp; 
+    struct ObjectHeader *header; 
+} ObjPropertyTimeTrial;
 
 typedef struct ObjProperties {
     union {
@@ -193,6 +202,8 @@ typedef struct ObjProperties {
         ObjPropertyRacer racer;
         ObjPropertySetupPoint setupPoint;
         ObjPropertyWeapon weapon;
+        ObjPropertyCamControl camControl;
+        ObjPropertyTimeTrial timeTrial;
     };
 } ObjProperties;
 

@@ -773,7 +773,7 @@ typedef struct ObjectHeader {
   /* 0x54 */ s8 behaviorId;
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
   /* 0x56 */ s8 unk56;
-  /* 0x57 */ s8 unk57;
+  /* 0x57 */ s8 particleCount; // Number of different particle types that are attached
   /* 0x58 */ s8 unk58;
   /* 0x59 */ u8 pad59;
   /* 0x5A */ s8 numLightSources;
@@ -943,18 +943,18 @@ typedef struct Object_Animation {
   /* 0x24 */ s16 unk24;
   /* 0x26 */ s16 unk26;
   /* 0x28 */ u16 unk28;
-  /* 0x2A */ u16 unk2A;
+  /* 0x2A */ u16 startDelay;
   /* 0x2C */ u8 unk2C;
   /* 0x2D */ u8 unk2D;
   /* 0x2E */ u8 unk2E;
   /* 0x2F */ u8 unk2F;
-  /* 0x30 */ s8 unk30;
+  /* 0x30 */ s8 cameraID;
   /* 0x31 */ u8 unk31;
   /* 0x32 */ u8 unk32;
   /* 0x33 */ u8 unk33;
   /* 0x34 */ u8 unk34;
   /* 0x35 */ u8 unk35;
-  /* 0x36 */ s16 unk36;
+  /* 0x36 */ s16 pauseCounter;
   /* 0x38 */ u8 unk38;
   /* 0x39 */ u8 unk39;
   /* 0x3A */ u8 unk3A;
@@ -983,8 +983,8 @@ typedef struct Object_OverridePos {
 } Object_OverridePos;
 
 typedef struct Object_WeaponBalloon {
-  /* 0x0 */ f32 radius;
-  /* 0x4 */ s16 unk4;
+  /* 0x0 */ f32 scale;
+  /* 0x4 */ s16 respawnTime;
   /* 0x6 */ s8 unk6[0x2];
 } Object_WeaponBalloon;
 
@@ -1074,7 +1074,7 @@ typedef struct Object_CharacterFlag {
 
 typedef struct Object_AnimCamera {
   /* 0x00 */ u8 pad0[0x30];
-  /* 0x30 */ s8 unk30;
+  /* 0x30 */ s8 cameraID;
   /* 0x31 */ u8 pad31[0xB];
   /* 0x3C */ s32 unk3C;
   /* 0x40 */ u8 pad40[4];
@@ -1088,19 +1088,6 @@ typedef struct Object_AnimCamera {
 typedef struct Object_InfoPoint {
   /* 0x0 */ s16 unk0;
 } Object_InfoPoint;
-
-typedef struct Object_TTDoor {
-  /* 0x00 */ f32 homeY;
-  /* 0x04 */ SoundMask *soundMask;
-  /* 0x08 */ s32 unk8;
-  /* 0x0C */ s16 unkC;
-  /* 0x0C */ s8 unkE;
-  /* 0x0F */ u8 doorID;
-  /* 0x10 */ u8 pad10[2];
-  /* 0x12 */ u8 unk12;
-  /* 0x13 */ s8 unk13;
-  /* 0x14 */ s32 unk14;
-} Object_TTDoor;
 
 typedef struct Object_WorldKey {
   /* 0x0 */ s16 unk0;
@@ -1187,13 +1174,13 @@ typedef struct Object_Exit {
 typedef struct Object_AiNode {
    /* 0x00 */ struct Object *nodeObj[4];
    /* 0x10 */ s16 distToNode[4];
-   /* 0x18 */ u8 unk18[4];
+   /* 0x18 */ s8 directions[4];
 } Object_AiNode;
 
 /* Size: 0x224 - 548 bytes */
 typedef struct Object_Racer {
   /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
-  /* 0x002 */ s8 unk2;
+  /* 0x002 */ s8 racerIndex; // Unique ID for each racer object.
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
   /* 0x004 */ s32 unk4;
   /* 0x008 */ f32 forwardVel;
@@ -1261,7 +1248,7 @@ typedef struct Object_Racer {
   /* 0x11C */ f32 unk11C;
   /* 0x120 */ f32 unk120;
   /* 0x124 */ f32 unk124;
-  /* 0x128 */ s32 lap_times[5]; //func_80022948 implies there should be at least 5 lap times.
+  /* 0x128 */ s32 lap_times[5]; //mode_init_taj_race implies there should be at least 5 lap times.
   /* 0x13C */ s32 unk13C;
   /* 0x140 */ struct Object *magnetTargetObj;
   /* 0x144 */ struct Object *held_obj;
@@ -1269,8 +1256,8 @@ typedef struct Object_Racer {
   /* 0x14C */ struct Object *zipperObj;
   /* 0x150 */ struct Object *unk150;
   /* 0x154 */ struct Object *unk154;
-  /* 0x158 */ struct Object *unk158;
-  /* 0x15C */ struct Object *unk15C;
+  /* 0x158 */ struct Object *nodeCurrent;
+  /* 0x15C */ struct Object *challengeMarker;
   /* 0x160 */ s16 y_rotation_offset;
   /* 0x162 */ s16 x_rotation_offset;
   /* 0x164 */ s16 z_rotation_offset;
@@ -1394,7 +1381,7 @@ typedef struct Object_Racer {
   /* 0x20E */ u16 delaySoundID;
   /* 0x210 */ u8 delaySoundTimer;
   /* 0x211 */ s8 unk211;
-  /* 0x212 */ s8 unk212;
+  /* 0x212 */ s8 elevation; // Some maps like Icicle Pyramid have elevation levels that are communicated on the minimap.
   /* 0x213 */ s8 unk213;
   /* 0x214 */ s8 unk214;
   /* 0x215 */ s8 unk215;
@@ -1407,16 +1394,17 @@ typedef struct Object_Racer {
 
 typedef struct Object_Door {
   /* 0x00 */ f32 homeY;
-  /* 0x04 */ SoundMask *unk4;
-  /* 0x08 */ s32 unk8;
-  /* 0x0A */ s16 unkA;
-  /* 0x0E */ s8 unkE;
-  /* 0x0F */ u8 unkF;
-  /* 0x10 */ u8 unk10;
-  /* 0x11 */ u8 unk11;
-  /* 0x12 */ u8 unk12;
-  /* 0x13 */ s8 unk13;
-  /* 0x14 */ s8 unk14[4];
+  /* 0x04 */ SoundMask *soundMask;
+  /* 0x08 */ s32 jingleTimer;
+  /* 0x0A */ s16 jingleCooldown;
+  /* 0x0E */ s8 doorID;
+  /* 0x0F */ u8 doorType;
+  /* 0x10 */ u8 balloonCount;
+  /* 0x11 */ u8 balloonCountUnused;
+  /* 0x12 */ u8 radius;
+  /* 0x13 */ s8 textID;
+  /* 0x14 */ s8 keyID;
+  /* 0x15 */ s8 openDir;
 } Object_Door;
 
 typedef struct Object_Trigger {
@@ -1481,7 +1469,7 @@ typedef struct Object_Banana {
   /* 0x0 */ s32 unk0;
   /* 0x4 */ struct Object *spawner;
   /* 0x8 */ s8 unk8;
-  /* 0x9 */ s8 unk9;
+  /* 0x9 */ s8 droppedVehicleID;
 } Object_Banana;
 
 typedef struct Object_FogChanger {
@@ -1492,11 +1480,11 @@ typedef struct Object_NPC {
    /* 0x00 */ f32 unk0;
    /* 0x04 */ f32 animFrameF;
    /* 0x08 */ s32 unk8;
-   /* 0x0C */ s8 unkC;
-   /* 0x0D */ u8 unkD;
-   /* 0x0E */ u8 unkE;
-   /* 0x0F */ u8 unkF;
-   /* 0x10 */ u8 unk10;
+   /* 0x0C */ s8 nodeBack1; // One node backwards
+   /* 0x0D */ u8 nodeCurrent; // Intended target node
+   /* 0x0E */ u8 nodeBack2; // Two nodes backward
+   /* 0x0F */ u8 nodeForward1; // One node forward
+   /* 0x10 */ u8 nodeForward2; // Two nodes forward
    /* 0x11 */ u8 fogR;
    /* 0x12 */ u8 fogG;
    /* 0x13 */ u8 fogB;
@@ -1522,8 +1510,8 @@ typedef struct Object_TT {
 } Object_TT;
 
 typedef struct Object_Bridge_WhaleRamp {
-  /* 0x0 */ f32 unk0;
-  /* 0x4 */ SoundMask *unk4;
+  /* 0x0 */ f32 homeY;
+  /* 0x4 */ SoundMask *soundMask;
 } Object_Bridge_WhaleRamp;
 
 typedef struct Object_8001B7A8 {
@@ -1561,12 +1549,12 @@ typedef struct Object_Fireball_Octoweapon {
 typedef struct Object_AnimatedObject {
     u8 pad0[0x20];
   /* 0x20 */ u32 soundMask;
-  /* 0x24 */ s16 unk24;
+  /* 0x24 */ s16 currentSound;
   /* 0x26 */ s16 unk26;
     s16 unk28;
     u8 pad2A[0xC];
     s16 unk36;
-    s8 unk38;
+    s8 soundID;
     s8 unk39;
     s8 unk3A;
     s8 unk3B;
@@ -1638,7 +1626,6 @@ typedef struct Object_64 {
         Object_CharacterFlag character_flag;
         Object_AnimCamera anim_camera;
         Object_InfoPoint info_point;
-        Object_TTDoor tt_door;
         Object_WorldKey world_key;
         Object_AudioLine audio_line;
         Object_AudioReverb audio_reverb;
@@ -1707,7 +1694,7 @@ typedef struct Object_68 {
  } Object_68;
  
 /* Size: 0x20 bytes */
-typedef struct Object_6C {
+typedef struct ParticleEmitter {
     /* 0x00 */ struct Particle *unk0;
     /* 0x04 */ s16 unk4;
     /* 0x06 */ u8 unk6;
@@ -1715,7 +1702,7 @@ typedef struct Object_6C {
     /* 0x08 */ s16 unk8;
     /* 0x0A */ s16 unkA;
     /* 0x0C */ u8  padC[0x14];
-} Object_6C;
+} ParticleEmitter;
 
 /* Size: 0xA0 bytes */
 typedef struct ParticleBehavior {
@@ -1907,9 +1894,9 @@ typedef struct Object {
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
-  /* 0x006C */ Object_6C *unk6C; //player + 0x370
+  /* 0x006C */ ParticleEmitter *particleEmitter; //player + 0x370
   /* 0x0070 */ Object_LightData **lightData;
-  /* 0x0074 */ u32 unk74;
+  /* 0x0074 */ u32 particleEmitFlags;
   /* 0x0078 */ ObjProperties properties;
   /* 0x0080 */ void *unk80;
   /* 0x0084 */ u32 unk84;
@@ -1958,11 +1945,6 @@ typedef struct GhostNode {
   /* 0x08 */ s16 xRotation;
   /* 0x0A */ s16 yRotation;
 } GhostNode;
-
-/* Size: 12 bytes */
-typedef struct GhostDataFrame {
-    u8 pad0[12];
-} GhostDataFrame;
 
 typedef struct ByteColour {
     u8 red;

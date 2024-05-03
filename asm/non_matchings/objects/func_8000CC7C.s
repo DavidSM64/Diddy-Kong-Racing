@@ -89,8 +89,8 @@ glabel func_8000CC7C
 /* 00D998 8000CD98 3C0B8012 */  lui   $t3, %hi(D_8011ADC5) # $t3, 0x8012
 /* 00D99C 8000CD9C 256BADC5 */  addiu $t3, %lo(D_8011ADC5) # addiu $t3, $t3, -0x523b
 /* 00D9A0 8000CDA0 816E0000 */  lb    $t6, ($t3)
-/* 00D9A4 8000CDA4 3C0C8012 */  lui   $t4, %hi(D_8011AE82) # $t4, 0x8012
-/* 00D9A8 8000CDA8 258CAE82 */  addiu $t4, %lo(D_8011AE82) # addiu $t4, $t4, -0x517e
+/* 00D9A4 8000CDA4 3C0C8012 */  lui   $t4, %hi(gPrevTimeTrialVehicle) # $t4, 0x8012
+/* 00D9A8 8000CDA8 258CAE82 */  addiu $t4, %lo(gPrevTimeTrialVehicle) # addiu $t4, $t4, -0x517e
 /* 00D9AC 8000CDAC AFA20128 */  sw    $v0, 0x128($sp)
 /* 00D9B0 8000CDB0 A58E0000 */  sh    $t6, ($t4)
 /* 00D9B4 8000CDB4 92F80049 */  lbu   $t8, 0x49($s7)
@@ -1020,12 +1020,12 @@ glabel L8000D98C
 /* 00E694 8000DA94 26B50004 */   addiu $s5, $s5, 4
 /* 00E698 8000DA98 00009025 */  move  $s2, $zero
 .L8000DA9C:
-/* 00E69C 8000DA9C 3C15800E */  lui   $s5, %hi(gGhostObj) # $s5, 0x800e
-/* 00E6A0 8000DAA0 26B5C718 */  addiu $s5, %lo(gGhostObj) # addiu $s5, $s5, -0x38e8
-/* 00E6A4 8000DAA4 0C0166D3 */  jal   free_tt_ghost_data
+/* 00E69C 8000DA9C 3C15800E */  lui   $s5, %hi(gGhostObjStaff) # $s5, 0x800e
+/* 00E6A0 8000DAA0 26B5C718 */  addiu $s5, %lo(gGhostObjStaff) # addiu $s5, $s5, -0x38e8
+/* 00E6A4 8000DAA4 0C0166D3 */  jal   timetrial_free_staff_ghost
 /* 00E6A8 8000DAA8 AEA00000 */   sw    $zero, ($s5)
-/* 00E6AC 8000DAAC 3C118012 */  lui   $s1, %hi(D_8011AD38) # $s1, 0x8012
-/* 00E6B0 8000DAB0 2631AD38 */  addiu $s1, %lo(D_8011AD38) # addiu $s1, $s1, -0x52c8
+/* 00E6AC 8000DAAC 3C118012 */  lui   $s1, %hi(gTimeTrialContPak) # $s1, 0x8012
+/* 00E6B0 8000DAB0 2631AD38 */  addiu $s1, %lo(gTimeTrialContPak) # addiu $s1, $s1, -0x52c8
 /* 00E6B4 8000DAB4 2418FFFF */  li    $t8, -1
 /* 00E6B8 8000DAB8 AE380000 */  sw    $t8, ($s1)
 /* 00E6BC 8000DABC 3C0F8012 */  lui   $t7, %hi(gIsTimeTrial) # $t7, 0x8012
@@ -1037,14 +1037,14 @@ glabel L8000D98C
 /* 00E6D4 8000DAD4 24010001 */  li    $at, 1
 /* 00E6D8 8000DAD8 15A1006D */  bne   $t5, $at, .L8000DC90
 /* 00E6DC 8000DADC 00000000 */   nop   
-/* 00E6E0 8000DAE0 0C016651 */  jal   func_80059944
+/* 00E6E0 8000DAE0 0C016651 */  jal   timetrial_reset_player_ghost
 /* 00E6E4 8000DAE4 00000000 */   nop   
-/* 00E6E8 8000DAE8 0C006D9A */  jal   func_8001B668
+/* 00E6E8 8000DAE8 0C006D9A */  jal   timetrial_init_player_ghost
 /* 00E6EC 8000DAEC 00002025 */   move  $a0, $zero
-/* 00E6F0 8000DAF0 3C10800E */  lui   $s0, %hi(D_800DC728) # $s0, 0x800e
+/* 00E6F0 8000DAF0 3C10800E */  lui   $s0, %hi(gTimeTrialVehicle) # $s0, 0x800e
 /* 00E6F4 8000DAF4 AE220000 */  sw    $v0, ($s1)
 /* 00E6F8 8000DAF8 3C01800E */  lui   $at, %hi(gHasGhostToSave) # $at, 0x800e
-/* 00E6FC 8000DAFC 2610C728 */  addiu $s0, %lo(D_800DC728) # addiu $s0, $s0, -0x38d8
+/* 00E6FC 8000DAFC 2610C728 */  addiu $s0, %lo(gTimeTrialVehicle) # addiu $s0, $s0, -0x38d8
 /* 00E700 8000DB00 A020C730 */  sb    $zero, %lo(gHasGhostToSave)($at)
 /* 00E704 8000DB04 860E0000 */  lh    $t6, ($s0)
 /* 00E708 8000DB08 00000000 */  nop   
@@ -1053,12 +1053,12 @@ glabel L8000D98C
 /* 00E714 8000DB14 00000000 */   nop   
 /* 00E718 8000DB18 A6000000 */  sh    $zero, ($s0)
 .L8000DB1C:
-/* 00E71C 8000DB1C 0C006CA2 */  jal   func_8001B288
+/* 00E71C 8000DB1C 0C006CA2 */  jal   timetrial_valid_player_ghost
 /* 00E720 8000DB20 00000000 */   nop   
 /* 00E724 8000DB24 1040002C */  beqz  $v0, .L8000DBD8
-/* 00E728 8000DB28 3C19800E */   lui   $t9, %hi(D_800DC72C) # $t9, 0x800e
+/* 00E728 8000DB28 3C19800E */   lui   $t9, %hi(gTimeTrialCharacter) # $t9, 0x800e
 /* 00E72C 8000DB2C 860F0000 */  lh    $t7, ($s0)
-/* 00E730 8000DB30 8739C72C */  lh    $t9, %lo(D_800DC72C)($t9)
+/* 00E730 8000DB30 8739C72C */  lh    $t9, %lo(gTimeTrialCharacter)($t9)
 /* 00E734 8000DB34 000F6880 */  sll   $t5, $t7, 2
 /* 00E738 8000DB38 01AF6821 */  addu  $t5, $t5, $t7
 /* 00E73C 8000DB3C 000D7080 */  sll   $t6, $t5, 2
@@ -1091,10 +1091,10 @@ glabel L8000D98C
 /* 00E7A8 8000DBA8 3C01800E */  lui   $at, %hi(D_800E5178) # $at, 0x800e
 /* 00E7AC 8000DBAC C4245178 */  lwc1  $f4, %lo(D_800E5178)($at)
 /* 00E7B0 8000DBB0 8C4E0050 */  lw    $t6, 0x50($v0)
-/* 00E7B4 8000DBB4 3C038012 */  lui   $v1, %hi(D_8011AD34) # $v1, 0x8012
+/* 00E7B4 8000DBB4 3C038012 */  lui   $v1, %hi(gGhostObjPlayer) # $v1, 0x8012
 /* 00E7B8 8000DBB8 E5C40000 */  swc1  $f4, ($t6)
 /* 00E7BC 8000DBBC 8C59004C */  lw    $t9, 0x4c($v0)
-/* 00E7C0 8000DBC0 2463AD34 */  addiu $v1, %lo(D_8011AD34) # addiu $v1, $v1, -0x52cc
+/* 00E7C0 8000DBC0 2463AD34 */  addiu $v1, %lo(gGhostObjPlayer) # addiu $v1, $v1, -0x52cc
 /* 00E7C4 8000DBC4 A7200014 */  sh    $zero, 0x14($t9)
 /* 00E7C8 8000DBC8 AC620000 */  sw    $v0, ($v1)
 /* 00E7CC 8000DBCC 8C530064 */  lw    $s3, 0x64($v0)
@@ -1103,7 +1103,7 @@ glabel L8000D98C
 .L8000DBD8:
 /* 00E7D8 8000DBD8 0C01AF62 */  jal   get_current_map_id
 /* 00E7DC 8000DBDC 00000000 */   nop   
-/* 00E7E0 8000DBE0 0C006D3F */  jal   func_8001B4FC
+/* 00E7E0 8000DBE0 0C006D3F */  jal   timetrial_init_staff_ghost
 /* 00E7E4 8000DBE4 00402025 */   move  $a0, $v0
 /* 00E7E8 8000DBE8 10400029 */  beqz  $v0, .L8000DC90
 /* 00E7EC 8000DBEC 3C188012 */   lui   $t8, %hi(gMapDefaultVehicle) # $t8, 0x8012
@@ -1320,8 +1320,8 @@ glabel L8000D98C
 /* 00EAF8 8000DEF8 1653FFF5 */  bne   $s2, $s3, .L8000DED0
 /* 00EAFC 8000DEFC AC40003C */   sw    $zero, 0x3c($v0)
 .L8000DF00:
-/* 00EB00 8000DF00 3C018012 */  lui   $at, %hi(D_8011AD4E) # $at, 0x8012
-/* 00EB04 8000DF04 A420AD4E */  sh    $zero, %lo(D_8011AD4E)($at)
+/* 00EB00 8000DF00 3C018012 */  lui   $at, %hi(gRaceEndTimer) # $at, 0x8012
+/* 00EB04 8000DF04 A420AD4E */  sh    $zero, %lo(gRaceEndTimer)($at)
 /* 00EB08 8000DF08 3C018012 */  lui   $at, %hi(D_8011ADB4) # $at, 0x8012
 /* 00EB0C 8000DF0C AC20ADB4 */  sw    $zero, %lo(D_8011ADB4)($at)
 /* 00EB10 8000DF10 0C0274CC */  jal   set_next_taj_challenge_menu

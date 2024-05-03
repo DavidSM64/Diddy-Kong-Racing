@@ -15404,6 +15404,11 @@
                         "folder": "racer_stats"
                     },
                     {
+                        "index": 12,
+                        "filename": "balloon_data",
+                        "build-id": "ASSET_MISC_BALLOON_DATA"
+                    },
+                    {
                         "index": 19,
                         "filename": "rumble_data",
                         "build-id": "ASSET_MISC_RUMBLE_DATA"
@@ -15417,6 +15422,11 @@
                         "index": 22,
                         "filename": "magnet_data",
                         "build-id": "ASSET_MISC_MAGNET_DATA"
+                    },
+                    {
+                        "index": 24,
+                        "filename": "ghost_unlock_times",
+                        "build-id": "ASSET_MISC_GHOST_UNLOCK_TIMES"
                     },
                     {
                         "index": 26,
@@ -20413,7 +20423,7 @@
                 "LevelObjectEntry_Trigger",
                 "LevelObjectEntryCommon",
                 "LevelObjectEntry_AirZippers_WaterZippers",
-                "LevelObjectEntry_Unknown58",
+                "LevelObjectEntry_TimeTrial_Ghost",
                 "LevelObjectEntry_WaveGenerator",
                 "LevelObjectEntry_WavePower",
                 "LevelObjectEntry_Butterfly",

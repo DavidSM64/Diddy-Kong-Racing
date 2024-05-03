@@ -63,7 +63,7 @@ glabel func_80042D20
 .L80042D98:
 /* 043998 80042D98 A60001C6 */  sh    $zero, 0x1c6($s0)
 .L80042D9C:
-/* 04399C 80042D9C 0C006B91 */  jal   func_8001AE44
+/* 04399C 80042D9C 0C006B91 */  jal   race_finish_timer
 /* 0439A0 80042DA0 AFAA0060 */   sw    $t2, 0x60($sp)
 /* 0439A4 80042DA4 8FAA0060 */  lw    $t2, 0x60($sp)
 /* 0439A8 80042DA8 10400007 */  beqz  $v0, .L80042DC8

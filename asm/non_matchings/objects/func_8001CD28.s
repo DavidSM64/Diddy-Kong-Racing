@@ -26,8 +26,8 @@ glabel func_8001CD28
 /* 01D984 8001CD84 1420FFF9 */  bnez  $at, .L8001CD6C
 /* 01D988 8001CD88 ADE00000 */   sw    $zero, ($t7)
 /* 01D98C 8001CD8C 8FAE0378 */  lw    $t6, 0x378($sp)
-/* 01D990 8001CD90 3C038012 */  lui   $v1, %hi(D_8011AF04) # $v1, 0x8012
-/* 01D994 8001CD94 8C63AF04 */  lw    $v1, %lo(D_8011AF04)($v1)
+/* 01D990 8001CD90 3C038012 */  lui   $v1, %hi(gAINodes) # $v1, 0x8012
+/* 01D994 8001CD94 8C63AF04 */  lw    $v1, %lo(gAINodes)($v1)
 /* 01D998 8001CD98 000E7880 */  sll   $t7, $t6, 2
 /* 01D99C 8001CD9C 006F2021 */  addu  $a0, $v1, $t7
 /* 01D9A0 8001CDA0 8C820000 */  lw    $v0, ($a0)

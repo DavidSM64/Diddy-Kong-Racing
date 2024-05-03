@@ -60,7 +60,7 @@ void free_game_text_table(void);
 void set_textbox_display_value(s32 num);
 void reset_delayed_text(void);
 void set_delayed_text(s32 textID, f32 delay);
-s32 func_800C3400(void);
+s32 textbox_visible(void);
 void process_onscreen_textbox(s32 updateRate);
 void find_next_subtitle(void);
 s32 func_800C38B4(s32 arg0, TextBox *textbox);

@@ -14,11 +14,7 @@
 #include "math_util.h"
 #include "objects.h"
 
-/************ .rodata ************/
-
-const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
-
-/*********************************/
+#define WEATHER_OVERRIDE_COUNT 16
 
 /************ .data ************/
 
@@ -43,7 +39,7 @@ Vertex *D_800E2914[2] = { NULL, NULL };
 s32 *gWeatherAssetTable = NULL;   // List of Ids
 s32 gWeatherAssetTableLength = 0; // Set, but never read.
 
-Gfx D_800E2928[] = {
+Gfx dLensFlare[] = {
     gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_1CYCLE),
     gsDPSetTextureLOD(G_TL_TILE),
@@ -57,37 +53,28 @@ Gfx D_800E2928[] = {
     gsSPEndDisplayList(),
 };
 
-unk800E2980 D_800E2980[2] = {
-    { 1, 0xFFFF, 0xC090, 3.0f, 0.0f },
-    { 0, 0, 0, 0.0f, 0.0f },
-};
+LensFlareData gLensPresetLarge[2] = { { 1, { { { 255, 255, 192, 144 } } }, 3.0f, 0.0f }, { NULL } };
 
-unk800E2980 D_800E29A0[4] = {
-    { 3, 0xFFFF, 0x0090, 0.75f, -32.0f },
-    { 2, 0x0050, 0xFF60, 0.8f, -96.0f },
-    { 2, 0x00FF, 0x0090, 0.75f, -192.0f },
-    { 0, 0, 0, 0.0f, 0.0f },
-};
+LensFlareData gLensPreset1[4] = { { 3, { { { 255, 255, 0, 144 } } }, 0.75f, -32.0f },
+                                  { 2, { { { 0, 80, 255, 96 } } }, 0.8f, -96.0f },
+                                  { 2, { { { 0, 255, 0, 144 } } }, 0.75f, -192.0f },
+                                  { NULL } };
 
-unk800E2980 D_800E29E0[5] = {
-    { 3, 0xFF80, 0x1490, 0.65f, -64.0f },
-    { 2, 0xFFFF, 0xFF90, 1.0f, -128.0f },
-    { 3, 0xFFFF, 0x8090, 0.5f, -176.0f },
-    { 3, 0xFF28, 0x2890, 0.75f, -224.0f },
-    { 0, 0, 0, 0.0f, 0.0f },
-};
+LensFlareData gLensPreset2[5] = { { 3, { { { 255, 128, 20, 144 } } }, 0.65f, -64.0f },
+                                  { 2, { { { 255, 255, 255, 144 } } }, 1.0f, -128.0f },
+                                  { 3, { { { 255, 255, 128, 144 } } }, 0.5f, -176.0f },
+                                  { 3, { { { 255, 40, 40, 144 } } }, 0.75f, -224.0f },
+                                  { NULL } };
 
-unk800E2980 D_800E2A30[5] = {
-    { 3, 0xFF80, 0xFF80, 0.5f, -64.0f },
-    { 1, 0xFFFF, 0xC090, 0.75f, -128.0f },
-    { 2, 0xFF28, 0x0080, 0.6f, -176.0f },
-    { 1, 0xFFC0, 0xFF90, 0.75f, -224.0f },
-    { 0, 0, 0, 0.0f, 0.0f },
-};
+LensFlareData gLensPreset3[5] = { { 3, { { { 255, 128, 255, 128 } } }, 0.5f, -64.0f },
+                                  { 1, { { { 255, 255, 192, 144 } } }, 0.75f, -128.0f },
+                                  { 2, { { { 255, 40, 0, 128 } } }, 0.6f, -176.0f },
+                                  { 1, { { { 255, 192, 255, 144 } } }, 0.75f, -224.0f },
+                                  { NULL } };
 
-Object *D_800E2A80 = NULL;
-s32 D_800E2A84 = TRUE;
-s32 D_800E2A88 = 0;
+Object *gLensFlare = NULL;
+s32 gLensFlareOff = TRUE;
+s32 gLensFlareOverrideObjs = 0;
 f32 D_800E2A8C = -200.0f;
 f32 D_800E2A90 = 200.0f;
 f32 D_800E2A94 = 200.0f;
@@ -153,11 +140,11 @@ Vertex *gCurrWeatherVertexList;
 TriangleList *gCurrWeatherTriList;
 ObjectSegment *gWeatherCamera;
 Matrix *gWeatherCameraMatrix;
-s32 D_80127C24;
-s32 D_80127C28;
-Matrix *D_80127C2C;
-Vec3f D_80127C30;
-Object *D_80127C40[16];
+LensFlareData *gLensFlareSet1;
+LensFlareData *gLensFlareSet2;
+LensFlareData *gLensFlareLarge;
+Vec3f gLensFlarePos;
+Object *gLensFlareSwitches[WEATHER_OVERRIDE_COUNT];
 
 /******************************/
 
@@ -177,9 +164,9 @@ void init_weather(void) {
     D_800E290C = 0;
     D_80127BF8.unk0 = -1;
     D_80127BF8.unk2 = -512;
-    D_800E2A80 = NULL;
-    D_800E2A84 = TRUE;
-    D_800E2A88 = 0;
+    gLensFlare = NULL;
+    gLensFlareOff = TRUE;
+    gLensFlareOverrideObjs = 0;
     if (gWeatherAssetTable == NULL) {
         gWeatherAssetTable = (s32 *) load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
         gWeatherAssetTableLength = 0;
@@ -233,9 +220,9 @@ void free_weather_memory(void) {
     FREE_TEX(D_800E28D8.unk8);
     FREE_MEM(D_800E2910);
 
-    D_800E2A88 = 0;
-    D_800E2A80 = NULL;
-    D_800E2A84 = TRUE;
+    gLensFlareOverrideObjs = 0;
+    gLensFlare = NULL;
+    gLensFlareOff = TRUE;
     if (gWeatherType != WEATHER_SNOW) {
         free_rain_memory();
     }
@@ -284,7 +271,6 @@ void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
         func_800AD2C4(arg3 + 1, arg4 + 1, (f32) arg5 / 60.0f);
     }
 }
-
 /**
  * The root function for handling all weather.
  * Decide whether to perform rain or snow logic, execute it, then set it to render right after.
@@ -407,6 +393,7 @@ GLOBAL_ASM("asm/non_matchings/weather/func_800AC21C.s")
 void render_falling_snow(void) {
     s32 i;
     u32 mtx;
+    u32 vtx;
 
     if (D_800E28D8.unk8 != NULL) {
         D_80127C00 = 4;
@@ -418,136 +405,168 @@ void render_falling_snow(void) {
             gDkrInsertMatrix(gCurrWeatherDisplayList++, G_MTX_DKR_INDEX_0, 0);
             load_and_set_texture_no_offset(&gCurrWeatherDisplayList, D_800E28D8.unk8, RENDER_Z_COMPARE);
             while (i + D_80127C00 < D_800E2908) {
-                mtx = (u32) &D_800E2904[i];
-                gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx), D_80127C00, 0);
+                vtx = (u32) &D_800E2904[i];
+                gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(vtx), D_80127C00, 0);
                 gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(D_800E290C), D_80127C04, 1);
                 i += D_80127C00;
             }
-            mtx = (u32) &D_800E2904[i];
-            gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx), (D_800E2908 - i), 0);
+            vtx = (u32) &D_800E2904[i];
+            gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(vtx), (D_800E2908 - i), 0);
             gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(D_800E290C), ((s32) (D_800E2908 - i) >> 1), 1);
         }
     }
 }
 
-UNUSED void func_800AC850(void) {
-    D_800E2A84 = TRUE;
+/**
+ * Disable lens flare rendering.
+ */
+UNUSED void lensflare_off(void) {
+    gLensFlareOff = TRUE;
 }
 
-UNUSED void func_800AC860(void) {
-    if (D_800E2A80 != NULL) {
-        D_800E2A84 = FALSE;
+/**
+ * Enable lens flare rendering, if possible.
+ */
+UNUSED void lensflare_on(void) {
+    if (gLensFlare != NULL) {
+        gLensFlareOff = FALSE;
     }
 }
 
-void func_800AC880(Object *obj) {
-    if (obj == D_800E2A80) {
-        D_800E2A80 = NULL;
-        D_800E2A84 = TRUE;
+/**
+ * Removes the lens flare object from the weather system,
+ * meaning it won't be seen anymore. Also disables lens flare rendering.
+ */
+void lensflare_remove(Object *obj) {
+    if (obj == gLensFlare) {
+        gLensFlare = NULL;
+        gLensFlareOff = TRUE;
     }
 }
 
-void func_800AC8A8(Object *lensflareObj) {
+/**
+ * Sets the weather systems' lens flare object to this.
+ * Afterwards, assigns presets based on the spawn parameters.
+ * Finally, set the screenspace matrix position.
+ */
+void lensflare_init(Object *obj) {
     LevelObjectEntry_LensFlare *entry;
-    Vec3s sp1C;
+    Vec3s angle;
 
-    D_800E2A80 = lensflareObj;
-    D_800E2A84 = 0;
-    entry = &D_800E2A80->segment.level_entry->lensFlare;
+    gLensFlare = obj;
+    gLensFlareOff = FALSE;
+    entry = &gLensFlare->segment.level_entry->lensFlare;
 
-    switch (entry->unkC) {
+    switch (entry->set1) {
         default:
-            D_80127C24 = 0;
+            gLensFlareSet1 = NULL;
             break;
         case 1:
-            D_80127C24 = (s32) D_800E29A0;
+            gLensFlareSet1 = gLensPreset1;
             break;
         case 2:
-            D_80127C24 = (s32) D_800E29E0;
+            gLensFlareSet1 = gLensPreset2;
             break;
         case 3:
-            D_80127C24 = (s32) D_800E2A30;
+            gLensFlareSet1 = gLensPreset3;
             break;
     }
 
-    switch (entry->unkD) {
+    switch (entry->set2) {
         default:
-            D_80127C28 = 0;
+            gLensFlareSet2 = NULL;
             break;
         case 1:
-            D_80127C28 = (s32) D_800E29A0;
+            gLensFlareSet2 = gLensPreset1;
             break;
         case 2:
-            D_80127C28 = (s32) D_800E29E0;
+            gLensFlareSet2 = gLensPreset2;
             break;
         case 3:
-            D_80127C28 = (s32) D_800E2A30;
+            gLensFlareSet2 = gLensPreset3;
             break;
     }
 
-    if (entry->unkE == 1) {
-        D_80127C2C = (Matrix *) D_800E2980;
+    if (entry->largeShine == 1) {
+        gLensFlareLarge = gLensPresetLarge;
     } else {
-        D_80127C2C = NULL;
+        gLensFlareLarge = NULL;
     }
 
-    sp1C.y_rotation = entry->unkA;
-    sp1C.x_rotation = entry->unk8;
-    sp1C.z_rotation = 0;
-    D_80127C30.x = 0;
-    D_80127C30.y = 0;
-    D_80127C30.z = -1.0f;
-    f32_vec3_apply_object_rotation3((ObjectTransform *) &sp1C, D_80127C30.f);
-    D_80127C30.x = -D_80127C30.x;
-    D_80127C30.y = -D_80127C30.y;
-    D_80127C30.z = -D_80127C30.z;
+    angle.y_rotation = entry->angleY;
+    angle.x_rotation = entry->angleX;
+    angle.z_rotation = 0;
+    gLensFlarePos.x = 0;
+    gLensFlarePos.y = 0;
+    gLensFlarePos.z = -1.0f;
+    f32_vec3_apply_object_rotation3((ObjectTransform *) &angle, gLensFlarePos.f);
+    gLensFlarePos.x = -gLensFlarePos.x;
+    gLensFlarePos.y = -gLensFlarePos.y;
+    gLensFlarePos.z = -gLensFlarePos.z;
 }
 
 // https://decomp.me/scratch/mYuMJ
+// lensflare_render
 GLOBAL_ASM("asm/non_matchings/weather/func_800ACA20.s")
 
-void cameraAddOverrideObject(Object *arg0) {
-    if (D_800E2A88 < 0x10) {
-        D_80127C40[D_800E2A88] = arg0;
-        D_800E2A88++;
+/**
+ * Adds the new override object to the end of the list,
+ * so the game can use it for applying overrides.
+ */
+void lensflare_override_add(Object *obj) {
+    if (gLensFlareOverrideObjs < WEATHER_OVERRIDE_COUNT) {
+        gLensFlareSwitches[gLensFlareOverrideObjs] = obj;
+        gLensFlareOverrideObjs++;
+    } else {
+        stubbed_printf("\nMaximum limit of %d lens flare switches, per level, has been exceeded.",
+                       WEATHER_OVERRIDE_COUNT);
     }
 }
 
-void func_800ACF98(Object *arg0) {
+/**
+ * Check if the lens flare switch object is registered.
+ * If so, remove it from the list, then move any further objects forward to fill the gap.
+ */
+void lensflare_override_remove(Object *obj) {
     s32 i;
     s32 isFound = FALSE;
 
-    for (i = 0; i < D_800E2A88 && !isFound; i++) {
-        if (D_80127C40[i] == arg0) {
+    for (i = 0; i < gLensFlareOverrideObjs && !isFound; i++) {
+        if (gLensFlareSwitches[i] == obj) {
             isFound = TRUE;
         }
     }
 
     if (isFound) {
-        D_800E2A88--;
+        gLensFlareOverrideObjs--;
         i--;
-        for (; i < D_800E2A88; i++) {
-            D_80127C40[i] = D_80127C40[i + 1];
+        for (; i < gLensFlareOverrideObjs; i++) {
+            gLensFlareSwitches[i] = gLensFlareSwitches[i + 1];
         }
     }
 }
 
-void func_800AD030(ObjectSegment *cameraSegment) {
-    LevelObjectEntry_Weather *weather;
+/**
+ * Check if the camera is inside the radius of a lens flare override.
+ * If so, disable the lens flare effect while it remains inside.
+ */
+void lensflare_override(ObjectSegment *cameraSegment) {
+    LevelObjectEntry_LensFlareSwitch *lensFlare;
     f32 xDiff;
     f32 zDiff;
     f32 yDiff;
     s32 i;
-    D_800E2A84 = FALSE;
-    if (D_800E2A88 > 0 && D_800E2A80 != 0) {
-        if (D_80127C40[0]) {} // Fakematch
-        for (i = 0; i < D_800E2A88; i++) {
-            xDiff = cameraSegment->trans.x_position - D_80127C40[i]->segment.trans.x_position;
-            yDiff = cameraSegment->trans.y_position - D_80127C40[i]->segment.trans.y_position;
-            zDiff = cameraSegment->trans.z_position - D_80127C40[i]->segment.trans.z_position;
-            weather = &D_80127C40[i]->segment.level_entry->weather;
-            if (sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < weather->radius) {
-                D_800E2A84 = TRUE;
+
+    gLensFlareOff = FALSE;
+    if (gLensFlareOverrideObjs > 0 && gLensFlare != 0) {
+        if (gLensFlareSwitches[0]) {} // Fakematch
+        for (i = 0; i < gLensFlareOverrideObjs; i++) {
+            xDiff = cameraSegment->trans.x_position - gLensFlareSwitches[i]->segment.trans.x_position;
+            yDiff = cameraSegment->trans.y_position - gLensFlareSwitches[i]->segment.trans.y_position;
+            zDiff = cameraSegment->trans.z_position - gLensFlareSwitches[i]->segment.trans.z_position;
+            lensFlare = &gLensFlareSwitches[i]->segment.level_entry->lensFlareSwitch;
+            if (sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < lensFlare->radius) {
+                gLensFlareOff = TRUE;
             }
         }
     }

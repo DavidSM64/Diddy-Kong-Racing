@@ -231,7 +231,7 @@ GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004668.s")
 
 // input typing not right (some type of struct)
 //  99% sure this function will clear the audio buffer associated with a given sound mask.
-void func_8000488C(u8 *arg0) {
+void sound_stop(u8 *arg0) {
     ALEvent sp_18;
     sp_18.type = 1024;
     //((u32 *)(&sp_18))[1] = (u32)arg0;

@@ -163,12 +163,12 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     animFrame = obj->segment.animFrame;
     obj->segment.animFrame = racer->animationSpeed;
-    obj->unk74 = 0;
+    obj->particleEmitFlags = OBJ_EMIT_OFF;
     if (obj->segment.object.animationID == ANIM_TRICKY_RUN) {
         play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
-        obj->unk74 |= 3;
+        obj->particleEmitFlags |= OBJ_EMIT_PARTICLE_1 | OBJ_EMIT_PARTICLE_2;
     }
-    func_800AFC3C(obj, updateRate);
+    obj_spawn_particle(obj, updateRate);
     fade_when_near_camera(obj, racer, 120);
     switch (obj->segment.object.animationID) {
         case ANIM_TRICKY_RUN:

@@ -94,7 +94,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     func_80049794(updateRate, updateRateF, obj, racer);
     racer->vehicleID = racer->vehicleIDPrev;
     *startTimer = tempStartTimer;
-    obj->unk74 = 0;
+    obj->particleEmitFlags = OBJ_EMIT_OFF;
     racer->headAngle = tempHeadAngle;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
@@ -221,7 +221,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     animFrame = obj->segment.animFrame;
     obj->segment.animFrame = racer->animationSpeed;
-    obj->unk74 = 0;
+    obj->particleEmitFlags = OBJ_EMIT_OFF;
     if (obj->segment.object.animationID == ANIM_WIZPIG_RUN) {
         play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
     }
@@ -230,7 +230,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             spawn_boss_hazard(obj, racer, 100.0f, ASSET_OBJECT_ID_FIREBALL, SOUND_VOICE_TRICKY_HM);
         }
     }
-    func_800AFC3C(obj, updateRate);
+    obj_spawn_particle(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
     firstRacerObj = get_racer_object(PLAYER_ONE);
     racer = (Object_Racer *) firstRacerObj->unk64;

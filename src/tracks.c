@@ -69,9 +69,8 @@ ObjectSegment *gSceneActiveCamera;
 
 s32 gSceneCurrentPlayerID;
 Object *gSkydomeSegment;
-UNUSED s32
-    gIsNearCurrBBox;   // Set to true if the current visible segment is close to the camera. Never actually used though.
-UNUSED s32 D_8011B0C0; // Set to 0 then never read.
+UNUSED s32 gIsNearCurrBBox; // Set to true if the current visible segment is close to the camera.
+UNUSED s32 D_8011B0C0;      // Set to 0 then never read.
 UNUSED s32 gDisableShadows; // Never not 0.
 s32 gShadowHeapFlip;        // Flips between 0 and 1 to prevent incorrect access between frames.
 s32 D_8011B0CC;
@@ -235,7 +234,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     spawn_skydome(skybox);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
-    func_80011390();
+    path_enable();
     func_8000C8F8(arg6, 0);
     func_8000C8F8(collectables, 1);
     gScenePlayerViewports = numberOfPlayers;
@@ -333,10 +332,12 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
         flip = TRUE;
     }
+#ifdef ANTI_TAMPER
     // Antipiracy measure
     if (IO_READ(0x200) != 0xAC290000) {
         flip = TRUE;
     }
+#endif
     reset_render_settings(&gSceneCurrDisplayList);
     gDkrDisableBillboard(gSceneCurrDisplayList++);
     gSPClearGeometryMode(gSceneCurrDisplayList++, G_CULL_FRONT);
@@ -386,7 +387,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList,
                             tempUpdateRate);
         }
-        func_800AD030(get_active_camera_segment());
+        lensflare_override(get_active_camera_segment());
         func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
         render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
                    get_racer_object_by_port(gSceneCurrentPlayerID), updateRate);
@@ -413,7 +414,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             gDPPipeSync(gSceneCurrDisplayList++);
             initialise_player_viewport_vars(updateRate);
             set_weather_limits(-1, -512);
-            func_800AD030(get_active_camera_segment());
+            lensflare_override(get_active_camera_segment());
             func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
                           get_active_camera_segment());
             set_text_font(FONT_COLOURFUL);
@@ -706,8 +707,10 @@ void animate_level_textures(s32 updateRate) {
 void spawn_skydome(s32 objectID) {
     LevelObjectEntryCommon spawnObject;
 
+#ifdef ANTI_TAMPER
     // Antipiracy measure
     compare_balloon_checksums();
+#endif
     if (objectID == -1) {
         gSkydomeSegment = NULL;
         return;
@@ -1553,7 +1556,7 @@ s32 check_if_in_draw_range(Object *obj) {
                 obj64 = obj->unk64;
                 obj->segment.object.opacity = ((obj64->racer.transparency + 1) * alpha) >> 8;
                 break;
-            case BHV_UNK_3A: // Ghost Object?
+            case BHV_TIMETRIAL_GHOST: // Ghost Object?
                 obj64 = obj->unk64;
                 obj->segment.object.opacity = obj64->racer.transparency;
                 break;

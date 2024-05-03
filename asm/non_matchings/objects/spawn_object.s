@@ -575,7 +575,7 @@ glabel L8000EDE0
 /* 00FE80 8000F280 00C02825 */  move  $a1, $a2
 /* 00FE84 8000F284 19800006 */  blez  $t4, .L8000F2A0
 /* 00FE88 8000F288 00000000 */   nop   
-/* 00FE8C 8000F28C 0C003EB1 */  jal   func_8000FAC4
+/* 00FE8C 8000F28C 0C003EB1 */  jal   obj_init_emitter
 /* 00FE90 8000F290 AFA60048 */   sw    $a2, 0x48($sp)
 /* 00FE94 8000F294 8FA60048 */  lw    $a2, 0x48($sp)
 /* 00FE98 8000F298 8E500040 */  lw    $s0, 0x40($s2)

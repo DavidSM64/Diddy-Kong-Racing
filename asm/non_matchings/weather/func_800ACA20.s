@@ -1,8 +1,8 @@
 glabel func_800ACA20
 /* 0AD620 800ACA20 27BDFF10 */  addiu $sp, $sp, -0xf0
 /* 0AD624 800ACA24 AFB60050 */  sw    $s6, 0x50($sp)
-/* 0AD628 800ACA28 3C16800E */  lui   $s6, %hi(D_800E2A80) # $s6, 0x800e
-/* 0AD62C 800ACA2C 26D62A80 */  addiu $s6, %lo(D_800E2A80) # addiu $s6, $s6, 0x2a80
+/* 0AD628 800ACA28 3C16800E */  lui   $s6, %hi(gLensFlare) # $s6, 0x800e
+/* 0AD62C 800ACA2C 26D62A80 */  addiu $s6, %lo(gLensFlare) # addiu $s6, $s6, 0x2a80
 /* 0AD630 800ACA30 8ECF0000 */  lw    $t7, ($s6)
 /* 0AD634 800ACA34 AFB70054 */  sw    $s7, 0x54($sp)
 /* 0AD638 800ACA38 AFB5004C */  sw    $s5, 0x4c($sp)
@@ -24,8 +24,8 @@ glabel func_800ACA20
 /* 0AD678 800ACA78 E7B50020 */  swc1  $f21, 0x20($sp)
 /* 0AD67C 800ACA7C 11E00126 */  beqz  $t7, .L800ACF18
 /* 0AD680 800ACA80 E7B40024 */   swc1  $f20, 0x24($sp)
-/* 0AD684 800ACA84 3C19800E */  lui   $t9, %hi(D_800E2A84) # $t9, 0x800e
-/* 0AD688 800ACA88 8F392A84 */  lw    $t9, %lo(D_800E2A84)($t9)
+/* 0AD684 800ACA84 3C19800E */  lui   $t9, %hi(gLensFlareOff) # $t9, 0x800e
+/* 0AD688 800ACA88 8F392A84 */  lw    $t9, %lo(gLensFlareOff)($t9)
 /* 0AD68C 800ACA8C 00000000 */  nop   
 /* 0AD690 800ACA90 17200122 */  bnez  $t9, .L800ACF1C
 /* 0AD694 800ACA94 8FBF005C */   lw    $ra, 0x5c($sp)
@@ -46,8 +46,8 @@ glabel func_800ACA20
 /* 0AD6D0 800ACAD0 00A03025 */  move  $a2, $a1
 /* 0AD6D4 800ACAD4 0C01BDBB */  jal   f32_matrix_dot
 /* 0AD6D8 800ACAD8 00402025 */   move  $a0, $v0
-/* 0AD6DC 800ACADC 3C1E8012 */  lui   $fp, %hi(D_80127C30) # $fp, 0x8012
-/* 0AD6E0 800ACAE0 27DE7C30 */  addiu $fp, %lo(D_80127C30) # addiu $fp, $fp, 0x7c30
+/* 0AD6DC 800ACADC 3C1E8012 */  lui   $fp, %hi(gLensFlarePos) # $fp, 0x8012
+/* 0AD6E0 800ACAE0 27DE7C30 */  addiu $fp, %lo(gLensFlarePos) # addiu $fp, $fp, 0x7c30
 /* 0AD6E4 800ACAE4 C7C60000 */  lwc1  $f6, ($fp)
 /* 0AD6E8 800ACAE8 C7A400D8 */  lwc1  $f4, 0xd8($sp)
 /* 0AD6EC 800ACAEC C7CA0004 */  lwc1  $f10, 4($fp)
@@ -118,19 +118,19 @@ glabel func_800ACA20
 /* 0AD7F0 800ACBF0 E7A600E0 */  swc1  $f6, 0xe0($sp)
 .L800ACBF4:
 /* 0AD7F4 800ACBF4 16400004 */  bnez  $s2, .L800ACC08
-/* 0AD7F8 800ACBF8 3C108012 */   lui   $s0, %hi(D_80127C2C) # $s0, 0x8012
-/* 0AD7FC 800ACBFC 8E107C2C */  lw    $s0, %lo(D_80127C2C)($s0)
+/* 0AD7F8 800ACBF8 3C108012 */   lui   $s0, %hi(gLensFlareLarge) # $s0, 0x8012
+/* 0AD7FC 800ACBFC 8E107C2C */  lw    $s0, %lo(gLensFlareLarge)($s0)
 /* 0AD800 800ACC00 10000009 */  b     .L800ACC28
 /* 0AD804 800ACC04 00000000 */   nop   
 .L800ACC08:
 /* 0AD808 800ACC08 16420005 */  bne   $s2, $v0, .L800ACC20
-/* 0AD80C 800ACC0C 3C108012 */   lui   $s0, %hi(D_80127C28) # $s0, 0x8012
-/* 0AD810 800ACC10 3C108012 */  lui   $s0, %hi(D_80127C24) # $s0, 0x8012
-/* 0AD814 800ACC14 8E107C24 */  lw    $s0, %lo(D_80127C24)($s0)
+/* 0AD80C 800ACC0C 3C108012 */   lui   $s0, %hi(gLensFlareSet2) # $s0, 0x8012
+/* 0AD810 800ACC10 3C108012 */  lui   $s0, %hi(gLensFlareSet1) # $s0, 0x8012
+/* 0AD814 800ACC14 8E107C24 */  lw    $s0, %lo(gLensFlareSet1)($s0)
 /* 0AD818 800ACC18 10000003 */  b     .L800ACC28
 /* 0AD81C 800ACC1C 00000000 */   nop   
 .L800ACC20:
-/* 0AD820 800ACC20 8E107C28 */  lw    $s0, %lo(D_80127C28)($s0)
+/* 0AD820 800ACC20 8E107C28 */  lw    $s0, %lo(gLensFlareSet2)($s0)
 /* 0AD824 800ACC24 00000000 */  nop   
 .L800ACC28:
 /* 0AD828 800ACC28 12000058 */  beqz  $s0, .L800ACD8C
@@ -261,8 +261,8 @@ glabel func_800ACA20
 /* 0ADA08 800ACE08 8E230000 */  lw    $v1, ($s1)
 /* 0ADA0C 800ACE0C 8FAA0098 */  lw    $t2, 0x98($sp)
 /* 0ADA10 800ACE10 00602025 */  move  $a0, $v1
-/* 0ADA14 800ACE14 3C0C800E */  lui   $t4, %hi(D_800E2928) # $t4, 0x800e
-/* 0ADA18 800ACE18 258C2928 */  addiu $t4, %lo(D_800E2928) # addiu $t4, $t4, 0x2928
+/* 0ADA14 800ACE14 3C0C800E */  lui   $t4, %hi(dLensFlare) # $t4, 0x800e
+/* 0ADA18 800ACE18 258C2928 */  addiu $t4, %lo(dLensFlare) # addiu $t4, $t4, 0x2928
 /* 0ADA1C 800ACE1C 3C190600 */  lui   $t9, 0x600
 /* 0ADA20 800ACE20 24630008 */  addiu $v1, $v1, 8
 /* 0ADA24 800ACE24 00024403 */  sra   $t0, $v0, 0x10

@@ -471,7 +471,7 @@ glabel func_80019808
 /* 01AABC 80019EBC 2406FFFF */  li    $a2, -1
 /* 01AAC0 80019EC0 0C01B06B */  jal   push_level_property_stack
 /* 01AAC4 80019EC4 24E7FFFF */   addiu $a3, $a3, -1
-/* 01AAC8 80019EC8 0C006A35 */  jal   func_8001A8D4
+/* 01AAC8 80019EC8 0C006A35 */  jal   race_finish_adventure
 /* 01AACC 80019ECC 02802025 */   move  $a0, $s4
 .L80019ED0:
 /* 01AAD0 80019ED0 3C018012 */  lui   $at, %hi(D_8011ADB4) # $at, 0x8012
@@ -792,7 +792,7 @@ glabel func_80019808
 /* 01AF4C 8001A34C 3C0F8012 */   lui   $t7, %hi(D_8011AD3C) # $t7, 0x8012
 /* 01AF50 8001A350 13000005 */  beqz  $t8, .L8001A368
 /* 01AF54 8001A354 00000000 */   nop   
-/* 01AF58 8001A358 0C008B86 */  jal   func_80022E18
+/* 01AF58 8001A358 0C008B86 */  jal   mode_end_taj_race
 /* 01AF5C 8001A35C 00002025 */   move  $a0, $zero
 /* 01AF60 8001A360 10000114 */  b     .L8001A7B4
 /* 01AF64 8001A364 8FBF0034 */   lw    $ra, 0x34($sp)
@@ -1088,7 +1088,7 @@ glabel func_80019808
 /* 01B384 8001A784 25D90001 */  addiu $t9, $t6, 1
 /* 01B388 8001A788 A4590000 */  sh    $t9, ($v0)
 .L8001A78C:
-/* 01B38C 8001A78C 0C006A35 */  jal   func_8001A8D4
+/* 01B38C 8001A78C 0C006A35 */  jal   race_finish_adventure
 /* 01B390 8001A790 02802025 */   move  $a0, $s4
 .L8001A794:
 /* 01B394 8001A794 3C018012 */  lui   $at, %hi(D_8011ADB4) # $at, 0x8012
@@ -1096,7 +1096,7 @@ glabel func_80019808
 /* 01B39C 8001A79C AC35ADB4 */   sw    $s5, %lo(D_8011ADB4)($at)
 /* 01B3A0 8001A7A0 14540004 */  bne   $v0, $s4, .L8001A7B4
 /* 01B3A4 8001A7A4 8FBF0034 */   lw    $ra, 0x34($sp)
-/* 01B3A8 8001A7A8 0C006B99 */  jal   func_8001AE64
+/* 01B3A8 8001A7A8 0C006B99 */  jal   race_finish_time_trial
 /* 01B3AC 8001A7AC 00000000 */   nop   
 .L8001A7B0:
 /* 01B3B0 8001A7B0 8FBF0034 */  lw    $ra, 0x34($sp)

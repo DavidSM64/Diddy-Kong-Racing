@@ -144,6 +144,7 @@ void init_level_globals(void) {
     }
     free_from_memory_pool(gTempAssetTable);
     // Antipiracy measure
+#ifdef ANTI_TAMPER
     checksumCount = 0;
     for (j = 0; j < gViewportFuncLength; j++) {
         checksumCount += ((u8 *) (&viewport_rsp_set))[j];
@@ -151,6 +152,7 @@ void init_level_globals(void) {
     if (checksumCount != gViewportFuncChecksum) {
         disable_button_mask();
     }
+#endif
 }
 
 UNUSED s16 func_8006ABB4(s32 levelID) {
@@ -569,7 +571,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT && numPlayers == 0 && is_time_trial_enabled()) {
         cutsceneId = CUTSCENE_ID_UNK_64;
     }
-    set_cutscene_id(cutsceneId);
+    cutscene_id_set(cutsceneId);
     init_track(gCurrentLevelHeader->geometry, gCurrentLevelHeader->skybox, numberOfPlayers, vehicleId, entranceId,
                gCurrentLevelHeader->collectables, gCurrentLevelHeader->unkBA);
     if (gCurrentLevelHeader->fogNear == 0 && gCurrentLevelHeader->fogFar == 0 && gCurrentLevelHeader->fogR == 0 &&

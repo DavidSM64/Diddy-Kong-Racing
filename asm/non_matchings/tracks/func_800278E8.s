@@ -23,7 +23,7 @@ glabel func_800278E8
 /* 028538 80027938 AFAF0030 */  sw    $t7, 0x30($sp)
 /* 02853C 8002793C 8E040000 */  lw    $a0, ($s0)
 /* 028540 80027940 AFA60034 */  sw    $a2, 0x34($sp)
-/* 028544 80027944 0C006F75 */  jal   find_nearest_spectate_camera
+/* 028544 80027944 0C006F75 */  jal   spectate_nearest
 /* 028548 80027948 AFA30040 */   sw    $v1, 0x40($sp)
 /* 02854C 8002794C 8FB80030 */  lw    $t8, 0x30($sp)
 /* 028550 80027950 823901D8 */  lb    $t9, 0x1d8($s1)
@@ -75,7 +75,7 @@ glabel func_800278E8
 /* 0285F0 800279F0 00000000 */  nop   
 .L800279F4:
 /* 0285F4 800279F4 822401FD */  lb    $a0, 0x1fd($s1)
-/* 0285F8 800279F8 0C006F65 */  jal   get_camera_object
+/* 0285F8 800279F8 0C006F65 */  jal   spectate_object
 /* 0285FC 800279FC AFA50054 */   sw    $a1, 0x54($sp)
 /* 028600 80027A00 3C0F8012 */  lui   $t7, %hi(D_8011B104) # $t7, 0x8012
 /* 028604 80027A04 8DEFB104 */  lw    $t7, %lo(D_8011B104)($t7)
