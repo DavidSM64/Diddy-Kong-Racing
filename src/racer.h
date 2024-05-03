@@ -184,9 +184,9 @@ void second_racer_camera_update(Object *obj, Object_Racer *racer, s32 mode, f32 
 void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths);
 void allocate_ghost_data(void);
 void timetrial_reset_player_ghost(void);
-void timetrial_swap_player_ghost(s32 arg0);
+void timetrial_swap_player_ghost(s32 mapID);
 s32 timetrial_map_id(void);
-s32 timetrial_load_player_ghost(s32 controllerID, s32 mapId, s16 arg2, s16 *arg3, s16 *arg4);
+s32 timetrial_load_player_ghost(s32 controllerID, s32 mapId, s16 arg2, s16 *characterID, s16 *time);
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime);
 void timetrial_free_staff_ghost(void);
 SIDeviceStatus timetrial_write_player_ghost(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4);

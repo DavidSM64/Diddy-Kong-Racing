@@ -1847,8 +1847,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         newObj->unk60 = (Object_60 *) (((uintptr_t) newObj + (uintptr_t) newObj->unk60) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->segment.header->particleCount > 0) {
-        newObj->particleEmitter =
-            (ParticleEmitter *) (((uintptr_t) newObj + (uintptr_t) newObj->particleEmitter) - (uintptr_t) gSpawnObjectHeap);
+        newObj->particleEmitter = (ParticleEmitter *) (((uintptr_t) newObj + (uintptr_t) newObj->particleEmitter) -
+                                                       (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->segment.header->numLightSources > 0) {
         newObj->lightData =
@@ -4473,8 +4473,9 @@ void race_finish_time_trial(void) {
         }
         if (((!vehicleID) && (!vehicleID)) && (!vehicleID)) {} // Fakematch
         if (settings->timeTrialRacer == 0) {
-            if (bestCourseTime < 10800 && (vehicleID != gTimeTrialVehicle || timetrial_map_id() != get_current_map_id() ||
-                                           bestCourseTime < gTimeTrialTime)) {
+            if (bestCourseTime < 10800 &&
+                (vehicleID != gTimeTrialVehicle || timetrial_map_id() != get_current_map_id() ||
+                 bestCourseTime < gTimeTrialTime)) {
                 gTimeTrialTime = bestCourseTime;
                 gTimeTrialVehicle = gPrevTimeTrialVehicle;
                 gTimeTrialCharacter = settings->racers[0].character;
@@ -4512,9 +4513,9 @@ s32 timetrial_valid_player_ghost(void) {
     }
 }
 
-/** 
+/**
  * Return the player ghost object.
-*/
+ */
 Object *timetrial_player_ghost(void) {
     return gGhostObjPlayer;
 }
@@ -4649,7 +4650,7 @@ s32 timetrial_staff_unbeaten(void) {
 /**
  * Calls a function to start loading the player ghost data from the controller pak.
  * Returns the controller pak status. 0 means good.
-*/
+ */
 s32 timetrial_init_player_ghost(s32 playerID) {
     s16 characterID;
     s16 time;
@@ -4658,7 +4659,8 @@ s32 timetrial_init_player_ghost(s32 playerID) {
 
     ghostMapID = timetrial_map_id();
     if (get_current_map_id() != ghostMapID || gTimeTrialVehicle != gPrevTimeTrialVehicle) {
-        cpakStatus = timetrial_load_player_ghost(playerID, get_current_map_id(), gPrevTimeTrialVehicle, &characterID, &time);
+        cpakStatus =
+            timetrial_load_player_ghost(playerID, get_current_map_id(), gPrevTimeTrialVehicle, &characterID, &time);
         if (cpakStatus == CONTROLLER_PAK_GOOD) {
             gTimeTrialVehicle = gPrevTimeTrialVehicle;
             gTimeTrialCharacter = characterID;
@@ -4672,9 +4674,10 @@ s32 timetrial_init_player_ghost(s32 playerID) {
 /**
  * Call a function to write the ghost data to the controller pak.
  * Returns the controller pak status. 0 is good.
-*/
+ */
 SIDeviceStatus timetrial_save_player_ghost(s32 controllerIndex) {
-    return timetrial_write_player_ghost(controllerIndex, timetrial_map_id(), gTimeTrialVehicle, gTimeTrialCharacter, gTimeTrialTime);
+    return timetrial_write_player_ghost(controllerIndex, timetrial_map_id(), gTimeTrialVehicle, gTimeTrialCharacter,
+                                        gTimeTrialTime);
 }
 
 /**

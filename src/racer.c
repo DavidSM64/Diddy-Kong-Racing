@@ -5673,17 +5673,17 @@ void timetrial_reset_player_ghost(void) {
     gGhostNodeDelay = 0;
 }
 
-/** 
+/**
  * Swap player ghost index and set the new saved map ID.
-*/
+ */
 void timetrial_swap_player_ghost(s32 mapID) {
     gPrevGhostNodeIndex = (gCurrentGhostIndex + 1) & 1;
     gGhostMapID = mapID;
 }
 
-/** 
+/**
  * Return the current map ID associated with the time trial ghost.
-*/
+ */
 s32 timetrial_map_id(void) {
     return gGhostMapID;
 }
@@ -5691,14 +5691,15 @@ s32 timetrial_map_id(void) {
 /**
  * Attempt to load the player ghost data from the controller pak.
  * Returns the controller pak status when done.
-*/
+ */
 s32 timetrial_load_player_ghost(s32 controllerID, s32 mapId, s16 arg2, s16 *characterID, s16 *time) {
     s32 cpakStatus;
     s32 nodeID;
     s16 nodeCount;
 
     nodeID = (gCurrentGhostIndex + 1) & 1;
-    cpakStatus = func_80074B34(controllerID, mapId, arg2, (u16 *) characterID, time, &nodeCount, (GhostHeader *) gGhostData[nodeID]);
+    cpakStatus = func_80074B34(controllerID, mapId, arg2, (u16 *) characterID, time, &nodeCount,
+                               (GhostHeader *) gGhostData[nodeID]);
     if (characterID) {
         if (cpakStatus == CONTROLLER_PAK_GOOD) {
             gGhostNodeCount[nodeID] = nodeCount;
@@ -5737,7 +5738,7 @@ s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime) {
 
 /**
  * Free the staff ghost from memory if it exists.
-*/
+ */
 void timetrial_free_staff_ghost(void) {
     if (gGhostData[GHOST_STAFF] != NULL) {
         free_from_memory_pool(gGhostData[GHOST_STAFF]);
@@ -5748,7 +5749,7 @@ void timetrial_free_staff_ghost(void) {
 /**
  * Calls a function that attempts to write the player ghost data to the controller pak.
  * Returns the controller pak status when finished.
-*/
+ */
 SIDeviceStatus timetrial_write_player_ghost(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4) {
     return func_80075000(controllerIndex, (s16) mapId, arg2, arg3, arg4, gGhostNodeCount[gCurrentGhostIndex],
                          (GhostHeader *) gGhostData[gCurrentGhostIndex]);
@@ -5757,7 +5758,7 @@ SIDeviceStatus timetrial_write_player_ghost(s32 controllerIndex, s32 mapId, s16 
 /**
  * Write down the current position and rotation every half second to the ghost node data.
  * Returns early if the ghost node data is full.
-*/
+ */
 void timetrial_ghost_write(Object *obj, s32 updateRate) {
     f32 yOffset;
     Object_Racer *racer;
@@ -5794,7 +5795,7 @@ void timetrial_ghost_write(Object *obj, s32 updateRate) {
 
 /**
  * Returns true if the time trial ghost has reached its size limit.
-*/
+ */
 s16 timetrial_ghost_full(void) {
     return gGhostNodeFull[gCurrentGhostIndex];
 }
