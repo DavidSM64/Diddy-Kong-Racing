@@ -16,7 +16,6 @@
 
 UNUSED const char D_800E8E70[] = "\nAssertion failed: '%s' in file %s, line %d\n";
 UNUSED const char D_800E8EA0[] = "\nAssertion failed: '%s' in file %s, line %d\n";
-UNUSED const char D_800E8ED0[] = ">fault< ";
 
 /*********************************/
 
@@ -71,6 +70,7 @@ void thread0_Main(UNUSED void *unused) {
             continue;
         }
         s0 &= ~8;
+        stubbed_printf(">fault< ");
         enable_interupts_on_main();
         stop_all_threads_except_main();
         write_epc_data_to_cpak();

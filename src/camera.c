@@ -15,14 +15,6 @@
 /************ .rodata ************/
 
 UNUSED const char D_800E6F00[] = "Camera Error: Illegal mode!\n";
-UNUSED const char D_800E6F20[] = "Camera Error: Illegal player no!\n";
-UNUSED const char D_800E6F34[] = "cameraPushSprMtx: model stack overflow!!\n";
-UNUSED const char D_800E6F70[] = "\nCam do 2D sprite called with NULL pointer!";
-UNUSED const char D_800E6F9C[] = "CamDo2DSprite FrameNo Overflow !!!\n";
-UNUSED const char D_800E6FC0[] = "cameraPushModelMtx: model stack overflow!!\n";
-UNUSED const char D_800E6FEC[] = "camPushModelMtx: bsp stack overflow!!\n";
-UNUSED const char D_800E7010[] = "camPopModelMtx: model stack negative overflow!!\n";
-UNUSED const char D_800E7048[] = "camPopModelMtx: bsp stack negative overflow!!\n";
 
 /*********************************/
 
@@ -396,6 +388,7 @@ void set_active_camera(s32 num) {
     if (num >= 0 && num < 4) {
         gActiveCameraID = num;
     } else {
+        stubbed_printf("Camera Error: Illegal player no!\n");
         gActiveCameraID = 0;
     }
 }
@@ -1012,6 +1005,8 @@ void viewport_reset(Gfx **dlist) {
     gActiveCameraID = 0;
 }
 
+UNUSED const char D_800E6F34[] = "cameraPushSprMtx: model stack overflow!!\n";
+
 /**
  * Sets the matrix position to the world origin (0, 0, 0)
  * Used when the next thing rendered relies on there not being any matrix offset.
@@ -1052,6 +1047,10 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
     s32 result;
     s32 textureFrame;
 
+    if (obj == NULL) {
+        stubbed_printf("\nCam do 2D sprite called with NULL pointer!");
+    }
+
     result = TRUE;
     if (flags & RENDER_VEHICLE_PART) {
         diffX = gModelMatrixViewX[gCameraMatrixPos] - obj->segment.trans.x_position;
@@ -1075,6 +1074,7 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         angleDiff = (angleDiff * tanX) >> 8;
         textureFrame = (tanY >> 7) & 0xFF;
         if (textureFrame > 127) {
+            stubbed_printf("CamDo2DSprite FrameNo Overflow !!!\n");
             textureFrame = 255 - textureFrame;
             angleDiff += 0x8000;
             result = FALSE;
@@ -1340,9 +1340,10 @@ void camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f
     f32_matrix_mult(gModelMatrixF[gModelMatrixStackPos + 1], &gViewMatrixF, &gCurrentModelMatrixS);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixS, *mtx);
     gModelMatrixStackPos++;
-    gModelMatrixS[0, gModelMatrixStackPos] =
-        *mtx; // Should be [gModelMatrixStackPos], but only matches with [0, gModelMatrixStackPos]
-    if (1) {}
+    gModelMatrixS[0, gModelMatrixStackPos] = *mtx; // Should be [gModelMatrixStackPos]
+    if (gModelMatrixStackPos >= ARRAY_COUNT(gModelMatrixS)) {
+        stubbed_printf("cameraPushModelMtx: model stack overflow!!\n");
+    }
     if (1) {}
     if (1) {}; // Fakematch
     gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_1);
@@ -1372,7 +1373,9 @@ void camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f
     gModelMatrixViewX[index] = tempX;
     gModelMatrixViewY[index] = tempY;
     gModelMatrixViewZ[index] = tempZ;
-    if (0) {} // Fakematch
+    if (0) {
+        stubbed_printf("camPushModelMtx: bsp stack overflow!!\n");
+    }
 }
 
 /**
@@ -1440,6 +1443,11 @@ void apply_matrix_from_stack(Gfx **dlist) {
     {
         s32 temp = gCameraMatrixPos;
         if ((temp && temp) != 0) {}
+        if (temp > ARRAY_COUNT(gModelMatrixViewX)) {
+            stubbed_printf("camPopModelMtx: model stack negative overflow!!\n");
+            // TODO: get the condition matching for this one too.
+            stubbed_printf("camPopModelMtx: bsp stack negative overflow!!\n");
+        }
     } // Fakematch
 
     if (gModelMatrixStackPos > 0) {
