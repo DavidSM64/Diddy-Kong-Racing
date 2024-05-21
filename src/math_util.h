@@ -21,8 +21,12 @@
     if ((x) > (high)) (x) -= ((high) * 2) - 1;  \
     if ((x) < (low)) (x) += ((high) * 2) - 1;   \
 }
-
+// Returning s16 causes good compilers to optimise out parts of the resultant, causing bugs. They most likely intended u16, since that fixes every single one.
+#ifdef AVOID_UB
+u16 arctan2_f(f32 y, f32 x);
+#else
 s16 arctan2_f(f32 y, f32 x);
+#endif
 f32 coss_f(s16 angle);
 f32 sins_f(s16 angle);
 s32 coss(s16 angle);

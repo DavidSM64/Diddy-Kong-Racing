@@ -657,7 +657,7 @@ GLOBAL_ASM("asm/math_util/atan2s.s")
 #endif
 
 #ifdef NON_MATCHING
-s16 arctan2_f(f32 y, f32 x) {
+u16 arctan2_f(f32 y, f32 x) {
     return atan2s((s32) (y * 255.0f), (s32) (x * 255.0f));
 }
 #else
