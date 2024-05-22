@@ -380,7 +380,7 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
             spawnObj.x = obj->segment.trans.x_position;
             spawnObj.y = obj->segment.trans.y_position;
             spawnObj.z = obj->segment.trans.z_position;
-            spawnObj.size = 8;
+            spawnObj.size = sizeof(LevelObjectEntryCommon);
             spawnObj.objectID = ASSET_OBJECT_ID_LASERBOLT;
             play_sound_at_position(SOUND_LASER_GUN, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                    obj->segment.trans.z_position, 4, NULL);
@@ -616,7 +616,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                 newObject.x = obj->segment.level_entry->animation.common.x;
                 newObject.y = obj->segment.level_entry->animation.common.y;
                 newObject.z = obj->segment.level_entry->animation.common.z;
-                newObject.size = 8;
+                newObject.size = sizeof(LevelObjectEntryCommon);
                 tempObj = spawn_object(&newObject, 1);
                 if (tempObj != NULL) {
                     tempObj->segment.level_entry = NULL;
@@ -831,7 +831,7 @@ void obj_loop_eggcreator(Object *obj, UNUSED s32 updateRate) {
         spawnObj.x = obj->segment.trans.x_position;
         spawnObj.y = obj->segment.trans.y_position;
         spawnObj.z = obj->segment.trans.z_position;
-        spawnObj.size = 8;
+        spawnObj.size = sizeof(LevelObjectEntryCommon);
         spawnObj.objectID = ASSET_OBJECT_ID_COLLECTEGG;
         eggObj = spawn_object(&spawnObj, 1);
         if (eggObj != NULL) {
@@ -1924,7 +1924,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                             newObject.x = posX;
                             newObject.y = posY;
                             newObject.z = posZ;
-                            newObject.size = 8;
+                            newObject.size = sizeof(LevelObjectEntryCommon);
                             newObject.objectID = ASSET_OBJECT_ID_LASERBOLT;
                             newObj = spawn_object(&newObject, 1);
                             if (newObj != NULL) {
@@ -4198,7 +4198,7 @@ void obj_loop_treasuresucker(Object *obj, s32 updateRate) {
             spawnObj.x = racerObj->segment.trans.x_position;
             spawnObj.y = (s16) racerObj->segment.trans.y_position + 10;
             spawnObj.z = racerObj->segment.trans.z_position;
-            spawnObj.size = 8;
+            spawnObj.size = sizeof(LevelObjectEntryCommon);
             spawnObj.objectID = ASSET_OBJECT_ID_FLYCOIN;
             newObj = spawn_object(&spawnObj, 1);
             if (newObj != NULL) {
@@ -4278,7 +4278,7 @@ void obj_loop_bananacreator(Object *obj, s32 updateRate) {
         newEntry.x = obj->segment.trans.x_position;
         newEntry.y = (s16) obj->segment.trans.y_position - 3;
         newEntry.z = obj->segment.trans.z_position;
-        newEntry.size = 8;
+        newEntry.size = sizeof(LevelObjectEntryCommon);
         newEntry.objectID = ASSET_OBJECT_ID_COIN;
         newBananaObj = spawn_object(&newEntry, 1);
         obj->properties.bananaSpawner.spawn = TRUE;

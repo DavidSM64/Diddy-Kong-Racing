@@ -1171,7 +1171,7 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     stopwatchTimer = 0;
     if (gAssetHudElements->entry[20] == NULL) {
         ttSWBody.objectID = gAssetHudElementIds[20] & 0xFFFF;
-        ttSWBody.size = 8;
+        ttSWBody.size = sizeof(LevelObjectEntryCommon);
         ttSWBody.x = 0;
         ttSWBody.y = 0;
         ttSWBody.z = 0;
@@ -1183,7 +1183,7 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     }
     if (gAssetHudElements->entry[34] == 0) {
         ttSWArms.objectID = gAssetHudElementIds[34] & 0xFFFF;
-        ttSWArms.size = 8;
+        ttSWArms.size = sizeof(LevelObjectEntryCommon);
         ttSWArms.x = 0;
         ttSWArms.y = 0;
         ttSWArms.z = 0;

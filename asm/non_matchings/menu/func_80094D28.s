@@ -154,9 +154,9 @@ glabel L80094DD0
 /* 095B34 80094F34 01A53823 */  subu  $a3, $t5, $a1
 /* 095B38 80094F38 0C019A50 */  jal   viewport_menu_set
 /* 095B3C 80094F3C 00000000 */   nop   
-/* 095B40 80094F40 3C02800E */  lui   $v0, %hi(gMenuImageStack) # $v0, 0x800e
+/* 095B40 80094F40 3C02800E */  lui   $v0, %hi(gMenuImages) # $v0, 0x800e
 /* 095B44 80094F44 44905000 */  mtc1  $s0, $f10
-/* 095B48 80094F48 2442F75C */  addiu $v0, %lo(gMenuImageStack) # addiu $v0, $v0, -0x8a4
+/* 095B48 80094F48 2442F75C */  addiu $v0, %lo(gMenuImages) # addiu $v0, $v0, -0x8a4
 /* 095B4C 80094F4C 8C4E0000 */  lw    $t6, ($v0)
 /* 095B50 80094F50 44802000 */  mtc1  $zero, $f4
 /* 095B54 80094F54 46805420 */  cvt.s.w $f16, $f10
@@ -617,7 +617,7 @@ glabel L80095588
 /* 0961E4 800955E4 00000000 */  nop   
 /* 0961E8 800955E8 19A00004 */  blez  $t5, .L800955FC
 /* 0961EC 800955EC 3C013F80 */   lui   $at, 0x3f80
-/* 0961F0 800955F0 0C027298 */  jal   func_8009CA60
+/* 0961F0 800955F0 0C027298 */  jal   menu_element_render
 /* 0961F4 800955F4 24040004 */   li    $a0, 4
 /* 0961F8 800955F8 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 .L800955FC:

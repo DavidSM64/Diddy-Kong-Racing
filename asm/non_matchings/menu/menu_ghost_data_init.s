@@ -28,15 +28,15 @@ glabel menu_ghost_data_init
 /* 09A6C4 80099AC4 00000000 */   nop   
 .L80099AC8:
 /* 09A6C8 80099AC8 3C04800E */  lui   $a0, %hi(gGhostDataObjectIndices) # $a0, 0x800e
-/* 09A6CC 80099ACC 0C02719D */  jal   func_8009C674
+/* 09A6CC 80099ACC 0C02719D */  jal   menu_assetgroup_load
 /* 09A6D0 80099AD0 24841708 */   addiu $a0, %lo(gGhostDataObjectIndices) # addiu $a0, $a0, 0x1708
 /* 09A6D4 80099AD4 3C04800E */  lui   $a0, %hi(gGhostDataImageIndices) # $a0, 0x800e
-/* 09A6D8 80099AD8 0C027229 */  jal   allocate_menu_images
+/* 09A6D8 80099AD8 0C027229 */  jal   menu_imagegroup_load
 /* 09A6DC 80099ADC 2484174C */   addiu $a0, %lo(gGhostDataImageIndices) # addiu $a0, $a0, 0x174c
 /* 09A6E0 80099AE0 0C03105C */  jal   load_font
 /* 09A6E4 80099AE4 24040002 */   li    $a0, 2
-/* 09A6E8 80099AE8 3C028012 */  lui   $v0, %hi(gMenuObjects) # $v0, 0x8012
-/* 09A6EC 80099AEC 24426550 */  addiu $v0, %lo(gMenuObjects) # addiu $v0, $v0, 0x6550
+/* 09A6E8 80099AE8 3C028012 */  lui   $v0, %hi(gMenuAssets) # $v0, 0x8012
+/* 09A6EC 80099AEC 24426550 */  addiu $v0, %lo(gMenuAssets) # addiu $v0, $v0, 0x6550
 /* 09A6F0 80099AF0 8C570038 */  lw    $s7, 0x38($v0)
 /* 09A6F4 80099AF4 3C01800E */  lui   $at, %hi(gDrawTexDinoDomainGhostBg) # $at, 0x800e
 /* 09A6F8 80099AF8 AC37153C */  sw    $s7, %lo(gDrawTexDinoDomainGhostBg)($at)

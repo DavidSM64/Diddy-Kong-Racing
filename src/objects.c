@@ -1252,7 +1252,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         if (is_two_player_adventure_race() == 0) {
             for (i2 = 0; i2 < 3; i2++) {
                 entry->common.objectID = ASSET_OBJECT_ID_POSARROW;
-                entry->common.size = 8;
+                entry->common.size = sizeof(LevelObjectEntryCommon);
                 entry->common.x = 0;
                 entry->common.y = 0;
                 entry->common.z = 0;

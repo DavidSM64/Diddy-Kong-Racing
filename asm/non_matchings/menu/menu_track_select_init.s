@@ -100,10 +100,10 @@ glabel menu_track_select_init
 /* 08F524 8008E924 0C01DED7 */  jal   set_background_fill_colour
 /* 08F528 8008E928 240600DF */   li    $a2, 223
 /* 08F52C 8008E92C 3C11800E */  lui   $s1, %hi(gTracksMenuBgTextureIndices) # $s1, 0x800e
-/* 08F530 8008E930 3C168012 */  lui   $s6, %hi(gMenuObjects) # $s6, 0x8012
+/* 08F530 8008E930 3C168012 */  lui   $s6, %hi(gMenuAssets) # $s6, 0x8012
 /* 08F534 8008E934 3C12800E */  lui   $s2, %hi(gTracksMenuBgTextures) # $s2, 0x800e
 /* 08F538 8008E938 26520730 */  addiu $s2, %lo(gTracksMenuBgTextures) # addiu $s2, $s2, 0x730
-/* 08F53C 8008E93C 26D66550 */  addiu $s6, %lo(gMenuObjects) # addiu $s6, $s6, 0x6550
+/* 08F53C 8008E93C 26D66550 */  addiu $s6, %lo(gMenuAssets) # addiu $s6, $s6, 0x6550
 /* 08F540 8008E940 26310710 */  addiu $s1, %lo(gTracksMenuBgTextureIndices) # addiu $s1, $s1, 0x710
 /* 08F544 8008E944 00002825 */  move  $a1, $zero
 .L8008E948:
@@ -111,7 +111,7 @@ glabel menu_track_select_init
 /* 08F54C 8008E94C 000570C0 */  sll   $t6, $a1, 3
 /* 08F550 8008E950 12A4000C */  beq   $s5, $a0, .L8008E984
 /* 08F554 8008E954 024E8021 */   addu  $s0, $s2, $t6
-/* 08F558 8008E958 0C0271B5 */  jal   func_8009C6D4
+/* 08F558 8008E958 0C0271B5 */  jal   menu_asset_load
 /* 08F55C 8008E95C AFA50074 */   sw    $a1, 0x74($sp)
 /* 08F560 8008E960 86290000 */  lh    $t1, ($s1)
 /* 08F564 8008E964 8FA50074 */  lw    $a1, 0x74($sp)
@@ -129,7 +129,7 @@ glabel menu_track_select_init
 /* 08F58C 8008E98C 00000000 */  nop   
 /* 08F590 8008E990 12A4000A */  beq   $s5, $a0, .L8008E9BC
 /* 08F594 8008E994 00000000 */   nop   
-/* 08F598 8008E998 0C0271B5 */  jal   func_8009C6D4
+/* 08F598 8008E998 0C0271B5 */  jal   menu_asset_load
 /* 08F59C 8008E99C AFA50074 */   sw    $a1, 0x74($sp)
 /* 08F5A0 8008E9A0 862F0002 */  lh    $t7, 2($s1)
 /* 08F5A4 8008E9A4 8FA50074 */  lw    $a1, 0x74($sp)
@@ -331,10 +331,10 @@ glabel menu_track_select_init
 /* 08F8A4 8008ECA4 3C01800E */  lui   $at, %hi(gIsInTracksMenu) # $at, 0x800e
 /* 08F8A8 8008ECA8 3C04800E */  lui   $a0, %hi(gTrackSelectObjectIndices) # $a0, 0x800e
 /* 08F8AC 8008ECAC AC2A097C */  sw    $t2, %lo(gIsInTracksMenu)($at)
-/* 08F8B0 8008ECB0 0C02719D */  jal   func_8009C674
+/* 08F8B0 8008ECB0 0C02719D */  jal   menu_assetgroup_load
 /* 08F8B4 8008ECB4 248407C4 */   addiu $a0, %lo(gTrackSelectObjectIndices) # addiu $a0, $a0, 0x7c4
 /* 08F8B8 8008ECB8 3C04800E */  lui   $a0, %hi(gTrackSelectImageIndices) # $a0, 0x800e
-/* 08F8BC 8008ECBC 0C027229 */  jal   allocate_menu_images
+/* 08F8BC 8008ECBC 0C027229 */  jal   menu_imagegroup_load
 /* 08F8C0 8008ECC0 248407E0 */   addiu $a0, %lo(gTrackSelectImageIndices) # addiu $a0, $a0, 0x7e0
 /* 08F8C4 8008ECC4 0C02392C */  jal   assign_menu_arrow_textures
 /* 08F8C8 8008ECC8 00000000 */   nop   

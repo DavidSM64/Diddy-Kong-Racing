@@ -115,22 +115,23 @@ typedef enum TitleDemoIndex {
 
 /* Size: 0x20 bytes */
 // So this is looking to be a struct for menu images.
-typedef struct unk800DF510 {
-    s16 unk0; //X1
-    s16 unk2; //Y1
-    s16 unk4;
-    s16 unk6;
-    f32 unk8;
-    f32 unkC; // X offset
-    f32 unk10; // Y offset
-    f32 unk14;
-    s16 unk18;
-    s8  unk1A;
-    s8  unk1B;
-    s8  unk1C;
-    s8  unk1D;
-    u8  pad1E[2];
-} unk800DF510;
+typedef struct MenuAsset {
+    s16 r;
+    s16 g;
+    s16 b;
+    s16 spriteID;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+    s16 spriteOffset;
+    s8 unk1A;
+    s8 unk1B;
+    s8 unk1C;
+    s8 unk1D;
+    s8 unk1E;
+    s8 unk1F;
+} MenuAsset;
 
 typedef struct unk80080BC8 {
     Vertex *vertices;
@@ -403,9 +404,8 @@ void menu_cinematic_init(void);
 void func_8009AF18(void);
 void menu_credits_init(void);
 void render_credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a);
-void func_8009BCF0(void);
-void func_8009BD5C(void);
-void func_8009BE54();
+void menu_credits_unload(void);
+void menu_camera_centre(void);
 void reset_controller_sticks(void);
 void reset_character_id_slots(void);
 s32 get_save_file_index(void);
@@ -424,12 +424,12 @@ s32 get_number_of_active_players(void);
 s32 get_active_player_count(void);
 s32 get_multiplayer_racer_count(void);
 Settings **get_all_save_files_ptr(void);
-void func_8009C4A8(s16 *arg0);
-void func_8009C508(s32 arg0);
-void func_8009C674(s16 *textureIndex);
-void allocate_menu_images(s16 *imageSet);
-void allocate_and_set_menu_image_properties(s32 imageID);
-void func_8009CA58(void);
+void menu_assetgroup_free(s16 *arg0);
+void menu_asset_free(s32 arg0);
+void menu_assetgroup_load(s16 *textureIndex);
+void menu_imagegroup_load(s16 *imageSet);
+void menu_image_load(s32 imageID);
+void menu_imagegroup_free(void);
 void func_8009CF68(s32 arg0);
 void try_close_dialogue_box(void);
 s32 npc_dialogue_loop(u32 dialogueOption);
@@ -498,10 +498,10 @@ void func_8009963C(void);
 void render_enter_filename_ui(UNUSED s32 updateRate);
 void randomise_ai_racer_slots(s32 arg0);
 void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED s32 font, s32 alignment);
-void func_8009CA60(s32 stackIndex);
+void menu_element_render(s32 stackIndex);
 void func_8008E4EC(void);
 SIDeviceStatus func_800862C4(void);
-void func_8009C6D4(s32 arg0);
+void menu_asset_load(s32 arg0);
 s32 func_80087734(s32 buttonsPressed, s32 yAxis);
 void func_800853D0(SaveFileData *arg0, s32 x, s32 y);
 void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);

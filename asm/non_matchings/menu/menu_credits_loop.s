@@ -659,7 +659,7 @@ glabel L8009BB9C
 /* 09C888 8009BC88 8FBF0054 */   lw    $ra, 0x54($sp)
 /* 09C88C 8009BC8C 0C0002CA */  jal   music_change_on
 /* 09C890 8009BC90 00000000 */   nop   
-/* 09C894 8009BC94 0C026F3C */  jal   func_8009BCF0
+/* 09C894 8009BC94 0C026F3C */  jal   menu_credits_unload
 /* 09C898 8009BC98 00000000 */   nop   
 /* 09C89C 8009BC9C 24040015 */  li    $a0, 21
 /* 09C8A0 8009BCA0 2405FFFF */  li    $a1, -1

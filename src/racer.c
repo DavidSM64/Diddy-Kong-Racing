@@ -2551,7 +2551,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                         newObject.y = 0;
                         newObject.z = 0;
                         newObject.objectID = ASSET_OBJECT_ID_CHECKARROW;
-                        newObject.size = 8;
+                        newObject.size = sizeof(LevelObjectEntryCommon);
                         tempRacer->challengeMarker = spawn_object(&newObject, 1);
                         if (tempRacer->challengeMarker) {
                             tempRacer->challengeMarker->segment.level_entry = NULL;
@@ -4604,7 +4604,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                 newObject.x = obj->segment.trans.x_position + (racer->ox1 * objDist);
                 newObject.y = obj->segment.trans.y_position + (racer->oy1 * objDist) + (10.0f * racer->oy2);
                 newObject.z = obj->segment.trans.z_position + (racer->oz1 * objDist);
-                newObject.size = 8;
+                newObject.size = sizeof(LevelObjectEntryCommon);
                 newObject.objectID = objID;
                 spawnedObj = spawn_object(&newObject, 1);
                 if (spawnedObj != NULL) {
@@ -4961,7 +4961,7 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
             newObject.x = pos[0] + (s32) obj->segment.trans.x_position;
             newObject.y = pos[1] + (s32) obj->segment.trans.y_position;
             newObject.z = pos[2] + (s32) obj->segment.trans.z_position;
-            newObject.size = 8;
+            newObject.size = sizeof(LevelObjectEntryCommon);
             newObject.objectID = ASSET_OBJECT_ID_COIN;
             i = number;
             do {

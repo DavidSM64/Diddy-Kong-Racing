@@ -310,7 +310,7 @@ glabel func_8008FF1C
 /* 090F9C 8009039C 00002025 */  move  $a0, $zero
 /* 090FA0 800903A0 0C019A25 */  jal   camDisableUserView
 /* 090FA4 800903A4 24050001 */   li    $a1, 1
-/* 090FA8 800903A8 0C026F57 */  jal   func_8009BD5C
+/* 090FA8 800903A8 0C026F57 */  jal   menu_camera_centre
 /* 090FAC 800903AC 00000000 */   nop   
 /* 090FB0 800903B0 3C118012 */  lui   $s1, %hi(sMenuCurrDisplayList) # $s1, 0x8012
 /* 090FB4 800903B4 263163A0 */  addiu $s1, %lo(sMenuCurrDisplayList) # addiu $s1, $s1, 0x63a0

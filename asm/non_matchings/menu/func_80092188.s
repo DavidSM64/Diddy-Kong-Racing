@@ -119,8 +119,8 @@ glabel func_80092188
 /* 092F30 80092330 3C04800E */  lui   $a0, %hi(sMenuImageProperties) # $a0, 0x800e
 /* 092F34 80092334 2484F510 */  addiu $a0, %lo(sMenuImageProperties) # addiu $a0, $a0, -0xaf0
 /* 092F38 80092338 C4920088 */  lwc1  $f18, 0x88($a0)
-/* 092F3C 8009233C 3C03800E */  lui   $v1, %hi(gMenuImageStack) # $v1, 0x800e
-/* 092F40 80092340 2463F75C */  addiu $v1, %lo(gMenuImageStack) # addiu $v1, $v1, -0x8a4
+/* 092F3C 8009233C 3C03800E */  lui   $v1, %hi(gMenuImages) # $v1, 0x800e
+/* 092F40 80092340 2463F75C */  addiu $v1, %lo(gMenuImages) # addiu $v1, $v1, -0x8a4
 /* 092F44 80092344 8C6E0000 */  lw    $t6, ($v1)
 /* 092F48 80092348 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
 /* 092F4C 8009234C 460A8000 */  add.s $f0, $f16, $f10
