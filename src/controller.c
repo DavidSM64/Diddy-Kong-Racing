@@ -140,7 +140,7 @@ void initialise_player_ids(void) {
  * Assign the next four player ID's to the index of the players who are not connected.
  * Official name: joyCreateMap
  */
-void assign_player_ids(s8 *activePlayers) {
+void charselect_assign_players(s8 *activePlayers) {
     s32 i;
     s32 temp = 0;
     for (i = 0; i < MAXCONTROLLERS; i++) {

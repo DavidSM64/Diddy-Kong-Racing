@@ -132,9 +132,9 @@ u16 D_80126520[6];
 Settings *gSavefileData[4];
 u8 D_80126540[8];
 s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
-void *gMenuAssets[128]; // lookup table? Contains Textures, Objects, and Sprites. Need to change name and type.
-u8 gMenuAssetActive[128];      // Seems to be a boolean for "This texture exists" for the above array.
-s32 D_801267D0;
+void *gMenuAssets[128];   // lookup table? Contains Textures, Objects, and Sprites. Need to change name and type.
+u8 gMenuAssetActive[128]; // Seems to be a boolean for "This texture exists" for the above array.
+s32 gTrackmenuType;
 s32 D_801267D4;
 s32 gMenuButtons[5]; // Buttons pressed per player plus an extra?
 s8 *D_801267EC;
@@ -148,7 +148,7 @@ s32 D_8012682C;
 s16 gMenuStickY[5];
 s16 D_8012683A;
 s32 D_8012683C;
-s32 D_80126840;
+SoundMask *gTrackTTSoundMask;
 s32 D_80126844;
 s32 D_80126848;
 s32 D_8012684C;
@@ -656,14 +656,14 @@ CharacterSelectData gCharacterSelectBytesComplete[] = {
 
 s32 unused_800DFFCC = 0;
 
-// Set from func_8008AEB4()
+// Set from charselect_prev()
 // Is either 0, 1, or 2. However it is never set to 2?
 // Set to 0 upon entering the Character Select menu normally.
 // Set to 1 upon entering the Char Select from the
 //   "Select Character" option on the "Pause Options" screen in a race.
 s32 gEnteredCharSelectFrom = 0;
 
-// Set from func_8008AEB4()
+// Set from charselect_prev()
 // Set to the value *arg1 when arg0 is 2, but that never happens.
 // Not read from anywhere, so I'd consider this to be unused.
 s32 unused_800DFFD4 = -1;
@@ -3122,7 +3122,7 @@ s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts
 
 /**
  * Print a time onscreen.
-*/
+ */
 void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID) {
     s32 minutes;
     s32 seconds;
@@ -3390,17 +3390,19 @@ void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale) {
                         reset_render_settings(&sMenuCurrDisplayList);
                     }
                     sMenuGuiOpacity = elems->opacity;
-                    menu_timestamp_render(*elems->unk14_a.numberU16, xPos - SCREEN_WIDTH_HALF, (-yPos - gDrawElementsYOffset) + SCREEN_HEIGHT_HALF,
-                                   elems->filterRed, elems->filterGreen, elems->filterBlue, elems->textFont);
+                    menu_timestamp_render(*elems->unk14_a.numberU16, xPos - SCREEN_WIDTH_HALF,
+                                          (-yPos - gDrawElementsYOffset) + SCREEN_HEIGHT_HALF, elems->filterRed,
+                                          elems->filterGreen, elems->filterBlue, elems->textFont);
                     break;
                 case 2: // Number
                     if (shouldResetRenderSettings) {
                         shouldResetRenderSettings = FALSE;
                         reset_render_settings(&sMenuCurrDisplayList);
                     }
-                    func_80081C04(*elems->unk14_a.number, xPos - SCREEN_WIDTH_HALF, (-yPos - gDrawElementsYOffset) + SCREEN_HEIGHT_HALF,
-                                  elems->filterRed, elems->filterGreen, elems->filterBlue, elems->opacity,
-                                  elems->textFont, elems->textAlignFlags);
+                    func_80081C04(*elems->unk14_a.number, xPos - SCREEN_WIDTH_HALF,
+                                  (-yPos - gDrawElementsYOffset) + SCREEN_HEIGHT_HALF, elems->filterRed,
+                                  elems->filterGreen, elems->filterBlue, elems->opacity, elems->textFont,
+                                  elems->textAlignFlags);
                     break;
                 case 3:
                     render_textured_rectangle(&sMenuCurrDisplayList, elems->unk14_a.drawTexture, xPos,
@@ -3824,7 +3826,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
 
     sp18 = get_active_camera_segment();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
-    func_8008E4EC();
+    menu_input();
     if (osTvType == TV_TYPE_PAL) {
         updateRateF = (f32) updateRate / 50.0f;
     } else {
@@ -3952,7 +3954,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
                 sp28 ^= 3;
             }
             load_level_for_menu(ASSET_LEVEL_CHARACTERSELECT, -1, sp28);
-            func_8008AEB4(0, NULL);
+            charselect_prev(0, NULL);
             menu_init(MENU_CHARACTER_SELECT);
             return MENU_RESULT_CONTINUE;
         }
@@ -6636,16 +6638,20 @@ s16 D_800E1E2C[10] = { 0x4C, 0x4D, 0x4E, 0x4F, 0x5B, 0x5C, 0x00, 0x42, -1, 0 };
 // TT game status textures. And these maybe just standalone ones.
 s16 D_800E1E40[10] = { 0x0D, 0x0E, 0x0F, 0x10, 0x08, 0x09, 0x00, 0x0A, -1, 0 };
 
-void func_8008AEB4(s32 arg0, s32 *arg1) {
-    switch (arg0) {
+/**
+ * Set the previous menu type for the character select.
+ * This ensures when leaving the character select menu, you return to where you were.
+ */
+void charselect_prev(s32 context, UNUSED s32 *arg1) {
+    switch (context) {
         default:
             gEnteredCharSelectFrom = 0;
             return;
         case 1:
-        case 3:
+        case 3: // Take you straight back to tracks mode.
             gEnteredCharSelectFrom = 1;
             return;
-        case 2:
+        case 2: // Unused
             gEnteredCharSelectFrom = 2;
             unused_800DFFD4 = *arg1;
             return;
@@ -6732,7 +6738,7 @@ void menu_character_select_init(void) {
 /**
  * Draws the "Player Select" and "OK?" text in the character select menu.
  */
-void draw_character_select_text(UNUSED s32 arg0) {
+void charselect_render_text(UNUSED s32 arg0) {
     s32 yPos;
     if (gMenuDelay >= -0x16 && gMenuDelay < 0x17) {
         set_text_font(ASSET_FONTS_BIGFONT);
@@ -6758,10 +6764,14 @@ void draw_character_select_text(UNUSED s32 arg0) {
     }
 }
 
-void func_8008B358(void) {
+/**
+ * If a controller not already with control presses Start or A,
+ * they get assigned a character in the menu to select.
+*/
+void charselect_new_player(void) {
     s32 i;
     s32 j;
-    s32 var_a0;
+    s32 takenChar;
     s32 var_a2;
 
     for (i = 0; i < MAXCONTROLLERS; i++) {
@@ -6770,13 +6780,13 @@ void func_8008B358(void) {
             if (gMenuButtons[i] & (A_BUTTON | START_BUTTON)) {
                 do {
                     var_a2++;
-                    var_a0 = TRUE;
-                    for (j = 0; (j < ARRAY_COUNT(gActivePlayersArray)) && (var_a0); j++) {
+                    takenChar = TRUE;
+                    for (j = 0; (j < ARRAY_COUNT(gActivePlayersArray)) && takenChar; j++) {
                         if (gActivePlayersArray[j] && var_a2 == gPlayersCharacterArray[j]) {
-                            var_a0 = FALSE;
+                            takenChar = FALSE;
                         }
                     }
-                } while (!var_a0);
+                } while (takenChar == FALSE);
                 gPlayersCharacterArray[i] = var_a2;
                 gActivePlayersArray[i] = TRUE;
                 gNumberOfActivePlayers++;
@@ -6789,7 +6799,11 @@ void func_8008B358(void) {
     }
 }
 
-void func_8008B4C8(void) {
+/**
+ * Mark the selected character as claimed and play their character selection sound.
+ * Alternatively, if the B button was pressed, unmark the character and play their deselection sound.
+ */
+void charselect_pick(void) {
     s32 i;
     s32 characterSelected;
     s32 buttonsPressedAllPlayers;
@@ -6819,9 +6833,9 @@ void func_8008B4C8(void) {
         sound_play(((*gCurrCharacterSelectData)[gPlayersCharacterArray[characterSelected]].voiceID +
                     SOUND_VOICE_CHARACTER_SELECTED),
                    &gMenuSoundMasks[characterSelected]);
-        if ((gNumberOfActivePlayers > 2) ||
-            ((gNumberOfActivePlayers > 1) && !(gActiveMagicCodes & CHEAT_TWO_PLAYER_ADVENTURE)) ||
-            (gEnteredCharSelectFrom == 1)) {
+        if (gNumberOfActivePlayers > 2 ||
+            (gNumberOfActivePlayers > 1 && !(gActiveMagicCodes & CHEAT_TWO_PLAYER_ADVENTURE)) ||
+            gEnteredCharSelectFrom == 1) {
             music_fade(-128);
         }
     } else {
@@ -6843,7 +6857,12 @@ void func_8008B4C8(void) {
     }
 }
 
-void func_8008B758(s8 *activePlayers) {
+/**
+ * Handle input for existing controllers on the character select menu.
+ * Pressing A marks the character as claimed, and attempting to move the cursor
+ * where it can't will make a sound communicating that.
+*/
+void charselect_input(s8 *activePlayers) {
     CharacterSelectData *charSelectData;
     s32 found;
     s32 i;
@@ -6899,16 +6918,16 @@ void func_8008B758(s8 *activePlayers) {
                 } else {
                     charSelectData = (*gCurrCharacterSelectData) + gPlayersCharacterArray[i];
                     if (gMenuStickY[i] > 0) {
-                        func_8008BFE8(i, charSelectData->upInput, ARRAY_COUNT(charSelectData->upInput),
+                        menu_charselect_move(i, charSelectData->upInput, ARRAY_COUNT(charSelectData->upInput),
                                       SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
                     } else if (gMenuStickY[i] < 0) {
-                        func_8008BFE8(i, charSelectData->downInput, ARRAY_COUNT(charSelectData->downInput),
+                        menu_charselect_move(i, charSelectData->downInput, ARRAY_COUNT(charSelectData->downInput),
                                       SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
                     } else if (gMenuStickX[i] < 0) {
-                        func_8008BFE8(i, charSelectData->rightInput, ARRAY_COUNT(charSelectData->rightInput),
+                        menu_charselect_move(i, charSelectData->rightInput, ARRAY_COUNT(charSelectData->rightInput),
                                       SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
                     } else if (gMenuStickX[i] > 0) {
-                        func_8008BFE8(i, charSelectData->leftInput, ARRAY_COUNT(charSelectData->leftInput),
+                        menu_charselect_move(i, charSelectData->leftInput, ARRAY_COUNT(charSelectData->leftInput),
                                       SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
                     }
                     if (charSelectData->voiceID != (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID) {
@@ -6923,7 +6942,7 @@ void func_8008B758(s8 *activePlayers) {
     }
 }
 
-void randomise_ai_racer_slots(s32 arg0) {
+void charselect_assign_ai(s32 arg0) {
     s32 foundIt;
     s32 i, j;
     s32 numCharacters;
@@ -6961,6 +6980,10 @@ void randomise_ai_racer_slots(s32 arg0) {
     }
 }
 
+/**
+ * Handle the character select menu, letting players pick their character.
+ * When finished, this will also assign all the AI racers their character IDs.
+*/
 s32 menu_character_select_loop(s32 updateRate) {
     s32 i;
     s32 phi_a0;
@@ -6968,9 +6991,9 @@ s32 menu_character_select_loop(s32 updateRate) {
     s8 activePlayers[4];
     s32 j;
 
-    draw_character_select_text(updateRate);
-    func_8008C168(updateRate);
-    func_8008E4EC();
+    charselect_render_text(updateRate);
+    charselect_music_channels(updateRate);
+    menu_input();
 
     for (i = 0; i < ARRAY_COUNT(D_801263DC); i++) {
         if (D_801263DC[i] == 1) {
@@ -6983,13 +7006,13 @@ s32 menu_character_select_loop(s32 updateRate) {
         // THIS MUST BE ON ONE LINE!
         for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) { activePlayers[i] = gActivePlayersArray[i]; }
         // clang-format on
-        func_8008B358();
+        charselect_new_player();
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers) {
-            func_8008B4C8(); // Cancel/Confirm selected character?
+            charselect_pick(); // Cancel/Confirm selected character?
         } else {
-            func_8008B758(activePlayers); // Move and select characters?
+            charselect_input(activePlayers); // Move and select characters?
         }
-        return 0; // This return needs to be here.
+        return MENU_RESULT_CONTINUE; // This return needs to be here.
     } else if (gMenuDelay > 0) {
         gMenuDelay += updateRate;
         if (gMenuDelay >= 31) {
@@ -7000,7 +7023,7 @@ s32 menu_character_select_loop(s32 updateRate) {
                     phi_t3++;
                 }
             }
-            func_8008C128();
+            charselect_free();
 
             phi_a0 = 0;
             for (j = 0; j < ARRAY_COUNT(gActivePlayersArray); j++) {
@@ -7010,8 +7033,8 @@ s32 menu_character_select_loop(s32 updateRate) {
                 }
             }
 
-            randomise_ai_racer_slots(phi_a0);
-            assign_player_ids(gActivePlayersArray);
+            charselect_assign_ai(phi_a0);
+            charselect_assign_players(gActivePlayersArray);
 
             gIsInTracksMode = 1;
             if (phi_t3 >= gNumberOfActivePlayers) {
@@ -7033,7 +7056,7 @@ s32 menu_character_select_loop(s32 updateRate) {
         gMenuDelay -= updateRate;
         if (gMenuDelay < -30) {
             music_change_on();
-            func_8008C128();
+            charselect_free();
             gNumberOfActivePlayers = 1;
             menu_init(MENU_TITLE);
         }
@@ -7041,19 +7064,24 @@ s32 menu_character_select_loop(s32 updateRate) {
     return MENU_RESULT_CONTINUE;
 }
 
-void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 menuPickSoundId, u16 menuPickFailedSoundId) {
+/** 
+ * Attempt to move the character select cursor elsewhere.
+ * Read the potential direction from the character table and see if there's another claimed character in the way.
+ * Play a success or a fail sound based on whether the cursor ended up moving.
+*/
+void menu_charselect_move(s32 playerID, s8 *direction, s32 bounds, u16 menuPickSoundId, u16 menuPickFailedSoundId) {
     s32 sameCharSelected;
     s32 j;
     s32 i;
 
     j = 0;
     sameCharSelected = TRUE;
-    while (sameCharSelected && j < arg2 && arg1[j] != -1) {
+    while (sameCharSelected && j < bounds && direction[j] != -1) {
         sameCharSelected = FALSE;
         // Run this block if the DOUBLEVISION cheat isn't active.
         if (!(get_filtered_cheats() & CHEAT_SELECT_SAME_PLAYER)) {
             for (i = 0; i < MAXCONTROLLERS && !sameCharSelected; i++) {
-                if (i != arg0 && gPlayersCharacterArray[i] == arg1[j]) {
+                if (i != playerID && gPlayersCharacterArray[i] == direction[j]) {
                     sameCharSelected = TRUE;
                 }
             }
@@ -7063,7 +7091,7 @@ void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 menuPickSoundId, u16 menuPi
         }
     }
     if (!sameCharSelected) {
-        gPlayersCharacterArray[arg0] = arg1[j];
+        gPlayersCharacterArray[playerID] = direction[j];
         // menuPickSoundId seems to always be passed SOUND_MENU_PICK3?
         sound_play(menuPickSoundId, NULL);
     } else {
@@ -7072,7 +7100,10 @@ void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 menuPickSoundId, u16 menuPi
     }
 }
 
-void func_8008C128(void) {
+/**
+ * Free all assets associated with the character select menu.
+*/
+void charselect_free(void) {
     menu_assetgroup_free(gCharSelectObjectIndices);
     set_free_queue_state(0);
     unload_font(ASSET_FONTS_BIGFONT);
@@ -7080,9 +7111,12 @@ void func_8008C128(void) {
     gEnteredCharSelectFrom = 0;
 }
 
-void func_8008C168(s32 updateRate) {
+/**
+ * Raise and lower music channel volumes based on which character is last selected.
+*/
+void charselect_music_channels(s32 updateRate) {
     if (gMenuCurrentCharacter.unk1 > 0) {
-        gMenuCurrentCharacter.unk1 = gMenuCurrentCharacter.unk1 - updateRate;
+        gMenuCurrentCharacter.unk1 -= updateRate;
         if (gMenuCurrentCharacter.unk1 <= 0) {
             if (D_801263B8.channelIndex >= 0) {
                 music_channel_off(gCharacterVolumes[D_801263B8.channelIndex][0]);
@@ -7254,7 +7288,7 @@ s32 menu_game_select_loop(s32 updateRate) {
     s32 playerYDir;
     s32 charSelectScene;
 
-    func_8008C168(updateRate);
+    charselect_music_channels(updateRate);
 
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
 
@@ -7298,7 +7332,7 @@ s32 menu_game_select_loop(s32 updateRate) {
             charSelectScene ^= 3;
         }
         load_level_for_menu(ASSET_LEVEL_CHARACTERSELECT, -1, charSelectScene);
-        func_8008AEB4(0, 0);
+        charselect_prev(0, 0);
         menu_init(MENU_CHARACTER_SELECT);
         return MENU_RESULT_CONTINUE;
     } else {
@@ -7812,7 +7846,7 @@ s32 menu_file_select_loop(s32 updateRate) {
     Settings *settings;
 
     settings = get_settings();
-    func_8008C168(updateRate);
+    charselect_music_channels(updateRate);
     if (gOpacityDecayTimer) {
         gOpacityDecayTimer++;
 
@@ -7974,7 +8008,11 @@ void assign_menu_arrow_textures(void) {
     gMenuSelectionArrowRight[0].texture = gMenuAssets[TEXTURE_ICON_ARROW_RIGHT];
 }
 
-void func_8008E4EC(void) {
+/**
+ * Update tracked input for the menu.
+ * Adds all inputs together, since it wants every player to feel involved.
+ */
+void menu_input(void) {
     s32 i;
     s32 buttonsHeld[MAXCONTROLLERS + 1];
 
@@ -8056,7 +8094,7 @@ void menu_track_select_init(void) {
     D_801263D0 = -1;
     gOpacityDecayTimer = 32;
     gOptionBlinkTimer = 0;
-    D_801267D0 = -1;
+    gTrackmenuType = -1;
     func_8008F00C(0);
     transition_begin(&sMenuTransitionFadeOut);
     enable_new_screen_transitions();
@@ -8165,7 +8203,7 @@ void menu_track_select_init(void) {
     }
     assign_dialogue_box_id(7);
     func_8007FFEC(2);
-    D_80126840 = 0;
+    gTrackTTSoundMask = 0;
     D_80126848 = 0;
     sMenuMusicVolume = 0;
     music_voicelimit_set(24);
@@ -8186,15 +8224,15 @@ void func_8008F00C(s32 arg0) {
     s32 i;
     s32 temp;
 
-    if ((D_801267D0 != -1) && (D_801267D0 != 0) && (D_801267D0 == 1)) {
+    if ((gTrackmenuType != -1) && (gTrackmenuType != 0) && (gTrackmenuType == 1)) {
         menu_assetgroup_free(gTrackSelectPreviewObjectIndices);
     }
 
-    D_801267D0 = arg0;
-    temp = D_801267D0;
+    gTrackmenuType = arg0;
+    temp = gTrackmenuType;
 
     if ((temp >= 0) && (temp < 2)) {
-        switch (D_801267D0) {
+        switch (gTrackmenuType) {
             case 0:
                 gTrackSelectTargetX = gTrackSelectX;
                 gTrackSelectTargetY = gTrackSelectY;
@@ -8238,6 +8276,10 @@ void func_8008F00C(s32 arg0) {
     gMenuDelay = 0;
 }
 
+/**
+ * Show the track selection menu, or the course and vehicle selection menu,
+ * or the course info, depending on what should be visible.
+ */
 s32 menu_track_select_loop(s32 updateRate) {
     s32 cutsceneId;
     Settings *settings;
@@ -8251,19 +8293,19 @@ s32 menu_track_select_loop(s32 updateRate) {
             gMenuDelay += updateRate;
         }
     }
-    func_8008E4EC();
+    menu_input();
 
     gSPClearGeometryMode(sMenuCurrDisplayList++, G_CULL_FRONT);
 
-    switch (D_801267D0) {
+    switch (gTrackmenuType) {
         case 0:
             func_8008FF1C(updateRate);
-            func_800904E8(updateRate);
-            func_80090918(updateRate);
+            trackmenu_track_view(updateRate);
+            trackmenu_input(updateRate);
             break;
         case 1:
-            func_80090ED8(updateRate);
-            render_track_select_setup_ui(updateRate);
+            trackmenu_timetrial_sound(updateRate);
+            trackmenu_setup_render(updateRate);
             func_80092188(updateRate);
             break;
     }
@@ -8275,10 +8317,10 @@ s32 menu_track_select_loop(s32 updateRate) {
         if (sMenuMusicVolume >= 81) {
             sMenuMusicVolume = 80;
         }
-        music_volume_set((u8) sMenuMusicVolume);
+        music_volume_set(sMenuMusicVolume);
     }
-    if (D_801267D0 < 0) {
-        func_8008F534();
+    if (gTrackmenuType < 0) {
+        menu_track_select_unload();
         gTrackSpecifiedWithTrackIdToLoad = 0;
         if (gNumberOfActivePlayers >= 3 ||
             (gNumberOfActivePlayers == 2 && !(gActiveMagicCodes & CHEAT_TWO_PLAYER_ADVENTURE))) {
@@ -8290,7 +8332,7 @@ s32 menu_track_select_loop(s32 updateRate) {
                 cutsceneId ^= 3;
             }
             load_level_for_menu(ASSET_LEVEL_CHARACTERSELECT, -1, cutsceneId);
-            func_8008AEB4(0, NULL);
+            charselect_prev(0, NULL);
             menu_init(MENU_CHARACTER_SELECT);
             return MENU_RESULT_CONTINUE;
         }
@@ -8298,8 +8340,8 @@ s32 menu_track_select_loop(s32 updateRate) {
         menu_init(MENU_GAME_SELECT);
         return MENU_RESULT_CONTINUE;
     }
-    if (D_801267D0 >= 2) {
-        func_8008F534();
+    if (gTrackmenuType >= 2) {
+        menu_track_select_unload();
         if (gMultiplayerSelectedNumberOfRacersCopy != gMultiplayerSelectedNumberOfRacers) {
             for (cutsceneId = 0; cutsceneId < 8; cutsceneId++) {
                 settings->racers[cutsceneId].starting_position = cutsceneId;
@@ -8319,7 +8361,10 @@ s32 menu_track_select_loop(s32 updateRate) {
     return MENU_RESULT_CONTINUE;
 }
 
-void func_8008F534(void) {
+/**
+ * Unload all assets associated with the track select menu.
+ */
+void menu_track_select_unload(void) {
     s32 i;
 
     camDisableUserView(0, FALSE);
@@ -8548,6 +8593,7 @@ void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
 }
 
 #ifdef NON_MATCHING
+// trackmenu_render_names
 void func_8008FF1C(UNUSED s32 updateRate) {
     s32 i; // sp7C
     UNUSED s16 **temp2;
@@ -8675,7 +8721,11 @@ void func_8008FF1C(UNUSED s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/menu/func_8008FF1C.s")
 #endif
 
-void func_800904E8(s32 updateRate) {
+/**
+ * If the track hasn't been loaded already, tell thread30 to load the track in the background.
+ * Also move the viewports and cursor towards the target.
+ */
+void trackmenu_track_view(s32 updateRate) {
     s32 x1;
     s32 y1;
     s32 x2;
@@ -8709,7 +8759,11 @@ void func_800904E8(s32 updateRate) {
     camEnableUserView(0, 0);
 }
 
-void func_80090918(s32 updateRate) {
+/**
+ * Read the menu inputs and move the track menu cursor to where the players set it.
+ * If a player presses A, then scale the viewport up, provided the course has finished loading.
+ */
+void trackmenu_input(s32 updateRate) {
     UNUSED s32 pad1[2];
     s32 var_t1;
     UNUSED s32 pad2[2];
@@ -8722,8 +8776,8 @@ void func_80090918(s32 updateRate) {
 
     sp24 = gMenuDelay;
     if (gMenuDelay > 0) {
-        if ((gTrackSelectTargetX - gTrackSelectX > 4.0f) || (gTrackSelectTargetX - gTrackSelectX < -4.0f) ||
-            ((gTrackSelectTargetY - gTrackSelectY > 4.0f)) || (gTrackSelectTargetY - gTrackSelectY < -4.0f)) {
+        if (gTrackSelectTargetX - gTrackSelectX > 4.0f || gTrackSelectTargetX - gTrackSelectX < -4.0f ||
+            gTrackSelectTargetY - gTrackSelectY > 4.0f || gTrackSelectTargetY - gTrackSelectY < -4.0f) {
             gMenuDelay = 1;
         } else if (gTrackSelectSound) {
             sound_play(SOUND_SELECT2, NULL);
@@ -8736,8 +8790,8 @@ void func_80090918(s32 updateRate) {
         var_t2 = 160;
         var_t0 = gTrackSelectViewPortHalfY;
         if (var_t1 < 20) {
-            var_t2 += (gTrackSelectTargetX - gTrackSelectX);
-            var_t0 -= (gTrackSelectTargetY - gTrackSelectY);
+            var_t2 += gTrackSelectTargetX - gTrackSelectX;
+            var_t0 -= gTrackSelectTargetY - gTrackSelectY;
         }
         var_t3 = (((var_t1 + 20) * gTrackSelectViewPortHalfY) / 40) + var_t0;
         var_a2 = var_t0 - (((var_t1 + 20) * gTrackSelectViewPortHalfY) / 40);
@@ -8829,13 +8883,16 @@ void func_80090918(s32 updateRate) {
     }
 }
 
-void func_80090ED8(UNUSED s32 updateRate) {
-    if (gMenuOptionCount == 1 && gTracksMenuTimeTrialHighlightIndex == 0 && D_80126840 == 0) {
-        sound_play(SOUND_VOICE_TT_SNORE, &D_80126840);
+/**
+ * If the time trial option is off when prompted, loop the snoring sound.
+ */
+void trackmenu_timetrial_sound(UNUSED s32 updateRate) {
+    if (gMenuOptionCount == 1 && gTracksMenuTimeTrialHighlightIndex == 0 && gTrackTTSoundMask == NULL) {
+        sound_play(SOUND_VOICE_TT_SNORE, &gTrackTTSoundMask);
     }
 }
 
-void render_track_select_setup_ui(UNUSED s32 updateRate) {
+void trackmenu_setup_render(UNUSED s32 updateRate) {
     // Had to mess around with shifting the local variables, so they all probably need to be renamed.
     s32 k;
     s32 y;
@@ -8898,7 +8955,8 @@ void render_track_select_setup_ui(UNUSED s32 updateRate) {
             sp84 = 511 - sp84;
         }
         set_current_dialogue_background_colour(7, 255, sp84, 0, sMenuGuiOpacity);
-        if (gMenuOptionCount == -1 || (gMenuOptionCount == 2 && gTrackSelectCursorX == 4 && is_adventure_two_unlocked())) {
+        if (gMenuOptionCount == -1 ||
+            (gMenuOptionCount == 2 && gTrackSelectCursorX == 4 && is_adventure_two_unlocked())) {
             temp2 = get_text_width(gMenuText[ASSET_MENU_TEXT_ADVENTURE2], 0, 0); // "ADVENTURE"
             k = get_text_width(gMenuText[ASSET_MENU_TEXT_ADVENTURETWO2], 0, 0);  // "ADVENTURE TWO"
             if (temp2 < k) {
@@ -8948,10 +9006,10 @@ void render_track_select_setup_ui(UNUSED s32 updateRate) {
             decompress_filename_string(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview],
                                        filename.buffer, 3);
             draw_text(&sMenuCurrDisplayList, 250, regionOffset + 92, filename.buffer, ALIGN_MIDDLE_CENTER);
-            menu_timestamp_render(settings->courseTimesPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], 22, 53, 128,
-                           255, 255, FONT_COLOURFUL);
-            menu_timestamp_render(settings->flapTimesPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], 22, 33, 255,
-                           192, 255, FONT_COLOURFUL);
+            menu_timestamp_render(settings->courseTimesPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], 22,
+                                  53, 128, 255, 255, FONT_COLOURFUL);
+            menu_timestamp_render(settings->flapTimesPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], 22, 33,
+                                  255, 192, 255, FONT_COLOURFUL);
             if (gMenuOptionCount != -1) {
                 if (gNumberOfActivePlayers == 1) {
                     set_current_dialogue_box_coords(7, 134, regionOffset + 112, 186, regionOffset + 137);
@@ -9418,7 +9476,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
     vehicle = gPlayerSelectVehicle[PLAYER_ONE];
     sp30 = get_map_available_vehicles(mapId);
     vehicle2 = vehicle;
-    func_8008E4EC();
+    menu_input();
     if (gMenuDelay == 0) {
         if ((gMenuOptionCount != 0) || sp20 || sp28) {
             if (gMenuButtons[PLAYER_ONE] & (A_BUTTON | START_BUTTON)) {
@@ -10689,7 +10747,7 @@ s32 menu_results_loop(s32 updateRate) {
     playSelectSound = FALSE;
     playPickSound = FALSE;
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
-    func_8008E4EC();
+    menu_input();
     if (gMenuOptionCount <= 0) {
         gOpacityDecayTimer += updateRate;
         if (gOpacityDecayTimer >= 60) {
@@ -11257,7 +11315,7 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
         draw_trophy_race_text(updateRate);
     }
     if ((gIgnorePlayerInputTime == 0) && (gMenuDelay == 0)) {
-        func_8008E4EC();
+        menu_input();
         if ((gMenuButtons[PLAYER_MENU] & (A_BUTTON | START_BUTTON)) != 0) {
             transition_begin(&sMenuTransitionFadeIn);
             gMenuDelay = 1;
@@ -11888,12 +11946,12 @@ void func_80099E8C(UNUSED s32 updateRate) {
         sMenuGuiOpacity = 128;
         // Timestamp Shadow gets drawn first
         menu_timestamp_render(D_80126520[spE4], gGhostDataElementPositions[8] - (SCREEN_HEIGHT_HALF - 1),
-                       (-gGhostDataElementPositions[9] - y) + heightAdjust + (SCREEN_HEIGHT_HALF - 1), 0, 0, 0,
-                       FONT_COLOURFUL);
+                              (-gGhostDataElementPositions[9] - y) + heightAdjust + (SCREEN_HEIGHT_HALF - 1), 0, 0, 0,
+                              FONT_COLOURFUL);
         sMenuGuiOpacity = 255;
         menu_timestamp_render(D_80126520[spE4], gGhostDataElementPositions[8] - (SCREEN_HEIGHT_HALF + 1),
-                       (-gGhostDataElementPositions[9] - y) + heightAdjust + (SCREEN_HEIGHT_HALF + 1), 255, 192, 255,
-                       FONT_COLOURFUL);
+                              (-gGhostDataElementPositions[9] - y) + heightAdjust + (SCREEN_HEIGHT_HALF + 1), 255, 192,
+                              255, FONT_COLOURFUL);
         spE4++;
         spE8--;
         y += 54;
@@ -12229,7 +12287,7 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_credits_loop.s")
 
 /**
  * Unload associated assets with the credits scene.
-*/
+ */
 void menu_credits_unload(void) {
     music_voicelimit_set(18);
     disable_new_screen_transitions();
@@ -12243,7 +12301,7 @@ void menu_credits_unload(void) {
 /**
  * Store the coordinates of the first camera and then move it to the middle of the scene, then update the viewport.
  * Write the original coordinates back once done.
-*/
+ */
 void menu_camera_centre(void) {
     ObjectSegment *cam;
     s16 angleY;
@@ -12536,21 +12594,21 @@ s32 get_multiplayer_racer_count(void) {
 
 /**
  * Return the start of the save file data.
-*/
+ */
 Settings **get_all_save_files_ptr(void) {
     return (Settings **) gSavefileData;
 }
 
 /**
  * Reset the seen status for the title screen popup.
-*/
+ */
 UNUSED void menu_title_reset(void) {
     gTitleScreenLoaded = FALSE;
 }
 
 /**
  * Loops through each asset in the group and frees it from memory.
-*/
+ */
 void menu_assetgroup_free(s16 *assetGroup) {
     s32 index = 0;
     while (assetGroup[index] != -1) {
@@ -12562,11 +12620,12 @@ void menu_assetgroup_free(s16 *assetGroup) {
  * Check what type of asset this is, then free it accordingly.
  * Mark the asset ID as nonexistent after, and if that was the last existing asset,
  * also free the asset table.
-*/
+ */
 void menu_asset_free(s32 assetID) {
     if (gMenuAssetActive[assetID]) {
         if (gMenuAssets[assetID] != NULL) {
-            if (((*gAssetsMenuElementIds)[assetID] & HUD_ELEMENT_TEXTURE) == HUD_ELEMENT_TEXTURE && gMenuAssets[assetID] != NULL) {
+            if (((*gAssetsMenuElementIds)[assetID] & HUD_ELEMENT_TEXTURE) == HUD_ELEMENT_TEXTURE &&
+                gMenuAssets[assetID] != NULL) {
                 set_free_queue_state(0);
                 free_texture(gMenuAssets[assetID]);
                 set_free_queue_state(2);
@@ -12602,7 +12661,7 @@ void menu_asset_free(s32 assetID) {
 
 /**
  * Loops through every asset in the group and loads it into memory.
-*/
+ */
 void menu_assetgroup_load(s16 *textureIndex) {
     s32 index = 0;
     while (textureIndex[index] != -1) {
@@ -12614,7 +12673,7 @@ void menu_assetgroup_load(s16 *textureIndex) {
  * Check what type of asset it is, then load it accordingly.
  * Mark the asset ID as existing after, and if it doesn't already exist,
  * load the asset table.
-*/
+ */
 void menu_asset_load(s32 assetID) {
     s32 i;
     LevelObjectEntryCommon entry;
@@ -12653,9 +12712,9 @@ void menu_asset_load(s32 assetID) {
     }
 }
 
-/** 
+/**
  * Loop through every image in the group and load it into memory.
-*/
+ */
 void menu_imagegroup_load(s16 *imageSet) {
     s32 index = 0;
     while (imageSet[index] != -1) {
@@ -12665,7 +12724,7 @@ void menu_imagegroup_load(s16 *imageSet) {
 
 /**
  * Load a menu image into memory, then set the base position.
-*/
+ */
 void menu_image_load(s32 imageID) {
     if (gMenuImages == NULL) {
         gMenuImages = allocate_from_main_pool_safe(sizeof(MenuAsset) * 18, COLOUR_TAG_RED);
@@ -12688,7 +12747,7 @@ void menu_image_load(s32 imageID) {
 
 /**
  * Educated guess says this was the mass free function for menu images.
-*/
+ */
 UNUSED void menu_imagegroup_free(void) {
 }
 
@@ -12724,8 +12783,7 @@ void menu_element_render(s32 stackIndex) {
                                     sMenuGuiOpacity);
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
                     render_ortho_triangle_image(&sMenuCurrDisplayList, &sMenuCurrHudMat, &sMenuCurrHudVerts,
-                                                (ObjectSegment *) (&gMenuImages[stackIndex]), sprite,
-                                                gMenuSpriteFlags);
+                                                (ObjectSegment *) (&gMenuImages[stackIndex]), sprite, gMenuSpriteFlags);
                     gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 } else {
                     if (sMenuGuiOpacity < 255) {

@@ -693,7 +693,7 @@ void ingame_logic_loop(s32 updateRate) {
                     if (is_tt_unlocked()) {
                         i ^= 3;
                     }
-                    func_8008AEB4(1, 0);
+                    charselect_prev(1, 0);
                     load_menu_with_level_background(MENU_CHARACTER_SELECT, ASSET_LEVEL_CHARACTERSELECT, i);
                     break;
                 case LEVEL_CONTEXT_UNK7:

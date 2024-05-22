@@ -87,9 +87,9 @@ glabel menu_track_select_init
 /* 08F4F0 8008E8F0 AC2F63D8 */  sw    $t7, %lo(gOpacityDecayTimer)($at)
 /* 08F4F4 8008E8F4 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
 /* 08F4F8 8008E8F8 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
-/* 08F4FC 8008E8FC 3C018012 */  lui   $at, %hi(D_801267D0) # $at, 0x8012
+/* 08F4FC 8008E8FC 3C018012 */  lui   $at, %hi(gTrackmenuType) # $at, 0x8012
 /* 08F500 8008E900 0C023C03 */  jal   func_8008F00C
-/* 08F504 8008E904 AC3567D0 */   sw    $s5, %lo(D_801267D0)($at)
+/* 08F504 8008E904 AC3567D0 */   sw    $s5, %lo(gTrackmenuType)($at)
 /* 08F508 8008E908 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeOut) # $a0, 0x800e
 /* 08F50C 8008E90C 0C030076 */  jal   transition_begin
 /* 08F510 8008E910 2484F77C */   addiu $a0, %lo(sMenuTransitionFadeOut) # addiu $a0, $a0, -0x884
@@ -518,8 +518,8 @@ glabel menu_track_select_init
 /* 08FB60 8008EF60 24040007 */   li    $a0, 7
 /* 08FB64 8008EF64 0C01FFFB */  jal   func_8007FFEC
 /* 08FB68 8008EF68 24040002 */   li    $a0, 2
-/* 08FB6C 8008EF6C 3C018012 */  lui   $at, %hi(D_80126840) # $at, 0x8012
-/* 08FB70 8008EF70 AC206840 */  sw    $zero, %lo(D_80126840)($at)
+/* 08FB6C 8008EF6C 3C018012 */  lui   $at, %hi(gTrackTTSoundMask) # $at, 0x8012
+/* 08FB70 8008EF70 AC206840 */  sw    $zero, %lo(gTrackTTSoundMask)($at)
 /* 08FB74 8008EF74 3C10800E */  lui   $s0, %hi(sMenuMusicVolume) # $s0, 0x800e
 /* 08FB78 8008EF78 3C018012 */  lui   $at, %hi(D_80126848) # $at, 0x8012
 /* 08FB7C 8008EF7C 2610F760 */  addiu $s0, %lo(sMenuMusicVolume) # addiu $s0, $s0, -0x8a0

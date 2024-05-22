@@ -459,10 +459,10 @@ glabel L80092740
 /* 0933F8 800927F8 046100C7 */  bgez  $v1, .L80092B18
 /* 0933FC 800927FC 3C19800E */   lui   $t9, %hi(gTracksMenuTimeTrialHighlightIndex) # $t9, 0x800e
 /* 093400 80092800 8F390414 */  lw    $t9, %lo(gTracksMenuTimeTrialHighlightIndex)($t9)
-/* 093404 80092804 3C048012 */  lui   $a0, %hi(D_80126840) # $a0, 0x8012
+/* 093404 80092804 3C048012 */  lui   $a0, %hi(gTrackTTSoundMask) # $a0, 0x8012
 /* 093408 80092808 1F2000C4 */  bgtz  $t9, .L80092B1C
 /* 09340C 8009280C 8FAF003C */   lw    $t7, 0x3c($sp)
-/* 093410 80092810 8C846840 */  lw    $a0, %lo(D_80126840)($a0)
+/* 093410 80092810 8C846840 */  lw    $a0, %lo(gTrackTTSoundMask)($a0)
 /* 093414 80092814 24180001 */  li    $t8, 1
 /* 093418 80092818 10800003 */  beqz  $a0, .L80092828
 /* 09341C 8009281C AFB80034 */   sw    $t8, 0x34($sp)
