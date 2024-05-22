@@ -25,10 +25,10 @@ glabel menu_track_select_init
 /* 08F3FC 8008E7FC 8C6E0000 */  lw    $t6, ($v1)
 /* 08F400 8008E800 0040B825 */  move  $s7, $v0
 /* 08F404 8008E804 11C00009 */  beqz  $t6, .L8008E82C
-/* 08F408 8008E808 3C018012 */   lui   $at, %hi(D_801269C8) # $at, 0x8012
-/* 08F40C 8008E80C AC2069C8 */  sw    $zero, %lo(D_801269C8)($at)
-/* 08F410 8008E810 3C018012 */  lui   $at, %hi(D_801269CC) # $at, 0x8012
-/* 08F414 8008E814 AC2069CC */  sw    $zero, %lo(D_801269CC)($at)
+/* 08F408 8008E808 3C018012 */   lui   $at, %hi(gTrackSelectCursorX) # $at, 0x8012
+/* 08F40C 8008E80C AC2069C8 */  sw    $zero, %lo(gTrackSelectCursorX)($at)
+/* 08F410 8008E810 3C018012 */  lui   $at, %hi(gTrackSelectCursorY) # $at, 0x8012
+/* 08F414 8008E814 AC2069CC */  sw    $zero, %lo(gTrackSelectCursorY)($at)
 /* 08F418 8008E818 3C01800E */  lui   $at, %hi(gTracksMenuTimeTrialHighlightIndex) # $at, 0x800e
 /* 08F41C 8008E81C AC200414 */  sw    $zero, %lo(gTracksMenuTimeTrialHighlightIndex)($at)
 /* 08F420 8008E820 3C01800E */  lui   $at, %hi(gTracksMenuAdventureHighlightIndex) # $at, 0x800e
@@ -55,11 +55,11 @@ glabel menu_track_select_init
 /* 08F470 8008E870 27DE6478 */  addiu $fp, %lo(gTrackSelectViewPortHalfY) # addiu $fp, $fp, 0x6478
 /* 08F474 8008E874 00055843 */  sra   $t3, $a1, 1
 /* 08F478 8008E878 AFCB0000 */  sw    $t3, ($fp)
-/* 08F47C 8008E87C 3C0C8012 */  lui   $t4, %hi(D_801269C8) # $t4, 0x8012
-/* 08F480 8008E880 8D8C69C8 */  lw    $t4, %lo(D_801269C8)($t4)
-/* 08F484 8008E884 3C0D8012 */  lui   $t5, %hi(D_801269CC) # $t5, 0x8012
+/* 08F47C 8008E87C 3C0C8012 */  lui   $t4, %hi(gTrackSelectCursorX) # $t4, 0x8012
+/* 08F480 8008E880 8D8C69C8 */  lw    $t4, %lo(gTrackSelectCursorX)($t4)
+/* 08F484 8008E884 3C0D8012 */  lui   $t5, %hi(gTrackSelectCursorY) # $t5, 0x8012
 /* 08F488 8008E888 448C2000 */  mtc1  $t4, $f4
-/* 08F48C 8008E88C 8DAD69CC */  lw    $t5, %lo(D_801269CC)($t5)
+/* 08F48C 8008E88C 8DAD69CC */  lw    $t5, %lo(gTrackSelectCursorY)($t5)
 /* 08F490 8008E890 468021A0 */  cvt.s.w $f6, $f4
 /* 08F494 8008E894 3C0143A0 */  li    $at, 0x43A00000 # 320.000000
 /* 08F498 8008E898 44814000 */  mtc1  $at, $f8
@@ -348,8 +348,8 @@ glabel menu_track_select_init
 /* 08F8E8 8008ECE8 8ECE002C */  lw    $t6, 0x2c($s6)
 /* 08F8EC 8008ECEC 8ECF0030 */  lw    $t7, 0x30($s6)
 /* 08F8F0 8008ECF0 8ED80034 */  lw    $t8, 0x34($s6)
-/* 08F8F4 8008ECF4 3C198012 */  lui   $t9, %hi(D_801268E8) # $t9, 0x8012
-/* 08F8F8 8008ECF8 273968E8 */  addiu $t9, %lo(D_801268E8) # addiu $t9, $t9, 0x68e8
+/* 08F8F4 8008ECF4 3C198012 */  lui   $t9, %hi(gTrackSelectIDs) # $t9, 0x8012
+/* 08F8F8 8008ECF8 273968E8 */  addiu $t9, %lo(gTrackSelectIDs) # addiu $t9, $t9, 0x68e8
 /* 08F8FC 8008ECFC AFB90058 */  sw    $t9, 0x58($sp)
 /* 08F900 8008ED00 24160004 */  li    $s6, 4
 /* 08F904 8008ED04 00009825 */  move  $s3, $zero
@@ -479,14 +479,14 @@ glabel menu_track_select_init
 /* 08FAC8 8008EEC8 AFA90058 */  sw    $t1, 0x58($sp)
 /* 08FACC 8008EECC 17C1FF95 */  bne   $fp, $at, .L8008ED24
 /* 08FAD0 8008EED0 03C09825 */   move  $s3, $fp
-/* 08FAD4 8008EED4 3C028012 */  lui   $v0, %hi(D_801269CC) # $v0, 0x8012
-/* 08FAD8 8008EED8 8C4269CC */  lw    $v0, %lo(D_801269CC)($v0)
-/* 08FADC 8008EEDC 3C0C8012 */  lui   $t4, %hi(D_801269C8) # $t4, 0x8012
+/* 08FAD4 8008EED4 3C028012 */  lui   $v0, %hi(gTrackSelectCursorY) # $v0, 0x8012
+/* 08FAD8 8008EED8 8C4269CC */  lw    $v0, %lo(gTrackSelectCursorY)($v0)
+/* 08FADC 8008EEDC 3C0C8012 */  lui   $t4, %hi(gTrackSelectCursorX) # $t4, 0x8012
 /* 08FAE0 8008EEE0 00025080 */  sll   $t2, $v0, 2
-/* 08FAE4 8008EEE4 8D8C69C8 */  lw    $t4, %lo(D_801269C8)($t4)
-/* 08FAE8 8008EEE8 3C078012 */  lui   $a3, %hi(D_801268E8) # $a3, 0x8012
+/* 08FAE4 8008EEE4 8D8C69C8 */  lw    $t4, %lo(gTrackSelectCursorX)($t4)
+/* 08FAE8 8008EEE8 3C078012 */  lui   $a3, %hi(gTrackSelectIDs) # $a3, 0x8012
 /* 08FAEC 8008EEEC 01425023 */  subu  $t2, $t2, $v0
-/* 08FAF0 8008EEF0 24E768E8 */  addiu $a3, %lo(D_801268E8) # addiu $a3, $a3, 0x68e8
+/* 08FAF0 8008EEF0 24E768E8 */  addiu $a3, %lo(gTrackSelectIDs) # addiu $a3, $a3, 0x68e8
 /* 08FAF4 8008EEF4 000A5080 */  sll   $t2, $t2, 2
 /* 08FAF8 8008EEF8 00EA5821 */  addu  $t3, $a3, $t2
 /* 08FAFC 8008EEFC 000C6840 */  sll   $t5, $t4, 1

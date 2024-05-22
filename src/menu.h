@@ -22,6 +22,8 @@
 
 #define NUM_CHARACTERS 10
 
+#define PLAYER_MENU 4
+
 enum DialogueMenuCases {
     DIALOGUE_TAJ,
     DIALOGUE_UNK_01,
@@ -334,7 +336,7 @@ void func_80080E6C(void);
 void reset_title_logo_scale(void);
 void menu_init(u32 menuId);
 s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate);
-void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
+void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
 void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
 void func_800828B8(void);
 void print_missing_controller_text(Gfx **dl, s32 updateRate);
