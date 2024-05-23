@@ -238,8 +238,8 @@ glabel menu_ghost_data_init
 /* 09AA08 80099E08 00000000 */   nop   
 /* 09AA0C 80099E0C 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
 /* 09AA10 80099E10 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
-/* 09AA14 80099E14 3C018012 */  lui   $at, %hi(gMenuOptionCount) # $at, 0x8012
-/* 09AA18 80099E18 AC2063E0 */  sw    $zero, %lo(gMenuOptionCount)($at)
+/* 09AA14 80099E14 3C018012 */  lui   $at, %hi(gMenuStage) # $at, 0x8012
+/* 09AA18 80099E18 AC2063E0 */  sw    $zero, %lo(gMenuStage)($at)
 /* 09AA1C 80099E1C 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
 /* 09AA20 80099E20 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
 /* 09AA24 80099E24 AC2063D8 */  sw    $zero, %lo(gOpacityDecayTimer)($at)

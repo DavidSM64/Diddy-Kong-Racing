@@ -199,8 +199,8 @@ glabel func_80084854
 /* 08574C 80084B4C 00003025 */  move  $a2, $zero
 /* 085750 80084B50 0C0310F3 */  jal   set_text_background_colour
 /* 085754 80084B54 00003825 */   move  $a3, $zero
-/* 085758 80084B58 3C0C8012 */  lui   $t4, %hi(gMenuOptionCount) # $t4, 0x8012
-/* 08575C 80084B5C 8D8C63E0 */  lw    $t4, %lo(gMenuOptionCount)($t4)
+/* 085758 80084B58 3C0C8012 */  lui   $t4, %hi(gMenuStage) # $t4, 0x8012
+/* 08575C 80084B5C 8D8C63E0 */  lw    $t4, %lo(gMenuStage)($t4)
 /* 085760 80084B60 00001825 */  move  $v1, $zero
 /* 085764 80084B64 29810005 */  slti  $at, $t4, 5
 /* 085768 80084B68 10200005 */  beqz  $at, .L80084B80
