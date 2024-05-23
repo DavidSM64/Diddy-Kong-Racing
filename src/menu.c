@@ -192,9 +192,9 @@ SoundMask *gSoundOptionMask;
 s32 gSaveMenuOptionCountLower;
 SaveFileData *gSavemenuFilesDest;
 s32 gSaveMenuOptionCountUpper;
-SaveFileData *D_80126A0C;
-s32 D_80126A10;
-s32 D_80126A14;
+SaveFileData *gSavemenuFilesSource;
+s32 gSavemenuRumbleNag;
+s32 gSavemenuRumbleConnected;
 s32 D_80126A18;
 s32 D_80126A1C;
 s32 sControllerPakNotesFree[MAXCONTROLLERS]; // Looks to be an array for number notes free in each controller memory pak
@@ -207,7 +207,7 @@ u8 sControllerPakDataPresent[MAXCONTROLLERS]; // Flag to see if there's data pre
                                               // sure
 char *D_80126A64;
 s32 gMenuOption; // sCurrentControllerIndex?
-s32 D_80126A6C;
+s32 gSavemenuRumbleNagSet;
 char **gDeviceStatusStrings;
 s32 D_80126A74;
 s32 D_80126A78;
@@ -217,7 +217,7 @@ s32 gPostRace1Player;
 s32 gPostRaceTimer;
 s32 D_80126A98;
 s32 D_80126A9C;
-char *D_80126AA0[16];                           // Text to render
+char *gBootPakData[16];                           // Text to render
 u8 *sCurrentControllerPakAllFileNames[16];      // Every file name on the controller pak
 u8 *sCurrentControllerPakAllFileExtensions[16]; // Every file extension on the controller pak
 u8 sCurrentControllerPakAllFileTypes[16];       // File type of all files on controller pak
@@ -2559,25 +2559,6 @@ char *gConPakAdvSavePrefix = " (ADV.";
 
 /*******************************/
 
-/************ .rodata ************/
-
-const char D_800E8208[] = "OK?";
-const char D_800E820C[] = "~";
-const char D_800E8210[] = "DEL";
-const char D_800E8214[] = "OK";
-const char gROMChecksum[] = "ROM checksum %08X,%d\n"; // Used with the "DODGYROMMER" cheat.
-const char D_800E8230[] = "OK?";
-const char D_800E8234[] = "OK?";
-const char D_800E8238[] = "OK?";
-const char D_800E823C[] = "OK?";
-const char D_800E8240[] = "OK?";
-const char D_800E8244[] = "SP";
-const char D_800E8248[] = "DEL";
-const char D_800E824C[] = "OK";
-const char D_800E8250[] = "loadFrontEndItem() - Item no %d out of range 0-%d\n";
-
-/*********************************/
-
 #ifdef NON_EQUIVALENT
 
 // Should be functionally equivalent
@@ -4381,8 +4362,8 @@ void soundoptions_free(void) {
 }
 
 void menu_save_options_init(void) {
-    D_80126A6C = 1;
-    D_80126A10 = 0;
+    gSavemenuRumbleNagSet = TRUE;
+    gSavemenuRumbleNag = FALSE;
     D_80126A18 = 1;
     D_80126A1C = 1;
     gOptionsMenuItemIndex = 0;
@@ -4391,8 +4372,8 @@ void menu_save_options_init(void) {
     gMenuOptionCount = 1;
     gOpacityDecayTimer = 0;
     D_80126A64 = (char *) allocate_from_main_pool_safe(0x800, COLOUR_TAG_WHITE);
-    D_80126A0C = (SaveFileData *) allocate_from_main_pool_safe(0xA00, COLOUR_TAG_WHITE);
-    gSavemenuFilesDest = &D_80126A0C[80];
+    gSavemenuFilesSource = (SaveFileData *) allocate_from_main_pool_safe(0xA00, COLOUR_TAG_WHITE);
+    gSavemenuFilesDest = &gSavemenuFilesSource[80];
     gSaveMenuOptionCountUpper = 0;
     gSaveMenuOptionSource = 0;
     gSavemenuScrollSource = 0.0f;
@@ -4434,7 +4415,7 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
 
     spriteID = 11;
     switch (file->saveFileType) {
-        case SAVE_FILE_TYPE_UNK1:
+        case SAVE_FILE_TYPE_CART_SAVE:
             drawTexture = gDrawTexN64Icon;
             texture = gMenuAssets[TEXTURE_SURFACE_BUTTON_WOOD];
             colour = COLOUR_RGBA32(176, 224, 192, 255);
@@ -4453,14 +4434,14 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
             }
             text = gMenuText[ASSET_MENU_TEXT_GAMEPAK];
             break;
-        case SAVE_FILE_TYPE_UNK2:
+        case SAVE_FILE_TYPE_CART_TIMES:
             drawTexture = gDrawTexTTIcon;
             texture = gMenuAssets[TEXTURE_SURFACE_BUTTON_WOOD];
             colour = COLOUR_RGBA32(176, 224, 192, 255);
             text2 = gMenuText[ASSET_MENU_TEXT_TIMES];
             text = gMenuText[ASSET_MENU_TEXT_GAMEPAK];
             break;
-        case SAVE_FILE_TYPE_GAME_DATA:
+        case SAVE_FILE_TYPE_CPAK_SAVE:
             drawTexture = gDrawTexN64Icon;
             texture = gMenuAssets[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[file->controllerIndex];
@@ -4480,28 +4461,28 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
                 spriteID = 12;
             }
             break;
-        case SAVE_FILE_TYPE_TIME_DATA:
+        case SAVE_FILE_TYPE_CPAK_TIMES:
             drawTexture = gDrawTexTTIcon;
             texture = gMenuAssets[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[file->controllerIndex];
             text2 = file->saveFileExt;
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + file->controllerIndex];
             break;
-        case SAVE_FILE_TYPE_GHOST_DATA:
+        case SAVE_FILE_TYPE_CPAK_GHOST:
             drawTexture = gDrawTexGhostIcon;
             texture = gMenuAssets[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[file->controllerIndex];
             text2 = gMenuText[ASSET_MENU_TEXT_GHOSTS];
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + file->controllerIndex];
             break;
-        case SAVE_FILE_TYPE_UNKNOWN:
+        case SAVE_FILE_TYPE_CPAK_OTHER:
             drawTexture = gDrawTexFileIcon;
             texture = gMenuAssets[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[file->controllerIndex];
             text2 = file->saveFileExt;
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + file->controllerIndex];
             break;
-        case SAVE_FILE_TYPE_UNK8:
+        case SAVE_FILE_TYPE_CPAK_EMPTY:
             drawTexture = gDrawTexContPakIcon;
             texture = gMenuAssets[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[file->controllerIndex];
@@ -4515,7 +4496,7 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
             text2 = gMenuText[ASSET_MENU_TEXT_VIEWGHOSTS];
             text = NULL;
             break;
-        case SAVE_FILE_TYPE_UNKA:
+        case SAVE_FILE_TYPE_CART_BONUSES:
             drawTexture = gDrawTexN64Icon;
             text2 = gMenuText[ASSET_MENU_TEXT_GAMEPAKBONUSES];
             texture = gMenuAssets[TEXTURE_SURFACE_BUTTON_WOOD];
@@ -4534,8 +4515,8 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
     if (osTvType == TV_TYPE_PAL) {
         y += 12;
     }
-    if (file->saveFileType == SAVE_FILE_TYPE_GAME_DATA ||
-        (file->saveFileType == SAVE_FILE_TYPE_UNK1 && gSavefileData[file->controllerIndex]->newGame == FALSE)) {
+    if (file->saveFileType == SAVE_FILE_TYPE_CPAK_SAVE ||
+        (file->saveFileType == SAVE_FILE_TYPE_CART_SAVE && gSavefileData[file->controllerIndex]->newGame == FALSE)) {
         if (osTvType == TV_TYPE_PAL) {
             i = 134;
         } else {
@@ -4649,14 +4630,13 @@ void savemenu_render(UNUSED s32 updateRate) {
         }
     }
 
-
     if (drawUpperElements) {
         scroll = (s32) gSavemenuScrollSource;
         temp = scroll;
         offsetX = 80 - (s32) ((gSavemenuScrollSource - scroll) * 164.0f);
         x = offsetX;
         while (x < videoWidth && temp < gSaveMenuOptionCountUpper) {
-            savemenu_render_element(&D_80126A0C[temp], x, 64);
+            savemenu_render_element(&gSavemenuFilesSource[temp], x, 64);
             x += 164;
             temp++;
         }
@@ -4665,7 +4645,7 @@ void savemenu_render(UNUSED s32 updateRate) {
         while ((x > 0) && (temp > 0)) {
             temp--;
             x -= 164;
-            savemenu_render_element(&D_80126A0C[temp], x, 64);
+            savemenu_render_element(&gSavemenuFilesSource[temp], x, 64);
         }
     }
 
@@ -4691,7 +4671,7 @@ void savemenu_render(UNUSED s32 updateRate) {
     set_text_font(2);
     set_text_colour(255, 255, 255, 0, 255);
     if (drawOk) {
-        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, (char *) D_800E8208, ALIGN_MIDDLE_CENTER); // "OK?"
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, "OK?", ALIGN_MIDDLE_CENTER);
     }
     if (drawPleaseWait) {
         draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT],
@@ -4706,17 +4686,17 @@ void savemenu_render(UNUSED s32 updateRate) {
 /**
  * Searches the controller pak to see if it has enough space to support the destination file.
 */
-SIDeviceStatus savemenu_check_space(s32 controllerIndex, s32 *pakState, SaveFileData *arg2, s32 *arg3, s32 fileSize,
+SIDeviceStatus savemenu_check_space(s32 controllerIndex, s32 *pakState, SaveFileData *file, s32 *index, s32 fileSize,
                              UNUSED s32 arg5) {
     SIDeviceStatus ret = CONTROLLER_PAK_GOOD;
 
     if (*pakState) {
-        ret = get_free_space(controllerIndex, &arg2[*arg3].fileSize, &sControllerPakNotesFree[controllerIndex]);
+        ret = get_free_space(controllerIndex, &file[*index].fileSize, &sControllerPakNotesFree[controllerIndex]);
         if (ret == CONTROLLER_PAK_GOOD) {
-            if ((s32) arg2[*arg3].fileSize >= fileSize && sControllerPakNotesFree[controllerIndex] > 0) {
-                arg2[*arg3].saveFileType = SAVE_FILE_TYPE_UNK8;
-                arg2[*arg3].controllerIndex = controllerIndex;
-                (*arg3)++;
+            if ((s32) file[*index].fileSize >= fileSize && sControllerPakNotesFree[controllerIndex] > 0) {
+                file[*index].saveFileType = SAVE_FILE_TYPE_CPAK_EMPTY;
+                file[*index].controllerIndex = controllerIndex;
+                (*index)++;
             }
         } else {
             SIDeviceStatus status = ret & 0xFF; // The upper bytes could be controllerIndex, so focus on the status
@@ -4740,7 +4720,7 @@ void savemenu_blank_save_destination(SaveFileData *file, s32 *fileIndex) {
     s32 i;
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         if (gSavefileData[i]->newGame) {
-            file[*fileIndex].saveFileType = SAVE_FILE_TYPE_UNK1;
+            file[*fileIndex].saveFileType = SAVE_FILE_TYPE_CART_SAVE;
             file[*fileIndex].unk1 = 0;
             file[*fileIndex].balloonCount = 0;
             file[*fileIndex].controllerIndex = i;
@@ -4774,24 +4754,24 @@ SIDeviceStatus savemenu_load_sources(void) {
     gSavemenuScrollSource = 0.0f;
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         if (!gSavefileData[i]->newGame) {
-            D_80126A0C[gSaveMenuOptionCountUpper].saveFileType = SAVE_FILE_TYPE_UNK1;
-            D_80126A0C[gSaveMenuOptionCountUpper].unk1 = 1;
-            D_80126A0C[gSaveMenuOptionCountUpper].balloonCount = gSavefileData[i]->balloonsPtr[0];
-            D_80126A0C[gSaveMenuOptionCountUpper].controllerIndex = i;
-            D_80126A0C[gSaveMenuOptionCountUpper].fileSize = get_game_data_file_size();
+            gSavemenuFilesSource[gSaveMenuOptionCountUpper].saveFileType = SAVE_FILE_TYPE_CART_SAVE;
+            gSavemenuFilesSource[gSaveMenuOptionCountUpper].unk1 = 1;
+            gSavemenuFilesSource[gSaveMenuOptionCountUpper].balloonCount = gSavefileData[i]->balloonsPtr[0];
+            gSavemenuFilesSource[gSaveMenuOptionCountUpper].controllerIndex = i;
+            gSavemenuFilesSource[gSaveMenuOptionCountUpper].fileSize = get_game_data_file_size();
             gSaveMenuOptionCountUpper++;
         }
     }
 
-    D_80126A0C[gSaveMenuOptionCountUpper].saveFileType = SAVE_FILE_TYPE_UNK2;
-    D_80126A0C[gSaveMenuOptionCountUpper].unk1 = 1;
-    D_80126A0C[gSaveMenuOptionCountUpper++].fileSize = get_time_data_file_size();
-    D_80126A0C[gSaveMenuOptionCountUpper++].saveFileType = SAVE_FILE_TYPE_UNKA;
+    gSavemenuFilesSource[gSaveMenuOptionCountUpper].saveFileType = SAVE_FILE_TYPE_CART_TIMES;
+    gSavemenuFilesSource[gSaveMenuOptionCountUpper].unk1 = 1;
+    gSavemenuFilesSource[gSaveMenuOptionCountUpper++].fileSize = get_time_data_file_size();
+    gSavemenuFilesSource[gSaveMenuOptionCountUpper++].saveFileType = SAVE_FILE_TYPE_CART_BONUSES;
     temp_D_80126A64 = D_80126A64;
     do {
         numAttempts = 1;
         if (D_80126A18 != 0) {
-            D_80126A14 = 0;
+            gSavemenuRumbleConnected = FALSE;
 
             do {
                 result = get_controller_pak_file_list(0, 16, fileNames, fileExts, fileSizes, fileTypes);
@@ -4801,35 +4781,35 @@ SIDeviceStatus savemenu_load_sources(void) {
 
             if (result == CONTROLLER_PAK_GOOD) {
                 for (fileIndex = 0; fileIndex < 16; fileIndex++) {
-                    if ((fileTypes[fileIndex] >= SAVE_FILE_TYPE_GAME_DATA) &&
-                        (fileTypes[fileIndex] <= SAVE_FILE_TYPE_UNKNOWN)) {
+                    if ((fileTypes[fileIndex] >= SAVE_FILE_TYPE_CPAK_SAVE) &&
+                        (fileTypes[fileIndex] <= SAVE_FILE_TYPE_CPAK_OTHER)) {
                         (*sControllerPakNotesFree)--;
-                        D_80126A0C[gSaveMenuOptionCountUpper].saveFileType = fileTypes[fileIndex];
-                        D_80126A0C[gSaveMenuOptionCountUpper].controllerIndex = 0;
-                        D_80126A0C[gSaveMenuOptionCountUpper].saveFileNumber = fileIndex;
-                        D_80126A0C[gSaveMenuOptionCountUpper].fileSize = fileSizes[fileIndex];
-                        if (fileTypes[fileIndex] == SAVE_FILE_TYPE_GAME_DATA) {
+                        gSavemenuFilesSource[gSaveMenuOptionCountUpper].saveFileType = fileTypes[fileIndex];
+                        gSavemenuFilesSource[gSaveMenuOptionCountUpper].controllerIndex = 0;
+                        gSavemenuFilesSource[gSaveMenuOptionCountUpper].saveFileNumber = fileIndex;
+                        gSavemenuFilesSource[gSaveMenuOptionCountUpper].fileSize = fileSizes[fileIndex];
+                        if (fileTypes[fileIndex] == SAVE_FILE_TYPE_CPAK_SAVE) {
                             if (read_game_data_from_controller_pak(0, fileExts[fileIndex], settings) ==
                                 CONTROLLER_PAK_GOOD) {
-                                D_80126A0C[gSaveMenuOptionCountUpper].saveFileExt = temp_D_80126A64;
+                                gSavemenuFilesSource[gSaveMenuOptionCountUpper].saveFileExt = temp_D_80126A64;
                                 temp_D_80126A64[0] = *fileExts[fileIndex];
                                 temp_D_80126A64[1] = 0;
                                 temp_D_80126A64 += 2;
-                                D_80126A0C[gSaveMenuOptionCountUpper].balloonCount = *settings->balloonsPtr;
-                                D_80126A0C[gSaveMenuOptionCountUpper].adventureTwo =
+                                gSavemenuFilesSource[gSaveMenuOptionCountUpper].balloonCount = *settings->balloonsPtr;
+                                gSavemenuFilesSource[gSaveMenuOptionCountUpper].adventureTwo =
                                     (settings->cutsceneFlags & 4) != 0; // Is in Adventure Two?
-                                D_80126A0C[gSaveMenuOptionCountUpper].compressedFilename = settings->filename;
+                                gSavemenuFilesSource[gSaveMenuOptionCountUpper].compressedFilename = settings->filename;
                             } else {
                                 gSaveMenuOptionCountUpper--;
                             }
                         } else {
                             temp = 0;
-                            if ((fileTypes[fileIndex] == SAVE_FILE_TYPE_UNKNOWN) ||
-                                (fileTypes[fileIndex] == SAVE_FILE_TYPE_TIME_DATA)) {
-                                if (fileTypes[fileIndex] == SAVE_FILE_TYPE_TIME_DATA) {
+                            if ((fileTypes[fileIndex] == SAVE_FILE_TYPE_CPAK_OTHER) ||
+                                (fileTypes[fileIndex] == SAVE_FILE_TYPE_CPAK_TIMES)) {
+                                if (fileTypes[fileIndex] == SAVE_FILE_TYPE_CPAK_TIMES) {
                                     temp = CONTROLLER_PAK_BAD_DATA;
                                 }
-                                D_80126A0C[gSaveMenuOptionCountUpper].saveFileExt = temp_D_80126A64;
+                                gSavemenuFilesSource[gSaveMenuOptionCountUpper].saveFileExt = temp_D_80126A64;
                                 while (fileNames[fileIndex][temp] != '\0') {
                                     *temp_D_80126A64 = fileNames[fileIndex][temp];
                                     temp++;
@@ -4855,13 +4835,13 @@ SIDeviceStatus savemenu_load_sources(void) {
                 }
                 packDirectoryFree();
             } else if (temp == CONTROLLER_PAK_RUMBLE_PAK_FOUND) {
-                D_80126A14 = 1;
+                gSavemenuRumbleConnected = TRUE;
                 if (D_80126A18 < 0) {
                     result = CONTROLLER_PAK_GOOD;
                 }
-                if (D_80126A6C != 0) {
-                    D_80126A10 = 1;
-                    D_80126A6C = 0;
+                if (gSavemenuRumbleNagSet) {
+                    gSavemenuRumbleNag = TRUE;
+                    gSavemenuRumbleNagSet = FALSE;
                 }
             } else if (temp == CONTROLLER_PAK_NOT_FOUND) {
                 result = CONTROLLER_PAK_GOOD;
@@ -4884,33 +4864,33 @@ SIDeviceStatus savemenu_load_destinations(void) {
 
     gSaveMenuOptionCountLower = 0;
 
-    switch (D_80126A0C[gSaveMenuOptionSource].saveFileType) {
-        case SAVE_FILE_TYPE_UNK1:
-            mark_read_save_file(D_80126A0C[gSaveMenuOptionSource].controllerIndex);
+    switch (gSavemenuFilesSource[gSaveMenuOptionSource].saveFileType) {
+        case SAVE_FILE_TYPE_CART_SAVE:
+            mark_read_save_file(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex);
             savemenu_blank_save_destination(gSavemenuFilesDest, &gSaveMenuOptionCountLower);
             ret = savemenu_check_space(0, &D_80126A18, gSavemenuFilesDest, &gSaveMenuOptionCountLower, get_game_data_file_size(), -1);
             break;
-        case SAVE_FILE_TYPE_UNK2:
+        case SAVE_FILE_TYPE_CART_TIMES:
             ret = savemenu_check_space(0, &D_80126A18, gSavemenuFilesDest, &gSaveMenuOptionCountLower, get_time_data_file_size(), -1);
             break;
-        case SAVE_FILE_TYPE_GAME_DATA:
+        case SAVE_FILE_TYPE_CPAK_SAVE:
             savemenu_blank_save_destination(gSavemenuFilesDest, &gSaveMenuOptionCountLower);
             ret = savemenu_check_space(1, &D_80126A1C, gSavemenuFilesDest, &gSaveMenuOptionCountLower, get_game_data_file_size(),
-                                D_80126A0C[gSaveMenuOptionSource].controllerIndex);
+                                gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex);
             break;
-        case SAVE_FILE_TYPE_TIME_DATA:
-            gSavemenuFilesDest[gSaveMenuOptionCountLower++].saveFileType = SAVE_FILE_TYPE_UNK2;
+        case SAVE_FILE_TYPE_CPAK_TIMES:
+            gSavemenuFilesDest[gSaveMenuOptionCountLower++].saveFileType = SAVE_FILE_TYPE_CART_TIMES;
             ret = savemenu_check_space(1, &D_80126A1C, gSavemenuFilesDest, &gSaveMenuOptionCountLower, get_time_data_file_size(),
-                                D_80126A0C[gSaveMenuOptionSource].controllerIndex);
+                                gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex);
             break;
-        case SAVE_FILE_TYPE_GHOST_DATA:
+        case SAVE_FILE_TYPE_CPAK_GHOST:
             gSavemenuFilesDest[gSaveMenuOptionCountLower++].saveFileType = SAVE_FILE_TYPE_UNK9;
             ret = savemenu_check_space(1, &D_80126A1C, gSavemenuFilesDest, &gSaveMenuOptionCountLower, get_ghost_data_file_size(),
-                                D_80126A0C[gSaveMenuOptionSource].controllerIndex);
+                                gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex);
             break;
     }
 
-    gSavemenuFilesDest[gSaveMenuOptionCountLower++].saveFileType = SAVE_FILE_TYPE_UNK7;
+    gSavemenuFilesDest[gSaveMenuOptionCountLower++].saveFileType = SAVE_FILE_TYPE_ERASE;
 
     return ret;
 }
@@ -4937,7 +4917,13 @@ void savemenu_move(s32 updateRate) {
     }
 }
 
-SIDeviceStatus func_80086AFC(void) {
+/**
+ * Write the selected source file to the destination.
+ * Check the types of the source and destination files to know what kind to write.
+ * If the file type is marked as "erase", then erase the data instead.
+ * Return the controller pak status.
+*/
+SIDeviceStatus savemenu_write(void) {
     s32 i;
     SIDeviceStatus ret;
     UNUSED s32 pad[2];
@@ -4945,28 +4931,28 @@ SIDeviceStatus func_80086AFC(void) {
     Settings *settings;
 
     settings = get_settings();
-    switch (D_80126A0C[gSaveMenuOptionSource].saveFileType) {
-        case SAVE_FILE_TYPE_UNK1:
+    switch (gSavemenuFilesSource[gSaveMenuOptionSource].saveFileType) {
+        case SAVE_FILE_TYPE_CART_SAVE:
             switch (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType) {
-                case SAVE_FILE_TYPE_UNK1:
+                case SAVE_FILE_TYPE_CART_SAVE:
                     force_mark_write_save_file(gSavemenuFilesDest[gSaveMenuOptionDest].controllerIndex);
                     gSavefileData[gSavemenuFilesDest[gSaveMenuOptionDest].controllerIndex]->cutsceneFlags = settings->cutsceneFlags;
                     gSavefileData[gSavemenuFilesDest[gSaveMenuOptionDest].controllerIndex]->newGame = FALSE;
                     *gSavefileData[gSavemenuFilesDest[gSaveMenuOptionDest].controllerIndex]->balloonsPtr = *settings->balloonsPtr;
                     gSavefileData[gSavemenuFilesDest[gSaveMenuOptionDest].controllerIndex]->filename = settings->filename;
                     break;
-                case SAVE_FILE_TYPE_UNK8:
+                case SAVE_FILE_TYPE_CPAK_EMPTY:
                     ret = write_game_data_to_controller_pak(gSavemenuFilesDest[gSaveMenuOptionDest].controllerIndex, settings);
                     break;
-                case SAVE_FILE_TYPE_UNK7:
-                    mark_save_file_to_erase(D_80126A0C[gSaveMenuOptionSource].controllerIndex);
-                    gSavefileData[D_80126A0C[gSaveMenuOptionSource].controllerIndex]->newGame = TRUE;
+                case SAVE_FILE_TYPE_ERASE:
+                    mark_save_file_to_erase(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex);
+                    gSavefileData[gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex]->newGame = TRUE;
                     break;
             }
             break;
-        case SAVE_FILE_TYPE_UNK2:
-            if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType != SAVE_FILE_TYPE_UNK7) {
-                if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType == SAVE_FILE_TYPE_UNK8) {
+        case SAVE_FILE_TYPE_CART_TIMES:
+            if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType != SAVE_FILE_TYPE_ERASE) {
+                if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType == SAVE_FILE_TYPE_CPAK_EMPTY) {
                     ret = write_time_data_to_controller_pak(gSavemenuFilesDest[gSaveMenuOptionDest].controllerIndex, settings);
                 }
             } else {
@@ -4976,11 +4962,11 @@ SIDeviceStatus func_80086AFC(void) {
                     0xFFFFF0); // Reset most eeprom save data, but keep Adventure 2, and Drumstick.
             }
             break;
-        case SAVE_FILE_TYPE_GAME_DATA:
+        case SAVE_FILE_TYPE_CPAK_SAVE:
             switch (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType) {
-                case SAVE_FILE_TYPE_UNK1:
-                    ret = read_game_data_from_controller_pak(D_80126A0C[gSaveMenuOptionSource].controllerIndex,
-                                                             D_80126A0C[gSaveMenuOptionSource].saveFileExt, settings);
+                case SAVE_FILE_TYPE_CART_SAVE:
+                    ret = read_game_data_from_controller_pak(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex,
+                                                             gSavemenuFilesSource[gSaveMenuOptionSource].saveFileExt, settings);
                     if (settings->cutsceneFlags & 4 && !is_adventure_two_unlocked()) {
                         ret = CONTROLLER_PAK_NEED_SECOND_ADVENTURE;
                     }
@@ -4992,66 +4978,66 @@ SIDeviceStatus func_80086AFC(void) {
                         gSavefileData[gSavemenuFilesDest[gSaveMenuOptionDest].controllerIndex]->filename = settings->filename;
                     }
                     break;
-                case SAVE_FILE_TYPE_UNK8:
-                    ret = read_game_data_from_controller_pak(D_80126A0C[gSaveMenuOptionSource].controllerIndex,
-                                                             D_80126A0C[gSaveMenuOptionSource].saveFileExt, gSavefileData[3]);
+                case SAVE_FILE_TYPE_CPAK_EMPTY:
+                    ret = read_game_data_from_controller_pak(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex,
+                                                             gSavemenuFilesSource[gSaveMenuOptionSource].saveFileExt, gSavefileData[3]);
                     if (ret == CONTROLLER_PAK_GOOD) {
                         ret =
                             write_game_data_to_controller_pak(gSavemenuFilesDest[gSaveMenuOptionDest].controllerIndex, gSavefileData[3]);
                     }
                     break;
-                case SAVE_FILE_TYPE_UNK7:
-                    ret = delete_file(D_80126A0C[gSaveMenuOptionSource].controllerIndex, D_80126A0C[gSaveMenuOptionSource].saveFileNumber);
+                case SAVE_FILE_TYPE_ERASE:
+                    ret = delete_file(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex, gSavemenuFilesSource[gSaveMenuOptionSource].saveFileNumber);
                     break;
             }
             break;
-        case SAVE_FILE_TYPE_TIME_DATA:
-            for (i = 0; D_80126A0C[gSaveMenuOptionSource].saveFileExt[i] != '\0'; i++) {}
+        case SAVE_FILE_TYPE_CPAK_TIMES:
+            for (i = 0; gSavemenuFilesSource[gSaveMenuOptionSource].saveFileExt[i] != '\0'; i++) {}
             if (i > 0) {
-                fileExt[0] = D_80126A0C[gSaveMenuOptionSource].saveFileExt[i - 1];
+                fileExt[0] = gSavemenuFilesSource[gSaveMenuOptionSource].saveFileExt[i - 1];
             } else {
                 fileExt[0] = 'A';
             }
             fileExt[1] = '\0';
             switch (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType) {
-                case SAVE_FILE_TYPE_UNK2:
-                    ret = read_time_data_from_controller_pak(D_80126A0C[gSaveMenuOptionSource].controllerIndex, fileExt, settings);
+                case SAVE_FILE_TYPE_CART_TIMES:
+                    ret = read_time_data_from_controller_pak(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex, fileExt, settings);
                     break;
-                case SAVE_FILE_TYPE_UNK8:
-                    ret = read_time_data_from_controller_pak(D_80126A0C[gSaveMenuOptionSource].controllerIndex, fileExt, settings);
+                case SAVE_FILE_TYPE_CPAK_EMPTY:
+                    ret = read_time_data_from_controller_pak(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex, fileExt, settings);
                     if (ret == CONTROLLER_PAK_GOOD) {
                         ret = write_time_data_to_controller_pak(gSavemenuFilesDest[gSaveMenuOptionDest].controllerIndex, settings);
                     }
                     mark_to_read_flap_and_course_times();
                     break;
-                case SAVE_FILE_TYPE_UNK7:
-                    ret = delete_file(D_80126A0C[gSaveMenuOptionSource].controllerIndex, D_80126A0C[gSaveMenuOptionSource].saveFileNumber);
+                case SAVE_FILE_TYPE_ERASE:
+                    ret = delete_file(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex, gSavemenuFilesSource[gSaveMenuOptionSource].saveFileNumber);
                     break;
             }
             break;
-        case SAVE_FILE_TYPE_GHOST_DATA:
-            if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType != SAVE_FILE_TYPE_UNK7) {
-                if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType != SAVE_FILE_TYPE_UNK8) {
+        case SAVE_FILE_TYPE_CPAK_GHOST:
+            if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType != SAVE_FILE_TYPE_ERASE) {
+                if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType != SAVE_FILE_TYPE_CPAK_EMPTY) {
                     if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType == SAVE_FILE_TYPE_UNK9) {
                         gMenuDelay = 1;
-                        D_801264D0 = D_80126A0C[gSaveMenuOptionSource].controllerIndex;
+                        D_801264D0 = gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex;
                     }
                 } else {
-                    ret = copy_controller_pak_data(D_80126A0C[gSaveMenuOptionSource].controllerIndex,
-                                                   D_80126A0C[gSaveMenuOptionSource].saveFileNumber,
+                    ret = copy_controller_pak_data(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex,
+                                                   gSavemenuFilesSource[gSaveMenuOptionSource].saveFileNumber,
                                                    gSavemenuFilesDest[gSaveMenuOptionDest].controllerIndex);
                 }
             } else {
-                ret = delete_file(D_80126A0C[gSaveMenuOptionSource].controllerIndex, D_80126A0C[gSaveMenuOptionSource].saveFileNumber);
+                ret = delete_file(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex, gSavemenuFilesSource[gSaveMenuOptionSource].saveFileNumber);
             }
             break;
-        case SAVE_FILE_TYPE_UNKNOWN:
-            if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType == SAVE_FILE_TYPE_UNK7) {
-                ret = delete_file(D_80126A0C[gSaveMenuOptionSource].controllerIndex, D_80126A0C[gSaveMenuOptionSource].saveFileNumber);
+        case SAVE_FILE_TYPE_CPAK_OTHER:
+            if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType == SAVE_FILE_TYPE_ERASE) {
+                ret = delete_file(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex, gSavemenuFilesSource[gSaveMenuOptionSource].saveFileNumber);
             }
             break;
-        case SAVE_FILE_TYPE_UNKA:
-            if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType == SAVE_FILE_TYPE_UNK7) {
+        case SAVE_FILE_TYPE_CART_BONUSES:
+            if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType == SAVE_FILE_TYPE_ERASE) {
                 unset_eeprom_settings_value(
                     0xFFFFF3); // Reset most eeprom save data including Adventure Two unlock and Drumstick unlock.
                 gActiveMagicCodes &= ~(CHEAT_CONTROL_TT | CHEAT_CONTROL_DRUMSTICK);
@@ -5065,7 +5051,11 @@ SIDeviceStatus func_80086AFC(void) {
     return ret;
 }
 
-void func_800871D8(SIDeviceStatus deviceStatus) {
+/**
+ * Render an error message based on what the error itself is.
+ * This is either because the controller pak is missing, damaged or it found a rumble pak instead.
+*/
+void savemenu_render_error(SIDeviceStatus deviceStatus) {
     s32 i;
     s32 j;
     s32 k;
@@ -5116,6 +5106,7 @@ void func_800871D8(SIDeviceStatus deviceStatus) {
 /**
  * Scroll the source blocks in the save menu.
  * Press A to load potential destinations and start picking those, press B to return.
+ * Reminds the player to reconnect their rumble pak if they had one connected coming in.
 */
 s32 savemenu_input_source(s32 buttonsPressed, s32 direction) {
     s32 ret;
@@ -5123,8 +5114,8 @@ s32 savemenu_input_source(s32 buttonsPressed, s32 direction) {
     ret = 0;
     if (buttonsPressed & B_BUTTON) {
         gMenuOptionCount = SAVEMENU_ENTER;
-        if (D_80126A10 != D_80126A14) {
-            func_800871D8(CONTROLLER_PAK_SWITCH_TO_RUMBLE);
+        if (gSavemenuRumbleNag != gSavemenuRumbleConnected) {
+            savemenu_render_error(CONTROLLER_PAK_SWITCH_TO_RUMBLE);
         } else {
             sound_play(SOUND_MENU_BACK3, NULL);
             ret = -1;
@@ -5306,6 +5297,13 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
     return 0;
 }
 
+/**
+ * Load the save option data from the cartridge,
+ * and if detected, off the controller pak too.
+ * Seperates each menu stage into a seperate function.
+ * These navigate around the menu, select the files to read, write and modify,
+ * then the cartridge or controller pak are written to.
+*/
 s32 menu_save_options_loop(s32 updateRate) {
     SIDeviceStatus result;
     s32 buttonsPressed;
@@ -5321,7 +5319,7 @@ s32 menu_save_options_loop(s32 updateRate) {
             gMenuDelay -= updateRate;
         }
     }
-    if ((gMenuOptionCount & 7) >= 2) {
+    if ((gMenuOptionCount & 7) > 1) {
         savemenu_move(updateRate);
     }
     if (gMenuDelay > -20 && gMenuDelay < 20) {
@@ -5356,7 +5354,7 @@ s32 menu_save_options_loop(s32 updateRate) {
                 break;
             case SAVEMENU_WAIT:
                 gOpacityDecayTimer++;
-                if (gOpacityDecayTimer >= 11) {
+                if (gOpacityDecayTimer > 10) {
                     gMenuOptionCount = 2;
                 }
                 break;
@@ -5365,7 +5363,7 @@ s32 menu_save_options_loop(s32 updateRate) {
                 gSavemenuScrollSource = 0.0f;
                 result = savemenu_load_sources();
                 if (result != CONTROLLER_PAK_GOOD) {
-                    func_800871D8(result);
+                    savemenu_render_error(result);
                 } else {
                     gMenuOptionCount = 3;
                 }
@@ -5378,7 +5376,7 @@ s32 menu_save_options_loop(s32 updateRate) {
                 gSavemenuScrollDest = 0.0f;
                 result = savemenu_load_destinations();
                 if (result != CONTROLLER_PAK_GOOD) {
-                    func_800871D8(result);
+                    savemenu_render_error(result);
                 } else {
                     gMenuOptionCount = 5;
                 }
@@ -5391,10 +5389,10 @@ s32 menu_save_options_loop(s32 updateRate) {
                 break;
             case SAVEMENU_WRITE:
                 gOpacityDecayTimer++;
-                if (gOpacityDecayTimer >= 4) {
-                    result = func_80086AFC();
+                if (gOpacityDecayTimer > 3) {
+                    result = savemenu_write();
                     if (result != CONTROLLER_PAK_GOOD) {
-                        func_800871D8(result);
+                        savemenu_render_error(result);
                     } else {
                         gOpacityDecayTimer = 6;
                         gMenuOptionCount = 1;
@@ -5419,7 +5417,7 @@ void savemenu_free(void) {
     menu_button_free();
     menu_assetgroup_free(gSaveMenuObjectIndices);
     assign_dialogue_box_id(7);
-    free_from_memory_pool((void *) D_80126A0C);
+    free_from_memory_pool((void *) gSavemenuFilesSource);
     free_from_memory_pool((void *) D_80126A64);
 }
 
@@ -5531,26 +5529,26 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
             if (sCurrentControllerPakAllFileNames[i] != 0) {
                 k = 0;
                 for (; sCurrentControllerPakAllFileNames[i][k] != 0; j++, k++) {
-                    D_80126AA0[i][j] = sCurrentControllerPakAllFileNames[i][k];
+                    gBootPakData[i][j] = sCurrentControllerPakAllFileNames[i][k];
                 }
 
                 if ((sCurrentControllerPakAllFileExtensions[i] != 0) &&
                     (*sCurrentControllerPakAllFileExtensions[i] != 0)) {
-                    D_80126AA0[i][j] = '.';
+                    gBootPakData[i][j] = '.';
                     j++;
                     k = 0;
                     for (; sCurrentControllerPakAllFileExtensions[i][k] != 0; j++, k++) {
-                        D_80126AA0[i][j] = sCurrentControllerPakAllFileExtensions[i][k];
+                        gBootPakData[i][j] = sCurrentControllerPakAllFileExtensions[i][k];
                     }
                 }
             }
             if (j == 0) {
-                D_80126AA0[i][j] = '-';
+                gBootPakData[i][j] = '-';
                 j++;
             }
             i++;
-            D_80126AA0[i - 1][j] = 0;
-        } while (&D_80126AA0 != &sCurrentControllerPakAllFileNames);
+            gBootPakData[i - 1][j] = 0;
+        } while (&gBootPakData != &sCurrentControllerPakAllFileNames);
 
         packDirectoryFree();                                                     // Free D_800DE440 from memory
         get_free_space(*controllerIndex, &sCurrentControllerPakFreeSpace, NULL); // Get Available Space in Controller
@@ -5645,19 +5643,23 @@ void menu_boot_init(void) {
     gBootMenuTimer = 0;
 }
 
+/**
+ * Display the title onscreen for a few seconds.
+ * 
+*/
 s32 menu_boot_loop(s32 updateRate) {
     s32 out;
-    s32 temp;
     s32 y;
+    s32 offsetY;
 
-    out = 0;
+    out = MENU_RESULT_CONTINUE;
 
-    y = SCREEN_HEIGHT_HALF;
+    offsetY = SCREEN_HEIGHT_HALF;
     if (osTvType == TV_TYPE_PAL) {
-        y = SCREEN_HEIGHT_HALF_PAL;
+        offsetY = SCREEN_HEIGHT_HALF_PAL;
     }
 
-    temp = y;
+    y = offsetY;
 
     switch (gBootMenuPhase) {
         case 0:
@@ -5667,7 +5669,7 @@ s32 menu_boot_loop(s32 updateRate) {
                     gBootMenuTimer = 32;
                 }
             } else {
-                func_800887E8();
+                bootscreen_init_cpak();
                 gBootMenuPhase = 1;
             }
             break;
@@ -5678,24 +5680,24 @@ s32 menu_boot_loop(s32 updateRate) {
                     gBootMenuTimer = 140;
                 }
             } else {
-                func_800887C4();
+                bootscreen_free();
                 gBootMenuPhase = 2;
             }
             if (gBootMenuTimer >= 129) {
-                temp = 300;
+                y = 300;
             }
             break;
         case 2:
             if (gMenuDelay && check_fadeout_transition() == 0) {
                 transition_begin(&sMenuTransitionFadeInFast);
             }
-            temp = 300;
+            y = 300;
             out = menu_controller_pak_loop(updateRate);
             break;
     }
 
-    if (temp < 300) {
-        render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, temp, 255, 255, 255,
+    if (y < 300) {
+        render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, y, 255, 255, 255,
                                   255);
         reset_render_settings(&sMenuCurrDisplayList);
     }
@@ -5703,19 +5705,26 @@ s32 menu_boot_loop(s32 updateRate) {
     return out;
 }
 
-void func_800887C4(void) {
+/**
+ * Free the assets associated with the boot screen.
+*/
+void bootscreen_free(void) {
     menu_assetgroup_free((s16 *) sGameTitleTileTextures);
 }
 
-void func_800887E8(void) {
+/**
+ * Initialises the controller pak menu variables.
+ * Allocate space for the pak data and load the assets into memory.
+*/
+void bootscreen_init_cpak(void) {
     s32 i;
 
     // Starting point
-    D_80126AA0[0] = allocate_from_main_pool_safe(0x200, COLOUR_TAG_WHITE);
+    gBootPakData[0] = allocate_from_main_pool_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
 
     // Fills in the table.
     for (i = 1; i < 16; i++) {
-        D_80126AA0[i] = (char *) (((u32) D_80126AA0[0]) + (i * 0x20));
+        gBootPakData[i] = (char *) (((u32) gBootPakData[0]) + (i * 0x20));
     }
 
     for (i = 0; i < 1; i++) {
@@ -5747,6 +5756,7 @@ void func_800887E8(void) {
     load_font(ASSET_FONTS_BIGFONT);
 }
 
+
 // Visual Aid : https://i.imgur.com/7T2Scdr.png
 void render_controller_pak_ui(UNUSED s32 updateRate) {
     s32 alpha;
@@ -5756,6 +5766,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
     char *pagesText;
     s32 numberOfPages;
     s32 yPos = 0;
+    static const char sTilde[] = "~";
 
     set_text_background_colour(0, 0, 0, 0);
     alpha = gOptionBlinkTimer << 3;
@@ -5817,9 +5828,9 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
                     set_current_dialogue_background_colour(6, 224, 224, 48, 224);
                 }
                 set_current_text_colour(6, 16, 16, 160, 255, 255);
-                noteText = (char *) &D_800E820C;  //~
-                pagesText = (char *) &D_800E820C; //~
-                fileNameText = D_80126AA0[gOpacityDecayTimer + i];
+                noteText = (char *) &sTilde;
+                pagesText = (char *) &sTilde;
+                fileNameText = gBootPakData[gOpacityDecayTimer + i];
                 numberOfPages = sCurrentControllerPakAllFileSizes[gOpacityDecayTimer + i];
             }
             render_dialogue_text(6, 26, 2, noteText, gOpacityDecayTimer + i + 1, HORZ_ALIGN_CENTER);
@@ -5990,8 +6001,8 @@ s32 menu_controller_pak_loop(s32 updateRate) {
                     default:
                         if (pressedButtons & (A_BUTTON | START_BUTTON)) {
                             // Check if the selected menu item is a file or blank
-                            if ((sCurrentControllerPakAllFileTypes[gMenuCurIndex] >= SAVE_FILE_TYPE_GAME_DATA) &&
-                                (sCurrentControllerPakAllFileTypes[gMenuCurIndex] <= SAVE_FILE_TYPE_UNKNOWN)) {
+                            if ((sCurrentControllerPakAllFileTypes[gMenuCurIndex] >= SAVE_FILE_TYPE_CPAK_SAVE) &&
+                                (sCurrentControllerPakAllFileTypes[gMenuCurIndex] <= SAVE_FILE_TYPE_CPAK_OTHER)) {
                                 D_80126C10 = 0;
                                 gMenuOptionCount = 2;
                                 playSelectedSound = TRUE;
@@ -6043,7 +6054,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
         gMenuDelay += updateRate;
         if (gMenuDelay >= 36) {
 
-            func_800895A4();
+            cpakmenu_free();
             menu_init(MENU_LOGOS);
             load_level_for_menu(ASSET_LEVEL_FRONTEND, -1, 0);
         }
@@ -6051,9 +6062,12 @@ s32 menu_controller_pak_loop(s32 updateRate) {
     return 0;
 }
 
-void func_800895A4(void) {
-    menu_asset_free(0x3F);
-    free_from_memory_pool(D_80126AA0[0]);
+/**
+ * Free all assets associated with the boot sequence controller pak menu.
+*/
+void cpakmenu_free(void) {
+    menu_asset_free(63);
+    free_from_memory_pool(gBootPakData[0]);
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
@@ -6114,9 +6128,9 @@ void render_magic_codes_ui(UNUSED s32 updateRate) {
                 displayChar[1] = '\0';
                 draw_text(&sMenuCurrDisplayList, xPos, yPos, displayChar, ALIGN_MIDDLE_CENTER); // Draw the character
             } else if (j == 5) {
-                draw_text(&sMenuCurrDisplayList, xPos, yPos, (char *) &D_800E8210 /* "DEL" */, ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList, xPos, yPos, "DEL", ALIGN_MIDDLE_CENTER);
             } else {
-                draw_text(&sMenuCurrDisplayList, xPos, yPos, (char *) &D_800E8214 /* "OK" */, ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList, xPos, yPos, "OK", ALIGN_MIDDLE_CENTER);
             }
             if ((5 == gOptionsMenuItemIndex) && (j == gCheatInputCurrentColumn) && (i == gCheatInputCurrentRow)) {
                 set_text_colour(255, 255, 255, 0, 255);
@@ -6706,7 +6720,7 @@ void calculate_and_display_rom_checksum(void) {
     set_render_printf_background_colour(0, 0, 0, 128);
     set_render_printf_position(32, 136);
     numLeft = (s32) &__ROM_END;
-    render_printf(gROMChecksum, cksum, numLeft); // gROMChecksum = "ROM checksum %08X,%d\n"
+    render_printf("ROM checksum %08X,%d\n", cksum, numLeft);
 }
 
 // These vars have to be defined after calculate_and_display_rom_checksum since that function has a static var in it.
@@ -6841,7 +6855,7 @@ void charselect_render_text(UNUSED s32 arg0) {
             if (osTvType == TV_TYPE_PAL) {
                 yPos = 234;
             }
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) D_800E8230 /* "OK?" */,
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, "OK?",
                       ALIGN_MIDDLE_CENTER);
         }
         reset_render_settings(&sMenuCurrDisplayList);
@@ -7663,7 +7677,7 @@ void fileselect_render(UNUSED s32 updateRate) {
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOCOPYTO],
                       ALIGN_MIDDLE_CENTER);
         } else {
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) &D_800E8234 /* "OK?" */,
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, "OK?",
                       ALIGN_MIDDLE_CENTER);
         }
     } else if (gFileErase) {
@@ -7672,7 +7686,7 @@ void fileselect_render(UNUSED s32 updateRate) {
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOERASE],
                       ALIGN_MIDDLE_CENTER);
         } else {
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) &D_800E8238 /* "OK?" */,
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, "OK?",
                       ALIGN_MIDDLE_CENTER);
         }
     } else if (gFileNew == FALSE) {
@@ -9334,7 +9348,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
                 if (gTrackSelectCursorX >= 4) {
                     regionOffset += 24;
                 }
-                draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, regionOffset + 172, (char *) D_800E823C /* "OK?" */,
+                draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, regionOffset + 172, "OK?",
                           ALIGN_MIDDLE_CENTER);
             }
         }
@@ -9540,7 +9554,7 @@ void render_adventure_track_setup(UNUSED s32 arg0, s32 arg1, s32 arg2) {
                         set_text_font(FONT_LARGE);
                         set_text_background_colour(0, 0, 0, 0);
                         set_text_colour(255, 255, 255, 0, 255);
-                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yOffset + 172, (char *) D_800E8240,
+                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yOffset + 172, "OK?",
                                   ALIGN_MIDDLE_CENTER);
                     }
                 } else {
@@ -11172,7 +11186,7 @@ void render_enter_filename_ui(UNUSED s32 updateRate) {
             xIncrement = 40;
             charIndexIncrement = 1;
         }
-        while (((x >= -15) && (x < 336))) {
+        while (x > -16 && x < SCREEN_WIDTH + 16) {
             if (charIndex < 0) {
                 charIndex = 30;
             }
@@ -11191,11 +11205,11 @@ void render_enter_filename_ui(UNUSED s32 updateRate) {
             } else {
                 set_text_font(ASSET_FONTS_FUNFONT);
                 if (charIndex == 28) {
-                    draw_text(&sMenuCurrDisplayList, x, y, (char *) &D_800E8244 /* "SP" */, ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, x, y, "SP", ALIGN_MIDDLE_CENTER);
                 } else if (charIndex == 29) {
-                    draw_text(&sMenuCurrDisplayList, x, y, (char *) &D_800E8248 /* "DEL" */, ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, x, y, "DEL", ALIGN_MIDDLE_CENTER);
                 } else {
-                    draw_text(&sMenuCurrDisplayList, x, y, (char *) &D_800E824C /* "OK" */, ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, x, y, "OK", ALIGN_MIDDLE_CENTER);
                 }
             }
             x += xIncrement;
@@ -12845,10 +12859,11 @@ void menu_asset_load(s32 assetID) {
             gMenuAssetActive[i] = FALSE;
         }
     }
+    if (((!assetID) && (!assetID)) && (!assetID)) {
+            stubbed_printf("loadFrontEndItem() - Item no %d out of range 0-%d\n", assetID, sizeof(gMenuAssetActive));
+        } // Fakematch
     if (!gMenuAssetActive[assetID]) {
         i = (*gAssetsMenuElementIds)[assetID];
-
-        if (((!assetID) && (!assetID)) && (!assetID)) {} // Fakematch
 
         if ((i & HUD_ELEMENT_TEXTURE) == HUD_ELEMENT_TEXTURE) {
             gMenuAssets[assetID] = (TextureHeader *) load_texture(i & 0x3FFF);

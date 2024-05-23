@@ -702,7 +702,7 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
             if (fileNames[fileNum] == NULL) {
                 continue;
             }
-            if (fileType == SAVE_FILE_TYPE_GAME_DATA) {
+            if (fileType == SAVE_FILE_TYPE_CPAK_SAVE) {
                 if ((bcmp((u8 *) fileNames[fileNum], (char *) sDKRacingAdv1, strlen((char *) sDKRacingAdv2)) != 0)) {
                     continue;
                 }
@@ -1895,7 +1895,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
         font_codes_to_string((char *) &state.game_name, (char *) fileNames[i], PFS_FILE_NAME_LEN);
         font_codes_to_string((char *) &state.ext_name, (char *) fileExtensions[i], PFS_FILE_EXT_LEN);
         fileSizes[i] = state.file_size;
-        fileTypes[i] = SAVE_FILE_TYPE_UNKNOWN;
+        fileTypes[i] = SAVE_FILE_TYPE_CPAK_OTHER;
 
         if ((state.game_code == gameCode) && (state.company_code == COMPANY_CODE)) {
             fileTypes[i] = get_file_type(controllerIndex, i);
@@ -2250,21 +2250,21 @@ SaveFileType get_file_type(s32 controllerIndex, s32 fileNum) {
     UNUSED s32 pad;
     s32 ret;
 
-    ret = SAVE_FILE_TYPE_UNKNOWN;
+    ret = SAVE_FILE_TYPE_CPAK_OTHER;
     data = allocate_from_main_pool_safe(0x100, COLOUR_TAG_BLACK);
     if (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *) data, 0x100) == CONTROLLER_PAK_GOOD) {
         switch (*data) {
             case GAMD:
-                ret = SAVE_FILE_TYPE_GAME_DATA;
+                ret = SAVE_FILE_TYPE_CPAK_SAVE;
                 break;
             case TIMD:
-                ret = SAVE_FILE_TYPE_TIME_DATA;
+                ret = SAVE_FILE_TYPE_CPAK_TIMES;
                 break;
             case GHSS:
-                ret = SAVE_FILE_TYPE_GHOST_DATA;
+                ret = SAVE_FILE_TYPE_CPAK_GHOST;
                 break;
             default:
-                ret = SAVE_FILE_TYPE_UNKNOWN;
+                ret = SAVE_FILE_TYPE_CPAK_OTHER;
                 break;
         }
     }
