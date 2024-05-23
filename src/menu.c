@@ -7461,6 +7461,7 @@ void fileselect_render_element(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s
 /**
  * Render the file select buttons onscreen. This includes the 3D buttons,
  * and then the copy and erase text beneath.
+ * If trying to copy or erase a file, render the confirmation menu.
 */
 void fileselect_render(UNUSED s32 updateRate) {
     s32 yPos;
@@ -7609,11 +7610,15 @@ void fileselect_render(UNUSED s32 updateRate) {
     }
 }
 
-s32 func_8008D5F8(UNUSED s32 updateRate) {
+/**
+ * Allows movement between the main options in the file select.
+ * If the new file, erase file or copy file options are selected, enable those flags.
+*/
+s32 fileselect_input_root(UNUSED s32 updateRate) {
     u32 buttonsPressed;
     s32 xAxisDirection;
     s32 yAxisDirection;
-    s32 temp_a0;
+    s32 prevOption;
     u32 buttonsPressedPlayer2;
 
     buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
@@ -7640,27 +7645,27 @@ s32 func_8008D5F8(UNUSED s32 updateRate) {
                 sound_play(SOUND_SELECT2, NULL);
                 gSaveFileIndex3 = gSaveFileIndex;
                 gFileCopy = TRUE;
-                gFileConfirm = 0;
+                gFileConfirm = FALSE;
                 return 0;
             case 2:
                 sound_play(SOUND_SELECT2, NULL);
                 gSaveFileIndex3 = gSaveFileIndex;
                 gFileErase = TRUE;
-                gFileConfirm = 0;
+                gFileConfirm = FALSE;
                 return 0;
         }
     } else if (buttonsPressed & CONT_B) {
         return -1;
     }
 
-    temp_a0 = (gMenuOptionCount << 8) | gSaveFileIndex;
+    prevOption = (gMenuOptionCount << 8) | gSaveFileIndex;
     if (gMenuOptionCount == 0) {
         // Left
-        if ((xAxisDirection < 0) && (gSaveFileIndex > 0)) {
+        if (xAxisDirection < 0 && gSaveFileIndex > 0) {
             gSaveFileIndex--;
         }
         // Right
-        if ((xAxisDirection > 0) && (gSaveFileIndex < 2)) {
+        if (xAxisDirection > 0 && (gSaveFileIndex < 2)) {
             gSaveFileIndex++;
         }
         // Down
@@ -7673,32 +7678,36 @@ s32 func_8008D5F8(UNUSED s32 updateRate) {
         }
     } else {
         // Left
-        if ((xAxisDirection < 0) && (gMenuOptionCount == 2)) {
+        if (xAxisDirection < 0 && gMenuOptionCount == 2) {
             gMenuOptionCount = 1;
         }
         // Right
-        if ((xAxisDirection > 0) && (gMenuOptionCount == 1)) {
+        if (xAxisDirection > 0 && gMenuOptionCount == 1) {
             gMenuOptionCount = 2;
         }
         // Up
         if (yAxisDirection > 0) {
-            if ((gMenuOptionCount == 1) && (gSaveFileIndex >= 2)) {
+            if (gMenuOptionCount == 1 && gSaveFileIndex >= 2) {
                 gSaveFileIndex = 0;
             }
-            if ((gMenuOptionCount == 2) && (gSaveFileIndex <= 0)) {
+            if (gMenuOptionCount == 2 && gSaveFileIndex <= 0) {
                 gSaveFileIndex = 2;
             }
             gMenuOptionCount = 0;
         }
     }
-    if (temp_a0 != ((gMenuOptionCount << 8) | gSaveFileIndex)) {
+    if (prevOption != ((gMenuOptionCount << 8) | gSaveFileIndex)) {
         sound_play(SOUND_MENU_PICK2, NULL);
     }
     return 0;
 }
 
-void func_8008D8BC(UNUSED s32 updateRate) {
-    s32 prevValue;
+/**
+ * Works similar to the root version of the function,
+ * but when selecting a file, it gives a confirmation, before copying a file.
+*/
+void fileselect_input_copy(UNUSED s32 updateRate) {
+    s32 prevOption;
     u32 buttonsPressed;
     s32 xAxisDirection;
     s32 i;
@@ -7730,14 +7739,14 @@ void func_8008D8BC(UNUSED s32 updateRate) {
             sound_play(SOUND_MENU_BACK3, NULL);
             return;
         }
-        prevValue = gSaveFileIndex3;
+        prevOption = gSaveFileIndex3;
         if ((xAxisDirection < 0) && (gSaveFileIndex3 > 0)) {
             gSaveFileIndex3--;
         }
         if ((xAxisDirection > 0) && (gSaveFileIndex3 < 2)) {
             gSaveFileIndex3++;
         }
-        if (prevValue != gSaveFileIndex3) {
+        if (prevOption != gSaveFileIndex3) {
             sound_play(SOUND_MENU_PICK2, NULL);
         }
     } else if (gFileConfirm == 1) {
@@ -7756,14 +7765,14 @@ void func_8008D8BC(UNUSED s32 updateRate) {
             sound_play(SOUND_MENU_BACK3, NULL);
             return;
         }
-        prevValue = gSaveFileIndex2;
+        prevOption = gSaveFileIndex2;
         if (xAxisDirection < 0 && gSaveFileIndex2 > 0) {
             gSaveFileIndex2--;
         }
         if (xAxisDirection > 0 && gSaveFileIndex2 < 2) {
             gSaveFileIndex2++;
         }
-        if (prevValue != gSaveFileIndex2) {
+        if (prevOption != gSaveFileIndex2) {
             sound_play(SOUND_MENU_PICK2, NULL);
         }
     } else {
@@ -7790,10 +7799,14 @@ void func_8008D8BC(UNUSED s32 updateRate) {
     }
 }
 
-void func_8008DC7C(UNUSED s32 updateRate) {
+/**
+ * Works similar to the root version of the function,
+ * but when selecting a file, it gives a confirmation, before erasing a file.
+*/
+void fileselect_input_erase(UNUSED s32 updateRate) {
     s32 buttonsPressed;
     s32 controllerXAxisDirection;
-    s32 temp;
+    s32 prevOption;
 
     buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
     controllerXAxisDirection = gControllersXAxisDirection[0];
@@ -7818,7 +7831,7 @@ void func_8008DC7C(UNUSED s32 updateRate) {
             return;
         }
 
-        temp = gSaveFileIndex3;
+        prevOption = gSaveFileIndex3;
 
         // Left
         if (controllerXAxisDirection < 0) {
@@ -7834,7 +7847,7 @@ void func_8008DC7C(UNUSED s32 updateRate) {
             }
         }
 
-        if (gSaveFileIndex3 != temp) {
+        if (gSaveFileIndex3 != prevOption) {
             sound_play(SOUND_MENU_PICK2, NULL);
         }
     } else {
@@ -7858,6 +7871,11 @@ void func_8008DC7C(UNUSED s32 updateRate) {
     }
 }
 
+/**
+ * Sets the music channels to match whichever character was last selected.
+ * Initialises the display for the file select options here, and then handles
+ * all of the file select behaviour.
+*/
 s32 menu_file_select_loop(s32 updateRate) {
     s32 i;
     s32 currentMenuDelay;
@@ -7899,17 +7917,17 @@ s32 menu_file_select_loop(s32 updateRate) {
             gMenuDelay -= updateRate;
         }
     }
-    if ((gMenuDelay >= -20) && (gMenuDelay <= 20)) {
+    if (gMenuDelay >= -20 && gMenuDelay <= 20) {
         fileselect_render(updateRate);
     }
-    if ((gMenuDelay == 0) && (gOpacityDecayTimer == 0)) {
-        if (gFileCopy != FALSE) {
-            func_8008D8BC(updateRate);
-        } else if (gFileErase != FALSE) {
-            func_8008DC7C(updateRate);
+    if (gMenuDelay == 0 && gOpacityDecayTimer == 0) {
+        if (gFileCopy) {
+            fileselect_input_copy(updateRate);
+        } else if (gFileErase) {
+            fileselect_input_erase(updateRate);
         } else if (gFileNew) {
             buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
-            if ((buttonsPressed & B_BUTTON) && (gCurrentFilenameChars == 0)) {
+            if (buttonsPressed & B_BUTTON && gCurrentFilenameChars == 0) {
                 unload_big_font_4();
                 gFileNew = FALSE;
                 gSavefileInfo[i].name[0] = 'D';
@@ -7932,7 +7950,7 @@ s32 menu_file_select_loop(s32 updateRate) {
                 gMenuDelay = 1;
             }
         } else {
-            currentMenuDelay = func_8008D5F8(updateRate);
+            currentMenuDelay = fileselect_input_root(updateRate);
             if (currentMenuDelay != 0) {
                 if (currentMenuDelay > 0) {
                     if (gSavefileInfo[gSaveFileIndex].isStarted != 0) {
