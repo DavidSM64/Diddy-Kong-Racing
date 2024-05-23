@@ -331,14 +331,14 @@ extern u8 *__ROM_END;
 
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
-void func_8007FF88(void);
+void menu_button_free(void);
 void func_80080E6C(void);
 void reset_title_logo_scale(void);
 void menu_init(u32 menuId);
 s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
 void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
-void func_800828B8(void);
+void trackmenu_set_records(void);
 void print_missing_controller_text(Gfx **dl, s32 updateRate);
 void menu_logos_screen_init(void);
 s32 menu_logo_screen_loop(s32 updateRate);
@@ -373,9 +373,9 @@ void menu_charselect_move(s32 arg0, s8 *arg1, s32 arg2, u16 menuPickSoundId, u16
 void charselect_free(void);
 void menu_caution_init(void);
 void unload_big_font_3(void);
-void func_8008CACC(void);
+void gameselect_free(void);
 void menu_file_select_init(void);
-void render_menu_image(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s32 green, s32 blue, s32 opacity);
+void fileselect_render_element(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s32 green, s32 blue, s32 opacity);
 void func_8008E428(void);
 void assign_vehicle_icon_textures(void);
 void assign_menu_arrow_textures(void);
@@ -478,7 +478,7 @@ s32 menu_enter_filename_loop(s32 updateRate);
 s32 menu_file_select_loop(s32 updateRate);
 s32 func_8008D5F8(s32 updateRate);
 void charselect_music_channels(s32 updateRate);
-void func_8008C698(s32 updateRate);
+void gameselect_render(s32 updateRate);
 void func_80083098(f32);
 void func_8008F00C(s32);
 void render_track_selection_viewport_border(ObjectModel *objMdl);
@@ -516,7 +516,7 @@ void render_magic_codes_list_menu_text(s32 updateRate);
 void trackmenu_track_view(s32 updateRate);
 void func_80085B9C(UNUSED s32 updateRate);
 void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale);
-void render_file_select_menu(UNUSED s32 updateRate);
+void fileselect_render(UNUSED s32 updateRate);
 void func_800871D8(SIDeviceStatus deviceStatus);
 SIDeviceStatus func_80086AFC(void);
 void trackmenu_setup_render(s32 updateRate);

@@ -99,11 +99,11 @@ s32 gTrackSelectViewPortHalfX;
 s32 gTrackSelectViewPortHalfY;
 s32 gTrackSelectViewPortX;
 s32 gTrackSelectViewportY;
-s32 D_80126484;
-s32 D_80126488;
+s32 gFileCopy;
+s32 gFileErase;
 s32 gSaveFileIndex3;
 s32 gSaveFileIndex2;
-s32 D_80126494;
+s32 gFileConfirm;
 s32 D_80126498;
 s32 D_8012649C;
 
@@ -266,7 +266,7 @@ char *D_80126C74; // gFileName?
 s32 D_80126C78;
 s32 D_80126C7C;
 s16 D_80126C80[32];
-s32 D_80126CC0;
+s32 gFileNew;
 
 /******************************/
 
@@ -2739,7 +2739,10 @@ void load_menu_text(s32 language) {
 GLOBAL_ASM("asm/non_matchings/menu/load_menu_text.s")
 #endif
 
-void func_8007FF88(void) {
+/**
+ * Free the geometry used by the 3D menu buttons.
+*/
+void menu_button_free(void) {
     if (gWoodPanelTriangles[0] != NULL) {
         free_from_memory_pool(gWoodPanelTriangles[0]);
         gWoodPanelTriangles[0] = NULL;
@@ -3470,7 +3473,10 @@ void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale) {
     sMenuGuiOpacity = 255;
 }
 
-void func_800828B8(void) {
+/**
+ * Set the current save data to use the furthest progress of all save files.
+*/
+void trackmenu_set_records(void) {
     s32 i;
     s32 numWorlds;
     s32 numLevels;
@@ -5331,7 +5337,7 @@ s32 menu_save_options_loop(s32 updateRate) {
 
 void func_80087EB8(void) {
     unload_font(ASSET_FONTS_BIGFONT);
-    func_8007FF88();
+    menu_button_free();
     menu_assetgroup_free(gSaveMenuObjectIndices);
     assign_dialogue_box_id(7);
     free_from_memory_pool((void *) D_80126A0C);
@@ -7047,7 +7053,7 @@ s32 menu_character_select_loop(s32 updateRate) {
                 }
             } else {
                 music_change_on();
-                func_800828B8();
+                trackmenu_set_records();
                 init_racer_headers();
                 menu_init(MENU_TRACK_SELECT);
             }
@@ -7248,12 +7254,15 @@ void menu_game_select_init(void) {
     }
 }
 
-void func_8008C698(UNUSED s32 updateRate) {
+/**
+ * Initialise the ortho matrix then render the menu elements for the buttons.
+*/
+void gameselect_render(UNUSED s32 updateRate) {
     s32 i;
     s32 filterBlendFactor;
     s32 fade;
 
-    if (gMenuDelay >= -21 && gMenuDelay < 22) {
+    if (gMenuDelay > -22 && gMenuDelay < 22) {
         fade = gOptionBlinkTimer * 8;
         fade = fade;
         if (fade >= 0x100) {
@@ -7283,6 +7292,10 @@ void func_8008C698(UNUSED s32 updateRate) {
     }
 }
 
+/**
+ * Make sure the correct music channels are active in accordance to the selected player,
+ * then render the available game modes.
+*/
 s32 menu_game_select_loop(s32 updateRate) {
     s32 playerInputs;
     s32 playerYDir;
@@ -7295,7 +7308,7 @@ s32 menu_game_select_loop(s32 updateRate) {
     if (gOpacityDecayTimer) {
         gOpacityDecayTimer++;
         if (gOpacityDecayTimer >= 3) {
-            func_800828B8();
+            trackmenu_set_records();
             gOpacityDecayTimer = 0;
         }
     }
@@ -7307,7 +7320,7 @@ s32 menu_game_select_loop(s32 updateRate) {
         }
     }
     if (gMenuDelay > 30) {
-        func_8008CACC();
+        gameselect_free();
         if (gMenuCurIndex == gMenuOptionCount) {
             music_change_on();
             gIsInTracksMode = TRUE;
@@ -7323,7 +7336,7 @@ s32 menu_game_select_loop(s32 updateRate) {
         }
         return MENU_RESULT_CONTINUE;
     } else if (gMenuDelay < -30) {
-        func_8008CACC();
+        gameselect_free();
         charSelectScene = 0;
         if (is_drumstick_unlocked()) {
             charSelectScene = 1;
@@ -7336,7 +7349,7 @@ s32 menu_game_select_loop(s32 updateRate) {
         menu_init(MENU_CHARACTER_SELECT);
         return MENU_RESULT_CONTINUE;
     } else {
-        func_8008C698(updateRate);
+        gameselect_render(updateRate);
         if ((gMenuDelay == 0) && (gOpacityDecayTimer == 0)) {
             playerInputs = get_buttons_pressed_from_player(PLAYER_ONE);
             playerYDir = gControllersYAxisDirection[0];
@@ -7347,7 +7360,7 @@ s32 menu_game_select_loop(s32 updateRate) {
             }
             if (playerInputs & (A_BUTTON | START_BUTTON)) {
                 if (gMenuCurIndex == gMenuOptionCount) {
-                    music_fade(-0x80);
+                    music_fade(-128);
                 }
                 transition_begin(&sMenuTransitionFadeIn);
                 gMenuDelay = 1;
@@ -7375,9 +7388,12 @@ s32 menu_game_select_loop(s32 updateRate) {
     }
 }
 
-void func_8008CACC(void) {
+/**
+ * Free the assets associated with the game select menu.
+*/
+void gameselect_free(void) {
     unload_font(ASSET_FONTS_BIGFONT);
-    func_8007FF88();
+    menu_button_free();
     menu_asset_free(0x43);
 }
 
@@ -7400,9 +7416,9 @@ void menu_file_select_init(void) {
     gMenuDelay = 0;
     gMenuOptionCount = 0;
     gOptionBlinkTimer = 0;
-    D_80126484 = FALSE;
-    D_80126488 = FALSE;
-    D_80126CC0 = FALSE;
+    gFileCopy = FALSE;
+    gFileErase = FALSE;
+    gFileNew = FALSE;
     transition_begin(&sMenuTransitionFadeOut);
     load_font(ASSET_FONTS_BIGFONT);
     music_play(SEQUENCE_CHOOSE_YOUR_RACER);
@@ -7417,10 +7433,9 @@ void menu_file_select_init(void) {
 }
 
 /**
- * Sets the colour properties of the selected image index in the menu texture stack, then renders it on screen.
- * Rendering it twice using different colour settings, it casts a shadow.
+ * Render a screen element associated with file select onscreen.
  */
-void render_menu_image(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s32 green, s32 blue, s32 opacity) {
+void fileselect_render_element(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s32 green, s32 blue, s32 opacity) {
     s32 tempRed = sMenuGuiColourR;
     s32 tempGreen = sMenuGuiColourG;
     s32 tempBlue = sMenuGuiColourB;
@@ -7443,10 +7458,14 @@ void render_menu_image(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s32 green
     menu_element_render(imageID);
 }
 
-void render_file_select_menu(UNUSED s32 updateRate) {
+/**
+ * Render the file select buttons onscreen. This includes the 3D buttons,
+ * and then the copy and erase text beneath.
+*/
+void fileselect_render(UNUSED s32 updateRate) {
     s32 yPos;
     s32 var_s2;
-    s32 temp;
+    s32 glow;
     u32 colour;
     s32 i;
     UNUSED s32 pad[3];
@@ -7481,19 +7500,19 @@ void render_file_select_menu(UNUSED s32 updateRate) {
                 if (gSavefileInfo[i].isAdventure2) {
                     var_s2 = 12;
                 }
-                render_menu_image(var_s2, gFileSelectButtons[i].x + gFileSelectElementPos[2],
+                fileselect_render_element(var_s2, gFileSelectButtons[i].x + gFileSelectElementPos[2],
                                   gFileSelectButtons[i].y + gFileSelectElementPos[3], 0, 0, 0, 128);
                 sprite_anim_off(TRUE);
                 gMenuImages->spriteOffset = gSavefileInfo[i].balloonCount / 10;
-                render_menu_image(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] - 6,
+                fileselect_render_element(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] - 6,
                                   gFileSelectButtons[i].y + gFileSelectElementPos[7], 0, 0, 0, 128);
                 gMenuImages->spriteOffset = gSavefileInfo[i].balloonCount % 10;
-                render_menu_image(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] + 6,
+                fileselect_render_element(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] + 6,
                                   gFileSelectButtons[i].y + gFileSelectElementPos[7], 0, 0, 0, 128);
                 sprite_anim_off(FALSE);
                 sMenuGuiColourG = 64;
                 sMenuGuiColourB = 64;
-                render_menu_image(10, gFileSelectButtons[i].x + gFileSelectElementPos[8],
+                fileselect_render_element(10, gFileSelectButtons[i].x + gFileSelectElementPos[8],
                                   gFileSelectButtons[i].y + gFileSelectElementPos[9], 0, 0, 0, 128);
                 sMenuGuiColourG = 255;
                 sMenuGuiColourB = 255;
@@ -7506,22 +7525,22 @@ void render_file_select_menu(UNUSED s32 updateRate) {
             }
         }
     }
-    temp = gOptionBlinkTimer * 8;
-    if (temp >= 256) {
-        temp = 511 - temp;
+    glow = gOptionBlinkTimer * 8;
+    if (glow >= 256) {
+        glow = 511 - glow;
     }
     set_text_font(ASSET_FONTS_FUNFONT);
     set_text_background_colour(0, 0, 0, 0);
     set_text_colour(255, 255, 255, 0, 255);
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         var_s2 = FALSE;
-        if (D_80126484 != FALSE) {
-            if (D_80126494 == 0 && i == gSaveFileIndex3) {
+        if (gFileCopy) {
+            if (gFileConfirm == 0 && i == gSaveFileIndex3) {
                 var_s2 = TRUE;
-            } else if (D_80126494 > 0 && i == gSaveFileIndex2) {
+            } else if (gFileConfirm > 0 && i == gSaveFileIndex2) {
                 var_s2 = TRUE;
             }
-        } else if (D_80126488 != FALSE) {
+        } else if (gFileErase) {
             if (i == gSaveFileIndex3) {
                 var_s2 = TRUE;
             }
@@ -7529,12 +7548,12 @@ void render_file_select_menu(UNUSED s32 updateRate) {
             var_s2 = TRUE;
         }
         if (var_s2) {
-            colour = temp | ~0xFF;
+            colour = glow | ~0xFF;
             func_80080E90(&sMenuCurrDisplayList, gFileSelectButtons[i].x, gFileSelectButtons[i].y + yPos,
                           gFileSelectButtons[i].width, gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth,
                           gFileSelectButtons[i].borderHeight, colour, colour, colour, colour);
         }
-        if (!D_80126CC0 || i != gSaveFileIndex) {
+        if (!gFileNew || i != gSaveFileIndex) {
             trim_filename_string(gSavefileInfo[i].name, trimmedFilename);
             if (!gSavefileInfo[i].isStarted) {
                 trim_filename_string(gFilenames[i], trimmedFilename);
@@ -7554,12 +7573,12 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 16, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
     set_text_colour(255, 255, 255, 0, 255);
     yPos += 187;
-    if (D_80126484) {
-        if (D_80126494 == 0) {
+    if (gFileCopy) {
+        if (gFileConfirm == FALSE) {
             set_text_font(ASSET_FONTS_FUNFONT);
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOCOPY],
                       ALIGN_MIDDLE_CENTER);
-        } else if (D_80126494 == 1) {
+        } else if (gFileConfirm == 1) {
             set_text_font(ASSET_FONTS_FUNFONT);
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOCOPYTO],
                       ALIGN_MIDDLE_CENTER);
@@ -7567,8 +7586,8 @@ void render_file_select_menu(UNUSED s32 updateRate) {
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) &D_800E8234 /* "OK?" */,
                       ALIGN_MIDDLE_CENTER);
         }
-    } else if (D_80126488) {
-        if (D_80126494 == 0) {
+    } else if (gFileErase) {
+        if (gFileConfirm == FALSE) {
             set_text_font(ASSET_FONTS_FUNFONT);
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOERASE],
                       ALIGN_MIDDLE_CENTER);
@@ -7576,13 +7595,13 @@ void render_file_select_menu(UNUSED s32 updateRate) {
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) &D_800E8238 /* "OK?" */,
                       ALIGN_MIDDLE_CENTER);
         }
-    } else if (!D_80126CC0) {
+    } else if (gFileNew == FALSE) {
         if (gMenuOptionCount == 1) {
-            set_text_colour(255, 255, 255, temp, 255);
+            set_text_colour(255, 255, 255, glow, 255);
         }
         draw_text(&sMenuCurrDisplayList, 90, yPos, gMenuText[ASSET_MENU_TEXT_COPY], ALIGN_MIDDLE_CENTER);
         if (gMenuOptionCount == 2) {
-            set_text_colour(255, 255, 255, temp, 255);
+            set_text_colour(255, 255, 255, glow, 255);
         } else {
             set_text_colour(255, 255, 255, 0, 255);
         }
@@ -7620,14 +7639,14 @@ s32 func_8008D5F8(UNUSED s32 updateRate) {
             case 1:
                 sound_play(SOUND_SELECT2, NULL);
                 gSaveFileIndex3 = gSaveFileIndex;
-                D_80126484 = TRUE;
-                D_80126494 = 0;
+                gFileCopy = TRUE;
+                gFileConfirm = 0;
                 return 0;
             case 2:
                 sound_play(SOUND_SELECT2, NULL);
                 gSaveFileIndex3 = gSaveFileIndex;
-                D_80126488 = TRUE;
-                D_80126494 = 0;
+                gFileErase = TRUE;
+                gFileConfirm = 0;
                 return 0;
         }
     } else if (buttonsPressed & CONT_B) {
@@ -7694,10 +7713,10 @@ void func_8008D8BC(UNUSED s32 updateRate) {
         buttonsPressed |= buttonsPressedPlayerTwo;
         xAxisDirection += gControllersXAxisDirection[PLAYER_TWO];
     }
-    if (D_80126494 == 0) {
+    if (gFileConfirm == 0) {
         if (buttonsPressed & (B_BUTTON)) {
             sound_play(SOUND_MENU_BACK3, NULL);
-            D_80126484 = FALSE;
+            gFileCopy = FALSE;
             return;
         }
         if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
@@ -7705,7 +7724,7 @@ void func_8008D8BC(UNUSED s32 updateRate) {
                 sound_play(SOUND_SELECT2, NULL);
                 mark_read_save_file(gSaveFileIndex3);
                 gSaveFileIndex2 = gSaveFileIndex3;
-                D_80126494 = 1;
+                gFileConfirm = 1;
                 return;
             }
             sound_play(SOUND_MENU_BACK3, NULL);
@@ -7721,17 +7740,17 @@ void func_8008D8BC(UNUSED s32 updateRate) {
         if (prevValue != gSaveFileIndex3) {
             sound_play(SOUND_MENU_PICK2, NULL);
         }
-    } else if (D_80126494 == 1) {
+    } else if (gFileConfirm == 1) {
         if (buttonsPressed & B_BUTTON) {
             sound_play(SOUND_MENU_BACK3, NULL);
             gSaveFileIndex3 = gSaveFileIndex2;
-            D_80126494 = 0;
+            gFileConfirm = 0;
             return;
         }
         if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
             if (!gSavefileInfo[gSaveFileIndex2].isStarted) {
                 sound_play(SOUND_SELECT2, NULL);
-                D_80126494 = 2;
+                gFileConfirm = 2;
                 return;
             }
             sound_play(SOUND_MENU_BACK3, NULL);
@@ -7763,10 +7782,10 @@ void func_8008D8BC(UNUSED s32 updateRate) {
             gSavefileInfo[gSaveFileIndex2].name[i] = '\0';
             gSaveFileIndex = gSaveFileIndex2;
             gMenuOptionCount = 0;
-            D_80126484 = FALSE;
+            gFileCopy = FALSE;
         } else if (buttonsPressed & B_BUTTON) {
             sound_play(SOUND_MENU_BACK3, NULL);
-            D_80126494 = 1;
+            gFileConfirm = 1;
         }
     }
 }
@@ -7784,15 +7803,15 @@ void func_8008DC7C(UNUSED s32 updateRate) {
         controllerXAxisDirection += gControllersXAxisDirection[1];
     }
 
-    if (D_80126494 == 0) {
+    if (gFileConfirm == 0) {
         if (buttonsPressed & B_BUTTON) {
             sound_play(SOUND_MENU_BACK3, NULL);
-            D_80126488 = FALSE;
+            gFileErase = FALSE;
             return;
         } else if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
             if (gSavefileInfo[gSaveFileIndex3].isStarted != 0) {
                 sound_play(SOUND_SELECT2, NULL);
-                D_80126494 = 1;
+                gFileConfirm = 1;
                 return;
             }
             sound_play(SOUND_MENU_BACK3, NULL);
@@ -7831,10 +7850,10 @@ void func_8008DC7C(UNUSED s32 updateRate) {
             gSavefileInfo[gSaveFileIndex3].name[3] = '\0';
             gSaveFileIndex = gSaveFileIndex3;
             gMenuOptionCount = 0;
-            D_80126488 = FALSE;
+            gFileErase = FALSE;
         } else if (buttonsPressed & B_BUTTON) {
             sound_play(SOUND_MENU_BACK3, NULL);
-            D_80126494 = 0;
+            gFileConfirm = 0;
         }
     }
 }
@@ -7881,25 +7900,25 @@ s32 menu_file_select_loop(s32 updateRate) {
         }
     }
     if ((gMenuDelay >= -20) && (gMenuDelay <= 20)) {
-        render_file_select_menu(updateRate);
+        fileselect_render(updateRate);
     }
     if ((gMenuDelay == 0) && (gOpacityDecayTimer == 0)) {
-        if (D_80126484 != FALSE) {
+        if (gFileCopy != FALSE) {
             func_8008D8BC(updateRate);
-        } else if (D_80126488 != FALSE) {
+        } else if (gFileErase != FALSE) {
             func_8008DC7C(updateRate);
-        } else if (D_80126CC0) {
+        } else if (gFileNew) {
             buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
             if ((buttonsPressed & B_BUTTON) && (gCurrentFilenameChars == 0)) {
                 unload_big_font_4();
-                D_80126CC0 = FALSE;
+                gFileNew = FALSE;
                 gSavefileInfo[i].name[0] = 'D';
                 gSavefileInfo[i].name[1] = 'K';
                 gSavefileInfo[i].name[2] = 'R';
                 gSavefileInfo[i].name[3] = '\0';
             } else if (menu_enter_filename_loop(updateRate) != 0) {
                 unload_big_font_4();
-                D_80126CC0 = FALSE;
+                gFileNew = FALSE;
                 gSavefileInfo[gSaveFileIndex].isAdventure2 = 0;
                 if (gIsInAdventureTwo != 0) {
                     gSavefileInfo[gSaveFileIndex].isAdventure2 = 1;
@@ -7921,7 +7940,7 @@ s32 menu_file_select_loop(s32 updateRate) {
                         mark_read_save_file(gSaveFileIndex);
                         music_fade(-128);
                     } else {
-                        D_80126CC0 = TRUE;
+                        gFileNew = TRUE;
                         gIndexOfCurInputCharacter = 0;
                         i = 0;
                         if (osTvType == TV_TYPE_PAL) {
@@ -7982,7 +8001,7 @@ s32 menu_file_select_loop(s32 updateRate) {
 
 void func_8008E428(void) {
     menu_assetgroup_free(gFileSelectObjectIndices);
-    func_8007FF88();
+    menu_button_free();
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
@@ -8381,7 +8400,7 @@ void menu_track_select_unload(void) {
         }
     }
     unload_font(ASSET_FONTS_BIGFONT);
-    func_8007FF88();
+    menu_button_free();
     music_change_on();
     music_voicelimit_change_on();
     music_stop();
@@ -9865,7 +9884,7 @@ void func_80094688(s32 arg0, s32 arg1) {
     } else {
         gMenuOptionCount = 7;
     }
-    D_80126CC0 = FALSE;
+    gFileNew = FALSE;
     gOptionBlinkTimer = 0;
     gOpacityDecayTimer = 0;
     gMenuDelay = 0;
