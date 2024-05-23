@@ -109,28 +109,28 @@ s32 D_8012649C;
 
 SavefileInfo gSavefileInfo[4];
 
-s32 D_801264D0;
-s32 gGhostMenuTotal; // Count of elements in some arrays?  D_80126540, D_80126508, D_80126510, gGhostMenuVehicleIDs, D_80126520?
+s32 gCpakGhostData;
+s32 gGhostMenuTotal; // Count of elements in some arrays?  gGhostWorldIDs, gGhostLevelIDsMenu, gGhostCharacterIDsMenu, gGhostVehicleIDsMenu, gGhostChecksumIDsMenu?
 s8 gDialogueSubmenu;
-u8 D_801264DC[4]; // gGhostLevelIDs?
+u8 gGhostLevelIDsPak[4]; // gGhostLevelIDsMenu?
 s8 D_801264E0;
 s8 D_801264E1;
 
 s8 sCurrentMenuID;
-u8 D_801264E4[4]; // gGhostSomethings?
+u8 gGhostCharacterIDsPak[4]; // gGhostSomethings?
 s32 D_801264E8;
-u8 D_801264EC[4]; // gGhostVehicleIds?
+u8 gGhostVehicleIDsPak[4]; // gGhostVehicleIds?
 s32 D_801264F0[2];
-u16 D_801264F8[6]; // gGhostChecksums?
+u16 gGhostChecksumIDsPak[6]; // gGhostChecksums?
 s8 sDialogueOptionMax;
-u8 D_80126508[6];
+u8 gGhostLevelIDsMenu[6];
 s8 gDialogueOptionYOffset;
-u8 D_80126510[6];
+u8 gGhostCharacterIDsMenu[6];
 s8 gDialogueItemSelection;
-u8 gGhostMenuVehicleIDs[6];
-u16 D_80126520[6];
+u8 gGhostVehicleIDsMenu[6];
+u16 gGhostChecksumIDsMenu[6];
 Settings *gSavefileData[4];
-u8 D_80126540[8];
+u8 gGhostWorldIDs[8];
 s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
 void *gMenuAssets[128];   // lookup table? Contains Textures, Objects, and Sprites. Need to change name and type.
 u8 gMenuAssetActive[128]; // Seems to be a boolean for "This texture exists" for the above array.
@@ -5020,7 +5020,7 @@ SIDeviceStatus savemenu_write(void) {
                 if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType != SAVE_FILE_TYPE_CPAK_EMPTY) {
                     if (gSavemenuFilesDest[gSaveMenuOptionDest].saveFileType == SAVE_FILE_TYPE_UNK9) {
                         gMenuDelay = 1;
-                        D_801264D0 = gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex;
+                        gCpakGhostData = gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex;
                     }
                 } else {
                     ret = copy_controller_pak_data(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex,
@@ -11805,7 +11805,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
             }
             break;
         case 1:
-            if (postrace_render(updateRate) != 0) {
+            if (postrace_render(updateRate)) {
                 gMenuOptionCount = 2;
                 draw_menu_elements(1, gTrophyRankingsTitle, 1.0f);
             }
@@ -11858,8 +11858,8 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
             break;
         case 3:
             gMenuDelay += updateRate;
-            if (gMenuDelay >= 31) {
-                func_80099600();
+            if (gMenuDelay > 30) {
+                rankings_free();
                 close_dialogue_box(7);
                 assign_dialogue_box_id(7);
                 if (gTrophyRaceRound < 4) {
@@ -11925,20 +11925,30 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
     return ret;
 }
 
-void func_80099600(void) {
+/**
+ * Free all assets associated with the trophy race rankings screen.
+*/
+void rankings_free(void) {
     menu_assetgroup_free(gTrophyRankingsObjectIndices);
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
+/**
+ * Return the hub world ID of the trophy race.
+*/
 s32 get_trophy_race_world_id(void) {
     return gTrophyRaceWorldId;
 }
 
-void func_8009963C(void) {
+/**
+ * Reads all the ghost data from the controller pak and checks if it's valid.
+ * Any valid data gets added as a total, and then the menu gets populated with that data.
+*/
+void ghostmenu_generate(void) {
     u8 *mainTrackIds;
     s32 i;
     s32 j;
-    u16 sp44[4];
+    u16 validIDs[4];
     u16 swap;
     u16 swapByte;
     UNUSED s32 pad;
@@ -11947,11 +11957,11 @@ void func_8009963C(void) {
     mainTrackIds = (u8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
 
     for (i = 0; i < 6; i++) {
-        if (D_801264DC[i] != 0xFF) {
-            for (j = 0; mainTrackIds[j] != 0xFF && mainTrackIds[j] != D_801264DC[i]; j++) {}
+        if (gGhostLevelIDsPak[i] != 0xFF) {
+            for (j = 0; mainTrackIds[j] != 0xFF && mainTrackIds[j] != gGhostLevelIDsPak[i]; j++) {}
             if (mainTrackIds[j] != 0xFF) {
-                D_80126540[gGhostMenuTotal] = i;
-                sp44[gGhostMenuTotal] = (j * 8) + D_801264EC[i];
+                gGhostWorldIDs[gGhostMenuTotal] = i;
+                validIDs[gGhostMenuTotal] = (j * 8) + gGhostVehicleIDsPak[i];
                 gGhostMenuTotal++;
             }
         }
@@ -11959,48 +11969,52 @@ void func_8009963C(void) {
 
     for (i = gGhostMenuTotal - 1; i > 0; i--) {
         for (j = 0; j < i; j++) {
-            if (sp44[j + 1] < sp44[j]) {
-                swap = sp44[j];
-                sp44[j] = sp44[j + 1];
-                sp44[j + 1] = swap;
-                swapByte = D_80126540[j];
-                D_80126540[j] = D_80126540[j + 1];
-                D_80126540[j + 1] = swapByte;
+            if (validIDs[j + 1] < validIDs[j]) {
+                swap = validIDs[j];
+                validIDs[j] = validIDs[j + 1];
+                validIDs[j + 1] = swap;
+                swapByte = gGhostWorldIDs[j];
+                gGhostWorldIDs[j] = gGhostWorldIDs[j + 1];
+                gGhostWorldIDs[j + 1] = swapByte;
             }
         }
     }
 
     for (i = 0; i < gGhostMenuTotal; i++) {
-        D_80126508[i] = D_801264DC[D_80126540[i]];
-        D_80126510[i] = D_801264E4[D_80126540[i]];
-        gGhostMenuVehicleIDs[i] = D_801264EC[D_80126540[i]];
-        D_80126520[i] = D_801264F8[D_80126540[i]];
+        gGhostLevelIDsMenu[i] = gGhostLevelIDsPak[gGhostWorldIDs[i]];
+        gGhostCharacterIDsMenu[i] = gGhostCharacterIDsPak[gGhostWorldIDs[i]];
+        gGhostVehicleIDsMenu[i] = gGhostVehicleIDsPak[gGhostWorldIDs[i]];
+        gGhostChecksumIDsMenu[i] = gGhostChecksumIDsPak[gGhostWorldIDs[i]];
     }
 }
 
-s32 func_800998E0(s32 arg0) {
+/**
+ * Erase a ghost from the controller pak.
+ * Move further entries forward to fill in the new gap.
+*/
+s32 ghostmenu_erase(s32 id) {
     s32 temp_s0;
     s32 result;
     s32 i;
 
-    result = 0;
-    if (arg0 >= 0 && arg0 < gGhostMenuTotal) {
+    result = CONTROLLER_PAK_GOOD;
+    if (id >= 0 && id < gGhostMenuTotal) {
         sound_play(SOUND_SELECT2, NULL);
-        temp_s0 = D_80126540[arg0];
-        result = func_800753D8(D_801264D0, temp_s0);
-        if (result == 0) {
-            D_801264DC[temp_s0] = 0xFF;
+        temp_s0 = gGhostWorldIDs[id];
+        result = func_800753D8(gCpakGhostData, temp_s0);
+        if (result == CONTROLLER_PAK_GOOD) {
+            gGhostLevelIDsPak[temp_s0] = 0xFF;
             gGhostMenuTotal--;
-            for (i = arg0; i < gGhostMenuTotal; i++) {
-                D_80126540[i] = D_80126540[i + 1];
-                D_80126508[i] = D_80126508[i + 1];
-                D_80126510[i] = D_80126510[i + 1];
-                gGhostMenuVehicleIDs[i] = gGhostMenuVehicleIDs[i + 1];
-                D_80126520[i] = D_80126520[i + 1];
+            for (i = id; i < gGhostMenuTotal; i++) {
+                gGhostWorldIDs[i] = gGhostWorldIDs[i + 1];
+                gGhostLevelIDsMenu[i] = gGhostLevelIDsMenu[i + 1];
+                gGhostCharacterIDsMenu[i] = gGhostCharacterIDsMenu[i + 1];
+                gGhostVehicleIDsMenu[i] = gGhostVehicleIDsMenu[i + 1];
+                gGhostChecksumIDsMenu[i] = gGhostChecksumIDsMenu[i + 1];
             }
             for (i = 0; i < gGhostMenuTotal; i++) {
-                if (temp_s0 < D_80126540[i]) {
-                    D_80126540[i]--;
+                if (temp_s0 < gGhostWorldIDs[i]) {
+                    gGhostWorldIDs[i]--;
                 }
             }
         }
@@ -12015,9 +12029,9 @@ void menu_ghost_data_init(void) {
     s32 i;
     SIDeviceStatus pakStatus;
 
-    pakStatus = func_800756D4(D_801264D0, &D_801264DC, &D_801264EC, &D_801264E4, &D_801264F8);
+    pakStatus = func_800756D4(gCpakGhostData, &gGhostLevelIDsPak, &gGhostVehicleIDsPak, &gGhostCharacterIDsPak, &gGhostChecksumIDsPak);
     if (pakStatus == CONTROLLER_PAK_GOOD) {
-        func_8009963C();
+        ghostmenu_generate();
     }
     menu_assetgroup_load(&gGhostDataObjectIndices);
     menu_imagegroup_load(&gGhostDataImageIndices);
@@ -12122,11 +12136,11 @@ void ghostmenu_render(UNUSED s32 updateRate) {
     while (scroll < gGhostMenuTotal && numToDraw > 0) {
         if (gGhostDataElementPositions[0]) {} // Fakematch
 
-        currentWorldId = get_map_world_id(D_80126508[scroll]) - 1;
+        currentWorldId = get_map_world_id(gGhostLevelIDsMenu[scroll]) - 1;
         if (currentWorldId < 0 || currentWorldId >= WORLD_FUTURE_FUN_LAND) {
             currentWorldId = 0;
         }
-        levelName = get_level_name(D_80126508[scroll]);
+        levelName = get_level_name(gGhostLevelIDsMenu[scroll]);
         for (i = 0; levelName[i] != '\0' && i < 63; i++) {
             textBuffer[i] = levelName[i];
             if (textBuffer[i] >= 'a' && textBuffer[i] <= 'z') {
@@ -12149,10 +12163,10 @@ void ghostmenu_render(UNUSED s32 updateRate) {
         set_text_colour(200, 228, 80, 255, 255);
         draw_text(&sMenuCurrDisplayList, gGhostDataElementPositions[0] + 40, gGhostDataElementPositions[1] + y,
                   textBuffer, ALIGN_MIDDLE_CENTER);
-        render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[D_80126510[scroll]],
+        render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[gGhostCharacterIDsMenu[scroll]],
                                   gGhostDataElementPositions[2] + 40, gGhostDataElementPositions[3] + y, 255, 255, 255,
                                   255);
-        switch (gGhostMenuVehicleIDs[scroll]) {
+        switch (gGhostVehicleIDsMenu[scroll]) {
             case 1:
                 vehicleSelectTex = gRaceSelectionHoverTex;
                 break;
@@ -12173,11 +12187,11 @@ void ghostmenu_render(UNUSED s32 updateRate) {
         menu_element_render(7);
         sMenuGuiOpacity = 128;
         // Timestamp Shadow gets drawn first
-        menu_timestamp_render(D_80126520[scroll], gGhostDataElementPositions[8] - (SCREEN_HEIGHT_HALF - 1),
+        menu_timestamp_render(gGhostChecksumIDsMenu[scroll], gGhostDataElementPositions[8] - (SCREEN_HEIGHT_HALF - 1),
                               (-gGhostDataElementPositions[9] - y) + heightAdjust + (SCREEN_HEIGHT_HALF - 1), 0, 0, 0,
                               FONT_COLOURFUL);
         sMenuGuiOpacity = 255;
-        menu_timestamp_render(D_80126520[scroll], gGhostDataElementPositions[8] - (SCREEN_HEIGHT_HALF + 1),
+        menu_timestamp_render(gGhostChecksumIDsMenu[scroll], gGhostDataElementPositions[8] - (SCREEN_HEIGHT_HALF + 1),
                               (-gGhostDataElementPositions[9] - y) + heightAdjust + (SCREEN_HEIGHT_HALF + 1), 255, 192,
                               255, FONT_COLOURFUL);
         scroll++;
@@ -12294,7 +12308,7 @@ s32 menu_ghost_data_loop(s32 updateRate) {
                 sound_play(SOUND_MENU_BACK3, NULL);
             } else {
                 if (pressedButtons & (START_BUTTON | A_BUTTON)) {
-                    if (func_800998E0(gGhostMenuOption) == 0) {
+                    if (ghostmenu_erase(gGhostMenuOption) == CONTROLLER_PAK_GOOD) {
                         if (gGhostMenuOption >= gGhostMenuTotal) {
                             gGhostMenuOption = gGhostMenuTotal - 1;
                         }

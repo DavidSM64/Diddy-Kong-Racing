@@ -1600,7 +1600,7 @@ s32 func_800753D8(s32 controllerIndex, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
 #endif
 
-SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, s16 *arg4) {
+SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *levelIDs, u8 *vehicleIDs, u8 *characterIDs, s16 *checksumIDs) {
     s32 i;
     u8 *fileData;
     s32 ret; // sp64
@@ -1615,11 +1615,11 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, 
         return ret;
     }
     for (i = 0; i < 6; i++) {
-        arg1[i] = 0xFF;
-        arg4[i] = 0;
-        temp_v0_2 = arg4[i];
-        arg3[i] = temp_v0_2;
-        arg2[i] = temp_v0_2;
+        levelIDs[i] = 0xFF;
+        checksumIDs[i] = 0;
+        temp_v0_2 = checksumIDs[i];
+        characterIDs[i] = temp_v0_2;
+        vehicleIDs[i] = temp_v0_2;
     }
     ret = get_file_number(controllerIndex, "DKRACING-GHOSTS", "", &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
@@ -1635,10 +1635,10 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, 
                             ret = CONTROLLER_PAK_BAD_DATA;
                             break;
                         } else {
-                            arg1[i] = var_s1[i].unk0.levelID;
-                            arg2[i] = var_s1[i].unk0.vehicleID;
-                            arg3[i] = fileData[var_s1[i].unk2 + 2];
-                            arg4[i] = ((GhostHeaderAlt *) &fileData[var_s1[i].unk2] + 1)->checksum;
+                            levelIDs[i] = var_s1[i].unk0.levelID;
+                            vehicleIDs[i] = var_s1[i].unk0.vehicleID;
+                            characterIDs[i] = fileData[var_s1[i].unk2 + 2];
+                            checksumIDs[i] = ((GhostHeaderAlt *) &fileData[var_s1[i].unk2] + 1)->checksum;
                         }
                     }
                 }

@@ -1,13 +1,13 @@
 glabel menu_ghost_data_init
 /* 09A65C 80099A5C 27BDFF88 */  addiu $sp, $sp, -0x78
-/* 09A660 80099A60 3C048012 */  lui   $a0, %hi(D_801264D0) # $a0, 0x8012
-/* 09A664 80099A64 3C0E8012 */  lui   $t6, %hi(D_801264F8) # $t6, 0x8012
+/* 09A660 80099A60 3C048012 */  lui   $a0, %hi(gCpakGhostData) # $a0, 0x8012
+/* 09A664 80099A64 3C0E8012 */  lui   $t6, %hi(gGhostChecksumIDsPak) # $t6, 0x8012
 /* 09A668 80099A68 AFBF0044 */  sw    $ra, 0x44($sp)
-/* 09A66C 80099A6C 25CE64F8 */  addiu $t6, %lo(D_801264F8) # addiu $t6, $t6, 0x64f8
-/* 09A670 80099A70 8C8464D0 */  lw    $a0, %lo(D_801264D0)($a0)
-/* 09A674 80099A74 3C058012 */  lui   $a1, %hi(D_801264DC) # $a1, 0x8012
-/* 09A678 80099A78 3C068012 */  lui   $a2, %hi(D_801264EC) # $a2, 0x8012
-/* 09A67C 80099A7C 3C078012 */  lui   $a3, %hi(D_801264E4) # $a3, 0x8012
+/* 09A66C 80099A6C 25CE64F8 */  addiu $t6, %lo(gGhostChecksumIDsPak) # addiu $t6, $t6, 0x64f8
+/* 09A670 80099A70 8C8464D0 */  lw    $a0, %lo(gCpakGhostData)($a0)
+/* 09A674 80099A74 3C058012 */  lui   $a1, %hi(gGhostLevelIDsPak) # $a1, 0x8012
+/* 09A678 80099A78 3C068012 */  lui   $a2, %hi(gGhostVehicleIDsPak) # $a2, 0x8012
+/* 09A67C 80099A7C 3C078012 */  lui   $a3, %hi(gGhostCharacterIDsPak) # $a3, 0x8012
 /* 09A680 80099A80 AFBE0040 */  sw    $fp, 0x40($sp)
 /* 09A684 80099A84 AFB7003C */  sw    $s7, 0x3c($sp)
 /* 09A688 80099A88 AFB60038 */  sw    $s6, 0x38($sp)
@@ -17,14 +17,14 @@ glabel menu_ghost_data_init
 /* 09A698 80099A98 AFB20028 */  sw    $s2, 0x28($sp)
 /* 09A69C 80099A9C AFB10024 */  sw    $s1, 0x24($sp)
 /* 09A6A0 80099AA0 AFB00020 */  sw    $s0, 0x20($sp)
-/* 09A6A4 80099AA4 24E764E4 */  addiu $a3, %lo(D_801264E4) # addiu $a3, $a3, 0x64e4
-/* 09A6A8 80099AA8 24C664EC */  addiu $a2, %lo(D_801264EC) # addiu $a2, $a2, 0x64ec
-/* 09A6AC 80099AAC 24A564DC */  addiu $a1, %lo(D_801264DC) # addiu $a1, $a1, 0x64dc
+/* 09A6A4 80099AA4 24E764E4 */  addiu $a3, %lo(gGhostCharacterIDsPak) # addiu $a3, $a3, 0x64e4
+/* 09A6A8 80099AA8 24C664EC */  addiu $a2, %lo(gGhostVehicleIDsPak) # addiu $a2, $a2, 0x64ec
+/* 09A6AC 80099AAC 24A564DC */  addiu $a1, %lo(gGhostLevelIDsPak) # addiu $a1, $a1, 0x64dc
 /* 09A6B0 80099AB0 0C01D5B5 */  jal   func_800756D4
 /* 09A6B4 80099AB4 AFAE0010 */   sw    $t6, 0x10($sp)
 /* 09A6B8 80099AB8 14400003 */  bnez  $v0, .L80099AC8
 /* 09A6BC 80099ABC AFA20070 */   sw    $v0, 0x70($sp)
-/* 09A6C0 80099AC0 0C02658F */  jal   func_8009963C
+/* 09A6C0 80099AC0 0C02658F */  jal   ghostmenu_generate
 /* 09A6C4 80099AC4 00000000 */   nop   
 .L80099AC8:
 /* 09A6C8 80099AC8 3C04800E */  lui   $a0, %hi(gGhostDataObjectIndices) # $a0, 0x800e
