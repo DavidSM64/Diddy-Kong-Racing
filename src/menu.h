@@ -72,6 +72,17 @@ enum PostRaceStages {
     POSTRACE_STAGE_END
 };
 
+enum SaveMenuStages {
+    SAVEMENU_ENTER,
+    SAVEMENU_WAIT,
+    SAVEMENU_INIT_SOURCE,
+    SAVEMENU_CHOOSE_SOURCE,
+    SAVEMENU_INIT_DEST,
+    SAVEMENU_CHOOSE_DEST,
+    SAVEMENU_CONFIRM,
+    SAVEMENU_WRITE
+};
+
 enum DialogueMenuCases {
     DIALOGUE_TAJ,
     DIALOGUE_UNK_01,
@@ -401,11 +412,11 @@ void optionscreen_free(void);
 void menu_audio_options_init(void);
 void soundoptions_free(void);
 void menu_save_options_init(void);
-SIDeviceStatus func_800860A8(s32 controllerIndex, s32 *arg1, SaveFileData *arg2, s32 *arg3, s32 fileSize, s32 arg5);
-void func_800861C8(SaveFileData *arg0, s32 *arg1);
-s32 func_800874D0(s32 buttonsPressed, s32 arg1);
-s32 func_800875E4(s32 buttonsPressed, s32 arg1);
-s32 func_800876CC(s32 buttonsPressed, s32 arg1);
+SIDeviceStatus savemenu_check_space(s32 controllerIndex, s32 *arg1, SaveFileData *arg2, s32 *arg3, s32 fileSize, s32 arg5);
+void savemenu_blank_save_destination(SaveFileData *arg0, s32 *arg1);
+s32 savemenu_input_source(s32 buttonsPressed, s32 arg1);
+s32 savemenu_input_dest(s32 buttonsPressed, s32 arg1);
+s32 savemenu_input_confirm(s32 buttonsPressed, s32 arg1);
 void savemenu_free(void);
 void menu_boot_init(void);
 void func_800887C4(void);
@@ -523,7 +534,7 @@ PakError check_for_controller_pak_errors(void);
 void menu_pause_init(void);
 s32 menu_pause_loop(UNUSED Gfx **dl, s32 updateRate);
 s32 menu_track_select_loop(s32 updateRate);
-SIDeviceStatus func_800867D4(void);
+SIDeviceStatus savemenu_load_destinations(void);
 s32 menu_enter_filename_loop(s32 updateRate);
 s32 menu_file_select_loop(s32 updateRate);
 s32 fileselect_input_root(s32 updateRate);
@@ -552,7 +563,7 @@ void charselect_assign_ai(s32 arg0);
 void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED s32 font, s32 alignment);
 void menu_element_render(s32 stackIndex);
 void menu_input(void);
-SIDeviceStatus func_800862C4(void);
+SIDeviceStatus savemenu_load_sources(void);
 void menu_asset_load(s32 arg0);
 s32 func_80087734(s32 buttonsPressed, s32 yAxis);
 void savemenu_render_element(SaveFileData *arg0, s32 x, s32 y);

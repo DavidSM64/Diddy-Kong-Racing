@@ -1179,7 +1179,7 @@ void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 node
     ghostHeader->checksum = calculate_ghost_header_checksum(ghostHeader);
 }
 
-// Seems to only be called when used as an argument for func_800860A8. Effectively just returns 0x6700
+// Seems to only be called when used as an argument for savemenu_check_space. Effectively just returns 0x6700
 s32 get_ghost_data_file_size(void) {
     int x = 0x1100;
     return (&x)[0] * 6 + 0x100;
