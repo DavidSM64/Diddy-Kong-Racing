@@ -312,8 +312,8 @@ void main_game_loop(void) {
     if (handle_transitions(sLogicUpdateRate)) {
         render_fade_transition(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     }
-    if ((sBootDelayTimer >= 8) && (is_controller_missing())) {
-        print_missing_controller_text(&gCurrDisplayList, sLogicUpdateRate);
+    if (sBootDelayTimer >= 8 && is_controller_missing()) {
+        menu_missing_controller(&gCurrDisplayList, sLogicUpdateRate);
     }
 
     gDPFullSync(gCurrDisplayList++);
