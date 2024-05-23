@@ -232,7 +232,7 @@ glabel menu_ghost_data_init
 /* 09A9F0 80099DF0 00F6C021 */  addu  $t8, $a3, $s6
 /* 09A9F4 80099DF4 0C023917 */  jal   assign_vehicle_icon_textures
 /* 09A9F8 80099DF8 AF0F0018 */   sw    $t7, 0x18($t8)
-/* 09A9FC 80099DFC 0C025181 */  jal   assign_racer_portrait_textures
+/* 09A9FC 80099DFC 0C025181 */  jal   menu_racer_portraits
 /* 09AA00 80099E00 00000000 */   nop   
 /* 09AA04 80099E04 0C02392C */  jal   assign_menu_arrow_textures
 /* 09AA08 80099E08 00000000 */   nop   
@@ -246,9 +246,9 @@ glabel menu_ghost_data_init
 /* 09AA28 80099E28 8FB90070 */  lw    $t9, 0x70($sp)
 /* 09AA2C 80099E2C 2442F47C */  addiu $v0, %lo(gMenuDelay) # addiu $v0, $v0, -0xb84
 /* 09AA30 80099E30 AC400000 */  sw    $zero, ($v0)
-/* 09AA34 80099E34 3C018012 */  lui   $at, %hi(D_80126498) # $at, 0x8012
+/* 09AA34 80099E34 3C018012 */  lui   $at, %hi(gGhostMenuOption) # $at, 0x8012
 /* 09AA38 80099E38 17200006 */  bnez  $t9, .L80099E54
-/* 09AA3C 80099E3C AC206498 */   sw    $zero, %lo(D_80126498)($at)
+/* 09AA3C 80099E3C AC206498 */   sw    $zero, %lo(gGhostMenuOption)($at)
 /* 09AA40 80099E40 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeOut) # $a0, 0x800e
 /* 09AA44 80099E44 0C030076 */  jal   transition_begin
 /* 09AA48 80099E48 2484F77C */   addiu $a0, %lo(sMenuTransitionFadeOut) # addiu $a0, $a0, -0x884

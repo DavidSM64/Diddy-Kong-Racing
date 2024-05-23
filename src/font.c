@@ -966,7 +966,7 @@ void render_dialogue_box(Gfx **dlist, MatrixS **mat, Vertex **verts, s32 dialogu
             sDialogueBoxIsOpen = TRUE;
         }
         sDialogueBoxCloseTimer = 2;
-        func_8009E9B0(dialogueBox, dlist, mat, verts);
+        dialogue_ortho(dialogueBox, dlist, mat, verts);
     }
     // Set and render the text portions of the dialogue box.
     dialogueTextBox = dialogueBox->textBox;

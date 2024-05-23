@@ -60,7 +60,7 @@ CharacterSelectData (*gCurrCharacterSelectData)[10];
 s32 gTrackmenuLoadedLevel;                         // Compared for equality to gTrackIdForPreview
 s8 gActivePlayersArray[MAXCONTROLLERS]; // Boolean value for each controller if it's active with a player.
 s32 gOpacityDecayTimer;
-s8 D_801263DC[MAXCONTROLLERS];
+s8 gCharselectStatus[MAXCONTROLLERS];
 s32 gMenuOptionCount;
 s32 D_801263E4;
 s8 gPlayersCharacterArray[8]; // -1 = Non active player, or character id if >= 0
@@ -104,13 +104,13 @@ s32 gFileErase;
 s32 gSaveFileIndex3;
 s32 gSaveFileIndex2;
 s32 gFileConfirm;
-s32 D_80126498;
+s32 gGhostMenuOption;
 s32 D_8012649C;
 
 SavefileInfo gSavefileInfo[4];
 
 s32 D_801264D0;
-s32 D_801264D4; // Count of elements in some arrays?  D_80126540, D_80126508, D_80126510, D_80126518, D_80126520?
+s32 gGhostMenuTotal; // Count of elements in some arrays?  D_80126540, D_80126508, D_80126510, gGhostMenuVehicleIDs, D_80126520?
 s8 gDialogueSubmenu;
 u8 D_801264DC[4]; // gGhostLevelIDs?
 s8 D_801264E0;
@@ -127,7 +127,7 @@ u8 D_80126508[6];
 s8 gDialogueOptionYOffset;
 u8 D_80126510[6];
 s8 gDialogueItemSelection;
-u8 D_80126518[6];
+u8 gGhostMenuVehicleIDs[6];
 u16 D_80126520[6];
 Settings *gSavefileData[4];
 u8 D_80126540[8];
@@ -137,9 +137,9 @@ u8 gMenuAssetActive[128]; // Seems to be a boolean for "This texture exists" for
 s32 gTrackmenuType;
 s32 D_801267D4;
 s32 gMenuButtons[5]; // Buttons pressed per player plus an extra?
-s8 *D_801267EC;
+s8 *gCinematicParams;
 s32 buttonsPressed[5];
-s8 *D_80126804;
+s8 *gCinematicPortraits;
 SoundMask *gMenuSoundMasks[MAXCONTROLLERS]; // Soundmask values
 s16 gMenuStickX[5];
 s32 D_80126824;
@@ -2139,7 +2139,7 @@ s16 gGhostDataImageIndices[4] = { 0, 1, 7, -1 };
 
 s16 gGhostDataElementPositions[10] = { 0x78, 0x12, 0x08, 0x06, 0xC0, 0x06, 0xD4, 0x1A, 0x78, 0x22 };
 
-s16 gIntroCinematicObjectIndices[12] = { 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, -1, 0 };
+s16 gCinematicObjectIndices[12] = { 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, -1, 0 };
 
 Gfx dCreditsFade[11] = {
     gsDPPipeSync(),
@@ -3943,7 +3943,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
         if (gMenuButtons[PLAYER_MENU] & (A_BUTTON | START_BUTTON)) {
             for (contrIndex = 3; contrIndex > 0 && !(gMenuButtons[contrIndex] & (A_BUTTON | START_BUTTON));
                  contrIndex--) {}
-            set_active_player_index(contrIndex);
+            titlescreen_controller_assign(contrIndex);
             gMenuDelay = 1;
             transition_begin(&sMenuTransitionFadeIn);
             enable_new_screen_transitions();
@@ -6773,7 +6773,7 @@ s32 gTrackSelectSound = FALSE;
 
 s8 D_800E1E20[8] = { 0, -1, 1, 0, 0, 1, -1, 0 };
 
-s8 D_800E1E28 = 0;
+s8 gGameStatusVisible = FALSE;
 
 // TT Game Status textures, think these are potentially multi-part images.
 s16 D_800E1E2C[10] = { 0x4C, 0x4D, 0x4E, 0x4F, 0x5B, 0x5C, 0x00, 0x42, -1, 0 };
@@ -6805,7 +6805,7 @@ void charselect_prev(s32 context, UNUSED s32 *arg1) {
  * Sets the player who controls the menus.
  * 0 = controller 1, 1 = controller 2, 2 = controller 3, 3 = controller 4
  */
-void set_active_player_index(s32 controllerIndex) {
+void titlescreen_controller_assign(s32 controllerIndex) {
     s32 i;
 
     gNumberOfActivePlayers = 1;
@@ -6841,8 +6841,8 @@ void menu_character_select_init(void) {
     } else {
         gCurrCharacterSelectData = (CharacterSelectData(*)[10]) & gCharacterSelectBytesDefault;
     }
-    for (i = 0; i < ARRAY_COUNT(D_801263DC); i++) {
-        D_801263DC[i] = 0;
+    for (i = 0; i < ARRAY_COUNT(gCharselectStatus); i++) {
+        gCharselectStatus[i] = 0;
     }
     gNumberOfReadyPlayers = 0;
     gMenuDelay = 0;
@@ -6984,9 +6984,9 @@ void charselect_pick(void) {
     } else {
         // Character Deselected
         for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) {
-            if (gActivePlayersArray[i] && D_801263DC[i] != 0) {
+            if (gActivePlayersArray[i] && gCharselectStatus[i] != 0) {
                 if (gMenuButtons[i] & B_BUTTON) {
-                    D_801263DC[i] = 0;
+                    gCharselectStatus[i] = 0;
                     gNumberOfReadyPlayers--;
                     if (gMenuSoundMasks[i] != 0) {
                         sound_stop(gMenuSoundMasks[i]);
@@ -7013,9 +7013,9 @@ void charselect_input(s8 *activePlayers) {
 
     for (i = 0; i < MAXCONTROLLERS; i++) {
         if (activePlayers[i] != 0) {
-            if (D_801263DC[i] != 0) {
+            if (gCharselectStatus[i] != 0) {
                 if (gMenuButtons[i] & B_BUTTON) {
-                    D_801263DC[i] = 0;
+                    gCharselectStatus[i] = 0;
                     gNumberOfReadyPlayers -= 1;
                     if (gMenuSoundMasks[i] != 0) {
                         sound_stop(gMenuSoundMasks[i]);
@@ -7050,7 +7050,7 @@ void charselect_input(s8 *activePlayers) {
                         transition_begin(&sMenuTransitionFadeIn);
                     }
                 } else if (gMenuButtons[i] & (A_BUTTON | START_BUTTON)) {
-                    D_801263DC[i] = 1;
+                    gCharselectStatus[i] = 1;
                     gNumberOfReadyPlayers++;
                     if (gMenuSoundMasks[i] != 0) {
                         sound_stop(gMenuSoundMasks[i]);
@@ -7061,16 +7061,16 @@ void charselect_input(s8 *activePlayers) {
                 } else {
                     charSelectData = (*gCurrCharacterSelectData) + gPlayersCharacterArray[i];
                     if (gMenuStickY[i] > 0) {
-                        menu_charselect_move(i, charSelectData->upInput, ARRAY_COUNT(charSelectData->upInput),
+                        charselect_move(i, charSelectData->upInput, ARRAY_COUNT(charSelectData->upInput),
                                       SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
                     } else if (gMenuStickY[i] < 0) {
-                        menu_charselect_move(i, charSelectData->downInput, ARRAY_COUNT(charSelectData->downInput),
+                        charselect_move(i, charSelectData->downInput, ARRAY_COUNT(charSelectData->downInput),
                                       SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
                     } else if (gMenuStickX[i] < 0) {
-                        menu_charselect_move(i, charSelectData->rightInput, ARRAY_COUNT(charSelectData->rightInput),
+                        charselect_move(i, charSelectData->rightInput, ARRAY_COUNT(charSelectData->rightInput),
                                       SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
                     } else if (gMenuStickX[i] > 0) {
-                        menu_charselect_move(i, charSelectData->leftInput, ARRAY_COUNT(charSelectData->leftInput),
+                        charselect_move(i, charSelectData->leftInput, ARRAY_COUNT(charSelectData->leftInput),
                                       SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
                     }
                     if (charSelectData->voiceID != (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID) {
@@ -7085,7 +7085,12 @@ void charselect_input(s8 *activePlayers) {
     }
 }
 
-void charselect_assign_ai(s32 arg0) {
+/**
+ * First ensures that one of the AI players is Diddy Kong.
+ * Afterwards, assigns the rest of the character slots a random character.
+ * Keeps looping until every character ID is unique.
+*/
+void charselect_assign_ai(s32 charSlot) {
     s32 foundIt;
     s32 i, j;
     s32 numCharacters;
@@ -7098,20 +7103,20 @@ void charselect_assign_ai(s32 arg0) {
         numCharacters++;
     }
 
-    if (arg0 < 8) {
+    if (charSlot < 8) {
         foundIt = FALSE;
-        for (i = 0; i < arg0 && !foundIt; i++) {
-            if (gCharacterIdSlots[i] == 9) { // I think 9 is the character id for Diddy Kong?
+        for (i = 0; i < charSlot && !foundIt; i++) {
+            if (gCharacterIdSlots[i] == CHARACTER_DIDDY) { // I think 9 is the character id for Diddy Kong?
                 foundIt = TRUE;
             }
         }
         if (!foundIt) {
-            gCharacterIdSlots[arg0] = 9;
-            arg0++;
+            gCharacterIdSlots[charSlot] = CHARACTER_DIDDY;
+            charSlot++;
         }
     }
 
-    for (i = arg0; i < 8; i++) {
+    for (i = charSlot; i < 8; i++) {
         do {
             gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[get_random_number_from_range(0, numCharacters)].voiceID;
             for (j = 0, foundIt = FALSE; j < i; j++) {
@@ -7129,8 +7134,8 @@ void charselect_assign_ai(s32 arg0) {
 */
 s32 menu_character_select_loop(s32 updateRate) {
     s32 i;
-    s32 phi_a0;
-    s32 phi_t3;
+    s32 charSlot;
+    s32 confirmOffset;
     s8 activePlayers[4];
     s32 j;
 
@@ -7138,9 +7143,9 @@ s32 menu_character_select_loop(s32 updateRate) {
     charselect_music_channels(updateRate);
     menu_input();
 
-    for (i = 0; i < ARRAY_COUNT(D_801263DC); i++) {
-        if (D_801263DC[i] == 1) {
-            D_801263DC[i] = 2;
+    for (i = 0; i < ARRAY_COUNT(gCharselectStatus); i++) {
+        if (gCharselectStatus[i] == 1) {
+            gCharselectStatus[i] = 2;
         }
     }
     gIgnorePlayerInputTime = 0;
@@ -7158,29 +7163,30 @@ s32 menu_character_select_loop(s32 updateRate) {
         return MENU_RESULT_CONTINUE; // This return needs to be here.
     } else if (gMenuDelay > 0) {
         gMenuDelay += updateRate;
-        if (gMenuDelay >= 31) {
-            phi_t3 = 0;
+        if (gMenuDelay > 30) {
+            // This offset will determine whether or not the game goes straight into the tracks menu.
+            confirmOffset = 0;
             if (gEnteredCharSelectFrom == 0) {
-                phi_t3++;
+                confirmOffset++;
                 if (gActiveMagicCodes & CHEAT_TWO_PLAYER_ADVENTURE) {
-                    phi_t3++;
+                    confirmOffset++;
                 }
             }
             charselect_free();
 
-            phi_a0 = 0;
+            charSlot = 0;
             for (j = 0; j < ARRAY_COUNT(gActivePlayersArray); j++) {
                 if (gActivePlayersArray[j]) {
-                    gCharacterIdSlots[phi_a0] = (*gCurrCharacterSelectData)[gPlayersCharacterArray[j]].voiceID;
-                    phi_a0++;
+                    gCharacterIdSlots[charSlot] = (*gCurrCharacterSelectData)[gPlayersCharacterArray[j]].voiceID;
+                    charSlot++;
                 }
             }
 
-            charselect_assign_ai(phi_a0);
+            charselect_assign_ai(charSlot);
             charselect_assign_players(gActivePlayersArray);
 
             gIsInTracksMode = 1;
-            if (phi_t3 >= gNumberOfActivePlayers) {
+            if (confirmOffset >= gNumberOfActivePlayers) {
                 music_change_off();
                 load_level_for_menu(ASSET_LEVEL_OPTIONSBACKGROUND, -1, 0);
                 if (gNumberOfActivePlayers == 1 && !gPlayerHasSeenCautionMenu) {
@@ -7212,7 +7218,7 @@ s32 menu_character_select_loop(s32 updateRate) {
  * Read the potential direction from the character table and see if there's another claimed character in the way.
  * Play a success or a fail sound based on whether the cursor ended up moving.
 */
-void menu_charselect_move(s32 playerID, s8 *direction, s32 bounds, u16 menuPickSoundId, u16 menuPickFailedSoundId) {
+void charselect_move(s32 playerID, s8 *direction, s32 bounds, u16 menuPickSoundId, u16 menuPickFailedSoundId) {
     s32 sameCharSelected;
     s32 j;
     s32 i;
@@ -10018,7 +10024,7 @@ void n_alSeqpDelete(void) {
 /**
  * Set the racer portrait element textures for their respective characters.
  */
-void assign_racer_portrait_textures(void) {
+void menu_racer_portraits(void) {
     gMenuPortraitKrunch[0].texture = gMenuAssets[TEXTURE_ICON_PORTRAIT_KRUNCH];
     gMenuPortraitDiddy[0].texture = gMenuAssets[TEXTURE_ICON_PORTRAIT_DIDDY];
     gMenuPortraitDrumstick[0].texture = gMenuAssets[TEXTURE_ICON_PORTRAIT_DRUMSTICK];
@@ -10138,7 +10144,7 @@ void postrace_load(void) {
         temp_a0 = D_800E0A10[gPostRace.unk0_s32];
         if (temp_a0 == -1) {
             menu_imagegroup_load(gRaceResultsImageIndices);
-            assign_racer_portrait_textures();
+            menu_racer_portraits();
             settings = get_settings();
             gRaceResultsMenuElements->unk14_a.element =
                 gRacerPortraits[settings->racers[settings->timeTrialRacer].character];
@@ -10797,7 +10803,7 @@ void menu_results_init(void) {
     gMenuSubOption = 0;
     menu_assetgroup_load(gRaceResultsObjectIndices);
     menu_imagegroup_load(gRaceResultsImageIndices);
-    assign_racer_portrait_textures();
+    menu_racer_portraits();
     load_font(ASSET_FONTS_BIGFONT);
     transition_begin(&sMenuTransitionFadeOut);
     music_voicelimit_set(24);
@@ -11681,7 +11687,7 @@ void menu_trophy_race_rankings_init(void) {
         gResultOptionCount = 1;
     }
     gMenuOption = 0;
-    assign_racer_portrait_textures();
+    menu_racer_portraits();
 
     if (gNumberOfActivePlayers > 2) {
         gRankingPlayerCount = gNumberOfActivePlayers;
@@ -11937,21 +11943,21 @@ void func_8009963C(void) {
     u16 swapByte;
     UNUSED s32 pad;
 
-    D_801264D4 = 0;
+    gGhostMenuTotal = 0;
     mainTrackIds = (u8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
 
     for (i = 0; i < 6; i++) {
         if (D_801264DC[i] != 0xFF) {
             for (j = 0; mainTrackIds[j] != 0xFF && mainTrackIds[j] != D_801264DC[i]; j++) {}
             if (mainTrackIds[j] != 0xFF) {
-                D_80126540[D_801264D4] = i;
-                sp44[D_801264D4] = (j * 8) + D_801264EC[i];
-                D_801264D4++;
+                D_80126540[gGhostMenuTotal] = i;
+                sp44[gGhostMenuTotal] = (j * 8) + D_801264EC[i];
+                gGhostMenuTotal++;
             }
         }
     }
 
-    for (i = D_801264D4 - 1; i > 0; i--) {
+    for (i = gGhostMenuTotal - 1; i > 0; i--) {
         for (j = 0; j < i; j++) {
             if (sp44[j + 1] < sp44[j]) {
                 swap = sp44[j];
@@ -11964,10 +11970,10 @@ void func_8009963C(void) {
         }
     }
 
-    for (i = 0; i < D_801264D4; i++) {
+    for (i = 0; i < gGhostMenuTotal; i++) {
         D_80126508[i] = D_801264DC[D_80126540[i]];
         D_80126510[i] = D_801264E4[D_80126540[i]];
-        D_80126518[i] = D_801264EC[D_80126540[i]];
+        gGhostMenuVehicleIDs[i] = D_801264EC[D_80126540[i]];
         D_80126520[i] = D_801264F8[D_80126540[i]];
     }
 }
@@ -11978,21 +11984,21 @@ s32 func_800998E0(s32 arg0) {
     s32 i;
 
     result = 0;
-    if (arg0 >= 0 && arg0 < D_801264D4) {
+    if (arg0 >= 0 && arg0 < gGhostMenuTotal) {
         sound_play(SOUND_SELECT2, NULL);
         temp_s0 = D_80126540[arg0];
         result = func_800753D8(D_801264D0, temp_s0);
         if (result == 0) {
             D_801264DC[temp_s0] = 0xFF;
-            D_801264D4--;
-            for (i = arg0; i < D_801264D4; i++) {
+            gGhostMenuTotal--;
+            for (i = arg0; i < gGhostMenuTotal; i++) {
                 D_80126540[i] = D_80126540[i + 1];
                 D_80126508[i] = D_80126508[i + 1];
                 D_80126510[i] = D_80126510[i + 1];
-                D_80126518[i] = D_80126518[i + 1];
+                gGhostMenuVehicleIDs[i] = gGhostMenuVehicleIDs[i + 1];
                 D_80126520[i] = D_80126520[i + 1];
             }
-            for (i = 0; i < D_801264D4; i++) {
+            for (i = 0; i < gGhostMenuTotal; i++) {
                 if (temp_s0 < D_80126540[i]) {
                     D_80126540[i]--;
                 }
@@ -12049,13 +12055,13 @@ void menu_ghost_data_init(void) {
         }
     }
     assign_vehicle_icon_textures();
-    assign_racer_portrait_textures();
+    menu_racer_portraits();
     assign_menu_arrow_textures();
     gOptionBlinkTimer = 0;
     gMenuOptionCount = 0;
     gOpacityDecayTimer = 0;
     gMenuDelay = 0;
-    D_80126498 = 0;
+    gGhostMenuOption = 0;
     if (pakStatus == CONTROLLER_PAK_GOOD) {
         transition_begin(&sMenuTransitionFadeOut);
         return;
@@ -12066,13 +12072,18 @@ void menu_ghost_data_init(void) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_ghost_data_init.s")
 #endif
 
-void func_80099E8C(UNUSED s32 updateRate) {
+/**
+ * Render the list of existing ghost data.
+ * This includes their names, character, vehicle, world ID and track ID.
+ * Also render the confirmation box if it should be active.
+*/
+void ghostmenu_render(UNUSED s32 updateRate) {
     s32 currentWorldId;
-    s32 spE8;
-    s32 spE4;
+    s32 numToDraw;
+    s32 scroll;
     s32 i;
     s32 y;
-    s32 colourIntensity;
+    s32 highlight;
     s32 x;
     s32 heightAdjust;
     DrawTexture *vehicleSelectTex;
@@ -12085,7 +12096,7 @@ void func_80099E8C(UNUSED s32 updateRate) {
     } else {
         heightAdjust = 0;
     }
-    spE4 = gOpacityDecayTimer;
+    scroll = gOpacityDecayTimer;
     set_text_font(FONT_LARGE);
     set_text_background_colour(0, 0, 0, 0);
     set_text_colour(0, 0, 0, 255, 128);
@@ -12094,31 +12105,31 @@ void func_80099E8C(UNUSED s32 updateRate) {
     set_text_colour(255, 255, 255, 0, 255);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_GHOSTDATA], ALIGN_MIDDLE_CENTER);
     y = 56;
-    if (D_801264D4 <= 0) {
+    if (gGhostMenuTotal <= 0) {
         set_text_colour(255, 255, 255, 0, 255);
         draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, heightAdjust + SCREEN_HEIGHT_HALF,
                   gMenuText[ASSET_MENU_TEXT_NOGHOSTSSAVED], ALIGN_MIDDLE_CENTER);
         return;
     }
-    spE8 = 3;
-    colourIntensity = gOptionBlinkTimer * 8;
-    if (colourIntensity > 255) {
-        colourIntensity = 511 - colourIntensity;
+    numToDraw = 3;
+    highlight = gOptionBlinkTimer * 8;
+    if (highlight > 255) {
+        highlight = 511 - highlight;
     }
-    colourIntensity |= ~0xFF;
+    highlight |= ~0xFF;
     set_text_font(FONT_SMALL);
     x = 40;
-    while (spE4 < D_801264D4 && spE8 > 0) {
+    while (scroll < gGhostMenuTotal && numToDraw > 0) {
         if (gGhostDataElementPositions[0]) {} // Fakematch
 
-        currentWorldId = get_map_world_id(D_80126508[spE4]) - 1;
-        if (currentWorldId < 0 || currentWorldId >= 5) {
+        currentWorldId = get_map_world_id(D_80126508[scroll]) - 1;
+        if (currentWorldId < 0 || currentWorldId >= WORLD_FUTURE_FUN_LAND) {
             currentWorldId = 0;
         }
-        levelName = get_level_name(D_80126508[spE4]);
-        for (i = 0; (levelName[i] != '\0') && (i < 63); i++) {
+        levelName = get_level_name(D_80126508[scroll]);
+        for (i = 0; levelName[i] != '\0' && i < 63; i++) {
             textBuffer[i] = levelName[i];
-            if ((textBuffer[i] >= 'a') && (textBuffer[i] <= 'z')) {
+            if (textBuffer[i] >= 'a' && textBuffer[i] <= 'z') {
                 textBuffer[i] ^= 0x20; // Force uppercase.
             }
         }
@@ -12126,9 +12137,9 @@ void func_80099E8C(UNUSED s32 updateRate) {
         render_texture_rectangle_scaled(&sMenuCurrDisplayList, gDrawTexWorldBgs[currentWorldId], x, y, 0.75f, 0.8125f,
                                         COLOUR_RGBA32(255, 255, 255, 255), 0);
         func_80080E90(&sMenuCurrDisplayList, 40, y, 240, 52, 4, 4, 32, 80, 176, 128);
-        if (spE4 == D_80126498) {
-            func_80080E90(&sMenuCurrDisplayList, 40, y, 240, 52, 4, 4, colourIntensity, colourIntensity,
-                          colourIntensity, colourIntensity);
+        if (scroll == gGhostMenuOption) {
+            func_80080E90(&sMenuCurrDisplayList, 40, y, 240, 52, 4, 4, highlight, highlight,
+                          highlight, highlight);
         }
         set_text_colour(0, 0, 0, 255, 255);
         for (i = 0; i < 4; i++) {
@@ -12138,10 +12149,10 @@ void func_80099E8C(UNUSED s32 updateRate) {
         set_text_colour(200, 228, 80, 255, 255);
         draw_text(&sMenuCurrDisplayList, gGhostDataElementPositions[0] + 40, gGhostDataElementPositions[1] + y,
                   textBuffer, ALIGN_MIDDLE_CENTER);
-        render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[D_80126510[spE4]],
+        render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[D_80126510[scroll]],
                                   gGhostDataElementPositions[2] + 40, gGhostDataElementPositions[3] + y, 255, 255, 255,
                                   255);
-        switch (D_80126518[spE4]) {
+        switch (gGhostMenuVehicleIDs[scroll]) {
             case 1:
                 vehicleSelectTex = gRaceSelectionHoverTex;
                 break;
@@ -12162,18 +12173,18 @@ void func_80099E8C(UNUSED s32 updateRate) {
         menu_element_render(7);
         sMenuGuiOpacity = 128;
         // Timestamp Shadow gets drawn first
-        menu_timestamp_render(D_80126520[spE4], gGhostDataElementPositions[8] - (SCREEN_HEIGHT_HALF - 1),
+        menu_timestamp_render(D_80126520[scroll], gGhostDataElementPositions[8] - (SCREEN_HEIGHT_HALF - 1),
                               (-gGhostDataElementPositions[9] - y) + heightAdjust + (SCREEN_HEIGHT_HALF - 1), 0, 0, 0,
                               FONT_COLOURFUL);
         sMenuGuiOpacity = 255;
-        menu_timestamp_render(D_80126520[spE4], gGhostDataElementPositions[8] - (SCREEN_HEIGHT_HALF + 1),
+        menu_timestamp_render(D_80126520[scroll], gGhostDataElementPositions[8] - (SCREEN_HEIGHT_HALF + 1),
                               (-gGhostDataElementPositions[9] - y) + heightAdjust + (SCREEN_HEIGHT_HALF + 1), 255, 192,
                               255, FONT_COLOURFUL);
-        spE4++;
-        spE8--;
+        scroll++;
+        numToDraw--;
         y += 54;
     }
-    colourIntensity &= 0xFF;
+    highlight &= 0xFF;
     if (gMenuOptionCount > 0) {
         clear_dialogue_box_open_flag(7);
         assign_dialogue_box_id(7);
@@ -12182,13 +12193,13 @@ void func_80099E8C(UNUSED s32 updateRate) {
         set_dialogue_font(7, 0);
         set_current_text_background_colour(7, 0, 0, 0, 0);
         if (gMenuOptionCount == 1) {
-            set_current_text_colour(7, 255, 255, 255, colourIntensity, 255);
+            set_current_text_colour(7, 255, 255, 255, highlight, 255);
         } else {
             set_current_text_colour(7, 255, 255, 255, 0, 255);
         }
         render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_ERASEGHOST], 1, ALIGN_MIDDLE_CENTER);
         if (gMenuOptionCount == 2) {
-            set_current_text_colour(7, 255, 255, 255, colourIntensity, 255);
+            set_current_text_colour(7, 255, 255, 255, highlight, 255);
         } else {
             set_current_text_colour(7, 255, 255, 255, 0, 255);
         }
@@ -12196,7 +12207,7 @@ void func_80099E8C(UNUSED s32 updateRate) {
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
     }
     if (gOptionBlinkTimer & 0x10) {
-        if ((gOpacityDecayTimer + 3) < D_801264D4) {
+        if ((gOpacityDecayTimer + 3) < gGhostMenuTotal) {
             render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrowDown, SCREEN_WIDTH_HALF + 1, y + 3, 0,
                                       0, 0, 128);
             render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrowDown, SCREEN_WIDTH_HALF - 1, y + 1, 255,
@@ -12212,18 +12223,21 @@ void func_80099E8C(UNUSED s32 updateRate) {
     }
 }
 
+/** 
+ * Show a list of all the saved ghost data and let the player pick individual ones to erase.
+*/
 s32 menu_ghost_data_loop(s32 updateRate) {
     s32 i;
     s32 pressedButtons;
     s32 xStick;
     s32 yStick;
-    s32 temp;
+    s32 prevOption;
     UNUSED s32 unused;
 
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
 
-    if ((gMenuDelay > -20) && (gMenuDelay < 20)) {
-        func_80099E8C(updateRate);
+    if (gMenuDelay > -20 && gMenuDelay < 20) {
+        ghostmenu_render(updateRate);
     }
 
     pressedButtons = 0;
@@ -12247,29 +12261,29 @@ s32 menu_ghost_data_loop(s32 updateRate) {
 
     switch (gMenuOptionCount) {
         case 0:
-            if ((pressedButtons & (START_BUTTON | A_BUTTON)) && (D_801264D4 > 0)) {
+            if ((pressedButtons & (START_BUTTON | A_BUTTON)) && gGhostMenuTotal > 0) {
                 gMenuOptionCount = 2;
                 sound_play(SOUND_SELECT2, NULL);
-            } else if ((pressedButtons & B_BUTTON) ||
-                       ((pressedButtons & (START_BUTTON | A_BUTTON)) && (D_801264D4 == 0))) {
+            } else if (pressedButtons & B_BUTTON ||
+                       (pressedButtons & (START_BUTTON | A_BUTTON) && gGhostMenuTotal == 0)) {
                 gMenuDelay = 1;
                 transition_begin(&sMenuTransitionFadeIn);
                 sound_play(SOUND_MENU_BACK3, NULL);
             } else {
-                temp = D_80126498;
-                if (yStick < 0 && D_80126498 < (D_801264D4 - 1)) {
-                    D_80126498++;
-                    if (D_80126498 >= gOpacityDecayTimer + 3) {
-                        gOpacityDecayTimer = D_80126498 - 2;
+                prevOption = gGhostMenuOption;
+                if (yStick < 0 && gGhostMenuOption < gGhostMenuTotal - 1) {
+                    gGhostMenuOption++;
+                    if (gGhostMenuOption >= gOpacityDecayTimer + 3) {
+                        gOpacityDecayTimer = gGhostMenuOption - 2;
                     }
                 }
-                if (yStick > 0 && D_80126498 > 0) {
-                    D_80126498--;
-                    if (D_80126498 < gOpacityDecayTimer) {
-                        gOpacityDecayTimer = D_80126498;
+                if (yStick > 0 && gGhostMenuOption > 0) {
+                    gGhostMenuOption--;
+                    if (gGhostMenuOption < gOpacityDecayTimer) {
+                        gOpacityDecayTimer = gGhostMenuOption;
                     }
                 }
-                if (temp != D_80126498) {
+                if (prevOption != gGhostMenuOption) {
                     sound_play(SOUND_MENU_PICK2, NULL);
                 }
             }
@@ -12280,15 +12294,15 @@ s32 menu_ghost_data_loop(s32 updateRate) {
                 sound_play(SOUND_MENU_BACK3, NULL);
             } else {
                 if (pressedButtons & (START_BUTTON | A_BUTTON)) {
-                    if (func_800998E0(D_80126498) == 0) {
-                        if (D_80126498 >= D_801264D4) {
-                            D_80126498 = D_801264D4 - 1;
+                    if (func_800998E0(gGhostMenuOption) == 0) {
+                        if (gGhostMenuOption >= gGhostMenuTotal) {
+                            gGhostMenuOption = gGhostMenuTotal - 1;
                         }
-                        if (D_80126498 < 0) {
-                            D_80126498 = 0;
+                        if (gGhostMenuOption < 0) {
+                            gGhostMenuOption = 0;
                         }
-                        if (D_80126498 < gOpacityDecayTimer) {
-                            gOpacityDecayTimer = D_80126498;
+                        if (gGhostMenuOption < gOpacityDecayTimer) {
+                            gOpacityDecayTimer = gGhostMenuOption;
                         }
                         sound_play(SOUND_SELECT2, NULL);
                     } else {
@@ -12316,52 +12330,62 @@ s32 menu_ghost_data_loop(s32 updateRate) {
 
     gIgnorePlayerInputTime = FALSE;
     if (gMenuDelay > 30) {
-        func_8009ABAC();
+        ghostmenu_free();
         menu_init(MENU_SAVE_OPTIONS);
     }
     return MENU_RESULT_CONTINUE;
 }
 
-void func_8009ABAC(void) {
+/**
+ * Free all assets associated with the ghost data menu.
+*/
+void ghostmenu_free(void) {
     menu_assetgroup_free(gGhostDataObjectIndices);
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
-void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5) {
+void func_8009ABD8(s8 *params, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5) {
     s32 phi_v1;
 
     phi_v1 = 0;
     while (phi_v1 < arg1) {
         phi_v1++;
-        while (-1 != *arg0) {
-            arg0 += 3;
+        while (-1 != *params) {
+            params += 3;
         }
-        arg0++;
+        params++;
     }
 
-    if (phi_v1 == 0 && (s8 *) get_misc_asset(ASSET_MISC_25) == arg0) {
+    if (phi_v1 == 0 && (s8 *) get_misc_asset(ASSET_MISC_25) == params) {
         D_8012684C = TRUE;
     } else {
         D_8012684C = FALSE;
     }
 
-    D_801267EC = arg0;
+    gCinematicParams = params;
     D_80126824 = arg2;
     D_8012683C = arg3;
     D_80126844 = arg4;
-    D_80126804 = arg5;
+    gCinematicPortraits = arg5;
 }
 
+/**
+ * Load a new level and trigger a cutscene.
+*/
 void menu_cinematic_init(void) {
-    if (D_80126804 != NULL) {
-        menu_assetgroup_load(gIntroCinematicObjectIndices);
-        assign_racer_portrait_textures();
+    if (gCinematicPortraits != NULL) {
+        menu_assetgroup_load(gCinematicObjectIndices);
+        menu_racer_portraits();
     }
-    load_level_for_menu(D_801267EC[0], D_801267EC[1], D_801267EC[2]);
+    load_level_for_menu(gCinematicParams[0], gCinematicParams[1], gCinematicParams[2]);
     gMenuDelay = 0;
     gMenuOptionCount = 0;
 }
 
+/**
+ * Wait for a signal, which can come from a few sources depending on what cutscene is playing.
+ * After that signal, exit this menu mode.
+*/
 s32 menu_cinematic_loop(UNUSED s32 updateRate) {
     s32 i;
     s32 buttonsPressed;
@@ -12373,28 +12397,28 @@ s32 menu_cinematic_loop(UNUSED s32 updateRate) {
         }
     }
     if (func_800214C4() != 0) {
-        D_801267EC += 3;
-        if (D_801267EC[0] >= 0) {
-            load_level_for_menu(D_801267EC[0], D_801267EC[1], D_801267EC[2]);
+        gCinematicParams += 3;
+        if (gCinematicParams[0] >= 0) {
+            load_level_for_menu(gCinematicParams[0], gCinematicParams[1], gCinematicParams[2]);
         } else {
             if (D_8012684C) {
                 music_change_off();
             }
-            func_8009AF18();
+            cinematic_free();
             return D_80126824;
         }
     }
     if ((D_8012683C != 0) && (buttonsPressed & (A_BUTTON | START_BUTTON))) {
-        func_8009AF18();
+        cinematic_free();
         return D_8012683C;
     }
     if ((D_80126844 != 0) && (buttonsPressed & B_BUTTON)) {
-        func_8009AF18();
+        cinematic_free();
         return D_80126844;
     }
-    if (D_80126804 != NULL) {
-        for (i = 0; D_80126804[i] != -1; i++) {
-            render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[D_80126804[i]], 24, 16 + (44 * i), 255,
+    if (gCinematicPortraits != NULL) {
+        for (i = 0; gCinematicPortraits[i] != -1; i++) {
+            render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[gCinematicPortraits[i]], 24, 16 + (44 * i), 255,
                                       255, 255, 255);
         }
     }
@@ -12402,9 +12426,12 @@ s32 menu_cinematic_loop(UNUSED s32 updateRate) {
     return MENU_RESULT_CONTINUE;
 }
 
-void func_8009AF18(void) {
-    if (D_80126804 != NULL) {
-        menu_assetgroup_free(gIntroCinematicObjectIndices);
+/**  
+ * Free all assets associated with the intro cutscene.
+*/
+void cinematic_free(void) {
+    if (gCinematicPortraits != NULL) {
+        menu_assetgroup_free(gCinematicObjectIndices);
     }
 }
 
@@ -12440,7 +12467,7 @@ void menu_credits_init(void) {
     camEnableUserView(0, 1);
     menu_assetgroup_load(gCreditsObjectIndices);
     menu_imagegroup_load(gCreditsImageIndices);
-    assign_racer_portrait_textures();
+    menu_racer_portraits();
     load_font(ASSET_FONTS_BIGFONT);
     music_voicelimit_set(24);
     gCreditsControlData[130] = CREDITS_END; // DONT show developer times
@@ -12482,7 +12509,7 @@ void menu_credits_init(void) {
 /**
  * Render a fading rectangle over the screen during the credits to serve as a transition between levels.
  */
-void render_credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
+void credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
     if (a > 255) {
         a = 255;
     }
@@ -12505,7 +12532,7 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_credits_loop.s")
 /**
  * Unload associated assets with the credits scene.
  */
-void menu_credits_unload(void) {
+void credits_free(void) {
     music_voicelimit_set(18);
     disable_new_screen_transitions();
     camDisableUserView(0, FALSE);
@@ -12703,8 +12730,12 @@ void set_player_selected_vehicle(s32 playerNum, s32 index) {
     gPlayerSelectVehicle[playerNum] = index;
 }
 
-s8 *func_8009C274(void) {
-    return D_801263DC;
+/**
+ * Returns the character select controller ID status.
+ * 0 = choosing, 1 = chosen, and then set to 2.
+*/
+s8 *charselect_status(void) {
+    return gCharselectStatus;
 }
 
 /**
@@ -12969,6 +13000,10 @@ void menu_image_load(s32 imageID) {
 UNUSED void menu_imagegroup_free(void) {
 }
 
+/**
+ * Render a menu element.
+ * They can be a few different things, so check what it is and then call a function to render it.
+*/
 void menu_element_render(s32 stackIndex) {
     Object *new_var;
     unk8009CA602 *new_var2;
@@ -12976,8 +13011,8 @@ void menu_element_render(s32 stackIndex) {
     ObjectModel **temp;
 
     if (gMenuAssets[gMenuImages[stackIndex].spriteID] != 0) {
-        if (((*gAssetsMenuElementIds)[gMenuImages[stackIndex].spriteID] & 0xC000) != 0xC000) {
-            if ((*gAssetsMenuElementIds)[gMenuImages[stackIndex].spriteID] & 0x4000) {
+        if (((*gAssetsMenuElementIds)[gMenuImages[stackIndex].spriteID] & HUD_ELEMENT_TEXTURE) != HUD_ELEMENT_TEXTURE) {
+            if ((*gAssetsMenuElementIds)[gMenuImages[stackIndex].spriteID] & HUD_ELEMENT_OBJECT) {
                 if (0) {} // Fakematch
                 new_var = (Object *) gMenuAssets[gMenuImages[stackIndex].spriteID];
                 new_var2 = (unk8009CA602 *) &gMenuImages[stackIndex];
@@ -12995,7 +13030,7 @@ void menu_element_render(s32 stackIndex) {
                 new_var->segment.object.opacity = sMenuGuiOpacity;
                 render_object(&sMenuCurrDisplayList, &sMenuCurrHudMat, &sMenuCurrHudVerts, new_var);
             } else {
-                if ((*gAssetsMenuElementIds)[gMenuImages[stackIndex].spriteID] & 0x8000) {
+                if ((*gAssetsMenuElementIds)[gMenuImages[stackIndex].spriteID] & HUD_ELEMENT_SPRITE) {
                     sprite = (Sprite *) gMenuAssets[gMenuImages[stackIndex].spriteID];
                     gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, sMenuGuiColourR, sMenuGuiColourG, sMenuGuiColourB,
                                     sMenuGuiOpacity);
@@ -13504,7 +13539,7 @@ s32 tt_menu_loop(void) {
                         play_tt_voice_clip(SOUND_VOICE_TT_GAME_STATUS, TRUE);
                         menu_assetgroup_load(D_800E1E2C);
                         menu_imagegroup_load(D_800E1E40);
-                        D_800E1E28 = 1;
+                        gGameStatusVisible = TRUE;
                         sCurrentMenuID = TT_MENU_GAME_STATUS;
                         break;
                 }
@@ -13546,7 +13581,7 @@ s32 tt_menu_loop(void) {
         case TT_MENU_GAME_STATUS:
             if (buttonsPressed & (A_BUTTON | B_BUTTON)) {
                 sCurrentMenuID = TT_MENU_ROOT;
-                D_800E1E28 = 0;
+                gGameStatusVisible = FALSE;
                 menu_assetgroup_free(D_800E1E2C);
                 play_tt_voice_clip(SOUND_VOICE_TT_OKAY, TRUE);
             }
@@ -13663,7 +13698,10 @@ s32 tt_menu_loop(void) {
     return currentOption;
 }
 
-void func_8009E3D0(void) {
+/**
+ * Render all the 2D elements for T.T's game status screen.
+*/
+void dialogue_tt_gamestatus(void) {
     s32 numBalloonsTensDigit;
     s32 y;
     s32 i;
@@ -13673,8 +13711,8 @@ void func_8009E3D0(void) {
     s32 flag;
     s16 tempX;
 
-    if (D_800E1E28 == 1) {
-        D_800E1E28++;
+    if (gGameStatusVisible == TRUE) {
+        gGameStatusVisible++;
         return;
     }
     settings = get_settings();
@@ -13690,37 +13728,37 @@ void func_8009E3D0(void) {
     }
     tempX = -74;
     gMenuImages[numOfItem].x = tempX;
-    gMenuImages[numOfItem].y = (65 - y);
+    gMenuImages[numOfItem].y = 65 - y;
     menu_element_render(numOfItem);
-    sprite_opaque(0);
+    sprite_opaque(FALSE);
     tempX = -29;
     gMenuImages[0].x = tempX;
-    gMenuImages[0].y = (98 - y);
+    gMenuImages[0].y = 98 - y;
     gMenuImages[0].x -= 6.0f;
 
-    flag = (settings->balloonsPtr[0] / 10); // settings->balloonsPtr[0] is the total balloon count.
+    flag = settings->balloonsPtr[0] / 10; // settings->balloonsPtr[0] is the total balloon count.
     numBalloonsTensDigit = flag;
-    if (numBalloonsTensDigit != 0) {
+    if (numBalloonsTensDigit) {
         gMenuImages[0].spriteOffset = numBalloonsTensDigit;
         menu_element_render(0);
         gMenuImages[0].x += 12.0f;
     }
-    gMenuImages[0].spriteOffset = (settings->balloonsPtr[0] % 10);
+    gMenuImages[0].spriteOffset = settings->balloonsPtr[0] % 10;
     menu_element_render(0);
     tempX = -49;
     gMenuImages[10].x = tempX;
-    gMenuImages[10].y = (98 - y);
+    gMenuImages[10].y = 98 - y;
     menu_element_render(10);
-    sprite_opaque(1);
+    sprite_opaque(TRUE);
     y += 50;
     tempX = -89;
     gMenuImages[15].x = tempX;
-    gMenuImages[15].y = (95 - y);
+    gMenuImages[15].y = 95 - y;
     gMenuImages[15].spriteOffset = settings->wizpigAmulet;
     menu_element_render(15);
     tempX = -29;
     gMenuImages[16].x = tempX;
-    gMenuImages[16].y = (95 - y);
+    gMenuImages[16].y = 95 - y;
     gMenuImages[16].spriteOffset = settings->ttAmulet;
     menu_element_render(16);
 
@@ -13809,16 +13847,15 @@ void dialogue_close_stub(void) {
 }
 
 /**
- * Renders a textbox with a displaylist.
- * Return value goes completely unused.
+ * Renders ortho geometry if the current dialogue box has anything to draw.
  */
-f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, MatrixS **mat, Vertex **verts) {
+f32 dialogue_ortho(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, MatrixS **mat, Vertex **verts) {
     sMenuCurrDisplayList = *dlist;
     sMenuCurrHudMat = *mat;
     sMenuCurrHudVerts = *verts;
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-    if (D_800E1E28 != 0 && sCurrentMenuID == 4) {
-        func_8009E3D0();
+    if (gGameStatusVisible && sCurrentMenuID == MENU_UNUSED_4) {
+        dialogue_tt_gamestatus();
     }
     *dlist = sMenuCurrDisplayList;
     *mat = sMenuCurrHudMat;
@@ -13826,22 +13863,36 @@ f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, MatrixS **
     return TRUE;
 }
 
+/**
+ * Return the address of the game settings bitfield.
+*/
 u64 *get_eeprom_settings_pointer(void) {
     return &sEepromSettings;
 }
 
+/**
+ * Set a bit in the game settings.
+ * Return nonzero when done.
+*/
 s32 set_eeprom_settings_value(u64 valueToSet) {
     sEepromSettings |= valueToSet;
     mark_write_eeprom_settings();
     return TRUE;
 }
 
+/**
+ * Clear a bit in the game settings.
+ * Return nonzero when done.
+*/
 s32 unset_eeprom_settings_value(u64 valueToUnset) {
     sEepromSettings &= ~valueToUnset;
     mark_write_eeprom_settings();
     return TRUE;
 }
 
+/**
+ * Return the game settings bitfield.
+*/
 u64 get_eeprom_settings(void) {
     return sEepromSettings;
 }

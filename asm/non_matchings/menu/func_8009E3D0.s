@@ -1,7 +1,7 @@
-glabel func_8009E3D0
+glabel dialogue_tt_gamestatus
 /* 09EFD0 8009E3D0 27BDFFA0 */  addiu $sp, $sp, -0x60
-/* 09EFD4 8009E3D4 3C03800E */  lui   $v1, %hi(D_800E1E28) # $v1, 0x800e
-/* 09EFD8 8009E3D8 24631E28 */  addiu $v1, %lo(D_800E1E28) # addiu $v1, $v1, 0x1e28
+/* 09EFD4 8009E3D4 3C03800E */  lui   $v1, %hi(gGameStatusVisible) # $v1, 0x800e
+/* 09EFD8 8009E3D8 24631E28 */  addiu $v1, %lo(gGameStatusVisible) # addiu $v1, $v1, 0x1e28
 /* 09EFDC 8009E3DC 80620000 */  lb    $v0, ($v1)
 /* 09EFE0 8009E3E0 AFB4002C */  sw    $s4, 0x2c($sp)
 /* 09EFE4 8009E3E4 24140001 */  li    $s4, 1

@@ -2038,7 +2038,7 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
     Object_CharacterSelect *charSelect;
     s32 charCount;
     s32 var_s0;
-    s8 *var_v0 = NULL;
+    s8 *status = NULL;
     Object_68 *gfxData;
     u8 sp50[4];
     u8 sp4F;
@@ -2090,9 +2090,9 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
                     D_800DCA88[i] = 0;
                 }
                 if (sp4F > 0) {
-                    var_v0 = func_8009C274();
+                    status = charselect_status();
                     for (i2 = 0; i2 < sp4F; i2++) {
-                        if (var_v0[sp50[i2]] == 1) {
+                        if (status[sp50[i2]] == 1) {
                             charSelectObj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
                             obj_spawn_particle(charSelectObj, LOGIC_30FPS);
                         }

@@ -50,7 +50,7 @@ glabel menu_credits_loop
 /* 09BFD4 8009B3D4 AFB90010 */  sw    $t9, 0x10($sp)
 /* 09BFD8 8009B3D8 24050026 */  li    $a1, 38
 /* 09BFDC 8009B3DC 24060140 */  li    $a2, 320
-/* 09BFE0 8009B3E0 0C026C79 */  jal   render_credits_fade
+/* 09BFE0 8009B3E0 0C026C79 */  jal   credits_fade
 /* 09BFE4 8009B3E4 240700BA */   li    $a3, 186
 /* 09BFE8 8009B3E8 10000008 */  b     .L8009B40C
 /* 09BFEC 8009B3EC 00000000 */   nop   
@@ -60,7 +60,7 @@ glabel menu_credits_loop
 /* 09BFF8 8009B3F8 24060140 */  li    $a2, 320
 /* 09BFFC 8009B3FC 000950C0 */  sll   $t2, $t1, 3
 /* 09C000 8009B400 AFAA0010 */  sw    $t2, 0x10($sp)
-/* 09C004 8009B404 0C026C79 */  jal   render_credits_fade
+/* 09C004 8009B404 0C026C79 */  jal   credits_fade
 /* 09C008 8009B408 2407009C */   li    $a3, 156
 .L8009B40C:
 /* 09C00C 8009B40C 3C068012 */  lui   $a2, %hi(gOpacityDecayTimer) # $a2, 0x8012
@@ -659,7 +659,7 @@ glabel L8009BB9C
 /* 09C888 8009BC88 8FBF0054 */   lw    $ra, 0x54($sp)
 /* 09C88C 8009BC8C 0C0002CA */  jal   music_change_on
 /* 09C890 8009BC90 00000000 */   nop   
-/* 09C894 8009BC94 0C026F3C */  jal   menu_credits_unload
+/* 09C894 8009BC94 0C026F3C */  jal   credits_free
 /* 09C898 8009BC98 00000000 */   nop   
 /* 09C89C 8009BC9C 24040015 */  li    $a0, 21
 /* 09C8A0 8009BCA0 2405FFFF */  li    $a1, -1
