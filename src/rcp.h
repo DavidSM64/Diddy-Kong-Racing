@@ -15,7 +15,9 @@
 
 enum TextureRectangleFlags {
     TEXRECT_BILERP,
-    TEXRECT_POINT
+    TEXRECT_POINT = (1 << 0),
+    TEXRECT_FLIP_X = (1 << 12),
+    TEXRECT_FLIP_Y = (1 << 13),
 };
 
 typedef union {

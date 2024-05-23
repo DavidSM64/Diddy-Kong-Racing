@@ -764,8 +764,8 @@ void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos
     gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dmaDlist), numberOfGfxCommands(dTextureRectangleScaledOpa[0]));
     gDPSetPrimColorRGBA((*dlist)++, colour);
 
-    bFlipX = flags & (1 << 12);
-    bFlipY = flags & (1 << 13);
+    bFlipX = flags & (1 << 12); // 0x1000
+    bFlipY = flags & (1 << 13); // 0x2000
     xScale *= 4;
     yScale *= 4;
     xPos4x = xPos * 4;

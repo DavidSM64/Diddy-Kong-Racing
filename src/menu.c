@@ -57,7 +57,7 @@ unk801263C0 gMenuCurrentCharacter;
 s32 gIgnorePlayerInputTime;  // A set amount of time to ignore player input.
 UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
 CharacterSelectData (*gCurrCharacterSelectData)[10];
-s32 D_801263D0;                         // Compared for equality to gTrackIdForPreview
+s32 gTrackmenuLoadedLevel;                         // Compared for equality to gTrackIdForPreview
 s8 gActivePlayersArray[MAXCONTROLLERS]; // Boolean value for each controller if it's active with a player.
 s32 gOpacityDecayTimer;
 s8 D_801263DC[MAXCONTROLLERS];
@@ -185,7 +185,7 @@ char *gMusicTestString;
 f32 gTrackSelectY;
 f32 gTrackSelectTargetX;
 f32 gTrackSelectTargetY;
-char *D_801269F0;
+char *gTrackMenuHubName;
 s32 gSelectedTrackX;
 s32 gSelectedTrackY;
 s32 *D_801269FC;
@@ -246,7 +246,7 @@ char **D_80126C1C;
 s32 gBootMenuPhase;
 s32 D_80126C24;
 s8 D_80126C28;
-unk80080BC8 (*D_80126C2C)[2];
+unk80080BC8 (*gMenuGeometry)[2];
 u16 (*gCheatsAssetData)[30]; // Cheat table.
 s32 D_80126C34;
 s32 gNumberOfCheats;
@@ -1303,7 +1303,7 @@ char *gQMarkPtr = "?";
 // Boolean. Set to TRUE once in the Track Select menu, then
 //   set to FALSE when leaving the menu.
 // This is effectively unused, since it is only read from the
-//   unused function func_8008E790()
+//   unused function trackmenu_active()
 s32 gIsInTracksMenu = FALSE;
 
 s32 gTrackNameVoiceDelay = 0;
@@ -2533,7 +2533,7 @@ s32 *gWoodPanelVertices[2] = { NULL, NULL };
 
 s32 *gWoodPanelTriangles[2] = { NULL, NULL };
 
-s32 D_800E1DB4 = 0;
+s32 gMenuTrisFlip = 0;
 s32 gWoodPanelCount = 0;
 s32 gWoodPanelAllocCount = 0;
 
@@ -2553,7 +2553,7 @@ char gRareCopyrightString[24] = "(C) COPYRIGHT RARE 1997";
 // Fade transition between levels in the title screen demo.
 FadeTransition gFadeTitleScreenDemo = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 52, -1);
 
-// Used in func_800853D0(). Used for controller pak adventure saves.
+// Used in savemenu_render_element(). Used for controller pak adventure saves.
 // So the first save in the pak would be (ADV.A), second save (ADV.B), etc.
 char *gConPakAdvSavePrefix = " (ADV.";
 
@@ -2748,7 +2748,7 @@ void menu_button_free(void) {
         gWoodPanelTriangles[0] = NULL;
     }
     gWoodPanelTriangles[1] = NULL;
-    D_80126C2C = NULL;
+    gMenuGeometry = NULL;
     gWoodPanelVertices[0] = NULL;
     gWoodPanelVertices[1] = NULL;
     gWoodPanelCount = 0;
@@ -2774,10 +2774,10 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
     s32 i;
     s32 texEnabled;
 
-    //((unk80080BC8*)((u8*)D_80126C2C[gWoodPanelCount] + (D_800E1DB4 * 4)))->texture = tex;
-    ((unk80080BC8 *) ((u8 *) D_80126C2C + (gWoodPanelCount << 5) + (D_800E1DB4 * 4)))->texture = tex;
-    //(&(*D_80126C2C)[gWoodPanelCount] + (D_800E1DB4 * 4))->texture = tex;
-    // D_80126C2C[gWoodPanelCount][D_800E1DB4].texture = tex;
+    //((unk80080BC8*)((u8*)gMenuGeometry[gWoodPanelCount] + (gMenuTrisFlip * 4)))->texture = tex;
+    ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->texture = tex;
+    //(&(*gMenuGeometry)[gWoodPanelCount] + (gMenuTrisFlip * 4))->texture = tex;
+    // gMenuGeometry[gWoodPanelCount][gMenuTrisFlip].texture = tex;
     if (tex != NULL) {
         uVals[0] = 0;
         vVals[0] = 0;
@@ -2787,7 +2787,7 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
         vVals[1] = gWoodPanelTexScaleV * borderHeight;
         vVals[2] = (height - borderHeight) * gWoodPanelTexScaleV;
         vVals[3] = gWoodPanelTexScaleV * height;
-        tris = ((unk80080BC8 *) ((u8 *) D_80126C2C + (gWoodPanelCount << 5) + (D_800E1DB4 * 4)))->triangles;
+        tris = ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->triangles;
         for (i = 0; i < 5; i++) {
             tris[i * 2].uv0.u = uVals[gWoodPanelTexCoords[i][0]];
             tris[i * 2].uv0.v = vVals[gWoodPanelTexCoords[i][1]];
@@ -2803,7 +2803,7 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
             tris[i * 2 + 1].uv2.v = vVals[gWoodPanelTexCoords[i][11]];
         }
     }
-    verts = ((unk80080BC8 *) ((u8 *) D_80126C2C + (gWoodPanelCount << 5) + (D_800E1DB4 * 4)))->vertices;
+    verts = ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->vertices;
     for (i = 0; i < 5; i++) {
         for (j = 0; j < 4; j++) {
             verts[j].x = startX;
@@ -2820,7 +2820,7 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
         }
     }
     if (dlist != NULL) {
-        ((unk80080BC8 *) ((u8 *) D_80126C2C + (gWoodPanelCount << 5) + (D_800E1DB4 * 4)))->unk18 = 1;
+        ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->unk18 = 1;
         gSPDisplayList((*dlist)++, &dMenuHudSettings);
         if (tex != NULL) {
             texEnabled = TRUE;
@@ -2834,25 +2834,25 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
         /*
         temp_v0_6 = *dlist;
         *dlist = temp_v0_6 + 8;
-        temp_v0_6->words.w0 = (((((*(D_80126C2C + (gWoodPanelCount << 5) + (D_800E1DB4 * 4)) + 0x80000000) & 6) | 0x98)
-        & 0xFF) << 0x10) | 0x04000000 | 0x170; temp_v0_6->words.w1 = *(D_80126C2C + (gWoodPanelCount << 5) + (D_800E1DB4
+        temp_v0_6->words.w0 = (((((*(gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)) + 0x80000000) & 6) | 0x98)
+        & 0xFF) << 0x10) | 0x04000000 | 0x170; temp_v0_6->words.w1 = *(gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip
         * 4)) + 0x80000000;
         */
         gSPVertexDKR((*dlist)++,
-                     OS_K0_TO_PHYSICAL(((unk80080BC8 *) ((u8 *) D_80126C2C + (i * 32) + (D_800E1DB4 * 4)))->vertices),
+                     OS_K0_TO_PHYSICAL(((unk80080BC8 *) ((u8 *) gMenuGeometry + (i * 32) + (gMenuTrisFlip * 4)))->vertices),
                      20, 0);
         /*
         temp_v0_7 = *dlist;
         *dlist = temp_v0_7 + 8;
         temp_v0_7->words.w0 = (((texEnabled | 0x90) & 0xFF) << 0x10) | 0x05000000 | 0xA0;
-        temp_v0_7->words.w1 = (D_80126C2C + (gWoodPanelCount << 5) + (D_800E1DB4 * 4))->unk8 + 0x80000000;
+        temp_v0_7->words.w1 = (gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4))->unk8 + 0x80000000;
         */
         gSPPolygon((*dlist)++,
-                   OS_K0_TO_PHYSICAL(((unk80080BC8 *) ((u8 *) D_80126C2C + (i * 32) + (D_800E1DB4 * 4)))->triangles),
+                   OS_K0_TO_PHYSICAL(((unk80080BC8 *) ((u8 *) gMenuGeometry + (i * 32) + (gMenuTrisFlip * 4)))->triangles),
                    10, texEnabled);
         reset_render_settings(dlist);
     } else {
-        ((unk80080BC8 *) ((u8 *) D_80126C2C + (gWoodPanelCount * 32) + (D_800E1DB4 * 4)))->unk18 = 0;
+        ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount * 32) + (gMenuTrisFlip * 4)))->unk18 = 0;
     }
     gWoodPanelCount++;
 }
@@ -2874,9 +2874,9 @@ void func_80080BC8(Gfx **dlist) {
     lastTex = NULL;
 
     for (i = 0; i < gWoodPanelCount; i++) {
-        //((unk80080BC8*)((u8*)D_80126C2C + (i << 5) + (D_800E1DB4 * 4)))->texture
-        if (!D_80126C2C[i][D_800E1DB4].unk18) {
-            tex = D_80126C2C[i][D_800E1DB4].texture;
+        //((unk80080BC8*)((u8*)gMenuGeometry + (i << 5) + (gMenuTrisFlip * 4)))->texture
+        if (!gMenuGeometry[i][gMenuTrisFlip].unk18) {
+            tex = gMenuGeometry[i][gMenuTrisFlip].texture;
             if (tex != NULL) {
                 if (var_t0 != 1) {
                     var_t0 = 1;
@@ -2891,21 +2891,24 @@ void func_80080BC8(Gfx **dlist) {
                 gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudSettings[6]), 2);
             }
             gDPPipeSync((*dlist)++);
-            gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL((&D_80126C2C[i][D_800E1DB4])->vertices), 20, 0);
-            gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL((&D_80126C2C[i][D_800E1DB4])->triangles), 10, 0);
+            gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL((&gMenuGeometry[i][gMenuTrisFlip])->vertices), 20, 0);
+            gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL((&gMenuGeometry[i][gMenuTrisFlip])->triangles), 10, 0);
         }
     }
     gWoodPanelCount = 0;
-    D_800E1DB4 = 1 - D_800E1DB4;
+    gMenuTrisFlip = 1 - gMenuTrisFlip;
     reset_render_settings(dlist);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/menu/func_80080BC8.s")
 #endif
 
-void func_80080E6C(void) {
+/**
+ * Resets the menu geometry after drawing, then flips the geometry index for the next frame.
+*/
+void menu_geometry_end(void) {
     gWoodPanelCount = 0;
-    D_800E1DB4 = (s32) (1 - D_800E1DB4);
+    gMenuTrisFlip = 1 - gMenuTrisFlip;
 }
 
 // https://decomp.me/scratch/IZ1Gq
@@ -4383,7 +4386,7 @@ void menu_save_options_init(void) {
     transition_begin(&sMenuTransitionFadeOut);
 }
 
-void func_800853D0(SaveFileData *arg0, s32 x, s32 y) {
+void savemenu_render_element(SaveFileData *arg0, s32 x, s32 y) {
     s32 i;
     s32 sp78;
     s32 sp74;
@@ -4613,7 +4616,7 @@ void func_80085B9C(UNUSED s32 updateRate) {
         sp5C = 80 - (s32) ((D_80126BDC - var_s2) * 164.0f);
         var_s1 = sp5C;
         while (var_s1 < videoWidth && temp < D_80126A08) {
-            func_800853D0(&D_80126A0C[temp], var_s1, 64);
+            savemenu_render_element(&D_80126A0C[temp], var_s1, 64);
             var_s1 += 164;
             temp++;
         }
@@ -4622,7 +4625,7 @@ void func_80085B9C(UNUSED s32 updateRate) {
         while ((var_s1 > 0) && (temp > 0)) {
             temp--;
             var_s1 -= 164;
-            func_800853D0(&D_80126A0C[temp], var_s1, 64);
+            savemenu_render_element(&D_80126A0C[temp], var_s1, 64);
         }
     }
 
@@ -4632,7 +4635,7 @@ void func_80085B9C(UNUSED s32 updateRate) {
         sp5C = 80 - (s32) ((D_80126BEC - (f32) var_s2) * 164.0f);
         var_s1 = sp5C;
         while (var_s1 < videoWidth && temp < D_80126A00) {
-            func_800853D0(&D_80126A04[temp], var_s1, 144);
+            savemenu_render_element(&D_80126A04[temp], var_s1, 144);
             var_s1 += 164;
             temp++;
         }
@@ -4641,7 +4644,7 @@ void func_80085B9C(UNUSED s32 updateRate) {
         while (var_s1 > 0 && temp > 0) {
             temp--;
             var_s1 -= 164;
-            func_800853D0(&D_80126A04[temp], var_s1, 144);
+            savemenu_render_element(&D_80126A04[temp], var_s1, 144);
         }
     }
 
@@ -4657,7 +4660,7 @@ void func_80085B9C(UNUSED s32 updateRate) {
     if (drawDialogueBox) {
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
     }
-    func_80080E6C();
+    menu_geometry_end();
 }
 
 SIDeviceStatus func_800860A8(s32 controllerIndex, s32 *arg1, SaveFileData *arg2, s32 *arg3, s32 fileSize,
@@ -7989,7 +7992,7 @@ s32 menu_file_select_loop(s32 updateRate) {
         }
         gNumberOfActivePlayers = 1;
         D_800E0FAC = 1;
-        func_8008E428();
+        fileselect_free();
         music_change_on();
         init_racer_headers();
         gTrophyRaceWorldId = 0;
@@ -8009,7 +8012,7 @@ s32 menu_file_select_loop(s32 updateRate) {
         return gNumberOfActivePlayers;
     }
     if (gMenuDelay < -35) {
-        func_8008E428();
+        fileselect_free();
         menu_init(MENU_GAME_SELECT);
         return MENU_RESULT_CONTINUE;
     } else {
@@ -8017,7 +8020,10 @@ s32 menu_file_select_loop(s32 updateRate) {
     }
 }
 
-void func_8008E428(void) {
+/**
+ * Free all assets associated with the file select menu.
+*/
+void fileselect_free(void) {
     menu_assetgroup_free(gFileSelectObjectIndices);
     menu_button_free();
     unload_font(ASSET_FONTS_BIGFONT);
@@ -8083,7 +8089,10 @@ void menu_input(void) {
     }
 }
 
-UNUSED s32 func_8008E790(void) {
+/**
+ * Return whether the tracks menu is open.
+*/
+UNUSED s32 trackmenu_active(void) {
     return gIsInTracksMenu;
 }
 
@@ -8128,7 +8137,7 @@ void menu_track_select_init(void) {
     gTrackSelectY = (f32) gTrackSelectCursorY * (f32) -gTrackSelectViewportY;
     gSelectedTrackX = -1;
     gSelectedTrackY = -1;
-    D_801263D0 = -1;
+    gTrackmenuLoadedLevel = -1;
     gOpacityDecayTimer = 32;
     gOptionBlinkTimer = 0;
     gTrackmenuType = -1;
@@ -8232,8 +8241,8 @@ void menu_track_select_init(void) {
     gTrackIdForPreview = gTrackSelectIDs[gTrackSelectCursorY][gTrackSelectCursorX];
     gTrackSelectRow = gTrackSelectCursorY + 1;
     if (gTrackIdForPreview == (s16) -1) {
-        D_801263D0 = gTrackSelectIDs[0];
-        load_level_for_menu(D_801263D0, -1, 1);
+        gTrackmenuLoadedLevel = gTrackSelectIDs[0];
+        load_level_for_menu(gTrackmenuLoadedLevel, -1, 1);
         gTrackSelectRow = 1;
         gSelectedTrackX = 0;
         gSelectedTrackY = 0;
@@ -8256,19 +8265,19 @@ void menu_track_select_init(void) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_track_select_init.s")
 #endif
 
-void func_8008F00C(s32 arg0) {
+void func_8008F00C(s32 type) {
     Vehicle vehicle;
     s32 i;
-    s32 temp;
+    s32 newType;
 
-    if ((gTrackmenuType != -1) && (gTrackmenuType != 0) && (gTrackmenuType == 1)) {
+    if (gTrackmenuType != -1 && gTrackmenuType != 0 && gTrackmenuType == 1) {
         menu_assetgroup_free(gTrackSelectPreviewObjectIndices);
     }
 
-    gTrackmenuType = arg0;
-    temp = gTrackmenuType;
+    gTrackmenuType = type;
+    newType = gTrackmenuType;
 
-    if ((temp >= 0) && (temp < 2)) {
+    if (newType >= 0 && newType < 2) {
         switch (gTrackmenuType) {
             case 0:
                 gTrackSelectTargetX = gTrackSelectX;
@@ -8332,6 +8341,7 @@ s32 menu_track_select_loop(s32 updateRate) {
     }
     menu_input();
 
+    // Make sure adventure 2 view doesn't cause problems later on.
     gSPClearGeometryMode(sMenuCurrDisplayList++, G_CULL_FRONT);
 
     switch (gTrackmenuType) {
@@ -8533,7 +8543,12 @@ s32 func_8008F618(Gfx **dlist, MatrixS **mtx) {
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F618.s")
 #endif
 
-void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort,
+/**
+ * Render the text and frame around the viewport onscreen.
+ * This includes the world name, the frame around the viewport,
+ * and the image that goes over the viewport when the level is not loaded.
+*/
+void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort,
                          DrawTexture *arg7, s32 arg8) {
     s32 xTemp;
     s32 yTemp;
@@ -8565,16 +8580,16 @@ void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
     } else {
         opacity = 255;
     }
-    if (hubName != D_801269F0) {
-        temp = (s32) get_level_name(get_hub_area_id(3));
+    if (hubName != gTrackMenuHubName) {
+        temp = (s32) get_level_name(get_hub_area_id(WORLD_SNOWFLAKE_MOUNTAIN));
         if ((s32) hubName == temp) {
             set_kerning(TRUE);
         }
         set_text_colour(0, 0, 0, 255, opacity / 2);
-        draw_text(&sMenuCurrDisplayList, 161, (yTemp - sp6C) - 85, hubName, ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, (yTemp - sp6C) - 85, hubName, ALIGN_MIDDLE_CENTER);
         set_text_colour(255, 255, 255, 0, opacity);
-        draw_text(&sMenuCurrDisplayList, 160, (yTemp - sp6C) - 88, hubName, ALIGN_MIDDLE_CENTER);
-        D_801269F0 = hubName;
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, (yTemp - sp6C) - 88, hubName, ALIGN_MIDDLE_CENTER);
+        gTrackMenuHubName = hubName;
         set_kerning(0);
     }
     set_text_colour(255, 255, 255, 0, opacity);
@@ -8599,7 +8614,7 @@ void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
             x1 = temp;
             if (temp < SCREEN_WIDTH && xTemp > 0) {
                 render_texture_rectangle_scaled(&sMenuCurrDisplayList, arg7, xTemp, yTemp, sp58, sp54,
-                                                (rectOpacity & 0xFF) | ~0xFF, 0x1000);
+                                                (rectOpacity & 0xFF) | ~0xFF, TEXRECT_FLIP_X);
             }
             if (xTemp < SCREEN_WIDTH && x2 > 0) {
                 render_texture_rectangle_scaled(&sMenuCurrDisplayList, arg7, xTemp, yTemp, sp58, sp54,
@@ -8740,10 +8755,10 @@ void func_8008FF1C(UNUSED s32 updateRate) {
         gDPPipeSync(sMenuCurrDisplayList++);
         D_80126928 = 64;
         D_8012692C = 32;
-        D_801269F0 = NULL;
+        gTrackMenuHubName = NULL;
         for (i = 0; i < ARRAY_COUNT(gTrackSelectRenderDetails); i++) {
             if (gTrackSelectRenderDetails[i].visible != 0) {
-                render_track_select(gTrackSelectRenderDetails[i].xOff, gTrackSelectRenderDetails[i].yOff,
+                trackmenu_render_2D(gTrackSelectRenderDetails[i].xOff, gTrackSelectRenderDetails[i].yOff,
                                     gTrackSelectRenderDetails[i].hubName, gTrackSelectRenderDetails[i].trackName,
                                     gTrackSelectRenderDetails[i].opacity, gTrackSelectRenderDetails[i].border,
                                     ((u32) gTrackSelectRenderDetails[i].viewPort) >> 0xF,
@@ -8775,12 +8790,12 @@ void trackmenu_track_view(s32 updateRate) {
         gTrackSelectY += (gTrackSelectTargetY - gTrackSelectY) * 0.1;
     }
     if (gOpacityDecayTimer == 32 && get_thread30_level_id_to_load() == 0) {
-        if (gTrackIdForPreview == D_801263D0) {
+        if (gTrackIdForPreview == gTrackmenuLoadedLevel) {
             gSelectedTrackX = gTrackSelectCursorX;
             gSelectedTrackY = gTrackSelectCursorY;
-        } else if (gTrackIdForPreview != D_801263D0 && gTrackIdForPreview != -1 &&
+        } else if (gTrackIdForPreview != gTrackmenuLoadedLevel && gTrackIdForPreview != -1 &&
                    set_level_to_load_in_background(gTrackIdForPreview, 1)) {
-            D_801263D0 = gTrackIdForPreview;
+            gTrackmenuLoadedLevel = gTrackIdForPreview;
             gSelectedTrackX = gTrackSelectCursorX;
             gSelectedTrackY = gTrackSelectCursorY;
             set_level_default_vehicle(get_map_default_vehicle(gTrackIdForPreview));
@@ -8802,16 +8817,16 @@ void trackmenu_track_view(s32 updateRate) {
  */
 void trackmenu_input(s32 updateRate) {
     UNUSED s32 pad1[2];
-    s32 var_t1;
+    s32 scaleOffset;
     UNUSED s32 pad2[2];
     s32 spaceWorldUnlocked;
-    s32 var_t0;
-    s32 var_t2;
-    s32 sp24;
-    s32 var_t3;
-    s32 var_a2;
+    s32 centreY;
+    s32 centreX;
+    s32 menuDelay;
+    s32 y2;
+    s32 y1;
 
-    sp24 = gMenuDelay;
+    menuDelay = gMenuDelay;
     if (gMenuDelay > 0) {
         if (gTrackSelectTargetX - gTrackSelectX > 4.0f || gTrackSelectTargetX - gTrackSelectX < -4.0f ||
             gTrackSelectTargetY - gTrackSelectY > 4.0f || gTrackSelectTargetY - gTrackSelectY < -4.0f) {
@@ -8820,22 +8835,22 @@ void trackmenu_input(s32 updateRate) {
             sound_play(SOUND_SELECT2, NULL);
             gTrackSelectSound = FALSE;
         }
-        var_t1 = gMenuDelay - 1;
-        if (var_t1 > 20) {
-            var_t1 = 20;
+        scaleOffset = gMenuDelay - 1;
+        if (scaleOffset > 20) {
+            scaleOffset = 20;
         }
-        var_t2 = 160;
-        var_t0 = gTrackSelectViewPortHalfY;
-        if (var_t1 < 20) {
-            var_t2 += gTrackSelectTargetX - gTrackSelectX;
-            var_t0 -= gTrackSelectTargetY - gTrackSelectY;
+        centreX = 160;
+        centreY = gTrackSelectViewPortHalfY;
+        if (scaleOffset < 20) {
+            centreX += gTrackSelectTargetX - gTrackSelectX;
+            centreY -= gTrackSelectTargetY - gTrackSelectY;
         }
-        var_t3 = (((var_t1 + 20) * gTrackSelectViewPortHalfY) / 40) + var_t0;
-        var_a2 = var_t0 - (((var_t1 + 20) * gTrackSelectViewPortHalfY) / 40);
-        viewport_menu_set(0, (var_t2 - (var_t1 * 4)) - 80, var_a2, (var_t1 * 4) + var_t2 + 80, var_t3);
-        gMenuImages[4].scale = (f32) (sMenuImageProperties[4].scale * (1.0f + ((f32) var_t1 / 20.0f)));
-        gMenuImages[6].scale = (f32) (sMenuImageProperties[6].scale * (1.0f + ((f32) var_t1 / 20.0f)));
-        gMenuImages[5].scale = (f32) (sMenuImageProperties[5].scale * (1.0f + ((f32) var_t1 / 20.0f)));
+        y2 = (((scaleOffset + 20) * gTrackSelectViewPortHalfY) / 40) + centreY;
+        y1 = centreY - (((scaleOffset + 20) * gTrackSelectViewPortHalfY) / 40);
+        viewport_menu_set(0, (centreX - (scaleOffset * 4)) - 80, y1, (scaleOffset * 4) + centreX + 80, y2);
+        gMenuImages[4].scale = (f32) (sMenuImageProperties[4].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
+        gMenuImages[6].scale = (f32) (sMenuImageProperties[6].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
+        gMenuImages[5].scale = (f32) (sMenuImageProperties[5].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
     }
     camEnableUserView(0, 0);
     if (get_thread30_level_id_to_load() == 0) {
@@ -8858,7 +8873,7 @@ void trackmenu_input(s32 updateRate) {
             gIsInTracksMenu = FALSE;
         }
         if (gMenuDelay > 30) {
-            if ((is_adventure_two_unlocked()) && (gTrackSelectCursorX != 5)) {
+            if (is_adventure_two_unlocked() && gTrackSelectCursorX != 5) {
                 gMenuOptionCount = -1;
             } else {
                 gMenuOptionCount = 0;
@@ -8870,10 +8885,10 @@ void trackmenu_input(s32 updateRate) {
             func_8008F00C(-1);
         }
     }
-    if (sp24 == 0) {
-        spaceWorldUnlocked = (gFFLUnlocked == -1) ? 3 : 4;
+    if (menuDelay == 0) {
+        spaceWorldUnlocked = gFFLUnlocked == -1 ? 3 : 4;
         if (gMenuButtons[PLAYER_MENU] & (A_BUTTON | START_BUTTON)) {
-            if (gTrackIdForPreview != (s32) -1) {
+            if (gTrackIdForPreview != -1) {
                 gMenuDelay = 1;
                 gTrackIdToLoad = gTrackIdForPreview;
                 gTrackSelectSound = TRUE;
@@ -8929,6 +8944,11 @@ void trackmenu_timetrial_sound(UNUSED s32 updateRate) {
     }
 }
 
+/**
+ * Render the player options before going into a race.
+ * This includes which adventure mode, which vehicles, 
+ * racer count and whether to use time trial mode.
+*/
 void trackmenu_setup_render(UNUSED s32 updateRate) {
     // Had to mess around with shifting the local variables, so they all probably need to be renamed.
     s32 k;
@@ -8963,7 +8983,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
     if (gMenuDelay < 0) {
         if (gSelectedTrackX == 4) {
             sp84 = 6;
-        } else if ((gSelectedTrackX == 5)) {
+        } else if (gSelectedTrackX == 5) {
             sp84 = 5;
         } else {
             sp84 = 4;
@@ -9008,7 +9028,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
                           temp2, gTracksMenuAdventureButton.height, gTracksMenuAdventureButton.borderWidth,
                           gTracksMenuAdventureButton.borderHeight, sMenuGuiOpacity + COLOUR_RGBA32(176, 224, 192, 0),
                           gMenuAssets[67]);
-            func_80080E6C();
+            menu_geometry_end();
             set_text_font(ASSET_FONTS_FUNFONT);
             for (temp = 0, temp2 = 0,
                 y = gTracksMenuAdventureButton.colourMax + gTracksMenuAdventureButton.y + regionOffset + 1;
@@ -9169,7 +9189,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
                                   gTwoPlayerRacerCountMenu.height, gTwoPlayerRacerCountMenu.borderWidth,
                                   gTwoPlayerRacerCountMenu.borderHeight, COLOUR_RGBA32(176, 224, 192, 255),
                                   gMenuAssets[67]);
-                    func_80080E6C();
+                    menu_geometry_end();
                     set_text_font(ASSET_FONTS_FUNFONT);
                     set_text_colour(0, 0, 0, 255, 128);
                     draw_text(&sMenuCurrDisplayList,
@@ -9232,7 +9252,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
             reset_render_settings(&sMenuCurrDisplayList);
         }
         if (gTrackSelectCursorX != 5) {
-            if ((gMenuOptionCount == 2 && !sp74) || (gMenuOptionCount == 3 && sp74) || gMenuOptionCount == 4) {
+            if (gMenuOptionCount == 2 && !sp74 || gMenuOptionCount == 3 && sp74 || gMenuOptionCount == 4) {
                 set_text_font(ASSET_FONTS_BIGFONT);
                 set_text_colour(255, 255, 255, 0, sMenuGuiOpacity);
                 if (gTrackSelectCursorX >= 4) {

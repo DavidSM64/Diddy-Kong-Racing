@@ -987,16 +987,16 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
 
     switch (saveFileNum) {
         case 0:
-            startingAddress = 0;
+            startingAddress = 0x00 / sizeof(u64);
             break;
         case 1:
-            startingAddress = 5;
+            startingAddress = 0x28 / sizeof(u64);
             break;
         case 2:
-            startingAddress = 10;
+            startingAddress = 0x50 / sizeof(u64);
             break;
         default:
-            startingAddress = 10;
+            startingAddress = 0x50 / sizeof(u64);
             break;
     }
 
@@ -1030,20 +1030,20 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
         return -1;
     }
 
-    alloc = allocate_from_main_pool_safe(0x200, COLOUR_TAG_WHITE);
+    alloc = allocate_from_main_pool_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
 
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
-        s32 blocks = 24;
+        s32 blocks = EEP_FLAP_SIZE;
         for (i = 0; i < blocks; i++) {
-            osEepromRead(get_si_mesg_queue(), i + 0x10, (u8 *) &alloc[i]);
+            osEepromRead(get_si_mesg_queue(), i + EEP_FLAP_OFFSET, (u8 *) &alloc[i]);
         }
         func_80073588(settings, (u8 *) alloc, SAVE_DATA_FLAG_READ_FLAP_TIMES);
     }
 
     if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
-        s32 blocks = 24;
+        s32 blocks = EEP_COURSE_RECORD_SIZE;
         for (i = 0; i < blocks; i++) {
-            osEepromRead(get_si_mesg_queue(), i + 0x28, (u8 *) (&alloc[24] + i));
+            osEepromRead(get_si_mesg_queue(), i + EEP_COURSE_TIME_OFFSET, (u8 *) (&alloc[EEP_FLAP_SIZE] + i));
         }
         func_80073588(settings, (u8 *) alloc, SAVE_DATA_FLAG_READ_COURSE_TIMES);
     }
@@ -1068,25 +1068,25 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
         return -1;
     }
 
-    alloc = allocate_from_main_pool_safe(0x200, COLOUR_TAG_WHITE);
+    alloc = allocate_from_main_pool_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
 
     func_800738A4(settings, (u8 *) alloc);
 
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
-        s32 size = 24;
+        s32 size = EEP_FLAP_SIZE;
         if (1) {} // Fake Match
         if (!is_reset_pressed()) {
             for (i = 0; i != size; i++) {
-                osEepromWrite(get_si_mesg_queue(), i + 16, (u8 *) &alloc[i]);
+                osEepromWrite(get_si_mesg_queue(), i + EEP_FLAP_OFFSET, (u8 *) &alloc[i]);
             }
         }
     }
 
     if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
-        s32 size = 24;
+        s32 size = EEP_COURSE_RECORD_SIZE;
         if (!is_reset_pressed()) {
             for (i = 0; i != size; i++) {
-                osEepromWrite(get_si_mesg_queue(), i + 40, (u8 *) (&alloc[24] + i));
+                osEepromWrite(get_si_mesg_queue(), i + EEP_COURSE_TIME_OFFSET, (u8 *) (&alloc[EEP_FLAP_SIZE] + i));
             }
         }
     }
@@ -1371,7 +1371,7 @@ SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostC
     GhostHeader *ghost;
 
     fileSize = 0x1100 * 6;
-    temp_v0_3 = allocate_from_main_pool_safe(fileSize + 0x200, COLOUR_TAG_BLACK);
+    temp_v0_3 = allocate_from_main_pool_safe(fileSize + SAVE_SIZE, COLOUR_TAG_BLACK);
     *((s32 *) temp_v0_3) = GHSS;
     ghost = (GhostHeader *) (temp_v0_3 + 4);
     // temp_v0_3->unk0 = GHSS;

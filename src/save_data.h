@@ -23,6 +23,13 @@
 
 #define NUMBER_OF_SAVE_FILES 3
 
+// Most of this is temporary really until we figure out where the size comes from
+#define EEP_FLAP_OFFSET (0x80 / sizeof(u64))
+#define EEP_COURSE_TIME_OFFSET (0x140 / sizeof(u64))
+#define EEP_FLAP_SIZE (0xC0  / sizeof(u64))
+#define EEP_COURSE_RECORD_SIZE (0xC0  / sizeof(u64))
+#define SAVE_SIZE 0x200
+
 // One unique thing about results using SIDeviceStatus is that they
 // store the enum value in the lower 0xFF byte, and they store
 // the controller index in the upper 3 bits.

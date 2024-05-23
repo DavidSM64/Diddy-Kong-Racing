@@ -332,7 +332,7 @@ extern u8 *__ROM_END;
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
 void menu_button_free(void);
-void func_80080E6C(void);
+void menu_geometry_end(void);
 void reset_title_logo_scale(void);
 void menu_init(u32 menuId);
 s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate);
@@ -376,7 +376,7 @@ void unload_big_font_3(void);
 void gameselect_free(void);
 void menu_file_select_init(void);
 void fileselect_render_element(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s32 green, s32 blue, s32 opacity);
-void func_8008E428(void);
+void fileselect_free(void);
 void assign_vehicle_icon_textures(void);
 void assign_menu_arrow_textures(void);
 void menu_track_select_unload(void);
@@ -505,8 +505,8 @@ void menu_input(void);
 SIDeviceStatus func_800862C4(void);
 void menu_asset_load(s32 arg0);
 s32 func_80087734(s32 buttonsPressed, s32 yAxis);
-void func_800853D0(SaveFileData *arg0, s32 x, s32 y);
-void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
+void savemenu_render_element(SaveFileData *arg0, s32 x, s32 y);
+void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
 void func_80093D40(UNUSED s32 updateRate);
 s32 func_80095728(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 updateRate);
 void func_80099E8C(UNUSED s32 updateRate);

@@ -81,8 +81,8 @@ glabel menu_track_select_init
 /* 08F4D8 8008E8D8 AC3569F4 */  sw    $s5, %lo(gSelectedTrackX)($at)
 /* 08F4DC 8008E8DC 3C018012 */  lui   $at, %hi(gSelectedTrackY) # $at, 0x8012
 /* 08F4E0 8008E8E0 AC3569F8 */  sw    $s5, %lo(gSelectedTrackY)($at)
-/* 08F4E4 8008E8E4 3C018012 */  lui   $at, %hi(D_801263D0) # $at, 0x8012
-/* 08F4E8 8008E8E8 AC3563D0 */  sw    $s5, %lo(D_801263D0)($at)
+/* 08F4E4 8008E8E4 3C018012 */  lui   $at, %hi(gTrackmenuLoadedLevel) # $at, 0x8012
+/* 08F4E8 8008E8E8 AC3563D0 */  sw    $s5, %lo(gTrackmenuLoadedLevel)($at)
 /* 08F4EC 8008E8EC 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
 /* 08F4F0 8008E8F0 AC2F63D8 */  sw    $t7, %lo(gOpacityDecayTimer)($at)
 /* 08F4F4 8008E8F4 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
@@ -501,8 +501,8 @@ glabel menu_track_select_init
 /* 08FB20 8008EF20 16AE000E */  bne   $s5, $t6, .L8008EF5C
 /* 08FB24 8008EF24 AC6E0000 */   sw    $t6, ($v1)
 /* 08FB28 8008EF28 84E40000 */  lh    $a0, ($a3)
-/* 08FB2C 8008EF2C 3C028012 */  lui   $v0, %hi(D_801263D0) # $v0, 0x8012
-/* 08FB30 8008EF30 244263D0 */  addiu $v0, %lo(D_801263D0) # addiu $v0, $v0, 0x63d0
+/* 08FB2C 8008EF2C 3C028012 */  lui   $v0, %hi(gTrackmenuLoadedLevel) # $v0, 0x8012
+/* 08FB30 8008EF30 244263D0 */  addiu $v0, %lo(gTrackmenuLoadedLevel) # addiu $v0, $v0, 0x63d0
 /* 08FB34 8008EF34 2405FFFF */  li    $a1, -1
 /* 08FB38 8008EF38 24060001 */  li    $a2, 1
 /* 08FB3C 8008EF3C 0C01B8BA */  jal   load_level_for_menu
