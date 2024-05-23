@@ -51,8 +51,8 @@ glabel func_80094D28
 /* 0959C8 80094DC8 01400008 */  jr    $t2
 /* 0959CC 80094DCC 00000000 */   nop   
 glabel L80094DD0
-/* 0959D0 80094DD0 3C108012 */  lui   $s0, %hi(D_80126A94) # $s0, 0x8012
-/* 0959D4 80094DD4 8E106A94 */  lw    $s0, %lo(D_80126A94)($s0)
+/* 0959D0 80094DD0 3C108012 */  lui   $s0, %hi(gPostRaceTimer) # $s0, 0x8012
+/* 0959D4 80094DD4 8E106A94 */  lw    $s0, %lo(gPostRaceTimer)($s0)
 /* 0959D8 80094DD8 3C118012 */  lui   $s1, %hi(gTrackSelectViewPortHalfY) # $s1, 0x8012
 /* 0959DC 80094DDC 2A01003D */  slti  $at, $s0, 0x3d
 /* 0959E0 80094DE0 14200002 */  bnez  $at, .L80094DEC
@@ -354,13 +354,13 @@ glabel L800951CC
 /* 095E18 80095218 1000000C */  b     .L8009524C
 /* 095E1C 8009521C 24100001 */   li    $s0, 1
 .L80095220:
-/* 095E20 80095220 3C0D8012 */  lui   $t5, %hi(D_80126C1C) # $t5, 0x8012
-/* 095E24 80095224 8DAD6C1C */  lw    $t5, %lo(D_80126C1C)($t5)
+/* 095E20 80095220 3C0D8012 */  lui   $t5, %hi(gPostRaceMessage) # $t5, 0x8012
+/* 095E24 80095224 8DAD6C1C */  lw    $t5, %lo(gPostRaceMessage)($t5)
 /* 095E28 80095228 3C108012 */  lui   $s0, %hi(gResultOptionCount) # $s0, 0x8012
 /* 095E2C 8009522C 11A00005 */  beqz  $t5, .L80095244
 /* 095E30 80095230 00000000 */   nop   
-/* 095E34 80095234 3C108012 */  lui   $s0, %hi(D_80126C24) # $s0, 0x8012
-/* 095E38 80095238 8E106C24 */  lw    $s0, %lo(D_80126C24)($s0)
+/* 095E34 80095234 3C108012 */  lui   $s0, %hi(gPostRaceLineCount) # $s0, 0x8012
+/* 095E38 80095238 8E106C24 */  lw    $s0, %lo(gPostRaceLineCount)($s0)
 /* 095E3C 8009523C 10000004 */  b     .L80095250
 /* 095E40 80095240 2A010005 */   slti  $at, $s0, 5
 .L80095244:
@@ -416,9 +416,9 @@ glabel L800951CC
 /* 095EF4 800952F4 0C031400 */  jal   set_current_text_colour
 /* 095EF8 800952F8 240700FF */   li    $a3, 255
 /* 095EFC 800952FC 8E380000 */  lw    $t8, ($s1)
-/* 095F00 80095300 3C028012 */  lui   $v0, %hi(D_80126C1C) # $v0, 0x8012
+/* 095F00 80095300 3C028012 */  lui   $v0, %hi(gPostRaceMessage) # $v0, 0x8012
 /* 095F04 80095304 1300000E */  beqz  $t8, .L80095340
-/* 095F08 80095308 24426C1C */   addiu $v0, %lo(D_80126C1C) # addiu $v0, $v0, 0x6c1c
+/* 095F08 80095308 24426C1C */   addiu $v0, %lo(gPostRaceMessage) # addiu $v0, $v0, 0x6c1c
 /* 095F0C 8009530C 3C0F800E */  lui   $t7, %hi(gMenuText) # $t7, 0x800e
 /* 095F10 80095310 8DEFF4A0 */  lw    $t7, %lo(gMenuText)($t7)
 /* 095F14 80095314 240B0001 */  li    $t3, 1
@@ -437,16 +437,16 @@ glabel L800951CC
 /* 095F44 80095344 3C11800E */  lui   $s1, %hi(gMenuSubOption) # $s1, 0x800e
 /* 095F48 80095348 11A00020 */  beqz  $t5, .L800953CC
 /* 095F4C 8009534C 26310988 */   addiu $s1, %lo(gMenuSubOption) # addiu $s1, $s1, 0x988
-/* 095F50 80095350 3C0E8012 */  lui   $t6, %hi(D_80126C24) # $t6, 0x8012
-/* 095F54 80095354 8DCE6C24 */  lw    $t6, %lo(D_80126C24)($t6)
+/* 095F50 80095350 3C0E8012 */  lui   $t6, %hi(gPostRaceLineCount) # $t6, 0x8012
+/* 095F54 80095354 8DCE6C24 */  lw    $t6, %lo(gPostRaceLineCount)($t6)
 /* 095F58 80095358 2412000C */  li    $s2, 12
 /* 095F5C 8009535C 19C00088 */  blez  $t6, .L80095580
 /* 095F60 80095360 00008025 */   move  $s0, $zero
 /* 095F64 80095364 8FB10050 */  lw    $s1, 0x50($sp)
 /* 095F68 80095368 00001825 */  move  $v1, $zero
 .L8009536C:
-/* 095F6C 8009536C 3C028012 */  lui   $v0, %hi(D_80126C1C) # $v0, 0x8012
-/* 095F70 80095370 24426C1C */  addiu $v0, %lo(D_80126C1C) # addiu $v0, $v0, 0x6c1c
+/* 095F6C 8009536C 3C028012 */  lui   $v0, %hi(gPostRaceMessage) # $v0, 0x8012
+/* 095F70 80095370 24426C1C */  addiu $v0, %lo(gPostRaceMessage) # addiu $v0, $v0, 0x6c1c
 /* 095F74 80095374 8C4A0000 */  lw    $t2, ($v0)
 /* 095F78 80095378 24180001 */  li    $t8, 1
 /* 095F7C 8009537C 0143C821 */  addu  $t9, $t2, $v1
@@ -459,8 +459,8 @@ glabel L800951CC
 /* 095F98 80095398 24058000 */  li    $a1, -32768
 /* 095F9C 8009539C 0C03145A */  jal   render_dialogue_text
 /* 095FA0 800953A0 02403025 */   move  $a2, $s2
-/* 095FA4 800953A4 3C0B8012 */  lui   $t3, %hi(D_80126C24) # $t3, 0x8012
-/* 095FA8 800953A8 8D6B6C24 */  lw    $t3, %lo(D_80126C24)($t3)
+/* 095FA4 800953A4 3C0B8012 */  lui   $t3, %hi(gPostRaceLineCount) # $t3, 0x8012
+/* 095FA8 800953A8 8D6B6C24 */  lw    $t3, %lo(gPostRaceLineCount)($t3)
 /* 095FAC 800953AC 8FA30034 */  lw    $v1, 0x34($sp)
 /* 095FB0 800953B0 26100001 */  addiu $s0, $s0, 1
 /* 095FB4 800953B4 020B082A */  slt   $at, $s0, $t3

@@ -438,7 +438,7 @@ void ingame_logic_loop(s32 updateRate) {
                 gLevelLoadTimer == 0 && gPauseLockTimer == 0) {
                 buttonPressedInputs = 0;
                 gIsPaused = TRUE;
-                func_80093A40();
+                menu_pause_init();
             }
         }
     } else {
@@ -459,39 +459,39 @@ void ingame_logic_loop(s32 updateRate) {
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
     if (gPostRaceViewPort) {
-        i = func_80095728(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
+        i = menu_postrace(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
         switch (i) {
-            case 2:
+            case POSTRACE_OPT_2:
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
-            case 1:
+            case POSTRACE_OPT_1:
                 gPostRaceViewPort = NULL;
                 func_8006D8F0(-1);
                 break;
-            case 4:
+            case POSTRACE_OPT_4:
                 clear_level_property_stack();
                 gDrumstickSceneLoadTimer = 0;
                 buttonHeldInputs |= (L_TRIG | R_TRIG);
                 break;
-            case 5:
+            case POSTRACE_OPT_5:
                 buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_TRACK_SELECT;
                 break;
-            case 8:
+            case POSTRACE_OPT_8:
                 buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_RESULTS;
                 break;
-            case 9:
+            case POSTRACE_OPT_9:
                 buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_TROPHY_ROUND;
                 break;
-            case 10:
+            case POSTRACE_OPT_10:
                 buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_TROPHY_RESULTS;
                 break;
-            case 11:
+            case POSTRACE_OPT_11:
                 buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_UNUSED;
                 break;
-            case 12:
+            case POSTRACE_OPT_12:
                 buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_CHARACTER_SELECT;
                 break;
-            case 13:
+            case POSTRACE_OPT_13:
                 buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_UNK7;
                 break;
         }
@@ -508,12 +508,12 @@ void ingame_logic_loop(s32 updateRate) {
         }
     }
     if (gIsPaused) {
-        i = render_pause_menu(&gCurrDisplayList, updateRate);
-        switch (i - 1) {
-            case 0:
+        i = menu_pause_loop(&gCurrDisplayList, updateRate);
+        switch (i) {
+            case PAUSE_CONTINUE:
                 gIsPaused = FALSE;
                 break;
-            case 1:
+            case PAUSE_RESET:
                 sound_clear_delayed();
                 reset_delayed_text();
                 if (func_80023568() != 0 && is_in_two_player_adventure()) {
@@ -521,7 +521,7 @@ void ingame_logic_loop(s32 updateRate) {
                 }
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
-            case 2:
+            case PAUSE_QUIT_LOBBY:
                 sound_clear_delayed();
                 reset_delayed_text();
                 if (func_80023568() != 0 && is_in_two_player_adventure()) {
@@ -529,24 +529,24 @@ void ingame_logic_loop(s32 updateRate) {
                 }
                 buttonHeldInputs |= L_TRIG;
                 break;
-            case 4:
+            case PAUSE_QUIT_TRACKS:
                 loadContext = LEVEL_CONTEXT_TRACK_SELECT;
                 reset_delayed_text();
                 buttonHeldInputs |= L_TRIG;
                 break;
-            case 11:
+            case PAUSE_QUIT_CHARSELECT:
                 loadContext = LEVEL_CONTEXT_CHARACTER_SELECT;
                 reset_delayed_text();
                 buttonHeldInputs |= L_TRIG;
                 break;
-            case 5:
+            case PAUSE_OPT_6:
                 gIsPaused = FALSE;
                 break;
-            case 6:
+            case PAUSE_QUIT_CHALLENGE:
                 mode_end_taj_race(CHALLENGE_END_QUIT);
                 gIsPaused = FALSE;
                 break;
-            case 3:
+            case PAUSE_OPT_4:
                 gDrumstickSceneLoadTimer = 0;
                 sound_clear_delayed();
                 reset_delayed_text();

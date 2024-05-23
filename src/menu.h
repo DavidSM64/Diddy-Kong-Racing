@@ -24,6 +24,54 @@
 
 #define PLAYER_MENU 4
 
+enum PauseMenuResults {
+    PAUSE_NONE,
+    PAUSE_CONTINUE,
+    PAUSE_RESET,
+    PAUSE_QUIT_LOBBY,
+    PAUSE_OPT_4,
+    PAUSE_QUIT_TRACKS,
+    PAUSE_OPT_6,
+    PAUSE_QUIT_CHALLENGE,
+    PAUSE_QUIT_CHARSELECT = 12,
+};
+
+enum PostRaceCases {
+    POSTRACE_NONE,
+    POSTRACE_OPT_1,
+    POSTRACE_OPT_2,
+    POSTRACE_OPT_3,
+    POSTRACE_OPT_4,
+    POSTRACE_OPT_5,
+    POSTRACE_OPT_6,
+    POSTRACE_OPT_7,
+    POSTRACE_OPT_8,
+    POSTRACE_OPT_9,
+    POSTRACE_OPT_10,
+    POSTRACE_OPT_11,
+    POSTRACE_OPT_12,
+    POSTRACE_OPT_13
+};
+
+enum PostRaceRenderStates {
+    POSTRACE_SLIDE_IN,
+    POSTRACE_HOLD,
+    POSTRACE_SLIDE_OUT,
+    POSTRACE_SLIDE_END = 4,
+};
+
+enum PostRaceStages {
+    POSTRACE_STAGE_BEGIN,
+    POSTRACE_STAGE_SHRINK_VIEWPORT,
+    POSTRACE_STAGE_RACE_TIMES,
+    POSTRACE_STAGE_RACE_ORDER,
+    POSTRACE_STAGE_ENTER_INITIALS,
+    POSTRACE_STAGE_RACE_RECORDS,
+    POSTRACE_STAGE_OPTIONS,
+    POSTRACE_STAGE_FADE_OUT,
+    POSTRACE_STAGE_END
+};
+
 enum DialogueMenuCases {
     DIALOGUE_TAJ,
     DIALOGUE_UNK_01,
@@ -32,6 +80,8 @@ enum DialogueMenuCases {
     DIALOGUE_TROPHY,
     DIALOGUE_RACERESULT
 };
+
+
 
 #define CHEAT(index) 1 << index
 
@@ -337,7 +387,7 @@ void reset_title_logo_scale(void);
 void menu_init(u32 menuId);
 s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
-void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
+void postrace_offsets(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
 void trackmenu_set_records(void);
 void print_missing_controller_text(Gfx **dl, s32 updateRate);
 void menu_logos_screen_init(void);
@@ -383,11 +433,11 @@ void menu_track_select_unload(void);
 void trackmenu_timetrial_sound(s32 updateRate);
 s32 func_80092BE0(s32 mapId);
 void menu_adventure_track_init(void);
-void func_80093A0C(void);
+void adventuretrack_free(void);
 void n_alSynRemovePlayer(void);
 void n_alSeqpDelete(void);
 void assign_racer_portrait_textures(void);
-void func_80094C14(s32 updateRate);
+void postrace_music_fade(s32 updateRate);
 void func_80096790(void);
 void menu_results_init(void);
 void func_800976CC(void);
@@ -462,7 +512,7 @@ s32 menu_character_select_loop(s32 updateRate);
 s32 menu_caution_loop(s32 updateRate);
 void fileselect_input_erase(UNUSED s32 updateRate);
 s32 menu_adventure_track_loop(s32 updateRate);
-void func_80095624(SIDeviceStatus status);
+void postrace_message(SIDeviceStatus status);
 s32 menu_boot_loop(s32 updateRate);
 void menu_magic_codes_init(void);
 s32 menu_game_select_loop(s32 updateRate);
@@ -470,8 +520,8 @@ s32 menu_ghost_data_loop(s32 updateRate);
 s32 menu_trophy_race_round_loop(s32 updateRate);
 void render_controller_pak_ui(UNUSED s32 updateRate);
 PakError check_for_controller_pak_errors(void);
-void func_80093A40(void);
-s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate);
+void menu_pause_init(void);
+s32 menu_pause_loop(UNUSED Gfx **dl, s32 updateRate);
 s32 menu_track_select_loop(s32 updateRate);
 SIDeviceStatus func_800867D4(void);
 s32 menu_enter_filename_loop(s32 updateRate);
@@ -507,8 +557,8 @@ void menu_asset_load(s32 arg0);
 s32 func_80087734(s32 buttonsPressed, s32 yAxis);
 void savemenu_render_element(SaveFileData *arg0, s32 x, s32 y);
 void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
-void func_80093D40(UNUSED s32 updateRate);
-s32 func_80095728(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 updateRate);
+void pausemenu_render(UNUSED s32 updateRate);
+s32 menu_postrace(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 updateRate);
 void func_80099E8C(UNUSED s32 updateRate);
 s32 func_800998E0(s32 arg0);
 void render_magic_codes_ui(s32 updateRate);
