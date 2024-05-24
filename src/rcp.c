@@ -502,7 +502,7 @@ void setup_gfx_mesg_queues(OSSched *sc) {
 /**
  * Set one or two textures for the patterned world themed background.
  * Can also apply a shift to make tiling less obvious.
-*/
+ */
 void mosaic_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
     gMosaicTex1 = tex1;
     gMosaicTex2 = tex2;

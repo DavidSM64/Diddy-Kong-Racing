@@ -235,7 +235,7 @@ void free_game_text_table(void) {
         gTextTableExists = FALSE;
         gShowOnscreenMessage = FALSE;
         for (i = 0; i < 10; i++) {
-            try_close_dialogue_box();
+            dialogue_try_close();
         };
         free_message_box();
     }
@@ -443,7 +443,7 @@ s32 dialogue_challenge_loop(void) {
                 D_8012A78E += 1;
             } else {
                 gShowOnscreenMessage = FALSE;
-                func_8009CF68(3);
+                dialogue_npc_finish(3);
             }
             gCloseTextMessage = FALSE;
             gTextCloseTimerSeconds = 0;

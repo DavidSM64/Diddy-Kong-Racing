@@ -92,7 +92,27 @@ enum DialogueMenuCases {
     DIALOGUE_RACERESULT
 };
 
-
+enum DialogIDsTaj {
+    DIALOGUEPAGE_TAJ_CHALLENGE_WIN_3 = -8,
+    DIALOGUEPAGE_TAJ_CHALLENGE_WIN_2 = -7,
+    DIALOGUEPAGE_TAJ_CHALLENGE_WIN_1 = -6,
+    DIALOGUEPAGE_TAJ_CHALLENGE_WIN = -5,
+    DIALOGUEPAGE_TAJ_CHALLENGE_LOSE = -4,
+    DIALOGUEPAGE_TAJ_CHALLENGE_PLANE = -3,
+    DIALOGUEPAGE_TAJ_CHALLENGE_HOVER = -2,
+    DIALOGUEPAGE_TAJ_CHALLENGE_CAR = -1,
+    DIALOGUEPAGE_TAJ_TUTORIAL,
+    DIALOGUEPAGE_TAJ_ROOT,
+    DIALOGUEPAGE_TAJ_VEHICLE_SELECT,
+    DIALOGUEPAGE_TAJ_CHALLENGES,
+    DIALOGUEPAGE_TAJ_4,
+    DIALOGUEPAGE_TAJ_5,
+    DIALOGUEPAGE_TAJ_6,
+    DIALOGUEPAGE_TAJ_7,
+    DIALOGUEPAGE_TAJ_8,
+    DIALOGUEPAGE_TAJ_VEHICLE_SELECT_2 = 98,
+    DIALOGUEPAGE_TAJ_CHALLENGES_2
+};
 
 #define CHEAT(index) 1 << index
 
@@ -457,7 +477,7 @@ void trophyround_free(void);
 void rankings_free(void);
 s32 get_trophy_race_world_id(void);
 void ghostmenu_free(void);
-void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5);
+void cinematic_start(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5);
 void menu_cinematic_init(void);
 void cinematic_free(void);
 void menu_credits_init(void);
@@ -488,13 +508,12 @@ void menu_assetgroup_load(s16 *textureIndex);
 void menu_imagegroup_load(s16 *imageSet);
 void menu_image_load(s32 imageID);
 void menu_imagegroup_free(void);
-void func_8009CF68(s32 arg0);
-void try_close_dialogue_box(void);
+void dialogue_npc_finish(s32 arg0);
+void dialogue_try_close(void);
 s32 npc_dialogue_loop(u32 dialogueOption);
 void set_option_text_colour(s32 condition);
 void render_dialogue_option(char *text, s32 yOffset, s32 optionID);
 void handle_menu_joystick_input(void);
-void func_8009D324(void);
 void set_next_taj_challenge_menu(s32 arg0);
 void set_menu_id_if_option_equal(s32 IDToCheck, s32 IDToSet);
 s32 taj_menu_loop(void);

@@ -681,7 +681,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
             dialogueID = npc_dialogue_loop(DIALOGUE_TROPHY);
             if (dialogueID) {
                 obj->properties.trophyCabinet.action = 0;
-                func_8009CF68(4);
+                dialogue_npc_finish(4);
                 if (dialogueID == 1) {
                     begin_trophy_race_teleport();
                     obj->properties.trophyCabinet.action = 2;
@@ -1278,7 +1278,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     if (obj->properties.npc.action >= TT_MODE_TURN_TOWARDS_PLAYER) {
         index = npc_dialogue_loop(DIALOGUE_TT);
     } else {
-        func_8009CF68(2);
+        dialogue_npc_finish(2);
         index = 0;
     }
     switch (obj->properties.npc.action) {
@@ -2644,7 +2644,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             dialogueID = npc_dialogue_loop(DIALOGUE_TAJ);
             break;
         default:
-            func_8009CF68(0);
+            dialogue_npc_finish(0);
             dialogueID = 0;
             break;
     }

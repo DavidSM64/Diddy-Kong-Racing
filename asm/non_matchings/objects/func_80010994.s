@@ -466,7 +466,7 @@ glabel func_80010994
 /* 011C38 80011038 3C018012 */  lui   $at, %hi(D_8011AD53) # $at, 0x8012
 /* 011C3C 8001103C 0C0038AD */  jal   transform_player_vehicle
 /* 011C40 80011040 A020AD53 */   sb    $zero, %lo(D_8011AD53)($at)
-/* 011C44 80011044 0C0273EC */  jal   try_close_dialogue_box
+/* 011C44 80011044 0C0273EC */  jal   dialogue_try_close
 /* 011C48 80011048 00000000 */   nop   
 /* 011C4C 8001104C 0C005E74 */  jal   func_800179D0
 /* 011C50 80011050 00000000 */   nop   
