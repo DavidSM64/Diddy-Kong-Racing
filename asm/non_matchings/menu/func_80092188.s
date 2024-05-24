@@ -149,7 +149,7 @@ glabel func_80092188
 .L800923A4:
 /* 092FA4 800923A4 14200006 */  bnez  $at, .L800923C0
 /* 092FA8 800923A8 2841FFE2 */   slti  $at, $v0, -0x1e
-/* 092FAC 800923AC 0C023C03 */  jal   func_8008F00C
+/* 092FAC 800923AC 0C023C03 */  jal   trackmenu_assets
 /* 092FB0 800923B0 24040002 */   li    $a0, 2
 /* 092FB4 800923B4 10000012 */  b     .L80092400
 /* 092FB8 800923B8 00002025 */   move  $a0, $zero
@@ -158,7 +158,7 @@ glabel func_80092188
 /* 092FC0 800923C0 1020000E */  beqz  $at, .L800923FC
 /* 092FC4 800923C4 00002025 */   move  $a0, $zero
 /* 092FC8 800923C8 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
-/* 092FCC 800923CC 0C023C03 */  jal   func_8008F00C
+/* 092FCC 800923CC 0C023C03 */  jal   trackmenu_assets
 /* 092FD0 800923D0 AC2063D8 */   sw    $zero, %lo(gOpacityDecayTimer)($at)
 /* 092FD4 800923D4 3C028012 */  lui   $v0, %hi(gTrackSelectViewPortHalfY) # $v0, 0x8012
 /* 092FD8 800923D8 8C426478 */  lw    $v0, %lo(gTrackSelectViewPortHalfY)($v0)

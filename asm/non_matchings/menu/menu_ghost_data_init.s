@@ -230,11 +230,11 @@ glabel menu_ghost_data_init
 /* 09A9E8 80099DE8 8FAF0048 */  lw    $t7, 0x48($sp)
 /* 09A9EC 80099DEC AC980040 */  sw    $t8, 0x40($a0)
 /* 09A9F0 80099DF0 00F6C021 */  addu  $t8, $a3, $s6
-/* 09A9F4 80099DF4 0C023917 */  jal   assign_vehicle_icon_textures
+/* 09A9F4 80099DF4 0C023917 */  jal   menu_init_vehicle_textures
 /* 09A9F8 80099DF8 AF0F0018 */   sw    $t7, 0x18($t8)
 /* 09A9FC 80099DFC 0C025181 */  jal   menu_racer_portraits
 /* 09AA00 80099E00 00000000 */   nop   
-/* 09AA04 80099E04 0C02392C */  jal   assign_menu_arrow_textures
+/* 09AA04 80099E04 0C02392C */  jal   menu_init_arrow_textures
 /* 09AA08 80099E08 00000000 */   nop   
 /* 09AA0C 80099E0C 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
 /* 09AA10 80099E10 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)

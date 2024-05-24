@@ -306,8 +306,8 @@ void main_game_loop(void) {
     sound_update_queue(sLogicUpdateRate);
     debug_text_print(&gCurrDisplayList);
     render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
-    close_dialogue_box(4);
-    assign_dialogue_box_id(4);
+    dialogue_close(4);
+    dialog_clear(4);
     // handle_transitions will perform the logic of transitions and return the transition ID.
     if (handle_transitions(sLogicUpdateRate)) {
         render_fade_transition(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
@@ -504,7 +504,7 @@ void ingame_logic_loop(s32 updateRate) {
         }
         if (textbox_visible() != 2) {
             gIsPaused = FALSE;
-            n_alSeqpDelete();
+            menu_close_dialogue();
         }
     }
     if (gIsPaused) {
@@ -744,7 +744,7 @@ void ingame_logic_loop(s32 updateRate) {
 void set_drumstick_unlock_transition(void) {
     gDrumstickSceneLoadTimer = 44;
     gIsPaused = 0;
-    n_alSeqpDelete();
+    menu_close_dialogue();
     transition_begin(&gDrumstickSceneTransition);
 }
 

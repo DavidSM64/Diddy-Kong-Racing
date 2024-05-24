@@ -225,9 +225,9 @@ u8 sCurrentControllerPakAllFileTypes[16];       // File type of all files on con
 u32 sCurrentControllerPakAllFileSizes[16];      // File size of all files on controller pak
 u32 sCurrentControllerPakFreeSpace;             // Space available in current controller pak
 s32 sControllerPakMenuNumberOfRows;             // 8 if PAL, 7 if not
-TextureHeader *D_80126BB8;
-TextureHeader *D_80126BBC;
-s32 D_80126BC0;
+TextureHeader *gMenuMosaic1;
+TextureHeader *gMenuMosaic2;
+s32 gMenuMosaicShift;
 s32 D_80126BC4;
 PakError sControllerPakError; // 0 = no error, 1 = fatal error, 2 = no free space, 3 = bad data
 s32 D_80126BCC;
@@ -655,7 +655,7 @@ CharacterSelectData gCharacterSelectBytesComplete[] = {
     //!@bug T.T's down input selects Tiptup. It should be set to NONE.
 };
 
-s32 unused_800DFFCC = 0;
+UNUSED s32 unused_800DFFCC = 0;
 
 // Set from charselect_prev()
 // Is either 0, 1, or 2. However it is never set to 2?
@@ -667,7 +667,7 @@ s32 gEnteredCharSelectFrom = 0;
 // Set from charselect_prev()
 // Set to the value *arg1 when arg0 is 2, but that never happens.
 // Not read from anywhere, so I'd consider this to be unused.
-s32 unused_800DFFD4 = -1;
+UNUSED s32 unused_800DFFD4 = -1;
 
 // clang-format off
 
@@ -2177,6 +2177,9 @@ s16 gCreditsImageIndices[2] = { -1, 0 };
 #define CREDITS_MAGIC_CODE_TIME 4.5
 #define CREDITS_DEV_TIMES_TIME 8.334
 
+
+// clang-format off
+
 // Data used to control the credits.
 s16 gCreditsControlData[] = {
     CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME),
@@ -2430,6 +2433,9 @@ char *gCreditsArray[87] = { "CREDITS",
                             NULL,
                             NULL,
                             NULL };
+
+
+// clang-format off
 
 // Developer's best times for each track
 char *gCreditsBestTimesArray[20] = {
@@ -3201,7 +3207,10 @@ void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green,
     sMenuGuiColourB = 255;
 }
 
-void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED s32 font, s32 alignment) {
+/**
+ * Convert the number to a string and then render as an element at the given position.
+*/
+void menu_number_render(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED s32 font, s32 alignment) {
     s32 strLen;
     s32 powerOfTen;
     s32 i;
@@ -3291,7 +3300,7 @@ s32 postrace_render(s32 updateRate) {
     s32 i;
     s32 buttonsPressedAllPlayers;
 
-    ret = 1;
+    ret = MENU_RESULT_FLAGS_1;
     scale = -1.0f;
     buttonsPressedAllPlayers = 0;
     if (gPostraceState != POSTRACE_SLIDE_END) {
@@ -3353,7 +3362,7 @@ s32 postrace_render(s32 updateRate) {
 
         if (gPostraceState != POSTRACE_SLIDE_END) {
             draw_menu_elements(gPostraceState, gTrophyRankingsMenuElements, scale);
-            ret = 0;
+            ret = MENU_RESULT_CONTINUE;
         }
     }
     return ret;
@@ -3364,22 +3373,22 @@ s32 postrace_render(s32 updateRate) {
  * Elements can be a range of things, so this checks what it is,
  * then calls a specific function to render that element.
  */
-void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale) {
+void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
     s32 shouldResetRenderSettings;
     s32 xPos, yPos;
 
     shouldResetRenderSettings = FALSE;
-    if (flags == 4) {
+    if (state == 4) {
         return;
     }
 
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     while (elems->unk14_a.element != NULL) {
         if ((elems->unk14_a.element != &D_80126850)) {                      // fakematch
-            if (flags == ((elems->unk14_a.element != (&D_80126850)) * 0)) { // fakematch
+            if (state == ((elems->unk14_a.element != (&D_80126850)) * 0)) { // fakematch
                 xPos = ((s32) ((elems->center - elems->left) * scale)) + elems->left;
                 yPos = ((s32) ((elems->middle - elems->top) * scale)) + elems->top;
-            } else if ((flags == 1)) {
+            } else if ((state == 1)) {
                 xPos = elems->center;
                 yPos = elems->middle;
             } else {
@@ -3412,7 +3421,7 @@ void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale) {
                         shouldResetRenderSettings = FALSE;
                         reset_render_settings(&sMenuCurrDisplayList);
                     }
-                    func_80081C04(*elems->unk14_a.number, xPos - SCREEN_WIDTH_HALF,
+                    menu_number_render(*elems->unk14_a.number, xPos - SCREEN_WIDTH_HALF,
                                   (-yPos - gPostraceTimestampOffset) + SCREEN_HEIGHT_HALF, elems->filterRed,
                                   elems->filterGreen, elems->filterBlue, elems->opacity, elems->textFont,
                                   elems->textAlignFlags);
@@ -4188,7 +4197,7 @@ void menu_audio_options_init(void) {
     gOpacityDecayTimer = -1;
     menu_assetgroup_load(gOptionMenuTextures);
     menu_imagegroup_load(&gOptionMenuTextures[6]);
-    assign_menu_arrow_textures();
+    menu_init_arrow_textures();
     transition_begin(&sMenuTransitionFadeOut);
     func_8007FFEC(2);
     gMusicVolumeSliderValue = music_volume_config();
@@ -4373,6 +4382,10 @@ void soundoptions_free(void) {
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
+/**
+ * Allocates space for the pak filesystem to load its results into, then resets all
+ * the other variables related to the save options.
+*/
 void menu_save_options_init(void) {
     gSavemenuRumbleNagSet = TRUE;
     gSavemenuRumbleNag = FALSE;
@@ -4402,7 +4415,7 @@ void menu_save_options_init(void) {
     gDrawTexFileIcon[0].texture = gMenuAssets[TEXTURE_ICON_SAVE_FILECABINET];
     gDrawTexContPakIcon[0].texture = gMenuAssets[TEXTURE_ICON_SAVE_CPAK];
     gDrawTexTrashIcon[0].texture = gMenuAssets[TEXTURE_ICON_SAVE_BIN];
-    assign_menu_arrow_textures();
+    menu_init_arrow_textures();
     mark_read_all_save_files();
     transition_begin(&sMenuTransitionFadeOut);
 }
@@ -5108,7 +5121,7 @@ void savemenu_render_error(SIDeviceStatus deviceStatus) {
 
     D_80126A78 = D_80126A74 - 1;
 
-    assign_dialogue_box_id(7);
+    dialog_clear(7);
     set_current_dialogue_box_coords(7, 40, SCREEN_HEIGHT_HALF - (((k * 16) + 44) >> 1), 280,
                                     (((k * 16) + 44) >> 1) + SCREEN_HEIGHT_HALF);
     set_current_dialogue_background_colour(7, 0, 0, 0, 160);
@@ -5450,7 +5463,7 @@ void savemenu_free(void) {
     unload_font(ASSET_FONTS_BIGFONT);
     menu_button_free();
     menu_assetgroup_free(gSaveMenuObjectIndices);
-    assign_dialogue_box_id(7);
+    dialog_clear(7);
     free_from_memory_pool((void *) gSavemenuFilesSource);
     free_from_memory_pool((void *) D_80126A64);
 }
@@ -5781,7 +5794,7 @@ void bootscreen_init_cpak(void) {
     gMenuCurIndex = 0;
     gOpacityDecayTimer = 0;
     menu_asset_load(63);
-    assign_menu_arrow_textures();
+    menu_init_arrow_textures();
     if (osTvType == TV_TYPE_PAL) {
         sControllerPakMenuNumberOfRows = 8;
     } else {
@@ -5824,7 +5837,7 @@ void pakmenu_render(UNUSED s32 updateRate) {
 
         yPos += 48;
 
-        assign_dialogue_box_id(6);
+        dialog_clear(6);
         set_current_dialogue_box_coords(6, 58, yPos, 262, yPos + 30);
 
         if (gMenuCurIndex == -1) {
@@ -5847,7 +5860,7 @@ void pakmenu_render(UNUSED s32 updateRate) {
         set_dialogue_font(6, ASSET_FONTS_SMALLFONT);
         set_current_text_background_colour(6, 0, 0, 0, 0);
         for (i = -1; i < sControllerPakMenuNumberOfRows; i++) {
-            assign_dialogue_box_id(6);
+            dialog_clear(6);
             set_current_dialogue_box_coords(6, 28, yPos, 292, yPos + 14);
             if (i < 0) {
                 // Red background for table header
@@ -5899,7 +5912,7 @@ void pakmenu_render(UNUSED s32 updateRate) {
             } else {
                 yPos = SCREEN_HEIGHT_HALF;
             }
-            assign_dialogue_box_id(6);
+            dialog_clear(6);
             set_dialogue_font(6, ASSET_FONTS_FUNFONT);
             set_current_dialogue_box_coords(6, 76, yPos - 28, 244, yPos + 28);
             set_current_dialogue_background_colour(6, 0, 0, 0, 160);
@@ -6132,7 +6145,7 @@ void menu_magic_codes_init(void) {
     transition_begin(&sMenuTransitionFadeOut);
     set_current_dialogue_box_coords(7, 50, 50, 270, 132);
     set_current_dialogue_background_colour(7, 0, 0, 0, 128);
-    assign_dialogue_box_id(7);
+    dialog_clear(7);
     load_font(ASSET_FONTS_BIGFONT);
 }
 
@@ -6238,7 +6251,7 @@ void cheatmenu_render(UNUSED s32 updateRate) {
         } else {
             offsetY = SCREEN_HEIGHT_HALF;
         }
-        assign_dialogue_box_id(6);
+        dialog_clear(6);
         set_dialogue_font(6, ASSET_FONTS_FUNFONT);
         set_current_dialogue_box_coords(6, 76, offsetY - 28, 244, offsetY + 28);
         set_current_dialogue_background_colour(6, 0, 0, 0, 160);
@@ -6542,7 +6555,7 @@ void menu_magic_codes_list_init(void) {
     gOptionsMenuItemIndex = 0;
     load_font(ASSET_FONTS_BIGFONT);
     menu_asset_load(63);
-    assign_menu_arrow_textures();
+    menu_init_arrow_textures();
     transition_begin(&sMenuTransitionFadeOut);
     if (osTvType == TV_TYPE_PAL) {
         gNumOnscreenMagicCodes = 11;
@@ -7374,7 +7387,7 @@ s32 menu_caution_loop(s32 updateRate) {
         draw_menu_elements(1, gCautionMenuTextElements, 1.0f);
     }
     if (gMenuDelay > 30) {
-        unload_big_font_3();
+        caution_free();
         menu_init(MENU_GAME_SELECT);
     }
     if (gIgnorePlayerInputTime > 0) {
@@ -7384,9 +7397,9 @@ s32 menu_caution_loop(s32 updateRate) {
 }
 
 /**
- * Explicitly says to unload the ASSET_FONTS_BIGFONT type.
+ * Unloads all assets associated with the caution screen.
  */
-void unload_big_font_3(void) {
+void caution_free(void) {
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
@@ -7405,7 +7418,7 @@ void menu_game_select_init(void) {
     mark_read_all_save_files();
     set_ghost_none();
     gOpacityDecayTimer = 1;
-    menu_asset_load(0x43);
+    menu_asset_load(67);
     func_8007FFEC(3);
     load_font(ASSET_FONTS_BIGFONT);
     music_play(SEQUENCE_CHOOSE_YOUR_RACER);
@@ -7444,8 +7457,8 @@ void gameselect_render(UNUSED s32 updateRate) {
     if (gMenuDelay > -22 && gMenuDelay < 22) {
         fade = gOptionBlinkTimer * 8;
         fade = fade;
-        if (fade >= 0x100) {
-            fade = 0x1FF - fade;
+        if (fade > 255) {
+            fade = 511 - fade;
         }
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
@@ -7573,7 +7586,7 @@ s32 menu_game_select_loop(s32 updateRate) {
 void gameselect_free(void) {
     unload_font(ASSET_FONTS_BIGFONT);
     menu_button_free();
-    menu_asset_free(0x43);
+    menu_asset_free(67);
 }
 
 /**
@@ -7706,7 +7719,7 @@ void fileselect_render(UNUSED s32 updateRate) {
         }
     }
     glow = gOptionBlinkTimer * 8;
-    if (glow >= 256) {
+    if (glow > 255) {
         glow = 511 - glow;
     }
     set_text_font(ASSET_FONTS_FUNFONT);
@@ -8206,7 +8219,7 @@ void fileselect_free(void) {
 /**
  * Set the texture IDs of the vehicle ID elements.
  */
-void assign_vehicle_icon_textures(void) {
+void menu_init_vehicle_textures(void) {
     gRaceSelectionCarTex[0].texture = gMenuAssets[TEXTURE_ICON_VEHICLE_CAR_TOP];
     gRaceSelectionCarTex[1].texture = gMenuAssets[TEXTURE_ICON_VEHICLE_CAR_BOTTOM];
     gRaceSelectionHoverTex[0].texture = gMenuAssets[TEXTURE_ICON_VEHICLE_HOVERCRAFT_TOP];
@@ -8218,7 +8231,7 @@ void assign_vehicle_icon_textures(void) {
 /**
  * Set the texture IDs of the menu arrow elements.
  */
-void assign_menu_arrow_textures(void) {
+void menu_init_arrow_textures(void) {
     gMenuSelectionArrowUp[0].texture = gMenuAssets[TEXTURE_ICON_ARROW_UP];
     gMenuSelectionArrowLeft[0].texture = gMenuAssets[TEXTURE_ICON_ARROW_LEFT];
     gMenuSelectionArrowDown[0].texture = gMenuAssets[TEXTURE_ICON_ARROW_DOWN];
@@ -8315,7 +8328,7 @@ void menu_track_select_init(void) {
     gOpacityDecayTimer = 32;
     gOptionBlinkTimer = 0;
     gTrackmenuType = -1;
-    func_8008F00C(0);
+    trackmenu_assets(0);
     transition_begin(&sMenuTransitionFadeOut);
     enable_new_screen_transitions();
     set_background_fill_colour(50, 105, 223);
@@ -8365,7 +8378,7 @@ void menu_track_select_init(void) {
     gIsInTracksMenu = TRUE;
     menu_assetgroup_load(gTrackSelectObjectIndices);
     menu_imagegroup_load(gTrackSelectImageIndices);
-    assign_menu_arrow_textures();
+    menu_init_arrow_textures();
 
     D_800E05D4[0].texture = gMenuAssets[TEXTURE_UNK_08];
     D_800E05D4[1].texture = gMenuAssets[TEXTURE_UNK_09];
@@ -8421,7 +8434,7 @@ void menu_track_select_init(void) {
         gSelectedTrackX = 0;
         gSelectedTrackY = 0;
     }
-    assign_dialogue_box_id(7);
+    dialog_clear(7);
     func_8007FFEC(2);
     gTrackTTSoundMask = 0;
     D_80126848 = 0;
@@ -8439,7 +8452,12 @@ void menu_track_select_init(void) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_track_select_init.s")
 #endif
 
-void func_8008F00C(s32 type) {
+/**
+ * If type is -1, allocate and initialise all the track setup elements.
+ * If type is 0, reset the cursor target to the current position.
+ * If type is 1, free the assetgroup for the track setup.
+*/
+void trackmenu_assets(s32 type) {
     Vehicle vehicle;
     s32 i;
     s32 newType;
@@ -8451,7 +8469,7 @@ void func_8008F00C(s32 type) {
     gTrackmenuType = type;
     newType = gTrackmenuType;
 
-    if (newType >= 0 && newType < 2) {
+    if (newType > -1 && newType < 2) {
         switch (gTrackmenuType) {
             case 0:
                 gTrackSelectTargetX = gTrackSelectX;
@@ -8467,7 +8485,7 @@ void func_8008F00C(s32 type) {
                 gTrackNameVoiceDelay = 1;
                 menu_assetgroup_load(gTrackSelectPreviewObjectIndices);
                 menu_imagegroup_load(gTrackSelectPreviewImageIndices);
-                assign_vehicle_icon_textures();
+                menu_init_vehicle_textures();
                 gRaceSelectionTTOn[0].texture = gMenuAssets[TEXTURE_ICON_TIMETRIAL_ON_TOP];
                 gRaceSelectionTTOn[1].texture = gMenuAssets[TEXTURE_ICON_TIMETRIAL_ON_BOTTOM];
                 gRaceSelectionTTOff[0].texture = gMenuAssets[TEXTURE_ICON_TIMETRIAL_OFF_TOP];
@@ -9052,11 +9070,11 @@ void trackmenu_input(s32 updateRate) {
             } else {
                 gMenuStage = 0;
             }
-            func_8008F00C(1);
+            trackmenu_assets(1);
         } else if (gMenuDelay < -30) {
             disable_new_screen_transitions();
             camDisableUserView(0, FALSE);
-            func_8008F00C(-1);
+            trackmenu_assets(-1);
         }
     }
     if (menuDelay == 0) {
@@ -9419,7 +9437,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
             }
             sprite_opaque(TRUE);
         }
-        if (gNumberOfActivePlayers == 1 && gMenuStage >= 0 && func_80092BE0(gTrackIdForPreview) >= 0) {
+        if (gNumberOfActivePlayers == 1 && gMenuStage >= 0 && trackmenu_staff_beaten(gTrackIdForPreview) >= 0) {
             render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionTTTexture, 204, regionOffset + 122, 255, 255,
                                       255, sMenuGuiOpacity);
             reset_render_settings(&sMenuCurrDisplayList);
@@ -9440,7 +9458,11 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80092188.s")
 
-s32 func_80092BE0(s32 mapId) {
+/**
+ * Return whether the staff time has been beaten for this level.
+ * Get the track ID then compare it with the bits in the main eeprom settings field.
+*/
+s32 trackmenu_staff_beaten(s32 mapId) {
     s8 *trackIdArray;
     s32 index;
     s32 temp;
@@ -9504,7 +9526,7 @@ void menu_adventure_track_init(void) {
         gMenuStage = 0;
         menu_assetgroup_load(gAdvTrackInitObjectIndices);
         menu_imagegroup_load(gAdvTrackInitImageIndices);
-        assign_vehicle_icon_textures();
+        menu_init_vehicle_textures();
         gRaceSelectionCarOptHighlight[0].texture = gMenuAssets[TEXTURE_ICON_VEHICLE_SELECT_CAR_HIGHLIGHT];
         gRaceSelectionCarOpt[0].texture = gMenuAssets[TEXTURE_ICON_VEHICLE_SELECT_CAR];
         gRaceSelectionHoverOptHighlight[0].texture = gMenuAssets[TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT_HIGHLIGHT];
@@ -9521,7 +9543,7 @@ void menu_adventure_track_init(void) {
         load_font(ASSET_FONTS_BIGFONT);
         load_level_for_menu(mapId, -1, 1);
     }
-    assign_dialogue_box_id(7);
+    dialog_clear(7);
     if (get_map_race_type(mapId) & RACETYPE_CHALLENGE) {
         set_current_text(get_map_world_id(mapId) + ASSET_GAME_TEXT_59);
     }
@@ -9567,7 +9589,7 @@ void render_adventure_track_setup(UNUSED s32 arg0, s32 arg1, s32 arg2) {
             if (!(get_map_race_type(mapID) & RACETYPE_CHALLENGE)) {
                 if (arg2 == 0) {
                     if (is_time_trial_enabled()) {
-                        if (func_80092BE0(mapID) >= 0) {
+                        if (trackmenu_staff_beaten(mapID) >= 0) {
                             render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionTTTexture,
                                                       SCREEN_HEIGHT - 36, yOffset + 122, 255, 255, 255,
                                                       sMenuGuiOpacity);
@@ -9868,7 +9890,7 @@ void pausemenu_render(UNUSED s32 updateRate) {
         y = SCREEN_HEIGHT_HALF;
     }
     clear_dialogue_box_open_flag(7);
-    assign_dialogue_box_id(7);
+    dialog_clear(7);
     halfTemp = temp >> 1;
     halfX = x >> 1;
     set_current_dialogue_box_coords(7, SCREEN_WIDTH_HALF - halfX, y - halfTemp, SCREEN_WIDTH_HALF + halfX,
@@ -9998,7 +10020,7 @@ s32 menu_pause_loop(UNUSED Gfx **dl, s32 updateRate) {
     } else {
         gMenuDelay++;
         if (gMenuDelay >= 4) {
-            n_alSynRemovePlayer();
+            menu_dialogue_end();
             if (gMenuSubOption == 1) {
                 if (gTrophyRaceWorldId != 0) {
                     gTrophyRaceWorldId = 0;
@@ -10042,15 +10064,22 @@ s32 menu_pause_loop(UNUSED Gfx **dl, s32 updateRate) {
     return PAUSE_NONE;
 }
 
-void n_alSynRemovePlayer(void) {
+/**
+ * Reenable rumble, close the menu dialogue box and clear it.
+*/
+void menu_dialogue_end(void) {
     rumble_init(TRUE);
-    close_dialogue_box(7);
-    assign_dialogue_box_id(7);
+    dialogue_close(7);
+    dialog_clear(7);
     gMenuOptionCap = 0;
 }
 
-void n_alSeqpDelete(void) {
-    n_alSynRemovePlayer();
+/**
+ * See above.
+ * Not sure why they didn't just call that instead.
+*/
+void menu_close_dialogue(void) {
+    menu_dialogue_end();
 }
 
 /**
@@ -10137,19 +10166,19 @@ void func_80094688(s32 arg0, s32 arg1) {
         var_v1 = &gTracksMenuBgTextureIndices[arg1 * 3];
         if (var_v1[0] != -1) {
             menu_asset_load(var_v1[0]);
-            D_80126BB8 = gMenuAssets[var_v1[0]];
+            gMenuMosaic1 = gMenuAssets[var_v1[0]];
         } else {
-            D_80126BB8 = 0;
+            gMenuMosaic1 = 0;
         }
         if (var_v1[1] != -1) {
             menu_asset_load(var_v1[1]);
-            D_80126BBC = gMenuAssets[var_v1[1]];
+            gMenuMosaic2 = gMenuAssets[var_v1[1]];
         } else {
-            D_80126BBC = 0;
+            gMenuMosaic2 = 0;
         }
-        D_80126BC0 = var_v1[2];
+        gMenuMosaicShift = var_v1[2];
         if (get_game_mode() == GAMEMODE_INGAME) {
-            func_80078170(D_80126BB8, D_80126BBC, D_80126BC0);
+            mosaic_init(gMenuMosaic1, gMenuMosaic2, gMenuMosaicShift);
         }
         camEnableUserView(0, 1);
         viewport_menu_set(0, 0, 0, gTrackSelectViewPortX, gTrackSelectViewportY);
@@ -10334,7 +10363,7 @@ void func_80094D28(UNUSED s32 updateRate) {
             break;
         case 6:
             clear_dialogue_box_open_flag(7);
-            assign_dialogue_box_id(7);
+            dialog_clear(7);
             set_dialogue_font(7, FONT_COLOURFUL);
             set_current_text_background_colour(7, 0, 0, 0, 0);
 
@@ -10509,7 +10538,7 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
             func_80094D28(updateRate);
         }
     } else {
-        func_80078170(NULL, NULL, 0);
+        mosaic_init(NULL, NULL, 0);
     }
     update_controller_sticks();
     buttonsPressed = 0;
@@ -10735,9 +10764,9 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
                     }
                 }
                 camDisableUserView(0, FALSE);
-                func_80096790();
-                close_dialogue_box(7);
-                assign_dialogue_box_id(7);
+                postrace_free();
+                dialogue_close(7);
+                dialog_clear(7);
                 if (D_80126C28 >= 2) {
                     if (D_80126C28 == 9) {
                         func_8009ABD8((s8 *) get_misc_asset(ASSET_MISC_25), D_80126C28, 0x10E, 0, 0, NULL);
@@ -10781,23 +10810,26 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
     return ret;
 }
 
-void func_80096790(void) {
-    s32 temp;
-    s8 *temp2;
+/**
+ * Free all assets associated with the postrace screen.
+*/
+void postrace_free(void) {
+    s32 headerWorldTex;
+    LevelHeader *header;
 
-    temp2 = (s8 *) get_current_level_header();
+    header = get_current_level_header();
     menu_assetgroup_free(gRaceResultsObjectIndices);
-    temp = *temp2 - 1;
+    headerWorldTex = header->world - 1;
 
-    if (D_80126BB8) {
-        menu_asset_free(gTracksMenuBgTextureIndices[temp * 3]);
+    if (gMenuMosaic1) {
+        menu_asset_free(gTracksMenuBgTextureIndices[headerWorldTex * 3]);
     }
-    D_80126BB8 = 0;
+    gMenuMosaic1 = NULL;
 
-    if (D_80126BBC) {
-        menu_asset_free(gTracksMenuBgTextureIndices[(temp * 3) + 1]);
+    if (gMenuMosaic2) {
+        menu_asset_free(gTracksMenuBgTextureIndices[(headerWorldTex * 3) + 1]);
     }
-    D_80126BBC = 0;
+    gMenuMosaic2 = NULL;
 
     menu_unload_bigfont();
     sound_volume_change(VOLUME_NORMAL);
@@ -10844,13 +10876,17 @@ void menu_results_init(void) {
     music_fade(128);
 }
 
+/**
+ * Draw the portraits of the four player onscreen, then draw the scoreboard below.
+ * After, draw the text options at the bottom.
+*/
 void results_render(UNUSED s32 updateRate, f32 opacity) {
     s32 x2;
     s32 y2;
-    s32 spA4;
+    s32 offsetX;
     s32 spA0;
     s32 time;
-    s32 sp98;
+    s32 offsetY;
     s32 hundredths;
     s32 tens;
     UNUSED s32 pad;
@@ -10858,9 +10894,9 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
     Settings *settings;
 
     settings = get_settings();
-    sp98 = 0;
+    offsetY = 0;
     if (osTvType == TV_TYPE_PAL) {
-        sp98 = 12;
+        offsetY = 12;
     }
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (opacity < 0.0f) {
@@ -10875,8 +10911,8 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
     set_text_colour(255, 255, 255, 0, sMenuGuiOpacity);
     draw_text(&sMenuCurrDisplayList, POS_CENTRED, 34, gMenuText[ASSET_MENU_TEXT_RANKINGS], ALIGN_MIDDLE_CENTER);
     sMenuGuiOpacity = 255;
-    spA4 = 160 - ((gNumberOfActivePlayers - 1) << 5);
-    x2 = spA4;
+    offsetX = 160 - ((gNumberOfActivePlayers - 1) << 5);
+    x2 = offsetX;
 
     for (i = 0; i < gNumberOfActivePlayers; i++) {
         if (settings->racers[i].starting_position == 0) {
@@ -10893,15 +10929,15 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         x2 += 64;
     }
 
-    spA4 = spA4 + (s32) (320 * opacity); // Cannot use += here?
+    offsetX = offsetX + (s32) (320 * opacity); // Cannot use += here?
     set_text_font(ASSET_FONTS_FUNFONT);
-    y2 = 0x68;
+    y2 = 104;
     for (spA0 = 0; spA0 < 4; spA0++) {
-        time = spA4;
+        time = offsetX;
         set_text_colour(0, 0, 0, 255, 255);
-        draw_text(&sMenuCurrDisplayList, time - 32, y2 + sp98 + 4, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, time - 32, y2 + offsetY + 4, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER);
         set_text_colour(255, 255, 192, 96, 255);
-        draw_text(&sMenuCurrDisplayList, time - 34, y2 + sp98 + 2, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, time - 34, y2 + offsetY + 2, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER);
         reset_render_settings(&sMenuCurrDisplayList);
         sprite_anim_off(TRUE);
         sprite_opaque(FALSE);
@@ -10909,7 +10945,7 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         sMenuGuiColourG = 255 - 64 * spA0;
         sMenuGuiColourB = 255;
         sMenuGuiColourBlendFactor = 255;
-        x2 = spA4;
+        x2 = offsetX;
         for (i = 0; i < gNumberOfActivePlayers; i++, x2 += 64) {
             time = settings->racers[i].placements[spA0]; // Is this local var name correct?
             if (time > 999) {
@@ -10951,8 +10987,8 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
     if (gMenuStage > 0) {
         y2 = gResultOptionCount * 8;
         clear_dialogue_box_open_flag(7);
-        assign_dialogue_box_id(7);
-        set_current_dialogue_box_coords(7, 80, (sp98 - y2) + 196, 240, y2 + sp98 + 204);
+        dialog_clear(7);
+        set_current_dialogue_box_coords(7, SCREEN_WIDTH_HALF - 80, (offsetY - y2) + 196, SCREEN_WIDTH_HALF + 80, y2 + offsetY + (SCREEN_HEIGHT - 36));
         set_current_dialogue_background_colour(7, 64, 64, 255, 0);
         set_dialogue_font(7, 0);
         set_current_text_background_colour(7, 0, 0, 0, 0);
@@ -11090,8 +11126,8 @@ s32 menu_results_loop(s32 updateRate) {
         gMenuDelay += updateRate;
         if (gMenuDelay > 30) {
             results_free();
-            close_dialogue_box(7);
-            assign_dialogue_box_id(7);
+            dialogue_close(7);
+            dialog_clear(7);
             if (gResultOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_TRYAGAIN]) {
                 return (MENU_RESULT_FLAGS_100 | MENU_RESULT_FLAGS_2); // This gets parsed in menu_logic_loop as a flag
                                                                       // and an ID from the bottom 7 bits.
@@ -11378,7 +11414,7 @@ s32 filename_enter(s32 updateRate) {
         gNameEntryStickX = 0;
     }
     targetX = gNameEntryTargetX;
-    targetXF = (f32) *targetX;
+    targetXF = *targetX;
     for (i = 0; i < updateRate; i++) {
         if (gNameEntryOffsetX <= targetXF) {
             dist1 = targetXF - gNameEntryOffsetX;
@@ -11924,8 +11960,8 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
             gMenuDelay += updateRate;
             if (gMenuDelay > 30) {
                 rankings_free();
-                close_dialogue_box(7);
-                assign_dialogue_box_id(7);
+                dialogue_close(7);
+                dialog_clear(7);
                 if (gTrophyRaceRound < 4) {
                     menu_init(MENU_TROPHY_RACE_ROUND);
                 } else {
@@ -12133,9 +12169,9 @@ void menu_ghost_data_init(void) {
             gDrawTexFutureFunLandGhostBg[i + 6].texture = gDrawTexFutureFunLandGhostBg[0].texture;
         }
     }
-    assign_vehicle_icon_textures();
+    menu_init_vehicle_textures();
     menu_racer_portraits();
-    assign_menu_arrow_textures();
+    menu_init_arrow_textures();
     gOptionBlinkTimer = 0;
     gMenuStage = 0;
     gOpacityDecayTimer = 0;
@@ -12265,7 +12301,7 @@ void ghostmenu_render(UNUSED s32 updateRate) {
     highlight &= 0xFF;
     if (gMenuStage > 0) {
         clear_dialogue_box_open_flag(7);
-        assign_dialogue_box_id(7);
+        dialog_clear(7);
         set_current_dialogue_box_coords(7, 104, 102, 216, 138);
         set_current_dialogue_background_colour(7, 0, 0, 0, 192);
         set_dialogue_font(7, 0);
@@ -13205,7 +13241,7 @@ void func_8009CF68(s32 arg0) {
 void try_close_dialogue_box(void) {
     if (gNeedToCloseDialogueBox) {
         gNeedToCloseDialogueBox = FALSE;
-        close_dialogue_box(1);
+        dialogue_close(1);
         reset_controller_sticks();
     }
 }
@@ -13229,7 +13265,7 @@ s32 npc_dialogue_loop(u32 dialogueOption) {
     }
     result = 0;
     update_controller_sticks();
-    assign_dialogue_box_id(1);
+    dialog_clear(1);
     open_dialogue_box(1);
     set_current_dialogue_background_colour(1, 0, 0, 0, 128);
     func_8001F450();
@@ -13481,11 +13517,11 @@ s32 taj_menu_loop(void) {
         case 4:
             sp2C = (gNextTajChallengeMenu - 1) | 0x40;
             sCurrentMenuID = 5;
-            close_dialogue_box(1);
+            dialogue_close(1);
             break;
         case 5:
             gNextTajChallengeMenu = 0;
-            close_dialogue_box(1);
+            dialogue_close(1);
             break;
         case 6:
         case 7:
@@ -13494,7 +13530,7 @@ s32 taj_menu_loop(void) {
                 sp2C = 3;
             }
             gNeedToCloseDialogueBox = FALSE;
-            close_dialogue_box(1);
+            dialogue_close(1);
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 0;
             break;

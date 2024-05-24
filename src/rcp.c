@@ -18,9 +18,9 @@ u8 sBackgroundPrimColourG = 0;
 u8 sBackgroundPrimColourB = 0;
 s32 sBackgroundFillColour = GPACK_RGBA5551(0, 0, 0, 1) | (GPACK_RGBA5551(0, 0, 0, 1) << 16);
 
-u32 D_800DE4C0 = 0x40;
-TextureHeader *D_800DE4C4 = 0;
-TextureHeader *D_800DE4C8 = 0;
+u32 gMosaicShiftX = 0x40;
+TextureHeader *gMosaicTex1 = 0;
+TextureHeader *gMosaicTex2 = 0;
 s32 gChequerBGEnabled = FALSE;
 
 BackgroundFunction gBackgroundDrawFunc = { NULL };
@@ -432,7 +432,7 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
         if (check_viewport_background_flag(0)) {
             if (gChequerBGEnabled) {
                 render_chequer_background(dList); // Unused
-            } else if (D_800DE4C4) {
+            } else if (gMosaicTex1) {
                 func_80078190(dList);
             } else if (gBackgroundDrawFunc.ptr != NULL) {
                 gBackgroundDrawFunc.function((Gfx *) dList, mtx);
@@ -453,7 +453,7 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
         } else {
             if (gChequerBGEnabled) {
                 render_chequer_background(dList); // Unused
-            } else if (D_800DE4C4) {
+            } else if (gMosaicTex1) {
                 func_80078190(dList);
             } else if (gBackgroundDrawFunc.ptr != NULL) {
                 gBackgroundDrawFunc.function((Gfx *) dList, mtx);
@@ -499,14 +499,17 @@ void setup_gfx_mesg_queues(OSSched *sc) {
     osCreateMesgQueue(&gGfxTaskMesgQueue, gGfxTaskMesgBuf, ARRAY_COUNT(gGfxTaskMesgBuf));
 }
 
-// Called after finishing a race. Sets values during single player races. Set to zero during trophy races.
-void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
-    D_800DE4C4 = arg0;
-    D_800DE4C8 = arg1;
-    D_800DE4C0 = arg2 << 2;
+/**
+ * Set one or two textures for the patterned world themed background.
+ * Can also apply a shift to make tiling less obvious.
+*/
+void mosaic_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
+    gMosaicTex1 = tex1;
+    gMosaicTex2 = tex2;
+    gMosaicShiftX = shiftX * 4;
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 /**
  * Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
  * https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
@@ -536,12 +539,12 @@ void func_80078190(Gfx **dlist) {
     videoHeight = GET_VIDEO_HEIGHT(widthAndHeight);
     gSPDisplayList((*dlist)++, dRaceFinishBackgroundSettings);
 
-    if (D_800DE4C8 == NULL) {
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C4->cmd), D_800DE4C4->numberOfCommands);
+    if (gMosaicTex2 == NULL) {
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gMosaicTex1->cmd), gMosaicTex1->numberOfCommands);
         upperVideoWidth = videoWidth << 2;
         upperVideoHeight = videoHeight << 2;
-        texture1UpperWidth = D_800DE4C4->width << 2;
-        texture1UpperHeight = D_800DE4C4->height << 2;
+        texture1UpperWidth = gMosaicTex1->width << 2;
+        texture1UpperHeight = gMosaicTex1->height << 2;
         var_s3 = 0;
         for (yPos = 0; yPos < upperVideoHeight; yPos += texture1UpperHeight) {
             uly = yPos;
@@ -559,16 +562,16 @@ void func_80078190(Gfx **dlist) {
                 }
                 ulx = lrx;
             }
-            var_s3 = (var_s3 + D_800DE4C0) & (texture1UpperWidth - 1);
+            var_s3 = (var_s3 + gMosaicShiftX) & (texture1UpperWidth - 1);
         }
     } else {
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C4->cmd), D_800DE4C4->numberOfCommands);
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gMosaicTex1->cmd), gMosaicTex1->numberOfCommands);
         upperVideoWidth = videoWidth << 2;
         upperVideoHeight = videoHeight << 2;
-        texture1UpperWidth = D_800DE4C4->width << 2;
-        texture1UpperHeight = D_800DE4C4->height << 2;
-        // texture2UpperHeight = D_800DE4C8->height << 2;
-        texture1And2UpperHeight = (D_800DE4C8->height << 2) + texture1UpperHeight;
+        texture1UpperWidth = gMosaicTex1->width << 2;
+        texture1UpperHeight = gMosaicTex1->height << 2;
+        // texture2UpperHeight = gMosaicTex2->height << 2;
+        texture1And2UpperHeight = (gMosaicTex2->height << 2) + texture1UpperHeight;
         var_s3 = 0;
         for (yPos = 0; yPos < upperVideoHeight; yPos += texture1And2UpperHeight) {
             uly = yPos;
@@ -586,9 +589,9 @@ void func_80078190(Gfx **dlist) {
                 }
                 ulx = lrx;
             }
-            var_s3 = (var_s3 + D_800DE4C0) & (texture1UpperWidth - 1);
+            var_s3 = (var_s3 + gMosaicShiftX) & (texture1UpperWidth - 1);
         }
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C8->cmd), D_800DE4C8->numberOfCommands);
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gMosaicTex2->cmd), gMosaicTex2->numberOfCommands);
         upperVideoWidth <<= 2;
         upperVideoHeight <<= 2;
         var_s3 = 0;
@@ -608,7 +611,7 @@ void func_80078190(Gfx **dlist) {
                 }
                 ulx = lrx;
             }
-            var_s3 = (var_s3 + D_800DE4C0) & (texture1UpperWidth - 1);
+            var_s3 = (var_s3 + gMosaicShiftX) & (texture1UpperWidth - 1);
         }
     }
     gDPPipeSync((*dlist)++);

@@ -88,7 +88,7 @@ glabel menu_track_select_init
 /* 08F4F4 8008E8F4 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
 /* 08F4F8 8008E8F8 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
 /* 08F4FC 8008E8FC 3C018012 */  lui   $at, %hi(gTrackmenuType) # $at, 0x8012
-/* 08F500 8008E900 0C023C03 */  jal   func_8008F00C
+/* 08F500 8008E900 0C023C03 */  jal   trackmenu_assets
 /* 08F504 8008E904 AC3567D0 */   sw    $s5, %lo(gTrackmenuType)($at)
 /* 08F508 8008E908 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeOut) # $a0, 0x800e
 /* 08F50C 8008E90C 0C030076 */  jal   transition_begin
@@ -336,7 +336,7 @@ glabel menu_track_select_init
 /* 08F8B8 8008ECB8 3C04800E */  lui   $a0, %hi(gTrackSelectImageIndices) # $a0, 0x800e
 /* 08F8BC 8008ECBC 0C027229 */  jal   menu_imagegroup_load
 /* 08F8C0 8008ECC0 248407E0 */   addiu $a0, %lo(gTrackSelectImageIndices) # addiu $a0, $a0, 0x7e0
-/* 08F8C4 8008ECC4 0C02392C */  jal   assign_menu_arrow_textures
+/* 08F8C4 8008ECC4 0C02392C */  jal   menu_init_arrow_textures
 /* 08F8C8 8008ECC8 00000000 */   nop   
 /* 08F8CC 8008ECCC 3C02800E */  lui   $v0, %hi(D_800E05D4) # $v0, 0x800e
 /* 08F8D0 8008ECD0 3C03800E */  lui   $v1, %hi(D_800E05F4) # $v1, 0x800e
@@ -514,7 +514,7 @@ glabel menu_track_select_init
 /* 08FB54 8008EF54 3C018012 */  lui   $at, %hi(gSelectedTrackY) # $at, 0x8012
 /* 08FB58 8008EF58 AC2069F8 */  sw    $zero, %lo(gSelectedTrackY)($at)
 .L8008EF5C:
-/* 08FB5C 8008EF5C 0C031525 */  jal   assign_dialogue_box_id
+/* 08FB5C 8008EF5C 0C031525 */  jal   dialog_clear
 /* 08FB60 8008EF60 24040007 */   li    $a0, 7
 /* 08FB64 8008EF64 0C01FFFB */  jal   func_8007FFEC
 /* 08FB68 8008EF68 24040002 */   li    $a0, 2

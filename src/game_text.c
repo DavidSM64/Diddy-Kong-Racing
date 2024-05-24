@@ -82,8 +82,8 @@ void init_dialogue_text(void) {
 void free_message_box(void) {
     free_from_memory_pool(gCurrentMessageText[0]);
     gShowSubtitles = FALSE;
-    close_dialogue_box(6);
-    assign_dialogue_box_id(6);
+    dialogue_close(6);
+    dialog_clear(6);
 }
 
 /**
@@ -103,7 +103,7 @@ void render_subtitles(void) {
     s32 textFlags;
     char **textData;
 
-    assign_dialogue_box_id(6);
+    dialog_clear(6);
     set_current_dialogue_box_coords(6, gDialogueXPos1, gDialogueYPos1, gDialogueXPos2, gDialogueYPos2);
     set_current_dialogue_background_colour(6, 64, 96, 96, (gDialogueAlpha * 160) >> 8);
     set_current_text_background_colour(6, 0, 0, 0, 0);
@@ -190,8 +190,8 @@ void process_subtitles(s32 updateRate) {
             if (gDialogueAlpha < 0) {
                 gDialogueAlpha = 0;
                 gShowSubtitles = FALSE;
-                close_dialogue_box(6);
-                assign_dialogue_box_id(6);
+                dialogue_close(6);
+                dialog_clear(6);
             }
         } else {
             gDialogueAlpha += updateRate * gTextAlphaVelocity;
