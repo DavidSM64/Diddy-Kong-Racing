@@ -165,8 +165,8 @@ typedef struct MenuElement {
   /* 0x14 */ DrawTexture *drawTexture;    // Pointer to texture to be displayed on the screen.
   /* 0x14 */ s32 *number;     // Pointer to a number to be displayed on the screen.
   /* 0x14 */ u16 *numberU16;  // Pointer to a number to be displayed on the screen.
-  /* 0x14 */ s32 value;       // Some value for elementType == 5
-  } unk14_a;
+  /* 0x14 */ s32 assetID;       // Some value for elementType == 5
+  } t;
   union {
     struct {
         // Element Background Color/Transparency
@@ -209,11 +209,11 @@ typedef struct Racer {
 
 /* Unknown Size */
 typedef struct Settings4C {
-    u8 unk0; //courseId?
+    u8 courseID; //courseId?
     u8 unk1; // This value + 8 is cutsceneId index? gGameCurrentCutscene = gLevelSettings[gLevelSettings[1] + 8];
-    s8 unk2; //mapId?
+    s8 mapID; //mapId?
     u8 pad3[0xC];
-    u8 unkF; //entranceId?
+    u8 entranceID; //entranceId?
 } Settings4C;
 
 #define TAJ_FLAGS_CAR_CHAL_UNLOCKED    0x01

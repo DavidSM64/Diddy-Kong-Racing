@@ -588,7 +588,7 @@ void ingame_logic_loop(s32 updateRate) {
                     break;
                 case LEVEL_LOAD_TROPHY_RACE:
                     loadContext = LEVEL_CONTEXT_TROPHY_ROUND;
-                    func_80098208();
+                    trophyround_adventure();
                     D_801234FC = 2;
                     break;
                 case LEVEL_LOAD_LIGHTHOUSE_CUTSCENE:

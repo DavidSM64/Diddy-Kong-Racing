@@ -179,9 +179,9 @@ typedef enum TitleDemoIndex {
 /* Size: 0x20 bytes */
 // So this is looking to be a struct for menu images.
 typedef struct MenuAsset {
-    s16 r;
-    s16 g;
-    s16 b;
+    s16 y_rotation;
+    s16 x_rotation;
+    s16 z_rotation;
     s16 spriteID;
     f32 scale;
     f32 x;
@@ -349,11 +349,6 @@ typedef struct unk80069D20 {
     f32 unk14;
 } unk80069D20;
 
-typedef struct unk8006BDB0 {
-    u8 pad[0x4C];
-    s8 unk4C;
-} unk8006BDB0;
-
 typedef struct unk8009CA602 {
     ObjectTransform trans;
     s16 unk18;
@@ -456,7 +451,7 @@ void filename_decompress(u32 compressedFilename, char *output, s32 length);
 s32 filename_compress(char *filename, s32 length);
 void filename_init(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *fileName, s32 fileNameLength);
 void menu_unload_bigfont(void);
-void func_80098208(void);
+void trophyround_adventure(void);
 void trophyround_render(UNUSED s32 updateRate);
 void trophyround_free(void);
 void rankings_free(void);
@@ -561,7 +556,7 @@ void ghostmenu_generate(void);
 void filename_render(UNUSED s32 updateRate);
 void charselect_assign_ai(s32 arg0);
 void menu_number_render(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED s32 font, s32 alignment);
-void menu_element_render(s32 stackIndex);
+void menu_element_render(s32 elementID);
 void menu_input(void);
 SIDeviceStatus savemenu_load_sources(void);
 void menu_asset_load(s32 arg0);

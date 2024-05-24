@@ -151,7 +151,7 @@ s16 D_8012683A;
 s32 D_8012683C;
 SoundMask *gTrackTTSoundMask;
 s32 D_80126844;
-s32 D_80126848;
+SoundMask *D_80126848;
 s32 D_8012684C;
 s32 *D_80126850; // Never set, but it's read? Is it part of a larger struct being set?
 s32 gMenuElementScaleTimer;
@@ -2619,14 +2619,14 @@ void load_menu_text(s32 language) {
         gMagicCodeMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_CLEARALLCODES];                    // "CLEAR ALL CODES"
         gMagicCodeMenuStrings[2] = gMenuText[ASSET_MENU_TEXT_CODELIST];                         // "CODE LIST"
         gMagicCodeMenuStrings[3] = gMenuText[ASSET_MENU_TEXT_RETURN];                           // "RETURN"
-        gRaceResultsMenuElements[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_LAPTIMES];    // "LAP TIMES"
-        gRaceResultsMenuElements[2].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_OVERALLTIME]; // "OVERALL TIME"
-        gRaceOrderMenuElements[8].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RACEORDER];     // "RACE ORDER"
-        gRaceOrderMenuElements[9].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RACEORDER];     // "RACE ORDER"
-        gRecordTimesMenuElements[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RECORDTIMES]; // "RECORD TIMES"
-        gRecordTimesMenuElements[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RECORDTIMES]; // "RECORD TIMES"
-        gRecordTimesMenuElements[2].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_BESTTIME];    // "BEST TIME"
-        gRecordTimesMenuElements[5].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_BESTLAP];     // "BEST LAP"
+        gRaceResultsMenuElements[1].t.asciiText = gMenuText[ASSET_MENU_TEXT_LAPTIMES];    // "LAP TIMES"
+        gRaceResultsMenuElements[2].t.asciiText = gMenuText[ASSET_MENU_TEXT_OVERALLTIME]; // "OVERALL TIME"
+        gRaceOrderMenuElements[8].t.asciiText = gMenuText[ASSET_MENU_TEXT_RACEORDER];     // "RACE ORDER"
+        gRaceOrderMenuElements[9].t.asciiText = gMenuText[ASSET_MENU_TEXT_RACEORDER];     // "RACE ORDER"
+        gRecordTimesMenuElements[0].t.asciiText = gMenuText[ASSET_MENU_TEXT_RECORDTIMES]; // "RECORD TIMES"
+        gRecordTimesMenuElements[1].t.asciiText = gMenuText[ASSET_MENU_TEXT_RECORDTIMES]; // "RECORD TIMES"
+        gRecordTimesMenuElements[2].t.asciiText = gMenuText[ASSET_MENU_TEXT_BESTTIME];    // "BEST TIME"
+        gRecordTimesMenuElements[5].t.asciiText = gMenuText[ASSET_MENU_TEXT_BESTLAP];     // "BEST LAP"
         gOptionMenuStrings[0] = gMenuText[ASSET_MENU_TEXT_LANGUAGE];                            // "ENGLISH"
         if (sEepromSettings & 0x2000000) {
             gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESON]; // "SUBTITLES ON"
@@ -2685,15 +2685,15 @@ void load_menu_text(s32 language) {
         gContPakNeed2ndAdvStrings[7] = gMenuText[ASSET_MENU_TEXT_CONTINUE];                // "CONTINUE"
         gTitleMenuStrings[0] = gMenuText[ASSET_MENU_TEXT_START];                           // "START"
         gTitleMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_OPTIONS];                         // "OPTIONS"
-        gGameSelectTextElemsNoAdv2[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];     // "GAME SELECT"
-        gGameSelectTextElemsNoAdv2[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];     // "GAME SELECT"
-        gGameSelectTextElemsNoAdv2[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURE];      // "ADVENTURE"
-        gGameSelectTextElemsNoAdv2[5].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_TRACKS];         // "TRACKS"
-        gGameSelectTextElemsWithAdv2[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];   // "GAME SELECT"
-        gGameSelectTextElemsWithAdv2[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];   // "GAME SELECT"
-        gGameSelectTextElemsWithAdv2[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURE];    // "ADVENTURE"
-        gGameSelectTextElemsWithAdv2[5].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURETWO]; // "ADVENTURE TWO"
-        gGameSelectTextElemsWithAdv2[7].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_TRACKS];       // "TRACKS"
+        gGameSelectTextElemsNoAdv2[0].t.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];     // "GAME SELECT"
+        gGameSelectTextElemsNoAdv2[1].t.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];     // "GAME SELECT"
+        gGameSelectTextElemsNoAdv2[3].t.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURE];      // "ADVENTURE"
+        gGameSelectTextElemsNoAdv2[5].t.asciiText = gMenuText[ASSET_MENU_TEXT_TRACKS];         // "TRACKS"
+        gGameSelectTextElemsWithAdv2[0].t.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];   // "GAME SELECT"
+        gGameSelectTextElemsWithAdv2[1].t.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];   // "GAME SELECT"
+        gGameSelectTextElemsWithAdv2[3].t.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURE];    // "ADVENTURE"
+        gGameSelectTextElemsWithAdv2[5].t.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURETWO]; // "ADVENTURE TWO"
+        gGameSelectTextElemsWithAdv2[7].t.asciiText = gMenuText[ASSET_MENU_TEXT_TRACKS];       // "TRACKS"
         sBadControllerPakMenuText[0] = gMenuText[ASSET_MENU_TEXT_BADCONTPAK];   // "BAD CONTROLLER PAK"
         sControllerPakFullMenuText[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKFULL]; // "CONTROLLER PAK FULL"
         sNoControllerPakMenuText[0] = gMenuText[ASSET_MENU_TEXT_NOCONTPAK];     // 'NO CONTROLLER PAK"
@@ -2719,11 +2719,11 @@ void load_menu_text(s32 language) {
         sInsertRumblePakMenuText[0] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_3];            // "If you wish to use"
         sInsertRumblePakMenuText[1] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_5];            // "the Rumble Pak"
         sInsertRumblePakMenuText[2] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6];            // "insert it now!"
-        gCautionMenuTextElements[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // "CAUTION"
-        gCautionMenuTextElements[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // "CAUTION"
+        gCautionMenuTextElements[0].t.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // "CAUTION"
+        gCautionMenuTextElements[1].t.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // "CAUTION"
         for (i = 2; i < 13; i++) {
             // Caution message lines starting from gMenuText[166]
-            gCautionMenuTextElements[i].unk14_a.asciiText = gMenuText[166 + (i - 2)];
+            gCautionMenuTextElements[i].t.asciiText = gMenuText[166 + (i - 2)];
         }
     }
 }
@@ -3383,9 +3383,9 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
     }
 
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-    while (elems->unk14_a.element != NULL) {
-        if ((elems->unk14_a.element != &D_80126850)) {                      // fakematch
-            if (state == ((elems->unk14_a.element != (&D_80126850)) * 0)) { // fakematch
+    while (elems->t.element != NULL) {
+        if ((elems->t.element != &D_80126850)) {                      // fakematch
+            if (state == ((elems->t.element != (&D_80126850)) * 0)) { // fakematch
                 xPos = ((s32) ((elems->center - elems->left) * scale)) + elems->left;
                 yPos = ((s32) ((elems->middle - elems->top) * scale)) + elems->top;
             } else if ((state == 1)) {
@@ -3403,7 +3403,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                     set_text_colour(elems->filterRed, elems->filterGreen, elems->filterBlue, elems->filterBlendFactor,
                                     elems->opacity);
                     set_text_font(elems->textFont);
-                    draw_text(&sMenuCurrDisplayList, xPos, yPos + gPostraceTextOffset, elems->unk14_a.asciiText,
+                    draw_text(&sMenuCurrDisplayList, xPos, yPos + gPostraceTextOffset, elems->t.asciiText,
                               elems->textAlignFlags);
                     break;
                 case 1:
@@ -3412,7 +3412,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                         reset_render_settings(&sMenuCurrDisplayList);
                     }
                     sMenuGuiOpacity = elems->opacity;
-                    menu_timestamp_render(*elems->unk14_a.numberU16, xPos - SCREEN_WIDTH_HALF,
+                    menu_timestamp_render(*elems->t.numberU16, xPos - SCREEN_WIDTH_HALF,
                                           (-yPos - gPostraceTimestampOffset) + SCREEN_HEIGHT_HALF, elems->filterRed,
                                           elems->filterGreen, elems->filterBlue, elems->textFont);
                     break;
@@ -3421,19 +3421,19 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                         shouldResetRenderSettings = FALSE;
                         reset_render_settings(&sMenuCurrDisplayList);
                     }
-                    menu_number_render(*elems->unk14_a.number, xPos - SCREEN_WIDTH_HALF,
+                    menu_number_render(*elems->t.number, xPos - SCREEN_WIDTH_HALF,
                                   (-yPos - gPostraceTimestampOffset) + SCREEN_HEIGHT_HALF, elems->filterRed,
                                   elems->filterGreen, elems->filterBlue, elems->opacity, elems->textFont,
                                   elems->textAlignFlags);
                     break;
                 case 3:
-                    render_textured_rectangle(&sMenuCurrDisplayList, elems->unk14_a.drawTexture, xPos,
+                    render_textured_rectangle(&sMenuCurrDisplayList, elems->t.drawTexture, xPos,
                                               yPos + gPostraceTextOffset, elems->filterRed, elems->filterGreen,
                                               elems->filterBlue, elems->opacity);
                     shouldResetRenderSettings = TRUE;
                     break;
                 case 4:
-                    render_texture_rectangle_scaled(&sMenuCurrDisplayList, elems->unk14_a.element, xPos,
+                    render_texture_rectangle_scaled(&sMenuCurrDisplayList, elems->t.element, xPos,
                                                     yPos + gPostraceTextOffset, elems->details.texture.width / 256.0f,
                                                     elems->details.texture.height / 256.0f,
                                                     (elems->filterRed << 24) | (elems->filterGreen << 16) |
@@ -3448,19 +3448,19 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                     }
                     sprite_anim_off(TRUE);
                     sprite_opaque(FALSE);
-                    gMenuImages[elems->unk14_a.value].x = xPos - SCREEN_WIDTH_HALF;
-                    gMenuImages[elems->unk14_a.value].y = (-yPos - gPostraceTimestampOffset) + SCREEN_HEIGHT_HALF;
-                    gMenuImages[elems->unk14_a.value].spriteOffset = elems->textFont;
-                    gMenuImages[elems->unk14_a.value].b = elems->details.background.backgroundRed;
-                    gMenuImages[elems->unk14_a.value].g = elems->details.background.backgroundGreen;
-                    gMenuImages[elems->unk14_a.value].r = elems->details.background.backgroundBlue;
-                    gMenuImages[elems->unk14_a.value].scale = elems->details.background.backgroundAlpha / 256.0f;
+                    gMenuImages[elems->t.assetID].x = xPos - SCREEN_WIDTH_HALF;
+                    gMenuImages[elems->t.assetID].y = (-yPos - gPostraceTimestampOffset) + SCREEN_HEIGHT_HALF;
+                    gMenuImages[elems->t.assetID].spriteOffset = elems->textFont;
+                    gMenuImages[elems->t.assetID].z_rotation = elems->details.background.backgroundRed;
+                    gMenuImages[elems->t.assetID].x_rotation = elems->details.background.backgroundGreen;
+                    gMenuImages[elems->t.assetID].y_rotation = elems->details.background.backgroundBlue;
+                    gMenuImages[elems->t.assetID].scale = elems->details.background.backgroundAlpha / 256.0f;
                     sMenuGuiColourR = elems->filterRed;
                     sMenuGuiColourG = elems->filterGreen;
                     sMenuGuiColourB = elems->filterBlue;
                     sMenuGuiColourBlendFactor = elems->filterBlendFactor;
                     sMenuGuiOpacity = elems->opacity;
-                    menu_element_render(elems->unk14_a.value);
+                    menu_element_render(elems->t.assetID);
                     sprite_anim_off(FALSE);
                     sprite_opaque(TRUE);
                     break;
@@ -3476,7 +3476,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                                   elems->details.texture.borderWidth, elems->details.texture.borderHeight,
                                   (elems->filterRed << 24) | (elems->filterGreen << 16) | (elems->filterBlue << 8) |
                                       elems->opacity,
-                                  elems->unk14_a.element);
+                                  elems->t.element);
                     break;
             }
         }
@@ -5628,39 +5628,39 @@ PakError check_for_controller_pak_errors(void) {
     // This has been hard limited to just the first controller pak, but can easily be modified to check the rest with i
     // <= MAXCONTROLLERS
     for (i = 0; i <= 0 && errorFound == 0; i++) {
-        if (sControllerPakFatalErrorFound[i] != 0) {
-            gControllerPakMenuElement[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_PAKERROR]; // PAK ERROR
-            gControllerPakMenuElement[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_PAKERROR]; // PAK ERROR
-            gControllerPakMenuElement[2].unk14_a.asciiText =
+        if (sControllerPakFatalErrorFound[i]) {
+            gControllerPakMenuElement[0].t.asciiText = gMenuText[ASSET_MENU_TEXT_PAKERROR]; // PAK ERROR
+            gControllerPakMenuElement[1].t.asciiText = gMenuText[ASSET_MENU_TEXT_PAKERROR]; // PAK ERROR
+            gControllerPakMenuElement[2].t.asciiText =
                 gMenuText[ASSET_MENU_TEXT_CONTPAK1 + i]; // CONTROLLER PAK 1 / 2 / 3 / 4
-            gControllerPakMenuElement[3].unk14_a.asciiText =
+            gControllerPakMenuElement[3].t.asciiText =
                 gMenuText[ASSET_MENU_TEXT_CONTPAKISDAMAGED_0]; // IRREPARABLY DAMAGED.
-            gControllerPakMenuElement[4].unk14_a.asciiText =
+            gControllerPakMenuElement[4].t.asciiText =
                 gMenuText[ASSET_MENU_TEXT_TURNOFFN64_0]; // Switch off the N64
-            gControllerPakMenuElement[5].unk14_a.asciiText =
+            gControllerPakMenuElement[5].t.asciiText =
                 gMenuText[ASSET_MENU_TEXT_TURNOFFN64_1]; // and remove the controller pak.
             sControllerPakError = PAK_ERROR_FATAL;
             errorFound = 1;
-        } else if ((sControllerPakNoFreeSpace[i] != 0) && (sControllerPakDataPresent[i] == 0)) {
-            gControllerPakMenuElement[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // CAUTION
-            gControllerPakMenuElement[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // CAUTION
-            gControllerPakMenuElement[2].unk14_a.asciiText =
+        } else if (sControllerPakNoFreeSpace[i] && sControllerPakDataPresent[i] == 0) {
+            gControllerPakMenuElement[0].t.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // CAUTION
+            gControllerPakMenuElement[1].t.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // CAUTION
+            gControllerPakMenuElement[2].t.asciiText =
                 gMenuText[ASSET_MENU_TEXT_CONTPAK1 + i]; // CONTROLLER PAK 1 / 2 / 3 / 4
-            gControllerPakMenuElement[3].unk14_a.asciiText =
+            gControllerPakMenuElement[3].t.asciiText =
                 gMenuText[ASSET_MENU_TEXT_CONTPAKFULL];                                           // CONTROLLER PAK FULL
-            gControllerPakMenuElement[4].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CONTINUE]; // CONTINUE
-            gControllerPakMenuElement[5].unk14_a.asciiText = NULL;
+            gControllerPakMenuElement[4].t.asciiText = gMenuText[ASSET_MENU_TEXT_CONTINUE]; // CONTINUE
+            gControllerPakMenuElement[5].t.asciiText = NULL;
             sControllerPakDataPresent[i] = 1;
             sControllerPakError = PAK_ERROR_FULL;
             errorFound = 1;
-        } else if (sControllerPakBadData[i] != 0) {
-            gControllerPakMenuElement[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // CAUTION
-            gControllerPakMenuElement[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // CAUTION
-            gControllerPakMenuElement[2].unk14_a.asciiText =
+        } else if (sControllerPakBadData[i]) {
+            gControllerPakMenuElement[0].t.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // CAUTION
+            gControllerPakMenuElement[1].t.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION]; // CAUTION
+            gControllerPakMenuElement[2].t.asciiText =
                 gMenuText[ASSET_MENU_TEXT_CONTPAK1 + i]; // CONTROLLER PAK 1 / 2 / 3 / 4
-            gControllerPakMenuElement[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_0]; // CORRUPT DATA.
-            gControllerPakMenuElement[4].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_1]; // TRY AGAIN!
-            gControllerPakMenuElement[5].unk14_a.asciiText = NULL;
+            gControllerPakMenuElement[3].t.asciiText = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_0]; // CORRUPT DATA.
+            gControllerPakMenuElement[4].t.asciiText = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_1]; // TRY AGAIN!
+            gControllerPakMenuElement[5].t.asciiText = NULL;
             sControllerPakError = PAK_ERROR_CORRUPT;
             errorFound = 1;
         }
@@ -7442,7 +7442,7 @@ void menu_game_select_init(void) {
 
     for (i = 0; i <= gMenuStage; i++) {
         // Fakematch? What's the (i ^ 0)?
-        gGameSelectElements[((i ^ 0) * 2) + 2].unk14_a.texture = gMenuAssets[TEXTURE_SURFACE_BUTTON_WOOD];
+        gGameSelectElements[((i ^ 0) * 2) + 2].t.texture = gMenuAssets[TEXTURE_SURFACE_BUTTON_WOOD];
     }
 }
 
@@ -8591,7 +8591,7 @@ s32 menu_track_select_loop(s32 updateRate) {
             return gNumberOfActivePlayers;
         }
         gTrophyRaceWorldId = gTrackSelectCursorY + 1;
-        gInAdvModeTrophyRace = 0;
+        gInAdvModeTrophyRace = FALSE;
         gTrophyRaceRound = 0;
         menu_init(MENU_TROPHY_RACE_ROUND);
         return MENU_RESULT_CONTINUE;
@@ -9506,7 +9506,7 @@ void menu_adventure_track_init(void) {
     gTrackIdForPreview = ASSET_LEVEL_CENTRALAREAHUB;
     gOptionBlinkTimer = 0;
     gMenuDelay = 0;
-    mapId = settings->unk4C->unk2;
+    mapId = settings->unk4C->mapID;
     gPlayerSelectVehicle[PLAYER_ONE] = get_map_default_vehicle(mapId);
     result = get_map_race_type(mapId);
     if ((result == 5) || (result == 8) || (!(result & 0x40) && (!(settings->courseFlagsPtr[mapId] & RACE_CLEARED)))) {
@@ -9572,7 +9572,7 @@ void render_adventure_track_setup(UNUSED s32 arg0, s32 arg1, s32 arg2) {
     if (osTvType == TV_TYPE_PAL) {
         yOffset = 12;
     }
-    mapID = ((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->unk2;
+    mapID = ((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->mapID;
     gSPClearGeometryMode(sMenuCurrDisplayList++, G_CULL_FRONT);
     menu_camera_centre();
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
@@ -9610,12 +9610,12 @@ void render_adventure_track_setup(UNUSED s32 arg0, s32 arg1, s32 arg2) {
                         menu_timestamp_render(
                             settings
                                 ->courseTimesPtr[gPlayerSelectVehicle[0]]
-                                                [((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->unk2],
+                                                [((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->mapID],
                             26, 53, 128, 255, 255, 0);
                         menu_timestamp_render(
                             settings
                                 ->flapTimesPtr[gPlayerSelectVehicle[0]]
-                                              [((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->unk2],
+                                              [((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->mapID],
                             26, 33, 255, 192, 255, 0);
                     }
                     greenAmount = gOptionBlinkTimer * 8;
@@ -9698,7 +9698,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
         return gTrackIdForPreview | 0x80;
     }
     settings = get_settings();
-    mapId = ((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->unk2;
+    mapId = ((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->mapID;
     challenge = FALSE;
     sp1C = 0;
     if (settings->courseFlagsPtr[mapId] & RACE_CLEARED) {
@@ -10207,23 +10207,23 @@ void postrace_load(void) {
             menu_imagegroup_load(gRaceResultsImageIndices);
             menu_racer_portraits();
             settings = get_settings();
-            gRaceResultsMenuElements->unk14_a.element =
+            gRaceResultsMenuElements->t.element =
                 gRacerPortraits[settings->racers[settings->timeTrialRacer].character];
             if (is_time_trial_enabled() == FALSE) {
                 for (i = 0; i < 8; i++) {
                     for (j = 0; j < 8; j++) {
                         if (i == settings->racers[j].starting_position) {
-                            gRaceOrderMenuElements[7 - i].unk14_a.element =
+                            gRaceOrderMenuElements[7 - i].t.element =
                                 gRacerPortraits[settings->racers[j].character];
                         }
                     }
                 }
                 if (is_in_two_player_adventure()) {
                     for (i = 0; i < 6; i++) {
-                        gRaceOrderMenuElements[i + 1].unk14_a.element = gRaceOrderMenuElements[i + 2].unk14_a.element;
+                        gRaceOrderMenuElements[i + 1].t.element = gRaceOrderMenuElements[i + 2].t.element;
                     }
-                    gRaceOrderMenuElements[7].unk14_a.element = &D_80126850;
-                    gRaceOrderMenuElements[0].unk14_a.element = &D_80126850;
+                    gRaceOrderMenuElements[7].t.element = &D_80126850;
+                    gRaceOrderMenuElements[0].t.element = &D_80126850;
                 }
             }
             gPostRace.unk0_s32 = -1;
@@ -10568,10 +10568,10 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
                     gMenuStage = POSTRACE_STAGE_RACE_ORDER;
                 } else {
                     racer = &settings->racers[settings->timeTrialRacer];
-                    gRaceResultsMenuElements[3].unk14_a.numberU16 = &racer->lap_times[0];
-                    gRaceResultsMenuElements[4].unk14_a.numberU16 = &racer->lap_times[1];
-                    gRaceResultsMenuElements[5].unk14_a.numberU16 = &racer->lap_times[2];
-                    gRaceResultsMenuElements[6].unk14_a.numberU16 = &racer->course_time;
+                    gRaceResultsMenuElements[3].t.numberU16 = &racer->lap_times[0];
+                    gRaceResultsMenuElements[4].t.numberU16 = &racer->lap_times[1];
+                    gRaceResultsMenuElements[5].t.numberU16 = &racer->lap_times[2];
+                    gRaceResultsMenuElements[6].t.numberU16 = &racer->course_time;
                     postrace_offsets(gRaceResultsMenuElements, 0.5f, 15.0f, 0.5f, textOffsetY, timeOffsetY);
                     gMenuStage = POSTRACE_STAGE_RACE_TIMES;
                 }
@@ -10584,9 +10584,9 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
                     transition_begin(&sMenuTransitionFadeIn);
                     gMenuStage = POSTRACE_STAGE_END;
                 } else if (settings->display_times) {
-                    gRecordTimesMenuElements[3].unk14_a.numberU16 =
+                    gRecordTimesMenuElements[3].t.numberU16 =
                         &settings->courseTimesPtr[*gPlayerSelectVehicle][settings->courseId];
-                    gRecordTimesMenuElements[6].unk14_a.numberU16 =
+                    gRecordTimesMenuElements[6].t.numberU16 =
                         &settings->flapTimesPtr[*gPlayerSelectVehicle][settings->courseId];
                     filename_decompress(settings->courseInitialsPtr[*gPlayerSelectVehicle][settings->courseId],
                                         D_80126390, 3);
@@ -11380,7 +11380,7 @@ s32 filename_enter(s32 updateRate) {
 
     buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
     joytickXAxis = clamp_joystick_x_axis(PLAYER_ONE);
-    if ((joytickXAxis > -35) && (joytickXAxis < 35)) {
+    if (joytickXAxis > -35 && (joytickXAxis < 35)) {
         joytickXAxis = 0;
     }
     if (joytickXAxis < 0) {
@@ -11510,15 +11510,17 @@ void menu_unload_bigfont(void) {
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
-// Gets triggered when entering trophy race in adventure mode.
-void func_80098208(void) {
+/**
+ * 
+*/
+void trophyround_adventure(void) {
     Settings *settings = get_settings();
     gTrophyRaceWorldId = settings->worldId;
     gTrophyRaceRound = 0;
-    settings->unk4C->unk0 = settings->courseId;
-    settings->unk4C->unkF = 0;
+    settings->unk4C->courseID = settings->courseId;
+    settings->unk4C->entranceID = 0;
     settings->unk4C->unk1 = 0;
-    gInAdvModeTrophyRace = 1;
+    gInAdvModeTrophyRace = TRUE;
     set_time_trial_enabled(0);
 }
 
@@ -11673,8 +11675,8 @@ void func_80098774(s32 isRankings) {
 
     settings = get_settings();
     titleText = (isRankings) ? gMenuText[ASSET_MENU_TEXT_RANKINGS] : gMenuText[ASSET_MENU_TEXT_RACEORDER];
-    gTrophyRankingsTitle[0].unk14_a.asciiText = titleText;
-    gTrophyRankingsTitle[1].unk14_a.asciiText = titleText;
+    gTrophyRankingsTitle[0].t.asciiText = titleText;
+    gTrophyRankingsTitle[1].t.asciiText = titleText;
     racerIndex = (gRankingPlayerCount - 1);
     racerIndex <<= 1;
     yOffset = 240;
@@ -11720,18 +11722,18 @@ void func_80098774(s32 isRankings) {
 
             gTrophyRankingsTitle[menuElemIndex + 2].filterGreen = temp;
             if (isRankings) {
-                gTrophyRankingsTitle[menuElemIndex].unk14_a.drawTexture =
+                gTrophyRankingsTitle[menuElemIndex].t.drawTexture =
                     gRacerPortraits[settings->racers[D_80126430[racerIndex]].character];
-                gTrophyRankingsTitle[menuElemIndex + 2].unk14_a.element = &settings->racers[D_80126430[racerIndex]];
+                gTrophyRankingsTitle[menuElemIndex + 2].t.element = &settings->racers[D_80126430[racerIndex]];
             } else {
-                gTrophyRankingsTitle[menuElemIndex].unk14_a.drawTexture =
+                gTrophyRankingsTitle[menuElemIndex].t.drawTexture =
                     gRacerPortraits[settings->racers[D_80126428[racerIndex]].character];
-                gTrophyRankingsTitle[menuElemIndex + 2].unk14_a.number = &gTrophyRacePointsArray[racerIndex];
+                gTrophyRankingsTitle[menuElemIndex + 2].t.number = &gTrophyRacePointsArray[racerIndex];
             }
             menuElemIndex += 3;
         }
     }
-    gTrophyRankingsTitle[menuElemIndex].unk14_a.asciiText = NULL;
+    gTrophyRankingsTitle[menuElemIndex].t.asciiText = NULL;
 }
 
 #else
@@ -11993,8 +11995,8 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                     } else {
                         ret = MENU_RESULT_RETURN_TO_GAME;
                         settings->courseId = get_hub_area_id(settings->worldId);
-                        if (gInAdvModeTrophyRace != 0) {
-                            gInAdvModeTrophyRace = 0;
+                        if (gInAdvModeTrophyRace) {
+                            gInAdvModeTrophyRace = FALSE;
                             ret = settings->courseId | MENU_RESULT_FLAGS_200;
                             if (sp34 < 3) {
                                 temp0 = settings->worldId - 1;
@@ -12931,9 +12933,9 @@ s32 get_number_of_active_players(void) {
  * as it would otherwise return 1.
  */
 s32 get_active_player_count(void) {
-    unk8006BDB0 *temp = (unk8006BDB0 *) get_current_level_header();
+    LevelHeader *header = get_current_level_header();
     if (gIsInTwoPlayerAdventure && !gIsInTracksMode) {
-        if (temp->unk4C == 0 || (temp->unk4C & 0x40) != 0) {
+        if (header->race_type == RACETYPE_DEFAULT || header->race_type & RACETYPE_CHALLENGE) {
             return 2;
         }
     }
@@ -13093,9 +13095,9 @@ void menu_image_load(s32 imageID) {
         gMenuImages = allocate_from_main_pool_safe(sizeof(MenuAsset) * 18, COLOUR_TAG_RED);
     }
 
-    gMenuImages[imageID].r = sMenuImageProperties[imageID].r;
-    gMenuImages[imageID].g = sMenuImageProperties[imageID].g;
-    gMenuImages[imageID].b = sMenuImageProperties[imageID].b;
+    gMenuImages[imageID].y_rotation = sMenuImageProperties[imageID].y_rotation;
+    gMenuImages[imageID].x_rotation = sMenuImageProperties[imageID].x_rotation;
+    gMenuImages[imageID].z_rotation = sMenuImageProperties[imageID].z_rotation;
     gMenuImages[imageID].spriteID = sMenuImageProperties[imageID].spriteID;
     gMenuImages[imageID].x = sMenuImageProperties[imageID].x;
     gMenuImages[imageID].y = sMenuImageProperties[imageID].y;
@@ -13118,39 +13120,39 @@ UNUSED void menu_imagegroup_free(void) {
  * Render a menu element.
  * They can be a few different things, so check what it is and then call a function to render it.
  */
-void menu_element_render(s32 stackIndex) {
+void menu_element_render(s32 elementID) {
     Object *new_var;
-    unk8009CA602 *new_var2;
+    MenuAsset *new_var2;
     Sprite *sprite;
     ObjectModel **temp;
 
-    if (gMenuAssets[gMenuImages[stackIndex].spriteID] != 0) {
-        if (((*gAssetsMenuElementIds)[gMenuImages[stackIndex].spriteID] & HUD_ELEMENT_TEXTURE) != HUD_ELEMENT_TEXTURE) {
-            if ((*gAssetsMenuElementIds)[gMenuImages[stackIndex].spriteID] & HUD_ELEMENT_OBJECT) {
+    if (gMenuAssets[gMenuImages[elementID].spriteID] != NULL) {
+        if (((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & HUD_ELEMENT_TEXTURE) != HUD_ELEMENT_TEXTURE) {
+            if ((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & HUD_ELEMENT_OBJECT) {
                 if (0) {} // Fakematch
-                new_var = (Object *) gMenuAssets[gMenuImages[stackIndex].spriteID];
-                new_var2 = (unk8009CA602 *) &gMenuImages[stackIndex];
-                new_var->segment.trans.y_rotation = new_var2->trans.y_rotation;
-                new_var->segment.trans.x_rotation = new_var2->trans.x_rotation;
-                new_var->segment.trans.z_rotation = new_var2->trans.z_rotation;
-                new_var->segment.trans.x_position = new_var2->trans.x_position;
-                new_var->segment.trans.y_position = new_var2->trans.y_position;
-                new_var->segment.trans.z_position = new_var2->trans.z_position;
-                new_var->segment.trans.scale = new_var2->trans.scale;
+                new_var = (Object *) gMenuAssets[gMenuImages[elementID].spriteID];
+                new_var2 = (MenuAsset *) &gMenuImages[elementID];
+                new_var->segment.trans.y_rotation = new_var2->y_rotation;
+                new_var->segment.trans.x_rotation = new_var2->x_rotation;
+                new_var->segment.trans.z_rotation = new_var2->z_rotation;
+                new_var->segment.trans.x_position = new_var2->x;
+                new_var->segment.trans.y_position = new_var2->y;
+                new_var->segment.trans.z_position = new_var2->z;
+                new_var->segment.trans.scale = new_var2->scale;
                 if (unused_800DF468 == 0) {
                     new_var->segment.animFrame = new_var2->unk1D;
-                    new_var->segment.object.modelIndex = new_var2->unk18;
+                    new_var->segment.object.modelIndex = new_var2->spriteOffset;
                 }
                 new_var->segment.object.opacity = sMenuGuiOpacity;
                 render_object(&sMenuCurrDisplayList, &sMenuCurrHudMat, &sMenuCurrHudVerts, new_var);
             } else {
-                if ((*gAssetsMenuElementIds)[gMenuImages[stackIndex].spriteID] & HUD_ELEMENT_SPRITE) {
-                    sprite = (Sprite *) gMenuAssets[gMenuImages[stackIndex].spriteID];
+                if ((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & HUD_ELEMENT_SPRITE) {
+                    sprite = (Sprite *) gMenuAssets[gMenuImages[elementID].spriteID];
                     gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, sMenuGuiColourR, sMenuGuiColourG, sMenuGuiColourB,
                                     sMenuGuiOpacity);
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
                     render_ortho_triangle_image(&sMenuCurrDisplayList, &sMenuCurrHudMat, &sMenuCurrHudVerts,
-                                                (ObjectSegment *) (&gMenuImages[stackIndex]), sprite, gMenuSpriteFlags);
+                                                (ObjectSegment *) (&gMenuImages[elementID]), sprite, gMenuSpriteFlags);
                     gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 } else {
                     if (sMenuGuiOpacity < 255) {
@@ -13160,9 +13162,9 @@ void menu_element_render(s32 stackIndex) {
                     };
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
                     camera_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat,
-                                          (ObjectTransform *) (&gMenuImages[stackIndex]),
+                                          (ObjectTransform *) (&gMenuImages[elementID]),
                                           gTrackSelectWoodFrameHeightScale, 0);
-                    temp = ((ObjectModel **) gMenuAssets[gMenuImages[stackIndex].spriteID]);
+                    temp = ((ObjectModel **) gMenuAssets[gMenuImages[elementID].spriteID]);
                     render_track_selection_viewport_border(*temp);
                     apply_matrix_from_stack(&sMenuCurrDisplayList);
                     if (sMenuGuiOpacity < 255) {
