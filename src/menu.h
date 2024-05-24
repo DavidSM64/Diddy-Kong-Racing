@@ -83,6 +83,47 @@ enum SaveMenuStages {
     SAVEMENU_WRITE
 };
 
+enum PakMenuStages {
+    PAKMENU_CHOOSE,
+    PAKMENU_CONFIRM,
+    PAKMENU_WRITE
+};
+
+enum CheatMenuStages {
+    CHEATMENU_CHOOSE,
+    CHEATMENU_KEYBOARD,
+    CHEATMENU_MESSAGE,
+};
+
+enum TrackmenuStages {
+    TRACKMENU_MIRROR = -1,
+    TRACKMENU_OPT_1,
+    TRACKMENU_CHOOSE,
+    TRACKMENU_OPT_2,
+    TRACKMENU_OPT_3,
+    TRACKMENU_OPT_4
+};
+
+enum AdventureSetupStages {
+    ADVENTURESETUP_PREVIEW = -1,
+    ADVENTURESETUP_VEHICLE,
+    ADVENTURESETUP_CONFIRM
+};
+
+enum ResultsStages {
+    RESULTS_M1 = -1,
+    RESULTS_0,
+    RESULTS_1,
+    RESULTS_2,
+    RESULTS_3,
+};
+
+enum TitleScreenStages {
+    TITLESCREEN_START,
+    TITLESCREEN_NAME,
+    TITLESCREEN_PRESS_START
+};
+
 enum DialogueMenuCases {
     DIALOGUE_TAJ,
     DIALOGUE_UNK_01,
@@ -557,7 +598,7 @@ void gameselect_render(s32 updateRate);
 void func_80083098(f32);
 void trackmenu_assets(s32);
 void render_track_selection_viewport_border(ObjectModel *objMdl);
-void render_adventure_track_setup(UNUSED s32 updateRate, s32 arg1, s32 arg2);
+void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 void menu_trophy_race_round_init(void);
 void charselect_new_player(void);
 s32 menu_save_options_loop(s32 updateRate);

@@ -434,7 +434,7 @@ void ingame_logic_loop(s32 updateRate) {
         func_80010994(updateRate);
         if (check_if_showing_cutscene_camera() == 0 || get_race_countdown()) {
             if (buttonPressedInputs & START_BUTTON && get_level_property_stack_pos() == 0 &&
-                gDrumstickSceneLoadTimer == 0 && gGameMode == GAMEMODE_INGAME && gPostRaceViewPort == NULL &&
+                gDrumstickSceneLoadTimer == 0 && gGameMode == GAMEMODE_INGAME && gPostRaceViewPort == FALSE &&
                 gLevelLoadTimer == 0 && gPauseLockTimer == 0) {
                 buttonPressedInputs = 0;
                 gIsPaused = TRUE;
@@ -465,7 +465,7 @@ void ingame_logic_loop(s32 updateRate) {
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
             case POSTRACE_OPT_1:
-                gPostRaceViewPort = NULL;
+                gPostRaceViewPort = FALSE;
                 func_8006D8F0(-1);
                 break;
             case POSTRACE_OPT_4:
@@ -661,7 +661,7 @@ void ingame_logic_loop(s32 updateRate) {
     if ((buttonHeldInputs & L_TRIG && gGameMode == GAMEMODE_INGAME) || D_801234FC != 0) {
         gIsPaused = FALSE;
         gLevelLoadTimer = 0;
-        gPostRaceViewPort = NULL;
+        gPostRaceViewPort = FALSE;
         unload_level_game();
         safe_mark_write_save_file(get_save_file_index());
         if (loadContext) {
@@ -730,7 +730,7 @@ void ingame_logic_loop(s32 updateRate) {
         D_801234FC = 0;
     }
     if (D_801234F8) {
-        gPostRaceViewPort = NULL;
+        gPostRaceViewPort = FALSE;
         unload_level_game();
         load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
         safe_mark_write_save_file(get_save_file_index());
@@ -748,8 +748,12 @@ void set_drumstick_unlock_transition(void) {
     transition_begin(&gDrumstickSceneTransition);
 }
 
-void func_8006D8E0(s32 arg0) {
-    gPostRaceViewPort = arg0 + 1;
+/**
+ * Set the postrace viewport var to match the finish state.
+ * The game never actually uses this beyond checking it's nonzero.
+*/
+void race_postrace_type(s32 finishState) {
+    gPostRaceViewPort = finishState + 1;
 }
 
 void func_8006D8F0(UNUSED s32 arg0) {
