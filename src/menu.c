@@ -6172,7 +6172,7 @@ s32 menu_character_select_loop(s32 updateRate) {
         // clang-format on
         charselect_new_player();
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers) {
-            charselect_pick(); // Cancel/Confirm selected character?
+            charselect_pick(); // Cancel/Confirm selected character
         } else {
             charselect_input(activePlayers); // Move and select characters?
         }
