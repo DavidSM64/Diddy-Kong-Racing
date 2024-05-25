@@ -6122,7 +6122,7 @@ void charselect_assign_ai(s32 charSlot) {
     if (charSlot < 8) {
         foundIt = FALSE;
         for (i = 0; i < charSlot && !foundIt; i++) {
-            if (gCharacterIdSlots[i] == CHARACTER_DIDDY) { // I think 9 is the character id for Diddy Kong?
+            if (gCharacterIdSlots[i] == CHARACTER_DIDDY) {
                 foundIt = TRUE;
             }
         }
