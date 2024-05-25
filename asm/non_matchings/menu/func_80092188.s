@@ -256,10 +256,10 @@ glabel L8009251C
 /* 093124 80092524 00002825 */  move  $a1, $zero
 /* 093128 80092528 19400072 */  blez  $t2, .L800926F4
 /* 09312C 8009252C 3C088012 */   lui   $t0, %hi(gMenuButtons) # $t0, 0x8012
-/* 093130 80092530 3C0B8012 */  lui   $t3, %hi(D_801269C4) # $t3, 0x8012
+/* 093130 80092530 3C0B8012 */  lui   $t3, %hi(gPlayerSelectConfirm) # $t3, 0x8012
 /* 093134 80092534 3C09800E */  lui   $t1, %hi(gNumberOfReadyPlayers) # $t1, 0x800e
 /* 093138 80092538 2529F480 */  addiu $t1, %lo(gNumberOfReadyPlayers) # addiu $t1, $t1, -0xb80
-/* 09313C 8009253C 256B69C4 */  addiu $t3, %lo(D_801269C4) # addiu $t3, $t3, 0x69c4
+/* 09313C 8009253C 256B69C4 */  addiu $t3, %lo(gPlayerSelectConfirm) # addiu $t3, $t3, 0x69c4
 /* 093140 80092540 250867D8 */  addiu $t0, %lo(gMenuButtons) # addiu $t0, $t0, 0x67d8
 /* 093144 80092544 241F0001 */  li    $ra, 1
 .L80092548:
@@ -280,10 +280,10 @@ glabel L8009251C
 /* 093180 80092580 8FA50040 */  lw    $a1, 0x40($sp)
 /* 093184 80092584 8FA80024 */  lw    $t0, 0x24($sp)
 /* 093188 80092588 3C09800E */  lui   $t1, %hi(gNumberOfReadyPlayers) # $t1, 0x800e
-/* 09318C 8009258C 3C0B8012 */  lui   $t3, %hi(D_801269C4) # $t3, 0x8012
+/* 09318C 8009258C 3C0B8012 */  lui   $t3, %hi(gPlayerSelectConfirm) # $t3, 0x8012
 /* 093190 80092590 3C0C8012 */  lui   $t4, %hi(gMenuStage) # $t4, 0x8012
 /* 093194 80092594 258C63E0 */  addiu $t4, %lo(gMenuStage) # addiu $t4, $t4, 0x63e0
-/* 093198 80092598 256B69C4 */  addiu $t3, %lo(D_801269C4) # addiu $t3, $t3, 0x69c4
+/* 093198 80092598 256B69C4 */  addiu $t3, %lo(gPlayerSelectConfirm) # addiu $t3, $t3, 0x69c4
 /* 09319C 8009259C 2529F480 */  addiu $t1, %lo(gNumberOfReadyPlayers) # addiu $t1, $t1, -0xb80
 /* 0931A0 800925A0 240DFFFF */  li    $t5, -1
 /* 0931A4 800925A4 10400003 */  beqz  $v0, .L800925B4
@@ -421,8 +421,8 @@ glabel L80092740
 .L80092770:
 /* 093370 80092770 13200009 */  beqz  $t9, .L80092798
 /* 093374 80092774 3C09800E */   lui   $t1, %hi(gNumberOfReadyPlayers) # $t1, 0x800e
-/* 093378 80092778 3C0B8012 */  lui   $t3, %hi(D_801269C4) # $t3, 0x8012
-/* 09337C 8009277C 256B69C4 */  addiu $t3, %lo(D_801269C4) # addiu $t3, $t3, 0x69c4
+/* 093378 80092778 3C0B8012 */  lui   $t3, %hi(gPlayerSelectConfirm) # $t3, 0x8012
+/* 09337C 8009277C 256B69C4 */  addiu $t3, %lo(gPlayerSelectConfirm) # addiu $t3, $t3, 0x69c4
 /* 093380 80092780 2529F480 */  addiu $t1, %lo(gNumberOfReadyPlayers) # addiu $t1, $t1, -0xb80
 /* 093384 80092784 24180001 */  li    $t8, 1
 /* 093388 80092788 A1600000 */  sb    $zero, ($t3)
@@ -526,13 +526,13 @@ glabel L8009287C
 /* 0934F0 800928F0 AD800000 */  sw    $zero, ($t4)
 /* 0934F4 800928F4 13000005 */  beqz  $t8, .L8009290C
 /* 0934F8 800928F8 AD2F0000 */   sw    $t7, ($t1)
-/* 0934FC 800928FC 3C0B8012 */  lui   $t3, %hi(D_801269C4) # $t3, 0x8012
-/* 093500 80092900 256B69C4 */  addiu $t3, %lo(D_801269C4) # addiu $t3, $t3, 0x69c4
+/* 0934FC 800928FC 3C0B8012 */  lui   $t3, %hi(gPlayerSelectConfirm) # $t3, 0x8012
+/* 093500 80092900 256B69C4 */  addiu $t3, %lo(gPlayerSelectConfirm) # addiu $t3, $t3, 0x69c4
 /* 093504 80092904 10000004 */  b     .L80092918
 /* 093508 80092908 A1600000 */   sb    $zero, ($t3)
 .L8009290C:
-/* 09350C 8009290C 3C0B8012 */  lui   $t3, %hi(D_801269C4) # $t3, 0x8012
-/* 093510 80092910 256B69C4 */  addiu $t3, %lo(D_801269C4) # addiu $t3, $t3, 0x69c4
+/* 09350C 8009290C 3C0B8012 */  lui   $t3, %hi(gPlayerSelectConfirm) # $t3, 0x8012
+/* 093510 80092910 256B69C4 */  addiu $t3, %lo(gPlayerSelectConfirm) # addiu $t3, $t3, 0x69c4
 /* 093514 80092914 A1600001 */  sb    $zero, 1($t3)
 .L80092918:
 /* 093518 80092918 240E0001 */  li    $t6, 1
@@ -652,10 +652,10 @@ glabel L8009287C
 /* 0936B8 80092AB8 19400017 */  blez  $t2, .L80092B18
 /* 0936BC 80092ABC 00002825 */   move  $a1, $zero
 /* 0936C0 80092AC0 3C088012 */  lui   $t0, %hi(gMenuButtons) # $t0, 0x8012
-/* 0936C4 80092AC4 3C0B8012 */  lui   $t3, %hi(D_801269C4) # $t3, 0x8012
+/* 0936C4 80092AC4 3C0B8012 */  lui   $t3, %hi(gPlayerSelectConfirm) # $t3, 0x8012
 /* 0936C8 80092AC8 3C09800E */  lui   $t1, %hi(gNumberOfReadyPlayers) # $t1, 0x800e
 /* 0936CC 80092ACC 2529F480 */  addiu $t1, %lo(gNumberOfReadyPlayers) # addiu $t1, $t1, -0xb80
-/* 0936D0 80092AD0 256B69C4 */  addiu $t3, %lo(D_801269C4) # addiu $t3, $t3, 0x69c4
+/* 0936D0 80092AD0 256B69C4 */  addiu $t3, %lo(gPlayerSelectConfirm) # addiu $t3, $t3, 0x69c4
 /* 0936D4 80092AD4 250867D8 */  addiu $t0, %lo(gMenuButtons) # addiu $t0, $t0, 0x67d8
 .L80092AD8:
 /* 0936D8 80092AD8 8D180000 */  lw    $t8, ($t0)

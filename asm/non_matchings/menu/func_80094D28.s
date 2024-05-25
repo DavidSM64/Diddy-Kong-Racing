@@ -345,8 +345,8 @@ glabel L800951CC
 /* 095DF4 800951F4 00003825 */  move  $a3, $zero
 /* 095DF8 800951F8 0C031414 */  jal   set_current_text_background_colour
 /* 095DFC 800951FC AFA00010 */   sw    $zero, 0x10($sp)
-/* 095E00 80095200 3C118012 */  lui   $s1, %hi(D_80126A98) # $s1, 0x8012
-/* 095E04 80095204 26316A98 */  addiu $s1, %lo(D_80126A98) # addiu $s1, $s1, 0x6a98
+/* 095E00 80095200 3C118012 */  lui   $s1, %hi(gTracksSaveGhost) # $s1, 0x8012
+/* 095E04 80095204 26316A98 */  addiu $s1, %lo(gTracksSaveGhost) # addiu $s1, $s1, 0x6a98
 /* 095E08 80095208 8E2C0000 */  lw    $t4, ($s1)
 /* 095E0C 8009520C 24040007 */  li    $a0, 7
 /* 095E10 80095210 11800003 */  beqz  $t4, .L80095220

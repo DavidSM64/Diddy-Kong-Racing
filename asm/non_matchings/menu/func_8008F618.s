@@ -88,7 +88,7 @@ glabel func_8008F618
 /* 090364 8008F764 AC4E0000 */  sw    $t6, ($v0)
 /* 090368 8008F768 240EFF00 */  li    $t6, -256
 /* 09036C 8008F76C 3C19FB00 */  lui   $t9, 0xfb00
-/* 090370 8008F770 3C068012 */  lui   $a2, %hi(D_80126924) # $a2, 0x8012
+/* 090370 8008F770 3C068012 */  lui   $a2, %hi(gTrackSelectVertsFlip) # $a2, 0x8012
 /* 090374 8008F774 3C11800E */  lui   $s1, %hi(gTrackSelectBgVertices) # $s1, 0x800e
 /* 090378 8008F778 3C12800E */  lui   $s2, %hi(gTrackSelectBgTriangles) # $s2, 0x800e
 /* 09037C 8008F77C 00007812 */  mflo  $t7
@@ -101,7 +101,7 @@ glabel func_8008F618
 /* 090398 8008F798 AED80000 */  sw    $t8, ($s6)
 /* 09039C 8008F79C AC4E0004 */  sw    $t6, 4($v0)
 /* 0903A0 8008F7A0 AC590000 */  sw    $t9, ($v0)
-/* 0903A4 8008F7A4 8CC66924 */  lw    $a2, %lo(D_80126924)($a2)
+/* 0903A4 8008F7A4 8CC66924 */  lw    $a2, %lo(gTrackSelectVertsFlip)($a2)
 /* 0903A8 8008F7A8 91380000 */  lbu   $t8, ($t1)
 /* 0903AC 8008F7AC 00067880 */  sll   $t7, $a2, 2
 /* 0903B0 8008F7B0 022F8821 */  addu  $s1, $s1, $t7
