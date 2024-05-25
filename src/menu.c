@@ -66,10 +66,10 @@ s32 D_801263E4;
 s8 gPlayersCharacterArray[8]; // -1 = Non active player, or character id if >= 0
 s8 gCharacterIdSlots[8];
 s32 gRankingsPoints[8];
-u8 D_80126418[8];
-u8 D_80126420[8];
-u8 D_80126428[8];
-u8 D_80126430[8]; // Contains the order of racer indices that tell you what place they are in.
+u8 gResultsPlayers[8];
+u8 gRankingsPlayers[8];
+u8 gResultsPlayerIDs[8];
+u8 gRankingsPlayerIDs[8]; // Contains the order of racer indices that tell you what place they are in.
 s8 D_80126438[16];
 
 // Eeeprom save data bits stored at address 0xF
@@ -2249,7 +2249,7 @@ void menu_number_render(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UN
  */
 void postrace_offsets(MenuElement *elements, f32 in, f32 mid, f32 out, s32 textOffset, s32 timestampOffset) {
     gTrophyRankingsMenuElements = elements;
-    gPostraceState = POSTRACE_SLIDE_IN;
+    gPostraceState = POSTRACE_ENTER;
     gPostraceScaleIn = in * 60.0f;
     gPostraceScaleMiddle = mid * 60.0f;
     gPostraceScaleOut = out * 60.0f;
@@ -2283,7 +2283,7 @@ s32 postrace_render(s32 updateRate) {
         gMenuElementScaleTimer += updateRate;
         do {
             switch (gPostraceState) {
-                case POSTRACE_SLIDE_IN:
+                case POSTRACE_ENTER:
                     if (buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON)) {
                         gMenuElementScaleTimer = 0;
                         gPostraceState = POSTRACE_HOLD;
@@ -8170,7 +8170,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
         set_text_background_colour(0, 0, 0, 0);
         draw_text(&sMenuCurrDisplayList, POS_CENTRED, 43, (char *) i, ALIGN_MIDDLE_CENTER); // Draw track name?
         sp84 = gOptionBlinkTimer * 8;
-        if (sp84 >= 256) {
+        if (sp84 > 255) {
             sp84 = 511 - sp84;
         }
         set_current_dialogue_background_colour(7, 255, sp84, 0, sMenuGuiOpacity);
@@ -9101,9 +9101,9 @@ void postrace_start(s32 finishState, s32 worldID) {
         }
         gResultOptionText[gResultOptionCount] = gMenuText[ASSET_MENU_TEXT_QUIT];
         gResultOptionCount++;
-        gMenuStage = 0;
+        gMenuStage = POSTRACE_STAGE_BEGIN;
     } else {
-        gMenuStage = 7;
+        gMenuStage = POSTRACE_STAGE_FADE_OUT;
     }
     gFileNew = FALSE;
     gOptionBlinkTimer = 0;
@@ -9120,11 +9120,11 @@ void postrace_start(s32 finishState, s32 worldID) {
         gIgnorePlayerInputTime = normalise_time(240); // 4 seconds
     }
     if (gPostraceFinishState) {
-        gMenuStage = 8;
+        gMenuStage = POSTRACE_STAGE_END;
         gMenuDelay = 100;
     }
     if (get_game_mode() != GAMEMODE_INGAME) {
-        gMenuStage = 7;
+        gMenuStage = POSTRACE_STAGE_FADE_OUT;
     }
     reset_controller_sticks();
     race_postrace_type(finishState);
@@ -9834,7 +9834,7 @@ void menu_results_init(void) {
         }
     }
 
-    gMenuStage = RESULTS_M1;
+    gMenuStage = RESULTS_ENTER;
     gOptionBlinkTimer = 0;
     gOpacityDecayTimer = 0;
     gMenuDelay = 0;
@@ -9959,7 +9959,7 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         sMenuGuiColourG = 255;
         sMenuGuiColourBlendFactor = 0;
     }
-    if (gMenuStage >= RESULTS_1) {
+    if (gMenuStage >= RESULTS_OPTIONS) {
         y2 = gResultOptionCount * 8;
         clear_dialogue_box_open_flag(7);
         dialog_clear(7);
@@ -10020,17 +10020,18 @@ s32 menu_results_loop(s32 updateRate) {
     playPickSound = FALSE;
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     menu_input();
-    if (gMenuStage <= RESULTS_0) {
+    if (gMenuStage <= RESULTS_SCORE) {
         gOpacityDecayTimer += updateRate;
         if (gOpacityDecayTimer >= 60) {
-            gMenuStage = RESULTS_1;
+            gMenuStage = RESULTS_OPTIONS;
         } else if (gMenuStage < 0 && gOpacityDecayTimer > 20) {
-            gMenuStage = RESULTS_0;
+            gMenuStage = RESULTS_SCORE;
             sound_play(SOUND_WHOOSH1, NULL);
         }
     }
+    
     if (gMenuDelay < 20) {
-        if (gMenuStage <= RESULTS_0) {
+        if (gMenuStage <= RESULTS_SCORE) {
             if (gOpacityDecayTimer >= 20) {
                 results_render(updateRate, 1.0f - ((f32) (gOpacityDecayTimer - 20) / 40.0f));
             }
@@ -10039,9 +10040,9 @@ s32 menu_results_loop(s32 updateRate) {
         }
     }
     if (gMenuDelay == 0) {
-        if (gMenuStage == RESULTS_0) {
+        if (gMenuStage == RESULTS_SCORE) {
             if (gMenuButtons[PLAYER_MENU] & (A_BUTTON | START_BUTTON)) {
-                gMenuStage = RESULTS_1;
+                gMenuStage = RESULTS_OPTIONS;
             }
         } else if (gMenuSubOption != 0) {
             if (gMenuButtons[PLAYER_MENU] & (A_BUTTON | START_BUTTON)) {
@@ -10699,11 +10700,11 @@ void func_80098774(s32 isRankings) {
             gTrophyRankingsTitle[menuElemIndex + 2].filterGreen = temp;
             if (isRankings) {
                 gTrophyRankingsTitle[menuElemIndex].t.drawTexture =
-                    gRacerPortraits[settings->racers[D_80126430[racerIndex]].character];
-                gTrophyRankingsTitle[menuElemIndex + 2].t.element = &settings->racers[D_80126430[racerIndex]];
+                    gRacerPortraits[settings->racers[gRankingsPlayerIDs[racerIndex]].character];
+                gTrophyRankingsTitle[menuElemIndex + 2].t.element = &settings->racers[gRankingsPlayerIDs[racerIndex]];
             } else {
                 gTrophyRankingsTitle[menuElemIndex].t.drawTexture =
-                    gRacerPortraits[settings->racers[D_80126428[racerIndex]].character];
+                    gRacerPortraits[settings->racers[gResultsPlayerIDs[racerIndex]].character];
                 gTrophyRankingsTitle[menuElemIndex + 2].t.number = &gTrophyRacePointsArray[racerIndex];
             }
             menuElemIndex += 3;
@@ -10721,20 +10722,16 @@ GLOBAL_ASM("asm/non_matchings/menu/func_80098774.s")
  * Sets the order of the racer portraits based on points position.
  */
 void menu_trophy_race_rankings_init(void) {
-    UNUSED s32 pad0;
-    UNUSED s32 pad1;
-    UNUSED s32 pad2;
     s32 i;
     s32 j;
+    s32 ranking[8];
     s32 tempForSwap;
-    s32 sp48[4];
-    UNUSED s32 pad3;
     Settings *settings;
     s8 *trackMenuIds;
 
     settings = get_settings();
     trackMenuIds = (s8 *) get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
-    gMenuStage = 0;
+    gMenuStage = RANKINGS_ENTER;
     gMenuDelay = 0;
     gOptionBlinkTimer = 0;
     gOpacityDecayTimer = 0;
@@ -10769,11 +10766,11 @@ void menu_trophy_race_rankings_init(void) {
     for (i = 0; i < gRankingPlayerCount; i++) {
         for (j = 0; j < gRankingPlayerCount; j++) {
             if (i == settings->racers[j].starting_position) {
-                D_80126428[i] = j;
+                gResultsPlayerIDs[i] = j;
                 if (j < gNumberOfActivePlayers) {
-                    D_80126418[i] = TRUE;
+                    gResultsPlayers[i] = TRUE;
                 } else {
-                    D_80126418[i] = FALSE;
+                    gResultsPlayers[i] = FALSE;
                 }
             }
         }
@@ -10782,19 +10779,19 @@ void menu_trophy_race_rankings_init(void) {
         gRankingsPoints[i] = gTrophyRacePointsArray[settings->racers[i].starting_position];
     }
     for (i = 0; i < gRankingPlayerCount; i++) {
-        D_80126430[i] = i;
-        sp48[i] = settings->racers[i].trophy_points + gRankingsPoints[i];
+        gRankingsPlayerIDs[i] = i;
+        ranking[i] = settings->racers[i].trophy_points + gRankingsPoints[i];
     }
 
     for (i = gRankingPlayerCount - 1; i > 0; i--) {
         for (j = 0; j < i; j++) {
-            if (sp48[j] < sp48[j + 1]) {
-                tempForSwap = sp48[j];
-                sp48[j] = sp48[j + 1];
-                sp48[j + 1] = tempForSwap;
-                tempForSwap = D_80126430[j];
-                D_80126430[j] = D_80126430[j + 1];
-                D_80126430[j + 1] = tempForSwap;
+            if (ranking[j] < ranking[j + 1]) {
+                tempForSwap = ranking[j];
+                ranking[j] = ranking[j + 1];
+                ranking[j + 1] = tempForSwap;
+                tempForSwap = gRankingsPlayerIDs[j];
+                gRankingsPlayerIDs[j] = gRankingsPlayerIDs[j + 1];
+                gRankingsPlayerIDs[j + 1] = tempForSwap;
             }
         }
     }
@@ -10805,10 +10802,10 @@ void menu_trophy_race_rankings_init(void) {
         j = gNumberOfActivePlayers;
     }
     for (i = 0; i < gRankingPlayerCount; i++) {
-        if (D_80126430[i] < j) {
-            D_80126420[i] = 1;
+        if (gRankingsPlayerIDs[i] < j) {
+            gRankingsPlayers[i] = TRUE;
         } else {
-            D_80126420[i] = 0;
+            gRankingsPlayers[i] = FALSE;
         }
     }
     load_font(ASSET_FONTS_BIGFONT);
@@ -10837,7 +10834,8 @@ void rankings_render_order(s32 updateRate) {
     }
     for (i = 0; i < gRankingPlayerCount; i++) {
         fade = 255;
-        if (gNumberOfActivePlayers < 3 && ((gMenuStage == 0 && D_80126418[i]) || (gMenuStage != 0 && D_80126420[i]))) {
+        // Highlight human players if there are fewer than four.
+        if (gNumberOfActivePlayers < 3 && ((gMenuStage == POSTRACE_ENTER && gResultsPlayers[i]) || (gMenuStage != POSTRACE_ENTER && gRankingsPlayers[i]))) {
             fade = (highlight >> 1) + 128;
         }
         gTrophyRankingsRacers[i * 3].filterRed = fade;
@@ -10845,7 +10843,7 @@ void rankings_render_order(s32 updateRate) {
         gTrophyRankingsRacers[i * 3].filterBlue = fade;
     }
     stage = gMenuStage;
-    if (stage == 2 || stage == 3) {
+    if (stage == RANKINGS_ORDER || stage == RANKINGS_EXIT) {
         draw_menu_elements(1, gTrophyRankingsTitle, 1.0f);
     }
 }
@@ -10875,20 +10873,20 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
     }
     update_controller_sticks();
     switch (gMenuStage) { // gMenuStage = current Trophy Race Rankings state?
-        case 0:
+        case POSTRACE_ENTER:
             if (postrace_render(updateRate)) {
-                gMenuStage = 1;
+                gMenuStage = RANKINGS_SWAP;
                 func_80098774(1);
                 postrace_offsets(gTrophyRankingsTitle, 0.5f, 0.0f, 0.0f, 0, 0);
             }
             break;
-        case 1:
+        case RANKINGS_SWAP:
             if (postrace_render(updateRate)) {
-                gMenuStage = 2;
+                gMenuStage = RANKINGS_ORDER;
                 draw_menu_elements(1, gTrophyRankingsTitle, 1.0f);
             }
             break;
-        case 2:
+        case RANKINGS_ORDER:
             gOpacityDecayTimer += updateRate;
             if (gOpacityDecayTimer > 10) {
                 gOpacityDecayTimer -= 10;
@@ -10928,13 +10926,13 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
             if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
                 music_fade(-128);
                 transition_begin(&sMenuTransitionFadeIn);
-                gMenuStage = 3;
+                gMenuStage = RANKINGS_EXIT;
                 for (i = 0; i < gRankingPlayerCount; i++) {
                     settings->racers[i].trophy_points += gRankingsPoints[i];
                 }
             }
             break;
-        case 3:
+        case RANKINGS_EXIT:
             gMenuDelay += updateRate;
             if (gMenuDelay > 30) {
                 rankings_free();
@@ -10944,15 +10942,15 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                     menu_init(MENU_TROPHY_RACE_ROUND);
                 } else {
                     for (temp6 = 0, i = 0; i < gRankingPlayerCount; i++) {
-                        if (D_80126420[i] != 0) {
-                            temp7 = settings->racers[D_80126430[i]].character;
+                        if (gRankingsPlayers[i] != 0) {
+                            temp7 = settings->racers[gRankingsPlayerIDs[i]].character;
                             if (temp6 == 0) {
                                 sp34 = i;
                                 D_80126438[temp6++] = temp7;
                                 continue;
                             }
-                            if (settings->racers[D_80126430[i]].trophy_points ==
-                                settings->racers[D_80126430[sp34]].trophy_points) {
+                            if (settings->racers[gRankingsPlayerIDs[i]].trophy_points ==
+                                settings->racers[gRankingsPlayerIDs[sp34]].trophy_points) {
                                 D_80126438[temp6++] = temp7;
                             }
                         }
@@ -11277,20 +11275,20 @@ void ghostmenu_render(UNUSED s32 updateRate) {
         y += 54;
     }
     highlight &= 0xFF;
-    if (gMenuStage > 0) {
+    if (gMenuStage > GHOSTMENU_CHOOSE) {
         clear_dialogue_box_open_flag(7);
         dialog_clear(7);
         set_current_dialogue_box_coords(7, 104, 102, 216, 138);
         set_current_dialogue_background_colour(7, 0, 0, 0, 192);
         set_dialogue_font(7, 0);
         set_current_text_background_colour(7, 0, 0, 0, 0);
-        if (gMenuStage == 1) {
+        if (gMenuStage == GHOSTMENU_ERASE) {
             set_current_text_colour(7, 255, 255, 255, highlight, 255);
         } else {
             set_current_text_colour(7, 255, 255, 255, 0, 255);
         }
         render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_ERASEGHOST], 1, ALIGN_MIDDLE_CENTER);
-        if (gMenuStage == 2) {
+        if (gMenuStage == GHOSTMENU_CONFIRM) {
             set_current_text_colour(7, 255, 255, 255, highlight, 255);
         } else {
             set_current_text_colour(7, 255, 255, 255, 0, 255);
@@ -11352,9 +11350,9 @@ s32 menu_ghost_data_loop(s32 updateRate) {
     }
 
     switch (gMenuStage) {
-        case 0:
+        case GHOSTMENU_CHOOSE:
             if ((pressedButtons & (START_BUTTON | A_BUTTON)) && gGhostMenuTotal > 0) {
-                gMenuStage = 2;
+                gMenuStage = GHOSTMENU_CONFIRM;
                 sound_play(SOUND_SELECT2, NULL);
             } else if (pressedButtons & B_BUTTON ||
                        (pressedButtons & (START_BUTTON | A_BUTTON) && gGhostMenuTotal == 0)) {
@@ -11380,9 +11378,9 @@ s32 menu_ghost_data_loop(s32 updateRate) {
                 }
             }
             break;
-        case 1:
+        case GHOSTMENU_ERASE:
             if (pressedButtons & B_BUTTON) {
-                gMenuStage = 0;
+                gMenuStage = GHOSTMENU_CHOOSE;
                 sound_play(SOUND_MENU_BACK3, NULL);
             } else {
                 if (pressedButtons & (START_BUTTON | A_BUTTON)) {
@@ -11402,19 +11400,19 @@ s32 menu_ghost_data_loop(s32 updateRate) {
                         transition_begin(&sMenuTransitionFadeIn);
                         sound_play(SOUND_MENU_BACK3, NULL);
                     }
-                    gMenuStage = 0;
+                    gMenuStage = GHOSTMENU_CHOOSE;
                 } else if (yStick < 0) {
-                    gMenuStage = 2;
+                    gMenuStage = GHOSTMENU_CONFIRM;
                     sound_play(SOUND_MENU_PICK2, NULL);
                 }
             }
             break;
-        case 2:
+        case GHOSTMENU_CONFIRM:
             if (pressedButtons & (START_BUTTON | A_BUTTON | B_BUTTON)) {
-                gMenuStage = 0;
+                gMenuStage = GHOSTMENU_CHOOSE;
                 sound_play(SOUND_MENU_BACK3, NULL);
             } else if (yStick > 0) {
-                gMenuStage = 1;
+                gMenuStage = GHOSTMENU_ERASE;
                 sound_play(SOUND_MENU_PICK2, NULL);
             }
             break;

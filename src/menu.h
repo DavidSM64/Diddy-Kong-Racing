@@ -54,7 +54,7 @@ enum PostRaceCases {
 };
 
 enum PostRaceRenderStates {
-    POSTRACE_SLIDE_IN,
+    POSTRACE_ENTER,
     POSTRACE_HOLD,
     POSTRACE_SLIDE_OUT,
     POSTRACE_SLIDE_END = 4,
@@ -111,17 +111,28 @@ enum AdventureSetupStages {
 };
 
 enum ResultsStages {
-    RESULTS_M1 = -1,
-    RESULTS_0,
-    RESULTS_1,
-    RESULTS_2,
-    RESULTS_3,
+    RESULTS_ENTER = -1,
+    RESULTS_SCORE,
+    RESULTS_OPTIONS,
 };
 
 enum TitleScreenStages {
     TITLESCREEN_START,
     TITLESCREEN_NAME,
     TITLESCREEN_PRESS_START
+};
+
+enum RankingsStages {
+    RANKINGS_ENTER,
+    RANKINGS_SWAP,
+    RANKINGS_ORDER,
+    RANKINGS_EXIT
+};
+
+enum GhostMenuStages {
+    GHOSTMENU_CHOOSE,
+    GHOSTMENU_ERASE,
+    GHOSTMENU_CONFIRM
 };
 
 enum DialogueMenuCases {
