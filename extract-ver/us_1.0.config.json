@@ -15429,6 +15429,11 @@
                         "build-id": "ASSET_MISC_GHOST_UNLOCK_TIMES"
                     },
                     {
+                        "index": 25,
+                        "filename": "cinematic_race",
+                        "build-id": "ASSET_MISC_CINEMATIC_RACE"
+                    },
+                    {
                         "index": 26,
                         "filename": "tracks_menu_ids",
                         "build-id": "ASSET_MISC_TRACKS_MENU_IDS",
@@ -15462,6 +15467,11 @@
                         "build-id": "ASSET_MISC_BOSS_TRACKS_IDS",
                         "misc-type": "TrackIds",
                         "folder": "track_ids"
+                    },
+                    {
+                        "index": 31,
+                        "filename": "cinematic_trophy",
+                        "build-id": "ASSET_MISC_CINEMATIC_TROPHY"
                     },
                     {
                         "index": 33,

@@ -24,6 +24,10 @@
 
 #define PLAYER_MENU 4
 
+#define CINEMATIC_LEVELID   0
+#define CINEMATIC_PLAYERS   1
+#define CINEMATIC_CUTSCENE  2
+
 enum PauseMenuResults {
     PAUSE_NONE,
     PAUSE_CONTINUE,

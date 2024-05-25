@@ -2165,8 +2165,10 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, ch
     return ret;
 }
 
-// Get File size for given controller's Control Pak
-/* Official name: packFileSize */
+/**
+ * Get File size for given controller's Control Pak
+ * Official name: packFileSize
+*/
 SIDeviceStatus get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize) {
     OSPfsState state;
 
@@ -2178,7 +2180,9 @@ SIDeviceStatus get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize) {
     return CONTROLLER_PAK_BAD_DATA;
 }
 
-// Converts N64 Font codes used in controller pak file names, into C ASCII a coded string
+/**
+ * Converts N64 Font codes used in controller pak file names, into C ASCII a coded string
+*/
 char *font_codes_to_string(char *inString, char *outString, s32 stringLength) {
     s32 index = *inString;
     char *ret = outString;
@@ -2211,7 +2215,9 @@ char *font_codes_to_string(char *inString, char *outString, s32 stringLength) {
     return ret;
 }
 
-// Converts a C ASCII string into N64 Font codes for controller pak file names
+/**
+ * Converts a C ASCII string into N64 Font codes for controller pak file names
+*/
 char *string_to_font_codes(char *inString, char *outString, s32 stringLength) {
     s32 i;
     char currentChar;

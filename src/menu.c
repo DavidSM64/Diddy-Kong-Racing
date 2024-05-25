@@ -7154,7 +7154,7 @@ s32 menu_file_select_loop(s32 updateRate) {
             if (gIsInAdventureTwo) {
                 settings->cutsceneFlags |= CUTSCENE_ADVENTURE_TWO;
             }
-            cinematic_start((s8 *) get_misc_asset(ASSET_MISC_25), 0, gNumberOfActivePlayers, 0, 0, NULL);
+            cinematic_start((s8 *) get_misc_asset(ASSET_MISC_CINEMATIC_RACE), 0, gNumberOfActivePlayers, 0, 0, NULL);
             menu_init(MENU_NEWGAME_CINEMATIC);
             return MENU_RESULT_CONTINUE;
         }
@@ -9737,12 +9737,12 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
                 dialog_clear(7);
                 if (gPostraceFinishState >= 2) {
                     if (gPostraceFinishState == 9) {
-                        cinematic_start((s8 *) get_misc_asset(ASSET_MISC_25), gPostraceFinishState,
+                        cinematic_start((s8 *) get_misc_asset(ASSET_MISC_CINEMATIC_RACE), gPostraceFinishState,
                                         MENU_RESULT_FLAGS_100 | MENU_RESULT_FLAGS_2 | MENU_RESULT_FLAGS_4 |
                                             MENU_RESULT_FLAGS_8,
                                         0, 0, NULL);
                     } else {
-                        cinematic_start((s8 *) get_misc_asset(ASSET_MISC_25), gPostraceFinishState,
+                        cinematic_start((s8 *) get_misc_asset(ASSET_MISC_CINEMATIC_RACE), gPostraceFinishState,
                                         MENU_RESULT_FLAGS_100 | MENU_RESULT_FLAGS_1, 0, 0, NULL);
                     }
                     ret = POSTRACE_OPT_13;
@@ -10856,7 +10856,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
     s32 buttonsPressed;
     s32 prevOption;
     s32 ret;
-    s8 *miscAsset31;
+    s8 *params;
     s32 sp34;
     s16 playSound;
     s16 temp7;
@@ -10983,9 +10983,9 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                         }
                     }
                     if (sp34 < 3) {
-                        miscAsset31 = (s8 *) get_misc_asset(ASSET_MISC_31);
+                        params = (s8 *) get_misc_asset(ASSET_MISC_CINEMATIC_TROPHY);
                         temp0 = ((gTrophyRaceWorldId * 3) + sp34) - 3;
-                        cinematic_start(miscAsset31, temp0, ret, 0, 0, D_80126438);
+                        cinematic_start(params, temp0, ret, 0, 0, D_80126438);
                         ret = MENU_RESULT_CONTINUE;
                         menu_init(MENU_NEWGAME_CINEMATIC);
                     }
@@ -11447,7 +11447,7 @@ void cinematic_start(s8 *params, s32 arg1, s32 endFlags, s32 skipFlagsA, s32 ski
         params++;
     }
 
-    if (phi_v1 == 0 && (s8 *) get_misc_asset(ASSET_MISC_25) == params) {
+    if (phi_v1 == 0 && (s8 *) get_misc_asset(ASSET_MISC_CINEMATIC_RACE) == params) {
         gCinematicMusicChangeOff = TRUE;
     } else {
         gCinematicMusicChangeOff = FALSE;
@@ -11468,7 +11468,7 @@ void menu_cinematic_init(void) {
         menu_assetgroup_load(gCinematicObjectIndices);
         menu_racer_portraits();
     }
-    load_level_for_menu(gCinematicParams[0], gCinematicParams[1], gCinematicParams[2]);
+    load_level_for_menu(gCinematicParams[CINEMATIC_LEVELID], gCinematicParams[CINEMATIC_PLAYERS], gCinematicParams[CINEMATIC_CUTSCENE]);
     gMenuDelay = 0;
     gMenuStage = 0;
 }
@@ -11489,8 +11489,8 @@ s32 menu_cinematic_loop(UNUSED s32 updateRate) {
     }
     if (func_800214C4() != 0) {
         gCinematicParams += 3;
-        if (gCinematicParams[0] >= 0) {
-            load_level_for_menu(gCinematicParams[0], gCinematicParams[1], gCinematicParams[2]);
+        if (gCinematicParams[CINEMATIC_LEVELID] > -1) {
+            load_level_for_menu(gCinematicParams[CINEMATIC_LEVELID], gCinematicParams[CINEMATIC_PLAYERS], gCinematicParams[CINEMATIC_CUTSCENE]);
         } else {
             if (gCinematicMusicChangeOff) {
                 music_change_off();
