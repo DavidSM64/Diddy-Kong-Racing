@@ -751,7 +751,7 @@ void set_drumstick_unlock_transition(void) {
 /**
  * Set the postrace viewport var to match the finish state.
  * The game never actually uses this beyond checking it's nonzero.
-*/
+ */
 void race_postrace_type(s32 finishState) {
     gPostRaceViewPort = finishState + 1;
 }

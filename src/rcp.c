@@ -18,9 +18,9 @@ u8 sBackgroundPrimColourG = 0;
 u8 sBackgroundPrimColourB = 0;
 s32 sBackgroundFillColour = GPACK_RGBA5551(0, 0, 0, 1) | (GPACK_RGBA5551(0, 0, 0, 1) << 16);
 
-u32 gMosaicShiftX = 0x40;
-TextureHeader *gMosaicTex1 = 0;
-TextureHeader *gMosaicTex2 = 0;
+u32 gMosaicShiftX = 64;
+TextureHeader *gMosaicTex1 = NULL;
+TextureHeader *gMosaicTex2 = NULL;
 s32 gChequerBGEnabled = FALSE;
 
 BackgroundFunction gBackgroundDrawFunc = { NULL };
@@ -509,7 +509,7 @@ void mosaic_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
     gMosaicShiftX = shiftX * 4;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 /**
  * Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
  * https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
@@ -767,8 +767,8 @@ void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos
     gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dmaDlist), numberOfGfxCommands(dTextureRectangleScaledOpa[0]));
     gDPSetPrimColorRGBA((*dlist)++, colour);
 
-    bFlipX = flags & (1 << 12); // 0x1000
-    bFlipY = flags & (1 << 13); // 0x2000
+    bFlipX = flags & TEXRECT_FLIP_X;
+    bFlipY = flags & TEXRECT_FLIP_Y;
     xScale *= 4;
     yScale *= 4;
     xPos4x = xPos * 4;

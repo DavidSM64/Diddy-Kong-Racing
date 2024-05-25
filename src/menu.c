@@ -41,7 +41,7 @@
 // Otherwise the bss variables will get reordered, which is bad.
 
 char gCourseInitials[4]; // course initials
-char gFLapInitials[4]; // flap initials
+char gFLapInitials[4];   // flap initials
 s32 gAdventureSaveGhost;
 s32 gPreviousMenuID;
 Gfx *sMenuCurrDisplayList;
@@ -131,7 +131,7 @@ u16 gGhostChecksumIDsMenu[6];
 Settings *gSavefileData[4];
 u8 gGhostWorldIDs[8];
 s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
-void *gMenuAssets[128];   // lookup table? Contains Textures, Objects, and Sprites. Need to change name and type.
+void *gMenuAssets[128]; // lookup table? Contains Textures, Objects, and Sprites. Need to change name and type.
 u8 gMenuAssetActive[128];
 s32 gTrackmenuType;
 UNUSED s32 D_801267D4;
@@ -202,7 +202,7 @@ u8 sControllerPakFatalErrorFound[MAXCONTROLLERS]; // Flag to see if there's a fa
 u8 sControllerPakNoFreeSpace[MAXCONTROLLERS];     // Flag to see if there's no free space for the given controller pak
 u8 sControllerPakBadData[MAXCONTROLLERS];         // Flag to see if there's bad data for the given controller pak
 char *gMenuOptionText[8];                         // Menu Text
-u8 sControllerPakDataPresent[MAXCONTROLLERS]; // Flag to see if there's data present for the given controller pak?
+u8 sControllerPakDataPresent[MAXCONTROLLERS];     // Flag to see if there's data present for the given controller pak?
 char *D_80126A64;
 s32 gMenuOption;
 s32 gSavemenuRumbleNagSet;
@@ -5570,8 +5570,8 @@ void cheatlist_render(UNUSED s32 updateRate) {
         if (i == gOptionsMenuItemIndex) {
             set_text_colour(255, 255, 255, alpha, 255);
         }
-        draw_text(&sMenuCurrDisplayList, 48, yPos, (char *) (*gCheatsAssetData) + cheatData[(gUnlockedCheatIDs[i] << 1) + 1],
-                  ALIGN_TOP_LEFT);
+        draw_text(&sMenuCurrDisplayList, 48, yPos,
+                  (char *) (*gCheatsAssetData) + cheatData[(gUnlockedCheatIDs[i] << 1) + 1], ALIGN_TOP_LEFT);
         if ((1 << gUnlockedCheatIDs[i]) & gActiveMagicCodes) {
             draw_text(&sMenuCurrDisplayList, 256, yPos, gMenuText[ASSET_MENU_TEXT_ON], ALIGN_TOP_LEFT); // ON
         } else {
@@ -8171,7 +8171,8 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
             sp84 = 511 - sp84;
         }
         set_current_dialogue_background_colour(7, 255, sp84, 0, sMenuGuiOpacity);
-        if (gMenuStage == TRACKMENU_MIRROR || (gMenuStage == TRACKMENU_OPT_2 && gTrackSelectCursorX == 4 && is_adventure_two_unlocked())) {
+        if (gMenuStage == TRACKMENU_MIRROR ||
+            (gMenuStage == TRACKMENU_OPT_2 && gTrackSelectCursorX == 4 && is_adventure_two_unlocked())) {
             temp2 = get_text_width(gMenuText[ASSET_MENU_TEXT_ADVENTURE2], 0, 0); // "ADVENTURE"
             k = get_text_width(gMenuText[ASSET_MENU_TEXT_ADVENTURETWO2], 0, 0);  // "ADVENTURE TWO"
             if (temp2 < k) {
@@ -8404,13 +8405,15 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
             }
             sprite_opaque(TRUE);
         }
-        if (gNumberOfActivePlayers == 1 && gMenuStage > TRACKMENU_MIRROR && trackmenu_staff_beaten(gTrackIdForPreview) >= 0) {
+        if (gNumberOfActivePlayers == 1 && gMenuStage > TRACKMENU_MIRROR &&
+            trackmenu_staff_beaten(gTrackIdForPreview) >= 0) {
             render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionTTTexture, 204, regionOffset + 122, 255, 255,
                                       255, sMenuGuiOpacity);
             reset_render_settings(&sMenuCurrDisplayList);
         }
         if (gTrackSelectCursorX != 5) {
-            if ((gMenuStage == TRACKMENU_OPT_2 && !sp74) || (gMenuStage == TRACKMENU_OPT_3 && sp74) || gMenuStage == TRACKMENU_OPT_4) {
+            if ((gMenuStage == TRACKMENU_OPT_2 && !sp74) || (gMenuStage == TRACKMENU_OPT_3 && sp74) ||
+                gMenuStage == TRACKMENU_OPT_4) {
                 set_text_font(ASSET_FONTS_BIGFONT);
                 set_text_colour(255, 255, 255, 0, sMenuGuiOpacity);
                 if (gTrackSelectCursorX >= 4) {
@@ -8476,7 +8479,8 @@ void menu_adventure_track_init(void) {
     mapId = settings->unk4C->mapID;
     gPlayerSelectVehicle[PLAYER_ONE] = get_map_default_vehicle(mapId);
     raceType = get_map_race_type(mapId);
-    if (raceType == RACETYPE_HUBWORLD || raceType == RACETYPE_BOSS || (!(raceType & RACETYPE_CHALLENGE) && (!(settings->courseFlagsPtr[mapId] & RACE_CLEARED)))) {
+    if (raceType == RACETYPE_HUBWORLD || raceType == RACETYPE_BOSS ||
+        (!(raceType & RACETYPE_CHALLENGE) && (!(settings->courseFlagsPtr[mapId] & RACE_CLEARED)))) {
         ttVoiceLine = gTTVoiceLines[mapId];
         if (ttVoiceLine != -1) {
             sound_play_delayed(ttVoiceLine, NULL, 1.0f);
@@ -9066,8 +9070,8 @@ void menu_racer_portraits(void) {
 }
 
 /**
- * 
-*/
+ *
+ */
 void postrace_start(s32 finishState, s32 worldID) {
     s16 *var_v1;
     LevelHeader *header;
@@ -10026,7 +10030,7 @@ s32 menu_results_loop(s32 updateRate) {
             sound_play(SOUND_WHOOSH1, NULL);
         }
     }
-    
+
     if (gMenuDelay < 20) {
         if (gMenuStage <= RESULTS_SCORE) {
             if (gOpacityDecayTimer >= 20) {
@@ -10832,7 +10836,8 @@ void rankings_render_order(s32 updateRate) {
     for (i = 0; i < gRankingPlayerCount; i++) {
         fade = 255;
         // Highlight human players if there are fewer than four.
-        if (gNumberOfActivePlayers < 3 && ((gMenuStage == POSTRACE_ENTER && gResultsPlayers[i]) || (gMenuStage != POSTRACE_ENTER && gRankingsPlayers[i]))) {
+        if (gNumberOfActivePlayers < 3 && ((gMenuStage == POSTRACE_ENTER && gResultsPlayers[i]) ||
+                                           (gMenuStage != POSTRACE_ENTER && gRankingsPlayers[i]))) {
             fade = (highlight >> 1) + 128;
         }
         gTrophyRankingsRacers[i * 3].filterRed = fade;
@@ -11468,7 +11473,8 @@ void menu_cinematic_init(void) {
         menu_assetgroup_load(gCinematicObjectIndices);
         menu_racer_portraits();
     }
-    load_level_for_menu(gCinematicParams[CINEMATIC_LEVELID], gCinematicParams[CINEMATIC_PLAYERS], gCinematicParams[CINEMATIC_CUTSCENE]);
+    load_level_for_menu(gCinematicParams[CINEMATIC_LEVELID], gCinematicParams[CINEMATIC_PLAYERS],
+                        gCinematicParams[CINEMATIC_CUTSCENE]);
     gMenuDelay = 0;
     gMenuStage = 0;
 }
@@ -11490,7 +11496,8 @@ s32 menu_cinematic_loop(UNUSED s32 updateRate) {
     if (func_800214C4() != 0) {
         gCinematicParams += 3;
         if (gCinematicParams[CINEMATIC_LEVELID] > -1) {
-            load_level_for_menu(gCinematicParams[CINEMATIC_LEVELID], gCinematicParams[CINEMATIC_PLAYERS], gCinematicParams[CINEMATIC_CUTSCENE]);
+            load_level_for_menu(gCinematicParams[CINEMATIC_LEVELID], gCinematicParams[CINEMATIC_PLAYERS],
+                                gCinematicParams[CINEMATIC_CUTSCENE]);
         } else {
             if (gCinematicMusicChangeOff) {
                 music_change_off();

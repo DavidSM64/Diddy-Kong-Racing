@@ -23,6 +23,7 @@ ifeq ($(NON_EQUIVALENT),1)
 endif
 ifeq ($(NON_MATCHING),1)
   DEFINES += NON_MATCHING=1
+  DEFINES += AVOID_UB=1
 else
   DEFINES += ANTI_TAMPER=1
 endif
