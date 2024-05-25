@@ -4089,7 +4089,7 @@ void savemenu_render_error(SIDeviceStatus deviceStatus) {
 
     D_80126A78 = D_80126A74 - 1;
 
-    dialog_clear(7);
+    dialogue_clear(7);
     set_current_dialogue_box_coords(7, 40, SCREEN_HEIGHT_HALF - (((k * 16) + 44) >> 1), 280,
                                     (((k * 16) + 44) >> 1) + SCREEN_HEIGHT_HALF);
     set_current_dialogue_background_colour(7, 0, 0, 0, 160);
@@ -4431,7 +4431,7 @@ void savemenu_free(void) {
     unload_font(ASSET_FONTS_BIGFONT);
     menu_button_free();
     menu_assetgroup_free(gSaveMenuObjectIndices);
-    dialog_clear(7);
+    dialogue_clear(7);
     free_from_memory_pool((void *) gSavemenuFilesSource);
     free_from_memory_pool((void *) D_80126A64);
 }
@@ -4803,7 +4803,7 @@ void pakmenu_render(UNUSED s32 updateRate) {
 
         yPos += 48;
 
-        dialog_clear(6);
+        dialogue_clear(6);
         set_current_dialogue_box_coords(6, 58, yPos, 262, yPos + 30);
 
         if (gMenuCurIndex == -1) {
@@ -4826,7 +4826,7 @@ void pakmenu_render(UNUSED s32 updateRate) {
         set_dialogue_font(6, ASSET_FONTS_SMALLFONT);
         set_current_text_background_colour(6, 0, 0, 0, 0);
         for (i = -1; i < sControllerPakMenuNumberOfRows; i++) {
-            dialog_clear(6);
+            dialogue_clear(6);
             set_current_dialogue_box_coords(6, 28, yPos, 292, yPos + 14);
             if (i < 0) {
                 // Red background for table header
@@ -4878,7 +4878,7 @@ void pakmenu_render(UNUSED s32 updateRate) {
             } else {
                 yPos = SCREEN_HEIGHT_HALF;
             }
-            dialog_clear(6);
+            dialogue_clear(6);
             set_dialogue_font(6, ASSET_FONTS_FUNFONT);
             set_current_dialogue_box_coords(6, 76, yPos - 28, 244, yPos + 28);
             set_current_dialogue_background_colour(6, 0, 0, 0, 160);
@@ -5112,7 +5112,7 @@ void menu_magic_codes_init(void) {
     transition_begin(&sMenuTransitionFadeOut);
     set_current_dialogue_box_coords(7, 50, 50, 270, 132);
     set_current_dialogue_background_colour(7, 0, 0, 0, 128);
-    dialog_clear(7);
+    dialogue_clear(7);
     load_font(ASSET_FONTS_BIGFONT);
 }
 
@@ -5218,7 +5218,7 @@ void cheatmenu_render(UNUSED s32 updateRate) {
         } else {
             offsetY = SCREEN_HEIGHT_HALF;
         }
-        dialog_clear(6);
+        dialogue_clear(6);
         set_dialogue_font(6, ASSET_FONTS_FUNFONT);
         set_current_dialogue_box_coords(6, 76, offsetY - 28, 244, offsetY + 28);
         set_current_dialogue_background_colour(6, 0, 0, 0, 160);
@@ -7401,7 +7401,7 @@ void menu_track_select_init(void) {
         gSelectedTrackX = 0;
         gSelectedTrackY = 0;
     }
-    dialog_clear(7);
+    dialogue_clear(7);
     func_8007FFEC(2);
     gTrackTTSoundMask = 0;
     D_80126848 = 0;
@@ -8514,7 +8514,7 @@ void menu_adventure_track_init(void) {
         load_font(ASSET_FONTS_BIGFONT);
         load_level_for_menu(mapId, -1, 1);
     }
-    dialog_clear(7);
+    dialogue_clear(7);
     if (get_map_race_type(mapId) & RACETYPE_CHALLENGE) {
         set_current_text(get_map_world_id(mapId) + ASSET_GAME_TEXT_59);
     }
@@ -8861,7 +8861,7 @@ void pausemenu_render(UNUSED s32 updateRate) {
         y = SCREEN_HEIGHT_HALF;
     }
     clear_dialogue_box_open_flag(7);
-    dialog_clear(7);
+    dialogue_clear(7);
     halfTemp = temp >> 1;
     halfX = x >> 1;
     set_current_dialogue_box_coords(7, SCREEN_WIDTH_HALF - halfX, y - halfTemp, SCREEN_WIDTH_HALF + halfX,
@@ -9041,7 +9041,7 @@ s32 menu_pause_loop(UNUSED Gfx **dl, s32 updateRate) {
 void menu_dialogue_end(void) {
     rumble_init(TRUE);
     dialogue_close(7);
-    dialog_clear(7);
+    dialogue_clear(7);
     gMenuOptionCap = 0;
 }
 
@@ -9335,7 +9335,7 @@ void func_80094D28(UNUSED s32 updateRate) {
             break;
         case 6:
             clear_dialogue_box_open_flag(7);
-            dialog_clear(7);
+            dialogue_clear(7);
             set_dialogue_font(7, FONT_COLOURFUL);
             set_current_text_background_colour(7, 0, 0, 0, 0);
 
@@ -9738,7 +9738,7 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
                 camDisableUserView(0, FALSE);
                 postrace_free();
                 dialogue_close(7);
-                dialog_clear(7);
+                dialogue_clear(7);
                 if (gPostraceFinishState >= 2) {
                     if (gPostraceFinishState == 9) {
                         cinematic_start((s8 *) get_misc_asset(ASSET_MISC_CINEMATIC_RACE), gPostraceFinishState,
@@ -9963,7 +9963,7 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
     if (gMenuStage >= RESULTS_OPTIONS) {
         y2 = gResultOptionCount * 8;
         clear_dialogue_box_open_flag(7);
-        dialog_clear(7);
+        dialogue_clear(7);
         set_current_dialogue_box_coords(7, SCREEN_WIDTH_HALF - 80, (offsetY - y2) + 196, SCREEN_WIDTH_HALF + 80,
                                         y2 + offsetY + (SCREEN_HEIGHT - 36));
         set_current_dialogue_background_colour(7, 64, 64, 255, 0);
@@ -10105,7 +10105,7 @@ s32 menu_results_loop(s32 updateRate) {
         if (gMenuDelay > 30) {
             results_free();
             dialogue_close(7);
-            dialog_clear(7);
+            dialogue_clear(7);
             if (gResultOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_TRYAGAIN]) {
                 return (MENU_RESULT_FLAGS_100 | MENU_RESULT_FLAGS_2); // This gets parsed in menu_logic_loop as a flag
                                                                       // and an ID from the bottom 7 bits.
@@ -10939,7 +10939,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
             if (gMenuDelay > 30) {
                 rankings_free();
                 dialogue_close(7);
-                dialog_clear(7);
+                dialogue_clear(7);
                 if (gTrophyRaceRound < 4) {
                     menu_init(MENU_TROPHY_RACE_ROUND);
                 } else {
@@ -11279,7 +11279,7 @@ void ghostmenu_render(UNUSED s32 updateRate) {
     highlight &= 0xFF;
     if (gMenuStage > GHOSTMENU_CHOOSE) {
         clear_dialogue_box_open_flag(7);
-        dialog_clear(7);
+        dialogue_clear(7);
         set_current_dialogue_box_coords(7, 104, 102, 216, 138);
         set_current_dialogue_background_colour(7, 0, 0, 0, 192);
         set_dialogue_font(7, 0);
@@ -12253,7 +12253,7 @@ s32 npc_dialogue_loop(u32 dialogueOption) {
     }
     result = 0;
     update_controller_sticks();
-    dialog_clear(1);
+    dialogue_clear(1);
     open_dialogue_box(1);
     set_current_dialogue_background_colour(1, 0, 0, 0, 128);
     func_8001F450();

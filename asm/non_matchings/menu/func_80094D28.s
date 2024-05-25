@@ -334,7 +334,7 @@ glabel L80095110
 glabel L800951CC
 /* 095DCC 800951CC 0C0315B4 */  jal   clear_dialogue_box_open_flag
 /* 095DD0 800951D0 24040007 */   li    $a0, 7
-/* 095DD4 800951D4 0C031525 */  jal   dialog_clear
+/* 095DD4 800951D4 0C031525 */  jal   dialogue_clear
 /* 095DD8 800951D8 24040007 */   li    $a0, 7
 /* 095DDC 800951DC 24040007 */  li    $a0, 7
 /* 095DE0 800951E0 0C0313DF */  jal   set_dialogue_font

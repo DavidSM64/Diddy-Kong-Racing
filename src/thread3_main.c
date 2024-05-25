@@ -307,7 +307,7 @@ void main_game_loop(void) {
     debug_text_print(&gCurrDisplayList);
     render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     dialogue_close(4);
-    dialog_clear(4);
+    dialogue_clear(4);
     // handle_transitions will perform the logic of transitions and return the transition ID.
     if (handle_transitions(sLogicUpdateRate)) {
         render_fade_transition(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);

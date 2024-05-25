@@ -6110,7 +6110,7 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
                 y1 = SCREEN_HEIGHT - 38;
                 y2 = SCREEN_HEIGHT - 38 + 20;
             }
-            dialog_clear(4);
+            dialogue_clear(4);
             set_current_dialogue_box_coords(4, x1, y1, x2, y2);
             set_current_dialogue_background_colour(4, 128, 64, 128, (properties->opacity * 160) >> 8);
             set_current_text_background_colour(4, 0, 0, 0, 0);

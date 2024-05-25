@@ -728,7 +728,7 @@ UNUSED void move_dialogue_box_to_front(s32 dialogueBoxID, DialogueBox *dialogueB
  * Clear all strings from this dialogue box ID.
  * Official Name: fontWindowFlushStrings
  */
-void dialog_clear(s32 dialogueBoxID) {
+void dialogue_clear(s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;
     DialogueBox *dialogueTextBox, *dialogueTextBoxTemp;
 
