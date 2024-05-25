@@ -5654,8 +5654,8 @@ s32 menu_magic_codes_list_loop(s32 updateRate) {
     if ((xAxis < 0 || xAxis > 0) && numUnlockedCodes != gOptionsMenuItemIndex) {
         sound_play(SOUND_SELECT2, NULL);
         code = 1 << gUnlockedCheatIDs[gOptionsMenuItemIndex];
-        gActiveMagicCodes ^= code;                                               // Toggle active cheats?
-        cheatlist_exclusive(code, CHEAT_BIG_CHARACTERS, CHEAT_SMALL_CHARACTERS); // cheatlist_exclusive() = Clear flags?
+        gActiveMagicCodes ^= code;
+        cheatlist_exclusive(code, CHEAT_BIG_CHARACTERS, CHEAT_SMALL_CHARACTERS);
         cheatlist_exclusive(code, CHEAT_SMALL_CHARACTERS, CHEAT_BIG_CHARACTERS);
         cheatlist_exclusive(code, CHEAT_DISABLE_BANANAS,
                             CHEAT_NO_LIMIT_TO_BANANAS | CHEAT_BANANAS_REDUCE_SPEED | CHEAT_START_WITH_10_BANANAS);
