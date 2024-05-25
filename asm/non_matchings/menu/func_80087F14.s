@@ -179,10 +179,10 @@ glabel func_80087F14
 /* 088D88 80088188 00405025 */   move  $t2, $v0
 /* 088D8C 8008818C 3C098012 */  lui   $t1, %hi(sCurrentControllerPakAllFileSizes) # $t1, 0x8012
 /* 088D90 80088190 3C088012 */  lui   $t0, %hi(sCurrentControllerPakAllFileNames) # $t0, 0x8012
-/* 088D94 80088194 3C058012 */  lui   $a1, %hi(D_80126AA0) # $a1, 0x8012
+/* 088D94 80088194 3C058012 */  lui   $a1, %hi(gBootPakData) # $a1, 0x8012
 /* 088D98 80088198 3C1F8012 */  lui   $ra, %hi(sCurrentControllerPakAllFileNames) # $ra, 0x8012
 /* 088D9C 8008819C 27FF6AE0 */  addiu $ra, %lo(sCurrentControllerPakAllFileNames) # addiu $ra, $ra, 0x6ae0
-/* 088DA0 800881A0 24A56AA0 */  addiu $a1, %lo(D_80126AA0) # addiu $a1, $a1, 0x6aa0
+/* 088DA0 800881A0 24A56AA0 */  addiu $a1, %lo(gBootPakData) # addiu $a1, $a1, 0x6aa0
 /* 088DA4 800881A4 25086AE0 */  addiu $t0, %lo(sCurrentControllerPakAllFileNames) # addiu $t0, $t0, 0x6ae0
 /* 088DA8 800881A8 25296B70 */  addiu $t1, %lo(sCurrentControllerPakAllFileSizes) # addiu $t1, $t1, 0x6b70
 /* 088DAC 800881AC 00005825 */  move  $t3, $zero

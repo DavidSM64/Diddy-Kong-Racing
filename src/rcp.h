@@ -15,7 +15,9 @@
 
 enum TextureRectangleFlags {
     TEXRECT_BILERP,
-    TEXRECT_POINT
+    TEXRECT_POINT = (1 << 0),
+    TEXRECT_FLIP_X = (1 << 12),
+    TEXRECT_FLIP_Y = (1 << 13),
 };
 
 typedef union {
@@ -46,8 +48,8 @@ extern u8 sBackgroundPrimColourG;
 extern u8 sBackgroundPrimColourB;
 extern s32 sBackgroundFillColour;
 
-extern TextureHeader *D_800DE4C4;
-extern TextureHeader *D_800DE4C8;
+extern TextureHeader *gMosaicTex1;
+extern TextureHeader *gMosaicTex2;
 extern s32 gChequerBGEnabled;
 
 extern s32 gfxBufCounter;
@@ -69,7 +71,7 @@ void set_background_fill_colour(s32 red, s32 green, s32 blue);
 void init_rdp_and_framebuffer(Gfx **dList);
 void init_rsp(Gfx **dList);
 void setup_gfx_mesg_queues(OSSched *sc);
-void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2);
+void mosaic_init(TextureHeader *arg0, TextureHeader *arg1, u32 arg2);
 s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
 void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
 void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue,

@@ -28,10 +28,10 @@ glabel func_80080BC8
                                              # dMenuHudSettings - 0x7FFFFFC0 = 0xE1CB0
 /* 08182C 80080C2C 3C11000E */  lui   $s1, %hi(dMenuHudSettings - 0x7FFFFFC0) # $s1, 0xe
 /* 081830 80080C30 3C1F0702 */  lui   $ra, (0x07020010 >> 16) # lui $ra, 0x702
-/* 081834 80080C34 3C0B8012 */  lui   $t3, %hi(D_80126C2C) # $t3, 0x8012
-/* 081838 80080C38 3C0A800E */  lui   $t2, %hi(D_800E1DB4) # $t2, 0x800e
-/* 08183C 80080C3C 254A1DB4 */  addiu $t2, %lo(D_800E1DB4) # addiu $t2, $t2, 0x1db4
-/* 081840 80080C40 256B6C2C */  addiu $t3, %lo(D_80126C2C) # addiu $t3, $t3, 0x6c2c
+/* 081834 80080C34 3C0B8012 */  lui   $t3, %hi(gMenuGeometry) # $t3, 0x8012
+/* 081838 80080C38 3C0A800E */  lui   $t2, %hi(gMenuTrisFlip) # $t2, 0x800e
+/* 08183C 80080C3C 254A1DB4 */  addiu $t2, %lo(gMenuTrisFlip) # addiu $t2, $t2, 0x1db4
+/* 081840 80080C40 256B6C2C */  addiu $t3, %lo(gMenuGeometry) # addiu $t3, $t3, 0x6c2c
 /* 081844 80080C44 37FF0010 */  ori   $ra, (0x07020010 & 0xFFFF) # ori $ra, $ra, 0x10
                                              # dMenuHudSettings - 0x7FFFFFC0 = 0xE1CB0
 /* 081848 80080C48 26311CB0 */  addiu $s1, %lo(dMenuHudSettings - 0x7FFFFFC0) # addiu $s1, $s1, 0x1cb0
@@ -158,9 +158,9 @@ glabel func_80080BC8
 /* 081A14 80080E14 1420FF94 */  bnez  $at, .L80080C68
 /* 081A18 80080E18 00000000 */   nop   
 .L80080E1C:
-/* 081A1C 80080E1C 3C0A800E */  lui   $t2, %hi(D_800E1DB4) # $t2, 0x800e
+/* 081A1C 80080E1C 3C0A800E */  lui   $t2, %hi(gMenuTrisFlip) # $t2, 0x800e
 /* 081A20 80080E20 3C01800E */  lui   $at, %hi(gWoodPanelCount) # $at, 0x800e
-/* 081A24 80080E24 254A1DB4 */  addiu $t2, %lo(D_800E1DB4) # addiu $t2, $t2, 0x1db4
+/* 081A24 80080E24 254A1DB4 */  addiu $t2, %lo(gMenuTrisFlip) # addiu $t2, $t2, 0x1db4
 /* 081A28 80080E28 AC201DB8 */  sw    $zero, %lo(gWoodPanelCount)($at)
 /* 081A2C 80080E2C 8D590000 */  lw    $t9, ($t2)
 /* 081A30 80080E30 24100001 */  li    $s0, 1

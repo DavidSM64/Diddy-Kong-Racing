@@ -25,10 +25,10 @@ glabel menu_track_select_init
 /* 08F3FC 8008E7FC 8C6E0000 */  lw    $t6, ($v1)
 /* 08F400 8008E800 0040B825 */  move  $s7, $v0
 /* 08F404 8008E804 11C00009 */  beqz  $t6, .L8008E82C
-/* 08F408 8008E808 3C018012 */   lui   $at, %hi(D_801269C8) # $at, 0x8012
-/* 08F40C 8008E80C AC2069C8 */  sw    $zero, %lo(D_801269C8)($at)
-/* 08F410 8008E810 3C018012 */  lui   $at, %hi(D_801269CC) # $at, 0x8012
-/* 08F414 8008E814 AC2069CC */  sw    $zero, %lo(D_801269CC)($at)
+/* 08F408 8008E808 3C018012 */   lui   $at, %hi(gTrackSelectCursorX) # $at, 0x8012
+/* 08F40C 8008E80C AC2069C8 */  sw    $zero, %lo(gTrackSelectCursorX)($at)
+/* 08F410 8008E810 3C018012 */  lui   $at, %hi(gTrackSelectCursorY) # $at, 0x8012
+/* 08F414 8008E814 AC2069CC */  sw    $zero, %lo(gTrackSelectCursorY)($at)
 /* 08F418 8008E818 3C01800E */  lui   $at, %hi(gTracksMenuTimeTrialHighlightIndex) # $at, 0x800e
 /* 08F41C 8008E81C AC200414 */  sw    $zero, %lo(gTracksMenuTimeTrialHighlightIndex)($at)
 /* 08F420 8008E820 3C01800E */  lui   $at, %hi(gTracksMenuAdventureHighlightIndex) # $at, 0x800e
@@ -55,11 +55,11 @@ glabel menu_track_select_init
 /* 08F470 8008E870 27DE6478 */  addiu $fp, %lo(gTrackSelectViewPortHalfY) # addiu $fp, $fp, 0x6478
 /* 08F474 8008E874 00055843 */  sra   $t3, $a1, 1
 /* 08F478 8008E878 AFCB0000 */  sw    $t3, ($fp)
-/* 08F47C 8008E87C 3C0C8012 */  lui   $t4, %hi(D_801269C8) # $t4, 0x8012
-/* 08F480 8008E880 8D8C69C8 */  lw    $t4, %lo(D_801269C8)($t4)
-/* 08F484 8008E884 3C0D8012 */  lui   $t5, %hi(D_801269CC) # $t5, 0x8012
+/* 08F47C 8008E87C 3C0C8012 */  lui   $t4, %hi(gTrackSelectCursorX) # $t4, 0x8012
+/* 08F480 8008E880 8D8C69C8 */  lw    $t4, %lo(gTrackSelectCursorX)($t4)
+/* 08F484 8008E884 3C0D8012 */  lui   $t5, %hi(gTrackSelectCursorY) # $t5, 0x8012
 /* 08F488 8008E888 448C2000 */  mtc1  $t4, $f4
-/* 08F48C 8008E88C 8DAD69CC */  lw    $t5, %lo(D_801269CC)($t5)
+/* 08F48C 8008E88C 8DAD69CC */  lw    $t5, %lo(gTrackSelectCursorY)($t5)
 /* 08F490 8008E890 468021A0 */  cvt.s.w $f6, $f4
 /* 08F494 8008E894 3C0143A0 */  li    $at, 0x43A00000 # 320.000000
 /* 08F498 8008E898 44814000 */  mtc1  $at, $f8
@@ -81,15 +81,15 @@ glabel menu_track_select_init
 /* 08F4D8 8008E8D8 AC3569F4 */  sw    $s5, %lo(gSelectedTrackX)($at)
 /* 08F4DC 8008E8DC 3C018012 */  lui   $at, %hi(gSelectedTrackY) # $at, 0x8012
 /* 08F4E0 8008E8E0 AC3569F8 */  sw    $s5, %lo(gSelectedTrackY)($at)
-/* 08F4E4 8008E8E4 3C018012 */  lui   $at, %hi(D_801263D0) # $at, 0x8012
-/* 08F4E8 8008E8E8 AC3563D0 */  sw    $s5, %lo(D_801263D0)($at)
+/* 08F4E4 8008E8E4 3C018012 */  lui   $at, %hi(gTrackmenuLoadedLevel) # $at, 0x8012
+/* 08F4E8 8008E8E8 AC3563D0 */  sw    $s5, %lo(gTrackmenuLoadedLevel)($at)
 /* 08F4EC 8008E8EC 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
 /* 08F4F0 8008E8F0 AC2F63D8 */  sw    $t7, %lo(gOpacityDecayTimer)($at)
 /* 08F4F4 8008E8F4 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
 /* 08F4F8 8008E8F8 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
-/* 08F4FC 8008E8FC 3C018012 */  lui   $at, %hi(D_801267D0) # $at, 0x8012
-/* 08F500 8008E900 0C023C03 */  jal   func_8008F00C
-/* 08F504 8008E904 AC3567D0 */   sw    $s5, %lo(D_801267D0)($at)
+/* 08F4FC 8008E8FC 3C018012 */  lui   $at, %hi(gTrackmenuType) # $at, 0x8012
+/* 08F500 8008E900 0C023C03 */  jal   trackmenu_assets
+/* 08F504 8008E904 AC3567D0 */   sw    $s5, %lo(gTrackmenuType)($at)
 /* 08F508 8008E908 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeOut) # $a0, 0x800e
 /* 08F50C 8008E90C 0C030076 */  jal   transition_begin
 /* 08F510 8008E910 2484F77C */   addiu $a0, %lo(sMenuTransitionFadeOut) # addiu $a0, $a0, -0x884
@@ -100,10 +100,10 @@ glabel menu_track_select_init
 /* 08F524 8008E924 0C01DED7 */  jal   set_background_fill_colour
 /* 08F528 8008E928 240600DF */   li    $a2, 223
 /* 08F52C 8008E92C 3C11800E */  lui   $s1, %hi(gTracksMenuBgTextureIndices) # $s1, 0x800e
-/* 08F530 8008E930 3C168012 */  lui   $s6, %hi(gMenuObjects) # $s6, 0x8012
+/* 08F530 8008E930 3C168012 */  lui   $s6, %hi(gMenuAssets) # $s6, 0x8012
 /* 08F534 8008E934 3C12800E */  lui   $s2, %hi(gTracksMenuBgTextures) # $s2, 0x800e
 /* 08F538 8008E938 26520730 */  addiu $s2, %lo(gTracksMenuBgTextures) # addiu $s2, $s2, 0x730
-/* 08F53C 8008E93C 26D66550 */  addiu $s6, %lo(gMenuObjects) # addiu $s6, $s6, 0x6550
+/* 08F53C 8008E93C 26D66550 */  addiu $s6, %lo(gMenuAssets) # addiu $s6, $s6, 0x6550
 /* 08F540 8008E940 26310710 */  addiu $s1, %lo(gTracksMenuBgTextureIndices) # addiu $s1, $s1, 0x710
 /* 08F544 8008E944 00002825 */  move  $a1, $zero
 .L8008E948:
@@ -111,7 +111,7 @@ glabel menu_track_select_init
 /* 08F54C 8008E94C 000570C0 */  sll   $t6, $a1, 3
 /* 08F550 8008E950 12A4000C */  beq   $s5, $a0, .L8008E984
 /* 08F554 8008E954 024E8021 */   addu  $s0, $s2, $t6
-/* 08F558 8008E958 0C0271B5 */  jal   func_8009C6D4
+/* 08F558 8008E958 0C0271B5 */  jal   menu_asset_load
 /* 08F55C 8008E95C AFA50074 */   sw    $a1, 0x74($sp)
 /* 08F560 8008E960 86290000 */  lh    $t1, ($s1)
 /* 08F564 8008E964 8FA50074 */  lw    $a1, 0x74($sp)
@@ -129,7 +129,7 @@ glabel menu_track_select_init
 /* 08F58C 8008E98C 00000000 */  nop   
 /* 08F590 8008E990 12A4000A */  beq   $s5, $a0, .L8008E9BC
 /* 08F594 8008E994 00000000 */   nop   
-/* 08F598 8008E998 0C0271B5 */  jal   func_8009C6D4
+/* 08F598 8008E998 0C0271B5 */  jal   menu_asset_load
 /* 08F59C 8008E99C AFA50074 */   sw    $a1, 0x74($sp)
 /* 08F5A0 8008E9A0 862F0002 */  lh    $t7, 2($s1)
 /* 08F5A4 8008E9A4 8FA50074 */  lw    $a1, 0x74($sp)
@@ -308,9 +308,9 @@ glabel menu_track_select_init
 /* 08F848 8008EC48 0068082B */  sltu  $at, $v1, $t0
 /* 08F84C 8008EC4C 1420FFDA */  bnez  $at, .L8008EBB8
 /* 08F850 8008EC50 00001025 */   move  $v0, $zero
-/* 08F854 8008EC54 3C018012 */  lui   $at, %hi(D_80126924) # $at, 0x8012
+/* 08F854 8008EC54 3C018012 */  lui   $at, %hi(gTrackSelectVertsFlip) # $at, 0x8012
 /* 08F858 8008EC58 3C048009 */  lui   $a0, %hi(func_8008F618) # $a0, 0x8009
-/* 08F85C 8008EC5C AC206924 */  sw    $zero, %lo(D_80126924)($at)
+/* 08F85C 8008EC5C AC206924 */  sw    $zero, %lo(gTrackSelectVertsFlip)($at)
 /* 08F860 8008EC60 0C01E2AB */  jal   set_background_draw_function
 /* 08F864 8008EC64 2484F618 */   addiu $a0, %lo(func_8008F618) # addiu $a0, $a0, -0x9e8
 /* 08F868 8008EC68 8FC20000 */  lw    $v0, ($fp)
@@ -331,12 +331,12 @@ glabel menu_track_select_init
 /* 08F8A4 8008ECA4 3C01800E */  lui   $at, %hi(gIsInTracksMenu) # $at, 0x800e
 /* 08F8A8 8008ECA8 3C04800E */  lui   $a0, %hi(gTrackSelectObjectIndices) # $a0, 0x800e
 /* 08F8AC 8008ECAC AC2A097C */  sw    $t2, %lo(gIsInTracksMenu)($at)
-/* 08F8B0 8008ECB0 0C02719D */  jal   func_8009C674
+/* 08F8B0 8008ECB0 0C02719D */  jal   menu_assetgroup_load
 /* 08F8B4 8008ECB4 248407C4 */   addiu $a0, %lo(gTrackSelectObjectIndices) # addiu $a0, $a0, 0x7c4
 /* 08F8B8 8008ECB8 3C04800E */  lui   $a0, %hi(gTrackSelectImageIndices) # $a0, 0x800e
-/* 08F8BC 8008ECBC 0C027229 */  jal   allocate_menu_images
+/* 08F8BC 8008ECBC 0C027229 */  jal   menu_imagegroup_load
 /* 08F8C0 8008ECC0 248407E0 */   addiu $a0, %lo(gTrackSelectImageIndices) # addiu $a0, $a0, 0x7e0
-/* 08F8C4 8008ECC4 0C02392C */  jal   assign_menu_arrow_textures
+/* 08F8C4 8008ECC4 0C02392C */  jal   menu_init_arrow_textures
 /* 08F8C8 8008ECC8 00000000 */   nop   
 /* 08F8CC 8008ECCC 3C02800E */  lui   $v0, %hi(D_800E05D4) # $v0, 0x800e
 /* 08F8D0 8008ECD0 3C03800E */  lui   $v1, %hi(D_800E05F4) # $v1, 0x800e
@@ -348,8 +348,8 @@ glabel menu_track_select_init
 /* 08F8E8 8008ECE8 8ECE002C */  lw    $t6, 0x2c($s6)
 /* 08F8EC 8008ECEC 8ECF0030 */  lw    $t7, 0x30($s6)
 /* 08F8F0 8008ECF0 8ED80034 */  lw    $t8, 0x34($s6)
-/* 08F8F4 8008ECF4 3C198012 */  lui   $t9, %hi(D_801268E8) # $t9, 0x8012
-/* 08F8F8 8008ECF8 273968E8 */  addiu $t9, %lo(D_801268E8) # addiu $t9, $t9, 0x68e8
+/* 08F8F4 8008ECF4 3C198012 */  lui   $t9, %hi(gTrackSelectIDs) # $t9, 0x8012
+/* 08F8F8 8008ECF8 273968E8 */  addiu $t9, %lo(gTrackSelectIDs) # addiu $t9, $t9, 0x68e8
 /* 08F8FC 8008ECFC AFB90058 */  sw    $t9, 0x58($sp)
 /* 08F900 8008ED00 24160004 */  li    $s6, 4
 /* 08F904 8008ED04 00009825 */  move  $s3, $zero
@@ -479,14 +479,14 @@ glabel menu_track_select_init
 /* 08FAC8 8008EEC8 AFA90058 */  sw    $t1, 0x58($sp)
 /* 08FACC 8008EECC 17C1FF95 */  bne   $fp, $at, .L8008ED24
 /* 08FAD0 8008EED0 03C09825 */   move  $s3, $fp
-/* 08FAD4 8008EED4 3C028012 */  lui   $v0, %hi(D_801269CC) # $v0, 0x8012
-/* 08FAD8 8008EED8 8C4269CC */  lw    $v0, %lo(D_801269CC)($v0)
-/* 08FADC 8008EEDC 3C0C8012 */  lui   $t4, %hi(D_801269C8) # $t4, 0x8012
+/* 08FAD4 8008EED4 3C028012 */  lui   $v0, %hi(gTrackSelectCursorY) # $v0, 0x8012
+/* 08FAD8 8008EED8 8C4269CC */  lw    $v0, %lo(gTrackSelectCursorY)($v0)
+/* 08FADC 8008EEDC 3C0C8012 */  lui   $t4, %hi(gTrackSelectCursorX) # $t4, 0x8012
 /* 08FAE0 8008EEE0 00025080 */  sll   $t2, $v0, 2
-/* 08FAE4 8008EEE4 8D8C69C8 */  lw    $t4, %lo(D_801269C8)($t4)
-/* 08FAE8 8008EEE8 3C078012 */  lui   $a3, %hi(D_801268E8) # $a3, 0x8012
+/* 08FAE4 8008EEE4 8D8C69C8 */  lw    $t4, %lo(gTrackSelectCursorX)($t4)
+/* 08FAE8 8008EEE8 3C078012 */  lui   $a3, %hi(gTrackSelectIDs) # $a3, 0x8012
 /* 08FAEC 8008EEEC 01425023 */  subu  $t2, $t2, $v0
-/* 08FAF0 8008EEF0 24E768E8 */  addiu $a3, %lo(D_801268E8) # addiu $a3, $a3, 0x68e8
+/* 08FAF0 8008EEF0 24E768E8 */  addiu $a3, %lo(gTrackSelectIDs) # addiu $a3, $a3, 0x68e8
 /* 08FAF4 8008EEF4 000A5080 */  sll   $t2, $t2, 2
 /* 08FAF8 8008EEF8 00EA5821 */  addu  $t3, $a3, $t2
 /* 08FAFC 8008EEFC 000C6840 */  sll   $t5, $t4, 1
@@ -501,8 +501,8 @@ glabel menu_track_select_init
 /* 08FB20 8008EF20 16AE000E */  bne   $s5, $t6, .L8008EF5C
 /* 08FB24 8008EF24 AC6E0000 */   sw    $t6, ($v1)
 /* 08FB28 8008EF28 84E40000 */  lh    $a0, ($a3)
-/* 08FB2C 8008EF2C 3C028012 */  lui   $v0, %hi(D_801263D0) # $v0, 0x8012
-/* 08FB30 8008EF30 244263D0 */  addiu $v0, %lo(D_801263D0) # addiu $v0, $v0, 0x63d0
+/* 08FB2C 8008EF2C 3C028012 */  lui   $v0, %hi(gTrackmenuLoadedLevel) # $v0, 0x8012
+/* 08FB30 8008EF30 244263D0 */  addiu $v0, %lo(gTrackmenuLoadedLevel) # addiu $v0, $v0, 0x63d0
 /* 08FB34 8008EF34 2405FFFF */  li    $a1, -1
 /* 08FB38 8008EF38 24060001 */  li    $a2, 1
 /* 08FB3C 8008EF3C 0C01B8BA */  jal   load_level_for_menu
@@ -514,12 +514,12 @@ glabel menu_track_select_init
 /* 08FB54 8008EF54 3C018012 */  lui   $at, %hi(gSelectedTrackY) # $at, 0x8012
 /* 08FB58 8008EF58 AC2069F8 */  sw    $zero, %lo(gSelectedTrackY)($at)
 .L8008EF5C:
-/* 08FB5C 8008EF5C 0C031525 */  jal   assign_dialogue_box_id
+/* 08FB5C 8008EF5C 0C031525 */  jal   dialogue_clear
 /* 08FB60 8008EF60 24040007 */   li    $a0, 7
 /* 08FB64 8008EF64 0C01FFFB */  jal   func_8007FFEC
 /* 08FB68 8008EF68 24040002 */   li    $a0, 2
-/* 08FB6C 8008EF6C 3C018012 */  lui   $at, %hi(D_80126840) # $at, 0x8012
-/* 08FB70 8008EF70 AC206840 */  sw    $zero, %lo(D_80126840)($at)
+/* 08FB6C 8008EF6C 3C018012 */  lui   $at, %hi(gTrackTTSoundMask) # $at, 0x8012
+/* 08FB70 8008EF70 AC206840 */  sw    $zero, %lo(gTrackTTSoundMask)($at)
 /* 08FB74 8008EF74 3C10800E */  lui   $s0, %hi(sMenuMusicVolume) # $s0, 0x800e
 /* 08FB78 8008EF78 3C018012 */  lui   $at, %hi(D_80126848) # $at, 0x8012
 /* 08FB7C 8008EF7C 2610F760 */  addiu $s0, %lo(sMenuMusicVolume) # addiu $s0, $s0, -0x8a0

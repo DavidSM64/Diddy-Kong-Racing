@@ -23,6 +23,13 @@
 
 #define NUMBER_OF_SAVE_FILES 3
 
+// Most of this is temporary really until we figure out where the size comes from
+#define EEP_FLAP_OFFSET (0x80 / sizeof(u64))
+#define EEP_COURSE_TIME_OFFSET (0x140 / sizeof(u64))
+#define EEP_FLAP_SIZE (0xC0  / sizeof(u64))
+#define EEP_COURSE_RECORD_SIZE (0xC0  / sizeof(u64))
+#define SAVE_SIZE 0x200
+
 // One unique thing about results using SIDeviceStatus is that they
 // store the enum value in the lower 0xFF byte, and they store
 // the controller index in the upper 3 bits.
@@ -43,16 +50,16 @@ typedef enum {
 typedef enum {
     SAVE_FILE_TYPE_UNSET = -1,
     SAVE_FILE_TYPE_UNK0, //Unused? 
-    SAVE_FILE_TYPE_UNK1, //GAMD on cartridge save?
-    SAVE_FILE_TYPE_UNK2, //TIMD saved on cartridge>
-    SAVE_FILE_TYPE_GAME_DATA, //GAMD saved on cpak?
-    SAVE_FILE_TYPE_TIME_DATA, //TIMD saved on cpak?
-    SAVE_FILE_TYPE_GHOST_DATA, //GHSS
-    SAVE_FILE_TYPE_UNKNOWN, //Possibly from another game?
-    SAVE_FILE_TYPE_UNK7,
-    SAVE_FILE_TYPE_UNK8, //Empty Slot?
+    SAVE_FILE_TYPE_CART_SAVE, // Save data on the cartridge
+    SAVE_FILE_TYPE_CART_TIMES, // Time trial records on the catrdige
+    SAVE_FILE_TYPE_CPAK_SAVE, // Save data on the controller pak
+    SAVE_FILE_TYPE_CPAK_TIMES, // Time trial records on the controller pak
+    SAVE_FILE_TYPE_CPAK_GHOST, // Time Trial ghost data on the controller pak
+    SAVE_FILE_TYPE_CPAK_OTHER, //Possibly from another game?
+    SAVE_FILE_TYPE_ERASE,
+    SAVE_FILE_TYPE_CPAK_EMPTY, //Empty Slot?
     SAVE_FILE_TYPE_UNK9, //View Ghosts?
-    SAVE_FILE_TYPE_UNKA //Game Pak Bonuses?
+    SAVE_FILE_TYPE_CART_BONUSES //Game Pak Bonuses?
 } SaveFileType;
 
 enum RumbleTypes {

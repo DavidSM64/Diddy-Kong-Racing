@@ -1,13 +1,13 @@
 glabel menu_ghost_data_init
 /* 09A65C 80099A5C 27BDFF88 */  addiu $sp, $sp, -0x78
-/* 09A660 80099A60 3C048012 */  lui   $a0, %hi(D_801264D0) # $a0, 0x8012
-/* 09A664 80099A64 3C0E8012 */  lui   $t6, %hi(D_801264F8) # $t6, 0x8012
+/* 09A660 80099A60 3C048012 */  lui   $a0, %hi(gCpakGhostData) # $a0, 0x8012
+/* 09A664 80099A64 3C0E8012 */  lui   $t6, %hi(gGhostChecksumIDsPak) # $t6, 0x8012
 /* 09A668 80099A68 AFBF0044 */  sw    $ra, 0x44($sp)
-/* 09A66C 80099A6C 25CE64F8 */  addiu $t6, %lo(D_801264F8) # addiu $t6, $t6, 0x64f8
-/* 09A670 80099A70 8C8464D0 */  lw    $a0, %lo(D_801264D0)($a0)
-/* 09A674 80099A74 3C058012 */  lui   $a1, %hi(D_801264DC) # $a1, 0x8012
-/* 09A678 80099A78 3C068012 */  lui   $a2, %hi(D_801264EC) # $a2, 0x8012
-/* 09A67C 80099A7C 3C078012 */  lui   $a3, %hi(D_801264E4) # $a3, 0x8012
+/* 09A66C 80099A6C 25CE64F8 */  addiu $t6, %lo(gGhostChecksumIDsPak) # addiu $t6, $t6, 0x64f8
+/* 09A670 80099A70 8C8464D0 */  lw    $a0, %lo(gCpakGhostData)($a0)
+/* 09A674 80099A74 3C058012 */  lui   $a1, %hi(gGhostLevelIDsPak) # $a1, 0x8012
+/* 09A678 80099A78 3C068012 */  lui   $a2, %hi(gGhostVehicleIDsPak) # $a2, 0x8012
+/* 09A67C 80099A7C 3C078012 */  lui   $a3, %hi(gGhostCharacterIDsPak) # $a3, 0x8012
 /* 09A680 80099A80 AFBE0040 */  sw    $fp, 0x40($sp)
 /* 09A684 80099A84 AFB7003C */  sw    $s7, 0x3c($sp)
 /* 09A688 80099A88 AFB60038 */  sw    $s6, 0x38($sp)
@@ -17,26 +17,26 @@ glabel menu_ghost_data_init
 /* 09A698 80099A98 AFB20028 */  sw    $s2, 0x28($sp)
 /* 09A69C 80099A9C AFB10024 */  sw    $s1, 0x24($sp)
 /* 09A6A0 80099AA0 AFB00020 */  sw    $s0, 0x20($sp)
-/* 09A6A4 80099AA4 24E764E4 */  addiu $a3, %lo(D_801264E4) # addiu $a3, $a3, 0x64e4
-/* 09A6A8 80099AA8 24C664EC */  addiu $a2, %lo(D_801264EC) # addiu $a2, $a2, 0x64ec
-/* 09A6AC 80099AAC 24A564DC */  addiu $a1, %lo(D_801264DC) # addiu $a1, $a1, 0x64dc
+/* 09A6A4 80099AA4 24E764E4 */  addiu $a3, %lo(gGhostCharacterIDsPak) # addiu $a3, $a3, 0x64e4
+/* 09A6A8 80099AA8 24C664EC */  addiu $a2, %lo(gGhostVehicleIDsPak) # addiu $a2, $a2, 0x64ec
+/* 09A6AC 80099AAC 24A564DC */  addiu $a1, %lo(gGhostLevelIDsPak) # addiu $a1, $a1, 0x64dc
 /* 09A6B0 80099AB0 0C01D5B5 */  jal   func_800756D4
 /* 09A6B4 80099AB4 AFAE0010 */   sw    $t6, 0x10($sp)
 /* 09A6B8 80099AB8 14400003 */  bnez  $v0, .L80099AC8
 /* 09A6BC 80099ABC AFA20070 */   sw    $v0, 0x70($sp)
-/* 09A6C0 80099AC0 0C02658F */  jal   func_8009963C
+/* 09A6C0 80099AC0 0C02658F */  jal   ghostmenu_generate
 /* 09A6C4 80099AC4 00000000 */   nop   
 .L80099AC8:
 /* 09A6C8 80099AC8 3C04800E */  lui   $a0, %hi(gGhostDataObjectIndices) # $a0, 0x800e
-/* 09A6CC 80099ACC 0C02719D */  jal   func_8009C674
+/* 09A6CC 80099ACC 0C02719D */  jal   menu_assetgroup_load
 /* 09A6D0 80099AD0 24841708 */   addiu $a0, %lo(gGhostDataObjectIndices) # addiu $a0, $a0, 0x1708
 /* 09A6D4 80099AD4 3C04800E */  lui   $a0, %hi(gGhostDataImageIndices) # $a0, 0x800e
-/* 09A6D8 80099AD8 0C027229 */  jal   allocate_menu_images
+/* 09A6D8 80099AD8 0C027229 */  jal   menu_imagegroup_load
 /* 09A6DC 80099ADC 2484174C */   addiu $a0, %lo(gGhostDataImageIndices) # addiu $a0, $a0, 0x174c
 /* 09A6E0 80099AE0 0C03105C */  jal   load_font
 /* 09A6E4 80099AE4 24040002 */   li    $a0, 2
-/* 09A6E8 80099AE8 3C028012 */  lui   $v0, %hi(gMenuObjects) # $v0, 0x8012
-/* 09A6EC 80099AEC 24426550 */  addiu $v0, %lo(gMenuObjects) # addiu $v0, $v0, 0x6550
+/* 09A6E8 80099AE8 3C028012 */  lui   $v0, %hi(gMenuAssets) # $v0, 0x8012
+/* 09A6EC 80099AEC 24426550 */  addiu $v0, %lo(gMenuAssets) # addiu $v0, $v0, 0x6550
 /* 09A6F0 80099AF0 8C570038 */  lw    $s7, 0x38($v0)
 /* 09A6F4 80099AF4 3C01800E */  lui   $at, %hi(gDrawTexDinoDomainGhostBg) # $at, 0x800e
 /* 09A6F8 80099AF8 AC37153C */  sw    $s7, %lo(gDrawTexDinoDomainGhostBg)($at)
@@ -230,25 +230,25 @@ glabel menu_ghost_data_init
 /* 09A9E8 80099DE8 8FAF0048 */  lw    $t7, 0x48($sp)
 /* 09A9EC 80099DEC AC980040 */  sw    $t8, 0x40($a0)
 /* 09A9F0 80099DF0 00F6C021 */  addu  $t8, $a3, $s6
-/* 09A9F4 80099DF4 0C023917 */  jal   assign_vehicle_icon_textures
+/* 09A9F4 80099DF4 0C023917 */  jal   menu_init_vehicle_textures
 /* 09A9F8 80099DF8 AF0F0018 */   sw    $t7, 0x18($t8)
-/* 09A9FC 80099DFC 0C025181 */  jal   assign_racer_portrait_textures
+/* 09A9FC 80099DFC 0C025181 */  jal   menu_racer_portraits
 /* 09AA00 80099E00 00000000 */   nop   
-/* 09AA04 80099E04 0C02392C */  jal   assign_menu_arrow_textures
+/* 09AA04 80099E04 0C02392C */  jal   menu_init_arrow_textures
 /* 09AA08 80099E08 00000000 */   nop   
 /* 09AA0C 80099E0C 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
 /* 09AA10 80099E10 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
-/* 09AA14 80099E14 3C018012 */  lui   $at, %hi(gMenuOptionCount) # $at, 0x8012
-/* 09AA18 80099E18 AC2063E0 */  sw    $zero, %lo(gMenuOptionCount)($at)
+/* 09AA14 80099E14 3C018012 */  lui   $at, %hi(gMenuStage) # $at, 0x8012
+/* 09AA18 80099E18 AC2063E0 */  sw    $zero, %lo(gMenuStage)($at)
 /* 09AA1C 80099E1C 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
 /* 09AA20 80099E20 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
 /* 09AA24 80099E24 AC2063D8 */  sw    $zero, %lo(gOpacityDecayTimer)($at)
 /* 09AA28 80099E28 8FB90070 */  lw    $t9, 0x70($sp)
 /* 09AA2C 80099E2C 2442F47C */  addiu $v0, %lo(gMenuDelay) # addiu $v0, $v0, -0xb84
 /* 09AA30 80099E30 AC400000 */  sw    $zero, ($v0)
-/* 09AA34 80099E34 3C018012 */  lui   $at, %hi(D_80126498) # $at, 0x8012
+/* 09AA34 80099E34 3C018012 */  lui   $at, %hi(gGhostMenuOption) # $at, 0x8012
 /* 09AA38 80099E38 17200006 */  bnez  $t9, .L80099E54
-/* 09AA3C 80099E3C AC206498 */   sw    $zero, %lo(D_80126498)($at)
+/* 09AA3C 80099E3C AC206498 */   sw    $zero, %lo(gGhostMenuOption)($at)
 /* 09AA40 80099E40 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeOut) # $a0, 0x800e
 /* 09AA44 80099E44 0C030076 */  jal   transition_begin
 /* 09AA48 80099E48 2484F77C */   addiu $a0, %lo(sMenuTransitionFadeOut) # addiu $a0, $a0, -0x884

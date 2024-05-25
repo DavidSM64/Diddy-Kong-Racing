@@ -8528,8 +8528,8 @@ glabel ASSET_MISC_23
 .incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_23.bin"
 glabel ASSET_MISC_GHOST_UNLOCK_TIMES
 .incbin "./build/us_1.0/assets/misc/unlabeled/ghost_unlock_times.bin"
-glabel ASSET_MISC_25
-.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_25.bin"
+glabel ASSET_MISC_CINEMATIC_RACE
+.incbin "./build/us_1.0/assets/misc/unlabeled/cinematic_race.bin"
 glabel ASSET_MISC_TRACKS_MENU_IDS
 .incbin "./build/us_1.0/assets/misc/track_ids/tracks_menu_ids.bin"
 glabel ASSET_MISC_HUB_AREA_IDS
@@ -8540,8 +8540,8 @@ glabel ASSET_MISC_BATTLE_TRACKS_IDS
 .incbin "./build/us_1.0/assets/misc/track_ids/battle_tracks_ids.bin"
 glabel ASSET_MISC_BOSS_TRACKS_IDS
 .incbin "./build/us_1.0/assets/misc/track_ids/boss_tracks_ids.bin"
-glabel ASSET_MISC_31
-.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_31.bin"
+glabel ASSET_MISC_CINEMATIC_TROPHY
+.incbin "./build/us_1.0/assets/misc/unlabeled/cinematic_trophy.bin"
 glabel ASSET_MISC_32
 .incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_32.bin"
 glabel ASSET_MISC_RACERACCELERATION_UNKNOWN0
@@ -8649,13 +8649,13 @@ glabel ASSET_MISC_TABLE
 .word (ASSET_MISC_MAGNET_DATA - ASSET_MISC) / 4
 .word (ASSET_MISC_23 - ASSET_MISC) / 4
 .word (ASSET_MISC_GHOST_UNLOCK_TIMES - ASSET_MISC) / 4
-.word (ASSET_MISC_25 - ASSET_MISC) / 4
+.word (ASSET_MISC_CINEMATIC_RACE - ASSET_MISC) / 4
 .word (ASSET_MISC_TRACKS_MENU_IDS - ASSET_MISC) / 4
 .word (ASSET_MISC_HUB_AREA_IDS - ASSET_MISC) / 4
 .word (ASSET_MISC_MAIN_TRACKS_IDS - ASSET_MISC) / 4
 .word (ASSET_MISC_BATTLE_TRACKS_IDS - ASSET_MISC) / 4
 .word (ASSET_MISC_BOSS_TRACKS_IDS - ASSET_MISC) / 4
-.word (ASSET_MISC_31 - ASSET_MISC) / 4
+.word (ASSET_MISC_CINEMATIC_TROPHY - ASSET_MISC) / 4
 .word (ASSET_MISC_32 - ASSET_MISC) / 4
 .word (ASSET_MISC_RACERACCELERATION_UNKNOWN0 - ASSET_MISC) / 4
 .word (ASSET_MISC_RACERACCELERATION_DIDDY - ASSET_MISC) / 4

@@ -1252,7 +1252,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         if (is_two_player_adventure_race() == 0) {
             for (i2 = 0; i2 < 3; i2++) {
                 entry->common.objectID = ASSET_OBJECT_ID_POSARROW;
-                entry->common.size = 8;
+                entry->common.size = sizeof(LevelObjectEntryCommon);
                 entry->common.x = 0;
                 entry->common.y = 0;
                 entry->common.z = 0;
@@ -2345,7 +2345,7 @@ void func_80010994(s32 updateRate) {
         D_8011AD24[0] = 0;
         D_8011AD53 = 0;
         transform_player_vehicle();
-        try_close_dialogue_box();
+        dialogue_try_close();
         func_800179D0();
     } while (0); // FAKEMATCH
     if (D_8011AF00 == 1) {
