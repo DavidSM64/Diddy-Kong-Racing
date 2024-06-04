@@ -390,7 +390,7 @@ typedef struct MenuColour {
 // Unknown Size
 typedef struct unk80126A80 {
     u8 pad0[0x13];
-    s8 unk13;
+    s8 highlight;
 } unk80126A80;
 
 /* Size: 0x10 bytes */
@@ -635,7 +635,7 @@ void menu_element_render(s32 elementID);
 void menu_input(void);
 SIDeviceStatus savemenu_load_sources(void);
 void menu_asset_load(s32 arg0);
-s32 func_80087734(s32 buttonsPressed, s32 yAxis);
+s32 savemenu_input_message(s32 buttonsPressed, s32 yAxis);
 void savemenu_render_element(SaveFileData *arg0, s32 x, s32 y);
 void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
 void pausemenu_render(UNUSED s32 updateRate);

@@ -194,8 +194,8 @@ s32 gSaveMenuOptionCountUpper;
 SaveFileData *gSavemenuFilesSource;
 s32 gSavemenuRumbleNag;
 s32 gSavemenuRumbleConnected;
-s32 D_80126A18;
-s32 D_80126A1C;
+s32 gSaveMenuSourceState;
+s32 gSaveMenuDestState;
 s32 sControllerPakNotesFree[MAXCONTROLLERS]; // Looks to be an array for number notes free in each controller memory pak
 u8 sControllerPakIssueNotFound[MAXCONTROLLERS];   // Flag to see if there's no known issues for the given controller pak
 u8 sControllerPakFatalErrorFound[MAXCONTROLLERS]; // Flag to see if there's a fatal error for the given controller pak
@@ -207,10 +207,10 @@ char *D_80126A64;
 s32 gMenuOption;
 s32 gSavemenuRumbleNagSet;
 char **gDeviceStatusStrings;
-s32 D_80126A74;
-s32 D_80126A78;
+s32 gSaveMenuMessageLines;
+s32 gSavemenuMessageOption;
 UNUSED s32 D_80126A7C;
-unk80126A80 *D_80126A80[4];
+unk80126A80 *gSavemenuText[4];
 s32 gPostRace1Player;
 s32 gPostRaceTimer;
 s32 gTracksSaveGhost;
@@ -465,7 +465,7 @@ u32 gContPakSaveBgColours[MAXCONTROLLERS] = {
     COLOUR_RGBA32(64, 255, 64, 255)   // Green for controller 4
 };
 
-SIDeviceStatus D_800DFADC = CONTROLLER_PAK_GOOD;
+SIDeviceStatus gDeviceStatus = CONTROLLER_PAK_GOOD;
 s32 gControllerIndex = 0;
 
 // Strings related to the controller pak.
@@ -3357,8 +3357,8 @@ void soundoptions_free(void) {
 void menu_save_options_init(void) {
     gSavemenuRumbleNagSet = TRUE;
     gSavemenuRumbleNag = FALSE;
-    D_80126A18 = 1;
-    D_80126A1C = 1;
+    gSaveMenuSourceState = 1;
+    gSaveMenuDestState = 1;
     gOptionsMenuItemIndex = 0;
     gOptionBlinkTimer = 0;
     gMenuDelay = 0;
@@ -3763,7 +3763,7 @@ SIDeviceStatus savemenu_load_sources(void) {
     temp_D_80126A64 = D_80126A64;
     do {
         numAttempts = 1;
-        if (D_80126A18 != 0) {
+        if (gSaveMenuSourceState != 0) {
             gSavemenuRumbleConnected = FALSE;
 
             do {
@@ -3829,7 +3829,7 @@ SIDeviceStatus savemenu_load_sources(void) {
                 packDirectoryFree();
             } else if (temp == CONTROLLER_PAK_RUMBLE_PAK_FOUND) {
                 gSavemenuRumbleConnected = TRUE;
-                if (D_80126A18 < 0) {
+                if (gSaveMenuSourceState < 0) {
                     result = CONTROLLER_PAK_GOOD;
                 }
                 if (gSavemenuRumbleNagSet) {
@@ -3838,7 +3838,7 @@ SIDeviceStatus savemenu_load_sources(void) {
                 }
             } else if (temp == CONTROLLER_PAK_NOT_FOUND) {
                 result = CONTROLLER_PAK_GOOD;
-            } else if (D_80126A18 < 0 && temp == CONTROLLER_PAK_CHANGED) {
+            } else if (gSaveMenuSourceState < 0 && temp == CONTROLLER_PAK_CHANGED) {
                 numAttempts = 0;
             }
         }
@@ -3861,28 +3861,28 @@ SIDeviceStatus savemenu_load_destinations(void) {
         case SAVE_FILE_TYPE_CART_SAVE:
             mark_read_save_file(gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex);
             savemenu_blank_save_destination(gSavemenuFilesDest, &gSaveMenuOptionCountLower);
-            ret = savemenu_check_space(0, &D_80126A18, gSavemenuFilesDest, &gSaveMenuOptionCountLower,
+            ret = savemenu_check_space(0, &gSaveMenuSourceState, gSavemenuFilesDest, &gSaveMenuOptionCountLower,
                                        get_game_data_file_size(), -1);
             break;
         case SAVE_FILE_TYPE_CART_TIMES:
-            ret = savemenu_check_space(0, &D_80126A18, gSavemenuFilesDest, &gSaveMenuOptionCountLower,
+            ret = savemenu_check_space(0, &gSaveMenuSourceState, gSavemenuFilesDest, &gSaveMenuOptionCountLower,
                                        get_time_data_file_size(), -1);
             break;
         case SAVE_FILE_TYPE_CPAK_SAVE:
             savemenu_blank_save_destination(gSavemenuFilesDest, &gSaveMenuOptionCountLower);
-            ret = savemenu_check_space(1, &D_80126A1C, gSavemenuFilesDest, &gSaveMenuOptionCountLower,
+            ret = savemenu_check_space(1, &gSaveMenuDestState, gSavemenuFilesDest, &gSaveMenuOptionCountLower,
                                        get_game_data_file_size(),
                                        gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex);
             break;
         case SAVE_FILE_TYPE_CPAK_TIMES:
             gSavemenuFilesDest[gSaveMenuOptionCountLower++].saveFileType = SAVE_FILE_TYPE_CART_TIMES;
-            ret = savemenu_check_space(1, &D_80126A1C, gSavemenuFilesDest, &gSaveMenuOptionCountLower,
+            ret = savemenu_check_space(1, &gSaveMenuDestState, gSavemenuFilesDest, &gSaveMenuOptionCountLower,
                                        get_time_data_file_size(),
                                        gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex);
             break;
         case SAVE_FILE_TYPE_CPAK_GHOST:
             gSavemenuFilesDest[gSaveMenuOptionCountLower++].saveFileType = SAVE_FILE_TYPE_UNK9;
-            ret = savemenu_check_space(1, &D_80126A1C, gSavemenuFilesDest, &gSaveMenuOptionCountLower,
+            ret = savemenu_check_space(1, &gSaveMenuDestState, gSavemenuFilesDest, &gSaveMenuOptionCountLower,
                                        get_ghost_data_file_size(),
                                        gSavemenuFilesSource[gSaveMenuOptionSource].controllerIndex);
             break;
@@ -4080,14 +4080,14 @@ void savemenu_render_error(SIDeviceStatus deviceStatus) {
     gControllerIndex = (deviceStatus >> 30) & 3; // Gets the controller index from the device status.
     deviceStatus &= 0x3FFFFFFF;                  // Removes the controller index from the device status value.
     gDeviceStatusStrings = gContPakStrings[deviceStatus];
-    D_800DFADC = deviceStatus;
-    D_80126A74 = 0;
+    gDeviceStatus = deviceStatus;
+    gSaveMenuMessageLines = 0;
 
     for (k = 0; gDeviceStatusStrings[k] != NULL; k++) {}
     k++;
-    for (; gDeviceStatusStrings[k] != NULL; D_80126A74++, k++) {}
+    for (; gDeviceStatusStrings[k] != NULL; gSaveMenuMessageLines++, k++) {}
 
-    D_80126A78 = D_80126A74 - 1;
+    gSavemenuMessageOption = gSaveMenuMessageLines - 1;
 
     dialogue_clear(7);
     set_current_dialogue_box_coords(7, 40, SCREEN_HEIGHT_HALF - (((k * 16) + 44) >> 1), 280,
@@ -4113,7 +4113,7 @@ void savemenu_render_error(SIDeviceStatus deviceStatus) {
     i++;
     y += 16;
     for (j = 0; gDeviceStatusStrings[i] != NULL; i++, j++, y += 16) {
-        D_80126A80[j] = render_dialogue_text(7, POS_CENTRED, y, gDeviceStatusStrings[i], 1, ALIGN_MIDDLE_CENTER);
+        gSavemenuText[j] = render_dialogue_text(7, POS_CENTRED, y, gDeviceStatusStrings[i], 1, ALIGN_MIDDLE_CENTER);
     }
     gMenuStage |= 8;
 }
@@ -4187,37 +4187,41 @@ s32 savemenu_input_confirm(s32 buttonsPressed, UNUSED s32 arg1) {
     return 0;
 }
 
-s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
+/**
+ * Takes input if a message is shown onscreen when first coming into the save menu.
+ * This resolves having a rumble pak connected, or a damaged controller pak.
+*/
+s32 savemenu_input_message(s32 buttonsPressed, s32 yAxis) {
     UNUSED s32 pad[2];
-    s32 sp1C;
+    s32 stage;
     s32 i;
-    s32 temp;
+    s32 highlight;
 
-    temp = gOptionBlinkTimer * 8;
-    if (temp > 255) {
-        temp = 511 - temp;
+    highlight = gOptionBlinkTimer * 8;
+    if (highlight > 255) {
+        highlight = 511 - highlight;
     }
-    sp1C = (gMenuStage & 7);
-    for (i = 0; i < D_80126A74; i++) {
-        if (i == D_80126A78) {
-            D_80126A80[i]->unk13 = temp;
+    stage = (gMenuStage & 7);
+    for (i = 0; i < gSaveMenuMessageLines; i++) {
+        if (i == gSavemenuMessageOption) {
+            gSavemenuText[i]->highlight = highlight;
         } else {
-            D_80126A80[i]->unk13 = 0;
+            gSavemenuText[i]->highlight = 0;
         }
     }
     if (buttonsPressed & B_BUTTON ||
-        (buttonsPressed & (START_BUTTON | A_BUTTON) && (u32) D_80126A74 == (u32) (D_80126A78 + 1))) {
+        (buttonsPressed & (START_BUTTON | A_BUTTON) && (u32) gSaveMenuMessageLines == (u32) (gSavemenuMessageOption + 1))) {
         sound_play(SOUND_MENU_BACK3, NULL);
         gMenuStage &= ~8;
-        switch (sp1C) {
-            case 0:
+        switch (stage) {
+            case SAVEMENU_ENTER:
                 if (!(buttonsPressed & (START_BUTTON | A_BUTTON))) {
                     gOpacityDecayTimer = 6;
                     gMenuStage = SAVEMENU_WAIT;
                 }
                 break;
-            case 2:
-                switch (D_800DFADC) {
+            case SAVEMENU_INIT_SOURCE:
+                switch (gDeviceStatus) {
                     case CONTROLLER_PAK_CHANGED:
                         gOpacityDecayTimer = 5;
                         gMenuStage = SAVEMENU_WAIT;
@@ -4226,18 +4230,18 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
                     case CONTROLLER_PAK_INCONSISTENT:
                     case CONTROLLER_PAK_WITH_BAD_ID:
                     case CONTROLLER_PAK_BAD_DATA:
-                        D_80126A18 = 0;
+                        gSaveMenuSourceState = 0;
                         break;
                     case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
-                        D_80126A18 = -1;
+                        gSaveMenuSourceState = -1;
                         break;
                     default:
-                        D_80126A18 = 1;
+                        gSaveMenuSourceState = 1;
                         break;
                 }
                 break;
-            case 4:
-                switch (D_800DFADC) {
+            case SAVEMENU_INIT_DEST:
+                switch (gDeviceStatus) {
                     case CONTROLLER_PAK_NOT_FOUND:
                     case CONTROLLER_PAK_CHANGED:
                         gOpacityDecayTimer = 5;
@@ -4246,18 +4250,18 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
                     case CONTROLLER_PAK_INCONSISTENT:
                     case CONTROLLER_PAK_WITH_BAD_ID:
                     case CONTROLLER_PAK_BAD_DATA:
-                        D_80126A1C = 0;
+                        gSaveMenuDestState = 0;
                         break;
                     case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
-                        D_80126A1C = -1;
+                        gSaveMenuDestState = -1;
                         break;
                     default:
-                        D_80126A1C = 1;
+                        gSaveMenuDestState = 1;
                         break;
                 }
                 break;
-            case 7:
-                switch (D_800DFADC) {
+            case SAVEMENU_WRITE:
+                switch (gDeviceStatus) {
                     case CONTROLLER_PAK_NOT_FOUND:
                     case CONTROLLER_PAK_INCONSISTENT:
                     case CONTROLLER_PAK_WITH_BAD_ID:
@@ -4276,38 +4280,38 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
     } else if (buttonsPressed & (START_BUTTON | A_BUTTON)) {
         sound_play(SOUND_SELECT2, NULL);
         gMenuStage &= ~8;
-        switch (D_800DFADC) {
+        switch (gDeviceStatus) {
             case CONTROLLER_PAK_WITH_BAD_ID:
                 reformat_controller_pak(gControllerIndex);
-                if (sp1C == 4) {
-                    D_80126A1C = 0;
-                } else if (sp1C == 7) {
-                    D_80126A18 = 0;
+                if (stage == SAVEMENU_INIT_DEST) {
+                    gSaveMenuDestState = 0;
+                } else if (stage == SAVEMENU_WRITE) {
+                    gSaveMenuSourceState = 0;
                 }
                 break;
             case CONTROLLER_PAK_INCONSISTENT:
             case CONTROLLER_PAK_BAD_DATA:
                 repair_controller_pak(gControllerIndex);
-                if (sp1C == 4) {
-                    D_80126A1C = 1;
-                } else if (sp1C == 2) {
-                    D_80126A18 = 1;
+                if (stage == SAVEMENU_INIT_DEST) {
+                    gSaveMenuDestState = 1;
+                } else if (stage == SAVEMENU_INIT_SOURCE) {
+                    gSaveMenuSourceState = 1;
                 }
                 break;
             case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
-                if (sp1C == 4) {
-                    D_80126A1C = -1;
+                if (stage == SAVEMENU_INIT_DEST) {
+                    gSaveMenuDestState = -1;
                 } else {
-                    D_80126A18 = -1;
+                    gSaveMenuSourceState = -1;
                 }
                 break;
         }
-    } else if (yAxis < 0 && D_80126A78 < (D_80126A74 - 1)) {
+    } else if (yAxis < 0 && gSavemenuMessageOption < (gSaveMenuMessageLines - 1)) {
         sound_play(SOUND_MENU_PICK2, NULL);
-        D_80126A78++;
-    } else if (yAxis > 0 && D_80126A78 > 0) {
+        gSavemenuMessageOption++;
+    } else if (yAxis > 0 && gSavemenuMessageOption > 0) {
         sound_play(SOUND_MENU_PICK2, NULL);
-        D_80126A78--;
+        gSavemenuMessageOption--;
     }
     return 0;
 }
@@ -4361,7 +4365,7 @@ s32 menu_save_options_loop(s32 updateRate) {
         }
     }
     if (gMenuStage & 8) {
-        gMenuDelay = func_80087734(buttonsPressed, yAxis);
+        gMenuDelay = savemenu_input_message(buttonsPressed, yAxis);
     } else {
         switch (gMenuStage) {
             case SAVEMENU_ENTER:
