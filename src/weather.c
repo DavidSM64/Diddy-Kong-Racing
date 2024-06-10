@@ -505,8 +505,7 @@ void lensflare_init(Object *obj) {
     gLensFlarePos.z = -gLensFlarePos.z;
 }
 
-// lensflare_render
-void func_800ACA20(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *segment) {
+void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *segment) {
     u16 height;
     f32 pep;
     f32 pep2;
@@ -514,11 +513,11 @@ void func_800ACA20(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *s
     f32 magnitude;
     f32 magSquared;
     f32 magSquareSquared;
-    LensFlareData* lensFlareData;
+    LensFlareData *lensFlareData;
     ObjectTransform trans;
     Gfx *gfxTemp;
     s32 width;
-    LevelObjectEntry_LensFlare* lensFlareEntry;
+    LevelObjectEntry_LensFlare *lensFlareEntry;
     s32 i;
 
     if (gLensFlare != NULL && gLensFlareOff == 0) {
@@ -540,10 +539,10 @@ void func_800ACA20(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *s
                 trans.y_rotation = 0;
                 trans.x_rotation = 0;
                 trans.z_rotation = 0;
-                pos[1].x = (pos[1].x * (0,(2 * magnitude))) - gLensFlarePos.x;
-                pos[1].y = (pos[1].y * (0,(2 * magnitude))) - gLensFlarePos.y;
-                pos[1].z = (pos[1].z * (0,(2 * magnitude))) - gLensFlarePos.z;
-                for(i = 0; i < 3; i++) {
+                pos[1].x = (pos[1].x * (0, (2 * magnitude))) - gLensFlarePos.x;
+                pos[1].y = (pos[1].y * (0, (2 * magnitude))) - gLensFlarePos.y;
+                pos[1].z = (pos[1].z * (0, (2 * magnitude))) - gLensFlarePos.z;
+                for (i = 0; i < 3; i++) {
                     if (i == 0) {
                         lensFlareData = gLensFlareLarge;
                     } else if (i == 1) {
@@ -552,7 +551,7 @@ void func_800ACA20(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *s
                         lensFlareData = gLensFlareSet2;
                     }
                     if (lensFlareData != NULL) {
-                        while((lensFlareData->count > 0)) {
+                        while ((lensFlareData->count > 0)) {
                             trans.x_position = pos[0].x;
                             trans.y_position = pos[0].y;
                             trans.z_position = pos[0].z;
@@ -562,13 +561,19 @@ void func_800ACA20(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *s
                                 trans.z_position = (lensFlareData->offset * pos[1].z) + pos[0].z;
                             }
                             trans.scale = lensFlareData->scale * magSquared;
-                            gDPSetPrimColor((*dList)++, 0, 0, lensFlareData->colour.r, lensFlareData->colour.g, lensFlareData->colour.b, (s32) (lensFlareData->colour.a * magSquareSquared));
-                            render_sprite_billboard(dList, mats, verts, (Object*)&trans, (unk80068514_arg4 *)gLensFlare->unk68[lensFlareData->count], (RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE));
+                            gDPSetPrimColor((*dList)++, 0, 0, lensFlareData->colour.r, lensFlareData->colour.g,
+                                            lensFlareData->colour.b,
+                                            (s32) (lensFlareData->colour.a * magSquareSquared));
+                            render_sprite_billboard(dList, mats, verts, (Object *) &trans,
+                                                    (unk80068514_arg4 *) gLensFlare->unk68[lensFlareData->count],
+                                                    (RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE));
                             lensFlareData++;
                         }
                     }
                     if (i == 1) {
-                        pep = (((pos[1].x * gLensFlarePos.x) + (pos[1].y * gLensFlarePos.y)) + (pos[1].z * ((0, gLensFlarePos.z)))) * 2;
+                        pep = (((pos[1].x * gLensFlarePos.x) + (pos[1].y * gLensFlarePos.y)) +
+                               (pos[1].z * ((0, gLensFlarePos.z)))) *
+                              2;
                         pos[1].x = (pep * gLensFlarePos.x) - pos[1].x;
                         pos[1].y = (pep * gLensFlarePos.y) - pos[1].y;
                         pos[1].z = (pep * gLensFlarePos.z) - pos[1].z;
@@ -579,7 +584,8 @@ void func_800ACA20(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *s
                 width = GET_VIDEO_WIDTH(width);
                 gfxTemp = (*dList);
                 gSPDisplayList(gfxTemp++, dLensFlare);
-                gDPSetPrimColor(gfxTemp++, 0, 0, lensFlareEntry->red, lensFlareEntry->green, lensFlareEntry->blue, (s32)(lensFlareEntry->alpha * magSquareSquared));
+                gDPSetPrimColor(gfxTemp++, 0, 0, lensFlareEntry->red, lensFlareEntry->green, lensFlareEntry->blue,
+                                (s32) (lensFlareEntry->alpha * magSquareSquared));
                 gDPSetCombineMode(gfxTemp++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
                 gDPFillRectangle(gfxTemp++, 0, 0, width, height);
                 gDPPipeSync(gfxTemp++);

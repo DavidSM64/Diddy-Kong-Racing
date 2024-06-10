@@ -112,7 +112,7 @@ void init_weather(void);
 void f32_matrix_dot(Matrix *arg0, Matrix *arg1, Matrix *arg2);
 void func_800AC21C(void);
 void lensflare_init(Object *);
-void func_800ACA20(Gfx**, MatrixS**, Vertex**, ObjectSegment*);
+void lensflare_render(Gfx**, MatrixS**, Vertex**, ObjectSegment*);
 void func_800AB4A8(s32 weatherType, s32 weatherEnable, s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity);
 
 #endif
