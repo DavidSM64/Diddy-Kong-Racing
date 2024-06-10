@@ -16,6 +16,8 @@ compiler_type = "ido"
 "TRUE" = "unsigned int"
 "FALSE" = "unsigned int"
 "NULL" = "unsigned int"
+"G_CC.*" = "unsigned int"
+"G_AC.*" = "unsigned int"
 
 [decompme.compilers]
 "tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3_irix"

@@ -332,7 +332,11 @@ typedef struct LevelObjectEntry_LensFlare {
     /* 0x0C */ u8 set1;
     /* 0x0D */ u8 set2;
     /* 0x0E */ u8 largeShine;
-    /* 0x0A */ u8 pad[5];
+    /* 0x0A */ u8 padA;
+    /* 0x10 */ u8 red;
+    /* 0x11 */ u8 green;
+    /* 0x12 */ u8 blue;
+    /* 0x13 */ u8 alpha;
 } LevelObjectEntry_LensFlare;
 
 typedef struct LevelObjectEntry_LensFlareSwitch {
