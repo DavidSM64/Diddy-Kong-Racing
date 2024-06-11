@@ -7,7 +7,8 @@
 
 typedef enum WeatherType {
     WEATHER_SNOW,
-    WEATHER_RAIN
+    WEATHER_RAIN,
+    WEATHER_UNK2
 } WeatherType;
 
 typedef struct unk800E2850_unk0 {

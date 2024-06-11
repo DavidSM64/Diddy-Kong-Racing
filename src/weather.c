@@ -227,6 +227,7 @@ void free_weather_memory(void) {
         free_rain_memory();
     }
 }
+
 // proccess_rain?
 void func_800AB4A8(s32 weatherType, s32 weatherEnable, s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity) {
     s16 width;
@@ -254,7 +255,7 @@ void func_800AB4A8(s32 weatherType, s32 weatherEnable, s32 velX, s32 velY, s32 v
     D_80127BB8.unk8 = intensity;
     D_80127BB8.unk30 = opacity;
     D_80127BB8.unk38 = opacity;
-    if (weatherType >= WEATHER_SNOW) {
+    if (weatherType >= WEATHER_UNK2) {
         weatherType = WEATHER_RAIN;
     }
     if (D_800E2850[weatherType].unk8 == ((TextureHeader *) 1)) {
@@ -370,12 +371,12 @@ void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
             D_80127BB8.unk8 = arg3;
             D_80127BB8.unk38 = arg4;
             D_80127BB8.unk3C = arg5;
-            return;
+        } else {
+            D_80127BB8.unk0 = arg3;
+            D_80127BB8.unk30 = arg4;
+            D_80127BB8.unk3C = 0;
+            func_800AD2C4(arg3 + 1, arg4 + 1, (f32) arg5 / 60.0f);
         }
-        D_80127BB8.unk0 = arg3;
-        D_80127BB8.unk30 = arg4;
-        D_80127BB8.unk3C = 0;
-        func_800AD2C4(arg3 + 1, arg4 + 1, (f32) arg5 / 60.0f);
     }
 }
 /**
