@@ -33,7 +33,7 @@ unk800E2850 D_800E28D8 = { NULL, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 // Not sure about typing for the following.
 Vertex *D_800E2904 = 0;
 s32 D_800E2908 = 0;
-s32 *D_800E290C = NULL;
+Triangle *D_800E290C = NULL;
 s16 *D_800E2910 = NULL;
 Vertex *D_800E2914[2] = { NULL, NULL };
 s32 *gWeatherAssetTable = NULL;   // List of Ids
@@ -129,7 +129,7 @@ FadeTransition gThunderTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_I
 
 s32 D_80127BB0;
 s32 D_80127BB4;
-s32 D_80127BB8[16];
+RainData D_80127BB8;
 unk80127BF8 D_80127BF8;
 s32 D_80127C00;
 s32 D_80127C04;
@@ -227,8 +227,115 @@ void free_weather_memory(void) {
         free_rain_memory();
     }
 }
+// proccess_rain?
+void func_800AB4A8(s32 weatherType, s32 weatherEnable, s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity) {
+    s16 width;
+    s16 height;
+    s32 numOfElements;
+    s32 allocSize;
+    s32 i;
+    s32 j;
+    unk800E2850_unk0 *temp_v0;
 
-GLOBAL_ASM("asm/non_matchings/weather/func_800AB4A8.s")
+    free_weather_memory();
+    D_80127BB8.unkC = velX;
+    D_80127BB8.unk10 = 0;
+    D_80127BB8.unk14 = velX;
+    D_80127BB8.unk18 = velY;
+    D_80127BB8.unk1C = 0;
+    D_80127BB8.unk20 = velY;
+    D_80127BB8.unk28 = 0;
+    D_80127BB8.unk4 = 0;
+    D_80127BB8.unk34 = 0;
+    D_80127BB8.unk3C = 0;
+    D_80127BB8.unk24 = velZ;
+    D_80127BB8.unk2C = velZ;
+    D_80127BB8.unk0 = intensity;
+    D_80127BB8.unk8 = intensity;
+    D_80127BB8.unk30 = opacity;
+    D_80127BB8.unk38 = opacity;
+    if (weatherType >= WEATHER_SNOW) {
+        weatherType = WEATHER_RAIN;
+    }
+    if (D_800E2850[weatherType].unk8 == ((TextureHeader *) 1)) {
+        func_800AD144(intensity + 1, opacity + 1);
+        return;
+    }
+    temp_v0 = (unk800E2850_unk0 *) allocate_from_main_pool_safe(
+        D_800E2850[weatherType].unk4 * (sizeof(unk800E2850_unk0)), COLOUR_TAG_LIGHT_ORANGE);
+    D_800E28D8.unk0 = temp_v0;
+    D_800E28D8.unk4 = D_800E2850[weatherType].unk4;
+    D_800E28D8.unkC = D_800E2850[weatherType].unkC;
+    D_800E28D8.unk10 = D_800E2850[weatherType].unk10;
+    D_800E28D8.unk14 = D_800E2850[weatherType].unk14;
+    D_800E28D8.unk18 = D_800E2850[weatherType].unk18;
+    D_800E28D8.unk1C = D_800E2850[weatherType].unk1C;
+    D_800E28D8.unk20 = D_800E2850[weatherType].unk20;
+    D_800E28D8.unk24 = D_800E2850[weatherType].unk24;
+    D_800E28D8.unk26 = D_800E2850[weatherType].unk26;
+    D_800E28D8.unk28 = D_800E28D8.unk24 * 2;
+    D_800E28D8.unk2A = D_800E28D8.unk26 * 2;
+    if (D_800E2850[weatherType].unk8 == NULL) {
+        func_800ABB34();
+    }
+    numOfElements = weatherEnable;
+    D_80127BB0 = numOfElements;
+    D_800E2910 = (s16 *) allocate_from_main_pool_safe(numOfElements * (sizeof(s16)), COLOUR_TAG_LIGHT_ORANGE);
+    D_800E28D4 =
+        (unk800E28D4 *) allocate_from_main_pool_safe(numOfElements * (sizeof(unk800E28D4)), COLOUR_TAG_LIGHT_ORANGE);
+    for (i = 0; i < D_80127BB0; i++) {
+        D_800E28D4[i].unk0 = get_random_number_from_range(0, D_800E28D8.unk18);
+        D_800E28D4[i].unk4 = get_random_number_from_range(0, D_800E28D8.unk1C);
+        D_800E28D4[i].unk8 = get_random_number_from_range(0, D_800E28D8.unk20);
+        D_800E28D4[i].unkC = 1 << (get_random_number_from_range(0, 32) + 5);
+        D_800E28D4[i].unkD = 1 << (get_random_number_from_range(0, 32) + 5);
+        D_800E28D4[i].unkE = 1 << (get_random_number_from_range(0, 32) + 5);
+        D_800E28D4[i].unkF = get_random_number_from_range(0, D_800E28D8.unk4 - 1);
+    }
+
+    numOfElements = numOfElements * 4;
+    allocSize = sizeof(Vertex);
+    allocSize *= numOfElements;
+    D_800E2914[0] = allocate_from_main_pool_safe(allocSize, COLOUR_TAG_LIGHT_ORANGE);
+    D_800E2914[1] = allocate_from_main_pool_safe(allocSize, COLOUR_TAG_LIGHT_ORANGE);
+    for (j = 0; j < 2; j++) {
+        D_800E2904 = D_800E2914[j];
+        for (i = 0; i < numOfElements; i++) {
+            D_800E2904[i].r = 0xFF;
+            D_800E2904[i].g = 0xFF;
+            D_800E2904[i].b = 0xFF;
+            D_800E2904[i].a = 0xFF;
+        }
+    }
+
+    width = (D_800E28D8.unk8->width << 5) - 1;
+    height = (D_800E28D8.unk8->height << 5) - 1;
+    D_800E290C = (Triangle *) allocate_from_main_pool_safe(D_80127C04 * (sizeof(Triangle)), COLOUR_TAG_LIGHT_ORANGE);
+    for (i = 0; i < D_80127C04; i += 2) {
+        D_800E290C[i].flags = 0;
+        D_800E290C[i].vi0 = (i << 1) + 3;
+        D_800E290C[i].uv0.u = 0;
+        D_800E290C[i].uv0.v = height;
+        D_800E290C[i].vi1 = (i << 1) + 1;
+        D_800E290C[i].uv1.u = width;
+        D_800E290C[i].uv1.v = 0;
+        D_800E290C[i].vi2 = (i << 1) + 0;
+        D_800E290C[i].uv2.u = 0;
+        D_800E290C[i].uv2.v = 0;
+        D_800E290C[i + 1].flags = 0;
+        D_800E290C[i + 1].vi0 = (i << 1) + 3;
+        D_800E290C[i + 1].uv0.u = 0;
+        D_800E290C[i + 1].uv0.v = height;
+        D_800E290C[i + 1].vi1 = (i << 1) + 2;
+        D_800E290C[i + 1].uv1.u = width;
+        D_800E290C[i + 1].uv1.v = height;
+        D_800E290C[i + 1].vi2 = (i << 1) + 1;
+        D_800E290C[i + 1].uv2.u = width;
+        D_800E290C[i + 1].uv2.v = 0;
+    }
+
+    D_80127C08 = 0;
+}
 
 void func_800ABB34(void) {
     s32 temp_v0;
@@ -249,25 +356,25 @@ void func_800ABB34(void) {
 }
 
 void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
-    if ((arg5 > 0) && ((arg0 != D_80127BB8[5]) || (arg1 != D_80127BB8[8]) || (arg2 != D_80127BB8[11]) ||
-                       (arg3 != D_80127BB8[0]) || (arg4 != D_80127BB8[12]))) {
-        D_80127BB8[5] = arg0;
-        D_80127BB8[8] = arg1;
-        D_80127BB8[11] = arg2;
-        D_80127BB8[4] = (s32) ((s32) (arg0 - D_80127BB8[3]) / arg5);
-        D_80127BB8[7] = (s32) ((s32) (arg1 - D_80127BB8[6]) / arg5);
-        D_80127BB8[10] = (s32) ((s32) (arg2 - D_80127BB8[9]) / arg5);
+    if ((arg5 > 0) && ((arg0 != D_80127BB8.unk14) || (arg1 != D_80127BB8.unk20) || (arg2 != D_80127BB8.unk2C) ||
+                       (arg3 != D_80127BB8.unk0) || (arg4 != D_80127BB8.unk30))) {
+        D_80127BB8.unk14 = arg0;
+        D_80127BB8.unk20 = arg1;
+        D_80127BB8.unk2C = arg2;
+        D_80127BB8.unk10 = (s32) ((s32) (arg0 - D_80127BB8.unkC) / arg5);
+        D_80127BB8.unk1C = (s32) ((s32) (arg1 - D_80127BB8.unk18) / arg5);
+        D_80127BB8.unk28 = (s32) ((s32) (arg2 - D_80127BB8.unk24) / arg5);
         if (gWeatherType == WEATHER_SNOW) {
-            D_80127BB8[1] = (s32) ((s32) (arg3 - D_80127BB8[0]) / arg5);
-            D_80127BB8[13] = (s32) ((s32) (arg4 - D_80127BB8[12]) / arg5);
-            D_80127BB8[2] = arg3;
-            D_80127BB8[14] = arg4;
-            D_80127BB8[15] = arg5;
+            D_80127BB8.unk4 = (s32) ((s32) (arg3 - D_80127BB8.unk0) / arg5);
+            D_80127BB8.unk34 = (s32) ((s32) (arg4 - D_80127BB8.unk30) / arg5);
+            D_80127BB8.unk8 = arg3;
+            D_80127BB8.unk38 = arg4;
+            D_80127BB8.unk3C = arg5;
             return;
         }
-        D_80127BB8[0] = arg3;
-        D_80127BB8[12] = arg4;
-        D_80127BB8[15] = 0;
+        D_80127BB8.unk0 = arg3;
+        D_80127BB8.unk30 = arg4;
+        D_80127BB8.unk3C = 0;
         func_800AD2C4(arg3 + 1, arg4 + 1, (f32) arg5 / 60.0f);
     }
 }
@@ -287,25 +394,25 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
     if (gWeatherType != WEATHER_SNOW) {
         handle_weather_rain(updateRate);
     } else {
-        if (D_80127BB8[15] > 0) {
-            if (updateRate < D_80127BB8[15]) {
-                D_80127BB8[0] += D_80127BB8[1] * updateRate;
-                D_80127BB8[3] += D_80127BB8[4] * updateRate;
-                D_80127BB8[6] += D_80127BB8[7] * updateRate;
-                D_80127BB8[9] += D_80127BB8[10] * updateRate;
-                D_80127BB8[12] += D_80127BB8[13] * updateRate;
-                D_80127BB8[15] -= updateRate;
+        if (D_80127BB8.unk3C > 0) {
+            if (updateRate < D_80127BB8.unk3C) {
+                D_80127BB8.unk0 += D_80127BB8.unk4 * updateRate;
+                D_80127BB8.unkC += D_80127BB8.unk10 * updateRate;
+                D_80127BB8.unk18 += D_80127BB8.unk1C * updateRate;
+                D_80127BB8.unk24 += D_80127BB8.unk28 * updateRate;
+                D_80127BB8.unk30 += D_80127BB8.unk34 * updateRate;
+                D_80127BB8.unk3C -= updateRate;
             } else {
-                D_80127BB8[0] = D_80127BB8[2];
-                D_80127BB8[3] = D_80127BB8[5];
-                D_80127BB8[6] = D_80127BB8[8];
-                D_80127BB8[9] = D_80127BB8[11];
-                D_80127BB8[12] = D_80127BB8[14];
-                D_80127BB8[15] = 0;
+                D_80127BB8.unk0 = D_80127BB8.unk8;
+                D_80127BB8.unkC = D_80127BB8.unk14;
+                D_80127BB8.unk18 = D_80127BB8.unk20;
+                D_80127BB8.unk24 = D_80127BB8.unk2C;
+                D_80127BB8.unk30 = D_80127BB8.unk38;
+                D_80127BB8.unk3C = 0;
             }
         }
-        D_80127BB4 = (D_80127BB0 * D_80127BB8[0]) >> (unused = 16);
-        D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8[12])) >> (unused = 16);
+        D_80127BB4 = (D_80127BB0 * D_80127BB8.unk0) >> (unused = 16);
+        D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8.unk30)) >> (unused = 16);
 
         func_800AC0C8(updateRate);
         if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < D_80127BF8.unk0)) {
@@ -329,11 +436,11 @@ void func_800AC0C8(s32 updateRate) {
     for (i = 0; i < D_80127BB0; i++) {
         temp_v1 = &D_800E28D8.unk0[D_800E28D4[i].unkF];
         D_800E28D4[i].unk0 =
-            ((((temp_v1->unk0 + (D_80127BB8[3] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk0) & D_800E28D8.unk18;
+            ((((temp_v1->unk0 + (D_80127BB8.unkC * 2)) * updateRate) >> 1) + D_800E28D4[i].unk0) & D_800E28D8.unk18;
         D_800E28D4[i].unk4 =
-            ((((temp_v1->unk4 + (D_80127BB8[6] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk4) & D_800E28D8.unk1C;
+            ((((temp_v1->unk4 + (D_80127BB8.unk18 * 2)) * updateRate) >> 1) + D_800E28D4[i].unk4) & D_800E28D8.unk1C;
         D_800E28D4[i].unk8 =
-            ((((temp_v1->unk8 + (D_80127BB8[9] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk8) & D_800E28D8.unk20;
+            ((((temp_v1->unk8 + (D_80127BB8.unk24 * 2)) * updateRate) >> 1) + D_800E28D4[i].unk8) & D_800E28D8.unk20;
         D_800E28D4[i].unkF++;
         if (D_800E28D4[i].unkF >= D_800E28D8.unk4) {
             D_800E28D4[i].unkF -= D_800E28D8.unk4;
@@ -508,7 +615,7 @@ void lensflare_init(Object *obj) {
 void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *segment) {
     u16 height;
     f32 pep;
-    f32 pep2;
+    UNUSED s32 pad;
     Vec3f pos[2];
     f32 magnitude;
     f32 magSquared;

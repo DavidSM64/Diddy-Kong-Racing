@@ -84,9 +84,30 @@ typedef struct unk800E28D4 {
     s32 unk0;
     s32 unk4;
     s32 unk8;
-    u8  padC[3];
+    u8  unkC;
+    u8  unkD;
+    u8  unkE;
     u8  unkF;
 } unk800E28D4;
+
+typedef struct RainData {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    s32 unk10;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
+    s32 unk24;
+    s32 unk28;
+    s32 unk2C;
+    s32 unk30;
+    s32 unk34;
+    s32 unk38;
+    s32 unk3C;
+} RainData;
 
 void set_weather_limits(s16 arg0, s16 arg1);
 void lensflare_remove(Object *obj);
@@ -105,6 +126,8 @@ void free_weather_memory(void);
 void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
 void lensflare_override(ObjectSegment *cameraSegment);
 void func_800AC0C8(s32 updateRate);
+void func_800ABB34(void);
+void func_800AD144(s32 arg0, s32 arg1);
 
 s32 coss(s16);
 s32 sins(s16);
