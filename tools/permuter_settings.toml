@@ -18,6 +18,7 @@ compiler_type = "ido"
 "NULL" = "unsigned int"
 "G_CC.*" = "unsigned int"
 "G_AC.*" = "unsigned int"
+"ARRAY_COUNT" = "unsigned int"
 
 [decompme.compilers]
-"tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3_irix"
+"tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3"

@@ -379,6 +379,7 @@ void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
         }
     }
 }
+
 /**
  * The root function for handling all weather.
  * Decide whether to perform rain or snow logic, execute it, then set it to render right after.
@@ -870,7 +871,121 @@ void handle_weather_rain(s32 updateRate) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void render_rain_splashes(s32 updateRate) {
+    s32 sp6C;
+    f32 sp5C;
+    f32 xPos;
+    f32 zPos;
+    Object *racer;
+    WaterProperties **waterProps;
+    f32 var_f0;
+    f32 var_f2;
+    s32 temp_t0;
+    s32 firstIndexWithoutFlags;
+    s32 setEnvColor;
+    s32 var_v1_2;
+    s32 waveCount;
+    Object *obj;
+    s32 i;
+    s32 levelSegmentIndex;
+
+    setEnvColor = TRUE;
+    if (gRainSplashGfx != NULL) {
+        temp_t0 = ((D_800E2C6C >> 2) * gLightningFrequency) >> 14;
+        if (temp_t0 > 0x4000) {
+            racer = get_racer_object_by_port(0);
+            D_800E2C84 -= updateRate;
+            if (D_800E2C84 <= 0) {
+                i = 0;
+                if (racer != NULL) {
+                    firstIndexWithoutFlags = -1;
+                    for (; i < ARRAY_COUNT(D_800E2B4C) && firstIndexWithoutFlags < 0; i++) {
+                        obj = &D_800E2B4C[i];
+                        if (obj->segment.trans.flags == OBJ_FLAGS_NONE) {
+                            firstIndexWithoutFlags = i;
+                        }
+
+                    }
+                    if (firstIndexWithoutFlags >= 0) {
+                        sp6C = get_random_number_from_range(-0x2000, 0x2000) + racer->segment.trans.y_rotation + 0x8000;
+                        sp5C = (f32) get_random_number_from_range(50, 500);
+                        xPos = (sins_f(sp6C) * sp5C) + racer->segment.trans.x_position;
+                        zPos = (coss_f(sp6C) * sp5C) + racer->segment.trans.z_position;
+                        levelSegmentIndex = get_level_segment_index_from_position(xPos, racer->segment.trans.y_position, zPos);
+                        waveCount = func_8002B0F4(levelSegmentIndex, xPos, zPos, &waterProps);
+                        if (waveCount != 0) {
+                            var_f2 = 1000.0f;
+                            var_v1_2 = 0;
+                            if (waveCount >= 2) {
+                                while (var_v1_2 < (waveCount - 1) && racer->segment.trans.y_position < waterProps[var_v1_2]->waveHeight) {
+                                    var_v1_2++;
+                                }
+                                if (var_v1_2 > 0) {
+                                    var_f2 = racer->segment.trans.y_position - waterProps[var_v1_2]->waveHeight;
+                                    var_v1_2--;
+                                    if (var_f2 < 0.0f) {
+                                        var_f2 = -var_f2;
+                                    }
+                                }
+                            }
+                            var_f0 = racer->segment.trans.y_position - waterProps[var_v1_2]->waveHeight;
+                            if (var_f0 < 0.0f) {
+                                var_f0 = -var_f0;
+                            }
+                            if (var_f0 < var_f2) {
+                                if (var_f0 > 200.0f) {
+                                    firstIndexWithoutFlags = -1;
+                                }
+                            } else {
+                                var_v1_2++;
+                                if (var_f2 > 200.0f) {
+                                    firstIndexWithoutFlags = -1;
+                                }
+                            }
+                            if (firstIndexWithoutFlags >= 0) {
+                                obj = &D_800E2B4C[firstIndexWithoutFlags];
+                                obj->segment.trans.x_position = xPos;
+                                obj->segment.trans.y_position = waterProps[var_v1_2]->waveHeight;
+                                obj->segment.trans.z_position = zPos;
+                                obj->segment.animFrame = 0;
+                                obj->segment.trans.flags = OBJ_FLAGS_UNK_0001;
+                                obj->segment.unk1A = get_random_number_from_range(128, (temp_t0 >> 10) + 191);
+                                D_800E2C84 = (D_800E2C84 - (temp_t0 >> 10)) + 64;
+                                if (D_800E2C84 < 0) {
+                                    D_800E2C84 = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for (i = 0; i < ARRAY_COUNT(D_800E2B4C); i++) {
+            obj = &D_800E2B4C[i];
+            if (obj->segment.trans.flags != 0) {
+                obj->segment.animFrame += updateRate * 16;
+                if (obj->segment.animFrame > 255) {
+                    obj->segment.trans.flags = 0;
+                } else {
+                    if (setEnvColor) {
+                        setEnvColor = FALSE;                        
+                        gDPSetEnvColor(gCurrWeatherDisplayList++, 255, 255, 255, 0);
+                    }
+                    
+                    gDPSetPrimColor(gCurrWeatherDisplayList++, 0, 0, 192, 192, 255, (obj->segment.unk1A));
+                    render_sprite_billboard(&gCurrWeatherDisplayList, &gCurrWeatherMatrix, &gCurrWeatherVertexList,
+                        (Object *) obj, (unk80068514_arg4 *) gRainSplashGfx, 0x10E);
+                }
+            }
+        }
+       
+        gDPSetPrimColor(gCurrWeatherDisplayList++, 0, 0, 255, 255, 255, 255);
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/weather/render_rain_splashes.s")
+#endif
 
 /**
  * On a randomly set timer, based on the weather intensity, count down and make the sound of thunder.
