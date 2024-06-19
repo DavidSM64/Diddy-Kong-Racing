@@ -873,22 +873,22 @@ void handle_weather_rain(s32 updateRate) {
 
 #ifdef NON_EQUIVALENT
 void render_rain_splashes(s32 updateRate) {
-    s32 sp6C;
-    f32 sp5C;
-    f32 xPos;
-    f32 zPos;
-    Object *racer;
+    s32 i;
+    s32 levelSegmentIndex;
+    s32 temp_t0;
     WaterProperties **waterProps;
     f32 var_f0;
     f32 var_f2;
-    s32 temp_t0;
+    s32 randYRot;
     s32 firstIndexWithoutFlags;
     s32 setEnvColor;
-    s32 var_v1_2;
+    s32 waveIndex;
+    f32 randFloat;
+    f32 xPos;
+    f32 zPos;
+    Object *racer;
     s32 waveCount;
     Object *obj;
-    s32 i;
-    s32 levelSegmentIndex;
 
     setEnvColor = TRUE;
     if (gRainSplashGfx != NULL) {
@@ -908,28 +908,28 @@ void render_rain_splashes(s32 updateRate) {
 
                     }
                     if (firstIndexWithoutFlags >= 0) {
-                        sp6C = get_random_number_from_range(-0x2000, 0x2000) + racer->segment.trans.y_rotation + 0x8000;
-                        sp5C = (f32) get_random_number_from_range(50, 500);
-                        xPos = (sins_f(sp6C) * sp5C) + racer->segment.trans.x_position;
-                        zPos = (coss_f(sp6C) * sp5C) + racer->segment.trans.z_position;
+                        randYRot = get_random_number_from_range(-0x2000, 0x2000) + racer->segment.trans.y_rotation + 0x8000;
+                        randFloat = (f32) get_random_number_from_range(50, 500);
+                        xPos = (sins_f(randYRot) * randFloat) + racer->segment.trans.x_position;
+                        zPos = (coss_f(randYRot) * randFloat) + racer->segment.trans.z_position;
                         levelSegmentIndex = get_level_segment_index_from_position(xPos, racer->segment.trans.y_position, zPos);
                         waveCount = func_8002B0F4(levelSegmentIndex, xPos, zPos, &waterProps);
                         if (waveCount != 0) {
                             var_f2 = 1000.0f;
-                            var_v1_2 = 0;
+                            waveIndex = 0;
                             if (waveCount >= 2) {
-                                while (var_v1_2 < (waveCount - 1) && racer->segment.trans.y_position < waterProps[var_v1_2]->waveHeight) {
-                                    var_v1_2++;
+                                while (waveIndex < (waveCount - 1) && racer->segment.trans.y_position < waterProps[waveIndex]->waveHeight) {
+                                    waveIndex++;
                                 }
-                                if (var_v1_2 > 0) {
-                                    var_f2 = racer->segment.trans.y_position - waterProps[var_v1_2]->waveHeight;
-                                    var_v1_2--;
+                                if (waveIndex > 0) {
+                                    var_f2 = racer->segment.trans.y_position - waterProps[waveIndex]->waveHeight;
                                     if (var_f2 < 0.0f) {
                                         var_f2 = -var_f2;
                                     }
+                                    waveIndex--;
                                 }
                             }
-                            var_f0 = racer->segment.trans.y_position - waterProps[var_v1_2]->waveHeight;
+                            var_f0 = racer->segment.trans.y_position - waterProps[waveIndex]->waveHeight;
                             if (var_f0 < 0.0f) {
                                 var_f0 = -var_f0;
                             }
@@ -938,7 +938,7 @@ void render_rain_splashes(s32 updateRate) {
                                     firstIndexWithoutFlags = -1;
                                 }
                             } else {
-                                var_v1_2++;
+                                waveIndex++;
                                 if (var_f2 > 200.0f) {
                                     firstIndexWithoutFlags = -1;
                                 }
@@ -946,7 +946,7 @@ void render_rain_splashes(s32 updateRate) {
                             if (firstIndexWithoutFlags >= 0) {
                                 obj = &D_800E2B4C[firstIndexWithoutFlags];
                                 obj->segment.trans.x_position = xPos;
-                                obj->segment.trans.y_position = waterProps[var_v1_2]->waveHeight;
+                                obj->segment.trans.y_position = waterProps[waveIndex]->waveHeight;
                                 obj->segment.trans.z_position = zPos;
                                 obj->segment.animFrame = 0;
                                 obj->segment.trans.flags = OBJ_FLAGS_UNK_0001;
