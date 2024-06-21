@@ -450,51 +450,47 @@ void func_800AC0C8(s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_800AC21C(void) {
-    s16 zPos; // sp74
-    s16 yPos;
-    s16 xPos;
-    Matrix sp64;
+    s16 pos[3];
+    f32 sp64[3];
+    s32 i;
+    Vertex *verts;
     s32 sp58;
     s32 sp54;
     s32 sp50;
-    s32 i;
 
-    sp58 = (gWeatherCamera->trans.x_position * 65536.0f);
-    sp54 = (gWeatherCamera->trans.y_position * 65536.0f);
-    sp50 = (gWeatherCamera->trans.z_position * 65536.0f);
+    sp58 = (s32) (gWeatherCamera->trans.x_position * 65536.0f);
+    sp54 = (s32) (gWeatherCamera->trans.y_position * 65536.0f);
+    sp50 = (s32) (gWeatherCamera->trans.z_position * 65536.0f);
     D_800E2908 = 0;
+    verts = D_800E2904;
     for (i = 0; i < D_80127BB4; i++) {
-        sp64[0][0] = (f32) (((D_800E28D4[i].unk0 - sp58) & D_800E28D8.unk18) + D_800E28D8.unkC) * (1.0f / 65536.0f);
-        sp64[0][1] = (f32) (((D_800E28D4[i].unk4 - sp54) & D_800E28D8.unk1C) + D_800E28D8.unk10) * (1.0f / 65536.0f);
-        sp64[0][2] = (f32) (((D_800E28D4[i].unk8 - sp50) & D_800E28D8.unk20) + D_800E28D8.unk14) * (1.0f / 65536.0f);
-        f32_matrix_dot(gWeatherCameraMatrix, &sp64, &sp64);
-        zPos = sp64[0][2];
-        if ((zPos < D_80127BF8.unk0) && (D_80127BF8.unk4 < zPos)) {
-            xPos = sp64[0][0];
-            yPos = sp64[0][1];
-            D_800E2904[i].x = xPos - D_800E28D8.unk24;
-            D_800E2904[i].y = yPos + D_800E28D8.unk26;
-            D_800E2904[i].z = zPos;
-            D_800E2904[i + 1].x = xPos + D_800E28D8.unk24;
-            D_800E2904[i + 1].y = yPos + D_800E28D8.unk26;
-            D_800E2904[i + 1].z = zPos;
-            D_800E2904[i + 2].x = xPos + D_800E28D8.unk24;
-            D_800E2904[i + 2].y = yPos - D_800E28D8.unk26;
-            D_800E2904[i + 2].z = zPos;
-            D_800E2904[i + 3].x = xPos - D_800E28D8.unk24;
-            D_800E2904[i + 3].y = yPos - D_800E28D8.unk26;
-            D_800E2904[i + 3].z = zPos;
+        sp64[0] = (f32) (((D_800E28D4[i].unk0 - sp58) & D_800E28D8.unk18) + D_800E28D8.unkC) * (1.0f / 65536.0f);
+        sp64[1] = (f32) (((D_800E28D4[i].unk4 - sp54) & D_800E28D8.unk1C) + D_800E28D8.unk10) * (1.0f / 65536.0f);
+        sp64[2] = (f32) (((D_800E28D4[i].unk8 - sp50) & D_800E28D8.unk20) + D_800E28D8.unk14) * (1.0f / 65536.0f);
+        f32_matrix_dot(gWeatherCameraMatrix, (Matrix *) &sp64, (Matrix *) &sp64);
+        pos[2] = sp64[2];
+        if ((pos[2] < D_80127BF8.unk0) && (D_80127BF8.unk4 < pos[2])) {
+            pos[0] = sp64[0];
+            pos[1] = sp64[1];
+            verts[0].x = pos[0] - D_800E28D8.unk24;
+            verts[0].y = pos[1] + D_800E28D8.unk26;
+            verts[0].z = pos[2];
+            verts[1].x = pos[0] + D_800E28D8.unk24;
+            verts[1].y = pos[1] + D_800E28D8.unk26;
+            verts[1].z = pos[2];
+            verts[2].x = pos[0] + D_800E28D8.unk24;
+            verts[2].y = pos[1] - D_800E28D8.unk26;
+            verts[2].z = pos[2];
+            verts[3].x = pos[0] - D_800E28D8.unk24;
+            verts[3].y = pos[1] - D_800E28D8.unk26;
+            verts[3].z = pos[2];
+            verts += 4;
             D_800E2908 += 4;
             D_800E2910[D_800E2908 >> 2] = i;
-            if ((!i) && (!i)) {} // Fakematch
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/weather/func_800AC21C.s")
-#endif
 
 /**
  * Load and execute the draw commands for the falling snowflakes, seen with snowy weather enabled.
