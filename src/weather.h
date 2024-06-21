@@ -43,17 +43,11 @@ typedef struct LensFlareData {
 } LensFlareData;
 
 /* Size: 0x1C Bytes */
-typedef struct unk800E2B4C {
-    s32 unk0;
-    s16 unk4;
-    s16 unk6;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    s16 unk18;
-    s16 unk1A;
-} unk800E2B4C;
+typedef struct ObjectSegment2 {
+  ObjectTransform trans;
+  s16 animFrame;
+  s16 unk1A;
+} ObjectSegment2;
 
 /* Size: 0x18 Bytes */
 typedef struct unk800E2C2C {
