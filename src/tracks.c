@@ -388,7 +388,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
                             tempUpdateRate);
         }
         lensflare_override(get_active_camera_segment());
-        func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
+        lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
         render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
                    get_racer_object_by_port(gSceneCurrentPlayerID), updateRate);
     }
@@ -415,8 +415,8 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             initialise_player_viewport_vars(updateRate);
             set_weather_limits(-1, -512);
             lensflare_override(get_active_camera_segment());
-            func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
-                          get_active_camera_segment());
+            lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
+                             get_active_camera_segment());
             set_text_font(FONT_COLOURFUL);
             if (osTvType == TV_TYPE_PAL) {
                 posX = SCREEN_WIDTH_HALF + 6;

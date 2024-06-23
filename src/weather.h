@@ -7,7 +7,8 @@
 
 typedef enum WeatherType {
     WEATHER_SNOW,
-    WEATHER_RAIN
+    WEATHER_RAIN,
+    WEATHER_UNK2
 } WeatherType;
 
 typedef struct unk800E2850_unk0 {
@@ -42,17 +43,11 @@ typedef struct LensFlareData {
 } LensFlareData;
 
 /* Size: 0x1C Bytes */
-typedef struct unk800E2B4C {
-    s32 unk0;
-    s16 unk4;
-    s16 unk6;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    s16 unk18;
-    s16 unk1A;
-} unk800E2B4C;
+typedef struct ObjectSegment2 {
+  ObjectTransform trans;
+  s16 animFrame;
+  s16 unk1A;
+} ObjectSegment2;
 
 /* Size: 0x18 Bytes */
 typedef struct unk800E2C2C {
@@ -84,9 +79,30 @@ typedef struct unk800E28D4 {
     s32 unk0;
     s32 unk4;
     s32 unk8;
-    u8  padC[3];
+    u8  unkC;
+    u8  unkD;
+    u8  unkE;
     u8  unkF;
 } unk800E28D4;
+
+typedef struct RainData {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    s32 unk10;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
+    s32 unk24;
+    s32 unk28;
+    s32 unk2C;
+    s32 unk30;
+    s32 unk34;
+    s32 unk38;
+    s32 unk3C;
+} RainData;
 
 void set_weather_limits(s16 arg0, s16 arg1);
 void lensflare_remove(Object *obj);
@@ -105,6 +121,8 @@ void free_weather_memory(void);
 void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
 void lensflare_override(ObjectSegment *cameraSegment);
 void func_800AC0C8(s32 updateRate);
+void func_800ABB34(void);
+void func_800AD144(s32 arg0, s32 arg1);
 
 s32 coss(s16);
 s32 sins(s16);
@@ -112,7 +130,7 @@ void init_weather(void);
 void f32_matrix_dot(Matrix *arg0, Matrix *arg1, Matrix *arg2);
 void func_800AC21C(void);
 void lensflare_init(Object *);
-void func_800ACA20(Gfx**, MatrixS**, Vertex**, ObjectSegment*);
+void lensflare_render(Gfx**, MatrixS**, Vertex**, ObjectSegment*);
 void func_800AB4A8(s32 weatherType, s32 weatherEnable, s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity);
 
 #endif
