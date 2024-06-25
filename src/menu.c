@@ -2771,12 +2771,12 @@ void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
 
     if (gTitleRevealTimer) {
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-        scale = (f32) gTitleRevealTimer * 0.03125f;
+        scale = (f32) gTitleRevealTimer * (1.0f / 32.0f);
         sMenuGuiOpacity = (gTitleRevealTimer * 8) - 1;
         sprite_anim_off(FALSE);
         if (scale != 1.0f) {
             render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF,
-                                            52.0f, scale, scale, 0xFFFFFFFE, TEXRECT_POINT);
+                                            52.0f, scale, scale, COLOUR_RGBA32(255, 255, 255, 254), TEXRECT_POINT);
         } else {
             render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, 52, 255, 255,
                                       255, 255);
@@ -2788,7 +2788,7 @@ void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
             set_text_background_colour(0, 0, 0, 0);
             while (gTitleMenuStrings[i] != NULL) {
                 if (i == gTitleScreenCurrentOption) {
-                    alpha = (gOptionBlinkTimer & 0x1F) * 16;
+                    alpha = (gOptionBlinkTimer & 0x1F) << 4;
                     if (alpha > 255) {
                         alpha = 511 - alpha;
                     }
@@ -2801,10 +2801,8 @@ void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
                 i++;
             }
         }
-    } else {
-        if (sTitleScreenDemoIds[gTitleDemoIndex] == sTitleScreenDemoIds[0]) {
-            func_80083098(updateRateF);
-        }
+    } else if (sTitleScreenDemoIds[gTitleDemoIndex] == sTitleScreenDemoIds[0]) {
+        func_80083098(updateRateF);
     }
 }
 
