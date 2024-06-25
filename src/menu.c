@@ -30,6 +30,7 @@
 #include "tracks.h"
 #include "lib/src/mips1/al/alSynStartVoiceParams.h"
 #include "controller.h"
+#include "math_util.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -5077,7 +5078,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
 
             pakmenu_free();
             menu_init(MENU_LOGOS);
-            load_level_for_menu(ASSET_LEVEL_FRONTEND, -1, 0);
+            load_level_for_menu(ASSET_LEVEL_FRONTEND, ZERO_PLAYERS, CUTSCENE_NONE);
         }
     }
     return 0;
@@ -11623,7 +11624,331 @@ void credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
     reset_render_settings(&sMenuCurrDisplayList);
 }
 
+#if 0
+s32 menu_credits_loop(s32 updateRate) {
+    s32 sp6C;
+    s32 sp68;
+    s16 *asset69;
+    s8 *mainTrackIds;
+    DrawTexture **var_s0;
+    MenuElement *var_s0_2;
+    s16 *var_a0;
+    s16 *var_s1;
+    s16 *var_s1_2;
+    s16 temp_a0;
+    s16 temp_v1_2;
+    s16 var_s2_2;
+    s16 *temp_v0_3;
+    s32 temp_s0;
+    s32 temp_s0_2;
+    s32 temp_s2;
+    s32 temp_s3;
+    s32 temp_s4;
+    s32 temp_t1;
+    s32 temp_t2;
+    s32 temp_t3;
+    s32 temp_t4;
+    s32 temp_t6;
+    s32 temp_t6_3;
+    s32 temp_t8;
+    s32 temp_t8_2;
+    s32 temp_t9;
+    s32 temp_v0;
+    s32 temp_v0_4;
+    s32 temp_v1;
+    s32 var_a1;
+    s32 var_a1_2;
+    s32 var_s0_3;
+    s32 var_s2;
+    s32 buttonsPressedAllPlayers;
+    s32 var_s3;
+    s32 var_s4;
+    s32 var_s4_2;
+    s32 var_s5;
+    s32 var_s7;
+    s32 var_t4;
+    s32 var_v0;
+    s32 var_v0_2;
+    s8 *temp_t6_2;
+    s8 var_a2;
+    s32 temp_v0_2;
+    u8 var_s5_2;
+    MenuElement *var_v0_3;
+    s32 i;
+
+    sp68 = FALSE;
+    mainTrackIds = get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
+    asset69 = get_misc_asset(ASSET_MISC_69);
+    tick_thread30();
+    if (gMenuDelay == 0) {
+        disable_new_screen_transitions();
+        transition_begin(NULL);
+        enable_new_screen_transitions();
+    }
+    if (osTvType == TV_TYPE_PAL) {
+        credits_fade(0, 38, SCREEN_WIDTH, 186, gOpacityDecayTimer * 8);
+    } else {
+        credits_fade(0, 40, SCREEN_WIDTH, 156, gOpacityDecayTimer * 8);
+    }
+    if (gOpacityDecayTimer > 0) {
+        gMenuCurIndex += updateRate << 8;
+        if (gOpacityDecayTimer >= 40) {
+            var_s4 = 0;
+        } else {
+            var_s4 = 40 - gOpacityDecayTimer;
+        }
+        var_s5 = gMenuCurIndex;
+        temp_s4 = (var_s4 * 5) + 72;
+        temp_s2 = (get_video_width_and_height_as_s32() >> 17) & 0x7FFF; // Truncated video height? Height / 2?
+        for (i = 0; i < ARRAY_COUNT(gRacerPortraits); i++) {
+            render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[i], 
+                ((sins(var_s5) * temp_s4) >> 16) + 140,
+                ((coss(var_s5) * temp_s4) >> 16) + (temp_s2 - 20),
+                255, 255, 255, 255);
+            var_s5 += 0x1999;
+        }
+        reset_render_settings(&sMenuCurrDisplayList);
+    }
+    if (D_80126BE0 != 0) {
+        D_80126BE0 = postrace_render(updateRate) == 0;
+    }
+    if ((D_80126BD8 == 0) && (D_80126BE0 == 0)) {
+        sp6C = 0;
+        do {
+            temp_a0 = gCreditsControlData[D_80126BC4];
+            temp_v0 = temp_a0 & 0xF000;
+            var_a2 = temp_v0 == 0x6000;
+            if (temp_v0 != 0x1000) {
+                temp_s0 = D_80126BC4 + 1;
+                switch (temp_v0) {
+                case 0x2000: /* fallthrough */
+                case 0x6000:                        /* switch 1 */
+                    D_80126BE8 = temp_a0 & 0xFFFF0FFF;
+                    temp_t6 = gCreditsControlData[temp_s0] & 0xF000;
+                    D_80126BC4 = temp_s0;
+                    var_a1 = temp_s0;
+                    var_v0 = temp_t6;
+                    sp6C = 1;
+                    var_s5_2 = 0;
+                    var_s7 = 0x14;
+                    var_s3 = 0;
+                    if (temp_t6 == 0) {
+                        do {
+                            temp_t8 = var_a1 + 1;
+                            D_80126BC4 = temp_t8;
+                            temp_t2 = gCreditsControlData[temp_t8] & 0xF000;
+                            var_v0 = temp_t2;
+                            var_a1 = temp_t8;
+                        } while (temp_t2 == 0);
+                    }
+                    temp_v1 = var_a1 - temp_s0;
+                    if (osTvType == TV_TYPE_PAL) {
+                        var_s2 = SCREEN_HEIGHT_HALF + 14;
+                    } else {
+                        var_s2 = SCREEN_HEIGHT_HALF;
+                    }
+                    if (temp_v1 == 1) {
+                        var_s2_2 = var_s2 - 14;
+                        var_s5_2 = 2;
+                    } else if (var_a2 != 0) {
+                        var_s2_2 = (var_s2 - (temp_v1 * 16)) + 3;
+                        var_s7 = 32;
+                    } else {
+                        var_s2_2 = (var_s2 - (temp_v1 * 16)) + 8;
+                    }
+                    gCreditsMenuElements->left = 480;
+                    if (var_v0 == 0x3000) {
+                        gCreditsMenuElements->right = SCREEN_WIDTH_HALF;
+                    } else {
+                        gCreditsMenuElements->right = -SCREEN_WIDTH_HALF;
+                    }
+                    if (temp_s0 < var_a1) {
+                        var_s1 = &gCreditsControlData[temp_s0];
+                        var_s0_2 = gCreditsMenuElements;
+                        do {
+                            var_s0_2->top = var_s2_2;
+                            var_s0_2->middle = var_s2_2;
+                            var_s0_2->bottom = var_s2_2;
+                            if (var_a2 != 0) {
+                                var_s0_2->textFont = 0;
+                                var_s0_2->filterGreen = 0;
+                                var_s0_2->filterBlendFactor = 48;
+                                var_s5_2 = 2;
+                                temp_v1_2 = var_s2_2 + 14;
+                                var_a1 = D_80126BC4;
+                                var_s0_2->t.element = get_level_name((s32) *(*var_s1 + mainTrackIds));
+                                var_s0_2[1].top = temp_v1_2;
+                                var_s0_2[1].middle = temp_v1_2;
+                                var_s0_2[1].bottom = temp_v1_2;
+                                var_s0_2[1].textFont = 0;
+                                var_a0 = &gCreditsControlData[var_a1];
+                                var_s3 += 2;
+                                var_s0_2->t.asciiText = gCreditsBestTimesArray[*var_s1];
+                                var_s0_2 += 2;
+                            } else {
+                                var_a0 = &gCreditsControlData[var_a1];
+                                if (var_s3 & 1) {
+                                    var_s0_2->filterGreen = 255;
+                                    var_s0_2->filterBlendFactor = 0;
+                                }
+                                var_s0_2->textFont = var_s5_2;
+                                var_s5_2 = 2;
+                                var_s3 += 1;
+                                var_s0_2->t.asciiText = gCreditsArray[*var_s1];
+                                var_s0_2 += 1;
+                            }
+                            var_s1 += 2;
+                            var_s2_2 += var_s7;
+                            var_s7 = 0x20;
+                        } while ((u32) var_s1 < (u32) var_a0);
+                    }
+                    gCreditsMenuElements[var_s3].t.element = NULL;
+                    postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
+                    D_80126BE0 = postrace_render(0) == MENU_RESULT_CONTINUE;
+                    break;
+                case 0x3000:                        /* switch 1 */
+                    temp_s0_2 = D_80126BC4 + 1;
+                    D_80126BE8 = temp_a0 & 0xFFFF0FFF;
+                    D_80126BC4 = temp_s0_2;
+                    temp_t8_2 = gCreditsControlData[temp_s0_2] & 0xF000;
+                    var_a1_2 = temp_s0_2;
+                    var_v0_2 = temp_t8_2;
+                    sp6C = 1;
+                    if (temp_t8_2 == 0) {
+                        do {
+                            temp_t1 = var_a1_2 + 1;
+                            D_80126BC4 = temp_t1;
+                            temp_t3 = gCreditsControlData[temp_t1] & 0xF000;
+                            var_v0_2 = temp_t3;
+                            var_a1_2 = temp_t1;
+                        } while (temp_t3 == 0);
+                    }
+                    gCreditsMenuElements->left = SCREEN_WIDTH_HALF;
+                    if (var_v0_2 == 0x3000) {
+                        gCreditsMenuElements->right = SCREEN_WIDTH_HALF;
+                    } else {
+                        gCreditsMenuElements->right = -SCREEN_WIDTH_HALF;
+                    }
+                    var_s4_2 = temp_s0_2;
+                    if (temp_s0_2 < var_a1_2) {
+                        var_s1_2 = &gCreditsControlData[var_s4_2];
+                        var_v0_3 = (var_s4_2 * 0) + gCreditsMenuElements;
+                        do {
+                            var_s4_2 += 1;
+                            temp_t6_2 = gCreditsArray[*var_s1_2];
+                            var_s1_2 += 2;
+                            var_v0_3 += 1;
+                            var_v0_3->t.asciiText = temp_t6_2;
+                        } while (var_s4_2 < var_a1_2);
+                    }
+                    //*(&gCreditsMenuElements[1].t + ((var_s4_2 << 5) + -(temp_s0_2 << 5))) = 0;
+                    gCreditsMenuElements[1].t.asciiText[((var_s4_2 << 5) + -(temp_s0_2 << 5))] = 0;
+                    postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
+                    D_80126BE0 = postrace_render(0) == 0;
+                    break;
+                case 0x4000:
+                    D_80126BC4 += 1;
+                    D_80126BD8 = 1;
+                    sp6C = 1;
+                    break;
+                case 0x5000:
+                    D_80126BC4 += 1;
+                    break;
+                }
+            } else {
+                D_80126BC4 = 0;
+                sp68 = TRUE;
+                gIgnorePlayerInputTime = 0;
+            }
+        } while (sp6C == 0);
+    }
+    buttonsPressedAllPlayers = 0;
+    if (gIgnorePlayerInputTime == 0) {
+        if (gMenuDelay == 0) {
+            for (i = 0; i < 4; i++) {
+                buttonsPressedAllPlayers |= get_buttons_pressed_from_player(i);
+            }
+        }
+    }
+    switch (gMenuStage) {
+    case 0:
+        temp_v0_3 = &asset69[D_80126BCC];
+        set_level_to_load_in_background((s32) temp_v0_3[0], (s32) temp_v0_3[1]);
+        gMenuStage = 1;
+        gOpacityDecayTimer = 40;        
+        break;
+    case 1:
+        if (get_thread30_level_id_to_load() == 0) {
+            gMenuStage = 2;
+            gOptionBlinkTimer = 40;
+            D_80126BD8 = 0;
+        }
+        break;
+    case 2:
+        temp_t4 = gOptionBlinkTimer - updateRate;
+        gOptionBlinkTimer = temp_t4;
+        gOpacityDecayTimer -= updateRate;
+        if (temp_t4 <= 0) {
+            gOptionBlinkTimer = temp_t4 + 600;
+            gMenuStage = 3;
+        }
+        break;
+    case 3:
+        temp_v0_4 = gOpacityDecayTimer;
+        gOptionBlinkTimer -= updateRate;
+        if (temp_v0_4 > 0) {
+            gOpacityDecayTimer = temp_v0_4 - updateRate;
+        } else {
+            gOpacityDecayTimer = 0;
+        }
+        if (gOptionBlinkTimer <= 0) {
+            gOptionBlinkTimer = 40;
+            gMenuStage = 4;
+        }
+        break;
+    case 4:
+        gOptionBlinkTimer -= updateRate;
+        gOpacityDecayTimer += updateRate;
+        if (gOptionBlinkTimer <= 0) {
+            gMenuStage = 0;
+            D_80126BCC++;
+            if (asset69[D_80126BCC] < 0) {
+                D_80126BCC = 0;
+                gIgnorePlayerInputTime = 0;
+            }
+        }
+        break;
+    }
+    if (!(buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON))) {
+        if (!(buttonsPressedAllPlayers & B_BUTTON)) {
+            if (sp68) {
+                goto block_84;
+            }
+        } else {
+            goto block_85;
+        }
+    } else {
+block_84:
+block_85:
+        gMenuDelay = 1;
+        disable_new_screen_transitions();
+        transition_begin(&sMenuTransitionFadeIn);
+        enable_new_screen_transitions();
+        music_fade(-0x80);
+    }
+    if ((gMenuDelay > 0) && (gMenuDelay += updateRate, (get_thread30_level_id_to_load() == 0))) {
+        if (gMenuDelay >= 0x1F) {
+            music_change_on();
+            credits_free();
+            load_level_for_menu(ASSET_LEVEL_FRONTEND, ZERO_PLAYERS, CUTSCENE_NONE);
+            menu_init(MENU_LOGOS);
+        }
+    }
+    return 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/menu_credits_loop.s")
+#endif
 
 /**
  * Unload associated assets with the credits scene.
