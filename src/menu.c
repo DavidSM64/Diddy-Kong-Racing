@@ -2529,7 +2529,7 @@ void menu_logos_screen_init(void) {
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
     copy_viewports_to_stack(); // Init viewports
-    camEnableUserView(0, 1);
+    camEnableUserView(0, TRUE);
 }
 
 /**
@@ -7339,7 +7339,7 @@ void menu_track_select_init(void) {
     viewport_menu_set(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), SCREEN_HEIGHT,
                       (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
     copy_viewports_to_stack();
-    camEnableUserView(0, 0);
+    camEnableUserView(0, FALSE);
     gIsInTracksMenu = TRUE;
     menu_assetgroup_load(gTrackSelectObjectIndices);
     menu_imagegroup_load(gTrackSelectImageIndices);
@@ -7693,7 +7693,7 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
         }
         numVertices += 4;
     }
-    camEnableUserView(0, 1);
+    camEnableUserView(0, TRUE);
     return 0;
 }
 #else
@@ -7965,7 +7965,7 @@ void trackmenu_track_view(s32 updateRate) {
     y2 = y1 + gTrackSelectViewPortHalfY;
     viewport_menu_set(0, x1, y1, x2, y2);
     copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2);
-    camEnableUserView(0, 0);
+    camEnableUserView(0, FALSE);
 }
 
 /**
@@ -8009,7 +8009,7 @@ void trackmenu_input(s32 updateRate) {
         gMenuImages[6].scale = (f32) (sMenuImageProperties[6].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
         gMenuImages[5].scale = (f32) (sMenuImageProperties[5].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
     }
-    camEnableUserView(0, 0);
+    camEnableUserView(0, FALSE);
     if (get_thread30_level_id_to_load() == 0) {
         if (gMenuDelay < 0) {
             sMenuMusicVolume -= updateRate * 4;
@@ -9152,7 +9152,7 @@ void postrace_start(s32 finishState, s32 worldID) {
         if (get_game_mode() == GAMEMODE_INGAME) {
             mosaic_init(gMenuMosaic1, gMenuMosaic2, gMenuMosaicShift);
         }
-        camEnableUserView(0, 1);
+        camEnableUserView(0, TRUE);
         viewport_menu_set(0, 0, 0, gTrackSelectViewPortX, gTrackSelectViewportY);
     }
     sound_volume_change(VOLUME_LOWER_AMBIENT);
@@ -11560,7 +11560,7 @@ void menu_credits_init(void) {
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
     copy_viewports_to_stack();
-    camEnableUserView(0, 1);
+    camEnableUserView(0, TRUE);
     menu_assetgroup_load(gCreditsObjectIndices);
     menu_imagegroup_load(gCreditsImageIndices);
     menu_racer_portraits();
@@ -11574,7 +11574,7 @@ void menu_credits_init(void) {
         gCreditsArray[86] = gCreditsLastMessageArray[4]; // "THIS TIME."
         gViewingCreditsFromCheat = FALSE;
     } else {
-        if (settings->bosses & 0x20) {
+        if (settings->bosses & 0x20) { // WIZPIG 2
             music_play(SEQUENCE_CRESCENT_ISLAND);
             gCreditsArray[84] = gCreditsLastMessageArray[1];                      // "TO BE CONTINUED ..."
             gCreditsControlData[130] = CREDITS_DEV_TIMES(CREDITS_DEV_TIMES_TIME); // Show developer times.
