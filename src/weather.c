@@ -33,7 +33,7 @@ unk800E2850 D_800E28D8 = { NULL, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 // Not sure about typing for the following.
 Vertex *D_800E2904 = 0;
 s32 D_800E2908 = 0;
-s32 *D_800E290C = NULL;
+Triangle *D_800E290C = NULL;
 s16 *D_800E2910 = NULL;
 Vertex *D_800E2914[2] = { NULL, NULL };
 s32 *gWeatherAssetTable = NULL;   // List of Ids
@@ -93,11 +93,11 @@ Vertex D_800E2AAC[16] = {
     { 0, 0, 0, 255, 255, 255, 255 },
 };
 
-unk800E2B4C D_800E2B4C[8] = {
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 }, { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 }, { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 }, { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 }, { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
+ObjectSegment2 D_800E2B4C[8] = {
+    { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
 };
 
 unk800E2C2C gRainGfx[2] = {
@@ -129,7 +129,7 @@ FadeTransition gThunderTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_I
 
 s32 D_80127BB0;
 s32 D_80127BB4;
-s32 D_80127BB8[16];
+RainData D_80127BB8;
 unk80127BF8 D_80127BF8;
 s32 D_80127C00;
 s32 D_80127C04;
@@ -228,7 +228,115 @@ void free_weather_memory(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/weather/func_800AB4A8.s")
+// proccess_rain?
+void func_800AB4A8(s32 weatherType, s32 weatherEnable, s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity) {
+    s16 width;
+    s16 height;
+    s32 numOfElements;
+    s32 allocSize;
+    s32 i;
+    s32 j;
+    unk800E2850_unk0 *temp_v0;
+
+    free_weather_memory();
+    D_80127BB8.unkC = velX;
+    D_80127BB8.unk10 = 0;
+    D_80127BB8.unk14 = velX;
+    D_80127BB8.unk18 = velY;
+    D_80127BB8.unk1C = 0;
+    D_80127BB8.unk20 = velY;
+    D_80127BB8.unk28 = 0;
+    D_80127BB8.unk4 = 0;
+    D_80127BB8.unk34 = 0;
+    D_80127BB8.unk3C = 0;
+    D_80127BB8.unk24 = velZ;
+    D_80127BB8.unk2C = velZ;
+    D_80127BB8.unk0 = intensity;
+    D_80127BB8.unk8 = intensity;
+    D_80127BB8.unk30 = opacity;
+    D_80127BB8.unk38 = opacity;
+    if (weatherType >= WEATHER_UNK2) {
+        weatherType = WEATHER_RAIN;
+    }
+    if (D_800E2850[weatherType].unk8 == ((TextureHeader *) 1)) {
+        func_800AD144(intensity + 1, opacity + 1);
+        return;
+    }
+    temp_v0 = (unk800E2850_unk0 *) allocate_from_main_pool_safe(
+        D_800E2850[weatherType].unk4 * (sizeof(unk800E2850_unk0)), COLOUR_TAG_LIGHT_ORANGE);
+    D_800E28D8.unk0 = temp_v0;
+    D_800E28D8.unk4 = D_800E2850[weatherType].unk4;
+    D_800E28D8.unkC = D_800E2850[weatherType].unkC;
+    D_800E28D8.unk10 = D_800E2850[weatherType].unk10;
+    D_800E28D8.unk14 = D_800E2850[weatherType].unk14;
+    D_800E28D8.unk18 = D_800E2850[weatherType].unk18;
+    D_800E28D8.unk1C = D_800E2850[weatherType].unk1C;
+    D_800E28D8.unk20 = D_800E2850[weatherType].unk20;
+    D_800E28D8.unk24 = D_800E2850[weatherType].unk24;
+    D_800E28D8.unk26 = D_800E2850[weatherType].unk26;
+    D_800E28D8.unk28 = D_800E28D8.unk24 * 2;
+    D_800E28D8.unk2A = D_800E28D8.unk26 * 2;
+    if (D_800E2850[weatherType].unk8 == NULL) {
+        func_800ABB34();
+    }
+    numOfElements = weatherEnable;
+    D_80127BB0 = numOfElements;
+    D_800E2910 = (s16 *) allocate_from_main_pool_safe(numOfElements * (sizeof(s16)), COLOUR_TAG_LIGHT_ORANGE);
+    D_800E28D4 =
+        (unk800E28D4 *) allocate_from_main_pool_safe(numOfElements * (sizeof(unk800E28D4)), COLOUR_TAG_LIGHT_ORANGE);
+    for (i = 0; i < D_80127BB0; i++) {
+        D_800E28D4[i].unk0 = get_random_number_from_range(0, D_800E28D8.unk18);
+        D_800E28D4[i].unk4 = get_random_number_from_range(0, D_800E28D8.unk1C);
+        D_800E28D4[i].unk8 = get_random_number_from_range(0, D_800E28D8.unk20);
+        D_800E28D4[i].unkC = 1 << (get_random_number_from_range(0, 32) + 5);
+        D_800E28D4[i].unkD = 1 << (get_random_number_from_range(0, 32) + 5);
+        D_800E28D4[i].unkE = 1 << (get_random_number_from_range(0, 32) + 5);
+        D_800E28D4[i].unkF = get_random_number_from_range(0, D_800E28D8.unk4 - 1);
+    }
+
+    numOfElements = numOfElements * 4;
+    allocSize = sizeof(Vertex);
+    allocSize *= numOfElements;
+    D_800E2914[0] = allocate_from_main_pool_safe(allocSize, COLOUR_TAG_LIGHT_ORANGE);
+    D_800E2914[1] = allocate_from_main_pool_safe(allocSize, COLOUR_TAG_LIGHT_ORANGE);
+    for (j = 0; j < 2; j++) {
+        D_800E2904 = D_800E2914[j];
+        for (i = 0; i < numOfElements; i++) {
+            D_800E2904[i].r = 0xFF;
+            D_800E2904[i].g = 0xFF;
+            D_800E2904[i].b = 0xFF;
+            D_800E2904[i].a = 0xFF;
+        }
+    }
+
+    width = (D_800E28D8.unk8->width << 5) - 1;
+    height = (D_800E28D8.unk8->height << 5) - 1;
+    D_800E290C = (Triangle *) allocate_from_main_pool_safe(D_80127C04 * (sizeof(Triangle)), COLOUR_TAG_LIGHT_ORANGE);
+    for (i = 0; i < D_80127C04; i += 2) {
+        D_800E290C[i].flags = 0;
+        D_800E290C[i].vi0 = (i << 1) + 3;
+        D_800E290C[i].uv0.u = 0;
+        D_800E290C[i].uv0.v = height;
+        D_800E290C[i].vi1 = (i << 1) + 1;
+        D_800E290C[i].uv1.u = width;
+        D_800E290C[i].uv1.v = 0;
+        D_800E290C[i].vi2 = (i << 1) + 0;
+        D_800E290C[i].uv2.u = 0;
+        D_800E290C[i].uv2.v = 0;
+        D_800E290C[i + 1].flags = 0;
+        D_800E290C[i + 1].vi0 = (i << 1) + 3;
+        D_800E290C[i + 1].uv0.u = 0;
+        D_800E290C[i + 1].uv0.v = height;
+        D_800E290C[i + 1].vi1 = (i << 1) + 2;
+        D_800E290C[i + 1].uv1.u = width;
+        D_800E290C[i + 1].uv1.v = height;
+        D_800E290C[i + 1].vi2 = (i << 1) + 1;
+        D_800E290C[i + 1].uv2.u = width;
+        D_800E290C[i + 1].uv2.v = 0;
+    }
+
+    D_80127C08 = 0;
+}
 
 void func_800ABB34(void) {
     s32 temp_v0;
@@ -249,28 +357,29 @@ void func_800ABB34(void) {
 }
 
 void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
-    if ((arg5 > 0) && ((arg0 != D_80127BB8[5]) || (arg1 != D_80127BB8[8]) || (arg2 != D_80127BB8[11]) ||
-                       (arg3 != D_80127BB8[0]) || (arg4 != D_80127BB8[12]))) {
-        D_80127BB8[5] = arg0;
-        D_80127BB8[8] = arg1;
-        D_80127BB8[11] = arg2;
-        D_80127BB8[4] = (s32) ((s32) (arg0 - D_80127BB8[3]) / arg5);
-        D_80127BB8[7] = (s32) ((s32) (arg1 - D_80127BB8[6]) / arg5);
-        D_80127BB8[10] = (s32) ((s32) (arg2 - D_80127BB8[9]) / arg5);
+    if ((arg5 > 0) && ((arg0 != D_80127BB8.unk14) || (arg1 != D_80127BB8.unk20) || (arg2 != D_80127BB8.unk2C) ||
+                       (arg3 != D_80127BB8.unk0) || (arg4 != D_80127BB8.unk30))) {
+        D_80127BB8.unk14 = arg0;
+        D_80127BB8.unk20 = arg1;
+        D_80127BB8.unk2C = arg2;
+        D_80127BB8.unk10 = (s32) ((s32) (arg0 - D_80127BB8.unkC) / arg5);
+        D_80127BB8.unk1C = (s32) ((s32) (arg1 - D_80127BB8.unk18) / arg5);
+        D_80127BB8.unk28 = (s32) ((s32) (arg2 - D_80127BB8.unk24) / arg5);
         if (gWeatherType == WEATHER_SNOW) {
-            D_80127BB8[1] = (s32) ((s32) (arg3 - D_80127BB8[0]) / arg5);
-            D_80127BB8[13] = (s32) ((s32) (arg4 - D_80127BB8[12]) / arg5);
-            D_80127BB8[2] = arg3;
-            D_80127BB8[14] = arg4;
-            D_80127BB8[15] = arg5;
-            return;
+            D_80127BB8.unk4 = (s32) ((s32) (arg3 - D_80127BB8.unk0) / arg5);
+            D_80127BB8.unk34 = (s32) ((s32) (arg4 - D_80127BB8.unk30) / arg5);
+            D_80127BB8.unk8 = arg3;
+            D_80127BB8.unk38 = arg4;
+            D_80127BB8.unk3C = arg5;
+        } else {
+            D_80127BB8.unk0 = arg3;
+            D_80127BB8.unk30 = arg4;
+            D_80127BB8.unk3C = 0;
+            func_800AD2C4(arg3 + 1, arg4 + 1, (f32) arg5 / 60.0f);
         }
-        D_80127BB8[0] = arg3;
-        D_80127BB8[12] = arg4;
-        D_80127BB8[15] = 0;
-        func_800AD2C4(arg3 + 1, arg4 + 1, (f32) arg5 / 60.0f);
     }
 }
+
 /**
  * The root function for handling all weather.
  * Decide whether to perform rain or snow logic, execute it, then set it to render right after.
@@ -287,25 +396,25 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
     if (gWeatherType != WEATHER_SNOW) {
         handle_weather_rain(updateRate);
     } else {
-        if (D_80127BB8[15] > 0) {
-            if (updateRate < D_80127BB8[15]) {
-                D_80127BB8[0] += D_80127BB8[1] * updateRate;
-                D_80127BB8[3] += D_80127BB8[4] * updateRate;
-                D_80127BB8[6] += D_80127BB8[7] * updateRate;
-                D_80127BB8[9] += D_80127BB8[10] * updateRate;
-                D_80127BB8[12] += D_80127BB8[13] * updateRate;
-                D_80127BB8[15] -= updateRate;
+        if (D_80127BB8.unk3C > 0) {
+            if (updateRate < D_80127BB8.unk3C) {
+                D_80127BB8.unk0 += D_80127BB8.unk4 * updateRate;
+                D_80127BB8.unkC += D_80127BB8.unk10 * updateRate;
+                D_80127BB8.unk18 += D_80127BB8.unk1C * updateRate;
+                D_80127BB8.unk24 += D_80127BB8.unk28 * updateRate;
+                D_80127BB8.unk30 += D_80127BB8.unk34 * updateRate;
+                D_80127BB8.unk3C -= updateRate;
             } else {
-                D_80127BB8[0] = D_80127BB8[2];
-                D_80127BB8[3] = D_80127BB8[5];
-                D_80127BB8[6] = D_80127BB8[8];
-                D_80127BB8[9] = D_80127BB8[11];
-                D_80127BB8[12] = D_80127BB8[14];
-                D_80127BB8[15] = 0;
+                D_80127BB8.unk0 = D_80127BB8.unk8;
+                D_80127BB8.unkC = D_80127BB8.unk14;
+                D_80127BB8.unk18 = D_80127BB8.unk20;
+                D_80127BB8.unk24 = D_80127BB8.unk2C;
+                D_80127BB8.unk30 = D_80127BB8.unk38;
+                D_80127BB8.unk3C = 0;
             }
         }
-        D_80127BB4 = (D_80127BB0 * D_80127BB8[0]) >> (unused = 16);
-        D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8[12])) >> (unused = 16);
+        D_80127BB4 = (D_80127BB0 * D_80127BB8.unk0) >> (unused = 16);
+        D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8.unk30)) >> (unused = 16);
 
         func_800AC0C8(updateRate);
         if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < D_80127BF8.unk0)) {
@@ -329,11 +438,11 @@ void func_800AC0C8(s32 updateRate) {
     for (i = 0; i < D_80127BB0; i++) {
         temp_v1 = &D_800E28D8.unk0[D_800E28D4[i].unkF];
         D_800E28D4[i].unk0 =
-            ((((temp_v1->unk0 + (D_80127BB8[3] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk0) & D_800E28D8.unk18;
+            ((((temp_v1->unk0 + (D_80127BB8.unkC * 2)) * updateRate) >> 1) + D_800E28D4[i].unk0) & D_800E28D8.unk18;
         D_800E28D4[i].unk4 =
-            ((((temp_v1->unk4 + (D_80127BB8[6] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk4) & D_800E28D8.unk1C;
+            ((((temp_v1->unk4 + (D_80127BB8.unk18 * 2)) * updateRate) >> 1) + D_800E28D4[i].unk4) & D_800E28D8.unk1C;
         D_800E28D4[i].unk8 =
-            ((((temp_v1->unk8 + (D_80127BB8[9] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk8) & D_800E28D8.unk20;
+            ((((temp_v1->unk8 + (D_80127BB8.unk24 * 2)) * updateRate) >> 1) + D_800E28D4[i].unk8) & D_800E28D8.unk20;
         D_800E28D4[i].unkF++;
         if (D_800E28D4[i].unkF >= D_800E28D8.unk4) {
             D_800E28D4[i].unkF -= D_800E28D8.unk4;
@@ -341,51 +450,47 @@ void func_800AC0C8(s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_800AC21C(void) {
-    s16 zPos; // sp74
-    s16 yPos;
-    s16 xPos;
-    Matrix sp64;
+    s16 pos[3];
+    f32 sp64[3];
+    s32 i;
+    Vertex *verts;
     s32 sp58;
     s32 sp54;
     s32 sp50;
-    s32 i;
 
-    sp58 = (gWeatherCamera->trans.x_position * 65536.0f);
-    sp54 = (gWeatherCamera->trans.y_position * 65536.0f);
-    sp50 = (gWeatherCamera->trans.z_position * 65536.0f);
+    sp58 = (s32) (gWeatherCamera->trans.x_position * 65536.0f);
+    sp54 = (s32) (gWeatherCamera->trans.y_position * 65536.0f);
+    sp50 = (s32) (gWeatherCamera->trans.z_position * 65536.0f);
     D_800E2908 = 0;
+    verts = D_800E2904;
     for (i = 0; i < D_80127BB4; i++) {
-        sp64[0][0] = (f32) (((D_800E28D4[i].unk0 - sp58) & D_800E28D8.unk18) + D_800E28D8.unkC) * (1.0f / 65536.0f);
-        sp64[0][1] = (f32) (((D_800E28D4[i].unk4 - sp54) & D_800E28D8.unk1C) + D_800E28D8.unk10) * (1.0f / 65536.0f);
-        sp64[0][2] = (f32) (((D_800E28D4[i].unk8 - sp50) & D_800E28D8.unk20) + D_800E28D8.unk14) * (1.0f / 65536.0f);
-        f32_matrix_dot(gWeatherCameraMatrix, &sp64, &sp64);
-        zPos = sp64[0][2];
-        if ((zPos < D_80127BF8.unk0) && (D_80127BF8.unk4 < zPos)) {
-            xPos = sp64[0][0];
-            yPos = sp64[0][1];
-            D_800E2904[i].x = xPos - D_800E28D8.unk24;
-            D_800E2904[i].y = yPos + D_800E28D8.unk26;
-            D_800E2904[i].z = zPos;
-            D_800E2904[i + 1].x = xPos + D_800E28D8.unk24;
-            D_800E2904[i + 1].y = yPos + D_800E28D8.unk26;
-            D_800E2904[i + 1].z = zPos;
-            D_800E2904[i + 2].x = xPos + D_800E28D8.unk24;
-            D_800E2904[i + 2].y = yPos - D_800E28D8.unk26;
-            D_800E2904[i + 2].z = zPos;
-            D_800E2904[i + 3].x = xPos - D_800E28D8.unk24;
-            D_800E2904[i + 3].y = yPos - D_800E28D8.unk26;
-            D_800E2904[i + 3].z = zPos;
+        sp64[0] = (f32) (((D_800E28D4[i].unk0 - sp58) & D_800E28D8.unk18) + D_800E28D8.unkC) * (1.0f / 65536.0f);
+        sp64[1] = (f32) (((D_800E28D4[i].unk4 - sp54) & D_800E28D8.unk1C) + D_800E28D8.unk10) * (1.0f / 65536.0f);
+        sp64[2] = (f32) (((D_800E28D4[i].unk8 - sp50) & D_800E28D8.unk20) + D_800E28D8.unk14) * (1.0f / 65536.0f);
+        f32_matrix_dot(gWeatherCameraMatrix, (Matrix *) &sp64, (Matrix *) &sp64);
+        pos[2] = sp64[2];
+        if ((pos[2] < D_80127BF8.unk0) && (D_80127BF8.unk4 < pos[2])) {
+            pos[0] = sp64[0];
+            pos[1] = sp64[1];
+            verts[0].x = pos[0] - D_800E28D8.unk24;
+            verts[0].y = pos[1] + D_800E28D8.unk26;
+            verts[0].z = pos[2];
+            verts[1].x = pos[0] + D_800E28D8.unk24;
+            verts[1].y = pos[1] + D_800E28D8.unk26;
+            verts[1].z = pos[2];
+            verts[2].x = pos[0] + D_800E28D8.unk24;
+            verts[2].y = pos[1] - D_800E28D8.unk26;
+            verts[2].z = pos[2];
+            verts[3].x = pos[0] - D_800E28D8.unk24;
+            verts[3].y = pos[1] - D_800E28D8.unk26;
+            verts[3].z = pos[2];
+            verts += 4;
             D_800E2908 += 4;
             D_800E2910[D_800E2908 >> 2] = i;
-            if ((!i) && (!i)) {} // Fakematch
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/weather/func_800AC21C.s")
-#endif
 
 /**
  * Load and execute the draw commands for the falling snowflakes, seen with snowy weather enabled.
@@ -505,9 +610,96 @@ void lensflare_init(Object *obj) {
     gLensFlarePos.z = -gLensFlarePos.z;
 }
 
-// https://decomp.me/scratch/mYuMJ
-// lensflare_render
-GLOBAL_ASM("asm/non_matchings/weather/func_800ACA20.s")
+void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *segment) {
+    u16 height;
+    f32 pep;
+    UNUSED s32 pad;
+    Vec3f pos[2];
+    f32 magnitude;
+    f32 magSquared;
+    f32 magSquareSquared;
+    LensFlareData *lensFlareData;
+    ObjectTransform trans;
+    Gfx *gfxTemp;
+    s32 width;
+    LevelObjectEntry_LensFlare *lensFlareEntry;
+    s32 i;
+
+    if (gLensFlare != NULL && gLensFlareOff == 0) {
+        if (get_viewport_count() == 0) {
+            lensFlareEntry = &gLensFlare->segment.level_entry->lensFlare;
+            pos[1].x = 0.0f;
+            pos[1].y = 0.0f;
+            pos[1].z = -1.0f;
+            f32_matrix_dot(get_projection_matrix_f32(), (Matrix *) &pos[1].x, (Matrix *) &pos[1].x);
+            magnitude = ((gLensFlarePos.x * pos[1].x) + (gLensFlarePos.y * pos[1].y)) + (gLensFlarePos.z * pos[1].z);
+            if (magnitude > 0.0f) {
+                func_80066CDC(dList, mats);
+                matrix_world_origin(dList, mats);
+                pos[0].x = (gLensFlarePos.x * 256.0f) + segment->trans.x_position;
+                pos[0].y = (gLensFlarePos.y * 256.0f) + segment->trans.y_position;
+                pos[0].z = (gLensFlarePos.z * 256.0f) + segment->trans.z_position;
+                magSquared = magnitude * magnitude;
+                magSquareSquared = magSquared * magSquared;
+                trans.y_rotation = 0;
+                trans.x_rotation = 0;
+                trans.z_rotation = 0;
+                pos[1].x = (pos[1].x * (0, (2 * magnitude))) - gLensFlarePos.x;
+                pos[1].y = (pos[1].y * (0, (2 * magnitude))) - gLensFlarePos.y;
+                pos[1].z = (pos[1].z * (0, (2 * magnitude))) - gLensFlarePos.z;
+                for (i = 0; i < 3; i++) {
+                    if (i == 0) {
+                        lensFlareData = gLensFlareLarge;
+                    } else if (i == 1) {
+                        lensFlareData = gLensFlareSet1;
+                    } else {
+                        lensFlareData = gLensFlareSet2;
+                    }
+                    if (lensFlareData != NULL) {
+                        while ((lensFlareData->count > 0)) {
+                            trans.x_position = pos[0].x;
+                            trans.y_position = pos[0].y;
+                            trans.z_position = pos[0].z;
+                            if (i != 0) {
+                                trans.x_position = (lensFlareData->offset * pos[1].x) + pos[0].x;
+                                trans.y_position = (lensFlareData->offset * pos[1].y) + pos[0].y;
+                                trans.z_position = (lensFlareData->offset * pos[1].z) + pos[0].z;
+                            }
+                            trans.scale = lensFlareData->scale * magSquared;
+                            gDPSetPrimColor((*dList)++, 0, 0, lensFlareData->colour.r, lensFlareData->colour.g,
+                                            lensFlareData->colour.b,
+                                            (s32) (lensFlareData->colour.a * magSquareSquared));
+                            render_sprite_billboard(dList, mats, verts, (Object *) &trans,
+                                                    (unk80068514_arg4 *) gLensFlare->unk68[lensFlareData->count],
+                                                    (RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE));
+                            lensFlareData++;
+                        }
+                    }
+                    if (i == 1) {
+                        pep = (((pos[1].x * gLensFlarePos.x) + (pos[1].y * gLensFlarePos.y)) +
+                               (pos[1].z * ((0, gLensFlarePos.z)))) *
+                              2;
+                        pos[1].x = (pep * gLensFlarePos.x) - pos[1].x;
+                        pos[1].y = (pep * gLensFlarePos.y) - pos[1].y;
+                        pos[1].z = (pep * gLensFlarePos.z) - pos[1].z;
+                    }
+                }
+                width = get_video_width_and_height_as_s32();
+                height = GET_VIDEO_HEIGHT(width);
+                width = GET_VIDEO_WIDTH(width);
+                gfxTemp = (*dList);
+                gSPDisplayList(gfxTemp++, dLensFlare);
+                gDPSetPrimColor(gfxTemp++, 0, 0, lensFlareEntry->red, lensFlareEntry->green, lensFlareEntry->blue,
+                                (s32) (lensFlareEntry->alpha * magSquareSquared));
+                gDPSetCombineMode(gfxTemp++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+                gDPFillRectangle(gfxTemp++, 0, 0, width, height);
+                gDPPipeSync(gfxTemp++);
+                *dList = gfxTemp;
+                reset_render_settings(dList);
+            }
+        }
+    }
+}
 
 /**
  * Adds the new override object to the end of the list,
@@ -675,7 +867,114 @@ void handle_weather_rain(s32 updateRate) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/weather/render_rain_splashes.s")
+void render_rain_splashes(s32 updateRate) {
+    s32 temp_t0;
+    s32 i;
+    f32 var_f2;
+    s32 firstIndexWithoutFlags;
+    s32 randYRot;
+    s32 setEnvColor;
+    s32 waveIndex;
+    f32 var_f0;
+    f32 randFloat;
+    f32 xPos;
+    f32 zPos;
+    Object *racer;
+    WaterProperties **waterProps;
+
+    setEnvColor = TRUE;
+    if (gRainSplashGfx != NULL) {
+        temp_t0 = (((D_800E2C6C >> 2) * gLightningFrequency) >> 14);
+        if (temp_t0 > 0x4000) {
+            racer = get_racer_object_by_port(0);
+            D_800E2C84 -= updateRate;
+            if (D_800E2C84 <= 0) {
+                i = 0;
+                if (racer != NULL) {
+                    firstIndexWithoutFlags = -1;
+                    for (; i < ARRAY_COUNT(D_800E2B4C) && firstIndexWithoutFlags < 0; i++) {
+                        if (D_800E2B4C[i].trans.flags == OBJ_FLAGS_NONE) {
+                            firstIndexWithoutFlags = i;
+                        }
+                    }
+                    if (firstIndexWithoutFlags >= 0) {
+                        randYRot =
+                            get_random_number_from_range(-0x2000, 0x2000) + racer->segment.trans.y_rotation + 0x8000;
+                        randFloat = (f32) get_random_number_from_range(50, 500);
+                        xPos = (sins_f(randYRot) * randFloat) + racer->segment.trans.x_position;
+                        zPos = (coss_f(randYRot) * randFloat) + racer->segment.trans.z_position;
+                        i = func_8002B0F4(
+                            get_level_segment_index_from_position(xPos, racer->segment.trans.y_position, zPos), xPos,
+                            zPos, &waterProps);
+                        if (i != 0) {
+                            var_f2 = 1000.0f;
+                            waveIndex = 0;
+                            if (i >= 2) {
+                                while (waveIndex < (i - 1) &&
+                                       racer->segment.trans.y_position < waterProps[waveIndex]->waveHeight) {
+                                    waveIndex++;
+                                }
+                                if (waveIndex > 0) {
+                                    var_f2 = racer->segment.trans.y_position - waterProps[waveIndex]->waveHeight;
+                                    if (var_f2 < 0.0f) {
+                                        var_f2 = -var_f2;
+                                    }
+                                    waveIndex--;
+                                }
+                            }
+                            var_f0 = racer->segment.trans.y_position - waterProps[waveIndex]->waveHeight;
+                            if (var_f0 < 0.0f) {
+                                var_f0 = -var_f0;
+                            }
+                            if (var_f0 < var_f2) {
+                                if (var_f0 > 200.0f) {
+                                    firstIndexWithoutFlags = -1;
+                                }
+                            } else {
+                                waveIndex++;
+                                if (var_f2 > 200.0f) {
+                                    firstIndexWithoutFlags = -1;
+                                }
+                            }
+                            if (firstIndexWithoutFlags >= 0) {
+                                D_800E2B4C[firstIndexWithoutFlags].trans.x_position = xPos;
+                                D_800E2B4C[firstIndexWithoutFlags].trans.y_position = waterProps[waveIndex]->waveHeight;
+                                D_800E2B4C[firstIndexWithoutFlags].trans.z_position = zPos;
+                                D_800E2B4C[firstIndexWithoutFlags].animFrame = 0;
+                                D_800E2B4C[firstIndexWithoutFlags].trans.flags = OBJ_FLAGS_UNK_0001;
+                                D_800E2B4C[firstIndexWithoutFlags].unk1A =
+                                    get_random_number_from_range(128, (temp_t0 >> 10) + 191);
+                                D_800E2C84 = (D_800E2C84 - (temp_t0 >> 10)) + 64;
+                                if (D_800E2C84 < 0) {
+                                    D_800E2C84 = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for (i = 0; i < ARRAY_COUNT(D_800E2B4C); i++) {
+            if (D_800E2B4C[i].trans.flags != 0) {
+                D_800E2B4C[i].animFrame += updateRate * 16;
+                if (D_800E2B4C[i].animFrame > 255) {
+                    D_800E2B4C[i].trans.flags = 0;
+                } else {
+                    if (setEnvColor) {
+                        setEnvColor = FALSE;
+                        gDPSetEnvColor(gCurrWeatherDisplayList++, 255, 255, 255, 0);
+                    }
+
+                    gDPSetPrimColor(gCurrWeatherDisplayList++, 0, 0, 192, 192, 255, (D_800E2B4C[i].unk1A));
+                    render_sprite_billboard(&gCurrWeatherDisplayList, &gCurrWeatherMatrix, &gCurrWeatherVertexList,
+                                            (Object *) &D_800E2B4C[i], (unk80068514_arg4 *) gRainSplashGfx, 0x10E);
+                }
+            }
+        }
+
+        gDPSetPrimColor(gCurrWeatherDisplayList++, 0, 0, 255, 255, 255, 255);
+    }
+}
 
 /**
  * On a randomly set timer, based on the weather intensity, count down and make the sound of thunder.

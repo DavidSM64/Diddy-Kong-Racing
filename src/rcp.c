@@ -400,6 +400,7 @@ void set_background_fill_colour(s32 red, s32 green, s32 blue) {
     sBackgroundFillColour = GPACK_RGBA5551(red, green, blue, 1);
     sBackgroundFillColour |= (sBackgroundFillColour << 16);
 }
+
 /**
  * Clears the ZBuffer first, then decides how to draw the background which goes directly
  * over the colour buffer. DrawBG if set to 0 (which never happens) will completely skip
