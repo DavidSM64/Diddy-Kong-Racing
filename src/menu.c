@@ -226,7 +226,7 @@ s32 sControllerPakMenuNumberOfRows;             // 8 if PAL, 7 if not
 TextureHeader *gMenuMosaic1;
 TextureHeader *gMenuMosaic2;
 s32 gMenuMosaicShift;
-s32 D_80126BC4;
+s32 D_80126BC4; //gCreditsControlData - CurIndex?
 PakError sControllerPakError; // 0 = no error, 1 = fatal error, 2 = no free space, 3 = bad data
 s32 D_80126BCC;
 UNUSED s32 D_80126BD0; // Set to zero, never read.
@@ -1248,11 +1248,19 @@ s16 gCreditsObjectIndices[12] = {
 
 s16 gCreditsImageIndices[2] = { -1, 0 };
 
-#define CREDITS_END (0x1000)
-#define CREDITS_NEW_TITLE(seconds) (0x2000 | ((s16) (seconds * 60.0)))
-#define CREDITS_CONTINUE_TITLE(seconds) (0x3000 | ((s16) (seconds * 60.0)))
-#define CREDITS_NEXT_LEVEL (0x4000)
-#define CREDITS_DEV_TIMES(seconds) (0x6000 | ((s16) (seconds * 60.0)))
+#define CREDITS_NO_FLAG (0)
+#define CREDITS_END_FLAG (0x1000)
+#define CREDITS_NEW_TITLE_FLAG (0x2000)
+#define CREDITS_CONTINUE_TITLE_FLAG (0x3000)
+#define CREDITS_NEXT_LEVEL_FLAG (0x4000)
+#define CREDITS_UNK_FLAG (0x5000)
+#define CREDITS_DEV_TIMES_FLAG (0x6000)
+
+#define CREDITS_END (CREDITS_END_FLAG)
+#define CREDITS_NEW_TITLE(seconds) (CREDITS_NEW_TITLE_FLAG | ((s16) (seconds * 60.0)))
+#define CREDITS_CONTINUE_TITLE(seconds) (CREDITS_CONTINUE_TITLE_FLAG | ((s16) (seconds * 60.0)))
+#define CREDITS_NEXT_LEVEL (CREDITS_NEXT_LEVEL_FLAG)
+#define CREDITS_DEV_TIMES(seconds) (CREDITS_DEV_TIMES_FLAG | ((s16) (seconds * 60.0)))
 
 // Number of seconds for each section in the credits.
 #define CREDITS_DEFAULT_TITLE_TIME 2.75
@@ -10633,8 +10641,6 @@ void trophyround_free(void) {
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
-// https://decomp.me/scratch/MvASs
-#ifdef NON_MATCHING
 void func_80098774(s32 isRankings) {
     Settings *settings;
     s16 **iconPositions;
@@ -10642,13 +10648,10 @@ void func_80098774(s32 isRankings) {
     s16 *xPositions;
     s32 yOffset;
     s32 menuElemIndex;
-    UNUSED s32 arrIndex;
     s32 racerIndex;
     s32 temp;
     s32 greenAmount;
-    UNUSED s32 index;
     char *titleText;
-    UNUSED MenuElement *elem;
 
     settings = get_settings();
     titleText = (isRankings) ? gMenuText[ASSET_MENU_TEXT_RANKINGS] : gMenuText[ASSET_MENU_TEXT_RACEORDER];
@@ -10688,16 +10691,16 @@ void func_80098774(s32 isRankings) {
             // Regalloc issue here.
             temp = gRankingPlayerCount & 3;
             if (temp) {
-                greenAmount = racerIndex;
+                temp = racerIndex;
                 if (racerIndex >= 3) {
-                    greenAmount = racerIndex - 3;
+                    temp = racerIndex - 3;
                 }
             } else {
-                greenAmount = racerIndex & 3;
+                temp = racerIndex & 3;
             }
-            temp = 255 - (greenAmount << 6);
+            greenAmount = 255 - (temp << 6);
 
-            gTrophyRankingsTitle[menuElemIndex + 2].filterGreen = temp;
+            gTrophyRankingsTitle[menuElemIndex + 2].filterGreen = greenAmount;
             if (isRankings) {
                 gTrophyRankingsTitle[menuElemIndex].t.drawTexture =
                     gRacerPortraits[settings->racers[gRankingsPlayerIDs[racerIndex]].character];
@@ -10712,10 +10715,6 @@ void func_80098774(s32 isRankings) {
     }
     gTrophyRankingsTitle[menuElemIndex].t.asciiText = NULL;
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80098774.s")
-#endif
 
 /**
  * Initialise trophy race points screen.
@@ -11624,21 +11623,27 @@ void credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
     reset_render_settings(&sMenuCurrDisplayList);
 }
 
-#if 0
+#ifdef NON_EQUIVALENT
+
+typedef struct Asset69 {
+    s8 unk0;
+    s8 unk1;
+    s8 unk2;
+    s8 unk3;
+} Asset69;
 s32 menu_credits_loop(s32 updateRate) {
     s32 sp6C;
     s32 sp68;
-    s16 *asset69;
+    Asset69 *asset69;
     s8 *mainTrackIds;
     DrawTexture **var_s0;
     MenuElement *var_s0_2;
     s16 *var_a0;
     s16 *var_s1;
     s16 *var_s1_2;
-    s16 temp_a0;
+    s16 temp_a0_control_data;
     s16 temp_v1_2;
     s16 var_s2_2;
-    s16 *temp_v0_3;
     s32 temp_s0;
     s32 temp_s0_2;
     s32 temp_s2;
@@ -11653,7 +11658,7 @@ s32 menu_credits_loop(s32 updateRate) {
     s32 temp_t8;
     s32 temp_t8_2;
     s32 temp_t9;
-    s32 temp_v0;
+    s32 temp_v0_credits_flag;
     s32 temp_v0_4;
     s32 temp_v1;
     s32 var_a1;
@@ -11715,15 +11720,15 @@ s32 menu_credits_loop(s32 updateRate) {
     if ((D_80126BD8 == 0) && (D_80126BE0 == 0)) {
         sp6C = 0;
         do {
-            temp_a0 = gCreditsControlData[D_80126BC4];
-            temp_v0 = temp_a0 & 0xF000;
-            var_a2 = temp_v0 == 0x6000;
-            if (temp_v0 != 0x1000) {
+            temp_a0_control_data = gCreditsControlData[D_80126BC4];
+            temp_v0_credits_flag = temp_a0_control_data & 0xF000;
+            var_a2 = temp_v0_credits_flag == CREDITS_DEV_TIMES_FLAG;
+            if (temp_v0_credits_flag != CREDITS_NEW_TITLE_FLAG) {
                 temp_s0 = D_80126BC4 + 1;
-                switch (temp_v0) {
-                case 0x2000: /* fallthrough */
-                case 0x6000:                        /* switch 1 */
-                    D_80126BE8 = temp_a0 & 0xFFFF0FFF;
+                switch (temp_v0_credits_flag) {
+                case CREDITS_NEW_TITLE_FLAG: /* fallthrough */
+                case CREDITS_DEV_TIMES_FLAG:
+                    D_80126BE8 = temp_a0_control_data & 0xFFFF0FFF;
                     temp_t6 = gCreditsControlData[temp_s0] & 0xF000;
                     D_80126BC4 = temp_s0;
                     var_a1 = temp_s0;
@@ -11739,7 +11744,7 @@ s32 menu_credits_loop(s32 updateRate) {
                             temp_t2 = gCreditsControlData[temp_t8] & 0xF000;
                             var_v0 = temp_t2;
                             var_a1 = temp_t8;
-                        } while (temp_t2 == 0);
+                        } while (temp_t2 == CREDITS_NO_FLAG);
                     }
                     temp_v1 = var_a1 - temp_s0;
                     if (osTvType == TV_TYPE_PAL) {
@@ -11776,7 +11781,7 @@ s32 menu_credits_loop(s32 updateRate) {
                                 var_s5_2 = 2;
                                 temp_v1_2 = var_s2_2 + 14;
                                 var_a1 = D_80126BC4;
-                                var_s0_2->t.element = get_level_name((s32) *(*var_s1 + mainTrackIds));
+                                var_s0_2->t.asciiText = get_level_name(mainTrackIds[*var_s1]);
                                 var_s0_2[1].top = temp_v1_2;
                                 var_s0_2[1].middle = temp_v1_2;
                                 var_s0_2[1].bottom = temp_v1_2;
@@ -11806,9 +11811,9 @@ s32 menu_credits_loop(s32 updateRate) {
                     postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
                     D_80126BE0 = postrace_render(0) == MENU_RESULT_CONTINUE;
                     break;
-                case 0x3000:                        /* switch 1 */
+                case CREDITS_CONTINUE_TITLE_FLAG:
                     temp_s0_2 = D_80126BC4 + 1;
-                    D_80126BE8 = temp_a0 & 0xFFFF0FFF;
+                    D_80126BE8 = temp_a0_control_data & 0xFFFF0FFF;
                     D_80126BC4 = temp_s0_2;
                     temp_t8_2 = gCreditsControlData[temp_s0_2] & 0xF000;
                     var_a1_2 = temp_s0_2;
@@ -11846,12 +11851,12 @@ s32 menu_credits_loop(s32 updateRate) {
                     postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
                     D_80126BE0 = postrace_render(0) == 0;
                     break;
-                case 0x4000:
+                case CREDITS_NEXT_LEVEL_FLAG:
                     D_80126BC4 += 1;
                     D_80126BD8 = 1;
                     sp6C = 1;
                     break;
-                case 0x5000:
+                case CREDITS_UNK_FLAG:
                     D_80126BC4 += 1;
                     break;
                 }
@@ -11872,8 +11877,7 @@ s32 menu_credits_loop(s32 updateRate) {
     }
     switch (gMenuStage) {
     case 0:
-        temp_v0_3 = &asset69[D_80126BCC];
-        set_level_to_load_in_background((s32) temp_v0_3[0], (s32) temp_v0_3[1]);
+        set_level_to_load_in_background(asset69[D_80126BCC].unk0, asset69[D_80126BCC].unk2);
         gMenuStage = 1;
         gOpacityDecayTimer = 40;        
         break;
@@ -11912,7 +11916,7 @@ s32 menu_credits_loop(s32 updateRate) {
         if (gOptionBlinkTimer <= 0) {
             gMenuStage = 0;
             D_80126BCC++;
-            if (asset69[D_80126BCC] < 0) {
+            if (asset69[D_80126BCC].unk0 < 0) {
                 D_80126BCC = 0;
                 gIgnorePlayerInputTime = 0;
             }
@@ -11936,8 +11940,9 @@ block_85:
         enable_new_screen_transitions();
         music_fade(-0x80);
     }
-    if ((gMenuDelay > 0) && (gMenuDelay += updateRate, (get_thread30_level_id_to_load() == 0))) {
-        if (gMenuDelay >= 0x1F) {
+    if (gMenuDelay > 0) {
+        gMenuDelay += updateRate;
+        if (get_thread30_level_id_to_load() == 0 && gMenuDelay > 30) {
             music_change_on();
             credits_free();
             load_level_for_menu(ASSET_LEVEL_FRONTEND, ZERO_PLAYERS, CUTSCENE_NONE);
