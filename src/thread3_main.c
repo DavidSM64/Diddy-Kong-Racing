@@ -215,7 +215,7 @@ void init_game(void) {
     default_alloc_displaylist_heap();
     load_fonts();
     init_controller_paks();
-    func_80081218(); // init_save_data
+    init_save_data();
     create_and_start_thread30();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIOSMesg, 1);
     osScAddClient(&gMainSched, (OSScClient *) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);

@@ -226,7 +226,7 @@ s32 sControllerPakMenuNumberOfRows;             // 8 if PAL, 7 if not
 TextureHeader *gMenuMosaic1;
 TextureHeader *gMenuMosaic2;
 s32 gMenuMosaicShift;
-s32 D_80126BC4; //gCreditsControlData - CurIndex?
+s32 D_80126BC4;               // gCreditsControlData - CurIndex?
 PakError sControllerPakError; // 0 = no error, 1 = fatal error, 2 = no free space, 3 = bad data
 s32 D_80126BCC;
 UNUSED s32 D_80126BD0; // Set to zero, never read.
@@ -1889,8 +1889,7 @@ void menu_geometry_end(void) {
 // https://decomp.me/scratch/IZ1Gq
 GLOBAL_ASM("asm/non_matchings/menu/func_80080E90.s")
 
-// init_save_data
-void func_80081218(void) {
+void init_save_data(void) {
     s32 numLevels;
     s32 numWorlds;
     s32 i;
@@ -11701,10 +11700,8 @@ s32 menu_credits_loop(s32 updateRate) {
         temp_s4 = (var_s4 * 5) + 72;
         temp_s2 = (get_video_width_and_height_as_s32() >> 17) & 0x7FFF; // Truncated video height? Height / 2?
         for (i = 0; i < ARRAY_COUNT(gRacerPortraits); i++) {
-            render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[i], 
-                ((sins(var_s5) * temp_s4) >> 16) + 140,
-                ((coss(var_s5) * temp_s4) >> 16) + (temp_s2 - 20),
-                255, 255, 255, 255);
+            render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[i], ((sins(var_s5) * temp_s4) >> 16) + 140,
+                                      ((coss(var_s5) * temp_s4) >> 16) + (temp_s2 - 20), 255, 255, 255, 255);
             var_s5 += 0x1999;
         }
         reset_render_settings(&sMenuCurrDisplayList);
@@ -11721,139 +11718,139 @@ s32 menu_credits_loop(s32 updateRate) {
             if (temp_v0_credits_flag != CREDITS_NEW_TITLE_FLAG) {
                 temp_s0 = D_80126BC4 + 1;
                 switch (temp_v0_credits_flag) {
-                case CREDITS_NEW_TITLE_FLAG: /* fallthrough */
-                case CREDITS_DEV_TIMES_FLAG:
-                    D_80126BE8 = temp_a0_control_data & 0xFFFF0FFF;
-                    temp_t6 = gCreditsControlData[temp_s0] & 0xF000;
-                    D_80126BC4 = temp_s0;
-                    var_a1 = temp_s0;
-                    var_v0 = temp_t6;
-                    sp6C = 1;
-                    var_s5_2 = 0;
-                    var_s7 = 0x14;
-                    var_s3 = 0;
-                    if (temp_t6 == 0) {
-                        do {
-                            temp_t8 = var_a1 + 1;
-                            D_80126BC4 = temp_t8;
-                            temp_t2 = gCreditsControlData[temp_t8] & 0xF000;
-                            var_v0 = temp_t2;
-                            var_a1 = temp_t8;
-                        } while (temp_t2 == CREDITS_NO_FLAG);
-                    }
-                    temp_v1 = var_a1 - temp_s0;
-                    if (osTvType == TV_TYPE_PAL) {
-                        var_s2 = SCREEN_HEIGHT_HALF + 14;
-                    } else {
-                        var_s2 = SCREEN_HEIGHT_HALF;
-                    }
-                    if (temp_v1 == 1) {
-                        var_s2_2 = var_s2 - 14;
-                        var_s5_2 = 2;
-                    } else if (var_a2 != 0) {
-                        var_s2_2 = (var_s2 - (temp_v1 * 16)) + 3;
-                        var_s7 = 32;
-                    } else {
-                        var_s2_2 = (var_s2 - (temp_v1 * 16)) + 8;
-                    }
-                    gCreditsMenuElements->left = 480;
-                    if (var_v0 == 0x3000) {
-                        gCreditsMenuElements->right = SCREEN_WIDTH_HALF;
-                    } else {
-                        gCreditsMenuElements->right = -SCREEN_WIDTH_HALF;
-                    }
-                    if (temp_s0 < var_a1) {
-                        var_s1 = &gCreditsControlData[temp_s0];
-                        var_s0_2 = gCreditsMenuElements;
-                        do {
-                            var_s0_2->top = var_s2_2;
-                            var_s0_2->middle = var_s2_2;
-                            var_s0_2->bottom = var_s2_2;
-                            if (var_a2 != 0) {
-                                var_s0_2->textFont = 0;
-                                var_s0_2->filterGreen = 0;
-                                var_s0_2->filterBlendFactor = 48;
-                                var_s5_2 = 2;
-                                temp_v1_2 = var_s2_2 + 14;
-                                var_a1 = D_80126BC4;
-                                var_s0_2->t.asciiText = get_level_name(mainTrackIds[*var_s1]);
-                                var_s0_2[1].top = temp_v1_2;
-                                var_s0_2[1].middle = temp_v1_2;
-                                var_s0_2[1].bottom = temp_v1_2;
-                                var_s0_2[1].textFont = 0;
-                                var_a0 = &gCreditsControlData[var_a1];
-                                var_s3 += 2;
-                                var_s0_2->t.asciiText = gCreditsBestTimesArray[*var_s1];
-                                var_s0_2 += 2;
-                            } else {
-                                var_a0 = &gCreditsControlData[var_a1];
-                                if (var_s3 & 1) {
-                                    var_s0_2->filterGreen = 255;
-                                    var_s0_2->filterBlendFactor = 0;
+                    case CREDITS_NEW_TITLE_FLAG: /* fallthrough */
+                    case CREDITS_DEV_TIMES_FLAG:
+                        D_80126BE8 = temp_a0_control_data & 0xFFFF0FFF;
+                        temp_t6 = gCreditsControlData[temp_s0] & 0xF000;
+                        D_80126BC4 = temp_s0;
+                        var_a1 = temp_s0;
+                        var_v0 = temp_t6;
+                        sp6C = 1;
+                        var_s5_2 = 0;
+                        var_s7 = 0x14;
+                        var_s3 = 0;
+                        if (temp_t6 == 0) {
+                            do {
+                                temp_t8 = var_a1 + 1;
+                                D_80126BC4 = temp_t8;
+                                temp_t2 = gCreditsControlData[temp_t8] & 0xF000;
+                                var_v0 = temp_t2;
+                                var_a1 = temp_t8;
+                            } while (temp_t2 == CREDITS_NO_FLAG);
+                        }
+                        temp_v1 = var_a1 - temp_s0;
+                        if (osTvType == TV_TYPE_PAL) {
+                            var_s2 = SCREEN_HEIGHT_HALF + 14;
+                        } else {
+                            var_s2 = SCREEN_HEIGHT_HALF;
+                        }
+                        if (temp_v1 == 1) {
+                            var_s2_2 = var_s2 - 14;
+                            var_s5_2 = 2;
+                        } else if (var_a2 != 0) {
+                            var_s2_2 = (var_s2 - (temp_v1 * 16)) + 3;
+                            var_s7 = 32;
+                        } else {
+                            var_s2_2 = (var_s2 - (temp_v1 * 16)) + 8;
+                        }
+                        gCreditsMenuElements->left = 480;
+                        if (var_v0 == 0x3000) {
+                            gCreditsMenuElements->right = SCREEN_WIDTH_HALF;
+                        } else {
+                            gCreditsMenuElements->right = -SCREEN_WIDTH_HALF;
+                        }
+                        if (temp_s0 < var_a1) {
+                            var_s1 = &gCreditsControlData[temp_s0];
+                            var_s0_2 = gCreditsMenuElements;
+                            do {
+                                var_s0_2->top = var_s2_2;
+                                var_s0_2->middle = var_s2_2;
+                                var_s0_2->bottom = var_s2_2;
+                                if (var_a2 != 0) {
+                                    var_s0_2->textFont = 0;
+                                    var_s0_2->filterGreen = 0;
+                                    var_s0_2->filterBlendFactor = 48;
+                                    var_s5_2 = 2;
+                                    temp_v1_2 = var_s2_2 + 14;
+                                    var_a1 = D_80126BC4;
+                                    var_s0_2->t.asciiText = get_level_name(mainTrackIds[*var_s1]);
+                                    var_s0_2[1].top = temp_v1_2;
+                                    var_s0_2[1].middle = temp_v1_2;
+                                    var_s0_2[1].bottom = temp_v1_2;
+                                    var_s0_2[1].textFont = 0;
+                                    var_a0 = &gCreditsControlData[var_a1];
+                                    var_s3 += 2;
+                                    var_s0_2->t.asciiText = gCreditsBestTimesArray[*var_s1];
+                                    var_s0_2 += 2;
+                                } else {
+                                    var_a0 = &gCreditsControlData[var_a1];
+                                    if (var_s3 & 1) {
+                                        var_s0_2->filterGreen = 255;
+                                        var_s0_2->filterBlendFactor = 0;
+                                    }
+                                    var_s0_2->textFont = var_s5_2;
+                                    var_s5_2 = 2;
+                                    var_s3 += 1;
+                                    var_s0_2->t.asciiText = gCreditsArray[*var_s1];
+                                    var_s0_2 += 1;
                                 }
-                                var_s0_2->textFont = var_s5_2;
-                                var_s5_2 = 2;
-                                var_s3 += 1;
-                                var_s0_2->t.asciiText = gCreditsArray[*var_s1];
-                                var_s0_2 += 1;
-                            }
-                            var_s1 += 2;
-                            var_s2_2 += var_s7;
-                            var_s7 = 0x20;
-                        } while ((u32) var_s1 < (u32) var_a0);
-                    }
-                    gCreditsMenuElements[var_s3].t.element = NULL;
-                    postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
-                    D_80126BE0 = postrace_render(0) == MENU_RESULT_CONTINUE;
-                    break;
-                case CREDITS_CONTINUE_TITLE_FLAG:
-                    temp_s0_2 = D_80126BC4 + 1;
-                    D_80126BE8 = temp_a0_control_data & 0xFFFF0FFF;
-                    D_80126BC4 = temp_s0_2;
-                    temp_t8_2 = gCreditsControlData[temp_s0_2] & 0xF000;
-                    var_a1_2 = temp_s0_2;
-                    var_v0_2 = temp_t8_2;
-                    sp6C = 1;
-                    if (temp_t8_2 == 0) {
-                        do {
-                            temp_t1 = var_a1_2 + 1;
-                            D_80126BC4 = temp_t1;
-                            temp_t3 = gCreditsControlData[temp_t1] & 0xF000;
-                            var_v0_2 = temp_t3;
-                            var_a1_2 = temp_t1;
-                        } while (temp_t3 == 0);
-                    }
-                    gCreditsMenuElements->left = SCREEN_WIDTH_HALF;
-                    if (var_v0_2 == 0x3000) {
-                        gCreditsMenuElements->right = SCREEN_WIDTH_HALF;
-                    } else {
-                        gCreditsMenuElements->right = -SCREEN_WIDTH_HALF;
-                    }
-                    var_s4_2 = temp_s0_2;
-                    if (temp_s0_2 < var_a1_2) {
-                        var_s1_2 = &gCreditsControlData[var_s4_2];
-                        var_v0_3 = (var_s4_2 * 0) + gCreditsMenuElements;
-                        do {
-                            var_s4_2 += 1;
-                            temp_t6_2 = gCreditsArray[*var_s1_2];
-                            var_s1_2 += 2;
-                            var_v0_3 += 1;
-                            var_v0_3->t.asciiText = temp_t6_2;
-                        } while (var_s4_2 < var_a1_2);
-                    }
-                    //*(&gCreditsMenuElements[1].t + ((var_s4_2 << 5) + -(temp_s0_2 << 5))) = 0;
-                    gCreditsMenuElements[1].t.asciiText[((var_s4_2 << 5) + -(temp_s0_2 << 5))] = 0;
-                    postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
-                    D_80126BE0 = postrace_render(0) == 0;
-                    break;
-                case CREDITS_NEXT_LEVEL_FLAG:
-                    D_80126BC4 += 1;
-                    D_80126BD8 = 1;
-                    sp6C = 1;
-                    break;
-                case CREDITS_UNK_FLAG:
-                    D_80126BC4 += 1;
-                    break;
+                                var_s1 += 2;
+                                var_s2_2 += var_s7;
+                                var_s7 = 0x20;
+                            } while ((u32) var_s1 < (u32) var_a0);
+                        }
+                        gCreditsMenuElements[var_s3].t.element = NULL;
+                        postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
+                        D_80126BE0 = postrace_render(0) == MENU_RESULT_CONTINUE;
+                        break;
+                    case CREDITS_CONTINUE_TITLE_FLAG:
+                        temp_s0_2 = D_80126BC4 + 1;
+                        D_80126BE8 = temp_a0_control_data & 0xFFFF0FFF;
+                        D_80126BC4 = temp_s0_2;
+                        temp_t8_2 = gCreditsControlData[temp_s0_2] & 0xF000;
+                        var_a1_2 = temp_s0_2;
+                        var_v0_2 = temp_t8_2;
+                        sp6C = 1;
+                        if (temp_t8_2 == 0) {
+                            do {
+                                temp_t1 = var_a1_2 + 1;
+                                D_80126BC4 = temp_t1;
+                                temp_t3 = gCreditsControlData[temp_t1] & 0xF000;
+                                var_v0_2 = temp_t3;
+                                var_a1_2 = temp_t1;
+                            } while (temp_t3 == 0);
+                        }
+                        gCreditsMenuElements->left = SCREEN_WIDTH_HALF;
+                        if (var_v0_2 == 0x3000) {
+                            gCreditsMenuElements->right = SCREEN_WIDTH_HALF;
+                        } else {
+                            gCreditsMenuElements->right = -SCREEN_WIDTH_HALF;
+                        }
+                        var_s4_2 = temp_s0_2;
+                        if (temp_s0_2 < var_a1_2) {
+                            var_s1_2 = &gCreditsControlData[var_s4_2];
+                            var_v0_3 = (var_s4_2 * 0) + gCreditsMenuElements;
+                            do {
+                                var_s4_2 += 1;
+                                temp_t6_2 = gCreditsArray[*var_s1_2];
+                                var_s1_2 += 2;
+                                var_v0_3 += 1;
+                                var_v0_3->t.asciiText = temp_t6_2;
+                            } while (var_s4_2 < var_a1_2);
+                        }
+                        //*(&gCreditsMenuElements[1].t + ((var_s4_2 << 5) + -(temp_s0_2 << 5))) = 0;
+                        gCreditsMenuElements[1].t.asciiText[((var_s4_2 << 5) + -(temp_s0_2 << 5))] = 0;
+                        postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
+                        D_80126BE0 = postrace_render(0) == 0;
+                        break;
+                    case CREDITS_NEXT_LEVEL_FLAG:
+                        D_80126BC4 += 1;
+                        D_80126BD8 = 1;
+                        sp6C = 1;
+                        break;
+                    case CREDITS_UNK_FLAG:
+                        D_80126BC4 += 1;
+                        break;
                 }
             } else {
                 D_80126BC4 = 0;
@@ -11871,52 +11868,52 @@ s32 menu_credits_loop(s32 updateRate) {
         }
     }
     switch (gMenuStage) {
-    case 0:
-        set_level_to_load_in_background(asset69[D_80126BCC].unk0, asset69[D_80126BCC].unk2);
-        gMenuStage = 1;
-        gOpacityDecayTimer = 40;        
-        break;
-    case 1:
-        if (get_thread30_level_id_to_load() == 0) {
-            gMenuStage = 2;
-            gOptionBlinkTimer = 40;
-            D_80126BD8 = 0;
-        }
-        break;
-    case 2:
-        temp_t4 = gOptionBlinkTimer - updateRate;
-        gOptionBlinkTimer = temp_t4;
-        gOpacityDecayTimer -= updateRate;
-        if (temp_t4 <= 0) {
-            gOptionBlinkTimer = temp_t4 + 600;
-            gMenuStage = 3;
-        }
-        break;
-    case 3:
-        temp_v0_4 = gOpacityDecayTimer;
-        gOptionBlinkTimer -= updateRate;
-        if (temp_v0_4 > 0) {
-            gOpacityDecayTimer = temp_v0_4 - updateRate;
-        } else {
-            gOpacityDecayTimer = 0;
-        }
-        if (gOptionBlinkTimer <= 0) {
-            gOptionBlinkTimer = 40;
-            gMenuStage = 4;
-        }
-        break;
-    case 4:
-        gOptionBlinkTimer -= updateRate;
-        gOpacityDecayTimer += updateRate;
-        if (gOptionBlinkTimer <= 0) {
-            gMenuStage = 0;
-            D_80126BCC++;
-            if (asset69[D_80126BCC].unk0 < 0) {
-                D_80126BCC = 0;
-                gIgnorePlayerInputTime = 0;
+        case 0:
+            set_level_to_load_in_background(asset69[D_80126BCC].unk0, asset69[D_80126BCC].unk2);
+            gMenuStage = 1;
+            gOpacityDecayTimer = 40;
+            break;
+        case 1:
+            if (get_thread30_level_id_to_load() == 0) {
+                gMenuStage = 2;
+                gOptionBlinkTimer = 40;
+                D_80126BD8 = 0;
             }
-        }
-        break;
+            break;
+        case 2:
+            temp_t4 = gOptionBlinkTimer - updateRate;
+            gOptionBlinkTimer = temp_t4;
+            gOpacityDecayTimer -= updateRate;
+            if (temp_t4 <= 0) {
+                gOptionBlinkTimer = temp_t4 + 600;
+                gMenuStage = 3;
+            }
+            break;
+        case 3:
+            temp_v0_4 = gOpacityDecayTimer;
+            gOptionBlinkTimer -= updateRate;
+            if (temp_v0_4 > 0) {
+                gOpacityDecayTimer = temp_v0_4 - updateRate;
+            } else {
+                gOpacityDecayTimer = 0;
+            }
+            if (gOptionBlinkTimer <= 0) {
+                gOptionBlinkTimer = 40;
+                gMenuStage = 4;
+            }
+            break;
+        case 4:
+            gOptionBlinkTimer -= updateRate;
+            gOpacityDecayTimer += updateRate;
+            if (gOptionBlinkTimer <= 0) {
+                gMenuStage = 0;
+                D_80126BCC++;
+                if (asset69[D_80126BCC].unk0 < 0) {
+                    D_80126BCC = 0;
+                    gIgnorePlayerInputTime = 0;
+                }
+            }
+            break;
     }
     if (!(buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON))) {
         if (!(buttonsPressedAllPlayers & B_BUTTON)) {
@@ -11927,8 +11924,8 @@ s32 menu_credits_loop(s32 updateRate) {
             goto block_85;
         }
     } else {
-block_84:
-block_85:
+    block_84:
+    block_85:
         gMenuDelay = 1;
         disable_new_screen_transitions();
         transition_begin(&sMenuTransitionFadeIn);
