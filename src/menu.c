@@ -1896,7 +1896,6 @@ void init_save_data(void) {
     s32 numberOfLevelsTimes4;
     s32 index;
     s32 numberOfWords;
-    s32 *courseFlagsPtr;
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
     numberOfLevelsTimes4 = (numLevels * 4);
@@ -1907,13 +1906,13 @@ void init_save_data(void) {
     gSavefileData[0] = allocate_from_main_pool_safe(numberOfWords * 4, COLOUR_TAG_WHITE);
     i = 0;
     for (index = 0; index < ARRAY_COUNT(gSavefileData); index++) {
-        gSavefileData[index] = (u8 *) gSavefileData[0] + i;
+        gSavefileData[index] = (Settings *) ((u8 *) gSavefileData[0] + i);
         i += numberOfWords;
-        gSavefileData[index]->courseFlagsPtr = (u8 *) gSavefileData[index] + sizeof(Settings);
-        gSavefileData[index]->balloonsPtr = (u8 *) gSavefileData[index]->courseFlagsPtr + numberOfLevelsTimes4;
+        gSavefileData[index]->courseFlagsPtr = (s32 *) ((u8 *) gSavefileData[index] + sizeof(Settings));
+        gSavefileData[index]->balloonsPtr = (s16 *) ((u8 *) gSavefileData[index]->courseFlagsPtr + numberOfLevelsTimes4);
     }
-    gCheatsAssetData = get_misc_asset(ASSET_MISC_MAGIC_CODES);
-    gNumberOfCheats = (s32) (*gCheatsAssetData)[0];
+    gCheatsAssetData = (u16 (*)[30]) get_misc_asset(ASSET_MISC_MAGIC_CODES);
+    gNumberOfCheats = (*gCheatsAssetData)[0];
     gMenuText = allocate_from_main_pool_safe(1024 * sizeof(char *), COLOUR_TAG_WHITE);
     load_menu_text(LANGUAGE_ENGLISH);
     for (i = 0; i < ARRAY_COUNT(gMenuAssets); i++) { \
