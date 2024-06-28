@@ -1900,12 +1900,12 @@ void init_save_data(void) {
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
     courseFlagsPtrSize = numLevels * sizeof(s32);
-    saveFileSize = numWorlds * sizeof(s16); // balloonsPtrSize
-    saveFileSize = courseFlagsPtrSize + saveFileSize;
-    saveFileSize += 0x11B;
-    saveFileSize &= ~3;
+    saveFileSize = courseFlagsPtrSize;
+    saveFileSize += numWorlds * sizeof(s16); // balloonsPtrSize;
+    saveFileSize += sizeof(Settings);
+    saveFileSize = (saveFileSize + 3) & ~3; // align to a 4-byte boundary
     
-    *gSavefileData = allocate_from_main_pool_safe(saveFileSize * 4, COLOUR_TAG_WHITE);
+    *gSavefileData = allocate_from_main_pool_safe(saveFileSize * ARRAY_COUNT(gSavefileData), COLOUR_TAG_WHITE);
 
     for (index = 0, offset = 0; index < ARRAY_COUNT(gSavefileData); index++) {
         gSavefileData[index] = (Settings *) ((u8 *) *gSavefileData + offset);
