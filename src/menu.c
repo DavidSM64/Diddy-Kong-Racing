@@ -1893,28 +1893,32 @@ void init_save_data(void) {
     s32 numLevels;
     s32 numWorlds;
     s32 i;
-    s32 numberOfLevelsTimes4;
+    s32 courseFlagsPtrSize;
     s32 index;
-    s32 numberOfWords;
+    s32 saveFileSize;
+    s32 offset;
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
-    numberOfLevelsTimes4 = (numLevels * 4);
-    numberOfWords = (numWorlds * 2);
-    numberOfWords = numberOfLevelsTimes4 + numberOfWords;
-    numberOfWords += 0x11B;
-    numberOfWords &= ~3;
-    gSavefileData[0] = allocate_from_main_pool_safe(numberOfWords * 4, COLOUR_TAG_WHITE);
-    i = 0;
-    for (index = 0; index < ARRAY_COUNT(gSavefileData); index++) {
-        gSavefileData[index] = (Settings *) ((u8 *) gSavefileData[0] + i);
-        i += numberOfWords;
+    courseFlagsPtrSize = numLevels * sizeof(s32);
+    saveFileSize = numWorlds * sizeof(s16); // balloonsPtrSize
+    saveFileSize = courseFlagsPtrSize + saveFileSize;
+    saveFileSize += 0x11B;
+    saveFileSize &= ~3;
+    
+    *gSavefileData = allocate_from_main_pool_safe(saveFileSize * 4, COLOUR_TAG_WHITE);
+
+    for (index = 0, offset = 0; index < ARRAY_COUNT(gSavefileData); index++) {
+        gSavefileData[index] = (Settings *) ((u8 *) *gSavefileData + offset);
         gSavefileData[index]->courseFlagsPtr = (s32 *) ((u8 *) gSavefileData[index] + sizeof(Settings));
-        gSavefileData[index]->balloonsPtr = (s16 *) ((u8 *) gSavefileData[index]->courseFlagsPtr + numberOfLevelsTimes4);
+        gSavefileData[index]->balloonsPtr = (s16 *) ((u8 *) gSavefileData[index]->courseFlagsPtr + courseFlagsPtrSize);
+        offset += saveFileSize;
     }
+    
     gCheatsAssetData = (u16 (*)[30]) get_misc_asset(ASSET_MISC_MAGIC_CODES);
     gNumberOfCheats = (*gCheatsAssetData)[0];
     gMenuText = allocate_from_main_pool_safe(1024 * sizeof(char *), COLOUR_TAG_WHITE);
     load_menu_text(LANGUAGE_ENGLISH);
+    
     for (i = 0; i < ARRAY_COUNT(gMenuAssets); i++) { \
         gMenuAssets[i] = NULL;
     }
