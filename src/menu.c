@@ -1890,42 +1890,37 @@ void menu_geometry_end(void) {
 GLOBAL_ASM("asm/non_matchings/menu/func_80080E90.s")
 
 // init_save_data
-#ifdef NON_EQUIVALENT
-// Should be functionally equivalent.
 void func_80081218(void) {
-    s32 numLevels; // sp34
-    s32 numWorlds; // sp30
+    s32 numLevels;
+    s32 numWorlds;
     s32 i;
-    s32 sp28;
-    s32 sp20;
+    s32 numberOfLevelsTimes4;
+    s32 index;
+    s32 numberOfWords;
+    s32 *courseFlagsPtr;
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
-    sp20 = ((numLevels * 4) + (numWorlds * 2) + 0x11B) & ~3;
-    sp28 = numLevels * 4;
-    gSavefileData[0] = allocate_from_main_pool_safe(sp20 * 4, COLOUR_TAG_WHITE);
-    gSavefileData[0] = gSavefileData[0];
-    gSavefileData[0]->courseFlagsPtr = (u8 *) gSavefileData[0] + sizeof(Settings);
-    gSavefileData[0]->balloonsPtr = (u8 *) gSavefileData[0]->courseFlagsPtr + sp28;
-    gSavefileData[1] = (u8 *) gSavefileData[0] + sp20;
-    gSavefileData[1]->courseFlagsPtr = (u8 *) gSavefileData[1] + sizeof(Settings);
-    gSavefileData[1]->balloonsPtr = (u8 *) gSavefileData[1]->courseFlagsPtr + sp28;
-    gSavefileData[2] = (u8 *) gSavefileData[1] + sp20;
-    gSavefileData[2]->courseFlagsPtr = (u8 *) gSavefileData[2] + sizeof(Settings);
-    gSavefileData[2]->balloonsPtr = (u8 *) gSavefileData[2]->courseFlagsPtr + sp28;
-    gSavefileData[3] = (u8 *) gSavefileData[2] + sp20;
-    gSavefileData[3]->courseFlagsPtr = (u8 *) gSavefileData[3] + sizeof(Settings);
-    gSavefileData[3]->balloonsPtr = (u8 *) gSavefileData[3]->courseFlagsPtr + sp28;
+    numberOfLevelsTimes4 = (numLevels * 4);
+    numberOfWords = (numWorlds * 2);
+    numberOfWords = numberOfLevelsTimes4 + numberOfWords;
+    numberOfWords += 0x11B;
+    numberOfWords &= ~3;
+    gSavefileData[0] = allocate_from_main_pool_safe(numberOfWords * 4, COLOUR_TAG_WHITE);
+    i = 0;
+    for (index = 0; index < ARRAY_COUNT(gSavefileData); index++) {
+        gSavefileData[index] = (u8 *) gSavefileData[0] + i;
+        i += numberOfWords;
+        gSavefileData[index]->courseFlagsPtr = (u8 *) gSavefileData[index] + sizeof(Settings);
+        gSavefileData[index]->balloonsPtr = (u8 *) gSavefileData[index]->courseFlagsPtr + numberOfLevelsTimes4;
+    }
     gCheatsAssetData = get_misc_asset(ASSET_MISC_MAGIC_CODES);
-    gNumberOfCheats = (s32) (*gCheatsAssetData);
+    gNumberOfCheats = (s32) (*gCheatsAssetData)[0];
     gMenuText = allocate_from_main_pool_safe(1024 * sizeof(char *), COLOUR_TAG_WHITE);
     load_menu_text(LANGUAGE_ENGLISH);
-    for (i = 0; i < 128; i++) {
+    for (i = 0; i < ARRAY_COUNT(gMenuAssets); i++) { \
         gMenuAssets[i] = NULL;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80081218.s")
-#endif
 
 /**
  * Sets the title reveal timer to zero when the menu boots, meaning it may not automatically appear.
