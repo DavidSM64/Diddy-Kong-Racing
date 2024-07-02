@@ -1513,92 +1513,78 @@ SIDeviceStatus func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
 GLOBAL_ASM("asm/non_matchings/save_data/func_80075000.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-// I give up. Ghost data structs have be beat for now.
+// 4 bytes
+typedef struct unk800753D8_body {
+    u8 unk0;
+    u8 unk1;
+    s16 unk2;
+} unk800753D8_body;
 
-s32 func_800753D8(s32 controllerIndex, s32 arg1) {
-    GhostData *dataToWrite;
+typedef struct unk800753D8 {
+    s32 signature;
+    unk800753D8_body data[1];
+} unk800753D8;
+
+#define GHSS_SIZE 0x100
+#define AS_BYTES(ptr) ((u8 *) ptr)
+
+s32 func_800753D8(s32 controllerIndex, s32 worldId) {
+    unk800753D8_body *tempData;
+    unk800753D8 *data;
+    unk800753D8 *data2;
+    s32 pakStatus;
+    s32 i;
+    s32 sizeDiff;
     s32 fileNumber;
-    s32 fileLength;
-    u8 *sp28;
-    u8 *sp20;
-    s16 temp_t9_2;
-    s16 temp_t9_3;
-    s32 temp_a3;
-    s32 temp_t8;
-    s32 temp_t8_2;
-    s32 var_at;
-    s32 ret;
-    s32 var_v1_4;
-    GhostDataData *temp_t1;
-    GhostData *fileData;
-    GhostData *temp_v0_6;
-    u8 *temp_v1;
-    u8 temp_t2_2;
-    u8 temp_t3;
-    u8 temp_t7;
-    u8 temp_t7_2;
-    u8 temp_t8_3;
-    u8 temp_t8_4;
-    GhostDataData *temp_v0_5;
-    u8 *temp_v0_8;
-    GhostDataData *var_v0;
-    u8 *var_v0_2;
+    s32 fileSize;
 
-    ret = get_si_device_status(controllerIndex);
-    if (ret != CONTROLLER_PAK_GOOD) {
+    pakStatus = get_si_device_status(controllerIndex);
+    if (pakStatus != CONTROLLER_PAK_GOOD) {
         start_reading_controller_data(controllerIndex);
-        return ret;
+        return pakStatus;
     }
-    ret = get_file_number(controllerIndex, "DKRACING-GHOSTS", "", &fileNumber);
-    if (ret == CONTROLLER_PAK_GOOD) {
-        ret = get_file_size(controllerIndex, fileNumber, &fileLength);
-        if (ret != CONTROLLER_PAK_GOOD) {
+    pakStatus = get_file_number(controllerIndex, "DKRACING-GHOSTS", "", &fileNumber);
+    if (pakStatus == CONTROLLER_PAK_GOOD) {
+        pakStatus = get_file_size(controllerIndex, fileNumber, &fileSize);
+        if (pakStatus != CONTROLLER_PAK_GOOD) {
             start_reading_controller_data(controllerIndex);
-            return ret;
+            return pakStatus;
         }
-        fileData = (GhostData *) allocate_from_main_pool_safe(fileLength + 0x100, COLOUR_TAG_BLACK);
-        ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *) fileData, fileLength);
+        data = allocate_from_main_pool_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
+        pakStatus = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *) data, fileSize);
         start_reading_controller_data(controllerIndex);
-        if (ret == CONTROLLER_PAK_GOOD) {
-            ret = CONTROLLER_PAK_BAD_DATA;
-            if (fileData->headerId == GHSS) {
-                temp_t8 = arg1 * 4;
-                temp_v0_5 = (GhostDataData *) &fileData[temp_t8];
-                temp_a3 = temp_v0_5->unk6 - temp_v0_5->unkA;
-                temp_v0_6 = (GhostData *) allocate_from_main_pool_safe(fileLength + 0x100, COLOUR_TAG_BLACK);
-                temp_v1 = fileData->ghostHeader;
-                dataToWrite = temp_v0_6;
-                temp_t1 = &temp_v1[temp_t8];
-                sp20 = temp_t1;
-                sp28 = temp_v1;
-                bcopy(fileData, temp_v0_6, temp_t1->unk2);
-                if (arg1 != 5) {
-                    bcopy(&fileData[temp_t1->unk6], &(&dataToWrite[temp_t1->unk6])[temp_a3],
-                          fileData->ghostData->unk1A - temp_t1->unk6);
+        if (pakStatus == CONTROLLER_PAK_GOOD) {
+            if (data->signature == GHSS) {
+                tempData = data->data;
+                sizeDiff = tempData[worldId].unk2 - tempData[worldId + 1].unk2;
+                data2 = allocate_from_main_pool_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
+                bcopy(data, data2, tempData[worldId].unk2); // Copy data into data2
+
+                if (worldId != WORLD_FUTURE_FUN_LAND) {
+                    bcopy(AS_BYTES(data) + tempData[worldId + 1].unk2,
+                          AS_BYTES(data2) + tempData[worldId + 1].unk2 + sizeDiff,
+                          tempData[6].unk2 - tempData[worldId + 1].unk2);
                 }
-                var_v0 = &dataToWrite[arg1].ghostData;
-                for (var_v1_4 = arg1; var_v1_4 < 6; var_v1_4++) {
-                    var_v0[var_v1_4].unk2 = (var_v0[var_v1_4].unk6 + temp_a3);
-                    var_v0[var_v1_4].unk18 = var_v0[var_v1_4].unk4;
-                    var_v0[var_v1_4].unk1A = var_v0[var_v1_4].unk5;
+                tempData = data2->data;
+                for (i = worldId; i <= WORLD_FUTURE_FUN_LAND; i++) {
+                    tempData[i + 0].unk0 = tempData[i + 1].unk0;
+                    tempData[i + 0].unk1 = tempData[i + 1].unk1;
+                    tempData[i + 0].unk2 = tempData[i + 1].unk2 + sizeDiff;
                 }
-                dataToWrite->ghostData->unk1A = dataToWrite->ghostData->unk16;
-                ret = write_controller_pak_file(controllerIndex, fileNumber, "DKRACING-GHOSTS", "", (u8 *) dataToWrite,
-                                                fileLength);
+                tempData[6].unk2 = tempData[5].unk2;
+                pakStatus = write_controller_pak_file(controllerIndex, fileNumber, "DKRACING-GHOSTS", "", (u8 *) data2,
+                                                      fileSize);
+            } else {
+                pakStatus = CONTROLLER_PAK_BAD_DATA;
             }
-            free_from_memory_pool(dataToWrite);
+            free_from_memory_pool(data2); // Wait, what happens if (data->signature != GHSS)?
         }
-        free_from_memory_pool(fileData);
+        free_from_memory_pool(data);
     } else {
         start_reading_controller_data(controllerIndex);
     }
-
-    return ret;
+    return pakStatus;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
-#endif
 
 SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *levelIDs, u8 *vehicleIDs, u8 *characterIDs, s16 *checksumIDs) {
     s32 i;

@@ -11620,7 +11620,7 @@ void credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
     reset_render_settings(&sMenuCurrDisplayList);
 }
 
-#if 1
+#if 0
 
 typedef struct Asset69 {
     s8 unk0;
@@ -11633,45 +11633,28 @@ s32 menu_credits_loop(s32 updateRate) {
     s32 sp68;
     Asset69 *asset69;
     s8 *mainTrackIds;
-    DrawTexture **var_s0;
     MenuElement *menuElement;
-    s16 *var_a0;
-    s16 *creditControlData;
     s16 *var_s1_2;
     s16 temp_a0_control_data;
-    s16 temp_v1_2;
-    s16 var_s2_2;
     s32 nextIndex;
     s32 temp_s0_2;
     s32 temp_s2;
-    s32 temp_s3;
     s32 temp_s4;
     s32 temp_t1;
-    s32 temp_t2;
     s32 temp_t3;
-    s32 temp_t4;
-    s32 temp_t6_3;
-    s32 temp_t8;
     s32 temp_t8_2;
-    s32 temp_t9;
     s32 temp_v0_credits_flag;
-    s32 temp_v0_4;
     s32 temp_v1;
-    s32 var_a1;
     s32 var_a1_2;
-    s32 var_s0_3;
     s32 textPos;
     s32 buttonsPressedAllPlayers;
     s32 var_s3;
     s32 var_s4;
     s32 var_s4_2;
     s32 var_s5;
-    s32 var_s7;
-    s32 var_t4;
+    s32 textLineHeight;
     s32 var_v0_2;
     s8 *temp_t6_2;
-    s8 var_a2;
-    s32 temp_v0_2;
     u8 textFont;
     MenuElement *var_v0_3;
     s32 i;
@@ -11722,10 +11705,8 @@ s32 menu_credits_loop(s32 updateRate) {
                     case CREDITS_DEV_TIMES_FLAG:
                         D_80126BE8 = temp_a0_control_data & 0xFFFF0FFF;
                         D_80126BC4 = nextIndex;
-                        var_a1 = nextIndex;
                         breakLoop = TRUE;
                         textFont = FONT_COLOURFUL;
-                        var_s7 = 20;
                         while ((gCreditsControlData[D_80126BC4] & 0xF000) == CREDITS_NO_FLAG) {
                             D_80126BC4++;
                         }
@@ -11734,13 +11715,14 @@ s32 menu_credits_loop(s32 updateRate) {
                         } else {
                             textPos = SCREEN_HEIGHT_HALF;
                         }
+                        textLineHeight = 20;
                         temp_v1 = D_80126BC4 - nextIndex;
                         if (temp_v1 == 1) {
                             textPos -= 14;
                             textFont = FONT_LARGE;
                         } else if ((temp_v0_credits_flag == CREDITS_DEV_TIMES_FLAG) != 0) {
                             textPos = (textPos - (temp_v1 * 16)) + 3;
-                            var_s7 = 32;
+                            textLineHeight = 32;
                         } else {
                             textPos = (textPos - (temp_v1 * 16)) + 8;
                         }
@@ -11751,44 +11733,37 @@ s32 menu_credits_loop(s32 updateRate) {
                             gCreditsMenuElements->right = -SCREEN_WIDTH_HALF;
                         }
                         var_s3 = 0;
-                        if (nextIndex < D_80126BC4) {
-                            creditControlData = &gCreditsControlData[nextIndex];
-                            menuElement = gCreditsMenuElements;
-                            do {
-                                menuElement->top = textPos;
-                                menuElement->middle = textPos;
-                                menuElement->bottom = textPos;
-                                if ((temp_v0_credits_flag == CREDITS_DEV_TIMES_FLAG) != 0) {
-                                    menuElement->textFont = FONT_COLOURFUL;
-                                    menuElement->filterGreen = 0;
-                                    menuElement->filterBlendFactor = 48;
-                                    menuElement->t.asciiText = get_level_name(mainTrackIds[*creditControlData]);
-                                    textFont = FONT_LARGE;
-                                    menuElement[1].top = textPos + 14;
-                                    menuElement[1].middle = textPos + 14;
-                                    menuElement[1].bottom = textPos + 14;
-                                    menuElement[1].textFont = FONT_COLOURFUL;
-                                    var_a1 = D_80126BC4;
-                                    var_a0 = &gCreditsControlData[D_80126BC4];
-                                    var_s3 += 2;
-                                    menuElement->t.asciiText = gCreditsBestTimesArray[*creditControlData];
-                                    menuElement += 2;
-                                } else {
-                                    var_a0 = &gCreditsControlData[var_a1];
-                                    if (var_s3 & 1) {
-                                        menuElement->filterGreen = 255;
-                                        menuElement->filterBlendFactor = 0;
-                                    }
-                                    menuElement->textFont = textFont;
-                                    textFont = FONT_LARGE;
-                                    var_s3++;
-                                    menuElement->t.asciiText = gCreditsArray[*creditControlData];
-                                    menuElement++;
+                        menuElement = gCreditsMenuElements;
+                        for (i = nextIndex; i < D_80126BC4; i+=2) {
+                            menuElement->top = textPos;
+                            menuElement->middle = textPos;
+                            menuElement->bottom = textPos;
+                            if ((temp_v0_credits_flag == CREDITS_DEV_TIMES_FLAG) != 0) {
+                                menuElement->textFont = FONT_COLOURFUL;
+                                menuElement->filterGreen = 0;
+                                menuElement->filterBlendFactor = 48;
+                                menuElement->t.asciiText = get_level_name(mainTrackIds[gCreditsControlData[i]]);
+                                menuElement++;
+                                menuElement->top = textPos + 14;
+                                menuElement->middle = textPos + 14;
+                                menuElement->bottom = textPos + 14;
+                                menuElement->textFont = FONT_COLOURFUL;
+                                menuElement->t.asciiText = gCreditsBestTimesArray[gCreditsControlData[i]];
+                                menuElement++;
+                                var_s3 += 2;
+                            } else {
+                                if (var_s3 & 1) {
+                                    menuElement->filterGreen = 255;
+                                    menuElement->filterBlendFactor = 0;
                                 }
-                                creditControlData += 2;
-                                textPos += var_s7;
-                                var_s7 = 32;
-                            } while ((u32) creditControlData < (u32) var_a0);
+                                menuElement->textFont = textFont;
+                                menuElement->t.asciiText = gCreditsArray[gCreditsControlData[i]];
+                                menuElement++;
+                                var_s3++;
+                            }
+                            textFont = FONT_LARGE;
+                            textPos += textLineHeight;
+                            textLineHeight = 32;
                         }
                         gCreditsMenuElements[var_s3].t.element = NULL;
                         postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
@@ -11837,7 +11812,7 @@ s32 menu_credits_loop(s32 updateRate) {
                     case CREDITS_NEXT_LEVEL_FLAG:
                         D_80126BC4++;
                         D_80126BD8 = 1;
-                        breakLoop = 1;
+                        breakLoop = TRUE;
                         break;
                     case CREDITS_UNK_FLAG:
                         D_80126BC4++;
@@ -11848,12 +11823,12 @@ s32 menu_credits_loop(s32 updateRate) {
                 sp68 = TRUE;
                 gIgnorePlayerInputTime = 0;
             }
-        } while (breakLoop == 0);
+        } while (breakLoop == FALSE);
     }
     buttonsPressedAllPlayers = 0;
     if (gIgnorePlayerInputTime == 0) {
         if (gMenuDelay == 0) {
-            for (i = 0; i < 4; i++) {
+            for (i = 0; i < MAXCONTROLLERS; i++) {
                 buttonsPressedAllPlayers |= get_buttons_pressed_from_player(i);
             }
         }
@@ -11872,19 +11847,17 @@ s32 menu_credits_loop(s32 updateRate) {
             }
             break;
         case 2:
-            temp_t4 = gOptionBlinkTimer - updateRate;
-            gOptionBlinkTimer = temp_t4;
             gOpacityDecayTimer -= updateRate;
-            if (temp_t4 <= 0) {
-                gOptionBlinkTimer = temp_t4 + 600;
+            gOptionBlinkTimer -= updateRate;
+            if (gOptionBlinkTimer <= 0) {
+                gOptionBlinkTimer += 600;
                 gMenuStage = 3;
             }
             break;
         case 3:
-            temp_v0_4 = gOpacityDecayTimer;
             gOptionBlinkTimer -= updateRate;
-            if (temp_v0_4 > 0) {
-                gOpacityDecayTimer = temp_v0_4 - updateRate;
+            if (gOpacityDecayTimer > 0) {
+                gOpacityDecayTimer -= updateRate;
             } else {
                 gOpacityDecayTimer = 0;
             }
