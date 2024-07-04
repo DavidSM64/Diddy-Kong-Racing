@@ -98,7 +98,13 @@ typedef struct unk80075000_body {
         };
         s16 unk0_hw;
     };
-    s16 unk2;
+    union {
+        struct {
+            u8 unk2_b;
+            u8 unk3_b;
+        };
+        s16 unk2;
+    };
 } unk80075000_body;
 
 typedef struct unk80075000 {
@@ -163,9 +169,9 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
 void func_80073588(Settings *settings, u8 *saveData, u8 arg2);
 void func_800732E8(Settings *settings, u8 *saveData);
 void func_800738A4(Settings *settings, u8 *saveData);
+s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, unk80075000 *ghostData);
 
 //Using some context, and best guesses, these could be the names of the variables
-s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *ghostData); //Non matching
 char *string_to_font_codes(char *inString, char *outString, s32 stringLength);
 
 //Reasonably certain about these names for now.

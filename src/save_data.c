@@ -58,11 +58,6 @@ UNUSED const char D_800E7700[] = "WARNING : No Eprom\n";
 UNUSED const char D_800E7714[] = "WARNING : No Eprom\n";
 UNUSED const char D_800E7728[] = "WARNING : No Eprom\n";
 
-const char sDKRacingGhosts[] = "DKRACING-GHOSTS";
-const char sDKRacingGhostFileExt[] = "";
-
-UNUSED const char D_800E7750[] = "warning: corrupt ghost\n";
-
 /*********************************/
 
 /************ .bss ************/
@@ -1185,132 +1180,96 @@ s32 get_ghost_data_file_size(void) {
     return (&x)[0] * 6 + 0x100;
 }
 
-#ifdef NON_EQUIVALENT
-typedef struct unkGhostData {
-    u8 unk0;
-    u8 unk1;
-    s16 unk2;
-    u8 unk4;
-    u8 unk5;
-    s16 unk6;
-    u8 unk8;
-    u8 unk9;
-    u8 unkA;
-    u8 unkB;
-    u8 unkC;
-} unkGhostData;
-// cpak_read_ghost
 s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCharacterId, s16 *ghostTime,
-                  s16 *ghostNodeCount, GhostHeader *ghostData) {
-#define GHSS_FILE_SIZE 0x100
-    static OSPfs *pfs; // Maybe static?
-    s32 i;
-    u8 *cPakFile;
-    s32 bytesFree;
+                  s16 *ghostNodeCount, unk80075000 *ghostData) {
+    unk80075000_body *ghostDataBody;
+    unk80075000 *cPakFile;
+    s32 pakStatus;
     s32 fileNumber;
-    s32 notesFree;
-    s32 fileOffset;
-    s32 fileSize;
-    SIDeviceStatus ret;
-    SIDeviceStatus retTemp;
-    GhostHeader *fileData;
-    unkGhostData *temp_v0_4;
+    s32 i;
+    s32 ghostSize;
+    s32 allocateSpace;
+    s32 ghostDataBytesFree;
+    s32 ghostDataNotesFree;
 
-    fileOffset = 0;
-    ret = get_si_device_status(controllerIndex);
-    if (ret != CONTROLLER_PAK_GOOD) {
+    ghostSize = 0;
+    pakStatus = get_si_device_status(controllerIndex);
+    if (pakStatus != CONTROLLER_PAK_GOOD) {
         start_reading_controller_data(controllerIndex);
-        return ret;
+        return pakStatus;
     }
     if (ghostCharacterId != NULL) {
         *ghostTime = -1;
         *ghostCharacterId = -1;
     }
-    ret = get_file_number(controllerIndex, (char *) sDKRacingGhosts, (char *) sDKRacingGhostFileExt, &fileNumber);
-    if (ret == CONTROLLER_PAK_GOOD) {
-        cPakFile = allocate_from_main_pool_safe(GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
-        pfs = &pfs[controllerIndex]; // This should be uninintialized?
-        if (!(pfs->status & PFS_INITIALIZED)) {
-            osPfsInit(sControllerMesgQueue, &pfs, controllerIndex);
+    pakStatus = get_file_number(controllerIndex, "DKRACING-GHOSTS", "", &fileNumber);
+    if (pakStatus == CONTROLLER_PAK_GOOD) {
+        cPakFile = allocate_from_main_pool_safe(GHSS_SIZE, COLOUR_TAG_BLACK);
+        if (!(pfs[controllerIndex].status & 1)) {
+            osPfsInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex);
         }
-        ret = read_data_from_controller_pak(controllerIndex, fileNumber, cPakFile, GHSS_FILE_SIZE);
-        if (ret == CONTROLLER_PAK_GOOD) {
-            // The first 4 bytes of any data from the controller pak will have initials declaring it's type.
-            if (*((s32 *) cPakFile) == GHSS) {
-                fileData = (GhostHeader *) (cPakFile + 4);
-                for (i = 0; i < 5; i++) {
-                    if (levelId == fileData[i].unk0.levelID && vehicleId == fileData[i].unk0.vehicleID) {
-                        fileOffset = fileData[i].unk2;
-                        fileSize = fileData[i].nodeCount - fileData[i].unk2;
+        pakStatus = read_data_from_controller_pak(controllerIndex, fileNumber, cPakFile, GHSS_SIZE);
+        if (pakStatus == CONTROLLER_PAK_GOOD) {
+            if (cPakFile->signature == GHSS) {
+                ghostDataBody = cPakFile->data;
+                for (i = 0; i < 6; i++) {
+                    if ((levelId == ghostDataBody[i].unk0) && (vehicleId == ghostDataBody[i].unk1)) {
+                        ghostSize = ghostDataBody[i].unk2;
+                        allocateSpace = ghostDataBody[i + 1].unk2 - ghostSize;
                         break;
                     }
                 }
-                if (fileOffset == 0) {
-                    ret = CONTROLLER_PAK_NO_ROOM_FOR_GHOSTS;
-                    if (fileData->unk0.levelID == 0xFF) {
-                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
-                    }
-                    if (fileData->unk4 == 0xFF) {
-                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
-                    }
-                    temp_v0_4 = (unkGhostData *) (fileData + 1);
-                    if (temp_v0_4->unk0 == 0xFF) {
-                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
-                    }
-                    if (temp_v0_4->unk4 == 0xFF) {
-                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
-                    }
-                    if (temp_v0_4->unk8 == 0xFF) {
-                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
-                    }
-                    if (temp_v0_4->unkC == 0xFF) {
-                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
+                if (ghostSize == 0) {
+                    pakStatus = CONTROLLER_PAK_NO_ROOM_FOR_GHOSTS;
+                    for (i = 0; i < 6; i++) {
+                        if (ghostDataBody[i].unk0 == 0xFF) {
+                            pakStatus = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
+                        }
                     }
                 }
             } else {
-                ret = CONTROLLER_PAK_BAD_DATA;
+                pakStatus = CONTROLLER_PAK_BAD_DATA;
             }
         }
         free_from_memory_pool(cPakFile);
-        if (fileOffset != 0) {
+        if (ghostSize != 0) {
             if (ghostCharacterId != NULL) {
-                cPakFile = allocate_from_main_pool_safe(fileSize + GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
-                retTemp = CONTROLLER_PAK_BAD_DATA;
-                if (osPfsReadWriteFile(pfs, fileNumber, PFS_READ, fileOffset, fileSize, cPakFile) == 0) {
-                    fileData = (GhostHeader *) cPakFile;
-                    if (calculate_ghost_header_checksum(fileData) == fileData->checksum) {
-                        *ghostCharacterId = fileData->characterID;
-                        *ghostTime = fileData->time;
-                        *ghostNodeCount = fileData->nodeCount;
-                        bcopy(fileData, ghostData, *ghostNodeCount * sizeof(GhostNode));
-                        retTemp = CONTROLLER_PAK_GOOD;
+                cPakFile = allocate_from_main_pool_safe(allocateSpace + GHSS_SIZE, COLOUR_TAG_BLACK);
+                if (osPfsReadWriteFile(&pfs[controllerIndex], fileNumber, 0, ghostSize, allocateSpace, cPakFile) == 0) {
+                    // Hmm... The ghost data struct might not be quite right here...
+                    if (cPakFile->data[-1].unk0_hw == calculate_ghost_header_checksum((GhostHeader *) cPakFile)) {
+                        *ghostCharacterId = cPakFile->data[-1].unk2_b;
+                        *ghostTime = cPakFile->data[0].unk0_hw;
+                        *ghostNodeCount = cPakFile->data[0].unk2;
+                        bcopy(cPakFile->data + 1, ghostData, *ghostNodeCount * sizeof(GhostNode));
+                        pakStatus = CONTROLLER_PAK_GOOD;
                     } else {
-                        retTemp = CONTROLLER_PAK_BAD_DATA;
+                        pakStatus = CONTROLLER_PAK_BAD_DATA;
                     }
+                } else {
+                    pakStatus = CONTROLLER_PAK_BAD_DATA;
                 }
                 free_from_memory_pool(cPakFile);
-                ret = retTemp;
             }
         }
-        if ((fileOffset != 0) && (ghostCharacterId == NULL)) {
-            ret = CONTROLLER_PAK_GOOD;
+        if ((ghostSize != 0) && (ghostCharacterId == NULL)) {
+            pakStatus = CONTROLLER_PAK_GOOD;
         }
     }
     start_reading_controller_data(controllerIndex);
-    if (ret == CONTROLLER_PAK_CHANGED) {
-        if (get_free_space(controllerIndex, &bytesFree, &notesFree) == CONTROLLER_PAK_GOOD) {
-            if (bytesFree < get_ghost_data_file_size() || notesFree == 0) {
+    if (pakStatus == CONTROLLER_PAK_CHANGED) {
+        if (get_free_space(controllerIndex, &ghostDataBytesFree, &ghostDataNotesFree) == 0) {
+            if ((ghostDataBytesFree < get_ghost_data_file_size()) || (ghostDataNotesFree == 0)) {
                 return CONTROLLER_PAK_FULL;
             }
         } else {
             return CONTROLLER_PAK_BAD_DATA;
         }
     }
-    return ret;
+    return pakStatus;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_80074B34.s")
-#endif
+
+UNUSED const char D_800E7750[] = "warning: corrupt ghost\n";
 
 typedef struct GhostHeaderAltUnk0 {
     u8 levelID;
