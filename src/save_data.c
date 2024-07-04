@@ -40,24 +40,6 @@ UNUSED const char D_800E7614[] = "loc = %x\t";
 UNUSED const char D_800E7620[] = "size = %x\n";
 UNUSED const char D_800E762C[] = "\n";
 
-// File Names
-const char sDKRacingAdv1[] = "DKRACING-ADV";
-const char sDKRacingAdv2[] = "DKRACING-ADV";
-const char sDKRacingTimes1[] = "DKRACING-TIMES";
-const char sDKRacingTimes2[] = "DKRACING-TIMES";
-const char sDKRacingAdv3[] = "DKRACING-ADV";
-const char sDKRacingAdv4[] = "DKRACING-ADV";
-const char sDKRacingTimes3[] = "DKRACING-TIMES";
-const char sDKRacingTimes4[] = "DKRACING-TIMES";
-
-UNUSED const char D_800E76B0[] = "WARNING : No Eprom\n";
-UNUSED const char D_800E76C4[] = "WARNING : No Eprom\n";
-UNUSED const char D_800E76D8[] = "WARNING : No Eprom\n";
-UNUSED const char D_800E76EC[] = "WARNING : No Eprom\n";
-UNUSED const char D_800E7700[] = "WARNING : No Eprom\n";
-UNUSED const char D_800E7714[] = "WARNING : No Eprom\n";
-UNUSED const char D_800E7728[] = "WARNING : No Eprom\n";
-
 /*********************************/
 
 /************ .bss ************/
@@ -698,11 +680,10 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
                 continue;
             }
             if (fileType == SAVE_FILE_TYPE_CPAK_SAVE) {
-                if ((bcmp((u8 *) fileNames[fileNum], (char *) sDKRacingAdv1, strlen((char *) sDKRacingAdv2)) != 0)) {
+                if ((bcmp(AS_BYTES(fileNames[fileNum]), "DKRACING-ADV", strlen("DKRACING-ADV")) != 0)) {
                     continue;
                 }
-            } else if ((bcmp((u8 *) fileNames[fileNum], (char *) sDKRacingTimes1, strlen((char *) sDKRacingTimes2)) !=
-                        0)) {
+            } else if ((bcmp(AS_BYTES(fileNames[fileNum]), "DKRACING-TIMES", strlen("DKRACING-TIMES")) != 0)) {
                 continue;
             }
 
@@ -743,7 +724,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
         start_reading_controller_data(controllerIndex);
         return (controllerIndex << 30) | ret;
     }
-    ret = get_file_number(controllerIndex, (char *) sDKRacingAdv3, fileExt, &fileNumber);
+    ret = get_file_number(controllerIndex, "DKRACING-ADV", fileExt, &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
@@ -788,8 +769,7 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     func_800732E8(arg1, gameData + 4);
     ret = get_file_extension(controllerIndex, 3, (char *) &fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
-        ret = write_controller_pak_file(controllerIndex, -1, (char *) sDKRacingAdv4, (char *) &fileExt, gameData,
-                                        fileSize);
+        ret = write_controller_pak_file(controllerIndex, -1, "DKRACING-ADV", (char *) &fileExt, gameData, fileSize);
     }
     free_from_memory_pool(gameData);
     if (ret != CONTROLLER_PAK_GOOD) {
@@ -811,7 +791,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
         return (controllerIndex << 30) | status;
     }
 
-    status = get_file_number(controllerIndex, (char *) sDKRacingTimes3, fileExt, &fileNumber);
+    status = get_file_number(controllerIndex, "DKRACING-TIMES", fileExt, &fileNumber);
     if (status == CONTROLLER_PAK_GOOD) {
         status = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
@@ -856,8 +836,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     func_800738A4(arg1, timeData + 4);
     ret = get_file_extension(controllerIndex, 4, (char *) &fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
-        ret = write_controller_pak_file(controllerIndex, -1, (char *) sDKRacingTimes4, (char *) &fileExt, timeData,
-                                        fileSize);
+        ret = write_controller_pak_file(controllerIndex, -1, "DKRACING-TIMES", (char *) &fileExt, timeData, fileSize);
     }
     free_from_memory_pool(timeData);
     if (ret != CONTROLLER_PAK_GOOD) {
@@ -876,6 +855,7 @@ s32 read_save_file(s32 saveFileNum, Settings *settings) {
     s32 ret;
 
     if (osEepromProbe(get_si_mesg_queue()) == 0) {
+        stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
     switch (saveFileNum) {
@@ -959,6 +939,8 @@ void erase_save_file(s32 saveFileNum, Settings *settings) {
             }
         }
         free_from_memory_pool(alloc);
+    } else {
+        stubbed_printf("WARNING : No Eprom\n");
     }
 }
 
@@ -977,6 +959,7 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
     s32 i;
 
     if (osEepromProbe(get_si_mesg_queue()) == 0) {
+        stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
 
@@ -1022,6 +1005,7 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
     s32 i;
 
     if (osEepromProbe(get_si_mesg_queue()) == 0) {
+        stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
 
@@ -1060,6 +1044,7 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
     s32 i;
 
     if (osEepromProbe(get_si_mesg_queue()) == 0) {
+        stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
 
@@ -1115,6 +1100,7 @@ s32 read_eeprom_settings(u64 *eepromSettings) {
     s32 sp20;
 
     if (osEepromProbe(get_si_mesg_queue()) == 0) {
+        stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
 
@@ -1140,6 +1126,7 @@ s32 read_eeprom_settings(u64 *eepromSettings) {
  */
 s32 write_eeprom_settings(u64 *eepromSettings) {
     if (osEepromProbe(get_si_mesg_queue()) == 0) {
+        stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
     *eepromSettings <<= 8;
