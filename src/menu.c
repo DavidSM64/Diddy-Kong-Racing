@@ -12154,7 +12154,7 @@ s32 get_filtered_cheats(void) {
     if (!check_if_in_race()) {
         cheats &= ~CHEAT_MIRRORED_TRACKS; // Disable mirroring
     }
-    if (get_map_race_type(get_settings()->courseId) & 0x40) {
+    if (get_map_race_type(get_settings()->courseId) & RACETYPE_CHALLENGE) {
         cheats &= CHEATS_ALLOWED_IN_CHALLENGES;
     }
     if (gIsInAdventureTwo && check_if_in_race()) {

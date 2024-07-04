@@ -63,28 +63,6 @@ RumbleData gRumble[MAXCONTROLLERS];
 #define RUMBLE_STRENGTH (type * 2)     // Accesses the first byte of the rumble table.
 
 s16 *sRumbleTable; // Misc Asset 19, first byte is strength, second byte is duration.
-/**
- * Values for Misc Asset 19
- * 00 2D 00 12
- * 00 46 00 0A
- * 00 3C 00 3C
- * 00 64 00 0F
- * 00 3C 00 36
- * 00 32 00 0F
- * 00 32 00 34
- * 00 46 00 3C
- * 00 55 00 3C
- * 00 46 00 16
- * 00 50 00 4B
- * 00 64 00 0C
- * 00 3C 00 18
- * 00 50 00 1E
- * 00 64 00 2A
- * 00 32 00 3C
- * 00 28 00 0A
- * 00 28 00 0A
- * 00 64 00 0F
- **/
 u8 gRumbleOn;
 u8 gRumblePresent; // Bits 0, 1, 2, and 3 of the bit pattern correspond to Controllers 1, 2, 3, and 4.
                    // 1 if a rumble pak is present
@@ -380,7 +358,7 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
     s32 i;
     s32 levelCount;
     s32 worldCount;
-    s32 temp_v0;
+    s32 raceType;
     s32 var_s1;
     s16 var_a0;
     u8 temp_v1;
@@ -389,15 +367,15 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
     D_801241EC = saveData;
     D_801241F0 = D_801241F4 = 0;
-    var_a0 = func_80072C54(0x10) - 5;
+    var_a0 = func_80072C54(16) - 5;
     // clang-format off
     // Must be one line
     for (i = 2; i < 40; i++) { var_a0 -= saveData[i]; }
     // clang-format on
     if (var_a0 == 0) {
         for (i = 0, var_s1 = 0; i < levelCount; i++) {
-            temp_v0 = get_map_race_type(i);
-            if ((temp_v0 == 0) || (temp_v0 & 0x40) || (temp_v0 == 8)) {
+            raceType = get_map_race_type(i);
+            if ((raceType == RACETYPE_DEFAULT) || (raceType & RACETYPE_CHALLENGE) || (raceType == RACETYPE_BOSS)) {
                 temp_v1 = func_80072C54(2);
                 if (temp_v1 > 0) {
                     // Set Map Visited
@@ -414,10 +392,10 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
                 var_s1 += 2;
             }
         }
-        func_80072C54(0x44 - var_s1);
+        func_80072C54(68 - var_s1);
         settings->tajFlags = func_80072C54(6);
-        settings->trophies = func_80072C54(0xA);
-        settings->bosses = func_80072C54(0xC);
+        settings->trophies = func_80072C54(10);
+        settings->bosses = func_80072C54(12);
         for (i = 0; i < worldCount; i++) {
             settings->balloonsPtr[i] = func_80072C54(7);
         }
@@ -427,8 +405,8 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
             settings->courseFlagsPtr[get_hub_area_id(i)] |= func_80072C54(16) << 16;
         }
         settings->keys = func_80072C54(8);
-        settings->cutsceneFlags = func_80072C54(0x20);
-        settings->filename = func_80072C54(0x10);
+        settings->cutsceneFlags = func_80072C54(32);
+        settings->filename = func_80072C54(16);
         func_80072C54(8);
         settings->newGame = FALSE;
     }
@@ -436,7 +414,7 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
 
 void func_800732E8(Settings *settings, u8 *saveData) {
     s16 var_v0;
-    s8 temp_v0;
+    s8 raceType;
     u8 courseStatus;
     s32 levelCount;
     s32 worldCount;
@@ -449,8 +427,8 @@ void func_800732E8(Settings *settings, u8 *saveData) {
     D_801241F4 = 128;
     func_80072E28(16, 0);
     for (i = 0, var_s0 = 0; i < levelCount; i++) {
-        temp_v0 = get_map_race_type(i);
-        if ((temp_v0 == 0) || (temp_v0 & 0x40) || (temp_v0 == 8)) {
+        raceType = get_map_race_type(i);
+        if ((raceType == RACETYPE_DEFAULT) || (raceType & RACETYPE_CHALLENGE) || (raceType == RACETYPE_BOSS)) {
             courseStatus = 0;
             // Map visited
             if (settings->courseFlagsPtr[i] & RACE_VISITED) {
@@ -515,7 +493,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         sum -= func_80072C54(16);
         if (sum == 0) {
             for (i = 0; i < levelCount; i++) {
-                if (get_map_race_type(i) == 0) {
+                if (get_map_race_type(i) == RACETYPE_DEFAULT) {
                     availableVehicles = get_map_available_vehicles(i);
                     // Car Available
                     if (availableVehicles & 1) {
@@ -546,7 +524,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         sum -= func_80072C54(16);
         if (sum == 0) {
             for (i = 0; i < levelCount; i++) {
-                if (get_map_race_type(i) == 0) {
+                if (get_map_race_type(i) == RACETYPE_DEFAULT) {
                     availableVehicles = get_map_available_vehicles(i);
                     // Car Available
                     if (availableVehicles & 1) {
@@ -583,7 +561,7 @@ void func_800738A4(Settings *settings, u8 *saveData) {
     D_801241F4 = 128;
     func_80072E28(16, 0);
     for (vehicleCount = 0, i = 0; i < levelCount; i++) {
-        if (get_map_race_type(i) == 0) {
+        if (get_map_race_type(i) == RACETYPE_DEFAULT) {
             availableVehicles = get_map_available_vehicles(i);
             // Car Available
             if (availableVehicles & 1) {
@@ -624,7 +602,7 @@ void func_800738A4(Settings *settings, u8 *saveData) {
     D_801241F4 = 128;
     func_80072E28(16, 0);
     for (i = 0; i < levelCount; i++) {
-        if (get_map_race_type(i) == 0) {
+        if (get_map_race_type(i) == RACETYPE_DEFAULT) {
             availableVehicles = get_map_available_vehicles(i);
             // Car Available
             if (availableVehicles & 1) {
@@ -662,10 +640,10 @@ s32 get_time_data_file_size(void) {
 
 SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileExt) {
 #define BLANK_EXT_CHAR ' '
-    char *fileNames[16];
-    char *fileExtensions[16];
-    u8 fileTypes[16];
-    u32 fileSizes[16];
+    char *fileNames[MAX_CPAK_FILES];
+    char *fileExtensions[MAX_CPAK_FILES];
+    u8 fileTypes[MAX_CPAK_FILES];
+    u32 fileSizes[MAX_CPAK_FILES];
     s32 var_s1;
     s32 fileNum;
     char fileExtChar;
@@ -673,17 +651,17 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
 
     fileExtChar = BLANK_EXT_CHAR;
     var_s1 = 0;
-    ret = get_controller_pak_file_list(controllerIndex, 16, fileNames, fileExtensions, fileSizes, fileTypes);
+    ret = get_controller_pak_file_list(controllerIndex, MAX_CPAK_FILES, fileNames, fileExtensions, fileSizes, fileTypes);
     if (ret == CONTROLLER_PAK_GOOD) {
-        for (fileNum = 0; fileNum < 16; fileNum++) {
+        for (fileNum = 0; fileNum < MAX_CPAK_FILES; fileNum++) {
             if (fileNames[fileNum] == NULL) {
                 continue;
             }
             if (fileType == SAVE_FILE_TYPE_CPAK_SAVE) {
-                if ((bcmp(AS_BYTES(fileNames[fileNum]), "DKRACING-ADV", strlen("DKRACING-ADV")) != 0)) {
+                if (bcmp(fileNames[fileNum], "DKRACING-ADV", strlen("DKRACING-ADV")) != 0) {
                     continue;
                 }
-            } else if ((bcmp(AS_BYTES(fileNames[fileNum]), "DKRACING-TIMES", strlen("DKRACING-TIMES")) != 0)) {
+            } else if (bcmp(fileNames[fileNum], "DKRACING-TIMES", strlen("DKRACING-TIMES")) != 0) {
                 continue;
             }
 
@@ -1861,10 +1839,10 @@ s32 get_free_space(s32 controllerIndex, u32 *bytesFree, s32 *notesFree) {
                 start_reading_controller_data(controllerIndex);
                 return (controllerIndex << 30) | CONTROLLER_PAK_BAD_DATA;
             }
-            if (notesUsed >= 16) {
+            if (notesUsed >= MAX_CPAK_FILES) {
                 *notesFree = 0;
             } else {
-                *notesFree = 16 - notesUsed;
+                *notesFree = MAX_CPAK_FILES - notesUsed;
             }
         }
     } else {
