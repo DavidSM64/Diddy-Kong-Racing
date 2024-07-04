@@ -11620,14 +11620,15 @@ void credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
     reset_render_settings(&sMenuCurrDisplayList);
 }
 
-#if 0
-
+#ifdef NON_EQUIVALENT
 typedef struct Asset69 {
     s8 unk0;
     s8 unk1;
     s8 unk2;
     s8 unk3;
 } Asset69;
+
+// Heavily WIP
 s32 menu_credits_loop(s32 updateRate) {
     s32 breakLoop;
     s32 sp68;
@@ -11637,7 +11638,7 @@ s32 menu_credits_loop(s32 updateRate) {
     s16 *var_s1_2;
     s16 temp_a0_control_data;
     s32 nextIndex;
-    s32 temp_s0_2;
+    s32 controlDataIndex;
     s32 temp_s2;
     s32 temp_s4;
     s32 temp_t1;
@@ -11645,16 +11646,16 @@ s32 menu_credits_loop(s32 updateRate) {
     s32 temp_t8_2;
     s32 temp_v0_credits_flag;
     s32 temp_v1;
-    s32 var_a1_2;
+    s32 original_D_80126BC4;
     s32 textPos;
     s32 buttonsPressedAllPlayers;
     s32 var_s3;
     s32 var_s4;
-    s32 var_s4_2;
+    s32 new_D_80126BC4;
     s32 var_s5;
     s32 textLineHeight;
-    s32 var_v0_2;
-    s8 *temp_t6_2;
+    s32 controlDataFlag;
+    char *asciiText;
     u8 textFont;
     MenuElement *var_v0_3;
     s32 i;
@@ -11734,7 +11735,7 @@ s32 menu_credits_loop(s32 updateRate) {
                         }
                         var_s3 = 0;
                         menuElement = gCreditsMenuElements;
-                        for (i = nextIndex; i < D_80126BC4; i+=2) {
+                        for (i = nextIndex; i < D_80126BC4; i += 2) {
                             menuElement->top = textPos;
                             menuElement->middle = textPos;
                             menuElement->bottom = textPos;
@@ -11770,42 +11771,27 @@ s32 menu_credits_loop(s32 updateRate) {
                         D_80126BE0 = postrace_render(0) == MENU_RESULT_CONTINUE;
                         break;
                     case CREDITS_CONTINUE_TITLE_FLAG:
-                        temp_s0_2 = D_80126BC4 + 1;
                         D_80126BE8 = temp_a0_control_data & 0xFFFF0FFF;
-                        D_80126BC4 = temp_s0_2;
-                        temp_t8_2 = gCreditsControlData[temp_s0_2] & 0xF000;
-                        var_a1_2 = temp_s0_2;
-                        var_v0_2 = temp_t8_2;
+                        D_80126BC4++;
+                        original_D_80126BC4 = D_80126BC4;
                         breakLoop = TRUE;
-                        if (temp_t8_2 == 0) {
-                            do {
-                                temp_t1 = var_a1_2 + 1;
-                                D_80126BC4 = temp_t1;
-                                temp_t3 = gCreditsControlData[temp_t1] & 0xF000;
-                                var_v0_2 = temp_t3;
-                                var_a1_2 = temp_t1;
-                            } while (temp_t3 == 0);
+                        while ((gCreditsControlData[D_80126BC4] & 0xF000) == CREDITS_NO_FLAG) {
+                            D_80126BC4++;
                         }
                         gCreditsMenuElements->left = SCREEN_WIDTH_HALF;
-                        if (var_v0_2 == CREDITS_CONTINUE_TITLE_FLAG) {
+                        if ((gCreditsControlData[D_80126BC4] & 0xF000) == CREDITS_CONTINUE_TITLE_FLAG) {
                             gCreditsMenuElements->right = SCREEN_WIDTH_HALF;
                         } else {
                             gCreditsMenuElements->right = -SCREEN_WIDTH_HALF;
                         }
-                        var_s4_2 = temp_s0_2;
-                        if (temp_s0_2 < var_a1_2) {
-                            var_s1_2 = &gCreditsControlData[var_s4_2];
-                            var_v0_3 = (var_s4_2 * 0) + gCreditsMenuElements;
-                            do {
-                                var_s4_2 += 1;
-                                temp_t6_2 = gCreditsArray[*var_s1_2];
-                                var_s1_2 += 2;
-                                var_v0_3 += 1;
-                                var_v0_3->t.asciiText = temp_t6_2;
-                            } while (var_s4_2 < var_a1_2);
+                        new_D_80126BC4 = original_D_80126BC4;
+                        while (new_D_80126BC4 < D_80126BC4) {
+                            asciiText = gCreditsArray[gCreditsControlData[new_D_80126BC4]];
+                            // The negation part is a bit confusing.
+                            gCreditsMenuElements[(new_D_80126BC4) + (-original_D_80126BC4)].t.asciiText = asciiText;
+                            new_D_80126BC4++;
                         }
-                        //*(&gCreditsMenuElements[1].t + ((var_s4_2 << 5) + -(temp_s0_2 << 5))) = 0;
-                        gCreditsMenuElements[1].t.asciiText[((var_s4_2 << 5) + -(temp_s0_2 << 5))] = 0;
+                        gCreditsMenuElements[((new_D_80126BC4) + (-original_D_80126BC4)) + 1].t.asciiText = NULL;
                         postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
                         D_80126BE0 = postrace_render(0) == 0;
                         break;
@@ -11814,7 +11800,8 @@ s32 menu_credits_loop(s32 updateRate) {
                         D_80126BD8 = 1;
                         breakLoop = TRUE;
                         break;
-                    case CREDITS_UNK_FLAG:
+                    // case CREDITS_UNK_FLAG:
+                    default:
                         D_80126BC4++;
                         break;
                 }
@@ -11879,17 +11866,7 @@ s32 menu_credits_loop(s32 updateRate) {
             }
             break;
     }
-    if (!(buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON))) {
-        if (!(buttonsPressedAllPlayers & B_BUTTON)) {
-            if (sp68) {
-                goto block_84;
-            }
-        } else {
-            goto block_85;
-        }
-    } else {
-    block_84:
-    block_85:
+    if ((buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON)) || (buttonsPressedAllPlayers & B_BUTTON) || sp68) {
         gMenuDelay = 1;
         disable_new_screen_transitions();
         transition_begin(&sMenuTransitionFadeIn);
