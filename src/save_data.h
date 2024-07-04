@@ -30,6 +30,9 @@
 #define EEP_COURSE_RECORD_SIZE (0xC0  / sizeof(u64))
 #define SAVE_SIZE 0x200
 
+#define GHSS_SIZE 0x100
+#define AS_BYTES(ptr) ((u8 *) ptr)
+
 // One unique thing about results using SIDeviceStatus is that they
 // store the enum value in the lower 0xFF byte, and they store
 // the controller index in the upper 3 bits.
@@ -85,6 +88,23 @@ enum RumbleTypes {
     RUMBLE_TYPE_19,
     RUMBLE_TYPE_20,
 };
+
+// 4 bytes
+typedef struct unk80075000_body {
+    union {
+        struct {
+            u8 unk0;
+            u8 unk1;
+        };
+        s16 unk0_hw;
+    };
+    s16 unk2;
+} unk80075000_body;
+
+typedef struct unk80075000 {
+    s32 signature;
+    unk80075000_body data[1];
+} unk80075000;
 
 extern s8 *D_800DE440;
 extern u8 gN64FontCodes[68];
@@ -151,7 +171,7 @@ char *string_to_font_codes(char *inString, char *outString, s32 stringLength);
 //Reasonably certain about these names for now.
 SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, u8 *dest);
 SIDeviceStatus func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime,
-                             s16 ghostNodeCount, GhostHeader *ghostData);
+                             s16 ghostNodeCount, unk80075000_body *ghostData);
 s32 func_800753D8(s32 controllerIndex, s32 worldId);
 
 #endif
