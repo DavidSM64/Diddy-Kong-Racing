@@ -1208,7 +1208,7 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCha
         if (!(pfs[controllerIndex].status & 1)) {
             osPfsInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex);
         }
-        pakStatus = read_data_from_controller_pak(controllerIndex, fileNumber, cPakFile, GHSS_SIZE);
+        pakStatus = read_data_from_controller_pak(controllerIndex, fileNumber, AS_BYTES(cPakFile), GHSS_SIZE);
         if (pakStatus == CONTROLLER_PAK_GOOD) {
             if (cPakFile->signature == GHSS) {
                 ghostDataBody = cPakFile->data;
@@ -1235,7 +1235,8 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCha
         if (ghostSize != 0) {
             if (ghostCharacterId != NULL) {
                 cPakFile = allocate_from_main_pool_safe(allocateSpace + GHSS_SIZE, COLOUR_TAG_BLACK);
-                if (osPfsReadWriteFile(&pfs[controllerIndex], fileNumber, 0, ghostSize, allocateSpace, cPakFile) == 0) {
+                if (osPfsReadWriteFile(&pfs[controllerIndex], fileNumber, PFS_READ, ghostSize, allocateSpace,
+                                       AS_BYTES(cPakFile)) == 0) {
                     // Hmm... The ghost data struct might not be quite right here...
                     if (cPakFile->data[-1].unk0_hw == calculate_ghost_header_checksum((GhostHeader *) cPakFile)) {
                         *ghostCharacterId = cPakFile->data[-1].unk2_b;
@@ -1244,6 +1245,7 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCha
                         bcopy(cPakFile->data + 1, ghostData, *ghostNodeCount * sizeof(GhostNode));
                         pakStatus = CONTROLLER_PAK_GOOD;
                     } else {
+                        stubbed_printf("warning: corrupt ghost\n");
                         pakStatus = CONTROLLER_PAK_BAD_DATA;
                     }
                 } else {
@@ -1258,7 +1260,7 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCha
     }
     start_reading_controller_data(controllerIndex);
     if (pakStatus == CONTROLLER_PAK_CHANGED) {
-        if (get_free_space(controllerIndex, &ghostDataBytesFree, &ghostDataNotesFree) == 0) {
+        if (get_free_space(controllerIndex, (u32 *) &ghostDataBytesFree, &ghostDataNotesFree) == 0) {
             if ((ghostDataBytesFree < get_ghost_data_file_size()) || (ghostDataNotesFree == 0)) {
                 return CONTROLLER_PAK_FULL;
             }
@@ -1268,8 +1270,6 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCha
     }
     return pakStatus;
 }
-
-UNUSED const char D_800E7750[] = "warning: corrupt ghost\n";
 
 typedef struct GhostHeaderAltUnk0 {
     u8 levelID;
@@ -2046,7 +2046,7 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, ch
     bytesToSave = fileSize;
     temp = fileSize & 0xFF;
     if (temp != 0) {
-        bytesToSave = (fileSize - temp) + 0x100;
+        bytesToSave = (fileSize - temp) + GHSS_SIZE;
     }
 
     string_to_font_codes(fileName, (char *) fileNameAsFontCodes, PFS_FILE_NAME_LEN);
