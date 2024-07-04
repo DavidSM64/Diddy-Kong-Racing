@@ -591,11 +591,11 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     }
     settings->courseId = levelId;
     if (gCurrentLevelHeader->weatherEnable > 0) {
-        func_800AB4A8(gCurrentLevelHeader->weatherType, gCurrentLevelHeader->weatherEnable,
+        weather_reset(gCurrentLevelHeader->weatherType, gCurrentLevelHeader->weatherEnable,
                       gCurrentLevelHeader->weatherVelX << 8, gCurrentLevelHeader->weatherVelY << 8,
                       gCurrentLevelHeader->weatherVelZ << 8, gCurrentLevelHeader->weatherIntensity * 257,
                       gCurrentLevelHeader->weatherOpacity * 257);
-        set_weather_limits(-1, -512);
+        weather_clip_planes(-1, -512);
     }
     if (gCurrentLevelHeader->skyDome == -1) {
         gCurrentLevelHeader->unkA4 = load_texture((s32) gCurrentLevelHeader->unkA4);
@@ -709,7 +709,7 @@ void clear_audio_and_track(void) {
     func_80008174();
     sound_volume_change(VOLUME_NORMAL);
     if (gCurrentLevelHeader->weatherEnable > 0) {
-        free_weather_memory();
+        weather_free();
     }
     //! @bug this will never be true because skyDome is signed.
     if (gCurrentLevelHeader->skyDome == 0xFF) {

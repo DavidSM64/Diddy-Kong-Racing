@@ -452,7 +452,7 @@ typedef struct LevelHeader {
   /* 0x74 */ LevelHeader_70 *unk74[7];
 
   // Weather related?
-  /* 0x90 */ s16 weatherEnable;
+  /* 0x90 */ s16 weatherEnable; // This affects snow density, but for rain, it simply needs to be nonzero.
   /* 0x92 */ s16 weatherType;
   /* 0x94 */ u8 weatherIntensity;
   /* 0x95 */ u8 weatherOpacity;

@@ -5621,8 +5621,8 @@ void obj_loop_weather(Object *obj, UNUSED s32 updateRate) {
         if ((diffX * diffX) + (diffZ * diffZ) <= dist) {
             if (((!obj->segment.level_entry) && (!obj->segment.level_entry)) && (!obj->segment.level_entry)) {
             } // Fakematch
-            changeWeather(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257,
-                          entry->unk11 * 257, entry->unk12);
+            weather_set(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257,
+                        entry->unk12);
         }
     }
 }

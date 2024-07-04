@@ -4190,7 +4190,7 @@ s32 savemenu_input_confirm(s32 buttonsPressed, UNUSED s32 arg1) {
 /**
  * Takes input if a message is shown onscreen when first coming into the save menu.
  * This resolves having a rumble pak connected, or a damaged controller pak.
-*/
+ */
 s32 savemenu_input_message(s32 buttonsPressed, s32 yAxis) {
     UNUSED s32 pad[2];
     s32 stage;
@@ -4209,8 +4209,8 @@ s32 savemenu_input_message(s32 buttonsPressed, s32 yAxis) {
             gSavemenuText[i]->highlight = 0;
         }
     }
-    if (buttonsPressed & B_BUTTON ||
-        (buttonsPressed & (START_BUTTON | A_BUTTON) && (u32) gSaveMenuMessageLines == (u32) (gSavemenuMessageOption + 1))) {
+    if (buttonsPressed & B_BUTTON || (buttonsPressed & (START_BUTTON | A_BUTTON) &&
+                                      (u32) gSaveMenuMessageLines == (u32) (gSavemenuMessageOption + 1))) {
         sound_play(SOUND_MENU_BACK3, NULL);
         gMenuStage &= ~8;
         switch (stage) {

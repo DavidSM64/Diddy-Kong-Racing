@@ -210,7 +210,7 @@ void init_game(void) {
     debug_text_init();
     allocate_ghost_data();
     init_particle_assets();
-    init_weather();
+    weather_init();
     calc_and_alloc_heap_for_settings();
     default_alloc_displaylist_heap();
     load_fonts();
