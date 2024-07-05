@@ -651,7 +651,8 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
 
     fileExtChar = BLANK_EXT_CHAR;
     var_s1 = 0;
-    ret = get_controller_pak_file_list(controllerIndex, MAX_CPAK_FILES, fileNames, fileExtensions, fileSizes, fileTypes);
+    ret =
+        get_controller_pak_file_list(controllerIndex, MAX_CPAK_FILES, fileNames, fileExtensions, fileSizes, fileTypes);
     if (ret == CONTROLLER_PAK_GOOD) {
         for (fileNum = 0; fileNum < MAX_CPAK_FILES; fileNum++) {
             if (fileNames[fileNum] == NULL) {
@@ -1256,77 +1257,44 @@ typedef struct GhostHeaderAlt {
     };
 } GhostHeaderAlt;
 
-typedef struct GhostDataData {
-    s16 unk0;
-    s16 unk2;
-    u8 unk4;
-    u8 unk5;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    u8 padB[10];
-    s16 unk16;
-    s16 unk18;
-    s16 unk1A;
-} GhostDataData;
-
 typedef struct GhostData {
     /* 0x00 */ s32 headerId;
-    union {
-        /* 0x04 */ GhostHeader *ghostHeader;
-        /* 0x04 */ GhostDataData *ghostData;
-    };
+    /* 0x04 */ GhostHeader *ghostHeader;
     /* 0x08 */ u8 unk8_pad[0x14];
     /* 0x1C */ u8 unk1C;
     /* 0x1E */ s16 unk1E;
 } GhostData;
 
-#ifdef NON_EQUIVALENT
-// This is just a mess until we can figure out the ghost data structs properly.
 SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime,
                              s16 ghostNodeCount, u8 *dest) {
-#define GHSS_FILE_SIZE 0x100
-    SIDeviceStatus ret;
-    s32 fileSize;
-    u8 *temp_v0_3;
-    GhostDataData *temp_v0_4;
-    void *temp_v0_5;
-    GhostHeader *temp_v1;
-    GhostHeader *ghost;
+    unk80075000_body *ghostBody;
+    unk80075000 *ghost = NULL;
+    s32 i;
+    s32 sp30 = 0x1000;
+    s32 sp24;
+    s32 pakStatus;
 
-    fileSize = 0x1100 * 6;
-    temp_v0_3 = allocate_from_main_pool_safe(fileSize + SAVE_SIZE, COLOUR_TAG_BLACK);
-    *((s32 *) temp_v0_3) = GHSS;
-    ghost = (GhostHeader *) (temp_v0_3 + 4);
-    // temp_v0_3->unk0 = GHSS;
-    ghost->unk0.levelID = arg1;
-    ghost->nodeCount = 0x100;
-    temp_v1 = ghost + 4;
-    // ghost->unkA = (s16) (ghost->nodeCount + 0x1100);
-    ghost->unk5 = arg2;
-    temp_v0_4 = temp_v1 + 4;
-    temp_v0_4->unk0 = 0xFF;
-    temp_v0_4->unk4 = 0xFF;
-    temp_v0_4->unk2 = (s16) temp_v1->time;
-    temp_v0_4->unk6 = (s16) temp_v1->time;
-    // temp_v0_5 = temp_v1 + (3 * 4);
-    // temp_v0_5->unk0 = 0xFF;
-    // temp_v0_5->unk4 = 0xFF;
-    // temp_v0_5->unk2 = (s16) temp_v1->time;
-    // temp_v0_5->unk8 = 0xFF;
-    // temp_v0_5->unk6 = (s16) temp_v1->time;
-    // temp_v0_5->unkC = 0xFF;
-    // temp_v0_5->unkA = (s16) temp_v1->time;
-    // temp_v0_5->unkE = (s16) temp_v1->time;
-    func_80074AA8((GhostHeader *) &ghost[temp_v1->unk2], ghostCharacterId, ghostTime, ghostNodeCount, dest);
-    ret =
-        write_controller_pak_file(controllerIndex, -1, "DKRACING-GHOSTS", "", (u8 *) ghost, fileSize + GHSS_FILE_SIZE);
+    if (1) {} // fake
+    sp30 += GHSS_SIZE;
+    sp24 = sp30 * 6;
+    if (1) {} // fake
+    ghost = allocate_from_main_pool_safe(sp24 + (GHSS_SIZE * 2), COLOUR_TAG_BLACK);
+    ghost->signature = GHSS;
+    ghostBody = &ghost->data;
+    ghostBody[0].unk0 = arg1;
+    ghostBody[0].unk1 = arg2;
+    ghostBody[0].unk2 = GHSS_SIZE;
+    ghostBody[1].unk2 = ghostBody[0].unk2 + sp30;
+    for (i = 1; i < 7; i++) {
+        ghostBody[i].unk0 = 0xFF;
+        ghostBody[i].unk2 = ghostBody[1].unk2;
+    }
+
+    func_80074AA8(AS_BYTES(ghost) + ghostBody[0].unk2, ghostCharacterId, ghostTime, ghostNodeCount, dest);
+    pakStatus = write_controller_pak_file(controllerIndex, -1, "DKRACING-GHOSTS", "", ghost, sp24 + GHSS_SIZE);
     free_from_memory_pool(ghost);
-    return ret;
+    return pakStatus;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
-#endif
 
 SIDeviceStatus func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime,
                              s16 ghostNodeCount, unk80075000_body *ghostData) {
