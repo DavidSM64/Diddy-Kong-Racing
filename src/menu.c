@@ -210,7 +210,7 @@ char **gDeviceStatusStrings;
 s32 gSaveMenuMessageLines;
 s32 gSavemenuMessageOption;
 UNUSED s32 D_80126A7C;
-unk80126A80 *gSavemenuText[4];
+unk80126A80 *gSaveMenuText[4];
 s32 gPostRace1Player;
 s32 gPostRaceTimer;
 s32 gTracksSaveGhost;
