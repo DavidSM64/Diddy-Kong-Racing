@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of June 21, 2024, this is our current score:
+As of July 4, 2024, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 67.05%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 67.54%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 48.33%
 <!-- README_SCORE_SUMMARY_END -->
@@ -126,20 +126,20 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of June 21st, 2024, this is our current score:
+As of July 4th, 2024, this is our current score:
 ```
  =============================================
     ADVENTURE ONE (ASM -> C Decompilation)
- --- 67.05% Complete (69.64% NON_MATCHING) ---
-         # Decompiled functions: 1685
-          # GLOBAL_ASM remaining: 160
-         # NON_MATCHING functions: 15
-      # NON_EQUIVALENT WIP functions: 54
+ --- 67.54% Complete (70.04% NON_MATCHING) ---
+         # Decompiled functions: 1692
+          # GLOBAL_ASM remaining: 153
+         # NON_MATCHING functions: 14
+      # NON_EQUIVALENT WIP functions: 49
  ---------------- Game Status ----------------
    Balloons: 32/47, Keys: 3/4, Trophies: 3/5
     T.T. Amulets: 3/4, Wizpig Amulets: 3/4
  ---------------------------------------------
- We are racing in Greenwood Village. (Lap 1/3)
+ We are racing in Greenwood Village. (Lap 2/3)
  =============================================
      ADVENTURE TWO (Cleanup & Documentation)
  -------------- 48.33% Complete --------------
