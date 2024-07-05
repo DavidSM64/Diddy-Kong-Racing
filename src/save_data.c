@@ -1265,7 +1265,7 @@ typedef struct GhostData {
     /* 0x1E */ s16 unk1E;
 } GhostData;
 
-SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime,
+SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime,
                              s16 ghostNodeCount, u8 *dest) {
     unk80075000_body *ghostBody;
     unk80075000 *ghost = NULL;
@@ -1281,8 +1281,8 @@ SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostC
     ghost = allocate_from_main_pool_safe(sp24 + (GHSS_SIZE * 2), COLOUR_TAG_BLACK);
     ghost->signature = GHSS;
     ghostBody = &ghost->data;
-    ghostBody[0].unk0 = arg1;
-    ghostBody[0].unk1 = arg2;
+    ghostBody[0].unk0 = levelId;
+    ghostBody[0].unk1 = vehicleId;
     ghostBody[0].unk2 = GHSS_SIZE;
     ghostBody[1].unk2 = ghostBody[0].unk2 + sp30;
     for (i = 1; i < 7; i++) {
@@ -1493,7 +1493,7 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *levelIDs, u8 *vehicleIDs, 
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (ret == CONTROLLER_PAK_GOOD) {
-            fileData = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
+            fileData = allocate_from_main_pool_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
             ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *) fileData, fileSize);
             if (ret == CONTROLLER_PAK_GOOD) {
                 for (i = 0, var_s1 = (GhostHeaderAlt *) (&fileData[4]); i < 6; i++) {
