@@ -105,12 +105,12 @@ RainGfxData gRainGfx[2] = {
 };
 
 s32 gWeatherType = WEATHER_SNOW;
-s32 gLightningFrequency = 65536;
+s32 gLightningFrequency = 0x10000;
 s32 gLightningFrequencyStep = 0;
-s32 gLightningFrequencyTarget = 65536;
-s32 gRainOpacity = 65536;
+s32 gLightningFrequencyTarget = 0x10000;
+s32 gRainOpacity = 0x10000;
 s32 gRainOpacityStep = 0;
-s32 gRainOpacityTarget = 65536;
+s32 gRainOpacityTarget = 0x10000;
 s32 gRainHiddenTimer = 0;
 s32 gLightningTimer = 0;
 s32 gThunderTimer = 0;

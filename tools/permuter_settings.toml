@@ -1,7 +1,9 @@
 compiler_type = "ido"
 
 [preserve_macros]
+"ASSET_.*" = "unsigned int"
 "g[DS]P.*" = "void"
+"gs[DS]P.*" = "void"
 "gDma.*" = "void"
 "gDkr.*" = "void"
 "fast3d_cmd" = "void"
@@ -19,6 +21,9 @@ compiler_type = "ido"
 "G_CC.*" = "unsigned int"
 "G_AC.*" = "unsigned int"
 "ARRAY_COUNT" = "unsigned int"
+"SCREEN_.*" = "unsigned int"
+"TV_TYPE_.*" = "unsigned int"
+"COLOUR_TAG_.*" = "unsigned int"
 
 [decompme.compilers]
 "tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3"
