@@ -30,6 +30,7 @@
 #include "tracks.h"
 #include "lib/src/mips1/al/alSynStartVoiceParams.h"
 #include "controller.h"
+#include "math_util.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -225,7 +226,7 @@ s32 sControllerPakMenuNumberOfRows;             // 8 if PAL, 7 if not
 TextureHeader *gMenuMosaic1;
 TextureHeader *gMenuMosaic2;
 s32 gMenuMosaicShift;
-s32 D_80126BC4;
+s32 D_80126BC4;               // gCreditsControlData - CurIndex?
 PakError sControllerPakError; // 0 = no error, 1 = fatal error, 2 = no free space, 3 = bad data
 s32 D_80126BCC;
 UNUSED s32 D_80126BD0; // Set to zero, never read.
@@ -1247,11 +1248,19 @@ s16 gCreditsObjectIndices[12] = {
 
 s16 gCreditsImageIndices[2] = { -1, 0 };
 
-#define CREDITS_END (0x1000)
-#define CREDITS_NEW_TITLE(seconds) (0x2000 | ((s16) (seconds * 60.0)))
-#define CREDITS_CONTINUE_TITLE(seconds) (0x3000 | ((s16) (seconds * 60.0)))
-#define CREDITS_NEXT_LEVEL (0x4000)
-#define CREDITS_DEV_TIMES(seconds) (0x6000 | ((s16) (seconds * 60.0)))
+#define CREDITS_NO_FLAG (0)
+#define CREDITS_END_FLAG (0x1000)
+#define CREDITS_NEW_TITLE_FLAG (0x2000)
+#define CREDITS_CONTINUE_TITLE_FLAG (0x3000)
+#define CREDITS_NEXT_LEVEL_FLAG (0x4000)
+#define CREDITS_UNK_FLAG (0x5000)
+#define CREDITS_DEV_TIMES_FLAG (0x6000)
+
+#define CREDITS_END (CREDITS_END_FLAG)
+#define CREDITS_NEW_TITLE(seconds) (CREDITS_NEW_TITLE_FLAG | ((s16) (seconds * 60.0)))
+#define CREDITS_CONTINUE_TITLE(seconds) (CREDITS_CONTINUE_TITLE_FLAG | ((s16) (seconds * 60.0)))
+#define CREDITS_NEXT_LEVEL (CREDITS_NEXT_LEVEL_FLAG)
+#define CREDITS_DEV_TIMES(seconds) (CREDITS_DEV_TIMES_FLAG | ((s16) (seconds * 60.0)))
 
 // Number of seconds for each section in the credits.
 #define CREDITS_DEFAULT_TITLE_TIME 2.75
@@ -1880,43 +1889,40 @@ void menu_geometry_end(void) {
 // https://decomp.me/scratch/IZ1Gq
 GLOBAL_ASM("asm/non_matchings/menu/func_80080E90.s")
 
-// init_save_data
-#ifdef NON_EQUIVALENT
-// Should be functionally equivalent.
-void func_80081218(void) {
-    s32 numLevels; // sp34
-    s32 numWorlds; // sp30
+void init_save_data(void) {
+    s32 numLevels;
+    s32 numWorlds;
     s32 i;
-    s32 sp28;
-    s32 sp20;
+    s32 courseFlagsPtrSize;
+    s32 index;
+    s32 saveFileSize;
+    s32 offset;
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
-    sp20 = ((numLevels * 4) + (numWorlds * 2) + 0x11B) & ~3;
-    sp28 = numLevels * 4;
-    gSavefileData[0] = allocate_from_main_pool_safe(sp20 * 4, COLOUR_TAG_WHITE);
-    gSavefileData[0] = gSavefileData[0];
-    gSavefileData[0]->courseFlagsPtr = (u8 *) gSavefileData[0] + sizeof(Settings);
-    gSavefileData[0]->balloonsPtr = (u8 *) gSavefileData[0]->courseFlagsPtr + sp28;
-    gSavefileData[1] = (u8 *) gSavefileData[0] + sp20;
-    gSavefileData[1]->courseFlagsPtr = (u8 *) gSavefileData[1] + sizeof(Settings);
-    gSavefileData[1]->balloonsPtr = (u8 *) gSavefileData[1]->courseFlagsPtr + sp28;
-    gSavefileData[2] = (u8 *) gSavefileData[1] + sp20;
-    gSavefileData[2]->courseFlagsPtr = (u8 *) gSavefileData[2] + sizeof(Settings);
-    gSavefileData[2]->balloonsPtr = (u8 *) gSavefileData[2]->courseFlagsPtr + sp28;
-    gSavefileData[3] = (u8 *) gSavefileData[2] + sp20;
-    gSavefileData[3]->courseFlagsPtr = (u8 *) gSavefileData[3] + sizeof(Settings);
-    gSavefileData[3]->balloonsPtr = (u8 *) gSavefileData[3]->courseFlagsPtr + sp28;
-    gCheatsAssetData = get_misc_asset(ASSET_MISC_MAGIC_CODES);
-    gNumberOfCheats = (s32) (*gCheatsAssetData);
+    courseFlagsPtrSize = numLevels * sizeof(s32);
+    saveFileSize = courseFlagsPtrSize;
+    saveFileSize += numWorlds * sizeof(s16); // balloonsPtrSize;
+    saveFileSize += sizeof(Settings);
+    saveFileSize = (saveFileSize + 3) & ~3; // align to a 4-byte boundary
+    
+    *gSavefileData = allocate_from_main_pool_safe(saveFileSize * ARRAY_COUNT(gSavefileData), COLOUR_TAG_WHITE);
+
+    for (index = 0, offset = 0; index < ARRAY_COUNT(gSavefileData); index++) {
+        gSavefileData[index] = (Settings *) ((u8 *) *gSavefileData + offset);
+        gSavefileData[index]->courseFlagsPtr = (s32 *) ((u8 *) gSavefileData[index] + sizeof(Settings));
+        gSavefileData[index]->balloonsPtr = (s16 *) ((u8 *) gSavefileData[index]->courseFlagsPtr + courseFlagsPtrSize);
+        offset += saveFileSize;
+    }
+    
+    gCheatsAssetData = (u16 (*)[30]) get_misc_asset(ASSET_MISC_MAGIC_CODES);
+    gNumberOfCheats = (*gCheatsAssetData)[0];
     gMenuText = allocate_from_main_pool_safe(1024 * sizeof(char *), COLOUR_TAG_WHITE);
     load_menu_text(LANGUAGE_ENGLISH);
-    for (i = 0; i < 128; i++) {
+    
+    for (i = 0; i < ARRAY_COUNT(gMenuAssets); i++) { \
         gMenuAssets[i] = NULL;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80081218.s")
-#endif
 
 /**
  * Sets the title reveal timer to zero when the menu boots, meaning it may not automatically appear.
@@ -2529,7 +2535,7 @@ void menu_logos_screen_init(void) {
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
     copy_viewports_to_stack(); // Init viewports
-    camEnableUserView(0, 1);
+    camEnableUserView(0, TRUE);
 }
 
 /**
@@ -2771,12 +2777,12 @@ void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
 
     if (gTitleRevealTimer) {
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-        scale = (f32) gTitleRevealTimer * 0.03125f;
+        scale = (f32) gTitleRevealTimer * (1.0f / 32.0f);
         sMenuGuiOpacity = (gTitleRevealTimer * 8) - 1;
         sprite_anim_off(FALSE);
         if (scale != 1.0f) {
             render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF,
-                                            52.0f, scale, scale, 0xFFFFFFFE, TEXRECT_POINT);
+                                            52.0f, scale, scale, COLOUR_RGBA32(255, 255, 255, 254), TEXRECT_POINT);
         } else {
             render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, 52, 255, 255,
                                       255, 255);
@@ -2788,7 +2794,7 @@ void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
             set_text_background_colour(0, 0, 0, 0);
             while (gTitleMenuStrings[i] != NULL) {
                 if (i == gTitleScreenCurrentOption) {
-                    alpha = (gOptionBlinkTimer & 0x1F) * 16;
+                    alpha = (gOptionBlinkTimer & 0x1F) << 4;
                     if (alpha > 255) {
                         alpha = 511 - alpha;
                     }
@@ -2801,10 +2807,8 @@ void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
                 i++;
             }
         }
-    } else {
-        if (sTitleScreenDemoIds[gTitleDemoIndex] == sTitleScreenDemoIds[0]) {
-            func_80083098(updateRateF);
-        }
+    } else if (sTitleScreenDemoIds[gTitleDemoIndex] == sTitleScreenDemoIds[0]) {
+        func_80083098(updateRateF);
     }
 }
 
@@ -5079,7 +5083,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
 
             pakmenu_free();
             menu_init(MENU_LOGOS);
-            load_level_for_menu(ASSET_LEVEL_FRONTEND, -1, 0);
+            load_level_for_menu(ASSET_LEVEL_FRONTEND, ZERO_PLAYERS, CUTSCENE_NONE);
         }
     }
     return 0;
@@ -7341,7 +7345,7 @@ void menu_track_select_init(void) {
     viewport_menu_set(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), SCREEN_HEIGHT,
                       (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
     copy_viewports_to_stack();
-    camEnableUserView(0, 0);
+    camEnableUserView(0, FALSE);
     gIsInTracksMenu = TRUE;
     menu_assetgroup_load(gTrackSelectObjectIndices);
     menu_imagegroup_load(gTrackSelectImageIndices);
@@ -7695,7 +7699,7 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
         }
         numVertices += 4;
     }
-    camEnableUserView(0, 1);
+    camEnableUserView(0, TRUE);
     return 0;
 }
 #else
@@ -7967,7 +7971,7 @@ void trackmenu_track_view(s32 updateRate) {
     y2 = y1 + gTrackSelectViewPortHalfY;
     viewport_menu_set(0, x1, y1, x2, y2);
     copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2);
-    camEnableUserView(0, 0);
+    camEnableUserView(0, FALSE);
 }
 
 /**
@@ -8011,7 +8015,7 @@ void trackmenu_input(s32 updateRate) {
         gMenuImages[6].scale = (f32) (sMenuImageProperties[6].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
         gMenuImages[5].scale = (f32) (sMenuImageProperties[5].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
     }
-    camEnableUserView(0, 0);
+    camEnableUserView(0, FALSE);
     if (get_thread30_level_id_to_load() == 0) {
         if (gMenuDelay < 0) {
             sMenuMusicVolume -= updateRate * 4;
@@ -9154,7 +9158,7 @@ void postrace_start(s32 finishState, s32 worldID) {
         if (get_game_mode() == GAMEMODE_INGAME) {
             mosaic_init(gMenuMosaic1, gMenuMosaic2, gMenuMosaicShift);
         }
-        camEnableUserView(0, 1);
+        camEnableUserView(0, TRUE);
         viewport_menu_set(0, 0, 0, gTrackSelectViewPortX, gTrackSelectViewportY);
     }
     sound_volume_change(VOLUME_LOWER_AMBIENT);
@@ -10634,8 +10638,6 @@ void trophyround_free(void) {
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
-// https://decomp.me/scratch/MvASs
-#ifdef NON_MATCHING
 void func_80098774(s32 isRankings) {
     Settings *settings;
     s16 **iconPositions;
@@ -10643,13 +10645,10 @@ void func_80098774(s32 isRankings) {
     s16 *xPositions;
     s32 yOffset;
     s32 menuElemIndex;
-    UNUSED s32 arrIndex;
     s32 racerIndex;
     s32 temp;
     s32 greenAmount;
-    UNUSED s32 index;
     char *titleText;
-    UNUSED MenuElement *elem;
 
     settings = get_settings();
     titleText = (isRankings) ? gMenuText[ASSET_MENU_TEXT_RANKINGS] : gMenuText[ASSET_MENU_TEXT_RACEORDER];
@@ -10689,16 +10688,16 @@ void func_80098774(s32 isRankings) {
             // Regalloc issue here.
             temp = gRankingPlayerCount & 3;
             if (temp) {
-                greenAmount = racerIndex;
+                temp = racerIndex;
                 if (racerIndex >= 3) {
-                    greenAmount = racerIndex - 3;
+                    temp = racerIndex - 3;
                 }
             } else {
-                greenAmount = racerIndex & 3;
+                temp = racerIndex & 3;
             }
-            temp = 255 - (greenAmount << 6);
+            greenAmount = 255 - (temp << 6);
 
-            gTrophyRankingsTitle[menuElemIndex + 2].filterGreen = temp;
+            gTrophyRankingsTitle[menuElemIndex + 2].filterGreen = greenAmount;
             if (isRankings) {
                 gTrophyRankingsTitle[menuElemIndex].t.drawTexture =
                     gRacerPortraits[settings->racers[gRankingsPlayerIDs[racerIndex]].character];
@@ -10713,10 +10712,6 @@ void func_80098774(s32 isRankings) {
     }
     gTrophyRankingsTitle[menuElemIndex].t.asciiText = NULL;
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80098774.s")
-#endif
 
 /**
  * Initialise trophy race points screen.
@@ -11562,7 +11557,7 @@ void menu_credits_init(void) {
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
     copy_viewports_to_stack();
-    camEnableUserView(0, 1);
+    camEnableUserView(0, TRUE);
     menu_assetgroup_load(gCreditsObjectIndices);
     menu_imagegroup_load(gCreditsImageIndices);
     menu_racer_portraits();
@@ -11576,7 +11571,7 @@ void menu_credits_init(void) {
         gCreditsArray[86] = gCreditsLastMessageArray[4]; // "THIS TIME."
         gViewingCreditsFromCheat = FALSE;
     } else {
-        if (settings->bosses & 0x20) {
+        if (settings->bosses & 0x20) { // WIZPIG 2
             music_play(SEQUENCE_CRESCENT_ISLAND);
             gCreditsArray[84] = gCreditsLastMessageArray[1];                      // "TO BE CONTINUED ..."
             gCreditsControlData[130] = CREDITS_DEV_TIMES(CREDITS_DEV_TIMES_TIME); // Show developer times.
@@ -11625,7 +11620,273 @@ void credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
     reset_render_settings(&sMenuCurrDisplayList);
 }
 
+#ifdef NON_EQUIVALENT
+typedef struct Asset69 {
+    s8 unk0;
+    s8 unk1;
+    s8 unk2;
+    s8 unk3;
+} Asset69;
+
+// Heavily WIP
+s32 menu_credits_loop(s32 updateRate) {
+    s32 breakLoop;
+    s32 sp68;
+    Asset69 *asset69;
+    s8 *mainTrackIds;
+    MenuElement *menuElement;
+    s16 *var_s1_2;
+    s16 temp_a0_control_data;
+    s32 nextIndex;
+    s32 controlDataIndex;
+    s32 temp_s2;
+    s32 temp_s4;
+    s32 temp_t1;
+    s32 temp_t3;
+    s32 temp_t8_2;
+    s32 temp_v0_credits_flag;
+    s32 temp_v1;
+    s32 original_D_80126BC4;
+    s32 textPos;
+    s32 buttonsPressedAllPlayers;
+    s32 var_s3;
+    s32 var_s4;
+    s32 new_D_80126BC4;
+    s32 var_s5;
+    s32 textLineHeight;
+    s32 controlDataFlag;
+    char *asciiText;
+    u8 textFont;
+    MenuElement *var_v0_3;
+    s32 i;
+
+    sp68 = FALSE;
+    mainTrackIds = get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
+    asset69 = get_misc_asset(ASSET_MISC_69);
+    tick_thread30();
+    if (gMenuDelay == 0) {
+        disable_new_screen_transitions();
+        transition_begin(NULL);
+        enable_new_screen_transitions();
+    }
+    if (osTvType == TV_TYPE_PAL) {
+        credits_fade(0, 38, SCREEN_WIDTH, 186, gOpacityDecayTimer * 8);
+    } else {
+        credits_fade(0, 40, SCREEN_WIDTH, 156, gOpacityDecayTimer * 8);
+    }
+    if (gOpacityDecayTimer > 0) {
+        gMenuCurIndex += updateRate << 8;
+        if (gOpacityDecayTimer >= 40) {
+            var_s4 = 0;
+        } else {
+            var_s4 = 40 - gOpacityDecayTimer;
+        }
+        var_s5 = gMenuCurIndex;
+        temp_s4 = (var_s4 * 5) + 72;
+        temp_s2 = (get_video_width_and_height_as_s32() >> 17) & 0x7FFF; // Truncated video height? Height / 2?
+        for (i = 0; i < ARRAY_COUNT(gRacerPortraits); i++) {
+            render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[i], ((sins(var_s5) * temp_s4) >> 16) + 140,
+                                      ((coss(var_s5) * temp_s4) >> 16) + (temp_s2 - 20), 255, 255, 255, 255);
+            var_s5 += 0x1999;
+        }
+        reset_render_settings(&sMenuCurrDisplayList);
+    }
+    if (D_80126BE0 != 0) {
+        D_80126BE0 = postrace_render(updateRate) == 0;
+    }
+    if ((D_80126BD8 == 0) && (D_80126BE0 == 0)) {
+        breakLoop = FALSE;
+        do {
+            temp_a0_control_data = gCreditsControlData[D_80126BC4];
+            temp_v0_credits_flag = temp_a0_control_data & 0xF000;
+            if (temp_v0_credits_flag != CREDITS_NEW_TITLE_FLAG) {
+                nextIndex = D_80126BC4 + 1;
+                switch (temp_v0_credits_flag) {
+                    case CREDITS_NEW_TITLE_FLAG: /* fallthrough */
+                    case CREDITS_DEV_TIMES_FLAG:
+                        D_80126BE8 = temp_a0_control_data & 0xFFFF0FFF;
+                        D_80126BC4 = nextIndex;
+                        breakLoop = TRUE;
+                        textFont = FONT_COLOURFUL;
+                        while ((gCreditsControlData[D_80126BC4] & 0xF000) == CREDITS_NO_FLAG) {
+                            D_80126BC4++;
+                        }
+                        if (osTvType == TV_TYPE_PAL) {
+                            textPos = SCREEN_HEIGHT_HALF + 14;
+                        } else {
+                            textPos = SCREEN_HEIGHT_HALF;
+                        }
+                        textLineHeight = 20;
+                        temp_v1 = D_80126BC4 - nextIndex;
+                        if (temp_v1 == 1) {
+                            textPos -= 14;
+                            textFont = FONT_LARGE;
+                        } else if ((temp_v0_credits_flag == CREDITS_DEV_TIMES_FLAG) != 0) {
+                            textPos = (textPos - (temp_v1 * 16)) + 3;
+                            textLineHeight = 32;
+                        } else {
+                            textPos = (textPos - (temp_v1 * 16)) + 8;
+                        }
+                        gCreditsMenuElements->left = 480;
+                        if ((gCreditsControlData[D_80126BC4] & 0xF000) == CREDITS_CONTINUE_TITLE_FLAG) {
+                            gCreditsMenuElements->right = SCREEN_WIDTH_HALF;
+                        } else {
+                            gCreditsMenuElements->right = -SCREEN_WIDTH_HALF;
+                        }
+                        var_s3 = 0;
+                        menuElement = gCreditsMenuElements;
+                        for (i = nextIndex; i < D_80126BC4; i += 2) {
+                            menuElement->top = textPos;
+                            menuElement->middle = textPos;
+                            menuElement->bottom = textPos;
+                            if ((temp_v0_credits_flag == CREDITS_DEV_TIMES_FLAG) != 0) {
+                                menuElement->textFont = FONT_COLOURFUL;
+                                menuElement->filterGreen = 0;
+                                menuElement->filterBlendFactor = 48;
+                                menuElement->t.asciiText = get_level_name(mainTrackIds[gCreditsControlData[i]]);
+                                menuElement++;
+                                menuElement->top = textPos + 14;
+                                menuElement->middle = textPos + 14;
+                                menuElement->bottom = textPos + 14;
+                                menuElement->textFont = FONT_COLOURFUL;
+                                menuElement->t.asciiText = gCreditsBestTimesArray[gCreditsControlData[i]];
+                                menuElement++;
+                                var_s3 += 2;
+                            } else {
+                                if (var_s3 & 1) {
+                                    menuElement->filterGreen = 255;
+                                    menuElement->filterBlendFactor = 0;
+                                }
+                                menuElement->textFont = textFont;
+                                menuElement->t.asciiText = gCreditsArray[gCreditsControlData[i]];
+                                menuElement++;
+                                var_s3++;
+                            }
+                            textFont = FONT_LARGE;
+                            textPos += textLineHeight;
+                            textLineHeight = 32;
+                        }
+                        gCreditsMenuElements[var_s3].t.element = NULL;
+                        postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
+                        D_80126BE0 = postrace_render(0) == MENU_RESULT_CONTINUE;
+                        break;
+                    case CREDITS_CONTINUE_TITLE_FLAG:
+                        D_80126BE8 = temp_a0_control_data & 0xFFFF0FFF;
+                        D_80126BC4++;
+                        original_D_80126BC4 = D_80126BC4;
+                        breakLoop = TRUE;
+                        while ((gCreditsControlData[D_80126BC4] & 0xF000) == CREDITS_NO_FLAG) {
+                            D_80126BC4++;
+                        }
+                        gCreditsMenuElements->left = SCREEN_WIDTH_HALF;
+                        if ((gCreditsControlData[D_80126BC4] & 0xF000) == CREDITS_CONTINUE_TITLE_FLAG) {
+                            gCreditsMenuElements->right = SCREEN_WIDTH_HALF;
+                        } else {
+                            gCreditsMenuElements->right = -SCREEN_WIDTH_HALF;
+                        }
+                        new_D_80126BC4 = original_D_80126BC4;
+                        while (new_D_80126BC4 < D_80126BC4) {
+                            asciiText = gCreditsArray[gCreditsControlData[new_D_80126BC4]];
+                            // The negation part is a bit confusing.
+                            gCreditsMenuElements[(new_D_80126BC4) + (-original_D_80126BC4)].t.asciiText = asciiText;
+                            new_D_80126BC4++;
+                        }
+                        gCreditsMenuElements[((new_D_80126BC4) + (-original_D_80126BC4)) + 1].t.asciiText = NULL;
+                        postrace_offsets(gCreditsMenuElements, 0.5f, (f32) D_80126BE8 / 60.0f, 0.5f, 0, 0);
+                        D_80126BE0 = postrace_render(0) == 0;
+                        break;
+                    case CREDITS_NEXT_LEVEL_FLAG:
+                        D_80126BC4++;
+                        D_80126BD8 = 1;
+                        breakLoop = TRUE;
+                        break;
+                    // case CREDITS_UNK_FLAG:
+                    default:
+                        D_80126BC4++;
+                        break;
+                }
+            } else {
+                D_80126BC4 = 0;
+                sp68 = TRUE;
+                gIgnorePlayerInputTime = 0;
+            }
+        } while (breakLoop == FALSE);
+    }
+    buttonsPressedAllPlayers = 0;
+    if (gIgnorePlayerInputTime == 0) {
+        if (gMenuDelay == 0) {
+            for (i = 0; i < MAXCONTROLLERS; i++) {
+                buttonsPressedAllPlayers |= get_buttons_pressed_from_player(i);
+            }
+        }
+    }
+    switch (gMenuStage) {
+        case 0:
+            set_level_to_load_in_background(asset69[D_80126BCC].unk0, asset69[D_80126BCC].unk2);
+            gMenuStage = 1;
+            gOpacityDecayTimer = 40;
+            break;
+        case 1:
+            if (get_thread30_level_id_to_load() == 0) {
+                gMenuStage = 2;
+                gOptionBlinkTimer = 40;
+                D_80126BD8 = 0;
+            }
+            break;
+        case 2:
+            gOpacityDecayTimer -= updateRate;
+            gOptionBlinkTimer -= updateRate;
+            if (gOptionBlinkTimer <= 0) {
+                gOptionBlinkTimer += 600;
+                gMenuStage = 3;
+            }
+            break;
+        case 3:
+            gOptionBlinkTimer -= updateRate;
+            if (gOpacityDecayTimer > 0) {
+                gOpacityDecayTimer -= updateRate;
+            } else {
+                gOpacityDecayTimer = 0;
+            }
+            if (gOptionBlinkTimer <= 0) {
+                gOptionBlinkTimer = 40;
+                gMenuStage = 4;
+            }
+            break;
+        case 4:
+            gOptionBlinkTimer -= updateRate;
+            gOpacityDecayTimer += updateRate;
+            if (gOptionBlinkTimer <= 0) {
+                gMenuStage = 0;
+                D_80126BCC++;
+                if (asset69[D_80126BCC].unk0 < 0) {
+                    D_80126BCC = 0;
+                    gIgnorePlayerInputTime = 0;
+                }
+            }
+            break;
+    }
+    if ((buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON)) || (buttonsPressedAllPlayers & B_BUTTON) || sp68) {
+        gMenuDelay = 1;
+        disable_new_screen_transitions();
+        transition_begin(&sMenuTransitionFadeIn);
+        enable_new_screen_transitions();
+        music_fade(-0x80);
+    }
+    if (gMenuDelay > 0) {
+        gMenuDelay += updateRate;
+        if (get_thread30_level_id_to_load() == 0 && gMenuDelay > 30) {
+            music_change_on();
+            credits_free();
+            load_level_for_menu(ASSET_LEVEL_FRONTEND, ZERO_PLAYERS, CUTSCENE_NONE);
+            menu_init(MENU_LOGOS);
+        }
+    }
+    return 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/menu_credits_loop.s")
+#endif
 
 /**
  * Unload associated assets with the credits scene.
@@ -11893,7 +12154,7 @@ s32 get_filtered_cheats(void) {
     if (!check_if_in_race()) {
         cheats &= ~CHEAT_MIRRORED_TRACKS; // Disable mirroring
     }
-    if (get_map_race_type(get_settings()->courseId) & 0x40) {
+    if (get_map_race_type(get_settings()->courseId) & RACETYPE_CHALLENGE) {
         cheats &= CHEATS_ALLOWED_IN_CHALLENGES;
     }
     if (gIsInAdventureTwo && check_if_in_race()) {

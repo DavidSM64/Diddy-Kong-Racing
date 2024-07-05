@@ -23,12 +23,17 @@
 
 #define NUMBER_OF_SAVE_FILES 3
 
+#define MAX_CPAK_FILES 16
+
 // Most of this is temporary really until we figure out where the size comes from
 #define EEP_FLAP_OFFSET (0x80 / sizeof(u64))
 #define EEP_COURSE_TIME_OFFSET (0x140 / sizeof(u64))
 #define EEP_FLAP_SIZE (0xC0  / sizeof(u64))
 #define EEP_COURSE_RECORD_SIZE (0xC0  / sizeof(u64))
 #define SAVE_SIZE 0x200
+
+#define GHSS_SIZE 0x100
+#define AS_BYTES(ptr) ((u8 *) ptr)
 
 // One unique thing about results using SIDeviceStatus is that they
 // store the enum value in the lower 0xFF byte, and they store
@@ -85,6 +90,29 @@ enum RumbleTypes {
     RUMBLE_TYPE_19,
     RUMBLE_TYPE_20,
 };
+
+// 4 bytes
+typedef struct unk80075000_body {
+    union {
+        struct {
+            u8 unk0;
+            u8 unk1;
+        };
+        s16 unk0_hw;
+    };
+    union {
+        struct {
+            u8 unk2_b;
+            u8 unk3_b;
+        };
+        s16 unk2;
+    };
+} unk80075000_body;
+
+typedef struct unk80075000 {
+    s32 signature;
+    unk80075000_body data[1];
+} unk80075000;
 
 extern s8 *D_800DE440;
 extern u8 gN64FontCodes[68];
@@ -143,15 +171,12 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
 void func_80073588(Settings *settings, u8 *saveData, u8 arg2);
 void func_800732E8(Settings *settings, u8 *saveData);
 void func_800738A4(Settings *settings, u8 *saveData);
-
-//Using some context, and best guesses, these could be the names of the variables
-s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *ghostData); //Non matching
+s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, unk80075000 *ghostData);
 char *string_to_font_codes(char *inString, char *outString, s32 stringLength);
-
-//Reasonably certain about these names for now.
-SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, u8 *dest);
+SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime,
+                             s16 ghostNodeCount, u8 *dest);
 SIDeviceStatus func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime,
-                             s16 ghostNodeCount, GhostHeader *ghostData);
-s32 func_800753D8(s32 controllerIndex, s32 arg1);
+                             s16 ghostNodeCount, unk80075000_body *ghostData);
+s32 func_800753D8(s32 controllerIndex, s32 worldId);
 
 #endif

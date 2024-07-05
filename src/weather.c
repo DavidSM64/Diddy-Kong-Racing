@@ -106,12 +106,12 @@ unk800E2C2C gRainGfx[2] = {
 };
 
 s32 gWeatherType = WEATHER_SNOW;
-s32 gLightningFrequency = 65536;
+s32 gLightningFrequency = 0x10000;
 s32 D_800E2C64 = 0;
-s32 D_800E2C68 = 65536;
-s32 D_800E2C6C = 65536;
+s32 D_800E2C68 = 0x10000;
+s32 D_800E2C6C = 0x10000;
 s32 D_800E2C70 = 0;
-s32 D_800E2C74 = 65536;
+s32 D_800E2C74 = 0x10000;
 s32 D_800E2C78 = 0;
 s32 gLightningTimer = 0;
 s32 gThunderTimer = 0;
@@ -985,7 +985,7 @@ void handle_rain_lightning(s32 updateRate) {
     if (gThunderTimer > 0) {
         gThunderTimer -= updateRate;
         if (gThunderTimer <= 0) {
-            if (D_800E2C6C >= 32769 && check_fadeout_transition() == 0) {
+            if (D_800E2C6C > 0x8000 && check_fadeout_transition() == 0) {
                 transition_begin(&gThunderTransition);
             }
             sound_play(SOUND_LIGHTNING, NULL);
