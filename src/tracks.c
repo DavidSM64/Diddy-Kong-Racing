@@ -344,7 +344,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     gDPSetBlendColor(gSceneCurrDisplayList++, 0, 0, 0, 0x64);
     gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
-    func_800AD40C();
+    rain_fog();
     update_fog(numViewports, tempUpdateRate);
     func_800AF404(tempUpdateRate);
     if (gCurrentLevelModel->numberOfAnimatedTextures > 0) {
@@ -381,11 +381,11 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         }
         gDPPipeSync(gSceneCurrDisplayList++);
         initialise_player_viewport_vars(updateRate);
-        set_weather_limits(-1, -512);
+        weather_clip_planes(-1, -512);
         // Show weather effects in single player.
         if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < 2) {
-            process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList,
-                            tempUpdateRate);
+            weather_update(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList,
+                           tempUpdateRate);
         }
         lensflare_override(get_active_camera_segment());
         lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
@@ -413,7 +413,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             matrix_world_origin(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             gDPPipeSync(gSceneCurrDisplayList++);
             initialise_player_viewport_vars(updateRate);
-            set_weather_limits(-1, -512);
+            weather_clip_planes(-1, -512);
             lensflare_override(get_active_camera_segment());
             lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
                              get_active_camera_segment());
