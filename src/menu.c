@@ -208,7 +208,7 @@ s32 gMenuOption;
 s32 gSavemenuRumbleNagSet;
 char **gDeviceStatusStrings;
 s32 gSaveMenuMessageLines;
-s32 gSavemenuMessageOption;
+s32 gSaveMenuMessageOption;
 UNUSED s32 D_80126A7C;
 unk80126A80 *gSaveMenuText[4];
 s32 gPostRace1Player;
