@@ -25,23 +25,6 @@ s32 gRumbleKillTimer = 0;
 
 /*******************************/
 
-/************ .rodata ************/
-
-UNUSED const char D_800E7590[] = "Region = %d	 loc = %x	 size = %x\t";
-UNUSED const char D_800E75B4[] = "FREE";
-UNUSED const char D_800E75BC[] = "ALLOCATED";
-UNUSED const char D_800E75C8[] = "ALLOCATED,FIXED";
-UNUSED const char D_800E75D8[] = "\n";
-UNUSED const char D_800E75DC[] = "\n";
-UNUSED const char D_800E75E0[] = "Region number = %d\t";
-UNUSED const char D_800E75F4[] = "maxSlots = %d\t";
-UNUSED const char D_800E7604[] = "slotsUsed = %d\t";
-UNUSED const char D_800E7614[] = "loc = %x\t";
-UNUSED const char D_800E7620[] = "size = %x\n";
-UNUSED const char D_800E762C[] = "\n";
-
-/*********************************/
-
 /************ .bss ************/
 
 OSMesgQueue *sControllerMesgQueue;
@@ -1493,7 +1476,7 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *levelIDs, u8 *vehicleIDs, 
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (ret == CONTROLLER_PAK_GOOD) {
-            fileData = allocate_from_main_pool_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
+            fileData = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
             ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *) fileData, fileSize);
             if (ret == CONTROLLER_PAK_GOOD) {
                 for (i = 0, var_s1 = (GhostHeaderAlt *) (&fileData[4]); i < 6; i++) {
