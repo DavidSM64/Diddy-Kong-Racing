@@ -673,7 +673,6 @@ UNUSED void render_memory_colour_tags(void) {
     render_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOUR_TAG_ORANGE));
 }
 
-
 /************ .rodata ************/
 
 UNUSED const char D_800E7590[] = "Region = %d	 loc = %x	 size = %x\t";
