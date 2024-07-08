@@ -1280,7 +1280,7 @@ SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
     if (1) {} // fake
     ghost = allocate_from_main_pool_safe(sp24 + (GHSS_SIZE * 2), COLOUR_TAG_BLACK);
     ghost->signature = GHSS;
-    ghostBody = &ghost->data;
+    ghostBody = &ghost->data[0];
     ghostBody[0].unk0 = levelId;
     ghostBody[0].unk1 = vehicleId;
     ghostBody[0].unk2 = GHSS_SIZE;
@@ -1290,8 +1290,8 @@ SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
         ghostBody[i].unk2 = ghostBody[1].unk2;
     }
 
-    func_80074AA8(AS_BYTES(ghost) + ghostBody[0].unk2, ghostCharacterId, ghostTime, ghostNodeCount, dest);
-    pakStatus = write_controller_pak_file(controllerIndex, -1, "DKRACING-GHOSTS", "", ghost, sp24 + GHSS_SIZE);
+    func_80074AA8((GhostHeader *) (AS_BYTES(ghost) + ghostBody[0].unk2), ghostCharacterId, ghostTime, ghostNodeCount, dest);
+    pakStatus = write_controller_pak_file(controllerIndex, -1, "DKRACING-GHOSTS", "", (u8 *) ghost, sp24 + GHSS_SIZE);
     free_from_memory_pool(ghost);
     return pakStatus;
 }
