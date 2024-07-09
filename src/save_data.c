@@ -25,23 +25,6 @@ s32 gRumbleKillTimer = 0;
 
 /*******************************/
 
-/************ .rodata ************/
-
-UNUSED const char D_800E7590[] = "Region = %d	 loc = %x	 size = %x\t";
-UNUSED const char D_800E75B4[] = "FREE";
-UNUSED const char D_800E75BC[] = "ALLOCATED";
-UNUSED const char D_800E75C8[] = "ALLOCATED,FIXED";
-UNUSED const char D_800E75D8[] = "\n";
-UNUSED const char D_800E75DC[] = "\n";
-UNUSED const char D_800E75E0[] = "Region number = %d\t";
-UNUSED const char D_800E75F4[] = "maxSlots = %d\t";
-UNUSED const char D_800E7604[] = "slotsUsed = %d\t";
-UNUSED const char D_800E7614[] = "loc = %x\t";
-UNUSED const char D_800E7620[] = "size = %x\n";
-UNUSED const char D_800E762C[] = "\n";
-
-/*********************************/
-
 /************ .bss ************/
 
 OSMesgQueue *sControllerMesgQueue;
