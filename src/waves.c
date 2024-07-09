@@ -16,7 +16,7 @@
 f32 *D_800E3040 = NULL;
 s32 *D_800E3044 = NULL;
 s32 *D_800E3048 = NULL;
-s32 *D_800E304C = NULL;
+s32 D_800E304C[] = { NULL };
 
 // Could be an array of pointers?
 s32 D_800E3050[8] = {
@@ -146,7 +146,7 @@ void free_waves(void) {
     FREE_MEM(D_800E3040);
     FREE_MEM(D_800E3044);
     FREE_MEM(D_800E3048);
-    FREE_MEM(D_800E304C);
+    FREE_MEM(D_800E304C[0]);
     FREE_MEM(D_800E3070[0]);
     FREE_MEM(D_800E3080[0]);
     FREE_TEX(D_800E30D0);
@@ -159,63 +159,48 @@ void free_waves(void) {
     D_800E3188 = NULL;
 }
 
-#ifdef NON_EQUIVALENT
+#if 1
 // wave_init
 void func_800B7EB4(void) {
-    s32 *var_v1;
-    s32 temp_lo;
-    s32 temp_t7;
-    s32 temp_t9;
-    s32 temp_v1;
-    s32 var_a1;
-    s32 var_a2;
-    s32 var_a3;
-    s32 var_t0;
-    s32 var_t1;
+  unsigned short new_var;
+    s32 allocSize;
+    s32 i;
+    s64 temp;
 
     free_waves();
     D_800E3040 = (s32 *) allocate_from_main_pool_safe(D_80129FC8.unk20 << 2, COLOUR_TAG_CYAN);
     D_800E3044 = (s32 *) allocate_from_main_pool_safe((D_80129FC8.unk4 << 2) * D_80129FC8.unk4, COLOUR_TAG_CYAN);
     D_800E3048 =
         (s32 *) allocate_from_main_pool_safe(((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1), COLOUR_TAG_CYAN);
-    temp_lo = ((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1);
-    D_800E304C = allocate_from_main_pool_safe(temp_lo * 9, COLOUR_TAG_CYAN);
+    allocSize = ((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1);
+    D_800E304C[0] = allocate_from_main_pool_safe(allocSize * 9, COLOUR_TAG_CYAN);
 
-    // for (var_a1 = 1; var_a1 < 4; var_a1++) {
-    //     D_800E3050[var_a1] = (s32 *) ((u32) D_800E304C + (temp_lo * var_a1));
-    // }
-
-    var_v1 = D_800E3050;
-    var_a1 = 1;
-    do {
-        var_v1[0] = (s32 *) (D_800E304C + temp_lo);
-        var_v1[1] = (s32 *) (D_800E304C + (temp_lo * 2));
-        var_v1[2] = (s32 *) (D_800E304C + (temp_lo * 3));
-        var_v1[3] = (s32 *) (D_800E304C + (temp_lo * 4));
-        var_v1 += 4;
-        var_a1 += 4;
-    } while (var_a1 < 9);
-
-    // temp_lo = (D_80129FC8.unk0 + 1) * 250 * (D_80129FC8.unk0 + 1);
-    temp_lo = ((((D_80129FC8.unk0 + 1) << 5) - D_80129FC8.unk0) * 10) * (D_80129FC8.unk0 + 1);
-    if (D_8012A078 != 2) {
-        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 1, COLOUR_TAG_CYAN);
-        D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
-    } else {
-        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 2, COLOUR_TAG_CYAN);
-        D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
-        D_800E3070[2] = (s32 *) ((u32) D_800E3070[1] + temp_lo);
-        D_800E3070[3] = (s32 *) ((u32) D_800E3070[2] + temp_lo);
+    for (i = 1; i < 9; i++) {
+        temp = (allocSize * (i));
+        D_800E3050[i - 1u] = (s32 *) (AS_BYTES(D_800E304C) + temp);
     }
-    temp_lo = (D_80129FC8.unk0 << 5) * D_80129FC8.unk0;
+
+    // allocSize = (D_80129FC8.unk0 + 1) * 250 * (D_80129FC8.unk0 + 1);
+    allocSize = ((((D_80129FC8.unk0 + 1) << 5) - D_80129FC8.unk0) * 10) * (D_80129FC8.unk0 + 1);
     if (D_8012A078 != 2) {
-        D_800E3080[0] = allocate_from_main_pool_safe(temp_lo << 1, COLOUR_TAG_CYAN);
-        D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + temp_lo);
+        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(allocSize << 1, COLOUR_TAG_CYAN);
+        D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + allocSize);
     } else {
-        D_800E3080[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 2, COLOUR_TAG_CYAN);
-        D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + temp_lo);
-        D_800E3080[2] = (s32 *) ((u32) D_800E3080[1] + temp_lo);
-        D_800E3080[3] = (s32 *) ((u32) D_800E3080[2] + temp_lo);
+        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(allocSize << 2, COLOUR_TAG_CYAN);
+        new_var = 0;
+        D_800E3070[1] = (s32 *) ((u32) D_800E3070[0]) + allocSize;
+        D_800E3070[2] = (s32 *) ((u32) D_800E3070[1] + allocSize);
+        D_800E3070[3] = (s32 *) ((u32) D_800E3070[2] + allocSize);
+    }
+    allocSize = (D_80129FC8.unk0 << 5) * D_80129FC8.unk0;
+    if (D_8012A078 != 2) {
+        D_800E3080[0] = allocate_from_main_pool_safe(allocSize << 1, COLOUR_TAG_CYAN);
+        D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + allocSize);
+    } else {
+        D_800E3080[0] = (s32 *) allocate_from_main_pool_safe(allocSize << 2, COLOUR_TAG_CYAN);
+        D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + allocSize);
+        D_800E3080[2] = (s32 *) ((u32) D_800E3080[1] + allocSize);
+        D_800E3080[3] = (s32 *) ((u32) D_800E3080[2] + allocSize);
     }
     D_800E30D0 = load_texture(D_80129FC8.unk2C);
 }
