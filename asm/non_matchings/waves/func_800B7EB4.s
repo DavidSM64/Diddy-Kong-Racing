@@ -50,12 +50,12 @@ glabel func_800B7EB4
 /* 0B8B74 800B7F74 00000000 */   nop   
 /* 0B8B78 800B7F78 3C04800E */  lui   $a0, %hi(D_800E304C) # $a0, 0x800e
 /* 0B8B7C 800B7F7C 2484304C */  addiu $a0, %lo(D_800E304C) # addiu $a0, $a0, 0x304c
-/* 0B8B80 800B7F80 3C03800E */  lui   $v1, %hi(D_800E3050) # $v1, 0x800e
+/* 0B8B80 800B7F80 3C03800E */  lui   $v1, %hi(D_800E304C) # $v1, 0x800e
 /* 0B8B84 800B7F84 00104080 */  sll   $t0, $s0, 2
 /* 0B8B88 800B7F88 AC820000 */  sw    $v0, ($a0)
 /* 0B8B8C 800B7F8C 241F0009 */  li    $ra, 9
 /* 0B8B90 800B7F90 01104023 */  subu  $t0, $t0, $s0
-/* 0B8B94 800B7F94 24633050 */  addiu $v1, %lo(D_800E3050) # addiu $v1, $v1, 0x3050
+/* 0B8B94 800B7F94 24633050 */  addiu $v1, %lo(D_800E304C + 4) # addiu $v1, $v1, 0x3050
 /* 0B8B98 800B7F98 24050001 */  li    $a1, 1
 /* 0B8B9C 800B7F9C 02003025 */  move  $a2, $s0
 /* 0B8BA0 800B7FA0 00105080 */  sll   $t2, $s0, 2
