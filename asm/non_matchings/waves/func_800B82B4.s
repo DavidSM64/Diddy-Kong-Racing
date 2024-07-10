@@ -26,7 +26,7 @@ glabel func_800B82B4
 /* B8EF8 800B82F8 AC26A078 */  sw         $a2, %lo(D_8012A078)($at)
 /* B8EFC 800B82FC 0C02E04D */  jal        func_800B8134
 /* B8F00 800B8300 00A02025 */   or        $a0, $a1, $zero
-/* B8F04 800B8304 0C02DFAD */  jal        func_800B7EB4
+/* B8F04 800B8304 0C02DFAD */  jal        wave_init
 /* B8F08 800B8308 00000000 */   nop
 /* B8F0C 800B830C 8FA40070 */  lw         $a0, 0x70($sp)
 /* B8F10 800B8310 0C02EF77 */  jal        func_800BBDDC

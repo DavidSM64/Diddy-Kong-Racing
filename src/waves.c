@@ -154,8 +154,7 @@ void free_waves(void) {
     D_800E3188 = NULL;
 }
 
-// wave_init
-void func_800B7EB4(void) {
+void wave_init(void) {
     s32 temp;
     s32 allocSize;
     s32 i;
