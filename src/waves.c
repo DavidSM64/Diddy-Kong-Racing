@@ -225,44 +225,22 @@ void func_800B8134(LevelHeader *header) {
     D_80129FC8.unk4C = header->unk70_u8;
 }
 
-#if 0
+#ifdef NON_EQUIVALENT
 void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
     s32 sp54;
     s32 sp4C;
-    Vertex **var_a3;
-    Vertex **var_v0;
-    Vertex *temp_a1_2;
-    Vertex *temp_a2;
-    Vertex *temp_t2;
-    Vertex *temp_v0_4;
-    Vertex *temp_v0_5;
-    f32 *temp_v0;
-    f32 *temp_v0_2;
-    f32 temp_f0;
-    f32 temp_f0_2;
-    f32 temp_f20;
-    s32 **var_v1;
-    s32 *temp_t6;
     s32 temp_lo;
-    s32 temp_v0_3;
-    s32 temp_v1;
     s32 var_a0;
     s32 var_a0_2;
     s32 var_a2;
     s32 var_fp;
     s32 var_s0;
-    s32 var_s0_2;
     s32 var_s0_3;
     s32 var_s3;
     s32 var_s5;
     s32 var_s6;
-    s32 var_s6_2;
     s32 var_s7;
-    s32 var_v0_2;
-    s8 temp_a1;
     s8 var_s0_4;
-    unk8012A028 **var_a0_3;
-    f32 phi_f0;
     s32 i;
     s32 j;
 
@@ -346,33 +324,14 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
     var_s5 = 0;
     for (var_s7 = 0; var_s7 < D_80129FC8.unk0; var_s7++) {
         for (var_s0_4 = 0; var_s0_4 < D_80129FC8.unk0; var_s0_4++) {
-            var_a0_2 = 0;
-            if (var_s3 > 0) {
-                var_v1 = D_800E3080;
-                temp_a1 = var_s0_4 + 1;
-                var_v0_2 = var_s5 * 0x10;
-                do {
-                    D_800E3080[var_v0_2][var_a0_2] = 0x40;
-                    // *(*var_v1 + var_v0_2) = 0x40;
-                    // temp_t6 = *var_v1;
-                    // var_v1 += 4;
-                    // (temp_t6 + var_v0_2)->unk1 = var_s0_4;
-                    // (var_v1->unk-4 + var_v0_2)->unk2 = (s8) (var_s0_4 + D_80129FC8.unk0 + 1);
-                    // (var_v1->unk-4 + var_v0_2)->unk3 = temp_a1;
-                    // temp_v0_3 = var_v0_2 + 0x10;
-                    // *(var_v1->unk-4 + temp_v0_3) = 0x40;
-                    // (var_v1->unk-4 + temp_v0_3)->unk1 = temp_a1;
-                    // (var_v1->unk-4 + temp_v0_3)->unk2 = (s8) (var_s0_4 + D_80129FC8.unk0 + 1);
-                    // (var_v1->unk-4 + temp_v0_3)->unk3 = (s8) (var_s0_4 + D_80129FC8.unk0 + 2);
-                    var_v0_2 = temp_v0_3 - 0x10;
-                    var_a0_2++;
-                } while (var_a0_2 < var_s3);
+            for (var_a0_2 = 0; var_a0_2 < var_s3; var_a0_2++) {
+                D_800E3080[var_s5 * 16][var_a0_2] = 0x40;
             }
             var_s5 += 2;
         }
     }
     func_800BC6C8();
-    temp_lo = (D_80129FC8.unk0 + 1) * D_80129FC8.unk0;
+    temp_lo = D_80129FC8.unk0 * (D_80129FC8.unk0 + 1);
     // var_a3 = D_800E3070;
     // var_a0_3 = D_8012A028;
     // do {
@@ -414,9 +373,13 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
 
     for (i = 0; i < ARRAY_COUNT(D_8012A028); i++) {
         for (j = 0; j < ARRAY_COUNT(D_800E3070); j++) {
-            D_8012A028[i]->vert[i + temp_lo].x = D_800E3070[j][D_80129FC8.unk0].x;
-            D_8012A028[i]->vert[i + temp_lo].y = D_800E3070[j][D_80129FC8.unk0].y;
-            D_8012A028[i]->vert[i + temp_lo].z = D_800E3070[j][D_80129FC8.unk0].z;
+            D_8012A028[i]->vert[temp_lo].x = D_800E3070[temp_lo + i][j].x;
+            D_8012A028[i]->vert[temp_lo].y = 0;
+            D_8012A028[i]->vert[temp_lo].z = D_800E3070[temp_lo + i][j].z;
+            D_8012A028[i]->vert[temp_lo].r = D_800E3070[temp_lo + i][j].r;
+            D_8012A028[i]->vert[temp_lo].g = D_800E3070[temp_lo + i][j].g;
+            D_8012A028[i]->vert[temp_lo].b = D_800E3070[temp_lo + i][j].b;
+            D_8012A028[i]->vert[temp_lo].a = D_800E3070[temp_lo + i][j].a;
         }
     }
 
