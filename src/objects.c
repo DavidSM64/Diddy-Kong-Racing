@@ -324,11 +324,11 @@ s32 D_8011B000;
 s32 D_8011B004;
 s32 D_8011B008;
 u8 D_8011B010[16];
-Object *D_8011B020[10];
+Object *D_8011B020[NUMBER_OF_CHARACTERS];
 s32 D_8011B048[4];
 s32 D_8011B058[4];
 u8 D_8011B068[16];
-ColourRGBA D_8011B078[10]; // Note: D_8011B078 might not be a ColourRGBA.
+ColourRGBA D_8011B078[NUMBER_OF_CHARACTERS]; // Note: D_8011B078 might not be a ColourRGBA.
 
 extern s16 gGhostMapID;
 
@@ -2893,7 +2893,7 @@ void render_3d_model(Object *obj) {
             hasEnvCol = TRUE;
         }
         if (obj->behaviorId == BHV_RACER) {
-            racerObj = (Object_Racer *) obj->unk64;
+            racerObj = &obj->unk64->racer;
             object_do_player_tumble(obj);
         } else {
             racerObj = NULL;
@@ -3402,17 +3402,17 @@ void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj,
  * Afterwards, render the graphics with opacity scaling with the fadetimer.
  */
 void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj) {
-    struct Object_Racer *racer;
+    Object_Racer *racer;
     Object_68 *gfxData;
     ObjectModel *mdl;
-    struct RacerShieldGfx *shield;
+    RacerShieldGfx *shield;
     s32 shieldType;
     s32 vehicleID;
     s32 racerIndex;
     f32 scale;
     f32 shear;
 
-    racer = (Object_Racer *) obj->unk64;
+    racer = &obj->unk64->racer;
     if (racer->shieldTimer > 0 && gShieldEffectObject != NULL) {
         gObjectCurrDisplayList = *dList;
         gObjectCurrMatrix = *mtx;
@@ -3425,7 +3425,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         if (vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
             vehicleID = VEHICLE_CAR;
         }
-        shield = ((struct RacerShieldGfx *) get_misc_asset(ASSET_MISC_SHIELD_DATA));
+        shield = (RacerShieldGfx *) get_misc_asset(ASSET_MISC_SHIELD_DATA);
         vehicleID = (vehicleID * 10) + racerIndex;
         shield = shield + vehicleID;
         gShieldEffectObject->segment.trans.x_position = shield->x_position;
@@ -3484,7 +3484,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     f32 shear;
     UNUSED s32 pad;
 
-    racer = (Object_Racer *) obj->unk64;
+    racer = &obj->unk64->racer;
     var_t0 = racer->racerIndex;
     if (D_8011B078[var_t0].a != 0) {
         if (gMagnetEffectObject != NULL) {
@@ -4279,7 +4279,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80019808.s")
 s8 set_course_finish_flags(Settings *settings) {
     Object_Racer *racer;
 
-    racer = (Object_Racer *) gRacersByPosition[PLAYER_ONE]->unk64;
+    racer = &gRacersByPosition[PLAYER_ONE]->unk64->racer;
     if (racer->playerIndex == PLAYER_COMPUTER) {
         return FALSE;
     }
@@ -5081,7 +5081,7 @@ void ainode_update(void) {
     for (i = 0; i < AINODE_COUNT; i++) {
         obj = (*gAINodes)[i];
         if (obj != NULL) {
-            aiNodeObj64 = (Object_AiNode *) obj->unk64;
+            aiNodeObj64 = &obj->unk64->ai_node;
             aiNodeEntry = &obj->segment.level_entry->aiNode;
             for (j = 0; j < 4; j++) {
                 index2 = aiNodeEntry->adjacent[j];
@@ -5239,8 +5239,8 @@ s32 func_8001CC48(s32 nodeCurrent, s32 arg1, s32 direction) {
     if (someObj == NULL) {
         return NODE_NONE;
     }
-    entry = (LevelObjectEntry_AiNode *) someObj->segment.level_entry;
-    someObj64 = (Object_AiNode *) someObj->unk64;
+    entry = &someObj->segment.level_entry->aiNode;
+    someObj64 = &someObj->unk64->ai_node;
     test = direction & 3;
 
     // Swapping these messes up the registers.
@@ -5294,7 +5294,7 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     } while (i < AINODE_COUNT);
 
     aiNodeObj = (*gAINodes)[arg0];
-    aiNode = (Object_AiNode *) aiNodeObj->unk64;
+    aiNode = &aiNodeObj->unk64->ai_node;
     aiNodeEntry = &aiNodeObj->segment.level_entry->aiNode;
     var_t1 = 0;
     var_ra = 0;
@@ -5728,7 +5728,7 @@ void func_8001E6EC(s8 arg0) {
     s32 i;
     s32 j;
     s32 someBool;
-    Object_64 *unk64;
+    Object_Animation *animation;
 
     for (i = 0; i < D_8011AE00; i++) {
         overridePosObj = D_8011ADD8[i];
@@ -5741,14 +5741,14 @@ void func_8001E6EC(s8 arg0) {
             if (j != D_8011AE78 && D_8011AE74[j]->unk64 != NULL) {
                 someBool = (D_8011AE74[j]->unk64->animation.unk5C) ? FALSE : TRUE;
                 if (arg0 != someBool) {
-                    unk64 = D_8011AE74[j]->unk64;
-                    overridePos->x = unk64->animation.x;
-                    overridePos->y = unk64->animation.y;
-                    overridePos->z = unk64->animation.z;
-                    overridePos->anim = &unk64->animation;
-                    unk64->animation.x = overridePosObj->segment.trans.x_position;
-                    unk64->animation.y = overridePosObj->segment.trans.y_position;
-                    unk64->animation.z = overridePosObj->segment.trans.z_position;
+                    animation = &D_8011AE74[j]->unk64->animation;
+                    overridePos->x = animation->x;
+                    overridePos->y = animation->y;
+                    overridePos->z = animation->z;
+                    overridePos->anim = animation;
+                    animation->x = overridePosObj->segment.trans.x_position;
+                    animation->y = overridePosObj->segment.trans.y_position;
+                    animation->z = overridePosObj->segment.trans.z_position;
                 }
             } else {
                 overridePos->anim = NULL;
@@ -5761,7 +5761,7 @@ void func_8001E6EC(s8 arg0) {
 void func_8001E89C(void) {
     s32 i;
     Object *obj;
-    Object_64 *obj64;
+    Object_8001E89C_64  *obj64;
 
     // some flag, flips to 1 when loading a new zone
     if (D_8011AE01 != 0) {
@@ -5772,12 +5772,12 @@ void func_8001E89C(void) {
     // loading (boss) cutscene
     for (i = 0; i < D_8011AE00; i++) {
         obj = D_8011ADD8[i];
-        obj64 = obj->unk64;
+        obj64 = &obj->unk64->obj8001E89C_64;
 
-        if (obj64->obj8001E89C_64.unkC != NULL) {
-            obj64->obj8001E89C_64.unkC->unkC = obj64->obj8001E89C_64.unk0;
-            obj64->obj8001E89C_64.unkC->unk10 = obj64->obj8001E89C_64.unk4;
-            obj64->obj8001E89C_64.unkC->unk14 = obj64->obj8001E89C_64.unk8;
+        if (obj64->unkC != NULL) {
+            obj64->unkC->unkC = obj64->unk0;
+            obj64->unkC->unk10 = obj64->unk4;
+            obj64->unkC->unk14 = obj64->unk8;
         }
     }
 }
@@ -6056,7 +6056,7 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
     s32 i;
     Object_AnimatedObject *animObj;
 
-    animObj = (Object_AnimatedObject *) obj->unk64;
+    animObj = &obj->unk64->animatedObject;
     if (animObj->unk3A != 0) {
         obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     }
