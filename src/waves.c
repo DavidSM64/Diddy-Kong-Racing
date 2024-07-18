@@ -320,7 +320,7 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
         }
         var_a2++;
     } while (var_a2 < 25);
-    
+
     var_s5 = 0;
     for (var_s7 = 0; var_s7 < D_80129FC8.unk0; var_s7++) {
         for (var_s0_4 = 0; var_s0_4 < D_80129FC8.unk0; var_s0_4++) {

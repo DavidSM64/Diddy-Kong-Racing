@@ -497,6 +497,7 @@ void mode_init_taj_race(void);
 void func_8000BADC(s32 updateRate);
 f32 func_8002277C(f32 *data, s32 index, f32 x);
 void race_transition_adventure(s32 updateRate);
+void func_8001E4C4(void);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

@@ -5615,7 +5615,57 @@ UNUSED s32 get_object_list_index(void) {
     return gObjectListStart;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001E4C4.s")
+void func_8001E4C4(void) {
+    Object *obj;
+    s32 lastObjCount;
+    s32 curObjCount;
+    s32 i;
+    s32 j;
+    LevelObjectEntry_Animation *entryAnimation;
+
+    for (i = 0; i < gObjectCount; i++) {
+        gObjPtrList[i]->segment.trans.flags &= ~OBJ_FLAGS_UNK_2000;
+    }
+    for (i = 0; i < gObjectCount; i++) {
+        obj = gObjPtrList[i];
+        if (obj != NULL && !(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && obj->behaviorId == BHV_ANIMATION) {
+            entryAnimation = &obj->segment.level_entry->animation;
+            if (entryAnimation->channel != gCutsceneID && entryAnimation->channel != 20) {
+                obj->segment.trans.flags |= OBJ_FLAGS_UNK_2000;
+                if (obj->unk64 != NULL) {
+                    obj->unk64->animation2.flags |= OBJ_FLAGS_UNK_2000;
+                }
+            }
+        }
+    }
+    curObjCount = gObjectCount - 1;
+    lastObjCount = curObjCount;
+    for (i = 0; curObjCount >= i;) {
+        for (j = 0; lastObjCount >= i && (j == 0);) {
+            if (gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_UNK_2000) {
+                i++;
+            } else {
+                j = -1;
+            }
+        }
+        for (j = 0; curObjCount >= 0 && j == 0;) {
+            if (gObjPtrList[curObjCount]->segment.trans.flags & OBJ_FLAGS_UNK_2000) {
+                j = -1;
+            } else {
+                curObjCount--;
+            }
+        }
+        if (i < curObjCount) {
+            obj = gObjPtrList[i];
+            gObjPtrList[i] = gObjPtrList[curObjCount];
+            gObjPtrList[curObjCount] = obj;
+            i++;
+            curObjCount--;
+        }
+    }
+    gObjectListStart = i;
+    D_8011AE7C = 0;
+}
 
 void func_8001E6EC(s8 arg0) {
     LevelObjectEntry_OverridePos *overridePosEntry;
@@ -5629,7 +5679,7 @@ void func_8001E6EC(s8 arg0) {
     for (i = 0; i < D_8011AE00; i++) {
         overridePosObj = D_8011ADD8[i];
         overridePosEntry = &overridePosObj->segment.level_entry->overridePos;
-        overridePos = (Object_OverridePos *) overridePosObj->unk64;
+        overridePos = &overridePosObj->unk64->override_pos;
         if ((overridePosEntry->cutsceneId == gCutsceneID) || ((overridePosEntry->cutsceneId == 20))) {
             for (j = 0; (j < D_8011AE78) &&
                         (overridePosEntry->behaviorId != D_8011AE74[j]->properties.animatedObj.behaviourID);
