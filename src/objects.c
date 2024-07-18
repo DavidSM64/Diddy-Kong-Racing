@@ -3486,7 +3486,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
 
     racer = (Object_Racer *) obj->unk64;
     var_t0 = racer->racerIndex;
-    if (D_8011B078[var_t0].a) {
+    if (D_8011B078[var_t0].a != 0) {
         if (gMagnetEffectObject != NULL) {
             gObjectCurrDisplayList = *dList;
             gObjectCurrMatrix = *mtx;

@@ -1476,7 +1476,7 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *levelIDs, u8 *vehicleIDs, 
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (ret == CONTROLLER_PAK_GOOD) {
-            fileData = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
+            fileData = allocate_from_main_pool_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
             ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *) fileData, fileSize);
             if (ret == CONTROLLER_PAK_GOOD) {
                 for (i = 0, var_s1 = (GhostHeaderAlt *) (&fileData[4]); i < 6; i++) {
