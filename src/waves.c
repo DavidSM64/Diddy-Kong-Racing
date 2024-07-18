@@ -14,20 +14,15 @@
 /************ .data ************/
 
 f32 *D_800E3040 = NULL;
-s32 *D_800E3044 = NULL;
+s16 *D_800E3044 = NULL;
 s32 *D_800E3048 = NULL;
-s32 *D_800E304C = NULL;
-
-// Could be an array of pointers?
-s32 D_800E3050[8] = {
-    0, 0, 0, 0, 0, 0, 0, 0,
-};
+f32 *D_800E304C[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
 Vertex *D_800E3070[2] = { NULL, NULL };
 s32 *D_800E3078[2] = { NULL, NULL };
 
 // This could also be D_800E3080[2] + D_800E3088[2]
-s32 *D_800E3080[4] = { NULL, NULL, NULL, NULL };
+u8 *D_800E3080[4] = { NULL, NULL, NULL, NULL };
 
 /* Size: 0x10, might just be an array? */
 typedef struct unk800E3090 {
@@ -85,7 +80,8 @@ s32 D_80129FC4;
 unk80129FC8 D_80129FC8;
 s32 D_8012A018;
 f32 D_8012A01C;
-f32 D_8012A020[2];
+f32 D_8012A020;
+UNUSED s32 D_8012A024;
 unk8012A028 *D_8012A028[20];
 s32 D_8012A078;
 TriangleBatchInfo *gWaveBatch;
@@ -146,7 +142,7 @@ void free_waves(void) {
     FREE_MEM(D_800E3040);
     FREE_MEM(D_800E3044);
     FREE_MEM(D_800E3048);
-    FREE_MEM(D_800E304C);
+    FREE_MEM(D_800E304C[0]);
     FREE_MEM(D_800E3070[0]);
     FREE_MEM(D_800E3080[0]);
     FREE_TEX(D_800E30D0);
@@ -159,69 +155,44 @@ void free_waves(void) {
     D_800E3188 = NULL;
 }
 
-#ifdef NON_EQUIVALENT
-// wave_init
-void func_800B7EB4(void) {
-    s32 *var_v1;
-    s32 temp_lo;
-    s32 temp_t7;
-    s32 temp_t9;
-    s32 temp_v1;
-    s32 var_a1;
-    s32 var_a2;
-    s32 var_a3;
-    s32 var_t0;
-    s32 var_t1;
+void wave_init(void) {
+    s32 temp;
+    s32 allocSize;
+    s32 i;
 
     free_waves();
-    D_800E3040 = (s32 *) allocate_from_main_pool_safe(D_80129FC8.unk20 << 2, COLOUR_TAG_CYAN);
+    D_800E3040 = (f32 *) allocate_from_main_pool_safe(D_80129FC8.unk20 << 2, COLOUR_TAG_CYAN);
     D_800E3044 = (s32 *) allocate_from_main_pool_safe((D_80129FC8.unk4 << 2) * D_80129FC8.unk4, COLOUR_TAG_CYAN);
     D_800E3048 =
         (s32 *) allocate_from_main_pool_safe(((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1), COLOUR_TAG_CYAN);
-    temp_lo = ((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1);
-    D_800E304C = allocate_from_main_pool_safe(temp_lo * 9, COLOUR_TAG_CYAN);
-
-    // for (var_a1 = 1; var_a1 < 4; var_a1++) {
-    //     D_800E3050[var_a1] = (s32 *) ((u32) D_800E304C + (temp_lo * var_a1));
-    // }
-
-    var_v1 = D_800E3050;
-    var_a1 = 1;
-    do {
-        var_v1[0] = (s32 *) (D_800E304C + temp_lo);
-        var_v1[1] = (s32 *) (D_800E304C + (temp_lo * 2));
-        var_v1[2] = (s32 *) (D_800E304C + (temp_lo * 3));
-        var_v1[3] = (s32 *) (D_800E304C + (temp_lo * 4));
-        var_v1 += 4;
-        var_a1 += 4;
-    } while (var_a1 < 9);
-
-    // temp_lo = (D_80129FC8.unk0 + 1) * 250 * (D_80129FC8.unk0 + 1);
-    temp_lo = ((((D_80129FC8.unk0 + 1) << 5) - D_80129FC8.unk0) * 10) * (D_80129FC8.unk0 + 1);
-    if (D_8012A078 != 2) {
-        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 1, COLOUR_TAG_CYAN);
-        D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
-    } else {
-        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 2, COLOUR_TAG_CYAN);
-        D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
-        D_800E3070[2] = (s32 *) ((u32) D_800E3070[1] + temp_lo);
-        D_800E3070[3] = (s32 *) ((u32) D_800E3070[2] + temp_lo);
+    allocSize = ((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1);
+    D_800E304C[0] = allocate_from_main_pool_safe(allocSize * ARRAY_COUNT(D_800E304C), COLOUR_TAG_CYAN);
+    for (i = 1; i < ARRAY_COUNT(D_800E304C); i++) {
+        D_800E304C[i] = (f32 *) (((u32) D_800E304C[0]) + (allocSize * i));
     }
-    temp_lo = (D_80129FC8.unk0 << 5) * D_80129FC8.unk0;
+    temp = (D_80129FC8.unk0 + 1);
+    allocSize = (temp * 250 * (D_80129FC8.unk0 + 1));
     if (D_8012A078 != 2) {
-        D_800E3080[0] = allocate_from_main_pool_safe(temp_lo << 1, COLOUR_TAG_CYAN);
-        D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + temp_lo);
+        D_800E3070[0] = (Vertex *) allocate_from_main_pool_safe(allocSize << 1, COLOUR_TAG_CYAN);
+        D_800E3070[1] = (Vertex *) (((u32) D_800E3070[0]) + allocSize);
     } else {
-        D_800E3080[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 2, COLOUR_TAG_CYAN);
-        D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + temp_lo);
-        D_800E3080[2] = (s32 *) ((u32) D_800E3080[1] + temp_lo);
-        D_800E3080[3] = (s32 *) ((u32) D_800E3080[2] + temp_lo);
+        D_800E3070[0] = (Vertex *) allocate_from_main_pool_safe(allocSize << 2, COLOUR_TAG_CYAN);
+        D_800E3070[1] = (Vertex *) (((u32) D_800E3070[0]) + allocSize);
+        D_800E3070[2] = (Vertex *) (((u32) D_800E3070[1]) + allocSize);
+        D_800E3070[3] = (Vertex *) (((u32) D_800E3070[2]) + allocSize);
+    }
+    allocSize = (D_80129FC8.unk0 * 32) * D_80129FC8.unk0;
+    if (D_8012A078 != 2) {
+        D_800E3080[0] = allocate_from_main_pool_safe(allocSize << 1, COLOUR_TAG_CYAN);
+        D_800E3080[1] = (s32 *) (((u32) D_800E3080[0]) + allocSize);
+    } else {
+        D_800E3080[0] = (s32 *) allocate_from_main_pool_safe(allocSize << 2, COLOUR_TAG_CYAN);
+        D_800E3080[1] = (s32 *) (((u32) D_800E3080[0]) + allocSize);
+        D_800E3080[2] = (s32 *) (((u32) D_800E3080[1]) + allocSize);
+        D_800E3080[3] = (s32 *) (((u32) D_800E3080[2]) + allocSize);
     }
     D_800E30D0 = load_texture(D_80129FC8.unk2C);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/waves/func_800B7EB4.s")
-#endif
 
 void func_800B8134(LevelHeader *header) {
     if (D_8012A078 != 2) {
@@ -254,7 +225,181 @@ void func_800B8134(LevelHeader *header) {
     D_80129FC8.unk4C = header->unk70_u8;
 }
 
+#ifdef NON_EQUIVALENT
+void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
+    s32 sp54;
+    s32 sp4C;
+    s32 temp_lo;
+    s32 var_a0;
+    s32 var_a0_2;
+    s32 var_a2;
+    s32 var_fp;
+    s32 var_s0;
+    s32 var_s0_3;
+    s32 var_s3;
+    s32 var_s5;
+    s32 var_s6;
+    s32 var_s7;
+    s8 var_s0_4;
+    s32 i;
+    s32 j;
+
+    D_8012A078 = arg2;
+    func_800B8134(arg1);
+    wave_init();
+    func_800BBDDC(arg0, arg1);
+    D_8012A0A0 = (f32) gWaveBoundingBoxDiffX;
+    D_8012A0A4 = (f32) gWaveBoundingBoxDiffZ;
+    D_8012A0B8 = D_8012A0A0 / D_80129FC8.unk0;
+    D_8012A0BC = D_8012A0A4 / D_80129FC8.unk0;
+    D_8012A084 = 0;
+    D_8012A088 = 0;
+    D_8012A08C = ((gWaveTexture->width * D_80129FC8.unk30) * 32) / D_80129FC8.unk0;
+    D_8012A090 = ((gWaveTexture->height * D_80129FC8.unk34) * 32) / D_80129FC8.unk0;
+    D_8012A094 = (gWaveTexture->width * 32) - 1;
+    D_8012A098 = (gWaveTexture->height * 32) - 1;
+    D_8012A09C = 0;
+    var_s6 = D_80129FC8.unk10;
+    var_fp = D_80129FC8.unk1C;
+    sp54 = (D_80129FC8.unk8 << 16) / D_80129FC8.unk20;
+    sp4C = (D_80129FC8.unk14 << 16) / D_80129FC8.unk20;
+    D_8012A01C = 10000.0f;
+    D_8012A020 = -10000.0f;
+    var_s7 = 0;
+    for (var_s0 = 0; var_s0 < D_80129FC8.unk20; var_s0++) {
+        D_800E3040[var_s0] = (sins_f(var_s6) * D_80129FC8.unkC) + (sins_f(var_fp) * D_80129FC8.unk18);
+        if (D_80129FC8.unk28 != 0) {
+            D_800E3040[var_s0] *= 2.0f;
+        }
+        if (D_800E3040[var_s0] < D_8012A01C) {
+            D_8012A01C = D_800E3040[var_s0];
+        }
+        if (D_8012A020 < D_800E3040[var_s0]) {
+            D_8012A020 = D_800E3040[var_s0];
+        }
+        var_s6 += sp54;
+        var_fp += sp4C;
+    }
+    save_rng_seed();
+    set_rng_seed(0x57415646);
+    var_s5 = 0;
+    for (; var_s7 < D_80129FC8.unk4; var_s7++) {
+        for (var_s0 = 0; var_s0 < D_80129FC8.unk4; var_s0++) {
+            D_800E3044[(var_s5 * 2)] = get_random_number_from_range(0, D_80129FC8.unk20 - 1);
+            D_800E3044[(var_s5 * 2) + 1] = get_random_number_from_range(0, D_80129FC8.unk20 - 1);
+            var_s5++;
+        }
+    }
+    load_rng_seed();
+    if (arg2 != 2) {
+        var_s3 = 2;
+    } else {
+        var_s3 = 4;
+    }
+    var_a2 = 0;
+    var_s5 = 0;
+    do {
+        for (var_s7 = 0; (D_80129FC8.unk0 >= var_s7); var_s7++) {
+            for (var_s0_3 = 0; D_80129FC8.unk0 >= var_s0_3; var_s0_3++) {
+                for (var_a0 = 0; var_a0 < var_s3; var_a0++) {
+                    D_800E3070[var_a0][var_s5].x = (var_s0_3 * D_8012A0B8) + 0.5;
+                    D_800E3070[var_a0][var_s5].z = (var_s7 * D_8012A0BC) + 0.5;
+                    if (D_80129FC8.unk4C == 0) {
+                        D_800E3070[var_a0][var_s5].r = 255;
+                        D_800E3070[var_a0][var_s5].g = 255;
+                        D_800E3070[var_a0][var_s5].b = 255;
+                    } else {
+                        D_800E3070[var_a0][var_s5].r = 0;
+                        D_800E3070[var_a0][var_s5].g = 0;
+                        D_800E3070[var_a0][var_s5].b = 0;
+                    }
+                    D_800E3070[var_a0][var_s5].a = 255;
+                }
+                var_s5++;
+            }
+        }
+        var_a2++;
+    } while (var_a2 < 25);
+
+    var_s5 = 0;
+    for (var_s7 = 0; var_s7 < D_80129FC8.unk0; var_s7++) {
+        for (var_s0_4 = 0; var_s0_4 < D_80129FC8.unk0; var_s0_4++) {
+            for (var_a0_2 = 0; var_a0_2 < var_s3; var_a0_2++) {
+                D_800E3080[var_s5 * 16][var_a0_2] = 0x40;
+            }
+            var_s5 += 2;
+        }
+    }
+    func_800BC6C8();
+    temp_lo = D_80129FC8.unk0 * (D_80129FC8.unk0 + 1);
+    // var_a3 = D_800E3070;
+    // var_a0_3 = D_8012A028;
+    // do {
+    //     temp_a1_2 = *var_a3;
+    //     var_a3 += 4;
+    //     // var_a0_3->unk2 = 0;
+    //     // var_a0_3->unk0 = (s16) temp_a1_2->x;
+    //     // temp_v0_4 = &temp_a1_2[D_80129FC8.unk0];
+    //     // var_a0_3->unk4 = (s16) temp_a1_2->z;
+    //     // temp_a2 = &temp_a1_2[temp_lo];
+    //     // var_a0_3->unk6 = (u8) temp_a1_2->r;
+    //     // var_a0_3 += 0x28;
+    //     // var_a0_3->unk-21 = (u8) temp_a1_2->g;
+    //     // var_a0_3->unk-20 = (u8) temp_a1_2->b;
+    //     // var_a0_3->unk-1F = (u8) temp_a1_2->a;
+    //     // var_a0_3->unk-1C = 0;
+    //     // var_a0_3->unk-1E = (s16) temp_v0_4->x;
+    //     // var_a0_3->unk-1A = (s16) temp_v0_4->z;
+    //     // var_a0_3->unk-18 = (u8) temp_v0_4->r;
+    //     // var_a0_3->unk-17 = (u8) temp_v0_4->g;
+    //     // var_a0_3->unk-16 = (u8) temp_v0_4->b;
+    //     // var_a0_3->unk-15 = (u8) temp_v0_4->a;
+    //     // var_a0_3->unk-12 = 0;
+    //     // var_a0_3->unk-14 = (s16) temp_a2->x;
+    //     // var_a0_3->unk-10 = (s16) temp_a2->z;
+    //     // var_a0_3->unk-E = (u8) temp_a2->r;
+    //     // var_a0_3->unk-D = (u8) temp_a2->g;
+    //     // temp_v0_5 = &(&temp_a1_2[temp_lo])[D_80129FC8.unk0];
+    //     // var_a0_3->unk-C = (u8) temp_a2->b;
+    //     // var_a0_3->unk-B = (u8) temp_a2->a;
+    //     // var_a0_3->unk-8 = 0;
+    //     // var_a0_3->unk-A = (s16) temp_v0_5->x;
+    //     // var_a0_3->unk-6 = (s16) temp_v0_5->z;
+    //     // var_a0_3->unk-4 = (u8) temp_v0_5->r;
+    //     // var_a0_3->unk-3 = (u8) temp_v0_5->g;
+    //     // var_a0_3->unk-2 = (u8) temp_v0_5->b;
+    //     // var_a0_3->unk-1 = (u8) temp_v0_5->a;
+    // } while ((u32)var_a3 != (u32)D_800E3078);
+
+    for (i = 0; i < ARRAY_COUNT(D_8012A028); i++) {
+        for (j = 0; j < ARRAY_COUNT(D_800E3070); j++) {
+            D_8012A028[i]->vert[temp_lo].x = D_800E3070[temp_lo + i][j].x;
+            D_8012A028[i]->vert[temp_lo].y = 0;
+            D_8012A028[i]->vert[temp_lo].z = D_800E3070[temp_lo + i][j].z;
+            D_8012A028[i]->vert[temp_lo].r = D_800E3070[temp_lo + i][j].r;
+            D_8012A028[i]->vert[temp_lo].g = D_800E3070[temp_lo + i][j].g;
+            D_8012A028[i]->vert[temp_lo].b = D_800E3070[temp_lo + i][j].b;
+            D_8012A028[i]->vert[temp_lo].a = D_800E3070[temp_lo + i][j].a;
+        }
+    }
+
+    func_800BCC70(arg0);
+    if (D_80129FC8.unk24 == 3) {
+        D_800E30E0 = D_800E30E8;
+        D_800E30E4 = D_800E30FC;
+    } else {
+        D_80129FC8.unk24 = 5;
+        D_800E30E0 = D_800E3110;
+        D_800E30E4 = D_800E3144;
+    }
+    D_800E3188 = 0;
+    gWavePowerDivisor = 0;
+    gWaveGeneratorObj = NULL;
+    D_8012A018 = 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/waves/func_800B82B4.s")
+#endif
 
 void func_800B8B8C(void) {
     s32 temp_v0;

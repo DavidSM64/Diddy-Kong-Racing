@@ -19,16 +19,14 @@
 /************ .data ************/
 
 SnowGfxData gWeatherPresets[3] = {
-    { 0, 0x40, (TextureHeader *) 0, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8,
-      8 }, // Snow
-    { 0, 0x100, (TextureHeader *) 1, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8,
-      8 }, // Rain
-    { 0, 0x08, (TextureHeader *) 2, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8,
-      8 }, // Unused, game crashes with this.
+    { 0, 0x40, { WEATHER_SNOW }, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
+    { 0, 0x100, { WEATHER_RAIN }, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
+    // Unused, game crashes with this.
+    { 0, 0x08, { WEATHER_UNK }, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
 };
 
 SnowPosData *gSnowPhysics = NULL;
-SnowGfxData gSnowGfx = { NULL, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+SnowGfxData gSnowGfx = { NULL, 0, { NULL }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 Vertex *gSnowVerts = NULL;
 s32 gSnowVertCount = 0;
@@ -264,7 +262,7 @@ void weather_reset(s32 weatherType, s32 density, s32 velX, s32 velY, s32 velZ, s
     if (weatherType > WEATHER_RAIN) {
         weatherType = WEATHER_RAIN;
     }
-    if (gWeatherPresets[weatherType].texture == ((TextureHeader *) 1)) {
+    if (gWeatherPresets[weatherType].type == WEATHER_RAIN) {
         rain_init(intensity + 1, opacity + 1);
         return;
     }
@@ -282,7 +280,7 @@ void weather_reset(s32 weatherType, s32 density, s32 velX, s32 velY, s32 velZ, s
     gSnowGfx.vertOffsetH = gWeatherPresets[weatherType].vertOffsetH;
     gSnowGfx.vertWidth = gSnowGfx.vertOffsetW * 2;
     gSnowGfx.vertHeight = gSnowGfx.vertOffsetH * 2;
-    if (gWeatherPresets[weatherType].texture == NULL) {
+    if (gWeatherPresets[weatherType].type == WEATHER_SNOW) {
         snow_init();
     }
     numOfElements = density;
@@ -638,7 +636,7 @@ void lensflare_init(Object *obj) {
 /**
  * Based on face direction, start rendering lens flare effects on screen.
  * Each element is shifted based on the preset to create the effect of the sun shining in your face.
-*/
+ */
 void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *segment) {
     u16 height;
     f32 mag2;
@@ -913,7 +911,7 @@ void rain_update(s32 updateRate) {
  * If it's raining hard enough, then start generating rain splash particles.
  * Set position to be a random spot near the camera and account for wave height.
  * Every existing splash particle gets rendered as a billboard.
-*/
+ */
 void rain_render_splashes(s32 updateRate) {
     s32 temp_t0;
     s32 i;

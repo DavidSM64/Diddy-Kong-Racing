@@ -322,13 +322,16 @@ typedef struct unk800149C0 {
 // Size: 0x80 bytes.
 typedef struct Asset20 {
     f32 unk0;
-    s32 pad4[27];
+    u8 pad4[0x68];
+    s16 unk6C;
+    s16 unk6E;
     u8 unk70;
     u8 unk71;
     u8 unk72;
     s8 unk73;
     f32 unk74;
-    u8 pad78[0x8];
+    Sprite *unk78;
+    TextureHeader *unk7C;
 } Asset20;
 
 #define CIC_ID 6103
@@ -497,6 +500,8 @@ void mode_init_taj_race(void);
 void func_8000BADC(s32 updateRate);
 f32 func_8002277C(f32 *data, s32 index, f32 x);
 void race_transition_adventure(s32 updateRate);
+void func_8001E4C4(void);
+void func_8000B020(s32 numberOfVertices, s32 numberOfTriangles);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -515,7 +520,6 @@ void func_80012F94(Object *);
 void func_800101AC(Object *, s32);
 void func_800135B8(Object *);
 void func_8000CC7C(Vehicle, u32, s32);
-void func_8000B020(s32, s32);
 void func_80017E98(void);
 void spectate_update(void);
 void func_8001E93C(void);
