@@ -328,27 +328,81 @@ Object *D_8011B020[10];
 s32 D_8011B048[4];
 s32 D_8011B058[4];
 u8 D_8011B068[16];
-u8 D_8011B078[3];
-u8 D_8011B07B[1];
-s32 D_8011B080[7];
+ColourRGBA D_8011B078[10]; // Note: D_8011B078 might not be a ColourRGBA.
 
 extern s16 gGhostMapID;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000B020.s")
+typedef struct LevelObjectEntry_unk8000B020 {
+    LevelObjectEntryCommon common;
+    s8 unk8;
+    s8 unk9;
+} LevelObjectEntry_unk8000B020;
 
-struct TempStruct9 {
-    u8 pad[0x78];
-    Sprite *unk78;
-    TextureHeader *unk7C;
-};
+void func_8000B020(s32 numberOfVertices, s32 numberOfTriangles) {
+    Asset20 *miscAsset20;
+    LevelObjectEntry_unk8000B020 objEntry;
+    s32 i;
+
+    D_800DC754[0] =
+        (s32) allocate_from_main_pool_safe(((numberOfTriangles * 16) + (numberOfVertices * 10)) * 2, COLOUR_TAG_BLUE);
+    D_800DC754[1] = D_800DC754[0] + (numberOfTriangles * 16);
+    D_800DC74C[0] = D_800DC754[1] + (numberOfTriangles * 16);
+    D_800DC74C[1] = D_800DC74C[0] + (numberOfVertices * 10);
+    D_8011AFF8 = numberOfVertices;
+    D_8011AFFC = 0;
+    D_8011B000 = numberOfTriangles;
+    D_8011B004 = 0;
+    D_8011B008 = 0;
+    miscAsset20 = (Asset20 *) get_misc_asset(ASSET_MISC_20);
+    for (i = 0; i < ARRAY_COUNT(D_8011B020); i++) {
+        objEntry.common.objectID = ASSET_OBJECT_ID_BOOST;
+        objEntry.common.size = 10;
+        objEntry.common.x = 0;
+        objEntry.common.y = 0;
+        objEntry.common.z = 0;
+        objEntry.unk8 = i;
+        D_8011B020[i] = spawn_object(&objEntry.common, 1);
+        if (D_8011B020[i] != NULL) {
+            D_8011B020[i]->properties.common.unk0 = 0;
+            D_8011B020[i]->properties.common.unk4 = 0;
+            miscAsset20[i].unk70 = 0;
+            miscAsset20[i].unk74 = 0.0f;
+            miscAsset20[i].unk78 = (Sprite *) func_8007C12C(miscAsset20[i].unk6C, 0);
+            miscAsset20[i].unk7C = load_texture(miscAsset20[i].unk6E);
+            miscAsset20[i].unk72 = get_random_number_from_range(0, 255);
+            miscAsset20[i].unk73 = 0;
+            D_8011B010[i] = get_random_number_from_range(0, 255);
+        }
+        D_8011B068[i] = 1;
+    }
+    D_800DC760 = 9;
+    objEntry.common.objectID = ASSET_OBJECT_ID_SHIELD;
+    objEntry.common.size = 10;
+    objEntry.common.x = 0;
+    objEntry.common.y = 0;
+    objEntry.common.z = 0;
+    gShieldEffectObject = spawn_object((LevelObjectEntryCommon *) &objEntry, 0);
+    for (i = 0; i < ARRAY_COUNT(D_8011B078); i++) {
+        D_8011B078[i].r = 0;
+        D_8011B078[i].g = get_random_number_from_range(0, 255);
+        D_8011B078[i].b = get_random_number_from_range(0, 255);
+        D_8011B078[i].a = 0;
+    }
+    objEntry.common.objectID = ASSET_OBJECT_ID_AINODE;
+    objEntry.common.size = 138;
+    objEntry.common.x = 0;
+    objEntry.common.y = 0;
+    objEntry.common.z = 0;
+    gMagnetEffectObject = spawn_object((LevelObjectEntryCommon *) &objEntry, 0);
+}
 
 void func_8000B290(void) {
-    Sprite *temp_a0_2;
-    TextureHeader *temp_a0_3;
+    Sprite *sprite;
+    TextureHeader *texture;
     s32 temp_a0;
-    struct TempStruct9 *var_s0;
+    Asset20 *asset20;
     u32 i;
 
     temp_a0 = D_800DC754[0];
@@ -359,25 +413,25 @@ void func_8000B290(void) {
         D_800DC74C[0] = 0;
         D_800DC74C[1] = 0;
     }
-    var_s0 = (struct TempStruct9 *) get_misc_asset(ASSET_MISC_20);
+    asset20 = (Asset20 *) get_misc_asset(ASSET_MISC_20);
     for (i = 0; i < 10; i++) {
-        temp_a0_2 = var_s0[i].unk78;
-        if (temp_a0_2 != 0) {
-            free_sprite(temp_a0_2);
-            var_s0[i].unk78 = 0;
+        sprite = asset20[i].unk78;
+        if (sprite != NULL) {
+            free_sprite(sprite);
+            asset20[i].unk78 = NULL;
         }
-        temp_a0_3 = var_s0[i].unk7C;
-        if (temp_a0_3 != 0) {
-            free_texture(temp_a0_3);
-            var_s0[i].unk7C = 0;
+        texture = asset20[i].unk7C;
+        if (texture != NULL) {
+            free_texture(texture);
+            asset20[i].unk7C = NULL;
         }
     }
-    if (gShieldEffectObject) {
+    if (gShieldEffectObject != NULL) {
         free_object(gShieldEffectObject);
     }
     gShieldEffectObject = NULL;
 
-    if (gMagnetEffectObject) {
+    if (gMagnetEffectObject != NULL) {
         free_object(gMagnetEffectObject);
     }
     gMagnetEffectObject = NULL;
@@ -451,7 +505,7 @@ void func_8000BADC(s32 updateRate) {
                     asset20Part->unk74 -= updateRateF * 0.05f;
                     updateRateF = 0.0f;
                     if (asset20Part->unk74 < 0.0f) {
-                        asset20Part->unk70 = 0U;
+                        asset20Part->unk70 = 0;
                         asset20Part->unk74 += 1.0f;
                     }
                 }
@@ -460,27 +514,27 @@ void func_8000BADC(s32 updateRate) {
                     if (asset20Part->unk74 < 0.0f) {
                         asset20Part->unk74 = 0.0f;
                     }
-                    asset20Part->unk70 = 0U;
+                    asset20Part->unk70 = 0;
                 }
             }
         }
         if ((asset20Part->unk70 > 0) || (asset20Part->unk74 > 0.0f)) {
             func_8000B750((*gRacers)[i], racer->racerIndex, racer->vehicleIDPrev, racer->boostType, 0);
         }
-        temp = racer->racerIndex << 2;
-        D_8011B078[temp + 1] += updateRate;
-        D_8011B078[temp + 2] += updateRate;
+        temp = racer->racerIndex;
+        D_8011B078[temp].g += updateRate;
+        D_8011B078[temp].b += updateRate;
         if (racer->magnetTimer != 0) {
-            if (D_8011B078[temp + 3] + (updateRate << 2) < 32) {
-                D_8011B078[temp + 3] += (updateRate << 2);
+            if (D_8011B078[temp].a + (updateRate << 2) < 32) {
+                D_8011B078[temp].a += (updateRate << 2);
             } else {
-                D_8011B078[temp + 3] = 32;
+                D_8011B078[temp].a = 32;
             }
         } else {
-            if (D_8011B078[temp + 3] - updateRate > 0) {
-                D_8011B078[temp + 3] -= updateRate;
+            if (D_8011B078[temp].a - updateRate > 0) {
+                D_8011B078[temp].a -= updateRate;
             } else {
-                D_8011B078[temp + 3] = 0;
+                D_8011B078[temp].a = 0;
             }
         }
     }
@@ -3431,8 +3485,8 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     UNUSED s32 pad;
 
     racer = (Object_Racer *) obj->unk64;
-    var_t0 = racer->racerIndex * 4;
-    if (D_8011B07B[var_t0]) {
+    var_t0 = racer->racerIndex;
+    if (D_8011B078[var_t0].a) {
         if (gMagnetEffectObject != NULL) {
             gObjectCurrDisplayList = *dList;
             gObjectCurrMatrix = *mtx;
@@ -3451,17 +3505,17 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gMagnetEffectObject->segment.trans.y_position = magnet[1];
             gMagnetEffectObject->segment.trans.z_position = magnet[2];
             magnet += 3;
-            shear = (coss_f((D_8011B078[(var_t0 * 4) + 1] * 0x400)) * 0.02f) + 0.98f;
+            shear = (coss_f((D_8011B078[var_t0].g * 0x400)) * 0.02f) + 0.98f;
             gMagnetEffectObject->segment.trans.scale = magnet[0] * shear;
             magnet += 1;
             shear = magnet[0] * shear;
-            gMagnetEffectObject->segment.trans.y_rotation = D_8011B078[(var_t0 * 4) + 2] * 0x1000;
+            gMagnetEffectObject->segment.trans.y_rotation = D_8011B078[var_t0].b * 0x1000;
             gMagnetEffectObject->segment.trans.x_rotation = 0;
             gMagnetEffectObject->segment.trans.z_rotation = 0;
             gfxData = *gMagnetEffectObject->unk68;
             mdl = gfxData->objModel;
             gMagnetEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->animationTaskNum];
-            opacity = ((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80;
+            opacity = ((D_8011B078[var_t0].g * 8) & 0x7F) + 0x80;
             func_8007F594(&gObjectCurrDisplayList, 2, COLOUR_RGBA32(255, 255, 255, opacity),
                           gMagnetColours[racer->magnetModelID]);
             apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);
