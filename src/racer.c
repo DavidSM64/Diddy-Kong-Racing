@@ -143,7 +143,6 @@ s32 gCurrentCarSteerVel;
 s32 D_8011D558;
 s32 gCurrentPlayerIndex;
 s16 D_8011D560; // Set, but never read.
-UNUSED s16 D_8011D562;
 f32 *gCurrentRacerMiscAssetPtr;
 f32 *D_8011D568;
 f32 gCurrentRacerWeightStat;

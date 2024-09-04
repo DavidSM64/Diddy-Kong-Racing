@@ -6355,7 +6355,7 @@ s32 get_object_property_size(Object *obj, Object_64 *obj64) {
             ret = sizeof(Object_AudioLine);
             break;
         case BHV_AINODE:
-            ret = 0x1C;
+            ret = sizeof(Object_AiNode);
             break;
         case BHV_MODECHANGE:
         case BHV_BONUS:
@@ -6396,7 +6396,7 @@ s32 get_object_property_size(Object *obj, Object_64 *obj64) {
             ret = sizeof(Object_LaserGun);
             break;
         case BHV_OVERRIDE_POS:
-            ret = 0x10;
+            ret = sizeof(Object_OverridePos);
             break;
         case BHV_DINO_WHALE:
         case BHV_ANIMATED_OBJECT:
