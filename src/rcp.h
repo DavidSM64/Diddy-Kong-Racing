@@ -65,7 +65,6 @@ extern s8 rspF3DDKRFifoStart[];
 extern s8 rspF3DDKRDataFifoStart[];
 
 s32 wait_for_gfx_task(void);
-void func_80077AAC(void *bufPtr, s32 bufSize, UNUSED s32 arg2);
 void set_background_prim_colour(u8 red, u8 green, u8 blue);
 void set_background_fill_colour(s32 red, s32 green, s32 blue);
 void init_rdp_and_framebuffer(Gfx **dList);
