@@ -10,6 +10,7 @@
 .section .text
 
 glabel entrypoint
+.ent entrypoint
 /* 001000 80000400 3C08800F */  lui   $t0, %hi(gBssSectionStart) # $t0, 0x800f
 /* 001004 80000404 3C090004 */  lui   $t1, %hi(__BSS_SECTION_SIZE) # lui $t1, 4
 /* 001008 80000408 2508BF60 */  addiu $t0, %lo(gBssSectionStart) # addiu $t0, $t0, -0x40a0
@@ -31,3 +32,4 @@ glabel entrypoint
 /* 001044 80000444 00000000 */  nop   
 /* 001048 80000448 00000000 */  nop   
 /* 00104C 8000044C 00000000 */  nop   
+.end entrypoint
