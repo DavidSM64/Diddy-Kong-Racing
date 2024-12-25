@@ -7,9 +7,9 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of July 4, 2024, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 67.54%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 67.74%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 48.33%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 49.32%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -130,26 +130,26 @@ As of July 4th, 2024, this is our current score:
 ```
  =============================================
     ADVENTURE ONE (ASM -> C Decompilation)
- --- 67.54% Complete (70.04% NON_MATCHING) ---
-         # Decompiled functions: 1692
-          # GLOBAL_ASM remaining: 153
+ --- 67.74% Complete (70.25% NON_MATCHING) ---
+         # Decompiled functions: 1695
+          # GLOBAL_ASM remaining: 150
          # NON_MATCHING functions: 14
       # NON_EQUIVALENT WIP functions: 49
  ---------------- Game Status ----------------
    Balloons: 32/47, Keys: 3/4, Trophies: 3/5
     T.T. Amulets: 3/4, Wizpig Amulets: 3/4
  ---------------------------------------------
- We are racing in Greenwood Village. (Lap 2/3)
+ We are racing in Greenwood Village. (Lap 3/3)
  =============================================
      ADVENTURE TWO (Cleanup & Documentation)
- -------------- 48.33% Complete --------------
-         # Documented functions: 1068
-         # Undocumented remaining: 500
+ -------------- 49.32% Complete --------------
+         # Documented functions: 1080
+         # Undocumented remaining: 488
  ---------------- Game Status ----------------
-   Balloons: 23/47, Keys: 2/4, Trophies: 2/5
+   Balloons: 24/47, Keys: 3/4, Trophies: 2/5
     T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  ---------------------------------------------
-  We are racing in Crescent Island. (Lap 3/3)
+   We are racing in Pirate Lagoon. (Lap 2/3)
  =============================================
 ```
 <!-- README_SCORE_END -->

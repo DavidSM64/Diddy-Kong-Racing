@@ -7,14 +7,18 @@
 
 typedef enum WeatherType {
     WEATHER_SNOW,
-    WEATHER_RAIN
+    WEATHER_RAIN,
+    WEATHER_UNK
 } WeatherType;
 
 /* Size: 0x2C Bytes */
 typedef struct SnowGfxData {
     Vec3i *pos;
     s32 size;
-    TextureHeader *texture;
+    union {
+        WeatherType type;
+        TextureHeader *texture;
+    };
     s32 offsetX;
     s32 offsetY;
     s32 offsetZ;
