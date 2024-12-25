@@ -5761,7 +5761,7 @@ void func_8001E6EC(s8 arg0) {
 void func_8001E89C(void) {
     s32 i;
     Object *obj;
-    Object_8001E89C_64  *obj64;
+    Object_8001E89C_64 *obj64;
 
     // some flag, flips to 1 when loading a new zone
     if (D_8011AE01 != 0) {

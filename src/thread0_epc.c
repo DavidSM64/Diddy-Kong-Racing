@@ -243,7 +243,7 @@ s32 get_lockup_status(void) {
  * Counts up. Automatically switches page every second.
  * Official name: diCpuTraceTick
  */
-void lockup_screen_loop(s32 updateRate) {
+void mode_lockup(s32 updateRate) {
     sLockupDelay += updateRate;
     if (sLockupDelay > 60) {
         sLockupDelay = 0;

@@ -1273,7 +1273,8 @@ SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
         ghostBody[i].unk2 = ghostBody[1].unk2;
     }
 
-    func_80074AA8((GhostHeader *) (AS_BYTES(ghost) + ghostBody[0].unk2), ghostCharacterId, ghostTime, ghostNodeCount, dest);
+    func_80074AA8((GhostHeader *) (AS_BYTES(ghost) + ghostBody[0].unk2), ghostCharacterId, ghostTime, ghostNodeCount,
+                  dest);
     pakStatus = write_controller_pak_file(controllerIndex, -1, "DKRACING-GHOSTS", "", (u8 *) ghost, sp24 + GHSS_SIZE);
     free_from_memory_pool(ghost);
     return pakStatus;
@@ -1760,7 +1761,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
 /**
  * Free the controller pak file list from memory.
  * Officla Name: pakDirectoryFree
-*/
+ */
 void cpak_free_files(void) {
     if (gPakFileList) {
         free_from_memory_pool(gPakFileList);

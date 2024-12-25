@@ -709,7 +709,7 @@ void spawn_skydome(s32 objectID) {
 
 #ifdef ANTI_TAMPER
     // Antipiracy measure
-    compare_balloon_checksums();
+    drm_checksum_balloon();
 #endif
     if (objectID == -1) {
         gSkydomeSegment = NULL;

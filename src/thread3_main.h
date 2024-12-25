@@ -156,7 +156,7 @@ void safe_mark_write_save_file(s32 saveFileIndex);
 void mark_save_file_to_erase(s32 saveFileIndex);
 void mark_read_eeprom_settings(void);
 void mark_write_eeprom_settings(void);
-s32 check_dmem_validity(void);
+s32 drm_validate_dmem(void);
 void level_transition_begin(s32 type);
 void func_8006F20C(void);
 void begin_trophy_race_teleport(void);
@@ -165,14 +165,14 @@ void begin_level_teleport(s32 levelID);
 void set_pause_lockout_timer(u8 time);
 void swap_lead_player(void);
 void set_frame_blackout_timer(void);
-void pre_intro_loop(void);
+void mode_intro(void);
 s32 is_controller_missing(void);
-s32 check_imem_validity(void);
-void ingame_logic_loop(s32 updateRate);
+s32 drm_validate_imem(void);
+void mode_game(s32 updateRate);
 void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
 void init_level_globals(void);
 void alloc_displaylist_heap(s32 numberOfPlayers);
 void default_alloc_displaylist_heap(void);
-void menu_logic_loop(s32 updateRate);
+void mode_menu(s32 updateRate);
 
 #endif

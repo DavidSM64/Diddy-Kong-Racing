@@ -5941,7 +5941,7 @@ void racer_set_dialogue_camera(void) {
  * Antipiracy function that loops over an address of a function a number of times.
  * It compares the number it gets to a generated checksum to determine if the game has been tampered with at all.
  */
-void compare_balloon_checksums(void) {
+void drm_checksum_balloon(void) {
     s32 i;
     s32 count = 0;
     u8 *temp = (u8 *) &obj_loop_goldenballoon;
@@ -6579,7 +6579,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
  * Triggered upon failure of an anti-tamper test. Sets the first index of the surface speed
  * table to an unreasonable value, wrecking drivability while on it.
  */
-void antipiracy_modify_surface_traction_table(void) {
+void drm_vehicle_traction(void) {
     gSurfaceTractionTable[SURFACE_DEFAULT] = 0.05f;
 }
 #endif
