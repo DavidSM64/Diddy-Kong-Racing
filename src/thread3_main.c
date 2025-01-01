@@ -247,7 +247,7 @@ void main_game_loop(void) {
         set_rsp_segment(&gCurrDisplayList, 0, 0);
         set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoCurrFramebuffer);
         set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
-        set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoCurrFramebuffer - 0x500);
+        set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoCurrFramebuffer - VI_OFFSET); // Unused
     }
     if (gDrawFrameTimer == 0) {
         setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
@@ -266,7 +266,7 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 0, 0);
     set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoLastFramebuffer);
     set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
-    set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoLastFramebuffer - 0x500);
+    set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoLastFramebuffer - VI_OFFSET); // Unused
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE);
