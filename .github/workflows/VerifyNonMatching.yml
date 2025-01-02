@@ -1,0 +1,51 @@
+name: Verify Non Matching
+
+on:
+  pull_request_target:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    if: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      - name: Install packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config git python3 libssl-dev wget binutils-mips-linux-gnu
+
+      - name: Get ROM
+        run: wget -q -O baseroms/dkr.z64 ${{secrets.ROMURL}}
+
+      - name: Verify ROM
+        run: if [[ $(echo "0cb115d8716dbbc2922fda38e533b9fe63bb9670 baseroms/dkr.z64" | sha1sum -c --quiet -) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
+
+      - name: Download Recomp
+        run: |
+          wget -q -O ido-static-recomp.tar.gz https://github.com/decompals/ido-static-recomp/releases/download/v1.0/ido-5.3-recomp-linux.tar.gz
+          mkdir -p tools/ido-static-recomp/build5.3/out
+          tar -xvzf ido-static-recomp.tar.gz -C tools/ido-static-recomp/build5.3/out
+
+      - name: Build Tools
+        run: |
+          cd tools
+          make -j4
+          cd ..
+
+      - name: Extract Assets
+        run: |
+          ./extract.sh
+          python3 tools/python/check_if_need_to_extract.py us_1.0
+
+      - name: Verify NON_MATCHING
+        run: make -j4 NON_MATCHING=1
