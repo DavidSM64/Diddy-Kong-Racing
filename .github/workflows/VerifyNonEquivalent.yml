@@ -7,8 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  build:
-    if: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+  verify-non-equivalent:
     runs-on: ubuntu-latest
 
     steps:
