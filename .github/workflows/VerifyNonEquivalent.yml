@@ -1,4 +1,4 @@
-name: Verify Build
+name: Verify Non Equivalent
 
 on:
   pull_request_target:
@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  verify-build:
+  verify-non-equivalent:
     runs-on: ubuntu-latest
 
     steps:
@@ -46,8 +46,5 @@ jobs:
           ./extract.sh
           python3 tools/python/check_if_need_to_extract.py us_1.0
 
-      - name: Build ROM
-        run: make -j4
-
-      - name: Verify Build
-        run: if [[ $(sha1sum -c --quiet sha1/dkr.us_1.0.sha1) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
+      - name: Verify NON_EQUIVALENT
+        run: make -j4 NON_EQUIVALENT=1

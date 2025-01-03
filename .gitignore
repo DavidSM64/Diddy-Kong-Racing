@@ -26,6 +26,7 @@ m2cfiles/
 
 # Misc stuff that should be ignored.
 .*/
+!.github
 
 # Ignore .deb packages
 *.deb
