@@ -5,7 +5,7 @@ CXX := g++
 CFLAGS := -I . -Wall -Wextra -Wno-unused-parameter -pedantic -std=c99 $(OPT) -s
 # List of specific errors to ignore
 IGNORE_W_ERRORS := -Wno-unused-parameter -Wno-misleading-indentation -Wno-extra
-CXXFLAGS := -I . -I dkr_assets_tool_src/ $(IGNORE_W_ERRORS) -std=c++17 $(OPT)
+CXXFLAGS := -I . -I dkr_assets_tool_src/ -std=c++17 $(OPT)
 LDFLAGS := -lm
 PROGRAMS := n64crc dkr_assets_tool
 
@@ -16,7 +16,7 @@ ifeq ($(OS), Darwin)
 	CXXFLAGS += -I/opt/homebrew/include 
 	LDFLAGS += -I/opt/homebrew/lib -lpcre2-8
 else
-	CXXFLAGS += -Werror -Wall -lpcre2-8 
+	CXXFLAGS += -Werror -Wall $(IGNORE_W_ERRORS) -lpcre2-8 
 endif
 
 BUILD_DIR := dkr_assets_tool_src/_build
