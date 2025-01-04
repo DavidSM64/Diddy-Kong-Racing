@@ -14,7 +14,7 @@ namespace fs = std::filesystem;
 
 // Using path as a key doesn't seem to work on raspberry pi OS?
 struct PathHash {
-    std::size_t operator()(const std::filesystem::__cxx11::path& p) const {
+    std::size_t operator()(const std::filesystem::path& p) const {
         return std::filesystem::hash_value(p);
     }
 };
