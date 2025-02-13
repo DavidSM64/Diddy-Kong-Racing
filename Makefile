@@ -184,7 +184,16 @@ LIB_DIRS := lib
 ASM_DIRS := asm asm/boot asm/assets lib/asm lib/asm/non_decompilable
 SRC_DIRS := $(sort $(patsubst %/,%,$(dir $(wildcard src/* src/**/* lib/src/* lib/src/**/* lib/src/**/**/*))))
 
-GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(SRC_DIRS)
+OS := $(shell uname)
+
+# MacOS has a slightly different name for grep, so check to see if it needs to be used.
+ifeq ($(OS), Darwin)
+	GREP_FILE := ggrep
+else
+	GREP_FILE := grep
+endif
+
+GLOBAL_ASM_C_FILES != $(GREP_FILE) -rl 'GLOBAL_ASM(' $(SRC_DIRS)
 GLOBAL_ASM_O_FILES = $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 
 S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))

@@ -92,7 +92,10 @@ class ScoreFileMatch:
         self.comment = comment
         self.functionName = functionName
         self.isDocumented = (comment != None) and not functionName.startswith("func_")
-        self.size = MAP_FILE.functionSizes[functionName]
+        if functionName in MAP_FILE.functionSizes:
+            self.size = MAP_FILE.functionSizes[functionName]
+        else:
+            self.size = 0
     
 class ScoreFile:
     def __init__(self, filepath):

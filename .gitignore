@@ -26,6 +26,7 @@ m2cfiles/
 
 # Misc stuff that should be ignored.
 .*/
+!.github
 
 # Ignore .deb packages
 *.deb
@@ -36,3 +37,4 @@ m2cfiles/
 dkr_hot_reload.py
 lastRomPath.txt
 gcc_safe_files.mk
+*.DS_Store
