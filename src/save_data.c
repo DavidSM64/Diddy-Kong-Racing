@@ -1760,7 +1760,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
 
 /**
  * Free the controller pak file list from memory.
- * Officla Name: pakDirectoryFree
+ * Official Name: pakDirectoryFree
  */
 void cpak_free_files(void) {
     if (gPakFileList) {
