@@ -18,6 +18,6 @@ enum RSPSegments {
     SEGMENT_COUNT,
 };
 
-void segment_rsp(Gfx **dlist, s32 segment, s32 base);
+void rsp_segment(Gfx **dlist, s32 segment, s32 base);
 
 #endif
