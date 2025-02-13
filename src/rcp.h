@@ -10,9 +10,6 @@
 #include "game_ui.h"
 #include "video.h"
 
-#define SEGMENT_DEPTH_BUFFER 0x02000000
-#define SEGMENT_COLOUR_BUFFER 0x01000000
-
 enum TextureRectangleFlags {
     TEXRECT_BILERP,
     TEXRECT_POINT = (1 << 0),

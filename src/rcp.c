@@ -7,6 +7,7 @@
 #include "macros.h"
 #include "video.h"
 #include "camera.h"
+#include "set_rsp_segment.h"
 // #include "lib/src/unknown_0D24D0.h"
 
 /************ .data ************/
@@ -424,11 +425,11 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     //!@bug: the scissor does not need the off by one here, despite being intended for fill mode.
     gDPSetScissor((*dList)++, 0, 0, 0, w - 1, h - 1);
     gDPSetCycleType((*dList)++, G_CYC_FILL);
-    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_DEPTH_BUFFER);
+    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_ZBUFFER << 24);
     gDPSetFillColor((*dList)++, GPACK_RGBA5551(255, 255, 240, 0) << 16 | GPACK_RGBA5551(255, 255, 240, 0));
     gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
     gDPPipeSync((*dList)++);
-    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_COLOUR_BUFFER);
+    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_FRAMEBUFFER << 24);
     if (drawBG) {
         if (check_viewport_background_flag(0)) {
             if (gChequerBGEnabled) {
@@ -477,8 +478,8 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
  */
 void init_rdp_and_framebuffer(Gfx **dList) {
     s32 width = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
-    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, SEGMENT_COLOUR_BUFFER);
-    gDPSetDepthImage((*dList)++, SEGMENT_DEPTH_BUFFER);
+    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, SEGMENT_FRAMEBUFFER << 24);
+    gDPSetDepthImage((*dList)++, SEGMENT_ZBUFFER << 24);
     gSPDisplayList((*dList)++, dRdpInit);
 }
 
