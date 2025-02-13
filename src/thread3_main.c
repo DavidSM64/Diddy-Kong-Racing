@@ -200,7 +200,7 @@ void init_game(void) {
 #endif
     init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     init_PI_mesg_queue();
-    setup_gfx_mesg_queues(&gMainSched);
+    gfxtask_init(&gMainSched);
     audio_init(&gMainSched);
     func_80008040(); // Should be very similar to allocate_object_model_pools
     sControllerStatus = init_controllers();
@@ -250,7 +250,7 @@ void main_game_loop(void) {
         rsp_segment(&gCurrDisplayList, SEGMENT_FRAMEBUFFER_OFFSET, (s32) gVideoCurrFramebuffer - VI_OFFSET); // Unused
     }
     if (gDrawFrameTimer == 0) {
-        setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
+        gfxtask_run_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
         gSPTaskNum += 1;
         gSPTaskNum &= 1;
     }
@@ -267,9 +267,9 @@ void main_game_loop(void) {
     rsp_segment(&gCurrDisplayList, SEGMENT_FRAMEBUFFER, (s32) gVideoLastFramebuffer);
     rsp_segment(&gCurrDisplayList, SEGMENT_ZBUFFER, (s32) gVideoLastDepthBuffer);
     rsp_segment(&gCurrDisplayList, SEGMENT_FRAMEBUFFER_OFFSET, (s32) gVideoLastFramebuffer - VI_OFFSET); // Unused
-    init_rsp(&gCurrDisplayList);
-    init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE);
+    rsp_init(&gCurrDisplayList);
+    rdp_init(&gCurrDisplayList);
+    bgdraw_render(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE);
     gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
@@ -322,7 +322,7 @@ void main_game_loop(void) {
     copy_viewports_to_stack();
     if (gDrawFrameTimer != 1) {
         if (gSkipGfxTask == FALSE) {
-            gScreenStatus = wait_for_gfx_task();
+            gScreenStatus = gfxtask_wait();
         }
     } else {
         gDrawFrameTimer = 0;
@@ -392,7 +392,7 @@ void unload_level_game(void) {
     set_free_queue_state(0);
     if (gSkipGfxTask == FALSE) {
         if (gDrawFrameTimer != 1) {
-            wait_for_gfx_task();
+            gfxtask_wait();
         }
         gSkipGfxTask = TRUE;
     }
@@ -555,7 +555,7 @@ void mode_game(s32 updateRate) {
                 break;
         }
     }
-    init_rdp_and_framebuffer(&gCurrDisplayList);
+    rdp_init(&gCurrDisplayList);
     divider_draw(&gCurrDisplayList);
     render_minimap_and_misc_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
     divider_clear_coverage(&gCurrDisplayList);
@@ -902,7 +902,7 @@ void update_menu_scene(s32 updateRate) {
         ainode_update();
         render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
         process_onscreen_textbox(updateRate);
-        init_rdp_and_framebuffer(&gCurrDisplayList);
+        rdp_init(&gCurrDisplayList);
         divider_draw(&gCurrDisplayList);
         divider_clear_coverage(&gCurrDisplayList);
     }

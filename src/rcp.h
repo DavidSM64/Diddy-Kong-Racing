@@ -10,6 +10,9 @@
 #include "game_ui.h"
 #include "video.h"
 
+// Recommended size is around 100KB, or 0x19000. This is unused though so it doesn't matter.
+#define YIELD_BUFFER_SIZE 0x1800
+
 enum TextureRectangleFlags {
     TEXRECT_BILERP,
     TEXRECT_POINT = (1 << 0),
@@ -40,17 +43,17 @@ typedef struct DKR_OSTask {
 
 extern s16 gGfxTaskMesgNums[16];
 
-extern u8 sBackgroundPrimColourR;
-extern u8 sBackgroundPrimColourG;
-extern u8 sBackgroundPrimColourB;
+extern u8 sBGPrimColourrR;
+extern u8 sBGPrimColourrG;
+extern u8 sBGPrimColourrB;
 extern s32 sBackgroundFillColour;
 
-extern TextureHeader *gMosaicTex1;
-extern TextureHeader *gMosaicTex2;
+extern TextureHeader *gTexBGTex1;
+extern TextureHeader *gTexBGTex2;
 extern s32 gChequerBGEnabled;
 
-extern s32 gfxBufCounter;
-extern s32 gfxBufCounter2;
+extern s32 gGfxBufCounter;
+extern s32 gGfxBufCounter2;
 extern s32 gGfxTaskIsRunning;
 
 // Defined in dkr.ld
@@ -61,21 +64,21 @@ extern s8 rspF3DDKRDataXbusStart[];
 extern s8 rspF3DDKRFifoStart[];
 extern s8 rspF3DDKRDataFifoStart[];
 
-s32 wait_for_gfx_task(void);
-void set_background_prim_colour(u8 red, u8 green, u8 blue);
-void set_background_fill_colour(s32 red, s32 green, s32 blue);
-void init_rdp_and_framebuffer(Gfx **dList);
-void init_rsp(Gfx **dList);
-void setup_gfx_mesg_queues(OSSched *sc);
-void mosaic_init(TextureHeader *arg0, TextureHeader *arg1, u32 arg2);
-s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
-void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
-void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue,
+s32 gfxtask_wait(void);
+void bgdraw_primcolour(u8 red, u8 green, u8 blue);
+void bgdraw_fillcolour(s32 red, s32 green, s32 blue);
+void rdp_init(Gfx **dList);
+void rsp_init(Gfx **dList);
+void gfxtask_init(OSSched *sc);
+void bgdraw_texture_init(TextureHeader *arg0, TextureHeader *arg1, u32 arg2);
+s32 gfxtask_run_xbus(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
+void gfxtask_run_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
+void texrect_draw(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue,
                                u8 alpha);
-void render_chequer_background(Gfx** dList);
-void render_background(Gfx **dList, Matrix *mtx, s32 drawBG);
-void set_background_draw_function(void *func);
-void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour, s32 flags);
+void bgdraw_chequer(Gfx** dList);
+void bgdraw_render(Gfx **dList, Matrix *mtx, s32 drawBG);
+void bgdraw_set_func(void *func);
+void texrect_draw_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour, s32 flags);
 
 //Non Matching
 void func_80078190(Gfx **dlist);

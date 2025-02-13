@@ -97,7 +97,7 @@ glabel menu_track_select_init
 /* 08F518 8008E918 00000000 */   nop   
 /* 08F51C 8008E91C 24040032 */  li    $a0, 50
 /* 08F520 8008E920 24050069 */  li    $a1, 105
-/* 08F524 8008E924 0C01DED7 */  jal   set_background_fill_colour
+/* 08F524 8008E924 0C01DED7 */  jal   bgdraw_fillcolour
 /* 08F528 8008E928 240600DF */   li    $a2, 223
 /* 08F52C 8008E92C 3C11800E */  lui   $s1, %hi(gTracksMenuBgTextureIndices) # $s1, 0x800e
 /* 08F530 8008E930 3C168012 */  lui   $s6, %hi(gMenuAssets) # $s6, 0x8012
@@ -311,7 +311,7 @@ glabel menu_track_select_init
 /* 08F854 8008EC54 3C018012 */  lui   $at, %hi(gTrackSelectVertsFlip) # $at, 0x8012
 /* 08F858 8008EC58 3C048009 */  lui   $a0, %hi(func_8008F618) # $a0, 0x8009
 /* 08F85C 8008EC5C AC206924 */  sw    $zero, %lo(gTrackSelectVertsFlip)($at)
-/* 08F860 8008EC60 0C01E2AB */  jal   set_background_draw_function
+/* 08F860 8008EC60 0C01E2AB */  jal   bgdraw_set_func
 /* 08F864 8008EC64 2484F618 */   addiu $a0, %lo(func_8008F618) # addiu $a0, $a0, -0x9e8
 /* 08F868 8008EC68 8FC20000 */  lw    $v0, ($fp)
 /* 08F86C 8008EC6C 00002025 */  move  $a0, $zero

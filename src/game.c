@@ -608,8 +608,8 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         init_pulsating_light_data(gCurrentLevelHeader->pulseLightData);
     }
     update_camera_fov(gCurrentLevelHeader->cameraFOV);
-    set_background_prim_colour(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen,
-                               gCurrentLevelHeader->bgColorBlue);
+    bgdraw_primcolour(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen,
+                          gCurrentLevelHeader->bgColorBlue);
     reset_video_delta_time();
     func_8007AB24(gCurrentLevelHeader->unk4[numberOfPlayers]);
 }
@@ -698,7 +698,7 @@ char *get_level_name(s32 levelId) {
  */
 void clear_audio_and_track(void) {
     free_ai_behaviour_table();
-    set_background_prim_colour(0, 0, 0);
+    bgdraw_primcolour(0, 0, 0);
     free_from_memory_pool(gCurrentLevelHeader);
     sound_stop_all();
     music_stop();

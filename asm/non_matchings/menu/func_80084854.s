@@ -174,7 +174,7 @@ glabel func_80084854
 /* 0856E8 80084AE8 AFAD0010 */  sw    $t5, 0x10($sp)
 /* 0856EC 80084AEC 02002825 */  move  $a1, $s0
 /* 0856F0 80084AF0 02402025 */  move  $a0, $s2
-/* 0856F4 80084AF4 0C01E2AE */  jal   render_textured_rectangle
+/* 0856F4 80084AF4 0C01E2AE */  jal   texrect_draw
 /* 0856F8 80084AF8 24070078 */   li    $a3, 120
 /* 0856FC 80084AFC 3C06800E */  lui   $a2, %hi(gMusicVolumeSliderValue) # $a2, 0x800e
 /* 085700 80084B00 8CC6FAC4 */  lw    $a2, %lo(gMusicVolumeSliderValue)($a2)
@@ -190,7 +190,7 @@ glabel func_80084854
 /* 085728 80084B28 AFA80010 */  sw    $t0, 0x10($sp)
 /* 08572C 80084B2C 02402025 */  move  $a0, $s2
 /* 085730 80084B30 02002825 */  move  $a1, $s0
-/* 085734 80084B34 0C01E2AE */  jal   render_textured_rectangle
+/* 085734 80084B34 0C01E2AE */  jal   texrect_draw
 /* 085738 80084B38 240700A0 */   li    $a3, 160
 /* 08573C 80084B3C 0C01ECF4 */  jal   reset_render_settings
 /* 085740 80084B40 02402025 */   move  $a0, $s2
