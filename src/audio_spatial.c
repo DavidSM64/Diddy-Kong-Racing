@@ -544,9 +544,9 @@ void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVal
     temp_tris[0].vi0 = 2;
     temp_tris[0].vi1 = 1;
     temp_tris[0].vi2 = 0;
-    temp_tris[0].uv0.u = 0x3E0;
-    temp_tris[0].uv0.v = 0x3E0;
-    temp_tris[0].uv1.u = 0x3E0;
+    temp_tris[0].uv0.u = 1024 - 32;
+    temp_tris[0].uv0.v = 1024 - 32;
+    temp_tris[0].uv1.u = 1024 - 32;
     temp_tris[0].uv1.v = 0;
     temp_tris[0].uv2.u = 1;
     temp_tris[0].uv2.v = 0;
@@ -555,9 +555,9 @@ void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVal
     temp_tris[1].vi1 = 2;
     temp_tris[1].vi2 = 1;
     temp_tris[1].uv0.u = 1;
-    temp_tris[1].uv0.v = 0x3E0;
-    temp_tris[1].uv1.u = 0x3E0;
-    temp_tris[1].uv1.v = 0x3E0;
+    temp_tris[1].uv0.v = 1024 - 32;
+    temp_tris[1].uv1.u = 1024 - 32;
+    temp_tris[1].uv1.v = 1024 - 32;
     temp_tris[1].uv2.u = 1;
     temp_tris[1].uv2.v = 0;
     temp_tris += 2;

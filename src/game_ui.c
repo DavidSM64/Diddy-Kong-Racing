@@ -381,7 +381,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                     gMinimapOpacity = 0;
                 }
             }
-            if (gShowHUD == 0) {
+            if (gShowHUD == FALSE) {
                 racer = (Object_Racer *) obj->unk64;
                 if (D_8012718A) {
                     D_80126D10 = 1 - racer->playerIndex;
@@ -959,7 +959,8 @@ void render_hud_battle(s32 countdown, Object *obj, s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
+// hud_render_lives
 void func_800A1E48(Object *racerObj, s32 updateRate) {
     f32 temp;
     s32 i;
@@ -2188,10 +2189,11 @@ void hud_draw_finish_misc(Object_Racer *racer) {
     }
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
+// hud_render_finish
 void func_800A6254(Object_Racer *racer, s32 updateRate) {
-    s32 *var_a0;
-    s32 var_t0;
+    UNUSED s32 *var_a0;
+    UNUSED s32 var_t0;
     s32 var_a2;
     s32 var_v1;
     s32 raceType;

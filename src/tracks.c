@@ -249,7 +249,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     set_active_viewports_and_max(gScenePlayerViewports);
 
     numberOfPlayers = gScenePlayerViewports;
-    gAntiAliasing = 0;
+    gAntiAliasing = FALSE;
     for (i = 0; i < ARRAY_COUNT(gShadowHeapTextures); i++) {
         gShadowHeapTextures[i] =
             (DrawTexture *) allocate_from_main_pool_safe(sizeof(DrawTexture) * 400, COLOUR_TAG_YELLOW);
@@ -709,7 +709,7 @@ void spawn_skydome(s32 objectID) {
 
 #ifdef ANTI_TAMPER
     // Antipiracy measure
-    compare_balloon_checksums();
+    drm_checksum_balloon();
 #endif
     if (objectID == -1) {
         gSkydomeSegment = NULL;

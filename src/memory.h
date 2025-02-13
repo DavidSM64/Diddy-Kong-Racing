@@ -87,7 +87,6 @@ u8 *align8(u8 *address);
 u8 *align4(u8 *address);
 void print_memory_colour_tags(void);
 void render_memory_colour_tags(void);
-void func_80071CE8(void);
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots);
 void free_memory_pool_slot(s32 poolIndex, s32 slotIndex);
 s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken,

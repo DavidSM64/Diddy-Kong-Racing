@@ -143,7 +143,6 @@ s32 gCurrentCarSteerVel;
 s32 D_8011D558;
 s32 gCurrentPlayerIndex;
 s16 D_8011D560; // Set, but never read.
-UNUSED s16 D_8011D562;
 f32 *gCurrentRacerMiscAssetPtr;
 f32 *D_8011D568;
 f32 gCurrentRacerWeightStat;
@@ -5699,7 +5698,7 @@ s32 timetrial_load_player_ghost(s32 controllerID, s32 mapId, s16 arg2, s16 *char
 
     nodeID = (gCurrentGhostIndex + 1) & 1;
     cpakStatus = func_80074B34(controllerID, mapId, arg2, (u16 *) characterID, time, &nodeCount,
-                               (GhostHeader *) gGhostData[nodeID]);
+                               (unk80075000 *) gGhostData[nodeID]);
     if (characterID) {
         if (cpakStatus == CONTROLLER_PAK_GOOD) {
             gGhostNodeCount[nodeID] = nodeCount;
@@ -5752,7 +5751,7 @@ void timetrial_free_staff_ghost(void) {
  */
 SIDeviceStatus timetrial_write_player_ghost(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4) {
     return func_80075000(controllerIndex, (s16) mapId, arg2, arg3, arg4, gGhostNodeCount[gCurrentGhostIndex],
-                         (GhostHeader *) gGhostData[gCurrentGhostIndex]);
+                         (unk80075000_body *) gGhostData[gCurrentGhostIndex]);
 }
 
 /**
@@ -5942,7 +5941,7 @@ void racer_set_dialogue_camera(void) {
  * Antipiracy function that loops over an address of a function a number of times.
  * It compares the number it gets to a generated checksum to determine if the game has been tampered with at all.
  */
-void compare_balloon_checksums(void) {
+void drm_checksum_balloon(void) {
     s32 i;
     s32 count = 0;
     u8 *temp = (u8 *) &obj_loop_goldenballoon;
@@ -6580,7 +6579,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
  * Triggered upon failure of an anti-tamper test. Sets the first index of the surface speed
  * table to an unreasonable value, wrecking drivability while on it.
  */
-void antipiracy_modify_surface_traction_table(void) {
+void drm_vehicle_traction(void) {
     gSurfaceTractionTable[SURFACE_DEFAULT] = 0.05f;
 }
 #endif

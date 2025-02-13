@@ -3830,7 +3830,7 @@ SIDeviceStatus savemenu_load_sources(void) {
                         gSaveMenuOptionCountUpper++;
                     }
                 }
-                packDirectoryFree();
+                cpak_free_files();
             } else if (temp == CONTROLLER_PAK_RUMBLE_PAK_FOUND) {
                 gSaveMenuRumbleConnected = TRUE;
                 if (gSaveMenuSourceState < 0) {
@@ -4573,7 +4573,7 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
             gBootPakData[i - 1][j] = 0;
         } while (&gBootPakData != &sCurrentControllerPakAllFileNames);
 
-        packDirectoryFree();                                                     // Free D_800DE440 from memory
+        cpak_free_files();                                                       // Free gPakFileList from memory
         get_free_space(*controllerIndex, &sCurrentControllerPakFreeSpace, NULL); // Get Available Space in Controller
                                                                                  // Pak
         sCurrentControllerPakFreeSpace = sCurrentControllerPakFreeSpace / 256;   // Bytes
@@ -10115,7 +10115,7 @@ s32 menu_results_loop(s32 updateRate) {
             dialogue_close(7);
             dialogue_clear(7);
             if (gResultOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_TRYAGAIN]) {
-                return (MENU_RESULT_FLAGS_100 | MENU_RESULT_FLAGS_2); // This gets parsed in menu_logic_loop as a flag
+                return (MENU_RESULT_FLAGS_100 | MENU_RESULT_FLAGS_2); // This gets parsed in mode_menu as a flag
                                                                       // and an ID from the bottom 7 bits.
             }
             if (gResultOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_SELECTTRACK]) {

@@ -162,7 +162,7 @@ void wave_init(void) {
 
     free_waves();
     D_800E3040 = (f32 *) allocate_from_main_pool_safe(D_80129FC8.unk20 << 2, COLOUR_TAG_CYAN);
-    D_800E3044 = (s32 *) allocate_from_main_pool_safe((D_80129FC8.unk4 << 2) * D_80129FC8.unk4, COLOUR_TAG_CYAN);
+    D_800E3044 = (s16 *) allocate_from_main_pool_safe((D_80129FC8.unk4 << 2) * D_80129FC8.unk4, COLOUR_TAG_CYAN);
     D_800E3048 =
         (s32 *) allocate_from_main_pool_safe(((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1), COLOUR_TAG_CYAN);
     allocSize = ((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1);
@@ -184,12 +184,12 @@ void wave_init(void) {
     allocSize = (D_80129FC8.unk0 * 32) * D_80129FC8.unk0;
     if (D_8012A078 != 2) {
         D_800E3080[0] = allocate_from_main_pool_safe(allocSize << 1, COLOUR_TAG_CYAN);
-        D_800E3080[1] = (s32 *) (((u32) D_800E3080[0]) + allocSize);
+        D_800E3080[1] = (u8 *) (((u32) D_800E3080[0]) + allocSize);
     } else {
-        D_800E3080[0] = (s32 *) allocate_from_main_pool_safe(allocSize << 2, COLOUR_TAG_CYAN);
-        D_800E3080[1] = (s32 *) (((u32) D_800E3080[0]) + allocSize);
-        D_800E3080[2] = (s32 *) (((u32) D_800E3080[1]) + allocSize);
-        D_800E3080[3] = (s32 *) (((u32) D_800E3080[2]) + allocSize);
+        D_800E3080[0] = (u8 *) allocate_from_main_pool_safe(allocSize << 2, COLOUR_TAG_CYAN);
+        D_800E3080[1] = (u8 *) (((u32) D_800E3080[0]) + allocSize);
+        D_800E3080[2] = (u8 *) (((u32) D_800E3080[1]) + allocSize);
+        D_800E3080[3] = (u8 *) (((u32) D_800E3080[2]) + allocSize);
     }
     D_800E30D0 = load_texture(D_80129FC8.unk2C);
 }

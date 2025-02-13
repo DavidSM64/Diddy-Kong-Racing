@@ -7,6 +7,7 @@
 #include "macros.h"
 #include "video.h"
 #include "camera.h"
+#include "set_rsp_segment.h"
 // #include "lib/src/unknown_0D24D0.h"
 
 /************ .data ************/
@@ -136,11 +137,11 @@ Gfx dTextureRectangleScaledXlu[][2] = {
 
 u8 gDramStack[SP_DRAM_STACK_SIZE8];
 u8 gGfxSPTaskYieldBuffer[YIELD_BUFFER_SIZE];
-OSMesgQueue D_80125EA0;
-OSMesg D_80125EB8;
-OSMesgQueue D_80125EC0;
+OSMesgQueue gRCPMesgQueue;
+OSMesg gRCPMesgBuf;
+UNUSED OSMesgQueue gUnusedMesgQueue;
 OSMesgQueue gGfxTaskMesgQueue;
-OSMesg D_80125EF0[8];
+UNUSED OSMesg gUnusedMesgBuf[8];
 OSMesg gGfxTaskMesgBuf[8];
 u8 gChequerBGColourR1;
 u8 gChequerBGColourG1;
@@ -190,7 +191,7 @@ s32 setup_ostask_xbus(Gfx *dlBegin, Gfx *dlEnd, UNUSED s32 recvMesg) {
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
     dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
-    dkrtask->task.output_buff_size = (u64 *) &D_80125EA0;
+    dkrtask->task.output_buff_size = (u64 *) &gRCPMesgQueue;
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
     dkrtask->task.output_buff = NULL;
@@ -245,12 +246,12 @@ UNUSED void setup_ostask_xbus_2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     dkrtask->unk68 = 0;
 
     if (recvMesg) {
-        dkrtask->mesgQueue = &D_80125EA0;
+        dkrtask->mesgQueue = &gRCPMesgQueue;
     }
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, 1);
     if (recvMesg) {
-        osRecvMesg(&D_80125EA0, &mesgBuf, OS_MESG_BLOCK);
+        osRecvMesg(&gRCPMesgQueue, &mesgBuf, OS_MESG_BLOCK);
     }
 }
 
@@ -298,13 +299,13 @@ UNUSED void setup_ostask_fifo(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     dkrtask->unk68 = 0;
 
     if (recvMesg) {
-        dkrtask->mesgQueue = &D_80125EA0;
+        dkrtask->mesgQueue = &gRCPMesgQueue;
     }
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, 1);
 
     if (recvMesg) {
-        osRecvMesg(&D_80125EA0, &mesgBuf, OS_MESG_BLOCK);
+        osRecvMesg(&gRCPMesgQueue, &mesgBuf, OS_MESG_BLOCK);
     }
 }
 
@@ -336,7 +337,7 @@ UNUSED void setup_ostask_fifo_2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
     dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
-    dkrtask->task.output_buff_size = (u64 *) &D_80125EA0;
+    dkrtask->task.output_buff_size = (u64 *) &gRCPMesgQueue;
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
     dkrtask->next = NULL;
@@ -374,7 +375,7 @@ s32 wait_for_gfx_task(void) {
     return (s32) mesg[1];
 }
 
-UNUSED void func_80077AAC(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
+UNUSED void gfxtask_run_rdp(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
     osWritebackDCacheAll();
     while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
     osDpSetNextBuffer(bufPtr, bufSize);
@@ -424,11 +425,11 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     //!@bug: the scissor does not need the off by one here, despite being intended for fill mode.
     gDPSetScissor((*dList)++, 0, 0, 0, w - 1, h - 1);
     gDPSetCycleType((*dList)++, G_CYC_FILL);
-    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_DEPTH_BUFFER);
+    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_ZBUFFER << 24);
     gDPSetFillColor((*dList)++, GPACK_RGBA5551(255, 255, 240, 0) << 16 | GPACK_RGBA5551(255, 255, 240, 0));
     gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
     gDPPipeSync((*dList)++);
-    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_COLOUR_BUFFER);
+    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_FRAMEBUFFER << 24);
     if (drawBG) {
         if (check_viewport_background_flag(0)) {
             if (gChequerBGEnabled) {
@@ -477,8 +478,8 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
  */
 void init_rdp_and_framebuffer(Gfx **dList) {
     s32 width = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
-    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, SEGMENT_COLOUR_BUFFER);
-    gDPSetDepthImage((*dList)++, SEGMENT_DEPTH_BUFFER);
+    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, SEGMENT_FRAMEBUFFER << 24);
+    gDPSetDepthImage((*dList)++, SEGMENT_ZBUFFER << 24);
     gSPDisplayList((*dList)++, dRdpInit);
 }
 
@@ -495,8 +496,8 @@ void init_rsp(Gfx **dList) {
  */
 void setup_gfx_mesg_queues(OSSched *sc) {
     osScInterruptQ = osScGetInterruptQ(sc);
-    osCreateMesgQueue(&D_80125EA0, &D_80125EB8, 1);
-    osCreateMesgQueue(&D_80125EC0, D_80125EF0, ARRAY_COUNT(D_80125EF0));
+    osCreateMesgQueue(&gRCPMesgQueue, &gRCPMesgBuf, 1);
+    osCreateMesgQueue(&gUnusedMesgQueue, gUnusedMesgBuf, ARRAY_COUNT(gUnusedMesgBuf));
     osCreateMesgQueue(&gGfxTaskMesgQueue, gGfxTaskMesgBuf, ARRAY_COUNT(gGfxTaskMesgBuf));
 }
 

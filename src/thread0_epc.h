@@ -88,7 +88,7 @@ void enable_interupts_on_main(void);
 void stop_all_threads_except_main(void);
 void update_object_stack_trace(s32 index, s32 value);
 s32 get_lockup_status(void);
-void lockup_screen_loop(s32 updateRate);
+void mode_lockup(s32 updateRate);
 void thread0_create(void);
 void write_epc_data_to_cpak(void);
 void dump_memory_to_cpak(s32 epc, s32 size, u32 colourTag);

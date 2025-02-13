@@ -107,7 +107,7 @@ void *allocate_from_main_pool_safe(s32 size, u32 colourTag) {
         dump_memory_to_cpak(get_stack_pointer()->unk14, size, colourTag);
     }
     temp_v0 = allocate_from_memory_pool(0, size, colourTag);
-    if (temp_v0 == (void *) NULL) {
+    if (temp_v0 == NULL) {
         dump_memory_to_cpak(get_stack_pointer()->unk14, size, colourTag);
     }
     return temp_v0;
@@ -673,23 +673,6 @@ UNUSED void render_memory_colour_tags(void) {
     render_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOUR_TAG_ORANGE));
 }
 
-/************ .rodata ************/
-
-UNUSED const char D_800E7590[] = "Region = %d	 loc = %x	 size = %x\t";
-UNUSED const char D_800E75B4[] = "FREE";
-UNUSED const char D_800E75BC[] = "ALLOCATED";
-UNUSED const char D_800E75C8[] = "ALLOCATED,FIXED";
-UNUSED const char D_800E75D8[] = "\n";
-UNUSED const char D_800E75DC[] = "\n";
-UNUSED const char D_800E75E0[] = "Region number = %d\t";
-UNUSED const char D_800E75F4[] = "maxSlots = %d\t";
-UNUSED const char D_800E7604[] = "slotsUsed = %d\t";
-UNUSED const char D_800E7614[] = "loc = %x\t";
-UNUSED const char D_800E7620[] = "size = %x\n";
-UNUSED const char D_800E762C[] = "\n";
-
-/*********************************/
-
 UNUSED void mmSlotPrint(void) {
     s32 i;
     s32 skip;
@@ -698,7 +681,8 @@ UNUSED void mmSlotPrint(void) {
     s32 nextIndex;
     MemoryPoolSlot *slot;
 
-    for (i = 0; (gNumberOfMemoryPools ^ 0) >= i; i++) {
+    for (i = 0; gNumberOfMemoryPools >= i; i++) {
+        stubbed_printf("Region = %d	 loc = %x	 size = %x\t", i, gMemoryPools[i].slots, gMemoryPools[i].size);
         if (i && i) {} // Fakematch
         slot = &gMemoryPools[i].slots[0];
         index = 1;
@@ -720,10 +704,23 @@ UNUSED void mmSlotPrint(void) {
     }
 }
 
-// Unused. Does nothing?
-UNUSED void func_80071CE8(void) {
+UNUSED const char D_800E75B4[] = "FREE";
+UNUSED const char D_800E75BC[] = "ALLOCATED";
+UNUSED const char D_800E75C8[] = "ALLOCATED,FIXED";
+UNUSED const char D_800E75D8[] = "\n";
+UNUSED const char D_800E75DC[] = "\n";
+
+/**
+ * Print out the current status of each existing memory pool.
+ */
+UNUSED void mempool_print_data(void) {
     s32 i;
     for (i = gNumberOfMemoryPools; i != -1; i--) {
-        // Nothing here. There might've been a printf or something similar.
+        stubbed_printf("Region number = %d\t", i);
+        stubbed_printf("maxSlots = %d\t", gMemoryPools[i].maxNumSlots);
+        stubbed_printf("slotsUsed = %d\t", gMemoryPools[i].curNumSlots);
+        stubbed_printf("loc = %x\t", gMemoryPools[i].slots);
+        stubbed_printf("size = %x\n", gMemoryPools[i].size);
+        stubbed_printf("\n");
     }
 }

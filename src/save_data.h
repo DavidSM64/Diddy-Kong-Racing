@@ -114,7 +114,7 @@ typedef struct unk80075000 {
     unk80075000_body data[1];
 } unk80075000;
 
-extern s8 *D_800DE440;
+extern s8 *gPakFileList;
 extern u8 gN64FontCodes[68];
 extern s32 gRumbleKillTimer;
 extern OSPfs pfs[MAXCONTROLLERS];
@@ -146,7 +146,7 @@ SIDeviceStatus check_for_rumble_pak(s32 controllerIndex);
 SIDeviceStatus repair_controller_pak(s32 controllerIndex);
 SIDeviceStatus reformat_controller_pak(s32 controllerIndex);
 s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, char **fileNames, char **fileExtensions, u32 *fileSizes, u8 *fileTypes);
-void packDirectoryFree(void);
+void cpak_free_files(void);
 s32 get_free_space(s32 controllerIndex, u32 *bytesFree, s32 *notesFree);
 s32 delete_file(s32 controllerIndex, s32 fileNum);
 s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondControllerIndex);

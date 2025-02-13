@@ -18,7 +18,7 @@ typedef struct huft {
 #define BMAX 16         /* maximum bit length of any code (16 for explode) */
 #define N_MAX 288       /* maximum number of codes in any set */
 
-void init_rzip(void);
+void gzip_init(void);
 s32 byteswap32(u8 *arg0);
 s32 get_asset_uncompressed_size(s32 assetIndex, s32 assetOffset);
 u8 *gzip_inflate(u8 *compressedInput, u8 *decompressedOutput);

@@ -193,8 +193,8 @@ SIDeviceStatus timetrial_write_player_ghost(s32 controllerIndex, s32 mapId, s16 
 s16 timetrial_ghost_full(void);
 void disable_racer_input(void);
 void racer_set_dialogue_camera(void);
-void compare_balloon_checksums(void);
-void antipiracy_modify_surface_traction_table(void);
+void drm_checksum_balloon(void);
+void drm_vehicle_traction(void);
 s32 turn_head_towards_object(Object *obj, Object_Racer *racer, Object *targetObj, f32 distance);
 void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, s32 arg2);
 void func_8005C270(Object_Racer *racer);

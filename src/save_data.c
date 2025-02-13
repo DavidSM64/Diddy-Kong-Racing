@@ -15,7 +15,7 @@
 
 /************ .data ************/
 
-s8 *D_800DE440 = 0;
+s8 *gPakFileList = 0;
 
 u8 gN64FontCodes[] = "\0               0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#'*+,-./:=?@";
 
@@ -1263,7 +1263,7 @@ SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
     if (1) {} // fake
     ghost = allocate_from_main_pool_safe(sp24 + (GHSS_SIZE * 2), COLOUR_TAG_BLACK);
     ghost->signature = GHSS;
-    ghostBody = &ghost->data;
+    ghostBody = &ghost->data[0];
     ghostBody[0].unk0 = levelId;
     ghostBody[0].unk1 = vehicleId;
     ghostBody[0].unk2 = GHSS_SIZE;
@@ -1273,8 +1273,9 @@ SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
         ghostBody[i].unk2 = ghostBody[1].unk2;
     }
 
-    func_80074AA8(AS_BYTES(ghost) + ghostBody[0].unk2, ghostCharacterId, ghostTime, ghostNodeCount, dest);
-    pakStatus = write_controller_pak_file(controllerIndex, -1, "DKRACING-GHOSTS", "", ghost, sp24 + GHSS_SIZE);
+    func_80074AA8((GhostHeader *) (AS_BYTES(ghost) + ghostBody[0].unk2), ghostCharacterId, ghostTime, ghostNodeCount,
+                  dest);
+    pakStatus = write_controller_pak_file(controllerIndex, -1, "DKRACING-GHOSTS", "", (u8 *) ghost, sp24 + GHSS_SIZE);
     free_from_memory_pool(ghost);
     return pakStatus;
 }
@@ -1634,7 +1635,7 @@ SIDeviceStatus repair_controller_pak(s32 controllerIndex) {
     s32 status = get_si_device_status(controllerIndex);
     if (status == CONTROLLER_PAK_GOOD || status == CONTROLLER_PAK_INCONSISTENT) {
         status = osPfsChecker(&pfs[controllerIndex]);
-        if (status == 0) {
+        if (status == CONTROLLER_PAK_GOOD) {
             ret = CONTROLLER_PAK_GOOD;
         } else if (status == PFS_ERR_NEW_PACK) {
             ret = CONTROLLER_PAK_CHANGED;
@@ -1677,7 +1678,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
     s32 ret;
     s32 maxNumOfFilesOnCpak;
     s32 files_used;
-    s8 *temp_D_800DE440;
+    s8 *list;
     s32 i;
     u32 gameCode;
 
@@ -1704,23 +1705,23 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
         maxNumOfFilesOnCpak = maxNumOfFilesToGet;
     }
 
-    if (D_800DE440 != NULL) {
-        free_from_memory_pool(D_800DE440);
+    if (gPakFileList != NULL) {
+        free_from_memory_pool(gPakFileList);
     }
 
     files_used = maxNumOfFilesOnCpak * 24;
-    D_800DE440 = allocate_from_main_pool_safe(files_used, COLOUR_TAG_BLACK);
-    bzero(D_800DE440, files_used);
-    temp_D_800DE440 = D_800DE440;
+    gPakFileList = allocate_from_main_pool_safe(files_used, COLOUR_TAG_BLACK);
+    bzero(gPakFileList, files_used);
+    list = gPakFileList;
 
     // TODO: There's probably an unidentified struct here
     for (i = 0; i < maxNumOfFilesOnCpak; i++) {
-        fileNames[i] = (char *) temp_D_800DE440;
-        temp_D_800DE440 += 0x12;
-        fileExtensions[i] = (char *) temp_D_800DE440;
+        fileNames[i] = (char *) list;
+        list += 0x12;
+        fileExtensions[i] = (char *) list;
         fileSizes[i] = 0;
         fileTypes[i] = SAVE_FILE_TYPE_UNSET;
-        temp_D_800DE440 += 6;
+        list += 6;
     }
 
     while (i < maxNumOfFilesToGet) {
@@ -1757,12 +1758,15 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
     return CONTROLLER_PAK_GOOD;
 }
 
-// Free D_800DE440
-void packDirectoryFree(void) {
-    if (D_800DE440 != 0) {
-        free_from_memory_pool(D_800DE440);
+/**
+ * Free the controller pak file list from memory.
+ * Official Name: pakDirectoryFree
+ */
+void cpak_free_files(void) {
+    if (gPakFileList) {
+        free_from_memory_pool(gPakFileList);
     }
-    D_800DE440 = 0;
+    gPakFileList = NULL;
 }
 
 // Get Available Space in Controller Pak

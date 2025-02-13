@@ -214,6 +214,10 @@ ifeq ($(shell getconf LONG_BIT), 64)
 endif
 CC_CHECK_CFLAGS := -fsyntax-only -funsigned-char $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -Wno-main -DNON_MATCHING -DAVOID_UB -D_LANGUAGE_C -DNDEBUG -Werror-implicit-function-declaration
 
+# Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
+ifeq ($(NON_MATCHING),0)
+	CC_CHECK_CFLAGS += -Wno-unused-value
+endif
 #Warnings to ignore
 CC_CHECK_CFLAGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch
 
