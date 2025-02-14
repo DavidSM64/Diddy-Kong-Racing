@@ -32,7 +32,7 @@ extern s16 gArcTanTable[];
  * work with delicate areas in memory. Kind of like a mutex.
  * Returns what the interrupt mask wask before.
  * Official Name: disableInterrupts */
-u32 intmask_clear(void) {
+u32 interrupts_disable(void) {
     if (gIntDisFlag) {
         return __osDisableInt();
     }
@@ -47,7 +47,7 @@ GLOBAL_ASM("asm/math_util/disable_interrupts.s")
  * Required after zeroing them out, otherwise system
  * operation won't work as normal.
  * Official Name: enableInterrupts */
-void intmask_restore(u32 flags) {
+void interrupts_enable(u32 flags) {
     if (gIntDisFlag) {
         __osRestoreInt(flags);
     }

@@ -60,7 +60,7 @@ s32 atan2s(s32 xDelta, s32 zDelta);
 f32 area_triangle_2d(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2);
 void dmacopy_doubleword(void *src, void *dst, s32 end);
 StackInfo *stack_pointer(void);
-u32 intmask_clear(void);
-void intmask_restore(u32 flags);
+u32 interrupts_disable(void);
+void interrupts_enable(u32 flags);
 
 #endif // MATH_UTIL_H

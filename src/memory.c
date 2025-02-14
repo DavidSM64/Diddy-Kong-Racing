@@ -51,13 +51,13 @@ MemoryPoolSlot *mempool_new_sub(s32 poolDataSize, s32 numSlots) {
     s32 size;
     MemoryPoolSlot *slots;
     UNUSED s32 unused_2;
-    u32 intFlags = intmask_clear();
+    u32 intFlags = interrupts_disable();
     MemoryPoolSlot *newPool;
 
     size = poolDataSize + (numSlots * sizeof(MemoryPoolSlot));
     slots = (MemoryPoolSlot *) mempool_alloc_safe(size, COLOUR_TAG_WHITE);
     newPool = mempool_init(slots, size, numSlots);
-    intmask_restore(intFlags);
+    interrupts_enable(intFlags);
     return newPool;
 }
 
@@ -135,13 +135,13 @@ MemoryPoolSlot *mempool_slot_find(MemoryPools poolIndex, s32 size, u32 colourTag
     s32 nextIndex;
     s32 currIndex;
 
-    intFlags = intmask_clear();
+    intFlags = interrupts_disable();
     if (size == 0) {
         stubbed_printf("*** mmAlloc: size = 0 ***\n");
     }
     pool = &gMemoryPools[poolIndex];
     if ((pool->curNumSlots + 1) == (*pool).maxNumSlots) {
-        intmask_restore(intFlags);
+        interrupts_enable(intFlags);
         stubbed_printf("*** mm Error *** ---> No more slots available.\n");
         return NULL;
     }
@@ -165,10 +165,10 @@ MemoryPoolSlot *mempool_slot_find(MemoryPools poolIndex, s32 size, u32 colourTag
     } while (nextIndex != MEMSLOT_NONE);
     if (currIndex != MEMSLOT_NONE) {
         mempool_slot_assign(poolIndex, (s32) currIndex, size, 1, 0, colourTag);
-        intmask_restore(intFlags);
+        interrupts_enable(intFlags);
         return (MemoryPoolSlot *) (slots + currIndex)->data;
     }
-    intmask_restore(intFlags);
+    interrupts_enable(intFlags);
     stubbed_printf("\n*** mm Error *** ---> No suitble block found for allocation.\n");
     return NULL;
 }
@@ -198,12 +198,12 @@ void *mempool_alloc_fixed(s32 size, u8 *address, u32 colorTag) {
     MemoryPoolSlot *slots;
     u32 intFlags;
 
-    intFlags = intmask_clear();
+    intFlags = interrupts_disable();
     if (size == 0) {
         stubbed_printf("*** mmAllocAtAddr: size = 0 ***\n");
     }
     if ((gMemoryPools[POOL_MAIN].curNumSlots + 1) == gMemoryPools[POOL_MAIN].maxNumSlots) {
-        intmask_restore(intFlags);
+        interrupts_enable(intFlags);
         stubbed_printf("\n*** mm Error *** ---> No more slots available.\n");
     } else {
         if (size & 0xF) {
@@ -217,18 +217,18 @@ void *mempool_alloc_fixed(s32 size, u8 *address, u32 colorTag) {
                     (u32) address + size <= (u32) curSlot->data + curSlot->size) {
                     if (address == (u8 *) curSlot->data) {
                         mempool_slot_assign(POOL_MAIN, i, size, 1, 0, colorTag);
-                        intmask_restore(intFlags);
+                        interrupts_enable(intFlags);
                         return curSlot->data;
                     } else {
                         i = mempool_slot_assign(POOL_MAIN, i, (u32) address - (u32) curSlot->data, 0, 1, colorTag);
                         mempool_slot_assign(POOL_MAIN, i, size, 1, 0, colorTag);
-                        intmask_restore(intFlags);
+                        interrupts_enable(intFlags);
                         return (slots + i)->data;
                     }
                 }
             }
         }
-        intmask_restore(intFlags);
+        interrupts_enable(intFlags);
     }
     stubbed_printf("\n*** mm Error *** ---> Can't allocate memory at desired address.\n");
     return NULL;
@@ -241,14 +241,14 @@ void *mempool_alloc_fixed(s32 size, u8 *address, u32 colorTag) {
  * before clearing from memory.
  */
 void mempool_free_timer(s32 state) {
-    u32 intFlags = intmask_clear();
+    u32 intFlags = interrupts_disable();
     gFreeQueueTimer = state;
     if (state == 0) { // flush free queue if state is 0.
         while (gFreeQueueCount > 0) {
             mempool_free_addr(gFreeQueue[--gFreeQueueCount].dataAddress);
         }
     }
-    intmask_restore(intFlags);
+    interrupts_enable(intFlags);
 }
 
 /**
@@ -257,13 +257,13 @@ void mempool_free_timer(s32 state) {
  * Official Name: mmFree
  */
 void mempool_free(void *data) {
-    u32 intFlags = intmask_clear();
+    u32 intFlags = interrupts_disable();
     if (gFreeQueueTimer == 0) {
         mempool_free_addr(data);
     } else {
         mempool_free_queue(data);
     }
-    intmask_restore(intFlags);
+    interrupts_enable(intFlags);
 }
 
 /**
@@ -274,7 +274,7 @@ void mempool_free_queue_clear(void) {
     s32 i;
     u32 intFlags;
 
-    intFlags = intmask_clear();
+    intFlags = interrupts_disable();
 
     for (i = 0; i < gFreeQueueCount;) {
         gFreeQueue[i].freeTimer--;
@@ -289,7 +289,7 @@ void mempool_free_queue_clear(void) {
         }
     }
 
-    intmask_restore(intFlags);
+    interrupts_enable(intFlags);
 }
 
 /**
@@ -334,7 +334,7 @@ UNUSED void mempool_clear(void) {
     s32 poolIndex;
     s32 slotIndex;
 
-    intFlags = intmask_clear();
+    intFlags = interrupts_disable();
     poolIndex = gNumberOfMemoryPools;
     while (poolIndex != -1) {
         pool = &gMemoryPools[poolIndex];
@@ -348,7 +348,7 @@ UNUSED void mempool_clear(void) {
                 if (pool->curNumSlots == 1) {
                     mempool_slot_clear(poolIndex, slotIndex);
                 } else {
-                    intmask_restore(intFlags);
+                    interrupts_enable(intFlags);
                     stubbed_printf("*** Slots still in use in region ***\n");
                     return;
                 }
@@ -357,7 +357,7 @@ UNUSED void mempool_clear(void) {
         } while (slotIndex != MEMSLOT_NONE);
         poolIndex--;
     }
-    intmask_restore(intFlags);
+    interrupts_enable(intFlags);
 }
 
 /**
@@ -384,7 +384,7 @@ s32 mempool_locked_set(u8 *address) {
     MemoryPool *pool;
     u32 intFlags;
 
-    intFlags = intmask_clear();
+    intFlags = interrupts_disable();
     pool = &gMemoryPools[mempool_get_pool(address)];
     slotIndex = 0;
     while (slotIndex != MEMSLOT_NONE) {
@@ -392,14 +392,14 @@ s32 mempool_locked_set(u8 *address) {
         if (address == (u8 *) slot->data) {
             if (slot->flags == SLOT_USED || slot->flags == SLOT_SAFEGUARD) {
                 slot->flags |= SLOT_LOCKED;
-                intmask_restore(intFlags);
+                interrupts_enable(intFlags);
                 return 1;
             }
         }
         slotIndex = slot->nextIndex;
     }
     stubbed_printf("\n*** mm Error *** ---> Can't fix the specified block.\n");
-    intmask_restore(intFlags);
+    interrupts_enable(intFlags);
     return 0;
 }
 
@@ -414,7 +414,7 @@ s32 mempool_locked_unset(u8 *address) {
     MemoryPool *pool;
     u32 intFlags;
 
-    intFlags = intmask_clear();
+    intFlags = interrupts_disable();
     pool = &gMemoryPools[mempool_get_pool(address)];
     slotIndex = 0;
     while (slotIndex != MEMSLOT_NONE) {
@@ -422,14 +422,14 @@ s32 mempool_locked_unset(u8 *address) {
         if (address == (u8 *) slot->data) {
             if (slot->flags & SLOT_LOCKED) {
                 slot->flags ^= SLOT_LOCKED;
-                intmask_restore(intFlags);
+                interrupts_enable(intFlags);
                 return 1;
             }
         }
         slotIndex = slot->nextIndex;
     }
     stubbed_printf("\n*** mm Error *** ---> Can't unfix the specified block.\n");
-    intmask_restore(intFlags);
+    interrupts_enable(intFlags);
     return 0;
 }
 
