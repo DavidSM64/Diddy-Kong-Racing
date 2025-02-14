@@ -85,7 +85,7 @@ glabel menu_credits_loop
 /* 09C050 8009B450 0014C080 */  sll   $t8, $s4, 2
 /* 09C054 8009B454 0314C021 */  addu  $t8, $t8, $s4
 /* 09C058 8009B458 8C750000 */  lw    $s5, ($v1)
-/* 09C05C 8009B45C 0C01E948 */  jal   get_video_width_and_height_as_s32
+/* 09C05C 8009B45C 0C01E948 */  jal   fb_size
 /* 09C060 8009B460 27140048 */   addiu $s4, $t8, 0x48
 /* 09C064 8009B464 00029443 */  sra   $s2, $v0, 0x11
 /* 09C068 8009B468 32597FFF */  andi  $t9, $s2, 0x7fff
@@ -127,7 +127,7 @@ glabel menu_credits_loop
 /* 09C0F4 8009B4F4 00006812 */  mflo  $t5
 /* 09C0F8 8009B4F8 000D7403 */  sra   $t6, $t5, 0x10
 /* 09C0FC 8009B4FC 01D23821 */  addu  $a3, $t6, $s2
-/* 09C100 8009B500 0C01E2AE */  jal   render_textured_rectangle
+/* 09C100 8009B500 0C01E2AE */  jal   texrect_draw
 /* 09C104 8009B504 24E7FFEC */   addiu $a3, $a3, -0x14
 /* 09C108 8009B508 26100004 */  addiu $s0, $s0, 4
 /* 09C10C 8009B50C 1616FFDE */  bne   $s0, $s6, .L8009B488

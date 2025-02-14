@@ -257,7 +257,7 @@ void init_hud(UNUSED s32 viewportCount) {
     while (gAssetHudElementIds[gAssetHudElementIdsCount] != -1) {
         gAssetHudElementIdsCount++;
     }
-    gAssetHudElements = allocate_from_main_pool_safe(gAssetHudElementIdsCount * (sizeof(void *) + 1), COLOUR_TAG_BLUE);
+    gAssetHudElements = mempool_alloc_safe(gAssetHudElementIdsCount * (sizeof(void *) + 1), COLOUR_TAG_BLUE);
     // Evil pointer shenanigans to store the timer in that last byte in the struct above.
     gAssetHudElementStaleCounter = (u8 *) ((gAssetHudElementIdsCount + (s32 *) gAssetHudElements));
     for (i = 0; i < gAssetHudElementIdsCount; i++) {
@@ -277,7 +277,7 @@ void init_hud(UNUSED s32 viewportCount) {
     } else {
         playerCount = 4; // Create four viewports if there are three players.
     }
-    gPlayerHud[PLAYER_ONE] = allocate_from_main_pool_safe(playerCount * sizeof(HudData), COLOUR_TAG_BLUE);
+    gPlayerHud[PLAYER_ONE] = mempool_alloc_safe(playerCount * sizeof(HudData), COLOUR_TAG_BLUE);
     gPlayerHud[PLAYER_TWO] = (HudData *) ((u8 *) gPlayerHud[PLAYER_ONE] + sizeof(HudData));
     gPlayerHud[PLAYER_THREE] = (HudData *) ((u8 *) gPlayerHud[PLAYER_TWO] + sizeof(HudData));
     gPlayerHud[PLAYER_FOUR] = (HudData *) ((u8 *) gPlayerHud[PLAYER_THREE] + sizeof(HudData));
@@ -332,10 +332,10 @@ void free_hud(void) {
             gAssetHudElements->entry[i] = NULL;
         }
     }
-    free_from_memory_pool(*gPlayerHud);
-    free_from_memory_pool(gAssetHudElementIds);
+    mempool_free(*gPlayerHud);
+    mempool_free(gAssetHudElementIds);
     gAssetHudElementIdsCount = 0;
-    free_from_memory_pool(gAssetHudElements);
+    mempool_free(gAssetHudElements);
     gParticlePtrList_flush();
 }
 
@@ -440,8 +440,8 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                     gRaceStartShowHudStep += 1;
                 }
                 gDPPipeSync(gHUDCurrDisplayList++);
-                init_rsp(&gHUDCurrDisplayList);
-                init_rdp_and_framebuffer(&gHUDCurrDisplayList);
+                rsp_init(&gHUDCurrDisplayList);
+                rdp_init(&gHUDCurrDisplayList);
                 tex_enable_modes(RENDER_ALL);
                 tex_disable_modes(RENDER_Z_COMPARE);
                 sprite_opaque(FALSE);
@@ -537,7 +537,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                 sprite_opaque(TRUE);
                 if (D_80127180) {
                     gHudSprites[D_80127180].texture = NULL;
-                    render_textured_rectangle(&gHUDCurrDisplayList, gHudSprites, 0, 0, 255, 255, 255, 255);
+                    texrect_draw(&gHUDCurrDisplayList, gHudSprites, 0, 0, 255, 255, 255, 255);
                 }
                 *dList = gHUDCurrDisplayList;
                 *mtx = gHUDCurrMatrix;
@@ -1052,7 +1052,7 @@ void hud_draw_lives(Object_Racer *racer, UNUSED s32 updateRate) {
         D_80126CD5 = TRUE;
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->challengePortrait);
         D_80126CD5 = FALSE;
-        init_rdp_and_framebuffer(&gHUDCurrDisplayList);
+        rdp_init(&gHUDCurrDisplayList);
         reset_render_settings(&gHUDCurrDisplayList);
     }
     if (racer->bananas < 10) {
@@ -3158,7 +3158,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     }
     if (D_80127180 != 0) {
         gHudSprites[D_80127180].texture = NULL;
-        render_textured_rectangle(&gHUDCurrDisplayList, gHudSprites, 0, 0, 255, 255, 255, 255);
+        texrect_draw(&gHUDCurrDisplayList, gHudSprites, 0, 0, 255, 255, 255, 255);
     }
     *dList = gHUDCurrDisplayList;
     *mtx = gHUDCurrMatrix;

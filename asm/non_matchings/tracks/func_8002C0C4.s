@@ -21,7 +21,7 @@ glabel func_8002C0C4
 /* 02CCF8 8002C0F8 36B52A00 */  ori   $s5, (0x00082A00 & 0xFFFF) # ori $s5, $s5, 0x2a00
 /* 02CCFC 8002C0FC 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 02CD00 8002C100 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 02CD04 8002C104 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 02CD04 8002C104 0C01C327 */  jal   mempool_alloc_safe
 /* 02CD08 8002C108 02A02025 */   move  $a0, $s5
 /* 02CD0C 8002C10C 3C038012 */  lui   $v1, %hi(gTrackModelHeap) # $v1, 0x8012
 /* 02CD10 8002C110 3C11800E */  lui   $s1, %hi(gCurrentLevelModel) # $s1, 0x800e
@@ -31,13 +31,13 @@ glabel func_8002C0C4
 /* 02CD20 8002C120 AC620000 */  sw    $v0, ($v1)
 /* 02CD24 8002C124 AE220000 */  sw    $v0, ($s1)
 /* 02CD28 8002C128 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 02CD2C 8002C12C 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 02CD2C 8002C12C 0C01C327 */  jal   mempool_alloc_safe
 /* 02CD30 8002C130 240407D0 */   li    $a0, 2000
 /* 02CD34 8002C134 3C018012 */  lui   $at, %hi(D_8011D370) # $at, 0x8012
 /* 02CD38 8002C138 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 02CD3C 8002C13C AC22D370 */  sw    $v0, %lo(D_8011D370)($at)
 /* 02CD40 8002C140 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 02CD44 8002C144 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 02CD44 8002C144 0C01C327 */  jal   mempool_alloc_safe
 /* 02CD48 8002C148 240401F4 */   li    $a0, 500
 /* 02CD4C 8002C14C 3C018012 */  lui   $at, %hi(D_8011D374) # $at, 0x8012
 /* 02CD50 8002C150 AC22D374 */  sw    $v0, %lo(D_8011D374)($at)
@@ -87,7 +87,7 @@ glabel func_8002C0C4
 /* 02CDF0 8002C1F0 0C031886 */  jal   gzip_inflate
 /* 02CDF4 8002C1F4 02002025 */   move  $a0, $s0
 /* 02CDF8 8002C1F8 8E840000 */  lw    $a0, ($s4)
-/* 02CDFC 8002C1FC 0C01C450 */  jal   free_from_memory_pool
+/* 02CDFC 8002C1FC 0C01C450 */  jal   mempool_free
 /* 02CE00 8002C200 00000000 */   nop   
 /* 02CE04 8002C204 8E320000 */  lw    $s2, ($s1)
 /* 02CE08 8002C208 00008025 */  move  $s0, $zero
@@ -291,19 +291,19 @@ glabel func_8002C0C4
 /* 02D108 8002C508 0C032755 */  jal   rmonPrintf
 /* 02D10C 8002C50C 02602825 */   move  $a1, $s3
 .L8002C510:
-/* 02D110 8002C510 0C01C42C */  jal   set_free_queue_state
+/* 02D110 8002C510 0C01C42C */  jal   mempool_free_timer
 /* 02D114 8002C514 00002025 */   move  $a0, $zero
 /* 02D118 8002C518 3C048012 */  lui   $a0, %hi(gTrackModelHeap) # $a0, 0x8012
 /* 02D11C 8002C51C 8C84D30C */  lw    $a0, %lo(gTrackModelHeap)($a0)
-/* 02D120 8002C520 0C01C450 */  jal   free_from_memory_pool
+/* 02D120 8002C520 0C01C450 */  jal   mempool_free
 /* 02D124 8002C524 00000000 */   nop   
 /* 02D128 8002C528 3C058012 */  lui   $a1, %hi(gTrackModelHeap) # $a1, 0x8012
 /* 02D12C 8002C52C 8CA5D30C */  lw    $a1, %lo(gTrackModelHeap)($a1)
 /* 02D130 8002C530 3C06FFFF */  lui   $a2, (0xFFFF00FF >> 16) # lui $a2, 0xffff
 /* 02D134 8002C534 34C600FF */  ori   $a2, (0xFFFF00FF & 0xFFFF) # ori $a2, $a2, 0xff
-/* 02D138 8002C538 0C01C3BE */  jal   allocate_at_address_in_main_pool
+/* 02D138 8002C538 0C01C3BE */  jal   mempool_alloc_fixed
 /* 02D13C 8002C53C 02602025 */   move  $a0, $s3
-/* 02D140 8002C540 0C01C42C */  jal   set_free_queue_state
+/* 02D140 8002C540 0C01C42C */  jal   mempool_free_timer
 /* 02D144 8002C544 24040002 */   li    $a0, 2
 /* 02D148 8002C548 8E240000 */  lw    $a0, ($s1)
 /* 02D14C 8002C54C 0C02A0ED */  jal   minimap_init

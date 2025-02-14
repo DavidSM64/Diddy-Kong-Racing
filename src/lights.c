@@ -37,7 +37,7 @@ f32 gLightDiffZ;
  */
 void free_lights(void) {
     if (gActiveLights != NULL) {
-        free_from_memory_pool(gActiveLights);
+        mempool_free(gActiveLights);
         gActiveLights = NULL;
         D_800DC954 = NULL;
         D_800DC960 = NULL;
@@ -57,7 +57,7 @@ void setup_lights(s32 count) {
 
     free_lights();
     gMaxLights = count;
-    temp_v0 = (ObjectLight **) allocate_from_main_pool_safe(
+    temp_v0 = (ObjectLight **) mempool_alloc_safe(
         gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(unk800DC960) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
     newCount = gMaxLights;
     gActiveLights = temp_v0;

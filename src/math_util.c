@@ -26,8 +26,13 @@ extern s16 gArcTanTable[];
 /******************************/
 
 #ifdef NON_MATCHING
-/* Official Name: disableInterrupts*/
-u32 disable_interrupts(void) {
+/**
+ * Zero out the interrupt mask. This stops this thread
+ * from being interrupted by others, letting you safely
+ * work with delicate areas in memory. Kind of like a mutex.
+ * Returns what the interrupt mask wask before.
+ * Official Name: disableInterrupts */
+u32 interrupts_disable(void) {
     if (gIntDisFlag) {
         return __osDisableInt();
     }
@@ -37,8 +42,12 @@ GLOBAL_ASM("asm/math_util/disable_interrupts.s")
 #endif
 
 #ifdef NON_MATCHING
-/* Official Name: enable_interrupts */
-void enable_interrupts(u32 flags) {
+/**
+ * Set the interrupt mask to whichever flags were given.
+ * Required after zeroing them out, otherwise system
+ * operation won't work as normal.
+ * Official Name: enableInterrupts */
+void interrupts_enable(u32 flags) {
     if (gIntDisFlag) {
         __osRestoreInt(flags);
     }

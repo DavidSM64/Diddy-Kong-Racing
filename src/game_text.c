@@ -57,7 +57,7 @@ s32 D_8012A7D4;
  * Set the default values of dialogue and allocate memory for the active text entry.
  */
 void init_dialogue_text(void) {
-    gCurrentMessageText[0] = (char *) allocate_from_main_pool_safe(0x780, COLOUR_TAG_GREEN);
+    gCurrentMessageText[0] = (char *) mempool_alloc_safe(0x780, COLOUR_TAG_GREEN);
     gCurrentMessageText[1] = gCurrentMessageText[0] + 0x3C0;
     D_8012A7D4 = 0;
     gShowSubtitles = FALSE;
@@ -80,7 +80,7 @@ void init_dialogue_text(void) {
  * Close screen dialogue and free the text currently loaded into it.
  */
 void free_message_box(void) {
-    free_from_memory_pool(gCurrentMessageText[0]);
+    mempool_free(gCurrentMessageText[0]);
     gShowSubtitles = FALSE;
     dialogue_close(6);
     dialogue_clear(6);
@@ -215,7 +215,7 @@ void process_subtitles(s32 updateRate) {
  */
 void load_game_text_table(void) {
     D_8012A78C = -1;
-    gGameTextTable[0] = (GameTextTableStruct *) allocate_from_main_pool_safe(0x800, COLOUR_TAG_GREEN);
+    gGameTextTable[0] = (GameTextTableStruct *) mempool_alloc_safe(0x800, COLOUR_TAG_GREEN);
     gGameTextTableEntries[0] = (char *) &gGameTextTable[0]->entries[32];
     gGameTextTableEntries[1] = &gGameTextTableEntries[0][960];
     D_8012A7A4 = 0;
@@ -231,7 +231,7 @@ void load_game_text_table(void) {
 void free_game_text_table(void) {
     s32 i;
     if (gTextTableExists) {
-        free_from_memory_pool(gGameTextTable[0]);
+        mempool_free(gGameTextTable[0]);
         gTextTableExists = FALSE;
         gShowOnscreenMessage = FALSE;
         for (i = 0; i < 10; i++) {

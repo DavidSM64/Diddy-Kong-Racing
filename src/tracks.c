@@ -251,10 +251,9 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     numberOfPlayers = gScenePlayerViewports;
     gAntiAliasing = FALSE;
     for (i = 0; i < ARRAY_COUNT(gShadowHeapTextures); i++) {
-        gShadowHeapTextures[i] =
-            (DrawTexture *) allocate_from_main_pool_safe(sizeof(DrawTexture) * 400, COLOUR_TAG_YELLOW);
-        gShadowHeapTris[i] = (Triangle *) allocate_from_main_pool_safe(sizeof(Triangle) * 800, COLOUR_TAG_YELLOW);
-        gShadowHeapVerts[i] = (Vertex *) allocate_from_main_pool_safe(sizeof(Vertex) * 2000, COLOUR_TAG_YELLOW);
+        gShadowHeapTextures[i] = (DrawTexture *) mempool_alloc_safe(sizeof(DrawTexture) * 400, COLOUR_TAG_YELLOW);
+        gShadowHeapTris[i] = (Triangle *) mempool_alloc_safe(sizeof(Triangle) * 800, COLOUR_TAG_YELLOW);
+        gShadowHeapVerts[i] = (Vertex *) mempool_alloc_safe(sizeof(Vertex) * 2000, COLOUR_TAG_YELLOW);
     }
 
     gShadowHeapFlip = 0;
@@ -449,8 +448,8 @@ GLOBAL_ASM("asm/non_matchings/tracks/func_80025510.s")
 
 void func_800257D0(void) {
     if (D_800DC924 != 0) {
-        free_from_memory_pool(D_8011D474);
-        free_from_memory_pool(D_800DC924);
+        mempool_free(D_8011D474);
+        mempool_free(D_800DC924);
         D_800DC924 = 0;
     }
 }
@@ -1854,10 +1853,10 @@ void func_8002C0C4(s32 modelId) {
     LevelModel *mdl;
 
     set_texture_colour_tag(COLOUR_TAG_GREEN);
-    gTrackModelHeap = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
+    gTrackModelHeap = mempool_alloc_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
     gCurrentLevelModel = gTrackModelHeap;
-    D_8011D370 = allocate_from_main_pool_safe(0x7D0, COLOUR_TAG_YELLOW);
-    D_8011D374 = allocate_from_main_pool_safe(0x1F4, COLOUR_TAG_YELLOW);
+    D_8011D370 = mempool_alloc_safe(0x7D0, COLOUR_TAG_YELLOW);
+    D_8011D374 = mempool_alloc_safe(0x1F4, COLOUR_TAG_YELLOW);
     D_8011D378 = 0;
     gLevelModelTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
 
@@ -1877,7 +1876,7 @@ void func_8002C0C4(s32 modelId) {
 
     load_asset_to_address(ASSET_LEVEL_MODELS, temp, gLevelModelTable[modelId], temp_s4);
     gzip_inflate((u8 *) temp, (u8 *) gCurrentLevelModel);
-    free_from_memory_pool(gLevelModelTable); // Done with the level models table, so free it.
+    mempool_free(gLevelModelTable); // Done with the level models table, so free it.
 
     mdl = gCurrentLevelModel;
 
@@ -1921,10 +1920,10 @@ void func_8002C0C4(s32 modelId) {
     if (temp_s4 > LEVEL_MODEL_MAX_SIZE) {
         rmonPrintf("ERROR!! TrackMem overflow .. %d\n", temp_s4);
     }
-    set_free_queue_state(0);
-    free_from_memory_pool(gTrackModelHeap);
-    allocate_at_address_in_main_pool(temp_s4, (u8 *) gTrackModelHeap, COLOUR_TAG_YELLOW);
-    set_free_queue_state(2);
+    mempool_free_timer(0);
+    mempool_free(gTrackModelHeap);
+    mempool_alloc_fixed(temp_s4, (u8 *) gTrackModelHeap, COLOUR_TAG_YELLOW);
+    mempool_free_timer(2);
     minimap_init(gCurrentLevelModel);
 
     for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
@@ -1989,14 +1988,14 @@ void free_track(void) {
     for (i = 0; i < gCurrentLevelModel->numberOfTextures; i++) {
         free_texture(gCurrentLevelModel->textures[i].texture);
     }
-    free_from_memory_pool(gTrackModelHeap);
-    free_from_memory_pool(D_8011D370);
-    free_from_memory_pool(D_8011D374);
+    mempool_free(gTrackModelHeap);
+    mempool_free(D_8011D370);
+    mempool_free(D_8011D374);
     free_sprite((Sprite *) gCurrentLevelModel->minimapSpriteIndex);
     for (i = 0; i < MAXCONTROLLERS; i++) {
-        free_from_memory_pool(gShadowHeapTextures[i]);
-        free_from_memory_pool(gShadowHeapTris[i]);
-        free_from_memory_pool(gShadowHeapVerts[i]);
+        mempool_free(gShadowHeapTextures[i]);
+        mempool_free(gShadowHeapTris[i]);
+        mempool_free(gShadowHeapVerts[i]);
     }
     func_800257D0();
     if (gSkydomeSegment != NULL) {

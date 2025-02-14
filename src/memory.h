@@ -6,13 +6,31 @@
 #include "macros.h"
 #include "config.h"
 
+typedef enum MemoryPools {
+    POOL_MAIN,
+    POOL_OBJECT,
+    POOL_UNUSED_2,
+    POOL_UNUSED_3,
+
+    POOL_COUNT
+} MemoryPools;
+
+typedef enum MempoolFlags {
+    SLOT_FREE = 0,              // The slot is free.
+    SLOT_USED = (1 << 0),       // The slot is used.
+    SLOT_LOCKED = (1 << 1),     // The slot is used, and cannot be freed by normal means.
+    SLOT_SAFEGUARD = (1 << 2),  // The slot is used, and marks the stopping point of a global pool clear.
+} MempoolFlags;
+
 #define RAM_END 0x80400000
 #define EXPANSION_RAM_END 0x80800000
 #define MAIN_POOL_SLOT_COUNT 1600
+#define FREE_QUEUE_SIZE 256
+#define MEMSLOT_NONE -1
 
 // Animation related?
 #define COLOUR_TAG_RED 0xFF0000FF
-// Models
+// Model headers
 #define COLOUR_TAG_GREEN 0x00FF00FF
 // Objects
 #define COLOUR_TAG_BLUE 0x0000FFFF
@@ -28,7 +46,7 @@
 #define COLOUR_TAG_GREY 0x7F7F7FFF
 // Particles
 #define COLOUR_TAG_SEMITRANS_GREY 0x80808080
-// ???
+// Model data
 #define COLOUR_TAG_ORANGE 0xFF7F7FFF
 // Controller Pak
 #define COLOUR_TAG_BLACK 0x000000FF
@@ -65,35 +83,35 @@ typedef struct FreeQueueSlot {
 } FreeQueueSlot;
 
 /* Unknown size */
-typedef struct unk800B7D10 {
-    u8 pad0[0x14];
-    s32 unk14;
-} unk800B7D10;
+typedef struct StackInfo {
+    u32 var[5];
+    u32 sp;
+} StackInfo;
 
-void init_main_memory_pool(void);
-MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots);
-void *allocate_from_main_pool_safe(s32 size, u32 colourTag);
-MemoryPoolSlot *allocate_from_main_pool(s32 size, u32 colourTag);
-void *allocate_from_pool_containing_slots(MemoryPoolSlot *slots, s32 size);
-void set_free_queue_state(s32 state);
-void free_from_memory_pool(void *data);
-void clear_free_queue(void);
-void add_to_free_queue(void *dataAddress);
-s32 func_80071478(u8 *address);
-s32 memory_slot_exists(u8 *address);
-s32 get_memory_pool_index_containing_address(u8 *address);
+void mempool_init_main(void);
+MemoryPoolSlot *mempool_new_sub(s32 poolDataSize, s32 numSlots);
+void *mempool_alloc_safe(s32 size, u32 colourTag);
+MemoryPoolSlot *mempool_alloc(s32 size, u32 colourTag);
+void *mempool_alloc_pool(MemoryPoolSlot *slots, s32 size);
+void mempool_free_timer(s32 state);
+void mempool_free(void *data);
+void mempool_free_queue_clear(void);
+void mempool_free_queue(void *dataAddress);
+s32 mempool_locked_set(u8 *address);
+s32 mempool_locked_unset(u8 *address);
+s32 mempool_get_pool(u8 *address);
 u8 *align16(u8 *address);
 u8 *align8(u8 *address);
 u8 *align4(u8 *address);
-void print_memory_colour_tags(void);
-void render_memory_colour_tags(void);
-MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots);
-void free_memory_pool_slot(s32 poolIndex, s32 slotIndex);
-s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken,
+void mempool_print_tags_usb(void);
+void mempool_print_tags_screen(void);
+MemoryPoolSlot *mempool_init(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots);
+void mempool_slot_clear(MemoryPools poolIndex, s32 slotIndex);
+s32 mempool_slot_assign(MemoryPools poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken,
                               u32 colourTag);
 s32 get_memory_colour_tag_count(u32 colourTag);
-void free_slot_containing_address(u8 *address);
-MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag);
-void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag);
+void mempool_free_addr(u8 *address);
+MemoryPoolSlot *mempool_slot_find(MemoryPools poolIndex, s32 size, u32 colourTag);
+void *mempool_alloc_fixed(s32 size, u8 *address, u32 colorTag);
 
 #endif

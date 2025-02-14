@@ -22,7 +22,7 @@ void divider_draw(Gfx **dList) {
     u32 y, x, xOffset, yOffset;
     LevelHeader *levelHeader;
 
-    widthAndHeight = get_video_width_and_height_as_s32();
+    widthAndHeight = fb_size();
     width = GET_VIDEO_WIDTH(widthAndHeight);
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     xOffset = width / 256;
@@ -66,7 +66,7 @@ void divider_clear_coverage(Gfx **dList) {
     u32 tempX;
     u32 tempY;
 
-    screenSize = get_video_width_and_height_as_s32();
+    screenSize = fb_size();
     screenHeight = GET_VIDEO_HEIGHT(screenSize);
     screenWidth = GET_VIDEO_WIDTH(screenSize);
     height = (screenHeight / 128) << 1 << 1;

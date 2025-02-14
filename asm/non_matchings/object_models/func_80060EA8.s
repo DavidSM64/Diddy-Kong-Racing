@@ -61,7 +61,7 @@ glabel func_80060EA8
 /* 061B84 80060F84 0004C080 */  sll   $t8, $a0, 2
 /* 061B88 80060F88 0304C023 */  subu  $t8, $t8, $a0
 /* 061B8C 80060F8C 00182080 */  sll   $a0, $t8, 2
-/* 061B90 80060F90 0C01C344 */  jal   allocate_from_main_pool
+/* 061B90 80060F90 0C01C344 */  jal   mempool_alloc
 /* 061B94 80060F94 A7A70098 */   sh    $a3, 0x98($sp)
 /* 061B98 80060F98 87A70098 */  lh    $a3, 0x98($sp)
 /* 061B9C 80060F9C 8FBF00A4 */  lw    $ra, 0xa4($sp)
@@ -75,14 +75,14 @@ glabel func_80060EA8
 /* 061BB8 80060FB8 3C05FF7F */  lui   $a1, (0xFF7F7FFF >> 16) # lui $a1, 0xff7f
 /* 061BBC 80060FBC AFBF00A4 */  sw    $ra, 0xa4($sp)
 /* 061BC0 80060FC0 34A57FFF */  ori   $a1, (0xFF7F7FFF & 0xFFFF) # ori $a1, $a1, 0x7fff
-/* 061BC4 80060FC4 0C01C344 */  jal   allocate_from_main_pool
+/* 061BC4 80060FC4 0C01C344 */  jal   mempool_alloc
 /* 061BC8 80060FC8 00042040 */   sll   $a0, $a0, 1
 /* 061BCC 80060FCC 8FBF00A4 */  lw    $ra, 0xa4($sp)
 /* 061BD0 80060FD0 240D000C */  li    $t5, 12
 /* 061BD4 80060FD4 14400006 */  bnez  $v0, .L80060FF0
 /* 061BD8 80060FD8 AFA200A0 */   sw    $v0, 0xa0($sp)
 /* 061BDC 80060FDC 8FA400AC */  lw    $a0, 0xac($sp)
-/* 061BE0 80060FE0 0C01C450 */  jal   free_from_memory_pool
+/* 061BE0 80060FE0 0C01C450 */  jal   mempool_free
 /* 061BE4 80060FE4 00000000 */   nop   
 /* 061BE8 80060FE8 10000274 */  b     .L800619BC
 /* 061BEC 80060FEC 24020001 */   li    $v0, 1
@@ -245,17 +245,17 @@ glabel func_80060EA8
 /* 061E44 80061244 0004C840 */  sll   $t9, $a0, 1
 /* 061E48 80061248 2412000A */  li    $s2, 10
 /* 061E4C 8006124C 03202025 */  move  $a0, $t9
-/* 061E50 80061250 0C01C344 */  jal   allocate_from_main_pool
+/* 061E50 80061250 0C01C344 */  jal   mempool_alloc
 /* 061E54 80061254 34A57FFF */   ori   $a1, (0xFF7F7FFF & 0xFFFF) # ori $a1, $a1, 0x7fff
 /* 061E58 80061258 8FBF00A4 */  lw    $ra, 0xa4($sp)
 /* 061E5C 8006125C 240D000C */  li    $t5, 12
 /* 061E60 80061260 14400009 */  bnez  $v0, .L80061288
 /* 061E64 80061264 0040B825 */   move  $s7, $v0
 /* 061E68 80061268 8FA400AC */  lw    $a0, 0xac($sp)
-/* 061E6C 8006126C 0C01C450 */  jal   free_from_memory_pool
+/* 061E6C 8006126C 0C01C450 */  jal   mempool_free
 /* 061E70 80061270 00000000 */   nop   
 /* 061E74 80061274 8FA400A0 */  lw    $a0, 0xa0($sp)
-/* 061E78 80061278 0C01C450 */  jal   free_from_memory_pool
+/* 061E78 80061278 0C01C450 */  jal   mempool_free
 /* 061E7C 8006127C 00000000 */   nop   
 /* 061E80 80061280 100001CE */  b     .L800619BC
 /* 061E84 80061284 24020001 */   li    $v0, 1
@@ -528,19 +528,19 @@ glabel func_80060EA8
 /* 06223C 8006163C 3C05FF7F */  lui   $a1, (0xFF7F7FFF >> 16) # lui $a1, 0xff7f
 /* 062240 80061640 AFBF00A4 */  sw    $ra, 0xa4($sp)
 /* 062244 80061644 34A57FFF */  ori   $a1, (0xFF7F7FFF & 0xFFFF) # ori $a1, $a1, 0x7fff
-/* 062248 80061648 0C01C344 */  jal   allocate_from_main_pool
+/* 062248 80061648 0C01C344 */  jal   mempool_alloc
 /* 06224C 8006164C 00042080 */   sll   $a0, $a0, 2
 /* 062250 80061650 8FBF00A4 */  lw    $ra, 0xa4($sp)
 /* 062254 80061654 240D000C */  li    $t5, 12
 /* 062258 80061658 1440000B */  bnez  $v0, .L80061688
 /* 06225C 8006165C 00409025 */   move  $s2, $v0
 /* 062260 80061660 8FA400AC */  lw    $a0, 0xac($sp)
-/* 062264 80061664 0C01C450 */  jal   free_from_memory_pool
+/* 062264 80061664 0C01C450 */  jal   mempool_free
 /* 062268 80061668 00000000 */   nop   
 /* 06226C 8006166C 8FA400A0 */  lw    $a0, 0xa0($sp)
-/* 062270 80061670 0C01C450 */  jal   free_from_memory_pool
+/* 062270 80061670 0C01C450 */  jal   mempool_free
 /* 062274 80061674 00000000 */   nop   
-/* 062278 80061678 0C01C450 */  jal   free_from_memory_pool
+/* 062278 80061678 0C01C450 */  jal   mempool_free
 /* 06227C 8006167C 02E02025 */   move  $a0, $s7
 /* 062280 80061680 100000CE */  b     .L800619BC
 /* 062284 80061684 24020001 */   li    $v0, 1
@@ -757,12 +757,12 @@ glabel func_80060EA8
 .L80061994:
 /* 062594 80061994 8FA900A0 */  lw    $t1, 0xa0($sp)
 /* 062598 80061998 02E02025 */  move  $a0, $s7
-/* 06259C 8006199C 0C01C450 */  jal   free_from_memory_pool
+/* 06259C 8006199C 0C01C450 */  jal   mempool_free
 /* 0625A0 800619A0 AD490040 */   sw    $t1, 0x40($t2)
-/* 0625A4 800619A4 0C01C450 */  jal   free_from_memory_pool
+/* 0625A4 800619A4 0C01C450 */  jal   mempool_free
 /* 0625A8 800619A8 02402025 */   move  $a0, $s2
 /* 0625AC 800619AC 8FA400AC */  lw    $a0, 0xac($sp)
-/* 0625B0 800619B0 0C01C450 */  jal   free_from_memory_pool
+/* 0625B0 800619B0 0C01C450 */  jal   mempool_free
 /* 0625B4 800619B4 00000000 */   nop   
 .L800619B8:
 /* 0625B8 800619B8 00001025 */  move  $v0, $zero

@@ -354,7 +354,7 @@ void render_fade_transition(Gfx **dList, MatrixS **mats, Vertex **verts) {
  */
 void transition_end(void) {
     if (sTransitionVtx[0] != NULL) {
-        free_from_memory_pool(sTransitionVtx[0]);
+        mempool_free(sTransitionVtx[0]);
         sTransitionVtx[0] = NULL;
         sTransitionVtx[1] = NULL;
         sTransitionTris[0] = NULL;
@@ -426,7 +426,7 @@ void process_transition_fullscreen(s32 updateRate) {
  * Draws a simple fillrect covering the whole screen that fades in or out.
  */
 void render_fade_fullscreen(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
-    s32 screenSize = get_video_width_and_height_as_s32();
+    s32 screenSize = fb_size();
     gSPDisplayList((*dList)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dList)++, 0, 0, gCurFadeRed, gCurFadeGreen, gCurFadeBlue, gCurFadeAlpha);
     gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
@@ -452,7 +452,7 @@ void init_transition_shape(FadeTransition *transition, s32 numVerts, s32 numTris
     sizeTris = numTris * 16;
     i = j * 12;
 
-    sTransitionVtx[0] = allocate_from_main_pool_safe(((sizeVerts + sizeTris) * 2) + (i * 3), COLOUR_TAG_YELLOW);
+    sTransitionVtx[0] = mempool_alloc_safe(((sizeVerts + sizeTris) * 2) + (i * 3), COLOUR_TAG_YELLOW);
     sTransitionVtx[1] = sTransitionVtx[0] + j;
     sTransitionTris[0] = (Triangle *) (sTransitionVtx[1] + j);
     sTransitionTris[1] = (Triangle *) (((u8 *) sTransitionTris[0]) + sizeTris);
@@ -585,7 +585,7 @@ void func_800C15D4(FadeTransition *transition) {
     sizeVerts = numVerts * sizeof(Vertex);
     sizeTris = numTris * sizeof(Triangle);
 
-    sTransitionVtx[0] = (Vertex *) allocate_from_main_pool_safe(((sizeVerts + sizeTris) * 2), COLOUR_TAG_YELLOW);
+    sTransitionVtx[0] = (Vertex *) mempool_alloc_safe(((sizeVerts + sizeTris) * 2), COLOUR_TAG_YELLOW);
     sTransitionVtx[1] = (Vertex *) ((uintptr_t) sTransitionVtx[0] + sizeVerts);
     sTransitionTris[0] = (Triangle *) ((uintptr_t) sTransitionVtx[1] + sizeVerts);
     sTransitionTris[1] = (Triangle *) ((uintptr_t) sTransitionTris[0] + sizeTris);
@@ -850,7 +850,7 @@ void process_transition_disabled(s32 updateRate) {
  * Fill the whole screen with a solid colour.
  */
 void render_fade_disabled(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
-    s32 screenSize = get_video_width_and_height_as_s32();
+    s32 screenSize = fb_size();
     gSPDisplayList((*dList)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dList)++, 0, 0, (gLastFadeRed >> 16), (gLastFadeGreen >> 16), (gLastFadeBlue >> 16), 255);
     gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);

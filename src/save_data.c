@@ -693,7 +693,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
             ret = CONTROLLER_PAK_BAD_DATA;
         }
         if (ret == CONTROLLER_PAK_GOOD) {
-            alloc = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_BLACK);
+            alloc = mempool_alloc_safe(fileSize, COLOUR_TAG_BLACK);
             ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *) alloc, fileSize);
 
             if (ret == CONTROLLER_PAK_GOOD) {
@@ -707,7 +707,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
                 }
             }
 
-            free_from_memory_pool(alloc);
+            mempool_free(alloc);
         }
     }
 
@@ -726,14 +726,14 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     s32 fileSize;
 
     fileSize = get_game_data_file_size(); // 256 bytes
-    gameData = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_WHITE);
+    gameData = mempool_alloc_safe(fileSize, COLOUR_TAG_WHITE);
     *((s32 *) gameData) = GAMD;
     func_800732E8(arg1, gameData + 4);
     ret = get_file_extension(controllerIndex, 3, (char *) &fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = write_controller_pak_file(controllerIndex, -1, "DKRACING-ADV", (char *) &fileExt, gameData, fileSize);
     }
-    free_from_memory_pool(gameData);
+    mempool_free(gameData);
     if (ret != CONTROLLER_PAK_GOOD) {
         ret |= (controllerIndex << 30);
     }
@@ -761,7 +761,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
         }
 
         if (status == CONTROLLER_PAK_GOOD) {
-            cpakData = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_BLACK);
+            cpakData = mempool_alloc_safe(fileSize, COLOUR_TAG_BLACK);
 
             status = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *) cpakData, fileSize);
             if (status == CONTROLLER_PAK_GOOD) {
@@ -773,7 +773,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
                 }
             }
 
-            free_from_memory_pool(cpakData);
+            mempool_free(cpakData);
         }
     }
 
@@ -793,14 +793,14 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     char *fileExt;
 
     fileSize = get_time_data_file_size(); // 512 bytes
-    timeData = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_WHITE);
+    timeData = mempool_alloc_safe(fileSize, COLOUR_TAG_WHITE);
     *((s32 *) timeData) = TIMD;
     func_800738A4(arg1, timeData + 4);
     ret = get_file_extension(controllerIndex, 4, (char *) &fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = write_controller_pak_file(controllerIndex, -1, "DKRACING-TIMES", (char *) &fileExt, timeData, fileSize);
     }
-    free_from_memory_pool(timeData);
+    mempool_free(timeData);
     if (ret != CONTROLLER_PAK_GOOD) {
         ret |= (controllerIndex << 30);
     }
@@ -835,12 +835,12 @@ s32 read_save_file(s32 saveFileNum, Settings *settings) {
             break;
     }
     blocks = 5;
-    saveData = allocate_from_main_pool_safe(blocks * sizeof(u64), COLOUR_TAG_WHITE);
+    saveData = mempool_alloc_safe(blocks * sizeof(u64), COLOUR_TAG_WHITE);
     for (block = 0, address = startingAddress; block < blocks; block++, address++) {
         osEepromRead(get_si_mesg_queue(), address, (u8 *) &saveData[block]);
     }
     populate_settings_from_save_data(settings, (u8 *) saveData);
-    free_from_memory_pool(saveData);
+    mempool_free(saveData);
     ret = settings->newGame;
     if (settings->newGame) {
         erase_save_file(saveFileNum, settings);
@@ -887,7 +887,7 @@ void erase_save_file(s32 saveFileNum, Settings *settings) {
                 break;
         }
         blockSize = 5;
-        alloc = allocate_from_main_pool_safe(blockSize * sizeof(u64), COLOUR_TAG_WHITE);
+        alloc = mempool_alloc_safe(blockSize * sizeof(u64), COLOUR_TAG_WHITE);
         saveData = (u8 *) alloc;
 
         // clang-format off
@@ -900,7 +900,7 @@ void erase_save_file(s32 saveFileNum, Settings *settings) {
                 osEepromWrite(get_si_mesg_queue(), address, (u8 *) &alloc[i]);
             }
         }
-        free_from_memory_pool(alloc);
+        mempool_free(alloc);
     } else {
         stubbed_printf("WARNING : No Eprom\n");
     }
@@ -941,7 +941,7 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
     }
 
     blocks = 5;
-    alloc = allocate_from_main_pool_safe(blocks * sizeof(u64), COLOUR_TAG_WHITE);
+    alloc = mempool_alloc_safe(blocks * sizeof(u64), COLOUR_TAG_WHITE);
     func_800732E8(settings, (u8 *) alloc);
 
     if (!is_reset_pressed()) {
@@ -950,7 +950,7 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
         }
     }
 
-    free_from_memory_pool(alloc);
+    mempool_free(alloc);
 
     return 0;
 }
@@ -971,7 +971,7 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
         return -1;
     }
 
-    alloc = allocate_from_main_pool_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
+    alloc = mempool_alloc_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
 
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
         s32 blocks = EEP_FLAP_SIZE;
@@ -989,7 +989,7 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
         func_80073588(settings, (u8 *) alloc, SAVE_DATA_FLAG_READ_COURSE_TIMES);
     }
 
-    free_from_memory_pool(alloc);
+    mempool_free(alloc);
     return 0;
 }
 
@@ -1010,7 +1010,7 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
         return -1;
     }
 
-    alloc = allocate_from_main_pool_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
+    alloc = mempool_alloc_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
 
     func_800738A4(settings, (u8 *) alloc);
 
@@ -1033,7 +1033,7 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
         }
     }
 
-    free_from_memory_pool(alloc);
+    mempool_free(alloc);
     return 0;
 }
 
@@ -1153,7 +1153,7 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCha
     }
     pakStatus = get_file_number(controllerIndex, "DKRACING-GHOSTS", "", &fileNumber);
     if (pakStatus == CONTROLLER_PAK_GOOD) {
-        cPakFile = allocate_from_main_pool_safe(GHSS_SIZE, COLOUR_TAG_BLACK);
+        cPakFile = mempool_alloc_safe(GHSS_SIZE, COLOUR_TAG_BLACK);
         if (!(pfs[controllerIndex].status & 1)) {
             osPfsInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex);
         }
@@ -1180,10 +1180,10 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCha
                 pakStatus = CONTROLLER_PAK_BAD_DATA;
             }
         }
-        free_from_memory_pool(cPakFile);
+        mempool_free(cPakFile);
         if (ghostSize != 0) {
             if (ghostCharacterId != NULL) {
-                cPakFile = allocate_from_main_pool_safe(allocateSpace + GHSS_SIZE, COLOUR_TAG_BLACK);
+                cPakFile = mempool_alloc_safe(allocateSpace + GHSS_SIZE, COLOUR_TAG_BLACK);
                 if (osPfsReadWriteFile(&pfs[controllerIndex], fileNumber, PFS_READ, ghostSize, allocateSpace,
                                        AS_BYTES(cPakFile)) == 0) {
                     // Hmm... The ghost data struct might not be quite right here...
@@ -1200,7 +1200,7 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCha
                 } else {
                     pakStatus = CONTROLLER_PAK_BAD_DATA;
                 }
-                free_from_memory_pool(cPakFile);
+                mempool_free(cPakFile);
             }
         }
         if ((ghostSize != 0) && (ghostCharacterId == NULL)) {
@@ -1261,7 +1261,7 @@ SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
     sp30 += GHSS_SIZE;
     sp24 = sp30 * 6;
     if (1) {} // fake
-    ghost = allocate_from_main_pool_safe(sp24 + (GHSS_SIZE * 2), COLOUR_TAG_BLACK);
+    ghost = mempool_alloc_safe(sp24 + (GHSS_SIZE * 2), COLOUR_TAG_BLACK);
     ghost->signature = GHSS;
     ghostBody = &ghost->data[0];
     ghostBody[0].unk0 = levelId;
@@ -1276,7 +1276,7 @@ SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
     func_80074AA8((GhostHeader *) (AS_BYTES(ghost) + ghostBody[0].unk2), ghostCharacterId, ghostTime, ghostNodeCount,
                   dest);
     pakStatus = write_controller_pak_file(controllerIndex, -1, "DKRACING-GHOSTS", "", (u8 *) ghost, sp24 + GHSS_SIZE);
-    free_from_memory_pool(ghost);
+    mempool_free(ghost);
     return pakStatus;
 }
 
@@ -1322,11 +1322,11 @@ SIDeviceStatus func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
             start_reading_controller_data(controllerIndex);
             return pakStatus;
         } else {
-            fileData = allocate_from_main_pool_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
+            fileData = mempool_alloc_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
             pakStatus = read_data_from_controller_pak(controllerIndex, fileNumber, AS_BYTES(fileData), fileSize);
             start_reading_controller_data(controllerIndex);
             if (pakStatus != CONTROLLER_PAK_GOOD) {
-                free_from_memory_pool(fileData);
+                mempool_free(fileData);
             } else {
                 if (fileData->signature == GHSS) {
                     ghostFileData = &fileData->data[0];
@@ -1359,7 +1359,7 @@ SIDeviceStatus func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
                         pakStatus = CONTROLLER_PAK_NO_ROOM_FOR_GHOSTS;
                     } else {
                         sp58 = ghostSize - (ghostFileData[ghostIndex + 1].unk2 - ghostFileData[ghostIndex].unk2);
-                        fileDataToWrite = allocate_from_main_pool_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
+                        fileDataToWrite = mempool_alloc_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
                         fileDataToWrite->signature = GHSS;
                         sp70 = &fileDataToWrite->data[0];
                         fileDataToWrite->data[6].unk0 = 0xFF;
@@ -1382,12 +1382,12 @@ SIDeviceStatus func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
                         sp70[ghostIndex].unk1 = vehicleId;
                         pakStatus = write_controller_pak_file(controllerIndex, fileNumber, "DKRACING-GHOSTS", "",
                                                               AS_BYTES(fileDataToWrite), fileSize);
-                        free_from_memory_pool(fileDataToWrite);
+                        mempool_free(fileDataToWrite);
                     }
                 } else {
                     pakStatus = CONTROLLER_PAK_BAD_DATA;
                 }
-                free_from_memory_pool(fileData);
+                mempool_free(fileData);
             }
         }
     }
@@ -1416,14 +1416,14 @@ s32 func_800753D8(s32 controllerIndex, s32 worldId) {
             start_reading_controller_data(controllerIndex);
             return pakStatus;
         }
-        data = allocate_from_main_pool_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
+        data = mempool_alloc_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
         pakStatus = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *) data, fileSize);
         start_reading_controller_data(controllerIndex);
         if (pakStatus == CONTROLLER_PAK_GOOD) {
             if (data->signature == GHSS) {
                 tempData = data->data;
                 sizeDiff = tempData[worldId].unk2 - tempData[worldId + 1].unk2;
-                data2 = allocate_from_main_pool_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
+                data2 = mempool_alloc_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
                 bcopy(data, data2, tempData[worldId].unk2); // Copy data into data2
 
                 if (worldId != WORLD_FUTURE_FUN_LAND) {
@@ -1443,9 +1443,9 @@ s32 func_800753D8(s32 controllerIndex, s32 worldId) {
             } else {
                 pakStatus = CONTROLLER_PAK_BAD_DATA;
             }
-            free_from_memory_pool(data2); // Wait, what happens if (data->signature != GHSS)?
+            mempool_free(data2); // Wait, what happens if (data->signature != GHSS)?
         }
-        free_from_memory_pool(data);
+        mempool_free(data);
     } else {
         start_reading_controller_data(controllerIndex);
     }
@@ -1477,7 +1477,7 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *levelIDs, u8 *vehicleIDs, 
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (ret == CONTROLLER_PAK_GOOD) {
-            fileData = allocate_from_main_pool_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
+            fileData = mempool_alloc_safe(fileSize + GHSS_SIZE, COLOUR_TAG_BLACK);
             ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *) fileData, fileSize);
             if (ret == CONTROLLER_PAK_GOOD) {
                 for (i = 0, var_s1 = (GhostHeaderAlt *) (&fileData[4]); i < 6; i++) {
@@ -1495,7 +1495,7 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *levelIDs, u8 *vehicleIDs, 
                     }
                 }
             }
-            free_from_memory_pool(fileData);
+            mempool_free(fileData);
         }
     }
     start_reading_controller_data(controllerIndex);
@@ -1706,11 +1706,11 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
     }
 
     if (gPakFileList != NULL) {
-        free_from_memory_pool(gPakFileList);
+        mempool_free(gPakFileList);
     }
 
     files_used = maxNumOfFilesOnCpak * 24;
-    gPakFileList = allocate_from_main_pool_safe(files_used, COLOUR_TAG_BLACK);
+    gPakFileList = mempool_alloc_safe(files_used, COLOUR_TAG_BLACK);
     bzero(gPakFileList, files_used);
     list = gPakFileList;
 
@@ -1764,7 +1764,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
  */
 void cpak_free_files(void) {
     if (gPakFileList) {
-        free_from_memory_pool(gPakFileList);
+        mempool_free(gPakFileList);
     }
     gPakFileList = NULL;
 }
@@ -1854,12 +1854,12 @@ s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondCont
         return (controllerIndex << 30) | CONTROLLER_PAK_BAD_DATA;
     }
 
-    alloc = allocate_from_main_pool_safe(state.file_size, COLOUR_TAG_BLACK);
+    alloc = mempool_alloc_safe(state.file_size, COLOUR_TAG_BLACK);
 
     status = read_data_from_controller_pak(controllerIndex, fileNumber, alloc, state.file_size);
     start_reading_controller_data(controllerIndex);
     if (status != CONTROLLER_PAK_GOOD) {
-        free_from_memory_pool(alloc);
+        mempool_free(alloc);
         return (controllerIndex << 30) | status;
     }
 
@@ -1871,7 +1871,7 @@ s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondCont
         status |= (secondControllerIndex << 30);
     }
 
-    free_from_memory_pool(alloc);
+    mempool_free(alloc);
     return status;
 }
 
@@ -2112,7 +2112,7 @@ SaveFileType get_file_type(s32 controllerIndex, s32 fileNum) {
     s32 ret;
 
     ret = SAVE_FILE_TYPE_CPAK_OTHER;
-    data = allocate_from_main_pool_safe(0x100, COLOUR_TAG_BLACK);
+    data = mempool_alloc_safe(0x100, COLOUR_TAG_BLACK);
     if (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *) data, 0x100) == CONTROLLER_PAK_GOOD) {
         switch (*data) {
             case GAMD:
@@ -2129,6 +2129,6 @@ SaveFileType get_file_type(s32 controllerIndex, s32 fileNum) {
                 break;
         }
     }
-    free_from_memory_pool(data);
+    mempool_free(data);
     return ret;
 }

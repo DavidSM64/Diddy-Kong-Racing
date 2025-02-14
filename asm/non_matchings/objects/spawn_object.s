@@ -594,7 +594,7 @@ glabel L8000EDE0
 .L8000F2C8:
 /* 00FEC8 8000F2C8 8C84AE68 */  lw    $a0, %lo(gObjectMemoryPool)($a0)
 /* 00FECC 8000F2CC 00A08825 */  move  $s1, $a1
-/* 00FED0 8000F2D0 0C01C3A4 */  jal   allocate_from_pool_containing_slots
+/* 00FED0 8000F2D0 0C01C3A4 */  jal   mempool_alloc_pool
 /* 00FED4 8000F2D4 02408025 */   move  $s0, $s2
 /* 00FED8 8000F2D8 14400018 */  bnez  $v0, .L8000F33C
 /* 00FEDC 8000F2DC 00409025 */   move  $s2, $v0
@@ -804,7 +804,7 @@ glabel L8000EDE0
 /* 0101C0 8000F5C0 87A4004E */  lh    $a0, 0x4e($sp)
 /* 0101C4 8000F5C4 0C003211 */  jal   try_free_object_header
 /* 0101C8 8000F5C8 00000000 */   nop   
-/* 0101CC 8000F5CC 0C01C450 */  jal   free_from_memory_pool
+/* 0101CC 8000F5CC 0C01C450 */  jal   mempool_free
 /* 0101D0 8000F5D0 02402025 */   move  $a0, $s2
 /* 0101D4 8000F5D4 12200005 */  beqz  $s1, .L8000F5EC
 /* 0101D8 8000F5D8 00000000 */   nop   

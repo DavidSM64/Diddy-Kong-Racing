@@ -50,9 +50,9 @@ void func_80008040(void) {
     s32 var_v0;
 
     sound_table_properties(&D_80119C40, NULL, NULL);
-    gSoundMaskHeap = allocate_from_main_pool_safe(0x5A0, COLOUR_TAG_CYAN);
-    gSoundMaskHeapFree = allocate_from_main_pool_safe(0xA0, COLOUR_TAG_CYAN);
-    gSoundMaskHeapUsed = allocate_from_main_pool_safe(0xA0, COLOUR_TAG_CYAN);
+    gSoundMaskHeap = mempool_alloc_safe(0x5A0, COLOUR_TAG_CYAN);
+    gSoundMaskHeapFree = mempool_alloc_safe(0xA0, COLOUR_TAG_CYAN);
+    gSoundMaskHeapUsed = mempool_alloc_safe(0xA0, COLOUR_TAG_CYAN);
     gUsedMasks = 0;
     for (var_v0 = 0; var_v0 < 7; var_v0++) {
         D_80119C58[var_v0].unk4 = NULL;

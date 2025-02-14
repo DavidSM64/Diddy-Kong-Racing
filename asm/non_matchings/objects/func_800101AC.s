@@ -82,7 +82,7 @@ glabel func_800101AC
 .L800102B8:
 /* 010EB8 800102B8 0C003211 */  jal   try_free_object_header
 /* 010EBC 800102BC 00000000 */   nop   
-/* 010EC0 800102C0 0C01C450 */  jal   free_from_memory_pool
+/* 010EC0 800102C0 0C01C450 */  jal   mempool_free
 /* 010EC4 800102C4 02202025 */   move  $a0, $s1
 /* 010EC8 800102C8 8EC30060 */  lw    $v1, 0x60($s6)
 /* 010ECC 800102CC 26B50001 */  addiu $s5, $s5, 1
@@ -295,7 +295,7 @@ glabel L800105A8
 /* 0111AC 800105AC 00000000 */  nop   
 /* 0111B0 800105B0 10800005 */  beqz  $a0, .L800105C8
 /* 0111B4 800105B4 00000000 */   nop   
-/* 0111B8 800105B8 0C01C450 */  jal   free_from_memory_pool
+/* 0111B8 800105B8 0C01C450 */  jal   mempool_free
 /* 0111BC 800105BC 00000000 */   nop   
 /* 0111C0 800105C0 86C50048 */  lh    $a1, 0x48($s6)
 /* 0111C4 800105C4 00000000 */  nop   
@@ -566,7 +566,7 @@ glabel L80010664
 /* 011558 80010958 86C4002C */  lh    $a0, 0x2c($s6)
 /* 01155C 8001095C 0C003211 */  jal   try_free_object_header
 /* 011560 80010960 00000000 */   nop   
-/* 011564 80010964 0C01C450 */  jal   free_from_memory_pool
+/* 011564 80010964 0C01C450 */  jal   mempool_free
 /* 011568 80010968 02C02025 */   move  $a0, $s6
 .L8001096C:
 /* 01156C 8001096C 8FBF0034 */  lw    $ra, 0x34($sp)

@@ -59,7 +59,7 @@ OSScClient gVideoSched;
  * Framebuffers are allocated at runtime.
  * Official Name: viInit
  */
-void init_video(s32 videoModeIndex, OSSched *sc) {
+void video_init(s32 videoModeIndex, OSSched *sc) {
     if (osTvType == TV_TYPE_PAL) {
         gVideoRefreshRate = REFRESH_50HZ;
         gVideoAspectRatio = ASPECT_RATIO_PAL;
@@ -81,17 +81,17 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
         }
     }
 
-    reset_video_delta_time();
-    set_video_mode_index(videoModeIndex);
+    video_delta_reset();
+    fb_mode_set(videoModeIndex);
     gVideoFramebuffers[0] = NULL;
     gVideoFramebuffers[1] = NULL;
-    init_framebuffer(0);
-    init_framebuffer(1);
+    fb_alloc(0);
+    fb_alloc(1);
     gVideoCurrFbIndex = 1;
-    swap_framebuffers();
+    fb_swap();
     osCreateMesgQueue((OSMesgQueue *) &gVideoMesgQueue, gVideoMesgBuf, ARRAY_COUNT(gVideoMesgBuf));
     osScAddClient(sc, &gVideoSched, (OSMesgQueue *) &gVideoMesgQueue, OS_SC_ID_VIDEO);
-    init_vi_settings();
+    fb_init_vi();
     sBlackScreenTimer = 12;
     osViBlack(TRUE);
     gVideoDeltaCounter = 0;
@@ -101,14 +101,14 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
 /**
  * Set the current video mode to the id specified.
  */
-void set_video_mode_index(s32 videoModeIndex) {
+void fb_mode_set(s32 videoModeIndex) {
     gVideoModeIndex = videoModeIndex;
 }
 
 /**
  * Unused function that would return the current video mode index.
  */
-UNUSED s32 get_video_mode_index(void) {
+UNUSED s32 fb_mode(void) {
     return gVideoModeIndex;
 }
 
@@ -116,7 +116,7 @@ UNUSED s32 get_video_mode_index(void) {
  * Unused function that would change the framebuffer dimensions.
  * Since only one kind of video mode is ever used, this function is never called.
  */
-UNUSED void set_video_width_and_height_from_index(s32 fbIndex) {
+UNUSED void fb_mode_size(s32 fbIndex) {
     gVideoFbWidths[fbIndex] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].width;
     gVideoFbHeights[fbIndex] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].height;
 }
@@ -126,7 +126,7 @@ UNUSED void set_video_width_and_height_from_index(s32 fbIndex) {
  * The high 16 bits are the height of the frame, and the low 16 bits are the width.
  * Official Name: viGetCurrentSize
  */
-s32 get_video_width_and_height_as_s32(void) {
+s32 fb_size(void) {
     return (gVideoFbHeights[gVideoCurrFbIndex] << 16) | gVideoFbWidths[gVideoCurrFbIndex];
 }
 
@@ -136,7 +136,7 @@ s32 get_video_width_and_height_as_s32(void) {
  * depending on the gVideoModeIndex value.
  * Most of these go unused, as the value is always 1.
  */
-void init_vi_settings(void) {
+void fb_init_vi(void) {
     s32 viModeTableIndex;
     OSViMode *tvViMode;
 
@@ -164,7 +164,7 @@ void init_vi_settings(void) {
             } else if (osTvType == TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLpn1;
             }
-            memory_copy((u8 *) tvViMode, (u8 *) &gTvViMode, sizeof(OSViMode));
+            fb_memcpy((u8 *) tvViMode, (u8 *) &gTvViMode, sizeof(OSViMode));
             if (osTvType == TV_TYPE_PAL) {
                 // A simple osViExtendVStart to add an additional 24 scanlines?
                 gTvViMode.fldRegs[0].vStart -= (PAL_HEIGHT_DIFFERENCE << 16);
@@ -183,7 +183,7 @@ void init_vi_settings(void) {
                 tvViMode = &osViModeMpalLpn1;
             }
 
-            memory_copy((u8 *) tvViMode, (u8 *) &gTvViMode, sizeof(OSViMode));
+            fb_memcpy((u8 *) tvViMode, (u8 *) &gTvViMode, sizeof(OSViMode));
             gTvViMode.comRegs.width = WIDTH(HIGH_RES_SCREEN_WIDTH);
             gTvViMode.comRegs.xScale = SCALE(1, 0);
             gTvViMode.fldRegs[0].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
@@ -198,7 +198,7 @@ void init_vi_settings(void) {
             } else if (osTvType == TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLan1;
             }
-            memory_copy((u8 *) tvViMode, (u8 *) &gTvViMode, sizeof(OSViMode));
+            fb_memcpy((u8 *) tvViMode, (u8 *) &gTvViMode, sizeof(OSViMode));
             gTvViMode.comRegs.width = WIDTH(HIGH_RES_SCREEN_WIDTH);
             gTvViMode.comRegs.xScale = SCALE(1, 0);
             gTvViMode.fldRegs[0].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
@@ -230,31 +230,33 @@ void init_vi_settings(void) {
 /**
  * Allocate the selected framebuffer index from the main pool.
  * Will also allocate the depthbuffer if it does not already exist.
+ * Framebuffers should be 64 bit aligned, but since the memory allocator
+ * already aligns by 16, it only needs 48 bits of alignment in addition.
  */
-void init_framebuffer(s32 index) {
+void fb_alloc(s32 index) {
     if (gVideoFramebuffers[index] != 0) {
-        memory_slot_exists((u8 *) gVideoFramebuffers[index]); // Effectively unused.
-        free_from_memory_pool(gVideoFramebuffers[index]);
+        mempool_locked_unset((u8 *) gVideoFramebuffers[index]); // Effectively unused.
+        mempool_free(gVideoFramebuffers[index]);
     }
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].width;
     gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].height;
     if (gVideoModeIndex >= VIDEO_MODE_MIDRES_MASK) {
         gVideoFramebuffers[index] =
-            allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
-        gVideoFramebuffers[index] = (u16 *) (((s32) gVideoFramebuffers[index] + 0x3F) & ~0x3F);
+            mempool_alloc_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+        gVideoFramebuffers[index] = FBALIGN(gVideoFramebuffers[index]);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe(
-                (HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
-            gVideoDepthBuffer = (u16 *) (((s32) gVideoDepthBuffer + 0x3F) & ~0x3F);
+            gVideoDepthBuffer =
+                mempool_alloc_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+            gVideoDepthBuffer = FBALIGN(gVideoDepthBuffer);
         }
     } else {
         gVideoFramebuffers[index] =
-            allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
-        gVideoFramebuffers[index] = (u16 *) (((s32) gVideoFramebuffers[index] + 0x3F) & ~0x3F);
+            mempool_alloc_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
+        gVideoFramebuffers[index] = FBALIGN(gVideoFramebuffers[index]);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe(
-                (gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
-            gVideoDepthBuffer = (u16 *) (((s32) gVideoDepthBuffer + 0x3F) & ~0x3F);
+            gVideoDepthBuffer =
+                mempool_alloc_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
+            gVideoDepthBuffer = FBALIGN(gVideoDepthBuffer);
         }
     }
 }
@@ -263,7 +265,7 @@ void init_framebuffer(s32 index) {
  * Sets the video counters to their default values.
  * Another renmant from an unused system.
  */
-void reset_video_delta_time(void) {
+void video_delta_reset(void) {
     gVideoDeltaCounter = 0;
     gVideoDeltaTime = 2;
 }
@@ -273,9 +275,9 @@ void reset_video_delta_time(void) {
  * then update the current framebuffer index.
  * This function also has a section where it counts a timer that goes no higher
  * than an update magnitude of 2. It's only purpose is to be used as a divisor
- * in the unused function, get_video_refresh_speed.
+ * in the unused function, vi_refresh_rate.
  */
-s32 swap_framebuffer_when_ready(s32 mesg) {
+s32 fb_update(s32 mesg) {
     u8 tempUpdateRate;
 
     tempUpdateRate = LOGIC_60FPS;
@@ -286,7 +288,7 @@ s32 swap_framebuffer_when_ready(s32 mesg) {
         }
     }
     if (mesg != MESG_SKIP_BUFFER_SWAP) {
-        swap_framebuffers();
+        fb_swap();
     }
     while (osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_NOBLOCK) != -1) {
         tempUpdateRate++;
@@ -325,7 +327,7 @@ void func_8007AB24(u8 arg0) {
  * A fully performant game would return 60.
  * Perhaps may have been used originally to calculate the factor in which to handle frameskipping with.
  */
-UNUSED s32 get_video_refresh_speed(void) {
+UNUSED s32 vi_refresh_rate(void) {
     return (s32) ((f32) gVideoRefreshRate / (f32) gVideoDeltaTime);
 }
 
@@ -333,7 +335,7 @@ UNUSED s32 get_video_refresh_speed(void) {
  * Flips the current framebuffer index, swapping to the other framebuffer
  * for the next frame, then update the current and previous framebuffer pointers.
  */
-void swap_framebuffers(void) {
+void fb_swap(void) {
     gVideoLastFramebuffer = gVideoFramebuffers[gVideoCurrFbIndex];
     gVideoLastDepthBuffer = gVideoDepthBuffer;
     gVideoCurrFbIndex ^= 1;
@@ -344,7 +346,7 @@ void swap_framebuffers(void) {
 /**
  * Copy byte-by-byte a region from one address to another.
  */
-void memory_copy(u8 *src, u8 *dest, s32 len) {
+void fb_memcpy(u8 *src, u8 *dest, s32 len) {
     s32 i;
 
     for (i = 0; i < len; i++) {

@@ -8,20 +8,20 @@ glabel func_80008040
 /* 008C58 80008058 00003025 */   move  $a2, $zero
 /* 008C5C 8000805C 3C0500FF */  lui   $a1, (0x00FFFFFF >> 16) # lui $a1, 0xff
 /* 008C60 80008060 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
-/* 008C64 80008064 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 008C64 80008064 0C01C327 */  jal   mempool_alloc_safe
 /* 008C68 80008068 240405A0 */   li    $a0, 1440
 /* 008C6C 8000806C 3C068012 */  lui   $a2, %hi(gSoundMaskHeap) # $a2, 0x8012
 /* 008C70 80008070 24C69C48 */  addiu $a2, %lo(gSoundMaskHeap) # addiu $a2, $a2, -0x63b8
 /* 008C74 80008074 3C0500FF */  lui   $a1, (0x00FFFFFF >> 16) # lui $a1, 0xff
 /* 008C78 80008078 ACC20000 */  sw    $v0, ($a2)
 /* 008C7C 8000807C 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
-/* 008C80 80008080 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 008C80 80008080 0C01C327 */  jal   mempool_alloc_safe
 /* 008C84 80008084 240400A0 */   li    $a0, 160
 /* 008C88 80008088 3C018012 */  lui   $at, %hi(gSoundMaskHeapFree) # $at, 0x8012
 /* 008C8C 8000808C 3C0500FF */  lui   $a1, (0x00FFFFFF >> 16) # lui $a1, 0xff
 /* 008C90 80008090 AC229C50 */  sw    $v0, %lo(gSoundMaskHeapFree)($at)
 /* 008C94 80008094 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
-/* 008C98 80008098 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 008C98 80008098 0C01C327 */  jal   mempool_alloc_safe
 /* 008C9C 8000809C 240400A0 */   li    $a0, 160
 /* 008CA0 800080A0 3C018012 */  lui   $at, %hi(gSoundMaskHeapUsed) # $at, 0x8012
 /* 008CA4 800080A4 AC229C44 */  sw    $v0, %lo(gSoundMaskHeapUsed)($at)

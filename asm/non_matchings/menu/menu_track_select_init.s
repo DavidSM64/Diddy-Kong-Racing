@@ -35,7 +35,7 @@ glabel menu_track_select_init
 /* 08F424 8008E824 AC200418 */  sw    $zero, %lo(gTracksMenuAdventureHighlightIndex)($at)
 /* 08F428 8008E828 AC600000 */  sw    $zero, ($v1)
 .L8008E82C:
-/* 08F42C 8008E82C 0C01E948 */  jal   get_video_width_and_height_as_s32
+/* 08F42C 8008E82C 0C01E948 */  jal   fb_size
 /* 08F430 8008E830 00000000 */   nop   
 /* 08F434 8008E834 3C068012 */  lui   $a2, %hi(gTrackSelectViewPortX) # $a2, 0x8012
 /* 08F438 8008E838 24C6647C */  addiu $a2, %lo(gTrackSelectViewPortX) # addiu $a2, $a2, 0x647c
@@ -97,7 +97,7 @@ glabel menu_track_select_init
 /* 08F518 8008E918 00000000 */   nop   
 /* 08F51C 8008E91C 24040032 */  li    $a0, 50
 /* 08F520 8008E920 24050069 */  li    $a1, 105
-/* 08F524 8008E924 0C01DED7 */  jal   set_background_fill_colour
+/* 08F524 8008E924 0C01DED7 */  jal   bgdraw_fillcolour
 /* 08F528 8008E928 240600DF */   li    $a2, 223
 /* 08F52C 8008E92C 3C11800E */  lui   $s1, %hi(gTracksMenuBgTextureIndices) # $s1, 0x800e
 /* 08F530 8008E930 3C168012 */  lui   $s6, %hi(gMenuAssets) # $s6, 0x8012
@@ -147,7 +147,7 @@ glabel menu_track_select_init
 /* 08F5CC 8008E9CC 26310006 */   addiu $s1, $s1, 6
 /* 08F5D0 8008E9D0 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 08F5D4 8008E9D4 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 08F5D8 8008E9D8 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 08F5D8 8008E9D8 0C01C327 */  jal   mempool_alloc_safe
 /* 08F5DC 8008E9DC 24040B40 */   li    $a0, 2880
 /* 08F5E0 8008E9E0 3C05800E */  lui   $a1, %hi(gTrackSelectBgTriangles) # $a1, 0x800e
 /* 08F5E4 8008E9E4 24A50970 */  addiu $a1, %lo(gTrackSelectBgTriangles) # addiu $a1, $a1, 0x970
@@ -311,7 +311,7 @@ glabel menu_track_select_init
 /* 08F854 8008EC54 3C018012 */  lui   $at, %hi(gTrackSelectVertsFlip) # $at, 0x8012
 /* 08F858 8008EC58 3C048009 */  lui   $a0, %hi(func_8008F618) # $a0, 0x8009
 /* 08F85C 8008EC5C AC206924 */  sw    $zero, %lo(gTrackSelectVertsFlip)($at)
-/* 08F860 8008EC60 0C01E2AB */  jal   set_background_draw_function
+/* 08F860 8008EC60 0C01E2AB */  jal   bgdraw_set_func
 /* 08F864 8008EC64 2484F618 */   addiu $a0, %lo(func_8008F618) # addiu $a0, $a0, -0x9e8
 /* 08F868 8008EC68 8FC20000 */  lw    $v0, ($fp)
 /* 08F86C 8008EC6C 00002025 */  move  $a0, $zero

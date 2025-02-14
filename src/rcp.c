@@ -14,19 +14,19 @@
 
 s16 gGfxTaskMesgNums[16] = { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-u8 sBackgroundPrimColourR = 0;
-u8 sBackgroundPrimColourG = 0;
-u8 sBackgroundPrimColourB = 0;
+u8 sBGPrimColourrR = 0;
+u8 sBGPrimColourrG = 0;
+u8 sBGPrimColourrB = 0;
 s32 sBackgroundFillColour = GPACK_RGBA5551(0, 0, 0, 1) | (GPACK_RGBA5551(0, 0, 0, 1) << 16);
 
-u32 gMosaicShiftX = 64;
-TextureHeader *gMosaicTex1 = NULL;
-TextureHeader *gMosaicTex2 = NULL;
+u32 gTexBGShiftX = 64;
+TextureHeader *gTexBGTex1 = NULL;
+TextureHeader *gTexBGTex2 = NULL;
 s32 gChequerBGEnabled = FALSE;
 
-BackgroundFunction gBackgroundDrawFunc = { NULL };
-s32 gfxBufCounter = 0;
-s32 gfxBufCounter2 = 0;
+BackgroundFunction gBGDrawFunc = { NULL };
+s32 gGfxBufCounter = 0;
+s32 gGfxBufCounter2 = 0;
 s32 gGfxTaskIsRunning = FALSE;
 
 Gfx dRspInit[] = {
@@ -63,7 +63,7 @@ Gfx dRaceFinishBackgroundSettings[] = {
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetAlphaCompare(G_AC_NONE),
     gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
-    gsDPPipeSync(),
+    gsDPPipeSync(), // And here?
     gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_DECALRGBA),
     gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
     gsSPEndDisplayList(),
@@ -75,7 +75,7 @@ Gfx dChequerBGSettings[] = {
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetAlphaCompare(G_AC_NONE),
     gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
-    gsDPPipeSync(),
+    gsDPPipeSync(), // Ditto
     gsDPSetCombineMode(G_CC_PRIMITIVE, G_CC_PRIMITIVE),
     gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
     gsSPEndDisplayList(),
@@ -87,7 +87,7 @@ Gfx dTextureRectangleModes[] = {
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetAlphaCompare(G_AC_NONE),
     gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
-    gsDPPipeSync(),
+    gsDPPipeSync(), // Ditto
     gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
     gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
     gsSPEndDisplayList(),
@@ -99,7 +99,7 @@ Gfx dScaledRectangleBaseModes[] = {
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetAlphaCompare(G_AC_NONE),
     gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
-    gsDPPipeSync(),
+    gsDPPipeSync(), // Ditto
     gsSPEndDisplayList(),
 };
 
@@ -133,10 +133,8 @@ Gfx dTextureRectangleScaledXlu[][2] = {
 
 /************ .bss ************/
 
-#define YIELD_BUFFER_SIZE 0x1800
-
 u8 gDramStack[SP_DRAM_STACK_SIZE8];
-u8 gGfxSPTaskYieldBuffer[YIELD_BUFFER_SIZE];
+u8 gGfxTaskOutputBuffer[OUTPUT_BUFFER_SIZE];
 OSMesgQueue gRCPMesgQueue;
 OSMesg gRCPMesgBuf;
 UNUSED OSMesgQueue gUnusedMesgQueue;
@@ -166,14 +164,14 @@ OSMesgQueue *osScInterruptQ;
  * Sends a message to the scheduler to start processing an RSP task once set up.
  * Official Name: rcpFast3d
  */
-s32 setup_ostask_xbus(Gfx *dlBegin, Gfx *dlEnd, UNUSED s32 recvMesg) {
+s32 gfxtask_run_xbus(Gfx *dlBegin, Gfx *dlEnd, UNUSED s32 recvMesg) {
     DKR_OSTask *dkrtask;
 
     gGfxTaskIsRunning = TRUE;
-    dkrtask = &gGfxTaskBuf[gfxBufCounter];
-    gfxBufCounter++;
-    if (gfxBufCounter == 2) {
-        gfxBufCounter = 0;
+    dkrtask = &gGfxTaskBuf[gGfxBufCounter];
+    gGfxBufCounter++;
+    if (gGfxBufCounter == 2) {
+        gGfxBufCounter = 0;
     }
     dkrtask->flags = OS_SC_LAST_TASK | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
     dkrtask->mesgQueue = &gGfxTaskMesgQueue;
@@ -190,7 +188,7 @@ s32 setup_ostask_xbus(Gfx *dlBegin, Gfx *dlEnd, UNUSED s32 recvMesg) {
     dkrtask->task.ucode_data_size = SP_UCODE_DATA_SIZE;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
-    dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
+    dkrtask->task.output_buff = (u64 *) gGfxTaskOutputBuffer;
     dkrtask->task.output_buff_size = (u64 *) &gRCPMesgQueue;
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
@@ -209,15 +207,15 @@ s32 setup_ostask_xbus(Gfx *dlBegin, Gfx *dlEnd, UNUSED s32 recvMesg) {
  * Unused variant of the xbus task function.
  * Probably intended to be a secondary task system, since it doesn't set the var saying there's a task running.
  */
-UNUSED void setup_ostask_xbus_2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
+UNUSED void gfxtask_run_xbus2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     OSMesg mesgBuf;
 
     mesgBuf = NULL;
-    dkrtask = &gGfxTaskBuf2[gfxBufCounter2];
-    gfxBufCounter2++;
-    if (gfxBufCounter2 == 2) {
-        gfxBufCounter2 = 0;
+    dkrtask = &gGfxTaskBuf2[gGfxBufCounter2];
+    gGfxBufCounter2++;
+    if (gGfxBufCounter2 == 2) {
+        gGfxBufCounter2 = 0;
     }
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
@@ -237,13 +235,13 @@ UNUSED void setup_ostask_xbus_2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     dkrtask->next = NULL;
     dkrtask->flags = OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
     dkrtask->mesgQueue = &gGfxTaskMesgQueue;
-    dkrtask->mesg = gGfxTaskMesgNums;
+    dkrtask->mesg = &gGfxTaskMesgNums[0];
     dkrtask->frameBuffer = gVideoCurrFramebuffer;
     dkrtask->unused58 = COLOUR_TAG_RED;
     dkrtask->unused5C = COLOUR_TAG_RED;
     dkrtask->unused60 = 0xFF;
     dkrtask->unused64 = 0xFF;
-    dkrtask->unk68 = 0;
+    dkrtask->unk68 = FALSE;
 
     if (recvMesg) {
         dkrtask->mesgQueue = &gRCPMesgQueue;
@@ -261,15 +259,15 @@ UNUSED void setup_ostask_xbus_2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
  * Sends a message to the scheduler to start processing an RSP task once set up.
  * Goes unused, and is broken.
  */
-UNUSED void setup_ostask_fifo(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
+UNUSED void gfxtask_run_fifo(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     OSMesg mesgBuf;
 
     mesgBuf = NULL;
-    dkrtask = &gGfxTaskBuf2[gfxBufCounter2];
-    gfxBufCounter2++;
-    if (gfxBufCounter2 == 2) {
-        gfxBufCounter2 = 0;
+    dkrtask = &gGfxTaskBuf2[gGfxBufCounter2];
+    gGfxBufCounter2++;
+    if (gGfxBufCounter2 == 2) {
+        gGfxBufCounter2 = 0;
     }
 
     dkrtask->task.data_ptr = (u64 *) dlBegin;
@@ -283,20 +281,20 @@ UNUSED void setup_ostask_fifo(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     dkrtask->task.ucode_data_size = SP_UCODE_DATA_SIZE;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
-    dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
-    dkrtask->task.output_buff_size = (u64 *) (gGfxSPTaskYieldBuffer + YIELD_BUFFER_SIZE);
+    dkrtask->task.output_buff = (u64 *) gGfxTaskOutputBuffer;
+    dkrtask->task.output_buff_size = (u64 *) (gGfxTaskOutputBuffer + OUTPUT_BUFFER_SIZE);
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
     dkrtask->next = NULL;
     dkrtask->flags = OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP | OS_SC_DRAM_DLIST;
     dkrtask->mesgQueue = &gGfxTaskMesgQueue;
-    dkrtask->mesg = gGfxTaskMesgNums;
+    dkrtask->mesg = &gGfxTaskMesgNums[0];
     dkrtask->frameBuffer = gVideoCurrFramebuffer;
     dkrtask->unused58 = COLOUR_TAG_RED;
     dkrtask->unused5C = COLOUR_TAG_RED;
-    dkrtask->unused60 = 0xFF;
-    dkrtask->unused64 = 0xFF;
-    dkrtask->unk68 = 0;
+    dkrtask->unused60 = COLOUR_TAG_BLACK;
+    dkrtask->unused64 = COLOUR_TAG_BLACK;
+    dkrtask->unk68 = FALSE;
 
     if (recvMesg) {
         dkrtask->mesgQueue = &gRCPMesgQueue;
@@ -313,16 +311,16 @@ UNUSED void setup_ostask_fifo(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
  * Unused variant of the FIFO task function.
  * Probably intended to be a secondary task system, since it doesn't set the var saying there's a task running.
  */
-UNUSED void setup_ostask_fifo_2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
+UNUSED void gfxtask_run_fifo2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     OSMesg mesgBuf;
 
     mesgBuf = NULL;
-    dkrtask = &gGfxTaskBuf[gfxBufCounter];
-    gfxBufCounter++;
-    //!@bug - gfxBufCounter being 2 would mean an out of bounds access of gGfxTaskBuf
-    if (gfxBufCounter == 3) {
-        gfxBufCounter = 0;
+    dkrtask = &gGfxTaskBuf[gGfxBufCounter];
+    gGfxBufCounter++;
+    //!@bug - gGfxBufCounter being 2 would mean an out of bounds access of gGfxTaskBuf
+    if (gGfxBufCounter == 3) {
+        gGfxBufCounter = 0;
     }
 
     dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
@@ -336,22 +334,22 @@ UNUSED void setup_ostask_fifo_2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     dkrtask->task.ucode_data_size = SP_UCODE_DATA_SIZE;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
-    dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
+    dkrtask->task.output_buff = (u64 *) gGfxTaskOutputBuffer;
     dkrtask->task.output_buff_size = (u64 *) &gRCPMesgQueue;
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
     dkrtask->next = NULL;
     dkrtask->flags = OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP | OS_SC_DRAM_DLIST;
     dkrtask->mesgQueue = &gGfxTaskMesgQueue;
-    dkrtask->mesg = gGfxTaskMesgNums;
+    dkrtask->mesg = &gGfxTaskMesgNums[0];
     dkrtask->frameBuffer = gVideoCurrFramebuffer;
     dkrtask->unused58 = COLOUR_TAG_RED;
     dkrtask->unused5C = COLOUR_TAG_RED;
     if (recvMesg) {
-        dkrtask->unused60 = 0xFF;
-        dkrtask->unused64 = 0xFF;
+        dkrtask->unused60 = COLOUR_TAG_BLACK;
+        dkrtask->unused64 = COLOUR_TAG_BLACK;
     }
-    dkrtask->unk68 = 0;
+    dkrtask->unk68 = FALSE;
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, 1);
     if (recvMesg) {
@@ -365,7 +363,7 @@ UNUSED void setup_ostask_fifo_2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
  * Alternatively, if no task is active, then it will just skip.
  * Official Name: rcpWaitDP
  */
-s32 wait_for_gfx_task(void) {
+s32 gfxtask_wait(void) {
     OSMesg *mesg = NULL;
     if (gGfxTaskIsRunning == FALSE) {
         return 0;
@@ -375,6 +373,10 @@ s32 wait_for_gfx_task(void) {
     return (s32) mesg[1];
 }
 
+/**
+ * Write Data Cache back into RAM and then execute an RDP task with a given command buffer.
+ * This function skips the RSP, so it takes in raw RDP commands.
+ */
 UNUSED void gfxtask_run_rdp(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
     osWritebackDCacheAll();
     while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
@@ -386,10 +388,10 @@ UNUSED void gfxtask_run_rdp(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
  * Sets the primitive colour for the cyclemode fillrect background.
  * Official name: rcpSetScreenColour
  */
-void set_background_prim_colour(u8 red, u8 green, u8 blue) {
-    sBackgroundPrimColourR = red;
-    sBackgroundPrimColourG = green;
-    sBackgroundPrimColourB = blue;
+void bgdraw_primcolour(u8 red, u8 green, u8 blue) {
+    sBGPrimColourrR = red;
+    sBGPrimColourrG = green;
+    sBGPrimColourrB = blue;
 }
 
 /**
@@ -397,7 +399,7 @@ void set_background_prim_colour(u8 red, u8 green, u8 blue) {
  * Uses RGBA5551
  * Official name: rcpSetBorderColour
  */
-void set_background_fill_colour(s32 red, s32 green, s32 blue) {
+void bgdraw_fillcolour(s32 red, s32 green, s32 blue) {
     sBackgroundFillColour = GPACK_RGBA5551(red, green, blue, 1);
     sBackgroundFillColour |= (sBackgroundFillColour << 16);
 }
@@ -408,7 +410,7 @@ void set_background_fill_colour(s32 red, s32 green, s32 blue) {
  * over clearing the colour buffer.
  * Official Name: rcpClearScreen
  */
-void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
+void bgdraw_render(Gfx **dList, Matrix *mtx, s32 drawBG) {
     s32 widthAndHeight;
     s32 w;
     s32 h;
@@ -417,7 +419,7 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     s32 x2;
     s32 y2;
 
-    widthAndHeight = get_video_width_and_height_as_s32();
+    widthAndHeight = fb_size();
     w = GET_VIDEO_WIDTH(widthAndHeight);
     h = GET_VIDEO_HEIGHT(widthAndHeight);
 
@@ -433,11 +435,11 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     if (drawBG) {
         if (check_viewport_background_flag(0)) {
             if (gChequerBGEnabled) {
-                render_chequer_background(dList); // Unused
-            } else if (gMosaicTex1) {
+                bgdraw_chequer(dList); // Unused
+            } else if (gTexBGTex1) {
                 func_80078190(dList);
-            } else if (gBackgroundDrawFunc.ptr != NULL) {
-                gBackgroundDrawFunc.function((Gfx *) dList, mtx);
+            } else if (gBGDrawFunc.ptr != NULL) {
+                gBGDrawFunc.function((Gfx *) dList, mtx);
             } else {
                 gDPSetFillColor((*dList)++, sBackgroundFillColour);
                 gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
@@ -446,24 +448,22 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
             // fillmode.
             if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
                 gDPSetCycleType((*dList)++, G_CYC_1CYCLE);
-                gDPSetPrimColor((*dList)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG,
-                                sBackgroundPrimColourB, 255);
+                gDPSetPrimColor((*dList)++, 0, 0, sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 255);
                 gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
                 gDPSetRenderMode((*dList)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
                 gDPFillRectangle((*dList)++, x1, y1, x2, y2);
             }
         } else {
             if (gChequerBGEnabled) {
-                render_chequer_background(dList); // Unused
-            } else if (gMosaicTex1) {
+                bgdraw_chequer(dList); // Unused
+            } else if (gTexBGTex1) {
                 func_80078190(dList);
-            } else if (gBackgroundDrawFunc.ptr != NULL) {
-                gBackgroundDrawFunc.function((Gfx *) dList, mtx);
+            } else if (gBGDrawFunc.ptr != NULL) {
+                gBGDrawFunc.function((Gfx *) dList, mtx);
             } else {
-                gDPSetFillColor(
-                    (*dList)++,
-                    (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) |
-                        GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
+                gDPSetFillColor((*dList)++,
+                                (GPACK_RGBA5551(sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 1) << 16) |
+                                    GPACK_RGBA5551(sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 1));
                 gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
             }
         }
@@ -476,8 +476,8 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
  * Gets the framebuffer width, then points to the start of segment 0x01 in memory.
  * afterwards, calls the draw command that initialises all the rendermodes, ready for use.
  */
-void init_rdp_and_framebuffer(Gfx **dList) {
-    s32 width = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
+void rdp_init(Gfx **dList) {
+    s32 width = GET_VIDEO_WIDTH(fb_size());
     gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, SEGMENT_FRAMEBUFFER << 24);
     gDPSetDepthImage((*dList)++, SEGMENT_ZBUFFER << 24);
     gSPDisplayList((*dList)++, dRdpInit);
@@ -487,14 +487,14 @@ void init_rdp_and_framebuffer(Gfx **dList) {
  * Calls the draw command that sets all the OtherModes, ready for use.
  * Official name: rcpInitSp or rcpInitDpNoSize
  */
-void init_rsp(Gfx **dList) {
+void rsp_init(Gfx **dList) {
     gSPDisplayList((*dList)++, dRspInit);
 }
 
 /**
  * Initialise the mesg queues for the gfx tasks, that interface with the scheduler.
  */
-void setup_gfx_mesg_queues(OSSched *sc) {
+void gfxtask_init(OSSched *sc) {
     osScInterruptQ = osScGetInterruptQ(sc);
     osCreateMesgQueue(&gRCPMesgQueue, &gRCPMesgBuf, 1);
     osCreateMesgQueue(&gUnusedMesgQueue, gUnusedMesgBuf, ARRAY_COUNT(gUnusedMesgBuf));
@@ -505,12 +505,13 @@ void setup_gfx_mesg_queues(OSSched *sc) {
  * Set one or two textures for the patterned world themed background.
  * Can also apply a shift to make tiling less obvious.
  */
-void mosaic_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
-    gMosaicTex1 = tex1;
-    gMosaicTex2 = tex2;
-    gMosaicShiftX = shiftX * 4;
+void bgdraw_texture_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
+    gTexBGTex1 = tex1;
+    gTexBGTex2 = tex2;
+    gTexBGShiftX = shiftX * 4;
 }
 
+// bgdraw_texture
 #ifdef NON_EQUIVALENT
 /**
  * Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
@@ -536,17 +537,17 @@ void func_80078190(Gfx **dlist) {
     s32 t;   // the texture coordinate t of upper-left corner of rectangle (s10.5)
     s32 s;   // the texture coordinate s of upper-left corner of rectangle (s10.5)
 
-    widthAndHeight = get_video_width_and_height_as_s32();
+    widthAndHeight = fb_size();
     videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
     videoHeight = GET_VIDEO_HEIGHT(widthAndHeight);
     gSPDisplayList((*dlist)++, dRaceFinishBackgroundSettings);
 
-    if (gMosaicTex2 == NULL) {
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gMosaicTex1->cmd), gMosaicTex1->numberOfCommands);
+    if (gTexBGTex2 == NULL) {
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gTexBGTex1->cmd), gTexBGTex1->numberOfCommands);
         upperVideoWidth = videoWidth << 2;
         upperVideoHeight = videoHeight << 2;
-        texture1UpperWidth = gMosaicTex1->width << 2;
-        texture1UpperHeight = gMosaicTex1->height << 2;
+        texture1UpperWidth = gTexBGTex1->width << 2;
+        texture1UpperHeight = gTexBGTex1->height << 2;
         var_s3 = 0;
         for (yPos = 0; yPos < upperVideoHeight; yPos += texture1UpperHeight) {
             uly = yPos;
@@ -564,16 +565,16 @@ void func_80078190(Gfx **dlist) {
                 }
                 ulx = lrx;
             }
-            var_s3 = (var_s3 + gMosaicShiftX) & (texture1UpperWidth - 1);
+            var_s3 = (var_s3 + gTexBGShiftX) & (texture1UpperWidth - 1);
         }
     } else {
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gMosaicTex1->cmd), gMosaicTex1->numberOfCommands);
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gTexBGTex1->cmd), gTexBGTex1->numberOfCommands);
         upperVideoWidth = videoWidth << 2;
         upperVideoHeight = videoHeight << 2;
-        texture1UpperWidth = gMosaicTex1->width << 2;
-        texture1UpperHeight = gMosaicTex1->height << 2;
-        // texture2UpperHeight = gMosaicTex2->height << 2;
-        texture1And2UpperHeight = (gMosaicTex2->height << 2) + texture1UpperHeight;
+        texture1UpperWidth = gTexBGTex1->width << 2;
+        texture1UpperHeight = gTexBGTex1->height << 2;
+        // texture2UpperHeight = gTexBGTex2->height << 2;
+        texture1And2UpperHeight = (gTexBGTex2->height << 2) + texture1UpperHeight;
         var_s3 = 0;
         for (yPos = 0; yPos < upperVideoHeight; yPos += texture1And2UpperHeight) {
             uly = yPos;
@@ -591,9 +592,9 @@ void func_80078190(Gfx **dlist) {
                 }
                 ulx = lrx;
             }
-            var_s3 = (var_s3 + gMosaicShiftX) & (texture1UpperWidth - 1);
+            var_s3 = (var_s3 + gTexBGShiftX) & (texture1UpperWidth - 1);
         }
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gMosaicTex2->cmd), gMosaicTex2->numberOfCommands);
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gTexBGTex2->cmd), gTexBGTex2->numberOfCommands);
         upperVideoWidth <<= 2;
         upperVideoHeight <<= 2;
         var_s3 = 0;
@@ -613,7 +614,7 @@ void func_80078190(Gfx **dlist) {
                 }
                 ulx = lrx;
             }
-            var_s3 = (var_s3 + gMosaicShiftX) & (texture1UpperWidth - 1);
+            var_s3 = (var_s3 + gTexBGShiftX) & (texture1UpperWidth - 1);
         }
     }
     gDPPipeSync((*dlist)++);
@@ -625,7 +626,7 @@ GLOBAL_ASM("asm/non_matchings/rcp/func_80078190.s")
 /**
  * Enables the chequer background and sets up its properties.
  */
-UNUSED void set_chequer_background(s32 colourA, s32 colourB, s32 width, s32 height) {
+UNUSED void bgdraw_chequer_on(s32 colourA, s32 colourB, s32 width, s32 height) {
     gChequerBGColourR1 = (colourA >> 24) & 0xFF;
     gChequerBGColourG1 = (colourA >> 16) & 0xFF;
     gChequerBGColourB1 = (colourA >> 8) & 0xFF;
@@ -642,7 +643,7 @@ UNUSED void set_chequer_background(s32 colourA, s32 colourB, s32 width, s32 heig
 /**
  * Disables the chequer background.
  */
-UNUSED void disable_chequer_background(void) {
+UNUSED void bgdraw_chequer_off(void) {
     gChequerBGEnabled = FALSE;
 }
 
@@ -651,14 +652,14 @@ UNUSED void disable_chequer_background(void) {
  * Goes unused.
  * Official Name: rcpCheckClear
  */
-void render_chequer_background(Gfx **dList) {
+void bgdraw_chequer(Gfx **dList) {
     s32 height;
     s32 width;
     s32 flip; // Flips between 0 and 1
     s32 y;
     s32 x;
 
-    width = get_video_width_and_height_as_s32();
+    width = fb_size();
     height = GET_VIDEO_HEIGHT(width) & 0xFFFF;
     width = GET_VIDEO_WIDTH(width);
 
@@ -686,8 +687,8 @@ void render_chequer_background(Gfx **dList) {
  * Sets the function pointer to whatever's passed through.
  * If nonzero, will override the background drawing section.
  */
-void set_background_draw_function(void *func) {
-    gBackgroundDrawFunc.ptr = func;
+void bgdraw_set_func(void *func) {
+    gBGDrawFunc.ptr = func;
 }
 
 /**
@@ -695,8 +696,7 @@ void set_background_draw_function(void *func) {
  * Texture rectangle coordinates use 10.2 precision and texture coords use 10.5 precision.
  * Typically, you do these shifts in the draw call itself, but Rare decided to do it beforehand.
  */
-void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue,
-                               u8 alpha) {
+void texrect_draw(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
     TextureHeader *tex;
     s32 i;
     s32 uly;
@@ -734,8 +734,14 @@ void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 
     gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
 }
 
-void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale,
-                                     u32 colour, s32 flags) {
+/**
+ * Renders one or more textures directly on screen resulting from the passed image properties.
+ * Texture rectangle coordinates use 10.2 precision and texture coords use 10.5 precision.
+ * Typically, you do these shifts in the draw call itself, but Rare decided to do it beforehand.
+ * Also applies texel shifting in order to apply scaling.
+ */
+void texrect_draw_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour,
+                         s32 flags) {
     TextureHeader *tex;
     Gfx *dmaDlist;
     s32 i;
@@ -754,7 +760,7 @@ void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos
     s32 width;
     s32 height;
 
-    height = get_video_width_and_height_as_s32();
+    height = fb_size();
     width = GET_VIDEO_WIDTH(height) * 4;
     height = (GET_VIDEO_HEIGHT(height) & 0xFFFF) * 4;
 

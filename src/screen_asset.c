@@ -32,7 +32,7 @@ UNUSED u32 load_screen(s32 screenIndex) {
     // screenTableCount will always be 0 in vanilla DKR,
     // since there are no screen assets in the ROM.
     if (screenTableCount == 0) {
-        free_from_memory_pool(screenTable);
+        mempool_free(screenTable);
         return (u32) OS_PHYSICAL_TO_K0(0x100000);
     } else {
         if (screenIndex < 0 || screenIndex >= screenTableCount) {
@@ -42,10 +42,10 @@ UNUSED u32 load_screen(s32 screenIndex) {
 
         start = screenTable[screenIndex];
         size = screenTable[screenIndex + 1] - start;
-        someAddr = (u32) allocate_from_main_pool_safe(size, COLOUR_TAG_BLUE);
+        someAddr = (u32) mempool_alloc_safe(size, COLOUR_TAG_BLUE);
 
         load_asset_to_address(ASSET_SCREENS, someAddr, start, size);
-        free_from_memory_pool(screenTable);
+        mempool_free(screenTable);
 
         return someAddr;
     }

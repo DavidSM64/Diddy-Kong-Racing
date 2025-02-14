@@ -10,7 +10,7 @@ glabel func_80078190
 /* 078DB0 800781B0 AFB20020 */  sw    $s2, 0x20($sp)
 /* 078DB4 800781B4 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 078DB8 800781B8 AFB00018 */  sw    $s0, 0x18($sp)
-/* 078DBC 800781BC 0C01E948 */  jal   get_video_width_and_height_as_s32
+/* 078DBC 800781BC 0C01E948 */  jal   fb_size
 /* 078DC0 800781C0 AFA40040 */   sw    $a0, 0x40($sp)
 /* 078DC4 800781C4 8FA40040 */  lw    $a0, 0x40($sp)
 /* 078DC8 800781C8 00024403 */  sra   $t0, $v0, 0x10
@@ -18,22 +18,22 @@ glabel func_80078190
 /* 078DD0 800781D0 3C19800E */  lui   $t9, %hi(dRaceFinishBackgroundSettings) # $t9, 0x800e
 /* 078DD4 800781D4 246F0008 */  addiu $t7, $v1, 8
 /* 078DD8 800781D8 AC8F0000 */  sw    $t7, ($a0)
-/* 078DDC 800781DC 3C0A800E */  lui   $t2, %hi(gMosaicTex2) # $t2, 0x800e
+/* 078DDC 800781DC 3C0A800E */  lui   $t2, %hi(gTexBGTex2) # $t2, 0x800e
 /* 078DE0 800781E0 310EFFFF */  andi  $t6, $t0, 0xffff
 /* 078DE4 800781E4 2739E598 */  addiu $t9, %lo(dRaceFinishBackgroundSettings) # addiu $t9, $t9, -0x1a68
 /* 078DE8 800781E8 3C180600 */  lui   $t8, 0x600
-/* 078DEC 800781EC 254AE4C8 */  addiu $t2, %lo(gMosaicTex2) # addiu $t2, $t2, -0x1b38
+/* 078DEC 800781EC 254AE4C8 */  addiu $t2, %lo(gTexBGTex2) # addiu $t2, $t2, -0x1b38
 /* 078DF0 800781F0 01C04025 */  move  $t0, $t6
 /* 078DF4 800781F4 AC780000 */  sw    $t8, ($v1)
 /* 078DF8 800781F8 AC790004 */  sw    $t9, 4($v1)
 /* 078DFC 800781FC 8D4E0000 */  lw    $t6, ($t2)
-/* 078E00 80078200 3C09800E */  lui   $t1, %hi(gMosaicTex1) # $t1, 0x800e
+/* 078E00 80078200 3C09800E */  lui   $t1, %hi(gTexBGTex1) # $t1, 0x800e
 /* 078E04 80078204 15C00070 */  bnez  $t6, .L800783C8
-/* 078E08 80078208 2529E4C4 */   addiu $t1, %lo(gMosaicTex1) # addiu $t1, $t1, -0x1b3c
+/* 078E08 80078208 2529E4C4 */   addiu $t1, %lo(gTexBGTex1) # addiu $t1, $t1, -0x1b3c
 /* 078E0C 8007820C 8C830000 */  lw    $v1, ($a0)
-/* 078E10 80078210 3C09800E */  lui   $t1, %hi(gMosaicTex1) # $t1, 0x800e
+/* 078E10 80078210 3C09800E */  lui   $t1, %hi(gTexBGTex1) # $t1, 0x800e
 /* 078E14 80078214 246F0008 */  addiu $t7, $v1, 8
-/* 078E18 80078218 2529E4C4 */  addiu $t1, %lo(gMosaicTex1) # addiu $t1, $t1, -0x1b3c
+/* 078E18 80078218 2529E4C4 */  addiu $t1, %lo(gTexBGTex1) # addiu $t1, $t1, -0x1b3c
 /* 078E1C 8007821C AC8F0000 */  sw    $t7, ($a0)
 /* 078E20 80078220 8D380000 */  lw    $t8, ($t1)
 /* 078E24 80078224 3C010700 */  lui   $at, 0x700
@@ -64,10 +64,10 @@ glabel func_80078190
 /* 078E88 80078288 00009825 */  move  $s3, $zero
 /* 078E8C 8007828C 1AC00128 */  blez  $s6, .L80078730
 /* 078E90 80078290 00009025 */   move  $s2, $zero
-/* 078E94 80078294 3C17800E */  lui   $s7, %hi(gMosaicShiftX) # $s7, 0x800e
+/* 078E94 80078294 3C17800E */  lui   $s7, %hi(gTexBGShiftX) # $s7, 0x800e
 /* 078E98 80078298 3C1F0400 */  lui   $ra, (0x04000400 >> 16) # lui $ra, 0x400
 /* 078E9C 8007829C 37FF0400 */  ori   $ra, (0x04000400 & 0xFFFF) # ori $ra, $ra, 0x400
-/* 078EA0 800782A0 26F7E4C0 */  addiu $s7, %lo(gMosaicShiftX) # addiu $s7, $s7, -0x1b40
+/* 078EA0 800782A0 26F7E4C0 */  addiu $s7, %lo(gTexBGShiftX) # addiu $s7, $s7, -0x1b40
 /* 078EA4 800782A4 2715FFFF */  addiu $s5, $t8, -1
 /* 078EA8 800782A8 3C0DB200 */  lui   $t5, 0xb200
 /* 078EAC 800782AC 3C0CB300 */  lui   $t4, 0xb300
@@ -183,10 +183,10 @@ glabel func_80078190
 /* 07904C 8007844C 01D9F021 */  addu  $fp, $t6, $t9
 /* 079050 80078450 1AC0004D */  blez  $s6, .L80078588
 /* 079054 80078454 00009825 */   move  $s3, $zero
-/* 079058 80078458 3C17800E */  lui   $s7, %hi(gMosaicShiftX) # $s7, 0x800e
+/* 079058 80078458 3C17800E */  lui   $s7, %hi(gTexBGShiftX) # $s7, 0x800e
 /* 07905C 8007845C 3C1F0400 */  lui   $ra, (0x04000400 >> 16) # lui $ra, 0x400
 /* 079060 80078460 37FF0400 */  ori   $ra, (0x04000400 & 0xFFFF) # ori $ra, $ra, 0x400
-/* 079064 80078464 26F7E4C0 */  addiu $s7, %lo(gMosaicShiftX) # addiu $s7, $s7, -0x1b40
+/* 079064 80078464 26F7E4C0 */  addiu $s7, %lo(gTexBGShiftX) # addiu $s7, $s7, -0x1b40
 /* 079068 80078468 2615FFFF */  addiu $s5, $s0, -1
 /* 07906C 8007846C 3C0DB200 */  lui   $t5, 0xb200
 /* 079070 80078470 3C0CB300 */  lui   $t4, 0xb300
@@ -266,9 +266,9 @@ glabel func_80078190
 /* 079184 80078584 00009825 */  move  $s3, $zero
 .L80078588:
 /* 079188 80078588 8C830000 */  lw    $v1, ($a0)
-/* 07918C 8007858C 3C06800E */  lui   $a2, %hi(gMosaicTex2) # $a2, 0x800e
+/* 07918C 8007858C 3C06800E */  lui   $a2, %hi(gTexBGTex2) # $a2, 0x800e
 /* 079190 80078590 24790008 */  addiu $t9, $v1, 8
-/* 079194 80078594 24C6E4C8 */  addiu $a2, %lo(gMosaicTex2) # addiu $a2, $a2, -0x1b38
+/* 079194 80078594 24C6E4C8 */  addiu $a2, %lo(gTexBGTex2) # addiu $a2, $a2, -0x1b38
 /* 079198 80078598 AC990000 */  sw    $t9, ($a0)
 /* 07919C 8007859C 8CD80000 */  lw    $t8, ($a2)
 /* 0791A0 800785A0 3C010700 */  lui   $at, 0x700
@@ -290,11 +290,11 @@ glabel func_80078190
 /* 0791E0 800785E0 8CD90000 */  lw    $t9, ($a2)
 /* 0791E4 800785E4 3C1F0400 */  lui   $ra, (0x04000400 >> 16) # lui $ra, 0x400
 /* 0791E8 800785E8 93340001 */  lbu   $s4, 1($t9)
-/* 0791EC 800785EC 3C17800E */  lui   $s7, %hi(gMosaicShiftX) # $s7, 0x800e
+/* 0791EC 800785EC 3C17800E */  lui   $s7, %hi(gTexBGShiftX) # $s7, 0x800e
 /* 0791F0 800785F0 00117080 */  sll   $t6, $s1, 2
 /* 0791F4 800785F4 0258082A */  slt   $at, $s2, $t8
 /* 0791F8 800785F8 00147880 */  sll   $t7, $s4, 2
-/* 0791FC 800785FC 26F7E4C0 */  addiu $s7, %lo(gMosaicShiftX) # addiu $s7, $s7, -0x1b40
+/* 0791FC 800785FC 26F7E4C0 */  addiu $s7, %lo(gTexBGShiftX) # addiu $s7, $s7, -0x1b40
 /* 079200 80078600 37FF0400 */  ori   $ra, (0x04000400 & 0xFFFF) # ori $ra, $ra, 0x400
 /* 079204 80078604 3C0BE400 */  lui   $t3, 0xe400
 /* 079208 80078608 3C0CB300 */  lui   $t4, 0xb300

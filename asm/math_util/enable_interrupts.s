@@ -1,4 +1,4 @@
-glabel enable_interrupts /* Official name: enableInterrupts */
+glabel interrupts_enable /* Official name: enableInterrupts */
 /* 07013C 8006F53C 3C08800E */  lui   $t0, %hi(gIntDisFlag) # $t0, 0x800e
 /* 070140 8006F540 8108D430 */  lb    $t0, %lo(gIntDisFlag)($t0)
 /* 070144 8006F544 11000005 */  beqz  $t0, .L8006F55C # Identical to __osRestoreInt below this line
