@@ -245,8 +245,8 @@ void fb_alloc(s32 index) {
             mempool_alloc_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = FBALIGN(gVideoFramebuffers[index]);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = mempool_alloc_safe(
-                (HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+            gVideoDepthBuffer =
+                mempool_alloc_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
             gVideoDepthBuffer = FBALIGN(gVideoDepthBuffer);
         }
     } else {
@@ -254,8 +254,8 @@ void fb_alloc(s32 index) {
             mempool_alloc_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = FBALIGN(gVideoFramebuffers[index]);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = mempool_alloc_safe(
-                (gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
+            gVideoDepthBuffer =
+                mempool_alloc_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
             gVideoDepthBuffer = FBALIGN(gVideoDepthBuffer);
         }
     }

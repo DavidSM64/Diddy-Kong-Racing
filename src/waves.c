@@ -123,11 +123,11 @@ s32 gWavePowerDivisor;
 
 /*****************************/
 
-#define FREE_MEM(mem)                   \
-    tempMem = (s32 *) mem;              \
-    if (tempMem != NULL) {              \
+#define FREE_MEM(mem)          \
+    tempMem = (s32 *) mem;     \
+    if (tempMem != NULL) {     \
         mempool_free(tempMem); \
-        mem = NULL;                     \
+        mem = NULL;            \
     }
 #define FREE_TEX(tex)          \
     tempTex = tex;             \
@@ -163,8 +163,7 @@ void wave_init(void) {
     free_waves();
     D_800E3040 = (f32 *) mempool_alloc_safe(D_80129FC8.unk20 << 2, COLOUR_TAG_CYAN);
     D_800E3044 = (s16 *) mempool_alloc_safe((D_80129FC8.unk4 << 2) * D_80129FC8.unk4, COLOUR_TAG_CYAN);
-    D_800E3048 =
-        (s32 *) mempool_alloc_safe(((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1), COLOUR_TAG_CYAN);
+    D_800E3048 = (s32 *) mempool_alloc_safe(((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1), COLOUR_TAG_CYAN);
     allocSize = ((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1);
     D_800E304C[0] = mempool_alloc_safe(allocSize * ARRAY_COUNT(D_800E304C), COLOUR_TAG_CYAN);
     for (i = 1; i < ARRAY_COUNT(D_800E304C); i++) {

@@ -702,7 +702,7 @@ UNUSED void mempool_print_tags_screen(void) {
  * Prints out the status of each memory pool slot.
  * Will mark based on what flags the slot has.
  * Official name: mmSlotPrint
-*/
+ */
 UNUSED void mempool_print_slots(void) {
     s32 i;
     s32 skip;

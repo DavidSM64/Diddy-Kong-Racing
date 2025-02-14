@@ -190,11 +190,11 @@ void weather_clip_planes(s16 near, s16 far) {
     }
 }
 
-#define FREE_MEM(mem)                   \
-    tempMem = (s32 *) mem;              \
-    if (tempMem != NULL) {              \
+#define FREE_MEM(mem)          \
+    tempMem = (s32 *) mem;     \
+    if (tempMem != NULL) {     \
         mempool_free(tempMem); \
-        mem = NULL;                     \
+        mem = NULL;            \
     }
 #define FREE_TEX(tex)          \
     tempTex = tex;             \
@@ -266,8 +266,7 @@ void weather_reset(s32 weatherType, s32 density, s32 velX, s32 velY, s32 velZ, s
         rain_init(intensity + 1, opacity + 1);
         return;
     }
-    pos = (Vec3i *) mempool_alloc_safe(gWeatherPresets[weatherType].size * (sizeof(Vec3i)),
-                                                 COLOUR_TAG_LIGHT_ORANGE);
+    pos = (Vec3i *) mempool_alloc_safe(gWeatherPresets[weatherType].size * (sizeof(Vec3i)), COLOUR_TAG_LIGHT_ORANGE);
     gSnowGfx.pos = pos;
     gSnowGfx.size = gWeatherPresets[weatherType].size;
     gSnowGfx.offsetX = gWeatherPresets[weatherType].offsetX;
@@ -286,8 +285,7 @@ void weather_reset(s32 weatherType, s32 density, s32 velX, s32 velY, s32 velZ, s
     numOfElements = density;
     gSnowDensity = numOfElements;
     gSnowTriIndices = (s16 *) mempool_alloc_safe(numOfElements * (sizeof(s16)), COLOUR_TAG_LIGHT_ORANGE);
-    gSnowPhysics =
-        (SnowPosData *) mempool_alloc_safe(numOfElements * (sizeof(SnowPosData)), COLOUR_TAG_LIGHT_ORANGE);
+    gSnowPhysics = (SnowPosData *) mempool_alloc_safe(numOfElements * (sizeof(SnowPosData)), COLOUR_TAG_LIGHT_ORANGE);
     for (i = 0; i < gSnowDensity; i++) {
         gSnowPhysics[i].x_position = get_random_number_from_range(0, gSnowGfx.radiusX);
         gSnowPhysics[i].y_position = get_random_number_from_range(0, gSnowGfx.radiusY);
@@ -315,8 +313,7 @@ void weather_reset(s32 weatherType, s32 density, s32 velX, s32 velY, s32 velZ, s
 
     width = (gSnowGfx.texture->width << 5) - 1;
     height = (gSnowGfx.texture->height << 5) - 1;
-    gSnowTriangles =
-        (Triangle *) mempool_alloc_safe(gSnowTriCount * (sizeof(Triangle)), COLOUR_TAG_LIGHT_ORANGE);
+    gSnowTriangles = (Triangle *) mempool_alloc_safe(gSnowTriCount * (sizeof(Triangle)), COLOUR_TAG_LIGHT_ORANGE);
     for (i = 0; i < gSnowTriCount; i += 2) {
         gSnowTriangles[i].flags = 0;
         gSnowTriangles[i].vi0 = (i << 1) + 3;

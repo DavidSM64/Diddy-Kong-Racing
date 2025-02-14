@@ -345,8 +345,7 @@ void func_8000B020(s32 numberOfVertices, s32 numberOfTriangles) {
     LevelObjectEntry_unk8000B020 objEntry;
     s32 i;
 
-    D_800DC754[0] =
-        (s32) mempool_alloc_safe(((numberOfTriangles * 16) + (numberOfVertices * 10)) * 2, COLOUR_TAG_BLUE);
+    D_800DC754[0] = (s32) mempool_alloc_safe(((numberOfTriangles * 16) + (numberOfVertices * 10)) * 2, COLOUR_TAG_BLUE);
     D_800DC754[1] = D_800DC754[0] + (numberOfTriangles * 16);
     D_800DC74C[0] = D_800DC754[1] + (numberOfTriangles * 16);
     D_800DC74C[1] = D_800DC74C[0] + (numberOfVertices * 10);
