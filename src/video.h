@@ -47,17 +47,6 @@
 #define VI_OFFSET (SCREEN_WIDTH * sizeof(u16) * 2)
 
 /**
- * This is an offset with a size of two rows of the framebuffer.
- * It's likely they were trying to offset the framebuffer in order to
- * undo what Libultra does, where in order to sample pixels from the top and
- * bottom of the screen for anti aliasing and dedithering, they shift the framebuffer
- * to hide some visible rows.
- * A small mistake is present though, where they offset by two rows instead of one.
- * This will cause there to be visible noise on the bottom row.
-*/
-#define VI_OFFSET (SCREEN_WIDTH * sizeof(u16) * 2)
-
-/**
  * The video width is the lower 16 bits of the returned 32 bit value
  */
 #define GET_VIDEO_WIDTH(width_and_height) (width_and_height & 0xFFFF)
