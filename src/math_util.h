@@ -59,8 +59,8 @@ void f32_matrix_from_scale(Matrix, f32, f32, f32);
 s32 atan2s(s32 xDelta, s32 zDelta);
 f32 area_triangle_2d(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2);
 void dmacopy_doubleword(void *src, void *dst, s32 end);
-unk800B7D10 *get_stack_pointer(void);
-u32 disable_interrupts(void);
-void enable_interrupts(u32 flags);
+StackInfo *stack_pointer(void);
+u32 intmask_clear(void);
+void intmask_restore(u32 flags);
 
 #endif // MATH_UTIL_H

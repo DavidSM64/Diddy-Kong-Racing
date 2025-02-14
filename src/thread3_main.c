@@ -171,7 +171,7 @@ void init_game(void) {
     s32 viMode;
 
     stubbed_printf(sDebugRomBuildInfo);
-    init_main_memory_pool();
+    mempool_init_main();
     gzip_init();
 #ifdef ANTI_TAMPER
     sAntiPiracyTriggered = TRUE;
@@ -328,7 +328,7 @@ void main_game_loop(void) {
         gDrawFrameTimer = 0;
     }
     gSkipGfxTask = FALSE;
-    clear_free_queue();
+    mempool_free_queue_clear();
     if (!gIsPaused) {
         disable_cutscene_camera();
     }
@@ -371,7 +371,7 @@ void load_next_ingame_level(s32 numPlayers, s32 trackID, Vehicle vehicle) {
  */
 void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
     alloc_displaylist_heap(numberOfPlayers);
-    set_free_queue_state(0);
+    mempool_free_timer(0);
     camera_init();
     load_game_text_table();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, gGameCurrentCutscene);
@@ -379,7 +379,7 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
     ainode_update();
     osSetTime(0);
-    set_free_queue_state(2);
+    mempool_free_timer(2);
     rumble_init(TRUE);
 }
 
@@ -389,7 +389,7 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
  * Waits for a GFX task before unloading.
  */
 void unload_level_game(void) {
-    set_free_queue_state(0);
+    mempool_free_timer(0);
     if (gSkipGfxTask == FALSE) {
         if (gDrawFrameTimer != 1) {
             gfxtask_wait();
@@ -404,7 +404,7 @@ void unload_level_game(void) {
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
-    set_free_queue_state(2);
+    mempool_free_timer(2);
 }
 
 /**
@@ -862,7 +862,7 @@ Vehicle get_level_default_vehicle(void) {
  * Used for menus.
  */
 void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
-    set_free_queue_state(0);
+    mempool_free_timer(0);
     camera_init();
     load_game_text_table();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
@@ -870,7 +870,7 @@ void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     func_800AE728(4, 4, 0x6E, 0x30, 0x20, 0);
     ainode_update();
     osSetTime(0);
-    set_free_queue_state(2);
+    mempool_free_timer(2);
 }
 
 /**
@@ -880,13 +880,13 @@ void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
 void unload_level_menu(void) {
     if (!gIsLoading) {
         gIsLoading = TRUE;
-        set_free_queue_state(0);
+        mempool_free_timer(0);
         clear_audio_and_track();
         transition_begin(&D_800DD3F4);
         func_800AE270();
         free_hud();
         free_game_text_table();
-        set_free_queue_state(2);
+        mempool_free_timer(2);
     }
     gIsLoading = FALSE;
 }
@@ -1083,7 +1083,7 @@ void calc_and_alloc_heap_for_settings(void) {
     sizes[13] = sizes[12] + dataSize; // courseTimesPtr[2]
     sizes[14] = sizes[13] + dataSize; // total size
 
-    gSettingsPtr = allocate_from_main_pool_safe(sizes[14], COLOUR_TAG_WHITE);
+    gSettingsPtr = mempool_alloc_safe(sizes[14], COLOUR_TAG_WHITE);
     gSettingsPtr->courseFlagsPtr = (s32 *) ((u8 *) gSettingsPtr + sizes[0]);
     gSettingsPtr->balloonsPtr = (s16 *) ((u8 *) gSettingsPtr + sizes[1]);
     gSettingsPtr->tajFlags = 0;
@@ -1358,21 +1358,20 @@ void alloc_displaylist_heap(s32 numberOfPlayers) {
     if (numberOfPlayers != gPrevPlayerCount) {
         gPrevPlayerCount = numberOfPlayers;
         num = numberOfPlayers;
-        set_free_queue_state(0);
-        free_from_memory_pool(gDisplayLists[0]);
-        free_from_memory_pool(gDisplayLists[1]);
+        mempool_free_timer(0);
+        mempool_free(gDisplayLists[0]);
+        mempool_free(gDisplayLists[1]);
         totalSize = ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))) + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))) +
                     ((gNumHudVertsPerPlayer[num] * sizeof(Vertex))) + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle)));
-        gDisplayLists[0] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[0], COLOUR_TAG_RED);
-        gDisplayLists[1] =
-            (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[1], COLOUR_TAG_YELLOW);
+        gDisplayLists[0] = (Gfx *) mempool_alloc_fixed(totalSize, (u8 *) gDisplayLists[0], COLOUR_TAG_RED);
+        gDisplayLists[1] = (Gfx *) mempool_alloc_fixed(totalSize, (u8 *) gDisplayLists[1], COLOUR_TAG_YELLOW);
         if ((gDisplayLists[0] == NULL) || gDisplayLists[1] == NULL) {
             if (gDisplayLists[0] != NULL) {
-                free_from_memory_pool(gDisplayLists[0]);
+                mempool_free(gDisplayLists[0]);
                 gDisplayLists[0] = NULL;
             }
             if (gDisplayLists[1] != NULL) {
-                free_from_memory_pool(gDisplayLists[1]);
+                mempool_free(gDisplayLists[1]);
                 gDisplayLists[1] = NULL;
             }
             default_alloc_displaylist_heap();
@@ -1387,7 +1386,7 @@ void alloc_displaylist_heap(s32 numberOfPlayers) {
         gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[num];
         gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[num];
         gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[num];
-        set_free_queue_state(2);
+        mempool_free_timer(2);
     }
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gGameCurrMatrix = gMatrixHeap[gSPTaskNum];
@@ -1424,13 +1423,13 @@ void default_alloc_displaylist_heap(void) {
                 (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)) +
                 (gNumHudTrisPerPlayer[numberOfPlayers] * sizeof(Triangle));
 
-    gDisplayLists[0] = (Gfx *) allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
+    gDisplayLists[0] = (Gfx *) mempool_alloc_safe(totalSize, COLOUR_TAG_RED);
     gMatrixHeap[0] = (MatrixS *) ((u8 *) gDisplayLists[0] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
     gVertexHeap[0] = (Vertex *) ((u8 *) gMatrixHeap[0] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
     gTriangleHeap[0] =
         (TriangleList *) ((u8 *) gVertexHeap[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
-    gDisplayLists[1] = (Gfx *) allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
+    gDisplayLists[1] = (Gfx *) mempool_alloc_safe(totalSize, COLOUR_TAG_YELLOW);
     gMatrixHeap[1] = (MatrixS *) ((u8 *) gDisplayLists[1] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
     gVertexHeap[1] = (Vertex *) ((u8 *) gMatrixHeap[1] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
     gTriangleHeap[1] =

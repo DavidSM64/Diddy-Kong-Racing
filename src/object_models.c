@@ -51,8 +51,8 @@ void allocate_object_model_pools(void) {
     s32 i;
     s32 checksum;
 
-    D_8011D624 = allocate_from_main_pool_safe(0x230, COLOUR_TAG_GREEN);
-    D_8011D628 = allocate_from_main_pool_safe(0x190, COLOUR_TAG_GREEN);
+    D_8011D624 = mempool_alloc_safe(0x230, COLOUR_TAG_GREEN);
+    D_8011D628 = mempool_alloc_safe(0x190, COLOUR_TAG_GREEN);
     D_8011D62C = 0;
     D_8011D634 = 0;
     gObjectModelTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_MODELS_TABLE);
@@ -63,7 +63,7 @@ void allocate_object_model_pools(void) {
     gNumModelIDs--;
     gAnimationTable = (s16 *) load_asset_section_from_rom(ASSET_ANIMATION_IDS);
     gObjectAnimationTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_ANIMATIONS_TABLE);
-    D_8011D644 = (s32) allocate_from_main_pool_safe(0xC00, COLOUR_TAG_GREEN);
+    D_8011D644 = (s32) mempool_alloc_safe(0xC00, COLOUR_TAG_GREEN);
     D_8011D640 = 0;
 
 #ifdef ANTI_TAMPER
@@ -121,7 +121,7 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     temp_s0 = gObjectModelTable[modelID];
     sp48 = gObjectModelTable[modelID + 1] - temp_s0;
     sp34 = get_asset_uncompressed_size(ASSET_OBJECT_MODELS, temp_s0) + 0x80;
-    objMdl = (ObjectModel *) allocate_from_main_pool(sp34, COLOUR_TAG_RED);
+    objMdl = (ObjectModel *) mempool_alloc(sp34, COLOUR_TAG_RED);
     if (objMdl == NULL) {
         return NULL;
     }
@@ -184,7 +184,7 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
 
     if ((model->numberOfAnimations != 0) && (arg1 & 8)) {
         temp = ((model->numberOfVertices << 1) * 10) + 36;
-        result = (Object_68 *) allocate_from_main_pool((model->unk4A * 6) + temp, COLOUR_TAG_BLUE);
+        result = (Object_68 *) mempool_alloc((model->unk4A * 6) + temp, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
@@ -194,7 +194,7 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
         result->unk1E = 2;
     } else if ((model->unk40 != NULL) && (arg1 & 1)) {
         temp = (model->numberOfVertices * 10);
-        result = (Object_68 *) allocate_from_main_pool(temp + 36, COLOUR_TAG_BLUE);
+        result = (Object_68 *) mempool_alloc(temp + 36, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
@@ -204,7 +204,7 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
         result->unk4[2] = NULL;
         result->unk1E = 1;
     } else {
-        result = (Object_68 *) allocate_from_main_pool(36, COLOUR_TAG_BLUE);
+        result = (Object_68 *) mempool_alloc(36, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
@@ -269,7 +269,7 @@ void free_3d_model(ObjectModel **modelPtr) {
         model = *modelPtr;
         model->references--;
         if (model->references > 0) { // Model is still used, so free the reference and return.
-            free_from_memory_pool(modelPtr);
+            mempool_free(modelPtr);
             return;
         }
 
@@ -286,7 +286,7 @@ void free_3d_model(ObjectModel **modelPtr) {
             D_8011D634++;
             D_8011D624[modelIndex << 1] = -1;
             D_8011D624[(modelIndex << 1) + 1] = -1;
-            free_from_memory_pool(modelPtr);
+            mempool_free(modelPtr);
         }
     }
 }
@@ -312,15 +312,15 @@ void free_model_data(ObjectModel *mdl) {
     }
     // ???
     if (mdl->unkC != NULL) {
-        free_from_memory_pool(mdl->unkC);
+        mempool_free(mdl->unkC);
     }
     // ???
     if (mdl->unk10 != NULL) {
-        free_from_memory_pool(mdl->unk10);
+        mempool_free(mdl->unk10);
     }
     // ???
     if (mdl->unk40 != NULL) {
-        free_from_memory_pool(mdl->unk40);
+        mempool_free(mdl->unk40);
     }
     // free the animations
     if (mdl->animations != NULL) {
@@ -328,15 +328,15 @@ void free_model_data(ObjectModel *mdl) {
         s32 animIndex = 0;
         if (mdl->numberOfAnimations != 0) {
             do {
-                free_from_memory_pool(mdl->animations[animIndex].anim - 1);
+                mempool_free(mdl->animations[animIndex].anim - 1);
                 animsFreed++;
                 animIndex++;
             } while (animsFreed < mdl->numberOfAnimations);
-            free_from_memory_pool(mdl->animations);
+            mempool_free(mdl->animations);
         }
     }
     // free the model itself
-    free_from_memory_pool(mdl);
+    mempool_free(mdl);
 }
 
 GLOBAL_ASM("asm/non_matchings/object_models/func_8006017C.s")
@@ -418,7 +418,7 @@ s32 func_80061A00(ObjectModel *model, s32 animTableIndex) {
         }
     }
     model->numberOfAnimations = end - start;
-    allocAnimData = (ObjectModel_44 *) allocate_from_main_pool(model->numberOfAnimations * 8, COLOUR_TAG_RED);
+    allocAnimData = (ObjectModel_44 *) mempool_alloc(model->numberOfAnimations * 8, COLOUR_TAG_RED);
     model->animations = allocAnimData;
     if (allocAnimData == NULL) {
         return 1;
@@ -430,12 +430,12 @@ s32 func_80061A00(ObjectModel *model, s32 animTableIndex) {
         animAddress = gObjectAnimationTable[start + 1] - assetOffset;
         assetSize = animAddress;
         size = get_asset_uncompressed_size(ASSET_OBJECT_ANIMATIONS, assetOffset) + 0x80;
-        model->animations[i].animData = (u8 *) allocate_from_main_pool(size, COLOUR_TAG_RED);
+        model->animations[i].animData = (u8 *) mempool_alloc(size, COLOUR_TAG_RED);
         if (model->animations[i].animData == NULL) {
             for (j = 0; j < i2; j++) {
-                free_from_memory_pool(model->animations[j].animData);
+                mempool_free(model->animations[j].animData);
             }
-            free_from_memory_pool(model->animations);
+            mempool_free(model->animations);
             model->animations = NULL;
             return 1;
         }

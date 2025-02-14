@@ -1,4 +1,4 @@
-glabel disable_interrupts /* Official name: disableInterrupts */
+glabel intmask_clear /* Official name: disableInterrupts */
 /* 070110 8006F510 3C08800E */  lui   $t0, %hi(gIntDisFlag) # $t0, 0x800e
 /* 070114 8006F514 8108D430 */  lb    $t0, %lo(gIntDisFlag)($t0)
 /* 070118 8006F518 11000006 */  beqz  $t0, .L8006F534

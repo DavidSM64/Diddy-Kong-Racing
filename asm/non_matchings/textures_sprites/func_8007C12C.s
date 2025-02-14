@@ -111,7 +111,7 @@ glabel func_8007C12C
 /* 07CEBC 8007C2BC 01C02025 */   move  $a0, $t6
 /* 07CEC0 8007C2C0 3C05FF00 */  lui   $a1, (0xFF00FFFF >> 16) # lui $a1, 0xff00
 /* 07CEC4 8007C2C4 02022021 */  addu  $a0, $s0, $v0
-/* 07CEC8 8007C2C8 0C01C344 */  jal   allocate_from_main_pool
+/* 07CEC8 8007C2C8 0C01C344 */  jal   mempool_alloc
 /* 07CECC 8007C2CC 34A5FFFF */   ori   $a1, (0xFF00FFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 07CED0 8007C2D0 1440000B */  bnez  $v0, .L8007C300
 /* 07CED4 8007C2D4 00409825 */   move  $s3, $v0
@@ -220,7 +220,7 @@ glabel func_8007C12C
 /* 07D050 8007C450 25F8FFFF */  addiu $t8, $t7, -1
 /* 07D054 8007C454 AC580000 */  sw    $t8, ($v0)
 .L8007C458:
-/* 07D058 8007C458 0C01C450 */  jal   free_from_memory_pool
+/* 07D058 8007C458 0C01C450 */  jal   mempool_free
 /* 07D05C 8007C45C 02602025 */   move  $a0, $s3
 /* 07D060 8007C460 10000029 */  b     .L8007C508
 /* 07D064 8007C464 00001025 */   move  $v0, $zero

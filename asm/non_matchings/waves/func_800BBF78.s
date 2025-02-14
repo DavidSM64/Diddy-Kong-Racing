@@ -177,7 +177,7 @@ glabel func_800BBF78
 /* 0BCDF8 800BC1F8 272E0001 */  addiu $t6, $t9, 1
 /* 0BCDFC 800BC1FC 10A00005 */  beqz  $a1, .L800BC214
 /* 0BCE00 800BC200 AE0E0000 */   sw    $t6, ($s0)
-/* 0BCE04 800BC204 0C01C450 */  jal   free_from_memory_pool
+/* 0BCE04 800BC204 0C01C450 */  jal   mempool_free
 /* 0BCE08 800BC208 00A02025 */   move  $a0, $a1
 /* 0BCE0C 800BC20C 8EE30000 */  lw    $v1, ($s7)
 /* 0BCE10 800BC210 00000000 */  nop   
@@ -188,7 +188,7 @@ glabel func_800BBF78
 /* 0BCE20 800BC220 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 0BCE24 800BC224 00002012 */  mflo  $a0
 /* 0BCE28 800BC228 00047880 */  sll   $t7, $a0, 2
-/* 0BCE2C 800BC22C 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 0BCE2C 800BC22C 0C01C327 */  jal   mempool_alloc_safe
 /* 0BCE30 800BC230 01E02025 */   move  $a0, $t7
 /* 0BCE34 800BC234 AE420000 */  sw    $v0, ($s2)
 /* 0BCE38 800BC238 3C04800E */  lui   $a0, %hi(D_800E30D8) # $a0, 0x800e
@@ -196,7 +196,7 @@ glabel func_800BBF78
 /* 0BCE40 800BC240 00000000 */  nop   
 /* 0BCE44 800BC244 10800003 */  beqz  $a0, .L800BC254
 /* 0BCE48 800BC248 00000000 */   nop   
-/* 0BCE4C 800BC24C 0C01C450 */  jal   free_from_memory_pool
+/* 0BCE4C 800BC24C 0C01C450 */  jal   mempool_free
 /* 0BCE50 800BC250 00000000 */   nop   
 .L800BC254:
 /* 0BCE54 800BC254 8679001A */  lh    $t9, 0x1a($s3)
@@ -208,7 +208,7 @@ glabel func_800BBF78
 /* 0BCE6C 800BC26C 01CF2021 */  addu  $a0, $t6, $t7
 /* 0BCE70 800BC270 3C0500FF */  lui   $a1, (0x00FFFFFF >> 16) # lui $a1, 0xff
 /* 0BCE74 800BC274 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
-/* 0BCE78 800BC278 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 0BCE78 800BC278 0C01C327 */  jal   mempool_alloc_safe
 /* 0BCE7C 800BC27C 24840880 */   addiu $a0, $a0, 0x880
 /* 0BCE80 800BC280 3C01800E */  lui   $at, %hi(D_800E30D8) # $at, 0x800e
 /* 0BCE84 800BC284 AC2230D8 */  sw    $v0, %lo(D_800E30D8)($at)

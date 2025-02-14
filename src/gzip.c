@@ -26,8 +26,8 @@ s32 gHuftTablePos; // gzip_hufts
  * Allocate space for the decompression heap and file header.
  */
 void gzip_init(void) {
-    gHuftTable = (huft *) allocate_from_main_pool_safe(0x2800, COLOUR_TAG_BLACK);
-    gPackedHeader = (s32 *) allocate_from_main_pool_safe(0x10, COLOUR_TAG_BLACK);
+    gHuftTable = (huft *) mempool_alloc_safe(0x2800, COLOUR_TAG_BLACK);
+    gPackedHeader = (s32 *) mempool_alloc_safe(0x10, COLOUR_TAG_BLACK);
 }
 
 /**

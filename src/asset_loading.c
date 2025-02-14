@@ -33,8 +33,8 @@ void init_PI_mesg_queue(void) {
     osCreateMesgQueue(&gDmaMesgQueue, &gDmaMesg, 1);
     osCreatePiManager((OSPri) 150, &gPIMesgQueue, gPIMesgBuf, ARRAY_COUNT(gPIMesgBuf));
     assetTableSize = __ASSETS_LUT_END - __ASSETS_LUT_START;
-    gAssetsLookupTable = (u32 *) allocate_from_main_pool_safe(assetTableSize, COLOUR_TAG_GREY);
-    func_80071478((u8 *) gAssetsLookupTable);
+    gAssetsLookupTable = (u32 *) mempool_alloc_safe(assetTableSize, COLOUR_TAG_GREY);
+    mempool_locked_set((u8 *) gAssetsLookupTable);
     dmacopy((u32) __ASSETS_LUT_START, (u32) gAssetsLookupTable, (s32) assetTableSize);
 }
 
@@ -54,7 +54,7 @@ u32 *load_asset_section_from_rom(u32 assetIndex) {
     index = assetIndex + gAssetsLookupTable;
     start = *index;
     size = *(index + 1) - start;
-    out = (u32 *) allocate_from_main_pool_safe(size, COLOUR_TAG_GREY);
+    out = (u32 *) mempool_alloc_safe(size, COLOUR_TAG_GREY);
     if (out == 0) {
         return 0;
     }
@@ -80,11 +80,11 @@ UNUSED u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
     out = (u8 *) (assetIndex + gAssetsLookupTable);
     start = ((s32 *) out)[0];
     size = ((s32 *) out)[1] - start;
-    gzipHeaderRamPos = (u8 *) allocate_from_main_pool_safe(8, COLOUR_TAG_WHITE);
+    gzipHeaderRamPos = (u8 *) mempool_alloc_safe(8, COLOUR_TAG_WHITE);
     dmacopy((u32) (start + __ASSETS_LUT_END), (u32) gzipHeaderRamPos, 8);
     totalSpace = byteswap32(gzipHeaderRamPos) + extraMemory;
-    free_from_memory_pool(gzipHeaderRamPos);
-    out = (u8 *) allocate_from_main_pool_safe(totalSpace + extraMemory, COLOUR_TAG_GREY);
+    mempool_free(gzipHeaderRamPos);
+    out = (u8 *) mempool_alloc_safe(totalSpace + extraMemory, COLOUR_TAG_GREY);
     if (out == NULL) {
         return NULL;
     }

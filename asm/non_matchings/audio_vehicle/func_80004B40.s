@@ -51,7 +51,7 @@ glabel func_80004B40
 /* 0057E4 80004BE4 0019C880 */  sll   $t9, $t9, 2
 /* 0057E8 80004BE8 02402825 */  move  $a1, $s2
 /* 0057EC 80004BEC 2404004C */  li    $a0, 76
-/* 0057F0 80004BF0 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 0057F0 80004BF0 0C01C327 */  jal   mempool_alloc_safe
 /* 0057F4 80004BF4 01F98821 */   addu  $s1, $t7, $t9
 /* 0057F8 80004BF8 0040A825 */  move  $s5, $v0
 /* 0057FC 80004BFC 24040027 */  li    $a0, 39
@@ -60,7 +60,7 @@ glabel func_80004B40
 /* 005808 80004C08 0C01DB9A */  jal   load_asset_to_address
 /* 00580C 80004C0C 2407004C */   li    $a3, 76
 /* 005810 80004C10 240400E0 */  li    $a0, 224
-/* 005814 80004C14 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 005814 80004C14 0C01C327 */  jal   mempool_alloc_safe
 /* 005818 80004C18 02402825 */   move  $a1, $s2
 /* 00581C 80004C1C AFA20044 */  sw    $v0, 0x44($sp)
 /* 005820 80004C20 00401825 */  move  $v1, $v0
@@ -364,9 +364,9 @@ glabel func_80004B40
 /* 005C8C 8000508C E4520054 */  swc1  $f18, 0x54($v0)
 .L80005090:
 /* 005C90 80005090 8FA4003C */  lw    $a0, 0x3c($sp)
-/* 005C94 80005094 0C01C450 */  jal   free_from_memory_pool
+/* 005C94 80005094 0C01C450 */  jal   mempool_free
 /* 005C98 80005098 00000000 */   nop   
-/* 005C9C 8000509C 0C01C450 */  jal   free_from_memory_pool
+/* 005C9C 8000509C 0C01C450 */  jal   mempool_free
 /* 005CA0 800050A0 02A02025 */   move  $a0, $s5
 /* 005CA4 800050A4 8FBF0034 */  lw    $ra, 0x34($sp)
 /* 005CA8 800050A8 8FA20044 */  lw    $v0, 0x44($sp)

@@ -257,7 +257,7 @@ void init_hud(UNUSED s32 viewportCount) {
     while (gAssetHudElementIds[gAssetHudElementIdsCount] != -1) {
         gAssetHudElementIdsCount++;
     }
-    gAssetHudElements = allocate_from_main_pool_safe(gAssetHudElementIdsCount * (sizeof(void *) + 1), COLOUR_TAG_BLUE);
+    gAssetHudElements = mempool_alloc_safe(gAssetHudElementIdsCount * (sizeof(void *) + 1), COLOUR_TAG_BLUE);
     // Evil pointer shenanigans to store the timer in that last byte in the struct above.
     gAssetHudElementStaleCounter = (u8 *) ((gAssetHudElementIdsCount + (s32 *) gAssetHudElements));
     for (i = 0; i < gAssetHudElementIdsCount; i++) {
@@ -277,7 +277,7 @@ void init_hud(UNUSED s32 viewportCount) {
     } else {
         playerCount = 4; // Create four viewports if there are three players.
     }
-    gPlayerHud[PLAYER_ONE] = allocate_from_main_pool_safe(playerCount * sizeof(HudData), COLOUR_TAG_BLUE);
+    gPlayerHud[PLAYER_ONE] = mempool_alloc_safe(playerCount * sizeof(HudData), COLOUR_TAG_BLUE);
     gPlayerHud[PLAYER_TWO] = (HudData *) ((u8 *) gPlayerHud[PLAYER_ONE] + sizeof(HudData));
     gPlayerHud[PLAYER_THREE] = (HudData *) ((u8 *) gPlayerHud[PLAYER_TWO] + sizeof(HudData));
     gPlayerHud[PLAYER_FOUR] = (HudData *) ((u8 *) gPlayerHud[PLAYER_THREE] + sizeof(HudData));
@@ -332,10 +332,10 @@ void free_hud(void) {
             gAssetHudElements->entry[i] = NULL;
         }
     }
-    free_from_memory_pool(*gPlayerHud);
-    free_from_memory_pool(gAssetHudElementIds);
+    mempool_free(*gPlayerHud);
+    mempool_free(gAssetHudElementIds);
     gAssetHudElementIdsCount = 0;
-    free_from_memory_pool(gAssetHudElements);
+    mempool_free(gAssetHudElements);
     gParticlePtrList_flush();
 }
 

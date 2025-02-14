@@ -9,7 +9,7 @@
 .set noreorder # dont insert nops after branches
 .set gp=64     # 64-bit instructions are used
 
-glabel get_stack_pointer
+glabel stack_pointer
 jr    $ra
  move  $v0, $sp
  

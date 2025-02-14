@@ -235,26 +235,26 @@ void vi_init(void) {
  */
 void fb_init(s32 index) {
     if (gVideoFramebuffers[index] != 0) {
-        memory_slot_exists((u8 *) gVideoFramebuffers[index]); // Effectively unused.
-        free_from_memory_pool(gVideoFramebuffers[index]);
+        mempool_locked_unset((u8 *) gVideoFramebuffers[index]); // Effectively unused.
+        mempool_free(gVideoFramebuffers[index]);
     }
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].width;
     gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].height;
     if (gVideoModeIndex >= VIDEO_MODE_MIDRES_MASK) {
         gVideoFramebuffers[index] =
-            allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+            mempool_alloc_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = FBALIGN(gVideoFramebuffers[index]);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe(
+            gVideoDepthBuffer = mempool_alloc_safe(
                 (HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
-        gVideoDepthBuffer = FBALIGN(gVideoDepthBuffer);
+            gVideoDepthBuffer = FBALIGN(gVideoDepthBuffer);
         }
     } else {
         gVideoFramebuffers[index] =
-            allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
+            mempool_alloc_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = FBALIGN(gVideoFramebuffers[index]);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe(
+            gVideoDepthBuffer = mempool_alloc_safe(
                 (gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
             gVideoDepthBuffer = FBALIGN(gVideoDepthBuffer);
         }

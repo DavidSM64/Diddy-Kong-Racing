@@ -41,7 +41,7 @@ glabel func_800BCC70
 /* 0BD908 800BCD08 00000000 */  nop   
 /* 0BD90C 800BCD0C 10800004 */  beqz  $a0, .L800BCD20
 /* 0BD910 800BCD10 8FAF0190 */   lw    $t7, 0x190($sp)
-/* 0BD914 800BCD14 0C01C450 */  jal   free_from_memory_pool
+/* 0BD914 800BCD14 0C01C450 */  jal   mempool_free
 /* 0BD918 800BCD18 00000000 */   nop   
 /* 0BD91C 800BCD1C 8FAF0190 */  lw    $t7, 0x190($sp)
 .L800BCD20:
@@ -53,14 +53,14 @@ glabel func_800BCC70
 /* 0BD934 800BCD34 3610FFFF */  ori   $s0, (0x00FFFFFF & 0xFFFF) # ori $s0, $s0, 0xffff
 /* 0BD938 800BCD38 02002825 */  move  $a1, $s0
 /* 0BD93C 800BCD3C 00002012 */  mflo  $a0
-/* 0BD940 800BCD40 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 0BD940 800BCD40 0C01C327 */  jal   mempool_alloc_safe
 /* 0BD944 800BCD44 00000000 */   nop   
 /* 0BD948 800BCD48 8FAE0190 */  lw    $t6, 0x190($sp)
 /* 0BD94C 800BCD4C AE220000 */  sw    $v0, ($s1)
 /* 0BD950 800BCD50 85C4001A */  lh    $a0, 0x1a($t6)
 /* 0BD954 800BCD54 02002825 */  move  $a1, $s0
 /* 0BD958 800BCD58 00047880 */  sll   $t7, $a0, 2
-/* 0BD95C 800BCD5C 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 0BD95C 800BCD5C 0C01C327 */  jal   mempool_alloc_safe
 /* 0BD960 800BCD60 01E02025 */   move  $a0, $t7
 /* 0BD964 800BCD64 3C188013 */  lui   $t8, %hi(D_8012A0D8) # $t8, 0x8013
 /* 0BD968 800BCD68 3C198013 */  lui   $t9, %hi(D_8012A0DC) # $t9, 0x8013
@@ -71,12 +71,12 @@ glabel func_800BCC70
 /* 0BD97C 800BCD7C 02002825 */  move  $a1, $s0
 /* 0BD980 800BCD80 00002012 */  mflo  $a0
 /* 0BD984 800BCD84 000470C0 */  sll   $t6, $a0, 3
-/* 0BD988 800BCD88 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 0BD988 800BCD88 0C01C327 */  jal   mempool_alloc_safe
 /* 0BD98C 800BCD8C 01C02025 */   move  $a0, $t6
 /* 0BD990 800BCD90 00142080 */  sll   $a0, $s4, 2
 /* 0BD994 800BCD94 AFA200A4 */  sw    $v0, 0xa4($sp)
 /* 0BD998 800BCD98 24840004 */  addiu $a0, $a0, 4
-/* 0BD99C 800BCD9C 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 0BD99C 800BCD9C 0C01C327 */  jal   mempool_alloc_safe
 /* 0BD9A0 800BCDA0 02002825 */   move  $a1, $s0
 /* 0BD9A4 800BCDA4 3C0F8013 */  lui   $t7, %hi(D_8012A0D8) # $t7, 0x8013
 /* 0BD9A8 800BCDA8 3C188013 */  lui   $t8, %hi(D_8012A0DC) # $t8, 0x8013
@@ -1069,13 +1069,13 @@ glabel func_800BCC70
 /* 0BE800 800BDC00 018F6021 */   addu  $t4, $t4, $t7
 .L800BDC04:
 /* 0BE804 800BDC04 8FA400A8 */  lw    $a0, 0xa8($sp)
-/* 0BE808 800BDC08 0C01C450 */  jal   free_from_memory_pool
+/* 0BE808 800BDC08 0C01C450 */  jal   mempool_free
 /* 0BE80C 800BDC0C 00000000 */   nop   
 /* 0BE810 800BDC10 8FA400A4 */  lw    $a0, 0xa4($sp)
-/* 0BE814 800BDC14 0C01C450 */  jal   free_from_memory_pool
+/* 0BE814 800BDC14 0C01C450 */  jal   mempool_free
 /* 0BE818 800BDC18 00000000 */   nop   
 /* 0BE81C 800BDC1C 8FA400A0 */  lw    $a0, 0xa0($sp)
-/* 0BE820 800BDC20 0C01C450 */  jal   free_from_memory_pool
+/* 0BE820 800BDC20 0C01C450 */  jal   mempool_free
 /* 0BE824 800BDC24 00000000 */   nop   
 /* 0BE828 800BDC28 8FBF0064 */  lw    $ra, 0x64($sp)
 /* 0BE82C 800BDC2C C7B50018 */  lwc1  $f21, 0x18($sp)

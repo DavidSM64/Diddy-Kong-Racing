@@ -78,9 +78,9 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
     addrPtr = (s32 *) load_asset_section_from_rom(ASSET_AUDIO_TABLE);
     vehicleId *= 10;
     temp_s1 = addrPtr[ASSET_AUDIO_7] + ((vehicleId + characterId) * sizeof(unkAudioAsset));
-    temp_v0_2 = (unkAudioAsset *) allocate_from_main_pool_safe(sizeof(unkAudioAsset), COLOUR_TAG_CYAN);
+    temp_v0_2 = (unkAudioAsset *) mempool_alloc_safe(sizeof(unkAudioAsset), COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, (u32) temp_v0_2, temp_s1, sizeof(unkAudioAsset));
-    temp_v0_3 = (VehicleSoundData *) allocate_from_main_pool_safe(sizeof(VehicleSoundData), COLOUR_TAG_CYAN);
+    temp_v0_3 = (VehicleSoundData *) mempool_alloc_safe(sizeof(VehicleSoundData), COLOUR_TAG_CYAN);
 
     // Not really sure this is right...
     memset = temp_v0_3;
@@ -161,8 +161,8 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
         temp_v0_3->unk54[0] =
             temp_v0_3->unk2C[var_a0_2] + (temp_v0_3->unk2C[var_a0_2 + 1] - temp_v0_3->unk2C[var_a0_2]) * new_var;
     }
-    free_from_memory_pool(addrPtr);
-    free_from_memory_pool((void *) temp_v0_2);
+    mempool_free(addrPtr);
+    mempool_free((void *) temp_v0_2);
     return temp_v0_3;
 }
 #else
@@ -601,7 +601,7 @@ void racer_sound_free(Object *obj) {
                 D_80119C30[i] = NULL;
             }
         }
-        free_from_memory_pool(gRacerSound);
+        mempool_free(gRacerSound);
         obj->unk64->racer.vehicleSound = NULL;
     }
 }

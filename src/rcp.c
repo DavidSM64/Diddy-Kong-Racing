@@ -448,8 +448,7 @@ void bgdraw_render(Gfx **dList, Matrix *mtx, s32 drawBG) {
             // fillmode.
             if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
                 gDPSetCycleType((*dList)++, G_CYC_1CYCLE);
-                gDPSetPrimColor((*dList)++, 0, 0, sBGPrimColourrR, sBGPrimColourrG,
-                                sBGPrimColourrB, 255);
+                gDPSetPrimColor((*dList)++, 0, 0, sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 255);
                 gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
                 gDPSetRenderMode((*dList)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
                 gDPFillRectangle((*dList)++, x1, y1, x2, y2);
@@ -462,10 +461,9 @@ void bgdraw_render(Gfx **dList, Matrix *mtx, s32 drawBG) {
             } else if (gBGDrawFunc.ptr != NULL) {
                 gBGDrawFunc.function((Gfx *) dList, mtx);
             } else {
-                gDPSetFillColor(
-                    (*dList)++,
-                    (GPACK_RGBA5551(sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 1) << 16) |
-                        GPACK_RGBA5551(sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 1));
+                gDPSetFillColor((*dList)++,
+                                (GPACK_RGBA5551(sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 1) << 16) |
+                                    GPACK_RGBA5551(sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 1));
                 gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
             }
         }
@@ -513,7 +511,7 @@ void bgdraw_texture_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
     gTexBGShiftX = shiftX * 4;
 }
 
-//bgdraw_texture
+// bgdraw_texture
 #ifdef NON_EQUIVALENT
 /**
  * Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
@@ -698,8 +696,7 @@ void bgdraw_set_func(void *func) {
  * Texture rectangle coordinates use 10.2 precision and texture coords use 10.5 precision.
  * Typically, you do these shifts in the draw call itself, but Rare decided to do it beforehand.
  */
-void texrect_draw(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue,
-                               u8 alpha) {
+void texrect_draw(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
     TextureHeader *tex;
     s32 i;
     s32 uly;
@@ -743,8 +740,8 @@ void texrect_draw(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red,
  * Typically, you do these shifts in the draw call itself, but Rare decided to do it beforehand.
  * Also applies texel shifting in order to apply scaling.
  */
-void texrect_draw_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale,
-                                     u32 colour, s32 flags) {
+void texrect_draw_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour,
+                         s32 flags) {
     TextureHeader *tex;
     Gfx *dmaDlist;
     s32 i;

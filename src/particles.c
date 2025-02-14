@@ -168,60 +168,60 @@ void func_800AE2D8(void) {
         for (i = 0; i < D_800E2E64; i++) {
             free_sprite(D_800E2E60[i]);
         }
-        free_from_memory_pool(D_800E2E60);
+        mempool_free(D_800E2E60);
         D_800E2E60 = 0;
     }
 }
 
 void func_800AE374(void) {
     if (D_800E2CA8 != NULL) {
-        free_from_memory_pool(D_800E2CA8);
+        mempool_free(D_800E2CA8);
         D_800E2CA8 = NULL;
     }
     if (D_800E2CB4 != NULL) {
-        free_from_memory_pool(D_800E2CB4);
+        mempool_free(D_800E2CB4);
         D_800E2CB4 = NULL;
     }
     if (D_800E2CC0 != NULL) {
-        free_from_memory_pool(D_800E2CC0);
+        mempool_free(D_800E2CC0);
         D_800E2CC0 = NULL;
     }
     if (D_800E2CCC != NULL) {
-        free_from_memory_pool(D_800E2CCC);
+        mempool_free(D_800E2CCC);
         D_800E2CCC = NULL;
     }
     if (D_800E2CD8 != NULL) {
-        free_from_memory_pool(D_800E2CD8);
+        mempool_free(D_800E2CD8);
         D_800E2CD8 = NULL;
     }
 }
 
 void func_800AE438(void) {
     if (D_800E2CE0 != NULL) {
-        free_from_memory_pool(D_800E2CE0);
+        mempool_free(D_800E2CE0);
         D_800E2CE0 = NULL;
     }
     if (D_800E2CE4 != NULL) {
-        free_from_memory_pool(D_800E2CE4);
+        mempool_free(D_800E2CE4);
         D_800E2CE4 = NULL;
     }
 }
 
 void func_800AE490(void) {
     if (gParticlesAssets != NULL) {
-        free_from_memory_pool(gParticlesAssets);
+        mempool_free(gParticlesAssets);
         gParticlesAssets = NULL;
     }
     if (gParticlesAssetTable != NULL) {
-        free_from_memory_pool(gParticlesAssetTable);
+        mempool_free(gParticlesAssetTable);
         gParticlesAssetTable = NULL;
     }
     if (gParticleBehavioursAssets != NULL) {
-        free_from_memory_pool(gParticleBehavioursAssets);
+        mempool_free(gParticleBehavioursAssets);
         gParticleBehavioursAssets = NULL;
     }
     if (gParticleBehavioursAssetTable != NULL) {
-        free_from_memory_pool(gParticleBehavioursAssetTable);
+        mempool_free(gParticleBehavioursAssetTable);
         gParticleBehavioursAssetTable = NULL;
     }
 }
@@ -471,7 +471,7 @@ void func_800AF29C(Particle *arg0, s32 behaviourID, s32 propertyID, s16 velX, s1
             arg0->data.lifeTime = 255;
         }
         arg0->data.unkC_400.unkC =
-            (s32 *) allocate_from_main_pool_safe(arg0->data.lifeTime * sizeof(uintptr_t), COLOUR_TAG_SEMITRANS_GREY);
+            (s32 *) mempool_alloc_safe(arg0->data.lifeTime * sizeof(uintptr_t), COLOUR_TAG_SEMITRANS_GREY);
         arg0->data.unkC_400.unk10 = behaviour->unk14;
         arg0->data.unkC_400.unk12 = behaviour->unk16;
         arg0->data.unkC_400.unk14 = behaviour->unk22;
@@ -1578,7 +1578,7 @@ void func_800B2260(Particle *arg0) {
                 temp_v0->segment.particle.destroyTimer = 0;
                 temp_v0->unk70 = 0;
             }
-            free_from_memory_pool(arg0->data.unkC_60);
+            mempool_free(arg0->data.unkC_60);
             arg0->data.unkC_60 = NULL;
         }
     }

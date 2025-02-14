@@ -94,7 +94,7 @@ void load_fonts(void) {
         gFonts[i].loadedFonts[0] = 0;
     }
 
-    gDialogueBoxBackground = (DialogueBoxBackground *) allocate_from_main_pool_safe(
+    gDialogueBoxBackground = (DialogueBoxBackground *) mempool_alloc_safe(
         DIALOGUEBOXBACKGROUND_TOTAL_SIZE + DialogueTextElement_TOTAL_SIZE, COLOUR_TAG_YELLOW);
     gDialogueText = (DialogueTextElement *) &gDialogueBoxBackground[DIALOGUEBOXBACKGROUND_COUNT];
 

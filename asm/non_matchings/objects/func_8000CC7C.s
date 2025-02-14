@@ -534,7 +534,7 @@ glabel func_8000CC7C
 /* 00DFCC 8000D3CC 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 00DFD0 8000D3D0 24150018 */  li    $s5, 24
 /* 00DFD4 8000D3D4 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 00DFD8 8000D3D8 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 00DFD8 8000D3D8 0C01C327 */  jal   mempool_alloc_safe
 /* 00DFDC 8000D3DC 24040010 */   li    $a0, 16
 /* 00DFE0 8000D3E0 A440000C */  sh    $zero, 0xc($v0)
 /* 00DFE4 8000D3E4 A440000A */  sh    $zero, 0xa($v0)
@@ -1417,11 +1417,11 @@ glabel L8000D98C
 /* 00EC60 8000E060 0C01AF44 */  jal   start_level_music
 /* 00EC64 8000E064 00000000 */   nop   
 .L8000E068:
-/* 00EC68 8000E068 0C01C42C */  jal   set_free_queue_state
+/* 00EC68 8000E068 0C01C42C */  jal   mempool_free_timer
 /* 00EC6C 8000E06C 00002025 */   move  $a0, $zero
-/* 00EC70 8000E070 0C01C450 */  jal   free_from_memory_pool
+/* 00EC70 8000E070 0C01C450 */  jal   mempool_free
 /* 00EC74 8000E074 02C02025 */   move  $a0, $s6
-/* 00EC78 8000E078 0C01C42C */  jal   set_free_queue_state
+/* 00EC78 8000E078 0C01C42C */  jal   mempool_free_timer
 /* 00EC7C 8000E07C 24040002 */   li    $a0, 2
 .L8000E080:
 /* 00EC80 8000E080 8FBF003C */  lw    $ra, 0x3c($sp)

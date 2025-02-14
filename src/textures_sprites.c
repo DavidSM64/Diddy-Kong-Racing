@@ -351,8 +351,8 @@ s16 gUsePrimColour;
 void tex_init_textures(void) {
     s32 i;
 
-    gTextureCache = allocate_from_main_pool_safe(sizeof(TextureHeader) * TEX_HEADER_COUNT, COLOUR_TAG_MAGENTA);
-    gCiPalettes = allocate_from_main_pool_safe(0x280, COLOUR_TAG_MAGENTA);
+    gTextureCache = mempool_alloc_safe(sizeof(TextureHeader) * TEX_HEADER_COUNT, COLOUR_TAG_MAGENTA);
+    gCiPalettes = mempool_alloc_safe(0x280, COLOUR_TAG_MAGENTA);
     gNumberOfLoadedTextures = 0;
     gCiPalettesSize = 0;
     gTextureAssetTable[TEX_TABLE_2D] = (s32 *) load_asset_section_from_rom(ASSET_TEXTURES_2D_TABLE);
@@ -364,8 +364,8 @@ void tex_init_textures(void) {
     for (i = 0; gTextureAssetTable[TEX_TABLE_3D][i] != -1; i++) {}
     gTextureAssetID[TEX_TABLE_3D] = --i;
 
-    gSpriteCache = allocate_from_main_pool_safe(sizeof(Sprite) * TEX_SPRITE_COUNT, COLOUR_TAG_MAGENTA);
-    gCurrentSprite = allocate_from_main_pool_safe(sizeof(Sprite) * 32, COLOUR_TAG_MAGENTA);
+    gSpriteCache = mempool_alloc_safe(sizeof(Sprite) * TEX_SPRITE_COUNT, COLOUR_TAG_MAGENTA);
+    gCurrentSprite = mempool_alloc_safe(sizeof(Sprite) * 32, COLOUR_TAG_MAGENTA);
     D_80126358 = 0;
     gSpriteOffsetTable = (s32 *) load_asset_section_from_rom(ASSET_SPRITES_TABLE);
     gSpriteTableNum = 0;
@@ -374,7 +374,7 @@ void tex_init_textures(void) {
     }
     gSpriteTableNum--;
 
-    gTempTextureHeader = allocate_from_main_pool_safe(0x28, COLOUR_TAG_MAGENTA);
+    gTempTextureHeader = mempool_alloc_safe(0x28, COLOUR_TAG_MAGENTA);
     D_80126344 = 0;
 }
 
@@ -460,7 +460,7 @@ TextureHeader *load_texture(s32 arg0) {
     numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
 
     if (!gTempTextureHeader->header.isCompressed) {
-        tex = allocate_from_main_pool((numberOfTextures * 0x60) + assetSize, gTexColourTag);
+        tex = mempool_alloc((numberOfTextures * 0x60) + assetSize, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
@@ -469,7 +469,7 @@ TextureHeader *load_texture(s32 arg0) {
         temp_v0_5 = byteswap32(&gTempTextureHeader->uncompressedSize);
         temp_a0 = (numberOfTextures * 0x60) + temp_v0_5;
         sp3C = temp_v0_5 + 0x20;
-        tex = allocate_from_main_pool(temp_a0 + 0x20, gTexColourTag);
+        tex = mempool_alloc(temp_a0 + 0x20, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
@@ -542,7 +542,7 @@ void free_texture(TextureHeader *tex) {
         if ((--tex->numberOfInstances) <= 0) {
             for (i = 0; i < gNumberOfLoadedTextures; i++) {
                 if ((s32) tex == gTextureCache[(i << 1) + 1]) {
-                    free_from_memory_pool(tex);
+                    mempool_free(tex);
 
                     gTextureCache[(i << 1)] = -1;
                     gTextureCache[(i << 1) + 1] = -1;
@@ -934,7 +934,7 @@ UNUSED u8 func_8007C660(s32 arg0) {
         return 0;
     }
     if (D_80126370 == 0) {
-        D_80126370 = (u8 *) allocate_from_main_pool_safe(gTextureAssetID[TEX_TABLE_2D], COLOUR_TAG_MAGENTA);
+        D_80126370 = (u8 *) mempool_alloc_safe(gTextureAssetID[TEX_TABLE_2D], COLOUR_TAG_MAGENTA);
         for (i = 0; i < gTextureAssetID[TEX_TABLE_2D]; i++) {
             D_80126370[i] = 0;
         }
@@ -1020,7 +1020,7 @@ void free_sprite(Sprite *sprite) {
                     for (frame = 0; frame < sprite->numberOfFrames; frame++) {
                         free_texture(sprite->frames[frame]);
                     }
-                    free_from_memory_pool(sprite);
+                    mempool_free(sprite);
                     gSpriteCache[(i << 1) + 0] = -1;
                     gSpriteCache[(i << 1) + 1] = -1; // ?
                     break;

@@ -36,7 +36,7 @@ glabel func_80025510
 /* 026194 80025594 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 026198 80025598 AFA80024 */  sw    $t0, 0x24($sp)
 /* 02619C 8002559C AFA70028 */  sw    $a3, 0x28($sp)
-/* 0261A0 800255A0 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 0261A0 800255A0 0C01C327 */  jal   mempool_alloc_safe
 /* 0261A4 800255A4 00102100 */   sll   $a0, $s0, 4
 /* 0261A8 800255A8 8FA70028 */  lw    $a3, 0x28($sp)
 /* 0261AC 800255AC 8FA80024 */  lw    $t0, 0x24($sp)
@@ -53,7 +53,7 @@ glabel func_80025510
 /* 0261D8 800255D8 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 0261DC 800255DC 00006012 */  mflo  $t4
 /* 0261E0 800255E0 032C2021 */  addu  $a0, $t9, $t4
-/* 0261E4 800255E4 0C01C327 */  jal   allocate_from_main_pool_safe
+/* 0261E4 800255E4 0C01C327 */  jal   mempool_alloc_safe
 /* 0261E8 800255E8 00000000 */   nop   
 /* 0261EC 800255EC 3C04800E */  lui   $a0, %hi(D_800DC924) # $a0, 0x800e
 /* 0261F0 800255F0 2484C924 */  addiu $a0, %lo(D_800DC924) # addiu $a0, $a0, -0x36dc
