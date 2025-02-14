@@ -897,7 +897,7 @@ void s32_to_string(char **outString, s32 number) {
  * lrx, lry = lower-right position
  */
 void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
-    u32 widthAndHeight = get_video_width_and_height_as_s32();
+    u32 widthAndHeight = fb_size();
     u32 width = GET_VIDEO_WIDTH(widthAndHeight);
     u32 height = GET_VIDEO_HEIGHT(widthAndHeight);
 

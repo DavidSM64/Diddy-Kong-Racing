@@ -419,7 +419,7 @@ void bgdraw_render(Gfx **dList, Matrix *mtx, s32 drawBG) {
     s32 x2;
     s32 y2;
 
-    widthAndHeight = get_video_width_and_height_as_s32();
+    widthAndHeight = fb_size();
     w = GET_VIDEO_WIDTH(widthAndHeight);
     h = GET_VIDEO_HEIGHT(widthAndHeight);
 
@@ -479,7 +479,7 @@ void bgdraw_render(Gfx **dList, Matrix *mtx, s32 drawBG) {
  * afterwards, calls the draw command that initialises all the rendermodes, ready for use.
  */
 void rdp_init(Gfx **dList) {
-    s32 width = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
+    s32 width = GET_VIDEO_WIDTH(fb_size());
     gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, SEGMENT_FRAMEBUFFER << 24);
     gDPSetDepthImage((*dList)++, SEGMENT_ZBUFFER << 24);
     gSPDisplayList((*dList)++, dRdpInit);
@@ -539,7 +539,7 @@ void func_80078190(Gfx **dlist) {
     s32 t;   // the texture coordinate t of upper-left corner of rectangle (s10.5)
     s32 s;   // the texture coordinate s of upper-left corner of rectangle (s10.5)
 
-    widthAndHeight = get_video_width_and_height_as_s32();
+    widthAndHeight = fb_size();
     videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
     videoHeight = GET_VIDEO_HEIGHT(widthAndHeight);
     gSPDisplayList((*dlist)++, dRaceFinishBackgroundSettings);
@@ -661,7 +661,7 @@ void bgdraw_chequer(Gfx **dList) {
     s32 y;
     s32 x;
 
-    width = get_video_width_and_height_as_s32();
+    width = fb_size();
     height = GET_VIDEO_HEIGHT(width) & 0xFFFF;
     width = GET_VIDEO_WIDTH(width);
 
@@ -763,7 +763,7 @@ void texrect_draw_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, 
     s32 width;
     s32 height;
 
-    height = get_video_width_and_height_as_s32();
+    height = fb_size();
     width = GET_VIDEO_WIDTH(height) * 4;
     height = (GET_VIDEO_HEIGHT(height) & 0xFFFF) * 4;
 

@@ -32,6 +32,9 @@
 #define HEIGHT_RATIO_NTSC (LOW_RES_NTSC_HEIGHT / LOW_RES_NTSC_HEIGHT)
 #define HEIGHT_RATIO_MPAL (LOW_RES_MPAL_HEIGHT / LOW_RES_NTSC_HEIGHT)
 
+// Framebuffers require 64 byte alignment.
+#define FBALIGN(a) ((u16 *) (((s32) (a) + 0x3F) & ~0x3F))
+
 /**
  * This is an offset with a size of two rows of the framebuffer.
  * It's likely they were trying to offset the framebuffer in order to
@@ -100,16 +103,16 @@ typedef struct VideoModeResolution {
 
 extern VideoModeResolution gVideoModeResolutions[8];
 
-void init_video(s32 videoModeIndex, OSSched *sc);
-void set_video_mode_index(s32 videoModeIndex);
-s32 get_video_width_and_height_as_s32(void);
-void init_vi_settings(void);
-void init_framebuffer(s32 index);
-void reset_video_delta_time(void);
+void video_init(s32 videoModeIndex, OSSched *sc);
+void fb_mode_set(s32 videoModeIndex);
+s32 fb_size(void);
+void vi_init(void);
+void fb_init(s32 index);
+void video_delta_reset(void);
 void func_8007AB24(u8 arg0);
-s32 get_video_refresh_speed(void);
-void swap_framebuffers(void);
-void memory_copy(u8 *src, u8 *dest, s32 len);
-s32 swap_framebuffer_when_ready(s32 mesg);
+s32 vi_refresh_rate(void);
+void fb_swap(void);
+void fb_memcpy(u8 *src, u8 *dest, s32 len);
+s32 fb_update(s32 mesg);
 
 #endif

@@ -198,7 +198,7 @@ void init_game(void) {
         gDmemInvalid = TRUE;
     }
 #endif
-    init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
+    video_init(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     init_PI_mesg_queue();
     gfxtask_init(&gMainSched);
     audio_init(&gMainSched);
@@ -343,7 +343,7 @@ void main_game_loop(void) {
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor
     // affects frameskipping, to maintain consistent game speed, through the (many)
     // dropped frames in DKR.
-    tempLogicUpdateRate = swap_framebuffer_when_ready(gScreenStatus);
+    tempLogicUpdateRate = fb_update(gScreenStatus);
     sLogicUpdateRate = tempLogicUpdateRate;
     tempLogicUpdateRateMax = LOGIC_10FPS;
     if (tempLogicUpdateRate > tempLogicUpdateRateMax) {

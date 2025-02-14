@@ -489,7 +489,7 @@ void viewport_menu_set(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
     s32 widthAndHeight, width, height;
     s32 temp;
 
-    widthAndHeight = get_video_width_and_height_as_s32();
+    widthAndHeight = fb_size();
     height = GET_VIDEO_HEIGHT(widthAndHeight) & 0xFFFF;
     width = GET_VIDEO_WIDTH(widthAndHeight);
 
@@ -603,7 +603,7 @@ void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32
  * Official name: camGetWindowLimits
  */
 UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) {
-    u32 widthAndHeight = get_video_width_and_height_as_s32();
+    u32 widthAndHeight = fb_size();
     *x1 = 0;
     *y1 = 0;
     *x2 = GET_VIDEO_WIDTH(widthAndHeight);
@@ -642,7 +642,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
         gActiveCameraID = 1;
         savedCameraID = 0;
     }
-    widthAndHeight = get_video_width_and_height_as_s32();
+    widthAndHeight = fb_size();
     videoHeight = GET_VIDEO_HEIGHT(widthAndHeight);
     videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
     if (gScreenViewports[savedCameraID].flags & VIEWPORT_EXTRA_BG) {
@@ -785,7 +785,7 @@ void viewport_scissor(Gfx **dlist) {
     s32 width;
     s32 height;
 
-    size = get_video_width_and_height_as_s32();
+    size = fb_size();
     height = (u16) GET_VIDEO_HEIGHT(size);
     width = (u16) size;
     numViewports = gNumberOfViewports;
@@ -923,7 +923,7 @@ void set_ortho_matrix_view(Gfx **dlist, MatrixS **mtx) {
     s32 width, height;
     s32 i, j;
 
-    widthAndHeight = get_video_width_and_height_as_s32();
+    widthAndHeight = fb_size();
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
     f32_matrix_to_s16_matrix(&gOrthoMatrixF, *mtx);
@@ -992,7 +992,7 @@ void viewport_rsp_set(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
 void viewport_reset(Gfx **dlist) {
     u32 widthAndHeight, width, height;
     gActiveCameraID = 4;
-    widthAndHeight = get_video_width_and_height_as_s32();
+    widthAndHeight = fb_size();
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
     if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG)) {

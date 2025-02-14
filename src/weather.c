@@ -711,7 +711,7 @@ void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment
                         pos[1].z = (mag2 * gLensFlarePos.z) - pos[1].z;
                     }
                 }
-                width = get_video_width_and_height_as_s32();
+                width = fb_size();
                 height = GET_VIDEO_HEIGHT(width);
                 width = GET_VIDEO_WIDTH(width);
                 gfxTemp = (*dList);

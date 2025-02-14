@@ -3572,7 +3572,7 @@ void savemenu_render(UNUSED s32 updateRate) {
     s32 drawOk;
     s32 drawDialogueBox;
 
-    videoWidth = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
+    videoWidth = GET_VIDEO_WIDTH(fb_size());
     drawUpperElements = FALSE;
     drawLowerElements = FALSE;
     drawPleaseWait = FALSE;
@@ -7290,7 +7290,7 @@ void menu_track_select_init(void) {
         gTracksMenuAdventureHighlightIndex = 0;
         gTitleScreenLoaded = 0;
     }
-    videoWidthAndHeight = get_video_width_and_height_as_s32();
+    videoWidthAndHeight = fb_size();
     gTrackSelectViewPortX = GET_VIDEO_WIDTH(videoWidthAndHeight);
     gTrackSelectViewportY = GET_VIDEO_HEIGHT(videoWidthAndHeight);
     gTrackSelectViewPortHalfX = gTrackSelectViewPortX >> 1;
@@ -9137,7 +9137,7 @@ void postrace_start(s32 finishState, s32 worldID) {
     }
     reset_controller_sticks();
     race_postrace_type(finishState);
-    gTrackSelectViewPortX = get_video_width_and_height_as_s32();
+    gTrackSelectViewPortX = fb_size();
     gTrackSelectViewportY = GET_VIDEO_HEIGHT(gTrackSelectViewPortX) & 0xFFFF;
     gTrackSelectViewPortX = GET_VIDEO_WIDTH(gTrackSelectViewPortX);
     gTrackSelectViewPortHalfX = gTrackSelectViewPortX >> 1;
@@ -11687,7 +11687,7 @@ s32 menu_credits_loop(s32 updateRate) {
         }
         var_s5 = gMenuCurIndex;
         temp_s4 = (var_s4 * 5) + 72;
-        temp_s2 = (get_video_width_and_height_as_s32() >> 17) & 0x7FFF; // Truncated video height? Height / 2?
+        temp_s2 = (fb_size() >> 17) & 0x7FFF; // Truncated video height? Height / 2?
         for (i = 0; i < ARRAY_COUNT(gRacerPortraits); i++) {
             texrect_draw(&sMenuCurrDisplayList, gRacerPortraits[i], ((sins(var_s5) * temp_s4) >> 16) + 140,
                                       ((coss(var_s5) * temp_s4) >> 16) + (temp_s2 - 20), 255, 255, 255, 255);

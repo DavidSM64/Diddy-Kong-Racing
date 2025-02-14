@@ -22,7 +22,7 @@ glabel func_80066CDC
 /* 06792C 80066D2C AFEF0000 */  sw    $t7, ($ra)
 /* 067930 80066D30 00004825 */  move  $t1, $zero
 .L80066D34:
-/* 067934 80066D34 0C01E948 */  jal   get_video_width_and_height_as_s32
+/* 067934 80066D34 0C01E948 */  jal   fb_size
 /* 067938 80066D38 AFA90030 */   sw    $t1, 0x30($sp)
 /* 06793C 80066D3C 8FA90030 */  lw    $t1, 0x30($sp)
 /* 067940 80066D40 240B0034 */  li    $t3, 52
