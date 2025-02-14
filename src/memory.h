@@ -6,13 +6,23 @@
 #include "macros.h"
 #include "config.h"
 
+typedef enum MemoryPools {
+    POOL_GLOBAL,
+    POOL_OBJECT,
+    POOL_UNUSED_2,
+    POOL_UNUSED_3,
+
+    POOL_COUNT
+} MemoryPools;
+
 #define RAM_END 0x80400000
 #define EXPANSION_RAM_END 0x80800000
 #define MAIN_POOL_SLOT_COUNT 1600
+#define MEMSLOT_NONE -1
 
 // Animation related?
 #define COLOUR_TAG_RED 0xFF0000FF
-// Models
+// Model headers
 #define COLOUR_TAG_GREEN 0x00FF00FF
 // Objects
 #define COLOUR_TAG_BLUE 0x0000FFFF
@@ -28,7 +38,7 @@
 #define COLOUR_TAG_GREY 0x7F7F7FFF
 // Particles
 #define COLOUR_TAG_SEMITRANS_GREY 0x80808080
-// ???
+// Model data
 #define COLOUR_TAG_ORANGE 0xFF7F7FFF
 // Controller Pak
 #define COLOUR_TAG_BLACK 0x000000FF
@@ -88,12 +98,12 @@ u8 *align4(u8 *address);
 void print_memory_colour_tags(void);
 void render_memory_colour_tags(void);
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots);
-void free_memory_pool_slot(s32 poolIndex, s32 slotIndex);
-s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken,
+void free_memory_pool_slot(MemoryPools poolIndex, s32 slotIndex);
+s32 allocate_memory_pool_slot(MemoryPools poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken,
                               u32 colourTag);
 s32 get_memory_colour_tag_count(u32 colourTag);
 void free_slot_containing_address(u8 *address);
-MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag);
+MemoryPoolSlot *allocate_from_memory_pool(MemoryPools poolIndex, s32 size, u32 colourTag);
 void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag);
 
 #endif
