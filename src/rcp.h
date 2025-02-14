@@ -11,7 +11,7 @@
 #include "video.h"
 
 // Recommended size is around 100KB, or 0x19000. This is unused though so it doesn't matter.
-#define YIELD_BUFFER_SIZE 0x1800
+#define OUTPUT_BUFFER_SIZE 0x1800
 
 enum TextureRectangleFlags {
     TEXRECT_BILERP,

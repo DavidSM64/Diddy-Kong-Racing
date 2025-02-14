@@ -134,7 +134,7 @@ Gfx dTextureRectangleScaledXlu[][2] = {
 /************ .bss ************/
 
 u8 gDramStack[SP_DRAM_STACK_SIZE8];
-u8 gGfxSPTaskYieldBuffer[YIELD_BUFFER_SIZE];
+u8 gGfxTaskOutputBuffer[OUTPUT_BUFFER_SIZE];
 OSMesgQueue gRCPMesgQueue;
 OSMesg gRCPMesgBuf;
 UNUSED OSMesgQueue gUnusedMesgQueue;
@@ -188,7 +188,7 @@ s32 gfxtask_run_xbus(Gfx *dlBegin, Gfx *dlEnd, UNUSED s32 recvMesg) {
     dkrtask->task.ucode_data_size = SP_UCODE_DATA_SIZE;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
-    dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
+    dkrtask->task.output_buff = (u64 *) gGfxTaskOutputBuffer;
     dkrtask->task.output_buff_size = (u64 *) &gRCPMesgQueue;
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
@@ -281,8 +281,8 @@ UNUSED void gfxtask_run_fifo(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     dkrtask->task.ucode_data_size = SP_UCODE_DATA_SIZE;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
-    dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
-    dkrtask->task.output_buff_size = (u64 *) (gGfxSPTaskYieldBuffer + YIELD_BUFFER_SIZE);
+    dkrtask->task.output_buff = (u64 *) gGfxTaskOutputBuffer;
+    dkrtask->task.output_buff_size = (u64 *) (gGfxTaskOutputBuffer + OUTPUT_BUFFER_SIZE);
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
     dkrtask->next = NULL;
@@ -334,7 +334,7 @@ UNUSED void gfxtask_run_fifo2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     dkrtask->task.ucode_data_size = SP_UCODE_DATA_SIZE;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
-    dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
+    dkrtask->task.output_buff = (u64 *) gGfxTaskOutputBuffer;
     dkrtask->task.output_buff_size = (u64 *) &gRCPMesgQueue;
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
