@@ -704,41 +704,34 @@ UNUSED void mempool_print_tags_screen(void) {
  * Official name: mmSlotPrint
  */
 UNUSED void mempool_print_slots(void) {
-    s32 i;
-    s32 skip;
-    s32 index;
-    s32 index2;
-    s32 nextIndex;
+    int flags;
+    int nextIndex;
+    int i;
     MemoryPoolSlot *slot;
 
-    for (i = 0; gNumberOfMemoryPools >= i; i++) {
+    for (i = 0; i <= gNumberOfMemoryPools; i++) {
         stubbed_printf("Region = %d	 loc = %x	 size = %x\t", i, gMemoryPools[i].slots, gMemoryPools[i].size);
-        if (i && i) {} // Fakematch
         slot = &gMemoryPools[i].slots[0];
-        index = 1;
-        index2 = -index;
+        
         do {
-            index = slot->flags;
+            flags = slot->flags;
             nextIndex = slot->nextIndex;
-            skip = nextIndex == index2;
-            if (index) {
-                if (((((((((!slot->nextIndex) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) {
-                    if (nextIndex && nextIndex) {} // Fakematch
-                }
+
+            switch(flags) {
+                case 0: stubbed_printf("FREE"); break;
+                case 1: stubbed_printf("ALLOCATED"); break;
+                case 2: stubbed_printf("ALLOCATED,FIXED"); break;
+                default: stubbed_printf("\n"); break;
             }
-            if (skip) {
+            stubbed_printf("\n");
+            if (nextIndex == -1) {
                 continue;
+            } else {
+                slot = &gMemoryPools[i].slots[slot->nextIndex];
             }
-            slot = &gMemoryPools[i].slots[slot->nextIndex];
-        } while (nextIndex != MEMSLOT_NONE);
+        } while (nextIndex != -1);
     }
 }
-
-UNUSED const char D_800E75B4[] = "FREE";
-UNUSED const char D_800E75BC[] = "ALLOCATED";
-UNUSED const char D_800E75C8[] = "ALLOCATED,FIXED";
-UNUSED const char D_800E75D8[] = "\n";
-UNUSED const char D_800E75DC[] = "\n";
 
 /**
  * Print out the current status of each existing memory pool.
