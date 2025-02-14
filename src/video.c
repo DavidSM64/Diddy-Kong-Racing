@@ -85,13 +85,13 @@ void video_init(s32 videoModeIndex, OSSched *sc) {
     fb_mode_set(videoModeIndex);
     gVideoFramebuffers[0] = NULL;
     gVideoFramebuffers[1] = NULL;
-    fb_init(0);
-    fb_init(1);
+    fb_alloc(0);
+    fb_alloc(1);
     gVideoCurrFbIndex = 1;
     fb_swap();
     osCreateMesgQueue((OSMesgQueue *) &gVideoMesgQueue, gVideoMesgBuf, ARRAY_COUNT(gVideoMesgBuf));
     osScAddClient(sc, &gVideoSched, (OSMesgQueue *) &gVideoMesgQueue, OS_SC_ID_VIDEO);
-    vi_init();
+    fb_init_vi();
     sBlackScreenTimer = 12;
     osViBlack(TRUE);
     gVideoDeltaCounter = 0;
@@ -136,7 +136,7 @@ s32 fb_size(void) {
  * depending on the gVideoModeIndex value.
  * Most of these go unused, as the value is always 1.
  */
-void vi_init(void) {
+void fb_init_vi(void) {
     s32 viModeTableIndex;
     OSViMode *tvViMode;
 
@@ -233,7 +233,7 @@ void vi_init(void) {
  * Framebuffers should be 64 bit aligned, but since the memory allocator
  * already aligns by 16, it only needs 48 bits of alignment in addition.
  */
-void fb_init(s32 index) {
+void fb_alloc(s32 index) {
     if (gVideoFramebuffers[index] != 0) {
         mempool_locked_unset((u8 *) gVideoFramebuffers[index]); // Effectively unused.
         mempool_free(gVideoFramebuffers[index]);
