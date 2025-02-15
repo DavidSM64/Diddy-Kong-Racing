@@ -240,7 +240,7 @@ typedef struct LevelObjectEntry_Torch_Mist {
 
 typedef struct LevelObjectEntry_TexScroll {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s16 numTextures;
+    /* 0x08 */ s16 textureIndex;
     /* 0x0A */ s8 unkA;
     /* 0x0B */ s8 unkB;
 } LevelObjectEntry_TexScroll;
@@ -443,8 +443,7 @@ typedef struct LevelObjectEntry_WaveGenerator {
 
 typedef struct LevelObjectEntry_Butterfly {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
-    /* 0x09 */ u8 unk9;
+    /* 0x08 */ u16 unk8;
     /* 0x0A */ u8 unkA;
     /* 0x0B */ u8 unkB;
 } LevelObjectEntry_Butterfly;

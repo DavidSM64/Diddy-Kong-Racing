@@ -1015,8 +1015,8 @@ typedef struct Object_Butterfly {
   /* 0x0FD */ u8 unkFD;
   /* 0x0FE */ u8 unkFE;
   /* 0x0FF */ u8 unkFF;
-  /* 0x100 */ s32 unk100;
-  /* 0x104 */ s16 unk104;
+  /* 0x100 */ struct Object *unk100; 
+  /* 0x104 */ u16 unk104;
   /* 0x106 */ s16 unk106;
   /* 0x108 */ f32 unk108;
   /* 0x10C */ f32 unk10C;
@@ -1130,7 +1130,7 @@ typedef struct Object_AudioReverb {
 } Object_AudioReverb;
 
 typedef struct Object_TexScroll {
-  /* 0x0 */ s16 numTextures;
+  /* 0x0 */ s16 textureIndex;
   /* 0x2 */ s16 pad2;
   /* 0x4 */ s16 unk4;
   /* 0x6 */ s16 unk6;
@@ -1368,7 +1368,7 @@ typedef struct Object_Racer {
   /* 0x1FA */ s8 drifting;
   /* 0x1FB */ s8 unk1FB;
   /* 0x1FC */ u8 unk1FC;
-  /* 0x1FD */ u8 unk1FD;
+  /* 0x1FD */ s8 unk1FD;
   /* 0x1FE */ u8 unk1FE;
   /* 0x1FF */ u8 unk1FF;
   /* 0x200 */ s8 transitionTimer;

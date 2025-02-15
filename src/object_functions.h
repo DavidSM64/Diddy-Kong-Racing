@@ -12,6 +12,7 @@
 #define TIME_JIFFIES_PER_SECOND 60
 #define TIME_SECONDS(sec) sec * TIME_JIFFIES_PER_SECOND
 #define U8_ANGLE_TO_U16(x) (x << 6 << 4)
+#define TEX_INDEX_NO_TEXTURE 0xFF
 
 enum BananaBehaviour {
     BANANA_COLLECTED = -1,
@@ -435,14 +436,12 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry);
 void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry);
 void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry);
 void weapon_projectile(Object *obj, s32 updateRate);
-
-//Non Matching
+void obj_loop_texscroll(Object *obj, s32 updateRate);
+void obj_loop_animator(Object *obj, s32 updateRate);
 void calc_env_mapping_for_object(ObjectModel *, s16, s16, s16);
 void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param);
 void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry);
-void obj_loop_texscroll(Object *obj, s32 updateRate);
-void obj_loop_butterfly(Object *obj, s32 updateRate);
-void obj_loop_animator(Object *obj, s32 updateRate);
+void obj_loop_butterfly(Object *butterflyObj, s32 updateRate);
 s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation);
 s32 func_8001CC48(s32, s32, s32);
 f32 func_8001C6C4(Object_64 *, Object *, f32, f32, s32);
