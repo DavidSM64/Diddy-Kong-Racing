@@ -9,7 +9,9 @@ typedef struct {
 } LevelModelSubArray;
 typedef struct {
     LevelModelSegment *unk00;
-    u8 pad04[0x6];
+    s16 unk4;
+    s16 unk6; // used as playerIndex
+    s16 unk8;
     u8 unkA;
     u8 unkB;
     u32 unkC;
