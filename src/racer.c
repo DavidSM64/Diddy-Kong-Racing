@@ -28,6 +28,7 @@
 #include "collision.h"
 #include "controller.h"
 #include "particles.h"
+#include "common.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -104,7 +105,7 @@ s8 D_800DCDB0[16][2] = {
 };
 
 // Checksum count for obj_loop_goldenballoon
-s32 gObjLoopGoldenBalloonChecksum = 0xA597;
+s32 gObjLoopGoldenBalloonChecksum = ObjLoopGoldenBalloonChecksum;
 
 FadeTransition gDoorFadeTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 50, -1);
 
@@ -2116,7 +2117,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     tempRacer->racePosition = 1;
     tempRacer->miscAnimCounter = tempRacer->playerIndex * 5;
     tempRacer->checkpoint_distance = 1.0f;
-    tempRacer->unk1FD = 0;
+    tempRacer->cameraIndex = 0;
     tempRacer->magnetSoundMask = NULL;
     tempRacer->shieldSoundMask = NULL;
     tempRacer->bananaSoundMask = NULL;
@@ -2239,7 +2240,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         tempRacer->unk1F1 = 0;
     }
     // PAL moves 20% faster.
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     tempRacer->unk1F6 -= updateRate;
@@ -5825,7 +5826,7 @@ s32 set_ghost_position_and_rotation(Object *obj) {
     }
 
     commonUnk0f32 = (f32) obj->properties.common.unk0 / 30.0f;
-    if (osTvType == TV_TYPE_PAL && ghostDataIndex == 2) {
+    if (osTvType == OS_TV_TYPE_PAL && ghostDataIndex == 2) {
         commonUnk0f32 = ((f32) obj->properties.common.unk0 * 1.2) / 30.0f;
     }
     commonUnk0s32 = commonUnk0f32; // Truncate the float to an integer?

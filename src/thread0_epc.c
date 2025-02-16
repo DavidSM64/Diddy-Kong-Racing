@@ -58,7 +58,7 @@ void thread0_Main(UNUSED void *unused) {
     osCreateMesgQueue(&D_80129790, D_801297A8, ARRAY_COUNT(D_801297A8));
     osSetEventMesg(OS_EVENT_FAULT, &D_80129790, (OSMesg) 8);
     osSetEventMesg(OS_EVENT_CPU_BREAK, &D_80129790, (OSMesg) 2);
-    osCreatePiManager(150, &D_801297E8, D_801297C8, 8);
+    osCreatePiManager(150, &D_801297E8, D_801297C8, ARRAY_COUNT(D_801297C8));
 
     while (1) {
         osRecvMesg(&D_80129790, (OSMesg) &sp34, OS_MESG_BLOCK);

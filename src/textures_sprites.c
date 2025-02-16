@@ -829,49 +829,41 @@ void sprite_opaque(s32 setting) {
     gForceFlags = TRUE;
 }
 
-#ifdef NON_EQUIVALENT
-// Reasonably certain the macros are correct, but definitely need to figure out the gDkrDmaDisplayList Gfx arguments
-void func_8007BF34(Gfx **dlist, s32 arg1) {
-    s32 temp_a1;
-    s32 temp_t8;
-    s32 temp_v0_3;
-
-    if ((arg1 != gCurrentRenderFlags) || (gForceFlags != 0)) {
+void func_8007BF34(Gfx **dlist, s32 flags) {
+    if ((flags != gCurrentRenderFlags) || gForceFlags) {
         gDPPipeSync((*dlist)++);
-        if (((gCurrentRenderFlags * 16) < 0) || (gForceFlags != 0)) {
+        if ((gCurrentRenderFlags & RENDER_VTX_ALPHA) || gForceFlags) {
             gSPSetGeometryMode((*dlist)++, G_FOG);
         }
-        temp_a1 = arg1 & 0xF7FFFFFF & ~gBlockedRenderFlags;
-        temp_v0_3 = temp_a1 & 2;
-        if (((gCurrentRenderFlags & 2) != temp_v0_3) || (gForceFlags != 0)) {
-            if (temp_v0_3 != 0) {
+        flags &= ~RENDER_VTX_ALPHA;
+        flags &= ~gBlockedRenderFlags;
+        if (((flags & RENDER_Z_COMPARE) != (gCurrentRenderFlags & RENDER_Z_COMPARE)) || gForceFlags) {
+            if (flags & RENDER_Z_COMPARE) {
                 gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
             } else {
                 gSPClearGeometryMode((*dlist)++, G_ZBUFFER);
             }
         }
-        gForceFlags = 0;
-        gCurrentRenderFlags = temp_a1;
-        temp_t8 = temp_a1 & ~0x800;
-        if (gSpriteOpaque == 0) {
-            if ((gCurrentRenderFlags & 0x200) != 0) {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSpriteCld[((temp_t8 >> 1) & 1) * 16]),
+        gForceFlags = FALSE;
+        gCurrentRenderFlags = flags;
+        flags &= ~RENDER_DECAL;
+        if (gSpriteOpaque == FALSE) {
+            if ((gCurrentRenderFlags & RENDER_PRESERVE_COVERAGE)) {
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSpriteCld[(flags >> 1) & 1]),
                                    numberOfGfxCommands(dRenderSettingsSpriteCld[0]));
             } else {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSpriteXlu[(temp_t8 - 16) * 16]),
+                // fake ^ 0 required for some reason
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSpriteXlu[(flags - 16) ^ 0]),
                                    numberOfGfxCommands(dRenderSettingsSpriteXlu[0]));
             }
         } else {
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsCommon[temp_t8 * 16]),
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsCommon[flags]),
                                numberOfGfxCommands(dRenderSettingsCommon[0]));
         }
         gCurrentTextureHeader = NULL;
-        gUsingTexture = 1;
+        gUsingTexture = TRUE;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
-#endif
 
 /**
  * Official Name: texLoadSprite

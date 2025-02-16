@@ -9,6 +9,7 @@
 #include "asset_loading.h"
 #include "objects.h"
 #include "PR/abi.h"
+#include "common.h"
 
 /****  type define's for structures unique to audiomgr ****/
 typedef union {
@@ -80,7 +81,7 @@ s32 gAudioCmdLen; // Set but not used
 /**** Anti Piracy - Sets random audio frequency ****/
 s16 gAntiPiracyCRCStart;
 s8 gAntiPiracyAudioFreq = FALSE;
-s32 gFunc80019808Checksum = 0x35281;
+s32 gFunc80019808Checksum = Func80019808Checksum;
 s32 gFunc80019808Length = 0xFD0;
 
 /** Queues and storage for use with audio DMA's ****/
@@ -103,16 +104,6 @@ static void __clearAudioDMA(void);
 /**** Debug strings ****/
 const char D_800E49F0[] =
     "audio manager: RCP audio interface bug caused DMA from bad address - move audiomgr.c in the makelist!\n";
-const char D_800E4A58[] = "audio: ai out of samples\n";
-const char D_800E4A74[] = "OH DEAR - No audio DMA buffers left\n";
-const char D_800E4A9C[] = "Dma not done\n";
-const char D_800E4AAC[] = "";
-const char D_800E49B0[] = "Bad soundState: voices =%d, states free =%d, states busy =%d, type %d data %x\n";
-const char D_800E4B00[] = "playing a playing sound\n";
-const char D_800E4B1C[] = "Nonsense sndp event\n";
-const char D_800E4B34[] = "Sound state allocate failed - sndId %d\n";
-const char D_800E4B5C[] = "Don't worry - game should cope OK\n";
-const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
 /******************************************************************************
  * Audio Manager API
@@ -365,7 +356,7 @@ static void __amHandleDoneMsg(UNUSED AudioInfo *info) {
 
     samplesLeft = osAiGetLength() >> 2;
     if (samplesLeft == 0 && !firstTime) {
-        // stubbed_printf("audio: ai out of samples\n");
+        stubbed_printf("audio: ai out of samples\n");
         firstTime = 0;
     }
 }
@@ -402,9 +393,8 @@ static s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
         buffEnd = dmaPtr->startAddr + DMA_BUFFER_LENGTH;
         if (dmaPtr->startAddr > (u32) addr) { /* since buffers are ordered */
             break;                            /* abort if past possible */
-
-        } else if (addrEnd <= buffEnd) {    /* yes, found a buffer with samples */
-            dmaPtr->lastFrame = audFrameCt; /* mark it used */
+        } else if (addrEnd <= buffEnd) {      /* yes, found a buffer with samples */
+            dmaPtr->lastFrame = audFrameCt;   /* mark it used */
             foundBuffer = dmaPtr->ptr + addr - dmaPtr->startAddr;
             return (int) osVirtualToPhysical(foundBuffer);
         }
@@ -426,6 +416,7 @@ static s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
      * pointer, it's better than nothing
      */
     if (!dmaPtr) {
+        stubbed_printf("OH DEAR - No audio DMA buffers left\n");
         return (int) osVirtualToPhysical(lastDmaPtr->ptr) + delta;
     }
 
@@ -502,8 +493,8 @@ static void __clearAudioDMA(void) {
      * overrun. (Bad news, but go for it anyway, and try and recover.
      */
     for (i = 0; i < nextDMA; i++) {
-        if (osRecvMesg(&audDMAMessageQ, (OSMesg *) &iomsg, OS_MESG_NOBLOCK) ==
-            -1) { /* stubbed_printf("Dma not done\n"); */
+        if (osRecvMesg(&audDMAMessageQ, (OSMesg *) &iomsg, OS_MESG_NOBLOCK) == -1) {
+            stubbed_printf("Dma not done\n");
         }
         // if (logging)
         //     osLogEvent(log, 17, 2, iomsg->devAddr, iomsg->size);

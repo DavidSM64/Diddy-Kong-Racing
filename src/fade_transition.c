@@ -313,7 +313,7 @@ s32 handle_transitions(s32 updateRate) {
  */
 void render_fade_transition(Gfx **dList, MatrixS **mats, Vertex **verts) {
     if (sTransitionStatus != TRANSITION_NONE) {
-        if (osTvType == TV_TYPE_PAL) {
+        if (osTvType == OS_TV_TYPE_PAL) {
             set_ortho_matrix_height(1.4f);
         } else {
             set_ortho_matrix_height(1.2f);

@@ -32,6 +32,7 @@
 #include "collision.h"
 #include "controller.h"
 #include "printf.h"
+#include "common.h"
 
 /************ .data ************/
 
@@ -203,7 +204,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
 
     someObj = obj->properties.fireball.obj;
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2 && obj->properties.fireball.timer < 0) {
@@ -433,29 +434,27 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
 
     s8 delete; // Boolean
     s8 surface;
-    f32 dirZ;
-    f32 dirY;
-    f32 dirX;
+    Vec3f dir;
     f32 radius;
     s32 hasCollision; // Boolean
 
     delete = FALSE;
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
-    dirX = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
-    dirY = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
-    dirZ = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
+    dir.x = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
+    dir.y = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
+    dir.z = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
     radius = 9.0f;
 
-    func_80031130(1, &obj->segment.trans.x_position, &dirX, -1);
+    func_80031130(1, &obj->segment.trans.x_position, &dir.x, -1);
     hasCollision = FALSE;
-    func_80031600(&obj->segment.trans.x_position, &dirX, &radius, &surface, TRUE, &hasCollision);
+    func_80031600(&obj->segment.trans.x_position, (f32 *) &dir, &radius, &surface, TRUE, &hasCollision);
     if (hasCollision) {
-        obj->segment.x_velocity = (dirX - obj->segment.trans.x_position) / updateRateF;
-        obj->segment.y_velocity = (dirY - obj->segment.trans.y_position) / updateRateF;
-        obj->segment.z_velocity = (dirZ - obj->segment.trans.z_position) / updateRateF;
+        obj->segment.x_velocity = (dir.x - obj->segment.trans.x_position) / updateRateF;
+        obj->segment.y_velocity = (dir.y - obj->segment.trans.y_position) / updateRateF;
+        obj->segment.z_velocity = (dir.z - obj->segment.trans.z_position) / updateRateF;
     }
     move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF,
                 obj->segment.z_velocity * updateRateF);
@@ -725,7 +724,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
 
     egg = (Object_CollectEgg *) obj->unk64;
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     switch (egg->status) {
@@ -1216,7 +1215,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
 
     tempPosY = obj->segment.trans.y_position;
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     tt = (Object_NPC *) obj->unk64;
@@ -2230,7 +2229,7 @@ void obj_init_smoke(UNUSED Object *obj, UNUSED LevelObjectEntry_Smoke *entry) {
 
 void obj_loop_smoke(Object *obj, s32 updateRate) {
     f32 updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     obj->segment.trans.x_position += obj->segment.x_velocity * updateRateF;
@@ -2261,7 +2260,7 @@ void obj_loop_wardensmoke(Object *obj, s32 updateRate) {
     f32 updateRateF;
 
     updateRateF = (f32) updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     obj->segment.animFrame += updateRate * 4;
@@ -2564,7 +2563,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
 
     updateRateF2 = updateRate;
     updateRateF = updateRateF2;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     taj = (Object_NPC *) obj->unk64;
@@ -3399,7 +3398,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
     s32 isPirated;
 
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     isPirated = FALSE;
@@ -3541,7 +3540,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
 
     doorEntry = &doorObj->segment.level_entry->door;
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     settings = get_settings();
@@ -3984,7 +3983,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     entry = (LevelObjectEntry_Bridge_WhaleRamp *) obj->segment.level_entry;
     updateRateF = updateRate;
 
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
 
@@ -4238,7 +4237,7 @@ void obj_loop_flycoin(Object *obj, s32 updateRate) {
     Object_Racer *racerObj;
 
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     obj->segment.y_velocity -= 0.5 * updateRateF;
@@ -4338,7 +4337,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
     SoundMask *prevSoundMask;
 
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     banana = (Object_Banana *) obj->unk64;
@@ -4831,9 +4830,7 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     Object_Weapon *weapon;
     Object *temp_s1_2;
     UNUSED s32 pad;
-    f32 offsetZ;
-    f32 offsetY;
-    f32 offsetX;
+    Vec3f offset;
     f32 radius;
     f32 updateRateF;
     f32 posX;
@@ -4866,27 +4863,27 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     guMtxXFMF(mtxf, 0.0f, 0.0f, weapon->forwardVel, &obj->segment.x_velocity, &obj->segment.y_velocity,
               &obj->segment.z_velocity);
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
-    offsetX = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
-    offsetY = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
-    offsetZ = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
+    offset.x = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
+    offset.y = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
+    offset.z = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
     if (weapon->weaponID != WEAPON_MAGNET_LEVEL_3) {
         radius = 16.0f;
-        func_80031130(1, &obj->segment.trans.x_position, &offsetX, -1);
+        func_80031130(1, &obj->segment.trans.x_position, (f32 *) &offset, -1);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
-        func_80031600(&obj->segment.trans.x_position, &offsetX, &radius, &surface, TRUE, &hasCollision);
+        func_80031600(&obj->segment.trans.x_position, (f32 *) &offset, &radius, &surface, TRUE, &hasCollision);
         if (hasCollision > 0) {
             if (func_8002ACD4(&diffX, &diffY, &diffZ)) {
                 obj->properties.projectile.timer = 0;
             }
         }
     }
-    diffX = offsetX - posX;
-    diffY = offsetY - posY;
-    diffZ = offsetZ - posZ;
+    diffX = offset.x - posX;
+    diffY = offset.y - posY;
+    diffZ = offset.z - posZ;
     if (move_object(obj, diffX, diffY, diffZ)) {
         obj->properties.projectile.timer = 0;
     }
@@ -5170,7 +5167,7 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
     weaponOwner = &weapon->owner->unk64->racer;
     updateRateF = updateRate;
     weaponProperties = &weaponObj->properties.weapon;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     if (weaponProperties->status == WEAPON_DROPPED) {
@@ -6376,23 +6373,22 @@ void obj_init_frog(Object *obj, LevelObjectEntry_Frog *entry) {
  * character.
  */
 void obj_loop_frog(Object *obj, s32 updateRate) {
-    UNUSED s32 pad0;
+    Object_Frog *frog;
     s32 i;
     s32 hopping;
     s32 var_v1;
-    UNUSED u8 pad[0x90];
-    f32 sp6C;
-    UNUSED u8 pad2[0xC];
-    Object_Frog *frog;
+    UNUSED s32 pad0[29];// Wtf is this large gap here?
+    f32 colY[8];
+    UNUSED s32 pad2[4];
+    f32 cosine;
     f32 diffX;
     f32 diffY;
     f32 diffZ;
-    f32 cosine;
     f32 updateRateF;
     Object *racerObj;
 
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     frog = (Object_Frog *) obj->unk64;
@@ -6489,10 +6485,10 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
             ignore_bounds_check();
             move_object(obj, obj->segment.x_velocity, 0.0f, obj->segment.z_velocity);
             if (func_8002BAB0(obj->segment.object.segmentID, obj->segment.trans.x_position,
-                              obj->segment.trans.z_position, &sp6C) != 0) {
+                              obj->segment.trans.z_position, colY) != 0) {
                 obj->segment.trans.y_position = 0.0f;
                 ignore_bounds_check();
-                move_object(obj, 0.0f, sp6C, 0.0f);
+                move_object(obj, 0.0f, (f32) colY[0], 0.0f);
             }
             if (frog->squishCooldown <= 0 && (frog->hopFrame < 6 || frog->hopFrame >= 27)) {
                 if (obj_dist_racer(obj->segment.trans.x_position, obj->segment.trans.y_position,
@@ -6613,7 +6609,7 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             textWidth = (get_text_width(levelName, 0, 0) + 24) >> 1;
             x1 = SCREEN_WIDTH_HALF - textWidth;
             x2 = textWidth + SCREEN_WIDTH_HALF;
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 y1 = SCREEN_HEIGHT - 16;
                 y2 = SCREEN_HEIGHT - 16 + 24;
             } else {

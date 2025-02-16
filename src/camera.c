@@ -11,6 +11,7 @@
 #include "math_util.h"
 #include "weather.h"
 #include "lib/src/os/piint.h"
+#include "include/viint.h"
 
 /************ .rodata ************/
 
@@ -170,7 +171,7 @@ void func_80066060(s32 cameraID, s32 zoomLevel) {
  * Otherwise, set it to 0, regardless of TV type.
  */
 void set_viewport_tv_type(s8 setting) {
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         gAdjustViewportHeight = setting;
     }
 }
@@ -667,14 +668,14 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
     x = videoWidth >> 1;
     sp54_x = x;
     sp58_y = y;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         sp58_y = 145;
     }
 
     switch (viewports) {
         case VIEWPORTS_COUNT_1_PLAYER:
             posY = sp58_y;
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 posY -= 18;
             }
             gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, videoWidth, videoHeight);
@@ -683,7 +684,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
         case VIEWPORTS_COUNT_2_PLAYERS:
             if (gActiveCameraID == 0) {
                 posY = videoHeight >> 2;
-                if (osTvType == TV_TYPE_PAL) {
+                if (osTvType == OS_TV_TYPE_PAL) {
                     posY -= 12;
                 }
                 gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, videoWidth, (y - (videoHeight >> 7)));
@@ -739,7 +740,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
             }
             posY += sp58_y;
             posX += sp54_x;
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 if (gActiveCameraID <= VIEWPORTS_COUNT_2_PLAYERS) {
                     posY -= 20;
                 } else {
@@ -754,7 +755,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
             break;
     }
 
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         posX -= 4;
     }
     viewport_rsp_set(dlist, sp54_x, sp58_y, posX, posY);
@@ -1005,7 +1006,7 @@ void viewport_reset(Gfx **dlist) {
     gActiveCameraID = 0;
 }
 
-UNUSED const char D_800E6F34[] = "cameraPushSprMtx: model stack overflow!!\n";
+UNUSED const char D_800E6F44[] = "cameraPushSprMtx: model stack overflow!!\n";
 
 /**
  * Sets the matrix position to the world origin (0, 0, 0)

@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-#define OS_PIM_STACKSIZE 4096
+#define OS_PIM_STACKSIZE 256
 
 extern u8 D_8012A9B0[0x100];
 extern u16 D_80129BB0[512];

@@ -2,6 +2,7 @@
 /* RAM_POS: 0x800C29F0 */
 
 #include "game_text.h"
+#include "common.h"
 #include "menu.h"
 #include "objects.h"
 #include "racer.h"
@@ -45,7 +46,7 @@ s16 gDialogueYPos2; // The Lower Right Y Coord of the Dialogue Box. Changes for 
 s16 gShowSubtitles;
 s16 gSubtitleLineCount;
 s16 gCurrentTextID;
-UNUSED s16 D_8012A7BE;
+UNUSED s16 D_8012A7BC;
 char *gSubtitleProperties[1];
 char *gCurrentMessageText[2];
 char *gCurrentTextProperties;
@@ -66,7 +67,7 @@ void init_dialogue_text(void) {
     gCurrentTextID = 0;
     gDialogueXPos1 = 32;
     gDialogueXPos2 = 288;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         gDialogueYPos1 = 224;
         gDialogueYPos2 = 248;
     } else {
@@ -259,7 +260,7 @@ void reset_delayed_text(void) {
  * Set the delayed text ID and delay (in seconds)
  */
 void set_delayed_text(s32 textID, f32 delay) {
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         gTextboxDelay = delay * 50.0;
     } else {
         gTextboxDelay = delay * 60.0;
@@ -469,7 +470,7 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
             case 1:
                 textbox->left = var_s0[1] & 0xFF;
                 textbox->top = D_8012A7A0[arg0 + 2] & 0xFF;
-                if (osTvType == TV_TYPE_PAL) {
+                if (osTvType == OS_TV_TYPE_PAL) {
                     temp = textbox->top;
                     textbox->top = (textbox->top * 264) / 240;
                     temp = textbox->top - temp;

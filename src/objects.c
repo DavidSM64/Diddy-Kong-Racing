@@ -157,7 +157,7 @@ BossRaceVehicles gBossVehicles[] = {
     { VEHICLE_PLANE, VEHICLE_ROCKET },       // Wizpig 2
 };
 
-s8 D_800DC820[10] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+s8 D_800DC834[10] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
 s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
@@ -461,7 +461,7 @@ void func_8000BADC(s32 updateRate) {
     }
     for (i = 0; i < gNumRacers; i++) {
         updateRateF = (f32) updateRate;
-        if (osTvType == TV_TYPE_PAL) {
+        if (osTvType == OS_TV_TYPE_PAL) {
             updateRateF *= 1.2f;
         }
         racer = &(*gRacers)[i]->unk64->racer;
@@ -771,7 +771,7 @@ void try_free_object_header(s32 index) {
  * it consistent with non PAL timers, running 60Hz.
  */
 s32 normalise_time(s32 timer) {
-    if (osTvType != TV_TYPE_PAL || timer < 0) {
+    if (osTvType != OS_TV_TYPE_PAL || timer < 0) {
         return timer;
     } else {
         return (timer * 5) / 6;
@@ -4407,7 +4407,7 @@ void race_transition_adventure(s32 updateRate) {
         set_anti_aliasing(TRUE);
         disable_racer_input();
         if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE)) {
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 cutsceneTimerLimit = 415;
             } else {
                 cutsceneTimerLimit = 540;
@@ -4535,7 +4535,7 @@ void race_finish_time_trial(void) {
                 timetrial_swap_player_ghost(get_current_map_id());
                 gHasGhostToSave = TRUE;
             }
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 bestCourseTime = (bestCourseTime * 6) / 5;
             }
             if (bestCourseTime < gTTGhostTimeToBeat) {
@@ -4805,7 +4805,7 @@ f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
     return var_f2;
 }
 
-UNUSED f32 func_8001B974(Object_Racer *racer) {
+UNUSED f32 func_8001B954(Object_Racer *racer) {
     f32 distLeft;
     s32 checkpointID;
 
@@ -5428,7 +5428,7 @@ Object *ainode_get(s32 nodeID) {
     return NULL;
 }
 
-UNUSED void func_8001D23C(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
+UNUSED void func_8001D248(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
 /**
