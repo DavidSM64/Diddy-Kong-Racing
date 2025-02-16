@@ -199,11 +199,7 @@ void rumble_update(s32 updateRate) {
     u8 controllerToCheck;
     u8 pfsBitPattern;
 
-    if (
-#if VERSION >= VERSION_79
-        (gRumbleEnable) &&
-#endif
-        (gRumbleIdle != 0 || gRumbleKillTimer != 0)) {
+    if ((gRumbleIdle != 0 || gRumbleKillTimer != 0)) {
         gRumbleDetectionTimer += updateRate;
         if (gRumbleDetectionTimer > 120) {
             gRumbleDetectionTimer = 0;
