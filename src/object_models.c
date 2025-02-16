@@ -110,7 +110,7 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
             return ret;
         }
     }
-    
+
     if (D_8011D634 > 0) {
         D_8011D634--;
         sp50 = D_8011D628[D_8011D634];

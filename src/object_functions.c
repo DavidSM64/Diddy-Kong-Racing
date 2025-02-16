@@ -6377,7 +6377,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
     s32 i;
     s32 hopping;
     s32 var_v1;
-    UNUSED s32 pad0[29];// Wtf is this large gap here?
+    UNUSED s32 pad0[29]; // Wtf is this large gap here?
     f32 colY[8];
     UNUSED s32 pad2[4];
     f32 cosine;

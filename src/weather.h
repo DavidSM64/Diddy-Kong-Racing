@@ -100,11 +100,11 @@ typedef struct WeatherData {
     s32 shiftTime;
 } WeatherData;
 
-void weather_clip_planes(s16 arg0, s16 arg1);
+void weather_clip_planes(s16 near, s16 far);
 void lensflare_remove(Object *obj);
 void lensflare_override_add(Object *obj);
 void free_rain_memory(void);
-void rain_set(s32 arg0, s32 arg1, f32 arg2);
+void rain_set(s32 lightningFrequency, s32 opacity, f32 time);
 void rain_fog(void);
 void rain_update(s32 updateRate);
 void rain_sound(s32 updateRate);
@@ -114,15 +114,15 @@ void render_rain_overlay(RainGfxData*, s32);
 void weather_update(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void snow_render(void);
 void weather_free(void);
-void weather_set(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
+void weather_set(s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity, s32 time);
 void lensflare_override(ObjectSegment *cameraSegment);
 void snow_update(s32 updateRate);
 void snow_init(void);
-void rain_init(s32 arg0, s32 arg1);
+void rain_init(s32 intensity, s32 opacity);
 void weather_init(void);
 void snow_vertices(void);
 void lensflare_init(Object *);
 void lensflare_render(Gfx**, MatrixS**, Vertex**, ObjectSegment*);
-void weather_reset(s32 weatherType, s32 weatherEnable, s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity);
+void weather_reset(s32 weatherType, s32 density, s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity);
 
 #endif

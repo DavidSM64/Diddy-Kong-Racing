@@ -1718,7 +1718,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
     gPakFileList = mempool_alloc_safe(files_used, COLOUR_TAG_BLACK);
     bzero(gPakFileList, files_used);
     list = gPakFileList;
-    
+
     for (i = 0; i < maxNumOfFilesOnCpak; i++) {
         fileNames[i] = (char *) list;
         list += 0x12;
@@ -2091,7 +2091,7 @@ char *string_to_font_codes(char *inString, char *outString, s32 stringLength) {
                 break;
             }
         }
-        
+
         inString++;
         stringLength--;
     }

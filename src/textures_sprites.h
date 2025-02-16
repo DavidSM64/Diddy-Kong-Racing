@@ -140,7 +140,7 @@ void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentCo
 void func_8007CA68(s32 spriteID, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4); // Non Matching
 MemoryPoolSlot *func_8007C12C(s32 spriteID, s32 arg1); // Non Matching
 void tex_init_textures(void); // Non Matching
-void func_8007BF34(Gfx **dlist, s32 arg1); // Non Matching
+void func_8007BF34(Gfx **dlist, s32 flags); // Non Matching
 void load_blinking_lights_texture(Gfx **dlist, TextureHeader *texture_list, u32 flags,
                                   s32 texture_index);        // Non Matching
 void build_tex_display_list(TextureHeader *tex, Gfx *dlist); // Non Matching

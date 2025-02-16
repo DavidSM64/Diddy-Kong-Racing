@@ -370,41 +370,41 @@ s32 func_800B653C(Gfx **dlist, char *buffer) {
         if (*buffer >= 11) {
             if (*buffer >= 0x21) {
                 switch (*buffer) {
-                case 0x83:
-                    D_80127CB4 = 0;
-                    break;
-                case 0x84:
-                    D_80127CB4 = 1;
-                    break;
-                case 0x81:
-                    red = *nextBuffer++;
-                    green = *nextBuffer++;
-                    blue = *nextBuffer++;
-                    alpha = *nextBuffer++;
-                    if (gDebugTextOn) {
-                        gDPSetEnvColor((*dlist)++, red, green, blue, alpha);
-                    }
-                    break;
-                case 0x85:
-                    red = *nextBuffer++;
-                    green = *nextBuffer++;
-                    blue = *nextBuffer++;
-                    alpha = *nextBuffer++;
-                    if (!gDebugTextOn) {
-                        gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha);
-                    }
-                    break;
-                case 0x82:
-                    if (!gDebugTextOn) {
-                        debug_text_background(dlist, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
-                    }
-                    gDebugTextX  = *nextBuffer++;
-                    gDebugTextX |= *nextBuffer++ << 8;
-                    gDebugTextY  = *nextBuffer++;
-                    gDebugTextY |= *nextBuffer++ << 8;
-                    D_80127CB0 = gDebugTextX;
-                    D_80127CB2 = gDebugTextY;
-                    break;
+                    case 0x83:
+                        D_80127CB4 = 0;
+                        break;
+                    case 0x84:
+                        D_80127CB4 = 1;
+                        break;
+                    case 0x81:
+                        red = *nextBuffer++;
+                        green = *nextBuffer++;
+                        blue = *nextBuffer++;
+                        alpha = *nextBuffer++;
+                        if (gDebugTextOn) {
+                            gDPSetEnvColor((*dlist)++, red, green, blue, alpha);
+                        }
+                        break;
+                    case 0x85:
+                        red = *nextBuffer++;
+                        green = *nextBuffer++;
+                        blue = *nextBuffer++;
+                        alpha = *nextBuffer++;
+                        if (!gDebugTextOn) {
+                            gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha);
+                        }
+                        break;
+                    case 0x82:
+                        if (!gDebugTextOn) {
+                            debug_text_background(dlist, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
+                        }
+                        gDebugTextX = *nextBuffer++;
+                        gDebugTextX |= *nextBuffer++ << 8;
+                        gDebugTextY = *nextBuffer++;
+                        gDebugTextY |= *nextBuffer++ << 8;
+                        D_80127CB0 = gDebugTextX;
+                        D_80127CB2 = gDebugTextY;
+                        break;
                 }
             } else {
                 xOffset = 6;
@@ -414,21 +414,21 @@ s32 func_800B653C(Gfx **dlist, char *buffer) {
             }
         } else {
             switch (*buffer) {
-            case 10:
-                if (!gDebugTextOn) {
-                    debug_text_background(dlist, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
-                }
-                debug_text_newline();
-                D_80127CB0 = gDebugTextX;
-                D_80127CB2 = gDebugTextY;
-                break;
-            case 9:
-                if (!(gDebugTextX % 32)) {
-                    xOffset = 32;
-                } else {
-                    xOffset = 32 - (gDebugTextX % 32);
-                }
-                break;
+                case 10:
+                    if (!gDebugTextOn) {
+                        debug_text_background(dlist, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
+                    }
+                    debug_text_newline();
+                    D_80127CB0 = gDebugTextX;
+                    D_80127CB2 = gDebugTextY;
+                    break;
+                case 9:
+                    if (!(gDebugTextX % 32)) {
+                        xOffset = 32;
+                    } else {
+                        xOffset = 32 - (gDebugTextX % 32);
+                    }
+                    break;
             }
         }
         var_a1 = gDebugScreenWidth - 16;

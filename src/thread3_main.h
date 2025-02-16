@@ -121,7 +121,7 @@ void load_next_ingame_level(s32 numPlayers, s32 trackID, Vehicle vehicle);
 void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId);
 void unload_level_game(void);
 void set_drumstick_unlock_transition(void);
-void race_postrace_type(s32 arg0);
+void race_postrace_type(s32 finishState);
 void func_8006D8F0(s32 arg0);
 void func_8006D968(s8 *arg0);
 GameMode get_game_mode(void);
