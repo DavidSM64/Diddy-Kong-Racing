@@ -433,9 +433,7 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
 
     s8 delete; // Boolean
     s8 surface;
-    f32 dirZ;
-    f32 dirY;
-    f32 dirX;
+    Vec3f dir;
     f32 radius;
     s32 hasCollision; // Boolean
 
@@ -444,18 +442,18 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
     if (osTvType == TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
-    dirX = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
-    dirY = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
-    dirZ = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
+    dir.x = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
+    dir.y = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
+    dir.z = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
     radius = 9.0f;
 
-    func_80031130(1, &obj->segment.trans.x_position, &dirX, -1);
+    func_80031130(1, &obj->segment.trans.x_position, &dir.x, -1);
     hasCollision = FALSE;
-    func_80031600(&obj->segment.trans.x_position, &dirX, &radius, &surface, TRUE, &hasCollision);
+    func_80031600(&obj->segment.trans.x_position, (f32 *) &dir, &radius, &surface, TRUE, &hasCollision);
     if (hasCollision) {
-        obj->segment.x_velocity = (dirX - obj->segment.trans.x_position) / updateRateF;
-        obj->segment.y_velocity = (dirY - obj->segment.trans.y_position) / updateRateF;
-        obj->segment.z_velocity = (dirZ - obj->segment.trans.z_position) / updateRateF;
+        obj->segment.x_velocity = (dir.x - obj->segment.trans.x_position) / updateRateF;
+        obj->segment.y_velocity = (dir.y - obj->segment.trans.y_position) / updateRateF;
+        obj->segment.z_velocity = (dir.z - obj->segment.trans.z_position) / updateRateF;
     }
     move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF,
                 obj->segment.z_velocity * updateRateF);
@@ -4831,9 +4829,7 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     Object_Weapon *weapon;
     Object *temp_s1_2;
     UNUSED s32 pad;
-    f32 offsetZ;
-    f32 offsetY;
-    f32 offsetX;
+    Vec3f offset;
     f32 radius;
     f32 updateRateF;
     f32 posX;
@@ -4869,24 +4865,24 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     if (osTvType == TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
-    offsetX = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
-    offsetY = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
-    offsetZ = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
+    offset.x = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
+    offset.y = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
+    offset.z = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
     if (weapon->weaponID != WEAPON_MAGNET_LEVEL_3) {
         radius = 16.0f;
-        func_80031130(1, &obj->segment.trans.x_position, &offsetX, -1);
+        func_80031130(1, &obj->segment.trans.x_position, (f32 *) &offset, -1);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
-        func_80031600(&obj->segment.trans.x_position, &offsetX, &radius, &surface, TRUE, &hasCollision);
+        func_80031600(&obj->segment.trans.x_position, (f32 *) &offset, &radius, &surface, TRUE, &hasCollision);
         if (hasCollision > 0) {
             if (func_8002ACD4(&diffX, &diffY, &diffZ)) {
                 obj->properties.projectile.timer = 0;
             }
         }
     }
-    diffX = offsetX - posX;
-    diffY = offsetY - posY;
-    diffZ = offsetZ - posZ;
+    diffX = offset.x - posX;
+    diffY = offset.y - posY;
+    diffZ = offset.z - posZ;
     if (move_object(obj, diffX, diffY, diffZ)) {
         obj->properties.projectile.timer = 0;
     }
@@ -6376,18 +6372,17 @@ void obj_init_frog(Object *obj, LevelObjectEntry_Frog *entry) {
  * character.
  */
 void obj_loop_frog(Object *obj, s32 updateRate) {
-    UNUSED s32 pad0;
+    Object_Frog *frog;
     s32 i;
     s32 hopping;
     s32 var_v1;
-    UNUSED u8 pad[0x90];
-    f32 sp6C;
-    UNUSED u8 pad2[0xC];
-    Object_Frog *frog;
+    UNUSED s32 pad0[29];// Wtf is this large gap here?
+    f32 colY[8];
+    UNUSED s32 pad2[4];
+    f32 cosine;
     f32 diffX;
     f32 diffY;
     f32 diffZ;
-    f32 cosine;
     f32 updateRateF;
     Object *racerObj;
 
@@ -6489,10 +6484,10 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
             ignore_bounds_check();
             move_object(obj, obj->segment.x_velocity, 0.0f, obj->segment.z_velocity);
             if (func_8002BAB0(obj->segment.object.segmentID, obj->segment.trans.x_position,
-                              obj->segment.trans.z_position, &sp6C) != 0) {
+                              obj->segment.trans.z_position, colY) != 0) {
                 obj->segment.trans.y_position = 0.0f;
                 ignore_bounds_check();
-                move_object(obj, 0.0f, sp6C, 0.0f);
+                move_object(obj, 0.0f, (f32) colY[0], 0.0f);
             }
             if (frog->squishCooldown <= 0 && (frog->hopFrame < 6 || frog->hopFrame >= 27)) {
                 if (obj_dist_racer(obj->segment.trans.x_position, obj->segment.trans.y_position,
