@@ -579,9 +579,7 @@ f32 func_800BEFC4(s32 arg0, s32 arg1, s32 arg2) {
     s32 var_v1;
     s32 temp_0;
     unk800E3184 *temp_a3;
-    unk800E3190 *temp_s2;
     unk800E3190 *temp_s1;
-    LevelModel_Alternate *temp_a2;
 
     var_f28 = 0.0f;
     if (D_800E3188 <= 0) {
