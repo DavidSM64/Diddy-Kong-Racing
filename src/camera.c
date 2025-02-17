@@ -101,7 +101,7 @@ f32 gModelMatrixViewZ[5];
 u16 perspNorm;
 Matrix *gModelMatrixF[6];
 MatrixS *gModelMatrixS[6];
-Matrix D_80120DA0[5];
+Matrix *D_80120DA0[10][8]; // Not sure why, but gModelMatrixF is populated from here, even though this is never set.
 Matrix gPerspectiveMatrixF;
 Matrix gViewMatrixF;
 Matrix gCameraMatrixF;
@@ -113,20 +113,19 @@ Matrix gCurrentModelMatrixS;
 
 /******************************/
 
-#ifdef NON_MATCHING
-extern s32 D_B0000578;
 /**
  * Official Name: camInit
  */
+extern s32 D_B0000578;
 void camera_init(void) {
     s32 i;
     s32 j;
     u32 stat;
 
-    // This loop is not cooperating.
-    for (i = 0; i < 5; i++) {
-        gModelMatrixF[i] = D_80120DA0 + i + i * 0;
-    }
+    // clang-format off
+    // This section is highly suspicous to be undefined behaviour as we have it defined right now.
+    for (i = 0; i < 5; i++) { gModelMatrixF[i] = (Matrix *) &D_80120DA0[(i << 1)]; }
+    // clang-format on
 
     for (j = 0; j < 8; j++) {
         gActiveCameraID = j;
@@ -141,7 +140,7 @@ void camera_init(void) {
     gSpriteAnimOff = FALSE;
     D_80120D18 = 0;
     gAdjustViewportHeight = 0;
-    gAntiPiracyViewport = 0;
+    gAntiPiracyViewport = FALSE;
 
     WAIT_ON_IOBUSY(stat);
 
@@ -155,9 +154,6 @@ void camera_init(void) {
     f32_matrix_to_s16_matrix(&gPerspectiveMatrixF, &gProjectionMatrixS);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/camera_init.s")
-#endif
 
 void func_80066060(s32 cameraID, s32 zoomLevel) {
     if (cameraID >= 0 && cameraID < 4) {
