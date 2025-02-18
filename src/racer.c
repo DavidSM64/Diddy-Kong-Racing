@@ -680,8 +680,6 @@ void func_80045128(Object **racerObjs) {
 GLOBAL_ASM("asm/non_matchings/racer/func_800452A0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80045C48.s")
 
-#if 1
-#define TICK_RATE (1 / 60.0)
 void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     s32 objectMoved;
     UNUSED s32 pad1;
@@ -761,12 +759,12 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         slowly_reset_head_angle(racer);
     }
     if (gCurrentRacerInput & A_BUTTON) {
-        racer->throttle += updateRateF * TICK_RATE;
+        racer->throttle += updateRateF * 0.016;
         if (racer->throttle > 1.0) {
             racer->throttle = 1.0;
         }
     } else {
-        racer->throttle -= updateRateF * TICK_RATE;
+        racer->throttle -= updateRateF * 0.016;
         if (racer->throttle < 0.0f) {
             racer->throttle = 0.0f;
         }
@@ -784,7 +782,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         spF4 *= 1.2;
     }
     if ((gCurrentRacerInput & B_BUTTON) && (gCurrentStickY < -40 || racer->velocity < 0.0f)) {
-        racer->brake += updateRateF * (3 * TICK_RATE);
+        racer->brake += updateRateF * 0.046;
         if (racer->brake > 1.2) {
             racer->brake = 1.2f;
         }
@@ -792,7 +790,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             rumble_set(racer->playerIndex, RUMBLE_TYPE_5);
         }
     } else {
-        racer->brake -= updateRateF * (3 * TICK_RATE);
+        racer->brake -= updateRateF * 0.046;
         if (racer->brake < 0.0f) {
             racer->brake = 0.0f;
         }
@@ -957,8 +955,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->segment.y_velocity -= gCurrentRacerWeightStat * updateRateF;
     }
     iTemp = (gCurrentPlayerIndex != PLAYER_COMPUTER && !racer->raceFinished) ? racer->steerAngle : gCurrentStickX;
-    spFC = TICK_RATE / 3;
-    obj->segment.y_velocity -= (obj->segment.y_velocity * (TICK_RATE / 3)) * updateRateF;
+    spFC = 0.004;
+    obj->segment.y_velocity -= (obj->segment.y_velocity * 0.025) * updateRateF;
     if (gCurrentRacerInput & B_BUTTON && gCurrentStickY >= -40 && racer->velocity >= -0.5) {
         spFC *= 16.0f;
     }
@@ -1405,9 +1403,6 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         func_800230D0(obj, racer);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/racer/func_80046524.s")
-#endif
 
 /**
  * Initialise some states when a racer is attacked or runs into something.
