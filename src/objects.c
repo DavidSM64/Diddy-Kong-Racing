@@ -2614,7 +2614,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     newZPos = obj->segment.trans.z_position + zPos;
     if (levelModel == NULL) {
         gNoBoundsCheck = FALSE;
-        return 0;
+        return FALSE;
     }
     outOfBounds = FALSE;
     x2 = (levelModel->upperXBounds + 1000.0);
@@ -2652,7 +2652,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     gNoBoundsCheck = FALSE;
     if (outOfBounds) {
         obj->segment.object.segmentID = -1;
-        return 1;
+        return TRUE;
     }
 
     obj->segment.trans.x_position = newXPos;
@@ -2665,7 +2665,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
 
     if (box == NULL) {
         obj->segment.object.segmentID = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
-        return 0;
+        return FALSE;
     } else {
         outsideBBox = FALSE;
         if (box->x2 < intXPos || intXPos < box->x1) {
@@ -2684,7 +2684,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
             }
         }
     }
-    return 0;
+    return FALSE;
 }
 
 /**
