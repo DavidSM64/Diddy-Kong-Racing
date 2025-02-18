@@ -680,7 +680,7 @@ void func_80045128(Object **racerObjs) {
 GLOBAL_ASM("asm/non_matchings/racer/func_800452A0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80045C48.s")
 
-#if 1
+#ifdef NON_MATCHING
 #define TICK_RATE (1 / 60.0)
 void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     s32 temp2;
