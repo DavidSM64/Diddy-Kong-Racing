@@ -721,7 +721,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s8 sp67;
     f32 new_var2;
     f32 new_var;
-    
+
     if (func_8000E138()) {
         updateRateF *= 1.15;
     }
@@ -994,7 +994,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
 
-    if (racer->playerIndex == PLAYER_ONE && racer->groundedWheels && lastWheelSurface == SURFACE_TAJ_PAD && gCurrentButtonsPressed & Z_TRIG) {
+    if (racer->playerIndex == PLAYER_ONE && racer->groundedWheels && lastWheelSurface == SURFACE_TAJ_PAD &&
+        gCurrentButtonsPressed & Z_TRIG) {
         gTajInteractStatus = TAJ_TELEPORT;
     }
     if (racer->groundedWheels || racer->buoyancy > 0.0f) {
@@ -1055,7 +1056,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     temp_f0 = sqrtf((obj->segment.z_velocity * obj->segment.z_velocity) +
                     (obj->segment.x_velocity * obj->segment.x_velocity));
     if (temp_f0 > 0.25) {
-        racer->unk168 =  arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity) + 0x8000;
+        racer->unk168 = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity) + 0x8000;
         var_v1 = ((0x8000 - racer->unk168) & 0xFFFF) - (racer->cameraYaw & 0xFFFF);
         if (var_v1 > 0x8000) {
             var_v1 -= 0xFFFF;
@@ -1081,7 +1082,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (temp_f0 > 10.0) {
             temp_f0 = 10.0;
         }
-        
+
         temp_f2 = temp_f0 + 0.0f;
         temp_f2 = temp_f2 / 10.0;
         if (!racer) {}
@@ -1282,7 +1283,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->segment.y_velocity = 4.0f;
     }
     if (gNumViewports < 2 && obj->segment.header->particleCount >= 9) {
-        if ((gCurrentRacerInput & (A_BUTTON | R_TRIG)) == (A_BUTTON | R_TRIG) && (gCurrentStickX < -30 || gCurrentStickX > 30)) {
+        if ((gCurrentRacerInput & (A_BUTTON | R_TRIG)) == (A_BUTTON | R_TRIG) &&
+            (gCurrentStickX < -30 || gCurrentStickX > 30)) {
             func_800B4668(obj, 8, updateRate << 10, 0x80);
         } else {
             func_800B46BC(obj, 8, updateRate << 9, 0x20);
@@ -1372,7 +1374,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (racer->buoyancy != 0.0f || racer->groundedWheels == 4) {
         racer->unk1FB = 0;
     }
-    if (gCurrentButtonsPressed & R_TRIG && (racer->buoyancy > 0.0f || racer->groundedWheels >= 2) && racer->unk1FB == 0) {
+    if (gCurrentButtonsPressed & R_TRIG && (racer->buoyancy > 0.0f || racer->groundedWheels >= 2) &&
+        racer->unk1FB == 0) {
         if (racer->buoyancy != 0.0f) {
             obj->segment.y_velocity += 4.5;
             if (obj->segment.y_velocity > 5.5) {

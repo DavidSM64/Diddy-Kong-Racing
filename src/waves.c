@@ -278,12 +278,12 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
     set_rng_seed(0x57415646);
 
     if (D_80129FC8.unk4 > 0) {
-    for (i = 0; i < D_80129FC8.unk4; i++) {
-        for (var_s0 = 0; var_s0 < D_80129FC8.unk4; var_s0++) {
-            D_800E3044[(var_s0 * 2)] = get_random_number_from_range(0, D_80129FC8.unk20 - 1);
-            D_800E3044[(var_s0 * 2) + 1] = get_random_number_from_range(0, D_80129FC8.unk20 - 1);
+        for (i = 0; i < D_80129FC8.unk4; i++) {
+            for (var_s0 = 0; var_s0 < D_80129FC8.unk4; var_s0++) {
+                D_800E3044[(var_s0 * 2)] = get_random_number_from_range(0, D_80129FC8.unk20 - 1);
+                D_800E3044[(var_s0 * 2) + 1] = get_random_number_from_range(0, D_80129FC8.unk20 - 1);
+            }
         }
-    }
     }
     load_rng_seed();
     if (arg2 != 2) {
@@ -312,7 +312,7 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
             }
         }
     }
-    
+
     var_s5 = 0;
     for (var_s7 = 0; var_s7 < D_80129FC8.unk0; var_s7++) {
         for (var_s0 = 0; var_s0 < D_80129FC8.unk0; var_s0++) {
@@ -609,7 +609,7 @@ f32 func_800BEFC4(s32 arg0, s32 arg1, s32 arg2) {
                 temp_f12 = (temp_f20 * temp_f20) + (temp_f22 * temp_f22);
                 if (temp_f12 < temp_s1->unk14) {
                     temp_f0 = sqrtf(temp_f12);
-                    var_s0 = (u16)temp_s1->unk1A;
+                    var_s0 = (u16) temp_s1->unk1A;
                     if (temp_s1->unk31 != 0) {
                         if (temp_f20 < temp_f26) {
                             var_s0 -= (s32) (temp_f20 * temp_s1->unk20);
