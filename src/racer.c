@@ -1362,14 +1362,14 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (var_v0 > 0x8000) {
             var_v0 -= 0xFFFF;
         }
-        if (var_v0 < (-0x8000)) {
+        if (var_v0 < -0x8000) {
             var_v0 += 0xFFFF;
         }
         var_v0 *= updateRate;
         racer->x_rotation_vel += var_v0 >> 4;
     }
     if (gRaceStartTimer != 0) {
-        gCurrentButtonsPressed &= ~0x0010;
+        gCurrentButtonsPressed &= ~R_TRIG;
     }
     if (racer->buoyancy != 0.0f || racer->groundedWheels == 4) {
         racer->unk1FB = 0;
