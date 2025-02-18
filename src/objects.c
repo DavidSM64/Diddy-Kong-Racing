@@ -918,7 +918,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     s32 var_s4;
     s32 tajFlags;
 
-    D_8011AD20 = 0;
+    D_8011AD20 = FALSE;
     gEventCountdown = 0;
     gFirstTimeFinish = 0;
     gNumRacers = 0;
@@ -1148,7 +1148,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             curRacer->vehicleID = vehicle;
             curRacer->vehicleIDPrev = vehicle;
             if (sp127 != -1 && sp127 != (s32) vehicle) {
-                D_8011AD20 = 1;
+                D_8011AD20 = TRUE;
             }
             sp127 = vehicle;
             if (curRacer->vehicleID == VEHICLE_PLANE || curRacer->vehicleID == VEHICLE_SMOKEY ||
@@ -1205,7 +1205,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         D_8011AD3C = 0;
     }
     if (D_8011AD3C != 0) {
-        D_8011AD20 = 0;
+        D_8011AD20 = FALSE;
     }
     if (get_game_mode() == GAMEMODE_INGAME) {
         for (j = 0; j < gObjectCount; j++) {
