@@ -450,13 +450,13 @@ s32 gPostRace1Player;
 s32 gPostRaceTimer;
 s32 gTracksSaveGhost;
 UNUSED s32 D_80126A9C;
-char *gBootPakData[MAX_CPAK_FILES];                           // Text to render
-char *sCurrentControllerPakAllFileNames[MAX_CPAK_FILES];      // Every file name on the controller pak
-char *sCurrentControllerPakAllFileExtensions[MAX_CPAK_FILES]; // Every file extension on the controller pak
-u8 sCurrentControllerPakAllFileTypes[MAX_CPAK_FILES];         // File type of all files on controller pak
-u32 sCurrentControllerPakNumberOfPages[MAX_CPAK_FILES];       // Number of pages for each file on controller pak
-u32 sCurrentControllerPakFreePages;                           // Pages available in current controller pak
-s32 sControllerPakMenuNumberOfRows;                           // 8 if PAL, 7 if not
+char *gBootPakNames[16];                        // Text to render
+u8 *sCurrentControllerPakAllFileNames[16];      // Every file name on the controller pak
+u8 *sCurrentControllerPakAllFileExtensions[16]; // Every file extension on the controller pak
+u8 sCurrentControllerPakAllFileTypes[16];       // File type of all files on controller pak
+u32 sCurrentControllerPakAllFileSizes[16];      // File size of all files on controller pak
+u32 sCurrentControllerPakFreeSpace;             // Space available in current controller pak
+s32 sControllerPakMenuNumberOfRows;             // 8 if PAL, 7 if not
 TextureHeader *gMenuMosaic1;
 TextureHeader *gMenuMosaic2;
 s32 gMenuMosaicShift;
@@ -5332,24 +5332,27 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
             j = 0;
             if (sCurrentControllerPakAllFileNames[i] != NULL) {
                 k = 0;
-                while (sCurrentControllerPakAllFileNames[i][k] != '\0') {
-                    gBootPakData[i][j++] = sCurrentControllerPakAllFileNames[i][k++];
+                for (; sCurrentControllerPakAllFileNames[i][k] != 0; j++, k++) {
+                    gBootPakNames[i][j] = sCurrentControllerPakAllFileNames[i][k];
                 }
 
-                if (sCurrentControllerPakAllFileExtensions[i] != NULL &&
-                    sCurrentControllerPakAllFileExtensions[i][0] != '\0') {
-                    gBootPakData[i][j++] = '.';
+                if ((sCurrentControllerPakAllFileExtensions[i] != 0) &&
+                    (*sCurrentControllerPakAllFileExtensions[i] != 0)) {
+                    gBootPakNames[i][j] = '.';
+                    j++;
                     k = 0;
-                    while (sCurrentControllerPakAllFileExtensions[i][k] != '\0') {
-                        gBootPakData[i][j++] = sCurrentControllerPakAllFileExtensions[i][k++];
+                    for (; sCurrentControllerPakAllFileExtensions[i][k] != 0; j++, k++) {
+                        gBootPakNames[i][j] = sCurrentControllerPakAllFileExtensions[i][k];
                     }
                 }
             }
             if (j == 0) {
-                gBootPakData[i][j++] = '-';
+                gBootPakNames[i][j] = '-';
+                j++;
             }
-            gBootPakData[i][j] = '\0';
-        }
+            i++;
+            gBootPakNames[i - 1][j] = 0;
+        } while (&gBootPakNames != &sCurrentControllerPakAllFileNames);
 
         cpak_free_files();
         get_free_space(*controllerIndex, &sCurrentControllerPakFreePages, NULL);
@@ -5512,12 +5515,12 @@ void bootscreen_free(void) {
 void bootscreen_init_cpak(void) {
     s32 i;
 
-    // Starting point
-    gBootPakData[0] = mempool_alloc_safe(SAVE_SIZE_MENU, COLOUR_TAG_WHITE);
+    // Label size is 32 characters, multiplied by 16 files.
+    gBootPakNames[0] = mempool_alloc_safe(32 * 16, COLOUR_TAG_WHITE);
 
     // Fills in the table.
-    for (i = 1; i < ARRAY_COUNT(gBootPakData); i++) {
-        gBootPakData[i] = (char *) (((u32) gBootPakData[0]) + (i * (SAVE_SIZE_MENU / ARRAY_COUNT(gBootPakData))));
+    for (i = 1; i < 16; i++) {
+        gBootPakNames[i] = (char *) (((u32) gBootPakNames[0]) + (i * 32));
     }
 
     // Only check cpak 0
@@ -5633,9 +5636,10 @@ void pakmenu_render(UNUSED s32 updateRate) {
                     set_current_dialogue_background_colour(6, 224, 224, 48, 224);
                 }
                 set_current_text_colour(6, 16, 16, 160, 255, 255);
-                pagesText = noteText = "~";
-                fileNameText = gBootPakData[gOpacityDecayTimer + i];
-                numberOfPages = sCurrentControllerPakNumberOfPages[gOpacityDecayTimer + i];
+                noteText = (char *) &sTilde;
+                pagesText = (char *) &sTilde;
+                fileNameText = gBootPakNames[gOpacityDecayTimer + i];
+                numberOfPages = sCurrentControllerPakAllFileSizes[gOpacityDecayTimer + i];
             }
             render_dialogue_text(6, 26, 2, noteText, gOpacityDecayTimer + i + 1, HORZ_ALIGN_CENTER);
             render_dialogue_text(6, 56, 2, fileNameText, 1, HORZ_ALIGN_LEFT);
@@ -5887,7 +5891,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
  */
 void pakmenu_free(void) {
     menu_asset_free(TEXTURE_ICON_ARROW_DOWN);
-    mempool_free(gBootPakData[0]);
+    mempool_free(gBootPakNames[0]);
 #if REGION == REGION_JP
     func_800C67F4_C73F4();
 #else

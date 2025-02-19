@@ -988,12 +988,12 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
         return -1;
     }
 
-    alloc = mempool_alloc_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
+    alloc = mempool_alloc_safe(COURSE_TIMES_START + sizeof(CourseRecords), COLOUR_TAG_WHITE);
 
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
         s32 blocks = EEP_FLAP_SIZE;
         for (i = 0; i < blocks; i++) {
-            osEepromRead(get_si_mesg_queue(), i + EEP_FLAP_OFFSET, (u8 *) &alloc[i]);
+            osEepromRead(si_mesg(), BLOCK_SIZE(FASTEST_LAPS_START) + i, (u8 *) &alloc[i]);
         }
         func_80073588(settings, (u8 *) alloc, SAVE_DATA_FLAG_READ_FLAP_TIMES);
     }
@@ -1001,7 +1001,8 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
     if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
         s32 blocks = EEP_COURSE_RECORD_SIZE;
         for (i = 0; i < blocks; i++) {
-            osEepromRead(get_si_mesg_queue(), i + EEP_COURSE_TIME_OFFSET, (u8 *) (&alloc[EEP_FLAP_SIZE] + i));
+            osEepromRead(si_mesg(), BLOCK_SIZE(COURSE_TIMES_START) + i,
+                         (u8 *) (&alloc[sizeof(CourseRecords) / sizeof(u64)] + i));
         }
         func_80073588(settings, (u8 *) alloc, SAVE_DATA_FLAG_READ_COURSE_TIMES);
     }
@@ -1027,25 +1028,26 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
         return -1;
     }
 
-    alloc = mempool_alloc_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
+    alloc = mempool_alloc_safe(COURSE_TIMES_START + sizeof(CourseRecords), COLOUR_TAG_WHITE);
 
     func_800738A4(settings, (u8 *) alloc);
 
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
         s32 size = EEP_FLAP_SIZE;
         if (1) {} // Fake Match
-        if (!is_reset_pressed()) {
-            for (i = 0; i != size; i++) {
-                osEepromWrite(get_si_mesg_queue(), i + EEP_FLAP_OFFSET, (u8 *) &alloc[i]);
+        if (is_reset_pressed() == FALSE) {
+            for (i = 0; i != blocks; i++) {
+                osEepromWrite(si_mesg(), BLOCK_SIZE(FASTEST_LAPS_START) + i, (u8 *) &alloc[i]);
             }
         }
     }
 
     if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
-        s32 size = EEP_COURSE_RECORD_SIZE;
-        if (!is_reset_pressed()) {
-            for (i = 0; i != size; i++) {
-                osEepromWrite(get_si_mesg_queue(), i + EEP_COURSE_TIME_OFFSET, (u8 *) (&alloc[EEP_FLAP_SIZE] + i));
+        s32 blocks = sizeof(CourseRecords) / sizeof(u64);
+        if (is_reset_pressed() == FALSE) {
+            for (i = 0; i != blocks; i++) {
+                osEepromWrite(si_mesg(), BLOCK_SIZE(COURSE_TIMES_START) + i,
+                              (u8 *) (&alloc[sizeof(CourseRecords) / sizeof(u64)] + i));
             }
         }
     }
@@ -1083,10 +1085,10 @@ s32 read_eeprom_settings(u64 *eepromSettings) {
         return -1;
     }
 
-    osEepromRead(get_si_mesg_queue(), 0xF, (u8 *) eepromSettings);
-    sp20 = calculate_eeprom_settings_checksum(*eepromSettings);
-    temp = *eepromSettings >> 56;
-    if (sp20 != temp) {
+    osEepromRead(si_mesg(), BLOCK_SIZE(CONFIG_START), (u8 *) eepromSettings);
+    expected = calculate_eeprom_settings_checksum(*eepromSettings);
+    checksum = *eepromSettings >> 56;
+    if (expected != checksum) {
         // bit 24 = Unknown
         // bit 25 = Seems to be a flag for whether subtitles are enabled or not.
 #if REGION == REGION_JP
@@ -1114,9 +1116,9 @@ s32 write_eeprom_settings(u64 *eepromSettings) {
     }
     *eepromSettings <<= 8;
     *eepromSettings >>= 8;
-    *eepromSettings |= (s64) (calculate_eeprom_settings_checksum(*eepromSettings)) << 56;
-    if (is_reset_pressed() == 0) {
-        osEepromWrite(get_si_mesg_queue(), 0xF, (u8 *) eepromSettings);
+    *eepromSettings |= (u64) (calculate_eeprom_settings_checksum(*eepromSettings)) << 56;
+    if (is_reset_pressed() == FALSE) {
+        osEepromWrite(si_mesg(), BLOCK_SIZE(CONFIG_START), (u8 *) eepromSettings);
     }
     return 1;
 }
