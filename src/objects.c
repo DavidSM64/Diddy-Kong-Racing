@@ -6179,8 +6179,7 @@ void mode_init_taj_race(void) {
     Settings *settings;
     Object *racerObj;
     Object_Racer *racer;
-    UNUSED s32 pad2[7];
-    f32 sp2C;
+    f32 yOut[8];
 
     gTajRaceInit -= 1;
     if (gTajRaceInit == 0) {
@@ -6219,7 +6218,7 @@ void mode_init_taj_race(void) {
         lvlSeg =
             get_level_segment_index_from_position(newRacerEntry.common.x, checkpointNode->y, newRacerEntry.common.z);
         newRacerEntry.common.y =
-            func_8002BAB0(lvlSeg, newRacerEntry.common.x, newRacerEntry.common.z, &sp2C) ? sp2C : checkpointNode->y;
+            func_8002BAB0(lvlSeg, newRacerEntry.common.x, newRacerEntry.common.z, yOut) ? yOut[0] : checkpointNode->y;
         newRacerEntry.common.size = 16;
         newRacerEntry.angleY = racer->steerVisualRotation;
         newRacerEntry.angleX = 0;
@@ -6374,7 +6373,7 @@ CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
         for (i = 0; i < gObjectCount; i++) {
             ptrList = gObjPtrList[i];
             if (!(ptrList->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (ptrList->behaviorId == BHV_SETUP_POINT)) {
-                if (ptrList->properties.common.unk0 == 0) {
+                if (ptrList->properties.setupPoint.racerIndex == 0) {
                     obj->segment.trans.x_position = ptrList->segment.trans.x_position;
                     obj->segment.trans.y_position = ptrList->segment.trans.y_position;
                     obj->segment.trans.z_position = ptrList->segment.trans.z_position;
