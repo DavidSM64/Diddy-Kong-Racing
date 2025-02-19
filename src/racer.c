@@ -692,16 +692,14 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     f32 xVelTemp;
     f32 zVelTemp;
     f32 spFC;
-    UNUSED f32 pad2;
+    UNUSED s32 pad2;
     f32 spF4;
     f32 spF0;
     f32 temp;
     f32 racerOx1;
     f32 racerOz1;
-    s32 temp3;
-    UNUSED f32 pad3;
     f32 var_f0;
-    Vec3f *waterRotation; 
+    Vec3f water_rotation; 
     f32 var_f2;
     s32 var_v0;
     f32 spC8;
@@ -714,7 +712,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s8 lastWheelSurface;
     s8 wave_properties;
     s8 wheelsOnStone;
-    f32 var_f4;
+    UNUSED s32 pad3;
     Matrix transformedMtx;
     s8 playerObjectHasMoved;
     f32 var_f6;
@@ -1208,7 +1206,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     waterHeight = -10000.0f;
     // clang-format off
     // the backslash here is relevant for the match
-    wave_properties = get_wave_properties(obj->segment.trans.y_position, &waterHeight, &waterRotation); \
+    wave_properties = get_wave_properties(obj->segment.trans.y_position, &waterHeight, &water_rotation); \
     if (wave_properties != 0) {
         // clang-format on
         velocity = racer->velocity;
@@ -1242,7 +1240,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (gCurrentRacerInput & R_TRIG) {
             iTemp = gCurrentStickX * 2;
         }
-        rotate_racer_in_water(obj, racer, &waterRotation, wave_properties, updateRate, iTemp, 1.0f);
+        rotate_racer_in_water(obj, racer, &water_rotation, wave_properties, updateRate, iTemp, 1.0f);
     }
     if (racer->buoyancy > 0.0) {
         obj->segment.trans.y_position += racer->buoyancy * racer->unkC4;
