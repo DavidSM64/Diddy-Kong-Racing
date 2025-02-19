@@ -839,16 +839,16 @@ s32 read_save_file(s32 saveFileNum, Settings *settings) {
     }
     switch (saveFileNum) {
         case 0:
-            startingAddress = 0;
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 0));
             break;
         case 1:
-            startingAddress = 5;
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 1));
             break;
         case 2:
-            startingAddress = 10;
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
             break;
         default:
-            startingAddress = 10;
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
             break;
     }
     blocks = 5;
@@ -891,16 +891,16 @@ void erase_save_file(s32 saveFileNum, Settings *settings) {
         settings->newGame = TRUE;
         switch (saveFileNum) {
             case 0:
-                startingAddress = 0;
+                startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 0));
                 break;
             case 1:
-                startingAddress = 5;
+                startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 1));
                 break;
             case 2:
-                startingAddress = 10;
+                startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
                 break;
             default:
-                startingAddress = 10;
+                startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
                 break;
         }
         blockSize = 5;
@@ -944,16 +944,16 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
 
     switch (saveFileNum) {
         case 0:
-            startingAddress = 0x00 / sizeof(u64);
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 0));
             break;
         case 1:
-            startingAddress = 0x28 / sizeof(u64);
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 1));
             break;
         case 2:
-            startingAddress = 0x50 / sizeof(u64);
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
             break;
         default:
-            startingAddress = 0x50 / sizeof(u64);
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
             break;
     }
 
