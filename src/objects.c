@@ -6361,7 +6361,84 @@ void mode_end_taj_race(s32 reason) {
     gIsTajChallenge = FALSE;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800230D0.s")
+CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
+    CheckpointNode *lastCheckpointNode;
+    ObjectSegment *activeCameraSegment;
+    s32 yOutCount;
+    f32 yOut[9];
+    Object *ptrList;
+    s32 i;
+
+    if (gNumberOfCheckpoints == 0) {
+        lastCheckpointNode = NULL;
+        for (i = 0; i < gObjectCount; i++) {
+            ptrList = gObjPtrList[i];
+            if (!(ptrList->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (ptrList->behaviorId == BHV_SETUP_POINT)) {
+                if (ptrList->properties.common.unk0 == 0) {
+                    obj->segment.trans.x_position = ptrList->segment.trans.x_position;
+                    obj->segment.trans.y_position = ptrList->segment.trans.y_position;
+                    obj->segment.trans.z_position = ptrList->segment.trans.z_position;
+                    obj->segment.object.segmentID = ptrList->segment.object.segmentID;
+                    i = gObjectCount;
+                }
+            }
+        }
+    } else {
+        lastCheckpointNode = &gTrackCheckpoints[gNumberOfCheckpoints - 1];
+        obj->segment.trans.x_position = lastCheckpointNode->x - (lastCheckpointNode->rotationZFrac * 35.0f);
+        obj->segment.trans.y_position = lastCheckpointNode->y;
+        obj->segment.trans.z_position = lastCheckpointNode->z + (lastCheckpointNode->rotationXFrac * 35.0f);
+        obj->segment.object.segmentID = get_level_segment_index_from_position(
+            obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+    }
+    yOutCount = func_8002BAB0(obj->segment.object.segmentID, obj->segment.trans.x_position,
+                              obj->segment.trans.z_position, yOut);
+    if (yOutCount != 0) {
+        obj->segment.trans.y_position = yOut[yOutCount - 1];
+    }
+    racer->prev_x_position = obj->segment.trans.x_position;
+    racer->prev_y_position = obj->segment.trans.y_position;
+    racer->prev_z_position = obj->segment.trans.z_position;
+    if (lastCheckpointNode != NULL) {
+        racer->steerVisualRotation = arctan2_f(lastCheckpointNode->rotationXFrac, lastCheckpointNode->rotationZFrac);
+    } else {
+        racer->steerVisualRotation = ptrList->segment.trans.y_rotation;
+    }
+    racer->checkpoint = 0;
+    racer->courseCheckpoint = racer->lap * gNumberOfCheckpoints;
+    obj->segment.trans.y_rotation = racer->steerVisualRotation;
+    racer->unkD8.x = obj->segment.trans.x_position;
+    racer->unkD8.y = obj->segment.trans.y_position + 15.0f;
+    racer->unkD8.z = obj->segment.trans.z_position;
+    racer->unkE4.x = obj->segment.trans.x_position;
+    racer->unkE4.y = obj->segment.trans.y_position + 15.0f;
+    racer->unkE4.z = obj->segment.trans.z_position;
+    racer->unkF0.x = obj->segment.trans.x_position;
+    racer->unkF0.y = obj->segment.trans.y_position + 15.0f;
+    racer->unkF0.z = obj->segment.trans.z_position;
+    racer->unkFC.x = obj->segment.trans.x_position;
+    racer->unkFC.y = obj->segment.trans.y_position + 15.0f;
+    racer->unkFC.z = obj->segment.trans.z_position;
+    obj->interactObj->x_position = obj->segment.trans.x_position;
+    obj->interactObj->y_position = obj->segment.trans.y_position;
+    obj->interactObj->z_position = obj->segment.trans.z_position;
+    // fake
+    if (1) {}
+    if (1) {}
+    racer->velocity = 0.0f;
+    racer->lateral_velocity = 0.0f;
+    obj->segment.x_velocity = 0.0f;
+    obj->segment.z_velocity = 0.0f;
+    racer->vehicleID = racer->vehicleIDPrev;
+    if (racer->playerIndex != -1) {
+        set_active_camera(racer->playerIndex);
+        activeCameraSegment = get_active_camera_segment_no_cutscenes();
+        activeCameraSegment->trans.x_position = obj->segment.trans.x_position;
+        activeCameraSegment->trans.y_position = obj->segment.trans.y_position;
+        activeCameraSegment->trans.z_position = obj->segment.trans.z_position;
+    }
+    return lastCheckpointNode;
+}
 
 /**
  * Returns true if a taj challenge is currently active.
