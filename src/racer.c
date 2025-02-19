@@ -699,7 +699,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     f32 racerOx1;
     f32 racerOz1;
     f32 var_f0;
-    Vec3f water_rotation; 
+    Vec3f water_rotation;
     f32 var_f2;
     s32 var_v0;
     f32 spC8;
@@ -1038,7 +1038,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
 
     var_f2 = sqrtf((obj->segment.z_velocity * obj->segment.z_velocity) +
-                    (obj->segment.x_velocity * obj->segment.x_velocity));
+                   (obj->segment.x_velocity * obj->segment.x_velocity));
     if (var_f2 > 0.25) {
         racer->unk168 = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity) + 0x8000;
         var_v1 = ((0x8000 - racer->unk168) & 0xFFFF) - (racer->cameraYaw & 0xFFFF);
@@ -1184,7 +1184,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
 
         objectMoved = move_object(obj, (temp * updateRateF) + racerOx1, obj->segment.y_velocity * updateRateF,
-                            (zVelTemp * updateRateF) + racerOz1);
+                                  (zVelTemp * updateRateF) + racerOz1);
 
         if (objectMoved && gCurrentPlayerIndex != PLAYER_COMPUTER) {
             playerObjectHasMoved = TRUE;
@@ -1280,8 +1280,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (gCurrentPlayerIndex >= PLAYER_ONE && racer->buoyancy > 0.0) {
         if (gNumViewports < 3) {
             var_f2 = ((obj->segment.x_velocity * obj->segment.x_velocity) +
-                       (obj->segment.y_velocity * obj->segment.y_velocity)) +
-                      (obj->segment.z_velocity * obj->segment.z_velocity);
+                      (obj->segment.y_velocity * obj->segment.y_velocity)) +
+                     (obj->segment.z_velocity * obj->segment.z_velocity);
             if (var_f2 > 16.0f) {
                 if (var_f2 < 80.0f) {
                     obj->particleEmitFlags |= OBJ_EMIT_PARTICLE_3 | OBJ_EMIT_PARTICLE_4;
@@ -1333,8 +1333,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gCurrentRacerTransform.y_position = 0.0f;
     gCurrentRacerTransform.z_position = 0.0f;
     object_transform_to_matrix_2(transformedMtx, &gCurrentRacerTransform);
-    guMtxXFMF(transformedMtx, obj->segment.x_velocity, obj->segment.y_velocity, obj->segment.z_velocity, &racer->lateral_velocity,
-              (f32 *) &racer->unk34, &racer->velocity);
+    guMtxXFMF(transformedMtx, obj->segment.x_velocity, obj->segment.y_velocity, obj->segment.z_velocity,
+              &racer->lateral_velocity, (f32 *) &racer->unk34, &racer->velocity);
     if (racer->groundedWheels == 0 && racer->waterTimer == 0) {
         iTemp = (-gCurrentStickY * 0x40) & 0xFFFF;
         var_v1 = iTemp - (obj->segment.trans.x_rotation & 0xFFFF);
