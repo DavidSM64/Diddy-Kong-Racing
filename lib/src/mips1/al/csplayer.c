@@ -425,7 +425,7 @@ void __CSPHandleMIDIMsg(ALCSPlayer_Custom *seqp, ALEvent *event)
         }
         
     }
-    if (((1 << chan) & seqp->chanMask))
+    if ((1 << chan) & seqp->chanMask)
     {
     }
     else if (
