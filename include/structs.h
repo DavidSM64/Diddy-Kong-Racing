@@ -1368,7 +1368,7 @@ typedef struct Object_Racer {
   /* 0x1FA */ s8 drifting;
   /* 0x1FB */ s8 unk1FB;
   /* 0x1FC */ u8 unk1FC;
-  /* 0x1FD */ s8 unk1FD;
+  /* 0x1FD */ s8 cameraIndex;
   /* 0x1FE */ u8 unk1FE;
   /* 0x1FF */ u8 unk1FF;
   /* 0x200 */ s8 transitionTimer;

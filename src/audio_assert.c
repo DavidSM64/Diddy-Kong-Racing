@@ -3,9 +3,6 @@
 
 #include "audio_assert.h"
 
-UNUSED void func_800B6F30(UNUSED int arg0, UNUSED int arg1, UNUSED int arg2) {
-}
-
 // Only called from two libultra funcs for some reason.
 // This is likely an assert gone wrong.
 // Called from alEnvMixerPull, and _pullSubFrame

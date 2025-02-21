@@ -28,11 +28,9 @@
 #include "collision.h"
 #include "controller.h"
 #include "particles.h"
+#include "common.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
-
-#define TICK_RATE 0.016
-#define TICK_RATE_3X 0.046
 
 /**
  * This file features extensive use of CLAMP and WRAP.
@@ -107,7 +105,7 @@ s8 D_800DCDB0[16][2] = {
 };
 
 // Checksum count for obj_loop_goldenballoon
-s32 gObjLoopGoldenBalloonChecksum = 0xA597;
+s32 gObjLoopGoldenBalloonChecksum = ObjLoopGoldenBalloonChecksum;
 
 FadeTransition gDoorFadeTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 50, -1);
 
@@ -694,16 +692,14 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     f32 xVelTemp;
     f32 zVelTemp;
     f32 spFC;
-    UNUSED f32 pad2;
+    UNUSED s32 pad2;
     f32 spF4;
     f32 spF0;
     f32 temp;
     f32 racerOx1;
     f32 racerOz1;
-    s32 temp3;
-    UNUSED f32 pad3;
     f32 var_f0;
-    Vec3f *waterRotation; 
+    Vec3f water_rotation;
     f32 var_f2;
     s32 var_v0;
     f32 spC8;
@@ -714,9 +710,9 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s32 var_t0;
     Asset20 *asset20;
     s8 lastWheelSurface;
-    s8 waveProperties;
+    s8 wave_properties;
     s8 wheelsOnStone;
-    f32 var_f4;
+    UNUSED s32 pad3;
     Matrix transformedMtx;
     s8 playerObjectHasMoved;
     f32 var_f6;
@@ -724,8 +720,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (func_8000E138()) {
         updateRateF *= 1.15;
     }
-    playerObjectHasMoved = 0;
-    if ((racer->playerIndex >= PLAYER_ONE) && (gNumViewports < 2)) {
+    playerObjectHasMoved = FALSE;
+    if (racer->playerIndex >= PLAYER_ONE && gNumViewports < 2) {
         obj->particleEmitFlags |= OBJ_EMIT_UNK_100;
     }
     D_8011D550 = 0;
@@ -784,7 +780,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         spF4 *= 1.2;
     }
     if ((gCurrentRacerInput & B_BUTTON) && (gCurrentStickY < -40 || racer->velocity < 0.0f)) {
-        racer->brake += updateRateF * TICK_RATE_3X;
+        racer->brake += updateRateF * 0.046;
         if (racer->brake > 1.2) {
             racer->brake = 1.2f;
         }
@@ -792,7 +788,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             rumble_set(racer->playerIndex, RUMBLE_TYPE_5);
         }
     } else {
-        racer->brake -= updateRateF * TICK_RATE_3X;
+        racer->brake -= updateRateF * 0.046;
         if (racer->brake < 0.0f) {
             racer->brake = 0.0f;
         }
@@ -951,7 +947,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     iTemp = (gCurrentPlayerIndex != PLAYER_COMPUTER && !racer->raceFinished) ? racer->steerAngle : gCurrentStickX;
     spFC = 0.004;
-    obj->segment.y_velocity -= (obj->segment.y_velocity * (0.025)) * updateRateF;
+    obj->segment.y_velocity -= (obj->segment.y_velocity * 0.025) * updateRateF;
     if (gCurrentRacerInput & B_BUTTON && gCurrentStickY >= -40 && racer->velocity >= -0.5) {
         spFC *= 16.0f;
     }
@@ -1042,7 +1038,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
 
     var_f2 = sqrtf((obj->segment.z_velocity * obj->segment.z_velocity) +
-                    (obj->segment.x_velocity * obj->segment.x_velocity));
+                   (obj->segment.x_velocity * obj->segment.x_velocity));
     if (var_f2 > 0.25) {
         racer->unk168 = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity) + 0x8000;
         var_v1 = ((0x8000 - racer->unk168) & 0xFFFF) - (racer->cameraYaw & 0xFFFF);
@@ -1058,8 +1054,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         sp11C *= 0.125;
         var_v1 = (sp11C * var_v1) * 0.75;
-        temp3 = (var_v1 * updateRate) >> 4;
-        racer->cameraYaw += temp3;
+        racer->cameraYaw += (var_v1 * updateRate) >> 4;
         var_v1 = (0x8000 - racer->cameraYaw) - (racer->steerVisualRotation & 0xFFFF);
         if (var_v1 > 0x8000) {
             var_v1 -= 0xFFFF;
@@ -1071,8 +1066,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             var_f2 = 10.0;
         }
 
-        var_f2 = var_f2 / 10.0;
-        var_v1 = ((f32) var_v1) * var_f2;
+        var_f2 /= 10.0;
+        var_v1 *= var_f2;
         if (gCurrentRacerInput & A_BUTTON || gCurrentRacerInput & R_TRIG) {
             var_v1 *= 2;
         }
@@ -1189,7 +1184,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
 
         objectMoved = move_object(obj, (temp * updateRateF) + racerOx1, obj->segment.y_velocity * updateRateF,
-            (zVelTemp * updateRateF) + racerOz1);
+                                  (zVelTemp * updateRateF) + racerOz1);
 
         if (objectMoved && gCurrentPlayerIndex != PLAYER_COMPUTER) {
             playerObjectHasMoved = TRUE;
@@ -1211,8 +1206,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     waterHeight = -10000.0f;
     // clang-format off
     // the backslash here is relevant for the match
-    waveProperties = get_wave_properties(obj->segment.trans.y_position, &waterHeight, &waterRotation); \
-    if (waveProperties != 0) {
+    wave_properties = get_wave_properties(obj->segment.trans.y_position, &waterHeight, &water_rotation); \
+    if (wave_properties != 0) {
         // clang-format on
         velocity = racer->velocity;
         if (velocity < 0.0f) {
@@ -1245,7 +1240,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (gCurrentRacerInput & R_TRIG) {
             iTemp = gCurrentStickX * 2;
         }
-        rotate_racer_in_water(obj, racer, &waterRotation, waveProperties, updateRate, iTemp, 1.0f);
+        rotate_racer_in_water(obj, racer, &water_rotation, wave_properties, updateRate, iTemp, 1.0f);
     }
     if (racer->buoyancy > 0.0) {
         obj->segment.trans.y_position += racer->buoyancy * racer->unkC4;
@@ -1262,6 +1257,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         iTemp = 1;
     }
     racer->unk1D2 = iTemp; // restores unk1D2
+
     var_f2 = 1.0f / updateRateF;
     temp = ((obj->segment.trans.x_position - (xPos + racerOx1)) - D_8011D548) * var_f2;
     zVelTemp = ((obj->segment.trans.z_position - (zPos + racerOz1)) - D_8011D54C) * var_f2;
@@ -1284,8 +1280,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (gCurrentPlayerIndex >= PLAYER_ONE && racer->buoyancy > 0.0) {
         if (gNumViewports < 3) {
             var_f2 = ((obj->segment.x_velocity * obj->segment.x_velocity) +
-                       (obj->segment.y_velocity * obj->segment.y_velocity)) +
-                      (obj->segment.z_velocity * obj->segment.z_velocity);
+                      (obj->segment.y_velocity * obj->segment.y_velocity)) +
+                     (obj->segment.z_velocity * obj->segment.z_velocity);
             if (var_f2 > 16.0f) {
                 if (var_f2 < 80.0f) {
                     obj->particleEmitFlags |= OBJ_EMIT_PARTICLE_3 | OBJ_EMIT_PARTICLE_4;
@@ -1337,8 +1333,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gCurrentRacerTransform.y_position = 0.0f;
     gCurrentRacerTransform.z_position = 0.0f;
     object_transform_to_matrix_2(transformedMtx, &gCurrentRacerTransform);
-    guMtxXFMF(transformedMtx, obj->segment.x_velocity, obj->segment.y_velocity, obj->segment.z_velocity, &racer->lateral_velocity,
-              (f32 *) &racer->unk34, &racer->velocity);
+    guMtxXFMF(transformedMtx, obj->segment.x_velocity, obj->segment.y_velocity, obj->segment.z_velocity,
+              &racer->lateral_velocity, (f32 *) &racer->unk34, &racer->velocity);
     if (racer->groundedWheels == 0 && racer->waterTimer == 0) {
         iTemp = (-gCurrentStickY * 0x40) & 0xFFFF;
         var_v1 = iTemp - (obj->segment.trans.x_rotation & 0xFFFF);
@@ -1376,7 +1372,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             obj->segment.y_velocity += 3.5;
         }
         var_f2 = ((2.0 * obj->segment.y_velocity) / gCurrentRacerWeightStat);
-        racer->unk1FB = ((s32) var_f2) + 1;
+        racer->unk1FB = (s32) (var_f2) + 1;
     }
     if (racer->unk1FB > 0) {
         racer->unk1FB -= updateRate;
@@ -2109,7 +2105,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     tempRacer->racePosition = 1;
     tempRacer->miscAnimCounter = tempRacer->playerIndex * 5;
     tempRacer->checkpoint_distance = 1.0f;
-    tempRacer->unk1FD = 0;
+    tempRacer->cameraIndex = 0;
     tempRacer->magnetSoundMask = NULL;
     tempRacer->shieldSoundMask = NULL;
     tempRacer->bananaSoundMask = NULL;
@@ -2232,7 +2228,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         tempRacer->unk1F1 = 0;
     }
     // PAL moves 20% faster.
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
     tempRacer->unk1F6 -= updateRate;
@@ -3119,7 +3115,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     // If on the Taj pad and the horn is honked, summon Taj
     if (racer->playerIndex == PLAYER_ONE && racer->groundedWheels && surfaceType == SURFACE_TAJ_PAD &&
         gCurrentButtonsPressed & Z_TRIG) {
-        gTajInteractStatus = 2;
+        gTajInteractStatus = TAJ_TELEPORT;
     }
     // Set grip levels to basically zero when floating on water.
     if (racer->buoyancy != 0.0) {
@@ -3333,7 +3329,7 @@ s32 should_taj_teleport(void) {
 /**
  * Sets Taj's interaction status.
  */
-void set_taj_status(s32 status) {
+void set_taj_status(TajInteraction status) {
     gTajInteractStatus = status;
 }
 
@@ -4033,7 +4029,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
     if (!racer->approachTarget) {
         xVel = obj->segment.x_velocity;
         zVel = obj->segment.z_velocity;
-        if (racer->unk1D2) {
+        if (racer->unk1D2 != 0) {
             xVel += racer->unk11C;
             zVel += racer->unk120;
         }
@@ -4067,7 +4063,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
     gCurrentRacerTransform.scale = 1.0f;
     object_transform_to_matrix_2(mtx, &gCurrentRacerTransform);
     guMtxXFMF(mtx, xVel, 0.0f, zVel, &hVel, &tempVel, &yVel);
-    if (racer->unk1D2) {
+    if (racer->unk1D2 != 0) {
         racer->unk1D2 -= updateRate;
         if (racer->unk1D2 < 0) {
             racer->unk1D2 = 0;
@@ -5818,7 +5814,7 @@ s32 set_ghost_position_and_rotation(Object *obj) {
     }
 
     commonUnk0f32 = (f32) obj->properties.common.unk0 / 30.0f;
-    if (osTvType == TV_TYPE_PAL && ghostDataIndex == 2) {
+    if (osTvType == OS_TV_TYPE_PAL && ghostDataIndex == 2) {
         commonUnk0f32 = ((f32) obj->properties.common.unk0 * 1.2) / 30.0f;
     }
     commonUnk0s32 = commonUnk0f32; // Truncate the float to an integer?

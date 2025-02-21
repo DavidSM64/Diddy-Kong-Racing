@@ -39,7 +39,7 @@ u8 gBlockVoiceLimitChange = FALSE;
 /************ .bss ************/
 
 // The audio heap is located at the start of the BSS section.
-u8 gBssSectionStart[AUDIO_HEAP_SIZE];
+u8 gAudioHeapStack[AUDIO_HEAP_SIZE];
 
 ALHeap gALHeap;
 ALSeqFile *gSequenceTable;
@@ -50,7 +50,7 @@ u8 gCurrentJingleID;
 s32 gMusicTempo;
 u32 *gSeqLengthTable;
 ALBankFile *gSequenceBank;
-ALBankFile *gSoundBank;
+ALBankFile *gSoundBank; // Official Name: sfxBankPtr
 SoundData *gSoundTable;
 MusicData *gSeqSoundTable;
 s32 gSoundCount;
@@ -89,7 +89,7 @@ void audio_init(OSSched *sc) {
     audioMgrConfig audConfig;
 
     seqLength = 0;
-    alHeapInit(&gALHeap, gBssSectionStart, sizeof(gBssSectionStart));
+    alHeapInit(&gALHeap, gAudioHeapStack, sizeof(gAudioHeapStack));
 
     addrPtr = (s32 *) load_asset_section_from_rom(ASSET_AUDIO_TABLE);
     gSoundBank = (ALBankFile *) mempool_alloc_safe(addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1], COLOUR_TAG_CYAN);
@@ -894,6 +894,7 @@ UNUSED void sound_pitch_set(SoundMask *soundMask, u32 pitch) {
 
 /**
  * Return the number of playable sounds in the audio table.
+ * Official name: amGetSfxCount
  */
 u16 sound_count(void) {
     return gSoundBank->bankArray[0]->instArray[0]->soundCount;

@@ -31,7 +31,6 @@ VideoModeResolution gVideoModeResolutions[] = {
 s32 gVideoRefreshRate; // Official Name: viFramesPerSecond
 f32 gVideoAspectRatio;
 f32 gVideoHeightRatio;
-UNUSED s32 D_8012617C;
 OSMesg gVideoMesgBuf[8];
 OSMesgQueue gVideoMesgQueue[8];
 OSViMode gTvViMode;
@@ -49,7 +48,6 @@ u8 D_801262E4;
 UNUSED OSMesg D_801262E8[8];
 u8 gVideoDeltaCounter;
 u8 gVideoDeltaTime;
-UNUSED s32 D_8012630C;
 OSScClient gVideoSched;
 
 /******************************/
@@ -60,11 +58,11 @@ OSScClient gVideoSched;
  * Official Name: viInit
  */
 void video_init(s32 videoModeIndex, OSSched *sc) {
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         gVideoRefreshRate = REFRESH_50HZ;
         gVideoAspectRatio = ASPECT_RATIO_PAL;
         gVideoHeightRatio = HEIGHT_RATIO_PAL;
-    } else if (osTvType == TV_TYPE_MPAL) {
+    } else if (osTvType == OS_TV_TYPE_MPAL) {
         gVideoRefreshRate = REFRESH_60HZ;
         gVideoAspectRatio = ASPECT_RATIO_MPAL;
         gVideoHeightRatio = HEIGHT_RATIO_MPAL;
@@ -74,7 +72,7 @@ void video_init(s32 videoModeIndex, OSSched *sc) {
         gVideoHeightRatio = HEIGHT_RATIO_NTSC;
     }
 
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         s32 i;
         for (i = 0; i < 8; i++) {
             gVideoModeResolutions[i].height += PAL_HEIGHT_DIFFERENCE;
@@ -141,9 +139,9 @@ void fb_init_vi(void) {
     OSViMode *tvViMode;
 
     viModeTableIndex = OS_VI_NTSC_LPN1;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         viModeTableIndex = OS_VI_PAL_LPN1;
-    } else if (osTvType == TV_TYPE_MPAL) {
+    } else if (osTvType == OS_TV_TYPE_MPAL) {
         viModeTableIndex = OS_VI_MPAL_LPN1;
     }
 
@@ -159,13 +157,13 @@ void fb_init_vi(void) {
             // So maybe it was swapped out late in development?
             stubbed_printf("320 by 240 Anti-aliased, Non interlaced.\n");
             tvViMode = &osViModeNtscLpn1;
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 tvViMode = &osViModePalLpn1;
-            } else if (osTvType == TV_TYPE_MPAL) {
+            } else if (osTvType == OS_TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLpn1;
             }
             fb_memcpy((u8 *) tvViMode, (u8 *) &gTvViMode, sizeof(OSViMode));
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 // A simple osViExtendVStart to add an additional 24 scanlines?
                 gTvViMode.fldRegs[0].vStart -= (PAL_HEIGHT_DIFFERENCE << 16);
                 gTvViMode.fldRegs[1].vStart -= (PAL_HEIGHT_DIFFERENCE << 16);
@@ -177,9 +175,9 @@ void fb_init_vi(void) {
         case VIDEO_MODE_MEDRES_LPN:
             stubbed_printf("640 by 240 Point sampled, Non interlaced.\n");
             tvViMode = &osViModeNtscLpn1;
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 tvViMode = &osViModePalLpn1;
-            } else if (osTvType == TV_TYPE_MPAL) {
+            } else if (osTvType == OS_TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLpn1;
             }
 
@@ -193,9 +191,9 @@ void fb_init_vi(void) {
         case VIDEO_MODE_MEDRES_LAN:
             stubbed_printf("640 by 240 Anti-aliased, Non interlaced.\n");
             tvViMode = &osViModeNtscLan1;
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 tvViMode = &osViModePalLan1;
-            } else if (osTvType == TV_TYPE_MPAL) {
+            } else if (osTvType == OS_TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLan1;
             }
             fb_memcpy((u8 *) tvViMode, (u8 *) &gTvViMode, sizeof(OSViMode));

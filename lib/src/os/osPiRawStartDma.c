@@ -6,7 +6,7 @@
 #include "libultra_internal.h"
 #include "PR/rcp.h"
 
-s32 osPiRawStartDma(s32 direction, u32 devAddr, void *dramAddr, u32 size) {
+s32 __osPiRawStartDma(s32 direction, u32 devAddr, void *dramAddr, u32 size) {
     register int status;
     status = IO_READ(PI_STATUS_REG);
     while (status & (PI_STATUS_DMA_BUSY | PI_STATUS_IO_BUSY | PI_STATUS_ERROR)) {

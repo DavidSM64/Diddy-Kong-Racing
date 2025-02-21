@@ -5,6 +5,7 @@
 #include "menu.h"
 #include "textures_sprites.h"
 #include "camera.h"
+#include "common.h"
 
 /************ .data ************/
 
@@ -43,7 +44,7 @@ s32 gDescPowsOf10[9] = {
 #define OUTWARDS 1
 
 // clang-format off
-s8 sDialogueBoxDimensions[48] = {
+s8 sDialogueBoxDimensions[] = {
     /*X Offset*/ 4,  INWARDS,  /*Y Start*/  0,  INWARDS,  /*Y end*/  1,
     /*X Offset*/ 2,  INWARDS,  /*Y Start*/  1,  INWARDS,  /*Y end*/  2,
     /*X Offset*/ 1,  INWARDS,  /*Y Start*/  2,  INWARDS,  /*Y end*/  4,
@@ -51,17 +52,12 @@ s8 sDialogueBoxDimensions[48] = {
     /*X Offset*/ 1,  OUTWARDS, /*Y Start*/ -4,  OUTWARDS, /*Y end*/ -2,
     /*X Offset*/ 2,  OUTWARDS, /*Y Start*/ -2,  OUTWARDS, /*Y end*/ -1,
     /*X Offset*/ 4,  OUTWARDS, /*Y Start*/ -1,  OUTWARDS,  0,
-    /*X Offset*/ -1, 0, 0, 0, 0, // End of Data
-    /*X Offset*/ 0, 0, 0, 0, 0, 0, 0, 0,
+    /*X Offset*/ -1, // End of Data
 };
 // clang-format on
 
 #undef INWARDS
 #undef OUTWARDS
-
-OSDevMgr __osPiDevMgr = {
-    0, NULL, NULL, NULL, NULL, NULL, NULL,
-};
 
 /*******************************/
 
@@ -994,13 +990,13 @@ void render_dialogue_box(Gfx **dlist, MatrixS **mat, Vertex **verts, s32 dialogu
  * character '~' with the number.
  */
 void parse_string_with_number(char *input, char *output, s32 number) {
-    while (*input != '\0') {
-        if ('~' == *input) { // ~ is equivalent to a %d.
+    while (*input) {
+        if (*input == '~') { // ~ is equivalent to a %d.
             // output the number as part of the string
             s32_to_string(&output, number);
             input++;
         } else {
-            *output = (signed char) *input; // It's either this cast, or change the function signature
+            *output = *input;
             input++;
             output++;
         }

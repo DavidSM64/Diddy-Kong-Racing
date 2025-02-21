@@ -19,6 +19,14 @@ s32 sfxVolumeSlider = 256;
 s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
 u16 *gSoundChannelVolume;
 
+/**** Debug strings ****/
+const char D_800E4AB0[] = "Bad soundState: voices =%d, states free =%d, states busy =%d, type %d data %x\n";
+const char D_800E4B00[] = "playing a playing sound\n";
+const char D_800E4B1C[] = "Nonsense sndp event\n";
+const char D_800E4B34[] = "Sound state allocate failed - sndId %d\n";
+const char D_800E4B5C[] = "Don't worry - game should cope OK\n";
+const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
+
 static void _removeEvents(ALEventQueue *, ALSoundState *, u16);
 
 void set_sfx_volume_slider(u32 volume) {

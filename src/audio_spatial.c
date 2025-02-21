@@ -396,7 +396,7 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
     f32 outY;
     f32 outZ;
     s32 levelSegmentIndex;
-    f32 *yVals;
+    f32 yVals[8]; // Not sure of the number needed
     s32 distBetween;
     s32 numOfYVals;
     u8 temp_v0_4;

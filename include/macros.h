@@ -37,6 +37,13 @@
 #define STATIC_ASSERT(cond, msg) typedef char GLUE2(static_assertion_failed, __LINE__)[(cond) ? 1 : -1]
 #endif
 
+
+#ifdef __GNUC__
+#define ALIGNED(x) __attribute__((aligned(x)))
+#else
+#define ALIGNED(x)
+#endif
+
 // Align to 8-byte boundary for DMA requirements
 #ifdef __GNUC__
 #define ALIGNED8 __attribute__((aligned(8)))
@@ -67,5 +74,13 @@
 
 // Used to make a u32 colour value look clearer. Transforms 0xFF0000FF to 255, 0, 0, 255
 #define COLOUR_RGBA32(r, g, b, a) (((r << 24) | (g << 16) |  (b << 8) | a))
+
+#define ALIGN8(val) (((val) + 7) & ~7)
+
+#define STACK(stack, size) \
+    u64 stack[ALIGN8(size) / sizeof(u64)]
+
+#define STACK_START(stack) \
+    ((u8*)(stack) + sizeof(stack))
 
 #endif

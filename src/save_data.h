@@ -166,7 +166,7 @@ s32 func_80072C54(s32 arg0);
 void populate_settings_from_save_data(Settings *settings, u8 *saveData);
 s32 read_save_file(s32 saveFileNum, Settings *settings);
 void erase_save_file(s32 saveFileNum, Settings *settings);
-SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, s16 *arg4);
+SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *levelIDs, u8 *vehicleIDs, u8 *characterIDs, s16 *checksumIDs);
 SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileExt);
 void func_80073588(Settings *settings, u8 *saveData, u8 arg2);
 void func_800732E8(Settings *settings, u8 *saveData);

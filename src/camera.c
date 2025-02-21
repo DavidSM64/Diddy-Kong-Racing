@@ -11,6 +11,7 @@
 #include "math_util.h"
 #include "weather.h"
 #include "lib/src/os/piint.h"
+#include "include/viint.h"
 
 /************ .rodata ************/
 
@@ -100,7 +101,7 @@ f32 gModelMatrixViewZ[5];
 u16 perspNorm;
 Matrix *gModelMatrixF[6];
 MatrixS *gModelMatrixS[6];
-Matrix D_80120DA0[5];
+Matrix *D_80120DA0[10][8]; // Not sure why, but gModelMatrixF is populated from here, even though this is never set.
 Matrix gPerspectiveMatrixF;
 Matrix gViewMatrixF;
 Matrix gCameraMatrixF;
@@ -112,20 +113,19 @@ Matrix gCurrentModelMatrixS;
 
 /******************************/
 
-#ifdef NON_MATCHING
-extern s32 D_B0000578;
 /**
  * Official Name: camInit
  */
+extern s32 D_B0000578;
 void camera_init(void) {
     s32 i;
     s32 j;
     u32 stat;
 
-    // This loop is not cooperating.
-    for (i = 0; i < 5; i++) {
-        gModelMatrixF[i] = D_80120DA0 + i + i * 0;
-    }
+    // clang-format off
+    // This section is highly suspicous to be undefined behaviour as we have it defined right now.
+    for (i = 0; i < 5; i++) { gModelMatrixF[i] = (Matrix *) &D_80120DA0[(i << 1)]; }
+    // clang-format on
 
     for (j = 0; j < 8; j++) {
         gActiveCameraID = j;
@@ -140,7 +140,7 @@ void camera_init(void) {
     gSpriteAnimOff = FALSE;
     D_80120D18 = 0;
     gAdjustViewportHeight = 0;
-    gAntiPiracyViewport = 0;
+    gAntiPiracyViewport = FALSE;
 
     WAIT_ON_IOBUSY(stat);
 
@@ -154,9 +154,6 @@ void camera_init(void) {
     f32_matrix_to_s16_matrix(&gPerspectiveMatrixF, &gProjectionMatrixS);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/camera_init.s")
-#endif
 
 void func_80066060(s32 cameraID, s32 zoomLevel) {
     if (cameraID >= 0 && cameraID < 4) {
@@ -170,7 +167,7 @@ void func_80066060(s32 cameraID, s32 zoomLevel) {
  * Otherwise, set it to 0, regardless of TV type.
  */
 void set_viewport_tv_type(s8 setting) {
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         gAdjustViewportHeight = setting;
     }
 }
@@ -667,14 +664,14 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
     x = videoWidth >> 1;
     sp54_x = x;
     sp58_y = y;
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         sp58_y = 145;
     }
 
     switch (viewports) {
         case VIEWPORTS_COUNT_1_PLAYER:
             posY = sp58_y;
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 posY -= 18;
             }
             gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, videoWidth, videoHeight);
@@ -683,7 +680,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
         case VIEWPORTS_COUNT_2_PLAYERS:
             if (gActiveCameraID == 0) {
                 posY = videoHeight >> 2;
-                if (osTvType == TV_TYPE_PAL) {
+                if (osTvType == OS_TV_TYPE_PAL) {
                     posY -= 12;
                 }
                 gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, videoWidth, (y - (videoHeight >> 7)));
@@ -739,7 +736,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
             }
             posY += sp58_y;
             posX += sp54_x;
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 if (gActiveCameraID <= VIEWPORTS_COUNT_2_PLAYERS) {
                     posY -= 20;
                 } else {
@@ -754,7 +751,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
             break;
     }
 
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         posX -= 4;
     }
     viewport_rsp_set(dlist, sp54_x, sp58_y, posX, posY);
@@ -1005,7 +1002,7 @@ void viewport_reset(Gfx **dlist) {
     gActiveCameraID = 0;
 }
 
-UNUSED const char D_800E6F34[] = "cameraPushSprMtx: model stack overflow!!\n";
+UNUSED const char D_800E6F44[] = "cameraPushSprMtx: model stack overflow!!\n";
 
 /**
  * Sets the matrix position to the world origin (0, 0, 0)

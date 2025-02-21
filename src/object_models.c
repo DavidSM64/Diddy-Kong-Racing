@@ -2,6 +2,7 @@
 /* RAM_POS: 0x8005F850 */
 
 #include "object_models.h"
+#include "common.h"
 #include "macros.h"
 #include "memory.h"
 #include "asset_enums.h"
@@ -13,7 +14,7 @@
 
 /************ .data ************/
 
-s32 gTractionTableChecksum = 116315;
+s32 gTractionTableChecksum = TractionTableChecksum;
 s32 gTrackRenderFuncLength = 1980;
 
 /*******************************/

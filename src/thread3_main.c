@@ -55,7 +55,7 @@ const char D_800E7134[] = "BBB\n"; // Functionally unused.
 
 /************ .data ************/
 
-UNUSED char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
+UNUSED char gBuildString[] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 
 s8 sAntiPiracyTriggered = 0;
 UNUSED s32 D_800DD378 = 1;
@@ -182,11 +182,11 @@ void init_game(void) {
     gIsLoading = FALSE;
     gLevelDefaultVehicleID = VEHICLE_CAR;
 
-    if (osTvType == TV_TYPE_PAL) {
+    if (osTvType == OS_TV_TYPE_PAL) {
         viMode = OS_VI_PAL_LPN1;
-    } else if (osTvType == TV_TYPE_NTSC) {
+    } else if (osTvType == OS_TV_TYPE_NTSC) {
         viMode = OS_VI_NTSC_LPN1;
-    } else if (osTvType == TV_TYPE_MPAL) {
+    } else if (osTvType == OS_TV_TYPE_MPAL) {
         viMode = OS_VI_MPAL_LPN1;
     }
 
@@ -334,7 +334,7 @@ void main_game_loop(void) {
     }
     if (gDrawFrameTimer == 2) {
         framebufferSize = SCREEN_WIDTH * SCREEN_HEIGHT * 2;
-        if (osTvType == TV_TYPE_PAL) {
+        if (osTvType == OS_TV_TYPE_PAL) {
             framebufferSize = (s32) ((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
         }
         dmacopy_doubleword(gVideoLastFramebuffer, gVideoCurrFramebuffer, (s32) gVideoCurrFramebuffer + framebufferSize);

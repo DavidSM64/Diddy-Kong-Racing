@@ -6,13 +6,13 @@
 #include "macros.h"
 #include "structs.h"
 #include "f3ddkr.h"
-#include "PR/libultra.h"
 #include "camera.h"
 #include "tracks.h"
 #include "audio_spatial.h"
 #include "textures_sprites.h"
 #include "math_util.h"
 #include "objects.h"
+#include "common.h"
 
 #define WEATHER_OVERRIDE_COUNT 16
 
@@ -843,7 +843,7 @@ void free_rain_memory(void) {
  * The game will slowly ease into the intended values.
  */
 void rain_set(s32 lightningFrequency, s32 opacity, f32 time) {
-    gRainHiddenTimer = osTvType == TV_TYPE_PAL ? 50.0 * time : 60.0 * time;
+    gRainHiddenTimer = osTvType == OS_TV_TYPE_PAL ? 50.0 * time : 60.0 * time;
     gLightningFrequencyTarget = lightningFrequency;
     gLightningFrequencyStep = (gLightningFrequencyTarget - gLightningFrequency) / gRainHiddenTimer;
     gRainOpacityTarget = opacity;

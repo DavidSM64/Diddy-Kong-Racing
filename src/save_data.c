@@ -2,6 +2,7 @@
 /* RAM_POS: 0x80072250 */
 
 #include "save_data.h"
+#include "common.h"
 #include "memory.h"
 #include "PR/pfs.h"
 #include "PR/os_cont.h"
@@ -198,7 +199,7 @@ void rumble_update(s32 updateRate) {
     u8 controllerToCheck;
     u8 pfsBitPattern;
 
-    if (gRumbleIdle != 0 || gRumbleKillTimer != 0) {
+    if ((gRumbleIdle != 0 || gRumbleKillTimer != 0)) {
         gRumbleDetectionTimer += updateRate;
         if (gRumbleDetectionTimer > 120) {
             gRumbleDetectionTimer = 0;
@@ -1635,7 +1636,7 @@ SIDeviceStatus repair_controller_pak(s32 controllerIndex) {
     s32 status = get_si_device_status(controllerIndex);
     if (status == CONTROLLER_PAK_GOOD || status == CONTROLLER_PAK_INCONSISTENT) {
         status = osPfsChecker(&pfs[controllerIndex]);
-        if (status == CONTROLLER_PAK_GOOD) {
+        if (status == 0) {
             ret = CONTROLLER_PAK_GOOD;
         } else if (status == PFS_ERR_NEW_PACK) {
             ret = CONTROLLER_PAK_CHANGED;
@@ -1695,7 +1696,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
 
     if (get_language() == LANGUAGE_JAPANESE) {
         gameCode = JPN_GAME_CODE;
-    } else if (osTvType == TV_TYPE_PAL) {
+    } else if (osTvType == OS_TV_TYPE_PAL) {
         gameCode = PAL_GAME_CODE;
     } else {
         gameCode = NTSC_GAME_CODE;
@@ -1714,7 +1715,6 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
     bzero(gPakFileList, files_used);
     list = gPakFileList;
 
-    // TODO: There's probably an unidentified struct here
     for (i = 0; i < maxNumOfFilesOnCpak; i++) {
         fileNames[i] = (char *) list;
         list += 0x12;
@@ -1894,7 +1894,7 @@ SIDeviceStatus get_file_number(s32 controllerIndex, char *fileName, char *fileEx
 
     if (get_language() == LANGUAGE_JAPANESE) {
         gameCode = JPN_GAME_CODE;
-    } else if (osTvType == TV_TYPE_PAL) {
+    } else if (osTvType == OS_TV_TYPE_PAL) {
         gameCode = PAL_GAME_CODE;
     } else {
         gameCode = NTSC_GAME_CODE;
@@ -1974,7 +1974,7 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, ch
 
     if (get_language() == LANGUAGE_JAPANESE) {
         game_code = JPN_GAME_CODE;
-    } else if (osTvType == TV_TYPE_PAL) {
+    } else if (osTvType == OS_TV_TYPE_PAL) {
         game_code = PAL_GAME_CODE;
     } else {
         game_code = NTSC_GAME_CODE;
@@ -2083,8 +2083,7 @@ char *string_to_font_codes(char *inString, char *outString, s32 stringLength) {
         for (i = 0; i < 65; i++) {
             currentChar = *inString;
             if (currentChar == gN64FontCodes[i]) {
-                *outString = i;
-                outString++;
+                *outString++ = i;
                 break;
             }
         }

@@ -157,7 +157,7 @@ BossRaceVehicles gBossVehicles[] = {
     { VEHICLE_PLANE, VEHICLE_ROCKET },       // Wizpig 2
 };
 
-s8 D_800DC820[10] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+s8 D_800DC834[10] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
 s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
@@ -461,7 +461,7 @@ void func_8000BADC(s32 updateRate) {
     }
     for (i = 0; i < gNumRacers; i++) {
         updateRateF = (f32) updateRate;
-        if (osTvType == TV_TYPE_PAL) {
+        if (osTvType == OS_TV_TYPE_PAL) {
             updateRateF *= 1.2f;
         }
         racer = &(*gRacers)[i]->unk64->racer;
@@ -771,7 +771,7 @@ void try_free_object_header(s32 index) {
  * it consistent with non PAL timers, running 60Hz.
  */
 s32 normalise_time(s32 timer) {
-    if (osTvType != TV_TYPE_PAL || timer < 0) {
+    if (osTvType != OS_TV_TYPE_PAL || timer < 0) {
         return timer;
     } else {
         return (timer * 5) / 6;
@@ -918,7 +918,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     s32 var_s4;
     s32 tajFlags;
 
-    D_8011AD20 = 0;
+    D_8011AD20 = FALSE;
     gEventCountdown = 0;
     gFirstTimeFinish = 0;
     gNumRacers = 0;
@@ -1148,7 +1148,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             curRacer->vehicleID = vehicle;
             curRacer->vehicleIDPrev = vehicle;
             if (sp127 != -1 && sp127 != (s32) vehicle) {
-                D_8011AD20 = 1;
+                D_8011AD20 = TRUE;
             }
             sp127 = vehicle;
             if (curRacer->vehicleID == VEHICLE_PLANE || curRacer->vehicleID == VEHICLE_SMOKEY ||
@@ -1205,7 +1205,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         D_8011AD3C = 0;
     }
     if (D_8011AD3C != 0) {
-        D_8011AD20 = 0;
+        D_8011AD20 = FALSE;
     }
     if (get_game_mode() == GAMEMODE_INGAME) {
         for (j = 0; j < gObjectCount; j++) {
@@ -2614,7 +2614,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     newZPos = obj->segment.trans.z_position + zPos;
     if (levelModel == NULL) {
         gNoBoundsCheck = FALSE;
-        return 0;
+        return FALSE;
     }
     outOfBounds = FALSE;
     x2 = (levelModel->upperXBounds + 1000.0);
@@ -2652,7 +2652,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     gNoBoundsCheck = FALSE;
     if (outOfBounds) {
         obj->segment.object.segmentID = -1;
-        return 1;
+        return TRUE;
     }
 
     obj->segment.trans.x_position = newXPos;
@@ -2665,7 +2665,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
 
     if (box == NULL) {
         obj->segment.object.segmentID = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
-        return 0;
+        return FALSE;
     } else {
         outsideBBox = FALSE;
         if (box->x2 < intXPos || intXPos < box->x1) {
@@ -2684,7 +2684,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
             }
         }
     }
-    return 0;
+    return FALSE;
 }
 
 /**
@@ -4407,7 +4407,7 @@ void race_transition_adventure(s32 updateRate) {
         set_anti_aliasing(TRUE);
         disable_racer_input();
         if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE)) {
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 cutsceneTimerLimit = 415;
             } else {
                 cutsceneTimerLimit = 540;
@@ -4535,7 +4535,7 @@ void race_finish_time_trial(void) {
                 timetrial_swap_player_ghost(get_current_map_id());
                 gHasGhostToSave = TRUE;
             }
-            if (osTvType == TV_TYPE_PAL) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 bestCourseTime = (bestCourseTime * 6) / 5;
             }
             if (bestCourseTime < gTTGhostTimeToBeat) {
@@ -4805,7 +4805,7 @@ f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
     return var_f2;
 }
 
-UNUSED f32 func_8001B974(Object_Racer *racer) {
+UNUSED f32 func_8001B954(Object_Racer *racer) {
     f32 distLeft;
     s32 checkpointID;
 
@@ -5428,7 +5428,7 @@ Object *ainode_get(s32 nodeID) {
     return NULL;
 }
 
-UNUSED void func_8001D23C(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
+UNUSED void func_8001D248(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
 /**
@@ -6179,8 +6179,7 @@ void mode_init_taj_race(void) {
     Settings *settings;
     Object *racerObj;
     Object_Racer *racer;
-    UNUSED s32 pad2[7];
-    f32 sp2C;
+    f32 yOut[8];
 
     gTajRaceInit -= 1;
     if (gTajRaceInit == 0) {
@@ -6219,7 +6218,7 @@ void mode_init_taj_race(void) {
         lvlSeg =
             get_level_segment_index_from_position(newRacerEntry.common.x, checkpointNode->y, newRacerEntry.common.z);
         newRacerEntry.common.y =
-            func_8002BAB0(lvlSeg, newRacerEntry.common.x, newRacerEntry.common.z, &sp2C) ? sp2C : checkpointNode->y;
+            func_8002BAB0(lvlSeg, newRacerEntry.common.x, newRacerEntry.common.z, yOut) ? yOut[0] : checkpointNode->y;
         newRacerEntry.common.size = 16;
         newRacerEntry.angleY = racer->steerVisualRotation;
         newRacerEntry.angleX = 0;
@@ -6361,7 +6360,84 @@ void mode_end_taj_race(s32 reason) {
     gIsTajChallenge = FALSE;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800230D0.s")
+CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
+    CheckpointNode *lastCheckpointNode;
+    ObjectSegment *activeCameraSegment;
+    s32 yOutCount;
+    f32 yOut[9];
+    Object *ptrList;
+    s32 i;
+
+    if (gNumberOfCheckpoints == 0) {
+        lastCheckpointNode = NULL;
+        for (i = 0; i < gObjectCount; i++) {
+            ptrList = gObjPtrList[i];
+            if (!(ptrList->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (ptrList->behaviorId == BHV_SETUP_POINT)) {
+                if (ptrList->properties.setupPoint.racerIndex == 0) {
+                    obj->segment.trans.x_position = ptrList->segment.trans.x_position;
+                    obj->segment.trans.y_position = ptrList->segment.trans.y_position;
+                    obj->segment.trans.z_position = ptrList->segment.trans.z_position;
+                    obj->segment.object.segmentID = ptrList->segment.object.segmentID;
+                    i = gObjectCount;
+                }
+            }
+        }
+    } else {
+        lastCheckpointNode = &gTrackCheckpoints[gNumberOfCheckpoints - 1];
+        obj->segment.trans.x_position = lastCheckpointNode->x - (lastCheckpointNode->rotationZFrac * 35.0f);
+        obj->segment.trans.y_position = lastCheckpointNode->y;
+        obj->segment.trans.z_position = lastCheckpointNode->z + (lastCheckpointNode->rotationXFrac * 35.0f);
+        obj->segment.object.segmentID = get_level_segment_index_from_position(
+            obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+    }
+    yOutCount = func_8002BAB0(obj->segment.object.segmentID, obj->segment.trans.x_position,
+                              obj->segment.trans.z_position, yOut);
+    if (yOutCount != 0) {
+        obj->segment.trans.y_position = yOut[yOutCount - 1];
+    }
+    racer->prev_x_position = obj->segment.trans.x_position;
+    racer->prev_y_position = obj->segment.trans.y_position;
+    racer->prev_z_position = obj->segment.trans.z_position;
+    if (lastCheckpointNode != NULL) {
+        racer->steerVisualRotation = arctan2_f(lastCheckpointNode->rotationXFrac, lastCheckpointNode->rotationZFrac);
+    } else {
+        racer->steerVisualRotation = ptrList->segment.trans.y_rotation;
+    }
+    racer->checkpoint = 0;
+    racer->courseCheckpoint = racer->lap * gNumberOfCheckpoints;
+    obj->segment.trans.y_rotation = racer->steerVisualRotation;
+    racer->unkD8.x = obj->segment.trans.x_position;
+    racer->unkD8.y = obj->segment.trans.y_position + 15.0f;
+    racer->unkD8.z = obj->segment.trans.z_position;
+    racer->unkE4.x = obj->segment.trans.x_position;
+    racer->unkE4.y = obj->segment.trans.y_position + 15.0f;
+    racer->unkE4.z = obj->segment.trans.z_position;
+    racer->unkF0.x = obj->segment.trans.x_position;
+    racer->unkF0.y = obj->segment.trans.y_position + 15.0f;
+    racer->unkF0.z = obj->segment.trans.z_position;
+    racer->unkFC.x = obj->segment.trans.x_position;
+    racer->unkFC.y = obj->segment.trans.y_position + 15.0f;
+    racer->unkFC.z = obj->segment.trans.z_position;
+    obj->interactObj->x_position = obj->segment.trans.x_position;
+    obj->interactObj->y_position = obj->segment.trans.y_position;
+    obj->interactObj->z_position = obj->segment.trans.z_position;
+    // fake
+    if (1) {}
+    if (1) {}
+    racer->velocity = 0.0f;
+    racer->lateral_velocity = 0.0f;
+    obj->segment.x_velocity = 0.0f;
+    obj->segment.z_velocity = 0.0f;
+    racer->vehicleID = racer->vehicleIDPrev;
+    if (racer->playerIndex != -1) {
+        set_active_camera(racer->playerIndex);
+        activeCameraSegment = get_active_camera_segment_no_cutscenes();
+        activeCameraSegment->trans.x_position = obj->segment.trans.x_position;
+        activeCameraSegment->trans.y_position = obj->segment.trans.y_position;
+        activeCameraSegment->trans.z_position = obj->segment.trans.z_position;
+    }
+    return lastCheckpointNode;
+}
 
 /**
  * Returns true if a taj challenge is currently active.

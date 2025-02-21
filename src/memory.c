@@ -712,16 +712,24 @@ UNUSED void mempool_print_slots(void) {
     for (i = 0; i <= gNumberOfMemoryPools; i++) {
         stubbed_printf("Region = %d	 loc = %x	 size = %x\t", i, gMemoryPools[i].slots, gMemoryPools[i].size);
         slot = &gMemoryPools[i].slots[0];
-        
+
         do {
             flags = slot->flags;
             nextIndex = slot->nextIndex;
 
-            switch(flags) {
-                case 0: stubbed_printf("FREE"); break;
-                case 1: stubbed_printf("ALLOCATED"); break;
-                case 2: stubbed_printf("ALLOCATED,FIXED"); break;
-                default: stubbed_printf("\n"); break;
+            switch (flags) {
+                case 0:
+                    stubbed_printf("FREE");
+                    break;
+                case 1:
+                    stubbed_printf("ALLOCATED");
+                    break;
+                case 2:
+                    stubbed_printf("ALLOCATED,FIXED");
+                    break;
+                default:
+                    stubbed_printf("\n");
+                    break;
             }
             stubbed_printf("\n");
             if (nextIndex == -1) {
