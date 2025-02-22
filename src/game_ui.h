@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "structs.h"
-#include "libultra_internal.h"
+#include <ultra64.h>
 
 #define HUD_ELEMENT_MODEL       0x0000
 #define HUD_ELEMENT_OBJECT      0x4000

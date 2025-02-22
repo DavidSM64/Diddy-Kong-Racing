@@ -3,8 +3,9 @@
 
 #include "types.h"
 #include "structs.h"
-#include "PR/pfs.h"
+#include "PR/os_pfs.h"
 #include "PR/os_cont.h"
+#include "common.h"
 
 #define GAMD 0x47414D44 // 'GAMD' ASCII - Game Data?
 #define TIMD 0x54494D44 // 'TIMD' ASCII - Time Data?
@@ -30,7 +31,17 @@
 #define EEP_COURSE_TIME_OFFSET (0x140 / sizeof(u64))
 #define EEP_FLAP_SIZE (0xC0  / sizeof(u64))
 #define EEP_COURSE_RECORD_SIZE (0xC0  / sizeof(u64))
+
+#if REGION == REGION_JP
+// The Save size constant seems to change depending on the file being compiled in JP?
+#define SAVE_SIZE_MENU 0x400
 #define SAVE_SIZE 0x200
+#define SAVE_FILE_BYTES 48
+#else
+#define SAVE_SIZE_MENU 0x200
+#define SAVE_SIZE 0x200
+#define SAVE_FILE_BYTES 24
+#endif
 
 #define GHSS_SIZE 0x100
 #define AS_BYTES(ptr) ((u8 *) ptr)
@@ -178,5 +189,6 @@ SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 levelId, s16 vehicleId, s1
 SIDeviceStatus func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime,
                              s16 ghostNodeCount, unk80075000_body *ghostData);
 s32 func_800753D8(s32 controllerIndex, s32 worldId);
+void rumble_enable(s32 enable);
 
 #endif

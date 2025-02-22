@@ -1,34 +1,39 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800CE170 */
 
-#include "types.h"
-#include "macros.h"
+#include "PR/ultratypes.h"
+#include "string.h"
 
-void *memcpy(void *dst, const void *src, size_t size) {
-    u8 *_dst = dst;
-    const u8 *_src = src;
-    while (size > 0) {
-        *_dst++ = *_src++;
-        size--;
+// TODO: this comes from a header
+#ident "$Revision: 1.23 $"
+
+void* memcpy(void* s1, const void* s2, size_t n) {
+    char* su1 = (char*)s1;
+    const char* su2 = (const char*)s2;
+    while (n > 0) {
+        *su1 = *su2;
+        su1++;
+        su2++;
+        n--;
     }
-    return dst;
+    return (void*)s1;
 }
 
-size_t strlen(const char *str) {
-    const u8 *ptr = (const u8 *) str;
-    while (*ptr) {
-        ptr++;
+size_t strlen(const char* s) {
+    const char* sc = s;
+    while (*sc != 0) {
+        sc++;
     }
-    return (const char *) ptr - str;
+    return sc - s;
 }
 
-char *strchr(const char *str, s32 ch) {
-    u8 c = ch;
-    while (*(u8 *)str != c) {
-        if (*(u8 *)str == 0) {
+char* strchr(const char* s, int c) {
+    const char ch = c;
+    while (*s != ch) {
+        if (*s == 0) {
             return NULL;
         }
-        str++;
+        s++;
     }
-    return (char *) str;
+    return (char*)s;
 }

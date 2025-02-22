@@ -2,7 +2,7 @@
 /* RAM_POS: 0x8007A310 */
 
 #include "video.h"
-#include "viint.h"
+#include "PRinternal/viint.h"
 
 /************ .data ************/
 

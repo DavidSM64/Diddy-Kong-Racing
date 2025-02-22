@@ -3,9 +3,7 @@
 
 #include "types.h"
 
-#define OS_PIM_STACKSIZE 256
-
-extern u8 D_8012A9B0[0x100];
+extern u8 D_80129AB0[0x100];
 extern u16 D_80129BB0[512];
 extern s32 gObjectStackTrace[3];
 

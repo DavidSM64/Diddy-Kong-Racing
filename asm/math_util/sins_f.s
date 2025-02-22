@@ -1,7 +1,7 @@
 glabel sins_f
 /* 0713C4 800707C4 27BDFFF8 */  addiu $sp, $sp, -8
 /* 0713C8 800707C8 FFBF0000 */  sd    $ra, ($sp)
-/* 0713CC 800707CC 0C01C20C */  jal   sins
+/* 0713CC 800707CC 0C01C20C */  jal   mathSinInterp
 /* 0713D0 800707D0 00000000 */   nop   
 /* 0713D4 800707D4 44820000 */  mtc1  $v0, $f0
 /* 0713D8 800707D8 3C013780 */  li    $at, 0x37800000 # 0.000015

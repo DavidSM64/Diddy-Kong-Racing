@@ -17,11 +17,12 @@
 #include "game_text.h"
 #include "object_models.h"
 #include "tracks.h"
-#include "rcp.h"
+#include "rcp_dkr.h"
 #include "audiosfx.h"
 #include "printf.h"
 #include "audio_spatial.h"
-#include "controller.h"
+#include "controller_dkr.h"
+#include "PRinternal/viint.h"
 
 /************ .data ************/
 

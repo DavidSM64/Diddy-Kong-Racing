@@ -7,7 +7,6 @@
 #include "asset_enums.h"
 #include "memory.h"
 #include "font.h"
-#include "PR/libultra.h"
 
 #define SET_TEXTBOX_BOUNDARY(leftVal, topVal, rightVal, bottomVal) \
     textBox.left = leftVal;                                        \

@@ -9,6 +9,7 @@
 #include "structs.h"
 #include "game.h"
 #include "string.h"
+#include "PR/os_internal_reg.h"
 
 extern s32 gIntDisFlag;
 extern s32 gCurrentRNGSeed; // Official Name: rngSeed
@@ -279,12 +280,12 @@ void object_transform_to_matrix(Matrix mtx, ObjectTransform *trans) {
     f32 zRotCosine;
     f32 scale;
 
-    yRotSine = sins(trans->y_rotation) * 0.000015f;
-    yRotCosine = coss(trans->y_rotation) * 0.000015f;
-    xRotSine = sins(trans->x_rotation) * 0.000015f;
-    xRotCosine = coss(trans->x_rotation) * 0.000015f;
-    zRotSine = sins(trans->z_rotation) * 0.000015f;
-    zRotCosine = coss(trans->z_rotation) * 0.000015f;
+    yRotSine = mathSinInterp(trans->y_rotation) * 0.000015f;
+    yRotCosine = mathCosInterp(trans->y_rotation) * 0.000015f;
+    xRotSine = mathSinInterp(trans->x_rotation) * 0.000015f;
+    xRotCosine = mathCosInterp(trans->x_rotation) * 0.000015f;
+    zRotSine = mathSinInterp(trans->z_rotation) * 0.000015f;
+    zRotCosine = mathCosInterp(trans->z_rotation) * 0.000015f;
     scale = trans->scale * 0.000015f;
 
     mtx[0][0] = ((xRotSine * yRotSine * zRotSine) + (scale * yRotCosine)) * scale;
@@ -340,12 +341,12 @@ void object_transform_to_matrix_2(Matrix mtx, ObjectTransform *trans) {
     f32 zRotCosine;
     f32 scale;
 
-    yRotCosine = coss(trans->y_rotation) * 0.000015f;
-    yRotSine = sins(trans->y_rotation) * 0.000015f;
-    xRotCosine = coss(trans->x_rotation) * 0.000015f;
-    xRotSine = sins(trans->x_rotation) * 0.000015f;
-    zRotCosine = coss(trans->z_rotation) * 0.000015f;
-    zRotSine = sins(trans->z_rotation) * 0.000015f;
+    yRotCosine = mathCosInterp(trans->y_rotation) * 0.000015f;
+    yRotSine = mathSinInterp(trans->y_rotation) * 0.000015f;
+    xRotCosine = mathCosInterp(trans->x_rotation) * 0.000015f;
+    xRotSine = mathSinInterp(trans->x_rotation) * 0.000015f;
+    zRotCosine = mathCosInterp(trans->z_rotation) * 0.000015f;
+    zRotSine = mathSinInterp(trans->z_rotation) * 0.000015f;
 
     scale = trans->scale * 0.000015f;
 
@@ -376,8 +377,8 @@ GLOBAL_ASM("asm/math_util/func_80070058.s")
 void f32_matrix_from_rotation_and_scale(Matrix mtx, s32 angle, f32 arg2, f32 arg3) {
     f32 cosine, sine;
 
-    cosine = sins(angle) * 0.000015f;
-    sine = coss(angle) * 0.000015f;
+    cosine = mathSinInterp(angle) * 0.000015f;
+    sine = mathCosInterp(angle) * 0.000015f;
     mtx[0][0] = sine * arg2;
     mtx[0][1] = cosine * arg2;
     mtx[0][2] = 0;
@@ -411,12 +412,12 @@ void s16_vec3_apply_object_rotation(ObjectTransform *trans, s16 *vec3Arg) {
     s32 temp_t4;
     s32 temp_t5;
 
-    yRotCosine = coss(trans->y_rotation);
-    yRotSine = sins(trans->y_rotation);
-    xRotCosine = coss(trans->x_rotation);
-    xRotSine = sins(trans->x_rotation);
-    zRotCosine = coss(trans->z_rotation);
-    zRotSine = sins(trans->z_rotation);
+    yRotCosine = mathCosInterp(trans->y_rotation);
+    yRotSine = mathSinInterp(trans->y_rotation);
+    xRotCosine = mathCosInterp(trans->x_rotation);
+    xRotSine = mathSinInterp(trans->x_rotation);
+    zRotCosine = mathCosInterp(trans->z_rotation);
+    zRotSine = mathSinInterp(trans->z_rotation);
 
     temp_t3 = ((vec3Arg[0] * yRotSine) - (vec3Arg[1] * yRotCosine)) >> 16;
     temp_t4 = ((vec3Arg[1] * yRotSine) + (vec3Arg[0] * yRotCosine)) >> 16;

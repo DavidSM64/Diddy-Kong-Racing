@@ -4,7 +4,6 @@
 #include "types.h"
 #include "macros.h"
 #include "memory.h"
-#include "PR/libultra.h"
 #include "PR/os_message.h"
 #include "PR/os_vi.h"
 #include "sched.h"

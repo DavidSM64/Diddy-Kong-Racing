@@ -10,8 +10,8 @@
 #include "lib/src/libc/rmonPrintf.h"
 #include "math_util.h"
 #include "weather.h"
-#include "lib/src/os/piint.h"
-#include "include/viint.h"
+#include "PRinternal/piint.h"
+#include "PRinternal/viint.h"
 
 /************ .rodata ************/
 
@@ -1058,7 +1058,7 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         sp44 = (diffX * cosY) + (diffZ * sineY);
         diffZ = (diffZ * cosY) - (diffX * sineY);
         tanY = arctan2_f(sp44, sqrtf((diffY * diffY) + (diffZ * diffZ)));
-        tanX = -sins(arctan2_f(sp44, diffZ)) >> 8;
+        tanX = -mathSinInterp(arctan2_f(sp44, diffZ)) >> 8;
         if (diffZ < 0.0f) {
             diffZ = -diffZ;
             tanX = 1 - tanX;

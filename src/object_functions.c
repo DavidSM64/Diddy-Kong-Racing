@@ -30,8 +30,9 @@
 #include "object_models.h"
 #include "lib/src/libc/rmonPrintf.h"
 #include "collision.h"
-#include "controller.h"
+#include "controller_dkr.h"
 #include "printf.h"
+#include "PRinternal/viint.h"
 #include "common.h"
 
 /************ .data ************/
@@ -1603,7 +1604,7 @@ void obj_loop_fish(Object *fishObj, s32 updateRate) {
     }
     fish->unkFC = 1 - fish->unkFC;
     verts = &fish->vertices[fish->unkFC * 6];
-    randNumber = sins(fish->unk106) >> 3;
+    randNumber = mathSinInterp(fish->unk106) >> 3;
     temp_s0_2 = (s32) (coss_f(randNumber) * 32);
     temp_t1 = (s32) (sins_f(randNumber) * 32);
     verts[4].x = (verts[2].x + temp_t1);
@@ -6094,8 +6095,8 @@ void obj_loop_butterfly(Object *butterflyObj, s32 updateRate) {
     butterfly->unkFC = 1 - butterfly->unkFC;
     vertices = &butterfly->vertices[butterfly->unkFC * 6];
     var_v1 = sp64 == 0 ? 7 : 8;
-    xPos = sins((butterflyObj->segment.animFrame << var_v1)) >> 10;
-    yPos = coss((butterflyObj->segment.animFrame << var_v1)) >> 10;
+    xPos = mathSinInterp((butterflyObj->segment.animFrame << var_v1)) >> 10;
+    yPos = mathCosInterp((butterflyObj->segment.animFrame << var_v1)) >> 10;
     if (xPos < 0) {
         xPos = -xPos;
     }

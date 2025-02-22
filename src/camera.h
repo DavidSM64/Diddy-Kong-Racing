@@ -6,7 +6,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "menu.h"
-#include "libultra_internal.h"
+#include <ultra64.h>
 #include "libc/math.h"
 
 #define SCREEN_WIDTH 320

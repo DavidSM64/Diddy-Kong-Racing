@@ -110,16 +110,16 @@ void PreBuild::_get_code_files() {
 
 void PreBuild::_populate_filepaths() {
     _lateDataFiles = {
-        _buildLibSrc / "al/alCopy.o",
+        _buildLibSrc / "audio/copy.o",
         _buildLibSrc / "libc/xprintf.o",
-        _buildLibSrc / "os/osTimer.o",
-        _buildLibSrc / "os/piacs.o",
+        _buildLibSrc / "os/timerintr.o",
+        _buildLibSrc / "io/piacs.o",
     };
     _bssLibOrderFiles = {
-        _buildLibSrc / "os/osViMgr.o",
-        _buildLibSrc / "os/osSetEventMesg.o",
-        _buildLibSrc / "os/controller.o",
-        _buildLibSrc / "os/siacs.o",
+        _buildLibSrc / "io/vimgr.o",
+        _buildLibSrc / "os/seteventmesg.o",
+        _buildLibSrc / "io/controller.o",
+        _buildLibSrc / "io/siacs.o",
     };
 }
 

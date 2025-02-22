@@ -14,7 +14,7 @@
  *
  *  $Revision: 1.13 $
  *  $Date: 1997/02/11 08:15:34 $
- *  $Source: /disk6/Master/cvsmdev2/PR/include/R4300.h,v $
+ *  $Source: /exdisk2/cvs/N64OS/Master/cvsmdev2/PR/include/R4300.h,v $
  *
  **************************************************************************/
 

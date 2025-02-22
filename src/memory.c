@@ -4,7 +4,7 @@
 #include "memory.h"
 #include "printf.h"
 #include "thread0_epc.h"
-#include "controller.h"
+#include "controller_dkr.h"
 #include "math_util.h"
 
 /************ .bss ************/

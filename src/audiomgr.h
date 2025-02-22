@@ -5,7 +5,7 @@
 #include "macros.h"
 #include "audio_internal.h"
 #include "asset_enums.h"
-#include "libultra_internal.h"
+#include <ultra64.h>
 #include "sched.h"
 
 #define MAX_UPDATES             32
@@ -49,8 +49,6 @@ extern void alInit(ALGlobals *g, ALSynConfig *c);
 
 extern s8 rspF3DDKRBootStart[];
 extern s8 rspF3DDKRDramStart[];
-extern s8 aspMainDataStart[];
-extern s8 aspMainTextStart[];
 
 void audioStartThread(void);
 void audioStopThread(void);

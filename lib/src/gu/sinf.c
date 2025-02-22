@@ -1,72 +1,160 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800D4C20 */
 
-#include "types.h"
-#include "macros.h"
+/**************************************************************************
+ *									  *
+ *		 Copyright (C) 1994, Silicon Graphics, Inc.		  *
+ *									  *
+ *  These coded instructions, statements, and computer programs  contain  *
+ *  unpublished  proprietary  information of Silicon Graphics, Inc., and  *
+ *  are protected by Federal copyright law.  They  may  not be disclosed  *
+ *  to  third  parties  or copied or duplicated in any form, in whole or  *
+ *  in part, without the prior written consent of Silicon Graphics, Inc.  *
+ *									  *
+ **************************************************************************/
+
 #include "guint.h"
 
-extern du P_sinf[];
-extern du rpi_sinf;
-extern du pihi_sinf;
-extern du pilo_sinf;
-extern fu zero_sinf;
-extern fu __libm_qnan_f;
+/* ====================================================================
+ * ====================================================================
+ *
+ * Module: fsin.c
+ * $Revision: 1.3 $
+ * $Date: 1998/10/09 06:14:51 $
+ * $Author: has $
+ * $Source: /exdisk2/cvs/N64OS/Master/cvsmdev2/PR/libultra/monegi/gu/sinf.c,v $
+ *
+ * Revision history:
+ *  09-Jun-93 - Original Version
+ *
+ * Description:	source code for fsin function
+ *
+ * ====================================================================
+ * ====================================================================
+ */
 
-f32 sinf(f32 x) {
-	f64 dx;  // double x
-	f64 xsq; // x squared
-	f64 poly;
-	f64 dn;
-	s32 n;
-	f64 result;
-	s32 ix; // int x
-	s32 xpt;
+#pragma weak fsin = __sinf
+#pragma weak sinf = __sinf
+#define	fsin __sinf
 
-	ix = *(s32 *) &x;
-	xpt = (ix >> 22) & 0x1FF;
+/* coefficients for polynomial approximation of sin on +/- pi/2 */
 
-	if (xpt < 255) {
+static const du	P[] =
+{
+{0x3ff00000,	0x00000000},
+{0xbfc55554,	0xbc83656d},
+{0x3f8110ed,	0x3804c2a0},
+{0xbf29f6ff,	0xeea56814},
+{0x3ec5dbdf,	0x0e314bfe},
+};
+
+static const du	rpi =
+{0x3fd45f30,	0x6dc9c883};
+
+static const du	pihi =
+{0x400921fb,	0x50000000};
+
+static const du	pilo =
+{0x3e6110b4,	0x611a6263};
+
+static const fu	zero = {0x00000000};
+
+
+/* ====================================================================
+ *
+ * FunctionName		fsin
+ *
+ * Description		computes sine of arg
+ *
+ * ====================================================================
+ */
+
+float
+fsin( float x )
+{
+double	dx, xsq, poly;
+double	dn;
+int	n;
+double	result;
+int	ix, xpt;
+
+
+	ix = *(int *)&x;
+	xpt = (ix >> 22);
+	xpt &= 0x1ff;
+
+	/* xpt is exponent(x) + 1 bit of mantissa */
+
+	if ( xpt < 0xff )	
+	{
+		/* |x| < 1.5 */
+
 		dx = x;
-		if (xpt >= 230) {
-			xsq = dx * dx;
-			poly = (((((P_sinf[4].d * xsq) + P_sinf[3].d) * xsq) + P_sinf[2].d) * xsq) + P_sinf[1].d;
-			result = ((dx * xsq) * poly) + dx;
 
-			return result;
-		} else {
-			return x;
+		if ( xpt >= 0xe6 )
+		{
+			/* |x| >= 2^(-12) */
+
+			/* compute sin(x) with a standard polynomial approximation */
+
+			xsq = dx*dx;
+
+			poly = ((P[4].d*xsq + P[3].d)*xsq + P[2].d)*xsq + P[1].d;
+
+			result = dx + (dx*xsq)*poly;
+
+			return ( (float)result );
 		}
+
+		return ( x );
 	}
 
-	if (xpt < 310) {
+	if ( xpt < 0x136 )
+	{
+		/* |x| < 2^28 */
+
 		dx = x;
-		dn = dx * rpi_sinf.d;
 
-		if (dn >= 0) {
-			n = dn + 0.5;
-		}
-		else {
-			n = dn - 0.5;
-		}
+		/*  reduce argument to +/- pi/2  */
 
+		dn = dx*rpi.d;
+
+		n = ROUND(dn);
 		dn = n;
-		dx -= dn * pihi_sinf.d;
-		dx -= dn * pilo_sinf.d;
-		xsq = dx * dx;
-		poly = (((((P_sinf[4].d * xsq) + P_sinf[3].d) * xsq) + P_sinf[2].d) * xsq) + P_sinf[1].d;
-		result = ((dx * xsq) * poly) + dx;
 
-		if ((n & 1) == 0) {
-			return result;
-		}
-		else {
-			return -(f32) result;
-		}
+		dx = dx - dn*pihi.d;
+		dx = dx - dn*pilo.d;	/* dx = x - n*pi */
+
+		/* compute sin(dx) as before, negating result if n is odd
+		*/
+
+		xsq = dx*dx;
+
+		poly = ((P[4].d*xsq + P[3].d)*xsq + P[2].d)*xsq + P[1].d;
+
+		result = dx + (dx*xsq)*poly;
+
+
+		if ( (n & 1) == 0 )
+			return ( (float)result );
+
+		return ( -(float)result );
 	}
 
-	if (x != x) {
-		return __libm_qnan_f.f;
+	if ( x != x )
+	{
+		/* x is a NaN; return a quiet NaN */
+
+#ifdef _IP_NAN_SETS_ERRNO
+
+		*__errnoaddr = EDOM;
+#endif
+		
+		return ( __libm_qnan_f );
 	}
 
-	return zero_sinf.f;
+	/* just give up and return 0.0 */
+
+	return ( zero.f );
 }
+

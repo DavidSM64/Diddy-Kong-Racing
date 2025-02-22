@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
-#include "libultra_internal.h"
+#include <ultra64.h>
 
 void main(void);
 void thread1_main(void *);

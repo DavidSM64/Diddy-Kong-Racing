@@ -1,13 +1,91 @@
-#ifndef _ULTRA64_OS_INTERNAL_H_
-#define _ULTRA64_OS_INTERNAL_H_
 
-/* Internal functions used by the operating system */
-/* Do not include this header in application code */
+/*====================================================================
+ * os.h
+ *
+ * Copyright 1995, Silicon Graphics, Inc.
+ * All Rights Reserved.
+ *
+ * This is UNPUBLISHED PROPRIETARY SOURCE CODE of Silicon Graphics,
+ * Inc.; the contents of this file may not be disclosed to third
+ * parties, copied or duplicated in any form, in whole or in part,
+ * without the prior written permission of Silicon Graphics, Inc.
+ *
+ * RESTRICTED RIGHTS LEGEND:
+ * Use, duplication or disclosure by the Government is subject to
+ * restrictions as set forth in subdivision (c)(1)(ii) of the Rights
+ * in Technical Data and Computer Software clause at DFARS
+ * 252.227-7013, and/or in similar or successor clauses in the FAR,
+ * DOD or NASA FAR Supplement. Unpublished - rights reserved under the
+ * Copyright Laws of the United States.
+ *====================================================================*/
 
-#include "os_thread.h"
+/*---------------------------------------------------------------------*
+        Copyright (C) 1998 Nintendo. (Originated by SGI)
+        
+        $RCSfile: os.h,v $
+        $Revision: 1.168 $
+        $Date: 2000/06/15 06:24:52 $
+ *---------------------------------------------------------------------*/
+
+#ifndef _OS_H_
+#define	_OS_H_
+
+#include <PR/os_thread.h>
+#include <PR/os_message.h>
+#include <PR/os_exception.h>
+#include <PR/os_tlb.h>
+#include <PR/os_pi.h>
+#include <PR/os_vi.h>
+#include <PR/os_ai.h>
+#include <PR/os_si.h>
+#include <PR/os_time.h>
+#include <PR/os_cont.h>
+#include <PR/os_pfs.h>
+#include <PR/os_gbpak.h>
+#include <PR/os_voice.h>
+#include <PR/os_cache.h>
+#include <PR/os_debug.h>
+#include <PR/os_error.h>
+#include <PR/os_gio.h>
+#include <PR/os_reg.h>
+#include <PR/os_system.h>
+#include <PR/os_eeprom.h>
+#include <PR/os_flash.h>
+/* #include <PR/os_host.h> */
+#include <PR/os_convert.h>
+#include <PR/os_rdp.h>
+#include <PR/os_rsp.h>
+/* #include <PR/os_motor.h> */
+#include <PR/os_libc.h>
+/* #include <PR/os_version.h> */
+
+/* TODO: Why the 3 includes above fail? */
+
+#ifdef _LANGUAGE_C_PLUS_PLUS
+extern "C" {
+#endif
+
+#include <PR/ultratypes.h>
+
+/**************************************************************************
+ *
+ * Global definitions
+ *
+ */
 
 /*
- * Leo Disk
+ * Stack size for I/O device managers: PIM (PI Manager), VIM (VI Manager),
+ *	SIM (SI Manager)
+ *
+ */
+#define OS_PIM_STACKSIZE	256
+#define OS_VIM_STACKSIZE	256
+#define OS_SIM_STACKSIZE	4096
+
+#define	OS_MIN_STACKSIZE	72
+
+/* 
+ * Leo Disk 
  */
 
 /* transfer mode */
@@ -16,39 +94,17 @@
 #define LEO_TRACK_MODE	2
 #define LEO_SECTOR_MODE	3
 
-/* Variables */
 /*
- * CPU counter increments at 3/4 of bus clock rate:
- *
- * Bus Clock	Proc Clock	Counter (1/2 Proc Clock)
- * ---------	----------	------------------------
- * 62.5 Mhz	93.75 Mhz	46.875 Mhz
+ * Boot addresses
  */
-extern u64 osClockRate;
+#define	BOOT_ADDRESS_ULTRA	0x80000400
+#define	BOOT_ADDRESS_COSIM	0x80002000
+#define	BOOT_ADDRESS_EMU	0x20010000
+#define	BOOT_ADDRESS_INDY 	0x88100000
 
-#define	OS_CLOCK_RATE		62500000LL
-#define	OS_CPU_COUNTER		(OS_CLOCK_RATE*3/4)
-#define OS_NSEC_TO_CYCLES(n)	(((u64)(n)*(OS_CPU_COUNTER/15625000LL))/(1000000000LL/15625000LL))
-#define OS_USEC_TO_CYCLES(n)	(((u64)(n)*(OS_CPU_COUNTER/15625LL))/(1000000LL/15625LL))
-#define OS_CYCLES_TO_NSEC(c)	(((u64)(c)*(1000000000LL/15625000LL))/(OS_CPU_COUNTER/15625000LL))
-#define OS_CYCLES_TO_USEC(c)	(((u64)(c)*(1000000LL/15625LL))/(OS_CPU_COUNTER/15625LL))
 
-/* Functions */
-
-u32 __osProbeTLB(void *);
-u32 __osDisableInt(void);
-void __osRestoreInt(u32);
-OSThread *__osGetCurrFaultedThread(void);
-
-/* Address translation routines and macros */
-
-extern u32         osVirtualToPhysical(void *);
-extern void *         osPhysicalToVirtual(u32);
-
-#define    OS_K0_TO_PHYSICAL(x)    (u32)(((char *)(x)-0x80000000))
-#define    OS_K1_TO_PHYSICAL(x)    (u32)(((char *)(x)-0xa0000000))
-
-#define    OS_PHYSICAL_TO_K0(x)    (void *)(((u32)(x)+0x80000000))
-#define    OS_PHYSICAL_TO_K1(x)    (void *)(((u32)(x)+0xa0000000))
-
+#ifdef _LANGUAGE_C_PLUS_PLUS
+}
 #endif
+
+#endif /* !_OS_H */

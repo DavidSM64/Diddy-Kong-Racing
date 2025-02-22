@@ -18,7 +18,7 @@
  **************************************************************************/
 
 #ifndef _GBI_H_
-#define _GBI_H_
+#define	_GBI_H_
 
 #define F3D_OLD
 
@@ -93,109 +93,109 @@
 # ifndef  F3DEX_GBI
 #  define F3DEX_GBI
 # endif
-#define G_NOOP			0x00
-#define G_RDPHALF_2		0xf1
-#define G_SETOTHERMODE_H	0xe3
-#define G_SETOTHERMODE_L	0xe2
-#define G_RDPHALF_1		0xe1
-#define G_SPNOOP		0xe0
-#define G_ENDDL			0xdf
-#define G_DL			0xde
-#define G_LOAD_UCODE		0xdd
-#define G_MOVEMEM		0xdc
-#define G_MOVEWORD		0xdb
-#define G_MTX			0xda
+#define	G_NOOP			0x00
+#define	G_RDPHALF_2		0xf1
+#define	G_SETOTHERMODE_H	0xe3
+#define	G_SETOTHERMODE_L	0xe2
+#define	G_RDPHALF_1		0xe1
+#define	G_SPNOOP		0xe0
+#define	G_ENDDL			0xdf
+#define	G_DL			0xde
+#define	G_LOAD_UCODE		0xdd
+#define	G_MOVEMEM		0xdc
+#define	G_MOVEWORD		0xdb
+#define	G_MTX			0xda
 #define G_GEOMETRYMODE		0xd9
-#define G_POPMTX		0xd8
-#define G_TEXTURE		0xd7
-#define G_DMA_IO		0xd6
-#define G_SPECIAL_1		0xd5
-#define G_SPECIAL_2		0xd4
-#define G_SPECIAL_3		0xd3
+#define	G_POPMTX		0xd8
+#define	G_TEXTURE		0xd7
+#define	G_DMA_IO		0xd6
+#define	G_SPECIAL_1		0xd5
+#define	G_SPECIAL_2		0xd4
+#define	G_SPECIAL_3		0xd3
 
-#define G_VTX			0x01
-#define G_MODIFYVTX		0x02
-#define G_CULLDL		0x03
-#define G_BRANCH_Z		0x04
-#define G_TRI1			0x05
+#define	G_VTX			0x01
+#define	G_MODIFYVTX		0x02
+#define	G_CULLDL		0x03
+#define	G_BRANCH_Z		0x04
+#define	G_TRI1			0x05
 #define G_TRI2			0x06
 #define G_QUAD			0x07
 #define G_LINE3D		0x08
-#else   /* F3DEX_GBI_2 */
+#else	/* F3DEX_GBI_2 */
 
 /* DMA commands: */
-#define G_SPNOOP		0	/* handle 0 gracefully */
-#define G_MTX			1
+#define	G_SPNOOP		0	/* handle 0 gracefully */
+#define	G_MTX			1
 #define G_RESERVED0		2	/* not implemeted */
 #define G_MOVEMEM		3	/* move a block of memory (up to 4 words) to dmem */
-#define G_VTX			4
+#define	G_VTX			4
 #define G_RESERVED1		5	/* not implemeted */
-#define G_DL			6
+#define	G_DL			6
 #define G_RESERVED2		7	/* not implemeted */
 #define G_RESERVED3		8	/* not implemeted */
 #define G_SPRITE2D_BASE		9	/* sprite command */
 
 /* IMMEDIATE commands: */
-#define G_IMMFIRST		-65
-#define G_TRI1			(G_IMMFIRST-0)		//0xBF
-#define G_CULLDL		(G_IMMFIRST-1)		//0xBE
-#define G_POPMTX		(G_IMMFIRST-2)		//0xBD
-#define G_MOVEWORD		(G_IMMFIRST-3)		//0xBC
-#define G_TEXTURE		(G_IMMFIRST-4)		//0xBB
-#define G_SETOTHERMODE_H	(G_IMMFIRST-5)	//0xBA
-#define G_SETOTHERMODE_L	(G_IMMFIRST-6)	//0xB9
-#define G_ENDDL			(G_IMMFIRST-7)		//0xB8
-#define G_SETGEOMETRYMODE	(G_IMMFIRST-8)	//0xB7
-#define G_CLEARGEOMETRYMODE	(G_IMMFIRST-9)	//0xB6
-#define G_LINE3D		(G_IMMFIRST-10)		//0xB5
-#define G_RDPHALF_1		(G_IMMFIRST-11) 	//0xB4
-#define G_RDPHALF_2		(G_IMMFIRST-12) 	//0xB3
+#define	G_IMMFIRST		-65
+#define	G_TRI1			(G_IMMFIRST-0)
+#define G_CULLDL		(G_IMMFIRST-1)
+#define	G_POPMTX		(G_IMMFIRST-2)
+#define	G_MOVEWORD		(G_IMMFIRST-3)
+#define	G_TEXTURE		(G_IMMFIRST-4)
+#define	G_SETOTHERMODE_H	(G_IMMFIRST-5)
+#define	G_SETOTHERMODE_L	(G_IMMFIRST-6)
+#define G_ENDDL			(G_IMMFIRST-7)
+#define G_SETGEOMETRYMODE	(G_IMMFIRST-8)
+#define G_CLEARGEOMETRYMODE	(G_IMMFIRST-9)
+#define G_LINE3D		(G_IMMFIRST-10)
+#define G_RDPHALF_1		(G_IMMFIRST-11)
+#define G_RDPHALF_2		(G_IMMFIRST-12)
 #if (defined(F3DEX_GBI)||defined(F3DLP_GBI))
 #  define G_MODIFYVTX		(G_IMMFIRST-13)
 #  define G_TRI2		(G_IMMFIRST-14)
 #  define G_BRANCH_Z		(G_IMMFIRST-15)
 #  define G_LOAD_UCODE		(G_IMMFIRST-16)
 #else
-#  define G_RDPHALF_CONT	(G_IMMFIRST-13)	/*0xB2*/
+#  define G_RDPHALF_CONT	(G_IMMFIRST-13)
 #endif
 
 /* We are overloading 2 of the immediate commands
    to keep the byte alignment of dmem the same */
 
-#define G_SPRITE2D_SCALEFLIP    (G_IMMFIRST-1) //0xBE
-#define G_SPRITE2D_DRAW         (G_IMMFIRST-2) //0xBD
+#define G_SPRITE2D_SCALEFLIP    (G_IMMFIRST-1)
+#define G_SPRITE2D_DRAW         (G_IMMFIRST-2)
 
 /* RDP commands: */
-#define G_NOOP			0xc0	/*   0 */
+#define	G_NOOP			0xc0	/*   0 */
 
-#endif  /* F3DEX_GBI_2 */
+#endif	/* F3DEX_GBI_2 */
 
 /* RDP commands: */
-#define G_SETCIMG		0xff	/*  -1 */
-#define G_SETZIMG		0xfe	/*  -2 */
-#define G_SETTIMG		0xfd	/*  -3 */
-#define G_SETCOMBINE		0xfc	/*  -4 */
-#define G_SETENVCOLOR		0xfb	/*  -5 */
-#define G_SETPRIMCOLOR		0xfa	/*  -6 */
-#define G_SETBLENDCOLOR		0xf9	/*  -7 */
-#define G_SETFOGCOLOR		0xf8	/*  -8 */
-#define G_SETFILLCOLOR		0xf7	/*  -9 */
-#define G_FILLRECT		0xf6	/* -10 */
-#define G_SETTILE		0xf5	/* -11 */
-#define G_LOADTILE		0xf4	/* -12 */
-#define G_LOADBLOCK		0xf3	/* -13 */
-#define G_SETTILESIZE		0xf2	/* -14 */
-#define G_LOADTLUT		0xf0	/* -16 */
-#define G_RDPSETOTHERMODE	0xef	/* -17 */
-#define G_SETPRIMDEPTH		0xee	/* -18 */
-#define G_SETSCISSOR		0xed	/* -19 */
-#define G_SETCONVERT		0xec	/* -20 */
-#define G_SETKEYR		0xeb	/* -21 */
-#define G_SETKEYGB		0xea	/* -22 */
-#define G_RDPFULLSYNC		0xe9	/* -23 */
-#define G_RDPTILESYNC		0xe8	/* -24 */
-#define G_RDPPIPESYNC		0xe7	/* -25 */
-#define G_RDPLOADSYNC		0xe6	/* -26 */
+#define	G_SETCIMG		0xff	/*  -1 */
+#define	G_SETZIMG		0xfe	/*  -2 */
+#define	G_SETTIMG		0xfd	/*  -3 */
+#define	G_SETCOMBINE		0xfc	/*  -4 */
+#define	G_SETENVCOLOR		0xfb	/*  -5 */
+#define	G_SETPRIMCOLOR		0xfa	/*  -6 */
+#define	G_SETBLENDCOLOR		0xf9	/*  -7 */
+#define	G_SETFOGCOLOR		0xf8	/*  -8 */
+#define	G_SETFILLCOLOR		0xf7	/*  -9 */
+#define	G_FILLRECT		0xf6	/* -10 */
+#define	G_SETTILE		0xf5	/* -11 */
+#define	G_LOADTILE		0xf4	/* -12 */
+#define	G_LOADBLOCK		0xf3	/* -13 */
+#define	G_SETTILESIZE		0xf2	/* -14 */
+#define	G_LOADTLUT		0xf0	/* -16 */
+#define	G_RDPSETOTHERMODE	0xef	/* -17 */
+#define	G_SETPRIMDEPTH		0xee	/* -18 */
+#define	G_SETSCISSOR		0xed	/* -19 */
+#define	G_SETCONVERT		0xec	/* -20 */
+#define	G_SETKEYR		0xeb	/* -21 */
+#define	G_SETKEYGB		0xea	/* -22 */
+#define	G_RDPFULLSYNC		0xe9	/* -23 */
+#define	G_RDPTILESYNC		0xe8	/* -24 */
+#define	G_RDPPIPESYNC		0xe7	/* -25 */
+#define	G_RDPLOADSYNC		0xe6	/* -26 */
 #define G_TEXRECTFLIP		0xe5	/* -27 */
 #define G_TEXRECT		0xe4	/* -28 */
 
@@ -231,10 +231,10 @@
  */
 
 /* masks to build RDP triangle commands: */
-#define G_RDP_TRI_FILL_MASK     0x08
-#define G_RDP_TRI_SHADE_MASK    0x04
-#define G_RDP_TRI_TXTR_MASK     0x02
-#define G_RDP_TRI_ZBUFF_MASK    0x01
+#define G_RDP_TRI_FILL_MASK	0x08
+#define G_RDP_TRI_SHADE_MASK	0x04
+#define G_RDP_TRI_TXTR_MASK	0x02		
+#define G_RDP_TRI_ZBUFF_MASK	0x01		
 
 /*
  * HACK:
@@ -299,19 +299,19 @@
  * G_MTX: parameter flags
  */
 #ifdef	F3DEX_GBI_2
-# define G_MTX_MODELVIEW    0x00	/* matrix types */
-# define G_MTX_PROJECTION   0x04
-# define G_MTX_MUL          0x00	/* concat or load */
-# define G_MTX_LOAD         0x02
-# define G_MTX_NOPUSH       0x00	/* push or not */
-# define G_MTX_PUSH         0x01
+# define G_MTX_MODELVIEW	0x00	/* matrix types */
+# define G_MTX_PROJECTION	0x04
+# define G_MTX_MUL		0x00	/* concat or load */
+# define G_MTX_LOAD		0x02
+# define G_MTX_NOPUSH		0x00	/* push or not */
+# define G_MTX_PUSH		0x01
 #else	/* F3DEX_GBI_2 */
-# define G_MTX_MODELVIEW    0x00	/* matrix types */
-# define G_MTX_PROJECTION   0x01
-# define G_MTX_MUL          0x00	/* concat or load */
-# define G_MTX_LOAD         0x02
-# define G_MTX_NOPUSH       0x00	/* push or not */
-# define G_MTX_PUSH         0x04
+# define G_MTX_MODELVIEW	0x00	/* matrix types */
+# define G_MTX_PROJECTION	0x01
+# define G_MTX_MUL		0x00	/* concat or load */
+# define G_MTX_LOAD		0x02
+# define G_MTX_NOPUSH		0x00	/* push or not */
+# define G_MTX_PUSH		0x04
 #endif	/* F3DEX_GBI_2 */
 
 /*
@@ -443,147 +443,118 @@
  * G_SETCOMBINE: color combine modes
  */
 /* Color combiner constants: */
-#define G_CCMUX_COMBINED        0
-#define G_CCMUX_TEXEL0          1
-#define G_CCMUX_TEXEL1          2
-#define G_CCMUX_PRIMITIVE       3
-#define G_CCMUX_SHADE           4
-#define G_CCMUX_ENVIRONMENT     5
-#define G_CCMUX_CENTER          6
-#define G_CCMUX_SCALE           6
-#define G_CCMUX_COMBINED_ALPHA  7
-#define G_CCMUX_TEXEL0_ALPHA    8
-#define G_CCMUX_TEXEL1_ALPHA    9
-#define G_CCMUX_PRIMITIVE_ALPHA 10
-#define G_CCMUX_SHADE_ALPHA     11
-#define G_CCMUX_ENV_ALPHA       12
-#define G_CCMUX_LOD_FRACTION    13
-#define G_CCMUX_PRIM_LOD_FRAC   14
-#define G_CCMUX_NOISE           7
-#define G_CCMUX_K4              7
-#define G_CCMUX_K5              15
-#define G_CCMUX_1               6
-#define G_CCMUX_0               31
+#define G_CCMUX_COMBINED	0
+#define G_CCMUX_TEXEL0		1
+#define G_CCMUX_TEXEL1		2
+#define G_CCMUX_PRIMITIVE	3
+#define G_CCMUX_SHADE		4
+#define G_CCMUX_ENVIRONMENT	5
+#define G_CCMUX_CENTER		6
+#define G_CCMUX_SCALE		6
+#define G_CCMUX_COMBINED_ALPHA	7
+#define G_CCMUX_TEXEL0_ALPHA	8
+#define G_CCMUX_TEXEL1_ALPHA	9
+#define G_CCMUX_PRIMITIVE_ALPHA	10
+#define G_CCMUX_SHADE_ALPHA	11
+#define G_CCMUX_ENV_ALPHA	12
+#define G_CCMUX_LOD_FRACTION	13
+#define G_CCMUX_PRIM_LOD_FRAC	14
+#define G_CCMUX_NOISE		7
+#define G_CCMUX_K4		7
+#define G_CCMUX_K5		15
+#define G_CCMUX_1		6
+#define G_CCMUX_0		31
 
 /* Alpha combiner constants: */
-#define G_ACMUX_COMBINED	    0
-#define G_ACMUX_TEXEL0		    1
-#define G_ACMUX_TEXEL1		    2
-#define G_ACMUX_PRIMITIVE	    3
-#define G_ACMUX_SHADE		    4
-#define G_ACMUX_ENVIRONMENT	    5
+#define G_ACMUX_COMBINED	0
+#define G_ACMUX_TEXEL0		1
+#define G_ACMUX_TEXEL1		2
+#define G_ACMUX_PRIMITIVE	3
+#define G_ACMUX_SHADE		4
+#define G_ACMUX_ENVIRONMENT	5
 #define G_ACMUX_LOD_FRACTION	0
 #define G_ACMUX_PRIM_LOD_FRAC	6
-#define G_ACMUX_1		        6
-#define G_ACMUX_0		        7
+#define G_ACMUX_1		6
+#define G_ACMUX_0		7
 
 /* typical CC cycle 1 modes */
-#define	G_CC_PRIMITIVE              0, 0, 0, PRIMITIVE, 0, 0, 0, PRIMITIVE
-#define	G_CC_SHADE                  0, 0, 0, SHADE, 0, 0, 0, SHADE
-
-#define	G_CC_MODULATEI              TEXEL0, 0, SHADE, 0, 0, 0, 0, SHADE
-#define	G_CC_MODULATEIDECALA        TEXEL0, 0, SHADE, 0, 0, 0, 0, TEXEL0
-#define	G_CC_MODULATEIFADE          TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT
-
-#define	G_CC_MODULATERGB            G_CC_MODULATEI
-#define	G_CC_MODULATERGBDECALA      G_CC_MODULATEIDECALA
-#define	G_CC_MODULATERGBFADE        G_CC_MODULATEIFADE
-
-#define	G_CC_MODULATEIA             TEXEL0, 0, SHADE, 0, TEXEL0, 0, SHADE, 0
-#define	G_CC_MODULATEIFADEA         TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0
-
-#define	G_CC_MODULATEFADE           TEXEL0, 0, SHADE, 0, ENVIRONMENT, 0, TEXEL0, 0
-
-#define	G_CC_MODULATERGBA           G_CC_MODULATEIA
-#define	G_CC_MODULATERGBFADEA       G_CC_MODULATEIFADEA
-
-#define	G_CC_MODULATEI_PRIM         TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE
-#define	G_CC_MODULATEIA_PRIM        TEXEL0, 0, PRIMITIVE, 0, TEXEL0, 0, PRIMITIVE, 0
-#define	G_CC_MODULATEIDECALA_PRIM   TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, TEXEL0
-
-#define	G_CC_MODULATERGB_PRIM       G_CC_MODULATEI_PRIM
-#define	G_CC_MODULATERGBA_PRIM      G_CC_MODULATEIA_PRIM
-#define	G_CC_MODULATERGBDECALA_PRIM G_CC_MODULATEIDECALA_PRIM
-
-#define	G_CC_FADE                   SHADE, 0, ENVIRONMENT, 0, SHADE, 0, ENVIRONMENT, 0
-#define	G_CC_FADEA                  TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, ENVIRONMENT, 0
-
-#define	G_CC_DECALRGB               0, 0, 0, TEXEL0, 0, 0, 0, SHADE
-#define	G_CC_DECALRGBA              0, 0, 0, TEXEL0, 0, 0, 0, TEXEL0
-#define	G_CC_DECALFADE              0, 0, 0, TEXEL0, 0, 0, 0, ENVIRONMENT
-
-#define	G_CC_DECALFADEA             0, 0, 0, TEXEL0, TEXEL0, 0, ENVIRONMENT, 0
-
-#define	G_CC_BLENDI                 ENVIRONMENT, SHADE, TEXEL0, SHADE, 0, 0, 0, SHADE
-#define	G_CC_BLENDIA                ENVIRONMENT, SHADE, TEXEL0, SHADE, TEXEL0, 0, SHADE, 0
-#define	G_CC_BLENDIDECALA           ENVIRONMENT, SHADE, TEXEL0, SHADE, 0, 0, 0, TEXEL0
-
-#define	G_CC_BLENDRGBA              TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, SHADE
-#define	G_CC_BLENDRGBDECALA         TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, TEXEL0
-#define	G_CC_BLENDRGBFADEA          TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, ENVIRONMENT
-
-#define G_CC_ADDRGB                 TEXEL0, 0, TEXEL0, SHADE, 0, 0, 0, SHADE
-#define G_CC_ADDRGBDECALA           TEXEL0, 0, TEXEL0, SHADE, 0, 0, 0, TEXEL0
-#define G_CC_ADDRGBFADE             TEXEL0, 0, TEXEL0, SHADE, 0, 0, 0, ENVIRONMENT
-
-#define G_CC_REFLECTRGB             ENVIRONMENT, 0, TEXEL0, SHADE, 0, 0, 0, SHADE
-#define G_CC_REFLECTRGBDECALA       ENVIRONMENT, 0, TEXEL0, SHADE, 0, 0, 0, TEXEL0
-
-#define G_CC_HILITERGB              PRIMITIVE, SHADE, TEXEL0, SHADE, 0, 0, 0, SHADE
-#define G_CC_HILITERGBA             PRIMITIVE, SHADE, TEXEL0, SHADE, PRIMITIVE, SHADE, TEXEL0, SHADE
-#define G_CC_HILITERGBDECALA        PRIMITIVE, SHADE, TEXEL0, SHADE, 0, 0, 0, TEXEL0
-
-#define G_CC_SHADEDECALA            0, 0, 0, SHADE, 0, 0, 0, TEXEL0
-#define G_CC_SHADEFADEA             0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT
-
-#define	G_CC_BLENDPE                PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, SHADE, 0
-#define	G_CC_BLENDPEDECALA          PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, TEXEL0
+#define	G_CC_PRIMITIVE		0, 0, 0, PRIMITIVE, 0, 0, 0, PRIMITIVE
+#define	G_CC_SHADE		0, 0, 0, SHADE, 0, 0, 0, SHADE
+#define	G_CC_MODULATEI		TEXEL0, 0, SHADE, 0, 0, 0, 0, SHADE
+#define	G_CC_MODULATEIA		TEXEL0, 0, SHADE, 0, TEXEL0, 0, SHADE, 0
+#define	G_CC_MODULATEIDECALA	TEXEL0, 0, SHADE, 0, 0, 0, 0, TEXEL0
+#define	G_CC_MODULATERGB	G_CC_MODULATEI
+#define	G_CC_MODULATERGBA	G_CC_MODULATEIA
+#define	G_CC_MODULATERGBDECALA	G_CC_MODULATEIDECALA
+#define	G_CC_MODULATEI_PRIM	TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE
+#define	G_CC_MODULATEIA_PRIM	TEXEL0, 0, PRIMITIVE, 0, TEXEL0, 0, PRIMITIVE, 0
+#define	G_CC_MODULATEIDECALA_PRIM	TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, TEXEL0
+#define	G_CC_MODULATERGB_PRIM	G_CC_MODULATEI_PRIM
+#define	G_CC_MODULATERGBA_PRIM	G_CC_MODULATEIA_PRIM
+#define	G_CC_MODULATERGBDECALA_PRIM	G_CC_MODULATEIDECALA_PRIM
+#define	G_CC_DECALRGB		0, 0, 0, TEXEL0, 0, 0, 0, SHADE
+#define	G_CC_DECALRGBA		0, 0, 0, TEXEL0, 0, 0, 0, TEXEL0
+#define	G_CC_BLENDI		ENVIRONMENT, SHADE, TEXEL0, SHADE, 0, 0, 0, SHADE
+#define	G_CC_BLENDIA		ENVIRONMENT, SHADE, TEXEL0, SHADE, TEXEL0, 0, SHADE, 0
+#define	G_CC_BLENDIDECALA	ENVIRONMENT, SHADE, TEXEL0, SHADE, 0, 0, 0, TEXEL0
+#define	G_CC_BLENDRGBA		TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, SHADE
+#define	G_CC_BLENDRGBDECALA	TEXEL0, SHADE, TEXEL0_ALPHA, SHADE, 0, 0, 0, TEXEL0
+#define G_CC_ADDRGB		1, 0, TEXEL0, SHADE, 0, 0, 0, SHADE
+#define G_CC_ADDRGBDECALA	1, 0, TEXEL0, SHADE, 0, 0, 0, TEXEL0
+#define G_CC_REFLECTRGB		ENVIRONMENT, 0, TEXEL0, SHADE, 0, 0, 0, SHADE
+#define G_CC_REFLECTRGBDECALA	ENVIRONMENT, 0, TEXEL0, SHADE, 0, 0, 0, TEXEL0
+#define G_CC_HILITERGB		PRIMITIVE, SHADE, TEXEL0, SHADE, 0, 0, 0, SHADE
+#define G_CC_HILITERGBA		PRIMITIVE, SHADE, TEXEL0, SHADE, PRIMITIVE, SHADE, TEXEL0, SHADE
+#define G_CC_HILITERGBDECALA	PRIMITIVE, SHADE, TEXEL0, SHADE, 0, 0, 0, TEXEL0
+#define G_CC_SHADEDECALA	0, 0, 0, SHADE, 0, 0, 0, TEXEL0
+#define	G_CC_BLENDPE		PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, SHADE, 0
+#define	G_CC_BLENDPEDECALA	PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, TEXEL0
 
 /* oddball modes */
-#define	_G_CC_BLENDPE       ENVIRONMENT, PRIMITIVE, TEXEL0, PRIMITIVE, TEXEL0, 0, SHADE, 0
-#define	_G_CC_BLENDPEDECALA ENVIRONMENT, PRIMITIVE, TEXEL0, PRIMITIVE, 0, 0, 0, TEXEL0
-#define	_G_CC_TWOCOLORTEX   PRIMITIVE, SHADE, TEXEL0, SHADE, 0, 0, 0, SHADE
+#define	_G_CC_BLENDPE		ENVIRONMENT, PRIMITIVE, TEXEL0, PRIMITIVE, TEXEL0, 0, SHADE, 0
+#define	_G_CC_BLENDPEDECALA	ENVIRONMENT, PRIMITIVE, TEXEL0, PRIMITIVE, 0, 0, 0, TEXEL0
+#define	_G_CC_TWOCOLORTEX	PRIMITIVE, SHADE, TEXEL0, SHADE, 0, 0, 0, SHADE
 /* used for 1-cycle sparse mip-maps, primitive color has color of lowest LOD */
-#define	_G_CC_SPARSEST      PRIMITIVE, TEXEL0, LOD_FRACTION, TEXEL0, PRIMITIVE, TEXEL0, LOD_FRACTION, TEXEL0
-#define G_CC_TEMPLERP       TEXEL1, TEXEL0, PRIM_LOD_FRAC, TEXEL0, TEXEL1, TEXEL0, PRIM_LOD_FRAC, TEXEL0
+#define	_G_CC_SPARSEST		PRIMITIVE, TEXEL0, LOD_FRACTION, TEXEL0, PRIMITIVE, TEXEL0, LOD_FRACTION, TEXEL0
+#define G_CC_TEMPLERP   TEXEL1, TEXEL0, PRIM_LOD_FRAC, TEXEL0, TEXEL1, TEXEL0, PRIM_LOD_FRAC, TEXEL0
 
 /* typical CC cycle 1 modes, usually followed by other cycle 2 modes */
-#define	G_CC_TRILERP        TEXEL1, TEXEL0, LOD_FRACTION, TEXEL0, TEXEL1, TEXEL0, LOD_FRACTION, TEXEL0
-#define	G_CC_INTERFERENCE   TEXEL0, 0, TEXEL1, 0, TEXEL0, 0, TEXEL1, 0
+#define	G_CC_TRILERP		TEXEL1, TEXEL0, LOD_FRACTION, TEXEL0, TEXEL1, TEXEL0, LOD_FRACTION, TEXEL0
+#define	G_CC_INTERFERENCE	TEXEL0, 0, TEXEL1, 0, TEXEL0, 0, TEXEL1, 0
 
 /*
  *  One-cycle color convert operation
  */
-#define	G_CC_1CYUV2RGB      TEXEL0, K4, K5, TEXEL0, 0, 0, 0, SHADE
+#define	G_CC_1CYUV2RGB		TEXEL0, K4, K5, TEXEL0, 0, 0, 0, SHADE
 
 /*
  *  NOTE: YUV2RGB expects TF step1 color conversion to occur in 2nd clock.
  * Therefore, CC looks for step1 results in TEXEL1
  */
-#define	G_CC_YUV2RGB        TEXEL1, K4, K5, TEXEL1, 0, 0, 0, 0
+#define	G_CC_YUV2RGB		TEXEL1, K4, K5, TEXEL1, 0, 0, 0, 0
 
 /* typical CC cycle 2 modes */
-#define	G_CC_PASS2              0, 0, 0, COMBINED, 0, 0, 0, COMBINED
-#define	G_CC_MODULATEI2         COMBINED, 0, SHADE, 0, 0, 0, 0, SHADE
-#define	G_CC_MODULATEIA2        COMBINED, 0, SHADE, 0, COMBINED, 0, SHADE, 0
-#define	G_CC_MODULATERGB2       G_CC_MODULATEI2
-#define	G_CC_MODULATERGBA2      G_CC_MODULATEIA2
-#define	G_CC_MODULATEI_PRIM2    COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE
-#define	G_CC_MODULATEIA_PRIM2   COMBINED, 0, PRIMITIVE, 0, COMBINED, 0, PRIMITIVE, 0
-#define	G_CC_MODULATERGB_PRIM2  G_CC_MODULATEI_PRIM2
-#define	G_CC_MODULATERGBA_PRIM2 G_CC_MODULATEIA_PRIM2
-#define	G_CC_DECALRGB2          0, 0, 0, COMBINED, 0, 0, 0, SHADE
+#define	G_CC_PASS2		0, 0, 0, COMBINED, 0, 0, 0, COMBINED
+#define	G_CC_MODULATEI2		COMBINED, 0, SHADE, 0, 0, 0, 0, SHADE
+#define	G_CC_MODULATEIA2	COMBINED, 0, SHADE, 0, COMBINED, 0, SHADE, 0
+#define	G_CC_MODULATERGB2	G_CC_MODULATEI2
+#define	G_CC_MODULATERGBA2	G_CC_MODULATEIA2
+#define	G_CC_MODULATEI_PRIM2	COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE
+#define	G_CC_MODULATEIA_PRIM2	COMBINED, 0, PRIMITIVE, 0, COMBINED, 0, PRIMITIVE, 0
+#define	G_CC_MODULATERGB_PRIM2	G_CC_MODULATEI_PRIM2
+#define	G_CC_MODULATERGBA_PRIM2	G_CC_MODULATEIA_PRIM2
+#define	G_CC_DECALRGB2		0, 0, 0, COMBINED, 0, 0, 0, SHADE
 /*
  * ?
 #define	G_CC_DECALRGBA2		COMBINED, SHADE, COMBINED_ALPHA, SHADE, 0, 0, 0, SHADE
 */
-#define	G_CC_BLENDI2            ENVIRONMENT, SHADE, COMBINED, SHADE, 0, 0, 0, SHADE
-#define	G_CC_BLENDIA2           ENVIRONMENT, SHADE, COMBINED, SHADE, COMBINED, 0, SHADE, 0
-#define	G_CC_CHROMA_KEY2        TEXEL0, CENTER, SCALE, 0, 0, 0, 0, 0
-#define G_CC_HILITERGB2         ENVIRONMENT, COMBINED, TEXEL0, COMBINED, 0, 0, 0, SHADE
-#define G_CC_HILITERGBA2        ENVIRONMENT, COMBINED, TEXEL0, COMBINED, ENVIRONMENT, COMBINED, TEXEL0, COMBINED
-#define G_CC_HILITERGBDECALA2   ENVIRONMENT, COMBINED, TEXEL0, COMBINED, 0, 0, 0, TEXEL0
-#define G_CC_HILITERGBPASSA2    ENVIRONMENT, COMBINED, TEXEL0, COMBINED, 0, 0, 0, COMBINED
+#define	G_CC_BLENDI2		ENVIRONMENT, SHADE, COMBINED, SHADE, 0, 0, 0, SHADE
+#define	G_CC_BLENDIA2		ENVIRONMENT, SHADE, COMBINED, SHADE, COMBINED, 0, SHADE, 0
+#define	G_CC_CHROMA_KEY2	TEXEL0, CENTER, SCALE, 0, 0, 0, 0, 0
+#define G_CC_HILITERGB2		ENVIRONMENT, COMBINED, TEXEL0, COMBINED, 0, 0, 0, SHADE
+#define G_CC_HILITERGBA2	ENVIRONMENT, COMBINED, TEXEL0, COMBINED, ENVIRONMENT, COMBINED, TEXEL0, COMBINED
+#define G_CC_HILITERGBDECALA2	ENVIRONMENT, COMBINED, TEXEL0, COMBINED, 0, 0, 0, TEXEL0
+#define G_CC_HILITERGBPASSA2	ENVIRONMENT, COMBINED, TEXEL0, COMBINED, 0, 0, 0, COMBINED
 
 /*
  * G_SETOTHERMODE_L sft: shift count
@@ -933,9 +904,6 @@
 	CVG_DST_CLAMP | ZMODE_OPA |          \
 	GBL_c##clk(G_BL_CLR_IN, G_BL_0, G_BL_CLR_IN, G_BL_1)
 
-/* Custom version of RM_AA_ZB_XLU_SURF with Z_UPD */
-#define RM_CUSTOM_AA_ZB_XLU_SURF(clk)				\
-	RM_AA_ZB_XLU_SURF(clk) | Z_UPD
 
 
 #define	G_RM_AA_ZB_OPA_SURF	RM_AA_ZB_OPA_SURF(1)
@@ -1033,9 +1001,6 @@
 #define G_RM_VISCVG2    	RM_VISCVG(2)
 #define G_RM_OPA_CI         RM_OPA_CI(1)
 #define G_RM_OPA_CI2        RM_OPA_CI(2)
-
-#define G_RM_CUSTOM_AA_ZB_XLU_SURF	RM_CUSTOM_AA_ZB_XLU_SURF(1)
-#define G_RM_CUSTOM_AA_ZB_XLU_SURF2	RM_CUSTOM_AA_ZB_XLU_SURF(2)
 
 
 #define	G_RM_FOG_SHADE_A	GBL_c1(G_BL_CLR_FOG, G_BL_A_SHADE, G_BL_CLR_IN, G_BL_1MA)
@@ -1169,7 +1134,7 @@ typedef struct {
  * First 8 words are integer portion of the 4x4 matrix
  * Last 8 words are the fraction portion of the 4x4 matrix
  */
-typedef s32	Mtx_t[4][4];
+typedef long	Mtx_t[4][4];
 
 typedef union {
     Mtx_t		m;
@@ -1515,8 +1480,6 @@ typedef union {
 		{	{{ {{0,0,0},0,{0,0,0},0,{rightx,righty,rightz},0}}, \
 			{ {{0,0x80,0},0,{0,0x80,0},0,{upx,upy,upz},0}}}   }
 
-/* Don't declare these for F3D_OLD to avoid bss reordering */
-#ifndef F3D_OLD
 /*
  *  Graphics DMA Packet
  */
@@ -1524,7 +1487,7 @@ typedef struct {
 	int		cmd:8;
 	unsigned int	par:8;
 	unsigned int	len:16;
-	uintptr_t   	addr;
+	unsigned int	addr;
 } Gdma;
 
 /*
@@ -1609,7 +1572,7 @@ typedef struct {
                 unsigned int    siz:2;
                 unsigned int    pad:7;
                 unsigned int    wd:12;	/* really only 10 bits, extra	*/
-                uintptr_t       dram;	/* to account for 1024		*/
+                unsigned int    dram;	/* to account for 1024		*/
 } Gsetimg;
 
 typedef struct {
@@ -1689,6 +1652,9 @@ typedef struct {
 		unsigned int	dtdy:16;/* Change in T per change in Y	*/
 } Gtexrect;
 
+#define	MakeTexRect(xh,yh,flip,tile,xl,yl,s,t,dsdx,dtdy)		\
+	G_TEXRECT, xh, yh, 0, flip, 0, tile, xl, yl, s, t, dsdx, dtdy
+
 /*
  * Textured rectangles are 128 bits not 64 bits
  */	
@@ -1698,30 +1664,21 @@ typedef struct {
     unsigned long w2;
     unsigned long w3;
 } TexRect;
-#endif
-
-#define	MakeTexRect(xh,yh,flip,tile,xl,yl,s,t,dsdx,dtdy)		\
-	G_TEXRECT, xh, yh, 0, flip, 0, tile, xl, yl, s, t, dsdx, dtdy
 
 /*
  * Generic Gfx Packet
  */
 typedef struct {
-	uintptr_t w0;
-	uintptr_t w1;
+	unsigned int w0;
+	unsigned int w1;
 } Gwords;
 
 /*
  * This union is the fundamental type of the display list.
  * It is, by law, exactly 64 bits in size.
- *
- * (Edit: except on 64-bit, where it is exactly 128 bit. On little-endian or
- * 64-bit systems, only the 'words' member may be accessed; the rest of the
- * structs don't have matching layouts for now.)
  */
 typedef union {
 	Gwords		words;
-#if !defined(F3D_OLD) && IS_BIG_ENDIAN && !IS_64_BIT
 	Gdma		dma;
 	Gtri		tri;
 	Gline3D		line;
@@ -1739,8 +1696,7 @@ typedef union {
 	Gloadtile	loadtile;	/* use for loadblock also, th is dxt */
 	Gsettilesize	settilesize;
 	Gloadtlut	loadtlut;
-#endif
-	long long int	force_structure_alignment;
+        long long int	force_structure_alignment;
 } Gfx;
 
 /*
@@ -1755,12 +1711,12 @@ typedef union {
 	Gfx *_g = (Gfx *)(pkt);						\
 									\
 	_g->words.w0 = _SHIFTL((c), 24, 8) | _SHIFTL((l), 0, 24);	\
-	_g->words.w1 = (uintptr_t)(s);				\
+	_g->words.w1 = (unsigned int)(s);				\
 }
 
 #define	gsDma0p(c, s, l)						\
 {{									\
-	_SHIFTL((c), 24, 8) | _SHIFTL((l), 0, 24), (uintptr_t)(s)	\
+	_SHIFTL((c), 24, 8) | _SHIFTL((l), 0, 24), (unsigned int)(s)	\
 }}
 
 #define	gDma1p(pkt, c, s, l, p)						\
@@ -1769,14 +1725,14 @@ typedef union {
 									\
 	_g->words.w0 = (_SHIFTL((c), 24, 8) | _SHIFTL((p), 16, 8) |	\
 			_SHIFTL((l), 0, 16));				\
-	_g->words.w1 = (uintptr_t)(s);				\
+	_g->words.w1 = (unsigned int)(s);				\
 }
 
 #define	gsDma1p(c, s, l, p)						\
 {{									\
 	(_SHIFTL((c), 24, 8) | _SHIFTL((p), 16, 8) | 			\
 	 _SHIFTL((l), 0, 16)), 						\
-        (uintptr_t)(s)						\
+        (unsigned int)(s)						\
 }}
 
 #define	gDma2p(pkt, c, adrs, len, idx, ofs)				\
@@ -1784,13 +1740,13 @@ typedef union {
 	Gfx *_g = (Gfx *)(pkt);						\
 	_g->words.w0 = (_SHIFTL((c),24,8)|_SHIFTL(((len)-1)/8,19,5)|	\
 			_SHIFTL((ofs)/8,8,8)|_SHIFTL((idx),0,8));	\
-	_g->words.w1 = (uintptr_t)(adrs);				\
+	_g->words.w1 = (unsigned int)(adrs);				\
 }
 #define	gsDma2p(c, adrs, len, idx, ofs)					\
 {{									\
 	(_SHIFTL((c),24,8)|_SHIFTL(((len)-1)/8,19,5)|			\
 	 _SHIFTL((ofs)/8,8,8)|_SHIFTL((idx),0,8)),			\
-        (uintptr_t)(adrs)						\
+        (unsigned int)(adrs)						\
 }}
 
 #define	gSPNoOp(pkt)		gDma0p(pkt, G_SPNOOP, 0, 0)
@@ -1821,12 +1777,12 @@ typedef union {
 	Gfx *_g = (Gfx *)(pkt);						\
 	_g->words.w0 =							\
 	  _SHIFTL(G_VTX,24,8)|_SHIFTL((n),12,8)|_SHIFTL((v0)+(n),1,7);	\
-	_g->words.w1 = (uintptr_t)(v);				\
+	_g->words.w1 = (unsigned int)(v);				\
 }
 # define	gsSPVertex(v, n, v0)					\
 {{									\
 	(_SHIFTL(G_VTX,24,8)|_SHIFTL((n),12,8)|_SHIFTL((v0)+(n),1,7)),	\
-        (uintptr_t)(v)						\
+        (unsigned int)(v)						\
 }}
 #elif	(defined(F3DEX_GBI)||defined(F3DLP_GBI))
 /*
@@ -1891,12 +1847,12 @@ typedef union {
 	Gfx *_g = (Gfx *)(pkt);						\
 									\
 	_g->words.w0 = _SHIFTL((c), 24, 8);				\
-	_g->words.w1 = (uintptr_t)(p0);				\
+	_g->words.w1 = (unsigned int)(p0);				\
 }
 
 #define	gsImmp1(c, p0)							\
 {{									\
-	_SHIFTL((c), 24, 8), (uintptr_t)(p0)				\
+	_SHIFTL((c), 24, 8), (unsigned int)(p0)				\
 }}
 
 #define	gImmp2(pkt, c, p0, p1)						\
@@ -1933,13 +1889,13 @@ typedef union {
 									\
 	_g->words.w0 = (_SHIFTL((c), 24, 8)  | _SHIFTL((p0), 8, 16) |	\
 			_SHIFTL((p1), 0, 8));				\
-	_g->words.w1 = (uintptr_t) (dat);				\
+	_g->words.w1 = (unsigned int) (dat);				\
 }
 
 #define	gsImmp21(c, p0, p1, dat)					\
 {{									\
 	_SHIFTL((c), 24, 8) | _SHIFTL((p0), 8, 16) | _SHIFTL((p1), 0, 8),\
-        (uintptr_t) (dat)						\
+        (unsigned int) (dat)						\
 }}
 
 #ifdef	F3DEX_GBI_2
@@ -2199,15 +2155,7 @@ typedef union {
 	 __gsSP1Triangle_w1f(v00, v01, v02, flag0)),			\
 	 __gsSP1Triangle_w1f(v10, v11, v12, flag1)			\
 }}
-#else
-#define gSP2Triangles(pkt, v00, v01, v02, flag0, v10, v11, v12, flag1)	\
-{									\
-	gSP1Triangle(pkt, v00, v01, v02, flag0);			\
-	gSP1Triangle(pkt, v10, v11, v12, flag1);			\
-}
-#define gsSP2Triangles(v00, v01, v02, flag0, v10, v11, v12, flag1)	\
-	gsSP1Triangle(v00, v01, v02, flag0),				\
-	gsSP1Triangle(v10, v11, v12, flag1)
+
 #endif	/* F3DEX_GBI/F3DLP_GBI */
 
 #if	(defined(F3DEX_GBI)||defined(F3DLP_GBI))
@@ -2386,7 +2334,7 @@ typedef union {
 {									\
 	Gfx *_g = (Gfx *)(pkt);						\
 	_g->words.w0 = _SHIFTL(G_RDPHALF_1,24,8);			\
-	_g->words.w1 = (uintptr_t)(dl);				\
+	_g->words.w1 = (unsigned int)(dl);				\
 	_g = (Gfx *)(pkt);						\
 	_g->words.w0 = (_SHIFTL(G_BRANCH_Z,24,8)|			\
 		        _SHIFTL((vtx)*5,12,12)|_SHIFTL((vtx)*2,0,12));	\
@@ -2395,7 +2343,7 @@ typedef union {
 
 #define	gsSPBranchLessZrg(dl, vtx, zval, near, far, flag, zmin, zmax)	      \
 {{	_SHIFTL(G_RDPHALF_1,24,8),					      \
-	(uintptr_t)(dl),						}},    \
+	(unsigned int)(dl),						}},    \
 {{	_SHIFTL(G_BRANCH_Z,24,8)|_SHIFTL((vtx)*5,12,12)|_SHIFTL((vtx)*2,0,12),\
 	G_DEPTOZSrg(zval, near, far, flag, zmin, zmax),			}}
 
@@ -2415,7 +2363,7 @@ typedef union {
 {									\
 	Gfx *_g = (Gfx *)(pkt);						\
 	_g->words.w0 = _SHIFTL(G_RDPHALF_1,24,8);			\
-	_g->words.w1 = (uintptr_t)(dl);				\
+	_g->words.w1 = (unsigned int)(dl);				\
 	_g = (Gfx *)(pkt);						\
 	_g->words.w0 = (_SHIFTL(G_BRANCH_Z,24,8)|			\
 		        _SHIFTL((vtx)*5,12,12)|_SHIFTL((vtx)*2,0,12));	\
@@ -2424,7 +2372,7 @@ typedef union {
 
 #define	gsSPBranchLessZraw(dl, vtx, zval)				\
 {{	_SHIFTL(G_RDPHALF_1,24,8),					      \
-	(uintptr_t)(dl),						}},    \
+	(unsigned int)(dl),						}},    \
 {{	_SHIFTL(G_BRANCH_Z,24,8)|_SHIFTL((vtx)*5,12,12)|_SHIFTL((vtx)*2,0,12),\
 	(unsigned int)(zval),						}}
 
@@ -2438,19 +2386,19 @@ typedef union {
 {									\
 	Gfx *_g = (Gfx *)(pkt);						\
 	_g->words.w0 = _SHIFTL(G_RDPHALF_1,24,8);			\
-	_g->words.w1 = (uintptr_t)(uc_dstart);			\
+	_g->words.w1 = (unsigned int)(uc_dstart);			\
 	_g = (Gfx *)(pkt);						\
 	_g->words.w0 = (_SHIFTL(G_LOAD_UCODE,24,8)|			\
 			_SHIFTL((int)(uc_dsize)-1,0,16));		\
-	_g->words.w1 = (uintptr_t)(uc_start);			\
+	_g->words.w1 = (unsigned int)(uc_start);			\
 }
 
 #define	gsSPLoadUcodeEx(uc_start, uc_dstart, uc_dsize)			\
 {{	_SHIFTL(G_RDPHALF_1,24,8),					\
-	(uintptr_t)(uc_dstart),				}},	\
+	(unsigned int)(uc_dstart),				}},	\
 {{	_SHIFTL(G_LOAD_UCODE,24,8)|					\
 	  _SHIFTL((int)(uc_dsize)-1,0,16),				\
-	(uintptr_t)(uc_start),				}}
+	(unsigned int)(uc_start),				}}
 
 #define	gSPLoadUcode(pkt, uc_start, uc_dstart)				\
         gSPLoadUcodeEx((pkt), (uc_start), (uc_dstart), SP_UCODE_DATA_SIZE)
@@ -2474,14 +2422,14 @@ typedef union {
 	Gfx *_g = (Gfx *)(pkt);						\
 	_g->words.w0 = _SHIFTL(G_DMA_IO,24,8)|_SHIFTL((flag),23,1)|	\
 	  _SHIFTL((dmem)/8,13,10)|_SHIFTL((size)-1,0,12);		\
-	_g->words.w1 = (uintptr_t)(dram);				\
+	_g->words.w1 = (unsigned int)(dram);				\
 }
 
 #define	gsSPDma_io(flag, dmem, dram, size)				\
 {{									\
 	_SHIFTL(G_DMA_IO,24,8)|_SHIFTL((flag),23,1)|			\
 	_SHIFTL((dmem)/8,13,10)|_SHIFTL((size)-1,0,12),			\
-	(uintptr_t)(dram)						\
+	(unsigned int)(dram)						\
 }}
 
 #define	gSPDmaRead(pkt,dmem,dram,size)	gSPDma_io((pkt),0,(dmem),(dram),(size))
@@ -2845,22 +2793,22 @@ typedef union {
 }}
 #endif
 
-#ifndef F3D_OLD
-# define gSPPerspNormalize(pkt, s)	gMoveWd(pkt, G_MW_PERSPNORM, 0, (s))
-# define gsSPPerspNormalize(s)		gsMoveWd(    G_MW_PERSPNORM, 0, (s))
-#else
-# define gSPPerspNormalize(pkt, s)					\
+#ifdef F3D_OLD
+#define gSPPerspNormalize(pkt, s)					\
 {									\
 	Gfx *_g = (Gfx *)(pkt);						\
 									\
 	_g->words.w0 = _SHIFTL(G_RDPHALF_1, 24, 8);			\
 	_g->words.w1 = (s);						\
 }
-# define gsSPPerspNormalize(s)						\
+#define gsSPPerspNormalize(s)						\
 {{									\
 	_SHIFTL(G_RDPHALF_1, 24, 8),					\
 	(s)								\
 }}
+#else
+#define gSPPerspNormalize(pkt, s)	gMoveWd(pkt, G_MW_PERSPNORM, 0, (s))
+#define gsSPPerspNormalize(s)		gsMoveWd(    G_MW_PERSPNORM, 0, (s))
 #endif
 
 #ifdef	F3DEX_GBI_2
@@ -2912,7 +2860,7 @@ typedef union {
 #define	gsSPClearGeometryMode(word)	gsSPGeometryMode((word),0)
 #define	gSPLoadGeometryMode(pkt, word)	gSPGeometryMode((pkt),-1,(word))
 #define	gsSPLoadGeometryMode(word)	gsSPGeometryMode(-1,(word))
-#define gsSPGeometryModeSetFirst(c, s)	gsSPGeometryMode(c, s)
+
 #else	/* F3DEX_GBI_2 */
 #define	gSPSetGeometryMode(pkt, word)					\
 {									\
@@ -2939,18 +2887,6 @@ typedef union {
 {{									\
 	_SHIFTL(G_CLEARGEOMETRYMODE, 24, 8), (unsigned int)(word)	\
 }}
-
-/*
- * gsSPGeometryMode
- * In Fast3DEX2 it is better to use this, as the RSP geometry mode
- * is able to be set and cleared in a single command.
- */
-#define gsSPGeometryMode(c, s)						\
-	gsSPClearGeometryMode(c),					\
-	gsSPSetGeometryMode(s)
-#define gsSPGeometryModeSetFirst(c, s)					\
-	gsSPSetGeometryMode(s),						\
-	gsSPClearGeometryMode(c)
 #endif	/* F3DEX_GBI_2 */
 
 #ifdef	F3DEX_GBI_2
@@ -3081,14 +3017,14 @@ typedef union {
 									\
 	_g->words.w0 = _SHIFTL(cmd, 24, 8) | _SHIFTL(fmt, 21, 3) |	\
 		       _SHIFTL(siz, 19, 2) | _SHIFTL((width)-1, 0, 12);	\
-	_g->words.w1 = (uintptr_t)(i);				\
+	_g->words.w1 = (unsigned int)(i);				\
 }
 
 #define	gsSetImage(cmd, fmt, siz, width, i)				\
 {{									\
 	_SHIFTL(cmd, 24, 8) | _SHIFTL(fmt, 21, 3) |			\
 	_SHIFTL(siz, 19, 2) | _SHIFTL((width)-1, 0, 12),		\
-	(uintptr_t)(i)						\
+	(unsigned int)(i)						\
 }}
 
 #define	gDPSetColorImage(pkt, f, s, w, i)	gSetImage(pkt, G_SETCIMG, f, s, w, i)
@@ -4558,7 +4494,7 @@ typedef union {
 }
 
 #ifdef F3D_OLD
-# define gSPTextureRectangle(pkt, xl, yl, xh, yh, tile, s, t, dsdx, dtdy)\
+#define gSPTextureRectangle(pkt, xl, yl, xh, yh, tile, s, t, dsdx, dtdy)\
 {									\
     Gfx *_g = (Gfx *)(pkt);						\
 									\
@@ -4623,7 +4559,13 @@ typedef union {
     gImmp1(pkt, G_RDPHALF_CONT, (_SHIFTL(dsdx, 16, 16) | _SHIFTL(dtdy, 0, 16))); \
 }
 #else
-# define gSPTextureRectangle(pkt, xl, yl, xh, yh, tile, s, t, dsdx, dtdy)\
+#define gsSPTextureRectangle(xl, yl, xh, yh, tile, s, t, dsdx, dtdy)	\
+    {{(_SHIFTL(G_TEXRECT, 24, 8) | _SHIFTL(xh, 12, 12) | _SHIFTL(yh, 0, 12)),\
+    (_SHIFTL(tile, 24, 3) | _SHIFTL(xl, 12, 12) | _SHIFTL(yl, 0, 12))}},	\
+    gsImmp1(G_RDPHALF_1, (_SHIFTL(s, 16, 16) | _SHIFTL(t, 0, 16))),	\
+    gsImmp1(G_RDPHALF_2, (_SHIFTL(dsdx, 16, 16) | _SHIFTL(dtdy, 0, 16)))
+
+#define gSPTextureRectangle(pkt, xl, yl, xh, yh, tile, s, t, dsdx, dtdy)\
 {									\
     Gfx *_g = (Gfx *)(pkt);						\
 									\
@@ -4635,14 +4577,8 @@ typedef union {
     gImmp1(pkt, G_RDPHALF_2, (_SHIFTL(dsdx, 16, 16) | _SHIFTL(dtdy, 0, 16)));\
 }
 
-#define gsSPTextureRectangle(xl, yl, xh, yh, tile, s, t, dsdx, dtdy)	\
-    {{(_SHIFTL(G_TEXRECT, 24, 8) | _SHIFTL(xh, 12, 12) | _SHIFTL(yh, 0, 12)),\
-    (_SHIFTL(tile, 24, 3) | _SHIFTL(xl, 12, 12) | _SHIFTL(yl, 0, 12))}},	\
-    gsImmp1(G_RDPHALF_1, (_SHIFTL(s, 16, 16) | _SHIFTL(t, 0, 16))),	\
-    gsImmp1(G_RDPHALF_2, (_SHIFTL(dsdx, 16, 16) | _SHIFTL(dtdy, 0, 16)))
-
 /* like gSPTextureRectangle but accepts negative position arguments */
-# define gSPScisTextureRectangle(pkt, xl, yl, xh, yh, tile, s, t, dsdx, dtdy) \
+#define gSPScisTextureRectangle(pkt, xl, yl, xh, yh, tile, s, t, dsdx, dtdy) \
 {                                                                            \
     Gfx *_g = (Gfx *)(pkt);                                                  \
                                                                              \
@@ -4669,14 +4605,14 @@ typedef union {
                               _SHIFTL((dtdy), 0, 16)));                      \
 }
 
-# define gsSPTextureRectangleFlip(xl, yl, xh, yh, tile, s, t, dsdx, dtdy) \
+#define gsSPTextureRectangleFlip(xl, yl, xh, yh, tile, s, t, dsdx, dtdy) \
     {{(_SHIFTL(G_TEXRECTFLIP, 24, 8) | _SHIFTL(xh, 12, 12) |		\
      _SHIFTL(yh, 0, 12)),						\
     (_SHIFTL(tile, 24, 3) | _SHIFTL(xl, 12, 12) | _SHIFTL(yl, 0, 12))}},	\
     gsImmp1(G_RDPHALF_1, (_SHIFTL(s, 16, 16) | _SHIFTL(t, 0, 16))),	\
     gsImmp1(G_RDPHALF_2, (_SHIFTL(dsdx, 16, 16) | _SHIFTL(dtdy, 0, 16)))
 
-# define gSPTextureRectangleFlip(pkt, xl, yl, xh, yh, tile, s, t, dsdx, dtdy) \
+#define gSPTextureRectangleFlip(pkt, xl, yl, xh, yh, tile, s, t, dsdx, dtdy) \
 {								       	\
     Gfx *_g = (Gfx *)(pkt);					       	\
 									 \
@@ -4688,17 +4624,16 @@ typedef union {
     gImmp1(pkt, G_RDPHALF_2, (_SHIFTL(dsdx, 16, 16) | _SHIFTL(dtdy, 0, 16))); \
 }
 #endif
-
 #define gsDPWord(wordhi, wordlo)			\
-    gsImmp1(G_RDPHALF_1, (uintptr_t)(wordhi)),	\
-    gsImmp1(G_RDPHALF_2, (uintptr_t)(wordlo))
+    gsImmp1(G_RDPHALF_1, (unsigned int)(wordhi)),	\
+    gsImmp1(G_RDPHALF_2, (unsigned int)(wordlo))
 
 #define gDPWord(pkt, wordhi, wordlo)      		\
 {							\
     Gfx *_g = (Gfx *)(pkt);				\
 							\
-    gImmp1(pkt, G_RDPHALF_1, (uintptr_t)(wordhi));	\
-    gImmp1(pkt, G_RDPHALF_2, (uintptr_t)(wordlo));	\
+    gImmp1(pkt, G_RDPHALF_1, (unsigned int)(wordhi));	\
+    gImmp1(pkt, G_RDPHALF_2, (unsigned int)(wordlo));	\
 }
 
 #define	gDPFullSync(pkt)	gDPNoParam(pkt, G_RDPFULLSYNC)

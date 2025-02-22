@@ -1,32 +1,35 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800D7470 */
 
-#include <stdlib.h>
+#include "os_version.h"
+#include "stdlib.h"
 
-ldiv_t ldiv(long num, long denom)
-{
+// TODO: these come from headers
+#ident "$Revision: 1.34 $"
+#ident "$Revision: 1.5 $"
+
+ldiv_t ldiv(long num, long denom) {
     ldiv_t ret;
 
     ret.quot = num / denom;
     ret.rem = num - denom * ret.quot;
-    if (ret.quot < 0 && ret.rem > 0)
-    {
-        ret.quot++;
+
+    if (ret.quot < 0 && ret.rem > 0) {
+        ret.quot += 1;
         ret.rem -= denom;
     }
 
     return ret;
 }
 
-lldiv_t lldiv(long long num, long long denom)
-{
+lldiv_t lldiv(long long num, long long denom) {
     lldiv_t ret;
 
     ret.quot = num / denom;
     ret.rem = num - denom * ret.quot;
-    if (ret.quot < 0 && ret.rem > 0)
-    {
-        ret.quot++;
+
+    if (ret.quot < 0 && ret.rem > 0) {
+        ret.quot += 1;
         ret.rem -= denom;
     }
 

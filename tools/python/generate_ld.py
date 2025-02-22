@@ -23,17 +23,17 @@ DATA_DIR = ROOT_DIR + '/data'
 BUILD_DIR = 'build/' + VERSION
 
 LATE_DATA_FILES = [
-    BUILD_DIR + '/lib/src/al/alCopy.o',
+    BUILD_DIR + '/lib/src/audio/copy.o',
     BUILD_DIR + '/lib/src/libc/xprintf.o',
-    BUILD_DIR + '/lib/src/os/osTimer.o',
-    BUILD_DIR + '/lib/src/os/piacs.o'
+    BUILD_DIR + '/lib/src/os/timerintr.o',
+    BUILD_DIR + '/lib/src/io/piacs.o'
 ]
 
 BSS_LIB_ORDER_FILES = [
-    BUILD_DIR + '/lib/src/os/osViMgr.o',
-    BUILD_DIR + '/lib/src/os/osSetEventMesg.o',
-    BUILD_DIR + '/lib/src/os/controller.o',
-    BUILD_DIR + '/lib/src/os/siacs.o'
+    BUILD_DIR + '/lib/src/io/vimgr.o',
+    BUILD_DIR + '/lib/src/os/seteventmesg.o',
+    BUILD_DIR + '/lib/src/io/controller.o',
+    BUILD_DIR + '/lib/src/io/siacs.o'
 ]
 
 class GenerateLD:

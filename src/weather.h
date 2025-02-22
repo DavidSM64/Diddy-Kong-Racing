@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_0ABDF0_H_
-#define _UNKNOWN_0ABDF0_H_
+#ifndef _WEATHER_H_
+#define _WEATHER_H_
 
 #include "types.h"
 #include "textures_sprites.h"

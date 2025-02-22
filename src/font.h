@@ -3,14 +3,13 @@
 
 #include "memory.h"
 #include "video.h"
-#include "stacks.h"
 
 #include "asset_loading.h"
 #include "structs.h"
 #include "types.h"
 #include "macros.h"
 #include "asset_enums.h"
-#include "libultra_internal.h"
+#include <ultra64.h>
 #include "f3ddkr.h"
 #include "textures_sprites.h"
 
@@ -147,6 +146,12 @@ typedef struct DialogueBoxBackground {
     DialogueBox *textBox;
 } DialogueBoxBackground;
 
+typedef struct Asset46 {
+    s32 unk0;
+    s32 unk4;
+    u8 unk8;
+} Asset46;
+
 #define DIALOGUEBOXBACKGROUND_COUNT 8
 #define DIALOGUETEXTELEMENT_COUNT 64
 #define DIALOGUEBOXBACKGROUND_TOTAL_SIZE (sizeof(DialogueBoxBackground) * DIALOGUEBOXBACKGROUND_COUNT)
@@ -181,5 +186,17 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
                         f32 scisScale);
 s32 get_text_width(char *text, s32 x, s32 font);
 void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s32 number, s32 flags);
+
+// Japanese Region exclusives
+void func_800C6464_C7064(void);
+void func_800C663C_C723C(void);
+void func_800C6870_C7470(void);
+void func_800C67F4_C73F4(void);
+s32 func_800C68CC_C74CC(u16 arg0);
+void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height);
+s32 func_800C7744_C8344(Gfx **dlist, u16 charIndex, s32 *outLeft, s32 *outTop, s32 *outRight, s32 *outBottom);
+void func_800C7804_C8404(s32 arg0);
+void func_800C7864_C8464(char *inString, char *outString);
+void func_800C78E0_C84E0(void);
 
 #endif

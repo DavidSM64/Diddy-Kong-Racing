@@ -2,7 +2,7 @@
 #define _THREAD0_EPC_H_
 
 #include "types.h"
-#include "libultra_internal.h"
+#include <ultra64.h>
 #include "macros.h"
 
 /* Size: 0x1B0 bytes */

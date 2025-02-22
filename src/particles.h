@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "structs.h"
-#include "libultra_internal.h"
+#include <ultra64.h>
 
 enum ObjectEmitterFlags {
     OBJ_EMIT_OFF,

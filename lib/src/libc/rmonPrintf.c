@@ -10,7 +10,7 @@
 /**
  * This gets called inside of _PrintF, but it is just a fake pointer returned
  */
-static char *is_proutSyncPrintf(UNUSED char *str, UNUSED const char *buf, UNUSED size_t n) {
+static char *proutSyncPrintf(UNUSED char *str, UNUSED const char *buf, UNUSED size_t n) {
     return ((char *) 1);   /* return a fake pointer so that it's not NULL */
 }
 
@@ -23,6 +23,6 @@ static char *is_proutSyncPrintf(UNUSED char *str, UNUSED const char *buf, UNUSED
 void rmonPrintf(const char *format, ...) {
     va_list args;
     va_start(args, format);
-    _Printf(is_proutSyncPrintf, NULL, format, args);
+    _Printf(proutSyncPrintf, NULL, format, args);
     va_end(args);
 }

@@ -88,6 +88,11 @@ typedef struct StackInfo {
     u32 sp;
 } StackInfo;
 
+// This variable doesn't truly exist in memory.
+// It's just defined as the end of BSS, and it's 
+// symbol needs to be in the undefined syms place.
+extern MemoryPoolSlot gMainMemoryPool;
+
 void mempool_init_main(void);
 MemoryPoolSlot *mempool_new_sub(s32 poolDataSize, s32 numSlots);
 void *mempool_alloc_safe(s32 size, u32 colourTag);

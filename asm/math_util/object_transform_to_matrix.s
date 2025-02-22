@@ -4,37 +4,37 @@ glabel object_transform_to_matrix
 /* 070838 8006FC38 FFBF0000 */  sd    $ra, ($sp)
 /* 07083C 8006FC3C 00803825 */  move  $a3, $a0
 /* 070840 8006FC40 44819000 */  mtc1  $at, $f18
-/* 070844 8006FC44 0C01C20C */  jal   sins
+/* 070844 8006FC44 0C01C20C */  jal   mathSinInterp
 /* 070848 8006FC48 84A40000 */   lh    $a0, ($a1)
 /* 07084C 8006FC4C 44820000 */  mtc1  $v0, $f0
 /* 070850 8006FC50 84A40000 */  lh    $a0, ($a1)
 /* 070854 8006FC54 46800020 */  cvt.s.w $f0, $f0
 /* 070858 8006FC58 46120002 */  mul.s $f0, $f0, $f18
-/* 07085C 8006FC5C 0C01C20B */  jal   coss
+/* 07085C 8006FC5C 0C01C20B */  jal   mathCosInterp
 /* 070860 8006FC60 00000000 */   nop   
 /* 070864 8006FC64 44821000 */  mtc1  $v0, $f2
 /* 070868 8006FC68 84A40002 */  lh    $a0, 2($a1)
 /* 07086C 8006FC6C 468010A0 */  cvt.s.w $f2, $f2
 /* 070870 8006FC70 46121082 */  mul.s $f2, $f2, $f18
-/* 070874 8006FC74 0C01C20C */  jal   sins
+/* 070874 8006FC74 0C01C20C */  jal   mathSinInterp
 /* 070878 8006FC78 00000000 */   nop   
 /* 07087C 8006FC7C 44822000 */  mtc1  $v0, $f4
 /* 070880 8006FC80 84A40002 */  lh    $a0, 2($a1)
 /* 070884 8006FC84 46802120 */  cvt.s.w $f4, $f4
 /* 070888 8006FC88 46122102 */  mul.s $f4, $f4, $f18
-/* 07088C 8006FC8C 0C01C20B */  jal   coss
+/* 07088C 8006FC8C 0C01C20B */  jal   mathCosInterp
 /* 070890 8006FC90 00000000 */   nop   
 /* 070894 8006FC94 44823000 */  mtc1  $v0, $f6
 /* 070898 8006FC98 84A40004 */  lh    $a0, 4($a1)
 /* 07089C 8006FC9C 468031A0 */  cvt.s.w $f6, $f6
 /* 0708A0 8006FCA0 46123182 */  mul.s $f6, $f6, $f18
-/* 0708A4 8006FCA4 0C01C20C */  jal   sins
+/* 0708A4 8006FCA4 0C01C20C */  jal   mathSinInterp
 /* 0708A8 8006FCA8 00000000 */   nop   
 /* 0708AC 8006FCAC 44824000 */  mtc1  $v0, $f8
 /* 0708B0 8006FCB0 84A40004 */  lh    $a0, 4($a1)
 /* 0708B4 8006FCB4 46804220 */  cvt.s.w $f8, $f8
 /* 0708B8 8006FCB8 46124202 */  mul.s $f8, $f8, $f18
-/* 0708BC 8006FCBC 0C01C20B */  jal   coss
+/* 0708BC 8006FCBC 0C01C20B */  jal   mathCosInterp
 /* 0708C0 8006FCC0 00000000 */   nop   
 /* 0708C4 8006FCC4 44825000 */  mtc1  $v0, $f10
 /* 0708C8 8006FCC8 8CAA0008 */  lw    $t2, 8($a1)

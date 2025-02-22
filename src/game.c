@@ -25,7 +25,7 @@
 #include "objects.h"
 #include "camera.h"
 #include "save_data.h"
-#include "rcp.h"
+#include "rcp_dkr.h"
 #include "audiosfx.h"
 #include "audiomgr.h"
 #include "lights.h"
@@ -43,7 +43,7 @@
 #include "racer.h"
 #include "particles.h"
 #include "math_util.h"
-#include "controller.h"
+#include "controller_dkr.h"
 #include "common.h"
 
 /************ .data ************/
