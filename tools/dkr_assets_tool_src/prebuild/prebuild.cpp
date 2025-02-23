@@ -110,16 +110,8 @@ void PreBuild::_get_code_files() {
 
 void PreBuild::_populate_filepaths() {
     _lateDataFiles = {
-        _buildLibSrc / "audio/copy.o",
-        _buildLibSrc / "libc/xprintf.o",
-        _buildLibSrc / "os/timerintr.o",
-        _buildLibSrc / "io/piacs.o",
     };
     _bssLibOrderFiles = {
-        _buildLibSrc / "io/vimgr.o",
-        _buildLibSrc / "os/seteventmesg.o",
-        _buildLibSrc / "io/controller.o",
-        _buildLibSrc / "io/siacs.o",
     };
 }
 
@@ -305,7 +297,7 @@ void PreBuild::_generate_ld() {
     // .ucodeData section
     _write_ucode_data_section(ld);
     
-    ld.write_assignment("__BSS_SECTION_SIZE", "SIZEOF(.bss.noload) - 16");
+    ld.write_assignment("__BSS_SECTION_SIZE", "SIZEOF(.bss.noload) - 32");
     ld.write_newline();
     
     // .bss.noload section

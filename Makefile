@@ -277,35 +277,35 @@ ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UC
 
 ####################### LIBULTRA #########################
 
-$(BUILD_DIR)/$(LIB_DIRS)/%.c.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/$(LIB_DIRS)/src/audio/%.c.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/$(LIB_DIRS)/src/audio/mips1/%.c.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/$(LIB_DIRS)/src/os/%.c.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/$(LIB_DIRS)/src/io/%.c.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/$(LIB_DIRS)/src/io/vimgr.c.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/$(LIB_DIRS)/src/io/pimgr.c.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/$(LIB_DIRS)/src/io/motor.c.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/$(LIB_DIRS)/src/libc/xprintf.c.o : OPT_FLAGS := -O3
-$(BUILD_DIR)/$(LIB_DIRS)/src/audio/env.c.o: OPT_FLAGS := -g
-$(BUILD_DIR)/$(LIB_DIRS)/src/libc/llcvt.c.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/$(LIB_DIRS)/src/libc/llcvt.c.o: MIPSISET := -mips3 -32
-$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ll.c.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ll.c.o: MIPSISET := -mips3 -32
-$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ldiv.c.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ldiv.c.o: MIPSISET := -mips2
-$(BUILD_DIR)/$(LIB_DIRS)/src/libc/xldtob.c.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/$(LIB_DIRS)/src/libc/xldtob.c.o: MIPSISET := -mips2
+$(BUILD_DIR)/$(LIB_DIRS)/%.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIB_DIRS)/src/audio/%.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/$(LIB_DIRS)/src/audio/mips1/%.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIB_DIRS)/src/os/%.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/%.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/vimgr.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/pimgr.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/motor.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/xprintf.o : OPT_FLAGS := -O3
+$(BUILD_DIR)/$(LIB_DIRS)/src/audio/env.o: OPT_FLAGS := -g
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/llcvt.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/llcvt.o: MIPSISET := -mips3 -32
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ll.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ll.o: MIPSISET := -mips3 -32
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ldiv.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ldiv.o: MIPSISET := -mips2
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/xldtob.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/xldtob.o: MIPSISET := -mips2
 
-$(BUILD_DIR)/$(LIB_DIRS)/%.c.o: MIPSISET := -mips2
-$(BUILD_DIR)/$(LIB_DIRS)/src/audio/mips1/%.c.o: MIPSISET := -mips1
-$(BUILD_DIR)/$(LIB_DIRS)/src/io/pimgr.c.o: MIPSISET := -mips1
-$(BUILD_DIR)/$(LIB_DIRS)/src/sc/sched.c.o: MIPSISET := -mips1
-$(BUILD_DIR)/$(LIB_DIRS)/src/io/motor.c.o: MIPSISET := -mips1
-$(BUILD_DIR)/$(LIB_DIRS)/src/audio/env.c.o: MIPSISET := -mips1
+$(BUILD_DIR)/$(LIB_DIRS)/%.o: MIPSISET := -mips2
+$(BUILD_DIR)/$(LIB_DIRS)/src/audio/mips1/%.o: MIPSISET := -mips1
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/pimgr.o: MIPSISET := -mips1
+$(BUILD_DIR)/$(LIB_DIRS)/src/sc/sched.o: MIPSISET := -mips1
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/motor.o: MIPSISET := -mips1
+$(BUILD_DIR)/$(LIB_DIRS)/src/audio/env.o: MIPSISET := -mips1
 
 #Ignore warnings for libultra files
-$(BUILD_DIR)/$(LIB_DIRS)/%.c.o: CC_WARNINGS := -w
-$(BUILD_DIR)/$(LIB_DIRS)/%.c.o: CC_CHECK := :
+$(BUILD_DIR)/$(LIB_DIRS)/%.o: CC_WARNINGS := -w
+$(BUILD_DIR)/$(LIB_DIRS)/%.o: CC_CHECK := :
 
 ####################### MATH UTIL #########################
 
