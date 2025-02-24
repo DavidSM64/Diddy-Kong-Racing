@@ -151,12 +151,12 @@ s32 func_800090C0(f32 arg0, f32 arg1, s32 arg2) {
 
     if (temp_v1 < arg2) {
         if (sp1C <= 1.0f) {
-            ret = 64 - ((mathSinInterp(arg2 - temp_v1) / 1024) * (sp1C * 1));
+            ret = 64 - ((sins_s16(arg2 - temp_v1) / 1024) * (sp1C * 1));
         } else {
             ret = 64 - (sins_2(arg2 - temp_v1) / 1024);
         }
     } else if (sp1C <= 1.0f) {
-        ret = (mathSinInterp(temp_v1 - arg2) / 1024) * (sp1C * 1) + 64;
+        ret = (sins_s16(temp_v1 - arg2) / 1024) * (sp1C * 1) + 64;
     } else {
         ret = (sins_2(temp_v1 - arg2) / 1024) + 64;
     }

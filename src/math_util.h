@@ -29,8 +29,8 @@ s16 arctan2_f(f32 y, f32 x);
 #endif
 f32 coss_f(s16 angle);
 f32 sins_f(s16 angle);
-s32 mathCosInterp(s16 angle);
-s32 mathSinInterp(s16 angle);
+s32 coss_s16(s16 angle);
+s32 sins_s16(s16 angle);
 s32 sins_2(s16 angle);
 void set_rng_seed(s32 num);
 void save_rng_seed(void);

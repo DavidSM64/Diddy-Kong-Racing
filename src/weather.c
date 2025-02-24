@@ -354,9 +354,9 @@ void snow_init(void) {
     offset = 0;
 
     for (i = 0; i < gSnowGfx.size; i++) {
-        gSnowGfx.pos[i].x = mathCosInterp(offset & 0xFFFF) << 3;
+        gSnowGfx.pos[i].x = coss_s16(offset & 0xFFFF) << 3;
         gSnowGfx.pos[i].y = 0xFFFC0000;
-        gSnowGfx.pos[i].z = mathSinInterp(offset & 0xFFFF) << 1;
+        gSnowGfx.pos[i].z = sins_s16(offset & 0xFFFF) << 1;
         offset += step;
     }
 

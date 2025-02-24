@@ -1058,7 +1058,7 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         sp44 = (diffX * cosY) + (diffZ * sineY);
         diffZ = (diffZ * cosY) - (diffX * sineY);
         tanY = arctan2_f(sp44, sqrtf((diffY * diffY) + (diffZ * diffZ)));
-        tanX = -mathSinInterp(arctan2_f(sp44, diffZ)) >> 8;
+        tanX = -sins_s16(arctan2_f(sp44, diffZ)) >> 8;
         if (diffZ < 0.0f) {
             diffZ = -diffZ;
             tanX = 1 - tanX;
