@@ -10,6 +10,7 @@
 #include "objects.h"
 #include "tracks.h"
 #include "math_util.h"
+#include "PRinternal/viint.h"
 
 /************ .data ************/
 

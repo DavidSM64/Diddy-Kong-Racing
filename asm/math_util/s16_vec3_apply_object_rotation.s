@@ -5,10 +5,10 @@ glabel s16_vec3_apply_object_rotation
 /* 070DF0 800701F0 84AB0000 */  lh    $t3, ($a1)
 /* 070DF4 800701F4 84AC0002 */  lh    $t4, 2($a1)
 /* 070DF8 800701F8 84AD0004 */  lh    $t5, 4($a1)
-/* 070DFC 800701FC 0C01C20C */  jal   sins
+/* 070DFC 800701FC 0C01C20C */  jal   sins_s16
 /* 070E00 80070200 84C40000 */   lh    $a0, ($a2)
 /* 070E04 80070204 00407025 */  move  $t6, $v0
-/* 070E08 80070208 0C01C20B */  jal   coss
+/* 070E08 80070208 0C01C20B */  jal   coss_s16
 /* 070E0C 8007020C 84C40000 */   lh    $a0, ($a2)
 /* 070E10 80070210 016E0018 */  mult  $t3, $t6
 /* 070E14 80070214 00407825 */  move  $t7, $v0
@@ -27,10 +27,10 @@ glabel s16_vec3_apply_object_rotation
 /* 070E48 80070248 018F0018 */  mult  $t4, $t7
 /* 070E4C 8007024C 00006012 */  mflo  $t4
 /* 070E50 80070250 01886020 */  add   $t4, $t4, $t0
-/* 070E54 80070254 0C01C20C */  jal   sins
+/* 070E54 80070254 0C01C20C */  jal   sins_s16
 /* 070E58 80070258 000C6403 */   sra   $t4, $t4, 0x10
 /* 070E5C 8007025C 00407025 */  move  $t6, $v0
-/* 070E60 80070260 0C01C20B */  jal   coss
+/* 070E60 80070260 0C01C20B */  jal   coss_s16
 /* 070E64 80070264 84C40002 */   lh    $a0, 2($a2)
 /* 070E68 80070268 018E0018 */  mult  $t4, $t6
 /* 070E6C 8007026C 00407825 */  move  $t7, $v0
@@ -49,10 +49,10 @@ glabel s16_vec3_apply_object_rotation
 /* 070EA0 800702A0 01AF0018 */  mult  $t5, $t7
 /* 070EA4 800702A4 00006812 */  mflo  $t5
 /* 070EA8 800702A8 01A86820 */  add   $t5, $t5, $t0
-/* 070EAC 800702AC 0C01C20C */  jal   sins
+/* 070EAC 800702AC 0C01C20C */  jal   sins_s16
 /* 070EB0 800702B0 000D6C03 */   sra   $t5, $t5, 0x10
 /* 070EB4 800702B4 00407025 */  move  $t6, $v0
-/* 070EB8 800702B8 0C01C20B */  jal   coss
+/* 070EB8 800702B8 0C01C20B */  jal   coss_s16
 /* 070EBC 800702BC 84C40004 */   lh    $a0, 4($a2)
 /* 070EC0 800702C0 016E0018 */  mult  $t3, $t6
 /* 070EC4 800702C4 00407825 */  move  $t7, $v0

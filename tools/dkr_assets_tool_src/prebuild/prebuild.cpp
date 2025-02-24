@@ -110,16 +110,8 @@ void PreBuild::_get_code_files() {
 
 void PreBuild::_populate_filepaths() {
     _lateDataFiles = {
-        _buildLibSrc / "al/alCopy.o",
-        _buildLibSrc / "libc/xprintf.o",
-        _buildLibSrc / "os/osTimer.o",
-        _buildLibSrc / "os/piacs.o",
     };
     _bssLibOrderFiles = {
-        _buildLibSrc / "os/osViMgr.o",
-        _buildLibSrc / "os/osSetEventMesg.o",
-        _buildLibSrc / "os/controller.o",
-        _buildLibSrc / "os/siacs.o",
     };
 }
 
@@ -305,7 +297,7 @@ void PreBuild::_generate_ld() {
     // .ucodeData section
     _write_ucode_data_section(ld);
     
-    ld.write_assignment("__BSS_SECTION_SIZE", "SIZEOF(.bss.noload) - 16");
+    ld.write_assignment("__BSS_SECTION_SIZE", "SIZEOF(.bss.noload) - 32");
     ld.write_newline();
     
     // .bss.noload section

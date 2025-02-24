@@ -26,8 +26,9 @@
 #include "object_models.h"
 #include "audiosfx.h"
 #include "collision.h"
-#include "controller.h"
+#include "joypad.h"
 #include "particles.h"
+#include "PRinternal/viint.h"
 #include "common.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360

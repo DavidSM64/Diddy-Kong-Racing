@@ -16,7 +16,7 @@ ignoreFiles = ["include/sys/regdef.h"]
 search_folders = ["include/", "src/"]
 
 # Needed for StereoPanMode
-includeFiles = ['lib/src/mips1/al/alSynStartVoiceParams.h']
+includeFiles = ['include/PR/libaudio.h']
 
 hack_directives_into_singleline = ['DRAW_TABLE_ENTRY', 'DRAW_TABLE_GROUP']
 

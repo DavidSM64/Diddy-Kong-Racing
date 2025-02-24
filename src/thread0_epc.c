@@ -2,15 +2,17 @@
 /* RAM_POS: 0x800B6F50 */
 
 #include "thread0_epc.h"
+#include "common.h"
 #include "types.h"
 #include "macros.h"
 #include "menu.h"
 #include "save_data.h"
 #include "printf.h"
 #include "objects.h"
-#include "controller.h"
+#include "joypad.h"
 #include "game.h"
 #include "stacks.h"
+#include "PR/os_internal_thread.h"
 
 /************ .rodata ************/
 

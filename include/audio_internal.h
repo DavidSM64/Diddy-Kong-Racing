@@ -27,7 +27,8 @@ enum {
     AL_FILTER_START_VOICE_ALT,
     AL_FILTER_START_VOICE,
     AL_FILTER_STOP_VOICE,
-    AL_FILTER_SET_FXAMT
+    AL_FILTER_SET_FXAMT,
+    AL_FILTER_UNK11
 };
 
 #define AL_MAX_RSP_SAMPLES      160
@@ -304,11 +305,13 @@ typedef struct PVoice_s {
  */
 ALParam         *__allocParam(void);
 void            __freeParam(ALParam *param);
-void            __freePVoices(ALSynth *drvr, PVoice *pvoice);
+void            _freePVoice(ALSynth *drvr, PVoice *pvoice);
 void            _collectPVoices(ALSynth *drvr);
 
-s32             __timeToSamples(ALSynth *ALSynth, s32 micros);
+s32             _timeToSamples(ALSynth *ALSynth, s32 micros);
 ALMicroTime     _samplesToTime(ALSynth *synth, s32 samples);
+
+void func_80065A80(ALSynth *arg0, PVoice *arg1, s16 arg2);
 
 void            _init_lpfilter(ALLowPass *lp);
 void alClose(ALGlobals *glob);

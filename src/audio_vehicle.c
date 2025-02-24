@@ -8,7 +8,7 @@
 #include "audio_spatial.h"
 #include "audiosfx.h"
 #include "objects.h"
-#include "controller.h"
+#include "joypad.h"
 #include "racer.h"
 #include "PR/libaudio.h"
 #include "game_ui.h"

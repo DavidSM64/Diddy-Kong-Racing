@@ -102,12 +102,12 @@ glabel menu_credits_loop
 /* 09C090 8009B490 00092400 */  sll   $a0, $t1, 0x10
 /* 09C094 8009B494 00045403 */  sra   $t2, $a0, 0x10
 /* 09C098 8009B498 01402025 */  move  $a0, $t2
-/* 09C09C 8009B49C 0C01C20C */  jal   sins
+/* 09C09C 8009B49C 0C01C20C */  jal   sins_s16
 /* 09C0A0 8009B4A0 01208825 */   move  $s1, $t1
 /* 09C0A4 8009B4A4 00112400 */  sll   $a0, $s1, 0x10
 /* 09C0A8 8009B4A8 00046403 */  sra   $t4, $a0, 0x10
 /* 09C0AC 8009B4AC 01802025 */  move  $a0, $t4
-/* 09C0B0 8009B4B0 0C01C20B */  jal   coss
+/* 09C0B0 8009B4B0 0C01C20B */  jal   coss_s16
 /* 09C0B4 8009B4B4 00409825 */   move  $s3, $v0
 /* 09C0B8 8009B4B8 02740019 */  multu $s3, $s4
 /* 09C0BC 8009B4BC 8E050000 */  lw    $a1, ($s0)

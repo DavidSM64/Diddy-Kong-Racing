@@ -4,37 +4,37 @@ glabel object_transform_to_matrix_2
 /* 070A7C 8006FE7C FFBF0000 */  sd    $ra, ($sp)
 /* 070A80 8006FE80 00803825 */  move  $a3, $a0
 /* 070A84 8006FE84 44819000 */  mtc1  $at, $f18
-/* 070A88 8006FE88 0C01C20C */  jal   sins
+/* 070A88 8006FE88 0C01C20C */  jal   sins_s16
 /* 070A8C 8006FE8C 84A40000 */   lh    $a0, ($a1)
 /* 070A90 8006FE90 44820000 */  mtc1  $v0, $f0
 /* 070A94 8006FE94 84A40000 */  lh    $a0, ($a1)
 /* 070A98 8006FE98 46800020 */  cvt.s.w $f0, $f0
 /* 070A9C 8006FE9C 46120002 */  mul.s $f0, $f0, $f18
-/* 070AA0 8006FEA0 0C01C20B */  jal   coss
+/* 070AA0 8006FEA0 0C01C20B */  jal   coss_s16
 /* 070AA4 8006FEA4 00000000 */   nop   
 /* 070AA8 8006FEA8 44821000 */  mtc1  $v0, $f2
 /* 070AAC 8006FEAC 84A40002 */  lh    $a0, 2($a1)
 /* 070AB0 8006FEB0 468010A0 */  cvt.s.w $f2, $f2
 /* 070AB4 8006FEB4 46121082 */  mul.s $f2, $f2, $f18
-/* 070AB8 8006FEB8 0C01C20C */  jal   sins
+/* 070AB8 8006FEB8 0C01C20C */  jal   sins_s16
 /* 070ABC 8006FEBC 00000000 */   nop   
 /* 070AC0 8006FEC0 44822000 */  mtc1  $v0, $f4
 /* 070AC4 8006FEC4 84A40002 */  lh    $a0, 2($a1)
 /* 070AC8 8006FEC8 46802120 */  cvt.s.w $f4, $f4
 /* 070ACC 8006FECC 46122102 */  mul.s $f4, $f4, $f18
-/* 070AD0 8006FED0 0C01C20B */  jal   coss
+/* 070AD0 8006FED0 0C01C20B */  jal   coss_s16
 /* 070AD4 8006FED4 00000000 */   nop   
 /* 070AD8 8006FED8 44823000 */  mtc1  $v0, $f6
 /* 070ADC 8006FEDC 84A40004 */  lh    $a0, 4($a1)
 /* 070AE0 8006FEE0 468031A0 */  cvt.s.w $f6, $f6
 /* 070AE4 8006FEE4 46123182 */  mul.s $f6, $f6, $f18
-/* 070AE8 8006FEE8 0C01C20C */  jal   sins
+/* 070AE8 8006FEE8 0C01C20C */  jal   sins_s16
 /* 070AEC 8006FEEC 00000000 */   nop   
 /* 070AF0 8006FEF0 44824000 */  mtc1  $v0, $f8
 /* 070AF4 8006FEF4 84A40004 */  lh    $a0, 4($a1)
 /* 070AF8 8006FEF8 46804220 */  cvt.s.w $f8, $f8
 /* 070AFC 8006FEFC 46124202 */  mul.s $f8, $f8, $f18
-/* 070B00 8006FF00 0C01C20B */  jal   coss
+/* 070B00 8006FF00 0C01C20B */  jal   coss_s16
 /* 070B04 8006FF04 00000000 */   nop   
 /* 070B08 8006FF08 44825000 */  mtc1  $v0, $f10
 /* 070B0C 8006FF0C ACE0000C */  sw    $zero, 0xc($a3)

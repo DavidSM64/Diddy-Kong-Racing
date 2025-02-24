@@ -19,7 +19,8 @@
 #define DKR_CC_UNK9 PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0
 #define DKR_CC_UNK10 TEXEL0, 0, SCALE, 0, 0, 0, 0, TEXEL0
 #define DKR_CC_UNK11 ENVIRONMENT, TEXEL0, ENV_ALPHA, TEXEL0, TEXEL0, 0, PRIMITIVE, 0
-#define	DKR_CC_UNK12  0, 0, 0, ENVIRONMENT, 0, 0, 0, TEXEL0
+#define	DKR_CC_UNK12 0, 0, 0, ENVIRONMENT, 0, 0, 0, TEXEL0
+#define DKR_CC_UNK13 ENVIRONMENT, TEXEL0, ENV_ALPHA, TEXEL0, TEXEL1, 0, PRIMITIVE, 0
 
 #define	DKR_CC_ENVIRONMENT   0, 0, 0, ENVIRONMENT, 0, 0, 0, ENVIRONMENT
 #define DKR_CC_DECALFADEPRIM 0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE, 0
@@ -38,6 +39,7 @@
 #define DKR_OMH_1CYC_CI_BILERP      DKR_OMH_COMMON | G_CYC_1CYCLE | G_TT_RGBA16 | G_TF_BILERP | G_TP_PERSP
 #define DKR_OMH_2CYC_BILERP         DKR_OMH_COMMON | G_CYC_2CYCLE | G_TT_NONE   | G_TF_BILERP | G_TP_PERSP
 #define DKR_OMH_2CYC_POINT          DKR_OMH_COMMON | G_CYC_2CYCLE | G_TT_NONE   | G_TF_POINT  | G_TP_PERSP
+#define DKR_OMH_2CYC_POINT_NOPERSP  DKR_OMH_COMMON | G_CYC_2CYCLE | G_TT_NONE   | G_TF_POINT  | G_TP_NONE
 #define DKR_OMH_2CYC_CI_BILERP      DKR_OMH_COMMON | G_CYC_2CYCLE | G_TT_RGBA16 | G_TF_BILERP | G_TP_PERSP
 
 #define DKR_OMH_COPY_POINT_NOPERSP G_DKR_BLENDMASK | G_PM_NPRIMITIVE | G_TD_CLAMP | G_TL_TILE | G_TC_FILT \
@@ -93,10 +95,10 @@
 #define TRIN_DISABLE_TEXTURE 0
 #define TRIN_ENABLE_TEXTURE 1
 
-#define gSPPolygon(dl, ptr, numTris, texEnabled) {                                                                              \
-    Gfx *_g = (Gfx *)(dl);                                                                                                      \
-    _g->words.w0 = _SHIFTL(((numTris - 1) << 4) | (texEnabled), 16, 8) | _SHIFTL(G_TRIN, 24, 8) | _SHIFTL((numTris*16), 0, 16); \
-    _g->words.w1 = (unsigned int)(ptr);                                                                                         \
+#define gSPPolygon(dl, ptr, numTris, texEnabled) {                                                                                  \
+    Gfx *_g = (Gfx *)(dl);                                                                                                          \
+    _g->words.w0 = _SHIFTL((((numTris) - 1) << 4) | (texEnabled), 16, 8) | _SHIFTL(G_TRIN, 24, 8) | _SHIFTL(((numTris)*16), 0, 16); \
+    _g->words.w1 = (unsigned int)(ptr);                                                                                             \
 }
 
 #define numberOfGfxCommands(gfxCmds) (sizeof(gfxCmds) / sizeof(Gwords))

@@ -23,6 +23,7 @@
 #include "math_util.h"
 #include "printf.h"
 #include "collision.h"
+#include "PRinternal/viint.h"
 #include "common.h"
 
 // Maximum size for a level model is 522.5 KiB

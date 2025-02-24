@@ -1,64 +1,61 @@
-
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800D6700 */
 
-#include "macros.h"
-#include "xprintf.h"
 #include "stdlib.h"
 #include "string.h"
+#include "xstdio.h"
+
+// TODO: these come from headers
+#ident "$Revision: 1.34 $"
+#ident "$Revision: 1.5 $"
+#ident "$Revision: 1.23 $"
 
 #define BUFF_LEN 0x18
 
-extern char ldigs[];
-extern char udigs[];
+static char ldigs[] = "0123456789abcdef";
+static char udigs[] = "0123456789ABCDEF";
 
-void _Litob(printf_struct *args, char type) {
+void _Litob(_Pft *args, char type) {
     char buff[BUFF_LEN];
     const char *digs;
     s32 base;
     s32 i;
-    u64 us64val;
+    unsigned long long ullval;
 
-    if (type == 'X') {
-        digs = udigs;
-    } else {
-        digs = ldigs;
-    }
+    digs = (type == 'X') ? udigs : ldigs;
 
     base = (type == 'o') ? 8 : ((type != 'x' && type != 'X') ? 10 : 16);
     i = BUFF_LEN;
-    us64val = args->value.s64;
+    ullval = args->v.ll;
 
-    if ((type == 'd' || type == 'i') && args->value.s64 < 0) {
-        us64val = -us64val;
+    if ((type == 'd' || type == 'i') && args->v.ll < 0) {
+        ullval = -ullval;
     }
 
-    if (us64val != 0 || args->precision != 0) {
-        buff[--i] = digs[us64val % base];
+    if (ullval != 0 || args->prec != 0) {
+        buff[--i] = digs[ullval % base];
     }
 
-    args->value.s64 = us64val / base;
+    args->v.ll = ullval / base;
 
-    while (args->value.s64 > 0 && i > 0) {
-        lldiv_t qr = lldiv(args->value.s64, base);
+    while (args->v.ll > 0 && i > 0) {
+        lldiv_t qr = lldiv(args->v.ll, base);
         
-        args->value.s64 = qr.quot;
+        args->v.ll = qr.quot;
         buff[--i] = digs[qr.rem];
     }
 
-    args->part2_len = BUFF_LEN - i;
+    args->n1 = BUFF_LEN - i;
 
-    memcpy(args->buff, buff + i, args->part2_len);
+    memcpy(args->s, buff + i, args->n1);
 
-    if (args->part2_len < args->precision) {
-        args->num_leading_zeros = args->precision - args->part2_len;
+    if (args->n1 < args->prec) {
+        args->nz0 = args->prec - args->n1;
     }
 
-    if (args->precision < 0 && (args->flags & (FLAGS_ZERO | FLAGS_MINUS)) == FLAGS_ZERO) {
-        i = args->width - args->n0 - args->num_leading_zeros - args->part2_len;
-        
-        if (i > 0) {
-            args->num_leading_zeros += i;
+    if (args->prec < 0 && (args->flags & (FLAGS_ZERO | FLAGS_MINUS)) == FLAGS_ZERO) {
+        if ((i = args->width - args->n0 - args->nz0 - args->n1) > 0) {
+            args->nz0 += i;
         }
     }
 }

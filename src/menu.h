@@ -686,6 +686,9 @@ void func_80084854(void);
 void func_80098774(s32);
 void func_80094D28(UNUSED s32 updateRate);
 
+void func_80082BC8_837C8(s32 dialogueBoxID, s32 xPos1, s32 yPos1, s32 xPos2, 
+    s32 yPos2, char *text, AlignmentFlags alignment, s32 textColour, s32 alpha);
+
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,
 /* 0x01 */ TEXTURE_UNK_01,

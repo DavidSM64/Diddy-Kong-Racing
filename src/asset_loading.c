@@ -3,6 +3,7 @@
 
 #include "asset_loading.h"
 
+#include "common.h"
 // #include "assets.h"
 #include "macros.h"
 #include "ultra64.h"

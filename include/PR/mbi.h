@@ -17,7 +17,7 @@
  *
  *  $Revision: 1.136 $
  *  $Date: 1999/01/05 13:04:00 $
- *  $Source: /hosts/gate3/exdisk2/cvs/N64OS/Master/cvsmdev2/PR/include/mbi.h,v $
+ *  $Source: /exdisk2/cvs/N64OS/Master/cvsmdev2/PR/include/mbi.h,v $
  *
  **************************************************************************/
 

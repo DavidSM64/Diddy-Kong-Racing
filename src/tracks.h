@@ -211,5 +211,6 @@ void func_800B82B4(LevelModel *, LevelHeader *, s32);
 void func_80025510(s32);
 void func_8002C0C4(s32 modelId);
 void func_800304C8(Vec4f *arg0);
+s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
 
 #endif

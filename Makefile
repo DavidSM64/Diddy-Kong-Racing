@@ -12,7 +12,7 @@ VERSION := us_1.0
 NON_MATCHING ?= 0
 $(eval $(call validate-option,NON_MATCHING,0 1))
 
-LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\" -DRAREDIFFS
+LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\"
 
 ifeq ($(VERSION),us_1.0)
   DEFINES += VERSION_US_1_0=1
@@ -157,7 +157,7 @@ endif
 MIPSISET := -mips1
 OPT_FLAGS := -O2 -Xfullwarn #include -Xfullwarn here since it's not supported with -O3
 
-INCLUDE_DIRS := include $(BUILD_DIR) $(BUILD_DIR)/include src include/libc .
+INCLUDE_DIRS := include $(BUILD_DIR) $(BUILD_DIR)/include src include/libc include/PR include/sys lib/src lib/src/audio lib/src/debug lib/src/gu lib/src/libc lib/src/os .
 
 C_DEFINES := $(foreach d,$(DEFINES),-D$(d)) $(LIBULTRA_VERSION_DEFINE) -D_MIPS_SZLONG=32
 DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
@@ -165,7 +165,7 @@ DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 
 #IDO Warnings to Ignore. These are coding style warnings we don't follow
 IDO_IGNORE_WARNINGS = -woff 838,649,624
-ASFLAGS = -mtune=vr4300 -march=vr4300 -mabi=32 $(foreach d,$(DEFINES),--defsym $(d))
+ASFLAGS = -mtune=vr4300 -march=vr4300 -mabi=32 -I include $(foreach d,$(DEFINES),--defsym $(d))
 INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I src -I . -I include/libc
 CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -DNDEBUG $(OPT_FLAGS) $(MIPSISET) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) $(IDO_IGNORE_WARNINGS)
 LDFLAGS = undefined_syms.txt -T $(BUILD_DIR)/$(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
@@ -185,7 +185,7 @@ FIXCHECKSUMS = python3 $(TOOLS_DIR)/python/calc_func_checksums.py $(VERSION)
 BUILDER = $(TOOLS_DIR)/dkr_assets_tool  -dkrv $(VERSION) build
 
 LIB_DIRS := lib
-ASM_DIRS := asm asm/boot asm/assets lib/asm lib/asm/non_decompilable
+ASM_DIRS := asm asm/boot asm/assets lib/asm
 SRC_DIRS := $(sort $(patsubst %/,%,$(dir $(wildcard src/* src/**/* lib/src/* lib/src/**/* lib/src/**/**/*))))
 
 OS := $(shell uname)
@@ -277,25 +277,35 @@ ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UC
 
 ####################### LIBULTRA #########################
 
-$(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2 -Xfullwarn
-$(BUILD_DIR)/lib/src/al/%.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1 -Xfullwarn
-$(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2 -Xfullwarn
-$(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O2 -Xfullwarn
-$(BUILD_DIR)/lib/src/os/osMotor.o: OPT_FLAGS := -O2 -Xfullwarn
-$(BUILD_DIR)/lib/src/libc/xprintf.o : OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/al/env.o: OPT_FLAGS := -g
-$(BUILD_DIR)/lib/src/libc/llcvt.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/libc/llcvt.o: MIPSISET := -mips3 -32
-$(BUILD_DIR)/lib/src/libc/ll.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/libc/ll.o: MIPSISET := -mips3 -32
-$(BUILD_DIR)/lib/src/libc/ldiv.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/libc/ldiv.o: MIPSISET := -mips2
+$(BUILD_DIR)/$(LIB_DIRS)/%.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIB_DIRS)/src/audio/%.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/$(LIB_DIRS)/src/audio/mips1/%.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIB_DIRS)/src/os/%.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/%.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/vimgr.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/pimgr.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/motor.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/xprintf.o : OPT_FLAGS := -O3
+$(BUILD_DIR)/$(LIB_DIRS)/src/audio/env.o: OPT_FLAGS := -g
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/llcvt.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/llcvt.o: MIPSISET := -mips3 -32
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ll.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ll.o: MIPSISET := -mips3 -32
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ldiv.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ldiv.o: MIPSISET := -mips2
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/xldtob.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/xldtob.o: MIPSISET := -mips2
 
-$(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
-$(BUILD_DIR)/lib/src/os/osMotor.o: MIPSISET := -mips1
-$(BUILD_DIR)/lib/src/al/env.o: MIPSISET := -mips1
+$(BUILD_DIR)/$(LIB_DIRS)/%.o: MIPSISET := -mips2
+$(BUILD_DIR)/$(LIB_DIRS)/src/audio/mips1/%.o: MIPSISET := -mips1
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/pimgr.o: MIPSISET := -mips1
+$(BUILD_DIR)/$(LIB_DIRS)/src/sc/sched.o: MIPSISET := -mips1
+$(BUILD_DIR)/$(LIB_DIRS)/src/io/motor.o: MIPSISET := -mips1
+$(BUILD_DIR)/$(LIB_DIRS)/src/audio/env.o: MIPSISET := -mips1
+
+#Ignore warnings for libultra files
+$(BUILD_DIR)/$(LIB_DIRS)/%.o: CC_WARNINGS := -w
+$(BUILD_DIR)/$(LIB_DIRS)/%.o: CC_CHECK := :
 
 ####################### MATH UTIL #########################
 
@@ -388,12 +398,12 @@ $(BUILD_DIR)/%.o: %.c | $(ALL_ASSETS_BUILT)
 	@$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) $(CFLAGS) -o $@ $<
 
-$(BUILD_DIR)/lib/src/libc/llcvt.o: lib/src/libc/llcvt.c | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/llcvt.o: $(LIB_DIRS)/src/libc/llcvt.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling mips3:,$<,$@)
 	$(V)$(CC) $(CFLAGS) -o $@ $<
 	$(V)python3 tools/python/patchmips3.py $@ || rm $@
 
-$(BUILD_DIR)/lib/src/libc/ll.o: lib/src/libc/ll.c | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/$(LIB_DIRS)/src/libc/ll.o: $(LIB_DIRS)/src/libc/ll.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling mips3:,$<,$@)
 	$(V)$(CC) $(CFLAGS) -o $@ $<
 	$(V)python3 tools/python/patchmips3.py $@ || rm $@

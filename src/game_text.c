@@ -7,7 +7,8 @@
 #include "objects.h"
 #include "racer.h"
 #include "game.h"
-#include "controller.h"
+#include "joypad.h"
+#include "PRinternal/viint.h"
 
 /************ .data ************/
 

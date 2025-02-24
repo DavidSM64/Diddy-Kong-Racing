@@ -25,11 +25,12 @@
 #include "lights.h"
 #include "game_ui.h"
 #include "audio_spatial.h"
-#include "controller.h"
+#include "joypad.h"
 #include "game_text.h"
 #include "audiosfx.h"
 #include "audio_vehicle.h"
 #include "vehicle_misc.h"
+#include "PRinternal/viint.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800

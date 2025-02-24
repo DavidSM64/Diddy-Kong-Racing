@@ -1,3 +1,4 @@
+
 /*====================================================================
  * os_message.h
  *
@@ -27,14 +28,14 @@
  *---------------------------------------------------------------------*/
 
 #ifndef _OS_MESSAGE_H_
-#define	_OS_MESSAGE_H_
+#define _OS_MESSAGE_H_
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {
 #endif
 
-#include <PR/ultratypes.h>
-#include <PR/os_thread.h>
+#include "ultratypes.h"
+#include "os_thread.h"
 
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
@@ -49,21 +50,18 @@ typedef u32 OSEvent;
 /*
  * Structure for message
  */
-typedef void *	OSMesg;
+typedef void *OSMesg;
 
 /*
  * Structure for message queue
  */
 typedef struct OSMesgQueue_s {
-	// sizeof = 0x18 or 24 bytes
-	OSThread	*mtqueue;	/* Queue to store threads blocked
-					   on empty mailboxes (receive) */
-	OSThread	*fullqueue;	/* Queue to store threads blocked
-					   on full mailboxes (send) */
-	s32		validCount;	/* Contains number of valid message */
-	s32		first;		/* Points to first valid message */
-	s32		msgCount;	/* Contains total # of messages */
-	OSMesg		*msg;		/* Points to message buffer array */
+    OSThread    *mtqueue;       /* Queue to store threads blocked on empty mailboxes (receive) */
+    OSThread    *fullqueue;     /* Queue to store threads blocked on full mailboxes (send) */
+    s32          validCount;    /* Contains number of valid message */
+    s32          first;         /* Points to first valid message */
+    s32          msgCount;      /* Contains total # of messages */
+    OSMesg      *msg;           /* Points to message buffer array */
 } OSMesgQueue;
 
 
@@ -110,26 +108,9 @@ typedef struct OSMesgQueue_s {
 
 /* Flags to turn blocking on/off when sending/receiving message */
 
-#define	OS_MESG_NOBLOCK		0
-#define	OS_MESG_BLOCK		1
+#define OS_MESG_NOBLOCK     0
+#define OS_MESG_BLOCK       1
 
-/*
- * I/O message types
- */
-#define OS_MESG_TYPE_BASE	(10)
-#define OS_MESG_TYPE_LOOPBACK	(OS_MESG_TYPE_BASE+0)
-#define OS_MESG_TYPE_DMAREAD	(OS_MESG_TYPE_BASE+1)
-#define OS_MESG_TYPE_DMAWRITE	(OS_MESG_TYPE_BASE+2)
-#define OS_MESG_TYPE_VRETRACE	(OS_MESG_TYPE_BASE+3)
-#define OS_MESG_TYPE_COUNTER	(OS_MESG_TYPE_BASE+4)
-#define OS_MESG_TYPE_EDMAREAD	(OS_MESG_TYPE_BASE+5)
-#define OS_MESG_TYPE_EDMAWRITE	(OS_MESG_TYPE_BASE+6)
-
-/*
- * I/O message priority
- */
-#define OS_MESG_PRI_NORMAL	0
-#define OS_MESG_PRI_HIGH	1
 
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
@@ -140,11 +121,11 @@ typedef struct OSMesgQueue_s {
  */
 
 /* Get count of valid messages in queue */
-#define MQ_GET_COUNT(mq)        ((mq)->validCount)
+#define MQ_GET_COUNT(mq)    ((mq)->validCount)
 
 /* Figure out if message queue is empty or full */
-#define MQ_IS_EMPTY(mq)		(MQ_GET_COUNT(mq) == 0)
-#define MQ_IS_FULL(mq)		(MQ_GET_COUNT(mq) >= (mq)->msgCount)
+#define MQ_IS_EMPTY(mq)     (MQ_GET_COUNT(mq) == 0)
+#define MQ_IS_FULL(mq)      (MQ_GET_COUNT(mq) >= (mq)->msgCount)
 
 
 /**************************************************************************
@@ -162,14 +143,14 @@ typedef struct OSMesgQueue_s {
 
 /* Message operations */
 
-extern void		osCreateMesgQueue(OSMesgQueue *mq, OSMesg *msg, s32 msgCount);
-extern s32		osSendMesg(OSMesgQueue *, OSMesg, s32);
-extern s32		osJamMesg(OSMesgQueue *, OSMesg, s32);
-extern s32		osRecvMesg(OSMesgQueue *, OSMesg *, s32);
+extern void     osCreateMesgQueue(OSMesgQueue *, OSMesg *, s32);
+extern s32      osSendMesg(OSMesgQueue *, OSMesg, s32);
+extern s32      osJamMesg(OSMesgQueue *, OSMesg, s32);
+extern s32      osRecvMesg(OSMesgQueue *, OSMesg *, s32);
 
 /* Event operations */
 
-extern void		osSetEventMesg(OSEvent, OSMesgQueue *, OSMesg);
+extern void     osSetEventMesg(OSEvent, OSMesgQueue *, OSMesg);
 
 
 #endif  /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */

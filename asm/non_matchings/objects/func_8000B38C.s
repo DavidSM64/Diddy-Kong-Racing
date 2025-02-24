@@ -138,7 +138,7 @@ glabel func_8000B38C
 .L8000B5A8:
 /* 00C1A8 8000B5A8 00112400 */  sll   $a0, $s1, 0x10
 /* 00C1AC 8000B5AC 0004C403 */  sra   $t8, $a0, 0x10
-/* 00C1B0 8000B5B0 0C01C20C */  jal   sins
+/* 00C1B0 8000B5B0 0C01C20C */  jal   sins_s16
 /* 00C1B4 8000B5B4 03002025 */   move  $a0, $t8
 /* 00C1B8 8000B5B8 00520019 */  multu $v0, $s2
 /* 00C1BC 8000B5BC 00112400 */  sll   $a0, $s1, 0x10
@@ -147,7 +147,7 @@ glabel func_8000B38C
 /* 00C1C8 8000B5C8 0000C812 */  mflo  $t9
 /* 00C1CC 8000B5CC 00197403 */  sra   $t6, $t9, 0x10
 /* 00C1D0 8000B5D0 01D27821 */  addu  $t7, $t6, $s2
-/* 00C1D4 8000B5D4 0C01C20B */  jal   coss
+/* 00C1D4 8000B5D4 0C01C20B */  jal   coss_s16
 /* 00C1D8 8000B5D8 AE0F0000 */   sw    $t7, ($s0)
 /* 00C1DC 8000B5DC 02C20019 */  multu $s6, $v0
 /* 00C1E0 8000B5E0 8E190000 */  lw    $t9, ($s0)

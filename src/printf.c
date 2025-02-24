@@ -8,7 +8,7 @@
 #include "thread0_epc.h"
 #include "stdarg.h"
 #include "textures_sprites.h"
-#include "rcp.h"
+#include "rcp_dkr.h"
 
 /************ .data ************/
 

@@ -4,7 +4,7 @@
 #include "save_data.h"
 #include "common.h"
 #include "memory.h"
-#include "PR/pfs.h"
+#include "PR/os_pfs.h"
 #include "PR/os_cont.h"
 #include "macros.h"
 #include "structs.h"
@@ -12,7 +12,9 @@
 #include "objects.h"
 #include "game.h"
 #include "thread3_main.h"
-#include "controller.h"
+#include "joypad.h"
+#include "PRinternal/viint.h"
+#include "PR/os_motor.h"
 
 /************ .data ************/
 

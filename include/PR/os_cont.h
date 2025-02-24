@@ -93,6 +93,7 @@ typedef struct {
 /* controller errors */
 #define CONT_NO_RESPONSE_ERROR          0x8
 #define CONT_OVERRUN_ERROR              0x4
+#define CONT_RANGE_ERROR               -1
 #ifdef _HW_VERSION_1
 #define CONT_FRAME_ERROR                0x2
 #define CONT_COLLISION_ERROR            0x1
@@ -187,10 +188,10 @@ typedef struct {
 
 /* Controller interface */
 
-extern s32		osContInit(OSMesgQueue *mq, u8 *bitpattern, OSContStatus *data);
+extern s32		osContInit(OSMesgQueue *, u8 *, OSContStatus *);
 extern s32		osContReset(OSMesgQueue *, OSContStatus *);
 extern s32		osContStartQuery(OSMesgQueue *);
-extern s32		osContStartReadData(OSMesgQueue *mq);
+extern s32		osContStartReadData(OSMesgQueue *);
 #ifndef _HW_VERSION_1
 extern s32		osContSetCh(u8);
 #endif
