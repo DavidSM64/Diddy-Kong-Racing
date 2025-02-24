@@ -44,7 +44,7 @@
 #include "racer.h"
 #include "particles.h"
 #include "math_util.h"
-#include "controller_dkr.h"
+#include "joypad.h"
 #include "PRinternal/viint.h"
 #include "font.h"
 

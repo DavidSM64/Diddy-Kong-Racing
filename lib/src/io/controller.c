@@ -41,7 +41,7 @@ s32 osContInit(OSMesgQueue* mq, u8* bitpattern, OSContStatus* data) {
         osRecvMesg(&timerMesgQueue, &dummy, OS_MESG_BLOCK);
     }
 
-    __osMaxControllers = 4;
+    __osMaxControllers = MAXCONTROLLERS;
 
     __osPackRequestData(CONT_CMD_REQUEST_STATUS);
 

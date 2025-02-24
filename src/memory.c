@@ -4,7 +4,7 @@
 #include "memory.h"
 #include "printf.h"
 #include "thread0_epc.h"
-#include "controller_dkr.h"
+#include "joypad.h"
 #include "math_util.h"
 
 /************ .bss ************/

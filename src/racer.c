@@ -26,7 +26,7 @@
 #include "object_models.h"
 #include "audiosfx.h"
 #include "collision.h"
-#include "controller_dkr.h"
+#include "joypad.h"
 #include "particles.h"
 #include "PRinternal/viint.h"
 #include "common.h"

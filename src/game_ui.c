@@ -21,7 +21,7 @@
 #include "audiosfx.h"
 #include "printf.h"
 #include "audio_spatial.h"
-#include "controller_dkr.h"
+#include "joypad.h"
 #include "PRinternal/viint.h"
 
 /************ .data ************/

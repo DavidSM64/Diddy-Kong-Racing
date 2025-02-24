@@ -9,7 +9,7 @@
 #include "save_data.h"
 #include "printf.h"
 #include "objects.h"
-#include "controller_dkr.h"
+#include "joypad.h"
 #include "game.h"
 #include "stacks.h"
 #include "PR/os_internal_thread.h"

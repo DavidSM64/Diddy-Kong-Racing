@@ -25,7 +25,7 @@
 #include "lights.h"
 #include "game_ui.h"
 #include "audio_spatial.h"
-#include "controller_dkr.h"
+#include "joypad.h"
 #include "game_text.h"
 #include "audiosfx.h"
 #include "audio_vehicle.h"

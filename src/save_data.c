@@ -12,7 +12,7 @@
 #include "objects.h"
 #include "game.h"
 #include "thread3_main.h"
-#include "controller_dkr.h"
+#include "joypad.h"
 #include "PRinternal/viint.h"
 #include "PR/os_motor.h"
 

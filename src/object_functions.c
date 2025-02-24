@@ -30,7 +30,7 @@
 #include "object_models.h"
 #include "lib/src/libc/rmonPrintf.h"
 #include "collision.h"
-#include "controller_dkr.h"
+#include "joypad.h"
 #include "printf.h"
 #include "PRinternal/viint.h"
 #include "common.h"

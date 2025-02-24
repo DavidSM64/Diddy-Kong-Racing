@@ -1,5 +1,5 @@
-#ifndef _CONTROLLER_DKR_H_
-#define _CONTROLLER_DKR_H_
+#ifndef _JOYPAD_H_
+#define _JOYPAD_H_
 
 #include "types.h"
 #include "macros.h"

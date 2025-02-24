@@ -29,7 +29,7 @@
 #include "racer.h"
 #include "tracks.h"
 #include "lib/src/audio/synstartvoiceparam.h"
-#include "controller_dkr.h"
+#include "joypad.h"
 #include "math_util.h"
 #include "PRinternal/viint.h"
 
