@@ -12,7 +12,9 @@ ASM_FOLDERS = [
 ]
 
 BLACKLIST = [
-    '/non_matchings/'
+    '/non_matchings/',
+    '/assets/',
+    '/boot/'
 ]
 
 BLACKLIST_C = [
@@ -73,7 +75,9 @@ class DkrMapFile:
                         address = int(line[18:18+8], 16)
                         if address >= CODE_START and address < CODE_END:
                             symbol = line[line.rfind(' ')+1:]
-                            functions.append((symbol, address))
+                            if (not symbol.startswith(".L") and not symbol.startswith("L800") 
+                                and not self.contains_forbidden_func(symbol)):
+                                    functions.append((symbol, address))
                 functions.sort(key=lambda x:x[1]) # Sort by RAM address
                 for i in range(0, len(functions) - 1):
                     self.functionSizes[functions[i][0]] = functions[i + 1][1] - functions[i][1]
@@ -82,6 +86,13 @@ class DkrMapFile:
         except FileNotFoundError:
             print("You must build a rom before it can be scored!")
             sys.exit()
+    
+
+    def contains_forbidden_func(self, string):
+        for forbidden in ['__FUNC_RAM_START', 'cosf', 'sinf']:
+            if forbidden in string:
+                return True
+        return False
 
 MAP_FILE = DkrMapFile()
 
@@ -219,13 +230,14 @@ def main():
         scoreFiles.append(scoreFile)
     
     
-    totalNumberOfFunctions = totalNumberOfDecompiledFunctions + totalNumberOfGlobalAsms
     for asm_function in ASM_LABELS:
         if asm_function in MAP_FILE.functionSizes:
+            totalNumberOfDecompiledFunctions += 1 # Consider hand written asm as "decompiled"
             asmFuncSize = MAP_FILE.functionSizes[asm_function]
             totalSizeOfDecompiledFunctions += asmFuncSize
             totalSizeOfDecompiledAndNonMatchingFunctions += asmFuncSize
-    
+
+    totalNumberOfFunctions = totalNumberOfDecompiledFunctions + totalNumberOfGlobalAsms
     adventureOnePercentage = (totalSizeOfDecompiledFunctions / CODE_SIZE) * 100
     adventureOnePercentageWithNonMatching = (totalSizeOfDecompiledAndNonMatchingFunctions / CODE_SIZE) * 100
     adventureTwoPercentage = (totalSizeOfDocumentedFunctions / (CODE_SIZE - ignoreSizeDocumentedFunctions)) * 100
