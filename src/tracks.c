@@ -467,7 +467,6 @@ void func_800257D0(void) {
 #ifdef NON_EQUIVALENT
 void func_80026070(LevelModelSegmentBoundingBox *, f32, f32, f32);
 void func_80026430(LevelModelSegment *, f32, f32, f32);
-void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3);
 // Alternative Attempt: https://decomp.me/scratch/2C6dJ
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     Vertex *spAC;
@@ -634,7 +633,84 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002581C.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/tracks/func_80026070.s")
+void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 arg3) {
+    f32 sp80[4];
+    f32 sp70[4];
+    s16 temp2;
+    s32 pad;
+    f32 sp60[2];
+    s16 index;
+    s16 nextIndex;
+    f32 sp54[2];
+    f32 sp4C[2];
+    f32 temp;
+    s16 sp40[4];
+    s16 var_t0;
+
+    sp80[0] = arg0->x1;
+    sp70[0] = arg0->z1;
+    sp80[1] = arg0->x2;
+    sp70[1] = arg0->z1;
+    sp80[2] = arg0->x2;
+    sp70[2] = arg0->z2;
+    sp80[3] = arg0->x1;
+    sp70[3] = arg0->z2;
+
+    temp2 = 0;
+    for (index = 0; index < 4; index++) {
+        sp60[index] = (arg1 * sp80[index]) + (sp70[index] * arg2) + arg3;
+        sp40[index] = sp60[index] <= 0.0;
+        temp2 += sp40[index];
+    }
+    if (temp2 != 0) {
+        var_t0 = 0;
+        if (temp2 == 4) {
+            return;
+        }
+        for (index = 0; index < 4; index++) {
+            nextIndex = index + 1;
+            if (nextIndex >= 4) {
+                nextIndex = 0;
+            }
+            if ((sp40[nextIndex] != sp40[index]) != 0U) {
+                temp = sp60[index] / (sp60[index] - sp60[nextIndex]);
+                sp54[var_t0] = sp80[index] + ((sp80[nextIndex] - sp80[index]) * temp);
+                sp4C[var_t0] = sp70[index] + ((sp70[nextIndex] - sp70[index]) * temp);
+                var_t0++;
+            }
+        }
+        if (var_t0 != 2) {
+            return;
+        }
+
+        sp60[0] = (D_8011D4A0 * sp54[0]) + (D_8011D4A4 * sp4C[0]) + D_8011D4A8;
+        sp60[1] = (D_8011D4A0 * sp54[1]) + (D_8011D4A4 * sp4C[1]) + D_8011D4A8;
+
+        if (sp60[1] < sp60[0]) {
+            temp = sp60[0];
+            sp60[0] = sp60[1];
+            sp60[1] = temp;
+        }
+
+        // Returns must be on the same line.
+        // clang-format off
+        if (-300.0 > sp60[1]) { return;
+}
+        if (sp60[0] > 300.0) { return;
+}
+        // clang-format on
+
+        if (sp60[0] < -300.0) {
+            sp60[0] = -300.0f;
+        }
+        if (sp60[1] > 300.0) {
+            sp60[1] = 300.0f;
+        }
+        func_80026C14(sp60[1], gCurrentLevelModel->lowerYBounds - 195, 0);
+        func_80026C14(sp60[0], gCurrentLevelModel->lowerYBounds - 195, 0);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/tracks/func_80026430.s")
 
 void func_80026C14(s16 arg0, s16 arg1, s32 arg2) {
@@ -670,7 +746,78 @@ void func_80026C14(s16 arg0, s16 arg1, s32 arg2) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/tracks/func_80026E54.s")
+void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
+    s32 pad[7];
+    unk8011D478 *next;
+    unk8011D478 *curr;
+    s16 temp3;
+    s16 temp4;
+    f32 diff_unk0;
+    f32 curr_unk0;
+    f32 curr_unk2;
+    f32 next_unk0;
+    f32 next_unk2;
+    s32 noSwap;
+    s16 i;
+    s16 j;
+    s8 temp;
+    s8 temp0;
+    s8 temp1;
+    f32 temp2;
+    f32 sp94[10];
+    f32 sp6C[10];
+    s8 sp60[10];
+    s8 swapByte;
+
+    if (arg0 >= 10 || arg0 == 0) {
+        return;
+    }
+    
+    for (j = 0, i = 0; i < arg0; ) {
+        temp = arg1[i];
+        curr = &D_8011D478[D_8011D47C[(s16) (temp * 2)]];
+        next = &D_8011D478[D_8011D47C[((s16) (temp * 2)) + 1]];
+        curr_unk0 = (f32) curr->unk0;
+        curr_unk2 = (f32) curr->unk2;
+        next_unk0 = (f32) next->unk0;
+        next_unk2 = (f32) next->unk2;
+        if (curr_unk0 == next_unk0) {
+            return;
+        }
+        diff_unk0 = (curr_unk0 - next_unk0);
+        sp94[j++] = ((next_unk2 - curr_unk2) * ((curr_unk0 - arg3) / diff_unk0)) + curr_unk2;
+        sp6C[i] = sp94[j - 1];
+        sp60[i] = i;
+        sp94[j++] = ((curr_unk2 - next_unk2) * ((arg2 - next_unk0) / diff_unk0)) + next_unk2;
+        sp6C[i] += sp94[j - 1];
+        i++;
+    }
+
+    do {
+        noSwap = TRUE;
+        for (i = 0; i < arg0 - 1; i++) {
+            if (sp6C[sp60[i + 1]] < sp6C[sp60[i]]) {
+                swapByte = arg1[i];
+                arg1[i] = arg1[i + 1];
+                arg1[i + 1] = swapByte;
+                swapByte = sp60[i];
+                sp60[i] = sp60[i + 1];
+                sp60[i + 1] = swapByte;
+                noSwap = FALSE;
+            }
+        }
+    } while (noSwap == FALSE);
+
+    for (i = 0; i < arg0 - 1; i++) {
+        temp0 = D_8011D478[D_8011D47C[arg1[i] * 2]].unk6 & 1;
+        temp1 = D_8011D478[D_8011D47C[arg1[i + 1] * 2]].unk6 & 1;
+        if (temp0 && !temp1) {
+            temp3 = (sp60[i] * 2);
+            temp4 = (sp60[i + 1] * 2);
+            func_80027184(&sp94[temp3], &sp94[temp4], arg3, arg2);
+        }
+    }
+}
 
 #ifdef NON_EQUIVALENT
 s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {

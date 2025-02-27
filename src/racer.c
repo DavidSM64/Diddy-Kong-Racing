@@ -5452,35 +5452,37 @@ void set_position_goal_from_path(UNUSED Object *obj, Object_Racer *racer, f32 *x
 
     splineEnd = get_checkpoint_count();
 
-    if (splineEnd) {
-        magnitude = 1.0 - racer->checkpoint_distance;
-        if (magnitude < 0.0f) {
-            magnitude = 0.0f;
-        }
-        if (racer->checkpoint) {} // Fakematch
-        splinePos = racer->checkpoint - 2;
-        if (splinePos < 0) {
-            splinePos += splineEnd;
-        }
-        for (i = 0; i < 5; i++) {
-            checkpoint = find_next_checkpoint_node(splinePos, racer->unk1C8);
-            splineX[i] = checkpoint->x;
-            splineY[i] = checkpoint->y;
-            splineZ[i] = checkpoint->z;
-            splinePos++;
-            if (splinePos == splineEnd) {
-                splinePos = 0;
-            }
-        }
-        destReached = FALSE;
-        if (magnitude >= 1.0) {
-            destReached = TRUE;
-            magnitude -= 1.0;
-        }
-        *x = catmull_rom_interpolation(splineX, destReached, magnitude);
-        *y = catmull_rom_interpolation(splineY, destReached, magnitude);
-        *z = catmull_rom_interpolation(splineZ, destReached, magnitude);
+    if (splineEnd == 0) {
+        return;
     }
+
+    magnitude = 1.0 - racer->checkpoint_distance;
+    if (magnitude < 0.0f) {
+        magnitude = 0.0f;
+    }
+    if (racer->checkpoint) {} // Fakematch
+    splinePos = racer->checkpoint - 2;
+    if (splinePos < 0) {
+        splinePos += splineEnd;
+    }
+    for (i = 0; i < 5; i++) {
+        checkpoint = find_next_checkpoint_node(splinePos, racer->unk1C8);
+        splineX[i] = checkpoint->x;
+        splineY[i] = checkpoint->y;
+        splineZ[i] = checkpoint->z;
+        splinePos++;
+        if (splinePos == splineEnd) {
+            splinePos = 0;
+        }
+    }
+    destReached = FALSE;
+    if (magnitude >= 1.0) {
+        destReached = TRUE;
+        magnitude -= 1.0;
+    }
+    *x = catmull_rom_interpolation(splineX, destReached, magnitude);
+    *y = catmull_rom_interpolation(splineY, destReached, magnitude);
+    *z = catmull_rom_interpolation(splineZ, destReached, magnitude);
 }
 
 #ifdef NON_MATCHING
