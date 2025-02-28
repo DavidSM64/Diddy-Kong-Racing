@@ -772,8 +772,8 @@ void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
     if (arg0 >= 10 || arg0 == 0) {
         return;
     }
-    
-    for (j = 0, i = 0; i < arg0; ) {
+
+    for (j = 0, i = 0; i < arg0;) {
         temp = arg1[i];
         curr = &D_8011D478[D_8011D47C[(s16) (temp * 2)]];
         next = &D_8011D478[D_8011D47C[((s16) (temp * 2)) + 1]];

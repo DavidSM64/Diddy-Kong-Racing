@@ -247,7 +247,7 @@ void func_8004447C(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
 void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate);
-Object* func_8005698C(Object* racer, Object_Racer* obj, f32* dist);
+Object *func_8005698C(Object *racerObj, Object_Racer *racer, f32 *outDistance);
 void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF);
 
 #endif

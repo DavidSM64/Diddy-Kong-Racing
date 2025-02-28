@@ -455,7 +455,7 @@ void func_8000B290(void);
 void func_80016BC4(Object *obj);
 s32 ainode_register(Object *obj);
 void obj_taj_create_balloon(s32 blockID, f32 x, f32 y, f32 z);
-Object *func_8001B7A8(Object *racer, s32 position, f32 *distance);
+Object *func_8001B7A8(Object_Racer *racer, s32 position, f32 *distance);
 s32 func_8000FD34(Object *obj, Object_5C *matrices);
 void func_8000E4E8(s32 index);
 void objFreeAssets(Object *obj, s32 count, s32 objType);

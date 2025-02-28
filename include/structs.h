@@ -1304,7 +1304,7 @@ typedef struct Object_Racer {
   /* 0x1A4 */ s16 x_rotation_vel;
   /* 0x1A6 */ s16 z_rotation_vel;
   /* 0x1A8 */ s16 unk1A8;
-  /* 0x1AA */ u16 unk1AA;
+  /* 0x1AA */ s16 unk1AA;
   /* 0x1AC */ s16 finishPosition;
   /* 0x1AE */ s16 racePosition;
   /* 0x1B0 */ s16 unk1B0;
@@ -1518,11 +1518,6 @@ typedef struct Object_Bridge_WhaleRamp {
   /* 0x0 */ f32 homeY;
   /* 0x4 */ SoundMask *soundMask;
 } Object_Bridge_WhaleRamp;
-
-typedef struct Object_8001B7A8 {
-              u8 pad0[0x112];
-  /* 0x112 */ s16 unk112;
-} Object_8001B7A8;
 
 typedef struct Object_64_80021400 {
   /* 0x00 */ u8 pad[0x2A];
@@ -1910,7 +1905,7 @@ typedef struct Object {
   /* 0x008C */ u32 unk8C;
   /* 0x0090 */ u32 unk90;
   /* 0x0094 */ u32 unk94;
-  /* 0x0098 */ Object_8001B7A8 obj;
+  /* 0x0098 */ s32 unk98;
 } Object;
 
 // Unused

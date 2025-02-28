@@ -280,12 +280,12 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
             sp5C = NULL;
             sp94 = 0.0f;
             sp90 = 0.0f;
-            temp_v0_3 = func_8001B7A8((Object *) racer, 1, &sp94);
+            temp_v0_3 = func_8001B7A8(racer, 1, &sp94);
             if (temp_v0_3 != NULL) {
                 sp5C = temp_v0_3->unk64;
             }
             sp58 = NULL;
-            temp_v0_3 = func_8001B7A8((Object *) racer, -1, &sp90);
+            temp_v0_3 = func_8001B7A8(racer, -1, &sp90);
             if (temp_v0_3 != NULL) {
                 sp58 = temp_v0_3->unk64;
             }
@@ -3350,13 +3350,13 @@ void handle_racer_head_turning(Object *obj, Object_Racer *racer, UNUSED s32 upda
         foundObj = turn_head_towards_object(obj, racer, tempObj, 400.0f * 400.0f);
     }
     if (foundObj == FALSE) {
-        tempObj = func_8001B7A8((Object *) racer, 1, &distance);
+        tempObj = func_8001B7A8(racer, 1, &distance);
         if (tempObj && !gRaceStartTimer) {
             foundObj = turn_head_towards_object(obj, racer, tempObj, 400.0f * 400.0f);
         }
     }
     if (foundObj == FALSE) {
-        tempObj = func_8001B7A8((Object *) racer, -1, &distance);
+        tempObj = func_8001B7A8(racer, -1, &distance);
         if (tempObj && !gRaceStartTimer) {
             foundObj = turn_head_towards_object(obj, racer, tempObj, 30000.0f);
         }
@@ -4675,7 +4675,80 @@ void play_char_horn_sound(Object *obj, Object_Racer *racer) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_8005698C.s")
+// Used for magnet and homing rockets to get the distance to the nearest racer.
+Object *func_8005698C(Object *racerObj, Object_Racer *racer, f32 *outDistance) {
+    Object_Racer *curRacer;
+    s32 i;
+    f32 curDistance;
+    f32 racerOx1;
+    UNUSED s32 pad;
+    f32 racerOy1;
+    Object *savedRacerObj;
+    Object *curRacerObj;
+    Object **racerObjects;
+    f32 racerOz1;
+    f32 racerOx3;
+    f32 racerOz3;
+    f32 savedDist;
+    f32 racerO1dist;
+    f32 racerOy3;
+    f32 racerO3dist;
+    f32 curDistance2;
+    s32 numRacers;
+    f32 savedDist2;
+    s32 isChallengeRace;
+    s32 raceType;
+
+    raceType = get_current_level_race_type();
+    isChallengeRace = raceType & RACETYPE_CHALLENGE;
+    if (racer->playerIndex == PLAYER_COMPUTER && !isChallengeRace) {
+        curDistance = 0.0f;
+        curRacerObj = func_8001B7A8(racer, 1, &curDistance);
+        *outDistance = curDistance;
+        return curRacerObj;
+    }
+    racerOx1 = racer->ox1;
+    racerOy1 = racer->oy1;
+    racerOz1 = racer->oz1;
+    racerO1dist = -((racerObj->segment.trans.x_position * racerOx1) + (racerObj->segment.trans.y_position * racerOy1) +
+                    (racerObj->segment.trans.z_position * racerOz1));
+    racerOx3 = racer->ox3;
+    racerOy3 = racer->oy3;
+    racerOz3 = racer->oz3;
+    racerO3dist = -((racerObj->segment.trans.x_position * racerOx3) + (racerObj->segment.trans.y_position * racerOy1) +
+                    (racerObj->segment.trans.z_position * racerOz3));
+    racerObjects = get_racer_objects(&numRacers);
+    // TODO: Need better names for these
+    savedDist2 = 10000.0f;
+    savedDist = 10000.0f;
+    savedRacerObj = NULL;
+    for (i = 0; i < numRacers; i++) {
+        if (racerObj != racerObjects[i]) {
+            curRacerObj = racerObjects[i];
+            curRacer = &racerObjects[i]->unk64->racer;
+            if ((!isChallengeRace || !curRacer->raceFinished) && curRacer->elevation == racer->elevation) {
+                curDistance = -((racerOx1 * curRacerObj->segment.trans.x_position) +
+                                (racerOy1 * curRacerObj->segment.trans.y_position) +
+                                (racerOz1 * curRacerObj->segment.trans.z_position) + racerO1dist);
+                if (curDistance > 0.0f) {
+                    curDistance2 = (racerOx3 * curRacerObj->segment.trans.x_position) +
+                                   (racerOy3 * curRacerObj->segment.trans.y_position) +
+                                   (racerOz3 * curRacerObj->segment.trans.z_position) + racerO3dist;
+                    if (curDistance2 < 0.0f) {
+                        curDistance2 = -curDistance2;
+                    }
+                    if ((curDistance2 < curDistance || raceType == RACETYPE_BOSS) && curDistance2 < savedDist2) {
+                        savedDist = curDistance;
+                        savedDist2 = curDistance2;
+                        savedRacerObj = curRacerObj;
+                    }
+                }
+            }
+        }
+    }
+    *outDistance = savedDist;
+    return savedRacerObj;
+}
 
 /**
  * When active, takes the magnet target, calculates the distance then sets the player's velocity

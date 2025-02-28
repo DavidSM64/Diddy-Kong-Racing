@@ -4749,19 +4749,19 @@ void set_ghost_none(void) {
     gHasGhostToSave = FALSE;
 }
 
-Object *func_8001B7A8(Object *racer, s32 position, f32 *distance) {
-    UNUSED s32 temp;
-    Object *tempRacer;
-    position = (racer->obj.unk112 - position) - 1;
+Object *func_8001B7A8(Object_Racer *racer, s32 position, f32 *distance) {
+    UNUSED s32 pad;
+    Object *tempRacerObj;
+    position = (racer->unk1AA - position) - 1;
     if (position < 0 || position >= gNumRacers) {
         return NULL;
     }
-    tempRacer = gRacersByPosition[position];
-    if (tempRacer == NULL) {
+    tempRacerObj = gRacersByPosition[position];
+    if (tempRacerObj == NULL) {
         return NULL;
     }
-    *distance = func_8001B834((Object_Racer *) racer, (Object_Racer *) tempRacer->unk64);
-    return tempRacer;
+    *distance = func_8001B834(racer, &tempRacerObj->unk64->racer);
+    return tempRacerObj;
 }
 
 f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
