@@ -60,11 +60,11 @@ Vp gViewportStack[20] = {
 };
 
 ObjectTransform D_800DD288 = {
-    0, 0, 0, 0, 1.0f, 0.0f, 0.0f, -281.0f,
+    { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, -281.0f,
 };
 
 ObjectTransform D_800DD2A0 = {
-    0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f,
+    { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f,
 };
 
 Matrix gOrthoMatrixF = {

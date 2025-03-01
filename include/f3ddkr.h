@@ -101,7 +101,7 @@
     _g->words.w1 = (unsigned int)(ptr);                                                                                             \
 }
 
-#define numberOfGfxCommands(gfxCmds) (sizeof(gfxCmds) / sizeof(Gwords))
+#define numberOfGfxCommands(gfxCmds) (sizeof(gfxCmds) / sizeof(Gfx))
 
 #define gDkrDmaDisplayList(pkt, address, numberOfCommands)                         \
 {                                                                                  \
