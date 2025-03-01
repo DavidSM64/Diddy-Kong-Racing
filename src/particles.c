@@ -478,12 +478,12 @@ void func_800AF29C(Particle *arg0, s32 behaviourID, s32 propertyID, s16 velX, s1
         arg0->data.unkC_400.unk16 = behaviour->unk24;
     } else {
         arg0->data.flags = 0;
-        arg0->data.angle.y_rotation = behaviour->unk14;
-        arg0->data.angle.x_rotation = behaviour->unk16;
-        arg0->data.angle.z_rotation = behaviour->unk18;
-        arg0->data.angle.y_direction = behaviour->unk22;
-        arg0->data.angle.x_direction = behaviour->unk24;
-        arg0->data.angle.z_direction = behaviour->unk26;
+        arg0->data.angle.rotation.y_rotation = behaviour->unk14;
+        arg0->data.angle.rotation.x_rotation = behaviour->unk16;
+        arg0->data.angle.rotation.z_rotation = behaviour->unk18;
+        arg0->data.angle.direction.y_rotation = behaviour->unk22;
+        arg0->data.angle.direction.x_rotation = behaviour->unk24;
+        arg0->data.angle.direction.z_rotation = behaviour->unk26;
     }
 }
 
@@ -539,25 +539,25 @@ void func_800AF52C(Object *obj, s32 arg1) {
             }
         }
         if (behaviour->flags & 1) {
-            temp_v0->data.angle.z_rotation = behaviour->unk14;
-            temp_v0->data.angle.y_direction = behaviour->unk16;
+            temp_v0->data.angle.rotation.z_rotation = behaviour->unk14;
+            temp_v0->data.angle.direction.y_rotation = behaviour->unk16;
         }
         if (behaviour->flags & 4) {
-            temp_v0->data.angle.x_direction = behaviour->unk22;
-            temp_v0->data.angle.z_direction = behaviour->unk24;
+            temp_v0->data.angle.direction.x_rotation = behaviour->unk22;
+            temp_v0->data.angle.direction.z_rotation = behaviour->unk24;
         }
     } else {
         if (behaviour->flags & 1) {
             temp_v0->data.unk6 = 0;
-            temp_v0->data.angle.y_rotation = behaviour->unk14;
-            temp_v0->data.angle.x_rotation = behaviour->unk16;
-            temp_v0->data.angle.z_rotation = behaviour->unk18;
+            temp_v0->data.angle.rotation.y_rotation = behaviour->unk14;
+            temp_v0->data.angle.rotation.x_rotation = behaviour->unk16;
+            temp_v0->data.angle.rotation.z_rotation = behaviour->unk18;
         }
         if (behaviour->flags & 4) {
             temp_v0->data.lifeTime = 0;
-            temp_v0->data.angle.y_direction = behaviour->unk22;
-            temp_v0->data.angle.x_direction = behaviour->unk24;
-            temp_v0->data.angle.z_direction = behaviour->unk26;
+            temp_v0->data.angle.direction.y_rotation = behaviour->unk22;
+            temp_v0->data.angle.direction.x_rotation = behaviour->unk24;
+            temp_v0->data.angle.direction.z_rotation = behaviour->unk26;
         }
     }
     temp_v0->data.flags &= 0xFDFF;
@@ -877,19 +877,19 @@ void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehav
                 (f32) get_random_number_from_range(-arg3->gravityRange2, arg3->gravityRange2) * 0.00001525878906;
         }
         if (flags & (PARTICLE_UNK00000040 | PARTICLE_UNK00000020)) {
-            angle.y_rotation = arg2->data.angle.y_direction;
+            angle.y_rotation = arg2->data.angle.direction.y_rotation;
             if (flags & PARTICLE_UNK00000020) {
                 angle.y_rotation += get_random_number_from_range(-arg3->angleRangeY2, arg3->angleRangeY2);
             }
-            angle.x_rotation = arg2->data.angle.x_direction;
+            angle.x_rotation = arg2->data.angle.direction.x_rotation;
             if (flags & PARTICLE_UNK00000040) {
                 angle.x_rotation += get_random_number_from_range(-arg3->angleRangeX2, arg3->angleRangeX2);
             }
-            f32_vec3_apply_object_rotation3((ObjectTransform *) &angle, (f32 *) &velocityPos);
+            f32_vec3_apply_object_rotation3(&angle, &velocityPos.x);
         } else {
-            f32_vec3_apply_object_rotation3((ObjectTransform *) &arg2->data.angle.y_direction, (f32 *) &velocityPos);
+            f32_vec3_apply_object_rotation3(&arg2->data.angle.direction, &velocityPos.x);
         }
-        f32_vec3_apply_object_rotation((ObjectTransform *) arg0->segment.unk3C, (f32 *) &velocityPos);
+        f32_vec3_apply_object_rotation((ObjectTransform *) arg0->segment.unk3C, &velocityPos.x);
         arg0->segment.x_velocity += velocityPos.x;
         arg0->segment.y_velocity += velocityPos.y;
         arg0->segment.z_velocity += velocityPos.z;
@@ -920,17 +920,17 @@ void func_800B03C0(Particle *particle, Particle *arg1, Particle *arg2, ParticleB
                         0.00001525878906;
         }
         if (flags & (PARTICLE_UNK00000004 | PARTICLE_UNK00000002)) {
-            angle.y_rotation = arg2->data.angle.y_rotation;
+            angle.y_rotation = arg2->data.angle.rotation.y_rotation;
             if (flags & PARTICLE_UNK00000002) {
                 angle.y_rotation += get_random_number_from_range(-behaviour->angleRangeY1, behaviour->angleRangeY1);
             }
-            angle.x_rotation = arg2->data.angle.x_rotation;
+            angle.x_rotation = arg2->data.angle.rotation.x_rotation;
             if (flags & PARTICLE_UNK00000004) {
                 angle.x_rotation += get_random_number_from_range(-behaviour->angleRangeX1, behaviour->angleRangeX1);
             }
-            f32_vec3_apply_object_rotation3((ObjectTransform *) &angle, (f32 *) &posVel);
+            f32_vec3_apply_object_rotation3(&angle, (f32 *) &posVel);
         } else {
-            f32_vec3_apply_object_rotation((ObjectTransform *) &arg2->data.angle.y_rotation, (f32 *) &posVel);
+            f32_vec3_apply_object_rotation((Vec3s *) &arg2->data.angle.rotation.y_rotation, (f32 *) &posVel);
         }
         particle->baseVelX += posVel.x;
         particle->baseVelY += posVel.y;
@@ -1009,13 +1009,13 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
     }
     func_800B03C0(var_v0, arg0, arg1, sp20);
     if (sp20->flags & 0x80) {
-        var_v0->segment.trans.y_rotation = sp20->angleOffsetY;
-        var_v0->segment.trans.x_rotation = sp20->angleOffsetX;
-        var_v0->segment.trans.z_rotation = sp20->angleOffsetZ;
+        var_v0->segment.trans.rotation.y_rotation = sp20->angleOffsetY;
+        var_v0->segment.trans.rotation.x_rotation = sp20->angleOffsetX;
+        var_v0->segment.trans.rotation.z_rotation = sp20->angleOffsetZ;
     } else {
-        var_v0->segment.trans.y_rotation = arg0->segment.trans.y_rotation + sp20->angleOffsetY;
-        var_v0->segment.trans.x_rotation = arg0->segment.trans.x_rotation + sp20->angleOffsetX;
-        var_v0->segment.trans.z_rotation = arg0->segment.trans.z_rotation + sp20->angleOffsetZ;
+        var_v0->segment.trans.rotation.y_rotation = arg0->segment.trans.rotation.y_rotation + sp20->angleOffsetY;
+        var_v0->segment.trans.rotation.x_rotation = arg0->segment.trans.rotation.x_rotation + sp20->angleOffsetX;
+        var_v0->segment.trans.rotation.z_rotation = arg0->segment.trans.rotation.z_rotation + sp20->angleOffsetZ;
     }
     var_v0->angleVelY = sp20->angleVelY;
     var_v0->angleVelX = sp20->angleVelX;
@@ -1029,12 +1029,12 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
         var_v0->forwardVel = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
     }
     if (sp20->flags & 2) {
-        arg1->data.angle.z_rotation += sp20->unk1C;
-        arg1->data.angle.y_direction += sp20->unk1E;
+        arg1->data.angle.rotation.z_rotation += sp20->unk1C;
+        arg1->data.angle.direction.y_rotation += sp20->unk1E;
     }
     if (sp20->flags & 8) {
-        arg1->data.angle.x_direction += sp20->unk2A;
-        arg1->data.angle.z_direction += sp20->unk2C;
+        arg1->data.angle.direction.x_rotation += sp20->unk2A;
+        arg1->data.angle.direction.z_rotation += sp20->unk2C;
     }
     var_v0->segment.unk1A = properties->unk6;
     var_v0->segment.textureFrame = 0;
@@ -1342,26 +1342,26 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     }
     func_800B03C0(var_v0, arg0, arg1, behaviour);
     if (behaviour->flags & 0x80) {
-        var_v0->segment.trans.y_rotation = behaviour->angleOffsetY;
-        var_v0->segment.trans.x_rotation = behaviour->angleOffsetX;
-        var_v0->segment.trans.z_rotation = behaviour->angleOffsetZ;
+        var_v0->segment.trans.rotation.y_rotation = behaviour->angleOffsetY;
+        var_v0->segment.trans.rotation.x_rotation = behaviour->angleOffsetX;
+        var_v0->segment.trans.rotation.z_rotation = behaviour->angleOffsetZ;
     } else {
-        var_v0->segment.trans.y_rotation = arg0->segment.trans.y_rotation + behaviour->angleOffsetY;
-        var_v0->segment.trans.x_rotation = arg0->segment.trans.x_rotation + behaviour->angleOffsetX;
-        var_v0->segment.trans.z_rotation = arg0->segment.trans.z_rotation + behaviour->angleOffsetZ;
+        var_v0->segment.trans.rotation.y_rotation = arg0->segment.trans.rotation.y_rotation + behaviour->angleOffsetY;
+        var_v0->segment.trans.rotation.x_rotation = arg0->segment.trans.rotation.x_rotation + behaviour->angleOffsetX;
+        var_v0->segment.trans.rotation.z_rotation = arg0->segment.trans.rotation.z_rotation + behaviour->angleOffsetZ;
     }
     flags = behaviour->behaviourFlags & (PARTICLE_ANGLE_Z | PARTICLE_ANGLE_X | PARTICLE_ANGLE_Y);
     if (flags != 0) {
         if (flags & PARTICLE_ANGLE_Y) {
-            var_v0->segment.trans.y_rotation +=
+            var_v0->segment.trans.rotation.y_rotation +=
                 get_random_number_from_range(-behaviour->angleRangeY3, behaviour->angleRangeY3);
         }
         if (flags & PARTICLE_ANGLE_X) {
-            var_v0->segment.trans.x_rotation +=
+            var_v0->segment.trans.rotation.x_rotation +=
                 get_random_number_from_range(-behaviour->angleRangeX3, behaviour->angleRangeX3);
         }
         if (flags & PARTICLE_ANGLE_Z) {
-            var_v0->segment.trans.z_rotation +=
+            var_v0->segment.trans.rotation.z_rotation +=
                 get_random_number_from_range(-behaviour->angleRangeZ3, behaviour->angleRangeZ3);
         }
     }
@@ -1390,18 +1390,18 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     if (behaviour->flags & 2) {
         arg1->data.unk6++;
         if (arg1->data.unk6 >= behaviour->unk1A) {
-            arg1->data.angle.y_rotation += behaviour->unk1C;
-            arg1->data.angle.x_rotation += behaviour->unk1E;
-            arg1->data.angle.z_rotation += behaviour->unk18;
+            arg1->data.angle.rotation.y_rotation += behaviour->unk1C;
+            arg1->data.angle.rotation.x_rotation += behaviour->unk1E;
+            arg1->data.angle.rotation.z_rotation += behaviour->unk18;
             arg1->data.unk6 -= behaviour->unk1A;
         }
     }
     if (behaviour->flags & 8) {
         arg1->data.lifeTime++;
         if (arg1->data.lifeTime >= behaviour->unk28) {
-            arg1->data.angle.y_direction += behaviour->unk2A;
-            arg1->data.angle.x_direction += behaviour->unk2C;
-            arg1->data.angle.z_direction += behaviour->unk2E;
+            arg1->data.angle.direction.y_rotation += behaviour->unk2A;
+            arg1->data.angle.direction.x_rotation += behaviour->unk2C;
+            arg1->data.angle.direction.z_rotation += behaviour->unk2E;
             arg1->data.lifeTime -= behaviour->unk28;
         }
     }
@@ -1897,9 +1897,9 @@ void move_particle_basic_parent(Particle *particle) {
         particle->baseVelY += particle->segment.y_velocity;
         particle->segment.y_velocity -= particle->gravity;
         particle->baseVelZ += particle->segment.z_velocity;
-        particle->segment.trans.y_rotation += particle->angleVelY;
-        particle->segment.trans.x_rotation += particle->angleVelX;
-        particle->segment.trans.z_rotation += particle->angleVelZ;
+        particle->segment.trans.rotation.y_rotation += particle->angleVelY;
+        particle->segment.trans.rotation.x_rotation += particle->angleVelX;
+        particle->segment.trans.rotation.z_rotation += particle->angleVelZ;
         particle->segment.trans.scale += particle->segment.scaleVel;
     }
     particle->segment.trans.x_position = particle->baseVelX;
@@ -1924,9 +1924,9 @@ void move_particle_velocity_parent(Particle *particle) {
 
     i = gParticleUpdateRate;
     while (i-- > 0) {
-        particle->segment.trans.y_rotation += particle->angleVelY;
-        particle->segment.trans.x_rotation += particle->angleVelX;
-        particle->segment.trans.z_rotation += particle->angleVelZ;
+        particle->segment.trans.rotation.y_rotation += particle->angleVelY;
+        particle->segment.trans.rotation.x_rotation += particle->angleVelX;
+        particle->segment.trans.rotation.z_rotation += particle->angleVelZ;
         particle->segment.trans.scale += particle->segment.scaleVel;
     }
     particle->segment.trans.x_position = 0.0f;
@@ -1957,9 +1957,9 @@ void move_particle_with_velocities(Particle *particle) {
         particle->segment.trans.y_position += particle->segment.y_velocity;
         particle->segment.trans.z_position += particle->segment.z_velocity;
         particle->segment.trans.scale += particle->segment.scaleVel;
-        particle->segment.trans.y_rotation += particle->angleVelY;
-        particle->segment.trans.x_rotation += particle->angleVelX;
-        particle->segment.trans.z_rotation += particle->angleVelZ;
+        particle->segment.trans.rotation.y_rotation += particle->angleVelY;
+        particle->segment.trans.rotation.x_rotation += particle->angleVelX;
+        particle->segment.trans.rotation.z_rotation += particle->angleVelZ;
         vel.x = 0.0f;
         vel.y = -particle->forwardVel;
         vel.z = 0.0f;
@@ -1983,9 +1983,9 @@ void move_particle_basic(Particle *particle) {
         particle->segment.y_velocity = particle->segment.y_velocity - particle->gravity;
         particle->segment.trans.z_position += particle->segment.z_velocity;
         particle->segment.trans.scale += particle->segment.scaleVel;
-        particle->segment.trans.y_rotation += particle->angleVelY;
-        particle->segment.trans.x_rotation += particle->angleVelX;
-        particle->segment.trans.z_rotation += particle->angleVelZ;
+        particle->segment.trans.rotation.y_rotation += particle->angleVelY;
+        particle->segment.trans.rotation.x_rotation += particle->angleVelX;
+        particle->segment.trans.rotation.z_rotation += particle->angleVelZ;
     }
 }
 
@@ -2005,9 +2005,9 @@ void move_particle_with_velocity(Particle *particle) {
         particle->segment.trans.y_position += particle->segment.y_velocity - particle->gravity;
         particle->segment.trans.z_position += particle->segment.z_velocity;
         particle->segment.trans.scale += particle->segment.scaleVel;
-        particle->segment.trans.y_rotation += particle->angleVelY;
-        particle->segment.trans.x_rotation += particle->angleVelX;
-        particle->segment.trans.z_rotation += particle->angleVelZ;
+        particle->segment.trans.rotation.y_rotation += particle->angleVelY;
+        particle->segment.trans.rotation.x_rotation += particle->angleVelX;
+        particle->segment.trans.rotation.z_rotation += particle->angleVelZ;
     }
 }
 

@@ -15,7 +15,10 @@ enum LightType {
 };
 
 typedef struct SubMiscAssetObjectHeader24 {
-    s32 unk0;
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
     s32 unk4;
 } SubMiscAssetObjectHeader24;
 
@@ -37,9 +40,7 @@ typedef struct ObjectLight {
     s16 homeY;
     s16 homeZ;
     Object *owner;
-    f32 x;
-    f32 y;
-    f32 z;
+    Vec3f pos;
     s32 unk1C;
     s32 unk20;
     s32 unk24;
@@ -48,14 +49,14 @@ typedef struct ObjectLight {
     s32 unk30;
     s32 unk34;
     s32 unk38;
-    s16 unk3C;
-    s16 unk3E;
-    s16 unk40;
-    s16 unk42;
+    u16 unk3C;
+    u16 unk3E;
+    u16 unk40;
+    u16 unk42;
     SubMiscAssetObjectHeader24 *unk44;
     u16 unk48;
-    s16 unk4A;
-    s16 unk4C;
+    u16 unk4A;
+    u16 unk4C;
     u16 unk4E;
     s16 unk50;
     s16 unk52;
@@ -72,8 +73,8 @@ typedef struct ObjectLight {
     s16 unk72;
     s16 unk74;
     s16 unk76;
-    s16 unk78;
-    s16 unk7A;
+    u16 unk78;
+    u16 unk7A;
     f32 unk7C; // Think this might be scale.
     f32 unk80; // Ditto.
     f32 unk84; // The evolved form of ditto.
@@ -96,11 +97,11 @@ f32 light_distance_calc(ObjectLight *light);
 f32 light_direction_calc(ObjectLight *light);
 ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry);
 ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1);
+void func_80032424(ObjectLight *light, s32 updateRate);
 
 //Non Matching
 void setup_lights(s32 count);
 void func_80032C7C(Object *object);
 void func_800337E4(void);
-void func_80032424(ObjectLight *light, s32 arg1);
 
 #endif

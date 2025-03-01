@@ -52,7 +52,7 @@ void f32_matrix_from_rotation_and_scale(Matrix mtx, s32 angle, f32 arg2, f32 arg
 void s16_vec3_apply_object_rotation(ObjectTransform *trans, s16 *vec3Arg);
 void f32_vec3_apply_object_rotation(ObjectTransform *trans, f32 *vec3_f32);
 void f32_vec3_apply_object_rotation2(ObjectTransform *trans, f32 *arg1);
-void f32_vec3_apply_object_rotation3(ObjectTransform *trans, f32 *vec3_f32);
+void f32_vec3_apply_object_rotation3(Vec3s *trans, f32 *vec3_f32);
 s32 point_triangle_2d_xz_intersection(s32 x, s32 z, s16 *vec3A, s16 *vec3B, s16 *vec3C);
 void f32_matrix_from_position(Matrix *mtx, f32 x, f32 y, f32 z);
 void f32_matrix_from_scale(Matrix, f32, f32, f32);

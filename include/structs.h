@@ -1793,9 +1793,7 @@ typedef struct unk800B2260_C {
 
 /* Size: 0x018 bytes */
 typedef struct ObjectTransform {
-  /* 0x0000 */ s16 y_rotation;
-  /* 0x0002 */ s16 x_rotation;
-  /* 0x0004 */ s16 z_rotation;
+  /* 0x0000 */ Vec3s rotation;
   /* 0x0006 */ s16 flags;
   /* 0x0008 */ f32 scale;
   /* 0x000C */ f32 x_position;

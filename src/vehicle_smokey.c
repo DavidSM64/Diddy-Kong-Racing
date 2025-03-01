@@ -243,7 +243,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
     diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
     if (sqrtf((diffX * diffX) + (diffZ * diffZ)) < 700.0) {
-        headAngleRange = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        headAngleRange = (arctan2_f(diffX, diffZ) - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
         if (headAngleRange > 0x8000) {
             headAngleRange -= 0xFFFF;
         }

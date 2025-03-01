@@ -185,7 +185,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
     diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
     if (sqrtf((diffX * diffX) + (diffZ * diffZ)) < 700.0) {
-        tempStartTimer = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        tempStartTimer = (arctan2_f(diffX, diffZ) - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(tempStartTimer, -0x8000, 0x8000);
         CLAMP(tempStartTimer, -headAngleRange, headAngleRange);
         racer->headAngleTarget = tempStartTimer;

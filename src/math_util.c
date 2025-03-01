@@ -280,12 +280,12 @@ void object_transform_to_matrix(Matrix mtx, ObjectTransform *trans) {
     f32 zRotCosine;
     f32 scale;
 
-    yRotSine = sins_s16(trans->y_rotation) * 0.000015f;
-    yRotCosine = coss_s16(trans->y_rotation) * 0.000015f;
-    xRotSine = sins_s16(trans->x_rotation) * 0.000015f;
-    xRotCosine = coss_s16(trans->x_rotation) * 0.000015f;
-    zRotSine = sins_s16(trans->z_rotation) * 0.000015f;
-    zRotCosine = coss_s16(trans->z_rotation) * 0.000015f;
+    yRotSine = sins_s16(trans->rotation.y_rotation) * 0.000015f;
+    yRotCosine = coss_s16(trans->rotation.y_rotation) * 0.000015f;
+    xRotSine = sins_s16(trans->rotation.x_rotation) * 0.000015f;
+    xRotCosine = coss_s16(trans->rotation.x_rotation) * 0.000015f;
+    zRotSine = sins_s16(trans->rotation.z_rotation) * 0.000015f;
+    zRotCosine = coss_s16(trans->rotation.z_rotation) * 0.000015f;
     scale = trans->scale * 0.000015f;
 
     mtx[0][0] = ((xRotSine * yRotSine * zRotSine) + (scale * yRotCosine)) * scale;
@@ -341,12 +341,12 @@ void object_transform_to_matrix_2(Matrix mtx, ObjectTransform *trans) {
     f32 zRotCosine;
     f32 scale;
 
-    yRotCosine = coss_s16(trans->y_rotation) * 0.000015f;
-    yRotSine = sins_s16(trans->y_rotation) * 0.000015f;
-    xRotCosine = coss_s16(trans->x_rotation) * 0.000015f;
-    xRotSine = sins_s16(trans->x_rotation) * 0.000015f;
-    zRotCosine = coss_s16(trans->z_rotation) * 0.000015f;
-    zRotSine = sins_s16(trans->z_rotation) * 0.000015f;
+    yRotCosine = coss_s16(trans->rotation.y_rotation) * 0.000015f;
+    yRotSine = sins_s16(trans->rotation.y_rotation) * 0.000015f;
+    xRotCosine = coss_s16(trans->rotation.x_rotation) * 0.000015f;
+    xRotSine = sins_s16(trans->rotation.x_rotation) * 0.000015f;
+    zRotCosine = coss_s16(trans->rotation.z_rotation) * 0.000015f;
+    zRotSine = sins_s16(trans->rotation.z_rotation) * 0.000015f;
 
     scale = trans->scale * 0.000015f;
 
@@ -412,12 +412,12 @@ void s16_vec3_apply_object_rotation(ObjectTransform *trans, s16 *vec3Arg) {
     s32 temp_t4;
     s32 temp_t5;
 
-    yRotCosine = coss_s16(trans->y_rotation);
-    yRotSine = sins_s16(trans->y_rotation);
-    xRotCosine = coss_s16(trans->x_rotation);
-    xRotSine = sins_s16(trans->x_rotation);
-    zRotCosine = coss_s16(trans->z_rotation);
-    zRotSine = sins_s16(trans->z_rotation);
+    yRotCosine = coss_s16(trans->rotation.y_rotation);
+    yRotSine = sins_s16(trans->rotation.y_rotation);
+    xRotCosine = coss_s16(trans->rotation.x_rotation);
+    xRotSine = sins_s16(trans->rotation.x_rotation);
+    zRotCosine = coss_s16(trans->rotation.z_rotation);
+    zRotSine = sins_s16(trans->rotation.z_rotation);
 
     temp_t3 = ((vec3Arg[0] * yRotSine) - (vec3Arg[1] * yRotCosine)) >> 16;
     temp_t4 = ((vec3Arg[1] * yRotSine) + (vec3Arg[0] * yRotCosine)) >> 16;
@@ -449,12 +449,12 @@ void f32_vec3_apply_object_rotation(ObjectTransform *trans, f32 *vec3_f32) {
     f32 x, y, z;
     f32 temp;
 
-    zRotSine = sinf(trans->z_rotation);
-    zRotCosine = cosf(trans->z_rotation);
-    xRotSine = sinf(trans->x_rotation);
-    xRotCosine = cosf(trans->x_rotation);
-    yRotSine = sinf(trans->y_rotation);
-    yRotCosine = cosf(trans->y_rotation);
+    zRotSine = sinf(trans->rotation.z_rotation);
+    zRotCosine = cosf(trans->rotation.z_rotation);
+    xRotSine = sinf(trans->rotation.x_rotation);
+    xRotCosine = cosf(trans->rotation.x_rotation);
+    yRotSine = sinf(trans->rotation.y_rotation);
+    yRotCosine = cosf(trans->rotation.y_rotation);
 
     x = vec3_f32[0];
     y = vec3_f32[1];
@@ -492,12 +492,12 @@ void f32_vec3_apply_object_rotation2(ObjectTransform *trans, f32 *arg1) {
     f32 temp_f6;
     f32 temp_f8;
 
-    xRotSine = sinf(trans->x_rotation);
-    xRotCosine = cosf(trans->x_rotation);
-    yRotSine = sinf(trans->y_rotation);
-    yRotCosine = cosf(trans->y_rotation);
-    zRotCosine = cosf(trans->z_rotation);
-    zRotSine = sinf(trans->z_rotation);
+    xRotSine = sinf(trans->rotation.x_rotation);
+    xRotCosine = cosf(trans->rotation.x_rotation);
+    yRotSine = sinf(trans->rotation.y_rotation);
+    yRotCosine = cosf(trans->rotation.y_rotation);
+    zRotCosine = cosf(trans->rotation.z_rotation);
+    zRotSine = sinf(trans->rotation.z_rotation);
 
     temp_f4 = (arg1[0] * xRotSine) + (arg1[2] * xRotCosine);
     temp_f8 = (arg1[2] * xRotSine) - (arg1[0] * xRotCosine);
@@ -519,7 +519,7 @@ GLOBAL_ASM("asm/math_util/f32_vec3_apply_object_rotation2.s")
 
 #ifdef NON_EQUIVALENT
 /* Official Name: mathOneFloatPY */
-void f32_vec3_apply_object_rotation3(ObjectTransform *trans, f32 *vec3_f32) {
+void f32_vec3_apply_object_rotation3(Vec3s *trans, f32 *vec3_f32) {
     f32 xRotSine;
     f32 xRotCosine;
     f32 yRotSine;

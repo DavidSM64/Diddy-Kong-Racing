@@ -11908,15 +11908,15 @@ void menu_camera_centre(void) {
 
     cam = get_active_camera_segment();
 
-    angleY = cam->trans.y_rotation;
-    angleX = cam->trans.x_rotation;
-    angleZ = cam->trans.z_rotation;
+    angleY = cam->trans.rotation.y_rotation;
+    angleX = cam->trans.rotation.x_rotation;
+    angleZ = cam->trans.rotation.z_rotation;
     posX = cam->trans.x_position;
     posY = cam->trans.y_position;
     posZ = cam->trans.z_position;
-    cam->trans.z_rotation = 0;
-    cam->trans.x_rotation = 0;
-    cam->trans.y_rotation = 0x8000;
+    cam->trans.rotation.z_rotation = 0;
+    cam->trans.rotation.x_rotation = 0;
+    cam->trans.rotation.y_rotation = 0x8000;
     cam->trans.x_position = -32.0f;
     cam->trans.y_position = -32.0f;
     cam->trans.z_position = -32.0f;
@@ -11924,9 +11924,9 @@ void menu_camera_centre(void) {
     update_envmap_position(0, 0, -1);
     func_80066CDC(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
-    cam->trans.y_rotation = angleY;
-    cam->trans.x_rotation = angleX;
-    cam->trans.z_rotation = angleZ;
+    cam->trans.rotation.y_rotation = angleY;
+    cam->trans.rotation.x_rotation = angleX;
+    cam->trans.rotation.z_rotation = angleZ;
     cam->trans.x_position = posX;
     cam->trans.y_position = posY;
     cam->trans.z_position = posZ;
@@ -12364,9 +12364,9 @@ void menu_element_render(s32 elementID) {
                 if (0) {} // Fakematch
                 object = (Object *) gMenuAssets[gMenuImages[elementID].spriteID];
                 asset = (MenuAsset *) &gMenuImages[elementID];
-                object->segment.trans.y_rotation = asset->y_rotation;
-                object->segment.trans.x_rotation = asset->x_rotation;
-                object->segment.trans.z_rotation = asset->z_rotation;
+                object->segment.trans.rotation.y_rotation = asset->y_rotation;
+                object->segment.trans.rotation.x_rotation = asset->x_rotation;
+                object->segment.trans.rotation.z_rotation = asset->z_rotation;
                 object->segment.trans.x_position = asset->x;
                 object->segment.trans.y_position = asset->y;
                 object->segment.trans.z_position = asset->z;
