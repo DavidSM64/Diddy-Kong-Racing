@@ -3708,7 +3708,120 @@ UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3
     *arg5 = endVal - 1;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
+// Only used in the unused function func_800149C0
+s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
+    Object* swapTemp;
+    s32 var_a0;
+    s32 var_a1;
+
+    var_a0 = arg0; 
+    var_a1 = arg1;
+    switch (arg3) {
+    case 0:
+        while (arg1 >= arg0) {
+            while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.x_position - gObjPtrList[arg0]->segment.particle.unk34) < arg2)) {
+                arg0++;
+            }
+            while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.x_position - gObjPtrList[arg1]->segment.particle.unk34))) {
+                arg1--;
+            }
+            if (arg0 < arg1) {
+                swapTemp = gObjPtrList[arg0];
+                gObjPtrList[arg0] = gObjPtrList[arg1];
+                gObjPtrList[arg1] = swapTemp; 
+                arg0++;
+                arg1--;
+            }
+        }
+        break;
+    case 1:
+        while (arg1 >= arg0) {
+            while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.y_position - gObjPtrList[arg0]->segment.particle.unk34) < arg2)) {
+                arg0++;
+            }
+            while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.y_position - gObjPtrList[arg1]->segment.particle.unk34))) {
+                arg1--;
+            } 
+            if (arg0 < arg1) {
+                swapTemp = gObjPtrList[arg0];
+                gObjPtrList[arg0] = gObjPtrList[arg1];
+                gObjPtrList[arg1] = swapTemp; 
+                arg0++;
+                arg1--;
+            }
+        }
+        break;
+    case 2:
+        while (arg1 >= arg0) {
+            while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.z_position - gObjPtrList[arg0]->segment.particle.unk34) < arg2)) {
+                arg0++;
+            }
+            while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.z_position - gObjPtrList[arg1]->segment.particle.unk34))) {
+                arg1--;
+            } 
+            if (arg0 < arg1) {
+                swapTemp = gObjPtrList[arg0];
+                gObjPtrList[arg0] = gObjPtrList[arg1];
+                gObjPtrList[arg1] = swapTemp; 
+                arg0++;
+                arg1--;
+            }
+        }
+        break;
+    case 8:
+        while (arg1 >= arg0) {
+            while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.x_position + gObjPtrList[arg0]->segment.particle.unk34) < arg2)) {
+                arg0++;
+            }
+            while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.x_position + gObjPtrList[arg1]->segment.particle.unk34))) {
+                arg1--;
+            }
+            if (arg0 < arg1) {
+                swapTemp = gObjPtrList[arg0];
+                gObjPtrList[arg0] = gObjPtrList[arg1];
+                gObjPtrList[arg1] = swapTemp; 
+                arg0++;
+                arg1--;
+            }
+        }
+        break;
+    case 9:
+        while (arg1 >= arg0) {
+            while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.y_position + gObjPtrList[arg0]->segment.particle.unk34) < arg2)) {
+                arg0++;
+            }
+            while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.y_position + gObjPtrList[arg1]->segment.particle.unk34))) {
+                arg1--;
+            }
+            if (arg0 < arg1) {
+                swapTemp = gObjPtrList[arg0];
+                gObjPtrList[arg0] = gObjPtrList[arg1];
+                gObjPtrList[arg1] = swapTemp; 
+                arg0++;
+                arg1--;
+            }
+        }
+        break;
+    case 10:
+        while (arg1 >= arg0) {
+            while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.z_position + gObjPtrList[arg0]->segment.particle.unk34) < arg2)) {
+                arg0++;
+            }
+            while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.z_position + gObjPtrList[arg1]->segment.particle.unk34))) {
+                arg1--;
+            }
+            if (arg0 < arg1) {
+                swapTemp = gObjPtrList[arg0];
+                gObjPtrList[arg0] = gObjPtrList[arg1];
+                gObjPtrList[arg1] = swapTemp; 
+                arg0++;
+                arg1--;
+            }
+        }
+        break;
+    }
+    return arg0;
+}
 
 /**
  * Takes every object and sorts the main object list by distance to the camera.

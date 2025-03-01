@@ -502,6 +502,7 @@ f32 func_8002277C(f32 *data, s32 index, f32 x);
 void race_transition_adventure(s32 updateRate);
 void func_8001E4C4(void);
 void func_8000B020(s32 numberOfVertices, s32 numberOfTriangles);
+s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -533,7 +534,6 @@ void func_800159C8(Object *, Object *);
 void func_80011264(ObjectModel *, Object *);
 void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
 s32 object_animate(Object *obj);
-s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 
 #endif
