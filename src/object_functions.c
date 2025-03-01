@@ -335,7 +335,7 @@ void obj_init_lasergun(Object *obj, LevelObjectEntry_Lasergun *entry) {
     laserGun->radius = entry->radius;
     laserGun->fireTimer = laserGun->fireRate;
     obj->segment.trans.rotation.y_rotation = entry->angleY << 4 << 4; // Not sure about the shift amounts here, but it
-    obj->segment.trans.rotation.x_rotation = entry->angleX << 4 << 4; // just needs to be 2 left shifts that add up to 8.
+    obj->segment.trans.rotation.x_rotation = entry->angleX << 4 << 4; // just needs to be 2 left shifts to add up to 8.
 }
 
 /**
@@ -1289,8 +1289,9 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
                 racer_set_dialogue_camera();
             }
             if (distance > 10.0) {
-                angleDiff =
-                    (arctan2_f(diffX / distance, diffZ / distance) - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
+                angleDiff = (arctan2_f(diffX / distance, diffZ / distance) -
+                             (obj->segment.trans.rotation.y_rotation & 0xFFFF)) +
+                            0x8000;
                 WRAP(angleDiff, -0x8000, 0x8000);
                 if (angleDiff > 0) {
                     if (angleDiff < 0x10) {
@@ -1317,7 +1318,9 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             racer_set_dialogue_camera();
             obj->segment.object.animationID = 0;
             tt->animFrameF += 3.0 * updateRateF;
-            angleDiff = (racerObj->segment.trans.rotation.y_rotation - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
+            angleDiff =
+                (racerObj->segment.trans.rotation.y_rotation - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) +
+                0x8000;
             WRAP(angleDiff, -0x8000, 0x8000);
             if (angleDiff > 0) {
                 if (angleDiff < 0x10) {
@@ -1935,8 +1938,10 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                             newObj = spawn_object(&newObject, 1);
                             if (newObj != NULL) {
                                 newObj->segment.level_entry = NULL;
-                                newObj->segment.trans.rotation.y_rotation = wizShipObj->segment.trans.rotation.y_rotation + 0x8000;
-                                newObj->segment.trans.rotation.x_rotation = -wizShipObj->segment.trans.rotation.x_rotation;
+                                newObj->segment.trans.rotation.y_rotation =
+                                    wizShipObj->segment.trans.rotation.y_rotation + 0x8000;
+                                newObj->segment.trans.rotation.x_rotation =
+                                    -wizShipObj->segment.trans.rotation.x_rotation;
                                 newObj->properties.lasergun.timer = 0x3C;
                                 guMtxXFMF(laserMtx, 0.0f, 0.0f, -30.0f, &newObj->segment.x_velocity,
                                           &newObj->segment.y_velocity, &newObj->segment.z_velocity);
@@ -2155,7 +2160,8 @@ void obj_loop_animcamera(Object *obj, s32 updateRate) {
         if (updateCam) {
             write_to_object_render_stack(camera->cameraID, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                          obj->segment.trans.z_position, 0x8000 - obj->segment.trans.rotation.y_rotation,
-                                         -obj->segment.trans.rotation.x_rotation, obj->segment.trans.rotation.z_rotation);
+                                         -obj->segment.trans.rotation.x_rotation,
+                                         obj->segment.trans.rotation.z_rotation);
         }
     }
 }
@@ -2680,9 +2686,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 racer_set_dialogue_camera();
             }
             if (distance > 10.0) {
-                arctan =
-                    (arctan2_f(xPosDiff / distance, zPosDiff / distance) - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) +
-                    0x8000;
+                arctan = (arctan2_f(xPosDiff / distance, zPosDiff / distance) -
+                          (obj->segment.trans.rotation.y_rotation & 0xFFFF)) +
+                         0x8000;
                 if (arctan > 0x8000) {
                     arctan -= 0xFFFF;
                 }
@@ -2711,7 +2717,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             racer_set_dialogue_camera();
             obj->segment.object.animationID = 0;
             taj->animFrameF += updateRateF * 2.0;
-            arctan = (racerObj->segment.trans.rotation.y_rotation - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
+            arctan = (racerObj->segment.trans.rotation.y_rotation - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) +
+                     0x8000;
             if (arctan > 0x8000) {
                 arctan -= 0xFFFF;
             }
@@ -2743,7 +2750,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 taj->unk18 = -1.0f;
                 obj->properties.npc.action = TAJ_MODE_DIALOGUE;
             }
-            arctan = (racerObj->segment.trans.rotation.y_rotation - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
+            arctan = (racerObj->segment.trans.rotation.y_rotation - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) +
+                     0x8000;
             if (arctan > 0x8000) {
                 arctan -= 0xFFFF;
             }
@@ -6086,8 +6094,10 @@ void obj_loop_butterfly(Object *butterflyObj, s32 updateRate) {
             butterflyObj->segment.y_velocity = var_f0;
         }
         if (butterfly->unk108 != 0.0f) {
-            butterflyObj->segment.x_velocity = sins_f(butterflyObj->segment.trans.rotation.y_rotation) * -butterfly->unk108;
-            butterflyObj->segment.z_velocity = coss_f(butterflyObj->segment.trans.rotation.y_rotation) * -butterfly->unk108;
+            butterflyObj->segment.x_velocity =
+                sins_f(butterflyObj->segment.trans.rotation.y_rotation) * -butterfly->unk108;
+            butterflyObj->segment.z_velocity =
+                coss_f(butterflyObj->segment.trans.rotation.y_rotation) * -butterfly->unk108;
             move_object(butterflyObj, butterflyObj->segment.x_velocity, butterflyObj->segment.y_velocity,
                         butterflyObj->segment.z_velocity);
         }
@@ -6432,7 +6442,8 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                 if (frog->hopTimer < 0) {
                     hopping = TRUE;
                     frog->forwardVel = get_random_number_from_range(40, 72);
-                    frog->hopDirection = get_random_number_from_range(-0x4000, 0x4000) + obj->segment.trans.rotation.y_rotation;
+                    frog->hopDirection =
+                        get_random_number_from_range(-0x4000, 0x4000) + obj->segment.trans.rotation.y_rotation;
                 }
             }
             if (hopping) {

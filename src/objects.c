@@ -1873,7 +1873,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
 
     // WRONG WRONG WRONG - Is this really just trying to set up the first several values in a weird way?
     for (var_s0_5 = 0; var_s0_5 < sizeOfobj; var_s0_5 += 4) {
-        newObj[var_s0_5].segment.trans.rotation.y_rotation = (*gSpawnObjectHeap)[var_s0_5]->segment.trans.rotation.y_rotation;
+        newObj[var_s0_5].segment.trans.rotation.y_rotation =
+            (*gSpawnObjectHeap)[var_s0_5]->segment.trans.rotation.y_rotation;
     }
     if (newObj->waterEffect != NULL) {
         newObj->waterEffect =
@@ -5552,7 +5553,8 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 
     if (environmentMappingEnabled) {
         // Calculates environment mapping for the object
-        calc_env_mapping_for_object(model, object->segment.trans.rotation.z_rotation, object->segment.trans.rotation.x_rotation,
+        calc_env_mapping_for_object(model, object->segment.trans.rotation.z_rotation,
+                                    object->segment.trans.rotation.x_rotation,
                                     object->segment.trans.rotation.y_rotation);
     }
 }

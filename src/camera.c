@@ -1109,9 +1109,11 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         gSPVertexDKR((*dlist)++, OS_PHYSICAL_TO_K0(*vertexList), 1, 0);
         (*vertexList)++;
         if (gCutsceneCameraActive == 0) {
-            angleDiff = gCameraSegment[gActiveCameraID].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
+            angleDiff =
+                gCameraSegment[gActiveCameraID].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
         } else {
-            angleDiff = gCameraSegment[gActiveCameraID + 4].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
+            angleDiff =
+                gCameraSegment[gActiveCameraID + 4].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
         }
         textureFrame = obj->segment.animFrame;
         gModelMatrixStackPos++;
@@ -1174,7 +1176,8 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         gModelMatrixStackPos++;
         gCameraTransform.rotation.y_rotation = -segment->trans.rotation.y_rotation;
         gCameraTransform.rotation.x_rotation = -segment->trans.rotation.x_rotation;
-        gCameraTransform.rotation.z_rotation = gCameraSegment[gActiveCameraID].trans.rotation.z_rotation + segment->trans.rotation.z_rotation;
+        gCameraTransform.rotation.z_rotation =
+            gCameraSegment[gActiveCameraID].trans.rotation.z_rotation + segment->trans.rotation.z_rotation;
         gCameraTransform.x_position = 0.0f;
         gCameraTransform.y_position = 0.0f;
         gCameraTransform.z_position = 0.0f;
@@ -1472,10 +1475,14 @@ UNUSED void translate_camera_segment(f32 x, f32 y, f32 z) {
  * Also recalculates which block it's in.
  */
 UNUSED void transform_camera_segment(f32 x, UNUSED f32 y, f32 z) {
-    gCameraSegment[gActiveCameraID].trans.x_position -= x * coss_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
-    gCameraSegment[gActiveCameraID].trans.z_position -= x * sins_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
-    gCameraSegment[gActiveCameraID].trans.x_position -= z * sins_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
-    gCameraSegment[gActiveCameraID].trans.z_position += z * coss_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
+    gCameraSegment[gActiveCameraID].trans.x_position -=
+        x * coss_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
+    gCameraSegment[gActiveCameraID].trans.z_position -=
+        x * sins_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
+    gCameraSegment[gActiveCameraID].trans.x_position -=
+        z * sins_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
+    gCameraSegment[gActiveCameraID].trans.z_position +=
+        z * coss_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
     gCameraSegment[gActiveCameraID].object.cameraSegmentID = get_level_segment_index_from_position(
         gCameraSegment[gActiveCameraID].trans.x_position, gCameraSegment[gActiveCameraID].trans.y_position,
         gCameraSegment[gActiveCameraID].trans.z_position);

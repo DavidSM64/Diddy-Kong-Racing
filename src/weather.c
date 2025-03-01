@@ -92,10 +92,14 @@ Vertex gRainVertices[16] = {
 };
 
 RainPosData gRainSplashSegments[8] = {
-    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
-    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
-    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
-    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
 };
 
 RainGfxData gRainGfx[2] = {
@@ -941,8 +945,8 @@ void rain_render_splashes(s32 updateRate) {
                         }
                     }
                     if (firstIndexWithoutFlags >= 0) {
-                        randYRot =
-                            get_random_number_from_range(-0x2000, 0x2000) + racer->segment.trans.rotation.y_rotation + 0x8000;
+                        randYRot = get_random_number_from_range(-0x2000, 0x2000) +
+                                   racer->segment.trans.rotation.y_rotation + 0x8000;
                         randFloat = (f32) get_random_number_from_range(50, 500);
                         xPos = (sins_f(randYRot) * randFloat) + racer->segment.trans.x_position;
                         zPos = (coss_f(randYRot) * randFloat) + racer->segment.trans.z_position;
@@ -1101,7 +1105,8 @@ void render_rain_overlay(RainGfxData *arg0, s32 arg1) {
         if (opacity > 0) {
             altVertical = arg0->unk2;
             vertical = ((arg0->unk6 * vertical) >> 8) + arg0->unk2;
-            altHorizontal = (arg0->unk0 + ((horizontal * 6 * gWeatherCamera->trans.rotation.y_rotation) >> 16)) & temp_v1;
+            altHorizontal =
+                (arg0->unk0 + ((horizontal * 6 * gWeatherCamera->trans.rotation.y_rotation) >> 16)) & temp_v1;
             horizontal += altHorizontal;
             zSins = sins_f(gWeatherCamera->trans.rotation.z_rotation);
             zCoss = coss_f(gWeatherCamera->trans.rotation.z_rotation);

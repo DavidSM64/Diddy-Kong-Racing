@@ -3297,9 +3297,9 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     if (someRacer->playerIndex != PLAYER_COMPUTER) {
                         gCurrentHud->minimapMarker.y -= 1.0f;
                         gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_ARROW;
-                        gCurrentHud->minimapMarker.z_rotation =
-                            (objectGroup[i]->segment.trans.rotation.y_rotation - ((lvlMdl->minimapRotation * 0xFFFF) / 360)) &
-                            0xFFFF;
+                        gCurrentHud->minimapMarker.z_rotation = (objectGroup[i]->segment.trans.rotation.y_rotation -
+                                                                 ((lvlMdl->minimapRotation * 0xFFFF) / 360)) &
+                                                                0xFFFF;
 
                         if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
                             gCurrentHud->minimapMarker.z_rotation = 0xFFFF - gCurrentHud->minimapMarker.z_rotation;
