@@ -89,13 +89,13 @@ ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry
         newLight->homeY = 0;
         newLight->homeZ = 0;
         if (light != NULL) {
-            newLight->x = light->segment.trans.x_position;
-            newLight->y = light->segment.trans.y_position;
-            newLight->z = light->segment.trans.z_position;
+            newLight->pos.x = light->segment.trans.x_position;
+            newLight->pos.y = light->segment.trans.y_position;
+            newLight->pos.z = light->segment.trans.z_position;
         } else {
-            newLight->x = lightEntry->common.x;
-            newLight->y = lightEntry->common.y;
-            newLight->z = lightEntry->common.z;
+            newLight->pos.x = lightEntry->common.x;
+            newLight->pos.y = lightEntry->common.y;
+            newLight->pos.z = lightEntry->common.z;
         }
         newLight->unk1C = lightEntry->unkA << 16;
         newLight->unk2C = 0;
@@ -167,9 +167,9 @@ ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
         light->homeX = arg1->homeX;
         light->homeY = arg1->homeY;
         light->homeZ = arg1->homeZ;
-        light->x = light->homeX;
-        light->y = light->homeY;
-        light->z = light->homeZ;
+        light->pos.x = light->homeX;
+        light->pos.y = light->homeY;
+        light->pos.z = light->homeZ;
         light->unk1C = arg1->unk2 << 16;
         light->unk2C = 0;
         light->unk3C = 0;
@@ -272,7 +272,143 @@ void lightUpdateLights(s32 updateRate) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/lights/func_80032424.s")
+void func_80032424(ObjectLight *light, s32 updateRate) {
+    Vec3s rotation;
+    SubMiscAssetObjectHeader24 *var_a3;
+    s32 temp_v0;
+    SubMiscAssetObjectHeader24 *temp_v1;
+
+    if (light->owner != NULL) {
+        light->pos.x = light->homeX;
+        light->pos.y = light->homeY;
+        light->pos.z = light->homeZ;
+        f32_vec3_apply_object_rotation(&light->owner->segment.trans, (f32 *) &light->pos);
+        light->pos.x += light->owner->segment.trans.x_position;
+        light->pos.y += light->owner->segment.trans.y_position;
+        light->pos.z += light->owner->segment.trans.z_position;
+        light->unk5 = 1;
+    }
+    if (light->unk44 != NULL) {
+        light->unk4C += updateRate;
+        while (light->unk4C >= light->unk44[light->unk4A].unk4) {
+            light->unk4C -= light->unk44[light->unk4A].unk4;
+            light->unk4A++;
+            if (light->unk48 < light->unk4A) {
+                light->unk4A = 0;
+            }
+        }
+        temp_v1 = &light->unk44[light->unk4A];
+        if (light->unk4A < (light->unk48 - 1)) {
+            var_a3 = &light->unk44[light->unk4A + 1];
+        } else {
+            var_a3 = light->unk44;
+        }
+        temp_v0 = (0x10000 / temp_v1->unk4);
+        light->unk1C = ((var_a3->unk0 - temp_v1->unk0) * light->unk4C * temp_v0) + (temp_v1->unk0 << 0x10);
+        light->unk20 = ((var_a3->unk1 - temp_v1->unk1) * light->unk4C * temp_v0) + (temp_v1->unk1 << 0x10);
+        light->unk24 = ((var_a3->unk2 - temp_v1->unk2) * light->unk4C * temp_v0) + (temp_v1->unk2 << 0x10);
+        light->unk28 = ((var_a3->unk3 - temp_v1->unk3) * light->unk4C * temp_v0) + (temp_v1->unk3 << 0x10);
+    } else {
+        if (light->unk3C != 0) {
+            temp_v0 = light->unk3C;
+            if (updateRate < light->unk3C) {
+                light->unk1C += light->unk2C * updateRate;
+                light->unk3C -= updateRate;
+            } else {
+                light->unk3C = 0;
+                light->unk1C += light->unk2C * temp_v0;
+            }
+        }
+        if (light->unk3E != 0) {
+            temp_v0 = light->unk3E;
+            if (updateRate < light->unk3E) {
+                light->unk20 += light->unk30 * updateRate;
+                light->unk3E -= updateRate;
+            } else {
+                light->unk3E = 0;
+                light->unk20 += light->unk30 * temp_v0;
+            }
+        }
+        if (light->unk40 != 0) {
+            temp_v0 = light->unk40;
+            if (updateRate < light->unk40) {
+                light->unk24 += light->unk34 * updateRate;
+                light->unk40 -= updateRate;
+            } else {
+                light->unk40 = 0;
+                light->unk24 += light->unk34 * temp_v0;
+            }
+        }
+        if (light->unk42 != 0) {
+            temp_v0 = light->unk42;
+            if (updateRate < light->unk42) {
+                light->unk28 += light->unk38 * updateRate;
+                light->unk42 -= updateRate;
+            } else {
+                light->unk42 = 0;
+                light->unk28 += light->unk38 * temp_v0;
+            }
+        }
+    }
+    if (light->unk78 != 0) {
+        temp_v0 = light->unk78;
+        if (light->unk78 == 0xFFFF) {
+            light->unk70 += light->unk74 * updateRate;
+        } else if (updateRate < temp_v0) {
+            light->unk70 += light->unk74 * updateRate;
+            light->unk78 = temp_v0 - updateRate;
+        } else {
+            light->unk78 = 0;
+            light->unk70 += light->unk74 * temp_v0;
+        }
+        light->unk5 = 1;
+    }
+    if (light->unk7A != 0) {
+        temp_v0 = light->unk7A;
+        if (light->unk7A == 0xFFFF) {
+            light->unk72 += light->unk76 * updateRate;
+        } else if (updateRate < temp_v0) {
+            light->unk72 += light->unk76 * updateRate;
+            light->unk7A = temp_v0 - updateRate;
+        } else {
+            light->unk7A = 0;
+            light->unk72 += light->unk76 * temp_v0;
+        }
+        light->unk5 = 1;
+    }
+    if (light->unk5 != 0) {
+        light->unk50 = light->pos.x - light->radius;
+        light->unk56 = light->pos.x + light->radius;
+        if (light->unk0 == 1) {
+            light->unk52 = light->pos.y - light->radius;
+            light->unk58 = light->pos.y + light->radius;
+        } else {
+            light->unk52 = light->pos.y - light->unk60;
+            light->unk58 = light->pos.y + light->unk60;
+        }
+        if (light->unk0 == 0) {
+            light->unk54 = light->pos.z - light->unk64;
+            light->unk5A = light->pos.z + light->unk64;
+        } else {
+            light->unk54 = light->pos.z - light->radius;
+            light->unk5A = light->pos.z + light->radius;
+        }
+        if (light->unk1 == 2) {
+            light->unk84 = -1.0f;
+            rotation.y_rotation = light->unk70;
+            rotation.x_rotation = light->unk72;
+            rotation.z_rotation = 0;
+            f32_vec3_apply_object_rotation3(&rotation, &light->unk7C);
+            if (light->owner != NULL) {
+                f32_vec3_apply_object_rotation(&light->owner->segment.trans, &light->unk7C);
+            }
+            light->unk7C = -light->unk7C;
+            light->unk80 = -light->unk80;
+            light->unk84 = -light->unk84;
+        }
+        light->unk5 = 0;
+    }
+}
 
 /**
  * Official Name: killLight?
@@ -348,9 +484,9 @@ void func_80032C7C(Object *object) {
                         D_800DC968 = D_800DC968 + 1;
                     }
                 } else {
-                    gLightDiffX = entry->x - object->segment.trans.x_position;
-                    gLightDiffY = entry->y - object->segment.trans.y_position;
-                    gLightDiffZ = entry->z - object->segment.trans.z_position;
+                    gLightDiffX = entry->pos.x - object->segment.trans.x_position;
+                    gLightDiffY = entry->pos.y - object->segment.trans.y_position;
+                    gLightDiffZ = entry->pos.z - object->segment.trans.z_position;
                     if (entry->unk0 == 2) {
                         gLightDiffY = 0.0f;
                     }

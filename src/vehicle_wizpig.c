@@ -125,7 +125,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (find_next_checkpoint_node(racer->checkpoint, racer->unk1C8)->unk36[racer->unk1CA] == 1) {
         nextCheckpoint = TRUE;
     }
-    racer->x_rotation_offset = -obj->segment.trans.x_rotation;
+    racer->x_rotation_offset = -obj->segment.trans.rotation.x_rotation;
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 0x10) - 0x11;

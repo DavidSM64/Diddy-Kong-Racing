@@ -509,8 +509,8 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     load_and_set_texture_no_offset(&gSceneCurrDisplayList, NULL, RENDER_ANTI_ALIASING | RENDER_Z_COMPARE);
     D_8011D49C = 0;
     D_8011D49E = 0;
-    yCameraSins = sins_f(gSceneActiveCamera->trans.y_rotation * -1);
-    yCameraCoss = coss_f(gSceneActiveCamera->trans.y_rotation * -1);
+    yCameraSins = sins_f(gSceneActiveCamera->trans.rotation.y_rotation * -1);
+    yCameraCoss = coss_f(gSceneActiveCamera->trans.rotation.y_rotation * -1);
     D_8011D4AC = (gSceneActiveCamera->trans.x_position + (yCameraSins * 250.0));
     D_8011D4B0 = (gSceneActiveCamera->trans.z_position + (yCameraCoss * 250.0));
     D_8011D4A0 = -yCameraCoss;
@@ -772,8 +772,8 @@ void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
     if (arg0 >= 10 || arg0 == 0) {
         return;
     }
-    
-    for (j = 0, i = 0; i < arg0; ) {
+
+    for (j = 0, i = 0; i < arg0;) {
         temp = arg1[i];
         curr = &D_8011D478[D_8011D47C[(s16) (temp * 2)]];
         next = &D_8011D478[D_8011D47C[((s16) (temp * 2)) + 1]];
@@ -1096,27 +1096,27 @@ void func_800278E8(s32 updateRate) {
         zDelta = segment->trans.z_position - thisObject->segment.trans.z_position;
         xzSqr = sqrtf((xDelta * xDelta) + (zDelta * zDelta));
         if (D_8011B108 != 0) {
-            angleDiff = ((s32) (-atan2s(xDelta, zDelta) - segment->trans.y_rotation) + 0x8000);
+            angleDiff = ((s32) (-atan2s(xDelta, zDelta) - segment->trans.rotation.y_rotation) + 0x8000);
             //!@bug Never true, since angleDiff is signed. Should be >=.
             if (angleDiff > 0x8000) {
                 angleDiff = -(0xFFFF - angleDiff);
             }
-            segment->trans.y_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
-            angleDiff = atan2s(yDelta, xzSqr) - segment->trans.x_rotation;
+            segment->trans.rotation.y_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
+            angleDiff = atan2s(yDelta, xzSqr) - segment->trans.rotation.x_rotation;
             //!@bug Never true, since angleDiff is signed. Should be >=.
             if (angleDiff > 0x8000) {
                 angleDiff = -(0xFFFF - angleDiff);
             }
-            segment->trans.x_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
+            segment->trans.rotation.x_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
             D_8011B108 -= updateRate;
             if (D_8011B108 < 0) {
                 D_8011B108 = 0;
             }
         } else {
-            segment->trans.y_rotation = 0x8000 - atan2s(xDelta, zDelta);
-            segment->trans.x_rotation = atan2s(yDelta, xzSqr);
+            segment->trans.rotation.y_rotation = 0x8000 - atan2s(xDelta, zDelta);
+            segment->trans.rotation.x_rotation = atan2s(yDelta, xzSqr);
         }
-        segment->trans.z_rotation = 0;
+        segment->trans.rotation.z_rotation = 0;
         segment->object.cameraSegmentID = get_level_segment_index_from_position(
             segment->trans.x_position, currentRacer->oy1, segment->trans.z_position);
         D_8011B104 = currentRacer->cameraIndex;
@@ -3396,9 +3396,9 @@ void compute_scene_camera_transform_matrix(void) {
     f32 y = 0.0f;
     f32 z = -65536.0f;
 
-    trans.z_rotation = gSceneActiveCamera->trans.z_rotation;
-    trans.x_rotation = gSceneActiveCamera->trans.x_rotation;
-    trans.y_rotation = gSceneActiveCamera->trans.y_rotation;
+    trans.rotation.z_rotation = gSceneActiveCamera->trans.rotation.z_rotation;
+    trans.rotation.x_rotation = gSceneActiveCamera->trans.rotation.x_rotation;
+    trans.rotation.y_rotation = gSceneActiveCamera->trans.rotation.y_rotation;
     trans.x_position = 0.0f;
     trans.y_position = 0.0f;
     trans.z_position = 0.0f;

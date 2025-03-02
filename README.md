@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of February 27, 2025, this is our current score:
+As of March 2, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 71.03%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 71.83%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 49.99%
 <!-- README_SCORE_SUMMARY_END -->
@@ -126,20 +126,20 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of February 27th, 2025, this is our current score:
+As of March 2nd, 2025, this is our current score:
 ```
  ===============================================
      ADVENTURE ONE (ASM -> C Decompilation)
- ---- 71.03% Complete (74.19% NON_MATCHING) ----
-          # Decompiled functions: 1810
-           # GLOBAL_ASM remaining: 131
+ ---- 71.83% Complete (74.99% NON_MATCHING) ----
+          # Decompiled functions: 1814
+           # GLOBAL_ASM remaining: 127
           # NON_MATCHING functions: 15
        # NON_EQUIVALENT WIP functions: 44
  ----------------- Game Status -----------------
-    Balloons: 34/47, Keys: 4/4, Trophies: 3/5
+    Balloons: 35/47, Keys: 4/4, Trophies: 3/5
      T.T. Amulets: 3/4, Wizpig Amulets: 3/4
  -----------------------------------------------
-    We are racing in Haunted Woods. (Lap 3/3)
+ We are racing the dragon boss Smokey. (Lap 2/3)
  ===============================================
       ADVENTURE TWO (Cleanup & Documentation)
  --------------- 49.99% Complete ---------------
@@ -149,7 +149,7 @@ As of February 27th, 2025, this is our current score:
     Balloons: 24/47, Keys: 3/4, Trophies: 2/5
      T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  -----------------------------------------------
-   We are racing in Pirate Lagoon. (Lap 3/3)
+    We are racing in Pirate Lagoon. (Lap 3/3)
  ===============================================
 ```
 <!-- README_SCORE_END -->

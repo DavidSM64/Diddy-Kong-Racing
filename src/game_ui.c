@@ -2912,7 +2912,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     Object_Racer *someRacer;
     s32 i;
     s32 objectCount;
-    HudElement objTrans;
+    HudElement hudElem;
     f32 sp11C;
     f32 sp118;
     f32 sp114;
@@ -3218,22 +3218,22 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 gMinimapScreenY *= 1.2;
             }
             sprite_opaque(FALSE);
-            objTrans.x = gMinimapScreenX + gHudOffsetX + gHudBounceX;
-            objTrans.y = gMinimapScreenY;
+            hudElem.x = gMinimapScreenX + gHudOffsetX + gHudBounceX;
+            hudElem.y = gMinimapScreenY;
             if (osTvType == OS_TV_TYPE_PAL) {
-                objTrans.x -= 4.0f;
+                hudElem.x -= 4.0f;
             }
-            objTrans.z_rotation = -someObjSeg->trans.z_rotation;
-            objTrans.x_rotation = 0;
+            hudElem.z_rotation = -someObjSeg->trans.rotation.z_rotation;
+            hudElem.x_rotation = 0;
             if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
-                objTrans.y_rotation = -0x8000;
-                objTrans.x -= gMinimapDotOffsetX;
+                hudElem.y_rotation = -0x8000;
+                hudElem.x -= gMinimapDotOffsetX;
             } else {
-                objTrans.y_rotation = 0;
+                hudElem.y_rotation = 0;
             }
-            objTrans.spriteOffset = 0;
-            objTrans.z = 0.0f;
-            objTrans.scale = 1.0f;
+            hudElem.spriteOffset = 0;
+            hudElem.z = 0.0f;
+            hudElem.scale = 1.0f;
             opacity = mapOpacity;
             if (mapOpacity > 160) {
                 mapOpacity = 160;
@@ -3244,7 +3244,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gMinimapRed, gMinimapGreen, gMinimapBlue, mapOpacity);
             }
             render_ortho_triangle_image(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                        (ObjectSegment *) &objTrans, minimap, 0);
+                                        (ObjectSegment *) &hudElem, minimap, 0);
             sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
             sp118 = coss_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
             sp114 = sins_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
@@ -3297,9 +3297,9 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     if (someRacer->playerIndex != PLAYER_COMPUTER) {
                         gCurrentHud->minimapMarker.y -= 1.0f;
                         gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_ARROW;
-                        gCurrentHud->minimapMarker.z_rotation =
-                            (objectGroup[i]->segment.trans.y_rotation - ((lvlMdl->minimapRotation * 0xFFFF) / 360)) &
-                            0xFFFF;
+                        gCurrentHud->minimapMarker.z_rotation = (objectGroup[i]->segment.trans.rotation.y_rotation -
+                                                                 ((lvlMdl->minimapRotation * 0xFFFF) / 360)) &
+                                                                0xFFFF;
 
                         if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
                             gCurrentHud->minimapMarker.z_rotation = 0xFFFF - gCurrentHud->minimapMarker.z_rotation;

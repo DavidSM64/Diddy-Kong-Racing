@@ -92,10 +92,14 @@ Vertex gRainVertices[16] = {
 };
 
 RainPosData gRainSplashSegments[8] = {
-    { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
-    { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
-    { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
-    { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 }, { { 0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
+    { { { { { 0, 0, 0 } } }, 0, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0 },
 };
 
 RainGfxData gRainGfx[2] = {
@@ -625,7 +629,7 @@ void lensflare_init(Object *obj) {
     gLensFlarePos.x = 0;
     gLensFlarePos.y = 0;
     gLensFlarePos.z = -1.0f;
-    f32_vec3_apply_object_rotation3((ObjectTransform *) &angle, gLensFlarePos.f);
+    f32_vec3_apply_object_rotation3(&angle, gLensFlarePos.f);
     gLensFlarePos.x = -gLensFlarePos.x;
     gLensFlarePos.y = -gLensFlarePos.y;
     gLensFlarePos.z = -gLensFlarePos.z;
@@ -666,9 +670,9 @@ void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment
                 pos[0].z = (gLensFlarePos.z * 256.0f) + segment->trans.z_position;
                 magSquared = magnitude * magnitude;
                 magSquareSquared = magSquared * magSquared;
-                trans.y_rotation = 0;
-                trans.x_rotation = 0;
-                trans.z_rotation = 0;
+                trans.rotation.y_rotation = 0;
+                trans.rotation.x_rotation = 0;
+                trans.rotation.z_rotation = 0;
                 pos[1].x = (pos[1].x * (0, (2 * magnitude))) - gLensFlarePos.x;
                 pos[1].y = (pos[1].y * (0, (2 * magnitude))) - gLensFlarePos.y;
                 pos[1].z = (pos[1].z * (0, (2 * magnitude))) - gLensFlarePos.z;
@@ -941,8 +945,8 @@ void rain_render_splashes(s32 updateRate) {
                         }
                     }
                     if (firstIndexWithoutFlags >= 0) {
-                        randYRot =
-                            get_random_number_from_range(-0x2000, 0x2000) + racer->segment.trans.y_rotation + 0x8000;
+                        randYRot = get_random_number_from_range(-0x2000, 0x2000) +
+                                   racer->segment.trans.rotation.y_rotation + 0x8000;
                         randFloat = (f32) get_random_number_from_range(50, 500);
                         xPos = (sins_f(randYRot) * randFloat) + racer->segment.trans.x_position;
                         zPos = (coss_f(randYRot) * randFloat) + racer->segment.trans.z_position;
@@ -1060,8 +1064,8 @@ void rain_sound(UNUSED s32 updateRate) {
     f32 sineOffset;
 
     length = 1152.0f - (f32) (gLightningFrequency >> 6);
-    cosOffset = sins_f(gWeatherCamera->trans.y_rotation) * length;
-    sineOffset = coss_f(gWeatherCamera->trans.y_rotation) * length;
+    cosOffset = sins_f(gWeatherCamera->trans.rotation.y_rotation) * length;
+    sineOffset = coss_f(gWeatherCamera->trans.rotation.y_rotation) * length;
     xPos = gWeatherCamera->trans.x_position + (sineOffset - cosOffset);
     yPos = gWeatherCamera->trans.y_position;
     zPos = gWeatherCamera->trans.z_position + (-sineOffset - cosOffset);
@@ -1101,10 +1105,11 @@ void render_rain_overlay(RainGfxData *arg0, s32 arg1) {
         if (opacity > 0) {
             altVertical = arg0->unk2;
             vertical = ((arg0->unk6 * vertical) >> 8) + arg0->unk2;
-            altHorizontal = (arg0->unk0 + ((horizontal * 6 * gWeatherCamera->trans.y_rotation) >> 16)) & temp_v1;
+            altHorizontal =
+                (arg0->unk0 + ((horizontal * 6 * gWeatherCamera->trans.rotation.y_rotation) >> 16)) & temp_v1;
             horizontal += altHorizontal;
-            zSins = sins_f(gWeatherCamera->trans.z_rotation);
-            zCoss = coss_f(gWeatherCamera->trans.z_rotation);
+            zSins = sins_f(gWeatherCamera->trans.rotation.z_rotation);
+            zCoss = coss_f(gWeatherCamera->trans.rotation.z_rotation);
             verts = &gRainVertices[gRainVertexFlip];
             verts[0].x = ((D_800E2A8C * zCoss) - (D_800E2A9C * zSins));
             verts[0].y = ((D_800E2A8C * zSins) + (D_800E2A9C * zCoss));

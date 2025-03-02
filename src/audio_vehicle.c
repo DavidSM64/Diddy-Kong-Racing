@@ -525,8 +525,8 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
         gRacerSound->throttlePitch = 0.0f;
     }
     var_f14 += gRacerSound->throttlePitch;
-    sp28 = sins_f(obj->segment.trans.x_rotation);
-    var_f2 = sins_f(obj->segment.trans.z_rotation) * gRacerSound->unkC0;
+    sp28 = sins_f(obj->segment.trans.rotation.x_rotation);
+    var_f2 = sins_f(obj->segment.trans.rotation.z_rotation) * gRacerSound->unkC0;
     if (var_f2 < 0.0f) {
         var_f2 = -var_f2;
     }
@@ -722,7 +722,8 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                     var_f26 = 2250000.0f; //(1500.0f * 1500.0f)
                     var_f26 = (var_f26 - (gRacerSound->unk84 * gRacerSound->unk84)) / var_f26;
                     var_f26 *= var_f26;
-                    gRacerSound->unk91[0] = func_800090C0(tempxPos, tempzPos, segment[loopCount1].trans.y_rotation);
+                    gRacerSound->unk91[0] =
+                        func_800090C0(tempxPos, tempzPos, segment[loopCount1].trans.rotation.y_rotation);
                 } else {
                     var_f26 = 0.0f;
                 }
@@ -841,7 +842,8 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             temp_s3 *= 0.8;
                             if (gRacerSound->unk88 < temp_s3) {
                                 gRacerSound->unk88 = temp_s3;
-                                gRacerSound->unk91[0] = func_800090C0(tempxPos, tempzPos, segment->trans.y_rotation);
+                                gRacerSound->unk91[0] =
+                                    func_800090C0(tempxPos, tempzPos, segment->trans.rotation.y_rotation);
                                 if (racer->raceFinished != 0) {
                                     func_80006BFC(objs[loopCount1], segment, objs[loopCount2], updateRate);
                                 } else {
