@@ -3946,20 +3946,20 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
             }
             objRacer->particleEmitFlags |= OBJ_EMIT_UNK_400 | OBJ_EMIT_UNK_800;
         }
-        temp_f0 = (f64) someObj->segment.trans.y_position; // Fake
+        temp_f0 = someObj->segment.trans.y_position; // Fake
         for (i = 0; i < 4; i++) {
             someObj = objRacer->unk60->unk4[i];
             if (!(racer->unk1E3 & flags)) {
-                someObj->segment.trans.y_position += ((f64) (-10.0f - someObj->segment.trans.y_position) * 0.125);
+                someObj->segment.trans.y_position += ((-10.0f - someObj->segment.trans.y_position) * 0.125);
                 if (racer->waterTimer != 0) {
                     someObj->segment.trans.scale +=
-                        ((((f64) someObj->segment.header->scale * 1.4) - someObj->segment.trans.scale) * 0.1);
+                        (((someObj->segment.header->scale * 1.4) - someObj->segment.trans.scale) * 0.1);
                 }
             } else {
-                temp_f0 = (f64) someObj->segment.trans.y_position;
-                someObj->segment.trans.y_position = (f32) (temp_f0 - (temp_f0 * 0.125));
+                temp_f0 = someObj->segment.trans.y_position;
+                someObj->segment.trans.y_position = (temp_f0 - (temp_f0 * 0.125));
                 someObj->segment.trans.scale +=
-                    ((f64) (someObj->segment.header->scale - someObj->segment.trans.scale) * 0.1);
+                    ((someObj->segment.header->scale - someObj->segment.trans.scale) * 0.1);
             }
             flags <<= 1;
         }
