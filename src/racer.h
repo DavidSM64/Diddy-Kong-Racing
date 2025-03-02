@@ -232,11 +232,11 @@ void update_player_racer(Object *obj, s32 updateRate);
 void func_80045128(Object **racerObjs);
 void timetrial_ghost_write(Object *obj, s32 updateRate);
 void func_80046524(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);
+void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF);
 
 //Non Matching
 s32 set_ghost_position_and_rotation(Object *obj);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
-void func_80053750(Object *obj, Object_Racer *racer, f32);
 void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32, f32);
 s32 func_80017248(void*, s32, s32*, Vec3f*, f32*, f32*, s8* surface);
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */

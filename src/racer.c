@@ -3851,7 +3851,124 @@ void handle_car_velocity_control(Object_Racer *racer) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80053750.s")
+void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
+    Object *someObj;
+    f64 temp_f0;
+    f32 velocity;
+    s32 temp_v1;
+    s32 flags;
+    s32 isNotHardBraking;
+    s32 i;
+
+    if (objRacer->unk60 == NULL) {
+        return;
+    }
+    temp_v1 = objRacer->unk60->unk0;
+    if (temp_v1 == 2) {
+        someObj = objRacer->unk60->unk4[0];
+        someObj->segment.trans.rotation.y_rotation = 0x4000;
+        someObj = objRacer->unk60->unk4[1];
+        someObj->segment.trans.rotation.y_rotation = 0x4000;
+    }
+    if (temp_v1 >= 4) {
+        velocity = racer->velocity;
+        if (velocity > 5.0) {
+            velocity = 5.0;
+        }
+        if (velocity < -5.0) {
+            velocity = -5.0;
+        }
+        isNotHardBraking = TRUE;
+        if (racer->brake > 0.4) {
+            if (racer->throttle < 0.4) {
+                velocity = 0.0f;
+            }
+            isNotHardBraking = FALSE;
+        }
+        racer->unkB0 -= (velocity * updateRateF) * 0.5;
+        while (racer->unkB0 > 5.0) {
+            racer->unkB0 -= 5.0;
+            for (i = 0; i < 4; i++) {
+                if (i < 2 || isNotHardBraking) {
+                    someObj = objRacer->unk60->unk4[i];
+                    if ((racer->unk1FB != 0 && i >= 3) || racer->unk1FB == 0) {
+                        if (someObj->properties.common.unk0 != 0) {
+                            someObj->segment.object.modelIndex--;
+                            if (someObj->segment.object.modelIndex < 0) {
+                                someObj->segment.object.modelIndex = someObj->segment.header->numberOfModelIds - 1;
+                            }
+                        } else {
+                            someObj->segment.object.modelIndex++;
+                            if (someObj->segment.object.modelIndex == someObj->segment.header->numberOfModelIds) {
+                                someObj->segment.object.modelIndex = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        while (racer->unkB0 < 0.0f) {
+            racer->unkB0 += 5.0;
+            for (i = 0; i < 4; i++) {
+                if (i < 2 || isNotHardBraking) {
+                    someObj = objRacer->unk60->unk4[i];
+                    if ((racer->unk1FB != 0 && i >= 3) || racer->unk1FB == 0) {
+                        if (someObj->properties.common.unk0 == 0) {
+                            someObj->segment.object.modelIndex--;
+                            if (someObj->segment.object.modelIndex < 0) {
+                                someObj->segment.object.modelIndex = someObj->segment.header->numberOfModelIds - 1;
+                            }
+                        } else {
+                            someObj->segment.object.modelIndex++;
+                            if (someObj->segment.object.modelIndex == someObj->segment.header->numberOfModelIds) {
+                                someObj->segment.object.modelIndex = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        flags = 1;
+        if (racer->unk1FB != 0) {
+            for (i = 0; i < 2; i++) {
+                someObj = objRacer->unk60->unk4[i];
+                if (someObj->properties.racer.unk0 != 0) {
+                    someObj->segment.object.modelIndex--;
+                    if (someObj->segment.object.modelIndex < 0) {
+                        someObj->segment.object.modelIndex = (s8) (someObj->segment.header->numberOfModelIds - 1);
+                    }
+                } else {
+                    someObj->segment.object.modelIndex++;
+                    if (someObj->segment.object.modelIndex == someObj->segment.header->numberOfModelIds) {
+                        someObj->segment.object.modelIndex = 0;
+                    }
+                }
+            }
+            objRacer->particleEmitFlags |= OBJ_EMIT_UNK_400 | OBJ_EMIT_UNK_800;
+        }
+        temp_f0 = (f64) someObj->segment.trans.y_position; // Fake
+        for (i = 0; i < 4; i++) {
+            someObj = objRacer->unk60->unk4[i];
+            if (!(racer->unk1E3 & flags)) {
+                someObj->segment.trans.y_position += ((f64) (-10.0f - someObj->segment.trans.y_position) * 0.125);
+                if (racer->waterTimer != 0) {
+                    someObj->segment.trans.scale +=
+                        ((((f64) someObj->segment.header->scale * 1.4) - someObj->segment.trans.scale) * 0.1);
+                }
+            } else {
+                temp_f0 = (f64) someObj->segment.trans.y_position;
+                someObj->segment.trans.y_position = (f32) (temp_f0 - (temp_f0 * 0.125));
+                someObj->segment.trans.scale +=
+                    ((f64) (someObj->segment.header->scale - someObj->segment.trans.scale) * 0.1);
+            }
+            flags <<= 1;
+        }
+        someObj = objRacer->unk60->unk4[2];
+        someObj->segment.trans.rotation.y_rotation = gCurrentStickX * 100;
+        someObj = objRacer->unk60->unk4[3];
+        someObj->segment.trans.rotation.y_rotation = gCurrentStickX * 100;
+    }
+}
 
 /**
  * Initialise some states when a racer is attacked or runs into something.
