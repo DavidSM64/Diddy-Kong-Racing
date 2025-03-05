@@ -507,7 +507,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80042D20.s")
 #endif
 
 /**
@@ -660,7 +660,7 @@ s32 roll_percent_chance(s32 chance) {
     return get_random_number_from_range(0, 99) < chance;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_8004447C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004447C.s")
 
 void func_80045128(Object **racerObjs) {
     Object_Racer *obj;
@@ -678,8 +678,8 @@ void func_80045128(Object **racerObjs) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_800452A0.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80045C48.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_800452A0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80045C48.s")
 
 void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     s32 objectMoved;
@@ -1643,7 +1643,7 @@ f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3,
     return velocity;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80049794.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80049794.s")
 
 /**
  * When turning left and right in a plane, apply the tilting animation to the character.
@@ -1942,10 +1942,10 @@ void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
     racer->cameraYaw = gCameraObject->trans.rotation.y_rotation;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/update_camera_plane.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/update_camera_plane.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/racer/func_8004CC20.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004CC20.s")
 
 /**
  * Handles the camera movement when the player is on a loop-the-loop.
@@ -2742,7 +2742,7 @@ void set_racer_tail_lights(Object_Racer *racer) {
     racer->lightFlags = (racer->lightFlags & 0xFFF0) | lightTimer;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004F7F4.s")
 
 /**
  * At this point, control is taken away from the player.
@@ -3313,7 +3313,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/func_80050A28.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80050A28.s")
 #endif
 
 /**
@@ -4359,7 +4359,7 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
     obj->segment.y_velocity -= weight * updateRateF;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80054FD0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80054FD0.s")
 
 /**
  * Update the collision of the racer.
@@ -5535,7 +5535,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     racer->cameraYaw = gCameraObject->trans.rotation.y_rotation;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/update_camera_car.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/update_camera_car.s")
 #endif
 
 /**
@@ -5808,7 +5808,7 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/func_80059208.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80059208.s")
 #endif
 
 /**
@@ -6099,7 +6099,7 @@ s32 set_ghost_position_and_rotation(Object *obj) {
     return TRUE;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/set_ghost_position_and_rotation.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/set_ghost_position_and_rotation.s")
 #endif
 
 /**
@@ -6752,7 +6752,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8005B818.s")
 #endif
 
 #ifdef ANTI_TAMPER

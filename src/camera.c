@@ -7,7 +7,7 @@
 #include "game.h"
 #include "tracks.h"
 #include "video.h"
-#include "lib/src/libc/rmonPrintf.h"
+#include "libultra/src/libc/rmonPrintf.h"
 #include "math_util.h"
 #include "weather.h"
 #include "PRinternal/piint.h"
@@ -761,7 +761,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
     gActiveCameraID = originalCameraID;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/camera/func_80066CDC.s")
 #endif
 
 /**

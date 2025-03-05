@@ -258,7 +258,7 @@ void init_particle_assets(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800AE728.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/particles/func_800AE728.s")
 
 /**
  * Generate a triangle shaped particle mesh.
@@ -513,7 +513,7 @@ void func_800AF404(s32 updateRate) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/particles/func_800AF404.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/particles/func_800AF404.s")
 #endif
 
 void func_800AF52C(Object *obj, s32 arg1) {

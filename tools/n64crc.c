@@ -25,13 +25,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
-#define NO_COL  "\x1B[0m"
-#define RED     "\x1B[31m"
-#define GREEN   "\x1B[32m"
-#define BLUE    "\x1B[34m"
-#define YELLOW  "\x1B[33m"
+#define COLORIZE(color) ((colorize) ? color : "") 
+#define NO_COL  COLORIZE("\x1B[0m")
+#define RED     COLORIZE("\x1B[31m")
+#define GREEN   COLORIZE("\x1B[32m")
+#define BLUE    COLORIZE("\x1B[34m")
+#define YELLOW  COLORIZE("\x1B[33m")
 
 #define ROL(i, b) (((i) << (b)) | ((i) >> (32 - (b))))
 #define BYTES2LONG(b) ( (b)[0] << 24 | \
@@ -165,13 +167,16 @@ int main(int argc, char **argv) {
 	int cic;
 	unsigned int crc[2];
 	unsigned char *buffer;
+    char colorize_arg[2];
+    unsigned char colorize = 0;
 
 	//Init CRC algorithm
 	gen_table();
 
 	//Check args
-	if (argc != 2) {
-		printf("Usage: n64sums <infile>\n");
+	if (argc != 2 && argc != 3) {
+        printf("argc: %d\n", argc);
+		printf("Usage: n64crc <infile> <-c>\n");
 		return 1;
 	}
 
@@ -180,6 +185,20 @@ int main(int argc, char **argv) {
 		printf("Unable to open \"%s\" in mode \"%s\"\n", argv[1], "r+b");
 		return 1;
 	}
+
+    //Check for colorize flag
+    if (argc == 3) {
+        if (strlen(argv[2]) > 2) {
+            printf("colorize flag: %s is too long!\n", argv[2]);
+            return 1;
+        }
+        else {
+            strcpy(colorize_arg, argv[2]);
+            if (strcmp(colorize_arg, "-c") == 0) {
+                colorize = 1;
+            }
+        }
+    }
 
 	//Allocate memory
 	if (!(buffer = (unsigned char*)malloc((CHECKSUM_START + CHECKSUM_LENGTH)))) {

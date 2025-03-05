@@ -1,0 +1,113 @@
+/* These seem to be needed because of some weird match things going on. 
+   The exact address isn't the same for each region, so I'm doing a hacky 
+   offset from the previous BSS variable that is declared  */
+
+gEpcInfo = D_801297E8 + 0x18;
+D_801299B0 = gEpcInfo + 0x1B0;
+
+/* We have to define these addresses because they're hasm and share space with the coss funcs. */
+
+sins_s16 = coss_s16 + 0x4;
+sins_2 = coss_2 + 0x4;
+
+/* These are fake symbols we just need until things are properly matched */
+
+D_B0000574 = 0xB0000574;
+D_B0000578 = 0xB0000578;
+
+/* The symbols below are GFX commands where it uses OS_K0_TO_PHYSICAL */
+
+/* US V1 */
+D_E1CA0 = dMenuHudDrawModes - 0x80000000;
+D_E1CB0 = D_E1CA0 + 0x10;
+D_E1CC0 = D_E1CB0 + 0x10;
+/* PAL V1 */
+D_E1D30 = dMenuHudDrawModes - 0x80000000;
+D_E1D40 = D_E1D30 + 0x10;
+D_E1D50 = D_E1D40 + 0x10;
+/* US V2 */
+D_E2220 = dMenuHudDrawModes - 0x80000000;
+D_E2230 = D_E2220 + 0x10;
+D_E2240 = D_E2230 + 0x10;
+/* PAL V2 */
+D_E22B0 = dMenuHudDrawModes - 0x80000000;
+D_E22C0 = D_E22B0 + 0x10;
+D_E22D0 = D_E22C0 + 0x10;
+/* JPN V1 */
+D_E3730 = dMenuHudDrawModes - 0x80000000;
+D_E3740 = D_E3730 + 0x10;
+D_E3750 = D_E3740 + 0x10;
+D_E51B8 = dDialogueBoxDrawModes - 0x80000000;
+D_E51C8 = D_E51B8 + 0x10;
+D_E51D8 = D_E51C8 + 0x10;
+
+/* Symbols related to the end of the ROM */
+
+gMainMemoryPool = main_BSS_END;         /* This variable is just supposed to be available at the end of BSS for allocating memory to  */
+__BSS_SECTION_START = main_BSS_START;   /* Entrypoint addresses */
+__BSS_SECTION_SIZE = main_BSS_SIZE;     /* Entrypoint addresses */
+__ASSETS_LUT_START = main_ROM_END;      /* Required to have this in place to define where assets live */
+__ASSETS_LUT_END = main_ROM_END + 0xD0; /* Not truly sure how to determine the end location, but it's always 0xD0 after the start */
+__ROM_END = assets_ROM_END;             /* Used for the ROM checksum calculation in cheatmenu_checksum */
+__RAM_TO_ROM = entry_VRAM - 0x1000;     /* Used in the calc_func_checksyms.py */
+
+/* Just libultra stuff below */
+
+osTvType = 0x80000300;
+osRomType = 0x80000304;
+osRomBase = 0x80000308;
+osResetType = 0x8000030C;
+osCicId = 0x80000310;
+osVersion = 0x80000314;
+osMemSize = 0x80000318;
+osAppNMIBuffer = 0x8000031C;
+entrypoint = 0x80000400;
+
+SP_MEM_ADDR_REG = 0xA4040000;
+SP_DRAM_ADDR_REG = 0xA4040004;
+SP_RD_LEN_REG = 0xA4040008;
+SP_WR_LEN_REG = 0xA404000C;
+SP_STATUS_REG = 0xA4040010;
+DPC_START_REG = 0xA4100000;
+DPC_END_REG = 0xA4100004;
+DPC_STATUS_REG = 0xA410000C;
+MI_MODE_REG = 0xA4300000;
+MI_INTR_REG = 0xA4300008;
+MI_INTR_MASK_REG = 0xA430000C;
+VI_STATUS_REG = 0xA4400000;
+VI_DRAM_ADDR_REG = 0xA4400004;
+VI_H_WIDTH_REG = 0xA4400008;
+VI_V_INTR_REG = 0xA440000C;
+VI_V_CURRENT_LINE_REG = 0xA4400010;
+VI_TIMING_REG = 0xA4400014;
+VI_V_SYNC_REG = 0xA4400018;
+VI_H_SYNC_REG = 0xA440001C;
+VI_H_SYNC_LEAP_REG = 0xA4400020;
+VI_H_VIDEO_REG = 0xA4400024;
+VI_V_VIDEO_REG = 0xA4400028;
+VI_V_BURST_REG = 0xA440002C;
+VI_X_SCALE_REG = 0xA4400030;
+VI_Y_SCALE_REG = 0xA4400034;
+AI_DRAM_ADDR_REG = 0xA4500000;
+AI_LEN_REG = 0xA4500004;
+AI_CONTROL_REG = 0xA4500008;
+AI_STATUS_REG = 0xA450000C;
+AI_DACRATE_REG = 0xA4500010;
+AI_BITRATE_REG = 0xA4500014;
+PI_DRAM_ADDR_REG = 0xA4600000;
+PI_CART_ADDR_REG = 0xA4600004;
+PI_RD_LEN_REG = 0xA4600008;
+PI_WR_LEN_REG = 0xA460000C;
+PI_STATUS_REG = 0xA4600010;
+PI_BSD_DOM1_LAT_REG = 0xA4600014;
+PI_BSD_DOM1_PWD_REG = 0xA4600018;
+PI_BSD_DOM1_PGS_REG = 0xA460001C;
+PI_BSD_DOM1_RLS_REG = 0xA4600020;
+PI_BSD_DOM2_LAT_REG = 0xA4600024;
+PI_BSD_DOM2_PWD_REG = 0xA4600028;
+PI_BSD_DOM2_PGS_REG = 0xA460002C;
+PI_BSD_DOM2_RLS_REG = 0xA4600030;
+SI_DRAM_ADDR_REG = 0xA4800000;
+SI_PIF_ADDR_RD64B_REG = 0xA4800004;
+SI_PIF_ADDR_WR64B_REG = 0xA4800010;
+SI_STATUS_REG = 0xA4800018;

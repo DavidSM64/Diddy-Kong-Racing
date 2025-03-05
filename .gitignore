@@ -1,40 +1,63 @@
-# Baseroms is where the user will place their ROM files.
-baseroms/*
-nonmatchings/*
+# ignore all rom files
+*.z64
+*.n64
+*.v64
 
-# Ignore pycache
-__pycache__
-
-# Automatically generated folders should be ignored
-tools/dkr_assets_tool_src/_build/
+#compiled or ripped asm
+asm/*
+asm
+build/*
 build/
+
+#binaries ripped from the ROMs
 assets/
-ucode/
-!asm/assets/
-!mods/*
+assets/*
+assets_*/
+assets_*/*
+bin/
+bin/*
 
-# Linker file is automatically generated, so it should be ignored
-dkr.ld
+#compiled object files
+*.slo
+*.lo
+*.o
+*.obj
 
-# CTX files for mips2c should be ignored as we generate those
-ctx.c
-ctx_includes.c
-ctx.c.m2c
+#Precompiled Headers
+*.gch
+*.pch
 
-#Folder for automatically decompiled functions output from mips2c
-m2cfiles/
+#compiled dynamic libraries
+*.so
+*.dylib
+*.dll
 
-# Misc stuff that should be ignored.
+#static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+#misc
+__pycache__/
+*__pycache__/
+expected/
 .*/
-!.github
-
-# Ignore .deb packages
-*.deb
-
-# Ignore batch and executable files.
-*.exe
-*.bat
-dkr_hot_reload.py
-lastRomPath.txt
-gcc_safe_files.mk
+*.ld
+*/*.ld
+*.map
+*/*.map
+*auto.txt
+*_auto.*.txt
+*.*auto.txt
+*/.splat_cache
+.splat_cache
+.splat_cache*
+ctx.c
+ctx.c.m2c
+ctx_includes.c
+tools/n64crc
+!tools/build
+m2cfiles/
+tools/ido-recomp
 *.DS_Store

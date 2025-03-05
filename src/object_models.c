@@ -91,6 +91,10 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     s32 temp_s0;
     Object_68 *ret;
     s8 sp3F;
+#if VERSION >= VERSION_79
+    s8 var_a2;
+    s8 var_a3;
+#endif
     u32 compressedData;
     s32 sp34;
 
@@ -111,11 +115,21 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
         }
     }
 
+#if VERSION >= VERSION_79
+    var_a2 = FALSE;
+    var_a3 = FALSE;
+#endif
     if (D_8011D634 > 0) {
         D_8011D634--;
+#if VERSION >= VERSION_79
+        var_a2 = TRUE;
+#endif
         sp50 = D_8011D628[D_8011D634];
     } else {
         sp50 = D_8011D62C;
+#if VERSION >= VERSION_79
+        var_a3 = TRUE;
+#endif
         D_8011D62C++;
     }
 
@@ -124,6 +138,14 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     sp34 = get_asset_uncompressed_size(ASSET_OBJECT_MODELS, temp_s0) + 0x80;
     objMdl = (ObjectModel *) mempool_alloc(sp34, COLOUR_TAG_RED);
     if (objMdl == NULL) {
+#if VERSION >= VERSION_79
+        if (var_a2) {
+            D_8011D634++;
+        }
+        if (var_a3) {
+            D_8011D62C--;
+        }
+#endif
         return NULL;
     }
     compressedData = (u32) ((u8 *) objMdl + sp34) - sp48;
@@ -172,6 +194,14 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
         }
     }
 block_30:
+#if VERSION >= VERSION_79
+    if (var_a3) {
+        D_8011D62C--;
+    }
+    if (var_a2) {
+        D_8011D634++;
+    }
+#endif
     free_model_data((ObjectModel *) objMdl);
     return NULL;
 }
@@ -340,9 +370,9 @@ void free_model_data(ObjectModel *mdl) {
     mempool_free(mdl);
 }
 
-GLOBAL_ASM("asm/non_matchings/object_models/func_8006017C.s")
-GLOBAL_ASM("asm/non_matchings/object_models/func_80060910.s")
-GLOBAL_ASM("asm/non_matchings/object_models/func_80060AC8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_8006017C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_80060910.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_80060AC8.s")
 
 s32 func_80060C58(Vertex *vertices, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     Vertex *a;
@@ -387,7 +417,7 @@ end:
     return 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/object_models/func_80060EA8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_80060EA8.s")
 
 void func_800619F4(s32 arg0) {
     D_8011D640 = arg0;

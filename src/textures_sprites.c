@@ -528,7 +528,7 @@ TextureHeader *load_texture(s32 arg0) {
     return tex;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/load_texture.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/load_texture.s")
 #endif
 
 /**
@@ -868,7 +868,7 @@ void func_8007BF34(Gfx **dlist, s32 flags) {
 /**
  * Official Name: texLoadSprite
  */
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007C12C.s")
 
 Sprite *func_8007C52C(s32 arg0) {
     if ((arg0 < 0) || (arg0 >= D_80126358)) {
@@ -997,7 +997,7 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
     goto textureCouldNotBeLoaded;
 }
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007CA68.s")
 
 /* Official name: texFreeSprite */
 void free_sprite(Sprite *sprite) {
@@ -1146,7 +1146,7 @@ void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
     D_80126368 = triangles;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CDC0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007CDC0.s")
 #endif
 
 #ifdef NON_EQUIVALENT
@@ -1308,7 +1308,7 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/build_tex_display_list.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/build_tex_display_list.s")
 #endif
 
 s32 func_8007EF64(s16 arg0) {
