@@ -167,7 +167,7 @@ int main(int argc, char **argv) {
 	int cic;
 	unsigned int crc[2];
 	unsigned char *buffer;
-    char colorize_arg[2];
+    char colorize_arg[20];
     unsigned char colorize = 0;
 
 	//Init CRC algorithm
