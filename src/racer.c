@@ -6840,7 +6840,8 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->unkAC = 0.01f;
         }
         for (j = 0; j < 2; j++) {
-            var_f22 = (1.0 - racer->checkpoint_distance) + (racer->unkAC * updateRateF);
+            var_f22 = (racer->unkAC * updateRateF);
+            var_f22 += (1.0 - racer->checkpoint_distance);
             if (var_f22 >= 1.0) {
                 checkpointSplineIdx = 1;
                 var_f22 -= 1.0;
