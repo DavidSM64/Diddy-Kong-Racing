@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of March 5, 2025, this is our current score:
+As of March 6, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 72.14%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 72.44%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 49.99%
 <!-- README_SCORE_SUMMARY_END -->
@@ -126,20 +126,20 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of March 5th, 2025, this is our current score:
+As of March 6, 2025, this is our current score:
 ```
  ===============================================
      ADVENTURE ONE (ASM -> C Decompilation)
- ---- 72.14% Complete (75.30% NON_MATCHING) ----
-          # Decompiled functions: 1815
-           # GLOBAL_ASM remaining: 126
+ ---- 72.44% Complete (75.60% NON_MATCHING) ----
+          # Decompiled functions: 1816
+           # GLOBAL_ASM remaining: 125
           # NON_MATCHING functions: 15
-       # NON_EQUIVALENT WIP functions: 44
+       # NON_EQUIVALENT WIP functions: 43
  ----------------- Game Status -----------------
     Balloons: 35/47, Keys: 4/4, Trophies: 3/5
      T.T. Amulets: 3/4, Wizpig Amulets: 3/4
  -----------------------------------------------
- We are racing the dragon boss Smokey. (Lap 2/3)
+ We are racing the dragon boss Smokey. (Lap 3/3)
  ===============================================
       ADVENTURE TWO (Cleanup & Documentation)
  --------------- 49.99% Complete ---------------
