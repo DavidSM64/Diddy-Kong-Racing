@@ -6723,26 +6723,25 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
 
 #ifdef NON_MATCHING
 void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
-    static f64 D_800E69D8 = 1.3;
     f32 temp_f0;
     s32 checkpointIdx;
     s32 checkpointCount;
     CheckpointNode *checkpoint;
     f32 var_f24;
-    f32 *var_t1;
+    UNUSED s32 pad0;
     f32 checkpointX[4];
-    f32 *var_v1;
+    UNUSED s32 pad1;
     f32 checkpointY[4];
     f32 var_f12;
     f32 checkpointZ[4];
     s32 j;
     s32 checkpointSplineIdx;
-    s32 pad_spCC;
+    UNUSED s32 pad2;
     f32 var_f22;
     f32 spB8[4];
     f32 var_f26;
     f32 spA4[4];
-    f32 var_f18;
+    UNUSED s32 pad3;
     f32 sp9C;
     f32 sp98;
     f32 sp94;
