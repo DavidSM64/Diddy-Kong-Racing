@@ -818,7 +818,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             if (racer->playerIndex != PLAYER_COMPUTER) {
                 sound_play_spatial(SOUND_ZIP_PAD_BOOST, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                    obj->segment.trans.z_position, NULL);
-                play_random_character_voice(obj, SOUND_VOICE_KRUNCH_POSITIVE1, 8, 0x80 | 0x2);
+                play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 0x80 | 0x2);
             }
             racer->boostTimer = normalise_time(45);
             racer->boostType = BOOST_LARGE;
@@ -1034,7 +1034,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             racer->boostType |= BOOST_SMALL_FAST;
         }
         racer_play_sound(obj, SOUND_ZIP_PAD_BOOST);
-        play_random_character_voice(obj, SOUND_VOICE_KRUNCH_POSITIVE1, 8, 0x80 | 0x2);
+        play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 0x80 | 0x2);
         rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
     }
 
@@ -3958,8 +3958,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
             } else {
                 temp_f0 = someObj->segment.trans.y_position;
                 someObj->segment.trans.y_position = (temp_f0 - (temp_f0 * 0.125));
-                someObj->segment.trans.scale +=
-                    ((someObj->segment.header->scale - someObj->segment.trans.scale) * 0.1);
+                someObj->segment.trans.scale += ((someObj->segment.header->scale - someObj->segment.trans.scale) * 0.1);
             }
             flags <<= 1;
         }
@@ -4359,7 +4358,220 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
     obj->segment.y_velocity -= weight * updateRateF;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80054FD0.s")
+// Related to ground collision?
+void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
+    s32 pad[3];
+    s32 sp190;
+    s32 flags;
+    s32 mask;
+    s32 sp184;
+    f32 sp180;
+    f32 sp17C;
+    f32 sp178;
+    f32 new_var;
+    f32 new_var2;
+    s32 i;
+    s32 j;
+    s32 new_var3;
+    f32 sp134[4 * 3]; // 4 sets of 3 floats. (4 Vec3fs don't seem to match?)
+    s16 temp_s16;
+    s16 sp130;
+    f32 sp11C[5];
+    f32 sp108[5];
+    f32 spF4[5];
+    f32 spE0[5];
+    f32 spA0[4 * 4];
+    f32 sp60[4 * 4];
+    s8 sp5C;
+    s8 sp58[4];
+
+    if (gCurrentCourseHeight < racerObj->segment.trans.y_position) {
+        racerObj->segment.trans.y_position = gCurrentCourseHeight;
+        func_8002ACC8(1);
+    }
+    sp130 = FALSE;
+    gCurrentRacerTransform.rotation.y_rotation = racerObj->segment.trans.rotation.y_rotation;
+    gCurrentRacerTransform.rotation.x_rotation = racerObj->segment.trans.rotation.x_rotation;
+    gCurrentRacerTransform.rotation.z_rotation = racerObj->segment.trans.rotation.z_rotation;
+    gCurrentRacerTransform.scale = 1.0f;
+    gCurrentRacerTransform.x_position = racerObj->segment.trans.x_position;
+    gCurrentRacerTransform.y_position = racerObj->segment.trans.y_position;
+    gCurrentRacerTransform.z_position = racerObj->segment.trans.z_position;
+    object_transform_to_matrix(spA0, &gCurrentRacerTransform);
+
+    for (i = 0; i < 4; i++) {
+        guMtxXFMF(spA0, D_8011D568[i * 4 + 0], D_8011D568[i * 4 + 1], D_8011D568[i * 4 + 2], &sp134[i * 3 + 0],
+                  &sp134[i * 3 + 1], &sp134[i * 3 + 2]);
+        spE0[i] = D_8011D568[i * 4 + 3];
+        sp58[i] = -1;
+    }
+
+    sp190 = 0;
+    D_8011D548 = 0;
+    D_8011D54C = 0;
+    flags = 0;
+    if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_TRICKY) {
+        flags = func_80017248(racerObj, 4, &sp190, &racer->unkD8, sp134, spE0, sp58);
+    }
+    if (flags & 0x80) {
+        for (i = 0; i < 4; i++) {
+            D_8011D548 = D_8011D548 + sp134[i * 3 + 0];
+            D_8011D54C = D_8011D54C + sp134[i * 3 + 2];
+        }
+        D_8011D548 = D_8011D548 / 4;
+        D_8011D54C = D_8011D54C / 4;
+        D_8011D548 = D_8011D548 - racerObj->segment.trans.x_position;
+        D_8011D54C = D_8011D54C - racerObj->segment.trans.z_position;
+        sp130 = TRUE;
+        flags &= ~0x80;
+    }
+    sp5C = 0;
+    if (flags) {
+        sp178 = 0;
+        for (i = 0; i < 4; i++) {
+            sp178 += sp134[i * 3 + 1];
+        }
+        sp178 *= 0.25;
+        if (sp178 < (racerObj->segment.trans.y_position - 4.0)) {
+            sp5C = 1;
+        }
+    }
+    func_80031130(4, &racer->unkD8, &sp134, racer->vehicleID);
+    sp190 = 0;
+    racer->unk1E3 = func_80031600(&racer->unkD8, &sp134, &spE0, &sp58, 4, &sp190);
+    sp184 = func_8002ACD4(&sp180, &sp178, &sp17C);
+    if (sp184 != 0) {
+        temp_s16 = (u16) arctan2_f(sp180 * 255.0f, sp17C * 255.0f);
+        temp_s16 -= racerObj->segment.trans.rotation.y_rotation;
+        if ((temp_s16 < 0x2000 && temp_s16 > -0x2000) || racer->vehicleID == VEHICLE_HOVERCRAFT) {
+            sp178 = racer->velocity * 1.075;
+            if (sp178 < 0) {
+                sp178 = -sp178;
+            }
+            if (sp178 > 1.0) {
+                rumble_set_fade(racer->playerIndex, 18, sp178 * 0.125);
+            }
+            if (sp178 > 4.0) {
+                racer->unk1F3 |= 8;
+                if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
+                    gCameraObject->unk30 = 3.0f;
+                }
+                racer->unk1D2 = 7;
+                if (racer->playerIndex != PLAYER_COMPUTER) {
+                    play_random_character_voice(racerObj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 0x80 | 0x2);
+                    racer_play_sound(racerObj, SOUND_CRASH);
+                }
+                racer->boost_sound |= BOOST_SOUND_UNK4;
+                if (racer->vehicleID == VEHICLE_HOVERCRAFT) {
+                    sp178 *= 0.5;
+                }
+                racer->unk11C = sp180 * sp178;
+                racer->unk120 = sp17C * sp178;
+                racer->velocity *= 0.15;
+                racer->lateral_velocity = 0;
+            }
+        }
+    }
+    if (sp5C && sp190 >= 3) {
+        if (racer->playerIndex != PLAYER_COMPUTER && racer->unk20 == 0 && racer->shieldTimer <= 0) {
+            sound_play(SOUND_SPLAT, &racer->unk20);
+        }
+        if (racer->squish_timer == 0) {
+            racer->attackType = ATTACK_SQUISHED;
+        } else {
+            racer->squish_timer = 60;
+        }
+    }
+    racer->unk1E4 = flags;
+    racer->unk1E3 |= flags;
+
+    racer->groundedWheels = 0;
+    flags = 1;
+    for (j = 0; j < 4; j++) {
+        if (racer->unk1E3 & flags) {
+            racer->groundedWheels++;
+        }
+        flags <<= 1;
+    }
+
+    for (i = 0; i < 12; i++) {
+        ((f32 *) &racer->unkD8)[i] = sp134[i];
+    }
+    for (i = 0; i < 4; i++) {
+        racer->wheel_surfaces[i] = sp58[i];
+    }
+    racerObj->segment.trans.x_position = 0;
+    racerObj->segment.trans.y_position = 0;
+    racerObj->segment.trans.z_position = 0;
+    for (i = 0; i < 12; i += 3) {
+        racerObj->segment.trans.x_position = racerObj->segment.trans.x_position + ((f32 *) &racer->unkD8)[i + 0];
+        racerObj->segment.trans.y_position = racerObj->segment.trans.y_position + ((f32 *) &racer->unkD8)[i + 1];
+        racerObj->segment.trans.z_position = racerObj->segment.trans.z_position + ((f32 *) &racer->unkD8)[i + 2];
+    }
+    racerObj->segment.trans.x_position /= 4;
+    racerObj->segment.trans.y_position /= 4;
+    racerObj->segment.trans.z_position /= 4;
+
+    gCurrentRacerTransform.rotation.y_rotation = -racerObj->segment.trans.rotation.y_rotation;
+    gCurrentRacerTransform.rotation.x_rotation = -racerObj->segment.trans.rotation.x_rotation;
+    gCurrentRacerTransform.rotation.z_rotation = -racerObj->segment.trans.rotation.z_rotation;
+    gCurrentRacerTransform.scale = 1.0f;
+    gCurrentRacerTransform.x_position = -racerObj->segment.trans.x_position;
+    gCurrentRacerTransform.y_position = -racerObj->segment.trans.y_position;
+    gCurrentRacerTransform.z_position = -racerObj->segment.trans.z_position;
+    object_transform_to_matrix_2(sp60, &gCurrentRacerTransform);
+    for (i = 0; i < 4; i++) {
+        guMtxXFMF(sp60, ((f32 *) &racer->unkD8)[i * 3 + 0], ((f32 *) &racer->unkD8)[i * 3 + 1],
+                  ((f32 *) &racer->unkD8)[i * 3 + 2], &sp11C[i], &sp108[i], &spF4[i]);
+    }
+    if (racer->vehicleID != VEHICLE_LOOPDELOOP) {
+        sp180 = sp11C[0] + sp11C[1];
+        sp17C = spF4[0] + spF4[1];
+        new_var = sp11C[2] + sp11C[3];
+        new_var2 = spF4[2] + spF4[3];
+        new_var3 = (arctan2_f(sp180 - new_var, sp17C - new_var2) + 0x8000) & 0xFFFF;
+        temp_s16 = new_var3;
+        if (racer->unk1D2 == 7) {
+            if (temp_s16 > 0) {
+                racer->unk19C = 2048;
+            }
+            if (temp_s16 < 0) {
+                racer->unk19C = -2048;
+            }
+        }
+        if (racer->unk1D2 != 0) {
+            temp_s16 = racer->unk19C;
+        }
+        if (temp_s16 > 500 || temp_s16 < -500) {
+            racer->drift_direction = 0;
+            racer->unk10C = (s32) (racer->unk10C * 7) >> 3;
+            racer->y_rotation_vel = (s16) ((s32) (racer->y_rotation_vel * 7) >> 3);
+        }
+        if (sp130) {
+            temp_s16 *= 4;
+        }
+        racerObj->segment.trans.rotation.y_rotation += temp_s16 >> 2;
+        racer->steerVisualRotation = racerObj->segment.trans.rotation.y_rotation - racer->y_rotation_vel;
+    }
+    sp180 = spF4[2] - spF4[0];
+    sp17C = sp108[2] - sp108[0];
+    temp_s16 = arctan2_f(sp180, sp17C) & 0xFFFF;
+    temp_s16 -= 0x4000;
+    if (sp184 == 0) {
+        racerObj->segment.trans.rotation.x_rotation += temp_s16;
+    }
+    sp180 = (sp11C[1] - sp11C[0]);
+    sp17C = (sp108[1] - sp108[0]);
+    temp_s16 = (0x4000 - (arctan2_f(sp180, sp17C)));
+    if (sp184 == 0) {
+        racer->x_rotation_vel += temp_s16 & 0xFFFF & 0xFFFF & 0xFFFF;
+    }
+    if (racer->vehicleID != VEHICLE_LOOPDELOOP && racer->vehicleID != VEHICLE_PLANE &&
+        racer->vehicleID != VEHICLE_CARPET && racer->vehicleID != VEHICLE_SMOKEY) {
+        CLAMP(racer->x_rotation_vel, -0x3400, 0x3400);
+        CLAMP(racerObj->segment.trans.rotation.x_rotation, -0x3400, 0x3400);
+    }
+}
 
 /**
  * Update the collision of the racer.
@@ -4447,7 +4659,7 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
             racer->x_rotation_vel = temp_v1_2;
         }
         xRot = -(s16) (u16) arctan2_f(zTemp, yTemp);
-        if ((xRot < 0x2000) && (xRot > -0x2000)) {
+        if (xRot < 0x2000 && xRot > -0x2000) {
             obj->segment.trans.rotation.x_rotation = xRot;
         }
         if (racer->vehicleID == VEHICLE_LOOPDELOOP) {
