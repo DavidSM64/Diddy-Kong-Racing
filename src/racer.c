@@ -6769,7 +6769,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->unk124 = sp94;
     }
 
-    var_f12 = sqrtf(((racer->unk124 * 0.0025) + 0.595) / 0.004);
+    var_f12 = sqrtf(((racer->unk124 * 0.025) + 0.595) / 0.004);
     if (racer->boostTimer != 0) {
         var_f12 *= 1.3;
     }
@@ -6956,6 +6956,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     obj->particleEmitFlags = OBJ_EMIT_OFF;
     func_800AF714(obj, updateRate);
 }
+
 #ifdef ANTI_TAMPER
 // This gets called if an anti-piracy checksum fails in allocate_object_model_pools.
 /**
