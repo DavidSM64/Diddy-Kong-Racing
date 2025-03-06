@@ -6720,252 +6720,242 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     set_racer_tail_lights(racer);
 }
 
-#ifdef NON_EQUIVALENT
-// WIP
 void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
-    s32 sp11C;
-    f32 sp100;
-    f32 spEC;
-    f32 spC0; // s32?
-    f32 spD8;
-    f32 spBC; // s32?
-    f32 spB8;
-    f32 spAC; // s32?
-    f32 spA8; // s32?
-    f32 spA4; // struct?
+    f32 temp_f0;
+    s32 checkpointIdx;
+    s32 checkpointCount;
+    CheckpointNode *checkpoint;
+    UNUSED f32 pad0;
+    f32 var_f28;
+    f32 checkpointX[4];
+    s32 j;
+    f32 checkpointY[4];
+    f32 var_f12;
+    f32 checkpointZ[4];
+    s32 checkpointSplineIdx;
+    f32 checkpointDistance;
+    UNUSED f32 pad1;
+    UNUSED f32 pad2;
+    f32 spB8[4];
+    f32 var_f26;
+    f32 spA4[4];
+    UNUSED f32 pad3;
     f32 sp9C;
     f32 sp98;
     f32 sp94;
-    f32 sp8C;                 // What sets this?
-    LevelHeader *levelHeader; // sp80
-    f32 *sp70;
-    f32 *var_t0; // struct?
-    f32 *var_a2;
-    f32 *var_a3;
-    f32 *var_t1;
-    f32 *var_v1;
-    f32 temp_f0_4;
-    f32 temp_f0_5;
-    f32 temp_f12;
-    f32 temp_f12_2;
-    f32 temp_f24;
-    f32 temp_f24_3;
-    f32 temp_f26;
-    f32 temp_f28;
-    f32 var_f12;
-    f32 var_f12_2;
-    f32 var_f22;
-    f32 var_f26;
-    f32 var_f28;
-    s16 temp_v0_4;
-    s32 var_a0;
-    s32 var_s0;
-    s32 var_s2;
-    s32 var_v0;
-    s8 temp_v0_3;
-    CheckpointNode *checkpoint;
+    f32 checkpointPositionOffset;
+    f32 tempRacerVelocity;
+    f32 var_f24;
     s32 i;
+    LevelHeader *levelHeader;
 
-    gCurrentRacerMiscAssetPtr = get_misc_asset(ASSET_MISC_RACERACCELERATION_UNKNOWN0);
+    gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACERACCELERATION_UNKNOWN0);
     levelHeader = get_current_level_header();
-    sp11C = get_checkpoint_count();
-    if (sp11C != 0) {
-        racer->unk1C9 = 0;
-        racer->zipperDirCorrection = 0;
-        racer->attackType = ATTACK_NONE;
-        racer->lateral_velocity = 0;
-        sp94 = 20.0f;
-        if (racer->unk124 < -20.0f) {
-            racer->unk124 = -20.0f;
+    checkpointCount = get_checkpoint_count();
+    if (checkpointCount == 0) {
+        return;
+    }
+
+    racer->unk1C9 = 0;
+    racer->zipperDirCorrection = 0;
+    racer->attackType = ATTACK_NONE;
+    racer->lateral_velocity = 0;
+    sp94 = 20.0f;
+    if (racer->unk124 < -sp94) {
+        racer->unk124 = -sp94;
+    }
+
+    if (racer->unk124 > sp94) {
+        racer->unk124 = sp94;
+    }
+
+    var_f12 = sqrtf(((racer->unk124 * 0.025) + 0.595) / 0.004);
+    if (racer->boostTimer != 0) {
+        var_f12 *= 1.3;
+    }
+    
+    if (racer->vehicleID == VEHICLE_HOVERCRAFT) {
+        i = (racer->unk1BE & 0xFFFF) - (racer->unk1C2 & 0xFFFF);
+        if (i >= 0x8001) {
+            i += 0xFFFF0001;
         }
-        if (racer->unk124 > sp94) {
-            racer->unk124 = sp94;
+
+        if (i < -0x8000) {
+            i += 0xFFFF;
         }
-        var_f12 = sqrtf(((racer->unk124 * 0.025) + 0.595) / 0.004);
-        var_v1 = &sp100;
-        if (racer->boostTimer != 0) {
-            var_f12 *= 1.3;
+
+        if (i < 0) {
+            i = -i;
         }
-        var_a2 = &spEC;
-        if (racer->vehicleID == VEHICLE_HOVERCRAFT) {
-            var_v0 = (racer->unk1BE & 0xFFFF) - (racer->unk1C2 & 0xFFFF);
-            if (var_v0 >= 0x8001) {
-                var_v0 += 0xFFFF0001;
-            }
-            if (var_v0 < -0x8000) {
-                var_v0 += 0xFFFF;
-            }
-            if (var_v0 < 0) {
-                var_v0 = -var_v0;
-            }
-            var_v0 -= 200;
-            if (var_v0 < 0) {
-                var_v0 = 0;
-            }
-            sp94 = (f32) var_v0 / 150.0;
-            var_f12_2 = var_f12 - sp94;
-            if (var_f12_2 < 2.0) {
-                var_f12_2 = 2.0f;
-            }
-            if (racer->velocity < -var_f12_2) {
-                racer->velocity = -var_f12_2;
-            } else {
-                racer->velocity += ((-var_f12_2 - racer->velocity) * 0.125);
-            }
+
+        i -= 200;
+        if (i < 0) {
+            i = 0;
+        }
+        sp94 = (f32) i / 150.0;
+        var_f12 -= sp94;
+        if (var_f12 < 2.0) {
+            var_f12 = 2.0f;
+        }
+
+        if (racer->velocity < -var_f12) {
+            racer->velocity = -var_f12;
         } else {
-            racer->velocity += ((-var_f12 - racer->velocity) * 0.25);
+            racer->velocity += ((-var_f12 - racer->velocity) * 0.125);
         }
-        var_a3 = &spD8;
-        var_a0 = racer->checkpoint - 2;
-        var_t1 = &spB8;
-        if (var_a0 < 0) {
-            var_a0 += sp11C;
+    } else {
+        racer->velocity += ((-var_f12 - racer->velocity) * 0.25);
+    }
+
+    checkpointIdx = racer->checkpoint - 2;
+    if (checkpointIdx < 0) {
+        checkpointIdx += checkpointCount;
+    }
+
+    if (checkpointIdx >= checkpointCount) {
+        checkpointIdx -= checkpointCount;
+    }
+
+    for (i = 0; i < 5; i++) {
+        checkpoint = find_next_checkpoint_node(checkpointIdx, racer->unk1C8);
+        checkpointX[i] = checkpoint->x;
+        checkpointY[i] = checkpoint->y;
+        checkpointZ[i] = checkpoint->z;
+        spB8[i] = checkpoint->unk2E[racer->unk1CA];
+        spA4[i] = checkpoint->unk32[racer->unk1CA];
+        checkpointX[i] += ((checkpoint->scale * checkpoint->rotationZFrac * checkpoint->unk2E[racer->unk1CA]));
+        checkpointY[i] += ((checkpoint->scale * checkpoint->unk32[racer->unk1CA]));
+        checkpointZ[i] += ((checkpoint->scale * -checkpoint->rotationXFrac * checkpoint->unk2E[racer->unk1CA]));
+        checkpointIdx++;
+        if (checkpointIdx == checkpointCount) {
+            checkpointIdx = 0;
         }
-        var_t0 = &spA4;
-        if (var_a0 >= sp11C) {
-            var_a0 -= sp11C;
+    }
+
+    tempRacerVelocity = racer->velocity;
+    if (tempRacerVelocity < 0.0f) {
+        tempRacerVelocity = -tempRacerVelocity;
+    }
+    checkpointSplineIdx = 0;
+    if (racer->unkAC == 0.0) {
+        racer->unkAC = 0.01f;
+    }
+    j = 0;
+    do {
+        checkpointDistance = (1.0 - racer->checkpoint_distance) + (racer->unkAC * updateRateF);
+        if (checkpointDistance >= 1.0) {
+            checkpointSplineIdx = 1;
+            checkpointDistance -= 1.0;
         }
-        for (i = 0; i < 1; i++) {
-            checkpoint = find_next_checkpoint_node(var_a0, racer->unk1C8);
-            var_v1[i] = checkpoint->x;
-            var_a2[i] = checkpoint->y;
-            var_a3[i] = checkpoint->z;
-            var_t1[i] = checkpoint->unk2E[racer->unk1CA];
-            var_t0[i] = checkpoint->unk32[racer->unk1CA];
-            var_v1[i] += ((checkpoint->scale * checkpoint->rotationZFrac * checkpoint->unk2E[racer->unk1CA]));
-            var_a2[i] += ((checkpoint->scale * checkpoint->unk32[racer->unk1CA]));
-            var_a3[i] += ((checkpoint->scale * -checkpoint->rotationXFrac * checkpoint->unk2E[racer->unk1CA]));
-            var_a0++;
-            if (var_a0 == sp11C) {
-                var_a0 = 0;
+        var_f24 = cubic_spline_interpolation(checkpointX, checkpointSplineIdx, checkpointDistance, &sp9C);
+        var_f26 = cubic_spline_interpolation(checkpointY, checkpointSplineIdx, checkpointDistance, &sp98);
+        var_f28 = cubic_spline_interpolation(checkpointZ, checkpointSplineIdx, checkpointDistance, &sp94);
+        var_f24 -= racer->unk68;
+        var_f26 -= racer->unk6C;
+        var_f28 -= racer->unk70;
+        if (j == 0) {
+            checkpointSplineIdx = 0;
+            checkpointPositionOffset = sqrtf((var_f24 * var_f24) + (var_f26 * var_f26) + (var_f28 * var_f28)) / updateRateF;
+            if (checkpointPositionOffset != 0.0f) {
+                racer->unkAC *= (tempRacerVelocity / checkpointPositionOffset);
+            } else {
+                j = -1;
+                racer->unkAC += 0.01;
+            }
+        }
+        j++;
+    } while (j < 2);
+    racer->unk68 += var_f24;
+    racer->unk6C += var_f26;
+    racer->unk70 += var_f28;
+    var_f24 = racer->unk68 - obj->segment.trans.x_position;
+    var_f26 = racer->unk6C - obj->segment.trans.y_position;
+    var_f28 = racer->unk70 - obj->segment.trans.z_position;
+    checkpointPositionOffset = sqrtf((var_f24 * var_f24) + (var_f28 * var_f28)) / updateRateF;
+    if (checkpointPositionOffset > 35.0) {
+        temp_f0 = (35.0 / checkpointPositionOffset);
+        var_f24 *= temp_f0;
+        var_f28 *= temp_f0;
+    }
+    racer->checkpoint_distance = (1.0 - checkpointDistance);
+    if (checkpointSplineIdx != 0) {
+        racer->checkpoint++;
+        if (racer->checkpoint >= checkpointCount) {
+            racer->checkpoint = 0;
+            if (racer->courseCheckpoint > 0) {
+                if (racer->lap < 120) {
+                    racer->lap++;
+                }
             }
         }
 
-        if (racer->velocity < 0.0f) {
-            racer->velocity = -racer->velocity;
+        if (racer->courseCheckpoint < ((levelHeader->laps + 3) * checkpointCount)) {
+            racer->courseCheckpoint++;
         }
-        var_s2 = 0;
-        if (racer->unkAC == 0.0) {
-            racer->unkAC = 0.01f;
-        }
-        for (var_s0 = 0; var_s0 < 2; var_s0++) {
-            var_f22 = ((1.0 - racer->checkpoint_distance) + (racer->unkAC * updateRateF));
-            if (var_f22 >= 1.0) {
-                var_s2 = 1;
-                var_f22--;
-            }
-            temp_f26 = cubic_spline_interpolation(&sp100, var_s2, var_f22, &sp9C);
-            temp_f24 = cubic_spline_interpolation(&spEC, var_s2, var_f22, &sp98);
-            temp_f28 = cubic_spline_interpolation(&spD8, var_s2, var_f22, &sp94);
-            temp_f26 -= racer->unk68;
-            temp_f24 -= racer->unk6C;
-            temp_f28 -= racer->unk70;
-            if (var_s0 == 0) {
-                var_s2 = 0;
-                temp_f12 = sqrtf((temp_f26 * temp_f26) + (temp_f24 * temp_f24) + (temp_f28 * temp_f28)) / updateRateF;
-                if (temp_f12 != 0) {
-                    racer->unkAC *= (sp8C / temp_f12);
-                } else {
-                    var_s0 = -1;
-                    racer->unkAC += 0.01;
-                }
-            }
-        }
-        racer->unk68 += temp_f26;
-        racer->unk6C += temp_f24;
-        racer->unk70 += temp_f28;
-        var_f26 = racer->unk68 - obj->segment.trans.x_position;
-        var_f28 = racer->unk70 - obj->segment.trans.z_position;
-        temp_f24_3 = racer->unk6C - obj->segment.trans.y_position;
-        temp_f12_2 = sqrtf((var_f26 * var_f26) + (var_f28 * var_f28)) / updateRateF;
-        if (temp_f12_2 > 35.0) {
-            temp_f0_4 = (35.0 / temp_f12_2);
-            var_f26 *= temp_f0_4;
-            var_f28 *= temp_f0_4;
-        }
-        racer->checkpoint_distance = (1 - var_f22);
-        if (var_s2 != 0) {
-            racer->checkpoint += 1;
-            if (racer->checkpoint >= sp11C) {
-                racer->checkpoint = 0;
-                if (racer->courseCheckpoint > 0) {
-                    temp_v0_3 = racer->lap;
-                    if (temp_v0_3 < 0x78) {
-                        racer->lap = temp_v0_3 + 1;
-                    }
-                }
-            }
-            temp_v0_4 = racer->courseCheckpoint;
-            if (temp_v0_4 < ((levelHeader->laps + 3) * sp11C)) {
-                racer->courseCheckpoint = temp_v0_4 + 1;
-            }
-            racer->unk1A8 = 10000;
-        } else {
-            racer->unk1A8 = racer->checkpoint_distance * 100;
-        }
-        if (racer->boostTimer > 0) {
-            racer->boostTimer -= updateRate;
-        } else {
-            racer->boostTimer = 0;
-        }
-        racer->unk1BA = (((spC0 - spBC) * var_f22) + spBC);
-        racer->unk1BC = (((spAC - spA8) * var_f22) + spA8);
-        temp_f0_5 = sqrtf((sp9C * sp9C) + (sp94 * sp94));
-        if (temp_f0_5 != 0) {
-            sp9C /= temp_f0_5;
-            sp94 /= temp_f0_5;
-            sp98 /= temp_f0_5;
-            racer->steerVisualRotation = arctan2_f(sp9C, sp94) - 0x8000;
-            obj->segment.trans.rotation.y_rotation = racer->steerVisualRotation;
-            obj->segment.trans.rotation.x_rotation = arctan2_f(sp98, 1.0f);
-        }
-        racer->unk1C2 = racer->unk1BE;
-        racer->unk1C4 = racer->unk1C0;
-        racer->unk1BE = racer->steerVisualRotation;
-        racer->unk1C0 = obj->segment.trans.rotation.x_rotation;
-        if (move_object(obj, var_f26, temp_f24_3, var_f28)) {
-            obj->segment.trans.x_position += var_f26;
-            obj->segment.trans.y_position += temp_f24_3;
-            obj->segment.trans.z_position += var_f28;
-        }
-        if (temp_f12_2 < 20.0) {
-            obj->segment.y_velocity = -1.0f;
-            obj->segment.x_velocity = var_f26 / updateRateF;
-            obj->segment.z_velocity = var_f28 / updateRateF;
-        }
-        func_80042D20(obj, racer, updateRate);
-        handle_racer_items(obj, racer, updateRate);
-        racer->waterTimer = 0;
-        obj->interactObj->x_position = obj->segment.trans.x_position;
-        obj->interactObj->y_position = obj->segment.trans.y_position;
-        obj->interactObj->z_position = obj->segment.trans.z_position;
-        racer->drift_direction = 0;
-        racer->y_rotation_vel = 0;
-        racer->z_rotation_vel = 0;
-        racer->unk1D2 = 0;
-        racer->carBobX = 0.0f;
-        racer->carBobY = 0.0f;
-        racer->carBobZ = 0.0f;
-        obj->segment.y_velocity = 0.0f;
-        racer->unkD8.x = obj->segment.trans.x_position;
-        racer->unkD8.y = obj->segment.trans.y_position;
-        racer->unkD8.z = obj->segment.trans.z_position;
-        racer->unkE4.x = obj->segment.trans.x_position;
-        racer->unkE4.y = obj->segment.trans.y_position;
-        racer->unkE4.z = obj->segment.trans.z_position;
-        racer->unkF0.x = obj->segment.trans.x_position;
-        racer->unkF0.y = obj->segment.trans.y_position;
-        racer->unkF0.z = obj->segment.trans.z_position;
-        racer->unkFC.x = obj->segment.trans.x_position;
-        racer->unkFC.y = obj->segment.trans.y_position;
-        racer->unkFC.z = obj->segment.trans.z_position;
-        obj->particleEmitFlags = OBJ_EMIT_OFF;
-        func_800AF714(obj, updateRate);
+        racer->unk1A8 = 10000;
+    } else {
+        racer->unk1A8 = racer->checkpoint_distance * 100;
     }
+    if (racer->boostTimer > 0) {
+        racer->boostTimer -= updateRate;
+    } else {
+        racer->boostTimer = 0;
+    }
+    racer->unk1BA = spB8[1] + ((spB8[2] - spB8[1]) * checkpointDistance);
+    racer->unk1BC = spA4[1] + ((spA4[2] - spA4[1]) * checkpointDistance);
+    temp_f0 = sqrtf((sp9C * sp9C) + (sp94 * sp94));
+    if (temp_f0 != 0.0f) {
+        sp9C /= temp_f0;
+        sp98 /= temp_f0;
+        sp94 /= temp_f0;
+        racer->steerVisualRotation = arctan2_f(sp9C, sp94) - 0x8000;
+        obj->segment.trans.rotation.y_rotation = racer->steerVisualRotation;
+        obj->segment.trans.rotation.x_rotation = arctan2_f(sp98, 1.0f);
+    }
+    racer->unk1C2 = racer->unk1BE;
+    racer->unk1C4 = racer->unk1C0;
+    racer->unk1BE = racer->steerVisualRotation;
+    racer->unk1C0 = obj->segment.trans.rotation.x_rotation;
+    if (move_object(obj, var_f24, var_f26, var_f28)) {
+        obj->segment.trans.x_position += var_f24;
+        if (1) {}
+        obj->segment.trans.y_position += var_f26;
+        obj->segment.trans.z_position += var_f28;
+    }
+    if (checkpointPositionOffset < 20.0) {
+        obj->segment.x_velocity = var_f24 / updateRateF;
+        obj->segment.y_velocity = -1.0f;
+        obj->segment.z_velocity = var_f28 / updateRateF;
+    }
+    func_80042D20(obj, racer, updateRate);
+    handle_racer_items(obj, racer, updateRate);
+    racer->waterTimer = 0;
+    obj->interactObj->x_position = obj->segment.trans.x_position;
+    obj->interactObj->y_position = obj->segment.trans.y_position;
+    obj->interactObj->z_position = obj->segment.trans.z_position;
+    racer->drift_direction = 0;
+    racer->y_rotation_vel = 0;
+    racer->z_rotation_vel = 0;
+    racer->unk1D2 = 0;
+    racer->carBobX = 0.0f;
+    racer->carBobY = 0.0f;
+    racer->carBobZ = 0.0f;
+    obj->segment.y_velocity = 0.0f;
+    racer->unkD8.x = obj->segment.trans.x_position;
+    racer->unkD8.y = obj->segment.trans.y_position;
+    racer->unkD8.z = obj->segment.trans.z_position;
+    racer->unkE4.x = obj->segment.trans.x_position;
+    racer->unkE4.y = obj->segment.trans.y_position;
+    racer->unkE4.z = obj->segment.trans.z_position;
+    racer->unkF0.x = obj->segment.trans.x_position;
+    racer->unkF0.y = obj->segment.trans.y_position;
+    racer->unkF0.z = obj->segment.trans.z_position;
+    racer->unkFC.x = obj->segment.trans.x_position;
+    racer->unkFC.y = obj->segment.trans.y_position;
+    racer->unkFC.z = obj->segment.trans.z_position;
+    obj->particleEmitFlags = OBJ_EMIT_OFF;
+    func_800AF714(obj, updateRate);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
-#endif
 
 #ifdef ANTI_TAMPER
 // This gets called if an anti-piracy checksum fails in allocate_object_model_pools.
