@@ -8425,7 +8425,271 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_80092188.s")
+void func_80092188(s32 updateRate) {
+    s32 yOffset2;
+    s32 origVehicle;
+    s32 availableVehicles;
+    s32 xOffset;
+    s32 yOffset;
+    s32 i;
+    s32 menuBackedOut;
+    s32 menuSelected;
+    s32 menuChanged;
+    s32 menuDelay;
+    Settings *settings;
+
+    menuDelay = gMenuDelay;
+    settings = get_settings();
+    if (gTrackNameVoiceDelay != 0) {
+        gTrackNameVoiceDelay += updateRate;
+    }
+    // Challenge Races
+    if (gTrackSelectCursorX == 5 && gMenuStage != 2) {
+        gMenuStage = 2;
+        if (gTrackSelectCursorX == 5) {
+            // One of the following three text messages
+            // THE FIRST PLAYER TO HATCH // THE LAST PLAYER REMAINING // THE FIRST PLAYER TO GET 10
+            // THREE EGGS WILL WIN!      // WILL WIN!!                // BANANAS INTO THEIR TREASURE
+            //                                                        // CHEST WILL WIN!!
+            set_current_text(gTrackSelectCursorY + ASSET_GAME_TEXT_60);
+        }
+    }
+    // Trophy Races
+    if (gTrackSelectCursorX == 4 && gMenuStage != -1 && gMenuStage != 2) {
+        gMenuStage = 2;
+    }
+    if (gTTVoiceLines[gTrackIdForPreview] != -1 && gTrackNameVoiceDelay >= 7) {
+        sound_play(gTTVoiceLines[gTrackIdForPreview], NULL);
+        gTrackNameVoiceDelay = 0;
+    }
+    xOffset = gMenuDelay + 25;
+    if (gMenuDelay < 0) {
+        if (xOffset > 20) {
+            xOffset = 20;
+        }
+        if (xOffset < 0) {
+            xOffset = 0;
+        }
+        yOffset = ((xOffset + 20) * gTrackSelectViewPortHalfY) / 40;
+        yOffset2 = yOffset + gTrackSelectViewPortHalfY;
+        viewport_menu_set(0, 80 - (xOffset * 4), gTrackSelectViewPortHalfY - yOffset, (xOffset * 4) + 240, yOffset2);
+        // TODO: gMenuImages is not just an array of MenuAsset?
+        ((f32 *) gMenuImages)[34] = (f32) (sMenuImageProperties[4].scale * (1.0f + ((f32) xOffset / 20.0f)));
+        ((f32 *) gMenuImages)[42] = (f32) (sMenuImageProperties[5].scale * (1.0f + ((f32) xOffset / 20.0f)));
+        ((f32 *) gMenuImages)[50] = (f32) (sMenuImageProperties[6].scale * (1.0f + ((f32) xOffset / 20.0f)));
+    }
+    if (gMenuDelay > 0) {
+        sMenuMusicVolume -= updateRate * 4;
+    }
+    if (gMenuDelay > 40) {
+        trackmenu_assets(TRACKMENU_TYPE_LOAD_LEVEL);
+    } else if (gMenuDelay < -30) {
+        gOpacityDecayTimer = 0;
+        trackmenu_assets(TRACKMENU_TYPE_RESET_CURSOR);
+        viewport_menu_set(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), 240,
+                          (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
+    }
+    camEnableUserView(0, TRUE);
+    if (menuDelay == 0) {
+        availableVehicles = get_map_available_vehicles(gTrackIdForPreview);
+        menuBackedOut = FALSE;
+        menuSelected = FALSE;
+        menuChanged = FALSE;
+        switch (gMenuStage) {
+            case -1:
+                if (gMenuButtons[4] & (A_BUTTON | START_BUTTON)) {
+                    if (gTrackSelectCursorX == 4) {
+                        gMenuStage = 2;
+                    } else {
+                        gMenuStage = 0;
+                    }
+                    menuSelected = TRUE;
+                } else if (gMenuButtons[4] & B_BUTTON) {
+                    gMenuDelay = -1;
+                    menuBackedOut = TRUE;
+                } else {
+                    if (gMenuStickY[4] > 0 && gTracksMenuAdventureHighlightIndex != 0) {
+                        gTracksMenuAdventureHighlightIndex = 0;
+                        menuChanged = TRUE;
+                    } else if ((gMenuStickY[4] < 0) && (gTracksMenuAdventureHighlightIndex == 0)) {
+                        gTracksMenuAdventureHighlightIndex = 1;
+                        menuChanged = TRUE;
+                    }
+                }
+                break;
+            case 0:
+                for (i = 0; i < gNumberOfActivePlayers; i++) {
+                    if (gMenuButtons[i] & B_BUTTON) {
+                        menuBackedOut = TRUE;
+                        if (gNumberOfReadyPlayers == 0) {
+                            if (is_adventure_two_unlocked()) {
+                                gMenuStage = -1;
+                            } else {
+                                gMenuDelay = -1;
+                            }
+                        } else if (gPlayerSelectConfirm[i] != 0) {
+                            gNumberOfReadyPlayers--;
+                            gPlayerSelectConfirm[i] = 0;
+                        }
+                    } else {
+                        if (gMenuButtons[i] & (A_BUTTON | START_BUTTON)) {
+                            if (gPlayerSelectConfirm[i] == 0) {
+                                gPlayerSelectConfirm[i] = 1;
+                                gNumberOfReadyPlayers++;
+                                menuSelected = TRUE;
+                            }
+                        } else if (gPlayerSelectConfirm[i] == 0 && settings->courseFlagsPtr[gTrackIdForPreview] & 2) {
+                            origVehicle = gPlayerSelectVehicle[i];
+                            if (gMenuStickY[i] > 0) {
+                                do {
+                                    gPlayerSelectVehicle[i]--;
+                                } while (((1 << gPlayerSelectVehicle[i]) & availableVehicles) == 0 &&
+                                         gPlayerSelectVehicle[i] >= 0);
+                            }
+                            if (gMenuStickY[i] < 0) {
+                                do {
+                                    gPlayerSelectVehicle[i]++;
+                                } while (((1 << gPlayerSelectVehicle[i]) & availableVehicles) == 0 &&
+                                         gPlayerSelectVehicle[i] < 3);
+                            }
+                            if (origVehicle != gPlayerSelectVehicle[i]) {
+                                if (gPlayerSelectVehicle[i] < 0 || gPlayerSelectVehicle[i] >= 3) {
+                                    gPlayerSelectVehicle[i] = origVehicle;
+                                } else {
+                                    menuChanged = TRUE;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (gNumberOfReadyPlayers == gNumberOfActivePlayers) {
+                    menuBackedOut = FALSE;
+                    menuSelected = FALSE;
+                    menuChanged = FALSE;
+                    if (gNumberOfActivePlayers >= 2) {
+                        gMenuStage = 2;
+                    } else {
+                        gMenuStage = 1;
+                    }
+                    sound_play(SOUND_CAR_REV2, NULL);
+                }
+                break;
+            case 1:
+                if (gMenuButtons[0] & (A_BUTTON | START_BUTTON)) {
+                    gMenuStage = 2;
+                    menuSelected = TRUE;
+                } else if (gMenuButtons[0] & B_BUTTON) {
+                    gPlayerSelectConfirm[0] = 0;
+                    gNumberOfReadyPlayers = 0;
+                    gMenuStage = 0;
+                    menuBackedOut = TRUE;
+                }
+                if (gMenuStickY[0] > 0 && gTracksMenuTimeTrialHighlightIndex > 0) {
+                    if (D_80126848 != NULL) {
+                        sound_stop((u8 *) D_80126848);
+                    }
+                    gTracksMenuTimeTrialHighlightIndex--;
+                    menuChanged = TRUE;
+                }
+                if (gMenuStickY[0] < 0) {
+                    if (gTracksMenuTimeTrialHighlightIndex <= 0) {
+                        menuChanged = TRUE;
+                        if (gTrackTTSoundMask != NULL) {
+                            sound_stop((u8 *) gTrackTTSoundMask);
+                        }
+                        if (get_random_number_from_range(0, 255) >= 128) {
+                            sound_play(SOUND_VOICE_TT_INTRO, (s32 *) &D_80126848);
+                        } else {
+                            sound_play(SOUND_VOICE_TT_GO_FOR_IT, (s32 *) &D_80126848);
+                        }
+                        gTracksMenuTimeTrialHighlightIndex++;
+                    }
+                }
+                break;
+            case 2: /* fall through */
+            case 3:
+                if (gMenuStage == 2 && gNumberOfActivePlayers == 2 && gTrackSelectCursorX < 4) {
+                    if (gMenuButtons[4] & (A_BUTTON | START_BUTTON)) {
+                        gMenuStage = 3;
+                        menuSelected = TRUE;
+                    } else if (gMenuButtons[4] & B_BUTTON) {
+                        gMenuStage = 0;
+                        gNumberOfReadyPlayers--;
+                        if (gMenuButtons[0] & B_BUTTON) {
+                            gPlayerSelectConfirm[0] = 0;
+                        } else {
+                            gPlayerSelectConfirm[1] = 0;
+                        }
+                        menuBackedOut = TRUE;
+                    } else {
+                        if (gMenuStickX[4] < 0 && gMultiplayerSelectedNumberOfRacers > 0) {
+                            menuChanged = TRUE;
+                            gMultiplayerSelectedNumberOfRacers--;
+                        } else if (gMenuStickX[4] > 0 && gMultiplayerSelectedNumberOfRacers < 2) {
+                            menuChanged = TRUE;
+                            gMultiplayerSelectedNumberOfRacers++;
+                        }
+                    }
+                } else if (gMenuButtons[4] & (A_BUTTON | START_BUTTON)) {
+                    gMenuDelay = 1;
+                    bgdraw_set_func(NULL);
+                    gIsInTracksMenu = 0;
+                    disable_new_screen_transitions();
+                    transition_begin(&sMenuTransitionFadeIn);
+                    if (gTrackSelectCursorX == 5) {
+                        set_current_text(10000); // Nonsense value. No text.
+                    }
+                    menuSelected = TRUE;
+                } else if (gTrackSelectCursorX >= 4) {
+                    if (gMenuButtons[4] & B_BUTTON) {
+                        menuBackedOut = TRUE;
+                        if ((gTrackSelectCursorX == 4) && (is_adventure_two_unlocked())) {
+                            gMenuStage = -1;
+                        } else {
+                            gMenuDelay = -1;
+                        }
+                        if (gTrackSelectCursorX == 5) {
+                            set_current_text(10000); // Nonsense value. No text.
+                        }
+                    }
+                } else if (gNumberOfActivePlayers == 1) {
+                    if (gMenuButtons[0] & B_BUTTON) {
+                        gMenuStage = 1;
+                        menuBackedOut = TRUE;
+                    }
+                } else if (gNumberOfActivePlayers == 2) {
+                    if (gMenuButtons[4] & B_BUTTON) {
+                        gMenuStage = 2;
+                        menuBackedOut = TRUE;
+                    }
+                } else {
+                    for (i = 0; i < gNumberOfActivePlayers; i++) {
+                        if (gMenuButtons[i] & B_BUTTON) {
+                            gNumberOfReadyPlayers--;
+                            gPlayerSelectConfirm[i] = 0;
+                            gMenuStage = 0;
+                            menuBackedOut = TRUE;
+                        }
+                    }
+                }
+                break;
+        }
+        if (menuBackedOut) {
+            sound_play(SOUND_MENU_BACK3, NULL);
+        } else if (menuSelected) {
+            sound_play(SOUND_SELECT2, NULL);
+        } else if (menuChanged) {
+            sound_play(SOUND_MENU_PICK2, NULL);
+        }
+        set_level_default_vehicle((enum Vehicle) * gPlayerSelectVehicle);
+        if (gNumberOfActivePlayers >= 2 || gTrackSelectCursorX >= 4) {
+            set_time_trial_enabled(FALSE);
+        } else {
+            set_time_trial_enabled(gTracksMenuTimeTrialHighlightIndex);
+        }
+        gIsInAdventureTwo = gTracksMenuAdventureHighlightIndex;
+    }
+}
 
 /**
  * Return whether the staff time has been beaten for this level.
