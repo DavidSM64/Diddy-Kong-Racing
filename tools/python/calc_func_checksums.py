@@ -4,11 +4,11 @@ import sys
 
 from file_util import FileUtil
 
-VERSION = sys.argv[1]
+REGION = sys.argv[1]
+VERSION = sys.argv[2]
 
-BUILD_DIR = 'build/' + VERSION
-MAP_FILEPATH = BUILD_DIR + '/dkr.map'
-ROM_FILEPATH = BUILD_DIR + '/dkr.z64'
+MAP_FILEPATH = f'build/dkr.{REGION}.{VERSION}.map'
+ROM_FILEPATH = f'build/dkr.{REGION}.{VERSION}.z64'
 
 FUNCTIONS_TO_CALC = [
     # function         checksum variable        func size variable

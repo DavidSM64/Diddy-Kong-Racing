@@ -1,9 +1,12 @@
-[submodule "tools/ido-static-recomp"]
-	path = tools/ido-static-recomp
-	url = https://github.com/decompals/ido-static-recomp
-[submodule "tools/asm_processor"]
-	path = tools/asm_processor
-	url = https://github.com/simonlindholm/asm-processor.git
+[submodule "tools/asm-processor"]
+	path = tools/asm-processor
+	url = https://github.com/simonlindholm/asm-processor
+[submodule "tools/asm-differ"]
+	path = tools/asm-differ
+	url = https://github.com/simonlindholm/asm-differ.git
+[submodule "tools/m2c"]
+	path = tools/m2c
+	url = https://github.com/matt-kempster/m2c.git
 [submodule "tools/Flips"]
 	path = tools/Flips
 	url = https://github.com/Alcaro/Flips.git

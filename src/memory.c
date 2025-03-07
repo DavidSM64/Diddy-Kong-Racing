@@ -20,8 +20,6 @@ FreeQueueSlot gFreeQueue[FREE_QUEUE_SIZE];
 s32 gFreeQueueCount;
 s32 gFreeQueueTimer; // Official Name: mmDelay
 
-extern MemoryPoolSlot gMainMemoryPool;
-
 /******************************/
 
 /**

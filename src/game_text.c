@@ -66,8 +66,13 @@ void init_dialogue_text(void) {
     gDialogueAlpha = 0;
     gTextAlphaVelocity = 32;
     gCurrentTextID = 0;
+#if REGION == REGION_JP
+    gDialogueXPos1 = 24;
+    gDialogueXPos2 = 296;
+#else
     gDialogueXPos1 = 32;
     gDialogueXPos2 = 288;
+#endif
     if (osTvType == OS_TV_TYPE_PAL) {
         gDialogueYPos1 = 224;
         gDialogueYPos2 = 248;
@@ -104,13 +109,32 @@ void render_subtitles(void) {
     s32 i;
     s32 textFlags;
     char **textData;
+#if VERSION == VERSION_79
+#define SUBTITLE_Y_OFFSET 18
+#else
+#define SUBTITLE_Y_OFFSET 14
+#endif
 
     dialogue_clear(6);
+#if VERSION >= VERSION_79
+    if (gSubtitleLineCount >= 2) {
+        gDialogueYPos1 -= SUBTITLE_Y_OFFSET;
+    }
+#endif
     set_current_dialogue_box_coords(6, gDialogueXPos1, gDialogueYPos1, gDialogueXPos2, gDialogueYPos2);
     set_current_dialogue_background_colour(6, 64, 96, 96, (gDialogueAlpha * 160) >> 8);
     set_current_text_background_colour(6, 0, 0, 0, 0);
+#if REGION == REGION_JP
+    textY = ((((gDialogueYPos2 - gDialogueYPos1) - (gSubtitleLineCount * 16)) - (gSubtitleLineCount * 2)) + 2) >> 1;
+#else
     textY = ((((gDialogueYPos2 - gDialogueYPos1) - (gSubtitleLineCount * 12)) - (gSubtitleLineCount * 2)) + 2) >> 1;
+#endif
 
+#if VERSION >= VERSION_79
+    if (gSubtitleLineCount >= 2) {
+        gDialogueYPos1 += SUBTITLE_Y_OFFSET;
+    }
+#endif
     for (i = 0; i < gSubtitleLineCount; i++) {
         textData = &gSubtitleProperties[0];
         set_dialogue_font(6, (s32) textData[i][TEXT_FONT]);
@@ -129,7 +153,7 @@ void render_subtitles(void) {
         render_dialogue_text(6, textX, textY, textData[i] + 8, 1, textFlags);
         set_current_text_colour(6, 0, 0, 0, 255, (gDialogueAlpha * 255) >> 8);
         render_dialogue_text(6, textX + 1, textY + 1, textData[i] + 8, 1, textFlags);
-        textY += 14;
+        textY += SUBTITLE_Y_OFFSET;
     }
     open_dialogue_box(6);
 }
