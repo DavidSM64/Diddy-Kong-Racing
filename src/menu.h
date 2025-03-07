@@ -170,6 +170,19 @@ enum DialogIDsTaj {
     DIALOGUEPAGE_TAJ_CHALLENGES_2
 };
 
+/**
+ * If type is -1, allocate and initialise all the track setup elements.
+ * If type is 0, reset the cursor target to the current position.
+ * If type is 1, free the assetgroup for the track setup.
+ * If type is 2, to load the race
+ */
+enum TrackMenuTypes {
+    TRACKMENU_TYPE_INIT = -1,
+    TRACKMENU_TYPE_RESET_CURSOR,
+    TRACKMENU_TYPE_FREE,
+    TRACKMENU_TYPE_LOAD_LEVEL
+};
+
 #define CHEAT(index) 1 << index
 
 typedef enum Cheats {
@@ -654,6 +667,7 @@ SIDeviceStatus savemenu_write(void);
 void trackmenu_setup_render(s32 updateRate);
 void rankings_render_order(s32 updateRate);
 void results_render(UNUSED s32 updateRate, f32 opacity);
+void func_80092188(s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -661,7 +675,6 @@ s32 menu_controller_pak_loop(s32 updateRate);
 void menu_game_select_init(void);
 void func_8008FF1C(s32 updateRate);
 void trackmenu_input(s32 updateRate);
-void func_80092188(s32 updateRate);
 void filename_trim(char *input, char *output);
 void menu_ghost_data_init(void);
 void update_controller_sticks(void);
