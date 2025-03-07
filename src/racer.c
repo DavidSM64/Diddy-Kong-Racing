@@ -3281,8 +3281,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (temp > 75) {
             temp = 75;
         }
-        if (temp < -75) {
-        }
+        if (temp < -75) {}
     } else {
         racer->drift_direction = 0;
     }
@@ -3344,7 +3343,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // Set final turn velocity by taking the steering velocity and multiplying it by the handling stat of the character.
     temp = ((temp * updateRate) >> 1);
-    temp_2 = temp  * gCurrentRacerHandlingStat;
+    temp_2 = temp * gCurrentRacerHandlingStat;
     racer->steerVisualRotation -= temp_2 & 0xFFFF;
     // Now steer the car.
     handle_car_steering(racer);
@@ -3436,7 +3435,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // Multiply current velocity by the surface grip levels.
     racer->lateral_velocity *= surfaceTraction;
-    velocityDiff =  coss_f(racer->x_rotation_vel);
+    velocityDiff = coss_f(racer->x_rotation_vel);
     if (velocityDiff < 0.0f) {
         velocityDiff = -velocityDiff;
     }
@@ -3513,14 +3512,15 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (racer->velocity < 0.0f) {
         traction = -traction;
     }
-    
+
     if (traction > 12.0f) {
         traction = 12.0f;
     }
     // Convert the velocity value to an int
     temp = (s32) traction;
     // Calculate the velocity multiplier based on current velocity
-    traction = ((gCurrentRacerMiscAssetPtr[temp + 1] * (traction - temp)) + (gCurrentRacerMiscAssetPtr[temp] * (1.0 - (traction - temp))));
+    traction = ((gCurrentRacerMiscAssetPtr[temp + 1] * (traction - temp)) +
+                (gCurrentRacerMiscAssetPtr[temp] * (1.0 - (traction - temp))));
     traction *= 1.7;
     traction *= topSpeed;
     // Force the throttle wide open if boosting
@@ -7032,7 +7032,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     f32 tempRacerVelocity;
     f32 var_f24;
     s32 i;
-    LevelHeader *levelHeader;    
+    LevelHeader *levelHeader;
 #if VERSION == VERSION_80
     UNUSED f32 pad4;
 #endif
@@ -7216,6 +7216,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         obj->segment.trans.x_position += var_f24;
         obj->segment.trans.y_position += var_f26;
         obj->segment.trans.z_position += var_f28;
+        // Don't get caught up on this using checkpointDistance var when documenting. It just matched that way.
         checkpointDistance = model->upperXBounds + 1000.0f;
         if (obj->segment.trans.x_position > checkpointDistance) {
             obj->segment.trans.x_position = checkpointDistance;
