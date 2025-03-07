@@ -7297,7 +7297,7 @@ void menu_track_select_init(void) {
     gTrackmenuLoadedLevel = -1;
     gOpacityDecayTimer = 32;
     gOptionBlinkTimer = 0;
-    gTrackmenuType = -1;
+    gTrackmenuType = TRACKMENU_TYPE_INIT;
     trackmenu_assets(0);
     transition_begin(&sMenuTransitionFadeOut);
     enable_new_screen_transitions();
@@ -7426,26 +7426,28 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_track_select_init.s")
  * If type is -1, allocate and initialise all the track setup elements.
  * If type is 0, reset the cursor target to the current position.
  * If type is 1, free the assetgroup for the track setup.
+ * If type is 2, to load the race
  */
 void trackmenu_assets(s32 type) {
     Vehicle vehicle;
     s32 i;
     s32 newType;
 
-    if (gTrackmenuType != -1 && gTrackmenuType != 0 && gTrackmenuType == 1) {
+    if (gTrackmenuType != TRACKMENU_TYPE_INIT && gTrackmenuType != TRACKMENU_TYPE_RESET_CURSOR &&
+        gTrackmenuType == TRACKMENU_TYPE_FREE) {
         menu_assetgroup_free(gTrackSelectPreviewObjectIndices);
     }
 
     gTrackmenuType = type;
     newType = gTrackmenuType;
 
-    if (newType > -1 && newType < 2) {
+    if (newType > TRACKMENU_TYPE_INIT && newType <= TRACKMENU_TYPE_FREE) {
         switch (gTrackmenuType) {
-            case 0:
+            case TRACKMENU_TYPE_RESET_CURSOR:
                 gTrackSelectTargetX = gTrackSelectX;
                 gTrackSelectTargetY = gTrackSelectY;
                 break;
-            case 1:
+            case TRACKMENU_TYPE_FREE:
                 vehicle = get_map_default_vehicle(gTrackIdForPreview);
                 for (i = 0; i < gNumberOfActivePlayers; i++) {
                     gPlayerSelectConfirm[i] = 0;
@@ -7507,12 +7509,12 @@ s32 menu_track_select_loop(s32 updateRate) {
     gSPClearGeometryMode(sMenuCurrDisplayList++, G_CULL_FRONT);
 
     switch (gTrackmenuType) {
-        case 0:
+        case TRACKMENU_TYPE_RESET_CURSOR:
             func_8008FF1C(updateRate);
             trackmenu_track_view(updateRate);
             trackmenu_input(updateRate);
             break;
-        case 1:
+        case TRACKMENU_TYPE_FREE:
             trackmenu_timetrial_sound(updateRate);
             trackmenu_setup_render(updateRate);
             func_80092188(updateRate);
@@ -7528,7 +7530,7 @@ s32 menu_track_select_loop(s32 updateRate) {
         }
         music_volume_set(sMenuMusicVolume);
     }
-    if (gTrackmenuType < 0) {
+    if (gTrackmenuType <= TRACKMENU_TYPE_INIT) {
         menu_track_select_unload();
         gTrackSpecifiedWithTrackIdToLoad = 0;
         if (gNumberOfActivePlayers >= 3 ||
@@ -7549,7 +7551,7 @@ s32 menu_track_select_loop(s32 updateRate) {
         menu_init(MENU_GAME_SELECT);
         return MENU_RESULT_CONTINUE;
     }
-    if (gTrackmenuType >= 2) {
+    if (gTrackmenuType >= TRACKMENU_TYPE_LOAD_LEVEL) {
         menu_track_select_unload();
         if (gMultiplayerSelectedNumberOfRacersCopy != gMultiplayerSelectedNumberOfRacers) {
             for (cutsceneId = 0; cutsceneId < 8; cutsceneId++) {
@@ -8040,11 +8042,11 @@ void trackmenu_input(s32 updateRate) {
             } else {
                 gMenuStage = TRACKMENU_OPT_1;
             }
-            trackmenu_assets(1);
+            trackmenu_assets(TRACKMENU_TYPE_FREE);
         } else if (gMenuDelay < -30) {
             disable_new_screen_transitions();
             camDisableUserView(0, FALSE);
-            trackmenu_assets(-1);
+            trackmenu_assets(TRACKMENU_TYPE_INIT);
         }
     }
     if (menuDelay == 0) {
@@ -8964,7 +8966,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
         if (gMenuStage != ADVENTURESETUP_VEHICLE || sp20 || challenge) {
             if (gMenuButtons[PLAYER_ONE] & (A_BUTTON | START_BUTTON)) {
                 if (challenge) {
-                    set_current_text(0x2710);
+                    set_current_text(10000);
                 }
                 gMenuDelay = 1;
                 transition_begin(&sMenuTransitionFadeIn);
@@ -8973,7 +8975,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
                 sound_play(SOUND_MENU_BACK3, NULL);
                 if (sp20 || challenge) {
                     if (challenge) {
-                        set_current_text(0x2710);
+                        set_current_text(10000);
                     }
                     transition_begin(&sMenuTransitionFadeIn);
                     gMenuDelay = -1;

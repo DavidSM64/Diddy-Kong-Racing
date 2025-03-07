@@ -7,7 +7,7 @@ Currently, only the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of March 7, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 73.56%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 73.86%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 49.99%
 <!-- README_SCORE_SUMMARY_END -->
@@ -130,16 +130,16 @@ As of March 7, 2025, this is our current score:
 ```
  ==========================================================
            ADVENTURE ONE (ASM -> C Decompilation)
- --------- 73.56% Complete (76.05% NON_MATCHING) ----------
-                # Decompiled functions: 1818
-                # GLOBAL_ASM remaining: 123
+ --------- 73.86% Complete (76.35% NON_MATCHING) ----------
+                # Decompiled functions: 1819
+                # GLOBAL_ASM remaining: 122
                 # NON_MATCHING functions: 14
              # NON_EQUIVALENT WIP functions: 43
  ---------------------- Game Status -----------------------
          Balloons: 35/47, Keys: 4/4, Trophies: 3/5
            T.T. Amulets: 3/4, Wizpig Amulets: 3/4
  ----------------------------------------------------------
- We are collecting bananas in Smokey Castle. (5/10 Bananas)
+ We are collecting bananas in Smokey Castle. (7/10 Bananas)
  ==========================================================
            ADVENTURE TWO (Cleanup & Documentation)
  -------------------- 49.99% Complete ---------------------
