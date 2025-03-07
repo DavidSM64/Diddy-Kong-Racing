@@ -8866,10 +8866,10 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
 #if VERSION >= VERSION_79
         if (gNumberOfActivePlayers >= 2) {
             if (gTrackIdForPreview == ASSET_LEVEL_SPACEPORTALPHA) {
-                availableVehicleFlags &= ~VEHICLE_PLANE;
+                availableVehicleFlags &= ~(1 << VEHICLE_HOVERCRAFT);
             }
             if (gTrackIdForPreview == ASSET_LEVEL_FROSTYVILLAGE) {
-                availableVehicleFlags &= ~VEHICLE_LOOPDELOOP;
+                availableVehicleFlags &= ~(1 << VEHICLE_PLANE);
             }
         }
 #endif
@@ -9166,7 +9166,6 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
     }
 }
 
-#ifdef VERSION < VERSION_80
 void func_80092188(s32 updateRate) {
     s32 yOffset2;
     s32 origVehicle;
@@ -9237,10 +9236,10 @@ void func_80092188(s32 updateRate) {
 #if VERSION >= VERSION_79
         if (gNumberOfActivePlayers >= 2) {
             if (gTrackIdForPreview == ASSET_LEVEL_SPACEPORTALPHA) {
-                avaliableVehicles &= ~VEHICLE_PLANE;
+                avaliableVehicles &= ~(1 << VEHICLE_HOVERCRAFT);
             }
             if (gTrackIdForPreview == ASSET_LEVEL_FROSTYVILLAGE) {
-                avaliableVehicles &= ~VEHICLE_LOOPDELOOP;
+                avaliableVehicles &= ~(1 << VEHICLE_PLANE);
             }
         }
 #endif
@@ -9442,9 +9441,6 @@ void func_80092188(s32 updateRate) {
         gIsInAdventureTwo = gTracksMenuAdventureHighlightIndex;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_80092188.s")
-#endif
 
 /**
  * Return whether the staff time has been beaten for this level.
@@ -9652,7 +9648,7 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
                     y = yOffset + 139;
                     savedY = y;
 
-                    for (i = 0; i < 3; i++) {
+                    for (i = 0; i <= VEHICLE_PLANE; i++) {
                         alpha = (arg1 < 2 && get_map_default_vehicle(mapID) != (Vehicle) i) ? 128 : 255;
                         if ((1 << i) & mask) {
                             if (i == gPlayerSelectVehicle[0]) {

@@ -7005,12 +7005,13 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     set_racer_tail_lights(racer);
 }
 
+#if VERSION != VERSION_80
 void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
     f32 temp_f0;
     s32 checkpointIdx;
     s32 checkpointCount;
     CheckpointNode *checkpoint;
-    UNUSED f32 pad0;
+    LevelModel *model;
     f32 var_f28;
     f32 checkpointX[4];
     s32 j;
@@ -7203,10 +7204,42 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     racer->unk1BE = racer->steerVisualRotation;
     racer->unk1C0 = obj->segment.trans.rotation.x_rotation;
     if (move_object(obj, var_f24, var_f26, var_f28)) {
-        obj->segment.trans.x_position += var_f24;
+#if VERSION < VERSION_80
         if (1) {}
+        obj->segment.trans.x_position += var_f24;
         obj->segment.trans.y_position += var_f26;
         obj->segment.trans.z_position += var_f28;
+#endif
+#if VERSION == VERSION_80
+        model = get_current_level_model();
+        obj->segment.trans.x_position += var_f24;
+        obj->segment.trans.y_position += var_f26;
+        obj->segment.trans.z_position += var_f28;
+        var_f26 = model->upperXBounds + 1000.0f;
+        if (obj->segment.trans.x_position > var_f26) {
+            obj->segment.trans.x_position = var_f26;
+        }
+        var_f26 = model->lowerXBounds - 1000.0f;
+        if (obj->segment.trans.x_position < var_f26) {
+            obj->segment.trans.x_position = var_f26;
+        }
+        var_f26 = model->upperYBounds + 3000.0f;
+        if (obj->segment.trans.y_position > var_f26) {
+            obj->segment.trans.y_position = var_f26;
+        }
+        var_f26 = model->lowerYBounds - 500.0f;
+        if (obj->segment.trans.y_position < var_f26) {
+            obj->segment.trans.y_position = var_f26;
+        }
+        var_f26 = model->upperZBounds + 1000.0f;
+        if (obj->segment.trans.z_position > var_f26) {
+            obj->segment.trans.z_position = var_f26;
+        }
+        var_f26 = model->lowerZBounds - 1000.0f;
+        if (obj->segment.trans.z_position < var_f26) {
+            obj->segment.trans.z_position = var_f26;
+        }
+#endif
     }
     if (checkpointPositionOffset < 20.0) {
         obj->segment.x_velocity = var_f24 / updateRateF;
@@ -7242,6 +7275,9 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     obj->particleEmitFlags = OBJ_EMIT_OFF;
     func_800AF714(obj, updateRate);
 }
+#else
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8005B818.s")
+#endif
 
 #ifdef ANTI_TAMPER
 // This gets called if an anti-piracy checksum fails in allocate_object_model_pools.
