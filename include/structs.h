@@ -1393,7 +1393,7 @@ typedef struct Object_Racer {
   /* 0x216 */ u8 unk216;
   /* 0x217 */ u8 unk217;
   /* 0x218 */ s32 weaponSoundMask;
-  /* 0x21C */ s32 unk21C;
+  /* 0x21C */ SoundMask *unk21C;
   /* 0x220 */ s32 unk220;
 } Object_Racer;
 
