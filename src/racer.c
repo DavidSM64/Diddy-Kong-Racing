@@ -3117,32 +3117,27 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s1
     }
 }
 
-#ifdef NON_MATCHING
-typedef struct unk_Object_60 {
-    s32 count;
-    ObjectTransform *transforms[1]; // Array of ObjectTransform pointers.
-} unk_Object_60;
-
 void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
-    s32 soundID;
-    f32 scale;
-    f32 velocityDiff;
-    s32 sp68; // 68
+    UNUSED s32 pad0;
+    s32 i;
+    s32 temp_2;
+    s32 sp68;
     s32 surfaceType;
-    s32 sp60; // 60
-    s32 velocityS;
-    s32 sp58; // 58
+    s32 sp60;
+    f32 tempVel;
+    s32 sp58;
     s8 stoneWheels;
     s8 steerAngle;
-    f32 velSquare; // 50
-    s32 SteeringVel;
-    f32 *miscAsset;
+    f32 velSquare;
+    s32 temp;
+    f32 velocityDiff;
     f32 traction;
-    f32 tempVel;
     f32 surfaceTraction;
+    f32 *miscAsset;
     ObjectTransform *temp_v0;
-    f32 topSpeed; // 78
-    s32 i;
+    f32 topSpeed;
+    UNUSED s32 pad1;
+    UNUSED s32 pad2;
 
     sp58 = FALSE;
     // Set the square value of the current forward velocity
@@ -3154,17 +3149,17 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     racer->unk88 = 0.0f;
     // Apply bobbing if there's no dialogue camera rotation active.
     if (gDialogueCameraAngle == 0) {
-        scale = (f32) D_800DCDB0[0][racer->miscAnimCounter & 0x1F] * 0.024999999999999998;
-        racer->carBobX = -racer->roll * scale;
-        racer->carBobY = -racer->yaw * scale;
-        racer->carBobZ = -racer->pitch * scale;
+        tempVel = (f32) D_800DCDB0[0][racer->miscAnimCounter & 0x1F] * 0.024999999999999998;
+        racer->carBobX = -racer->roll * tempVel;
+        racer->carBobY = -racer->yaw * tempVel;
+        racer->carBobZ = -racer->pitch * tempVel;
         if (obj->unk60 != NULL) {
             for (i = 0; i < ((unk_Object_60 *) obj->unk60)->count; i++) {
-                scale = 1.0f / obj->segment.trans.scale;
+                tempVel = 1.0f / obj->segment.trans.scale;
                 temp_v0 = ((unk_Object_60 *) obj->unk60)->transforms[i];
-                temp_v0->x_position = (f32) (-racer->carBobX * scale);
-                temp_v0->y_position = (f32) (-racer->carBobY * scale);
-                temp_v0->z_position = (f32) (-racer->carBobZ * scale);
+                temp_v0->x_position = (f32) (-racer->carBobX * tempVel);
+                temp_v0->y_position = (f32) (-racer->carBobY * tempVel);
+                temp_v0->z_position = (f32) (-racer->carBobZ * tempVel);
             }
         }
     } else {
@@ -3232,13 +3227,14 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         } else {
             sp58 = TRUE;
         }
+        i = racer->y_rotation_vel;
         racer->y_rotation_vel += updateRate * 0x600 * racer->drifting;
         if (racer->drifting > 0) {
-            if (racer->y_rotation_vel < 0 && racer->y_rotation_vel >= 0) {
+            if (racer->y_rotation_vel < 0 && i >= 0) {
                 racer->drifting = 0;
                 racer->y_rotation_vel = 0x7FFF;
             }
-        } else if (racer->y_rotation_vel > 0 && racer->y_rotation_vel <= 0) {
+        } else if (racer->y_rotation_vel > 0 && i <= 0) {
             racer->drifting = 0;
             racer->y_rotation_vel = -0x8000;
         }
@@ -3280,19 +3276,17 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     // If currently drifting, apply a minor speed multiplier and tilt the natural steering towards the drift direction
     if (gCurrentRacerInput & R_TRIG && racer->drift_direction != 0) {
         topSpeed *= 1.1;
-        SteeringVel = (gCurrentStickX >> 1) + (racer->drift_direction * 30);
-        if (SteeringVel > 75) {
-            SteeringVel = 75;
+        // Unused code?
+        temp = (gCurrentStickX >> 1) + (racer->drift_direction * 30);
+        if (temp > 75) {
+            temp = 75;
         }
-        if (SteeringVel < -75) {
-            SteeringVel = -75;
+        if (temp < -75) {
         }
     } else {
         racer->drift_direction = 0;
     }
-    i = ((racer->unk10C - (racer->drift_direction << 13)) * updateRate) >> 4;
-    racer->unk10C -= i;
-    // racer->unk10C -= ((racer->unk10C - (racer->drift_direction << 13)) * updateRate) >> 4;
+    racer->unk10C -= ((racer->unk10C - (racer->drift_direction << 13)) * updateRate) >> 4;
     // sounds for drifting and sliding
     if (!(racer->y_rotation_vel <= 0x1800 && racer->y_rotation_vel >= -0x1800 && racer->drift_direction == 0 &&
           racer->drifting == 0 && racer->unk1FB == 0)) {
@@ -3314,69 +3308,73 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
                               obj->segment.trans.z_position);
             }
             if (racer->unk14) {
-                sound_stop(racer->unk14);
+                sound_stop((void *) racer->unk14);
             }
         } else {
             if (racer->unk10) {
-                sound_stop(racer->unk10);
+                sound_stop((void *) racer->unk10);
             }
         }
     } else {
         if (racer->unk10) {
-            sound_stop(racer->unk10);
+            sound_stop((void *) racer->unk10);
         }
         if (racer->unk14) {
-            sound_stop(racer->unk14);
+            sound_stop((void *) racer->unk14);
         }
     }
     // Velocity of steering input
     steerAngle = racer->steerAngle;
-    velocityS = 6;
+    i = 6;
     // Turn twice as fast under braking (because that's totally how cars work)
     if (gCurrentRacerInput & B_BUTTON) {
-        velocityS = 12;
+        i = 12;
     }
     // Turn thrice as fast when drifting and braking.
     if (gCurrentRacerInput & B_BUTTON && racer->drift_direction != 0) {
-        velocityS = 18;
+        i = 18;
     }
     // Multiply steering velocity with angle
-    SteeringVel = 0;
+    temp = 0;
     if (racer->velocity < -0.3) {
-        SteeringVel = steerAngle * velocityS;
+        temp = steerAngle * i;
     }
     if (racer->velocity > 0.3) {
-        SteeringVel = -steerAngle * velocityS;
+        temp = -steerAngle * i;
     }
     // Set final turn velocity by taking the steering velocity and multiplying it by the handling stat of the character.
-    racer->steerVisualRotation -= (s32) (((SteeringVel * updateRate) >> 1) * gCurrentRacerHandlingStat);
+    temp = ((temp * updateRate) >> 1);
+    temp_2 = temp  * gCurrentRacerHandlingStat;
+    racer->steerVisualRotation -= temp_2 & 0xFFFF;
     // Now steer the car.
     handle_car_steering(racer);
     // Set base grip level to 0.
-    traction = 0.0f;
     surfaceType = SURFACE_DEFAULT;
     // If reversing, flip the steering
     if (racer->velocity < -4.0) {
         if (gCurrentCarSteerVel > 0x1400 || (racer->drift_direction != 0 && gCurrentCarSteerVel > 0)) {
-            SteeringVel = racer->miscAnimCounter & 7;
-            if (SteeringVel >= 4) {
-                SteeringVel = 7 - SteeringVel;
+            i = racer->miscAnimCounter & 7;
+            if (i >= 4) {
+                i = 7 - i;
             }
-            gCurrentCarSteerVel += SteeringVel * 0x190;
+            gCurrentCarSteerVel += i * 0x190;
         } else if (gCurrentCarSteerVel < -0x1400 || (racer->drift_direction != 0 && gCurrentCarSteerVel < 0)) {
-            SteeringVel = racer->miscAnimCounter & 7;
-            if (SteeringVel >= 4) {
-                SteeringVel = 7 - SteeringVel;
+            i = racer->miscAnimCounter & 7;
+            if (i >= 4) {
+                i = 7 - i;
             }
-            gCurrentCarSteerVel -= SteeringVel * 0x190;
+            gCurrentCarSteerVel -= i * 0x190;
         }
     }
+
+    traction = 0.0f;
     surfaceTraction = 0.0f;
     velocityDiff = 0.0f;
     sp68 = 0;        // Number of wheels contacting grass or sand
     stoneWheels = 0; // Number of wheels contacting the stone surface type
     // Iterate through each wheel and find which surface they're on.
-    for (i = 0; i < 4; i++) {
+    i = 0;
+    while (i < 4) {
         if (racer->wheel_surfaces[i] != SURFACE_NONE) {
             if (get_filtered_cheats() & CHEAT_FOUR_WHEEL_DRIVER) {
                 traction += gSurfaceTractionTable[0];
@@ -3393,10 +3391,14 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             }
             velocityDiff += 1.0f;
         }
-    }
+        i++;
+    };
+
+    // Probably fake but required for match
+    for (i = 0; i < 4; i++) {}
+
     // With multiple contact patches, average the surface properties across.
     if (velocityDiff > 1.0f) {
-        i--; // fakematch
         traction /= velocityDiff;
         surfaceTraction /= velocityDiff;
     }
@@ -3434,12 +3436,12 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // Multiply current velocity by the surface grip levels.
     racer->lateral_velocity *= surfaceTraction;
-    tempVel = coss_f(racer->x_rotation_vel);
-    if (tempVel < 0.0f) {
-        tempVel = -tempVel;
+    velocityDiff =  coss_f(racer->x_rotation_vel);
+    if (velocityDiff < 0.0f) {
+        velocityDiff = -velocityDiff;
     }
     // Multiply lateral velocity by pitch
-    racer->lateral_velocity *= tempVel;
+    racer->lateral_velocity *= velocityDiff;
     gCurrentSurfaceType = surfaceType;
     if (stoneWheels != 0) {
         miscAsset = (f32 *) get_misc_asset(ASSET_MISC_32);
@@ -3474,7 +3476,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->unk1EE = 0;
     }
     if (get_viewport_count() < THREE_PLAYERS) {
-        if ((sp60 && racer->velocity < -2.0) || sp58 || racer->unk1FB != 0) {
+        if ((sp60 != 0 && racer->velocity < -2.0) || sp58 != 0 || racer->unk1FB != 0) {
             if (racer->wheel_surfaces[2] < SURFACE_NONE) {
                 obj->particleEmitFlags |= gSurfaceFlagTable[racer->wheel_surfaces[2]];
             }
@@ -3493,42 +3495,40 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // Play a sound on grass and sand when landing on it
     surfaceType = gSurfaceSoundTable[surfaceType];
-    soundID = surfaceType;
-    if (racer->unk18 == NULL && soundID != SOUND_NONE && racer->velocity < -2.0) {
-        sound_play(soundID, &racer->unk18);
+    if (racer->unk18 == NULL && surfaceType != SOUND_NONE && racer->velocity < -2.0) {
+        sound_play(surfaceType, &racer->unk18);
     }
-    if (racer->unk18 != NULL && (soundID == SOUND_NONE || racer->velocity > -2.0)) {
-        sound_stop(racer->unk18);
+    if (racer->unk18 != NULL && (surfaceType == SOUND_NONE || racer->velocity > -2.0)) {
+        sound_stop((void *) racer->unk18);
     }
     // Apply a bobbing effect when on grass and sand.
     if (racer->velocity < -2.0 && sp68 >= 4) {
-        scale = (f32) (racer->miscAnimCounter & 1) * 0.5;
-        racer->carBobX -= racer->roll * scale;
-        racer->carBobY -= racer->yaw * scale;
-        racer->carBobZ -= racer->pitch * scale;
+        tempVel = (f32) (racer->miscAnimCounter & 1) * 0.5;
+        racer->carBobX -= racer->roll * tempVel;
+        racer->carBobY -= racer->yaw * tempVel;
+        racer->carBobZ -= racer->pitch * tempVel;
     }
-    tempVel = racer->velocity;
+    traction = racer->velocity;
     // Keep velocity positive and keep it below 12
-    if (tempVel < 0.0f) {
-        tempVel = -tempVel;
+    if (racer->velocity < 0.0f) {
+        traction = -traction;
     }
-    if (tempVel > 12.0f) {
-        tempVel = 12.0f;
+    
+    if (traction > 12.0f) {
+        traction = 12.0f;
     }
     // Convert the velocity value to an int
-    velocityS = (s32) tempVel;
-    miscAsset = &gCurrentRacerMiscAssetPtr[velocityS];
-    velocityDiff = tempVel - velocityS;
+    temp = (s32) traction;
     // Calculate the velocity multiplier based on current velocity
-    surfaceTraction = (f32) ((miscAsset[1] * velocityDiff) + (miscAsset[0] * (1.0 - velocityDiff)));
-    surfaceTraction = (surfaceTraction * 1.7);
-    surfaceTraction *= topSpeed;
+    traction = ((gCurrentRacerMiscAssetPtr[temp + 1] * (traction - temp)) + (gCurrentRacerMiscAssetPtr[temp] * (1.0 - (traction - temp))));
+    traction *= 1.7;
+    traction *= topSpeed;
     // Force the throttle wide open if boosting
     if (racer->boostTimer > 0) {
         if (gRaceStartTimer == 0) {
             racer->throttle = 1.0f;
-            if (surfaceTraction != 0.0) {
-                surfaceTraction = 2.0f;
+            if (traction != 0.0) {
+                traction = 2.0f;
             }
             racer->boostTimer -= updateRate;
         }
@@ -3538,7 +3538,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (racer->velocity > -2.0 && racer->velocity < 3.0 &&
         (racer->playerIndex != PLAYER_COMPUTER || racer->unk214 != 0)) {
         tempVel = (3.0 - racer->velocity) * 0.15;
-        if (soundID == 4) {
+        if (surfaceType == 4) {
             tempVel *= 0.25;
         }
         if ((gCurrentStickY < -25) && !(gCurrentRacerInput & A_BUTTON) && (gCurrentRacerInput & B_BUTTON)) {
@@ -3549,8 +3549,8 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->brake = 0.0f;
         }
     }
-    tempVel = (racer->brake * surfaceTraction) * 0.32; //!@Delta
-    racer->velocity -= surfaceTraction * racer->throttle;
+    tempVel = (racer->brake * traction) * 0.32;
+    racer->velocity -= traction * racer->throttle;
     if (racer->velocity > -0.04 && racer->velocity < 0.04) {
         racer->velocity = 0.0f;
     }
@@ -3565,14 +3565,15 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->velocity = 0.0f;
         }
     }
-    surfaceTraction = gCurrentRacerWeightStat;
-    obj->segment.y_velocity -= surfaceTraction * updateRateF;
+    traction = gCurrentRacerWeightStat;
+    obj->segment.y_velocity -= traction * updateRateF;
     if (gDialogueCameraAngle != 0) {
-        surfaceTraction = 0.0f;
+        traction = 0.0f;
     }
     if (racer->brake < 0.9 && racer->vehicleIDPrev < VEHICLE_TRICKY && gRaceStartTimer == 0) {
-        if (racer->pitch < 0.0) {
-            velocityDiff = -racer->pitch;
+        velocityDiff = racer->pitch;
+        if (velocityDiff < 0.0) {
+            velocityDiff = -velocityDiff;
             velocityDiff -= 0.3;
             if (velocityDiff < 0.0) {
                 velocityDiff = 0.0f;
@@ -3584,7 +3585,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         } else {
             velocityDiff = 0.0f;
         }
-        racer->velocity += surfaceTraction * (racer->pitch / (4.0f - velocityDiff)) * updateRateF;
+        racer->velocity += traction * (racer->pitch / (4.0f - velocityDiff)) * updateRateF;
     }
     racer->forwardVel -= (racer->forwardVel + (racer->velocity * 0.05)) * 0.125; //!@Delta
     racer->unk1E8 = racer->steerAngle;
@@ -3599,9 +3600,6 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/racer/func_80050A28.s")
-#endif
 
 /**
  * Checks if Taj's interaction status is set to try make him teleport and return true.
