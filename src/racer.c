@@ -3281,8 +3281,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (temp > 75) {
             temp = 75;
         }
-        if (temp < -75) {
-        }
+        if (temp < -75) {}
     } else {
         racer->drift_direction = 0;
     }
@@ -3344,7 +3343,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // Set final turn velocity by taking the steering velocity and multiplying it by the handling stat of the character.
     temp = ((temp * updateRate) >> 1);
-    temp_2 = temp  * gCurrentRacerHandlingStat;
+    temp_2 = temp * gCurrentRacerHandlingStat;
     racer->steerVisualRotation -= temp_2 & 0xFFFF;
     // Now steer the car.
     handle_car_steering(racer);
@@ -3436,7 +3435,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // Multiply current velocity by the surface grip levels.
     racer->lateral_velocity *= surfaceTraction;
-    velocityDiff =  coss_f(racer->x_rotation_vel);
+    velocityDiff = coss_f(racer->x_rotation_vel);
     if (velocityDiff < 0.0f) {
         velocityDiff = -velocityDiff;
     }
@@ -3513,14 +3512,15 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (racer->velocity < 0.0f) {
         traction = -traction;
     }
-    
+
     if (traction > 12.0f) {
         traction = 12.0f;
     }
     // Convert the velocity value to an int
     temp = (s32) traction;
     // Calculate the velocity multiplier based on current velocity
-    traction = ((gCurrentRacerMiscAssetPtr[temp + 1] * (traction - temp)) + (gCurrentRacerMiscAssetPtr[temp] * (1.0 - (traction - temp))));
+    traction = ((gCurrentRacerMiscAssetPtr[temp + 1] * (traction - temp)) +
+                (gCurrentRacerMiscAssetPtr[temp] * (1.0 - (traction - temp))));
     traction *= 1.7;
     traction *= topSpeed;
     // Force the throttle wide open if boosting
