@@ -308,7 +308,7 @@ s32 get_map_available_vehicles(s32 mapId) {
             return (temp >> 4) & 0xF;
         }
     }
-    return VEHICLE_HOVERCRAFT;
+    return (1 << VEHICLE_CAR);
 }
 
 /**
