@@ -1479,7 +1479,7 @@ Gfx dMenuHudSettings[] = {
     gsSPEndDisplayList(),
 };
 
-UNUSED Gfx dMenuHudDrawModes[][2] = {
+Gfx dMenuHudDrawModes[][2] = {
     {
         gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
         gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
@@ -1807,11 +1807,11 @@ void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s
         gSPDisplayList((*dList)++, &dMenuHudSettings);
         if (tex != NULL) {
             texEnabled = TRUE;
-            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudSettings[8]), 2);
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[1]), 2);
             gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
         } else {
             texEnabled = FALSE;
-            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudSettings[6]), 2);
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[0]), 2);
         }
         gDPPipeSync((*dList)++);
         /*
@@ -1863,7 +1863,7 @@ void func_80080BC8(Gfx **dList) {
             if (tex != NULL) {
                 if (var_t0 != 1) {
                     var_t0 = 1;
-                    gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudSettings[8]), 2);
+                    gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[1]), 2);
                 }
                 if (lastTex != tex) {
                     gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
@@ -1871,7 +1871,7 @@ void func_80080BC8(Gfx **dList) {
                 }
             } else if (var_t0 != 0) {
                 var_t0 = 0;
-                gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudSettings[6]), 2);
+                gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[0]), 2);
             }
             gDPPipeSync((*dList)++);
             gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(gMenuGeometry[i].vertices[gMenuTrisFlip]), 20, 0);
@@ -1891,8 +1891,99 @@ void menu_geometry_end(void) {
     gMenuTrisFlip = 1 - gMenuTrisFlip;
 }
 
-// https://decomp.me/scratch/IZ1Gq
-GLOBAL_ASM("asm/non_matchings/menu/func_80080E90.s")
+void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
+                   s32 colour0, s32 colour1, s32 colour2, s32 colour3) {
+    s32 temp_ra;
+    s32 temp_t3;
+    s32 temp_t4;
+    s32 temp_t5;
+    s32 recUly;
+    s32 recUlx;
+    s32 uly;
+    s32 recLrx;
+    s32 borderLineCount;
+    s32 i;
+    s32 recLry;
+    s32 ulx;
+    s32 y0Orig;
+    s32 primColour;
+    s32 j;
+    s32 index;
+
+    gSPDisplayList((*dlist)++, &dMenuHudSettings);
+    gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[2]), 2);
+
+    // Must be a while loop to match.
+    i = 0;
+    while (i < 4) {
+        index = i << 2;
+        temp_t3 = D_800E1DC8[index + 0];
+        temp_t4 = D_800E1DC8[index + 1];
+        temp_t5 = D_800E1DC8[index + 2];
+        temp_ra = D_800E1DC8[index + 3];
+        ulx = startX;
+        y0Orig = startY;
+        uly = y0Orig;
+
+        switch (i) {
+            case 0:
+                primColour = colour0;
+                recLrx = startX + width;
+                recLry = y0Orig + 1;
+                borderLineCount = borderHeight;
+                break;
+            case 1:
+                ulx = (startX + (u32) width) - 1;
+                primColour = colour1;
+                uly = y0Orig + 1;
+                recLrx = startX + width;
+                recLry = (y0Orig + height) - 1;
+                borderLineCount = borderWidth;
+                break;
+            case 2:
+                primColour = colour2;
+                uly = (y0Orig + height) - 1;
+                recLrx = startX + width;
+                recLry = y0Orig + height;
+                borderLineCount = borderHeight;
+                break;
+            default:
+                primColour = colour3;
+                uly = y0Orig + 1;
+                recLrx = startX + 1;
+                recLry = (y0Orig + height) - 1;
+                borderLineCount = borderWidth;
+                break;
+        }
+
+        gDPSetPrimColor((*dlist)++, 0, 0, primColour >> 24, primColour >> 16, primColour >> 8, primColour);
+
+        for (j = 0; j < borderLineCount; j++) {
+            if (recLrx >= 0 && recLry >= 0) {
+                if (ulx < 0) {
+                    recUlx = 0;
+                } else {
+                    recUlx = ulx;
+                }
+                if (uly < 0) {
+                    recUly = 0;
+                } else {
+                    recUly = uly;
+                }
+                gDPFillRectangle((*dlist)++, recUlx, recUly, recLrx, recLry);
+            }
+            ulx += temp_t3;
+            uly += temp_t4;
+            recLrx += temp_t5;
+            recLry += temp_ra;
+        }
+        i++;
+    }
+
+    gDPPipeSync((*dlist)++);
+    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+    reset_render_settings(dlist);
+}
 
 void init_save_data(void) {
     s32 numLevels;
