@@ -1758,9 +1758,9 @@ void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s
     s32 texEnabled;
 
     //((unk80080BC8*)((u8*)gMenuGeometry[gWoodPanelCount] + (gMenuTrisFlip * 4)))->texture = tex;
-    ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->texture = tex;
+    //((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->texture = tex;
     //(&(*gMenuGeometry)[gWoodPanelCount] + (gMenuTrisFlip * 4))->texture = tex;
-    // gMenuGeometry[gWoodPanelCount][gMenuTrisFlip].texture = tex;
+    //gMenuGeometry->texture[gWoodPanelCount] = tex;
     if (tex != NULL) {
         uVals[0] = 0;
         vVals[0] = 0;
@@ -1803,7 +1803,7 @@ void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s
         }
     }
     if (dList != NULL) {
-        ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->unk18 = 1;
+        //((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->unk18 = 1;
         gSPDisplayList((*dList)++, &dMenuHudSettings);
         if (tex != NULL) {
             texEnabled = TRUE;
@@ -1838,7 +1838,7 @@ void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s
             texEnabled);
         reset_render_settings(dList);
     } else {
-        ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount * 32) + (gMenuTrisFlip * 4)))->unk18 = 0;
+        //((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount * 32) + (gMenuTrisFlip * 4)))->unk18 = 0;
     }
     gWoodPanelCount++;
 }
