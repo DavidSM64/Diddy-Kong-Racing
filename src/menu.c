@@ -246,7 +246,7 @@ char **gPostRaceMessage;
 s32 gBootMenuPhase;
 s32 gPostRaceLineCount;
 s8 gPostraceFinishState;
-unk80080BC8 (*gMenuGeometry)[2];
+unk80080BC8 *gMenuGeometry;
 u16 (*gCheatsAssetData)[30]; // Cheat table.
 s32 gNameEntryStickHeld;
 s32 gNumberOfCheats;
@@ -1846,8 +1846,6 @@ void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s
 GLOBAL_ASM("asm/non_matchings/menu/func_80080580.s")
 #endif
 
-// https://decomp.me/scratch/lS3f5
-#ifdef NON_EQUIVALENT
 void func_80080BC8(Gfx **dList) {
     s16 temp_a1;
     s32 i;
@@ -1860,9 +1858,8 @@ void func_80080BC8(Gfx **dList) {
     lastTex = NULL;
 
     for (i = 0; i < gWoodPanelCount; i++) {
-        //((unk80080BC8*)((u8*)gMenuGeometry + (i << 5) + (gMenuTrisFlip * 4)))->texture
-        if (!gMenuGeometry[i][gMenuTrisFlip].unk18) {
-            tex = gMenuGeometry[i][gMenuTrisFlip].texture;
+        if (!gMenuGeometry[i].unk18[gMenuTrisFlip]) {
+            tex = gMenuGeometry[i].texture[gMenuTrisFlip];
             if (tex != NULL) {
                 if (var_t0 != 1) {
                     var_t0 = 1;
@@ -1877,17 +1874,14 @@ void func_80080BC8(Gfx **dList) {
                 gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudSettings[6]), 2);
             }
             gDPPipeSync((*dList)++);
-            gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL((&gMenuGeometry[i][gMenuTrisFlip])->vertices), 20, 0);
-            gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL((&gMenuGeometry[i][gMenuTrisFlip])->triangles), 10, 0);
+            gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(gMenuGeometry[i].vertices[gMenuTrisFlip]), 20, 0);
+            gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(gMenuGeometry[i].triangles[gMenuTrisFlip]), 10, var_t0);
         }
     }
     gWoodPanelCount = 0;
     gMenuTrisFlip = 1 - gMenuTrisFlip;
     reset_render_settings(dList);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80080BC8.s")
-#endif
 
 /**
  * Resets the menu geometry after drawing, then flips the geometry index for the next frame.

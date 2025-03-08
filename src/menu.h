@@ -286,14 +286,10 @@ typedef struct MenuAsset {
 } MenuAsset;
 
 typedef struct unk80080BC8 {
-    Vertex *vertices;
-    s32 *unk4;
-    Triangle *triangles;
-    s32 *unkC;
-    TextureHeader *texture;
-    s32 *unk14;
-    s32 unk18;
-    s32 unk1C;
+    Vertex *vertices[2];
+    Triangle *triangles[2];
+    TextureHeader *texture[2];
+    s32 unk18[2];
 } unk80080BC8;
 
 typedef struct unk80126460 {
