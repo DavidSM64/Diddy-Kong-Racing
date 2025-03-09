@@ -7064,8 +7064,8 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
 
     if (racer->vehicleID == VEHICLE_HOVERCRAFT) {
         i = (racer->unk1BE & 0xFFFF) - (racer->unk1C2 & 0xFFFF);
-        if (i >= 0x8001) {
-            i += 0xFFFF0001;
+        if (i > 0x8000) {
+            i -= 0xFFFF;
         }
 
         if (i < -0x8000) {
