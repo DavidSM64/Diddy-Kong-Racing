@@ -259,7 +259,7 @@ char **gPostRaceMessage;
 s32 gBootMenuPhase;
 s32 gPostRaceLineCount;
 s8 gPostraceFinishState;
-unk80080BC8 (*gMenuGeometry)[2];
+unk80080BC8 *gMenuGeometry;
 u16 (*gCheatsAssetData)[30]; // Cheat table.
 s32 gNameEntryStickHeld;
 
@@ -9333,10 +9333,10 @@ void func_80092188(s32 updateRate) {
 #if VERSION >= VERSION_79
         if (gNumberOfActivePlayers >= 2) {
             if (gTrackIdForPreview == ASSET_LEVEL_SPACEPORTALPHA) {
-                avaliableVehicles &= ~(1 << VEHICLE_HOVERCRAFT);
+                availableVehicles &= ~(1 << VEHICLE_HOVERCRAFT);
             }
             if (gTrackIdForPreview == ASSET_LEVEL_FROSTYVILLAGE) {
-                avaliableVehicles &= ~(1 << VEHICLE_PLANE);
+                availableVehicles &= ~(1 << VEHICLE_PLANE);
             }
         }
 #endif
