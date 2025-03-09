@@ -1927,6 +1927,7 @@ char *gConPakAdvSavePrefix = " (ADV.";
 
 /*******************************/
 
+#if VERSION == VERSION_77
 void load_menu_text(s32 language) {
     char **menuText;
     char **temp;
@@ -2095,6 +2096,10 @@ void load_menu_text(s32 language) {
         gCautionMenuTextElements[langIndex + 2].t.element = menuText[ASSET_MENU_TEXT_CAUTIONMESSAGE_0 + langIndex];
     }
 }
+#else
+#pragma GLOBAL_ASM("asm/nonmatchings/menu/load_menu_text.s")
+#endif
+
 
 /**
  * Free the geometry used by the 3D menu buttons.
