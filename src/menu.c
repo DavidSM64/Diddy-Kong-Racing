@@ -1927,7 +1927,6 @@ char *gConPakAdvSavePrefix = " (ADV.";
 
 /*******************************/
 
-#if VERSION == VERSION_77
 void load_menu_text(s32 language) {
     char **menuText;
     char **temp;
@@ -2084,10 +2083,18 @@ void load_menu_text(s32 language) {
     sCorruptDataMenuText[langIndex] = menuText[ASSET_MENU_TEXT_CORRUPTDATA_1];   // "TRY AGAIN!"
     sInsertControllerPakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3];  // "If you wish to use"
     sInsertControllerPakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_4];  // "the Controller Pak"
+#if VERSION == VERSION_77
     sInsertControllerPakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6];  // "insert it now!"
     sInsertRumblePakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3];      // "If you wish to use"
     sInsertRumblePakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_5];      // "the Rumble Pak"
     sInsertRumblePakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6];      // "insert it now!"
+#else
+    // TODO: Figure out what these text values are for these versions.
+    sInsertControllerPakMenuText[2] = menuText[161];
+    sInsertRumblePakMenuText[0] = menuText[162];
+    sInsertRumblePakMenuText[1] = menuText[186];
+    sInsertRumblePakMenuText[2] = menuText[187];
+#endif
     gCautionMenuTextElements[0].t.asciiText = menuText[ASSET_MENU_TEXT_CAUTION]; // "CAUTION"
     gCautionMenuTextElements[1].t.asciiText = menuText[ASSET_MENU_TEXT_CAUTION]; // "CAUTION"
 
@@ -2096,10 +2103,6 @@ void load_menu_text(s32 language) {
         gCautionMenuTextElements[langIndex + 2].t.element = menuText[ASSET_MENU_TEXT_CAUTIONMESSAGE_0 + langIndex];
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/load_menu_text.s")
-#endif
-
 
 /**
  * Free the geometry used by the 3D menu buttons.
