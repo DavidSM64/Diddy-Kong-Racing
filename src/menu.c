@@ -1745,106 +1745,101 @@ UNUSED void menu_button_uvs(f32 u, f32 v) {
     gWoodPanelTexScaleV = v * 32.0f;
 }
 
-// https://decomp.me/scratch/W0adv
-#ifdef NON_EQUIVALENT
-void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
+void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour, TextureHeader *tex) {
     s32 uVals[4];
     s32 vVals[4];
-    Vertex *verts;
-    Triangle *tris;
-    s32 j;
+    Vertex *vertices;
+    Triangle *triangles;
     s32 i;
-    s32 texEnabled;
+    s32 j;
+    s32 r, g, b, a;
+    s32 r0, g0, b0, a0;
+    s8 *texCoords;
+    s16 *texColors;
+    u8 *woodPanelTexCoords;
+    s32 temp;
 
-    //((unk80080BC8*)((u8*)gMenuGeometry[gWoodPanelCount] + (gMenuTrisFlip * 4)))->texture = tex;
-    //((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->texture = tex;
-    //(&(*gMenuGeometry)[gWoodPanelCount] + (gMenuTrisFlip * 4))->texture = tex;
-    //gMenuGeometry->texture[gWoodPanelCount] = tex;
+    gMenuGeometry[gWoodPanelCount].texture[gMenuTrisFlip] = tex;
     if (tex != NULL) {
+        woodPanelTexCoords = gWoodPanelTexCoords;
         uVals[0] = 0;
-        vVals[0] = 0;
         uVals[1] = gWoodPanelTexScaleU * borderWidth;
         uVals[2] = (width - borderWidth) * gWoodPanelTexScaleU;
         uVals[3] = gWoodPanelTexScaleU * width;
-        vVals[1] = gWoodPanelTexScaleV * borderHeight;
+        vVals[0] = 0;
+        j = gWoodPanelTexScaleV; // fake
+        vVals[1] = j * borderHeight;
         vVals[2] = (height - borderHeight) * gWoodPanelTexScaleV;
         vVals[3] = gWoodPanelTexScaleV * height;
-        tris = ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->triangles;
-        for (i = 0; i < 5; i++) {
-            tris[i * 2].uv0.u = uVals[gWoodPanelTexCoords[i][0]];
-            tris[i * 2].uv0.v = vVals[gWoodPanelTexCoords[i][1]];
-            tris[i * 2].uv1.u = uVals[gWoodPanelTexCoords[i][2]];
-            tris[i * 2].uv1.v = vVals[gWoodPanelTexCoords[i][3]];
-            tris[i * 2].uv2.u = uVals[gWoodPanelTexCoords[i][4]];
-            tris[i * 2].uv2.v = vVals[gWoodPanelTexCoords[i][5]];
-            tris[i * 2 + 1].uv0.u = uVals[gWoodPanelTexCoords[i][6]];
-            tris[i * 2 + 1].uv0.v = vVals[gWoodPanelTexCoords[i][7]];
-            tris[i * 2 + 1].uv1.u = uVals[gWoodPanelTexCoords[i][8]];
-            tris[i * 2 + 1].uv1.v = vVals[gWoodPanelTexCoords[i][9]];
-            tris[i * 2 + 1].uv2.u = uVals[gWoodPanelTexCoords[i][10]];
-            tris[i * 2 + 1].uv2.v = vVals[gWoodPanelTexCoords[i][11]];
+        triangles = gMenuGeometry[gWoodPanelCount].triangles[gMenuTrisFlip];
+        for (i = 0; i < 10; i += 2) {
+            if (1) {}
+            if (1) {}
+            if (1) {} // fake
+            triangles[0].uv0.u = uVals[woodPanelTexCoords[0]];
+            triangles[0].uv0.v = vVals[woodPanelTexCoords[1]];
+            triangles[0].uv1.u = uVals[woodPanelTexCoords[2]];
+            triangles[0].uv1.v = vVals[woodPanelTexCoords[3]];
+            triangles[0].uv2.u = uVals[woodPanelTexCoords[4]];
+            triangles[0].uv2.v = vVals[woodPanelTexCoords[5]];
+            triangles[1].uv0.u = uVals[woodPanelTexCoords[6]];
+            triangles[1].uv0.v = vVals[woodPanelTexCoords[7]];
+            triangles[1].uv1.u = uVals[woodPanelTexCoords[8]];
+            triangles[1].uv1.v = vVals[woodPanelTexCoords[9]];
+            triangles[1].uv2.u = uVals[woodPanelTexCoords[10]];
+            triangles[1].uv2.v = vVals[woodPanelTexCoords[11]];
+            woodPanelTexCoords += 12;
+            triangles += 2;
         }
     }
-    verts = ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->vertices;
-    for (i = 0; i < 5; i++) {
+    r0 = ((colour >> 24) & 0xFF);
+    g0 = ((colour >> 16) & 0xFF);
+    b0 = ((colour >> 8) & 0xFF);
+    a0 = (colour & 0xFF);
+    vertices = gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip];
+    for (texColors = gWoodPanelVertColours, texCoords = gWoodPanelVertCoords, i = 0; i < 5; i++) {
+        r = (texColors[0] * r0) >> 8;
+        g = (texColors[1] * g0) >> 8;
+        b = (texColors[2] * b0) >> 8;
+        a = (texColors[3] * a0) >> 8;
+        texColors += 4;
         for (j = 0; j < 4; j++) {
-            verts[j].x = startX;
-            verts[j].y = startY;
-            verts[j].x += (gWoodPanelVertCoords[j][0] * width);
-            verts[j].x += (gWoodPanelVertCoords[j][1] * borderWidth);
-            verts[j].y += (gWoodPanelVertCoords[j][2] * height);
-            verts[j].y += (gWoodPanelVertCoords[j][3] * borderHeight);
-            verts[j].z = 0;
-            verts[j].r = (s32) (gWoodPanelVertColours[i][0] * ((colour >> 24) & 0xFF)) >> 8;
-            verts[j].g = (s32) (gWoodPanelVertColours[i][1] * ((colour >> 16) & 0xFF)) >> 8;
-            verts[j].b = (s32) (gWoodPanelVertColours[i][2] * ((colour >> 8) & 0xFF)) >> 8;
-            verts[j].a = (s32) (gWoodPanelVertColours[i][3] * (colour & 0xFF)) >> 8;
+            vertices->x = startX;
+            vertices->x += texCoords[0] * width;
+            vertices->x += (texCoords[1] * borderWidth);
+            vertices->y = startY;
+            vertices->y += texCoords[2] * height;
+            vertices->y += texCoords[3] * borderHeight;
+            vertices->z = 0;
+            vertices->r = r;
+            vertices->g = g;
+            vertices->b = b;
+            vertices->a = a;
+            texCoords += 4;
+            vertices++;
         }
     }
-    if (dList != NULL) {
-        //((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->unk18 = 1;
-        gSPDisplayList((*dList)++, &dMenuHudSettings);
+    if (dlist != NULL) {
+        gMenuGeometry[gWoodPanelCount].unk18[gMenuTrisFlip] = 1;
+        gSPDisplayList((*dlist)++, &dMenuHudSettings);
         if (tex != NULL) {
-            texEnabled = TRUE;
-            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[1]), 2);
-            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
+            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[1]), 2);
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+            i = TRUE; // texEnabled
         } else {
-            texEnabled = FALSE;
-            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[0]), 2);
+            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[0]), 2);
+            i = FALSE; // texEnabled
         }
-        gDPPipeSync((*dList)++);
-        /*
-        temp_v0_6 = *dList;
-        *dList = temp_v0_6 + 8;
-        temp_v0_6->words.w0 = (((((*(gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)) + 0x80000000) & 6) |
-        0x98) & 0xFF) << 0x10) | 0x04000000 | 0x170; temp_v0_6->words.w1 = *(gMenuGeometry + (gWoodPanelCount << 5) +
-        (gMenuTrisFlip
-        * 4)) + 0x80000000;
-        */
-        gSPVertexDKR(
-            (*dList)++,
-            OS_K0_TO_PHYSICAL(((unk80080BC8 *) ((u8 *) gMenuGeometry + (i * 32) + (gMenuTrisFlip * 4)))->vertices), 20,
-            0);
-        /*
-        temp_v0_7 = *dList;
-        *dList = temp_v0_7 + 8;
-        temp_v0_7->words.w0 = (((texEnabled | 0x90) & 0xFF) << 0x10) | 0x05000000 | 0xA0;
-        temp_v0_7->words.w1 = (gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4))->unk8 + 0x80000000;
-        */
-        gSPPolygon(
-            (*dList)++,
-            OS_K0_TO_PHYSICAL(((unk80080BC8 *) ((u8 *) gMenuGeometry + (i * 32) + (gMenuTrisFlip * 4)))->triangles), 10,
-            texEnabled);
-        reset_render_settings(dList);
+        gDPPipeSync((*dlist)++);
+        gSPVertexDKR((*dlist)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip]), 20, 0);
+        gSPPolygon((*dlist)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].triangles[gMenuTrisFlip]), 10, i);
+        reset_render_settings(dlist);
     } else {
-        //((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount * 32) + (gMenuTrisFlip * 4)))->unk18 = 0;
+        gMenuGeometry[gWoodPanelCount].unk18[gMenuTrisFlip] = 0;
     }
     gWoodPanelCount++;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80080580.s")
-#endif
 
 void func_80080BC8(Gfx **dList) {
     s16 temp_a1;

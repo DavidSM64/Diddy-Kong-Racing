@@ -684,7 +684,7 @@ void func_8007FFEC(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
 void set_gIntDisFlag(s8 setting);
 void init_save_data(void);
-void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
+void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour, TextureHeader *tex);
 void fileselect_input_copy(s32 updateRate);
 
