@@ -16,6 +16,7 @@ assets_*/
 assets_*/*
 bin/
 bin/*
+ucode/*
 
 #compiled object files
 *.slo

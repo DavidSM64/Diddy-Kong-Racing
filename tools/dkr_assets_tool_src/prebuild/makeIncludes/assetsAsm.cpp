@@ -21,7 +21,7 @@ AssetsAsm::AssetsAsm(DkrAssetsSettings &settings) : _settings(settings) {
     
     _outFilepath = _settings.pathToAsm / "assets/assets.s";
     
-    _outPrefix = _settings.pathToBuild / _settings.dkrVersion / "assets/";
+    _outPrefix = _settings.pathToBuild / "assets/";
     
     _write();
 }
