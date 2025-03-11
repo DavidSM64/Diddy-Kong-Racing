@@ -717,24 +717,28 @@ char *D_800E142C_E202C[] = { D_800E13A4_E1FA4, D_800E13B0_E1FB0, D_800E13BC_E1FB
 s32 gTitleCinematicTextColourCount = 0;
 
 // Colours used for the Character Names during the title screen cinematic
-MenuColour gTitleCinematicTextColours[4] = {
+MenuColour gTitleCinematicTextColours[] = {
     { 255, 255, 0, 255, 204 }, // Yellow
     { 0, 255, 0, 255, 153 },   // Green
     { 0, 255, 255, 255, 102 }, // Cyan
     { 0, 0, 255, 255, 51 }     // Blue
 };
 
-UNUSED u8 unused_800DFA0C[4] = { 0, 0, 15, 120 };
+UNUSED u8 unused_800DFA0C[] = { 0, 0, 15, 120 };
 
-char *gOptionMenuStrings[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+char *gOptionMenuStrings[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-s16 gOptionMenuTextures[8] = { 0x3D, 0x3C, 0x3F, 0x3E, 0x44, -1, -1, 0 };
+s16 gOptionMenuTextures[] = { 0x3D, 0x3C, 0x3F, 0x3E, 0x44, -1, -1, 0 };
 
-unk800DFA3C gAudioMenuStrings[8] = {
-    { 160, 80, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, 12, NULL },  { 160, 104, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, 12, NULL },
-    { 160, 144, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, 12, NULL }, { 160, 192, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, 12, NULL },
-    { 161, 35, 0, 0, 0, 0xFF, 0x80, 2, 0, 12, NULL },        { 160, 32, 0xFF, 0x80, 0xFF, 0, 0xFF, 2, 0, 12, NULL },
-    { 160, 188, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, 12, NULL }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL },
+unk800DFA3C gAudioMenuStrings[] = {
+    { 160, 80, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
+    { 160, 104, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
+    { 160, 144, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
+    { 160, 192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
+    { 161, 35, 0, 0, 0, 255, 128, ASSET_FONTS_BIGFONT, 12, NULL },
+    { 160, 32, 255, 128, 255, 0, 255, ASSET_FONTS_BIGFONT, 12, NULL },
+    { 160, 188, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 };
 
 // Current song index used in the music test (from JUKEBOX magic code)
@@ -1979,11 +1983,11 @@ void load_menu_text(s32 language) {
     gAudioOutputStrings[0] = menuText[ASSET_MENU_TEXT_STEREO];                       // "STEREO"
     gAudioOutputStrings[1] = menuText[ASSET_MENU_TEXT_MONO];                         // "MONO"
     gAudioOutputStrings[2] = menuText[ASSET_MENU_TEXT_HEADPHONES];                   // "HEADPHONES"
-    gAudioMenuStrings[1].unkC = menuText[ASSET_MENU_TEXT_SFXVOLUME];                 // "SFX VOLUME"
-    gAudioMenuStrings[2].unkC = menuText[ASSET_MENU_TEXT_MUSICVOLUME];               // "MUSIC VOLUME"
-    gAudioMenuStrings[3].unkC = menuText[ASSET_MENU_TEXT_RETURN];                    // "RETURN"
-    gAudioMenuStrings[4].unkC = menuText[ASSET_MENU_TEXT_AUDIOOPTIONS];              // "AUDIO OPTIONS"
-    gAudioMenuStrings[5].unkC = menuText[ASSET_MENU_TEXT_AUDIOOPTIONS];              // "AUDIO OPTIONS"
+    gAudioMenuStrings[1].text = menuText[ASSET_MENU_TEXT_SFXVOLUME];                 // "SFX VOLUME"
+    gAudioMenuStrings[2].text = menuText[ASSET_MENU_TEXT_MUSICVOLUME];               // "MUSIC VOLUME"
+    gAudioMenuStrings[3].text = menuText[ASSET_MENU_TEXT_RETURN];                    // "RETURN"
+    gAudioMenuStrings[4].text = menuText[ASSET_MENU_TEXT_AUDIOOPTIONS];              // "AUDIO OPTIONS"
+    gAudioMenuStrings[5].text = menuText[ASSET_MENU_TEXT_AUDIOOPTIONS];              // "AUDIO OPTIONS"
     gMusicTestString = menuText[ASSET_MENU_TEXT_MUSICTEST];                          // "MUSIC TEST 00"
     gMagicCodeMenuStrings[0] = menuText[ASSET_MENU_TEXT_ENTERCODE];                  // "ENTER CODE"
     gMagicCodeMenuStrings[1] = menuText[ASSET_MENU_TEXT_CLEARALLCODES];              // "CLEAR ALL CODES"
@@ -2130,106 +2134,101 @@ UNUSED void menu_button_uvs(f32 u, f32 v) {
     gWoodPanelTexScaleV = v * 32.0f;
 }
 
-// https://decomp.me/scratch/W0adv
-#ifdef NON_EQUIVALENT
-void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
+void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour, TextureHeader *tex) {
     s32 uVals[4];
     s32 vVals[4];
-    Vertex *verts;
-    Triangle *tris;
-    s32 j;
+    Vertex *vertices;
+    Triangle *triangles;
     s32 i;
-    s32 texEnabled;
+    s32 j;
+    s32 r, g, b, a;
+    s32 r0, g0, b0, a0;
+    s8 *texCoords;
+    s16 *texColors;
+    u8 *woodPanelTexCoords;
+    s32 temp;
 
-    //((unk80080BC8*)((u8*)gMenuGeometry[gWoodPanelCount] + (gMenuTrisFlip * 4)))->texture = tex;
-    //((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->texture = tex;
-    //(&(*gMenuGeometry)[gWoodPanelCount] + (gMenuTrisFlip * 4))->texture = tex;
-    //gMenuGeometry->texture[gWoodPanelCount] = tex;
+    gMenuGeometry[gWoodPanelCount].texture[gMenuTrisFlip] = tex;
     if (tex != NULL) {
+        woodPanelTexCoords = gWoodPanelTexCoords;
         uVals[0] = 0;
-        vVals[0] = 0;
         uVals[1] = gWoodPanelTexScaleU * borderWidth;
         uVals[2] = (width - borderWidth) * gWoodPanelTexScaleU;
         uVals[3] = gWoodPanelTexScaleU * width;
-        vVals[1] = gWoodPanelTexScaleV * borderHeight;
+        vVals[0] = 0;
+        j = gWoodPanelTexScaleV; // fake
+        vVals[1] = j * borderHeight;
         vVals[2] = (height - borderHeight) * gWoodPanelTexScaleV;
         vVals[3] = gWoodPanelTexScaleV * height;
-        tris = ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->triangles;
-        for (i = 0; i < 5; i++) {
-            tris[i * 2].uv0.u = uVals[gWoodPanelTexCoords[i][0]];
-            tris[i * 2].uv0.v = vVals[gWoodPanelTexCoords[i][1]];
-            tris[i * 2].uv1.u = uVals[gWoodPanelTexCoords[i][2]];
-            tris[i * 2].uv1.v = vVals[gWoodPanelTexCoords[i][3]];
-            tris[i * 2].uv2.u = uVals[gWoodPanelTexCoords[i][4]];
-            tris[i * 2].uv2.v = vVals[gWoodPanelTexCoords[i][5]];
-            tris[i * 2 + 1].uv0.u = uVals[gWoodPanelTexCoords[i][6]];
-            tris[i * 2 + 1].uv0.v = vVals[gWoodPanelTexCoords[i][7]];
-            tris[i * 2 + 1].uv1.u = uVals[gWoodPanelTexCoords[i][8]];
-            tris[i * 2 + 1].uv1.v = vVals[gWoodPanelTexCoords[i][9]];
-            tris[i * 2 + 1].uv2.u = uVals[gWoodPanelTexCoords[i][10]];
-            tris[i * 2 + 1].uv2.v = vVals[gWoodPanelTexCoords[i][11]];
+        triangles = gMenuGeometry[gWoodPanelCount].triangles[gMenuTrisFlip];
+        for (i = 0; i < 10; i += 2) {
+            if (1) {}
+            if (1) {}
+            if (1) {} // fake
+            triangles[0].uv0.u = uVals[woodPanelTexCoords[0]];
+            triangles[0].uv0.v = vVals[woodPanelTexCoords[1]];
+            triangles[0].uv1.u = uVals[woodPanelTexCoords[2]];
+            triangles[0].uv1.v = vVals[woodPanelTexCoords[3]];
+            triangles[0].uv2.u = uVals[woodPanelTexCoords[4]];
+            triangles[0].uv2.v = vVals[woodPanelTexCoords[5]];
+            triangles[1].uv0.u = uVals[woodPanelTexCoords[6]];
+            triangles[1].uv0.v = vVals[woodPanelTexCoords[7]];
+            triangles[1].uv1.u = uVals[woodPanelTexCoords[8]];
+            triangles[1].uv1.v = vVals[woodPanelTexCoords[9]];
+            triangles[1].uv2.u = uVals[woodPanelTexCoords[10]];
+            triangles[1].uv2.v = vVals[woodPanelTexCoords[11]];
+            woodPanelTexCoords += 12;
+            triangles += 2;
         }
     }
-    verts = ((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->vertices;
-    for (i = 0; i < 5; i++) {
+    r0 = ((colour >> 24) & 0xFF);
+    g0 = ((colour >> 16) & 0xFF);
+    b0 = ((colour >> 8) & 0xFF);
+    a0 = (colour & 0xFF);
+    vertices = gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip];
+    for (texColors = gWoodPanelVertColours, texCoords = gWoodPanelVertCoords, i = 0; i < 5; i++) {
+        r = (texColors[0] * r0) >> 8;
+        g = (texColors[1] * g0) >> 8;
+        b = (texColors[2] * b0) >> 8;
+        a = (texColors[3] * a0) >> 8;
+        texColors += 4;
         for (j = 0; j < 4; j++) {
-            verts[j].x = startX;
-            verts[j].y = startY;
-            verts[j].x += (gWoodPanelVertCoords[j][0] * width);
-            verts[j].x += (gWoodPanelVertCoords[j][1] * borderWidth);
-            verts[j].y += (gWoodPanelVertCoords[j][2] * height);
-            verts[j].y += (gWoodPanelVertCoords[j][3] * borderHeight);
-            verts[j].z = 0;
-            verts[j].r = (s32) (gWoodPanelVertColours[i][0] * ((colour >> 24) & 0xFF)) >> 8;
-            verts[j].g = (s32) (gWoodPanelVertColours[i][1] * ((colour >> 16) & 0xFF)) >> 8;
-            verts[j].b = (s32) (gWoodPanelVertColours[i][2] * ((colour >> 8) & 0xFF)) >> 8;
-            verts[j].a = (s32) (gWoodPanelVertColours[i][3] * (colour & 0xFF)) >> 8;
+            vertices->x = startX;
+            vertices->x += texCoords[0] * width;
+            vertices->x += (texCoords[1] * borderWidth);
+            vertices->y = startY;
+            vertices->y += texCoords[2] * height;
+            vertices->y += texCoords[3] * borderHeight;
+            vertices->z = 0;
+            vertices->r = r;
+            vertices->g = g;
+            vertices->b = b;
+            vertices->a = a;
+            texCoords += 4;
+            vertices++;
         }
     }
-    if (dList != NULL) {
-        //((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)))->unk18 = 1;
-        gSPDisplayList((*dList)++, &dMenuHudSettings);
+    if (dlist != NULL) {
+        gMenuGeometry[gWoodPanelCount].unk18[gMenuTrisFlip] = 1;
+        gSPDisplayList((*dlist)++, &dMenuHudSettings);
         if (tex != NULL) {
-            texEnabled = TRUE;
-            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[1]), 2);
-            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
+            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[1]), 2);
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+            i = TRUE; // texEnabled
         } else {
-            texEnabled = FALSE;
-            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[0]), 2);
+            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[0]), 2);
+            i = FALSE; // texEnabled
         }
-        gDPPipeSync((*dList)++);
-        /*
-        temp_v0_6 = *dList;
-        *dList = temp_v0_6 + 8;
-        temp_v0_6->words.w0 = (((((*(gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4)) + 0x80000000) & 6) |
-        0x98) & 0xFF) << 0x10) | 0x04000000 | 0x170; temp_v0_6->words.w1 = *(gMenuGeometry + (gWoodPanelCount << 5) +
-        (gMenuTrisFlip
-        * 4)) + 0x80000000;
-        */
-        gSPVertexDKR(
-            (*dList)++,
-            OS_K0_TO_PHYSICAL(((unk80080BC8 *) ((u8 *) gMenuGeometry + (i * 32) + (gMenuTrisFlip * 4)))->vertices), 20,
-            0);
-        /*
-        temp_v0_7 = *dList;
-        *dList = temp_v0_7 + 8;
-        temp_v0_7->words.w0 = (((texEnabled | 0x90) & 0xFF) << 0x10) | 0x05000000 | 0xA0;
-        temp_v0_7->words.w1 = (gMenuGeometry + (gWoodPanelCount << 5) + (gMenuTrisFlip * 4))->unk8 + 0x80000000;
-        */
-        gSPPolygon(
-            (*dList)++,
-            OS_K0_TO_PHYSICAL(((unk80080BC8 *) ((u8 *) gMenuGeometry + (i * 32) + (gMenuTrisFlip * 4)))->triangles), 10,
-            texEnabled);
-        reset_render_settings(dList);
+        gDPPipeSync((*dlist)++);
+        gSPVertexDKR((*dlist)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip]), 20, 0);
+        gSPPolygon((*dlist)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].triangles[gMenuTrisFlip]), 10, i);
+        reset_render_settings(dlist);
     } else {
-        //((unk80080BC8 *) ((u8 *) gMenuGeometry + (gWoodPanelCount * 32) + (gMenuTrisFlip * 4)))->unk18 = 0;
+        gMenuGeometry[gWoodPanelCount].unk18[gMenuTrisFlip] = 0;
     }
     gWoodPanelCount++;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_80080580.s")
-#endif
 
 void func_80080BC8(Gfx **dList) {
     s16 temp_a1;
@@ -3726,13 +3725,13 @@ void menu_audio_options_init(void) {
     gMusicVolumeSliderValue = music_volume_config();
     gSfxVolumeSliderValue = get_sfx_volume_slider();
     if (gActiveMagicCodes & CHEAT_MUSIC_MENU) { // Check if "JUKEBOX" cheat is active
-        gAudioMenuStrings[6].unkC = gMusicTestString;
-        gAudioMenuStrings[3].unk2 = 212;
+        gAudioMenuStrings[6].text = gMusicTestString;
+        gAudioMenuStrings[3].y = 212;
         music_voicelimit_set(32);
         gMenuStage = 5;
     } else {
-        gAudioMenuStrings[6].unkC = NULL;
-        gAudioMenuStrings[3].unk2 = 192;
+        gAudioMenuStrings[6].text = NULL;
+        gAudioMenuStrings[3].y = 192;
         gMenuStage = 4;
     }
 #if REGION != REGION_JP
@@ -3741,7 +3740,87 @@ void menu_audio_options_init(void) {
 }
 
 // Probably soundoption_render
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_80084854.s")
+void func_80084854(s32 updateRate) {
+    s32 i;
+    s32 yOffset;
+    s32 j;
+    s32 temp;
+
+    temp = gMusicTestSongIndex;
+
+#if REGION != REGION_JP
+    for (i = 0; (gMusicTestString[i] < '0') || (gMusicTestString[i] > '9'); i++) {}
+
+    j = temp / 10;
+    gMusicTestString[i] = '0' + j;
+    temp -= (j * 10);
+    i++;
+    gMusicTestString[i] = '0' + temp;
+#else
+    for (i = 1; (gMusicTestString[i] < 0x10) || (gMusicTestString[i] > 0x19); i++) {}
+
+    j = temp / 10;
+    gMusicTestString[i] = 0x10 + j;
+    temp -= (j * 10);
+    gMusicTestString[i + 2] = 0x10 + temp;
+#endif
+
+    temp = gOptionBlinkTimer * 8;
+    if (temp >= 256) {
+        temp = 511 - temp;
+    }
+    gAudioMenuStrings[0].text = gAudioOutputStrings[gAudioOutputType];
+    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+
+    if (osTvType == OS_TV_TYPE_PAL) {
+        yOffset = 101;
+    } else {
+        yOffset = 113;
+    }
+    func_80080580(NULL, -72, 120 - yOffset, 144, 14, 6, 4, COLOUR_RGBA32(255, 192, 64, 255),
+                  (TextureHeader *) gMenuAssets[TEXTURE_UNK_44]);
+    func_80080580(NULL, -72, 80 - yOffset, 144, 14, 6, 4, COLOUR_RGBA32(255, 192, 64, 255),
+                  (TextureHeader *) gMenuAssets[TEXTURE_UNK_44]);
+    func_80080BC8(&sMenuCurrDisplayList);
+    dialogue_clear(7);
+    set_current_dialogue_background_colour(7, 0, 0, 0, 255);
+    set_current_dialogue_box_coords(7, 94, 117, 226, 123);
+    render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
+    set_current_dialogue_box_coords(7, 94, 157, 226, 163);
+    render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
+    texrect_draw(&sMenuCurrDisplayList, gMenuSelectionArrowLeft, (gSfxVolumeSliderValue >> 1) + 96, 120, 255, 255, 255,
+                 255);
+    texrect_draw(&sMenuCurrDisplayList, gMenuSelectionArrowLeft, (gMusicVolumeSliderValue >> 1) + 96, 160, 255, 255,
+                 255, 255);
+    reset_render_settings(&sMenuCurrDisplayList);
+    set_text_background_colour(0, 0, 0, 0);
+
+    // j must be here.
+    j = 0;
+
+    if (gMenuStage < 5) {
+        i = gOptionsMenuItemIndex;
+    } else if (gOptionsMenuItemIndex < 3) {
+        i = gOptionsMenuItemIndex;
+    } else if (gOptionsMenuItemIndex == 3) {
+        i = 6;
+    } else {
+        i = 3;
+    }
+
+    // Must be a for loop?
+    for (; gAudioMenuStrings[j].text != NULL; j++) {
+        set_text_font(gAudioMenuStrings[j].font);
+        if (j == i) {
+            set_text_colour(255, 255, 255, temp, 255);
+        } else {
+            set_text_colour(gAudioMenuStrings[j].red, gAudioMenuStrings[j].green, gAudioMenuStrings[j].blue,
+                            gAudioMenuStrings[j].alpha, gAudioMenuStrings[j].opacity);
+        }
+        draw_text(&sMenuCurrDisplayList, gAudioMenuStrings[j].x, gAudioMenuStrings[j].y, gAudioMenuStrings[j].text,
+                  gAudioMenuStrings[j].alignmentFlags);
+    }
+}
 
 /**
  * Handles the input for the audio options menu.
@@ -3765,7 +3844,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
         }
     }
     if (gMenuDelay > -20 && gMenuDelay < 20) {
-        func_80084854();
+        func_80084854(updateRate);
     }
     if (gIgnorePlayerInputTime == 0) {
         contX = 0;
@@ -9319,10 +9398,9 @@ void func_80092188(s32 updateRate) {
         yOffset = ((xOffset + 20) * gTrackSelectViewPortHalfY) / 40;
         yOffset2 = yOffset + gTrackSelectViewPortHalfY;
         viewport_menu_set(0, 80 - (xOffset * 4), gTrackSelectViewPortHalfY - yOffset, (xOffset * 4) + 240, yOffset2);
-        // TODO: gMenuImages is not just an array of MenuAsset?
-        ((f32 *) gMenuImages)[34] = (f32) (sMenuImageProperties[4].scale * (1.0f + ((f32) xOffset / 20.0f)));
-        ((f32 *) gMenuImages)[42] = (f32) (sMenuImageProperties[5].scale * (1.0f + ((f32) xOffset / 20.0f)));
-        ((f32 *) gMenuImages)[50] = (f32) (sMenuImageProperties[6].scale * (1.0f + ((f32) xOffset / 20.0f)));
+        gMenuImages[4].scale = sMenuImageProperties[4].scale * (1.0f + ((f32) xOffset / 20.0f));
+        gMenuImages[5].scale = sMenuImageProperties[5].scale * (1.0f + ((f32) xOffset / 20.0f));
+        gMenuImages[6].scale = sMenuImageProperties[6].scale * (1.0f + ((f32) xOffset / 20.0f));
     }
     if (gMenuDelay > 0) {
         sMenuMusicVolume -= updateRate * 4;
@@ -10417,55 +10495,56 @@ void postrace_music_fade(s32 updateRate) {
 #ifdef NON_MATCHING
 // postrace_render
 void func_80094D28(UNUSED s32 updateRate) {
-    s32 y;
-    s32 textAlpha;
-    s32 viewportULX;
-    s32 viewportLRY;
-    s32 viewportULY;
+    s32 temp;
+    s32 var_s3;
     Settings *settings;
-    s32 j;
+    s32 sp50;
+    s32 var_s2;
+    s32 var_s0;
+    s32 sp40;
     s32 i;
     s32 sp3C;
-    s32 temp;
+    s32 var_v0;
 
     settings = get_settings();
     if (gNumberOfActivePlayers == 1) {
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     }
     camDisableUserView(0, TRUE);
-    textAlpha = gOptionBlinkTimer * 8;
-    if (textAlpha > 255) {
-        textAlpha = 511 - textAlpha;
+    var_s3 = gOptionBlinkTimer * 8;
+    if (var_s3 > 255) {
+        var_s3 = 511 - var_s3;
     }
     switch (gMenuStage) {
         case 1:
-            temp = gPostRaceTimer;
-            if (temp > 60) {
-                temp = 60;
+            var_s0 = gPostRaceTimer;
+            if (var_s0 > 60) {
+                var_s0 = 60;
             }
-            viewportULY = ((gTrackSelectViewPortHalfY - ((gTrackSelectViewPortHalfY * 4) / 5)) * temp) / 60;
-            viewportLRY =
-                gTrackSelectViewportY - (((gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY / 5)) * temp) / 60);
-            viewportULX = (temp * 80) / 60;
-            viewport_menu_set(0, viewportULX, viewportULY, SCREEN_WIDTH - viewportULX, viewportLRY);
+            var_s2 = ((gTrackSelectViewPortHalfY - ((gTrackSelectViewPortHalfY * 4) / 5)) * var_s0) / 60;
+            temp = var_s2;
+            sp50 =
+                gTrackSelectViewportY - (((gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY / 5)) * var_s0) / 60);
+            var_v0 = (var_s0 * 80) / 60;
+            viewport_menu_set(0, var_v0, temp, SCREEN_WIDTH - var_v0, sp50);
             gMenuImages[4].x = 0.0f;
-            gMenuImages[4].y = gTrackSelectViewPortHalfY - ((viewportULY + viewportLRY) >> 1);
-            gMenuImages[4].scale = sMenuImageProperties[4].scale * (2.0f - (temp / 60.0f));
+            gMenuImages[4].y = gTrackSelectViewPortHalfY - ((var_s2 + sp50) >> 1);
+            gMenuImages[4].scale = sMenuImageProperties[4].scale * (2.0f - (var_s0 / 60.0f));
             break;
         case 2:
             for (i = 0; i < 3; i++) {
                 if (settings->display_times && settings->racers[0].best_times & (1 << i)) {
-                    gRaceResultsMenuElements[i + 3].filterGreen = 192 - ((textAlpha * 3) >> 2);
-                    gRaceResultsMenuElements[i + 3].filterBlue = 255 - textAlpha;
+                    gRaceResultsMenuElements[i + 3].filterGreen = 192 - ((var_s3 * 3) >> 2);
+                    gRaceResultsMenuElements[i + 3].filterBlue = 255 - var_s3;
                 } else {
                     gRaceResultsMenuElements[i + 3].filterGreen = 192;
                     gRaceResultsMenuElements[i + 3].filterBlue = 255;
                 }
             }
             if (settings->display_times && settings->racers[0].best_times & (1 << 7)) {
-                gRaceResultsMenuElements[6].filterRed = (textAlpha >> 1) + 128;
-                gRaceResultsMenuElements[6].filterGreen = 255 - textAlpha;
-                gRaceResultsMenuElements[6].filterBlue = 255 - textAlpha;
+                gRaceResultsMenuElements[6].filterRed = (var_s3 >> 1) + 128;
+                gRaceResultsMenuElements[6].filterGreen = 255 - var_s3;
+                gRaceResultsMenuElements[6].filterBlue = 255 - var_s3;
             } else {
                 gRaceResultsMenuElements[6].filterRed = 128;
                 gRaceResultsMenuElements[6].filterGreen = 255;
@@ -10473,38 +10552,37 @@ void func_80094D28(UNUSED s32 updateRate) {
             }
             break;
         case 3:
-            for (j = 0; j < 8; j++) {
-                i = j;
+            for (sp40 = 0; sp40 < 8; sp40++) {
+                i = sp40;
                 sp3C = 255;
                 if (is_in_two_player_adventure()) {
-                    i = j - 1;
+                    i = sp40 - 1;
                     if (i == settings->racers[1].starting_position) {
-                        sp3C = (textAlpha >> 1) + 128;
+                        sp3C = (var_s3 >> 1) + 128;
                     }
                 }
                 if (i == settings->racers[0].starting_position) {
-                    sp3C = (textAlpha >> 1) + 128;
+                    sp3C = (var_s3 >> 1) + 128;
                 }
-                if (y) {} // Fake
-                gRaceOrderMenuElements[7 - j].filterRed = sp3C;
-                gRaceOrderMenuElements[7 - j].filterGreen = sp3C;
-                gRaceOrderMenuElements[7 - j].filterBlue = sp3C;
+                gRaceOrderMenuElements[7 - sp40].filterRed = sp3C;
+                gRaceOrderMenuElements[7 - sp40].filterGreen = sp3C;
+                gRaceOrderMenuElements[7 - sp40].filterBlue = sp3C;
             }
             break;
         case 5:
             if (settings->display_times && settings->racers[0].best_times & (s8) ~(1 << 7)) {
                 gRecordTimesMenuElements[6].filterRed = 255;
-                gRecordTimesMenuElements[6].filterGreen = 192 - ((textAlpha * 3) >> 2);
-                gRecordTimesMenuElements[6].filterBlue = 255 - textAlpha;
+                gRecordTimesMenuElements[6].filterGreen = 192 - ((var_s3 * 3) >> 2);
+                gRecordTimesMenuElements[6].filterBlue = 255 - var_s3;
             } else {
                 gRecordTimesMenuElements[6].filterRed = 255;
                 gRecordTimesMenuElements[6].filterGreen = 192;
                 gRecordTimesMenuElements[6].filterBlue = 255;
             }
             if (settings->display_times && settings->racers[0].best_times & (1 << 7)) {
-                gRecordTimesMenuElements[3].filterRed = (textAlpha >> 1) + 128;
-                gRecordTimesMenuElements[3].filterGreen = 255 - textAlpha;
-                gRecordTimesMenuElements[3].filterBlue = 255 - textAlpha;
+                gRecordTimesMenuElements[3].filterRed = (var_s3 >> 1) + 128;
+                gRecordTimesMenuElements[3].filterGreen = 255 - var_s3;
+                gRecordTimesMenuElements[3].filterBlue = 255 - var_s3;
             } else {
                 gRecordTimesMenuElements[3].filterRed = 128;
                 gRecordTimesMenuElements[3].filterGreen = 255;
@@ -10518,62 +10596,65 @@ void func_80094D28(UNUSED s32 updateRate) {
             set_current_text_background_colour(7, 0, 0, 0, 0);
 
             if (gTracksSaveGhost != 0) {
-                temp = 1;
+                var_s0 = 1;
             } else if (gPostRaceMessage != NULL) {
-                temp = gPostRaceLineCount;
+                var_s0 = gPostRaceLineCount;
             } else {
-                temp = gResultOptionCount;
+                var_s0 = gResultOptionCount;
             }
-            if (temp >= 5) {
-                viewportULX = 2;
-                viewportLRY = 13;
+            if (var_s0 >= 5) {
+                var_v0 = 2;
+                sp50 = 13;
             } else {
-                viewportULX = 0;
-                viewportLRY = 16;
+                var_v0 = 0;
+                sp50 = 16;
             }
-            viewportULY = ((temp * viewportLRY) + 1) >> 1;
-            temp = 192;
+            var_s2 = ((var_s0 * sp50) + 1) >> 1;
+            var_s0 = 192;
             if (osTvType == OS_TV_TYPE_PAL) {
-                temp = 218;
+                var_s0 = 218;
             }
-            set_current_dialogue_box_coords(7, 0, temp - viewportULY - viewportULX - 4, SCREEN_WIDTH,
-                                            temp + viewportULY + viewportULX + 4);
+            set_current_dialogue_box_coords(7, 0, var_s0 - var_s2 - var_v0 - 4, SCREEN_WIDTH,
+                                            var_s0 + var_s2 + var_v0 + 4);
             set_current_dialogue_background_colour(7, 64, 64, 255, 0);
             set_current_text_colour(7, 255, 0, 255, 64, 255);
             if (gTracksSaveGhost != 0) {
                 render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], 1, ALIGN_MIDDLE_CENTER);
             } else if (gPostRaceMessage != NULL) {
-                for (y = 12, temp = 0; temp < gPostRaceLineCount; temp++, y += viewportLRY) {
-                    render_dialogue_text(7, POS_CENTRED, y, gPostRaceMessage[temp], 1, ALIGN_MIDDLE_CENTER);
+                var_s2 = 12;
+                for (var_s0 = 0; var_s0 < gPostRaceLineCount; var_s0++) {
+                    render_dialogue_text(7, POS_CENTRED, var_s2, gPostRaceMessage[var_s0], 1, ALIGN_MIDDLE_CENTER);
+                    var_s2 += sp50;
                 }
             } else {
-                if (y && y) {} // fake
-                viewportULY -= 24;
+                var_s2 -= 24;
                 if (gMenuSubOption != 0) {
-                    render_dialogue_text(7, POS_CENTRED, viewportULY + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1,
+                    render_dialogue_text(7, POS_CENTRED, var_s2 + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1,
                                          ALIGN_MIDDLE_CENTER);
-                    temp = 0;
+                    var_s0 = 0;
                     if (gMenuSubOption == 1) {
-                        temp = textAlpha;
+                        var_s0 = var_s3;
                     }
-                    set_current_text_colour(7, 255, 255, 255, temp, 255);
-                    render_dialogue_text(7, POS_CENTRED, viewportULY + 26, gMenuText[ASSET_MENU_TEXT_OK], 1,
+                    set_current_text_colour(7, 255, 255, 255, var_s0, 255);
+                    render_dialogue_text(7, POS_CENTRED, var_s2 + 26, gMenuText[ASSET_MENU_TEXT_OK], 1,
                                          ALIGN_MIDDLE_CENTER);
-                    temp = 0;
+                    var_s0 = 0;
                     if (gMenuSubOption == 2) {
-                        temp = textAlpha;
+                        var_s0 = var_s3;
                     }
-                    set_current_text_colour(7, 255, 255, 255, temp, 255);
-                    render_dialogue_text(7, POS_CENTRED, viewportULY + 42, gMenuText[ASSET_MENU_TEXT_CANCEL], 1,
+                    set_current_text_colour(7, 255, 255, 255, var_s0, 255);
+                    render_dialogue_text(7, POS_CENTRED, var_s2 + 42, gMenuText[ASSET_MENU_TEXT_CANCEL], 1,
                                          ALIGN_MIDDLE_CENTER);
                 } else {
-                    for (y = 12, temp = 0; temp < gResultOptionCount; temp++, y += viewportLRY) {
-                        if (temp == gMenuOption) {
-                            set_current_text_colour(7, 255, 255, 255, textAlpha, 255);
+                    for (var_s2 = 12, var_s0 = 0; var_s0 < gResultOptionCount; var_s0++) {
+                        if (var_s0 == gMenuOption) {
+                            set_current_text_colour(7, 255, 255, 255, var_s3, 255);
                         } else {
                             set_current_text_colour(7, 255, 255, 255, 0, 255);
                         }
-                        render_dialogue_text(7, SCREEN_WIDTH_HALF, y, gResultOptionText[temp], 1, ALIGN_MIDDLE_CENTER);
+                        render_dialogue_text(7, SCREEN_WIDTH_HALF, var_s2, gResultOptionText[var_s0], 1,
+                                             ALIGN_MIDDLE_CENTER);
+                        var_s2 += sp50;
                     }
                 }
             }
