@@ -431,24 +431,28 @@ unk800DF83C gTitleCinematicText[10] = {
 s32 gTitleCinematicTextColourCount = 0;
 
 // Colours used for the Character Names during the title screen cinematic
-MenuColour gTitleCinematicTextColours[4] = {
+MenuColour gTitleCinematicTextColours[] = {
     { 255, 255, 0, 255, 204 }, // Yellow
     { 0, 255, 0, 255, 153 },   // Green
     { 0, 255, 255, 255, 102 }, // Cyan
     { 0, 0, 255, 255, 51 }     // Blue
 };
 
-UNUSED u8 unused_800DFA10[4] = { 0, 0, 15, 120 };
+UNUSED u8 unused_800DFA10[] = { 0, 0, 15, 120 };
 
-char *gOptionMenuStrings[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+char *gOptionMenuStrings[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-s16 gOptionMenuTextures[8] = { 0x3D, 0x3C, 0x3F, 0x3E, 0x44, -1, -1, 0 };
+s16 gOptionMenuTextures[] = { 0x3D, 0x3C, 0x3F, 0x3E, 0x44, -1, -1, 0 };
 
-unk800DFA3C gAudioMenuStrings[8] = {
-    { 160, 80, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, 12, NULL },  { 160, 104, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, 12, NULL },
-    { 160, 144, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, 12, NULL }, { 160, 192, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, 12, NULL },
-    { 161, 35, 0, 0, 0, 0xFF, 0x80, 2, 0, 12, NULL },        { 160, 32, 0xFF, 0x80, 0xFF, 0, 0xFF, 2, 0, 12, NULL },
-    { 160, 188, 0xFF, 0xFF, 0xFF, 0, 0xFF, 0, 0, 12, NULL }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL },
+unk800DFA3C gAudioMenuStrings[] = {
+    { 160, 80, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
+    { 160, 104, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
+    { 160, 144, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
+    { 160, 192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
+    { 161, 35, 0, 0, 0, 255, 128, ASSET_FONTS_BIGFONT, 12, NULL },
+    { 160, 32, 255, 128, 255, 0, 255, ASSET_FONTS_BIGFONT, 12, NULL },
+    { 160, 188, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 };
 
 // Current song index used in the music test (from JUKEBOX magic code)
@@ -1602,11 +1606,11 @@ void load_menu_text(s32 language) {
     gAudioOutputStrings[0] = menuText[ASSET_MENU_TEXT_STEREO];                       // "STEREO"
     gAudioOutputStrings[1] = menuText[ASSET_MENU_TEXT_MONO];                         // "MONO"
     gAudioOutputStrings[2] = menuText[ASSET_MENU_TEXT_HEADPHONES];                   // "HEADPHONES"
-    gAudioMenuStrings[1].unkC = menuText[ASSET_MENU_TEXT_SFXVOLUME];                 // "SFX VOLUME"
-    gAudioMenuStrings[2].unkC = menuText[ASSET_MENU_TEXT_MUSICVOLUME];               // "MUSIC VOLUME"
-    gAudioMenuStrings[3].unkC = menuText[ASSET_MENU_TEXT_RETURN];                    // "RETURN"
-    gAudioMenuStrings[4].unkC = menuText[ASSET_MENU_TEXT_AUDIOOPTIONS];              // "AUDIO OPTIONS"
-    gAudioMenuStrings[5].unkC = menuText[ASSET_MENU_TEXT_AUDIOOPTIONS];              // "AUDIO OPTIONS"
+    gAudioMenuStrings[1].text = menuText[ASSET_MENU_TEXT_SFXVOLUME];                 // "SFX VOLUME"
+    gAudioMenuStrings[2].text = menuText[ASSET_MENU_TEXT_MUSICVOLUME];               // "MUSIC VOLUME"
+    gAudioMenuStrings[3].text = menuText[ASSET_MENU_TEXT_RETURN];                    // "RETURN"
+    gAudioMenuStrings[4].text = menuText[ASSET_MENU_TEXT_AUDIOOPTIONS];              // "AUDIO OPTIONS"
+    gAudioMenuStrings[5].text = menuText[ASSET_MENU_TEXT_AUDIOOPTIONS];              // "AUDIO OPTIONS"
     gMusicTestString = menuText[ASSET_MENU_TEXT_MUSICTEST];                          // "MUSIC TEST 00"
     gMagicCodeMenuStrings[0] = menuText[ASSET_MENU_TEXT_ENTERCODE];                  // "ENTER CODE"
     gMagicCodeMenuStrings[1] = menuText[ASSET_MENU_TEXT_CLEARALLCODES];              // "CLEAR ALL CODES"
@@ -3265,20 +3269,91 @@ void menu_audio_options_init(void) {
     gMusicVolumeSliderValue = music_volume_config();
     gSfxVolumeSliderValue = get_sfx_volume_slider();
     if (gActiveMagicCodes & CHEAT_MUSIC_MENU) { // Check if "JUKEBOX" cheat is active
-        gAudioMenuStrings[6].unkC = gMusicTestString;
-        gAudioMenuStrings[3].unk2 = 212;
+        gAudioMenuStrings[6].text = gMusicTestString;
+        gAudioMenuStrings[3].y = 212;
         music_voicelimit_set(32);
         gMenuStage = 5;
     } else {
-        gAudioMenuStrings[6].unkC = NULL;
-        gAudioMenuStrings[3].unk2 = 192;
+        gAudioMenuStrings[6].text = NULL;
+        gAudioMenuStrings[3].y = 192;
         gMenuStage = 4;
     }
     load_font(ASSET_FONTS_BIGFONT);
 }
 
 // Probably soundoption_render
-GLOBAL_ASM("asm/non_matchings/menu/func_80084854.s")
+void func_80084854(s32 updateRate) {
+    s32 i;
+    s32 yOffset;
+    s32 j;
+    s32 temp;
+
+    temp = gMusicTestSongIndex;
+
+    for (i = 0; (gMusicTestString[i] < '0') || (gMusicTestString[i] > '9'); i++) {}
+
+    j = temp / 10;
+    gMusicTestString[i] = '0' + j;
+    temp -= (j * 10);
+    i++;
+    gMusicTestString[i] = '0' + temp;
+
+    temp = gOptionBlinkTimer * 8;
+    if (temp >= 256) {
+        temp = 511 - temp;
+    }
+    gAudioMenuStrings[0].text = gAudioOutputStrings[gAudioOutputType];
+    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+
+    if (osTvType == OS_TV_TYPE_PAL) {
+        yOffset = 101;
+    } else {
+        yOffset = 113;
+    }
+    func_80080580(NULL, -72, 120 - yOffset, 144, 14, 6, 4, COLOUR_RGBA32(255, 192, 64, 255),
+                  (TextureHeader *) gMenuAssets[TEXTURE_UNK_44]);
+    func_80080580(NULL, -72, 80 - yOffset, 144, 14, 6, 4, COLOUR_RGBA32(255, 192, 64, 255),
+                  (TextureHeader *) gMenuAssets[TEXTURE_UNK_44]);
+    func_80080BC8(&sMenuCurrDisplayList);
+    dialogue_clear(7);
+    set_current_dialogue_background_colour(7, 0, 0, 0, 255);
+    set_current_dialogue_box_coords(7, 94, 117, 226, 123);
+    render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
+    set_current_dialogue_box_coords(7, 94, 157, 226, 163);
+    render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
+    texrect_draw(&sMenuCurrDisplayList, gMenuSelectionArrowLeft, (gSfxVolumeSliderValue >> 1) + 96, 120, 255, 255, 255,
+                 255);
+    texrect_draw(&sMenuCurrDisplayList, gMenuSelectionArrowLeft, (gMusicVolumeSliderValue >> 1) + 96, 160, 255, 255,
+                 255, 255);
+    reset_render_settings(&sMenuCurrDisplayList);
+    set_text_background_colour(0, 0, 0, 0);
+
+    // j must be here.
+    j = 0;
+
+    if (gMenuStage < 5) {
+        i = gOptionsMenuItemIndex;
+    } else if (gOptionsMenuItemIndex < 3) {
+        i = gOptionsMenuItemIndex;
+    } else if (gOptionsMenuItemIndex == 3) {
+        i = 6;
+    } else {
+        i = 3;
+    }
+
+    // Must be a for loop?
+    for (; gAudioMenuStrings[j].text != NULL; j++) {
+        set_text_font(gAudioMenuStrings[j].font);
+        if (j == i) {
+            set_text_colour(255, 255, 255, temp, 255);
+        } else {
+            set_text_colour(gAudioMenuStrings[j].red, gAudioMenuStrings[j].green, gAudioMenuStrings[j].blue,
+                            gAudioMenuStrings[j].alpha, gAudioMenuStrings[j].opacity);
+        }
+        draw_text(&sMenuCurrDisplayList, gAudioMenuStrings[j].x, gAudioMenuStrings[j].y, gAudioMenuStrings[j].text,
+                  gAudioMenuStrings[j].alignmentFlags);
+    }
+}
 
 /**
  * Handles the input for the audio options menu.
@@ -3302,7 +3377,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
         }
     }
     if (gMenuDelay > -20 && gMenuDelay < 20) {
-        func_80084854();
+        func_80084854(updateRate);
     }
     if (gIgnorePlayerInputTime == 0) {
         contX = 0;

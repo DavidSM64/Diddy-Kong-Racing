@@ -336,17 +336,16 @@ typedef struct unk800DF83C {
 } unk800DF83C;
 
 typedef struct unk800DFA3C {
-    s16 unk0;
-    s16 unk2;
-    u8  unk4;
-    u8  unk5;
-    u8  unk6;
-    u8  unk7;
-    u8  unk8;
-    u8  unk9;
-    u8  unkA;
-    u8  unkB;
-    char *unkC;
+ /* 0x00 */ s16 x;
+ /* 0x02 */ s16 y;
+ /* 0x04 */ u8 red;
+ /* 0x05 */ u8 green;
+ /* 0x06 */ u8 blue;
+ /* 0x07 */ u8 alpha;
+ /* 0x08 */ u8 opacity;
+ /* 0x09 */ u8 font;
+ /* 0x0A */ s16 alignmentFlags;
+ /* 0x0C */ char *text; 
 } unk800DFA3C;
 
 typedef struct ButtonElement {
@@ -692,7 +691,7 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx);
 void func_80080BC8(Gfx **);
 void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour0, s32 colour1, s32 colour2, s32 colour3);
-void func_80084854(void);
+void func_80084854(s32 updateRate);
 void func_80098774(s32);
 void func_80094D28(UNUSED s32 updateRate);
 
