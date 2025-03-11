@@ -1499,7 +1499,7 @@ Gfx dMenuHudDrawModes[][2] = {
 };
 
 // Triangle indices for the wood panels used in multiple menus.
-s8 gWoodPanelsIndices[32] = { 0,  1,  2,  0,  2,  3,  4,  5,  6,  4,  6,  7,  8,  9,  10, 8,
+u8 gWoodPanelsIndices[32] = { 0,  1,  2,  0,  2,  3,  4,  5,  6,  4,  6,  7,  8,  9,  10, 8,
                               10, 11, 12, 13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19, 0,  0 };
 
 // UV coordinate indices the wood panels.
@@ -1528,7 +1528,7 @@ s16 gWoodPanelVertColours[5][4] = {
 
 s32 *gWoodPanelVertices[2] = { NULL, NULL };
 
-s32 *gWoodPanelTriangles[2] = { NULL, NULL };
+Triangle *gWoodPanelTriangles[2] = { NULL, NULL };
 
 s32 gMenuTrisFlip = 0;
 s32 gWoodPanelCount = 0;
@@ -1741,7 +1741,74 @@ void menu_button_free(void) {
     gWoodPanelAllocCount = 0;
 }
 
+#ifdef NON_EQUIVALENT
+void func_8007FFEC(s32 arg0) {
+    s32 sp28;
+    s32 sp24;
+    s32 sp20;
+    Triangle *alloc;
+    s32 triListIndex;
+    s32 IndicesIndex;
+    s32 triIndex;
+    s32 i;
+    s32 j;
+
+    if (gMenuGeometry != NULL) {
+        menu_button_free();
+    }
+
+    gWoodPanelTexScaleU = 32; // 32 = 1.0x scale
+    gWoodPanelTexScaleV = 32; // 32 = 1.0x scale
+    sp20 = arg0 * 0xA * 0x10;
+    // sp28 = arg0 << 5;
+    // sp24 = arg0 * 0x64 * 2;
+
+    // This is mostly wrong. Need to fix!
+    alloc = mempool_alloc_safe(arg0 * 0x2F0, COLOUR_TAG_WHITE);
+    gWoodPanelTriangles[0] = alloc;
+    gWoodPanelTriangles[1] = gWoodPanelTriangles[0] + sp20;
+    gMenuGeometry = gWoodPanelTriangles[1] + sp20;
+    gWoodPanelVertices[1] = gMenuGeometry;
+    gWoodPanelVertices[1] = gWoodPanelVertices[0] + arg0;
+
+    // This loop isn't quite right.
+    for (i = 0; i < arg0; i++) {
+        gMenuGeometry[i].vertices[0] = gWoodPanelVertices[0] + i;
+        gMenuGeometry[i].vertices[1] = gWoodPanelVertices[1] + i;
+        gMenuGeometry[i].triangles[0] = gWoodPanelTriangles[0] + i;
+        gMenuGeometry[i].triangles[1] = gWoodPanelTriangles[1] + i;
+        gMenuGeometry[i].texture[0] = 0;
+        gMenuGeometry[i].texture[1] = 0;
+        gMenuGeometry[i].unk18[0] = 0;
+        gMenuGeometry[i].unk18[1] = 0;
+    }
+
+    for (triIndex = 0; triIndex < arg0; triIndex++) {
+        for (IndicesIndex = 0; IndicesIndex < 10; IndicesIndex++) {    // Index into gWoodPanelsIndices
+            for (triListIndex = 0; triListIndex < 2; triListIndex++) { // Index into gWoodPanelTriangles?
+                (gWoodPanelTriangles[triListIndex] + triIndex)->verticesArray[0] = 0x40;
+                (gWoodPanelTriangles[triListIndex] + triIndex)->verticesArray[1] =
+                    gWoodPanelsIndices[IndicesIndex * 3 + 0];
+                (gWoodPanelTriangles[triListIndex] + triIndex)->verticesArray[2] =
+                    gWoodPanelsIndices[IndicesIndex * 3 + 1];
+                (gWoodPanelTriangles[triListIndex] + triIndex)->verticesArray[3] =
+                    gWoodPanelsIndices[IndicesIndex * 3 + 2];
+                (gWoodPanelTriangles[triListIndex] + triIndex)->uv0.u = 0;
+                (gWoodPanelTriangles[triListIndex] + triIndex)->uv0.v = 0;
+                (gWoodPanelTriangles[triListIndex] + triIndex)->uv1.u = 0;
+                (gWoodPanelTriangles[triListIndex] + triIndex)->uv1.v = 0;
+                (gWoodPanelTriangles[triListIndex] + triIndex)->uv2.u = 0;
+                (gWoodPanelTriangles[triListIndex] + triIndex)->uv2.v = 0;
+            }
+        }
+    }
+    gMenuTrisFlip = 0;
+    gWoodPanelCount = 0;
+    gWoodPanelAllocCount = arg0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_8007FFEC.s")
+#endif
 
 /**
  * Resize the UV's of the menu panels.
@@ -9668,7 +9735,6 @@ void postrace_music_fade(s32 updateRate) {
     }
 }
 
-#ifdef NON_MATCHING
 // postrace_render
 void func_80094D28(UNUSED s32 updateRate) {
     s32 temp;
@@ -9677,9 +9743,9 @@ void func_80094D28(UNUSED s32 updateRate) {
     s32 sp50;
     s32 var_s2;
     s32 var_s0;
-    s32 sp40;
     s32 i;
-    s32 sp3C;
+    s32 sp40;
+    s32 filterColour;
     s32 var_v0;
 
     settings = get_settings();
@@ -9709,7 +9775,7 @@ void func_80094D28(UNUSED s32 updateRate) {
             break;
         case 2:
             for (i = 0; i < 3; i++) {
-                if (settings->display_times && settings->racers[0].best_times & (1 << i)) {
+                if (settings->display_times && settings->racers[PLAYER_ONE].best_times & (1 << i)) {
                     gRaceResultsMenuElements[i + 3].filterGreen = 192 - ((var_s3 * 3) >> 2);
                     gRaceResultsMenuElements[i + 3].filterBlue = 255 - var_s3;
                 } else {
@@ -9728,21 +9794,21 @@ void func_80094D28(UNUSED s32 updateRate) {
             }
             break;
         case 3:
-            for (sp40 = 0; sp40 < 8; sp40++) {
-                i = sp40;
-                sp3C = 255;
+            for (i = 0; i < ARRAY_COUNT(settings->racers); i++) {
+                filterColour = 255;
+                sp40 = i;
                 if (is_in_two_player_adventure()) {
-                    i = sp40 - 1;
-                    if (i == settings->racers[1].starting_position) {
-                        sp3C = (var_s3 >> 1) + 128;
+                    sp40--;
+                    if (sp40 == settings->racers[1].starting_position) {
+                        filterColour = (var_s3 >> 1) + 128;
                     }
                 }
-                if (i == settings->racers[0].starting_position) {
-                    sp3C = (var_s3 >> 1) + 128;
+                if (sp40 == settings->racers[0].starting_position) {
+                    filterColour = (var_s3 >> 1) + 128;
                 }
-                gRaceOrderMenuElements[7 - sp40].filterRed = sp3C;
-                gRaceOrderMenuElements[7 - sp40].filterGreen = sp3C;
-                gRaceOrderMenuElements[7 - sp40].filterBlue = sp3C;
+                gRaceOrderMenuElements[7 - i].filterRed = filterColour;
+                gRaceOrderMenuElements[7 - i].filterGreen = filterColour;
+                gRaceOrderMenuElements[7 - i].filterBlue = filterColour;
             }
             break;
         case 5:
@@ -9850,9 +9916,6 @@ void func_80094D28(UNUSED s32 updateRate) {
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80094D28.s")
-#endif
 
 /**
  * Set the postrace message depending on if a controller pak was detected.
