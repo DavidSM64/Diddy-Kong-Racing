@@ -1510,11 +1510,11 @@ u8 gWoodPanelTexCoords[5][12] = { { 0, 0, 3, 0, 2, 1, 0, 0, 2, 1, 1, 1 },
                                   { 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 1, 2 } };
 
 // Position offsets for the wood panels. It has a X Width, X BorderWidth, Y Width, Y BorderWidth pattern.
-u8 gWoodPanelVertCoords[][8] = { { 0, 0, 0, 0, 1, 0, 0, 0 },       { 1, 255, 0, 255, 0, 1, 0, 255 },
-                                 { 1, 255, 0, 255, 1, 0, 0, 0 },   { 1, 0, 255, 0, 1, 255, 255, 1 },
-                                 { 0, 1, 255, 1, 1, 255, 255, 1 }, { 1, 0, 255, 0, 0, 0, 255, 0 },
-                                 { 0, 0, 0, 0, 0, 1, 0, 255 },     { 0, 1, 255, 1, 0, 0, 255, 0 },
-                                 { 0, 1, 0, 255, 1, 255, 0, 255 }, { 1, 255, 255, 1, 0, 1, 255, 1 } };
+s8 gWoodPanelVertCoords[][4] = { { 0, 0, 0, 0 },     { 1, 0, 0, 0 },     { 1, 255, 0, 255 }, { 0, 1, 0, 255 },
+                                 { 1, 255, 0, 255 }, { 1, 0, 0, 0 },     { 1, 0, 255, 0 },   { 1, 255, 255, 1 },
+                                 { 0, 1, 255, 1 },   { 1, 255, 255, 1 }, { 1, 0, 255, 0 },   { 0, 0, 255, 0 },
+                                 { 0, 0, 0, 0 },     { 0, 1, 0, 255 },   { 0, 1, 255, 1 },   { 0, 0, 255, 0 },
+                                 { 0, 1, 0, 255 },   { 1, 255, 0, 255 }, { 1, 255, 255, 1 }, { 0, 1, 255, 1 } };
 
 // Colour filter, used for the shadows on the side of the panels.
 s16 gWoodPanelVertColours[5][4] = {
@@ -1760,7 +1760,7 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
     s32 j;
     s32 r, g, b, a;
     s32 r0, g0, b0, a0;
-    s8 *texCoords;
+    s8(*texCoords)[4];
     s16(*texColors)[4];
     u8(*woodPanelTexCoords)[12];
     UNUSED s32 pad;
@@ -1811,17 +1811,17 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
         texColors += 1;
         for (j = 0; j < 4; j++) {
             vertices->x = startX;
-            vertices->x += texCoords[0] * width;
-            vertices->x += texCoords[1] * borderWidth;
+            vertices->x += (*texCoords)[0] * width;
+            vertices->x += (*texCoords)[1] * borderWidth;
             vertices->y = startY;
-            vertices->y += texCoords[2] * height;
-            vertices->y += texCoords[3] * borderHeight;
+            vertices->y += (*texCoords)[2] * height;
+            vertices->y += (*texCoords)[3] * borderHeight;
             vertices->z = 0;
             vertices->r = r;
             vertices->g = g;
             vertices->b = b;
             vertices->a = a;
-            texCoords += 4;
+            texCoords += 1;
             vertices++;
         }
     }
