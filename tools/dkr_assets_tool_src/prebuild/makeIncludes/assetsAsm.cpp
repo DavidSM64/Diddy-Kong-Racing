@@ -37,6 +37,8 @@ void AssetsAsm::_write() {
     _asm.write_newline();
     _asm.write_include("macro.inc");
     _asm.write_newline();
+    _asm.write_section("data");
+    _asm.write_newline();
     
     _write_asset_sections();
     

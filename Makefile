@@ -42,7 +42,7 @@ BIN_DIRS  = assets
 BUILD_DIR = build
 SRC_DIR   = src
 LIBULTRA_DIR = libultra
-ASM_DIRS  = asm asm/data asm/nonmatchings
+ASM_DIRS  = asm asm/data asm/assets asm/nonmatchings
 HASM_DIRS = $(SRC_DIR)/hasm $(LIBULTRA_DIR)/src/os $(LIBULTRA_DIR)/src/gu $(LIBULTRA_DIR)/src/libc
 LIBULTRA_SRC_DIRS  = $(LIBULTRA_DIR) $(LIBULTRA_DIR)/src $(LIBULTRA_DIR)/src/audio $(LIBULTRA_DIR)/src/audio/mips1 
 LIBULTRA_SRC_DIRS += $(LIBULTRA_DIR)/src/debug $(LIBULTRA_DIR)/src/gu $(LIBULTRA_DIR)/src/io
@@ -275,48 +275,99 @@ expected: verify
 
 ### Recipes
 
+######## Asset Targets ########
+
+ASSETS_VERSION := us_1.0
+ASSETS := assets/$(ASSETS_VERSION)
+ASSETS_BUILD_DIR := $(BUILD_DIR)/assets
+BUILDER = $(TOOLS_DIR)/dkr_assets_tool -dkrv $(ASSETS_VERSION) build
+
+# Don't do setup checks if cleaning.
+ifneq ($(MAKECMDGOALS),clean)
+######## Extract Assets & Microcode ########
+DUMMY != $(PYTHON) $(TOOLS_DIR)/python/check_if_need_to_extract.py $(ASSETS_VERSION) >&2 || echo FAIL
+######## Prebuild step (Compile assets, generate linker file, etc.) ########
+DUMMY != $(TOOLS_DIR)/dkr_assets_tool -dkrv $(ASSETS_VERSION) prebuild >&2 || echo FAIL
+endif
+
+# Helps fix an issue with parallel jobs.
+$(ALL_ASSETS_BUILT): | $(BUILD_DIR)
+
+# This is here to prevent make from deleting all the asset files after the build completes/fails.
+dont_remove_asset_files: $(ALL_ASSETS_BUILT)
+
+# Add .json files
+JSON_FILES := $(shell find $(ASSETS) -type f -name '*.json')
+
+# Ignore .meta.json files
+IGNORE_JSON_FILES := $(shell find $(ASSETS) -type f -name '*.meta.json')
+JSON_FILES := $(filter-out $(IGNORE_JSON_FILES),$(JSON_FILES))
+
+# $1 = asset path (e.g. assets/levels/models/...), $2 = cmd to run
+define DEFINE_ASSET_TARGET
+$(eval BASE_PATH := $(subst $(ASSETS),$(ASSETS_BUILD_DIR),$(basename $1)))
+$$(BASE_PATH).bin: $1
+	$2
+$(eval ALL_ASSETS_BUILT+=$(BASE_PATH).bin)
+endef
+
+# $1 = Print message
+define JSON_FILE_ACTION
+	$$(call print,$1:,$$<,$$@)
+	$$(V)$$(BUILDER) -i $$< -o $$@
+endef
+
+$(foreach FILE,$(JSON_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call JSON_FILE_ACTION,Building))))
+
+###############################
+
 $(GLOBAL_ASM_O_FILES): CC := $(ASM_PROCESSOR) $(CC) -- $(AS) $(ASFLAGS) --
 
-$(TARGET).elf: dirs $(LD_SCRIPT) $(O_FILES)
+$(TARGET).elf: dirs $(LD_SCRIPT) $(O_FILES) | $(ALL_ASSETS_BUILT)
 	@$(PRINT) "$(GREEN)Linking: $(BLUE)$@$(NO_COL)\n"
 	$(V)$(LD) $(LD_FLAGS) -o $@
 
 ifndef PERMUTER
-$(GLOBAL_ASM_O_FILES): $(BUILD_DIR)/%.c.o: %.c
+$(GLOBAL_ASM_O_FILES): $(BUILD_DIR)/%.c.o: %.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling:,$<,$@)
 	$(V)$(CC_CHECK) $<
 	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 endif
 
 # non asm-processor recipe
-$(BUILD_DIR)/%.c.o: %.c
+$(BUILD_DIR)/%.c.o: %.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling:,$<,$@)
 	$(V)$(CC_CHECK) $<
 	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 
-$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: $(LIBULTRA_DIR)/src/libc/llcvt.c
+$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: $(LIBULTRA_DIR)/src/libc/llcvt.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling mips3:,$<,$@)
 	@$(CC)  -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 	$(V)$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@
 
-$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c
+$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling mips3:,$<,$@)
 	@$(CC)  -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 	$(V)$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@
 
-$(BUILD_DIR)/%.s.o: %.s
+$(BUILD_DIR)/%.s.o: %.s | $(ALL_ASSETS_BUILT)
 	$(call print,Assembling:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -o $@ $<
 
-$(BUILD_DIR)/%.bin.o: %.bin
+# Specifically override the assets bin output location to match what splat output to the ld file.
+$(BUILD_DIR)/asm/assets/assets.s.o: asm/assets/assets.s | $(ALL_ASSETS_BUILT)
+	$(call print,Assembling Assets:,$<,$@)
+	$(V)$(AS) $(ASFLAGS) -o $(BUILD_DIR)/assets/assets.bin.o $<
+
+$(BUILD_DIR)/%.bin.o: %.bin | $(ALL_ASSETS_BUILT)
 	$(call print,Linking Binary:,$<,$@)
 	$(V)$(LD) -r -b binary -o $@ $<
 
-$(TARGET).bin: $(TARGET).elf
+$(TARGET).bin: $(TARGET).elf | $(ALL_ASSETS_BUILT)
 	$(call print,Objcopy:,$<,$@)
 	$(V)$(OBJCOPY) $(OBJCOPYFLAGS) $< $@
 
-$(TARGET).z64: $(TARGET).bin
+$(TARGET).z64: $(TARGET).bin | $(ALL_ASSETS_BUILT)
 	$(call print,CopyRom:,$<,$@)
 	$(V)$(PYTHON) $(TOOLS_DIR)/python/CopyRom.py $< $@
 
