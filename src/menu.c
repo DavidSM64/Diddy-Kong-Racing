@@ -1509,11 +1509,12 @@ u8 gWoodPanelTexCoords[5][12] = { { 0, 0, 3, 0, 2, 1, 0, 0, 2, 1, 1, 1 },
                                   { 0, 0, 1, 1, 1, 2, 0, 0, 1, 2, 0, 3 },
                                   { 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 1, 2 } };
 
-// Position offsets for the wood panels.
-u16 gWoodPanelVertCoords[10][4] = { { 0, 0, 256, 0 },         { 511, 255, 1, 255 },   { 511, 255, 256, 0 },
-                                    { 256, -256, 511, -255 }, { 1, -255, 511, -255 }, { 256, -256, 0, -256 },
-                                    { 0, 0, 1, 255 },         { 1, -255, 0, -256 },   { 1, 255, 511, 255 },
-                                    { 511, -255, 1, -255 } };
+// Position offsets for the wood panels. It has a X Width, X BorderWidth, Y Width, Y BorderWidth pattern.
+u8 gWoodPanelVertCoords[][8] = { { 0, 0, 0, 0, 1, 0, 0, 0 },       { 1, 255, 0, 255, 0, 1, 0, 255 },
+                                 { 1, 255, 0, 255, 1, 0, 0, 0 },   { 1, 0, 255, 0, 1, 255, 255, 1 },
+                                 { 0, 1, 255, 1, 1, 255, 255, 1 }, { 1, 0, 255, 0, 0, 0, 255, 0 },
+                                 { 0, 0, 0, 0, 0, 1, 0, 255 },     { 0, 1, 255, 1, 0, 0, 255, 0 },
+                                 { 0, 1, 0, 255, 1, 255, 0, 255 }, { 1, 255, 255, 1, 0, 1, 255, 1 } };
 
 // Colour filter, used for the shadows on the side of the panels.
 s16 gWoodPanelVertColours[5][4] = {
@@ -1562,7 +1563,7 @@ void load_menu_text(s32 language) {
     char **fake;
 
     if (gMenuTextLangTable == NULL) {
-        gMenuTextLangTable = load_asset_section_from_rom(ASSET_MENU_TEXT_TABLE);
+        gMenuTextLangTable = (s32 *) load_asset_section_from_rom(ASSET_MENU_TEXT_TABLE);
     }
 
     switch (language) {
@@ -1589,13 +1590,13 @@ void load_menu_text(s32 language) {
         return;
     }
 
-    load_asset_to_address(ASSET_MENU_TEXT, temp, langIndex, size);
+    load_asset_to_address(ASSET_MENU_TEXT, (u32) temp, langIndex, size);
 
     // TODO: Find a way to clean up the ugly hacks.
     // Fill up the lookup table with proper RAM addresses
     for (langIndex = 0; langIndex < gMenuTextLangTable[0]; langIndex++) {
-        menuText = gMenuText[langIndex];
-        if ((((s32) menuText) & 0xFFFFFFFF) == -1) {
+        menuText = (char **) gMenuText[langIndex];
+        if ((((s32) menuText) & 0xFFFFFFFF) == 0xFFFFFFFF) {
             gMenuText[langIndex] = NULL;
         } else {
             gMenuText[langIndex] = &((char *) gMenuText)[(s32) (fake = menuText)];
@@ -1760,9 +1761,9 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
     s32 r, g, b, a;
     s32 r0, g0, b0, a0;
     s8 *texCoords;
-    s16 *texColors;
-    u8 *woodPanelTexCoords;
-    s32 temp;
+    s16(*texColors)[4];
+    u8(*woodPanelTexCoords)[12];
+    UNUSED s32 pad;
 
     gMenuGeometry[gWoodPanelCount].texture[gMenuTrisFlip] = tex;
     if (tex != NULL) {
@@ -1781,19 +1782,19 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
             if (1) {}
             if (1) {}
             if (1) {} // fake
-            triangles[0].uv0.u = uVals[woodPanelTexCoords[0]];
-            triangles[0].uv0.v = vVals[woodPanelTexCoords[1]];
-            triangles[0].uv1.u = uVals[woodPanelTexCoords[2]];
-            triangles[0].uv1.v = vVals[woodPanelTexCoords[3]];
-            triangles[0].uv2.u = uVals[woodPanelTexCoords[4]];
-            triangles[0].uv2.v = vVals[woodPanelTexCoords[5]];
-            triangles[1].uv0.u = uVals[woodPanelTexCoords[6]];
-            triangles[1].uv0.v = vVals[woodPanelTexCoords[7]];
-            triangles[1].uv1.u = uVals[woodPanelTexCoords[8]];
-            triangles[1].uv1.v = vVals[woodPanelTexCoords[9]];
-            triangles[1].uv2.u = uVals[woodPanelTexCoords[10]];
-            triangles[1].uv2.v = vVals[woodPanelTexCoords[11]];
-            woodPanelTexCoords += 12;
+            triangles[0].uv0.u = uVals[(*woodPanelTexCoords)[0]];
+            triangles[0].uv0.v = vVals[(*woodPanelTexCoords)[1]];
+            triangles[0].uv1.u = uVals[(*woodPanelTexCoords)[2]];
+            triangles[0].uv1.v = vVals[(*woodPanelTexCoords)[3]];
+            triangles[0].uv2.u = uVals[(*woodPanelTexCoords)[4]];
+            triangles[0].uv2.v = vVals[(*woodPanelTexCoords)[5]];
+            triangles[1].uv0.u = uVals[(*woodPanelTexCoords)[6]];
+            triangles[1].uv0.v = vVals[(*woodPanelTexCoords)[7]];
+            triangles[1].uv1.u = uVals[(*woodPanelTexCoords)[8]];
+            triangles[1].uv1.v = vVals[(*woodPanelTexCoords)[9]];
+            triangles[1].uv2.u = uVals[(*woodPanelTexCoords)[10]];
+            triangles[1].uv2.v = vVals[(*woodPanelTexCoords)[11]];
+            woodPanelTexCoords += 1;
             triangles += 2;
         }
     }
@@ -1803,15 +1804,15 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
     a0 = (colour & 0xFF);
     vertices = gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip];
     for (texColors = gWoodPanelVertColours, texCoords = gWoodPanelVertCoords, i = 0; i < 5; i++) {
-        r = (texColors[0] * r0) >> 8;
-        g = (texColors[1] * g0) >> 8;
-        b = (texColors[2] * b0) >> 8;
-        a = (texColors[3] * a0) >> 8;
-        texColors += 4;
+        r = ((*texColors)[0] * r0) >> 8;
+        g = ((*texColors)[1] * g0) >> 8;
+        b = ((*texColors)[2] * b0) >> 8;
+        a = ((*texColors)[3] * a0) >> 8;
+        texColors += 1;
         for (j = 0; j < 4; j++) {
             vertices->x = startX;
             vertices->x += texCoords[0] * width;
-            vertices->x += (texCoords[1] * borderWidth);
+            vertices->x += texCoords[1] * borderWidth;
             vertices->y = startY;
             vertices->y += texCoords[2] * height;
             vertices->y += texCoords[3] * borderHeight;
@@ -1846,7 +1847,7 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
 }
 
 void func_80080BC8(Gfx **dList) {
-    s16 temp_a1;
+    UNUSED s16 pad;
     s32 i;
     s32 var_t0;
     TextureHeader *tex;
@@ -3282,7 +3283,7 @@ void menu_audio_options_init(void) {
 }
 
 // Probably soundoption_render
-void func_80084854(s32 updateRate) {
+void func_80084854(UNUSED s32 updateRate) {
     s32 i;
     s32 yOffset;
     s32 j;
