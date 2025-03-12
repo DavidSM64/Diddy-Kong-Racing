@@ -217,13 +217,13 @@ s32 gPostRace1Player;
 s32 gPostRaceTimer;
 s32 gTracksSaveGhost;
 UNUSED s32 D_80126A9C;
-char *gBootPakData[16];                         // Text to render
-u8 *sCurrentControllerPakAllFileNames[16];      // Every file name on the controller pak
-u8 *sCurrentControllerPakAllFileExtensions[16]; // Every file extension on the controller pak
-u8 sCurrentControllerPakAllFileTypes[16];       // File type of all files on controller pak
-u32 sCurrentControllerPakAllFileSizes[16];      // File size of all files on controller pak
-u32 sCurrentControllerPakFreeSpace;             // Space available in current controller pak
-s32 sControllerPakMenuNumberOfRows;             // 8 if PAL, 7 if not
+char *gBootPakData[16];                           // Text to render
+char *sCurrentControllerPakAllFileNames[16];      // Every file name on the controller pak
+char *sCurrentControllerPakAllFileExtensions[16]; // Every file extension on the controller pak
+u8 sCurrentControllerPakAllFileTypes[16];         // File type of all files on controller pak
+u32 sCurrentControllerPakAllFileSizes[16];        // File size of all files on controller pak
+u32 sCurrentControllerPakFreeSpace;               // Space available in current controller pak
+s32 sControllerPakMenuNumberOfRows;               // 8 if PAL, 7 if not
 TextureHeader *gMenuMosaic1;
 TextureHeader *gMenuMosaic2;
 s32 gMenuMosaicShift;
@@ -4688,7 +4688,7 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
     s32 pakStatusSuccess;
     s32 pakStatusError3;
     s32 pakStatusError9;
-    s32 bytesFree;
+    u32 bytesFree;
     s32 notesFree;
     s32 pakStatusErrorNoFreeSpace;
     s32 pakStatus;
@@ -4773,9 +4773,9 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
     }
 
     *controllerIndex = controllerIndexVal;
-    ret = get_controller_pak_file_list(controllerIndexVal, 16, &sCurrentControllerPakAllFileNames,
-                                       &sCurrentControllerPakAllFileExtensions, &sCurrentControllerPakAllFileSizes,
-                                       &sCurrentControllerPakAllFileTypes);
+    ret = get_controller_pak_file_list(controllerIndexVal, 16, sCurrentControllerPakAllFileNames,
+                                       sCurrentControllerPakAllFileExtensions, sCurrentControllerPakAllFileSizes,
+                                       sCurrentControllerPakAllFileTypes);
 
     if (ret == CONTROLLER_PAK_GOOD) {
         i = 0;
