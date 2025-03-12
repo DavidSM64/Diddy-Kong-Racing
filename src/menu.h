@@ -509,7 +509,7 @@ void cheatlist_free(void);
 void charselect_prev(s32 context, s32 *arg1);
 void titlescreen_controller_assign(s32 controllerIndex);
 void menu_character_select_init(void);
-void charselect_render_text(s32 arg0);
+void charselect_render_text(s32 updateRate);
 void charselect_move(s32 playerID, s8 *direction, s32 bounds, u16 menuPickSoundId, u16 menuPickFailedSoundId);
 void charselect_free(void);
 void menu_caution_init(void);

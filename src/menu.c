@@ -72,7 +72,7 @@ u8 gResultsPlayers[8];
 u8 gRankingsPlayers[8];
 u8 gResultsPlayerIDs[8];
 u8 gRankingsPlayerIDs[8]; // Contains the order of racer indices that tell you what place they are in.
-s8 D_80126438[16];
+s8 gRankingsPortraitIDs[16];
 
 // Eeeprom save data bits stored at address 0xF
 // bit 0      = Adventure Two is Unlocked
@@ -198,13 +198,13 @@ s32 gSaveMenuRumbleNag;
 s32 gSaveMenuRumbleConnected;
 s32 gSaveMenuSourceState;
 s32 gSaveMenuDestState;
-s32 sControllerPakNotesFree[MAXCONTROLLERS]; // Looks to be an array for number notes free in each controller memory pak
-u8 sControllerPakIssueNotFound[MAXCONTROLLERS];   // Flag to see if there's no known issues for the given controller pak
-u8 sControllerPakFatalErrorFound[MAXCONTROLLERS]; // Flag to see if there's a fatal error for the given controller pak
-u8 sControllerPakNoFreeSpace[MAXCONTROLLERS];     // Flag to see if there's no free space for the given controller pak
-u8 sControllerPakBadData[MAXCONTROLLERS];         // Flag to see if there's bad data for the given controller pak
+s32 sControllerPakNotesFree[MAXCONTROLLERS];      // Number notes free in each controller memory pak
+u8 sControllerPakIssueNotFound[MAXCONTROLLERS];   // Bool to see if there's no known issues for the given controller pak
+u8 sControllerPakFatalErrorFound[MAXCONTROLLERS]; // Bool to see if there's a fatal error for the given controller pak
+u8 sControllerPakNoFreeSpace[MAXCONTROLLERS];     // Bool to see if there's no free space for the given controller pak
+u8 sControllerPakBadData[MAXCONTROLLERS];         // Bool to see if there's bad data for the given controller pak
 char *gMenuOptionText[8];                         // Menu Text
-u8 sControllerPakDataPresent[MAXCONTROLLERS];     // Flag to see if there's data present for the given controller pak?
+u8 sControllerPakDataPresent[MAXCONTROLLERS];     // Bool to see if there's data present for the given controller pak
 char *D_80126A64;
 s32 gMenuOption;
 s32 gSaveMenuRumbleNagSet;
@@ -4004,16 +4004,16 @@ SIDeviceStatus savemenu_load_sources(void) {
             gSaveMenuRumbleConnected = FALSE;
 
             do {
-                result = get_controller_pak_file_list(0, 16, fileNames, fileExts, fileSizes, fileTypes);
+                result = get_controller_pak_file_list(0, MAX_CPAK_FILES, fileNames, fileExts, fileSizes, fileTypes);
                 temp = result & 0xFF; // strip the controller index from the result to just get the SI Device Status
                 numAttempts++;
-            } while ((temp == CONTROLLER_PAK_CHANGED) && (numAttempts < 3));
+            } while (temp == CONTROLLER_PAK_CHANGED && numAttempts < 3);
 
             if (result == CONTROLLER_PAK_GOOD) {
-                for (fileIndex = 0; fileIndex < 16; fileIndex++) {
+                for (fileIndex = 0; fileIndex < MAX_CPAK_FILES; fileIndex++) {
                     if ((fileTypes[fileIndex] >= SAVE_FILE_TYPE_CPAK_SAVE) &&
                         (fileTypes[fileIndex] <= SAVE_FILE_TYPE_CPAK_OTHER)) {
-                        (*sControllerPakNotesFree)--;
+                        sControllerPakNotesFree[0]--;
                         gSaveMenuFilesSource[gSaveMenuOptionCountUpper].saveFileType = fileTypes[fileIndex];
                         gSaveMenuFilesSource[gSaveMenuOptionCountUpper].controllerIndex = 0;
                         gSaveMenuFilesSource[gSaveMenuOptionCountUpper].saveFileNumber = fileIndex;
@@ -4686,19 +4686,19 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
     s32 ret;
     u32 bytesFree;
     s32 notesFree;
-    s32 pakStatusErrorNoFreeSpace;
-    s32 pakStatusError3;
-    s32 pakStatusError9;
+    s32 paksWithNoFreeSpace;
+    s32 paksWithFatalErrors;
+    s32 paksWithBadData;
 
-    pakStatusError3 = 0;
-    pakStatusErrorNoFreeSpace = 0;
-    pakStatusError9 = 0;
+    paksWithFatalErrors = 0;
+    paksWithNoFreeSpace = 0;
+    paksWithBadData = 0;
     pakStatusSuccess = 0;
 
     // This has been hard limited to just the first controller pak, but can easily be modified to check the rest with i
     // <= MAXCONTROLLERS
     for (i = 0; i <= 0; i++) {
-        sControllerPakFatalErrorFound[i] = 0;
+        sControllerPakFatalErrorFound[i] = FALSE;
         sControllerPakNoFreeSpace[i] = FALSE;
         sControllerPakBadData[i] = FALSE;
         ret = get_free_space(i, &bytesFree, &notesFree);
@@ -4707,34 +4707,29 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
             if (bytesFree == 0 || notesFree == 0) {
                 sControllerPakNoFreeSpace[i] = TRUE;
                 if (sControllerPakDataPresent[i] == FALSE) {
-                    pakStatusErrorNoFreeSpace++;
+                    paksWithNoFreeSpace++;
                 }
             }
             pakStatusSuccess++;
         } else {
             ret &= 0xFF; // Upper 2 bits are controller index
             sControllerPakIssueNotFound[i] = FALSE;
-            // Bad data
             if (ret == CONTROLLER_PAK_BAD_DATA) {
                 sControllerPakBadData[i] = TRUE;
-                pakStatusError9++;
+                paksWithBadData++;
             }
-            // Error inconsistent
             if (ret == CONTROLLER_PAK_INCONSISTENT) {
-                // Repair file system
                 repair_controller_pak(i);
             }
-            // fatal error
             if (ret == CONTROLLER_PAK_WITH_BAD_ID) {
-                sControllerPakFatalErrorFound[i] = 1;
-                pakStatusError3++;
+                sControllerPakFatalErrorFound[i] = TRUE;
+                paksWithFatalErrors++;
             }
         }
     }
 
-    if ((pakStatusSuccess == 0) || (pakStatusError3 != 0) || (pakStatusErrorNoFreeSpace != 0) ||
-        (pakStatusError9 != 0)) {
-        return CONTROLLER_PAK_NOT_FOUND; // Return unsuccessfully?
+    if ((pakStatusSuccess == 0) || (paksWithFatalErrors != 0) || (paksWithNoFreeSpace != 0) || (paksWithBadData != 0)) {
+        return CONTROLLER_PAK_NOT_FOUND; // Return unsuccessfully
     }
 
     // Loop through the cpaks to find the next one with no issues found.
@@ -4963,11 +4958,12 @@ void bootscreen_init_cpak(void) {
     gBootPakData[0] = mempool_alloc_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
 
     // Fills in the table.
-    for (i = 1; i < 16; i++) {
+    for (i = 1; i < ARRAY_COUNT(gBootPakData); i++) {
         gBootPakData[i] = (char *) (((u32) gBootPakData[0]) + (i * 0x20));
     }
 
-    for (i = 0; i < 1; i++) {
+    // Only check cpak 0
+    for (i = 0; i <= 0; i++) {
         sControllerPakDataPresent[i] = FALSE;
     }
 
@@ -6124,9 +6120,9 @@ void menu_character_select_init(void) {
 /**
  * Draws the "Player Select" and "OK?" text in the character select menu.
  */
-void charselect_render_text(UNUSED s32 arg0) {
+void charselect_render_text(UNUSED s32 updateRate) {
     s32 yPos;
-    if (gMenuDelay >= -0x16 && gMenuDelay < 0x17) {
+    if (gMenuDelay > -23 && gMenuDelay < 23) {
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_background_colour(0, 0, 0, 0);
         set_text_colour(0, 0, 0, 255, 128);
@@ -11424,12 +11420,12 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                             temp7 = settings->racers[gRankingsPlayerIDs[i]].character;
                             if (temp6 == 0) {
                                 sp34 = i;
-                                D_80126438[temp6++] = temp7;
+                                gRankingsPortraitIDs[temp6++] = temp7;
                                 continue;
                             }
                             if (settings->racers[gRankingsPlayerIDs[i]].trophy_points ==
                                 settings->racers[gRankingsPlayerIDs[sp34]].trophy_points) {
-                                D_80126438[temp6++] = temp7;
+                                gRankingsPortraitIDs[temp6++] = temp7;
                             }
                         }
                     }
@@ -11437,7 +11433,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                     if (gNumberOfActivePlayers == 1 && !is_in_two_player_adventure()) {
                         temp6 = 0;
                     }
-                    D_80126438[temp6] = -1;
+                    gRankingsPortraitIDs[temp6] = -1;
                     if (gIsInTracksMode == 1) {
                         if (sp34 >= 3) {
                             menu_init(MENU_TRACK_SELECT);
@@ -11466,7 +11462,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                     if (sp34 < 3) {
                         params = (s8 *) get_misc_asset(ASSET_MISC_CINEMATIC_TROPHY);
                         temp0 = ((gTrophyRaceWorldId * 3) + sp34) - 3;
-                        cinematic_start(params, temp0, ret, 0, 0, D_80126438);
+                        cinematic_start(params, temp0, ret, 0, 0, gRankingsPortraitIDs);
                         ret = MENU_RESULT_CONTINUE;
                         menu_init(MENU_NEWGAME_CINEMATIC);
                     }
