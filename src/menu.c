@@ -72,7 +72,7 @@ u8 gResultsPlayers[8];
 u8 gRankingsPlayers[8];
 u8 gResultsPlayerIDs[8];
 u8 gRankingsPlayerIDs[8]; // Contains the order of racer indices that tell you what place they are in.
-s8 D_80126438[16];
+s8 gRankingsPortraitIDs[16];
 
 // Eeeprom save data bits stored at address 0xF
 // bit 0      = Adventure Two is Unlocked
@@ -198,13 +198,13 @@ s32 gSaveMenuRumbleNag;
 s32 gSaveMenuRumbleConnected;
 s32 gSaveMenuSourceState;
 s32 gSaveMenuDestState;
-s32 sControllerPakNotesFree[MAXCONTROLLERS]; // Looks to be an array for number notes free in each controller memory pak
-u8 sControllerPakIssueNotFound[MAXCONTROLLERS];   // Flag to see if there's no known issues for the given controller pak
-u8 sControllerPakFatalErrorFound[MAXCONTROLLERS]; // Flag to see if there's a fatal error for the given controller pak
-u8 sControllerPakNoFreeSpace[MAXCONTROLLERS];     // Flag to see if there's no free space for the given controller pak
-u8 sControllerPakBadData[MAXCONTROLLERS];         // Flag to see if there's bad data for the given controller pak
+s32 sControllerPakNotesFree[MAXCONTROLLERS];      // Number notes free in each controller memory pak
+u8 sControllerPakIssueNotFound[MAXCONTROLLERS];   // Bool to see if there's no known issues for the given controller pak
+u8 sControllerPakFatalErrorFound[MAXCONTROLLERS]; // Bool to see if there's a fatal error for the given controller pak
+u8 sControllerPakNoFreeSpace[MAXCONTROLLERS];     // Bool to see if there's no free space for the given controller pak
+u8 sControllerPakBadData[MAXCONTROLLERS];         // Bool to see if there's bad data for the given controller pak
 char *gMenuOptionText[8];                         // Menu Text
-u8 sControllerPakDataPresent[MAXCONTROLLERS];     // Flag to see if there's data present for the given controller pak?
+u8 sControllerPakDataPresent[MAXCONTROLLERS];     // Bool to see if there's data present for the given controller pak
 char *D_80126A64;
 s32 gMenuOption;
 s32 gSaveMenuRumbleNagSet;
@@ -217,13 +217,13 @@ s32 gPostRace1Player;
 s32 gPostRaceTimer;
 s32 gTracksSaveGhost;
 UNUSED s32 D_80126A9C;
-char *gBootPakData[16];                         // Text to render
-u8 *sCurrentControllerPakAllFileNames[16];      // Every file name on the controller pak
-u8 *sCurrentControllerPakAllFileExtensions[16]; // Every file extension on the controller pak
-u8 sCurrentControllerPakAllFileTypes[16];       // File type of all files on controller pak
-u32 sCurrentControllerPakAllFileSizes[16];      // File size of all files on controller pak
-u32 sCurrentControllerPakFreeSpace;             // Space available in current controller pak
-s32 sControllerPakMenuNumberOfRows;             // 8 if PAL, 7 if not
+char *gBootPakData[MAX_CPAK_FILES];                           // Text to render
+char *sCurrentControllerPakAllFileNames[MAX_CPAK_FILES];      // Every file name on the controller pak
+char *sCurrentControllerPakAllFileExtensions[MAX_CPAK_FILES]; // Every file extension on the controller pak
+u8 sCurrentControllerPakAllFileTypes[MAX_CPAK_FILES];         // File type of all files on controller pak
+u32 sCurrentControllerPakNumberOfPages[MAX_CPAK_FILES];       // Number of pages for each file on controller pak
+u32 sCurrentControllerPakFreePages;                           // Pages available in current controller pak
+s32 sControllerPakMenuNumberOfRows;                           // 8 if PAL, 7 if not
 TextureHeader *gMenuMosaic1;
 TextureHeader *gMenuMosaic2;
 s32 gMenuMosaicShift;
@@ -2785,90 +2785,92 @@ void init_title_screen_variables(void) {
 }
 
 #ifdef NON_MATCHING
-void func_80083098(f32 arg0) {
+// Single regswap diff
+void func_80083098(f32 updateRateF) {
     f32 temp;
     f32 temp2;
     s32 didUpdate;
     s32 xPos;
     s32 yPos;
-    s32 i;
-    unk800DF83C *introCharData;
-    char *text;
+    s32 i; // s1
     s32 j;
+    char *text;
+    unk800DF83C *introCharData;
 
     didUpdate = FALSE;
     xPos = 0;
     yPos = 0;
     text = NULL;
-    if (gOpeningNameID < 10) {
-        introCharData = &gTitleCinematicText[gOpeningNameID];
-        D_801268D8 += arg0;
-        set_text_font(ASSET_FONTS_BIGFONT);
-        set_text_background_colour(0, 0, 0, 0);
-        i = 0;
-        while (i < gTitleCinematicTextColourCount) {
-            // set_text_colour(gTitleCinematicTextColours[D_80126878[i].colourIndex].red,
-            // gTitleCinematicTextColours[D_80126878[i].colourIndex].green,
-            // gTitleCinematicTextColours[D_80126878[i].colourIndex].blue,
-            // gTitleCinematicTextColours[D_80126878[i].colourIndex].alpha,
-            // gTitleCinematicTextColours[D_80126878[i].colourIndex].opacity);
-            j = D_80126878[i].colourIndex; // This seems super fake, but I can't do any better.
-            set_text_colour(gTitleCinematicTextColours[j].red, gTitleCinematicTextColours[j].green,
-                            gTitleCinematicTextColours[j].blue, gTitleCinematicTextColours[j].alpha,
-                            gTitleCinematicTextColours[j].opacity);
-            draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
-            D_80126878[i].colourIndex++;
-            if (D_80126878[i].colourIndex >= 4) {
-                j = i;
-                gTitleCinematicTextColourCount--;
-                while (j < gTitleCinematicTextColourCount) {
-                    D_80126878[j].text = D_80126878[j + 1].text;
-                    D_80126878[j].x = D_80126878[j + 1].x;
-                    D_80126878[j].y = D_80126878[j + 1].y;
-                    D_80126878[j].colourIndex = D_80126878[j + 1].colourIndex;
-                    j++;
-                }
-            } else {
-                i++;
+
+    if (gOpeningNameID >= 10) {
+        return;
+    }
+
+    introCharData = &gTitleCinematicText[gOpeningNameID];
+    D_801268D8 += updateRateF;
+    set_text_font(ASSET_FONTS_BIGFONT);
+    set_text_background_colour(0, 0, 0, 0);
+    i = 0;
+    while (i < gTitleCinematicTextColourCount) {
+        j = D_80126878[i].colourIndex;
+        set_text_colour(gTitleCinematicTextColours[j].red, gTitleCinematicTextColours[j].green,
+                        gTitleCinematicTextColours[j].blue, gTitleCinematicTextColours[j].alpha,
+                        gTitleCinematicTextColours[j].opacity);
+        draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
+        D_80126878[i].colourIndex++;
+        if (D_80126878[i].colourIndex >= 4) {
+            gTitleCinematicTextColourCount--;
+            for (j = i; j < gTitleCinematicTextColourCount; j++) {
+                D_80126878[j].text = D_80126878[j + 1].text;
+                D_80126878[j].x = D_80126878[j + 1].x;
+                D_80126878[j].y = D_80126878[j + 1].y;
+                D_80126878[j].colourIndex = D_80126878[j + 1].colourIndex;
             }
-        }
-        if (introCharData->unk4 <= D_801268D8) {
-            if (D_801268D8 < introCharData->unk8) {
-                temp = (D_801268D8 - introCharData->unk4);
-                temp2 = (introCharData->unk8 - introCharData->unk4);
-                xPos = (introCharData->unk14 + (((introCharData->unk1C - introCharData->unk14) * temp) / temp2));
-                yPos = (introCharData->unk18 + (((introCharData->unk20 - introCharData->unk18) * temp) / temp2));
-                text = introCharData->unk0;
-                didUpdate = TRUE;
-            } else if (D_801268D8 <= introCharData->unkC) {
-                xPos = introCharData->unk1C;
-                yPos = introCharData->unk20;
-                text = introCharData->unk0;
-                didUpdate = TRUE;
-            } else if (D_801268D8 < introCharData->unk10) {
-                temp = (D_801268D8 - introCharData->unkC);
-                temp2 = (introCharData->unk10 - introCharData->unkC);
-                xPos = (introCharData->unk1C + (((introCharData->unk24 - introCharData->unk1C) * temp) / temp2));
-                yPos = (introCharData->unk20 + (((introCharData->unk28 - introCharData->unk20) * temp) / temp2));
-                text = introCharData->unk0;
-                didUpdate = TRUE;
-            } else {
-                if (!gTitleCinematicTextColours[0].red) {} // Fake
-                gOpeningNameID++;
-            }
-        }
-        if (didUpdate) {
-            if (gTitleCinematicTextColourCount < 4) {
-                D_80126878[gTitleCinematicTextColourCount].colourIndex = 0;
-                D_80126878[gTitleCinematicTextColourCount].text = text;
-                D_80126878[gTitleCinematicTextColourCount].x = xPos;
-                D_80126878[gTitleCinematicTextColourCount].y = yPos;
-                gTitleCinematicTextColourCount++;
-            }
-            set_text_colour(255, 255, 255, 0, 255);
-            draw_text(&sMenuCurrDisplayList, xPos, yPos, text, ALIGN_MIDDLE_CENTER);
+        } else {
+            i++;
         }
     }
+
+    if (introCharData->unk4 <= D_801268D8) {
+        if (D_801268D8 < introCharData->unk8) {
+            temp = (D_801268D8 - introCharData->unk4);
+            temp2 = (introCharData->unk8 - introCharData->unk4);
+            xPos = (introCharData->unk14 + (((introCharData->unk1C - introCharData->unk14) * temp) / temp2));
+            yPos = (introCharData->unk18 + (((introCharData->unk20 - introCharData->unk18) * temp) / temp2));
+            text = introCharData->unk0;
+            didUpdate = TRUE;
+        } else if (D_801268D8 <= introCharData->unkC) {
+            xPos = introCharData->unk1C;
+            yPos = introCharData->unk20;
+            text = introCharData->unk0;
+            didUpdate = TRUE;
+        } else if (D_801268D8 < introCharData->unk10) {
+            temp = (D_801268D8 - introCharData->unkC);
+            temp2 = (introCharData->unk10 - introCharData->unkC);
+            xPos = (introCharData->unk1C + (((introCharData->unk24 - introCharData->unk1C) * temp) / temp2));
+            yPos = (introCharData->unk20 + (((introCharData->unk28 - introCharData->unk20) * temp) / temp2));
+            text = introCharData->unk0;
+            didUpdate = TRUE;
+        } else {
+            gOpeningNameID++;
+        }
+    }
+
+    if (gTitleCinematicTextColours) {}
+
+    if (!didUpdate) {
+        return;
+    }
+
+    if (gTitleCinematicTextColourCount < 4) {
+        D_80126878[gTitleCinematicTextColourCount].colourIndex = 0;
+        D_80126878[gTitleCinematicTextColourCount].text = text;
+        D_80126878[gTitleCinematicTextColourCount].x = xPos;
+        D_80126878[gTitleCinematicTextColourCount].y = yPos;
+        gTitleCinematicTextColourCount++;
+    }
+    set_text_colour(255, 255, 255, 0, 255);
+    draw_text(&sMenuCurrDisplayList, xPos, yPos, text, ALIGN_MIDDLE_CENTER);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/menu/func_80083098.s")
@@ -4004,16 +4006,16 @@ SIDeviceStatus savemenu_load_sources(void) {
             gSaveMenuRumbleConnected = FALSE;
 
             do {
-                result = get_controller_pak_file_list(0, 16, fileNames, fileExts, fileSizes, fileTypes);
+                result = get_controller_pak_file_list(0, MAX_CPAK_FILES, fileNames, fileExts, fileSizes, fileTypes);
                 temp = result & 0xFF; // strip the controller index from the result to just get the SI Device Status
                 numAttempts++;
-            } while ((temp == CONTROLLER_PAK_CHANGED) && (numAttempts < 3));
+            } while (temp == CONTROLLER_PAK_CHANGED && numAttempts < 3);
 
             if (result == CONTROLLER_PAK_GOOD) {
-                for (fileIndex = 0; fileIndex < 16; fileIndex++) {
+                for (fileIndex = 0; fileIndex < MAX_CPAK_FILES; fileIndex++) {
                     if ((fileTypes[fileIndex] >= SAVE_FILE_TYPE_CPAK_SAVE) &&
                         (fileTypes[fileIndex] <= SAVE_FILE_TYPE_CPAK_OTHER)) {
-                        (*sControllerPakNotesFree)--;
+                        sControllerPakNotesFree[0]--;
                         gSaveMenuFilesSource[gSaveMenuOptionCountUpper].saveFileType = fileTypes[fileIndex];
                         gSaveMenuFilesSource[gSaveMenuOptionCountUpper].controllerIndex = 0;
                         gSaveMenuFilesSource[gSaveMenuOptionCountUpper].saveFileNumber = fileIndex;
@@ -4677,147 +4679,126 @@ void savemenu_free(void) {
     mempool_free((void *) D_80126A64);
 }
 
-#ifdef NON_EQUIVALENT
-// Nearly complete
-SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
+SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
+    s32 j;
+    s32 k;
+    s32 i;
+    UNUSED s32 pad;
+    s32 paksWithStatusSuccess;
     s32 ret;
-    s32 j = 0;
-    s32 k = 0;
-    s32 i = 0;
-    s32 controllerIndexVal;
-    s32 pakStatusSuccess;
-    s32 pakStatusError3;
-    s32 pakStatusError9;
-    s32 bytesFree;
+    u32 bytesFree;
     s32 notesFree;
-    s32 pakStatusErrorNoFreeSpace;
-    s32 pakStatus;
+    s32 paksWithNoFreeSpace;
+    s32 paksWithFatalErrors;
+    s32 paksWithBadData;
 
-    pakStatusSuccess = 0;
-    pakStatusError3 = 0;
-    pakStatusError9 = 0;
-    pakStatusErrorNoFreeSpace = 0;
-    // Is this really <= 0?
+    paksWithFatalErrors = 0;
+    paksWithNoFreeSpace = 0;
+    paksWithBadData = 0;
+    paksWithStatusSuccess = 0;
+
+    // This has been hard limited to just the first controller pak, but can easily be modified to check the rest with i
+    // <= MAXCONTROLLERS
     for (i = 0; i <= 0; i++) {
-        // sControllerPakIssueNotFound[i] = 0;
-        sControllerPakFatalErrorFound[i] = 0;
-        sControllerPakNoFreeSpace[i] = 0;
-        sControllerPakBadData[i] = 0;
+        sControllerPakFatalErrorFound[i] = FALSE;
+        sControllerPakNoFreeSpace[i] = FALSE;
+        sControllerPakBadData[i] = FALSE;
         ret = get_free_space(i, &bytesFree, &notesFree);
-        pakStatus = ret & 0xFF; // Upper 2 bits are controller index
         if (ret == CONTROLLER_PAK_GOOD) {
-            sControllerPakIssueNotFound[i] = 1;
+            sControllerPakIssueNotFound[i] = TRUE;
             if (bytesFree == 0 || notesFree == 0) {
-                sControllerPakNoFreeSpace[i] = 1;
-                if (sControllerPakDataPresent[i] == 0) {
-                    pakStatusErrorNoFreeSpace++;
+                sControllerPakNoFreeSpace[i] = TRUE;
+                if (sControllerPakDataPresent[i] == FALSE) {
+                    paksWithNoFreeSpace++;
                 }
             }
-            pakStatusSuccess++;
+            paksWithStatusSuccess++;
         } else {
-            sControllerPakIssueNotFound[i] = 0;
-            // Bad data
-            if (pakStatus == CONTROLLER_PAK_BAD_DATA) {
-                sControllerPakBadData[i] = 1;
-                pakStatusError9++;
+            ret &= 0xFF; // Upper 2 bits are controller index
+            sControllerPakIssueNotFound[i] = FALSE;
+            if (ret == CONTROLLER_PAK_BAD_DATA) {
+                sControllerPakBadData[i] = TRUE;
+                paksWithBadData++;
             }
-            // Error inconsistent
-            if (pakStatus == CONTROLLER_PAK_INCONSISTENT) {
-                // Repair file system
+            if (ret == CONTROLLER_PAK_INCONSISTENT) {
                 repair_controller_pak(i);
             }
-            // fatal error
-            if (pakStatus == CONTROLLER_PAK_WITH_BAD_ID) {
-                sControllerPakFatalErrorFound[i] = 1;
-                pakStatusError3++;
+            if (ret == CONTROLLER_PAK_WITH_BAD_ID) {
+                sControllerPakFatalErrorFound[i] = TRUE;
+                paksWithFatalErrors++;
             }
         }
     }
-    if ((pakStatusSuccess == 0) || (pakStatusError3 != 0) || (pakStatusErrorNoFreeSpace != 0) ||
-        (pakStatusError9 != 0)) {
-        return CONTROLLER_PAK_NOT_FOUND; // Return unsuccessfully?
+
+    if (paksWithStatusSuccess == 0 || paksWithFatalErrors != 0 || paksWithNoFreeSpace != 0 || paksWithBadData != 0) {
+        return CONTROLLER_PAK_NOT_FOUND; // Return unsuccessfully
     }
 
-    controllerIndexVal = *controllerIndex;
-    if (controllerIndexVal < 0) {
-        i = controllerIndexVal;
+    // Loop through the cpaks to find the next one with no issues found.
+    i = *controllerIndex;
+    if (i < 0) {
+        //!@bug If i == -1, and sControllerPakIssueNotFound[0] is FALSE, then this will get stuck in an infinite loop.
+        // This is saved by the fact that this code can't be reached when cpak 0 has an error as it will return above.
         do {
-            controllerIndexVal++;
             i++;
-            if (controllerIndexVal > 0) {
-                controllerIndexVal--;
+            if (i > 0) {
                 i--;
             }
-        } while (sControllerPakIssueNotFound[i] == 0);
-    } else if (sControllerPakIssueNotFound[*controllerIndex] == 0 || arg1 > 0) {
-        i = controllerIndexVal;
+        } while (sControllerPakIssueNotFound[i] == FALSE);
+    } else if (sControllerPakIssueNotFound[*controllerIndex] == FALSE || xAxisDirection > 0) {
         do {
-            controllerIndexVal++;
             i++;
-            if (controllerIndexVal > 0) {
-                controllerIndexVal--;
+            if (i > 0) {
                 i--;
             }
-        } while (sControllerPakIssueNotFound[i] == 0);
-    } else if (arg1 < 0) {
-        i = controllerIndexVal;
+        } while (sControllerPakIssueNotFound[i] == FALSE);
+    } else if (xAxisDirection < 0) {
         do {
-            controllerIndexVal--;
             i--;
-            if (controllerIndexVal < 0) {
-                ;
-                controllerIndexVal++;
+            if (i < 0) {
                 i++;
             }
-        } while (sControllerPakIssueNotFound[i] == 0);
+        } while (sControllerPakIssueNotFound[i] == FALSE);
     }
 
-    *controllerIndex = controllerIndexVal;
-    ret = get_controller_pak_file_list(controllerIndexVal, 16, &sCurrentControllerPakAllFileNames,
-                                       &sCurrentControllerPakAllFileExtensions, &sCurrentControllerPakAllFileSizes,
-                                       &sCurrentControllerPakAllFileTypes);
+    // Set the controller index to the next cpak with no issue found.
+    *controllerIndex = i;
+    ret = get_controller_pak_file_list(*controllerIndex, MAX_CPAK_FILES, sCurrentControllerPakAllFileNames,
+                                       sCurrentControllerPakAllFileExtensions, sCurrentControllerPakNumberOfPages,
+                                       sCurrentControllerPakAllFileTypes);
 
     if (ret == CONTROLLER_PAK_GOOD) {
-        i = 0;
-        j = 0;
-        do {
-            sCurrentControllerPakAllFileSizes[i] = sCurrentControllerPakAllFileSizes[i] / 256;
-            if (sCurrentControllerPakAllFileNames[i] != 0) {
+        for (i = 0; i < MAX_CPAK_FILES; i++) {
+            sCurrentControllerPakNumberOfPages[i] /= (PFS_ONE_PAGE * BLOCKSIZE);
+            j = 0;
+            if (sCurrentControllerPakAllFileNames[i] != NULL) {
                 k = 0;
-                for (; sCurrentControllerPakAllFileNames[i][k] != 0; j++, k++) {
-                    gBootPakData[i][j] = sCurrentControllerPakAllFileNames[i][k];
+                while (sCurrentControllerPakAllFileNames[i][k] != '\0') {
+                    gBootPakData[i][j++] = sCurrentControllerPakAllFileNames[i][k++];
                 }
 
-                if ((sCurrentControllerPakAllFileExtensions[i] != 0) &&
-                    (*sCurrentControllerPakAllFileExtensions[i] != 0)) {
-                    gBootPakData[i][j] = '.';
-                    j++;
+                if (sCurrentControllerPakAllFileExtensions[i] != NULL &&
+                    sCurrentControllerPakAllFileExtensions[i][0] != '\0') {
+                    gBootPakData[i][j++] = '.';
                     k = 0;
-                    for (; sCurrentControllerPakAllFileExtensions[i][k] != 0; j++, k++) {
-                        gBootPakData[i][j] = sCurrentControllerPakAllFileExtensions[i][k];
+                    while (sCurrentControllerPakAllFileExtensions[i][k] != '\0') {
+                        gBootPakData[i][j++] = sCurrentControllerPakAllFileExtensions[i][k++];
                     }
                 }
             }
             if (j == 0) {
-                gBootPakData[i][j] = '-';
-                j++;
+                gBootPakData[i][j++] = '-';
             }
-            i++;
-            gBootPakData[i - 1][j] = 0;
-        } while (&gBootPakData != &sCurrentControllerPakAllFileNames);
+            gBootPakData[i][j] = '\0';
+        }
 
-        cpak_free_files();                                                       // Free gPakFileList from memory
-        get_free_space(*controllerIndex, &sCurrentControllerPakFreeSpace, NULL); // Get Available Space in Controller
-                                                                                 // Pak
-        sCurrentControllerPakFreeSpace = sCurrentControllerPakFreeSpace / 256;   // Bytes
-        ret = pakStatus;                                                         // Really?
+        cpak_free_files();
+        get_free_space(*controllerIndex, &sCurrentControllerPakFreePages, NULL);
+        sCurrentControllerPakFreePages /= (PFS_ONE_PAGE * BLOCKSIZE);
     }
 
     return ret;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80087F14.s")
-#endif
 
 /**
  * Sets and returns an error code if any controller paks have an error.
@@ -4976,12 +4957,13 @@ void bootscreen_init_cpak(void) {
     gBootPakData[0] = mempool_alloc_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
 
     // Fills in the table.
-    for (i = 1; i < 16; i++) {
+    for (i = 1; i < ARRAY_COUNT(gBootPakData); i++) {
         gBootPakData[i] = (char *) (((u32) gBootPakData[0]) + (i * 0x20));
     }
 
-    for (i = 0; i < 1; i++) {
-        sControllerPakDataPresent[i] = 0;
+    // Only check cpak 0
+    for (i = 0; i <= 0; i++) {
+        sControllerPakDataPresent[i] = FALSE;
     }
 
     gCpakWriteTimer = 0;
@@ -5023,7 +5005,6 @@ void pakmenu_render(UNUSED s32 updateRate) {
     char *pagesText;
     s32 numberOfPages;
     s32 yPos = 0;
-    static const char sTilde[] = "~";
 
     set_text_background_colour(0, 0, 0, 0);
     highlight = gOptionBlinkTimer << 3;
@@ -5055,9 +5036,9 @@ void pakmenu_render(UNUSED s32 updateRate) {
         set_dialogue_font(6, ASSET_FONTS_FUNFONT);
         set_current_text_colour(6, 255, 255, 255, 0, 255);
         set_current_text_background_colour(6, 0, 0, 0, 0);
-        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[86 + gMenuOption], 1,
-                             HORZ_ALIGN_CENTER); // ASSET_MENU_TEXT_CONTPAK1 - CONTROLLER PAK 1 / 2 / 3 / 4
-        render_dialogue_text(6, POS_CENTRED, 16, gMenuText[ASSET_MENU_TEXT_FREEPAGESX], sCurrentControllerPakFreeSpace,
+        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[ASSET_MENU_TEXT_CONTPAK1 + gMenuOption], 1,
+                             HORZ_ALIGN_CENTER); // CONTROLLER PAK 1 / 2 / 3 / 4
+        render_dialogue_text(6, POS_CENTRED, 16, gMenuText[ASSET_MENU_TEXT_FREEPAGESX], sCurrentControllerPakFreePages,
                              HORZ_ALIGN_CENTER); // FREE PAGES: ~
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
 
@@ -5085,10 +5066,9 @@ void pakmenu_render(UNUSED s32 updateRate) {
                     set_current_dialogue_background_colour(6, 224, 224, 48, 224);
                 }
                 set_current_text_colour(6, 16, 16, 160, 255, 255);
-                noteText = (char *) &sTilde;
-                pagesText = (char *) &sTilde;
+                pagesText = noteText = "~";
                 fileNameText = gBootPakData[gOpacityDecayTimer + i];
-                numberOfPages = sCurrentControllerPakAllFileSizes[gOpacityDecayTimer + i];
+                numberOfPages = sCurrentControllerPakNumberOfPages[gOpacityDecayTimer + i];
             }
             render_dialogue_text(6, 26, 2, noteText, gOpacityDecayTimer + i + 1, HORZ_ALIGN_CENTER);
             render_dialogue_text(6, 56, 2, fileNameText, 1, HORZ_ALIGN_LEFT);
@@ -6137,9 +6117,9 @@ void menu_character_select_init(void) {
 /**
  * Draws the "Player Select" and "OK?" text in the character select menu.
  */
-void charselect_render_text(UNUSED s32 arg0) {
+void charselect_render_text(UNUSED s32 updateRate) {
     s32 yPos;
-    if (gMenuDelay >= -0x16 && gMenuDelay < 0x17) {
+    if (gMenuDelay > -23 && gMenuDelay < 23) {
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_background_colour(0, 0, 0, 0);
         set_text_colour(0, 0, 0, 255, 128);
@@ -11437,12 +11417,12 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                             temp7 = settings->racers[gRankingsPlayerIDs[i]].character;
                             if (temp6 == 0) {
                                 sp34 = i;
-                                D_80126438[temp6++] = temp7;
+                                gRankingsPortraitIDs[temp6++] = temp7;
                                 continue;
                             }
                             if (settings->racers[gRankingsPlayerIDs[i]].trophy_points ==
                                 settings->racers[gRankingsPlayerIDs[sp34]].trophy_points) {
-                                D_80126438[temp6++] = temp7;
+                                gRankingsPortraitIDs[temp6++] = temp7;
                             }
                         }
                     }
@@ -11450,7 +11430,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                     if (gNumberOfActivePlayers == 1 && !is_in_two_player_adventure()) {
                         temp6 = 0;
                     }
-                    D_80126438[temp6] = -1;
+                    gRankingsPortraitIDs[temp6] = -1;
                     if (gIsInTracksMode == 1) {
                         if (sp34 >= 3) {
                             menu_init(MENU_TRACK_SELECT);
@@ -11479,7 +11459,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                     if (sp34 < 3) {
                         params = (s8 *) get_misc_asset(ASSET_MISC_CINEMATIC_TROPHY);
                         temp0 = ((gTrophyRaceWorldId * 3) + sp34) - 3;
-                        cinematic_start(params, temp0, ret, 0, 0, D_80126438);
+                        cinematic_start(params, temp0, ret, 0, 0, gRankingsPortraitIDs);
                         ret = MENU_RESULT_CONTINUE;
                         menu_init(MENU_NEWGAME_CINEMATIC);
                     }
