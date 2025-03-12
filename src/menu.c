@@ -2785,90 +2785,92 @@ void init_title_screen_variables(void) {
 }
 
 #ifdef NON_MATCHING
-void func_80083098(f32 arg0) {
+// Single regswap diff
+void func_80083098(f32 updateRateF) {
     f32 temp;
     f32 temp2;
     s32 didUpdate;
     s32 xPos;
     s32 yPos;
-    s32 i;
-    unk800DF83C *introCharData;
-    char *text;
+    s32 i; // s1
     s32 j;
+    s32 text;
+    unk800DF83C *introCharData;
 
     didUpdate = FALSE;
     xPos = 0;
     yPos = 0;
     text = NULL;
-    if (gOpeningNameID < 10) {
-        introCharData = &gTitleCinematicText[gOpeningNameID];
-        D_801268D8 += arg0;
-        set_text_font(ASSET_FONTS_BIGFONT);
-        set_text_background_colour(0, 0, 0, 0);
-        i = 0;
-        while (i < gTitleCinematicTextColourCount) {
-            // set_text_colour(gTitleCinematicTextColours[D_80126878[i].colourIndex].red,
-            // gTitleCinematicTextColours[D_80126878[i].colourIndex].green,
-            // gTitleCinematicTextColours[D_80126878[i].colourIndex].blue,
-            // gTitleCinematicTextColours[D_80126878[i].colourIndex].alpha,
-            // gTitleCinematicTextColours[D_80126878[i].colourIndex].opacity);
-            j = D_80126878[i].colourIndex; // This seems super fake, but I can't do any better.
-            set_text_colour(gTitleCinematicTextColours[j].red, gTitleCinematicTextColours[j].green,
-                            gTitleCinematicTextColours[j].blue, gTitleCinematicTextColours[j].alpha,
-                            gTitleCinematicTextColours[j].opacity);
-            draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
-            D_80126878[i].colourIndex++;
-            if (D_80126878[i].colourIndex >= 4) {
-                j = i;
-                gTitleCinematicTextColourCount--;
-                while (j < gTitleCinematicTextColourCount) {
-                    D_80126878[j].text = D_80126878[j + 1].text;
-                    D_80126878[j].x = D_80126878[j + 1].x;
-                    D_80126878[j].y = D_80126878[j + 1].y;
-                    D_80126878[j].colourIndex = D_80126878[j + 1].colourIndex;
-                    j++;
-                }
-            } else {
-                i++;
+
+    if (gOpeningNameID >= 10) {
+        return;
+    }
+
+    introCharData = &gTitleCinematicText[gOpeningNameID];
+    D_801268D8 += updateRateF;
+    set_text_font(ASSET_FONTS_BIGFONT);
+    set_text_background_colour(0, 0, 0, 0);
+    i = 0;
+    while (i < gTitleCinematicTextColourCount) {
+        j = D_80126878[i].colourIndex;
+        set_text_colour(gTitleCinematicTextColours[j].red, gTitleCinematicTextColours[j].green,
+                        gTitleCinematicTextColours[j].blue, gTitleCinematicTextColours[j].alpha,
+                        gTitleCinematicTextColours[j].opacity);
+        draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
+        D_80126878[i].colourIndex++;
+        if (D_80126878[i].colourIndex >= 4) {
+            gTitleCinematicTextColourCount--;
+            for (j = i; j < gTitleCinematicTextColourCount; j++) {
+                D_80126878[j].text = D_80126878[j + 1].text;
+                D_80126878[j].x = D_80126878[j + 1].x;
+                D_80126878[j].y = D_80126878[j + 1].y;
+                D_80126878[j].colourIndex = D_80126878[j + 1].colourIndex;
             }
-        }
-        if (introCharData->unk4 <= D_801268D8) {
-            if (D_801268D8 < introCharData->unk8) {
-                temp = (D_801268D8 - introCharData->unk4);
-                temp2 = (introCharData->unk8 - introCharData->unk4);
-                xPos = (introCharData->unk14 + (((introCharData->unk1C - introCharData->unk14) * temp) / temp2));
-                yPos = (introCharData->unk18 + (((introCharData->unk20 - introCharData->unk18) * temp) / temp2));
-                text = introCharData->unk0;
-                didUpdate = TRUE;
-            } else if (D_801268D8 <= introCharData->unkC) {
-                xPos = introCharData->unk1C;
-                yPos = introCharData->unk20;
-                text = introCharData->unk0;
-                didUpdate = TRUE;
-            } else if (D_801268D8 < introCharData->unk10) {
-                temp = (D_801268D8 - introCharData->unkC);
-                temp2 = (introCharData->unk10 - introCharData->unkC);
-                xPos = (introCharData->unk1C + (((introCharData->unk24 - introCharData->unk1C) * temp) / temp2));
-                yPos = (introCharData->unk20 + (((introCharData->unk28 - introCharData->unk20) * temp) / temp2));
-                text = introCharData->unk0;
-                didUpdate = TRUE;
-            } else {
-                if (!gTitleCinematicTextColours[0].red) {} // Fake
-                gOpeningNameID++;
-            }
-        }
-        if (didUpdate) {
-            if (gTitleCinematicTextColourCount < 4) {
-                D_80126878[gTitleCinematicTextColourCount].colourIndex = 0;
-                D_80126878[gTitleCinematicTextColourCount].text = text;
-                D_80126878[gTitleCinematicTextColourCount].x = xPos;
-                D_80126878[gTitleCinematicTextColourCount].y = yPos;
-                gTitleCinematicTextColourCount++;
-            }
-            set_text_colour(255, 255, 255, 0, 255);
-            draw_text(&sMenuCurrDisplayList, xPos, yPos, text, ALIGN_MIDDLE_CENTER);
+        } else {
+            i++;
         }
     }
+
+    if (introCharData->unk4 <= D_801268D8) {
+        if (D_801268D8 < introCharData->unk8) {
+            temp = (D_801268D8 - introCharData->unk4);
+            temp2 = (introCharData->unk8 - introCharData->unk4);
+            xPos = (introCharData->unk14 + (((introCharData->unk1C - introCharData->unk14) * temp) / temp2));
+            yPos = (introCharData->unk18 + (((introCharData->unk20 - introCharData->unk18) * temp) / temp2));
+            text = introCharData->unk0;
+            didUpdate = TRUE;
+        } else if (D_801268D8 <= introCharData->unkC) {
+            xPos = introCharData->unk1C;
+            yPos = introCharData->unk20;
+            text = introCharData->unk0;
+            didUpdate = TRUE;
+        } else if (D_801268D8 < introCharData->unk10) {
+            temp = (D_801268D8 - introCharData->unkC);
+            temp2 = (introCharData->unk10 - introCharData->unkC);
+            xPos = (introCharData->unk1C + (((introCharData->unk24 - introCharData->unk1C) * temp) / temp2));
+            yPos = (introCharData->unk20 + (((introCharData->unk28 - introCharData->unk20) * temp) / temp2));
+            text = introCharData->unk0;
+            didUpdate = TRUE;
+        } else {
+            gOpeningNameID++;
+        }
+    }
+
+    if (gTitleCinematicTextColours) {}
+
+    if (!didUpdate) {
+        return;
+    }
+
+    if (gTitleCinematicTextColourCount < 4) {
+        D_80126878[gTitleCinematicTextColourCount].colourIndex = 0;
+        D_80126878[gTitleCinematicTextColourCount].text = text;
+        D_80126878[gTitleCinematicTextColourCount].x = xPos;
+        D_80126878[gTitleCinematicTextColourCount].y = yPos;
+        gTitleCinematicTextColourCount++;
+    }
+    set_text_colour(255, 255, 255, 0, 255);
+    draw_text(&sMenuCurrDisplayList, xPos, yPos, text, ALIGN_MIDDLE_CENTER);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/menu/func_80083098.s")
