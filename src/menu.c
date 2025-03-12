@@ -221,8 +221,8 @@ char *gBootPakData[MAX_CPAK_FILES];                           // Text to render
 char *sCurrentControllerPakAllFileNames[MAX_CPAK_FILES];      // Every file name on the controller pak
 char *sCurrentControllerPakAllFileExtensions[MAX_CPAK_FILES]; // Every file extension on the controller pak
 u8 sCurrentControllerPakAllFileTypes[MAX_CPAK_FILES];         // File type of all files on controller pak
-u32 sCurrentControllerPakAllFileSizes[MAX_CPAK_FILES];        // File size of all files on controller pak
-u32 sCurrentControllerPakFreeSpace;                           // Space available in current controller pak
+u32 sCurrentControllerPakNumberOfPages[MAX_CPAK_FILES];       // Number of pages for each file on controller pak
+u32 sCurrentControllerPakFreePages;                           // Pages available in current controller pak
 s32 sControllerPakMenuNumberOfRows;                           // 8 if PAL, 7 if not
 TextureHeader *gMenuMosaic1;
 TextureHeader *gMenuMosaic2;
@@ -4764,12 +4764,12 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
     // Set the controller index to the next cpak with no issue found.
     *controllerIndex = i;
     ret = get_controller_pak_file_list(*controllerIndex, MAX_CPAK_FILES, sCurrentControllerPakAllFileNames,
-                                       sCurrentControllerPakAllFileExtensions, sCurrentControllerPakAllFileSizes,
+                                       sCurrentControllerPakAllFileExtensions, sCurrentControllerPakNumberOfPages,
                                        sCurrentControllerPakAllFileTypes);
 
     if (ret == CONTROLLER_PAK_GOOD) {
         for (i = 0; i < MAX_CPAK_FILES; i++) {
-            sCurrentControllerPakAllFileSizes[i] /= 256;
+            sCurrentControllerPakNumberOfPages[i] /= (PFS_ONE_PAGE * BLOCKSIZE);
             j = 0;
             if (sCurrentControllerPakAllFileNames[i] != NULL) {
                 k = 0;
@@ -4793,8 +4793,8 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
         }
 
         cpak_free_files();
-        get_free_space(*controllerIndex, &sCurrentControllerPakFreeSpace, NULL);
-        sCurrentControllerPakFreeSpace /= 256;
+        get_free_space(*controllerIndex, &sCurrentControllerPakFreePages, NULL);
+        sCurrentControllerPakFreePages /= (PFS_ONE_PAGE * BLOCKSIZE);
     }
 
     return ret;
@@ -5039,7 +5039,7 @@ void pakmenu_render(UNUSED s32 updateRate) {
         set_current_text_background_colour(6, 0, 0, 0, 0);
         render_dialogue_text(6, POS_CENTRED, 2, gMenuText[86 + gMenuOption], 1,
                              HORZ_ALIGN_CENTER); // ASSET_MENU_TEXT_CONTPAK1 - CONTROLLER PAK 1 / 2 / 3 / 4
-        render_dialogue_text(6, POS_CENTRED, 16, gMenuText[ASSET_MENU_TEXT_FREEPAGESX], sCurrentControllerPakFreeSpace,
+        render_dialogue_text(6, POS_CENTRED, 16, gMenuText[ASSET_MENU_TEXT_FREEPAGESX], sCurrentControllerPakFreePages,
                              HORZ_ALIGN_CENTER); // FREE PAGES: ~
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
 
@@ -5070,7 +5070,7 @@ void pakmenu_render(UNUSED s32 updateRate) {
                 noteText = (char *) &sTilde;
                 pagesText = (char *) &sTilde;
                 fileNameText = gBootPakData[gOpacityDecayTimer + i];
-                numberOfPages = sCurrentControllerPakAllFileSizes[gOpacityDecayTimer + i];
+                numberOfPages = sCurrentControllerPakNumberOfPages[gOpacityDecayTimer + i];
             }
             render_dialogue_text(6, 26, 2, noteText, gOpacityDecayTimer + i + 1, HORZ_ALIGN_CENTER);
             render_dialogue_text(6, 56, 2, fileNameText, 1, HORZ_ALIGN_LEFT);
