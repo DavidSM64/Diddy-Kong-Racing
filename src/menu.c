@@ -4768,29 +4768,26 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
                                        sCurrentControllerPakAllFileTypes);
 
     if (ret == CONTROLLER_PAK_GOOD) {
-        j = 0;
         for (i = 0; i < MAX_CPAK_FILES; i++) {
             sCurrentControllerPakAllFileSizes[i] /= 256;
             j = 0;
             if (sCurrentControllerPakAllFileNames[i] != NULL) {
                 k = 0;
-                for (; sCurrentControllerPakAllFileNames[i][k] != '\0'; j++, k++) {
-                    gBootPakData[i][j] = sCurrentControllerPakAllFileNames[i][k];
+                while (sCurrentControllerPakAllFileNames[i][k] != '\0') {
+                    gBootPakData[i][j++] = sCurrentControllerPakAllFileNames[i][k++];
                 }
 
-                if ((sCurrentControllerPakAllFileExtensions[i] != NULL) &&
-                    (sCurrentControllerPakAllFileExtensions[i][0] != '\0')) {
-                    gBootPakData[i][j] = '.';
-                    j++;
+                if (sCurrentControllerPakAllFileExtensions[i] != NULL &&
+                    sCurrentControllerPakAllFileExtensions[i][0] != '\0') {
+                    gBootPakData[i][j++] = '.';
                     k = 0;
-                    for (; sCurrentControllerPakAllFileExtensions[i][k] != '\0'; j++, k++) {
-                        gBootPakData[i][j] = sCurrentControllerPakAllFileExtensions[i][k];
+                    while (sCurrentControllerPakAllFileExtensions[i][k] != '\0') {
+                        gBootPakData[i][j++] = sCurrentControllerPakAllFileExtensions[i][k++];
                     }
                 }
             }
             if (j == 0) {
-                gBootPakData[i][j] = '-';
-                j++;
+                gBootPakData[i][j++] = '-';
             }
             gBootPakData[i][j] = '\0';
         }
