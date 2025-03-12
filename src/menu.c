@@ -5005,7 +5005,6 @@ void pakmenu_render(UNUSED s32 updateRate) {
     char *pagesText;
     s32 numberOfPages;
     s32 yPos = 0;
-    static const char sTilde[] = "~";
 
     set_text_background_colour(0, 0, 0, 0);
     highlight = gOptionBlinkTimer << 3;
@@ -5037,8 +5036,8 @@ void pakmenu_render(UNUSED s32 updateRate) {
         set_dialogue_font(6, ASSET_FONTS_FUNFONT);
         set_current_text_colour(6, 255, 255, 255, 0, 255);
         set_current_text_background_colour(6, 0, 0, 0, 0);
-        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[86 + gMenuOption], 1,
-                             HORZ_ALIGN_CENTER); // ASSET_MENU_TEXT_CONTPAK1 - CONTROLLER PAK 1 / 2 / 3 / 4
+        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[ASSET_MENU_TEXT_CONTPAK1 + gMenuOption], 1,
+                             HORZ_ALIGN_CENTER); // CONTROLLER PAK 1 / 2 / 3 / 4
         render_dialogue_text(6, POS_CENTRED, 16, gMenuText[ASSET_MENU_TEXT_FREEPAGESX], sCurrentControllerPakFreePages,
                              HORZ_ALIGN_CENTER); // FREE PAGES: ~
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
@@ -5067,8 +5066,7 @@ void pakmenu_render(UNUSED s32 updateRate) {
                     set_current_dialogue_background_colour(6, 224, 224, 48, 224);
                 }
                 set_current_text_colour(6, 16, 16, 160, 255, 255);
-                noteText = (char *) &sTilde;
-                pagesText = (char *) &sTilde;
+                pagesText = noteText = "~";
                 fileNameText = gBootPakData[gOpacityDecayTimer + i];
                 numberOfPages = sCurrentControllerPakNumberOfPages[gOpacityDecayTimer + i];
             }
