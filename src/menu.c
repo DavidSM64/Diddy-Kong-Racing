@@ -217,13 +217,13 @@ s32 gPostRace1Player;
 s32 gPostRaceTimer;
 s32 gTracksSaveGhost;
 UNUSED s32 D_80126A9C;
-char *gBootPakData[16];                           // Text to render
-char *sCurrentControllerPakAllFileNames[16];      // Every file name on the controller pak
-char *sCurrentControllerPakAllFileExtensions[16]; // Every file extension on the controller pak
-u8 sCurrentControllerPakAllFileTypes[16];         // File type of all files on controller pak
-u32 sCurrentControllerPakAllFileSizes[16];        // File size of all files on controller pak
-u32 sCurrentControllerPakFreeSpace;               // Space available in current controller pak
-s32 sControllerPakMenuNumberOfRows;               // 8 if PAL, 7 if not
+char *gBootPakData[MAX_CPAK_FILES];                           // Text to render
+char *sCurrentControllerPakAllFileNames[MAX_CPAK_FILES];      // Every file name on the controller pak
+char *sCurrentControllerPakAllFileExtensions[MAX_CPAK_FILES]; // Every file extension on the controller pak
+u8 sCurrentControllerPakAllFileTypes[MAX_CPAK_FILES];         // File type of all files on controller pak
+u32 sCurrentControllerPakAllFileSizes[MAX_CPAK_FILES];        // File size of all files on controller pak
+u32 sCurrentControllerPakFreeSpace;                           // Space available in current controller pak
+s32 sControllerPakMenuNumberOfRows;                           // 8 if PAL, 7 if not
 TextureHeader *gMenuMosaic1;
 TextureHeader *gMenuMosaic2;
 s32 gMenuMosaicShift;
@@ -4677,123 +4677,116 @@ void savemenu_free(void) {
     mempool_free((void *) D_80126A64);
 }
 
-#ifdef NON_EQUIVALENT
-// Nearly complete
-SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
-    s32 ret;
-    s32 j = 0;
-    s32 k = 0;
-    s32 i = 0;
-    s32 controllerIndexVal;
+SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
+    s32 j;
+    s32 k;
+    s32 i;
+    UNUSED s32 pad;
     s32 pakStatusSuccess;
-    s32 pakStatusError3;
-    s32 pakStatusError9;
+    s32 ret;
     u32 bytesFree;
     s32 notesFree;
     s32 pakStatusErrorNoFreeSpace;
-    s32 pakStatus;
+    s32 pakStatusError3;
+    s32 pakStatusError9;
 
-    pakStatusSuccess = 0;
     pakStatusError3 = 0;
-    pakStatusError9 = 0;
     pakStatusErrorNoFreeSpace = 0;
-    // Is this really <= 0?
+    pakStatusError9 = 0;
+    pakStatusSuccess = 0;
+
+    // This has been hard limited to just the first controller pak, but can easily be modified to check the rest with i
+    // <= MAXCONTROLLERS
     for (i = 0; i <= 0; i++) {
-        // sControllerPakIssueNotFound[i] = 0;
         sControllerPakFatalErrorFound[i] = 0;
-        sControllerPakNoFreeSpace[i] = 0;
-        sControllerPakBadData[i] = 0;
+        sControllerPakNoFreeSpace[i] = FALSE;
+        sControllerPakBadData[i] = FALSE;
         ret = get_free_space(i, &bytesFree, &notesFree);
-        pakStatus = ret & 0xFF; // Upper 2 bits are controller index
         if (ret == CONTROLLER_PAK_GOOD) {
-            sControllerPakIssueNotFound[i] = 1;
+            sControllerPakIssueNotFound[i] = TRUE;
             if (bytesFree == 0 || notesFree == 0) {
-                sControllerPakNoFreeSpace[i] = 1;
-                if (sControllerPakDataPresent[i] == 0) {
+                sControllerPakNoFreeSpace[i] = TRUE;
+                if (sControllerPakDataPresent[i] == FALSE) {
                     pakStatusErrorNoFreeSpace++;
                 }
             }
             pakStatusSuccess++;
         } else {
-            sControllerPakIssueNotFound[i] = 0;
+            ret &= 0xFF; // Upper 2 bits are controller index
+            sControllerPakIssueNotFound[i] = FALSE;
             // Bad data
-            if (pakStatus == CONTROLLER_PAK_BAD_DATA) {
-                sControllerPakBadData[i] = 1;
+            if (ret == CONTROLLER_PAK_BAD_DATA) {
+                sControllerPakBadData[i] = TRUE;
                 pakStatusError9++;
             }
             // Error inconsistent
-            if (pakStatus == CONTROLLER_PAK_INCONSISTENT) {
+            if (ret == CONTROLLER_PAK_INCONSISTENT) {
                 // Repair file system
                 repair_controller_pak(i);
             }
             // fatal error
-            if (pakStatus == CONTROLLER_PAK_WITH_BAD_ID) {
+            if (ret == CONTROLLER_PAK_WITH_BAD_ID) {
                 sControllerPakFatalErrorFound[i] = 1;
                 pakStatusError3++;
             }
         }
     }
+
     if ((pakStatusSuccess == 0) || (pakStatusError3 != 0) || (pakStatusErrorNoFreeSpace != 0) ||
         (pakStatusError9 != 0)) {
         return CONTROLLER_PAK_NOT_FOUND; // Return unsuccessfully?
     }
 
-    controllerIndexVal = *controllerIndex;
-    if (controllerIndexVal < 0) {
-        i = controllerIndexVal;
+    // Loop through the cpaks to find the next one with no issues found.
+    i = *controllerIndex;
+    if (i < 0) {
+        //!@bug If i == -1, and sControllerPakIssueNotFound[0] is FALSE, then this will get stuck in an infinite loop.
+        // This is saved by the fact that this code can't be reached when cpak 0 has an error as it will return above.
         do {
-            controllerIndexVal++;
             i++;
-            if (controllerIndexVal > 0) {
-                controllerIndexVal--;
+            if (i > 0) {
                 i--;
             }
-        } while (sControllerPakIssueNotFound[i] == 0);
-    } else if (sControllerPakIssueNotFound[*controllerIndex] == 0 || arg1 > 0) {
-        i = controllerIndexVal;
+        } while (sControllerPakIssueNotFound[i] == FALSE);
+    } else if (sControllerPakIssueNotFound[*controllerIndex] == FALSE || xAxisDirection > 0) {
         do {
-            controllerIndexVal++;
             i++;
-            if (controllerIndexVal > 0) {
-                controllerIndexVal--;
+            if (i > 0) {
                 i--;
             }
-        } while (sControllerPakIssueNotFound[i] == 0);
-    } else if (arg1 < 0) {
-        i = controllerIndexVal;
+        } while (sControllerPakIssueNotFound[i] == FALSE);
+    } else if (xAxisDirection < 0) {
         do {
-            controllerIndexVal--;
             i--;
-            if (controllerIndexVal < 0) {
-                ;
-                controllerIndexVal++;
+            if (i < 0) {
                 i++;
             }
-        } while (sControllerPakIssueNotFound[i] == 0);
+        } while (sControllerPakIssueNotFound[i] == FALSE);
     }
 
-    *controllerIndex = controllerIndexVal;
-    ret = get_controller_pak_file_list(controllerIndexVal, 16, sCurrentControllerPakAllFileNames,
+    // Set the controller index to the next cpak with no issue found.
+    *controllerIndex = i;
+    ret = get_controller_pak_file_list(*controllerIndex, MAX_CPAK_FILES, sCurrentControllerPakAllFileNames,
                                        sCurrentControllerPakAllFileExtensions, sCurrentControllerPakAllFileSizes,
                                        sCurrentControllerPakAllFileTypes);
 
     if (ret == CONTROLLER_PAK_GOOD) {
-        i = 0;
         j = 0;
-        do {
-            sCurrentControllerPakAllFileSizes[i] = sCurrentControllerPakAllFileSizes[i] / 256;
-            if (sCurrentControllerPakAllFileNames[i] != 0) {
+        for (i = 0; i < MAX_CPAK_FILES; i++) {
+            sCurrentControllerPakAllFileSizes[i] /= 256;
+            j = 0;
+            if (sCurrentControllerPakAllFileNames[i] != NULL) {
                 k = 0;
-                for (; sCurrentControllerPakAllFileNames[i][k] != 0; j++, k++) {
+                for (; sCurrentControllerPakAllFileNames[i][k] != '\0'; j++, k++) {
                     gBootPakData[i][j] = sCurrentControllerPakAllFileNames[i][k];
                 }
 
-                if ((sCurrentControllerPakAllFileExtensions[i] != 0) &&
-                    (*sCurrentControllerPakAllFileExtensions[i] != 0)) {
+                if ((sCurrentControllerPakAllFileExtensions[i] != NULL) &&
+                    (sCurrentControllerPakAllFileExtensions[i][0] != '\0')) {
                     gBootPakData[i][j] = '.';
                     j++;
                     k = 0;
-                    for (; sCurrentControllerPakAllFileExtensions[i][k] != 0; j++, k++) {
+                    for (; sCurrentControllerPakAllFileExtensions[i][k] != '\0'; j++, k++) {
                         gBootPakData[i][j] = sCurrentControllerPakAllFileExtensions[i][k];
                     }
                 }
@@ -4802,22 +4795,16 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
                 gBootPakData[i][j] = '-';
                 j++;
             }
-            i++;
-            gBootPakData[i - 1][j] = 0;
-        } while (&gBootPakData != &sCurrentControllerPakAllFileNames);
+            gBootPakData[i][j] = '\0';
+        }
 
-        cpak_free_files();                                                       // Free gPakFileList from memory
-        get_free_space(*controllerIndex, &sCurrentControllerPakFreeSpace, NULL); // Get Available Space in Controller
-                                                                                 // Pak
-        sCurrentControllerPakFreeSpace = sCurrentControllerPakFreeSpace / 256;   // Bytes
-        ret = pakStatus;                                                         // Really?
+        cpak_free_files();
+        get_free_space(*controllerIndex, &sCurrentControllerPakFreeSpace, NULL);
+        sCurrentControllerPakFreeSpace /= 256;
     }
 
     return ret;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80087F14.s")
-#endif
 
 /**
  * Sets and returns an error code if any controller paks have an error.
@@ -4981,7 +4968,7 @@ void bootscreen_init_cpak(void) {
     }
 
     for (i = 0; i < 1; i++) {
-        sControllerPakDataPresent[i] = 0;
+        sControllerPakDataPresent[i] = FALSE;
     }
 
     gCpakWriteTimer = 0;
