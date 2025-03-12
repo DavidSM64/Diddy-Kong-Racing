@@ -2794,7 +2794,7 @@ void func_80083098(f32 updateRateF) {
     s32 yPos;
     s32 i; // s1
     s32 j;
-    s32 text;
+    char *text;
     unk800DF83C *introCharData;
 
     didUpdate = FALSE;
@@ -4684,7 +4684,7 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
     s32 k;
     s32 i;
     UNUSED s32 pad;
-    s32 pakStatusSuccess;
+    s32 paksWithStatusSuccess;
     s32 ret;
     u32 bytesFree;
     s32 notesFree;
@@ -4695,7 +4695,7 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
     paksWithFatalErrors = 0;
     paksWithNoFreeSpace = 0;
     paksWithBadData = 0;
-    pakStatusSuccess = 0;
+    paksWithStatusSuccess = 0;
 
     // This has been hard limited to just the first controller pak, but can easily be modified to check the rest with i
     // <= MAXCONTROLLERS
@@ -4712,7 +4712,7 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
                     paksWithNoFreeSpace++;
                 }
             }
-            pakStatusSuccess++;
+            paksWithStatusSuccess++;
         } else {
             ret &= 0xFF; // Upper 2 bits are controller index
             sControllerPakIssueNotFound[i] = FALSE;
@@ -4730,7 +4730,7 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
         }
     }
 
-    if ((pakStatusSuccess == 0) || (paksWithFatalErrors != 0) || (paksWithNoFreeSpace != 0) || (paksWithBadData != 0)) {
+    if (paksWithStatusSuccess == 0 || paksWithFatalErrors != 0 || paksWithNoFreeSpace != 0 || paksWithBadData != 0) {
         return CONTROLLER_PAK_NOT_FOUND; // Return unsuccessfully
     }
 
