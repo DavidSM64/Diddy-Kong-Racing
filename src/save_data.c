@@ -1455,7 +1455,7 @@ s32 func_800753D8(s32 controllerIndex, s32 worldId) {
     return pakStatus;
 }
 
-SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *levelIDs, u8 *vehicleIDs, u8 *characterIDs, s16 *checksumIDs) {
+SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *levelIDs, u8 *vehicleIDs, u8 *characterIDs, u16 *checksumIDs) {
     s32 i;
     u8 *fileData;
     s32 ret; // sp64
