@@ -4958,7 +4958,7 @@ void bootscreen_init_cpak(void) {
 
     // Fills in the table.
     for (i = 1; i < ARRAY_COUNT(gBootPakData); i++) {
-        gBootPakData[i] = (char *) (((u32) gBootPakData[0]) + (i * 0x20));
+        gBootPakData[i] = (char *) (((u32) gBootPakData[0]) + (i * (SAVE_SIZE_MENU / ARRAY_COUNT(gBootPakData))));
     }
 
     // Only check cpak 0
@@ -8028,11 +8028,11 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
 // trackmenu_render_names
 void func_8008FF1C(UNUSED s32 updateRate) {
     s32 i; // sp7C
-    UNUSED s16 **temp2;
+    UNUSED s32 pad1;
     char *hubName;
-    UNUSED s32 temp4;
+    s16 temp4;
     s32 trackSelectX;
-    UNUSED s32 pad4;
+    UNUSED s32 pad2;
     s32 temp;
     s32 maxTrackY;
     s8 *trackMenuIds;
@@ -8063,9 +8063,9 @@ void func_8008FF1C(UNUSED s32 updateRate) {
                 } else {
                     cur->visible = 1;
                     hubName = get_level_name(get_hub_area_id(trackY + 1));
+                    temp4 = gTrackSelectIDs[trackY][trackX];
                     cur->hubName = hubName;
-                    // Problem is here.
-                    if (gTrackSelectIDs[trackY][trackX] != -1) {
+                    if ((temp4) != -1) {
                         cur->trackName = get_level_name(trackMenuIds[(trackY * 6) + trackX]);
                         if (trackX == 4) {
                             if (((settings->trophies >> (trackY * 2)) & 3) == 3) {
@@ -11569,53 +11569,34 @@ s32 ghostmenu_erase(s32 id) {
     return result;
 }
 
-#ifdef NON_EQUIVALENT
-
-// Should be functionally equivalent
 void menu_ghost_data_init(void) {
     s32 i;
     SIDeviceStatus pakStatus;
 
-    pakStatus = func_800756D4(gCpakGhostData, &gGhostLevelIDsPak, &gGhostVehicleIDsPak, &gGhostCharacterIDsPak,
-                              &gGhostChecksumIDsPak);
+    pakStatus = func_800756D4(gCpakGhostData, gGhostLevelIDsPak, gGhostVehicleIDsPak, gGhostCharacterIDsPak,
+                              gGhostChecksumIDsPak);
     if (pakStatus == CONTROLLER_PAK_GOOD) {
         ghostmenu_generate();
     }
-    menu_assetgroup_load(&gGhostDataObjectIndices);
-    menu_imagegroup_load(&gGhostDataImageIndices);
+    menu_assetgroup_load(gGhostDataObjectIndices);
+    menu_imagegroup_load(gGhostDataImageIndices);
     load_font(ASSET_FONTS_BIGFONT);
-    gDrawTexDinoDomainGhostBg[0].texture = gMenuAssets[TEXTURE_BACKGROUND_DINO_DOMAIN_TOP];
-    gDrawTexDinoDomainGhostBg[5].texture = gMenuAssets[TEXTURE_BACKGROUND_DINO_DOMAIN_BOTTOM];
-    gDrawTexSherbetIslandGhostBg[0].texture = gMenuAssets[TEXTURE_BACKGROUND_SHERBERT_ISLAND_TOP];
-    gDrawTexSherbetIslandGhostBg[5].texture = gMenuAssets[TEXTURE_BACKGROUND_SHERBERT_ISLAND_BOTTOM];
-    gDrawTexSnowflakeMountainGhostBg[0].texture = gMenuAssets[TEXTURE_BACKGROUND_SNOWFLAKE_MOUNTAIN_TOP];
-    gDrawTexSnowflakeMountainGhostBg[5].texture = gMenuAssets[TEXTURE_BACKGROUND_SNOWFLAKE_MOUNTAIN_BOTTOM];
-    gDrawTexDragonForestGhostBg[0].texture = gMenuAssets[TEXTURE_BACKGROUND_DRAGON_FOREST_TOP];
-    gDrawTexDragonForestGhostBg[5].texture = gMenuAssets[TEXTURE_BACKGROUND_DRAGON_FOREST_BOTTOM];
-    gDrawTexFutureFunLandGhostBg[0].texture = gMenuAssets[TEXTURE_BACKGROUND_FUTURE_FUN_LAND_TOP];
-    gDrawTexFutureFunLandGhostBg[5].texture = gMenuAssets[TEXTURE_BACKGROUND_FUTURE_FUN_LAND_BOTTOM];
-    for (i = 0; i < 4; i++) {
-        gDrawTexDinoDomainGhostBg[i + 1].texture = gDrawTexDinoDomainGhostBg[0].texture;
-        gDrawTexDinoDomainGhostBg[i + 6].texture = gDrawTexDinoDomainGhostBg[5].texture;
-        if (i & 1 == 1) {
-            gDrawTexSherbetIslandGhostBg[i + 1].texture = gDrawTexSherbetIslandGhostBg[0].texture;
-            gDrawTexSherbetIslandGhostBg[i + 6].texture = gDrawTexSherbetIslandGhostBg[5].texture;
-        } else {
-            gDrawTexSherbetIslandGhostBg[i + 1].texture = gDrawTexSherbetIslandGhostBg[5].texture;
-            gDrawTexSherbetIslandGhostBg[i + 6].texture = gDrawTexSherbetIslandGhostBg[0].texture;
-        }
-        gDrawTexSnowflakeMountainGhostBg[i + 1].texture = gDrawTexSnowflakeMountainGhostBg[0].texture;
-        gDrawTexSnowflakeMountainGhostBg[i + 6].texture = gDrawTexSnowflakeMountainGhostBg[5].texture;
-        gDrawTexDragonForestGhostBg[i + 1].texture = gDrawTexDragonForestGhostBg[0].texture;
-        gDrawTexDragonForestGhostBg[i + 6].texture = gDrawTexDragonForestGhostBg[5].texture;
-        if (i & 1 == 1) {
-            gDrawTexFutureFunLandGhostBg[i + 1].texture = gDrawTexFutureFunLandGhostBg[0].texture;
-            gDrawTexFutureFunLandGhostBg[i + 6].texture = gDrawTexFutureFunLandGhostBg[5].texture;
-        } else {
-            gDrawTexFutureFunLandGhostBg[i + 1].texture = gDrawTexFutureFunLandGhostBg[5].texture;
-            gDrawTexFutureFunLandGhostBg[i + 6].texture = gDrawTexFutureFunLandGhostBg[0].texture;
-        }
+
+    for (i = 0; i < 5; i++) {
+        gDrawTexDinoDomainGhostBg[i].texture = gMenuAssets[TEXTURE_BACKGROUND_DINO_DOMAIN_TOP];
+        gDrawTexDinoDomainGhostBg[i + 5].texture = gMenuAssets[TEXTURE_BACKGROUND_DINO_DOMAIN_BOTTOM];
+        gDrawTexSherbetIslandGhostBg[i + ((i & 1) * 5)].texture = gMenuAssets[TEXTURE_BACKGROUND_SHERBERT_ISLAND_TOP];
+        gDrawTexSherbetIslandGhostBg[i + (((i & 1) ^ 1) * 5)].texture =
+            gMenuAssets[TEXTURE_BACKGROUND_SHERBERT_ISLAND_BOTTOM];
+        gDrawTexSnowflakeMountainGhostBg[i].texture = gMenuAssets[TEXTURE_BACKGROUND_SNOWFLAKE_MOUNTAIN_TOP];
+        gDrawTexSnowflakeMountainGhostBg[i + 5].texture = gMenuAssets[TEXTURE_BACKGROUND_SNOWFLAKE_MOUNTAIN_BOTTOM];
+        gDrawTexDragonForestGhostBg[i].texture = gMenuAssets[TEXTURE_BACKGROUND_DRAGON_FOREST_TOP];
+        gDrawTexDragonForestGhostBg[i + 5].texture = gMenuAssets[TEXTURE_BACKGROUND_DRAGON_FOREST_BOTTOM];
+        gDrawTexFutureFunLandGhostBg[i + ((i & 1) * 5)].texture = gMenuAssets[TEXTURE_BACKGROUND_FUTURE_FUN_LAND_TOP];
+        gDrawTexFutureFunLandGhostBg[i + (((i & 1) ^ 1) * 5)].texture =
+            gMenuAssets[TEXTURE_BACKGROUND_FUTURE_FUN_LAND_BOTTOM];
     }
+
     menu_init_vehicle_textures();
     menu_racer_portraits();
     menu_init_arrow_textures();
@@ -11630,9 +11611,6 @@ void menu_ghost_data_init(void) {
     }
     gMenuDelay = 30;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/menu_ghost_data_init.s")
-#endif
 
 /**
  * Render the list of existing ghost data.
