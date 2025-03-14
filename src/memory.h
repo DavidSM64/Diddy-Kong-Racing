@@ -16,10 +16,10 @@ typedef enum MemoryPools {
 } MemoryPools;
 
 typedef enum MempoolFlags {
-    SLOT_FREE = 0,              // The slot is free.
-    SLOT_USED = (1 << 0),       // The slot is used.
-    SLOT_LOCKED = (1 << 1),     // The slot is used, and cannot be freed by normal means.
-    SLOT_SAFEGUARD = (1 << 2),  // The slot is used, and marks the stopping point of a global pool clear.
+    SLOT_FREE = 0,             // The slot is free.
+    SLOT_USED = (1 << 0),      // The slot is used.
+    SLOT_LOCKED = (1 << 1),    // The slot is used, and cannot be freed by normal means.
+    SLOT_SAFEGUARD = (1 << 2)  // The slot is used, and marks the stopping point of a global pool clear.
 } MempoolFlags;
 
 #define RAM_END 0x80400000
