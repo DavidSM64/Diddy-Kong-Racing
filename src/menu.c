@@ -8169,31 +8169,22 @@ UNUSED s32 trackmenu_active(void) {
     return gIsInTracksMenu;
 }
 
-#ifdef NON_EQUIVALENT
 void menu_track_select_init(void) {
     s32 levelCount;
     s32 worldCount;
+    s32 sp74;
+    s32 i;
+    s32 j;
+    s32 var_a0;
     Settings *settings;
-    TextureHeader **var_s0;
-    s16 temp_a0;
-    s16 temp_a0_2;
-    s16 var_a0;
-    s8 **trackMenuIds;
-    s16 *var_s2;
-    s32 videoWidthAndHeight;
-    s32 temp_v0_6;
-    s32 var_a0_2;
-    s32 var_a1;
-    s32 var_a1_2;
-    s32 idx2;
-    s32 idx;
-    s32 var_v0;
-    s16 var_t4;
+    s8 *trackIds;
 
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     settings = get_settings();
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
-    trackMenuIds = (s8 **) get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
+    trackIds = (s8 *) get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
     if (gTitleScreenLoaded != 0) {
         gTrackSelectCursorX = 0;
         gTrackSelectCursorY = 0;
@@ -8201,9 +8192,9 @@ void menu_track_select_init(void) {
         gTracksMenuAdventureHighlightIndex = 0;
         gTitleScreenLoaded = 0;
     }
-    videoWidthAndHeight = fb_size();
-    gTrackSelectViewPortX = GET_VIDEO_WIDTH(videoWidthAndHeight);
-    gTrackSelectViewportY = GET_VIDEO_HEIGHT(videoWidthAndHeight);
+    gTrackSelectViewPortX = fb_size();
+    gTrackSelectViewportY = GET_VIDEO_HEIGHT(gTrackSelectViewPortX) & 0xFFFF;
+    gTrackSelectViewPortX = GET_VIDEO_WIDTH(gTrackSelectViewPortX);
     gTrackSelectViewPortHalfX = gTrackSelectViewPortX >> 1;
     gTrackSelectViewPortHalfY = gTrackSelectViewportY >> 1;
     gTrackSelectX = (f32) gTrackSelectCursorX * 320.0f;
@@ -8218,42 +8209,51 @@ void menu_track_select_init(void) {
     transition_begin(&sMenuTransitionFadeOut);
     enable_new_screen_transitions();
     bgdraw_fillcolour(50, 105, 223);
-    for (var_a1 = 0; var_a1 != 5; var_a1++) {
-        temp_a0 = gTracksMenuBgTextureIndices[(var_a1 * 3)];
-        var_s0 = (TextureHeader **) gTracksMenuBgTextures[var_a1];
-        if (temp_a0 != -1) {
-            menu_asset_load(temp_a0);
-            var_s0[0] = gMenuAssets[gTracksMenuBgTextureIndices[(var_a1 * 3)]];
+
+    for (sp74 = 0; sp74 < 5; sp74++) {
+        if (gTracksMenuBgTextureIndices[sp74 * 3] != -1) {
+            menu_asset_load(gTracksMenuBgTextureIndices[sp74 * 3]);
+            gTracksMenuBgTextures[sp74 << 1] = gMenuAssets[gTracksMenuBgTextureIndices[sp74 * 3]];
         } else {
-            var_s0[0] = NULL;
+            gTracksMenuBgTextures[sp74 << 1] = NULL;
         }
-        temp_a0_2 = gTracksMenuBgTextureIndices[(var_a1 * 3) + 1];
-        if (temp_a0_2 != -1) {
-            menu_asset_load(temp_a0_2);
-            var_s0[1] = (TextureHeader *) gMenuAssets[gTracksMenuBgTextureIndices[(var_a1 * 3)]];
+        if (gTracksMenuBgTextureIndices[sp74 * 3 + 1] != -1) {
+            menu_asset_load(gTracksMenuBgTextureIndices[sp74 * 3 + 1]);
+            gTracksMenuBgTextures[(sp74 << 1) + 1] = gMenuAssets[gTracksMenuBgTextureIndices[sp74 * 3 + 1]];
         } else {
-            var_s0[1] = NULL;
+            gTracksMenuBgTextures[(sp74 << 1) + 1] = NULL;
         }
     }
-    gTrackSelectBgTriangles[0] = (Triangle *) mempool_alloc_safe(2880, COLOUR_TAG_YELLOW);
-    gTrackSelectBgTriangles[1] = (s32) (&gTrackSelectBgTriangles[0][40]); // 640 bytes forward
-    gTrackSelectBgVertices[0] = (s32) (&gTrackSelectBgTriangles[1][80]);  // 1280 bytes forward
-    // gTrackSelectBgVertices[1] = (s32) (&gTrackSelectBgVertices[0][80]); //800 bytes past gTrackSelectBgVertices
+
+    i = 40;
+    gTrackSelectBgTriangles[0] = mempool_alloc_safe(0xB40, COLOUR_TAG_YELLOW);
+    gTrackSelectBgTriangles[1] = gTrackSelectBgTriangles[0] + i;
+    gTrackSelectBgVertices[0] = (Vertex *) (gTrackSelectBgTriangles[1] + i);
+    gTrackSelectBgVertices[1] = gTrackSelectBgVertices[0] + i * 2;
+
     var_a0 = -160;
-    var_v0 = 0;
-    for (var_v0 = 0; var_v0 < 80; var_v0++) {
-        gTrackSelectBgVertices[var_v0]->x = var_a0;
-        var_a0 = -var_a0;
-        gTrackSelectBgVertices[var_v0]->z = -1024;
-        gTrackSelectBgVertices[var_v0]->r = 0xFF;
-        gTrackSelectBgVertices[var_v0]->g = 0xFF;
-        gTrackSelectBgVertices[var_v0]->b = 0xFF;
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 80; j++) {
+            gTrackSelectBgVertices[i][j].x = var_a0;
+            gTrackSelectBgVertices[i][j].z = -0x400;
+            gTrackSelectBgVertices[i][j].r = 255;
+            gTrackSelectBgVertices[i][j].g = 255;
+            gTrackSelectBgVertices[i][j].b = 255;
+            var_a0 = -var_a0;
+        }
     }
-    for (var_v0 = 0; var_v0 < 40; var_v0++) {
-        gTrackSelectBgTriangles[var_v0]->flags = 0x40; // 0x40 = Draw backface
-        gTrackSelectBgTriangles[var_v0]->vi0 = 0;
-        gTrackSelectBgTriangles[var_v0]->vi1 = 2;
-        gTrackSelectBgTriangles[var_v0]->vi2 = 1;
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 40; j++) {
+            gTrackSelectBgTriangles[i][j].flags = 0x40; // 0x40 = Draw backface
+            gTrackSelectBgTriangles[i][j].vi0 = 0;
+            gTrackSelectBgTriangles[i][j].vi1 = 2;
+            gTrackSelectBgTriangles[i][j].vi2 = 1;
+            j++;
+            gTrackSelectBgTriangles[i][j].flags = 0x40;
+            gTrackSelectBgTriangles[i][j].vi0 = 1;
+            gTrackSelectBgTriangles[i][j].vi1 = 2;
+            gTrackSelectBgTriangles[i][j].vi2 = 3;
+        }
     }
     gTrackSelectVertsFlip = 0;
     bgdraw_set_func(func_8008F618);
@@ -8265,56 +8265,55 @@ void menu_track_select_init(void) {
     menu_assetgroup_load(gTrackSelectObjectIndices);
     menu_imagegroup_load(gTrackSelectImageIndices);
     menu_init_arrow_textures();
+    D_800E05D4[0].texture = (TextureHeader *) gMenuAssets[TEXTURE_UNK_08];
+    D_800E05D4[1].texture = (TextureHeader *) gMenuAssets[TEXTURE_UNK_09];
+    D_800E05D4[2].texture = (TextureHeader *) gMenuAssets[TEXTURE_UNK_0A];
+    D_800E05F4[0].texture = (TextureHeader *) gMenuAssets[TEXTURE_UNK_0B];
+    D_800E05F4[1].texture = (TextureHeader *) gMenuAssets[TEXTURE_UNK_0C];
+    D_800E05F4[2].texture = (TextureHeader *) gMenuAssets[TEXTURE_UNK_0D];
 
-    D_800E05D4[0].texture = gMenuAssets[TEXTURE_UNK_08];
-    D_800E05D4[1].texture = gMenuAssets[TEXTURE_UNK_09];
-    D_800E05D4[2].texture = gMenuAssets[TEXTURE_UNK_0A];
-    D_800E05F4[0].texture = gMenuAssets[TEXTURE_UNK_0B];
-    D_800E05F4[1].texture = gMenuAssets[TEXTURE_UNK_0C];
-    D_800E05F4[2].texture = gMenuAssets[TEXTURE_UNK_0D];
-
-    for (idx = 0; idx < 4; idx++) {
-        var_s2 = gTrackSelectIDs[idx];
-        for (idx2 = 0; idx2 < 6; idx2++) {
-            *var_s2 = -1;
-            if (idx2 == 0) {
-                if (idx < 4) {
-                    *var_s2 = trackMenuIds[idx][idx2];
+    for (i = 0; i < 5; i++) {
+#define getTrackId(add) ((i * 6) + add)
+        for (j = 0; j < 6; j++) {
+            gTrackSelectIDs[i][j] = -1;
+            if (j == 0 && i < 4) {
+                gTrackSelectIDs[i][j] = trackIds[getTrackId(j)];
+            } else if (j < 4) {
+                if (trackIds[getTrackId(j)] != -1 &&
+                    (settings->courseFlagsPtr[trackIds[getTrackId(j)]] & RACE_VISITED)) {
+                    gTrackSelectIDs[i][j] = trackIds[getTrackId(j)];
                 }
-            } else if (idx2 < 4) {
-                if ((trackMenuIds[idx][idx2] != -1) && (settings->courseFlagsPtr[trackMenuIds[idx][idx2]] & 1)) {
-                    *var_s2 = trackMenuIds[idx][idx2];
-                }
-            } else if (idx2 == 4) {
-                var_a1_2 = 0;
-                // This is almost definitely wrong.
-                for (var_a0_2 = 0; var_a0_2 < 2; var_a0_2++) {
-                    if ((trackMenuIds[idx][var_a0_2] != -1) &&
-                        ((settings->courseFlagsPtr[trackMenuIds[idx][var_a0_2]] & 6) == 6)) {
-                        var_a1_2++;
+            } else if (j == 4) {
+                for (var_a0 = 0, sp74 = 0; (var_a0 < 4) ^ 0; var_a0++) {
+                    if (trackIds[getTrackId(var_a0)] != -1 &&
+                        ((settings->courseFlagsPtr[trackIds[getTrackId(var_a0)]] &
+                          (RACE_CLEARED | RACE_CLEARED_SILVER_COINS)) == (RACE_CLEARED | RACE_CLEARED_SILVER_COINS))) {
+                        sp74++;
                     }
                 }
-                if ((var_a1_2 == 4) && (idx != 4)) {
-                    temp_v0_6 = 130 << idx;
-                    if (temp_v0_6 != (settings->bosses & temp_v0_6)) {
-                        var_a1_2 = 0;
+                if (sp74 == 4 && i != 4) {
+                    // Not Tricky 1 / 2
+                    if ((settings->bosses & (0x82 << i)) != (0x82 << i)) {
+                        sp74 = 0;
                     }
                 }
-                if (var_a1_2 == 4) {
-                    *var_s2 = trackMenuIds[idx][idx2];
+                if (sp74 == 4) {
+                    gTrackSelectIDs[i][j] = trackIds[getTrackId(j)];
                 }
-            } else if ((idx2 == 5) && (settings->keys & (1 << idx))) {
-                *var_s2 = trackMenuIds[idx][idx2];
+            } else if (j == 5 && (settings->keys & (1 << (i + 1)))) {
+                gTrackSelectIDs[i][j] = trackIds[getTrackId(j)];
             }
             if (is_adventure_two_unlocked()) {
-                *var_s2 = trackMenuIds[idx][idx2];
+                gTrackSelectIDs[i][j] = trackIds[getTrackId(j)];
             }
         }
+#undef getTrackId
     }
+
     gTrackIdForPreview = gTrackSelectIDs[gTrackSelectCursorY][gTrackSelectCursorX];
     gTrackSelectRow = gTrackSelectCursorY + 1;
-    if (gTrackIdForPreview == (s16) -1) {
-        gTrackmenuLoadedLevel = gTrackSelectIDs[0];
+    if (gTrackIdForPreview == -1) {
+        gTrackmenuLoadedLevel = gTrackSelectIDs[0][0];
         load_level_for_menu(gTrackmenuLoadedLevel, -1, 1);
         gTrackSelectRow = 1;
         gSelectedTrackX = 0;
@@ -8322,21 +8321,21 @@ void menu_track_select_init(void) {
     }
     dialogue_clear(7);
     func_8007FFEC(2);
-    gTrackTTSoundMask = 0;
-    D_80126848 = 0;
+    gTrackTTSoundMask = NULL;
+    D_80126848 = NULL;
     sMenuMusicVolume = 0;
     music_voicelimit_set(24);
     music_voicelimit_change_off();
     music_play(SEQUENCE_MAIN_MENU);
     music_volume_set(sMenuMusicVolume);
     music_change_off();
-    set_gIntDisFlag(TRUE); // Set an interrupt?
+    set_gIntDisFlag(TRUE);
     gIsInAdventureTwo = gTracksMenuAdventureHighlightIndex;
     gMultiplayerSelectedNumberOfRacersCopy = gMultiplayerSelectedNumberOfRacers;
-}
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/menu_track_select_init.s")
+#if REGION == REGION_JP
+    func_800C663C_C723C();
 #endif
+}
 
 /**
  * If type is -1, allocate and initialise all the track setup elements.
