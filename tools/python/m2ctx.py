@@ -16,7 +16,7 @@ ignoreFiles = ["include/sys/regdef.h"]
 search_folders = ["include/", "src/"]
 
 # Needed for StereoPanMode
-includeFiles = ['include/PR/libaudio.h']
+includeFiles = ['lib/src/audio/synstartvoiceparam.h']
 
 hack_directives_into_singleline = ['DRAW_TABLE_ENTRY', 'DRAW_TABLE_GROUP']
 
@@ -66,7 +66,13 @@ def fix_enums(text):
 
 # Fixes up a string to make it look nice. Also removes some unnecessary stuff.
 def cleanup_string(text):
-    return ' '.join(text.strip().replace('UNUSED', '').replace('extern', '').replace('\t', '    ').replace('\n', ' ').split())
+    return ' '.join(text.strip()
+        .replace('UNUSED', '')
+        .replace('extern', '')
+        .replace('__stdcall', '')
+        .replace('\t', '    ')
+        .replace('\n', ' ')
+        .split())
 
 # Returns the arguments for a function in a nice clean way.
 def get_cleaned_args(argsString):
