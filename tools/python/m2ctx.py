@@ -35,6 +35,29 @@ def remove_comments(string):
         else: # otherwise, we will return the 1st group
             return match.group(1) # captured quoted-string
     return regex.sub(_replacer, string)
+    
+def remove_text_from_inside_braces(string):
+    stack = []
+    result = []
+    in_braces = False
+    
+    for char in string:
+        if char == '{':
+            if in_braces:
+                stack.append(char)
+            else:
+                in_braces = True
+                stack = ['{']  # Start a new nested level
+        elif char == '}':
+            if len(stack) > 1:
+                stack.pop()  # Pop from the stack if we're inside nested braces
+            else:
+                in_braces = False
+                stack.clear()  # End of the outermost curly braces block
+        else:
+            if not in_braces:
+                result.append(char)  # Only append characters outside of braces
+    return ''.join(result)
 
 def regex_get_matches(text, regex):
     return re.finditer(regex, text, re.MULTILINE)
@@ -114,7 +137,7 @@ regex_func_proto = r"^([ \t]*(?:[A-Za-z0-9_*])+[ \t]+(?:[A-Za-z0-9_* ])+)[(]((?:
 
 # Collects both prototypes & definitions in a file.
 def collect_function_prototypes(filename, filetext, data):
-    collect_func_from_regex(filename, filetext, regex_func_proto, data) # First get Prototypes
+    collect_func_from_regex(filename, remove_text_from_inside_braces(filetext), regex_func_proto, data) # First get Prototypes
     collect_func_from_regex(filename, filetext, regex_func_def, data) # Then get definitions.
 
 # Only used for single line typedef (not structs or enums)
@@ -465,12 +488,14 @@ def write_output(data):
     directives = write_output_directives(data['directives'])
     out += directives[0] # Only add single-line directives at first for preprocessing.
     out += write_output_types(data['types'])
+    out += 's32 osTvType;\n' # Manually add this, since It doesn't seem to get added automatically.
     out += write_output_variables(data['variables'])
     out += write_output_functions(data['functions'])
     out = fix_enums(out) # Fixes trailing commas in enums, which gets rid of a warning.
     out = cleanup(out) # Removes useless stuff
     out = preprocess_all(out) # Preprocesses everything, removing all the directives.
     out = preprocess_directives(directives[1]) + out # Add the defines back in.
+    out = out.replace('\nOSPifRam ;', '') # Manual hack to remove this if it exists.
     return header + out
     
 # Uses the `find` program to return the filenames in the specified folders.
