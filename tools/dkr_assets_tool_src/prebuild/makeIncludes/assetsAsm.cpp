@@ -21,7 +21,7 @@ AssetsAsm::AssetsAsm(DkrAssetsSettings &settings) : _settings(settings) {
     
     _outFilepath = _settings.pathToAsm / "assets/assets.s";
     
-    _outPrefix = _settings.pathToBuild / _settings.dkrVersion / "assets/";
+    _outPrefix = _settings.pathToBuild / "assets/";
     
     _write();
 }
@@ -35,7 +35,9 @@ void AssetsAsm::_write() {
     
     // Includes
     _asm.write_newline();
-    _asm.write_include("macros.inc");
+    _asm.write_include("macro.inc");
+    _asm.write_newline();
+    _asm.write_section("data");
     _asm.write_newline();
     
     _write_asset_sections();

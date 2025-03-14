@@ -28,7 +28,7 @@
 #include "fade_transition.h"
 #include "audio_vehicle.h"
 #include "object_models.h"
-#include "lib/src/libc/rmonPrintf.h"
+#include "libultra/src/libc/rmonPrintf.h"
 #include "collision.h"
 #include "joypad.h"
 #include "printf.h"
@@ -6632,9 +6632,15 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             set_current_dialogue_box_coords(4, x1, y1, x2, y2);
             set_current_dialogue_background_colour(4, 128, 64, 128, (properties->opacity * 160) >> 8);
             set_current_text_background_colour(4, 0, 0, 0, 0);
+#if REGION == REGION_JP
+            set_dialogue_font(4, FONT_SMALL);
+            set_current_text_colour(4, 255, 255, 64, 255, (properties->opacity * 255) >> 8);
+            render_dialogue_text(4, (x2 - x1) >> 1, ((y2 - y1) >> 1), levelName, 1, ALIGN_MIDDLE_CENTER);
+#else
             set_dialogue_font(4, FONT_COLOURFUL);
             set_current_text_colour(4, 255, 255, 255, 0, (properties->opacity * 255) >> 8);
             render_dialogue_text(4, (x2 - x1) >> 1, ((y2 - y1) >> 1) + 2, levelName, 1, ALIGN_MIDDLE_CENTER);
+#endif
             open_dialogue_box(4);
         }
     }

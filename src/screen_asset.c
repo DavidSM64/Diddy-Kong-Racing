@@ -2,7 +2,7 @@
 /* RAM_POS: 0x8007F640 */
 
 #include "screen_asset.h"
-#include "lib/src/libc/rmonPrintf.h"
+#include "libultra/src/libc/rmonPrintf.h"
 
 // Render settings for the screens
 Gfx gRdpSetModeScreenAsset[] = {

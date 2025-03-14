@@ -100,7 +100,7 @@ BuildTexture::BuildTexture(DkrAssetsSettings &settings, BuildInfo &info) : _sett
     
     if(_settings.debugBuildKeepUncompressed) {
         // Have the uncompressed binary in a seperate directory in the build folder.
-        fs::path outUncompressedPath = _settings.pathToBuild / _settings.dkrVersion / "debug/textures" /  (_info.dstPath.stem().string() + ".bin");
+        fs::path outUncompressedPath = _settings.pathToBuild / "debug/textures" /  (_info.dstPath.stem().string() + ".bin");
         FileHelper::write_binary_file(out, outUncompressedPath, true);
     }
     

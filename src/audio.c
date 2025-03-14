@@ -12,7 +12,7 @@
 #include "audiomgr.h"
 #include "audiosfx.h"
 #include "sched.h"
-#include "lib/src/audio/seqchannel.h"
+#include "libultra/src/audio/seqchannel.h"
 
 /************ .data ************/
 

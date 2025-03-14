@@ -23,3 +23,9 @@
 .macro move a, b
     addu \a, \b, $zero
 .endm
+
+.macro leaf label
+    .global \label
+    \label:
+    .ent    \label
+.endm

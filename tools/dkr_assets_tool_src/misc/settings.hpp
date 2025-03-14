@@ -12,7 +12,7 @@
 // Some paths to find if a directory is considered to be the "root" of the decomp.
 const std::vector<fs::path> REPO_ROOT_FIND_PATHS = {
     "src",
-    "lib",
+    "libultra",
     "include",
     "baseroms",
     "README.md"
@@ -28,9 +28,6 @@ struct DkrAssetsSettings {
     fs::path pathToConfigs;
     fs::path pathToInclude;
     fs::path pathToAsm;
-    fs::path pathToSrc;
-    fs::path pathToLibAsm;
-    fs::path pathToLibSrc;
     fs::path pathToData;
     fs::path pathToBuild;
     fs::path pathToCache;
@@ -54,9 +51,6 @@ struct DkrAssetsSettings {
             "\n Configs Path: ", pathToConfigs,
             "\n Include Path: ", pathToInclude,
             "\n ASM Path: ", pathToAsm,
-            "\n Src Path: ", pathToSrc,
-            "\n Lib ASM Path: ", pathToLibAsm,
-            "\n Lib Src Path: ", pathToLibSrc,
             "\n Data Path: ", pathToData,
             "\n Build Path: ", pathToBuild,
             "\n Model Scale: ", modelScale,
@@ -126,15 +120,9 @@ struct DkrAssetsSettings {
         std::string localModAssetsPath;
         
         _load_string_from_ptr(localAsmPath, "/asm_subpath", DEFAULT_ASM_SUBPATH);
-        _load_string_from_ptr(localSrcPath, "/src_subpath", DEFAULT_SRC_SUBPATH);
-        _load_string_from_ptr(localLibAsmPath, "/lib_asm_subpath", DEFAULT_LIB_ASM_SUBPATH);
-        _load_string_from_ptr(localLibSrcPath, "/lib_src_subpath", DEFAULT_LIB_SRC_SUBPATH);
         _load_string_from_ptr(localModAssetsPath, "/mod_assets_subpath", DEFAULT_MOD_ASSETS_SUBPATH);
         
         _format_subpath(pathToAsm, pathToRepo, localAsmPath);
-        _format_subpath(pathToSrc, pathToRepo, localSrcPath);
-        _format_subpath(pathToLibAsm, pathToRepo, localLibAsmPath);
-        _format_subpath(pathToLibSrc, pathToRepo, localLibSrcPath);
         _format_subpath(pathToModAssets, pathToMods, localModAssetsPath);
         
         // Build subdirectories

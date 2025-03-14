@@ -123,7 +123,7 @@ ALMicroTime _sndpVoiceHandler(void *node) {
     return sndp->nextDelta;
 }
 
-GLOBAL_ASM("asm/non_matchings/audiosfx/_handleEvent.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/_handleEvent.s")
 
 void func_8000410C(ALSoundState *state) {
     if (state->unk3E & 4) {
@@ -210,8 +210,8 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     return freeListLastIndex;
 }
 
-GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004384.s")
-GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004520.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004384.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004520.s")
 
 void func_80004604(u8 *arg0, u8 arg1) {
     if (arg0) {
@@ -234,7 +234,7 @@ s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask) {
 s32 func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, SoundMask *soundMask) {
 }
 #else
-GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004668.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004668.s")
 #endif
 
 // input typing not right (some type of struct)
