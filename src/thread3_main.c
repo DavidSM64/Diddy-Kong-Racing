@@ -899,7 +899,7 @@ void unload_level_menu(void) {
  * In the tracks menu, this only runs if there's a track actively loaded.
  */
 void update_menu_scene(s32 updateRate) {
-    if (get_thread30_level_id_to_load() == NULL) {
+    if (get_thread30_need_to_load_level() == FALSE) {
         func_80010994(updateRate);
         gParticlePtrList_flush();
         ainode_update();
@@ -1041,7 +1041,7 @@ void mode_menu(s32 updateRate) {
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     if (!gIsLoading) {
         unload_level_menu();
-        if (get_thread30_level_id_to_load() == 0) {
+        if (get_thread30_need_to_load_level() == FALSE) {
             gCurrDisplayList = gDisplayLists[gSPTaskNum];
             gDPFullSync(gCurrDisplayList++);
             gSPEndDisplayList(gCurrDisplayList++);

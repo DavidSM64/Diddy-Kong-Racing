@@ -7715,7 +7715,7 @@ s32 menu_track_select_loop(s32 updateRate) {
 
     settings = get_settings();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
-    if (get_thread30_level_id_to_load() == 0 && gMenuDelay != 0) {
+    if (get_thread30_need_to_load_level() == FALSE && gMenuDelay != 0) {
         if (gMenuDelay < 0) {
             gMenuDelay -= updateRate;
         } else {
@@ -8172,7 +8172,7 @@ void trackmenu_track_view(s32 updateRate) {
         gTrackSelectX += (gTrackSelectTargetX - gTrackSelectX) * 0.1;
         gTrackSelectY += (gTrackSelectTargetY - gTrackSelectY) * 0.1;
     }
-    if (gOpacityDecayTimer == 32 && get_thread30_level_id_to_load() == 0) {
+    if (gOpacityDecayTimer == 32 && get_thread30_need_to_load_level() == FALSE) {
         if (gTrackIdForPreview == gTrackmenuLoadedLevel) {
             gSelectedTrackX = gTrackSelectCursorX;
             gSelectedTrackY = gTrackSelectCursorY;
@@ -8236,7 +8236,7 @@ void trackmenu_input(s32 updateRate) {
         gMenuImages[5].scale = (f32) (sMenuImageProperties[5].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
     }
     camEnableUserView(0, FALSE);
-    if (get_thread30_level_id_to_load() == 0) {
+    if (get_thread30_need_to_load_level() == FALSE) {
         if (gMenuDelay < 0) {
             sMenuMusicVolume -= updateRate * 4;
         }
@@ -12074,8 +12074,7 @@ void credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
  * Handles the credits for the game
  */
 s32 menu_credits_loop(s32 updateRate) {
-    MenuElement *menuElement;
-    UNUSED s32 pad_sp7C[2];
+    UNUSED s32 pad_sp7C[3];
     s32 nextIndex;
     UNUSED s32 pad_sp70[2];
     s32 breakLoop;
@@ -12295,7 +12294,7 @@ s32 menu_credits_loop(s32 updateRate) {
     if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
         for (nextIndex = 0; nextIndex < MAXCONTROLLERS; nextIndex++) {
             buttonsPressedAllPlayers |= get_buttons_pressed_from_player(nextIndex);
-        }        
+        }
     }
 
     // handles the animations (if any) between levels in the credits
@@ -12307,7 +12306,7 @@ s32 menu_credits_loop(s32 updateRate) {
             gOpacityDecayTimer = 40;
             break;
         case 1:
-            if (get_thread30_level_id_to_load() == 0) {
+            if (get_thread30_need_to_load_level() == FALSE) {
                 gMenuStage = 2;
                 gOptionBlinkTimer = 40;
                 D_80126BD8 = FALSE;
@@ -12358,7 +12357,7 @@ s32 menu_credits_loop(s32 updateRate) {
     }
     if (gMenuDelay > 0) {
         gMenuDelay += updateRate;
-        if (get_thread30_level_id_to_load() == 0 && gMenuDelay > 30) {
+        if (get_thread30_need_to_load_level() == FALSE && gMenuDelay > 30) {
             music_change_on();
             credits_free();
             load_level_for_menu(ASSET_LEVEL_FRONTEND, ZERO_PLAYERS, CUTSCENE_NONE);
