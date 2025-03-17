@@ -275,49 +275,49 @@ expected: verify
 
 ### Recipes
 
-######## Asset Targets ########
+# ######## Asset Targets ########
 
-ASSETS_VERSION := us_1.0
-ASSETS := assets/$(ASSETS_VERSION)
-ASSETS_BUILD_DIR := $(BUILD_DIR)/assets
-BUILDER = $(TOOLS_DIR)/dkr_assets_tool -dkrv $(ASSETS_VERSION) build
+# ASSETS_VERSION := us_1.0
+# ASSETS := assets/$(ASSETS_VERSION)
+# ASSETS_BUILD_DIR := $(BUILD_DIR)/assets
+# BUILDER = $(TOOLS_DIR)/dkr_assets_tool -dkrv $(ASSETS_VERSION) build
 
-# Don't do setup checks if cleaning.
-ifneq ($(MAKECMDGOALS),clean)
-######## Extract Assets & Microcode ########
-DUMMY != $(PYTHON) $(TOOLS_DIR)/python/check_if_need_to_extract.py $(ASSETS_VERSION) >&2 || echo FAIL
-######## Prebuild step (Compile assets, generate linker file, etc.) ########
-DUMMY != $(TOOLS_DIR)/dkr_assets_tool -dkrv $(ASSETS_VERSION) prebuild >&2 || echo FAIL
-endif
+# # Don't do setup checks if cleaning.
+# ifneq ($(MAKECMDGOALS),clean)
+# ######## Extract Assets & Microcode ########
+# DUMMY != $(PYTHON) $(TOOLS_DIR)/python/check_if_need_to_extract.py $(ASSETS_VERSION) >&2 || echo FAIL
+# ######## Prebuild step (Compile assets, generate linker file, etc.) ########
+# DUMMY != $(TOOLS_DIR)/dkr_assets_tool -dkrv $(ASSETS_VERSION) prebuild >&2 || echo FAIL
+# endif
 
-# Helps fix an issue with parallel jobs.
-$(ALL_ASSETS_BUILT): | $(BUILD_DIR)
+# # Helps fix an issue with parallel jobs.
+# $(ALL_ASSETS_BUILT): | $(BUILD_DIR)
 
-# This is here to prevent make from deleting all the asset files after the build completes/fails.
-dont_remove_asset_files: $(ALL_ASSETS_BUILT)
+# # This is here to prevent make from deleting all the asset files after the build completes/fails.
+# dont_remove_asset_files: $(ALL_ASSETS_BUILT)
 
-# Add .json files
-JSON_FILES := $(shell find $(ASSETS) -type f -name '*.json')
+# # Add .json files
+# JSON_FILES := $(shell find $(ASSETS) -type f -name '*.json')
 
-# Ignore .meta.json files
-IGNORE_JSON_FILES := $(shell find $(ASSETS) -type f -name '*.meta.json')
-JSON_FILES := $(filter-out $(IGNORE_JSON_FILES),$(JSON_FILES))
+# # Ignore .meta.json files
+# IGNORE_JSON_FILES := $(shell find $(ASSETS) -type f -name '*.meta.json')
+# JSON_FILES := $(filter-out $(IGNORE_JSON_FILES),$(JSON_FILES))
 
-# $1 = asset path (e.g. assets/levels/models/...), $2 = cmd to run
-define DEFINE_ASSET_TARGET
-$(eval BASE_PATH := $(subst $(ASSETS),$(ASSETS_BUILD_DIR),$(basename $1)))
-$$(BASE_PATH).bin: $1
-	$2
-$(eval ALL_ASSETS_BUILT+=$(BASE_PATH).bin)
-endef
+# # $1 = asset path (e.g. assets/levels/models/...), $2 = cmd to run
+# define DEFINE_ASSET_TARGET
+# $(eval BASE_PATH := $(subst $(ASSETS),$(ASSETS_BUILD_DIR),$(basename $1)))
+# $$(BASE_PATH).bin: $1
+# 	$2
+# $(eval ALL_ASSETS_BUILT+=$(BASE_PATH).bin)
+# endef
 
-# $1 = Print message
-define JSON_FILE_ACTION
-	$$(call print,$1:,$$<,$$@)
-	$$(V)$$(BUILDER) -i $$< -o $$@
-endef
+# # $1 = Print message
+# define JSON_FILE_ACTION
+# 	$$(call print,$1:,$$<,$$@)
+# 	$$(V)$$(BUILDER) -i $$< -o $$@
+# endef
 
-$(foreach FILE,$(JSON_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call JSON_FILE_ACTION,Building))))
+# $(foreach FILE,$(JSON_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call JSON_FILE_ACTION,Building))))
 
 ###############################
 
