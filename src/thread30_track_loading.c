@@ -44,7 +44,7 @@ void stop_thread30(void) {
 /**
  * Returns the value in gThread30NeedToLoadLevel.
  */
-s32 get_thread30_level_id_to_load(void) {
+s32 get_thread30_need_to_load_level(void) {
     return gThread30NeedToLoadLevel;
 }
 
