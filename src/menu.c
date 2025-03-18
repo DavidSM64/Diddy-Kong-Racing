@@ -7715,7 +7715,7 @@ s32 menu_track_select_loop(s32 updateRate) {
 
     settings = get_settings();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
-    if (get_thread30_need_to_load_level() == FALSE && gMenuDelay != 0) {
+    if (!get_thread30_need_to_load_level() && gMenuDelay != 0) {
         if (gMenuDelay < 0) {
             gMenuDelay -= updateRate;
         } else {
@@ -8172,7 +8172,7 @@ void trackmenu_track_view(s32 updateRate) {
         gTrackSelectX += (gTrackSelectTargetX - gTrackSelectX) * 0.1;
         gTrackSelectY += (gTrackSelectTargetY - gTrackSelectY) * 0.1;
     }
-    if (gOpacityDecayTimer == 32 && get_thread30_need_to_load_level() == FALSE) {
+    if (gOpacityDecayTimer == 32 && !get_thread30_need_to_load_level()) {
         if (gTrackIdForPreview == gTrackmenuLoadedLevel) {
             gSelectedTrackX = gTrackSelectCursorX;
             gSelectedTrackY = gTrackSelectCursorY;
@@ -8236,7 +8236,7 @@ void trackmenu_input(s32 updateRate) {
         gMenuImages[5].scale = (f32) (sMenuImageProperties[5].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
     }
     camEnableUserView(0, FALSE);
-    if (get_thread30_need_to_load_level() == FALSE) {
+    if (!get_thread30_need_to_load_level()) {
         if (gMenuDelay < 0) {
             sMenuMusicVolume -= updateRate * 4;
         }
@@ -12306,7 +12306,7 @@ s32 menu_credits_loop(s32 updateRate) {
             gOpacityDecayTimer = 40;
             break;
         case 1:
-            if (get_thread30_need_to_load_level() == FALSE) {
+            if (!get_thread30_need_to_load_level()) {
                 gMenuStage = 2;
                 gOptionBlinkTimer = 40;
                 D_80126BD8 = FALSE;
@@ -12357,7 +12357,7 @@ s32 menu_credits_loop(s32 updateRate) {
     }
     if (gMenuDelay > 0) {
         gMenuDelay += updateRate;
-        if (get_thread30_need_to_load_level() == FALSE && gMenuDelay > 30) {
+        if (!get_thread30_need_to_load_level() && gMenuDelay > 30) {
             music_change_on();
             credits_free();
             load_level_for_menu(ASSET_LEVEL_FRONTEND, ZERO_PLAYERS, CUTSCENE_NONE);
