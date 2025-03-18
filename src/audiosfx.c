@@ -10,9 +10,7 @@
 #include "objects.h"
 #include "PR/libaudio.h"
 
-ALSoundState *D_800DC6B0 = NULL;
-s32 D_800DC6B4 = 0;                // Currently unknown, might be a different type.
-unk800DC6BC_40 *D_800DC6B8 = NULL; // Set but not used.
+ALUnkStruct D_800DC6B0 = { NULL, NULL, NULL };
 unk800DC6BC gAlSndPlayer;
 unk800DC6BC *gAlSndPlayerPtr = &gAlSndPlayer;
 s32 sfxVolumeSlider = 256;
@@ -69,7 +67,7 @@ void alSndPNew(audioMgrConfig *c) {
     gAlSndPlayerPtr->frameTime = 33000; // AL_USEC_PER_FRAME        /* time between API events */
     gAlSndPlayerPtr->unk40 = (unk800DC6BC_40 *) alHeapAlloc(c->hp, 1, c->unk00 * sizeof(unk800DC6BC_40));
     alEvtqNew(&(gAlSndPlayerPtr->evtq), alHeapAlloc(c->hp, 1, (c->unk04) * 28), c->unk04);
-    D_800DC6B8 = gAlSndPlayerPtr->unk40;
+    D_800DC6B0.unk8 = gAlSndPlayerPtr->unk40;
     for (i = 1; i < c->unk00; i++) {
         tmp1 = gAlSndPlayerPtr->unk40;
         alLink((ALLink *) (i + tmp1), (ALLink *) (i + tmp1 - 1));
@@ -210,7 +208,59 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     return freeListLastIndex;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004384.s")
+// This function is full of names like next / prev that I made up based on other funcs.
+// It's in no way guaranteed to be correct.
+// I"m really not even sure what it's supposed to be returning as a type.
+ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
+    s32 temp;
+    ALKeyMap *temp_a2;
+    unk80004384 *nextAllocList;
+    u32 mask;
+    s32 temp_a1;
+
+    nextAllocList = (unk80004384 *) D_800DC6B0.unk8;
+    temp_a2 = arg1->keyMap;
+    if (nextAllocList != NULL) {
+        mask = osSetIntMask(OS_IM_NONE);
+        D_800DC6B0.unk8 = (ALLink *) nextAllocList->next;
+        alUnlink((ALLink *) nextAllocList);
+        if (D_800DC6B0.next != NULL) {
+            nextAllocList->next = (ALLink *) D_800DC6B0.next;
+            nextAllocList->prev = NULL;
+            ((ALLink *) (D_800DC6B0.next))->prev = (ALLink *) nextAllocList;
+            D_800DC6B0.next = (ALLink *) nextAllocList;
+        } else {
+            nextAllocList->prev = NULL;
+            nextAllocList->next = NULL;
+            D_800DC6B0.next = (ALLink *) nextAllocList;
+            D_800DC6B0.prev = (ALLink *) nextAllocList;
+        }
+        osSetIntMask(mask);
+        temp = ((arg1->envelope->decayTime + 1) == 0);
+        temp_a1 = temp + 0x40;
+        temp = 6000;
+        nextAllocList->unk36 = temp_a1;
+        nextAllocList->unk3F = 5;
+        nextAllocList->unk38 = 2;
+        nextAllocList->unk8 = arg1;
+        nextAllocList->unk2C = 1.0f;
+        nextAllocList->unk3E = temp_a2->keyMax & 0xF0;
+        nextAllocList->unk30 = 0;
+        if (nextAllocList->unk3E & 0x20) {
+            nextAllocList->unk28 = alCents2Ratio((temp_a2->keyBase * 100) - temp);
+        } else {
+            nextAllocList->unk28 = alCents2Ratio(((temp_a2->keyBase * 100) + temp_a2->detune) - temp);
+        }
+        if (temp_a1 != 0x40) {
+            nextAllocList->unk3E |= 2;
+        }
+        nextAllocList->unk3D = 0;
+        nextAllocList->unk3C = 0x40;
+        nextAllocList->unk34 = 0x7FFF;
+    }
+    return (ALSound *) nextAllocList;
+}
+
 #pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004520.s")
 
 void func_80004604(u8 *arg0, u8 arg1) {
@@ -256,7 +306,7 @@ void func_800048D8(u8 event) {
     ALSoundState *queue;
 
     intMask = osSetIntMask(OS_IM_NONE);
-    queue = D_800DC6B0;
+    queue = D_800DC6B0.next;
     while (queue != NULL) {
         evt.type = AL_SNDP_UNK_10_EVT;
         evt.msg.end.ticks = (s32) queue; // TODO: find the correct value for this.
@@ -318,7 +368,7 @@ void set_sound_channel_volume(u8 channel, u16 volume) {
     ALEvent evt;
 
     mask = osSetIntMask(OS_IM_NONE);
-    queue = (ALEventQueue *) D_800DC6B0;
+    queue = (ALEventQueue *) D_800DC6B0.next;
     gSoundChannelVolume[channel] = volume;
 
     while (queue != NULL) {

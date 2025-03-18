@@ -22,21 +22,44 @@
 #define AL_SNDP_UNK_10_EVT (1 << 10)
 #define AL_SNDP_UNK_11_EVT (1 << 11)
 
-typedef struct {
-    struct ALSoundState *next;
-    struct ALSoundState *prev;
-    struct ALSoundState *unk8;
+typedef struct ALUnkStruct {
+  /* 0x00 */ struct ALSoundState *next;
+  /* 0x04 */ struct ALSoundState *prev;
+  /* 0x08 */ struct ALSoundState *unk8;
+} ALUnkStruct;
+
+typedef struct ALSoundState {
+  /* 0x00 */ struct ALSoundState *next;
+  /* 0x04 */ struct ALSoundState *prev;
+  /* 0x08 */ struct ALSoundState *unk8;
   /* 0x0C */ ALVoice     voice;
-    ALSound     *sound;         /* sound referenced here */
-    s16         priority;
-    f32         pitch;          /* current playback pitch                    */
-    s32         state;          /* play state for this sound                 */
-    s16         vol;            /* volume - combined with volume from bank   */
-    ALPan       pan;            /* pan - 0 = left, 127 = right               */
-    u8          fxMix;          /* wet/dry mix - 0 = dry, 127 = wet          */
+  /* 0x28 */ ALSound     *sound;         /* sound referenced here */
+  /* 0x2C */ s16         priority;
+  /* 0x30 */ f32         pitch;          /* current playback pitch                    */
+  /* 0x34 */ s32         state;          /* play state for this sound                 */
+  /* 0x38 */ s16         vol;            /* volume - combined with volume from bank   */
+  /* 0x3A */ ALPan       pan;            /* pan - 0 = left, 127 = right               */
+  /* 0x3C */ u8          fxMix;          /* wet/dry mix - 0 = dry, 127 = wet          */
   /* 0x3C */ u8 pad3C[2];
   /* 0x3E */ u8 unk3E;
 } ALSoundState;
+
+typedef struct unk80004384 {
+  /* 0x00 */ struct ALSoundState *next;
+  /* 0x04 */ struct ALSoundState *prev;
+  /* 0x08 */ struct ALSoundState *unk8;
+  /* 0x0C */ ALVoice     voice;
+  /* 0x28 */ f32 unk28;
+  /* 0x2C */ f32 unk2C;
+  /* 0x30 */ s32 unk30;
+  /* 0x34 */ s16 unk34;
+  /* 0x36 */ u8 unk36;
+  /* 0x38 */ s32 unk38;
+  /* 0x3C */ u8 unk3C;
+  /* 0x3C */ u8 unk3D;
+  /* 0x3C */ u8 unk3E;
+  /* 0x3F */ u8 unk3F;
+} unk80004384; // ALSoundState based?
 
 typedef struct unk800DC6BC_40 {
     ALLink node;
@@ -153,6 +176,7 @@ void set_sound_channel_volume(u8 channel, u16 volume);
 void func_8000418C(ALVoiceState *voiceState);
 void func_800048D8(u8 event);
 INCONSISTENT void sound_stop();
+ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1);
 
 // Non Matching
 void func_80004520(ALSoundState *);

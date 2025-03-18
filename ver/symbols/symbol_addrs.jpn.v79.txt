@@ -1858,7 +1858,7 @@ __osLeoInterrupt = 0x800C8CD0;
 // thread30_track_loading.c .text
 create_and_start_thread30 = 0x800C8CE0;
 stop_thread30 = 0x800C8D4C;
-get_thread30_level_id_to_load = 0x800C8D70;
+get_thread30_need_to_load_level = 0x800C8D70;
 tick_thread30 = 0x800C8D80;
 get_thread30_load_delay = 0x800C8DD8;
 set_level_to_load_in_background = 0x800C8DE8;
@@ -2186,9 +2186,7 @@ gFunc80019808Checksum = 0x800DE020;
 gFunc80019808Length = 0x800DE024;
 
 // audiosfx.c .data
-D_800DC6B0 = 0x800DE040;
-D_800DC6B4 = 0x800DE044;
-D_800DC6B8 = 0x800DE048;
+D_800DC6B0 = 0x800DE040; // size:0x10
 gAlSndPlayerPtr = 0x800DE04C;
 sfxVolumeSlider = 0x800DE050;
 D_800DC6C4 = 0x800DE054;

@@ -5,7 +5,7 @@
 
 void create_and_start_thread30(void);
 void stop_thread30(void);
-s32 get_thread30_level_id_to_load(void);
+s32 get_thread30_need_to_load_level(void);
 void tick_thread30(void);
 s32 get_thread30_load_delay(void);
 s32 set_level_to_load_in_background(s32 levelId, s32 cutsceneId);
