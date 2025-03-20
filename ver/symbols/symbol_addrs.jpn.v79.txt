@@ -2186,7 +2186,7 @@ gFunc80019808Checksum = 0x800DE020;
 gFunc80019808Length = 0x800DE024;
 
 // audiosfx.c .data
-D_800DC6B0 = 0x800DE040; // size:0x10
+D_800DC6B0 = 0x800DE040; // size:0xC
 gAlSndPlayerPtr = 0x800DE04C;
 sfxVolumeSlider = 0x800DE050;
 D_800DC6C4 = 0x800DE054;
