@@ -583,14 +583,14 @@ void func_800C15D4(FadeTransition *transition) {
     s32 sizeTris;
     s16 xSins;
     s16 yCoss;
-    
+
     sizeVerts = 72 * sizeof(Vertex);
     sizeTris = 64 * sizeof(Triangle);
-    sTransitionVtx[0] = (Vertex *)mempool_alloc_safe((sizeVerts + sizeTris) * 2, COLOUR_TAG_YELLOW);
+    sTransitionVtx[0] = (Vertex *) mempool_alloc_safe((sizeVerts + sizeTris) * 2, COLOUR_TAG_YELLOW);
     sTransitionVtx[1] = sTransitionVtx[0] + 72;
     sTransitionTris[0] = (Triangle *) (sTransitionVtx[1] + 72);
     sTransitionTris[1] = sTransitionTris[0] + 64;
-    
+
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 72; j++) {
             sTransitionVtx[i][j].r = gCurFadeRed;
@@ -599,18 +599,18 @@ void func_800C15D4(FadeTransition *transition) {
             sTransitionVtx[i][j].a = 255;
         }
     }
-    
+
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 9; j++) {
             sTransitionVtx[i][(j << 1) + 19].a = 0;
             sTransitionVtx[i][(j << 1) + 55].a = 0;
         }
     }
-    
+
     var_f12 = 180.0f;
     var_f20 = 240.0f;
-    k = 0; 
-    for (i = 0; i < 9; i++, k+= 0x1000) {
+    k = 0;
+    for (i = 0; i < 9; i++, k += 0x1000) {
         xSins = sins_f(k) * var_f20;
         yCoss = coss_f(k) * var_f12;
         for (j = 0; j < 2; j++) {
@@ -628,7 +628,7 @@ void func_800C15D4(FadeTransition *transition) {
             sTransitionVtx[j][(i << 1) + 55].z = -16;
         }
     }
-    
+
     if (transition->type & FADE_FLAG_OUT) {
         D_8012A758 = 0.0f;
         D_8012A75C = 0.0f;
@@ -644,7 +644,7 @@ void func_800C15D4(FadeTransition *transition) {
         D_8012A768 = 0.0f;
         D_8012A76C = 0.0f;
     }
-    
+
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 64; j++) {
             sTransitionTris[i][j].flags = BACKFACE_DRAW;
@@ -656,14 +656,15 @@ void func_800C15D4(FadeTransition *transition) {
             sTransitionTris[i][j].uv2.v = 0;
         }
     }
-    #define ASSIGN_TRANSITION_TRI(i, j, k) \
-        ((u8*)sTransitionTris[j])[((i << 1) << 4) + (sizeof(Triangle) * k) * sizeof(Triangle) + 1] = (i << 1) + 0; \
-        ((u8*)sTransitionTris[j])[((i << 1) << 4) + (sizeof(Triangle) * k) * sizeof(Triangle) + 2] = (i << 1) + 1; \
-        ((u8*)sTransitionTris[j])[((i << 1) << 4) + (sizeof(Triangle) * k) * sizeof(Triangle) + 3] = (i << 1) + 3; \
-        ((u8*)sTransitionTris[j])[((i << 1) << 4) + (1 + (sizeof(Triangle) * k)) * sizeof(Triangle) + 1] = (i << 1) + 0; \
-        ((u8*)sTransitionTris[j])[((i << 1) << 4) + (1 + (sizeof(Triangle) * k)) * sizeof(Triangle) + 2] = (i << 1) + 3; \
-        ((u8*)sTransitionTris[j])[((i << 1) << 4) + (1 + (sizeof(Triangle) * k)) * sizeof(Triangle) + 3] = (i << 1) + 2;
-    
+
+#define ASSIGN_TRANSITION_TRI(i, j, k)                                                                                 \
+    ((u8 *) sTransitionTris[j])[((i << 1) << 4) + (sizeof(Triangle) * k) * sizeof(Triangle) + 1] = (i << 1) + 0;       \
+    ((u8 *) sTransitionTris[j])[((i << 1) << 4) + (sizeof(Triangle) * k) * sizeof(Triangle) + 2] = (i << 1) + 1;       \
+    ((u8 *) sTransitionTris[j])[((i << 1) << 4) + (sizeof(Triangle) * k) * sizeof(Triangle) + 3] = (i << 1) + 3;       \
+    ((u8 *) sTransitionTris[j])[((i << 1) << 4) + (1 + (sizeof(Triangle) * k)) * sizeof(Triangle) + 1] = (i << 1) + 0; \
+    ((u8 *) sTransitionTris[j])[((i << 1) << 4) + (1 + (sizeof(Triangle) * k)) * sizeof(Triangle) + 2] = (i << 1) + 3; \
+    ((u8 *) sTransitionTris[j])[((i << 1) << 4) + (1 + (sizeof(Triangle) * k)) * sizeof(Triangle) + 3] = (i << 1) + 2;
+
     for (i = 0; i < 8; i++) {
         for (j = 0; j < 2; j++) {
             ASSIGN_TRANSITION_TRI(i, j, 0);
@@ -672,7 +673,7 @@ void func_800C15D4(FadeTransition *transition) {
             ASSIGN_TRANSITION_TRI(i, j, 3);
         }
     }
-    
+
     sTransitionStatus = TRANSITION_ACTIVE;
 }
 
