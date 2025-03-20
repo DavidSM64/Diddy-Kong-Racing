@@ -1,6 +1,11 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800C9B30 */
 
+
+#ifndef NON_MATCHING
+
+// GCC complains if these are compiled, so include assembly variants instead in nonmatching builds.
+
 long long __d_to_ll(double d) {
     return d;
 }
@@ -32,3 +37,5 @@ double __ull_to_d(unsigned long long u) {
 float __ull_to_f(unsigned long long u) {
     return u;
 }
+
+#endif

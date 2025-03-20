@@ -6135,7 +6135,12 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     ObjectModel *objModel;
     Vertex *vertices;
     Vertex *vertex;
+    // TODO: find a way to have matching builds use this Matrix temp.
+#ifdef AVOID_UB
+    Matrix mtx;
+#else
     f32 mtx[4];
+#endif
     f32 sinYRot;
     f32 tempF3;
     f32 minX;

@@ -5,7 +5,7 @@
 #include "macros.h"
 #include <ultra64.h>
 
-void main(void);
+void mainproc(void);
 void thread1_main(void *);
 void thread3_verify_stack(void);
 

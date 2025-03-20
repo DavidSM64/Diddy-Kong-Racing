@@ -12,6 +12,10 @@ VERSION := us_1.0
 NON_MATCHING ?= 0
 $(eval $(call validate-option,NON_MATCHING,0 1))
 
+# Experimental option for nonmatching builds. GCC may not function identically to ido.
+COMPILER ?= ido
+$(eval $(call validate-option,NON_MATCHING,ido gcc))
+
 LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\"
 
 ifeq ($(VERSION),us_1.0)
@@ -30,6 +34,8 @@ ifeq ($(NON_MATCHING),1)
   DEFINES += AVOID_UB=1
 else
   DEFINES += ANTI_TAMPER=1
+  # Override compiler choice on matching builds.
+  COMPILER := ido
 endif
 
 # Whether to hide commands or not
@@ -40,6 +46,9 @@ endif
 
 # Whether to colorize build messages
 COLOR ?= 1
+
+# Optimisation flag for nonmatching GCC builds. Can be -O2, -O3, -Os or -OFast, among others.
+OPT_FLAGS_GCC := -O2
 
 ############################ Setup ###########################
 
@@ -216,7 +225,14 @@ ifeq ($(shell getconf LONG_BIT), 64)
   # Ensure that gcc treats the code as 32-bit
   CC_CHECK_CFLAGS += -m32
 endif
-CC_CHECK_CFLAGS := -fsyntax-only -funsigned-char $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -Wno-main -DNON_MATCHING -DAVOID_UB -D_LANGUAGE_C -DNDEBUG -Werror-implicit-function-declaration
+
+ifeq ($(NON_MATCHING),0)
+  C_STANDARD := -std=gnu90
+else
+  C_STANDARD := -std=gnu99
+endif
+
+CC_CHECK_CFLAGS := -fsyntax-only -funsigned-char $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) $(C_STANDARD) -Wall -Wextra -Wno-format-security -Wno-main -DNON_MATCHING -DAVOID_UB -D_LANGUAGE_C -DNDEBUG -Werror-implicit-function-declaration
 
 # Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
 ifeq ($(NON_MATCHING),0)
@@ -314,6 +330,38 @@ $(BUILD_DIR)/src/collision.o: MIPSISET := -mips2
 
 ######################## Targets #############################
 
+ifeq ($(COMPILER),gcc)
+	DUMMY != python3 ./tools/python/gcc_generate.py gcc_safe_files.mk
+	include gcc_safe_files.mk
+endif
+
+$(GCC_SAFE_FILES): CC := $(CROSS)gcc
+
+$(GCC_SAFE_FILES): CFLAGS := -c -DNDEBUG -DAVOID_UB $(OPT_FLAGS_GCC) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) \
+	-EB \
+	-march=vr4300 \
+	-mabi=32 \
+	-mno-check-zero-division \
+	-mno-abicalls \
+	-mgp32 \
+	-mfp32 \
+	-mhard-float \
+	-ffreestanding \
+	-fno-builtin \
+	-fno-common \
+	-mno-long-calls \
+	-ffast-math \
+	-funsafe-math-optimizations \
+	-fno-merge-constants \
+	-fno-strict-aliasing \
+	-fno-zero-initialized-in-bss \
+	-fsingle-precision-constant \
+	-funsigned-char \
+	-mips3 \
+	-fwrapv \
+	-falign-functions=16 \
+	-G 0
+
 default: all
 
 TARGET = dkr
@@ -355,7 +403,14 @@ else
 	@echo "build lib directory has already been deleted."
 endif
 
-clean_src: clean_lib
+clean_asm:
+ifneq ($(wildcard $(BUILD_DIR)/lib/.*),)
+	rm -r $(BUILD_DIR)/asm/*.o
+else
+	@echo "build asm directory has already been deleted."
+endif
+
+clean_src: clean_lib clean_asm
 ifneq ($(wildcard $(BUILD_DIR)/src/.*),)
 	rm -r $(BUILD_DIR)/src/*.o
 	rm -f dkr.ld
