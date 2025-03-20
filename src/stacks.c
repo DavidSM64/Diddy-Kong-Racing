@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800B7D1F */
-
 #include "stacks.h"
 
 #include "types.h"

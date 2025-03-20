@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x8009ECF0 */
-
 #include "game_ui.h"
 #include "common.h"
 #include "types.h"

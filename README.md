@@ -153,27 +153,3 @@ As of March 16, 2025, this is our current score:
  =====================================================================
  ```
 <!-- README_SCORE_END -->
-
----
-
-## TODO list
-
-### Major
-
-What should be focused on.
-
-* Decompiling the non-matching asm files into matching C functions.
-* Documenting variables & functions
-
-### Minor
-
-What can be done, but not essential.
-
-* Figuring out the formats for the assets in the /assets/ folder.
-* Creating tools to modify assets
-
-### Future
-
-These features won't be complete anytime soon.
-
-* Add support for the other 4 versions.

@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800249E0 */
-
 #include "tracks.h"
 
 #include "types.h"

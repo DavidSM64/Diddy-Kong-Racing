@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80077450 */
-
 #include "rcp_dkr.h"
 #include "types.h"
 #include "structs.h"
@@ -8,7 +5,6 @@
 #include "video.h"
 #include "camera.h"
 #include "set_rsp_segment.h"
-// #include "libultra/src/unknown_0D24D0.h"
 
 /************ .data ************/
 

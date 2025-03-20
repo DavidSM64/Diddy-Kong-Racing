@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800B6F50 */
-
 #include "thread0_epc.h"
 #include "common.h"
 #include "types.h"
