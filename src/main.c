@@ -22,8 +22,11 @@ UNUSED u64 gUnusedThreadStack[0x200];
  * It kicks things off by initialising thread1, which serves as the top level
  * Official name: boot
  */
-void main(void) {
+void mainproc(void) {
     osInitialize();
+#ifdef AVOID_UB
+    bzero(&gMainMemoryPool, RAM_END - (s32)(&gMainMemoryPool));
+#endif
     osCreateThread(&gThread1, 1, &thread1_main, 0, &gThread1Stack[0x20], OS_PRIORITY_IDLE);
     osStartThread(&gThread1);
 }
