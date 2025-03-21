@@ -1,3 +1,4 @@
+#ifndef NON_MATCHING
 long long __d_to_ll(double d) {
     return d;
 }
@@ -29,3 +30,4 @@ double __ull_to_d(unsigned long long u) {
 float __ull_to_f(unsigned long long u) {
     return u;
 }
+#endif

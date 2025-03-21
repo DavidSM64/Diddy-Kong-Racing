@@ -18,9 +18,9 @@ sw         $zero, 0x0($t0)
 sw         $zero, 0x4($t0)
 bnez       $t1, .L80000410
  addi      $t0, $t0, 0x8
-lui        $t2, %hi(main)
+lui        $t2, %hi(mainproc)
 lui        $sp, %hi(gCameraSegment)
-addiu      $t2, $t2, %lo(main)
+addiu      $t2, $t2, %lo(mainproc)
 jr         $t2
  addiu     $sp, $sp, %lo(gCameraSegment)
 nop

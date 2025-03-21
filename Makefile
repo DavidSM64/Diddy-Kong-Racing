@@ -3,6 +3,10 @@ REGION  := us
 VERSION  := v77
 NON_MATCHING ?= 0
 
+# Experimental option for nonmatching builds. GCC may not function identically to ido.
+COMPILER ?= ido
+$(eval $(call validate-option,NON_MATCHING,ido gcc))
+
 LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\"
 
 # Whether to hide commands or not
@@ -120,8 +124,12 @@ ifeq ($(NON_MATCHING),1)
 	DEFINES += NON_MATCHING
 	DEFINES += AVOID_UB
 	VERIFY = no_verify
+	C_STANDARD := -std=gnu99
 else
 	DEFINES += ANTI_TAMPER
+    # Override compiler choice on matching builds.
+	COMPILER := ido
+	C_STANDARD := -std=gnu99
 endif
 
 C_DEFINES := $(foreach d,$(DEFINES),-D$(d)) $(LIBULTRA_VERSION_DEFINE) -D_MIPS_SZLONG=32
@@ -148,7 +156,7 @@ CHECK_WARNINGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -Wn
 ifeq ($(NON_MATCHING),0)
 	CHECK_WARNINGS += -Wno-unused-value
 endif
-CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char -std=gnu90 -m32 -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
+CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -m32 -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
 
 TARGET     = $(BUILD_DIR)/$(BASENAME).$(REGION).$(VERSION)
 LD_SCRIPT  = ver/$(BASENAME).$(REGION).$(VERSION).ld
@@ -192,6 +200,38 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_WARNINGS := -w
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_CHECK := :
 
 ### Targets
+
+ifeq ($(COMPILER),gcc)
+	DUMMY != python3 ./tools/python/gcc_generate.py gcc_safe_files.mk
+	include gcc_safe_files.mk
+endif
+
+$(GCC_SAFE_FILES): CC := $(CROSS)gcc
+
+$(GCC_SAFE_FILES): CFLAGS := -c -DNDEBUG -DAVOID_UB $(OPT_FLAGS_GCC) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) \
+	-EB \
+	-march=vr4300 \
+	-mabi=32 \
+	-mno-check-zero-division \
+	-mno-abicalls \
+	-mgp32 \
+	-mfp32 \
+	-mhard-float \
+	-ffreestanding \
+	-fno-builtin \
+	-fno-common \
+	-mno-long-calls \
+	-ffast-math \
+	-funsafe-math-optimizations \
+	-fno-merge-constants \
+	-fno-strict-aliasing \
+	-fno-zero-initialized-in-bss \
+	-fsingle-precision-constant \
+	-funsigned-char \
+	-mips3 \
+	-fwrapv \
+	-falign-functions=16 \
+	-G 0
 
 default: all
 
@@ -360,6 +400,13 @@ $(BUILD_DIR)/%.s.o: %.s | $(ALL_ASSETS_BUILT)
 $(BUILD_DIR)/asm/assets/assets.s.o: asm/assets/assets.s | $(ALL_ASSETS_BUILT)
 	$(call print,Assembling Assets:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -o $(BUILD_DIR)/assets/assets.bin.o $<
+
+ifeq ($(NON_MATCHING),1)
+# Specifically override llcvt file for NON_MATCHING builds
+$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: src/hasm/llmuldiv_gcc.s | $(ALL_ASSETS_BUILT)
+	$(call print,Assembling llmuldiv_gcc:,$<,$@)
+	$(V)$(AS) $(ASFLAGS) --defsym NON_MATCHING=1 -o $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o $<
+endif
 
 $(BUILD_DIR)/%.bin.o: %.bin | $(ALL_ASSETS_BUILT)
 	$(call print,Linking Binary:,$<,$@)
