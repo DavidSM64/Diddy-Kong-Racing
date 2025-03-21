@@ -5,6 +5,11 @@
 .set noreorder /* don't insert nops after branches */
 .set gp=64     /* allow use of 64-bit general purpose registers */
 
+.section .bss
+
+glabel entrypointThreadStack
+.space 0x1000
+
 .section .text, "ax"
 
 leaf entrypoint
@@ -19,10 +24,10 @@ sw         $zero, 0x4($t0)
 bnez       $t1, .L80000410
  addi      $t0, $t0, 0x8
 lui        $t2, %hi(mainproc)
-lui        $sp, %hi(gCameraSegment)
+lui        $sp, %hi(entrypointThreadStack + 0x1000)
 addiu      $t2, $t2, %lo(mainproc)
 jr         $t2
- addiu     $sp, $sp, %lo(gCameraSegment)
+ addiu     $sp, $sp, %lo(entrypointThreadStack + 0x1000)
 nop
 nop
 nop

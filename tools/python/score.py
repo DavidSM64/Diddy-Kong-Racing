@@ -8,7 +8,7 @@ from score_display import ScoreDisplay
 
 ASM_FOLDERS = [
     './asm',
-    './lib/asm',
+    './libultra/asm',
 ]
 
 BLACKLIST = [

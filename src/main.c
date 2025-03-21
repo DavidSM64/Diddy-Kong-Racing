@@ -9,7 +9,6 @@ u64 gThread1Stack[0x21];
 u64 gThread3Stack[0x401];
 OSThread gThread1; // OSThread for thread 1
 OSThread gThread3; // OSThread for thread 3
-UNUSED u64 gUnusedThreadStack[0x200];
 
 /******************************/
 

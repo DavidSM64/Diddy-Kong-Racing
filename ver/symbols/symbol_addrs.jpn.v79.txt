@@ -3933,7 +3933,9 @@ gThread1Stack = 0x8011F0C0;
 gThread3Stack = 0x8011F1C8;
 gThread1 = 0x801211D0;
 gThread3 = 0x80121380;
-gUnusedThreadStack = 0x80121530;
+
+// entrypoint .bss
+entrypointThreadStack = 0x80121530;
 
 // camera .bss
 gCameraSegment = 0x80122530;

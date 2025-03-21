@@ -29,20 +29,13 @@ segments:
     type: bin
     start: 0x40
 
-  - name: entry
+  - name: main
     type: code
     start: 0x1000
     vram: 0x80000400
-    subsegments:
-      - [0x1000, hasm, hasm/entrypoint]
-
-  - name: main
-    type: code
-    start: 0x1050
-    vram: 0x80000450
-    follows_vram: entry
     bss_size: 0x414D0
     subsegments:
+      - [0x1000, hasm, hasm/entrypoint]
       - [0x1050, c, audio]
       - [0x3260, c, audiomgr]
       - [0x3D60, c, audiosfx]
@@ -405,6 +398,7 @@ segments:
       - { start: auto, type: .bss, vram: 0x8011DB90, name: vehicle_rocket }
       - { start: auto, type: .bss, vram: 0x8011DBA0, name: object_models }
       - { start: auto, type: .bss, vram: 0x8011DCD0, name: main }
+      - { start: auto, type: .bss, vram: 0x80120040, name: hasm/entrypoint }
       - { start: auto, type: .bss, vram: 0x80121040, name: camera }
       - { start: auto, type: .bss, vram: 0x80121660, name: joypad }
       - { start: auto, type: .bss, vram: 0x801216E0, name: game }

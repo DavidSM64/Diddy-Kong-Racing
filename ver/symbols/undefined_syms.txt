@@ -49,7 +49,7 @@ __BSS_SECTION_SIZE = main_BSS_SIZE;     /* Entrypoint addresses */
 __ASSETS_LUT_START = main_ROM_END;      /* Required to have this in place to define where assets live */
 __ASSETS_LUT_END = main_ROM_END + 0xD0; /* Not truly sure how to determine the end location, but it's always 0xD0 after the start */
 __ROM_END = assets_ROM_END;             /* Used for the ROM checksum calculation in cheatmenu_checksum */
-__RAM_TO_ROM = entry_VRAM - 0x1000;     /* Used in the calc_func_checksyms.py */
+__RAM_TO_ROM = main_VRAM - 0x1000;      /* Used in the calc_func_checksyms.py */
 
 /* Just libultra stuff below */
 
