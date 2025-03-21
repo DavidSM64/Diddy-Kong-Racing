@@ -96,7 +96,6 @@ else
 endif
 
 AS       = $(CROSS)as
-CPP      = cpp
 LD       = $(CROSS)ld
 OBJCOPY  = $(CROSS)objcopy
 VENV     = .venv
