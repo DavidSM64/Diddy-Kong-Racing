@@ -9,6 +9,7 @@
 
 glabel entrypointThreadStack
 .space 0x1000
+glabel entrypointThreadStackEnd
 
 .section .text, "ax"
 
@@ -24,10 +25,10 @@ sw         $zero, 0x4($t0)
 bnez       $t1, .L80000410
  addi      $t0, $t0, 0x8
 lui        $t2, %hi(mainproc)
-lui        $sp, %hi(entrypointThreadStack + 0x1000)
+lui        $sp, %hi(entrypointThreadStackEnd)
 addiu      $t2, $t2, %lo(mainproc)
 jr         $t2
- addiu     $sp, $sp, %lo(entrypointThreadStack + 0x1000)
+ addiu     $sp, $sp, %lo(entrypointThreadStackEnd)
 nop
 nop
 nop
