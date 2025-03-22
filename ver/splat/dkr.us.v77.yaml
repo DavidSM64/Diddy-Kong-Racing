@@ -443,5 +443,5 @@ segments:
     type: bin
     start: 0xECB60
     follows_vram: main
-  - [0xAC9630, bin, assets_end]
+  - [0xAC9630, bin, padding]
   - [0xC00000]
