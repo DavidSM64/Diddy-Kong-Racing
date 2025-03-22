@@ -869,7 +869,7 @@ modify_panning = 0x80065BEC;
 alSynStartVoiceParams = 0x80065C38;
 
 // main.c .text
-main = 0x80065D40;
+mainproc = 0x80065D40;
 thread1_main = 0x80065D98;
 thread3_verify_stack = 0x80065E30;
 
