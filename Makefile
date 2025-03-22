@@ -102,8 +102,6 @@ VENV     = .venv
 PYTHON   = $(VENV)/bin/python3
 GCC      = gcc
 
-XGCC     = mips64-elf-gcc
-
 #Options
 CC       = $(RECOMP_DIR)/cc
 SPLAT    ?= $(PYTHON) -m splat split
@@ -140,6 +138,14 @@ INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/audio -I $(LIBULTRA_DIR)/src/os
 
 ASFLAGS        = -march=vr4300 -32 -G0 $(ASM_DEFINES) $(INCLUDE_CFLAGS)
 OBJCOPYFLAGS   = -O binary
+
+# Pad to 12MB if matching, otherwise build to a necessary minimum of 1.004MB
+ifeq ($(NON_MATCHING),1)
+  OBJCOPYFLAGS += --pad-to=0x101000 --gap-fill=0xFF
+else
+  OBJCOPYFLAGS += --pad-to=0xC00000 --gap-fill=0xFF
+endif
+
 
 #IDO Warnings to Ignore. These are coding style warnings we don't follow
 CC_WARNINGS := -fullwarn -Xfullwarn -woff 838,649,624
