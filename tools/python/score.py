@@ -58,9 +58,9 @@ for filename in filelist:
 BUILD_DIRECTORY = './build'
 SRC_DIRECTORY = './src'
 LIB_SRC_DIRECTORY = './libultra/src'
-FUNCTION_REGEX = r'^(?<!static\s)(?:(\/[*][*!][*]*\n(?:[^/]*\n)+?\s*[*]\/\n)(?:\s*)*?)?(?:\s*UNUSED\s+)?([^\s]+)\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
-GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
-WIP_REGEX = r'#ifdef\s+(?:NON_MATCHING|NON_EQUIVALENT)(?:.|\n)*?#else\s*(GLOBAL_ASM[(][^)]*[)])(.|\n)*?#endif'
+FUNCTION_REGEX = r'^(?<!static\s)(?:(\/[*][*!][*]*\n(?:[^\/]*\n)+?\s*[*]\/\n)(?:\s*)*?)?(?:\s*UNUSED\s+)?([^\s]+)\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
+GLOBAL_ASM_REGEX = r'\#pragma\sGLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
+WIP_REGEX = r'ifdef\s+(?:NON_MATCHING|NON_EQUIVALENT)(?:.|\n)*?\#else\s*(\#pragma\sGLOBAL_ASM[(][^)]*[)])(.|\n)*?'
 NON_MATCHING_REGEX = re.compile(r'^#ifdef[ ]+NON_MATCHING(?:.|\n)*?(?:\s*UNUSED\s+)?(?:[^\s]+)\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{', re.MULTILINE)
 NON_EQUVIALENT_REGEX = re.compile(r'^#ifdef[ ]+NON_EQUIVALENT', re.MULTILINE)
 
@@ -103,7 +103,11 @@ class DkrMapFile:
 
 MAP_FILE = DkrMapFile()
 
-NOT_FUNCTION_NAMES = ['if', 'else', 'switch', 'while', 'for']
+# Adding regional and other version functions here to ignore since we're only scoring US_1.0 for now.
+NOT_FUNCTION_NAMES = ['if', 'else', 'switch', 'while', 'for', 'dmacopy_internal', 'func_80082BC8_837C8', 'rumble_enable',
+    'func_800C6464_C7064', 'func_800C663C_C723C', 'func_800C67F4_C73F4', 'func_800C6870_C7470',
+    'func_800C68CC_C74CC', 'func_800C6DD4_C79D4', 'func_800C7744_C8344', 'func_800C7804_C8404',
+    'func_800C7864_C8464', 'func_800C78E0_C84E0']
 
 class ScoreFileMatch:
     def __init__(self, comment, functionName):
