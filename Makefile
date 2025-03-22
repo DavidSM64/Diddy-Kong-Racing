@@ -274,7 +274,7 @@ extractall:
 	$(SPLAT) ver/splat/$(BASENAME).us.v80.yaml
 	$(SPLAT) ver/splat/$(BASENAME).pal.v80.yaml
 
-dependencies:
+setup:
 #Set up a python venv so we don't get warnings about breaking system packages.
 	$(V)python3 -m venv $(VENV)
 #Installing the splat dependencies
@@ -321,7 +321,7 @@ expected: verify
 #Run this to use the asset builder to customize assets
 assets: all
 
-# Only compile the assets when running `make assets`
+# Only compile the assets when running `make assets` or if we're making a NON_MATCHING build
 ifeq ($(MAKECMDGOALS),assets)
 
 ASSETS_VERSION := us_1.0
