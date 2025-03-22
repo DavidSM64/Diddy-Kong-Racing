@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800B4940 */
-
 #include "printf.h"
 #include "types.h"
 #include "macros.h"
@@ -207,7 +204,7 @@ UNUSED int sprintf(char *s, const char *format, ...) {
 }
 
 // Official Name: vsprintf
-GLOBAL_ASM("asm/non_matchings/printf/vsprintf.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/printf/vsprintf.s")
 
 /**
  * Load the font textures for the debug text, then set the buffer to the beginning.
@@ -449,7 +446,7 @@ s32 func_800B653C(Gfx **dlist, char *buffer) {
     return nextBuffer - bufferSave;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/printf/func_800B653C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/printf/func_800B653C.s")
 #endif
 
 /**

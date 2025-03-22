@@ -1,0 +1,4782 @@
+osTvType = 0x80000300;
+osRomType = 0x80000304;
+osRomBase = 0x80000308;
+osResetType = 0x8000030C;
+osCicId = 0x80000310;
+osVersion = 0x80000314;
+osMemSize = 0x80000318;
+osAppNMIBuffer = 0x8000031C;
+entrypoint = 0x80000400;
+
+// audio.c .text
+audio_init = 0x80000450;
+sound_volume_reset = 0x80000890;
+sound_volume_change = 0x80000968;
+music_change_off = 0x80000B18;
+music_change_on = 0x80000B28;
+music_play = 0x80000B34;
+music_voicelimit_set = 0x80000BE0;
+music_voicelimit_change_off = 0x80000C1C;
+music_voicelimit_change_on = 0x80000C2C;
+music_jingle_voicelimit_set = 0x80000C38;
+func_80000C68 = 0x80000C68;
+music_fade = 0x80000C98;
+music_volume_reset = 0x80000CBC;
+sound_update_queue = 0x80000D00;
+sound_play_delayed = 0x80000FDC;
+sound_clear_delayed = 0x80001050;
+music_channel_get_mask = 0x8000105C;
+music_dynamic_set = 0x80001074;
+music_channel_off = 0x80001114;
+music_channel_active = 0x8000114C;
+music_channel_on = 0x80001170;
+music_channel_pan_set = 0x800011A8;
+music_channel_volume_set = 0x800011E8;
+music_channel_volume = 0x80001228;
+music_channel_fade_set = 0x80001268;
+music_channel_fade = 0x800012A8;
+music_channel_reset_all = 0x800012E8;
+func_80001358 = 0x80001358;
+func_80001440 = 0x80001440;
+music_tempo_set_relative = 0x800014BC;
+music_tempo_set = 0x80001534;
+music_tempo = 0x800015B8;
+music_is_playing = 0x800015C8;
+music_animation_fraction = 0x800015F8;
+sound_get_properties = 0x80001728;
+music_jingle_play_safe = 0x80001784;
+sound_jingle_tempo_set = 0x800017D4;
+music_stop = 0x80001844;
+music_enabled_set = 0x80001878;
+music_can_play = 0x800018D0;
+music_jingle_stop = 0x800018E0;
+music_current_sequence = 0x80001918;
+music_next = 0x80001954;
+music_jingle_current = 0x80001980;
+music_volume_set = 0x80001990;
+music_volume_config_set = 0x80001A3C;
+music_volume = 0x80001AEC;
+music_volume_config = 0x80001AFC;
+music_jingle_volume_set = 0x80001B0C;
+music_jingle_pan_set = 0x80001B58;
+music_jingle_play = 0x80001BC0;
+music_jingle_playing = 0x80001C08;
+sound_channel_volume_all = 0x80001C5C;
+sound_distance = 0x80001CB8;
+sound_play = 0x80001D04;
+sound_play_spatial = 0x80001EA8;
+func_80001F14 = 0x80001F14;
+sound_volume_set_relative = 0x80001FB8;
+sound_volume_set = 0x8000208C;
+sound_pitch_set = 0x800020BC;
+sound_count = 0x800020E8;
+music_sequence_count = 0x80002110;
+sound_table_properties = 0x80002128;
+music_table_properties = 0x8000216C;
+gSoundBank_GetSoundDecayTime = 0x800021B0;
+sound_seqplayer_init = 0x80002224;
+music_sequence_start = 0x800022BC;
+music_sequence_init = 0x8000232C;
+music_sequence_stop = 0x80002570;
+sound_reverb_set = 0x80002608;
+sound_reverb_enabled = 0x80002630;
+
+//audiomgr.c .text
+amCreateAudioMgr = 0x80002660;
+audioStartThread = 0x80002A50;
+audioStopThread = 0x80002A74;
+__amMain = 0x80002A98;
+__amHandleFrameMsg = 0x80002C00;
+__amHandleDoneMsg = 0x80002DF8;
+__amDMA = 0x80002E38;
+__amDmaNew = 0x80003008;
+__clearAudioDMA = 0x80003040;
+
+//audiosfx.c .text
+set_sfx_volume_slider = 0x80003160;
+get_sfx_volume_slider = 0x8000317C;
+set_sound_channel_count = 0x8000318C;
+alSndPNew = 0x800031C0;
+_sndpVoiceHandler = 0x800033C8;
+_handleEvent = 0x80003470;
+func_8000410C = 0x8000410C;
+func_8000418C = 0x8000418C;
+_removeEvents = 0x800041FC;
+func_800042CC = 0x800042CC;
+func_80004384 = 0x80004384;
+func_80004520 = 0x80004520;
+func_80004604 = 0x80004604;
+func_8000461C = 0x8000461C;
+func_80004638 = 0x80004638;
+func_80004668 = 0x80004668;
+sound_stop = 0x8000488C;
+func_800048D8 = 0x800048D8;
+func_80004998 = 0x80004998;
+func_800049B8 = 0x800049B8;
+sound_stop_all = 0x800049D8;
+sound_event_update = 0x800049F8;
+get_sound_channel_volume = 0x80004A3C;
+set_sound_channel_volume = 0x80004A60;
+
+// audio_vehicle.c .text
+func_80004B40 = 0x80004B40;
+racer_sound_update = 0x800050D0;
+func_80005254 = 0x80005254;
+racer_sound_hovercraft = 0x80005D08;
+func_800063EC = 0x800063EC;
+racer_sound_free = 0x80006AC8;
+func_80006BFC = 0x80006BFC;
+func_80006FC8 = 0x80006FC8;
+sound_vehicle_enable = 0x80007F78;
+sound_vehicle_disable = 0x80007F88;
+sound_vehicle_check = 0x80007F94;
+func_80007FA4 = 0x80007FA4;
+
+// audio_spatial.c .text
+func_80008040 = 0x80008040;
+audioline_off = 0x80008140;
+audioline_on = 0x80008168;
+func_80008174 = 0x80008174;
+func_80008438 = 0x80008438;
+func_800090C0 = 0x800090C0;
+audioline_distance = 0x800092A8;
+play_sound_at_position = 0x80009558;
+func_800095E8 = 0x800095E8;
+update_spatial_audio_position = 0x800096D8;
+func_800096F8 = 0x800096F8;
+func_8000974C = 0x8000974C;
+audioline_ambient_create = 0x800098A4;
+func_80009968 = 0x80009968;
+func_800099EC = 0x800099EC;
+func_80009AB4 = 0x80009AB4;
+func_80009B7C = 0x80009B7C;
+func_80009D6C = 0x80009D6C;
+func_8000A184 = 0x8000A184;
+func_8000A2E8 = 0x8000A2E8;
+debug_render_line = 0x8000A414;
+
+// seqplayer.c .text
+dummy_8000A710 = 0x8000A710;
+__mapVoice = 0x8000A71C;
+__unmapVoice = 0x8000A7C4;
+__lookupVoice = 0x8000A84C;
+__lookupSoundQuick = 0x8000A8D0;
+__vsVol = 0x8000A9F8;
+__vsDelta = 0x8000AA88;
+__vsPan = 0x8000AAAC;
+__seqpReleaseVoice = 0x8000AB00;
+__voiceNeedsNoteKill = 0x8000AC34;
+__initFromBank = 0x8000ACE0;
+__setInstChanState = 0x8000AD98;
+__resetPerfChanState = 0x8000ADF4;
+__initChanState = 0x8000AE90;
+__seqpStopOsc = 0x8000AEFC;
+set_voice_limit = 0x8000B010;
+
+// objects.c .text
+func_8000B020 = 0x8000B020;
+func_8000B290 = 0x8000B290;
+func_8000B38C = 0x8000B38C;
+func_8000B750 = 0x8000B750;
+func_8000BADC = 0x8000BADC;
+func_8000BF44 = 0x8000BF44;
+allocate_object_pools = 0x8000BF8C;
+decrypt_magic_codes = 0x8000C2D8;
+clear_object_pointers = 0x8000C460;
+free_all_objects = 0x8000C604;
+load_object_header = 0x8000C718;
+try_free_object_header = 0x8000C844;
+normalise_time = 0x8000C8B4;
+func_8000C8F8 = 0x8000C8F8;
+func_8000CBC0 = 0x8000CBC0;
+func_8000CBF0 = 0x8000CBF0;
+func_8000CC20 = 0x8000CC20;
+func_8000CC7C = 0x8000CC7C;
+get_contpak_error = 0x8000E0B0;
+instShowBearBar = 0x8000E128;
+func_8000E138 = 0x8000E138;
+func_8000E148 = 0x8000E148;
+func_8000E158 = 0x8000E158;
+func_8000E184 = 0x8000E184;
+func_8000E194 = 0x8000E194;
+fontUseFont = 0x8000E1B8;
+find_non_car_racers = 0x8000E1CC;
+check_if_silver_coin_race = 0x8000E1DC;
+despawn_player_racer = 0x8000E1EC;
+transform_player_vehicle = 0x8000E2B4;
+set_time_trial_enabled = 0x8000E4BC;
+is_time_trial_enabled = 0x8000E4C8;
+is_in_time_trial = 0x8000E4D8;
+func_8000E4E8 = 0x8000E4E8;
+func_8000E558 = 0x8000E558;
+func_8000E5EC = 0x8000E5EC;
+func_8000E79C = 0x8000E79C;
+func_8000E898 = 0x8000E898;
+get_object = 0x8000E948;
+objGetObjList = 0x8000E988;
+get_object_count = 0x8000E9B0;
+get_particle_count = 0x8000E9C0;
+func_8000E9D0 = 0x8000E9D0;
+spawn_object = 0x8000EA54;
+objFreeAssets = 0x8000F648;
+light_setup_light_sources = 0x8000F758;
+init_object_shading = 0x8000F7EC;
+func_8000F99C = 0x8000F99C;
+obj_init_emitter = 0x8000FAC4;
+init_object_shadow = 0x8000FBCC;
+init_object_water_effect = 0x8000FC6C;
+init_object_interaction_data = 0x8000FD20;
+func_8000FD34 = 0x8000FD34;
+func_8000FD54 = 0x8000FD54;
+free_object = 0x8000FFB8;
+obj_table_ids = 0x80010018;
+obj_id_valid = 0x80010028;
+gParticlePtrList_flush = 0x8001004C;
+func_800101AC = 0x800101AC;
+func_80010994 = 0x80010994;
+func_80011134 = 0x80011134;
+func_80011264 = 0x80011264;
+do_nothing_func_80011364 = 0x80011364;
+path_update_check = 0x8001136C;
+path_enable = 0x80011390;
+get_race_countdown = 0x8001139C;
+get_race_start_timer = 0x800113AC;
+func_800113BC = 0x800113BC;
+play_footstep_sounds = 0x800113CC;
+ignore_bounds_check = 0x80011560;
+move_object = 0x80011570;
+render_misc_model = 0x80011960;
+render_3d_misc = 0x80011AD0;
+render_3d_billboard = 0x80011C94;
+render_3d_model = 0x800120C8;
+func_80012C30 = 0x80012C30;
+func_80012C3C = 0x80012C3C;
+func_80012C98 = 0x80012C98;
+func_80012CE8 = 0x80012CE8;
+render_object = 0x80012D5C;
+object_do_player_tumble = 0x80012E28;
+object_undo_player_tumble = 0x80012F30;
+func_80012F94 = 0x80012F94;
+render_object_parts = 0x8001348C;
+unset_temp_model_transforms = 0x80013548;
+func_800135B8 = 0x800135B8;
+render_bubble_trap = 0x800138A8;
+render_racer_shield = 0x80013A0C;
+render_racer_magnet = 0x80013DCC;
+func_80014090 = 0x80014090;
+func_800142B8 = 0x800142B8;
+render_mesh = 0x800143A8;
+func_80014814 = 0x80014814;
+func_800149C0 = 0x800149C0;
+func_80014B50 = 0x80014B50;
+sort_objects_by_dist = 0x80015348;
+process_object_interactions = 0x800155B8;
+func_800159C8 = 0x800159C8;
+func_80016500 = 0x80016500;
+func_80016748 = 0x80016748;
+func_80016BC4 = 0x80016BC4;
+obj_butterfly_node = 0x80016C68;
+obj_dist_racer = 0x80016DE8;
+func_8001709C = 0x8001709C;
+func_80017248 = 0x80017248;
+func_8001790C = 0x8001790C;
+func_80017978 = 0x80017978;
+func_800179D0 = 0x800179D0;
+func_80017A18 = 0x80017A18;
+set_taj_challenge_type = 0x80017E74;
+get_taj_challenge_type = 0x80017E88;
+func_80017E98 = 0x80017E98;
+func_800185E4 = 0x800185E4;
+find_taj_object = 0x80018C6C;
+func_80018CE0 = 0x80018CE0;
+func_8001955C = 0x8001955C;
+func_80019808 = 0x80019808;
+set_course_finish_flags = 0x8001A7D8;
+race_finish_adventure = 0x8001A8D4;
+race_transition_adventure = 0x8001A8F4;
+race_finish_timer = 0x8001AE44;
+get_balloon_cutscene_timer = 0x8001AE54;
+race_finish_time_trial = 0x8001AE64;
+timetrial_valid_player_ghost = 0x8001B288;
+timetrial_player_ghost = 0x8001B2E0;
+timetrial_load_staff_ghost = 0x8001B2F0;
+timetrial_staff_ghost_check = 0x8001B3AC;
+tt_ghost_beaten = 0x8001B3C4;
+timetrial_init_staff_ghost = 0x8001B4FC;
+timetrial_ghost_staff = 0x8001B640;
+timetrial_staff_unbeaten = 0x8001B650;
+timetrial_init_player_ghost = 0x8001B668;
+timetrial_save_player_ghost = 0x8001B738;
+has_ghost_to_save = 0x8001B780;
+set_ghost_none = 0x8001B790;
+func_8001B7A8 = 0x8001B7A8;
+func_8001B834 = 0x8001B834;
+func_8001B954 = 0x8001B954;
+get_checkpoint_node = 0x8001BA00;
+find_next_checkpoint_node = 0x8001BA1C;
+get_checkpoint_count = 0x8001BA64;
+get_racer_objects = 0x8001BA74;
+get_racer_objects_by_port = 0x8001BA90;
+get_racer_objects_by_position = 0x8001BAAC;
+get_racer_object = 0x8001BAC8;
+get_racer_object_by_port = 0x8001BB18;
+debug_render_checkpoints = 0x8001BB68;
+debug_render_checkpoint_node = 0x8001BC40;
+spectate_update = 0x8001BC54;
+spectate_object = 0x8001BD94;
+spectate_nearest = 0x8001BDD4;
+ainode_update = 0x8001BF20;
+obj_elevation = 0x8001C418;
+ainode_register = 0x8001C48C;
+ainode_find_nearest = 0x8001C524;
+func_8001C6C4 = 0x8001C6C4;
+func_8001CC48 = 0x8001CC48;
+func_8001CD28 = 0x8001CD28;
+ainode_enable = 0x8001D1AC;
+ainode_tail_set = 0x8001D1BC;
+ainode_tail = 0x8001D1E4;
+ainode_get = 0x8001D214;
+func_8001D248 = 0x8001D248;
+set_world_shading = 0x8001D258;
+add_shading_properties = 0x8001D2A0;
+set_shading_properties = 0x8001D4B4;
+update_envmap_position = 0x8001D5E0;
+calc_dyn_light_and_env_map_for_object = 0x8001D6E4;
+calc_dynamic_lighting_for_object_1 = 0x8001D80C;
+calc_env_mapping_for_object = 0x8001DD54;
+set_racer_position_and_angle = 0x8001E13C;
+get_misc_asset = 0x8001E29C;
+func_8001E2EC = 0x8001E2EC;
+func_8001E344 = 0x8001E344;
+obj_bridge_pos = 0x8001E36C;
+cutscene_id = 0x8001E440;
+cutscene_id_set = 0x8001E450;
+func_8001E45C = 0x8001E45C;
+get_object_list_index = 0x8001E4B4;
+func_8001E4C4 = 0x8001E4C4;
+func_8001E6EC = 0x8001E6EC;
+func_8001E89C = 0x8001E89C;
+func_8001E93C = 0x8001E93C;
+func_8001EE74 = 0x8001EE74;
+obj_init_animcamera = 0x8001EFA4;
+func_8001F23C = 0x8001F23C;
+func_8001F3B8 = 0x8001F3B8;
+func_8001F3C8 = 0x8001F3C8;
+func_8001F3EC = 0x8001F3EC;
+func_8001F450 = 0x8001F450;
+func_8001F460 = 0x8001F460;
+func_800210CC = 0x800210CC;
+func_80021104 = 0x80021104;
+func_8002125C = 0x8002125C;
+func_80021400 = 0x80021400;
+func_800214C4 = 0x800214C4;
+func_800214E4 = 0x800214E4;
+func_80021600 = 0x80021600;
+catmull_rom_interpolation = 0x80022540;
+cubic_spline_interpolation = 0x8002263C;
+func_8002277C = 0x8002277C;
+lerp = 0x80022888;
+func_800228B0 = 0x800228B0;
+func_800228DC = 0x800228DC;
+init_racer_for_challenge = 0x800228EC;
+mode_init_taj_race = 0x80022948;
+obj_taj_create_balloon = 0x80022CFC;
+mode_end_taj_race = 0x80022E18;
+func_800230D0 = 0x800230D0;
+is_taj_challenge = 0x8002341C;
+find_furthest_telepoint = 0x8002342C;
+func_80023568 = 0x80023568;
+obj_door_override = 0x800235C0;
+obj_door_open = 0x800235D0;
+get_object_property_size = 0x800235DC;
+run_object_init_func = 0x800238BC;
+obj_init_property_flags = 0x80023E30;
+run_object_loop_func = 0x80023F48;
+func_8002458C = 0x8002458C;
+func_80024594 = 0x80024594;
+func_800245B4 = 0x800245B4;
+
+// unknown_0251F0.c .text
+func_800245F0 = 0x800245F0;
+calc_dynamic_lighting_for_object_2 = 0x80024744;
+
+// tracks.c .text
+set_scene_viewport_num = 0x800249E0;
+init_track = 0x800249F0;
+render_scene = 0x80024D54;
+func_80025510 = 0x80025510;
+func_800257D0 = 0x800257D0;
+func_8002581C = 0x8002581C;
+func_80026070 = 0x80026070;
+func_80026430 = 0x80026430;
+func_80026C14 = 0x80026C14;
+func_80026E54 = 0x80026E54;
+func_80027184 = 0x80027184;
+func_80027568 = 0x80027568;
+func_800278E8 = 0x800278E8;
+animate_level_textures = 0x80027E24;
+spawn_skydome = 0x80027FC4;
+set_skydome_visbility = 0x80028044;
+func_80028050 = 0x80028050;
+draw_gradient_background = 0x800289B8;
+render_skydome = 0x80028C10;
+initialise_player_viewport_vars = 0x80028CD0;
+set_anti_aliasing = 0x80028FA0;
+render_level_geometry_and_objects = 0x80028FAC;
+render_level_segment = 0x80029658;
+traverse_segments_bsp_tree = 0x80029AF8;
+add_segment_to_order = 0x80029D14;
+check_if_inside_segment = 0x80029DE0;
+get_level_segment_index_from_position = 0x80029F18;
+get_inside_segment_count_xz = 0x8002A05C;
+get_inside_segment_count_xyz = 0x8002A134;
+get_segment = 0x8002A29C;
+get_segment_bounding_box = 0x8002A2DC;
+func_8002A31C = 0x8002A31C;
+should_segment_be_visible = 0x8002A5F8;
+check_if_in_draw_range = 0x8002A900;
+func_8002AC00 = 0x8002AC00;
+dayGetTrackFade = 0x8002ACA0;
+func_8002ACC8 = 0x8002ACC8;
+func_8002ACD4 = 0x8002ACD4;
+get_wave_properties = 0x8002AD08;
+func_8002B0F4 = 0x8002B0F4;
+func_8002B9BC = 0x8002B9BC;
+func_8002BAB0 = 0x8002BAB0;
+func_8002C0C4 = 0x8002C0C4;
+func_8002C71C = 0x8002C71C;
+get_current_level_model = 0x8002C7C4;
+free_track = 0x8002C7D4;
+func_8002C954 = 0x8002C954;
+func_8002CC30 = 0x8002CC30;
+trackMakeAbsolute = 0x8002D30C;
+render_object_shadow = 0x8002D384;
+render_object_water_effects = 0x8002D670;
+update_shadows = 0x8002D8DC;
+func_8002DE30 = 0x8002DE30;
+func_8002E234 = 0x8002E234;
+func_8002E904 = 0x8002E904;
+func_8002EEEC = 0x8002EEEC;
+func_8002F2AC = 0x8002F2AC;
+func_8002F440 = 0x8002F440;
+func_8002FA64 = 0x8002FA64;
+func_8002FD74 = 0x8002FD74;
+func_8002FF6C = 0x8002FF6C;
+func_800304C8 = 0x800304C8;
+set_fog = 0x80030664;
+get_fog_settings = 0x80030750;
+reset_fog = 0x800307BC;
+update_fog = 0x80030838;
+apply_fog = 0x8003093C;
+obj_loop_fogchanger = 0x80030A74;
+slowly_change_fog = 0x80030DE0;
+update_perspective_and_envmap = 0x80030FA0;
+compute_scene_camera_transform_matrix = 0x80031018;
+
+// collision.c .text
+func_80031130 = 0x80031130;
+func_800314DC = 0x800314DC;
+func_80031600 = 0x80031600;
+
+// lights.c .text
+free_lights = 0x80031B60;
+setup_lights = 0x80031BB8;
+func_80031CAC = 0x80031CAC;
+add_object_light = 0x80031F88;
+disable_object_light = 0x80032210;
+enable_object_light = 0x80032218;
+toggle_object_light = 0x80032224;
+func_80032248 = 0x80032248;
+func_80032344 = 0x80032344;
+lightUpdateLights = 0x80032398;
+func_80032424 = 0x80032424;
+func_80032BAC = 0x80032BAC;
+get_light_count = 0x80032C6C;
+func_80032C7C = 0x80032C7C;
+func_800337E4 = 0x800337E4;
+light_distance_calc = 0x80033A14;
+light_direction_calc = 0x80033C08;
+
+// object_functions.c .text
+obj_init_scenery = 0x80033CC0;
+obj_loop_scenery = 0x80033DD0;
+obj_init_fireball_octoweapon = 0x80033F44;
+obj_loop_fireball_octoweapon = 0x80033F60;
+obj_init_lasergun = 0x80034530;
+obj_loop_lasergun = 0x800345A0;
+obj_init_laserbolt = 0x80034844;
+obj_loop_laserbolt = 0x80034860;
+obj_init_torch_mist = 0x80034AF0;
+obj_loop_torch_mist = 0x80034B4C;
+obj_init_effectbox = 0x80034B68;
+obj_loop_effectbox = 0x80034B74;
+obj_init_trophycab = 0x80034E70;
+obj_loop_trophycab = 0x80034E9C;
+obj_init_collectegg = 0x8003522C;
+obj_loop_collectegg = 0x80035260;
+obj_init_eggcreator = 0x80035640;
+obj_loop_eggcreator = 0x8003564C;
+obj_init_lighthouse_rocketsignpost = 0x8003572C;
+obj_loop_rocketsignpost = 0x800357D4;
+obj_init_airzippers_waterzippers = 0x8003588C;
+obj_loop_airzippers_waterzippers = 0x8003596C;
+obj_init_groundzipper = 0x80035AE8;
+obj_loop_groundzipper = 0x80035C50;
+obj_init_timetrialghost = 0x80035E20;
+obj_loop_timetrialghost = 0x80035E34;
+obj_init_characterflag = 0x80035EF8;
+obj_loop_characterflag = 0x80035F6C;
+try_to_collect_egg = 0x80036040;
+obj_init_stopwatchman = 0x80036194;
+obj_loop_stopwatchman = 0x800361E0;
+play_tt_voice_clip = 0x80036BCC;
+obj_init_fish = 0x80036C30;
+obj_loop_fish = 0x800370D4;
+obj_init_lavaspurt = 0x80037578;
+obj_loop_lavaspurt = 0x80037594;
+obj_init_posarrow = 0x80037624;
+obj_loop_posarrow = 0x8003763C;
+obj_init_animator = 0x800376E0;
+obj_loop_animator = 0x800377E4;
+obj_init_animation = 0x80037A18;
+obj_loop_animobject = 0x80037CE8;
+obj_loop_dooropener = 0x80037D08;
+obj_init_overridepos = 0x80037D54;
+obj_loop_overridepos = 0x80037D60;
+obj_init_wizpigship = 0x80037D6C;
+obj_loop_wizpigship = 0x80037D78;
+obj_loop_vehicleanim = 0x800380F8;
+obj_init_hittester = 0x8003818C;
+obj_loop_hittester = 0x800381C0;
+obj_init_dynamic_lighting_object = 0x800381E0;
+obj_init_unknown96 = 0x80038214;
+obj_init_snowball = 0x80038248;
+obj_loop_snowball = 0x8003827C;
+obj_init_char_select = 0x80038330;
+obj_loop_char_select = 0x8003833C;
+obj_loop_animcamera = 0x80038710;
+obj_init_animcar = 0x800387C0;
+obj_loop_animcar = 0x800387CC;
+obj_init_infopoint = 0x80038854;
+obj_loop_infopoint = 0x800388D4;
+obj_init_smoke = 0x800389AC;
+obj_loop_smoke = 0x800389B8;
+obj_init_unknown25 = 0x80038A6C;
+obj_loop_unknown25 = 0x80038A78;
+obj_init_wardensmoke = 0x80038AC8;
+obj_loop_wardensmoke = 0x80038AD4;
+obj_init_bombexplosion = 0x80038B74;
+obj_loop_bombexplosion = 0x80038BF4;
+obj_init_teleport = 0x80038D58;
+obj_loop_teleport = 0x80038DC4;
+obj_init_exit = 0x80038E3C;
+obj_loop_exit = 0x80038F58;
+obj_init_cameracontrol = 0x80039160;
+obj_loop_cameracontrol = 0x80039184;
+obj_init_setuppoint = 0x80039190;
+obj_loop_setuppoint = 0x800391BC;
+obj_init_dino_whale = 0x800391C8;
+obj_loop_dino_whale = 0x800391FC;
+obj_init_parkwarden = 0x800392B8;
+set_taj_voice_line = 0x80039320;
+obj_loop_parkwarden = 0x80039330;
+play_taj_voice_clip = 0x8003AC3C;
+obj_loop_gbparkwarden = 0x8003ACA0;
+get_npc_pos_y = 0x8003ACAC;
+obj_init_checkpoint = 0x8003ACBC;
+obj_loop_checkpoint = 0x8003AD28;
+obj_init_modechange = 0x8003AD34;
+obj_loop_modechange = 0x8003AE50;
+obj_init_bonus = 0x8003B058;
+obj_loop_bonus = 0x8003B174;
+obj_init_goldenballoon = 0x8003B368;
+obj_loop_goldenballoon = 0x8003B4BC;
+obj_init_door = 0x8003B7CC;
+obj_loop_door = 0x8003B988;
+obj_init_ttdoor = 0x8003C1E0;
+obj_loop_ttdoor = 0x8003C2E4;
+obj_init_trigger = 0x8003C644;
+obj_loop_trigger = 0x8003C7A4;
+obj_init_bridge_whaleramp = 0x8003C9EC;
+obj_loop_bridge_whaleramp = 0x8003CA68;
+obj_init_rampswitch = 0x8003CE64;
+obj_loop_rampswitch = 0x8003CEA0;
+obj_init_seamonster = 0x8003CF00;
+obj_loop_seamonster = 0x8003CF0C;
+obj_init_fogchanger = 0x8003CF18;
+obj_init_skycontrol = 0x8003CF58;
+obj_loop_skycontrol = 0x8003CF98;
+obj_init_ainode = 0x8003CFE0;
+obj_loop_ainode = 0x8003D02C;
+obj_init_treasuresucker = 0x8003D038;
+obj_loop_treasuresucker = 0x8003D058;
+obj_init_flycoin = 0x8003D2AC;
+obj_loop_flycoin = 0x8003D2B8;
+obj_init_bananacreator = 0x8003D3EC;
+obj_loop_bananacreator = 0x8003D3FC;
+obj_init_banana = 0x8003D534;
+obj_loop_banana = 0x8003D5A0;
+obj_init_silvercoin_adv2 = 0x8003DBA0;
+obj_init_silvercoin = 0x8003DC5C;
+obj_loop_silvercoin = 0x8003DD14;
+obj_init_worldkey = 0x8003DE74;
+obj_loop_worldkey = 0x8003DF08;
+obj_init_weaponballoon = 0x8003DFCC;
+obj_loop_weaponballoon = 0x8003E140;
+obj_init_wballoonpop = 0x8003E5B0;
+obj_loop_wballoonpop = 0x8003E5BC;
+obj_init_weapon = 0x8003E5C8;
+obj_loop_weapon = 0x8003E630;
+weapon_projectile = 0x8003E694;
+rocket_prevent_overshoot = 0x8003EC14;
+homing_rocket_prevent_overshoot = 0x8003EDD8;
+reset_rocket_sound_timer = 0x8003F0D0;
+decrease_rocket_sound_timer = 0x8003F0DC;
+play_rocket_trailing_sound = 0x8003F0F8;
+weapon_trap = 0x8003F2E8;
+obj_spawn_effect = 0x8003FC44;
+obj_init_audio = 0x8003FD68;
+obj_init_audioline = 0x8003FEF4;
+obj_init_audioreverb = 0x8004001C;
+obj_init_texscroll = 0x800400A4;
+obj_loop_texscroll = 0x80040148;
+obj_init_rgbalight = 0x800403A8;
+obj_init_buoy_pirateship = 0x800403D8;
+obj_loop_buoy_pirateship = 0x80040448;
+obj_init_log = 0x8004049C;
+obj_loop_log = 0x80040570;
+obj_init_weather = 0x80040800;
+obj_loop_weather = 0x80040820;
+obj_init_lensflare = 0x8004092C;
+obj_init_lensflareswitch = 0x8004094C;
+obj_init_wavegenerator = 0x800409A4;
+obj_init_butterfly = 0x800409C8;
+obj_loop_butterfly = 0x80040C54;
+obj_init_midifade = 0x80041A90;
+obj_init_midifadepoint = 0x80041E80;
+obj_init_midichset = 0x80042014;
+obj_init_bubbler = 0x8004203C;
+obj_loop_bubbler = 0x80042090;
+obj_init_boost = 0x8004210C;
+obj_init_unknown94 = 0x80042150;
+obj_loop_unknown94 = 0x80042160;
+obj_init_rangetrigger = 0x8004216C;
+obj_loop_rangetrigger = 0x80042178;
+obj_init_frog = 0x80042210;
+obj_loop_frog = 0x800422F0;
+obj_loop_pigrocketeer = 0x80042998;
+obj_init_levelname = 0x80042A1C;
+obj_loop_levelname = 0x80042A90;
+obj_loop_wizghosts = 0x80042CD0;
+
+// racer.c .text
+func_80042D20 = 0x80042D20;
+increment_ai_behaviour_chances = 0x80043ECC;
+racer_AI_pathing_inputs = 0x80044170;
+roll_percent_chance = 0x80044450;
+func_8004447C = 0x8004447C;
+func_80045128 = 0x80045128;
+func_800452A0 = 0x800452A0;
+func_80045C48 = 0x80045C48;
+func_80046524 = 0x80046524;
+racer_attack_handler_hovercraft = 0x80048C7C;
+update_camera_hovercraft = 0x80048E64;
+rotate_racer_in_water = 0x800494E0;
+func_80049794 = 0x80049794;
+apply_plane_tilt_anim = 0x8004C0A0;
+racer_attack_handler_plane = 0x8004C140;
+update_camera_plane = 0x8004C2B0;
+func_8004CC20 = 0x8004CC20;
+update_camera_loop = 0x8004D590;
+update_carpet = 0x8004D95C;
+obj_init_racer = 0x8004DAB0;
+update_player_racer = 0x8004DE38;
+set_racer_tail_lights = 0x8004F77C;
+func_8004F7F4 = 0x8004F7F4;
+racer_approach_object = 0x80050754;
+apply_vehicle_rotation_offset = 0x80050850;
+func_80050A28 = 0x80050A28;
+should_taj_teleport = 0x80052188;
+set_taj_status = 0x800521B8;
+handle_racer_head_turning = 0x800521C4;
+slowly_reset_head_angle = 0x8005234C;
+turn_head_towards_object = 0x80052388;
+func_8005250C = 0x8005250C;
+func_80052988 = 0x80052988;
+racer_spinout_car = 0x80052B64;
+update_car_velocity_offground = 0x80052D7C;
+handle_car_steering = 0x80053478;
+func_800535C4 = 0x800535C4;
+handle_car_velocity_control = 0x80053664;
+func_80053750 = 0x80053750;
+racer_attack_handler_car = 0x80053E9C;
+update_onscreen_AI_racer = 0x80054110;
+update_car_velocity_ground = 0x8005492C;
+func_80054FD0 = 0x80054FD0;
+onscreen_ai_racer_physics = 0x80055A84;
+handle_racer_items = 0x80055EC0;
+play_char_horn_sound = 0x80056930;
+func_8005698C = 0x8005698C;
+racer_activate_magnet = 0x80056E2C;
+racer_play_sound = 0x80057048;
+racer_play_sound_after_delay = 0x800570A4;
+play_random_character_voice = 0x800570B8;
+handle_racer_top_speed = 0x80057220;
+func_800575EC = 0x800575EC;
+drop_bananas = 0x800576E0;
+handle_base_steering = 0x800579B0;
+update_player_camera = 0x80057A40;
+second_racer_camera_update = 0x800580B4;
+update_camera_car = 0x800581E8;
+update_camera_finish_challenge = 0x80058B84;
+update_camera_finish_race = 0x80058D5C;
+update_camera_fixed = 0x80058F44;
+set_position_goal_from_path = 0x80059080;
+func_80059208 = 0x80059208;
+get_timestamp_from_frames = 0x80059790;
+allocate_ghost_data = 0x800598D0;
+timetrial_reset_player_ghost = 0x80059944;
+timetrial_swap_player_ghost = 0x80059984;
+timetrial_map_id = 0x800599A8;
+timetrial_load_player_ghost = 0x800599B8;
+load_tt_ghost = 0x80059A68;
+timetrial_free_staff_ghost = 0x80059B4C;
+timetrial_write_player_ghost = 0x80059B7C;
+timetrial_ghost_write = 0x80059BF0;
+timetrial_ghost_full = 0x80059E20;
+set_ghost_position_and_rotation = 0x80059E40;
+disable_racer_input = 0x8005A3B0;
+racer_set_dialogue_camera = 0x8005A3C0;
+drm_checksum_balloon = 0x8005A3D0;
+racer_enter_door = 0x8005A424;
+update_AI_racer = 0x8005A6F0;
+func_8005B818 = 0x8005B818;
+drm_vehicle_traction = 0x8005C25C;
+func_8005C270 = 0x8005C270;
+
+//vehicle_tricky.c .text
+racer_special_init = 0x8005C2F0;
+update_tricky = 0x8005C364;
+set_boss_voice_clip_offset = 0x8005CA78;
+racer_boss_sound_spatial = 0x8005CA84;
+play_random_boss_sound = 0x8005CB04;
+racer_boss_finish = 0x8005CB68;
+fade_when_near_camera = 0x8005D048;
+
+// vehicle_bluey.c .text
+update_bluey = 0x8005D0D0;
+
+// vehicle_smokey.c .text
+update_smokey = 0x8005D820;
+spawn_boss_hazard = 0x8005E204;
+
+// vehicle_bubbler.c .text
+update_bubbler = 0x8005E4C0;
+
+// vehicle_wizpig.c .text
+update_wizpig = 0x8005EA90;
+
+// vehicle_rocket .c .text
+update_rocket = 0x8005F310;
+
+// object_models.c .text
+allocate_object_model_pools = 0x8005F850;
+object_model_init = 0x8005F99C;
+func_8005FCD0 = 0x8005FCD0;
+free_3d_model = 0x8005FF40;
+free_model_data = 0x80060058;
+func_8006017C = 0x8006017C;
+func_80060910 = 0x80060910;
+func_80060AC8 = 0x80060AC8;
+func_80060C58 = 0x80060C58;
+func_80060EA8 = 0x80060EA8;
+func_800619F4 = 0x800619F4;
+func_80061A00 = 0x80061A00;
+func_80061C0C = 0x80061C0C;
+
+// object_animate.c .text
+object_animate = 0x80061D30;
+
+// csplayer.c .text
+alCSPNew = 0x80062290;
+__CSPVoiceHandler = 0x80062408;
+__CSPPostNextSeqEvent = 0x800629CC;
+__CSPHandleNextSeqEvent = 0x80062A3C;
+__CSPHandleMIDIMsg = 0x80062B00;
+__CSPHandleMetaMsg = 0x800637EC;
+__CSPRepostEvent = 0x80063984;
+__setUsptFromTempo = 0x80063A34;
+
+// unknown_064690.c .text
+func_80063A90 = 0x80063A90;
+
+// seqchannel.c .text
+alSeqChOff = 0x80063AF0;
+alSeqChOn = 0x80063B44;
+
+// alCSPSetFadeIn.c .text
+alCSPSetFadeIn = 0x80063BA0;
+alCSPGetFadeIn = 0x80063C00;
+
+// reverb.c .text
+alFxPull = 0x80063C30;
+alFxParam = 0x80063F94;
+alFxParamHdl = 0x80063FAC;
+_loadOutputBuffer = 0x80064224;
+_loadBuffer = 0x800644A0;
+_saveBuffer = 0x80064638;
+_filterBuffer = 0x800647D0;
+_doModFunc = 0x80064884;
+alFxReverbSet = 0x8006492C;
+_alFxEnabled = 0x8006493C;
+
+// alFxNew.c .text
+init_lpfilter = 0x80064950;
+alFxNew = 0x80064A08;
+alEnvmixerNew = 0x80064E54;
+alLoadNew = 0x80064EF8;
+alResampleNew = 0x80064F9C;
+alAuxBusNew = 0x80065024;
+alMainBusNew = 0x80065084;
+alSaveNew = 0x800650E4;
+
+// synthesizer.c .text
+alSynNew = 0x80065130;
+alAudioFrame = 0x80065494;
+__allocParam = 0x80065668;
+__freeParam = 0x8006569C;
+_collectPVoices = 0x800656BC;
+_freePVoice = 0x8006571C;
+__timeToSamplesNoRound = 0x80065754;
+_timeToSamples = 0x800657C4;
+__nextSampleTime = 0x800657EC;
+
+// alSynAllocFX.c .text
+alSynAllocFX = 0x80065860;
+
+// alAuxBusPull.c .text
+alAuxBusPull = 0x80065900;
+alAuxBusParam = 0x800659D4;
+func_80065A80 = 0x80065A80;
+
+// alSynSetPan.c .text
+alSynSetPan = 0x80065B20;
+
+// alSynStartVoiceParams.c .text
+set_stereo_pan_mode = 0x80065BD0;
+get_stereo_pan_mode = 0x80065BDC;
+modify_panning = 0x80065BEC;
+alSynStartVoiceParams = 0x80065C38;
+
+// main.c .text
+mainproc = 0x80065D40;
+thread1_main = 0x80065D98;
+thread3_verify_stack = 0x80065E30;
+
+// camera.c .text
+camera_init = 0x80065EA0;
+func_80066060 = 0x80066060;
+set_viewport_tv_type = 0x80066098;
+func_800660C0 = 0x800660C0;
+func_800660D0 = 0x800660D0;
+get_current_camera_fov = 0x800660DC;
+update_camera_fov = 0x800660EC;
+calculate_camera_perspective = 0x80066194;
+matrix_get_model_s16 = 0x80066204;
+get_viewport_count = 0x80066210;
+get_current_viewport = 0x80066220;
+camera_init_tracks_menu = 0x80066230;
+get_distance_to_active_camera = 0x80066348;
+camera_reset = 0x800663DC;
+write_to_object_render_stack = 0x80066488;
+check_if_showing_cutscene_camera = 0x80066510;
+disable_cutscene_camera = 0x80066520;
+set_active_viewports_and_max = 0x8006652C;
+set_active_camera = 0x800665E8;
+copy_viewports_to_stack = 0x80066610;
+camEnableUserView = 0x80066818;
+camDisableUserView = 0x80066894;
+check_viewport_background_flag = 0x80066910;
+viewport_menu_set = 0x80066940;
+set_viewport_properties = 0x80066AA8;
+copy_viewport_background_size_to_coords = 0x80066BA8;
+copy_viewport_frame_size_to_coords = 0x80066C2C;
+copy_framebuffer_size_to_coords = 0x80066C80;
+func_80066CDC = 0x80066CDC;
+viewport_scissor = 0x80067A3C;
+func_80067D3C = 0x80067D3C;
+set_ortho_matrix_height = 0x80067F20;
+set_ortho_matrix_view = 0x80067F2C;
+func_8006807C = 0x8006807C;
+viewport_rsp_set = 0x80068158;
+viewport_reset = 0x800682AC;
+matrix_world_origin = 0x80068408;
+sprite_anim_off = 0x80068508;
+render_sprite_billboard = 0x80068514;
+render_ortho_triangle_image = 0x80068BF4;
+apply_object_shear_matrix = 0x80068FA8;
+camera_push_model_mtx = 0x80069484;
+apply_head_turning_matrix = 0x80069790;
+get_modelmatrix_vector = 0x800699E4;
+apply_matrix_from_stack = 0x80069A40;
+translate_camera_segment = 0x80069ACC;
+transform_camera_segment = 0x80069B70;
+rotate_camera_segment = 0x80069CB4;
+get_active_camera_segment_no_cutscenes = 0x80069CFC;
+get_active_camera_segment = 0x80069D20;
+get_cutscene_camera_segment = 0x80069D7C;
+get_projection_matrix_f32 = 0x80069DA4;
+get_projection_matrix_s16 = 0x80069DB0;
+get_camera_matrix = 0x80069DBC;
+get_distance_to_camera = 0x80069DC8;
+set_camera_shake_by_distance = 0x80069E14;
+set_camera_shake = 0x80069F28;
+debug_print_fixed_matrix_values = 0x80069F64;
+debug_print_float_matrix_values = 0x8006A03C;
+
+// controller.c .text
+get_si_mesg_queue = 0x8006A100;
+init_controllers = 0x8006A10C;
+handle_save_data_and_read_controller = 0x8006A1C4;
+initialise_player_ids = 0x8006A434;
+charselect_assign_players = 0x8006A458;
+get_player_id = 0x8006A4F8;
+swap_player_1_and_2_ids = 0x8006A50C;
+get_buttons_held_from_player = 0x8006A528;
+get_buttons_pressed_from_player = 0x8006A554;
+get_buttons_released_from_player = 0x8006A578;
+clamp_joystick_x_axis = 0x8006A59C;
+clamp_joystick_y_axis = 0x8006A5E0;
+clamp_joystick = 0x8006A624;
+disable_button_mask = 0x8006A6A0;
+
+// game.c .text
+init_level_globals = 0x8006A6B0;
+func_8006ABB4 = 0x8006ABB4;
+search_level_properties_forwards = 0x8006AC00;
+search_level_properties_backwards = 0x8006AE2C;
+get_race_type_count = 0x8006B018;
+get_world_level_count = 0x8006B054;
+get_map_default_vehicle = 0x8006B0AC;
+get_map_available_vehicles = 0x8006B0F8;
+get_map_race_type = 0x8006B14C;
+get_map_world_id = 0x8006B190;
+get_hub_area_id = 0x8006B1D4;
+get_number_of_levels_and_worlds = 0x8006B224;
+check_if_in_race = 0x8006B240;
+load_level = 0x8006B250;
+start_level_music = 0x8006BD10;
+get_current_map_id = 0x8006BD88;
+get_current_level_race_type = 0x8006BD98;
+get_current_level_header = 0x8006BDB0;
+get_total_level_header_count = 0x8006BDC0;
+get_level_name = 0x8006BDDC;
+clear_audio_and_track = 0x8006BEFC;
+set_ai_level = 0x8006BFC8;
+free_ai_behaviour_table = 0x8006C164;
+get_ai_behaviour_table = 0x8006C18C;
+is_two_player_adventure_race = 0x8006C19C;
+push_level_property_stack = 0x8006C1AC;
+pop_level_property_stack = 0x8006C22C;
+clear_level_property_stack = 0x8006C2E4;
+get_level_property_stack_pos = 0x8006C2F0;
+func_8006C300 = 0x8006C300;
+
+// thread3_main.c .text
+thread3_main = 0x8006C330;
+init_game = 0x8006C3E0;
+main_game_loop = 0x8006C60C;
+load_next_ingame_level = 0x8006CAE4;
+load_level_game = 0x8006CB58;
+unload_level_game = 0x8006CC14;
+mode_game = 0x8006CCF0;
+set_drumstick_unlock_transition = 0x8006D8A4;
+race_postrace_type = 0x8006D8E0;
+func_8006D8F0 = 0x8006D8F0;
+func_8006D968 = 0x8006D968;
+get_game_mode = 0x8006DA0C;
+set_game_mode = 0x8006DA1C;
+load_menu_with_level_background = 0x8006DA28;
+set_level_default_vehicle = 0x8006DB14;
+set_vehicle_id_for_menu = 0x8006DB20;
+get_level_default_vehicle = 0x8006DB2C;
+load_level_menu = 0x8006DB3C;
+unload_level_menu = 0x8006DBE4;
+update_menu_scene = 0x8006DC58;
+mode_menu = 0x8006DCF8;
+load_level_for_menu = 0x8006E2E8;
+calc_and_alloc_heap_for_settings = 0x8006E3BC;
+init_racer_headers = 0x8006E5BC;
+clear_lap_records = 0x8006E770;
+clear_game_progress = 0x8006E994;
+reset_save_data = 0x8006EA58;
+get_settings = 0x8006EA90;
+is_game_paused = 0x8006EAA0;
+is_postrace_viewport_active = 0x8006EAB0;
+is_reset_pressed = 0x8006EAC0;
+get_ingame_map_id = 0x8006EB14;
+mark_to_read_flap_times = 0x8006EB24;
+mark_to_read_course_times = 0x8006EB40;
+mark_to_read_flap_and_course_times = 0x8006EB5C;
+mark_read_save_file = 0x8006EB78;
+mark_read_all_save_files = 0x8006EBA8;
+mark_to_write_flap_times = 0x8006EBC4;
+mark_to_write_course_times = 0x8006EBE0;
+mark_to_write_flap_and_course_times = 0x8006EBFC;
+force_mark_write_save_file = 0x8006EC18;
+safe_mark_write_save_file = 0x8006EC48;
+mark_save_file_to_erase = 0x8006ECAC;
+mark_read_eeprom_settings = 0x8006ECC4;
+mark_write_eeprom_settings = 0x8006ECE0;
+alloc_displaylist_heap = 0x8006ECFC;
+drm_validate_dmem = 0x8006EFB8;
+default_alloc_displaylist_heap = 0x8006EFDC;
+level_transition_begin = 0x8006F140;
+func_8006F20C = 0x8006F20C;
+begin_trophy_race_teleport = 0x8006F254;
+begin_lighthouse_rocket_cutscene = 0x8006F29C;
+begin_level_teleport = 0x8006F338;
+set_pause_lockout_timer = 0x8006F388;
+swap_lead_player = 0x8006F398;
+set_frame_blackout_timer = 0x8006F42C;
+mode_intro = 0x8006F43C;
+is_controller_missing = 0x8006F4C8;
+drm_validate_imem = 0x8006F4EC;
+
+// math_util.c .text
+interrupts_disable = 0x8006F510;
+interrupts_enable = 0x8006F53C;
+set_gIntDisFlag = 0x8006F564;
+get_gIntDisFlag = 0x8006F570;
+s32_matrix_to_s16_matrix = 0x8006F57C;
+f32_matrix_to_s32_matrix = 0x8006F5E0;
+guMtxXFMF = 0x8006F64C;
+f32_matrix_dot = 0x8006F6EC;
+f32_matrix_mult = 0x8006F768;
+f32_matrix_to_s16_matrix = 0x8006F870;
+set_rng_seed = 0x8006F90C;
+save_rng_seed = 0x8006F918;
+load_rng_seed = 0x8006F92C;
+get_rng_seed = 0x8006F940;
+get_random_number_from_range = 0x8006F94C;
+s16_matrix_rotate = 0x8006F9B8;
+s16_matrix_to_s32_matrix = 0x8006FA40;
+s16_vec3_mult_by_s32_matrix_full = 0x8006FA78;
+s16_vec3_mult_by_s32_matrix = 0x8006FB60;
+object_transform_to_matrix = 0x8006FC30;
+f32_matrix_scale = 0x8006FE04;
+f32_matrix_y_scale = 0x8006FE30;
+object_transform_to_matrix_2 = 0x8006FE74;
+func_80070058 = 0x80070058;
+f32_matrix_from_rotation_and_scale = 0x80070130;
+s16_vec3_apply_object_rotation = 0x800701E4;
+f32_vec3_apply_object_rotation = 0x80070320;
+f32_vec3_apply_object_rotation2 = 0x800703D8;
+f32_vec3_apply_object_rotation3 = 0x80070490;
+point_triangle_2d_xz_intersection = 0x800704F0;
+f32_matrix_from_position = 0x800705F8;
+f32_matrix_from_scale = 0x80070638;
+atan2s = 0x8007066C;
+arctan2_f = 0x80070750;
+s32_matrix_cell_sqrt = 0x80070780;
+bad_int_sqrt = 0x800707AC;
+sins_f = 0x800707C4;
+coss_f = 0x800707F8;
+coss_s16 = 0x8007082C;
+sins_s16 = 0x80070830;
+coss_2 = 0x8007088C;
+sins_2 = 0x80070890;
+calc_dyn_lighting_for_level_segment = 0x800708D0;
+func_80070A04 = 0x80070A04;
+area_triangle_2d = 0x80070A2C;
+set_breakpoint = 0x80070AD8;
+dmacopy_doubleword = 0x80070B04;
+
+// memory.c .text
+mempool_init_main = 0x80070B30;
+mempool_new_sub = 0x80070B78;
+mempool_init = 0x80070BE4;
+mempool_alloc_safe = 0x80070C9C;
+mempool_alloc = 0x80070D10;
+mempool_slot_find = 0x80070D3C;
+mempool_alloc_pool = 0x80070E90;
+mempool_alloc_fixed = 0x80070EF8;
+mempool_free_timer = 0x800710B0;
+mempool_free = 0x80071140;
+mempool_free_queue_clear = 0x80071198;
+mempool_free_addr = 0x80071278;
+func_80071314 = 0x80071314;
+mempool_free_queue = 0x80071440;
+mempool_locked_set = 0x80071478;
+mempool_locked_unset = 0x80071538;
+mempool_get_pool = 0x800715EC;
+mempool_slot_clear = 0x8007164C;
+get_memory_pool_address = 0x80071774;
+mempool_slot_assign = 0x8007178C;
+align16 = 0x80071850;
+align8 = 0x8007186C;
+align4 = 0x80071888;
+find_active_pool_slot_colours = 0x800718A4;
+get_memory_colour_tag_count = 0x80071A24;
+mempool_print_tags_usb = 0x80071AD8;
+mempool_print_tags_screen = 0x80071B54;
+mmSlotPrint = 0x80071C74;
+func_80071CE8 = 0x80071CE8;
+
+// osMotor.c .text
+osMotorStop = 0x80071D30;
+osMotorStart = 0x80071E58;
+osMotorInit = 0x800720DC;
+
+// save_data.c .text
+input_get_id = 0x80072250;
+rumble_init = 0x80072298;
+rumble_exists = 0x800722E8;
+rumble_set = 0x80072348;
+rumble_set_fade = 0x80072424;
+rumble_start = 0x80072578;
+rumble_stop = 0x8007267C;
+rumble_kill = 0x80072708;
+rumble_update = 0x80072718;
+func_80072C54 = 0x80072C54;
+func_80072E28 = 0x80072E28;
+populate_settings_from_save_data = 0x8007306C;
+func_800732E8 = 0x800732E8;
+func_80073588 = 0x80073588;
+func_800738A4 = 0x800738A4;
+get_game_data_file_size = 0x80073C4C;
+get_time_data_file_size = 0x80073C54;
+get_file_extension = 0x80073C5C;
+read_game_data_from_controller_pak = 0x80073E1C;
+write_game_data_to_controller_pak = 0x80073F5C;
+read_time_data_from_controller_pak = 0x80074018;
+write_time_data_to_controller_pak = 0x80074148;
+read_save_file = 0x80074204;
+erase_save_file = 0x8007431C;
+write_save_data = 0x800744DC;
+read_eeprom_data = 0x800745D0;
+write_eeprom_data = 0x800746F0;
+calculate_eeprom_settings_checksum = 0x8007480C;
+read_eeprom_settings = 0x80074874;
+write_eeprom_settings = 0x8007497C;
+calculate_ghost_header_checksum = 0x80074A4C;
+func_80074AA8 = 0x80074AA8;
+get_ghost_data_file_size = 0x80074B1C;
+func_80074B34 = 0x80074B34;
+func_80074EB8 = 0x80074EB8;
+func_80075000 = 0x80075000;
+func_800753D8 = 0x800753D8;
+func_800756D4 = 0x800756D4;
+get_si_device_status = 0x800758DC;
+start_reading_controller_data = 0x80075AEC;
+init_controller_paks = 0x80075B18;
+check_for_rumble_pak = 0x80075CE0;
+repair_controller_pak = 0x80075D38;
+reformat_controller_pak = 0x80075DC4;
+get_controller_pak_file_list = 0x80075E60;
+cpak_free_files = 0x80076164;
+get_free_space = 0x80076194;
+delete_file = 0x800762C8;
+copy_controller_pak_data = 0x80076388;
+get_file_number = 0x800764E8;
+read_data_from_controller_pak = 0x80076610;
+write_controller_pak_file = 0x800766D4;
+get_file_size = 0x80076924;
+font_codes_to_string = 0x8007698C;
+string_to_font_codes = 0x80076A38;
+get_file_type = 0x80076AF4;
+
+// asset_loading.c .text
+init_PI_mesg_queue = 0x80076BA0;
+load_asset_section_from_rom = 0x80076C58;
+load_compressed_asset_from_rom = 0x80076CF0;
+load_asset_section_from_rom_to_address = 0x80076DFC;
+load_asset_to_address = 0x80076E68;
+get_rom_offset_of_asset = 0x80076EE8;
+get_size_of_asset_section = 0x80076F30;
+dmacopy = 0x80076F78;
+
+// borders.c .text
+divider_draw = 0x80077050;
+divider_clear_coverage = 0x80077268;
+
+// rcp.c .text
+gfxtask_run_xbus = 0x80077450;
+gfxtask_run_xbus_2 = 0x800775B0;
+gfxtask_run_fifo = 0x80077734;
+gfxtask_run_fifo_2 = 0x800778C8;
+gfxtask_wait = 0x80077A54;
+gfxtask_run_rdp = 0x80077AAC;
+bgdraw_primcolour = 0x80077B34;
+bgdraw_fillcolour = 0x80077B5C;
+bgdraw_render = 0x80077B9C;
+rdp_init = 0x80078054;
+rsp_init = 0x800780DC;
+gfxtask_init = 0x80078100;
+bgdraw_texture_init = 0x80078170;
+func_80078190 = 0x80078190;
+bgdraw_chequer_on = 0x80078778;
+bgdraw_chequer_off = 0x800787F0;
+bgdraw_chequer = 0x800787FC;
+bgdraw_set_func = 0x80078AAC;
+texrect_draw = 0x80078AB8;
+texrect_draw_scaled = 0x80078D00;
+
+// sched.c .text
+osCreateScheduler = 0x80079350;
+osScAddClient = 0x80079480;
+osScRemoveClient = 0x800794E4;
+osScGetCmdQ = 0x80079574;
+osScGetInterruptQ = 0x8007957C;
+scGetAudioTaskTimers = 0x80079584;
+func_80079760 = 0x80079760;
+dummy_80079808 = 0x80079808;
+dummy_80079810 = 0x80079810;
+__scHandleRetrace = 0x80079818;
+__scHandleRSP = 0x80079B44;
+__scHandleRDP = 0x80079D5C;
+__scTaskReady = 0x80079DE8;
+__scTaskComplete = 0x80079E40;
+__scAppendList = 0x80079F40;
+__scExec = 0x80079FA8;
+__scYield = 0x8007A080;
+
+// set_rsp_segment.c .text
+rsp_segment = 0x8007A2D0;
+
+// video.c .text
+video_init = 0x8007A310;
+fb_mode_set = 0x8007A4C0;
+fb_mode = 0x8007A4CC;
+fb_mode_size = 0x8007A4DC;
+fb_size = 0x8007A520;
+fb_init_vi = 0x8007A550;
+fb_alloc = 0x8007A7E8;
+video_delta_reset = 0x8007A974;
+fb_update = 0x8007A98C;
+func_8007AB24 = 0x8007AB24;
+vi_refresh_rate = 0x8007AB34;
+fb_swap = 0x8007AB9C;
+fb_memcpy = 0x8007ABFC;
+
+// textures_sprites.c .text
+tex_init_textures = 0x8007AC70;
+tex_disable_modes = 0x8007AE0C;
+tex_enable_modes = 0x8007AE28;
+get_loaded_2D_textures = 0x8007AE44;
+get_loaded_3D_textures = 0x8007AE54;
+func_8007AE64 = 0x8007AE64;
+load_texture = 0x8007AE74;
+free_texture = 0x8007B2BC;
+set_texture_colour_tag = 0x8007B374;
+func_8007B380 = 0x8007B380;
+reset_render_settings = 0x8007B3D0;
+enable_primitive_colour = 0x8007B43C;
+disable_primitive_colour = 0x8007B454;
+set_animated_texture_header = 0x8007B46C;
+load_and_set_texture_no_offset = 0x8007B4C8;
+load_and_set_texture = 0x8007B4E8;
+load_blinking_lights_texture = 0x8007BA5C;
+sprite_opaque = 0x8007BF1C;
+func_8007BF34 = 0x8007BF34;
+func_8007C12C = 0x8007C12C;
+func_8007C52C = 0x8007C52C;
+get_texture_size_from_id = 0x8007C57C;
+func_8007C660 = 0x8007C660;
+func_8007C860 = 0x8007C860;
+func_8007C8A0 = 0x8007C8A0;
+load_sprite_info = 0x8007C8E0;
+func_8007CA68 = 0x8007CA68;
+free_sprite = 0x8007CCB0;
+func_8007CDC0 = 0x8007CDC0;
+build_tex_display_list = 0x8007D0F4;
+func_8007EF64 = 0x8007EF64;
+tex_animate_texture = 0x8007EF80;
+func_8007F1E8 = 0x8007F1E8;
+update_colour_cycle = 0x8007F24C;
+init_pulsating_light_data = 0x8007F414;
+update_pulsating_light_data = 0x8007F460;
+func_8007F594 = 0x8007F594;
+
+// screen_asset.c .text
+load_screen = 0x8007F640;
+render_screen = 0x8007F714;
+
+// menu.c .text
+load_menu_text = 0x8007F900;
+menu_button_free = 0x8007FF88;
+func_8007FFEC = 0x8007FFEC;
+menu_button_uvs = 0x80080518;
+func_80080580 = 0x80080580;
+func_80080BC8 = 0x80080BC8;
+menu_geometry_end = 0x80080E6C;
+func_80080E90 = 0x80080E90;
+init_save_data = 0x80081218;
+reset_title_logo_scale = 0x800813C0;
+menu_init = 0x800813D0;
+menu_loop = 0x800815A4;
+menu_timestamp_render = 0x80081800;
+menu_number_render = 0x80081C04;
+postrace_offsets = 0x80081E54;
+postrace_render = 0x80081F4C;
+draw_menu_elements = 0x800821EC;
+trackmenu_set_records = 0x800828B8;
+menu_missing_controller = 0x800829F8;
+menu_logos_screen_init = 0x80082AAC;
+menu_logo_screen_loop = 0x80082B84;
+init_title_screen_variables = 0x80082FAC;
+func_80083098 = 0x80083098;
+menu_title_screen_init = 0x8008353C;
+render_title_screen = 0x8008377C;
+menu_title_screen_loop = 0x800839E4;
+titlescreen_free = 0x80084118;
+menu_options_init = 0x8008415C;
+optionscreen_render = 0x800841B8;
+menu_options_loop = 0x8008435C;
+optionscreen_free = 0x80084734;
+menu_audio_options_init = 0x80084754;
+func_80084854 = 0x80084854;
+menu_audio_options_loop = 0x80084C74;
+soundoptions_free = 0x800851FC;
+menu_save_options_init = 0x80085270;
+savemenu_render_element = 0x800853D0;
+savemenu_render = 0x80085B9C;
+savemenu_check_space = 0x800860A8;
+savemenu_blank_save_destination = 0x800861C8;
+savemenu_load_sources = 0x800862C4;
+savemenu_load_destinations = 0x800867D4;
+savemenu_move = 0x80086A48;
+savemenu_write = 0x80086AFC;
+savemenu_render_error = 0x800871D8;
+savemenu_input_source = 0x800874D0;
+savemenu_input_dest = 0x800875E4;
+savemenu_input_confirm = 0x800876CC;
+savemenu_input_message = 0x80087734;
+menu_save_options_loop = 0x80087B60;
+savemenu_free = 0x80087EB8;
+func_80087F14 = 0x80087F14;
+check_for_controller_pak_errors = 0x8008832C;
+menu_boot_init = 0x800884F4;
+menu_boot_loop = 0x8008860C;
+bootscreen_free = 0x800887C4;
+bootscreen_init_cpak = 0x800887E8;
+pakmenu_render = 0x80088938;
+menu_controller_pak_loop = 0x800890AC;
+pakmenu_free = 0x800895A4;
+menu_magic_codes_init = 0x800895DC;
+cheatmenu_render = 0x800896A4;
+menu_magic_codes_loop = 0x80089CD8;
+cheatmenu_free = 0x8008A4C8;
+menu_magic_codes_list_init = 0x8008A4E8;
+cheatlist_render = 0x8008A56C;
+cheatlist_exclusive = 0x8008A8F8;
+menu_magic_codes_list_loop = 0x8008A928;
+cheatlist_free = 0x8008AD1C;
+cheatmenu_checksum = 0x8008AD44;
+charselect_prev = 0x8008AEB4;
+titlescreen_controller_assign = 0x8008AF00;
+menu_character_select_init = 0x8008AFCC;
+charselect_render_text = 0x8008B20C;
+charselect_new_player = 0x8008B358;
+charselect_pick = 0x8008B4C8;
+charselect_input = 0x8008B758;
+charselect_assign_ai = 0x8008BB3C;
+menu_character_select_loop = 0x8008BD24;
+charselect_move = 0x8008BFE8;
+charselect_free = 0x8008C128;
+charselect_music_channels = 0x8008C168;
+menu_caution_init = 0x8008C3B4;
+menu_caution_loop = 0x8008C3FC;
+caution_free = 0x8008C4E8;
+menu_game_select_init = 0x8008C508;
+gameselect_render = 0x8008C698;
+menu_game_select_loop = 0x8008C7BC;
+gameselect_free = 0x8008CACC;
+menu_file_select_init = 0x8008CAFC;
+fileselect_render_element = 0x8008CC28;
+fileselect_render = 0x8008CD74;
+fileselect_input_root = 0x8008D5F8;
+fileselect_input_copy = 0x8008D8BC;
+fileselect_input_erase = 0x8008DC7C;
+menu_file_select_loop = 0x8008DE70;
+fileselect_free = 0x8008E428;
+menu_init_vehicle_textures = 0x8008E45C;
+menu_init_arrow_textures = 0x8008E4B0;
+menu_input = 0x8008E4EC;
+trackmenu_active = 0x8008E790;
+menu_track_select_init = 0x8008E7A0;
+trackmenu_assets = 0x8008F00C;
+menu_track_select_loop = 0x8008F234;
+menu_track_select_unload = 0x8008F534;
+func_8008F618 = 0x8008F618;
+trackmenu_render_2D = 0x8008FA54;
+func_8008FF1C = 0x8008FF1C;
+trackmenu_track_view = 0x800904E8;
+trackmenu_input = 0x80090918;
+trackmenu_timetrial_sound = 0x80090ED8;
+trackmenu_setup_render = 0x80090F30;
+func_80092188 = 0x80092188;
+trackmenu_staff_beaten = 0x80092BE0;
+menu_adventure_track_init = 0x80092C84;
+adventuretrack_render = 0x80092E94;
+menu_adventure_track_loop = 0x80093600;
+adventuretrack_free = 0x80093A0C;
+menu_pause_init = 0x80093A40;
+pausemenu_render = 0x80093D40;
+menu_pause_loop = 0x80094170;
+menu_dialogue_end = 0x800945B0;
+menu_close_dialogue = 0x800945E4;
+menu_racer_portraits = 0x80094604;
+postrace_start = 0x80094688;
+postrace_load = 0x80094A5C;
+postrace_music_fade = 0x80094C14;
+func_80094D28 = 0x80094D28;
+postrace_message = 0x80095624;
+menu_postrace = 0x80095728;
+postrace_free = 0x80096790;
+menu_results_init = 0x80096848;
+results_render = 0x80096978;
+menu_results_loop = 0x800972A8;
+results_free = 0x800976CC;
+filename_decompress = 0x800976F8;
+filename_compress = 0x80097744;
+filename_trim = 0x800977D0;
+filename_init = 0x80097874;
+filename_render = 0x80097918;
+filename_enter = 0x80097D10;
+menu_unload_bigfont = 0x800981E8;
+trophyround_adventure = 0x80098208;
+menu_trophy_race_round_init = 0x8009826C;
+trophyround_render = 0x800983C0;
+menu_trophy_race_round_loop = 0x8009859C;
+trophyround_free = 0x80098754;
+func_80098774 = 0x80098774;
+menu_trophy_race_rankings_init = 0x80098A24;
+rankings_render_order = 0x80098EBC;
+menu_trophy_race_rankings_loop = 0x80098FD4;
+rankings_free = 0x80099600;
+get_trophy_race_world_id = 0x8009962C;
+ghostmenu_generate = 0x8009963C;
+ghostmenu_erase = 0x800998E0;
+menu_ghost_data_init = 0x80099A5C;
+ghostmenu_render = 0x80099E8C;
+menu_ghost_data_loop = 0x8009A7D4;
+ghostmenu_free = 0x8009ABAC;
+cinematic_start = 0x8009ABD8;
+menu_cinematic_init = 0x8009AC98;
+menu_cinematic_loop = 0x8009ACFC;
+cinematic_free = 0x8009AF18;
+menu_credits_init = 0x8009AF48;
+credits_fade = 0x8009B1E4;
+menu_credits_loop = 0x8009B32C;
+credits_free = 0x8009BCF0;
+menu_camera_centre = 0x8009BD5C;
+func_8009BE54 = 0x8009BE54;
+reset_controller_sticks = 0x8009BE5C;
+update_controller_sticks = 0x8009BF20;
+reset_character_id_slots = 0x8009C154;
+get_save_file_index = 0x8009C1A0;
+get_track_id_to_load = 0x8009C1B0;
+get_character_id_from_slot = 0x8009C228;
+get_character_id_from_slot_unused = 0x8009C23C;
+get_player_selected_vehicle = 0x8009C250;
+set_player_selected_vehicle = 0x8009C264;
+charselect_status = 0x8009C274;
+get_player_character = 0x8009C280;
+enable_tracks_mode = 0x8009C2C4;
+is_in_tracks_mode = 0x8009C2D0;
+set_magic_code_flags = 0x8009C2E0;
+get_filtered_cheats = 0x8009C30C;
+get_number_of_active_players = 0x8009C3C8;
+get_active_player_count = 0x8009C3D8;
+get_multiplayer_racer_count = 0x8009C440;
+get_all_save_files_ptr = 0x8009C490;
+menu_title_reset = 0x8009C49C;
+menu_assetgroup_free = 0x8009C4A8;
+menu_asset_free = 0x8009C508;
+menu_assetgroup_load = 0x8009C674;
+menu_asset_load = 0x8009C6D4;
+menu_imagegroup_load = 0x8009C8A4;
+menu_image_load = 0x8009C904;
+menu_imagegroup_free = 0x8009CA58;
+menu_element_render = 0x8009CA60;
+render_track_selection_viewport_border = 0x8009CD7C;
+dialogue_npc_finish = 0x8009CF68;
+dialogue_try_close = 0x8009CFB0;
+npc_dialogue_loop = 0x8009CFEC;
+set_option_text_colour = 0x8009D118;
+render_dialogue_option = 0x8009D1B8;
+handle_menu_joystick_input = 0x8009D26C;
+func_8009D324 = 0x8009D324;
+set_next_taj_challenge_menu = 0x8009D330;
+set_menu_id_if_option_equal = 0x8009D33C;
+taj_menu_loop = 0x8009D360;
+dialogue_race_defeat = 0x8009D9F4;
+tt_menu_loop = 0x8009DB3C;
+dialogue_tt_gamestatus = 0x8009E3D0;
+trophy_race_cabinet_menu_loop = 0x8009E7E8;
+dialogue_open_stub = 0x8009E9A0;
+dialogue_close_stub = 0x8009E9A8;
+dialogue_ortho = 0x8009E9B0;
+get_eeprom_settings_pointer = 0x8009EA6C;
+set_eeprom_settings_value = 0x8009EA78;
+unset_eeprom_settings_value = 0x8009EABC;
+get_eeprom_settings = 0x8009EB08;
+get_language = 0x8009EB20;
+set_language = 0x8009EB94;
+is_adventure_two_unlocked = 0x8009EC60;
+is_in_adventure_two = 0x8009EC70;
+is_in_two_player_adventure = 0x8009EC80;
+is_tt_unlocked = 0x8009ECB8;
+is_drumstick_unlocked = 0x8009ECD0;
+
+// game_ui.c .text
+init_hud = 0x8009ECF0;
+func_8009F034 = 0x8009F034;
+free_hud = 0x800A003C;
+race_starting = 0x800A0190;
+render_hud = 0x800A01A0;
+hud_audio_init = 0x800A0B74;
+hud_audio_update = 0x800A0BD4;
+render_hud_race = 0x800A0DC0;
+render_course_indicator_arrows = 0x800A0EB4;
+render_hud_banana_challenge = 0x800A1248;
+render_hud_challenge_eggs = 0x800A1428;
+hud_draw_eggs = 0x800A14F0;
+hud_eggs_portrait = 0x800A19A4;
+render_hud_battle = 0x800A1C04;
+func_800A1E48 = 0x800A1E48;
+hud_draw_lives = 0x800A22F4;
+render_hud_race_boss = 0x800A258C;
+render_hud_taj_race = 0x800A263C;
+render_hud_hubworld = 0x800A26C8;
+func_800A277C = 0x800A277C;
+set_stopwatch_face = 0x800A36CC;
+hud_speedometre_reset = 0x800A3870;
+render_speedometer = 0x800A3884;
+render_race_start = 0x800A3CE4;
+render_racer_bananas = 0x800A4154;
+render_treasure_hud = 0x800A45F0;
+render_silver_coin_counter = 0x800A47A0;
+render_race_finish_position = 0x800A497C;
+func_800A4C34 = 0x800A4C34;
+render_race_position = 0x800A4C44;
+render_lap_count = 0x800A4F50;
+render_wrong_way_text = 0x800A5A64;
+hud_draw_finish_misc = 0x800A5F18;
+func_800A6254 = 0x800A6254;
+play_time_trial_end_message = 0x800A6DB4;
+render_time_trial_finish = 0x800A6E30;
+render_balloon_count = 0x800A718C;
+hud_sound_play = 0x800A7440;
+hud_sound_play_delayed = 0x800A7484;
+hud_sound_stop = 0x800A74EC;
+render_weapon_hud = 0x800A7520;
+render_magnet_reticle = 0x800A7A60;
+render_race_time = 0x800A7B68;
+render_timer = 0x800A7FBC;
+minimap_init = 0x800A83B4;
+get_hud_setting = 0x800A8458;
+render_minimap_and_misc_hud = 0x800A8474;
+minimap_marker_pos = 0x800AA3EC;
+func_800AA600 = 0x800AA600;
+hud_draw_model = 0x800AAFD0;
+minimap_fade = 0x800AB194;
+minimap_opacity_set = 0x800AB1AC;
+hud_reset_race_start = 0x800AB1C8;
+hud_visibility = 0x800AB1D4;
+
+// weather.c .text
+weather_init = 0x800AB1F0;
+weather_clip_planes = 0x800AB308;
+weather_free = 0x800AB35C;
+weather_reset = 0x800AB4A8;
+snow_init = 0x800ABB34;
+weather_set = 0x800ABC5C;
+weather_update = 0x800ABE68;
+snow_update = 0x800AC0C8;
+snow_vertices = 0x800AC21C;
+snow_render = 0x800AC5A4;
+lensflare_off = 0x800AC850;
+lensflare_on = 0x800AC860;
+lensflare_remove = 0x800AC880;
+lensflare_init = 0x800AC8A8;
+lensflare_render = 0x800ACA20;
+lensflare_override_add = 0x800ACF60;
+lensflare_override_remove = 0x800ACF98;
+lensflare_override = 0x800AD030;
+rain_init = 0x800AD144;
+free_rain_memory = 0x800AD220;
+rain_set = 0x800AD2C4;
+rain_fog = 0x800AD40C;
+rain_opacity_set = 0x800AD4AC;
+rain_update = 0x800AD4B8;
+rain_render_splashes = 0x800AD658;
+rain_lightning = 0x800ADAB8;
+rain_sound = 0x800ADBC8;
+render_rain_overlay = 0x800ADCBC;
+
+// particles.c .text
+func_800AE270 = 0x800AE270;
+func_800AE2A0 = 0x800AE2A0;
+func_800AE2D8 = 0x800AE2D8;
+func_800AE374 = 0x800AE374;
+func_800AE438 = 0x800AE438;
+func_800AE490 = 0x800AE490;
+init_particle_assets = 0x800AE530;
+func_800AE728 = 0x800AE728;
+generate_particle_shape_triangle = 0x800AEE14;
+generate_particle_shape_quad = 0x800AEEB8;
+func_800AEF88 = 0x800AEF88;
+func_800AF024 = 0x800AF024;
+func_800AF0A4 = 0x800AF0A4;
+func_800AF0F0 = 0x800AF0F0;
+func_800AF134 = 0x800AF134;
+partInitTrigger = 0x800AF1E0;
+func_800AF29C = 0x800AF29C;
+func_800AF404 = 0x800AF404;
+func_800AF52C = 0x800AF52C;
+func_800AF6E4 = 0x800AF6E4;
+func_800AF714 = 0x800AF714;
+obj_spawn_particle = 0x800AFC3C;
+func_800AFE5C = 0x800AFE5C;
+func_800B0010 = 0x800B0010;
+func_800B03C0 = 0x800B03C0;
+func_800B0698 = 0x800B0698;
+func_800B0BAC = 0x800B0BAC;
+func_800B1130 = 0x800B1130;
+func_800B1CB8 = 0x800B1CB8;
+func_800B2040 = 0x800B2040;
+func_800B2260 = 0x800B2260;
+handle_particle_movement = 0x800B22FC;
+func_800B263C = 0x800B263C;
+func_800B26E0 = 0x800B26E0;
+set_particle_texture_frame = 0x800B2FBC;
+move_particle_basic_parent = 0x800B3140;
+move_particle_velocity_parent = 0x800B3240;
+move_particle_with_velocities = 0x800B3358;
+move_particle_basic = 0x800B34B0;
+move_particle_with_velocity = 0x800B3564;
+render_active_particles = 0x800B3678;
+render_particle = 0x800B3740;
+func_800B3E64 = 0x800B3E64;
+get_particle_asset_table = 0x800B4488;
+get_next_particle_table = 0x800B44D4;
+get_previous_particle_table = 0x800B452C;
+get_particle_behaviour = 0x800B4578;
+func_800B45C4 = 0x800B45C4;
+func_800B461C = 0x800B461C;
+func_800B4668 = 0x800B4668;
+func_800B46BC = 0x800B46BC;
+
+// unused_string.c .text
+strcpy = 0x800B4710;
+strcat = 0x800B4744;
+strcasecmp = 0x800B4794;
+strncasecmp = 0x800B4848;
+memset = 0x800B490C;
+
+// printf.c .text
+_itoa = 0x800B4940;
+func_800B4A08 = 0x800B4A08;
+sprintf = 0x800B4A14;
+vsprintf = 0x800B4A40;
+debug_text_init = 0x800B5E88;
+render_printf = 0x800B5EDC;
+debug_text_print = 0x800B5F78;
+debug_text_reset = 0x800B61E0;
+set_render_printf_colour = 0x800B620C;
+set_render_printf_background_colour = 0x800B62B4;
+set_render_printf_position = 0x800B635C;
+debug_text_width = 0x800B63F4;
+func_800B653C = 0x800B653C;
+debug_text_background = 0x800B695C;
+debug_text_character = 0x800B69FC;
+debug_text_bounds = 0x800B6E50;
+debug_text_origin = 0x800B6EE0;
+debug_text_newline = 0x800B6F04;
+
+// audio_assert.c .text
+func_800B6F30 = 0x800B6F30;
+__assert = 0x800B6F40;
+
+// thread0_epc.c .text
+thread0_create = 0x800B6F50;
+thread0_Main = 0x800B6FC4;
+enable_interupts_on_main = 0x800B70D0;
+stop_all_threads_except_main = 0x800B7144;
+write_epc_data_to_cpak = 0x800B71B0;
+dump_memory_to_cpak = 0x800B7460;
+update_object_stack_trace = 0x800B76B8;
+get_lockup_status = 0x800B76DC;
+mode_lockup = 0x800B77D4;
+render_epc_lock_up_display = 0x800B7810;
+
+// stack_pointer.c .text
+stack_pointer = 0x800B7D10;
+
+// waves.c .text
+free_waves = 0x800B7D20;
+wave_init = 0x800B7EB4;
+func_800B8134 = 0x800B8134;
+func_800B82B4 = 0x800B82B4;
+func_800B8B8C = 0x800B8B8C;
+func_800B8C04 = 0x800B8C04;
+func_800B9228 = 0x800B9228;
+func_800B92F4 = 0x800B92F4;
+func_800B97A8 = 0x800B97A8;
+func_800B9C18 = 0x800B9C18;
+func_800BA288 = 0x800BA288;
+func_800BA4B8 = 0x800BA4B8;
+func_800BA8E4 = 0x800BA8E4;
+func_800BB2F4 = 0x800BB2F4;
+func_800BBDDC = 0x800BBDDC;
+func_800BBE08 = 0x800BBE08;
+func_800BBF78 = 0x800BBF78;
+func_800BC6C8 = 0x800BC6C8;
+func_800BCC70 = 0x800BCC70;
+func_800BDC80 = 0x800BDC80;
+func_800BE654 = 0x800BE654;
+log_wave_height = 0x800BEEB4;
+func_800BEFC4 = 0x800BEFC4;
+func_800BF3E4 = 0x800BF3E4;
+func_800BF524 = 0x800BF524;
+func_800BF634 = 0x800BF634;
+func_800BF9F8 = 0x800BF9F8;
+func_800BFC54 = 0x800BFC54;
+func_800BFE98 = 0x800BFE98;
+obj_loop_wavepower = 0x800BFFDC;
+
+// fade_transition.c .text
+enable_new_screen_transitions = 0x800C0170;
+disable_new_screen_transitions = 0x800C0180;
+check_fadeout_transition = 0x800C018C;
+transition_begin = 0x800C01D8;
+handle_transitions = 0x800C0494;
+render_fade_transition = 0x800C05C8;
+transition_end = 0x800C0724;
+transition_fullscreen_start = 0x800C0780;
+process_transition_fullscreen = 0x800C0834;
+render_fade_fullscreen = 0x800C0A08;
+init_transition_shape = 0x800C0B00;
+process_transition_shape = 0x800C1130;
+render_fade_barndoor_horizontal = 0x800C13E4;
+render_fade_barndoor_vertical = 0x800C14DC;
+func_800C15D4 = 0x800C15D4;
+func_800C1EE8 = 0x800C1EE8;
+render_fade_circle = 0x800C2274;
+render_fade_waves = 0x800C23F8;
+render_fade_barndoor_diagonal = 0x800C2548;
+init_transition_blank = 0x800C2640;
+process_transition_disabled = 0x800C27A0;
+render_fade_disabled = 0x800C28E8;
+
+// game_text.c .text
+init_dialogue_text = 0x800C29F0;
+free_message_box = 0x800C2AB4;
+set_subtitles = 0x800C2AF4;
+render_subtitles = 0x800C2B00;
+find_next_subtitle = 0x800C2D6C;
+process_subtitles = 0x800C2F1C;
+load_game_text_table = 0x800C3048;
+free_game_text_table = 0x800C30CC;
+set_textbox_display_value = 0x800C3140;
+reset_delayed_text = 0x800C314C;
+set_delayed_text = 0x800C3158;
+set_current_text = 0x800C31EC;
+textbox_visible = 0x800C3400;
+process_onscreen_textbox = 0x800C3440;
+dialogue_challenge_loop = 0x800C3564;
+func_800C38B4 = 0x800C38B4;
+
+// font.c .text
+load_fonts = 0x800C3C00;
+set_kerning = 0x800C4164;
+load_font = 0x800C4170;
+unload_font = 0x800C422C;
+set_text_font = 0x800C42EC;
+get_loaded_font = 0x800C4318;
+set_text_colour = 0x800C4384;
+set_text_background_colour = 0x800C43CC;
+draw_text_plain_unused = 0x800C4404;
+draw_text = 0x800C4440;
+draw_dialogue_text_unused = 0x800C44C0;
+draw_dialogue_text_pos_unused = 0x800C4510;
+render_text_string = 0x800C45A4;
+get_text_width = 0x800C4DA0;
+set_current_dialogue_box_coords = 0x800C4EDC;
+set_dialogue_font = 0x800C4F7C;
+set_current_dialogue_background_colour = 0x800C4FBC;
+set_current_text_colour = 0x800C5000;
+set_current_text_background_colour = 0x800C5050;
+set_current_text_offset = 0x800C5094;
+reset_current_text_offset = 0x800C50D8;
+func_800C510C = 0x800C510C;
+render_dialogue_text = 0x800C5168;
+move_dialogue_box_to_front = 0x800C5428;
+dialogue_clear = 0x800C5494;
+align_text_in_box = 0x800C54E8;
+open_dialogue_box = 0x800C55F4;
+dialogue_close = 0x800C5620;
+set_dialogue_box_unused_flag = 0x800C564C;
+dialogue_box_clear_unused_flag = 0x800C5678;
+enable_dialogue_box_vertices = 0x800C56A4;
+clear_dialogue_box_open_flag = 0x800C56D0;
+render_dialogue_boxes = 0x800C56FC;
+s32_to_string = 0x800C580C;
+render_fill_rectangle = 0x800C5AA0;
+render_dialogue_box = 0x800C5B58;
+parse_string_with_number = 0x800C5F60;
+
+// osCreatePiManager.c .text
+osCreatePiManager = 0x800C6000;
+
+// gzip.c .text
+gzip_init = 0x800C6170;
+byteswap32 = 0x800C61AC;
+get_asset_uncompressed_size = 0x800C61DC;
+gzip_inflate = 0x800C6218;
+gzip_huft_build = 0x800C6274;
+
+// asm/gzip.s .text
+gzip_inflate_block = 0x800C68C0;
+gzip_inflate_dynamic = 0x800C69C4;
+gzip_inflate_fixed = 0x800C6DDC;
+gzip_inflate_stored = 0x800C6F34;
+gzip_inflate_codes = 0x800C7040;
+
+// __osLeoInterrupt.c .text
+__osLeoInterrupt = 0x800C7340;
+
+// thread30_track_loading.c .text
+create_and_start_thread30 = 0x800C7350;
+stop_thread30 = 0x800C73BC;
+get_thread30_need_to_load_level = 0x800C73E0;
+tick_thread30 = 0x800C73F0;
+get_thread30_load_delay = 0x800C7448;
+set_level_to_load_in_background = 0x800C7458;
+thread30_track_loading = 0x800C74A0; // type:func
+
+// alHeapInit.c .text
+alHeapInit = 0x800C7560;
+
+// alBnkfNew.c .text
+alBnkfNew = 0x800C76A4;
+alSeqFileNew = 0x800C77A8;
+
+// alHeapDBAlloc.c .text
+alHeapDBAlloc = 0x800C77F0;
+
+// 
+alCSPSetVol = 0x800C7850;
+alCSPGetTempo = 0x800C7890;
+osGetCount = 0x800C78D0;
+alCSPSetChlPan = 0x800C78E0;
+alCSPSetChlVol = 0x800C7940;
+alCSPGetChlVol = 0x800C79A0;
+alSeqpGetChlFXMix = 0x800C79C0;
+alCSPSetTempo = 0x800C79E0;
+alCSPGetState = 0x800C7A50;
+alCSPSetBank = 0x800C7A60;
+alCSeqGetLoc = 0x800C7AA0;
+alCSeqSetLoc = 0x800C7B40;
+alCSeqNextEvent = 0x800C7D04;
+alCSeqNew = 0x800C7FFC;
+alCSeqNewMarker = 0x800C8110;
+alCSeqGetTicks = 0x800C827C;
+alCSeqSecToTicks = 0x800C8284;
+alCSeqTicksToSec = 0x800C8380;
+__alCSeqNextDelta = 0x800C83EC;
+
+
+alCSPSetSeq = 0x800C8560;
+alCSPPlay = 0x800C85A0;
+alCSPStop = 0x800C85D0;
+osAiSetFrequency = 0x800C8600;
+alUnlink = 0x800C8760;
+alLink = 0x800C8790;
+alClose = 0x800C87B4;
+alInit = 0x800C87EC;
+
+
+osCreateMesgQueue = 0x800C8820;
+osCreateThread = 0x800C8850;
+osStartThread = 0x800C89A0;
+osStopThread = 0x800C8AF0;
+osRecvMesg = 0x800C8BB0;
+osVirtualToPhysical = 0x800C8CF0;
+osAiSetNextBuffer = 0x800C8D70;
+osAiGetLength = 0x800C8E20;
+osSendMesg = 0x800C8E30;
+osPiStartDma = 0x800C8F80;
+alEvtqFlushType = 0x800C9090;
+alEvtqFlush = 0x800C913C;
+alEvtqPostEvent = 0x800C91AC;
+alEvtqNextEvent = 0x800C92D0;
+alEvtqNew = 0x800C935C;
+alSynAddPlayer = 0x800C93D0;
+_allocatePVoice = 0x800C9420;
+alSynAllocVoice = 0x800C9508;
+alSynSetVol = 0x800C9650;
+alSynStartVoice = 0x800C96F0;
+alSynSetPitch = 0x800C9780;
+alSynSetFXMix = 0x800C9810;
+alSynStopVoice = 0x800C98B0;
+alSynFreeVoice = 0x800C9930;
+alCents2Ratio = 0x800C99E0;
+osSetIntMask = 0x800C9A30;
+sqrtf = 0x800C9AD0;
+alSynSetPriority = 0x800C9AE0;
+
+// __NOPS_NEEDED
+__NOPS_NEEDED = 0x800C9AF0;
+
+// llcvt.c .text
+__d_to_ll = 0x800C9B30;
+__f_to_ll = 0x800C9B4C;
+__d_to_ull = 0x800C9B68;
+__f_to_ull = 0x800C9C08;
+__ll_to_d = 0x800C9CA4;
+__ll_to_f = 0x800C9CBC;
+__ull_to_d = 0x800C9CD4;
+__ull_to_f = 0x800C9D08;
+
+// rmonPrintf.c .text
+rmonPrintf = 0x800C9D54;
+
+// bcopy
+bcopy = 0x800C9DA0;
+alFilterNew = 0x800CA0B0;
+alEnvmixerPull = 0x800CA0D0;
+alEnvmixerParam = 0x800CAA7C;
+_frexpf = 0x800CB104;
+_ldexpf = 0x800CB288;
+alLoadParam = 0x800CB540;
+alRaw16Pull = 0x800CB714;
+alAdpcmPull = 0x800CBBEC;
+alResampleParam = 0x800CC090;
+alResamplePull = 0x800CC17C;
+alMainBusParam = 0x800CC390;
+alMainBusPull = 0x800CC3C0;
+alSaveParam = 0x800CC4E0;
+alSavePull = 0x800CC514;
+osInitialize = 0x800CC5A0;
+osSetThreadPri = 0x800CC840;
+guPerspectiveF = 0x800CC920;
+guPerspective = 0x800CCB50;
+osSetEventMesg = 0x800CCBB0;
+osContInit = 0x800CCC20;
+__osContGetInitData = 0x800CCE18;
+__osPackRequestData = 0x800CCEE8;
+osContStartReadData = 0x800CCFE0;
+osContGetReadData = 0x800CD0A4;
+__osSpSetStatus = 0x800CD240;
+osDpSetStatus = 0x800CD250;
+osSetTime = 0x800CD260;
+osPfsIsPlug = 0x800CD290;
+__osPfsRequestData = 0x800CD430;
+__osPfsGetInitData = 0x800CD52C;
+__osSiCreateAccessQueue = 0x800CD600;
+__osSiGetAccess = 0x800CD650;
+__osSiRelAccess = 0x800CD694;
+__osSiRawStartDma = 0x800CD6C0;
+__osContAddressCrc = 0x800CD770;
+__osContDataCrc = 0x800CD820;
+__osContRamWrite = 0x800CD8F0;
+__osContRamRead = 0x800CDCA0;
+bcmp = 0x800CE050;
+
+// libc/string.c .text
+memcpy = 0x800CE170;
+strlen = 0x800CE19C;
+strchr = 0x800CE1C4;
+
+// 
+osEepromProbe = 0x800CE210;
+osEepromRead = 0x800CE280;
+__osPackEepReadData = 0x800CE470;
+osEepromWrite = 0x800CE580;
+__osPackEepWriteData = 0x800CE730;
+__osEepStatus = 0x800CE83C;
+__ull_rshift = 0x800CEA60;
+__ull_rem = 0x800CEA8C;
+__ull_div = 0x800CEAC8;
+__ll_lshift = 0x800CEB04;
+__ll_rem = 0x800CEB30;
+__ll_div = 0x800CEB6C;
+__ll_mul = 0x800CEBC8;
+__ull_divremi = 0x800CEBF8;
+__ll_mod = 0x800CEC58;
+__ll_rshift = 0x800CECF4;
+
+// 
+osPfsInit = 0x800CED20;
+__osPfsGetStatus = 0x800CEDD4;
+osPfsReadWriteFile = 0x800CEFDC;
+osPfsFreeBlocks = 0x800CF3E0;
+
+// osPfsChecker.c .text
+osPfsChecker = 0x800CF530;
+corrupted_init = 0x800CFBF4;
+corrupted = 0x800CFDA8;
+
+// osPfsReFormat
+osPfsReFormat = 0x800CFF90;
+osPfsNumFiles = 0x800D0390;
+bzero = 0x800D04E0;
+osPfsFileState = 0x800D0580;
+osPfsDeleteFile = 0x800D0870;
+__osPfsReleasePages = 0x800D0B50;
+__osBlockSum = 0x800D0D88;
+osPfsFindFile = 0x800D0E80;
+osPfsAllocateFile = 0x800D1040;
+__osPfsDeclearPage = 0x800D14C4;
+osInvalDCache = 0x800D17F0;
+osWritebackDCacheAll = 0x800D18A0;
+osDpGetStatus = 0x800D18D0;
+osDpSetNextBuffer = 0x800D18E0;
+osCreateViManager = 0x800D1990;
+viMgrMain = 0x800D1B08;
+
+// osViSetMode
+osViSetMode = 0x800D1CA0;
+osViBlack = 0x800D1D10;
+osViSetEvent = 0x800D1D80;
+osSpTaskYielded = 0x800D1DF0;
+osViGetCurrentFramebuffer = 0x800D1E70;
+osViGetNextFramebuffer = 0x800D1EB0;
+osSpTaskLoad = 0x800D200C;
+osSpTaskStartGo = 0x800D216C;
+osGetTime = 0x800D21B0;
+osSpTaskYield = 0x800D2240;
+osViSetSpecialFeatures = 0x800D2260;
+osViSwapBuffer = 0x800D2420;
+__osGetActiveQueue = 0x800D2470;
+__osPiCreateAccessQueue = 0x800D2480;
+__osPiGetAccess = 0x800D24D0;
+__osPiRelAccess = 0x800D2514;
+osGetThreadPri = 0x800D2540;
+__osDisableInt = 0x800D2560;
+__osRestoreInt = 0x800D2580;
+osPiRawStartDma = 0x800D25A0;
+osEPiRawStartDma = 0x800D2680;
+__osDevMgrMain = 0x800D2760;
+__osViInit = 0x800D2B10;
+alSynDelete = 0x800D2C60;
+__osDequeueThread = 0x800D2C70;
+__osExceptionPreamble = 0x800D2CB0;
+__osException = 0x800D2CC0;
+send_mesg = 0x800D31E4;
+handle_CpU = 0x800D3298;
+__osEnqueueAndYield = 0x800D32CC;
+__osEnqueueThread = 0x800D33CC;
+__osPopThread = 0x800D3414;
+__osDispatchThread = 0x800D3424;
+__osCleanupThread = 0x800D35A0;
+__osProbeTLB = 0x800D35B0;
+
+// __osAiDeviceBusy
+__osAiDeviceBusy = 0x800D3670;
+osJamMesg = 0x800D36A0;
+osPiGetCmdQueue = 0x800D37F0;
+alCopy = 0x800D3820;
+_Printf = 0x800D3F10;
+__osSetSR = 0x800D4560;
+__osGetSR = 0x800D4570;
+__osSetFpcCsr = 0x800D4580;
+__osSiRawReadIo = 0x800D4590;
+__osSiRawWriteIo = 0x800D45E0;
+osWritebackDCache = 0x800D4630;
+osInvalICache = 0x800D46B0;
+osMapTLBRdb = 0x800D4730;
+osPiRawReadIo = 0x800D4790;
+__osSetHWIntrRoutine = 0x800D47F0;
+
+// guMtxUtil
+guMtxF2L = 0x800D4840;
+guMtxIdentF = 0x800D4940;
+guMtxIdent = 0x800D49C8;
+guMtxL2F = 0x800D49F8;
+
+// cosf
+cosf = 0x800D4AB0;
+
+// sinf
+sinf = 0x800D4C20;
+
+// osSetTimer
+osSetTimer = 0x800D4DE0;
+
+// osTimer
+__osTimerServicesInit = 0x800D4EC0;
+__osTimerInterrupt = 0x800D4F4C;
+__osSetTimerIntr = 0x800D50C4;
+__osInsertTimer = 0x800D5138;
+
+// si
+__osSiDeviceBusy = 0x800D52C0;
+__osSumcalc = 0x800D52F0;
+__osIdCheckSum = 0x800D534C;
+__osRepairPackId = 0x800D53B4;
+__osCheckPackId = 0x800D57CC;
+__osGetId = 0x800D5964;
+__osCheckId = 0x800D5BC0;
+__osPfsRWInode = 0x800D5CBC;
+__osPfsSelectBank = 0x800D5FDC;
+
+// dp
+__osDpDeviceBusy = 0x800D6050;
+__osViGetCurrentContext = 0x800D6080;
+__osViSwapContext = 0x800D6090;
+__osSpGetStatus = 0x800D63F0;
+__osSpSetPc = 0x800D6400;
+__osSpRawStartDma = 0x800D6440;
+__osSpDeviceBusy = 0x800D64D0;
+__osResetGlobalIntMask = 0x800D6500;
+osEPiRawWriteIo = 0x800D6560;
+osYieldThread = 0x800D65B0;
+osDestroyThread = 0x800D6600;
+_Litob = 0x800D6700;
+_Genld = 0x800D69A0;
+_Ldtob = 0x800D6F10;
+__osSetCompare = 0x800D7460;
+
+// ldiv
+lldiv = 0x800D7470;
+ldiv = 0x800D7570;
+
+// ucode_text us v77
+aspMainTextStart = 0x800D7600; // size:0xEC0
+rspF3DDKRBootStart = 0x800D84C0; // size:0xD0
+rspF3DDKRDramStart = 0x800D8590; // size:0x1200
+rspF3DDKRFifoStart = 0x800D9790; // size:0x11E0
+rspF3DDKRXbusStart = 0x800DA970; // size:0x1200
+rspUnknown2Start = 0x800DBB70; // size:0xAC0
+
+// audio.c .data
+gMusicPlayer = 0x800DC630;
+gJinglePlayer = 0x800DC634;
+gMusicBaseVolume = 0x800DC638;
+sfxRelativeVolume = 0x800DC63C;
+gCanPlayMusic = 0x800DC640;
+gCanPlayJingle = 0x800DC644;
+gBlockMusicChange = 0x800DC648;
+audioPrevCount = 0x800DC64C;
+sMusicFadeVolume = 0x800DC650;
+gMusicSliderVolume = 0x800DC654;
+gDelayedSoundsCount = 0x800DC658;
+gMusicNextSeqID = 0x800DC65C;
+gJingleNextSeqID = 0x800DC660;
+D_800DC664 = 0x800DC664;
+D_800DC668 = 0x800DC668;
+gGlobalMusicVolume = 0x800DC66C;
+gBlockVoiceLimitChange = 0x800DC670;
+
+// audiomgr.c .data
+audFrameCt = 0x800DC680;
+nextDMA = 0x800DC684;
+curAcmdList = 0x800DC688;
+gAntiPiracyAudioFreq = 0x800DC68C;
+gFunc80019808Checksum = 0x800DC690;
+gFunc80019808Length = 0x800DC694;
+
+// audiosfx.c .data
+D_800DC6B0 = 0x800DC6B0; // size:0xC
+gAlSndPlayerPtr = 0x800DC6BC;
+sfxVolumeSlider = 0x800DC6C0;
+D_800DC6C4 = 0x800DC6C4;
+
+// audio_vehicle.c .data
+gVehicleSounds = 0x800DC6D0;
+D_800DC6D4 = 0x800DC6D4;
+D_800DC6D8 = 0x800DC6D8;
+
+// audio_spatial.c .data
+gUsedMasks = 0x800DC6E0;
+
+// objects.c .data
+gTajChallengeTransition = 0x800DC6F0;
+gBalloonCutsceneTransition = 0x800DC6F8;
+D_800DC700 = 0x800DC700;
+D_800DC704 = 0x800DC704;
+D_800DC708 = 0x800DC708;
+D_800DC70C = 0x800DC70C;
+D_800DC710 = 0x800DC710;
+D_800DC714 = 0x800DC714;
+gGhostObjStaff = 0x800DC718;
+D_800DC71C = 0x800DC71C;
+gObjectTexAnim = 0x800DC720;
+gTimeTrialTime = 0x800DC724;
+gTimeTrialVehicle = 0x800DC728;
+gTimeTrialCharacter = 0x800DC72C;
+gHasGhostToSave = 0x800DC730;
+gTimeTrialStaffGhost = 0x800DC734;
+gBeatStaffGhost = 0x800DC738;
+D_800DC73C = 0x800DC73C;
+D_800DC740 = 0x800DC740;
+gSwapLeadPlayer = 0x800DC744;
+D_800DC748 = 0x800DC748;
+D_800DC74C = 0x800DC74C;
+D_800DC754 = 0x800DC754;
+gShieldEffectObject = 0x800DC75C;
+D_800DC760 = 0x800DC760;
+gMagnetEffectObject = 0x800DC764;
+D_800DC768 = 0x800DC768;
+D_800DC76C = 0x800DC76C;
+D_800DC7A8 = 0x800DC7A8;
+D_800DC7B8 = 0x800DC7B8; // type:s16 size:0x66
+gBossVehicles = 0x800DC820; // size:0x14
+D_800DC834 = 0x800DC834;
+D_800DC840 = 0x800DC840;
+gNoBoundsCheck = 0x800DC848;
+gMagnetColours = 0x800DC84C;
+gRaceEndFade = 0x800DC858;
+gRaceEndTransition = 0x800DC860;
+
+// tracks.c .data
+D_800DC870 = 0x800DC870;
+gFullFadeToBlack = 0x800DC874;
+gCircleFadeToBlack = 0x800DC87C;
+D_800DC884 = 0x800DC884;
+D_800DC8AC = 0x800DC8AC;
+gCurrentLevelModel = 0x800DC918;
+gCurrentLevelHeader2 = 0x800DC91C;
+D_800DC920 = 0x800DC920;
+D_800DC924 = 0x800DC924;
+D_800DC928 = 0x800DC928;
+D_800DC92C = 0x800DC92C;
+
+// lights.c .data
+gActiveLights = 0x800DC950;
+D_800DC954 = 0x800DC954;
+gMaxLights = 0x800DC958;
+gNumActiveLights = 0x800DC95C;
+D_800DC960 = 0x800DC960;
+D_800DC964 = 0x800DC964;
+D_800DC968 = 0x800DC968;
+
+// object_functions.c .data
+gTajTransformTransitionEnd = 0x800DC970;
+gTajTransition = 0x800DC978;
+gCharacterFlagVertices = 0x800DC980;
+D_800DC9A8 = 0x800DC9A8;
+D_800DC9CC = 0x800DC9CC;
+D_800DC9D0 = 0x800DC9D0;
+D_800DCA50 = 0x800DCA50;
+D_800DCA58 = 0x800DCA58;
+D_800DCA64 = 0x800DCA64;
+D_800DCA70 = 0x800DCA70;
+D_800DCA7C = 0x800DCA7C;
+D_800DCA88 = 0x800DCA88;
+D_800DCA94 = 0x800DCA94;
+D_800DCA9C = 0x800DCA9C;
+D_800DCAA8 = 0x800DCAA8;
+D_800DCB28 = 0x800DCB28;
+
+// racer.c .data
+gObjLoopGoldenBalloonLength = 0x800DCB50;
+gAntiPiracyHeadroll = 0x800DCB54;
+D_800DCB58 = 0x800DCB58;
+D_800DCB5C = 0x800DCB5C;
+D_800DCB60 = 0x800DCB60;
+gNumViewports = 0x800DCB98;
+gSurfaceTractionTable = 0x800DCB9C;
+D_800DCBE8 = 0x800DCBE8;
+gSurfaceBobbingTable = 0x800DCC34;
+gSurfaceSoundTable = 0x800DCC80;
+D_800DCCCC = 0x800DCCCC;
+gSurfaceFlagTable = 0x800DCCF4;
+gSurfaceFlagTable4P = 0x800DCD40;
+gRacerAIBalloonActionTable = 0x800DCD90;
+D_800DCDA0 = 0x800DCDA0;
+D_800DCDA8 = 0x800DCDA8;
+D_800DCDB0 = 0x800DCDB0;
+gObjLoopGoldenBalloonChecksum = 0x800DCDD0;
+gDoorFadeTransition = 0x800DCDD4;
+
+// vehicle_tricky.c .data
+gTrickyVoiceTable = 0x800DCDE0;
+
+// vehicle_bluey.c .data
+gBlueyVoiceTable = 0x800DCE00;
+
+// vehicle_smokey.c .data
+gSmokeyVoiceTable = 0x800DCE20;
+
+// vehicle_bubbler.c .data
+gBubblerVoiceTable = 0x800DCE40;
+
+// vehicle_wizpig.c .data
+gWizpigVoiceTable = 0x800DCE60;
+
+// vehicle_rocket.c .data
+gRocketVoiceTable = 0x800DCE80;
+
+// object_models.c .data
+gTractionTableChecksum = 0x800DCEA0;
+gTrackRenderFuncLength = 0x800DCEA4;
+
+// al/reverb.c .data
+alFXEnabled = 0x800DCEB0;
+
+// al/alSynStartVoiceParams .data
+gStereoPanMode = 0x800DD050;
+
+// camera.c .data
+gAntiPiracyViewport = 0x800DD060;
+gScreenViewports = 0x800DD064;
+gViewportWithBG = 0x800DD134;
+gVehiclePartVertex = 0x800DD138;
+gViewportStack = 0x800DD148;
+D_800DD288 = 0x800DD288;
+D_800DD2A0 = 0x800DD2A0;
+gOrthoMatrixF = 0x800DD2B8;
+gCameraZoomLevels = 0x800DD2F8;
+
+// controller.c .data
+sNoControllerPluggedIn = 0x800DD300;
+gButtonMask = 0x800DD304;
+
+// game.c .data
+gTempLevelNames = 0x800DD310;
+gCurrentDefaultVehicle = 0x800DD314;
+gTwoPlayerAdvRace = 0x800DD318;
+gIsInRace = 0x800DD31C;
+gViewportFuncChecksum = 0x800DD320;
+gViewportFuncLength = 0x800DD324;
+gLevelPropertyStackPos = 0x800DD328;
+D_800DD32C = 0x800DD32C;
+D_800DD330 = 0x800DD330;
+
+// thread3_main.c .data
+sDebugRomBuildInfo = 0x800DD340; // size:0xC
+gBuildString = 0x800DD34C; // type:asciz size:0x28
+sAntiPiracyTriggered = 0x800DD374; // type:s8
+D_800DD378 = 0x800DD378;
+gSaveDataFlags = 0x800DD37C;
+gScreenStatus = 0x800DD380;
+sControllerStatus = 0x800DD384;
+D_800DD388 = 0x800DD388;
+gSkipGfxTask = 0x800DD38C;
+gDrumstickSceneLoadTimer = 0x800DD390;
+gLevelLoadTimer = 0x800DD394;
+gPauseLockTimer = 0x800DD398;
+gFutureFunLandLevelTarget = 0x800DD39C;
+gDmemInvalid = 0x800DD3A0;
+D_800DD3A4 = 0x800DD3A4;
+D_800DD3A8 = 0x800DD3A8;
+D_800DD3AC = 0x800DD3AC;
+gNumF3dCmdsPerPlayer = 0x800DD3B0; // size:0x10
+gNumHudVertsPerPlayer = 0x800DD3C0; // size:0x10
+gNumHudMatPerPlayer = 0x800DD3D0; // size:0x10
+gNumHudTrisPerPlayer = 0x800DD3E0; // size:0x10
+gDrawFrameTimer = 0x800DD3F0;
+D_800DD3F4 = 0x800DD3F4;
+D_800DD3FC = 0x800DD3FC;
+sLogicUpdateRate = 0x800DD404;
+gDrumstickSceneTransition = 0x800DD408;
+D_800DD410 = 0x800DD410;
+gLevelFadeOutTransition = 0x800DD41C;
+D_800DD424 = 0x800DD424;
+
+// math_util_data .data
+gIntDisFlag = 0x800DD430;
+gCurrentRNGSeed = 0x800DD434;
+gPrevRNGSeed = 0x800DD438;
+gSineTable = 0x800DD43C;
+gArcTanTable = 0x800DDC3E;
+
+// save_data.c .data
+gPakFileList = 0x800DE440;
+gN64FontCodes = 0x800DE444;
+sControllerPaksPresent = 0x800DE488;
+gRumbleKillTimer = 0x800DE48C;
+
+// rcp.c .data
+gGfxTaskMesgNums = 0x800DE490;
+sBGPrimColourrR = 0x800DE4B0;
+sBGPrimColourrG = 0x800DE4B4;
+sBGPrimColourrB = 0x800DE4B8;
+sBackgroundFillColour = 0x800DE4BC;
+gTexBGShiftX = 0x800DE4C0;
+gTexBGTex1 = 0x800DE4C4;
+gTexBGTex2 = 0x800DE4C8;
+gChequerBGEnabled = 0x800DE4CC;
+gBGDrawFunc = 0x800DE4D0;
+gGfxBufCounter = 0x800DE4D4;
+ggGfxBufCounter2 = 0x800DE4D8;
+gGfxTaskIsRunning = 0x800DE4DC;
+dRspInit = 0x800DE4E0;
+dRdpInit = 0x800DE520;
+dRaceFinishBackgroundSettings = 0x800DE598;
+dChequerBGSettings = 0x800DE5E0;
+dTextureRectangleModes = 0x800DE628;
+dScaledRectangleBaseModes = 0x800DE670;
+dTextureRectangleScaledOpa = 0x800DE6A8;
+dTextureRectangleScaledXlu = 0x800DE6E8;
+
+//sched.c .data
+D_800DE730 = 0x800DE730;
+gBootBlackoutMesg = 0x800DE738;
+gAudTaskTimer0 = 0x800DE740;
+gAudTaskTimer1 = 0x800DE744;
+gAudTaskTimer2 = 0x800DE748;
+gAudTaskTimer3 = 0x800DE74C;
+gRetraceCounter32 = 0x800DE750;
+gCurRSPTaskCounter = 0x800DE754;
+gCurRDPTaskCounter = 0x800DE758;
+D_800DE75C = 0x800DE75C;
+gRetraceCounter64 = 0x800DE760;
+
+// video.c .data
+gVideoDepthBuffer = 0x800DE770;
+D_800DE774 = 0x800DE774;
+D_800DE778 = 0x800DE778;
+gVideoModeResolutions = 0x800DE77C;
+
+// textures_sprites.c .data
+gTexColourTag = 0x800DE7C0;
+gSpriteOpaque = 0x800DE7C4;
+dRenderSettingsVtxAlpha = 0x800DE7C8;
+dRenderSettingsSpriteCld = 0x800DE848;
+dRenderSettingsSpriteXlu = 0x800DE868;
+dRenderSettingsCommon = 0x800DE8E8;
+dRenderSettingsCutout = 0x800DECE8;
+dRenderSettingsDecal = 0x800DEDE8;
+dRenderSettingsSolidColourVtxAlpha = 0x800DEEE8;
+dRenderSettingsSolidColour = 0x800DEF28;
+dRenderSettingsPrimOverlay = 0x800DF028;
+dRenderSettingsPrimCol = 0x800DF0A8;
+dRenderSettingsBlinkingLights = 0x800DF1A8;
+D_800DF3A8 = 0x800DF3A8;
+D_800DF3D8 = 0x800DF3D8;
+D_800DF410 = 0x800DF410;
+
+// screen_asset.c .data
+gRdpSetModeScreenAsset = 0x800DF440;
+
+// menu.c .data
+gInAdvModeTrophyRace = 0x800DF450;
+gTrackSelectWoodFrameHeightScale = 0x800DF454;
+gResetTitleScale = 0x800DF458;
+gTitleScreenCurrentOption = 0x800DF45C;
+gMenuCurIndex = 0x800DF460;
+unused_800DF464 = 0x800DF464;
+gMenuDisableObjAnim = 0x800DF468;
+gMissingControllerDelay = 0x800DF46C;
+gCurrentMenuId = 0x800DF470;
+unused_800DF474 = 0x800DF474;
+gTrackSpecifiedWithTrackIdToLoad = 0x800DF478;
+gMenuDelay = 0x800DF47C;
+gNumberOfReadyPlayers = 0x800DF480;
+D_800DF484 = 0x800DF484;
+gTitleScreenLoaded = 0x800DF488;
+unused_800DF48C = 0x800DF48C;
+unused_800DF490 = 0x800DF490;
+gIsInAdventureTwo = 0x800DF494;
+gPlayerHasSeenCautionMenu = 0x800DF498;
+gMenuTextLangTable = 0x800DF49C;
+gMenuText = 0x800DF4A0;
+sMenuGuiColourR = 0x800DF4A4;
+sMenuGuiColourG = 0x800DF4A8;
+sMenuGuiColourB = 0x800DF4AC;
+sMenuGuiColourBlendFactor = 0x800DF4B0;
+gMenuSpriteFlags = 0x800DF4B4;
+gIsInTracksMode = 0x800DF4B8;
+gNumberOfActivePlayers = 0x800DF4BC;
+gIsInTwoPlayerAdventure = 0x800DF4C0;
+gTrackIdForPreview = 0x800DF4C4;
+gTrackSelectRow = 0x800DF4C8;
+gSaveFileIndex = 0x800DF4CC;
+unused_800DF4D0 = 0x800DF4D0;
+gTrackIdToLoad = 0x800DF4D4;
+unused_800DF4D8 = 0x800DF4D8;
+gNextTajChallengeMenu = 0x800DF4DC;
+gNeedToCloseDialogueBox = 0x800DF4E0;
+gDoneTalkingToNPC = 0x800DF4E4; // size:0x5
+gDialogueOptionTangible = 0x800DF4EC;
+unused_800DF4F0 = 0x800DF4F0;
+sMenuImageProperties = 0x800DF510; // size:0x240
+gAssetsMenuElementIds = 0x800DF750;
+gMenuElementIdCount = 0x800DF754;
+gMenuObjectsCount = 0x800DF758;
+gMenuImages = 0x800DF75C;
+sMenuMusicVolume = 0x800DF760; // type:s32 size:0x4
+sMenuGuiOpacity = 0x800DF764;
+unused_800DF768 = 0x800DF768;
+sMenuTransitionFadeInFast = 0x800DF76C;
+sMenuTransitionFadeIn = 0x800DF774;
+sMenuTransitionFadeOut = 0x800DF77C;
+sMenuTransitionFadeInWhite = 0x800DF784;
+sMenuTransitionFadeOutWhite = 0x800DF78C;
+gPostraceState = 0x800DF794;
+gTrophyRankingsMenuElements = 0x800DF798;
+gPostraceTextOffset = 0x800DF79C;
+gPostraceTimestampOffset = 0x800DF7A0;
+gTitleMenuStrings = 0x800DF7A4;
+gVersionDisplayText = 0x800DF7B0;
+sGameTitleTileTextures = 0x800DF7C4; // size:0x18
+sGameTitleTileOffsets = 0x800DF7DC; // size:0x60
+gTitleCinematicText = 0x800DF83C;
+gTitleCinematicTextColourCount = 0x800DF9F4;
+gTitleCinematicTextColours = 0x800DF9F8;
+unused_800DFA0C = 0x800DFA0C;
+gOptionMenuStrings = 0x800DFA10; // size:0x1C
+gOptionMenuTextures = 0x800DFA2C; // size:0x10
+gAudioMenuStrings = 0x800DFA3C; // size:0x80
+gMusicTestSongIndex = 0x800DFABC;
+gSfxVolumeSliderValue = 0x800DFAC0;
+gMusicVolumeSliderValue = 0x800DFAC4;
+gAudioOutputType = 0x800DFAC8;
+gContPakSaveBgColours = 0x800DFACC;
+gDeviceStatus = 0x800DFADC;
+gControllerIndex = 0x800DFAE0;
+gContPakNotPresentStrings = 0x800DFAE4;
+gContPakCorruptDataRepairStrings = 0x800DFAFC;
+gContPakDamagedStrings = 0x800DFB14;
+gContPakFullStrings = 0x800DFB2C;
+gContPakDiffContStrings = 0x800DFB40;
+gContPakNoRoomForGhostsStrings = 0x800DFB5C;
+gContPakCorruptDataStrings = 0x800DFB74;
+gContPakRumbleDetectedStrings = 0x800DFB8C;
+gContPakSwitchToRumbleStrings = 0x800DFBA4;
+gContPakNeed2ndAdvStrings = 0x800DFBBC;
+gContPakStrings = 0x800DFBDC;
+unused_800DFC08 = 0x800DFC08;
+unused_800DFC0C = 0x800DFC0C;
+gDrawTexN64Icon = 0x800DFC10;
+gDrawTexTTIcon = 0x800DFC20;
+gDrawTexGhostIcon = 0x800DFC30;
+gDrawTexFileIcon = 0x800DFC40;
+gDrawTexContPakIcon = 0x800DFC50;
+gDrawTexTrashIcon = 0x800DFC60;
+unused_800DFC70 = 0x800DFC70;
+gSaveMenuObjectIndices = 0x800DFC78;
+gSaveMenuImageIndices = 0x800DFCAC;
+gControllerPakMenuElement = 0x800DFCB4;
+gShowControllerPakMenu = 0x800DFD94;
+gActiveMagicCodes = 0x800DFD98;
+gUnlockedMagicCodes = 0x800DFD9C;
+gMagicCodeMenuStrings = 0x800DFDA0;
+gCharacterVolumes = 0x800DFDB4; // size:0x14
+gCharSelectObjectIndices = 0x800DFDC8;
+gCharSelectImageIndices = 0x800DFDCC;
+gCharacterSelectBytesDefault = 0x800DFDD0;
+gCharacterSelectBytesDrumStick = 0x800DFE40;
+gCharacterSelectBytesTT = 0x800DFEC0;
+gCharacterSelectBytesComplete = 0x800DFF40;
+unused_800DFFCC = 0x800DFFCC;
+gEnteredCharSelectFrom = 0x800DFFD0;
+unused_800DFFD4 = 0x800DFFD4;
+gCautionMenuTextElements = 0x800DFFD8; // size:0x1C0
+gGameSelectTextElemsNoAdv2 = 0x800E0198;
+gGameSelectTextElemsWithAdv2 = 0x800E0278;
+gFileSelectObjectIndices = 0x800E0398;
+gFileSelectImageIndices = 0x800E03A4;
+gFilenames = 0x800E03B0;
+unused_800E03BC = 0x800E03BC;
+gFileSelectButtons = 0x800E03CC;
+gFileSelectElementPos = 0x800E03FC;
+gMultiplayerSelectedNumberOfRacers = 0x800E0410;
+gTracksMenuTimeTrialHighlightIndex = 0x800E0414;
+gTracksMenuAdventureHighlightIndex = 0x800E0418;
+gMenuSelectionArrowUp = 0x800E041C;
+gMenuSelectionArrowLeft = 0x800E042C;
+gMenuSelectionArrowDown = 0x800E043C;
+gMenuSelectionArrowRight = 0x800E044C;
+gRaceSelectionCarTex = 0x800E045C;
+gRaceSelectionHoverTex = 0x800E0474;
+gRaceSelectionPlaneTex = 0x800E048C;
+gRaceSelectionTTOn = 0x800E04A4;
+gRaceSelectionTTOff = 0x800E04BC;
+gRaceSelectionCarOptHighlight = 0x800E04D4;
+gRaceSelectionCarOpt = 0x800E04E4;
+gRaceSelectionHoverOptHighlight = 0x800E04F4;
+gRaceSelectionHoverOpt = 0x800E0504;
+gRaceSelectionPlaneOptHighlight = 0x800E0514;
+gRaceSelectionPlaneOpt = 0x800E0524;
+gRaceSelectionTTOnOptHighlight = 0x800E0534;
+gRaceSelectionTTOffOptHighlight = 0x800E0544;
+gRaceSelectionTTOnOpt = 0x800E0554;
+gRaceSelectionTTOffOpt = 0x800E0564;
+gRaceSelectionPlayer1Texture = 0x800E0574;
+gRaceSelectionPlayer2Texture = 0x800E0584;
+gRaceSelectionPlayer3Texture = 0x800E0594;
+gRaceSelectionPlayer4Texture = 0x800E05A4;
+gRaceSelectionVehicleTitleTexture = 0x800E05B4;
+gRaceSelectionTTTitleTexture = 0x800E05C4;
+D_800E05D4 = 0x800E05D4;
+D_800E05F4 = 0x800E05F4;
+gRaceSelectionTTTexture = 0x800E0614;
+gRaceSelectionImages = 0x800E0624;
+gTrackSelectTTImage = 0x800E0648;
+gTrackSelectPlayerImage = 0x800E0660;
+gMenuSelectionArrows = 0x800E0678;
+gTracksMenuPlayerNamePositions = 0x800E0688;
+gTracksMenuVehicleNamePositions = 0x800E06B0;
+gTracksMenuArrowPositionsNTSC = 0x800E06C4;
+gTracksMenuArrowPositionsPAL = 0x800E06D4;
+gTwoPlayerRacerCountMenu = 0x800E06E4;
+gTracksMenuAdventureButton = 0x800E0700;
+gTracksMenuBgTextureIndices = 0x800E0710; // type:s16 size:0x1E
+gTracksMenuBgTextures = 0x800E0730;
+gTTVoiceLines = 0x800E0758;
+gTrackSelectObjectIndices = 0x800E07C4;
+gTrackSelectImageIndices = 0x800E07E0;
+gTrackSelectPreviewObjectIndices = 0x800E07E8;
+gTrackSelectPreviewImageIndices = 0x800E0830;
+gTrackSelectBgData = 0x800E0840;
+gTrackSelectBgVertices = 0x800E0968; // size:0x8
+gTrackSelectBgTriangles = 0x800E0970; // size:0x8
+gQMarkPtr = 0x800E0978;
+gIsInTracksMenu = 0x800E097C;
+gTrackNameVoiceDelay = 0x800E0980;
+gMenuOptionCap = 0x800E0984;
+gMenuSubOption = 0x800E0988;
+gLastPlayerWhoPaused = 0x800E098C;
+gPlayerPauseBgColour = 0x800E0990;
+gPlayerPauseOptionsTextColour = 0x800E09A0;
+sBadControllerPakMenuText = 0x800E09B0;
+sControllerPakFullMenuText = 0x800E09C4;
+sNoControllerPakMenuText = 0x800E09D8;
+sCorruptDataMenuText = 0x800E09EC;
+D_800E09F8 = 0x800E09F8;
+sInsertControllerPakMenuText = 0x800E0A04;
+D_800E0A10 = 0x800E0A10;
+sInsertRumblePakMenuText = 0x800E0A14;
+gRaceResultsObjectIndices = 0x800E0A24;
+gRaceResultsImageIndices = 0x800E0A40;
+gMenuPortraitKrunch = 0x800E0A50;
+gMenuPortraitDiddy = 0x800E0A60;
+gMenuPortraitDrumstick = 0x800E0A70;
+gMenuPortraitBumper = 0x800E0A80;
+gMenuPortraitBanjo = 0x800E0A90;
+gMenuPortraitConker = 0x800E0AA0;
+gMenuPortraitTiptup = 0x800E0AB0;
+gMenuPortraitTT = 0x800E0AC0;
+gMenuPortraitPipsy = 0x800E0AD0;
+gMenuPortraitTimber = 0x800E0AE0;
+gRacerPortraits = 0x800E0AF0;
+unused_800E0B18 = 0x800E0B18;
+gFirstPlace = 0x800E0BAC;
+gSecondPlace = 0x800E0BB0;
+gThirdPlace = 0x800E0BB4;
+gFourthPlace = 0x800E0BB8;
+gFifthPlace = 0x800E0BBC;
+gSixthPlace = 0x800E0BC0;
+gSeventhPlace = 0x800E0BC4;
+gEighthPlace = 0x800E0BC8;
+gRacePlacementsArray = 0x800E0BCC;
+gRaceResultsMenuElements = 0x800E0BEC; // size:0x100
+gRaceOrderMenuElements = 0x800E0CEC; // size:0x160
+gRecordTimesMenuElements = 0x800E0E4C; // size:0x120
+gFileNameValidChars = 0x800E0F6C; // size:0x20
+gCurFilenameCharBeingDrawn = 0x800E0F8C; // size:0x4
+gEnterInitalsY = 0x800E0F90;
+gFilenameX = 0x800E0F94;
+gFilenameY = 0x800E0F98;
+gFilenameFont = 0x800E0F9C;
+gNameEntryLength = 0x800E0FA0;
+D_800E0FA4 = 0x800E0FA4;
+gCheckAdvEnterInitials = 0x800E0FA8;
+D_800E0FAC = 0x800E0FAC;
+gIndexOfCurInputCharacter = 0x800E0FB0;
+gAdvTrackInitObjectIndices = 0x800E0FB4;
+gAdvTrackInitImageIndices = 0x800E0FD8;
+gRankingPlayerCount = 0x800E0FE4;
+gTrophyRaceWorldId = 0x800E0FE8;
+gTrophyRaceRound = 0x800E0FEC;
+gPrevTrophyRaceRound = 0x800E0FF0;
+unused_800E0FF4 = 0x800E0FF4;
+gTrophyRacePointsArray = 0x800E1004; // type:s32 size:0x20
+gTrophyRankingsObjectIndices = 0x800E1024;
+gTrophyRaceImageIndices = 0x800E1040;
+gTrophyRankingsTitle = 0x800E1048;
+gTrophyRankingsRacers = 0x800E1088;
+gTrophyRankingsRawIconPositions = 0x800E13A8; // type:s16 size:0x108
+gTrophyRankingsIconPositions = 0x800E14BC;
+gDrawTexDinoDomainGhostBg = 0x800E153C; // size:0x58
+gDrawTexSherbetIslandGhostBg = 0x800E1594; // size:0x58
+gDrawTexSnowflakeMountainGhostBg = 0x800E15EC; // size:0x58
+gDrawTexDragonForestGhostBg = 0x800E1644; // size:0x58
+gDrawTexFutureFunLandGhostBg = 0x800E169C; // size:0x58
+gDrawTexWorldBgs = 0x800E16F4; // size:0x14
+gGhostDataObjectIndices = 0x800E1708; // size:0x44
+gGhostDataImageIndices = 0x800E174C; // size:0x8
+gGhostDataElementPositions = 0x800E1754; // size:0x14
+gCinematicObjectIndices = 0x800E1768; // size:0x18
+dCreditsFade = 0x800E1780;
+gCreditsObjectIndices = 0x800E17D8;
+gCreditsImageIndices = 0x800E17F0;
+gCreditsControlData = 0x800E17F4; // size:0x144
+gCreditsArray = 0x800E1938; // defined:true
+gCreditsBestTimesArray = 0x800E1A94; // defined:true
+gCreditsLastMessageArray = 0x800E1AE4; // defined:true
+gCheatsInCreditsArray = 0x800E1AF8;
+gViewingCreditsFromCheat = 0x800E1B4C;
+gCreditsMenuElements = 0x800E1B50; // size:0x120
+dMenuHudSettings = 0x800E1C70;
+dMenuHudDrawModes = 0x800E1CA0;
+gWoodPanelsIndices = 0x800E1CD0;
+gWoodPanelTexCoords = 0x800E1CF0;
+gWoodPanelVertCoords = 0x800E1D2C;
+gWoodPanelVertColours = 0x800E1D7C;
+gWoodPanelVertices = 0x800E1DA4; // size:0x8
+gWoodPanelTriangles = 0x800E1DAC; // size:0x8
+gMenuTrisFlip = 0x800E1DB4;
+gWoodPanelCount = 0x800E1DB8;
+gWoodPanelAllocCount = 0x800E1DBC;
+gWoodPanelTexScaleU = 0x800E1DC0;
+gWoodPanelTexScaleV = 0x800E1DC4;
+D_800E1DC8 = 0x800E1DC8; // size:0x20
+gFadeLogoToTitleScreen = 0x800E1DE8;
+gRareCopyrightString = 0x800E1DF0;
+gFadeTitleScreenDemo = 0x800E1E08;
+gConPakAdvSavePrefix = 0x800E1E10; // size:0xC
+gTrackSelectSound = 0x800E1E1C;
+D_800E1E20 = 0x800E1E20;
+gGameStatusVisible = 0x800E1E28;
+D_800E1E2C = 0x800E1E2C;
+D_800E1E40 = 0x800E1E40;
+
+// game_ui.c .data
+D_800E1E60 = 0x800E1E60;
+gHudElementBase = 0x800E1E64;
+D_800E25C4 = 0x800E25C4;
+D_800E2684 = 0x800E2684;
+gHudAudioData = 0x800E2770;
+gShowCourseDirections = 0x800E2790;
+D_800E2794 = 0x800E2794;
+gHudToggleSettings = 0x800E27A4;
+gPrevToggleSetting = 0x800E27A8;
+gHudLapColours = 0x800E27AC;
+gHudIndicatorTimer = 0x800E27B8;
+gHudMinimapColours = 0x800E27BC;
+gHudColour = 0x800E2834;
+sRecordVel = 0x800E2838;
+D_800E283C = 0x800E283C;
+
+// weather.c .data
+gWeatherPresets = 0x800E2850;
+gSnowPhysics = 0x800E28D4;
+gSnowGfx = 0x800E28D8;
+gSnowVerts = 0x800E2904;
+gSnowVertCount = 0x800E2908;
+gSnowTriangles = 0x800E290C;
+gSnowTriIndices = 0x800E2910;
+gSnowVertexData = 0x800E2914;
+gWeatherAssetTable = 0x800E291C;
+gWeatherAssetTableLength = 0x800E2920;
+dLensFlare = 0x800E2928;
+gLensPresetLarge = 0x800E2980;
+gLensPreset1 = 0x800E29A0;
+gLensPreset2 = 0x800E29E0;
+gLensPreset3 = 0x800E2A30;
+gLensFlare = 0x800E2A80;
+gLensFlareOff = 0x800E2A84;
+gLensFlareOverrideObjs = 0x800E2A88;
+D_800E2A8C = 0x800E2A8C;
+D_800E2A90 = 0x800E2A90;
+D_800E2A94 = 0x800E2A94;
+D_800E2A98 = 0x800E2A98;
+D_800E2A9C = 0x800E2A9C;
+D_800E2AA0 = 0x800E2AA0;
+D_800E2AA4 = 0x800E2AA4;
+D_800E2AA8 = 0x800E2AA8;
+gRainVertices = 0x800E2AAC;
+gRainSplashSegments = 0x800E2B4C;
+gRainGfx = 0x800E2C2C;
+gWeatherType = 0x800E2C5C;
+gLightningFrequency = 0x800E2C60;
+gLightningFrequencyStep = 0x800E2C64;
+gLightningFrequencyTarget = 0x800E2C68;
+gRainOpacity = 0x800E2C6C;
+gRainOpacityStep = 0x800E2C70;
+gRainOpacityTarget = 0x800E2C74;
+gRainHiddenTimer = 0x800E2C78;
+gLightningTimer = 0x800E2C7C;
+gThunderTimer = 0x800E2C80;
+gRainSplashDelay = 0x800E2C84;
+gRainOverlayUnusedValue = 0x800E2C88;
+gRainSplashGfx = 0x800E2C8C;
+gRainVertexFlip = 0x800E2C90;
+gWeatherSoundMask = 0x800E2C94;
+gThunderTransition = 0x800E2C98;
+
+// particles.c .data
+D_800E2CA0 = 0x800E2CA0;
+D_800E2CA4 = 0x800E2CA4;
+D_800E2CA8 = 0x800E2CA8;
+D_800E2CAC = 0x800E2CAC;
+D_800E2CB0 = 0x800E2CB0;
+D_800E2CB4 = 0x800E2CB4;
+D_800E2CB8 = 0x800E2CB8;
+D_800E2CBC = 0x800E2CBC;
+D_800E2CC0 = 0x800E2CC0;
+D_800E2CC4 = 0x800E2CC4;
+D_800E2CC8 = 0x800E2CC8;
+D_800E2CCC = 0x800E2CCC;
+D_800E2CD0 = 0x800E2CD0;
+D_800E2CD4 = 0x800E2CD4;
+D_800E2CD8 = 0x800E2CD8;
+D_800E2CDC = 0x800E2CDC;
+D_800E2CE0 = 0x800E2CE0;
+D_800E2CE4 = 0x800E2CE4;
+gParticlesAssetTableCount = 0x800E2CE8;
+gParticlesAssets = 0x800E2CEC;
+gParticlesAssetTable = 0x800E2CF0;
+gParticleBehavioursAssetTableCount = 0x800E2CF4;
+gParticleBehavioursAssets = 0x800E2CF8;
+gParticleBehavioursAssetTable = 0x800E2CFC;
+D_800E2D00 = 0x800E2D00;
+D_800E2D08 = 0x800E2D08;
+D_800E2D58 = 0x800E2D58;
+D_800E2D78 = 0x800E2D78;
+D_800E2DF8 = 0x800E2DF8;
+D_800E2E28 = 0x800E2E28;
+gParticleGravityTable = 0x800E2E2C;
+D_800E2E4C = 0x800E2E4C;
+D_800E2E50 = 0x800E2E50;
+D_800E2E54 = 0x800E2E54;
+D_800E2E58 = 0x800E2E58;
+D_800E2E5C = 0x800E2E5C;
+D_800E2E60 = 0x800E2E60;
+D_800E2E64 = 0x800E2E64;
+gParticleCoordListTri = 0x800E2E68;
+gParticleCoordListQuad = 0x800E2E74;
+D_800E2E84 = 0x800E2E84;
+D_800E2EC4 = 0x800E2EC4;
+gParticleOpacity = 0x800E2EEC;
+
+// printf.c .data
+D_800E2EF0 = 0x800E2EF0;
+gDebugFontCoords = 0x800E2EF4;
+dDebugFontSettings = 0x800E2FB8;
+
+// thread0_epc.c .data
+sLockupStatus = 0x800E3020;
+sLockupPage = 0x800E3024;
+sLockupDelay = 0x800E3028;
+
+// waves.c .data
+D_800E3040 = 0x800E3040;
+D_800E3044 = 0x800E3044;
+D_800E3048 = 0x800E3048;
+D_800E304C = 0x800E304C;
+D_800E3070 = 0x800E3070;
+D_800E3078 = 0x800E3078;
+D_800E3080 = 0x800E3080;
+D_800E3090 = 0x800E3090;
+D_800E30D0 = 0x800E30D0;
+D_800E30D4 = 0x800E30D4;
+D_800E30D8 = 0x800E30D8;
+D_800E30DC = 0x800E30DC;
+D_800E30E0 = 0x800E30E0;
+D_800E30E4 = 0x800E30E4;
+D_800E30E8 = 0x800E30E8;
+D_800E30FC = 0x800E30FC;
+D_800E3110 = 0x800E3110;
+D_800E3144 = 0x800E3144;
+D_800E3178 = 0x800E3178;
+D_800E317C = 0x800E317C;
+D_800E3180 = 0x800E3180;
+D_800E3184 = 0x800E3184;
+D_800E3188 = 0x800E3188;
+D_800E318C = 0x800E318C;
+D_800E3190 = 0x800E3190;
+D_800E3194 = 0x800E3194;
+gWaveGeneratorObj = 0x800E3198;
+
+// fade_transition.c .data
+gTransitionsDisabled = 0x800E31A0;
+sLevelTransitionDelayTimer = 0x800E31A4;
+gTransitionInvert = 0x800E31A8;
+sTransitionStatus = 0x800E31AC;
+sTransitionFadeTimer = 0x800E31B0;
+gTransitionEndTimer = 0x800E31B4;
+sTransitionFadeDuration = 0x800E31B8;
+gTransitionFadeIn = 0x800E31BC;
+sTransitionVtx = 0x800E31C0;
+sTransitionTris = 0x800E31C8;
+sTransitionTaskNum = 0x800E31D0;
+dTransitionFadeSettings = 0x800E31D8;
+gTransitionBarnHorizontalData = 0x800E3230;
+gTransitionBarnVerticalData = 0x800E3268;
+D_800E32A0 = 0x800E32A0;
+D_800E32AC = 0x800E32AC;
+gTransitionBarnDoorTris = 0x800E32B8;
+gTransitionBarnDoorAlpha = 0x800E32D0;
+gTransitionBarnDiagData = 0x800E32DC;
+D_800E330C = 0x800E330C;
+D_800E3318 = 0x800E3318;
+gTransitionBarnDoorDiagTris = 0x800E3324;
+gTransitionBarnDoorDiagAlpha = 0x800E3338;
+gTransitionWaveData = 0x800E3344;
+D_800E3440 = 0x800E3440;
+D_800E349C = 0x800E349C;
+gTransitionWaveAlpha = 0x800E34F8;
+gTransitionWaveTris = 0x800E3554;
+dTransitionShapeSettings = 0x800E3648;
+
+// game_text.c .data
+gTextTableExists = 0x800E3670;
+gTextDisplayNumber = 0x800E3674;
+gTextboxDelay = 0x800E3678;
+gDelayedTextID = 0x800E367C;
+gSubtitleSetting = 0x800E3680;
+
+// font.c .data
+dDialogueBoxBegin = 0x800E3690;
+dDialogueBoxDrawModes = 0x800E36C8;
+sDialogueBoxIsOpen = 0x800E36E8;
+gDescPowsOf10 = 0x800E36EC;
+sDialogueBoxDimensions = 0x800E3710;
+
+__osPiDevMgr = 0x800E3740; // size:0x1C
+
+// gzip.c .data
+gHuftTable = 0x800E3760;
+gPackedHeader = 0x800E3764;
+gzip_inflate_input = 0x800E3768;
+gzip_inflate_output = 0x800E376C;
+
+// thread30_track_loading.c .data
+gThread30NeedToLoadLevel = 0x800E3770;
+gThread30LevelIdToLoad = 0x800E3774;
+gThread30CutsceneIdToLoad = 0x800E3778;
+gThread30LoadDelay = 0x800E377C;
+
+// al/sl.c .data
+alGlobals = 0x800E3780;
+
+// osAiSetNextBuffer.c .data
+hdwrBugFlag = 0x800E3790;
+
+// al/env .data
+// STATIC VAR
+eqpower = 0x800E37A0; // size:0x100
+
+// osInitialize.c .data
+osClockRate = 0x800E38A0;
+__osShutdown = 0x800E38A8;
+__OSGlobalIntMask = 0x800E38AC;
+gLeoFound = 0x800E38B0;
+
+// controller.c .data
+__osContinitialized = 0x800E38C0;
+
+// siacs.c .data
+__osSiAccessQueueEnabled = 0x800E38D0;
+
+// osViMgr .data
+__osViDevMgr = 0x800E38E0;
+
+// vitbl .data
+osViModeTable = 0x800E3900;
+osViModeNtscLpn1 = 0x800E4620;
+osViModePalLpn1 = 0x800E4670;
+osViModeMpalLpn1 = 0x800E46C0;
+osViModeNtscLan1 = 0x800E4710;
+osViModePalLan1 = 0x800E4760;
+osViModeMpalLan1 = 0x800E47B0;
+
+__osPiAccessQueueEnabled = 0x800E4800;
+
+// osSpTaskYielded .data
+vi = 0x800E4810;
+__osViCurr = 0x800E4870;
+__osViNext = 0x800E4874;
+osViClock = 0x800E4878;
+
+// __osViSwapContext .data
+__osThreadTail = 0x800E4880;
+__osRunQueue = 0x800E4888;
+__osActiveQueue = 0x800E488C;
+__osRunningThread = 0x800E4890;
+__osFaultedThread = 0x800E4894;
+
+__osHwIntTable = 0x800E48A0;
+
+// xprintf.c 
+_spaces = 0x800E48C0; // type:asciz
+_zeroes = 0x800E48E4; // type:asciz
+
+// osTimer.c .data
+__osTimerList = 0x800E4910;
+
+// xlitob .data
+ldigs = 0x800E4920; // type:asciz
+udigs = 0x800E4934; // type:asciz
+
+// audio.c .rodata
+sAudioErrorString_01 = 0x800E4950; // defined:true type:asciz
+sAudioErrorString_02 = 0x800E4980; // defined:true type:asciz
+sAudioErrorString_03 = 0x800E49BC; // defined:true type:asciz
+
+// audiomgr .rodata
+D_800E49F0 = 0x800E49F0;
+D_800E4A58 = 0x800E4A58;
+D_800E4A74 = 0x800E4A74;
+D_800E4A9C = 0x800E4A9C;
+D_800E4AAC = 0x800E4AAC;
+D_800E4AB0 = 0x800E4AB0;
+D_800E4B00 = 0x800E4B00;
+D_800E4B1C = 0x800E4B1C;
+D_800E4B34 = 0x800E4B34;
+D_800E4B5C = 0x800E4B5C;
+D_800E4B80 = 0x800E4B80;
+
+// audiosfx .rodata
+jpt_800E4BB0 = 0x800E4BB0;
+
+// audio_vehicle .rodata
+D_800E4BF0 = 0x800E4BF0; // type:f32
+
+D_800E4BF8 = 0x800E4BF8; // type:f64
+D_800E4C00 = 0x800E4C00; // type:f32
+D_800E4C08 = 0x800E4C08; // type:f64
+D_800E4C10 = 0x800E4C10; // type:f64
+D_800E4C18 = 0x800E4C18; // type:f64
+D_800E4C20 = 0x800E4C20; // type:f64
+D_800E4C28 = 0x800E4C28; // type:f64
+D_800E4C30 = 0x800E4C30; // type:f64
+D_800E4C38 = 0x800E4C38; // type:f32
+D_800E4C40 = 0x800E4C40; // type:f64
+D_800E4C48 = 0x800E4C48; // type:f64
+
+D_800E4C78 = 0x800E4C78; // type:f32
+D_800E4C80 = 0x800E4C80; // type:f64
+D_800E4C88 = 0x800E4C88; // type:f64
+D_800E4C90 = 0x800E4C90; // type:f64
+D_800E4C98 = 0x800E4C98; // type:f32
+
+D_800E4CC4 = 0x800E4CC4; // type:f32
+D_800E4CC8 = 0x800E4CC8; // type:f64
+D_800E4CD0 = 0x800E4CD0; // type:f32
+D_800E4CD4 = 0x800E4CD4; // type:f32
+D_800E4CD8 = 0x800E4CD8; // type:f64
+D_800E4CE0 = 0x800E4CE0; // type:f32
+D_800E4CE8 = 0x800E4CE8; // type:f64
+D_800E4CF0 = 0x800E4CF0; // type:f32
+D_800E4CF4 = 0x800E4CF4; // type:f32
+
+// audio_spatial .rodata
+D_800E4D00 = 0x800E4D00;
+D_800E4D18 = 0x800E4D18;
+D_800E4D58 = 0x800E4D58;
+D_800E4DA0 = 0x800E4DA0;
+D_800E4DE0 = 0x800E4DE0;
+D_800E4E28 = 0x800E4E28;
+D_800E4E68 = 0x800E4E68;
+D_800E4E9C = 0x800E4E9C;
+D_800E4EDC = 0x800E4EDC;
+D_800E4F10 = 0x800E4F10;
+D_800E4F14 = 0x800E4F14;
+
+// unknown_008C40 .rodata
+// D_800E4F20 = 0x800E4F20; // type:f64
+
+// al/seqplayer .rodata
+D_800E4F30 = 0x800E4F30; // type:asciz size:0x24
+
+// objects .rodata
+sObjectOutofMemString = 0x800E4F60; // defined:true
+sDoorNumberErrorString = 0x800E4F7C; // defined:true
+sObjectScopeErrorString = 0x800E4F98; // defined:true
+sObjectListDataOverflowString = 0x800E4FC4; // defined:true
+sObjectSetupError1String = 0x800E4FE4; // defined:true
+sObjectSetupError2String = 0x800E5008; // defined:true
+sObjectSetupError5String = 0x800E502C; // defined:true
+sObjectSetupError6String = 0x800E5050; // defined:true
+sObjectSetupError3String = 0x800E5074; // defined:true
+sObjectListOverflowString = 0x800E5098; // defined:true
+sObjectSetupError4String = 0x800E50B0; // defined:true
+sDuplicateCheckpointString = 0x800E50D4; // force_not_migration:true defined:true 
+sErrorChannelString = 0x800E50FC; // force_not_migration:true defined:true
+sReadOutErrorString = 0x800E5110; // force_not_migration:true defined:true
+sPureAnguishString = 0x800E5120; // force_not_migration:true defined:true
+D_800E5130 = 0x800E5130;
+D_800E5134 = 0x800E5134;
+jpt_800E5154 = 0x800E5154;
+D_800E5178 = 0x800E5178;
+D_800E517C = 0x800E517C;
+D_800E5180 = 0x800E5180;
+D_800E5184 = 0x800E5184;
+jpt_800E51B4 = 0x800E51B4;
+jpt_800E5250 = 0x800E5250;
+jpt_800E5420 = 0x800E5420;
+D_800E5554 = 0x800E5554;
+D_800E5558 = 0x800E5558;
+D_800E555C = 0x800E555C;
+D_800E5560 = 0x800E5560;
+D_800E5564 = 0x800E5564;
+D_800E5568 = 0x800E5568;
+jpt_800E5588 = 0x800E5588;
+D_800E55B8 = 0x800E55B8; // type:f64
+D_800E55C0 = 0x800E55C0; // type:f64
+D_800E55C8 = 0x800E55C8; // type:f64
+D_800E55D0 = 0x800E55D0; // type:f64
+D_800E55D8 = 0x800E55D8; // type:f64
+D_800E55E0 = 0x800E55E0; // type:f64
+D_800E55E8 = 0x800E55E8; // type:f64
+D_800E55F0 = 0x800E55F0; // type:f64
+D_800E5608 = 0x800E5608; // type:f64
+D_800E5610 = 0x800E5610; // type:f64
+D_800E5618 = 0x800E5618; // type:f64
+D_800E5620 = 0x800E5620; // type:f64
+D_800E5628 = 0x800E5628; // type:f64
+D_800E5648 = 0x800E5648; // type:f64
+D_800E5650 = 0x800E5650; // type:f32
+D_800E5658 = 0x800E5658; // type:f64
+D_800E5670 = 0x800E5670; // type:f64
+D_800E5678 = 0x800E5678; // type:f32
+D_800E5680 = 0x800E5680; // type:f64
+
+// tracks .rodata
+gTrackClippingErrorString = 0x800E5DF8;
+gTrackHeightOverflowString = 0x800E5E18;
+D_800E5E38 = 0x800E5E38;
+D_800E5E60 = 0x800E5E60; // type:f64
+D_800E5E68 = 0x800E5E68;
+D_800E5E70 = 0x800E5E70;
+D_800E5E78 = 0x800E5E78; // type:f64
+D_800E5E80 = 0x800E5E80; // type:f64
+D_800E5E88 = 0x800E5E88; // type:f64
+D_800E5E90 = 0x800E5E90; // type:f64
+D_800E5E98 = 0x800E5E98; // type:f64
+
+// D_800E5EB0 = 0x800E5EB0; // type:f64
+// D_800E5EB8 = 0x800E5EB8; // type:f64
+// D_800E5F40 = 0x800E5F40;
+
+D_800E5F48 = 0x800E5F48;
+D_800E5F4C = 0x800E5F4C;
+D_800E5F50 = 0x800E5F50;
+D_800E5F54 = 0x800E5F54;
+D_800E5F58 = 0x800E5F58;
+
+// collision .rodata
+// D_800E5F5C = 0x800E5F5C;
+D_800E5F60 = 0x800E5F60; // type:f32
+D_800E5F64 = 0x800E5F64; // type:f32
+D_800E5F68 = 0x800E5F68; // type:f32
+D_800E5F6C = 0x800E5F6C; // type:f32
+D_800E5F70 = 0x800E5F70; // type:f32
+
+// lights .rodata
+// D_800E5F80 = 0x800E5F80; // size:0x20
+
+//object_functions .rodata
+// 800e5fa0 
+D_800E6020 = 0x800E6020; // type:f64
+D_800E6048 = 0x800E6048;
+D_800E6140 = 0x800E6140; // type:f64
+D_800E621C = 0x800E621C;
+D_800E6220 = 0x800E6220;
+D_800E6224 = 0x800E6224;
+jpt_800E6228 = 0x800E6228;
+D_800E623C = 0x800E623C;
+D_800E6240 = 0x800E6240;
+D_800E6244 = 0x800E6244;
+D_800E6248 = 0x800E6248;
+
+// racer.c 
+gRacerDebugCoords = 0x800E6280;
+gChecksumOverflowString = 0x800E6290;
+gRacerBackString = 0x800E62A0;
+
+D_800E62A8 = 0x800E62A8; // type:f64
+D_800E62B0 = 0x800E62B0; // type:f64
+D_800E62B8 = 0x800E62B8; // type:f64
+D_800E62C0 = 0x800E62C0; // type:f64
+D_800E62C8 = 0x800E62C8; // type:f64
+D_800E62D0 = 0x800E62D0; // type:f64
+D_800E62D8 = 0x800E62D8; // type:f64
+D_800E62E0 = 0x800E62E0; // type:f64
+D_800E62E8 = 0x800E62E8; // type:f64
+D_800E62F0 = 0x800E62F0; // type:f64
+D_800E62F8 = 0x800E62F8; // type:f64
+D_800E6300 = 0x800E6300; // type:f64
+D_800E6308 = 0x800E6308; // type:f64
+D_800E6310 = 0x800E6310; // type:f64
+
+jpt_800E6318 = 0x800E6318;
+jpt_800E6334 = 0x800E6334;
+D_800E6350 = 0x800E6350; // type:f64
+jpt_800E6358 = 0x800E6358;
+D_800E6378 = 0x800E6378;
+jpt_800E637C = 0x800E637C;
+D_800E63A0 = 0x800E63A0; // type:f64
+D_800E63A8 = 0x800E63A8;
+D_800E63B0 = 0x800E63B0;
+D_800E63B8 = 0x800E63B8;
+D_800E63C0 = 0x800E63C0;
+D_800E63C8 = 0x800E63C8;
+D_800E63D0 = 0x800E63D0;
+D_800E63D8 = 0x800E63D8;
+D_800E63E0 = 0x800E63E0;
+D_800E63E8 = 0x800E63E8;
+D_800E63F0 = 0x800E63F0;
+D_800E63F8 = 0x800E63F8;
+D_800E6400 = 0x800E6400;
+D_800E6408 = 0x800E6408;
+D_800E6410 = 0x800E6410;
+D_800E6418 = 0x800E6418;
+D_800E6420 = 0x800E6420;
+D_800E6428 = 0x800E6428;
+D_800E6430 = 0x800E6430;
+D_800E6438 = 0x800E6438;
+D_800E6440 = 0x800E6440;
+D_800E6448 = 0x800E6448;
+D_800E6450 = 0x800E6450;
+D_800E6458 = 0x800E6458;
+D_800E6460 = 0x800E6460;
+D_800E6468 = 0x800E6468;
+
+D_800E64A8 = 0x800E64A8; // type:f64
+D_800E64B0 = 0x800E64B0; // type:f64
+D_800E64B8 = 0x800E64B8; // type:f64
+D_800E64C0 = 0x800E64C0; // type:f64
+D_800E64C8 = 0x800E64C8; // type:f64
+D_800E64D0 = 0x800E64D0; // type:f64
+D_800E64D8 = 0x800E64D8; // type:f32
+D_800E64E0 = 0x800E64E0; // type:f64
+D_800E64E8 = 0x800E64E8; // type:f32
+D_800E64EC = 0x800E64EC; // type:f32
+D_800E64F0 = 0x800E64F0; // type:f32
+D_800E64F4 = 0x800E64F4; // type:f32
+D_800E64F8 = 0x800E64F8; // type:f64
+D_800E6500 = 0x800E6500; // type:f64
+D_800E6508 = 0x800E6508; // type:f32
+D_800E6510 = 0x800E6510; // type:f64
+D_800E6518 = 0x800E6518; // type:f64
+D_800E6520 = 0x800E6520; // type:f64
+D_800E6528 = 0x800E6528; // type:f32
+D_800E6530 = 0x800E6530; // type:f64
+D_800E6538 = 0x800E6538; // type:f64
+D_800E6540 = 0x800E6540; // type:f64
+D_800E6548 = 0x800E6548; // type:f64
+
+D_800E6558 = 0x800E6558; // type:f64
+D_800E6560 = 0x800E6560; // type:f64
+D_800E6568 = 0x800E6568; // type:f32
+D_800E6570 = 0x800E6570; // type:f64
+D_800E6578 = 0x800E6578; // type:f64
+D_800E6580 = 0x800E6580;
+D_800E6584 = 0x800E6584;
+D_800E6588 = 0x800E6588;
+D_800E658C = 0x800E658C;
+D_800E65F8 = 0x800E65F8; // type:f64
+D_800E6600 = 0x800E6600; // type:f64
+D_800E6608 = 0x800E6608; // type:f64
+D_800E6610 = 0x800E6610; // type:f64
+D_800E6618 = 0x800E6618; // type:f64
+D_800E6620 = 0x800E6620; // type:f64
+D_800E6628 = 0x800E6628; // type:f64
+D_800E6630 = 0x800E6630; // type:f64
+D_800E6638 = 0x800E6638; // type:f64
+D_800E6640 = 0x800E6640; // type:f64
+D_800E6648 = 0x800E6648; // type:f64
+D_800E6650 = 0x800E6650; // type:f64
+D_800E6658 = 0x800E6658; // type:f64
+D_800E6660 = 0x800E6660; // type:f32
+D_800E6668 = 0x800E6668; // type:f64
+D_800E6670 = 0x800E6670; // type:f64
+D_800E6678 = 0x800E6678; // type:f64
+D_800E6680 = 0x800E6680; // type:f64
+D_800E6688 = 0x800E6688; // type:f64
+D_800E6690 = 0x800E6690; // type:f64
+D_800E6698 = 0x800E6698; // type:f64
+D_800E66A0 = 0x800E66A0; // type:f64
+D_800E66A8 = 0x800E66A8; // type:f64
+D_800E66B0 = 0x800E66B0; // type:f64
+D_800E66B8 = 0x800E66B8; // type:f64
+D_800E66C0 = 0x800E66C0; // type:f32
+D_800E66C8 = 0x800E66C8; // type:f64
+D_800E66F8 = 0x800E66F8; // type:f64
+D_800E6700 = 0x800E6700; // type:f64
+D_800E6788 = 0x800E6788;
+D_800E6790 = 0x800E6790;
+D_800E6798 = 0x800E6798;
+D_800E6808 = 0x800E6808; // type:f64
+D_800E6820 = 0x800E6820; // type:f64
+D_800E6838 = 0x800E6838; // type:f64
+D_800E6840 = 0x800E6840; // type:f64
+D_800E6848 = 0x800E6848; // type:f64
+D_800E68C4 = 0x800E68C4;
+D_800E68C8 = 0x800E68C8;
+D_800E6910 = 0x800E6910; // type:f64
+D_800E6918 = 0x800E6918; // type:f64
+D_800E6920 = 0x800E6920; // type:f64
+D_800E6930 = 0x800E6930; // type:f64
+D_800E6938 = 0x800E6938; // type:f64
+D_800E69B8 = 0x800E69B8; // type:f64
+D_800E69C0 = 0x800E69C0; // type:f64
+D_800E69C8 = 0x800E69C8; // type:f64
+D_800E69D0 = 0x800E69D0; // type:f64
+D_800E69D8 = 0x800E69D8; // type:f64
+D_800E69E0 = 0x800E69E0; // type:f64
+D_800E69E8 = 0x800E69E8; // type:f32
+D_800E69F0 = 0x800E69F0; // type:f64
+D_800E69F8 = 0x800E69F8; // type:f64
+D_800E6A00 = 0x800E6A00; // type:f32
+D_800E6A04 = 0x800E6A04; // type:s32 size:0xC padding
+
+// vehicle_tricky
+// 0x800E6A10 // size:0x20
+// vehicle_bluey
+// 0x800E6A30 // size:0x20
+// vehicle_smokey
+// 0x800E6A50 // size:0x20
+// vehicle_bubbler
+// 0x800E6AA0 // size:0x20
+// vehicle_wizpig
+// 0x800E6AB0 // size:0x20
+
+// vehicle_rocket
+D_800E6B00 = 0x800E6B00; // type:f64
+D_800E6B08 = 0x800E6B08; // type:f64
+D_800E6B10 = 0x800E6B10; // type:f64
+
+// object_models
+D_800E6B20 = 0x800E6B20;
+D_800E6B4C = 0x800E6B4C;
+D_800E6B64 = 0x800E6B64;
+D_800E6B84 = 0x800E6B84;
+D_800E6BC0 = 0x800E6BC0;
+D_800E6BE0 = 0x800E6BE0;
+
+// al/csplayer
+D_800E6C20 = 0x800E6C20;
+
+// al/reverb
+// 0x800E6E70 // size:0x30
+
+// camera .rodata
+D_800E6F00 = 0x800E6F00;
+D_800E6F44 = 0x800E6F44;
+D_800E709C = 0x800E709C;
+
+// 
+// sLevelErrorString = 0x800E70B0; //type:asciz
+// sBossErrorString = 0x800E70D8; //type:asciz
+// sAITableErrorString = 0x800E70EC; //type:asciz
+// sDebugVersionInfoString = 0x800E7110; //type:asciz
+// sDebugBuildDateString = 0x800E7118; //type:asciz
+// sDebugUsernameString = 0x800E7128; //type:asciz
+
+// thread3_main .rodata
+D_800E7134 = 0x800E7134; //type:asciz
+//sDebugCarString = 0x800E713C; //type:asciz
+//sDebugHovercraftString = 0x800E7140; //type:asciz
+//sDebugPlaneString = 0x800E7144; //type:asciz
+//sDebugVehicleSwapString = 0x800E7148; //type:asciz
+//D_800E7210 = 0x800E7210;
+//D_800E722C = 0x800E722C;
+//D_800E725C = 0x800E725C;
+//D_800E729C = 0x800E729C;
+//D_800E72C0 = 0x800E72C0;
+//D_800E72F4 = 0x800E72F4;
+//D_800E7338 = 0x800E7338;
+//D_800E7374 = 0x800E7374;
+
+// memory .rodata
+D_800E73A8 = 0x800E73A8;
+D_800E73D0 = 0x800E73D0;
+D_800E7400 = 0x800E7400;
+D_800E7438 = 0x800E7438;
+D_800E7590 = 0x800E7590; // type:asciz
+D_800E75B4 = 0x800E75B4; // type:asciz
+D_800E75BC = 0x800E75BC; // type:asciz
+D_800E75C8 = 0x800E75C8; // type:asciz
+D_800E75D8 = 0x800E75D8; // type:asciz
+D_800E75DC = 0x800E75DC; // type:asciz
+D_800E75E0 = 0x800E75E0; // type:asciz
+D_800E75F4 = 0x800E75F4; // type:asciz
+D_800E7604 = 0x800E7604; // type:asciz
+D_800E7614 = 0x800E7614; // type:asciz
+D_800E7620 = 0x800E7620; // type:asciz
+D_800E762C = 0x800E762C; // type:asciz
+
+// save_data size: 0x1d0
+//sDKRacingAdv1 = 0x800E7630; // type:asciz
+//sDKRacingAdv2 = 0x800E7640; // type:asciz
+//sDKRacingTimes1 = 0x800E7650; // type:asciz
+//sDKRacingTimes2 = 0x800E7660; // type:asciz
+//sDKRacingAdv3 = 0x800E7670; // type:asciz
+//sDKRacingAdv4 = 0x800E7680; // type:asciz
+//sDKRacingTimes3 = 0x800E7690; // type:asciz
+//sDKRacingTimes4 = 0x800E76A0; // type:asciz
+//D_800E76B0 = 0x800E76B0; // type:asciz
+//D_800E76C4 = 0x800E76C4; // type:asciz
+//D_800E76D8 = 0x800E76D8; // type:asciz
+//D_800E76EC = 0x800E76EC; // type:asciz
+//D_800E7700 = 0x800E7700; // type:asciz
+//D_800E7714 = 0x800E7714; // type:asciz
+//D_800E7728 = 0x800E7728; // type:asciz
+//sDKRacingGhosts = 0x800E773C; // type:asciz
+//sDKRacingGhostFileExt = 0x800E774C; // type:asciz
+//D_800E7750 = 0x800E7750; // type:asciz
+//D_800E7768 = 0x800E7768; // type:asciz "DKRACING-GHOSTS"
+//D_800E7778 = 0x800E7778; // type:asciz ""
+//D_800E777C = 0x800E777C; // type:asciz "DKRACING-GHOSTS"
+//D_800E778C = 0x800E778C; // type:asciz ""
+//D_800E7790 = 0x800E7790; // type:asciz "DKRACING-GHOSTS"
+//D_800E77A0 = 0x800E77A0; // type:asciz ""
+//D_800E77A4 = 0x800E77A4; // type:asciz "DKRACING-GHOSTS"
+//D_800E77B4 = 0x800E77B4; // type:asciz ""
+//D_800E77B8 = 0x800E77B8; // type:asciz "DKRACING-GHOSTS"
+//D_800E77C8 = 0x800E77C8; // type:asciz ""
+//D_800E77CC = 0x800E77CC; // type:asciz "DKRACING-GHOSTS"
+//D_800E77DC = 0x800E77DC; // type:asciz ""
+//D_800E77E0 = 0x800E77E0; // type:f64
+//D_800E77E8 = 0x800E77E8; // type:f64
+//D_800E77F0 = 0x800E77F0; // type:f64
+
+// sched .rodata
+D_800E7800 = 0x800E7800; // type:asciz "(Audio task)"
+D_800E7810 = 0x800E7810; // type:asciz "(Game task)"
+D_800E781C = 0x800E781C; // type:asciz "(DI task)\n"
+D_800E7828 = 0x800E7828; // type:asciz "(DI benchmark test)\n"
+D_800E7840 = 0x800E7840; // type:asciz "(Unknown task type %d)\n"
+D_800E7858 = 0x800E7858; // type:asciz "\nRCP TASK INFO\n"
+D_800E7868 = 0x800E7868; // type:asciz "-------------\n"
+D_800E7878 = 0x800E7878; // type:asciz "\ttype\t\t= %u\n"
+D_800E7888 = 0x800E7888; // type:asciz "\tflags\t\t= %u\n"
+D_800E7898 = 0x800E7898; // type:asciz "\tucode_boot\t\t= %p\n"
+D_800E78AC = 0x800E78AC; // type:asciz "\tucode_boot_size\t\t= %u\n"
+D_800E78C4 = 0x800E78C4; // type:asciz "\tucode\t\t= %p\n"
+D_800E78D4 = 0x800E78D4; // type:asciz "\tucode_size\t\t= %u\n"
+D_800E78E8 = 0x800E78E8; // type:asciz "\tucode_data\t\t= %p\n"
+D_800E78FC = 0x800E78FC; // type:asciz "\tucode_data_size\t\t= %u\n"
+D_800E7914 = 0x800E7914; // type:asciz "\toutput_buff\t\t= %p\n"
+D_800E7928 = 0x800E7928; // type:asciz "\toutput_buff_size\t\t= %u\n"
+D_800E7944 = 0x800E7944; // type:asciz "\tdata_ptr\t\t= %p\n"
+D_800E7958 = 0x800E7958; // type:asciz "\tdata_size\t\t= %u\n"
+
+// video size: 0x1A0
+
+// textures_sprites .rodata
+D_800E7B30 = 0x800E7B30; // type:asciz
+D_800E7B60 = 0x800E7B60; // type:asciz
+D_800E7B88 = 0x800E7B88; // type:asciz
+D_800E7BA8 = 0x800E7BA8; // type:asciz
+D_800E7BC4 = 0x800E7BC4; // type:asciz
+D_800E7BFC = 0x800E7BFC; // type:asciz
+D_800E7C10 = 0x800E7C10; // type:asciz
+D_800E7C30 = 0x800E7C30; // type:asciz
+D_800E7C50 = 0x800E7C50; // type:asciz
+
+// screen_asset size:0x20
+
+// menu .rodata size: 0x990
+//D_800E8208 = 0x800E8208; // type:asciz
+//D_800E820C = 0x800E820C; // type:asciz
+//D_800E8210 = 0x800E8210; // type:asciz
+//D_800E8214 = 0x800E8214; // type:asciz
+//D_800E8218 = 0x800E8218; // type:asciz
+//D_800E8230 = 0x800E8230; // type:asciz
+//D_800E8234 = 0x800E8234; // type:asciz
+//D_800E8238 = 0x800E8238; // type:asciz
+//D_800E823C = 0x800E823C; // type:asciz
+//D_800E8240 = 0x800E8240; // type:asciz
+//D_800E8244 = 0x800E8244; // type:asciz
+//D_800E8248 = 0x800E8248; // type:asciz
+//D_800E824C = 0x800E824C; // type:asciz
+//D_800E8250 = 0x800E8250; // type:asciz
+//D_800E84D0 = 0x800E84D0; // type:f64
+//D_800E84D8 = 0x800E84D8; // type:f32
+//D_800E84DC = 0x800E84DC; // type:s32 padding
+//D_800E84E0 = 0x800E84E0;
+//D_800E84E8 = 0x800E84E8;
+//D_800E84F0 = 0x800E84F0;
+jpt_800E84F4 = 0x800E84F4;
+jpt_800E8508 = 0x800E8508;
+D_800E8520 = 0x800E8520;
+jpt_800E8574 = 0x800E8574;
+
+// game_ui .rodata
+D_800E8640 = 0x800E8640; // type:asciz defined:True
+D_800E8648 = 0x800E8648; // type:asciz defined:True
+D_800E8650 = 0x800E8650; // type:asciz defined:True
+D_800E8658 = 0x800E8658; // type:asciz defined:True
+D_800E8664 = 0x800E8664; // type:asciz defined:True
+D_800E8668 = 0x800E8668; // type:asciz defined:True
+D_800E8670 = 0x800E8670; // type:asciz defined:True
+D_800E867C = 0x800E867C; // type:asciz defined:True
+D_800E8680 = 0x800E8680; // type:asciz defined:True
+D_800E8688 = 0x800E8688;
+D_800E8690 = 0x800E8690;
+D_800E8694 = 0x800E8694;
+D_800E86A8 = 0x800E86A8; // type:f64 function_owner:func_8009F034
+D_800E86B0 = 0x800E86B0; // type:f64 function_owner:func_8009F034
+D_800E86B8 = 0x800E86B8; // type:f32 function_owner:func_8009F034
+D_800E86BC = 0x800E86BC; // type:f32 function_owner:func_8009F034
+D_800E86C0 = 0x800E86C0; // type:f32 function_owner:func_8009F034
+D_800E86C8 = 0x800E86C8; // type:f64 function_owner:func_8009F034
+D_800E86D0 = 0x800E86D0; // type:f64 function_owner:func_8009F034
+D_800E86D8 = 0x800E86D8; // type:f64 function_owner:func_8009F034
+D_800E86E0 = 0x800E86E0; // type:f64 function_owner:func_8009F034
+D_800E86E8 = 0x800E86E8; // type:f64 function_owner:func_8009F034
+D_800E86F0 = 0x800E86F0; // type:f64 function_owner:func_8009F034
+D_800E8718 = 0x800E8718;
+D_800E871C = 0x800E871C; // type:s32 padding
+D_800E8720 = 0x800E8720;
+D_800E8728 = 0x800E8728;
+D_800E8730 = 0x800E8730; // type:f64
+D_800E8738 = 0x800E8738; // type:f64
+D_800E8758 = 0x800E8758; // type:f64
+D_800E8760 = 0x800E8760; // type:f64
+D_800E87A0 = 0x800E87A0; // type:f64 force_migration:True
+D_800E87A8 = 0x800E87A8; // type:f32 force_migration:True
+D_800E87B0 = 0x800E87B0; // force_migration:True type:f64 size:8
+D_800E87B8 = 0x800E87B8; // force_migration:True type:f64 size:8
+D_800E87D8 = 0x800E87D8;
+D_800E87E0 = 0x800E87E0; // type:f64
+
+// weather.c .rodata size:0x50
+
+// particles.c .rodata size:0x3C0
+D_800E8840 = 0x800E8840;
+D_800E887C = 0x800E887C;
+D_800E88BC = 0x800E88BC;
+D_800E88F8 = 0x800E88F8;
+D_800E891C = 0x800E891C;
+D_800E8940 = 0x800E8940;
+D_800E8964 = 0x800E8964;
+D_800E8984 = 0x800E8984;
+D_800E89A4 = 0x800E89A4;
+D_800E89D8 = 0x800E89D8;
+D_800E8A18 = 0x800E8A18;
+D_800E8A40 = 0x800E8A40;
+D_800E8A68 = 0x800E8A68;
+D_800E8A90 = 0x800E8A90;
+D_800E8AB4 = 0x800E8AB4;
+D_800E8AD8 = 0x800E8AD8;
+D_800E8B10 = 0x800E8B10;
+D_800E8B44 = 0x800E8B44;
+
+// printf.c .rodata size:0x270
+gLowerCase = 0x800E8C00; // type:asciz force_not_migration:true defined:true
+gUpperCase = 0x800E8C28; // type:asciz force_not_migration:true defined:true
+D_800E8C50 = 0x800E8C50; // type:asciz force_not_migration:true defined:true
+D_800E8C54 = 0x800E8C54; // type:asciz force_not_migration:true defined:true
+D_800E8C5C = 0x800E8C5C; // type:asciz force_not_migration:true defined:true
+jpt_800E8CAC = 0x800E8CAC;
+jpt_800E8CF0 = 0x800E8CF0;
+jpt_800E8D88 = 0x800E8D88;
+jpt_800E8E58 = 0x800E8E58;
+
+// thread0_epc.c .rodata size:0x2F0
+D_800E8E70 = 0x800E8E70; // type:asciz force_not_migration:true defined:true
+D_800E8EA0 = 0x800E8EA0; // type:asciz force_not_migration:true defined:true
+
+// waves.c .rodata size:0x170
+D_800E9160 = 0x800E9160;
+D_800E91AC = 0x800E91AC;
+D_800E91E4 = 0x800E91E4;
+D_800E9228 = 0x800E9228;
+D_800E9260 = 0x800E9260;
+D_800E92A0 = 0x800E92A0;
+D_800E92A4 = 0x800E92A4;
+
+// gzip .rodata
+gzip_border = 0x800E93C0;
+gzip_cplens = 0x800E93D4;
+gzip_cplext = 0x800E9412;
+gzip_cpdist = 0x800E9432;
+gzip_cpdext = 0x800E946E;
+gzip_mask_bits = 0x800E948C;
+D_800E94AE = 0x800E94AE;
+
+// osSetIntMask .rodata
+__osRcpImTable = 0x800E94D0;
+
+// exception .rodata
+__osIntOffTable = 0x800E9670;
+__osIntTable = 0x800E9690; // size:0x24
+
+// xprintf  .rodata
+length_str = 0x800E96C0; // type:asciz "hlL" defined:true
+flags_str = 0x800E96C4; // type:asciz " +-#0" defined:true
+flags_arr = 0x800E96CC; // type:u32 size:0x18 defined:true
+P_cosf = 0x800E97C0; // type:Du size:0x28 defined:true
+rpi_cosf = 0x800E97E8; // type:Du size:0x8 defined:true
+pihi_cosf = 0x800E97F0; // type:Du size:0x8 defined:true
+pilo_cosf = 0x800E97F8; // type:Du size:0x8 defined:true
+zero_cosf = 0x800E9800; // type:Fu size:0x8 defined:true
+P_sinf = 0x800E9810; // type:Du size:0x28 defined:true
+rpi_sinf = 0x800E9838; // type:Du size:0x8 defined:true
+pihi_sinf = 0x800E9840; // type:Du size:0x8 defined:true
+pilo_sinf = 0x800E9848; // type:Du size:0x8 defined:true
+zero_sinf = 0x800E9850; // type:Fu size:0x8 defined:true
+pows = 0x800E9860; // type:f64 size:0x48 defined:true
+Ldtob_NaN = 0x800E98A8; // type:asciz force_not_migration:true defined:true
+Ldtob_Inf = 0x800E98AC; // type:asciz force_not_migration:true defined:true
+_Genld_0_string = 0x800E98B0; // type:asciz force_not_migration:true defined:true
+_Ldtob_1e8 = 0x800E98B8; // type:f64
+__libm_qnan_f = 0x800E98C0; // type:f64
+
+// ucode_data
+aspMainDataStart = 0x800E98D0; // size:0x2D0
+rspF3DDKRDataDramStart = 0x800E9BA0; // size:0x800
+rspF3DDKRDataFifoStart = 0x800EA3A0; // size:0x800
+rspF3DDKRDataXbusStart = 0x800EABA0; // size:0x800
+rspUnknown2DataStart = 0x800EB3A0; // size:0xBC0
+
+// audio.c .bss
+gAudioHeapStack = 0x800EBF60; // size:0x29D88
+gALHeap = 0x80115CE8;
+gSequenceTable = 0x80115CF8;
+gMusicSequenceData = 0x80115CFC;
+gJingleSequenceData = 0x80115D00;
+gCurrentSequenceID = 0x80115D04;
+gCurrentJingleID = 0x80115D05;
+gMusicTempo = 0x80115D08;
+gSeqLengthTable = 0x80115D0C;
+gSequenceBank = 0x80115D10;
+gSoundBank = 0x80115D14;
+gSoundTable = 0x80115D18;
+gSeqSoundTable = 0x80115D1C;
+gSoundCount = 0x80115D20;
+gSeqSoundCount = 0x80115D24;
+gSoundTableSize = 0x80115D28;
+gSeqSoundTableSize = 0x80115D2C;
+sMusicTempo = 0x80115D30;
+gMusicAnimationTick = 0x80115D34;
+sMusicDelayTimer = 0x80115D38;
+sMusicDelayLength = 0x80115D3C;
+gMusicPlaying = 0x80115D40;
+gJinglePlaying = 0x80115D41;
+gDelayedSounds = 0x80115D48;
+gMusicSequence = 0x80115D88;
+gJingleSequence = 0x80115E80;
+gSkipResetChannels = 0x80115F78;
+gAudioVolumeSetting = 0x80115F79;
+gDynamicMusicChannelMask = 0x80115F7C;
+gGlobalSoundMask = 0x80115F80;
+gSpatialSoundMask = 0x80115F84;
+gRacerSoundMask = 0x80115F88;
+
+// audiomgr.c .bss
+gAudioSched = 0x80115F90;
+gAudioHeap = 0x80115F94;
+__am = 0x80115F98;
+dmaState = 0x80119230;
+dmaBuffs = 0x80119240;
+minFrameSize = 0x80119628;
+frameSize = 0x8011962C;
+maxFrameSize = 0x80119630;
+gAudioCmdLen = 0x80119634;
+gAntiPiracyCRCStart = 0x80119638;
+audDMAIOMesgBuf = 0x80119640;
+audDMAMessageQ = 0x80119AF0;
+audDMAMessageBuf = 0x80119B08;
+
+// audiosfx .bss
+gAlSndPlayer = 0x80119BD0;
+gSoundChannelVolume = 0x80119C28;
+
+// audio_vehicle .bss
+D_80119C30 = 0x80119C30;
+gRacerSound = 0x80119C38;
+gSoundRacerObj = 0x80119C3C;
+D_80119C40 = 0x80119C40;
+gSoundMaskHeapUsed = 0x80119C44;
+gSoundMaskHeap = 0x80119C48;
+gFreeMasks = 0x80119C4C;
+gSoundMaskHeapFree = 0x80119C50;
+D_80119C54 = 0x80119C54;
+D_80119C58 = 0x80119C58;
+D_80119C5C = 0x80119C5C;
+D_80119C60 = 0x80119C60;
+D_8011A6D8 = 0x8011A6D8;
+D_8011A6DC = 0x8011A6DC;
+D_8011A6E0 = 0x8011A6E0;
+gAudioLinesOff = 0x8011AC18;
+D_8011AC1C = 0x8011AC1C;
+
+// objects .bss
+D_8011AC20 = 0x8011AC20; // size:0x100
+D_8011AD20 = 0x8011AD20;
+D_8011AD21 = 0x8011AD21;
+D_8011AD22 = 0x8011AD22; // size:0x2
+D_8011AD24 = 0x8011AD24; // size:0x2
+D_8011AD26 = 0x8011AD26;
+D_8011AD28 = 0x8011AD28;
+D_8011AD2C = 0x8011AD2C;
+gCurrentLightIntensity = 0x8011AD30;
+gGhostObjPlayer = 0x8011AD34;
+gTimeTrialContPak = 0x8011AD38;
+D_8011AD3C = 0x8011AD3C;
+D_8011AD3D = 0x8011AD3D;
+D_8011AD3E = 0x8011AD3E;
+gTransformObject = 0x8011AD40;
+gTransformTimer = 0x8011AD44;
+gOverworldVehicle = 0x8011AD45;
+gTransformPosX = 0x8011AD46;
+gTransformPosY = 0x8011AD48;
+gTransformPosZ = 0x8011AD4A;
+gTransformAngleY = 0x8011AD4C;
+gRaceEndTimer = 0x8011AD4E;
+gRaceEndStage = 0x8011AD50;
+gNumRacersSaved = 0x8011AD51;
+unused_D_8011AD52 = 0x8011AD52;
+D_8011AD53 = 0x8011AD53;
+D_8011AD54 = 0x8011AD54;
+gSpawnObjectHeap = 0x8011AD58;
+D_8011AD5C = 0x8011AD5C;
+D_8011AD60 = 0x8011AD60;
+gAssetsObjectHeadersTable = 0x8011AD64;
+gAssetsObjectHeadersTableLength = 0x8011AD68;
+gAssetsMiscSection = 0x8011AD6C;
+gAssetsMiscTable = 0x8011AD70;
+D_8011AD74 = 0x8011AD74;
+D_8011AD78 = 0x8011AD78;
+gAssetsMiscTableLength = 0x8011ADA0;
+D_8011ADA4 = 0x8011ADA4;
+gObjectUpdateRateF = 0x8011ADA8;
+gPathUpdateOff = 0x8011ADAC;
+gEventCountdown = 0x8011ADB0;
+D_8011ADB4 = 0x8011ADB4;
+gEventStartTimer = 0x8011ADB8;
+D_8011ADBC = 0x8011ADBC;
+D_8011ADC0 = 0x8011ADC0;
+gFirstTimeFinish = 0x8011ADC4;
+D_8011ADC5 = 0x8011ADC5;
+gBalloonCutsceneTimer = 0x8011ADC8;
+D_8011ADCC = 0x8011ADCC;
+gObjectOffsetY = 0x8011ADD0;
+D_8011ADD4 = 0x8011ADD4;
+gOverrideDoors = 0x8011ADD5;
+D_8011ADD8 = 0x8011ADD8;
+D_8011AE00 = 0x8011AE00;
+D_8011AE01 = 0x8011AE01;
+gIsNonCarRacers = 0x8011AE02;
+gIsSilverCoinRace = 0x8011AE03;
+D_8011AE08 = 0x8011AE08;
+gLoadedObjectHeaders = 0x8011AE48;
+gObjectHeaderReferences = 0x8011AE4C;
+D_8011AE50 = 0x8011AE50;
+D_8011AE54 = 0x8011AE54;
+gObjPtrList = 0x8011AE58;
+gObjectCount = 0x8011AE5C;
+gObjectListStart = 0x8011AE60;
+gParticleCount = 0x8011AE64;
+gObjectMemoryPool = 0x8011AE68;
+D_8011AE6C = 0x8011AE6C;
+D_8011AE70 = 0x8011AE70;
+D_8011AE74 = 0x8011AE74;
+D_8011AE78 = 0x8011AE78;
+gCutsceneID = 0x8011AE7A;
+D_8011AE7C = 0x8011AE7C;
+D_8011AE7E = 0x8011AE7E;
+gTTGhostTimeToBeat = 0x8011AE80;
+gPrevTimeTrialVehicle = 0x8011AE82;
+gMapDefaultVehicle = 0x8011AE84;
+D_8011AE88 = 0x8011AE88;
+gObjectCurrDisplayList = 0x8011AE8C;
+gObjectCurrMatrix = 0x8011AE90;
+gObjectCurrVertexList = 0x8011AE94;
+D_8011AE98 = 0x8011AE98;
+D_8011AEA0 = 0x8011AEA0;
+D_8011AEA8 = 0x8011AEA8;
+D_8011AEB0 = 0x8011AEB0;
+gAssetsLvlObjTranslationTable = 0x8011AEB8;
+gAssetsLvlObjTranslationTableLength = 0x8011AEBC;
+D_8011AEC0 = 0x8011AEC0;
+gParticlePtrList = 0x8011AEC4;
+gFreeListCount = 0x8011AEC8;
+gTrackCheckpoints = 0x8011AECC;
+gNumberOfCheckpoints = 0x8011AED0;
+D_8011AED4 = 0x8011AED4;
+gTajChallengeType = 0x8011AED8;
+gCameraObjList = 0x8011AEDC;
+gCameraObjCount = 0x8011AEE0;
+gRacers = 0x8011AEE4;
+gRacersByPosition = 0x8011AEE8;
+gRacersByPort = 0x8011AEEC;
+gNumRacers = 0x8011AEF0;
+gTimeTrialEnabled = 0x8011AEF4;
+gIsTimeTrial = 0x8011AEF5;
+gIsTajChallenge = 0x8011AEF6;
+gTajRaceInit = 0x8011AEF7;
+gChallengePrevMusic = 0x8011AEF8;
+gChallengePrevInstruments = 0x8011AEFC;
+D_8011AF00 = 0x8011AF00;
+gAINodes = 0x8011AF04;
+gAINodeTail = 0x8011AF08;
+gInitAINodes = 0x8011AF10;
+D_8011AF14 = 0x8011AF14;
+gElevationHeights = 0x8011AF18;
+D_8011AF2C = 0x8011AF2C;
+gWorldShading = 0x8011AF30;
+D_8011AF34 = 0x8011AF34;
+D_8011AF38 = 0x8011AF38;
+D_8011AF60 = 0x8011AF60;
+D_8011AF68 = 0x8011AF68;
+gEnvmapPos = 0x8011AFE8;
+D_8011AFEE = 0x8011AFEE;
+D_8011AFF0 = 0x8011AFF0;
+D_8011AFF4 = 0x8011AFF4;
+D_8011AFF8 = 0x8011AFF8;
+D_8011AFFC = 0x8011AFFC;
+D_8011B000 = 0x8011B000;
+D_8011B004 = 0x8011B004;
+D_8011B008 = 0x8011B008;
+D_8011B010 = 0x8011B010;
+D_8011B020 = 0x8011B020;
+D_8011B048 = 0x8011B048;
+D_8011B058 = 0x8011B058;
+D_8011B068 = 0x8011B068;
+D_8011B078 = 0x8011B078;
+D_8011B07B = 0x8011B07B;
+D_8011B080 = 0x8011B080;
+
+// tracks .bss
+gSceneCurrDisplayList = 0x8011B0A0;
+gSceneCurrMatrix = 0x8011B0A4;
+gSceneCurrVertexList = 0x8011B0A8;
+gSceneCurrTriList = 0x8011B0AC;
+gSceneActiveCamera = 0x8011B0B0;
+gSceneCurrentPlayerID = 0x8011B0B4;
+gSkydomeSegment = 0x8011B0B8;
+gIsNearCurrBBox = 0x8011B0BC;
+D_8011B0C0 = 0x8011B0C0;
+gDisableShadows = 0x8011B0C4;
+gShadowHeapFlip = 0x8011B0C8;
+D_8011B0CC = 0x8011B0CC;
+gShadowIndex = 0x8011B0D0;
+gSceneStartSegment = 0x8011B0D4;
+D_8011B0D8 = 0x8011B0D8;
+gSceneRenderSkyDome = 0x8011B0DC;
+gDrawLevelSegments = 0x8011B0E0;
+D_8011B0E1 = 0x8011B0E1;
+D_8011B0E2 = 0x8011B0E2;
+D_8011B0E3 = 0x8011B0E3;
+D_8011B0E4 = 0x8011B0E4;
+D_8011B0E8 = 0x8011B0E8;
+D_8011B0EC = 0x8011B0EC;
+D_8011B0F0 = 0x8011B0F0;
+D_8011B0F4 = 0x8011B0F4;
+D_8011B0F8 = 0x8011B0F8;
+gAntiAliasing = 0x8011B0FC;
+D_8011B100 = 0x8011B100;
+D_8011B104 = 0x8011B104;
+D_8011B108 = 0x8011B108;
+D_8011B10C = 0x8011B10C;
+D_8011B110 = 0x8011B110;
+D_8011B114 = 0x8011B114;
+D_8011B118 = 0x8011B118;
+D_8011B11C = 0x8011B11C;
+D_8011B120 = 0x8011B120;
+D_8011B320 = 0x8011B320; // size:0x10
+D_8011B330 = 0x8011B330;
+D_8011C230 = 0x8011C230;
+D_8011C234 = 0x8011C234;
+D_8011C238 = 0x8011C238;
+D_8011C3B8 = 0x8011C3B8;
+D_8011C8B8 = 0x8011C8B8;
+D_8011D0B8 = 0x8011D0B8;
+D_8011D0BC = 0x8011D0BC;
+D_8011D0C0 = 0x8011D0C0;
+D_8011D0C4 = 0x8011D0C4;
+D_8011D0C8 = 0x8011D0C8;
+D_8011D0CC = 0x8011D0CC;
+D_8011D0CE = 0x8011D0CE;
+D_8011D0D0 = 0x8011D0D0;
+gShadowOpacity = 0x8011D0D4;
+D_8011D0D8 = 0x8011D0D8;
+D_8011D0DC = 0x8011D0DC;
+D_8011D0E0 = 0x8011D0E0;
+D_8011D0E4 = 0x8011D0E4;
+D_8011D0E8 = 0x8011D0E8;
+D_8011D0EC = 0x8011D0EC;
+D_8011D0F0 = 0x8011D0F0;
+D_8011D0F4 = 0x8011D0F4;
+D_8011D0F8 = 0x8011D0F8;
+D_8011D128 = 0x8011D128;
+D_8011D158 = 0x8011D158;
+D_8011D164 = 0x8011D164;
+D_8011D168 = 0x8011D168;
+gTrackWaves = 0x8011D2B8;
+D_8011D308 = 0x8011D308;
+gTrackModelHeap = 0x8011D30C;
+gLevelModelTable = 0x8011D310;
+gPrevCameraX = 0x8011D314;
+gPrevCameraY = 0x8011D318;
+gPrevCameraZ = 0x8011D31C;
+gShadowHeapTris = 0x8011D320;
+gCurrentShadowTris = 0x8011D330;
+D_8011D334 = 0x8011D334;
+gShadowHeapVerts = 0x8011D338;
+gCurrentShadowVerts = 0x8011D348;
+D_8011D34C = 0x8011D34C;
+gShadowHeapTextures = 0x8011D350;
+gCurrentShadowTexture = 0x8011D360;
+D_8011D364 = 0x8011D364;
+D_8011D368 = 0x8011D368;
+D_8011D36C = 0x8011D36C;
+D_8011D370 = 0x8011D370;
+D_8011D374 = 0x8011D374;
+D_8011D378 = 0x8011D378;
+gScenePlayerViewports = 0x8011D37C;
+gCurrBBoxDistanceToCamera = 0x8011D380;
+gWaveBlockCount = 0x8011D384;
+gFogData = 0x8011D388;
+gScenePerspectivePos = 0x8011D468;
+D_8011D474 = 0x8011D474;
+D_8011D478 = 0x8011D478;
+D_8011D47C = 0x8011D47C;
+D_8011D480 = 0x8011D480;
+D_8011D488 = 0x8011D488;
+D_8011D48C = 0x8011D48C;
+D_8011D490 = 0x8011D490;
+D_8011D498 = 0x8011D498;
+D_8011D49C = 0x8011D49C;
+D_8011D49E = 0x8011D49E;
+D_8011D4A0 = 0x8011D4A0;
+D_8011D4A4 = 0x8011D4A4;
+D_8011D4A8 = 0x8011D4A8;
+D_8011D4AC = 0x8011D4AC;
+D_8011D4B0 = 0x8011D4B0;
+D_8011D4B4 = 0x8011D4B4;
+D_8011D4B6 = 0x8011D4B6;
+D_8011D4B8 = 0x8011D4B8;
+D_8011D4BA = 0x8011D4BA;
+D_8011D4BC = 0x8011D4BC;
+
+// lights .bss
+gLightDistance = 0x8011D4C0;
+gLightDiffX = 0x8011D4C4;
+gLightDiffY = 0x8011D4C8;
+gLightDiffZ = 0x8011D4CC;
+
+// object_functions .bss
+gNPCPosY = 0x8011D4D0;
+gTajSoundMask = 0x8011D4D4;
+gTTSoundMask = 0x8011D4D8;
+gRocketSoundTimer = 0x8011D4DC;
+gTajDialogueChoice = 0x8011D4E0;
+gTajSoundID = 0x8011D4E2;
+
+// racer .bss
+gCurrentCourseHeight = 0x8011D4F0;
+gCurrentRacerWaterPos = 0x8011D4F8;
+gRacerWaveType = 0x8011D504;
+gCameraObject = 0x8011D508;
+D_8011D50C = 0x8011D50C;
+gCurrentRacerTransform = 0x8011D510;
+gCurrentRacerInput = 0x8011D528;
+gCurrentButtonsPressed = 0x8011D52C;
+gCurrentButtonsReleased = 0x8011D530;
+gCurrentStickX = 0x8011D534;
+gCurrentStickY = 0x8011D538;
+unused_8011D53C = 0x8011D53C;
+gRaceStartTimer = 0x8011D540;
+D_8011D544 = 0x8011D544;
+D_8011D548 = 0x8011D548;
+D_8011D54C = 0x8011D54C;
+D_8011D550 = 0x8011D550;
+D_8011D552 = 0x8011D552;
+gCurrentCarSteerVel = 0x8011D554;
+D_8011D558 = 0x8011D558;
+gCurrentPlayerIndex = 0x8011D55C;
+D_8011D560 = 0x8011D560;
+gCurrentRacerMiscAssetPtr = 0x8011D564;
+D_8011D568 = 0x8011D568;
+gCurrentRacerWeightStat = 0x8011D56C;
+gCurrentRacerHandlingStat = 0x8011D570;
+gCurrentRacerUnusedMiscAsset11 = 0x8011D574;
+gRacerMagnetVelX = 0x8011D578;
+gRacerMagnetVelZ = 0x8011D57C;
+D_8011D580 = 0x8011D580;
+gCurrentSurfaceType = 0x8011D581;
+gTajInteractStatus = 0x8011D582;
+gRacerDialogueCamera = 0x8011D583;
+gRacerInputBlocked = 0x8011D584;
+gStartBoostTime = 0x8011D585;
+gDialogueCameraAngle = 0x8011D586;
+gEggChallengeFlags = 0x8011D588; // size:0x4
+D_8011D58C = 0x8011D58C;
+gGhostData = 0x8011D590;
+gCurrentGhostIndex = 0x8011D59C;
+gPrevGhostNodeIndex = 0x8011D59D;
+gGhostNodeDelay = 0x8011D59E;
+gGhostNodeCount = 0x8011D5A0;
+gGhostNodeFull = 0x8011D5A8;
+gGhostMapID = 0x8011D5AC;
+gRacerWaveCount = 0x8011D5AE;
+D_8011D5AF = 0x8011D5AF;
+gRacerCurrentWave = 0x8011D5B0;
+D_8011D5B4 = 0x8011D5B4;
+D_8011D5B8 = 0x8011D5B8;
+
+// vehicle_tricky .bss
+gTrickyRacerPeakHeight = 0x8011D5C0;
+gTrickyCutsceneTimer = 0x8011D5C4;
+gBossSoundIDOffset = 0x8011D5C8;
+gTrickyStartBoost = 0x8011D5CC;
+
+// vehicle_bluey .bss
+gBlueyCutsceneTimer = 0x8011D5D0;
+gBlueyStartBoost = 0x8011D5D1;
+
+// vehicle_smokey .bss
+gSmokeyCutsceneTimer = 0x8011D5E0;
+gSmokeyStartBoost = 0x8011D5E1;
+
+// vehicle_bubbler .bss
+gBubblerCutsceneTimer = 0x8011D5F0;
+gBubblerStartBoost = 0x8011D5F1;
+
+// vehicle_wizpig .bss
+gWizpigCutsceneTimer = 0x8011D600;
+gWizpigStartBoost = 0x8011D601;
+
+// vehicle_rocket .bss
+gRocketCutsceneTimer = 0x8011D610;
+gRocketStartBoost = 0x8011D611;
+
+// object_models .bss
+gObjectModelTable = 0x8011D620;
+D_8011D624 = 0x8011D624;
+D_8011D628 = 0x8011D628;
+D_8011D62C = 0x8011D62C;
+gNumModelIDs = 0x8011D630;
+D_8011D634 = 0x8011D634;
+gAnimationTable = 0x8011D638;
+gObjectAnimationTable = 0x8011D63C;
+D_8011D640 = 0x8011D640;
+D_8011D644 = 0x8011D644;
+
+// main .bss
+gThread1Stack = 0x8011D650;
+gThread3Stack = 0x8011D758;
+gThread1 = 0x8011F760;
+gThread3 = 0x8011F910;
+
+// entrypoint .bss
+entrypointThreadStack = 0x8011FAC0;
+
+// camera .bss
+gCameraSegment = 0x80120AC0;
+gNumberOfViewports = 0x80120CE0;
+gActiveCameraID = 0x80120CE4;
+gViewportCap = 0x80120CE8;
+D_80120CEC = 0x80120CEC;
+gCameraTransform = 0x80120CF0;
+gMatrixType = 0x80120D08;
+gSpriteAnimOff = 0x80120D0C;
+gCurCamFOV = 0x80120D10;
+gCutsceneCameraActive = 0x80120D14;
+gAdjustViewportHeight = 0x80120D15;
+D_80120D18 = 0x80120D18;
+gModelMatrixStackPos = 0x80120D1C;
+gCameraMatrixPos = 0x80120D20;
+D_80120D24 = 0x80120D24;
+gModelMatrixViewX = 0x80120D28;
+gModelMatrixViewY = 0x80120D40;
+gModelMatrixViewZ = 0x80120D58;
+perspNorm = 0x80120D6C;
+gModelMatrixF = 0x80120D70;
+gModelMatrixS = 0x80120D88;
+D_80120DA0 = 0x80120DA0;
+gPerspectiveMatrixF = 0x80120EE0;
+gViewMatrixF = 0x80120F20;
+gCameraMatrixF = 0x80120F60;
+gProjectionMatrixF = 0x80120FA0;
+gProjectionMatrixS = 0x80120FE0;
+gUnusedProjectionMatrixS = 0x80121020;
+gCurrentModelMatrixF = 0x80121060;
+gCurrentModelMatrixS = 0x801210A0;
+
+// controller .bss
+sSIMesgQueue = 0x801210E0;
+sSIMesgBuf = 0x801210F8;
+gSIMesg = 0x801210FC;
+gControllerStatus = 0x80121100;
+gControllerCurrData = 0x80121110;
+gControllerPrevData = 0x80121128;
+gControllerButtonsPressed = 0x80121140;
+gControllerButtonsReleased = 0x80121148;
+sPlayerID = 0x80121150;
+
+// game .bss
+gTempAssetTable = 0x80121160;
+gMapId = 0x80121164;
+gCurrentLevelHeader = 0x80121168;
+gLevelNames = 0x8012116C;
+gNumberOfLevelHeaders = 0x80121170;
+gNumberOfWorlds = 0x80121174;
+D_80121178 = 0x80121178;
+gGlobalLevelTable = 0x8012117C;
+gRaceTypeCountTable = 0x80121180;
+gAIBehaviourTable = 0x801211C0;
+gLevelPropertyStack = 0x801211C8;
+
+// thread3_main .bss
+gDisplayLists = 0x801211F0;
+gCurrDisplayList = 0x801211F8;
+D_801211FC = 0x801211FC;
+gMatrixHeap = 0x80121200;
+gGameCurrMatrix = 0x80121208;
+gVertexHeap = 0x80121210;
+gGameCurrVertexList = 0x80121218;
+gTriangleHeap = 0x80121220;
+gGameCurrTriList = 0x80121228;
+D_80121230 = 0x80121230;
+gLevelSettings = 0x80121250;
+gMainSched = 0x80121260;
+gSchedStack = 0x801214E8;
+gSPTaskNum = 0x801234E8;
+gGameMode = 0x801234EC;
+gRenderMenu = 0x801234F0;
+gPlayableMapId = 0x801234F4;
+D_801234F8 = 0x801234F8;
+D_801234FC = 0x801234FC;
+gGameNumPlayers = 0x80123500;
+gGameCurrentEntrance = 0x80123504;
+gGameCurrentCutscene = 0x80123508;
+gPrevPlayerCount = 0x8012350C;
+gSettingsPtr = 0x80123510;
+gIsLoading = 0x80123514;
+gIsPaused = 0x80123515;
+gPostRaceViewPort = 0x80123516;
+gLevelDefaultVehicleID = 0x80123518;
+gMenuVehicleID = 0x8012351C;
+sBootDelayTimer = 0x80123520;
+gLevelLoadType = 0x80123524;
+gNextMap = 0x80123525;
+D_80123526 = 0x80123526;
+gCurrNumF3dCmdsPerPlayer = 0x80123528;
+gCurrNumHudMatPerPlayer = 0x8012352C;
+gCurrNumHudTrisPerPlayer = 0x80123530;
+gCurrNumHudVertsPerPlayer = 0x80123534;
+gNMISched = 0x80123538;
+gNMIOSMesg = 0x80123544;
+gNMIMesgQueue = 0x80123548;
+gNMIMesgBuf = 0x80123560;
+D_80123568 = 0x80123568;
+
+// memory .bss
+gMemoryPools = 0x80123580;
+gNumberOfMemoryPools = 0x801235C0;
+D_801235C4 = 0x801235C4;
+gFreeQueue = 0x801235C8;
+gFreeQueueCount = 0x80123DC8;
+gFreeQueueTimer = 0x80123DCC;
+
+// osMotor .bss
+_MotorStopData = 0x80123DD0;
+_MotorStartData = 0x80123ED0;
+_motorstopbuf = 0x80123FD0;
+_motorstartbuf = 0x80123FF0;
+
+// save_data .bss
+sControllerMesgQueue = 0x80124010;
+D_80124014 = 0x80124014;
+pfs = 0x80124018;
+gRumble = 0x801241B8;
+sRumbleTable = 0x801241E0;
+gRumbleOn = 0x801241E4;
+gRumblePresent = 0x801241E5;
+gRumbleIdle = 0x801241E6;
+gRumbleActive = 0x801241E7;
+gRumbleDetectionTimer = 0x801241E8;
+D_801241EC = 0x801241EC;
+D_801241F0 = 0x801241F0;
+D_801241F4 = 0x801241F4;
+
+// asset_loading .bss
+gAssetsDmaIoMesg = 0x80124200;
+gDmaMesg = 0x80124218;
+gDmaMesgQueue = 0x80124220;
+gPIMesgBuf = 0x80124238;
+gPIMesgQueue = 0x80124278;
+gAssetsLookupTable = 0x80124290;
+
+// rcp .bss
+gDramStack = 0x801242A0;
+gGfxTaskOutputBuffer = 0x801246A0;
+gRCPMesgQueue = 0x80125EA0;
+gRCPMesgBuf = 0x80125EB8;
+gUnusedMesgQueue = 0x80125EC0;
+gGfxTaskMesgQueue = 0x80125ED8;
+gUnusedMesgBuf = 0x80125EF0;
+gGfxTaskMesgBuf = 0x80125F10;
+gChequerBGColourR1 = 0x80125F30;
+gChequerBGColourG1 = 0x80125F31;
+gChequerBGColourB1 = 0x80125F32;
+gChequerBGColourA1 = 0x80125F33;
+gChequerBGColourR2 = 0x80125F34;
+gChequerBGColourG2 = 0x80125F35;
+gChequerBGColourB2 = 0x80125F36;
+gChequerBGColourA2 = 0x80125F37;
+gChequerBGWidth = 0x80125F38;
+gChequerBGHeight = 0x80125F3C;
+gGfxTaskBuf = 0x80125F40;
+gGfxTaskBuf2 = 0x80126020;
+osScInterruptQ = 0x80126100;
+
+// sc/sched .bss
+gCurRSPTaskIsSet = 0x80126110; // type:s32 size:0x4
+gCurRDPTaskIsSet = 0x80126114; // type:s32 size:0x4
+gYieldTime = 0x80126118; // type:u64 size:0x8
+gRSPAudTaskFlushTime = 0x80126120; // type:u32 size:0x4
+gRSPAudTaskDoneTime = 0x80126124; // type:u32 size:0x4
+D_80126128 = 0x80126128; // type:s32 size:0x48
+
+// video .bss
+gVideoRefreshRate = 0x80126170;
+gVideoAspectRatio = 0x80126174;
+gVideoHeightRatio = 0x80126178;
+D_8012617C = 0x8012617C;
+gVideoMesgBuf = 0x80126180;
+gVideoMesgQueue = 0x801261A0;
+gTvViMode = 0x80126260;
+gVideoFbWidths = 0x801262B0;
+gVideoFbHeights = 0x801262B8;
+gVideoFramebuffers = 0x801262C0;
+gVideoCurrFbIndex = 0x801262C8;
+gVideoModeIndex = 0x801262CC;
+sBlackScreenTimer = 0x801262D0;
+gVideoCurrFramebuffer = 0x801262D4;
+gVideoLastFramebuffer = 0x801262D8;
+gVideoCurrDepthBuffer = 0x801262DC;
+gVideoLastDepthBuffer = 0x801262E0;
+D_801262E4 = 0x801262E4;
+D_801262E8 = 0x801262E8;
+gVideoDeltaCounter = 0x80126308;
+gVideoDeltaTime = 0x80126309;
+gVideoSched = 0x80126310;
+
+// textures_sprites ,bss
+gTextureAssetTable = 0x80126320;
+gTextureCache = 0x80126328;
+gCiPalettes = 0x8012632C;
+gNumberOfLoadedTextures = 0x80126330;
+D_80126334 = 0x80126334;
+gTextureAssetID = 0x80126338;
+gCiPalettesSize = 0x80126340;
+D_80126344 = 0x80126344;
+gSpriteOffsetTable = 0x80126348;
+gSpriteCache = 0x8012634C;
+gCurrentSprite = 0x80126350;
+gSpriteTableNum = 0x80126354;
+D_80126358 = 0x80126358;
+D_8012635C = 0x8012635C;
+D_80126360 = 0x80126360;
+D_80126364 = 0x80126364;
+D_80126368 = 0x80126368;
+gTempTextureHeader = 0x8012636C;
+D_80126370 = 0x80126370;
+gCurrentRenderFlags = 0x80126374;
+gBlockedRenderFlags = 0x80126378;
+gCurrentTextureHeader = 0x8012637C;
+gUsingTexture = 0x80126380;
+gForceFlags = 0x80126382;
+gUsePrimColour = 0x80126384;
+
+// menu .bss
+gCourseInitials = 0x80126390;
+gFLapInitials = 0x80126394;
+gAdventureSaveGhost = 0x80126398;
+gPreviousMenuID = 0x8012639C;
+sMenuCurrDisplayList = 0x801263A0;
+gTTSaveGhostPakErrorText = 0x801263A4;
+sMenuCurrHudMat = 0x801263A8;
+sMenuCurrHudVerts = 0x801263AC;
+sMenuCurrHudTris = 0x801263B0;
+gMenuSelectedCharacter = 0x801263B4;
+D_801263B8 = 0x801263B8;
+gOptionBlinkTimer = 0x801263BC;
+gMenuCurrentCharacter = 0x801263C0;
+gIgnorePlayerInputTime = 0x801263C4;
+sUnused_801263C8 = 0x801263C8;
+gCurrCharacterSelectData = 0x801263CC;
+gTrackmenuLoadedLevel = 0x801263D0;
+gActivePlayersArray = 0x801263D4; // size:0x4
+gOpacityDecayTimer = 0x801263D8;
+gCharselectStatus = 0x801263DC;
+gMenuStage = 0x801263E0;
+D_801263E4 = 0x801263E4;
+gPlayersCharacterArray = 0x801263E8;
+gCharacterIdSlots = 0x801263F0;
+gRankingsPoints = 0x801263F8;
+gResultsPlayers = 0x80126418;
+gRankingsPlayers = 0x80126420;
+gResultsPlayerIDs = 0x80126428;
+gRankingsPlayerIDs = 0x80126430; // size:0x8
+gRankingsPortraitIDs = 0x80126438; // size:0x10
+sEepromSettings = 0x80126448; // type:u64
+sBootScreenTimer = 0x80126450; // size:0x4
+gControllersXAxisDelay = 0x80126454; // size:0x4
+gControllersYAxisDelay = 0x80126458; // size:0x4
+gControllersXAxisDirection = 0x8012645C; // size:0x4
+gGameSelectElements = 0x80126460; // size:0x4
+gControllersYAxisDirection = 0x80126464; // size:0x4
+gControllersXAxis = 0x80126468; // size:0x4
+gControllersYAxis = 0x8012646C; // size:0x4
+sUnused_80126470 = 0x80126470;
+gTrackSelectViewPortHalfX = 0x80126474;
+gTrackSelectViewPortHalfY = 0x80126478;
+gTrackSelectViewPortX = 0x8012647C;
+gTrackSelectViewportY = 0x80126480;
+gFileCopy = 0x80126484;
+gFileErase = 0x80126488;
+gSaveFileIndex3 = 0x8012648C;
+gSaveFileIndex2 = 0x80126490;
+gFileConfirm = 0x80126494;
+gGhostMenuOption = 0x80126498;
+D_8012649C = 0x8012649C;
+gSavefileInfo = 0x801264A0; // size:0x30
+gCpakGhostData = 0x801264D0; // size:0x4
+gGhostMenuTotal = 0x801264D4; // size:0x4
+gDialogueSubmenu = 0x801264D8; // size:0x1
+gGhostLevelIDsPak = 0x801264DC; // size:0x4
+D_801264E0 = 0x801264E0;
+D_801264E1 = 0x801264E1;
+sCurrentMenuID = 0x801264E2;
+gGhostCharacterIDsPak = 0x801264E4;
+D_801264E8 = 0x801264E8;
+gGhostVehicleIDsPak = 0x801264EC;
+D_801264F0 = 0x801264F0; // size:0x8
+gGhostChecksumIDsPak = 0x801264F8;
+sDialogueOptionMax = 0x80126504;
+gGhostLevelIDsMenu = 0x80126508;
+gDialogueOptionYOffset = 0x8012650E;
+gGhostCharacterIDsMenu = 0x80126510; // size:0x6
+gDialogueItemSelection = 0x80126516;
+gGhostVehicleIDsMenu = 0x80126518;
+gGhostChecksumIDsMenu = 0x80126520;
+gSavefileData = 0x80126530; // size:0x10
+gGhostWorldIDs = 0x80126540; // size:0x8
+gMultiplayerSelectedNumberOfRacersCopy = 0x80126548;
+gMenuAssets = 0x80126550; // size:0x200
+gMenuAssetActive = 0x80126750;
+gTrackmenuType = 0x801267D0;
+D_801267D4 = 0x801267D4;
+gMenuButtons = 0x801267D8; // size:0x14
+gCinematicParams = 0x801267EC;
+buttonsPressed = 0x801267F0;
+gCinematicPortraits = 0x80126804;
+gMenuSoundMasks = 0x80126808; // size:0x10
+gMenuStickX = 0x80126818; // size:0xA
+gCinematicEnd = 0x80126824;
+sUnused_80126828 = 0x80126828;
+D_8012682C = 0x8012682C;
+gMenuStickY = 0x80126830; // size:0xA
+D_8012683A = 0x8012683A;
+gCinematicSkipA = 0x8012683C;
+gTrackTTSoundMask = 0x80126840;
+gCinematicSkipB = 0x80126844;
+D_80126848 = 0x80126848;
+gCinematicMusicChangeOff = 0x8012684C;
+D_80126850 = 0x80126850;
+gMenuElementScaleTimer = 0x80126854;
+gPostraceScaleIn = 0x80126858;
+gPostraceScaleMiddle = 0x8012685C;
+gPostraceScaleOut = 0x80126860;
+gTitleDemoIndex = 0x80126864;
+gTitleDemoTimer = 0x80126868;
+gTitleRevealTimer = 0x8012686C;
+gTitleAudioCounter = 0x80126870;
+sTitleScreenDemoIds = 0x80126874;
+D_80126878 = 0x80126878;
+D_801268D8 = 0x801268D8;
+D_801268DC = 0x801268DC;
+gOpeningNameID = 0x801268E0;
+D_801268E4 = 0x801268E4;
+gTrackSelectIDs = 0x801268E8;
+gFFLUnlocked = 0x80126918;
+D_8012691C = 0x8012691C;
+D_80126920 = 0x80126920;
+gTrackSelectVertsFlip = 0x80126924;
+D_80126928 = 0x80126928;
+D_8012692C = 0x8012692C;
+gTrackSelectRenderDetails = 0x80126930;
+gPlayerSelectVehicle = 0x801269C0; // size:0x4
+gPlayerSelectConfirm = 0x801269C4; // size:0x4
+gTrackSelectCursorX = 0x801269C8; // size:0x4
+gTrackSelectCursorY = 0x801269CC; // size:0x4
+gAudioOutputStrings = 0x801269D0; // size:0xC
+gTrackSelectX = 0x801269DC; // size:0x4
+gMusicTestString = 0x801269E0; // size:0x4
+gTrackSelectY = 0x801269E4; // size:0x4
+gTrackSelectTargetX = 0x801269E8; // size:0x4
+gTrackSelectTargetY = 0x801269EC; // size:0x4
+gTrackMenuHubName = 0x801269F0; // size:0x4
+gSelectedTrackX = 0x801269F4; // size:0x4
+gSelectedTrackY = 0x801269F8; // size:0x4
+gSoundOptionMask = 0x801269FC; // size:0x4
+gSaveMenuOptionCountLower = 0x80126A00; // size:0x4
+gSaveMenuFilesDest = 0x80126A04; // size:0x4
+gSaveMenuOptionCountUpper = 0x80126A08; // size:0x4
+gSaveMenuFilesSource = 0x80126A0C; // size:0x4
+gSaveMenuRumbleNag = 0x80126A10; // size:0x4
+gSaveMenuRumbleConnected = 0x80126A14; // size:0x4
+gSaveMenuSourceState = 0x80126A18; // size:0x4
+gSaveMenuDestState = 0x80126A1C; // size:0x4
+sControllerPakNotesFree = 0x80126A20; // size:0x10
+sControllerPakIssueNotFound = 0x80126A30; // size:0x4
+sControllerPakFatalErrorFound = 0x80126A34; // size:0x4
+sControllerPakNoFreeSpace = 0x80126A38; // size:0x4
+sControllerPakBadData = 0x80126A3C; // size:0x4
+gMenuOptionText = 0x80126A40; // size:0x20
+sControllerPakDataPresent = 0x80126A60; // size:0x4
+D_80126A64 = 0x80126A64;
+gMenuOption = 0x80126A68;
+gSaveMenuRumbleNagSet = 0x80126A6C;
+gDeviceStatusStrings = 0x80126A70;
+gSaveMenuMessageLines = 0x80126A74;
+gSaveMenuMessageOption = 0x80126A78;
+D_80126A7C = 0x80126A7C;
+gSaveMenuText = 0x80126A80; // size:0x10
+gPostRace1Player = 0x80126A90;
+gPostRaceTimer = 0x80126A94;
+gTracksSaveGhost = 0x80126A98;
+D_80126A9C = 0x80126A9C;
+gBootPakData = 0x80126AA0; // size:0x40
+sCurrentControllerPakAllFileNames = 0x80126AE0;
+sCurrentControllerPakAllFileExtensions = 0x80126B20;
+sCurrentControllerPakAllFileTypes = 0x80126B60;
+sCurrentControllerPakNumberOfPages = 0x80126B70;
+sCurrentControllerPakFreePages = 0x80126BB0;
+sControllerPakMenuNumberOfRows = 0x80126BB4;
+gMenuMosaic1 = 0x80126BB8;
+gMenuMosaic2 = 0x80126BBC;
+gMenuMosaicShift = 0x80126BC0;
+gCreditsControlDataIndex = 0x80126BC4;
+sControllerPakError = 0x80126BC8;
+D_80126BCC = 0x80126BCC;
+D_80126BD0 = 0x80126BD0;
+gSaveMenuOptionSource = 0x80126BD4;
+D_80126BD8 = 0x80126BD8;
+gSaveMenuScrollSource = 0x80126BDC;
+D_80126BE0 = 0x80126BE0;
+gSaveMenuOptionDest = 0x80126BE4;
+D_80126BE8 = 0x80126BE8;
+gSaveMenuScrollDest = 0x80126BEC;
+gResultOptionText = 0x80126BF0;
+gCpakWriteTimer = 0x80126C10;
+gResultOptionCount = 0x80126C14;
+gBootMenuTimer = 0x80126C18;
+gPostRaceMessage = 0x80126C1C;
+gBootMenuPhase = 0x80126C20;
+gPostRaceLineCount = 0x80126C24;
+gPostraceFinishState = 0x80126C28;
+gMenuGeometry = 0x80126C2C;
+gCheatsAssetData = 0x80126C30;
+gNameEntryStickHeld = 0x80126C34;
+gNumberOfCheats = 0x80126C38;
+gNameEntryStickX = 0x80126C3C;
+gCheatInputCurrentRow = 0x80126C40;
+gCheatInputCurrentColumn = 0x80126C42;
+gCheatInputStringLength = 0x80126C44;
+gOptionsMenuItemIndex = 0x80126C46;
+gNameSelectionDone = 0x80126C48;
+gNewCheatID = 0x80126C4C;
+gNameEntryOffsetX = 0x80126C50;
+gPostRace = 0x80126C54; // size:0x4
+gCheatInput = 0x80126C58; // size:0x14
+gNameEntryTargetX = 0x80126C6C;
+gNumOnscreenMagicCodes = 0x80126C70;
+gNameEntryString = 0x80126C74;
+gNameEntryAllowedLength = 0x80126C78;
+gUnlockedCheatIDs = 0x80126C80;
+gFileNew = 0x80126CC0;
+
+// game_ui .bss
+gMinimapOpacity = 0x80126CD0;
+gMinimapFade = 0x80126CD1;
+gShowHUD = 0x80126CD2;
+gMinimapXlu = 0x80126CD3;
+gRaceStartShowHudStep = 0x80126CD4;
+D_80126CD5 = 0x80126CD5;
+gAssetHudElementStaleCounter = 0x80126CD8;
+gCurrentHud = 0x80126CDC;
+gPlayerHud = 0x80126CE0; // size:0x10
+gAssetHudElementIds = 0x80126CF0;
+gAssetHudElements = 0x80126CF4;
+gAssetHudElementIdsCount = 0x80126CF8;
+gHUDCurrDisplayList = 0x80126CFC;
+gHUDCurrMatrix = 0x80126D00;
+gHUDCurrVertex = 0x80126D04;
+gHudCurrentViewport = 0x80126D08;
+gHUDNumPlayers = 0x80126D0C;
+D_80126D10 = 0x80126D10;
+D_80126D14 = 0x80126D14;
+D_80126D18 = 0x80126D18;
+gMinimapDotOffsetX = 0x80126D1C;
+gMinimapDotOffsetY = 0x80126D20;
+gHudOffsetX = 0x80126D24;
+gHudBounceX = 0x80126D28;
+gHudBounceTimer = 0x80126D2C;
+gHudBounceMag = 0x80126D30;
+gHudRaceStart = 0x80126D34;
+D_80126D35 = 0x80126D35;
+gHideRaceTimer = 0x80126D36;
+gNumActivePlayers = 0x80126D37;
+gWrongWayNagPrefix = 0x80126D38;
+gRaceStartSoundMask = 0x80126D3C;
+gHUDVoiceSoundMask = 0x80126D40;
+D_80126D44 = 0x80126D44;
+D_80126D48 = 0x80126D48;
+D_80126D4C = 0x80126D4C;
+D_80126D50 = 0x80126D50;
+gMinimapRed = 0x80126D54;
+gMinimapGreen = 0x80126D55;
+gMinimapBlue = 0x80126D56;
+gMinimapScreenX = 0x80126D58;
+gMinimapScreenY = 0x80126D5C;
+gHudLevelHeader = 0x80126D60;
+D_80126D64 = 0x80126D64;
+D_80126D65 = 0x80126D65;
+D_80126D66 = 0x80126D66;
+gStopwatchFaceID = 0x80126D67;
+D_80126D68 = 0x80126D68;
+D_80126D69 = 0x80126D69;
+gWrongWayNagTimer = 0x80126D6C;
+gHudAudioReset = 0x80126D70;
+gHudTimeTrialGhost = 0x80126D71;
+gHudVoiceTimer = 0x80126D74;
+gHudVoicePlayerID = 0x80126D78;
+gHudVoiceID = 0x80126D7C;
+gHudSprites = 0x80126D80;
+D_80127180 = 0x80127180;
+gHudSettings = 0x80127184;
+gHudSilverCoinRace = 0x80127188;
+D_80127189 = 0x80127189;
+D_8012718A = 0x8012718A;
+gMinimapOpacityTarget = 0x8012718B;
+gStopwatchErrorX = 0x8012718C;
+gStopwatchErrorY = 0x80127190;
+D_80127194 = 0x80127194;
+D_80127198 = 0x80127198;
+
+// os_yield_data .bss
+gGfxTaskYieldData = 0x801271B0;
+
+// weather .bss
+gSnowDensity = 0x80127BB0;
+gSnowParticleCount = 0x80127BB4;
+gWeather = 0x80127BB8;
+gSnowPlane = 0x80127BF8;
+gSnowVertOffset = 0x80127C00;
+gSnowTriCount = 0x80127C04;
+gSnowVertexFlip = 0x80127C08;
+gCurrWeatherDisplayList = 0x80127C0C;
+gCurrWeatherMatrix = 0x80127C10;
+gCurrWeatherVertexList = 0x80127C14;
+gCurrWeatherTriList = 0x80127C18;
+gWeatherCamera = 0x80127C1C;
+gWeatherCameraMatrix = 0x80127C20;
+gLensFlareSet1 = 0x80127C24;
+gLensFlareSet2 = 0x80127C28;
+gLensFlareLarge = 0x80127C2C;
+gLensFlarePos = 0x80127C30;
+gLensFlareSwitches = 0x80127C40;
+
+// particles .bss
+gParticleUpdateRate = 0x80127C80;
+D_80127C84 = 0x80127C84;
+D_80127C88 = 0x80127C88;
+
+// printf
+gTexture = 0x80127CA0; //size:0xC
+gDebugTextX = 0x80127CAC;
+gDebugTextY = 0x80127CAE;
+D_80127CB0 = 0x80127CB0;
+D_80127CB2 = 0x80127CB2;
+D_80127CB4 = 0x80127CB4;
+gDebugTextOn = 0x80127CB8;
+gDebugBoundsX1 = 0x80127CBC;
+gDebugBoundsX2 = 0x80127CC0;
+gDebugBoundsY1 = 0x80127CC4;
+gDebugBoundsY2 = 0x80127CC8;
+gDebugFontTexture = 0x80127CCC;
+gDebugScreenWidth = 0x80127CD0;
+gDebugScreenHeight = 0x80127CD2;
+D_80127CD4 = 0x80127CD4;
+gDebugPrintBufferStart = 0x80127CD8;
+gDebugPrintBufferEnd = 0x801285D8;
+
+// thread0_epc
+gEPCStack = 0x801285E0;
+gEPCThread = 0x801295E0;
+D_80129790 = 0x80129790;
+D_801297A8 = 0x801297A8;
+D_801297C8 = 0x801297C8;
+D_801297E8 = 0x801297E8;
+gEpcInfo = 0x80129800; // size:0x1B0
+D_801299B0 = 0x801299B0; // size:0x100
+
+// stacks .bss
+D_80129AB0 = 0x80129AB0; // size:0x100
+D_80129BB0 = 0x80129BB0; // size:0x400
+gObjectStackTrace = 0x80129FB0; // size:0x10
+
+// waves .bss
+D_80129FC0 = 0x80129FC0;
+D_80129FC4 = 0x80129FC4;
+D_80129FC8 = 0x80129FC8; // size:0x50
+D_8012A018 = 0x8012A018;
+D_8012A01C = 0x8012A01C;
+D_8012A020 = 0x8012A020;
+D_8012A028 = 0x8012A028;
+D_8012A078 = 0x8012A078;
+gWaveBatch = 0x8012A07C;
+gWaveTexture = 0x8012A080;
+D_8012A084 = 0x8012A084;
+D_8012A088 = 0x8012A088;
+D_8012A08C = 0x8012A08C;
+D_8012A090 = 0x8012A090;
+D_8012A094 = 0x8012A094;
+D_8012A098 = 0x8012A098;
+D_8012A09C = 0x8012A09C;
+D_8012A0A0 = 0x8012A0A0;
+D_8012A0A4 = 0x8012A0A4;
+gWaveBoundingBoxDiffX = 0x8012A0A8;
+gWaveBoundingBoxDiffZ = 0x8012A0AC;
+gWaveBoundingBoxX1 = 0x8012A0B0;
+gWaveBoundingBoxZ1 = 0x8012A0B4;
+D_8012A0B8 = 0x8012A0B8;
+D_8012A0BC = 0x8012A0BC;
+D_8012A0C0 = 0x8012A0C0;
+D_8012A0C4 = 0x8012A0C4;
+D_8012A0C8 = 0x8012A0C8;
+D_8012A0CC = 0x8012A0CC;
+D_8012A0D0 = 0x8012A0D0;
+D_8012A0D4 = 0x8012A0D4;
+D_8012A0D8 = 0x8012A0D8;
+D_8012A0DC = 0x8012A0DC;
+D_8012A0E0 = 0x8012A0E0;
+D_8012A0E8 = 0x8012A0E8;
+D_8012A1E8 = 0x8012A1E8;
+D_8012A5E8 = 0x8012A5E8;
+D_8012A5F4 = 0x8012A5F4;
+D_8012A5F8 = 0x8012A5F8;
+D_8012A5FC = 0x8012A5FC;
+D_8012A600 = 0x8012A600;
+gWavePowerBase = 0x8012A720;
+gWaveMagnitude = 0x8012A724;
+gWavePowerDivisor = 0x8012A728;
+
+// fade_transition
+gCurFadeTransition = 0x8012A730;
+gCurFadeRed = 0x8012A734;
+gCurFadeGreen = 0x8012A735;
+gCurFadeBlue = 0x8012A736;
+gCurFadeAlpha = 0x8012A737;
+gLastFadeRed = 0x8012A738;
+gLastFadeGreen = 0x8012A73C;
+gLastFadeBlue = 0x8012A740;
+gLastFadeRedStep = 0x8012A744;
+gLastFadeGreenStep = 0x8012A748;
+gLastFadeBlueStep = 0x8012A74C;
+sTransitionOpacity = 0x8012A750;
+gTransitionOpacityVel = 0x8012A754;
+D_8012A758 = 0x8012A758;
+D_8012A75C = 0x8012A75C;
+D_8012A760 = 0x8012A760;
+D_8012A764 = 0x8012A764;
+D_8012A768 = 0x8012A768;
+D_8012A76C = 0x8012A76C;
+gTransitionNextVtx = 0x8012A770;
+gTransitionVtxStep = 0x8012A774;
+gTransitionVertexTarget = 0x8012A778;
+gTransitionVertexCount = 0x8012A77C;
+
+// game_text .bss
+gGameTextTable = 0x8012A780;
+gCloseTextMessage = 0x8012A784;
+gTextCloseTimerFrames = 0x8012A785;
+gTextCloseTimerSeconds = 0x8012A786;
+D_8012A787 = 0x8012A787;
+D_8012A788 = 0x8012A788;
+gShowOnscreenMessage = 0x8012A789;
+D_8012A78A = 0x8012A78A;
+D_8012A78C = 0x8012A78C;
+D_8012A78E = 0x8012A78E;
+gTextTableEntries = 0x8012A790;
+D_8012A792 = 0x8012A792;
+gGameTextTableEntries = 0x8012A798;
+D_8012A7A0 = 0x8012A7A0;
+D_8012A7A4 = 0x8012A7A4;
+gDialogueAlpha = 0x8012A7A8;
+gTextAlphaVelocity = 0x8012A7AA;
+gSubtitleTimer = 0x8012A7AC;
+gDialogueXPos1 = 0x8012A7AE;
+gDialogueYPos1 = 0x8012A7B0;
+gDialogueXPos2 = 0x8012A7B2;
+gDialogueYPos2 = 0x8012A7B4;
+gShowSubtitles = 0x8012A7B6;
+gSubtitleLineCount = 0x8012A7B8;
+gCurrentTextID = 0x8012A7BA;
+D_8012A7BC = 0x8012A7BC;
+gSubtitleProperties = 0x8012A7C0;
+gCurrentMessageText = 0x8012A7C8;
+gCurrentTextProperties = 0x8012A7D0;
+D_8012A7D4 = 0x8012A7D4;
+
+// font 
+gNumberOfFonts = 0x8012A7E0;
+gFonts = 0x8012A7E4;
+gDialogueBoxBackground = 0x8012A7E8;
+gDialogueText = 0x8012A7EC;
+gCompactKerning = 0x8012A7F0;
+sDialogueBoxCloseTimer = 0x8012A7F4;
+
+// osCreatePiManager .bss
+piThread = 0x8012A800;
+piThreadStack = 0x8012A9B0;
+piEventQueue = 0x8012AAB0;
+piEventBuf = 0x8012AAC8;
+
+// gzip .bss
+gzip_bit_buffer = 0x8012AAD0;
+gzip_num_bits = 0x8012AAD4;
+gHuftTablePos = 0x8012AAD8;
+
+// thread30_track_loading .bss
+leoDiskStack = 0x8012AAE0;
+gThread30 = 0x8012AAF0;
+gThread30MesgQueue = 0x8012ACA0; // type:OSMesgQueue size:0x18
+gThread30Message = 0x8012ACB8; // type:OSMesg size:0x4
+gThread30Stack = 0x8012ACC0; // type:u64 size:0x2000
+__osFinalrom = 0x8012CCC0; // type:u32 size:0x4
+
+// osSetEventMesg .bss
+__osEventStateTab = 0x8012CCD0;
+
+// controller .bss
+__osContPifRam = 0x8012CD50;
+__osContLastCmd = 0x8012CD90;
+__osMaxControllers = 0x8012CD91;
+__osEepromTimer = 0x8012CD98;
+__osEepromTimerQ = 0x8012CDB8;
+__osEepromTimerMsg = 0x8012CDD0;
+__osPfsPifRam = 0x8012CDE0;
+
+// siacs .bss
+__osSiAccessQueue = 0x8012CE28;
+__osEepPifRam = 0x8012CE40;
+viThread = 0x8012CE80;
+gViMgrStack = 0x8012D030;
+viEventQueue = 0x8012D130;
+viEventBuf = 0x8012D148;
+viRetraceMsg = 0x8012D160;
+viCounterMsg = 0x8012D178;
+retrace = 0x8012D190;
+tmp_task = 0x8012D1A0;
+piAccessBuf = 0x8012D1E0;
+__osPiAccessQueue = 0x8012D1E8;
+__osBaseTimer = 0x8012D200; // type:OSTimer size:0x20
+__osCurrentTime = 0x8012D220; // type:u64
+__osBaseCounter = 0x8012D228;
+__osViIntrCount = 0x8012D22C;
+__osTimerCounter = 0x8012D230;
+D_8012D238 = 0x8012D238;
+__osThreadSave = 0x8012D240; // type:OSThread size:0x1B0
+

@@ -38,7 +38,7 @@ def holecount_all(src):
                 print(filename, holes, nonmatches)
     return 1
 
-paths = ('src', 'lib')
+paths = ('src', 'libultra')
 
 # get file encoding type
 def get_encoding_type(file):

@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800C0170 */
-
 #include "fade_transition.h"
 
 #include "types.h"

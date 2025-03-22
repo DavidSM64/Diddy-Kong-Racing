@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x8007A2D0 */
-
 #include "set_rsp_segment.h"
 #include "PR/mbi.h"
 #include "PR/gbi.h"

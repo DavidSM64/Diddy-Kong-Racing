@@ -1,10 +1,7 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80065D40 */
-
 #include "main.h"
 #include "thread0_epc.h"
 #include "game.h"
-#include "lib/src/libc/rmonPrintf.h"
+#include "libultra/src/libc/rmonPrintf.h"
 
 /************ .bss ************/
 
@@ -12,7 +9,6 @@ u64 gThread1Stack[0x21];
 u64 gThread3Stack[0x401];
 OSThread gThread1; // OSThread for thread 1
 OSThread gThread3; // OSThread for thread 3
-UNUSED u64 gUnusedThreadStack[0x200];
 
 /******************************/
 

@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x8007F900 */
-
 #include "common.h"
 #include "menu.h"
 #include "memory.h"
@@ -28,7 +25,7 @@
 #include "audiosfx.h"
 #include "racer.h"
 #include "tracks.h"
-#include "lib/src/audio/synstartvoiceparam.h"
+#include "libultra/src/audio/synstartvoiceparam.h"
 #include "joypad.h"
 #include "math_util.h"
 #include "PRinternal/viint.h"
@@ -42,13 +39,246 @@
 // The bss section needs to stay above the data section!
 // Otherwise the bss variables will get reordered, which is bad.
 
+// A huge unfortunate issue has occurred which seems to have reordered the BSS for JP... Not sure why.
+#if REGION == REGION_JP
+// START OF JPN BSS ORDER
+
+char gCourseInitials[4]; // course initials
+char gFLapInitials[4];   // flap initials
+s32 gNumberOfCheats;
+s32 gNameEntryStickX;
+Gfx *sMenuCurrDisplayList;
+s16 gCheatInputCurrentRow;
+MatrixS *sMenuCurrHudMat;
+s16 gCheatInputCurrentColumn;
+Vertex *sMenuCurrHudVerts;
+s16 gCheatInputStringLength;
+TriangleList *sMenuCurrHudTris;
+s16 gOptionsMenuItemIndex;
+s32 gNameSelectionDone;
+s16 gNewCheatID;
+f32 gNameEntryOffsetX;
+UNUSED s32 D_80127E5F_128A5F;
+char gCheatInput[20];
+s32 *gNameEntryTargetX;
+s32 gNumOnscreenMagicCodes;
+char *gNameEntryString;
+s32 gNameEntryAllowedLength;
+unk80126C54 gPostRace;
+s16 gUnlockedCheatIDs[32];
+s32 gFileNew;
+s32 gOptionBlinkTimer;
+s32 gIgnorePlayerInputTime; // A set amount of time to ignore player input.
+s32 gAdventureSaveGhost;
+s32 gPreviousMenuID;
+char **gTTSaveGhostPakErrorText;
+UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
+s32 gTrackmenuLoadedLevel;   // Compared for equality to gTrackIdForPreview
+s32 gOpacityDecayTimer;
+s32 gMenuStage;
+unk801263C0 gMenuSelectedCharacter;
+unk801263C0 D_801263B8;
+unk801263C0 gMenuCurrentCharacter;
+
+// Eeeprom save data bits stored at address 0xF
+// bit 0      = Adventure Two is Unlocked
+// bit 1      = Used to set the CHEAT_CONTROL_DRUMSTICK magic code flag. Drumstick is unlocked flag?
+// bits 2-3   = Current language value
+// bits 4-23  = Used to set the CHEAT_CONTROL_TT magic code flag. Could be tracks where TT has been beat?
+// bit 24     = Unknown, but it's set as a default high bit.
+// bit 25     = Seems to be a flag for whether subtitles are enabled or not.
+// bits 26-55 = Unknown, but it could be a set of flags for unlocked tracks
+// bits 56-63 = Checksum bits. These are calculated from the previous bits,
+//              and validated using calculate_eeprom_settings_checksum.
+//              If the checksum fails, the settings are reset to just
+//              bits 24/25 being high.
+u64 sEepromSettings;
+f32 sBootScreenTimer;
+CharacterSelectData (*gCurrCharacterSelectData)[10];
+s8 gActivePlayersArray[MAXCONTROLLERS]; // Boolean value for each controller if it's active with a player.
+s8 gCharselectStatus[MAXCONTROLLERS];
+s8 gPlayersCharacterArray[8]; // -1 = Non active player, or character id if >= 0
+s8 gCharacterIdSlots[8];
+s32 gRankingsPoints[8];
+u8 gResultsPlayers[8];
+u8 gRankingsPlayers[8];
+u8 gResultsPlayerIDs[8];
+u8 gRankingsPlayerIDs[8]; // Contains the order of racer indices that tell you what place they are in.
+s8 gControllersXAxisDelay[4];
+UNUSED s32 D_80127F6C_EE71C;
+s8 gRankingsPortraitIDs[12];
+s8 gControllersYAxisDelay[4];
+s8 gControllersXAxisDirection[4]; // X axis (-1 = left, 1 = right) for controller
+s8 gControllersYAxisDirection[4]; // Y axis (-1 = down, 1 = up) for controller
+s8 gControllersXAxis[4];
+s8 gControllersYAxis[4];
+s32 sUnused_80126470; // Set to 0 in the magic codes menu and 0xD000 elsewhere, otherwise unused.
+s32 gTrackSelectViewPortHalfX;
+s32 gTrackSelectViewPortHalfY;
+s32 gTrackSelectViewPortX;
+s32 gTrackSelectViewportY;
+MenuElement *gGameSelectElements;
+s8 gDialogueSubmenu;
+s8 sCurrentMenuID;
+s32 gFileCopy;
+s32 gFileErase;
+s8 sDialogueOptionMax;
+s32 gSaveFileIndex3;
+s8 gDialogueOptionYOffset;
+s32 gSaveFileIndex2;
+s8 gDialogueItemSelection;
+s32 gFileConfirm;
+Settings *gSavefileData[4];
+s32 gGhostMenuOption;
+UNUSED s32 D_80127FE4_EE794;
+SavefileInfo gSavefileInfo[4];
+s32 gCpakGhostData;
+s32 gGhostMenuTotal;
+u8 gGhostLevelIDsPak[4];
+UNUSED s32 D_80128024_EE7D4;
+u8 gGhostCharacterIDsPak[4];
+void *gMenuAssets[128]; // lookup table? Contains Textures, Objects, and Sprites. Need to change name and type.
+u8 gGhostVehicleIDsPak[4];
+u8 gMenuAssetActive[128];
+u16 gGhostChecksumIDsPak[6];
+u8 gGhostLevelIDsMenu[6];
+u8 gGhostCharacterIDsMenu[6];
+UNUSED s32 D_801282D2_EEA82;
+SoundMask *gMenuSoundMasks[MAXCONTROLLERS]; // Soundmask values
+u8 gGhostVehicleIDsMenu[6];
+UNUSED s8 sUnused_80126828; // Set to 0 in menu_init, and never used again.
+u16 gGhostChecksumIDsMenu[6];
+u8 gGhostWorldIDs[6];
+s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
+s32 gTrackmenuType;
+s32 *D_80126850;     // Never set, but it's read? Is it part of a larger struct being set?
+s32 gMenuButtons[5]; // Buttons pressed per player plus an an extra containing each collective input.
+s8 *gCinematicParams;
+s32 gMenuElementScaleTimer;
+s32 buttonsPressed[5];
+s8 *gCinematicPortraits;
+s32 gPostraceScaleIn;
+s16 gMenuStickX[5];
+UNUSED s16 D_8012835A_EEB0A;
+s32 gCinematicEnd;
+s32 gPostraceScaleMiddle;
+s16 gMenuStickY[5];
+s16 D_8012683A;
+s32 gCinematicSkipA;
+s32 gPostraceScaleOut;
+SoundMask *gTrackTTSoundMask;
+s32 gCinematicSkipB;
+SoundMask *D_80126848;
+s32 gCinematicMusicChangeOff;
+s32 gTitleDemoIndex;
+s32 gTitleRevealTimer;
+f32 gTitleAudioCounter;
+s8 *sTitleScreenDemoIds; // Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
+s16 gTitleDemoTimer;
+unk80126878 D_80126878[8];
+u8 D_80126E78[0x20]; // NEW BSS, or BIGGER D_80126878?
+f32 D_801268D8;
+UNUSED s32 D_801268DC; // Set to 0 during the title screen, never read.
+s32 gOpeningNameID;
+s16 gTrackSelectIDs[4][6]; // Track Select values?
+s16 gFFLUnlocked;
+UNUSED s32 D_80128464;
+UNUSED s32 D_80128468;
+s32 gTrackSelectVertsFlip;
+UNUSED s32 D_80126928; // Set to 64, but never used.
+UNUSED s32 D_8012692C; // Set to 32, but never used.
+TrackRenderDetails gTrackSelectRenderDetails[9];
+s8 gPlayerSelectVehicle[4];
+s8 gPlayerSelectConfirm[4];
+s32 gTrackSelectCursorX;
+s32 gTrackSelectCursorY;
+char *gAudioOutputStrings[3];
+f32 gTrackSelectX;
+char *gMusicTestString;
+f32 gTrackSelectY;
+f32 gTrackSelectTargetX;
+f32 gTrackSelectTargetY;
+char *gTrackMenuHubName;
+s32 gSelectedTrackX;
+s32 gSelectedTrackY;
+SoundMask *gSoundOptionMask;
+s32 gSaveMenuOptionCountLower;
+SaveFileData *gSaveMenuFilesDest;
+s32 gSaveMenuOptionCountUpper;
+SaveFileData *gSaveMenuFilesSource;
+s32 gSaveMenuRumbleNag;
+s32 gSaveMenuRumbleConnected;
+s32 gSaveMenuSourceState;
+s32 gSaveMenuDestState;
+s32 sControllerPakNotesFree[MAXCONTROLLERS];      // Number notes free in each controller memory pak
+u8 sControllerPakIssueNotFound[MAXCONTROLLERS];   // Bool to see if there's no known issues for the given controller pak
+u8 sControllerPakFatalErrorFound[MAXCONTROLLERS]; // Bool to see if there's a fatal error for the given controller pak
+u8 sControllerPakNoFreeSpace[MAXCONTROLLERS];     // Bool to see if there's no free space for the given controller pak
+u8 sControllerPakBadData[MAXCONTROLLERS];         // Bool to see if there's bad data for the given controller pak
+char *gMenuOptionText[8];                         // Menu Text
+u8 sControllerPakDataPresent[MAXCONTROLLERS];     // Bool to see if there's data present for the given controller pak
+char *D_80126A64;
+s32 gMenuOption;
+s32 gSaveMenuRumbleNagSet;
+char **gDeviceStatusStrings;
+s32 gSaveMenuMessageLines;
+s32 gSaveMenuMessageOption;
+unk80126A80 *gSaveMenuText[4];
+s32 gPostRace1Player;
+s32 gPostRaceTimer;
+s32 gTracksSaveGhost;
+char *gBootPakData[MAX_CPAK_FILES];                           // Text to render
+char *sCurrentControllerPakAllFileNames[MAX_CPAK_FILES];      // Every file name on the controller pak
+char *sCurrentControllerPakAllFileExtensions[MAX_CPAK_FILES]; // Every file extension on the controller pak
+u8 sCurrentControllerPakAllFileTypes[MAX_CPAK_FILES];         // File type of all files on controller pak
+u32 sCurrentControllerPakNumberOfPages[MAX_CPAK_FILES];       // Number of pages for each file on controller pak
+u32 sCurrentControllerPakFreePages;                           // Pages available in current controller pak
+s32 sControllerPakMenuNumberOfRows;                           // 8 if PAL, 7 if not
+TextureHeader *gMenuMosaic1;
+TextureHeader *gMenuMosaic2;
+s32 gMenuMosaicShift;
+s32 gCreditsControlDataIndex;
+PakError sControllerPakError; // 0 = no error, 1 = fatal error, 2 = no free space, 3 = bad data
+s32 D_80126BCC;
+UNUSED s32 D_80126BD0; // Set to zero, never read.
+s32 gSaveMenuOptionSource;
+s32 D_80126BD8;
+f32 gSaveMenuScrollSource;
+s32 D_80126BE0;
+s32 gSaveMenuOptionDest;
+s32 D_80126BE8;
+f32 gSaveMenuScrollDest;
+char *gResultOptionText[8];
+s32 gCpakWriteTimer;
+s32 gResultOptionCount;
+s32 gBootMenuTimer;
+char **gPostRaceMessage;
+s32 gBootMenuPhase;
+s32 gPostRaceLineCount;
+s8 gPostraceFinishState;
+unk80080BC8 *gMenuGeometry;
+u16 (*gCheatsAssetData)[30]; // Cheat table.
+s32 gNameEntryStickHeld;
+
+// END OF JPN BSS ORDER
+#else
+// START OF US/PAL BSS ORDER
+
 char gCourseInitials[4]; // course initials
 char gFLapInitials[4];   // flap initials
 s32 gAdventureSaveGhost;
+#if VERSION >= VERSION_80
+// For some reason these BSS vars swapped places in different versions
+Gfx *sMenuCurrDisplayList;
+s32 gPreviousMenuID;
+MatrixS *sMenuCurrHudMat;
+char **gTTSaveGhostPakErrorText;
+#else
 s32 gPreviousMenuID;
 Gfx *sMenuCurrDisplayList;
 char **gTTSaveGhostPakErrorText;
 MatrixS *sMenuCurrHudMat;
+#endif
 Vertex *sMenuCurrHudVerts;
 TriangleList *sMenuCurrHudTris;
 unk801263C0 gMenuSelectedCharacter;
@@ -119,9 +349,9 @@ UNUSED s8 D_801264E0;
 UNUSED s8 D_801264E1;
 s8 sCurrentMenuID;
 u8 gGhostCharacterIDsPak[4];
-s32 D_801264E8;
+UNUSED s32 D_801264E8;
 u8 gGhostVehicleIDsPak[4];
-s32 D_801264F0[2];
+UNUSED s32 D_801264F0[2];
 u16 gGhostChecksumIDsPak[6];
 s8 sDialogueOptionMax;
 u8 gGhostLevelIDsMenu[6];
@@ -164,6 +394,9 @@ s32 gTitleRevealTimer;
 f32 gTitleAudioCounter;
 s8 *sTitleScreenDemoIds; // Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
 unk80126878 D_80126878[8];
+#if VERSION >= VERSION_79
+u8 D_80126E78[0x20]; // NEW BSS, or BIGGER D_80126878?
+#endif
 f32 D_801268D8;
 UNUSED s32 D_801268DC; // Set to 0 during the title screen, never read.
 s32 gOpeningNameID;
@@ -258,15 +491,26 @@ s16 gOptionsMenuItemIndex;
 s32 gNameSelectionDone;
 s16 gNewCheatID;
 f32 gNameEntryOffsetX;
+#if VERSION >= VERSION_79
+// Created a replacement for this var in v2?
+unk80126C54 gPostRaceOld;
+#else
 unk80126C54 gPostRace;
+#endif
 char gCheatInput[20];
 s32 *gNameEntryTargetX;
+#if VERSION >= VERSION_79
+// Created a replacement for this var in v2?
+unk80126C54 gPostRace;
+#endif
 s32 gNumOnscreenMagicCodes;
 char *gNameEntryString;
 s32 gNameEntryAllowedLength;
-UNUSED s32 D_80126C7C;
 s16 gUnlockedCheatIDs[32];
 s32 gFileNew;
+
+// END OF US/PAL BSS ORDER
+#endif
 
 /******************************/
 
@@ -353,8 +597,13 @@ MenuAsset sMenuImageProperties[18] = {
     { 0, 0, 0, 0x06, 0.215f, 0.0f, 0.0f, -500.0f, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0x07, 0.215f, 0.0f, 0.0f, -500.0f, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0x04, 0.125f, 0.0f, -40.0f, -500.0f, 0, 0, 0, 0, 0, 0, 0 },
+#if VERSION >= VERSION_79
+    { 0, 0, 0, 0x66, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x67, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+#else
     { 0, 0, 0, 0x5B, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0x5C, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+#endif
     { 0, 0, 0, 0x42, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0x40, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0x41, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
@@ -362,7 +611,11 @@ MenuAsset sMenuImageProperties[18] = {
     { 0, 0, 0, 0x4D, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0x4E, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0x4F, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+#if VERSION >= VERSION_79
+    { 0, 0, 0, 0x68, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+#else
     { 0, 0, 0, 0x5D, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+#endif
 };
 
 s16 *gAssetsMenuElementIds[1] = { NULL };
@@ -393,10 +646,16 @@ char *gTitleMenuStrings[3] = { 0, 0, 0 };
 char gVersionDisplayText[20] = "VERSION XXXXXXXX";
 
 // "Diddy Kong Racing" logo texture indices
+#if REGION == REGION_JP
+s16 sGameTitleTileTextures[12] = { TEXTURE_UNK_5B, TEXTURE_UNK_5C, TEXTURE_UNK_5D, TEXTURE_ICON_TT_HEAD,
+                                   TEXTURE_UNK_5F, TEXTURE_UNK_60, TEXTURE_UNK_61, TEXTURE_UNK_62,
+                                   TEXTURE_UNK_63, TEXTURE_UNK_64, TEXTURE_UNK_65, -1 };
+#else
 s16 sGameTitleTileTextures[12] = { TEXTURE_TITLE_SEGMENT_01, TEXTURE_TITLE_SEGMENT_02, TEXTURE_TITLE_SEGMENT_03,
                                    TEXTURE_TITLE_SEGMENT_04, TEXTURE_TITLE_SEGMENT_05, TEXTURE_TITLE_SEGMENT_06,
                                    TEXTURE_TITLE_SEGMENT_07, TEXTURE_TITLE_SEGMENT_08, TEXTURE_TITLE_SEGMENT_09,
                                    TEXTURE_TITLE_SEGMENT_10, TEXTURE_TITLE_SEGMENT_11, -1 };
+#endif
 
 DrawTexture sGameTitleTileOffsets[12] = { { NULL, -75, -32 }, { NULL, -60, -32 }, { NULL, -45, -32 },
                                           { NULL, -30, -32 }, { NULL, -15, -32 }, { NULL, 0, -32 },
@@ -427,6 +686,30 @@ unk800DF83C gTitleCinematicText[10] = {
       SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f }
 };
 
+#if REGION == REGION_JP
+char D_800E13A4_E1FA4[] = { 0x80, 0x62, 0x80, 0x46, 0x80, 0x4F, 0x80, 0x8B, 0x80, 0x3B, 0x00, 0x00 };
+
+char D_800E13B0_E1FB0[] = { 0x80, 0x8B, 0x80, 0x4F, 0x80, 0x90, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
+char D_800E13BC_E1FBC[] = { 0x80, 0x59, 0x80, 0x4F, 0x80, 0x55, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
+
+char D_800E13C8_E1FC8[] = { 0x80, 0x62, 0x80, 0x46, 0x80, 0x4A, 0x80, 0x92,
+                            0x80, 0x5F, 0x80, 0x4A, 0x80, 0x92, 0x00, 0x00 };
+char D_800E13D8_E1FD8[] = { 0x80, 0x8A, 0x80, 0x76, 0x80, 0x70, 0x80, 0x5C, 0x80, 0x62,
+                            0x80, 0x46, 0x80, 0x4A, 0x80, 0x57, 0x00, 0x00, 0x00, 0x00 };
+
+char D_800E13EC_E1FEC[] = { 0x80, 0x91, 0x80, 0x92, 0x80, 0x5B, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
+char D_800E13F8_E1FF8[] = { 0x80, 0x8B, 0x80, 0x4F, 0x80, 0x82, 0x80, 0x4D, 0x80, 0x3B, 0x00, 0x00 };
+
+char D_800E1404_E2004[] = { 0x80, 0x57, 0x80, 0x76, 0x80, 0x4F, 0x80, 0x60, 0x00, 0x00, 0x00, 0x00 };
+char D_800E1410_E2010[] = { 0x80, 0x52, 0x80, 0x46, 0x80, 0x83, 0x80, 0x91,
+                            0x80, 0x4A, 0x80, 0x7E, 0x00, 0x00, 0x00, 0x00 };
+
+char D_800E1420_E2020[] = { 0x80, 0x89, 0x80, 0x46, 0x80, 0x89, 0x80, 0x46, 0x80, 0x3B, 0x00, 0x00 };
+
+char *D_800E142C_E202C[] = { D_800E13A4_E1FA4, D_800E13B0_E1FB0, D_800E13BC_E1FBC, D_800E13C8_E1FC8, D_800E13D8_E1FD8,
+                             D_800E13EC_E1FEC, D_800E13F8_E1FF8, D_800E1404_E2004, D_800E1410_E2010, D_800E1420_E2020 };
+#endif
+
 // Number of active colours used in the title screen cinematic.
 s32 gTitleCinematicTextColourCount = 0;
 
@@ -438,7 +721,7 @@ MenuColour gTitleCinematicTextColours[] = {
     { 0, 0, 255, 255, 51 }     // Blue
 };
 
-UNUSED u8 unused_800DFA10[] = { 0, 0, 15, 120 };
+UNUSED u8 unused_800DFA0C[] = { 0, 0, 15, 120 };
 
 char *gOptionMenuStrings[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
@@ -677,6 +960,19 @@ UNUSED s32 unused_800DFFD4 = -1;
 MenuElement gCautionMenuTextElements[14] = {
     { SCREEN_WIDTH_HALF + 1, 35, SCREEN_WIDTH_HALF + 1, 35, SCREEN_WIDTH_HALF + 1, 35, 0, 0, 0, 255, 128, ASSET_FONTS_BIGFONT, 12,0, { NULL }, { { 0, 0, 0, 0 } } },
     { SCREEN_WIDTH_HALF, 32, SCREEN_WIDTH_HALF, 32, SCREEN_WIDTH_HALF, 32, 255, 255, 255, 0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+#if REGION == REGION_JP
+    { SCREEN_WIDTH_HALF, 72, SCREEN_WIDTH_HALF, 68, SCREEN_WIDTH_HALF, 72, 160, 16, 128, 255, 255, ASSET_FONTS_SMALLFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+    { SCREEN_WIDTH_HALF, 86, SCREEN_WIDTH_HALF, 82, SCREEN_WIDTH_HALF, 86, 160, 16, 132, 255, 255, ASSET_FONTS_SMALLFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+    { SCREEN_WIDTH_HALF, 100, SCREEN_WIDTH_HALF, 96, SCREEN_WIDTH_HALF, 100, 160, 16, 136, 255, 255, ASSET_FONTS_SMALLFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+    { SCREEN_WIDTH_HALF, 114, SCREEN_WIDTH_HALF, 110, SCREEN_WIDTH_HALF, 114, 160, 16, 140, 255, 255, ASSET_FONTS_SMALLFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+    { SCREEN_WIDTH_HALF, 128, SCREEN_WIDTH_HALF, 124, SCREEN_WIDTH_HALF, 128, 160, 16, 144, 255, 255, ASSET_FONTS_SMALLFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+    { SCREEN_WIDTH_HALF, 142, SCREEN_WIDTH_HALF, 138, SCREEN_WIDTH_HALF, 142, 160, 16, 148, 255, 255, ASSET_FONTS_SMALLFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 156, 160, 16, 152, 255, 255, ASSET_FONTS_SMALLFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 166, SCREEN_WIDTH_HALF, 156, 160, 16, 156, 255, 255, ASSET_FONTS_SMALLFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+    { SCREEN_WIDTH_HALF, 186, SCREEN_WIDTH_HALF, 180, SCREEN_WIDTH_HALF, 186, 160, 16, 160, 255, 255, ASSET_FONTS_SMALLFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 194, SCREEN_WIDTH_HALF, 200, 160, 16, 164, 255, 255, ASSET_FONTS_SMALLFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 208, SCREEN_WIDTH_HALF, 200, 160, 16, 168, 255, 255, ASSET_FONTS_SMALLFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+#else
     { SCREEN_WIDTH_HALF, 72, SCREEN_WIDTH_HALF, 68, SCREEN_WIDTH_HALF, 72, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
     { SCREEN_WIDTH_HALF, 86, SCREEN_WIDTH_HALF, 82, SCREEN_WIDTH_HALF, 86, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
     { SCREEN_WIDTH_HALF, 100, SCREEN_WIDTH_HALF, 96, SCREEN_WIDTH_HALF, 100, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
@@ -688,6 +984,7 @@ MenuElement gCautionMenuTextElements[14] = {
     { SCREEN_WIDTH_HALF, 186, SCREEN_WIDTH_HALF, 180, SCREEN_WIDTH_HALF, 186, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
     { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 194, SCREEN_WIDTH_HALF, 200, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
     { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 208, SCREEN_WIDTH_HALF, 200, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
+#endif
     {NULL},
 };
 
@@ -913,10 +1210,15 @@ s16 gTrackSelectObjectIndices[14] = {
 
 s16 gTrackSelectImageIndices[4] = { 0x04, 0x05, 0x06, -1 };
 
+
 s16 gTrackSelectPreviewObjectIndices[36] = { 0x0004, 0x0000, 0x0001, 0x0002, 0x0003, 0x0018, 0x0019, 0x001A, 0x001B,
                                              0x001C, 0x001D, 0x0024, 0x0025, 0x0026, 0x0027, 0x0028, 0x0029, 0x002A,
                                              0x002B, 0x001E, 0x001F, 0x0020, 0x0021, 0x0022, 0x0023, 0x002C, 0x002D,
+#if VERSION >= VERSION_79
+                                             0x002E, 0x002F, 0x0030, 0x0031, 0x0040, 0x0041, 0x0043, 0x0069, 0xFFFF };
+#else
                                              0x002E, 0x002F, 0x0030, 0x0031, 0x0040, 0x0041, 0x0043, 0x005E, 0xFFFF };
+#endif
 
 s16 gTrackSelectPreviewImageIndices[8] = { 0x07, 0x00, 0x01, 0x02, 0x03, 0x0B, 0x0C, -1 };
 
@@ -1024,6 +1326,16 @@ s16 unused_800E0B18[74] = { 0x0140, 0x017C, 0x01B8, 0x01F4, 0x0230, 0x026C, 0x02
                             0x0006, 0xFFE4, 0x0018, 0x0050, 0x0008, 0x0000, 0x0078, 0x0000, 0x003C, 0x0000, 0x001E,
                             0x0000, 0x0384, 0x0000, 0x001E, 0x0000, 0x001E, 0x0000, 0x0384 };
 
+#if REGION == REGION_JP
+char gFirstPlace[4] = "1st";
+char gSecondPlace[4] = "2nd";
+char gThirdPlace[4] = "3rd";
+char gFourthPlace[4] = "4th";
+char gFifthPlace[4] = "5th";
+char gSixthPlace[4] = "6th";
+char gSeventhPlace[4] = "7th";
+char gEighthPlace[4] = "8th";
+#else
 char gFirstPlace[4] = "1ST";
 char gSecondPlace[4] = "2ND";
 char gThirdPlace[4] = "3RD";
@@ -1032,6 +1344,7 @@ char gFifthPlace[4] = "5TH";
 char gSixthPlace[4] = "6TH";
 char gSeventhPlace[4] = "7TH";
 char gEighthPlace[4] = "8TH";
+#endif
 
 char *gRacePlacementsArray[8] = { gFirstPlace, gSecondPlace, gThirdPlace,   gFourthPlace,
                                   gFifthPlace, gSixthPlace,  gSeventhPlace, gEighthPlace };
@@ -1066,10 +1379,18 @@ MenuElement gRecordTimesMenuElements[9] = {
     { 481, 174, 161, 174, -159, 174, 0, 0, 0, 255, 128, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
     { 479, 172, 159, 172, -161, 172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
     { 368, 192, 48, 192, -272, 192, 255, 64, 64, 96, 255, ASSET_FONTS_FUNFONT, 8, 0, { NULL }, { { 0, 0, 0, 0 } } },
+#if REGION == REGION_JP
+    { 506, 189, 186, 189, -134, 189, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 1, { NULL }, { { 0, 0, 0, 0 } } },
+#else
     { 506, 187, 186, 187, -134, 187, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 1, { NULL }, { { 0, 0, 0, 0 } } },
+#endif
     { 578, 192, 258, 192, -62, 192, 255, 128, 255, 96, 255, ASSET_FONTS_FUNFONT, 12, 0, { &gCourseInitials }, { { 0, 0, 0, 0 } } },
     { 368, 212, 48, 212, -272, 212, 255, 64, 64, 96, 255, ASSET_FONTS_FUNFONT, 8, 0, { NULL }, { { 0, 0, 0, 0 } } },
+#if REGION == REGION_JP
+    { 506, 209, 186, 209, -134, 209, 128, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 1, { NULL }, { { 0, 0, 0, 0 } } },
+#else
     { 506, 207, 186, 207, -134, 207, 128, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 1, { NULL }, { { 0, 0, 0, 0 } } },
+#endif
     { 578, 212, 258, 212, -62, 212, 255, 128, 255, 96, 255, ASSET_FONTS_FUNFONT, 12, 0, { &gFLapInitials }, { { 0, 0, 0, 0 } } }, {NULL}
 };
 
@@ -1089,7 +1410,11 @@ s32 D_800E0FAC = 0;
 s32 gIndexOfCurInputCharacter = 0;
 
 s16 gAdvTrackInitObjectIndices[18] = { 0x0004, 0x0000, 0x0001, 0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D,
+#if VERSION >= VERSION_79
+                                       0x001E, 0x001F, 0x0020, 0x0021, 0x0022, 0x0023, 0x0030, 0x0069, -1 };
+#else
                                        0x001E, 0x001F, 0x0020, 0x0021, 0x0022, 0x0023, 0x0030, 0x005E, -1 };
+#endif
 
 s16 gAdvTrackInitImageIndices[6] = { 7, 0, 1, 2, 3, -1 };
 
@@ -1139,7 +1464,22 @@ MenuElement gTrophyRankingsRacers[] = {
     { 286, 434, 286, 194, 286, -46, 255, 64, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[7] }, { { 0, 0, 0, 0 } } },
     {NULL}
 };
-s16 gTrophyRankingsRawIconPositions[138] = {
+
+#if REGION == REGION_JP
+s16 gTrophyRankingsRawIconPositions[] = {
+    0x0048, 0x0020, 0x008A, 0x0048, 0x0020, 0x008A, 0x0048, 0x0020, 0x008A, 0x0048, 0x0020, 0x008A, 0x00DC, 0x00B4,
+    0x011E, 0x00DC, 0x00B4, 0x011E, 0x00DC, 0x00B4, 0x011E, 0x00DC, 0x00B4, 0x011E, 0x0030, 0x0030, 0x0044, 0x005A,
+    0x005A, 0x006E, 0x0084, 0x0084, 0x0098, 0x00AE, 0x00AE, 0x00C2, 0x0030, 0x0030, 0x0044, 0x005A, 0x005A, 0x006E,
+    0x0084, 0x0084, 0x0098, 0x00AE, 0x00AE, 0x00C2, 0x0038, 0x0038, 0x0040, 0x006A, 0x006A, 0x0072, 0x009C, 0x009C,
+    0x00A4, 0x00CE, 0x00CE, 0x00D6, 0x0038, 0x0038, 0x0040, 0x006A, 0x006A, 0x0072, 0x009C, 0x009C, 0x00A4, 0x00CE,
+    0x00CE, 0x00D6, 0x0048, 0x0020, 0x0082, 0x0048, 0x0020, 0x0082, 0x0048, 0x0020, 0x0082, 0x00DC, 0x00B4, 0x011E,
+    0x00DC, 0x00B4, 0x011E, 0x00DC, 0x00B4, 0x011E, 0x0034, 0x0034, 0x0048, 0x006F, 0x006F, 0x0083, 0x00AA, 0x00AA,
+    0x00BE, 0x0034, 0x0034, 0x0048, 0x006F, 0x006F, 0x0083, 0x00AA, 0x00AA, 0x00BE, 0x004C, 0x004C, 0x0054, 0x007E,
+    0x007E, 0x0086, 0x00B0, 0x00B0, 0x00B8, 0x004C, 0x004C, 0x0054, 0x007E, 0x007E, 0x0086, 0x00B0, 0x00B0, 0x00B8,
+    0x0090, 0x0068, 0x00D2, 0x0090, 0x0068, 0x00D2, 0x0090, 0x0068, 0x00D2, 0x0090, 0x0068, 0x00D2
+};
+#else
+s16 gTrophyRankingsRawIconPositions[] = {
     0x0040, 0x0020, 0x0082, 0x0040, 0x0020, 0x0082, 0x0040, 0x0020, 0x0082, 0x0040, 0x0020, 0x0082, 0x00DC, 0x00BC,
     0x011E, 0x00DC, 0x00BC, 0x011E, 0x00DC, 0x00BC, 0x011E, 0x00DC, 0x00BC, 0x011E, 0x0030, 0x0030, 0x0044, 0x005A,
     0x005A, 0x006E, 0x0084, 0x0084, 0x0098, 0x00AE, 0x00AE, 0x00C2, 0x0030, 0x0030, 0x0044, 0x005A, 0x005A, 0x006E,
@@ -1151,6 +1491,7 @@ s16 gTrophyRankingsRawIconPositions[138] = {
     0x007E, 0x0086, 0x00B0, 0x00B0, 0x00B8, 0x004C, 0x004C, 0x0054, 0x007E, 0x007E, 0x0086, 0x00B0, 0x00B0, 0x00B8,
     0x008C, 0x006C, 0x00CE, 0x008C, 0x006C, 0x00CE, 0x008C, 0x006C, 0x00CE, 0x008C, 0x006C, 0x00CE
 };
+#endif
 
 s16 *gTrophyRankingsIconPositions[32] = { NULL,
                                           NULL,
@@ -1397,7 +1738,13 @@ char *gCreditsArray[87] = {
     "Additional Design",
     "M.Wakeley", 
     "Documentation", 
-    "L.Loveday", "Liason", "E.Hochberg",
+    "L.Loveday", 
+#if VERSION >= VERSION_79
+    "Liaison", 
+#else
+    "Liason", 
+#endif
+    "E.Hochberg",
     "Character Voices",
     "K.Bayliss", "J.Christensen", "E.Fischer", "K.Rabbette", "L.Ray", "L.Schuneman",
     "C.Seavor", "D.Smith", "J.Stamper", "K.Stamper", "C.Sutherland",
@@ -1408,11 +1755,22 @@ char *gCreditsArray[87] = {
     "M.Fukuda", "K.Lobb", "M.Kelbaugh", "A.Williams", "R.Johnson", "M.Forrest",
     "P.Sandhop", "H.Sterchi", "T.Hertzog", "D.Bridgham", "G.Richardson", "B.Smith",
     "NOA Thanks To",
-    "NOA Tree House", "NOA Tree Branch", 
+#if REGION == REGION_JP
+    "Tree House", "Tree Branch",
+#else
+    "NOA Tree House", "NOA Tree Branch",
+#endif
     "NCL Thank You's",
-    "K.Terasaki", "M.Goto", "H.Yamada", "Mario Club",
+    "K.Terasaki", "M.Goto", "H.Yamada",
+#if REGION == REGION_JP
+    "Y.Sakai",
+    "NCL Thank You's",
+    "Super", "Mario Club",
+#else
+    "Mario Club",
     "NOE Thank You's",
     "J.Kraft", "J.Bardakoff",
+#endif
     "Special Thanks To",
     "J.Hochberg", "H.Lincoln", "M.Arakawa",
     "Game Director",
@@ -1437,13 +1795,29 @@ char *gCreditsBestTimesArray[20] = {
     /*** Future Fun Land ***/ "2:00:38", "2:05:68", "1:52:96", "1:55:00"
 };
 
-// clang-format on
-
+#if REGION == REGION_JP
+char D_800E3544_E4144[] = "THE END?";
+char D_800E3550_E4150[] = { 0x80, 0xD8, 0x80, 0xF0, 
+                            0x80, 0xCB, 0x80, 0xF2,
+                            0x80, 0xC1, 0x80, 0x75,
+                            0x00 };
+char D_800E3560_E4160[] = "THE END";
+char D_800E3568_E4168[] = { 0x80, 0x0F };
+char D_800E356C_E416C[] = { 0x80, 0x0F };
+char *gCreditsLastMessageArray[] = {
+    D_800E3544_E4144, D_800E3550_E4150, // Appears after beating the first wizpig race.
+    D_800E3560_E4160,                    // Appears after beating the second wizpig race.
+    D_800E3568_E4168, D_800E356C_E416C, // Appears if you use the "WHODIDTHIS" cheat.
+};
+#else
 char *gCreditsLastMessageArray[5] = {
     "THE END?", "TO BE CONTINUED ...", // Appears after beating the first wizpig race.
     "THE END",                         // Appears after beating the second wizpig race.
     "NO CHEAT", "THIS TIME.",          // Appears if you use the "WHODIDTHIS" cheat.
 };
+#endif
+
+// clang-format on
 
 // Cheats that are shown in the credits.
 s32 gCheatsInCreditsArray[21] = { CHEAT_BIG_CHARACTERS,
@@ -1721,10 +2095,18 @@ void load_menu_text(s32 language) {
     sCorruptDataMenuText[langIndex] = menuText[ASSET_MENU_TEXT_CORRUPTDATA_1];   // "TRY AGAIN!"
     sInsertControllerPakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3];  // "If you wish to use"
     sInsertControllerPakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_4];  // "the Controller Pak"
+#if VERSION == VERSION_77
     sInsertControllerPakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6];  // "insert it now!"
     sInsertRumblePakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3];      // "If you wish to use"
     sInsertRumblePakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_5];      // "the Rumble Pak"
     sInsertRumblePakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6];      // "insert it now!"
+#else
+    // TODO: Figure out what these text values are for these versions.
+    sInsertControllerPakMenuText[2] = menuText[161];
+    sInsertRumblePakMenuText[0] = menuText[162];
+    sInsertRumblePakMenuText[1] = menuText[186];
+    sInsertRumblePakMenuText[2] = menuText[187];
+#endif
     gCautionMenuTextElements[0].t.asciiText = menuText[ASSET_MENU_TEXT_CAUTION]; // "CAUTION"
     gCautionMenuTextElements[1].t.asciiText = menuText[ASSET_MENU_TEXT_CAUTION]; // "CAUTION"
 
@@ -1816,7 +2198,7 @@ void func_8007FFEC(s32 arg0) {
     gWoodPanelAllocCount = arg0;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/menu/func_8007FFEC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_8007FFEC.s")
 #endif
 
 /**
@@ -2089,7 +2471,11 @@ void init_save_data(void) {
 
     gCheatsAssetData = (u16(*)[30]) get_misc_asset(ASSET_MISC_MAGIC_CODES);
     gNumberOfCheats = (*gCheatsAssetData)[0];
+#if VERSION >= VERSION_79
+    gMenuText = mempool_alloc_safe(1280 * sizeof(char *), COLOUR_TAG_WHITE);
+#else
     gMenuText = mempool_alloc_safe(1024 * sizeof(char *), COLOUR_TAG_WHITE);
+#endif
     load_menu_text(LANGUAGE_ENGLISH);
 
     // clang-format off
@@ -2639,6 +3025,28 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
     sMenuGuiOpacity = 255;
 }
 
+#if REGION == REGION_JP
+void func_80082BC8_837C8(s32 dialogueBoxID, s32 xPos1, s32 yPos1, s32 xPos2, s32 yPos2, char *text,
+                         AlignmentFlags alignment, s32 textColour, s32 alpha) {
+    s32 opacity;
+    opacity = textColour & 0xFF;
+
+    if (dialogueBoxID < 0) {
+        set_text_colour(0, 0, 0, 255, opacity >> 1);
+        draw_text(&sMenuCurrDisplayList, xPos1 + xPos2, yPos1 + yPos2, text, alignment);
+        set_text_colour((textColour >> 24) & 0xFF, (textColour >> 16) & 0xFF, (textColour >> 8) & 0xFF, alpha, opacity);
+        draw_text(&sMenuCurrDisplayList, xPos1, yPos1, text, alignment);
+    } else {
+        set_current_text_colour(dialogueBoxID, 0, 0, 0, 255, opacity >> 1);
+        draw_dialogue_text_pos_unused(&sMenuCurrDisplayList, dialogueBoxID, xPos1 + xPos2, yPos1 + yPos2, text,
+                                      alignment);
+        set_current_text_colour(dialogueBoxID, (textColour >> 24) & 0xFF, (textColour >> 16) & 0xFF,
+                                (textColour >> 8) & 0xFF, alpha, opacity);
+        draw_dialogue_text_pos_unused(&sMenuCurrDisplayList, dialogueBoxID, xPos1, yPos1, text, alignment);
+    }
+}
+#endif
+
 /**
  * Set the current save data to use the furthest progress of all save files.
  */
@@ -2882,7 +3290,7 @@ void func_80083098(f32 updateRateF) {
     draw_text(&sMenuCurrDisplayList, xPos, yPos, text, ALIGN_MIDDLE_CENTER);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/menu/func_80083098.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_80083098.s")
 #endif
 
 /**
@@ -2919,7 +3327,9 @@ void menu_title_screen_init(void) {
     music_voicelimit_set(27);
     func_800660C0();
     set_text_font(ASSET_FONTS_FUNFONT);
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     sound_volume_reset(FALSE);
     set_time_trial_enabled(FALSE);
     gTitleDemoIndex = 0;
@@ -3133,7 +3543,11 @@ s32 menu_title_screen_loop(s32 updateRate) {
             menu_init(MENU_CHARACTER_SELECT);
             return MENU_RESULT_CONTINUE;
         }
+#if REGION == REGION_JP
+        gMenuCurIndex = 1;
+#else
         gMenuCurIndex = 0;
+#endif
         load_level_for_menu(ASSET_LEVEL_OPTIONSBACKGROUND, -1, 0);
         menu_init(MENU_OPTIONS);
         return MENU_RESULT_CONTINUE;
@@ -3149,7 +3563,9 @@ void titlescreen_free(void) {
     menu_assetgroup_free(sGameTitleTileTextures);
     music_voicelimit_set(16);
     func_800660D0();
+#if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
     sound_volume_reset(TRUE);
 }
 
@@ -3161,7 +3577,9 @@ void menu_options_init(void) {
     gOptionBlinkTimer = 0;
     gMenuDelay = 0;
     transition_begin(&sMenuTransitionFadeOut);
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     set_text_font(ASSET_FONTS_BIGFONT);
     music_voicelimit_set(24);
     music_play(SEQUENCE_MAIN_MENU);
@@ -3185,8 +3603,13 @@ void optionscreen_render(UNUSED s32 updateRate) {
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_OPTIONS],
               ALIGN_MIDDLE_CENTER); // OPTIONS
 
+#if REGION == REGION_JP
+    optionMenuTextIndex = 1;
+    yPos = 88;
+#else
     optionMenuTextIndex = 0;
     yPos = 76;
+#endif
 
     set_text_font(ASSET_FONTS_FUNFONT);
 
@@ -3217,7 +3640,10 @@ s32 menu_options_loop(s32 updateRate) {
     UNUSED s32 pad0;
     s32 analogueX;
     s32 analogueY;
-    UNUSED s32 pad1[4];
+    UNUSED s32 pad1;
+#if REGION == REGION_JP
+    UNUSED s32 langVal;
+#endif
 
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     if (gMenuDelay != 0) {
@@ -3235,13 +3661,10 @@ s32 menu_options_loop(s32 updateRate) {
     analogueX = 0;
     analogueY = 0;
     if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
-        s8 *xAxisPtr;
-        s8 *yAxisPtr;
-        for (i = 0, xAxisPtr = gControllersXAxisDirection, yAxisPtr = gControllersYAxisDirection; i < MAXCONTROLLERS;
-             i++) {
+        for (i = 0; i < MAXCONTROLLERS; i++) {
             buttonsPressed |= get_buttons_pressed_from_player(i);
-            analogueX += *(xAxisPtr++);
-            analogueY += *(yAxisPtr++);
+            analogueX += gControllersXAxisDirection[i];
+            analogueY += gControllersYAxisDirection[i];
         }
     }
     if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & (A_BUTTON | START_BUTTON)) && gMenuCurIndex == 5)) {
@@ -3254,9 +3677,29 @@ s32 menu_options_loop(s32 updateRate) {
         // Go to a sub-menu
         gMenuDelay = 31;
         sound_play(SOUND_SELECT2, NULL);
-
+#if REGION != REGION_JP
     } else if (gMenuCurIndex == 0 && analogueX != 0) {
-        switch ((u64) get_language()) {
+        s32 langVal = get_language();
+#if REGION == REGION_PAL
+        if (analogueX < 0) {
+            if ((u64) langVal == LANGUAGE_ENGLISH) {
+                set_language(LANGUAGE_GERMAN);
+            } else if ((u64) langVal == LANGUAGE_FRENCH) {
+                set_language(LANGUAGE_ENGLISH);
+            } else {
+                set_language(LANGUAGE_FRENCH);
+            }
+        } else {
+            if ((u64) langVal == LANGUAGE_ENGLISH) {
+                set_language(LANGUAGE_FRENCH);
+            } else if ((u64) langVal == LANGUAGE_FRENCH) {
+                set_language(LANGUAGE_GERMAN);
+            } else {
+                set_language(LANGUAGE_ENGLISH);
+            }
+        }
+#else
+        switch ((u64) langVal) {
             case LANGUAGE_ENGLISH:
                 set_language(LANGUAGE_FRENCH);
                 break;
@@ -3264,7 +3707,9 @@ s32 menu_options_loop(s32 updateRate) {
                 set_language(LANGUAGE_ENGLISH);
                 break;
         }
+#endif
         sound_play(SOUND_MENU_PICK2, NULL);
+#endif
     } else if (gMenuCurIndex == 1 && analogueX != 0) {
         if (sEepromSettings & 0x2000000) {
             // 0x2000000 SUBTITLES ENABLED?
@@ -3288,9 +3733,15 @@ s32 menu_options_loop(s32 updateRate) {
         }
         if (analogueY > 0) {
             gMenuCurIndex--;
+#if REGION == REGION_JP
+            if (gMenuCurIndex <= 0) {
+                gMenuCurIndex = 1;
+            }
+#else
             if (gMenuCurIndex < 0) {
                 gMenuCurIndex = 0;
             }
+#endif
         }
         if (prevOption != gMenuCurIndex) {
             sound_play(SOUND_MENU_PICK2, NULL);
@@ -3327,7 +3778,9 @@ s32 menu_options_loop(s32 updateRate) {
  * Unloads all assets associated with the options menu.
  */
 void optionscreen_free(void) {
+#if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -3358,7 +3811,9 @@ void menu_audio_options_init(void) {
         gAudioMenuStrings[3].y = 192;
         gMenuStage = 4;
     }
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 // Probably soundoption_render
@@ -3370,6 +3825,7 @@ void func_80084854(UNUSED s32 updateRate) {
 
     temp = gMusicTestSongIndex;
 
+#if REGION != REGION_JP
     for (i = 0; (gMusicTestString[i] < '0') || (gMusicTestString[i] > '9'); i++) {}
 
     j = temp / 10;
@@ -3377,6 +3833,14 @@ void func_80084854(UNUSED s32 updateRate) {
     temp -= (j * 10);
     i++;
     gMusicTestString[i] = '0' + temp;
+#else
+    for (i = 1; (gMusicTestString[i] < 0x10) || (gMusicTestString[i] > 0x19); i++) {}
+
+    j = temp / 10;
+    gMusicTestString[i] = 0x10 + j;
+    temp -= (j * 10);
+    gMusicTestString[i + 2] = 0x10 + temp;
+#endif
 
     temp = gOptionBlinkTimer * 8;
     if (temp >= 256) {
@@ -3596,7 +4060,9 @@ void soundoptions_free(void) {
         music_change_off();
     }
     menu_assetgroup_free(gOptionMenuTextures);
+#if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -3625,7 +4091,9 @@ void menu_save_options_init(void) {
     menu_assetgroup_load(gSaveMenuObjectIndices);
     menu_imagegroup_load(gSaveMenuImageIndices);
     func_8007FFEC(10);
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     gDrawTexN64Icon[0].texture = gMenuAssets[TEXTURE_ICON_SAVE_N64];
     gDrawTexTTIcon[0].texture = gMenuAssets[TEXTURE_ICON_SAVE_TT];
     gDrawTexGhostIcon[0].texture = gMenuAssets[TEXTURE_ICON_SAVE_GHOSTS];
@@ -3635,6 +4103,12 @@ void menu_save_options_init(void) {
     menu_init_arrow_textures();
     mark_read_all_save_files();
     transition_begin(&sMenuTransitionFadeOut);
+#if REGION == REGION_JP
+    func_800C663C_C723C();
+#endif
+#if VERSION >= VERSION_79
+    rumble_enable(FALSE);
+#endif
 }
 
 /**
@@ -3642,6 +4116,7 @@ void menu_save_options_init(void) {
  * This has the file name, and then a background and icon based on kind of file it is.
  * DKR save files will display the balloon count and adventure type.
  */
+#if REGION != REGION_JP
 void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
     s32 i;
     s32 firstDigit;
@@ -3704,11 +4179,33 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
             }
             break;
         case SAVE_FILE_TYPE_CPAK_TIMES:
+#if REGION == REGION_JP
+            drawTexture = gDrawTexTTIcon;
+            text2 = gMenuText[ASSET_MENU_TEXT_TIMES];
+            texture = gMenuAssets[TEXTURE_UNK_44];
+            colour = gContPakSaveBgColours[file->controllerIndex];
+            for (i = 0; (text2[i] & 0xFF) != 0; i++) {
+                firstDigit = text2[ASSET_MENU_TEXT_TIMES + i];
+                buffer[i] = firstDigit;
+            }
+            for (i = 0; file->saveFileExt[i] != 0 && file->saveFileExt[i] != 0x2E; i++) {}
+            buffer[i] = '.';
+            if (file->saveFileExt[i] != '\n') {
+                buffer[i - 1] = file->saveFileExt[i + 1];
+            } else {
+                buffer[i] = 'A';
+            }
+            buffer[i + 1] = '\n';
+            text2 = buffer;
+            text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + file->controllerIndex];
+            firstDigit = i;
+#else
             drawTexture = gDrawTexTTIcon;
             texture = gMenuAssets[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[file->controllerIndex];
             text2 = file->saveFileExt;
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + file->controllerIndex];
+#endif
             break;
         case SAVE_FILE_TYPE_CPAK_GHOST:
             drawTexture = gDrawTexGhostIcon;
@@ -3753,7 +4250,26 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
             text = NULL;
             break;
     }
-    func_80080580(&sMenuCurrDisplayList, x - 160, 120 - y, 160, 64, 4, 4, colour, texture);
+#if VERSION == VERSION_79
+#define SAVE_MENU_TEXT_FONT ASSET_FONTS_SUBTITLEFONT
+#define SAVE_MENU_TEXT_WIDTH 208
+#define SAVE_MENU_SPRITE_OFFSET 8
+#define SAVE_MENU_TEXT_OFFSET_1 24
+#define SAVE_MENU_TEXT_OFFSET_2 25
+#elif VERSION == VERSION_80
+#define SAVE_MENU_TEXT_FONT ASSET_FONTS_SMALLFONT
+#define SAVE_MENU_SPRITE_OFFSET 0
+#define SAVE_MENU_TEXT_WIDTH 160
+#define SAVE_MENU_TEXT_OFFSET_1 0
+#define SAVE_MENU_TEXT_OFFSET_2 1
+#else
+#define SAVE_MENU_TEXT_FONT ASSET_FONTS_SMALLFONT
+#define SAVE_MENU_SPRITE_OFFSET 0
+#define SAVE_MENU_TEXT_WIDTH 160
+#define SAVE_MENU_TEXT_OFFSET_1 0
+#define SAVE_MENU_TEXT_OFFSET_2 0
+#endif
+    func_80080580(&sMenuCurrDisplayList, x - 160, 120 - y, SAVE_MENU_TEXT_WIDTH, 64, 4, 4, colour, texture);
     if (osTvType == OS_TV_TYPE_PAL) {
         y += 12;
     }
@@ -3769,35 +4285,39 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
         gMenuImages[2].y = offsetY - 49;
         gMenuImages[spriteID].y = offsetY - 24;
         sprite_opaque(0);
-        gMenuImages[2].x = x - 133;
+        gMenuImages[2].x = x - (133 - SAVE_MENU_SPRITE_OFFSET);
         gMenuImages[2].spriteOffset = firstDigit;
         menu_element_render(2);
-        gMenuImages[2].x = x - 125;
+        gMenuImages[2].x = x - (125 - SAVE_MENU_SPRITE_OFFSET);
         gMenuImages[2].spriteOffset = secondDigit;
         menu_element_render(2);
         sprite_opaque(1);
-        gMenuImages[spriteID].x = x - 128;
+        gMenuImages[spriteID].x = x - (128 - SAVE_MENU_SPRITE_OFFSET);
         menu_element_render(spriteID);
         sprite_anim_off(FALSE);
     }
     if (drawTexture != NULL) {
-        texrect_draw(&sMenuCurrDisplayList, drawTexture, x + 60, y + 6, 255, 255, 255, 255);
+        texrect_draw(&sMenuCurrDisplayList, drawTexture, x + (60 + SAVE_MENU_TEXT_OFFSET_1), y + 6, 255, 255, 255, 255);
     }
     if (text != NULL) {
-        set_text_font(0);
+        set_text_font(ASSET_FONTS_FUNFONT);
         set_text_colour(0, 0, 0, 255, 128);
-        draw_text(&sMenuCurrDisplayList, x + 81, y + 1, text, ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, x + (81 + SAVE_MENU_TEXT_OFFSET_1), y + 1, text, ALIGN_MIDDLE_CENTER);
         set_text_colour(255, 64, 255, 64, 255);
-        draw_text(&sMenuCurrDisplayList, x + 79, y - 1, text, ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, x + (79 + SAVE_MENU_TEXT_OFFSET_1), y - 1, text, ALIGN_MIDDLE_CENTER);
     }
     if (text2 != NULL) {
-        set_text_font(1);
+        set_text_font(SAVE_MENU_TEXT_FONT);
         set_text_colour(0, 0, 0, 255, 160);
-        draw_text(&sMenuCurrDisplayList, x + 80, y + 48, text2, ALIGN_TOP_CENTER);
+        draw_text(&sMenuCurrDisplayList, x + (80 + SAVE_MENU_TEXT_OFFSET_2), y + 48, text2, ALIGN_TOP_CENTER);
         set_text_colour(255, 255, 255, 255, 255);
-        draw_text(&sMenuCurrDisplayList, x + 79, y + 47, text2, ALIGN_TOP_CENTER);
+        draw_text(&sMenuCurrDisplayList, x + (79 + SAVE_MENU_TEXT_OFFSET_2), y + 47, text2, ALIGN_TOP_CENTER);
     }
 }
+#else
+// No match JPN savemenu_render_element
+#pragma GLOBAL_ASM("asm/nonmatchings/menu/savemenu_render_element.s")
+#endif
 
 /**
  * Render all of the save option elements onscreen.
@@ -3854,7 +4374,7 @@ void savemenu_render(UNUSED s32 updateRate) {
     }
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     set_text_background_colour(0, 0, 0, 0);
-    set_text_font(2);
+    set_text_font(ASSET_FONTS_BIGFONT);
     set_text_colour(0, 0, 0, 255, 128);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS],
               ALIGN_MIDDLE_CENTER);
@@ -3871,21 +4391,31 @@ void savemenu_render(UNUSED s32 updateRate) {
         }
     }
 
+#if REGION == REGION_JP
+#define SAVEMENU_ELEMENT_SIZE 212
+#define SAVEMENU_OFFSET_X 56
+#define SAVEMENU_OFFSET_SCROLL 212.0f
+#else
+#define SAVEMENU_ELEMENT_SIZE 164
+#define SAVEMENU_OFFSET_X 80
+#define SAVEMENU_OFFSET_SCROLL 164.0f
+#endif
+
     if (drawUpperElements) {
         scroll = (s32) gSaveMenuScrollSource;
         temp = scroll;
-        offsetX = 80 - (s32) ((gSaveMenuScrollSource - scroll) * 164.0f);
+        offsetX = SAVEMENU_OFFSET_X - (s32) ((gSaveMenuScrollSource - scroll) * SAVEMENU_OFFSET_SCROLL);
         x = offsetX;
         while (x < videoWidth && temp < gSaveMenuOptionCountUpper) {
             savemenu_render_element(&gSaveMenuFilesSource[temp], x, 64);
-            x += 164;
+            x += SAVEMENU_ELEMENT_SIZE;
             temp++;
         }
         temp = scroll;
         x = offsetX;
         while ((x > 0) && (temp > 0)) {
             temp--;
-            x -= 164;
+            x -= SAVEMENU_ELEMENT_SIZE;
             savemenu_render_element(&gSaveMenuFilesSource[temp], x, 64);
         }
     }
@@ -3893,23 +4423,23 @@ void savemenu_render(UNUSED s32 updateRate) {
     if (drawLowerElements) {
         scroll = (s32) gSaveMenuScrollDest;
         temp = scroll;
-        offsetX = 80 - (s32) ((gSaveMenuScrollDest - (f32) scroll) * 164.0f);
+        offsetX = SAVEMENU_OFFSET_X - (s32) ((gSaveMenuScrollDest - (f32) scroll) * SAVEMENU_OFFSET_SCROLL);
         x = offsetX;
         while (x < videoWidth && temp < gSaveMenuOptionCountLower) {
             savemenu_render_element(&gSaveMenuFilesDest[temp], x, 144);
-            x += 164;
+            x += SAVEMENU_ELEMENT_SIZE;
             temp++;
         }
         temp = scroll;
         x = offsetX;
         while (x > 0 && temp > 0) {
             temp--;
-            x -= 164;
+            x -= SAVEMENU_ELEMENT_SIZE;
             savemenu_render_element(&gSaveMenuFilesDest[temp], x, 144);
         }
     }
 
-    set_text_font(2);
+    set_text_font(ASSET_FONTS_BIGFONT);
     set_text_colour(255, 255, 255, 0, 255);
     if (drawOk) {
         draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, "OK?", ALIGN_MIDDLE_CENTER);
@@ -4211,6 +4741,10 @@ SIDeviceStatus savemenu_write(void) {
                 mark_to_write_flap_and_course_times();
                 unset_eeprom_settings_value(
                     0xFFFFF0); // Reset most eeprom save data, but keep Adventure 2, and Drumstick.
+#if VERSION >= VERSION_79
+                gActiveMagicCodes &= ~CHEAT_CONTROL_TT;
+                gUnlockedMagicCodes &= ~CHEAT_CONTROL_TT;
+#endif
             }
             break;
         case SAVE_FILE_TYPE_CPAK_SAVE:
@@ -4260,6 +4794,9 @@ SIDeviceStatus savemenu_write(void) {
                 case SAVE_FILE_TYPE_CART_TIMES:
                     ret = read_time_data_from_controller_pak(
                         gSaveMenuFilesSource[gSaveMenuOptionSource].controllerIndex, fileExt, settings);
+#if VERSION >= VERSION_79
+                    mark_to_write_flap_and_course_times();
+#endif
                     break;
                 case SAVE_FILE_TYPE_CPAK_EMPTY:
                     ret = read_time_data_from_controller_pak(
@@ -4338,8 +4875,13 @@ void savemenu_render_error(SIDeviceStatus deviceStatus) {
     gSaveMenuMessageOption = gSaveMenuMessageLines - 1;
 
     dialogue_clear(7);
+#if REGION == REGION_JP
+    set_current_dialogue_box_coords(7, 28, SCREEN_HEIGHT_HALF - (((k * 16) + 44) >> 1), 292,
+                                    (((k * 16) + 44) >> 1) + SCREEN_HEIGHT_HALF + 3);
+#else
     set_current_dialogue_box_coords(7, 40, SCREEN_HEIGHT_HALF - (((k * 16) + 44) >> 1), 280,
                                     (((k * 16) + 44) >> 1) + SCREEN_HEIGHT_HALF);
+#endif
     set_current_dialogue_background_colour(7, 0, 0, 0, 160);
     set_current_text_background_colour(7, 0, 0, 0, 0);
     set_dialogue_font(7, 2);
@@ -4680,12 +5222,20 @@ s32 menu_save_options_loop(s32 updateRate) {
  * Free the assets associated with the save options menu.
  */
 void savemenu_free(void) {
+#if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
     menu_button_free();
     menu_assetgroup_free(gSaveMenuObjectIndices);
     dialogue_clear(7);
     mempool_free((void *) gSaveMenuFilesSource);
     mempool_free((void *) D_80126A64);
+#if REGION == REGION_JP
+    func_800C67F4_C73F4();
+#endif
+#if VERSION >= VERSION_79
+    rumble_enable(TRUE);
+#endif
 }
 
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection) {
@@ -4963,7 +5513,7 @@ void bootscreen_init_cpak(void) {
     s32 i;
 
     // Starting point
-    gBootPakData[0] = mempool_alloc_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
+    gBootPakData[0] = mempool_alloc_safe(SAVE_SIZE_MENU, COLOUR_TAG_WHITE);
 
     // Fills in the table.
     for (i = 1; i < ARRAY_COUNT(gBootPakData); i++) {
@@ -4997,7 +5547,14 @@ void bootscreen_init_cpak(void) {
     } else {
         sControllerPakMenuNumberOfRows = 7;
     }
+#if REGION == REGION_JP
+    func_800C663C_C723C();
+#else
     load_font(ASSET_FONTS_BIGFONT);
+#endif
+#if VERSION >= VERSION_79
+    rumble_enable(FALSE);
+#endif
 }
 
 /**
@@ -5006,6 +5563,7 @@ void bootscreen_init_cpak(void) {
  * Also draws the confirmation box.
  * Visual Aid : https://i.imgur.com/7T2Scdr.png
  */
+#if REGION != REGION_JP
 void pakmenu_render(UNUSED s32 updateRate) {
     s32 highlight;
     s32 i;
@@ -5082,8 +5640,14 @@ void pakmenu_render(UNUSED s32 updateRate) {
             render_dialogue_text(6, 26, 2, noteText, gOpacityDecayTimer + i + 1, HORZ_ALIGN_CENTER);
             render_dialogue_text(6, 56, 2, fileNameText, 1, HORZ_ALIGN_LEFT);
             render_dialogue_text(6, 240, 2, pagesText, numberOfPages, HORZ_ALIGN_CENTER);
+#if VERSION >= VERSION_79
+            set_kerning(TRUE);
+#endif
             render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
             yPos += 16;
+#if VERSION >= VERSION_79
+            set_kerning(FALSE);
+#endif
         }
         if (gOpacityDecayTimer < (16 - sControllerPakMenuNumberOfRows)) {
             if ((gOptionBlinkTimer & 8) != 0) {
@@ -5146,6 +5710,10 @@ void pakmenu_render(UNUSED s32 updateRate) {
         }
     }
 }
+#else
+// No match JPN pakmenu_render
+#pragma GLOBAL_ASM("asm/nonmatchings/menu/pakmenu_render.s")
+#endif
 
 /**
  * Handles the controller pak menu accessed from the boot screen.
@@ -5318,9 +5886,16 @@ s32 menu_controller_pak_loop(s32 updateRate) {
  * Free all assets associated with the boot sequence controller pak menu.
  */
 void pakmenu_free(void) {
-    menu_asset_free(63);
+    menu_asset_free(TEXTURE_ICON_ARROW_DOWN);
     mempool_free(gBootPakData[0]);
+#if REGION == REGION_JP
+    func_800C67F4_C73F4();
+#else
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
+#if VERSION >= VERSION_79
+    rumble_enable(TRUE);
+#endif
 }
 
 /**
@@ -5339,10 +5914,18 @@ void menu_magic_codes_init(void) {
     gOpacityDecayTimer = 0;
     gMenuStage = CHEATMENU_CHOOSE;
     transition_begin(&sMenuTransitionFadeOut);
+#if REGION == REGION_JP
+    set_current_dialogue_box_coords(7, 50, 50, 270, 134);
+#else
     set_current_dialogue_box_coords(7, 50, 50, 270, 132);
+#endif
     set_current_dialogue_background_colour(7, 0, 0, 0, 128);
     dialogue_clear(7);
+#if REGION == REGION_JP
+    func_800C663C_C723C();
+#else
     load_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -5356,8 +5939,8 @@ void cheatmenu_render(UNUSED s32 updateRate) {
     s32 xPos, yPos;
     char displayChar[2];
     s32 chr;
-    UNUSED s32 offsetY;
     UNUSED s32 pad1;
+    s32 offsetY;
 
     set_text_background_colour(0, 0, 0, 0);
     render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
@@ -5369,11 +5952,19 @@ void cheatmenu_render(UNUSED s32 updateRate) {
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_MAGICCODES],
               ALIGN_MIDDLE_CENTER); // "MAGIC CODES"
     chr = 'A';
+#if REGION == REGION_JP
+    set_text_font(ASSET_FONTS_SMALLFONT);
+#else
     set_text_font(ASSET_FONTS_FUNFONT);
     set_text_colour(255, 255, 255, 0, 255);
+#endif
     // Draw the input table
     for (i = 0, yPos = 60; i < 4; i++, yPos += 22) {
         for (j = 0, xPos = 64; j < 7; j++, xPos += 32) {
+#if REGION == REGION_JP
+            s32 addColourVal = 63;
+            set_text_colour((j << 5) + addColourVal, 255, (i << 6) + addColourVal, 255, 255);
+#endif
             if (gOptionsMenuItemIndex == 5 && j == gCheatInputCurrentColumn && i == gCheatInputCurrentRow) {
                 highlight = gOptionBlinkTimer * 8;
                 if (highlight >= 256) {
@@ -5381,14 +5972,22 @@ void cheatmenu_render(UNUSED s32 updateRate) {
                 }
                 highlight >>= 1;
                 highlight += 128;
+#if REGION == REGION_JP
+                set_text_colour(255, addColourVal, addColourVal, highlight, 255);
+#else
                 set_text_colour(128, 255, 192, highlight, 255);
+#endif
             }
             if (chr <= 'Z') {
                 displayChar[0] = chr;
                 displayChar[1] = '\0';
                 draw_text(&sMenuCurrDisplayList, xPos, yPos, displayChar, ALIGN_MIDDLE_CENTER); // Draw the character
             } else if (j == 5) {
+#if REGION == REGION_JP
+                draw_text(&sMenuCurrDisplayList, xPos, yPos, "BS", ALIGN_MIDDLE_CENTER);
+#else
                 draw_text(&sMenuCurrDisplayList, xPos, yPos, "DEL", ALIGN_MIDDLE_CENTER);
+#endif
             } else {
                 draw_text(&sMenuCurrDisplayList, xPos, yPos, "OK", ALIGN_MIDDLE_CENTER);
             }
@@ -5432,8 +6031,13 @@ void cheatmenu_render(UNUSED s32 updateRate) {
         } else {
             // Draw cheat code name.
             cheatData = (*gCheatsAssetData) + 1;
+#if REGION == REGION_JP
+            draw_text(&sMenuCurrDisplayList, POS_CENTRED, 144,
+                      &((char *) (*gCheatsAssetData))[cheatData[gNewCheatID + 2]], ALIGN_MIDDLE_CENTER);
+#else
             draw_text(&sMenuCurrDisplayList, POS_CENTRED, 144,
                       &((char *) (*gCheatsAssetData))[cheatData[gNewCheatID + 1]], ALIGN_MIDDLE_CENTER);
+#endif
         }
     } else if (5 == gOptionsMenuItemIndex) {
         draw_text(&sMenuCurrDisplayList, POS_CENTRED, 144, gCheatInput, ALIGN_MIDDLE_CENTER);
@@ -5449,7 +6053,11 @@ void cheatmenu_render(UNUSED s32 updateRate) {
         }
         dialogue_clear(6);
         set_dialogue_font(6, ASSET_FONTS_FUNFONT);
+#if REGION == REGION_JP
+        set_current_dialogue_box_coords(6, 44, offsetY - 28, 276, offsetY + 28);
+#else
         set_current_dialogue_box_coords(6, 76, offsetY - 28, 244, offsetY + 28);
+#endif
         set_current_dialogue_background_colour(6, 0, 0, 0, 160);
         offsetY = 4;
         for (i = 0; i < 3; i++) {
@@ -5605,9 +6213,15 @@ s32 menu_magic_codes_loop(s32 updateRate) {
             } else {
                 cheatDataEntries = &(*gCheatsAssetData)[1];
                 gNewCheatID = 0; // Index into the gCheatsAssetData cheatsTable
+#if VERSION >= VERSION_79
+                while (gNewCheatID < gNumberOfCheats && foundCheat == FALSE) {
+                    foundCheat = TRUE;
+                    cheatCodeText = ((char *) (*gCheatsAssetData)) + cheatDataEntries[gNewCheatID * 3];
+#else
                 while (gNewCheatID < gNumberOfCheats * 2 && foundCheat == FALSE) {
                     foundCheat = TRUE;
                     cheatCodeText = ((char *) (*gCheatsAssetData)) + cheatDataEntries[gNewCheatID];
+#endif
                     // gCheatInput = char *gPlayerEnteredCode; (Or something like that)
                     i = -1;
                     do {
@@ -5616,21 +6230,33 @@ s32 menu_magic_codes_loop(s32 updateRate) {
                             foundCheat = FALSE;
                         }
                         if (foundCheat == FALSE) {
+#if VERSION == VERSION_77
                             do {
-                            } while (0); // Fakematch
+                            } while (0); // Fakematch only for v1
+#endif
                             break;
                         }
                     } while (cheatCodeText[i] != '\0' && gCheatInput[i] != '\0');
                     if (foundCheat) {
                         continue;
                     }
+#if VERSION >= VERSION_79
+                    gNewCheatID += 1;
+#else
                     gNewCheatID += 2;
+#endif
                 }
                 if (foundCheat == FALSE) {
                     gNewCheatID = -1;
                 } else {
+#if VERSION >= VERSION_79
+                    gUnlockedMagicCodes |= 1 << gNewCheatID;
+                    gActiveMagicCodes |= 1 << gNewCheatID;
+                    gNewCheatID *= 3;
+#else
                     gUnlockedMagicCodes |= 1 << (gNewCheatID >> 1);
                     gActiveMagicCodes |= 1 << (gNewCheatID >> 1);
+#endif
                 }
                 gOptionsMenuItemIndex = 4;
                 gOpacityDecayTimer = 240;
@@ -5737,7 +6363,11 @@ s32 menu_magic_codes_loop(s32 updateRate) {
  * Free all assets associated with the cheat code menu.
  */
 void cheatmenu_free(void) {
+#if REGION == REGION_JP
+    func_800C67F4_C73F4();
+#else
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -5749,7 +6379,11 @@ void menu_magic_codes_list_init(void) {
     gMenuDelay = 0;
     gMenuStage = 0;
     gOptionsMenuItemIndex = 0;
+#if REGION == REGION_JP
+    func_800C663C_C723C();
+#else
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     menu_asset_load(63);
     menu_init_arrow_textures();
     transition_begin(&sMenuTransitionFadeOut);
@@ -5800,7 +6434,13 @@ void cheatlist_render(UNUSED s32 updateRate) {
             set_text_colour(255, 255, 255, alpha, 255);
         }
         draw_text(&sMenuCurrDisplayList, 48, yPos,
-                  (char *) (*gCheatsAssetData) + cheatData[(gUnlockedCheatIDs[i] << 1) + 1], ALIGN_TOP_LEFT);
+#if VERSION == VERSION_79
+                  (char *) (*gCheatsAssetData) + cheatData[(gUnlockedCheatIDs[i] * 3) + 2], ALIGN_TOP_LEFT);
+#elif VERSION == VERSION_80
+                  (char *) (*gCheatsAssetData) + cheatData[(gUnlockedCheatIDs[i] * 3) + 1], ALIGN_TOP_LEFT);
+#else
+                  (char *) (*gCheatsAssetData) + cheatData[(gUnlockedCheatIDs[i] * 2) + 1], ALIGN_TOP_LEFT);
+#endif
         if ((1 << gUnlockedCheatIDs[i]) & gActiveMagicCodes) {
             draw_text(&sMenuCurrDisplayList, 256, yPos, gMenuText[ASSET_MENU_TEXT_ON], ALIGN_TOP_LEFT); // ON
         } else {
@@ -5963,8 +6603,12 @@ s32 menu_magic_codes_list_loop(s32 updateRate) {
  * Free the assets associated with the cheat code list.
  */
 void cheatlist_free(void) {
-    menu_asset_free(63);
+    menu_asset_free(TEXTURE_ICON_ARROW_DOWN);
+#if REGION == REGION_JP
+    func_800C67F4_C73F4();
+#else
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -6021,7 +6665,11 @@ s8 D_800E1E20[8] = { 0, -1, 1, 0, 0, 1, -1, 0 };
 s8 gGameStatusVisible = FALSE;
 
 // TT Game Status textures, think these are potentially multi-part images.
+#if VERSION >= VERSION_79
+s16 D_800E1E2C[10] = { 0x4C, 0x4D, 0x4E, 0x4F, 0x66, 0x67, 0x00, 0x42, -1, 0 };
+#else
 s16 D_800E1E2C[10] = { 0x4C, 0x4D, 0x4E, 0x4F, 0x5B, 0x5C, 0x00, 0x42, -1, 0 };
+#endif
 
 // TT game status textures. And these maybe just standalone ones.
 s16 D_800E1E40[10] = { 0x0D, 0x0E, 0x0F, 0x10, 0x08, 0x09, 0x00, 0x0A, -1, 0 };
@@ -6120,7 +6768,9 @@ void menu_character_select_init(void) {
     menu_assetgroup_load(gCharSelectObjectIndices);
     menu_imagegroup_load(gCharSelectImageIndices);
     transition_begin(&sMenuTransitionFadeOut);
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -6144,7 +6794,12 @@ void charselect_render_text(UNUSED s32 updateRate) {
             if (osTvType == OS_TV_TYPE_PAL) {
                 yPos = 234;
             }
+#if REGION == REGION_JP
+            func_80082BC8_837C8(-1, SCREEN_WIDTH_HALF, yPos, 1, 3, "OK?", ALIGN_MIDDLE_CENTER,
+                                COLOUR_RGBA32(255, 255, 255, 255), 0);
+#else
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, "OK?", ALIGN_MIDDLE_CENTER);
+#endif
         }
         reset_render_settings(&sMenuCurrDisplayList);
         update_camera_fov(40.0f);
@@ -6499,7 +7154,9 @@ void charselect_move(s32 playerID, s8 *direction, s32 bounds, u16 menuPickSoundI
 void charselect_free(void) {
     menu_assetgroup_free(gCharSelectObjectIndices);
     mempool_free_timer(0);
+#if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
     mempool_free_timer(2);
     gEnteredCharSelectFrom = 0;
 }
@@ -6560,9 +7217,14 @@ void charselect_music_channels(s32 updateRate) {
 void menu_caution_init(void) {
     gIgnorePlayerInputTime = 60;
     gMenuDelay = 0;
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     transition_begin(&sMenuTransitionFadeOut);
     gPlayerHasSeenCautionMenu = 1;
+#if REGION == REGION_JP
+    func_800C663C_C723C();
+#endif
 }
 
 /**
@@ -6595,7 +7257,11 @@ s32 menu_caution_loop(s32 updateRate) {
  * Unloads all assets associated with the caution screen.
  */
 void caution_free(void) {
+#if REGION == REGION_JP
+    func_800C67F4_C73F4();
+#else
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -6615,7 +7281,9 @@ void menu_game_select_init(void) {
     gOpacityDecayTimer = 1;
     menu_asset_load(67);
     func_8007FFEC(3);
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     music_play(SEQUENCE_CHOOSE_YOUR_RACER);
 
     for (i = 0; i < NUM_CHARACTERS; i++) {
@@ -6639,6 +7307,9 @@ void menu_game_select_init(void) {
         // Fakematch? What's the (i ^ 0)?
         gGameSelectElements[((i ^ 0) * 2) + 2].t.texture = gMenuAssets[TEXTURE_SURFACE_BUTTON_WOOD];
     }
+#if REGION == REGION_JP
+    func_800C663C_C723C();
+#endif
 }
 
 /**
@@ -6779,9 +7450,14 @@ s32 menu_game_select_loop(s32 updateRate) {
  * Free the assets associated with the game select menu.
  */
 void gameselect_free(void) {
+#if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
     menu_button_free();
-    menu_asset_free(67);
+    menu_asset_free(TEXTURE_SURFACE_BUTTON_WOOD);
+#if REGION == REGION_JP
+    func_800C67F4_C73F4();
+#endif
 }
 
 /**
@@ -6807,7 +7483,9 @@ void menu_file_select_init(void) {
     gFileErase = FALSE;
     gFileNew = FALSE;
     transition_begin(&sMenuTransitionFadeOut);
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     music_play(SEQUENCE_CHOOSE_YOUR_RACER);
     for (i = 0; i < NUM_CHARACTERS; i++) {
         if (i != gMenuSelectedCharacter.channelIndex) {
@@ -6817,6 +7495,9 @@ void menu_file_select_init(void) {
     }
     music_channel_off(6);
     music_change_off();
+#if REGION == REGION_JP
+    func_800C663C_C723C();
+#endif
 }
 
 /**
@@ -6955,10 +7636,22 @@ void fileselect_render(UNUSED s32 updateRate) {
     }
     set_text_font(ASSET_FONTS_BIGFONT);
     set_text_colour(0, 0, 0, 255, 128);
+#if VERSION >= VERSION_79
+    // Did the enum for ASSET_MENU_TEXT_GAMESELECT change?
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 19, gMenuText[ASSET_MENU_TEXT_GAMESELECT + 112],
+              ALIGN_TOP_CENTER);
+#else
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 19, gMenuText[ASSET_MENU_TEXT_GAMESELECT],
               ALIGN_TOP_CENTER);
+#endif
     set_text_colour(255, 255, 255, 0, 255);
+#if VERSION >= VERSION_79
+    // Did the enum for ASSET_MENU_TEXT_GAMESELECT change?
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 16, gMenuText[ASSET_MENU_TEXT_GAMESELECT + 112],
+              ALIGN_TOP_CENTER);
+#else
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 16, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
+#endif
     set_text_colour(255, 255, 255, 0, 255);
     yPos += 187;
     if (gFileCopy) {
@@ -7408,7 +8101,11 @@ s32 menu_file_select_loop(s32 updateRate) {
 void fileselect_free(void) {
     menu_assetgroup_free(gFileSelectObjectIndices);
     menu_button_free();
+#if REGION == REGION_JP
+    func_800C67F4_C73F4();
+#else
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -7488,7 +8185,9 @@ void menu_track_select_init(void) {
     Settings *settings;
     s8 *trackIds;
 
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     settings = get_settings();
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
     trackIds = (s8 *) get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
@@ -7639,6 +8338,9 @@ void menu_track_select_init(void) {
     set_gIntDisFlag(TRUE);
     gIsInAdventureTwo = gTracksMenuAdventureHighlightIndex;
     gMultiplayerSelectedNumberOfRacersCopy = gMultiplayerSelectedNumberOfRacers;
+#if REGION == REGION_JP
+    func_800C663C_C723C();
+#endif
 }
 
 /**
@@ -7698,7 +8400,12 @@ void trackmenu_assets(s32 type) {
                 gRaceSelectionPlayer4Texture[0].texture = gMenuAssets[TEXTURE_ICON_PLAYER_4];
                 gRaceSelectionVehicleTitleTexture[0].texture = gMenuAssets[TEXTURE_ICON_VEHICLE_TITLE];
                 gRaceSelectionTTTitleTexture[0].texture = gMenuAssets[TEXTURE_ICON_TT_TITLE];
+#if VERSION >= VERSION_79
+                // Did the TEXTURE_ICON_TT_HEAD enum value change?
+                gRaceSelectionTTTexture[0].texture = gMenuAssets[TEXTURE_UNK_69];
+#else
                 gRaceSelectionTTTexture[0].texture = gMenuAssets[TEXTURE_ICON_TT_HEAD];
+#endif
                 break;
         }
     }
@@ -7810,12 +8517,17 @@ void menu_track_select_unload(void) {
             menu_asset_free(gTracksMenuBgTextureIndices[i + 1]);
         }
     }
+#if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
     menu_button_free();
     music_change_on();
     music_voicelimit_change_on();
     music_stop();
     set_gIntDisFlag(FALSE);
+#if REGION == REGION_JP
+    func_800C67F4_C73F4();
+#endif
 }
 
 #ifdef NON_EQUIVALENT
@@ -7923,7 +8635,7 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
     return 0;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/menu/func_8008F618.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_8008F618.s")
 #endif
 
 /**
@@ -7975,6 +8687,10 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
         gTrackMenuHubName = hubName;
         set_kerning(0);
     }
+#if REGION == REGION_JP
+    set_text_colour(0, 0, 0, 255, opacity / 2);
+    draw_text(&sMenuCurrDisplayList, xTemp + 1, sp6C + yTemp + 91, trackName, ALIGN_MIDDLE_CENTER);
+#endif
     set_text_colour(255, 255, 255, 0, opacity);
     draw_text(&sMenuCurrDisplayList, xTemp, sp6C + yTemp + 88, trackName, ALIGN_MIDDLE_CENTER);
     if (rectOpacity > 0) {
@@ -8153,7 +8869,7 @@ void func_8008FF1C(UNUSED s32 updateRate) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/menu/func_8008FF1C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_8008FF1C.s")
 #endif
 
 /**
@@ -8385,6 +9101,16 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
             sMenuGuiOpacity = 0;
         }
         availableVehicleFlags = get_map_available_vehicles(gTrackIdForPreview);
+#if VERSION >= VERSION_79
+        if (gNumberOfActivePlayers >= 2) {
+            if (gTrackIdForPreview == ASSET_LEVEL_SPACEPORTALPHA) {
+                availableVehicleFlags &= ~(1 << VEHICLE_HOVERCRAFT);
+            }
+            if (gTrackIdForPreview == ASSET_LEVEL_FROSTYVILLAGE) {
+                availableVehicleFlags &= ~(1 << VEHICLE_PLANE);
+            }
+        }
+#endif
         i = (s32) get_level_name(gTrackIdForPreview);
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_colour(192, 192, 255, 0, sMenuGuiOpacity);
@@ -8414,7 +9140,11 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
             menu_geometry_end();
             set_text_font(ASSET_FONTS_FUNFONT);
             for (temp = 0, temp2 = 0,
+#if REGION == REGION_JP
+                y = gTracksMenuAdventureButton.colourMax + gTracksMenuAdventureButton.y + regionOffset - 1;
+#else
                 y = gTracksMenuAdventureButton.colourMax + gTracksMenuAdventureButton.y + regionOffset + 1;
+#endif
                  temp2 < 2; temp2++, temp++, y += 16) {
                 for (j = 0, i = y; j < 4; j += 2, i -= 2) {
                     if (j == 0) {
@@ -8435,17 +9165,32 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
         if (gTrackSelectCursorX < 4) {
             set_text_font(ASSET_FONTS_FUNFONT);
             set_text_colour(255, 64, 64, 96, sMenuGuiOpacity);
+#if REGION == REGION_JP
+            draw_text(&sMenuCurrDisplayList, 51, 69 + regionOffset, gMenuText[ASSET_MENU_TEXT_BESTTIME],
+                      ALIGN_MIDDLE_LEFT); // "BEST TIME"
+            draw_text(&sMenuCurrDisplayList, 51, 89 + regionOffset, gMenuText[ASSET_MENU_TEXT_BESTLAP],
+                      ALIGN_MIDDLE_LEFT); // "BEST LAP"
+#else
             draw_text(&sMenuCurrDisplayList, 56, 72 + regionOffset, gMenuText[ASSET_MENU_TEXT_BESTTIME],
                       ALIGN_MIDDLE_LEFT); // "BEST TIME"
             draw_text(&sMenuCurrDisplayList, 56, 92 + regionOffset, gMenuText[ASSET_MENU_TEXT_BESTLAP],
                       ALIGN_MIDDLE_LEFT); // "BEST LAP"
+#endif
             set_text_colour(255, 128, 255, 96, sMenuGuiOpacity);
             filename_decompress(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview],
                                 filename.buffer, 3);
+#if REGION == REGION_JP
+            draw_text(&sMenuCurrDisplayList, 249, regionOffset + 70, filename.buffer, ALIGN_MIDDLE_CENTER);
+#else
             draw_text(&sMenuCurrDisplayList, 250, regionOffset + 72, filename.buffer, ALIGN_MIDDLE_CENTER);
+#endif
             filename_decompress(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview], filename.buffer,
                                 3);
+#if REGION == REGION_JP
+            draw_text(&sMenuCurrDisplayList, 249, regionOffset + 89, filename.buffer, ALIGN_MIDDLE_CENTER);
+#else
             draw_text(&sMenuCurrDisplayList, 250, regionOffset + 92, filename.buffer, ALIGN_MIDDLE_CENTER);
+#endif
             menu_timestamp_render(settings->courseTimesPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], 22,
                                   53, 128, 255, 255, FONT_COLOURFUL);
             menu_timestamp_render(settings->flapTimesPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], 22, 33,
@@ -8616,11 +9361,19 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
             }
             gMenuImages[k].y = 42.0f;
             if ((settings->courseFlagsPtr[gTrackIdForPreview] & 2) || (is_adventure_two_unlocked())) {
+#if VERSION >= VERSION_79
+                gMenuImages[k].x = (f32) ((gIsInAdventureTwo * 2) - 128);
+#else
                 gMenuImages[k].x = -128.0f;
+#endif
                 menu_element_render(k);
             }
             if ((settings->courseFlagsPtr[gTrackIdForPreview] & 4) || (is_adventure_two_unlocked())) {
+#if VERSION >= VERSION_79
+                gMenuImages[k].x = (f32) ((gIsInAdventureTwo * 2) + 120);
+#else
                 gMenuImages[k].x = 120.0f;
+#endif
                 menu_element_render(k);
             }
             sprite_opaque(TRUE);
@@ -8639,7 +9392,12 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
                 if (gTrackSelectCursorX >= 4) {
                     regionOffset += 24;
                 }
+#if REGION == REGION_JP
+                func_80082BC8_837C8(-1, SCREEN_WIDTH_HALF, regionOffset + 172, 1, 3, "OK?", ALIGN_MIDDLE_CENTER,
+                                    COLOUR_RGBA32(255, 255, 255, 255), 0);
+#else
                 draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, regionOffset + 172, "OK?", ALIGN_MIDDLE_CENTER);
+#endif
             }
         }
         sMenuGuiOpacity = 255;
@@ -8712,6 +9470,16 @@ void func_80092188(s32 updateRate) {
     camEnableUserView(0, TRUE);
     if (menuDelay == 0) {
         availableVehicles = get_map_available_vehicles(gTrackIdForPreview);
+#if VERSION >= VERSION_79
+        if (gNumberOfActivePlayers >= 2) {
+            if (gTrackIdForPreview == ASSET_LEVEL_SPACEPORTALPHA) {
+                availableVehicles &= ~(1 << VEHICLE_HOVERCRAFT);
+            }
+            if (gTrackIdForPreview == ASSET_LEVEL_FROSTYVILLAGE) {
+                availableVehicles &= ~(1 << VEHICLE_PLANE);
+            }
+        }
+#endif
         menuBackedOut = FALSE;
         menuSelected = FALSE;
         menuChanged = FALSE;
@@ -8988,13 +9756,22 @@ void menu_adventure_track_init(void) {
         gRaceSelectionPlaneOptHighlight[0].texture = gMenuAssets[TEXTURE_ICON_VEHICLE_SELECT_PLANE_HIGHLIGHT];
         gRaceSelectionPlaneOpt[0].texture = gMenuAssets[TEXTURE_ICON_VEHICLE_SELECT_PLANE];
         gRaceSelectionVehicleTitleTexture[0].texture = gMenuAssets[TEXTURE_ICON_VEHICLE_TITLE];
+#if VERSION >= VERSION_79
+        // Did the TEXTURE_ICON_TT_HEAD enum value change?
+        gRaceSelectionTTTexture[0].texture = gMenuAssets[TEXTURE_UNK_69];
+#else
         gRaceSelectionTTTexture[0].texture = gMenuAssets[TEXTURE_ICON_TT_HEAD];
+#endif
 
         transition_begin(&sMenuTransitionFadeOut);
         gOptionBlinkTimer = 0;
         gMenuDelay = 0;
         gTrackNameVoiceDelay = 30;
+#if REGION == REGION_JP
+        func_800C663C_C723C();
+#else
         load_font(ASSET_FONTS_BIGFONT);
+#endif
         load_level_for_menu(mapId, -1, 1);
     }
     dialogue_clear(7);
@@ -9047,29 +9824,53 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
                             texrect_draw(&sMenuCurrDisplayList, gRaceSelectionTTTexture, SCREEN_HEIGHT - 36,
                                          yOffset + 122, 255, 255, 255, sMenuGuiOpacity);
                         }
-                        set_text_font(0);
+                        set_text_font(ASSET_FONTS_FUNFONT);
                         set_text_colour(255, 64, 64, 96, 255);
-                        draw_text(&sMenuCurrDisplayList, 88, yOffset + 72, gMenuText[ASSET_MENU_TEXT_BESTTIME],
-                                  ALIGN_MIDDLE_CENTER);
-                        draw_text(&sMenuCurrDisplayList, 88, yOffset + 92, gMenuText[ASSET_MENU_TEXT_BESTLAP],
-                                  ALIGN_MIDDLE_CENTER);
+#if VERSION == VERSION_80
+#define ADVENTURETRACK_XPOS1 56
+#define ADVENTURETRACK_XPOS2 250
+#define ADVENTURETRACK_YPOS1 72
+#define ADVENTURETRACK_YPOS2 92
+#define ADVENTURETRACK_YPOS3 72
+#define ADVENTURETRACK_RED 22
+#define ADVENTURETRACK_ALIGN ALIGN_MIDDLE_LEFT
+#define ADVENTURETRACK_MAPID mapID
+#elif VERSION == VERSION_79
+#define ADVENTURETRACK_XPOS1 51
+#define ADVENTURETRACK_XPOS2 249
+#define ADVENTURETRACK_YPOS1 69
+#define ADVENTURETRACK_YPOS2 89
+#define ADVENTURETRACK_YPOS3 70
+#define ADVENTURETRACK_RED 22
+#define ADVENTURETRACK_ALIGN ALIGN_MIDDLE_LEFT
+#define ADVENTURETRACK_MAPID mapID
+#else
+#define ADVENTURETRACK_XPOS1 88
+#define ADVENTURETRACK_XPOS2 258
+#define ADVENTURETRACK_YPOS1 72
+#define ADVENTURETRACK_YPOS2 92
+#define ADVENTURETRACK_YPOS3 72
+#define ADVENTURETRACK_RED 26
+#define ADVENTURETRACK_ALIGN ALIGN_MIDDLE_CENTER
+#define ADVENTURETRACK_MAPID ((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->mapID
+#endif
+                        draw_text(&sMenuCurrDisplayList, ADVENTURETRACK_XPOS1, yOffset + ADVENTURETRACK_YPOS1,
+                                  gMenuText[ASSET_MENU_TEXT_BESTTIME], ADVENTURETRACK_ALIGN);
+                        draw_text(&sMenuCurrDisplayList, ADVENTURETRACK_XPOS1, yOffset + ADVENTURETRACK_YPOS2,
+                                  gMenuText[ASSET_MENU_TEXT_BESTLAP], ADVENTURETRACK_ALIGN);
                         set_text_colour(255, 128, 255, 96, 255);
                         filename_decompress(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][mapID],
                                             (char *) &filename, 3);
-                        draw_text(&sMenuCurrDisplayList, 258, yOffset + 72, (char *) &filename, ALIGN_MIDDLE_CENTER);
+                        draw_text(&sMenuCurrDisplayList, ADVENTURETRACK_XPOS2, yOffset + ADVENTURETRACK_YPOS3,
+                                  (char *) &filename, ALIGN_MIDDLE_CENTER);
                         filename_decompress(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][mapID],
                                             (char *) &filename, 3);
-                        draw_text(&sMenuCurrDisplayList, 258, yOffset + 92, (char *) &filename, ALIGN_MIDDLE_CENTER);
-                        menu_timestamp_render(
-                            settings
-                                ->courseTimesPtr[gPlayerSelectVehicle[0]]
-                                                [((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->mapID],
-                            26, 53, 128, 255, 255, 0);
-                        menu_timestamp_render(
-                            settings
-                                ->flapTimesPtr[gPlayerSelectVehicle[0]]
-                                              [((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->mapID],
-                            26, 33, 255, 192, 255, 0);
+                        draw_text(&sMenuCurrDisplayList, ADVENTURETRACK_XPOS2, yOffset + ADVENTURETRACK_YPOS2,
+                                  (char *) &filename, ALIGN_MIDDLE_CENTER);
+                        menu_timestamp_render(settings->courseTimesPtr[gPlayerSelectVehicle[0]][ADVENTURETRACK_MAPID],
+                                              ADVENTURETRACK_RED, 53, 128, 255, 255, 0);
+                        menu_timestamp_render(settings->flapTimesPtr[gPlayerSelectVehicle[0]][ADVENTURETRACK_MAPID],
+                                              ADVENTURETRACK_RED, 33, 255, 192, 255, 0);
                     }
                     greenAmount = gOptionBlinkTimer * 8;
                     if (greenAmount > 255) {
@@ -9084,7 +9885,7 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
                     y = yOffset + 139;
                     savedY = y;
 
-                    for (i = 0; i < 3; i++) {
+                    for (i = 0; i <= VEHICLE_PLANE; i++) {
                         alpha = (arg1 < 2 && get_map_default_vehicle(mapID) != (Vehicle) i) ? 128 : 255;
                         if ((1 << i) & mask) {
                             if (i == gPlayerSelectVehicle[0]) {
@@ -9109,9 +9910,16 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
                     menu_element_render(7);
                     if (gMenuStage != ADVENTURESETUP_VEHICLE) {
                         set_text_font(FONT_LARGE);
+#if VERSION == VERSION_77
                         set_text_background_colour(0, 0, 0, 0);
+#endif
                         set_text_colour(255, 255, 255, 0, 255);
+#if REGION == REGION_JP
+                        func_80082BC8_837C8(-1, SCREEN_WIDTH_HALF, yOffset + 172, 1, 3, "OK?", ALIGN_MIDDLE_CENTER,
+                                            COLOUR_RGBA32(255, 255, 255, 255), 0);
+#else
                         draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yOffset + 172, "OK?", ALIGN_MIDDLE_CENTER);
+#endif
                     }
                 } else {
                     set_text_font(FONT_LARGE);
@@ -9119,13 +9927,24 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
                     set_text_colour(255, 255, 255, 0, 255);
                     y = yOffset + 176;
                     if (get_language() == LANGUAGE_FRENCH) {
-                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[13], ALIGN_MIDDLE_CENTER);
+#if VERSION >= VERSION_79
+                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[191], ALIGN_MIDDLE_CENTER);
+#else
+                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_CHALLENGE],
+                                  ALIGN_MIDDLE_CENTER);
+#endif
                         y += 32;
                     }
-                    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[11], ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_SILVERCOIN],
+                              ALIGN_MIDDLE_CENTER);
                     y += 32;
                     if (get_language() != LANGUAGE_FRENCH) {
-                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[13], ALIGN_MIDDLE_CENTER);
+#if VERSION >= VERSION_79
+                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[191], ALIGN_MIDDLE_CENTER);
+#else
+                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_CHALLENGE],
+                                  ALIGN_MIDDLE_CENTER);
+#endif
                     }
                 }
             }
@@ -9252,7 +10071,11 @@ s32 menu_adventure_track_loop(s32 updateRate) {
  */
 void adventuretrack_free(void) {
     menu_assetgroup_free((s16 *) &gAdvTrackInitObjectIndices);
+#if REGION == REGION_JP
+    func_800C67F4_C73F4();
+#else
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
     music_change_on();
 }
 
@@ -9336,6 +10159,11 @@ void pausemenu_render(UNUSED s32 updateRate) {
             x = textWidth;
         }
     }
+#if REGION == REGION_JP
+    if (gMenuSubOption != 0 && gTrophyRaceWorldId != 0 && x < 232) {
+        x = 232;
+    }
+#endif
     temp = (gMenuOptionCap * 16) + 28;
     if (osTvType == OS_TV_TYPE_PAL) {
         y = SCREEN_HEIGHT_HALF_PAL;
@@ -10326,7 +11154,9 @@ void menu_results_init(void) {
     menu_assetgroup_load(gRaceResultsObjectIndices);
     menu_imagegroup_load(gRaceResultsImageIndices);
     menu_racer_portraits();
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     transition_begin(&sMenuTransitionFadeOut);
     music_voicelimit_set(24);
     music_play(SEQUENCE_MAIN_MENU);
@@ -10337,6 +11167,8 @@ void menu_results_init(void) {
  * Draw the portraits of the four player onscreen, then draw the scoreboard below.
  * After, draw the text options at the bottom.
  */
+#if REGION != REGION_JP
+// NON_EQUIVALENT IN JP - Too lazy to fix it right now, there's so many others to worry about.
 void results_render(UNUSED s32 updateRate, f32 opacity) {
     s32 x2;
     s32 y2;
@@ -10348,6 +11180,10 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
     s32 tens;
     UNUSED s32 pad;
     s32 i;
+#if VERSION >= VERSION_79
+    s32 offsetX2;
+    s32 timesToLoop;
+#endif
     Settings *settings;
 
     settings = get_settings();
@@ -10363,12 +11199,24 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         opacity = 1.0f;
     }
     sMenuGuiOpacity = (1 - opacity) * 255;
-    set_text_font(2);
+    set_text_font(ASSET_FONTS_BIGFONT);
     set_text_background_colour(0, 0, 0, 0);
     set_text_colour(255, 255, 255, 0, sMenuGuiOpacity);
     draw_text(&sMenuCurrDisplayList, POS_CENTRED, 34, gMenuText[ASSET_MENU_TEXT_RANKINGS], ALIGN_MIDDLE_CENTER);
     sMenuGuiOpacity = 255;
+#if VERSION >= VERSION_79
+    offsetX2 = 64;
+    if (gNumberOfActivePlayers == 4) {
+#if REGION == REGION_JP
+        offsetX2 = 52;
+#else
+        offsetX2 = 56;
+#endif
+    }
+    offsetX = 160 - ((gNumberOfActivePlayers - 1) * (offsetX2 >> 1));
+#else
     offsetX = 160 - ((gNumberOfActivePlayers - 1) << 5);
+#endif
     x2 = offsetX;
 
     for (i = 0; i < gNumberOfActivePlayers; i++) {
@@ -10383,18 +11231,32 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         }
         texrect_draw(&sMenuCurrDisplayList, gRacerPortraits[settings->racers[i].character], x2 - 20,
                      54 - (s32) (240 * opacity), spA0, spA0, spA0, 255);
+#if VERSION >= VERSION_79
+        x2 += offsetX2;
+#else
         x2 += 64;
+#endif
     }
 
     offsetX = offsetX + (s32) (320 * opacity); // Cannot use += here?
     set_text_font(ASSET_FONTS_FUNFONT);
     y2 = 104;
+#if VERSION >= VERSION_79
+    timesToLoop = 4;
+    for (spA0 = 0; spA0 < timesToLoop; spA0++) {
+#else
     for (spA0 = 0; spA0 < 4; spA0++) {
+#endif
         time = offsetX;
+#if REGION == REGION_JP
+        func_80082BC8_837C8(-1, time - 40, y2 + offsetY + 2, 2, 2, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER,
+                            COLOUR_RGBA32(255, 255, 255, 255), 0);
+#else
         set_text_colour(0, 0, 0, 255, 255);
         draw_text(&sMenuCurrDisplayList, time - 32, y2 + offsetY + 4, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER);
         set_text_colour(255, 255, 192, 96, 255);
         draw_text(&sMenuCurrDisplayList, time - 34, y2 + offsetY + 2, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER);
+#endif
         reset_render_settings(&sMenuCurrDisplayList);
         sprite_anim_off(TRUE);
         sprite_opaque(FALSE);
@@ -10403,7 +11265,11 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         sMenuGuiColourB = 255;
         sMenuGuiColourBlendFactor = 255;
         x2 = offsetX;
+#if VERSION >= VERSION_79
+        for (i = 0; i < gNumberOfActivePlayers; i++, x2 += offsetX2) {
+#else
         for (i = 0; i < gNumberOfActivePlayers; i++, x2 += 64) {
+#endif
             time = settings->racers[i].placements[spA0]; // Is this local var name correct?
             if (time > 999) {
                 time = 999;
@@ -10435,7 +11301,7 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
             gMenuImages[0].spriteOffset = time;
             menu_element_render(0);
         }
-        y2 = y2 + 17;
+        y2 += 17;
         sprite_anim_off(FALSE);
         sprite_opaque(TRUE);
         sMenuGuiColourG = 255;
@@ -10486,6 +11352,10 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         open_dialogue_box(7);
     }
 }
+#else
+// No match JPN results_render
+#pragma GLOBAL_ASM("asm/nonmatchings/menu/results_render.s")
+#endif
 
 /**
  * When someone presses A, decide whether to play the stage again,
@@ -10608,7 +11478,9 @@ s32 menu_results_loop(s32 updateRate) {
  */
 void results_free(void) {
     menu_assetgroup_free(gRaceResultsObjectIndices);
+#if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -10728,7 +11600,9 @@ void filename_init(s32 titleY, s32 x, s32 y, s32 font, s32 *targetX, char *fileN
     gNameSelectionDone = FALSE;
     gNameEntryStickX = 0;
     gNameEntryStickHeld = 0;
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -10800,7 +11674,11 @@ void filename_render(UNUSED s32 updateRate) {
                 if (charIndex == 28) {
                     draw_text(&sMenuCurrDisplayList, x, y, "SP", ALIGN_MIDDLE_CENTER);
                 } else if (charIndex == 29) {
+#if REGION == REGION_JP
+                    draw_text(&sMenuCurrDisplayList, x, y, "BS", ALIGN_MIDDLE_CENTER);
+#else
                     draw_text(&sMenuCurrDisplayList, x, y, "DEL", ALIGN_MIDDLE_CENTER);
+#endif
                 } else {
                     draw_text(&sMenuCurrDisplayList, x, y, "OK", ALIGN_MIDDLE_CENTER);
                 }
@@ -10966,7 +11844,9 @@ s32 filename_enter(s32 updateRate) {
  * Explicitly says to unload the ASSET_FONTS_BIGFONT type.
  */
 void menu_unload_bigfont(void) {
+#if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -11020,7 +11900,11 @@ void menu_trophy_race_round_init(void) {
 
     gMenuDelay = 0;
     gTrackNameVoiceDelay = 10;
+#if REGION == REGION_JP
+    func_800C663C_C723C();
+#else
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     music_voicelimit_set(24);
     music_play(SEQUENCE_MAIN_MENU);
     music_fade(256);
@@ -11112,7 +11996,11 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
  * Free any assets associated with the trophy race intro menu.
  */
 void trophyround_free(void) {
+#if REGION == REGION_JP
+    func_800C67F4_C73F4();
+#else
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 void func_80098774(s32 isRankings) {
@@ -11281,7 +12169,9 @@ void menu_trophy_race_rankings_init(void) {
             gRankingsPlayers[i] = FALSE;
         }
     }
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     music_voicelimit_set(24);
     music_play(SEQUENCE_MAIN_MENU);
     music_fade(256);
@@ -11480,7 +12370,9 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
  */
 void rankings_free(void) {
     menu_assetgroup_free(gTrophyRankingsObjectIndices);
+#if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -11583,7 +12475,9 @@ void menu_ghost_data_init(void) {
     }
     menu_assetgroup_load(gGhostDataObjectIndices);
     menu_imagegroup_load(gGhostDataImageIndices);
+#if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
+#endif
 
     for (i = 0; i < 5; i++) {
         gDrawTexDinoDomainGhostBg[i].texture = gMenuAssets[TEXTURE_BACKGROUND_DINO_DOMAIN_TOP];
@@ -11670,12 +12564,19 @@ void ghostmenu_render(UNUSED s32 updateRate) {
             currentWorldId = 0;
         }
         levelName = get_level_name(gGhostLevelIDsMenu[scroll]);
+#if REGION == REGION_JP
+        for (i = 0; levelName[i] != '\0'; i += 2) {
+            textBuffer[i] = levelName[i];
+            textBuffer[i + 1] = levelName[i + 1];
+        }
+#else
         for (i = 0; levelName[i] != '\0' && i < 63; i++) {
             textBuffer[i] = levelName[i];
             if (textBuffer[i] >= 'a' && textBuffer[i] <= 'z') {
                 textBuffer[i] ^= 0x20; // Force uppercase.
             }
         }
+#endif
         textBuffer[i] = '\0'; // Set NULL terminator
         texrect_draw_scaled(&sMenuCurrDisplayList, gDrawTexWorldBgs[currentWorldId], x, y, 0.75f, 0.8125f,
                             COLOUR_RGBA32(255, 255, 255, 255), 0);
@@ -11683,14 +12584,20 @@ void ghostmenu_render(UNUSED s32 updateRate) {
         if (scroll == gGhostMenuOption) {
             func_80080E90(&sMenuCurrDisplayList, 40, y, 240, 52, 4, 4, highlight, highlight, highlight, highlight);
         }
+#if REGION == REGION_JP
+#define GHOSTMENU_TEXT_OFFSET 38
+#else
+#define GHOSTMENU_TEXT_OFFSET 40
+#endif
         set_text_colour(0, 0, 0, 255, 255);
         for (i = 0; i < 4; i++) {
-            draw_text(&sMenuCurrDisplayList, gGhostDataElementPositions[0] + 40 + D_800E1E20[(i << 1)],
+            draw_text(&sMenuCurrDisplayList,
+                      gGhostDataElementPositions[0] + GHOSTMENU_TEXT_OFFSET + D_800E1E20[(i << 1)],
                       y + gGhostDataElementPositions[1] + D_800E1E20[(i << 1) + 1], textBuffer, ALIGN_MIDDLE_CENTER);
         }
         set_text_colour(200, 228, 80, 255, 255);
-        draw_text(&sMenuCurrDisplayList, gGhostDataElementPositions[0] + 40, gGhostDataElementPositions[1] + y,
-                  textBuffer, ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, gGhostDataElementPositions[0] + GHOSTMENU_TEXT_OFFSET,
+                  gGhostDataElementPositions[1] + y, textBuffer, ALIGN_MIDDLE_CENTER);
         texrect_draw(&sMenuCurrDisplayList, gRacerPortraits[gGhostCharacterIDsMenu[scroll]],
                      gGhostDataElementPositions[2] + 40, gGhostDataElementPositions[3] + y, 255, 255, 255, 255);
         switch (gGhostVehicleIDsMenu[scroll]) {
@@ -11728,7 +12635,11 @@ void ghostmenu_render(UNUSED s32 updateRate) {
     if (gMenuStage > GHOSTMENU_CHOOSE) {
         clear_dialogue_box_open_flag(7);
         dialogue_clear(7);
+#if VERSION == VERSION_80
+        set_current_dialogue_box_coords(7, 92, 102, 228, 138);
+#else
         set_current_dialogue_box_coords(7, 104, 102, 216, 138);
+#endif
         set_current_dialogue_background_colour(7, 0, 0, 0, 192);
         set_dialogue_font(7, 0);
         set_current_text_background_colour(7, 0, 0, 0, 0);
@@ -11878,7 +12789,9 @@ s32 menu_ghost_data_loop(s32 updateRate) {
  */
 void ghostmenu_free(void) {
     menu_assetgroup_free(gGhostDataObjectIndices);
+#if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
 }
 
 /**
@@ -12011,7 +12924,11 @@ void menu_credits_init(void) {
     menu_assetgroup_load(gCreditsObjectIndices);
     menu_imagegroup_load(gCreditsImageIndices);
     menu_racer_portraits();
+#if REGION == REGION_JP
+    func_800C663C_C723C();
+#else
     load_font(ASSET_FONTS_BIGFONT);
+#endif
     music_voicelimit_set(24);
     gCreditsControlData[130] = CREDITS_END; // DONT show developer times
     if (gViewingCreditsFromCheat) {
@@ -12041,8 +12958,19 @@ void menu_credits_init(void) {
         // The first u16 of gCheatsAssetData is the total number of cheats.
         // After that is the offsets to the cheat strings.
         cheatOffsets = *gCheatsAssetData + 1;
-        gCreditsArray[85] = (char *) (*gCheatsAssetData) + (cheatOffsets)[(cheatIndex << 1) + 1]; // Cheat name
-        gCreditsArray[86] = (char *) (*gCheatsAssetData) + (cheatOffsets)[(cheatIndex << 1)];     // Cheat code
+#if VERSION == VERSION_79
+#define CHEATINDEXADD 2
+#define CHEATINDEXMULT 3
+#elif VERSION == VERSION_80
+#define CHEATINDEXADD 1
+#define CHEATINDEXMULT 3
+#else
+#define CHEATINDEXADD 1
+#define CHEATINDEXMULT 2
+#endif
+        gCreditsArray[85] =
+            (char *) (*gCheatsAssetData) + (cheatOffsets)[(cheatIndex * CHEATINDEXMULT) + CHEATINDEXADD]; // Cheat name
+        gCreditsArray[86] = (char *) (*gCheatsAssetData) + (cheatOffsets)[(cheatIndex * CHEATINDEXMULT)]; // Cheat code
     }
     music_change_off();
     enable_new_screen_transitions();
@@ -12070,6 +12998,7 @@ void credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
     reset_render_settings(&sMenuCurrDisplayList);
 }
 
+#if REGION != REGION_JP
 /**
  * Handles the credits for the game
  */
@@ -12366,6 +13295,9 @@ s32 menu_credits_loop(s32 updateRate) {
     }
     return 0;
 }
+#else
+#pragma GLOBAL_ASM("asm/nonmatchings/menu/menu_credits_loop.s")
+#endif
 
 /**
  * Unload associated assets with the credits scene.
@@ -12376,7 +13308,11 @@ void credits_free(void) {
     camDisableUserView(0, FALSE);
     set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO);
     menu_assetgroup_free(gCreditsObjectIndices);
+#if REGION == REGION_JP
+    func_800C67F4_C73F4();
+#else
     unload_font(ASSET_FONTS_BIGFONT);
+#endif
     set_gIntDisFlag(FALSE);
 }
 
@@ -13104,7 +14040,11 @@ s32 taj_menu_loop(void) {
         sCurrentMenuID = DIALOGUEPAGE_TAJ_ROOT;
     }
     if (sCurrentMenuID >= DIALOGUEPAGE_TAJ_ROOT && sCurrentMenuID <= DIALOGUEPAGE_TAJ_CHALLENGES) {
+#if REGION == REGION_JP
+        set_current_dialogue_box_coords(1, 22, 16, 210, 124);
+#else
         set_current_dialogue_box_coords(1, 24, 16, 184, 124);
+#endif
         set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     }
     dialogueResult = 0;
@@ -13155,8 +14095,14 @@ s32 taj_menu_loop(void) {
             break;
         case DIALOGUEPAGE_TAJ_ROOT:
             gNextTajChallengeMenu = 0;
+#if VERSION >= VERSION_79
+            // ASSET_MENU_TEXT_OPTIONS must have changed
+            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[190], 1,
+                                 HORZ_ALIGN_CENTER); // OPTIONS
+#else
             render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_OPTIONS], 1,
                                  HORZ_ALIGN_CENTER); // OPTIONS
+#endif
             gDialogueOptionYOffset = 30;
             render_dialogue_option(gMenuText[ASSET_MENU_TEXT_CHANGEVEHICLE], 20, 0); // CHANGE VEHICLE
             if (settings->tajFlags & TAJ_FLAGS_UNLOCKED_A_CHALLENGE) {
@@ -13326,12 +14272,22 @@ s32 tt_menu_loop(void) {
     if (!(settings->cutsceneFlags & CUTSCENE_TT_HELP)) {
         sCurrentMenuID = TT_MENU_INTRODUCTION;
     }
-    if ((sCurrentMenuID != TT_MENU_GAME_STATUS) && (sCurrentMenuID != TT_MENU_INTRODUCTION)) {
+#if REGION == REGION_JP
+    if ((sCurrentMenuID == TT_MENU_CONT_PAK_ERROR_1) || (sCurrentMenuID == TT_MENU_INSERT_CONT_PAK) ||
+        (sCurrentMenuID == TT_MENU_INSERT_RUMBLE_PAK)) {
+        set_current_dialogue_box_coords(1, 22, 16, 218, 136);
+    } else
+#endif
+        if ((sCurrentMenuID != TT_MENU_GAME_STATUS) && (sCurrentMenuID != TT_MENU_INTRODUCTION)) {
         currentOption = 120;
         if (has_ghost_to_save()) {
             currentOption = 136;
         }
         set_current_dialogue_box_coords(1, 24, 16, 192, currentOption);
+#if REGION == REGION_JP
+    } else if (sCurrentMenuID == TT_MENU_INTRODUCTION) {
+        set_current_dialogue_box_coords(1, 24, 16, 200, 204);
+#endif
     } else {
         set_current_dialogue_box_coords(1, 24, 16, 184, 220);
     }
@@ -13343,8 +14299,14 @@ s32 tt_menu_loop(void) {
     switch (sCurrentMenuID) {
         case TT_MENU_ROOT:
         case TT_MENU_EXIT:
+#if VERSION >= VERSION_79
+            // ASSET_MENU_TEXT_OPTIONS must have changed
+            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[189], 1,
+                                 HORZ_ALIGN_CENTER); // OPTIONS
+#else
             render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_OPTIONS], 1,
-                                 HORZ_ALIGN_CENTER);                          // OPTIONS
+                                 HORZ_ALIGN_CENTER); // OPTIONS
+#endif
             render_dialogue_option(gMenuText[ASSET_MENU_TEXT_STATUS], 20, 3); // STATUS
             if (!is_in_two_player_adventure()) {
                 if (is_time_trial_enabled()) {
@@ -13463,8 +14425,14 @@ s32 tt_menu_loop(void) {
                                  HORZ_ALIGN_CENTER); // If you wish to use
             render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_4], 1,
                                  HORZ_ALIGN_CENTER); // the Controller Pak
+#if VERSION >= VERSION_79
+            // ASSET_MENU_TEXT_INSERTDEVICE_6 must have changed
+            render_dialogue_text(1, POS_CENTRED, 66, gMenuText[161], 1,
+                                 HORZ_ALIGN_CENTER); // insert it now!
+#else
             render_dialogue_text(1, POS_CENTRED, 66, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6], 1,
                                  HORZ_ALIGN_CENTER); // insert it now!
+#endif
             if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
                 sound_play(SOUND_SELECT2, NULL);
                 gAdventureSaveGhost = 0;
@@ -13476,12 +14444,21 @@ s32 tt_menu_loop(void) {
             }
             break;
         case TT_MENU_INSERT_RUMBLE_PAK:
+#if VERSION >= VERSION_79
+            render_dialogue_text(1, POS_CENTRED, 34, gMenuText[162], 1,
+                                 HORZ_ALIGN_CENTER); // If you wish to use
+            render_dialogue_text(1, POS_CENTRED, 50, gMenuText[186], 1,
+                                 HORZ_ALIGN_CENTER); // the Rumble Pak
+            render_dialogue_text(1, POS_CENTRED, 66, gMenuText[187], 1,
+                                 HORZ_ALIGN_CENTER); // insert it now!
+#else
             render_dialogue_text(1, POS_CENTRED, 34, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_3], 1,
                                  HORZ_ALIGN_CENTER); // If you wish to use
             render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_5], 1,
                                  HORZ_ALIGN_CENTER); // the Rumble Pak
             render_dialogue_text(1, POS_CENTRED, 66, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6], 1,
                                  HORZ_ALIGN_CENTER); // insert it now!
+#endif
             if (buttonsPressed & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                 sCurrentMenuID = TT_MENU_ROOT;
             }
@@ -13749,6 +14726,9 @@ u64 get_eeprom_settings(void) {
  * Official Name: frontGetLanguage
  */
 s32 get_language(void) {
+#if REGION == REGION_JP
+    return LANGUAGE_JAPANESE;
+#else
     s32 language = LANGUAGE_ENGLISH;
     switch (sEepromSettings & 0xC) {
         case 4:
@@ -13762,6 +14742,7 @@ s32 get_language(void) {
             break;
     }
     return language;
+#endif
 }
 
 /**
@@ -13770,6 +14751,7 @@ s32 get_language(void) {
  * tried to switch to it, all you would see is the word "Japanese" used everywhere as a placeholder.
  */
 void set_language(s32 language) {
+#if REGION != REGION_JP
     u64 langFlag = 0; // English
 
     switch (language) {
@@ -13789,6 +14771,7 @@ void set_language(s32 language) {
 
     load_menu_text(language);
     mark_write_eeprom_settings();
+#endif
 }
 
 /**

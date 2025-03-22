@@ -311,8 +311,6 @@ void            _collectPVoices(ALSynth *drvr);
 s32             _timeToSamples(ALSynth *ALSynth, s32 micros);
 ALMicroTime     _samplesToTime(ALSynth *synth, s32 samples);
 
-void func_80065A80(ALSynth *arg0, PVoice *arg1, s16 arg2);
-
 void            _init_lpfilter(ALLowPass *lp);
 void alClose(ALGlobals *glob);
 

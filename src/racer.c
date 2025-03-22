@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80042D20 */
-
 #include "racer.h"
 #include "memory.h"
 #include "menu.h"
@@ -506,7 +503,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80042D20.s")
 #endif
 
 /**
@@ -659,7 +656,7 @@ s32 roll_percent_chance(s32 chance) {
     return get_random_number_from_range(0, 99) < chance;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_8004447C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004447C.s")
 
 void func_80045128(Object **racerObjs) {
     Object_Racer *obj;
@@ -677,8 +674,8 @@ void func_80045128(Object **racerObjs) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_800452A0.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80045C48.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_800452A0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80045C48.s")
 
 void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     s32 objectMoved;
@@ -1642,7 +1639,7 @@ f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3,
     return velocity;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80049794.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80049794.s")
 
 /**
  * When turning left and right in a plane, apply the tilting animation to the character.
@@ -1941,10 +1938,10 @@ void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
     racer->cameraYaw = gCameraObject->trans.rotation.y_rotation;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/update_camera_plane.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/update_camera_plane.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/racer/func_8004CC20.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004CC20.s")
 
 /**
  * Handles the camera movement when the player is on a loop-the-loop.
@@ -6032,7 +6029,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     racer->cameraYaw = gCameraObject->trans.rotation.y_rotation;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/update_camera_car.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/update_camera_car.s")
 #endif
 
 /**
@@ -6305,7 +6302,7 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/func_80059208.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80059208.s")
 #endif
 
 /**
@@ -6596,7 +6593,7 @@ s32 set_ghost_position_and_rotation(Object *obj) {
     return TRUE;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/racer/set_ghost_position_and_rotation.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/set_ghost_position_and_rotation.s")
 #endif
 
 /**
@@ -7010,7 +7007,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     s32 checkpointIdx;
     s32 checkpointCount;
     CheckpointNode *checkpoint;
-    UNUSED f32 pad0;
+    LevelModel *model;
     f32 var_f28;
     f32 checkpointX[4];
     s32 j;
@@ -7033,6 +7030,9 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     f32 var_f24;
     s32 i;
     LevelHeader *levelHeader;
+#if VERSION == VERSION_80
+    UNUSED f32 pad4;
+#endif
 
     gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACERACCELERATION_UNKNOWN0);
     levelHeader = get_current_level_header();
@@ -7203,10 +7203,42 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     racer->unk1BE = racer->steerVisualRotation;
     racer->unk1C0 = obj->segment.trans.rotation.x_rotation;
     if (move_object(obj, var_f24, var_f26, var_f28)) {
-        obj->segment.trans.x_position += var_f24;
         if (1) {}
+#if VERSION < VERSION_80
+        obj->segment.trans.x_position += var_f24;
         obj->segment.trans.y_position += var_f26;
         obj->segment.trans.z_position += var_f28;
+#else
+        model = get_current_level_model();
+        obj->segment.trans.x_position += var_f24;
+        obj->segment.trans.y_position += var_f26;
+        obj->segment.trans.z_position += var_f28;
+        // Don't get caught up on this using checkpointDistance var when documenting. It just matched that way.
+        checkpointDistance = model->upperXBounds + 1000.0f;
+        if (obj->segment.trans.x_position > checkpointDistance) {
+            obj->segment.trans.x_position = checkpointDistance;
+        }
+        checkpointDistance = model->lowerXBounds - 1000.0f;
+        if (obj->segment.trans.x_position < checkpointDistance) {
+            obj->segment.trans.x_position = checkpointDistance;
+        }
+        checkpointDistance = model->upperYBounds + 3000.0f;
+        if (obj->segment.trans.y_position > checkpointDistance) {
+            obj->segment.trans.y_position = checkpointDistance;
+        }
+        checkpointDistance = model->lowerYBounds - 500.0f;
+        if (obj->segment.trans.y_position < checkpointDistance) {
+            obj->segment.trans.y_position = checkpointDistance;
+        }
+        checkpointDistance = model->upperZBounds + 1000.0f;
+        if (obj->segment.trans.z_position > checkpointDistance) {
+            obj->segment.trans.z_position = checkpointDistance;
+        }
+        checkpointDistance = model->lowerZBounds - 1000.0f;
+        if (obj->segment.trans.z_position < checkpointDistance) {
+            obj->segment.trans.z_position = checkpointDistance;
+        }
+#endif
     }
     if (checkpointPositionOffset < 20.0) {
         obj->segment.x_velocity = var_f24 / updateRateF;

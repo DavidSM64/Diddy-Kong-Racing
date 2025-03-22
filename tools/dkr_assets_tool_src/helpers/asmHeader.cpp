@@ -37,6 +37,10 @@ void WritableAsmInclude::write_include(std::string filepath) {
     _out << ".include \"" << filepath << "\"" << std::endl;
 }
 
+void WritableAsmInclude::write_section(std::string section) {
+    _out << ".section ." << section << std::endl;
+}
+
 void WritableAsmInclude::write_binary_include(std::string filepath) {
     _out << ".incbin \"" << filepath << "\"" << std::endl;
 }

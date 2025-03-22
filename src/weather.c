@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800AB1F0 */
-
 #include "weather.h"
 #include "types.h"
 #include "macros.h"
@@ -1148,5 +1145,5 @@ void render_rain_overlay(RainGfxData *arg0, s32 arg1) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/weather/render_rain_overlay.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/weather/render_rain_overlay.s")
 #endif

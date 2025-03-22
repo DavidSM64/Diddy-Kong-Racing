@@ -6,6 +6,7 @@ compiler_type = "ido"
 "gs[DS]P.*" = "void"
 "gDma.*" = "void"
 "gDkr.*" = "void"
+"numberOfGfxCommands" = "unsigned int"
 "fast3d_cmd" = "void"
 "OS_PHYSICAL_TO_K0" = "void *"
 "_SHIFTL" = "unsigned int"
@@ -26,4 +27,4 @@ compiler_type = "ido"
 "COLOUR_TAG_.*" = "unsigned int"
 
 [decompme.compilers]
-"tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3"
+"tools/ido-recomp/linux/cc" = "ido5.3"
