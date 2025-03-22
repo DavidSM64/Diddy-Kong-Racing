@@ -9,6 +9,10 @@ asm
 build/*
 build/
 
+#permuter folder
+nonmatchings/*
+nonmatchings/
+
 #binaries ripped from the ROMs
 assets/
 assets/*
@@ -38,6 +42,10 @@ ucode/*
 *.la
 *.a
 *.lib
+
+#Windows stuff
+*.bat
+*.exe
 
 #misc
 __pycache__/
