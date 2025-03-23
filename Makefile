@@ -425,7 +425,7 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: src/hasm/llmuldiv_gcc.s | $(ALL
 ifneq ("$(wildcard $(BOOT_CUSTOM))","")
 $(BUILD_DIR)/assets/boot.bin.o: $(BOOT_CUSTOM) | $(ALL_ASSETS_BUILT)
 	$(call print,Linking Custom Boot:,$<,$@)
-	$(V)$(LD) -r -b binary -o $(BOOT_CUSTOM) $<
+	$(V)$(LD) -r -b binary -o $@ $<
 endif
 endif
 
