@@ -3,6 +3,9 @@
 *.n64
 *.v64
 
+#Ignore any custom boot files if any.
+boot_custom.bin 
+
 #compiled or ripped asm
 asm/*
 asm

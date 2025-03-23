@@ -7,6 +7,9 @@ NON_MATCHING ?= 0
 COMPILER ?= ido
 $(eval $(call validate-option,NON_MATCHING,ido gcc))
 
+# Define a custom boot file if desired to use something other than the vanilla one
+BOOT_CUSTOM ?= boot_custom.bin
+
 LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\"
 
 # Whether to hide commands or not
@@ -417,6 +420,13 @@ ifeq ($(NON_MATCHING),1)
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: src/hasm/llmuldiv_gcc.s | $(ALL_ASSETS_BUILT)
 	$(call print,Assembling llmuldiv_gcc:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) --defsym NON_MATCHING=1 -o $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o $<
+
+# If doing a NON_MATCHING build, and the custom boot file exists, use that.
+ifneq ("$(wildcard $(BOOT_CUSTOM))","")
+$(BUILD_DIR)/assets/boot.bin.o: $(BOOT_CUSTOM) | $(ALL_ASSETS_BUILT)
+	$(call print,Linking Custom Boot:,$<,$@)
+	$(V)$(LD) -r -b binary -o $(BOOT_CUSTOM) $<
+endif
 endif
 
 $(BUILD_DIR)/%.bin.o: %.bin | $(ALL_ASSETS_BUILT)
