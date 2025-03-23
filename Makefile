@@ -130,7 +130,7 @@ else
 endif
 
 C_DEFINES := $(foreach d,$(DEFINES),-D$(d)) $(LIBULTRA_VERSION_DEFINE) -D_MIPS_SZLONG=32
-ASM_DEFINES = --defsym _MIPS_SIM=1 --defsym mips=1
+ASM_DEFINES = --defsym _MIPS_SIM=1 --defsym mips=1 --defsym VERSION_$(REGION)_$(VERSION)=1
 
 INCLUDE_CFLAGS  = -I . -I include -I include/libc  -I include/PR -I include/sys -I $(BIN_DIRS) -I $(SRC_DIR) -I $(LIBULTRA_DIR)
 INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/gu -I $(LIBULTRA_DIR)/src/libc -I $(LIBULTRA_DIR)/src/io  -I $(LIBULTRA_DIR)/src/sc 
@@ -405,6 +405,11 @@ $(BUILD_DIR)/%.s.o: %.s | $(ALL_ASSETS_BUILT)
 $(BUILD_DIR)/asm/assets/assets.s.o: asm/assets/assets.s | $(ALL_ASSETS_BUILT)
 	$(call print,Assembling Assets:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -o $(BUILD_DIR)/assets/assets.bin.o $<
+
+# Specifically override the header file from what splat extracted to be replaced by what we have in the hasm folder
+$(BUILD_DIR)/asm/header.s.o: src/hasm/header.s | $(ALL_ASSETS_BUILT)
+	$(call print,Assembling Header:,$<,$@)
+	$(V)$(AS) $(ASFLAGS) -o $(BUILD_DIR)/asm/header.s.o $<
 
 ifeq ($(NON_MATCHING),1)
 # Specifically override llcvt file for NON_MATCHING builds
