@@ -76,10 +76,15 @@ class DkrMapFile:
                 functions = []
                 lines = mapFile.read().split('\n')
                 for line in lines:
-                    if line.startswith('                0x8'):
+                    lineSet = 0
+                    if line.startswith('                0x00000000'):
+                        lineSet = 26
+                    elif line.startswith('                0x8'):
+                        lineSet = 18
+                    if (lineSet != 0):
                         if '=' in line:
                             line = line[0:line.find('=')-1]
-                        address = int(line[18:18+8], 16)
+                        address = int(line[lineSet:lineSet+8], 16)
                         if address >= CODE_START and address < CODE_END:
                             symbol = line[line.rfind(' ')+1:]
                             if (not symbol.startswith(".L") and not symbol.startswith("L800") 
