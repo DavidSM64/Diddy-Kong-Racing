@@ -258,6 +258,7 @@ else
 endif
 
 no_verify: $(TARGET).z64
+	$(V)$(CRC)
 	$(V)$(PRINT) "$(GREEN)Build Complete!$(NO_COL)\n"
 
 extract:
