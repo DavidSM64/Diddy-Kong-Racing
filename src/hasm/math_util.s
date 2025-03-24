@@ -1389,7 +1389,7 @@ leaf coss_f
 
 leaf coss_s16
 /* 7142C 8007082C 24844000 */  addiu      $a0, $a0, 0x4000
-leaf sins_s16
+glabel sins_s16
 /* 71430 80070830 00041440 */  sll        $v0, $a0, 17
 /* 71434 80070834 04430003 */  bgezl      $v0, .L80070844
 /* 71438 80070838 000450C2 */   srl       $t2, $a0, 3
@@ -1415,12 +1415,11 @@ leaf sins_s16
 .L80070884:
 /* 71484 80070884 03E00008 */  jr         $ra
 /* 71488 80070888 00000000 */   nop
-.end sins_s16
 .end coss_s16
 
 leaf coss_2
 /* 7148C 8007088C 24844000 */  addiu      $a0, $a0, 0x4000
-leaf sins_2
+glabel sins_2
 /* 71490 80070890 00041440 */  sll        $v0, $a0, 17
 /* 71494 80070894 04430003 */  bgezl      $v0, .L800708A4
 /* 71498 80070898 000450C2 */   srl       $t2, $a0, 3
@@ -1439,7 +1438,6 @@ leaf sins_2
 .L800708C8:
 /* 714C8 800708C8 03E00008 */  jr         $ra
 /* 714CC 800708CC 00000000 */   nop
-.end sins_2
 .end coss_2
 
 leaf calc_dyn_lighting_for_level_segment

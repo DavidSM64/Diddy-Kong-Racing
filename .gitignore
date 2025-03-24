@@ -17,7 +17,6 @@ nonmatchings/*
 nonmatchings/
 
 #binaries ripped from the ROMs
-assets/
 assets/*
 assets_*/
 assets_*/*
