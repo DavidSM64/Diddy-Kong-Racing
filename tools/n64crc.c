@@ -98,7 +98,7 @@ int N64GetCIC(unsigned char *data) {
 		case 0xACC8580A: return 6106;
 	}
 
-	return 6105;
+	return 0;
 }
 
 int N64CalcCRC(unsigned int *crc, unsigned char *data) {

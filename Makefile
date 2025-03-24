@@ -225,7 +225,7 @@ endif
 $(GCC_SAFE_FILES): CC := $(CROSS)gcc
 $(GCC_SAFE_FILES): CC_WARNINGS := 
 $(GCC_SAFE_FILES): MIPSISET := -mips3
-$(GCC_SAFE_FILES): CFLAGS := -c -DNDEBUG -DAVOID_UB -DNON_MATCHING -O2 $(INCLUDE_CFLAGS) $(C_DEFINES) \
+$(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING -O2 $(INCLUDE_CFLAGS) $(C_DEFINES) \
 	-EB \
 	-march=vr4300 \
 	-mabi=32 \
@@ -411,12 +411,12 @@ $(BUILD_DIR)/%.c.o: %.c | $(ALL_ASSETS_BUILT)
 
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: $(LIBULTRA_DIR)/src/libc/llcvt.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling mips3:,$<,$@)
-	@$(CC)  -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
+	@$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 	$(V)$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@
 
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling mips3:,$<,$@)
-	@$(CC)  -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
+	@$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 	$(V)$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@
 
 $(BUILD_DIR)/%.s.o: %.s | $(ALL_ASSETS_BUILT)
