@@ -2,7 +2,11 @@
 
 .word 0x80371240       /* PI BSB Domain 1 register */
 .word 0x0000000F       /* Clockrate setting */
+.ifdef BOOT_6103
+.word 0x80000400       /* Entrypoint address */
+.else
 .word 0x80100400       /* Entrypoint address */
+.endif
 .word 0x00001447       /* Revision */
 
 .ifdef VERSION_us_v77

@@ -135,6 +135,14 @@ endif
 C_DEFINES := $(foreach d,$(DEFINES),-D$(d)) $(LIBULTRA_VERSION_DEFINE) -D_MIPS_SZLONG=32
 ASM_DEFINES = --defsym _MIPS_SIM=1 --defsym mips=1 --defsym VERSION_$(REGION)_$(VERSION)=1
 
+# If NON_MATCHING and using a custom boot file, (Right now just 6103).
+# Define this so it will change the entrypoint in the header
+ifeq ($(NON_MATCHING),1)
+ifneq ("$(wildcard $(BOOT_CUSTOM))","")
+ASM_DEFINES += --defsym BOOT_6103=1
+endif
+endif
+
 INCLUDE_CFLAGS  = -I . -I include -I include/libc  -I include/PR -I include/sys -I $(BIN_DIRS) -I $(SRC_DIR) -I $(LIBULTRA_DIR)
 INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/gu -I $(LIBULTRA_DIR)/src/libc -I $(LIBULTRA_DIR)/src/io  -I $(LIBULTRA_DIR)/src/sc 
 INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/audio -I $(LIBULTRA_DIR)/src/os
