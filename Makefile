@@ -135,11 +135,11 @@ endif
 C_DEFINES := $(foreach d,$(DEFINES),-D$(d)) $(LIBULTRA_VERSION_DEFINE) -D_MIPS_SZLONG=32
 ASM_DEFINES = --defsym _MIPS_SIM=1 --defsym mips=1 --defsym VERSION_$(REGION)_$(VERSION)=1
 
-# If NON_MATCHING and using a custom boot file, (Right now just 6103).
+# If NON_MATCHING and using a custom boot file, (Right now just 6102).
 # Define this so it will change the entrypoint in the header
 ifeq ($(NON_MATCHING),1)
 ifneq ("$(wildcard $(BOOT_CUSTOM))","")
-ASM_DEFINES += --defsym BOOT_6103=1
+ASM_DEFINES += --defsym BOOT_6102=1
 endif
 endif
 

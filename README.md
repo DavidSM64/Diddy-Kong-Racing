@@ -20,6 +20,7 @@ As of March 20, 2025, this is our current score:
 * `make`, Version 4.2 or higher
 * `python3`
 * `libpcre2-dev` and `libpcre2-8-0` (Not technically required, but will speedup extracting/building some assets.)
+* `gcc-mips-linux-gnu` is optionally used if compiling NON_MATCHING with COMPILER=gcc
 
 `sudo apt install build-essential pkg-config git python3 python3-pip binutils-mips-linux-gnu python3-venv libpcre2-dev libpcre2-8-0`
 
