@@ -291,13 +291,13 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 clean_src:
-    rm -rf $(BUILD_DIR)/asm
-    rm -rf $(BUILD_DIR)/libultra
-    rm -rf $(BUILD_DIR)/src
+	rm -rf $(BUILD_DIR)/asm
+	rm -rf $(BUILD_DIR)/libultra
+	rm -rf $(BUILD_DIR)/src
 
 clean_assets:
-    rm -rf $(ASM_DIRS)
-    rm -rf $(BIN_DIRS)
+	rm -rf $(ASM_DIRS)
+	rm -rf $(BIN_DIRS)
 	
 cleanall:
 	rm -rf $(BUILD_DIR)
