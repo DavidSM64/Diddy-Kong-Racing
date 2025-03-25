@@ -2092,14 +2092,14 @@ void load_menu_text(s32 language) {
 
     for (langIndex = 0; sCorruptDataMenuText[langIndex] != NULL; langIndex++) {}
 
-    sCorruptDataMenuText[langIndex] = menuText[ASSET_MENU_TEXT_CORRUPTDATA_1];   // "TRY AGAIN!"
-    sInsertControllerPakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3];  // "If you wish to use"
-    sInsertControllerPakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_4];  // "the Controller Pak"
+    sCorruptDataMenuText[langIndex] = menuText[ASSET_MENU_TEXT_CORRUPTDATA_1];  // "TRY AGAIN!"
+    sInsertControllerPakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3]; // "If you wish to use"
+    sInsertControllerPakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_4]; // "the Controller Pak"
 #if VERSION == VERSION_77
-    sInsertControllerPakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6];  // "insert it now!"
-    sInsertRumblePakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3];      // "If you wish to use"
-    sInsertRumblePakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_5];      // "the Rumble Pak"
-    sInsertRumblePakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6];      // "insert it now!"
+    sInsertControllerPakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6]; // "insert it now!"
+    sInsertRumblePakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3];     // "If you wish to use"
+    sInsertRumblePakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_5];     // "the Rumble Pak"
+    sInsertRumblePakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6];     // "insert it now!"
 #else
     // TODO: Figure out what these text values are for these versions.
     sInsertControllerPakMenuText[2] = menuText[161];

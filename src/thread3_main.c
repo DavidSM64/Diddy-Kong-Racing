@@ -45,19 +45,13 @@
 #include "PRinternal/viint.h"
 #include "font.h"
 
-/************ .rodata ************/
+/************ .data ************/
 
 #if VERSION >= VERSION_79
 UNUSED char *sDebugRomBuildInfo[] = { "1.1634", "17/10/97 11:19", "pmountain" };
 #elif VERSION == VERSION_77
 UNUSED char *sDebugRomBuildInfo[] = { "1.1605", "02/10/97 16:03", "pmountain" };
 #endif
-
-const char D_800E7134[] = "BBB\n"; // Functionally unused.
-
-/*********************************/
-
-/************ .data ************/
 
 #if VERSION == VERSION_80
 UNUSED char gBuildString[] = "Version 8.0 27/10/97 12.30 L.Schuneman";
@@ -67,7 +61,7 @@ UNUSED char gBuildString[] = "Version 7.9 14/10/97 19.40 L.Schuneman";
 UNUSED char gBuildString[] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 #endif
 
-s8 sAntiPiracyTriggered = 0;
+s8 sAntiPiracyTriggered = FALSE;
 UNUSED s32 D_800DD378 = 1;
 s32 gSaveDataFlags = 0; // Official Name: load_save_flags
 s32 gScreenStatus = OSMESG_SWAP_BUFFER;
@@ -79,21 +73,16 @@ s16 gLevelLoadTimer = 0;
 s8 gPauseLockTimer = 0; // If this is above zero, the player cannot pause the game.
 s8 gFutureFunLandLevelTarget = FALSE;
 s8 gDmemInvalid = FALSE;
-UNUSED s32 D_800DD3A4 = 0;
-UNUSED s32 D_800DD3A8 = 0;
-UNUSED s32 D_800DD3AC = 0;
-s32 gNumF3dCmdsPerPlayer[4] = { 4500, 7000, 11000, 11000 };
-s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
-s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
-s32 gNumHudTrisPerPlayer[4] = { 20, 30, 40, 50 };
+UNUSED s32 D_800DD3A4[] = { 0, 0, 0 };
+s32 gNumF3dCmdsPerPlayer[MAXCONTROLLERS] = { 4500, 7000, 11000, 11000 };
+s32 gNumHudVertsPerPlayer[MAXCONTROLLERS] = { 300, 600, 850, 900 };
+s32 gNumHudMatPerPlayer[MAXCONTROLLERS] = { 300, 400, 550, 600 };
+s32 gNumHudTrisPerPlayer[MAXCONTROLLERS] = { 20, 30, 40, 50 };
 s8 gDrawFrameTimer = 0;
 FadeTransition D_800DD3F4 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 20, 0);
 UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 20, -1);
 s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition gDrumstickSceneTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, -1);
-UNUSED char *D_800DD410[3] = { "CAR", "HOV", "PLN" };
-FadeTransition gLevelFadeOutTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
-FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
 
 /*******************************/
 
@@ -291,7 +280,7 @@ void main_game_loop(void) {
             debugLoopCounter++;
         }
         if (debugLoopCounter > 20000000) { // This shouldn't ever be true?
-            render_printf(D_800E7134 /* "BBB\n" */);
+            render_printf("BBB\n");
         }
     }
 
@@ -847,6 +836,9 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     menu_init(menuId);
     gGameCurrentEntrance = 0;
 }
+
+// Unsure of the exact placement for this. It has to be between "BBB" and "Swapping\n" though.
+UNUSED char *D_800DD410[3] = { "CAR", "HOV", "PLN" };
 
 /**
  * Set the default vehicle option from the current loaded level.
@@ -1453,6 +1445,9 @@ void default_alloc_displaylist_heap(void) {
     gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[numberOfPlayers];
     gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[numberOfPlayers];
 }
+
+FadeTransition gLevelFadeOutTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
+FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
 
 /**
  * Set a delayed level trigger and a transition.
