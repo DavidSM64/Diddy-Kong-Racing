@@ -36,13 +36,7 @@ typedef	float	Matrix[4][4];
 
 #endif
 
-
-#ifdef __GNUC__
-#define ROUND(d) 	round(d)
-#define ABS(d)		abs(d)
-#else
 #define ROUND(d)	(int)(((d) >= 0.0) ? ((d) + 0.5) : ((d) - 0.5))
 #define	ABS(d)		((d) > 0) ? (d) : -(d)
-#endif
 
 extern float	__libm_qnan_f;

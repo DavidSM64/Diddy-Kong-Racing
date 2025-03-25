@@ -117,35 +117,37 @@ MIPSISET       = -mips1
 
 DEFINES := _FINALROM NDEBUG TARGET_N64 F3DDKR_GBI
 DEFINES += VERSION_$(REGION)_$(VERSION)
+MATCHDEFS := 
 
 VERIFY = verify
 
 ifeq ($(NON_MATCHING),1)
-	DEFINES += NON_MATCHING
-	DEFINES += AVOID_UB
+	MATCHDEFS += NON_MATCHING=1
+	MATCHDEFS += AVOID_UB=1
 	VERIFY = no_verify
 	MIPSISET = -mips2
 	C_STANDARD := -std=gnu99
 else
-	DEFINES += ANTI_TAMPER
+	MATCHDEFS += ANTI_TAMPER=1
     # Override compiler choice on matching builds.
 	COMPILER := ido
 	BOOT_CIC := 6103
 	C_STANDARD := -std=gnu90
 endif
 
+DEFINES += $(MATCHDEFS)
 C_DEFINES := $(foreach d,$(DEFINES),-D$(d)) $(LIBULTRA_VERSION_DEFINE) -D_MIPS_SZLONG=32
-ASM_DEFINES = --defsym _MIPS_SIM=1 --defsym mips=1 --defsym VERSION_$(REGION)_$(VERSION)=1
+ASM_DEFINES = $(foreach d,$(DEFINES),$(if $(findstring =,$(d)),--defsym $(d),)) --defsym _MIPS_SIM=1 --defsym mips=1 --defsym VERSION_$(REGION)_$(VERSION)=1
 
 # If NON_MATCHING and using a custom boot file, (Right now just 6102).
 # Define this so it will change the entrypoint in the header
 ifeq ($(NON_MATCHING),1)
-ifneq ("$(wildcard $(BOOT_CUSTOM))","")
-ASM_DEFINES += --defsym BOOT_$(BOOT_CIC)=1
-else
+ifeq ("$(wildcard $(BOOT_CUSTOM))","")
 BOOT_CIC := 6103
 endif
 endif
+
+ASM_DEFINES += --defsym BOOT_$(BOOT_CIC)=1
 
 C_DEFINES += -DCIC_ID=$(BOOT_CIC)
 
@@ -172,7 +174,7 @@ CFLAGS += $(C_DEFINES)
 CFLAGS += $(INCLUDE_CFLAGS)
 
 CHECK_WARNINGS := -Wall -Wextra -Werror-implicit-function-declaration -Wno-format-security -Wno-unknown-pragmas -Wno-unused-parameter -Wno-missing-braces \
-			      -Wno-main -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch -Wno-pointer-sign
+                  -Wno-main -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch -Wno-pointer-sign
 ifeq ($(DETECTED_OS), macos)
 	CHECK_WARNINGS += -Wno-constant-conversion -Wno-for-loop-analysis
 	# Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
