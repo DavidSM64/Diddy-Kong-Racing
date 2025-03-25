@@ -1,4 +1,3 @@
-@ -1,81 +0,0 @@
 #!/bin/bash
 
 # --- Useful Variables --- #
