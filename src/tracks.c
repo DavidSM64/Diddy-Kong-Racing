@@ -983,7 +983,7 @@ s32 func_80027568(void) {
     ret = FALSE;
     // bug? var_ra can be undefined?
     for (var_t4 = 0; var_t4 < D_8011D378 && ret == FALSE; var_t4++) {
-        var_v0_1 = D_8011D370[var_t4];
+        var_v0_1 = (s32) D_8011D370[var_t4];
         if (var_v0_1 > 0) {
             var_ra = (void *) PHYS_TO_K0(var_v0_1);
         } else {

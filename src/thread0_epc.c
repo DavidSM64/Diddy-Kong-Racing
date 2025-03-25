@@ -140,7 +140,7 @@ void write_epc_data_to_cpak(void) {
         thread->context.fp0.f.f_even = gObjectStackTrace[1];
         thread->context.fp2.f.f_odd = gObjectStackTrace[2];
         bcopy(thread, sp44, sizeof(epcInfo));
-        bcopy((void *) thread->context.sp, sp244, sizeof(sp244));
+        bcopy((void *) (u32) thread->context.sp, sp244, sizeof(sp244));
         zero = 0; // Why is this needed to match?
         v0 = func_80024594(&currentCount, &maxCount);
         for (i = zero; i < maxCount; i++) {

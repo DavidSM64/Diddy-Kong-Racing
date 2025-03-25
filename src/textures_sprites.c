@@ -446,14 +446,14 @@ TextureHeader *load_texture(s32 arg0) {
     }
     for (i = 0; i < gNumberOfLoadedTextures; i++) {
         if (arg0 == gTextureCache[(i << 1)]) {
-            tex = gTextureCache[(i << 1) + 1];
+            tex = (TextureHeader *) gTextureCache[(i << 1) + 1];
             tex->numberOfInstances++;
             return tex;
         }
     }
     assetOffset = gTextureAssetTable[assetTable][assetIndex];
     assetSize = gTextureAssetTable[assetTable][assetIndex + 1] - assetOffset;
-    load_asset_to_address(assetSection, gTempTextureHeader, assetOffset, 0x28);
+    load_asset_to_address(assetSection, (u32) gTempTextureHeader, assetOffset, 0x28);
     numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
 
     if (!gTempTextureHeader->header.isCompressed) {
@@ -461,7 +461,7 @@ TextureHeader *load_texture(s32 arg0) {
         if (tex == NULL) {
             return NULL;
         }
-        load_asset_to_address(assetSection, tex, assetOffset, assetSize);
+        load_asset_to_address(assetSection, (u32) tex, assetOffset, assetSize);
     } else {
         temp_v0_5 = byteswap32((u8 *) &gTempTextureHeader->uncompressedSize);
         temp_a0 = (numberOfTextures * 0x60) + temp_v0_5;
@@ -473,7 +473,7 @@ TextureHeader *load_texture(s32 arg0) {
         temp_a1 = ((s32) tex + sp3C) - assetSize;
         temp_a1 -= temp_a1 % 0x10;
         load_asset_to_address(assetSection, temp_a1, assetOffset, assetSize);
-        gzip_inflate(temp_a1 + 0x20, (u8 *) tex);
+        gzip_inflate((u8 *) (temp_a1 + 0x20), (u8 *) tex);
         assetSize = sp3C - 0x20;
     }
     texIndex = -1;
@@ -486,11 +486,11 @@ TextureHeader *load_texture(s32 arg0) {
         texIndex = gNumberOfLoadedTextures++;
     }
     gTextureCache[(texIndex << 1)] = arg0;
-    gTextureCache[(texIndex << 1) + 1] = tex;
+    gTextureCache[(texIndex << 1) + 1] = (s32) tex;
     paletteOffset = -1;
     if ((tex->format & 0xF) == TEX_FORMAT_CI4) {
         if (D_80126344 == 0) {
-            load_asset_to_address(ASSET_EMPTY_14, &gCiPalettes[gCiPalettesSize], tex->ciPaletteOffset, 32);
+            load_asset_to_address(ASSET_EMPTY_14, (u32) &gCiPalettes[gCiPalettesSize], tex->ciPaletteOffset, 32);
             tex->ciPaletteOffset = gCiPalettesSize;
             gCiPalettesSize += 32; // (32 bytes / 2 bytes per color) = 16 colors.
         }
@@ -498,7 +498,7 @@ TextureHeader *load_texture(s32 arg0) {
     }
     if ((tex->format & 0xF) == TEX_FORMAT_CI8) {
         if (D_80126344 == 0) {
-            load_asset_to_address(ASSET_EMPTY_14, &gCiPalettesSize[gCiPalettes], tex->ciPaletteOffset, 128);
+            load_asset_to_address(ASSET_EMPTY_14, (u32) &gCiPalettesSize[gCiPalettes], tex->ciPaletteOffset, 128);
             tex->ciPaletteOffset = gCiPalettesSize;
             gCiPalettesSize += 128; // (128 bytes / 2 bytes per color) = 64 colors.
         }

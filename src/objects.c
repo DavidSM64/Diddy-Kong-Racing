@@ -1821,7 +1821,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         address = (u32 *) ((uintptr_t) address + sizeOfobj);
         if (sizeOfobj == 0) {
             if (D_8011AE50 != NULL) {
-                free_texture((u32) D_8011AE50);
+                free_texture((TextureHeader *) D_8011AE50);
             }
             objFreeAssets(curObj, assetCount, objType);
             try_free_object_header(var_a0);
@@ -1849,10 +1849,10 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     newObj = mempool_alloc_pool((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
     if (newObj == NULL) {
         if (D_8011AE50 != NULL) {
-            free_texture((u32) D_8011AE50);
+            free_texture((TextureHeader *) D_8011AE50);
         }
         if (D_8011AE54 != NULL) {
-            free_texture((u32) D_8011AE54);
+            free_texture((TextureHeader *) D_8011AE54);
         }
         objFreeAssets(curObj, assetCount, objType);
         try_free_object_header(var_a0);
@@ -2443,7 +2443,7 @@ void func_80011134(Object *arg0, s32 arg1) {
             if (temp_v0 != 0xFF) {
                 var_t5 = temp_s3->textures[temp_v0].texture;
                 sp5C = var_s0->unk7 << 6;
-                tex_animate_texture(var_t5, temp_s4[var_s1].flags, &sp5C, arg1);
+                tex_animate_texture(var_t5, (u32 *) temp_s4[var_s1].flags, &sp5C, arg1);
                 var_s0->unk7 = sp5C >> 6;
             }
         }

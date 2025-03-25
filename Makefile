@@ -171,19 +171,21 @@ CFLAGS := -G 0 -non_shared -verbose -Xcpluscomm -nostdinc -Wab,-r4300_mul
 CFLAGS += $(C_DEFINES)
 CFLAGS += $(INCLUDE_CFLAGS)
 
+CHECK_WARNINGS := -Wall -Wextra -Werror-implicit-function-declaration -Wno-format-security -Wno-unknown-pragmas -Wno-unused-parameter -Wno-missing-braces -Wno-int-conversion -Wno-main -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch -Wno-pointer-sign -Wint-conversion
 ifeq ($(DETECTED_OS), macos)
-  CHECK_WARNINGS := -Wall -Wextra -Wno-format-security -Wno-unknown-pragmas -Wunused-function -Wno-unused-parameter -Wno-constant-conversion
-  CHECK_WARNINGS += -Werror-implicit-function-declaration -Wno-missing-braces -Wno-int-conversion -Wno-main -Wno-for-loop-analysis
-  CHECK_WARNINGS += -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch -Wno-pointer-sign
+	CHECK_WARNINGS += -Wno-constant-conversion -Wno-for-loop-analysis
+	# Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
+	ifeq ($(NON_MATCHING),0)
+		CHECK_WARNINGS += -Wno-unused-value -Wno-deprecated-non-prototype -Wno-array-bounds -Wno-self-assign -Wno-uninitialized
+		CHECK_WARNINGS += -Wno-unused-but-set-variable -Wno-unused-variable
+	endif
 else
-  CHECK_WARNINGS := -Wall -Wextra -Wno-format-security -Wno-unknown-pragmas -Wunused-function -Wno-unused-parameter  -Wno-constant-conversion
-  CHECK_WARNINGS += -Werror-implicit-function-declaration -Wno-missing-braces -Wno-int-conversion -Wno-main -Wno-for-loop-analysis
-  CHECK_WARNINGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch -Wno-pointer-sign
-endif
-# Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
-ifeq ($(NON_MATCHING),0)
-	CHECK_WARNINGS += -Wno-unused-value -Wno-deprecated-non-prototype -Wno-array-bounds -Wno-self-assign -Wno-uninitialized
-	CHECK_WARNINGS += -Wno-unused-but-set-variable -Wno-unused-variable
+  	CHECK_WARNINGS := -Wno-builtin-declaration-mismatch
+	# Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
+	ifeq ($(NON_MATCHING),0)
+		CHECK_WARNINGS += -Wno-unused-value -Wno-array-bounds -Wno-uninitialized
+		CHECK_WARNINGS += -Wno-unused-but-set-variable -Wno-unused-variable
+	endif
 endif
 CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -m32 -DAVOID_UB -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
 
