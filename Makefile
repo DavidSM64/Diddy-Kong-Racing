@@ -10,6 +10,7 @@ $(eval $(call validate-option,NON_MATCHING,ido gcc))
 # Define a custom boot file if desired to use something other than the vanilla one
 BOOT_CUSTOM ?= mods/boot_custom.bin
 BOOT_CIC ?= 6103
+$(eval $(call validate-option,BOOT_CIC,6102 6103))
 
 LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\"
 
@@ -96,6 +97,11 @@ else ifeq ($(shell type mips64-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0
   CROSS := mips64-linux-gnu-
 else
   CROSS := mips64-elf-
+# No binutil packages were found, so we have to download the source & build it.
+ifeq ($(wildcard $(TOOLS_DIR)/binutils/.*),)
+  DUMMY != $(TOOLS_DIR)/get-binutils.sh >&2 || echo FAIL
+endif 
+  CROSS := $(TOOLS_DIR)/binutils/mips64-elf-
 endif
 
 AS       = $(CROSS)as

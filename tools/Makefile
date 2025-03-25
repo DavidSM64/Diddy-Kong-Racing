@@ -21,6 +21,11 @@ else ifeq ($(UNAME_S),Darwin)
 else ifeq ($(UNAME_S),Linux)
 	DETECTED_OS := linux
 	CXXFLAGS += -Werror -Wall $(IGNORE_W_ERRORS) -lpcre2-8 
+	UNAME_P := $(shell uname -p)
+# If we detect arm as a platform for linux, but not mac, we'll make this -arm to download that version (Mostly used for raspi)
+	ifneq ($(filter arm%,$(UNAME_P)),)
+		DETECTED_OS := linux-arm
+	endif
 endif
 
 BUILD_DIR := dkr_assets_tool_src/_build
