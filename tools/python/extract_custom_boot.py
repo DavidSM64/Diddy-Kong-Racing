@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import sys
 import os
 import zlib
@@ -33,16 +31,27 @@ def boot_extract(input_file, output_file="boot_custom.bin"):
         output_file = "./mods/boot_custom.bin"
         mods_missing = False
         cictype = N64GetCIC(data)
-        if os.path.isfile("makefile"):
+        if (cictype == 0):
+            if data.find(b"Libdragon IPL3"):
+                cictype = "LIBDRAGON"
+                print("CIC: " + str(cictype))
+            else:
+                print("Unknown CIC, assume 6102 just in case, but don't assume the CIC itself is valid.")
+                cictype = 6102
+        else:
+            print("CIC: " + str(cictype))
+        if os.path.isfile("Makefile"):
             print("Makefile detected, modifying CIC type.")
-            with open("makefile", 'r') as f:
+            with open("Makefile", 'r') as f:
                 lines = f.readlines()
-            with open("makefile", 'w') as f:
+            with open("Makefile", 'w') as f:
                 for line in lines:
                     if line.startswith("BOOT_CIC ?="):
                         f.write("BOOT_CIC ?= " + str(cictype) + "\n")
                     else:
                         f.write(line)
+            if os.path.isfile("./build/asm/header.s.o"):
+                os.remove("./build/asm/header.s.o")
 
 
     with open(output_file, "wb") as f:
