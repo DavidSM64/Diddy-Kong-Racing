@@ -96,8 +96,13 @@ ifeq ($(shell type mips-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
   CROSS := mips-linux-gnu-
 else ifeq ($(shell type mips64-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
   CROSS := mips64-linux-gnu-
-else
+else ifeq ($(shell type mips64-elf-ld >/dev/null 2>/dev/null; echo $$?), 0)
   CROSS := mips64-elf-
+# No binutil packages were found, so we have to download the source & build it.
+ifeq ($(wildcard $(TOOLS_DIR)/binutils/.*),)
+  DUMMY != $(TOOLS_DIR)/get-binutils.sh >&2 || echo FAIL
+endif 
+  CROSS := $(TOOLS_DIR)/binutils/mips64-elf-
 endif
 
 AS       = $(CROSS)as
@@ -174,7 +179,7 @@ CHECK_WARNINGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -Wn
 ifeq ($(NON_MATCHING),0)
 	CHECK_WARNINGS += -Wno-unused-value
 endif
-CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -m32 -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
+CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
 
 TARGET     = $(BUILD_DIR)/$(BASENAME).$(REGION).$(VERSION)
 LD_SCRIPT  = ver/$(BASENAME).$(REGION).$(VERSION).ld

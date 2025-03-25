@@ -72,4 +72,5 @@ tools/n64crc
 m2cfiles/
 gcc_safe_files.mk
 tools/ido-recomp
+tools/binutils
 *.DS_Store
