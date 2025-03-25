@@ -180,6 +180,10 @@ ifeq ($(NON_MATCHING),0)
 	CHECK_WARNINGS += -Wno-unused-value
 endif
 CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
+ifeq ($(shell getconf LONG_BIT), 64)
+  # Ensure that gcc treats the code as 32-bit
+  CC_CHECK_CFLAGS += -m32
+endif
 
 TARGET     = $(BUILD_DIR)/$(BASENAME).$(REGION).$(VERSION)
 LD_SCRIPT  = ver/$(BASENAME).$(REGION).$(VERSION).ld
