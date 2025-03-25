@@ -9,6 +9,8 @@ $(eval $(call validate-option,NON_MATCHING,ido gcc))
 
 # Define a custom boot file if desired to use something other than the vanilla one
 BOOT_CUSTOM ?= boot_custom.bin
+BOOT_CIC ?= 6102
+$(eval $(call validate-option,BOOT_CIC,6102 6103))
 
 LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\"
 
@@ -139,7 +141,7 @@ ASM_DEFINES = --defsym _MIPS_SIM=1 --defsym mips=1 --defsym VERSION_$(REGION)_$(
 # Define this so it will change the entrypoint in the header
 ifeq ($(NON_MATCHING),1)
 ifneq ("$(wildcard $(BOOT_CUSTOM))","")
-ASM_DEFINES += --defsym BOOT_6102=1
+ASM_DEFINES += --defsym BOOT_$(BOOT_CIC)=1
 endif
 endif
 
