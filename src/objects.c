@@ -1665,7 +1665,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     for (i = 0; i < 0x200; i++) {
         (*gSpawnObjectHeap)[i] = NULL;
     }
-    curObj = &(*gSpawnObjectHeap)[0];
+    curObj = (Object *) &(*gSpawnObjectHeap)[0];
     curObj->segment.trans.flags = 2;
     curObj->segment.header = load_object_header(var_a0);
     if (curObj->segment.header == NULL) {
@@ -1817,7 +1817,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         }
     }
     if (sp50 & 4) {
-        sizeOfobj = init_object_water_effect(curObj, (ShadowData *) address);
+        sizeOfobj = init_object_water_effect(curObj, (WaterEffect *) address);
         address = (u32 *) ((uintptr_t) address + sizeOfobj);
         if (sizeOfobj == 0) {
             if (D_8011AE50 != NULL) {
@@ -1843,7 +1843,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
     if (curObj->segment.header->numLightSources > 0) {
-        curObj->lightData = address;
+        curObj->lightData = (Object_LightData **) address;
         sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->numLightSources * 4)) - (uintptr_t) curObj;
     }
     newObj = mempool_alloc_pool((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
@@ -1875,7 +1875,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     if (newObj->waterEffect != NULL) {
         newObj->waterEffect =
-            (ShadowData *) (((uintptr_t) newObj + (uintptr_t) newObj->waterEffect) - (uintptr_t) gSpawnObjectHeap);
+            (WaterEffect *) (((uintptr_t) newObj + (uintptr_t) newObj->waterEffect) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->shadow != NULL) {
         newObj->shadow =
@@ -1904,7 +1904,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     if (newObj->segment.header->numLightSources > 0) {
         newObj->lightData =
-            (u32 *) (((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
+            (Object_LightData **) (((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
     }
     newObj->unk68 = (Object_68 **) ((uintptr_t) newObj + (uintptr_t) 0x80);
     if (arg1 & 1) {
@@ -3009,12 +3009,16 @@ void render_3d_model(Object *obj) {
                         if (alpha < 255) {
                             flags |= RENDER_SEMI_TRANSPARENT;
                         }
+#ifdef ANTI_TAMPER
                         cicFailed = FALSE;
                         // Anti-Piracy check
                         if (osCicId != CIC_ID) {
                             cicFailed = TRUE;
                         }
                         if (!cicFailed) {
+#else
+                        if (1) {
+#endif
                             var_v0_2 = (loopObj->segment.trans.flags & OBJ_FLAGS_UNK_0080 && obj60_unk0 == 3);
                             if (racerObj != NULL && racerObj->transparency < 255) {
                                 var_v0_2 = FALSE;
@@ -4292,6 +4296,9 @@ u32 func_800179D0(void) {
         }
         i++;
     }
+#ifdef AVOID_UB
+    return 0;
+#endif
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017A18.s")

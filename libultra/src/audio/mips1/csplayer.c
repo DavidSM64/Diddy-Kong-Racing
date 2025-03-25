@@ -43,6 +43,7 @@
 #include "seqp.h"
 #include "cseqp.h"
 #include "cseq.h"
+#include "synthInternals.h"
 
 /************ .rodata ************/
 const char D_800E6C20[] = "CSP: oh oh \n";
@@ -55,6 +56,7 @@ static void             __CSPHandleMIDIMsg(ALCSPlayer_Custom *seqp, ALEvent *eve
 static void             __CSPHandleMetaMsg(ALCSPlayer *seqp, ALEvent *event);
 static void             __CSPRepostEvent(ALEventQueue *evtq, ALEventListItem *item);
 static void		__setUsptFromTempo(ALCSPlayer *seqp, f32 tempo);		/* sct 1/8/96 */
+       void func_80065A80(ALSynth *arg0, PVoice *arg1, s16 arg2);
 
 
 /*
@@ -144,7 +146,7 @@ static ALMicroTime __CSPVoiceHandler(void *node)
         switch (seqp->nextEvent.type)
         {
 	case (AL_SEQ_REF_EVT):
-	    __CSPHandleNextSeqEvent(seqp);
+	    __CSPHandleNextSeqEvent((ALCSPlayer *) seqp);
 	    break;
 
 	case (AL_SEQP_API_EVT):
@@ -210,7 +212,7 @@ static ALMicroTime __CSPVoiceHandler(void *node)
 	    break;
 
 	case (AL_SEQP_META_EVT):
-	    __CSPHandleMetaMsg(seqp, &seqp->nextEvent);
+	    __CSPHandleMetaMsg((ALCSPlayer *) seqp, &seqp->nextEvent);
 	    break;
 
 	case (AL_SEQP_VOL_EVT):
@@ -227,7 +229,7 @@ static ALMicroTime __CSPVoiceHandler(void *node)
 	    if (seqp->state != AL_PLAYING)
 	    {
 		seqp->state = AL_PLAYING;
-		__CSPPostNextSeqEvent(seqp);	/* seqp must be AL_PLAYING before we call this routine. */
+		__CSPPostNextSeqEvent((ALCSPlayer *) seqp);	/* seqp must be AL_PLAYING before we call this routine. */
 	    }
 	    break;
 
@@ -396,7 +398,7 @@ __CSPHandleNextSeqEvent(ALCSPlayer *seqp)
     switch (evt.type)
     {
       case AL_SEQ_MIDI_EVT:
-          __CSPHandleMIDIMsg(seqp, &evt);
+          __CSPHandleMIDIMsg((ALCSPlayer_Custom *) seqp, &evt);
 	  __CSPPostNextSeqEvent(seqp);
 	  break;
 

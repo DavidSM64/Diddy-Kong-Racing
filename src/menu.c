@@ -280,7 +280,7 @@ char **gTTSaveGhostPakErrorText;
 MatrixS *sMenuCurrHudMat;
 #endif
 Vertex *sMenuCurrHudVerts;
-TriangleList *sMenuCurrHudTris;
+Triangle *sMenuCurrHudTris;
 unk801263C0 gMenuSelectedCharacter;
 unk801263C0 D_801263B8;
 s32 gOptionBlinkTimer;
@@ -1909,7 +1909,7 @@ s16 gWoodPanelVertColours[5][4] = {
     { 256, 256, 256, 256 }  // Colour for the center of the panel
 };
 
-s32 *gWoodPanelVertices[2] = { NULL, NULL };
+Vertex *gWoodPanelVertices[2] = { NULL, NULL };
 
 Triangle *gWoodPanelTriangles[2] = { NULL, NULL };
 
@@ -2158,16 +2158,16 @@ void func_8007FFEC(s32 arg0) {
     alloc = mempool_alloc_safe(arg0 * 0x2F0, COLOUR_TAG_WHITE);
     gWoodPanelTriangles[0] = alloc;
     gWoodPanelTriangles[1] = gWoodPanelTriangles[0] + sp20;
-    gMenuGeometry = gWoodPanelTriangles[1] + sp20;
-    gWoodPanelVertices[1] = gMenuGeometry;
+    gMenuGeometry = (unk80080BC8 *) gWoodPanelTriangles[1] + sp20;
+    gWoodPanelVertices[1] = (Vertex *) gMenuGeometry;
     gWoodPanelVertices[1] = gWoodPanelVertices[0] + arg0;
 
     // This loop isn't quite right.
     for (i = 0; i < arg0; i++) {
-        gMenuGeometry[i].vertices[0] = gWoodPanelVertices[0] + i;
-        gMenuGeometry[i].vertices[1] = gWoodPanelVertices[1] + i;
-        gMenuGeometry[i].triangles[0] = gWoodPanelTriangles[0] + i;
-        gMenuGeometry[i].triangles[1] = gWoodPanelTriangles[1] + i;
+        gMenuGeometry[i].vertices[0] = (Vertex *) gWoodPanelVertices[0] + i;
+        gMenuGeometry[i].vertices[1] = (Vertex *) gWoodPanelVertices[1] + i;
+        gMenuGeometry[i].triangles[0] = (Triangle *) gWoodPanelTriangles[0] + i;
+        gMenuGeometry[i].triangles[1] = (Triangle *) gWoodPanelTriangles[1] + i;
         gMenuGeometry[i].texture[0] = 0;
         gMenuGeometry[i].texture[1] = 0;
         gMenuGeometry[i].unk18[0] = 0;
@@ -2580,7 +2580,7 @@ void menu_init(u32 menuId) {
 /**
  * Runs every frame. Calls the loop function of the current menu id
  */
-s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris,
+s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, Triangle **currHudTris,
               s32 updateRate) {
     s32 ret;
 
@@ -2923,7 +2923,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
             if (state == ((elems->t.element != (&D_80126850)) * 0)) { // fakematch
                 xPos = ((s32) ((elems->center - elems->left) * scale)) + elems->left;
                 yPos = ((s32) ((elems->middle - elems->top) * scale)) + elems->top;
-            } else if ((state == 1)) {
+            } else if (state == 1) {
                 xPos = elems->center;
                 yPos = elems->middle;
             } else {
@@ -8569,8 +8569,8 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
     yPos = gTrackSelectViewPortHalfY + temp2;
     gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor((*dList)++, 255, 255, 255, 0);
-    vertices = (&gTrackSelectBgVertices)[gTrackSelectVertsFlip];
-    triangles = (&gTrackSelectBgTriangles)[gTrackSelectVertsFlip];
+    vertices = (Vertex *) (&gTrackSelectBgVertices)[gTrackSelectVertsFlip];
+    triangles = (Triangle *) (&gTrackSelectBgTriangles)[gTrackSelectVertsFlip];
     for (index = 0; gTrackSelectBgData[index] < temp; index += 5) {}
 
     data = &gTrackSelectBgData[index];
@@ -12104,7 +12104,7 @@ void menu_trophy_race_rankings_init(void) {
         if (++gTrophyRaceRound >= 4) {
             break;
         }
-    } while ((trackMenuIds[((gTrophyRaceWorldId - 1) * 6) + (gTrophyRaceRound)] == -1));
+    } while (trackMenuIds[((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound] == -1);
 
     if (gTrophyRaceRound < 4) {
         gResultOptionText[0] = gMenuText[ASSET_MENU_TEXT_CONTINUE];

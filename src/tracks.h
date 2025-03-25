@@ -180,7 +180,7 @@ void obj_loop_fogchanger(Object* obj);
 void initialise_player_viewport_vars(s32 updateRate);
 s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation);
 void render_level_segment(s32 segmentId, s32 nonOpaque);
-void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, TriangleList** tris, s32 updateRate);
+void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, Triangle** tris, s32 updateRate);
 void set_fog(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue);
 void slowly_change_fog(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 far, s32 switchTimer);
 s32 func_8002FD74(f32 x0, f32 z0, f32 x1, f32 x2, s32 count, Vec4f *arg5);

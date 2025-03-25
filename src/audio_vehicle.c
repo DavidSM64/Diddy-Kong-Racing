@@ -80,8 +80,8 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
     temp_v0_3 = (VehicleSoundData *) mempool_alloc_safe(sizeof(VehicleSoundData), COLOUR_TAG_CYAN);
 
     // Not really sure this is right...
-    memset = temp_v0_3;
-    for (var_a3 = 0; var_a3 < sizeof(VehicleSoundData); var_a3++) {
+    memset = (u8 *) temp_v0_3;
+    for (var_a3 = 0; var_a3 < (s32) sizeof(VehicleSoundData); var_a3++) {
         memset[var_a3] = 0;
     }
 
@@ -109,7 +109,7 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
         temp_v0_3->unk18[0] = temp_v0_2->unk18;
         var_a0 = temp_v0_3 + 1;
         temp_v0_3->unkC[0][0] = temp_v0_2->unkC;
-        var_a2 = &temp_v0_3->unk0[1];
+        var_a2 = (VehicleSoundData *) &temp_v0_3->unk0[1];
         temp_v0_3->unk2C[0] = temp_v0_2->unk2C;
     loop_10:
         var_a3_2 += 2;
@@ -335,7 +335,7 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
         if (var_f20 > 12.0f) {
             var_f20 = 12.0f;
         }
-        func_80001F14(25, &gRacerSound->unkA8);
+        func_80001F14(25, (s32 *) &gRacerSound->unkA8);
         sp6C = (((var_f20 * 0.5) / 12.0) + 0.5);
         temp_a0_4 = gRacerSound->unkA8;
         if (temp_a0_4 != 0) {
@@ -559,7 +559,7 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     if ((gSoundRacerObj->playerIndex != PLAYER_COMPUTER) && (gSoundRacerObj->spinout_timer != 0) &&
         !gRacerSound->brakeSound) {
         gRacerSound->brakeSound = TRUE;
-        sound_play(SOUND_UNK_13D, &gRacerSound->brakeSoundMask);
+        sound_play(SOUND_UNK_13D, (s32 *) &gRacerSound->brakeSoundMask);
     } else if (gSoundRacerObj->spinout_timer == 0) {
         gRacerSound->brakeSound = FALSE;
         if (gRacerSound->brakeSoundMask != NULL) {

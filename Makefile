@@ -8,7 +8,8 @@ COMPILER ?= ido
 $(eval $(call validate-option,NON_MATCHING,ido gcc))
 
 # Define a custom boot file if desired to use something other than the vanilla one
-BOOT_CUSTOM ?= boot_custom.bin
+BOOT_CUSTOM ?= mods/boot_custom.bin
+BOOT_CIC ?= 6103
 
 LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\"
 
@@ -124,11 +125,13 @@ ifeq ($(NON_MATCHING),1)
 	DEFINES += NON_MATCHING
 	DEFINES += AVOID_UB
 	VERIFY = no_verify
+	MIPSISET = -mips2
 	C_STANDARD := -std=gnu99
 else
 	DEFINES += ANTI_TAMPER
     # Override compiler choice on matching builds.
 	COMPILER := ido
+	BOOT_CIC := 6103
 	C_STANDARD := -std=gnu99
 endif
 
@@ -139,9 +142,13 @@ ASM_DEFINES = --defsym _MIPS_SIM=1 --defsym mips=1 --defsym VERSION_$(REGION)_$(
 # Define this so it will change the entrypoint in the header
 ifeq ($(NON_MATCHING),1)
 ifneq ("$(wildcard $(BOOT_CUSTOM))","")
-ASM_DEFINES += --defsym BOOT_6102=1
+ASM_DEFINES += --defsym BOOT_$(BOOT_CIC)=1
+else
+BOOT_CIC := 6103
 endif
 endif
+
+C_DEFINES += -DCIC_ID=$(BOOT_CIC)
 
 INCLUDE_CFLAGS  = -I . -I include -I include/libc  -I include/PR -I include/sys -I $(BIN_DIRS) -I $(SRC_DIR) -I $(LIBULTRA_DIR)
 INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/gu -I $(LIBULTRA_DIR)/src/libc -I $(LIBULTRA_DIR)/src/io  -I $(LIBULTRA_DIR)/src/sc 
@@ -159,20 +166,27 @@ endif
 
 
 #IDO Warnings to Ignore. These are coding style warnings we don't follow
-CC_WARNINGS := -fullwarn -Xfullwarn -woff 838,649,624
+CC_WARNINGS := -fullwarn -Xfullwarn -woff 838,649,624,835,516
 
 CFLAGS := -G 0 -non_shared -verbose -Xcpluscomm -nostdinc -Wab,-r4300_mul
 CFLAGS += $(C_DEFINES)
 CFLAGS += $(INCLUDE_CFLAGS)
 
-CHECK_WARNINGS := -Wall -Wextra -Wno-format-security -Wno-unknown-pragmas -Wunused-function -Wno-unused-parameter -Werror-implicit-function-declaration
-CHECK_WARNINGS += -Werror-implicit-function-declaration -Wno-unused-variable -Wno-missing-braces -Wno-int-conversion -Wno-main
-CHECK_WARNINGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch
+ifeq ($(DETECTED_OS), macos)
+  CHECK_WARNINGS := -Wall -Wextra -Wno-format-security -Wno-unknown-pragmas -Wunused-function -Wno-unused-parameter -Wno-constant-conversion
+  CHECK_WARNINGS += -Werror-implicit-function-declaration -Wno-missing-braces -Wno-int-conversion -Wno-main -Wno-for-loop-analysis
+  CHECK_WARNINGS += -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch -Wno-pointer-sign
+else
+  CHECK_WARNINGS := -Wall -Wextra -Wno-format-security -Wno-unknown-pragmas -Wunused-function -Wno-unused-parameter  -Wno-constant-conversion
+  CHECK_WARNINGS += -Werror-implicit-function-declaration -Wno-missing-braces -Wno-int-conversion -Wno-main -Wno-for-loop-analysis
+  CHECK_WARNINGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch -Wno-pointer-sign
+endif
 # Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
 ifeq ($(NON_MATCHING),0)
-	CHECK_WARNINGS += -Wno-unused-value
+	CHECK_WARNINGS += -Wno-unused-value -Wno-deprecated-non-prototype -Wno-array-bounds -Wno-self-assign -Wno-uninitialized
+	CHECK_WARNINGS += -Wno-unused-but-set-variable -Wno-unused-variable
 endif
-CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -m32 -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
+CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -m32 -DAVOID_UB -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
 
 TARGET     = $(BUILD_DIR)/$(BASENAME).$(REGION).$(VERSION)
 LD_SCRIPT  = ver/$(BASENAME).$(REGION).$(VERSION).ld

@@ -457,23 +457,23 @@ TextureHeader *load_texture(s32 arg0) {
     numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
 
     if (!gTempTextureHeader->header.isCompressed) {
-        tex = mempool_alloc((numberOfTextures * 0x60) + assetSize, gTexColourTag);
+        tex = (TextureHeader * )mempool_alloc((numberOfTextures * 0x60) + assetSize, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
         load_asset_to_address(assetSection, tex, assetOffset, assetSize);
     } else {
-        temp_v0_5 = byteswap32(&gTempTextureHeader->uncompressedSize);
+        temp_v0_5 = byteswap32((u8 *) &gTempTextureHeader->uncompressedSize);
         temp_a0 = (numberOfTextures * 0x60) + temp_v0_5;
         sp3C = temp_v0_5 + 0x20;
-        tex = mempool_alloc(temp_a0 + 0x20, gTexColourTag);
+        tex = (TextureHeader *) mempool_alloc(temp_a0 + 0x20, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
         temp_a1 = ((s32) tex + sp3C) - assetSize;
         temp_a1 -= temp_a1 % 0x10;
         load_asset_to_address(assetSection, temp_a1, assetOffset, assetSize);
-        gzip_inflate(temp_a1 + 0x20, tex);
+        gzip_inflate(temp_a1 + 0x20, (u8 *) tex);
         assetSize = sp3C - 0x20;
     }
     texIndex = -1;
@@ -508,7 +508,7 @@ TextureHeader *load_texture(s32 arg0) {
     texTemp = tex;
     alignedAddress = align16((u8 *) ((s32) texTemp + assetSize));
     for (i = 0; i < numberOfTextures; i++) {
-        build_tex_display_list(texTemp, alignedAddress);
+        build_tex_display_list(texTemp, (Gfx *) alignedAddress);
         if (paletteOffset >= 0) {
             texTemp->ciPaletteOffset = paletteOffset;
             alignedAddress += 0x30; // I'm guessing it takes 6 f3d commands to load the palette
