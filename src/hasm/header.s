@@ -4,12 +4,8 @@
 .word 0x0000000F       /* Clockrate setting */
 .ifdef BOOT_6102
 .word 0x80000400       /* Entrypoint address */
-.endif
-.ifdef BOOT_6103
+.else
 .word 0x80100400       /* Entrypoint address */
-.endif
-.ifdef BOOT_LIBDRAGON
-.word 0x80000400       /* Entrypoint address */
 .endif
 .word 0x00001447       /* Revision */
 

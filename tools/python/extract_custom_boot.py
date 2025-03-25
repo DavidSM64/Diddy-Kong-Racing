@@ -35,11 +35,10 @@ def boot_extract(input_file, output_file="boot_custom.bin"):
         cictype = N64GetCIC(data)
         if (cictype == 0):
             if data.find(b"Libdragon IPL3"):
-                cictype = "LIBDRAGON"
-                print("CIC: " + str(cictype))
+                print("CIC: Libdragon")
             else:
                 print("Unknown CIC, assume 6102 just in case, but don't assume the CIC itself is valid.")
-                cictype = 6102
+            cictype = 6102
         else:
             print("CIC: " + str(cictype))
         if os.path.isfile("Makefile"):
