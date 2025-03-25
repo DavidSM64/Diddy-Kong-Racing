@@ -86,7 +86,6 @@ O_FILES := $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(BIN_FILES),$(BUILD_DIR)/$(file).o)
 
-
 find-command = $(shell which $(1) 2>/dev/null)
 
 # Tools
@@ -132,7 +131,7 @@ else
     # Override compiler choice on matching builds.
 	COMPILER := ido
 	BOOT_CIC := 6103
-	C_STANDARD := -std=gnu99
+	C_STANDARD := -std=gnu90
 endif
 
 C_DEFINES := $(foreach d,$(DEFINES),-D$(d)) $(LIBULTRA_VERSION_DEFINE) -D_MIPS_SZLONG=32
@@ -413,14 +412,14 @@ $(TARGET).elf: dirs $(LD_SCRIPT) $(O_FILES) | $(ALL_ASSETS_BUILT)
 ifndef PERMUTER
 $(GLOBAL_ASM_O_FILES): $(BUILD_DIR)/%.c.o: %.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling:,$<,$@)
-	$(V)$(CC_CHECK) $<
+	$(V)$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 endif
 
 # non asm-processor recipe
 $(BUILD_DIR)/%.c.o: %.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling:,$<,$@)
-	$(V)$(CC_CHECK) $<
+	$(V)$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: $(LIBULTRA_DIR)/src/libc/llcvt.c | $(ALL_ASSETS_BUILT)
@@ -435,7 +434,7 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | $(
 
 $(BUILD_DIR)/%.s.o: %.s | $(ALL_ASSETS_BUILT)
 	$(call print,Assembling:,$<,$@)
-	$(V)$(AS) $(ASFLAGS) -o $@ $<
+	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $< 
 
 # Specifically override the assets bin output location to match what splat output to the ld file.
 $(BUILD_DIR)/asm/assets/assets.s.o: asm/assets/assets.s | $(ALL_ASSETS_BUILT)
@@ -476,3 +475,5 @@ $(TARGET).z64: $(TARGET).bin | $(ALL_ASSETS_BUILT)
 ### Settings
 .PHONY: all clean cleanextract default assets
 SHELL = /bin/bash -e -o pipefail
+
+-include $(BUILD_DIR)/**/*.d

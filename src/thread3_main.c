@@ -44,6 +44,7 @@
 #include "joypad.h"
 #include "PRinternal/viint.h"
 #include "font.h"
+#include "stacks.h"
 
 /************ .rodata ************/
 
@@ -111,7 +112,7 @@ Triangle *gGameCurrTriList;
 UNUSED s32 D_80121230[8];
 s8 gLevelSettings[16];
 OSSched gMainSched; // 0x288 / 648 bytes
-u64 gSchedStack[0x400];
+u64 gSchedStack[STACKSIZE(STACK_SCHED)];
 s32 gSPTaskNum;
 s32 gGameMode;
 s32 gRenderMenu; // I don't think this is ever not 1
@@ -199,8 +200,15 @@ void init_game(void) {
     } else if (osTvType == OS_TV_TYPE_MPAL) {
         viMode = OS_VI_MPAL_LPN1;
     }
-
-    osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, viMode, 1);
+    
+    //@Bug: indexes out of bounds of gSchedStack.
+#ifdef AVOID_UB
+ #define STACKINDEX STACKSIZE(STACK_SCHED) - 1
+#else
+ #define STACKINDEX STACKSIZE(STACK_SCHED)
+#endif
+    osCreateScheduler(&gMainSched, &gSchedStack[STACKINDEX], /*priority*/ 13, viMode, 1);
+#undef STACKINDEX
 #ifdef ANTI_TAMPER
     // Antipiracy measure.
     gDmemInvalid = FALSE;
