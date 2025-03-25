@@ -200,15 +200,7 @@ void init_game(void) {
     } else if (osTvType == OS_TV_TYPE_MPAL) {
         viMode = OS_VI_MPAL_LPN1;
     }
-    
-    //@Bug: indexes out of bounds of gSchedStack.
-#ifdef AVOID_UB
- #define STACKINDEX STACKSIZE(STACK_SCHED) - 1
-#else
- #define STACKINDEX STACKSIZE(STACK_SCHED)
-#endif
-    osCreateScheduler(&gMainSched, &gSchedStack[STACKINDEX], /*priority*/ 13, viMode, 1);
-#undef STACKINDEX
+    osCreateScheduler(&gMainSched, &gSchedStack[STACKSIZE(STACK_SCHED)], /*priority*/ 13, viMode, 1);
 #ifdef ANTI_TAMPER
     // Antipiracy measure.
     gDmemInvalid = FALSE;

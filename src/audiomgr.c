@@ -193,14 +193,7 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     osCreateMesgQueue(&__am.audioReplyMsgQ, __am.audioReplyMsgBuf, MAX_MESGS);
     osCreateMesgQueue(&__am.audioFrameMsgQ, __am.audioFrameMsgBuf, MAX_MESGS);
     osCreateMesgQueue(&audDMAMessageQ, audDMAMessageBuf, NUM_DMA_MESSAGES);
-    //@Bug: indexes out of bounds of gSchedStack.
-#ifdef AVOID_UB
- #define STACKINDEX STACKSIZE(STACK_AUD) - 1
-#else
- #define STACKINDEX STACKSIZE(STACK_AUD)
-#endif
-    osCreateThread(&__am.thread, 4, __amMain, 0, (void *) (audioStack + STACKINDEX), pri);
-#undef STACKINDEX
+    osCreateThread(&__am.thread, 4, __amMain, 0, (void *) (audioStack + STACKSIZE(STACK_AUD)), pri);
 }
 
 /**
