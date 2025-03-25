@@ -92,7 +92,7 @@ BuildObjectMap::BuildObjectMap(DkrAssetsSettings &settings, BuildInfo &info) : _
     
     if(_settings.debugBuildKeepUncompressed) {
         // Have the uncompressed binary in a seperate directory in the build folder.
-        fs::path outUncompressedPath = _settings.pathToBuild / _settings.dkrVersion / "debug/objectMaps" /  (_info.dstPath.stem().string() + ".bin");
+        fs::path outUncompressedPath = _settings.pathToBuild / "debug/objectMaps" /  (_info.dstPath.stem().string() + ".bin");
         FileHelper::write_binary_file(out, outUncompressedPath, true);
     }
     

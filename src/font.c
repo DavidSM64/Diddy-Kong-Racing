@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800C3C00 */
-
 #include "font.h"
 #include "menu.h"
 #include "textures_sprites.h"
@@ -28,6 +25,12 @@ Gfx dDialogueBoxDrawModes[][2] = {
         gsDPSetCombineMode(DKR_CC_ENVIRONMENT, DKR_CC_ENVIRONMENT),
         gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
     },
+#if REGION == REGION_JP
+    {
+        gsDPSetCombineMode(DKR_CC_UNK13, G_CC_PASS2),
+        gsDPSetOtherMode(DKR_OMH_2CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_NOOP | G_RM_XLU_SURF2),
+    },
+#endif
 };
 
 s8 sDialogueBoxIsOpen = FALSE;
@@ -69,6 +72,60 @@ DialogueBoxBackground *gDialogueBoxBackground; // Official Name: Window
 DialogueTextElement *gDialogueText;            // Official Name: String
 s32 gCompactKerning; // Official Name: squash - Boolean value, seems to be related to X placement of menus on the X
                      // Axis?
+
+#if REGION == REGION_JP
+#define JP_FONT_ARRAY_SIZE 256
+#define NUMBER_OF_JP_FONTS 4
+
+// Header for a single japanese character. 0x10 bytes
+typedef struct JpCharHeader {
+    char *ptr;
+    char *unk4;
+    u8 pad8[2];
+    u8 left;
+    u8 top;
+    u8 right;
+    u8 bottom;
+    u8 spacing;
+} JpCharHeader;
+
+// Japanese Font Header, 0x10 bytes
+// Asset45 contains 4 font headers.
+typedef struct FontData_JP {
+    u8 unk0;
+    u8 x;
+    u8 y;
+    u8 charWidth;
+    u8 height;
+    u8 pad[3];
+    s32 offsetToData;
+    s32 bytesPerCharacter;
+} FontData_JP;
+
+typedef struct FontJpSpacing {
+    u8 spacing[256]; // 256 characters in the japanese font
+} FontJpSpacing;
+
+typedef struct Unk8012C2D4_JP {
+    char unk0;
+    char unk1;
+    u16 unk2;
+    Gfx *dlist;
+} Unk8012C2D4_JP;
+
+FontData_JP *D_8012C2A4_EE5E4;
+FontJpSpacing *D_8012C2A8_EE5E8[4]; // 4 tables for spacing in different fonts?
+s32 D_8012C2B8_EE5F8;
+Unk8012C2D4_JP (*D_8012C2BC_EE5FC)[128];
+JpCharHeader (*D_8012C2C0_EE600)[18];
+Gfx *D_8012C2C4_EE604;
+Unk8012C2D4_JP *D_8012C2C8_EE608;
+JpCharHeader (*D_8012C2CC_EE60C)[18];
+Gfx *D_8012C2D0_EE610;
+Unk8012C2D4_JP *D_8012C2D4_EE614;
+Unk8012C2D4_JP *D_8012C2D8_EE618;
+#endif
+
 s8 sDialogueBoxCloseTimer;
 
 /******************************/
@@ -135,8 +192,12 @@ void load_fonts(void) {
         gDialogueText[i].textBGColourA = 0;
         gDialogueText[i].nextBox = NULL;
     }
+#if REGION == REGION_JP
+    func_800C6464_C7064();
+#else
     load_font(ASSET_FONTS_FUNFONT);
     load_font(ASSET_FONTS_SMALLFONT);
+#endif
     gCompactKerning = FALSE;
 }
 
@@ -148,6 +209,7 @@ void set_kerning(s32 setting) {
     gCompactKerning = setting;
 }
 
+#if REGION != REGION_JP
 /**
  * Load the texture assets of the given font into RAM.
  * This is required before any text using this font can be displayed in a scene.
@@ -186,14 +248,19 @@ void unload_font(s32 fontID) {
         }
     }
 }
+#endif
 
 /**
  * Set the font of the current dialogue box's text.
  */
 void set_text_font(s32 fontID) {
+#if REGION == REGION_JP
+    gDialogueBoxBackground[0].font = D_8012C2B8_EE5F8 = fontID;
+#else
     if (fontID < gNumberOfFonts) {
         gDialogueBoxBackground[0].font = fontID;
     }
+#endif
 }
 
 /**
@@ -201,6 +268,9 @@ void set_text_font(s32 fontID) {
  * Goes unused.
  */
 UNUSED TextureHeader *get_loaded_font(s32 font, u8 index) {
+#if REGION == REGION_JP
+    return NULL;
+#else
     FontData *fontData;
     u8 pointerIndex;
 
@@ -218,6 +288,7 @@ UNUSED TextureHeader *get_loaded_font(s32 font, u8 index) {
     //!@bug: No return statement. The function will return whatever happens to be in v0 before this function was called.
 #ifdef AVOID_UB
     return NULL;
+#endif
 #endif
 }
 
@@ -290,6 +361,7 @@ UNUSED void draw_dialogue_text_pos_unused(Gfx **displayList, s32 dialogueBoxID, 
  * Loops through a string, then draws each character onscreen.
  * Will also draw a fillrect if text backgrounds are enabled.
  */
+#if REGION != REGION_JP
 void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, AlignmentFlags alignmentFlags,
                         f32 scisScale) {
     s32 scisOffset;
@@ -440,12 +512,207 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
         gDPPipeSync((*dList)++);
     }
 }
+#else
+void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, enum AlignmentFlags alignmentFlags,
+                        f32 scisScale) {
+    s32 jpTexS;
+    s32 prevFont;
+    s32 jpTexT;
+    s32 xpos;
+    s32 ulx;
+    s32 uly;
+    s32 lrx;
+    s32 lry;
+    s32 ypos;
+    s32 scisOffset;
+    s32 charSpace;
+    s32 scisPos;
+    s32 textureS;
+    s32 textureT;
+    s32 textureS2;
+    s32 textureT2;
+    s32 xAlignmentDiff;
+    s32 someIndexForJpChar;
+    u16 jpCharValue;
+    s32 textureLrx;
+    s32 textureLry;
+    u8 curChar;
+    FontData_JP *fontData;
+    s32 newTempX;
+    s32 newTempY;
+    s32 charIndex;
+    s32 temp;
+    char otherText[220]; // Not sure about the length of this buffer.
+    s32 temp2;
+
+    xAlignmentDiff = -1;
+    if (text == NULL) {
+        return;
+    }
+
+    func_800C7864_C8464(text, otherText);
+    prevFont = D_8012C2B8_EE5F8;
+    D_8012C2B8_EE5F8 = box->font;
+    xpos = box->xpos;
+    ypos = box->ypos;
+
+    fontData = (FontData_JP *) &D_8012C2A4_EE5E4[D_8012C2B8_EE5F8];
+    gSPDisplayList((*dList)++, dDialogueBoxBegin);
+    if (box != gDialogueBoxBackground) {
+        scisOffset = (((box->y2 - box->y1) + 1) / (f32) 2) * scisScale;
+        scisPos = (box->y1 + box->y2) >> 1;
+        ulx = box->x1;
+        lrx = box->x2;
+        // Pretty sure these are macros.
+        if (ulx < 0) {
+            ulx = 0;
+        }
+        if (ulx >= 320) {
+            ulx = 319;
+        }
+        if (lrx < 0) {
+            lrx = 0;
+        }
+        if (lrx >= 320) {
+            lrx = 319;
+        }
+        uly = scisPos - scisOffset;
+        lry = scisPos + scisOffset;
+        if (uly < 0) {
+            uly = 0;
+        }
+        if (uly >= 240) {
+            uly = 239;
+        }
+        if (lry < 0) {
+            lry = 0;
+        }
+        if (lry >= 240) {
+            lry = 239;
+        }
+        gDPSetScissor((*dList)++, 0, ulx, uly, lrx, lry);
+    }
+    if (alignmentFlags & (HORZ_ALIGN_RIGHT | HORZ_ALIGN_CENTER)) {
+        xAlignmentDiff = get_text_width(otherText, xpos, box->font);
+        if (alignmentFlags & HORZ_ALIGN_RIGHT) {
+            xpos = (xpos - xAlignmentDiff) + 1;
+        } else {
+            xpos -= xAlignmentDiff >> 1;
+        }
+    }
+    if (alignmentFlags & VERT_ALIGN_BOTTOM) {
+        ypos = (ypos - fontData->y) + 1;
+    }
+    if (alignmentFlags & VERT_ALIGN_MIDDLE) {
+        ypos -= fontData->y >> 1;
+    }
+    if (box->textBGColourA != 0) {
+        gDPSetEnvColor((*dList)++, box->textBGColourR, box->textBGColourG, box->textBGColourB, box->textBGColourA);
+        if (xAlignmentDiff == -1) {
+            xAlignmentDiff = get_text_width(otherText, xpos, box->font);
+        }
+        lrx = xpos + xAlignmentDiff;
+        lry = fontData->y + ypos;
+        gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dDialogueBoxDrawModes[1]), 2);
+        gDPFillRectangle((*dList)++, xpos + box->x1, ypos + box->y1, lrx + box->x1, lry + box->y1);
+        gDPPipeSync((*dList)++);
+    }
+    gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, box->opacity);
+    gDPSetEnvColor((*dList)++, box->textColourR, box->textColourG, box->textColourB, box->textColourA);
+    gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dDialogueBoxDrawModes[0]), 2);
+    gDPPipeSync((*dList)++);
+
+    xpos += box->textOffsetX;
+    ypos += box->textOffsetY;
+    charIndex = 0;
+    while ((otherText[charIndex] != '\0') && (box->y2 >= ypos)) {
+        curChar = otherText[charIndex++];
+        jpCharValue = 0;
+        if (curChar & 0x80) { // Test if this is a japanese character text.
+            // So this text system supports up to 32768 unique characters, although the game only uses 256.
+            jpCharValue = (otherText[charIndex++] | ((curChar & 0x7F) << 8));
+            if (jpCharValue == 15) { // Index 15 is the space character.
+                jpCharValue = 0;
+                curChar = ' ';
+            }
+        }
+        if (jpCharValue != 0) {
+            // Texture coordinates of the 256x256 japanese font texture.
+            ulx = box->x1 + xpos;
+            uly = box->y1 + ypos;
+            lrx = ulx + fontData->x;
+            lry = uly + fontData->y;
+            charSpace = D_8012C2A8_EE5E8[D_8012C2B8_EE5F8]->spacing[jpCharValue];
+            if ((lrx > 0) && (lry > 0) && (ulx < box->x2) && (uly < box->y2)) {
+                someIndexForJpChar =
+                    func_800C7744_C8344(dList, jpCharValue, &textureS, &textureT, &textureS2, &textureT2);
+            } else {
+                someIndexForJpChar = -1;
+            }
+            if (someIndexForJpChar >= 0) {
+                ulx = ulx << 2;
+                uly = (uly + textureT) << 2;
+                lrx = (textureS2 - textureS) * 4 + ulx;
+                lry = (textureT2 - textureT) * 4 + uly;
+                if ((lrx > 0) && (lry > 0)) {
+                    textureS <<= 5;
+                    textureT <<= 5;
+                    if (ulx < 0) {
+                        textureS += (ulx * -1) << 3;
+                        ulx = 0;
+                    }
+                    if (uly < 0) {
+                        textureT += (uly * -1) << 3;
+                        uly = 0;
+                    }
+                    func_800C7804_C8404(someIndexForJpChar);
+                    gSPTextureRectangle((*dList)++, ulx, uly, lrx, lry, 0, textureS, textureT, 1 << 10, 1 << 10);
+                }
+            }
+            if ((gCompactKerning) && (charSpace != 0)) {
+                charSpace--;
+            }
+            xpos += charSpace;
+        } else {
+            // This was a regular ascii character.
+            switch (curChar) {
+                case '\n': // newline
+                    xpos = box->textOffsetX;
+                    ypos += fontData->height;
+                    break;
+                case '\t': // Tab
+                    xpos = ((s32) xpos + (fontData->charWidth * 4)) -
+                           ((xpos - box->textOffsetX) % (fontData->charWidth * 4));
+                    break;
+                case '\v': // VT - Vertical Tab
+                    ypos += fontData->height;
+                    break;
+                case '\r': // Carriage Return
+                    xpos = box->textOffsetX;
+                    break;
+                default:
+                    xpos += fontData->charWidth;
+                    break;
+            }
+        }
+    }
+    box->xpos = xpos - box->textOffsetX;
+    box->ypos = ypos - box->textOffsetY;
+    D_8012C2B8_EE5F8 = prevFont; // Put previous font index back.
+    if (box != gDialogueBoxBackground) {
+        viewport_scissor(dList);
+    }
+    reset_render_settings(dList);
+    gDPPipeSync((*dList)++);
+}
+#endif
 
 /**
  * Start from the beginning of the line then add to an offset from the starting position.
  * Returns the width of the string.
  * Official Name: fontStringWidth
  */
+#if REGION != REGION_JP
 s32 get_text_width(char *text, s32 x, s32 font) {
     s32 diffX, thisDiffX;
     FontData *fontData;
@@ -486,6 +753,33 @@ s32 get_text_width(char *text, s32 x, s32 font) {
     }
     return diffX - x;
 }
+#else
+s32 get_text_width(char *text, s32 x, s32 font) {
+    FontData_JP *currentFont;
+    FontJpSpacing *currentFontSpacing;
+    s32 glyphIndex;
+    s32 length;
+
+    currentFont = &D_8012C2A4_EE5E4[font];
+    currentFontSpacing = D_8012C2A8_EE5E8[font];
+    length = 0;
+    while (text[0]) {
+        if (text[0] & 0x80) {
+            glyphIndex = (text[1] & 0xFF) | ((text[0] & 0x7F) << 8);
+            text += 2;
+            if ((glyphIndex == 0) || (glyphIndex == 15)) {
+                length += currentFont->charWidth;
+            } else {
+                length += currentFontSpacing->spacing[glyphIndex];
+            }
+        } else {
+            text += 1;
+            length += currentFont->charWidth;
+        }
+    }
+    return length;
+}
+#endif
 
 /**
  * Sets the position and size of the current dialogue box.
@@ -520,12 +814,16 @@ void set_current_dialogue_box_coords(s32 dialogueBoxID, s32 x1, s32 y1, s32 x2, 
  * Official Name: fontWindowUseFont
  */
 void set_dialogue_font(s32 dialogueBoxID, s32 font) {
+#if REGION == REGION_JP
+    gDialogueBoxBackground[dialogueBoxID].font = font;
+#else
     if (dialogueBoxID >= 0 && dialogueBoxID < DIALOGUEBOXBACKGROUND_COUNT) {
         DialogueBoxBackground *temp = &gDialogueBoxBackground[dialogueBoxID];
         if (font < gNumberOfFonts) {
             temp->font = font;
         }
     }
+#endif
 }
 
 /**
@@ -989,6 +1287,7 @@ void render_dialogue_box(Gfx **dlist, MatrixS **mat, Vertex **verts, s32 dialogu
  * Takes in a string and a number, and replaces each instance of the
  * character '~' with the number.
  */
+#if REGION != REGION_JP
 void parse_string_with_number(char *input, char *output, s32 number) {
     while (*input) {
         if (*input == '~') { // ~ is equivalent to a %d.
@@ -1003,3 +1302,362 @@ void parse_string_with_number(char *input, char *output, s32 number) {
     }
     *output = '\0'; // null terminator
 }
+#else
+void parse_string_with_number(char *input, char *output, s32 number) {
+    char currentChar;
+
+    currentChar = *input++;
+    while (currentChar) {
+        if (currentChar & 0x80) {
+            char nextChar = *input++;
+            if (nextChar == 0xE) {
+                s32_to_string(&output, number);
+            } else {
+                *output++ = currentChar;
+                *output++ = nextChar;
+            }
+        } else if (currentChar == '~') { // ~ is equivalent to a %d.
+            s32_to_string(&output, number);
+        } else {
+            *output++ = currentChar;
+        }
+        currentChar = *input;
+        input++;
+    }
+    *output = '\0'; // null terminator
+}
+
+void func_800C6464_C7064(void) {
+    s32 i;
+    s32 charIndex;
+    u8 **var_s3;
+    JpCharHeader *jpFontData;
+    FontData_JP *jpFontHeader;
+
+    D_8012C2C4_EE604 = mempool_alloc_safe(0x6C00, COLOUR_TAG_RED);
+    D_8012C2C8_EE608 = mempool_alloc_safe(0x400, COLOUR_TAG_RED);
+    D_8012C2CC_EE60C = mempool_alloc_safe(0x9000, COLOUR_TAG_RED);
+    for (i = 0, charIndex = 0; i < 128; i++) {
+        D_8012C2C8_EE608[i].unk0 = 0;
+        D_8012C2C8_EE608[i].dlist = &D_8012C2C4_EE604[charIndex];
+        if (i & 1) {
+            charIndex += 10;
+        } else {
+            charIndex += 17;
+        }
+    }
+
+    D_8012C2A4_EE5E4 = (FontData_JP *) load_asset_section_from_rom(ASSET_BINARY_45);
+
+    // Init the 4 pointers in D_8012C2A8_EE5E8 (table for spacing of each character in every font)
+    D_8012C2A8_EE5E8[0] = mempool_alloc_safe(NUMBER_OF_JP_FONTS * JP_FONT_ARRAY_SIZE, COLOUR_TAG_RED);
+    for (i = 1; i < 4; i++) {
+        D_8012C2A8_EE5E8[i] = &D_8012C2A8_EE5E8[0]->spacing[i * JP_FONT_ARRAY_SIZE];
+    }
+
+    jpFontData = mempool_alloc_safe(0x40, COLOUR_TAG_RED);
+    for (i = 0; i < 4; i++) {
+        jpFontHeader = &D_8012C2A4_EE5E4[i];
+        for (charIndex = 0; charIndex < JP_FONT_ARRAY_SIZE; charIndex++) {
+            load_asset_to_address(ASSET_BINARY_46, (u32) jpFontData,
+                                  jpFontHeader->offsetToData + (charIndex * jpFontHeader->bytesPerCharacter), 0x40);
+            D_8012C2A8_EE5E8[i]->spacing[charIndex] = jpFontData->spacing;
+        }
+    }
+
+    mempool_free(jpFontData);
+    D_8012C2B8_EE5F8 = 0;
+}
+
+void func_800C663C_C723C(void) {
+    s32 i;
+    s32 var_v0;
+
+    func_800C67F4_C73F4();
+    D_8012C2D0_EE610 = mempool_alloc_safe(0x6C00, COLOUR_TAG_RED);
+    D_8012C2D4_EE614 = mempool_alloc_safe(0x400, COLOUR_TAG_RED);
+    D_8012C2D8_EE618 = mempool_alloc_safe(0x9000, COLOUR_TAG_RED);
+    if (D_8012C2D0_EE610 == NULL || D_8012C2D4_EE614 == NULL || D_8012C2D8_EE618 == NULL) {
+        func_800C67F4_C73F4();
+        return;
+    }
+    var_v0 = 0;
+    for (i = 0; i < 0x80; i++) {
+        D_8012C2D4_EE614[i].unk0 = 0;
+        D_8012C2D4_EE614[i].dlist = &D_8012C2D0_EE610[var_v0];
+        if (i & 1) {
+            var_v0 += 10;
+        } else {
+            var_v0 += 17;
+        }
+    }
+}
+
+void func_800C67F4_C73F4(void) {
+    if (D_8012C2D0_EE610 != NULL) {
+        mempool_free(D_8012C2D0_EE610);
+        D_8012C2D0_EE610 = NULL;
+    }
+    if (D_8012C2D4_EE614 != NULL) {
+        mempool_free(D_8012C2D4_EE614);
+        D_8012C2D4_EE614 = NULL;
+    }
+    if (D_8012C2D8_EE618 != NULL) {
+        mempool_free(D_8012C2D8_EE618);
+        D_8012C2D8_EE618 = NULL;
+    }
+}
+
+void func_800C6870_C7470(void) {
+    if (D_8012C2C0_EE600 == D_8012C2CC_EE60C && D_8012C2D8_EE618 != NULL) {
+        D_8012C2BC_EE5FC = D_8012C2D4_EE614;
+        D_8012C2C0_EE600 = D_8012C2D8_EE618;
+    } else {
+        D_8012C2BC_EE5FC = D_8012C2C8_EE608;
+        D_8012C2C0_EE600 = D_8012C2CC_EE60C;
+    }
+}
+
+s32 func_800C68CC_C74CC(u16 arg0) {
+    s32 assetSize;
+    s32 i;
+    s32 var_t0;
+    s32 var_a3;
+    s32 curIndex;
+    s32 var_v1;
+    u16 glyphIndex;
+    Unk8012C2D4_JP *asset;
+
+    glyphIndex = ((D_8012C2B8_EE5F8 << 12) | (arg0 & 0xFFF));
+    var_a3 = (D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].bytesPerCharacter + 0x11F) / 0x120;
+    D_8012C2BC_EE5FC = D_8012C2C8_EE608;
+    D_8012C2C0_EE600 = D_8012C2CC_EE60C;
+    curIndex = -1;
+
+    do {
+        for (i = 0; i + var_a3 <= 128 && curIndex < 0; i += var_a3) {
+            if ((*D_8012C2BC_EE5FC)[i].unk0 != 0 && (*D_8012C2BC_EE5FC)[i].unk2 == glyphIndex) {
+                curIndex = i;
+            }
+        }
+        if (curIndex < 0) {
+            func_800C6870_C7470();
+        }
+    } while ((D_8012C2C0_EE600 != D_8012C2CC_EE60C) && (curIndex < 0));
+
+    if (curIndex >= 0) {
+        return curIndex;
+    } else {
+        D_8012C2BC_EE5FC = D_8012C2C8_EE608;
+        D_8012C2C0_EE600 = D_8012C2CC_EE60C;
+        do {
+            for (i = 0; i + var_a3 <= 128 && curIndex < 0; i += var_a3) {
+                if (((*D_8012C2BC_EE5FC)[i].unk0) == 0) {
+                    curIndex = i;
+                    for (var_v1 = 1; var_v1 < var_a3; var_v1++) {
+                        if ((*D_8012C2BC_EE5FC)[i + var_v1].unk0 != 0) {
+                            curIndex = -1;
+                        }
+                    }
+                }
+            }
+            if (curIndex < 0) {
+                func_800C6870_C7470();
+            }
+        } while ((D_8012C2C0_EE600 != D_8012C2CC_EE60C) && (curIndex < 0));
+
+        if (curIndex >= 0) {
+            for (var_v1 = 0; var_v1 < var_a3; var_v1++) {
+                (*D_8012C2BC_EE5FC)[curIndex + var_v1].unk1 = var_a3;
+                if (var_v1 == 0) {
+                    (*D_8012C2BC_EE5FC)[curIndex + var_v1].unk2 = glyphIndex;
+                } else {
+                    (*D_8012C2BC_EE5FC)[curIndex + var_v1].unk2 = -1;
+                }
+            }
+            asset = &D_8012C2C0_EE600[curIndex];
+            load_asset_to_address(ASSET_BINARY_46, (u32) asset,
+                                  D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].offsetToData +
+                                      (D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].bytesPerCharacter * arg0),
+                                  D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].bytesPerCharacter);
+            func_800C6DD4_C79D4((*D_8012C2BC_EE5FC)[curIndex].dlist, asset, D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].x,
+                                D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].y);
+        }
+
+        return curIndex;
+    }
+}
+
+void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height) {
+    if (asset->unk0 != -1) {
+        asset->unk0 = (s32) asset + asset->unk0;
+    } else {
+        asset->unk0 = NULL;
+    }
+    if (asset->unk4 != -1) {
+        asset->unk4 = (s32) asset + asset->unk4;
+    } else {
+        asset->unk4 = NULL;
+    }
+
+    if (asset->unk4 != NULL) {
+        gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height,
+                             0,                         // palette
+                             G_TX_NOMIRROR | G_TX_WRAP, // cms
+                             G_TX_NOMIRROR | G_TX_WRAP, // cmt
+                             8,                         // masks
+                             8,                         // maskt
+                             G_TX_NOLOD,                // shifts
+                             G_TX_NOLOD);               // shiftt
+
+        gDPLoadMultiBlock_4bS(dlist++, OS_PHYSICAL_TO_K0(asset->unk4), 0x100, 1, G_IM_FMT_I, width, height,
+                              0,                         // palette
+                              G_TX_NOMIRROR | G_TX_WRAP, // cms
+                              G_TX_NOMIRROR | G_TX_WRAP, // cmt
+                              8,                         // masks
+                              8,                         // maskt
+                              G_TX_NOLOD,                // shifts
+                              G_TX_NOLOD);               // shiftt
+
+        gDkrDmaDisplayList(dlist++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[2]),
+                           numberOfGfxCommands(dDialogueBoxDrawModes[1]));
+    } else {
+        switch (asset->unk8) {
+            case 0: // RGBA32
+                gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_32b, width,
+                                     height,
+                                     0,                         // palette
+                                     G_TX_NOMIRROR | G_TX_WRAP, // cms
+                                     G_TX_NOMIRROR | G_TX_WRAP, // cmt
+                                     8,                         // masks
+                                     8,                         // maskt
+                                     G_TX_NOLOD,                // shifts
+                                     G_TX_NOLOD);               // shiftt
+                break;
+            case 1: // RGBA16
+                gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_16b, width,
+                                     height,
+                                     0,                         // palette
+                                     G_TX_NOMIRROR | G_TX_WRAP, // cms
+                                     G_TX_NOMIRROR | G_TX_WRAP, // cmt
+                                     8,                         // masks
+                                     8,                         // maskt
+                                     G_TX_NOLOD,                // shifts
+                                     G_TX_NOLOD);               // shiftt
+                break;
+            case 5: // IA8
+                gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_IA, G_IM_SIZ_8b, width, height,
+                                     0,                         // palette
+                                     G_TX_NOMIRROR | G_TX_WRAP, // cms
+                                     G_TX_NOMIRROR | G_TX_WRAP, // cmt
+                                     8,                         // masks
+                                     8,                         // maskt
+                                     G_TX_NOLOD,                // shifts
+                                     G_TX_NOLOD);               // shiftt
+                break;
+            case 6: // IA4
+                gDPLoadTextureBlock_4bS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_IA, width, height,
+                                        0,                         // palette
+                                        G_TX_NOMIRROR | G_TX_WRAP, // cms
+                                        G_TX_NOMIRROR | G_TX_WRAP, // cmt
+                                        8,                         // masks
+                                        8,                         // maskt
+                                        G_TX_NOLOD,                // shifts
+                                        G_TX_NOLOD);               // shiftt
+                break;
+            case 3: // I4
+                gDPLoadTextureBlock_4bS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_I, width, height,
+                                        0,                         // palette
+                                        G_TX_NOMIRROR | G_TX_WRAP, // cms
+                                        G_TX_NOMIRROR | G_TX_WRAP, // cmt
+                                        8,                         // masks
+                                        8,                         // maskt
+                                        G_TX_NOLOD,                // shifts
+                                        G_TX_NOLOD);               // shiftt
+                break;
+            case 2: // I8
+                gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_I, G_IM_SIZ_8b, width, height,
+                                     0,                         // palette
+                                     G_TX_NOMIRROR | G_TX_WRAP, // cms
+                                     G_TX_NOMIRROR | G_TX_WRAP, // cmt
+                                     8,                         // masks
+                                     8,                         // maskt
+                                     G_TX_NOLOD,                // shifts
+                                     G_TX_NOLOD);               // shiftt
+                break;
+        }
+        gDkrDmaDisplayList(dlist++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[0]),
+                           numberOfGfxCommands(dDialogueBoxDrawModes[1]));
+    }
+    gSPEndDisplayList(dlist++);
+}
+
+s32 func_800C7744_C8344(Gfx **dlist, u16 charIndex, s32 *outLeft, s32 *outTop, s32 *outRight, s32 *outBottom) {
+    s32 index;
+    JpCharHeader *jpChar;
+
+    index = func_800C68CC_C74CC(charIndex);
+    if (index >= 0) {
+        gSPDisplayList((*dlist)++, (*D_8012C2BC_EE5FC)[index].dlist);
+        jpChar = D_8012C2C0_EE600[index];
+        *outLeft = jpChar->left;
+        *outTop = jpChar->top;
+        *outRight = jpChar->right;
+        *outBottom = jpChar->bottom;
+    }
+    return index;
+}
+
+void func_800C7804_C8404(s32 arg0) {
+    s32 i;
+
+    for (i = 0; i < (*D_8012C2BC_EE5FC)[arg0].unk1; i++) {
+        (*D_8012C2BC_EE5FC)[arg0 + i].unk0 = 2;
+    }
+}
+
+u8 D_800E5234_E5E34[] = {
+    0x0F, 0x34, 0x0A, 0x36, 0x02, 0x06, 0x0D, 0x37, 0x03, 0x04, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D,
+    0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x3E, 0x05, 0x0B, 0x3F, 0x0C, 0x40,
+    0x41, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28,
+    0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x07, 0x0F, 0x08, 0x0F, 0x0F,
+    0x09, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9A, 0x9B, 0x9C, 0x9D, 0x9E, 0x9F, 0xA0, 0xA1, 0xA2, 0xA3,
+    0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0x03, 0x0F, 0x04, 0x0E, 0x0F,
+};
+
+void func_800C7864_C8464(char *inString, char *outString) {
+    char currentChar;
+
+    currentChar = *inString++;
+    while (currentChar) {
+        if (currentChar & 0x80) {
+            *outString++ = currentChar;
+            *outString++ = *inString++;
+        } else if (currentChar < 32) {
+            *outString++ = currentChar;
+        } else {
+            *outString++ = 0x80;
+            *outString++ = D_800E5234_E5E34[currentChar - 32];
+        }
+        currentChar = *inString;
+        inString++;
+    }
+    *outString = '\0';
+}
+
+void func_800C78E0_C84E0(void) {
+    s32 i;
+
+    D_8012C2BC_EE5FC = D_8012C2C8_EE608;
+    D_8012C2C0_EE600 = D_8012C2CC_EE60C;
+    do {
+        for (i = 0; i < 128; i++) {
+            if ((*D_8012C2BC_EE5FC)[i].unk0) {
+                (*D_8012C2BC_EE5FC)[i].unk0--;
+            }
+        }
+        func_800C6870_C7470();
+    } while (D_8012C2C0_EE600 != D_8012C2CC_EE60C);
+}
+
+#endif

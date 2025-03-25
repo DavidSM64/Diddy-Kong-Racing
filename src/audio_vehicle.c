@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80004B40 */
-
 #include "audio_vehicle.h"
 
 #include "types.h"
@@ -166,7 +163,7 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
     return temp_v0_3;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/audio_vehicle/func_80004B40.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_vehicle/func_80004B40.s")
 #endif
 
 /**
@@ -367,7 +364,7 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/audio_vehicle/func_80005254.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_vehicle/func_80005254.s")
 #endif
 
 /**
@@ -571,7 +568,7 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/audio_vehicle/func_800063EC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_vehicle/func_800063EC.s")
 #endif
 
 /**
@@ -943,7 +940,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/audio_vehicle/func_80006FC8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_vehicle/func_80006FC8.s")
 #endif
 
 /**

@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80070B30 */
-
 #include "memory.h"
 #include "printf.h"
 #include "thread0_epc.h"
@@ -19,8 +16,6 @@ UNUSED s32 D_801235C4;
 FreeQueueSlot gFreeQueue[FREE_QUEUE_SIZE];
 s32 gFreeQueueCount;
 s32 gFreeQueueTimer; // Official Name: mmDelay
-
-extern MemoryPoolSlot gMainMemoryPool;
 
 /******************************/
 

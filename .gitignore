@@ -1,50 +1,76 @@
-# Baseroms is where the user will place their ROM files.
-baseroms/*
-nonmatchings/*
+# ignore all rom files
+*.z64
+*.n64
+*.v64
 
-# Ignore pycache
-__pycache__
+#Ignore any custom boot files if any.
+boot_custom.bin 
 
-# Automatically generated folders should be ignored
-tools/dkr_assets_tool_src/_build/
+#compiled or ripped asm
+asm/*
+asm
+build/*
 build/
-assets/
-ucode/
-!asm/assets/
-!mods/*
 
-# Linker file is automatically generated, so it should be ignored
-dkr.ld
+#permuter folder
+nonmatchings/*
+nonmatchings/
 
-# CTX files for mips2c should be ignored as we generate those
-ctx.c
-ctx_includes.c
-ctx.c.m2c
+#binaries ripped from the ROMs
+assets/*
+assets_*/
+assets_*/*
+bin/
+bin/*
+ucode/*
 
-#Folder for automatically decompiled functions output from mips2c
-m2cfiles/
+#compiled object files
+*.slo
+*.lo
+*.o
+*.obj
 
-# Misc stuff that should be ignored.
-.*/
-!.github
+#Precompiled Headers
+*.gch
+*.pch
 
-# Ignore .deb packages
-*.deb
+#compiled dynamic libraries
+*.so
+*.dylib
+*.dll
 
-# Ignore batch and executable files.
-*.exe
+#static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+#Windows stuff
 *.bat
-dkr_hot_reload.py
-lastRomPath.txt
-gcc_safe_files.mk
-*.DS_Store
+*.exe
 
-# Temp ignore for splat related stuff.
-asm/data/
-asm/header.s
-asm/nonmatchings/
-tools/asm-differ/
-tools/asm-processor/
-tools/ido-recomp/
-tools/m2c/
-ver/
+#misc
+__pycache__/
+*__pycache__/
+expected/
+.*/
+*.ld
+*/*.ld
+*.map
+*/*.map
+*auto.txt
+*_auto.*.txt
+*.*auto.txt
+*/.splat_cache
+.splat_cache
+.splat_cache*
+ctx.c
+ctx.c.m2c
+ctx_includes.c
+tools/n64crc
+!tools/build
+m2cfiles/
+gcc_safe_files.mk
+tools/ido-recomp
+tools/binutils
+*.DS_Store

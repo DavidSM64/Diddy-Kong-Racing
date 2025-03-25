@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800C6170 */
-
 #include "gzip.h"
 #include "asset_loading.h"
 #include "PR/os_libc.h"

@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80000450 */
-
 #include "audio.h"
 #include "memory.h"
 
@@ -12,7 +9,7 @@
 #include "audiomgr.h"
 #include "audiosfx.h"
 #include "sched.h"
-#include "lib/src/audio/seqchannel.h"
+#include "libultra/src/audio/seqchannel.h"
 
 /************ .data ************/
 

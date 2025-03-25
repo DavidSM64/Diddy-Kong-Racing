@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80072250 */
-
 #include "save_data.h"
 #include "common.h"
 #include "memory.h"
@@ -25,6 +22,10 @@ u8 gN64FontCodes[] = "\0               0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#'
 u8 sControllerPaksPresent = 0; // Bits 0, 1, 2, and 3 of the bit pattern correspond to Controllers 1, 2, 3, and 4.
                                // 1 if a controller pak is present
 s32 gRumbleKillTimer = 0;
+
+#if VERSION >= VERSION_79
+s32 gRumbleEnable = TRUE;
+#endif
 
 /*******************************/
 
@@ -70,6 +71,15 @@ u8 input_get_id(s32 controllerIndex) {
     }
     return get_player_id(controllerIndex);
 }
+
+#if VERSION >= VERSION_79
+/**
+ * Set a global flag that can enable or disable the rumble temporarily.
+ */
+void rumble_enable(s32 enable) {
+    gRumbleEnable = enable;
+}
+#endif
 
 /**
  * Reset the rumble state for all controllers and set whether or not to allow rumble.
@@ -201,7 +211,11 @@ void rumble_update(s32 updateRate) {
     u8 controllerToCheck;
     u8 pfsBitPattern;
 
-    if ((gRumbleIdle != 0 || gRumbleKillTimer != 0)) {
+    if (
+#if VERSION >= VERSION_79
+        (gRumbleEnable) &&
+#endif
+        (gRumbleIdle != 0 || gRumbleKillTimer != 0)) {
         gRumbleDetectionTimer += updateRate;
         if (gRumbleDetectionTimer > 120) {
             gRumbleDetectionTimer = 0;
@@ -1075,7 +1089,11 @@ s32 read_eeprom_settings(u64 *eepromSettings) {
     if (sp20 != temp) {
         // bit 24 = Unknown
         // bit 25 = Seems to be a flag for whether subtitles are enabled or not.
+#if REGION == REGION_JP
+        *eepromSettings = 0x300000C;
+#else
         *eepromSettings = 0x3000000; // Sets bits 24 and 25 high
+#endif
         *eepromSettings <<= 8;
         *eepromSettings >>= 8;
         *eepromSettings |= (u64) calculate_eeprom_settings_checksum(*eepromSettings) << 56;
@@ -1712,11 +1730,29 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
         mempool_free(gPakFileList);
     }
 
-    files_used = maxNumOfFilesOnCpak * 24;
+#if REGION == REGION_JP
+    files_used = maxNumOfFilesOnCpak * 24; // SAVE_FILE_BYTES
+    files_used *= 2;                       // Skips a register to bring SAVE_FILE_BYTES to 48.
+#else
+    files_used = maxNumOfFilesOnCpak * SAVE_FILE_BYTES;
+#endif
+
     gPakFileList = mempool_alloc_safe(files_used, COLOUR_TAG_BLACK);
     bzero(gPakFileList, files_used);
     list = gPakFileList;
 
+#if REGION == REGION_JP
+    ret = 0;
+    for (i = 0; i < maxNumOfFilesOnCpak; i++) {
+        list += ret; // fake
+        fileNames[i] = (char *) list;
+        list += 0x24; // Could be doubled because file names bytes are doubled in JP?
+        fileExtensions[i] = (char *) list;
+        fileSizes[i] = 0;
+        fileTypes[i] = SAVE_FILE_TYPE_UNSET;
+        list += 12;
+    }
+#else
     for (i = 0; i < maxNumOfFilesOnCpak; i++) {
         fileNames[i] = (char *) list;
         list += 0x12;
@@ -1725,6 +1761,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
         fileTypes[i] = SAVE_FILE_TYPE_UNSET;
         list += 6;
     }
+#endif
 
     while (i < maxNumOfFilesToGet) {
         fileExtensions[i] = 0;
@@ -2051,9 +2088,13 @@ char *font_codes_to_string(char *inString, char *outString, s32 stringLength) {
             *outString = gN64FontCodes[index];
             outString++;
         } else {
+#if REGION == REGION_JP
+            *outString++ = 0x80;
+            *outString++ = *inString;
+#else
             // Replace invalid characters with a hyphen
-            *outString = '-';
-            outString++;
+            *outString++ = '-';
+#endif
         }
 
         inString++;
@@ -2082,6 +2123,19 @@ char *string_to_font_codes(char *inString, char *outString, s32 stringLength) {
 
     while (*inString != 0 && stringLength != 0) {
         *outString = 0;
+#if REGION == REGION_JP
+        if (*inString & 0x80) {
+            *outString++ = inString[1];
+            inString += 2;
+        } else {
+            for (i = 0; i < 65; i++) {
+                if (*inString == gN64FontCodes[i]) {
+                    *outString++ = i;
+                    break;
+                }
+            }
+        }
+#else
         for (i = 0; i < 65; i++) {
             currentChar = *inString;
             if (currentChar == gN64FontCodes[i]) {
@@ -2089,7 +2143,7 @@ char *string_to_font_codes(char *inString, char *outString, s32 stringLength) {
                 break;
             }
         }
-
+#endif
         inString++;
         stringLength--;
     }

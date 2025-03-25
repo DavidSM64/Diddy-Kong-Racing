@@ -1,0 +1,446 @@
+name: Diddy Kong Racing (European (basic spec.))
+sha1: dd5d64dd140cb7aa28404fa35abdcaba33c29260
+options:
+  basename: dkr.pal.v77
+  target_path: baseroms/baserom.pal.v77.z64
+  base_path: ../../
+  compiler: IDO
+  find_file_boundaries: True
+  header_encoding: ASCII
+  platform: n64
+  undefined_funcs_auto_path: ver/symbols/undefined_funcs_auto.pal.v77.txt
+  undefined_syms_auto_path: ver/symbols/undefined_syms_auto.pal.v77.txt
+  symbol_addrs_path: ver/symbols/symbol_addrs.pal.v77.txt
+  symbol_name_format: $VRAM_$ROM
+  ld_script_path: ver/dkr.pal.v77.ld
+  asm_path: asm
+  src_path: src
+  build_path: build
+  asset_path: assets
+  section_order: [".text", ".data", ".rodata", ".bss"]
+  migrate_rodata_to_functions: True
+  hasm_in_src_path: True
+segments:
+  - name: header
+    type: header
+    start: 0x0
+
+  - name: boot
+    type: bin
+    start: 0x40
+
+  - name: main
+    type: code
+    start: 0x1000
+    vram: 0x80000400
+    bss_size: 0x41490
+    subsegments:
+      - [0x1000, hasm, hasm/entrypoint]
+      - [0x1050, c, audio]
+      - [0x3260, c, audiomgr]
+      - [0x3D60, c, audiosfx]
+      - [0x5740, c, audio_vehicle]
+      - [0x8C40, c, audio_spatial]
+      - [0xB310, c, ../libultra/src/audio/mips1/seqplayer]
+      - [0xBC20, c, objects]
+      - [0x251F0, hasm, hasm/unknown_0251F0]
+      - [0x255E0, c, tracks]
+      - [0x31D30, hasm, hasm/collision]
+      - [0x32760, c, lights]
+      - [0x348C0, c, object_functions]
+      - [0x43920, c, racer]
+      - [0x5CEF0, c, vehicle_tricky]
+      - [0x5DCD0, c, vehicle_bluey]
+      - [0x5E420, c, vehicle_smokey]
+      - [0x5F0C0, c, vehicle_bubbler]
+      - [0x5F690, c, vehicle_wizpig]
+      - [0x5FF10, c, vehicle_rocket]
+      - [0x60450, c, object_models]
+      - [0x62930, hasm, hasm/object_animate]
+      - [0x62E90, c, ../libultra/src/audio/mips1/csplayer]
+      - [0x64690, c, ../libultra/src/audio/mips1/unknown_064690]
+      - [0x646F0, c, ../libultra/src/audio/mips1/seqchannel]
+      - [0x647A0, c, ../libultra/src/audio/mips1/cspsetfadein]
+      - [0x64800, c, ../libultra/src/audio/mips1/cspgetfadein]
+      - [0x64830, c, ../libultra/src/audio/mips1/reverb]
+      - [0x65550, c, ../libultra/src/audio/mips1/drvrnew]
+      - [0x65D30, c, ../libultra/src/audio/mips1/synthesizer]
+      - [0x66460, c, ../libultra/src/audio/mips1/synallocfx]
+      - [0x66500, c, ../libultra/src/audio/mips1/auxbus]
+      - [0x66720, c, ../libultra/src/audio/mips1/synsetpan]
+      - [0x667D0, c, ../libultra/src/audio/mips1/synstartvoiceparam]
+      - [0x66940, c, main]
+      - [0x66AA0, c, camera]
+      - [0x6AD00, c, joypad]
+      - [0x6B2B0, c, game]
+      - [0x6CF30, c, thread3_main]
+      - [0x70110, hasm, hasm/math_util]
+      - [0x71730, c, memory]
+      - [0x72930, c, ../libultra/src/io/motor]
+      - [0x72E50, c, save_data]
+      - [0x777A0, c, asset_loading]
+      - [0x77C50, c, borders]
+      - [0x78050, c, rcp_dkr]
+      - [0x79F50, c, ../libultra/src/sc/sched]
+      - [0x7AED0, c, set_rsp_segment]
+      - [0x7AF10, c, video]
+      - [0x7B870, c, textures_sprites]
+      - [0x80240, c, screen_asset]
+      - [0x80500, c, menu]
+      - [0x9F980, c, game_ui]
+      - [auto, c, os_yield_data] #bss only file
+      - [0xABE80, c, weather]
+      - [0xAEF00, c, particles]
+      - [0xB53A0, c, unused_string]
+      - [0xB55D0, c, printf]
+      - [0xB7BD0, c, ../libultra/src/debug/assert]
+      - [0xB7BE0, c, thread0_epc]
+      - [0xB89A0, hasm, hasm/get_stack_pointer]
+      - [0xB89B0, c, waves]
+      - [0xC0E00, c, fade_transition]
+      - [0xC3680, c, game_text]
+      - [0xC4890, c, font]
+      - [0xC6C90, c, ../libultra/src/io/pimgr]
+      - [0xC6E00, c, gzip]
+      - [0xC7550, hasm, hasm/gzip_asm]
+      - [0xC7FD0, c, ../libultra/src/io/leointerrupt]
+      - [0xC7FE0, c, thread30_track_loading]
+      - [0xC81F0, c, ../libultra/src/audio/heapinit]
+      - [0xC8230, c, ../libultra/src/audio/bnkf]
+      - [0xC8480, c, ../libultra/src/audio/heapalloc]
+      - [0xC84E0, c, ../libultra/src/audio/cspsetvol]
+      - [0xC8520, c, ../libultra/src/audio/cspgettempo]
+      - [0xC8560, hasm, ../libultra/src/os/getcount]
+      - [0xC8570, c, ../libultra/src/audio/cspsetpan]
+      - [0xC85D0, c, ../libultra/src/audio/cspsetchlvol]
+      - [0xC8630, c, ../libultra/src/audio/cspgetchlvol]
+      - [0xC8650, c, ../libultra/src/audio/seqpgetfxmix]
+      - [0xC8670, c, ../libultra/src/audio/cspsettempo]
+      - [0xC86E0, c, ../libultra/src/audio/cspgetstate]
+      - [0xC86F0, c, ../libultra/src/audio/cspsetbank]
+      - [0xC8730, c, ../libultra/src/audio/cseq]
+      - [0xC91F0, c, ../libultra/src/audio/cspsetseq]
+      - [0xC9230, c, ../libultra/src/audio/cspplay]
+      - [0xC9260, c, ../libultra/src/audio/cspstop]
+      - [0xC9290, c, ../libultra/src/io/aisetfreq]
+      - [0xC93F0, c, ../libultra/src/audio/sl]
+      - [0xC94B0, c, ../libultra/src/os/createmesgqueue]
+      - [0xC94E0, c, ../libultra/src/os/createthread]
+      - [0xC9630, c, ../libultra/src/os/startthread]
+      - [0xC9780, c, ../libultra/src/os/stopthread]
+      - [0xC9840, c, ../libultra/src/os/recvmesg]
+      - [0xC9980, c, ../libultra/src/os/virtualtophysical]
+      - [0xC9A00, c, ../libultra/src/io/aisetnextbuf]
+      - [0xC9AB0, c, ../libultra/src/io/aigetlen]
+      - [0xC9AC0, c, ../libultra/src/os/sendmesg]
+      - [0xC9C10, c, ../libultra/src/io/pidma]
+      - [0xC9D20, c, ../libultra/src/audio/event]
+      - [0xCA060, c, ../libultra/src/audio/synaddplayer]
+      - [0xCA0B0, c, ../libultra/src/audio/synallocvoice]
+      - [0xCA2E0, c, ../libultra/src/audio/synsetvol]
+      - [0xCA380, c, ../libultra/src/audio/synstartvoice]
+      - [0xCA410, c, ../libultra/src/audio/synsetpitch]
+      - [0xCA4A0, c, ../libultra/src/audio/synsetfxmix]
+      - [0xCA540, c, ../libultra/src/audio/synstopvoice]
+      - [0xCA5C0, c, ../libultra/src/audio/synfreevoice]
+      - [0xCA670, c, ../libultra/src/audio/cents2ratio]
+      - [0xCA6C0, hasm, ../libultra/src/os/setintmask]
+      - [0xCA760, hasm, ../libultra/src/gu/sqrtf]
+      - [0xCA770, c, ../libultra/src/audio/synsetpriority]
+      - [0xCA780, pad] #0x40 bytes of zeroes, could be parameters.s from libultra, but that's 0x60 bytes.
+      - [0xCA7C0, c, ../libultra/src/libc/llcvt]
+      - [0xCA9D0, c, ../libultra/src/libc/rmonPrintf]
+      - [0xCAA30, hasm, ../libultra/src/libc/bcopy]
+      - [0xCAD40, c, ../libultra/src/audio/filter]
+      - [0xCAD60, c, ../libultra/src/audio/env]
+      - [0xCC1D0, c, ../libultra/src/audio/load]
+      - [0xCCD20, c, ../libultra/src/audio/resample]
+      - [0xCD020, c, ../libultra/src/audio/mainbus]
+      - [0xCD170, c, ../libultra/src/audio/save]
+      - [0xCD230, c, ../libultra/src/os/initialize]
+      - [0xCD4D0, c, ../libultra/src/os/setthreadpri]
+      - [0xCD5B0, c, ../libultra/src/gu/perspective]
+      - [0xCD840, c, ../libultra/src/os/seteventmesg]
+      - [0xCD8B0, c, ../libultra/src/io/controller]
+      - [0xCDC70, c, ../libultra/src/io/contreaddata]
+      - [0xCDED0, c, ../libultra/src/io/spsetstat]
+      - [0xCDEE0, c, ../libultra/src/io/dpsetstat]
+      - [0xCDEF0, c, ../libultra/src/os/settime]
+      - [0xCDF20, c, ../libultra/src/io/pfsisplug]
+      - [0xCE290, c, ../libultra/src/io/siacs]
+      - [0xCE350, c, ../libultra/src/io/sirawdma]
+      - [0xCE400, c, ../libultra/src/io/crc]
+      - [0xCE580, c, ../libultra/src/io/contramwrite]
+      - [0xCE930, c, ../libultra/src/io/contramread]
+      - [0xCECE0, hasm, ../libultra/src/libc/bcmp]
+      - [0xCEE00, c, ../libultra/src/libc/string]
+      - [0xCEEA0, c, ../libultra/src/io/conteepprobe]
+      - [0xCEF10, c, ../libultra/src/io/conteepread]
+      - [0xCF210, c, ../libultra/src/io/conteepwrite]
+      - [0xCF6F0, c, ../libultra/src/libc/ll]
+      - [0xCF9B0, c, ../libultra/src/io/pfsinit]
+      - [0xCFB70, c, ../libultra/src/io/pfsreadwritefile]
+      - [0xD0070, c, ../libultra/src/io/pfsfreeblocks]
+      - [0xD01C0, c, ../libultra/src/io/pfschecker]
+      - [0xD0C20, c, ../libultra/src/io/pfsreformat]
+      - [0xD1020, c, ../libultra/src/io/pfsnumfiles]
+      - [0xD1170, hasm, ../libultra/src/libc/bzero]
+      - [0xD1210, c, ../libultra/src/io/pfsfilestate]
+      - [0xD1500, c, ../libultra/src/io/pfsdeletefile]
+      - [0xD1B10, c, ../libultra/src/io/pfssearchfile]
+      - [0xD1CD0, c, ../libultra/src/io/pfsallocatefile]
+      - [0xD2480, hasm, ../libultra/src/os/invaldcache]
+      - [0xD2530, hasm, ../libultra/src/os/writebackdcacheall]
+      - [0xD2560, c, ../libultra/src/io/dpgetstat]
+      - [0xD2570, c, ../libultra/src/io/dpsetnextbuf]
+      - [0xD2620, c, ../libultra/src/io/vimgr]
+      - [0xD2930, c, ../libultra/src/io/visetmode]
+      - [0xD29A0, c, ../libultra/src/io/viblack]
+      - [0xD2A10, c, ../libultra/src/io/visetevent]
+      - [0xD2A80, c, ../libultra/src/io/sptaskyielded]
+      - [0xD2B00, c, ../libultra/src/io/vigetcurrframebuf]
+      - [0xD2B40, c, ../libultra/src/io/vigetnextframebuf]
+      - [0xD2B80, c, ../libultra/src/io/sptask]
+      - [0xD2E40, c, ../libultra/src/os/gettime]
+      - [0xD2ED0, c, ../libultra/src/io/sptaskyield]
+      - [0xD2EF0, c, ../libultra/src/io/visetspecial]
+      - [0xD30B0, c, ../libultra/src/io/viswapbuf]
+      - [0xD3100, c, ../libultra/src/os/getactivequeue]
+      - [0xD3110, c, ../libultra/src/io/piacs]
+      - [0xD31D0, c, ../libultra/src/os/getthreadpri]
+      - [0xD31F0, hasm, ../libultra/src/os/interrupt]
+      - [0xD3230, c, ../libultra/src/io/pirawdma]
+      - [0xD3310, c, ../libultra/src/io/epirawdma]
+      - [0xD33F0, c, ../libultra/src/io/devmgr]
+      - [0xD37A0, c, ../libultra/src/io/vi]
+      - [0xD38F0, c, ../libultra/src/audio/syndelete]
+      - [0xD3900, c, ../libultra/src/os/thread]
+      - [0xD3940, hasm, ../libultra/src/os/exceptasm]
+      - [0xD4240, hasm, ../libultra/src/os/probetlb]
+      - [0xD4300, c, ../libultra/src/io/ai]
+      - [0xD4330, c, ../libultra/src/os/jammesg]
+      - [0xD4480, c, ../libultra/src/io/pigetcmdq]
+      - [0xD44B0, c, ../libultra/src/audio/copy]
+      - [0xD4530, c, ../libultra/src/libc/xprintf]
+      - [0xD51F0, hasm, ../libultra/src/os/setsr]
+      - [0xD5200, hasm, ../libultra/src/os/getsr]
+      - [0xD5210, hasm, ../libultra/src/os/setfpccsr]
+      - [0xD5220, c, ../libultra/src/io/sirawread]
+      - [0xD5270, c, ../libultra/src/io/sirawwrite]
+      - [0xD52C0, hasm, ../libultra/src/os/writebackdcache]
+      - [0xD5340, hasm, ../libultra/src/os/invalicache]
+      - [0xD53C0, hasm, ../libultra/src/os/maptlbrdb]
+      - [0xD5420, c, ../libultra/src/io/pirawread]
+      - [0xD5480, c, ../libultra/src/os/sethwinterrupt]
+      - [0xD54D0, c, ../libultra/src/gu/mtxutil]
+      - [0xD5740, c, ../libultra/src/gu/cosf]
+      - [0xD58B0, c, ../libultra/src/gu/sinf]
+      - [0xD5A70, c, ../libultra/src/os/settimer]
+      - [0xD5B50, c, ../libultra/src/os/timerintr]
+      - [0xD5F50, c, ../libultra/src/io/si]
+      - [0xD5F80, c, ../libultra/src/io/contpfs]
+      - [0xD6CE0, c, ../libultra/src/io/dp]
+      - [0xD6D10, c, ../libultra/src/io/vigetcurrcontext]
+      - [0xD6D20, c, ../libultra/src/io/viswapcontext]
+      - [0xD7080, c, ../libultra/src/io/spgetstat]
+      - [0xD7090, c, ../libultra/src/io/spsetpc]
+      - [0xD70D0, c, ../libultra/src/io/sprawdma]
+      - [0xD7160, c, ../libultra/src/io/sp]
+      - [0xD7190, c, ../libultra/src/os/resetglobalintmask]
+      - [0xD71F0, c, ../libultra/src/io/epirawwrite]
+      - [0xD7240, c, ../libultra/src/os/yieldthread]
+      - [0xD7290, c, ../libultra/src/os/destroythread]
+      - [0xD7390, c, ../libultra/src/libc/xlitob]
+      - [0xD7630, c, ../libultra/src/libc/xldtob]
+      - [0xD80F0, hasm, ../libultra/src/os/setcompare]
+      - [0xD8100, c, ../libultra/src/libc/ldiv]
+      - [0xD8290, textbin, ucode_audio]
+      - [0xD9150, textbin, ucode_boot]
+      - [0xD9220, textbin, ucode_f3ddkr_dram]
+      - [0xDA420, textbin, ucode_f3ddkr_fifo]
+      - [0xDB600, textbin, ucode_f3ddkr_xbus]
+      - [0xDC800, textbin, ucode_unknown_2]
+      - [0xDD2C0, .data, audio]
+      - [0xDD310, .data, audiomgr]
+      - [0xDD340, .data, audiosfx]
+      - [0xDD360, .data, audio_vehicle]
+      - [0xDD370, .data, audio_spatial]
+      - [0xDD380, .data, objects]
+      - [0xDD500, .data, tracks]
+      - [0xDD5E0, .data, lights]
+      - [0xDD600, .data, object_functions]
+      - [0xDD7E0, .data, racer]
+      - [0xDDA70, .data, vehicle_tricky]
+      - [0xDDA90, .data, vehicle_bluey]
+      - [0xDDAC0, .data, vehicle_smokey]
+      - [0xDDAD0, .data, vehicle_bubbler]
+      - [0xDDAF0, .data, vehicle_wizpig]
+      - [0xDDB10, .data, vehicle_rocket]
+      - [0xDDB30, .data, object_models]
+      - [0xDDB40, .data, ../libultra/src/audio/mips1/reverb]
+      - [0xDDB50, .data, ../libultra/src/audio/mips1/drvrnew]
+      - [0xDDCE0, .data, ../libultra/src/audio/mips1/synstartvoiceparam]
+      - [0xDDCF0, .data, camera]
+      - [0xDDF90, .data, joypad]
+      - [0xDDFA0, .data, game]
+      - [0xDDFD0, .data, thread3_main]
+      - [0xDE0C0, .data, hasm/math_util]
+      - [0xDF0D0, .data, save_data]
+      - [0xDF120, .data, rcp_dkr]
+      - [0xDF3C0, .data, ../libultra/src/sc/sched]
+      - [0xDF400, .data, video]
+      - [0xDF450, .data, textures_sprites]
+      - [0xE00D0, .data, screen_asset]
+      - [0xE00E0, .data, menu]
+      - [0xE2AF0, .data, game_ui]
+      - [0xE34E0, .data, weather]
+      - [0xE3930, .data, particles]
+      - [0xE3B80, .data, printf]
+      - [0xE3CB0, .data, thread0_epc]
+      - [0xE3CD0, .data, waves]
+      - [0xE3E30, .data, fade_transition]
+      - [0xE4300, .data, game_text]
+      - [0xE4320, .data, font]
+      - [0xE43D0, .data, ../libultra/src/io/pimgr]
+      - [0xE43F0, .data, gzip]
+      - [0xE4400, .data, thread30_track_loading]
+      - [0xE4410, .data, ../libultra/src/audio/sl]
+      - [0xE4420, .data, ../libultra/src/io/aisetnextbuf]
+      - [0xE4430, .data, ../libultra/src/audio/env]
+      - [0xE4530, .data, ../libultra/src/os/initialize]
+      - [0xE4550, .data, ../libultra/src/io/controller]
+      - [0xE4560, .data, ../libultra/src/io/siacs]
+      - [0xE4570, .data, ../libultra/src/io/vimgr]
+      - [0xE4590, .data, ../libultra/src/io/vitbl]
+      - [0xE5490, .data, ../libultra/src/io/piacs]
+      - [0xE54A0, .data, ../libultra/src/io/vi]
+      - [0xE5510, .data, ../libultra/src/os/thread]
+      - [0xE5530, .data, ../libultra/src/os/exceptasm]
+      - [0xE5550, .data, ../libultra/src/libc/xprintf]
+      - [0xE55A0, .data, ../libultra/src/os/timerintr]
+      - [0xE55B0, .data, ../libultra/src/libc/xlitob]
+      - [0xE55E0, .rodata, audio]
+      - [0xE5680, .rodata, audiomgr]
+      - [0xE5740, .rodata, audiosfx]
+      - [0xE5880, .rodata, audio_vehicle]
+      - [0xE5990, .rodata, audio_spatial]
+      - [0xE5BC0, .rodata, ../libultra/src/audio/mips1/seqplayer]
+      - [0xE5BF0, .rodata, objects]
+      - [0xE6A80, .rodata, tracks]
+      - [0xE6BF0, .rodata, hasm/collision]
+      - [0xE6C10, .rodata, lights]
+      - [0xE6C30, .rodata, object_functions]
+      - [0xE6F10, .rodata, racer]
+      - [0xE76A0, .rodata, vehicle_tricky]
+      - [0xE76C0, .rodata, vehicle_bluey]
+      - [0xE76E0, .rodata, vehicle_smokey]
+      - [0xE7730, .rodata, vehicle_bubbler]
+      - [0xE7740, .rodata, vehicle_wizpig]
+      - [0xE7790, .rodata, vehicle_rocket]
+      - [0xE77B0, .rodata, object_models]
+      - [0xE78B0, .rodata, ../libultra/src/audio/mips1/csplayer]
+      - [0xE7B00, .rodata, ../libultra/src/audio/mips1/reverb]
+      - [0xE7B30, .rodata, ../libultra/src/audio/mips1/drvrnew]
+      - [0xE7B50, .rodata, ../libultra/src/audio/mips1/synthesizer]
+      - [0xE7B60, .rodata, main]
+      - [0xE7B90, .rodata, camera]
+      - [0xE7D40, .rodata, thread3_main]
+      - [0xE7EA0, .rodata, memory]
+      - [0xE8220, .rodata, save_data]
+      - [0xE8490, .rodata, ../libultra/src/sc/sched]
+      - [0xE8620, .rodata, video]
+      - [0xE87C0, .rodata, textures_sprites]
+      - [0xE8920, .rodata, screen_asset]
+      - [0xE8940, .rodata, menu]
+      - [0xE92D0, .rodata, game_ui]
+      - [0xE9480, .rodata, weather]
+      - [0xE94D0, .rodata, particles]
+      - [0xE9890, .rodata, printf]
+      - [0xE9B00, .rodata, thread0_epc]
+      - [0xE9DF0, .rodata, waves]
+      - [0xE9F60, .rodata, fade_transition]
+      - [0xE9FC0, .rodata, game_text]
+      - [0xE9FF0, .rodata, font]
+      - [0xEA050, .rodata, hasm/gzip_asm]
+      - [0xEA140, .rodata, ../libultra/src/audio/cseq]
+      - [0xEA150, .rodata, ../libultra/src/audio/cents2ratio]
+      - [0xEA160, .rodata, ../libultra/src/os/setintmask]
+      - [0xEA1E0, .rodata, ../libultra/src/libc/llcvt]
+      - [0xEA1F0, .rodata, ../libultra/src/audio/env]
+      - [0xEA290, .rodata, ../libultra/src/audio/resample]
+      - [0xEA2D0, .rodata, ../libultra/src/gu/perspective]
+      - [0xEA2E0, .rodata, ../libultra/src/io/devmgr]
+      - [0xEA300, .rodata, ../libultra/src/os/exceptasm]
+      - [0xEA350, .rodata, ../libultra/src/libc/xprintf]
+      - [0xEA450, .rodata, ../libultra/src/gu/cosf]
+      - [0xEA4A0, .rodata, ../libultra/src/gu/sinf]
+      - [0xEA4F0, .rodata, ../libultra/src/libc/xldtob]
+      - [0xEA550, hasm, ../libultra/src/gu/libm_vals]
+      - { start: 0xEA560, type: databin, name: data_audio,       linker_section_order: .rodata }
+      - { start: 0xEA830, type: databin, name: data_f3ddkr_dram, linker_section_order: .rodata }
+      - { start: 0xEB030, type: databin, name: data_f3ddkr_fifo, linker_section_order: .rodata }
+      - { start: 0xEB830, type: databin, name: data_f3ddkr_xbus, linker_section_order: .rodata }
+      - { start: 0xEC030, type: databin, name: data_unknown_2,   linker_section_order: .rodata }
+      - { start: auto, type: .bss, vram: 0x800EBFF0, name: audio }
+      - { start: auto, type: .bss, vram: 0x80116020, name: audiomgr }
+      - { start: auto, type: .bss, vram: 0x80119C60, name: audiosfx }
+      - { start: auto, type: .bss, vram: 0x80119CC0, name: audio_vehicle }
+      - { start: auto, type: .bss, vram: 0x8011ACB0, name: objects }
+      - { start: auto, type: .bss, vram: 0x8011B130, name: tracks }
+      - { start: auto, type: .bss, vram: 0x8011D550, name: lights }
+      - { start: auto, type: .bss, vram: 0x8011D560, name: object_functions }
+      - { start: auto, type: .bss, vram: 0x8011D580, name: racer }
+      - { start: auto, type: .bss, vram: 0x8011D650, name: vehicle_tricky }
+      - { start: auto, type: .bss, vram: 0x8011D660, name: vehicle_bluey }
+      - { start: auto, type: .bss, vram: 0x8011D670, name: vehicle_smokey }
+      - { start: auto, type: .bss, vram: 0x8011D680, name: vehicle_bubbler }
+      - { start: auto, type: .bss, vram: 0x8011D690, name: vehicle_wizpig }
+      - { start: auto, type: .bss, vram: 0x8011D6A0, name: vehicle_rocket }
+      - { start: auto, type: .bss, vram: 0x8011D6B0, name: object_models }
+      - { start: auto, type: .bss, vram: 0x8011D7E0, name: main }
+      - { start: auto, type: .bss, vram: 0x8011FB50, name: hasm/entrypoint }
+      - { start: auto, type: .bss, vram: 0x80120B50, name: camera }
+      - { start: auto, type: .bss, vram: 0x80121170, name: joypad }
+      - { start: auto, type: .bss, vram: 0x801211F0, name: game }
+      - { start: auto, type: .bss, vram: 0x80121280, name: thread3_main }
+      - { start: auto, type: .bss, vram: 0x80123610, name: memory }
+      - { start: auto, type: .bss, vram: 0x80123E60, name: ../libultra/src/io/motor }
+      - { start: auto, type: .bss, vram: 0x801240A0, name: save_data }
+      - { start: auto, type: .bss, vram: 0x80124290, name: asset_loading }
+      - { start: auto, type: .bss, vram: 0x80124330, name: rcp_dkr }
+      - { start: auto, type: .bss, vram: 0x801261A0, name: ../libultra/src/sc/sched }
+      - { start: auto, type: .bss, vram: 0x80126200, name: video }
+      - { start: auto, type: .bss, vram: 0x801263B0, name: textures_sprites }
+      - { start: auto, type: .bss, vram: 0x80126420, name: menu }
+      - { start: auto, type: .bss, vram: 0x80126D60, name: game_ui }
+      - { start: auto, type: .bss, vram: 0x80127240, name: os_yield_data }
+      - { start: auto, type: .bss, vram: 0x80127C40, name: weather }
+      - { start: auto, type: .bss, vram: 0x80127D10, name: particles }
+      - { start: auto, type: .bss, vram: 0x80127D30, name: printf }
+      - { start: auto, type: .bss, vram: 0x80128670, name: thread0_epc }
+      - { start: auto, type: .bss, vram: 0x80129B40, name: stacks }
+      - { start: auto, type: .bss, vram: 0x8012A050, name: waves }
+      - { start: auto, type: .bss, vram: 0x8012A7C0, name: fade_transition }
+      - { start: auto, type: .bss, vram: 0x8012A810, name: game_text }
+      - { start: auto, type: .bss, vram: 0x8012A870, name: font }
+      - { start: auto, type: .bss, vram: 0x8012A890, name: ../libultra/src/io/pimgr }
+      - { start: auto, type: .bss, vram: 0x8012AB60, name: gzip }
+      - { start: auto, type: .bss, vram: 0x8012AB70, name: ../libultra/src/io/leointerrupt }      
+      - { start: auto, type: .bss, vram: 0x8012AB80, name: thread30_track_loading }
+      - { start: auto, type: .bss, vram: 0x8012CD50, name: ../libultra/src/os/initialize }
+      - { start: auto, type: .bss, vram: 0x8012CD60, name: ../libultra/src/os/seteventmesg }
+      - { start: auto, type: .bss, vram: 0x8012CDE0, name: ../libultra/src/io/controller }
+      - { start: auto, type: .bss, vram: 0x8012CE70, name: ../libultra/src/io/pfsisplug }
+      - { start: auto, type: .bss, vram: 0x8012CEB0, name: ../libultra/src/io/siacs }
+      - { start: auto, type: .bss, vram: 0x8012CED0, name: ../libultra/src/io/conteepread }
+      - { start: auto, type: .bss, vram: 0x8012CF10, name: ../libultra/src/io/vimgr }
+      - { start: auto, type: .bss, vram: 0x8012D230, name: ../libultra/src/io/sptask }
+      - { start: auto, type: .bss, vram: 0x8012D270, name: ../libultra/src/io/piacs }
+      - { start: auto, type: .bss, vram: 0x8012D290, name: ../libultra/src/os/timerintr }
+      - { start: auto, type: .bss, vram: 0x8012D2D0, name: ../libultra/src/os/exceptasm }
+
+  - name: assets
+    type: bin
+    start: 0xECBF0
+    follows_vram: main
+  - [0xAC96C0]

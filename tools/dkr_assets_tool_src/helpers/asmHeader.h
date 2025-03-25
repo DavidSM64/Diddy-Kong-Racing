@@ -20,6 +20,7 @@ public:
     void write_word_with_comment(const std::string &value, const char *comment);
 
     void write_include(std::string filepath);
+    void write_section(std::string section);
     void write_binary_include(std::string filepath);
     
     void write_global_label(const std::string &label, bool align=false);
