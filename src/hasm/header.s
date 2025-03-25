@@ -51,23 +51,23 @@
 
 .ifdef VERSION_us_v77
 .ascii "E"             /* Country code */
-.equ region, 0x0
+.equ revision, 0x0
 .endif
 .ifdef VERSION_pal_v77
 .ascii "P"             /* Country code */
-.equ region, 0x0
+.equ revision, 0x0
 .endif
 .ifdef VERSION_jpn_v79
 .ascii "J"             /* Country code */
-.equ region, 0x0
+.equ revision, 0x0
 .endif
 .ifdef VERSION_us_v80
 .ascii "E"             /* Country code */
-.equ region, 0x1
+.equ revision, 0x1
 .endif
 .ifdef VERSION_pal_v80
 .ascii "P"             /* Country code */
-.equ region, 0x1
+.equ revision, 0x1
 .endif
 
 .ifdef NON_MATCHING
@@ -76,4 +76,4 @@
 .equ savetype, 0x0
 .endif
 
-.byte (region | (savetype << 4))    /* Version */
+.byte (revision | (savetype << 4))    /* Version */
