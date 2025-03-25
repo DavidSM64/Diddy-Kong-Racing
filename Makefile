@@ -95,8 +95,9 @@ ifeq ($(shell type mips-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
   CROSS := mips-linux-gnu-
 else ifeq ($(shell type mips64-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
   CROSS := mips64-linux-gnu-
-else
+else ifeq ($(shell type mips64-elf-ld >/dev/null 2>/dev/null; echo $$?), 0)
   CROSS := mips64-elf-
+else
 # No binutil packages were found, so we have to download the source & build it.
 ifeq ($(wildcard $(TOOLS_DIR)/binutils/.*),)
   DUMMY != $(TOOLS_DIR)/get-binutils.sh >&2 || echo FAIL
