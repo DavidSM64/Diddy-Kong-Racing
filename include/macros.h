@@ -51,8 +51,10 @@
 #define abs(x)      __builtin_abs(x)
 #define fabsf(x)    __builtin_fabsf(x)
 #define sqrtf(f)    __builtin_sqrtf(f)
-#define round(f)    __builtin_round(f)
-#define ABSF(x)     fabsf(x)
+#undef ABS
+#undef ABSF
+#define ABS(x)      __builtin_abs(x)
+#define ABSF(x)     __builtin_fabsf(x)
 #else
 #define inline
 #define ABSF(x) (x < 0.f ? -x : x)
