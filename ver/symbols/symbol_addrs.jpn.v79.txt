@@ -1855,14 +1855,14 @@ gzip_inflate_codes = 0x800C89D0;
 __osLeoInterrupt = 0x800C8CD0;
 
 
-// thread30_track_loading.c .text
-create_and_start_thread30 = 0x800C8CE0;
-stop_thread30 = 0x800C8D4C;
-get_thread30_need_to_load_level = 0x800C8D70;
-tick_thread30 = 0x800C8D80;
-get_thread30_load_delay = 0x800C8DD8;
-set_level_to_load_in_background = 0x800C8DE8;
-thread30_track_loading = 0x800C8E30; // type:func
+// thread30_bgload.c .text
+bgload_init = 0x800C8CE0;
+bgload_kill = 0x800C8D4C;
+bgload_active = 0x800C8D70;
+bgload_tick = 0x800C8D80;
+bgload_timer = 0x800C8DD8;
+bgload_start = 0x800C8DE8;
+thread30_bgload = 0x800C8E30; // type:func
 
 // alHeapInit.c .text
 alHeapInit = 0x800C8EF0;
@@ -2949,7 +2949,7 @@ gPackedHeader = 0x800E52C4;
 gzip_inflate_input = 0x800E52C8;
 gzip_inflate_output = 0x800E52CC;
 
-// thread30_track_loading.c .data
+// thread30_bgload.c .data
 gThread30NeedToLoadLevel = 0x800E52D0;
 gThread30LevelIdToLoad = 0x800E52D4;
 gThread30CutsceneIdToLoad = 0x800E52D8;
@@ -4624,7 +4624,7 @@ gzip_bit_buffer = 0x8012C5B0;
 gzip_num_bits = 0x8012C5B4;
 gHuftTablePos = 0x8012C5B8;
 
-// thread30_track_loading .bss
+// thread30_bgload .bss
 leoDiskStack = 0x8012C5C0;
 gThread30 = 0x8012C5D0;
 gThread30MesgQueue = 0x8012C780; // type:OSMesgQueue size:0x18

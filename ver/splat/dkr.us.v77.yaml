@@ -104,7 +104,7 @@ segments:
       - [0xC6D70, c, gzip]
       - [0xC74C0, hasm, hasm/gzip_asm]
       - [0xC7F40, c, ../libultra/src/io/leointerrupt]
-      - [0xC7F50, c, thread30_track_loading]
+      - [0xC7F50, c, thread30_bgload]
       - [0xC8160, c, ../libultra/src/audio/heapinit]
       - [0xC81A0, c, ../libultra/src/audio/bnkf]
       - [0xC83F0, c, ../libultra/src/audio/heapalloc]
@@ -303,7 +303,7 @@ segments:
       - [0xE4290, .data, font]
       - [0xE4340, .data, ../libultra/src/io/pimgr]
       - [0xE4360, .data, gzip]
-      - [0xE4370, .data, thread30_track_loading]
+      - [0xE4370, .data, thread30_bgload]
       - [0xE4380, .data, ../libultra/src/audio/sl]
       - [0xE4390, .data, ../libultra/src/io/aisetnextbuf]
       - [0xE43A0, .data, ../libultra/src/audio/env]
@@ -426,7 +426,7 @@ segments:
       - { start: auto, type: .bss, vram: 0x8012A800, name: ../libultra/src/io/pimgr }
       - { start: auto, type: .bss, vram: 0x8012AAD0, name: gzip }
       - { start: auto, type: .bss, vram: 0x8012AAE0, name: ../libultra/src/io/leointerrupt }     
-      - { start: auto, type: .bss, vram: 0x8012AAF0, name: thread30_track_loading }
+      - { start: auto, type: .bss, vram: 0x8012AAF0, name: thread30_bgload }
       - { start: auto, type: .bss, vram: 0x8012CCC0, name: ../libultra/src/os/initialize }
       - { start: auto, type: .bss, vram: 0x8012CCD0, name: ../libultra/src/os/seteventmesg }
       - { start: auto, type: .bss, vram: 0x8012CD50, name: ../libultra/src/io/controller }

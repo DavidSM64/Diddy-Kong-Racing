@@ -17,7 +17,7 @@
 #include "gzip.h"
 #include "printf.h"
 #include "thread0_epc.h"
-#include "thread30_track_loading.h"
+#include "thread30_bgload.h"
 #include "weather.h"
 #include "audio.h"
 #include "objects.h"
@@ -159,7 +159,7 @@ void thread3_main(UNUSED void *unused) {
         if (is_reset_pressed()) {
             rumble_kill();
             audioStopThread();
-            stop_thread30();
+            bgload_kill();
             __osSpSetStatus(SP_SET_HALT | SP_CLR_INTR_BREAK | SP_CLR_YIELD | SP_CLR_YIELDED | SP_CLR_TASKDONE |
                             SP_CLR_RSPSIGNAL | SP_CLR_CPUSIGNAL | SP_CLR_SIG5 | SP_CLR_SIG6 | SP_CLR_SIG7);
             osDpSetStatus(DPC_SET_XBUS_DMEM_DMA | DPC_CLR_FREEZE | DPC_CLR_FLUSH | DPC_CLR_TMEM_CTR | DPC_CLR_PIPE_CTR |
@@ -226,7 +226,7 @@ void init_game(void) {
     load_fonts();
     init_controller_paks();
     init_save_data();
-    create_and_start_thread30();
+    bgload_init();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIOSMesg, 1);
     osScAddClient(&gMainSched, (OSScClient *) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
     gNMIMesgBuf = 0;
@@ -909,7 +909,7 @@ void unload_level_menu(void) {
  * In the tracks menu, this only runs if there's a track actively loaded.
  */
 void update_menu_scene(s32 updateRate) {
-    if (!get_thread30_need_to_load_level()) {
+    if (bgload_active() == FALSE) {
         func_80010994(updateRate);
         gParticlePtrList_flush();
         ainode_update();
@@ -1051,7 +1051,7 @@ void mode_menu(s32 updateRate) {
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     if (!gIsLoading) {
         unload_level_menu();
-        if (!get_thread30_need_to_load_level()) {
+        if (bgload_active() == FALSE) {
             gCurrDisplayList = gDisplayLists[gSPTaskNum];
             gDPFullSync(gCurrDisplayList++);
             gSPEndDisplayList(gCurrDisplayList++);

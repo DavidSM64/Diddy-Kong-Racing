@@ -16,7 +16,7 @@
 #include "object_models.h"
 #include "printf.h"
 #include "textures_sprites.h"
-#include "thread30_track_loading.h"
+#include "thread30_bgload.h"
 #include "objects.h"
 #include "game.h"
 #include "rcp_dkr.h"
@@ -8423,7 +8423,7 @@ s32 menu_track_select_loop(s32 updateRate) {
 
     settings = get_settings();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
-    if (!get_thread30_need_to_load_level() && gMenuDelay != 0) {
+    if (bgload_active() == FALSE && gMenuDelay != 0) {
         if (gMenuDelay < 0) {
             gMenuDelay -= updateRate;
         } else {
@@ -8884,17 +8884,17 @@ void trackmenu_track_view(s32 updateRate) {
     s32 y2;
     s32 i;
 
-    tick_thread30();
+    bgload_tick();
     for (i = 0; i < updateRate; i++) {
         gTrackSelectX += (gTrackSelectTargetX - gTrackSelectX) * 0.1;
         gTrackSelectY += (gTrackSelectTargetY - gTrackSelectY) * 0.1;
     }
-    if (gOpacityDecayTimer == 32 && !get_thread30_need_to_load_level()) {
+    if (gOpacityDecayTimer == 32 && bgload_active() == FALSE) {
         if (gTrackIdForPreview == gTrackmenuLoadedLevel) {
             gSelectedTrackX = gTrackSelectCursorX;
             gSelectedTrackY = gTrackSelectCursorY;
         } else if (gTrackIdForPreview != gTrackmenuLoadedLevel && gTrackIdForPreview != -1 &&
-                   set_level_to_load_in_background(gTrackIdForPreview, 1)) {
+                   bgload_start(gTrackIdForPreview, 1)) {
             gTrackmenuLoadedLevel = gTrackIdForPreview;
             gSelectedTrackX = gTrackSelectCursorX;
             gSelectedTrackY = gTrackSelectCursorY;
@@ -8953,7 +8953,7 @@ void trackmenu_input(s32 updateRate) {
         gMenuImages[5].scale = (f32) (sMenuImageProperties[5].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
     }
     camEnableUserView(0, FALSE);
-    if (!get_thread30_need_to_load_level()) {
+    if (bgload_active() == FALSE) {
         if (gMenuDelay < 0) {
             sMenuMusicVolume -= updateRate * 4;
         }
@@ -13027,7 +13027,7 @@ s32 menu_credits_loop(s32 updateRate) {
     isCreditsEnd = FALSE;
     mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
     creditsBackgroundLevelData = (CreditsBackgroundLevelData *) get_misc_asset(ASSET_MISC_69);
-    tick_thread30();
+    bgload_tick();
     if (gMenuDelay == 0) {
         disable_new_screen_transitions();
         transition_begin(NULL);
@@ -13231,12 +13231,12 @@ s32 menu_credits_loop(s32 updateRate) {
     switch (gMenuStage) {
         case 0:
             tempBackgroundLevelData = &creditsBackgroundLevelData[D_80126BCC];
-            set_level_to_load_in_background(tempBackgroundLevelData->levelId, tempBackgroundLevelData->cutsceneId);
+            bgload_start(tempBackgroundLevelData->levelId, tempBackgroundLevelData->cutsceneId);
             gMenuStage = 1;
             gOpacityDecayTimer = 40;
             break;
         case 1:
-            if (!get_thread30_need_to_load_level()) {
+            if (bgload_active() == FALSE) {
                 gMenuStage = 2;
                 gOptionBlinkTimer = 40;
                 D_80126BD8 = FALSE;
@@ -13287,7 +13287,7 @@ s32 menu_credits_loop(s32 updateRate) {
     }
     if (gMenuDelay > 0) {
         gMenuDelay += updateRate;
-        if (!get_thread30_need_to_load_level() && gMenuDelay > 30) {
+        if (bgload_active() == FALSE && gMenuDelay > 30) {
             music_change_on();
             credits_free();
             load_level_for_menu(ASSET_LEVEL_FRONTEND, ZERO_PLAYERS, CUTSCENE_NONE);
