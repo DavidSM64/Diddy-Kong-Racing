@@ -3,7 +3,6 @@
 
 #include "types.h"
 #include "structs.h"
-#include "PR/pfs.h"
 #include "macros.h"
 #include "save_layout.h"
 #include "src/save_data.h"
@@ -230,5 +229,14 @@ typedef struct SaveBuffer {
 #define FASTEST_LAPS_START      (CONFIG_START + sizeof(SaveConfig))
 #define COURSE_TIMES_START      (FASTEST_LAPS_START + sizeof(CourseRecords))
 #define SAVE_SIZE               (sizeof(SaveBuffer))
+
+#if REGION == REGION_JP
+// The Save size constant seems to change depending on the file being compiled in JP?
+#define SAVE_SIZE_MENU 0x400
+#define SAVE_FILE_BYTES 48
+#else
+#define SAVE_SIZE_MENU 0x200
+#define SAVE_FILE_BYTES 24
+#endif
 
 #endif

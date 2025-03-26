@@ -12,6 +12,7 @@
 #include "joypad.h"
 #include "PRinternal/viint.h"
 #include "PR/os_motor.h"
+#include "save_layout.h"
 
 /************ .data ************/
 
