@@ -19,7 +19,7 @@ VideoModeResolution gVideoModeResolutions[] = {
 };
 
 // This value exists in order to make sure there are no out of bounds accesses of gVideoModeResolutions
-#define NUM_RESOLUTION_MODES ((sizeof(gVideoModeResolutions) / sizeof(VideoModeResolution)) - 1)
+#define NUM_RESOLUTION_MODES ((s32) (sizeof(gVideoModeResolutions) / sizeof(VideoModeResolution)) - 1)
 
 /*******************************/
 
@@ -71,7 +71,7 @@ void video_init(s32 videoModeIndex, OSSched *sc) {
 
     if (osTvType == OS_TV_TYPE_PAL) {
         s32 i;
-        for (i = 0; i < 8; i++) {
+        for (i = 0; i <= NUM_RESOLUTION_MODES; i++) {
             gVideoModeResolutions[i].height += PAL_HEIGHT_DIFFERENCE;
         }
     }
@@ -148,7 +148,7 @@ void fb_init_vi(void) {
             osViSetMode(&osViModeTable[viModeTableIndex]);
             break;
         case VIDEO_MODE_LOWRES_LPN:
-            //@bug: The video mode being set here is Point sampled
+            //!@bug: The video mode being set here is Point sampled
             // but the printf implies it was intended to be Anti-aliased.
             // By my understanding, this is the case we will always hit in code,
             // So maybe it was swapped out late in development?
