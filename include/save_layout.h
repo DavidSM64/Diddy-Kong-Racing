@@ -230,13 +230,4 @@ typedef struct SaveBuffer {
 #define COURSE_TIMES_START      (FASTEST_LAPS_START + sizeof(CourseRecords))
 #define SAVE_SIZE               (sizeof(SaveBuffer))
 
-#if REGION == REGION_JP
-// The Save size constant seems to change depending on the file being compiled in JP?
-#define CPAK_HEAP_SIZE 0x400
-#define SAVE_FILE_BYTES 48
-#else
-#define CPAK_HEAP_SIZE 0x200
-#define SAVE_FILE_BYTES 24
-#endif
-
 #endif

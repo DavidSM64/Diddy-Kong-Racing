@@ -26,6 +26,15 @@
 
 #define MAX_CPAK_FILES 16
 
+#if REGION == REGION_JP
+// The Save size constant seems to change depending on the file being compiled in JP?
+#define CPAK_HEAP_SIZE 0x400
+#define SAVE_FILE_BYTES 48
+#else
+#define CPAK_HEAP_SIZE 0x200
+#define SAVE_FILE_BYTES 24
+#endif
+
 #define GHSS_SIZE 0x100
 #define AS_BYTES(ptr) ((u8 *) ptr)
 
