@@ -232,10 +232,10 @@ typedef struct SaveBuffer {
 
 #if REGION == REGION_JP
 // The Save size constant seems to change depending on the file being compiled in JP?
-#define SAVE_SIZE_MENU 0x400
+#define CPAK_HEAP_SIZE 0x400
 #define SAVE_FILE_BYTES 48
 #else
-#define SAVE_SIZE_MENU 0x200
+#define CPAK_HEAP_SIZE 0x200
 #define SAVE_FILE_BYTES 24
 #endif
 

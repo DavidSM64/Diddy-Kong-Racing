@@ -5514,11 +5514,11 @@ void bootscreen_init_cpak(void) {
     s32 i;
 
     // Starting point
-    gBootPakData[0] = mempool_alloc_safe(SAVE_SIZE_MENU, COLOUR_TAG_WHITE);
+    gBootPakData[0] = mempool_alloc_safe(CPAK_HEAP_SIZE, COLOUR_TAG_WHITE);
 
     // Fills in the table.
     for (i = 1; i < ARRAY_COUNT(gBootPakData); i++) {
-        gBootPakData[i] = (char *) (((u32) gBootPakData[0]) + (i * (SAVE_SIZE_MENU / ARRAY_COUNT(gBootPakData))));
+        gBootPakData[i] = (char *) (((u32) gBootPakData[0]) + (i * (CPAK_HEAP_SIZE / ARRAY_COUNT(gBootPakData))));
     }
 
     // Only check cpak 0
