@@ -28,6 +28,7 @@
 #include "audio_vehicle.h"
 #include "vehicle_misc.h"
 #include "PRinternal/viint.h"
+#include "printf.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -2897,11 +2898,11 @@ void render_3d_model(Object *obj) {
             racerObj = NULL;
         }
         if (obj68->unk20 <= 0) {
-            obj->unk44 = (Vertex *) obj68->unk4[obj68->animationTaskNum];
-            if (obj68->unk1E == 2) {
-                object_animate(obj);
+            obj->unk44 = (Vertex *) obj68->vertices[obj68->animationTaskNum];
+            if (obj68->modelType == MODELTYPE_ANIMATED) {
+                obj_animate(obj);
             }
-            if (obj68->unk1E && objModel->unk40 != NULL) {
+            if (obj68->modelType != MODELTYPE_BASIC && objModel->unk40 != NULL) {
                 flags = TRUE;
                 if (racerObj != NULL && racerObj->vehicleID < VEHICLE_TRICKY &&
                     racerObj->playerIndex == PLAYER_COMPUTER) {
@@ -2910,7 +2911,7 @@ void render_3d_model(Object *obj) {
                 if (get_viewport_count() != VIEWPORTS_COUNT_1_PLAYER) {
                     flags = FALSE;
                 }
-                obj->unk44 = (Vertex *) obj68->unk4[obj68->animationTaskNum];
+                obj->unk44 = (Vertex *) obj68->vertices[obj68->animationTaskNum];
                 if (obj->behaviorId == BHV_UNK_3F) { // 63 = stopwatchicon, stopwatchhand
                     calc_dyn_light_and_env_map_for_object(objModel, obj, 0, gCurrentLightIntensity);
                 } else if (flags) {
@@ -2926,7 +2927,7 @@ void render_3d_model(Object *obj) {
                 obj68->unk20 = 1;
             }
         }
-        obj->unk44 = (Vertex *) obj68->unk4[obj68->animationTaskNum];
+        obj->unk44 = (Vertex *) obj68->vertices[obj68->animationTaskNum];
         if (obj->behaviorId == BHV_DOOR) {
             func_80011264(objModel, obj);
         }
@@ -3452,7 +3453,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         shear *= scale;
         gfxData = gShieldEffectObject->unk68[shieldType];
         mdl = gfxData->objModel;
-        gShieldEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->animationTaskNum];
+        gShieldEffectObject->unk44 = (Vertex *) gfxData->vertices[gfxData->animationTaskNum];
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, racer->shieldTimer * 4);
@@ -3516,7 +3517,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gMagnetEffectObject->segment.trans.rotation.z_rotation = 0;
             gfxData = *gMagnetEffectObject->unk68;
             mdl = gfxData->objModel;
-            gMagnetEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->animationTaskNum];
+            gMagnetEffectObject->unk44 = (Vertex *) gfxData->vertices[gfxData->animationTaskNum];
             opacity = ((D_8011B078[var_t0].g * 8) & 0x7F) + 0x80;
             func_8007F594(&gObjectCurrDisplayList, 2, COLOUR_RGBA32(255, 255, 255, opacity),
                           gMagnetColours[racer->magnetModelID]);
@@ -7052,7 +7053,7 @@ s32 obj_init_property_flags(s32 behaviorId) {
     s32 flags = OBJECT_SPAWN_NONE;
     switch (behaviorId) {
         case BHV_RACER:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_UNK08 |
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_ANIMATION |
                     OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_SCENERY:
@@ -7062,7 +7063,7 @@ s32 obj_init_property_flags(s32 behaviorId) {
             flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_DINO_WHALE:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_DOOR:
         case BHV_TT_DOOR:
@@ -7076,20 +7077,20 @@ s32 obj_init_property_flags(s32 behaviorId) {
         case BHV_HIT_TESTER_2:
         case BHV_SNOWBALL:
         case BHV_SNOWBALL_2:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE |
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE |
                     OBJECT_SPAWN_UNK20;
             break;
         case BHV_SNOWBALL_3:
         case BHV_SNOWBALL_4:
         case BHV_HIT_TESTER_3:
         case BHV_HIT_TESTER_4:
-            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
             break;
         case BHV_UNK_18:
             flags = OBJECT_SPAWN_UNK04;
             break;
         case BHV_STOPWATCH_MAN:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_BANANA:
         case BHV_WORLD_KEY:
@@ -7101,22 +7102,22 @@ s32 obj_init_property_flags(s32 behaviorId) {
             flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
             break;
         case BHV_BRIDGE_WHALE_RAMP:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
             break;
         case BHV_RAMP_SWITCH:
             flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_SHADOW;
             break;
         case BHV_SEA_MONSTER:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK08;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_COLLECT_EGG:
             flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_UNK_30:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK08;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_UNK_3F:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK08;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_ANIMATED_OBJECT:
         case BHV_VEHICLE_ANIMATION:
@@ -7124,10 +7125,10 @@ s32 obj_init_property_flags(s32 behaviorId) {
         case BHV_WIZPIG_SHIP:
         case BHV_ANIMATED_OBJECT_4:
         case BHV_PIG_ROCKETEER:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_CHARACTER_SELECT:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_TROPHY_CABINET:
         case BHV_DYNAMIC_LIGHT_OBJECT_2:
@@ -7139,7 +7140,7 @@ s32 obj_init_property_flags(s32 behaviorId) {
             flags = OBJECT_SPAWN_UNK01;
             break;
         case BHV_ANIMATED_OBJECT_2:
-            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08;
+            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_EXIT:
         case BHV_CHECKPOINT:
@@ -7169,10 +7170,10 @@ s32 obj_init_property_flags(s32 behaviorId) {
             flags = OBJECT_SPAWN_SHADOW;
             break;
         case BHV_PARK_WARDEN:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_FROG:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_UNK_72:
             flags = OBJECT_SPAWN_UNK01;

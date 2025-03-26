@@ -176,7 +176,7 @@ enum ObjectSpawnFlags {
     OBJECT_SPAWN_UNK01          = (1 << 0),
     OBJECT_SPAWN_SHADOW         = (1 << 1),
     OBJECT_SPAWN_UNK04          = (1 << 2),
-    OBJECT_SPAWN_UNK08          = (1 << 3),
+    OBJECT_SPAWN_ANIMATION          = (1 << 3),
     OBJECT_SPAWN_INTERACTIVE    = (1 << 4),
     OBJECT_SPAWN_UNK20          = (1 << 5)
 };
@@ -532,7 +532,7 @@ void func_80010994(s32 updateRate);
 void func_800159C8(Object *, Object *);
 void func_80011264(ObjectModel *, Object *);
 void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
-s32 object_animate(Object *obj);
+s32 obj_animate(Object *obj);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 
 #endif

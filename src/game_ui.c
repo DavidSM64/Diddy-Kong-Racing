@@ -1257,7 +1257,7 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
                     }
                 }
             }
-            object_animate(ttSWBodyObject);
+            obj_animate(ttSWBodyObject);
         }
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->stopwatchHands);
 

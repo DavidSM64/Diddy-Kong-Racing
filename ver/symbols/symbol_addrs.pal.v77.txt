@@ -782,7 +782,7 @@ update_rocket = 0x8005F310;
 // object_models.c .text
 allocate_object_model_pools = 0x8005F850;
 object_model_init = 0x8005F99C;
-func_8005FCD0 = 0x8005FCD0;
+model_init_type = 0x8005FCD0;
 free_3d_model = 0x8005FF40;
 free_model_data = 0x80060058;
 func_8006017C = 0x8006017C;
@@ -794,8 +794,8 @@ func_800619F4 = 0x800619F4;
 func_80061A00 = 0x80061A00;
 func_80061C0C = 0x80061C0C;
 
-// object_animate.c .text
-object_animate = 0x80061D30;
+// obj_animate.c .text
+obj_animate = 0x80061D30;
 
 // csplayer.c .text
 alCSPNew = 0x80062290;

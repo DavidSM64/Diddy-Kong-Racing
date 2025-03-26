@@ -56,7 +56,7 @@ segments:
       - [0x5F6C0, c, vehicle_wizpig]
       - [0x5FF40, c, vehicle_rocket]
       - [0x60480, c, object_models]
-      - [0x62A00, hasm, hasm/object_animate]
+      - [0x62A00, hasm, hasm/obj_animate]
       - [0x62F60, c, ../libultra/src/audio/mips1/csplayer]
       - [0x64760, c, ../libultra/src/audio/mips1/unknown_064690]
       - [0x647C0, c, ../libultra/src/audio/mips1/seqchannel]

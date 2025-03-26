@@ -8,6 +8,7 @@
 #include "textures_sprites.h"
 #include "racer.h"
 #include "save_data.h"
+#include "objects.h"
 
 /************ .data ************/
 
@@ -104,7 +105,7 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     for (i = 0; i < D_8011D62C; i++) {
         if (modelID == D_8011D624[(i << 1)]) {
             objMdl = (ObjectModel *) D_8011D624[(i << 1) + 1];
-            ret = func_8005FCD0(objMdl, flags);
+            ret = model_init_type(objMdl, flags);
             if (ret != NULL) {
                 objMdl->references++;
             }
@@ -179,7 +180,7 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
             }
         }
         if ((func_80060EA8(objMdl) == 0) && (func_80061A00(objMdl, modelID) == 0)) {
-            ret = func_8005FCD0(objMdl, flags);
+            ret = model_init_type(objMdl, flags);
             if (ret != NULL) {
                 D_8011D624[(sp50 << 1)] = modelID;
                 D_8011D624[(sp50 << 1) + 1] = (s32) objMdl;
@@ -203,43 +204,43 @@ block_30:
     return NULL;
 }
 
-Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
+Object_68 *model_init_type(ObjectModel *model, s32 flags) {
     s32 temp;
     Object_68 *result;
     Vertex *var_v1;
     Vertex *vertex;
     Vertex *mdlVertex;
 
-    if ((model->numberOfAnimations != 0) && (arg1 & 8)) {
-        temp = ((model->numberOfVertices << 1) * 10) + 36;
+    if ((model->numberOfAnimations != 0) && (flags & OBJECT_SPAWN_ANIMATION)) {
+        temp = ((model->numberOfVertices * 2) * sizeof(Vertex)) + 36;
         result = (Object_68 *) mempool_alloc((model->unk4A * 6) + temp, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
-        result->unk4[0] = (Vertex *) ((u8 *) result + 36);
-        result->unk4[1] = (Vertex *) ((u8 *) result + (model->numberOfVertices * 10) + 36);
-        result->unk4[2] = (Vertex *) ((u8 *) result + temp);
-        result->unk1E = 2;
-    } else if ((model->unk40 != NULL) && (arg1 & 1)) {
-        temp = (model->numberOfVertices * 10);
-        result = (Object_68 *) mempool_alloc(temp + 36, COLOUR_TAG_BLUE);
+        result->vertices[0] = (Vertex *) ((u8 *) result + 36);
+        result->vertices[1] = (Vertex *) ((u8 *) result + (model->numberOfVertices * sizeof(Vertex)) + 36);
+        result->vertices[2] = (Vertex *) ((u8 *) result + temp);
+        result->modelType = MODELTYPE_ANIMATED;
+    } else if ((model->unk40 != NULL) && (flags & OBJECT_SPAWN_UNK01)) {
+        temp = (model->numberOfVertices * sizeof(Vertex)) + 36;
+        result = (Object_68 *) mempool_alloc(temp, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
         var_v1 = (Vertex *) ((u8 *) result + 36);
-        result->unk4[0] = var_v1;
-        result->unk4[1] = var_v1;
-        result->unk4[2] = NULL;
-        result->unk1E = 1;
+        result->vertices[0] = var_v1;
+        result->vertices[1] = var_v1;
+        result->vertices[2] = NULL;
+        result->modelType = MODELTYPE_SHADE;
     } else {
         result = (Object_68 *) mempool_alloc(36, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
-        result->unk4[0] = model->vertices;
-        result->unk4[1] = model->vertices;
-        result->unk4[2] = NULL;
-        result->unk1E = 0;
+        result->vertices[0] = model->vertices;
+        result->vertices[1] = model->vertices;
+        result->vertices[2] = NULL;
+        result->modelType = MODELTYPE_BASIC;
     }
     result->offsetX = 0;
     result->offsetY = 0;
@@ -248,9 +249,10 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
     result->animationID = -1;
     result->animationFrame = -1;
     result->animationTaskNum = 0;
-    if (result->unk1E != 0) {
+    // Shaded models need to be double buffered, so duplicate them.
+    if (result->modelType != MODELTYPE_BASIC) {
         temp = 0;
-        vertex = result->unk4[0];
+        vertex = result->vertices[0];
         mdlVertex = &model->vertices[0];
         do {
             vertex->x = mdlVertex->x;
@@ -266,7 +268,7 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
         } while (temp < model->numberOfVertices);
 
         temp = 0;
-        vertex = result->unk4[1];
+        vertex = result->vertices[1];
         mdlVertex = &model->vertices[0];
         do {
             vertex->x = mdlVertex->x;

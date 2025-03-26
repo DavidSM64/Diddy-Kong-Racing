@@ -1669,7 +1669,7 @@ typedef struct Object_68 {
       ObjectModel *objModel;
       TextureHeader *texHeader;
   };
-  /* 0x04 */ Vertex *unk4[2];
+  /* 0x04 */ Vertex *vertices[2];
   /* 0x0C */ s32 *unkC;
   /* 0x10 */ s16 animationID;
   /* 0x12 */ s16 animationFrame;
@@ -1678,7 +1678,7 @@ typedef struct Object_68 {
   /* 0x18 */ s16 offsetY;
   /* 0x1A */ s16 offsetZ;
   /* 0x1C */ s16 unk1C;
-  /* 0x1E */ s8 unk1E;
+  /* 0x1E */ s8 modelType;
   /* 0x1F */ s8 animationTaskNum;
   /* 0x20 */ s8 unk20;
   /* 0x21 */ s8 unk21;
