@@ -992,7 +992,7 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
     alloc = mempool_alloc_safe(COURSE_TIMES_START + sizeof(CourseRecords), COLOUR_TAG_WHITE);
 
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
-        s32 blocks = sizeof(CourseRecords);
+        s32 blocks = BLOCK_SIZE(sizeof(CourseRecords));
         for (i = 0; i < blocks; i++) {
             osEepromRead(si_mesg(), BLOCK_SIZE(FASTEST_LAPS_START) + i, (u8 *) &alloc[i]);
         }
@@ -1000,7 +1000,7 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
     }
 
     if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
-        s32 blocks = sizeof(CourseRecords);
+        s32 blocks = BLOCK_SIZE(sizeof(CourseRecords));
         for (i = 0; i < blocks; i++) {
             osEepromRead(si_mesg(), BLOCK_SIZE(COURSE_TIMES_START) + i,
                          (u8 *) (&alloc[sizeof(CourseRecords) / sizeof(u64)] + i));
@@ -1034,7 +1034,7 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
     func_800738A4(settings, (u8 *) alloc);
 
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
-        s32 blocks = sizeof(CourseRecords);
+        s32 blocks = BLOCK_SIZE(sizeof(CourseRecords));
         if (1) {} // Fake Match
         if (is_reset_pressed() == FALSE) {
             for (i = 0; i != blocks; i++) {
@@ -1044,7 +1044,7 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
     }
 
     if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
-        s32 blocks = sizeof(CourseRecords);
+        s32 blocks = BLOCK_SIZE(sizeof(CourseRecords));
         if (is_reset_pressed() == FALSE) {
             for (i = 0; i != blocks; i++) {
                 osEepromWrite(si_mesg(), BLOCK_SIZE(COURSE_TIMES_START) + i,
@@ -1078,8 +1078,8 @@ s32 calculate_eeprom_settings_checksum(u64 eepromSettings) {
  * Address (0xF * sizeof(u64)) = 0x78 - 0x80 of the actual save data file
  */
 s32 read_eeprom_settings(u64 *eepromSettings) {
-    s32 expected;
     s32 checksum;
+    s32 expected;
 
     if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
@@ -1093,9 +1093,10 @@ s32 read_eeprom_settings(u64 *eepromSettings) {
         // bit 24 = Unknown
         // bit 25 = Seems to be a flag for whether subtitles are enabled or not.
 #if REGION == REGION_JP
-        *eepromSettings = 0x300000C;
+        // JP additionally forces the language setting to Japanese.
+        *eepromSettings = (1 << 2) | (1 << 3) | (1 << 24) | (1 << 25);
 #else
-        *eepromSettings = 0x3000000; // Sets bits 24 and 25 high
+        *eepromSettings = (1 << 24) | (1 << 25); // Sets bits 24 and 25 high
 #endif
         *eepromSettings <<= 8;
         *eepromSettings >>= 8;
