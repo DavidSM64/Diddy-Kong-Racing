@@ -7,6 +7,7 @@
 #include "objects.h"
 #include "PR/abi.h"
 #include "common.h"
+#include "stacks.h"
 
 /****  type define's for structures unique to audiomgr ****/
 typedef union {
@@ -63,7 +64,7 @@ OSSched *gAudioSched;
 ALHeap *gAudioHeap; // Set but not used
 
 AMAudioMgr __am;
-static u64 audioStack[AUDIO_STACKSIZE / sizeof(u64)];
+static u64 audioStack[STACKSIZE(STACK_AUD)];
 
 AMDMAState dmaState;
 AMDMABuffer dmaBuffs[NUM_DMA_BUFFERS];
@@ -192,8 +193,7 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     osCreateMesgQueue(&__am.audioReplyMsgQ, __am.audioReplyMsgBuf, MAX_MESGS);
     osCreateMesgQueue(&__am.audioFrameMsgQ, __am.audioFrameMsgBuf, MAX_MESGS);
     osCreateMesgQueue(&audDMAMessageQ, audDMAMessageBuf, NUM_DMA_MESSAGES);
-
-    osCreateThread(&__am.thread, 4, __amMain, 0, (void *) (audioStack + AUDIO_STACKSIZE / sizeof(u64)), pri);
+    osCreateThread(&__am.thread, 4, __amMain, 0, (void *) (audioStack + STACKSIZE(STACK_AUD)), pri);
 }
 
 /**

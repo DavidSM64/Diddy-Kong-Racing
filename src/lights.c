@@ -110,14 +110,14 @@ ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry
         if (lightEntry->unk1C < 7) {
             test = (LevelHeader_70 *) get_current_level_header()->unk74[lightEntry->unk1C];
             if (((s32) test) != -1) {
-                newLight->unk44 = &test->unk4;
-                newLight->unk44 = &test->unk0;
+                newLight->unk44 = (SubMiscAssetObjectHeader24 *) &test->unk4;
+                newLight->unk44 = (SubMiscAssetObjectHeader24 *) &test->unk0;
                 newLight->unk4A = 0;
                 if (lightEntry && lightEntry && lightEntry) {}
                 newLight->unk4C = 0;
                 newLight->unk4E = 0;
-                newLight->unk48 = (u16) &test->red2;
-                temp_a0 = (u16) &test->red2;
+                newLight->unk48 = (u16) (u32) &test->red2;
+                temp_a0 = (u16) (u32) &test->red2;
                 for (i = 0; i < temp_a0;) {
                     newLight->unk4E += test->unk18[i++].unk0;
                 }
@@ -473,7 +473,7 @@ void func_80032C7C(Object *object) {
                 (sp80 >= entry->unk52) && (entry->unk58 >= sp80) && (sp7E >= entry->unk54) && (entry->unk5A >= sp7E)) {
                 if (entry->unk0 == 0) {
                     if (entry->unk28 >= 0x10000) {
-                        D_800DC960[D_800DC968].unk0 = entry->unk0;
+                        D_800DC960[D_800DC968].unk0 = (s32) entry->unk0;
                         D_800DC960[D_800DC968].unk4 = entry->unk1C >> 0x10;
                         D_800DC960[D_800DC968].unk8 = entry->unk20 >> 0x10;
                         D_800DC960[D_800DC968].unkC = entry->unk24 >> 0x10;
@@ -513,7 +513,7 @@ void func_80032C7C(Object *object) {
                                     D_800DC964[D_800DC968].y = gLightDiffY;
                                     D_800DC964[D_800DC968].z = gLightDiffZ;
                                 }
-                                D_800DC960[D_800DC968].unk0 = entry;
+                                D_800DC960[D_800DC968].unk0 = (s32) entry;
                                 D_800DC960[D_800DC968].unk4 = entry->unk1C >> 0x10;
                                 D_800DC960[D_800DC968].unk8 = entry->unk20 >> 0x10;
                                 D_800DC960[D_800DC968].unkC = entry->unk24 >> 0x10;

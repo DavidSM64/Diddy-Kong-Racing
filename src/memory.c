@@ -639,6 +639,9 @@ UNUSED s32 find_active_pool_slot_colours(void) {
         stubbed_printf("Unable to record %d slots, colours overflowed table.\n", numOverflows);
     }
     numOverflows = slotColour;
+#ifdef AVOID_UB
+    return 0;
+#endif
 }
 
 /**

@@ -927,7 +927,7 @@ void func_800B03C0(Particle *particle, Particle *arg1, Particle *arg2, ParticleB
             }
             f32_vec3_apply_object_rotation3(&angle, (f32 *) &posVel);
         } else {
-            f32_vec3_apply_object_rotation((Vec3s *) &arg2->data.angle.rotation.y_rotation, (f32 *) &posVel);
+            f32_vec3_apply_object_rotation((ObjectTransform *) &arg2->data.angle.rotation, (f32 *) &posVel);
         }
         particle->baseVelX += posVel.x;
         particle->baseVelY += posVel.y;
@@ -1152,7 +1152,7 @@ Particle *func_800B0BAC(Object *arg0, Particle *arg1) {
     sp2C->vertices->x = arg1->segment.trans.x_position;
     sp2C->vertices->y = arg1->segment.trans.y_position;
     sp2C->vertices->z = arg1->segment.trans.z_position;
-    if ((s32) sp24 != -1U) {
+    if ((u32) sp24 != -1U) {
         arg1->data.unk1E += 1;
         if (arg1->data.unk1E >= sp24[0].unk0) {
             arg1->data.unk1E = 0;
@@ -1997,7 +1997,7 @@ void move_particle_with_velocity(Particle *particle) {
         particle->segment.x_velocity = 0.0f;
         particle->segment.y_velocity = 0.0f;
         particle->segment.z_velocity = -particle->forwardVel;
-        f32_vec3_apply_object_rotation3(&particle->segment.trans, &particle->segment.x_velocity);
+        f32_vec3_apply_object_rotation3(&particle->segment.trans.rotation, &particle->segment.x_velocity);
         particle->segment.trans.x_position += particle->segment.x_velocity;
         particle->segment.trans.y_position += particle->segment.y_velocity - particle->gravity;
         particle->segment.trans.z_position += particle->segment.z_velocity;

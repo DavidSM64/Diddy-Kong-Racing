@@ -123,7 +123,7 @@ void init_level_globals(void) {
         D_80121178[i] = -1;
     }
     for (i = 0; i < gNumberOfLevelHeaders; i++) {
-        if ((gGlobalLevelTable[i].raceType == 5)) {
+        if (gGlobalLevelTable[i].raceType == 5) {
             D_80121178[gGlobalLevelTable[i].world] = i;
         }
     }

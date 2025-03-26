@@ -38,9 +38,6 @@
                                        /* be deleted as quickly. This results in fewer  */
                                        /* DMA's but you need more buffers.              */
 
-
-#define AUDIO_STACKSIZE         0x3010
-
 #define MAX_SEQ_LENGTH  20000
 
 extern Acmd *alAudioFrame(Acmd *cmdList, s32 *cmdLen, s16 *outBuf, s32 outLen);

@@ -808,7 +808,6 @@ void sound_play(u16 soundID, s32 *soundMask) {
         if (soundMask != NULL) {
             *soundMask = NULL;
         }
-        stubbed_printf("amSndPlayDirect: Somebody tried to play illegal sound %d\n", soundID);
         return;
     }
     pitch = gSoundTable[soundID].pitch / 100.0f;
@@ -847,6 +846,7 @@ void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **soundMask) {
 
 void func_80001F14(u16 soundID, s32 *soundMask) {
     if (soundID <= 0 || sound_count() < soundID) {
+        stubbed_printf("amSndPlayDirect: Somebody tried to play illegal sound %d\n", soundID);
         if (soundMask) {
             *soundMask = NULL;
         }

@@ -201,6 +201,9 @@ UNUSED int sprintf(char *s, const char *format, ...) {
     va_start(args, format);
     vsprintf(s, format, args);
     va_end(args);
+#ifdef AVOID_UB
+    return 0;
+#endif
 }
 
 // Official Name: vsprintf

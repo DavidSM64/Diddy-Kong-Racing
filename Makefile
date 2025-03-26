@@ -8,8 +8,8 @@ COMPILER ?= ido
 $(eval $(call validate-option,NON_MATCHING,ido gcc))
 
 # Define a custom boot file if desired to use something other than the vanilla one
-BOOT_CUSTOM ?= boot_custom.bin
-BOOT_CIC ?= 6102
+BOOT_CUSTOM ?= mods/boot_custom.bin
+BOOT_CIC ?= 6103
 $(eval $(call validate-option,BOOT_CIC,6102 6103))
 
 LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\"
@@ -87,7 +87,6 @@ O_FILES := $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(BIN_FILES),$(BUILD_DIR)/$(file).o)
 
-
 find-command = $(shell which $(1) 2>/dev/null)
 
 # Tools
@@ -125,31 +124,39 @@ MIPSISET       = -mips1
 
 DEFINES := _FINALROM NDEBUG TARGET_N64 F3DDKR_GBI
 DEFINES += VERSION_$(REGION)_$(VERSION)
+MATCHDEFS := 
 
 VERIFY = verify
 
 ifeq ($(NON_MATCHING),1)
-	DEFINES += NON_MATCHING
-	DEFINES += AVOID_UB
+	MATCHDEFS += NON_MATCHING=1
+	MATCHDEFS += AVOID_UB=1
 	VERIFY = no_verify
+	MIPSISET = -mips2
 	C_STANDARD := -std=gnu99
 else
-	DEFINES += ANTI_TAMPER
+	MATCHDEFS += ANTI_TAMPER=1
     # Override compiler choice on matching builds.
 	COMPILER := ido
-	C_STANDARD := -std=gnu99
+	BOOT_CIC := 6103
+	C_STANDARD := -std=gnu90
 endif
 
+DEFINES += $(MATCHDEFS)
 C_DEFINES := $(foreach d,$(DEFINES),-D$(d)) $(LIBULTRA_VERSION_DEFINE) -D_MIPS_SZLONG=32
-ASM_DEFINES = --defsym _MIPS_SIM=1 --defsym mips=1 --defsym VERSION_$(REGION)_$(VERSION)=1
+ASM_DEFINES = $(foreach d,$(DEFINES),$(if $(findstring =,$(d)),--defsym $(d),)) --defsym _MIPS_SIM=1 --defsym mips=1 --defsym VERSION_$(REGION)_$(VERSION)=1
 
 # If NON_MATCHING and using a custom boot file, (Right now just 6102).
 # Define this so it will change the entrypoint in the header
 ifeq ($(NON_MATCHING),1)
-ifneq ("$(wildcard $(BOOT_CUSTOM))","")
+ifeq ("$(wildcard $(BOOT_CUSTOM))","")
+BOOT_CIC := 6103
+endif
+endif
+
 ASM_DEFINES += --defsym BOOT_$(BOOT_CIC)=1
-endif
-endif
+
+C_DEFINES += -DCIC_ID=$(BOOT_CIC)
 
 INCLUDE_CFLAGS  = -I . -I include -I include/libc  -I include/PR -I include/sys -I $(BIN_DIRS) -I $(SRC_DIR) -I $(LIBULTRA_DIR)
 INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/gu -I $(LIBULTRA_DIR)/src/libc -I $(LIBULTRA_DIR)/src/io  -I $(LIBULTRA_DIR)/src/sc 
@@ -167,24 +174,28 @@ endif
 
 
 #IDO Warnings to Ignore. These are coding style warnings we don't follow
-CC_WARNINGS := -fullwarn -Xfullwarn -woff 838,649,624
+CC_WARNINGS := -fullwarn -Xfullwarn -woff 838,649,624,835,516
 
 CFLAGS := -G 0 -non_shared -verbose -Xcpluscomm -nostdinc -Wab,-r4300_mul
 CFLAGS += $(C_DEFINES)
 CFLAGS += $(INCLUDE_CFLAGS)
 
-CHECK_WARNINGS := -Wall -Wextra -Wno-format-security -Wno-unknown-pragmas -Wunused-function -Wno-unused-parameter -Werror-implicit-function-declaration
-CHECK_WARNINGS += -Werror-implicit-function-declaration -Wno-unused-variable -Wno-missing-braces -Wno-int-conversion -Wno-main
-CHECK_WARNINGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch
-# Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
-ifeq ($(NON_MATCHING),0)
-	CHECK_WARNINGS += -Wno-unused-value
+CHECK_WARNINGS := -Wall -Wextra -Werror-implicit-function-declaration -Wno-format-security -Wno-unknown-pragmas -Wno-unused-parameter -Wno-missing-braces \
+                  -Wno-main -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch -Wno-pointer-sign
+ifeq ($(DETECTED_OS), macos)
+	CHECK_WARNINGS += -Wno-constant-conversion -Wno-for-loop-analysis
+	# Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
+	ifeq ($(NON_MATCHING),0)
+		CHECK_WARNINGS += -Wno-unused-value -Wno-deprecated-non-prototype -Wno-array-bounds -Wno-self-assign -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-variable
+	endif
+else
+  	CHECK_WARNINGS += -Wno-builtin-declaration-mismatch
+	# Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
+	ifeq ($(NON_MATCHING),0)
+		CHECK_WARNINGS += -Wno-unused-value -Wno-array-bounds -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-variable
+	endif
 endif
-CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
-ifeq ($(shell getconf LONG_BIT), 64)
-  # Ensure that gcc treats the code as 32-bit
-  CC_CHECK += -m32
-endif
+CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -m32 -DAVOID_UB -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
 
 TARGET     = $(BUILD_DIR)/$(BASENAME).$(REGION).$(VERSION)
 LD_SCRIPT  = ver/$(BASENAME).$(REGION).$(VERSION).ld
@@ -411,14 +422,14 @@ $(TARGET).elf: dirs $(LD_SCRIPT) $(O_FILES) | $(ALL_ASSETS_BUILT)
 ifndef PERMUTER
 $(GLOBAL_ASM_O_FILES): $(BUILD_DIR)/%.c.o: %.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling:,$<,$@)
-	$(V)$(CC_CHECK) $<
+	$(V)$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 endif
 
 # non asm-processor recipe
 $(BUILD_DIR)/%.c.o: %.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling:,$<,$@)
-	$(V)$(CC_CHECK) $<
+	$(V)$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: $(LIBULTRA_DIR)/src/libc/llcvt.c | $(ALL_ASSETS_BUILT)
@@ -433,7 +444,7 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | $(
 
 $(BUILD_DIR)/%.s.o: %.s | $(ALL_ASSETS_BUILT)
 	$(call print,Assembling:,$<,$@)
-	$(V)$(AS) $(ASFLAGS) -o $@ $<
+	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $< 
 
 # Specifically override the assets bin output location to match what splat output to the ld file.
 $(BUILD_DIR)/asm/assets/assets.s.o: asm/assets/assets.s | $(ALL_ASSETS_BUILT)
@@ -474,3 +485,5 @@ $(TARGET).z64: $(TARGET).bin | $(ALL_ASSETS_BUILT)
 ### Settings
 .PHONY: all clean cleanextract default assets
 SHELL = /bin/bash -e -o pipefail
+
+-include $(BUILD_DIR)/**/*.d

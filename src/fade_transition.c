@@ -196,6 +196,9 @@ u32 check_fadeout_transition(void) {
         }
     }
     //!@bug: This doesn't seem to guarantee a return.
+#ifdef AVOID_UB
+    return FALSE;
+#endif
 }
 
 /**

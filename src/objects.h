@@ -334,7 +334,6 @@ typedef struct Asset20 {
     TextureHeader *unk7C;
 } Asset20;
 
-#define CIC_ID 6103
 extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
 
 Object *func_8000BF44(s32 arg0);

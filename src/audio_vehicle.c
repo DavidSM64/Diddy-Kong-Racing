@@ -80,8 +80,8 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
     temp_v0_3 = (VehicleSoundData *) mempool_alloc_safe(sizeof(VehicleSoundData), COLOUR_TAG_CYAN);
 
     // Not really sure this is right...
-    memset = temp_v0_3;
-    for (var_a3 = 0; var_a3 < sizeof(VehicleSoundData); var_a3++) {
+    memset = (u8 *) temp_v0_3;
+    for (var_a3 = 0; var_a3 < (s32) sizeof(VehicleSoundData); var_a3++) {
         memset[var_a3] = 0;
     }
 
@@ -106,11 +106,11 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
         var_v1_2 = &temp_v0_2[1];
         temp_v0_3->unk4[0][0] = temp_v0_2->unk4[2];
         var_a1 = temp_v0_2 + 2;
-        temp_v0_3->unk18[0] = temp_v0_2->unk18;
+        temp_v0_3->unk18[0] = (s32) temp_v0_2->unk18;
         var_a0 = temp_v0_3 + 1;
         temp_v0_3->unkC[0][0] = temp_v0_2->unkC;
-        var_a2 = &temp_v0_3->unk0[1];
-        temp_v0_3->unk2C[0] = temp_v0_2->unk2C;
+        var_a2 = (VehicleSoundData *) &temp_v0_3->unk0[1];
+        temp_v0_3->unk2C[0] = (s32) temp_v0_2->unk2C;
     loop_10:
         var_a3_2 += 2;
         var_a0->unk4[0][0] = (u8) var_v1_2->unk4[0];
@@ -335,9 +335,9 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
         if (var_f20 > 12.0f) {
             var_f20 = 12.0f;
         }
-        func_80001F14(25, &gRacerSound->unkA8);
+        func_80001F14(25, (s32 *) &gRacerSound->unkA8);
         sp6C = (((var_f20 * 0.5) / 12.0) + 0.5);
-        temp_a0_4 = gRacerSound->unkA8;
+        temp_a0_4 = (s32) gRacerSound->unkA8;
         if (temp_a0_4 != 0) {
             sound_event_update(temp_a0_4, 16, *((u32 *) &sp6C));
         }
@@ -351,9 +351,9 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
             gRacerSound->unkD0 = 0;
         }
         if (gRacerSound->unkD0 >= 10) {
-            sound_event_update(gRacerSound->unkA8, 8, 0);
+            sound_event_update((s32) gRacerSound->unkA8, 8, 0);
         } else {
-            sound_event_update(gRacerSound->unkA8, 8, gRacerSound->unkAC << 8);
+            sound_event_update((s32) gRacerSound->unkA8, 8, gRacerSound->unkAC << 8);
             func_80009B7C((s32 *) gRacerSound->unkA8, obj->segment.trans.x_position, obj->segment.trans.y_position,
                           obj->segment.trans.z_position);
         }
@@ -559,7 +559,7 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     if ((gSoundRacerObj->playerIndex != PLAYER_COMPUTER) && (gSoundRacerObj->spinout_timer != 0) &&
         !gRacerSound->brakeSound) {
         gRacerSound->brakeSound = TRUE;
-        sound_play(SOUND_UNK_13D, &gRacerSound->brakeSoundMask);
+        sound_play(SOUND_UNK_13D, (s32 *) &gRacerSound->brakeSoundMask);
     } else if (gSoundRacerObj->spinout_timer == 0) {
         gRacerSound->brakeSound = FALSE;
         if (gRacerSound->brakeSoundMask != NULL) {
@@ -746,10 +746,10 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                         func_80009B7C((s32 *) gRacerSound->unk50, objs[loopCount1]->segment.trans.x_position,
                                       objs[loopCount1]->segment.trans.y_position,
                                       objs[loopCount1]->segment.trans.z_position);
-                        sound_event_update(gRacerSound->unk50, 8, temp_s3 << 8);
-                        sound_event_update(gRacerSound->unk50, 16, *((u32 *) &sp8C));
+                        sound_event_update((s32) gRacerSound->unk50, 8, temp_s3 << 8);
+                        sound_event_update((s32) gRacerSound->unk50, 16, *((u32 *) &sp8C));
                         func_80004604(gRacerSound->unk50, 80);
-                        sound_event_update(gRacerSound->unk50, 4, gRacerSound->unk91[0]);
+                        sound_event_update((s32) gRacerSound->unk50, 4, gRacerSound->unk91[0]);
                     }
                 } else if (gRacerSound->unk50 != NULL) {
                     sound_stop(gRacerSound->unk50);
@@ -783,13 +783,13 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             func_80009B7C(
                                 (s32 *) gRacerSound->unk48[loopCount2], objs[loopCount1]->segment.trans.x_position,
                                 objs[loopCount1]->segment.trans.y_position, objs[loopCount1]->segment.trans.z_position);
-                            sound_event_update(gRacerSound->unk48[loopCount2], 8, temp_s3 << 8);
-                            sound_event_update(gRacerSound->unk48[loopCount2], 16, *((u32 *) &sp8C));
+                            sound_event_update((s32) gRacerSound->unk48[loopCount2], 8, temp_s3 << 8);
+                            sound_event_update((s32) gRacerSound->unk48[loopCount2], 16, *((u32 *) &sp8C));
                             func_80004604(gRacerSound->unk48[loopCount2], 80);
                             if (arg3 != 1) {
                                 gRacerSound->unk91[0] = 64;
                             }
-                            sound_event_update(gRacerSound->unk48[loopCount2], 4, gRacerSound->unk91[0]);
+                            sound_event_update((s32) gRacerSound->unk48[loopCount2], 4, gRacerSound->unk91[0]);
                         }
                     }
                 }
@@ -810,7 +810,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
             racer = &objs[loopCount1]->unk64->racer;
             for (loopCount2 = arg3; loopCount2 < numRacers; loopCount2++) {
                 if (objs[loopCount2]->unk64 != NULL) {
-                    gRacerSound = (VehicleSoundData *) objs[loopCount2]->unk64->racer.cameraYaw;
+                    gRacerSound = (VehicleSoundData *) (s32) objs[loopCount2]->unk64->racer.cameraYaw;
                     if (gRacerSound != 0) {
                         if (racer->raceFinished != 0) {
                             tempxPos =
@@ -924,12 +924,12 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             if (temp->unk48[0] != NULL) {
                                 func_80009B7C((s32 *) temp->unk48[0], temp->racerPos.x, temp->racerPos.y,
                                               temp->racerPos.z);
-                                sound_event_update(temp->unk48[0], 8, temp->unk88 << 8);
-                                sound_event_update(temp->unk48[0], 16, *((u32 *) &temp->unk8C));
+                                sound_event_update((s32) temp->unk48[0], 8, temp->unk88 << 8);
+                                sound_event_update((s32) temp->unk48[0], 16, *((u32 *) &temp->unk8C));
                                 if (arg3 != 1) {
                                     temp->unk91[0] = 64;
                                 }
-                                sound_event_update(temp->unk48[0], 4, temp->unk91[0]);
+                                sound_event_update((s32) temp->unk48[0], 4, temp->unk91[0]);
                                 func_80004604(temp->unk48[0], 70);
                             }
                         }
