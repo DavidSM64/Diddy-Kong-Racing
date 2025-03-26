@@ -628,6 +628,7 @@ typedef struct ObjectModel {
     /* 0x4C */ s32 *unk4C;
     /* 0x50 */ s16 unk50;
     /* 0x52 */ s16 unk52;
+    /* 0x54 */ u8 pad[0x2C];
 } ObjectModel;      
 
 /* Size: 0x44 bytes */
@@ -1677,10 +1678,10 @@ typedef struct Object_68 {
   /* 0x16 */ s16 offsetX;
   /* 0x18 */ s16 offsetY;
   /* 0x1A */ s16 offsetZ;
-  /* 0x1C */ s16 unk1C;
+  /* 0x1C */ s16 headTilt;
   /* 0x1E */ s8 modelType;
   /* 0x1F */ s8 animationTaskNum;
-  /* 0x20 */ s8 unk20;
+  /* 0x20 */ s8 animUpdateTimer;
   /* 0x21 */ s8 unk21;
   /* 0x22 */ s16 unk22;
   /* 0x24 */ s32 unk24;
@@ -1882,7 +1883,7 @@ typedef struct Object_LightData {
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
-  /* 0x0044 */ Vertex *unk44;
+  /* 0x0044 */ Vertex *curVertData;
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 objectID; // First 9 bits are object ID, last 7 bits are header size
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318

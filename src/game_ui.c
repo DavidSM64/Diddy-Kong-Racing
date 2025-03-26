@@ -1280,7 +1280,7 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         if (get_contpak_error() <= 0) {
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->stopwatch);
         }
-        obj68->unk20 = 0;
+        obj68->animUpdateTimer = 0;
         sprite_anim_off(TRUE);
         render_course_indicator_arrows(curRacer, updateRate);
         if (!curRacer->raceFinished) {

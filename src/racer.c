@@ -1705,7 +1705,7 @@ void racer_attack_handler_plane(Object *obj, Object_Racer *racer) {
     if (racer->unk1C9 == 8) {
         racer->unk1C9 = 0;
     }
-    if (racer->vehicleID < VEHICLE_TRICKY) {
+    if (racer->vehicleID < VEHICLE_BOSSES) {
         play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
         switch (racer->attackType) {
             case ATTACK_EXPLOSION:
@@ -3015,7 +3015,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
                 }
             }
         }
-        if (racer->vehicleID < VEHICLE_TRICKY) {
+        if (racer->vehicleID < VEHICLE_BOSSES) {
             func_800AF714(racerObj, updateRate);
         }
         second_racer_camera_update(racerObj, racer, 0, updateRateF);
@@ -3567,7 +3567,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (gDialogueCameraAngle != 0) {
         traction = 0.0f;
     }
-    if (racer->brake < 0.9 && racer->vehicleIDPrev < VEHICLE_TRICKY && gRaceStartTimer == 0) {
+    if (racer->brake < 0.9 && racer->vehicleIDPrev < VEHICLE_BOSSES && gRaceStartTimer == 0) {
         velocityDiff = racer->pitch;
         if (velocityDiff < 0.0) {
             velocityDiff = -velocityDiff;
@@ -4285,7 +4285,7 @@ void racer_attack_handler_car(Object *obj, Object_Racer *racer, s32 updateRate) 
             if (racer->unk1C9 == 8) {
                 racer->unk1C9 = 0;
             }
-            if (racer->vehicleID < VEHICLE_TRICKY) {
+            if (racer->vehicleID < VEHICLE_BOSSES) {
                 play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
                 switch (racer->attackType) {
                     // Getting hit by a rocket, or running into a landmine.
@@ -4445,7 +4445,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
     }
     if (!racer->unk201) {
         obj->particleEmitFlags = OBJ_EMIT_OFF;
-    } else if (racer->vehicleID < VEHICLE_TRICKY) {
+    } else if (racer->vehicleID < VEHICLE_BOSSES) {
         func_800AF714(obj, updateRate);
     }
     func_80053750(obj, racer, updateRateF);
@@ -4692,7 +4692,7 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     D_8011D548 = 0;
     D_8011D54C = 0;
     flags = 0;
-    if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_TRICKY) {
+    if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
         flags = func_80017248(racerObj, 4, &sp190, &racer->unkD8, sp134, spE0, sp58);
     }
     if (flags & 0x80) {
@@ -4890,7 +4890,7 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     D_8011D54C = 0.0f;
     hasCollision = FALSE;
     flags = 0;
-    if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_TRICKY) {
+    if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
         flags = func_80017248(obj, 1, &hasCollision, &racer->unkD8, &tempPos.x, &radius, &surface);
     }
     if (flags & 0x80) {
@@ -4991,8 +4991,8 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
             if (obj->unk68[obj->segment.object.modelIndex] != NULL) {
                 model = obj->unk68[obj->segment.object.modelIndex]->objModel;
                 if (obj->segment.header->unk58 > -1 && obj->segment.header->unk58 < model->unk18) {
-                    if (obj->unk44 != NULL) {
-                        heldObjData = obj->unk44;
+                    if (obj->curVertData != NULL) {
+                        heldObjData = obj->curVertData;
                         heldObjData += model->unk14[obj->segment.header->unk58];
                         scaleY = heldObjData->y;
                         scaleY *= obj->segment.trans.scale;

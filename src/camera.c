@@ -1392,8 +1392,8 @@ void apply_head_turning_matrix(Gfx **dlist, MatrixS **mtx, Object_68 *objGfx, s1
     offsetX = (f32) objGfx->offsetX;
     offsetY = (f32) objGfx->offsetY;
     offsetZ = (f32) objGfx->offsetZ;
-    coss_unk1C = coss_f(objGfx->unk1C);
-    sins_unk1C = sins_f(objGfx->unk1C);
+    coss_unk1C = coss_f(objGfx->headTilt);
+    sins_unk1C = sins_f(objGfx->headTilt);
     coss_headAngle = coss_f(headAngle);
     sins_headAngle = sins_f(headAngle);
     headMtxF[0][0] = (coss_headAngle * coss_unk1C);

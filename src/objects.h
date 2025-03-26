@@ -359,8 +359,8 @@ u8 is_time_trial_enabled(void);
 u8 is_in_time_trial(void);
 Object *get_object(s32 index);
 Object **objGetObjList(s32 *arg0, s32 *cnt);
-s32 get_object_count(void);
-s32 get_particle_count(void);
+s32 obj_count(void);
+s32 particle_count(void);
 void func_8000E9D0(Object *arg0);
 void free_object(Object *);
 s32 obj_table_ids(void);
@@ -377,7 +377,7 @@ void render_object(Gfx **dList, MatrixS **mtx, Vertex **verts, Object *obj);
 void object_undo_player_tumble(Object *obj);
 void render_object_parts(Object *obj);
 void unset_temp_model_transforms(Object *obj);
-void func_800142B8(void);
+void obj_tick_anims(void);
 u32 func_800179D0(void);
 void set_taj_challenge_type(s32 vehicleID);
 s16 get_taj_challenge_type(void);
@@ -409,7 +409,7 @@ Object *ainode_tail(s32 *nodeID);
 Object *ainode_get(s32 nodeID);
 void set_world_shading(f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ);
 void set_shading_properties(ShadeProperties *arg0, f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ);
-void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 intensity);
+void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity);
 s32 *get_misc_asset(s32 index);
 s32 func_8001E2EC(s32 arg0);
 void func_8001E344(s32 arg0);
@@ -503,6 +503,17 @@ void func_8001E4C4(void);
 void func_8000B020(s32 numberOfVertices, s32 numberOfTriangles);
 s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
 
+/**
+ * Faster variant of the shading function for objects.
+ * Unlike the fancy option, does not calculate envmaps.
+*/
+void obj_shade_fast(ObjectModel *model, Object * obj, f32 intensity);
+
+/**
+ * Animation function for objects. Does per-vertex transformation.
+*/
+s32 obj_animate(Object *obj);
+
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
@@ -531,8 +542,6 @@ CheckpointNode *func_800230D0(Object*, Object_Racer*);
 void func_80010994(s32 updateRate);
 void func_800159C8(Object *, Object *);
 void func_80011264(ObjectModel *, Object *);
-void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
-s32 obj_animate(Object *obj);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 
 #endif

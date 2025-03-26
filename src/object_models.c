@@ -10,6 +10,8 @@
 #include "save_data.h"
 #include "objects.h"
 
+#define MODEL_LOADED_MAX 70
+
 /************ .data ************/
 
 s32 gTractionTableChecksum = TractionTableChecksum;
@@ -31,9 +33,9 @@ UNUSED const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent mo
 /************ .bss ************/
 
 s32 *gObjectModelTable;
-s32 *D_8011D624;
+s32 *gModelCache; // A table of two entries. The first half is the model ID, while the second half is the model data.
 s32 *D_8011D628;
-s32 D_8011D62C;
+s32 gModelCacheCount;
 s32 gNumModelIDs;
 s32 D_8011D634;
 s16 *gAnimationTable;
@@ -50,9 +52,9 @@ void allocate_object_model_pools(void) {
     s32 i;
     s32 checksum;
 
-    D_8011D624 = mempool_alloc_safe(0x230, COLOUR_TAG_GREEN);
-    D_8011D628 = mempool_alloc_safe(0x190, COLOUR_TAG_GREEN);
-    D_8011D62C = 0;
+    gModelCache = mempool_alloc_safe(MODEL_LOADED_MAX * ((sizeof(uintptr_t)) * 2), COLOUR_TAG_GREEN);
+    D_8011D628 = mempool_alloc_safe(100 * sizeof(uintptr_t), COLOUR_TAG_GREEN);
+    gModelCacheCount = 0;
     D_8011D634 = 0;
     gObjectModelTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_MODELS_TABLE);
     gNumModelIDs = 0;
@@ -80,10 +82,11 @@ void allocate_object_model_pools(void) {
 /**
  * Load the associated model ID and assign it to the objects gfx data.
  * Also loads textures and animations.
+ * v79 and newer have a bugfix that revert the cache count if allocation fails.
  */
 Object_68 *object_model_init(s32 modelID, s32 flags) {
     s32 i;
-    s32 sp50;
+    s32 cacheIndex;
     ObjectModel *objMdl;
     s32 sp48;
     s32 temp_s0;
@@ -91,10 +94,10 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     s8 sp3F;
 #if VERSION >= VERSION_79
     s8 var_a2;
-    s8 var_a3;
+    s8 cacheChanged;
 #endif
     u32 compressedData;
-    s32 sp34;
+    s32 modelSize;
 
     if (modelID >= gNumModelIDs) {
         stubbed_printf(D_800E6B20);
@@ -102,9 +105,9 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     }
 
     // Check if the model already exists in the cache.
-    for (i = 0; i < D_8011D62C; i++) {
-        if (modelID == D_8011D624[(i << 1)]) {
-            objMdl = (ObjectModel *) D_8011D624[(i << 1) + 1];
+    for (i = 0; i < gModelCacheCount; i++) {
+        if (modelID == gModelCache[MODELCACHE_ID(i)]) {
+            objMdl = (ObjectModel *) gModelCache[MODELCACHE_DATA(i)];
             ret = model_init_type(objMdl, flags);
             if (ret != NULL) {
                 objMdl->references++;
@@ -115,38 +118,38 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
 
 #if VERSION >= VERSION_79
     var_a2 = FALSE;
-    var_a3 = FALSE;
+    cacheChanged = FALSE;
 #endif
     if (D_8011D634 > 0) {
         D_8011D634--;
 #if VERSION >= VERSION_79
         var_a2 = TRUE;
 #endif
-        sp50 = D_8011D628[D_8011D634];
+        cacheIndex = D_8011D628[D_8011D634];
     } else {
-        sp50 = D_8011D62C;
+        cacheIndex = gModelCacheCount;
 #if VERSION >= VERSION_79
-        var_a3 = TRUE;
+        cacheChanged = TRUE;
 #endif
-        D_8011D62C++;
+        gModelCacheCount++;
     }
 
     temp_s0 = gObjectModelTable[modelID];
     sp48 = gObjectModelTable[modelID + 1] - temp_s0;
-    sp34 = get_asset_uncompressed_size(ASSET_OBJECT_MODELS, temp_s0) + 0x80;
-    objMdl = (ObjectModel *) mempool_alloc(sp34, COLOUR_TAG_RED);
+    modelSize = get_asset_uncompressed_size(ASSET_OBJECT_MODELS, temp_s0) + sizeof(ObjectModel);
+    objMdl = (ObjectModel *) mempool_alloc(modelSize, COLOUR_TAG_RED);
     if (objMdl == NULL) {
 #if VERSION >= VERSION_79
         if (var_a2) {
             D_8011D634++;
         }
-        if (var_a3) {
-            D_8011D62C--;
+        if (cacheChanged) {
+            gModelCacheCount--;
         }
 #endif
         return NULL;
     }
-    compressedData = (u32) ((u8 *) objMdl + sp34) - sp48;
+    compressedData = (u32) ((u8 *) objMdl + modelSize) - sp48;
     load_asset_to_address(ASSET_OBJECT_MODELS, compressedData, temp_s0, sp48);
     gzip_inflate((u8 *) compressedData, (u8 *) objMdl);
     objMdl->textures = (TextureInfo *) ((s32) objMdl->textures + (u8 *) objMdl);
@@ -182,19 +185,21 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
         if ((func_80060EA8(objMdl) == 0) && (func_80061A00(objMdl, modelID) == 0)) {
             ret = model_init_type(objMdl, flags);
             if (ret != NULL) {
-                D_8011D624[(sp50 << 1)] = modelID;
-                D_8011D624[(sp50 << 1) + 1] = (s32) objMdl;
-                if (D_8011D62C < 70) {
-                    ret->unk20 = 0;
+                gModelCache[MODELCACHE_ID(cacheIndex)] = modelID;
+                gModelCache[MODELCACHE_DATA(cacheIndex)] = (s32) objMdl;
+                if (gModelCacheCount < MODEL_LOADED_MAX) {
+                    ret->animUpdateTimer = 0;
                     return ret;
+                } else {
+                    stubbed_printf(D_800E6B64);
                 }
             }
         }
     }
 block_30:
 #if VERSION >= VERSION_79
-    if (var_a3) {
-        D_8011D62C--;
+    if (cacheChanged) {
+        gModelCacheCount--;
     }
     if (var_a2) {
         D_8011D634++;
@@ -295,29 +300,32 @@ void free_3d_model(ObjectModel **modelPtr) {
     ObjectModel *model;
     s32 i;
 
-    if (modelPtr != 0) {
-        model = *modelPtr;
-        model->references--;
-        if (model->references > 0) { // Model is still used, so free the reference and return.
-            mempool_free(modelPtr);
-            return;
-        }
+    if (modelPtr == 0) {
+        stubbed_printf(D_800E6BC0);
+        return;
+    }
+    
+    model = *modelPtr;
+    model->references--;
+    if (model->references > 0) { // Model is still used, so free the reference and return.
+        mempool_free(modelPtr);
+        return;
+    }
 
-        modelIndex = -1;
-        for (i = 0; i < D_8011D62C; i++) {
-            if ((s32) model == D_8011D624[(i << 1) + 1]) {
-                modelIndex = i;
-            }
+    modelIndex = -1;
+    for (i = 0; i < gModelCacheCount; i++) {
+        if (model == (ObjectModel *) gModelCache[MODELCACHE_DATA(i)]) {
+            modelIndex = i;
         }
+    }
 
-        if (modelIndex != -1) {
-            free_model_data(model);
-            D_8011D628[D_8011D634] = modelIndex;
-            D_8011D634++;
-            D_8011D624[modelIndex << 1] = -1;
-            D_8011D624[(modelIndex << 1) + 1] = -1;
-            mempool_free(modelPtr);
-        }
+    if (modelIndex != -1) {
+        free_model_data(model);
+        D_8011D628[D_8011D634] = modelIndex;
+        D_8011D634++;
+        gModelCache[MODELCACHE_ID(modelIndex)] = -1;
+        gModelCache[MODELCACHE_DATA(modelIndex)] = -1;
+        mempool_free(modelPtr);
     }
 }
 

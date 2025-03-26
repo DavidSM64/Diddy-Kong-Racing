@@ -5,6 +5,9 @@
 #include "PR/gbi.h"
 #include "structs.h"
 
+#define MODELCACHE_ID(x)    ((x << 1) + 0)
+#define MODELCACHE_DATA(x)  ((x << 1) + 1)
+
 typedef enum AnimType {
     MODELTYPE_BASIC,    // No shading nor animation
     MODELTYPE_SHADE,    // Model is intended to be shaded.

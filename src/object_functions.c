@@ -1922,10 +1922,10 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                 for (i = 0; i < wizShipObj->unk60->unk0; i++) {
                     index = wizShipObj->unk60->unk2C[i];
                     if ((index >= 0) && (index < wizShipModel->unk18)) {
-                        if (wizShipObj->unk44 != NULL) {
-                            posX = wizShipObj->unk44[wizShipModel->unk14[index]].x;
-                            posY = wizShipObj->unk44[wizShipModel->unk14[index]].y;
-                            posZ = wizShipObj->unk44[wizShipModel->unk14[index]].z;
+                        if (wizShipObj->curVertData != NULL) {
+                            posX = wizShipObj->curVertData[wizShipModel->unk14[index]].x;
+                            posY = wizShipObj->curVertData[wizShipModel->unk14[index]].y;
+                            posZ = wizShipObj->curVertData[wizShipModel->unk14[index]].z;
                             guMtxXFMF(shipMtx, posX, posY, posZ, &posX, &posY, &posZ);
                             newObject.x = posX;
                             newObject.y = posY;
@@ -4704,7 +4704,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
             whatObjInteracted = interactObj->obj;
             if (whatObjInteracted != NULL && whatObjInteracted->segment.header->behaviorId == BHV_RACER) {
                 racer = &whatObjInteracted->unk64->racer;
-                if (racer->vehicleID < VEHICLE_TRICKY || racer->playerIndex != PLAYER_COMPUTER) {
+                if (racer->vehicleID < VEHICLE_BOSSES || racer->playerIndex != PLAYER_COMPUTER) {
                     prevBalloonType = racer->balloon_type;
                     racer->balloon_type = weaponBalloonObj->properties.weaponBalloon.balloonID;
                     if (prevBalloonType == racer->balloon_type && racer->balloon_quantity != 0) {
