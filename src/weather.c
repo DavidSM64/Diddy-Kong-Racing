@@ -136,7 +136,7 @@ s32 gSnowVertexFlip;
 Gfx *gCurrWeatherDisplayList;
 MatrixS *gCurrWeatherMatrix;
 Vertex *gCurrWeatherVertexList;
-TriangleList *gCurrWeatherTriList;
+Triangle *gCurrWeatherTriList;
 ObjectSegment *gWeatherCamera;
 Matrix *gWeatherCameraMatrix;
 LensFlareData *gLensFlareSet1;
@@ -397,7 +397,7 @@ void weather_set(s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity, s32 t
  * The root function for handling all weather.
  * Decide whether to perform rain or snow logic, execute it, then set it to render right after.
  */
-void weather_update(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris,
+void weather_update(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, Triangle **currHudTris,
                     s32 updateRate) {
     UNUSED s32 unused;
     gCurrWeatherDisplayList = *currDisplayList;

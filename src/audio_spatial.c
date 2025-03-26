@@ -91,7 +91,7 @@ void func_80008174(void) {
     s32 j;
 
     for (gFreeMasks = 0; gFreeMasks < 40; gFreeMasks++) {
-        gSoundMaskHeapFree[gFreeMasks] = gSoundMaskHeap[gFreeMasks];
+        gSoundMaskHeapFree[gFreeMasks] = (SoundMask *) gSoundMaskHeap[gFreeMasks];
     }
     gFreeMasks--;
 

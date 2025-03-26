@@ -286,7 +286,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
  * The root function for rendering the entire scene.
  * Handles drawing the track, objects and the majority of the HUD in single player.
  */
-void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris, s32 updateRate) {
+void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32 updateRate) {
     s32 i;
     s32 numViewports;
     s32 tempUpdateRate;
@@ -546,7 +546,7 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
             check4 = TRUE;
         }
         if (((s16) ((s16) (check1 + check2) + check3) + check4) & 3) {
-            func_80026430(bbox, yCameraSins, yCameraCoss, temp_f22);
+            func_80026430((LevelModelSegment *) bbox, yCameraSins, yCameraCoss, temp_f22);
             if (gCurrentLevelModel->segments[segmentIndex].unk3C & 2) {
                 func_80026070(bbox, yCameraSins, yCameraCoss, temp_f22);
             }
@@ -583,8 +583,8 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
         }
         temp_t6 = gSceneCurrVertexList;
         gSceneCurrVertexList = D_8011D480[D_8011D4B4];
-        temp_t7 = gSceneCurrTriList;
-        gSceneCurrTriList = D_8011D490[D_8011D4B4];
+        temp_t7 = (s8 *) gSceneCurrTriList;
+        gSceneCurrTriList = (Triangle *) D_8011D490[D_8011D4B4];
         D_8011D4B4 = 1 - D_8011D4B4;
         var_s4 = D_8011D478->unk0;
         D_8011D488 = gSceneCurrVertexList;
@@ -631,7 +631,7 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
                        TRIN_DISABLE_TEXTURE);
         }
         gSceneCurrVertexList = spAC;
-        gSceneCurrTriList = spA8;
+        gSceneCurrTriList = (Triangle *) spA8;
     }
 }
 #else
@@ -983,7 +983,7 @@ s32 func_80027568(void) {
     ret = FALSE;
     // bug? var_ra can be undefined?
     for (var_t4 = 0; var_t4 < D_8011D378 && ret == FALSE; var_t4++) {
-        var_v0_1 = D_8011D370[var_t4];
+        var_v0_1 = (s32) D_8011D370[var_t4];
         if (var_v0_1 > 0) {
             var_ra = (void *) PHYS_TO_K0(var_v0_1);
         } else {
@@ -1299,7 +1299,7 @@ void draw_gradient_background(void) {
     verts += 4;
     gSceneCurrVertexList = verts;
     tris += 2;
-    gSceneCurrTriList = (TriangleList *) tris;
+    gSceneCurrTriList = (Triangle *) tris;
 }
 
 /**

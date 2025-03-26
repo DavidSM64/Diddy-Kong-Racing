@@ -256,7 +256,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
     if ((interactObj->obj)) {
         if ((interactObj->distance < 60)) {
             someObj = interactObj->obj;
-            if ((someObj->segment.header->behaviorId == BHV_RACER)) {
+            if (someObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) someObj->unk64;
                 if (racer->playerIndex != PLAYER_COMPUTER) {
                     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON) {
@@ -2119,7 +2119,7 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
             if (charSelectObj->segment.object.animationID >= 0) {
                 if ((charSelectObj->segment.object.animationID < objMdl->numberOfAnimations)) {
                     i = (objMdl->animations[charSelectObj->segment.object.animationID].unk4 - 1) << 4;
-                    if ((charSelect->unk2C == 1)) {
+                    if (charSelect->unk2C == 1) {
                         temp_f0 = music_animation_fraction();
                         if (temp_f0 > 0.5) {
                             temp_f0 -= 0.5;
@@ -5346,7 +5346,7 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
             if (weaponProperties->decayTimer < normalise_time(-1320)) {
                 if (weapon->weaponID == WEAPON_OIL_SLICK) {
                     weaponProperties->status = WEAPON_TRIGGERED;
-                } else if ((weapon->weaponID == WEAPON_BUBBLE_TRAP)) {
+                } else if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
                     weaponProperties->status = WEAPON_DESTROY;
                     play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,
                                            weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4,
@@ -5525,7 +5525,7 @@ void obj_loop_texscroll(Object *obj, s32 updateRate) {
     for (i = 0; i < levelModel->numberOfSegments; i++) {
         curBatch = curBlock[i].batches;
         for (j = 0; j < curBlock[i].numberOfBatches; j++) {
-            if ((curBatch[j].textureIndex == obj64->tex_scroll.textureIndex)) {
+            if (curBatch[j].textureIndex == obj64->tex_scroll.textureIndex) {
                 for (tri = curBatch[j].facesOffset; tri < curBatch[j + 1].facesOffset; tri++) {
                     curTriangle = &curBlock[i].triangles[tri];
                     if (!(curTriangle->flags & 0x80)) {
@@ -6122,36 +6122,28 @@ void obj_loop_butterfly(Object *butterflyObj, s32 updateRate) {
 
 void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     Object_64 *obj64;
-    s32 pad0;
+    Object_68 *obj68;
     ObjectTransform transform;
     f32 ox;
     f32 oy;
     f32 oz;
-    s32 pad[10];
-    Object_68 *obj68;
     ObjectModel *objModel;
-    Vertex *vertices;
-    Vertex *vertex;
-    // TODO: find a way to have matching builds use this Matrix temp.
-#ifdef AVOID_UB
+    UNUSED s32 pad;
     Matrix mtx;
-#else
-    f32 mtx[4];
-#endif
     f32 sinYRot;
     f32 tempF3;
     f32 minX;
     f32 minZ;
-    f32 scaleF;
     f32 minY;
+    f32 maxY;
     f32 maxX;
     f32 maxZ;
     f32 cosYRot;
+    f32 scaleF;
+    Vertex *vertex;
     f32 tempF2;
-    f32 maxY;
-    s32 numOfVertices;
     s32 i;
-    f32 scaleF2;
+
 
     obj->segment.trans.rotation.y_rotation = entry->angleY << 8 << 2; // Two shifts needed to skip a register.
     obj64 = obj->unk64;

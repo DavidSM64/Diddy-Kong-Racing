@@ -475,7 +475,7 @@ void menu_button_free(void);
 void menu_geometry_end(void);
 void reset_title_logo_scale(void);
 void menu_init(u32 menuId);
-s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate);
+s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, Triangle **currHudTris, s32 updateRate);
 void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
 void postrace_offsets(MenuElement *elements, f32 in, f32 mid, f32 out, s32 textOffset, s32 timestampOffset);
 void trackmenu_set_records(void);

@@ -30,30 +30,46 @@
 .word 0xF7D9879F       /* Checksum 2 */
 .endif
 
+.ifdef NON_MATCHING
+.word main_BSS_START   /* Unknown 1 */
+.else
 .word 0x00000000       /* Unknown 1 */
+.endif
 .word 0x00000000       /* Unknown 2 */
 .ascii "Diddy Kong Racing   " /* Internal name */
 .word 0x00000000       /* Unknown 3 */
 .word 0x0000004E       /* Cartridge */
+.ifdef NON_MATCHING
+.ascii "ED"            /* Cartridge ID */
+.else
 .ascii "DY"            /* Cartridge ID */
+.endif
 
 .ifdef VERSION_us_v77
 .ascii "E"             /* Country code */
-.byte 0x00             /* Version */
+.equ revision, 0x0
 .endif
 .ifdef VERSION_pal_v77
 .ascii "P"             /* Country code */
-.byte 0x00             /* Version */
+.equ revision, 0x0
 .endif
 .ifdef VERSION_jpn_v79
 .ascii "J"             /* Country code */
-.byte 0x00             /* Version */
+.equ revision, 0x0
 .endif
 .ifdef VERSION_us_v80
 .ascii "E"             /* Country code */
-.byte 0x01             /* Version */
+.equ revision, 0x1
 .endif
 .ifdef VERSION_pal_v80
 .ascii "P"             /* Country code */
-.byte 0x01             /* Version */
+.equ revision, 0x1
 .endif
+
+.ifdef NON_MATCHING
+.equ savetype, 0x1
+.else
+.equ savetype, 0x0
+.endif
+
+.byte (revision | (savetype << 4))    /* Version */

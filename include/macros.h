@@ -46,6 +46,20 @@
 #define ALIGNED16
 #endif
 
+// Use built-in pseudocode where possible in NON_MATCHING builds
+#ifdef __GNUC__
+#define abs(x)      __builtin_abs(x)
+#define fabsf(x)    __builtin_fabsf(x)
+#define sqrtf(f)    __builtin_sqrtf(f)
+#undef ABS
+#undef ABSF
+#define ABS(x)      __builtin_abs(x)
+#define ABSF(x)     __builtin_fabsf(x)
+#else
+#define inline
+#define ABSF(x) (x < 0.f ? -x : x)
+#endif
+
 // convert a virtual address to physical.
 #define VIRTUAL_TO_PHYSICAL(addr)   ((uintptr_t)(addr) & 0x1FFFFFFF)
 
@@ -54,8 +68,6 @@
 
 // another way of converting virtual to physical
 #define VIRTUAL_TO_PHYSICAL2(addr)  ((u8 *)(addr) - 0x80000000U)
-
-#define ABSF(x) (x < 0.f ? -x : x)
 
 // Used to suppress warnings in the ./generate_ctx.sh script.
 #define INCONSISTENT 

@@ -985,7 +985,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (racer->trickType != 0) {
             if (racer->groundedWheels) {
                 if (gRaceStartTimer != 100 && racer->playerIndex != PLAYER_COMPUTER && racer->trickType >= 6) {
-                    sound_play(SOUND_BOUNCE, &racer->unk21C);
+                    sound_play(SOUND_BOUNCE, (s32 *) &racer->unk21C);
                     sound_volume_set_relative(SOUND_BOUNCE, racer->unk21C, (racer->trickType * 2) + 50);
                 }
             } else if (racer->approachTarget == NULL) {
@@ -2748,7 +2748,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
     f32 spA8;
     f32 spA4;
     f32 spA0;
-    f32 sp60[4 * 4];
+    Matrix sp60;
     LevelHeader *currentLevelHeader;
     Asset20 *asset20;
     s32 var_v1;
@@ -2895,7 +2895,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
         if (D_8011D550) {
             if (gCurrentPlayerIndex != PLAYER_COMPUTER && D_8011D550 != SOUND_STOMP5) {
                 sound_play_spatial(D_8011D550, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position,
-                                   racerObj->segment.trans.z_position, &racer->unk21C);
+                                   racerObj->segment.trans.z_position, (s32 **) &racer->unk21C);
                 sound_volume_set_relative(D_8011D550, racer->unk21C, D_8011D552);
             }
             racer->stretch_height_cap = (1.0 - ((f32) (D_8011D552 - 40) * 0.004));
@@ -4662,8 +4662,8 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     f32 sp108[5];
     f32 spF4[5];
     f32 spE0[5];
-    f32 spA0[4 * 4];
-    f32 sp60[4 * 4];
+    Matrix spA0;
+    Matrix sp60;
     s8 sp5C;
     s8 sp58[4];
 
@@ -4718,9 +4718,9 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
             sp5C = 1;
         }
     }
-    func_80031130(4, &racer->unkD8, &sp134, racer->vehicleID);
+    func_80031130(4, (f32 *) &racer->unkD8, sp134, racer->vehicleID);
     sp190 = 0;
-    racer->unk1E3 = func_80031600(&racer->unkD8, &sp134, &spE0, &sp58, 4, &sp190);
+    racer->unk1E3 = func_80031600((f32 *) &racer->unkD8, sp134, spE0, sp58, 4, &sp190);
     sp184 = func_8002ACD4(&sp180, &sp178, &sp17C);
     if (sp184 != 0) {
         temp_s16 = (u16) arctan2_f(sp180 * 255.0f, sp17C * 255.0f);
