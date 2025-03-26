@@ -605,13 +605,10 @@ UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) 
 }
 
 #ifdef NON_MATCHING
-// viewport_main
-// Alternative attempt: https://decomp.me/scratch/rcJYo
-// Still a work-in-progress but it doesn't seem to cause any problems,
-// which is why it is labeled under NON_EQUIVALENT
 
 #define SCISSOR_INTERLACE G_SC_NON_INTERLACE
 
+// viewport_main
 void func_80066CDC(Gfx **dlist, MatrixS **mats) {
     u32 y;
     u32 x;
@@ -647,7 +644,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
                       gScreenViewports[gActiveCameraID].scissorY2);
         viewport_rsp_set(dlist, 0, 0, 0, 0);
         gActiveCameraID = tempCameraID;
-        if (mats != 0) {
+        if (mats != NULL) {
             func_80067D3C(dlist, mats);
         }
         gActiveCameraID = originalCameraID;
@@ -753,7 +750,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
             posY += sp58_height;
             posX += sp54_width;
             if (osTvType == OS_TV_TYPE_PAL) {
-                if (gActiveCameraID <= VIEWPORTS_COUNT_2_PLAYERS) {
+                if (gActiveCameraID <= 3) {
                     posY -= 20;
                 } else {
                     posY -= 6;
