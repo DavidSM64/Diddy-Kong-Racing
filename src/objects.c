@@ -33,7 +33,6 @@
 #define OBJECT_POOL_SIZE 0x15800
 #define OBJECT_SPAWN_HEAP_SIZE 0x800
 #define OBJECT_SLOT_COUNT 512
-#define ASSET_OBJECT_HEADER_TABLE_LENGTH 304 // This isn't important, but it's the number of object headers
 #define AINODE_COUNT 128
 #define CAMCONTROL_COUNT 20
 
@@ -250,8 +249,8 @@ s8 D_8011AE01;          // A boolean? I've seen it either as 0 or 1
 s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
 Object *D_8011AE08[16];
-ObjectHeader *(*gLoadedObjectHeaders)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
-u8 (*gObjectHeaderReferences)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
+ObjectHeader *(*gLoadedObjectHeaders)[ASSET_OBJECTS_COUNT];
+u8 (*gObjectHeaderReferences)[ASSET_OBJECTS_COUNT];
 TextureHeader *D_8011AE50;
 TextureHeader *D_8011AE54;
 Object **gObjPtrList; // Not sure about the number of elements
