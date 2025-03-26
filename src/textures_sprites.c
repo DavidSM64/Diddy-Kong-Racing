@@ -457,7 +457,7 @@ TextureHeader *load_texture(s32 arg0) {
     numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
 
     if (!gTempTextureHeader->header.isCompressed) {
-        tex = (TextureHeader * )mempool_alloc((numberOfTextures * 0x60) + assetSize, gTexColourTag);
+        tex = (TextureHeader *) mempool_alloc((numberOfTextures * 0x60) + assetSize, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }

@@ -724,8 +724,8 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
                     break;
                 case 1:
                     posX = x;
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, x + (videoWidth >> 8), 0,
-                                  (x + x) - (videoWidth >> 8), y - (videoHeight >> 7));
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, x + (videoWidth >> 8), 0, (x + x) - (videoWidth >> 8),
+                                  y - (videoHeight >> 7));
 
                     // Fake
                     if (1) {}

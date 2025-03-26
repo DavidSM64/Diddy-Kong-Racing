@@ -2549,7 +2549,6 @@ gContPakSwitchToRumbleStrings = 0x800E1604;
 gContPakNeed2ndAdvStrings = 0x800E161C;
 gContPakStrings = 0x800E163C;
 unused_800DFC08 = 0x800E1668;
-unused_800DFC0C = 0x800E166C;
 gDrawTexN64Icon = 0x800E1670;
 gDrawTexTTIcon = 0x800E1680;
 gDrawTexGhostIcon = 0x800E1690;
