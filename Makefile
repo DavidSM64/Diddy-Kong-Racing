@@ -9,8 +9,6 @@ $(eval $(call validate-option,NON_MATCHING,ido gcc))
 
 # Define a custom boot file if desired to use something other than the vanilla one
 BOOT_CUSTOM ?= mods/boot_custom.bin
-BOOT_CIC ?= 6103
-$(eval $(call validate-option,BOOT_CIC,6102 6103))
 
 LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\"
 
@@ -138,7 +136,6 @@ else
 	MATCHDEFS += ANTI_TAMPER=1
     # Override compiler choice on matching builds.
 	COMPILER := ido
-	BOOT_CIC := 6103
 	C_STANDARD := -std=gnu90
 endif
 
@@ -148,10 +145,20 @@ ASM_DEFINES = $(foreach d,$(DEFINES),$(if $(findstring =,$(d)),--defsym $(d),)) 
 
 # If NON_MATCHING and using a custom boot file, (Right now just 6102).
 # Define this so it will change the entrypoint in the header
+BOOT_CIC :=
 ifeq ($(NON_MATCHING),1)
 ifeq ("$(wildcard $(BOOT_CUSTOM))","")
-BOOT_CIC := 6103
+	BOOT_CIC := 6103
+else
+# Determine the CIC type automatically by checking the boot bin.
+	BOOT_CIC := $(shell python3 ./tools/python/extract_custom_boot.py)
+# The above returns 0 if it errors out, so course correct if it somehow happens.
+	ifeq ($(BOOT_CIC),0)
+		BOOT_CIC := 6103
+	endif
 endif
+else
+	BOOT_CIC := 6103
 endif
 
 ASM_DEFINES += --defsym BOOT_$(BOOT_CIC)=1
