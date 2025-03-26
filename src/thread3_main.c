@@ -152,7 +152,7 @@ UNUSED s32 D_80123568[3]; // BSS Padding
  */
 void thread3_main(UNUSED void *unused) {
     init_game();
-    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, 0);
+    gSaveDataFlags = input_update(gSaveDataFlags, 0);
     sBootDelayTimer = 0;
     gGameMode = GAMEMODE_INTRO;
     while (1) {
@@ -213,7 +213,7 @@ void init_game(void) {
     gfxtask_init(&gMainSched);
     audio_init(&gMainSched);
     func_80008040(); // Should be very similar to allocate_object_model_pools
-    sControllerStatus = init_controllers();
+    sControllerStatus = input_init();
     tex_init_textures();
     allocate_object_model_pools();
     allocate_object_pools();
@@ -280,7 +280,7 @@ void main_game_loop(void) {
     rsp_init(&gCurrDisplayList);
     rdp_init(&gCurrDisplayList);
     bgdraw_render(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE);
-    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
+    gSaveDataFlags = input_update(gSaveDataFlags, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
         gGameMode = GAMEMODE_LOCKUP;
@@ -433,8 +433,8 @@ void mode_game(s32 updateRate) {
 
     // Get input data for all 4 players.
     for (i = 0; i < get_active_player_count(); i++) {
-        buttonHeldInputs |= get_buttons_held_from_player(i);
-        buttonPressedInputs |= get_buttons_pressed_from_player(i);
+        buttonHeldInputs |= input_held(i);
+        buttonPressedInputs |= input_pressed(i);
     }
 #ifdef ANTI_TAMPER
     // Spam the start button, making the game unplayable because it's constantly paused.
@@ -1545,7 +1545,7 @@ void swap_lead_player(void) {
     u8 *first_racer_data;
     u8 *second_racer_data;
 
-    swap_player_1_and_2_ids();
+    input_swap_id();
     func_8000E194();
 
     first_racer_data = (u8 *) (gSettingsPtr->racers);
@@ -1574,7 +1574,7 @@ void mode_intro(void) {
     s32 buttonInputs = 0;
 
     for (i = 0; i < MAXCONTROLLERS; i++) {
-        buttonInputs |= get_buttons_held_from_player(i);
+        buttonInputs |= input_held(i);
     }
     if (buttonInputs & START_BUTTON) {
         gShowControllerPakMenu = TRUE;

@@ -2841,7 +2841,7 @@ s32 postrace_render(s32 updateRate) {
     if (gPostraceState != POSTRACE_SLIDE_END) {
         if (gIgnorePlayerInputTime == 0) {
             for (i = 0; i < gNumberOfActivePlayers; i++) {
-                buttonsPressedAllPlayers |= get_buttons_pressed_from_player(i);
+                buttonsPressedAllPlayers |= input_pressed(i);
             }
         }
         gMenuElementScaleTimer += updateRate;
@@ -3309,7 +3309,7 @@ void menu_title_screen_init(void) {
     gSaveFileIndex = 0;
     gTitleScreenCurrentOption = 0;
     gNumberOfActivePlayers = 4;
-    initialise_player_ids();
+    input_assign_players();
     music_play(SEQUENCE_NONE2);
     sMenuMusicVolume = music_volume();
     if (gResetTitleScale) {
@@ -3662,7 +3662,7 @@ s32 menu_options_loop(s32 updateRate) {
     analogueY = 0;
     if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
         for (i = 0; i < MAXCONTROLLERS; i++) {
-            buttonsPressed |= get_buttons_pressed_from_player(i);
+            buttonsPressed |= input_pressed(i);
             analogueX += gControllersXAxisDirection[i];
             analogueY += gControllersYAxisDirection[i];
         }
@@ -3930,8 +3930,8 @@ s32 menu_audio_options_loop(s32 updateRate) {
             buttonsPressed = 0;
             contXAxis = 0;
             for (i = 0; i < 4; i++) {
-                buttonsPressed |= get_buttons_pressed_from_player(i);
-                contXAxis += clamp_joystick_x_axis(i);
+                buttonsPressed |= input_pressed(i);
+                contXAxis += input_clamp_stick_x(i);
                 contX += gControllersXAxisDirection[i];
                 contY += gControllersYAxisDirection[i];
             }
@@ -5151,7 +5151,7 @@ s32 menu_save_options_loop(s32 updateRate) {
         for (i = 0; i < 4; i++) {
             xAxis += gControllersXAxisDirection[i];
             yAxis += gControllersYAxisDirection[i];
-            buttonsPressed |= get_buttons_pressed_from_player(i);
+            buttonsPressed |= input_pressed(i);
         }
     }
     if (gMenuStage & 8) {
@@ -5741,7 +5741,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
         xStick = 0;
         yStick = 0;
         for (i = 0; i < MAXCONTROLLERS; i++) {
-            pressedButtons |= get_buttons_pressed_from_player(i);
+            pressedButtons |= input_pressed(i);
             xStick += gControllersXAxisDirection[i];
             yStick += gControllersYAxisDirection[i];
         }
@@ -6138,7 +6138,7 @@ s32 menu_magic_codes_loop(s32 updateRate) {
     yDir = 0;
     if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
         for (i = 0; i < MAXCONTROLLERS; i++) {
-            buttonsPressed |= get_buttons_pressed_from_player(i);
+            buttonsPressed |= input_pressed(i);
             xDir += gControllersXAxisDirection[i];
             yDir += gControllersYAxisDirection[i];
         }
@@ -6505,7 +6505,7 @@ s32 menu_magic_codes_list_loop(s32 updateRate) {
     yAxis = 0;
     if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
         for (i = 0; i < MAXCONTROLLERS; i++) {
-            buttonsPressed |= get_buttons_pressed_from_player(i);
+            buttonsPressed |= input_pressed(i);
             xAxis += gControllersXAxisDirection[i];
             yAxis += gControllersYAxisDirection[i];
         }
@@ -6722,7 +6722,7 @@ void menu_character_select_init(void) {
     u8 *channelVolumes;
 
     breakTheLoop = FALSE;
-    initialise_player_ids();
+    input_assign_players();
     if (is_drumstick_unlocked()) {
         if (is_tt_unlocked()) {
             gCurrCharacterSelectData = (CharacterSelectData(*)[10]) & gCharacterSelectBytesComplete;
@@ -7235,7 +7235,7 @@ s32 menu_caution_loop(s32 updateRate) {
     if (gMenuDelay) {
         gMenuDelay += updateRate;
     } else if (gIgnorePlayerInputTime <= 0 &&
-               (get_buttons_pressed_from_player(PLAYER_ONE) & (A_BUTTON | B_BUTTON | START_BUTTON))) {
+               (input_pressed(PLAYER_ONE) & (A_BUTTON | B_BUTTON | START_BUTTON))) {
         sound_play(SOUND_SELECT2, NULL);
         gMenuDelay = 1;
         transition_begin(&sMenuTransitionFadeIn);
@@ -7409,11 +7409,11 @@ s32 menu_game_select_loop(s32 updateRate) {
     } else {
         gameselect_render(updateRate);
         if ((gMenuDelay == 0) && (gOpacityDecayTimer == 0)) {
-            playerInputs = get_buttons_pressed_from_player(PLAYER_ONE);
+            playerInputs = input_pressed(PLAYER_ONE);
             playerYDir = gControllersYAxisDirection[0];
             playerInputs = playerInputs;
             if (gNumberOfActivePlayers == 2) {
-                playerInputs |= get_buttons_pressed_from_player(1);
+                playerInputs |= input_pressed(1);
                 playerYDir += gControllersYAxisDirection[1];
             }
             if (playerInputs & (A_BUTTON | START_BUTTON)) {
@@ -7699,11 +7699,11 @@ s32 fileselect_input_root(UNUSED s32 updateRate) {
     s32 prevOption;
     u32 buttonsPressedPlayer2;
 
-    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+    buttonsPressed = input_pressed(PLAYER_ONE);
     xAxisDirection = gControllersXAxisDirection[PLAYER_ONE];
     yAxisDirection = gControllersYAxisDirection[PLAYER_ONE];
     if (gNumberOfActivePlayers == 2) {
-        buttonsPressedPlayer2 = get_buttons_pressed_from_player(PLAYER_TWO);
+        buttonsPressedPlayer2 = input_pressed(PLAYER_TWO);
         buttonsPressed |= buttonsPressedPlayer2;
         xAxisDirection += gControllersXAxisDirection[PLAYER_TWO];
         yAxisDirection += gControllersYAxisDirection[PLAYER_TWO];
@@ -7793,10 +7793,10 @@ void fileselect_input_copy(UNUSED s32 updateRate) {
     u32 buttonsPressedPlayerTwo;
 
     settings = get_settings();
-    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+    buttonsPressed = input_pressed(PLAYER_ONE);
     xAxisDirection = gControllersXAxisDirection[PLAYER_ONE];
     if (gNumberOfActivePlayers == 2) {
-        buttonsPressedPlayerTwo = get_buttons_pressed_from_player(PLAYER_TWO);
+        buttonsPressedPlayerTwo = input_pressed(PLAYER_TWO);
         buttonsPressed |= buttonsPressedPlayerTwo;
         xAxisDirection += gControllersXAxisDirection[PLAYER_TWO];
     }
@@ -7886,11 +7886,11 @@ void fileselect_input_erase(UNUSED s32 updateRate) {
     s32 controllerXAxisDirection;
     s32 prevOption;
 
-    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+    buttonsPressed = input_pressed(PLAYER_ONE);
     controllerXAxisDirection = gControllersXAxisDirection[0];
 
     if (gNumberOfActivePlayers == 2) {
-        buttonsPressed |= get_buttons_pressed_from_player(PLAYER_TWO);
+        buttonsPressed |= input_pressed(PLAYER_TWO);
         controllerXAxisDirection += gControllersXAxisDirection[1];
     }
 
@@ -8004,7 +8004,7 @@ s32 menu_file_select_loop(s32 updateRate) {
         } else if (gFileErase) {
             fileselect_input_erase(updateRate);
         } else if (gFileNew) {
-            buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+            buttonsPressed = input_pressed(PLAYER_ONE);
             if (buttonsPressed & B_BUTTON && gNameEntryLength == 0) {
                 menu_unload_bigfont();
                 gFileNew = FALSE;
@@ -8145,7 +8145,7 @@ void menu_input(void) {
             gMenuStickY[i] = 0;
         }
         for (i = 0; i < MAXCONTROLLERS; i++) {
-            buttonsHeld[i] = get_buttons_held_from_player(i);
+            buttonsHeld[i] = input_held(i);
             gMenuStickX[i] = gControllersXAxisDirection[i];
             gMenuStickY[i] = gControllersYAxisDirection[i];
             if (i < gNumberOfActivePlayers) {
@@ -10093,7 +10093,7 @@ void menu_pause_init(void) {
     gLastPlayerWhoPaused = -1;
 
     for (i = 0; (get_active_player_count() > i && gLastPlayerWhoPaused < 0); i++) {
-        if (get_buttons_held_from_player(i) & START_BUTTON) {
+        if (input_held(i) & START_BUTTON) {
             gLastPlayerWhoPaused = i;
         }
     }
@@ -10176,11 +10176,11 @@ void pausemenu_render(UNUSED s32 updateRate) {
     halfX = x >> 1;
     set_current_dialogue_box_coords(7, SCREEN_WIDTH_HALF - halfX, y - halfTemp, SCREEN_WIDTH_HALF + halfX,
                                     halfTemp + y);
-    colour = &gPlayerPauseBgColour[get_player_id(gLastPlayerWhoPaused)];
+    colour = &gPlayerPauseBgColour[input_player_id(gLastPlayerWhoPaused)];
     set_current_dialogue_background_colour(7, colour->r, colour->g, colour->b, colour->a);
     set_dialogue_font(7, ASSET_FONTS_FUNFONT);
     set_current_text_background_colour(7, 128, 128, 255, 0);
-    colour = &gPlayerPauseOptionsTextColour[get_player_id(gLastPlayerWhoPaused)];
+    colour = &gPlayerPauseOptionsTextColour[input_player_id(gLastPlayerWhoPaused)];
     set_current_text_colour(7, colour->r, colour->g, colour->b, colour->a, 255);
     alpha = gOptionBlinkTimer * 8;
     if (alpha > 255) {
@@ -10244,7 +10244,7 @@ s32 menu_pause_loop(UNUSED Gfx **dl, s32 updateRate) {
 
     buttonsPressed = 0;
     if (gIgnorePlayerInputTime == 0) {
-        buttonsPressed = get_buttons_pressed_from_player(gLastPlayerWhoPaused);
+        buttonsPressed = input_pressed(gLastPlayerWhoPaused);
     }
 
     if (gMenuDelay == 0) {
@@ -10825,7 +10825,7 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
     buttonsPressed = 0;
     if (gIgnorePlayerInputTime == FALSE && gPostRace.unk0_s32 < 0) {
         for (i = 0; i < numPlayers; i++) {
-            buttonsPressed |= get_buttons_pressed_from_player(i);
+            buttonsPressed |= input_pressed(i);
         }
     }
     switch (gMenuStage) {
@@ -11715,8 +11715,8 @@ s32 filename_enter(s32 updateRate) {
     s32 i;
     s32 joytickXAxis;
 
-    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
-    joytickXAxis = clamp_joystick_x_axis(PLAYER_ONE);
+    buttonsPressed = input_pressed(PLAYER_ONE);
+    joytickXAxis = input_clamp_stick_x(PLAYER_ONE);
     if (joytickXAxis > -35 && (joytickXAxis < 35)) {
         joytickXAxis = 0;
     }
@@ -12270,7 +12270,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
             buttonsPressed = 0;
             prevOption = gMenuOption;
             for (i = 0; i < gNumberOfActivePlayers; i++) {
-                buttonsPressed |= get_buttons_pressed_from_player(i);
+                buttonsPressed |= input_pressed(i);
                 if (gControllersYAxisDirection[i] < 0) {
                     gMenuOption++;
                 }
@@ -12701,7 +12701,7 @@ s32 menu_ghost_data_loop(s32 updateRate) {
     yStick = 0;
     if (!gIgnorePlayerInputTime && gMenuDelay == 0) {
         for (i = 0; i < MAXCONTROLLERS; i++) {
-            pressedButtons |= get_buttons_pressed_from_player(i);
+            pressedButtons |= input_pressed(i);
             xStick += gControllersXAxisDirection[i];
             yStick += gControllersYAxisDirection[i];
         }
@@ -12848,7 +12848,7 @@ s32 menu_cinematic_loop(UNUSED s32 updateRate) {
     buttonsPressed = 0;
     if (gIgnorePlayerInputTime == 0) {
         for (i = 0; i < gNumberOfActivePlayers; i++) {
-            buttonsPressed |= get_buttons_pressed_from_player(i);
+            buttonsPressed |= input_pressed(i);
         }
     }
     if (func_800214C4() != 0) {
@@ -13222,7 +13222,7 @@ s32 menu_credits_loop(s32 updateRate) {
     buttonsPressedAllPlayers = 0;
     if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
         for (nextIndex = 0; nextIndex < MAXCONTROLLERS; nextIndex++) {
-            buttonsPressedAllPlayers |= get_buttons_pressed_from_player(nextIndex);
+            buttonsPressedAllPlayers |= input_pressed(nextIndex);
         }
     }
 
@@ -13387,8 +13387,8 @@ void update_controller_sticks(void) {
     s32 XClamp, YClamp;
     s32 i;
     for (i = 0; i < 4; i++) {
-        XClamp = clamp_joystick_x_axis(i);
-        YClamp = clamp_joystick_y_axis(i);
+        XClamp = input_clamp_stick_x(i);
+        YClamp = input_clamp_stick_y(i);
         gControllersXAxisDirection[i] = 0;
         gControllersYAxisDirection[i] = 0;
 
@@ -14048,7 +14048,7 @@ s32 taj_menu_loop(void) {
         set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     }
     dialogueResult = 0;
-    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+    buttonsPressed = input_pressed(PLAYER_ONE);
     sDialogueOptionMax = 0;
 
     switch (sCurrentMenuID) {
@@ -14226,7 +14226,7 @@ s32 dialogue_race_defeat(void) {
     set_current_dialogue_box_coords(1, 24, 16, 184, 135);
     set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     state = 0;
-    playerInput = get_buttons_pressed_from_player(PLAYER_ONE);
+    playerInput = input_pressed(PLAYER_ONE);
     sDialogueOptionMax = 0;
     gNextTajChallengeMenu = 0;
     render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_LOSETOTAJ_0], 1,
@@ -14293,7 +14293,7 @@ s32 tt_menu_loop(void) {
     }
     set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     currentOption = 0;
-    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE) << 0;
+    buttonsPressed = input_pressed(PLAYER_ONE) << 0;
     sDialogueOptionMax = 0;
     gDialogueOptionYOffset = 32;
     switch (sCurrentMenuID) {
@@ -14630,7 +14630,7 @@ s32 trophy_race_cabinet_menu_loop(void) {
     set_current_dialogue_box_coords(1, 24, 16, 184, SCREEN_HEIGHT_HALF);
     set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     currentOption = 0;
-    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+    buttonsPressed = input_pressed(PLAYER_ONE);
     render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_TROPHYRACE], 1, HORZ_ALIGN_CENTER); // TROPHY RACE
     if (gControllersYAxisDirection[0] < 0) {
         gDialogueSubmenu++;

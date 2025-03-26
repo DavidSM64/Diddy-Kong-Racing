@@ -69,7 +69,7 @@ u8 input_get_id(s32 controllerIndex) {
     if ((controllerIndex == 0 || controllerIndex == 1) && func_8000E158()) {
         controllerIndex = 1 - controllerIndex;
     }
-    return get_player_id(controllerIndex);
+    return input_player_id(controllerIndex);
 }
 
 #if VERSION >= VERSION_79
@@ -833,7 +833,7 @@ s32 read_save_file(s32 saveFileNum, Settings *settings) {
     s32 block;
     s32 ret;
 
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
@@ -854,7 +854,7 @@ s32 read_save_file(s32 saveFileNum, Settings *settings) {
     blocks = 5;
     saveData = mempool_alloc_safe(blocks * sizeof(u64), COLOUR_TAG_WHITE);
     for (block = 0, address = startingAddress; block < blocks; block++, address++) {
-        osEepromRead(get_si_mesg_queue(), address, (u8 *) &saveData[block]);
+        osEepromRead(si_mesg(), address, (u8 *) &saveData[block]);
     }
     populate_settings_from_save_data(settings, (u8 *) saveData);
     mempool_free(saveData);
@@ -876,7 +876,7 @@ void erase_save_file(s32 saveFileNum, Settings *settings) {
     s32 address;
     s32 i;
 
-    if (osEepromProbe(get_si_mesg_queue()) != 0) {
+    if (osEepromProbe(si_mesg()) != 0) {
         get_number_of_levels_and_worlds(&levelCount, &worldCount);
         for (i = 0; i < levelCount; i++) {
             settings->courseFlagsPtr[i] = 0;
@@ -914,7 +914,7 @@ void erase_save_file(s32 saveFileNum, Settings *settings) {
 
         if (!is_reset_pressed()) {
             for (i = 0, address = startingAddress; i < blockSize; i++, address++) {
-                osEepromWrite(get_si_mesg_queue(), address, (u8 *) &alloc[i]);
+                osEepromWrite(si_mesg(), address, (u8 *) &alloc[i]);
             }
         }
         mempool_free(alloc);
@@ -937,7 +937,7 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
     s32 blocks;
     s32 i;
 
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
@@ -963,7 +963,7 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
 
     if (!is_reset_pressed()) {
         for (i = 0, address = startingAddress; i < blocks; i++, address++) {
-            osEepromWrite(get_si_mesg_queue(), address, (u8 *) &alloc[i]);
+            osEepromWrite(si_mesg(), address, (u8 *) &alloc[i]);
         }
     }
 
@@ -983,7 +983,7 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
     u64 *alloc;
     s32 i;
 
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
@@ -993,7 +993,7 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
         s32 blocks = EEP_FLAP_SIZE;
         for (i = 0; i < blocks; i++) {
-            osEepromRead(get_si_mesg_queue(), i + EEP_FLAP_OFFSET, (u8 *) &alloc[i]);
+            osEepromRead(si_mesg(), i + EEP_FLAP_OFFSET, (u8 *) &alloc[i]);
         }
         func_80073588(settings, (u8 *) alloc, SAVE_DATA_FLAG_READ_FLAP_TIMES);
     }
@@ -1001,7 +1001,7 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
     if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
         s32 blocks = EEP_COURSE_RECORD_SIZE;
         for (i = 0; i < blocks; i++) {
-            osEepromRead(get_si_mesg_queue(), i + EEP_COURSE_TIME_OFFSET, (u8 *) (&alloc[EEP_FLAP_SIZE] + i));
+            osEepromRead(si_mesg(), i + EEP_COURSE_TIME_OFFSET, (u8 *) (&alloc[EEP_FLAP_SIZE] + i));
         }
         func_80073588(settings, (u8 *) alloc, SAVE_DATA_FLAG_READ_COURSE_TIMES);
     }
@@ -1022,7 +1022,7 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
     u64 *alloc;
     s32 i;
 
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
@@ -1036,7 +1036,7 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
         if (1) {} // Fake Match
         if (!is_reset_pressed()) {
             for (i = 0; i != size; i++) {
-                osEepromWrite(get_si_mesg_queue(), i + EEP_FLAP_OFFSET, (u8 *) &alloc[i]);
+                osEepromWrite(si_mesg(), i + EEP_FLAP_OFFSET, (u8 *) &alloc[i]);
             }
         }
     }
@@ -1045,7 +1045,7 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
         s32 size = EEP_COURSE_RECORD_SIZE;
         if (!is_reset_pressed()) {
             for (i = 0; i != size; i++) {
-                osEepromWrite(get_si_mesg_queue(), i + EEP_COURSE_TIME_OFFSET, (u8 *) (&alloc[EEP_FLAP_SIZE] + i));
+                osEepromWrite(si_mesg(), i + EEP_COURSE_TIME_OFFSET, (u8 *) (&alloc[EEP_FLAP_SIZE] + i));
             }
         }
     }
@@ -1078,12 +1078,12 @@ s32 read_eeprom_settings(u64 *eepromSettings) {
     s32 temp;
     s32 sp20;
 
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
 
-    osEepromRead(get_si_mesg_queue(), 0xF, (u8 *) eepromSettings);
+    osEepromRead(si_mesg(), 0xF, (u8 *) eepromSettings);
     sp20 = calculate_eeprom_settings_checksum(*eepromSettings);
     temp = *eepromSettings >> 56;
     if (sp20 != temp) {
@@ -1108,7 +1108,7 @@ s32 read_eeprom_settings(u64 *eepromSettings) {
  * Address (0xF * sizeof(u64)) = 0x78 - 0x80 of the actual save data file
  */
 s32 write_eeprom_settings(u64 *eepromSettings) {
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
@@ -1116,7 +1116,7 @@ s32 write_eeprom_settings(u64 *eepromSettings) {
     *eepromSettings >>= 8;
     *eepromSettings |= (s64) (calculate_eeprom_settings_checksum(*eepromSettings)) << 56;
     if (is_reset_pressed() == 0) {
-        osEepromWrite(get_si_mesg_queue(), 0xF, (u8 *) eepromSettings);
+        osEepromWrite(si_mesg(), 0xF, (u8 *) eepromSettings);
     }
     return 1;
 }
@@ -1593,7 +1593,7 @@ void init_controller_paks(void) {
     u8 pakPattern;
     s8 maxControllers;
 
-    sControllerMesgQueue = get_si_mesg_queue();
+    sControllerMesgQueue = si_mesg();
     sRumbleTable = (s16 *) get_misc_asset(ASSET_MISC_RUMBLE_DATA);
     gRumbleIdle = gRumbleActive = 0xF;
     gRumbleOn = TRUE;

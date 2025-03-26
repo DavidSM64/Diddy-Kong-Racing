@@ -876,7 +876,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
         if (interactObj->distance < 200) {
             if (playerObj == interactObj->obj) {
                 // Detect if the player honks or slams into the signpost.
-                if ((get_buttons_pressed_from_player(PLAYER_ONE) & Z_TRIG) || playerObj == obj->unk5C->unk100) {
+                if ((input_pressed(PLAYER_ONE) & Z_TRIG) || playerObj == obj->unk5C->unk100) {
                     begin_lighthouse_rocket_cutscene();
                 }
             }
@@ -1248,7 +1248,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             obj->properties.npc.timer = 1;
         }
     }
-    index = get_buttons_pressed_from_player(PLAYER_ONE);
+    index = input_pressed(PLAYER_ONE);
     if (obj->properties.npc.action == TT_MODE_ROAM && distance < 300.0 && obj->properties.npc.timer == 0) {
         if (angleDiff > -0x2000 && angleDiff < 0x2000) {
             if ((obj->interactObj->flags & INTERACT_FLAGS_PUSHING && racerObj == obj->interactObj->obj) ||
@@ -1832,7 +1832,7 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
     path_enable();
     obj->properties.animatedObj.behaviourID = entry->actorIndex;
     obj->properties.animatedObj.action = arg2;
-    if (arg2 != 0 && (get_buttons_pressed_from_player(PLAYER_ONE) & R_CBUTTONS)) {
+    if (arg2 != 0 && (input_pressed(PLAYER_ONE) & R_CBUTTONS)) {
         obj->properties.animatedObj.action = 2;
     }
     if (((cutscene_id() == entry->channel) || (entry->channel == 20)) && (obj->unk64 == NULL) && (entry->order == 0) &&
@@ -2221,7 +2221,7 @@ void obj_loop_infopoint(Object *obj, UNUSED s32 updateRate) {
         if (playerObj->segment.header->behaviorId == 1) {
             Object_InfoPoint *playerObj64 = &playerObj->unk64->info_point;
             player = playerObj64->unk0;
-            if ((player != PLAYER_COMPUTER) && (get_buttons_pressed_from_player(player) & Z_TRIG)) {
+            if ((player != PLAYER_COMPUTER) && (input_pressed(player) & Z_TRIG)) {
                 set_current_text(obj->properties.infoPoint.radius & 0xFF);
             }
         }
@@ -2586,7 +2586,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         zPosDiff = (racerObj->segment.trans.z_position - (racer->oz1 * 50.0f)) - obj->segment.trans.z_position;
         distance = sqrtf((xPosDiff * xPosDiff) + (zPosDiff * zPosDiff));
     }
-    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+    buttonsPressed = input_pressed(PLAYER_ONE);
     var_a2 = FALSE;
     if ((obj->properties.npc.action == NULL) && (distance < 300.0) &&
         (((obj->interactObj->flags & INTERACT_FLAGS_PUSHING) && (racerObj == obj->interactObj->obj)) ||

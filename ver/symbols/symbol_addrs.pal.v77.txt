@@ -935,20 +935,20 @@ debug_print_fixed_matrix_values = 0x80069F64;
 debug_print_float_matrix_values = 0x8006A03C;
 
 // controller.c .text
-get_si_mesg_queue = 0x8006A100;
-init_controllers = 0x8006A10C;
-handle_save_data_and_read_controller = 0x8006A1C4;
-initialise_player_ids = 0x8006A434;
+si_mesg = 0x8006A100;
+input_init = 0x8006A10C;
+input_update = 0x8006A1C4;
+input_assign_players = 0x8006A434;
 charselect_assign_players = 0x8006A458;
-get_player_id = 0x8006A4F8;
-swap_player_1_and_2_ids = 0x8006A50C;
-get_buttons_held_from_player = 0x8006A528;
-get_buttons_pressed_from_player = 0x8006A554;
-get_buttons_released_from_player = 0x8006A578;
-clamp_joystick_x_axis = 0x8006A59C;
-clamp_joystick_y_axis = 0x8006A5E0;
-clamp_joystick = 0x8006A624;
-disable_button_mask = 0x8006A6A0;
+input_player_id = 0x8006A4F8;
+input_swap_id = 0x8006A50C;
+input_held = 0x8006A528;
+input_pressed = 0x8006A554;
+input_released = 0x8006A578;
+input_clamp_stick_x = 0x8006A59C;
+input_clamp_stick_y = 0x8006A5E0;
+input_clamp_stick_mag = 0x8006A624;
+drm_disable_input = 0x8006A6A0;
 
 // game.c .text
 init_level_globals = 0x8006A6B0;

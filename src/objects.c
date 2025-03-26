@@ -2404,7 +2404,7 @@ void func_80010994(s32 updateRate) {
         if ((gEventCountdown == 0x50) && (gCutsceneID == 0)) {
             sp54 = 0;
             for (i = 0; i < MAXCONTROLLERS; i++) {
-                tempVal = get_buttons_pressed_from_player(i);
+                tempVal = input_pressed(i);
                 sp54 |= tempVal;
             }
 
@@ -4550,7 +4550,7 @@ void race_transition_adventure(s32 updateRate) {
                 hud_visibility(1);
             }
         }
-        i = get_buttons_pressed_from_player(PLAYER_ONE) & A_BUTTON;
+        i = input_pressed(PLAYER_ONE) & A_BUTTON;
         settings = get_settings();
         if (!(settings->cutsceneFlags & 0x40000)) {
             i = 0;

@@ -12,19 +12,19 @@
 #define JOYSTICK_DEADZONE 8
 #define JOYSTICK_MAX_RANGE 70
 
-OSMesgQueue *get_si_mesg_queue(void);
-s32 init_controllers(void);
-s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate);
-void initialise_player_ids(void);
+OSMesgQueue *si_mesg(void);
+s32 input_init(void);
+s32 input_update(s32 saveDataFlags, s32 updateRate);
+void input_assign_players(void);
 void charselect_assign_players(s8 *activePlayers);
-u8 get_player_id(s32 player);
-void swap_player_1_and_2_ids(void);
-u16 get_buttons_held_from_player(s32 player);
-u32 get_buttons_pressed_from_player(s32 player);
-u16 get_buttons_released_from_player(s32 player);
-s32 clamp_joystick_x_axis(s32 player);
-s32 clamp_joystick_y_axis(s32 player);
-s8 clamp_joystick(s8 stickMag);
-void disable_button_mask(void);
+u8 input_player_id(s32 player);
+void input_swap_id(void);
+u16 input_held(s32 player);
+u32 input_pressed(s32 player);
+u16 input_released(s32 player);
+s32 input_clamp_stick_x(s32 player);
+s32 input_clamp_stick_y(s32 player);
+s8 input_clamp_stick_mag(s8 stickMag);
+void drm_disable_input(void);
 
 #endif
