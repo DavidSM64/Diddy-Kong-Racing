@@ -151,7 +151,7 @@ ifeq ("$(wildcard $(BOOT_CUSTOM))","")
 	BOOT_CIC := 6103
 else
 # Determine the CIC type automatically by checking the boot bin.
-	BOOT_CIC := $(shell python3 ./tools/python/extract_custom_boot.py)
+	BOOT_CIC := $(shell $(PYTHON) $(TOOLS_DIR)/python/extract_custom_boot.py)
 # The above returns 0 if it errors out, so course correct if it somehow happens.
 	ifeq ($(BOOT_CIC),0)
 		BOOT_CIC := 6103
