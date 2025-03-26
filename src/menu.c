@@ -29,6 +29,7 @@
 #include "joypad.h"
 #include "math_util.h"
 #include "PRinternal/viint.h"
+#include "save_layout.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
