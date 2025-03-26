@@ -992,7 +992,7 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
     alloc = mempool_alloc_safe(COURSE_TIMES_START + sizeof(CourseRecords), COLOUR_TAG_WHITE);
 
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
-        s32 blocks = EEP_FLAP_SIZE;
+        s32 blocks = sizeof(CourseRecords);
         for (i = 0; i < blocks; i++) {
             osEepromRead(si_mesg(), BLOCK_SIZE(FASTEST_LAPS_START) + i, (u8 *) &alloc[i]);
         }
@@ -1000,7 +1000,7 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
     }
 
     if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
-        s32 blocks = EEP_COURSE_RECORD_SIZE;
+        s32 blocks = sizeof(CourseRecords);
         for (i = 0; i < blocks; i++) {
             osEepromRead(si_mesg(), BLOCK_SIZE(COURSE_TIMES_START) + i,
                          (u8 *) (&alloc[sizeof(CourseRecords) / sizeof(u64)] + i));
@@ -1034,7 +1034,7 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
     func_800738A4(settings, (u8 *) alloc);
 
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
-        s32 size = EEP_FLAP_SIZE;
+        s32 blocks = sizeof(CourseRecords);
         if (1) {} // Fake Match
         if (is_reset_pressed() == FALSE) {
             for (i = 0; i != blocks; i++) {
@@ -1044,7 +1044,7 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
     }
 
     if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
-        s32 blocks = sizeof(CourseRecords) / sizeof(u64);
+        s32 blocks = sizeof(CourseRecords);
         if (is_reset_pressed() == FALSE) {
             for (i = 0; i != blocks; i++) {
                 osEepromWrite(si_mesg(), BLOCK_SIZE(COURSE_TIMES_START) + i,
@@ -1078,8 +1078,8 @@ s32 calculate_eeprom_settings_checksum(u64 eepromSettings) {
  * Address (0xF * sizeof(u64)) = 0x78 - 0x80 of the actual save data file
  */
 s32 read_eeprom_settings(u64 *eepromSettings) {
-    s32 temp;
-    s32 sp20;
+    s32 expected;
+    s32 checksum;
 
     if (osEepromProbe(get_si_mesg_queue()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
