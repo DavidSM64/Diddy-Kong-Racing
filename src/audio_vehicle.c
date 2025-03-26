@@ -178,8 +178,8 @@ void racer_sound_update(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 up
         if (gRacerSound != NULL) {
             if (get_race_countdown()) {
                 if (gSoundRacerObj->playerIndex != PLAYER_COMPUTER) {
-                    buttonsHeld = get_buttons_held_from_player(gSoundRacerObj->playerIndex);
-                    buttonsPressed = get_buttons_pressed_from_player(gSoundRacerObj->playerIndex);
+                    buttonsHeld = input_held(gSoundRacerObj->playerIndex);
+                    buttonsPressed = input_pressed(gSoundRacerObj->playerIndex);
                 }
             }
             if (gRacerSound->unk0[0] == 0) {

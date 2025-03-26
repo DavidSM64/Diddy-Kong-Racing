@@ -414,7 +414,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                 gCurrentHud = gPlayerHud[gHudCurrentViewport];
                 if (cutscene_id() != 10) {
                     if (gHUDNumPlayers == ONE_PLAYER) {
-                        if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->raceFinished == FALSE &&
+                        if (input_pressed(D_80126D10) & D_CBUTTONS && racer->raceFinished == FALSE &&
                             ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) ||
                              gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH) &&
                             gHudRaceStart) {
@@ -426,7 +426,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                                 gHudIndicatorTimer = 0;
                             }
                         }
-                    } else if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS &&
+                    } else if (input_pressed(D_80126D10) & D_CBUTTONS &&
                                racer->raceFinished == FALSE && !(gHudLevelHeader->race_type & RACETYPE_CHALLENGE) &&
                                gHudRaceStart) {
                         if (D_800E2794[gHUDNumPlayers][racer->playerIndex] < PLAYER_FOUR) {
@@ -436,7 +436,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                         }
                         sound_play((SOUND_TING_HIGHEST - (D_800E2794[gHUDNumPlayers][racer->playerIndex] == 0)), NULL);
                     }
-                    if (get_buttons_pressed_from_player(D_80126D10) & R_CBUTTONS && racer->raceFinished == FALSE &&
+                    if (input_pressed(D_80126D10) & R_CBUTTONS && racer->raceFinished == FALSE &&
                         gHudRaceStart && gMinimapOpacity == 0) {
                         gHudToggleSettings[gHUDNumPlayers] = 1 - gHudToggleSettings[gHUDNumPlayers];
                         if (gHudToggleSettings[gHUDNumPlayers] == 0) {

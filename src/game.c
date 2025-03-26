@@ -147,7 +147,7 @@ void init_level_globals(void) {
         checksumCount += ((u8 *) (&viewport_rsp_set))[j];
     }
     if (checksumCount != gViewportFuncChecksum) {
-        disable_button_mask();
+        drm_disable_input();
     }
 #endif
 }
