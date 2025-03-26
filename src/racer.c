@@ -2329,15 +2329,15 @@ void update_player_racer(Object *obj, s32 updateRate) {
                     tempVar = 1 - tempVar;
                 }
                 // Cap the joystick tilt and write the button inputs to the current buffer.
-                gCurrentStickX = clamp_joystick_x_axis(tempVar);
+                gCurrentStickX = input_clamp_stick_x(tempVar);
                 // Flip the steering for adventure 2.
                 if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
                     gCurrentStickX = -gCurrentStickX;
                 }
-                gCurrentStickY = clamp_joystick_y_axis(tempVar);
-                gCurrentRacerInput = get_buttons_held_from_player(tempVar);
-                gCurrentButtonsPressed = get_buttons_pressed_from_player(tempVar);
-                gCurrentButtonsReleased = get_buttons_released_from_player(tempVar);
+                gCurrentStickY = input_clamp_stick_y(tempVar);
+                gCurrentRacerInput = input_held(tempVar);
+                gCurrentButtonsPressed = input_pressed(tempVar);
+                gCurrentButtonsReleased = input_released(tempVar);
             } else {
                 racer_enter_door(tempRacer, updateRate);
             }

@@ -456,7 +456,7 @@ s32 dialogue_challenge_loop(void) {
             index = func_800C38B4(index, &textBox);
         }
     } while (keepLooping);
-    playerButtons = get_buttons_pressed_from_player(PLAYER_ONE);
+    playerButtons = input_pressed(PLAYER_ONE);
     if (D_8012A787 == 0) {
         playerButtons = 0;
     }

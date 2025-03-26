@@ -19,7 +19,7 @@ u8 sPlayerID[16];
  * Return the serial interface message queue.
  * Official name: joyMessageQ
  */
-OSMesgQueue *get_si_mesg_queue(void) {
+OSMesgQueue *si_mesg(void) {
     return &sSIMesgQueue;
 }
 
@@ -27,7 +27,7 @@ OSMesgQueue *get_si_mesg_queue(void) {
  * Initialise the player controllers, and return the status when finished.
  * Official name: joyInit
  */
-s32 init_controllers(void) {
+s32 input_init(void) {
     UNUSED s32 *temp1;
     u8 bitpattern;
     UNUSED s32 *temp2;
@@ -36,7 +36,7 @@ s32 init_controllers(void) {
     osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, gSIMesg);
     osContInit(&sSIMesgQueue, &bitpattern, gControllerStatus);
     osContStartReadData(&sSIMesgQueue);
-    initialise_player_ids();
+    input_assign_players();
 
     sNoControllerPluggedIn = FALSE;
 
@@ -56,7 +56,7 @@ s32 init_controllers(void) {
  * Also reads the latest inputs from the controllers, and sets their values.
  * Official name: joyRead
  */
-s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate) {
+s32 input_update(s32 saveDataFlags, s32 updateRate) {
     Settings **allSaves;
     OSMesg unusedMsg;
     Settings *settings;
@@ -125,7 +125,7 @@ s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate) {
  * Set the first 4 player ID's to the controller numbers, so players can input in the menus after boot.
  * Official name: joyResetMap
  */
-void initialise_player_ids(void) {
+void input_assign_players(void) {
     s32 i;
     for (i = 0; i < MAXCONTROLLERS; i++) {
         sPlayerID[i] = i;
@@ -156,7 +156,7 @@ void charselect_assign_players(s8 *activePlayers) {
  * Returns the id of the selected index.
  * Official name: joyGetController
  */
-u8 get_player_id(s32 player) {
+u8 input_player_id(s32 player) {
     return sPlayerID[player];
 }
 
@@ -164,7 +164,7 @@ u8 get_player_id(s32 player) {
  * Swaps the ID's of the first two indexes.
  * This applies in 2 player adventure, so that player 2 can control the car in the overworld.
  */
-void swap_player_1_and_2_ids(void) {
+void input_swap_id(void) {
     u8 tempID = sPlayerID[0];
     sPlayerID[0] = sPlayerID[1];
     sPlayerID[1] = tempID;
@@ -174,7 +174,7 @@ void swap_player_1_and_2_ids(void) {
  * Returns the buttons that are currently pressed down on the controller.
  * Official name: joyGetButtons
  */
-u16 get_buttons_held_from_player(s32 player) {
+u16 input_held(s32 player) {
     return gControllerCurrData[sPlayerID[player]].button;
 }
 
@@ -183,7 +183,7 @@ u16 get_buttons_held_from_player(s32 player) {
  * NOTE: This was a u16, but we only got a match in menu_ghost_data_loop when it was a u32 for some reason
  * Official name: joyGetPressed
  */
-u32 get_buttons_pressed_from_player(s32 player) {
+u32 input_pressed(s32 player) {
     return gControllerButtonsPressed[sPlayerID[player]];
 }
 
@@ -191,7 +191,7 @@ u32 get_buttons_pressed_from_player(s32 player) {
  * Returns the buttons that are no longer pressed in that frame.
  * Official name: joyGetReleased
  */
-u16 get_buttons_released_from_player(s32 player) {
+u16 input_released(s32 player) {
     return gControllerButtonsReleased[sPlayerID[player]];
 }
 
@@ -199,23 +199,23 @@ u16 get_buttons_released_from_player(s32 player) {
  * Clamps the X joystick axis of the selected player to 70 and returns it.
  * Official name: joyGetStickX
  */
-s32 clamp_joystick_x_axis(s32 player) {
-    return clamp_joystick(gControllerCurrData[sPlayerID[player]].stick_x);
+s32 input_clamp_stick_x(s32 player) {
+    return input_clamp_stick_mag(gControllerCurrData[sPlayerID[player]].stick_x);
 }
 
 /**
  * Clamps the Y joystick axis of the selected player to 70 and returns it.
  * Official name: joyGetStickY
  */
-s32 clamp_joystick_y_axis(s32 player) {
-    return clamp_joystick(gControllerCurrData[sPlayerID[player]].stick_y);
+s32 input_clamp_stick_y(s32 player) {
+    return input_clamp_stick_mag(gControllerCurrData[sPlayerID[player]].stick_y);
 }
 
 /**
  * Keeps the joysticks axis reads no higher than 70 (of a possible 127 or -128)
  * Will also pull the reading towards the centre.
  */
-s8 clamp_joystick(s8 stickMag) {
+s8 input_clamp_stick_mag(s8 stickMag) {
     if (stickMag < JOYSTICK_DEADZONE && stickMag > -JOYSTICK_DEADZONE) {
         return 0;
     }
@@ -237,6 +237,6 @@ s8 clamp_joystick(s8 stickMag) {
  * Used when anti-cheat/anti-tamper has failed in init_level_globals()
  * Official Name: joySetSecurity
  */
-void disable_button_mask(void) {
+void drm_disable_input(void) {
     gButtonMask = 0;
 }
