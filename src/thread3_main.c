@@ -89,12 +89,12 @@ s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4] = { 20, 30, 40, 50 };
 s8 gDrawFrameTimer = 0;
 FadeTransition D_800DD3F4 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 20, 0);
-UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 20, -1);
+UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 20, 0xFFFF);
 s32 sLogicUpdateRate = LOGIC_5FPS;
-FadeTransition gDrumstickSceneTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, -1);
+FadeTransition gDrumstickSceneTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, 0xFFFF);
 UNUSED char *D_800DD410[3] = { "CAR", "HOV", "PLN" };
-FadeTransition gLevelFadeOutTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
-FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
+FadeTransition gLevelFadeOutTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 0xFFFF);
+FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, 0xFFFF);
 
 /*******************************/
 
@@ -318,9 +318,9 @@ void main_game_loop(void) {
     render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     dialogue_close(4);
     dialogue_clear(4);
-    // handle_transitions will perform the logic of transitions and return the transition ID.
-    if (handle_transitions(sLogicUpdateRate)) {
-        render_fade_transition(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
+    // transition_update will perform the logic of transitions and return the transition ID.
+    if (transition_update(sLogicUpdateRate)) {
+        transition_render(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     }
     if (sBootDelayTimer >= 8 && is_controller_missing()) {
         menu_missing_controller(&gCurrDisplayList, sLogicUpdateRate);

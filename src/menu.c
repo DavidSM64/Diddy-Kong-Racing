@@ -628,11 +628,11 @@ s32 sMenuMusicVolume = 0x7F;
 s32 sMenuGuiOpacity = 0xFF;
 s32 unused_800DF768 = 1;
 
-FadeTransition sMenuTransitionFadeInFast = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 10, -1);
-FadeTransition sMenuTransitionFadeIn = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 18, -1);
+FadeTransition sMenuTransitionFadeInFast = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 10, 0xFFFF);
+FadeTransition sMenuTransitionFadeIn = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 18, 0xFFFF);
 FadeTransition sMenuTransitionFadeOut = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 18, 0);
 UNUSED FadeTransition sMenuTransitionFadeInWhite =
-    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 18, -1);
+    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 18, 0xFFFF);
 UNUSED FadeTransition sMenuTransitionFadeOutWhite =
     FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_WHITE, 18, 0);
 
@@ -1927,12 +1927,12 @@ s32 gWoodPanelTexScaleV = 32;
 s16 D_800E1DC8[16] = { 1, 1, -1, 1, -1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1 };
 
 // Fade transition from the logo screen to the title screen.
-FadeTransition gFadeLogoToTitleScreen = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 120, -1);
+FadeTransition gFadeLogoToTitleScreen = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 120, 0xFFFF);
 
 char gRareCopyrightString[24] = "(C) COPYRIGHT RARE 1997";
 
 // Fade transition between levels in the title screen demo.
-FadeTransition gFadeTitleScreenDemo = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 52, -1);
+FadeTransition gFadeTitleScreenDemo = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 52, 0xFFFF);
 
 // Used in savemenu_render_element(). Used for controller pak adventure saves.
 // So the first save in the pak would be (ADV.A), second save (ADV.B), etc.

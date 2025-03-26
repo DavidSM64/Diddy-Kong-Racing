@@ -164,7 +164,7 @@ u32 gMagnetColours[3] = {
     COLOUR_RGBA32(16, 64, 255, 0), // Level 2
     COLOUR_RGBA32(16, 255, 64, 0), // Level 3
 };
-FadeTransition gRaceEndFade = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 40, -1);
+FadeTransition gRaceEndFade = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 40, 0xFFFF);
 FadeTransition gRaceEndTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 40, 0);
 
 /*******************************/

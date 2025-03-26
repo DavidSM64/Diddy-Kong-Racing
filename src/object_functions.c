@@ -36,7 +36,7 @@
 
 // Unsure about the signed/unsigned with these arrays.
 FadeTransition gTajTransformTransitionEnd = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_INVERT, FADE_COLOR_WHITE, 7, 3);
-FadeTransition gTajTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
+FadeTransition gTajTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 0xFFFF);
 
 Vertex gCharacterFlagVertices[4] = {
     { -256, 256, 0, 255, 255, 255, 255 },
