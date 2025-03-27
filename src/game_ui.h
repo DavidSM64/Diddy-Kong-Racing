@@ -10,8 +10,6 @@
 #define HUD_ELEMENT_SPRITE      0x8000
 #define HUD_ELEMENT_TEXTURE     0xC000
 
-#define HUD_ELEMENT_COUNT (sizeof(struct HudData) / sizeof(struct HudElement))
-
 #define HUD_EGG_TOTAL 3
 
 enum CourseIndicatorArrows {
@@ -68,6 +66,70 @@ enum HudElementNames {
     HUD_ELEMENT_UNK_25,
     HUD_ELEMENT_UNK_26,
     HUD_ELEMENT_UNK_27
+};
+
+enum HudTypes {
+    HUD_RACE_POSITION,
+    HUD_RACE_POSITION_END,
+    HUD_WEAPON_DISPLAY,
+    HUD_LAP_COUNT_LABEL,
+    HUD_LAP_COUNT_CURRENT,
+    HUD_LAP_COUNT_SEPERATOR,
+    HUD_LAP_COUNT_TOTAL,
+    HUD_BANANA_COUNT_ICON_SPIN,
+    HUD_BANANA_COUNT_NUMBER_1,
+    HUD_BANANA_COUNT_NUMBER_2,
+    HUD_RACE_TIME_LABEL,
+    HUD_RACE_TIME_NUMBER,
+    HUD_RACE_START_GO,
+    HUD_RACE_START_READY,
+    HUD_RACE_END_FINISH,
+    HUD_MINIMAP_MARKER,
+    HUD_LAP_COUNT_FLAG,
+    HUD_MAGNET_RETICLE,
+    HUD_BANANA_COUNT_X,
+    HUD_BALLOON_COUNT_ICON,
+    HUD_BALLOON_COUNT_X,
+    HUD_BALLOON_COUNT_NUMBER_1,
+    HUD_BALLOON_COUNT_NUMBER_2,
+    HUD_LAP_TIME_TEXT,
+    HUD_TIME_TRIAL_LAP_TEXT,
+    HUD_TIME_TRIAL_LAP_NUMBER,
+    HUD_STOPWATCH_HANDS,
+    HUD_BANANA_COUNT_ICON_STATIC,
+    HUD_BANANA_COUNT_SPARKLE,
+    HUD_LAP_TEXT_FINAL,
+    HUD_LAP_TEXT_LAP,
+    HUD_LAP_TEXT_TWO,
+    HUD_TREASURE_METRE,
+    HUD_COURSE_ARROWS,
+    HUD_STOPWATCH,
+    HUD_WRONGWAY_1,
+    HUD_WRONGWAY_2,
+    HUD_PRO_AM_LOGO,
+    HUD_SPEEDOMETRE_ARROW,
+    HUD_SPEEDOMETRE_0,
+    HUD_SPEEDOMETRE_30,
+    HUD_SPEEDOMETRE_60,
+    HUD_SPEEDOMETRE_90,
+    HUD_SPEEDOMETRE_120,
+    HUD_SPEEDOMETRE_150,
+    HUD_SPEEDOMETRE_BG,
+    HUD_SILVER_COIN_TALLY,
+    HUD_CHALLENGE_FINISH_POS_1,
+    HUD_CHALLENGE_FINISH_POS_2,
+    HUD_WEAPON_QUANTITY,
+    HUD_CHALLENGE_PORTRAIT,
+    HUD_EGG_CHALLENGE_ICON,
+    HUD_BATTLE_BANANA_ICON,
+    HUD_BATTLE_BANANA_X,
+    HUD_BATTLE_BANANA_COUNT_1,
+    HUD_BATTLE_BANANA_COUNT_2,
+    HUD_RACE_FINISH_POS_1,
+    HUD_TWO_PLAYER_ADV_PORTRAIT,
+    HUD_RACE_FINISH_POS_2,
+
+    HUD_ELEMENT_COUNT
 };
 
 enum HudAssets {
@@ -155,98 +217,121 @@ typedef struct HudElementBase {
     s16 spriteOffset;
 } HudElementBase;
 
-typedef struct HudElement {
-    s16 y_rotation;
-    s16 x_rotation;
-    s16 z_rotation;
-    s16 spriteID;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-    s16 spriteOffset;
+typedef struct HudElement_ChallengeEggs {
+    s8 unk1A;
+} HudElement_ChallengeEggs;
+
+typedef struct HudElement_EggChallengeIcon {
+    s8 unk1A;
+} HudElement_EggChallengeIcon;
+
+typedef struct HudElement_RaceStartGo {
+    s8 unk1A[4];
+} HudElement_RaceStartGo;
+
+typedef struct HudElement_BananaCountIconSpin {
+    s8 unk1A;
+    s8 unk1B;
+} HudElement_BananaCountIconSpin;
+
+typedef struct HudElement_BananaCountSparkle {
+    s8 unk1A;
+    s8 unk1B;
+} HudElement_BananaCountSparkle;
+
+typedef struct HudElement_SilverCoinTally {
+    s8 unk1A;
+    s8 unk1B;
+    s8 unk1C;
+} HudElement_SilverCoinTally;
+
+typedef struct HudElement_RaceFinishPos {
     s8 unk1A;
     s8 unk1B;
     s8 unk1C;
     s8 unk1D;
-    s8 unk1E;
-    s8 unk1F;
-} HudElement;
+} HudElement_RaceFinishPos;
 
-typedef struct HudElementArray {
-    s16 y_rotation;
-    s16 x_rotation;
-    s16 z_rotation;
+typedef struct HudElement_RacePosition {
+    s8 unk1A;
+    s8 unk1B;
+    s8 unk1C;
+} HudElement_RacePosition;
+
+typedef struct HudElement_LapCountFlag {
+    s8 unk1A;
+} HudElement_LapCountFlag;
+
+typedef struct HudElement_LapText {
+    s8 unk1A;
+    s8 unk1B;
+    s8 unk1C;
+    s8 unk1D;
+} HudElement_LapText;
+
+typedef struct HudElement_WrongWay {
+    s8 unk1A;
+    s8 unk1B;
+    s8 unk1C;
+    s8 unk1D;
+} HudElement_WrongWay;
+
+typedef struct HudElement_Timer {
+    s8 minutes;
+    s8 seconds;
+    s8 hundredths;
+    s8 unk1D;
+} HudElement_Timer;
+
+typedef struct HudElement_FinishText {
+    s8 unk1A;
+    s8 unk1B;
+    s8 unk1C;
+    s8 unk1D;
+} HudElement_FinishText;
+
+typedef struct HudElement_WeaponDisplay {
+    s8 unk1A;
+    s8 unk1B;
+    s8 unk1C;
+    s8 unk1D;
+} HudElement_WeaponDisplay;
+
+typedef struct HudElement_RaceTimeLabel {
+    s8 unk1A;
+    s8 unk1B;
+} HudElement_RaceTimeLabel;
+
+typedef struct HudElement {
+    Vec3s rotation;
     s16 spriteID;
     f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
+    Vec3f pos;
     s16 spriteOffset;
-    s8 unk1A[6];
-} HudElementArray;
+    union {
+        u8 filler[6]; // Ensures this union is 6 bytes, since Rare never actually use more than four.
+        HudElement_ChallengeEggs challengeEggs;
+        HudElement_EggChallengeIcon eggChallengeIcon;
+        HudElement_RaceStartGo raceStartGo;
+        HudElement_BananaCountIconSpin bananaCountIconSpin;
+        HudElement_BananaCountSparkle bananaCountSparkle;
+        HudElement_SilverCoinTally silverCoinTally;
+        HudElement_RaceFinishPos raceFinishPos;
+        HudElement_RacePosition racePosition;
+        HudElement_LapCountFlag lapCountFlag;
+        HudElement_LapText lapText;
+        HudElement_WrongWay wrongWay;
+        HudElement_Timer timer;
+        HudElement_FinishText finishText;
+        HudElement_WeaponDisplay weaponDisplay;
+        HudElement_RaceTimeLabel raceTimeLabel;
+    };
+    
+} HudElement;
 
 // Size: 0x760
 typedef struct HudData {
-  /* 0x0000 */ HudElement racePostion;
-  /* 0x0020 */ HudElement racePositionEnd;
-  /* 0x0040 */ HudElement weaponDisplay;
-  /* 0x0060 */ HudElement lapCountLabel;
-  /* 0x0080 */ HudElement lapCountCurrent;
-  /* 0x00A0 */ HudElement lapCountSeperator;
-  /* 0x00C0 */ HudElement lapCountTotal;
-  /* 0x00E0 */ HudElement bananaCountIconSpin;
-  /* 0x0100 */ HudElement bananaCountNumber1;
-  /* 0x0120 */ HudElement bananaCountNumber2;
-  /* 0x0140 */ HudElement raceTimeLabel;
-  /* 0x0160 */ HudElement raceTimeNumber;
-  /* 0x0180 */ HudElementArray raceStartGo;
-  /* 0x01A0 */ HudElement raceStartReady;
-  /* 0x01C0 */ HudElement raceEndFinish;
-  /* 0x01E0 */ HudElement minimapMarker;
-  /* 0x0200 */ HudElement lapCountFlag;
-  /* 0x0200 */ HudElement magnetReticle;
-  /* 0x0240 */ HudElement bananaCountX;
-  /* 0x0260 */ HudElement balloonCountIcon;
-  /* 0x0280 */ HudElement balloonCountX;
-  /* 0x02A0 */ HudElement balloonCountNumber1;
-  /* 0x02C0 */ HudElement balloonCountNumber2;
-  /* 0x02E0 */ HudElement lapTimeText;
-  /* 0x0300 */ HudElement timeTrialLapText;
-  /* 0x0320 */ HudElement timeTrialLapNumber;
-  /* 0x0340 */ HudElement stopwatchHands;
-  /* 0x0360 */ HudElement bananaCountIconStatic;
-  /* 0x0380 */ HudElement bananaCountSparkle;
-  /* 0x03A0 */ HudElement lapTextFinal;
-  /* 0x03C0 */ HudElement lapTextLap;
-  /* 0x03E0 */ HudElement lapTextTwo;
-  /* 0x03E0 */ HudElement treasureMetre;
-  /* 0x0440 */ HudElement courseArrows;
-  /* 0x0440 */ HudElement stopwatch;
-  /* 0x0460 */ HudElement wrongWay1;
-  /* 0x0480 */ HudElement wrongWay2;
-  /* 0x04A0 */ HudElement unk4A0;
-  /* 0x04C0 */ HudElement speedometreArrow;
-  /* 0x04E0 */ HudElement speedometreNumber0;
-  /* 0x0500 */ HudElement speedometreNumber30;
-  /* 0x0520 */ HudElement speedometreNumber60;
-  /* 0x0540 */ HudElement speedometreNumber90;
-  /* 0x0560 */ HudElement speedometreNumber120;
-  /* 0x0580 */ HudElement speedometreNumber150;
-  /* 0x05A0 */ HudElement speedometreBG;
-  /* 0x05C0 */ HudElement silverCoinTally;
-  /* 0x05E0 */ HudElement challengeFinishPosition1;
-  /* 0x0600 */ HudElement challengeFinishPosition2;
-  /* 0x0620 */ HudElement weaponQuantity;
-  /* 0x0640 */ HudElement challengePortrait;
-  /* 0x0660 */ HudElement eggChallengeIcon;
-  /* 0x0680 */ HudElement battleBananaIcon;
-  /* 0x06A0 */ HudElement battleBananaX;
-  /* 0x06C0 */ HudElement battleBananaCount1;
-  /* 0x06E0 */ HudElement battleBananaCount2;
-  /* 0x0700 */ HudElement raceFinishPosition1;
-  /* 0x0720 */ HudElement twoPlayerAdvPortrait;
-  /* 0x0740 */ HudElement raceFinishPosition2;
+  /* 0x0000 */ HudElement entry[HUD_ELEMENT_COUNT];
 } HudData;
 
 /* Size: 0x10 bytes */
