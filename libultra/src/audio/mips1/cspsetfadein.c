@@ -1,6 +1,6 @@
 #include <libaudio.h>
 
-void alCSPSetFadeIn(ALSeqPlayer *seqp, u8 chan, ALPan pan) {
+void alCSPSetFadeIn(ALCSPlayer *seqp, u8 chan, ALPan pan) {
     ALEvent       evt;
 
     evt.type            = AL_SEQP_MIDI_EVT;

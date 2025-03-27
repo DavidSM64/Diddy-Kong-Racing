@@ -1,6 +1,6 @@
 #include <libaudio.h>
 
-void func_80063A90(ALSeqPlayer *seqp, u8 chan) {
+void func_80063A90(ALCSPlayer *seqp, u8 chan) {
     ALEvent evt;
 
     evt.type = AL_SEQP_MIDI_EVT;
