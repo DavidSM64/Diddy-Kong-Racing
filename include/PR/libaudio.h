@@ -734,7 +734,7 @@ typedef struct {
     u8          maxChannels;       /* max MIDI channels to support (16)*/
     u8          debugFlags;        /* control which error get reported */
     ALHeap      *heap;             /* ptr to initialized heap          */
-    u8          unknown_0x10;
+    u8          voiceLimit;
     void        *initOsc;
     void        *updateOsc;
     void        *stopOsc;
@@ -798,10 +798,8 @@ typedef struct {
     ALVoiceState        *vAllocHead;    /* list head for allocated voices   */
     ALVoiceState        *vAllocTail;    /* list tail for allocated voices   */
     ALVoiceState        *vFreeList;     /* list of free voice state structs */
-    s8                  unk70;
-    s8                  unk71;
-    s8                  unk72;
-    s8                  unk73;
+    u8                  voiceLimit;
+    u8                  mappedVoices;
     ALOscInit           initOsc;
     ALOscUpdate         updateOsc;
     ALOscStop           stopOsc;
@@ -832,10 +830,8 @@ typedef struct {
     /* 0x64 */ ALVoiceState        *vAllocHead;    /* list head for allocated voices   */
     /* 0x68 */ ALVoiceState        *vAllocTail;    /* list tail for allocated voices   */
     /* 0x6C */ ALVoiceState        *vFreeList;     /* list of free voice state structs */
-    /* 0x70 */ s8                  unk70;
-    /* 0x71 */ s8                  unk71;
-    /* 0x72 */ s8                  unk72;
-    /* 0x73 */ s8                  unk73;
+    /* 0x70 */ u8                  voiceLimit;
+    /* 0x71 */ u8                  mappedVoices;
     /* 0x74 */ ALOscInit           initOsc;
     /* 0x78 */ ALOscUpdate         updateOsc;
     /* 0x7C */ ALOscStop           stopOsc;

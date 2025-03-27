@@ -1,6 +1,6 @@
 #include <libaudio.h>
 
-void alSeqChOff(ALSeqPlayer *seqp, u8 chan) {
+void alSeqChOff(ALCSPlayer *seqp, u8 chan) {
     ALEvent evt;
 
     evt.type = AL_SEQP_MIDI_EVT;
@@ -11,7 +11,7 @@ void alSeqChOff(ALSeqPlayer *seqp, u8 chan) {
     alEvtqPostEvent(&seqp->evtq, &evt, 0);
 }
 
-void alSeqChOn(ALSeqPlayer *seqp, u8 chan) {
+void alSeqChOn(ALCSPlayer *seqp, u8 chan) {
     ALEvent evt;
 
     evt.type = AL_SEQP_MIDI_EVT;

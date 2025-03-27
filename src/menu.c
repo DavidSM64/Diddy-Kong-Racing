@@ -783,8 +783,7 @@ char **gContPakStrings[11] = { NULL,
                                gContPakCorruptDataStrings,
                                gContPakNeed2ndAdvStrings };
 
-s32 unused_800DFC08 = 0;
-s32 unused_800DFC0C = 0xFFFF;
+UNUSED DrawTexture unused_800DFC08[] = { { NULL, 0, -1 } };
 
 /*** Icons in the save options menu. ***/
 DrawTexture gDrawTexN64Icon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
@@ -794,13 +793,13 @@ DrawTexture gDrawTexFileIcon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gDrawTexContPakIcon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gDrawTexTrashIcon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 
-u8 unused_800DFC70[8] = { 0x40, 0x40, 0x04, 0x04, 0xFF, 0, 0, 0 };
+UNUSED s8 unused_800DFC70[] = { 0x40, 0x40, 0x04, 0x04, -1 };
 
-s16 gSaveMenuObjectIndices[26] = { 0x0024, 0x0025, 0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x003D,
-                                   0x003F, 0x003E, 0x003C, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047, 0x0048,
-                                   0x0049, 0x004A, 0x004B, 0x0040, 0x0041, 0x0002, 0xFFFF, 0x0000 };
+s16 gSaveMenuObjectIndices[] = { 0x0024, 0x0025, 0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x003D,
+                                 0x003F, 0x003E, 0x003C, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047, 0x0048,
+                                 0x0049, 0x004A, 0x004B, 0x0040, 0x0041, 0x0002, -1 };
 
-s16 gSaveMenuImageIndices[4] = { 0x000B, 0x000C, 0x0002, 0xFFFF };
+s16 gSaveMenuImageIndices[] = { 0x000B, 0x000C, 0x0002, -1 };
 
 MenuElement gControllerPakMenuElement[7] = {
     { 161, 32, 161, 33, 161, 32, 0, 0, 0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, { { 0, 0, 0, 0 } } },
@@ -2093,14 +2092,14 @@ void load_menu_text(s32 language) {
 
     for (langIndex = 0; sCorruptDataMenuText[langIndex] != NULL; langIndex++) {}
 
-    sCorruptDataMenuText[langIndex] = menuText[ASSET_MENU_TEXT_CORRUPTDATA_1];   // "TRY AGAIN!"
-    sInsertControllerPakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3];  // "If you wish to use"
-    sInsertControllerPakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_4];  // "the Controller Pak"
+    sCorruptDataMenuText[langIndex] = menuText[ASSET_MENU_TEXT_CORRUPTDATA_1];  // "TRY AGAIN!"
+    sInsertControllerPakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3]; // "If you wish to use"
+    sInsertControllerPakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_4]; // "the Controller Pak"
 #if VERSION == VERSION_77
-    sInsertControllerPakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6];  // "insert it now!"
-    sInsertRumblePakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3];      // "If you wish to use"
-    sInsertRumblePakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_5];      // "the Rumble Pak"
-    sInsertRumblePakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6];      // "insert it now!"
+    sInsertControllerPakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6]; // "insert it now!"
+    sInsertRumblePakMenuText[0] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_3];     // "If you wish to use"
+    sInsertRumblePakMenuText[1] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_5];     // "the Rumble Pak"
+    sInsertRumblePakMenuText[2] = menuText[ASSET_MENU_TEXT_INSERTDEVICE_6];     // "insert it now!"
 #else
     // TODO: Figure out what these text values are for these versions.
     sInsertControllerPakMenuText[2] = menuText[161];
@@ -7235,8 +7234,7 @@ void menu_caution_init(void) {
 s32 menu_caution_loop(s32 updateRate) {
     if (gMenuDelay) {
         gMenuDelay += updateRate;
-    } else if (gIgnorePlayerInputTime <= 0 &&
-               (input_pressed(PLAYER_ONE) & (A_BUTTON | B_BUTTON | START_BUTTON))) {
+    } else if (gIgnorePlayerInputTime <= 0 && (input_pressed(PLAYER_ONE) & (A_BUTTON | B_BUTTON | START_BUTTON))) {
         sound_play(SOUND_SELECT2, NULL);
         gMenuDelay = 1;
         transition_begin(&sMenuTransitionFadeIn);

@@ -401,7 +401,7 @@ s32 mempool_locked_set(u8 *address) {
 /**
  * Search the memory pool for the current address.
  * Check if the slot is marked with 0x02.
- * Unset that flag and return 1 if so, otherise 0.
+ * Unset that flag and return 1 if so, otherwise 0.
  */
 s32 mempool_locked_unset(u8 *address) {
     s32 slotIndex;

@@ -5,7 +5,7 @@
 #include "types.h"
 #include "audio_internal.h"
 
-void alSeqChOff(ALSeqPlayer *seqp, u8 chan);
-void alSeqChOn(ALSeqPlayer *seqp, u8 chan);
+void alSeqChOff(ALCSPlayer *seqp, u8 chan);
+void alSeqChOn(ALCSPlayer *seqp, u8 chan);
 
 #endif

@@ -87,8 +87,8 @@ void alCSPNew(ALCSPlayer *seqp, ALSeqpConfig *c)
     seqp->initOsc       = c->initOsc;
     seqp->updateOsc     = c->updateOsc;
     seqp->stopOsc       = c->stopOsc;
-    seqp->unk71         = 0;
-    seqp->unk70         = c->unknown_0x10;
+    seqp->mappedVoices  = 0;
+    seqp->voiceLimit    = c->voiceLimit;
 
     seqp->nextEvent.type = AL_SEQP_API_EVT;	/* this will start the voice handler "spinning" */
 

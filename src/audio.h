@@ -45,12 +45,12 @@ typedef struct DelayedSound {
 
 void  alCSPNew(ALCSPlayer *seqp, ALSeqpConfig *config); //lib/src/al/csplayer.c
 void  alCSPSetBank(ALCSPlayer *seqp, ALBank *b); //lib/src/unknown_0C8660.c
-void set_voice_limit(ALSeqPlayer *seqp, u8 voiceLimit); //lib/src/mips1/alseqplayer.c
+void set_voice_limit(ALCSPlayer *seqp, u8 voiceLimit); //lib/src/mips1/alseqplayer.c
 void    *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib/src/al/alHeapDBAlloc.c
 void alCSPSetChlPan(ALCSPlayer *seqp, u8 channel, ALPan pan); //lib/src/unknown_0C84E0.c
 void alCSPSetChlVol(ALCSPlayer *, u8 channel, u8 volume); //lib/src/unknown_0C84E0.c
 u8 alCSPGetChlVol(ALCSPlayer *seqp, u8 channel); //lib/src/al
-void alCSPSetFadeIn(ALSeqPlayer *seqp, u8 channel, ALPan pan); //lib/src/unknown_0647A0.c
+void alCSPSetFadeIn(ALCSPlayer *seqp, u8 channel, ALPan pan); //lib/src/unknown_0647A0.c
 u8 alCSPGetFadeIn(ALCSPlayer *seqp, u8 channel); //lib/src/mips1/al/unknown_064800.c
 u8 alSeqpGetChlFXMix(ALSeqPlayer *seqp, u8 channel); //lib/src/al/alSeqpGetChlFXMix.c
 void alFxReverbSet(u8 arg0); //lib/src/mips1/al/reverb.c
@@ -112,14 +112,14 @@ u16 sound_count(void);
 u8 music_sequence_count(void);
 void sound_table_properties(SoundData **table, s32 *size, s32 *count);
 u8 gSoundBank_GetSoundDecayTime(u16 soundID);
-ALSeqPlayer *sound_seqplayer_init(s32 maxVoices, s32 maxEvents);
-void music_sequence_start(u8 seqID, ALSeqPlayer *seqPlayer);
-void music_sequence_stop(ALSeqPlayer *seqPlayer);
+ALCSPlayer *sound_seqplayer_init(s32 maxVoices, s32 maxEvents);
+void music_sequence_start(u8 seqID, ALCSPlayer *seqPlayer);
+void music_sequence_stop(ALCSPlayer *seqPlayer);
 void sound_reverb_set(u8 setting);
 void alSeqFileNew(ALSeqFile *file, u8 *base);
-void func_80063A90(ALSeqPlayer *seqp, u8 channel);
+void func_80063A90(ALCSPlayer *seqp, u8 channel);
 void sound_volume_set_relative(u16 soundID, void *soundState, u8 volume);
-void music_sequence_init(ALSeqPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *seq);
+void music_sequence_init(ALCSPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *seq);
 void sound_play(u16 soundID, s32* soundMask);
 f32 music_animation_fraction(void);
 void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z);

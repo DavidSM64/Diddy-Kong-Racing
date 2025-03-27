@@ -6144,7 +6144,6 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     f32 tempF2;
     s32 i;
 
-
     obj->segment.trans.rotation.y_rotation = entry->angleY << 8 << 2; // Two shifts needed to skip a register.
     obj64 = obj->unk64;
     scaleF = (f32) (((s32) entry->scale) & 0xFFFF);
