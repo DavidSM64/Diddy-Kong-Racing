@@ -277,7 +277,7 @@ void main_game_loop(void) {
     rsp_segment(&gCurrDisplayList, SEGMENT_FRAMEBUFFER_OFFSET, (s32) gVideoLastFramebuffer - VI_OFFSET); // Unused
     rsp_init(&gCurrDisplayList);
     rdp_init(&gCurrDisplayList);
-    bgdraw_render(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE);
+    bgdraw_render(&gCurrDisplayList, &gGameCurrMatrix, TRUE);
     gSaveDataFlags = input_update(gSaveDataFlags, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();

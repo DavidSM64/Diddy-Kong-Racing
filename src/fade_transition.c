@@ -38,21 +38,21 @@ Gfx dTransitionFadeSettings[] = {
     gsSPEndDisplayList(),
 };
 
-s16 gTransitionBarnHorizontalData[28] = {
-    -480, 120, -320, 120, -160, 120, 0, 120, 160, 120, 320, 120, 480, 120,
-    -480, -120, -320, -120, -160, -120, 0, -120, 160, -120, 320, -120, 480, -120,
+Vec2s gTransitionBarnHorizontalCoords[14] = {
+    { -480, 120 }, { -320, 120 }, { -160, 120 }, { 0, 120 }, { 160, 120 }, { 320, 120 }, { 480, 120 },
+    { -480, -120 }, { -320, -120 }, { -160, -120 }, { 0, -120 }, { 160, -120 }, { 320, -120 }, { 480, -120 },
 };
 
-s16 gTransitionBarnVerticalData[28] = {
-    -160, 360, -160, 240, -160, 120, -160, 0, -160, -120, -160, -240, -160, -240,
-    160, 360, 160, 240, 160, 120, 160, 0, 160, -120, 160, -240, 160, -240,
+Vec2s gTransitionBarnVerticalCoords[14] = {
+    { -160, 360 }, { -160, 240 }, { -160, 120 }, { -160, 0 }, { -160, -120 }, { -160, -240 }, { -160, -240 },
+    { 160, 360 }, { 160, 240 }, { 160, 120 }, { 160, 0 }, { 160, -120 }, { 160, -240 }, { 160, -240 },
 };
 
-u8 D_800E32A0[12] = {
+TriangleList D_800E32A0[12] = {
     0, 2, 4, 14, 16, 18, 8, 10, 12, 22, 24, 26,
 };
 
-u8 D_800E32AC[12] = {
+TriangleList D_800E32AC[12] = {
     4, 6, 8, 18, 20, 22, 4, 6, 8, 18, 20, 22,
 };
 
@@ -64,16 +64,16 @@ u8 gTransitionBarnDoorAlpha[12] = {
     255, 255, 0, 255, 255, 0, 0, 255, 255, 0, 255, 255,
 };
 
-s16 gTransitionBarnDiagData[24] = {
-    -800, 120, -480, 120, -160, 120, 160, 120, 480, 120, 800, 120,
-    -800, -120, -480, -120, -160, -120, 160, -120, 480, -120, 800, -120,
+Vec2s gTransitionBarnDiagCoords[12] = {
+    { -800, 120 }, { -480, 120 }, { -160, 120 }, { 160, 120 }, { 480, 120 }, { 800, 120 },
+    { -800, -120 }, { -480, -120 }, { -160, -120 }, { 160, -120 }, { 480, -120 }, { 800, -120 },
 };
 
-u8 D_800E330C[12] = {
+TriangleList D_800E330C[12] = {
     0, 2, 4, 12, 14, 8, 10, 18, 20, 22, 0, 0,
 };
 
-u8 D_800E3318[12] = {
+TriangleList D_800E3318[12] = {
     4, 6, 8, 16, 18, 4, 6, 14, 16, 18, 0, 0,
 };
 
@@ -85,16 +85,20 @@ u8 gTransitionBarnDoorDiagAlpha[12] = {
     255, 255, 0, 255, 0, 0, 255, 0, 255, 255, 0, 0,
 };
 
-s16 gTransitionWaveData[126] = {
-    -160, 160, -144, 160, -128, 160, -112, 160, -96, 160, -80, 160, -64, 160,
-    -48, 160, -32, 160, -16, 160, 0, 160, 16, 160, 32, 160, 48, 160,
-    64, 160, 80, 160, 96, 160, 112, 160, 128, 160, 144, 160, 160, 160,
-    -160, -200, -144, -160, -128, -140, -112, -130, -96, -140, -80, -200, -64, -240,
-    -48, -260, -32, -270, -16, -260, 0, -220, 16, -210, 32, -200, 48, -210,
-    64, -220, 80, -260, 96, -270, 112, -260, 128, -220, 144, -160, 160, -140,
-    -160, -280, -144, -280, -128, -280, -112, -280, -96, -280, -80, -280, -64, -280,
-    -48, -280, -32, -280, -16, -280, 0, -280, 16, -280, 32, -280, 48, -280,
-    64, -280, 80, -280, 96, -280, 112, -280, 128, -280, 144, -280, 160, -280,
+Vec2s gTransitionWaveCoords[63] = {
+    { -160, 160 }, { -144, 160 }, { -128, 160 }, { -112, 160 }, { -96, 160 },
+    { -80, 160 }, { -64, 160 }, { -48, 160 }, { -32, 160 }, { -16, 160 },
+    { 0, 160 }, { 16, 160 }, { 32, 160 }, { 48, 160 }, { 64, 160 },
+    { 80, 160 }, { 96, 160 }, { 112, 160 }, { 128, 160 }, { 144, 160 },
+    { 160, 160 }, { -160, -200 }, { -144, -160 }, { -128, -140 }, { -112, -130 },
+    { -96, -140 }, { -80, -200 }, { -64, -240 }, { -48, -260 }, { -32, -270 },
+    { -16, -260 }, { 0, -220 }, { 16, -210 }, { 32, -200 }, { 48, -210 },
+    { 64, -220 }, { 80, -260 }, { 96, -270 }, { 112, -260 }, { 128, -220 },
+    { 144, -160 }, { 160, -140 }, { -160, -280 }, { -144, -280 }, { -128, -280 },
+    { -112, -280 }, { -96, -280 }, { -80, -280 }, { -64, -280 }, { -48, -280 },
+    { -32, -280 }, { -16, -280 }, { 0, -280 }, { 16, -280 }, { 32, -280 },
+    { 48, -280 }, { 64, -280 }, { 80, -280 }, { 96, -280 }, { 112, -280 },
+    { 128, -280 }, { 144, -280 }, { 160, -280 }
 };
 
 u8 D_800E3440[92] = {
@@ -234,22 +238,22 @@ s32 transition_begin(FadeTransition *transition) {
                 transition_fullscreen_start(transition);
                 break;
             case FADE_BARNDOOR_HORIZONTAL:
-                transition_init_shape(transition, 12, 8, gTransitionBarnHorizontalData, D_800E32A0, D_800E32AC,
+                transition_init_shape(transition, 12, 8, (s16 *) gTransitionBarnHorizontalCoords, D_800E32A0, D_800E32AC,
                                       gTransitionBarnDoorAlpha, gTransitionBarnDoorAlpha, gTransitionBarnDoorTris);
                 break;
             case FADE_BARNDOOR_VERTICAL:
-                transition_init_shape(transition, 12, 8, gTransitionBarnVerticalData, D_800E32A0, D_800E32AC,
+                transition_init_shape(transition, 12, 8, (s16 *) gTransitionBarnVerticalCoords, D_800E32A0, D_800E32AC,
                                       gTransitionBarnDoorAlpha, gTransitionBarnDoorAlpha, gTransitionBarnDoorTris);
                 break;
             case FADE_CIRCLE:
                 transition_init_circle(transition);
                 break;
             case FADE_WAVES:
-                transition_init_shape(transition, 92, 80, gTransitionWaveData, D_800E349C, D_800E3440,
+                transition_init_shape(transition, 92, 80, (s16 *) gTransitionWaveCoords, D_800E349C, D_800E3440,
                                       gTransitionWaveAlpha, gTransitionWaveAlpha, gTransitionWaveTris);
                 break;
             case FADE_BARNDOOR_DIAGONAL:
-                transition_init_shape(transition, 10, 6, gTransitionBarnDiagData, D_800E330C, D_800E3318,
+                transition_init_shape(transition, 10, 6, (s16 *) gTransitionBarnDiagCoords, D_800E330C, D_800E3318,
                                       gTransitionBarnDoorDiagAlpha, gTransitionBarnDoorDiagAlpha,
                                       gTransitionBarnDoorDiagTris);
                 break;
@@ -311,40 +315,40 @@ s32 transition_update(s32 updateRate) {
  * The rendering portion of transitions.
  * First establishes an orthogonal matrix, then renders a transition effect onscreen.
  */
-void transition_render(Gfx **dList, MatrixS **mats, Vertex **verts) {
+void transition_render(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
     if (sTransitionStatus != TRANSITION_NONE) {
         if (osTvType == OS_TV_TYPE_PAL) {
             set_ortho_matrix_height(1.4f);
         } else {
             set_ortho_matrix_height(1.2f);
         }
-        set_ortho_matrix_view(dList, mats);
+        set_ortho_matrix_view(dList, mtx);
         set_ortho_matrix_height(1.0f);
         switch (gCurFadeTransition) {
             case FADE_FULLSCREEN:
-                transition_render_fullscreen(dList, mats, verts);
+                transition_render_fullscreen(dList, mtx, vtx);
                 break;
             case FADE_BARNDOOR_HORIZONTAL:
-                transition_render_barndoor_hor(dList, mats, verts);
+                transition_render_barndoor_hor(dList, mtx, vtx);
                 break;
             case FADE_BARNDOOR_VERTICAL:
-                transition_render_barndoor_vert(dList, mats, verts);
+                transition_render_barndoor_vert(dList, mtx, vtx);
                 break;
             case FADE_CIRCLE:
-                transition_render_circle(dList, mats, verts);
+                transition_render_circle(dList, mtx, vtx);
                 break;
             case FADE_WAVES:
-                transition_render_waves(dList, mats, verts);
+                transition_render_waves(dList, mtx, vtx);
                 break;
             case FADE_BARNDOOR_DIAGONAL:
-                transition_render_barndoor_diag(dList, mats, verts);
+                transition_render_barndoor_diag(dList, mtx, vtx);
                 break;
             case FADE_DISABLED:
-                transition_render_blank(dList, mats, verts);
+                transition_render_blank(dList, mtx, vtx);
                 break;
         }
 
-        func_80066CDC(dList, mats);
+        func_80066CDC(dList, mtx);
     }
 }
 
@@ -425,7 +429,7 @@ void transition_update_fullscreen(s32 updateRate) {
 /**
  * Draws a simple fillrect covering the whole screen that fades in or out.
  */
-void transition_render_fullscreen(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+void transition_render_fullscreen(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
     s32 screenSize = fb_size();
     gSPDisplayList((*dList)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dList)++, 0, 0, gCurFadeRed, gCurFadeGreen, gCurFadeBlue, gCurFadeAlpha);
@@ -553,7 +557,7 @@ void transition_update_shape(s32 updateRate) {
 /**
  * Renders a transition effect on screen that will close in from both sides horizonally.
  */
-void transition_render_barndoor_hor(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+void transition_render_barndoor_hor(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
     reset_render_settings(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
     gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum]), 12, 0);
@@ -565,7 +569,7 @@ void transition_render_barndoor_hor(Gfx **dList, UNUSED MatrixS **mats, UNUSED V
  * Renders a transition effect on screen that will close in from both sides vertically.
  * Codewise, exactly the same as above, but uses a different vertex layout to make the difference.
  */
-void transition_render_barndoor_vert(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+void transition_render_barndoor_vert(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
     reset_render_settings(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
     gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum]), 12, 0);
@@ -733,7 +737,7 @@ void transition_update_circle(s32 updateRate) {
 /**
  * Render a circle shape transition onscreen using previously allocated geometry.
  */
-void transition_render_circle(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+void transition_render_circle(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
     Vertex *vertsToRender;
     Triangle *trisToRender;
     Gfx *gfx;
@@ -760,7 +764,7 @@ void transition_render_circle(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex 
 /**
  * Render the wavy transition onscreen using the vertex data allocated earlier.
  */
-void transition_render_waves(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+void transition_render_waves(Gfx **dlist, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
     Gfx *gfx;
     s32 i;
     Vertex *v;
@@ -798,7 +802,7 @@ void transition_render_waves(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex *
 /**
  * Renders a transition effect on screen that will close in from the opposite corners of the screen.
  */
-void transition_render_barndoor_diag(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+void transition_render_barndoor_diag(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
     reset_render_settings(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
     gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum]), 10, 0);
@@ -826,7 +830,7 @@ void transition_init_blank(UNUSED FadeTransition *transition) {
  * Shifts the colours of the transition over time while the timer ticks down.
  */
 void transition_update_blank(s32 updateRate) {
-    s32 var_v0;
+    s32 var_v0 = FALSE;
     do {
         var_v0 = TRUE;
         if (sTransitionFadeTimer > 0) {
@@ -856,7 +860,7 @@ void transition_update_blank(s32 updateRate) {
 /**
  * Fill the whole screen with a solid colour.
  */
-void transition_render_blank(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+void transition_render_blank(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
     s32 screenSize = fb_size();
     gSPDisplayList((*dList)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dList)++, 0, 0, (gLastFadeRed >> 16), (gLastFadeGreen >> 16), (gLastFadeBlue >> 16), 255);

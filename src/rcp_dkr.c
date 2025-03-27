@@ -5,6 +5,7 @@
 #include "video.h"
 #include "camera.h"
 #include "set_rsp_segment.h"
+#include "racer.h"
 
 /************ .data ************/
 
@@ -406,7 +407,7 @@ void bgdraw_fillcolour(s32 red, s32 green, s32 blue) {
  * over clearing the colour buffer.
  * Official Name: rcpClearScreen
  */
-void bgdraw_render(Gfx **dList, Matrix *mtx, s32 drawBG) {
+void bgdraw_render(Gfx **dList, MatrixS **mtx, s32 drawBG) {
     s32 widthAndHeight;
     s32 w;
     s32 h;
@@ -429,13 +430,13 @@ void bgdraw_render(Gfx **dList, Matrix *mtx, s32 drawBG) {
     gDPPipeSync((*dList)++);
     gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_FRAMEBUFFER << 24);
     if (drawBG) {
-        if (check_viewport_background_flag(0)) {
+        if (check_viewport_background_flag(PLAYER_ONE)) {
             if (gChequerBGEnabled) {
                 bgdraw_chequer(dList); // Unused
             } else if (gTexBGTex1) {
                 func_80078190(dList);
             } else if (gBGDrawFunc.ptr != NULL) {
-                gBGDrawFunc.function((Gfx *) dList, mtx);
+                gBGDrawFunc.function(dList, mtx);
             } else {
                 gDPSetFillColor((*dList)++, sBackgroundFillColour);
                 gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
@@ -455,7 +456,7 @@ void bgdraw_render(Gfx **dList, Matrix *mtx, s32 drawBG) {
             } else if (gTexBGTex1) {
                 func_80078190(dList);
             } else if (gBGDrawFunc.ptr != NULL) {
-                gBGDrawFunc.function((Gfx *) dList, mtx);
+                gBGDrawFunc.function(dList, mtx);
             } else {
                 gDPSetFillColor((*dList)++,
                                 (GPACK_RGBA5551(sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 1) << 16) |

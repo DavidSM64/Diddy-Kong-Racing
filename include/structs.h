@@ -24,6 +24,16 @@ typedef struct Vec3f {
   };
 } Vec3f;
 
+typedef struct Vec2f {
+  union {
+    struct {
+      f32 x;
+      f32 y;
+    };
+    f32 f[23];
+  };
+} Vec2f;
+
 typedef struct Vec3s {
   union {
     struct {
@@ -39,6 +49,20 @@ typedef struct Vec3s {
     s16 s[3];
   };
 } Vec3s;
+
+typedef struct Vec2s {
+  union {
+    struct {
+      s16 y_rotation;
+      s16 x_rotation;
+    };
+    struct {
+      s16 x;
+      s16 y;
+    };
+    s16 s[2];
+  };
+} Vec2s;
 
 typedef struct Vec3i {
   union {
