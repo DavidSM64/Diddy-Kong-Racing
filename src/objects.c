@@ -164,7 +164,7 @@ u32 gMagnetColours[3] = {
     COLOUR_RGBA32(16, 64, 255, 0), // Level 2
     COLOUR_RGBA32(16, 255, 64, 0), // Level 3
 };
-FadeTransition gRaceEndFade = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 40, 0xFFFF);
+FadeTransition gRaceEndFade = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 40, FADE_STAY);
 FadeTransition gRaceEndTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 40, 0);
 
 /*******************************/
@@ -3089,24 +3089,24 @@ void func_80012C30(void) {
     D_8011ADA4 = 0;
 }
 
-void func_80012C3C(Gfx **dlist) {
+void func_80012C3C(Gfx **dList) {
     s32 i;
     for (i = 0; i < D_8011ADA4; i++) {
-        gSPDisplayList((*dlist)++, D_8011AD78[i]);
+        gSPDisplayList((*dList)++, D_8011AD78[i]);
     }
 }
 
-void func_80012C98(Gfx **dlist) {
+void func_80012C98(Gfx **dList) {
     if (D_8011ADA4 < 9) {
-        gSPNoOp((*dlist)++); // Placeholder instruction?
-        D_8011AD78[D_8011ADA4] = *dlist;
+        gSPNoOp((*dList)++); // Placeholder instruction?
+        D_8011AD78[D_8011ADA4] = *dList;
     }
 }
 
-void func_80012CE8(Gfx **dlist) {
+void func_80012CE8(Gfx **dList) {
     if (D_8011ADA4 < 9) {
-        gSPEndDisplayList((*dlist)++);
-        gSPBranchList(D_8011AD78[D_8011ADA4] - 1, *dlist);
+        gSPEndDisplayList((*dList)++);
+        gSPBranchList(D_8011AD78[D_8011ADA4] - 1, *dList);
         D_8011ADA4++;
     }
 }
@@ -3540,7 +3540,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
  * Loop through every object.
  * Check which ones have 3D models and count down the update timer.
  * The object will update its animation at 0.
-*/
+ */
 void obj_tick_anims(void) {
     s32 i = gObjectListStart;
     s32 j;
@@ -3580,9 +3580,9 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
     s32 texToSetFlags;
     Triangle *tris;
     s32 vertOffset;
-    Gfx *dlist;
+    Gfx *dList;
 
-    dlist = gObjectCurrDisplayList;
+    dList = gObjectCurrDisplayList;
     i = startIndex;
     endLoop = FALSE;
     while (i < objModel->numberOfBatches && !endLoop) {
@@ -3615,27 +3615,27 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
                     texToSetFlags |= RENDER_SEMI_TRANSPARENT;
                 }
                 if (gObjectTexAnim == FALSE) {
-                    load_and_set_texture(&dlist, texToSet, texToSetFlags, texOffset);
+                    load_and_set_texture(&dList, texToSet, texToSetFlags, texOffset);
                 } else {
                     texToSet = set_animated_texture_header(texToSet, texOffset);
                     gDkrDmaDisplayList(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(texToSet->cmd),
                                        texToSet->numberOfCommands);
                 }
                 if (offsetStartVertex == numVertices) {
-                    gSPVertexDKR(dlist++, OS_K0_TO_PHYSICAL(vtx), numVertices, 0);
+                    gSPVertexDKR(dList++, OS_K0_TO_PHYSICAL(vtx), numVertices, 0);
                 } else {
                     if (offsetStartVertex > 0) {
-                        gSPVertexDKR(dlist++, OS_K0_TO_PHYSICAL(vtx), offsetStartVertex, 0);
-                        gDkrInsertMatrix(dlist++, 0, G_MTX_DKR_INDEX_2);
-                        gSPVertexDKR(dlist++, OS_K0_TO_PHYSICAL(&vtx[offsetStartVertex]),
+                        gSPVertexDKR(dList++, OS_K0_TO_PHYSICAL(vtx), offsetStartVertex, 0);
+                        gDkrInsertMatrix(dList++, 0, G_MTX_DKR_INDEX_2);
+                        gSPVertexDKR(dList++, OS_K0_TO_PHYSICAL(&vtx[offsetStartVertex]),
                                      (numVertices - offsetStartVertex), 1);
                     } else {
-                        gDkrInsertMatrix(dlist++, 0, G_MTX_DKR_INDEX_2);
-                        gSPVertexDKR(dlist++, OS_K0_TO_PHYSICAL(vtx), numVertices, 0);
+                        gDkrInsertMatrix(dList++, 0, G_MTX_DKR_INDEX_2);
+                        gSPVertexDKR(dList++, OS_K0_TO_PHYSICAL(vtx), numVertices, 0);
                     }
-                    gDkrInsertMatrix(dlist++, 0, G_MTX_DKR_INDEX_1);
+                    gDkrInsertMatrix(dList++, 0, G_MTX_DKR_INDEX_1);
                 }
-                gSPPolygon(dlist++, OS_K0_TO_PHYSICAL(tris), numTris, texEnabled);
+                gSPPolygon(dList++, OS_K0_TO_PHYSICAL(tris), numTris, texEnabled);
             }
             i++;
         } else {
@@ -3645,7 +3645,7 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
     if (i >= objModel->numberOfBatches) {
         i = -1;
     }
-    gObjectCurrDisplayList = dlist;
+    gObjectCurrDisplayList = dList;
     return i;
 }
 
@@ -5040,18 +5040,18 @@ Object *get_racer_object_by_port(s32 index) {
  * Unused function that would've iterated through all active checkpoints to render their visual nodes.
  * The function it calls is completely stubbed out.
  */
-UNUSED void debug_render_checkpoints(Gfx **dlist, MatrixS **mtx, Vertex **vtx) {
+UNUSED void debug_render_checkpoints(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
     s32 i;
 
-    load_and_set_texture_no_offset(dlist, NULL, RENDER_Z_COMPARE);
+    load_and_set_texture_no_offset(dList, NULL, RENDER_Z_COMPARE);
     if (gNumberOfCheckpoints > 3) {
         for (i = 0; i < gNumberOfCheckpoints; i++) {
             // Ground path
-            debug_render_checkpoint_node(i, 0, dlist, mtx, vtx);
+            debug_render_checkpoint_node(i, 0, dList, mtx, vtx);
         }
         for (i = 0; i < gNumberOfCheckpoints; i++) {
             // Air path
-            debug_render_checkpoint_node(i, 1, dlist, mtx, vtx);
+            debug_render_checkpoint_node(i, 1, dList, mtx, vtx);
         }
     }
 }

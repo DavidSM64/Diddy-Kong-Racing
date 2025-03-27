@@ -193,8 +193,8 @@ s32 gfxtask_run_xbus(Gfx *dlBegin, Gfx *dlEnd, UNUSED s32 recvMesg) {
     dkrtask->task.output_buff_size = NULL;
     dkrtask->next = NULL;
     dkrtask->frameBuffer = gVideoCurrFramebuffer;
-    dkrtask->unused60 = 0xFF;
-    dkrtask->unused64 = 0xFF;
+    dkrtask->unused60 = COLOUR_TAG_BLACK;
+    dkrtask->unused64 = COLOUR_TAG_BLACK;
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, OS_MESG_BLOCK);
     return 0;
@@ -236,8 +236,8 @@ UNUSED void gfxtask_run_xbus2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     dkrtask->frameBuffer = gVideoCurrFramebuffer;
     dkrtask->unused58 = COLOUR_TAG_RED;
     dkrtask->unused5C = COLOUR_TAG_RED;
-    dkrtask->unused60 = 0xFF;
-    dkrtask->unused64 = 0xFF;
+    dkrtask->unused60 = COLOUR_TAG_BLACK;
+    dkrtask->unused64 = COLOUR_TAG_BLACK;
     dkrtask->unk68 = FALSE;
 
     if (recvMesg) {
@@ -515,7 +515,7 @@ void bgdraw_texture_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
  * https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
  * Official Name: rcpMosaicClear
  */
-void func_80078190(Gfx **dlist) {
+void func_80078190(Gfx **dList) {
     s32 texture1And2UpperHeight;
     s32 videoHeight;
     s32 videoWidth;
@@ -537,10 +537,10 @@ void func_80078190(Gfx **dlist) {
     widthAndHeight = fb_size();
     videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
     videoHeight = GET_VIDEO_HEIGHT(widthAndHeight);
-    gSPDisplayList((*dlist)++, dRaceFinishBackgroundSettings);
+    gSPDisplayList((*dList)++, dRaceFinishBackgroundSettings);
 
     if (gTexBGTex2 == NULL) {
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gTexBGTex1->cmd), gTexBGTex1->numberOfCommands);
+        gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(gTexBGTex1->cmd), gTexBGTex1->numberOfCommands);
         upperVideoWidth = videoWidth << 2;
         upperVideoHeight = videoHeight << 2;
         texture1UpperWidth = gTexBGTex1->width << 2;
@@ -556,16 +556,16 @@ void func_80078190(Gfx **dlist) {
                 t = 0;
                 if (ulx < 0) {
                     s = -(ulx << 3);
-                    gSPTextureRectangle((*dlist)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
                 } else {
-                    gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
                 }
                 ulx = lrx;
             }
             var_s3 = (var_s3 + gTexBGShiftX) & (texture1UpperWidth - 1);
         }
     } else {
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gTexBGTex1->cmd), gTexBGTex1->numberOfCommands);
+        gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(gTexBGTex1->cmd), gTexBGTex1->numberOfCommands);
         upperVideoWidth = videoWidth << 2;
         upperVideoHeight = videoHeight << 2;
         texture1UpperWidth = gTexBGTex1->width << 2;
@@ -583,15 +583,15 @@ void func_80078190(Gfx **dlist) {
                 t = 0;
                 if (ulx < 0) {
                     s = -(ulx << 3);
-                    gSPTextureRectangle((*dlist)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
                 } else {
-                    gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
                 }
                 ulx = lrx;
             }
             var_s3 = (var_s3 + gTexBGShiftX) & (texture1UpperWidth - 1);
         }
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(gTexBGTex2->cmd), gTexBGTex2->numberOfCommands);
+        gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(gTexBGTex2->cmd), gTexBGTex2->numberOfCommands);
         upperVideoWidth <<= 2;
         upperVideoHeight <<= 2;
         var_s3 = 0;
@@ -605,16 +605,16 @@ void func_80078190(Gfx **dlist) {
                 t = 0;
                 if (ulx < 0) {
                     s = -(ulx << 3);
-                    gSPTextureRectangle((*dlist)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
                 } else {
-                    gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
                 }
                 ulx = lrx;
             }
             var_s3 = (var_s3 + gTexBGShiftX) & (texture1UpperWidth - 1);
         }
     }
-    gDPPipeSync((*dlist)++);
+    gDPPipeSync((*dList)++);
 }
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/rcp_dkr/func_80078190.s")
@@ -737,7 +737,7 @@ void texrect_draw(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red,
  * Typically, you do these shifts in the draw call itself, but Rare decided to do it beforehand.
  * Also applies texel shifting in order to apply scaling.
  */
-void texrect_draw_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour,
+void texrect_draw_scaled(Gfx **dList, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour,
                          s32 flags) {
     TextureHeader *tex;
     Gfx *dmaDlist;
@@ -768,9 +768,9 @@ void texrect_draw_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, 
         dmaDlist = dTextureRectangleScaledXlu[(u8) flags & 0xFF];
     }
 
-    gSPDisplayList((*dlist)++, dScaledRectangleBaseModes);
-    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dmaDlist), numberOfGfxCommands(dTextureRectangleScaledOpa[0]));
-    gDPSetPrimColorRGBA((*dlist)++, colour);
+    gSPDisplayList((*dList)++, dScaledRectangleBaseModes);
+    gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(dmaDlist), numberOfGfxCommands(dTextureRectangleScaledOpa[0]));
+    gDPSetPrimColorRGBA((*dList)++, colour);
 
     bFlipX = flags & TEXRECT_FLIP_X;
     bFlipY = flags & TEXRECT_FLIP_Y;
@@ -823,12 +823,12 @@ void texrect_draw_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, 
                     uly = 0;
                 }
 
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
-                gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, dsdx, dtdy);
+                gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+                gSPTextureRectangle((*dList)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, dsdx, dtdy);
             }
         }
     }
 
-    gDPPipeSync((*dlist)++);
-    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+    gDPPipeSync((*dList)++);
+    gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
 }

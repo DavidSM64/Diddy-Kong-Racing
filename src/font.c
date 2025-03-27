@@ -110,7 +110,7 @@ typedef struct Unk8012C2D4_JP {
     char unk0;
     char unk1;
     u16 unk2;
-    Gfx *dlist;
+    Gfx *dList;
 } Unk8012C2D4_JP;
 
 FontData_JP *D_8012C2A4_EE5E4;
@@ -1120,7 +1120,7 @@ void clear_dialogue_box_open_flag(s32 dialogueBoxID) {
  * when the player exits out of one.
  * Official Name: fontWindowsDraw
  */
-void render_dialogue_boxes(Gfx **dlist, MatrixS **mat, Vertex **verts) {
+void render_dialogue_boxes(Gfx **dList, MatrixS **mat, Vertex **verts) {
     s32 i;
 
     if (sDialogueBoxIsOpen) {
@@ -1134,9 +1134,9 @@ void render_dialogue_boxes(Gfx **dlist, MatrixS **mat, Vertex **verts) {
     for (i = 1; i < DIALOGUEBOXBACKGROUND_COUNT; i++) {
         if (gDialogueBoxBackground[i].flags & DIALOGUE_BOX_OPEN) {
             if (gDialogueBoxBackground[i].flags & DIALOGUE_BOX_VERTS) {
-                render_dialogue_box(dlist, mat, verts, i);
+                render_dialogue_box(dList, mat, verts, i);
             } else {
-                render_dialogue_box(dlist, NULL, NULL, i);
+                render_dialogue_box(dList, NULL, NULL, i);
             }
         }
     }
@@ -1190,7 +1190,7 @@ void s32_to_string(char **outString, s32 number) {
  * ulx, uly = upper-left position
  * lrx, lry = lower-right position
  */
-void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
+void render_fill_rectangle(Gfx **dList, s32 ulx, s32 uly, s32 lrx, s32 lry) {
     u32 widthAndHeight = fb_size();
     u32 width = GET_VIDEO_WIDTH(widthAndHeight);
     u32 height = GET_VIDEO_HEIGHT(widthAndHeight);
@@ -1202,7 +1202,7 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
         if (uly < 0) {
             uly = 0;
         }
-        gDPFillRectangle((*dlist)++, ulx, uly, lrx, lry);
+        gDPFillRectangle((*dList)++, ulx, uly, lrx, lry);
     }
 }
 
@@ -1210,7 +1210,7 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
  * Render the selected dialogue box. Background first, then text.
  * Official Name: fontWindowDraw
  */
-void render_dialogue_box(Gfx **dlist, MatrixS **mat, Vertex **verts, s32 dialogueBoxID) {
+void render_dialogue_box(Gfx **dList, MatrixS **mat, Vertex **verts, s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;
     DialogueBox *dialogueTextBox;
     s32 i;
@@ -1222,24 +1222,24 @@ void render_dialogue_box(Gfx **dlist, MatrixS **mat, Vertex **verts, s32 dialogu
 
     // Render dialogue box background.
     if (dialogueBox->backgroundColourA != 0) {
-        gSPDisplayList((*dlist)++, dDialogueBoxBegin);
-        gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[1]), 2);
-        gDPSetEnvColor((*dlist)++, 0, 0, 0, 0);
+        gSPDisplayList((*dList)++, dDialogueBoxBegin);
+        gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[1]), 2);
+        gDPSetEnvColor((*dList)++, 0, 0, 0, 0);
         if (dialogueBox->x2 - dialogueBox->x1 < 10 || dialogueBox->y2 - dialogueBox->y1 < 10) {
-            render_fill_rectangle(dlist, dialogueBox->x1 - 2, dialogueBox->y1 - 2, dialogueBox->x2 + 2,
+            render_fill_rectangle(dList, dialogueBox->x1 - 2, dialogueBox->y1 - 2, dialogueBox->x2 + 2,
                                   dialogueBox->y2 + 2);
         } else {
-            render_fill_rectangle(dlist, dialogueBox->x1 - 2, dialogueBox->y1 + 2, dialogueBox->x1 + 2,
+            render_fill_rectangle(dList, dialogueBox->x1 - 2, dialogueBox->y1 + 2, dialogueBox->x1 + 2,
                                   dialogueBox->y2 - 2);
-            render_fill_rectangle(dlist, dialogueBox->x1 - 2, dialogueBox->y1 - 2, dialogueBox->x2 + 2,
+            render_fill_rectangle(dList, dialogueBox->x1 - 2, dialogueBox->y1 - 2, dialogueBox->x2 + 2,
                                   dialogueBox->y1 + 2);
-            render_fill_rectangle(dlist, dialogueBox->x2 - 2, dialogueBox->y1 + 2, dialogueBox->x2 + 2,
+            render_fill_rectangle(dList, dialogueBox->x2 - 2, dialogueBox->y1 + 2, dialogueBox->x2 + 2,
                                   dialogueBox->y2 - 2);
-            render_fill_rectangle(dlist, dialogueBox->x1 - 2, dialogueBox->y2 - 2, dialogueBox->x2 + 2,
+            render_fill_rectangle(dList, dialogueBox->x1 - 2, dialogueBox->y2 - 2, dialogueBox->x2 + 2,
                                   dialogueBox->y2 + 2);
         }
-        gDPPipeSync((*dlist)++);
-        gDPSetEnvColor((*dlist)++, dialogueBox->backgroundColourR, dialogueBox->backgroundColourG,
+        gDPPipeSync((*dList)++);
+        gDPSetEnvColor((*dList)++, dialogueBox->backgroundColourR, dialogueBox->backgroundColourG,
                        dialogueBox->backgroundColourB, dialogueBox->backgroundColourA);
         // Loops through sDialogueBoxDimensions, rendering fillrects until it forms a rounded rectangle.
         // The array determines the width and height of each entry before drawing it.
@@ -1250,9 +1250,9 @@ void render_dialogue_box(Gfx **dlist, MatrixS **mat, Vertex **verts, s32 dialogu
             x2 = dialogueBox->x2 - sDialogueBoxDimensions[i];
             y2 = (sDialogueBoxDimensions[i + 3]) ? sDialogueBoxDimensions[i + 4] + dialogueBox->y2
                                                  : sDialogueBoxDimensions[i + 4] + dialogueBox->y1;
-            render_fill_rectangle(dlist, x1, y1, x2, y2);
+            render_fill_rectangle(dList, x1, y1, x2, y2);
         }
-        gDPPipeSync((*dlist)++);
+        gDPPipeSync((*dList)++);
     }
     if (mat != NULL && verts != NULL) {
         if (sDialogueBoxIsOpen == FALSE) {
@@ -1260,7 +1260,7 @@ void render_dialogue_box(Gfx **dlist, MatrixS **mat, Vertex **verts, s32 dialogu
             sDialogueBoxIsOpen = TRUE;
         }
         sDialogueBoxCloseTimer = 2;
-        dialogue_ortho(dialogueBox, dlist, mat, verts);
+        dialogue_ortho(dialogueBox, dList, mat, verts);
     }
     // Set and render the text portions of the dialogue box.
     dialogueTextBox = dialogueBox->textBox;
@@ -1278,7 +1278,7 @@ void render_dialogue_box(Gfx **dlist, MatrixS **mat, Vertex **verts, s32 dialogu
         dialogueBox->opacity = dialogueTextBox->opacity;
         dialogueBox->font = dialogueTextBox->font;
         parse_string_with_number(dialogueTextBox->text, text, dialogueTextBox->textNum);
-        render_text_string(dlist, dialogueBox, text, 0, 1.0f);
+        render_text_string(dList, dialogueBox, text, 0, 1.0f);
         dialogueTextBox = dialogueTextBox->nextBox;
     }
 }
@@ -1339,7 +1339,7 @@ void func_800C6464_C7064(void) {
     D_8012C2CC_EE60C = mempool_alloc_safe(0x9000, COLOUR_TAG_RED);
     for (i = 0, charIndex = 0; i < 128; i++) {
         D_8012C2C8_EE608[i].unk0 = 0;
-        D_8012C2C8_EE608[i].dlist = &D_8012C2C4_EE604[charIndex];
+        D_8012C2C8_EE608[i].dList = &D_8012C2C4_EE604[charIndex];
         if (i & 1) {
             charIndex += 10;
         } else {
@@ -1384,7 +1384,7 @@ void func_800C663C_C723C(void) {
     var_v0 = 0;
     for (i = 0; i < 0x80; i++) {
         D_8012C2D4_EE614[i].unk0 = 0;
-        D_8012C2D4_EE614[i].dlist = &D_8012C2D0_EE610[var_v0];
+        D_8012C2D4_EE614[i].dList = &D_8012C2D0_EE610[var_v0];
         if (i & 1) {
             var_v0 += 10;
         } else {
@@ -1480,7 +1480,7 @@ s32 func_800C68CC_C74CC(u16 arg0) {
                                   D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].offsetToData +
                                       (D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].bytesPerCharacter * arg0),
                                   D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].bytesPerCharacter);
-            func_800C6DD4_C79D4((*D_8012C2BC_EE5FC)[curIndex].dlist, asset, D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].x,
+            func_800C6DD4_C79D4((*D_8012C2BC_EE5FC)[curIndex].dList, asset, D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].x,
                                 D_8012C2A4_EE5E4[D_8012C2B8_EE5F8].y);
         }
 
@@ -1488,7 +1488,7 @@ s32 func_800C68CC_C74CC(u16 arg0) {
     }
 }
 
-void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height) {
+void func_800C6DD4_C79D4(Gfx *dList, Asset46 *asset, s32 width, s32 height) {
     if (asset->unk0 != -1) {
         asset->unk0 = (s32) asset + asset->unk0;
     } else {
@@ -1501,7 +1501,7 @@ void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height) {
     }
 
     if (asset->unk4 != NULL) {
-        gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height,
+        gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height,
                              0,                         // palette
                              G_TX_NOMIRROR | G_TX_WRAP, // cms
                              G_TX_NOMIRROR | G_TX_WRAP, // cmt
@@ -1510,7 +1510,7 @@ void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height) {
                              G_TX_NOLOD,                // shifts
                              G_TX_NOLOD);               // shiftt
 
-        gDPLoadMultiBlock_4bS(dlist++, OS_PHYSICAL_TO_K0(asset->unk4), 0x100, 1, G_IM_FMT_I, width, height,
+        gDPLoadMultiBlock_4bS(dList++, OS_PHYSICAL_TO_K0(asset->unk4), 0x100, 1, G_IM_FMT_I, width, height,
                               0,                         // palette
                               G_TX_NOMIRROR | G_TX_WRAP, // cms
                               G_TX_NOMIRROR | G_TX_WRAP, // cmt
@@ -1519,12 +1519,12 @@ void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height) {
                               G_TX_NOLOD,                // shifts
                               G_TX_NOLOD);               // shiftt
 
-        gDkrDmaDisplayList(dlist++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[2]),
+        gDkrDmaDisplayList(dList++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[2]),
                            numberOfGfxCommands(dDialogueBoxDrawModes[1]));
     } else {
         switch (asset->unk8) {
             case 0: // RGBA32
-                gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_32b, width,
+                gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_32b, width,
                                      height,
                                      0,                         // palette
                                      G_TX_NOMIRROR | G_TX_WRAP, // cms
@@ -1535,7 +1535,7 @@ void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height) {
                                      G_TX_NOLOD);               // shiftt
                 break;
             case 1: // RGBA16
-                gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_16b, width,
+                gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_16b, width,
                                      height,
                                      0,                         // palette
                                      G_TX_NOMIRROR | G_TX_WRAP, // cms
@@ -1546,7 +1546,7 @@ void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height) {
                                      G_TX_NOLOD);               // shiftt
                 break;
             case 5: // IA8
-                gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_IA, G_IM_SIZ_8b, width, height,
+                gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_IA, G_IM_SIZ_8b, width, height,
                                      0,                         // palette
                                      G_TX_NOMIRROR | G_TX_WRAP, // cms
                                      G_TX_NOMIRROR | G_TX_WRAP, // cmt
@@ -1556,7 +1556,7 @@ void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height) {
                                      G_TX_NOLOD);               // shiftt
                 break;
             case 6: // IA4
-                gDPLoadTextureBlock_4bS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_IA, width, height,
+                gDPLoadTextureBlock_4bS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_IA, width, height,
                                         0,                         // palette
                                         G_TX_NOMIRROR | G_TX_WRAP, // cms
                                         G_TX_NOMIRROR | G_TX_WRAP, // cmt
@@ -1566,7 +1566,7 @@ void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height) {
                                         G_TX_NOLOD);               // shiftt
                 break;
             case 3: // I4
-                gDPLoadTextureBlock_4bS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_I, width, height,
+                gDPLoadTextureBlock_4bS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_I, width, height,
                                         0,                         // palette
                                         G_TX_NOMIRROR | G_TX_WRAP, // cms
                                         G_TX_NOMIRROR | G_TX_WRAP, // cmt
@@ -1576,7 +1576,7 @@ void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height) {
                                         G_TX_NOLOD);               // shiftt
                 break;
             case 2: // I8
-                gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_I, G_IM_SIZ_8b, width, height,
+                gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_I, G_IM_SIZ_8b, width, height,
                                      0,                         // palette
                                      G_TX_NOMIRROR | G_TX_WRAP, // cms
                                      G_TX_NOMIRROR | G_TX_WRAP, // cmt
@@ -1586,19 +1586,19 @@ void func_800C6DD4_C79D4(Gfx *dlist, Asset46 *asset, s32 width, s32 height) {
                                      G_TX_NOLOD);               // shiftt
                 break;
         }
-        gDkrDmaDisplayList(dlist++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[0]),
+        gDkrDmaDisplayList(dList++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[0]),
                            numberOfGfxCommands(dDialogueBoxDrawModes[1]));
     }
-    gSPEndDisplayList(dlist++);
+    gSPEndDisplayList(dList++);
 }
 
-s32 func_800C7744_C8344(Gfx **dlist, u16 charIndex, s32 *outLeft, s32 *outTop, s32 *outRight, s32 *outBottom) {
+s32 func_800C7744_C8344(Gfx **dList, u16 charIndex, s32 *outLeft, s32 *outTop, s32 *outRight, s32 *outBottom) {
     s32 index;
     JpCharHeader *jpChar;
 
     index = func_800C68CC_C74CC(charIndex);
     if (index >= 0) {
-        gSPDisplayList((*dlist)++, (*D_8012C2BC_EE5FC)[index].dlist);
+        gSPDisplayList((*dList)++, (*D_8012C2BC_EE5FC)[index].dList);
         jpChar = D_8012C2C0_EE600[index];
         *outLeft = jpChar->left;
         *outTop = jpChar->top;

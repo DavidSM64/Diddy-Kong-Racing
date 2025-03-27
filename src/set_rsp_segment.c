@@ -8,6 +8,6 @@
  * This is used for the colour and depth buffers.
  * Official name: segSetBase
  */
-void rsp_segment(Gfx **dlist, s32 segment, s32 base) {
-    gSPSegment((*dlist)++, segment, base + K0BASE)
+void rsp_segment(Gfx **dList, s32 segment, s32 base) {
+    gSPSegment((*dList)++, segment, base + K0BASE)
 }

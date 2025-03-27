@@ -1303,8 +1303,8 @@ update_pulsating_light_data = 0x8007F770;
 func_8007F594 = 0x8007F8A4;
 
 // screen_asset.c .text
-load_screen = 0x8007F950;
-render_screen = 0x8007FA24;
+screenimage_load = 0x8007F950;
+screenimage_draw = 0x8007FA24;
 
 //menu.c .text
 load_menu_text = 0x8007FC10;

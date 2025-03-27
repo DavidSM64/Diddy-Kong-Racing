@@ -78,9 +78,9 @@ void texrect_draw(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red,
 void bgdraw_chequer(Gfx** dList);
 void bgdraw_render(Gfx **dList, MatrixS **mtx, s32 drawBG);
 void bgdraw_set_func(void *func);
-void texrect_draw_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour, s32 flags);
+void texrect_draw_scaled(Gfx **dList, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour, s32 flags);
 
 //Non Matching
-void func_80078190(Gfx **dlist);
+void func_80078190(Gfx **dList);
 
 #endif

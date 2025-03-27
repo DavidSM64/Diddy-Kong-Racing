@@ -304,7 +304,7 @@ void free_3d_model(ObjectModel **modelPtr) {
         stubbed_printf(D_800E6BC0);
         return;
     }
-    
+
     model = *modelPtr;
     model->references--;
     if (model->references > 0) { // Model is still used, so free the reference and return.

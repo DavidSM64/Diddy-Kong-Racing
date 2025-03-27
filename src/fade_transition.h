@@ -22,6 +22,8 @@
 #define FADE_COLOR_BLACK FADE_COLOR(0, 0, 0)
 #define FADE_COLOR_WHITE FADE_COLOR(255, 255, 255)
 
+#define FADE_STAY 0xFFFF // Transition will stay until manually removed.
+
 /**
  * type: Transition type
  * flags: Transition flags
@@ -68,7 +70,7 @@ void transition_update_shape(s32 updateRate);
 void transition_init_shape(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *coords, u8 *nextPos,
                            u8 *targetPos, u8 *nextAlpha, u8 *targetAlpha, u8 *vertIndices);
 void transition_update_circle(s32 updateRate);
-void transition_render_waves(Gfx **dlist, UNUSED MatrixS **mtx, UNUSED Vertex **vtx);
+void transition_render_waves(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx);
 void transition_init_circle(FadeTransition *transition);
 
 #endif

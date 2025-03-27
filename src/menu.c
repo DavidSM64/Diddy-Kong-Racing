@@ -628,11 +628,13 @@ s32 sMenuMusicVolume = 0x7F;
 s32 sMenuGuiOpacity = 0xFF;
 s32 unused_800DF768 = 1;
 
-FadeTransition sMenuTransitionFadeInFast = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 10, 0xFFFF);
-FadeTransition sMenuTransitionFadeIn = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 18, 0xFFFF);
+FadeTransition sMenuTransitionFadeInFast =
+    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 10, FADE_STAY);
+FadeTransition sMenuTransitionFadeIn =
+    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 18, FADE_STAY);
 FadeTransition sMenuTransitionFadeOut = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 18, 0);
 UNUSED FadeTransition sMenuTransitionFadeInWhite =
-    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 18, 0xFFFF);
+    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 18, FADE_STAY);
 UNUSED FadeTransition sMenuTransitionFadeOutWhite =
     FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_WHITE, 18, 0);
 
@@ -1926,12 +1928,13 @@ s32 gWoodPanelTexScaleV = 32;
 s16 D_800E1DC8[16] = { 1, 1, -1, 1, -1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1 };
 
 // Fade transition from the logo screen to the title screen.
-FadeTransition gFadeLogoToTitleScreen = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 120, 0xFFFF);
+FadeTransition gFadeLogoToTitleScreen =
+    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 120, FADE_STAY);
 
 char gRareCopyrightString[24] = "(C) COPYRIGHT RARE 1997";
 
 // Fade transition between levels in the title screen demo.
-FadeTransition gFadeTitleScreenDemo = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 52, 0xFFFF);
+FadeTransition gFadeTitleScreenDemo = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 52, FADE_STAY);
 
 // Used in savemenu_render_element(). Used for controller pak adventure saves.
 // So the first save in the pak would be (ADV.A), second save (ADV.B), etc.
@@ -2209,7 +2212,7 @@ UNUSED void menu_button_uvs(f32 u, f32 v) {
     gWoodPanelTexScaleV = v * 32.0f;
 }
 
-void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
+void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour, TextureHeader *tex) {
     s32 uVals[4];
     s32 vVals[4];
@@ -2284,21 +2287,21 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
             vertices++;
         }
     }
-    if (dlist != NULL) {
+    if (dList != NULL) {
         gMenuGeometry[gWoodPanelCount].unk18[gMenuTrisFlip] = 1;
-        gSPDisplayList((*dlist)++, &dMenuHudSettings);
+        gSPDisplayList((*dList)++, &dMenuHudSettings);
         if (tex != NULL) {
-            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[1]), 2);
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[1]), 2);
+            gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
             i = TRUE; // texEnabled
         } else {
-            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[0]), 2);
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[0]), 2);
             i = FALSE; // texEnabled
         }
-        gDPPipeSync((*dlist)++);
-        gSPVertexDKR((*dlist)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip]), 20, 0);
-        gSPPolygon((*dlist)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].triangles[gMenuTrisFlip]), 10, i);
-        reset_render_settings(dlist);
+        gDPPipeSync((*dList)++);
+        gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip]), 20, 0);
+        gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].triangles[gMenuTrisFlip]), 10, i);
+        reset_render_settings(dList);
     } else {
         gMenuGeometry[gWoodPanelCount].unk18[gMenuTrisFlip] = 0;
     }
@@ -2350,7 +2353,7 @@ void menu_geometry_end(void) {
     gMenuTrisFlip = 1 - gMenuTrisFlip;
 }
 
-void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
+void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour0, s32 colour1, s32 colour2, s32 colour3) {
     s32 temp_ra;
     s32 temp_t3;
@@ -2369,8 +2372,8 @@ void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
     s32 j;
     s32 index;
 
-    gSPDisplayList((*dlist)++, &dMenuHudSettings);
-    gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[2]), 2);
+    gSPDisplayList((*dList)++, &dMenuHudSettings);
+    gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[2]), 2);
 
     // Must be a while loop to match.
     i = 0;
@@ -2415,7 +2418,7 @@ void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
                 break;
         }
 
-        gDPSetPrimColor((*dlist)++, 0, 0, primColour >> 24, primColour >> 16, primColour >> 8, primColour);
+        gDPSetPrimColor((*dList)++, 0, 0, primColour >> 24, primColour >> 16, primColour >> 8, primColour);
 
         for (j = 0; j < borderLineCount; j++) {
             if (recLrx >= 0 && recLry >= 0) {
@@ -2429,7 +2432,7 @@ void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
                 } else {
                     recUly = uly;
                 }
-                gDPFillRectangle((*dlist)++, recUlx, recUly, recLrx, recLry);
+                gDPFillRectangle((*dList)++, recUlx, recUly, recLrx, recLry);
             }
             ulx += temp_t3;
             uly += temp_t4;
@@ -2439,9 +2442,9 @@ void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
         i++;
     }
 
-    gDPPipeSync((*dlist)++);
-    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
-    reset_render_settings(dlist);
+    gDPPipeSync((*dList)++);
+    gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
+    reset_render_settings(dList);
 }
 
 void init_save_data(void) {

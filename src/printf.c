@@ -353,7 +353,7 @@ UNUSED s32 debug_text_width(const char *format, ...) {
 }
 
 #ifdef NON_EQUIVALENT
-s32 func_800B653C(Gfx **dlist, char *buffer) {
+s32 func_800B653C(Gfx **dList, char *buffer) {
     char *bufferSave;
     s32 var_a1;
     s32 xOffset;
@@ -382,7 +382,7 @@ s32 func_800B653C(Gfx **dlist, char *buffer) {
                         blue = *nextBuffer++;
                         alpha = *nextBuffer++;
                         if (gDebugTextOn) {
-                            gDPSetEnvColor((*dlist)++, red, green, blue, alpha);
+                            gDPSetEnvColor((*dList)++, red, green, blue, alpha);
                         }
                         break;
                     case 0x85:
@@ -391,12 +391,12 @@ s32 func_800B653C(Gfx **dlist, char *buffer) {
                         blue = *nextBuffer++;
                         alpha = *nextBuffer++;
                         if (!gDebugTextOn) {
-                            gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha);
+                            gDPSetPrimColor((*dList)++, 0, 0, red, green, blue, alpha);
                         }
                         break;
                     case 0x82:
                         if (!gDebugTextOn) {
-                            debug_text_background(dlist, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
+                            debug_text_background(dList, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
                         }
                         gDebugTextX = *nextBuffer++;
                         gDebugTextX |= *nextBuffer++ << 8;
@@ -409,14 +409,14 @@ s32 func_800B653C(Gfx **dlist, char *buffer) {
             } else {
                 xOffset = 6;
                 if (*buffer != 0x20) {
-                    xOffset = debug_text_character(dlist, *buffer);
+                    xOffset = debug_text_character(dList, *buffer);
                 }
             }
         } else {
             switch (*buffer) {
                 case 10:
                     if (!gDebugTextOn) {
-                        debug_text_background(dlist, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
+                        debug_text_background(dList, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
                     }
                     debug_text_newline();
                     D_80127CB0 = gDebugTextX;
@@ -438,7 +438,7 @@ s32 func_800B653C(Gfx **dlist, char *buffer) {
         gDebugTextX += xOffset;
         if (var_a1 < gDebugTextX) {
             if (!gDebugTextOn) {
-                debug_text_background(dlist, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
+                debug_text_background(dList, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
             }
             debug_text_newline();
             D_80127CB0 = gDebugTextX;
