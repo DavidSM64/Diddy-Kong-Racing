@@ -46,13 +46,19 @@
 #include "font.h"
 #include "stacks.h"
 
-/************ .data ************/
+/************ .rodata ************/
 
 #if VERSION >= VERSION_79
 UNUSED char *sDebugRomBuildInfo[] = { "1.1634", "17/10/97 11:19", "pmountain" };
 #elif VERSION == VERSION_77
 UNUSED char *sDebugRomBuildInfo[] = { "1.1605", "02/10/97 16:03", "pmountain" };
 #endif
+
+const char D_800E7134[] = "BBB\n"; // Functionally unused.
+
+/*********************************/
+
+/************ .data ************/
 
 #if VERSION == VERSION_80
 UNUSED char gBuildString[] = "Version 8.0 27/10/97 12.30 L.Schuneman";
@@ -84,6 +90,9 @@ FadeTransition D_800DD3F4 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE
 UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 20, -1);
 s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition gDrumstickSceneTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, -1);
+UNUSED char *D_800DD410[3] = { "CAR", "HOV", "PLN" };
+FadeTransition gLevelFadeOutTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
+FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
 
 /*******************************/
 
@@ -280,7 +289,7 @@ void main_game_loop(void) {
             debugLoopCounter++;
         }
         if (debugLoopCounter > 20000000) { // This shouldn't ever be true?
-            render_printf("BBB\n");
+            render_printf(D_800E7134 /* "BBB\n" */);
         }
     }
 
@@ -836,9 +845,6 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     menu_init(menuId);
     gGameCurrentEntrance = 0;
 }
-
-// Unsure of the exact placement for this. It has to be between "BBB" and "Swapping\n" though.
-UNUSED char *D_800DD410[3] = { "CAR", "HOV", "PLN" };
 
 /**
  * Set the default vehicle option from the current loaded level.
@@ -1443,9 +1449,6 @@ void default_alloc_displaylist_heap(void) {
     gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[numberOfPlayers];
     gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[numberOfPlayers];
 }
-
-FadeTransition gLevelFadeOutTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
-FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
 
 /**
  * Set a delayed level trigger and a transition.
