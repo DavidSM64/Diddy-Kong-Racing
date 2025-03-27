@@ -820,10 +820,10 @@ void render_hud_challenge_eggs(s32 countdown, Object *obj, s32 updateRate) {
         sprite_anim_off(TRUE);
         render_race_start(countdown, updateRate);
         render_weapon_hud(obj, updateRate);
-        if ((127 - (updateRate * 2)) >= gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.unk1A) {
-            gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.unk1A += updateRate * 2;
+        if ((127 - (updateRate * 2)) >= gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer) {
+            gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer += updateRate * 2;
         } else {
-            gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.unk1A = (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.unk1A + (updateRate * 2)) - 255;
+            gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer = (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer + (updateRate * 2)) - 255;
         }
         // Skip rendering the portraits if in 2 player, it's done elsewhere.
         if (gNumActivePlayers != 2) {
@@ -917,10 +917,10 @@ void hud_eggs_portrait(Object_Racer *racer, UNUSED s32 updateRate) {
     if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT]);
     }
-    if (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].eggChallengeIcon.unk1A < 0) {
-        alpha = (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].eggChallengeIcon.unk1A * 2) + 256;
+    if (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer < 0) {
+        alpha = (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer * 2) + 256;
     } else {
-        alpha = 255 - (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].eggChallengeIcon.unk1A * 2);
+        alpha = 255 - (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer * 2);
     }
     if (alpha > 254) {
         alpha = 254;
@@ -1639,9 +1639,9 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
     s32 bananas;
     UNUSED s16 pad;
     s32 temp_lo;
-    u8 var_v1;
+    u8 prevSprite;
     if (racer->playerIndex == PLAYER_COMPUTER ||
-        (((gHUDNumPlayers < TWO_PLAYERS || D_800E2794[gHUDNumPlayers][racer->playerIndex] == PLAYER_THREE ||
+        (((gHUDNumPlayers < TWO_PLAYERS || D_800E2794[gHUDNumPlayers][racer->playerIndex] == 2 ||
            gHudLevelHeader->race_type == RACETYPE_CHALLENGE_BANANAS ||
            gHudLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) &&
           racer->raceFinished == FALSE) &&
@@ -1649,38 +1649,38 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
           gHudLevelHeader->race_type & RACETYPE_CHALLENGE))) {
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BANANA_COUNT_X]);
         bananas = racer->bananas;
-        var_v1 = gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset;
-        if ((gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.unk1A == 0) &&
-            (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.unk1B != racer->bananas)) {
-            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.unk1A = 2;
-            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.unk1B = racer->bananas;
-        } else if (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.unk1A) {
+        prevSprite = gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset;
+        if (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.spinCounter == 0 &&
+            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.visualCounter != racer->bananas) {
+            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.spinCounter = 2;
+            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.visualCounter = racer->bananas;
+        } else if (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.spinCounter) {
             gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].scale = 2.0f;
-            var_v1 += updateRate * 13;
-            if (var_v1 < (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset & 0xFF)) {
-                gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.unk1A--;
-                if (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.unk1A == 0) {
-                    gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.unk1B = 1;
-                    gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.unk1A = 6;
-                    var_v1 = 0;
+            prevSprite += updateRate * 13;
+            if (prevSprite < (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset & 0xFF)) {
+                gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.spinCounter--;
+                if (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.spinCounter == 0) {
+                    gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.sparkleCounter = 1;
+                    gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.sparkleTimer = 6;
+                    prevSprite = 0;
                     gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].spriteOffset = 1;
                 }
             }
         }
-        if (var_v1 == 0) {
+        if (prevSprite == 0) {
             sprite_opaque(TRUE);
             set_viewport_tv_type(OS_TV_TYPE_NTSC);
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC]);
             set_viewport_tv_type(OS_TV_TYPE_PAL);
             sprite_opaque(FALSE);
-            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset = var_v1;
-            if (gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.unk1B) {
-                gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.unk1A -= updateRate;
-                if (gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.unk1A < 0) {
-                    gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.unk1A = 6;
+            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset = prevSprite;
+            if (gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.sparkleCounter) {
+                gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.sparkleTimer -= updateRate;
+                if (gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.sparkleTimer < 0) {
+                    gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.sparkleTimer = 6;
                     if (gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].spriteOffset == 6) {
                         gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].spriteOffset = 0;
-                        gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.unk1B--;
+                        gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.sparkleCounter--;
                     } else {
                         gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].spriteOffset++;
                     }
@@ -1690,7 +1690,7 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
                 set_viewport_tv_type(OS_TV_TYPE_PAL);
             }
         } else {
-            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset = var_v1 + 128;
+            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset = prevSprite + 128;
             sprite_anim_off(FALSE);
             sprite_opaque(TRUE);
             set_viewport_tv_type(OS_TV_TYPE_NTSC);
@@ -1744,7 +1744,7 @@ void render_treasure_hud(Object_Racer *racer) {
 
 /**
  * Render the silver coin counter on the side of the screen.
- * When the 8th coin is collected, wait a second then play an encouraging voice clip from T.T.
+ * When the 8th coin is collected, wait half a second then play an encouraging voice clip from T.T.
  */
 void render_silver_coin_counter(Object_Racer *racer, s32 updateRate) {
     s32 i;
@@ -1760,12 +1760,12 @@ void render_silver_coin_counter(Object_Racer *racer, s32 updateRate) {
         gCurrentHud->entry[HUD_SILVER_COIN_TALLY].pos.y -= gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.unk1C;
     }
     if (racer->silverCoinCount == 8) {
-        if (gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.unk1B < 30) {
-            gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.unk1B += updateRate;
+        if (gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.soundTimer < 30) {
+            gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.soundTimer += updateRate;
         }
-        if (gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.unk1A == 0) {
-            if (gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.unk1B >= 30) {
-                gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.unk1A = 1;
+        if (gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.soundPlayed == FALSE) {
+            if (gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.soundTimer >= 30) {
+                gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.soundPlayed = TRUE;
                 if (gHUDVoiceSoundMask == NULL) {
                     sound_play(SOUND_VOICE_TT_GO_FOR_IT, &gHUDVoiceSoundMask);
                 }
@@ -1789,8 +1789,8 @@ void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
     position1 = &gCurrentHud->entry[HUD_RACE_FINISH_POS_1];
     position2 = &gCurrentHud->entry[HUD_RACE_FINISH_POS_2];
     drawPosition = FALSE;
-    switch (position1->raceFinishPos.unk1A) {
-        case 0:
+    switch (position1->raceFinishPos.status) {
+        case HUD_RACEFINISH_MUTE:
             music_voicelimit_set(24);
             music_play(SEQUENCE_FIRST_PLACE);
             sound_play(SOUND_WHOOSH1, NULL);
@@ -1798,9 +1798,9 @@ void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
             gHudAudioData[0].volume = 127;
             gHudAudioData[0].volumeRamp = 0;
             gHudAudioData[0].playerIndex = racer->playerIndex;
-            position1->raceFinishPos.unk1A = 1;
+            position1->raceFinishPos.status = HUD_RACEFINISH_TEXT_IN;
             break;
-        case 1:
+        case HUD_RACEFINISH_TEXT_IN:
             position1->pos.x += updateRate * 13;
             if (position1->pos.x > -23.0f) {
                 position1->pos.x = -23.0f;
@@ -1811,13 +1811,13 @@ void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
             }
             drawPosition = TRUE;
             if (position2->pos.x == 22.0f) {
-                position1->raceFinishPos.unk1B += updateRate;
-                if (position1->raceFinishPos.unk1B >= 120) {
-                    position1->raceFinishPos.unk1B = -120;
-                    position1->raceFinishPos.unk1C = position1->raceFinishPos.unk1C + 1;
+                position1->raceFinishPos.textOutTimer += updateRate;
+                if (position1->raceFinishPos.textOutTimer >= 120) {
+                    position1->raceFinishPos.textOutTimer = -120;
+                    position1->raceFinishPos.textOutTicks++;
                 }
-                if (position1->raceFinishPos.unk1C == 2) {
-                    position1->raceFinishPos.unk1A = 2;
+                if (position1->raceFinishPos.textOutTicks == 2) {
+                    position1->raceFinishPos.status = HUD_RACEFINISH_TEXT_OUT;
                     sound_play(SOUND_WHOOSH1, NULL);
                     if (gHudAudioData[0].playerIndex == racer->playerIndex) {
                         gHudAudioData[0].volumeRamp = -1;
@@ -1825,16 +1825,16 @@ void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
                 }
             }
             break;
-        case 2:
+        case HUD_RACEFINISH_TEXT_OUT:
             position1->pos.x += updateRate * 13;
             position2->pos.x += updateRate * 13;
             drawPosition = TRUE;
             if (position1->pos.x > 200.0f) {
-                position1->raceFinishPos.unk1A = 3;
+                position1->raceFinishPos.status = HUD_RACEFINISH_IDLE;
             }
             break;
-        case 3:
-            position1->raceFinishPos.unk1A = 3;
+        case HUD_RACEFINISH_IDLE:
+            position1->raceFinishPos.status = HUD_RACEFINISH_IDLE;
             break;
     }
     if (drawPosition) {
@@ -1854,7 +1854,7 @@ UNUSED void func_800A4C34(UNUSED s32 countdown, UNUSED Object_Racer *racer, UNUS
  */
 void render_race_position(Object_Racer *racer, s32 updateRate) {
     s32 place;
-    f32 prevCurrHudUnkC;
+    f32 prevPos;
     f32 scale;
     s32 placeIndex;
     Settings *settings;
@@ -1874,6 +1874,7 @@ void render_race_position(Object_Racer *racer, s32 updateRate) {
         }
     }
     if (gHUDNumPlayers < 2) {
+        // P1 and P2 have different endings to P3 onward, so offset the sprite ID based on current position.
         if (place < 4) {
             gCurrentHud->entry[HUD_RACE_POSITION_END].spriteOffset = place - 1;
         } else {
@@ -1881,33 +1882,33 @@ void render_race_position(Object_Racer *racer, s32 updateRate) {
         }
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_RACE_POSITION_END]);
     }
-    scale = (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1B + 129);
+    scale = (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter + 129);
     scale *= 128.0f;
     scale = sins_f(scale);
     placeIndex = place - 1;
-    gCurrentHud->entry[HUD_RACE_POSITION].scale = (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1C / 127.0f) + (1.0 + (0.5 * scale));
-    prevCurrHudUnkC = gCurrentHud->entry[HUD_RACE_POSITION].pos.x;
+    gCurrentHud->entry[HUD_RACE_POSITION].scale = (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.baseScale / 127.0f) + (1.0 + (0.5 * scale));
+    prevPos = gCurrentHud->entry[HUD_RACE_POSITION].pos.x;
     gCurrentHud->entry[HUD_RACE_POSITION].pos.x -= (24.0f * gCurrentHud->entry[HUD_RACE_POSITION].scale);
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_RACE_POSITION]);
-    gCurrentHud->entry[HUD_RACE_POSITION].pos.x = prevCurrHudUnkC;
-    if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1A) {
-        if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1B < 127 - (updateRate * 16)) {
-            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1B += (updateRate * 16);
+    gCurrentHud->entry[HUD_RACE_POSITION].pos.x = prevPos;
+    if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active) {
+        if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter < 127 - (updateRate * 16)) {
+            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter += (updateRate * 16);
         } else {
-            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1B = 127;
+            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter = 127;
         }
     }
     if (placeIndex != gCurrentHud->entry[HUD_RACE_POSITION].spriteOffset) {
-        if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1A && gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1B > 0) {
-            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1B = -gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1B;
+        if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active && gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter > 0) {
+            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter = -gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter;
         } else {
-            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1B = -127;
-            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1A = 1;
+            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter = -127;
+            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active = TRUE;
         }
     }
     gCurrentHud->entry[HUD_RACE_POSITION].spriteOffset = placeIndex;
-    if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1A && gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1B == 127) {
-        gCurrentHud->entry[HUD_RACE_POSITION].racePosition.unk1A = 0;
+    if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active && gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter == 127) {
+        gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active = FALSE;
     }
 }
 
@@ -1921,10 +1922,10 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
         (gHUDNumPlayers <= ONE_PLAYER || racer->lap <= 0 || racer->lap_times[racer->lap] >= 180) &&
         (gHUDNumPlayers <= ONE_PLAYER || D_800E2794[gHUDNumPlayers][racer->playerIndex] == 3)) {
         if (gHudLevelHeader->laps == (0, racer->countLap + 1) && gHUDNumPlayers < THREE_PLAYERS) {
-            gCurrentHud->entry[HUD_LAP_COUNT_FLAG].lapCountFlag.unk1A += updateRate;
-            if (gCurrentHud->entry[HUD_LAP_COUNT_FLAG].lapCountFlag.unk1A > 6) {
+            gCurrentHud->entry[HUD_LAP_COUNT_FLAG].lapCountFlag.visualCounter += updateRate;
+            if (gCurrentHud->entry[HUD_LAP_COUNT_FLAG].lapCountFlag.visualCounter > 6) {
                 gCurrentHud->entry[HUD_LAP_COUNT_FLAG].spriteOffset++;
-                gCurrentHud->entry[HUD_LAP_COUNT_FLAG].lapCountFlag.unk1A -= 6;
+                gCurrentHud->entry[HUD_LAP_COUNT_FLAG].lapCountFlag.visualCounter -= 6;
                 if (gCurrentHud->entry[HUD_LAP_COUNT_FLAG].spriteOffset > 4) {
                     gCurrentHud->entry[HUD_LAP_COUNT_FLAG].spriteOffset = 0;
                 }
@@ -1946,66 +1947,66 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
         sprite_opaque(TRUE);
     }
     if (is_game_paused() == FALSE) {
-        if (racer->lap_times[racer->lap] < 30 && gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1A == 0 && racer->raceFinished == FALSE) {
-            if ((racer->lap == 1) && gHudLevelHeader->laps >= 3) {
-                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1A = 2;
-                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1B = 1;
-                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1D = 0;
+        if (racer->lap_times[racer->lap] < 30 && gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status == LAPTEXT_IDLE && racer->raceFinished == FALSE) {
+            if (racer->lap == 1 && gHudLevelHeader->laps >= 3) {
+                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status = LAPTEXT_UNK2;
+                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction = LAPTEXT_OUT;
+                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.soundPlayed = FALSE;
                 sound_play(SOUND_WHOOSH1, NULL);
                 switch (gHUDNumPlayers) {
                     case ONE_PLAYER:
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C = -21;
-                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.unk1C = 32;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos = -21;
+                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos = 32;
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = -200.0f;
                         gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x = 211.0f;
                         break;
                     case TWO_PLAYERS:
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C = -16;
-                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.unk1C = 27;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos = -16;
+                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos = 27;
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = -200.0f;
                         gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x = 211.0f;
                         break;
                     default:
                         if (racer->playerIndex != PLAYER_ONE && racer->playerIndex != PLAYER_THREE) {
-                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C = 60;
-                            gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.unk1C = 91;
+                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos = 60;
+                            gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos = 91;
                             gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = -70.0f;
                             gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x = 221.0f;
                         } else {
-                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C = -90;
-                            gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.unk1C = -59;
+                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos = -90;
+                            gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos = -59;
                             gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = -220.0f;
                             gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x = 71.0f;
                         }
                         break;
                 }
             } else if (gHudLevelHeader->laps == (0, racer->lap + 1) && racer->lap != 0) {
-                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1A = 3;
-                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1B = -1;
-                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1D = 0;
+                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status = LAPTEXT_UNK3;
+                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction = LAPTEXT_IN;
+                gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.soundPlayed = FALSE;
                 sound_play(SOUND_WHOOSH1, NULL);
                 switch (gHUDNumPlayers) {
                     case ONE_PLAYER:
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C = 51;
-                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.unk1C = -41;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos = 51;
+                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos = -41;
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = 210.0f;
                         gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x = -200.0f;
                         break;
                     case TWO_PLAYERS:
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C = 41;
-                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.unk1C = -31;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos = 41;
+                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos = -31;
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = 210.0f;
                         gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x = -200.0f;
                         break;
                     default:
                         if (racer->playerIndex != PLAYER_ONE && racer->playerIndex != PLAYER_THREE) {
-                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C = 100;
-                            gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.unk1C = 50;
+                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos = 100;
+                            gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos = 50;
                             gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = 100.0f;
                             gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x = -50.0f;
                         } else {
-                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C = -50;
-                            gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.unk1C = -100;
+                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos = -50;
+                            gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos = -100;
                             gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = 50.0f;
                             gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x = -200.0f;
                         }
@@ -2013,71 +2014,71 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
                 }
             }
         }
-        if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1A != 0) {
-            if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1A == 2) {
-                if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1B == 1) {
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x < gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C - (updateRate * 13)) {
+        if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status != LAPTEXT_IDLE) {
+            if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status == LAPTEXT_UNK2) {
+                if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction == LAPTEXT_OUT) {
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x < gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos - (updateRate * 13)) {
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x += updateRate * 13;
                     } else {
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos;
                     }
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x > gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.unk1C + (updateRate * 13)) {
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x > gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos + (updateRate * 13)) {
                         gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x -= updateRate * 13;
                     } else {
-                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.unk1C;
+                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos;
                     }
                     if (racer->lap_times[racer->lap] >= 60) {
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1B = -1;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction = LAPTEXT_IN;
                         sound_play(SOUND_WHOOSH1, NULL);
                     }
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C &&
-                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.unk1C &&
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1D == 0) {
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos &&
+                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos &&
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.soundPlayed == FALSE) {
                         if (gHUDVoiceSoundMask == NULL) {
                             sound_play(SOUND_VOICE_TT_LAP2, &gHUDVoiceSoundMask);
                         }
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1D = 1;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.soundPlayed = TRUE;
                     }
-                } else if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1B == -1) {
+                } else if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction == LAPTEXT_IN) {
                     gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x -= updateRate * 13;
                     gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x += updateRate * 13;
                     if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x < -200.0f) {
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1A = 0;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status = LAPTEXT_IDLE;
                     }
                 }
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_LAP_TEXT_TWO]);
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_LAP_TEXT_LAP]); // lap
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-            } else if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1A == 3) {
-                if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1B == -1) {
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x > gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C + (updateRate * 13)) {
+            } else if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status == LAPTEXT_UNK3) {
+                if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction == LAPTEXT_IN) {
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x > gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos + (updateRate * 13)) {
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x -= updateRate * 13;
                     } else {
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos;
                     }
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x < gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.unk1C - (updateRate * 13)) {
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x < gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos - (updateRate * 13)) {
                         gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x += updateRate * 13;
                     } else {
-                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.unk1C;
+                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos;
                     }
                     if (racer->lap_times[racer->lap] >= 60) {
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1B = 1;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction = LAPTEXT_OUT;
                         sound_play(SOUND_WHOOSH1, NULL);
                     }
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1C &&
-                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.unk1C &&
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1D == 0) {
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos &&
+                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos &&
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.soundPlayed == FALSE) {
                         if (gHUDVoiceSoundMask == NULL) {
                             sound_play(SOUND_VOICE_TT_FINAL_LAP, &gHUDVoiceSoundMask);
                         }
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1D = 1;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.soundPlayed = TRUE;
                     }
-                } else if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1B == 1) {
+                } else if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction == LAPTEXT_OUT) {
                     gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x += updateRate * 13;
                     gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x -= updateRate * 13;
                     if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x > 200.0f) {
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.unk1A = 0;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status = LAPTEXT_IDLE;
                     }
                 }
 
@@ -2264,7 +2265,7 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
         D_80127189 = 1;
     }
 
-    switch (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1A) {
+    switch (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status) {
         case 0:
             if (!(raceType & RACETYPE_CHALLENGE_BATTLE)) {
                 gHudAudioData[0].volume = 127;
@@ -2302,7 +2303,7 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                 gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_2].spriteOffset = 3;
             }
             gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].spriteOffset = racer->finishPosition - 1;
-            gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1A = 1;
+            gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status = 1;
             switch (gNumActivePlayers) {
                 case 2:
                     var_f12 = 360.0f;
@@ -2412,9 +2413,9 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             }
             temp_v0_4 = 2; // fakematch?
             if (var_a2) {
-                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1A = temp_v0_4; // fakematch? Why not just set directly to 2?
-                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1B = -120;
-                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1C = 0;
+                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status = temp_v0_4; // fakematch? Why not just set directly to 2?
+                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTimer = -120;
+                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTicks = 0;
                 if (gHUDVoiceSoundMask == NULL) {
                     if (raceType == RACETYPE_CHALLENGE_BATTLE) {
                         switch (racer->finishPosition) {
@@ -2437,30 +2438,30 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             hud_draw_finish_misc(racer);
             break;
         case 2:
-            gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1B += updateRate;
+            gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTimer += updateRate;
 
-            if (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1B >= 120) {
-                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1B = -120;
-                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1C++;
+            if (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTimer >= 120) {
+                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTimer = -120;
+                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTicks++;
             }
-            if (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1C == 2) {
+            if (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTicks == 2) {
                 if (gNumActivePlayers == 1 || is_in_two_player_adventure()) {
-                    gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1A = 3;
+                    gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status = 3;
                     sound_play(SOUND_WHOOSH1, NULL);
                 } else {
-                    gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1A = 4;
+                    gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status = 4;
                 }
             }
             hud_draw_finish_misc(racer);
             break;
         case 3:
             if (raceType == RACETYPE_CHALLENGE_BATTLE) {
-                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1A = 4;
+                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status = 4;
             } else {
                 gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].pos.x -= (updateRate * 13);
                 gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_2].pos.x -= (updateRate * 13);
                 if (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].pos.x < -200.0f) {
-                    gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1A = 4;
+                    gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status = 4;
                 }
                 gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x += (updateRate * 13);
                 gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x += (updateRate * 13);
@@ -2471,8 +2472,8 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             if (racer->playerIndex == gHudAudioData[0].playerIndex) {
                 gHudAudioData[0].volumeRamp = -1;
             }
-            gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1A = 5;
-            gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.unk1B = 0;
+            gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status = 5;
+            gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTimer = 0;
             hud_draw_finish_misc(racer);
             break;
         default:
@@ -3121,8 +3122,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
                                   &gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT]);
                     D_80126CD5 = FALSE;
-                    if (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.unk1B == 0 && curRacerObj->bananas == 10) {
-                        gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.unk1B = curRacerObj->bananas;
+                    if (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.visualCounter == 0 && curRacerObj->bananas == 10) {
+                        gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.visualCounter = curRacerObj->bananas;
                     }
                     render_racer_bananas(curRacerObj, updateRate);
                     gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC].pos.x -= var_a0_5;

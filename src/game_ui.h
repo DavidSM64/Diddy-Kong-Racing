@@ -12,6 +12,25 @@
 
 #define HUD_EGG_TOTAL 3
 
+typedef enum RaceFinishStages {
+    HUD_RACEFINISH_MUTE,
+    HUD_RACEFINISH_TEXT_IN,
+    HUD_RACEFINISH_TEXT_OUT,
+    HUD_RACEFINISH_IDLE
+} RaceFinishStages;
+
+typedef enum LapTextStages {
+    LAPTEXT_IDLE,
+    LAPTEXT_UNK1,
+    LAPTEXT_UNK2,
+    LAPTEXT_UNK3
+} LapTextStages;
+
+typedef enum LapTextDirection {
+    LAPTEXT_IN = -1,
+    LAPTEXT_OUT = 1
+} LapTextDirection;
+
 enum CourseIndicatorArrows {
     INDICATOR_NONE,
     INDICATOR_LEFT,
@@ -218,55 +237,51 @@ typedef struct HudElementBase {
 } HudElementBase;
 
 typedef struct HudElement_ChallengeEggs {
-    s8 unk1A;
+    s8 alphaTimer;
 } HudElement_ChallengeEggs;
-
-typedef struct HudElement_EggChallengeIcon {
-    s8 unk1A;
-} HudElement_EggChallengeIcon;
 
 typedef struct HudElement_RaceStartGo {
     s8 unk1A[4];
 } HudElement_RaceStartGo;
 
 typedef struct HudElement_BananaCountIconSpin {
-    s8 unk1A;
-    s8 unk1B;
+    s8 spinCounter;     // Number of remaining times the icon will spin
+    s8 visualCounter;   // Previously known banana value.
 } HudElement_BananaCountIconSpin;
 
 typedef struct HudElement_BananaCountSparkle {
-    s8 unk1A;
-    s8 unk1B;
+    s8 sparkleTimer;   // Delay timer before starting a new sparkle
+    s8 sparkleCounter; // Number of remaining times the icon will sparkle
 } HudElement_BananaCountSparkle;
 
 typedef struct HudElement_SilverCoinTally {
-    s8 unk1A;
-    s8 unk1B;
+    s8 soundPlayed;     // Whether the sound has been played
+    s8 soundTimer;      // Delay timer before playing the sound
     s8 unk1C;
 } HudElement_SilverCoinTally;
 
 typedef struct HudElement_RaceFinishPos {
-    s8 unk1A;
-    s8 unk1B;
-    s8 unk1C;
+    s8 status;          // Which behaviour to do
+    s8 textOutTimer;    // Delay timer in frames, increases ticks at 120 before getting set to -120
+    s8 textOutTicks;    // Number of times delay timer has reached 120. This is because the timer is only 8 bits.
     s8 unk1D;
 } HudElement_RaceFinishPos;
 
 typedef struct HudElement_RacePosition {
-    s8 unk1A;
-    s8 unk1B;
-    s8 unk1C;
+    s8 active;          // Whether the scale effect is active.
+    s8 scaleCounter;    // Ranges from -128 to 127, plus 129 then multiplied to 127 to get a 16 bit range for the trig func.
+    s8 baseScale;       // The initial scale value used. Lets you have smaller baseline scales.
 } HudElement_RacePosition;
 
 typedef struct HudElement_LapCountFlag {
-    s8 unk1A;
+    s8 visualCounter;   // Counter that sets the sprite offset when above 6.
 } HudElement_LapCountFlag;
 
 typedef struct HudElement_LapText {
-    s8 unk1A;
-    s8 unk1B;
-    s8 unk1C;
-    s8 unk1D;
+    s8 status;
+    s8 direction;
+    s8 targetPos;
+    s8 soundPlayed;    // Whether the sound has been played
 } HudElement_LapText;
 
 typedef struct HudElement_WrongWay {
@@ -311,7 +326,6 @@ typedef struct HudElement {
     union {
         u8 filler[6]; // Ensures this union is 6 bytes, since Rare never actually use more than four.
         HudElement_ChallengeEggs challengeEggs;
-        HudElement_EggChallengeIcon eggChallengeIcon;
         HudElement_RaceStartGo raceStartGo;
         HudElement_BananaCountIconSpin bananaCountIconSpin;
         HudElement_BananaCountSparkle bananaCountSparkle;
