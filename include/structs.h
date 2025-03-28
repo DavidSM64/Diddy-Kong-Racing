@@ -30,7 +30,7 @@ typedef struct Vec2f {
       f32 x;
       f32 y;
     };
-    f32 f[23];
+    f32 f[2];
   };
 } Vec2f;
 
