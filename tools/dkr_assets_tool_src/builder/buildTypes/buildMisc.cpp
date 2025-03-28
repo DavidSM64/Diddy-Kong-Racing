@@ -173,7 +173,7 @@ uint8_t *BuildMisc::_build_magic_codes(BuildInfo &info, size_t &outDataSize) {
     }
     
     if(_settings.debugBuildKeepUncompressed) {
-        fs::path unencryptedCheatsPath = _settings.pathToBuild / _settings.dkrVersion / "debug/cheats" / info.dstPath.filename();
+        fs::path unencryptedCheatsPath = _settings.pathToBuild / "debug/cheats" / info.dstPath.filename();
         FileHelper::write_binary_file(out, outDataSize, unencryptedCheatsPath, true);
     }
     

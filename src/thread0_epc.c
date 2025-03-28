@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800B6F50 */
-
 #include "thread0_epc.h"
 #include "common.h"
 #include "types.h"
@@ -64,6 +61,7 @@ void thread0_Main(UNUSED void *unused) {
 
     while (1) {
         osRecvMesg(&D_80129790, (OSMesg) &sp34, OS_MESG_BLOCK);
+#if VERSION < VERSION_80
         if (!(get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY)) {
             continue;
         }
@@ -71,6 +69,7 @@ void thread0_Main(UNUSED void *unused) {
         if ((s0 & 8) == 0 && (s0 & 2) == 0) {
             continue;
         }
+#endif
         s0 &= ~8;
         stubbed_printf(">fault< ");
         enable_interupts_on_main();
@@ -141,7 +140,7 @@ void write_epc_data_to_cpak(void) {
         thread->context.fp0.f.f_even = gObjectStackTrace[1];
         thread->context.fp2.f.f_odd = gObjectStackTrace[2];
         bcopy(thread, sp44, sizeof(epcInfo));
-        bcopy((void *) thread->context.sp, sp244, sizeof(sp244));
+        bcopy((void *) (u32) thread->context.sp, sp244, sizeof(sp244));
         zero = 0; // Why is this needed to match?
         v0 = func_80024594(&currentCount, &maxCount);
         for (i = zero; i < maxCount; i++) {

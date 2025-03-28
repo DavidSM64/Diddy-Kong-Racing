@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80072250 */
-
 #include "save_data.h"
 #include "common.h"
 #include "memory.h"
@@ -15,6 +12,7 @@
 #include "joypad.h"
 #include "PRinternal/viint.h"
 #include "PR/os_motor.h"
+#include "save_layout.h"
 
 /************ .data ************/
 
@@ -25,6 +23,10 @@ u8 gN64FontCodes[] = "\0               0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#'
 u8 sControllerPaksPresent = 0; // Bits 0, 1, 2, and 3 of the bit pattern correspond to Controllers 1, 2, 3, and 4.
                                // 1 if a controller pak is present
 s32 gRumbleKillTimer = 0;
+
+#if VERSION >= VERSION_79
+s32 gRumbleEnable = TRUE;
+#endif
 
 /*******************************/
 
@@ -68,8 +70,17 @@ u8 input_get_id(s32 controllerIndex) {
     if ((controllerIndex == 0 || controllerIndex == 1) && func_8000E158()) {
         controllerIndex = 1 - controllerIndex;
     }
-    return get_player_id(controllerIndex);
+    return input_player_id(controllerIndex);
 }
+
+#if VERSION >= VERSION_79
+/**
+ * Set a global flag that can enable or disable the rumble temporarily.
+ */
+void rumble_enable(s32 enable) {
+    gRumbleEnable = enable;
+}
+#endif
 
 /**
  * Reset the rumble state for all controllers and set whether or not to allow rumble.
@@ -201,7 +212,11 @@ void rumble_update(s32 updateRate) {
     u8 controllerToCheck;
     u8 pfsBitPattern;
 
-    if ((gRumbleIdle != 0 || gRumbleKillTimer != 0)) {
+    if (
+#if VERSION >= VERSION_79
+        (gRumbleEnable) &&
+#endif
+        (gRumbleIdle != 0 || gRumbleKillTimer != 0)) {
         gRumbleDetectionTimer += updateRate;
         if (gRumbleDetectionTimer > 120) {
             gRumbleDetectionTimer = 0;
@@ -819,28 +834,28 @@ s32 read_save_file(s32 saveFileNum, Settings *settings) {
     s32 block;
     s32 ret;
 
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
     switch (saveFileNum) {
         case 0:
-            startingAddress = 0;
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 0));
             break;
         case 1:
-            startingAddress = 5;
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 1));
             break;
         case 2:
-            startingAddress = 10;
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
             break;
         default:
-            startingAddress = 10;
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
             break;
     }
     blocks = 5;
     saveData = mempool_alloc_safe(blocks * sizeof(u64), COLOUR_TAG_WHITE);
     for (block = 0, address = startingAddress; block < blocks; block++, address++) {
-        osEepromRead(get_si_mesg_queue(), address, (u8 *) &saveData[block]);
+        osEepromRead(si_mesg(), address, (u8 *) &saveData[block]);
     }
     populate_settings_from_save_data(settings, (u8 *) saveData);
     mempool_free(saveData);
@@ -862,7 +877,7 @@ void erase_save_file(s32 saveFileNum, Settings *settings) {
     s32 address;
     s32 i;
 
-    if (osEepromProbe(get_si_mesg_queue()) != 0) {
+    if (osEepromProbe(si_mesg()) != 0) {
         get_number_of_levels_and_worlds(&levelCount, &worldCount);
         for (i = 0; i < levelCount; i++) {
             settings->courseFlagsPtr[i] = 0;
@@ -877,16 +892,16 @@ void erase_save_file(s32 saveFileNum, Settings *settings) {
         settings->newGame = TRUE;
         switch (saveFileNum) {
             case 0:
-                startingAddress = 0;
+                startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 0));
                 break;
             case 1:
-                startingAddress = 5;
+                startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 1));
                 break;
             case 2:
-                startingAddress = 10;
+                startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
                 break;
             default:
-                startingAddress = 10;
+                startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
                 break;
         }
         blockSize = 5;
@@ -900,7 +915,7 @@ void erase_save_file(s32 saveFileNum, Settings *settings) {
 
         if (!is_reset_pressed()) {
             for (i = 0, address = startingAddress; i < blockSize; i++, address++) {
-                osEepromWrite(get_si_mesg_queue(), address, (u8 *) &alloc[i]);
+                osEepromWrite(si_mesg(), address, (u8 *) &alloc[i]);
             }
         }
         mempool_free(alloc);
@@ -923,23 +938,23 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
     s32 blocks;
     s32 i;
 
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
 
     switch (saveFileNum) {
         case 0:
-            startingAddress = 0x00 / sizeof(u64);
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 0));
             break;
         case 1:
-            startingAddress = 0x28 / sizeof(u64);
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 1));
             break;
         case 2:
-            startingAddress = 0x50 / sizeof(u64);
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
             break;
         default:
-            startingAddress = 0x50 / sizeof(u64);
+            startingAddress = BLOCK_SIZE(SAVE_START + (sizeof(SaveFile) * 2));
             break;
     }
 
@@ -949,7 +964,7 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
 
     if (!is_reset_pressed()) {
         for (i = 0, address = startingAddress; i < blocks; i++, address++) {
-            osEepromWrite(get_si_mesg_queue(), address, (u8 *) &alloc[i]);
+            osEepromWrite(si_mesg(), address, (u8 *) &alloc[i]);
         }
     }
 
@@ -969,25 +984,26 @@ s32 read_eeprom_data(Settings *settings, u8 flags) {
     u64 *alloc;
     s32 i;
 
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
 
-    alloc = mempool_alloc_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
+    alloc = mempool_alloc_safe(COURSE_TIMES_START + sizeof(CourseRecords), COLOUR_TAG_WHITE);
 
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
-        s32 blocks = EEP_FLAP_SIZE;
+        s32 blocks = BLOCK_SIZE(sizeof(CourseRecords));
         for (i = 0; i < blocks; i++) {
-            osEepromRead(get_si_mesg_queue(), i + EEP_FLAP_OFFSET, (u8 *) &alloc[i]);
+            osEepromRead(si_mesg(), BLOCK_SIZE(FASTEST_LAPS_START) + i, (u8 *) &alloc[i]);
         }
         func_80073588(settings, (u8 *) alloc, SAVE_DATA_FLAG_READ_FLAP_TIMES);
     }
 
     if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
-        s32 blocks = EEP_COURSE_RECORD_SIZE;
+        s32 blocks = BLOCK_SIZE(sizeof(CourseRecords));
         for (i = 0; i < blocks; i++) {
-            osEepromRead(get_si_mesg_queue(), i + EEP_COURSE_TIME_OFFSET, (u8 *) (&alloc[EEP_FLAP_SIZE] + i));
+            osEepromRead(si_mesg(), BLOCK_SIZE(COURSE_TIMES_START) + i,
+                         (u8 *) (&alloc[sizeof(CourseRecords) / sizeof(u64)] + i));
         }
         func_80073588(settings, (u8 *) alloc, SAVE_DATA_FLAG_READ_COURSE_TIMES);
     }
@@ -1008,30 +1024,31 @@ s32 write_eeprom_data(Settings *settings, u8 flags) {
     u64 *alloc;
     s32 i;
 
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
 
-    alloc = mempool_alloc_safe(SAVE_SIZE, COLOUR_TAG_WHITE);
+    alloc = mempool_alloc_safe(COURSE_TIMES_START + sizeof(CourseRecords), COLOUR_TAG_WHITE);
 
     func_800738A4(settings, (u8 *) alloc);
 
     if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
-        s32 size = EEP_FLAP_SIZE;
+        s32 blocks = BLOCK_SIZE(sizeof(CourseRecords));
         if (1) {} // Fake Match
-        if (!is_reset_pressed()) {
-            for (i = 0; i != size; i++) {
-                osEepromWrite(get_si_mesg_queue(), i + EEP_FLAP_OFFSET, (u8 *) &alloc[i]);
+        if (is_reset_pressed() == FALSE) {
+            for (i = 0; i != blocks; i++) {
+                osEepromWrite(si_mesg(), BLOCK_SIZE(FASTEST_LAPS_START) + i, (u8 *) &alloc[i]);
             }
         }
     }
 
     if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
-        s32 size = EEP_COURSE_RECORD_SIZE;
-        if (!is_reset_pressed()) {
-            for (i = 0; i != size; i++) {
-                osEepromWrite(get_si_mesg_queue(), i + EEP_COURSE_TIME_OFFSET, (u8 *) (&alloc[EEP_FLAP_SIZE] + i));
+        s32 blocks = BLOCK_SIZE(sizeof(CourseRecords));
+        if (is_reset_pressed() == FALSE) {
+            for (i = 0; i != blocks; i++) {
+                osEepromWrite(si_mesg(), BLOCK_SIZE(COURSE_TIMES_START) + i,
+                              (u8 *) (&alloc[sizeof(CourseRecords) / sizeof(u64)] + i));
             }
         }
     }
@@ -1061,21 +1078,26 @@ s32 calculate_eeprom_settings_checksum(u64 eepromSettings) {
  * Address (0xF * sizeof(u64)) = 0x78 - 0x80 of the actual save data file
  */
 s32 read_eeprom_settings(u64 *eepromSettings) {
-    s32 temp;
-    s32 sp20;
+    s32 checksum;
+    s32 expected;
 
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
 
-    osEepromRead(get_si_mesg_queue(), 0xF, (u8 *) eepromSettings);
-    sp20 = calculate_eeprom_settings_checksum(*eepromSettings);
-    temp = *eepromSettings >> 56;
-    if (sp20 != temp) {
+    osEepromRead(si_mesg(), BLOCK_SIZE(CONFIG_START), (u8 *) eepromSettings);
+    expected = calculate_eeprom_settings_checksum(*eepromSettings);
+    checksum = *eepromSettings >> 56;
+    if (expected != checksum) {
         // bit 24 = Unknown
         // bit 25 = Seems to be a flag for whether subtitles are enabled or not.
-        *eepromSettings = 0x3000000; // Sets bits 24 and 25 high
+#if REGION == REGION_JP
+        // JP additionally forces the language setting to Japanese.
+        *eepromSettings = (1 << 2) | (1 << 3) | (1 << 24) | (1 << 25);
+#else
+        *eepromSettings = (1 << 24) | (1 << 25); // Sets bits 24 and 25 high
+#endif
         *eepromSettings <<= 8;
         *eepromSettings >>= 8;
         *eepromSettings |= (u64) calculate_eeprom_settings_checksum(*eepromSettings) << 56;
@@ -1090,15 +1112,15 @@ s32 read_eeprom_settings(u64 *eepromSettings) {
  * Address (0xF * sizeof(u64)) = 0x78 - 0x80 of the actual save data file
  */
 s32 write_eeprom_settings(u64 *eepromSettings) {
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+    if (osEepromProbe(si_mesg()) == 0) {
         stubbed_printf("WARNING : No Eprom\n");
         return -1;
     }
     *eepromSettings <<= 8;
     *eepromSettings >>= 8;
-    *eepromSettings |= (s64) (calculate_eeprom_settings_checksum(*eepromSettings)) << 56;
-    if (is_reset_pressed() == 0) {
-        osEepromWrite(get_si_mesg_queue(), 0xF, (u8 *) eepromSettings);
+    *eepromSettings |= (u64) (calculate_eeprom_settings_checksum(*eepromSettings)) << 56;
+    if (is_reset_pressed() == FALSE) {
+        osEepromWrite(si_mesg(), BLOCK_SIZE(CONFIG_START), (u8 *) eepromSettings);
     }
     return 1;
 }
@@ -1575,7 +1597,7 @@ void init_controller_paks(void) {
     u8 pakPattern;
     s8 maxControllers;
 
-    sControllerMesgQueue = get_si_mesg_queue();
+    sControllerMesgQueue = si_mesg();
     sRumbleTable = (s16 *) get_misc_asset(ASSET_MISC_RUMBLE_DATA);
     gRumbleIdle = gRumbleActive = 0xF;
     gRumbleOn = TRUE;
@@ -1712,11 +1734,29 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
         mempool_free(gPakFileList);
     }
 
-    files_used = maxNumOfFilesOnCpak * 24;
+#if REGION == REGION_JP
+    files_used = maxNumOfFilesOnCpak * 24; // SAVE_FILE_BYTES
+    files_used *= 2;                       // Skips a register to bring SAVE_FILE_BYTES to 48.
+#else
+    files_used = maxNumOfFilesOnCpak * SAVE_FILE_BYTES;
+#endif
+
     gPakFileList = mempool_alloc_safe(files_used, COLOUR_TAG_BLACK);
     bzero(gPakFileList, files_used);
     list = gPakFileList;
 
+#if REGION == REGION_JP
+    ret = 0;
+    for (i = 0; i < maxNumOfFilesOnCpak; i++) {
+        list += ret; // fake
+        fileNames[i] = (char *) list;
+        list += 0x24; // Could be doubled because file names bytes are doubled in JP?
+        fileExtensions[i] = (char *) list;
+        fileSizes[i] = 0;
+        fileTypes[i] = SAVE_FILE_TYPE_UNSET;
+        list += 12;
+    }
+#else
     for (i = 0; i < maxNumOfFilesOnCpak; i++) {
         fileNames[i] = (char *) list;
         list += 0x12;
@@ -1725,6 +1765,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
         fileTypes[i] = SAVE_FILE_TYPE_UNSET;
         list += 6;
     }
+#endif
 
     while (i < maxNumOfFilesToGet) {
         fileExtensions[i] = 0;
@@ -2051,9 +2092,13 @@ char *font_codes_to_string(char *inString, char *outString, s32 stringLength) {
             *outString = gN64FontCodes[index];
             outString++;
         } else {
+#if REGION == REGION_JP
+            *outString++ = 0x80;
+            *outString++ = *inString;
+#else
             // Replace invalid characters with a hyphen
-            *outString = '-';
-            outString++;
+            *outString++ = '-';
+#endif
         }
 
         inString++;
@@ -2082,6 +2127,19 @@ char *string_to_font_codes(char *inString, char *outString, s32 stringLength) {
 
     while (*inString != 0 && stringLength != 0) {
         *outString = 0;
+#if REGION == REGION_JP
+        if (*inString & 0x80) {
+            *outString++ = inString[1];
+            inString += 2;
+        } else {
+            for (i = 0; i < 65; i++) {
+                if (*inString == gN64FontCodes[i]) {
+                    *outString++ = i;
+                    break;
+                }
+            }
+        }
+#else
         for (i = 0; i < 65; i++) {
             currentChar = *inString;
             if (currentChar == gN64FontCodes[i]) {
@@ -2089,7 +2147,7 @@ char *string_to_font_codes(char *inString, char *outString, s32 stringLength) {
                 break;
             }
         }
-
+#endif
         inString++;
         stringLength--;
     }

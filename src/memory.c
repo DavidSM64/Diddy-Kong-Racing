@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80070B30 */
-
 #include "memory.h"
 #include "printf.h"
 #include "thread0_epc.h"
@@ -19,8 +16,6 @@ UNUSED s32 D_801235C4;
 FreeQueueSlot gFreeQueue[FREE_QUEUE_SIZE];
 s32 gFreeQueueCount;
 s32 gFreeQueueTimer; // Official Name: mmDelay
-
-extern MemoryPoolSlot gMainMemoryPool;
 
 /******************************/
 
@@ -406,7 +401,7 @@ s32 mempool_locked_set(u8 *address) {
 /**
  * Search the memory pool for the current address.
  * Check if the slot is marked with 0x02.
- * Unset that flag and return 1 if so, otherise 0.
+ * Unset that flag and return 1 if so, otherwise 0.
  */
 s32 mempool_locked_unset(u8 *address) {
     s32 slotIndex;
@@ -644,6 +639,9 @@ UNUSED s32 find_active_pool_slot_colours(void) {
         stubbed_printf("Unable to record %d slots, colours overflowed table.\n", numOverflows);
     }
     numOverflows = slotColour;
+#ifdef AVOID_UB
+    return 0;
+#endif
 }
 
 /**

@@ -2,7 +2,7 @@
 
 This repo contains a work-in-progress decompilation of Diddy Kong Racing for the N64. You will need to have a original copy of the ROM to extract the game's assets.
 
-Currently, only the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
+All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of March 20, 2025, this is our current score:
@@ -19,29 +19,35 @@ As of March 20, 2025, this is our current score:
 * `gcc`, Version 8.0 or higher
 * `make`, Version 4.2 or higher
 * `python3`
-* `wget`
 * `libpcre2-dev` and `libpcre2-8-0` (Not technically required, but will speedup extracting/building some assets.)
+* `gcc-mips-linux-gnu` is optionally used if compiling NON_MATCHING with COMPILER=gcc
 
-`sudo apt install build-essential pkg-config git python3 wget libpcre2-dev libpcre2-8-0`
-
-### binutils
-
-You are not required to install a binutils package, but it does speed up the initial setup if you do have it installed.
-
-* Ubuntu/Debian (x86): `sudo apt install binutils-mips-linux-gnu`
+`sudo apt install build-essential pkg-config git python3 python3-pip binutils-mips-linux-gnu python3-venv libpcre2-dev libpcre2-8-0`
 
 ## Setup / Building
 1. Install the dependencies
 2. Place the ROM file within the `baseroms` directory.  
-    **a.** The name of the ROM file does not matter. It will be detected automatically from an md5 checksum.  
-    **b.** If you use a byte-swapped or little-endian ROM, then it will automatically be converted to a big-endian (.z64) ROM file.  
-3. Run `make` in the main directory.  
+    **a.** The name of the ROM file does not matter. It will be detected automatically from an sha1 checksum.  
+3. Grab tools: `git submodule update --init --recursive`
+4. Run `make setup` to install the IDO compiler, python venv, and packages required.
+5. Run `make extract` to run splat to extract all required files from the baserom.
+6. Run `make` in the main directory.  
     **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
 
 ### Building on macOS
 1. Use homebrew to install dependencies: `brew install make`
 2. Place the ROM file within the `baseroms` directory. See [Setup](#setup--building) above for more info.
 3. Run `gmake` from the main directory. Note that macOS built-in `make` will not work since it does not meet the version requirements.
+
+### Building other versions
+To build other versions of the ROM, just specifcy the region and version in the make command. All examples are below:
+Baserom|REGION|VERSION|Command
+---|--|---|-
+US 1.0 | US | v77 | `make REGION=US VERSION=v77`
+PAL 1.0 | PAL | v77 | `make REGION=PAL VERSION=v77`
+JPN 1.0 | JPN | v79 | `make REGION=JPN VERSION=v79`
+US 1.1 | US | v80 | `make REGION=US VERSION=v80`
+PAL 1.1 | PAL | v80 | `make REGION=PAL VERSION=v80`  
 
 ## Modding
 If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.  
@@ -82,21 +88,6 @@ Example: `./diff.sh menu_init`
 This script will rename an existing symbol, file name, and/or folder name within the repo with a new one.
 
 Example: `./rename.sh D_A4001000 SP_IMEM`
-
----
-
-#### `./get_symbol.sh <ram_address>|<symbol>`
-
-Given either a RAM address or symbol, returns its `(symbol, address)` pairing as defined in `/build/us_1.0/dkr.map`. If specified, the RAM address must be in base 16. The `0x` prefix is not required.
-
-Example: 
-```
-./get_symbol.sh 0xA4001000
-0xA4001000 = SP_IMEM
-
-./get_symbol.sh osCicId
-0x80000310 = osCicId
-```
 
 ---
 
@@ -153,27 +144,3 @@ As of March 20, 2025, this is our current score:
  =======================================================================
 ```
 <!-- README_SCORE_END -->
-
----
-
-## TODO list
-
-### Major
-
-What should be focused on.
-
-* Decompiling the non-matching asm files into matching C functions.
-* Documenting variables & functions
-
-### Minor
-
-What can be done, but not essential.
-
-* Figuring out the formats for the assets in the /assets/ folder.
-* Creating tools to modify assets
-
-### Future
-
-These features won't be complete anytime soon.
-
-* Add support for the other 4 versions.

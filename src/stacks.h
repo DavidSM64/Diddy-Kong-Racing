@@ -3,6 +3,14 @@
 
 #include "types.h"
 
+#define STACK_IDLE      0x100
+#define STACK_SCHED     0x2000
+#define STACK_AUD       0x3010
+#define STACK_GAME      0x2000
+#define STACK_BGLOAD    0x2000
+
+#define STACKSIZE(x) (x / sizeof(u64))
+
 extern u8 D_80129AB0[0x100];
 extern u16 D_80129BB0[512];
 extern s32 gObjectStackTrace[3];

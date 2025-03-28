@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x8006A6B0 */
-
 #include "game.h"
 
 #include <PR/os_cont.h>
@@ -126,7 +123,7 @@ void init_level_globals(void) {
         D_80121178[i] = -1;
     }
     for (i = 0; i < gNumberOfLevelHeaders; i++) {
-        if ((gGlobalLevelTable[i].raceType == 5)) {
+        if (gGlobalLevelTable[i].raceType == 5) {
             D_80121178[gGlobalLevelTable[i].world] = i;
         }
     }
@@ -150,7 +147,7 @@ void init_level_globals(void) {
         checksumCount += ((u8 *) (&viewport_rsp_set))[j];
     }
     if (checksumCount != gViewportFuncChecksum) {
-        disable_button_mask();
+        drm_disable_input();
     }
 #endif
 }

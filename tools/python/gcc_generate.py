@@ -38,7 +38,7 @@ def holecount_all(src):
                 print(filename, holes, nonmatches)
     return 1
 
-paths = ('src', 'lib')
+paths = ('src', 'libultra')
 
 # get file encoding type
 def get_encoding_type(file):
@@ -68,6 +68,6 @@ for directory in chain.from_iterable(os.walk(path) for path in paths):
     if (nonm_count + noneq_count + global_asm_count) == 0 :
       outfile.write("    $(BUILD_DIR)/")
       outfile.write(os.path.splitext(filename)[0])
-      outfile.write(".o    \\\n")
+      outfile.write(".c.o    \\\n")
     infile.close()
 outfile.close()

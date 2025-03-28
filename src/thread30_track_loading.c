@@ -1,10 +1,8 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800C7350 */
-
 #include "thread30_track_loading.h"
 #include "macros.h"
 #include <ultra64.h>
 #include "game.h"
+#include "stacks.h"
 
 /************ .data ************/
 
@@ -20,7 +18,7 @@ s32 gThread30LoadDelay = 0;
 OSThread gThread30;
 OSMesgQueue gThread30MesgQueue;
 OSMesg gThread30Message[2];
-u64 gThread30Stack[0x400];
+u64 gThread30Stack[STACKSIZE(STACK_BGLOAD)];
 
 /*****************************/
 
@@ -29,7 +27,7 @@ u64 gThread30Stack[0x400];
  */
 void create_and_start_thread30(void) {
     osCreateMesgQueue(&gThread30MesgQueue, &gThread30Message[0], ARRAY_COUNT(gThread30Message));
-    osCreateThread(&gThread30, 30, &thread30_track_loading, NULL, &gThread30Stack[0x400], 8);
+    osCreateThread(&gThread30, 30, &thread30_track_loading, NULL, &gThread30Stack[STACKSIZE(STACK_BGLOAD)], 8);
     osStartThread(&gThread30);
 }
 

@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800C0170 */
-
 #include "fade_transition.h"
 
 #include "types.h"
@@ -199,6 +196,9 @@ u32 check_fadeout_transition(void) {
         }
     }
     //!@bug: This doesn't seem to guarantee a return.
+#ifdef AVOID_UB
+    return FALSE;
+#endif
 }
 
 /**

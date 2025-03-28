@@ -29,7 +29,7 @@ APPLY_OPTS = ""
 
 # Compiler options used with Clang-Tidy
 # Normal warnings are disabled with -Wno-everything to focus only on tidying
-INCLUDES = "-Iinclude -Isrc -Ibuild -I. -Ilib/src -Iinclude/libc -Iinclude/PR -Iinclude/sys -Ilib/src -Ilib/src/audio -Ilib/src/debug -Ilib/src/gu -Ilib/src/libc -Ilib/src/os"
+INCLUDES = "-Iinclude -Isrc -Ibuild -I. -Ilib/src"
 DEFINES = "-D_LANGUAGE_C -DNON_MATCHING -D_MIPS_SZLONG=32 -DNON_EQUIVALENT"
 COMPILER_OPTS = f"-fno-builtin -std=gnu90 -m32 -Wno-everything {INCLUDES} {DEFINES}"
 

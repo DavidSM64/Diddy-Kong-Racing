@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80000450 */
-
 #include "audio.h"
 #include "memory.h"
 
@@ -12,12 +9,12 @@
 #include "audiomgr.h"
 #include "audiosfx.h"
 #include "sched.h"
-#include "lib/src/audio/seqchannel.h"
+#include "libultra/src/audio/seqchannel.h"
 
 /************ .data ************/
 
-ALSeqPlayer *gMusicPlayer = NULL;
-ALSeqPlayer *gJinglePlayer = NULL;
+ALCSPlayer *gMusicPlayer = NULL;
+ALCSPlayer *gJinglePlayer = NULL;
 u8 gMusicBaseVolume = 127;
 u8 sfxRelativeVolume = 127;
 u8 gCanPlayMusic = TRUE;
@@ -193,8 +190,8 @@ void sound_volume_change(s32 behaviour) {
             set_sound_channel_volume(1, 32767);
             set_sound_channel_volume(2, 0);
             set_sound_channel_volume(4, 0);
-            alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16) (gMusicBaseVolume * gMusicSliderVolume >> 2));
-            alCSPSetVol((ALCSPlayer *) gJinglePlayer, 0);
+            alCSPSetVol(gMusicPlayer, (s16) (gMusicBaseVolume * gMusicSliderVolume >> 2));
+            alCSPSetVol(gJinglePlayer, 0);
             break;
         case VOLUME_LOWER_AMBIENT: // Mute the ambient channel, making course elements stop making noise.
             set_sound_channel_volume(0, 0);
@@ -213,8 +210,8 @@ void sound_volume_change(s32 behaviour) {
             set_sound_channel_volume(1, 32767);
             set_sound_channel_volume(2, 32767);
             set_sound_channel_volume(4, 32767);
-            alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16) (gMusicBaseVolume * gMusicSliderVolume));
-            alCSPSetVol((ALCSPlayer *) gJinglePlayer, (s16) (get_sfx_volume_slider() * sfxRelativeVolume));
+            alCSPSetVol(gMusicPlayer, (s16) (gMusicBaseVolume * gMusicSliderVolume));
+            alCSPSetVol(gJinglePlayer, (s16) (get_sfx_volume_slider() * sfxRelativeVolume));
             break;
     }
     gAudioVolumeSetting = behaviour;
@@ -245,7 +242,7 @@ void music_play(u8 seqID) {
         if (gCanPlayMusic) {
             music_sequence_start(gCurrentSequenceID, gMusicPlayer);
         }
-        gMusicTempo = alCSPGetTempo((ALCSPlayer *) gMusicPlayer);
+        gMusicTempo = alCSPGetTempo(gMusicPlayer);
         audioPrevCount = osGetCount();
         gMusicPlaying = TRUE;
         gDynamicMusicChannelMask = MUSIC_CHAN_MASK_NONE;
@@ -358,7 +355,7 @@ void sound_update_queue(u8 updateRate) {
     music_sequence_init(gMusicPlayer, gMusicSequenceData, &gMusicNextSeqID, &gMusicSequence);
     music_sequence_init(gJinglePlayer, gJingleSequenceData, &gJingleNextSeqID, &gJingleSequence);
     if (sMusicTempo == -1 && gMusicPlayer->target) {
-        sMusicTempo = 60000000 / alCSPGetTempo((ALCSPlayer *) gMusicPlayer);
+        sMusicTempo = 60000000 / alCSPGetTempo(gMusicPlayer);
     }
 }
 
@@ -441,7 +438,7 @@ void music_channel_on(u8 channel) {
  */
 void music_channel_pan_set(u8 channel, ALPan pan) {
     if (channel < AUDIO_CHANNELS) {
-        alCSPSetChlPan((ALCSPlayer *) gMusicPlayer, channel, pan);
+        alCSPSetChlPan(gMusicPlayer, channel, pan);
     }
 }
 
@@ -451,7 +448,7 @@ void music_channel_pan_set(u8 channel, ALPan pan) {
  */
 void music_channel_volume_set(u8 channel, u8 volume) {
     if (channel < AUDIO_CHANNELS) {
-        alCSPSetChlVol((ALCSPlayer *) gMusicPlayer, channel, volume);
+        alCSPSetChlVol(gMusicPlayer, channel, volume);
     }
 }
 
@@ -463,7 +460,7 @@ UNUSED u8 music_channel_volume(u8 channel) {
     if (channel >= AUDIO_CHANNELS) {
         return 0;
     } else {
-        return alCSPGetChlVol((ALCSPlayer *) gMusicPlayer, channel);
+        return alCSPGetChlVol(gMusicPlayer, channel);
     }
 }
 
@@ -483,7 +480,7 @@ u8 music_channel_fade(u8 channel) {
     if (channel >= AUDIO_CHANNELS) {
         return 0;
     }
-    return alCSPGetFadeIn((ALCSPlayer *) gMusicPlayer, channel);
+    return alCSPGetFadeIn(gMusicPlayer, channel);
 }
 
 /**
@@ -508,17 +505,17 @@ UNUSED u8 func_80001358(u8 arg0, u8 arg1, s32 arg2) {
 
     // u8 fadeIn_chan = arg0;
     if (!(arg0 == 100)) {
-        val_1f = arg2 + alCSPGetChlVol((ALCSPlayer *) gMusicPlayer, arg0);
+        val_1f = arg2 + alCSPGetChlVol(gMusicPlayer, arg0);
         if (val_1f > 127) {
             val_1f = 127;
         }
-        alCSPSetChlVol((ALCSPlayer *) gMusicPlayer, arg0, val_1f);
+        alCSPSetChlVol(gMusicPlayer, arg0, val_1f);
     }
 
     if (arg1 != 100) {
-        updatedVol = alCSPGetChlVol((ALCSPlayer *) gMusicPlayer, arg1);
+        updatedVol = alCSPGetChlVol(gMusicPlayer, arg1);
         val_1e = (updatedVol > arg2) ? updatedVol - arg2 : 0;
-        alCSPSetChlVol((ALCSPlayer *) gMusicPlayer, arg1, val_1e);
+        alCSPSetChlVol(gMusicPlayer, arg1, val_1e);
         return val_1e;
     } else {
         return 127 - val_1f;
@@ -529,7 +526,7 @@ UNUSED void func_80001440(u8 *arg0) {
     s32 s0 = 0;
     if (gMusicPlayer->maxChannels > 0) {
         do {
-            arg0[s0] = alSeqpGetChlFXMix(gMusicPlayer, s0);
+            arg0[s0] = alSeqpGetChlFXMix((ALSeqPlayer *) gMusicPlayer, s0);
             s0++;
         } while (s0 < gMusicPlayer->maxChannels);
     }
@@ -551,7 +548,7 @@ void music_tempo_set_relative(f32 tempo) {
 void music_tempo_set(s32 tempo) {
     if (tempo != 0) {
         f32 inv_tempo = (1.0f / tempo);
-        alCSPSetTempo((ALCSPlayer *) gMusicPlayer, (s32) (inv_tempo * 60000000.0f));
+        alCSPSetTempo(gMusicPlayer, (s32) (inv_tempo * 60000000.0f));
         sMusicTempo = tempo;
     }
 }
@@ -568,7 +565,7 @@ s16 music_tempo(void) {
  * Returns true if background music is currently playing.
  */
 u8 music_is_playing(void) {
-    return (alCSPGetState((ALCSPlayer *) gMusicPlayer) == AL_PLAYING);
+    return (alCSPGetState(gMusicPlayer) == AL_PLAYING);
 }
 
 /**
@@ -617,7 +614,7 @@ void music_jingle_play_safe(u8 jingleID) {
  */
 void sound_jingle_tempo_set(s32 tempo) {
     f32 inv_tempo = (1.0f / tempo);
-    alCSPSetTempo((ALCSPlayer *) gJinglePlayer, (s32) (inv_tempo * 60000000.0f));
+    alCSPSetTempo(gJinglePlayer, (s32) (inv_tempo * 60000000.0f));
 }
 
 /**
@@ -700,7 +697,7 @@ void music_volume_set(u8 volume) {
 
     gMusicBaseVolume = volume;
     normalized_vol = gMusicSliderVolume * gMusicBaseVolume * sMusicFadeVolume;
-    alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16) ((s32) (gGlobalMusicVolume * normalized_vol) >> 8));
+    alCSPSetVol(gMusicPlayer, (s16) ((s32) (gGlobalMusicVolume * normalized_vol) >> 8));
 }
 
 /**
@@ -713,7 +710,7 @@ void music_volume_config_set(u32 slider_val) {
     slider_val = (slider_val <= 256) ? slider_val : 256;
     gMusicSliderVolume = slider_val;
     normalized_vol = gMusicSliderVolume * gMusicBaseVolume * sMusicFadeVolume;
-    alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16) ((s32) (gGlobalMusicVolume * normalized_vol) >> 8));
+    alCSPSetVol(gMusicPlayer, (s16) ((s32) (gGlobalMusicVolume * normalized_vol) >> 8));
 }
 
 /**
@@ -736,7 +733,7 @@ s32 music_volume_config(void) {
  */
 void music_jingle_volume_set(u8 arg0) {
     sfxRelativeVolume = arg0;
-    alCSPSetVol((ALCSPlayer *) gJinglePlayer, (s16) (get_sfx_volume_slider() * sfxRelativeVolume));
+    alCSPSetVol(gJinglePlayer, (s16) (get_sfx_volume_slider() * sfxRelativeVolume));
 }
 
 /**
@@ -745,7 +742,7 @@ void music_jingle_volume_set(u8 arg0) {
 void music_jingle_pan_set(ALPan pan) {
     u32 iChan;
     for (iChan = 0; iChan < AUDIO_CHANNELS; iChan++) {
-        alCSPSetChlPan((ALCSPlayer *) gJinglePlayer, iChan, pan);
+        alCSPSetChlPan(gJinglePlayer, iChan, pan);
     }
 }
 
@@ -811,7 +808,6 @@ void sound_play(u16 soundID, s32 *soundMask) {
         if (soundMask != NULL) {
             *soundMask = NULL;
         }
-        stubbed_printf("amSndPlayDirect: Somebody tried to play illegal sound %d\n", soundID);
         return;
     }
     pitch = gSoundTable[soundID].pitch / 100.0f;
@@ -850,6 +846,7 @@ void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **soundMask) {
 
 void func_80001F14(u16 soundID, s32 *soundMask) {
     if (soundID <= 0 || sound_count() < soundID) {
+        stubbed_printf("amSndPlayDirect: Somebody tried to play illegal sound %d\n", soundID);
         if (soundMask) {
             *soundMask = NULL;
         }
@@ -947,13 +944,13 @@ u8 gSoundBank_GetSoundDecayTime(u16 soundID) {
 /**
  * Allocate space, then initialise a sequence player for audio playback.
  */
-ALSeqPlayer *sound_seqplayer_init(s32 maxVoices, s32 maxEvents) {
+ALCSPlayer *sound_seqplayer_init(s32 maxVoices, s32 maxEvents) {
     ALCSPlayer *cseqp;
     ALSeqpConfig config;
 
     config.maxVoices = maxVoices;
     config.maxEvents = maxEvents;
-    config.unknown_0x10 = maxVoices; // this member doesn't exist in other versions of ALSeqpConfig
+    config.voiceLimit = maxVoices; // this member doesn't exist in other versions of ALSeqpConfig
     config.maxChannels = AUDIO_CHANNELS;
     config.heap = &gALHeap;
     config.initOsc = NULL;
@@ -965,13 +962,13 @@ ALSeqPlayer *sound_seqplayer_init(s32 maxVoices, s32 maxEvents) {
     alCSPSetBank(cseqp, gSequenceBank->bankArray[0]);
     cseqp->unk36 = 127;
 
-    return (ALSeqPlayer *) cseqp;
+    return cseqp;
 }
 
 /**
  * Stop the current sequence then set the parameters for the next sequence.
  */
-void music_sequence_start(u8 seqID, ALSeqPlayer *seqPlayer) {
+void music_sequence_start(u8 seqID, ALCSPlayer *seqPlayer) {
     music_sequence_stop(seqPlayer);
     if (seqID < gSequenceTable->seqCount) {
         if (seqPlayer == gMusicPlayer) {
@@ -987,16 +984,16 @@ void music_sequence_start(u8 seqID, ALSeqPlayer *seqPlayer) {
 /**
  * If the sequence player is currently inactive, start a new sequence with the current properties.
  */
-void music_sequence_init(ALSeqPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *seq) {
+void music_sequence_init(ALCSPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *seq) {
     s32 i;
 
-    if ((alCSPGetState((ALCSPlayer *) seqp) == AL_STOPPED) && (*seqID != 0)) {
+    if ((alCSPGetState(seqp) == AL_STOPPED) && (*seqID != 0)) {
         load_asset_to_address(ASSET_AUDIO, (u32) sequence,
                               gSequenceTable->seqArray[*seqID].offset - get_rom_offset_of_asset(ASSET_AUDIO, 0),
                               (s32) gSeqLengthTable[*seqID]);
         alCSeqNew(seq, sequence);
-        alCSPSetSeq((ALCSPlayer *) seqp, seq);
-        alCSPPlay((ALCSPlayer *) seqp);
+        alCSPSetSeq(seqp, seq);
+        alCSPPlay(seqp);
         if (seqp == gMusicPlayer) {
             music_volume_set(gSeqSoundTable[*seqID].volume);
             if (gSeqSoundTable[*seqID].tempo != 0) {
@@ -1029,14 +1026,14 @@ void music_sequence_init(ALSeqPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *s
 /**
  * Stops the current playing sequence for the given sequence player.
  */
-void music_sequence_stop(ALSeqPlayer *seqPlayer) {
+void music_sequence_stop(ALCSPlayer *seqPlayer) {
     if (gMusicPlayer == seqPlayer && gMusicPlaying) {
-        alCSPStop((ALCSPlayer *) seqPlayer);
+        alCSPStop(seqPlayer);
         gMusicPlaying = FALSE;
         gCurrentSequenceID = SEQUENCE_NONE;
         gMusicNextSeqID = SEQUENCE_NONE;
     } else if (gJinglePlayer == seqPlayer && gJinglePlaying) {
-        alCSPStop((ALCSPlayer *) seqPlayer);
+        alCSPStop(seqPlayer);
         gJinglePlaying = FALSE;
         gJingleNextSeqID = SEQUENCE_NONE;
     }

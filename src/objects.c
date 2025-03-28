@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x8000B020 */
-
 #include "objects.h"
 #include "memory.h"
 
@@ -438,8 +435,8 @@ void func_8000B290(void) {
     gParticlePtrList_flush();
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000B38C.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8000B750.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B38C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B750.s")
 
 void func_8000BADC(s32 updateRate) {
     s32 i;
@@ -638,7 +635,7 @@ void decrypt_magic_codes(s32 *data, s32 length) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/objects/decrypt_magic_codes.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/decrypt_magic_codes.s")
 #endif
 
 /**
@@ -1357,7 +1354,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     mempool_free_timer(2);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/objects/func_8000CC7C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000CC7C.s")
 #endif
 
 /**
@@ -1572,8 +1569,8 @@ UNUSED s32 func_8000E558(Object *arg0) {
     return TRUE;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000E5EC.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8000E79C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000E5EC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000E79C.s")
 
 UNUSED u8 *func_8000E898(u8 *arg0, s32 arg1) {
     s32 temp_t6;
@@ -1668,7 +1665,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     for (i = 0; i < 0x200; i++) {
         (*gSpawnObjectHeap)[i] = NULL;
     }
-    curObj = &(*gSpawnObjectHeap)[0];
+    curObj = (Object *) &(*gSpawnObjectHeap)[0];
     curObj->segment.trans.flags = 2;
     curObj->segment.header = load_object_header(var_a0);
     if (curObj->segment.header == NULL) {
@@ -1820,11 +1817,11 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         }
     }
     if (sp50 & 4) {
-        sizeOfobj = init_object_water_effect(curObj, (ShadowData *) address);
+        sizeOfobj = init_object_water_effect(curObj, (WaterEffect *) address);
         address = (u32 *) ((uintptr_t) address + sizeOfobj);
         if (sizeOfobj == 0) {
             if (D_8011AE50 != NULL) {
-                free_texture((u32) D_8011AE50);
+                free_texture((TextureHeader *) D_8011AE50);
             }
             objFreeAssets(curObj, assetCount, objType);
             try_free_object_header(var_a0);
@@ -1846,16 +1843,16 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
     if (curObj->segment.header->numLightSources > 0) {
-        curObj->lightData = address;
+        curObj->lightData = (Object_LightData **) address;
         sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->numLightSources * 4)) - (uintptr_t) curObj;
     }
     newObj = mempool_alloc_pool((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
     if (newObj == NULL) {
         if (D_8011AE50 != NULL) {
-            free_texture((u32) D_8011AE50);
+            free_texture((TextureHeader *) D_8011AE50);
         }
         if (D_8011AE54 != NULL) {
-            free_texture((u32) D_8011AE54);
+            free_texture((TextureHeader *) D_8011AE54);
         }
         objFreeAssets(curObj, assetCount, objType);
         try_free_object_header(var_a0);
@@ -1878,7 +1875,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     if (newObj->waterEffect != NULL) {
         newObj->waterEffect =
-            (ShadowData *) (((uintptr_t) newObj + (uintptr_t) newObj->waterEffect) - (uintptr_t) gSpawnObjectHeap);
+            (WaterEffect *) (((uintptr_t) newObj + (uintptr_t) newObj->waterEffect) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->shadow != NULL) {
         newObj->shadow =
@@ -1907,7 +1904,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     if (newObj->segment.header->numLightSources > 0) {
         newObj->lightData =
-            (u32 *) (((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
+            (Object_LightData **) (((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
     }
     newObj->unk68 = (Object_68 **) ((uintptr_t) newObj + (uintptr_t) 0x80);
     if (arg1 & 1) {
@@ -1943,7 +1940,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     return newObj;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/objects/spawn_object.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/spawn_object.s")
 #endif
 
 /**
@@ -2260,7 +2257,7 @@ void gParticlePtrList_flush(void) {
     gFreeListCount = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800101AC.s")
 
 #ifdef NON_MATCHING
 // Minor regalloc diffs
@@ -2407,7 +2404,7 @@ void func_80010994(s32 updateRate) {
         if ((gEventCountdown == 0x50) && (gCutsceneID == 0)) {
             sp54 = 0;
             for (i = 0; i < MAXCONTROLLERS; i++) {
-                tempVal = get_buttons_pressed_from_player(i);
+                tempVal = input_pressed(i);
                 sp54 |= tempVal;
             }
 
@@ -2422,7 +2419,7 @@ void func_80010994(s32 updateRate) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/objects/func_80010994.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80010994.s")
 #endif
 
 #ifdef NON_EQUIVALENT
@@ -2446,14 +2443,14 @@ void func_80011134(Object *arg0, s32 arg1) {
             if (temp_v0 != 0xFF) {
                 var_t5 = temp_s3->textures[temp_v0].texture;
                 sp5C = var_s0->unk7 << 6;
-                tex_animate_texture(var_t5, temp_s4[var_s1].flags, &sp5C, arg1);
+                tex_animate_texture(var_t5, (u32 *) temp_s4[var_s1].flags, &sp5C, arg1);
                 var_s0->unk7 = sp5C >> 6;
             }
         }
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/objects/func_80011134.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80011134.s")
 #endif
 
 #ifdef NON_EQUIVALENT
@@ -2489,7 +2486,7 @@ void func_80011264(ObjectModel *model, Object *obj) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/objects/func_80011264.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80011264.s")
 #endif
 
 /**
@@ -3012,12 +3009,16 @@ void render_3d_model(Object *obj) {
                         if (alpha < 255) {
                             flags |= RENDER_SEMI_TRANSPARENT;
                         }
+#ifdef ANTI_TAMPER
                         cicFailed = FALSE;
                         // Anti-Piracy check
                         if (osCicId != CIC_ID) {
                             cicFailed = TRUE;
                         }
                         if (!cicFailed) {
+#else
+                        if (1) {
+#endif
                             var_v0_2 = (loopObj->segment.trans.flags & OBJ_FLAGS_UNK_0080 && obj60_unk0 == 3);
                             if (racerObj != NULL && racerObj->transparency < 255) {
                                 var_v0_2 = FALSE;
@@ -3329,7 +3330,7 @@ void func_80012F94(Object *obj) {
     gCurrentLightIntensity = ret2;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80012F94.s")
 #endif
 
 /**
@@ -3364,7 +3365,7 @@ void unset_temp_model_transforms(Object *obj) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800135B8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800135B8.s")
 
 /**
  * Render the bubble trap weapon.
@@ -3533,7 +3534,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80014090.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80014090.s")
 
 void func_800142B8(void) {
     s32 i = gObjectListStart;
@@ -3686,7 +3687,7 @@ s32 func_80014814(s32 *retObjCount) {
     return curObjCount;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/objects/func_80014814.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80014814.s")
 #endif
 
 UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5, s32 arg6) {
@@ -3970,7 +3971,7 @@ void process_object_interactions(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800159C8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800159C8.s")
 
 void func_80016500(Object *obj, Object_Racer *racer) {
     s32 sp3C;
@@ -4254,7 +4255,7 @@ void func_8001709C(Object *obj) {
     obj5C->unk100 = NULL;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80017248.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017248.s")
 
 unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
     unk800179D0 *entry;
@@ -4295,9 +4296,12 @@ u32 func_800179D0(void) {
         }
         i++;
     }
+#ifdef AVOID_UB
+    return 0;
+#endif
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80017A18.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017A18.s")
 
 /**
  * Sets the active Taj challenge.
@@ -4314,8 +4318,8 @@ UNUSED s16 get_taj_challenge_type(void) {
     return gTajChallengeType;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80017E98.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_800185E4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017E98.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800185E4.s")
 
 /**
  * Search and return Taj's overworld object.
@@ -4334,7 +4338,7 @@ Object *find_taj_object(void) {
     return NULL;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80018CE0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80018CE0.s")
 
 // Rocket Path
 s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,
@@ -4395,7 +4399,7 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
     return TRUE;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80019808.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80019808.s")
 
 /**
  * Mark the course as finished for the appropriate mode.
@@ -4546,7 +4550,7 @@ void race_transition_adventure(s32 updateRate) {
                 hud_visibility(1);
             }
         }
-        i = get_buttons_pressed_from_player(PLAYER_ONE) & A_BUTTON;
+        i = input_pressed(PLAYER_ONE) & A_BUTTON;
         settings = get_settings();
         if (!(settings->cutsceneFlags & 0x40000)) {
             i = 0;
@@ -5345,7 +5349,7 @@ s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
     return result;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001C6C4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001C6C4.s")
 
 #ifdef NON_MATCHING
 // ainode_find_next
@@ -5389,7 +5393,7 @@ s32 func_8001CC48(s32 nodeCurrent, s32 arg1, s32 direction) {
     return entry->adjacent[someObj64->directions[test]];
 }
 #else
-GLOBAL_ASM("asm/non_matchings/objects/func_8001CC48.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001CC48.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -5517,7 +5521,7 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     return result;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/objects/func_8001CD28.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001CD28.s")
 #endif
 
 /**
@@ -5684,8 +5688,8 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/calc_dynamic_lighting_for_object_1.s")
-GLOBAL_ASM("asm/non_matchings/objects/calc_env_mapping_for_object.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/calc_dynamic_lighting_for_object_1.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/calc_env_mapping_for_object.s")
 
 /**
  * Find the racer object representing the player and directly set position and angle to new values.
@@ -5909,7 +5913,7 @@ void func_8001E89C(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001E93C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001E93C.s")
 
 void func_8001EE74(void) {
     LevelObjectEntry_Animation *animation;
@@ -6077,7 +6081,7 @@ void func_8001F450(void) {
     D_8011AD53 = 1;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001F460.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001F460.s")
 
 s32 func_800210CC(s8 arg0) {
     if (arg0 >= D_8011AD3D) {
@@ -6207,7 +6211,7 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
     return 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80021600.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80021600.s")
 
 f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x) {
     f32 ret;

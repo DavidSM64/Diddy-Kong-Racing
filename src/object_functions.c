@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80033CC0 */
-
 #include "object_functions.h"
 
 #include "PR/os_cont.h"
@@ -28,7 +25,7 @@
 #include "fade_transition.h"
 #include "audio_vehicle.h"
 #include "object_models.h"
-#include "lib/src/libc/rmonPrintf.h"
+#include "libultra/src/libc/rmonPrintf.h"
 #include "collision.h"
 #include "joypad.h"
 #include "printf.h"
@@ -259,7 +256,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
     if ((interactObj->obj)) {
         if ((interactObj->distance < 60)) {
             someObj = interactObj->obj;
-            if ((someObj->segment.header->behaviorId == BHV_RACER)) {
+            if (someObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) someObj->unk64;
                 if (racer->playerIndex != PLAYER_COMPUTER) {
                     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON) {
@@ -879,7 +876,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
         if (interactObj->distance < 200) {
             if (playerObj == interactObj->obj) {
                 // Detect if the player honks or slams into the signpost.
-                if ((get_buttons_pressed_from_player(PLAYER_ONE) & Z_TRIG) || playerObj == obj->unk5C->unk100) {
+                if ((input_pressed(PLAYER_ONE) & Z_TRIG) || playerObj == obj->unk5C->unk100) {
                     begin_lighthouse_rocket_cutscene();
                 }
             }
@@ -1251,7 +1248,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             obj->properties.npc.timer = 1;
         }
     }
-    index = get_buttons_pressed_from_player(PLAYER_ONE);
+    index = input_pressed(PLAYER_ONE);
     if (obj->properties.npc.action == TT_MODE_ROAM && distance < 300.0 && obj->properties.npc.timer == 0) {
         if (angleDiff > -0x2000 && angleDiff < 0x2000) {
             if ((obj->interactObj->flags & INTERACT_FLAGS_PUSHING && racerObj == obj->interactObj->obj) ||
@@ -1835,7 +1832,7 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
     path_enable();
     obj->properties.animatedObj.behaviourID = entry->actorIndex;
     obj->properties.animatedObj.action = arg2;
-    if (arg2 != 0 && (get_buttons_pressed_from_player(PLAYER_ONE) & R_CBUTTONS)) {
+    if (arg2 != 0 && (input_pressed(PLAYER_ONE) & R_CBUTTONS)) {
         obj->properties.animatedObj.action = 2;
     }
     if (((cutscene_id() == entry->channel) || (entry->channel == 20)) && (obj->unk64 == NULL) && (entry->order == 0) &&
@@ -2122,7 +2119,7 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
             if (charSelectObj->segment.object.animationID >= 0) {
                 if ((charSelectObj->segment.object.animationID < objMdl->numberOfAnimations)) {
                     i = (objMdl->animations[charSelectObj->segment.object.animationID].unk4 - 1) << 4;
-                    if ((charSelect->unk2C == 1)) {
+                    if (charSelect->unk2C == 1) {
                         temp_f0 = music_animation_fraction();
                         if (temp_f0 > 0.5) {
                             temp_f0 -= 0.5;
@@ -2224,7 +2221,7 @@ void obj_loop_infopoint(Object *obj, UNUSED s32 updateRate) {
         if (playerObj->segment.header->behaviorId == 1) {
             Object_InfoPoint *playerObj64 = &playerObj->unk64->info_point;
             player = playerObj64->unk0;
-            if ((player != PLAYER_COMPUTER) && (get_buttons_pressed_from_player(player) & Z_TRIG)) {
+            if ((player != PLAYER_COMPUTER) && (input_pressed(player) & Z_TRIG)) {
                 set_current_text(obj->properties.infoPoint.radius & 0xFF);
             }
         }
@@ -2589,7 +2586,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         zPosDiff = (racerObj->segment.trans.z_position - (racer->oz1 * 50.0f)) - obj->segment.trans.z_position;
         distance = sqrtf((xPosDiff * xPosDiff) + (zPosDiff * zPosDiff));
     }
-    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+    buttonsPressed = input_pressed(PLAYER_ONE);
     var_a2 = FALSE;
     if ((obj->properties.npc.action == NULL) && (distance < 300.0) &&
         (((obj->interactObj->flags & INTERACT_FLAGS_PUSHING) && (racerObj == obj->interactObj->obj)) ||
@@ -5349,7 +5346,7 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
             if (weaponProperties->decayTimer < normalise_time(-1320)) {
                 if (weapon->weaponID == WEAPON_OIL_SLICK) {
                     weaponProperties->status = WEAPON_TRIGGERED;
-                } else if ((weapon->weaponID == WEAPON_BUBBLE_TRAP)) {
+                } else if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
                     weaponProperties->status = WEAPON_DESTROY;
                     play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,
                                            weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4,
@@ -5528,7 +5525,7 @@ void obj_loop_texscroll(Object *obj, s32 updateRate) {
     for (i = 0; i < levelModel->numberOfSegments; i++) {
         curBatch = curBlock[i].batches;
         for (j = 0; j < curBlock[i].numberOfBatches; j++) {
-            if ((curBatch[j].textureIndex == obj64->tex_scroll.textureIndex)) {
+            if (curBatch[j].textureIndex == obj64->tex_scroll.textureIndex) {
                 for (tri = curBatch[j].facesOffset; tri < curBatch[j + 1].facesOffset; tri++) {
                     curTriangle = &curBlock[i].triangles[tri];
                     if (!(curTriangle->flags & 0x80)) {
@@ -6125,36 +6122,27 @@ void obj_loop_butterfly(Object *butterflyObj, s32 updateRate) {
 
 void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     Object_64 *obj64;
-    s32 pad0;
+    Object_68 *obj68;
     ObjectTransform transform;
     f32 ox;
     f32 oy;
     f32 oz;
-    s32 pad[10];
-    Object_68 *obj68;
     ObjectModel *objModel;
-    Vertex *vertices;
-    Vertex *vertex;
-    // TODO: find a way to have matching builds use this Matrix temp.
-#ifdef AVOID_UB
+    UNUSED s32 pad;
     Matrix mtx;
-#else
-    f32 mtx[4];
-#endif
     f32 sinYRot;
     f32 tempF3;
     f32 minX;
     f32 minZ;
-    f32 scaleF;
     f32 minY;
+    f32 maxY;
     f32 maxX;
     f32 maxZ;
     f32 cosYRot;
+    f32 scaleF;
+    Vertex *vertex;
     f32 tempF2;
-    f32 maxY;
-    s32 numOfVertices;
     s32 i;
-    f32 scaleF2;
 
     obj->segment.trans.rotation.y_rotation = entry->angleY << 8 << 2; // Two shifts needed to skip a register.
     obj64 = obj->unk64;
@@ -6637,9 +6625,15 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             set_current_dialogue_box_coords(4, x1, y1, x2, y2);
             set_current_dialogue_background_colour(4, 128, 64, 128, (properties->opacity * 160) >> 8);
             set_current_text_background_colour(4, 0, 0, 0, 0);
+#if REGION == REGION_JP
+            set_dialogue_font(4, FONT_SMALL);
+            set_current_text_colour(4, 255, 255, 64, 255, (properties->opacity * 255) >> 8);
+            render_dialogue_text(4, (x2 - x1) >> 1, ((y2 - y1) >> 1), levelName, 1, ALIGN_MIDDLE_CENTER);
+#else
             set_dialogue_font(4, FONT_COLOURFUL);
             set_current_text_colour(4, 255, 255, 255, 0, (properties->opacity * 255) >> 8);
             render_dialogue_text(4, (x2 - x1) >> 1, ((y2 - y1) >> 1) + 2, levelName, 1, ALIGN_MIDDLE_CENTER);
+#endif
             open_dialogue_box(4);
         }
     }

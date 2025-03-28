@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80003160 */
-
 #include "audiosfx.h"
 #include "memory.h"
 #include "audio_internal.h"
@@ -67,7 +64,7 @@ void alSndPNew(audioMgrConfig *c) {
     gAlSndPlayerPtr->frameTime = 33000; // AL_USEC_PER_FRAME        /* time between API events */
     gAlSndPlayerPtr->unk40 = (unk800DC6BC_40 *) alHeapAlloc(c->hp, 1, c->unk00 * sizeof(unk800DC6BC_40));
     alEvtqNew(&(gAlSndPlayerPtr->evtq), alHeapAlloc(c->hp, 1, (c->unk04) * 28), c->unk04);
-    D_800DC6B0.unk8 = gAlSndPlayerPtr->unk40;
+    D_800DC6B0.unk8 = (ALSoundState *) gAlSndPlayerPtr->unk40;
     for (i = 1; i < c->unk00; i++) {
         tmp1 = gAlSndPlayerPtr->unk40;
         alLink((ALLink *) (i + tmp1), (ALLink *) (i + tmp1 - 1));
@@ -121,7 +118,7 @@ ALMicroTime _sndpVoiceHandler(void *node) {
     return sndp->nextDelta;
 }
 
-GLOBAL_ASM("asm/non_matchings/audiosfx/_handleEvent.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/_handleEvent.s")
 
 void func_8000410C(ALSoundState *state) {
     if (state->unk3E & 4) {
@@ -177,27 +174,27 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     u16 freeListNextIndex;
     u16 allocListNextIndex;
     u16 freeListLastIndex;
-    ALLink *nextAllocList;
-    ALLink *nextFreeList;
-    ALLink *prevFreeList;
+    ALSoundState *nextAllocList;
+    ALSoundState *nextFreeList;
+    ALSoundState *prevFreeList;
     ALSoundState *queue;
 
     mask = osSetIntMask(OS_IM_NONE);
     queue = (ALSoundState *) &D_800DC6B0;
-    nextFreeList = (ALLink *) queue->next;
-    nextAllocList = (ALLink *) queue->unk8;
-    prevFreeList = (ALLink *) queue->prev;
+    nextFreeList = queue->next;
+    nextAllocList = queue->unk8;
+    prevFreeList = queue->prev;
 
     for (freeListNextIndex = 0; nextFreeList != 0; freeListNextIndex++) {
-        nextFreeList = (ALLink *) nextFreeList->next;
+        nextFreeList = nextFreeList->next;
     }
 
     for (allocListNextIndex = 0; nextAllocList != 0; allocListNextIndex++) {
-        nextAllocList = (ALLink *) nextAllocList->next;
+        nextAllocList = nextAllocList->next;
     }
 
     for (freeListLastIndex = 0; prevFreeList != 0; freeListLastIndex++) {
-        prevFreeList = (ALLink *) prevFreeList->prev;
+        prevFreeList = prevFreeList->prev;
     }
 
     *lastAllocListIndex = allocListNextIndex;
@@ -222,18 +219,18 @@ ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
     temp_a2 = arg1->keyMap;
     if (nextAllocList != NULL) {
         mask = osSetIntMask(OS_IM_NONE);
-        D_800DC6B0.unk8 = (ALLink *) nextAllocList->next;
+        D_800DC6B0.unk8 = nextAllocList->next;
         alUnlink((ALLink *) nextAllocList);
         if (D_800DC6B0.next != NULL) {
-            nextAllocList->next = (ALLink *) D_800DC6B0.next;
+            nextAllocList->next = D_800DC6B0.next;
             nextAllocList->prev = NULL;
-            ((ALLink *) (D_800DC6B0.next))->prev = (ALLink *) nextAllocList;
-            D_800DC6B0.next = (ALLink *) nextAllocList;
+            D_800DC6B0.next->prev = (ALSoundState *) nextAllocList;
+            D_800DC6B0.next = (ALSoundState *) nextAllocList;
         } else {
             nextAllocList->prev = NULL;
             nextAllocList->next = NULL;
-            D_800DC6B0.next = (ALLink *) nextAllocList;
-            D_800DC6B0.prev = (ALLink *) nextAllocList;
+            D_800DC6B0.next = (ALSoundState *) nextAllocList;
+            D_800DC6B0.prev = (ALSoundState *) nextAllocList;
         }
         osSetIntMask(mask);
         temp = ((arg1->envelope->decayTime + 1) == 0);
@@ -242,7 +239,7 @@ ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
         nextAllocList->unk36 = temp_a1;
         nextAllocList->unk3F = 5;
         nextAllocList->unk38 = 2;
-        nextAllocList->unk8 = arg1;
+        nextAllocList->unk8 = (ALSoundState *) arg1;
         nextAllocList->unk2C = 1.0f;
         nextAllocList->unk3E = temp_a2->keyMax & 0xF0;
         nextAllocList->unk30 = 0;
@@ -261,7 +258,7 @@ ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
     return (ALSound *) nextAllocList;
 }
 
-GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004520.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004520.s")
 
 void func_80004604(u8 *arg0, u8 arg1) {
     if (arg0) {
@@ -282,9 +279,10 @@ s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask) {
 
 #ifdef NON_EQUIVALENT
 s32 func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, SoundMask *soundMask) {
+    return 0;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004668.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004668.s")
 #endif
 
 // input typing not right (some type of struct)

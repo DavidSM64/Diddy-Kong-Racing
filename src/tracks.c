@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800249E0 */
-
 #include "tracks.h"
 
 #include "types.h"
@@ -18,7 +15,7 @@
 #include "game_ui.h"
 #include "weather.h"
 #include "particles.h"
-#include "lib/src/libc/rmonPrintf.h"
+#include "libultra/src/libc/rmonPrintf.h"
 #include "objects.h"
 #include "math_util.h"
 #include "printf.h"
@@ -49,6 +46,10 @@ LevelModel *gCurrentLevelModel = NULL; // Official Name: track
 LevelHeader *gCurrentLevelHeader2 = NULL;
 
 s32 D_800DC920 = -1;
+#if REGION == REGION_JP
+// T.T.カメラ  -  T.T. Camera
+char gJpnTTCam[] = { 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x55, 0x80, 0x71, 0x80, 0x76 };
+#endif
 s32 *D_800DC924 = NULL;
 s32 D_800DC928 = 0; // Currently unknown, might be a different type.
 
@@ -285,7 +286,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
  * The root function for rendering the entire scene.
  * Handles drawing the track, objects and the majority of the HUD in single player.
  */
-void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris, s32 updateRate) {
+void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32 updateRate) {
     s32 i;
     s32 numViewports;
     s32 tempUpdateRate;
@@ -434,7 +435,11 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
                 posX = SCREEN_WIDTH_HALF + 10;
                 posY = SCREEN_HEIGHT_HALF + 5;
             }
+#if REGION == REGION_JP
+            draw_text(&gSceneCurrDisplayList, posX, posY, gJpnTTCam, ALIGN_TOP_LEFT);
+#else
             draw_text(&gSceneCurrDisplayList, posX, posY, "TT CAM", ALIGN_TOP_LEFT);
+#endif
         } else {
             set_active_camera(PLAYER_FOUR);
             func_800278E8(updateRate);
@@ -454,7 +459,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
 UNUSED const char gTrackClippingErrorString[] = "Solid Clipping x0=x1 Error!!!\n";
 UNUSED const char gTrackHeightOverflowString[] = "TrackGetHeight() - Overflow!!!\n";
 
-GLOBAL_ASM("asm/non_matchings/tracks/func_80025510.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80025510.s")
 
 void func_800257D0(void) {
     if (D_800DC924 != 0) {
@@ -541,7 +546,7 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
             check4 = TRUE;
         }
         if (((s16) ((s16) (check1 + check2) + check3) + check4) & 3) {
-            func_80026430(bbox, yCameraSins, yCameraCoss, temp_f22);
+            func_80026430((LevelModelSegment *) bbox, yCameraSins, yCameraCoss, temp_f22);
             if (gCurrentLevelModel->segments[segmentIndex].unk3C & 2) {
                 func_80026070(bbox, yCameraSins, yCameraCoss, temp_f22);
             }
@@ -578,8 +583,8 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
         }
         temp_t6 = gSceneCurrVertexList;
         gSceneCurrVertexList = D_8011D480[D_8011D4B4];
-        temp_t7 = gSceneCurrTriList;
-        gSceneCurrTriList = D_8011D490[D_8011D4B4];
+        temp_t7 = (s8 *) gSceneCurrTriList;
+        gSceneCurrTriList = (Triangle *) D_8011D490[D_8011D4B4];
         D_8011D4B4 = 1 - D_8011D4B4;
         var_s4 = D_8011D478->unk0;
         D_8011D488 = gSceneCurrVertexList;
@@ -626,11 +631,11 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
                        TRIN_DISABLE_TEXTURE);
         }
         gSceneCurrVertexList = spAC;
-        gSceneCurrTriList = spA8;
+        gSceneCurrTriList = (Triangle *) spA8;
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002581C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002581C.s")
 #endif
 
 void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 arg3) {
@@ -711,7 +716,7 @@ void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 a
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/tracks/func_80026430.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80026430.s")
 
 void func_80026C14(s16 arg0, s16 arg1, s32 arg2) {
     s16 i;
@@ -915,7 +920,7 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     return 0;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/tracks/func_80027184.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80027184.s")
 #endif
 
 #ifdef NON_EQUIVALENT
@@ -978,7 +983,7 @@ s32 func_80027568(void) {
     ret = FALSE;
     // bug? var_ra can be undefined?
     for (var_t4 = 0; var_t4 < D_8011D378 && ret == FALSE; var_t4++) {
-        var_v0_1 = D_8011D370[var_t4];
+        var_v0_1 = (s32) D_8011D370[var_t4];
         if (var_v0_1 > 0) {
             var_ra = (void *) PHYS_TO_K0(var_v0_1);
         } else {
@@ -1027,7 +1032,7 @@ s32 func_80027568(void) {
     return ret;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/tracks/func_80027568.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80027568.s")
 #endif
 
 void func_800278E8(s32 updateRate) {
@@ -1195,7 +1200,7 @@ void set_skydome_visbility(s32 renderSky) {
 
 // init_skydome
 // https://decomp.me/scratch/jmbc1
-GLOBAL_ASM("asm/non_matchings/tracks/func_80028050.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80028050.s")
 
 /**
  * Instead of drawing the skydome with textures, draw a solid coloured background.
@@ -1294,7 +1299,7 @@ void draw_gradient_background(void) {
     verts += 4;
     gSceneCurrVertexList = verts;
     tris += 2;
-    gSceneCurrTriList = (TriangleList *) tris;
+    gSceneCurrTriList = (Triangle *) tris;
 }
 
 /**
@@ -2139,7 +2144,7 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     return gTrackWaves[index]->type;
 }
 
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002B0F4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002B0F4.s")
 
 s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
     LevelModelSegment *seg;
@@ -2298,7 +2303,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     return yOutCount;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002BAB0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002BAB0.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -2404,7 +2409,7 @@ void func_8002C0C4(s32 modelId) {
     set_texture_colour_tag(COLOUR_TAG_MAGENTA);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002C0C4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002C0C4.s")
 #endif
 
 void func_8002C71C(LevelModelSegment *segment) {
@@ -2547,7 +2552,7 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002CC30.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002CC30.s")
 
 typedef struct unk8002D30C_a0 {
     u8 pad00[0x04];
@@ -2965,8 +2970,8 @@ void func_8002E234(Object *obj, s32 bool) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002E904.s")
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002EEEC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002E904.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002EEEC.s")
 
 #ifdef NON_EQUIVALENT
 void func_8002F2AC(void) {
@@ -2992,10 +2997,10 @@ void func_8002F2AC(void) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002F2AC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002F2AC.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002F440.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002F440.s")
 
 // Transition points between different lighting levels, used by certain objects
 f32 func_8002FA64(void) {
@@ -3084,7 +3089,7 @@ s32 func_8002FD74(f32 x0, f32 z0, f32 x1, f32 x2, s32 count, Vec4f *arg5) {
     return 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002FF6C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002FF6C.s")
 
 #ifdef NON_EQUIUVALENT
 void func_800304C8(Vec4f *arg0) {
@@ -3131,7 +3136,7 @@ void func_800304C8(Vec4f *arg0) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/tracks/func_800304C8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_800304C8.s")
 #endif
 
 /**

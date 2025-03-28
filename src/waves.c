@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800B7D20 */
-
 #include "waves.h"
 #include "types.h"
 #include "macros.h"
@@ -403,7 +400,7 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
     D_8012A018 = 0;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/waves/func_800B82B4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800B82B4.s")
 #endif
 
 void func_800B8B8C(void) {
@@ -436,7 +433,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
     s32 var_t5;
     s32 var_s4;
     s32 var_t9;
-    Struct8012A5E8 *temp;
+    unk8012A5E8 *temp;
 
     // possible fake:
     xPosRatio = (xPosition - D_8012A0D0) / gWaveBoundingBoxDiffX;
@@ -555,7 +552,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
     func_800BA288(currentViewport, updateRate);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/waves/func_800B8C04.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800B8C04.s")
 #endif
 
 s32 func_800B9228(LevelModelSegment *arg0) {
@@ -571,9 +568,9 @@ s32 func_800B9228(LevelModelSegment *arg0) {
     return result;
 }
 
-GLOBAL_ASM("asm/non_matchings/waves/func_800B92F4.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800B97A8.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800B9C18.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800B92F4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800B97A8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800B9C18.s")
 
 void func_800BA288(s32 arg0, s32 arg1) {
     s32 i;
@@ -619,9 +616,9 @@ void func_800BA288(s32 arg0, s32 arg1) {
 }
 
 // https://decomp.me/scratch/h4uac
-GLOBAL_ASM("asm/non_matchings/waves/func_800BA4B8.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BA8E4.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BB2F4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BA4B8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BA8E4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BB2F4.s")
 
 void func_800BBDDC(LevelModel *level, LevelHeader *header) {
     func_800BBE08(level, (unk800BBE08_arg1 *) header);
@@ -671,12 +668,12 @@ void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/waves/func_800BBF78.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BC6C8.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BCC70.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BDC80.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BBF78.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BC6C8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BCC70.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BDC80.s")
 // https://decomp.me/scratch/2RF3k
-GLOBAL_ASM("asm/non_matchings/waves/func_800BE654.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BE654.s")
 
 /**
  * Finds the wave height and returns it for the spinning log object.

@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x8007AC70 */
-
 #include "textures_sprites.h"
 #include "gzip.h"
 #include "asset_loading.h"
@@ -449,34 +446,34 @@ TextureHeader *load_texture(s32 arg0) {
     }
     for (i = 0; i < gNumberOfLoadedTextures; i++) {
         if (arg0 == gTextureCache[(i << 1)]) {
-            tex = gTextureCache[(i << 1) + 1];
+            tex = (TextureHeader *) gTextureCache[(i << 1) + 1];
             tex->numberOfInstances++;
             return tex;
         }
     }
     assetOffset = gTextureAssetTable[assetTable][assetIndex];
     assetSize = gTextureAssetTable[assetTable][assetIndex + 1] - assetOffset;
-    load_asset_to_address(assetSection, gTempTextureHeader, assetOffset, 0x28);
+    load_asset_to_address(assetSection, (u32) gTempTextureHeader, assetOffset, 0x28);
     numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
 
     if (!gTempTextureHeader->header.isCompressed) {
-        tex = mempool_alloc((numberOfTextures * 0x60) + assetSize, gTexColourTag);
+        tex = (TextureHeader *) mempool_alloc((numberOfTextures * 0x60) + assetSize, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
-        load_asset_to_address(assetSection, tex, assetOffset, assetSize);
+        load_asset_to_address(assetSection, (u32) tex, assetOffset, assetSize);
     } else {
-        temp_v0_5 = byteswap32(&gTempTextureHeader->uncompressedSize);
+        temp_v0_5 = byteswap32((u8 *) &gTempTextureHeader->uncompressedSize);
         temp_a0 = (numberOfTextures * 0x60) + temp_v0_5;
         sp3C = temp_v0_5 + 0x20;
-        tex = mempool_alloc(temp_a0 + 0x20, gTexColourTag);
+        tex = (TextureHeader *) mempool_alloc(temp_a0 + 0x20, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
         temp_a1 = ((s32) tex + sp3C) - assetSize;
         temp_a1 -= temp_a1 % 0x10;
         load_asset_to_address(assetSection, temp_a1, assetOffset, assetSize);
-        gzip_inflate(temp_a1 + 0x20, tex);
+        gzip_inflate((u8 *) (temp_a1 + 0x20), (u8 *) tex);
         assetSize = sp3C - 0x20;
     }
     texIndex = -1;
@@ -489,11 +486,11 @@ TextureHeader *load_texture(s32 arg0) {
         texIndex = gNumberOfLoadedTextures++;
     }
     gTextureCache[(texIndex << 1)] = arg0;
-    gTextureCache[(texIndex << 1) + 1] = tex;
+    gTextureCache[(texIndex << 1) + 1] = (s32) tex;
     paletteOffset = -1;
     if ((tex->format & 0xF) == TEX_FORMAT_CI4) {
         if (D_80126344 == 0) {
-            load_asset_to_address(ASSET_EMPTY_14, &gCiPalettes[gCiPalettesSize], tex->ciPaletteOffset, 32);
+            load_asset_to_address(ASSET_EMPTY_14, (u32) &gCiPalettes[gCiPalettesSize], tex->ciPaletteOffset, 32);
             tex->ciPaletteOffset = gCiPalettesSize;
             gCiPalettesSize += 32; // (32 bytes / 2 bytes per color) = 16 colors.
         }
@@ -501,7 +498,7 @@ TextureHeader *load_texture(s32 arg0) {
     }
     if ((tex->format & 0xF) == TEX_FORMAT_CI8) {
         if (D_80126344 == 0) {
-            load_asset_to_address(ASSET_EMPTY_14, &gCiPalettesSize[gCiPalettes], tex->ciPaletteOffset, 128);
+            load_asset_to_address(ASSET_EMPTY_14, (u32) &gCiPalettesSize[gCiPalettes], tex->ciPaletteOffset, 128);
             tex->ciPaletteOffset = gCiPalettesSize;
             gCiPalettesSize += 128; // (128 bytes / 2 bytes per color) = 64 colors.
         }
@@ -511,7 +508,7 @@ TextureHeader *load_texture(s32 arg0) {
     texTemp = tex;
     alignedAddress = align16((u8 *) ((s32) texTemp + assetSize));
     for (i = 0; i < numberOfTextures; i++) {
-        build_tex_display_list(texTemp, alignedAddress);
+        build_tex_display_list(texTemp, (Gfx *) alignedAddress);
         if (paletteOffset >= 0) {
             texTemp->ciPaletteOffset = paletteOffset;
             alignedAddress += 0x30; // I'm guessing it takes 6 f3d commands to load the palette
@@ -528,7 +525,7 @@ TextureHeader *load_texture(s32 arg0) {
     return tex;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/load_texture.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/load_texture.s")
 #endif
 
 /**
@@ -868,7 +865,7 @@ void func_8007BF34(Gfx **dlist, s32 flags) {
 /**
  * Official Name: texLoadSprite
  */
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007C12C.s")
 
 Sprite *func_8007C52C(s32 arg0) {
     if ((arg0 < 0) || (arg0 >= D_80126358)) {
@@ -997,7 +994,7 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
     goto textureCouldNotBeLoaded;
 }
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007CA68.s")
 
 /* Official name: texFreeSprite */
 void free_sprite(Sprite *sprite) {
@@ -1146,7 +1143,7 @@ void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
     D_80126368 = triangles;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CDC0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007CDC0.s")
 #endif
 
 #ifdef NON_EQUIVALENT
@@ -1308,7 +1305,7 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/build_tex_display_list.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/build_tex_display_list.s")
 #endif
 
 s32 func_8007EF64(s16 arg0) {

@@ -13,7 +13,7 @@ then
     # If the 3rd argument is "--check", then make sure the new symbol doesn't already exist!
     if [ "$3" == "--check" ];
     then
-        if grep -rlq "$2" asm/**/*.s src/**/*.{c,h} lib/**/*.{c,s} include/*.h undefined_syms.txt dkr.ld;
+        if grep -rlq "$2" asm/**/*.s src/**/*.{c,h} libultra/**/*.{c,s} include/*.h undefined_syms.txt dkr.ld;
         then
             echo "$2 already exist"
             exit 1

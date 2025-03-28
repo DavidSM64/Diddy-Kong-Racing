@@ -9,14 +9,23 @@ CXXFLAGS := -I . -I dkr_assets_tool_src/ -std=c++17 $(OPT)
 LDFLAGS := -lm
 PROGRAMS := n64crc dkr_assets_tool
 
-OS := $(shell uname)
+UNAME_S := $(shell uname -s)
 
 # MacOS has a slightly different name for grep, so check to see if it needs to be used.
-ifeq ($(OS), Darwin)
+ifeq ($(UNAME_S),Windows_NT)
+	$(error Native Windows is currently unsupported for building this repository, use WSL instead c:)
+else ifeq ($(UNAME_S),Darwin)
+	DETECTED_OS := macos
 	CXXFLAGS += -I/opt/homebrew/include 
 	LDFLAGS += -I/opt/homebrew/lib -lpcre2-8
-else
+else ifeq ($(UNAME_S),Linux)
+	DETECTED_OS := linux
 	CXXFLAGS += -Werror -Wall $(IGNORE_W_ERRORS) -lpcre2-8 
+	UNAME_P := $(shell uname -p)
+# If we detect arm as a platform for linux, but not mac, we'll make this -arm to download that version (Mostly used for raspi)
+	ifneq ($(filter arm%,$(UNAME_P)),)
+		DETECTED_OS := linux-arm
+	endif
 endif
 
 BUILD_DIR := dkr_assets_tool_src/_build
@@ -26,6 +35,8 @@ ENUMS_HEADER := ../include/enums.h
 # From: https://stackoverflow.com/questions/2483182/recursive-wildcards-in-gnu-make/18258352#18258352
 rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
+RECOMP_DIR := ido-recomp/$(DETECTED_OS)
+
 default: all
 
 n64crc_SOURCES := n64crc.c
@@ -34,9 +45,9 @@ all: $(PROGRAMS) recomp flips
 
 # make clean for flips doesn't work, so just manually delete it on a clean. 
 clean:
-	rm -Rf $(PROGRAMS) $(BUILD_DIR)
-	@make -C ido-static-recomp clean VERSION=5.3
-	rm -f Flips/flips
+	$(RM) -Rf $(PROGRAMS) $(BUILD_DIR)
+	$(RM) -rf $(RECOMP_DIR)
+	$(RM) -f Flips/flips
 
 distclean: clean
 
@@ -60,10 +71,12 @@ $(BUILD_DIR)/%.o: %.cpp
 dkr_assets_tool: $(dkr_assets_tool_OBJ_FILES)
 	$(CXX) $^ -o $@ $(CXXFLAGS) $(LDFLAGS) -lpthread
 
-#recomp likes to echo some strings on all calls to make, the >/dev/null will silence them.
 recomp:
-	@make -C ido-static-recomp VERSION=5.3 RELEASE=1 setup >/dev/null
-	@make -C ido-static-recomp VERSION=5.3 RELEASE=1 >/dev/null
+	@echo "Fetching Recomp..."
+	wget https://github.com/decompals/ido-static-recomp/releases/download/v1.2/ido-5.3-recomp-${DETECTED_OS}.tar.gz
+	mkdir -p $(RECOMP_DIR)
+	tar xf ido-5.3-recomp-${DETECTED_OS}.tar.gz -C $(RECOMP_DIR)
+	$(RM) ido-5.3-recomp-${DETECTED_OS}.tar.gz
 
 #Builds the CLI only version of flips. It will complain about it being debug, but this makes it much faster compile.
 flips:

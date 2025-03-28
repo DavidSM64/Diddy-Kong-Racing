@@ -1,6 +1,3 @@
-/* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x8006C330 */
-
 #include "thread3_main.h"
 
 #include "common.h"
@@ -47,10 +44,15 @@
 #include "joypad.h"
 #include "PRinternal/viint.h"
 #include "font.h"
+#include "stacks.h"
 
 /************ .rodata ************/
 
+#if VERSION >= VERSION_79
+UNUSED char *sDebugRomBuildInfo[] = { "1.1634", "17/10/97 11:19", "pmountain" };
+#elif VERSION == VERSION_77
 UNUSED char *sDebugRomBuildInfo[] = { "1.1605", "02/10/97 16:03", "pmountain" };
+#endif
 
 const char D_800E7134[] = "BBB\n"; // Functionally unused.
 
@@ -58,9 +60,15 @@ const char D_800E7134[] = "BBB\n"; // Functionally unused.
 
 /************ .data ************/
 
+#if VERSION == VERSION_80
+UNUSED char gBuildString[] = "Version 8.0 27/10/97 12.30 L.Schuneman";
+#elif VERSION == VERSION_79
+UNUSED char gBuildString[] = "Version 7.9 14/10/97 19.40 L.Schuneman";
+#elif VERSION == VERSION_77
 UNUSED char gBuildString[] = "Version 7.7 29/09/97 15.00 L.Schuneman";
+#endif
 
-s8 sAntiPiracyTriggered = 0;
+s8 sAntiPiracyTriggered = FALSE;
 UNUSED s32 D_800DD378 = 1;
 s32 gSaveDataFlags = 0; // Official Name: load_save_flags
 s32 gScreenStatus = OSMESG_SWAP_BUFFER;
@@ -72,13 +80,11 @@ s16 gLevelLoadTimer = 0;
 s8 gPauseLockTimer = 0; // If this is above zero, the player cannot pause the game.
 s8 gFutureFunLandLevelTarget = FALSE;
 s8 gDmemInvalid = FALSE;
-UNUSED s32 D_800DD3A4 = 0;
-UNUSED s32 D_800DD3A8 = 0;
-UNUSED s32 D_800DD3AC = 0;
-s32 gNumF3dCmdsPerPlayer[4] = { 4500, 7000, 11000, 11000 };
-s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
-s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
-s32 gNumHudTrisPerPlayer[4] = { 20, 30, 40, 50 };
+UNUSED s32 D_800DD3A4[] = { 0, 0, 0 };
+s32 gNumF3dCmdsPerPlayer[MAXCONTROLLERS] = { 4500, 7000, 11000, 11000 };
+s32 gNumHudVertsPerPlayer[MAXCONTROLLERS] = { 300, 600, 850, 900 };
+s32 gNumHudMatPerPlayer[MAXCONTROLLERS] = { 300, 400, 550, 600 };
+s32 gNumHudTrisPerPlayer[MAXCONTROLLERS] = { 20, 30, 40, 50 };
 s8 gDrawFrameTimer = 0;
 FadeTransition D_800DD3F4 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 20, 0);
 UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 20, -1);
@@ -99,12 +105,12 @@ MatrixS *gMatrixHeap[2];
 MatrixS *gGameCurrMatrix;
 Vertex *gVertexHeap[2];
 Vertex *gGameCurrVertexList;
-TriangleList *gTriangleHeap[2];
-TriangleList *gGameCurrTriList;
+Triangle *gTriangleHeap[2];
+Triangle *gGameCurrTriList;
 UNUSED s32 D_80121230[8];
 s8 gLevelSettings[16];
 OSSched gMainSched; // 0x288 / 648 bytes
-u64 gSchedStack[0x400];
+u64 gSchedStack[STACKSIZE(STACK_SCHED)];
 s32 gSPTaskNum;
 s32 gGameMode;
 s32 gRenderMenu; // I don't think this is ever not 1
@@ -144,7 +150,7 @@ UNUSED s32 D_80123568[3]; // BSS Padding
  */
 void thread3_main(UNUSED void *unused) {
     init_game();
-    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, 0);
+    gSaveDataFlags = input_update(gSaveDataFlags, 0);
     sBootDelayTimer = 0;
     gGameMode = GAMEMODE_INTRO;
     while (1) {
@@ -192,8 +198,7 @@ void init_game(void) {
     } else if (osTvType == OS_TV_TYPE_MPAL) {
         viMode = OS_VI_MPAL_LPN1;
     }
-
-    osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, viMode, 1);
+    osCreateScheduler(&gMainSched, &gSchedStack[STACKSIZE(STACK_SCHED)], /*priority*/ 13, viMode, 1);
 #ifdef ANTI_TAMPER
     // Antipiracy measure.
     gDmemInvalid = FALSE;
@@ -206,7 +211,7 @@ void init_game(void) {
     gfxtask_init(&gMainSched);
     audio_init(&gMainSched);
     func_80008040(); // Should be very similar to allocate_object_model_pools
-    sControllerStatus = init_controllers();
+    sControllerStatus = input_init();
     tex_init_textures();
     allocate_object_model_pools();
     allocate_object_pools();
@@ -273,7 +278,7 @@ void main_game_loop(void) {
     rsp_init(&gCurrDisplayList);
     rdp_init(&gCurrDisplayList);
     bgdraw_render(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE);
-    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
+    gSaveDataFlags = input_update(gSaveDataFlags, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
         gGameMode = GAMEMODE_LOCKUP;
@@ -352,6 +357,9 @@ void main_game_loop(void) {
     if (tempLogicUpdateRate > tempLogicUpdateRateMax) {
         sLogicUpdateRate = tempLogicUpdateRateMax;
     }
+#if REGION == REGION_JP
+    func_800C78E0_C84E0();
+#endif
 }
 
 /**
@@ -423,8 +431,8 @@ void mode_game(s32 updateRate) {
 
     // Get input data for all 4 players.
     for (i = 0; i < get_active_player_count(); i++) {
-        buttonHeldInputs |= get_buttons_held_from_player(i);
-        buttonPressedInputs |= get_buttons_pressed_from_player(i);
+        buttonHeldInputs |= input_held(i);
+        buttonPressedInputs |= input_pressed(i);
     }
 #ifdef ANTI_TAMPER
     // Spam the start button, making the game unplayable because it's constantly paused.
@@ -1380,10 +1388,10 @@ void alloc_displaylist_heap(s32 numberOfPlayers) {
             default_alloc_displaylist_heap();
         }
         gMatrixHeap[0] = (MatrixS *) ((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))));
-        gTriangleHeap[0] = (TriangleList *) ((u8 *) gMatrixHeap[0] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
+        gTriangleHeap[0] = (Triangle *) ((u8 *) gMatrixHeap[0] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
         gVertexHeap[0] = (Vertex *) ((u8 *) gTriangleHeap[0] + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle))));
         gMatrixHeap[1] = (MatrixS *) ((u8 *) gDisplayLists[1] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))));
-        gTriangleHeap[1] = (TriangleList *) ((u8 *) gMatrixHeap[1] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
+        gTriangleHeap[1] = (Triangle *) ((u8 *) gMatrixHeap[1] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
         gVertexHeap[1] = (Vertex *) ((u8 *) gTriangleHeap[1] + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle))));
         gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[num];
         gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[num];
@@ -1429,14 +1437,12 @@ void default_alloc_displaylist_heap(void) {
     gDisplayLists[0] = (Gfx *) mempool_alloc_safe(totalSize, COLOUR_TAG_RED);
     gMatrixHeap[0] = (MatrixS *) ((u8 *) gDisplayLists[0] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
     gVertexHeap[0] = (Vertex *) ((u8 *) gMatrixHeap[0] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
-    gTriangleHeap[0] =
-        (TriangleList *) ((u8 *) gVertexHeap[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
+    gTriangleHeap[0] = (Triangle *) ((u8 *) gVertexHeap[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
     gDisplayLists[1] = (Gfx *) mempool_alloc_safe(totalSize, COLOUR_TAG_YELLOW);
     gMatrixHeap[1] = (MatrixS *) ((u8 *) gDisplayLists[1] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
     gVertexHeap[1] = (Vertex *) ((u8 *) gMatrixHeap[1] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
-    gTriangleHeap[1] =
-        (TriangleList *) ((u8 *) gVertexHeap[1] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
+    gTriangleHeap[1] = (Triangle *) ((u8 *) gVertexHeap[1] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
     gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[numberOfPlayers];
     gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[numberOfPlayers];
@@ -1535,7 +1541,7 @@ void swap_lead_player(void) {
     u8 *first_racer_data;
     u8 *second_racer_data;
 
-    swap_player_1_and_2_ids();
+    input_swap_id();
     func_8000E194();
 
     first_racer_data = (u8 *) (gSettingsPtr->racers);
@@ -1564,7 +1570,7 @@ void mode_intro(void) {
     s32 buttonInputs = 0;
 
     for (i = 0; i < MAXCONTROLLERS; i++) {
-        buttonInputs |= get_buttons_held_from_player(i);
+        buttonInputs |= input_held(i);
     }
     if (buttonInputs & START_BUTTON) {
         gShowControllerPakMenu = TRUE;
