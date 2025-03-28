@@ -361,7 +361,7 @@ Object *get_object(s32 index);
 Object **objGetObjList(s32 *arg0, s32 *cnt);
 s32 obj_count(void);
 s32 particle_count(void);
-void func_8000E9D0(Object *arg0);
+void func_8000E9D0(Object *obj);
 void free_object(Object *);
 s32 obj_table_ids(void);
 s32 obj_id_valid(s32 arg0);
