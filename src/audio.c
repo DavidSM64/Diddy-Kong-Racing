@@ -77,7 +77,7 @@ SoundMask *gRacerSoundMask;
  * Afterwards, set up the audio thread and start it.
  */
 void audio_init(OSSched *sc) {
-    s32 iCnt;
+    s32 i;
     ALSynConfig synth_config;
     s32 *addrPtr;
     u32 seqfSize;
@@ -116,14 +116,14 @@ void audio_init(OSSched *sc) {
     alSeqFileNew(gSequenceTable, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[ASSET_AUDIO_4]));
     gSeqLengthTable = (u32 *) mempool_alloc_safe((gSequenceTable->seqCount) * 4, COLOUR_TAG_CYAN);
 
-    for (iCnt = 0; iCnt < gSequenceTable->seqCount; iCnt++) {
-        pad = (u32) (gSequenceTable + 8 + iCnt * 8); // Fakematch
-        gSeqLengthTable[iCnt] = gSequenceTable->seqArray[iCnt].len;
-        if (gSeqLengthTable[iCnt] & 1) {
-            gSeqLengthTable[iCnt]++;
+    for (i = 0; i < gSequenceTable->seqCount; i++) {
+        pad = (u32) (gSequenceTable + 8 + i * 8); // Fakematch
+        gSeqLengthTable[i] = gSequenceTable->seqArray[i].len;
+        if (gSeqLengthTable[i] & 1) {
+            gSeqLengthTable[i]++;
         }
-        if (seqLength < gSeqLengthTable[iCnt]) {
-            seqLength = gSeqLengthTable[iCnt];
+        if (seqLength < gSeqLengthTable[i]) {
+            seqLength = gSeqLengthTable[i];
         }
     }
 
@@ -131,8 +131,8 @@ void audio_init(OSSched *sc) {
     synth_config.maxPVoices = 40;
     synth_config.maxUpdates = 96;
     synth_config.dmaproc = NULL;
-    synth_config.fxType[0] = 6;
-    synth_config.fxType[1] = 2;
+    synth_config.fxType[0] = AL_FX_CUSTOM;
+    synth_config.fxType[1] = AL_FX_BIGROOM;
     synth_config.outputRate = 0;
     synth_config.heap = &gALHeap;
     amCreateAudioMgr(&synth_config, 12, sc);
