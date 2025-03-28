@@ -19,6 +19,20 @@ typedef enum RaceFinishStages {
     HUD_RACEFINISH_IDLE
 } RaceFinishStages;
 
+typedef enum TimeTrialFinishStages {
+    TIMETRIAL_FINISH_INIT,  // Init necessary vars, then advance.
+    TIMETRIAL_FINISH_IN,    // Slide in the text.
+    TIMETRIAL_FINISH_SHOW,  // Keep the text onscreen for a few seconds.
+    TIMETRIAL_FINISH_OUT,   // Slide out the text.
+    TIMETRIAL_FINISH_IDLE,  // Text is offscreen, reset a few vars then advance.
+    TIMETRIAL_FINISH_IDLE_2 // Do nothing.
+} TimeTrialFinishStages;
+
+typedef enum WrongWayStages {
+    WRONGWAY_HIDE,
+    WRONGWAY_SHOW
+} WrongWayStages;
+
 typedef enum LapTextStages {
     LAPTEXT_IDLE,
     LAPTEXT_UNK1,
@@ -30,6 +44,14 @@ typedef enum LapTextDirection {
     LAPTEXT_IN = -1,
     LAPTEXT_OUT = 1
 } LapTextDirection;
+
+// Consistently inconsistent, courtesy of Rare.
+typedef enum WrongWayDirection {
+    WRONGWAY_OUT = -1,
+    WRONGWAY_IN = 1
+} WrongWayDirection;
+
+
 
 enum CourseIndicatorArrows {
     INDICATOR_NONE,
@@ -241,7 +263,7 @@ typedef struct HudElement_ChallengeEggs {
 } HudElement_ChallengeEggs;
 
 typedef struct HudElement_RaceStartGo {
-    s8 unk1A[4];
+    s8 musicStartTimer[4];
 } HudElement_RaceStartGo;
 
 typedef struct HudElement_BananaCountIconSpin {
@@ -257,14 +279,14 @@ typedef struct HudElement_BananaCountSparkle {
 typedef struct HudElement_SilverCoinTally {
     s8 soundPlayed;     // Whether the sound has been played
     s8 soundTimer;      // Delay timer before playing the sound
-    s8 unk1C;
+    s8 offsetY;         // Offset for the hud, utilised for two players.
 } HudElement_SilverCoinTally;
 
 typedef struct HudElement_RaceFinishPos {
     s8 status;          // Which behaviour to do
     s8 textOutTimer;    // Delay timer in frames, increases ticks at 120 before getting set to -120
     s8 textOutTicks;    // Number of times delay timer has reached 120. This is because the timer is only 8 bits.
-    s8 unk1D;
+    s8 targetPos;       // Target X offset for the element;
 } HudElement_RaceFinishPos;
 
 typedef struct HudElement_RacePosition {
@@ -278,43 +300,36 @@ typedef struct HudElement_LapCountFlag {
 } HudElement_LapCountFlag;
 
 typedef struct HudElement_LapText {
-    s8 status;
-    s8 direction;
-    s8 targetPos;
+    s8 status;       // Which behaviour to do
+    s8 direction;   // Direction to slide the text
+    s8 targetPos;   // Target X offset for the element
     s8 soundPlayed;    // Whether the sound has been played
 } HudElement_LapText;
 
-typedef struct HudElement_WrongWay {
-    s8 unk1A;
-    s8 unk1B;
-    s8 unk1C;
-    s8 unk1D;
-} HudElement_WrongWay;
-
 typedef struct HudElement_Timer {
-    s8 minutes;
-    s8 seconds;
-    s8 hundredths;
+    s8 minutes;     // Minutes elapsed
+    s8 seconds;     // Seconds elapsed
+    s8 hundredths;  // Hundredths of a second elapsed
     s8 unk1D;
 } HudElement_Timer;
 
 typedef struct HudElement_FinishText {
-    s8 unk1A;
-    s8 unk1B;
-    s8 unk1C;
-    s8 unk1D;
+    s8 status;
+    s8 fadeTimer;   // Timer that signals sliding the text offscreen when it hits 120
+    s8 unk1C;   // Unused
+    s8 targetPos;
 } HudElement_FinishText;
 
 typedef struct HudElement_WeaponDisplay {
-    s8 unk1A;
-    s8 unk1B;
-    s8 unk1C;
-    s8 unk1D;
+    s8 numberFlickerTimer;  // Value that counts down when having fewer than 3 quantity.
+    s8 rotation;    // s8 rotation representation. Wraps from 0-16, then multiplied by 0x1000
+    s8 scale;       // s8 scale representation. A new weapon grows larger until reaching full size. Ranges from 0 - 120
+    s8 prevLevel;   // Previous known weapon level, for starting the visual effects upon collecting another.
 } HudElement_WeaponDisplay;
 
 typedef struct HudElement_RaceTimeLabel {
-    s8 unk1A;
-    s8 unk1B;
+    s8 hideTimer;   // Counter that's used for having the text flicker.
+    s8 hundredths;   // Rounds hundredths to the next tenth, but functionally unused.
 } HudElement_RaceTimeLabel;
 
 typedef struct HudElement {
@@ -324,7 +339,7 @@ typedef struct HudElement {
     Vec3f pos;
     s16 spriteOffset;
     union {
-        u8 filler[6]; // Ensures this union is 6 bytes, since Rare never actually use more than four.
+        u8 filler[4]; // Ensures this union is 6 bytes, since Rare never actually use more than four.
         HudElement_ChallengeEggs challengeEggs;
         HudElement_RaceStartGo raceStartGo;
         HudElement_BananaCountIconSpin bananaCountIconSpin;
@@ -334,7 +349,6 @@ typedef struct HudElement {
         HudElement_RacePosition racePosition;
         HudElement_LapCountFlag lapCountFlag;
         HudElement_LapText lapText;
-        HudElement_WrongWay wrongWay;
         HudElement_Timer timer;
         HudElement_FinishText finishText;
         HudElement_WeaponDisplay weaponDisplay;

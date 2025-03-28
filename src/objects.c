@@ -6330,7 +6330,7 @@ void mode_init_taj_race(void) {
         gIsTajChallenge = racer->vehicleID + 1;
         checkpointNode = func_800230D0(racerObj, racer);
         racer->cameraYaw = 0x8000 - racer->steerVisualRotation;
-        racer->unk1FC = 0;
+        racer->wrongWayCounter = 0;
         racer->startInput = 0;
         racer->courseCheckpoint = 0;
         racer->checkpoint = 0;
