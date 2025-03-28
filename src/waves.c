@@ -112,12 +112,12 @@ s32 D_8012A0E8[64];
 s16 D_8012A1E8[512];
 
 typedef struct unk8012A5E8 {
- s16 unk0;
- s16 unk2;
- s16 unk4;
- s16 unk6;
- s32 unk8;
- s16 unkC;
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s32 unk8;
+    s16 unkC;
 } unk8012A5E8;
 
 unk8012A5E8 *D_8012A5E8;
@@ -441,7 +441,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
     D_8012A5E8 = -1;
     D_8012A5F4 = -1;
 
-    // This is incorrect because the assembly compares 
+    // This is incorrect because the assembly compares
     // var_v1 != gWavePowerBase
     // however gWavePowerBase is a f32
     // so instead we (for now) set every 6th values in the struct to -1
@@ -479,7 +479,13 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
                     tempXPosRatio = xPosRatio;
                     var_t2 = (zPosRatio * D_8012A0D8) + xPosRatio;
                     for (j = 0; j < D_80129FC8.unk24; j++) {
-                        if ((tempXPosRatio >= 0) && (tempXPosRatio < D_8012A0D8) && (D_8012A0E8[zPosRatio] & (1 << tempXPosRatio))) {
+                        // clang-format off
+                        if (
+                            (tempXPosRatio >= 0) &&
+                            (tempXPosRatio < D_8012A0D8) &&
+                            (D_8012A0E8[zPosRatio] & (1 << tempXPosRatio))
+                        ) {
+                            // clang-format on
                             var_t4 = var_t5 + var_s4;
                             D_800E30D4[var_t2] |= D_800E30E0[i * D_80129FC8.unk24 + j] << var_t4;
                             for (k = 0; k < D_8012A0E0; k++) {
@@ -531,7 +537,14 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
                 tempXPosRatio = xPosRatio;
                 var_t2 = (zPosRatio * D_8012A0D8) + tempXPosRatio;
                 for (j = 0; j < D_80129FC8.unk24; j++, tempXPosRatio++, var_t2++) {
-                    if ((tempXPosRatio >= 0) && (tempXPosRatio < D_8012A0D8) && (D_8012A0E8[zPosRatio] & (1 << tempXPosRatio))) {
+
+                    // clang-format off
+                    if (
+                        (tempXPosRatio >= 0) &&
+                        (tempXPosRatio < D_8012A0D8) &&
+                        (D_8012A0E8[zPosRatio] & (1 << tempXPosRatio))
+                    ) {
+                        // clang-format on
                         D_800E30D4[var_t2] = D_800E30E0[i * D_80129FC8.unk24 + j];
                         for (k = 0; k < D_8012A0E0; k++) {
                             if (var_t2 == (&D_800E30D8[k])->unkC) {
