@@ -4678,10 +4678,10 @@ void race_finish_time_trial(void) {
                 if (gTimeTrialStaffGhost) {
                     tt_ghost_beaten(get_current_map_id(), &bestRacer->playerIndex);
                 } else {
-                    play_time_trial_end_message(&bestRacer->playerIndex);
+                    hud_time_trial_message(&bestRacer->playerIndex);
                 }
             } else {
-                play_time_trial_end_message(&bestRacer->playerIndex);
+                hud_time_trial_message(&bestRacer->playerIndex);
             }
         }
     }
@@ -4786,7 +4786,7 @@ void tt_ghost_beaten(s32 arg0, s16 *playerId) {
         gBeatStaffGhost = FALSE;
         return;
     }
-    play_time_trial_end_message(playerId);
+    hud_time_trial_message(playerId);
 }
 
 /**

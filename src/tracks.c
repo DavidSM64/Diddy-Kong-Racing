@@ -399,14 +399,14 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
         }
         lensflare_override(get_active_camera_segment());
         lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
-        render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
-                   get_racer_object_by_port(gSceneCurrentPlayerID), updateRate);
+        hud_render_player(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
+                          get_racer_object_by_port(gSceneCurrentPlayerID), updateRate);
     }
     // Show TT Cam toggle for the fourth viewport when playing 3 player.
     if (numViewports == 3 && get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS &&
         get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE &&
         get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) {
-        if (get_hud_setting() == 0) {
+        if (hud_setting() == 0) {
             if (flip) {
                 gSPSetGeometryMode(gSceneCurrDisplayList++, G_CULL_FRONT);
             }

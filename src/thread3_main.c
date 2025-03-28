@@ -388,7 +388,7 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     camera_init();
     load_game_text_table();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, gGameCurrentCutscene);
-    init_hud(get_viewport_count());
+    hud_init(get_viewport_count());
     func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
     ainode_update();
     osSetTime(0);
@@ -412,7 +412,7 @@ void unload_level_game(void) {
     clear_audio_and_track();
     transition_begin(&D_800DD3F4);
     func_800AE270();
-    free_hud();
+    hud_free();
     free_game_text_table();
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gDPFullSync(gCurrDisplayList++);
@@ -570,7 +570,7 @@ void mode_game(s32 updateRate) {
     }
     rdp_init(&gCurrDisplayList);
     divider_draw(&gCurrDisplayList);
-    render_minimap_and_misc_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
+    hud_render_general(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
     divider_clear_coverage(&gCurrDisplayList);
     if (gFutureFunLandLevelTarget) {
         if (func_800214C4() != 0) {
@@ -879,7 +879,7 @@ void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     camera_init();
     load_game_text_table();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
-    init_hud(get_viewport_count());
+    hud_init(get_viewport_count());
     func_800AE728(4, 4, 0x6E, 0x30, 0x20, 0);
     ainode_update();
     osSetTime(0);
@@ -897,7 +897,7 @@ void unload_level_menu(void) {
         clear_audio_and_track();
         transition_begin(&D_800DD3F4);
         func_800AE270();
-        free_hud();
+        hud_free();
         free_game_text_table();
         mempool_free_timer(2);
     }

@@ -28,65 +28,65 @@ UNUSED s32 D_800E1E60 = 0;
 
 // Base positions of all onscreen hud elements
 HudElement gHudElementBase[HUD_ELEMENT_COUNT] = {
-    { 0, 0, 0, HUD_ASSET_0, 1.0f, 53.0f, 16.0f, 0.0f, 0, 0, 127, 0, 0},
-    { 0, 0, 0, HUD_ASSET_3, 1.0f, 54.0f, 18.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_WEAPONS, 0.4f, -120.0f, -68.0f, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_6, 1.0f, 104.0f, 16.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_9, 1.0f, 93.0f, 31.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_4, 1.0f, 104.0f, 32.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_9, 1.0f, 114.0f, 31.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_BANANA_ANIM, 0.5f, -3.0f, 73.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_9, 1.0f, 182.0f, 22.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_9, 1.0f, 192.0f, 22.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_13, 1.0f, 239.0f, 16.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_9, 1.0f, 206.0f, 31.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_GO_BIG, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_GET_READY, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_FINISH, 1.0f, -200.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_MAP_DOT, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_CHEQUER_FLAG, 1.0f, -50.0f, 87.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_RETICLE, 2.0f, -50.0f, 87.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_18, 1.0f, 167.0f, 22.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_GOLD_BALLOON, 1.0f, -127.0f, 88.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_18, 1.0f, 52.0f, 27.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_9, 1.0f, 67.0f, 27.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_9, 1.0f, 77.0f, 27.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_9, 1.0f, 221.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_6, 1.0f, 188.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_10, 1.0f, 206.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_20, 0.4f, -105.0f, -98.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_BANANA_STATIC, 0.5f, -3.0f, 73.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_23, 1.0f, -8.0f, 97.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_LAP_FINAL, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_LAP_LAP, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_LAP_2, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_2, 1.0f, 25.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_INDICATOR_TURN_90, 1.0f, -120.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_34, 0.4f, -105.0f, -98.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_WRONG, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_WAY, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_PRO_AM, 1.0f, 80.0f, -60.0f, 0.0f, 0, 0, 0, 0, 0}, // Unused
-    { 0, 0, 0x6490, HUD_SPRITE_SPEEDOMETRE_ARROW, 0.5f, 122.0f, -71.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_47, 0.75f, 247.0f, 212.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_48, 1.0f, 234.0f, 196.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_49, 1.0f, 232.0f, 177.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_50, 1.0f, 240.0f, 159.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_51, 1.0f, 256.0f, 146.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_52, 1.0f, 275.0f, 143.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_53, 1.0f, 246.0f, 156.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_54, 0.7272f, 27.0f, 142.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_0, 1.0f, -200.0f, 70.0f, 0.0f, 0, 0, 129, 0, 0},
-    { 0, 0, 0, HUD_ASSET_3, 1.0f, -175.0f, 72.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_WEAPON_NUMBER, 1.0f, -99.0f, -89.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_PORTRAIT, 0.76f, 43.0f, 20.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_66, 1.0f, 40.0f, 54.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_BANANA_ANIM, 0.375f, -117.0f, 46.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_28, 1.0f, 51.0f, 56.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_10, 1.0f, 60.0f, 57.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_ASSET_10, 1.0f, 69.0f, 57.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_PLACE_1, 1.0f, -160.0f, 5.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_PORTRAIT, 1.0f, 260.0f, 16.0f, 0.0f, 0, 0, 0, 0, 0},
-    { 0, 0, 0, HUD_SPRITE_PLACE_ST, 1.0f, 160.0f, 5.0f, 0.0f, 0, 0, 0, 0, 0},
+    { 0, 0, 0, HUD_ASSET_0, 1.0f, 53.0f, 16.0f, 0.0f, 0, 0, 127, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_3, 1.0f, 54.0f, 18.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_WEAPONS, 0.4f, -120.0f, -68.0f, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_6, 1.0f, 104.0f, 16.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_NUMBERS, 1.0f, 93.0f, 31.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_4, 1.0f, 104.0f, 32.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_NUMBERS, 1.0f, 114.0f, 31.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_BANANA_ANIM, 0.5f, -3.0f, 73.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_NUMBERS, 1.0f, 182.0f, 22.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_NUMBERS, 1.0f, 192.0f, 22.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_13, 1.0f, 239.0f, 16.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_NUMBERS, 1.0f, 206.0f, 31.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_GO_BIG, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_GET_READY, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_FINISH, 1.0f, -200.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_MAP_DOT, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_CHEQUER_FLAG, 1.0f, -50.0f, 87.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_RETICLE, 2.0f, -50.0f, 87.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_18, 1.0f, 167.0f, 22.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_GOLD_BALLOON, 1.0f, -127.0f, 88.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_18, 1.0f, 52.0f, 27.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_NUMBERS, 1.0f, 67.0f, 27.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_NUMBERS, 1.0f, 77.0f, 27.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_NUMBERS, 1.0f, 221.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_6, 1.0f, 188.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_NUMBERS_SMALL, 1.0f, 206.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_20, 0.4f, -105.0f, -98.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_BANANA_STATIC, 0.5f, -3.0f, 73.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_23, 1.0f, -8.0f, 97.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_LAP_FINAL, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_LAP_LAP, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_LAP_2, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_2, 1.0f, 25.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_INDICATOR_TURN_90, 1.0f, -120.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_34, 0.4f, -105.0f, -98.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_WRONG, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_WAY, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_PRO_AM, 1.0f, 80.0f, -60.0f, 0.0f, 0, 0, 0, 0, 0 }, // Unused
+    { 0, 0, 0x6490, HUD_SPRITE_SPEEDOMETRE_ARROW, 0.5f, 122.0f, -71.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_47, 0.75f, 247.0f, 212.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_48, 1.0f, 234.0f, 196.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_49, 1.0f, 232.0f, 177.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_50, 1.0f, 240.0f, 159.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_51, 1.0f, 256.0f, 146.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_52, 1.0f, 275.0f, 143.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_53, 1.0f, 246.0f, 156.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_54, 0.7272f, 27.0f, 142.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_0, 1.0f, -200.0f, 70.0f, 0.0f, 0, 0, 129, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_3, 1.0f, -175.0f, 72.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_WEAPON_NUMBER, 1.0f, -99.0f, -89.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_PORTRAIT, 0.76f, 43.0f, 20.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_66, 1.0f, 40.0f, 54.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_BANANA_ANIM, 0.375f, -117.0f, 46.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_28, 1.0f, 51.0f, 56.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_NUMBERS_SMALL, 1.0f, 60.0f, 57.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_NUMBERS_SMALL, 1.0f, 69.0f, 57.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_PLACE_1, 1.0f, -160.0f, 5.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_PORTRAIT, 1.0f, 260.0f, 16.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_PLACE_ST, 1.0f, 160.0f, 5.0f, 0.0f, 0, 0, 0, 0, 0 },
 };
 
 u16 D_800E25C4[96] = {
@@ -205,12 +205,12 @@ HudData *gPlayerHud[MAXCONTROLLERS]; // One per active player
 s16 *gAssetHudElementIds;
 HudElements *gAssetHudElements;
 s32 gAssetHudElementIdsCount;
-Gfx *gHUDCurrDisplayList;
-MatrixS *gHUDCurrMatrix;
-Vertex *gHUDCurrVertex;
+Gfx *gHudDL;
+MatrixS *gHudMtx;
+Vertex *gHudVtx;
 s32 gHudCurrentViewport;
 s32 gHUDNumPlayers;
-s32 D_80126D10;
+s32 gHudController;
 s32 D_80126D14;
 s32 D_80126D18;
 s32 gMinimapDotOffsetX;
@@ -220,13 +220,13 @@ s32 gHudBounceX; // Offset value to do the bounce when the hud slides in.
 u16 gHudBounceTimer;
 f32 gHudBounceMag;
 u8 gHudRaceStart;
-u8 D_80126D35;
+u8 gHudSlide;
 u8 gHideRaceTimer;
 u8 gNumActivePlayers;
 u8 gWrongWayNagPrefix;
 SoundMask *gRaceStartSoundMask;
 s32 gHUDVoiceSoundMask;
-s32 D_80126D44;
+SoundMask *gHudBalloonSoundMask;
 s16 D_80126D48;
 s32 D_80126D4C;
 s32 D_80126D50;
@@ -266,7 +266,7 @@ UNUSED s32 D_80127198[4];
  * Load basic hud assets and allocate HUD data for each player.
  * Set up the global hud elements and reset global vars.
  */
-void init_hud(UNUSED s32 viewportCount) {
+void hud_init(UNUSED s32 viewportCount) {
     s32 i;
     s32 playerCount;
 
@@ -317,7 +317,7 @@ void init_hud(UNUSED s32 viewportCount) {
     gHudVoiceID = 0;
     gHudVoiceTimer = 0;
     gRaceStartSoundMask = NULL;
-    D_80126D44 = 0;
+    gHudBalloonSoundMask = NULL;
     gMinimapXlu = 0;
     D_80127194 = (LevelHeader_70 *) get_misc_asset(ASSET_MISC_58);
     func_8007F1E8(D_80127194);
@@ -339,7 +339,7 @@ void init_hud(UNUSED s32 viewportCount) {
 /**
  * Frees all elements in the hud, and the player hud, and flushes particles
  */
-void free_hud(void) {
+void hud_free(void) {
     s32 i;
     for (i = 0; i < gAssetHudElementIdsCount; i++) {
         if (gAssetHudElements->entry[i] != NULL) {
@@ -370,10 +370,10 @@ u8 race_starting(void) {
 }
 
 /**
- * The root function for all of the heads up display during an active event.
- * Branches off to its own function for each race type, but overridden completely in time trial.
+ * Root function for the HUD updating and rendering for individual players.
+ * The player can toggle specific overrides and settings for displays based on their current game modes.
  */
-void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s32 updateRate) {
+void hud_render_player(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s32 updateRate) {
     s32 countdown;
     Object_Racer *racer;
 
@@ -389,9 +389,9 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
     }
     if (obj != NULL && !(gHudLevelHeader->unkBC & 2)) {
         if (get_game_mode() != GAMEMODE_MENU) {
-            gHUDCurrDisplayList = *dList;
-            gHUDCurrMatrix = *mtx;
-            gHUDCurrVertex = *vertexList;
+            gHudDL = *dList;
+            gHudMtx = *mtx;
+            gHudVtx = *vertexList;
             D_80127180 = 0;
             if (gMinimapFade) {
                 gMinimapOpacity += updateRate;
@@ -407,14 +407,14 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
             if (gShowHUD == FALSE) {
                 racer = (Object_Racer *) obj->unk64;
                 if (D_8012718A) {
-                    D_80126D10 = 1 - racer->playerIndex;
+                    gHudController = 1 - racer->playerIndex;
                 } else {
-                    D_80126D10 = racer->playerIndex;
+                    gHudController = racer->playerIndex;
                 }
                 gCurrentHud = gPlayerHud[gHudCurrentViewport];
                 if (cutscene_id() != 10) {
                     if (gHUDNumPlayers == ONE_PLAYER) {
-                        if (input_pressed(D_80126D10) & D_CBUTTONS && racer->raceFinished == FALSE &&
+                        if (input_pressed(gHudController) & D_CBUTTONS && racer->raceFinished == FALSE &&
                             ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) ||
                              gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH) &&
                             gHudRaceStart) {
@@ -426,16 +426,16 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                                 gHudIndicatorTimer = 0;
                             }
                         }
-                    } else if (input_pressed(D_80126D10) & D_CBUTTONS && racer->raceFinished == FALSE &&
+                    } else if (input_pressed(gHudController) & D_CBUTTONS && racer->raceFinished == FALSE &&
                                !(gHudLevelHeader->race_type & RACETYPE_CHALLENGE) && gHudRaceStart) {
-                        if (D_800E2794[gHUDNumPlayers][racer->playerIndex] < PLAYER_FOUR) {
+                        if (D_800E2794[gHUDNumPlayers][racer->playerIndex] < 3) {
                             D_800E2794[gHUDNumPlayers][racer->playerIndex]++;
                         } else {
-                            D_800E2794[gHUDNumPlayers][racer->playerIndex] = PLAYER_ONE;
+                            D_800E2794[gHUDNumPlayers][racer->playerIndex] = 0;
                         }
                         sound_play((SOUND_TING_HIGHEST - (D_800E2794[gHUDNumPlayers][racer->playerIndex] == 0)), NULL);
                     }
-                    if (input_pressed(D_80126D10) & R_CBUTTONS && racer->raceFinished == FALSE && gHudRaceStart &&
+                    if (input_pressed(gHudController) & R_CBUTTONS && racer->raceFinished == FALSE && gHudRaceStart &&
                         gMinimapOpacity == 0) {
                         gHudToggleSettings[gHUDNumPlayers] = 1 - gHudToggleSettings[gHUDNumPlayers];
                         if (gHudToggleSettings[gHUDNumPlayers] == 0) {
@@ -461,15 +461,15 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                     }
                     gRaceStartShowHudStep += 1;
                 }
-                gDPPipeSync(gHUDCurrDisplayList++);
-                rsp_init(&gHUDCurrDisplayList);
-                rdp_init(&gHUDCurrDisplayList);
+                gDPPipeSync(gHudDL++);
+                rsp_init(&gHudDL);
+                rdp_init(&gHudDL);
                 tex_enable_modes(RENDER_ALL);
                 tex_disable_modes(RENDER_Z_COMPARE);
                 sprite_opaque(FALSE);
                 if (check_if_showing_cutscene_camera() == FALSE && gHudRaceStart == FALSE &&
                     racer->playerIndex == PLAYER_ONE) {
-                    if (D_80126D35 != 0) {
+                    if (gHudSlide) {
                         gHudBounceX = sins_f(gHudBounceTimer) * gHudBounceMag * 8.0f;
                         gHudBounceTimer += updateRate << 0xB;
                         if (gHudBounceTimer >= 0x8000) {
@@ -490,48 +490,48 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                             gHudOffsetX = 0;
                         }
                         if (gHudOffsetX == 0) {
-                            D_80126D35 = 1;
+                            gHudSlide = TRUE;
                             sound_play(SOUND_EXPLOSION2, NULL);
                             gHudBounceX = 0;
                         }
                     }
                 }
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-                render_magnet_reticle(obj);
-                set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
-                gDPSetEnvColor(gHUDCurrDisplayList++, 255, 255, 255, 0);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
+                hud_magnet_reticle(obj);
+                set_ortho_matrix_view(&gHudDL, &gHudMtx);
+                gDPSetEnvColor(gHudDL++, 255, 255, 255, 0);
                 countdown = get_race_countdown() >> 1;
                 if (is_in_time_trial()) {
-                    func_800A277C(countdown, obj, updateRate);
+                    hud_main_time_trial(countdown, obj, updateRate);
                 } else {
                     if (cutscene_id() == 10) {
                         sprite_anim_off(TRUE);
-                        render_balloon_count(racer);
+                        hud_balloons(racer);
                         sprite_anim_off(FALSE);
                     } else {
                         switch (get_current_level_race_type()) {
                             case RACETYPE_DEFAULT:
                             case RACETYPE_HORSESHOE_GULCH:
                                 if (is_taj_challenge()) {
-                                    render_hud_taj_race(countdown, obj, updateRate);
+                                    hud_main_taj(countdown, obj, updateRate);
                                 } else {
-                                    render_hud_race(countdown, obj, updateRate);
+                                    hud_main_race(countdown, obj, updateRate);
                                 }
                                 break;
                             case RACETYPE_BOSS:
-                                render_hud_race_boss(countdown, obj, updateRate);
+                                hud_main_boss(countdown, obj, updateRate);
                                 break;
                             case RACETYPE_CHALLENGE_BANANAS:
-                                render_hud_banana_challenge(countdown, obj, updateRate);
+                                hud_main_treasure(countdown, obj, updateRate);
                                 break;
                             case RACETYPE_CHALLENGE_BATTLE:
-                                render_hud_battle(countdown, obj, updateRate);
+                                hud_main_battle(countdown, obj, updateRate);
                                 break;
                             case RACETYPE_CHALLENGE_EGGS:
-                                render_hud_challenge_eggs(countdown, obj, updateRate);
+                                hud_main_eggs(countdown, obj, updateRate);
                                 break;
                             default:
-                                render_hud_hubworld(obj, updateRate);
+                                hud_main_hub(obj, updateRate);
                                 break;
                         }
                     }
@@ -539,7 +539,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                 if (racer->raceFinished == TRUE) {
                     sprite_anim_off(TRUE);
                     if (is_in_time_trial()) {
-                        render_time_trial_finish(racer, updateRate);
+                        hud_time_trial_finish(racer, updateRate);
                     } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->finishPosition == 1) {
                         if (is_in_two_player_adventure()) {
                             if (get_current_level_race_type() == RACETYPE_BOSS) {
@@ -548,10 +548,10 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                             goto block_95;
                         }
                     showFinishRace:
-                        render_race_finish_position(racer, updateRate);
+                        hud_race_finish_1player(racer, updateRate);
                     } else {
                     block_95:
-                        func_800A6254(racer, updateRate);
+                        hud_race_finish_multiplayer(racer, updateRate);
                     }
                     sprite_anim_off(FALSE);
                 }
@@ -559,11 +559,11 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                 sprite_opaque(TRUE);
                 if (D_80127180) {
                     gHudSprites[D_80127180].texture = NULL;
-                    texrect_draw(&gHUDCurrDisplayList, gHudSprites, 0, 0, 255, 255, 255, 255);
+                    texrect_draw(&gHudDL, gHudSprites, 0, 0, 255, 255, 255, 255);
                 }
-                *dList = gHUDCurrDisplayList;
-                *mtx = gHUDCurrMatrix;
-                *vertexList = gHUDCurrVertex;
+                *dList = gHudDL;
+                *mtx = gHudMtx;
+                *vertexList = gHudVtx;
                 tex_enable_modes(RENDER_ALL);
             }
         }
@@ -647,35 +647,35 @@ void hud_audio_update(s32 updateRate) {
 /**
  * In a race, render all of the race related HUD.
  */
-void render_hud_race(s32 countdown, Object *obj, s32 updateRate) {
+void hud_main_race(s32 countdown, Object *obj, s32 updateRate) {
     Object_Racer *racer = &obj->unk64->racer;
 
     sprite_anim_off(TRUE);
-    render_course_indicator_arrows(racer, updateRate);
-    render_wrong_way_text(racer, updateRate);
-    render_race_start(countdown, updateRate);
+    hud_course_arrows(racer, updateRate);
+    hud_wrong_way(racer, updateRate);
+    hud_race_start(countdown, updateRate);
 
     if (gHudLevelHeader->race_type == RACETYPE_DEFAULT) {
-        render_lap_count(racer, updateRate);
+        hud_lap_count(racer, updateRate);
     }
 
-    render_racer_bananas(racer, updateRate);
-    render_race_time(racer, updateRate);
-    render_race_position(racer, updateRate);
-    render_speedometer(obj, updateRate);
+    hud_bananas(racer, updateRate);
+    hud_race_time(racer, updateRate);
+    hud_race_position(racer, updateRate);
+    hud_speedometre(obj, updateRate);
 
     if (gHudSilverCoinRace && racer->raceFinished == FALSE) {
-        render_silver_coin_counter(racer, updateRate);
+        hud_silver_coins(racer, updateRate);
     }
 
-    render_weapon_hud(obj, updateRate);
+    hud_weapon(obj, updateRate);
     sprite_anim_off(FALSE);
 }
 
 /**
  * Render the onscreen course arrows that show the player where to go.
  */
-void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
+void hud_course_arrows(Object_Racer *racer, s32 updateRate) {
     s32 timer;
     s32 type;
     HudElement *indicator;
@@ -732,13 +732,13 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
                 }
                 if (gHUDNumPlayers == ONE_PLAYER && racer->raceFinished == FALSE && racer->indicator_type &&
                     gHudIndicatorTimer == 0) {
-                    gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, indicator);
+                    gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 160);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, indicator);
                     indicator->pos.x = -indicator->pos.x;
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, indicator);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, indicator);
                     indicator->pos.x = -indicator->pos.x;
                     indicator->rotation.x_rotation = 0;
-                    gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                    gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
                 }
             }
         } else {
@@ -746,7 +746,7 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
         }
         if (gHudIndicatorTimer) {
             if (gHudIndicatorTimer & 0x20) {
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 160);
                 indicator = &gCurrentHud->entry[HUD_COURSE_ARROWS];
                 indicator->rotation.y_rotation = 0;
                 indicator->rotation.x_rotation = 0;
@@ -754,11 +754,11 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
                 if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->indicator_type < 30)) {
                     indicator->rotation.y_rotation = (s16) (0x8000 - indicator->rotation.y_rotation);
                 }
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, indicator);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, indicator);
                 indicator->pos.x = -indicator->pos.x;
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, indicator);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, indicator);
                 indicator->pos.x = -indicator->pos.x;
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
             }
             if (updateRate < gHudIndicatorTimer) {
                 gHudIndicatorTimer -= updateRate;
@@ -773,7 +773,7 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
  * Renders the HUD for the Smokey Castle challenge.
  * Shows each players portrait and their aquired treasure.
  */
-void render_hud_banana_challenge(s32 countdown, Object *obj, s32 updateRate) {
+void hud_main_treasure(s32 countdown, Object *obj, s32 updateRate) {
     Object_Racer *racer;
     Object **racers;
     s32 numRacers;
@@ -782,12 +782,12 @@ void render_hud_banana_challenge(s32 countdown, Object *obj, s32 updateRate) {
     racer = &obj->unk64->racer;
     racers = get_racer_objects(&numRacers);
     sprite_anim_off(TRUE);
-    render_race_start(countdown, updateRate);
+    hud_race_start(countdown, updateRate);
     switch (gNumActivePlayers) {
         case 1:
             for (i = 0; i < numRacers; i++) {
                 racer = &racers[i]->unk64->racer;
-                render_treasure_hud(racer);
+                hud_treasure(racer);
                 if (i == 1) {
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x += 55.0f;
                     gCurrentHud->entry[HUD_TREASURE_METRE].pos.x += 55.0f;
@@ -801,29 +801,30 @@ void render_hud_banana_challenge(s32 countdown, Object *obj, s32 updateRate) {
             break;
         case 3:
         case 4:
-            render_treasure_hud(racer);
+            hud_treasure(racer);
             break;
     }
     racer = &obj->unk64->racer;
-    reset_render_settings(&gHUDCurrDisplayList);
-    render_racer_bananas(racer, updateRate);
-    render_weapon_hud(obj, updateRate);
+    reset_render_settings(&gHudDL);
+    hud_bananas(racer, updateRate);
+    hud_weapon(obj, updateRate);
     sprite_anim_off(FALSE);
 }
 
 /**
  * The Egg Collector challenge mode displays the icons of each player and their score.
  */
-void render_hud_challenge_eggs(s32 countdown, Object *obj, s32 updateRate) {
+void hud_main_eggs(s32 countdown, Object *obj, s32 updateRate) {
     Object_Racer *racer = &obj->unk64->racer;
     if (racer->raceFinished == FALSE) {
         sprite_anim_off(TRUE);
-        render_race_start(countdown, updateRate);
-        render_weapon_hud(obj, updateRate);
+        hud_race_start(countdown, updateRate);
+        hud_weapon(obj, updateRate);
         if ((127 - (updateRate * 2)) >= gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer) {
             gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer += updateRate * 2;
         } else {
-            gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer = (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer + (updateRate * 2)) - 255;
+            gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer =
+                (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer + (updateRate * 2)) - 255;
         }
         // Skip rendering the portraits if in 2 player, it's done elsewhere.
         if (gNumActivePlayers != 2) {
@@ -915,7 +916,7 @@ void hud_eggs_portrait(Object_Racer *racer, UNUSED s32 updateRate) {
     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].spriteID = racer->characterId + HUD_SPRITE_PORTRAIT;
     D_80126CD5 = TRUE;
     if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT]);
     }
     if (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer < 0) {
         alpha = (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].challengeEggs.alphaTimer * 2) + 256;
@@ -926,13 +927,13 @@ void hud_eggs_portrait(Object_Racer *racer, UNUSED s32 updateRate) {
         alpha = 254;
     }
     for (i = 0; i < racer->lap && i < HUD_EGG_TOTAL; i++) {
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON]);
         gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].pos.x += 12.0f;
     }
     gHudColour = alpha | COLOUR_RGBA32(255, 255, 255, 0);
     i2 = i;
     for (i = 0; i < racer->eggHudCounter && i2 < HUD_EGG_TOTAL; i++) {
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON]);
         i2++;
         gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].pos.x += 12.0f;
     }
@@ -944,7 +945,7 @@ void hud_eggs_portrait(Object_Racer *racer, UNUSED s32 updateRate) {
  * Render the HUD for the battle mode challenge.
  * Shows each players portrait and their remaining health.
  */
-void render_hud_battle(s32 countdown, Object *obj, s32 updateRate) {
+void hud_main_battle(s32 countdown, Object *obj, s32 updateRate) {
     Object **racerObjs;
     Object_Racer *racer;
     s32 numRacers;
@@ -954,8 +955,8 @@ void render_hud_battle(s32 countdown, Object *obj, s32 updateRate) {
     racer = (Object_Racer *) obj->unk64;
     if (gNumActivePlayers != 1 || racer->raceFinished == FALSE) {
         sprite_anim_off(TRUE);
-        render_race_start(countdown, updateRate);
-        render_weapon_hud(obj, updateRate);
+        hud_race_start(countdown, updateRate);
+        hud_weapon(obj, updateRate);
         racerObjs = get_racer_objects(&numRacers);
         switch (gNumActivePlayers) {
             case 1:
@@ -974,7 +975,7 @@ void render_hud_battle(s32 countdown, Object *obj, s32 updateRate) {
                 }
                 break;
             default:
-                render_racer_bananas(racer, updateRate);
+                hud_bananas(racer, updateRate);
                 break;
         }
         sprite_anim_off(FALSE);
@@ -982,7 +983,7 @@ void render_hud_battle(s32 countdown, Object *obj, s32 updateRate) {
 }
 
 #ifdef NON_MATCHING
-// hud_render_lives
+// hud_lives
 void func_800A1E48(Object *racerObj, s32 updateRate) {
     f32 temp;
     s32 i;
@@ -1028,7 +1029,7 @@ void func_800A1E48(Object *racerObj, s32 updateRate) {
             gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.x += temp;
             gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.y += temp2;
             if (gNumActivePlayers < 3 || racer->playerIndex == curRacer->playerIndex) {
-                hud_draw_lives(curRacer, updateRate);
+                hud_lives_render(curRacer, updateRate);
             }
             if (gNumActivePlayers == 1) {
                 prevCurrHudUnk64C += 68;
@@ -1068,14 +1069,14 @@ void func_800A1E48(Object *racerObj, s32 updateRate) {
  * Render the portrait and life counter in the battle mode.
  * In 3/4 player, skips the portrait for all human players. Player 4 has a portrait if it's AI.
  */
-void hud_draw_lives(Object_Racer *racer, UNUSED s32 updateRate) {
+void hud_lives_render(Object_Racer *racer, UNUSED s32 updateRate) {
     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].spriteID = racer->characterId + HUD_SPRITE_PORTRAIT;
     if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
         D_80126CD5 = TRUE;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT]);
         D_80126CD5 = FALSE;
-        rdp_init(&gHUDCurrDisplayList);
-        reset_render_settings(&gHUDCurrDisplayList);
+        rdp_init(&gHudDL);
+        reset_render_settings(&gHudDL);
     }
     if (racer->bananas < 10) {
         gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].spriteOffset = racer->bananas;
@@ -1085,17 +1086,17 @@ void hud_draw_lives(Object_Racer *racer, UNUSED s32 updateRate) {
     } else {
         gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].spriteOffset = racer->bananas / 10;
         gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].spriteOffset = racer->bananas % 10;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2]);
     }
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1]);
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1]);
     if (gNumActivePlayers == 2 && racer->bananas < 10) {
         gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].pos.x -= 6.0f;
     }
     if (gNumActivePlayers != 2) {
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BATTLE_BANANA_X]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BATTLE_BANANA_X]);
         sprite_opaque(TRUE);
         D_80126CD5 = TRUE;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BATTLE_BANANA_ICON]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BATTLE_BANANA_ICON]);
         D_80126CD5 = FALSE;
         sprite_opaque(FALSE);
     }
@@ -1104,39 +1105,39 @@ void hud_draw_lives(Object_Racer *racer, UNUSED s32 updateRate) {
 /**
  * When racing the boss, render the essentials, but skip the bananas.
  */
-void render_hud_race_boss(s32 countdown, Object *obj, s32 updateRate) {
+void hud_main_boss(s32 countdown, Object *obj, s32 updateRate) {
     LevelHeader *level;
     Object_Racer *racer = (Object_Racer *) obj->unk64;
 
     sprite_anim_off(TRUE);
-    render_wrong_way_text(racer, updateRate);
-    render_race_start(countdown, updateRate);
-    render_race_time(racer, updateRate);
-    render_weapon_hud(obj, updateRate);
+    hud_wrong_way(racer, updateRate);
+    hud_race_start(countdown, updateRate);
+    hud_race_time(racer, updateRate);
+    hud_weapon(obj, updateRate);
 
     level = get_current_level_header();
     if (level->laps > 1) {
-        render_lap_count(racer, updateRate);
+        hud_lap_count(racer, updateRate);
     }
 
-    render_speedometer(obj, updateRate);
-    render_race_position(racer, updateRate);
+    hud_speedometre(obj, updateRate);
+    hud_race_position(racer, updateRate);
     sprite_anim_off(FALSE);
 }
 
 /**
  * When racing Taj in the overworld, render most of the basic race hud.
  */
-void render_hud_taj_race(s32 countdown, Object *obj, s32 updateRate) {
+void hud_main_taj(s32 countdown, Object *obj, s32 updateRate) {
     Object_Racer *racer = (Object_Racer *) obj->unk64;
 
     sprite_anim_off(TRUE);
-    render_wrong_way_text(racer, updateRate);
-    render_lap_count(racer, updateRate);
-    render_race_position(racer, updateRate);
-    render_race_time(racer, updateRate);
-    render_race_start(countdown, updateRate);
-    render_speedometer(obj, updateRate);
+    hud_wrong_way(racer, updateRate);
+    hud_lap_count(racer, updateRate);
+    hud_race_position(racer, updateRate);
+    hud_race_time(racer, updateRate);
+    hud_race_start(countdown, updateRate);
+    hud_speedometre(obj, updateRate);
     sprite_anim_off(FALSE);
 }
 
@@ -1144,29 +1145,28 @@ void render_hud_taj_race(s32 countdown, Object *obj, s32 updateRate) {
  * The hub world displays the player's balloon count.
  * In two player adventure, the icon of the character of the player sitting out is displayed.
  */
-void render_hud_hubworld(Object *obj, s32 updateRate) {
+void hud_main_hub(Object *obj, s32 updateRate) {
     Object_Racer *racer;
     HudElement *portrait;
 
-    if (get_viewport_count() == 0) {
+    if (get_viewport_count() == PLAYER_ONE) {
         racer = (Object_Racer *) obj->unk64;
         sprite_anim_off(TRUE);
-        render_balloon_count(racer);
-        render_speedometer(obj, updateRate);
+        hud_balloons(racer);
+        hud_speedometre(obj, updateRate);
         if (is_in_two_player_adventure()) {
             portrait = (HudElement *) &gCurrentHud->entry[HUD_TWO_PLAYER_ADV_PORTRAIT];
             portrait->spriteID = (get_settings()->racers[1].character + HUD_SPRITE_PORTRAIT);
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, portrait);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, portrait);
         }
         sprite_anim_off(FALSE);
     }
 }
 
 #ifdef NON_MATCHING
-// render_hud_time_trial
 // https://decomp.me/scratch/BWqz9
 // Draws Time Trial HUD. Also handles music/audio?
-void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
+void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     s32 i;
     s32 spB8;
     s32 spB4;
@@ -1250,7 +1250,7 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
                         } else {
                             ttSWBodyObject->segment.animFrame = 0;
                             if (curRacer->wrongWayCounter == 0 && curRacer->raceFinished == 0) {
-                                set_stopwatch_face(4, 0, 4, 1, 1);
+                                hud_stopwatch_face(4, 0, 4, 1, 1);
                             }
                         }
                     }
@@ -1258,7 +1258,7 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
             }
             obj_animate(ttSWBodyObject);
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_STOPWATCH_HANDS]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_STOPWATCH_HANDS]);
 
         for (i = 0; curRacer->lap >= i && i < 5; i++) {
             stopwatchTimer += curRacer->lap_times[i];
@@ -1272,31 +1272,31 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         }
         gCurrentHud->entry[HUD_STOPWATCH].rotation.z_rotation = ((stopwatchTimer * 0x444) + 0x7FF8);
         if (get_contpak_error() <= 0) {
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_STOPWATCH]);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_STOPWATCH]);
         }
         gCurrentHud->entry[HUD_STOPWATCH].rotation.z_rotation = ((((stopwatchTimer / 60) + 30) % 60) * 0x444);
         gCurrentHud->entry[HUD_STOPWATCH].pos.y = gCurrentHud->entry[HUD_STOPWATCH_HANDS].pos.y + 28.0f;
         if (get_contpak_error() <= 0) {
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_STOPWATCH]);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_STOPWATCH]);
         }
         obj68->animUpdateTimer = 0;
         sprite_anim_off(TRUE);
-        render_course_indicator_arrows(curRacer, updateRate);
+        hud_course_arrows(curRacer, updateRate);
         if (!curRacer->raceFinished) {
             spB8 = gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.y;
             for (i = 0; i < curRacer->countLap && i < gHudLevelHeader->laps; i++) {
                 // FAKEMATCH
                 get_timestamp_from_frames(curRacer->lap_times[i] & 0xFFFFFFFFFFFFFFFF, &spB4, &spB0, &spAC);
                 gHudColour = gHudLapColours[i];
-                render_timer(gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x, spB8, spB4, spB0, spAC, 1);
+                hud_timer_render(gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x, spB8, spB4, spB0, spAC, 1);
                 gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
                 spB8 += 12;
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
                 gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER].spriteOffset = i + 1;
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                              (HudElement *) &gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER]);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                              (HudElement *) &gCurrentHud->entry[HUD_TIME_TRIAL_LAP_TEXT]);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx,
+                                   (HudElement *) &gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER]);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx,
+                                   (HudElement *) &gCurrentHud->entry[HUD_TIME_TRIAL_LAP_TEXT]);
                 gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER].pos.y += 12.0f;
                 gCurrentHud->entry[HUD_TIME_TRIAL_LAP_TEXT].pos.y += 12.0f;
             }
@@ -1305,7 +1305,7 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
             gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER].pos.y -= posX;
             gCurrentHud->entry[HUD_TIME_TRIAL_LAP_TEXT].pos.y -= posX;
             if ((curRacer->boost_sound & BOOST_SOUND_UNK4) && (D_80126D4C <= 0)) {
-                set_stopwatch_face(7, 3, 0, 4, 0);
+                hud_stopwatch_face(7, 3, 0, 4, 0);
                 D_80126D4C = 60;
                 curRacer->boost_sound &= ~BOOST_SOUND_UNK4;
             }
@@ -1370,18 +1370,18 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
             }
         }
         if ((curRacer->lap_times[curRacer->lap] < 30) && (curRacer->lap != 0)) {
-            set_stopwatch_face(5, 1, 2, 2, 0);
+            hud_stopwatch_face(5, 1, 2, 2, 0);
         } else if (curRacer->boostTimer > 0) {
-            set_stopwatch_face(6, 2, 3, 2, 0);
+            hud_stopwatch_face(6, 2, 3, 2, 0);
         } else if (curRacer->wrongWayCounter > 120) {
-            set_stopwatch_face(6, 3, 1, 4, 0);
+            hud_stopwatch_face(6, 3, 1, 4, 0);
         }
-        render_lap_count(curRacer, updateRate);
-        render_race_time(curRacer, updateRate);
-        render_racer_bananas(curRacer, updateRate);
-        render_wrong_way_text(curRacer, updateRate);
-        render_race_start(arg0, updateRate);
-        render_speedometer(playerRacerObj, updateRate);
+        hud_lap_count(curRacer, updateRate);
+        hud_race_time(curRacer, updateRate);
+        hud_bananas(curRacer, updateRate);
+        hud_wrong_way(curRacer, updateRate);
+        hud_race_start(arg0, updateRate);
+        hud_speedometre(playerRacerObj, updateRate);
         if (get_contpak_error() > 0) {
             switch (get_contpak_error()) {
                 case CONTPAK_ERROR_UNKNOWN:
@@ -1404,20 +1404,20 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
             set_text_font(ASSET_FONTS_FUNFONT);
             // Draw text shadow.
             set_text_colour(0, 0, 0, 255, 255);
-            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 1,
-                      SWMessage[0], ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 15,
-                      SWMessage[1], ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 29,
-                      SWMessage[2], ALIGN_MIDDLE_CENTER);
+            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 1, SWMessage[0],
+                      ALIGN_MIDDLE_CENTER);
+            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 15, SWMessage[1],
+                      ALIGN_MIDDLE_CENTER);
+            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 29, SWMessage[2],
+                      ALIGN_MIDDLE_CENTER);
             // Draw actual text.
             set_text_colour(D_80127194->red, D_80127194->green, D_80127194->blue, 128, D_80127194->alpha);
-            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY,
-                      SWMessage[0], ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 14,
-                      SWMessage[1], ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 28,
-                      SWMessage[2], ALIGN_MIDDLE_CENTER);
+            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY, SWMessage[0],
+                      ALIGN_MIDDLE_CENTER);
+            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 14, SWMessage[1],
+                      ALIGN_MIDDLE_CENTER);
+            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 28, SWMessage[2],
+                      ALIGN_MIDDLE_CENTER);
             update_colour_cycle(D_80127194, updateRate);
             set_kerning(0);
         }
@@ -1425,10 +1425,10 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     }
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/func_800A277C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/hud_main_time_trial.s")
 #endif
 
-void set_stopwatch_face(u8 arg0, u8 arg1, u8 faceID, u8 arg3, u8 arg4) {
+void hud_stopwatch_face(u8 arg0, u8 arg1, u8 faceID, u8 arg3, u8 arg4) {
     s32 var_a3;
     s32 i;
     UNUSED u8 *temp_v0_2;
@@ -1477,7 +1477,7 @@ void hud_speedometre_reset(void) {
  * When enabled, displays speed of the player in the bottom right corner, replacing the minimap.
  * Speed is calculated by normalising racer velocity. then scaling the angle of the needle with that number.
  */
-void render_speedometer(Object *obj, UNUSED s32 updateRate) {
+void hud_speedometre(Object *obj, UNUSED s32 updateRate) {
     f32 vel;
     Object_Racer *racer;
     s32 opacity;
@@ -1498,9 +1498,9 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
                     sRecordVel = vel;
                 }
                 vel *= 4.0f;
+                //!@Bug: Planes and hovercraft use drift_direction for something else, applying this unintentionally.
                 if (racer->drift_direction != 0) {
-                    vel += 7.0f; //!@Bug: Planes and hovercraft use drift_direction for something else, applying this
-                                 //! unintentionally.
+                    vel += 7.0f;
                 }
                 if (vel > 100.0f) {
                     vel = 100.0f;
@@ -1528,25 +1528,18 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
                     } else {
                         opacity = 255;
                     }
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_SPEEDOMETRE_BG]);
-                    reset_render_settings(&gHUDCurrDisplayList);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_SPEEDOMETRE_BG]);
+                    reset_render_settings(&gHudDL);
                     sprite_opaque(TRUE);
-                    gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, opacity);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                  &gCurrentHud->entry[HUD_SPEEDOMETRE_ARROW]);
+                    gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, opacity);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_SPEEDOMETRE_ARROW]);
                     sprite_opaque(FALSE);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                  &gCurrentHud->entry[HUD_SPEEDOMETRE_0]);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                  &gCurrentHud->entry[HUD_SPEEDOMETRE_30]);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                  &gCurrentHud->entry[HUD_SPEEDOMETRE_60]);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                  &gCurrentHud->entry[HUD_SPEEDOMETRE_90]);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                  &gCurrentHud->entry[HUD_SPEEDOMETRE_120]);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                  &gCurrentHud->entry[HUD_SPEEDOMETRE_150]);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_SPEEDOMETRE_0]);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_SPEEDOMETRE_30]);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_SPEEDOMETRE_60]);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_SPEEDOMETRE_90]);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_SPEEDOMETRE_120]);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_SPEEDOMETRE_150]);
                 }
             }
         }
@@ -1557,7 +1550,7 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
  * Call the functions that render the "Get Ready" and "GO!" as well as their countdowns to control fade.
  * This function will also call to begin the background music for 1 and 2 player. 3 and 4 are treated with silence.
  */
-void render_race_start(s32 countdown, s32 updateRate) {
+void hud_race_start(s32 countdown, s32 updateRate) {
 
     if (!is_game_paused()) {
         if (countdown == 0 && gHudAudioData[0].playerIndex == PLAYER_COMPUTER) {
@@ -1569,9 +1562,9 @@ void render_race_start(s32 countdown, s32 updateRate) {
         }
         if (countdown > 0) {
             if (gHudRaceStart) {
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, (countdown * 255) / 40);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_RACE_START_READY]);
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, (countdown * 255) / 40);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_RACE_START_READY]);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
                 if (gRaceStartShowHudStep == 2) {
                     sound_play(SOUND_VOICE_TT_GET_READY, &gHUDVoiceSoundMask);
                     gRaceStartShowHudStep++;
@@ -1599,10 +1592,9 @@ void render_race_start(s32 countdown, s32 updateRate) {
                 }
             }
         } else if (gCurrentHud->entry[HUD_RACE_START_GO].pos.x > -200.0f) {
-            gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                          (HudElement *) &gCurrentHud->entry[HUD_RACE_START_GO]);
-            gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 160);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, (HudElement *) &gCurrentHud->entry[HUD_RACE_START_GO]);
+            gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
             gCurrentHud->entry[HUD_RACE_START_GO].raceStartGo.musicStartTimer[gHudCurrentViewport] += updateRate;
             if (gCurrentHud->entry[HUD_RACE_START_GO].raceStartGo.musicStartTimer[gHudCurrentViewport] >= 60) {
                 if (gRaceStartShowHudStep == 4) {
@@ -1635,7 +1627,7 @@ void render_race_start(s32 countdown, s32 updateRate) {
  * Renders the banana counter on screen.
  * When a banana is collected, render sparkles and animate the banana. for a brief moment.
  */
-void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
+void hud_bananas(Object_Racer *racer, s32 updateRate) {
     s32 bananas;
     UNUSED s16 pad;
     s32 temp_lo;
@@ -1647,7 +1639,7 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
           racer->raceFinished == FALSE) &&
          (gHUDNumPlayers < TWO_PLAYERS || racer->lap < 1 || racer->lap_times[racer->lap] >= 180 ||
           gHudLevelHeader->race_type & RACETYPE_CHALLENGE))) {
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BANANA_COUNT_X]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_X]);
         bananas = racer->bananas;
         prevSprite = gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset;
         if (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.spinCounter == 0 &&
@@ -1670,7 +1662,7 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
         if (prevSprite == 0) {
             sprite_opaque(TRUE);
             set_viewport_tv_type(OS_TV_TYPE_NTSC);
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC]);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC]);
             set_viewport_tv_type(OS_TV_TYPE_PAL);
             sprite_opaque(FALSE);
             gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset = prevSprite;
@@ -1686,7 +1678,7 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
                     }
                 }
                 set_viewport_tv_type(OS_TV_TYPE_NTSC);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE]);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE]);
                 set_viewport_tv_type(OS_TV_TYPE_PAL);
             }
         } else {
@@ -1694,7 +1686,7 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
             sprite_anim_off(FALSE);
             sprite_opaque(TRUE);
             set_viewport_tv_type(OS_TV_TYPE_NTSC);
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN]);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN]);
             sprite_opaque(FALSE);
             set_viewport_tv_type(OS_TV_TYPE_PAL);
             sprite_anim_off(TRUE);
@@ -1704,12 +1696,12 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
         if (temp_lo) {
             gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_1].spriteOffset = temp_lo;
             gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_2].spriteOffset = bananas % 10;
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_2]);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_2]);
         } else {
             gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_1].spriteOffset = bananas % 10;
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_1]);
-        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_1]);
+        gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
     }
 }
 
@@ -1717,7 +1709,7 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
  * Renders the icons and secured treasure in Smokey's castle.
  * In 4 player, all icons are skipped and in 3 player, player 4's icon is shown on their quadrant.
  */
-void render_treasure_hud(Object_Racer *racer) {
+void hud_treasure(Object_Racer *racer) {
     s32 i;
     s32 prevY;
 
@@ -1725,7 +1717,7 @@ void render_treasure_hud(Object_Racer *racer) {
     if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
         gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].spriteID = racer->characterId + HUD_SPRITE_PORTRAIT;
         D_80126CD5 = TRUE;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT]);
         D_80126CD5 = FALSE;
     }
     for (i = 0; i < 10; i++) {
@@ -1733,7 +1725,7 @@ void render_treasure_hud(Object_Racer *racer) {
             gHudColour = COLOUR_RGBA32(128, 128, 128, 128);
         }
         D_80126CD5 = TRUE;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_TREASURE_METRE]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_TREASURE_METRE]);
         D_80126CD5 = FALSE;
         gCurrentHud->entry[HUD_TREASURE_METRE].pos.y -= 3.0f;
     }
@@ -1746,18 +1738,20 @@ void render_treasure_hud(Object_Racer *racer) {
  * Render the silver coin counter on the side of the screen.
  * When the 8th coin is collected, wait half a second then play an encouraging voice clip from T.T.
  */
-void render_silver_coin_counter(Object_Racer *racer, s32 updateRate) {
+void hud_silver_coins(Object_Racer *racer, s32 updateRate) {
     s32 i;
     s32 prevY;
 
-    gCurrentHud->entry[HUD_SILVER_COIN_TALLY].pos.y = (s32) gCurrentHud->entry[HUD_SILVER_COIN_TALLY].pos.y; // Rounds float down to it's int value.
+    gCurrentHud->entry[HUD_SILVER_COIN_TALLY].pos.y =
+        (s32) gCurrentHud->entry[HUD_SILVER_COIN_TALLY].pos.y; // Rounds float down to it's int value.
     prevY = gCurrentHud->entry[HUD_SILVER_COIN_TALLY].pos.y;
     for (i = 0; i < 8; i++) {
         if (i >= racer->silverCoinCount) {
             gHudColour = COLOUR_RGBA32(128, 128, 128, 128);
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_SILVER_COIN_TALLY]);
-        gCurrentHud->entry[HUD_SILVER_COIN_TALLY].pos.y -= gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.offsetY;
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_SILVER_COIN_TALLY]);
+        gCurrentHud->entry[HUD_SILVER_COIN_TALLY].pos.y -=
+            gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.offsetY;
     }
     if (racer->silverCoinCount == 8) {
         if (gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.soundTimer < 30) {
@@ -1777,11 +1771,10 @@ void render_silver_coin_counter(Object_Racer *racer, s32 updateRate) {
 }
 
 /**
- * Plays the race finish fanfare and displays what position you finished
- * in the middle of the screen.
+ * Plays the race finish fanfare and displays what position you finished in the middle of the screen.
  * Uses a 3 step process to play the sounds, display the position, then slide it offscreen.
  */
-void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
+void hud_race_finish_1player(Object_Racer *racer, s32 updateRate) {
     HudElement *position1;
     HudElement *position2;
     s8 drawPosition;
@@ -1838,10 +1831,10 @@ void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
             break;
     }
     if (drawPosition) {
-        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 210);
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, position1);
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, position2);
-        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 210);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, position1);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, position2);
+        gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
     }
 }
 
@@ -1852,7 +1845,7 @@ UNUSED void func_800A4C34(UNUSED s32 countdown, UNUSED Object_Racer *racer, UNUS
  * Render the current race position of the racer.
  * Scales up and down when the position changes.
  */
-void render_race_position(Object_Racer *racer, s32 updateRate) {
+void hud_race_position(Object_Racer *racer, s32 updateRate) {
     s32 place;
     f32 prevPos;
     f32 scale;
@@ -1868,7 +1861,7 @@ void render_race_position(Object_Racer *racer, s32 updateRate) {
             place = 2;
         } else {
             settings = get_settings();
-            place = settings->racers[D_80126D10].starting_position;
+            place = settings->racers[gHudController].starting_position;
             gCurrentHud->entry[HUD_RACE_POSITION].spriteOffset = place;
             place++;
         }
@@ -1880,16 +1873,17 @@ void render_race_position(Object_Racer *racer, s32 updateRate) {
         } else {
             gCurrentHud->entry[HUD_RACE_POSITION_END].spriteOffset = 3;
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_RACE_POSITION_END]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_RACE_POSITION_END]);
     }
     scale = (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter + 129);
     scale *= 128.0f;
     scale = sins_f(scale);
     placeIndex = place - 1;
-    gCurrentHud->entry[HUD_RACE_POSITION].scale = (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.baseScale / 127.0f) + (1.0 + (0.5 * scale));
+    gCurrentHud->entry[HUD_RACE_POSITION].scale =
+        (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.baseScale / 127.0f) + (1.0 + (0.5 * scale));
     prevPos = gCurrentHud->entry[HUD_RACE_POSITION].pos.x;
     gCurrentHud->entry[HUD_RACE_POSITION].pos.x -= (24.0f * gCurrentHud->entry[HUD_RACE_POSITION].scale);
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_RACE_POSITION]);
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_RACE_POSITION]);
     gCurrentHud->entry[HUD_RACE_POSITION].pos.x = prevPos;
     if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active) {
         if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter < 127 - (updateRate * 16)) {
@@ -1899,15 +1893,18 @@ void render_race_position(Object_Racer *racer, s32 updateRate) {
         }
     }
     if (placeIndex != gCurrentHud->entry[HUD_RACE_POSITION].spriteOffset) {
-        if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active && gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter > 0) {
-            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter = -gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter;
+        if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active &&
+            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter > 0) {
+            gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter =
+                -gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter;
         } else {
             gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter = -127;
             gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active = TRUE;
         }
     }
     gCurrentHud->entry[HUD_RACE_POSITION].spriteOffset = placeIndex;
-    if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active && gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter == 127) {
+    if (gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active &&
+        gCurrentHud->entry[HUD_RACE_POSITION].racePosition.scaleCounter == 127) {
         gCurrentHud->entry[HUD_RACE_POSITION].racePosition.active = FALSE;
     }
 }
@@ -1917,7 +1914,7 @@ void render_race_position(Object_Racer *racer, s32 updateRate) {
  * Also displays the "Lap 2" and "Final Lap" messages when the line is crossed.
  * In multiplayer, shows a cut down display, if the display setting is set to show laps.
  */
-void render_lap_count(Object_Racer *racer, s32 updateRate) {
+void hud_lap_count(Object_Racer *racer, s32 updateRate) {
     if (racer->raceFinished == FALSE &&
         (gHUDNumPlayers <= ONE_PLAYER || racer->lap <= 0 || racer->lap_times[racer->lap] >= 180) &&
         (gHUDNumPlayers <= ONE_PLAYER || D_800E2794[gHUDNumPlayers][racer->playerIndex] == 3)) {
@@ -1930,24 +1927,25 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
                     gCurrentHud->entry[HUD_LAP_COUNT_FLAG].spriteOffset = 0;
                 }
             }
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_LAP_COUNT_FLAG]);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_LAP_COUNT_FLAG]);
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_LAP_COUNT_LABEL]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_LAP_COUNT_LABEL]);
         if (racer->countLap >= gHudLevelHeader->laps - 1) {
             gCurrentHud->entry[HUD_LAP_COUNT_CURRENT].spriteOffset = gHudLevelHeader->laps;
         } else {
             gCurrentHud->entry[HUD_LAP_COUNT_CURRENT].spriteOffset = racer->countLap + 1;
         }
         gCurrentHud->entry[HUD_LAP_COUNT_TOTAL].spriteOffset = gHudLevelHeader->laps;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_LAP_COUNT_CURRENT]);
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_LAP_COUNT_SEPERATOR]);
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_LAP_COUNT_TOTAL]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_LAP_COUNT_CURRENT]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_LAP_COUNT_SEPERATOR]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_LAP_COUNT_TOTAL]);
     }
     if (gHUDNumPlayers == TWO_PLAYERS) {
         sprite_opaque(TRUE);
     }
     if (is_game_paused() == FALSE) {
-        if (racer->lap_times[racer->lap] < 30 && gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status == LAPTEXT_IDLE && racer->raceFinished == FALSE) {
+        if (racer->lap_times[racer->lap] < 30 && gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status == LAPTEXT_IDLE &&
+            racer->raceFinished == FALSE) {
             if (racer->lap == 1 && gHudLevelHeader->laps >= 3) {
                 gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status = LAPTEXT_UNK2;
                 gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction = LAPTEXT_OUT;
@@ -2017,22 +2015,28 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
         if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status != LAPTEXT_IDLE) {
             if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status == LAPTEXT_UNK2) {
                 if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction == LAPTEXT_OUT) {
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x < gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos - (updateRate * 13)) {
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x <
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos - (updateRate * 13)) {
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x += updateRate * 13;
                     } else {
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x =
+                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos;
                     }
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x > gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos + (updateRate * 13)) {
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x >
+                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos + (updateRate * 13)) {
                         gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x -= updateRate * 13;
                     } else {
-                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos;
+                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x =
+                            gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos;
                     }
                     if (racer->lap_times[racer->lap] >= 60) {
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction = LAPTEXT_IN;
                         sound_play(SOUND_WHOOSH1, NULL);
                     }
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos &&
-                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos &&
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x ==
+                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos &&
+                        gCurrentHud->entry[HUD_LAP_TEXT_TWO].pos.x ==
+                            gCurrentHud->entry[HUD_LAP_TEXT_TWO].lapText.targetPos &&
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.soundPlayed == FALSE) {
                         if (gHUDVoiceSoundMask == NULL) {
                             sound_play(SOUND_VOICE_TT_LAP2, &gHUDVoiceSoundMask);
@@ -2046,28 +2050,35 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status = LAPTEXT_IDLE;
                     }
                 }
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_LAP_TEXT_TWO]);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_LAP_TEXT_LAP]); // lap
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 160);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_LAP_TEXT_TWO]);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx,
+                                   &gCurrentHud->entry[HUD_LAP_TEXT_LAP]); // lap
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
             } else if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.status == LAPTEXT_UNK3) {
                 if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction == LAPTEXT_IN) {
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x > gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos + (updateRate * 13)) {
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x >
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos + (updateRate * 13)) {
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x -= updateRate * 13;
                     } else {
-                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos;
+                        gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x =
+                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos;
                     }
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x < gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos - (updateRate * 13)) {
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x <
+                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos - (updateRate * 13)) {
                         gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x += updateRate * 13;
                     } else {
-                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x = gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos;
+                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x =
+                            gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos;
                     }
                     if (racer->lap_times[racer->lap] >= 60) {
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.direction = LAPTEXT_OUT;
                         sound_play(SOUND_WHOOSH1, NULL);
                     }
-                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos &&
-                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x == gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos &&
+                    if (gCurrentHud->entry[HUD_LAP_TEXT_LAP].pos.x ==
+                            gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.targetPos &&
+                        gCurrentHud->entry[HUD_LAP_TEXT_FINAL].pos.x ==
+                            gCurrentHud->entry[HUD_LAP_TEXT_FINAL].lapText.targetPos &&
                         gCurrentHud->entry[HUD_LAP_TEXT_LAP].lapText.soundPlayed == FALSE) {
                         if (gHUDVoiceSoundMask == NULL) {
                             sound_play(SOUND_VOICE_TT_FINAL_LAP, &gHUDVoiceSoundMask);
@@ -2082,10 +2093,10 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
                     }
                 }
 
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_LAP_TEXT_FINAL]);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_LAP_TEXT_LAP]);
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 160);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_LAP_TEXT_FINAL]);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_LAP_TEXT_LAP]);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
             }
         }
     }
@@ -2096,14 +2107,16 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
  * Players going the wrong way will be nagged by T.T to turn around.
  * This function plays the audio, and makes the text fly in.
  */
-void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
+void hud_wrong_way(Object_Racer *obj, s32 updateRate) {
     f32 textMoveSpeed;
     f32 textPosTarget;
 
     if (gHUDNumPlayers == TWO_PLAYERS) {
         sprite_opaque(TRUE);
     }
-    if (obj->wrongWayCounter > 120 && (gHUDNumPlayers || gCurrentHud->entry[HUD_WRONGWAY_1].pos.x == gCurrentHud->entry[HUD_WRONGWAY_1].lapText.targetPos) &&
+    if (obj->wrongWayCounter > 120 &&
+        (gHUDNumPlayers ||
+         gCurrentHud->entry[HUD_WRONGWAY_1].pos.x == gCurrentHud->entry[HUD_WRONGWAY_1].lapText.targetPos) &&
         !is_game_paused()) {
         if ((gWrongWayNagPrefix || gWrongWayNagTimer == 0) && gHUDVoiceSoundMask == NULL) {
             // 20% chance that T.T decides not to precede his nagging with "No no no!"
@@ -2148,10 +2161,10 @@ void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
                 }
             }
             if (!is_game_paused()) {
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_WRONGWAY_1]);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_WRONGWAY_2]);
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 160);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_WRONGWAY_1]);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_WRONGWAY_2]);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
             }
         }
     } else if (obj->wrongWayCounter > 120) {
@@ -2183,7 +2196,7 @@ void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
  * Render race result for multiplayer races or battles after that player has finished.
  * Displays the finish position, and in races, will display the race time.
  */
-void hud_draw_finish_misc(Object_Racer *racer) {
+void hud_finish_position(Object_Racer *racer) {
     s32 racerCount;
 #if VERSION == VERSION_80
     static char sDidNotFinish[] = "DID NOT FINISH";
@@ -2202,28 +2215,32 @@ void hud_draw_finish_misc(Object_Racer *racer) {
 #define FINISH_TIME_OFFSET 0
 #endif
 
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1]);
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_2]);
-    if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE) && (!is_in_two_player_adventure())) {
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1]);
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_2]);
+    if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE) && is_in_two_player_adventure() == FALSE) {
         get_racer_objects(&racerCount);
         if (gNumActivePlayers >= 2 &&
             (is_in_two_player_adventure() == FALSE || is_postrace_viewport_active() == FALSE)) {
             set_text_font(FONT_COLOURFUL);
             if (racerCount != racer->finishPosition) {
                 set_text_colour(255, 255, 255, 0, 255);
-                draw_text(&gHUDCurrDisplayList, gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x - FINISH_TEXT_OFFSET,
+                draw_text(&gHudDL, gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x - FINISH_TEXT_OFFSET,
                           gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.y, "RACE", ALIGN_TOP_LEFT);
-                render_timer(gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x + FINISH_TIME_OFFSET, gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.y,
-                             gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.minutes, gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.seconds,
-                             gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.hundredths, 1);
-                draw_text(&gHUDCurrDisplayList, gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x - FINISH_TEXT_OFFSET,
+                hud_timer_render(gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x + FINISH_TIME_OFFSET,
+                                 gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.y,
+                                 gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.minutes,
+                                 gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.seconds,
+                                 gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.hundredths, 1);
+                draw_text(&gHudDL, gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x - FINISH_TEXT_OFFSET,
                           gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.y, "LAP", ALIGN_TOP_LEFT);
-                render_timer(gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x + FINISH_TIME_OFFSET, gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.y,
-                             gCurrentHud->entry[HUD_LAP_TIME_TEXT].timer.minutes, gCurrentHud->entry[HUD_LAP_TIME_TEXT].timer.seconds,
-                             gCurrentHud->entry[HUD_LAP_TIME_TEXT].timer.hundredths, 1);
+                hud_timer_render(gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x + FINISH_TIME_OFFSET,
+                                 gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.y,
+                                 gCurrentHud->entry[HUD_LAP_TIME_TEXT].timer.minutes,
+                                 gCurrentHud->entry[HUD_LAP_TIME_TEXT].timer.seconds,
+                                 gCurrentHud->entry[HUD_LAP_TIME_TEXT].timer.hundredths, 1);
             } else {
-                draw_text(&gHUDCurrDisplayList, gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x - 35, gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.y,
-                          DID_NOT_FINISH, ALIGN_TOP_LEFT);
+                draw_text(&gHudDL, gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x - 35,
+                          gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.y, DID_NOT_FINISH, ALIGN_TOP_LEFT);
             }
         }
     }
@@ -2231,7 +2248,7 @@ void hud_draw_finish_misc(Object_Racer *racer) {
 
 #ifdef NON_MATCHING
 // hud_render_finish
-void func_800A6254(Object_Racer *racer, s32 updateRate) {
+void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate) {
     UNUSED s32 *var_a0;
     UNUSED s32 var_t0;
     s32 var_a2;
@@ -2393,27 +2410,33 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                 var_v1 = (updateRate * 13);
                 var_a2 = FALSE;
             } else {
-                var_v1 = (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.targetPos + 160) - gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].pos.x;
+                var_v1 = (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.targetPos + 160) -
+                         gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].pos.x;
             }
             gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].pos.x += var_v1;
             gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_2].pos.x += var_v1;
             if (gNumActivePlayers != 1) {
-                if ((gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.unk1D + (updateRate * 13) + 160) < gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x) {
+                if ((gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.unk1D + (updateRate * 13) + 160) <
+                    gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x) {
                     var_a2 = FALSE;
                 } else {
-                    var_v1 = gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x - (gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.unk1D + 160);
+                    var_v1 = gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x -
+                             (gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.unk1D + 160);
                 }
                 gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x -= var_v1;
-                if (gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x < (gCurrentHud->entry[HUD_LAP_TIME_TEXT].timer.unk1D - var_v1) + 160) {
+                if (gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x <
+                    (gCurrentHud->entry[HUD_LAP_TIME_TEXT].timer.unk1D - var_v1) + 160) {
                     var_a2 = FALSE;
                 } else {
-                    var_v1 = (gCurrentHud->entry[HUD_LAP_TIME_TEXT].timer.unk1D + 160) - gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x;
+                    var_v1 = (gCurrentHud->entry[HUD_LAP_TIME_TEXT].timer.unk1D + 160) -
+                             gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x;
                 }
                 gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x += var_v1;
             }
             temp_v0_4 = 2; // fakematch?
             if (var_a2) {
-                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status = temp_v0_4; // fakematch? Why not just set directly to 2?
+                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status =
+                    temp_v0_4; // fakematch? Why not just set directly to 2?
                 gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTimer = -120;
                 gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTicks = 0;
                 if (gHUDVoiceSoundMask == NULL) {
@@ -2431,11 +2454,11 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                                 break;
                         }
                     } else if (timetrial_ghost_staff() == NULL) {
-                        play_time_trial_end_message(&racer->playerIndex);
+                        hud_time_trial_message(&racer->playerIndex);
                     }
                 }
             }
-            hud_draw_finish_misc(racer);
+            hud_finish_position(racer);
             break;
         case 2:
             gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTimer += updateRate;
@@ -2452,7 +2475,7 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                     gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status = 4;
                 }
             }
-            hud_draw_finish_misc(racer);
+            hud_finish_position(racer);
             break;
         case 3:
             if (raceType == RACETYPE_CHALLENGE_BATTLE) {
@@ -2466,7 +2489,7 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                 gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x += (updateRate * 13);
                 gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x += (updateRate * 13);
             }
-            hud_draw_finish_misc(racer);
+            hud_finish_position(racer);
             break;
         case 4:
             if (racer->playerIndex == gHudAudioData[0].playerIndex) {
@@ -2474,22 +2497,22 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             }
             gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status = 5;
             gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTimer = 0;
-            hud_draw_finish_misc(racer);
+            hud_finish_position(racer);
             break;
         default:
-            hud_draw_finish_misc(racer);
+            hud_finish_position(racer);
             break;
     }
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/func_800A6254.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/hud_race_finish_multiplayer.s")
 #endif
 
 /**
  * Play the normal race finish message, unless you beat your time record,
  * then T.T will say "Race Record" instead.
  */
-void play_time_trial_end_message(s16 *playerID) {
+void hud_time_trial_message(s16 *playerID) {
     Settings *settings = get_settings();
 
     if (playerID != NULL) {
@@ -2510,8 +2533,8 @@ void play_time_trial_end_message(s16 *playerID) {
  * Render the finishing overlay after a time trial.
  * Has measures for multiplayer, depsite time trial being a single player exclusive mode.
  */
-void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
-    s32 temp;
+void hud_time_trial_finish(Object_Racer *racer, s32 updateRate) {
+    UNUSED s32 temp;
 
     switch (gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.status) {
         case TIMETRIAL_FINISH_INIT:
@@ -2534,18 +2557,20 @@ void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
             gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.status = TIMETRIAL_FINISH_IN;
             break;
         case TIMETRIAL_FINISH_IN:
-            temp = (updateRate * 13);
-            if (gCurrentHud->entry[HUD_RACE_END_FINISH].pos.x < gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.targetPos - (updateRate * 13)) {
+            temp = (updateRate * 13); // Fakematch
+            if (gCurrentHud->entry[HUD_RACE_END_FINISH].pos.x <
+                gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.targetPos - (updateRate * 13)) {
                 gCurrentHud->entry[HUD_RACE_END_FINISH].pos.x += updateRate * 13;
             } else {
-                gCurrentHud->entry[HUD_RACE_END_FINISH].pos.x = gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.targetPos;
+                gCurrentHud->entry[HUD_RACE_END_FINISH].pos.x =
+                    gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.targetPos;
                 gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.status = TIMETRIAL_FINISH_SHOW;
                 gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.fadeTimer = -120;
                 if (gHUDVoiceSoundMask == NULL && gHudTimeTrialGhost == FALSE) {
-                    play_time_trial_end_message(&racer->playerIndex);
+                    hud_time_trial_message(&racer->playerIndex);
                 }
             }
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_RACE_END_FINISH]);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_RACE_END_FINISH]);
             break;
         case TIMETRIAL_FINISH_SHOW:
             gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.fadeTimer += updateRate;
@@ -2562,14 +2587,15 @@ void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
                 }
                 sound_play(SOUND_WHOOSH1, NULL);
             }
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_RACE_END_FINISH]);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_RACE_END_FINISH]);
             break;
         case TIMETRIAL_FINISH_OUT:
             gCurrentHud->entry[HUD_RACE_END_FINISH].pos.x -= updateRate * 13;
-            if (gCurrentHud->entry[HUD_RACE_END_FINISH].pos.x < gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.targetPos) {
+            if (gCurrentHud->entry[HUD_RACE_END_FINISH].pos.x <
+                gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.targetPos) {
                 gCurrentHud->entry[HUD_RACE_END_FINISH].finishText.status = TIMETRIAL_FINISH_IDLE;
             }
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_RACE_END_FINISH]);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_RACE_END_FINISH]);
             break;
         case TIMETRIAL_FINISH_IDLE:
             gHudAudioData[0].volumeRamp = -1;
@@ -2583,8 +2609,9 @@ void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
 
 /**
  * Render the icon, and the number of collectable balloons onscreen.
+ * Has a case for when in the balloon cutscene, where it will visually increase the count by one.
  */
-void render_balloon_count(UNUSED Object_Racer *racer) {
+void hud_balloons(UNUSED Object_Racer *racer) {
     s32 balloonCount;
     s32 div;
     UNUSED s32 pad;
@@ -2598,15 +2625,16 @@ void render_balloon_count(UNUSED Object_Racer *racer) {
         balloonTickTimer = 840;
     }
     if (settings->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
-        gCurrentHud->entry[HUD_BALLOON_COUNT_ICON].spriteID = HUD_SPRITE_BALLOON_DIAMOND; // Use the adventure two balloon sprite.
+        gCurrentHud->entry[HUD_BALLOON_COUNT_ICON].spriteID =
+            HUD_SPRITE_BALLOON_DIAMOND; // Use the adventure two balloon sprite.
     }
     if (cutscene_id() == 10 && get_balloon_cutscene_timer() < balloonTickTimer) {
         balloonCount = *settings->balloonsPtr - 1;
     } else {
         balloonCount = *settings->balloonsPtr;
         if (cutscene_id() == 10) {
-            if (get_balloon_cutscene_timer() < balloonTickTimer + 8 && D_80126D44 == NULL) {
-                sound_play(SOUND_HUD_LAP_TICK, &D_80126D44);
+            if (get_balloon_cutscene_timer() < balloonTickTimer + 8 && gHudBalloonSoundMask == NULL) {
+                sound_play(SOUND_HUD_LAP_TICK, (s32 *) &gHudBalloonSoundMask);
             }
         }
     }
@@ -2617,19 +2645,19 @@ void render_balloon_count(UNUSED Object_Racer *racer) {
     if (div != 0) {
         gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_1].spriteOffset = div;
         gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_2].spriteOffset = balloonCount % 10;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_2]);
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_2]);
     } else {
         gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_1].spriteOffset = balloonCount % 10;
     }
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_1]);
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_1]);
     set_viewport_tv_type(OS_TV_TYPE_NTSC);
     if (osTvType == OS_TV_TYPE_PAL) {
         sprite_opaque(TRUE);
     }
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BALLOON_COUNT_ICON]);
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BALLOON_COUNT_ICON]);
     sprite_opaque(FALSE);
     set_viewport_tv_type(OS_TV_TYPE_PAL);
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_BALLOON_COUNT_X]);
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BALLOON_COUNT_X]);
 }
 
 /**
@@ -2666,7 +2694,7 @@ void hud_sound_stop(u16 soundID, s32 playerIndex) {
  * Renders the icon in the bottom left of the current weapon.
  * The icon will spin and grow as it appears, then spins and shrinks as it disappears.
  */
-void render_weapon_hud(Object *obj, s32 updateRate) {
+void hud_weapon(Object *obj, s32 updateRate) {
     Object_Racer *racer;
     s32 temp_a0;
 
@@ -2686,8 +2714,10 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
         }
         if (racer->balloon_quantity > 0) {
             if (gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation < 16 && racer->unk170 == 0) {
-                gCurrentHud->entry[HUD_WEAPON_DISPLAY].rotation.z_rotation = gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation * 0x1000;
-                gCurrentHud->entry[HUD_WEAPON_DISPLAY].scale = (gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation * 0.04687) + 0.25;
+                gCurrentHud->entry[HUD_WEAPON_DISPLAY].rotation.z_rotation =
+                    gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation * 0x1000;
+                gCurrentHud->entry[HUD_WEAPON_DISPLAY].scale =
+                    (gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation * 0.04687) + 0.25;
             } else {
                 gCurrentHud->entry[HUD_WEAPON_DISPLAY].rotation.z_rotation = 0;
                 gCurrentHud->entry[HUD_WEAPON_DISPLAY].scale = 1.0f;
@@ -2701,7 +2731,8 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
                     gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.scale = 120;
                 } else if (gHUDNumPlayers == ONE_PLAYER) {
                     gCurrentHud->entry[HUD_WEAPON_DISPLAY].scale +=
-                        0.18 * sins_f(((f32) gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.scale * 682.6583 * 4.0));
+                        0.18 *
+                        sins_f(((f32) gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.scale * 682.6583 * 4.0));
                 }
             }
             if (gHUDNumPlayers > ONE_PLAYER) {
@@ -2710,25 +2741,28 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
             if (gCurrentHud->entry[HUD_WEAPON_DISPLAY].scale != 1.0) {
                 sprite_opaque(TRUE);
             }
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_WEAPON_DISPLAY]);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_WEAPON_DISPLAY]);
             sprite_opaque(FALSE);
             if (racer->balloon_quantity > 3) {
-                gCurrentHud->entry[HUD_WEAPON_QUANTITY].weaponDisplay.numberFlickerTimer = -128;
+                gCurrentHud->entry[HUD_WEAPON_QUANTITY].weaponDisplay.hideTimer = -128;
             }
             if (racer->balloon_quantity < 3) {
-                gCurrentHud->entry[HUD_WEAPON_QUANTITY].weaponDisplay.numberFlickerTimer -= updateRate;
+                gCurrentHud->entry[HUD_WEAPON_QUANTITY].weaponDisplay.hideTimer -= updateRate;
             }
             if (racer->balloon_quantity >= 3 ||
-                ((((gCurrentHud->entry[HUD_WEAPON_QUANTITY].weaponDisplay.numberFlickerTimer + 128) % 32) < 20) && racer->balloon_quantity != 1)) {
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
+                ((((gCurrentHud->entry[HUD_WEAPON_QUANTITY].weaponDisplay.hideTimer + 128) % 32) < 20) &&
+                 racer->balloon_quantity != 1)) {
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 160);
                 gCurrentHud->entry[HUD_WEAPON_QUANTITY].spriteOffset = racer->balloon_quantity - 1;
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_WEAPON_QUANTITY]);
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_WEAPON_QUANTITY]);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
             }
         } else {
             if (gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation > 0) {
-                gCurrentHud->entry[HUD_WEAPON_DISPLAY].rotation.z_rotation = gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation * 0x1000;
-                gCurrentHud->entry[HUD_WEAPON_DISPLAY].scale = (gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation * 0.04687) + 0.25;
+                gCurrentHud->entry[HUD_WEAPON_DISPLAY].rotation.z_rotation =
+                    gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation * 0x1000;
+                gCurrentHud->entry[HUD_WEAPON_DISPLAY].scale =
+                    (gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation * 0.04687) + 0.25;
                 gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation -= updateRate;
                 gCurrentHud->entry[HUD_WEAPON_DISPLAY].spriteOffset = temp_a0;
                 if (gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.rotation < 0) {
@@ -2737,10 +2771,10 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
                 if (gHUDNumPlayers != ONE_PLAYER) {
                     gCurrentHud->entry[HUD_WEAPON_DISPLAY].scale /= 2;
                 }
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_WEAPON_DISPLAY]);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_WEAPON_DISPLAY]);
             }
         }
-        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
         set_viewport_tv_type(OS_TV_TYPE_PAL);
     }
 }
@@ -2748,7 +2782,7 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
 /**
  * If currently using a magnet, render a reticle over the racer that's being targeted.
  */
-void render_magnet_reticle(Object *racerObj) {
+void hud_magnet_reticle(Object *racerObj) {
     unk80068514_arg4 *entry;
     HudElement *hud;
     Object_Racer *racer;
@@ -2765,10 +2799,9 @@ void render_magnet_reticle(Object *racerObj) {
             return;
         }
         gAssetHudElementStaleCounter[hud->spriteID] = 0;
-        func_80066CDC(&gHUDCurrDisplayList, &gHUDCurrMatrix);
-        matrix_world_origin(&gHUDCurrDisplayList, &gHUDCurrMatrix);
-        render_sprite_billboard(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (Object *) hud, entry,
-                                RENDER_Z_UPDATE);
+        func_80066CDC(&gHudDL, &gHudMtx);
+        matrix_world_origin(&gHudDL, &gHudMtx);
+        render_sprite_billboard(&gHudDL, &gHudMtx, &gHudVtx, (Object *) hud, entry, RENDER_Z_UPDATE);
     }
 }
 
@@ -2776,7 +2809,7 @@ void render_magnet_reticle(Object *racerObj) {
  * Render the lap time on the top right.
  * When the player begins a new lap, start flashing the previous lap time below instead.
  */
-void render_race_time(Object_Racer *racer, s32 updateRate) {
+void hud_race_time(Object_Racer *racer, s32 updateRate) {
     s32 i;
     s32 stopwatchTimer;
     s32 minutes;
@@ -2805,7 +2838,7 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
                 timerHideCounter = 0;
             }
             if (gHUDNumPlayers == ONE_PLAYER) {
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_RACE_TIME_LABEL]);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_RACE_TIME_LABEL]);
             }
             if (normalise_time(36000) < stopwatchTimer) {
                 stopwatchTimer = normalise_time(36000);
@@ -2831,7 +2864,8 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
                 }
             } else {
                 // This section seems to do nothing of consequense.
-                hundredths = gCurrentHud->entry[HUD_RACE_TIME_LABEL].raceTimeLabel.hundredths + ((hundredths / 10) * 10);
+                hundredths =
+                    gCurrentHud->entry[HUD_RACE_TIME_LABEL].raceTimeLabel.hundredths + ((hundredths / 10) * 10);
                 gCurrentHud->entry[HUD_RACE_TIME_LABEL].raceTimeLabel.hundredths++;
                 if (gCurrentHud->entry[HUD_RACE_TIME_LABEL].raceTimeLabel.hundredths >= 10) {
                     gCurrentHud->entry[HUD_RACE_TIME_LABEL].raceTimeLabel.hundredths = 0;
@@ -2839,84 +2873,85 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
             }
 
             if (gNumActivePlayers == 1) {
-                render_timer(gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x, gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.y, minutes, seconds, hundredths,
-                             FALSE);
+                hud_timer_render(gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x,
+                                 gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.y, minutes, seconds, hundredths, FALSE);
             } else {
-                render_timer(gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x, gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.y, minutes, seconds, hundredths,
-                             TRUE);
+                hud_timer_render(gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x,
+                                 gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.y, minutes, seconds, hundredths, TRUE);
             }
-            gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
         }
     }
 }
 
 /**
  * Render a time in minutes, seconds and hundredths of a second.
+ * Supports a smaller font for multiplayer.
  */
-void render_timer(s32 x, s32 y, s32 minutes, s32 seconds, s32 hundredths, s32 smallFont) {
+void hud_timer_render(s32 x, s32 y, s32 minutes, s32 seconds, s32 hundredths, s32 smallFont) {
     UNUSED s32 pad;
-    HudElementBase entry2;
-    s32 unk14;
-    s32 unk10;
-    s32 unkC;
-    s32 unk8;
-    s32 var_s4;
-    s32 unk0;
+    HudElementBase entry;
+    s32 offset1;
+    s32 offset2;
+    s32 offset3;
+    s32 offsetY;
+    s32 numbers;
+    s32 seperator;
 
-    entry2.x = x;
-    entry2.y = y;
-    entry2.z_rotation = 0;
-    entry2.x_rotation = 0;
-    entry2.y_rotation = 0;
-    entry2.scale = 1.0f;
-    entry2.z = 0.0f;
-    if (!smallFont) {
-        unk14 = 11;
-        unk10 = 10;
-        unkC = 10;
-        unk8 = 2;
-        var_s4 = HUD_ASSET_9;
-        unk0 = HUD_ASSET_11;
+    entry.x = x;
+    entry.y = y;
+    entry.z_rotation = 0;
+    entry.x_rotation = 0;
+    entry.y_rotation = 0;
+    entry.scale = 1.0f;
+    entry.z = 0.0f;
+    if (!smallFont) { // The below offsets are applied after drawing their respective elements.
+        offset1 = 11; // Offset for the first number
+        offset2 = 10; // Offset for the second number
+        offset3 = 10; // Offset for the seperator
+        offsetY = 2;  // Offset used for the seperator.
+        numbers = HUD_ASSET_NUMBERS;
+        seperator = HUD_ASSET_SEPERATOR; // :
     } else {
-        unk14 = 10;
-        unk10 = 8;
-        unkC = 7;
-        unk8 = 0;
-        var_s4 = HUD_ASSET_10;
-        unk0 = HUD_ASSET_12;
+        offset1 = 10;
+        offset2 = 8;
+        offset3 = 7;
+        offsetY = 0; // Small font is the same height
+        numbers = HUD_ASSET_NUMBERS_SMALL;
+        seperator = HUD_ASSET_SEPERATOR_SMALL; // :
     }
-    entry2.spriteID = var_s4;
-    entry2.spriteOffset = minutes / 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
-    entry2.x += unk14;
-    entry2.spriteOffset = minutes % 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
-    entry2.spriteOffset = 0;
-    entry2.x += unk10;
-    entry2.y += unk8;
-    entry2.spriteID = unk0;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
-    entry2.spriteID = var_s4;
-    entry2.x += unkC;
-    entry2.y -= unk8;
-    entry2.spriteOffset = seconds / 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
-    entry2.x += unk14;
-    entry2.spriteOffset = seconds % 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
-    entry2.spriteOffset = 0;
-    entry2.x += unk10;
-    entry2.y += unk8;
-    entry2.spriteID = unk0;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
-    entry2.spriteID = var_s4;
-    entry2.x += unkC;
-    entry2.y -= unk8;
-    entry2.spriteOffset = hundredths / 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
-    entry2.x += unk14;
-    entry2.spriteOffset = hundredths % 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
+    entry.spriteID = numbers;
+    entry.spriteOffset = minutes / 10;
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, (HudElement *) &entry);
+    entry.x += offset1;
+    entry.spriteOffset = minutes % 10;
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, (HudElement *) &entry);
+    entry.spriteOffset = 0;
+    entry.x += offset2;
+    entry.y += offsetY;
+    entry.spriteID = seperator;
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, (HudElement *) &entry);
+    entry.spriteID = numbers;
+    entry.x += offset3;
+    entry.y -= offsetY;
+    entry.spriteOffset = seconds / 10;
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, (HudElement *) &entry);
+    entry.x += offset1;
+    entry.spriteOffset = seconds % 10;
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, (HudElement *) &entry);
+    entry.spriteOffset = 0;
+    entry.x += offset2;
+    entry.y += offsetY;
+    entry.spriteID = seperator;
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, (HudElement *) &entry);
+    entry.spriteID = numbers;
+    entry.x += offset3;
+    entry.y -= offsetY;
+    entry.spriteOffset = hundredths / 10;
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, (HudElement *) &entry);
+    entry.x += offset1;
+    entry.spriteOffset = hundredths % 10;
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, (HudElement *) &entry);
 }
 
 /**
@@ -2939,15 +2974,15 @@ void minimap_init(LevelModel *model) {
  * For 3 players, it's for toggling between the minimap and a spectator cam in viewport 4.
  * For 4 players, it's for toggling the minimap.
  */
-s8 get_hud_setting(void) {
+s8 hud_setting(void) {
     return gHudToggleSettings[gHUDNumPlayers];
 }
 
 /**
- * Renders the minimap in all modes as well as a few other random pieces of HUD.
- * This function also handles the HUD in 3 or 4 player, instead of the normal dedicated functions it has.
+ * Renders HUD elements concerning all players.
+ * This includes the minimap and score counters for challenge modes.
  */
-void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate) {
+void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate) {
     Object_Racer *curRacerObj;
     LevelModel *lvlMdl;
     Sprite *minimap;
@@ -2963,7 +2998,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     u8 sp113;
     s32 mapOpacity;
     s32 opacity;
-    UNUSED s32 pad[2];
+    UNUSED s32 pad0[2];
     s32 temp_s1_2;
     s32 var_a0_5;
     s32 spF4;
@@ -2972,7 +3007,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     s32 temp_s1_3;
     s32 spE4;
     s32 spE0;
-    UNUSED s32 pad9;
+    UNUSED s32 pad1;
     Object *temp_v0_8;
     s32 tempVar2;
     s32 sp144;
@@ -3024,13 +3059,13 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
 
     gHudLevelHeader = get_current_level_header();
     objectGroup = get_racer_objects_by_port(&objectCount);
-    gHUDCurrDisplayList = *dList;
-    gHUDCurrMatrix = *mtx;
-    gHUDCurrVertex = *vtx;
+    gHudDL = *dList;
+    gHudMtx = *mtx;
+    gHudVtx = *vtx;
     if (gHudLevelHeader->race_type == RACETYPE_CHALLENGE_EGGS) {
         if (gNumActivePlayers == 2 && gHudToggleSettings[gHUDNumPlayers] == 0) {
             hud_draw_eggs(NULL, updateRate);
-            reset_render_settings(&gHUDCurrDisplayList);
+            reset_render_settings(&gHudDL);
         } else {
             // Render player 4's egg challenge portrait if they are AI controlled.
             if (gNumActivePlayers == 3) {
@@ -3069,10 +3104,10 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
         if (gNumActivePlayers == 2 && gHudToggleSettings[gHUDNumPlayers] == 0) {
             sprite_anim_off(TRUE);
             sprite_opaque(FALSE);
-            set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+            set_ortho_matrix_view(&gHudDL, &gHudMtx);
             func_800A1E48(0, updateRate);
             sprite_anim_off(FALSE);
-            reset_render_settings(&gHUDCurrDisplayList);
+            reset_render_settings(&gHudDL);
             sprite_opaque(TRUE);
         } else {
             // In 3/4 player, just show the life counter.
@@ -3088,7 +3123,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     spE4 = gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x;
                     spE0 = gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
                     sprite_opaque(FALSE);
-                    set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+                    set_ortho_matrix_view(&gHudDL, &gHudMtx);
                     sprite_anim_off(TRUE);
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x = 225.0f;
                     if (osTvType == OS_TV_TYPE_PAL) {
@@ -3115,19 +3150,21 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_2].pos.y -= temp + 1;
                     gCurrentHud->entry[HUD_BANANA_COUNT_X].pos.x += var_a0_5;
                     gCurrentHud->entry[HUD_BANANA_COUNT_X].pos.y -= temp;
-                    gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].spriteID = curRacerObj->characterId + HUD_SPRITE_PORTRAIT;
+                    gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].spriteID =
+                        curRacerObj->characterId + HUD_SPRITE_PORTRAIT;
                     if (osTvType == OS_TV_TYPE_PAL) {
                         gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x -= 4.0f;
                         gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].pos.x -= 4.0f;
                     }
                     D_80126CD5 = TRUE;
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                  &gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT]);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT]);
                     D_80126CD5 = FALSE;
-                    if (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.visualCounter == 0 && curRacerObj->bananas == 10) {
-                        gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.visualCounter = curRacerObj->bananas;
+                    if (gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.visualCounter == 0 &&
+                        curRacerObj->bananas == 10) {
+                        gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].bananaCountIconSpin.visualCounter =
+                            curRacerObj->bananas;
                     }
-                    render_racer_bananas(curRacerObj, updateRate);
+                    hud_bananas(curRacerObj, updateRate);
                     gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC].pos.x -= var_a0_5;
                     gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC].pos.y -= temp;
                     gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].pos.x -= var_a0_5;
@@ -3143,7 +3180,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x = spE4;
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y = spE0;
                     sprite_opaque(TRUE);
-                    reset_render_settings(&gHUDCurrDisplayList);
+                    reset_render_settings(&gHudDL);
                     sprite_anim_off(FALSE);
                 }
             }
@@ -3157,7 +3194,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             racerGroup = get_racer_objects(&racerCount);
             for (sp144 = 0; sp144 < racerCount; sp144++) {
                 someRacer = (Object_Racer *) racerGroup[sp144]->unk64;
-                render_treasure_hud(someRacer);
+                hud_treasure(someRacer);
                 if (osTvType == OS_TV_TYPE_PAL) {
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y += 66.0;
                     gCurrentHud->entry[HUD_TREASURE_METRE].pos.y += 66.0;
@@ -3191,10 +3228,11 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     gCurrentHud->entry[HUD_TREASURE_METRE].pos.x -= 4.0f;
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y *= 1.1;
                     gCurrentHud->entry[HUD_TREASURE_METRE].pos.y *= 1.1;
-                    gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y = (s32) gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
+                    gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y =
+                        (s32) gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
                     gCurrentHud->entry[HUD_TREASURE_METRE].pos.y = (s32) gCurrentHud->entry[HUD_TREASURE_METRE].pos.y;
                 }
-                render_treasure_hud(tempVar4);
+                hud_treasure(tempVar4);
                 gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x = temp_s0_3;
                 gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y = temp_s1_3;
                 gCurrentHud->entry[HUD_TREASURE_METRE].pos.x = temp_f16;
@@ -3204,11 +3242,11 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     }
     if (D_80127180 != 0) {
         gHudSprites[D_80127180].texture = NULL;
-        texrect_draw(&gHUDCurrDisplayList, gHudSprites, 0, 0, 255, 255, 255, 255);
+        texrect_draw(&gHudDL, gHudSprites, 0, 0, 255, 255, 255, 255);
     }
-    *dList = gHUDCurrDisplayList;
-    *mtx = gHUDCurrMatrix;
-    *vtx = gHUDCurrVertex;
+    *dList = gHudDL;
+    *mtx = gHudMtx;
+    *vtx = gHudVtx;
     if (!(gHudLevelHeader->unkBC & 1)) {
         sp113 = TRUE;
         for (i = 0; i < objectCount; i++) {
@@ -3224,8 +3262,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
         test:
             return;
         } else {
-            reset_render_settings(&gHUDCurrDisplayList);
-            set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+            reset_render_settings(&gHudDL);
+            set_ortho_matrix_view(&gHudDL, &gHudMtx);
             lvlMdl = get_current_level_model();
             if (lvlMdl == NULL) {
                 return;
@@ -3283,12 +3321,11 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 mapOpacity = 160;
             }
             if (gNumActivePlayers == 3) {
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, mapOpacity);
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, mapOpacity);
             } else {
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gMinimapRed, gMinimapGreen, gMinimapBlue, mapOpacity);
+                gDPSetPrimColor(gHudDL++, 0, 0, gMinimapRed, gMinimapGreen, gMinimapBlue, mapOpacity);
             }
-            render_ortho_triangle_image(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                        (ObjectSegment *) &hudElem, minimap, 0);
+            render_ortho_triangle_image(&gHudDL, &gHudMtx, &gHudVtx, (ObjectSegment *) &hudElem, minimap, 0);
             sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
             sp118 = coss_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
             sp114 = sins_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
@@ -3301,8 +3338,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
                     gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
                     tempVar1 = (opacity * (f32) temp_v0_8->segment.object.opacity) * (1.0 / 128.0);
-                    gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 60, 60, 60, tempVar1);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
+                    gDPSetPrimColor(gHudDL++, 0, 0, 60, 60, 60, tempVar1);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
                 }
             }
             temp_v0_8 = timetrial_ghost_staff();
@@ -3311,11 +3348,11 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                                    sp118, sp11C);
                 gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
                 tempVar1 = (opacity * (f32) temp_v0_8->segment.object.opacity) * (1.0 / 128.0);
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gHudMinimapColours[8].red, gHudMinimapColours[8].green,
+                gDPSetPrimColor(gHudDL++, 0, 0, gHudMinimapColours[8].red, gHudMinimapColours[8].green,
                                 gHudMinimapColours[8].blue, tempVar1);
                 gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
                 gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_DOT;
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
             }
             // Draw Taj's minimap icon.
             if (gHudLevelHeader->race_type == RACETYPE_HUBWORLD) {
@@ -3325,9 +3362,9 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
                                        sp118, sp11C);
                     gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
-                    gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 0, 255, opacity);
+                    gDPSetPrimColor(gHudDL++, 0, 0, 255, 0, 255, opacity);
                     gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
+                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
                 }
             }
             // Draw racer minimap icons.
@@ -3341,12 +3378,14 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     if (someRacer->playerIndex != PLAYER_COMPUTER) {
                         gCurrentHud->entry[HUD_MINIMAP_MARKER].pos.y -= 1.0f;
                         gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_ARROW;
-                        gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = (objectGroup[i]->segment.trans.rotation.y_rotation -
-                                                                 ((lvlMdl->minimapRotation * 0xFFFF) / 360)) &
-                                                                0xFFFF;
+                        gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation =
+                            (objectGroup[i]->segment.trans.rotation.y_rotation -
+                             ((lvlMdl->minimapRotation * 0xFFFF) / 360)) &
+                            0xFFFF;
 
                         if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
-                            gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0xFFFF - gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation;
+                            gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation =
+                                0xFFFF - gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation;
                         }
                         sprite_opaque(TRUE);
                     } else {
@@ -3354,9 +3393,9 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                         gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_DOT;
                     }
                     if (is_taj_challenge() && someRacer->vehicleID == VEHICLE_CARPET) {
-                        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 0, 255, opacity);
+                        gDPSetPrimColor(gHudDL++, 0, 0, 255, 0, 255, opacity);
                     } else {
-                        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gHudMinimapColours[someRacer->characterId].red,
+                        gDPSetPrimColor(gHudDL++, 0, 0, gHudMinimapColours[someRacer->characterId].red,
                                         gHudMinimapColours[someRacer->characterId].green,
                                         gHudMinimapColours[someRacer->characterId].blue, opacity);
                     }
@@ -3380,18 +3419,17 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                         } else {
                             gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
                         }
-                        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                      &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
+                        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
                     }
                     sprite_opaque(FALSE);
                 }
             }
-            gDPPipeSync(gHUDCurrDisplayList++);
+            gDPPipeSync(gHudDL++);
             sprite_anim_off(FALSE);
             sprite_opaque(TRUE);
-            *dList = gHUDCurrDisplayList;
-            *mtx = gHUDCurrMatrix;
-            *vtx = gHUDCurrVertex;
+            *dList = gHudDL;
+            *mtx = gHudMtx;
+            *vtx = gHudVtx;
         }
     }
 }
@@ -3416,22 +3454,24 @@ void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspec
     scaledY = (lvlMdl->minimapYScale * -60.0f * (z - lvlMdl->lowerZBounds)) / b;
 
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) { // Is adventure 2?
-        gCurrentHud->entry[HUD_MINIMAP_MARKER].pos.x = (gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) +
-                                       lvlMdl->minimapOffsetXAdv2 - gMinimapDotOffsetX;
+        gCurrentHud->entry[HUD_MINIMAP_MARKER].pos.x =
+            (gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) + lvlMdl->minimapOffsetXAdv2 -
+            gMinimapDotOffsetX;
         gCurrentHud->entry[HUD_MINIMAP_MARKER].pos.y = (lvlMdl->minimapOffsetYAdv2 + gMinimapScreenY) -
-                                       ((scaledX * angleSin) - (scaledY * angleCos)) + gMinimapDotOffsetY;
+                                                       ((scaledX * angleSin) - (scaledY * angleCos)) +
+                                                       gMinimapDotOffsetY;
         return;
     }
     // Final x position on minimap
     gCurrentHud->entry[HUD_MINIMAP_MARKER].pos.x = gMinimapScreenX + ((scaledX * angleCos) + (scaledY * angleSin)) +
-                                   (f32) lvlMdl->minimapOffsetXAdv1 - gMinimapDotOffsetX;
+                                                   (f32) lvlMdl->minimapOffsetXAdv1 - gMinimapDotOffsetX;
     // Final y position on minimap
     gCurrentHud->entry[HUD_MINIMAP_MARKER].pos.y = (lvlMdl->minimapOffsetYAdv1 + gMinimapScreenY) -
-                                   ((scaledX * angleSin) - (scaledY * angleCos)) + gMinimapDotOffsetY;
+                                                   ((scaledX * angleSin) - (scaledY * angleCos)) + gMinimapDotOffsetY;
 }
 
 // hud_draw_element
-#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/func_800AA600.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/hud_element_render.s")
 
 /**
  * Renders a 3D model onscreen.
@@ -3470,12 +3510,12 @@ void hud_draw_model(ObjectModel *objModel) {
             } else {
                 texPtr = objModel->textures[texIndex].texture;
             }
-            load_and_set_texture_no_offset(&gHUDCurrDisplayList, texPtr, flags & ~RENDER_Z_COMPARE);
-            gSPVertexDKR(gHUDCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
+            load_and_set_texture_no_offset(&gHudDL, texPtr, flags & ~RENDER_Z_COMPARE);
+            gSPVertexDKR(gHudDL++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
             if (texPtr == NULL) {
                 textureEnabled = TRIN_DISABLE_TEXTURE;
             }
-            gSPPolygon(gHUDCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), numTris, textureEnabled);
+            gSPPolygon(gHudDL++, OS_PHYSICAL_TO_K0(tris), numTris, textureEnabled);
             numBatches = objModel->numberOfBatches;
         }
     }
