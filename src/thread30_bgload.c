@@ -1,4 +1,4 @@
-#include "thread30_track_loading.h"
+#include "thread30_bgload.h"
 #include "macros.h"
 #include <ultra64.h>
 #include "game.h"
@@ -25,9 +25,9 @@ u64 gThread30Stack[STACKSIZE(STACK_BGLOAD)];
 /**
  * Initalizes and starts thread30()
  */
-void create_and_start_thread30(void) {
-    osCreateMesgQueue(&gThread30MesgQueue, &gThread30Message[0], ARRAY_COUNT(gThread30Message));
-    osCreateThread(&gThread30, 30, &thread30_track_loading, NULL, &gThread30Stack[STACKSIZE(STACK_BGLOAD)], 8);
+void bgload_init(void) {
+    osCreateMesgQueue(&gThread30MesgQueue, gThread30Message, ARRAY_COUNT(gThread30Message));
+    osCreateThread(&gThread30, 30, &thread30_bgload, NULL, &gThread30Stack[STACKSIZE(STACK_BGLOAD)], 8);
     osStartThread(&gThread30);
 }
 
@@ -35,14 +35,14 @@ void create_and_start_thread30(void) {
  * Stop thread30()
  * Official Name: amStop
  */
-void stop_thread30(void) {
+void bgload_kill(void) {
     osStopThread(&gThread30);
 }
 
 /**
  * Returns the value in gThread30NeedToLoadLevel.
  */
-s32 get_thread30_need_to_load_level(void) {
+s32 bgload_active(void) {
     return gThread30NeedToLoadLevel;
 }
 
@@ -50,7 +50,7 @@ s32 get_thread30_need_to_load_level(void) {
  * If gThread30NeedToLoadLevel is set, then decrement gThread30LoadDelay. If gThread30LoadDelay is 0,
  * then signal thread30 to load a level.
  */
-void tick_thread30(void) {
+void bgload_tick(void) {
     if (gThread30NeedToLoadLevel && gThread30LoadDelay > 0) {
         gThread30LoadDelay--;
         if (gThread30LoadDelay == 0) {
@@ -63,7 +63,7 @@ void tick_thread30(void) {
 /**
  * Returns the value in gThread30LoadDelay.
  */
-UNUSED s32 get_thread30_load_delay(void) {
+UNUSED s32 bgload_timer(void) {
     return gThread30LoadDelay;
 }
 
@@ -71,7 +71,7 @@ UNUSED s32 get_thread30_load_delay(void) {
  * Sets a level id and cutscene id to be loaded. Used in the tracks menu & credits menu.
  * Returns 1 if successful, or 0 if gThread30NeedToLoadLevel was already set.
  */
-s32 set_level_to_load_in_background(s32 levelId, s32 cutsceneId) {
+s32 bgload_start(s32 levelId, s32 cutsceneId) {
     if (!gThread30NeedToLoadLevel) {
         gThread30LoadDelay = 4;
         gThread30LevelIdToLoad = levelId;
@@ -85,7 +85,7 @@ s32 set_level_to_load_in_background(s32 levelId, s32 cutsceneId) {
 /**
  * Waits for a signal from the main thread to load a level asynchronously.
  */
-void thread30_track_loading(UNUSED void *arg) {
+void thread30_bgload(UNUSED void *arg) {
     OSMesg mesg = 0;
     while (TRUE) {
         // Wait for a signal from the main thread

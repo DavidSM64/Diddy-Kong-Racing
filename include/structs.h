@@ -24,6 +24,16 @@ typedef struct Vec3f {
   };
 } Vec3f;
 
+typedef struct Vec2f {
+  union {
+    struct {
+      f32 x;
+      f32 y;
+    };
+    f32 f[2];
+  };
+} Vec2f;
+
 typedef struct Vec3s {
   union {
     struct {
@@ -39,6 +49,20 @@ typedef struct Vec3s {
     s16 s[3];
   };
 } Vec3s;
+
+typedef struct Vec2s {
+  union {
+    struct {
+      s16 y_rotation;
+      s16 x_rotation;
+    };
+    struct {
+      s16 x;
+      s16 y;
+    };
+    s16 s[2];
+  };
+} Vec2s;
 
 typedef struct Vec3i {
   union {
@@ -628,6 +652,7 @@ typedef struct ObjectModel {
     /* 0x4C */ s32 *unk4C;
     /* 0x50 */ s16 unk50;
     /* 0x52 */ s16 unk52;
+    /* 0x54 */ u8 pad[0x2C];
 } ObjectModel;      
 
 /* Size: 0x44 bytes */
@@ -1367,7 +1392,7 @@ typedef struct Object_Racer {
   /* 0x291 */ s8 indicator_timer;
   /* 0x1FA */ s8 drifting;
   /* 0x1FB */ s8 unk1FB;
-  /* 0x1FC */ u8 unk1FC;
+  /* 0x1FC */ u8 wrongWayCounter;
   /* 0x1FD */ s8 cameraIndex;
   /* 0x1FE */ u8 unk1FE;
   /* 0x1FF */ u8 unk1FF;
@@ -1669,7 +1694,7 @@ typedef struct Object_68 {
       ObjectModel *objModel;
       TextureHeader *texHeader;
   };
-  /* 0x04 */ Vertex *unk4[2];
+  /* 0x04 */ Vertex *vertices[2];
   /* 0x0C */ s32 *unkC;
   /* 0x10 */ s16 animationID;
   /* 0x12 */ s16 animationFrame;
@@ -1677,10 +1702,10 @@ typedef struct Object_68 {
   /* 0x16 */ s16 offsetX;
   /* 0x18 */ s16 offsetY;
   /* 0x1A */ s16 offsetZ;
-  /* 0x1C */ s16 unk1C;
-  /* 0x1E */ s8 unk1E;
+  /* 0x1C */ s16 headTilt;
+  /* 0x1E */ s8 modelType;
   /* 0x1F */ s8 animationTaskNum;
-  /* 0x20 */ s8 unk20;
+  /* 0x20 */ s8 animUpdateTimer;
   /* 0x21 */ s8 unk21;
   /* 0x22 */ s16 unk22;
   /* 0x24 */ s32 unk24;
@@ -1882,7 +1907,7 @@ typedef struct Object_LightData {
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
-  /* 0x0044 */ Vertex *unk44;
+  /* 0x0044 */ Vertex *curVertData;
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 objectID; // First 9 bits are object ID, last 7 bits are header size
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318

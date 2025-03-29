@@ -10,9 +10,48 @@
 #define HUD_ELEMENT_SPRITE      0x8000
 #define HUD_ELEMENT_TEXTURE     0xC000
 
-#define HUD_ELEMENT_COUNT (sizeof(struct HudData) / sizeof(struct HudElement))
-
 #define HUD_EGG_TOTAL 3
+
+typedef enum RaceFinishStages {
+    HUD_RACEFINISH_MUTE,
+    HUD_RACEFINISH_TEXT_IN,
+    HUD_RACEFINISH_TEXT_OUT,
+    HUD_RACEFINISH_IDLE
+} RaceFinishStages;
+
+typedef enum TimeTrialFinishStages {
+    TIMETRIAL_FINISH_INIT,  // Init necessary vars, then advance.
+    TIMETRIAL_FINISH_IN,    // Slide in the text.
+    TIMETRIAL_FINISH_SHOW,  // Keep the text onscreen for a few seconds.
+    TIMETRIAL_FINISH_OUT,   // Slide out the text.
+    TIMETRIAL_FINISH_IDLE,  // Text is offscreen, reset a few vars then advance.
+    TIMETRIAL_FINISH_IDLE_2 // Do nothing.
+} TimeTrialFinishStages;
+
+typedef enum WrongWayStages {
+    WRONGWAY_HIDE,
+    WRONGWAY_SHOW
+} WrongWayStages;
+
+typedef enum LapTextStages {
+    LAPTEXT_IDLE,
+    LAPTEXT_UNK1,
+    LAPTEXT_UNK2,
+    LAPTEXT_UNK3
+} LapTextStages;
+
+typedef enum LapTextDirection {
+    LAPTEXT_IN = -1,
+    LAPTEXT_OUT = 1
+} LapTextDirection;
+
+// Consistently inconsistent, courtesy of Rare.
+typedef enum WrongWayDirection {
+    WRONGWAY_OUT = -1,
+    WRONGWAY_IN = 1
+} WrongWayDirection;
+
+
 
 enum CourseIndicatorArrows {
     INDICATOR_NONE,
@@ -70,6 +109,70 @@ enum HudElementNames {
     HUD_ELEMENT_UNK_27
 };
 
+enum HudTypes {
+    HUD_RACE_POSITION,
+    HUD_RACE_POSITION_END,
+    HUD_WEAPON_DISPLAY,
+    HUD_LAP_COUNT_LABEL,
+    HUD_LAP_COUNT_CURRENT,
+    HUD_LAP_COUNT_SEPERATOR,
+    HUD_LAP_COUNT_TOTAL,
+    HUD_BANANA_COUNT_ICON_SPIN,
+    HUD_BANANA_COUNT_NUMBER_1,
+    HUD_BANANA_COUNT_NUMBER_2,
+    HUD_RACE_TIME_LABEL,
+    HUD_RACE_TIME_NUMBER,
+    HUD_RACE_START_GO,
+    HUD_RACE_START_READY,
+    HUD_RACE_END_FINISH,
+    HUD_MINIMAP_MARKER,
+    HUD_LAP_COUNT_FLAG,
+    HUD_MAGNET_RETICLE,
+    HUD_BANANA_COUNT_X,
+    HUD_BALLOON_COUNT_ICON,
+    HUD_BALLOON_COUNT_X,
+    HUD_BALLOON_COUNT_NUMBER_1,
+    HUD_BALLOON_COUNT_NUMBER_2,
+    HUD_LAP_TIME_TEXT,
+    HUD_TIME_TRIAL_LAP_TEXT,
+    HUD_TIME_TRIAL_LAP_NUMBER,
+    HUD_STOPWATCH_HANDS,
+    HUD_BANANA_COUNT_ICON_STATIC,
+    HUD_BANANA_COUNT_SPARKLE,
+    HUD_LAP_TEXT_FINAL,
+    HUD_LAP_TEXT_LAP,
+    HUD_LAP_TEXT_TWO,
+    HUD_TREASURE_METRE,
+    HUD_COURSE_ARROWS,
+    HUD_STOPWATCH,
+    HUD_WRONGWAY_1,
+    HUD_WRONGWAY_2,
+    HUD_PRO_AM_LOGO,
+    HUD_SPEEDOMETRE_ARROW,
+    HUD_SPEEDOMETRE_0,
+    HUD_SPEEDOMETRE_30,
+    HUD_SPEEDOMETRE_60,
+    HUD_SPEEDOMETRE_90,
+    HUD_SPEEDOMETRE_120,
+    HUD_SPEEDOMETRE_150,
+    HUD_SPEEDOMETRE_BG,
+    HUD_SILVER_COIN_TALLY,
+    HUD_CHALLENGE_FINISH_POS_1,
+    HUD_CHALLENGE_FINISH_POS_2,
+    HUD_WEAPON_QUANTITY,
+    HUD_CHALLENGE_PORTRAIT,
+    HUD_EGG_CHALLENGE_ICON,
+    HUD_BATTLE_BANANA_ICON,
+    HUD_BATTLE_BANANA_X,
+    HUD_BATTLE_BANANA_COUNT_1,
+    HUD_BATTLE_BANANA_COUNT_2,
+    HUD_RACE_FINISH_POS_1,
+    HUD_TWO_PLAYER_ADV_PORTRAIT,
+    HUD_RACE_FINISH_POS_2,
+
+    HUD_ELEMENT_COUNT
+};
+
 enum HudAssets {
     HUD_ASSET_0,
     HUD_SPRITE_WEAPONS,
@@ -80,10 +183,10 @@ enum HudAssets {
     HUD_ASSET_6,
     HUD_SPRITE_GO_BIG,
     HUD_SPRITE_BANANA_ANIM,
-    HUD_ASSET_9,
-    HUD_ASSET_10,
-    HUD_ASSET_11,
-    HUD_ASSET_12,
+    HUD_ASSET_NUMBERS,
+    HUD_ASSET_NUMBERS_SMALL,
+    HUD_ASSET_SEPERATOR,
+    HUD_ASSET_SEPERATOR_SMALL,
     HUD_ASSET_13,
     HUD_SPRITE_MAP_DOT,
     HUD_ASSET_15,
@@ -155,98 +258,108 @@ typedef struct HudElementBase {
     s16 spriteOffset;
 } HudElementBase;
 
-typedef struct HudElement {
-    s16 y_rotation;
-    s16 x_rotation;
-    s16 z_rotation;
-    s16 spriteID;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-    s16 spriteOffset;
-    s8 unk1A;
-    s8 unk1B;
-    s8 unk1C;
-    s8 unk1D;
-    s8 unk1E;
-    s8 unk1F;
-} HudElement;
+typedef struct HudElement_ChallengeEggs {
+    s8 alphaTimer;      // Counts up, wrapping between s8 bounds, used for setting the alpha.
+} HudElement_ChallengeEggs;
 
-typedef struct HudElementArray {
-    s16 y_rotation;
-    s16 x_rotation;
-    s16 z_rotation;
+typedef struct HudElement_RaceStartGo {
+    s8 musicStartTimer[4];  // Counts up to 60 frames (1 second) before starting the music
+} HudElement_RaceStartGo;
+
+typedef struct HudElement_BananaCountIconSpin {
+    s8 spinCounter;     // Number of remaining times the icon will spin
+    s8 visualCounter;   // Previously known banana value.
+} HudElement_BananaCountIconSpin;
+
+typedef struct HudElement_BananaCountSparkle {
+    s8 sparkleTimer;    // Delay timer before starting a new sparkle
+    s8 sparkleCounter;  // Number of remaining times the icon will sparkle
+} HudElement_BananaCountSparkle;
+
+typedef struct HudElement_SilverCoinTally {
+    s8 soundPlayed;     // Whether the sound has been played
+    s8 soundTimer;      // Delay timer before playing the sound
+    s8 offsetY;         // Offset for the hud, utilised for two players.
+} HudElement_SilverCoinTally;
+
+typedef struct HudElement_RaceFinishPos {
+    s8 status;          // Which behaviour to do
+    s8 textOutTimer;    // Delay timer in frames, increases ticks at 120 before getting set to -120
+    s8 textOutTicks;    // Number of times delay timer has reached 120. This is because the timer is only 8 bits.
+    s8 targetPos;       // Target X offset for the element;
+} HudElement_RaceFinishPos;
+
+typedef struct HudElement_RacePosition {
+    s8 active;          // Whether the scale effect is active.
+    s8 scaleCounter;    // Ranges from -128 to 127, plus 129 then multiplied to 127 to get a 16 bit range for the trig func.
+    s8 baseScale;       // The initial scale value used. Lets you have smaller baseline scales.
+} HudElement_RacePosition;
+
+typedef struct HudElement_LapCountFlag {
+    s8 visualCounter;   // Counter that sets the sprite offset when above 6.
+} HudElement_LapCountFlag;
+
+typedef struct HudElement_LapText {
+    s8 status;          // Which behaviour to do
+    s8 direction;       // Direction to slide the text
+    s8 targetPos;       // Target X offset for the element
+    s8 soundPlayed;     // Whether the sound has been played
+} HudElement_LapText;
+
+typedef struct HudElement_Timer {
+    s8 minutes;         // Minutes elapsed
+    s8 seconds;         // Seconds elapsed
+    s8 hundredths;      // Hundredths of a second elapsed
+    s8 unk1D;
+} HudElement_Timer;
+
+typedef struct HudElement_FinishText {
+    s8 status;          // Which behaviour to do
+    s8 fadeTimer;       // Timer that signals sliding the text offscreen when it hits 120
+    s8 unk1C;           // Unused
+    s8 targetPos;       // Target X offset for the element
+} HudElement_FinishText;
+
+typedef struct HudElement_WeaponDisplay {
+    s8 hideTimer;       // Value that counts down when having fewer than 3 quantity.
+    s8 rotation;        // s8 rotation representation. Wraps from 0-16, then multiplied by 0x1000
+    s8 scale;           // s8 scale representation. A new weapon grows larger until reaching full size. Ranges from 0 - 120
+    s8 prevLevel;       // Previous known weapon level, for starting the visual effects upon collecting another.
+} HudElement_WeaponDisplay;
+
+typedef struct HudElement_RaceTimeLabel {
+    s8 hideTimer;       // Counter that's used for having the text flicker.
+    s8 hundredths;      // Rounds hundredths to the next tenth, but functionally unused.
+} HudElement_RaceTimeLabel;
+
+typedef struct HudElement {
+    Vec3s rotation;
     s16 spriteID;
     f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
+    Vec3f pos;
     s16 spriteOffset;
-    s8 unk1A[6];
-} HudElementArray;
+    union {
+        u8 filler[4];   // Ensures this union is 6 bytes, since Rare never actually use more than four.
+        HudElement_ChallengeEggs challengeEggs;
+        HudElement_RaceStartGo raceStartGo;
+        HudElement_BananaCountIconSpin bananaCountIconSpin;
+        HudElement_BananaCountSparkle bananaCountSparkle;
+        HudElement_SilverCoinTally silverCoinTally;
+        HudElement_RaceFinishPos raceFinishPos;
+        HudElement_RacePosition racePosition;
+        HudElement_LapCountFlag lapCountFlag;
+        HudElement_LapText lapText;
+        HudElement_Timer timer;
+        HudElement_FinishText finishText;
+        HudElement_WeaponDisplay weaponDisplay;
+        HudElement_RaceTimeLabel raceTimeLabel;
+    };
+    
+} HudElement;
 
 // Size: 0x760
 typedef struct HudData {
-  /* 0x0000 */ HudElement racePostion;
-  /* 0x0020 */ HudElement racePositionEnd;
-  /* 0x0040 */ HudElement weaponDisplay;
-  /* 0x0060 */ HudElement lapCountLabel;
-  /* 0x0080 */ HudElement lapCountCurrent;
-  /* 0x00A0 */ HudElement lapCountSeperator;
-  /* 0x00C0 */ HudElement lapCountTotal;
-  /* 0x00E0 */ HudElement bananaCountIconSpin;
-  /* 0x0100 */ HudElement bananaCountNumber1;
-  /* 0x0120 */ HudElement bananaCountNumber2;
-  /* 0x0140 */ HudElement raceTimeLabel;
-  /* 0x0160 */ HudElement raceTimeNumber;
-  /* 0x0180 */ HudElementArray raceStartGo;
-  /* 0x01A0 */ HudElement raceStartReady;
-  /* 0x01C0 */ HudElement raceEndFinish;
-  /* 0x01E0 */ HudElement minimapMarker;
-  /* 0x0200 */ HudElement lapCountFlag;
-  /* 0x0200 */ HudElement magnetReticle;
-  /* 0x0240 */ HudElement bananaCountX;
-  /* 0x0260 */ HudElement balloonCountIcon;
-  /* 0x0280 */ HudElement balloonCountX;
-  /* 0x02A0 */ HudElement balloonCountNumber1;
-  /* 0x02C0 */ HudElement balloonCountNumber2;
-  /* 0x02E0 */ HudElement lapTimeText;
-  /* 0x0300 */ HudElement timeTrialLapText;
-  /* 0x0320 */ HudElement timeTrialLapNumber;
-  /* 0x0340 */ HudElement stopwatchHands;
-  /* 0x0360 */ HudElement bananaCountIconStatic;
-  /* 0x0380 */ HudElement bananaCountSparkle;
-  /* 0x03A0 */ HudElement lapTextFinal;
-  /* 0x03C0 */ HudElement lapTextLap;
-  /* 0x03E0 */ HudElement lapTextTwo;
-  /* 0x03E0 */ HudElement treasureMetre;
-  /* 0x0440 */ HudElement courseArrows;
-  /* 0x0440 */ HudElement stopwatch;
-  /* 0x0460 */ HudElement wrongWay1;
-  /* 0x0480 */ HudElement wrongWay2;
-  /* 0x04A0 */ HudElement unk4A0;
-  /* 0x04C0 */ HudElement speedometreArrow;
-  /* 0x04E0 */ HudElement speedometreNumber0;
-  /* 0x0500 */ HudElement speedometreNumber30;
-  /* 0x0520 */ HudElement speedometreNumber60;
-  /* 0x0540 */ HudElement speedometreNumber90;
-  /* 0x0560 */ HudElement speedometreNumber120;
-  /* 0x0580 */ HudElement speedometreNumber150;
-  /* 0x05A0 */ HudElement speedometreBG;
-  /* 0x05C0 */ HudElement silverCoinTally;
-  /* 0x05E0 */ HudElement challengeFinishPosition1;
-  /* 0x0600 */ HudElement challengeFinishPosition2;
-  /* 0x0620 */ HudElement weaponQuantity;
-  /* 0x0640 */ HudElement challengePortrait;
-  /* 0x0660 */ HudElement eggChallengeIcon;
-  /* 0x0680 */ HudElement battleBananaIcon;
-  /* 0x06A0 */ HudElement battleBananaX;
-  /* 0x06C0 */ HudElement battleBananaCount1;
-  /* 0x06E0 */ HudElement battleBananaCount2;
-  /* 0x0700 */ HudElement raceFinishPosition1;
-  /* 0x0720 */ HudElement twoPlayerAdvPortrait;
-  /* 0x0740 */ HudElement raceFinishPosition2;
+  /* 0x0000 */ HudElement entry[HUD_ELEMENT_COUNT];
 } HudData;
 
 /* Size: 0x10 bytes */
@@ -270,55 +383,55 @@ extern u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
 u8 race_starting(void);
 void hud_audio_init(void);
-void render_hud_race(s32 countdown, Object *obj, s32 updateRate);
-void render_hud_challenge_eggs(s32 countdown, Object *obj, s32 updateRate);
-void render_hud_race_boss(s32 countdown, Object *obj, s32 updateRate);
-void render_hud_taj_race(s32 countdown, Object *obj, s32 updateRate);
+void hud_main_race(s32 countdown, Object *obj, s32 updateRate);
+void hud_main_eggs(s32 countdown, Object *obj, s32 updateRate);
+void hud_main_boss(s32 countdown, Object *obj, s32 updateRate);
+void hud_main_taj(s32 countdown, Object *obj, s32 updateRate);
 void hud_speedometre_reset(void);
-void play_time_trial_end_message(s16 *playerID);
+void hud_time_trial_message(s16 *playerID);
 void hud_sound_play_delayed(u16 soundID, f32 delay, s32 playerIndex);
 void hud_sound_stop(u16 soundID, s32 playerIndex);
 void minimap_init(LevelModel *model);
-s8 get_hud_setting(void);
+s8 hud_setting(void);
 void minimap_fade(s32 setting);
 void minimap_opacity_set(s32 setting);
 void func_800AB1C8(void);
 void hud_visibility(u8 setting);
-void render_race_time(Object_Racer *racer, s32 updateRate);
-void render_wrong_way_text(Object_Racer *obj, s32 updateRate);
-void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate);
-void render_hud_hubworld(Object *obj, s32 updateRate);
-void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s32 updateRate);
-void render_weapon_hud(Object *obj, s32 updateRate);
-void render_race_start(s32 countdown, s32 updateRate);
-void render_racer_bananas(Object_Racer *racer, s32 updateRate);
-void render_race_finish_position(Object_Racer *racer, s32 updateRate);
-void render_speedometer(Object *obj, s32 updateRate);
-void render_lap_count(Object_Racer *racer, s32 updateRate);
-void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate);
-void init_hud(s32 viewportCount);
-void render_hud_battle(s32 countdown, Object *obj, s32 updateRate);
-void hud_draw_lives(Object_Racer *racer, s32 updateRate);
-void free_hud(void);
-void set_stopwatch_face(u8, u8, u8, u8, u8);
+void hud_race_time(Object_Racer *racer, s32 updateRate);
+void hud_wrong_way(Object_Racer *obj, s32 updateRate);
+void hud_course_arrows(Object_Racer *racer, s32 updateRate);
+void hud_main_hub(Object *obj, s32 updateRate);
+void hud_render_player(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s32 updateRate);
+void hud_weapon(Object *obj, s32 updateRate);
+void hud_race_start(s32 countdown, s32 updateRate);
+void hud_bananas(Object_Racer *racer, s32 updateRate);
+void hud_race_finish_1player(Object_Racer *racer, s32 updateRate);
+void hud_speedometre(Object *obj, s32 updateRate);
+void hud_lap_count(Object_Racer *racer, s32 updateRate);
+void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate);
+void hud_init(s32 viewportCount);
+void hud_main_battle(s32 countdown, Object *obj, s32 updateRate);
+void hud_lives_render(Object_Racer *racer, s32 updateRate);
+void hud_free(void);
+void hud_stopwatch_face(u8, u8, u8, u8, u8);
 void hud_audio_update(s32 updateRate);
-void render_silver_coin_counter(Object_Racer *racer, s32 updateRate);
-void render_magnet_reticle(Object *racerObj);
-void render_time_trial_finish(Object_Racer *racer, s32 updateRate);
+void hud_silver_coins(Object_Racer *racer, s32 updateRate);
+void hud_magnet_reticle(Object *racerObj);
+void hud_time_trial_finish(Object_Racer *racer, s32 updateRate);
 void hud_eggs_portrait(Object_Racer *racer, s32 updateRate);
 void hud_draw_eggs(Object *racerObj, s32 updateRate);
-void render_race_position(Object_Racer *racer, s32 updateRate);
-void render_hud_banana_challenge(s32 countdown, Object *obj, s32 updateRate);
-void render_balloon_count(Object_Racer *racer);
-void render_treasure_hud(Object_Racer *racer);
+void hud_race_position(Object_Racer *racer, s32 updateRate);
+void hud_main_treasure(s32 countdown, Object *obj, s32 updateRate);
+void hud_balloons(Object_Racer *racer);
+void hud_treasure(Object_Racer *racer);
 void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspectRatio);
-void render_timer(s32 x, s32 y, s32 minutes, s32 seconds, s32 hundredths, s32 smallFont);
+void hud_timer_render(s32 x, s32 y, s32 minutes, s32 seconds, s32 hundredths, s32 smallFont);
 void hud_draw_model(ObjectModel *objModel);
 
 // Non Matching
-void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement *arg3);
-void func_800A277C(s32, Object*, s32);
-void func_800A6254(Object_Racer *racer, s32 updateRate);
+void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement *arg3);
+void hud_main_time_trial(s32, Object*, s32);
+void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate);
 void func_800A1E48(Object*, s32 updateRate);
 void func_8009F034(void);
 

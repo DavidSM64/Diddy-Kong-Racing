@@ -22,6 +22,8 @@
 #define FADE_COLOR_BLACK FADE_COLOR(0, 0, 0)
 #define FADE_COLOR_WHITE FADE_COLOR(255, 255, 255)
 
+#define FADE_STAY 0xFFFF // Transition will stay until manually removed.
+
 /**
  * type: Transition type
  * flags: Transition flags
@@ -51,25 +53,24 @@ void enable_new_screen_transitions(void);
 void disable_new_screen_transitions(void);
 u32 check_fadeout_transition(void);
 void transition_end(void);
-s32 handle_transitions(s32 updateRate);
-void render_fade_transition(Gfx **dList, MatrixS **mats, Vertex **verts);
-void render_fade_fullscreen(Gfx **dList, MatrixS **mats, Vertex **verts);
-void render_fade_barndoor_horizontal(Gfx **dList, MatrixS **mats, Vertex **verts);
-void render_fade_barndoor_vertical(Gfx **dList, MatrixS **mats, Vertex **verts);
-void render_fade_barndoor_diagonal(Gfx **dList, MatrixS **mats, Vertex **verts);
-void render_fade_disabled(Gfx **dList, MatrixS **mats, Vertex **verts);
+s32 transition_update(s32 updateRate);
+void transition_render(Gfx **dList, MatrixS **mtx, Vertex **vtx);
+void transition_render_fullscreen(Gfx **dList, MatrixS **mtx, Vertex **vtx);
+void transition_render_barndoor_hor(Gfx **dList, MatrixS **mtx, Vertex **vtx);
+void transition_render_barndoor_vert(Gfx **dList, MatrixS **mtx, Vertex **vtx);
+void transition_render_barndoor_diag(Gfx **dList, MatrixS **mtx, Vertex **vtx);
+void transition_render_blank(Gfx **dList, MatrixS **mtx, Vertex **vtx);
 void transition_fullscreen_start(FadeTransition *transition);
-void init_transition_blank(FadeTransition *transition);
-void process_transition_fullscreen(s32 updateRate);
-void process_transition_disabled(s32 updateRate);
+void transition_init_blank(FadeTransition *transition);
+void transition_update_fullscreen(s32 updateRate);
+void transition_update_blank(s32 updateRate);
 s32 transition_begin(FadeTransition *transition);
-void render_fade_circle(Gfx **dList, MatrixS **mats, Vertex **verts);
-void process_transition_shape(s32 updateRate);
-void init_transition_shape(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *coords, u8 *nextPos,
+void transition_render_circle(Gfx **dList, MatrixS **mtx, Vertex **vtx);
+void transition_update_shape(s32 updateRate);
+void transition_init_shape(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *coords, u8 *nextPos,
                            u8 *targetPos, u8 *nextAlpha, u8 *targetAlpha, u8 *vertIndices);
-void func_800C1EE8(s32 updateRate);
-void render_fade_waves(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts);
-
-void func_800C15D4(FadeTransition *transition); //Non Matching
+void transition_update_circle(s32 updateRate);
+void transition_render_waves(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx);
+void transition_init_circle(FadeTransition *transition);
 
 #endif

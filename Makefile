@@ -275,7 +275,6 @@ $(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING -O2 $(INCLUDE_CF
 	-fno-zero-initialized-in-bss \
 	-fsingle-precision-constant \
 	-funsigned-char \
-	-mips3 \
 	-fwrapv \
 	-falign-functions=16 \
 	-G 0

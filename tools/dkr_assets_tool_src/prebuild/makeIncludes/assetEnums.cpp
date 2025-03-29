@@ -67,6 +67,7 @@ void AssetEnums::_write_main_asset_enum(std::vector<std::string> &mainOrder) {
     for(std::string &sectionId : mainOrder) {
         mainEnum.add_symbol(sectionId);
     }
+    mainEnum.add_symbol("\n    ASSET_SECTIONS_COUNT");
     _cHeader.write_raw_text(mainEnum.to_string());
 }
 
@@ -122,6 +123,7 @@ void AssetEnums::_write_single_asset_section_enums(const std::string &sectionId,
         }
     }
     
+    sectionEnum.add_symbol("\n    " + sectionId + "_COUNT");
     _cHeader.write_raw_text(sectionEnum.to_string());
 }
 
@@ -136,6 +138,10 @@ void AssetEnums::_write_asset_section_enums(const std::string &sectionId, JsonFi
         sectionEnum.add_symbol(assetBuildId);
     }
     
+    
+    if(sectionId != "ASSET_MENU_TEXT") {
+        sectionEnum.add_symbol("\n    " + sectionId + "_COUNT");
+    }
     _cHeader.write_raw_text(sectionEnum.to_string());
     
     if(sectionId == "ASSET_MENU_TEXT") {
@@ -148,6 +154,7 @@ void AssetEnums::_write_asset_section_enums(const std::string &sectionId, JsonFi
             menuTextIdsEnum.add_symbol(textId);
         }
         
+        menuTextIdsEnum.add_symbol("\n    " + sectionId + "_COUNT");
         _cHeader.write_newline();
         _cHeader.write_raw_text(menuTextIdsEnum.to_string());
     }
@@ -178,5 +185,6 @@ void AssetEnums::_write_deferred_asset_section_enums(const std::string &sectionI
         sectionEnum.add_symbol(assetBuildId + idPostfix);
     }
     
+    sectionEnum.add_symbol("\n    " + sectionId + "_COUNT");
     _cHeader.write_raw_text(sectionEnum.to_string());
 }

@@ -683,13 +683,13 @@ s32 menu_credits_loop(s32 updateRate);
 void func_8007FFEC(s32 arg0);
 void set_gIntDisFlag(s8 setting);
 void init_save_data(void);
-void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
+void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour, TextureHeader *tex);
 void fileselect_input_copy(s32 updateRate);
 
 s32 func_8008F618(Gfx **dList, MatrixS **mtx);
 void func_80080BC8(Gfx **);
-void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
+void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(s32 updateRate);
 void func_80098774(s32);

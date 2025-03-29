@@ -12,7 +12,7 @@ Gfx gRdpSetModeScreenAsset[] = {
  * Returns the address of the screen asset, or 0x80100000 if no screen assets were found.
  * Unused.
  */
-UNUSED u32 load_screen(s32 screenIndex) {
+UNUSED u32 screenimage_load(s32 screenIndex) {
     u32 someAddr;
     s32 screenTableCount, start, size;
     u32 *screenTable;
@@ -52,10 +52,10 @@ UNUSED u32 load_screen(s32 screenIndex) {
  * Renders a 320x240 RGBA16 screen asset.
  * Unused.
  */
-UNUSED void render_screen(Gfx **dlist, u8 *screenAddress) {
+UNUSED void screenimage_draw(Gfx **dList, u8 *screenAddress) {
     s32 y_pos;
 
-    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(&gRdpSetModeScreenAsset),
+    gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(&gRdpSetModeScreenAsset),
                        numberOfGfxCommands(gRdpSetModeScreenAsset));
 
     // Screen header is 16 bytes.
@@ -65,11 +65,11 @@ UNUSED void render_screen(Gfx **dlist, u8 *screenAddress) {
     y_pos = 0;
     while (y_pos != SCREEN_HEIGHT) {
         // Load the texture.
-        gDPLoadTextureBlockS((*dlist)++, OS_PHYSICAL_TO_K0(screenAddress), G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH,
+        gDPLoadTextureBlockS((*dList)++, OS_PHYSICAL_TO_K0(screenAddress), G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH,
                              SCREEN_HEIGHT_PART, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
 
         // Draw the texture.
-        gSPTextureRectangle((*dlist)++, 0, (y_pos << 2), SCREEN_WIDTH << 2, ((y_pos + SCREEN_HEIGHT_PART) << 2),
+        gSPTextureRectangle((*dList)++, 0, y_pos << 2, SCREEN_WIDTH << 2, (y_pos + SCREEN_HEIGHT_PART) << 2,
                             G_TX_RENDERTILE, 0, 0, 1 << 12, 1 << 10);
 
         // Advance to the next slice.
