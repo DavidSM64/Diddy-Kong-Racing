@@ -43,7 +43,7 @@ segments:
       - [0x8C40, c, audio_spatial]
       - [0xB310, c, ../libultra/src/audio/mips1/seqplayer]
       - [0xBC20, c, objects]
-      - [0x251F0, hasm, hasm/unknown_0251F0]
+      - [0x251F0, hasm, hasm/obj_shade_fast]
       - [0x255E0, c, tracks]
       - [0x31D30, hasm, hasm/collision]
       - [0x32760, c, lights]

@@ -396,7 +396,7 @@ func_8002458C = 0x8002458C;
 func_80024594 = 0x80024594;
 func_800245B4 = 0x800245B4;
 
-// unknown_0251F0.c .text
+// obj_shade_fast.c .text
 obj_shade_fast = 0x800245F0;
 calc_dynamic_lighting_for_object_2 = 0x80024744;
 
