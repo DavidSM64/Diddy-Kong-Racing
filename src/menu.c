@@ -16,7 +16,7 @@
 #include "object_models.h"
 #include "printf.h"
 #include "textures_sprites.h"
-#include "thread30_track_loading.h"
+#include "thread30_bgload.h"
 #include "objects.h"
 #include "game.h"
 #include "rcp_dkr.h"
@@ -628,11 +628,13 @@ s32 sMenuMusicVolume = 0x7F;
 s32 sMenuGuiOpacity = 0xFF;
 s32 unused_800DF768 = 1;
 
-FadeTransition sMenuTransitionFadeInFast = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 10, -1);
-FadeTransition sMenuTransitionFadeIn = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 18, -1);
+FadeTransition sMenuTransitionFadeInFast =
+    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 10, FADE_STAY);
+FadeTransition sMenuTransitionFadeIn =
+    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 18, FADE_STAY);
 FadeTransition sMenuTransitionFadeOut = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 18, 0);
 UNUSED FadeTransition sMenuTransitionFadeInWhite =
-    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 18, -1);
+    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 18, FADE_STAY);
 UNUSED FadeTransition sMenuTransitionFadeOutWhite =
     FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_WHITE, 18, 0);
 
@@ -1926,12 +1928,13 @@ s32 gWoodPanelTexScaleV = 32;
 s16 D_800E1DC8[16] = { 1, 1, -1, 1, -1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1 };
 
 // Fade transition from the logo screen to the title screen.
-FadeTransition gFadeLogoToTitleScreen = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 120, -1);
+FadeTransition gFadeLogoToTitleScreen =
+    FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 120, FADE_STAY);
 
 char gRareCopyrightString[24] = "(C) COPYRIGHT RARE 1997";
 
 // Fade transition between levels in the title screen demo.
-FadeTransition gFadeTitleScreenDemo = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 52, -1);
+FadeTransition gFadeTitleScreenDemo = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 52, FADE_STAY);
 
 // Used in savemenu_render_element(). Used for controller pak adventure saves.
 // So the first save in the pak would be (ADV.A), second save (ADV.B), etc.
@@ -2209,7 +2212,7 @@ UNUSED void menu_button_uvs(f32 u, f32 v) {
     gWoodPanelTexScaleV = v * 32.0f;
 }
 
-void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
+void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour, TextureHeader *tex) {
     s32 uVals[4];
     s32 vVals[4];
@@ -2284,21 +2287,21 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
             vertices++;
         }
     }
-    if (dlist != NULL) {
+    if (dList != NULL) {
         gMenuGeometry[gWoodPanelCount].unk18[gMenuTrisFlip] = 1;
-        gSPDisplayList((*dlist)++, &dMenuHudSettings);
+        gSPDisplayList((*dList)++, &dMenuHudSettings);
         if (tex != NULL) {
-            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[1]), 2);
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[1]), 2);
+            gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
             i = TRUE; // texEnabled
         } else {
-            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[0]), 2);
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[0]), 2);
             i = FALSE; // texEnabled
         }
-        gDPPipeSync((*dlist)++);
-        gSPVertexDKR((*dlist)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip]), 20, 0);
-        gSPPolygon((*dlist)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].triangles[gMenuTrisFlip]), 10, i);
-        reset_render_settings(dlist);
+        gDPPipeSync((*dList)++);
+        gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip]), 20, 0);
+        gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].triangles[gMenuTrisFlip]), 10, i);
+        reset_render_settings(dList);
     } else {
         gMenuGeometry[gWoodPanelCount].unk18[gMenuTrisFlip] = 0;
     }
@@ -2350,7 +2353,7 @@ void menu_geometry_end(void) {
     gMenuTrisFlip = 1 - gMenuTrisFlip;
 }
 
-void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
+void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour0, s32 colour1, s32 colour2, s32 colour3) {
     s32 temp_ra;
     s32 temp_t3;
@@ -2369,8 +2372,8 @@ void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
     s32 j;
     s32 index;
 
-    gSPDisplayList((*dlist)++, &dMenuHudSettings);
-    gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[2]), 2);
+    gSPDisplayList((*dList)++, &dMenuHudSettings);
+    gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[2]), 2);
 
     // Must be a while loop to match.
     i = 0;
@@ -2415,7 +2418,7 @@ void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
                 break;
         }
 
-        gDPSetPrimColor((*dlist)++, 0, 0, primColour >> 24, primColour >> 16, primColour >> 8, primColour);
+        gDPSetPrimColor((*dList)++, 0, 0, primColour >> 24, primColour >> 16, primColour >> 8, primColour);
 
         for (j = 0; j < borderLineCount; j++) {
             if (recLrx >= 0 && recLry >= 0) {
@@ -2429,7 +2432,7 @@ void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
                 } else {
                     recUly = uly;
                 }
-                gDPFillRectangle((*dlist)++, recUlx, recUly, recLrx, recLry);
+                gDPFillRectangle((*dList)++, recUlx, recUly, recLrx, recLry);
             }
             ulx += temp_t3;
             uly += temp_t4;
@@ -2439,9 +2442,9 @@ void func_80080E90(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
         i++;
     }
 
-    gDPPipeSync((*dlist)++);
-    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
-    reset_render_settings(dlist);
+    gDPPipeSync((*dList)++);
+    gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
+    reset_render_settings(dList);
 }
 
 void init_save_data(void) {
@@ -8421,7 +8424,7 @@ s32 menu_track_select_loop(s32 updateRate) {
 
     settings = get_settings();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
-    if (!get_thread30_need_to_load_level() && gMenuDelay != 0) {
+    if (bgload_active() == FALSE && gMenuDelay != 0) {
         if (gMenuDelay < 0) {
             gMenuDelay -= updateRate;
         } else {
@@ -8882,17 +8885,17 @@ void trackmenu_track_view(s32 updateRate) {
     s32 y2;
     s32 i;
 
-    tick_thread30();
+    bgload_tick();
     for (i = 0; i < updateRate; i++) {
         gTrackSelectX += (gTrackSelectTargetX - gTrackSelectX) * 0.1;
         gTrackSelectY += (gTrackSelectTargetY - gTrackSelectY) * 0.1;
     }
-    if (gOpacityDecayTimer == 32 && !get_thread30_need_to_load_level()) {
+    if (gOpacityDecayTimer == 32 && bgload_active() == FALSE) {
         if (gTrackIdForPreview == gTrackmenuLoadedLevel) {
             gSelectedTrackX = gTrackSelectCursorX;
             gSelectedTrackY = gTrackSelectCursorY;
         } else if (gTrackIdForPreview != gTrackmenuLoadedLevel && gTrackIdForPreview != -1 &&
-                   set_level_to_load_in_background(gTrackIdForPreview, 1)) {
+                   bgload_start(gTrackIdForPreview, 1)) {
             gTrackmenuLoadedLevel = gTrackIdForPreview;
             gSelectedTrackX = gTrackSelectCursorX;
             gSelectedTrackY = gTrackSelectCursorY;
@@ -8951,7 +8954,7 @@ void trackmenu_input(s32 updateRate) {
         gMenuImages[5].scale = (f32) (sMenuImageProperties[5].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
     }
     camEnableUserView(0, FALSE);
-    if (!get_thread30_need_to_load_level()) {
+    if (bgload_active() == FALSE) {
         if (gMenuDelay < 0) {
             sMenuMusicVolume -= updateRate * 4;
         }
@@ -13025,7 +13028,7 @@ s32 menu_credits_loop(s32 updateRate) {
     isCreditsEnd = FALSE;
     mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
     creditsBackgroundLevelData = (CreditsBackgroundLevelData *) get_misc_asset(ASSET_MISC_69);
-    tick_thread30();
+    bgload_tick();
     if (gMenuDelay == 0) {
         disable_new_screen_transitions();
         transition_begin(NULL);
@@ -13229,12 +13232,12 @@ s32 menu_credits_loop(s32 updateRate) {
     switch (gMenuStage) {
         case 0:
             tempBackgroundLevelData = &creditsBackgroundLevelData[D_80126BCC];
-            set_level_to_load_in_background(tempBackgroundLevelData->levelId, tempBackgroundLevelData->cutsceneId);
+            bgload_start(tempBackgroundLevelData->levelId, tempBackgroundLevelData->cutsceneId);
             gMenuStage = 1;
             gOpacityDecayTimer = 40;
             break;
         case 1:
-            if (!get_thread30_need_to_load_level()) {
+            if (bgload_active() == FALSE) {
                 gMenuStage = 2;
                 gOptionBlinkTimer = 40;
                 D_80126BD8 = FALSE;
@@ -13285,7 +13288,7 @@ s32 menu_credits_loop(s32 updateRate) {
     }
     if (gMenuDelay > 0) {
         gMenuDelay += updateRate;
-        if (!get_thread30_need_to_load_level() && gMenuDelay > 30) {
+        if (bgload_active() == FALSE && gMenuDelay > 30) {
             music_change_on();
             credits_free();
             load_level_for_menu(ASSET_LEVEL_FRONTEND, ZERO_PLAYERS, CUTSCENE_NONE);

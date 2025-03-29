@@ -105,11 +105,11 @@ s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1,
 void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void set_ortho_matrix_height(f32 value);
-void set_ortho_matrix_view(Gfx **dlist, MatrixS **mtx);
-void func_8006807C(Gfx **dlist, MatrixS **mtx);
-void viewport_rsp_set(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY);
-void viewport_reset(Gfx **dlist);
-void matrix_world_origin(Gfx **dlist, MatrixS **mtx);
+void set_ortho_matrix_view(Gfx **dList, MatrixS **mtx);
+void func_8006807C(Gfx **dList, MatrixS **mtx);
+void viewport_rsp_set(Gfx **dList, s32 width, s32 height, s32 posX, s32 posY);
+void viewport_reset(Gfx **dList);
+void matrix_world_origin(Gfx **dList, MatrixS **mtx);
 void sprite_anim_off(s32 setting);
 ObjectSegment *get_active_camera_segment_no_cutscenes(void);
 ObjectSegment *get_active_camera_segment(void);
@@ -120,18 +120,18 @@ Matrix *get_camera_matrix(void);
 f32 get_distance_to_camera(f32 x, f32 y, f32 z);
 void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude);
 void set_camera_shake(f32 magnitude);
-void func_80067D3C(Gfx **dlist, MatrixS **mats);
+void func_80067D3C(Gfx **dList, MatrixS **mats);
 void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags);
-s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
+s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
 void camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY);
-void viewport_scissor(Gfx **dlist);
-void apply_matrix_from_stack(Gfx **dlist);
+void viewport_scissor(Gfx **dList);
+void apply_matrix_from_stack(Gfx **dList);
 void copy_viewports_to_stack(void);
-void apply_head_turning_matrix(Gfx **dlist, MatrixS **mtx, Object_68 *objGfx, s16 headAngle);
+void apply_head_turning_matrix(Gfx **dList, MatrixS **mtx, Object_68 *objGfx, s16 headAngle);
 void apply_object_shear_matrix(Gfx **dList, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear);
 
 // Non Matching
 void camera_init(void);
-void func_80066CDC(Gfx **dlist, MatrixS **mats);
+void func_80066CDC(Gfx **dList, MatrixS **mats);
 
 #endif

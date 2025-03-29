@@ -134,7 +134,7 @@ typedef struct SaveConfig {
     unsigned subtitles : 1;
     unsigned unk0 : 31;
     // unsigned checksum : 8; // For some reason, the struct becomes 12 bytes if this is there.
-} SaveConfig ALIGNED8;
+} SaveConfig;
 
 typedef struct SaveFile {
     unsigned checksum : 16;
@@ -207,13 +207,13 @@ typedef struct SaveFile {
     unsigned sceneWorld5Key : 1; // Unused
 
     unsigned name : 15;
-} SaveFile ALIGNED8;
+} SaveFile;
 
 typedef struct CourseRecords {
     u16 checksum;
     u16 padding;
     u32 courseTime[COURSE_RECORD_TOTAL];
-} CourseRecords ALIGNED8;
+} CourseRecords;
 
 typedef struct SaveBuffer {
     SaveFile gameSave[NUMBER_OF_SAVE_FILES];

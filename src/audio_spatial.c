@@ -483,7 +483,7 @@ void func_8000A2E8(s32 arg0) {
  * Generates and renders a coloured line visible from anywhere.
  * Allows use of a colour, that interpolates from bright to dark from the beginning to the end of the line.
  */
-void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *coords, u8 red, u8 green, u8 blue) {
+void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, floatXYZVals *coords, u8 red, u8 green, u8 blue) {
     Gfx *temp_dlist;
     Vertex *temp_verts;
     Triangle *temp_tris;
@@ -500,7 +500,7 @@ void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVal
     x2 = coords->x2;
     y2 = coords->y2;
     z2 = coords->z2;
-    temp_dlist = *dlist;
+    temp_dlist = *dList;
 
     temp_verts = *verts;
     temp_tris = *tris;
@@ -559,7 +559,7 @@ void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVal
     temp_tris[1].uv2.v = 0;
     temp_tris += 2;
 
-    *dlist = temp_dlist;
+    *dList = temp_dlist;
     *verts = temp_verts;
     *tris = temp_tris;
 }

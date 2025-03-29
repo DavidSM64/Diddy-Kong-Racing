@@ -214,8 +214,8 @@ func_8000E79C = 0x8000E79C;
 func_8000E898 = 0x8000E898;
 get_object = 0x8000E948;
 objGetObjList = 0x8000E988;
-get_object_count = 0x8000E9B0;
-get_particle_count = 0x8000E9C0;
+obj_count = 0x8000E9B0;
+particle_count = 0x8000E9C0;
 func_8000E9D0 = 0x8000E9D0;
 spawn_object = 0x8000EA54;
 objFreeAssets = 0x8000F648;
@@ -264,7 +264,7 @@ render_bubble_trap = 0x800138A8;
 render_racer_shield = 0x80013A0C;
 render_racer_magnet = 0x80013DCC;
 func_80014090 = 0x80014090;
-func_800142B8 = 0x800142B8;
+obj_tick_anims = 0x800142B8;
 render_mesh = 0x800143A8;
 func_80014814 = 0x80014814;
 func_800149C0 = 0x800149C0;
@@ -341,7 +341,7 @@ set_world_shading = 0x8001D258;
 add_shading_properties = 0x8001D2A0;
 set_shading_properties = 0x8001D4B4;
 update_envmap_position = 0x8001D5E0;
-calc_dyn_light_and_env_map_for_object = 0x8001D6E4;
+obj_shade_fancy = 0x8001D6E4;
 calc_dynamic_lighting_for_object_1 = 0x8001D80C;
 calc_env_mapping_for_object = 0x8001DD54;
 set_racer_position_and_angle = 0x8001E13C;
@@ -396,8 +396,8 @@ func_8002458C = 0x8002458C;
 func_80024594 = 0x80024594;
 func_800245B4 = 0x800245B4;
 
-// unknown_0251F0.c .text
-func_800245F0 = 0x800245F0;
+// obj_shade_fast.c .text
+obj_shade_fast = 0x800245F0;
 calc_dynamic_lighting_for_object_2 = 0x80024744;
 
 // tracks.c .text
@@ -782,7 +782,7 @@ update_rocket = 0x8005F310;
 // object_models.c .text
 allocate_object_model_pools = 0x8005F850;
 object_model_init = 0x8005F99C;
-func_8005FCD0 = 0x8005FCD0;
+model_init_type = 0x8005FCD0;
 free_3d_model = 0x8005FF40;
 free_model_data = 0x80060058;
 func_8006017C = 0x8006017C;
@@ -794,8 +794,8 @@ func_800619F4 = 0x800619F4;
 func_80061A00 = 0x80061A00;
 func_80061C0C = 0x80061C0C;
 
-// object_animate.c .text
-object_animate = 0x80061D30;
+// obj_animate.c .text
+obj_animate = 0x80061D30;
 
 // csplayer.c .text
 alCSPNew = 0x80062290;
@@ -1299,8 +1299,8 @@ update_pulsating_light_data = 0x8007F460;
 func_8007F594 = 0x8007F594;
 
 // screen_asset.c .text
-load_screen = 0x8007F640;
-render_screen = 0x8007F714;
+screenimage_load = 0x8007F640;
+screenimage_draw = 0x8007F714;
 
 // menu.c .text
 load_menu_text = 0x8007F900;
@@ -1531,55 +1531,55 @@ is_tt_unlocked = 0x8009ECB8;
 is_drumstick_unlocked = 0x8009ECD0;
 
 // game_ui.c .text
-init_hud = 0x8009ECF0;
+hud_init = 0x8009ECF0;
 func_8009F034 = 0x8009F034;
-free_hud = 0x800A003C;
+hud_free = 0x800A003C;
 race_starting = 0x800A0190;
-render_hud = 0x800A01A0;
+hud_render_player = 0x800A01A0;
 hud_audio_init = 0x800A0B74;
 hud_audio_update = 0x800A0BD4;
-render_hud_race = 0x800A0DC0;
-render_course_indicator_arrows = 0x800A0EB4;
-render_hud_banana_challenge = 0x800A1248;
-render_hud_challenge_eggs = 0x800A1428;
+hud_main_race = 0x800A0DC0;
+hud_course_arrows = 0x800A0EB4;
+hud_main_treasure = 0x800A1248;
+hud_main_eggs = 0x800A1428;
 hud_draw_eggs = 0x800A14F0;
 hud_eggs_portrait = 0x800A19A4;
-render_hud_battle = 0x800A1C04;
+hud_main_battle = 0x800A1C04;
 func_800A1E48 = 0x800A1E48;
-hud_draw_lives = 0x800A22F4;
-render_hud_race_boss = 0x800A258C;
-render_hud_taj_race = 0x800A263C;
-render_hud_hubworld = 0x800A26C8;
-func_800A277C = 0x800A277C;
-set_stopwatch_face = 0x800A36CC;
+hud_lives_render = 0x800A22F4;
+hud_main_boss = 0x800A258C;
+hud_main_taj = 0x800A263C;
+hud_main_hub = 0x800A26C8;
+hud_main_time_trial = 0x800A277C;
+hud_stopwatch_face = 0x800A36CC;
 hud_speedometre_reset = 0x800A3870;
-render_speedometer = 0x800A3884;
-render_race_start = 0x800A3CE4;
-render_racer_bananas = 0x800A4154;
-render_treasure_hud = 0x800A45F0;
-render_silver_coin_counter = 0x800A47A0;
-render_race_finish_position = 0x800A497C;
+hud_speedometre = 0x800A3884;
+hud_race_start = 0x800A3CE4;
+hud_bananas = 0x800A4154;
+hud_treasure = 0x800A45F0;
+hud_silver_coins = 0x800A47A0;
+hud_race_finish_1player = 0x800A497C;
 func_800A4C34 = 0x800A4C34;
-render_race_position = 0x800A4C44;
-render_lap_count = 0x800A4F50;
-render_wrong_way_text = 0x800A5A64;
-hud_draw_finish_misc = 0x800A5F18;
-func_800A6254 = 0x800A6254;
-play_time_trial_end_message = 0x800A6DB4;
-render_time_trial_finish = 0x800A6E30;
-render_balloon_count = 0x800A718C;
+hud_race_position = 0x800A4C44;
+hud_lap_count = 0x800A4F50;
+hud_wrong_way = 0x800A5A64;
+hud_finish_position = 0x800A5F18;
+hud_race_finish_multiplayer = 0x800A6254;
+hud_time_trial_message = 0x800A6DB4;
+hud_time_trial_finish = 0x800A6E30;
+hud_balloons = 0x800A718C;
 hud_sound_play = 0x800A7440;
 hud_sound_play_delayed = 0x800A7484;
 hud_sound_stop = 0x800A74EC;
-render_weapon_hud = 0x800A7520;
-render_magnet_reticle = 0x800A7A60;
-render_race_time = 0x800A7B68;
-render_timer = 0x800A7FBC;
+hud_weapon = 0x800A7520;
+hud_magnet_reticle = 0x800A7A60;
+hud_race_time = 0x800A7B68;
+hud_timer_render = 0x800A7FBC;
 minimap_init = 0x800A83B4;
-get_hud_setting = 0x800A8458;
-render_minimap_and_misc_hud = 0x800A8474;
+hud_setting = 0x800A8458;
+hud_render_general = 0x800A8474;
 minimap_marker_pos = 0x800AA3EC;
-func_800AA600 = 0x800AA600;
+hud_element_render = 0x800AA600;
 hud_draw_model = 0x800AAFD0;
 minimap_fade = 0x800AB194;
 minimap_opacity_set = 0x800AB1AC;
@@ -1752,24 +1752,24 @@ enable_new_screen_transitions = 0x800C0170;
 disable_new_screen_transitions = 0x800C0180;
 check_fadeout_transition = 0x800C018C;
 transition_begin = 0x800C01D8;
-handle_transitions = 0x800C0494;
-render_fade_transition = 0x800C05C8;
+transition_update = 0x800C0494;
+transition_render = 0x800C05C8;
 transition_end = 0x800C0724;
 transition_fullscreen_start = 0x800C0780;
-process_transition_fullscreen = 0x800C0834;
-render_fade_fullscreen = 0x800C0A08;
-init_transition_shape = 0x800C0B00;
-process_transition_shape = 0x800C1130;
-render_fade_barndoor_horizontal = 0x800C13E4;
-render_fade_barndoor_vertical = 0x800C14DC;
-func_800C15D4 = 0x800C15D4;
-func_800C1EE8 = 0x800C1EE8;
-render_fade_circle = 0x800C2274;
-render_fade_waves = 0x800C23F8;
-render_fade_barndoor_diagonal = 0x800C2548;
-init_transition_blank = 0x800C2640;
-process_transition_disabled = 0x800C27A0;
-render_fade_disabled = 0x800C28E8;
+transition_update_fullscreen = 0x800C0834;
+transition_render_fullscreen = 0x800C0A08;
+transition_init_shape = 0x800C0B00;
+transition_update_shape = 0x800C1130;
+transition_render_barndoor_hor = 0x800C13E4;
+transition_render_barndoor_vert = 0x800C14DC;
+transition_init_circle = 0x800C15D4;
+transition_update_circle = 0x800C1EE8;
+transition_render_circle = 0x800C2274;
+transition_render_waves = 0x800C23F8;
+transition_render_barndoor_diag = 0x800C2548;
+transition_init_blank = 0x800C2640;
+transition_update_blank = 0x800C27A0;
+transition_render_blank = 0x800C28E8;
 
 // game_text.c .text
 init_dialogue_text = 0x800C29F0;
@@ -1848,14 +1848,14 @@ gzip_inflate_codes = 0x800C7040;
 // __osLeoInterrupt.c .text
 __osLeoInterrupt = 0x800C7340;
 
-// thread30_track_loading.c .text
-create_and_start_thread30 = 0x800C7350;
-stop_thread30 = 0x800C73BC;
-get_thread30_need_to_load_level = 0x800C73E0;
-tick_thread30 = 0x800C73F0;
-get_thread30_load_delay = 0x800C7448;
-set_level_to_load_in_background = 0x800C7458;
-thread30_track_loading = 0x800C74A0; // type:func
+// thread30_bgload.c .text
+bgload_init = 0x800C7350;
+bgload_kill = 0x800C73BC;
+bgload_active = 0x800C73E0;
+bgload_tick = 0x800C73F0;
+bgload_timer = 0x800C7448;
+bgload_start = 0x800C7458;
+thread30_bgload = 0x800C74A0; // type:func
 
 // alHeapInit.c .text
 alHeapInit = 0x800C7560;
@@ -2897,18 +2897,18 @@ sTransitionVtx = 0x800E31C0;
 sTransitionTris = 0x800E31C8;
 sTransitionTaskNum = 0x800E31D0;
 dTransitionFadeSettings = 0x800E31D8;
-gTransitionBarnHorizontalData = 0x800E3230;
-gTransitionBarnVerticalData = 0x800E3268;
+gTransitionBarnHorizontalCoords = 0x800E3230;
+gTransitionBarnVerticalCoords = 0x800E3268;
 D_800E32A0 = 0x800E32A0;
 D_800E32AC = 0x800E32AC;
 gTransitionBarnDoorTris = 0x800E32B8;
 gTransitionBarnDoorAlpha = 0x800E32D0;
-gTransitionBarnDiagData = 0x800E32DC;
+gTransitionBarnDiagCoords = 0x800E32DC;
 D_800E330C = 0x800E330C;
 D_800E3318 = 0x800E3318;
 gTransitionBarnDoorDiagTris = 0x800E3324;
 gTransitionBarnDoorDiagAlpha = 0x800E3338;
-gTransitionWaveData = 0x800E3344;
+gTransitionWaveCoords = 0x800E3344;
 D_800E3440 = 0x800E3440;
 D_800E349C = 0x800E349C;
 gTransitionWaveAlpha = 0x800E34F8;
@@ -2937,7 +2937,7 @@ gPackedHeader = 0x800E3764;
 gzip_inflate_input = 0x800E3768;
 gzip_inflate_output = 0x800E376C;
 
-// thread30_track_loading.c .data
+// thread30_bgload.c .data
 gThread30NeedToLoadLevel = 0x800E3770;
 gThread30LevelIdToLoad = 0x800E3774;
 gThread30CutsceneIdToLoad = 0x800E3778;
@@ -4037,9 +4037,9 @@ gRocketStartBoost = 0x8011D611;
 
 // object_models .bss
 gObjectModelTable = 0x8011D620;
-D_8011D624 = 0x8011D624;
+gModelCache = 0x8011D624;
 D_8011D628 = 0x8011D628;
-D_8011D62C = 0x8011D62C;
+gModelCacheCount = 0x8011D62C;
 gNumModelIDs = 0x8011D630;
 D_8011D634 = 0x8011D634;
 gAnimationTable = 0x8011D638;
@@ -4497,12 +4497,12 @@ gPlayerHud = 0x80126CE0; // size:0x10
 gAssetHudElementIds = 0x80126CF0;
 gAssetHudElements = 0x80126CF4;
 gAssetHudElementIdsCount = 0x80126CF8;
-gHUDCurrDisplayList = 0x80126CFC;
-gHUDCurrMatrix = 0x80126D00;
-gHUDCurrVertex = 0x80126D04;
+gHudDL = 0x80126CFC;
+gHudMtx = 0x80126D00;
+gHudVtx = 0x80126D04;
 gHudCurrentViewport = 0x80126D08;
 gHUDNumPlayers = 0x80126D0C;
-D_80126D10 = 0x80126D10;
+gHudController = 0x80126D10;
 D_80126D14 = 0x80126D14;
 D_80126D18 = 0x80126D18;
 gMinimapDotOffsetX = 0x80126D1C;
@@ -4512,13 +4512,13 @@ gHudBounceX = 0x80126D28;
 gHudBounceTimer = 0x80126D2C;
 gHudBounceMag = 0x80126D30;
 gHudRaceStart = 0x80126D34;
-D_80126D35 = 0x80126D35;
+gHudSlide = 0x80126D35;
 gHideRaceTimer = 0x80126D36;
 gNumActivePlayers = 0x80126D37;
 gWrongWayNagPrefix = 0x80126D38;
 gRaceStartSoundMask = 0x80126D3C;
 gHUDVoiceSoundMask = 0x80126D40;
-D_80126D44 = 0x80126D44;
+gHudBalloonSoundMask = 0x80126D44;
 D_80126D48 = 0x80126D48;
 D_80126D4C = 0x80126D4C;
 D_80126D50 = 0x80126D50;
@@ -4736,7 +4736,7 @@ gzip_bit_buffer = 0x8012AAD0;
 gzip_num_bits = 0x8012AAD4;
 gHuftTablePos = 0x8012AAD8;
 
-// thread30_track_loading .bss
+// thread30_bgload .bss
 leoDiskStack = 0x8012AAE0;
 gThread30 = 0x8012AAF0;
 gThread30MesgQueue = 0x8012ACA0; // type:OSMesgQueue size:0x18

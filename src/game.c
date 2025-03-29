@@ -16,7 +16,7 @@
 #include "gzip.h"
 #include "printf.h"
 #include "thread0_epc.h"
-#include "thread30_track_loading.h"
+#include "thread30_bgload.h"
 #include "weather.h"
 #include "audio.h"
 #include "objects.h"

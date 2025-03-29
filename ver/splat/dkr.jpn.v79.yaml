@@ -43,7 +43,7 @@ segments:
       - [0x8C40, c, audio_spatial]
       - [0xB310, c, ../libultra/src/audio/mips1/seqplayer]
       - [0xBC20, c, objects]
-      - [0x251F0, hasm, hasm/unknown_0251F0]
+      - [0x251F0, hasm, hasm/obj_shade_fast]
       - [0x255E0, c, tracks]
       - [0x31D30, hasm, hasm/collision]
       - [0x32760, c, lights]
@@ -56,7 +56,7 @@ segments:
       - [0x5F6C0, c, vehicle_wizpig]
       - [0x5FF40, c, vehicle_rocket]
       - [0x60480, c, object_models]
-      - [0x62A00, hasm, hasm/object_animate]
+      - [0x62A00, hasm, hasm/obj_animate]
       - [0x62F60, c, ../libultra/src/audio/mips1/csplayer]
       - [0x64760, c, ../libultra/src/audio/mips1/unknown_064690]
       - [0x647C0, c, ../libultra/src/audio/mips1/seqchannel]
@@ -104,7 +104,7 @@ segments:
       - [0xC8700, c, gzip]
       - [0xC8E50, hasm, hasm/gzip_asm]
       - [0xC98D0, c, ../libultra/src/io/leointerrupt]
-      - [0xC98E0, c, thread30_track_loading]
+      - [0xC98E0, c, thread30_bgload]
       - [0xC9AF0, c, ../libultra/src/audio/heapinit]
       - [0xC9B30, c, ../libultra/src/audio/bnkf]
       - [0xC9D80, c, ../libultra/src/audio/heapalloc]
@@ -303,7 +303,7 @@ segments:
       - [0xE5D80, .data, font]
       - [0xE5EA0, .data, ../libultra/src/io/pimgr]
       - [0xE5EC0, .data, gzip]
-      - [0xE5ED0, .data, thread30_track_loading]
+      - [0xE5ED0, .data, thread30_bgload]
       - [0xE5EE0, .data, ../libultra/src/audio/sl]
       - [0xE5EF0, .data, ../libultra/src/io/aisetnextbuf]
       - [0xE5F00, .data, ../libultra/src/audio/env]
@@ -427,7 +427,7 @@ segments:
       - { start: auto, type: .bss, vram: 0x8012C2E0, name: ../libultra/src/io/pimgr }
       - { start: auto, type: .bss, vram: 0x8012C5B0, name: gzip }
       - { start: auto, type: .bss, vram: 0x8012C5C0, name: ../libultra/src/io/leointerrupt }     
-      - { start: auto, type: .bss, vram: 0x8012C5D0, name: thread30_track_loading }
+      - { start: auto, type: .bss, vram: 0x8012C5D0, name: thread30_bgload }
       - { start: auto, type: .bss, vram: 0x8012E7A0, name: ../libultra/src/os/initialize }
       - { start: auto, type: .bss, vram: 0x8012E7B0, name: ../libultra/src/os/seteventmesg }
       - { start: auto, type: .bss, vram: 0x8012E830, name: ../libultra/src/io/controller }

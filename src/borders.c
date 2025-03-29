@@ -36,7 +36,7 @@ void divider_draw(Gfx **dList) {
         case VIEWPORTS_COUNT_3_PLAYERS:
             levelHeader = get_current_level_header();
             // Draw black square in the bottom-right corner.
-            if (get_hud_setting() || (levelHeader->race_type & RACETYPE_CHALLENGE)) {
+            if (hud_setting() || (levelHeader->race_type & RACETYPE_CHALLENGE)) {
                 gDPFillRectangle((*dList)++, width >> 1, height >> 1, width, height);
             }
             // There is no break statement here. This is intentional.

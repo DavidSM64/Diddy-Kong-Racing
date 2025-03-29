@@ -110,11 +110,23 @@ s32 D_8012A0DC;
 s32 D_8012A0E0;
 s32 D_8012A0E8[64];
 s16 D_8012A1E8[512];
-s32 D_8012A5E8[3];
-s32 D_8012A5F4;
+
+typedef struct unk8012A5E8 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s32 unk8;
+    s16 unkC;
+} unk8012A5E8;
+
+unk8012A5E8 *D_8012A5E8;
+UNUSED s32 D_8012A5EC;
+UNUSED s32 D_8012A5F0;
+s16 D_8012A5F4;
 UNUSED s32 D_8012A5F8;
 UNUSED s32 D_8012A5FC;
-s32 D_8012A600[72];
+s16 D_8012A600[144];
 f32 gWavePowerBase;
 f32 gWaveMagnitude;
 s32 gWavePowerDivisor;
@@ -406,7 +418,155 @@ void func_800B8B8C(void) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewport, s32 updateRate) {
+    s32 i;
+    s32 j;
+    s32 k;
+    s32 var_t4;
+    s32 tempXPosRatio;
+    s32 var_t2;
+    s32 var_v1;
+    s32 xPosRatio;
+    s32 zPosRatio;
+    s32 var_a0;
+    s32 var_t5;
+    s32 var_s4;
+    s32 var_t9;
+    unk8012A5E8 *temp;
+
+    // possible fake:
+    xPosRatio = (xPosition - D_8012A0D0) / gWaveBoundingBoxDiffX;
+    zPosRatio = (zPosition - D_8012A0D4) / gWaveBoundingBoxDiffZ;
+    D_8012A5E8 = -1;
+    D_8012A5F4 = -1;
+
+    // This is incorrect because the assembly compares
+    // var_v1 != gWavePowerBase
+    // however gWavePowerBase is a f32
+    // so instead we (for now) set every 6th values in the struct to -1
+    // D_8012A600 seems unused anyway though
+    for (var_v1 = 0; var_v1 < 144; var_v1 += 24) {
+        D_8012A600[var_v1] = -1;
+        D_8012A600[var_v1 + 6] = -1;
+        D_8012A600[var_v1 + 12] = -1;
+        D_8012A600[var_v1 + 18] = -1;
+    }
+
+    if (D_80129FC8.unk28 != 0) {
+        var_t5 = gWaveBoundingBoxDiffZ;
+        var_v1 = 0;
+        var_s4 = 0;
+        if ((gWaveBoundingBoxDiffX >> 1) < ((xPosition - (xPosRatio * gWaveBoundingBoxDiffX)) - D_8012A0D0)) {
+            var_v1 = 8;
+        }
+        if ((gWaveBoundingBoxDiffZ >> 1) < ((zPosition - (zPosRatio * gWaveBoundingBoxDiffZ)) - D_8012A0D4)) {
+            var_s4 = 16;
+        }
+
+        for (var_v1 -= (D_80129FC8.unk24 >> 1) * 8; var_v1 < 0; var_v1 += 16) {
+            xPosRatio -= 1;
+        }
+
+        for (var_s4 -= (D_80129FC8.unk24 >> 1) * 16; var_s4 < 0; var_s4 += 32) {
+            zPosRatio -= 1;
+        }
+
+        for (i = 0; i < D_80129FC8.unk24; i++) {
+            if (zPosRatio >= 0) {
+                if (zPosRatio < D_8012A0DC) {
+                    var_t5 = var_v1;
+                    tempXPosRatio = xPosRatio;
+                    var_t2 = (zPosRatio * D_8012A0D8) + xPosRatio;
+                    for (j = 0; j < D_80129FC8.unk24; j++) {
+                        // clang-format off
+                        if (
+                            (tempXPosRatio >= 0) &&
+                            (tempXPosRatio < D_8012A0D8) &&
+                            (D_8012A0E8[zPosRatio] & (1 << tempXPosRatio))
+                        ) {
+                            // clang-format on
+                            var_t4 = var_t5 + var_s4;
+                            D_800E30D4[var_t2] |= D_800E30E0[i * D_80129FC8.unk24 + j] << var_t4;
+                            for (k = 0; k < D_8012A0E0; k++) {
+                                if (var_t2 == (&D_800E30D8[k])->unkC) {
+                                    temp = &D_8012A5E8[k];
+                                    temp->unk0 = k;
+                                    temp->unk2 = var_t4 >> 3;
+                                    temp->unk8 = k * D_800E317C;
+                                    temp->unk4 = (&D_800E30D8[k])->unk12;
+                                    if (var_t5 != 0) {
+                                        temp->unk8 = k * D_800E317C + D_80129FC8.unk0;
+                                        temp->unk4 += D_80129FC8.unk0;
+                                        while (temp->unk4 >= D_80129FC8.unk4) {
+                                            temp->unk4 -= D_80129FC8.unk4;
+                                        }
+                                    }
+                                    temp->unk6 = (&D_800E30D8[k])->unk10;
+                                    if (var_s4 != 0) {
+                                        temp->unk8 += ((D_80129FC8.unk0 * 2) + 1) * D_80129FC8.unk0;
+                                        temp->unk6 += D_80129FC8.unk0;
+                                        while (temp->unk6 >= D_80129FC8.unk4) {
+                                            temp->unk6 -= D_80129FC8.unk4;
+                                        }
+                                    }
+                                    k = 0x7FFF;
+                                }
+                            }
+                        }
+                        var_t5 += 8;
+                        if (var_t5 > 8) {
+                            var_t5 -= 16;
+                            tempXPosRatio += 1;
+                            var_t2 += 1;
+                        }
+                    }
+                }
+            }
+            var_s4 += 16;
+            if (var_s4 > 16) {
+                var_s4 -= 32;
+                zPosRatio += 1;
+            }
+        }
+    } else {
+        xPosRatio -= D_80129FC8.unk24 >> 1; // a1
+        zPosRatio -= D_80129FC8.unk24 >> 1; // s7
+        for (i = 0; i < D_80129FC8.unk24; i++, zPosRatio++) {
+            if ((zPosRatio >= 0) && (zPosRatio < D_8012A0DC)) {
+                tempXPosRatio = xPosRatio;
+                var_t2 = (zPosRatio * D_8012A0D8) + tempXPosRatio;
+                for (j = 0; j < D_80129FC8.unk24; j++, tempXPosRatio++, var_t2++) {
+
+                    // clang-format off
+                    if (
+                        (tempXPosRatio >= 0) &&
+                        (tempXPosRatio < D_8012A0D8) &&
+                        (D_8012A0E8[zPosRatio] & (1 << tempXPosRatio))
+                    ) {
+                        // clang-format on
+                        D_800E30D4[var_t2] = D_800E30E0[i * D_80129FC8.unk24 + j];
+                        for (k = 0; k < D_8012A0E0; k++) {
+                            if (var_t2 == (&D_800E30D8[k])->unkC) {
+                                temp = &D_8012A5E8[k];
+                                temp->unk0 = k;
+                                temp->unk2 = 0;
+                                temp->unk4 = (&D_800E30D8[k])->unk12;
+                                temp->unk6 = (&D_800E30D8[k])->unk10;
+                                temp->unk8 = k * D_800E317C;
+                                k = 0x7FFF;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    func_800BA288(currentViewport, updateRate);
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800B8C04.s")
+#endif
 
 s32 func_800B9228(LevelModelSegment *arg0) {
     s32 v0 = 0;

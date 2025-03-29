@@ -15,7 +15,8 @@ typedef struct {
     u8 unkA;
     u8 unkB;
     u32 unkC;
-    u8 pad10[0x4];
+    s16 unk10;
+    s16 unk12;
     LevelModelSubArray unk14[2];
 } LevelModel_Alternate;
 

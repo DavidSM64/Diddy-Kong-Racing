@@ -8,6 +8,9 @@
 #include "textures_sprites.h"
 #include "racer.h"
 #include "save_data.h"
+#include "objects.h"
+
+#define MODEL_LOADED_MAX 70
 
 /************ .data ************/
 
@@ -30,9 +33,9 @@ UNUSED const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent mo
 /************ .bss ************/
 
 s32 *gObjectModelTable;
-s32 *D_8011D624;
+s32 *gModelCache; // A table of two entries. The first half is the model ID, while the second half is the model data.
 s32 *D_8011D628;
-s32 D_8011D62C;
+s32 gModelCacheCount;
 s32 gNumModelIDs;
 s32 D_8011D634;
 s16 *gAnimationTable;
@@ -49,9 +52,9 @@ void allocate_object_model_pools(void) {
     s32 i;
     s32 checksum;
 
-    D_8011D624 = mempool_alloc_safe(0x230, COLOUR_TAG_GREEN);
-    D_8011D628 = mempool_alloc_safe(0x190, COLOUR_TAG_GREEN);
-    D_8011D62C = 0;
+    gModelCache = mempool_alloc_safe(MODEL_LOADED_MAX * ((sizeof(uintptr_t)) * 2), COLOUR_TAG_GREEN);
+    D_8011D628 = mempool_alloc_safe(100 * sizeof(uintptr_t), COLOUR_TAG_GREEN);
+    gModelCacheCount = 0;
     D_8011D634 = 0;
     gObjectModelTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_MODELS_TABLE);
     gNumModelIDs = 0;
@@ -79,10 +82,11 @@ void allocate_object_model_pools(void) {
 /**
  * Load the associated model ID and assign it to the objects gfx data.
  * Also loads textures and animations.
+ * v79 and newer have a bugfix that revert the cache count if allocation fails.
  */
 Object_68 *object_model_init(s32 modelID, s32 flags) {
     s32 i;
-    s32 sp50;
+    s32 cacheIndex;
     ObjectModel *objMdl;
     s32 sp48;
     s32 temp_s0;
@@ -90,10 +94,10 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     s8 sp3F;
 #if VERSION >= VERSION_79
     s8 var_a2;
-    s8 var_a3;
+    s8 cacheChanged;
 #endif
     u32 compressedData;
-    s32 sp34;
+    s32 modelSize;
 
     if (modelID >= gNumModelIDs) {
         stubbed_printf(D_800E6B20);
@@ -101,10 +105,10 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     }
 
     // Check if the model already exists in the cache.
-    for (i = 0; i < D_8011D62C; i++) {
-        if (modelID == D_8011D624[(i << 1)]) {
-            objMdl = (ObjectModel *) D_8011D624[(i << 1) + 1];
-            ret = func_8005FCD0(objMdl, flags);
+    for (i = 0; i < gModelCacheCount; i++) {
+        if (modelID == gModelCache[MODELCACHE_ID(i)]) {
+            objMdl = (ObjectModel *) gModelCache[MODELCACHE_DATA(i)];
+            ret = model_init_type(objMdl, flags);
             if (ret != NULL) {
                 objMdl->references++;
             }
@@ -114,38 +118,38 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
 
 #if VERSION >= VERSION_79
     var_a2 = FALSE;
-    var_a3 = FALSE;
+    cacheChanged = FALSE;
 #endif
     if (D_8011D634 > 0) {
         D_8011D634--;
 #if VERSION >= VERSION_79
         var_a2 = TRUE;
 #endif
-        sp50 = D_8011D628[D_8011D634];
+        cacheIndex = D_8011D628[D_8011D634];
     } else {
-        sp50 = D_8011D62C;
+        cacheIndex = gModelCacheCount;
 #if VERSION >= VERSION_79
-        var_a3 = TRUE;
+        cacheChanged = TRUE;
 #endif
-        D_8011D62C++;
+        gModelCacheCount++;
     }
 
     temp_s0 = gObjectModelTable[modelID];
     sp48 = gObjectModelTable[modelID + 1] - temp_s0;
-    sp34 = get_asset_uncompressed_size(ASSET_OBJECT_MODELS, temp_s0) + 0x80;
-    objMdl = (ObjectModel *) mempool_alloc(sp34, COLOUR_TAG_RED);
+    modelSize = get_asset_uncompressed_size(ASSET_OBJECT_MODELS, temp_s0) + sizeof(ObjectModel);
+    objMdl = (ObjectModel *) mempool_alloc(modelSize, COLOUR_TAG_RED);
     if (objMdl == NULL) {
 #if VERSION >= VERSION_79
         if (var_a2) {
             D_8011D634++;
         }
-        if (var_a3) {
-            D_8011D62C--;
+        if (cacheChanged) {
+            gModelCacheCount--;
         }
 #endif
         return NULL;
     }
-    compressedData = (u32) ((u8 *) objMdl + sp34) - sp48;
+    compressedData = (u32) ((u8 *) objMdl + modelSize) - sp48;
     load_asset_to_address(ASSET_OBJECT_MODELS, compressedData, temp_s0, sp48);
     gzip_inflate((u8 *) compressedData, (u8 *) objMdl);
     objMdl->textures = (TextureInfo *) ((s32) objMdl->textures + (u8 *) objMdl);
@@ -179,21 +183,23 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
             }
         }
         if ((func_80060EA8(objMdl) == 0) && (func_80061A00(objMdl, modelID) == 0)) {
-            ret = func_8005FCD0(objMdl, flags);
+            ret = model_init_type(objMdl, flags);
             if (ret != NULL) {
-                D_8011D624[(sp50 << 1)] = modelID;
-                D_8011D624[(sp50 << 1) + 1] = (s32) objMdl;
-                if (D_8011D62C < 70) {
-                    ret->unk20 = 0;
+                gModelCache[MODELCACHE_ID(cacheIndex)] = modelID;
+                gModelCache[MODELCACHE_DATA(cacheIndex)] = (s32) objMdl;
+                if (gModelCacheCount < MODEL_LOADED_MAX) {
+                    ret->animUpdateTimer = 0;
                     return ret;
+                } else {
+                    stubbed_printf(D_800E6B64);
                 }
             }
         }
     }
 block_30:
 #if VERSION >= VERSION_79
-    if (var_a3) {
-        D_8011D62C--;
+    if (cacheChanged) {
+        gModelCacheCount--;
     }
     if (var_a2) {
         D_8011D634++;
@@ -203,43 +209,43 @@ block_30:
     return NULL;
 }
 
-Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
+Object_68 *model_init_type(ObjectModel *model, s32 flags) {
     s32 temp;
     Object_68 *result;
     Vertex *var_v1;
     Vertex *vertex;
     Vertex *mdlVertex;
 
-    if ((model->numberOfAnimations != 0) && (arg1 & 8)) {
-        temp = ((model->numberOfVertices << 1) * 10) + 36;
+    if ((model->numberOfAnimations != 0) && (flags & OBJECT_SPAWN_ANIMATION)) {
+        temp = ((model->numberOfVertices * 2) * sizeof(Vertex)) + 36;
         result = (Object_68 *) mempool_alloc((model->unk4A * 6) + temp, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
-        result->unk4[0] = (Vertex *) ((u8 *) result + 36);
-        result->unk4[1] = (Vertex *) ((u8 *) result + (model->numberOfVertices * 10) + 36);
-        result->unk4[2] = (Vertex *) ((u8 *) result + temp);
-        result->unk1E = 2;
-    } else if ((model->unk40 != NULL) && (arg1 & 1)) {
-        temp = (model->numberOfVertices * 10);
-        result = (Object_68 *) mempool_alloc(temp + 36, COLOUR_TAG_BLUE);
+        result->vertices[0] = (Vertex *) ((u8 *) result + 36);
+        result->vertices[1] = (Vertex *) ((u8 *) result + (model->numberOfVertices * sizeof(Vertex)) + 36);
+        result->vertices[2] = (Vertex *) ((u8 *) result + temp);
+        result->modelType = MODELTYPE_ANIMATED;
+    } else if ((model->unk40 != NULL) && (flags & OBJECT_SPAWN_UNK01)) {
+        temp = (model->numberOfVertices * sizeof(Vertex)) + 36;
+        result = (Object_68 *) mempool_alloc(temp, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
         var_v1 = (Vertex *) ((u8 *) result + 36);
-        result->unk4[0] = var_v1;
-        result->unk4[1] = var_v1;
-        result->unk4[2] = NULL;
-        result->unk1E = 1;
+        result->vertices[0] = var_v1;
+        result->vertices[1] = var_v1;
+        result->vertices[2] = NULL;
+        result->modelType = MODELTYPE_SHADE;
     } else {
         result = (Object_68 *) mempool_alloc(36, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
-        result->unk4[0] = model->vertices;
-        result->unk4[1] = model->vertices;
-        result->unk4[2] = NULL;
-        result->unk1E = 0;
+        result->vertices[0] = model->vertices;
+        result->vertices[1] = model->vertices;
+        result->vertices[2] = NULL;
+        result->modelType = MODELTYPE_BASIC;
     }
     result->offsetX = 0;
     result->offsetY = 0;
@@ -248,9 +254,10 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
     result->animationID = -1;
     result->animationFrame = -1;
     result->animationTaskNum = 0;
-    if (result->unk1E != 0) {
+    // Shaded models need to be double buffered, so duplicate them.
+    if (result->modelType != MODELTYPE_BASIC) {
         temp = 0;
-        vertex = result->unk4[0];
+        vertex = result->vertices[0];
         mdlVertex = &model->vertices[0];
         do {
             vertex->x = mdlVertex->x;
@@ -266,7 +273,7 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
         } while (temp < model->numberOfVertices);
 
         temp = 0;
-        vertex = result->unk4[1];
+        vertex = result->vertices[1];
         mdlVertex = &model->vertices[0];
         do {
             vertex->x = mdlVertex->x;
@@ -293,29 +300,32 @@ void free_3d_model(ObjectModel **modelPtr) {
     ObjectModel *model;
     s32 i;
 
-    if (modelPtr != 0) {
-        model = *modelPtr;
-        model->references--;
-        if (model->references > 0) { // Model is still used, so free the reference and return.
-            mempool_free(modelPtr);
-            return;
-        }
+    if (modelPtr == 0) {
+        stubbed_printf(D_800E6BC0);
+        return;
+    }
 
-        modelIndex = -1;
-        for (i = 0; i < D_8011D62C; i++) {
-            if ((s32) model == D_8011D624[(i << 1) + 1]) {
-                modelIndex = i;
-            }
-        }
+    model = *modelPtr;
+    model->references--;
+    if (model->references > 0) { // Model is still used, so free the reference and return.
+        mempool_free(modelPtr);
+        return;
+    }
 
-        if (modelIndex != -1) {
-            free_model_data(model);
-            D_8011D628[D_8011D634] = modelIndex;
-            D_8011D634++;
-            D_8011D624[modelIndex << 1] = -1;
-            D_8011D624[(modelIndex << 1) + 1] = -1;
-            mempool_free(modelPtr);
+    modelIndex = -1;
+    for (i = 0; i < gModelCacheCount; i++) {
+        if (model == (ObjectModel *) gModelCache[MODELCACHE_DATA(i)]) {
+            modelIndex = i;
         }
+    }
+
+    if (modelIndex != -1) {
+        free_model_data(model);
+        D_8011D628[D_8011D634] = modelIndex;
+        D_8011D634++;
+        gModelCache[MODELCACHE_ID(modelIndex)] = -1;
+        gModelCache[MODELCACHE_DATA(modelIndex)] = -1;
+        mempool_free(modelPtr);
     }
 }
 

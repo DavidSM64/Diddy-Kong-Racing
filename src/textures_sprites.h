@@ -115,16 +115,16 @@ s32 get_loaded_2D_textures(void);
 s32 get_loaded_3D_textures(void);
 s32 func_8007AE64(void);
 void set_texture_colour_tag(s32 tagID);
-void reset_render_settings(Gfx **dlist);
+void reset_render_settings(Gfx **dList);
 void enable_primitive_colour(void);
 void disable_primitive_colour(void);
-void load_and_set_texture_no_offset(Gfx **dlist, TextureHeader *texhead, u32 flags);
+void load_and_set_texture_no_offset(Gfx **dList, TextureHeader *texhead, u32 flags);
 void sprite_opaque(s32 setting);
 s32 func_8007EF64(s16 arg0);
-void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 texOffset);
+void load_and_set_texture(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset);
 void free_sprite(Sprite *sprite);
 void free_texture(TextureHeader *tex);
-void func_8007BF34(Gfx **dlist, s32 flags);
+void func_8007BF34(Gfx **dList, s32 flags);
 
 // There might be a file boundary here.
 void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate);
@@ -137,13 +137,13 @@ s32 get_texture_size_from_id(s32 id);  // Non Matching
 s32 func_8007C860(s32 spriteIndex); // Non Matching
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut,
                      s32 *sizeOut);                                                   // Non Matching
-void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor); // Non Matching
+void func_8007F594(Gfx **dList, u32 index, u32 primitiveColor, u32 environmentColor); // Non Matching
 void func_8007CA68(s32 spriteID, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4); // Non Matching
 MemoryPoolSlot *func_8007C12C(s32 spriteID, s32 arg1); // Non Matching
 void tex_init_textures(void); // Non Matching
-void load_blinking_lights_texture(Gfx **dlist, TextureHeader *texture_list, u32 flags,
+void load_blinking_lights_texture(Gfx **dList, TextureHeader *texture_list, u32 flags,
                                   s32 texture_index);        // Non Matching
-void build_tex_display_list(TextureHeader *tex, Gfx *dlist); // Non Matching
+void build_tex_display_list(TextureHeader *tex, Gfx *dList); // Non Matching
 void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2); // Non Matching
 
 #endif
