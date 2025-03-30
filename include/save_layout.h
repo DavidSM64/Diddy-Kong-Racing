@@ -4,8 +4,6 @@
 #include "types.h"
 #include "structs.h"
 #include "macros.h"
-#include "save_layout.h"
-#include "src/save_data.h"
 #include "PR/os_cont.h"
 
 /**
