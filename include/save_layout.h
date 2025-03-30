@@ -10,6 +10,8 @@
  * File contains the struct and macro definitions for the save layout for DKR.
 */
 
+#define NUMBER_OF_SAVE_FILES 3
+
 #define TT_COURSES          \
     unsigned courseAL : 1;  \
     unsigned courseFC : 1;  \
