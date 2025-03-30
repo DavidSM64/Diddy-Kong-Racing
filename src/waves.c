@@ -438,7 +438,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
     // possible fake:
     xPosRatio = (xPosition - D_8012A0D0) / gWaveBoundingBoxDiffX;
     zPosRatio = (zPosition - D_8012A0D4) / gWaveBoundingBoxDiffZ;
-    D_8012A5E8 = -1;
+    D_8012A5E8 = (unk8012A5E8 *) -1;
     D_8012A5F4 = -1;
 
     // This is incorrect because the assembly compares
