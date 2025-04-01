@@ -67,9 +67,9 @@ extern "C" {
     .end    proc
 #endif
 
-// #define ABS(x, y)   \
-//     .globl  x      ;\
-//     x   =   y
+#define ABS(x, y)   \
+    .globl  x      ;\
+    x   =   y
 
 #define EXPORT(x)   \
     .globl  x      ;\
