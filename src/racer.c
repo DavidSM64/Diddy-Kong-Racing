@@ -741,7 +741,7 @@ void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate) {
         splineZ[i] = checkpoint->z;
         splinePos++;
         if (racer->unk1C9 == 0) {
-            checkpoint[i + 1].unk24  = (f32) checkpoint->unk2E[racer->unk1CA];
+            checkpoint[i + 1].unk24 = (f32) checkpoint->unk2E[racer->unk1CA];
             checkpoint[i + 2].unk24 = (f32) checkpoint->unk32[racer->unk1CA];
             //(sp + i)->unk74 = (f32) checkpoint->unk2E[racer->unk1CA];
             //(sp + i)->unk64 = (f32) checkpoint->unk32[racer->unk1CA];
@@ -754,8 +754,8 @@ void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate) {
         }
     }
     if (racer->unk1C9 == 0) {
-        racer->unk1BA = magnitude;//(s16) (s32) (((sp7C - sp78) * var_f20) + sp78);
-        racer->unk1BC = magnitude;//(s16) (s32) (((sp6C - sp68) * var_f20) + sp68);
+        racer->unk1BA = magnitude; //(s16) (s32) (((sp7C - sp78) * var_f20) + sp78);
+        racer->unk1BC = magnitude; //(s16) (s32) (((sp6C - sp68) * var_f20) + sp68);
     }
     xDerivative = func_8002277C(splineX, 0, magnitude);
     yDerivative = func_8002277C(splineY, 0, magnitude);

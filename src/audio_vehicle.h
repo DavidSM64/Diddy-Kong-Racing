@@ -19,8 +19,7 @@ typedef struct unk80119C58 {
         /* 0x00 */ f32 unk0_01;
         /* 0x00 */ u8 unk0_02;
     } unk0;
-    /* 0x004 */ Vec3f *unk4;
-    /* 0x008 */ u8 pad9[0x164];
+    /* 0x004 */ f32 unk4[30 * 3]; // Should be a Vec3f, but that just doesn't match
     /* 0x16C */ s32 soundID;
     /* 0x170 */ s32 unk170;
     /* 0x174 */ u8 unk174;

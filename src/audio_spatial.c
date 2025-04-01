@@ -52,7 +52,7 @@ void func_80008040(void) {
     gSoundMaskHeapUsed = mempool_alloc_safe(0xA0, COLOUR_TAG_CYAN);
     gUsedMasks = 0;
     for (var_v0 = 0; var_v0 < 7; var_v0++) {
-        D_80119C58[var_v0].unk4 = NULL;
+        // D_80119C58[var_v0] = NULL;
     }
     for (var_v0 = 0; var_v0 < 10; var_v0++) {
         gSoundMaskHeap[var_v0]->unk18 = 0;
@@ -287,27 +287,27 @@ void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volu
 
 void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 arg8, u16 arg9,
                               u8 argA, u8 lineID, u8 argC) {
-    Vec3f *temp_a0;
     unk80119C58 *temp_v1;
+    f32 *temp_a0;
 
-    if ((lineID < 7) && (argC < 30)) {
+    if (lineID < 7 && argC < 30) {
         temp_v1 = &D_80119C58[lineID];
-        temp_a0 = (Vec3f *) (((u32 *) &temp_v1->unk4) + argC * 3); // This can't be right...
-        temp_a0->x = x;
-        temp_a0->y = y;
-        temp_a0->z = z;
+        temp_a0 = &temp_v1->unk4[argC * 3];
+        temp_a0[0] = x;
+        temp_a0[1] = y;
+        temp_a0[2] = z;
         if (argC == 0) {
-            (&D_80119C58[lineID])->soundID = soundId;
-            (&D_80119C58[lineID])->unk0.unk0_02 = arg0;
-            (&D_80119C58[lineID])->unk170 = arg9;
-            (&D_80119C58[lineID])->unk17D = argA;
-            (&D_80119C58[lineID])->unk174 = arg6;
-            (&D_80119C58[lineID])->unk175 = arg5;
-            (&D_80119C58[lineID])->unk176 = arg7;
-            (&D_80119C58[lineID])->unk17E = arg8;
+            temp_v1->soundID = soundId;
+            temp_v1->unk0.unk0_02 = arg0;
+            temp_v1->unk170 = arg9;
+            temp_v1->unk17D = argA;
+            temp_v1->unk174 = arg6;
+            temp_v1->unk175 = arg5;
+            temp_v1->unk176 = arg7;
+            temp_v1->unk17E = arg8;
         }
-        if ((&D_80119C58[lineID])->unk17C < argC) {
-            (&D_80119C58[lineID])->unk17C = argC;
+        if (temp_v1->unk17C < argC) {
+            temp_v1->unk17C = argC;
         }
     }
 }
