@@ -49,8 +49,8 @@ void audioline_init(void) {
 
     sound_table_properties(&D_80119C40, NULL, NULL);
     gSoundMaskHeap = mempool_alloc_safe(sizeof(SoundMask) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
-    gSoundMaskHeapFree = mempool_alloc_safe(0xA0, COLOUR_TAG_CYAN);
-    gSoundMaskHeapUsed = mempool_alloc_safe(0xA0, COLOUR_TAG_CYAN);
+    gSoundMaskHeapFree = mempool_alloc_safe(sizeof(uintptr_t) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
+    gSoundMaskHeapUsed = mempool_alloc_safe(sizeof(uintptr_t) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
     gUsedMasks = 0;
     for (i = 0; i < 7; i++) {
         D_80119C58[i].unk178 = NULL;
@@ -76,24 +76,28 @@ void audioline_on(void) {
     gAudioLinesOff = FALSE;
 }
 
-#if 0
+#ifdef NON_EQUIVALENT
 extern f32 D_80119C60[672];
-extern f32 D_8011A6E0[336]; //[7][48];
+extern f32 D_8011A6E0[7][48];
 extern unk8011A6D8 **D_8011A6DC;
+extern unk80119C58 **D_80119C5C;
+//extern void sound_stop(u8 *arg0);
 // audioline_reset
 void func_80008174(void) {
     s32 i;
     s32 j;
+    u8 *sound;
 
-    for (gFreeMasks = 0; gFreeMasks < 40; gFreeMasks++) {
-        gSoundMaskHeapFree[gFreeMasks] = (SoundMask *) gSoundMaskHeap[gFreeMasks];
+    for (gFreeMasks = 0; gFreeMasks < SOUND_MASK_HEAP_COUNT; gFreeMasks++) {
+        gSoundMaskHeapFree[gFreeMasks] = &gSoundMaskHeap[gFreeMasks];
     }
     gFreeMasks--;
 
     for (i = 0; i < gUsedMasks; i++) {
+        sound = gSoundMaskHeapUsed[i]->unk18;
         gSoundMaskHeapUsed[i]->unk12 = 0;
-        if (gSoundMaskHeapUsed[i]->unk18 != NULL) {
-            sound_stop(gSoundMaskHeapUsed[i]->unk18);
+        if (sound != NULL) {
+            sound_stop(sound);
         }
     }
     gUsedMasks = 0;
@@ -109,19 +113,20 @@ void func_80008174(void) {
             D_80119C58[i].unk178 = 0;
         }
         D_80119C58[i].unk17C = -1;
+        D_80119C5C[i]->unk0.unk0_01 = -100000.0f;
 
-        D_80119C60[i] = -100000.0;
+        D_80119C60[i] = -100000.0f;
     }
 
     for (i = 0; i < ARRAY_COUNT(D_8011A6E0); i++) {
         D_8011A6D8[i].unkB8 = -1;
         D_8011A6D8[i].unk0.unk0_01 = 0.0f;
         D_8011A6D8[i].unkBC = 0.0f;
-        D_8011A6DC[i]->unk0.unk0_01 = -100000.0;
-        D_8011A6E0[i] = -100000.0;
-        // for (j = 0; j < ARRAY_COUNT(D_8011A6E0[0]); j++) {
-        //     D_8011A6E0[i][j] = -100000.0;
-        // }
+        D_8011A6DC[i]->unk0.unk0_01 = -100000.0f;
+        D_8011A6E0[i][0] = -100000.0f;
+        for (j = 0; j < ARRAY_COUNT(D_8011A6E0[0]); j++) {
+            D_8011A6E0[i][j] = -100000.0f;
+        }
     }
 
     gAudioLinesOff = 0;
