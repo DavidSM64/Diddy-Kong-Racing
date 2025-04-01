@@ -27,7 +27,7 @@ VehicleSoundData *gRacerSound;
 Object_Racer *gSoundRacerObj;
 SoundData *D_80119C40; // This should be in audio_spatial?
 SoundMask **gSoundMaskHeapUsed;
-unk80119C48 **gSoundMaskHeap; // 0x24 struct size - 0x5A0 total size - should be 40 elements
+SoundMask **gSoundMaskHeap; // 0x24 struct size - 0x5A0 total size - should be 40 elements
 u8 gFreeMasks;
 SoundMask **gSoundMaskHeapFree;
 s32 D_80119C54;           // Padding?

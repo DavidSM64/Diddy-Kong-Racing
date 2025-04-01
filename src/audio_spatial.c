@@ -38,33 +38,28 @@ extern s8 gAudioLinesOff;
 extern SoundData *D_80119C40;
 extern unk80119C58 D_80119C58[];
 extern unk8011A6D8 D_8011A6D8[];
+extern SoundMask *gSoundMaskHeap;
+
+#define SOUND_MASK_HEAP_COUNT 40
 
 /*******************************/
 
-#ifdef NON_EQUIVALENT
-// audioline_init
-void func_80008040(void) {
-    s32 var_v0;
+void audioline_init(void) {
+    s32 i;
 
     sound_table_properties(&D_80119C40, NULL, NULL);
-    gSoundMaskHeap = mempool_alloc_safe(0x5A0, COLOUR_TAG_CYAN);
+    gSoundMaskHeap = mempool_alloc_safe(sizeof(SoundMask) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
     gSoundMaskHeapFree = mempool_alloc_safe(0xA0, COLOUR_TAG_CYAN);
     gSoundMaskHeapUsed = mempool_alloc_safe(0xA0, COLOUR_TAG_CYAN);
     gUsedMasks = 0;
-    for (var_v0 = 0; var_v0 < 7; var_v0++) {
-        // D_80119C58[var_v0] = NULL;
+    for (i = 0; i < 7; i++) {
+        D_80119C58[i].unk178 = NULL;
     }
-    for (var_v0 = 0; var_v0 < 10; var_v0++) {
-        gSoundMaskHeap[var_v0]->unk18 = 0;
-        gSoundMaskHeap[var_v0]->unk3C = 0;
-        gSoundMaskHeap[var_v0]->unk60 = 0;
-        gSoundMaskHeap[var_v0]->unk84 = 0;
+    for (i = 0; i < SOUND_MASK_HEAP_COUNT; i++) {
+        gSoundMaskHeap[i].unk18 = 0;
     }
     func_80008174();
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80008040.s")
-#endif
 
 /**
  * Stop any playing jingles, then block audio lines from playing anymore.
@@ -81,7 +76,7 @@ void audioline_on(void) {
     gAudioLinesOff = FALSE;
 }
 
-#ifdef NON_EQUIVALENT
+#if 0
 extern f32 D_80119C60[672];
 extern f32 D_8011A6E0[336]; //[7][48];
 extern unk8011A6D8 **D_8011A6DC;
