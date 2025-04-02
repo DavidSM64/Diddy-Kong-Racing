@@ -243,7 +243,7 @@ void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z) {
 
 void func_800096F8(SoundMask *arg0) {
     s32 i;
-    for (i = 0; i < 40; i++) {
+    for (i = 0; i < SOUND_MASK_HEAP_COUNT; i++) {
         if (arg0 == gSoundMaskHeapUsed[i]) {
             func_8000A2E8(i);
             break;
@@ -258,7 +258,7 @@ void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volu
     if (soundMask != NULL) {
         func_800245B4(soundBite | 0xE000);
     }
-    if (gUsedMasks == 40) {
+    if (gUsedMasks == SOUND_MASK_HEAP_COUNT) {
         if (soundMask != NULL) {
             *soundMask = NULL;
         }
@@ -537,7 +537,7 @@ void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, floatXYZVal
     temp_verts[3].a = 255;
     temp_verts += 4;
 
-    temp_tris[0].flags = 0x40; // 0x40 = Draw backface.
+    temp_tris[0].flags = BACKFACE_DRAW;
     temp_tris[0].vi0 = 2;
     temp_tris[0].vi1 = 1;
     temp_tris[0].vi2 = 0;
@@ -547,7 +547,7 @@ void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, floatXYZVal
     temp_tris[0].uv1.v = 0;
     temp_tris[0].uv2.u = 1;
     temp_tris[0].uv2.v = 0;
-    temp_tris[1].flags = 0x40;
+    temp_tris[1].flags = BACKFACE_DRAW;
     temp_tris[1].vi0 = 3;
     temp_tris[1].vi1 = 2;
     temp_tris[1].vi2 = 1;

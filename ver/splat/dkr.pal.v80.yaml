@@ -382,63 +382,63 @@ segments:
       - { start: 0xEB5B0, type: databin, name: data_f3ddkr_fifo, linker_section_order: .rodata }
       - { start: 0xEBDB0, type: databin, name: data_f3ddkr_xbus, linker_section_order: .rodata }
       - { start: 0xEC5B0, type: databin, name: data_unknown_2,   linker_section_order: .rodata }
-      - { start: auto, type: .bss, vram: 0x800EC570, name: audio }
-      - { start: auto, type: .bss, vram: 0x801165A0, name: audiomgr }
-      - { start: auto, type: .bss, vram: 0x8011A1E0, name: audiosfx }
-      - { start: auto, type: .bss, vram: 0x8011A240, name: audio_vehicle }
-      - { start: auto, type: .bss, vram: 0x8011B230, name: objects }
-      - { start: auto, type: .bss, vram: 0x8011B6B0, name: tracks }
-      - { start: auto, type: .bss, vram: 0x8011DAD0, name: lights }
-      - { start: auto, type: .bss, vram: 0x8011DAE0, name: object_functions }
-      - { start: auto, type: .bss, vram: 0x8011DB00, name: racer }
-      - { start: auto, type: .bss, vram: 0x8011DBD0, name: vehicle_tricky }
-      - { start: auto, type: .bss, vram: 0x8011DBE0, name: vehicle_bluey }
-      - { start: auto, type: .bss, vram: 0x8011DBF0, name: vehicle_smokey }
-      - { start: auto, type: .bss, vram: 0x8011DC00, name: vehicle_bubbler }
-      - { start: auto, type: .bss, vram: 0x8011DC10, name: vehicle_wizpig }
-      - { start: auto, type: .bss, vram: 0x8011DC20, name: vehicle_rocket }
-      - { start: auto, type: .bss, vram: 0x8011DC30, name: object_models }
-      - { start: auto, type: .bss, vram: 0x8011DD60, name: main }
-      - { start: auto, type: .bss, vram: 0x801200D0, name: hasm/entrypoint }
-      - { start: auto, type: .bss, vram: 0x801210D0, name: camera }
-      - { start: auto, type: .bss, vram: 0x801216F0, name: joypad }
-      - { start: auto, type: .bss, vram: 0x80121770, name: game }
-      - { start: auto, type: .bss, vram: 0x80121800, name: thread3_main }
-      - { start: auto, type: .bss, vram: 0x80123B90, name: memory }
-      - { start: auto, type: .bss, vram: 0x801243E0, name: ../libultra/src/io/motor }
-      - { start: auto, type: .bss, vram: 0x80124620, name: save_data }
-      - { start: auto, type: .bss, vram: 0x80124810, name: asset_loading }
-      - { start: auto, type: .bss, vram: 0x801248D0, name: rcp_dkr }
-      - { start: auto, type: .bss, vram: 0x80126740, name: ../libultra/src/sc/sched }
-      - { start: auto, type: .bss, vram: 0x801267A0, name: video }
-      - { start: auto, type: .bss, vram: 0x80126950, name: textures_sprites }
-      - { start: auto, type: .bss, vram: 0x801269C0, name: menu }
-      - { start: auto, type: .bss, vram: 0x80127320, name: game_ui }
-      - { start: auto, type: .bss, vram: 0x80127800, name: os_yield_data }
-      - { start: auto, type: .bss, vram: 0x80128200, name: weather }
-      - { start: auto, type: .bss, vram: 0x801282D0, name: particles }
-      - { start: auto, type: .bss, vram: 0x801282F0, name: printf }
-      - { start: auto, type: .bss, vram: 0x80128C30, name: thread0_epc }
-      - { start: auto, type: .bss, vram: 0x8012A100, name: stacks }
-      - { start: auto, type: .bss, vram: 0x8012A610, name: waves }
-      - { start: auto, type: .bss, vram: 0x8012AD80, name: fade_transition }
-      - { start: auto, type: .bss, vram: 0x8012ADD0, name: game_text }
-      - { start: auto, type: .bss, vram: 0x8012AE30, name: font }
-      - { start: auto, type: .bss, vram: 0x8012AE50, name: ../libultra/src/io/pimgr }
-      - { start: auto, type: .bss, vram: 0x8012B120, name: gzip }
-      - { start: auto, type: .bss, vram: 0x8012B130, name: ../libultra/src/io/leointerrupt }
-      - { start: auto, type: .bss, vram: 0x8012B140, name: thread30_bgload }
-      - { start: auto, type: .bss, vram: 0x8012D310, name: ../libultra/src/os/initialize }
-      - { start: auto, type: .bss, vram: 0x8012D320, name: ../libultra/src/os/seteventmesg }
-      - { start: auto, type: .bss, vram: 0x8012D3A0, name: ../libultra/src/io/controller }
-      - { start: auto, type: .bss, vram: 0x8012D430, name: ../libultra/src/io/pfsisplug }
-      - { start: auto, type: .bss, vram: 0x8012D470, name: ../libultra/src/io/siacs }
-      - { start: auto, type: .bss, vram: 0x8012D490, name: ../libultra/src/io/conteepread }
-      - { start: auto, type: .bss, vram: 0x8012D4D0, name: ../libultra/src/io/vimgr }
-      - { start: auto, type: .bss, vram: 0x8012D7F0, name: ../libultra/src/io/sptask }
-      - { start: auto, type: .bss, vram: 0x8012D830, name: ../libultra/src/io/piacs }
-      - { start: auto, type: .bss, vram: 0x8012D850, name: ../libultra/src/os/timerintr }
-      - { start: auto, type: .bss, vram: 0x8012D890, name: ../libultra/src/os/exceptasm }
+      - { type: .bss, vram: 0x800EC570, name: audio }
+      - { type: .bss, vram: 0x801165A0, name: audiomgr }
+      - { type: .bss, vram: 0x8011A1E0, name: audiosfx }
+      - { type: .bss, vram: 0x8011A240, name: audio_vehicle }
+      - { type: .bss, vram: 0x8011B230, name: objects }
+      - { type: .bss, vram: 0x8011B6B0, name: tracks }
+      - { type: .bss, vram: 0x8011DAD0, name: lights }
+      - { type: .bss, vram: 0x8011DAE0, name: object_functions }
+      - { type: .bss, vram: 0x8011DB00, name: racer }
+      - { type: .bss, vram: 0x8011DBD0, name: vehicle_tricky }
+      - { type: .bss, vram: 0x8011DBE0, name: vehicle_bluey }
+      - { type: .bss, vram: 0x8011DBF0, name: vehicle_smokey }
+      - { type: .bss, vram: 0x8011DC00, name: vehicle_bubbler }
+      - { type: .bss, vram: 0x8011DC10, name: vehicle_wizpig }
+      - { type: .bss, vram: 0x8011DC20, name: vehicle_rocket }
+      - { type: .bss, vram: 0x8011DC30, name: object_models }
+      - { type: .bss, vram: 0x8011DD60, name: main }
+      - { type: .bss, vram: 0x801200D0, name: hasm/entrypoint }
+      - { type: .bss, vram: 0x801210D0, name: camera }
+      - { type: .bss, vram: 0x801216F0, name: joypad }
+      - { type: .bss, vram: 0x80121770, name: game }
+      - { type: .bss, vram: 0x80121800, name: thread3_main }
+      - { type: .bss, vram: 0x80123B90, name: memory }
+      - { type: .bss, vram: 0x801243E0, name: ../libultra/src/io/motor }
+      - { type: .bss, vram: 0x80124620, name: save_data }
+      - { type: .bss, vram: 0x80124810, name: asset_loading }
+      - { type: .bss, vram: 0x801248D0, name: rcp_dkr }
+      - { type: .bss, vram: 0x80126740, name: ../libultra/src/sc/sched }
+      - { type: .bss, vram: 0x801267A0, name: video }
+      - { type: .bss, vram: 0x80126950, name: textures_sprites }
+      - { type: .bss, vram: 0x801269C0, name: menu }
+      - { type: .bss, vram: 0x80127320, name: game_ui }
+      - { type: .bss, vram: 0x80127800, name: os_yield_data }
+      - { type: .bss, vram: 0x80128200, name: weather }
+      - { type: .bss, vram: 0x801282D0, name: particles }
+      - { type: .bss, vram: 0x801282F0, name: printf }
+      - { type: .bss, vram: 0x80128C30, name: thread0_epc }
+      - { type: .bss, vram: 0x8012A100, name: stacks }
+      - { type: .bss, vram: 0x8012A610, name: waves }
+      - { type: .bss, vram: 0x8012AD80, name: fade_transition }
+      - { type: .bss, vram: 0x8012ADD0, name: game_text }
+      - { type: .bss, vram: 0x8012AE30, name: font }
+      - { type: .bss, vram: 0x8012AE50, name: ../libultra/src/io/pimgr }
+      - { type: .bss, vram: 0x8012B120, name: gzip }
+      - { type: .bss, vram: 0x8012B130, name: ../libultra/src/io/leointerrupt }
+      - { type: .bss, vram: 0x8012B140, name: thread30_bgload }
+      - { type: .bss, vram: 0x8012D310, name: ../libultra/src/os/initialize }
+      - { type: .bss, vram: 0x8012D320, name: ../libultra/src/os/seteventmesg }
+      - { type: .bss, vram: 0x8012D3A0, name: ../libultra/src/io/controller }
+      - { type: .bss, vram: 0x8012D430, name: ../libultra/src/io/pfsisplug }
+      - { type: .bss, vram: 0x8012D470, name: ../libultra/src/io/siacs }
+      - { type: .bss, vram: 0x8012D490, name: ../libultra/src/io/conteepread }
+      - { type: .bss, vram: 0x8012D4D0, name: ../libultra/src/io/vimgr }
+      - { type: .bss, vram: 0x8012D7F0, name: ../libultra/src/io/sptask }
+      - { type: .bss, vram: 0x8012D830, name: ../libultra/src/io/piacs }
+      - { type: .bss, vram: 0x8012D850, name: ../libultra/src/os/timerintr }
+      - { type: .bss, vram: 0x8012D890, name: ../libultra/src/os/exceptasm }
 
   - name: assets
     type: bin
