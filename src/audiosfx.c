@@ -122,7 +122,7 @@ ALMicroTime _sndpVoiceHandler(void *node) {
 #pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/_handleEvent.s")
 
 void func_8000410C(ALSoundState *state) {
-    if (state->unk3E & 4) {
+    if (state->flags & AL_SNDP_PAN_EVT) {
         alSynStopVoice(gAlSndPlayerPtr->drvr, &state->voice);
         alSynFreeVoice(gAlSndPlayerPtr->drvr, &state->voice);
     }
@@ -267,18 +267,18 @@ ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
 /**
  * Official Name: gsSndpSetPriority
  */
-void func_80004604(AlMsgUnk400Type_Unk0 *sndp, u8 priority) {
+void func_80004604(ALSoundState *sndp, u8 priority) {
     if (sndp != NULL) {
-        sndp->priority = priority;
+        sndp->soundPriority = priority;
     }
 }
 
 /**
  * Official Name: gsSndpGetState
  */
-UNUSED u8 func_8000461C(AlMsgUnk400Type_Unk0 *sndp) {
+UNUSED u8 func_8000461C(ALSoundState *sndp) {
     if (sndp != NULL) {
-        return sndp->state;
+        return sndp->soundState;
     } else {
         return 0;
     }
@@ -301,13 +301,13 @@ s32 func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, SoundMask *soundMask) {
  * 99% sure this function will clear the audio buffer associated with a given sound mask.
  * Official Name: gsSndpStop
  */
-void sound_stop(AlMsgUnk400Type_Unk0 *sndp) {
+void sound_stop(ALSoundState *sndp) {
     ALEvent alEvent;
 
-    alEvent.type = 0x400; // Could be a custom Rare event type.
+    alEvent.type = AL_SNDP_UNK_10_EVT;
     alEvent.msg.unk.unk0 = sndp;
     if (sndp != NULL) {
-        sndp->flags &= ~(1 << 4);
+        sndp->flags &= ~AL_SNDP_PITCH_EVT;
         alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &alEvent, 0);
     } else {
         // From JFG
@@ -316,22 +316,22 @@ void sound_stop(AlMsgUnk400Type_Unk0 *sndp) {
 }
 
 void func_800048D8(u8 event) {
-    u32 intMask;
+    OSIntMask mask;
     ALEvent evt;
     ALSoundState *queue;
 
-    intMask = osSetIntMask(OS_IM_NONE);
+    mask = osSetIntMask(OS_IM_NONE);
     queue = D_800DC6B0.next;
     while (queue != NULL) {
         evt.type = AL_SNDP_UNK_10_EVT;
-        evt.msg.end.ticks = (s32) queue; // TODO: find the correct value for this.
-        if ((queue->unk3E & event) == event) {
-            queue->unk3E &= ~AL_SNDP_PITCH_EVT;
+        evt.msg.unk.unk0 = queue;
+        if ((queue->flags & event) == event) {
+            evt.msg.unk.unk0->flags &= ~AL_SNDP_PITCH_EVT;
             alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt, 0);
         }
-        queue = (ALSoundState *) queue->next;
+        queue = queue->next;
     }
-    osSetIntMask(intMask);
+    osSetIntMask(mask);
 }
 
 UNUSED void func_80004998(void) {

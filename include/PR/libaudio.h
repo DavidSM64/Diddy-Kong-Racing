@@ -592,16 +592,26 @@ typedef struct {
     u8                         chan;
 } ALOscEvent;
 
-typedef struct {
-    u8 pad[0x36];
-    u8 priority;
-    u8 pad37[0x7];
-    u8 flags;
-    u8 state;
-} AlMsgUnk400Type_Unk0;
+typedef struct ALSoundState {
+    /* 0x00 */ struct ALSoundState *next;
+    /* 0x04 */ struct ALSoundState *prev;
+    /* 0x08 */ struct ALSoundState *unk8;
+    /* 0x0C */ ALVoice     voice;
+    /* 0x28 */ ALSound     *sound;         /* sound referenced here */
+    /* 0x2C */ s16         priority;
+    /* 0x30 */ f32         pitch;          /* current playback pitch                    */
+    /* 0x34 */ u8          pad34[0x2];
+    /* 0x34 */ u8          soundPriority;
+    /* 0x38 */ s16         vol;            /* volume - combined with volume from bank   */
+    /* 0x3A */ ALPan       pan;            /* pan - 0 = left, 127 = right               */
+    /* 0x3C */ u8          fxMix;          /* wet/dry mix - 0 = dry, 127 = wet          */
+    /* 0x3C */ u8 pad3C[2];
+    /* 0x3E */ u8 flags;
+    /* 0x3F */ u8 soundState;
+  } ALSoundState;
 
 typedef struct {
-    AlMsgUnk400Type_Unk0 *unk0;
+    ALSoundState *unk0;
 } AlMsgUnk400Type;
 
 typedef struct {

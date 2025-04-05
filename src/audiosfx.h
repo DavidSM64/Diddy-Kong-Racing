@@ -28,21 +28,13 @@ typedef struct ALUnkStruct {
   /* 0x08 */ struct ALSoundState *unk8;
 } ALUnkStruct;
 
-typedef struct ALSoundState {
-  /* 0x00 */ struct ALSoundState *next;
-  /* 0x04 */ struct ALSoundState *prev;
-  /* 0x08 */ struct ALSoundState *unk8;
-  /* 0x0C */ ALVoice     voice;
-  /* 0x28 */ ALSound     *sound;         /* sound referenced here */
-  /* 0x2C */ s16         priority;
-  /* 0x30 */ f32         pitch;          /* current playback pitch                    */
-  /* 0x34 */ s32         state;          /* play state for this sound                 */
-  /* 0x38 */ s16         vol;            /* volume - combined with volume from bank   */
-  /* 0x3A */ ALPan       pan;            /* pan - 0 = left, 127 = right               */
-  /* 0x3C */ u8          fxMix;          /* wet/dry mix - 0 = dry, 127 = wet          */
-  /* 0x3C */ u8 pad3C[2];
-  /* 0x3E */ u8 unk3E;
-} ALSoundState;
+// typedef struct {
+//     u8 pad[0x36];
+//     u8 priority;
+//     u8 pad37[0x7];
+//     u8 flags;
+//     u8 state;
+// } AlMsgUnk400Type_Unk0;
 
 typedef struct unk80004384 {
   /* 0x00 */ struct ALSoundState *next;
@@ -167,7 +159,7 @@ void alSndPNew(audioMgrConfig *c);
 ALMicroTime  _sndpVoiceHandler(void *node);
 void func_8000410C(ALSoundState *state);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
-void func_80004604(AlMsgUnk400Type_Unk0 *sndp, u8 priority);
+void func_80004604(ALSoundState *sndp, u8 priority);
 s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask);
 void sound_stop_all(void);
 void sound_event_update(s32 soundMask, s16 type, u32 volume);
