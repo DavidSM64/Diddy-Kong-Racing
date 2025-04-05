@@ -83,7 +83,7 @@ extern f32 D_80119C60[672];
 extern f32 D_8011A6E0[7][48];
 extern unk8011A6D8 **D_8011A6DC;
 extern unk80119C58 **D_80119C5C;
-//extern void sound_stop(u8 *arg0);
+// extern void sound_stop(u8 *arg0);
 // audioline_reset
 void func_80008174(void) {
     s32 i;

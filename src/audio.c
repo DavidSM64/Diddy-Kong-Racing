@@ -13,7 +13,7 @@
 
 /************ .data ************/
 
-ALCSPlayer *gMusicPlayer = NULL; // Offfical Name: tuneSeqPlayer
+ALCSPlayer *gMusicPlayer = NULL;  // Official Name: tuneSeqPlayer
 ALCSPlayer *gJinglePlayer = NULL; // Official Name: ambientSeqPlayer
 u8 gMusicBaseVolume = 127;
 u8 sfxRelativeVolume = 127;

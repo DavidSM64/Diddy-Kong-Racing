@@ -296,7 +296,7 @@ s32 func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, SoundMask *soundMask) {
 #pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004668.s")
 #endif
 
-/** 
+/**
  * input typing not right (some type of struct)
  * 99% sure this function will clear the audio buffer associated with a given sound mask.
  * Official Name: gsSndpStop
@@ -311,7 +311,7 @@ void sound_stop(AlMsgUnk400Type_Unk0 *sndp) {
         alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &alEvent, 0);
     } else {
         // From JFG
-        //osSyncPrintf("WARNING: Attempt to stop NULL sound aborted\n");
+        // osSyncPrintf("WARNING: Attempt to stop NULL sound aborted\n");
     }
 }
 
