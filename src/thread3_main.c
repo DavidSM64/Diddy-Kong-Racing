@@ -212,7 +212,7 @@ void init_game(void) {
     init_PI_mesg_queue();
     gfxtask_init(&gMainSched);
     audio_init(&gMainSched);
-    func_80008040(); // Should be very similar to allocate_object_model_pools
+    audioline_init();
     sControllerStatus = input_init();
     tex_init_textures();
     allocate_object_model_pools();

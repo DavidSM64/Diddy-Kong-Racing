@@ -4,13 +4,13 @@
 #include "types.h"
 #include "structs.h"
 #include "macros.h"
-#include "save_layout.h"
-#include "src/save_data.h"
 #include "PR/os_cont.h"
 
 /**
  * File contains the struct and macro definitions for the save layout for DKR.
 */
+
+#define NUMBER_OF_SAVE_FILES 3
 
 #define TT_COURSES          \
     unsigned courseAL : 1;  \

@@ -32,11 +32,12 @@ CPP_FLAGS = [
     "-DTARGET_N64",
     "-D_FINALROM",
     "-DNDEBUG",
-    "-DVERSION_us_v1",
+    "-DVERSION_us_v77",
     "-DANTI_TAMPER",
     "-D BUILD_VERSION_STRING=\"2.0G\"",
     "-DM2CTX",
     "-D__sgi",
+    "-DCIC_ID=6103",
     "-U__GNUC__",
 ]
 

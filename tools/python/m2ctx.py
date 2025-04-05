@@ -7,16 +7,16 @@ from pathlib import Path
 script_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = script_dir + "/../../"
 src_dir = root_dir + "src/"
-lib_dir = root_dir + "lib/"
+lib_dir = root_dir + "libultra/"
 
-VERSION = "us_1.0"
+VERSION = "us.v77"
 
-ignoreFiles = ["include/sys/regdef.h"]
+ignoreFiles = ["include/sys/regdef.h", "include/regdef.h", "src/hasm/collision.c", "src/hasm/math_util.c", "src/stacks.c"]
 
 search_folders = ["include/", "src/"]
 
 # Needed for StereoPanMode
-includeFiles = ['lib/src/audio/synstartvoiceparam.h']
+includeFiles = ['libultra/src/audio/synstartvoiceparam.h']
 
 hack_directives_into_singleline = ['DRAW_TABLE_ENTRY', 'DRAW_TABLE_GROUP']
 
@@ -308,7 +308,7 @@ def get_symbols_from_section_text(sectionText):
 
 # Get all the variable symbols of a filename from the dkr.map file.
 def get_variable_symbols_from_map(filename, mapText):
-    sectionSearch = "build/" + VERSION + "/" + filename[:-2] + ".o"
+    sectionSearch = "build/" + filename[:-2] + ".c.o"
 
     bssSectionText = get_map_section_text(mapText, sectionSearch + "(.bss)")
     dataSectionText = get_map_section_text(mapText, sectionSearch + "(.data)")
@@ -348,7 +348,7 @@ def collect_variables(filename, filetext, mapText, data):
 # Loads the dkr.map file from the build folder.
 def load_map():
     try:
-        return open(root_dir + "/build/" + VERSION + "/dkr.map", "r").read()
+        return open(root_dir + "/build/dkr." + VERSION + ".map", "r").read()
     except FileNotFoundError:
         print("Error: dkr.map could not be found. Please build the rom first, then run this script.")
         exit() 
@@ -468,7 +468,7 @@ def write_output_variables(variables):
 # Preprocess everything, since mips2c doesn't like the preprocessor.
 def preprocess_all(directivesText):
     open("__temp.c", "w").write(directivesText)
-    cpp_command = ["gcc", "-E", "-P", "-undef", "-D_LANGUAGE_C", "-D__sgi", "-DNON_MATCHING", "-D_Static_assert(x, y)=", "-D__attribute__(x)=", "__temp.c"]
+    cpp_command = ["gcc", "-E", "-P", "-undef", "-DBUILD_VERSION=4", "-DVERSION_us_v77", "-D_LANGUAGE_C", "-D__sgi", "-DNON_MATCHING", "-D_Static_assert(x, y)=", "-D__attribute__(x)=", "__temp.c"]
     out = subprocess.check_output(cpp_command, cwd=root_dir, encoding="utf-8")
     os.remove("__temp.c")
     return out
@@ -476,7 +476,7 @@ def preprocess_all(directivesText):
 # Preprocess everything but the #defines.
 def preprocess_directives(directivesText):
     open("__temp.c", "w").write(directivesText)
-    cpp_command = ["gcc", "-E", "-P", "-fdirectives-only", "-undef", "-D_LANGUAGE_C", "-D__sgi", "-DNON_MATCHING", "-D_Static_assert(x, y)=", "-D__attribute__(x)=", "__temp.c"]
+    cpp_command = ["gcc", "-E", "-P", "-fdirectives-only", "-undef", "-DBUILD_VERSION=4", "-DVERSION_us_v77", "-D_LANGUAGE_C", "-D__sgi", "-DNON_MATCHING", "-D_Static_assert(x, y)=", "-D__attribute__(x)=", "__temp.c"]
     out = subprocess.check_output(cpp_command, cwd=root_dir, encoding="utf-8")
     os.remove("__temp.c")
     return out

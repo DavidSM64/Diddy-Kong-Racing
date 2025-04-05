@@ -486,6 +486,7 @@ enum AL_MIDIstatus {
 
 enum AL_MIDIctrl {
     AL_MIDI_VOLUME_CTRL         = 0x07,
+    AL_MIDI_UNK_8               = 0x08,
     AL_MIDI_PAN_CTRL            = 0x0A,
     AL_MIDI_PRIORITY_CTRL       = 0x10, /* use general purpose controller for priority */
     AL_MIDI_FX_CTRL_0           = 0x14,
@@ -591,6 +592,28 @@ typedef struct {
     u8                         chan;
 } ALOscEvent;
 
+typedef struct ALSoundState {
+    /* 0x00 */ struct ALSoundState *next;
+    /* 0x04 */ struct ALSoundState *prev;
+    /* 0x08 */ struct ALSoundState *unk8;
+    /* 0x0C */ ALVoice     voice;
+    /* 0x28 */ ALSound     *sound;         /* sound referenced here */
+    /* 0x2C */ s16         priority;
+    /* 0x30 */ f32         pitch;          /* current playback pitch                    */
+    /* 0x34 */ u8          pad34[0x2];
+    /* 0x34 */ u8          soundPriority;
+    /* 0x38 */ s16         vol;            /* volume - combined with volume from bank   */
+    /* 0x3A */ ALPan       pan;            /* pan - 0 = left, 127 = right               */
+    /* 0x3C */ u8          fxMix;          /* wet/dry mix - 0 = dry, 127 = wet          */
+    /* 0x3C */ u8 pad3C[2];
+    /* 0x3E */ u8 flags;
+    /* 0x3F */ u8 soundState;
+  } ALSoundState;
+
+typedef struct {
+    ALSoundState *soundState;
+} ALSoundEvent;
+
 typedef struct {
     s16                 	type;
     union {
@@ -601,10 +624,11 @@ typedef struct {
         ALVolumeEvent   	vol;
         ALSeqpLoopEvent 	loop;
         ALSeqpVolEvent  	spvol;
-	ALSeqpPriorityEvent	sppriority;
-	ALSeqpSeqEvent		spseq;
-	ALSeqpBankEvent		spbank;
+        ALSeqpPriorityEvent	sppriority;
+        ALSeqpSeqEvent		spseq;
+        ALSeqpBankEvent		spbank;
         ALOscEvent      	osc;
+        ALSoundEvent        sndpevent;
     } msg;
 } ALEvent;
 
