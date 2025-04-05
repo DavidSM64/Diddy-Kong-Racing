@@ -25,7 +25,7 @@ fi
 grep -rl "$1" asm/**/*.s src/**/*.{c,h} lib/**/*.{c,s} include/*.h undefined_syms.txt dkr.ld | xargs sed -i "s/\b$1\b/$2/g"
 
 # Rename filenames & directories.
-python3 ./tools/python/rename_file.py "$1" "$2"
+.venv/bin/python3 ./tools/python/rename_file.py "$1" "$2"
 
 # This removes all the .o files that use the old name.
 grep -rl "$1" build/**/*.o | xargs rm
