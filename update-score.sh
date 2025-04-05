@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-export NEW_SCORE="$(python3 ./tools/python/score.py)"
-export NEW_SCORE_SUMMARY="$(python3 ./tools/python/score.py --summary)"
+export NEW_SCORE="$(.venv/bin/python3 ./tools/python/score.py)"
+export NEW_SCORE_SUMMARY="$(.venv/bin/python3 ./tools/python/score.py --summary)"
 
-python3 - <<'EOF' > README.md.tmp
+.venv/bin/python3 - <<'EOF' > README.md.tmp
 import sys
 import os
 import re
