@@ -49,6 +49,7 @@ void set_sound_channel_count(s32 numChannels) {
 
 /**
  * Initialise a sound player and ready it for use with the sound event system.
+ * Official Name: gsSndpNew
  */
 void alSndPNew(audioMgrConfig *c) {
     u32 i;
@@ -169,6 +170,9 @@ static void _removeEvents(ALEventQueue *evtq, ALSoundState *state, u16 eventType
     osSetIntMask(mask);
 }
 
+/**
+ * Official Name: getSoundStateCounts
+ */
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     OSIntMask mask;
     u16 freeListNextIndex;
@@ -207,7 +211,7 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
 
 // This function is full of names like next / prev that I made up based on other funcs.
 // It's in no way guaranteed to be correct.
-// I"m really not even sure what it's supposed to be returning as a type.
+// I'm really not even sure what it's supposed to be returning as a type.
 ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
     s32 temp;
     ALKeyMap *temp_a2;
@@ -260,17 +264,24 @@ ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004520.s")
 
-void func_80004604(u8 *arg0, u8 arg1) {
-    if (arg0) {
-        arg0[0x36] = arg1;
+/**
+ * Official Name: gsSndpSetPriority
+ */
+void func_80004604(AlMsgUnk400Type_Unk0 *sndp, u8 priority) {
+    if (sndp != NULL) {
+        sndp->priority = priority;
     }
 }
 
-UNUSED u8 func_8000461C(u8 *arg0) {
-    if (arg0) {
-        return arg0[0x3F];
+/**
+ * Official Name: gsSndpGetState
+ */
+UNUSED u8 func_8000461C(AlMsgUnk400Type_Unk0 *sndp) {
+    if (sndp != NULL) {
+        return sndp->state;
+    } else {
+        return 0;
     }
-    return 0;
 }
 
 s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask) {
@@ -285,16 +296,22 @@ s32 func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, SoundMask *soundMask) {
 #pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004668.s")
 #endif
 
-// input typing not right (some type of struct)
-//  99% sure this function will clear the audio buffer associated with a given sound mask.
-void sound_stop(u8 *arg0) {
-    ALEvent sp_18;
-    sp_18.type = 1024;
-    //((u32 *)(&sp_18))[1] = (u32)arg0;
-    sp_18.msg.osc.vs = (ALVoiceState *) arg0; // Not really a voice state, but not sure what else it is.
-    if (arg0) {
-        arg0[0x3e] &= ~(1 << 4);
-        alEvtqPostEvent(&(gAlSndPlayerPtr->evtq), &sp_18, 0);
+/** 
+ * input typing not right (some type of struct)
+ * 99% sure this function will clear the audio buffer associated with a given sound mask.
+ * Official Name: gsSndpStop
+ */
+void sound_stop(AlMsgUnk400Type_Unk0 *sndp) {
+    ALEvent alEvent;
+
+    alEvent.type = 0x400; // Could be a custom Rare event type.
+    alEvent.msg.unk.unk0 = sndp;
+    if (sndp != NULL) {
+        sndp->flags &= ~(1 << 4);
+        alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &alEvent, 0);
+    } else {
+        // From JFG
+        //osSyncPrintf("WARNING: Attempt to stop NULL sound aborted\n");
     }
 }
 

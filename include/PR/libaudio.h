@@ -486,6 +486,7 @@ enum AL_MIDIstatus {
 
 enum AL_MIDIctrl {
     AL_MIDI_VOLUME_CTRL         = 0x07,
+    AL_MIDI_UNK_8               = 0x08,
     AL_MIDI_PAN_CTRL            = 0x0A,
     AL_MIDI_PRIORITY_CTRL       = 0x10, /* use general purpose controller for priority */
     AL_MIDI_FX_CTRL_0           = 0x14,
@@ -592,6 +593,18 @@ typedef struct {
 } ALOscEvent;
 
 typedef struct {
+    u8 pad[0x36];
+    u8 priority;
+    u8 pad37[0x7];
+    u8 flags;
+    u8 state;
+} AlMsgUnk400Type_Unk0;
+
+typedef struct {
+    AlMsgUnk400Type_Unk0 *unk0;
+} AlMsgUnk400Type;
+
+typedef struct {
     s16                 	type;
     union {
         ALMIDIEvent     	midi;
@@ -605,6 +618,7 @@ typedef struct {
 	ALSeqpSeqEvent		spseq;
 	ALSeqpBankEvent		spbank;
         ALOscEvent      	osc;
+        AlMsgUnk400Type            unk;
     } msg;
 } ALEvent;
 

@@ -13,8 +13,8 @@
 
 /************ .data ************/
 
-ALCSPlayer *gMusicPlayer = NULL;
-ALCSPlayer *gJinglePlayer = NULL;
+ALCSPlayer *gMusicPlayer = NULL; // Offfical Name: tuneSeqPlayer
+ALCSPlayer *gJinglePlayer = NULL; // Official Name: ambientSeqPlayer
 u8 gMusicBaseVolume = 127;
 u8 sfxRelativeVolume = 127;
 u8 gCanPlayMusic = TRUE;
@@ -650,6 +650,7 @@ u8 music_can_play(void) {
 
 /**
  * Stops the currently playing jingle.
+ * Official Name: amAmbientStop
  */
 void music_jingle_stop(void) {
     if (music_jingle_playing() == SEQUENCE_NONE) {
@@ -757,6 +758,7 @@ void music_jingle_play(u8 seqID) {
 
 /**
  * If there's a jingle playing, return that, otherwise, return 0.
+ * Official Name: amDittyPlaying
  */
 u32 music_jingle_playing(void) {
     if (gCurrentJingleID && gCanPlayJingle && (gJinglePlayer->state == AL_PLAYING)) {

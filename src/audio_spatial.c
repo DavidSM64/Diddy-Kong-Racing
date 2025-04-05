@@ -63,6 +63,7 @@ void audioline_init(void) {
 
 /**
  * Stop any playing jingles, then block audio lines from playing anymore.
+ * Official Name: amAmbientPause
  */
 void audioline_off(void) {
     music_jingle_stop();
@@ -71,6 +72,7 @@ void audioline_off(void) {
 
 /**
  * Allow audio lines to play jingles.
+ * Official Name: amAmbientRestart
  */
 void audioline_on(void) {
     gAudioLinesOff = FALSE;
@@ -94,7 +96,7 @@ void func_80008174(void) {
     gFreeMasks--;
 
     for (i = 0; i < gUsedMasks; i++) {
-        sound = gSoundMaskHeapUsed[i]->unk18;
+        sound = (u8 *) gSoundMaskHeapUsed[i]->unk18;
         gSoundMaskHeapUsed[i]->unk12 = 0;
         if (sound != NULL) {
             sound_stop(sound);
@@ -136,26 +138,30 @@ void func_80008174(void) {
 #endif
 
 // audioline_ambient
+// Official Name: amPlayAudioMap
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80008438.s")
 
-s32 func_800090C0(f32 arg0, f32 arg1, s32 arg2) {
+/**
+ * Official Name: amCalcSfxStereo
+ */
+s32 func_800090C0(f32 x, f32 z, s32 yRot) {
     s32 temp_v1;
     s32 ret;
     f32 sp1C;
 
-    sp1C = sqrtf((arg0 * arg0) + (arg1 * arg1));
-    temp_v1 = 0xFFFF - arctan2_f(arg0, arg1);
+    sp1C = sqrtf((x * x) + (z * z));
+    temp_v1 = 0xFFFF - arctan2_f(x, z);
 
-    if (temp_v1 < arg2) {
+    if (temp_v1 < yRot) {
         if (sp1C <= 1.0f) {
-            ret = 64 - ((sins_s16(arg2 - temp_v1) / 1024) * (sp1C * 1));
+            ret = 64 - ((sins_s16(yRot - temp_v1) / 1024) * (sp1C * 1));
         } else {
-            ret = 64 - (sins_2(arg2 - temp_v1) / 1024);
+            ret = 64 - (sins_2(yRot - temp_v1) / 1024);
         }
     } else if (sp1C <= 1.0f) {
-        ret = (sins_s16(temp_v1 - arg2) / 1024) * (sp1C * 1) + 64;
+        ret = (sins_s16(temp_v1 - yRot) / 1024) * (sp1C * 1) + 64;
     } else {
-        ret = (sins_2(temp_v1 - arg2) / 1024) + 64;
+        ret = (sins_2(temp_v1 - yRot) / 1024) + 64;
     }
 
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
@@ -241,10 +247,13 @@ void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z) {
     arg0->pos.z = z;
 }
 
-void func_800096F8(SoundMask *arg0) {
+/**
+ * Official Name: amSndStopXYZ
+ */
+void func_800096F8(SoundMask *soundMask) {
     s32 i;
     for (i = 0; i < SOUND_MASK_HEAP_COUNT; i++) {
-        if (arg0 == gSoundMaskHeapUsed[i]) {
+        if (soundMask == gSoundMaskHeapUsed[i]) {
             func_8000A2E8(i);
             break;
         }
