@@ -12,7 +12,7 @@
 /************ .data ************/
 
 f32 *D_800E3040 = NULL;
-s16 *D_800E3044 = NULL;
+Vec2s *D_800E3044 = NULL;
 s32 *D_800E3048 = NULL;
 f32 *D_800E304C[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
@@ -117,12 +117,9 @@ typedef struct unk8012A5E8 {
     s16 unk4;
     s16 unk6;
     s32 unk8;
-    s16 unkC;
 } unk8012A5E8;
 
-unk8012A5E8 *D_8012A5E8;
-UNUSED s32 D_8012A5EC;
-UNUSED s32 D_8012A5F0;
+unk8012A5E8 D_8012A5E8[1];
 s16 D_8012A5F4;
 UNUSED s32 D_8012A5F8;
 UNUSED s32 D_8012A5FC;
@@ -172,7 +169,7 @@ void wave_init(void) {
 
     free_waves();
     D_800E3040 = (f32 *) mempool_alloc_safe(D_80129FC8.unk20 << 2, COLOUR_TAG_CYAN);
-    D_800E3044 = (s16 *) mempool_alloc_safe((D_80129FC8.unk4 << 2) * D_80129FC8.unk4, COLOUR_TAG_CYAN);
+    D_800E3044 = (Vec2s *) mempool_alloc_safe((D_80129FC8.unk4 << 2) * D_80129FC8.unk4, COLOUR_TAG_CYAN);
     D_800E3048 = (s32 *) mempool_alloc_safe(((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1), COLOUR_TAG_CYAN);
     allocSize = ((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1);
     D_800E304C[0] = mempool_alloc_safe(allocSize * ARRAY_COUNT(D_800E304C), COLOUR_TAG_CYAN);
@@ -290,8 +287,8 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
     if (D_80129FC8.unk4 > 0) {
         for (i = 0; i < D_80129FC8.unk4; i++) {
             for (var_s0 = 0; var_s0 < D_80129FC8.unk4; var_s0++) {
-                D_800E3044[(var_s0 * 2)] = get_random_number_from_range(0, D_80129FC8.unk20 - 1);
-                D_800E3044[(var_s0 * 2) + 1] = get_random_number_from_range(0, D_80129FC8.unk20 - 1);
+                D_800E3044[var_s0].s[0] = get_random_number_from_range(0, D_80129FC8.unk20 - 1);
+                D_800E3044[var_s0].s[1] = get_random_number_from_range(0, D_80129FC8.unk20 - 1);
             }
         }
     }
@@ -438,7 +435,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
     // possible fake:
     xPosRatio = (xPosition - D_8012A0D0) / gWaveBoundingBoxDiffX;
     zPosRatio = (zPosition - D_8012A0D4) / gWaveBoundingBoxDiffZ;
-    D_8012A5E8 = -1;
+    D_8012A5E8[0].unk0 = -1;
     D_8012A5F4 = -1;
 
     // This is incorrect because the assembly compares
@@ -581,7 +578,103 @@ s32 func_800B9228(LevelModelSegment *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800B92F4.s")
+void func_800B92F4(s32 arg0, s32 arg1) {
+    s32 i;
+    s32 var_s2;
+    s32 j;
+    f32 temp_f22;
+    f32 var_f20;
+    s32 sp98;
+    s32 var_v0;
+    s32 sp90;
+    s32 sp8C;
+    s32 sp88;
+    s32 sp84;
+    s32 var_v1;
+    s32 vertexIdx;
+    s32 var_s1;
+    s32 k;
+    Vertex *vertices;
+    LevelModel_Alternate *sp6C;
+
+    temp_f22 = (1.0f - D_80129FC8.unk44) / 255.0f;
+    sp6C = &D_800E30D8[arg0];
+    sp90 = (D_80129FC8.unk0 + 1) * (D_80129FC8.unk0 + 1);
+    for (k = 0; D_8012A5E8[k].unk0 != -1; k++) {
+        if (arg0 == D_8012A5E8[k].unk0) {
+            if (D_80129FC8.unk28 != 0) {
+                sp98 = (((u32) D_800E30D4[sp6C->unkC] >> (D_8012A5E8[k].unk2 * 8)) & 0xFF) - 1;
+                sp8C = (D_8012A5E8[k].unk2 & 1) * D_80129FC8.unk0;
+                sp88 = ((D_8012A5E8[k].unk2 & 2) >> 1) * D_80129FC8.unk0;
+            } else {
+                sp98 = (D_800E30D4[sp6C->unkC] & 0xFF) - 1;
+                sp8C = 0;
+                sp88 = 0;
+            }
+            sp84 = D_8012A5E8[k].unk6;
+            vertices = &D_800E3070[D_8012A018 + arg1][sp90 * sp98];
+            sp98 = D_800E30E4[sp98];
+            vertexIdx = 0;
+            for (i = 0; i <= D_80129FC8.unk0; i++) {
+                var_s1 = D_8012A5E8[k].unk4;
+                var_s2 = (sp84 * D_80129FC8.unk4) + var_s1;
+                for (j = 0; j <= D_80129FC8.unk0; j++) {
+                    var_f20 = (D_800E3040[D_800E3044[var_s2].s[0]] + D_800E3040[D_800E3044[var_s2].s[1]]) * D_80129FC8.magnitude;
+                    if (D_800E3188 > 0) {
+                        var_f20 += func_800BEFC4(arg0, j + sp8C, i + sp88);
+                    }
+                    var_f20 *= D_800E304C[sp98][vertexIdx];
+                    var_v0 = ((u8 *)((s32)D_800E3178 + D_8012A5E8[k].unk8))[0];
+                    
+                    // clang-format off
+                    var_v0 <<= 1; \
+                    D_8012A5E8[k].unk8++;
+                    // clang-format on
+                    if (var_v0 < 0xFF) {
+                        var_f20 *= D_80129FC8.unk44 + ((f32) var_v0 * temp_f22);
+                    }
+                    var_v0 += (s32) (var_f20 * D_80129FC8.unk48);
+                    if (var_v0 >= 0x100) {
+                        var_v0 = 0xFF;
+                    } else if (var_v0 < 0) {
+                        var_v0 = 0;
+                    }
+                    var_v0 += ((0xFF - var_v0) * sp6C->unk14[arg1>> 1].unk0[D_8012A5E8[k].unk2]) >> 7;
+                    vertices[vertexIdx].y = var_f20;
+                    if (var_v0 < 0xC0) {
+                        var_v1 = 0xFF;
+                    } else {
+                        var_v1 = ((0xFF - var_v0) * 4) & 0xFF;
+                    }
+                    vertices[vertexIdx].r = var_v1;
+                    vertices[vertexIdx].g = var_v1;
+                    vertices[vertexIdx].b = var_v1;
+                    if (var_v0 < 0x40) {
+                        var_v1 = (var_v0 * 4) & 0xFF;
+                    } else {
+                        var_v1 = 0xFF;
+                    }
+                    vertices[vertexIdx].a = var_v1;
+                    vertexIdx++;
+                    var_s1++;
+                    var_s2++;
+                    if (var_s1 >= D_80129FC8.unk4) {
+                        var_s1 -= D_80129FC8.unk4;
+                        var_s2 -= D_80129FC8.unk4;
+                    }
+                }
+                sp84++;
+                if (sp84 >= D_80129FC8.unk4) {
+                    sp84 -= D_80129FC8.unk4;
+                }
+                if (D_80129FC8.unk28 != 0) {
+                    D_8012A5E8[k].unk8 += D_80129FC8.unk0;
+                }
+            }
+        }
+    }
+}
+
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800B97A8.s")
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800B9C18.s")
 
