@@ -197,13 +197,12 @@ void func_800B4A08(s32 setting) {
 
 /* Official name: sprintf */
 UNUSED int sprintf(char *s, const char *format, ...) {
+    s32 ret;
     va_list args;
     va_start(args, format);
-    vsprintf(s, format, args);
+    ret = vsprintf(s, format, args);
     va_end(args);
-#ifdef AVOID_UB
-    return 0;
-#endif
+    return ret;
 }
 
 // Official Name: vsprintf

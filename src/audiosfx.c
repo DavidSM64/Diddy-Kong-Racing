@@ -49,6 +49,7 @@ void set_sound_channel_count(s32 numChannels) {
 
 /**
  * Initialise a sound player and ready it for use with the sound event system.
+ * Official Name: gsSndpNew
  */
 void alSndPNew(audioMgrConfig *c) {
     u32 i;
@@ -121,7 +122,7 @@ ALMicroTime _sndpVoiceHandler(void *node) {
 #pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/_handleEvent.s")
 
 void func_8000410C(ALSoundState *state) {
-    if (state->unk3E & 4) {
+    if (state->flags & AL_SNDP_PAN_EVT) {
         alSynStopVoice(gAlSndPlayerPtr->drvr, &state->voice);
         alSynFreeVoice(gAlSndPlayerPtr->drvr, &state->voice);
     }
@@ -169,6 +170,9 @@ static void _removeEvents(ALEventQueue *evtq, ALSoundState *state, u16 eventType
     osSetIntMask(mask);
 }
 
+/**
+ * Official Name: getSoundStateCounts
+ */
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     OSIntMask mask;
     u16 freeListNextIndex;
@@ -207,7 +211,7 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
 
 // This function is full of names like next / prev that I made up based on other funcs.
 // It's in no way guaranteed to be correct.
-// I"m really not even sure what it's supposed to be returning as a type.
+// I'm really not even sure what it's supposed to be returning as a type.
 ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
     s32 temp;
     ALKeyMap *temp_a2;
@@ -260,17 +264,24 @@ ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004520.s")
 
-void func_80004604(u8 *arg0, u8 arg1) {
-    if (arg0) {
-        arg0[0x36] = arg1;
+/**
+ * Official Name: gsSndpSetPriority
+ */
+void func_80004604(ALSoundState *sndp, u8 priority) {
+    if (sndp != NULL) {
+        sndp->soundPriority = priority;
     }
 }
 
-UNUSED u8 func_8000461C(u8 *arg0) {
-    if (arg0) {
-        return arg0[0x3F];
+/**
+ * Official Name: gsSndpGetState
+ */
+UNUSED u8 func_8000461C(ALSoundState *sndp) {
+    if (sndp != NULL) {
+        return sndp->soundState;
+    } else {
+        return 0;
     }
-    return 0;
 }
 
 s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask) {
@@ -285,48 +296,61 @@ s32 func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, SoundMask *soundMask) {
 #pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004668.s")
 #endif
 
-// input typing not right (some type of struct)
-//  99% sure this function will clear the audio buffer associated with a given sound mask.
-void sound_stop(u8 *arg0) {
-    ALEvent sp_18;
-    sp_18.type = 1024;
-    //((u32 *)(&sp_18))[1] = (u32)arg0;
-    sp_18.msg.osc.vs = (ALVoiceState *) arg0; // Not really a voice state, but not sure what else it is.
-    if (arg0) {
-        arg0[0x3e] &= ~(1 << 4);
-        alEvtqPostEvent(&(gAlSndPlayerPtr->evtq), &sp_18, 0);
+/**
+ * input typing not right (some type of struct)
+ * 99% sure this function will clear the audio buffer associated with a given sound mask.
+ * Official Name: gsSndpStop
+ */
+void sound_stop(ALSoundState *sndp) {
+    ALEvent alEvent;
+
+    alEvent.type = AL_SNDP_UNK_10_EVT;
+    alEvent.msg.sndpevent.soundState = sndp;
+    if (sndp != NULL) {
+        sndp->flags &= ~AL_SNDP_PITCH_EVT;
+        alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &alEvent, 0);
+    } else {
+        // From JFG
+        // osSyncPrintf("WARNING: Attempt to stop NULL sound aborted\n");
     }
 }
 
 void func_800048D8(u8 event) {
-    u32 intMask;
+    OSIntMask mask;
     ALEvent evt;
     ALSoundState *queue;
 
-    intMask = osSetIntMask(OS_IM_NONE);
+    mask = osSetIntMask(OS_IM_NONE);
     queue = D_800DC6B0.next;
     while (queue != NULL) {
         evt.type = AL_SNDP_UNK_10_EVT;
-        evt.msg.end.ticks = (s32) queue; // TODO: find the correct value for this.
-        if ((queue->unk3E & event) == event) {
-            queue->unk3E &= ~AL_SNDP_PITCH_EVT;
+        evt.msg.sndpevent.soundState = queue;
+        if ((queue->flags & event) == event) {
+            evt.msg.sndpevent.soundState->flags &= ~AL_SNDP_PITCH_EVT;
             alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt, 0);
         }
-        queue = (ALSoundState *) queue->next;
+        queue = queue->next;
     }
-    osSetIntMask(intMask);
+    osSetIntMask(mask);
 }
 
+/**
+ * Official Name: gsSndpStopAll
+ */
 UNUSED void func_80004998(void) {
     func_800048D8(AL_SNDP_PLAY_EVT);
 }
 
+/**
+ * Official Name: gsSndpStopAllRetrigger
+ */
 UNUSED void func_800049B8(void) {
     func_800048D8(AL_SNDP_PLAY_EVT | AL_SNDP_PITCH_EVT);
 }
 
 /**
  * Stops all sounds from playing.
+ * Official Name: gsSndpStopAllLooped
  */
 void sound_stop_all(void) {
     func_800048D8(AL_SNDP_PLAY_EVT | AL_SNDP_STOP_EVT);
@@ -334,14 +358,18 @@ void sound_stop_all(void) {
 
 /**
  * Send a message to the sound player to update an existing property of the sound entry.
+ * Official Name: gsSndpSetParam
  */
 void sound_event_update(s32 soundMask, s16 type, u32 volume) {
     ALEvent2 sndEvt;
     sndEvt.snd_event.type = type;
     sndEvt.snd_event.state = (void *) soundMask;
     sndEvt.snd_event.param = volume;
-    if (soundMask) {
-        alEvtqPostEvent(&(gAlSndPlayerPtr->evtq), (ALEvent *) &sndEvt, 0);
+    if (soundMask != NULL) {
+        alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &sndEvt, 0);
+    } else {
+        // From JFG
+        // osSyncPrintf("WARNING: Attempt to modify NULL sound aborted\n");
     }
 }
 
