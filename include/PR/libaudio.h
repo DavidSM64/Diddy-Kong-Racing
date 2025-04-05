@@ -611,8 +611,8 @@ typedef struct ALSoundState {
   } ALSoundState;
 
 typedef struct {
-    ALSoundState *unk0;
-} AlMsgUnk400Type;
+    ALSoundState *soundState;
+} ALSoundEvent;
 
 typedef struct {
     s16                 	type;
@@ -624,11 +624,11 @@ typedef struct {
         ALVolumeEvent   	vol;
         ALSeqpLoopEvent 	loop;
         ALSeqpVolEvent  	spvol;
-	ALSeqpPriorityEvent	sppriority;
-	ALSeqpSeqEvent		spseq;
-	ALSeqpBankEvent		spbank;
+        ALSeqpPriorityEvent	sppriority;
+        ALSeqpSeqEvent		spseq;
+        ALSeqpBankEvent		spbank;
         ALOscEvent      	osc;
-        AlMsgUnk400Type            unk;
+        ALSoundEvent        sndpevent;
     } msg;
 } ALEvent;
 

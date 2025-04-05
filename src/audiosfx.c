@@ -305,7 +305,7 @@ void sound_stop(ALSoundState *sndp) {
     ALEvent alEvent;
 
     alEvent.type = AL_SNDP_UNK_10_EVT;
-    alEvent.msg.unk.unk0 = sndp;
+    alEvent.msg.sndpevent.soundState = sndp;
     if (sndp != NULL) {
         sndp->flags &= ~AL_SNDP_PITCH_EVT;
         alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &alEvent, 0);
@@ -324,9 +324,9 @@ void func_800048D8(u8 event) {
     queue = D_800DC6B0.next;
     while (queue != NULL) {
         evt.type = AL_SNDP_UNK_10_EVT;
-        evt.msg.unk.unk0 = queue;
+        evt.msg.sndpevent.soundState = queue;
         if ((queue->flags & event) == event) {
-            evt.msg.unk.unk0->flags &= ~AL_SNDP_PITCH_EVT;
+            evt.msg.sndpevent.soundState->flags &= ~AL_SNDP_PITCH_EVT;
             alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt, 0);
         }
         queue = queue->next;
@@ -334,16 +334,23 @@ void func_800048D8(u8 event) {
     osSetIntMask(mask);
 }
 
+/**
+ * Official Name: gsSndpStopAll
+ */
 UNUSED void func_80004998(void) {
     func_800048D8(AL_SNDP_PLAY_EVT);
 }
 
+/**
+ * Official Name: gsSndpStopAllRetrigger
+ */
 UNUSED void func_800049B8(void) {
     func_800048D8(AL_SNDP_PLAY_EVT | AL_SNDP_PITCH_EVT);
 }
 
 /**
  * Stops all sounds from playing.
+ * Official Name: gsSndpStopAllLooped
  */
 void sound_stop_all(void) {
     func_800048D8(AL_SNDP_PLAY_EVT | AL_SNDP_STOP_EVT);
@@ -351,14 +358,18 @@ void sound_stop_all(void) {
 
 /**
  * Send a message to the sound player to update an existing property of the sound entry.
+ * Official Name: gsSndpSetParam
  */
 void sound_event_update(s32 soundMask, s16 type, u32 volume) {
     ALEvent2 sndEvt;
     sndEvt.snd_event.type = type;
     sndEvt.snd_event.state = (void *) soundMask;
     sndEvt.snd_event.param = volume;
-    if (soundMask) {
-        alEvtqPostEvent(&(gAlSndPlayerPtr->evtq), (ALEvent *) &sndEvt, 0);
+    if (soundMask != NULL) {
+        alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &sndEvt, 0);
+    } else {
+        // From JFG
+        // osSyncPrintf("WARNING: Attempt to modify NULL sound aborted\n");
     }
 }
 
