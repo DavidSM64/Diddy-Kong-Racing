@@ -83,8 +83,13 @@ class DkrMapFile:
                         lineSet = 18
                     if (lineSet != 0):
                         if '=' in line:
-                            line = line[0:line.find('=')-1]
-                        address = int(line[lineSet:lineSet+8], 16)
+                            line = line[0:line.find('=') - 1]
+                        try:
+                            address = int(line[lineSet:lineSet+8], 16)
+                        except ValueError:
+                            # no or incorrect address, skip
+                            continue
+
                         if address >= CODE_START and address < CODE_END:
                             symbol = line[line.rfind(' ')+1:]
                             if (not symbol.startswith(".L") and not symbol.startswith("L800") 
