@@ -134,7 +134,7 @@ void wave_init(void);
 
 Object_64 *func_800BE654(s16, f32, f32); // Non Matching
 void func_800BBF78(LevelModel *arg0); // Non Matching
-f32 func_800BB2F4(s32, f32, f32, f32*);
+f32 func_800BB2F4(s32, f32, f32, Vec3f *);
 void func_800B8C04(s32, s32, s32, s32, s32);
 void func_800BF524(Object *);
 f32 func_800BEFC4(s32, s32, s32);
