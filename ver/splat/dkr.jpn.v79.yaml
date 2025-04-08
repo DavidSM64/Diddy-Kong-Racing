@@ -386,6 +386,7 @@ segments:
       - { type: .bss, vram: 0x80117A00, name: audiomgr }
       - { type: .bss, vram: 0x8011B640, name: audiosfx }
       - { type: .bss, vram: 0x8011B6A0, name: audio_vehicle }
+      - { type: .bss, vram: 0x8011B6B0, name: audio_spatial }
       - { type: .bss, vram: 0x8011C690, name: objects }
       - { type: .bss, vram: 0x8011CB10, name: tracks }
       - { type: .bss, vram: 0x8011EF30, name: lights }

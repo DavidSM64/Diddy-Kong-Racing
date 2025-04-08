@@ -189,15 +189,15 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     nextAllocList = queue->unk8;
     prevFreeList = queue->prev;
 
-    for (freeListNextIndex = 0; nextFreeList != 0; freeListNextIndex++) {
+    for (freeListNextIndex = 0; nextFreeList != NULL; freeListNextIndex++) {
         nextFreeList = nextFreeList->next;
     }
 
-    for (allocListNextIndex = 0; nextAllocList != 0; allocListNextIndex++) {
+    for (allocListNextIndex = 0; nextAllocList != NULL; allocListNextIndex++) {
         nextAllocList = nextAllocList->next;
     }
 
-    for (freeListLastIndex = 0; prevFreeList != 0; freeListLastIndex++) {
+    for (freeListLastIndex = 0; prevFreeList != NULL; freeListLastIndex++) {
         prevFreeList = prevFreeList->prev;
     }
 
