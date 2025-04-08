@@ -38,36 +38,32 @@ extern s8 gAudioLinesOff;
 extern SoundData *D_80119C40;
 extern unk80119C58 D_80119C58[];
 extern unk8011A6D8 D_8011A6D8[];
+extern SoundMask *gSoundMaskHeap;
+
+#define SOUND_MASK_HEAP_COUNT 40
 
 /*******************************/
 
-#ifdef NON_EQUIVALENT
-// audioline_init
-void func_80008040(void) {
-    s32 var_v0;
+void audioline_init(void) {
+    s32 i;
 
     sound_table_properties(&D_80119C40, NULL, NULL);
-    gSoundMaskHeap = mempool_alloc_safe(0x5A0, COLOUR_TAG_CYAN);
-    gSoundMaskHeapFree = mempool_alloc_safe(0xA0, COLOUR_TAG_CYAN);
-    gSoundMaskHeapUsed = mempool_alloc_safe(0xA0, COLOUR_TAG_CYAN);
+    gSoundMaskHeap = mempool_alloc_safe(sizeof(SoundMask) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
+    gSoundMaskHeapFree = mempool_alloc_safe(sizeof(uintptr_t) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
+    gSoundMaskHeapUsed = mempool_alloc_safe(sizeof(uintptr_t) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
     gUsedMasks = 0;
-    for (var_v0 = 0; var_v0 < 7; var_v0++) {
-        D_80119C58[var_v0].unk4 = NULL;
+    for (i = 0; i < 7; i++) {
+        D_80119C58[i].unk178 = NULL;
     }
-    for (var_v0 = 0; var_v0 < 10; var_v0++) {
-        gSoundMaskHeap[var_v0]->unk18 = 0;
-        gSoundMaskHeap[var_v0]->unk3C = 0;
-        gSoundMaskHeap[var_v0]->unk60 = 0;
-        gSoundMaskHeap[var_v0]->unk84 = 0;
+    for (i = 0; i < SOUND_MASK_HEAP_COUNT; i++) {
+        gSoundMaskHeap[i].unk18 = 0;
     }
     func_80008174();
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80008040.s")
-#endif
 
 /**
  * Stop any playing jingles, then block audio lines from playing anymore.
+ * Official Name: amAmbientPause
  */
 void audioline_off(void) {
     music_jingle_stop();
@@ -76,6 +72,7 @@ void audioline_off(void) {
 
 /**
  * Allow audio lines to play jingles.
+ * Official Name: amAmbientRestart
  */
 void audioline_on(void) {
     gAudioLinesOff = FALSE;
@@ -83,22 +80,26 @@ void audioline_on(void) {
 
 #ifdef NON_EQUIVALENT
 extern f32 D_80119C60[672];
-extern f32 D_8011A6E0[336]; //[7][48];
+extern f32 D_8011A6E0[7][48];
 extern unk8011A6D8 **D_8011A6DC;
+extern unk80119C58 **D_80119C5C;
+// extern void sound_stop(u8 *arg0);
 // audioline_reset
 void func_80008174(void) {
     s32 i;
     s32 j;
+    u8 *sound;
 
-    for (gFreeMasks = 0; gFreeMasks < 40; gFreeMasks++) {
-        gSoundMaskHeapFree[gFreeMasks] = (SoundMask *) gSoundMaskHeap[gFreeMasks];
+    for (gFreeMasks = 0; gFreeMasks < SOUND_MASK_HEAP_COUNT; gFreeMasks++) {
+        gSoundMaskHeapFree[gFreeMasks] = &gSoundMaskHeap[gFreeMasks];
     }
     gFreeMasks--;
 
     for (i = 0; i < gUsedMasks; i++) {
+        sound = (u8 *) gSoundMaskHeapUsed[i]->unk18;
         gSoundMaskHeapUsed[i]->unk12 = 0;
-        if (gSoundMaskHeapUsed[i]->unk18 != NULL) {
-            sound_stop(gSoundMaskHeapUsed[i]->unk18);
+        if (sound != NULL) {
+            sound_stop(sound);
         }
     }
     gUsedMasks = 0;
@@ -114,19 +115,20 @@ void func_80008174(void) {
             D_80119C58[i].unk178 = 0;
         }
         D_80119C58[i].unk17C = -1;
+        D_80119C5C[i]->unk0.unk0_01 = -100000.0f;
 
-        D_80119C60[i] = -100000.0;
+        D_80119C60[i] = -100000.0f;
     }
 
     for (i = 0; i < ARRAY_COUNT(D_8011A6E0); i++) {
         D_8011A6D8[i].unkB8 = -1;
         D_8011A6D8[i].unk0.unk0_01 = 0.0f;
         D_8011A6D8[i].unkBC = 0.0f;
-        D_8011A6DC[i]->unk0.unk0_01 = -100000.0;
-        D_8011A6E0[i] = -100000.0;
-        // for (j = 0; j < ARRAY_COUNT(D_8011A6E0[0]); j++) {
-        //     D_8011A6E0[i][j] = -100000.0;
-        // }
+        D_8011A6DC[i]->unk0.unk0_01 = -100000.0f;
+        D_8011A6E0[i][0] = -100000.0f;
+        for (j = 0; j < ARRAY_COUNT(D_8011A6E0[0]); j++) {
+            D_8011A6E0[i][j] = -100000.0f;
+        }
     }
 
     gAudioLinesOff = 0;
@@ -136,26 +138,30 @@ void func_80008174(void) {
 #endif
 
 // audioline_ambient
+// Official Name: amPlayAudioMap
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80008438.s")
 
-s32 func_800090C0(f32 arg0, f32 arg1, s32 arg2) {
+/**
+ * Official Name: amCalcSfxStereo
+ */
+s32 func_800090C0(f32 x, f32 z, s32 yRot) {
     s32 temp_v1;
     s32 ret;
     f32 sp1C;
 
-    sp1C = sqrtf((arg0 * arg0) + (arg1 * arg1));
-    temp_v1 = 0xFFFF - arctan2_f(arg0, arg1);
+    sp1C = sqrtf((x * x) + (z * z));
+    temp_v1 = 0xFFFF - arctan2_f(x, z);
 
-    if (temp_v1 < arg2) {
+    if (temp_v1 < yRot) {
         if (sp1C <= 1.0f) {
-            ret = 64 - ((sins_s16(arg2 - temp_v1) / 1024) * (sp1C * 1));
+            ret = 64 - ((sins_s16(yRot - temp_v1) / 1024) * (sp1C * 1));
         } else {
-            ret = 64 - (sins_2(arg2 - temp_v1) / 1024);
+            ret = 64 - (sins_2(yRot - temp_v1) / 1024);
         }
     } else if (sp1C <= 1.0f) {
-        ret = (sins_s16(temp_v1 - arg2) / 1024) * (sp1C * 1) + 64;
+        ret = (sins_s16(temp_v1 - yRot) / 1024) * (sp1C * 1) + 64;
     } else {
-        ret = (sins_2(temp_v1 - arg2) / 1024) + 64;
+        ret = (sins_2(temp_v1 - yRot) / 1024) + 64;
     }
 
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
@@ -241,10 +247,13 @@ void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z) {
     arg0->pos.z = z;
 }
 
-void func_800096F8(SoundMask *arg0) {
+/**
+ * Official Name: amSndStopXYZ
+ */
+void func_800096F8(SoundMask *soundMask) {
     s32 i;
-    for (i = 0; i < 40; i++) {
-        if (arg0 == gSoundMaskHeapUsed[i]) {
+    for (i = 0; i < SOUND_MASK_HEAP_COUNT; i++) {
+        if (soundMask == gSoundMaskHeapUsed[i]) {
             func_8000A2E8(i);
             break;
         }
@@ -258,7 +267,7 @@ void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volu
     if (soundMask != NULL) {
         func_800245B4(soundBite | 0xE000);
     }
-    if (gUsedMasks == 40) {
+    if (gUsedMasks == SOUND_MASK_HEAP_COUNT) {
         if (soundMask != NULL) {
             *soundMask = NULL;
         }
@@ -287,27 +296,27 @@ void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volu
 
 void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 arg8, u16 arg9,
                               u8 argA, u8 lineID, u8 argC) {
-    Vec3f *temp_a0;
     unk80119C58 *temp_v1;
+    f32 *temp_a0;
 
-    if ((lineID < 7) && (argC < 30)) {
+    if (lineID < 7 && argC < 30) {
         temp_v1 = &D_80119C58[lineID];
-        temp_a0 = (Vec3f *) (((u32 *) &temp_v1->unk4) + argC * 3); // This can't be right...
-        temp_a0->x = x;
-        temp_a0->y = y;
-        temp_a0->z = z;
+        temp_a0 = &temp_v1->unk4[argC * 3];
+        temp_a0[0] = x;
+        temp_a0[1] = y;
+        temp_a0[2] = z;
         if (argC == 0) {
-            (&D_80119C58[lineID])->soundID = soundId;
-            (&D_80119C58[lineID])->unk0.unk0_02 = arg0;
-            (&D_80119C58[lineID])->unk170 = arg9;
-            (&D_80119C58[lineID])->unk17D = argA;
-            (&D_80119C58[lineID])->unk174 = arg6;
-            (&D_80119C58[lineID])->unk175 = arg5;
-            (&D_80119C58[lineID])->unk176 = arg7;
-            (&D_80119C58[lineID])->unk17E = arg8;
+            temp_v1->soundID = soundId;
+            temp_v1->unk0.unk0_02 = arg0;
+            temp_v1->unk170 = arg9;
+            temp_v1->unk17D = argA;
+            temp_v1->unk174 = arg6;
+            temp_v1->unk175 = arg5;
+            temp_v1->unk176 = arg7;
+            temp_v1->unk17E = arg8;
         }
-        if ((&D_80119C58[lineID])->unk17C < argC) {
-            (&D_80119C58[lineID])->unk17C = argC;
+        if (temp_v1->unk17C < argC) {
+            temp_v1->unk17C = argC;
         }
     }
 }
@@ -537,7 +546,7 @@ void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, floatXYZVal
     temp_verts[3].a = 255;
     temp_verts += 4;
 
-    temp_tris[0].flags = 0x40; // 0x40 = Draw backface.
+    temp_tris[0].flags = BACKFACE_DRAW;
     temp_tris[0].vi0 = 2;
     temp_tris[0].vi1 = 1;
     temp_tris[0].vi2 = 0;
@@ -547,7 +556,7 @@ void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, floatXYZVal
     temp_tris[0].uv1.v = 0;
     temp_tris[0].uv2.u = 1;
     temp_tris[0].uv2.v = 0;
-    temp_tris[1].flags = 0x40;
+    temp_tris[1].flags = BACKFACE_DRAW;
     temp_tris[1].vi0 = 3;
     temp_tris[1].vi1 = 2;
     temp_tris[1].vi2 = 1;

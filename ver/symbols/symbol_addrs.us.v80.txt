@@ -133,7 +133,7 @@ sound_vehicle_check = 0x80007F94;
 func_80007FA4 = 0x80007FA4;
 
 // audio_spatial.c .text
-func_80008040 = 0x80008040;
+audioline_init = 0x80008040;
 audioline_off = 0x80008140;
 audioline_on = 0x80008168;
 func_80008174 = 0x80008174;

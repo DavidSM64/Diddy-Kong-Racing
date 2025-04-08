@@ -5,22 +5,14 @@
 #include "structs.h"
 #include "audio.h"
 
-/* Size: 0x90 / 144 bytes */
-typedef struct unk80119C48 {
-    s32 unk18;
-    s32 unk3C;
-    s32 unk60;
-    s32 unk84;
-} unk80119C48;
-
 /* Size: 0x180 / 384 bytes */
 typedef struct unk80119C58 {
     union {
         /* 0x00 */ f32 unk0_01;
         /* 0x00 */ u8 unk0_02;
+        /* 0x00 */ s32 unk0_03;
     } unk0;
-    /* 0x004 */ Vec3f *unk4;
-    /* 0x008 */ u8 pad9[0x164];
+    /* 0x004 */ f32 unk4[30 * 3]; // Should be a Vec3f, but that just doesn't match
     /* 0x16C */ s32 soundID;
     /* 0x170 */ s32 unk170;
     /* 0x174 */ u8 unk174;
@@ -133,7 +125,6 @@ extern u8 gVehicleSounds;
 extern s32 D_800DC6D8;
 extern s32 D_800DC6DC;
 extern u16 gUsedMasks;
-extern unk80119C48 **gSoundMaskHeap;
 extern SoundMask **gSoundMaskHeapUsed;
 extern SoundMask **gSoundMaskHeapFree;
 extern u8 gFreeMasks;

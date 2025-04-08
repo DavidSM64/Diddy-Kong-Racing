@@ -65,10 +65,16 @@ SYMBOLS_DIR = ver/symbols
 TOOLS_DIR = tools
 
 UNAME_S := $(shell uname -s)
+UNAME_M := $(shell uname -m)
+
 ifeq ($(OS),Windows_NT)
 	$(error Native Windows is currently unsupported for building this repository, use WSL instead c:)
 else ifeq ($(UNAME_S),Linux)
-	DETECTED_OS := linux
+	ifneq ($(filter aarch%,$(UNAME_M)),)
+		DETECTED_OS := linux-arm
+	else
+		DETECTED_OS := linux
+	endif
 else ifeq ($(UNAME_S),Darwin)
 	DETECTED_OS := macos
 endif
@@ -202,7 +208,12 @@ else
 		CHECK_WARNINGS += -Wno-unused-value -Wno-array-bounds -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-variable
 	endif
 endif
-CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -m32 -DAVOID_UB -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
+CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -DAVOID_UB -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
+
+# Only add -m32 for x86_64 machines.
+ifneq ($(filter x86_64%,$(UNAME_M)),)
+	CC_CHECK += -m32
+endif
 
 TARGET     = $(BUILD_DIR)/$(BASENAME).$(REGION).$(VERSION)
 LD_SCRIPT  = ver/$(BASENAME).$(REGION).$(VERSION).ld

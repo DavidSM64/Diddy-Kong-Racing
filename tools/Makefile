@@ -21,9 +21,9 @@ else ifeq ($(UNAME_S),Darwin)
 else ifeq ($(UNAME_S),Linux)
 	DETECTED_OS := linux
 	CXXFLAGS += -Werror -Wall $(IGNORE_W_ERRORS) -lpcre2-8 
-	UNAME_P := $(shell uname -p)
+	UNAME_M := $(shell uname -m)
 # If we detect arm as a platform for linux, but not mac, we'll make this -arm to download that version (Mostly used for raspi)
-	ifneq ($(filter arm%,$(UNAME_P)),)
+	ifneq ($(filter aarch%,$(UNAME_M)),)
 		DETECTED_OS := linux-arm
 	endif
 endif

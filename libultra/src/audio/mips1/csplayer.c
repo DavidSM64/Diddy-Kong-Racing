@@ -711,7 +711,7 @@ void __CSPHandleMIDIMsg(ALCSPlayer_Custom *seqp, ALEvent *event)
                         }
                     }
                     break;
-                case (8):
+                case (AL_MIDI_UNK_8):
                     seqp->chanState[chan].fade = byte2;                        
                     seqp->chanState[chan].vol = (seqp->chanState[chan].unk11 * seqp->chanState[chan].fade) / 127.0f;
 
@@ -770,7 +770,7 @@ void __CSPHandleMIDIMsg(ALCSPlayer_Custom *seqp, ALEvent *event)
                             alSynSetFXMix(seqp->drvr, &vs->voice, byte2);
                     }
                     break;
-                case (0x5F):
+                case (AL_MIDI_UNK_5F):
                     seqp->unk36 = byte2;
                     for (i = 0; i < seqp->maxChannels; i++)
                     {

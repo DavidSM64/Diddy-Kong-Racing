@@ -3,8 +3,11 @@
 
 #include "types.h"
 #include "structs.h"
+#include "save_layout.h"
 #include "PR/os_pfs.h"
 #include "PR/os_cont.h"
+#include "PR/os_libc.h"
+#include "libc/string.h"
 #include "common.h"
 
 #define GAMD 0x47414D44 // 'GAMD' ASCII - Game Data?
@@ -21,8 +24,6 @@
 
 // This is RARE's unique code
 #define COMPANY_CODE 0x3459
-
-#define NUMBER_OF_SAVE_FILES 3
 
 #define MAX_CPAK_FILES 16
 
@@ -116,13 +117,6 @@ typedef struct unk80075000 {
     s32 signature;
     unk80075000_body data[1];
 } unk80075000;
-
-extern s8 *gPakFileList;
-extern u8 gN64FontCodes[68];
-extern s32 gRumbleKillTimer;
-extern OSPfs pfs[MAXCONTROLLERS];
-extern int	bcmp(const void *, const void *, int);
-size_t strlen(const char *str);
 
 u8 input_get_id(s32 controllerIndex);
 void rumble_init(u8 canRumble);

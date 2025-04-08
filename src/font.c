@@ -513,7 +513,7 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
     }
 }
 #else
-void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, enum AlignmentFlags alignmentFlags,
+void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, AlignmentFlags alignmentFlags,
                         f32 scisScale) {
     s32 jpTexS;
     s32 prevFont;

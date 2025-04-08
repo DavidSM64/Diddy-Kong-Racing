@@ -38,7 +38,7 @@ void load_rng_seed(void);
 s32 get_rng_seed(void);
 s32 get_random_number_from_range(s32, s32);
 void f32_matrix_to_s32_matrix(Matrix *input, MatrixS *output);
-void guMtxXFMF(Matrix mf, float x, float y, float z, float *ox, float *oy, float *oz);
+void guMtxXFMF(float mf[4][4], float x, float y, float z, float *ox, float *oy, float *oz);
 void f32_matrix_dot(Matrix *mat1, Matrix *mat2, Matrix *output);
 void f32_matrix_mult(Matrix *mat1, Matrix *mat2, Matrix *output);
 void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output);
