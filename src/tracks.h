@@ -156,7 +156,7 @@ LevelModelSegment *get_segment(s32 segmentID);
 LevelModelSegmentBoundingBox *get_segment_bounding_box(s32 segmentID);
 void func_8002ACC8(s32 arg0);
 s32 func_8002ACD4(f32 *arg0, f32 *arg1, f32 *arg2);
-s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3);
+s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3);
 void func_8002C71C(LevelModelSegment *segment);
 LevelModel *get_current_level_model(void);
 void get_fog_settings(s32 playerID, s16 *near, s16 *far, u8 *r, u8 *g, u8 *b);
