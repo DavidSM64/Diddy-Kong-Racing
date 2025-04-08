@@ -422,7 +422,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
     s32 k;
     s32 var_t4;
     s32 tempXPosRatio;
-    s32 var_t2;
+    u32 var_t2;
     s32 var_v1;
     s32 xPosRatio;
     s32 zPosRatio;
@@ -823,27 +823,27 @@ void func_800BA288(s32 arg0, s32 arg1) {
 f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
     f32 spA4;
     f32 spA0;
-    f32 var_f12; // sp9C
-    f32 var_f2; // sp98
+    f32 var_f12;
+    f32 var_f2;
     f32 sp94;
     f32 sp90;
-    f32 var_f16; // sp8C
-    f32 arg3X; // sp8C
-    f32 arg3Z; // sp84
-    f32 arg3Y; // sp80
+    f32 var_f16;
+    f32 arg3X;
+    f32 arg3Z;
+    f32 arg3Y;
     s32 var_a0;
     f32 sp78;
     s32 var_v0;
     s32 sp70;
     s32 sp6C;
-    s32 var_t0; // sp68
-    s32 var_a3; // sp64
+    s32 var_t0;
+    s32 var_a3;
     s32 sp60;
     u8 *tempD_800E3178;
     s32 sp58;
     s32 pad;
 
-    if ((arg0 < 0) || (arg0 >= D_8012A0E0)) {
+    if (arg0 < 0 || arg0 >= D_8012A0E0) {
         arg0 = 0;
     }
 
@@ -880,19 +880,19 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
     sp6C = arg2 / sp90;
     arg1 -= sp70 * sp94;
     arg2 -= sp6C * sp90;
-    
+
     var_t0 = D_800E30D8[arg0].unk12 + sp70;
     while (var_t0 >= D_80129FC8.unk4) {
         var_t0 -= D_80129FC8.unk4;
     }
-    
+
     var_a3 = D_800E30D8[arg0].unk10 + sp6C;
     while (var_a3 >= D_80129FC8.unk4) {
         var_a3 -= D_80129FC8.unk4;
     }
-    
+
     var_v0 = 0;
-    if ((arg2 != sp90) && (arg1 < (((sp90 - arg2) / sp90) * sp94))) {
+    if (arg2 != sp90 && arg1 < (((sp90 - arg2) / sp90) * sp94)) {
         var_v0 = 1;
     }
 
@@ -920,7 +920,8 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
             var_f12 *= D_80129FC8.unk44 + (var_v0 * var_f16);
         }
 
-        var_a0 = (var_t0 + 1) >= D_80129FC8.unk4 ? var_a3 * D_80129FC8.unk4 : (var_t0 ^ 0) + var_a3 * D_80129FC8.unk4 + 1;
+        var_a0 =
+            (var_t0 + 1) >= D_80129FC8.unk4 ? var_a3 * D_80129FC8.unk4 : (var_t0 + 0) + var_a3 * D_80129FC8.unk4 + 1;
         var_f2 = (D_800E3040[D_800E3044[var_a0].s[0]] + D_800E3040[D_800E3044[var_a0].s[1]]) * D_80129FC8.magnitude;
         if (D_800E3188 > 0) {
             var_f2 += func_800BEFC4(arg0, sp70 + 1, sp6C);
@@ -943,7 +944,8 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
         arg3Z = sp90 * sp94;
         arg3Y = (spA0 - var_f12) * sp94;
     } else {
-        var_a0 = (var_t0 + 1) >= D_80129FC8.unk4 ? var_a3 * D_80129FC8.unk4 : (var_t0 ^ 0) + (var_a3 * D_80129FC8.unk4) + 1;
+        var_a0 =
+            (var_t0 + 1) >= D_80129FC8.unk4 ? var_a3 * D_80129FC8.unk4 : (var_t0 + 0) + (var_a3 * D_80129FC8.unk4) + 1;
         spA0 = (D_800E3040[D_800E3044[var_a0].s[0]] + D_800E3040[D_800E3044[var_a0].s[1]]) * D_80129FC8.magnitude;
         if (D_800E3188 > 0) {
             spA0 += func_800BEFC4(arg0, sp70 + 1, sp6C);
@@ -963,14 +965,14 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
         var_a0 = sp58 + sp70 + ((sp6C + 1) * sp60);
         var_v0 = (tempD_800E3178 = D_800E3178)[var_a0];
         if (var_v0 < 0x7F) {
-          var_f12 *= D_80129FC8.unk44 + (var_v0 * var_f16);
+            var_f12 *= D_80129FC8.unk44 + (var_v0 * var_f16);
         }
 
         var_a0 = (var_t0 + 1) >= D_80129FC8.unk4 ? 0 : (var_t0 + 1);
         if ((var_a3 + 1) < D_80129FC8.unk4) {
-             var_a0 += (var_a3 + 1) * D_80129FC8.unk4;
+            var_a0 += (var_a3 + 1) * D_80129FC8.unk4;
         }
-        
+
         var_f2 = (D_800E3040[D_800E3044[var_a0].s[0]] + D_800E3040[D_800E3044[var_a0].s[1]]) * D_80129FC8.magnitude;
         if (D_800E3188 > 0) {
             var_f2 += func_800BEFC4(arg0, sp70 + 1, sp6C + 1);
@@ -991,7 +993,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
         spA4 = sp94;
         arg3X = sp90 * (var_f12 - var_f2);
         arg3Z = sp90 * sp94;
-        arg3Y =  sp94 * (spA0 - var_f2);
+        arg3Y = sp94 * (spA0 - var_f2);
     }
 
     var_f16 = sqrtf((arg3X * arg3X) + (arg3Z * arg3Z) + (arg3Y * arg3Y));
@@ -1002,7 +1004,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
         sp78 -= (((arg3X * arg1) + (arg3Y * arg2)) - ((spA4 * arg3X) + (spA0 * arg3Z))) / arg3Z;
     }
 
-    if (arg3) {
+    if (arg3 != NULL) {
         arg3->x = arg3X;
         arg3->y = arg3Z;
         arg3->z = arg3Y;
@@ -1010,7 +1012,6 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
 
     return sp78;
 }
-
 
 void func_800BBDDC(LevelModel *level, LevelHeader *header) {
     func_800BBE08(level, (unk800BBE08_arg1 *) header);
