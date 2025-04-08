@@ -1,10 +1,10 @@
 BASENAME  = dkr
 REGION  := us
 VERSION  := v77
-NON_MATCHING ?= 0
+NON_MATCHING ?= 1
 
 # Experimental option for nonmatching builds. GCC may not function identically to ido.
-COMPILER ?= ido
+COMPILER ?= gcc
 $(eval $(call validate-option,NON_MATCHING,ido gcc))
 
 # Define a custom boot file if desired to use something other than the vanilla one
@@ -90,6 +90,9 @@ BIN_FILES       = $(foreach dir,$(BIN_DIRS),$(wildcard $(dir)/*.bin))
 O_FILES := $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(BIN_FILES),$(BUILD_DIR)/$(file).o)
+
+O_FILES_LD := $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
+           	  $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o)
 
 find-command = $(shell which $(1) 2>/dev/null)
 
