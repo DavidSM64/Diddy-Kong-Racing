@@ -40,6 +40,7 @@ segments:
       - [0x3260, c, audiomgr]
       - [0x3D60, c, audiosfx]
       - [0x5740, c, audio_vehicle]
+      - [auto, c, audio_spatial_bss] #bss only file hack
       - [0x8C40, c, audio_spatial]
       - [0xB310, c, ../libultra/src/audio/mips1/seqplayer]
       - [0xBC20, c, objects]
@@ -386,6 +387,7 @@ segments:
       - { type: .bss, vram: 0x80115F90, name: audiomgr }
       - { type: .bss, vram: 0x80119BD0, name: audiosfx }
       - { type: .bss, vram: 0x80119C30, name: audio_vehicle }
+      - { type: .bss, vram: 0x80119C40, name: audio_spatial_bss }
       - { type: .bss, vram: 0x8011AC20, name: objects }
       - { type: .bss, vram: 0x8011B0A0, name: tracks }
       - { type: .bss, vram: 0x8011D4C0, name: lights }
