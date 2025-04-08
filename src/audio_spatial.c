@@ -41,9 +41,7 @@ u8 gFreeMasks;
 SoundMask **gSoundMaskHeapFree;
 s32 D_80119C54;           // Padding?
 unk80119C58 D_80119C58[7];
-unk8011A6D8 *D_8011A6D8;  // unk8011A6D8[] | Reverb stuff
-unk8011A6D8 **D_8011A6DC; // Struct of size 0xC0
-f32 D_8011A6E0[334];
+unk8011A6D8 D_8011A6D8[7];  // Reverb stuff
 s8 gAudioLinesOff;
 s32 D_8011AC1C;
 
@@ -86,60 +84,60 @@ void audioline_on(void) {
 }
 
 #ifdef NON_EQUIVALENT
-// //extern f32 D_80119C60[672];
-// //extern f32 D_8011A6E0[7][48];
-// extern unk8011A6D8 **D_8011A6DC;
-// extern unk80119C58 **D_80119C5C;
-// // extern void sound_stop(u8 *arg0);
-// // audioline_reset
-// void func_80008174(void) {
-//     s32 i;
-//     s32 j;
-//     u8 *sound;
+//extern f32 D_80119C60[672];
+//extern f32 D_8011A6E0[7][48];
+extern unk8011A6D8 **D_8011A6DC;
+extern unk80119C58 **D_80119C5C;
+// extern void sound_stop(u8 *arg0);
+// audioline_reset
+void func_80008174(void) {
+    s32 i;
+    s32 j;
+    u8 *sound;
 
-//     for (gFreeMasks = 0; gFreeMasks < SOUND_MASK_HEAP_COUNT; gFreeMasks++) {
-//         gSoundMaskHeapFree[gFreeMasks] = &gSoundMaskHeap[gFreeMasks];
-//     }
-//     gFreeMasks--;
+    for (gFreeMasks = 0; gFreeMasks < SOUND_MASK_HEAP_COUNT; gFreeMasks++) {
+        gSoundMaskHeapFree[gFreeMasks] = &gSoundMaskHeap[gFreeMasks];
+    }
+    gFreeMasks--;
 
-//     for (i = 0; i < gUsedMasks; i++) {
-//         sound = (u8 *) gSoundMaskHeapUsed[i]->unk18;
-//         gSoundMaskHeapUsed[i]->unk12 = 0;
-//         if (sound != NULL) {
-//             sound_stop(sound);
-//         }
-//     }
-//     gUsedMasks = 0;
+    for (i = 0; i < gUsedMasks; i++) {
+        sound = (u8 *) gSoundMaskHeapUsed[i]->unk18;
+        gSoundMaskHeapUsed[i]->unk12 = 0;
+        if (sound != NULL) {
+            sound_stop(sound);
+        }
+    }
+    gUsedMasks = 0;
 
-//     for (i = 0; i < ARRAY_COUNT(D_80119C60); i++) {
-//         D_80119C58[i].soundID = 0;
-//         if (D_80119C58[i].unk178 != 0) {
-//             if (D_80119C58[i].unk0.unk0_02 == 0) {
-//                 sound_stop(D_80119C58[i].unk178);
-//             } else if (D_80119C58[i].unk0.unk0_02 == 1) {
-//                 music_jingle_stop();
-//             }
-//             D_80119C58[i].unk178 = 0;
-//         }
-//         D_80119C58[i].unk17C = -1;
-//         D_80119C5C[i]->unk0.unk0_01 = -100000.0f;
+    for (i = 0; i < ARRAY_COUNT(D_80119C58); i++) {
+        D_80119C58[i].soundID = 0;
+        if (D_80119C58[i].unk178 != 0) {
+            if (D_80119C58[i].unk0.unk0_02 == 0) {
+                sound_stop(D_80119C58[i].unk178);
+            } else if (D_80119C58[i].unk0.unk0_02 == 1) {
+                music_jingle_stop();
+            }
+            D_80119C58[i].unk178 = 0;
+        }
+        D_80119C58[i].unk17C = -1;
+        D_80119C5C[i]->unk0.unk0_01 = -100000.0f;
 
-//         D_80119C60[i] = -100000.0f;
-//     }
+        //D_80119C58[i] = -100000.0f;
+    }
 
-//     // for (i = 0; i < ARRAY_COUNT(D_8011A6E0); i++) {
-//     //     D_8011A6D8[i].unkB8 = -1;
-//     //     D_8011A6D8[i].unk0.unk0_01 = 0.0f;
-//     //     D_8011A6D8[i].unkBC = 0.0f;
-//     //     D_8011A6DC[i]->unk0.unk0_01 = -100000.0f;
-//     //     D_8011A6E0[i][0] = -100000.0f;
-//     //     for (j = 0; j < ARRAY_COUNT(D_8011A6E0[0]); j++) {
-//     //         D_8011A6E0[i][j] = -100000.0f;
-//     //     }
-//     // }
+    // for (i = 0; i < ARRAY_COUNT(D_8011A6E0); i++) {
+    //     D_8011A6D8[i].unkB8 = -1;
+    //     D_8011A6D8[i].unk0.unk0_01 = 0.0f;
+    //     D_8011A6D8[i].unkBC = 0.0f;
+    //     D_8011A6DC[i]->unk0.unk0_01 = -100000.0f;
+    //     D_8011A6E0[i][0] = -100000.0f;
+    //     for (j = 0; j < ARRAY_COUNT(D_8011A6E0[0]); j++) {
+    //         D_8011A6E0[i][j] = -100000.0f;
+    //     }
+    // }
 
-//     gAudioLinesOff = 0;
-// }
+    gAudioLinesOff = 0;
+}
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80008174.s")
 #endif
@@ -362,6 +360,7 @@ s32 func_800099EC(u8 arg0) {
     ret = 1;
     temp_v0 = &D_80119C58[arg0];
     var_a2 = (f32 *) &temp_v0->unk4;
+
     if (temp_v0->unk17C <= 0) {
         return 0;
     }
@@ -377,33 +376,31 @@ s32 func_800099EC(u8 arg0) {
     return ret;
 }
 
-
-#ifdef NON_EQUIVALENT
 s32 func_80009AB4(u8 arg0) {
     s32 ret;
+    f32 *var_a2;
+    f32 temp_f0;
     s32 i;
-    unk8011A6D8 *levelHeader;
-    unk8011A6D8_04 *var_a2; // Probably a Vec3f
+    unk8011A6D8 *temp_v0;
 
     ret = 1;
-    levelHeader = &D_8011A6D8[arg0];
-    var_a2 = (unk8011A6D8_04 *) &levelHeader->unk4;
+    temp_v0 = &D_8011A6D8[arg0];
+    var_a2 = (f32 *) &temp_v0->unk4;
 
-    if (levelHeader->unkB8 <= 0) {
+    if (temp_v0->unkB8 <= 0) {
         return 0;
     }
 
-    for (i = 0; i < levelHeader->unkB8; i++, var_a2++) {
-        if ((var_a2->unk0 == -100000.0) || (var_a2->unk0 + 1 == -100000.0) || (var_a2->unk0 + 2 == -100000.0)) {
+    for (i = 0; i < temp_v0->unkB8; i++) {
+        temp_f0 = *var_a2;
+        if (temp_f0== -100000.0 || temp_f0 + 1 == -100000.0 || temp_f0 + 2 == -100000.0) {
             ret = 0;
         }
+        var_a2 += 3;
     }
 
     return ret;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009AB4.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);
