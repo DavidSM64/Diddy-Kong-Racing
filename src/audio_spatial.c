@@ -39,9 +39,9 @@ SoundMask **gSoundMaskHeapUsed;
 SoundMask *gSoundMaskHeap; // 0x24 struct size - 0x5A0 total size - should be 40 elements
 u8 gFreeMasks;
 SoundMask **gSoundMaskHeapFree;
-s32 D_80119C54;           // Padding?
+s32 D_80119C54; // Padding?
 unk80119C58 D_80119C58[7];
-unk8011A6D8 D_8011A6D8[7];  // Reverb stuff
+unk8011A6D8 D_8011A6D8[7]; // Reverb stuff
 s8 gAudioLinesOff;
 s32 D_8011AC1C;
 
@@ -84,8 +84,8 @@ void audioline_on(void) {
 }
 
 #ifdef NON_EQUIVALENT
-//extern f32 D_80119C60[672];
-//extern f32 D_8011A6E0[7][48];
+// extern f32 D_80119C60[672];
+// extern f32 D_8011A6E0[7][48];
 extern unk8011A6D8 **D_8011A6DC;
 extern unk80119C58 **D_80119C5C;
 // extern void sound_stop(u8 *arg0);
@@ -122,7 +122,7 @@ void func_80008174(void) {
         D_80119C58[i].unk17C = -1;
         D_80119C5C[i]->unk0.unk0_01 = -100000.0f;
 
-        //D_80119C58[i] = -100000.0f;
+        // D_80119C58[i] = -100000.0f;
     }
 
     // for (i = 0; i < ARRAY_COUNT(D_8011A6E0); i++) {
@@ -393,7 +393,7 @@ s32 func_80009AB4(u8 arg0) {
 
     for (i = 0; i < temp_v0->unkB8; i++) {
         temp_f0 = *var_a2;
-        if (temp_f0== -100000.0 || temp_f0 + 1 == -100000.0 || temp_f0 + 2 == -100000.0) {
+        if (temp_f0 == -100000.0 || temp_f0 + 1 == -100000.0 || temp_f0 + 2 == -100000.0) {
             ret = 0;
         }
         var_a2 += 3;
