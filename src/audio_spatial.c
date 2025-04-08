@@ -34,19 +34,13 @@ UNUSED const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=
 
 /************ .bss ************/
 
-// extern s8 gAudioLinesOff;
-// extern SoundData *D_80119C40;
-// extern unk80119C58 D_80119C58[];
-// extern unk8011A6D8 D_8011A6D8[];
-// extern SoundMask *gSoundMaskHeap;
-
-SoundData *D_80119C40; // This should be in audio_spatial?
+SoundData *D_80119C40;
 SoundMask **gSoundMaskHeapUsed;
 SoundMask *gSoundMaskHeap; // 0x24 struct size - 0x5A0 total size - should be 40 elements
 u8 gFreeMasks;
 SoundMask **gSoundMaskHeapFree;
 s32 D_80119C54;           // Padding?
-unk80119C58 D_80119C58[7]; // Struct of size in func_8000A184 = 0x180 = 384 bytes | Ambient Sounds
+unk80119C58 D_80119C58[7];
 unk8011A6D8 *D_8011A6D8;  // unk8011A6D8[] | Reverb stuff
 unk8011A6D8 **D_8011A6DC; // Struct of size 0xC0
 f32 D_8011A6E0[334];
@@ -334,8 +328,8 @@ void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5
     }
 }
 
-#ifdef NON_MATCHING
-// single regalloc diff
+#ifdef NON_EQUIVALENT
+// single regalloc diff, or at least it used to be...
 // audioline_reverb_create
 void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
     Vec3f *temp_a1;
@@ -358,7 +352,6 @@ void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009968.s")
 #endif
 
-#ifdef NON_EQUIVALENT
 s32 func_800099EC(u8 arg0) {
     s32 ret;
     f32 *var_a2;
@@ -383,9 +376,6 @@ s32 func_800099EC(u8 arg0) {
 
     return ret;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_800099EC.s")
-#endif
 
 
 #ifdef NON_EQUIVALENT
