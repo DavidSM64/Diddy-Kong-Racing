@@ -386,6 +386,7 @@ segments:
       - { type: .bss, vram: 0x80115F90, name: audiomgr }
       - { type: .bss, vram: 0x80119BD0, name: audiosfx }
       - { type: .bss, vram: 0x80119C30, name: audio_vehicle }
+      - { type: .bss, vram: 0x80119C40, name: audio_spatial }
       - { type: .bss, vram: 0x8011AC20, name: objects }
       - { type: .bss, vram: 0x8011B0A0, name: tracks }
       - { type: .bss, vram: 0x8011D4C0, name: lights }
@@ -440,8 +441,21 @@ segments:
       - { type: .bss, vram: 0x8012D200, name: ../libultra/src/os/timerintr }
       - { type: .bss, vram: 0x8012D240, name: ../libultra/src/os/exceptasm }
 
+  # TODO: If we can split up the assets bin file to these two files, we can properly
+  # define the symbol for __ASSETS_LUT_END even if it changes with custom assets
+  # - name: assets_lut
+  #   type: bin
+  #   start: 0xECB60
+  #   follows_vram: main
+
+  # - name: assets
+  #   type: bin
+  #   start: 0xECC30
+  #   follows_vram: main
+
   - name: assets
     type: bin
     start: 0xECB60
     follows_vram: main
+
   - [0xAC9630]

@@ -2146,13 +2146,13 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002B0F4.s")
 
-s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
+s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3) {
     LevelModelSegment *seg;
 
     if (arg2 != NULL) {
-        arg2[0] = 0.0f;
-        arg2[2] = 0.0f;
-        arg2[1] = 1.0f;
+        arg2->x = 0.0f;
+        arg2->z = 0.0f;
+        arg2->y = 1.0f;
     }
     if ((obj->segment.object.segmentID < 0) ||
         (obj->segment.object.segmentID >= gCurrentLevelModel->numberOfSegments)) {
