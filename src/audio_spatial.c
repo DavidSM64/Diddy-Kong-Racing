@@ -34,11 +34,24 @@ UNUSED const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=
 
 /************ .bss ************/
 
-extern s8 gAudioLinesOff;
-extern SoundData *D_80119C40;
-extern unk80119C58 D_80119C58[];
-extern unk8011A6D8 D_8011A6D8[];
-extern SoundMask *gSoundMaskHeap;
+// extern s8 gAudioLinesOff;
+// extern SoundData *D_80119C40;
+// extern unk80119C58 D_80119C58[];
+// extern unk8011A6D8 D_8011A6D8[];
+// extern SoundMask *gSoundMaskHeap;
+
+SoundData *D_80119C40; // This should be in audio_spatial?
+SoundMask **gSoundMaskHeapUsed;
+SoundMask *gSoundMaskHeap; // 0x24 struct size - 0x5A0 total size - should be 40 elements
+u8 gFreeMasks;
+SoundMask **gSoundMaskHeapFree;
+s32 D_80119C54;           // Padding?
+unk80119C58 D_80119C58[7]; // Struct of size in func_8000A184 = 0x180 = 384 bytes | Ambient Sounds
+unk8011A6D8 *D_8011A6D8;  // unk8011A6D8[] | Reverb stuff
+unk8011A6D8 **D_8011A6DC; // Struct of size 0xC0
+f32 D_8011A6E0[334];
+s8 gAudioLinesOff;
+s32 D_8011AC1C;
 
 #define SOUND_MASK_HEAP_COUNT 40
 
@@ -79,60 +92,60 @@ void audioline_on(void) {
 }
 
 #ifdef NON_EQUIVALENT
-extern f32 D_80119C60[672];
-extern f32 D_8011A6E0[7][48];
-extern unk8011A6D8 **D_8011A6DC;
-extern unk80119C58 **D_80119C5C;
-// extern void sound_stop(u8 *arg0);
-// audioline_reset
-void func_80008174(void) {
-    s32 i;
-    s32 j;
-    u8 *sound;
+// //extern f32 D_80119C60[672];
+// //extern f32 D_8011A6E0[7][48];
+// extern unk8011A6D8 **D_8011A6DC;
+// extern unk80119C58 **D_80119C5C;
+// // extern void sound_stop(u8 *arg0);
+// // audioline_reset
+// void func_80008174(void) {
+//     s32 i;
+//     s32 j;
+//     u8 *sound;
 
-    for (gFreeMasks = 0; gFreeMasks < SOUND_MASK_HEAP_COUNT; gFreeMasks++) {
-        gSoundMaskHeapFree[gFreeMasks] = &gSoundMaskHeap[gFreeMasks];
-    }
-    gFreeMasks--;
+//     for (gFreeMasks = 0; gFreeMasks < SOUND_MASK_HEAP_COUNT; gFreeMasks++) {
+//         gSoundMaskHeapFree[gFreeMasks] = &gSoundMaskHeap[gFreeMasks];
+//     }
+//     gFreeMasks--;
 
-    for (i = 0; i < gUsedMasks; i++) {
-        sound = (u8 *) gSoundMaskHeapUsed[i]->unk18;
-        gSoundMaskHeapUsed[i]->unk12 = 0;
-        if (sound != NULL) {
-            sound_stop(sound);
-        }
-    }
-    gUsedMasks = 0;
+//     for (i = 0; i < gUsedMasks; i++) {
+//         sound = (u8 *) gSoundMaskHeapUsed[i]->unk18;
+//         gSoundMaskHeapUsed[i]->unk12 = 0;
+//         if (sound != NULL) {
+//             sound_stop(sound);
+//         }
+//     }
+//     gUsedMasks = 0;
 
-    for (i = 0; i < ARRAY_COUNT(D_80119C60); i++) {
-        D_80119C58[i].soundID = 0;
-        if (D_80119C58[i].unk178 != 0) {
-            if (D_80119C58[i].unk0.unk0_02 == 0) {
-                sound_stop(D_80119C58[i].unk178);
-            } else if (D_80119C58[i].unk0.unk0_02 == 1) {
-                music_jingle_stop();
-            }
-            D_80119C58[i].unk178 = 0;
-        }
-        D_80119C58[i].unk17C = -1;
-        D_80119C5C[i]->unk0.unk0_01 = -100000.0f;
+//     for (i = 0; i < ARRAY_COUNT(D_80119C60); i++) {
+//         D_80119C58[i].soundID = 0;
+//         if (D_80119C58[i].unk178 != 0) {
+//             if (D_80119C58[i].unk0.unk0_02 == 0) {
+//                 sound_stop(D_80119C58[i].unk178);
+//             } else if (D_80119C58[i].unk0.unk0_02 == 1) {
+//                 music_jingle_stop();
+//             }
+//             D_80119C58[i].unk178 = 0;
+//         }
+//         D_80119C58[i].unk17C = -1;
+//         D_80119C5C[i]->unk0.unk0_01 = -100000.0f;
 
-        D_80119C60[i] = -100000.0f;
-    }
+//         D_80119C60[i] = -100000.0f;
+//     }
 
-    for (i = 0; i < ARRAY_COUNT(D_8011A6E0); i++) {
-        D_8011A6D8[i].unkB8 = -1;
-        D_8011A6D8[i].unk0.unk0_01 = 0.0f;
-        D_8011A6D8[i].unkBC = 0.0f;
-        D_8011A6DC[i]->unk0.unk0_01 = -100000.0f;
-        D_8011A6E0[i][0] = -100000.0f;
-        for (j = 0; j < ARRAY_COUNT(D_8011A6E0[0]); j++) {
-            D_8011A6E0[i][j] = -100000.0f;
-        }
-    }
+//     // for (i = 0; i < ARRAY_COUNT(D_8011A6E0); i++) {
+//     //     D_8011A6D8[i].unkB8 = -1;
+//     //     D_8011A6D8[i].unk0.unk0_01 = 0.0f;
+//     //     D_8011A6D8[i].unkBC = 0.0f;
+//     //     D_8011A6DC[i]->unk0.unk0_01 = -100000.0f;
+//     //     D_8011A6E0[i][0] = -100000.0f;
+//     //     for (j = 0; j < ARRAY_COUNT(D_8011A6E0[0]); j++) {
+//     //         D_8011A6E0[i][j] = -100000.0f;
+//     //     }
+//     // }
 
-    gAudioLinesOff = 0;
-}
+//     gAudioLinesOff = 0;
+// }
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80008174.s")
 #endif
@@ -345,6 +358,7 @@ void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009968.s")
 #endif
 
+#ifdef NON_EQUIVALENT
 s32 func_800099EC(u8 arg0) {
     s32 ret;
     f32 *var_a2;
@@ -369,7 +383,12 @@ s32 func_800099EC(u8 arg0) {
 
     return ret;
 }
+#else
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_800099EC.s")
+#endif
 
+
+#ifdef NON_EQUIVALENT
 s32 func_80009AB4(u8 arg0) {
     s32 ret;
     s32 i;
@@ -392,6 +411,9 @@ s32 func_80009AB4(u8 arg0) {
 
     return ret;
 }
+#else
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009AB4.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);
