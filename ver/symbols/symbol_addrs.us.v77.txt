@@ -3685,7 +3685,6 @@ gSoundMaskHeapUsed = 0x80119C44;
 gSoundMaskHeap = 0x80119C48;
 gFreeMasks = 0x80119C4C;
 gSoundMaskHeapFree = 0x80119C50;
-D_80119C54 = 0x80119C54;
 D_80119C58 = 0x80119C58; // size:0xA80
 D_8011A6D8 = 0x8011A6D8; // size:0x540
 gAudioLinesOff = 0x8011AC18;

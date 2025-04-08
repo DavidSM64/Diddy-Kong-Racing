@@ -39,7 +39,6 @@ SoundMask **gSoundMaskHeapUsed;
 SoundMask *gSoundMaskHeap; // 0x24 struct size - 0x5A0 total size - should be 40 elements
 u8 gFreeMasks;
 SoundMask **gSoundMaskHeapFree;
-s32 D_80119C54; // Padding?
 unk80119C58 D_80119C58[7];
 unk8011A6D8 D_8011A6D8[7]; // Reverb stuff
 s8 gAudioLinesOff;
@@ -57,7 +56,7 @@ void audioline_init(void) {
     gSoundMaskHeapFree = mempool_alloc_safe(sizeof(uintptr_t) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
     gSoundMaskHeapUsed = mempool_alloc_safe(sizeof(uintptr_t) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
     gUsedMasks = 0;
-    for (i = 0; i < 7; i++) {
+    for (i = 0; i < ARRAY_COUNT(D_80119C58); i++) {
         D_80119C58[i].unk178 = NULL;
     }
     for (i = 0; i < SOUND_MASK_HEAP_COUNT; i++) {
@@ -326,8 +325,8 @@ void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5
     }
 }
 
-#ifdef NON_EQUIVALENT
-// single regalloc diff, or at least it used to be...
+#ifdef NON_MATCHING
+// single regalloc diff
 // audioline_reverb_create
 void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
     Vec3f *temp_a1;
@@ -423,7 +422,7 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
     levelSegmentIndex = get_level_segment_index_from_position(x, y, z);
     volume = 0;
     var_s6 = 400;
-    for (i = 0; i < 7; i++) {
+    for (i = 0; i < ARRAY_COUNT(D_8011A6D8); i++) {
         if (D_8011A6D8[i].unk0.unk0_02 != 0) {
             if (func_80009AB4(i) != 0) {
                 for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
@@ -461,7 +460,7 @@ extern unk8011A6D8 **D_8011A6DC;
 void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
     s32 i, j;
 
-    for (i = 0; i < 7; i++) {
+    for (i = 0; i < ARRAY_COUNT(D_80119C58); i++) {
         if (D_80119C58[i].soundID != 0) {
             for (j = 0; j < D_80119C58[i].unk17C; j++) {
                 debug_render_line(arg0, arg1, arg2, (floatXYZVals *) &D_80119C5C[i], 0xFF, 0xFF, 0);
@@ -469,7 +468,7 @@ void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
         }
     }
 
-    for (i = 0; i < 7; i++) {
+    for (i = 0; i < ARRAY_COUNT(D_8011A6D8); i++) {
         if (D_8011A6D8[i].unk0.unk0_02 != 0) {
             for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
                 debug_render_line(arg0, arg1, arg2, (floatXYZVals *) &D_8011A6DC[i], 0xFF, 0xFF, 0);
