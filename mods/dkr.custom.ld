@@ -77,7 +77,7 @@ SECTIONS
         FILL(0x00000000);
         main_BSS_START = .;
         /* This hacky override is needed for the game to boot currently. TODO: fix bss.*/
-        build/src/audio_vehicle.c.o(.bss);
+        build/src/audio_spatial.c.o(.bss);
         build/src/objects.c.o(.bss);
 
         build/src*.o(.*bss*);
