@@ -486,7 +486,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
                             var_t4 = var_t5 + var_s4;
                             D_800E30D4[var_t2] |= D_800E30E0[i * D_80129FC8.unk24 + j] << var_t4;
                             for (k = 0; k < D_8012A0E0; k++) {
-                                if (var_t2 == (s32) (&D_800E30D8[k])->unkC) {
+                                if (var_t2 == (u32) (&D_800E30D8[k])->unkC) {
                                     temp = &D_8012A5E8[k];
                                     temp->unk0 = k;
                                     temp->unk2 = var_t4 >> 3;
@@ -544,7 +544,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
                         // clang-format on
                         D_800E30D4[var_t2] = D_800E30E0[i * D_80129FC8.unk24 + j];
                         for (k = 0; k < D_8012A0E0; k++) {
-                            if (var_t2 == (s32) (&D_800E30D8[k])->unkC) {
+                            if (var_t2 == (u32) (&D_800E30D8[k])->unkC) {
                                 temp = &D_8012A5E8[k];
                                 temp->unk0 = k;
                                 temp->unk2 = 0;
