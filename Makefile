@@ -1,10 +1,10 @@
 BASENAME  = dkr
 REGION  := us
 VERSION  := v77
-NON_MATCHING ?= 1
+NON_MATCHING ?= 0
 
 # Experimental option for nonmatching builds. GCC may not function identically to ido.
-COMPILER ?= gcc
+COMPILER ?= ido
 $(eval $(call validate-option,NON_MATCHING,ido gcc))
 
 # Define a custom boot file if desired to use something other than the vanilla one
@@ -224,7 +224,7 @@ ifeq ($(NON_MATCHING), 0)
 LD_SCRIPT  = ver/$(BASENAME).$(REGION).$(VERSION).ld
 else
 LD_SCRIPT  = mods/dkr.custom.ld
-LD_FLAGS += $(O_FILES)
+LD_FLAGS += $(O_FILES_LD)
 endif
 
 LD_FLAGS   += -T $(LD_SCRIPT) -T $(SYMBOLS_DIR)/undefined_syms.txt -Map $(TARGET).map
@@ -363,7 +363,7 @@ distclean: clean
 	rm -rf $(ASM_DIRS)
 	rm -rf $(BIN_DIRS)
 	rm -f $(SYMBOLS_DIR)/*auto.$(REGION).$(VERSION).txt
-	rm -f $(LD_SCRIPT)
+	rm -f ver/$(BASENAME).$(REGION).$(VERSION).ld
 
 distcleanall: cleanall
 	rm -rf asm
