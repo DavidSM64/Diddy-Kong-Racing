@@ -180,7 +180,7 @@ s32 func_800090C0(f32 x, f32 z, s32 yRot) {
  * Write the adjusted positions to the arguments.
  * Returns the distance between the input and the nearest endpoint.
  */
-s32 audioline_distance(f32 inX, f32 inY, f32 inZ, Vec3f *floatXYZ, f32 *outX, f32 *outY, f32 *outZ) {
+s32 audioline_distance(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 *outY, f32 *outZ) {
     f32 dx, dy, dz;
     f32 x1, y1, z1;
     f32 x2, y2, z2;
@@ -188,12 +188,12 @@ s32 audioline_distance(f32 inX, f32 inY, f32 inZ, Vec3f *floatXYZ, f32 *outX, f3
     f32 mag;
     f32 ret;
 
-    x1 = floatXYZ[0].x;
-    y1 = floatXYZ[0].y;
-    z1 = floatXYZ[0].z;
-    x2 = floatXYZ[1].x;
-    y2 = floatXYZ[1].y;
-    z2 = floatXYZ[1].z;
+    x1 = coords[0];
+    y1 = coords[1];
+    z1 = coords[2];
+    x2 = coords[3];
+    y2 = coords[4];
+    z2 = coords[5];
     mag = 0.0f;
 
     dx = x2 - x1;
