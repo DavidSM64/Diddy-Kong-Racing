@@ -180,7 +180,7 @@ s32 func_800090C0(f32 x, f32 z, s32 yRot) {
  * Write the adjusted positions to the arguments.
  * Returns the distance between the input and the nearest endpoint.
  */
-s32 audioline_distance(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ) {
+s32 audioline_distance(f32 inX, f32 inY, f32 inZ, Vec3f *floatXYZ, f32 *outX, f32 *outY, f32 *outZ) {
     f32 dx, dy, dz;
     f32 x1, y1, z1;
     f32 x2, y2, z2;
@@ -188,12 +188,12 @@ s32 audioline_distance(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *o
     f32 mag;
     f32 ret;
 
-    x1 = floatXYZ->x1;
-    y1 = floatXYZ->y1;
-    z1 = floatXYZ->z1;
-    x2 = floatXYZ->x2;
-    y2 = floatXYZ->y2;
-    z2 = floatXYZ->z2;
+    x1 = floatXYZ[0].x;
+    y1 = floatXYZ[0].y;
+    z1 = floatXYZ[0].z;
+    x2 = floatXYZ[1].x;
+    y2 = floatXYZ[1].y;
+    z2 = floatXYZ[1].z;
     mag = 0.0f;
 
     dx = x2 - x1;
@@ -305,7 +305,7 @@ void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5
 
     if (lineID < 7 && argC < 30) {
         temp_v1 = &D_80119C58[lineID];
-        temp_a0 = &temp_v1->unk4[argC * 3];
+        temp_a0 = &temp_v1->unk4.unk4_floats[argC * 3];
         temp_a0[0] = x;
         temp_a0[1] = y;
         temp_a0[2] = z;
@@ -325,51 +325,41 @@ void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5
     }
 }
 
-#ifdef NON_MATCHING
-// single regalloc diff
-// audioline_reverb_create
-void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
-    Vec3f *temp_a1;
-    s32 tempArg5 = arg5;
-
-    if ((arg4 < 7) && (tempArg5 < 15)) {
-        temp_a1 = (Vec3f *) &D_8011A6D8[arg4].unk4.unk4_05;
-        temp_a1[tempArg5].x = x;
-        temp_a1[tempArg5].y = y;
-        temp_a1[tempArg5].z = z;
-        if (tempArg5 == 0) {
-            D_8011A6D8[arg4].unk0.unk0_02 = arg3 & 0xFF;
+void audioline_reverb_create(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
+    unk8011A6D8 *temp;
+    if (arg4 < ARRAY_COUNT(D_8011A6D8) && arg5 < ARRAY_COUNT(D_8011A6D8[0].unk4.unk4_vec)) {
+        temp = &D_8011A6D8[arg4];
+        temp->unk4.unk4_floats[3 * arg5 + 0] = x;
+        temp->unk4.unk4_floats[3 * arg5 + 1] = y;
+        temp->unk4.unk4_floats[3 * arg5 + 2] = z;
+        if (arg5 == 0) {
+            temp->unk0.unk0_02 = arg3;
         }
-        if (D_8011A6D8[arg4].unkB8 < tempArg5) {
-            D_8011A6D8[arg4].unkB8 = tempArg5;
+        if (temp->unkB8 < arg5) {
+            temp->unkB8 = arg5;
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009968.s")
-#endif
 
 s32 func_800099EC(u8 arg0) {
     s32 ret;
-    f32 *var_a2;
-    f32 temp_f0;
     s32 i;
     unk80119C58 *temp_v0;
+    Vec3f *var_a2;
 
     ret = 1;
     temp_v0 = &D_80119C58[arg0];
-    var_a2 = (f32 *) &temp_v0->unk4;
+    var_a2 = temp_v0->unk4.unk4_vec;
 
     if (temp_v0->unk17C <= 0) {
         return 0;
     }
 
     for (i = 0; i < temp_v0->unk17C; i++) {
-        temp_f0 = *var_a2;
-        if (temp_f0 == -100000.0 || temp_f0 + 1 == -100000.0 || temp_f0 + 2 == -100000.0) {
+        if (var_a2->x == -100000.0 || var_a2->x + 1 == -100000.0 || var_a2->x + 2 == -100000.0) {
             ret = 0;
         }
-        var_a2 += 3;
+        var_a2 += 1;
     }
 
     return ret;
@@ -377,56 +367,56 @@ s32 func_800099EC(u8 arg0) {
 
 s32 func_80009AB4(u8 arg0) {
     s32 ret;
-    f32 *var_a2;
-    f32 temp_f0;
     s32 i;
     unk8011A6D8 *temp_v0;
+    Vec3f *var_a2;
 
     ret = 1;
     temp_v0 = &D_8011A6D8[arg0];
-    var_a2 = (f32 *) &temp_v0->unk4;
+    var_a2 = temp_v0->unk4.unk4_vec;
 
     if (temp_v0->unkB8 <= 0) {
         return 0;
     }
 
     for (i = 0; i < temp_v0->unkB8; i++) {
-        temp_f0 = *var_a2;
-        if (temp_f0 == -100000.0 || temp_f0 + 1 == -100000.0 || temp_f0 + 2 == -100000.0) {
+        if (var_a2->x == -100000.0 || var_a2->x + 1 == -100000.0 || var_a2->x + 2 == -100000.0) {
             ret = 0;
         }
-        var_a2 += 3;
+        var_a2 += 1;
     }
 
     return ret;
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_EQUIIVALENT
 u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);
 // audioline_reverb
 void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
     s32 j;
+    s32 levelSegmentIndex;
+    s32 numOfYVals;
+    s32 distBetween;
     f32 outX;
     f32 outY;
     f32 outZ;
-    s32 levelSegmentIndex;
-    f32 yVals[8]; // Not sure of the number needed
-    s32 distBetween;
-    s32 numOfYVals;
     u8 temp_v0_4;
     u8 volume;
     s32 var_s6;
     s32 i;
     s32 k;
+    unk8011A6D8 *temp;
+    f32 yVals[9]; // Not sure of the number needed
 
     levelSegmentIndex = get_level_segment_index_from_position(x, y, z);
     volume = 0;
     var_s6 = 400;
     for (i = 0; i < ARRAY_COUNT(D_8011A6D8); i++) {
-        if (D_8011A6D8[i].unk0.unk0_02 != 0) {
+        temp = &D_8011A6D8[i];
+        if (temp->unk0.unk0_02 != 0) {
             if (func_80009AB4(i) != 0) {
-                for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
-                    distBetween = audioline_distance(x, y, z, &D_8011A6D8[i].unk4.unk4_02[j], &outX, &outY, &outZ);
+                for (j = 0; j < temp->unkB8; j++) {
+                    distBetween = audioline_distance(x, y, z, &temp->unk4[j], &outX, &outY, &outZ);
                     if (distBetween < var_s6) {
                         numOfYVals = func_8002BAB0(levelSegmentIndex, x, z, yVals);
                         for (k = 0; k < numOfYVals; k++) {
@@ -444,7 +434,7 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
         }
     }
     if (soundState != NULL) {
-        sound_event_update((s32) soundState, 0x100, (u32) volume);
+        sound_event_update((s32) soundState, AL_SNDP_FX_EVT, (u32) volume);
     }
 }
 #else
@@ -454,24 +444,26 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009D6C.s")
 
 #ifdef NON_EQUIVALENT
-extern unk80119C58 **D_80119C5C;
-extern unk8011A6D8 **D_8011A6DC;
 // debug_render_audio_effects
 void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
     s32 i, j;
+    unk80119C58 *temp;
+    unk8011A6D8 *temp2;
 
     for (i = 0; i < ARRAY_COUNT(D_80119C58); i++) {
-        if (D_80119C58[i].soundID != 0) {
-            for (j = 0; j < D_80119C58[i].unk17C; j++) {
-                debug_render_line(arg0, arg1, arg2, (floatXYZVals *) &D_80119C5C[i], 0xFF, 0xFF, 0);
+        temp = &D_80119C58[i];
+        if (temp->soundID != 0) {
+            for (j = 0; j < temp->unk17C; j++) {
+                debug_render_line(arg0, arg1, arg2, &temp->unk4.unk4_vec[j], 0xFF, 0xFF, 0);
             }
         }
     }
 
     for (i = 0; i < ARRAY_COUNT(D_8011A6D8); i++) {
-        if (D_8011A6D8[i].unk0.unk0_02 != 0) {
-            for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
-                debug_render_line(arg0, arg1, arg2, (floatXYZVals *) &D_8011A6DC[i], 0xFF, 0xFF, 0);
+        temp2 = &D_8011A6D8[i];
+        if (temp2->unk0.unk0_02 != 0) {
+            for (j = 0; j < temp2->unkB8; j++) {
+                debug_render_line(arg0, arg1, arg2, &temp->unk4.unk4_vec[j], 0xFF, 0, 0xFF);
             }
         }
     }
@@ -500,7 +492,7 @@ void func_8000A2E8(s32 arg0) {
  * Generates and renders a coloured line visible from anywhere.
  * Allows use of a colour, that interpolates from bright to dark from the beginning to the end of the line.
  */
-void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, floatXYZVals *coords, u8 red, u8 green, u8 blue) {
+void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, f32 coords[6], u8 red, u8 green, u8 blue) {
     Gfx *temp_dlist;
     Vertex *temp_verts;
     Triangle *temp_tris;
@@ -511,12 +503,12 @@ void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, floatXYZVal
     s16 y2;
     s16 z2;
 
-    x1 = coords->x1;
-    y1 = coords->y1;
-    z1 = coords->z1;
-    x2 = coords->x2;
-    y2 = coords->y2;
-    z2 = coords->z2;
+    x1 = coords[0];
+    y1 = coords[1];
+    z1 = coords[2];
+    x2 = coords[3];
+    y2 = coords[4];
+    z2 = coords[5];
     temp_dlist = *dList;
 
     temp_verts = *verts;

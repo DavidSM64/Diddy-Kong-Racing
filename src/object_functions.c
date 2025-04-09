@@ -5440,7 +5440,7 @@ void obj_init_audioreverb(Object *obj, LevelObjectEntry_AudioReverb *entry) {
     temp = entry->lineID;
     reverb->lineID = temp & 0xFF;
     reverb->unk5 = entry->unkA;
-    func_80009968(entry->common.x, entry->common.y, entry->common.z, reverb->unk2, reverb->lineID, reverb->unk5);
+    audioline_reverb_create(entry->common.x, entry->common.y, entry->common.z, reverb->unk2, reverb->lineID, reverb->unk5);
     free_object(obj);
 }
 
