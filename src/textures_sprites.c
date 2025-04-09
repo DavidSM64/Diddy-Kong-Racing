@@ -1146,7 +1146,6 @@ void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
 #pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007CDC0.s")
 #endif
 
-#ifdef NON_MATCHING
 void build_tex_display_list(TextureHeader *tex, Gfx *_dList) {
     s32 texFormat;
     s32 texRenderMode;
@@ -1177,12 +1176,12 @@ void build_tex_display_list(TextureHeader *tex, Gfx *_dList) {
     for (i = 0; i < 7; i++) {
         if (size < width) {
             masks = i + 1;
-        } else if (size == width) {
+        } else if ((size == width) != 0) {
             uClamp = FALSE;
         }
         if (size < height) {
             maskt = i + 1;
-        } else if (size == height) {
+        } else if ((size == height) != 0) {
             vClamp = FALSE;
         }
         size *= 2;
@@ -1232,7 +1231,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *_dList) {
         if (texFormat == TEX_FORMAT_IA16) {
             gDPLoadTextureBlock(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, G_IM_SIZ_16b, width, height, 0, cms,
                                 cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
-            if (!tex->flags) {} // fake
             tex->flags |= RENDER_SEMI_TRANSPARENT;
         }
         if (texFormat == TEX_FORMAT_IA8) {
@@ -1307,9 +1305,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *_dList) {
         tex->numberOfCommands = dList - tex->cmd;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/build_tex_display_list.s")
-#endif
 
 s32 func_8007EF64(s16 arg0) {
     return (s32) (arg0 + gCiPalettes);
