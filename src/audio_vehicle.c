@@ -770,12 +770,14 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                                 (s32 *) gRacerSound->unk48[loopCount2], objs[loopCount1]->segment.trans.x_position,
                                 objs[loopCount1]->segment.trans.y_position, objs[loopCount1]->segment.trans.z_position);
                             sound_event_update((s32) gRacerSound->unk48[loopCount2], AL_SNDP_VOL_EVT, temp_s3 << 8);
-                            sound_event_update((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PITCH_EVT, *((u32 *) &sp8C));
+                            sound_event_update((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PITCH_EVT,
+                                               *((u32 *) &sp8C));
                             func_80004604((ALSoundState *) gRacerSound->unk48[loopCount2], 80);
                             if (arg3 != 1) {
                                 gRacerSound->unk91[0] = 64;
                             }
-                            sound_event_update((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PAN_EVT, gRacerSound->unk91[0]);
+                            sound_event_update((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PAN_EVT,
+                                               gRacerSound->unk91[0]);
                         }
                     }
                 }
