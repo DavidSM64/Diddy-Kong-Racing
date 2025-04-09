@@ -329,6 +329,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_y_scale.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official Name: mathRpyXyzMtx */
 void object_transform_to_matrix_2(Matrix mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
@@ -543,6 +544,7 @@ GLOBAL_ASM("asm/math_util/f32_vec3_apply_object_rotation3.s")
 #endif
 
 #ifdef NON_MATCHING
+/* Official Name: mathXZInTri */
 s32 point_triangle_2d_xz_intersection(s32 x, s32 z, s16 *vec3A, s16 *vec3B, s16 *vec3C) {
     s32 result;
     s32 aX;
@@ -586,6 +588,7 @@ GLOBAL_ASM("asm/math_util/point_triangle_2d_xz_intersection.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official Name: mathTranslateMtx */
 void f32_matrix_from_position(Matrix *mtx, f32 x, f32 y, f32 z) {
     s32 j;
     s32 i;
@@ -607,6 +610,7 @@ void f32_matrix_from_position(Matrix *mtx, f32 x, f32 y, f32 z) {
 GLOBAL_ASM("asm/math_util/f32_matrix_from_position.s")
 #endif
 
+/* Official Name: mathScaleMtx */
 GLOBAL_ASM("asm/math_util/f32_matrix_from_scale.s")
 
 #ifdef NON_MATCHING
