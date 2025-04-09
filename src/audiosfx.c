@@ -11,7 +11,7 @@ ALUnkStruct D_800DC6B0 = { NULL, NULL, NULL };
 unk800DC6BC gAlSndPlayer;
 unk800DC6BC *gAlSndPlayerPtr = &gAlSndPlayer;
 s32 sfxVolumeSlider = 256;
-s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
+s16 D_800DC6C4 = 0;
 u16 *gSoundChannelVolume;
 
 /**** Debug strings ****/
@@ -262,7 +262,35 @@ ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
     return (ALSound *) nextAllocList;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004520.s")
+void func_80004520(ALSoundState *soundState) {
+    if (soundState == D_800DC6B0.next) {
+        D_800DC6B0.next = soundState->next;
+    }
+    if (soundState == D_800DC6B0.prev) {
+        D_800DC6B0.prev = soundState->prev;
+    }
+    alUnlink((ALLink *) soundState);
+    if (D_800DC6B0.unk8 != NULL) {
+        soundState->next = D_800DC6B0.unk8;
+        soundState->prev = NULL;
+        D_800DC6B0.unk8->prev = soundState;
+        D_800DC6B0.unk8 = soundState;
+    } else {
+        soundState->prev = NULL;
+        soundState->next = NULL;
+        D_800DC6B0.unk8 = soundState;
+    }
+    if (soundState->flags & AL_SNDP_PAN_EVT) {
+        D_800DC6C4--;
+    }
+    soundState->soundState = 0;
+    if (soundState->unk30 != NULL) {
+        if (soundState == soundState->unk30->next) {
+            soundState->unk30->next = NULL;
+        }
+        soundState->unk30 = NULL;
+    }
+}
 
 /**
  * Official Name: gsSndpSetPriority

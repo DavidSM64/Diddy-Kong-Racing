@@ -599,7 +599,7 @@ typedef struct ALSoundState {
     /* 0x0C */ ALVoice     voice;
     /* 0x28 */ ALSound     *sound;         /* sound referenced here */
     /* 0x2C */ s16         priority;
-    /* 0x30 */ f32         pitch;          /* current playback pitch                    */
+    /* 0x30 */ struct ALSoundState *unk30;
     /* 0x34 */ u8          pad34[0x2];
     /* 0x34 */ u8          soundPriority;
     /* 0x38 */ s16         vol;            /* volume - combined with volume from bank   */
