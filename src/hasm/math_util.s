@@ -387,7 +387,6 @@ leaf get_random_number_from_range
 /* 705B4 8006F9B4 00000000 */   nop
 .end get_random_number_from_range
 
-
 /* Official Name: fastShortReflection */
 leaf s16_matrix_rotate
 /* 705B8 8006F9B8 84880000 */  lh         $t0, 0x0($a0)
