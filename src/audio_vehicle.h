@@ -5,26 +5,6 @@
 #include "structs.h"
 #include "audio.h"
 
-/* Size: 0x180 / 384 bytes */
-typedef struct unk80119C58 {
-    union {
-        /* 0x00 */ f32 unk0_01;
-        /* 0x00 */ u8 unk0_02;
-        /* 0x00 */ s32 unk0_03;
-    } unk0;
-    /* 0x004 */ f32 unk4[30 * 3]; // Should be a Vec3f, but that just doesn't match
-    /* 0x16C */ s32 soundID;
-    /* 0x170 */ s32 unk170;
-    /* 0x174 */ u8 unk174;
-    /* 0x175 */ u8 unk175;
-    /* 0x176 */ u8 unk176;
-    /* 0x177 */ u8 unk177;
-    /* 0x178 */ s32 unk178;
-    /* 0x17C */ s8 unk17C;
-    /* 0x17D */ u8 unk17D;
-    /* 0x17E */ u8 unk17E;
-} unk80119C58;
-
 /* Size: 0xE0 / 224 bytes */
 typedef struct VehicleSoundData {
     /* 0x00 */ u16 unk0[2];

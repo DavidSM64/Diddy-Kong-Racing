@@ -325,7 +325,7 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
         sp6C = (((var_f20 * 0.5) / 12.0) + 0.5);
         temp_a0_4 = (s32) gRacerSound->unkA8;
         if (temp_a0_4 != 0) {
-            sound_event_update(temp_a0_4, 16, *((u32 *) &sp6C));
+            sound_event_update(temp_a0_4, AL_SNDP_PITCH_EVT, *((u32 *) &sp6C));
         }
         gRacerSound->unkAC = 110;
         gRacerSound->unkD0 = 0;
@@ -337,9 +337,9 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
             gRacerSound->unkD0 = 0;
         }
         if (gRacerSound->unkD0 >= 10) {
-            sound_event_update((s32) gRacerSound->unkA8, 8, 0);
+            sound_event_update((s32) gRacerSound->unkA8, AL_SNDP_VOL_EVT, 0);
         } else {
-            sound_event_update((s32) gRacerSound->unkA8, 8, gRacerSound->unkAC << 8);
+            sound_event_update((s32) gRacerSound->unkA8, AL_SNDP_VOL_EVT, gRacerSound->unkAC << 8);
             func_80009B7C((s32 *) gRacerSound->unkA8, obj->segment.trans.x_position, obj->segment.trans.y_position,
                           obj->segment.trans.z_position);
         }
@@ -732,10 +732,10 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                         func_80009B7C((s32 *) gRacerSound->unk50, objs[loopCount1]->segment.trans.x_position,
                                       objs[loopCount1]->segment.trans.y_position,
                                       objs[loopCount1]->segment.trans.z_position);
-                        sound_event_update((s32) gRacerSound->unk50, 8, temp_s3 << 8);
-                        sound_event_update((s32) gRacerSound->unk50, 16, *((u32 *) &sp8C));
+                        sound_event_update((s32) gRacerSound->unk50, AL_SNDP_VOL_EVT, temp_s3 << 8);
+                        sound_event_update((s32) gRacerSound->unk50, AL_SNDP_PITCH_EVT, *((u32 *) &sp8C));
                         func_80004604((ALSoundState *) gRacerSound->unk50, 80);
-                        sound_event_update((s32) gRacerSound->unk50, 4, gRacerSound->unk91[0]);
+                        sound_event_update((s32) gRacerSound->unk50, AL_SNDP_PAN_EVT, gRacerSound->unk91[0]);
                     }
                 } else if (gRacerSound->unk50 != NULL) {
                     sound_stop(gRacerSound->unk50);
@@ -769,13 +769,15 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             func_80009B7C(
                                 (s32 *) gRacerSound->unk48[loopCount2], objs[loopCount1]->segment.trans.x_position,
                                 objs[loopCount1]->segment.trans.y_position, objs[loopCount1]->segment.trans.z_position);
-                            sound_event_update((s32) gRacerSound->unk48[loopCount2], 8, temp_s3 << 8);
-                            sound_event_update((s32) gRacerSound->unk48[loopCount2], 16, *((u32 *) &sp8C));
+                            sound_event_update((s32) gRacerSound->unk48[loopCount2], AL_SNDP_VOL_EVT, temp_s3 << 8);
+                            sound_event_update((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PITCH_EVT,
+                                               *((u32 *) &sp8C));
                             func_80004604((ALSoundState *) gRacerSound->unk48[loopCount2], 80);
                             if (arg3 != 1) {
                                 gRacerSound->unk91[0] = 64;
                             }
-                            sound_event_update((s32) gRacerSound->unk48[loopCount2], 4, gRacerSound->unk91[0]);
+                            sound_event_update((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PAN_EVT,
+                                               gRacerSound->unk91[0]);
                         }
                     }
                 }
@@ -910,12 +912,12 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             if (temp->unk48[0] != NULL) {
                                 func_80009B7C((s32 *) temp->unk48[0], temp->racerPos.x, temp->racerPos.y,
                                               temp->racerPos.z);
-                                sound_event_update((s32) temp->unk48[0], 8, temp->unk88 << 8);
-                                sound_event_update((s32) temp->unk48[0], 16, *((u32 *) &temp->unk8C));
+                                sound_event_update((s32) temp->unk48[0], AL_SNDP_VOL_EVT, temp->unk88 << 8);
+                                sound_event_update((s32) temp->unk48[0], AL_SNDP_PITCH_EVT, *((u32 *) &temp->unk8C));
                                 if (arg3 != 1) {
                                     temp->unk91[0] = 64;
                                 }
-                                sound_event_update((s32) temp->unk48[0], 4, temp->unk91[0]);
+                                sound_event_update((s32) temp->unk48[0], AL_SNDP_PAN_EVT, temp->unk91[0]);
                                 func_80004604((ALSoundState *) temp->unk48[0], 70);
                             }
                         }

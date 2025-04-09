@@ -68,6 +68,13 @@ enum RenderFlags {
     RENDER_ALL         =        0xFFFFFFFF
 };
 
+typedef enum  TextureRenderModes {
+    TRANSPARENT,
+    OPAQUE, 
+    TRANSPARENT_2, 
+    OPAQUE_2
+} TextureRenderModes;
+
 typedef enum TransFlags {
     OBJ_FLAGS_NONE,
     OBJ_FLAGS_UNK_0001 =            (1 << 0),
@@ -143,7 +150,7 @@ MemoryPoolSlot *func_8007C12C(s32 spriteID, s32 arg1); // Non Matching
 void tex_init_textures(void); // Non Matching
 void load_blinking_lights_texture(Gfx **dList, TextureHeader *texture_list, u32 flags,
                                   s32 texture_index);        // Non Matching
-void build_tex_display_list(TextureHeader *tex, Gfx *dList); // Non Matching
+void build_tex_display_list(TextureHeader *tex, Gfx *_dList);   // Non Matching
 void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2); // Non Matching
 
 #endif
