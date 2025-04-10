@@ -509,17 +509,18 @@ void bgdraw_texture_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
 }
 
 /**
- * Renders the background screen after a race finishes while you're at the menu deciding what to do next.
+ * Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
+ * https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
  * Official Name: rcpMosaicClear
 */
 void bgdraw_texture(Gfx **dList) {
-    // All variables use the (30.2) fixed-point format
+    s32 widthAndHeight;
+    // The following variables use the (30.2) fixed-point format
     s32 sumTextureHeights;
     s32 videoHeight;
     s32 videoWidth;
     s32 texWidth;
-    s32 texHeight;
-    s32 widthAndHeight;
+    s32 texHeight;    
     s32 xOffset;
     s32 uly;
     s32 ulx;

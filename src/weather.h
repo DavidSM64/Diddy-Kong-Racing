@@ -48,12 +48,12 @@ typedef struct RainPosData {
 
 /* Size: 0x18 Bytes */
 typedef struct RainGfxData {
-    s16 unk0; //tri - u?
-    s16 unk2; //tri - v?
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
+    s16 offsetU;
+    s16 offsetV;
+    s16 scaleU;
+    s16 scaleV;
+    s16 scrollSpeedU;
+    s16 scrollSpeedV;
     TextureHeader *tex;
     u8 primitiveRed;
     u8 primitiveGreen;

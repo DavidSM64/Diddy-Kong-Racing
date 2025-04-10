@@ -70,14 +70,12 @@ LensFlareData gLensPreset3[5] = { { 3, { { { 255, 128, 255, 128 } } }, 0.5f, -64
 Object *gLensFlare = NULL;
 s32 gLensFlareOff = TRUE;
 s32 gLensFlareOverrideObjs = 0;
-f32 D_800E2A8C = -200.0f;
-f32 D_800E2A90 = 200.0f;
-f32 D_800E2A94 = 200.0f;
-f32 D_800E2A98 = 200.0f;
-f32 D_800E2A9C = 200.0f;
-f32 D_800E2AA0 = -200.0f;
-f32 D_800E2AA4 = -200.0f;
-f32 D_800E2AA8 = -200.0f;
+Vec2f gRainQuad[4] = {
+    { -200.0f,  200.0f },
+    {  200.0f,  200.0f },
+    {  200.0f, -200.0f },
+    { -200.0f, -200.0f }
+};
 
 Vertex gRainVertices[16] = {
     { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 },
@@ -1073,77 +1071,88 @@ void rain_sound(UNUSED s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-void render_rain_overlay(RainGfxData *arg0, s32 arg1) {
-    f32 zSins;
-    Triangle *sp64;
-    f32 zCoss;
-    s32 altVertical;
-    s32 altHorizontal;
-    s32 opacity;
-    s32 horizontal;
+void render_rain_overlay(RainGfxData *rainGfx, s32 time) {
+    s32 u0;
+    s32 v0;
     s32 vertical;
-    s32 temp_t9;
-    s32 temp_v1;
+    s32 horizontal;
+    s32 maskU;
+    s32 maskV;
+    s32 opacity;
+    s32 i;
+    f32 zSin;
+    f32 zCos;
+    int unused;
+    int unused2;
     TextureHeader *tex;
-    Vertex *verts;
-    Triangle *tris;
-
-    tex = arg0->tex;
-    if (tex != NULL) {
-        horizontal = tex->width << 5;
-        vertical = tex->height << 5;
-        temp_v1 = (horizontal * 2) - 1;
-        temp_t9 = ((vertical * 2) - 1) & 0xFFFFFFFFFFFFFFFF;
-        arg0->unk0 = (normalise_time(arg0->unk8 * arg1) + arg0->unk0) & temp_v1;
-        arg0->unk2 = (normalise_time(arg0->unkA * arg1) + arg0->unk2) & temp_t9;
-        horizontal = (arg0->unk4 * horizontal) >> 8;
-        opacity = (arg0->opacity * (((gRainOpacity >> 2) * gLightningFrequency) >> 14)) >> 16;
-        if (opacity > 0) {
-            altVertical = arg0->unk2;
-            vertical = ((arg0->unk6 * vertical) >> 8) + arg0->unk2;
-            altHorizontal =
-                (arg0->unk0 + ((horizontal * 6 * gWeatherCamera->trans.rotation.y_rotation) >> 16)) & temp_v1;
-            horizontal += altHorizontal;
-            zSins = sins_f(gWeatherCamera->trans.rotation.z_rotation);
-            zCoss = coss_f(gWeatherCamera->trans.rotation.z_rotation);
-            verts = &gRainVertices[gRainVertexFlip];
-            verts[0].x = ((D_800E2A8C * zCoss) - (D_800E2A9C * zSins));
-            verts[0].y = ((D_800E2A8C * zSins) + (D_800E2A9C * zCoss));
-            verts[1].x = ((D_800E2A9C * zCoss) - (D_800E2A9C * zSins));
-            verts[1].y = ((D_800E2A9C * zSins) + (D_800E2A9C * zCoss));
-            verts[2].x = ((D_800E2A9C * zCoss) - (D_800E2AA8 * zSins));
-            verts[2].y = ((D_800E2A9C * zSins) + (D_800E2AA8 * zCoss));
-            verts[3].x = ((D_800E2AA8 * zCoss) - (D_800E2AA8 * zSins));
-            verts[3].y = ((D_800E2AA8 * zSins) + (D_800E2AA8 * zCoss));
-            tris = gCurrWeatherTriList;
-            tris[0].vertices = (0x40 << 24) | (0 << 16) | (1 << 8) | 2;
-            tris[0].uv0.u = altHorizontal;
-            tris[0].uv0.v = altVertical;
-            tris[0].uv1.u = horizontal;
-            tris[0].uv1.v = altVertical;
-            tris[0].uv2.u = horizontal;
-            tris[0].uv2.v = vertical;
-            tris[1].vertices = (0x40 << 24) | (2 << 16) | (3 << 8) | 0;
-            tris[1].uv0.u = horizontal;
-            tris[1].uv0.v = vertical;
-            tris[1].uv1.u = altHorizontal;
-            tris[1].uv1.v = vertical;
-            tris[1].uv2.u = altHorizontal;
-            tris[1].uv2.v = altVertical;
-            sp64 = tris + 0x20;
-            func_8007F594(&gCurrWeatherDisplayList, 0,
-                          COLOUR_RGBA32(arg0->primitiveRed, arg0->primitiveGreen, arg0->primitiveBlue, opacity),
-                          COLOUR_RGBA32(arg0->environmentRed, arg0->environmentGreen, arg0->environmentBlue, 0));
-            gDkrDmaDisplayList(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
-            gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(&gRainVertices[gRainVertexFlip]), 4, 0);
-            gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(gCurrWeatherTriList), 2, 1);
-            gDPPipeSync(gCurrWeatherDisplayList++);
-            gRainVertexFlip = (gRainVertexFlip + 4) & 0xF;
-            gCurrWeatherTriList = sp64;
-        }
+    Gfx *curDL;
+    Triangle *tri;
+    
+    if (rainGfx->tex == NULL) {
+        return;
     }
+    tex = rainGfx->tex;
+    
+    horizontal = tex->width << 5;
+    vertical = tex->height << 5;
+    maskU = (horizontal * 2) - 1;
+    maskV = (vertical * 2) - 1;
+
+    rainGfx->offsetU = (normalise_time(rainGfx->scrollSpeedU * time) + rainGfx->offsetU) & maskU;
+    rainGfx->offsetV = (normalise_time(rainGfx->scrollSpeedV * time) + rainGfx->offsetV) & maskV;
+
+    horizontal = (rainGfx->scaleU * horizontal) >> 8;
+    vertical = (rainGfx->scaleV * vertical) >> 8;
+
+    opacity = ((gRainOpacity >> 2) * gLightningFrequency) >> 14;
+    opacity = (opacity * rainGfx->opacity) >> 16;
+    if (opacity <= 0) {
+        return;
+    }
+
+    u0 = (rainGfx->offsetU + ((horizontal * 6 * gWeatherCamera->trans.rotation.x) >> 0x10)) & maskU;
+    v0 = rainGfx->offsetV;
+
+    horizontal += u0;
+    vertical += v0;
+    
+    zSin = sins_f(gWeatherCamera->trans.rotation.z);
+    zCos = coss_f(gWeatherCamera->trans.rotation.z);
+    
+    for (i = 0; i < ARRAY_COUNT(gRainQuad); i++) {
+        gRainVertices[gRainVertexFlip + i].x = gRainQuad[i].x * zCos - gRainQuad[i].y * zSin;
+        gRainVertices[gRainVertexFlip + i].y = gRainQuad[i].y * zCos + gRainQuad[i].x * zSin;
+    }
+    
+    curDL = gCurrWeatherDisplayList;
+    tri = gCurrWeatherTriList;
+
+    tri->vertices = (64 << 24) | (0 << 16) | (1 << 8) | 2;
+    tri->uv0.u = u0;
+    tri->uv0.v = v0;
+    tri->uv1.u = horizontal;
+    tri->uv1.v = v0;
+    tri->uv2.u = horizontal;
+    tri->uv2.v = vertical;
+    tri++;
+
+    tri->vertices = (64 << 24) | (2 << 16) | (3 << 8) | 0;
+    tri->uv0.u = horizontal;
+    tri->uv0.v = vertical;
+    tri->uv1.u = u0;
+    tri->uv1.v = vertical;
+    tri->uv2.u = u0;
+    tri->uv2.v = v0;
+    tri++;
+
+    func_8007F594(&curDL, 0,
+                  COLOUR_RGBA32(rainGfx->primitiveRed, rainGfx->primitiveGreen, rainGfx->primitiveBlue, opacity),
+                  COLOUR_RGBA32(rainGfx->environmentRed, rainGfx->environmentGreen, rainGfx->environmentBlue, 0));
+    gDkrDmaDisplayList(curDL++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+    gSPVertexDKR(curDL++, OS_PHYSICAL_TO_K0(gRainVertices + gRainVertexFlip), 4, 0);
+    gSPPolygon(curDL++, OS_PHYSICAL_TO_K0(gCurrWeatherTriList), 2, 1);
+    gDPPipeSync(curDL++);
+    gRainVertexFlip = (gRainVertexFlip + 4) & 0xF;
+    gCurrWeatherDisplayList = curDL;
+    gCurrWeatherTriList = tri;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/weather/render_rain_overlay.s")
-#endif
