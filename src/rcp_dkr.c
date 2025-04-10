@@ -434,7 +434,7 @@ void bgdraw_render(Gfx **dList, MatrixS **mtx, s32 drawBG) {
             if (gChequerBGEnabled) {
                 bgdraw_chequer(dList); // Unused
             } else if (gTexBGTex1) {
-                func_80078190(dList);
+                bgdraw_texture(dList);
             } else if (gBGDrawFunc.ptr != NULL) {
                 gBGDrawFunc.function(dList, mtx);
             } else {
@@ -454,7 +454,7 @@ void bgdraw_render(Gfx **dList, MatrixS **mtx, s32 drawBG) {
             if (gChequerBGEnabled) {
                 bgdraw_chequer(dList); // Unused
             } else if (gTexBGTex1) {
-                func_80078190(dList);
+                bgdraw_texture(dList);
             } else if (gBGDrawFunc.ptr != NULL) {
                 gBGDrawFunc.function(dList, mtx);
             } else {
@@ -508,117 +508,85 @@ void bgdraw_texture_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
     gTexBGShiftX = shiftX * 4;
 }
 
-// bgdraw_texture
-#ifdef NON_EQUIVALENT
 /**
  * Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
  * https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
  * Official Name: rcpMosaicClear
- */
-void func_80078190(Gfx **dList) {
-    s32 texture1And2UpperHeight;
+*/
+void bgdraw_texture(Gfx **dList) {
+    s32 widthAndHeight;
+    // The following variables use the (30.2) fixed-point format
+    s32 sumTextureHeights;
     s32 videoHeight;
     s32 videoWidth;
-    s32 upperVideoWidth;
-    s32 upperVideoHeight;
-    s32 texture1UpperWidth;
-    s32 texture1UpperHeight;
-    // s32 texture2UpperHeight;
-    s32 widthAndHeight;
-    s32 yPos;
-    s32 var_s3;
-    s32 uly; // the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
-    s32 ulx; // the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
-    s32 lry; // the y-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
-    s32 lrx; // the x-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
-    s32 t;   // the texture coordinate t of upper-left corner of rectangle (s10.5)
-    s32 s;   // the texture coordinate s of upper-left corner of rectangle (s10.5)
+    s32 texWidth;
+    s32 texHeight;    
+    s32 xOffset;
+    s32 uly;
+    s32 ulx;
 
     widthAndHeight = fb_size();
     videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
-    videoHeight = GET_VIDEO_HEIGHT(widthAndHeight);
+    videoHeight = GET_VIDEO_HEIGHT(widthAndHeight) & 0xFFFF;    
     gSPDisplayList((*dList)++, dRaceFinishBackgroundSettings);
 
     if (gTexBGTex2 == NULL) {
+        // Fill the background with a single texture
         gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(gTexBGTex1->cmd), gTexBGTex1->numberOfCommands);
-        upperVideoWidth = videoWidth << 2;
-        upperVideoHeight = videoHeight << 2;
-        texture1UpperWidth = gTexBGTex1->width << 2;
-        texture1UpperHeight = gTexBGTex1->height << 2;
-        var_s3 = 0;
-        for (yPos = 0; yPos < upperVideoHeight; yPos += texture1UpperHeight) {
-            uly = yPos;
-            lry = yPos + texture1UpperHeight;
-            ulx = -var_s3;
-            while (ulx < upperVideoWidth) {
-                lrx = ulx + texture1UpperWidth;
-                s = 0;
-                t = 0;
+        videoWidth <<= 2;
+        videoHeight <<= 2;
+        texWidth = gTexBGTex1->width << 2;
+        texHeight = gTexBGTex1->height << 2;
+        for (xOffset = 0, uly = 0; uly < videoHeight; uly += texHeight) {
+            for (ulx = -xOffset; ulx < videoWidth; ulx += texWidth) {
                 if (ulx < 0) {
-                    s = -(ulx << 3);
-                    gSPTextureRectangle((*dList)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, -(ulx << 3), 0, 1024, 1024);
                 } else {
-                    gSPTextureRectangle((*dList)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0, 1024, 1024);
                 }
-                ulx = lrx;
             }
-            var_s3 = (var_s3 + gTexBGShiftX) & (texture1UpperWidth - 1);
+            xOffset = (xOffset + gTexBGShiftX) & (texWidth - 1);
         }
     } else {
+        // The screen is filled with alternating horizontal stripes of two textures
         gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(gTexBGTex1->cmd), gTexBGTex1->numberOfCommands);
-        upperVideoWidth = videoWidth << 2;
-        upperVideoHeight = videoHeight << 2;
-        texture1UpperWidth = gTexBGTex1->width << 2;
-        texture1UpperHeight = gTexBGTex1->height << 2;
-        // texture2UpperHeight = gTexBGTex2->height << 2;
-        texture1And2UpperHeight = (gTexBGTex2->height << 2) + texture1UpperHeight;
-        var_s3 = 0;
-        for (yPos = 0; yPos < upperVideoHeight; yPos += texture1And2UpperHeight) {
-            uly = yPos;
-            lry = yPos + texture1UpperHeight;
-            ulx = -var_s3;
-            while (ulx < upperVideoWidth) {
-                lrx = ulx + texture1UpperWidth;
-                s = 0;
-                t = 0;
+        videoWidth <<= 2;
+        videoHeight <<= 2;
+        uly = 0;
+        texWidth = gTexBGTex1->width << 2;        
+        texHeight = gTexBGTex1->height << 2;        
+        sumTextureHeights = (gTexBGTex2->height << 2) + texHeight;
+        for (xOffset = 0; uly < videoHeight; uly += sumTextureHeights) {
+            for (ulx = -xOffset; ulx < videoWidth; ulx += texWidth) {
                 if (ulx < 0) {
-                    s = -(ulx << 3);
-                    gSPTextureRectangle((*dList)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, -(ulx << 3), 0, 1024, 1024);
                 } else {
-                    gSPTextureRectangle((*dList)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0, 1024, 1024);
                 }
-                ulx = lrx;
             }
-            var_s3 = (var_s3 + gTexBGShiftX) & (texture1UpperWidth - 1);
+            xOffset = (xOffset + gTexBGShiftX) & (texWidth - 1);
         }
+
         gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(gTexBGTex2->cmd), gTexBGTex2->numberOfCommands);
-        upperVideoWidth <<= 2;
-        upperVideoHeight <<= 2;
-        var_s3 = 0;
-        for (yPos = texture1UpperHeight; yPos < upperVideoHeight; yPos += texture1And2UpperHeight) {
-            uly = yPos;
-            lry = yPos + texture1And2UpperHeight;
-            ulx = -var_s3;
-            while (ulx < upperVideoWidth) {
-                lrx = ulx + texture1UpperWidth;
-                s = 0;
-                t = 0;
+        // Width and height are mistakenly multiplied by 4 again, but it doesn't cause any issues
+        videoWidth <<= 2;
+        videoHeight <<= 2;
+
+        uly = texHeight;
+        texHeight = gTexBGTex2->height << 2;
+        for (xOffset = 0; uly < videoHeight; uly += sumTextureHeights) {
+            for (ulx = -xOffset; ulx < videoWidth; ulx += texWidth) {
                 if (ulx < 0) {
-                    s = -(ulx << 3);
-                    gSPTextureRectangle((*dList)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, -(ulx << 3), 0, 1024, 1024);
                 } else {
-                    gSPTextureRectangle((*dList)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0, 1024, 1024);
                 }
-                ulx = lrx;
             }
-            var_s3 = (var_s3 + gTexBGShiftX) & (texture1UpperWidth - 1);
+            xOffset = (xOffset + gTexBGShiftX) & (texWidth - 1);
         }
     }
     gDPPipeSync((*dList)++);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/rcp_dkr/func_80078190.s")
-#endif
 
 /**
  * Enables the chequer background and sets up its properties.
