@@ -38,7 +38,6 @@ SECTIONS
         main_TEXT_START = .;
         build/src/hasm/entrypoint.s.o(.text);
         build/src*.o(.text);
-        build/src/hasm*.o(.text);
         build/libultra/src*.o(.text);
         build/asm/data/ucode_audio.s.o(.text);
         build/asm/data/ucode_boot.s.o(.text);
@@ -50,9 +49,7 @@ SECTIONS
         main_TEXT_END = .;
         main_TEXT_SIZE = ABSOLUTE(main_TEXT_END - main_TEXT_START);
         main_DATA_START = .;
-        build/src/hasm/entrypoint.s.o(.data);
         build/src*.o(.data*);
-        build/src/hasm*.o(.data*);
         build/libultra/src*.o(.data);
         build/asm/data/data_audio.s.o(.data);
         build/asm/data/data_f3ddkr_dram.s.o(.data);
@@ -63,9 +60,7 @@ SECTIONS
         main_DATA_END = .;
         main_DATA_SIZE = ABSOLUTE(main_DATA_END - main_DATA_START);
         main_RODATA_START = .;
-        build/src/hasm/entrypoint.s.o(.rodata);
         build/src*.o(.rodata*);
-        build/src/hasm*.o(.rodata*);
         build/libultra/src*.o(.rodata*);
         . = ALIGN(., 16);
         main_RODATA_END = .;
@@ -81,7 +76,6 @@ SECTIONS
         build/src/objects.c.o(.bss);
 
         build/src*.o(.*bss*);
-        build/src/hasm*.o(.*bss*);
         build/libultra/src*.o(.*bss*);
         . = ALIGN(., 16);
         main_BSS_END = .;
