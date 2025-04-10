@@ -1127,7 +1127,7 @@ void render_rain_overlay(RainGfxData *rainGfx, s32 time) {
     curDL = gCurrWeatherDisplayList;
     tri = gCurrWeatherTriList;
 
-    tri->vertices = (64 << 24) | (0 << 16) | (1 << 8) | 2;
+    tri->vertices = DKR_TRIANGLE(BACKFACE_DRAW, 0, 1, 2);
     tri->uv0.u = u0;
     tri->uv0.v = v0;
     tri->uv1.u = horizontal;
@@ -1136,7 +1136,7 @@ void render_rain_overlay(RainGfxData *rainGfx, s32 time) {
     tri->uv2.v = vertical;
     tri++;
 
-    tri->vertices = (64 << 24) | (2 << 16) | (3 << 8) | 0;
+    tri->vertices = DKR_TRIANGLE(BACKFACE_DRAW, 2, 3, 0);
     tri->uv0.u = horizontal;
     tri->uv0.v = vertical;
     tri->uv1.u = u0;
