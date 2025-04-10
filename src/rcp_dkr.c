@@ -434,7 +434,7 @@ void bgdraw_render(Gfx **dList, MatrixS **mtx, s32 drawBG) {
             if (gChequerBGEnabled) {
                 bgdraw_chequer(dList); // Unused
             } else if (gTexBGTex1) {
-                func_80078190(dList);
+                bgdraw_texture(dList);
             } else if (gBGDrawFunc.ptr != NULL) {
                 gBGDrawFunc.function(dList, mtx);
             } else {
@@ -454,7 +454,7 @@ void bgdraw_render(Gfx **dList, MatrixS **mtx, s32 drawBG) {
             if (gChequerBGEnabled) {
                 bgdraw_chequer(dList); // Unused
             } else if (gTexBGTex1) {
-                func_80078190(dList);
+                bgdraw_texture(dList);
             } else if (gBGDrawFunc.ptr != NULL) {
                 gBGDrawFunc.function(dList, mtx);
             } else {
@@ -508,18 +508,21 @@ void bgdraw_texture_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
     gTexBGShiftX = shiftX * 4;
 }
 
-// bgdraw_texture
-
-void func_80078190(Gfx **dList) {
-    s32 tex1and2Height;
+/**
+ * Renders the background screen after a race finishes while you're at the menu deciding what to do next.
+ * Official Name: rcpMosaicClear
+*/
+void bgdraw_texture(Gfx **dList) {
+    // All variables use the (30.2) fixed-point format
+    s32 sumTextureHeights;
     s32 videoHeight;
     s32 videoWidth;
     s32 texWidth;
     s32 texHeight;
     s32 widthAndHeight;
-    s32 var_s3;
-    s32 uly; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
-    s32 ulx; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
+    s32 xOffset;
+    s32 uly;
+    s32 ulx;
 
     widthAndHeight = fb_size();
     videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
@@ -527,53 +530,58 @@ void func_80078190(Gfx **dList) {
     gSPDisplayList((*dList)++, dRaceFinishBackgroundSettings);
 
     if (gTexBGTex2 == NULL) {
+        // Fill the background with a single texture
         gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(gTexBGTex1->cmd), gTexBGTex1->numberOfCommands);
         videoWidth <<= 2;
         videoHeight <<= 2;
         texWidth = gTexBGTex1->width << 2;
         texHeight = gTexBGTex1->height << 2;
-        for (var_s3 = 0, uly = 0; uly < videoHeight; uly += texHeight) {
-            for (ulx = -var_s3; ulx < videoWidth; ulx += texWidth) {
+        for (xOffset = 0, uly = 0; uly < videoHeight; uly += texHeight) {
+            for (ulx = -xOffset; ulx < videoWidth; ulx += texWidth) {
                 if (ulx < 0) {
                     gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, -(ulx << 3), 0, 1024, 1024);
                 } else {
                     gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0, 1024, 1024);
                 }
             }
-            var_s3 = (var_s3 + gTexBGShiftX) & (texWidth - 1);
+            xOffset = (xOffset + gTexBGShiftX) & (texWidth - 1);
         }
     } else {
+        // The screen is filled with alternating horizontal stripes of two textures
         gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(gTexBGTex1->cmd), gTexBGTex1->numberOfCommands);
         videoWidth <<= 2;
         videoHeight <<= 2;
         uly = 0;
         texWidth = gTexBGTex1->width << 2;        
         texHeight = gTexBGTex1->height << 2;        
-        tex1and2Height = (gTexBGTex2->height << 2) + texHeight;
-        for (var_s3 = 0; uly < videoHeight; uly += tex1and2Height) {
-            for (ulx = -var_s3; ulx < videoWidth; ulx += texWidth) {
+        sumTextureHeights = (gTexBGTex2->height << 2) + texHeight;
+        for (xOffset = 0; uly < videoHeight; uly += sumTextureHeights) {
+            for (ulx = -xOffset; ulx < videoWidth; ulx += texWidth) {
                 if (ulx < 0) {
                     gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, -(ulx << 3), 0, 1024, 1024);
                 } else {
                     gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0, 1024, 1024);
                 }
             }
-            var_s3 = (var_s3 + gTexBGShiftX) & (texWidth - 1);
+            xOffset = (xOffset + gTexBGShiftX) & (texWidth - 1);
         }
+
         gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(gTexBGTex2->cmd), gTexBGTex2->numberOfCommands);
+        // Width and height are mistakenly multiplied by 4 again, but it doesn't cause any issues
         videoWidth <<= 2;
         videoHeight <<= 2;
+
         uly = texHeight;
         texHeight = gTexBGTex2->height << 2;
-        for (var_s3 = 0; uly < videoHeight; uly += tex1and2Height) {
-            for (ulx = -var_s3; ulx < videoWidth; ulx += texWidth) {
+        for (xOffset = 0; uly < videoHeight; uly += sumTextureHeights) {
+            for (ulx = -xOffset; ulx < videoWidth; ulx += texWidth) {
                 if (ulx < 0) {
                     gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, -(ulx << 3), 0, 1024, 1024);
                 } else {
                     gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0, 1024, 1024);
                 }
             }
-            var_s3 = (var_s3 + gTexBGShiftX) & (texWidth - 1);
+            xOffset = (xOffset + gTexBGShiftX) & (texWidth - 1);
         }
     }
     gDPPipeSync((*dList)++);
