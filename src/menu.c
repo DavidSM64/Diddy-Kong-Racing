@@ -1288,9 +1288,7 @@ char *sControllerPakFullMenuText[5] = { 0, 0, 0, 0, 0 };
 char *sNoControllerPakMenuText[5] = { 0, 0, 0, 0, 0 };
 
 // CORRUPT DATA / If you wish to change / Controller Pak or Rumble Pak, / please do so now.
-char *sCorruptDataMenuText[3] = { 0, 0, 0 }; // This should be 5 in size? This is unclear still.
-
-char *D_800E09F8[3] = { 0, 0, 0 };
+char *sCorruptDataMenuText[6] = { 0, 0, 0, 0, 0, 0 };
 
 // If you wish to use / the Controller Pak / insert it now!
 char *sInsertControllerPakMenuText[3] = { 0, 0, 0 };

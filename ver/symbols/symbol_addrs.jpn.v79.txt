@@ -2645,7 +2645,6 @@ sBadControllerPakMenuText = 0x800E2410;
 sControllerPakFullMenuText = 0x800E2424;
 sNoControllerPakMenuText = 0x800E2438;
 sCorruptDataMenuText = 0x800E244C;
-D_800E09F8 = 0x800E2458;
 sInsertControllerPakMenuText = 0x800E2464;
 D_800E0A10 = 0x800E2470;
 sInsertRumblePakMenuText = 0x800E2474;
