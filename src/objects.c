@@ -607,35 +607,39 @@ void allocate_object_pools(void) {
     clear_object_pointers();
 }
 
-#ifdef NON_EQUIVALENT
 // Decrypts cheats
-void decrypt_magic_codes(s32 *data, s32 length) {
-    u8 sp3;
-    u8 sp2;
-    u8 sp1;
-    u8 sp0;
-    // s32 numWords;
+void decrypt_magic_codes(u8 *data, s32 length) {
     s32 i;
-
-    // numWords = length / 4;
-
-    for (i = 0; i < length; i++) {
-        sp0 = ((data[i + 3] & 0xC0) >> 6) | (data[i + 0] & 0xC0) | ((data[i + 1] & 0xC0) >> 2) |
-              ((data[i + 2] & 0xC0) >> 4);
-        sp1 = ((data[i + 3] & 0x30) >> 4) | ((data[i + 0] & 0x30) << 2) | (data[i + 1] & 0x30) |
-              ((data[i + 2] & 0x30) >> 2);
-        sp2 =
-            ((data[i + 3] & 0xC) >> 2) | ((data[i + 0] & 0xC) << 4) | ((data[i + 1] & 0xC) << 2) | (data[i + 2] & 0xC);
-        sp3 = (data[i + 3] & 3) | (data[i + 0] << 6) | ((data[i + 1] & 3) << 4) | ((data[i + 2] & 3) << 2);
-        data[i + 0] = ((sp0 & 0x55) << 1) | ((sp0 & 0xAA) >> 1);
-        data[i + 1] = ((sp1 & 0x55) << 1) | ((sp1 & 0xAA) >> 1);
-        data[i + 2] = ((sp2 & 0x55) << 1) | ((sp2 & 0xAA) >> 1);
-        data[i + 3] = ((sp3 & 0x55) << 1) | ((sp3 & 0xAA) >> 1);
+    s32 j;
+    u8 *ptr = data;
+    u8 temp[4];    
+    
+    for (i = 0; i < (length >> 2); i++) {
+        // Swap bits according to the following pattern:
+        // AABBCCDD EEFFGGHH IIJJKKLL MMNNOOPP -> AAEEIIMM BBFFJJNN CCGGKKOO DDHHLLPP
+        temp[0] = ((ptr[0] & 0xC0)     ) |
+                  ((ptr[1] & 0xC0) >> 2) |
+                  ((ptr[2] & 0xC0) >> 4) |
+                  ((ptr[3] & 0xC0) >> 6);
+        temp[1] = ((ptr[0] & 0x30) << 2) |
+                  ((ptr[1] & 0x30)     ) |
+                  ((ptr[2] & 0x30) >> 2) |
+                  ((ptr[3] & 0x30) >> 4);
+        temp[2] = ((ptr[0] & 0x0C) << 4) |
+                  ((ptr[1] & 0x0C) << 2) |
+                  ((ptr[2] & 0x0C)     ) |
+                  ((ptr[3] & 0x0C) >> 2);
+        temp[3] = ((ptr[0] & 0x03) << 6) |
+                  ((ptr[1] & 0x03) << 4) |
+                  ((ptr[2] & 0x03) << 2) |
+                  ((ptr[3] & 0x03)     );
+        
+        // Swap the odd and even bits
+        for (j = 0; j < 4; j++) {
+            *ptr++ = (((temp[j] & 0xAA) >> 1) | ((temp[j] & 0x55) << 1));    
+        }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/decrypt_magic_codes.s")
-#endif
 
 /**
  * Set all object counters and headers to zero, effectively telling the game there are no objects currently in the
