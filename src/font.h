@@ -196,7 +196,7 @@ s32 func_800C68CC_C74CC(u16 arg0);
 void func_800C6DD4_C79D4(Gfx *dList, Asset46 *asset, s32 width, s32 height);
 s32 func_800C7744_C8344(Gfx **dList, u16 charIndex, s32 *outLeft, s32 *outTop, s32 *outRight, s32 *outBottom);
 void func_800C7804_C8404(s32 arg0);
-void func_800C7864_C8464(char *inString, char *outString);
+void fontConvertString(char *inString, char *outString);
 void func_800C78E0_C84E0(void);
 
 #endif
