@@ -8,6 +8,7 @@
 #include "level_object_entries.h"
 #include "object_properties.h"
 #include "gbi.h"
+#include "PR/libaudio.h"
 
 // Stolen from PD
 // This hacky structure allows coords to be accessed using
@@ -98,7 +99,7 @@ typedef struct SoundMask {
     /* 0x11 */ u8 unk11;
     /* 0x12 */ u8 unk12;
     /* 0x14 */ s32 distance;
-    /* 0x18 */ s32 unk18;
+    /* 0x18 */ ALSoundState *soundPtr;
     /* 0x1C */ struct SoundMask **soundMask;
     /* 0x20 */ u8 unk20;
     /* 0x21 */ u8 unk21;
