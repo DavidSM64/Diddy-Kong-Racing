@@ -512,7 +512,7 @@ void bgdraw_texture_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
  * Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
  * https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
  * Official Name: rcpMosaicClear
-*/
+ */
 void bgdraw_texture(Gfx **dList) {
     s32 widthAndHeight;
     // The following variables use the (30.2) fixed-point format
@@ -520,14 +520,14 @@ void bgdraw_texture(Gfx **dList) {
     s32 videoHeight;
     s32 videoWidth;
     s32 texWidth;
-    s32 texHeight;    
+    s32 texHeight;
     s32 xOffset;
     s32 uly;
     s32 ulx;
 
     widthAndHeight = fb_size();
     videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
-    videoHeight = GET_VIDEO_HEIGHT(widthAndHeight) & 0xFFFF;    
+    videoHeight = GET_VIDEO_HEIGHT(widthAndHeight) & 0xFFFF;
     gSPDisplayList((*dList)++, dRaceFinishBackgroundSettings);
 
     if (gTexBGTex2 == NULL) {
@@ -540,9 +540,11 @@ void bgdraw_texture(Gfx **dList) {
         for (xOffset = 0, uly = 0; uly < videoHeight; uly += texHeight) {
             for (ulx = -xOffset; ulx < videoWidth; ulx += texWidth) {
                 if (ulx < 0) {
-                    gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, -(ulx << 3), 0, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE,
+                                        -(ulx << 3), 0, 1024, 1024);
                 } else {
-                    gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0,
+                                        1024, 1024);
                 }
             }
             xOffset = (xOffset + gTexBGShiftX) & (texWidth - 1);
@@ -553,15 +555,17 @@ void bgdraw_texture(Gfx **dList) {
         videoWidth <<= 2;
         videoHeight <<= 2;
         uly = 0;
-        texWidth = gTexBGTex1->width << 2;        
-        texHeight = gTexBGTex1->height << 2;        
+        texWidth = gTexBGTex1->width << 2;
+        texHeight = gTexBGTex1->height << 2;
         sumTextureHeights = (gTexBGTex2->height << 2) + texHeight;
         for (xOffset = 0; uly < videoHeight; uly += sumTextureHeights) {
             for (ulx = -xOffset; ulx < videoWidth; ulx += texWidth) {
                 if (ulx < 0) {
-                    gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, -(ulx << 3), 0, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE,
+                                        -(ulx << 3), 0, 1024, 1024);
                 } else {
-                    gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0,
+                                        1024, 1024);
                 }
             }
             xOffset = (xOffset + gTexBGShiftX) & (texWidth - 1);
@@ -577,9 +581,11 @@ void bgdraw_texture(Gfx **dList) {
         for (xOffset = 0; uly < videoHeight; uly += sumTextureHeights) {
             for (ulx = -xOffset; ulx < videoWidth; ulx += texWidth) {
                 if (ulx < 0) {
-                    gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, -(ulx << 3), 0, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, 0, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE,
+                                        -(ulx << 3), 0, 1024, 1024);
                 } else {
-                    gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0, 1024, 1024);
+                    gSPTextureRectangle((*dList)++, ulx, uly, ulx + texWidth, uly + texHeight, G_TX_RENDERTILE, 0, 0,
+                                        1024, 1024);
                 }
             }
             xOffset = (xOffset + gTexBGShiftX) & (texWidth - 1);
