@@ -416,7 +416,7 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
         if (temp->unk0.unk0_02 != 0) {
             if (func_80009AB4(i) != 0) {
                 for (j = 0; j < temp->unkB8; j++) {
-                    distBetween = audioline_distance(x, y, z, &temp->unk4.unk4_vec[j], &outX, &outY, &outZ);
+                    distBetween = audioline_distance(x, y, z, (f32 *) &temp->unk4.unk4_vec[j], &outX, &outY, &outZ);
                     if (distBetween < var_s6) {
                         numOfYVals = func_8002BAB0(levelSegmentIndex, x, z, yVals);
                         for (k = 0; k < numOfYVals; k++) {
@@ -454,7 +454,7 @@ void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
         temp = &D_80119C58[i];
         if (temp->soundID != 0) {
             for (j = 0; j < temp->unk17C; j++) {
-                debug_render_line(arg0, arg1, arg2, &temp->unk4.unk4_vec[j], 0xFF, 0xFF, 0);
+                debug_render_line(arg0, arg1, arg2, (f32 *) &temp->unk4.unk4_vec[j], 0xFF, 0xFF, 0);
             }
         }
     }
@@ -463,7 +463,7 @@ void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
         temp2 = &D_8011A6D8[i];
         if (temp2->unk0.unk0_02 != 0) {
             for (j = 0; j < temp2->unkB8; j++) {
-                debug_render_line(arg0, arg1, arg2, &temp->unk4.unk4_vec[j], 0xFF, 0, 0xFF);
+                debug_render_line(arg0, arg1, arg2, (f32 *) &temp->unk4.unk4_vec[j], 0xFF, 0, 0xFF);
             }
         }
     }
