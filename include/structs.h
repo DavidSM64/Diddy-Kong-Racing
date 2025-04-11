@@ -1724,7 +1724,7 @@ typedef struct Object_68 {
  
 /* Size: 0x20 bytes */
 typedef struct ParticleEmitter {
-    /* 0x00 */ struct Particle *unk0;
+    /* 0x00 */ struct ParticleBehavior *behaviour;
     /* 0x04 */ s16 unk4;
     /* 0x06 */ u8 unk6;
     /* 0x07 */ u8 unk7;

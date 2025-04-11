@@ -230,48 +230,52 @@ typedef struct ParticleOtherSomething {
 } ParticleOtherSomething;
 
 typedef struct Particle {
-  union {
-  /* 0x0000 */ ParticleSegment segment;
-  /* 0x0000 */ ParticleData data;
-  };
-  union {
-  /* 0x0044 */ ParticleModel *modelData;
-  /* 0x0044 */ ParticleOtherSomething *unk44_1;
-  };
-  /* 0x0048 */ s16 behaviorId;
-  /* 0x004A */ s16 brightness;
-  /* 0x004C */ f32 baseVelX;
-  /* 0x0050 */ f32 baseVelY;
-  union {
-  /* 0x0054 */ f32 baseVelZ;
-  /* 0x0054 */ f32 *unk54_ptr;
-  };
-  union {
-  /* 0x0058 */ Particle_58 **unk58_ptr;
-  /* 0x0058 */ f32 forwardVel;
-  };
-  /* 0x005C */ s16 opacity;
-  /* 0x005E */ s16 opacityVel;
-  /* 0x0060 */ s16 opacityTimer;
-  /* 0x0062 */ s16 angleVelY;
-  /* 0x0064 */ s16 angleVelX;
-  /* 0x0066 */ s16 angleVelZ;
-  union {
-  /* 0x0068 */ f32 gravity;
-  struct {
-  /* 0x0068 */ u8 unk68b;
-  /* 0x0069 */ u8 unk69b;
-  /* 0x006A */ s8 unk6Ab;
-  /* 0x006B */ s8 unk6Bb;
-  };
-  };
-  /* 0x006C */ ColourRGBA colour;
-  /* 0x0070 */ struct Particle *unk70;
-  /* 0x0074 */ u8 unk74;
-  /* 0x0075 */ u8 modelFrame;
-  /* 0x0076 */ u8 unk76;
-  /* 0x0077 */ s8 unk77;
+    union {
+    /* 0x0000 */ ParticleSegment segment;
+    /* 0x0000 */ ParticleData data;
+    };
+    union {
+    /* 0x0044 */ ParticleModel *modelData;
+    /* 0x0044 */ ParticleOtherSomething *unk44_1;
+    };
+    /* 0x0048 */ s16 behaviorId;
+    /* 0x004A */ s16 brightness;
+    /* 0x004C */ f32 baseVelX;
+    /* 0x0050 */ f32 baseVelY;
+    union {
+    /* 0x0054 */ f32 baseVelZ;
+    /* 0x0054 */ f32 *unk54_ptr;
+    };
+    union {
+    /* 0x0058 */ Particle_58 **unk58_ptr;
+    /* 0x0058 */ f32 forwardVel;
+    };
+    /* 0x005C */ s16 opacity;
+    /* 0x005E */ s16 opacityVel;
+    /* 0x0060 */ s16 opacityTimer;
+    /* 0x0062 */ s16 angleVelY;
+    /* 0x0064 */ s16 angleVelX;
+    /* 0x0066 */ s16 angleVelZ;
+    union {
+    /* 0x0068 */ f32 gravity;
+    struct {
+    /* 0x0068 */ u8 unk68b;
+    /* 0x0069 */ u8 unk69b;
+    /* 0x006A */ s8 unk6Ab;
+    /* 0x006B */ s8 unk6Bb;
+    };
+    };
+    /* 0x006C */ ColourRGBA colour;
 } Particle;
+
+typedef struct SpriteParticle {
+    /* 0x0000 */ Particle base;
+    /* 0x0070 */ struct Particle *unk70;
+    /* 0x0074 */ u8 unk74;
+    /* 0x0075 */ u8 modelFrame;
+    /* 0x0076 */ u8 unk76;
+    /* 0x0077 */ s8 unk77;
+} SpriteParticle;
 
 // Size: 8 bytes
 typedef struct unkParticleBehaviorUnk9C {
@@ -282,42 +286,35 @@ typedef struct unkParticleBehaviorUnk9C {
     u8 pad7; // Probably alpha
 } unkParticleBehaviorUnk9C;
 
-// Almost an identical copy of Particle, but a few bytes shorter. Exists to make sure func_800B1CB8 matches.
-typedef struct ParticleType {
-    u8 pad[0x2C];
-    s16 unk2C;
-    u8 pad2[0x42];
-} ParticleType;
-
 void func_800AE270(void);
 void func_800AE2A0(void);
 void func_800AE2D8(void);
-void func_800AE374(void);
-void func_800AE438(void);
-void func_800AE490(void);
+void free_particle_buffers(void);
+void free_particle_vertex_triangles(void);
+void free_particle_assets(void);
 void generate_particle_shape_triangle(ParticleModel *model, Vertex **vtx, Triangle **triangles);
 void generate_particle_shape_quad(ParticleModel *model, Vertex **vtx, Triangle **triangles);
-void func_800AEF88(ParticleModel *model, Vertex **vtx, Triangle **triangles);
-void func_800AF024(ParticleModel *model, Vertex **vtx, Triangle **triangles);
+void generate_particle_shape_line(ParticleModel *model, Vertex **vtx, Triangle **triangles);
+void generate_particle_shape_sprite(ParticleModel *model, Vertex **vtx, Triangle **triangles);
 void func_800AF0A4(Particle *particle);
 void func_800AF0F0(Particle *particle);
 void partInitTrigger(Particle *particle, s32 behaviourID, s32 propertyID);
 void func_800AF29C(Particle *arg0, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
 void func_800AF6E4(Object *obj, s32 arg1);
 void func_800B2260(Particle *arg0);
-void func_800B263C(Particle *arg0);
+void func_800B263C(SpriteParticle *arg0);
 void init_particle_assets(void);
 void set_particle_texture_frame(Particle *particle);
 void func_800B03C0(Particle *particle, Particle *arg1, Particle *arg2, ParticleBehavior *behaviour);
 void func_800B2040(Particle *arg0);
 void handle_particle_movement(Particle *particle, s32 updateRate);
 void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *arg3);
-Particle *func_800B0698(Particle *arg0, Particle *arg1);
+SpriteParticle *func_800B0698(Particle *arg0, Particle *arg1);
 Particle *func_800B1CB8(s32 arg0);
 void func_800AFE5C(Particle *arg0, Particle *arg1);
 Particle *func_800B1130(Particle *arg0, Particle *arg1);
 void func_800AF52C(Object *obj, s32 arg1);
-void func_800AF134(Particle *particle, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
+void func_800AF134(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
 void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags);
 void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);
@@ -328,7 +325,7 @@ void func_800AF714(Object *racerObj, s32 updateRate);
 Particle* func_800B0BAC(Object* arg0, Particle* arg1);
 
 void func_800AF404(s32 updateRate); // Non Matching
-void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
+void init_particle_buffers(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
 void move_particle_basic_parent(Particle *);
 void move_particle_velocity_parent(Particle *);
 void move_particle_with_velocities(Particle *);

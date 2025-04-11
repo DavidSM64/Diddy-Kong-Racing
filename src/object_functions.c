@@ -6278,7 +6278,7 @@ void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
 
 /* Official name: bubblerInit */
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
-    func_800AF134((Particle *) obj->particleEmitter, entry->particleBehaviourID, entry->particlePropertyID, 0, 0, 0);
+    func_800AF134(obj->particleEmitter, entry->particleBehaviourID, entry->particlePropertyID, 0, 0, 0);
     obj->properties.common.unk0 = entry->particleDensity;
 }
 

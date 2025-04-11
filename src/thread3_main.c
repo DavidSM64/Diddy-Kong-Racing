@@ -389,7 +389,7 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     load_game_text_table();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, gGameCurrentCutscene);
     hud_init(get_viewport_count());
-    func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
+    init_particle_buffers(8, 16, 150, 100, 50, 0);
     ainode_update();
     osSetTime(0);
     mempool_free_timer(2);
@@ -880,7 +880,7 @@ void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     load_game_text_table();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
     hud_init(get_viewport_count());
-    func_800AE728(4, 4, 0x6E, 0x30, 0x20, 0);
+    init_particle_buffers(4, 4, 110, 48, 32, 0);
     ainode_update();
     osSetTime(0);
     mempool_free_timer(2);

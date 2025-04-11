@@ -36,24 +36,24 @@ const char D_800E8B44[] = "\nError :: particle %x is not indexed correctly in tr
 /************ .data ************/
 
 // I woundn't be suprised if most of these zeroes are really just null pointers.
-s32 D_800E2CA0 = 0;
+s32 gNumTriangleParticles = 0;
 s32 D_800E2CA4 = 0;
-ParticleType *D_800E2CA8 = NULL;
-s32 D_800E2CAC = 0;
+Particle *gTriangleParticleBuffer = NULL;
+s32 gNumRectangleParticles = 0;
 s32 D_800E2CB0 = 0;
-ParticleType *D_800E2CB4 = NULL;
-s32 D_800E2CB8 = 0;
+Particle *gRectangleParticleBuffer = NULL;
+s32 gNumPointParticles = 0;
 s32 D_800E2CBC = 0;
-ParticleType *D_800E2CC0 = NULL;
-s32 D_800E2CC4 = 0;
+Particle *gPointParticleBuffer = NULL;
+s32 gNumLineParticles = 0;
 s32 D_800E2CC8 = 0;
-ParticleType *D_800E2CCC = NULL;
-s32 D_800E2CD0 = 0;
+Particle *gLineParticleBuffer = NULL;
+s32 gNumSpriteParticles = 0;
 s32 D_800E2CD4 = 0;
-Particle *D_800E2CD8 = NULL;
+SpriteParticle *gSpriteParticleBuffer = NULL;
 UNUSED s32 D_800E2CDC = 0; // Only ever and checked for being less than 512.
-s32 *D_800E2CE0 = NULL;
-s32 *D_800E2CE4 = NULL;
+Vertex *gParticleVertexBuffer = NULL;
+Triangle *gParticleTriangleBuffer = NULL;
 s32 gParticlesAssetTableCount = 0;
 s32 *gParticlesAssets = NULL;
 
@@ -97,11 +97,11 @@ s16 D_800E2E28 = 0;
 
 f32 gParticleGravityTable[8] = { 0.0f, 0.1, 0.2f, 0.3f, 0.45f, 0.525f, 0.6f, 0.8f };
 
-s32 D_800E2E4C = 0;
-s32 D_800E2E50 = 0;
-s32 D_800E2E54 = 0;
-s32 D_800E2E58 = 0;
-s32 D_800E2E5C = 0;
+s32 gMaxTriangleParticles = 0;
+s32 gMaxRectangleParticles = 0;
+s32 gMaxPointParticles = 0;
+s32 gMaxLineParticles = 0;
+s32 gMaxSpriteParticles = 0;
 Sprite **D_800E2E60 = NULL;
 s32 D_800E2E64 = 0;
 
@@ -146,15 +146,15 @@ s16 D_80127C88[12];
 /******************************/
 
 void func_800AE270(void) {
-    func_800AE374();
-    func_800AE438();
+    free_particle_buffers();
+    free_particle_vertex_triangles();
     func_800AE2D8();
 }
 
 void func_800AE2A0(void) {
-    func_800AE374();
-    func_800AE438();
-    func_800AE490();
+    free_particle_buffers();
+    free_particle_vertex_triangles();
+    free_particle_assets();
     func_800AE2D8();
 }
 
@@ -170,41 +170,41 @@ void func_800AE2D8(void) {
     }
 }
 
-void func_800AE374(void) {
-    if (D_800E2CA8 != NULL) {
-        mempool_free(D_800E2CA8);
-        D_800E2CA8 = NULL;
+void free_particle_buffers(void) {
+    if (gTriangleParticleBuffer != NULL) {
+        mempool_free(gTriangleParticleBuffer);
+        gTriangleParticleBuffer = NULL;
     }
-    if (D_800E2CB4 != NULL) {
-        mempool_free(D_800E2CB4);
-        D_800E2CB4 = NULL;
+    if (gRectangleParticleBuffer != NULL) {
+        mempool_free(gRectangleParticleBuffer);
+        gRectangleParticleBuffer = NULL;
     }
-    if (D_800E2CC0 != NULL) {
-        mempool_free(D_800E2CC0);
-        D_800E2CC0 = NULL;
+    if (gPointParticleBuffer != NULL) {
+        mempool_free(gPointParticleBuffer);
+        gPointParticleBuffer = NULL;
     }
-    if (D_800E2CCC != NULL) {
-        mempool_free(D_800E2CCC);
-        D_800E2CCC = NULL;
+    if (gLineParticleBuffer != NULL) {
+        mempool_free(gLineParticleBuffer);
+        gLineParticleBuffer = NULL;
     }
-    if (D_800E2CD8 != NULL) {
-        mempool_free(D_800E2CD8);
-        D_800E2CD8 = NULL;
-    }
-}
-
-void func_800AE438(void) {
-    if (D_800E2CE0 != NULL) {
-        mempool_free(D_800E2CE0);
-        D_800E2CE0 = NULL;
-    }
-    if (D_800E2CE4 != NULL) {
-        mempool_free(D_800E2CE4);
-        D_800E2CE4 = NULL;
+    if (gSpriteParticleBuffer != NULL) {
+        mempool_free(gSpriteParticleBuffer);
+        gSpriteParticleBuffer = NULL;
     }
 }
 
-void func_800AE490(void) {
+void free_particle_vertex_triangles(void) {
+    if (gParticleVertexBuffer != NULL) {
+        mempool_free(gParticleVertexBuffer);
+        gParticleVertexBuffer = NULL;
+    }
+    if (gParticleTriangleBuffer != NULL) {
+        mempool_free(gParticleTriangleBuffer);
+        gParticleTriangleBuffer = NULL;
+    }
+}
+
+void free_particle_assets(void) {
     if (gParticlesAssets != NULL) {
         mempool_free(gParticlesAssets);
         gParticlesAssets = NULL;
@@ -226,7 +226,7 @@ void func_800AE490(void) {
 void init_particle_assets(void) {
     s32 i;
 
-    func_800AE490();
+    free_particle_assets();
     gParticlesAssetTable = (ParticleProperties **) load_asset_section_from_rom(ASSET_PARTICLES_TABLE);
     gParticlesAssetTableCount = -1;
     while (((s32) gParticlesAssetTable[gParticlesAssetTableCount + 1]) != -1) {
@@ -255,7 +255,138 @@ void init_particle_assets(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/particles/func_800AE728.s")
+#ifdef NON_EQUIVALENT
+void init_particle_buffers(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+    unsigned int new_var2;
+    Vertex *sp54;
+    Triangle *sp50;
+    s32 i;
+    s16 *asset2F;
+    ParticleModel* modelPtr;
+    s32 zero = 0;
+    
+    D_800E2D00->word = 0;
+    
+    if (arg0 < 0) {
+        arg0 = 0x10;
+    }
+    if (arg1 < 0) {
+        arg1 = 0x10;
+    }
+    if (arg2 < 0) {
+        arg2 = 0xD0;
+    }
+    if (arg3 < 0) {
+        arg3 = 0xA0;
+    }
+    if (arg4 < 0) {
+        arg4 = 0x40;
+    }
+    gMaxTriangleParticles = arg0;
+    D_800E2CA4 = 0;
+    gMaxRectangleParticles = arg1;
+    D_800E2CB0 = 0;
+    gMaxPointParticles = arg2;
+    D_800E2CBC = 0;
+    gMaxLineParticles = arg3;
+    D_800E2CC8 = 0;
+    gMaxSpriteParticles = arg4;
+    D_800E2CD4 = 0;
+    
+    free_particle_vertex_triangles();
+    gParticleVertexBuffer = mempool_alloc_safe((3 * arg0 + 4 * arg1 + 6 * arg3 + 16 * arg4) * sizeof(Vertex), COLOUR_TAG_SEMITRANS_GREY);
+    gParticleTriangleBuffer = mempool_alloc_safe((arg0 + 2 * arg1) * sizeof(Triangle), COLOUR_TAG_SEMITRANS_GREY);
+    D_800E2CDC = 0;
+    
+    free_particle_buffers();
+    if (gMaxTriangleParticles > 0) {
+        gNumTriangleParticles = 0;
+        gTriangleParticleBuffer = mempool_alloc_safe(arg0 * (sizeof(Particle) + sizeof(ParticleModel)), COLOUR_TAG_SEMITRANS_GREY);
+    }
+    if (gMaxRectangleParticles > 0) {
+        gNumRectangleParticles = 0;
+        gRectangleParticleBuffer = mempool_alloc_safe(arg1 * (sizeof(Particle) + sizeof(ParticleModel)), COLOUR_TAG_SEMITRANS_GREY);
+    }
+    if (gMaxPointParticles > 0) {
+        gNumPointParticles = 0;
+        gPointParticleBuffer = mempool_alloc_safe(arg2 * sizeof(Particle), COLOUR_TAG_SEMITRANS_GREY);
+    }
+    if (gMaxLineParticles > 0) {
+        gNumLineParticles = 0;
+        gLineParticleBuffer = mempool_alloc_safe(arg3 * (sizeof(Particle) + sizeof(ParticleModel)), COLOUR_TAG_SEMITRANS_GREY);
+    }
+    if (gMaxSpriteParticles > 0) {
+        gNumSpriteParticles = 0;
+        gSpriteParticleBuffer = mempool_alloc_safe(arg4 * (sizeof(SpriteParticle) + sizeof(ParticleModel)), COLOUR_TAG_SEMITRANS_GREY);
+    }
+    
+    sp54 = &gParticleVertexBuffer[zero];
+    sp50 = &gParticleTriangleBuffer[zero];
+
+    modelPtr = &gTriangleParticleBuffer[gMaxTriangleParticles];
+    for (i = 0; i < gMaxTriangleParticles; i++) {
+        gTriangleParticleBuffer[i].modelData = &modelPtr[i];
+        generate_particle_shape_triangle(gTriangleParticleBuffer[i].modelData, &sp54, &sp50);
+    }
+
+    modelPtr = &gRectangleParticleBuffer[gMaxRectangleParticles];
+    for (i = 0; i < gMaxRectangleParticles; i++) {
+        gRectangleParticleBuffer[i].modelData = &modelPtr[i];
+        generate_particle_shape_quad(gRectangleParticleBuffer[i].modelData, &sp54, &sp50);
+    }
+    
+    modelPtr = &gLineParticleBuffer[gMaxLineParticles];
+    for (i = 0; i < gMaxLineParticles; i++) {
+        gLineParticleBuffer[i].modelData = &modelPtr[i];
+        sp50 = D_800E2D08;
+        generate_particle_shape_line(gLineParticleBuffer[i].modelData, &sp54, &sp50);
+    }
+
+    modelPtr = &gSpriteParticleBuffer[gMaxSpriteParticles];
+    for (i = 0; i < gMaxSpriteParticles; i++) {
+        gSpriteParticleBuffer[i].base.modelData = &modelPtr[i];
+        sp50 = D_800E2D78;
+        generate_particle_shape_sprite(gSpriteParticleBuffer[i].base.modelData, &sp54, &sp50);
+    }
+        
+    for (i = 0; i < gMaxTriangleParticles; i++) {
+        gTriangleParticleBuffer[i].segment.particle.unk2C = 0;
+    }
+    
+    for (i = 0; i < gMaxRectangleParticles; i++) {
+        gRectangleParticleBuffer[i].segment.particle.unk2C = 0;
+    }
+    
+    for (i = 0; i < gMaxPointParticles; i++) {
+        gPointParticleBuffer[i].segment.particle.unk2C = 0;
+    }
+    
+    for (i = 0; i < gMaxLineParticles; i++) {
+        gLineParticleBuffer[i].segment.particle.unk2C = 0;
+    }
+    
+    for (i = 0; i < gMaxSpriteParticles; i++) {
+        gSpriteParticleBuffer[i].base.segment.particle.unk2C = 0;
+    }
+    
+    if (D_800E2E60 == NULL) {
+        asset2F = load_asset_section_from_rom(ASSET_BINARY_47);
+        D_800E2E64 = 0;
+        while (asset2F[D_800E2E64] != -1) {
+            D_800E2E64++;
+        }
+        
+        D_800E2E60 = mempool_alloc_safe(D_800E2E64 * 4, COLOUR_TAG_BLUE);
+        for (i = 0; i < D_800E2E64; i++) {
+            D_800E2E60[i] = (Sprite *) func_8007C12C(asset2F[i] & 0x3FFF, 1);
+        }
+        
+        mempool_free(asset2F);
+    }
+}
+#else
+#pragma GLOBAL_ASM("asm/nonmatchings/particles/init_particle_buffers.s")
+#endif
 
 /**
  * Generate a triangle shaped particle mesh.
@@ -341,7 +472,7 @@ void generate_particle_shape_quad(ParticleModel *model, Vertex **vtx, Triangle *
     *triangles = tempTri;
 }
 
-void func_800AEF88(ParticleModel *model, Vertex **vtx, Triangle **triangles) {
+void generate_particle_shape_line(ParticleModel *model, Vertex **vtx, Triangle **triangles) {
     s32 i;
     Vertex *tempVtx;
 
@@ -360,7 +491,7 @@ void func_800AEF88(ParticleModel *model, Vertex **vtx, Triangle **triangles) {
     *vtx = tempVtx;
 }
 
-void func_800AF024(ParticleModel *model, Vertex **vtx, Triangle **triangles) {
+void generate_particle_shape_sprite(ParticleModel *model, Vertex **vtx, Triangle **triangles) {
     s32 i;
     Vertex *tempVtx;
 
@@ -415,7 +546,7 @@ void func_800AF0F0(Particle *particle) {
     temp_v1->unk1C = temp_t8;
 }
 
-void func_800AF134(Particle *particle, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ) {
+void func_800AF134(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ) {
     ParticleBehavior *behaviour;
     if (propertyID >= gParticlesAssetTableCount) {
         propertyID = 0;
@@ -424,9 +555,9 @@ void func_800AF134(Particle *particle, s32 behaviourID, s32 propertyID, s16 velX
         behaviourID = 0;
     }
     behaviour = gParticleBehavioursAssetTable[behaviourID];
-    if (particle->data.propertyID != propertyID || behaviour != particle->data.behaviour) {
-        func_800B2260(particle);
-        func_800AF29C(particle, behaviourID, propertyID, velX, velY, velZ);
+    if (emitter->unk8 != propertyID || behaviour != emitter->behaviour) {
+        func_800B2260(emitter);
+        func_800AF29C(emitter, behaviourID, propertyID, velX, velY, velZ);
     }
 }
 
@@ -486,27 +617,20 @@ void func_800AF29C(Particle *arg0, s32 behaviourID, s32 propertyID, s16 velX, s1
 
 #ifdef NON_EQUIVALENT
 void func_800AF404(s32 updateRate) {
-    u32 new_var;
     s32 i;
-    s16 temp;
-    Vec3s *vecTemp;
-
+    
     D_800E2E28 = (D_800E2E28 + (updateRate << 6)) & 0x1FF;
-    temp = D_800E2E28;
-    new_var = temp;
-    // clang-format off
-    for (i = 0; i < ARRAY_COUNT(D_800E2D08); i++) {\
-        vecTemp = &D_800E2D58[i];\
-        D_800E2D08[i].uv2.v = vecTemp->s[0] + new_var;\
-        D_800E2D08[i].uv1.v = vecTemp->s[1] + new_var;\
-        D_800E2D08[i].uv0.v = vecTemp->s[2] + new_var;\
+    
+    for (i = 0; i < ARRAY_COUNT(D_800E2D08); i++) {
+        D_800E2D08[i].uv2.v = D_800E2D58[i].s[0] + D_800E2E28;
+        D_800E2D08[i].uv1.v = D_800E2D58[i].s[1] + D_800E2E28;
+        D_800E2D08[i].uv0.v = D_800E2D58[i].s[2] + D_800E2E28;
     }
-    // clang-format on
+    
     for (i = 0; i < ARRAY_COUNT(D_800E2D78); i++) {
-        vecTemp = &D_800E2DF8[i];
-        D_800E2D78[i].uv0.v = vecTemp->s[0] + new_var;
-        D_800E2D78[i].uv1.v = vecTemp->s[1] + new_var;
-        D_800E2D78[i].uv2.v = vecTemp->s[2] + new_var;
+        D_800E2D78[i].uv0.v = D_800E2DF8[i].s[0] + D_800E2E28;
+        D_800E2D78[i].uv1.v = D_800E2DF8[i].s[1] + D_800E2E28;
+        D_800E2D78[i].uv2.v = D_800E2DF8[i].s[2] + D_800E2E28;
     }
 }
 #else
@@ -519,7 +643,7 @@ void func_800AF52C(Object *obj, s32 arg1) {
     ParticleBehavior *behaviour;
     Particle *temp;
 
-    temp_v0 = (Particle *) &obj->particleEmitter[arg1].unk0;
+    temp_v0 = (Particle *) &obj->particleEmitter[arg1].behaviour;
     behaviour = temp_v0->data.behaviour;
     temp_v0->data.opacity = 0;
     if (temp_v0->data.flags & 0x4000) {
@@ -684,7 +808,7 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
                     func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->particleEmitter[i]);
                 } else {
                     racerObj->particleEmitter[i].unkA += updateRate;
-                    if (racerObj->particleEmitter[i].unkA >= racerObj->particleEmitter[i].unk0->segment.unk40_s16) {
+                    if (racerObj->particleEmitter[i].unkA >= racerObj->particleEmitter[i].behaviour->unk40) {
                         func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->particleEmitter[i]);
                     }
                 }
@@ -739,7 +863,7 @@ void obj_spawn_particle(Object *obj, s32 updateRate) {
                 func_800AFE5C((Particle *) obj, (Particle *) &obj->particleEmitter[i]);
             } else {
                 obj->particleEmitter[i].unkA += updateRate;
-                if (obj->particleEmitter[i].unkA >= obj->particleEmitter[i].unk0->segment.unk40_s16) {
+                if (obj->particleEmitter[i].unkA >= obj->particleEmitter[i].behaviour->unk40) {
                     func_800AFE5C((Particle *) obj, (Particle *) &obj->particleEmitter[i]);
                 }
             }
@@ -778,7 +902,7 @@ void obj_spawn_particle(Object *obj, s32 updateRate) {
 
 // TODO: Should this be void func_800AFE5C(Object *arg0, ParticleEmitter *arg1)?
 void func_800AFE5C(Particle *arg0, Particle *arg1) {
-    Particle *temp_s0;
+    SpriteParticle *temp_s0;
     Particle *tempObj;
     Particle *tempObj2;
     s32 i;
@@ -803,7 +927,7 @@ void func_800AFE5C(Particle *arg0, Particle *arg1) {
             if (temp_s0 != NULL) {
                 func_8000E9D0((Object *) temp_s0);
                 temp_s0->unk74 = arg1->data.unk6;
-                temp_s0->segment.unk40 |= 0x2000;
+                temp_s0->base.segment.unk40 |= 0x2000;
                 arg1->data.unkC_60[arg1->data.unk6] = temp_s0;
                 arg1->data.unk6++;
             }
@@ -947,9 +1071,9 @@ void func_800B03C0(Particle *particle, Particle *arg1, Particle *arg2, ParticleB
     particle->segment.trans.z_position += arg1->segment.trans.z_position;
 }
 
-Particle *func_800B0698(Particle *arg0, Particle *arg1) {
+SpriteParticle *func_800B0698(Particle *arg0, Particle *arg1) {
     ParticleProperties *properties;
-    Particle *var_v0;
+    SpriteParticle *var_v0;
     TextureHeader **texture;
     ParticleBehavior *sp20;
     f32 temp_f0;
@@ -965,65 +1089,65 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
     if (var_v0 == NULL) {
         return var_v0;
     }
-    var_v0->segment.particle.blockID = arg0->segment.particle.blockID;
-    var_v0->segment.trans.flags = -OBJ_FLAGS_DEACTIVATED;
-    var_v0->segment.particle.movementType = properties->movementType;
-    var_v0->segment.unk40 = properties->unk2;
-    var_v0->segment.unk3C = arg0;
+    var_v0->base.segment.particle.blockID = arg0->segment.particle.blockID;
+    var_v0->base.segment.trans.flags = -OBJ_FLAGS_DEACTIVATED;
+    var_v0->base.segment.particle.movementType = properties->movementType;
+    var_v0->base.segment.unk40 = properties->unk2;
+    var_v0->base.segment.unk3C = arg0;
     var_v0->unk70 = arg1;
-    var_v0->segment.trans.scale = properties->scale * sp20->unk50;
-    var_v0->segment.scaleVel = properties->scale * sp20->unk54;
-    var_v0->segment.particle.destroyTimer = properties->lifeTime;
-    var_v0->segment.particle.unk34 = 0.0f;
-    var_v0->segment.particle.unk38 = 0.0f;
-    var_v0->colour.r = properties->colour.r;
-    var_v0->colour.g = properties->colour.g;
-    var_v0->colour.b = properties->colour.b;
-    var_v0->colour.a = properties->colour.a;
-    if (var_v0->segment.unk40 & 0x800 && arg0->unk54_ptr != NULL) {
-        var_v0->brightness = *arg0->unk54_ptr * 255.0f;
+    var_v0->base.segment.trans.scale = properties->scale * sp20->unk50;
+    var_v0->base.segment.scaleVel = properties->scale * sp20->unk54;
+    var_v0->base.segment.particle.destroyTimer = properties->lifeTime;
+    var_v0->base.segment.particle.unk34 = 0.0f;
+    var_v0->base.segment.particle.unk38 = 0.0f;
+    var_v0->base.colour.r = properties->colour.r;
+    var_v0->base.colour.g = properties->colour.g;
+    var_v0->base.colour.b = properties->colour.b;
+    var_v0->base.colour.a = properties->colour.a;
+    if (var_v0->base.segment.unk40 & 0x800 && arg0->unk54_ptr != NULL) {
+        var_v0->base.brightness = *arg0->unk54_ptr * 255.0f;
     } else {
-        var_v0->brightness = 255;
+        var_v0->base.brightness = 255;
     }
-    var_v0->opacityTimer = properties->opacityTimer;
+    var_v0->base.opacityTimer = properties->opacityTimer;
     if (arg1->data.flags & 0x100) {
-        var_v0->opacity = arg1->data.opacity;
+        var_v0->base.opacity = arg1->data.opacity;
     } else {
-        var_v0->opacity = properties->opacity << 8;
+        var_v0->base.opacity = properties->opacity << 8;
     }
     if (properties->opacity < 255) {
-        if (var_v0->segment.unk40 & 0x1000) {
-            var_v0->segment.trans.flags |= OBJ_FLAGS_UNK_0100;
+        if (var_v0->base.segment.unk40 & 0x1000) {
+            var_v0->base.segment.trans.flags |= OBJ_FLAGS_UNK_0100;
         } else {
-            var_v0->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
+            var_v0->base.segment.trans.flags |= OBJ_FLAGS_UNK_0080;
         }
     }
-    if (var_v0->opacityTimer < var_v0->segment.particle.destroyTimer) {
-        var_v0->opacityVel = ((properties->opacityVel << 8) - (var_v0->opacity & 0xFFFF)) /
-                             (var_v0->segment.particle.destroyTimer - var_v0->opacityTimer);
+    if (var_v0->base.opacityTimer < var_v0->base.segment.particle.destroyTimer) {
+        var_v0->base.opacityVel = ((properties->opacityVel << 8) - (var_v0->base.opacity & 0xFFFF)) /
+                             (var_v0->base.segment.particle.destroyTimer - var_v0->base.opacityTimer);
     } else {
-        var_v0->opacityVel = 0;
+        var_v0->base.opacityVel = 0;
     }
     func_800B03C0(var_v0, arg0, arg1, sp20);
     if (sp20->flags & 0x80) {
-        var_v0->segment.trans.rotation.y_rotation = sp20->angleOffsetY;
-        var_v0->segment.trans.rotation.x_rotation = sp20->angleOffsetX;
-        var_v0->segment.trans.rotation.z_rotation = sp20->angleOffsetZ;
+        var_v0->base.segment.trans.rotation.y_rotation = sp20->angleOffsetY;
+        var_v0->base.segment.trans.rotation.x_rotation = sp20->angleOffsetX;
+        var_v0->base.segment.trans.rotation.z_rotation = sp20->angleOffsetZ;
     } else {
-        var_v0->segment.trans.rotation.y_rotation = arg0->segment.trans.rotation.y_rotation + sp20->angleOffsetY;
-        var_v0->segment.trans.rotation.x_rotation = arg0->segment.trans.rotation.x_rotation + sp20->angleOffsetX;
-        var_v0->segment.trans.rotation.z_rotation = arg0->segment.trans.rotation.z_rotation + sp20->angleOffsetZ;
+        var_v0->base.segment.trans.rotation.y_rotation = arg0->segment.trans.rotation.y_rotation + sp20->angleOffsetY;
+        var_v0->base.segment.trans.rotation.x_rotation = arg0->segment.trans.rotation.x_rotation + sp20->angleOffsetX;
+        var_v0->base.segment.trans.rotation.z_rotation = arg0->segment.trans.rotation.z_rotation + sp20->angleOffsetZ;
     }
-    var_v0->angleVelY = sp20->angleVelY;
-    var_v0->angleVelX = sp20->angleVelX;
-    var_v0->angleVelZ = sp20->angleVelZ;
+    var_v0->base.angleVelY = sp20->angleVelY;
+    var_v0->base.angleVelX = sp20->angleVelX;
+    var_v0->base.angleVelZ = sp20->angleVelZ;
     func_800B0010(var_v0, arg0, arg1, sp20);
-    var_v0->gravity = gParticleGravityTable[(var_v0->segment.unk40 >> 4) & 7];
-    if (var_v0->segment.particle.movementType == PARTICLE_MOVEMENT_VELOCITY) {
-        temp_f0 = var_v0->segment.x_velocity;
-        temp_f2 = var_v0->segment.y_velocity;
-        temp_f14 = var_v0->segment.z_velocity;
-        var_v0->forwardVel = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
+    var_v0->base.gravity = gParticleGravityTable[(var_v0->base.segment.unk40 >> 4) & 7];
+    if (var_v0->base.segment.particle.movementType == PARTICLE_MOVEMENT_VELOCITY) {
+        temp_f0 = var_v0->base.segment.x_velocity;
+        temp_f2 = var_v0->base.segment.y_velocity;
+        temp_f14 = var_v0->base.segment.z_velocity;
+        var_v0->base.forwardVel = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
     }
     if (sp20->flags & 2) {
         arg1->data.angle.rotation.z_rotation += sp20->unk1C;
@@ -1033,23 +1157,23 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
         arg1->data.angle.direction.x_rotation += sp20->unk2A;
         arg1->data.angle.direction.z_rotation += sp20->unk2C;
     }
-    var_v0->segment.unk1A = properties->unk6;
-    var_v0->segment.textureFrame = 0;
-    texture = &var_v0->modelData->texture;
+    var_v0->base.segment.unk1A = properties->unk6;
+    var_v0->base.segment.textureFrame = 0;
+    texture = &var_v0->base.modelData->texture;
     if (properties->textureID == -1) {
         *texture = NULL;
     } else {
         *texture = load_texture(properties->textureID);
         if ((*texture) != NULL) {
             if ((*texture)->flags & 4) {
-                if (var_v0->segment.unk40 & 0x1000) {
-                    var_v0->segment.trans.flags |= OBJ_FLAGS_UNK_0100;
+                if (var_v0->base.segment.unk40 & 0x1000) {
+                    var_v0->base.segment.trans.flags |= OBJ_FLAGS_UNK_0100;
                 } else {
-                    var_v0->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
+                    var_v0->base.segment.trans.flags |= OBJ_FLAGS_UNK_0080;
                 }
             }
-            if ((var_v0->segment.unk40 & 3) == 2) {
-                var_v0->segment.textureFrame = (*texture)->numOfTextures - 1;
+            if ((var_v0->base.segment.unk40 & 3) == 2) {
+                var_v0->base.segment.textureFrame = (*texture)->numOfTextures - 1;
             }
         }
     }
@@ -1419,82 +1543,82 @@ Particle *func_800B1CB8(s32 arg0) {
 
     switch (arg0) {
         case 0x80:
-            if ((D_800E2CC0 != NULL)) {
-                if (D_800E2CB8 >= D_800E2E54 - 1) {
+            if ((gPointParticleBuffer != NULL)) {
+                if (gNumPointParticles >= gMaxPointParticles - 1) {
                     if (D_800E2CBC == 0) {
                         D_800E2CBC = 1;
                     }
                 } else {
-                    while (D_800E2CC0[i].unk2C != 0) {
+                    while (gPointParticleBuffer[i].segment.particle.unk2C != 0) {
                         i++;
                     }
-                    D_800E2CC0[i].unk2C = 0x80;
-                    D_800E2CB8++;
-                    var_v1 = (Particle *) &D_800E2CC0[i];
+                    gPointParticleBuffer[i].segment.particle.unk2C = 0x80;
+                    gNumPointParticles++;
+                    var_v1 = (Particle *) &gPointParticleBuffer[i];
                 }
             }
             break;
         case 1:
-            if (D_800E2CA8 != NULL) {
-                if (D_800E2CA0 >= D_800E2E4C - 1) {
+            if (gTriangleParticleBuffer != NULL) {
+                if (gNumTriangleParticles >= gMaxTriangleParticles - 1) {
                     if (D_800E2CA4 == 0) {
                         D_800E2CA4 = 1;
                     }
                 } else {
-                    while (D_800E2CA8[i].unk2C != 0) {
+                    while (gTriangleParticleBuffer[i].segment.particle.unk2C != 0) {
                         i++;
                     }
-                    D_800E2CA8[i].unk2C = 1;
-                    D_800E2CA0++;
-                    var_v1 = (Particle *) &D_800E2CA8[i];
+                    gTriangleParticleBuffer[i].segment.particle.unk2C = 1;
+                    gNumTriangleParticles++;
+                    var_v1 = (Particle *) &gTriangleParticleBuffer[i];
                 }
             }
             break;
         case 2:
-            if (D_800E2CB4 != NULL) {
-                if (D_800E2CAC >= D_800E2E50 - 1) {
+            if (gRectangleParticleBuffer != NULL) {
+                if (gNumRectangleParticles >= gMaxRectangleParticles - 1) {
                     if (D_800E2CB0 == 0) {
                         D_800E2CB0 = 1;
                     }
                 } else {
-                    while (D_800E2CB4[i].unk2C != 0) {
+                    while (gRectangleParticleBuffer[i].segment.particle.unk2C != 0) {
                         i++;
                     }
-                    D_800E2CB4[i].unk2C = 2;
-                    D_800E2CAC++;
-                    var_v1 = (Particle *) &D_800E2CB4[i];
+                    gRectangleParticleBuffer[i].segment.particle.unk2C = 2;
+                    gNumRectangleParticles++;
+                    var_v1 = (Particle *) &gRectangleParticleBuffer[i];
                 }
             }
             break;
         case 3:
-            if (D_800E2CCC != NULL) {
-                if (D_800E2CC4 >= D_800E2E58 - 1) {
+            if (gLineParticleBuffer != NULL) {
+                if (gNumLineParticles >= gMaxLineParticles - 1) {
                     if (D_800E2CC8 == 0) {
                         D_800E2CC8 = 1;
                     }
                 } else {
-                    while (D_800E2CCC[i].unk2C != 0) {
+                    while (gLineParticleBuffer[i].segment.particle.unk2C != 0) {
                         i++;
                     }
-                    D_800E2CCC[i].unk2C = 3;
-                    D_800E2CC4++;
-                    var_v1 = (Particle *) &D_800E2CCC[i];
+                    gLineParticleBuffer[i].segment.particle.unk2C = 3;
+                    gNumLineParticles++;
+                    var_v1 = (Particle *) &gLineParticleBuffer[i];
                 }
             }
             break;
         case 4:
-            if (D_800E2CD8 != NULL) {
-                if (D_800E2CD0 >= D_800E2E5C - 1) {
+            if (gSpriteParticleBuffer != NULL) {
+                if (gNumSpriteParticles >= gMaxSpriteParticles - 1) {
                     if (D_800E2CD4 == 0) {
                         D_800E2CD4 = 1;
                     }
                 } else {
-                    while (D_800E2CD8[i].segment.particle.unk2C != 0) {
+                    while (gSpriteParticleBuffer[i].base.segment.particle.unk2C != 0) {
                         i++;
                     }
-                    D_800E2CD8[i].segment.particle.unk2C = 4;
-                    D_800E2CD0++;
-                    var_v1 = (Particle *) &D_800E2CD8[i];
+                    gSpriteParticleBuffer[i].base.segment.particle.unk2C = 4;
+                    gNumSpriteParticles++;
+                    var_v1 = (Particle *) &gSpriteParticleBuffer[i];
                 }
             }
             break;
@@ -1510,54 +1634,54 @@ void func_800B2040(Particle *arg0) {
 
     switch (arg0->segment.particle.unk2C) {
         case 0x80:
-            if (D_800E2CB8 > 0) {
+            if (gNumPointParticles > 0) {
                 if (arg0->modelData) {
                     free_sprite((Sprite *) &arg0->modelData->texture);
                 }
-                D_800E2CB8--;
+                gNumPointParticles--;
                 arg0->segment.particle.unk2C = 0;
             }
             break;
         case 0:
             return;
         case 1:
-            if (D_800E2CA0 > 0) {
+            if (gNumTriangleParticles > 0) {
                 tex = arg0->modelData->texture;
                 if (tex != NULL) {
                     free_texture(tex);
                 }
-                D_800E2CA0--;
+                gNumTriangleParticles--;
                 arg0->segment.particle.unk2C = 0;
             }
             break;
         case 2:
-            if (D_800E2CAC > 0) {
+            if (gNumRectangleParticles > 0) {
                 tex = arg0->modelData->texture;
                 if (tex != NULL) {
                     free_texture(tex);
                 }
-                D_800E2CAC--;
+                gNumRectangleParticles--;
                 arg0->segment.particle.unk2C = 0;
             }
             break;
         case 3:
-            if (D_800E2CC4 > 0) {
+            if (gNumLineParticles > 0) {
                 tex = arg0->modelData->texture;
                 if (tex != NULL) {
                     free_texture(tex);
                 }
-                D_800E2CC4--;
+                gNumLineParticles--;
                 arg0->segment.particle.unk2C = 0;
             }
             break;
         case 4:
-            if (D_800E2CD0 > 0) {
+            if (gNumSpriteParticles > 0) {
                 func_800B263C(arg0);
                 tex = arg0->modelData->texture;
                 if (tex != NULL) {
                     free_texture(tex);
                 }
-                D_800E2CD0--;
+                gNumSpriteParticles--;
                 arg0->segment.particle.unk2C = 0;
             }
             break;
@@ -1565,14 +1689,14 @@ void func_800B2040(Particle *arg0) {
 }
 
 void func_800B2260(Particle *arg0) {
-    Particle *temp_v0;
+    SpriteParticle *temp_v0;
     s32 i;
 
     if (arg0->data.flags & 0x400) {
         if (arg0->data.unkC_60 != NULL) {
             for (i = 0; i < arg0->data.unk6; i++) {
                 temp_v0 = arg0->data.unkC_60[i];
-                temp_v0->segment.particle.destroyTimer = 0;
+                temp_v0->base.segment.particle.destroyTimer = 0;
                 temp_v0->unk70 = 0;
             }
             mempool_free(arg0->data.unkC_60);
@@ -1587,7 +1711,7 @@ void func_800B2260(Particle *arg0) {
  */
 void handle_particle_movement(Particle *particle, s32 updateRate) {
     LevelModelSegmentBoundingBox *boundingBox;
-    Particle *tempParticle;
+    SpriteParticle *tempParticle;
 
     gParticleUpdateRate = updateRate;
     tempParticle = NULL;
@@ -1601,8 +1725,8 @@ void handle_particle_movement(Particle *particle, s32 updateRate) {
         }
         if (particle->segment.particle.unk2C == 4) {
             tempParticle = particle;
-            particle->modelFrame = 1 - particle->modelFrame;
-            particle->unk77 = 0;
+            ((SpriteParticle*)particle)->modelFrame = 1 - ((SpriteParticle*)particle)->modelFrame;
+            ((SpriteParticle*)particle)->unk77 = 0;
         }
         if (tempParticle == NULL || (tempParticle && tempParticle->unk70)) {
             if (particle->segment.particle.movementType == PARTICLE_MOVEMENT_VELOCITIES) {
@@ -1658,9 +1782,9 @@ void handle_particle_movement(Particle *particle, s32 updateRate) {
     }
 }
 
-void func_800B263C(Particle *arg0) {
+void func_800B263C(SpriteParticle *arg0) {
     Particle *new_var;
-    Particle *new_var2;
+    SpriteParticle *new_var2;
     Particle *temp_v0;
     s32 i;
 
@@ -1668,7 +1792,7 @@ void func_800B263C(Particle *arg0) {
     if (temp_v0 != NULL) {
         new_var = temp_v0;
         if (temp_v0->data.unk6 != 0) {
-            if (arg0 == temp_v0->data.unkC_60[arg0->unk74]) {
+            if (&arg0->base == temp_v0->data.unkC_60[arg0->unk74]) {
                 temp_v0->data.unk6--;
                 for (i = arg0->unk74; i < temp_v0->data.unk6; i++) {
                     new_var->data.unkC_60[i] = new_var->data.unkC_60[i + 1];
@@ -2089,11 +2213,11 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
             if (particle->segment.camera.unk3A > 0) {
                 gDPSetPrimColor((*dList)++, 0, 0, particle->brightness, particle->brightness, particle->brightness,
                                 255);
-                if (particle->unk77 == 0) {
+                if (((SpriteParticle*)particle)->unk77 == 0) {
                     func_800B3E64((Object *) particle);
                 }
                 modelData = particle->modelData;
-                temp = particle->modelFrame;
+                temp = ((SpriteParticle*)particle)->modelFrame;
                 temp <<= 3;
                 tempvtx = &modelData->vertices[temp];
                 load_and_set_texture(dList, modelData->texture, renderFlags, particle->segment.textureFrame << 8);
