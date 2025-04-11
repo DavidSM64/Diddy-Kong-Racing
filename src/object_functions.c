@@ -1374,9 +1374,9 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
                 tt->nodeCurrent = ainode_find_nearest(obj->segment.trans.x_position, obj->segment.trans.y_position,
                                                       obj->segment.trans.z_position, FALSE);
                 if (tt->nodeCurrent != NODE_NONE) {
-                    tt->nodeBack2 = func_8001CC48(tt->nodeCurrent, -1, 0);
-                    tt->nodeForward1 = func_8001CC48(tt->nodeBack2, tt->nodeCurrent, 0);
-                    tt->nodeForward2 = func_8001CC48(tt->nodeForward1, tt->nodeBack2, 0);
+                    tt->nodeBack2 = ainode_find_next(tt->nodeCurrent, -1, 0);
+                    tt->nodeForward1 = ainode_find_next(tt->nodeBack2, tt->nodeCurrent, 0);
+                    tt->nodeForward2 = ainode_find_next(tt->nodeForward1, tt->nodeBack2, 0);
                     tt->nodeBack1 = tt->nodeCurrent;
                 }
             } else {
@@ -3001,9 +3001,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 taj->nodeCurrent = ainode_find_nearest(obj->segment.trans.x_position, obj->segment.trans.y_position,
                                                        obj->segment.trans.z_position, FALSE);
                 if (taj->nodeCurrent != NODE_NONE) {
-                    taj->nodeBack2 = func_8001CC48(taj->nodeCurrent, -1, 0);
-                    taj->nodeForward1 = func_8001CC48(taj->nodeBack2, taj->nodeCurrent, 0);
-                    taj->nodeForward2 = func_8001CC48(taj->nodeForward1, taj->nodeBack2, 0);
+                    taj->nodeBack2 = ainode_find_next(taj->nodeCurrent, -1, 0);
+                    taj->nodeForward1 = ainode_find_next(taj->nodeBack2, taj->nodeCurrent, 0);
+                    taj->nodeForward2 = ainode_find_next(taj->nodeForward1, taj->nodeBack2, 0);
                     taj->nodeBack1 = taj->nodeCurrent;
                 }
             } else {
@@ -3466,9 +3466,9 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                 obj64->nodeCurrent = ainode_find_nearest(obj->segment.trans.x_position, obj->segment.trans.y_position,
                                                          obj->segment.trans.z_position, FALSE);
                 if (obj64->nodeCurrent != 255) {
-                    obj64->nodeBack2 = func_8001CC48(obj64->nodeCurrent, -1, 0);
-                    obj64->nodeForward1 = func_8001CC48(obj64->nodeBack2, obj64->nodeCurrent, 0);
-                    obj64->nodeForward2 = func_8001CC48(obj64->nodeForward1, obj64->nodeBack2, 0);
+                    obj64->nodeBack2 = ainode_find_next(obj64->nodeCurrent, -1, 0);
+                    obj64->nodeForward1 = ainode_find_next(obj64->nodeBack2, obj64->nodeCurrent, 0);
+                    obj64->nodeForward2 = ainode_find_next(obj64->nodeForward1, obj64->nodeBack2, 0);
                     obj64->nodeBack1 = obj64->nodeCurrent;
                 }
             } else {

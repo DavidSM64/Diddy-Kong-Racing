@@ -1401,7 +1401,7 @@ void render_level_geometry_and_objects(void) {
         gAntiAliasing = TRUE;
     }
 
-    sp160 = func_80014814(&objCount);
+    sp160 = get_first_active_object(&objCount);
 
     if (gCurrentLevelModel->numberOfSegments > 1) {
         numberOfSegments = 0;
