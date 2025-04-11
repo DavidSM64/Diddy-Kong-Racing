@@ -5356,50 +5356,43 @@ s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001C6C4.s")
 
-#ifdef NON_MATCHING
-// ainode_find_next
-s32 func_8001CC48(s32 nodeCurrent, s32 arg1, s32 direction) {
+s32 func_8001CC48(s32 nodeId, s32 arg1, s32 direction) {
+    Object *aiNodeObj;
     LevelObjectEntry_AiNode *entry;
-    Object *someObj;
-    Object_AiNode *someObj64;
-    s32 someCount;
+    Object_AiNode *aiNode;
+    s32 nextIndex;
     s32 i;
-    s32 someIndex;
-    s32 test;
-
-    if ((nodeCurrent < -1) || (nodeCurrent >= AINODE_COUNT)) {
+    s32 someCount;    
+    
+    if (nodeId < -1 || nodeId >= AINODE_COUNT) {
         return NODE_NONE;
     }
-    someObj = (*gAINodes)[nodeCurrent];
-    if (someObj == NULL) {
+    aiNodeObj = (*gAINodes)[nodeId];
+    if (aiNodeObj == NULL){
         return NODE_NONE;
     }
-    entry = &someObj->segment.level_entry->aiNode;
-    someObj64 = &someObj->unk64->ai_node;
-    test = direction & 3;
-
-    // Swapping these messes up the registers.
+    
+    entry = &aiNodeObj->segment.level_entry->aiNode;
+    aiNode = &aiNodeObj->unk64->ai_node;
+    direction = direction & 3;
     someCount = 0;
-    someIndex = (someObj64->directions[test] + 1) & 3;
+    nextIndex = (aiNode->directions[direction] + 1) & 3;
 
     for (i = 0; i < 4; i++) {
-        if (entry->adjacent[someIndex] != NODE_NONE) {
-            if (entry->adjacent[someIndex] != arg1) {
-                someObj64->directions[test] = someIndex;
-                i = 4;
-                someCount++;
-            }
+        if (entry->adjacent[nextIndex] != NODE_NONE && arg1 != entry->adjacent[nextIndex]) {
+            aiNode->directions[direction] = nextIndex;
+            i = 4; // break
+            someCount++;
         }
-        someIndex = (someIndex + 1) & 3;
+        nextIndex = (nextIndex + 1) & 3;
     }
+
     if (someCount == 0) {
         return NODE_NONE;
+    } else {
+        return entry->adjacent[aiNode->directions[direction]];
     }
-    return entry->adjacent[someObj64->directions[test]];
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001CC48.s")
-#endif
 
 #ifdef NON_MATCHING
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
