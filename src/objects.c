@@ -5374,8 +5374,7 @@ s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001C6C4.s")
 
-// ainode_find_next
-s32 func_8001CC48(s32 nodeId, s32 arg1, s32 direction) {
+s32 ainode_find_next(s32 nodeId, s32 arg1, s32 direction) {
     Object *aiNodeObj;
     LevelObjectEntry_AiNode *entry;
     Object_AiNode *aiNode;
