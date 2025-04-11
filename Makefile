@@ -3,6 +3,11 @@ REGION  := us
 VERSION  := v77
 NON_MATCHING ?= 0
 
+# NM is shorthand for NON_MATCHING
+ifneq ($(NM),)
+	NON_MATCHING := 1
+endif
+
 # Experimental option for nonmatching builds. GCC may not function identically to ido.
 COMPILER ?= ido
 $(eval $(call validate-option,NON_MATCHING,ido gcc))
