@@ -7,7 +7,7 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of April 11, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 78.79%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 78.84%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 49.86%
 <!-- README_SCORE_SUMMARY_END -->
@@ -119,28 +119,28 @@ s32 is_drumstick_unlocked(void) {
 <!-- README_SCORE_BEGIN -->
 As of April 11, 2025, this is our current score:
 ```
- ====================================================================
-                ADVENTURE ONE (ASM -> C Decompilation)
- -------------- 78.79% Complete (81.36% NON_MATCHING) ---------------
-                     # Decompiled functions: 1848
-                     # GLOBAL_ASM remaining: 103
-                     # NON_MATCHING functions: 12
-                  # NON_EQUIVALENT WIP functions: 32
- --------------------------- Game Status ----------------------------
-              Balloons: 37/47, Keys: 4/4, Trophies: 3/5
-                T.T. Amulets: 4/4, Wizpig Amulets: 3/4
- --------------------------------------------------------------------
- We are collecting silver coins in Boulder Canyon. (8/8 silver coins)
- ====================================================================
+ ===================================================================
+               ADVENTURE ONE (ASM -> C Decompilation)
+ -------------- 78.84% Complete (81.41% NON_MATCHING) --------------
+                    # Decompiled functions: 1849
+                     # GLOBAL_ASM remaining: 102
+                    # NON_MATCHING functions: 12
+                 # NON_EQUIVALENT WIP functions: 31
+ --------------------------- Game Status ---------------------------
+              Balloons: 38/47, Keys: 4/4, Trophies: 3/5
+               T.T. Amulets: 4/4, Wizpig Amulets: 3/4
+ -------------------------------------------------------------------
+ We are collecting silver coins in Haunted Woods. (0/8 silver coins)
+ ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 49.86% Complete --------------------------
-                     # Documented functions: 1089
+ ------------------------- 49.86% Complete -------------------------
+                    # Documented functions: 1089
                     # Undocumented remaining: 565
- --------------------------- Game Status ----------------------------
+ --------------------------- Game Status ---------------------------
               Balloons: 24/47, Keys: 3/4, Trophies: 2/5
-                T.T. Amulets: 2/4, Wizpig Amulets: 2/4
- --------------------------------------------------------------------
+               T.T. Amulets: 2/4, Wizpig Amulets: 2/4
+ -------------------------------------------------------------------
               We are racing in Pirate Lagoon. (Lap 3/3)
- ====================================================================
+ ===================================================================
 ```
 <!-- README_SCORE_END -->

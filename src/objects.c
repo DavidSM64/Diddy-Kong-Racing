@@ -263,7 +263,7 @@ s32 D_8011AE70;
 Object **D_8011AE74; // Pointer to an array of Animation objects
 s16 D_8011AE78;      // Number of Animation objects in D_8011AE74
 s16 gCutsceneID;
-s16 D_8011AE7C;
+s16 gFirstActiveObjectId;
 s8 D_8011AE7E;
 s16 gTTGhostTimeToBeat;
 s16 gPrevTimeTrialVehicle; // Current Vehicle being used in track?
@@ -608,10 +608,10 @@ void allocate_object_pools(void) {
 }
 
 // Decrypts cheats
-void decrypt_magic_codes(u8 *data, s32 length) {
+void decrypt_magic_codes(s32 *data, s32 length) {
     s32 i;
     s32 j;
-    u8 *ptr = data;
+    u8 *ptr = (u8*)data;
     u8 temp[4];    
     
     for (i = 0; i < (length >> 2); i++) {
@@ -680,7 +680,7 @@ void clear_object_pointers(void) {
     D_8011ADD4 = 0;
     gCutsceneID = 0;
     D_8011AE7E = 1;
-    D_8011AE7C = 0;
+    gFirstActiveObjectId = 0;
     gTransformTimer = 0;
     gIsTajChallenge = FALSE;
     gTajRaceInit = 0;
@@ -2246,8 +2246,8 @@ void gParticlePtrList_flush(void) {
 
         // if object found
         if (search_indx != -1) {
-            if (search_indx < D_8011AE7C) {
-                D_8011AE7C--;
+            if (search_indx < gFirstActiveObjectId) {
+                gFirstActiveObjectId--;
             }
             gObjectCount--;
             if (0) {} // Fakematch
@@ -3653,51 +3653,63 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
     return i;
 }
 
-#ifdef NON_EQUIVALENT
-s32 func_80014814(s32 *retObjCount) {
-    s32 i;
-    s32 maxObjCount;
-    s32 curObjCount;
+s32 get_first_active_object(s32 *retObjCount) {
+    s32 i, j;
+    s32 minIndex, maxIndex;
+    s32 breakLoop;
 
     *retObjCount = gObjectCount;
-    if (D_8011AE7C) {
-        return D_8011AE7C;
+    if (gFirstActiveObjectId != 0) {
+        // Already sorted
+        return gFirstActiveObjectId;
     }
-    curObjCount = gObjectListStart;
-    maxObjCount = gObjectCount - 1;
-    while (maxObjCount >= curObjCount) {
-        for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
-            if (!(gObjPtrList[curObjCount]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
-                if (gObjPtrList[curObjCount]->segment.header->flags & 1) {
-                    curObjCount++;
+    
+    i = gObjectListStart;
+    j = gObjectCount - 1;
+    minIndex = i;
+    maxIndex = j;
+    
+    while (i <= j) {
+        breakLoop = 0;
+        while (i <= maxIndex && breakLoop == 0) {
+            if (!(gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
+                if (gObjPtrList[i]->segment.header->flags & 1) {
+                    i++;
+                } else {
+                    // Break the loop if neither OBJ_FLAGS_DEACTIVATED nor bit 1 in header->flags is set
+                    breakLoop = -1;
                 }
-                i = -1;
             } else {
-                curObjCount++;
+                i++;
             }
         }
-        for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
-            if (gObjPtrList[maxObjCount]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-                i = -1;
-            } else if (!(gObjPtrList[maxObjCount]->segment.header->flags & 1)) {
-                maxObjCount--;
+
+        breakLoop = 0;
+        while (j >= minIndex && breakLoop == 0) {
+            if (gObjPtrList[j]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
+                // Break the loop if OBJ_FLAGS_DEACTIVATED is set
+                breakLoop = -1;
+            } else if (!(gObjPtrList[j]->segment.header->flags & 1)) {
+                j--;
             } else {
-                i = -1;
+                // Break the loop if bit 1 in header->flags is set
+                breakLoop = -1;
             }
         }
-        if (curObjCount > maxObjCount) {
-            gObjPtrList[curObjCount] = gObjPtrList[maxObjCount];
-            gObjPtrList[maxObjCount] = gObjPtrList[curObjCount];
-            curObjCount++;
-            maxObjCount--;
+
+        if (i < j) {
+            // Swap active and inactive objects
+            Object *tempObject = gObjPtrList[i];
+            gObjPtrList[i] = gObjPtrList[j];
+            gObjPtrList[j] = tempObject;
+            i++;
+            j--;
         }
     }
-    D_8011AE7C = curObjCount;
-    return curObjCount;
+
+    gFirstActiveObjectId = i;
+    return i;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80014814.s")
-#endif
 
 UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5, s32 arg6) {
     UNUSED s32 pad;
@@ -5852,7 +5864,7 @@ void func_8001E4C4(void) {
         }
     }
     gObjectListStart = i;
-    D_8011AE7C = 0;
+    gFirstActiveObjectId = 0;
 }
 
 void func_8001E6EC(s8 arg0) {

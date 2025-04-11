@@ -517,8 +517,8 @@ s32 obj_animate(Object *obj);
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
-void decrypt_magic_codes(u8 *data, s32 length);
-s32 func_80014814(s32 *);
+void decrypt_magic_codes(s32 *data, s32 length);
+s32 get_first_active_object(s32 *);
 Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
 void func_8000B750(Object *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
