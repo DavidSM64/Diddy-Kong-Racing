@@ -7,7 +7,7 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of April 11, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 78.76%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 78.79%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 49.86%
 <!-- README_SCORE_SUMMARY_END -->
@@ -121,7 +121,7 @@ As of April 11, 2025, this is our current score:
 ```
  ====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- -------------- 78.76% Complete (81.33% NON_MATCHING) ---------------
+ -------------- 78.79% Complete (81.36% NON_MATCHING) ---------------
                      # Decompiled functions: 1848
                      # GLOBAL_ASM remaining: 103
                      # NON_MATCHING functions: 12
