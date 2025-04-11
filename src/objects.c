@@ -611,12 +611,13 @@ void allocate_object_pools(void) {
 void decrypt_magic_codes(s32 *data, s32 length) {
     s32 i;
     s32 j;
-    u8 *ptr = (u8*)data;
-    u8 temp[4];    
-    
+    u8 *ptr = (u8 *) data;
+    u8 temp[4];
+
     for (i = 0; i < (length >> 2); i++) {
         // Swap bits according to the following pattern:
         // AABBCCDD EEFFGGHH IIJJKKLL MMNNOOPP -> AAEEIIMM BBFFJJNN CCGGKKOO DDHHLLPP
+        // clang-format off
         temp[0] = ((ptr[0] & 0xC0)     ) |
                   ((ptr[1] & 0xC0) >> 2) |
                   ((ptr[2] & 0xC0) >> 4) |
@@ -633,10 +634,11 @@ void decrypt_magic_codes(s32 *data, s32 length) {
                   ((ptr[1] & 0x03) << 4) |
                   ((ptr[2] & 0x03) << 2) |
                   ((ptr[3] & 0x03)     );
-        
+        // clang-format on
+
         // Swap the odd and even bits
         for (j = 0; j < 4; j++) {
-            *ptr++ = (((temp[j] & 0xAA) >> 1) | ((temp[j] & 0x55) << 1));    
+            *ptr++ = (((temp[j] & 0xAA) >> 1) | ((temp[j] & 0x55) << 1));
         }
     }
 }
@@ -3663,12 +3665,12 @@ s32 get_first_active_object(s32 *retObjCount) {
         // Already sorted
         return gFirstActiveObjectId;
     }
-    
+
     i = gObjectListStart;
     j = gObjectCount - 1;
     minIndex = i;
     maxIndex = j;
-    
+
     while (i <= j) {
         breakLoop = 0;
         while (i <= maxIndex && breakLoop == 0) {
@@ -5379,16 +5381,16 @@ s32 func_8001CC48(s32 nodeId, s32 arg1, s32 direction) {
     Object_AiNode *aiNode;
     s32 nextIndex;
     s32 i;
-    s32 someCount;    
-    
+    s32 someCount;
+
     if (nodeId < -1 || nodeId >= AINODE_COUNT) {
         return NODE_NONE;
     }
     aiNodeObj = (*gAINodes)[nodeId];
-    if (aiNodeObj == NULL){
+    if (aiNodeObj == NULL) {
         return NODE_NONE;
     }
-    
+
     entry = &aiNodeObj->segment.level_entry->aiNode;
     aiNode = &aiNodeObj->unk64->ai_node;
     direction = direction & 3;

@@ -71,10 +71,10 @@ Object *gLensFlare = NULL;
 s32 gLensFlareOff = TRUE;
 s32 gLensFlareOverrideObjs = 0;
 Vec2f gRainQuad[4] = {
-    { -200.0f,  200.0f },
-    {  200.0f,  200.0f },
-    {  200.0f, -200.0f },
-    { -200.0f, -200.0f }
+    { -200.0f, 200.0f },
+    { 200.0f, 200.0f },
+    { 200.0f, -200.0f },
+    { -200.0f, -200.0f },
 };
 
 Vertex gRainVertices[16] = {
@@ -1087,12 +1087,12 @@ void render_rain_overlay(RainGfxData *rainGfx, s32 time) {
     TextureHeader *tex;
     Gfx *curDL;
     Triangle *tri;
-    
+
     if (rainGfx->tex == NULL) {
         return;
     }
     tex = rainGfx->tex;
-    
+
     horizontal = tex->width << 5;
     vertical = tex->height << 5;
     maskU = (horizontal * 2) - 1;
@@ -1115,15 +1115,15 @@ void render_rain_overlay(RainGfxData *rainGfx, s32 time) {
 
     horizontal += u0;
     vertical += v0;
-    
+
     zSin = sins_f(gWeatherCamera->trans.rotation.z);
     zCos = coss_f(gWeatherCamera->trans.rotation.z);
-    
+
     for (i = 0; i < ARRAY_COUNT(gRainQuad); i++) {
         gRainVertices[gRainVertexFlip + i].x = gRainQuad[i].x * zCos - gRainQuad[i].y * zSin;
         gRainVertices[gRainVertexFlip + i].y = gRainQuad[i].y * zCos + gRainQuad[i].x * zSin;
     }
-    
+
     curDL = gCurrWeatherDisplayList;
     tri = gCurrWeatherTriList;
 
