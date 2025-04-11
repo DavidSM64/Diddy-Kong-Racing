@@ -1477,7 +1477,7 @@ s32 func_800C68CC_C74CC(u16 arg0) {
                                   D_8012C2A4_EE5E4[fontInUse].offsetToData +
                                       (D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter * arg0),
                                   D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter);
-            func_800C6DD4_C79D4((*D_8012C2BC_EE5FC)[curIndex].dList, asset, D_8012C2A4_EE5E4[fontInUse].x,
+            fontCreateDisplayList((*D_8012C2BC_EE5FC)[curIndex].dList, asset, D_8012C2A4_EE5E4[fontInUse].x,
                                 D_8012C2A4_EE5E4[fontInUse].y);
         }
 
@@ -1485,7 +1485,10 @@ s32 func_800C68CC_C74CC(u16 arg0) {
     }
 }
 
-void func_800C6DD4_C79D4(Gfx *dList, Asset46 *asset, s32 width, s32 height) {
+/**
+ * Official Name: fontCreateDisplayList
+ */
+void fontCreateDisplayList(Gfx *dList, Asset46 *asset, s32 width, s32 height) {
     if (asset->unk0 != -1) {
         asset->unk0 = (s32) asset + asset->unk0;
     } else {
@@ -1613,7 +1616,7 @@ void func_800C7804_C8404(s32 arg0) {
     }
 }
 
-u8 D_800E5234_E5E34[] = {
+u8 gFontConversionTable[] = {
     0x0F, 0x34, 0x0A, 0x36, 0x02, 0x06, 0x0D, 0x37, 0x03, 0x04, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D,
     0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x3E, 0x05, 0x0B, 0x3F, 0x0C, 0x40,
     0x41, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28,
@@ -1636,7 +1639,7 @@ void fontConvertString(char *inString, char *outString) {
             *outString++ = currentChar;
         } else {
             *outString++ = 0x80;
-            *outString++ = D_800E5234_E5E34[currentChar - 32];
+            *outString++ = gFontConversionTable[currentChar - 32];
         }
     }
     *outString = '\0';
