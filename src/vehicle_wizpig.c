@@ -91,7 +91,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     func_80049794(updateRate, updateRateF, obj, racer);
     racer->vehicleID = racer->vehicleIDPrev;
     *startTimer = tempStartTimer;
-    obj->particleEmitFlags = OBJ_EMIT_OFF;
+    obj->particleEmitFlags = OBJ_EMIT_NONE;
     racer->headAngle = tempHeadAngle;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
@@ -218,7 +218,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     animFrame = obj->segment.animFrame;
     obj->segment.animFrame = racer->animationSpeed;
-    obj->particleEmitFlags = OBJ_EMIT_OFF;
+    obj->particleEmitFlags = OBJ_EMIT_NONE;
     if (obj->segment.object.animationID == ANIM_WIZPIG_RUN) {
         play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
     }

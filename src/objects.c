@@ -2063,10 +2063,10 @@ s32 obj_init_emitter(Object *obj, ParticleEmitter *emitter) {
     particleDataEntry = obj->segment.header->objectParticles;
     for (i = 0; i < obj->segment.header->particleCount; i++) {
         if ((particleDataEntry[i].upper & 0xFFFF0000) == 0xFFFF0000) {
-            partInitTrigger((Particle *) &obj->particleEmitter[i], (particleDataEntry[i].upper >> 8) & 0xFF,
+            partInitTrigger(&obj->particleEmitter[i], (particleDataEntry[i].upper >> 8) & 0xFF,
                             particleDataEntry[i].upper & 0xFF);
         } else {
-            func_800AF29C((Particle *) &obj->particleEmitter[i], (particleDataEntry[i].upper >> 0x18) & 0xFF,
+            func_800AF29C(&obj->particleEmitter[i], (particleDataEntry[i].upper >> 0x18) & 0xFF,
                           (particleDataEntry[i].upper >> 0x10) & 0xFF, particleDataEntry[i].upper & 0xFFFF,
                           (particleDataEntry[i].lower >> 0x10) & 0xFFFF, particleDataEntry[i].lower & 0xFFFF);
         }

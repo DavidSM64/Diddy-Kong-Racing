@@ -100,7 +100,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     func_80049794(updateRate, updateRateF, obj, racer);
     racer->vehicleID = racer->vehicleIDPrev;
     *startTimer = headAngleRange;
-    obj->particleEmitFlags = OBJ_EMIT_OFF;
+    obj->particleEmitFlags = OBJ_EMIT_NONE;
     racer->headAngle = tempHeadAngle;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
@@ -219,7 +219,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     animFrame = obj->segment.animFrame;
     obj->segment.animFrame = racer->animationSpeed;
     stepFrame = obj->segment.animFrame >> 4;
-    obj->particleEmitFlags = OBJ_EMIT_OFF;
+    obj->particleEmitFlags = OBJ_EMIT_NONE;
     if (obj->segment.object.animationID != ANIM_SMOKEY_RUN && obj->segment.object.animationID != 2) {
         animFrame >>= 4;
         stepFrame = 1;

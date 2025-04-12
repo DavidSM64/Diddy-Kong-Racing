@@ -8,6 +8,7 @@
 #include "libc/math.h"
 #include "camera.h"
 #include "lights.h"
+#include "particles.h"
 
 
 #define NEW_OBJECT_ENTRY(entryVar, entryId, entrySize, xPos, yPos, zPos) { \

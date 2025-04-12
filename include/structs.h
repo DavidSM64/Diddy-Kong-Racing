@@ -1722,17 +1722,6 @@ typedef struct Object_68 {
   /* 0x50 */ s16 unk50;
  } Object_68;
  
-/* Size: 0x20 bytes */
-typedef struct ParticleEmitter {
-    /* 0x00 */ struct ParticleBehavior *behaviour;
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ u8 unk6;
-    /* 0x07 */ u8 unk7;
-    /* 0x08 */ s16 unk8;
-    /* 0x0A */ s16 unkA;
-    /* 0x0C */ u8  padC[0x14];
-} ParticleEmitter;
-
 /* Size: 0xA0 bytes */
 typedef struct ParticleBehavior {
     s32 flags;
@@ -1921,7 +1910,7 @@ typedef struct Object {
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
-  /* 0x006C */ ParticleEmitter *particleEmitter; //player + 0x370
+  /* 0x006C */ struct ParticleEmitter *particleEmitter; //player + 0x370
   /* 0x0070 */ Object_LightData **lightData;
   /* 0x0074 */ u32 particleEmitFlags;
   /* 0x0078 */ ObjProperties properties;

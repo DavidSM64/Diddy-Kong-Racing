@@ -5,24 +5,25 @@
 #include "structs.h"
 #include <ultra64.h>
 
+// Flags representing which particle emitters are active for a game object
 enum ObjectEmitterFlags {
-    OBJ_EMIT_OFF,
-    OBJ_EMIT_PARTICLE_1 = (1 << 0),
-    OBJ_EMIT_PARTICLE_2 = (1 << 1),
-    OBJ_EMIT_PARTICLE_3 = (1 << 2),
-    OBJ_EMIT_PARTICLE_4 = (1 << 3),
-    OBJ_EMIT_UNK_10 = (1 << 4),
-    OBJ_EMIT_UNK_20 = (1 << 5),
-    OBJ_EMIT_UNK_40 = (1 << 6),
-    OBJ_EMIT_UNK_80 = (1 << 7),
-    OBJ_EMIT_UNK_100 = (1 << 8),
-    OBJ_EMIT_UNK_200 = (1 << 9),
-    OBJ_EMIT_UNK_400 = (1 << 10),
-    OBJ_EMIT_UNK_800 = (1 << 11),
-    OBJ_EMIT_UNK_1000 = (1 << 12),
-    OBJ_EMIT_UNK_2000 = (1 << 13),
-    OBJ_EMIT_UNK_4000 = (1 << 14),
-    OBJ_EMIT_UNK_8000 = (1 << 15),
+    OBJ_EMIT_NONE,
+    OBJ_EMIT_1 = (1 << 0),
+    OBJ_EMIT_2 = (1 << 1),
+    OBJ_EMIT_3 = (1 << 2),
+    OBJ_EMIT_4 = (1 << 3),
+    OBJ_EMIT_5 = (1 << 4),
+    OBJ_EMIT_6 = (1 << 5),
+    OBJ_EMIT_7 = (1 << 6),
+    OBJ_EMIT_8 = (1 << 7),
+    OBJ_EMIT_9 = (1 << 8),
+    OBJ_EMIT_10 = (1 << 9),
+    OBJ_EMIT_11 = (1 << 10),
+    OBJ_EMIT_12 = (1 << 11),
+    OBJ_EMIT_13 = (1 << 12),
+    OBJ_EMIT_14 = (1 << 13),
+    OBJ_EMIT_15 = (1 << 14),
+    OBJ_EMIT_16 = (1 << 15),
 };
 
 enum ParticleFlags {
@@ -163,32 +164,25 @@ typedef struct ParticleAngle {
     Vec3s direction;
 } ParticleAngle;
 
-typedef struct ParticleData {
+/* Size: 0x20 bytes */
+typedef struct ParticleEmitter {
+    /* 0x00 */ ParticleBehavior *behaviour;
+    /* 0x04 */ s16 flags;
+    /* 0x06 */ u8 unk6;
+    /* 0x07 */ u8 lifeTime;
+    /* 0x08 */ s16 propertyID;
+    /* 0x0A */ s16 opacity;
     union {
-  /* 0x0000 */ ParticleBehavior *behaviour;
-  /* 0x0000 */ s32 unk0;
+    /* 0x000C */ Vec3f pos;
+    /* 0x000C */ ParticleAngle angle;
+    /* 0x000C */ struct Particle **unkC_60;
+    /* 0x000C */ unk800AF29C_C_400 unkC_400;
     };
-  /* 0x0004 */ s16 flags;
-  /* 0x0006 */ u8 unk6;
-  /* 0x0007 */ u8 lifeTime;
-  /* 0x0008 */ s16 propertyID;
-  /* 0x000A */ s16 opacity;
-    union {
-  /* 0x000C */ Vec3f pos;
-  /* 0x000C */ ParticleAngle angle;
-  /* 0x000C */ struct Particle **unkC_60;
-  /* 0x000C */ unk800AF29C_C_400 unkC_400;
-    };
-  /* 0x0018 */ s16 baseVelX;
-  /* 0x0018 */ s16 baseVelY;
-  /* 0x001C */ s16 baseVelZ;
-  /* 0x001E */ s16 unk1E;
-  /* 0x0020 */ s32 unk20;
-  /* 0x0024 */ s32 unk24;
-  /* 0x0028 */ s32 unk28;
-  /* 0x002C */ s16 unk2C;
-  /* 0x002E */ s16 unk2E;
-} ParticleData;
+    /* 0x0018 */ s16 baseVelX;
+    /* 0x001A */ s16 baseVelY;
+    /* 0x001C */ s16 baseVelZ;
+    /* 0x001E */ s16 unk1E;
+} ParticleEmitter;
 
 typedef struct ParticleSegment {
   /* 0x0000 */ ObjectTransform trans;
@@ -204,13 +198,7 @@ typedef struct ParticleSegment {
       SegmentPropertiesCamera camera;
   };
   /* 0x003C */ void *unk3C;
-  union {
-    struct {
-        /* 0x0040 */ s16 unk40_s16;
-        /* 0x0042 */ s16 unk42;
-    };
-    s32 unk40;
-  };
+  /* 0x003C */ s32 unk40;
 } ParticleSegment;
 
 typedef struct ParticleModel {
@@ -230,10 +218,7 @@ typedef struct ParticleOtherSomething {
 } ParticleOtherSomething;
 
 typedef struct Particle {
-    union {
     /* 0x0000 */ ParticleSegment segment;
-    /* 0x0000 */ ParticleData data;
-    };
     union {
     /* 0x0044 */ ParticleModel *modelData;
     /* 0x0044 */ ParticleOtherSomething *unk44_1;
@@ -298,21 +283,21 @@ void generate_particle_shape_line(ParticleModel *model, Vertex **vtx, Triangle *
 void generate_particle_shape_sprite(ParticleModel *model, Vertex **vtx, Triangle **triangles);
 void func_800AF0A4(Particle *particle);
 void func_800AF0F0(Particle *particle);
-void partInitTrigger(Particle *particle, s32 behaviourID, s32 propertyID);
-void func_800AF29C(Particle *arg0, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
+void partInitTrigger(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID);
+void func_800AF29C(ParticleEmitter *arg0, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
 void func_800AF6E4(Object *obj, s32 arg1);
-void func_800B2260(Particle *arg0);
+void func_800B2260(ParticleEmitter *emitter);
 void func_800B263C(SpriteParticle *arg0);
 void init_particle_assets(void);
 void set_particle_texture_frame(Particle *particle);
-void func_800B03C0(Particle *particle, Particle *arg1, Particle *arg2, ParticleBehavior *behaviour);
+void func_800B03C0(Particle *particle, Object *arg1, ParticleEmitter *arg2, ParticleBehavior *behaviour);
 void func_800B2040(Particle *arg0);
 void handle_particle_movement(Particle *particle, s32 updateRate);
-void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *arg3);
-SpriteParticle *func_800B0698(Particle *arg0, Particle *arg1);
+void func_800B0010(Particle *arg0, Object *arg1, ParticleEmitter *arg2, ParticleBehavior *arg3);
+SpriteParticle *func_800B0698(Object *arg0, ParticleEmitter *arg1);
 Particle *func_800B1CB8(s32 arg0);
-void func_800AFE5C(Particle *arg0, Particle *arg1);
-Particle *func_800B1130(Particle *arg0, Particle *arg1);
+void func_800AFE5C(Object *arg0, ParticleEmitter *arg1);
+Particle *func_800B1130(Object *arg0, ParticleEmitter *arg1);
 void func_800AF52C(Object *obj, s32 arg1);
 void func_800AF134(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
 void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags);
@@ -322,7 +307,7 @@ void obj_spawn_particle(Object *obj, s32 updateRate);
 void func_800B3E64(Object *obj);
 void func_800B26E0(Particle *particle);
 void func_800AF714(Object *racerObj, s32 updateRate);
-Particle* func_800B0BAC(Object* arg0, Particle* arg1);
+Particle* func_800B0BAC(Object* arg0, ParticleEmitter* arg1);
 
 void func_800AF404(s32 updateRate); // Non Matching
 void init_particle_buffers(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching

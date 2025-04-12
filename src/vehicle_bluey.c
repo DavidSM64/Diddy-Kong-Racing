@@ -168,10 +168,10 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     }
     animFrame = obj->segment.animFrame;
     obj->segment.animFrame = racer->animationSpeed;
-    obj->particleEmitFlags = OBJ_EMIT_OFF;
+    obj->particleEmitFlags = OBJ_EMIT_NONE;
     if (obj->segment.object.animationID == ANIM_BLUEY_RUN) {
         play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
-        obj->particleEmitFlags |= OBJ_EMIT_PARTICLE_1 | OBJ_EMIT_PARTICLE_2;
+        obj->particleEmitFlags |= OBJ_EMIT_1 | OBJ_EMIT_2;
     }
     obj_spawn_particle(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
