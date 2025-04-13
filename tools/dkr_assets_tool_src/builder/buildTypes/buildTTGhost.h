@@ -10,6 +10,7 @@
 #include "helpers/jsonHelper.h"
 #include "helpers/c/cContext.h"
 
+namespace DkrAssetsTool {
 class BuildTTGhost {
 public:
     BuildTTGhost(DkrAssetsSettings &settings, BuildInfo &info);
@@ -22,3 +23,4 @@ private:
 
     void _preload_c_context();
 };
+}

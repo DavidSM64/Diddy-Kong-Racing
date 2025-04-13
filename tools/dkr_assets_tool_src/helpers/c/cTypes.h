@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <string>
 
+namespace DkrAssetsTool {
+
 // Class that represents standard c types.
 class CTypes {
 public:
@@ -25,3 +27,5 @@ public:
     static int64_t clamp_int(const std::string &typeName, int64_t value);
     
 };
+
+}

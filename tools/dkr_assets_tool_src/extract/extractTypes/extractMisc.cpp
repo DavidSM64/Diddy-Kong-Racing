@@ -1,5 +1,7 @@
 #include "extractMisc.h"
 
+using namespace DkrAssetsTool;
+
 #include "fileTypes/misc.hpp"
 
 #include "helpers/jsonHelper.h"

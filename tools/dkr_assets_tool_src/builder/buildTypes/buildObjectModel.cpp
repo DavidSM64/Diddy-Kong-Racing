@@ -1,12 +1,12 @@
 #include "buildObjectModel.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/debugHelper.h"
 #include "helpers/stringHelper.h"
 
 #include "buildModel/objModel.h"
 #include "buildModel/gltfModel.h"
-
-using namespace DkrAssetsTool;
 
 BuildObjectModel::BuildObjectModel(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
     // Vanilla models will just use the original raw binary.

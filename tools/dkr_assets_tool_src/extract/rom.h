@@ -6,6 +6,8 @@
 #include "helpers/debugHelper.h"
 #include "helpers/imageHelper.h"
 
+namespace DkrAssetsTool {
+
 class DkrExtractROM {
 public:
 
@@ -40,3 +42,4 @@ private:
     void _get_fixed_table(uint32_t offset, std::vector<int32_t> &outTable);
     void _get_variable_table(uint32_t offset, std::vector<int32_t> &outTable);
 };
+}

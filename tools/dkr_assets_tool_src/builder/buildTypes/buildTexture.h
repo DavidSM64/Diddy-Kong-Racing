@@ -9,6 +9,7 @@
 #include "helpers/fileHelper.h"
 #include "helpers/jsonHelper.h"
 
+namespace DkrAssetsTool {
 class BuildTexture {
 public:
     BuildTexture(DkrAssetsSettings &settings, BuildInfo &info);
@@ -19,3 +20,4 @@ private:
     
     size_t _calculate_out_size();
 };
+}

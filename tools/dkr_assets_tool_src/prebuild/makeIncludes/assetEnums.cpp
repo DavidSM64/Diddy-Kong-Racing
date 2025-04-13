@@ -4,6 +4,8 @@
 #include "helpers/stringHelper.h"
 #include "helpers/c/cEnumsHelper.h"
 
+using namespace DkrAssetsTool;
+
 AssetEnums::AssetEnums(DkrAssetsSettings &settings) : _settings(settings) {
     _outFilepath = _settings.pathToInclude / "asset_enums.h";
     

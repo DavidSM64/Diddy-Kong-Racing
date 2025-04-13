@@ -1,5 +1,7 @@
 #include "extractObjectAnimation.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/jsonHelper.h"
 
 ExtractObjectAnimation::ExtractObjectAnimation(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {

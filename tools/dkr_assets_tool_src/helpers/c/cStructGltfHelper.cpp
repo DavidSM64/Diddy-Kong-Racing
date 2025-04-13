@@ -1,5 +1,7 @@
 #include "cStructGltfHelper.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/assetsHelper.h"
 #include "helpers/c/cContext.h"
 #include "helpers/c/cTypes.h"

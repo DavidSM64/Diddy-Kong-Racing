@@ -1,5 +1,7 @@
 #include "gltfPrimitive.h"
 
+using namespace DkrAssetsTool;
+
 GltfPrimitive::GltfPrimitive(DkrVertex *vertices, DkrTriangle *triangles, size_t numTris, TextureHeader *texture, int materialIndex) {
     int texW = 0;
     int texH = 0;

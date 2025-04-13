@@ -1,5 +1,7 @@
 #include "extractMenuText.h"
 
+using namespace DkrAssetsTool;
+
 #include "fileTypes/types.hpp"
 
 #include "helpers/jsonHelper.h"

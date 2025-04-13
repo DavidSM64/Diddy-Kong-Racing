@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <any>
 
+namespace DkrAssetsTool {
+
 class CContext;
 class CStruct;
 
@@ -145,3 +147,5 @@ public:
     static void get_structs_from_code(CContext *context, const std::string &code, std::vector<CStruct*> &out);
     static void load_structs_from_file(CContext *context, fs::path filepath);
 };
+
+}

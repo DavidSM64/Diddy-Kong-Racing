@@ -1,5 +1,7 @@
 #include "buildFonts.h"
 
+using namespace DkrAssetsTool;
+
 #include <cstring> // for memset
 
 #include "helpers/stringHelper.h"

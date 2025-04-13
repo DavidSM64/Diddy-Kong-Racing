@@ -1,5 +1,7 @@
 #include "compile.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/dataHelper.h"
 #include "libs/zip_file.hpp"
 

@@ -1,5 +1,7 @@
 #include "extractObjectMap.h"
 
+using namespace DkrAssetsTool;
+
 #include "fileTypes/levelObjectMap.hpp"
 
 #include "helpers/gzipHelper.h"

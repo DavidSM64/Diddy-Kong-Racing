@@ -1,5 +1,7 @@
 #include "gzipHelper.h"
 
+using namespace DkrAssetsTool;
+
 #include "libs/gzip/DKRCompression.h"
 
 // Compression shouldn't be thread safe, but testing suggests that the mutex isn't necessary?

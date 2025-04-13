@@ -8,6 +8,7 @@
 #include "helpers/jsonHelper.h"
 #include "helpers/c/cHeader.h"
 
+namespace DkrAssetsTool {
 class AssetEnums {
 public:
     AssetEnums(DkrAssetsSettings &settings);
@@ -25,3 +26,4 @@ private:
     void _write_deferred_asset_section_enums(const std::string &sectionId, JsonFile *mainJson, 
         const std::string &deferInfoPtr);
 };
+}

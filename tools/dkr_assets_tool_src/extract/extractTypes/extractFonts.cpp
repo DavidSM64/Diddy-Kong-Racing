@@ -1,5 +1,7 @@
 #include "extractFonts.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/assetsHelper.h"
 #include "helpers/stringHelper.h"
 

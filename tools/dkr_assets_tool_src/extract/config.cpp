@@ -1,5 +1,7 @@
 #include "config.h"
 
+using namespace DkrAssetsTool;
+
 #define INVALID_CONFIG_STR "<INVALID CONFIG>"
 #define INVALID_CONFIG_INT -1
 

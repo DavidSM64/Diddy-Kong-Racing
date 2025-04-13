@@ -1,9 +1,13 @@
 #include "builder.h"
 
+using namespace DkrAssetsTool;
+
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include <memory>
 
+#include "helpers/assetsHelper.h"
 #include "helpers/stringHelper.h"
 #include "helpers/jsonHelper.h"
 #include "helpers/fileHelper.h"
@@ -57,6 +61,26 @@ std::unordered_map<std::string, BuilderFunction> builderMap = {
     {                    "Particle", BUILDER_LAMDA(BuildParticle)         },
     {            "ParticleBehavior", BUILDER_LAMDA(BuildParticleBehavior) },
 };
+
+// Build all assets.
+DkrAssetBuilder::DkrAssetBuilder(DkrAssetsSettings &settings, const fs::path &dstPath) {
+    settings.pathToAssets /= settings.dkrVersion + "/";
+    
+    size_t bufferSize = 10 * 1024 * 1024; // 10 MB for testing purposes.
+    std::shared_ptr<uint8_t[]> outAssetsBinary(new uint8_t[bufferSize], std::default_delete<uint8_t[]>());
+    
+    size_t outAssetsAllocatedSize = 0;
+    
+    JsonFile *mainJson = AssetsHelper::get().get_main_json(settings);
+    
+    DebugHelper::assert_(mainJson != nullptr, "(DkrAssetBuilder::DkrAssetBuilder) Could not get the main assets json file!");
+    
+    DebugHelper::info("Number of asset sections = ", mainJson->length_of_array("/assets/order"));
+    
+    // TODO: FINISH ME!
+    
+    FileHelper::write_binary_file(outAssetsBinary.get(), outAssetsAllocatedSize, dstPath, true);
+}
 
 DkrAssetBuilder::DkrAssetBuilder(DkrAssetsSettings &settings, const fs::path &srcPath, const fs::path &dstPath) {
     settings.pathToAssets /= settings.dkrVersion + "/";

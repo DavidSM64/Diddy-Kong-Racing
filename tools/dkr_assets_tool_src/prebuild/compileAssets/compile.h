@@ -8,6 +8,7 @@
 
 #include "misc/settings.hpp"
 
+namespace DkrAssetsTool {
 class CompileAssets {
 public:
     CompileAssets(DkrAssetsSettings &settings);
@@ -37,3 +38,4 @@ private:
     void _merge_and_copy_files();
     void _merge_or_copy_file(fs::path &modDir, fs::path &path);
 };
+}

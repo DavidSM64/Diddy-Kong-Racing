@@ -3,6 +3,8 @@
 #include "extract/extractInfo.h"
 #include "misc/settings.hpp"
 
+namespace DkrAssetsTool {
+
 class ExtractMisc {
 public:
     ExtractMisc(DkrAssetsSettings &settings, ExtractInfo &info);
@@ -20,3 +22,4 @@ private:
     
     std::string _miscType;
 };
+}

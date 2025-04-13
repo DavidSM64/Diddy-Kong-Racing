@@ -9,6 +9,7 @@
 #include "helpers/fileHelper.h"
 #include "helpers/jsonHelper.h"
 
+namespace DkrAssetsTool {
 class BuildFonts {
 public:
     BuildFonts(DkrAssetsSettings &settings, BuildInfo &info);
@@ -20,3 +21,4 @@ private:
     JsonFile *_get_font_file(fs::path &localFontPath);
     void _parse_ascii_encoding(JsonFile *fontJson, FontFile *fontFile);
 };
+}

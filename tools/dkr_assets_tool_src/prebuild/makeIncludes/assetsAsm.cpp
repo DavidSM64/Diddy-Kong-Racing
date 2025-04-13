@@ -10,6 +10,8 @@
 
 #include "helpers/c/cEnumsHelper.h"
 
+using namespace DkrAssetsTool;
+
 const std::string ASSETS_START_LABEL = "ASSETS_START";
 const std::string ASSETS_END_LABEL = "ASSETS_END";
 const std::string ASSETS_SIZE_LABEL = ASSETS_END_LABEL + " - " + ASSETS_START_LABEL;

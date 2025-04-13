@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <map>
 
+namespace DkrAssetsTool {
+
 class CContext;
 
 class CEnum {
@@ -62,12 +64,8 @@ private:
     std::map<int, std::string> _members; // Note: Inverted from CEnum version.
 };
 
-/**
- * Class that deals with reading / creating C enums.
- */
-class CEnumsHelper {
-public:
-    static void get_enums_from_code(CContext *context, const std::string &code, std::vector<CEnum*> &out);
-    static void load_enums_from_file(CContext *context, fs::path filepath);
-private:
-};
+namespace CEnumsHelper {
+    void get_enums_from_code(CContext *context, const std::string &code, std::vector<CEnum*> &out);
+    void load_enums_from_file(CContext *context, fs::path filepath);
+}
+}

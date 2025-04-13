@@ -1,5 +1,7 @@
 #include "jsonHelper.h"
 
+using namespace DkrAssetsTool;
+
 #include <fstream>
 #include <iostream>
 #include <cmath>
@@ -18,6 +20,7 @@
 
 using json = nlohmann::json;
 
+namespace DkrAssetsTool {
 namespace JSON_HELPER_DETAILS {
     class JsonFileData {
     public:
@@ -29,6 +32,7 @@ namespace JSON_HELPER_DETAILS {
         }
         json data;
     };
+}
 }
 
 /*******************************************************************************************************/

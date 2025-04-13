@@ -5,6 +5,8 @@
 
 #include "fileTypes/levelHeader.hpp"
 
+namespace DkrAssetsTool {
+
 class ExtractLevelHeader {
 public:
     ExtractLevelHeader(DkrAssetsSettings &settings, ExtractInfo &info);
@@ -21,3 +23,4 @@ private:
     template<typename T>
     void _extract_enum_bitfield(WritableJsonFile &jsonFile, std::string ptr, std::string enumName, T value);
 };
+}

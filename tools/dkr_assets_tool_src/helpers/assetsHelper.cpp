@@ -1,5 +1,7 @@
 #include "assetsHelper.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/fileHelper.h"
 #include "helpers/debugHelper.h"
 

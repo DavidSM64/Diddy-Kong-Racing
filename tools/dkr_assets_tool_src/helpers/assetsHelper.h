@@ -5,6 +5,8 @@
 #include "helpers/jsonHelper.h"
 #include "misc/settings.hpp"
 
+namespace DkrAssetsTool {
+
 struct DeferredAssetInfo {
     std::string type;
     std::string fromSection;
@@ -40,3 +42,4 @@ public:
 private:
     static JsonFile *_get_section_json(fs::path pathToAssets, const std::string &assetSectionId);
 };
+}

@@ -1,5 +1,7 @@
 #include "buildTTGhost.h"
 
+using namespace DkrAssetsTool;
+
 #include <cmath> // for std::round
 
 #include "fileTypes/ttGhost.hpp"

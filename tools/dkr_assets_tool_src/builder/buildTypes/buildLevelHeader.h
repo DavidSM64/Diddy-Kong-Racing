@@ -11,6 +11,7 @@
 #include "helpers/c/cContext.h"
 #include "fileTypes/levelHeader.hpp"
 
+namespace DkrAssetsTool {
 class BuildLevelHeader {
 public:
     BuildLevelHeader(DkrAssetsSettings &settings, BuildInfo &info);
@@ -32,3 +33,4 @@ private:
     
     void _preload_c_context();
 };
+}

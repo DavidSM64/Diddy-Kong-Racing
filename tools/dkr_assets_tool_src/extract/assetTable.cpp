@@ -1,5 +1,7 @@
 #include "assetTable.h"
 
+using namespace DkrAssetsTool;
+
 AssetTable::AssetTable(DkrExtractROM *rom, uint32_t offset, DkrAssetTableType type){
     _rom = rom;
     _romOffset = offset;

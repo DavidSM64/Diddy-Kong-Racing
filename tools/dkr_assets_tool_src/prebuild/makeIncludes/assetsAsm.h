@@ -8,6 +8,7 @@
 #include "helpers/jsonHelper.h"
 #include "helpers/c/cContext.h"
 
+namespace DkrAssetsTool {
 class AssetsAsm {
 public:
     AssetsAsm(DkrAssetsSettings &settings);
@@ -34,3 +35,4 @@ private:
     
     void _preload_c_context();
 };
+}

@@ -1,5 +1,7 @@
 #include "extractLevelObjectTranslationTable.h"
 
+using namespace DkrAssetsTool;
+
 #include <string>
 
 // Defines LOTT_ENTRY and LOTT_SIZE

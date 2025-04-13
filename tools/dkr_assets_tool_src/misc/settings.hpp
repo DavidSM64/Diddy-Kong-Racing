@@ -9,6 +9,8 @@
 #include "helpers/jsonHelper.h"
 #include "misc/constants.hpp"
 
+namespace DkrAssetsTool {
+
 // Some paths to find if a directory is considered to be the "root" of the decomp.
 const std::vector<fs::path> REPO_ROOT_FIND_PATHS = {
     "src",
@@ -176,3 +178,4 @@ private:
         sizeVar = (_settingsFileExists) ? _settingsJson->get_int(ptr, defaultValue) : defaultValue;
     }
 };
+}

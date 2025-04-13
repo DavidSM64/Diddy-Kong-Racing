@@ -6,6 +6,8 @@
 #include "helpers/c/cEnumsHelper.h"
 
 // Write-Only C Header generator class
+namespace DkrAssetsTool {
+
 class WritableCHeader {
 public:
     WritableCHeader();
@@ -25,3 +27,4 @@ public:
 private:
     std::stringstream _out;
 };
+}

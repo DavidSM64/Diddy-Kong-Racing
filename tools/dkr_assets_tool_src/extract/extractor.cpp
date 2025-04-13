@@ -1,5 +1,7 @@
 #include "extractor.h"
 
+using namespace DkrAssetsTool;
+
 #include <functional>
 
 #include "helpers/stringHelper.h"

@@ -1,5 +1,7 @@
 #include "buildGameText.h"
 
+using namespace DkrAssetsTool;
+
 #include <cstring>
 #include <algorithm>
 #include <unordered_map>

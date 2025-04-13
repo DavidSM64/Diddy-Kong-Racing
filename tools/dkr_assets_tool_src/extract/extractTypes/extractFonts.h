@@ -8,6 +8,8 @@
 #include "helpers/fileHelper.h"
 #include "helpers/jsonHelper.h"
 
+namespace DkrAssetsTool {
+
 class ExtractFonts {
 public:
     ExtractFonts(DkrAssetsSettings &settings, ExtractInfo &info);
@@ -16,3 +18,4 @@ private:
     DkrAssetsSettings &_settings;
     ExtractInfo &_info;
 };
+}

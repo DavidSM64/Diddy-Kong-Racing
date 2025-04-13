@@ -1,5 +1,7 @@
 #include "buildTexture.h"
 
+using namespace DkrAssetsTool;
+
 #include <cmath> // for std::round
 
 #include "helpers/dataHelper.h"

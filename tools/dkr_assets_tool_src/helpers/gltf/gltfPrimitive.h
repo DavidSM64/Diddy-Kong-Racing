@@ -1,11 +1,13 @@
 #pragma once
 
+
 #include <vector>
 
 #include "gltfDkrVertex.h"
 #include "gltfDkrTriangle.h"
 #include "fileTypes/texture.hpp"
 
+namespace DkrAssetsTool {
 
 class GltfPrimitive {
 public:
@@ -18,3 +20,5 @@ private:
     
     int _get_or_set_index(DkrVertex *vertex, DkrTexCoords *uv, int texWidth, int texHeight);
 };
+
+}

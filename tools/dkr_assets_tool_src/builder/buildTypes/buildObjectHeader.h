@@ -10,6 +10,7 @@
 #include "helpers/jsonHelper.h"
 #include "helpers/c/cContext.h"
 
+namespace DkrAssetsTool {
 class BuildObjectHeader {
 public:
     BuildObjectHeader(DkrAssetsSettings &settings, BuildInfo &info);
@@ -22,3 +23,4 @@ private:
     be_uint16_t _string_to_flags();
     void _preload_c_context();
 };
+}

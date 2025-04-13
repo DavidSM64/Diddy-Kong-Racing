@@ -1,5 +1,7 @@
 #include "buildObjectMap.h"
 
+using namespace DkrAssetsTool;
+
 #include "fileTypes/levelObjectMap.hpp"
 
 #include "helpers/assetsHelper.h"

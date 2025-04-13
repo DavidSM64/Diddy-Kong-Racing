@@ -1,5 +1,7 @@
 #include "extractParticleBehavior.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/jsonHelper.h"
 
 ExtractParticleBehavior::ExtractParticleBehavior(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {

@@ -8,6 +8,8 @@
 #include "helpers/fileHelper.h"
 #include "helpers/jsonHelper.h"
 
+namespace DkrAssetsTool {
+
 class ExtractBinary {
 public:
     ExtractBinary(DkrAssetsSettings &settings, ExtractInfo &info);
@@ -19,3 +21,4 @@ private:
     void _extract_as_asset();
     void _extract_as_code();
 };
+}

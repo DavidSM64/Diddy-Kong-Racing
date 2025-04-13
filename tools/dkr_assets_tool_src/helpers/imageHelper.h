@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <string>
 
+namespace DkrAssetsTool {
 class N64Image {
 public:
     N64Image(fs::path filepath, std::string &format, bool alignData=false); // Load image from filepath (Currently only .png is supported)
@@ -41,16 +42,10 @@ private:
 /**
  * Singleton class that deals with N64 image formats and with saving/loading images.
  */
-class ImageHelper {
-public:
-    static ImageHelper& get() {
-        static ImageHelper instance;
-        return instance;
-    }
-    
-    static N64Image load_image(fs::path filepath, std::string format="RGBA16");
-    static int bytes_in_format(std::string &format);
-    static size_t image_size(int width, int height, std::string &format);
-    static size_t image_size(fs::path filepath, std::string &format); // Get byte-size of .png image
-    
-};
+namespace ImageHelper {
+    N64Image load_image(fs::path filepath, std::string format="RGBA16");
+    int bytes_in_format(std::string &format);
+    size_t image_size(int width, int height, std::string &format);
+    size_t image_size(fs::path filepath, std::string &format); // Get byte-size of .png image
+}
+}

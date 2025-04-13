@@ -6,6 +6,8 @@
 
 #include "helpers/imageHelper.h"
 
+namespace DkrAssetsTool {
+
 class ExtractTexture {
 public:
     ExtractTexture(DkrAssetsSettings &settings, ExtractInfo &info);
@@ -17,3 +19,5 @@ private:
     
    N64Image **_generate_texture_images(std::vector<uint8_t> &texData, size_t numImages);
 };
+
+}

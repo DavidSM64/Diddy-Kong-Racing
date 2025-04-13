@@ -1,5 +1,7 @@
 #include "buildObjectHeader.h"
 
+using namespace DkrAssetsTool;
+
 #include <cstring>
 
 #include "helpers/assetsHelper.h"

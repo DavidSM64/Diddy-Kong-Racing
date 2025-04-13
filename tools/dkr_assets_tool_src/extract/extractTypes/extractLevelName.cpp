@@ -1,5 +1,7 @@
 #include "extractLevelName.h"
 
+using namespace DkrAssetsTool;
+
 #include <vector>
 #include <string>
 

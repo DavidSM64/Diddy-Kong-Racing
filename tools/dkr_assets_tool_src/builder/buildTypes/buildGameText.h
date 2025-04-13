@@ -9,6 +9,7 @@
 #include "helpers/fileHelper.h"
 #include "helpers/jsonHelper.h"
 
+namespace DkrAssetsTool {
 class BuildGameText {
 public:
     BuildGameText(DkrAssetsSettings &settings, BuildInfo &info);
@@ -32,3 +33,4 @@ private:
     
     void _build_textbox();
 };
+}

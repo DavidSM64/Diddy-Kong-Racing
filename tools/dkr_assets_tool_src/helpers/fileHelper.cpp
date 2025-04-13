@@ -1,5 +1,7 @@
 #include "fileHelper.h"
 
+using namespace DkrAssetsTool;
+
 #include <chrono>
 #include <ctime>
 #include <filesystem>

@@ -8,6 +8,8 @@
 #include "helpers/c/cStructHelper.h"
 #include "helpers/c/cEnumsHelper.h"
 
+namespace DkrAssetsTool {
+
 class CContext {
 public:
     CContext();
@@ -38,3 +40,5 @@ private:
     
     void _add_enum_values(CEnum *enumRef);
 };
+
+}

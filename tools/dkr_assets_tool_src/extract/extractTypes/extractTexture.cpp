@@ -1,5 +1,7 @@
 #include "extractTexture.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/debugHelper.h"
 #include "helpers/fileHelper.h"
 #include "helpers/jsonHelper.h"

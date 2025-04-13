@@ -9,6 +9,7 @@
 #include "helpers/fileHelper.h"
 #include "helpers/jsonHelper.h"
 
+namespace DkrAssetsTool {
 class BuildLOTT {
 public:
     BuildLOTT(DkrAssetsSettings &settings, BuildInfo &info);
@@ -17,3 +18,4 @@ private:
     DkrAssetsSettings &_settings;
     BuildInfo &_info;
 };
+}

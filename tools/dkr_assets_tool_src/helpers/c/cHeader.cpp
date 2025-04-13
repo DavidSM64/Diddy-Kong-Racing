@@ -1,5 +1,7 @@
 #include "cHeader.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/fileHelper.h"
 
 WritableCHeader::WritableCHeader() {

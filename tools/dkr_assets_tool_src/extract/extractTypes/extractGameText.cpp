@@ -1,5 +1,7 @@
 #include "extractGameText.h"
 
+using namespace DkrAssetsTool;
+
 #include "fileTypes/gameText.hpp"
 
 #include "helpers/jsonHelper.h"

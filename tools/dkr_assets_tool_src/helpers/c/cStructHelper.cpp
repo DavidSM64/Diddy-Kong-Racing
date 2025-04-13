@@ -1,5 +1,7 @@
 #include "cStructHelper.h"
 
+using namespace DkrAssetsTool;
+
 #include <string>
 #include <sstream>
 

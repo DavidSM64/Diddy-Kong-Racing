@@ -8,6 +8,7 @@
 #include "helpers/debugHelper.h"
 #include "helpers/fileHelper.h"
 
+namespace DkrAssetsTool {
 
 /*******************************************************/
 
@@ -151,3 +152,5 @@ private:
     std::unordered_map<std::string, int> _sectionIdToIndex;
     void _populate_sectionIdToIndex_map();
 };
+
+}

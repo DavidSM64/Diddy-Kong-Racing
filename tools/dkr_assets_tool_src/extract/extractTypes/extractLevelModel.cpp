@@ -1,5 +1,7 @@
 #include "extractLevelModel.h"
 
+using namespace DkrAssetsTool;
+
 #include <vector>
 #include <string>
 

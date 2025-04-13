@@ -1,5 +1,7 @@
 #include "cEnumsHelper.h"
 
+using namespace DkrAssetsTool;
+
 #include <stdexcept>
 #include <sstream>
 

@@ -1,5 +1,7 @@
 #include "buildMisc.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/dataHelper.h"
 #include "helpers/assetsHelper.h"
 #include "helpers/miscHelper.h"

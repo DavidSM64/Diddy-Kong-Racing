@@ -9,6 +9,8 @@
 #include "helpers/fileHelper.h"
 #include "helpers/asmHeader.h"
 
+namespace DkrAssetsTool {
+
 struct LDCodeFile {
     std::string path;
     std::string condition;
@@ -23,3 +25,4 @@ private:
     
     fs::path _buildFolder;
 };
+}

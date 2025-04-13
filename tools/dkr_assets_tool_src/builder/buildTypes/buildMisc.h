@@ -11,6 +11,7 @@
 #include "helpers/miscHelper.h"
 #include "helpers/c/cContext.h"
 
+namespace DkrAssetsTool {
 class BuildMisc {
 public:
     BuildMisc(DkrAssetsSettings &settings, BuildInfo &info);
@@ -30,3 +31,4 @@ private:
 
     void _preload_c_context(); // For enums
 };
+}

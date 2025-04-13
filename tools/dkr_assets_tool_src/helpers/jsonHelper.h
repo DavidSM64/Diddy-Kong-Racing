@@ -9,6 +9,8 @@
 
 #include "helpers/fileHelper.h"
 
+namespace DkrAssetsTool {
+
 namespace JSON_HELPER_DETAILS {
     // Only forward declared here, cause I don't want to expose the JSON library in the header.
     // This will allow me to change the implementation if I want to in the future.
@@ -129,3 +131,4 @@ private:
     JsonFile *_load_json_from_cache(const fs::path &filepath);
     
 };
+}

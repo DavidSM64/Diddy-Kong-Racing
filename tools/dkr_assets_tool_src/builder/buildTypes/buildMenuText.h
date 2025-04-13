@@ -11,6 +11,7 @@
 #include "helpers/fileHelper.h"
 #include "helpers/jsonHelper.h"
 
+namespace DkrAssetsTool {
 class BuildMenuText {
 public:
     BuildMenuText(DkrAssetsSettings &settings, BuildInfo &info);
@@ -21,3 +22,4 @@ private:
     
     size_t _get_total_string_lengths(std::vector<std::string> &menuTextOrder);
 };
+}

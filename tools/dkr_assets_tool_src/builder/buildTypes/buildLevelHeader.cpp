@@ -1,5 +1,7 @@
 #include "buildLevelHeader.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/assetsHelper.h"
 
 #include <cstring> // for strncpy

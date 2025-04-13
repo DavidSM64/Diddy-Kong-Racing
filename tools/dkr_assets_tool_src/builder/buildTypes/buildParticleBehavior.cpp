@@ -1,5 +1,7 @@
 #include "buildParticleBehavior.h"
 
+using namespace DkrAssetsTool;
+
 BuildParticleBehavior::BuildParticleBehavior(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
     std::string rawPath = info.srcFile->get_string("/raw");
     

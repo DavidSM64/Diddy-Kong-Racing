@@ -1,5 +1,7 @@
 #include "extractTTGhost.h"
 
+using namespace DkrAssetsTool;
+
 #include "fileTypes/ttGhost.hpp"
 
 #include "helpers/jsonHelper.h"

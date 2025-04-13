@@ -18,7 +18,7 @@
 
 #define RESET_TEXT "\033[0m"
 
-
+namespace DkrAssetsTool {
 
 /**
  * Singleton class that deals with info / logging / errors
@@ -150,3 +150,4 @@ private:
     bool _assertsEnabled = false;
     int timerChannel = 0;
 };
+}

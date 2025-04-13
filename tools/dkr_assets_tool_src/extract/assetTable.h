@@ -6,6 +6,8 @@
 #include "helpers/debugHelper.h"
 #include "rom.h"
 
+namespace DkrAssetsTool {
+
 enum DkrAssetTableType {
     FixedTable, // Starts with the length
     VariableTable, // Ends with -1
@@ -47,3 +49,5 @@ private:
     
     std::vector<DkrTableEntryInfo> _entries;
 };
+
+}

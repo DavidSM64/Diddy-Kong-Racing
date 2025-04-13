@@ -1,5 +1,7 @@
 #include "dataHelper.h"
 
+using namespace DkrAssetsTool;
+
 #define ALIGN_N(val, N) ((val + (N - 1)) & (~(N - 1)))
 
 // ALigns length to 16-bytes.

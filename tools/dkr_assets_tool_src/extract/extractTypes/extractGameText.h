@@ -3,6 +3,8 @@
 #include "extract/extractInfo.h"
 #include "misc/settings.hpp"
 
+namespace DkrAssetsTool {
+
 class ExtractGameText {
 public:
     ExtractGameText(DkrAssetsSettings &settings, ExtractInfo &info);
@@ -15,3 +17,5 @@ private:
     void _extract_dialog(WritableJsonFile &jsonFile, std::vector<uint8_t> &rawBytes);
     void _extract_textbox(WritableJsonFile &jsonFile, std::vector<uint8_t> &rawBytes);
 };
+
+}

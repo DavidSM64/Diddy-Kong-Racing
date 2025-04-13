@@ -14,6 +14,7 @@
 #include "helpers/c/cContext.h"
 #include "helpers/c/cStructHelper.h"
 
+namespace DkrAssetsTool {
 class BuildObjectMap {
 public:
     BuildObjectMap(DkrAssetsSettings &settings, BuildInfo &info);
@@ -35,3 +36,4 @@ private:
     size_t _calculate_size(GltfFileNode *objectsNode);
     void _preload_c_context();
 };
+}

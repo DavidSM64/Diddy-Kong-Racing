@@ -1,5 +1,7 @@
 #include "extractSprite.h"
 
+using namespace DkrAssetsTool;
+
 #include "fileTypes/sprite.hpp"
 
 #include "helpers/jsonHelper.h"

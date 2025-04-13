@@ -11,6 +11,8 @@
 #include "prebuild/makeIncludes/assetEnums.h"
 #include "prebuild/compileAssets/compile.h"
 
+using namespace DkrAssetsTool;
+
 const std::string SECTION_TEXT = "text";
 const std::string SECTION_DATA = "data";
 const std::string SECTION_RODATA = "rodata";

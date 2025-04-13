@@ -10,6 +10,8 @@
 #include "helpers/gltf/gltfHelper.h"
 #include "helpers/c/cStructHelper.h"
 
+namespace DkrAssetsTool {
+
 class ExtractObjectMap {
 public:
     ExtractObjectMap(DkrAssetsSettings &settings, ExtractInfo &info);
@@ -20,3 +22,4 @@ private:
     
     void _get_obj_position(WriteableGltfFile &gltfFile, uint8_t *bytes, CStruct *entryCommon, int nodeIndex, const std::string &entryStructName);
 };
+}

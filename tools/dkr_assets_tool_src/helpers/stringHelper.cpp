@@ -1,5 +1,7 @@
 #include "stringHelper.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/debugHelper.h"
 
 #include <algorithm>

@@ -1,4 +1,7 @@
 #include "extractInfo.h"
+
+using namespace DkrAssetsTool;
+
 #include <sstream>
 
 void DeferredExtractions::add_extraction(std::string key, ExtractInfo newExtract) {

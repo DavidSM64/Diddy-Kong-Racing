@@ -1,5 +1,7 @@
 #include "imageHelper.h"
 
+using namespace DkrAssetsTool;
+
 #include <cstring> // for memcpy
 #include <unordered_map>
 

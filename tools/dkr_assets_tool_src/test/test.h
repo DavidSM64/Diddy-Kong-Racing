@@ -2,6 +2,7 @@
 
 #include "misc/settings.hpp"
 
+namespace DkrAssetsTool {
 class TestDKRAT {
     public:
         TestDKRAT(DkrAssetsSettings &settings);
@@ -9,3 +10,4 @@ class TestDKRAT {
     private:
         DkrAssetsSettings &_settings;
 };
+}

@@ -1,5 +1,7 @@
 #include "buildSprite.h"
 
+using namespace DkrAssetsTool;
+
 #include "fileTypes/sprite.hpp"
 #include "helpers/dataHelper.h"
 #include "helpers/assetsHelper.h"

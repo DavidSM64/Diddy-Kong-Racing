@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+namespace DkrAssetsTool {
 class RegexMatchGroup {
 public:
     RegexMatchGroup(std::string &text, int offset);
@@ -31,3 +32,4 @@ public:
 private:
     std::vector<RegexMatchGroup> _groups;
 };
+}

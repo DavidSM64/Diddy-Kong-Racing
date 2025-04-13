@@ -1,5 +1,7 @@
 #include "extractObjectHeader.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/stringHelper.h"
 #include "helpers/assetsHelper.h"
 #include "helpers/dataHelper.h"

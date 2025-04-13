@@ -11,6 +11,8 @@
 #include "helpers/c/cStructHelper.h"
 #include "helpers/c/cContext.h"
 
+using namespace DkrAssetsTool;
+
 void test_string_helper() {
     DebugHelper::DebugTimer timer;
     

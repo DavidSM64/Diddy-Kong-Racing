@@ -1,5 +1,7 @@
 #include "buildAudio.h"
 
+using namespace DkrAssetsTool;
+
 BuildAudio::BuildAudio(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
     if(info.srcFile->is_value_null("/raw")) {
         FileHelper::write_empty_file(_info.dstPath, true);

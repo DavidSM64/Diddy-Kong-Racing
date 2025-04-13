@@ -1,5 +1,7 @@
 #include "extractBinary.h"
 
+using namespace DkrAssetsTool;
+
 ExtractBinary::ExtractBinary(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
     if(_info.is_asset()) {
         _extract_as_asset();

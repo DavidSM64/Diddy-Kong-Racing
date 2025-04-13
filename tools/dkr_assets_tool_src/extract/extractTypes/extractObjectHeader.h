@@ -6,6 +6,8 @@
 
 #include "fileTypes/types.hpp"
 
+namespace DkrAssetsTool {
+
 class ExtractObjectHeader {
 public:
     ExtractObjectHeader(DkrAssetsSettings &settings, ExtractInfo &info);
@@ -16,3 +18,5 @@ private:
     
     void _flags_to_string(WritableJsonFile &jsonFile, be_uint16_t flags);
 };
+
+}

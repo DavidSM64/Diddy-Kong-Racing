@@ -2,6 +2,8 @@
 
 #include <string>
 
+namespace DkrAssetsTool {
+
 const std::string DKRAT_NAME = "DKR Assets Tool";
 const std::string DKRAT_VERSION = "Revision 4";
 const int DKRAT_REVISION_MAJOR = 4;
@@ -28,3 +30,5 @@ const bool USING_ASSERTS = true;
 const double DEFAULT_MODEL_SCALE_GLTF = 1.0 / 1000.0;
 
 const double DKR_FPS = 60.0; // For time conversions
+
+}

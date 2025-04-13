@@ -1,5 +1,7 @@
 #include "buildMenuText.h"
 
+using namespace DkrAssetsTool;
+
 #include <cstring> // for strncpy
 
 #include "helpers/assetsHelper.h"

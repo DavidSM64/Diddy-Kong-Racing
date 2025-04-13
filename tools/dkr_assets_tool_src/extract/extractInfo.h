@@ -12,6 +12,8 @@
 
 #include "helpers/c/cContext.h"
 
+namespace DkrAssetsTool {
+
 class ExtractInfo;
 
 class DeferredExtractions {
@@ -92,3 +94,5 @@ private:
     
     void _check_params();
 };
+
+}

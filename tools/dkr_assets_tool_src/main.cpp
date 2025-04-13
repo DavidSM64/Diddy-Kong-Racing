@@ -13,6 +13,8 @@
 #include "prebuild/prebuild.h"
 #include "test/test.h"
 
+using namespace DkrAssetsTool;
+
 /*******************************************************************************************************/
 
 int main(int argc, char *argv[]) {
@@ -33,8 +35,8 @@ int main(int argc, char *argv[]) {
     argparse::ArgumentParser tester("test");
     
     builder.add_argument("-i", "--input")
-        .required()
-        .help("Input JSON filepath.");
+        .default_value("")
+        .help("Input JSON filepath. (Optional, if not specified then all assets are built to output path)");
     
     builder.add_argument("-o", "--output")
         .required()
@@ -77,8 +79,11 @@ int main(int argc, char *argv[]) {
     if(args.is_subcommand_used(builder)) {
         std::string inputPath = builder.get<std::string>("-i");
         std::string outputPath = builder.get<std::string>("-o");
-        //settings.print();
-        DkrAssetBuilder builder(settings, inputPath, outputPath);
+        if(!inputPath.empty()) {
+            DkrAssetBuilder builder(settings, inputPath, outputPath); // build single asset
+        } else {
+            DkrAssetBuilder builder(settings, outputPath); // build ALL assets
+        }
         return 0;
     }
     if(args.is_subcommand_used(tester)) {

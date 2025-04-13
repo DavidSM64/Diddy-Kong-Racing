@@ -16,6 +16,7 @@
 
 #include "helpers/c/cContext.h"
 
+namespace DkrAssetsTool {
 
 class DkrExtract {
 public:
@@ -59,3 +60,5 @@ private:
     
     CContext _c_context;
 };
+
+}

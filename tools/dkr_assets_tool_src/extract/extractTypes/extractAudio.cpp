@@ -1,5 +1,7 @@
 #include "extractAudio.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/jsonHelper.h"
 
 ExtractAudio::ExtractAudio(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {

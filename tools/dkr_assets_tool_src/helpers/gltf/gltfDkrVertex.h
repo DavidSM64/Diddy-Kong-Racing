@@ -3,6 +3,8 @@
 #include "fileTypes/vertex.hpp"
 #include "fileTypes/texCoords.hpp"
 
+namespace DkrAssetsTool {
+    
 // TODO: Move this into a singleton class.
 #define MODEL_SCALE_GLTF (1.0f / 1000.0f)
 #define MODEL_SCALE_GLTF_INVERSE (1.0f / MODEL_SCALE_GLTF)
@@ -37,3 +39,5 @@ public:
 
     static size_t get_size();
 };
+
+}

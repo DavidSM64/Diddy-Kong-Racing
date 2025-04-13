@@ -1,5 +1,7 @@
 #include "cContext.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/debugHelper.h"
 #include "helpers/c/cStructHelper.h"
 

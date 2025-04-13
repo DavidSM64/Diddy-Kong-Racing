@@ -1,5 +1,7 @@
 #include "extractObjectModel.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/jsonHelper.h"
 
 ExtractObjectModel::ExtractObjectModel(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {

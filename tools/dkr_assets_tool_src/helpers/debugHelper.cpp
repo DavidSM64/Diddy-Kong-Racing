@@ -1,5 +1,7 @@
 #include "debugHelper.h"
 
+using namespace DkrAssetsTool;
+
 void DebugHelper::set_verbose(bool isVerbose) {
     _verbose = isVerbose;
 }
