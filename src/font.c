@@ -113,9 +113,9 @@ typedef struct Unk8012C2D4_JP {
     Gfx *dList;
 } Unk8012C2D4_JP;
 
-FontData_JP *D_8012C2A4_EE5E4; //Official Name: dxTable
+FontData_JP *D_8012C2A4_EE5E4;                       // Official Name: dxTable
 FontJpSpacing *D_8012C2A8_EE5E8[NUMBER_OF_JP_FONTS]; // 4 tables for spacing in different fonts?
-s32 fontInUse; //Official Name: fontInUse
+s32 fontInUse;                                       // Official Name: fontInUse
 Unk8012C2D4_JP (*D_8012C2BC_EE5FC)[128];
 JpCharHeader (*D_8012C2C0_EE600)[18];
 Gfx *D_8012C2C4_EE604;
@@ -1478,7 +1478,7 @@ s32 func_800C68CC_C74CC(u16 arg0) {
                                       (D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter * arg0),
                                   D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter);
             fontCreateDisplayList((*D_8012C2BC_EE5FC)[curIndex].dList, asset, D_8012C2A4_EE5E4[fontInUse].x,
-                                D_8012C2A4_EE5E4[fontInUse].y);
+                                  D_8012C2A4_EE5E4[fontInUse].y);
         }
 
         return curIndex;
