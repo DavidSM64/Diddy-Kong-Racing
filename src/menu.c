@@ -5560,13 +5560,17 @@ void bootscreen_init_cpak(void) {
 #endif
 }
 
+#if REGION == REGION_JP
+#define PAKMENU_JP_OFFSET 2
+#else
+#define PAKMENU_JP_OFFSET 0
+#endif
 /**
  * Render the controller pak menu.
  * Lists the pak index, as well as remaining pages, then displays all known files.
  * Also draws the confirmation box.
  * Visual Aid : https://i.imgur.com/7T2Scdr.png
  */
-#if REGION != REGION_JP
 void pakmenu_render(UNUSED s32 updateRate) {
     s32 highlight;
     s32 i;
@@ -5606,15 +5610,19 @@ void pakmenu_render(UNUSED s32 updateRate) {
         set_dialogue_font(6, ASSET_FONTS_FUNFONT);
         set_current_text_colour(6, 255, 255, 255, 0, 255);
         set_current_text_background_colour(6, 0, 0, 0, 0);
-        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[ASSET_MENU_TEXT_CONTPAK1 + gMenuOption], 1,
+        render_dialogue_text(6, POS_CENTRED, 2 - PAKMENU_JP_OFFSET, gMenuText[ASSET_MENU_TEXT_CONTPAK1 + gMenuOption], 1,
                              HORZ_ALIGN_CENTER); // CONTROLLER PAK 1 / 2 / 3 / 4
-        render_dialogue_text(6, POS_CENTRED, 16, gMenuText[ASSET_MENU_TEXT_FREEPAGESX], sCurrentControllerPakFreePages,
+        render_dialogue_text(6, POS_CENTRED, 16 - PAKMENU_JP_OFFSET, gMenuText[ASSET_MENU_TEXT_FREEPAGESX], sCurrentControllerPakFreePages,
                              HORZ_ALIGN_CENTER); // FREE PAGES: ~
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
 
         yPos += 34; // To 82
 
+#if REGION == REGION_JP
+        set_dialogue_font(6, ASSET_FONTS_SUBTITLEFONT);
+#else
         set_dialogue_font(6, ASSET_FONTS_SMALLFONT);
+#endif
         set_current_text_background_colour(6, 0, 0, 0, 0);
         for (i = -1; i < sControllerPakMenuNumberOfRows; i++) {
             dialogue_clear(6);
@@ -5640,9 +5648,19 @@ void pakmenu_render(UNUSED s32 updateRate) {
                 fileNameText = gBootPakData[gOpacityDecayTimer + i];
                 numberOfPages = sCurrentControllerPakNumberOfPages[gOpacityDecayTimer + i];
             }
+#if REGION == REGION_JP
+            render_dialogue_text(6, 21, 2, noteText, gOpacityDecayTimer + i + 1, HORZ_ALIGN_CENTER);
+            if (i < 0) {
+                render_dialogue_text(6, POS_CENTRED, 2, fileNameText, 1, HORZ_ALIGN_CENTER);
+            } else {
+                render_dialogue_text(6, 44, 2, fileNameText, 1, HORZ_ALIGN_LEFT);
+            }
+            render_dialogue_text(6, 241, 2, pagesText, numberOfPages, HORZ_ALIGN_CENTER);
+#else
             render_dialogue_text(6, 26, 2, noteText, gOpacityDecayTimer + i + 1, HORZ_ALIGN_CENTER);
             render_dialogue_text(6, 56, 2, fileNameText, 1, HORZ_ALIGN_LEFT);
             render_dialogue_text(6, 240, 2, pagesText, numberOfPages, HORZ_ALIGN_CENTER);
+#endif
 #if VERSION >= VERSION_79
             set_kerning(TRUE);
 #endif
@@ -5675,16 +5693,29 @@ void pakmenu_render(UNUSED s32 updateRate) {
                 yPos = SCREEN_HEIGHT_HALF;
             }
             dialogue_clear(6);
+#if REGION == REGION_JP
+            set_dialogue_font(6, ASSET_FONTS_SMALLFONT);
+            set_current_dialogue_box_coords(6, 56, yPos - 28, 264, yPos + 28);
+#else
             set_dialogue_font(6, ASSET_FONTS_FUNFONT);
             set_current_dialogue_box_coords(6, 76, yPos - 28, 244, yPos + 28);
+#endif
             set_current_dialogue_background_colour(6, 0, 0, 0, 160);
 
             yPos = 4;
             for (i = 0; i <= 2; i++) {
                 if (i == 0) {
+#if REGION == REGION_JP
+                    set_current_text_colour(6, 208, 128, 255, 255, 255);
+#else
                     set_current_text_colour(6, 255, 0, 255, 64, 255);
+#endif
                 } else if (i == gMenuStage) {
+#if REGION == REGION_JP
+                    set_current_text_colour(6, 255, highlight, highlight, 255, 255);
+#else
                     set_current_text_colour(6, 255, 255, 255, highlight, 255);
+#endif
                 } else {
                     set_current_text_colour(6, 255, 255, 255, 0, 255);
                 }
@@ -5713,10 +5744,6 @@ void pakmenu_render(UNUSED s32 updateRate) {
         }
     }
 }
-#else
-// No match JPN pakmenu_render
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/pakmenu_render.s")
-#endif
 
 /**
  * Handles the controller pak menu accessed from the boot screen.
@@ -8687,7 +8714,7 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
         set_text_colour(255, 255, 255, 0, opacity);
         draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, (yTemp - sp6C) - 88, hubName, ALIGN_MIDDLE_CENTER);
         gTrackMenuHubName = hubName;
-        set_kerning(0);
+        set_kerning(FALSE);
     }
 #if REGION == REGION_JP
     set_text_colour(0, 0, 0, 255, opacity / 2);
