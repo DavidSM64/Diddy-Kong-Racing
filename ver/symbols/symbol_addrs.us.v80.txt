@@ -151,7 +151,7 @@ func_800099EC = 0x800099EC;
 func_80009AB4 = 0x80009AB4;
 func_80009B7C = 0x80009B7C;
 func_80009D6C = 0x80009D6C;
-func_8000A184 = 0x8000A184;
+debug_render_audio_effects = 0x8000A184;
 func_8000A2E8 = 0x8000A2E8;
 debug_render_line = 0x8000A414;
 

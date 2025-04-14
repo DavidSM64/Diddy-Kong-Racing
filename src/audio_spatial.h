@@ -5,6 +5,7 @@
 #include "libc/math.h"
 #include "structs.h"
 #include "PR/gbi.h"
+#include "PR/libaudio.h"
 
 typedef struct floatXYZVals {
     f32 x1;
@@ -39,7 +40,7 @@ typedef struct unk80119C58 {
     /* 0x175 */ u8 unk175;
     /* 0x176 */ u8 unk176;
     /* 0x177 */ u8 unk177;
-    /* 0x178 */ s32 unk178;
+    /* 0x178 */ ALSoundState *soundPtr;
     /* 0x17C */ s8 unk17C;
     /* 0x17D */ u8 unk17D;
     /* 0x17E */ u8 unk17E;
