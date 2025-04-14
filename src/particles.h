@@ -5,6 +5,15 @@
 #include "structs.h"
 #include <ultra64.h>
 
+enum ParticleKind {
+    PARTICLE_KIND_NONE = 0,
+    PARTICLE_KIND_TRIANGLE = 1,
+    PARTICLE_KIND_RECTANGLE = 2,
+    PARTICLE_KIND_LINE = 3,
+    PARTICLE_KIND_POINT = 4,
+    PARTICLE_KIND_SPRITE = 128
+};
+
 // Flags representing which particle emitters are active for a game object
 enum ObjectEmitterFlags {
     OBJ_EMIT_NONE,
@@ -26,7 +35,7 @@ enum ObjectEmitterFlags {
     OBJ_EMIT_16 = (1 << 15),
 };
 
-enum ParticleFlags {
+enum ParticleRandomizationFlags {
     PARTICLE_FLAGS_NONE,
     PARTICLE_GRAVITY = (1 << 0),
     PARTICLE_UNK00000002 = (1 << 1),
@@ -36,9 +45,9 @@ enum ParticleFlags {
     PARTICLE_UNK00000020 = (1 << 5),
     PARTICLE_UNK00000040 = (1 << 6),
     PARTICLE_UNK00000080 = (1 << 7),
-    PARTICLE_VEL_X = (1 << 8),
-    PARTICLE_VEL_Y = (1 << 9),
-    PARTICLE_VEL_Z = (1 << 10),
+    PARTICLE_RANDOM_VEL_X = (1 << 8),
+    PARTICLE_RANDOM_VEL_Y = (1 << 9),
+    PARTICLE_RANDOM_VEL_Z = (1 << 10),
     PARTICLE_ANGLE_Y = (1 << 11),
     PARTICLE_ANGLE_X = (1 << 12),
     PARTICLE_ANGLE_Z = (1 << 13),
@@ -62,18 +71,57 @@ enum ParticleFlags {
     PARTICLE_UNK80000000 = (1 << 31),
 };
 
+enum ParticleBehaviorFlags {
+    PARTICLE_BEHAVIOR_FLAGS_NONE = 0,
+    PARTICLE_BEHAVIOR_FLAG_1 = 0x1,
+    PARTICLE_BEHAVIOR_FLAG_2 = 0x2,
+    PARTICLE_BEHAVIOR_FLAG_4 = 0x4,
+    PARTICLE_BEHAVIOR_FLAG_8 = 0x8,
+    PARTICLE_BEHAVIOR_FLAG_10 = 0x10,
+    PARTICLE_BEHAVIOR_FLAG_20 = 0x20,
+    PARTICLE_BEHAVIOR_FLAG_40 = 0x40,
+    PARTICLE_BEHAVIOR_FLAG_80 = 0x80,
+    PARTICLE_BEHAVIOR_FLAG_100 = 0x100,
+    PARTICLE_BEHAVIOR_FLAG_200 = 0x200,
+    PARTICLE_BEHAVIOR_FLAG_400 = 0x400,
+    PARTICLE_BEHAVIOR_FLAG_800 = 0x800,
+    PARTICLE_BEHAVIOR_FLAG_1000 = 0x1000,
+    PARTICLE_BEHAVIOR_FLAG_2000 = 0x2000,
+    PARTICLE_BEHAVIOR_FLAG_4000 = 0x4000,
+    PARTICLE_BEHAVIOR_FLAG_8000 = 0x8000
+};
+
 enum ParticleMovement {
     PARTICLE_MOVEMENT_0,
     PARTICLE_MOVEMENT_1,
-    PARTICLE_MOVEMENT_VELOCITIES,
+    PARTICLE_MOVEMENT_ACCELERATION,
     PARTICLE_MOVEMENT_VELOCITY_PARENT,
     PARTICLE_MOVEMENT_BASIC_PARENT,
     PARTICLE_MOVEMENT_VELOCITY,
 };
 
+enum ParticleField40 {
+    PARTICLE_F40_1 = 0x1,
+    PARTICLE_F40_2 = 0x2,
+    PARTICLE_F40_4 = 0x4,
+    PARTICLE_F40_8 = 0x8,
+    PARTICLE_F40_GRAVITY_1 = 0x10,
+    PARTICLE_F40_GRAVITY_2 = 0x20,
+    PARTICLE_F40_GRAVITY_3 = 0x40,
+    PARTICLE_F40_80 = 0x80,
+    PARTICLE_F40_100 = 0x100,
+    PARTICLE_F40_200 = 0x200,
+    PARTICLE_F40_400 = 0x400,
+    PARTICLE_F40_800 = 0x800,
+    PARTICLE_F40_1000 = 0x1000,
+    PARTICLE_F40_2000 = 0x2000,
+    PARTICLE_F40_4000 = 0x4000,
+    PARTICLE_F40_8000 = 0x8000,
+};
+
 typedef struct ParticleProperties {
-  /* 0x00 */ u8 unk0;
-  /* 0x01 */ u8 movementType;
+  /* 0x00 */ u8 kind; // ParticleKind
+  /* 0x01 */ u8 movementType; // ParticleMovement
   /* 0x02 */ u16 unk2;
   /* 0x04 */ s16 textureID;
   /* 0x06 */ s16 unk6;
@@ -94,11 +142,6 @@ typedef struct ParticleProperties {
   /* 0x14 */ ColourRGBA colour;
 } ParticleProperties;
 
-/* Size: 0x10 bytes */
-typedef struct unk800E2D08 {
-    s16 unk0, unk2, unk4, unk6, unk8, unkA, unkC, unkE;
-} unk800E2D08;
-
 typedef struct XYStruct {
     s16 x, y;
 } XYStruct;
@@ -116,42 +159,6 @@ typedef struct unk800B1130_SP28 {
     u8 a;
 } unk800B1130_SP28;
 
-
-// Size: 8 bytes
-typedef struct Particle_58_0_9C {
-    u8 pad0[4];
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-} Particle_58_0_9C;
-
-typedef struct Particle_58_0 {
-    s32 unk0;
-    u8 pad4[0x2];
-    u8 unk6;
-    u8 pad7[0x5];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    u8 pad18[0x6];
-    s16 unk1E;
-    u8 pad20[0x7C];
-    Particle_58_0_9C *unk9C;
-} Particle_58_0;
-
-typedef struct Particle_58 {
-    Particle_58_0 *unk0;
-    u8 pad4[0x2];
-    u8 unk6;
-    u8 pad7[0x5];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    u8 pad18[0x6];
-    s16 unk1E;
-} Particle_58;
-
 typedef struct ParticleSegment_3C {
     u8 pad0[0x1C];
     f32 unk1C;
@@ -164,10 +171,74 @@ typedef struct ParticleAngle {
     Vec3s direction;
 } ParticleAngle;
 
+/* Size: 0xA0 bytes */
+typedef struct ParticleBehavior {
+    s32 emitterFlags;
+    f32 velX;
+    f32 velY;
+    f32 velZ;
+    f32 unk10;
+    s16 unk14;
+    s16 unk16;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    s16 unk26;
+    s16 unk28;
+    s16 unk2A;
+    s16 unk2C;
+    s16 unk2E;
+    f32 unk30;
+    f32 unk34;
+    f32 unk38;
+    f32 unk3C;
+    s16 unk40;
+    s16 unk42;
+    s16 angleOffsetY;
+    s16 angleOffsetX;
+    s16 angleOffsetZ;
+    s16 angleVelY;
+    s16 angleVelX;
+    s16 angleVelZ;
+    f32 unk50;
+    f32 unk54;
+    f32 forwardVel;
+    s32 randomizationFlags;
+    s32 gravityRange1;
+    s16 angleRangeY1;
+    s16 angleRangeX1;
+    s16 angleRangeZ1;
+    s16 angleRangeY2;
+    s16 angleRangeX2;
+    s16 angleRangeZ2;
+    s32 gravityRange2;
+    s32 velocityRangeX1;
+    s32 velocityRangeY1;
+    s32 velocityRangeZ1;
+    s16 angleRangeY3;
+    s16 angleRangeX3;
+    s16 angleRangeZ3;
+    s16 unk86;
+    s16 unk88;
+    s16 unk8A;
+    s32 unk8C; // Something to do with scale
+    s32 unk90; // Something to do with scale
+    s32 velocityRange;
+    u8 colourRangeR;
+    u8 colourRangeG;
+    u8 colourRangeB;
+    u8 colourRangeA;
+    s32 *unk9C;
+} ParticleBehavior;
+
 /* Size: 0x20 bytes */
 typedef struct ParticleEmitter {
     /* 0x00 */ ParticleBehavior *behaviour;
-    /* 0x04 */ s16 flags;
+    /* 0x04 */ s16 emmmflags;
     /* 0x06 */ u8 unk6;
     /* 0x07 */ u8 lifeTime;
     /* 0x08 */ s16 propertyID;
@@ -184,6 +255,7 @@ typedef struct ParticleEmitter {
     /* 0x001E */ s16 unk1E;
 } ParticleEmitter;
 
+// TODO merge this struct with ObjectSegment
 typedef struct ParticleSegment {
   /* 0x0000 */ ObjectTransform trans;
   /* 0x0018 */ s16 textureFrame;
@@ -197,8 +269,8 @@ typedef struct ParticleSegment {
       SegmentPropertiesParticle particle;
       SegmentPropertiesCamera camera;
   };
-  /* 0x003C */ void *unk3C;
-  /* 0x003C */ s32 unk40;
+  /* 0x003C */ Object *parentObj;
+  /* 0x0040 */ s32 unk40;
 } ParticleSegment;
 
 typedef struct ParticleModel {
@@ -225,15 +297,14 @@ typedef struct Particle {
     };
     /* 0x0048 */ s16 behaviorId;
     /* 0x004A */ s16 brightness;
-    /* 0x004C */ f32 baseVelX;
-    /* 0x0050 */ f32 baseVelY;
+    /* 0x004C */ f32 localPosX;
+    /* 0x0050 */ f32 localPosY;
+    /* 0x0054 */ f32 localPosZ;
     union {
-    /* 0x0054 */ f32 baseVelZ;
-    /* 0x0054 */ f32 *unk54_ptr;
-    };
-    union {
-    /* 0x0058 */ Particle_58 **unk58_ptr;
+    /* 0x0058 */ ParticleEmitter **lineEmitter;
     /* 0x0058 */ f32 forwardVel;
+    /* 0x0058 */ f32 downAcceleration;
+    /* 0x0058 */ f32 downOffset;
     };
     /* 0x005C */ s16 opacity;
     /* 0x005E */ s16 opacityVel;
@@ -253,14 +324,14 @@ typedef struct Particle {
     /* 0x006C */ ColourRGBA colour;
 } Particle;
 
-typedef struct SpriteParticle {
+typedef struct PointParticle {
     /* 0x0000 */ Particle base;
-    /* 0x0070 */ struct Particle *unk70;
+    /* 0x0070 */ ParticleEmitter *pointEmitter;
     /* 0x0074 */ u8 unk74;
     /* 0x0075 */ u8 modelFrame;
     /* 0x0076 */ u8 unk76;
     /* 0x0077 */ s8 unk77;
-} SpriteParticle;
+} PointParticle;
 
 // Size: 8 bytes
 typedef struct unkParticleBehaviorUnk9C {
@@ -275,45 +346,46 @@ void func_800AE270(void);
 void func_800AE2A0(void);
 void func_800AE2D8(void);
 void free_particle_buffers(void);
-void free_particle_vertex_triangles(void);
+void free_particle_vertices_triangles(void);
 void free_particle_assets(void);
 void generate_particle_shape_triangle(ParticleModel *model, Vertex **vtx, Triangle **triangles);
 void generate_particle_shape_quad(ParticleModel *model, Vertex **vtx, Triangle **triangles);
 void generate_particle_shape_line(ParticleModel *model, Vertex **vtx, Triangle **triangles);
-void generate_particle_shape_sprite(ParticleModel *model, Vertex **vtx, Triangle **triangles);
+void generate_particle_shape_point(ParticleModel *model, Vertex **vtx, Triangle **triangles);
 void func_800AF0A4(Particle *particle);
 void func_800AF0F0(Particle *particle);
 void partInitTrigger(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID);
-void func_800AF29C(ParticleEmitter *arg0, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
-void func_800AF6E4(Object *obj, s32 arg1);
+void func_800AF29C(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
+void func_800AF6E4(Object *obj, s32 emitterIndex);
 void func_800B2260(ParticleEmitter *emitter);
-void func_800B263C(SpriteParticle *arg0);
+void func_800B263C(PointParticle *arg0);
 void init_particle_assets(void);
 void set_particle_texture_frame(Particle *particle);
-void func_800B03C0(Particle *particle, Object *arg1, ParticleEmitter *arg2, ParticleBehavior *behaviour);
-void func_800B2040(Particle *arg0);
+void setup_particle_position(Particle *particle, Object *arg1, ParticleEmitter *arg2, ParticleBehavior *behaviour);
+void particle_deallocate(Particle *particle);
 void handle_particle_movement(Particle *particle, s32 updateRate);
-void func_800B0010(Particle *arg0, Object *arg1, ParticleEmitter *arg2, ParticleBehavior *arg3);
-SpriteParticle *func_800B0698(Object *arg0, ParticleEmitter *arg1);
-Particle *func_800B1CB8(s32 arg0);
-void func_800AFE5C(Object *arg0, ParticleEmitter *arg1);
-Particle *func_800B1130(Object *arg0, ParticleEmitter *arg1);
-void func_800AF52C(Object *obj, s32 arg1);
+void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehavior *behavior);
+PointParticle *init_point_particle(Object *obj, ParticleEmitter *emitter);
+Particle *particle_allocate(s32 kind);
+void func_800AFE5C(Object *arg0, ParticleEmitter *emitter);
+Particle *init_general_particle(Object *arg0, ParticleEmitter *arg1);
+void func_800AF52C(Object *obj, s32 emitterIndex);
 void func_800AF134(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
 void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags);
 void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void obj_spawn_particle(Object *obj, s32 updateRate);
-void func_800B3E64(Object *obj);
-void func_800B26E0(Particle *particle);
+void func_800B3E64(PointParticle *particle);
+void move_line_particle(Particle *particle);
 void func_800AF714(Object *racerObj, s32 updateRate);
-Particle* func_800B0BAC(Object* arg0, ParticleEmitter* arg1);
+Particle* init_line_particle(Object* arg0, ParticleEmitter* arg1);
 
 void func_800AF404(s32 updateRate); // Non Matching
-void init_particle_buffers(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
+void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, s32 maxSpriteParticles,
+                           s32 maxLineParticles, s32 maxPointParticles, s32 arg5); // Non Matching
 void move_particle_basic_parent(Particle *);
 void move_particle_velocity_parent(Particle *);
-void move_particle_with_velocities(Particle *);
+void move_particle_with_acceleration(Particle *);
 void move_particle_basic(Particle *);
 void move_particle_with_velocity(Particle *);
 

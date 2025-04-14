@@ -937,7 +937,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     playerObjectHasMoved = FALSE;
     if (racer->playerIndex >= PLAYER_ONE && gNumViewports < 2) {
-        obj->particleEmitFlags |= OBJ_EMIT_9;
+        obj->particleEmittersEnabled |= OBJ_EMIT_9;
     }
     D_8011D550 = 0;
     gCurrentCarSteerVel = 0;
@@ -1208,7 +1208,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                 }
             } else if (racer->approachTarget == NULL) {
                 racer_play_sound(obj, SOUND_UNK_AF);
-                obj->particleEmitFlags |= OBJ_EMIT_5 | OBJ_EMIT_6;
+                obj->particleEmittersEnabled |= OBJ_EMIT_5 | OBJ_EMIT_6;
             }
             var_f2 = racer->trickType;
             var_f2 -= 5.0f;
@@ -1499,13 +1499,13 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                      (obj->segment.z_velocity * obj->segment.z_velocity);
             if (var_f2 > 16.0f) {
                 if (var_f2 < 80.0f) {
-                    obj->particleEmitFlags |= OBJ_EMIT_3 | OBJ_EMIT_4;
+                    obj->particleEmittersEnabled |= OBJ_EMIT_3 | OBJ_EMIT_4;
                 }
                 if (var_f2 > 28.0f) {
-                    obj->particleEmitFlags |= OBJ_EMIT_1 | OBJ_EMIT_2;
+                    obj->particleEmittersEnabled |= OBJ_EMIT_1 | OBJ_EMIT_2;
                 }
                 if (gNumViewports == 1 && var_f2 > 10.25f) {
-                    obj->particleEmitFlags |= OBJ_EMIT_7;
+                    obj->particleEmittersEnabled |= OBJ_EMIT_7;
                 }
             }
         } else {
@@ -1515,7 +1515,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                 var_f2 = racer->velocity;
             }
             if (var_f2 > 4.0f) {
-                obj->particleEmitFlags |= OBJ_EMIT_3 | OBJ_EMIT_4;
+                obj->particleEmittersEnabled |= OBJ_EMIT_3 | OBJ_EMIT_4;
             }
         }
     }
@@ -1525,16 +1525,16 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         iTemp = ((racer->boostType & EMPOWER_BOOST) >> 2) + 10;
         if (iTemp > 10) {
             if (asset20->unk70 > 0 || asset20->unk74 > 0.0) {
-                obj->particleEmitFlags |= 1 << iTemp;
+                obj->particleEmittersEnabled |= 1 << iTemp;
             }
         } else if (asset20->unk70 == 2 && asset20->unk74 < 0.5) {
-            obj->particleEmitFlags |= 1 << iTemp;
+            obj->particleEmittersEnabled |= 1 << iTemp;
         } else if (asset20->unk70 < 2 && asset20->unk74 > 0.0f) {
-            obj->particleEmitFlags |= 1 << iTemp;
+            obj->particleEmittersEnabled |= 1 << iTemp;
         }
     }
     if (racer->unk201 == 0) {
-        obj->particleEmitFlags = OBJ_EMIT_NONE;
+        obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     } else {
         obj->segment.y_velocity += updateRate * gCurrentRacerWeightStat;
         func_800AF714(obj, updateRate);
@@ -2450,7 +2450,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     if (tempRacer->unk1F6 < 0) {
         tempRacer->unk1F6 = 0;
     }
-    obj->particleEmitFlags = OBJ_EMIT_NONE;
+    obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     if (tempRacer->unk201 > 0) {
         tempRacer->unk201 -= updateRate;
     } else {
@@ -2994,7 +2994,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
             var_v1 = 0;
         }
         if (racer->unk1FE == 0) {
-            racerObj->particleEmitFlags |= PARTICLE_VEL_Z;
+            racerObj->particleEmittersEnabled |= PARTICLE_RANDOM_VEL_Z;
         }
         apply_vehicle_rotation_offset(racer, updateRate, 0, 0, var_v1);
         func_80053750(racerObj, racer, updateRateF);
@@ -3212,24 +3212,24 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
             var_v1 = ((racer->boostType & EMPOWER_BOOST) >> 2) + 0x10;
             if (var_v1 > 0x10) {
                 if (asset20->unk70 > 0 || asset20->unk74 > 0.0) {
-                    racerObj->particleEmitFlags |= 1 << var_v1;
+                    racerObj->particleEmittersEnabled |= 1 << var_v1;
                 }
             } else {
                 if (asset20->unk70 == 2 && asset20->unk74 < 0.5) {
-                    racerObj->particleEmitFlags |= 1 << var_v1;
+                    racerObj->particleEmittersEnabled |= 1 << var_v1;
                 } else if (asset20->unk70 < 2 && asset20->unk74 > 0.0f) {
-                    racerObj->particleEmitFlags |= 1 << var_v1;
+                    racerObj->particleEmittersEnabled |= 1 << var_v1;
                 }
             }
         }
         if (gCurrentPlayerIndex != PLAYER_COMPUTER && gNumViewports < 2) {
             if (racer->buoyancy > 14.0f) {
                 if (get_random_number_from_range(0, 1) != 0) {
-                    racerObj->particleEmitFlags |= PARTICLE_COLOURVEL_RED | PARTICLE_COLOURVEL_GREEN;
+                    racerObj->particleEmittersEnabled |= PARTICLE_COLOURVEL_RED | PARTICLE_COLOURVEL_GREEN;
                 }
             } else if (racer->buoyancy < 6.0f) {
                 if (racer->velocity > -3.0 && racer->velocity < 0.5 && get_random_number_from_range(0, 1) != 0) {
-                    racerObj->particleEmitFlags |= PARTICLE_UNK00040000 | PARTICLE_FORWARDVEL;
+                    racerObj->particleEmittersEnabled |= PARTICLE_UNK00040000 | PARTICLE_FORWARDVEL;
                 }
             }
         }
@@ -3407,11 +3407,11 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (gCurrentPlayerIndex >= PLAYER_ONE) {
             if (gNumViewports < FOUR_PLAYERS) {
                 if (racer->drift_direction > 0) {
-                    obj->particleEmitFlags |= 0x1000 | 0x400;
+                    obj->particleEmittersEnabled |= 0x1000 | 0x400;
                 } else if (racer->drift_direction < 0) {
-                    obj->particleEmitFlags |= 0x2000 | 0x800;
+                    obj->particleEmittersEnabled |= 0x2000 | 0x800;
                 } else {
-                    obj->particleEmitFlags |= 0x2000 | 0x1000;
+                    obj->particleEmittersEnabled |= 0x2000 | 0x1000;
                 }
             } else {
                 sp58 = 1;
@@ -3438,7 +3438,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         gCurrentStickY = -70;
         sp60 = TRUE;
         if (gNumViewports < FOUR_PLAYERS) {
-            obj->particleEmitFlags |= 0x2000 | 0x1000 | 0x800 | 0x400;
+            obj->particleEmittersEnabled |= 0x2000 | 0x1000 | 0x800 | 0x400;
         } else {
             sp58 = TRUE;
         }
@@ -3464,9 +3464,9 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (racer->drift_direction != 0 && gCurrentPlayerIndex >= PLAYER_ONE) {
         if (gNumViewports < FOUR_PLAYERS) {
             if (racer->drift_direction > 0) {
-                obj->particleEmitFlags |= 0x1000 | 0x400;
+                obj->particleEmittersEnabled |= 0x1000 | 0x400;
             } else {
-                obj->particleEmitFlags |= 0x2000 | 0x800;
+                obj->particleEmittersEnabled |= 0x2000 | 0x800;
             }
         } else {
             sp58 = TRUE;
@@ -3509,9 +3509,9 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             rumble_set(racer->playerIndex, RUMBLE_TYPE_0);
         }
         if (racer->y_rotation_vel < 0) {
-            obj->particleEmitFlags |= 0x1000 | 0x400;
+            obj->particleEmittersEnabled |= 0x1000 | 0x400;
         } else {
-            obj->particleEmitFlags |= 0x2000 | 0x800;
+            obj->particleEmittersEnabled |= 0x2000 | 0x800;
         }
         if (racer->drift_direction != 0 || racer->drifting != 0 || racer->unk1FB != 0) {
             if (racer->unk10 == 0) {
@@ -3692,18 +3692,18 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (get_viewport_count() < THREE_PLAYERS) {
         if ((sp60 != 0 && racer->velocity < -2.0) || sp58 != 0 || racer->unk1FB != 0) {
             if (racer->wheel_surfaces[2] < SURFACE_NONE) {
-                obj->particleEmitFlags |= gSurfaceFlagTable[racer->wheel_surfaces[2]];
+                obj->particleEmittersEnabled |= gSurfaceFlagTable[racer->wheel_surfaces[2]];
             }
             if (racer->wheel_surfaces[3] < SURFACE_NONE) {
-                obj->particleEmitFlags |= gSurfaceFlagTable[racer->wheel_surfaces[3]] * 2;
+                obj->particleEmittersEnabled |= gSurfaceFlagTable[racer->wheel_surfaces[3]] * 2;
             }
         }
         if (racer->velocity < -2.0) {
             if (racer->wheel_surfaces[2] < SURFACE_NONE) {
-                obj->particleEmitFlags |= gSurfaceFlagTable4P[racer->wheel_surfaces[2]];
+                obj->particleEmittersEnabled |= gSurfaceFlagTable4P[racer->wheel_surfaces[2]];
             }
             if (racer->wheel_surfaces[3] < SURFACE_NONE) {
-                obj->particleEmitFlags |= gSurfaceFlagTable4P[racer->wheel_surfaces[3]] * 2;
+                obj->particleEmittersEnabled |= gSurfaceFlagTable4P[racer->wheel_surfaces[3]] * 2;
             }
         }
     }
@@ -3947,9 +3947,9 @@ void func_8005250C(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (racer->unk1F3 & 8) {
         if (gNumViewports < 3) {
             if (gCurrentPlayerIndex >= PLAYER_ONE) {
-                obj->particleEmitFlags |= 0x100000;
+                obj->particleEmittersEnabled |= 0x100000;
             } else {
-                obj->particleEmitFlags |= 0x80000;
+                obj->particleEmittersEnabled |= 0x80000;
             }
         }
         racer->unk1F2 = 4;
@@ -4109,13 +4109,13 @@ void racer_spinout_car(Object *obj, Object_Racer *racer, s32 updateRate, f32 upd
     angleVel = racer->y_rotation_vel;
     if (gCurrentPlayerIndex > PLAYER_COMPUTER) {
         if (gNumViewports < VIEWPORTS_COUNT_4_PLAYERS) {
-            obj->particleEmitFlags |= 0x4FC00;
+            obj->particleEmittersEnabled |= 0x4FC00;
         } else {
             if (racer->wheel_surfaces[2] < SURFACE_NONE) {
-                obj->particleEmitFlags |= 1 << (racer->wheel_surfaces[2] * 2);
+                obj->particleEmittersEnabled |= 1 << (racer->wheel_surfaces[2] * 2);
             }
             if (racer->wheel_surfaces[3] < SURFACE_NONE) {
-                obj->particleEmitFlags |= 2 << (racer->wheel_surfaces[3] * 2);
+                obj->particleEmittersEnabled |= 2 << (racer->wheel_surfaces[3] * 2);
             }
         }
     }
@@ -4243,7 +4243,7 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
         canSteer = TRUE;
     }
     if (canSteer) {
-        obj->particleEmitFlags = OBJ_EMIT_NONE;
+        obj->particleEmittersEnabled = OBJ_EMIT_NONE;
         racer->drift_direction = 0;
         racer->unk10C -= (racer->unk10C * updateRate) >> 4;
         gCurrentCarSteerVel = 0;
@@ -4277,7 +4277,7 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
         }
         racer->trickType = steerAngle;
     }
-    obj->particleEmitFlags = OBJ_EMIT_NONE;
+    obj->particleEmittersEnabled = OBJ_EMIT_NONE;
 }
 
 /**
@@ -4356,7 +4356,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
     f64 temp_f0;
     f32 velocity;
     s32 temp_v1;
-    s32 flags;
+    s32 randomizationFlags;
     s32 isNotHardBraking;
     s32 i;
 
@@ -4428,7 +4428,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
                 }
             }
         }
-        flags = 1;
+        randomizationFlags = 1;
         if (racer->unk1FB != 0) {
             for (i = 0; i < 2; i++) {
                 someObj = objRacer->unk60->unk4[i];
@@ -4444,12 +4444,12 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
                     }
                 }
             }
-            objRacer->particleEmitFlags |= OBJ_EMIT_11 | OBJ_EMIT_12;
+            objRacer->particleEmittersEnabled |= OBJ_EMIT_11 | OBJ_EMIT_12;
         }
         temp_f0 = someObj->segment.trans.y_position; // Fake
         for (i = 0; i < 4; i++) {
             someObj = objRacer->unk60->unk4[i];
-            if (!(racer->unk1E3 & flags)) {
+            if (!(racer->unk1E3 & randomizationFlags)) {
                 someObj->segment.trans.y_position += ((-10.0f - someObj->segment.trans.y_position) * 0.125);
                 if (racer->waterTimer != 0) {
                     someObj->segment.trans.scale +=
@@ -4460,7 +4460,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
                 someObj->segment.trans.y_position = (temp_f0 - (temp_f0 * 0.125));
                 someObj->segment.trans.scale += ((someObj->segment.header->scale - someObj->segment.trans.scale) * 0.1);
             }
-            flags <<= 1;
+            randomizationFlags <<= 1;
         }
         someObj = objRacer->unk60->unk4[2];
         someObj->segment.trans.rotation.y_rotation = gCurrentStickX * 100;
@@ -4662,7 +4662,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
         func_80054FD0(obj, racer, updateRate);
     }
     if (!racer->unk201) {
-        obj->particleEmitFlags = OBJ_EMIT_NONE;
+        obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     } else if (racer->vehicleID < VEHICLE_BOSSES) {
         func_800AF714(obj, updateRate);
     }
@@ -4792,10 +4792,10 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
     }
     if (get_viewport_count() < 2 && sp38 && racer->velocity < -2.0) {
         if (racer->wheel_surfaces[2] < SURFACE_NONE) {
-            obj->particleEmitFlags |= 1 << (racer->wheel_surfaces[2] * 2);
+            obj->particleEmittersEnabled |= 1 << (racer->wheel_surfaces[2] * 2);
         }
         if (racer->wheel_surfaces[3] < SURFACE_NONE) {
-            obj->particleEmitFlags |= 2 << (racer->wheel_surfaces[3] * 2);
+            obj->particleEmittersEnabled |= 2 << (racer->wheel_surfaces[3] * 2);
         }
     }
     vel = racer->velocity;
@@ -4862,7 +4862,7 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
 void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     s32 pad[3];
     s32 sp190;
-    s32 flags;
+    s32 randomizationFlags;
     s32 mask;
     s32 sp184;
     f32 sp180;
@@ -4909,11 +4909,11 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     sp190 = 0;
     D_8011D548 = 0;
     D_8011D54C = 0;
-    flags = 0;
+    randomizationFlags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
-        flags = func_80017248(racerObj, 4, &sp190, &racer->unkD8, sp134, spE0, sp58);
+        randomizationFlags = func_80017248(racerObj, 4, &sp190, &racer->unkD8, sp134, spE0, sp58);
     }
-    if (flags & 0x80) {
+    if (randomizationFlags & 0x80) {
         for (i = 0; i < 4; i++) {
             D_8011D548 = D_8011D548 + sp134[i * 3 + 0];
             D_8011D54C = D_8011D54C + sp134[i * 3 + 2];
@@ -4923,10 +4923,10 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
         D_8011D548 = D_8011D548 - racerObj->segment.trans.x_position;
         D_8011D54C = D_8011D54C - racerObj->segment.trans.z_position;
         sp130 = TRUE;
-        flags &= ~0x80;
+        randomizationFlags &= ~0x80;
     }
     sp5C = 0;
-    if (flags) {
+    if (randomizationFlags) {
         sp178 = 0;
         for (i = 0; i < 4; i++) {
             sp178 += sp134[i * 3 + 1];
@@ -4982,16 +4982,16 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
             racer->squish_timer = 60;
         }
     }
-    racer->unk1E4 = flags;
-    racer->unk1E3 |= flags;
+    racer->unk1E4 = randomizationFlags;
+    racer->unk1E3 |= randomizationFlags;
 
     racer->groundedWheels = 0;
-    flags = 1;
+    randomizationFlags = 1;
     for (j = 0; j < 4; j++) {
-        if (racer->unk1E3 & flags) {
+        if (racer->unk1E3 & randomizationFlags) {
             racer->groundedWheels++;
         }
-        flags <<= 1;
+        randomizationFlags <<= 1;
     }
 
     for (i = 0; i < 12; i++) {
@@ -5081,7 +5081,7 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     f32 angleZ;
     f32 distance;
     s32 hasCollision;
-    s32 flags;
+    s32 randomizationFlags;
     s32 temp_v1_2;
     f32 xTemp;
     f32 yTemp;
@@ -5107,24 +5107,24 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     D_8011D548 = 0.0f;
     D_8011D54C = 0.0f;
     hasCollision = FALSE;
-    flags = 0;
+    randomizationFlags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
-        flags = func_80017248(obj, 1, &hasCollision, &racer->unkD8, &tempPos.x, &radius, &surface);
+        randomizationFlags = func_80017248(obj, 1, &hasCollision, &racer->unkD8, &tempPos.x, &radius, &surface);
     }
-    if (flags & 0x80) {
+    if (randomizationFlags & 0x80) {
         D_8011D548 = tempPos.x - obj->segment.trans.x_position;
         D_8011D54C = tempPos.z - obj->segment.trans.z_position;
-        flags &= ~0x80;
+        randomizationFlags &= ~0x80;
     }
     shouldSquish = FALSE;
-    if (flags && tempPos.y < obj->segment.trans.y_position - 4.0) {
+    if (randomizationFlags && tempPos.y < obj->segment.trans.y_position - 4.0) {
         shouldSquish = TRUE;
     }
     func_80031130(1, &racer->unkD8.x, &tempPos.x, racer->vehicleID);
     hasCollision = FALSE;
     racer->unk1E3 = func_80031600(&racer->unkD8.x, &tempPos.x, &radius, &surface, TRUE, &hasCollision);
-    racer->unk1E4 = flags;
-    racer->unk1E3 |= flags;
+    racer->unk1E4 = randomizationFlags;
+    racer->unk1E3 |= randomizationFlags;
     racer->groundedWheels = 0;
     if (racer->unk1E3) {
         racer->unk1E3 = 0x8 | 0x4 | 0x2 | 0x1;
@@ -6797,7 +6797,7 @@ s32 set_ghost_position_and_rotation(Object *obj) {
     }
     obj->segment.trans.rotation.z_rotation = rot + (s32) (rotDiff * catmullX);
 
-    obj->particleEmitFlags = OBJ_EMIT_NONE;
+    obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     obj->segment.object.segmentID = get_level_segment_index_from_position(
         obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
     if (ghostNodeCount == (commonUnk0s32 + 3)) {
@@ -7489,7 +7489,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     racer->unkFC.x = obj->segment.trans.x_position;
     racer->unkFC.y = obj->segment.trans.y_position;
     racer->unkFC.z = obj->segment.trans.z_position;
-    obj->particleEmitFlags = OBJ_EMIT_NONE;
+    obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     func_800AF714(obj, updateRate);
 }
 
