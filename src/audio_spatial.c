@@ -455,24 +455,23 @@ s32 func_80009AB4(u8 arg0) {
     return ret;
 }
 
-#ifdef NON_EQUIVALENT
-u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);
-// audioline_reverb
-void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
+
+void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z) {
+    s32 i;
     s32 j;
-    s32 levelSegmentIndex;
-    s32 numOfYVals;
-    s32 distBetween;
+    unk8011A6D8 *temp;
+    s32 k;
     f32 outX;
     f32 outY;
     f32 outZ;
-    u8 temp_v0_4;
-    u8 volume;
+    s32 distBetween;
     s32 var_s6;
-    s32 i;
-    s32 k;
-    unk8011A6D8 *temp;
-    f32 yVals[9]; // Not sure of the number needed
+    s32 levelSegmentIndex;
+    s32 numOfYVals;
+    u8 volume;
+    u8 temp_v0_4;
+    f32 *tempfloat;
+    f32 yVals[10];
 
     levelSegmentIndex = get_level_segment_index_from_position(x, y, z);
     volume = 0;
@@ -481,8 +480,9 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
         temp = &D_8011A6D8[i];
         if (temp->unk0.unk0_02 != 0) {
             if (func_80009AB4(i) != 0) {
+                tempfloat = &temp->unk4.unk4_floats;
                 for (j = 0; j < temp->unkB8; j++) {
-                    distBetween = audioline_distance(x, y, z, &temp->unk4.unk4_vec[j], &outX, &outY, &outZ);
+                    distBetween = audioline_distance(x, y, z, tempfloat, &outX, &outY, &outZ);
                     if (distBetween < var_s6) {
                         numOfYVals = func_8002BAB0(levelSegmentIndex, x, z, yVals);
                         for (k = 0; k < numOfYVals; k++) {
@@ -495,6 +495,7 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
                             }
                         }
                     }
+                    tempfloat += 3;
                 }
             }
         }
@@ -503,9 +504,6 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
         sound_event_update((s32) soundState, AL_SNDP_FX_EVT, (u32) volume);
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009B7C.s")
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009D6C.s")
 
