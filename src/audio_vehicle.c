@@ -341,7 +341,7 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
         } else {
             sound_event_update((s32) gRacerSound->unkA8, AL_SNDP_VOL_EVT, gRacerSound->unkAC << 8);
             audioline_reverb((s32 *) gRacerSound->unkA8, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                          obj->segment.trans.z_position);
+                             obj->segment.trans.z_position);
         }
     }
     gRacerSound->unkA0 = var_s0;
@@ -730,8 +730,8 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                     sp8C = temp_f0_3 + ((((f32) gRacerSound->unk39 / 100.0f) - temp_f0_3) * temp_f20_2);
                     if (gRacerSound->unk50 != NULL) {
                         audioline_reverb((s32 *) gRacerSound->unk50, objs[loopCount1]->segment.trans.x_position,
-                                      objs[loopCount1]->segment.trans.y_position,
-                                      objs[loopCount1]->segment.trans.z_position);
+                                         objs[loopCount1]->segment.trans.y_position,
+                                         objs[loopCount1]->segment.trans.z_position);
                         sound_event_update((s32) gRacerSound->unk50, AL_SNDP_VOL_EVT, temp_s3 << 8);
                         sound_event_update((s32) gRacerSound->unk50, AL_SNDP_PITCH_EVT, *((u32 *) &sp8C));
                         func_80004604((ALSoundState *) gRacerSound->unk50, 80);
@@ -911,7 +911,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             }
                             if (temp->unk48[0] != NULL) {
                                 audioline_reverb((s32 *) temp->unk48[0], temp->racerPos.x, temp->racerPos.y,
-                                              temp->racerPos.z);
+                                                 temp->racerPos.z);
                                 sound_event_update((s32) temp->unk48[0], AL_SNDP_VOL_EVT, temp->unk88 << 8);
                                 sound_event_update((s32) temp->unk48[0], AL_SNDP_PITCH_EVT, *((u32 *) &temp->unk8C));
                                 if (arg3 != 1) {

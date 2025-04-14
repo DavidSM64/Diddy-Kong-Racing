@@ -455,7 +455,6 @@ s32 func_80009AB4(u8 arg0) {
     return ret;
 }
 
-
 void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z) {
     s32 i;
     s32 j;
@@ -465,29 +464,29 @@ void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z) {
     f32 outY;
     f32 outZ;
     s32 distBetween;
-    s32 var_s6;
+    s32 maxDist;
     s32 levelSegmentIndex;
     s32 numOfYVals;
     u8 volume;
     u8 temp_v0_4;
-    f32 *tempfloat;
+    f32 *coords;
     f32 yVals[10];
 
     levelSegmentIndex = get_level_segment_index_from_position(x, y, z);
     volume = 0;
-    var_s6 = 400;
+    maxDist = 400;
     for (i = 0; i < ARRAY_COUNT(D_8011A6D8); i++) {
         temp = &D_8011A6D8[i];
         if (temp->unk0.unk0_02 != 0) {
             if (func_80009AB4(i) != 0) {
-                tempfloat = &temp->unk4.unk4_floats;
+                coords = temp->unk4.unk4_floats;
                 for (j = 0; j < temp->unkB8; j++) {
-                    distBetween = audioline_distance(x, y, z, tempfloat, &outX, &outY, &outZ);
-                    if (distBetween < var_s6) {
+                    distBetween = audioline_distance(x, y, z, coords, &outX, &outY, &outZ);
+                    if (distBetween < maxDist) {
                         numOfYVals = func_8002BAB0(levelSegmentIndex, x, z, yVals);
                         for (k = 0; k < numOfYVals; k++) {
                             if (y < yVals[k]) {
-                                var_s6 = distBetween;
+                                maxDist = distBetween;
                                 temp_v0_4 = func_80009D6C(&D_8011A6D8[i], outX, outY, outZ);
                                 if (volume < temp_v0_4) {
                                     volume = temp_v0_4;
@@ -495,7 +494,7 @@ void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z) {
                             }
                         }
                     }
-                    tempfloat += 3;
+                    coords += 3;
                 }
             }
         }
