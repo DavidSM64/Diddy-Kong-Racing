@@ -641,16 +641,15 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
 void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 arg3) {
     f32 sp80[4];
     f32 sp70[4];
-    s16 temp2;
-    s32 pad;
-    f32 sp60[2];
-    s16 index;
-    s16 nextIndex;
+    f32 sp60[4];
+    f32 temp;
     f32 sp54[2];
     f32 sp4C[2];
-    f32 temp;
+    s16 index;
+    s16 nextIndex;
     s16 sp40[4];
     s16 var_t0;
+    s16 temp2;
 
     sp80[0] = arg0->x1;
     sp70[0] = arg0->z1;
@@ -699,10 +698,8 @@ void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 a
 
         // Returns must be on the same line.
         // clang-format off
-        if (-300.0 > sp60[1]) { return;
-}
-        if (sp60[0] > 300.0) { return;
-}
+        if (-300.0 > sp60[1]) { return; }
+        if (sp60[0] > 300.0) { return; }
         // clang-format on
 
         if (sp60[0] < -300.0) {
@@ -716,7 +713,155 @@ void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 a
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
+    s16 i;
+    TriangleBatchInfo *batch;
+    s8 spF8[3];
+    f32 spE8[3];
+    f32 spDC[3];
+    f32 spD0[3];
+    f32 spC4[3];
+    f32 spB8[3];
+    f32 spB4[3];
+    f32 spA8[3];
+    f32 spA0[3];
+    f32 *temp_v0_3;
+    s16 temp_a2_3;
+    s16 temp_t7;
+    s16 nextIndex;
+    s16 var_a3;
+    s16 index;
+    s16 var_a3_3;
+    s16 var_s0;
+    s16 var_t0;
+    s16 var_t1;
+    s16 var_t8;
+    s16 var_v1;
+    s16 var_s7;
+    s32 var_t9;
+    s8 var_t6;
+    s8 var_v0;
+    s8 var_v1_2;    
+    f32 temp;
+    Vertex *temp_v1;
+
+    if (D_8011D49E < D_8011D4BA) {
+        for (i = 0; i < segment->numberOfBatches; i++) {
+            batch = &segment->batches[i];
+            var_v1 = batch[0].facesOffset;
+            var_t1 = batch[0].verticesOffset;
+            temp_t7 = batch[1].facesOffset;
+            if (batch[0].flags & 0x300) {
+                var_v1 = temp_t7;
+            }
+            for (var_s7 = var_v1; var_s7 < temp_t7; var_s7++) {
+                if ((segment->triangles[var_s7].verticesArray[0] & 0x40)) {
+                    continue;
+                }
+                var_t0 = 0;                    
+                for (var_a3 = 0; var_a3 < 3; var_a3++) {
+                    temp_v1 = ((segment->triangles[var_s7].verticesArray[var_a3 + 1] + var_t1) * 10) + segment->vertices;
+                    spE8[var_a3] = temp_v1->x;
+                    spDC[var_a3] = temp_v1->y;
+                    spD0[var_a3] = temp_v1->z;
+                    spC4[var_a3] = (arg1 * spE8[var_a3]) + (arg2 * spD0[var_a3]) + arg3;
+                    var_t6 = 0;
+                    if (spC4[var_a3] <= 0.0) {
+                        var_t6 = 1;
+                    }
+                    spF8[var_a3] = var_t6;
+                    var_t9 = 0;
+                    if (spF8[var_a3] <= 0.0) {
+                        var_t9 = 1;
+                    }
+                    var_t0 += var_t9;
+                }
+                if ((var_t0 == 1) || (var_t0 == 2)) {
+                    var_s0 = 0;
+
+                    for(index = 0; index < 3;  index++) {
+                        nextIndex = index + 1;
+                        if (nextIndex >= 3) {
+                            nextIndex = 0;
+                        }
+                        if (spF8[nextIndex] != spF8[index]) {
+                            temp = spC4[index] / (spC4[index] - spC4[nextIndex]);
+                            spB4[var_s0] = ((spE8[nextIndex] - spE8[index]) * temp) + spE8[index];
+                            spA0[var_s0] = spB8[var_s0] = ((spDC[nextIndex] - spDC[index]) * temp) + spDC[index];
+                            spA8[var_s0] = ((spD0[nextIndex] - spD0[index]) * temp) + spD0[index];
+                            var_s0++;
+                        }
+                        
+                    }
+                    var_s0 = 0;
+                    var_v0 = 0;
+                    var_v1_2 = 0;
+                    spC4[0] = (D_8011D4A0 * spB4[0]) + (D_8011D4A4 * spA8[0]) + D_8011D4A8;
+                    spC4[1] = (D_8011D4A0 * spB4[1]) + (D_8011D4A4 * spA8[1]) + D_8011D4A8;
+                    if (spC4[0] < -300.0) {
+                        var_v0 = 1;
+                    }
+                    if (spC4[0] > 300.0) {
+                        var_v0 |= 2;
+                    }
+                    if (spC4[1] < -300.0) {
+                        var_v1_2 = 1;
+                    }
+                    if (spC4[1] > 300.0) {
+                        var_v1_2 |= 2;
+                    }
+                    if ((var_v1_2 | var_v0) == 0) {
+                        var_s0 = 1;
+                        spF8[1] = var_v1_2;
+                        spF8[0] = var_v0;
+                    } else {
+                        spF8[0] = var_v0;
+                        spF8[1] = var_v1_2;
+                        if (var_v1_2 != var_v0) {
+                            var_a3_3 = 0;
+                            if (spC4[1] < spC4[0]) {
+                                var_a3_3 = 1;
+                            }
+                            temp_a2_3 = 1 - var_a3_3;
+                            if (spF8[var_a3_3] == 1) {
+                                temp = ((-spC4[var_a3_3] - 300.0) / (spC4[temp_a2_3] - spC4[var_a3_3]));
+                                spB8[var_a3_3] = ((spB8[temp_a2_3] - spB8[var_a3_3]) * temp) + spB8[var_a3_3];
+                                spC4[var_a3_3] = -300.0f;
+                            }
+                            if (spF8[temp_a2_3] == 2) {
+                                temp = ((spC4[temp_a2_3] - 300.0) / (spC4[temp_a2_3] - spC4[var_a3_3]));
+                                spB8[temp_a2_3] = ((spB8[var_a3_3] - spB8[temp_a2_3]) * temp) + spB8[temp_a2_3];
+                                spC4[temp_a2_3] = 300.0f;
+                            }
+                            var_s0 = 1;
+                        }
+                    }
+                    if (var_s0 != 0) {
+                        temp_v0_3 = &segment->unk18[segment->unk14[var_s7 * 4]];
+                        temp = ((temp_v0_3[0] * (spB4[1] + D_8011D4A0)) + (spB8[0] * temp_v0_3[1]) + ((spA8[0] + D_8011D4A4) * temp_v0_3[2]) + temp_v0_3[3]);
+                        var_t8 = 0 * 4;
+                        if (temp > 0.0) {
+                            var_t8 = 1 * 4;
+                        }
+                        var_s0 = var_t8;
+                        if (temp_v0_3[1] < 0.0f) {
+                            var_s0 |= 1;
+                        }
+                        if (spC4[0] == spC4[1]) {
+                            var_s0 |= 8;
+                        }
+                        func_80026C14(spC4[0], spB8[0], var_s0);
+                        func_80026C14(spC4[1], spB8[1], var_s0);
+                    }
+                }
+            }
+        }
+    }
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80026430.s")
+#endif
 
 void func_80026C14(s16 arg0, s16 arg1, s32 arg2) {
     s16 i;
@@ -752,7 +897,7 @@ void func_80026C14(s16 arg0, s16 arg1, s32 arg2) {
 }
 
 void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
-    s32 pad[7];
+    UNUSED s32 pad[7];
     unk8011D478 *next;
     unk8011D478 *curr;
     s16 temp3;
@@ -768,7 +913,7 @@ void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
     s8 temp;
     s8 temp0;
     s8 temp1;
-    f32 temp2;
+    UNUSED f32 temp2;
     f32 sp94[10];
     f32 sp6C[10];
     s8 sp60[10];
@@ -829,7 +974,7 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     Vertex *verts;
     Triangle *tris;
     s32 two;
-    s32 test;
+    UNUSED s32 test;
     s32 vertZ1;
     s32 vertX2;
     s32 vertZ2;
@@ -2864,7 +3009,7 @@ void func_8002E234(Object *obj, s32 bool) {
     s32 yPos;
     f32 xPos;
     f32 zPos;
-    s32 *new_var;
+    UNUSED s32 *pad;
     s32 cheats;
     s32 inSegs[28];
     s32 i;
