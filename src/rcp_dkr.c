@@ -175,7 +175,7 @@ s32 gfxtask_run_xbus(Gfx *dlBegin, Gfx *dlEnd, UNUSED s32 recvMesg) {
     dkrtask->unused58 = COLOUR_TAG_RED;
     dkrtask->unused5C = COLOUR_TAG_RED;
     dkrtask->task.data_ptr = (u64 *) dlBegin;
-    dkrtask->task.data_size = ((s32) dlEnd - (s32) dlBegin) >> 3; // Shifted by 3, repsenting the size of the Gfx type.
+    dkrtask->task.data_size = dlEnd - dlBegin;
     dkrtask->task.type = M_GFXTASK;
     dkrtask->task.flags = OS_TASK_DP_WAIT;
     dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
@@ -510,7 +510,6 @@ void bgdraw_texture_init(TextureHeader *tex1, TextureHeader *tex2, u32 shiftX) {
 
 /**
  * Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
- * https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
  * Official Name: rcpMosaicClear
  */
 void bgdraw_texture(Gfx **dList) {

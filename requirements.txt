@@ -1,4 +1,5 @@
-splat64[mips]==0.32.3
+splat64[mips]==0.33.2
+spimdisasm==1.33.0
 pycparser>=2.22
 colorama>=0.4.6
 watchdog>=6.0.0
