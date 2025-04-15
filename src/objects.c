@@ -2754,7 +2754,7 @@ void render_3d_misc(Object *obj) {
  */
 void render_3d_billboard(Object *obj) {
     s32 intensity;
-    s32 randomizationFlags;
+    s32 flags;
     s32 alpha;
     s32 hasPrimCol;
     s32 hasEnvCol;
@@ -2765,7 +2765,7 @@ void render_3d_billboard(Object *obj) {
     intensity = 255;
     hasPrimCol = FALSE;
     hasEnvCol = FALSE;
-    randomizationFlags = obj->segment.trans.flags | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE;
+    flags = obj->segment.trans.flags | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE;
     if (obj->shading != NULL) {
         hasPrimCol = TRUE;
         hasEnvCol = TRUE;
@@ -2793,7 +2793,7 @@ void render_3d_billboard(Object *obj) {
     }
 
     if (alpha < 255) {
-        randomizationFlags |= RENDER_SEMI_TRANSPARENT;
+        flags |= RENDER_SEMI_TRANSPARENT;
         hasPrimCol = TRUE;
     }
     if ((obj->behaviorId == 5) && (obj->segment.trans.scale == 6.0f)) {
@@ -2846,7 +2846,7 @@ void render_3d_billboard(Object *obj) {
                            RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
     } else {
         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj,
-                                (unk80068514_arg4 *) gfxData, randomizationFlags);
+                                (unk80068514_arg4 *) gfxData, flags);
     }
     if (hasPrimCol) {
         gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -2870,7 +2870,7 @@ void render_3d_model(Object *obj) {
     s32 obj60_unk0;
     s32 hasOpacity;
     s32 hasEnvCol;
-    s32 randomizationFlags;
+    s32 flags;
     s32 meshBatch;
     s32 cicFailed;
     f32 vtxX;
@@ -2907,18 +2907,18 @@ void render_3d_model(Object *obj) {
                 obj_animate(obj);
             }
             if (obj68->modelType != MODELTYPE_BASIC && objModel->unk40 != NULL) {
-                randomizationFlags = TRUE;
+                flags = TRUE;
                 if (racerObj != NULL && racerObj->vehicleID < VEHICLE_BOSSES &&
                     racerObj->playerIndex == PLAYER_COMPUTER) {
-                    randomizationFlags = FALSE;
+                    flags = FALSE;
                 }
                 if (get_viewport_count() != VIEWPORTS_COUNT_1_PLAYER) {
-                    randomizationFlags = FALSE;
+                    flags = FALSE;
                 }
                 obj->curVertData = (Vertex *) obj68->vertices[obj68->animationTaskNum];
                 if (obj->behaviorId == BHV_UNK_3F) { // 63 = stopwatchicon, stopwatchhand
                     obj_shade_fancy(objModel, obj, 0, gCurrentLightIntensity);
-                } else if (randomizationFlags) {
+                } else if (flags) {
                     obj_shade_fancy(objModel, obj, -1, gCurrentLightIntensity);
                 } else {
                     obj_shade_fast(objModel, obj, gCurrentLightIntensity);
@@ -3008,12 +3008,12 @@ void render_3d_model(Object *obj) {
                         loopObj->segment.trans.y_position += vtxY;
                         loopObj->segment.trans.z_position += vtxZ;
                         if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
-                            randomizationFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
+                            flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
                         } else {
-                            randomizationFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE | RENDER_ANTI_ALIASING);
+                            flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE | RENDER_ANTI_ALIASING);
                         }
                         if (alpha < 255) {
-                            randomizationFlags |= RENDER_SEMI_TRANSPARENT;
+                            flags |= RENDER_SEMI_TRANSPARENT;
                         }
 #ifdef ANTI_TAMPER
                         cicFailed = FALSE;
@@ -3036,7 +3036,7 @@ void render_3d_model(Object *obj) {
                             }
                             loopObj->properties.common.unk0 = render_sprite_billboard(
                                 &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj,
-                                (unk80068514_arg4 *) something, randomizationFlags);
+                                (unk80068514_arg4 *) something, flags);
                             if (var_v0_2) {
                                 gDkrInsertMatrix(gObjectCurrDisplayList++, 0, 0);
                                 func_80012CE8(&gObjectCurrDisplayList);
@@ -3055,7 +3055,7 @@ void render_3d_model(Object *obj) {
             if (loopObj != NULL) {
                 index = obj->segment.header->unk58;
                 if (index >= 0 && index < objModel->unk18) {
-                    randomizationFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
+                    flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
                     something = loopObj->unk68[loopObj->segment.object.modelIndex];
                     vtxX = obj->curVertData[objModel->unk14[index]].x;
                     vtxY = obj->curVertData[objModel->unk14[index]].y;
@@ -3065,7 +3065,7 @@ void render_3d_model(Object *obj) {
                     loopObj->segment.trans.z_position += (vtxZ - loopObj->segment.trans.z_position) * 0.25;
                     if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
                         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
-                                                loopObj, (unk80068514_arg4 *) something, randomizationFlags);
+                                                loopObj, (unk80068514_arg4 *) something, flags);
                     }
                 }
             }
@@ -6435,7 +6435,7 @@ void obj_taj_create_balloon(s32 blockID, f32 x, f32 y, f32 z) {
  * Has a different response depending on whether the challenge was aborted or finished.
  */
 void mode_end_taj_race(s32 reason) {
-    s32 randomizationFlags;
+    s32 flags;
     s32 i;
     Object_Racer *racer;
     Settings *settings;
@@ -6476,13 +6476,13 @@ void mode_end_taj_race(s32 reason) {
     if (reason == CHALLENGE_END_FINISH) {
         if (racer->finishPosition == 1) {
             settings = get_settings();
-            randomizationFlags = racer->vehicleID;
-            randomizationFlags = 1 << (randomizationFlags + 3);
-            if (settings->tajFlags & randomizationFlags) {
+            flags = racer->vehicleID;
+            flags = 1 << (flags + 3);
+            if (settings->tajFlags & flags) {
                 set_next_taj_challenge_menu(5);
             } else {
                 set_next_taj_challenge_menu(racer->vehicleID + 6);
-                settings->tajFlags |= randomizationFlags;
+                settings->tajFlags |= flags;
                 safe_mark_write_save_file(get_save_file_index());
             }
         } else {
@@ -7065,74 +7065,74 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
  * This includes things like shadow data, interaction and visuals.
  */
 s32 obj_init_property_flags(s32 behaviorId) {
-    s32 randomizationFlags = OBJECT_SPAWN_NONE;
+    s32 flags = OBJECT_SPAWN_NONE;
     switch (behaviorId) {
         case BHV_RACER:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_ANIMATION |
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_ANIMATION |
                     OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_SCENERY:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_WEAPON:
-            randomizationFlags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_DINO_WHALE:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_DOOR:
         case BHV_TT_DOOR:
-            randomizationFlags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
             break;
         case BHV_WEAPON_BALLOON:
         case BHV_GOLDEN_BALLOON:
-            randomizationFlags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_HIT_TESTER:
         case BHV_HIT_TESTER_2:
         case BHV_SNOWBALL:
         case BHV_SNOWBALL_2:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE |
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE |
                     OBJECT_SPAWN_UNK20;
             break;
         case BHV_SNOWBALL_3:
         case BHV_SNOWBALL_4:
         case BHV_HIT_TESTER_3:
         case BHV_HIT_TESTER_4:
-            randomizationFlags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
             break;
         case BHV_UNK_18:
-            randomizationFlags = OBJECT_SPAWN_UNK04;
+            flags = OBJECT_SPAWN_UNK04;
             break;
         case BHV_STOPWATCH_MAN:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_BANANA:
         case BHV_WORLD_KEY:
         case BHV_SILVER_COIN:
         case BHV_SILVER_COIN_2:
-            randomizationFlags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_SHADOW;
+            flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_SHADOW;
             break;
         case BHV_LOG:
-            randomizationFlags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
             break;
         case BHV_BRIDGE_WHALE_RAMP:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
             break;
         case BHV_RAMP_SWITCH:
-            randomizationFlags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_SHADOW;
+            flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_SHADOW;
             break;
         case BHV_SEA_MONSTER:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_COLLECT_EGG:
-            randomizationFlags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_UNK_30:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_UNK_3F:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_ANIMATED_OBJECT:
         case BHV_VEHICLE_ANIMATION:
@@ -7140,22 +7140,22 @@ s32 obj_init_property_flags(s32 behaviorId) {
         case BHV_WIZPIG_SHIP:
         case BHV_ANIMATED_OBJECT_4:
         case BHV_PIG_ROCKETEER:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_CHARACTER_SELECT:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_TROPHY_CABINET:
         case BHV_DYNAMIC_LIGHT_OBJECT_2:
         case BHV_ROCKET_SIGNPOST:
         case BHV_ROCKET_SIGNPOST_2:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
             break;
         case BHV_UNK_5B:
-            randomizationFlags = OBJECT_SPAWN_UNK01;
+            flags = OBJECT_SPAWN_UNK01;
             break;
         case BHV_ANIMATED_OBJECT_2:
-            randomizationFlags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_EXIT:
         case BHV_CHECKPOINT:
@@ -7174,27 +7174,27 @@ s32 obj_init_property_flags(s32 behaviorId) {
         case BHV_TELEPORT:
         case BHV_FIREBALL_OCTOWEAPON:
         case BHV_FIREBALL_OCTOWEAPON_2:
-            randomizationFlags = OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_ZIPPER_GROUND:
-            randomizationFlags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_ANIMATION:
         case BHV_CAMERA_ANIMATION:
         case BHV_BUTTERFLY:
-            randomizationFlags = OBJECT_SPAWN_SHADOW;
+            flags = OBJECT_SPAWN_SHADOW;
             break;
         case BHV_PARK_WARDEN:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
             break;
         case BHV_FROG:
-            randomizationFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
             break;
         case BHV_UNK_72:
-            randomizationFlags = OBJECT_SPAWN_UNK01;
+            flags = OBJECT_SPAWN_UNK01;
             break;
     }
-    return randomizationFlags;
+    return flags;
 }
 
 /**

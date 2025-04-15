@@ -3490,13 +3490,13 @@ void hud_draw_model(ObjectModel *objModel) {
     s32 textureEnabled;
     s32 i;
     s32 texIndex;
-    s32 randomizationFlags;
+    s32 flags;
 
     numBatches = objModel->numberOfBatches;
 
     for (i = 0; i < numBatches; i++) {
-        randomizationFlags = objModel->batches[i].flags;
-        if (!(randomizationFlags & RENDER_Z_UPDATE)) {
+        flags = objModel->batches[i].flags;
+        if (!(flags & RENDER_Z_UPDATE)) {
             vertOffset = objModel->batches[i].verticesOffset;
             triOffset = objModel->batches[i].facesOffset;
             numVerts = objModel->batches[i + 1].verticesOffset - vertOffset;
@@ -3510,7 +3510,7 @@ void hud_draw_model(ObjectModel *objModel) {
             } else {
                 texPtr = objModel->textures[texIndex].texture;
             }
-            load_and_set_texture_no_offset(&gHudDL, texPtr, randomizationFlags & ~RENDER_Z_COMPARE);
+            load_and_set_texture_no_offset(&gHudDL, texPtr, flags & ~RENDER_Z_COMPARE);
             gSPVertexDKR(gHudDL++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
             if (texPtr == NULL) {
                 textureEnabled = TRIN_DISABLE_TEXTURE;

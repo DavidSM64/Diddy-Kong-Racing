@@ -4356,7 +4356,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
     f64 temp_f0;
     f32 velocity;
     s32 temp_v1;
-    s32 randomizationFlags;
+    s32 flags;
     s32 isNotHardBraking;
     s32 i;
 
@@ -4428,7 +4428,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
                 }
             }
         }
-        randomizationFlags = 1;
+        flags = 1;
         if (racer->unk1FB != 0) {
             for (i = 0; i < 2; i++) {
                 someObj = objRacer->unk60->unk4[i];
@@ -4449,7 +4449,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
         temp_f0 = someObj->segment.trans.y_position; // Fake
         for (i = 0; i < 4; i++) {
             someObj = objRacer->unk60->unk4[i];
-            if (!(racer->unk1E3 & randomizationFlags)) {
+            if (!(racer->unk1E3 & flags)) {
                 someObj->segment.trans.y_position += ((-10.0f - someObj->segment.trans.y_position) * 0.125);
                 if (racer->waterTimer != 0) {
                     someObj->segment.trans.scale +=
@@ -4460,7 +4460,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
                 someObj->segment.trans.y_position = (temp_f0 - (temp_f0 * 0.125));
                 someObj->segment.trans.scale += ((someObj->segment.header->scale - someObj->segment.trans.scale) * 0.1);
             }
-            randomizationFlags <<= 1;
+            flags <<= 1;
         }
         someObj = objRacer->unk60->unk4[2];
         someObj->segment.trans.rotation.y_rotation = gCurrentStickX * 100;
@@ -4862,7 +4862,7 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
 void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     s32 pad[3];
     s32 sp190;
-    s32 randomizationFlags;
+    s32 flags;
     s32 mask;
     s32 sp184;
     f32 sp180;
@@ -4909,11 +4909,11 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     sp190 = 0;
     D_8011D548 = 0;
     D_8011D54C = 0;
-    randomizationFlags = 0;
+    flags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
-        randomizationFlags = func_80017248(racerObj, 4, &sp190, &racer->unkD8, sp134, spE0, sp58);
+        flags = func_80017248(racerObj, 4, &sp190, &racer->unkD8, sp134, spE0, sp58);
     }
-    if (randomizationFlags & 0x80) {
+    if (flags & 0x80) {
         for (i = 0; i < 4; i++) {
             D_8011D548 = D_8011D548 + sp134[i * 3 + 0];
             D_8011D54C = D_8011D54C + sp134[i * 3 + 2];
@@ -4923,10 +4923,10 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
         D_8011D548 = D_8011D548 - racerObj->segment.trans.x_position;
         D_8011D54C = D_8011D54C - racerObj->segment.trans.z_position;
         sp130 = TRUE;
-        randomizationFlags &= ~0x80;
+        flags &= ~0x80;
     }
     sp5C = 0;
-    if (randomizationFlags) {
+    if (flags) {
         sp178 = 0;
         for (i = 0; i < 4; i++) {
             sp178 += sp134[i * 3 + 1];
@@ -4982,16 +4982,16 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
             racer->squish_timer = 60;
         }
     }
-    racer->unk1E4 = randomizationFlags;
-    racer->unk1E3 |= randomizationFlags;
+    racer->unk1E4 = flags;
+    racer->unk1E3 |= flags;
 
     racer->groundedWheels = 0;
-    randomizationFlags = 1;
+    flags = 1;
     for (j = 0; j < 4; j++) {
-        if (racer->unk1E3 & randomizationFlags) {
+        if (racer->unk1E3 & flags) {
             racer->groundedWheels++;
         }
-        randomizationFlags <<= 1;
+        flags <<= 1;
     }
 
     for (i = 0; i < 12; i++) {
@@ -5081,7 +5081,7 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     f32 angleZ;
     f32 distance;
     s32 hasCollision;
-    s32 randomizationFlags;
+    s32 flags;
     s32 temp_v1_2;
     f32 xTemp;
     f32 yTemp;
@@ -5107,24 +5107,24 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     D_8011D548 = 0.0f;
     D_8011D54C = 0.0f;
     hasCollision = FALSE;
-    randomizationFlags = 0;
+    flags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
-        randomizationFlags = func_80017248(obj, 1, &hasCollision, &racer->unkD8, &tempPos.x, &radius, &surface);
+        flags = func_80017248(obj, 1, &hasCollision, &racer->unkD8, &tempPos.x, &radius, &surface);
     }
-    if (randomizationFlags & 0x80) {
+    if (flags & 0x80) {
         D_8011D548 = tempPos.x - obj->segment.trans.x_position;
         D_8011D54C = tempPos.z - obj->segment.trans.z_position;
-        randomizationFlags &= ~0x80;
+        flags &= ~0x80;
     }
     shouldSquish = FALSE;
-    if (randomizationFlags && tempPos.y < obj->segment.trans.y_position - 4.0) {
+    if (flags && tempPos.y < obj->segment.trans.y_position - 4.0) {
         shouldSquish = TRUE;
     }
     func_80031130(1, &racer->unkD8.x, &tempPos.x, racer->vehicleID);
     hasCollision = FALSE;
     racer->unk1E3 = func_80031600(&racer->unkD8.x, &tempPos.x, &radius, &surface, TRUE, &hasCollision);
-    racer->unk1E4 = randomizationFlags;
-    racer->unk1E3 |= randomizationFlags;
+    racer->unk1E4 = flags;
+    racer->unk1E3 |= flags;
     racer->groundedWheels = 0;
     if (racer->unk1E3) {
         racer->unk1E3 = 0x8 | 0x4 | 0x2 | 0x1;

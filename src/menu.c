@@ -13844,7 +13844,7 @@ void menu_element_render(s32 elementID) {
  */
 void render_track_selection_viewport_border(ObjectModel *objMdl) {
     UNUSED s32 pad1[4];
-    s32 randomizationFlags;
+    s32 flags;
     UNUSED s32 pad2[4];
     TextureHeader *tex;
     Triangle *tris;
@@ -13857,9 +13857,9 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
     s32 texEnabled;
     s32 i;
 
-    randomizationFlags = RENDER_FOG_ACTIVE | RENDER_ANTI_ALIASING;
+    flags = RENDER_FOG_ACTIVE | RENDER_ANTI_ALIASING;
     if (sMenuGuiOpacity != 255) {
-        randomizationFlags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_ANTI_ALIASING;
+        flags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_ANTI_ALIASING;
     }
     for (i = 0; i < objMdl->numberOfBatches; i++) {
         if (!(objMdl->batches[i].flags & RENDER_Z_UPDATE)) {
@@ -13879,7 +13879,7 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
                 texEnabled = TRUE;
                 texOffset = objMdl->batches[i].unk7 << 14;
             }
-            load_and_set_texture(&sMenuCurrDisplayList, tex, randomizationFlags, texOffset);
+            load_and_set_texture(&sMenuCurrDisplayList, tex, flags, texOffset);
 
             gSPVertexDKR(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
             gSPPolygon(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), numTris, texEnabled);

@@ -2587,7 +2587,7 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
     s32 numTris;
     Vertex *vtx;
     Triangle *tri;
-    s32 randomizationFlags;
+    s32 flags;
     UNUSED s32 offsetX_2;
     s32 offsetY_2;
     s32 offsetY;
@@ -2605,16 +2605,16 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
             gCurrentShadowTris = gShadowHeapTris[D_8011B0CC];
             gCurrentShadowVerts = gShadowHeapVerts[D_8011B0CC];
             alpha = gCurrentShadowVerts[gCurrentShadowTexture[i].yOffset].a;
-            randomizationFlags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
+            flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
             if (alpha == 0 || obj->segment.object.opacity == 0) {
                 i = shadow->meshEnd; // It'd be easier to just return...
             } else if (alpha != 255 || obj->segment.object.opacity != 255) {
-                randomizationFlags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE;
+                flags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE;
                 alpha = (obj->segment.object.opacity * alpha) >> 8;
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, alpha);
             }
             while (i < shadow->meshEnd) {
-                load_and_set_texture_no_offset(&gSceneCurrDisplayList, gCurrentShadowTexture[i].texture, randomizationFlags);
+                load_and_set_texture_no_offset(&gSceneCurrDisplayList, gCurrentShadowTexture[i].texture, flags);
                 // I hope we can clean this part up.
                 offsetX_2 = offsetX = gCurrentShadowTexture[i].xOffset; // Fakematch
                 offsetY_2 = offsetY = gCurrentShadowTexture[i].yOffset;
@@ -2627,7 +2627,7 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
                 i++;
             }
 
-            if (randomizationFlags != RENDER_Z_COMPARE) {
+            if (flags != RENDER_Z_COMPARE) {
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
         }
@@ -2644,7 +2644,7 @@ void render_object_water_effects(Object *obj, WaterEffect *effect) {
     s32 numTris;
     Vertex *vtx;
     Triangle *tri;
-    s32 randomizationFlags;
+    s32 flags;
     UNUSED s32 offsetX;
     UNUSED s32 offsetY;
 
@@ -2660,12 +2660,12 @@ void render_object_water_effects(Object *obj, WaterEffect *effect) {
                     i = effect->meshEnd; // Just return.
                 }
             }
-            randomizationFlags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
+            flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
             gCurrentShadowTexture = gShadowHeapTextures[gShadowIndex];
             gCurrentShadowTris = gShadowHeapTris[gShadowIndex];
             gCurrentShadowVerts = gShadowHeapVerts[gShadowIndex];
             while (i < effect->meshEnd) {
-                load_and_set_texture_no_offset(&gSceneCurrDisplayList, gCurrentShadowTexture[i].texture, randomizationFlags);
+                load_and_set_texture_no_offset(&gSceneCurrDisplayList, gCurrentShadowTexture[i].texture, flags);
                 offsetX = gCurrentShadowTexture[i].xOffset; // Fakematch
                 offsetY = gCurrentShadowTexture[i].yOffset; // Fakematch
                 numTris = gCurrentShadowTexture[i + 1].xOffset - gCurrentShadowTexture[i].xOffset;

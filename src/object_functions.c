@@ -3899,7 +3899,7 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     f32 diffY;
     f32 diffZ;
     f32 radiusF;
-    s32 randomizationFlags;
+    s32 flags;
     f32 distance;
     s32 courseFlags;
 
@@ -3909,9 +3909,9 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     courseFlags = settings->courseFlagsPtr[settings->courseId];
     curRaceType = get_current_level_race_type();
     if (triggerEntry->index >= 0) {
-        randomizationFlags = 0x10000 << triggerEntry->index;
+        flags = 0x10000 << triggerEntry->index;
         if (obj->interactObj->distance < trigger->radius) {
-            if (((u8) curRaceType != RACETYPE_HUBWORLD) || !(courseFlags & randomizationFlags)) {
+            if (((u8) curRaceType != RACETYPE_HUBWORLD) || !(courseFlags & flags)) {
                 radiusF = trigger->radius;
                 racers = get_racer_objects(&numRacers);
                 for (i = 0; i < numRacers; i++) {
@@ -3928,7 +3928,7 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
                                        (trigger->directionZ * racerObj->segment.trans.z_position) +
                                        trigger->rotationDiff;
                             if (distance < 0.0f) {
-                                settings->courseFlagsPtr[settings->courseId] |= randomizationFlags;
+                                settings->courseFlagsPtr[settings->courseId] |= flags;
                                 if (triggerEntry->unkB != 0xFF) {
                                     set_current_text(triggerEntry->unkB);
                                 }
