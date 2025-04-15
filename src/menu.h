@@ -28,6 +28,8 @@
 #define CINEMATIC_PLAYERS   1
 #define CINEMATIC_CUTSCENE  2
 
+#define MAX_INITIALS_LENGTH 3
+
 enum PauseMenuResults {
     PAUSE_NONE,
     PAUSE_CONTINUE,

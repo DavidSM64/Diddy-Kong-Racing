@@ -5,6 +5,7 @@
 #include "libc/math.h"
 #include "structs.h"
 #include "PR/gbi.h"
+#include "PR/libaudio.h"
 
 typedef struct floatXYZVals {
     f32 x1;
@@ -39,7 +40,7 @@ typedef struct unk80119C58 {
     /* 0x175 */ u8 unk175;
     /* 0x176 */ u8 unk176;
     /* 0x177 */ u8 unk177;
-    /* 0x178 */ s32 unk178;
+    /* 0x178 */ ALSoundState *soundPtr;
     /* 0x17C */ s8 unk17C;
     /* 0x17D */ u8 unk17D;
     /* 0x17E */ u8 unk17E;
@@ -87,10 +88,12 @@ void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z);
 s32 func_80009AB4(u8 arg0);
 void audioline_init(void);
 void audioline_reverb_create(f32, f32, f32, u8, u8, u8);
+void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z);
 
 s32 audioline_distance(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 *outY, f32 *outZ);
 void func_80008174(void); // Non Matching
 void func_80008438(Object **arg0, s32 numRacers, s32 updateRate); // Non Matching
 void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3, s32 updateRate); // Non Matching
+u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);
 
 #endif

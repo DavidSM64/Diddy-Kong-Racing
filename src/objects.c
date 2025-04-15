@@ -263,7 +263,7 @@ s32 D_8011AE70;
 Object **D_8011AE74; // Pointer to an array of Animation objects
 s16 D_8011AE78;      // Number of Animation objects in D_8011AE74
 s16 gCutsceneID;
-s16 D_8011AE7C;
+s16 gFirstActiveObjectId;
 s8 D_8011AE7E;
 s16 gTTGhostTimeToBeat;
 s16 gPrevTimeTrialVehicle; // Current Vehicle being used in track?
@@ -607,35 +607,41 @@ void allocate_object_pools(void) {
     clear_object_pointers();
 }
 
-#ifdef NON_EQUIVALENT
 // Decrypts cheats
 void decrypt_magic_codes(s32 *data, s32 length) {
-    u8 sp3;
-    u8 sp2;
-    u8 sp1;
-    u8 sp0;
-    // s32 numWords;
     s32 i;
+    s32 j;
+    u8 *ptr = (u8 *) data;
+    u8 temp[4];
 
-    // numWords = length / 4;
+    for (i = 0; i < (length >> 2); i++) {
+        // Swap bits according to the following pattern:
+        // AABBCCDD EEFFGGHH IIJJKKLL MMNNOOPP -> AAEEIIMM BBFFJJNN CCGGKKOO DDHHLLPP
+        // clang-format off
+        temp[0] = ((ptr[0] & 0xC0)     ) |
+                  ((ptr[1] & 0xC0) >> 2) |
+                  ((ptr[2] & 0xC0) >> 4) |
+                  ((ptr[3] & 0xC0) >> 6);
+        temp[1] = ((ptr[0] & 0x30) << 2) |
+                  ((ptr[1] & 0x30)     ) |
+                  ((ptr[2] & 0x30) >> 2) |
+                  ((ptr[3] & 0x30) >> 4);
+        temp[2] = ((ptr[0] & 0x0C) << 4) |
+                  ((ptr[1] & 0x0C) << 2) |
+                  ((ptr[2] & 0x0C)     ) |
+                  ((ptr[3] & 0x0C) >> 2);
+        temp[3] = ((ptr[0] & 0x03) << 6) |
+                  ((ptr[1] & 0x03) << 4) |
+                  ((ptr[2] & 0x03) << 2) |
+                  ((ptr[3] & 0x03)     );
+        // clang-format on
 
-    for (i = 0; i < length; i++) {
-        sp0 = ((data[i + 3] & 0xC0) >> 6) | (data[i + 0] & 0xC0) | ((data[i + 1] & 0xC0) >> 2) |
-              ((data[i + 2] & 0xC0) >> 4);
-        sp1 = ((data[i + 3] & 0x30) >> 4) | ((data[i + 0] & 0x30) << 2) | (data[i + 1] & 0x30) |
-              ((data[i + 2] & 0x30) >> 2);
-        sp2 =
-            ((data[i + 3] & 0xC) >> 2) | ((data[i + 0] & 0xC) << 4) | ((data[i + 1] & 0xC) << 2) | (data[i + 2] & 0xC);
-        sp3 = (data[i + 3] & 3) | (data[i + 0] << 6) | ((data[i + 1] & 3) << 4) | ((data[i + 2] & 3) << 2);
-        data[i + 0] = ((sp0 & 0x55) << 1) | ((sp0 & 0xAA) >> 1);
-        data[i + 1] = ((sp1 & 0x55) << 1) | ((sp1 & 0xAA) >> 1);
-        data[i + 2] = ((sp2 & 0x55) << 1) | ((sp2 & 0xAA) >> 1);
-        data[i + 3] = ((sp3 & 0x55) << 1) | ((sp3 & 0xAA) >> 1);
+        // Swap the odd and even bits
+        for (j = 0; j < 4; j++) {
+            *ptr++ = (((temp[j] & 0xAA) >> 1) | ((temp[j] & 0x55) << 1));
+        }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/decrypt_magic_codes.s")
-#endif
 
 /**
  * Set all object counters and headers to zero, effectively telling the game there are no objects currently in the
@@ -676,7 +682,7 @@ void clear_object_pointers(void) {
     D_8011ADD4 = 0;
     gCutsceneID = 0;
     D_8011AE7E = 1;
-    D_8011AE7C = 0;
+    gFirstActiveObjectId = 0;
     gTransformTimer = 0;
     gIsTajChallenge = FALSE;
     gTajRaceInit = 0;
@@ -766,6 +772,7 @@ void try_free_object_header(s32 index) {
  * Converts the passed value into an accurate countdown value based on the systems region.
  * Since PAL runs at 50Hz, it therefore will reduce the timer to 5/6 to match, keeping
  * it consistent with non PAL timers, running 60Hz.
+ * Official Name: objTvTimes
  */
 s32 normalise_time(s32 timer) {
     if (osTvType != OS_TV_TYPE_PAL || timer < 0) {
@@ -2242,8 +2249,8 @@ void gParticlePtrList_flush(void) {
 
         // if object found
         if (search_indx != -1) {
-            if (search_indx < D_8011AE7C) {
-                D_8011AE7C--;
+            if (search_indx < gFirstActiveObjectId) {
+                gFirstActiveObjectId--;
             }
             gObjectCount--;
             if (0) {} // Fakematch
@@ -3649,51 +3656,63 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
     return i;
 }
 
-#ifdef NON_EQUIVALENT
-s32 func_80014814(s32 *retObjCount) {
-    s32 i;
-    s32 maxObjCount;
-    s32 curObjCount;
+s32 get_first_active_object(s32 *retObjCount) {
+    s32 i, j;
+    s32 minIndex, maxIndex;
+    s32 breakLoop;
 
     *retObjCount = gObjectCount;
-    if (D_8011AE7C) {
-        return D_8011AE7C;
+    if (gFirstActiveObjectId != 0) {
+        // Already sorted
+        return gFirstActiveObjectId;
     }
-    curObjCount = gObjectListStart;
-    maxObjCount = gObjectCount - 1;
-    while (maxObjCount >= curObjCount) {
-        for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
-            if (!(gObjPtrList[curObjCount]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
-                if (gObjPtrList[curObjCount]->segment.header->flags & 1) {
-                    curObjCount++;
+
+    i = gObjectListStart;
+    j = gObjectCount - 1;
+    minIndex = i;
+    maxIndex = j;
+
+    while (i <= j) {
+        breakLoop = 0;
+        while (i <= maxIndex && breakLoop == 0) {
+            if (!(gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
+                if (gObjPtrList[i]->segment.header->flags & 1) {
+                    i++;
+                } else {
+                    // Break the loop if neither OBJ_FLAGS_DEACTIVATED nor bit 1 in header->flags is set
+                    breakLoop = -1;
                 }
-                i = -1;
             } else {
-                curObjCount++;
+                i++;
             }
         }
-        for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
-            if (gObjPtrList[maxObjCount]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-                i = -1;
-            } else if (!(gObjPtrList[maxObjCount]->segment.header->flags & 1)) {
-                maxObjCount--;
+
+        breakLoop = 0;
+        while (j >= minIndex && breakLoop == 0) {
+            if (gObjPtrList[j]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
+                // Break the loop if OBJ_FLAGS_DEACTIVATED is set
+                breakLoop = -1;
+            } else if (!(gObjPtrList[j]->segment.header->flags & 1)) {
+                j--;
             } else {
-                i = -1;
+                // Break the loop if bit 1 in header->flags is set
+                breakLoop = -1;
             }
         }
-        if (curObjCount > maxObjCount) {
-            gObjPtrList[curObjCount] = gObjPtrList[maxObjCount];
-            gObjPtrList[maxObjCount] = gObjPtrList[curObjCount];
-            curObjCount++;
-            maxObjCount--;
+
+        if (i < j) {
+            // Swap active and inactive objects
+            Object *tempObject = gObjPtrList[i];
+            gObjPtrList[i] = gObjPtrList[j];
+            gObjPtrList[j] = tempObject;
+            i++;
+            j--;
         }
     }
-    D_8011AE7C = curObjCount;
-    return curObjCount;
+
+    gFirstActiveObjectId = i;
+    return i;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80014814.s")
-#endif
 
 UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5, s32 arg6) {
     UNUSED s32 pad;
@@ -5356,50 +5375,43 @@ s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001C6C4.s")
 
-#ifdef NON_MATCHING
-// ainode_find_next
-s32 func_8001CC48(s32 nodeCurrent, s32 arg1, s32 direction) {
+s32 ainode_find_next(s32 nodeId, s32 arg1, s32 direction) {
+    Object *aiNodeObj;
     LevelObjectEntry_AiNode *entry;
-    Object *someObj;
-    Object_AiNode *someObj64;
-    s32 someCount;
+    Object_AiNode *aiNode;
+    s32 nextIndex;
     s32 i;
-    s32 someIndex;
-    s32 test;
+    s32 someCount;
 
-    if ((nodeCurrent < -1) || (nodeCurrent >= AINODE_COUNT)) {
+    if (nodeId < -1 || nodeId >= AINODE_COUNT) {
         return NODE_NONE;
     }
-    someObj = (*gAINodes)[nodeCurrent];
-    if (someObj == NULL) {
+    aiNodeObj = (*gAINodes)[nodeId];
+    if (aiNodeObj == NULL) {
         return NODE_NONE;
     }
-    entry = &someObj->segment.level_entry->aiNode;
-    someObj64 = &someObj->unk64->ai_node;
-    test = direction & 3;
 
-    // Swapping these messes up the registers.
+    entry = &aiNodeObj->segment.level_entry->aiNode;
+    aiNode = &aiNodeObj->unk64->ai_node;
+    direction = direction & 3;
     someCount = 0;
-    someIndex = (someObj64->directions[test] + 1) & 3;
+    nextIndex = (aiNode->directions[direction] + 1) & 3;
 
     for (i = 0; i < 4; i++) {
-        if (entry->adjacent[someIndex] != NODE_NONE) {
-            if (entry->adjacent[someIndex] != arg1) {
-                someObj64->directions[test] = someIndex;
-                i = 4;
-                someCount++;
-            }
+        if (entry->adjacent[nextIndex] != NODE_NONE && arg1 != entry->adjacent[nextIndex]) {
+            aiNode->directions[direction] = nextIndex;
+            i = 4; // break
+            someCount++;
         }
-        someIndex = (someIndex + 1) & 3;
+        nextIndex = (nextIndex + 1) & 3;
     }
+
     if (someCount == 0) {
         return NODE_NONE;
+    } else {
+        return entry->adjacent[aiNode->directions[direction]];
     }
-    return entry->adjacent[someObj64->directions[test]];
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001CC48.s")
-#endif
 
 #ifdef NON_MATCHING
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
@@ -5854,7 +5866,7 @@ void func_8001E4C4(void) {
         }
     }
     gObjectListStart = i;
-    D_8011AE7C = 0;
+    gFirstActiveObjectId = 0;
 }
 
 void func_8001E6EC(s8 arg0) {
