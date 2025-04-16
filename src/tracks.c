@@ -643,16 +643,15 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
 void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 arg3) {
     f32 sp80[4];
     f32 sp70[4];
-    s16 temp2;
-    s32 pad;
-    f32 sp60[2];
-    s16 index;
-    s16 nextIndex;
+    f32 sp60[4];
+    f32 temp;
     f32 sp54[2];
     f32 sp4C[2];
-    f32 temp;
+    s16 index;
+    s16 nextIndex;
     s16 sp40[4];
     s16 var_t0;
+    s16 temp2;
 
     sp80[0] = arg0->x1;
     sp70[0] = arg0->z1;
@@ -701,10 +700,8 @@ void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 a
 
         // Returns must be on the same line.
         // clang-format off
-        if (-300.0 > sp60[1]) { return;
-}
-        if (sp60[0] > 300.0) { return;
-}
+        if (-300.0 > sp60[1]) { return; }
+        if (sp60[0] > 300.0) { return; }
         // clang-format on
 
         if (sp60[0] < -300.0) {
@@ -718,7 +715,132 @@ void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 a
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80026430.s")
+void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
+    s16 i;
+    s16 index;
+    s16 verticesOffset;
+    s16 nextFaceOffset;
+    s16 nextIndex;
+    s16 currFaceOffset;
+    s16 j;
+    Vertex *vert;
+    s8 spF8[3];
+    f32 temp;
+    s16 var_s0;
+    s16 var_t0;
+#ifdef AVOID_UB
+    f32 spE8[3]; // This really should be size of 3, but something is keeping it from matching that way.
+#else
+    f32 spE8[2];
+#endif
+    f32 spDC[3];
+    f32 spD0[3];
+    f32 spC4[3];
+    f32 spB8[3];
+    f32 spB0[2];
+    f32 spA8[2];
+    f32 spA0[2];
+
+    if (D_8011D49E >= D_8011D4BA) {
+        return;
+    }
+
+    for (i = 0; i < segment->numberOfBatches; i++) {
+        currFaceOffset = segment->batches[i].facesOffset;
+        verticesOffset = segment->batches[i].verticesOffset;
+        nextFaceOffset = segment->batches[i + 1].facesOffset;
+        if (segment->batches[i].flags & (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_UNK00000200)) {
+            currFaceOffset = nextFaceOffset;
+        }
+        for (j = currFaceOffset; j < nextFaceOffset; j++) {
+            if ((segment->triangles[j].flags & BACKFACE_DRAW)) {
+                continue;
+            }
+            var_t0 = 0;
+            for (index = 0; index < 3; index++) {
+                vert = &(segment->triangles[j].verticesArray[index + 1] + verticesOffset)[segment->vertices];
+                spE8[index] = vert->x;
+                spDC[index] = vert->y;
+                spD0[index] = vert->z;
+                spC4[index] = (arg1 * spE8[index]) + (arg2 * spD0[index]) + arg3;
+
+                spF8[index] = (spC4[index] <= 0.0);
+                var_t0 += (spF8[index] <= 0.0);
+            }
+            if ((var_t0 == 1) || (var_t0 == 2)) {
+                for (var_s0 = 0, index = 0; index < 3; index++) {
+                    nextIndex = index + 1;
+                    if (nextIndex >= 3) {
+                        nextIndex = 0;
+                    }
+                    if ((spF8[nextIndex] != spF8[index]) != 0) {
+                        temp = spC4[index] / (spC4[index] - spC4[nextIndex]);
+                        spB0[var_s0] = spE8[index] + ((spE8[nextIndex] - spE8[index]) * temp);
+                        spB8[var_s0] = spDC[index] + ((spDC[nextIndex] - spDC[index]) * temp);
+                        spA0[var_s0] = spB8[var_s0];
+                        spA8[var_s0] = spD0[index] + ((spD0[nextIndex] - spD0[index]) * temp);
+                        var_s0++;
+                    }
+                }
+
+                var_s0 = 0;
+                spF8[0] = 0;
+                spF8[1] = 0;
+                spC4[0] = (D_8011D4A0 * spB0[0]) + (D_8011D4A4 * spA8[0]) + D_8011D4A8;
+                spC4[1] = (D_8011D4A0 * spB0[1]) + (D_8011D4A4 * spA8[1]) + D_8011D4A8;
+                if (spC4[0] < -300.0) {
+                    spF8[0] = 1;
+                }
+                if (spC4[0] > 300.0) {
+                    spF8[0] |= 2;
+                }
+                if (spC4[1] < -300.0) {
+                    spF8[1] = 1;
+                }
+                if (spC4[1] > 300.0) {
+                    spF8[1] |= 2;
+                }
+                // clang-format off
+                if ((spF8[0] | spF8[1]) == 0) {  var_s0 = 1; }
+                // clang-format on
+                else if ((spF8[1] != spF8[0]) != 0) {
+                    index = 0;
+                    if (spC4[1] < spC4[0]) {
+                        index = 1;
+                    }
+                    nextIndex = 1 - index;
+                    if (spF8[index] == 1) {
+                        temp = ((-spC4[index] - 300.0) / (spC4[nextIndex] - spC4[index]));
+                        spB8[index] = spB8[index] + ((spB8[nextIndex] - spB8[index]) * temp);
+                        spC4[index] = -300.0f;
+                    }
+                    if (spF8[nextIndex] == 2) {
+                        temp = ((spC4[nextIndex] - 300.0) / (spC4[nextIndex] - spC4[index]));
+                        spB8[nextIndex] = spB8[nextIndex] + ((spB8[index] - spB8[nextIndex]) * temp);
+                        spC4[nextIndex] = 300.0f;
+                    }
+                    var_s0 = 1;
+                }
+                if (var_s0 != 0) {
+                    var_t0 = (segment->unk14[j].triangleIndex << 2);
+                    temp = (spB0[0] + D_8011D4A0) * segment->unk18[var_t0];
+                    temp += spB8[0] * segment->unk18[var_t0 + 1];
+                    temp += (spA8[0] + D_8011D4A4) * segment->unk18[var_t0 + 2];
+                    temp += segment->unk18[var_t0 + 3];
+                    var_s0 = (temp > 0.0) << 2;
+                    if (segment->unk18[var_t0 + 1] < 0.0f) {
+                        var_s0 |= 1;
+                    }
+                    if (spC4[0] == spC4[1]) {
+                        var_s0 |= 8;
+                    }
+                    func_80026C14(spC4[0], spB8[0], var_s0);
+                    func_80026C14(spC4[1], spB8[1], var_s0);
+                }
+            }
+        }
+    }
+}
 
 void func_80026C14(s16 arg0, s16 arg1, s32 arg2) {
     s16 i;
@@ -754,7 +876,7 @@ void func_80026C14(s16 arg0, s16 arg1, s32 arg2) {
 }
 
 void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
-    s32 pad[7];
+    UNUSED s32 pad[7];
     unk8011D478 *next;
     unk8011D478 *curr;
     s16 temp3;
@@ -770,7 +892,7 @@ void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
     s8 temp;
     s8 temp0;
     s8 temp1;
-    f32 temp2;
+    UNUSED f32 temp2;
     f32 sp94[10];
     f32 sp6C[10];
     s8 sp60[10];
@@ -831,7 +953,7 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     Vertex *verts;
     Triangle *tris;
     s32 two;
-    s32 test;
+    UNUSED s32 test;
     s32 vertZ1;
     s32 vertX2;
     s32 vertZ2;
@@ -2209,7 +2331,6 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     TriangleBatchInfo *currentBatch;
     f32 *temp_v1_4;
     Vec4f tempVec4f;
-    u16 *new_var;
     u16 temp;
 
     if (levelSegmentIndex < 0 || levelSegmentIndex >= gCurrentLevelModel->numberOfSegments) {
@@ -2274,8 +2395,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
                 temp_ra_3 = ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
                 var_v0 = faceNum; // fake?
                 if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
-                    new_var = currentSegment->unk14;
-                    temp = new_var[faceNum * 4];
+                    temp = currentSegment->unk14[faceNum].triangleIndex;
                     temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
                     tempVec4f.x = temp_v1_4[0];
                     tempVec4f.y = temp_v1_4[1];
@@ -2364,7 +2484,7 @@ void func_8002C0C4(s32 modelId) {
         LOCAL_OFFSET_TO_RAM_ADDRESS(Vertex *, gCurrentLevelModel->segments[k].vertices);
         LOCAL_OFFSET_TO_RAM_ADDRESS(Triangle *, gCurrentLevelModel->segments[k].triangles);
         LOCAL_OFFSET_TO_RAM_ADDRESS(TriangleBatchInfo *, gCurrentLevelModel->segments[k].batches);
-        LOCAL_OFFSET_TO_RAM_ADDRESS(u16 *, gCurrentLevelModel->segments[k].unk14);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(CollisionNode *, gCurrentLevelModel->segments[k].unk14);
     }
     for (k = 0; k < gCurrentLevelModel->numberOfTextures; k++) {
         gCurrentLevelModel->textures[k].texture =
@@ -2873,7 +2993,7 @@ void shadow_generate(Object *obj, s32 isWater) {
     s32 yPos;
     f32 xPos;
     f32 zPos;
-    s32 *new_var;
+    UNUSED s32 *pad;
     s32 cheats;
     s32 inSegs[28];
     s32 i;
