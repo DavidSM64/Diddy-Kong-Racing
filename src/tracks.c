@@ -713,20 +713,20 @@ void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 a
     }
 }
 
-#ifdef NON_EQUIVALENT
-void func_80026430(LevelModelSegment *segment, f32 xScale, f32 zScale, f32 arg3) {
-    s16 var_s0;
-    u16 *unk14;
+#if 1
+void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
     s16 index;
     s16 nextIndex;
-    Vertex *temp_v1;
+    s16 var_s0;
+    Vertex *vert;
+    u16 *unk14;
     f32 temp;
     s16 var_t0;
-    s16 var_v1;
-    s16 i; //sp10e
     s16 j;
-    s16 var_t1; //sp10a
-    s16 temp_t7; // sp108
+    s16 i; // sp10e
+    s16 currFaceOffset;
+    s16 verticesOffset;  // sp10a
+    s16 nextFaceOffset; // sp108
     f32 spA0[3];
     s8 spF8[3];
     s16 var_t8;
@@ -743,31 +743,29 @@ void func_80026430(LevelModelSegment *segment, f32 xScale, f32 zScale, f32 arg3)
     }
 
     for (i = 0; i < segment->numberOfBatches; i++) {
-        var_v1 = segment->batches[i].facesOffset;
-        var_t1 = segment->batches[i].verticesOffset;
-        temp_t7 = segment->batches[i + 1].facesOffset;
-        if (segment->batches[i].flags & 0x300) {
-            var_v1 = temp_t7;
+        currFaceOffset = segment->batches[i].facesOffset;
+        verticesOffset = segment->batches[i].verticesOffset;
+        nextFaceOffset = segment->batches[i + 1].facesOffset;
+        if (segment->batches[i].flags & (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_UNK00000200)) {
+            currFaceOffset = nextFaceOffset;
         }
-        for (j = var_v1; j < temp_t7; j++) {
-            if ((segment->triangles[j].verticesArray[0] & 0x40)) {
+        for (j = currFaceOffset; j < nextFaceOffset; j++) {
+            if ((segment->triangles[j].flags & BACKFACE_DRAW)) {
                 continue;
             }
             var_t0 = 0;
             for (index = 0; index < 3; index++) {
-                temp_v1 = &(segment->triangles[j].verticesArray[index + 1] + var_t1)[segment->vertices];
-                spE8[index] = temp_v1->x;
-                spDC[index] = temp_v1->y;
-                spD0[index] = temp_v1->z;
-                spC4[index] = (xScale * spE8[index]) + (zScale * spD0[index]) + arg3;
-                
+                vert = &(segment->triangles[j].verticesArray[index + 1] + verticesOffset)[segment->vertices];
+                spE8[index] = vert->x;
+                spDC[index] = vert->y;
+                spD0[index] = vert->z;
+                spC4[index] = (arg1 * spE8[index]) + (arg2 * spD0[index]) + arg3;
+
                 spF8[index] = (spC4[index] <= 0.0);
                 var_t0 += (spF8[index] <= 0.0);
             }
             if ((var_t0 == 1) || (var_t0 == 2)) {
-                var_s0 = 0;
-
-                for (index = 0; index < 3; index++) {
+                for (var_s0 = 0, index = 0; index < 3; index++) {
                     nextIndex = index + 1;
                     if (nextIndex >= 3) {
                         nextIndex = 0;
@@ -777,11 +775,12 @@ void func_80026430(LevelModelSegment *segment, f32 xScale, f32 zScale, f32 arg3)
                         spB4[var_s0] = spE8[index] + ((spE8[nextIndex] - spE8[index]) * temp);
                         spB8[var_s0] = spDC[index] + ((spDC[nextIndex] - spDC[index]) * temp);
                         spA0[var_s0] = spB8[var_s0];
-                        spA8[var_s0] = spD0[index]+ ((spD0[nextIndex] - spD0[index]) * temp);
+                        spA8[var_s0] = spD0[index] + ((spD0[nextIndex] - spD0[index]) * temp);
                         var_s0++;
                     }
                 }
-                var_s0 = FALSE;
+
+                var_s0 = 0;
                 spF8[0] = 0;
                 spF8[1] = 0;
                 spC4[0] = (D_8011D4A0 * spB4[0]) + (D_8011D4A4 * spA8[0]) + D_8011D4A8;
@@ -798,11 +797,11 @@ void func_80026430(LevelModelSegment *segment, f32 xScale, f32 zScale, f32 arg3)
                 if (spC4[1] > 300.0) {
                     spF8[1] |= 2;
                 }
-#pragma _permuter sameline start
+                // clang-format off
                 if ((spF8[0] | spF8[1]) == 0) { /* One line required */ \
-                    var_s0 = TRUE;
-#pragma _permuter sameline end
+                    var_s0 = 1;
                 } else if ((spF8[1] != spF8[0]) != 0) {
+                    // clang-format on
                     index = 0;
                     if (spC4[1] < spC4[0]) {
                         // index++;
@@ -820,13 +819,14 @@ void func_80026430(LevelModelSegment *segment, f32 xScale, f32 zScale, f32 arg3)
                         spB8[nextIndex] = spB8[nextIndex] + ((spB8[index] - spB8[nextIndex]) * temp);
                         spC4[nextIndex] = 300.0f;
                     }
-                    var_s0 = TRUE;
+                    var_s0 = 1;
                 }
-                if (var_s0) {
+                if (var_s0 != 0) {
                     unk14 = segment->unk14;
                     var_t8 = (unk14[j * 4] * 4);
-                    goto dummy_label_996187; dummy_label_996187: ;
-                    temp = (spB4[1] + D_8011D4A0) * segment->unk18[var_t8];
+                    goto dummy_label_996187;
+                dummy_label_996187:;
+                    temp = (spB4[1] + D_8011D4A0) * segment->unk18[var_t8 + 0];
                     temp += spB8[0] * segment->unk18[var_t8 + 1];
                     temp += (spA8[0] + D_8011D4A4) * segment->unk18[var_t8 + 2];
                     temp += segment->unk18[var_t8 + 3];
