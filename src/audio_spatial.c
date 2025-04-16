@@ -115,7 +115,7 @@ void func_80008174(void) {
         }
     }
     gUsedMasks = 0;
-    
+
     //  var_s1 = D_80119C58;
     //  do {
     //      var_s1->soundID = 0;
@@ -177,7 +177,7 @@ void func_80008174(void) {
     //      var_a3->unkC = -100000.0f;;
     //      var_a3->unk8 =  -100000.0f;
     //      var_a3->unk4 =  -100000.0f;
-        
+
     //      var_v0_2 = var_a3->unk20;
     //      for (j = 3; j != 15; j++, j+= 3) {// this should be j+=4 but has to be split up to match?
     //          // 3, 7, 11
@@ -195,7 +195,7 @@ void func_80008174(void) {
     //          var_v0_2[-1].unk4 =  -100000.0f;
     //          var_v0_2[-1].unk8 =  -100000.0f;
     //      };
-        
+
     //      var_a3++;
     //      var_a1++;
     //      var_a2++;
@@ -455,39 +455,38 @@ s32 func_80009AB4(u8 arg0) {
     return ret;
 }
 
-#ifdef NON_EQUIVALENT
-u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);
-// audioline_reverb
-void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
+void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z) {
+    s32 i;
     s32 j;
-    s32 levelSegmentIndex;
-    s32 numOfYVals;
-    s32 distBetween;
+    unk8011A6D8 *temp;
+    s32 k;
     f32 outX;
     f32 outY;
     f32 outZ;
-    u8 temp_v0_4;
+    s32 distBetween;
+    s32 maxDist;
+    s32 levelSegmentIndex;
+    s32 numOfYVals;
     u8 volume;
-    s32 var_s6;
-    s32 i;
-    s32 k;
-    unk8011A6D8 *temp;
-    f32 yVals[9]; // Not sure of the number needed
+    u8 temp_v0_4;
+    f32 *coords;
+    f32 yVals[10];
 
     levelSegmentIndex = get_level_segment_index_from_position(x, y, z);
     volume = 0;
-    var_s6 = 400;
+    maxDist = 400;
     for (i = 0; i < ARRAY_COUNT(D_8011A6D8); i++) {
         temp = &D_8011A6D8[i];
         if (temp->unk0.unk0_02 != 0) {
             if (func_80009AB4(i) != 0) {
+                coords = temp->unk4.unk4_floats;
                 for (j = 0; j < temp->unkB8; j++) {
-                    distBetween = audioline_distance(x, y, z, &temp->unk4.unk4_vec[j], &outX, &outY, &outZ);
-                    if (distBetween < var_s6) {
+                    distBetween = audioline_distance(x, y, z, coords, &outX, &outY, &outZ);
+                    if (distBetween < maxDist) {
                         numOfYVals = func_8002BAB0(levelSegmentIndex, x, z, yVals);
                         for (k = 0; k < numOfYVals; k++) {
                             if (y < yVals[k]) {
-                                var_s6 = distBetween;
+                                maxDist = distBetween;
                                 temp_v0_4 = func_80009D6C(&D_8011A6D8[i], outX, outY, outZ);
                                 if (volume < temp_v0_4) {
                                     volume = temp_v0_4;
@@ -495,6 +494,7 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
                             }
                         }
                     }
+                    coords += 3;
                 }
             }
         }
@@ -503,44 +503,36 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
         sound_event_update((s32) soundState, AL_SNDP_FX_EVT, (u32) volume);
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009B7C.s")
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009D6C.s")
 
-void debug_render_audio_effects(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
+void debug_render_audio_effects(Gfx **dList, Vertex **verts, Triangle **tris) {
     s32 i, j;
-    f32 *var_s1;
+    f32 *coords;
     unk80119C58 *var_s2;
     unk8011A6D8 *var_s2_2;
-    
-    i = 0;
-    do {
+
+    for (i = 0; i < ARRAY_COUNT(D_80119C58); i++) {
         var_s2 = &D_80119C58[i];
-        var_s1 = var_s2->unk4.unk4_floats;
+        coords = var_s2->unk4.unk4_floats;
         if (D_80119C58[i].soundID != 0) {
             for (j = 0; j < var_s2->unk17C; j++) {
-                debug_render_line(arg0, arg1, arg2, var_s1, 0xFF, 0xFF, 0);
-                var_s1 += 3;
+                debug_render_line(dList, verts, tris, coords, 255, 255, 0);
+                coords += 3;
             }
         }
-        i++;
-    } while (ARRAY_COUNT(D_80119C58) > i);
+    }
 
-    i = 0;
-    do {
+    for (i = 0; i < ARRAY_COUNT(D_8011A6D8); i++) {
         var_s2_2 = &D_8011A6D8[i];
-        var_s1 = var_s2_2->unk4.unk4_floats;
+        coords = var_s2_2->unk4.unk4_floats;
         if (D_8011A6D8[i].unk0.unk0_02 != 0) {
-            for (j = 0; j < var_s2_2->unkB8; j++) { 
-                debug_render_line(arg0, arg1, arg2, var_s1, 0xFF, 0, 0xFF);
-                var_s1 += 3;
+            for (j = 0; j < var_s2_2->unkB8; j++) {
+                debug_render_line(dList, verts, tris, coords, 255, 0, 255);
+                coords += 3;
             }
         }
-
-        i++;
-    } while (i != ARRAY_COUNT(D_8011A6D8));
+    }
 }
 
 void func_8000A2E8(s32 arg0) {

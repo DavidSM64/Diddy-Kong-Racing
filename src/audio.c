@@ -8,6 +8,7 @@
 #include "audio_internal.h"
 #include "audiomgr.h"
 #include "audiosfx.h"
+#include "audio_spatial.h"
 #include "sched.h"
 #include "libultra/src/audio/seqchannel.h"
 
@@ -842,7 +843,7 @@ void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **soundMask) {
     sound_play(soundID, (s32 *) soundMask);
 
     if (*soundMask != NULL) {
-        func_80009B7C(*soundMask, x, y, z);
+        audioline_reverb(*soundMask, x, y, z);
     }
 }
 

@@ -1325,13 +1325,14 @@ void force_mark_write_save_file(s32 saveFileIndex) {
 
 /**
  * Marks a flag to write a save file to flash as long as we're not in tracks mode, and we're in the draw game render
- * context. This should prevent save data from being overwritten outside of Adventure Mode. Official Name: mainSaveGame2
+ * context. This should prevent save data from being overwritten outside of Adventure Mode.
+ * Official Name: mainSaveGame2
  */
 void safe_mark_write_save_file(s32 saveFileIndex) {
     if (gGameMode == GAMEMODE_INGAME && !is_in_tracks_mode()) {
         gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; // Wipe out bits 10 and 11
-        gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10));
-        ; // Set bit 6 and place saveFileIndex into bits 10 and 11
+        gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA |
+                           ((saveFileIndex & 3) << 10)); // Set bit 6 and place saveFileIndex into bits 10 and 11
     }
 }
 
