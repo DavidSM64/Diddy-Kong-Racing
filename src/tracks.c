@@ -713,30 +713,29 @@ void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 a
     }
 }
 
-#if 1
+#ifdef NON_EQUIVALENT
 void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
-    s16 index;
-    s16 nextIndex;
-    s16 var_s0;
-    Vertex *vert;
-    u16 *unk14;
+    s16 i; //sp10e
+    s16 j;
+    s16 verticesOffset; //sp10a
+    s16 nextFaceOffset; // sp108
     f32 temp;
     s16 var_t0;
-    s16 j;
-    s16 i; // sp10e
     s16 currFaceOffset;
-    s16 verticesOffset;  // sp10a
-    s16 nextFaceOffset; // sp108
-    f32 spA0[3];
-    s8 spF8[3];
     s16 var_t8;
-    f32 spE8[3];
+    s16 nextIndex;
+    s8 spF8[3];
+    Vertex *vert;   
+    s16 var_s0;
+    s16 index; 
+    f32 spE8[2];
     f32 spDC[3];
     f32 spD0[3];
     f32 spC4[3];
     f32 spB8[3];
-    f32 spB4[3];
-    f32 spA8[3];
+    f32 spB0[2];
+    f32 spA8[2];
+    f32 spA0[2];
 
     if (D_8011D49E >= D_8011D4BA) {
         return;
@@ -772,7 +771,7 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
                     }
                     if ((spF8[nextIndex] != spF8[index]) != 0) {
                         temp = spC4[index] / (spC4[index] - spC4[nextIndex]);
-                        spB4[var_s0] = spE8[index] + ((spE8[nextIndex] - spE8[index]) * temp);
+                        spB0[var_s0] = spE8[index] + ((spE8[nextIndex] - spE8[index]) * temp);
                         spB8[var_s0] = spDC[index] + ((spDC[nextIndex] - spDC[index]) * temp);
                         spA0[var_s0] = spB8[var_s0];
                         spA8[var_s0] = spD0[index] + ((spD0[nextIndex] - spD0[index]) * temp);
@@ -783,8 +782,8 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
                 var_s0 = 0;
                 spF8[0] = 0;
                 spF8[1] = 0;
-                spC4[0] = (D_8011D4A0 * spB4[0]) + (D_8011D4A4 * spA8[0]) + D_8011D4A8;
-                spC4[1] = (D_8011D4A0 * spB4[1]) + (D_8011D4A4 * spA8[1]) + D_8011D4A8;
+                spC4[0] = (D_8011D4A0 * spB0[0]) + (D_8011D4A4 * spA8[0]) + D_8011D4A8;
+                spC4[1] = (D_8011D4A0 * spB0[1]) + (D_8011D4A4 * spA8[1]) + D_8011D4A8;
                 if (spC4[0] < -300.0) {
                     spF8[0] = 1;
                 }
@@ -797,9 +796,11 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
                 if (spC4[1] > 300.0) {
                     spF8[1] |= 2;
                 }
+#pragma _permuter sameline start
                 // clang-format off
                 if ((spF8[0] | spF8[1]) == 0) { /* One line required */ \
                     var_s0 = 1;
+#pragma _permuter sameline end
                 } else if ((spF8[1] != spF8[0]) != 0) {
                     // clang-format on
                     index = 0;
@@ -822,16 +823,13 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
                     var_s0 = 1;
                 }
                 if (var_s0 != 0) {
-                    unk14 = segment->unk14;
-                    var_t8 = (unk14[j * 4] * 4);
-                    goto dummy_label_996187;
-                dummy_label_996187:;
-                    temp = (spB4[1] + D_8011D4A0) * segment->unk18[var_t8 + 0];
-                    temp += spB8[0] * segment->unk18[var_t8 + 1];
-                    temp += (spA8[0] + D_8011D4A4) * segment->unk18[var_t8 + 2];
-                    temp += segment->unk18[var_t8 + 3];
+                    var_t0 = segment->unk14[j] * 4;
+                    temp = (spB0[0] + D_8011D4A0) * segment->unk18[var_t0];
+                    temp += spB8[0] * segment->unk18[var_t0 + 1];
+                    temp += (spA8[0] + D_8011D4A4) * segment->unk18[var_t0 + 2];
+                    temp += segment->unk18[var_t0 + 3];
                     var_s0 = (temp > 0.0) << 2;
-                    if (segment->unk18[var_t8 + 1] < 0.0f) {
+                    if (segment->unk18[var_t0 + 1] < 0.0f) {
                         var_s0 |= 1;
                     }
                     if (spC4[0] == spC4[1]) {
