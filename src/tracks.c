@@ -1438,7 +1438,7 @@ void render_level_geometry_and_objects(void) {
         objFlags = obj->segment.trans.flags;
         if (objFlags & OBJ_FLAGS_UNK_0080) {
             visible = 0;
-        } else if (!(objFlags & OBJ_FLAGS_DEACTIVATED)) {
+        } else if (!(objFlags & OBJ_FLAGS_PARTICLE)) {
             visible = obj->segment.object.opacity;
         }
         if (objFlags & visibleFlags) {
@@ -1446,7 +1446,7 @@ void render_level_geometry_and_objects(void) {
         }
         if (obj != NULL && visible == 255 && check_if_in_draw_range(obj) &&
             (objectsVisible[obj->segment.object.segmentID + 1] || obj->segment.camera.unk34 > 1000.0)) {
-            if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
+            if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
                 render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
             } else if (obj->shadow != NULL) {
@@ -1469,7 +1469,7 @@ void render_level_geometry_and_objects(void) {
         }
         if (obj != NULL && visible && objFlags & OBJ_FLAGS_UNK_0100 &&
             objectsVisible[obj->segment.object.segmentID + 1] && check_if_in_draw_range(obj)) {
-            if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
+            if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
                 render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
             } else if (obj->shadow != NULL) {
@@ -1503,7 +1503,7 @@ void render_level_geometry_and_objects(void) {
         objFlags = obj->segment.trans.flags;
         if (objFlags & OBJ_FLAGS_UNK_0080) {
             visible = 1;
-        } else if (!(objFlags & OBJ_FLAGS_DEACTIVATED)) {
+        } else if (!(objFlags & OBJ_FLAGS_PARTICLE)) {
             visible = obj->segment.object.opacity;
         }
         if (objFlags & visibleFlags) {
@@ -1515,7 +1515,7 @@ void render_level_geometry_and_objects(void) {
         if (obj != NULL && visible < 255 && objectsVisible[obj->segment.object.segmentID + 1] &&
             check_if_in_draw_range(obj)) {
             if (visible > 0) {
-                if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
+                if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
                     render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                     goto skip;
                 } else if (obj->shadow != NULL) {
@@ -1987,7 +1987,7 @@ s32 check_if_in_draw_range(Object *obj) {
     s32 temp2;
     f32 dist;
 
-    if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
+    if (!(obj->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
         alpha = 255;
         viewDistance = obj->segment.header->drawDistance;
         if (obj->segment.header->drawDistance) {
@@ -2718,7 +2718,7 @@ void update_shadows(s32 group, s32 waterGroup, s32 updateRate) {
         waterEffect = obj->waterEffect;
         shadow = obj->shadow;
         objIndex += 1;
-        if ((obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
+        if ((obj->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
             continue;
         }
         if (shadow != NULL && shadow->scale > 0.0f && group == objHeader->shadowGroup) {

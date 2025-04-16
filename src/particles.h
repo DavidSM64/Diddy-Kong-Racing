@@ -33,30 +33,33 @@ enum ObjectEmitterFlags {
     OBJ_EMIT_14 = (1 << 13),
     OBJ_EMIT_15 = (1 << 14),
     OBJ_EMIT_16 = (1 << 15),
+    OBJ_EMIT_17 = (1 << 16),
+    OBJ_EMIT_18 = (1 << 17),
+    OBJ_EMIT_19 = (1 << 18),
+    OBJ_EMIT_20 = (1 << 19),
 };
 
 enum ParticleRandomizationFlags {
-    PARTICLE_FLAGS_NONE,
-    PARTICLE_GRAVITY = (1 << 0),
-    PARTICLE_UNK00000002 = (1 << 1),
-    PARTICLE_UNK00000004 = (1 << 2),
+    PARTICLE_RANDOM_SOURCE_DISTANCE = (1 << 0),
+    PARTICLE_RANDOM_SOURCE_YAW = (1 << 1),
+    PARTICLE_RANDOM_SOURCE_PITCH = (1 << 2),
     PARTICLE_UNK00000008 = (1 << 3),
     PARTICLE_UNK00000010 = (1 << 4),
     PARTICLE_UNK00000020 = (1 << 5),
     PARTICLE_UNK00000040 = (1 << 6),
     PARTICLE_UNK00000080 = (1 << 7),
-    PARTICLE_RANDOM_VEL_X = (1 << 8),
-    PARTICLE_RANDOM_VEL_Y = (1 << 9),
-    PARTICLE_RANDOM_VEL_Z = (1 << 10),
+    PARTICLE_RANDOM_VELOCITY_X = (1 << 8),
+    PARTICLE_RANDOM_VELOCITY_Y = (1 << 9),
+    PARTICLE_RANDOM_VELOCITY_Z = (1 << 10),
     PARTICLE_ANGLE_Y = (1 << 11),
     PARTICLE_ANGLE_X = (1 << 12),
     PARTICLE_ANGLE_Z = (1 << 13),
     PARTICLE_ANGLEVEL_Y = (1 << 14),
     PARTICLE_ANGLEVEL_X = (1 << 15),
     PARTICLE_ANGLEVEL_Z = (1 << 16),
-    PARTICLE_UNK00020000 = (1 << 17),
-    PARTICLE_UNK00040000 = (1 << 18),
-    PARTICLE_FORWARDVEL = (1 << 19),
+    PARTICLE_RANDOM_SCALE = (1 << 17),
+    PARTICLE_RANDOM_SCALE_VELOCITY = (1 << 18),
+    PARTICLE_RANDOM_MOVEMENT_PARAM = (1 << 19),
     PARTICLE_COLOURVEL_RED = (1 << 20),
     PARTICLE_COLOURVEL_GREEN = (1 << 21),
     PARTICLE_COLOURVEL_BLUE = (1 << 22),
@@ -72,28 +75,28 @@ enum ParticleRandomizationFlags {
 };
 
 enum ParticleBehaviorFlags {
-    PARTICLE_BEHAVIOR_FLAGS_NONE = 0,
-    PARTICLE_BEHAVIOR_FLAG_1 = 0x1,
-    PARTICLE_BEHAVIOR_FLAG_2 = 0x2,
-    PARTICLE_BEHAVIOR_FLAG_4 = 0x4,
+    PARTICLE_FLAGS_NONE = 0,
+    PARTICLE_SOURCE_OFFSET_ENABLED = 0x1,
+    PARTICLE_SOURCE_ROTATION_ENABLED = 0x2,
+    PARTICLE_SOURCE_EMITS_WITH_VELOCITY = 0x4,
     PARTICLE_BEHAVIOR_FLAG_8 = 0x8,
-    PARTICLE_BEHAVIOR_FLAG_10 = 0x10,
-    PARTICLE_BEHAVIOR_FLAG_20 = 0x20,
-    PARTICLE_BEHAVIOR_FLAG_40 = 0x40,
-    PARTICLE_BEHAVIOR_FLAG_80 = 0x80,
+    PARTICLE_VELOCITY_RELATIVE_TO_PARENT = 0x10,
+    PARTICLE_VELOCITY_ABSOLUTE = 0x20,
+    PARTICLE_VELOCITY_SCALED_FROM_PARENT = 0x40,
+    PARTICLE_ROTATION_ABSOLUTE = 0x80,
     PARTICLE_BEHAVIOR_FLAG_100 = 0x100,
     PARTICLE_BEHAVIOR_FLAG_200 = 0x200,
-    PARTICLE_BEHAVIOR_FLAG_400 = 0x400,
+    PARTICLE_POINT = 0x400,
     PARTICLE_BEHAVIOR_FLAG_800 = 0x800,
-    PARTICLE_BEHAVIOR_FLAG_1000 = 0x1000,
+    PARTICLE_SCALE_VELOCITY_INHERITS_PARENT_SPEED = 0x1000,
     PARTICLE_BEHAVIOR_FLAG_2000 = 0x2000,
-    PARTICLE_BEHAVIOR_FLAG_4000 = 0x4000,
+    PARTICLE_LINE = 0x4000,
     PARTICLE_BEHAVIOR_FLAG_8000 = 0x8000
 };
 
 enum ParticleMovement {
-    PARTICLE_MOVEMENT_0,
-    PARTICLE_MOVEMENT_1,
+    PARTICLE_MOVEMENT_NONE,
+    PARTICLE_MOVEMENT_BASIC,
     PARTICLE_MOVEMENT_ACCELERATION,
     PARTICLE_MOVEMENT_VELOCITY_PARENT,
     PARTICLE_MOVEMENT_BASIC_PARENT,
@@ -151,39 +154,27 @@ typedef struct unk800B1CB8_44_8 {
     s16 unk6;
 } unk800B1CB8_44_8;
 
-typedef struct unk800B1130_SP28 {
+typedef struct ColorLoopEntry {
     s32 unk0;
     u8 r;
     u8 g;
     u8 b;
     u8 a;
-} unk800B1130_SP28;
-
-typedef struct ParticleSegment_3C {
-    u8 pad0[0x1C];
-    f32 unk1C;
-    f32 unk20;
-    f32 unk24;
-} ParticleSegment_3C;
+} ColorLoopEntry;
 
 typedef struct ParticleAngle {
-    Vec3s rotation;
-    Vec3s direction;
+    Vec3s sourceRotation;
+    Vec3s emissionDirection;
 } ParticleAngle;
 
 /* Size: 0xA0 bytes */
 typedef struct ParticleBehavior {
-    s32 emitterFlags;
-    f32 velX;
-    f32 velY;
-    f32 velZ;
-    f32 unk10;
-    s16 unk14;
-    s16 unk16;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
+    /* 0x00 */ s32 flags;
+    /* 0x04 */ Vec3f emitterPos;
+    /* 0x10 */ f32 sourceDistance;
+    /* 0x14 */ Vec3s unk14;
+    /* 0x1A */ s16 unk1A;
+    /* 0x1C */ Vec2s unk1C;
     s16 unk20;
     s16 unk22;
     s16 unk24;
@@ -192,33 +183,23 @@ typedef struct ParticleBehavior {
     s16 unk2A;
     s16 unk2C;
     s16 unk2E;
-    f32 unk30;
-    f32 unk34;
-    f32 unk38;
-    f32 unk3C;
-    s16 unk40;
-    s16 unk42;
-    s16 angleOffsetY;
-    s16 angleOffsetX;
-    s16 angleOffsetZ;
-    s16 angleVelY;
-    s16 angleVelX;
-    s16 angleVelZ;
-    f32 unk50;
-    f32 unk54;
-    f32 forwardVel;
+    /* 0x30 */ Vec3f velocityModifier; // The meaning of the modifier depends on the flags
+    /* 0x3C */ f32 emissionSpeed;
+    /* 0x40 */ s16 unk40;
+    /* 0x42 */ s16 unk42;
+    /* 0x44 */ Vec3s rotation;
+    /* 0x4A */ Vec3s angularVelocity;
+    f32 scale;
+    f32 scaleVelocity;
+    f32 movementParam;
     s32 randomizationFlags;
-    s32 gravityRange1;
-    s16 angleRangeY1;
-    s16 angleRangeX1;
-    s16 angleRangeZ1;
+    s32 sourceDistanceRange;
+    /* 0x64 */ Vec3s sourceDirRange;
     s16 angleRangeY2;
     s16 angleRangeX2;
     s16 angleRangeZ2;
-    s32 gravityRange2;
-    s32 velocityRangeX1;
-    s32 velocityRangeY1;
-    s32 velocityRangeZ1;
+    s32 emissionSpeedRange;
+    Vec3i velocityModifierRange;
     s16 angleRangeY3;
     s16 angleRangeX3;
     s16 angleRangeZ3;
@@ -227,18 +208,18 @@ typedef struct ParticleBehavior {
     s16 unk8A;
     s32 unk8C; // Something to do with scale
     s32 unk90; // Something to do with scale
-    s32 velocityRange;
+    s32 movementParamRange;
     u8 colourRangeR;
     u8 colourRangeG;
     u8 colourRangeB;
     u8 colourRangeA;
-    s32 *unk9C;
+    ColorLoopEntry *colorLoop;
 } ParticleBehavior;
 
 /* Size: 0x20 bytes */
 typedef struct ParticleEmitter {
     /* 0x00 */ ParticleBehavior *behaviour;
-    /* 0x04 */ s16 emmmflags;
+    /* 0x04 */ s16 flags;
     /* 0x06 */ u8 unk6;
     /* 0x07 */ u8 lifeTime;
     /* 0x08 */ s16 propertyID;
@@ -246,13 +227,11 @@ typedef struct ParticleEmitter {
     union {
     /* 0x000C */ Vec3f pos;
     /* 0x000C */ ParticleAngle angle;
-    /* 0x000C */ struct Particle **unkC_60;
+    /* 0x000C */ struct PointParticle **unkC_60;
     /* 0x000C */ unk800AF29C_C_400 unkC_400;
     };
-    /* 0x0018 */ s16 baseVelX;
-    /* 0x001A */ s16 baseVelY;
-    /* 0x001C */ s16 baseVelZ;
-    /* 0x001E */ s16 unk1E;
+    /* 0x0018 */ Vec3s position; // Relative to parent object
+    /* 0x001E */ s16 colorIndex;
 } ParticleEmitter;
 
 // TODO merge this struct with ObjectSegment
@@ -260,10 +239,8 @@ typedef struct ParticleSegment {
   /* 0x0000 */ ObjectTransform trans;
   /* 0x0018 */ s16 textureFrame;
   /* 0x001A */ s16 unk1A;
-  /* 0x001C */ f32 x_velocity;
-  /* 0x0020 */ f32 y_velocity;
-  /* 0x0024 */ f32 z_velocity;
-  /* 0x0028 */ f32 scaleVel;
+  /* 0x001C */ Vec3f velocity;
+  /* 0x0028 */ f32 scaleVelocity;
   union {
       SegmentPropertiesObject object;
       SegmentPropertiesParticle particle;
@@ -281,37 +258,26 @@ typedef struct ParticleModel {
     /* 0x0C */ Triangle *triangles;
 } ParticleModel;
 
-typedef struct ParticleOtherSomething {
-    /* 0x00 */ s16 textureCount;
-    /* 0x02 */ s16 unk2;
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ s16 unk6;
-    /* 0x08 */ unk800B1CB8_44_8 **unk8;
-} ParticleOtherSomething;
-
 typedef struct Particle {
     /* 0x0000 */ ParticleSegment segment;
     union {
-    /* 0x0044 */ ParticleModel *modelData;
-    /* 0x0044 */ ParticleOtherSomething *unk44_1;
+    /* 0x0044 */ ParticleModel *model;
+    /* 0x0044 */ Sprite *sprite; // Unclear whether this is the same as unk80068514_arg4
     };
     /* 0x0048 */ s16 behaviorId;
     /* 0x004A */ s16 brightness;
-    /* 0x004C */ f32 localPosX;
-    /* 0x0050 */ f32 localPosY;
-    /* 0x0054 */ f32 localPosZ;
+    /* 0x004C */ Vec3f localPos;
     union {
-    /* 0x0058 */ ParticleEmitter **lineEmitter;
+    /* 0x0058 */ ParticleEmitter *lineEmitter;
     /* 0x0058 */ f32 forwardVel;
     /* 0x0058 */ f32 downAcceleration;
     /* 0x0058 */ f32 downOffset;
+    /* 0x0058 */ f32 movementParam;
     };
     /* 0x005C */ s16 opacity;
     /* 0x005E */ s16 opacityVel;
     /* 0x0060 */ s16 opacityTimer;
-    /* 0x0062 */ s16 angleVelY;
-    /* 0x0064 */ s16 angleVelX;
-    /* 0x0066 */ s16 angleVelZ;
+    /* 0x0062 */ Vec3s angularVelocity;
     union {
     /* 0x0068 */ f32 gravity;
     struct {
@@ -333,15 +299,6 @@ typedef struct PointParticle {
     /* 0x0077 */ s8 unk77;
 } PointParticle;
 
-// Size: 8 bytes
-typedef struct unkParticleBehaviorUnk9C {
-    s32 unk0;
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 pad7; // Probably alpha
-} unkParticleBehaviorUnk9C;
-
 void func_800AE270(void);
 void func_800AE2A0(void);
 void func_800AE2D8(void);
@@ -354,10 +311,10 @@ void generate_particle_shape_line(ParticleModel *model, Vertex **vtx, Triangle *
 void generate_particle_shape_point(ParticleModel *model, Vertex **vtx, Triangle **triangles);
 void func_800AF0A4(Particle *particle);
 void func_800AF0F0(Particle *particle);
-void partInitTrigger(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID);
-void func_800AF29C(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
+void emitter_init(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID);
+void emitter_init_with_pos(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 posX, s16 posY, s16 posZ);
 void func_800AF6E4(Object *obj, s32 emitterIndex);
-void func_800B2260(ParticleEmitter *emitter);
+void emitter_cleanup(ParticleEmitter *emitter);
 void func_800B263C(PointParticle *arg0);
 void init_particle_assets(void);
 void set_particle_texture_frame(Particle *particle);
@@ -370,7 +327,7 @@ Particle *particle_allocate(s32 kind);
 void func_800AFE5C(Object *arg0, ParticleEmitter *emitter);
 Particle *init_general_particle(Object *arg0, ParticleEmitter *arg1);
 void func_800AF52C(Object *obj, s32 emitterIndex);
-void func_800AF134(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
+void emitter_change_settings(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
 void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags);
 void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);

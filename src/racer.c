@@ -2994,7 +2994,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
             var_v1 = 0;
         }
         if (racer->unk1FE == 0) {
-            racerObj->particleEmittersEnabled |= PARTICLE_RANDOM_VEL_Z;
+            racerObj->particleEmittersEnabled |= PARTICLE_RANDOM_VELOCITY_Z;
         }
         apply_vehicle_rotation_offset(racer, updateRate, 0, 0, var_v1);
         func_80053750(racerObj, racer, updateRateF);
@@ -3229,7 +3229,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
                 }
             } else if (racer->buoyancy < 6.0f) {
                 if (racer->velocity > -3.0 && racer->velocity < 0.5 && get_random_number_from_range(0, 1) != 0) {
-                    racerObj->particleEmittersEnabled |= PARTICLE_UNK00040000 | PARTICLE_FORWARDVEL;
+                    racerObj->particleEmittersEnabled |= PARTICLE_RANDOM_SCALE_VELOCITY | PARTICLE_RANDOM_MOVEMENT_PARAM;
                 }
             }
         }
