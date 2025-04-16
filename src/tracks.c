@@ -717,19 +717,22 @@ void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 a
 
 void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
     s16 i;
-    s16 j;
+    s16 index;
     s16 verticesOffset;
     s16 nextFaceOffset;
-    f32 temp;
-    s16 var_t0;
-    s16 currFaceOffset;
-    s16 var_t8;
     s16 nextIndex;
-    s8 spF8[3];
+    s16 currFaceOffset;
+    s16 j;
     Vertex *vert;
+    s8 spF8[3];
+    f32 temp;
     s16 var_s0;
-    s16 index;
+    s16 var_t0;
+#ifdef AVOID_UB
+    f32 spE8[3]; // This really should be size of 3, but something is keeping it from matching that way.
+#else
     f32 spE8[2];
+#endif
     f32 spDC[3];
     f32 spD0[3];
     f32 spC4[3];
@@ -798,10 +801,9 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
                     spF8[1] |= 2;
                 }
                 // clang-format off
-                if ((spF8[0] | spF8[1]) == 0) { /* One line required */ \
-                    var_s0 = 1;
-                } else if ((spF8[1] != spF8[0]) != 0) {
-                    // clang-format on
+                if ((spF8[0] | spF8[1]) == 0) {  var_s0 = 1; }
+                // clang-format on
+                else if ((spF8[1] != spF8[0]) != 0) {
                     index = 0;
                     if (spC4[1] < spC4[0]) {
                         index = 1;
