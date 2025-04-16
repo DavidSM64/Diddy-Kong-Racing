@@ -152,6 +152,13 @@ typedef struct DrawTexture {
     s16 yOffset; // Offset from the center of the screen.
 } DrawTexture;
 
+// Probably not unique to the boot menu.
+typedef struct ShadowHeapProperties {
+  TextureHeader *texture; // Pointer to texture to draw.
+  s16 triCount; // Offset from the center of the screen.
+  s16 vtxCount; // Offset from the center of the screen.
+} ShadowHeapProperties;
+
 typedef struct Sprite {
   /* 0x00 */ s16 baseTextureId;
   /* 0x02 */ s16 numberOfFrames; // 1 means static texture
@@ -798,10 +805,10 @@ typedef struct ObjectHeader {
   /* 0x40 */ s16 shadeAngleZ;
   /* 0x42 */ s16 unk42;
   /* 0x44 */ s16 unk44;
-  /* 0x48 */ s16 unk46;
-  /* 0x48 */ s16 unk48;
-  /* 0x4A */ s16 unk4A;
-  /* 0x4C */ s16 unk4C;
+  /* 0x48 */ s16 shadowBottom; // Lower bounds for shadow
+  /* 0x48 */ s16 shadowTop; // Upper bounds for shadow
+  /* 0x4A */ s16 shadowFadeMin; // Close reference distance for shadow opacity
+  /* 0x4C */ s16 shadowFadeMax; // Far reference distance for shadow opacity
   /* 0x4E */ s16 drawDistance;
   /* 0x50 */ s16 unk50;
   /* 0x52 */ s8 unk52;
