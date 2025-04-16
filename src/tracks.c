@@ -713,21 +713,20 @@ void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 a
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
-    s16 i; //sp10e
+    s16 i;
     s16 j;
-    s16 verticesOffset; //sp10a
-    s16 nextFaceOffset; // sp108
+    s16 verticesOffset;
+    s16 nextFaceOffset;
     f32 temp;
     s16 var_t0;
     s16 currFaceOffset;
     s16 var_t8;
     s16 nextIndex;
     s8 spF8[3];
-    Vertex *vert;   
+    Vertex *vert;
     s16 var_s0;
-    s16 index; 
+    s16 index;
     f32 spE8[2];
     f32 spDC[3];
     f32 spD0[3];
@@ -796,17 +795,13 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
                 if (spC4[1] > 300.0) {
                     spF8[1] |= 2;
                 }
-#pragma _permuter sameline start
                 // clang-format off
                 if ((spF8[0] | spF8[1]) == 0) { /* One line required */ \
                     var_s0 = 1;
-#pragma _permuter sameline end
                 } else if ((spF8[1] != spF8[0]) != 0) {
                     // clang-format on
                     index = 0;
                     if (spC4[1] < spC4[0]) {
-                        // index++;
-                        // index--;
                         index = 1;
                     }
                     nextIndex = 1 - index;
@@ -823,7 +818,7 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
                     var_s0 = 1;
                 }
                 if (var_s0 != 0) {
-                    var_t0 = segment->unk14[j] * 4;
+                    var_t0 = (segment->unk14[j].triangleIndex << 2);
                     temp = (spB0[0] + D_8011D4A0) * segment->unk18[var_t0];
                     temp += spB8[0] * segment->unk18[var_t0 + 1];
                     temp += (spA8[0] + D_8011D4A4) * segment->unk18[var_t0 + 2];
@@ -842,9 +837,6 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80026430.s")
-#endif
 
 void func_80026C14(s16 arg0, s16 arg1, s32 arg2) {
     s16 i;
@@ -2335,7 +2327,6 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     TriangleBatchInfo *currentBatch;
     f32 *temp_v1_4;
     Vec4f tempVec4f;
-    u16 *new_var;
     u16 temp;
 
     if (levelSegmentIndex < 0 || levelSegmentIndex >= gCurrentLevelModel->numberOfSegments) {
@@ -2400,8 +2391,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
                 temp_ra_3 = ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
                 var_v0 = faceNum; // fake?
                 if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
-                    new_var = currentSegment->unk14;
-                    temp = new_var[faceNum * 4];
+                    temp = currentSegment->unk14[faceNum].triangleIndex;
                     temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
                     tempVec4f.x = temp_v1_4[0];
                     tempVec4f.y = temp_v1_4[1];
@@ -2490,7 +2480,7 @@ void func_8002C0C4(s32 modelId) {
         LOCAL_OFFSET_TO_RAM_ADDRESS(Vertex *, gCurrentLevelModel->segments[k].vertices);
         LOCAL_OFFSET_TO_RAM_ADDRESS(Triangle *, gCurrentLevelModel->segments[k].triangles);
         LOCAL_OFFSET_TO_RAM_ADDRESS(TriangleBatchInfo *, gCurrentLevelModel->segments[k].batches);
-        LOCAL_OFFSET_TO_RAM_ADDRESS(u16 *, gCurrentLevelModel->segments[k].unk14);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(CollisionNode *, gCurrentLevelModel->segments[k].unk14);
     }
     for (k = 0; k < gCurrentLevelModel->numberOfTextures; k++) {
         gCurrentLevelModel->textures[k].texture =

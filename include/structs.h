@@ -659,6 +659,13 @@ typedef struct ObjectModel {
     /* 0x54 */ u8 pad[0x2C];
 } ObjectModel;      
 
+typedef struct CollisionNode {
+    u16 triangleIndex; // This triangle index
+    u16 closestTri01;  // The closest triangle index to the line made from indices 0 & 1.
+    u16 closestTri12;  // The closest triangle index to the line made from indices 1 & 2.
+    u16 closestTri20;  // The closest triangle index to the line made from indices 2 & 0.
+} CollisionNode;
+
 /* Size: 0x44 bytes */
 typedef struct LevelModelSegment {
 /* 0x00 */ Vertex *vertices;
@@ -666,7 +673,7 @@ typedef struct LevelModelSegment {
 /* 0x08 */ s32 unk8;
 /* 0x0C */ TriangleBatchInfo *batches;
 /* 0x10 */ s16 *unk10;
-/* 0x14 */ u16 *unk14;
+/* 0x14 */ CollisionNode *unk14;
 /* 0x18 */ f32 *unk18;
 /* 0x1C */ s16 numberOfVertices;
 /* 0x1E */ s16 numberOfTriangles;
