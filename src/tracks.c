@@ -714,10 +714,22 @@ void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 a
 }
 
 #ifdef NON_EQUIVALENT
-void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
-    s16 i;
-    TriangleBatchInfo *batch;
+void func_80026430(LevelModelSegment *segment, f32 xScale, f32 zScale, f32 arg3) {
+    s16 var_s0;
+    u16 *unk14;
+    s16 index;
+    s16 nextIndex;
+    Vertex *temp_v1;
+    f32 temp;
+    s16 var_t0;
+    s16 var_v1;
+    s16 i; //sp10e
+    s16 j;
+    s16 var_t1; //sp10a
+    s16 temp_t7; // sp108
+    f32 spA0[3];
     s8 spF8[3];
+    s16 var_t8;
     f32 spE8[3];
     f32 spDC[3];
     f32 spD0[3];
@@ -725,135 +737,108 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
     f32 spB8[3];
     f32 spB4[3];
     f32 spA8[3];
-    f32 spA0[3];
-    f32 *temp_v0_3;
-    s16 temp_a2_3;
-    s16 temp_t7;
-    s16 nextIndex;
-    s16 var_a3;
-    s16 index;
-    s16 var_a3_3;
-    s16 var_s0;
-    s16 var_t0;
-    s16 var_t1;
-    s16 var_t8;
-    s16 var_v1;
-    s16 var_s7;
-    s32 var_t9;
-    s8 var_t6;
-    s8 var_v0;
-    s8 var_v1_2;    
-    f32 temp;
-    Vertex *temp_v1;
 
-    if (D_8011D49E < D_8011D4BA) {
-        for (i = 0; i < segment->numberOfBatches; i++) {
-            batch = &segment->batches[i];
-            var_v1 = batch[0].facesOffset;
-            var_t1 = batch[0].verticesOffset;
-            temp_t7 = batch[1].facesOffset;
-            if (batch[0].flags & 0x300) {
-                var_v1 = temp_t7;
+    if (D_8011D49E >= D_8011D4BA) {
+        return;
+    }
+
+    for (i = 0; i < segment->numberOfBatches; i++) {
+        var_v1 = segment->batches[i].facesOffset;
+        var_t1 = segment->batches[i].verticesOffset;
+        temp_t7 = segment->batches[i + 1].facesOffset;
+        if (segment->batches[i].flags & 0x300) {
+            var_v1 = temp_t7;
+        }
+        for (j = var_v1; j < temp_t7; j++) {
+            if ((segment->triangles[j].verticesArray[0] & 0x40)) {
+                continue;
             }
-            for (var_s7 = var_v1; var_s7 < temp_t7; var_s7++) {
-                if ((segment->triangles[var_s7].verticesArray[0] & 0x40)) {
-                    continue;
-                }
-                var_t0 = 0;                    
-                for (var_a3 = 0; var_a3 < 3; var_a3++) {
-                    temp_v1 = ((segment->triangles[var_s7].verticesArray[var_a3 + 1] + var_t1) * 10) + segment->vertices;
-                    spE8[var_a3] = temp_v1->x;
-                    spDC[var_a3] = temp_v1->y;
-                    spD0[var_a3] = temp_v1->z;
-                    spC4[var_a3] = (arg1 * spE8[var_a3]) + (arg2 * spD0[var_a3]) + arg3;
-                    var_t6 = 0;
-                    if (spC4[var_a3] <= 0.0) {
-                        var_t6 = 1;
-                    }
-                    spF8[var_a3] = var_t6;
-                    var_t9 = 0;
-                    if (spF8[var_a3] <= 0.0) {
-                        var_t9 = 1;
-                    }
-                    var_t0 += var_t9;
-                }
-                if ((var_t0 == 1) || (var_t0 == 2)) {
-                    var_s0 = 0;
+            var_t0 = 0;
+            for (index = 0; index < 3; index++) {
+                temp_v1 = &(segment->triangles[j].verticesArray[index + 1] + var_t1)[segment->vertices];
+                spE8[index] = temp_v1->x;
+                spDC[index] = temp_v1->y;
+                spD0[index] = temp_v1->z;
+                spC4[index] = (xScale * spE8[index]) + (zScale * spD0[index]) + arg3;
+                
+                spF8[index] = (spC4[index] <= 0.0);
+                var_t0 += (spF8[index] <= 0.0);
+            }
+            if ((var_t0 == 1) || (var_t0 == 2)) {
+                var_s0 = 0;
 
-                    for(index = 0; index < 3;  index++) {
-                        nextIndex = index + 1;
-                        if (nextIndex >= 3) {
-                            nextIndex = 0;
-                        }
-                        if (spF8[nextIndex] != spF8[index]) {
-                            temp = spC4[index] / (spC4[index] - spC4[nextIndex]);
-                            spB4[var_s0] = ((spE8[nextIndex] - spE8[index]) * temp) + spE8[index];
-                            spA0[var_s0] = spB8[var_s0] = ((spDC[nextIndex] - spDC[index]) * temp) + spDC[index];
-                            spA8[var_s0] = ((spD0[nextIndex] - spD0[index]) * temp) + spD0[index];
-                            var_s0++;
-                        }
-                        
+                for (index = 0; index < 3; index++) {
+                    nextIndex = index + 1;
+                    if (nextIndex >= 3) {
+                        nextIndex = 0;
                     }
-                    var_s0 = 0;
-                    var_v0 = 0;
-                    var_v1_2 = 0;
-                    spC4[0] = (D_8011D4A0 * spB4[0]) + (D_8011D4A4 * spA8[0]) + D_8011D4A8;
-                    spC4[1] = (D_8011D4A0 * spB4[1]) + (D_8011D4A4 * spA8[1]) + D_8011D4A8;
-                    if (spC4[0] < -300.0) {
-                        var_v0 = 1;
+                    if ((spF8[nextIndex] != spF8[index]) != 0) {
+                        temp = spC4[index] / (spC4[index] - spC4[nextIndex]);
+                        spB4[var_s0] = spE8[index] + ((spE8[nextIndex] - spE8[index]) * temp);
+                        spB8[var_s0] = spDC[index] + ((spDC[nextIndex] - spDC[index]) * temp);
+                        spA0[var_s0] = spB8[var_s0];
+                        spA8[var_s0] = spD0[index]+ ((spD0[nextIndex] - spD0[index]) * temp);
+                        var_s0++;
                     }
-                    if (spC4[0] > 300.0) {
-                        var_v0 |= 2;
+                }
+                var_s0 = FALSE;
+                spF8[0] = 0;
+                spF8[1] = 0;
+                spC4[0] = (D_8011D4A0 * spB4[0]) + (D_8011D4A4 * spA8[0]) + D_8011D4A8;
+                spC4[1] = (D_8011D4A0 * spB4[1]) + (D_8011D4A4 * spA8[1]) + D_8011D4A8;
+                if (spC4[0] < -300.0) {
+                    spF8[0] = 1;
+                }
+                if (spC4[0] > 300.0) {
+                    spF8[0] |= 2;
+                }
+                if (spC4[1] < -300.0) {
+                    spF8[1] = 1;
+                }
+                if (spC4[1] > 300.0) {
+                    spF8[1] |= 2;
+                }
+#pragma _permuter sameline start
+                if ((spF8[0] | spF8[1]) == 0) { /* One line required */ \
+                    var_s0 = TRUE;
+#pragma _permuter sameline end
+                } else if ((spF8[1] != spF8[0]) != 0) {
+                    index = 0;
+                    if (spC4[1] < spC4[0]) {
+                        // index++;
+                        // index--;
+                        index = 1;
                     }
-                    if (spC4[1] < -300.0) {
-                        var_v1_2 = 1;
+                    nextIndex = 1 - index;
+                    if (spF8[index] == 1) {
+                        temp = ((-spC4[index] - 300.0) / (spC4[nextIndex] - spC4[index]));
+                        spB8[index] = spB8[index] + ((spB8[nextIndex] - spB8[index]) * temp);
+                        spC4[index] = -300.0f;
                     }
-                    if (spC4[1] > 300.0) {
-                        var_v1_2 |= 2;
+                    if (spF8[nextIndex] == 2) {
+                        temp = ((spC4[nextIndex] - 300.0) / (spC4[nextIndex] - spC4[index]));
+                        spB8[nextIndex] = spB8[nextIndex] + ((spB8[index] - spB8[nextIndex]) * temp);
+                        spC4[nextIndex] = 300.0f;
                     }
-                    if ((var_v1_2 | var_v0) == 0) {
-                        var_s0 = 1;
-                        spF8[1] = var_v1_2;
-                        spF8[0] = var_v0;
-                    } else {
-                        spF8[0] = var_v0;
-                        spF8[1] = var_v1_2;
-                        if (var_v1_2 != var_v0) {
-                            var_a3_3 = 0;
-                            if (spC4[1] < spC4[0]) {
-                                var_a3_3 = 1;
-                            }
-                            temp_a2_3 = 1 - var_a3_3;
-                            if (spF8[var_a3_3] == 1) {
-                                temp = ((-spC4[var_a3_3] - 300.0) / (spC4[temp_a2_3] - spC4[var_a3_3]));
-                                spB8[var_a3_3] = ((spB8[temp_a2_3] - spB8[var_a3_3]) * temp) + spB8[var_a3_3];
-                                spC4[var_a3_3] = -300.0f;
-                            }
-                            if (spF8[temp_a2_3] == 2) {
-                                temp = ((spC4[temp_a2_3] - 300.0) / (spC4[temp_a2_3] - spC4[var_a3_3]));
-                                spB8[temp_a2_3] = ((spB8[var_a3_3] - spB8[temp_a2_3]) * temp) + spB8[temp_a2_3];
-                                spC4[temp_a2_3] = 300.0f;
-                            }
-                            var_s0 = 1;
-                        }
+                    var_s0 = TRUE;
+                }
+                if (var_s0) {
+                    unk14 = segment->unk14;
+                    var_t8 = (unk14[j * 4] * 4);
+                    goto dummy_label_996187; dummy_label_996187: ;
+                    temp = (spB4[1] + D_8011D4A0) * segment->unk18[var_t8];
+                    temp += spB8[0] * segment->unk18[var_t8 + 1];
+                    temp += (spA8[0] + D_8011D4A4) * segment->unk18[var_t8 + 2];
+                    temp += segment->unk18[var_t8 + 3];
+                    var_s0 = (temp > 0.0) << 2;
+                    if (segment->unk18[var_t8 + 1] < 0.0f) {
+                        var_s0 |= 1;
                     }
-                    if (var_s0 != 0) {
-                        temp_v0_3 = &segment->unk18[segment->unk14[var_s7 * 4]];
-                        temp = ((temp_v0_3[0] * (spB4[1] + D_8011D4A0)) + (spB8[0] * temp_v0_3[1]) + ((spA8[0] + D_8011D4A4) * temp_v0_3[2]) + temp_v0_3[3]);
-                        var_t8 = 0 * 4;
-                        if (temp > 0.0) {
-                            var_t8 = 1 * 4;
-                        }
-                        var_s0 = var_t8;
-                        if (temp_v0_3[1] < 0.0f) {
-                            var_s0 |= 1;
-                        }
-                        if (spC4[0] == spC4[1]) {
-                            var_s0 |= 8;
-                        }
-                        func_80026C14(spC4[0], spB8[0], var_s0);
-                        func_80026C14(spC4[1], spB8[1], var_s0);
+                    if (spC4[0] == spC4[1]) {
+                        var_s0 |= 8;
                     }
+                    func_80026C14(spC4[0], spB8[0], var_s0);
+                    func_80026C14(spC4[1], spB8[1], var_s0);
                 }
             }
         }
