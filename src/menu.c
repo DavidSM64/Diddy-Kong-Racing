@@ -5611,11 +5611,9 @@ void pakmenu_render(UNUSED s32 updateRate) {
         set_current_text_colour(6, 255, 255, 255, 0, 255);
         set_current_text_background_colour(6, 0, 0, 0, 0);
         render_dialogue_text(6, POS_CENTRED, 2 - PAKMENU_JP_OFFSET, gMenuText[ASSET_MENU_TEXT_CONTPAK1 + gMenuOption],
-                             1,
-                             HORZ_ALIGN_CENTER); // CONTROLLER PAK 1 / 2 / 3 / 4
+                             1, HORZ_ALIGN_CENTER); // CONTROLLER PAK 1 / 2 / 3 / 4
         render_dialogue_text(6, POS_CENTRED, 16 - PAKMENU_JP_OFFSET, gMenuText[ASSET_MENU_TEXT_FREEPAGESX],
-                             sCurrentControllerPakFreePages,
-                             HORZ_ALIGN_CENTER); // FREE PAGES: ~
+                             sCurrentControllerPakFreePages, HORZ_ALIGN_CENTER); // FREE PAGES: ~
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
 
         yPos += 34; // To 82

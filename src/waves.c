@@ -284,7 +284,7 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
     D_8012A01C = 10000.0f;
     D_8012A020 = -10000.0f;
     for (var_s7 = 0; var_s7 < D_80129FC8.unk20; var_s7++) {
-        D_800E3040[var_s7] = (sins_f(var_s6) * D_80129FC8.unkC) + (sins_f(var_fp) *  D_80129FC8.unk18);
+        D_800E3040[var_s7] = (sins_f(var_s6) * D_80129FC8.unkC) + (sins_f(var_fp) * D_80129FC8.unk18);
         if (D_80129FC8.unk28 != 0) {
             D_800E3040[var_s7] *= 2.0f;
         }
@@ -297,7 +297,6 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
         var_s6 += sp54;
         var_fp += sp4C;
     }
-    ;
     save_rng_seed();
     set_rng_seed(0x57415646);
 
@@ -352,7 +351,7 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
                 D_800E3080[var_a0][var_s5].unk2 = (var_s0 + D_80129FC8.unk0) + 1;
                 D_800E3080[var_a0][var_s5].unk3 = var_s0 + 1;
                 var_s5++;
-                D_800E3080[var_a0][var_s5].unk0  = 0x40;
+                D_800E3080[var_a0][var_s5].unk0 = 0x40;
                 D_800E3080[var_a0][var_s5].unk1 = var_s0 + 1;
                 D_800E3080[var_a0][var_s5].unk2 = (var_s0 + D_80129FC8.unk0) + 1;
                 D_800E3080[var_a0][var_s5].unk3 = (var_s0 + D_80129FC8.unk0) + 2;
@@ -371,7 +370,7 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
     for (i = 0; i < ARRAY_COUNT(D_800E3070); i++) {
         // @note this should probably be the following for loop (or something like it, anyway)
         // but the change of var_s3 does not work
-        
+
         // for (j = 0; j < 4; j++) {
         //     if (j == 0) {
         //         var_s3 = 0;
@@ -402,7 +401,7 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
         temp_vtx->g = temp_vtx_2->g;
         temp_vtx->b = temp_vtx_2->b;
         temp_vtx->a = temp_vtx_2->a;
-    
+
         temp_vtx_3 = &D_800E3070[i][var_t0];
         temp_vtx = &D_8012A028[i][1];
         temp_vtx->x = temp_vtx_3->x;
@@ -414,7 +413,7 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
         temp_vtx->a = temp_vtx_3->a;
 
         var_t2 = var_t0 + 1;
-        var_v1 = (var_t0 + 1) * var_t0 ;
+        var_v1 = (var_t0 + 1) * var_t0;
         temp_vtx_4 = &D_800E3070[i][var_v1];
         temp_vtx = &D_8012A028[i][2];
         temp_vtx->x = temp_vtx_4->x;
@@ -425,7 +424,7 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
         temp_vtx->b = temp_vtx_4->b;
         temp_vtx->a = temp_vtx_4->a;
 
-        var_v1 = (var_t0 + 1) * var_t0 ;
+        var_v1 = (var_t0 + 1) * var_t0;
         temp_vtx_5 = &(&D_800E3070[i][var_v1])[var_t0];
         temp_vtx = &D_8012A028[i][3];
         temp_vtx->x = temp_vtx_5->x;
