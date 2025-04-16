@@ -9,7 +9,7 @@ As of April 16, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 79.16%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 50.05%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 50.27%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -133,9 +133,9 @@ As of April 16, 2025, this is our current score:
  We are collecting silver coins in Haunted Woods. (2/8 silver coins)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 50.05% Complete -------------------------
-                    # Documented functions: 1090
-                    # Undocumented remaining: 563
+ ------------------------- 50.27% Complete -------------------------
+                    # Documented functions: 1091
+                    # Undocumented remaining: 562
  --------------------------- Game Status ---------------------------
               Balloons: 25/47, Keys: 3/4, Trophies: 2/5
                T.T. Amulets: 2/4, Wizpig Amulets: 2/4
