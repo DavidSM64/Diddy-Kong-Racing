@@ -7,9 +7,9 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of April 16, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 79.16%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 79.61%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 50.05%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 50.27%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -121,21 +121,21 @@ As of April 16, 2025, this is our current score:
 ```
  ===================================================================
                ADVENTURE ONE (ASM -> C Decompilation)
- -------------- 79.16% Complete (81.99% NON_MATCHING) --------------
-                    # Decompiled functions: 1852
-                     # GLOBAL_ASM remaining: 98
-                    # NON_MATCHING functions: 13
+ -------------- 79.61% Complete (82.18% NON_MATCHING) --------------
+                    # Decompiled functions: 1854
+                     # GLOBAL_ASM remaining: 96
+                    # NON_MATCHING functions: 12
                  # NON_EQUIVALENT WIP functions: 28
  --------------------------- Game Status ---------------------------
               Balloons: 38/47, Keys: 4/4, Trophies: 3/5
                T.T. Amulets: 4/4, Wizpig Amulets: 3/4
  -------------------------------------------------------------------
- We are collecting silver coins in Haunted Woods. (2/8 silver coins)
+ We are collecting silver coins in Haunted Woods. (4/8 silver coins)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 50.05% Complete -------------------------
-                    # Documented functions: 1090
-                    # Undocumented remaining: 563
+ ------------------------- 50.27% Complete -------------------------
+                    # Documented functions: 1091
+                    # Undocumented remaining: 562
  --------------------------- Game Status ---------------------------
               Balloons: 25/47, Keys: 3/4, Trophies: 2/5
                T.T. Amulets: 2/4, Wizpig Amulets: 2/4
