@@ -20,10 +20,10 @@ Vertex *D_800E3070[2] = { NULL, NULL };
 s32 *D_800E3078[2] = { NULL, NULL };
 Triangle *D_800E3080[4][1] = { NULL, NULL, NULL, NULL };
 Triangle D_800E3090[4] = {
-    { { 0x40, 0x00, 0x02, 0x01 }, 0, 0, 0, 0, 0, 0 },
-    { { 0x40, 0x01, 0x02, 0x03 }, 0, 0, 0, 0, 0, 0 },
-    { { 0x40, 0x00, 0x02, 0x01 }, 0, 0, 0, 0, 0, 0 },
-    { { 0x40, 0x01, 0x02, 0x03 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 0x00, 0x02, 0x01 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 0x01, 0x02, 0x03 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 0x00, 0x02, 0x01 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 0x01, 0x02, 0x03 }, 0, 0, 0, 0, 0, 0 },
 };
 
 TextureHeader *D_800E30D0 = NULL;
