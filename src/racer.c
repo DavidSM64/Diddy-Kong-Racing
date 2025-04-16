@@ -3225,11 +3225,12 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
         if (gCurrentPlayerIndex != PLAYER_COMPUTER && gNumViewports < 2) {
             if (racer->buoyancy > 14.0f) {
                 if (get_random_number_from_range(0, 1) != 0) {
-                    racerObj->particleEmittersEnabled |= PARTICLE_COLOURVEL_RED | PARTICLE_COLOURVEL_GREEN;
+                    racerObj->particleEmittersEnabled |= PARTICLE_RANDOM_COLOUR_RED | PARTICLE_RANDOM_COLOUR_GREEN;
                 }
             } else if (racer->buoyancy < 6.0f) {
                 if (racer->velocity > -3.0 && racer->velocity < 0.5 && get_random_number_from_range(0, 1) != 0) {
-                    racerObj->particleEmittersEnabled |= PARTICLE_RANDOM_SCALE_VELOCITY | PARTICLE_RANDOM_MOVEMENT_PARAM;
+                    racerObj->particleEmittersEnabled |=
+                        PARTICLE_RANDOM_SCALE_VELOCITY | PARTICLE_RANDOM_MOVEMENT_PARAM;
                 }
             }
         }

@@ -1696,14 +1696,6 @@ typedef struct Object_68 {
   /* 0x50 */ s16 unk50;
  } Object_68;
  
-typedef struct unk800AF29C_C_400 {
-    s32 *unkC;
-    s16 unk10;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
-} unk800AF29C_C_400;
-
 typedef struct unk800B2260_C {
     s32 unk0;
     s32 unk4;

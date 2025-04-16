@@ -60,10 +60,10 @@ enum ParticleRandomizationFlags {
     PARTICLE_RANDOM_SCALE = (1 << 17),
     PARTICLE_RANDOM_SCALE_VELOCITY = (1 << 18),
     PARTICLE_RANDOM_MOVEMENT_PARAM = (1 << 19),
-    PARTICLE_COLOURVEL_RED = (1 << 20),
-    PARTICLE_COLOURVEL_GREEN = (1 << 21),
-    PARTICLE_COLOURVEL_BLUE = (1 << 22),
-    PARTICLE_COLOURVEL_ALPHA = (1 << 23),
+    PARTICLE_RANDOM_COLOUR_RED = (1 << 20),
+    PARTICLE_RANDOM_COLOUR_GREEN = (1 << 21),
+    PARTICLE_RANDOM_COLOUR_BLUE = (1 << 22),
+    PARTICLE_RANDOM_COLOUR_ALPHA = (1 << 23),
     PARTICLE_UNK01000000 = (1 << 24),
     PARTICLE_UNK02000000 = (1 << 25),
     PARTICLE_UNK04000000 = (1 << 26),
@@ -100,7 +100,7 @@ enum ParticleMovement {
     PARTICLE_MOVEMENT_ACCELERATION,
     PARTICLE_MOVEMENT_VELOCITY_PARENT,
     PARTICLE_MOVEMENT_BASIC_PARENT,
-    PARTICLE_MOVEMENT_VELOCITY,
+    PARTICLE_MOVEMENT_FORWARD,
 };
 
 enum ParticleField40 {
@@ -216,6 +216,14 @@ typedef struct ParticleBehavior {
     ColorLoopEntry *colorLoop;
 } ParticleBehavior;
 
+typedef struct unk800AF29C_C_400 {
+    struct PointParticle **unkC_60;
+    s16 unk10;
+    s16 unk12;
+    s16 unk14;
+    s16 unk16;
+} unk800AF29C_C_400;
+
 /* Size: 0x20 bytes */
 typedef struct ParticleEmitter {
     /* 0x00 */ ParticleBehavior *behaviour;
@@ -225,10 +233,9 @@ typedef struct ParticleEmitter {
     /* 0x08 */ s16 propertyID;
     /* 0x0A */ s16 opacity;
     union {
-    /* 0x000C */ Vec3f pos;
-    /* 0x000C */ ParticleAngle angle;
-    /* 0x000C */ struct PointParticle **unkC_60;
+    /* 0x000C */ Vec3f pos; // Valid for line particle
     /* 0x000C */ unk800AF29C_C_400 unkC_400;
+    /* 0x000C */ ParticleAngle angle;
     };
     /* 0x0018 */ Vec3s position; // Relative to parent object
     /* 0x001E */ s16 colorIndex;
@@ -318,24 +325,24 @@ void emitter_cleanup(ParticleEmitter *emitter);
 void func_800B263C(PointParticle *arg0);
 void init_particle_assets(void);
 void set_particle_texture_frame(Particle *particle);
-void setup_particle_position(Particle *particle, Object *arg1, ParticleEmitter *arg2, ParticleBehavior *behaviour);
+void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehavior *behaviour);
 void particle_deallocate(Particle *particle);
 void handle_particle_movement(Particle *particle, s32 updateRate);
 void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehavior *behavior);
 PointParticle *init_point_particle(Object *obj, ParticleEmitter *emitter);
 Particle *particle_allocate(s32 kind);
-void func_800AFE5C(Object *arg0, ParticleEmitter *emitter);
-Particle *init_general_particle(Object *arg0, ParticleEmitter *arg1);
+void func_800AFE5C(Object *obj, ParticleEmitter *emitter);
+Particle *init_general_particle(Object *obj, ParticleEmitter *emitter);
 void func_800AF52C(Object *obj, s32 emitterIndex);
-void emitter_change_settings(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ);
+void emitter_change_settings(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 posX, s16 posY, s16 posZ);
 void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags);
 void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void obj_spawn_particle(Object *obj, s32 updateRate);
-void func_800B3E64(PointParticle *particle);
+void func_800B3E64(PointParticle *obj);
 void move_line_particle(Particle *particle);
 void func_800AF714(Object *racerObj, s32 updateRate);
-Particle* init_line_particle(Object* arg0, ParticleEmitter* arg1);
+Particle* init_line_particle(Object* obj, ParticleEmitter* emitter);
 
 void func_800AF404(s32 updateRate); // Non Matching
 void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, s32 maxSpriteParticles,
@@ -344,6 +351,6 @@ void move_particle_basic_parent(Particle *);
 void move_particle_velocity_parent(Particle *);
 void move_particle_with_acceleration(Particle *);
 void move_particle_basic(Particle *);
-void move_particle_with_velocity(Particle *);
+void move_particle_forward(Particle *);
 
 #endif

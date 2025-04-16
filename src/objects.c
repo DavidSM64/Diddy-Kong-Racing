@@ -2064,11 +2064,11 @@ s32 obj_init_emitter(Object *obj, ParticleEmitter *emitter) {
     for (i = 0; i < obj->segment.header->particleCount; i++) {
         if ((particleDataEntry[i].upper & 0xFFFF0000) == 0xFFFF0000) {
             emitter_init(&obj->particleEmitter[i], (particleDataEntry[i].upper >> 8) & 0xFF,
-                            particleDataEntry[i].upper & 0xFF);
+                         particleDataEntry[i].upper & 0xFF);
         } else {
             emitter_init_with_pos(&obj->particleEmitter[i], (particleDataEntry[i].upper >> 0x18) & 0xFF,
-                          (particleDataEntry[i].upper >> 0x10) & 0xFF, particleDataEntry[i].upper & 0xFFFF,
-                          (particleDataEntry[i].lower >> 0x10) & 0xFFFF, particleDataEntry[i].lower & 0xFFFF);
+                                  (particleDataEntry[i].upper >> 0x10) & 0xFF, particleDataEntry[i].upper & 0xFFFF,
+                                  (particleDataEntry[i].lower >> 0x10) & 0xFFFF, particleDataEntry[i].lower & 0xFFFF);
         }
     }
     return ((obj->segment.header->particleCount * sizeof(ParticleEmitter)) + 3) & ~3;
@@ -3347,7 +3347,8 @@ void func_80012F94(Object *obj) {
 void render_object_parts(Object *obj) {
     func_80012F94(obj);
     if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
-        render_particle((Particle *) obj, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, PARTICLE_F40_8000);
+        render_particle((Particle *) obj, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
+                        PARTICLE_F40_8000);
     } else {
         if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
             render_3d_model(obj);
@@ -4353,8 +4354,7 @@ Object *find_taj_object(void) {
     Object *current_obj;
     for (i = gObjectListStart; i < gObjectCount; i++) {
         current_obj = gObjPtrList[i];
-        if (!(current_obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) &&
-            (current_obj->behaviorId == BHV_PARK_WARDEN)) {
+        if (!(current_obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) && (current_obj->behaviorId == BHV_PARK_WARDEN)) {
             return current_obj;
         }
     }
