@@ -141,7 +141,7 @@ s32 gParticleOpacity = 256;
 
 s32 gParticleUpdateRate;
 s32 D_80127C84;
-s16 D_80127C88[12];
+s16 D_80127C88[8];
 // printf.c
 // thread0_epc
 /******************************/
@@ -556,37 +556,37 @@ void func_800AF0F0(Particle *particle) {
     tri[1].uv2.u = texU;
 }
 
-void emitter_change_settings(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 posX, s16 posY, s16 posZ) {
+void emitter_change_settings(ParticleEmitter *emitter, s32 behaviourID, s32 particleID, s16 posX, s16 posY, s16 posZ) {
     ParticleBehavior *behaviour;
-    if (propertyID >= gParticlesAssetTableCount) {
-        propertyID = 0;
+    if (particleID >= gParticlesAssetTableCount) {
+        particleID = 0;
     }
     if (behaviourID >= gParticleBehavioursAssetTableCount) {
         behaviourID = 0;
     }
     behaviour = gParticleBehavioursAssetTable[behaviourID];
-    if (emitter->descriptorID != propertyID || behaviour != emitter->behaviour) {
+    if (emitter->descriptorID != particleID || behaviour != emitter->behaviour) {
         emitter_cleanup(emitter);
-        emitter_init_with_pos(emitter, behaviourID, propertyID, posX, posY, posZ);
+        emitter_init_with_pos(emitter, behaviourID, particleID, posX, posY, posZ);
     }
 }
 
-void emitter_init(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID) {
+void emitter_init(ParticleEmitter *emitter, s32 behaviourID, s32 particleID) {
     ParticleBehavior *behaviour;
 
     if (behaviourID < gParticleBehavioursAssetTableCount) {
         behaviour = gParticleBehavioursAssetTable[behaviourID];
-        emitter_init_with_pos(emitter, behaviourID, propertyID, behaviour->emitterPos.x, behaviour->emitterPos.y,
+        emitter_init_with_pos(emitter, behaviourID, particleID, behaviour->emitterPos.x, behaviour->emitterPos.y,
                               behaviour->emitterPos.z);
     }
 }
 
-void emitter_init_with_pos(ParticleEmitter *emitter, s32 behaviourID, s32 propertyID, s16 posX, s16 posY, s16 posZ) {
+void emitter_init_with_pos(ParticleEmitter *emitter, s32 behaviourID, s32 particleID, s16 posX, s16 posY, s16 posZ) {
     ParticleBehavior *behaviour;
     s32 flags;
 
     behaviour = gParticleBehavioursAssetTable[behaviourID];
-    emitter->descriptorID = propertyID;
+    emitter->descriptorID = particleID;
     emitter->behaviour = behaviour;
     emitter->position.x = posX;
     emitter->position.y = posY;
@@ -602,27 +602,27 @@ void emitter_init_with_pos(ParticleEmitter *emitter, s32 behaviourID, s32 proper
         emitter->lineAnchor.y = 0.0f;
         emitter->lineAnchor.z = 0.0f;
     } else if (flags & PARTICLE_POINT) {
-        emitter->pointsNumber = 0;
+        emitter->pointCount = 0;
         emitter->flags = PARTICLE_POINT;
-        if (gParticlesAssetTable[propertyID]->lifeTime <= 255) {
-            emitter->lifeTime = gParticlesAssetTable[propertyID]->lifeTime;
+        if (gParticlesAssetTable[particleID]->lifeTime <= 255) {
+            emitter->maxPointCount = gParticlesAssetTable[particleID]->lifeTime;
         } else {
-            emitter->lifeTime = 255;
+            emitter->maxPointCount = 255;
         }
-        emitter->unkC_400.unkC_60 = (PointParticle **) mempool_alloc_safe(emitter->lifeTime * sizeof(PointParticle *),
-                                                                          COLOUR_TAG_SEMITRANS_GREY);
-        emitter->unkC_400.unk10 = behaviour->unk14.y_rotation;
-        emitter->unkC_400.unk12 = behaviour->unk14.x_rotation;
-        emitter->unkC_400.unk14 = behaviour->unk22;
-        emitter->unkC_400.unk16 = behaviour->unk24;
+        emitter->unkC_400.unkC_60 = (PointParticle **) mempool_alloc_safe(
+            emitter->maxPointCount * sizeof(PointParticle *), COLOUR_TAG_SEMITRANS_GREY);
+        emitter->unkC_400.unk10 = behaviour->sourceRotation.y_rotation;
+        emitter->unkC_400.unk12 = behaviour->sourceRotation.x_rotation;
+        emitter->unkC_400.unk14 = behaviour->emissionDirection.y_rotation;
+        emitter->unkC_400.unk16 = behaviour->emissionDirection.x_rotation;
     } else {
         emitter->flags = PARTICLE_FLAGS_NONE;
-        emitter->angle.sourceRotation.y_rotation = behaviour->unk14.y_rotation;
-        emitter->angle.sourceRotation.x_rotation = behaviour->unk14.x_rotation;
-        emitter->angle.sourceRotation.z_rotation = behaviour->unk14.z_rotation;
-        emitter->angle.emissionDirection.y_rotation = behaviour->unk22;
-        emitter->angle.emissionDirection.x_rotation = behaviour->unk24;
-        emitter->angle.emissionDirection.z_rotation = behaviour->unk26;
+        emitter->angle.sourceRotation.y_rotation = behaviour->sourceRotation.y_rotation;
+        emitter->angle.sourceRotation.x_rotation = behaviour->sourceRotation.x_rotation;
+        emitter->angle.sourceRotation.z_rotation = behaviour->sourceRotation.z_rotation;
+        emitter->angle.emissionDirection.y_rotation = behaviour->emissionDirection.y_rotation;
+        emitter->angle.emissionDirection.x_rotation = behaviour->emissionDirection.x_rotation;
+        emitter->angle.emissionDirection.z_rotation = behaviour->emissionDirection.z_rotation;
     }
 }
 
@@ -655,46 +655,46 @@ void func_800AF52C(Object *obj, s32 emitterIndex) {
 
     emitter = &obj->particleEmitter[emitterIndex];
     behaviour = emitter->behaviour;
-    emitter->opacity = 0;
+    emitter->timeFromLastSpawn = 0;
 
     if (emitter->flags & PARTICLE_LINE) {
         emitter->lineAnchor.x = obj->segment.trans.x_position;
         emitter->lineAnchor.y = obj->segment.trans.y_position;
         emitter->lineAnchor.z = obj->segment.trans.z_position;
     } else if (emitter->flags & PARTICLE_POINT) {
-        emitter->opacity = gParticlesAssetTable[emitter->descriptorID]->colour.a << 8;
+        emitter->point_opacity = gParticlesAssetTable[emitter->descriptorID]->colour.a << 8;
 
-        if (emitter->pointsNumber > 0) { // Useless if statement, since the loop already does this.
-            for (i = 0; i < emitter->pointsNumber; i++) {
+        if (emitter->pointCount > 0) { // Useless if statement, since the loop already does this.
+            for (i = 0; i < emitter->pointCount; i++) {
                 PointParticle *temp = emitter->unkC_400.unkC_60[i];
                 temp->base.destroyTimer = 0;
             }
         }
         if (behaviour->flags & PARTICLE_SOURCE_OFFSET_ENABLED) {
-            emitter->angle.sourceRotation.z_rotation = behaviour->unk14.y_rotation;
-            emitter->angle.emissionDirection.y_rotation = behaviour->unk14.x_rotation;
+            emitter->angle.sourceRotation.z_rotation = behaviour->sourceRotation.y_rotation;
+            emitter->angle.emissionDirection.y_rotation = behaviour->sourceRotation.x_rotation;
         }
         if (behaviour->flags & PARTICLE_SOURCE_EMITS_WITH_VELOCITY) {
-            emitter->angle.emissionDirection.x_rotation = behaviour->unk22;
-            emitter->angle.emissionDirection.z_rotation = behaviour->unk24;
+            emitter->angle.emissionDirection.x_rotation = behaviour->emissionDirection.y_rotation;
+            emitter->angle.emissionDirection.z_rotation = behaviour->emissionDirection.x_rotation;
         }
     } else {
         if (behaviour->flags & PARTICLE_SOURCE_OFFSET_ENABLED) {
-            emitter->general_unk6 = 0;
-            emitter->angle.sourceRotation.y_rotation = behaviour->unk14.y_rotation;
-            emitter->angle.sourceRotation.x_rotation = behaviour->unk14.x_rotation;
-            emitter->angle.sourceRotation.z_rotation = behaviour->unk14.z_rotation;
+            emitter->sourceRotationCounter = 0;
+            emitter->angle.sourceRotation.y_rotation = behaviour->sourceRotation.y_rotation;
+            emitter->angle.sourceRotation.x_rotation = behaviour->sourceRotation.x_rotation;
+            emitter->angle.sourceRotation.z_rotation = behaviour->sourceRotation.z_rotation;
         }
         if (behaviour->flags & PARTICLE_SOURCE_EMITS_WITH_VELOCITY) {
-            emitter->lifeTime = 0;
-            emitter->angle.emissionDirection.y_rotation = behaviour->unk22;
-            emitter->angle.emissionDirection.x_rotation = behaviour->unk24;
-            emitter->angle.emissionDirection.z_rotation = behaviour->unk26;
+            emitter->emissionDirRotationCounter = 0;
+            emitter->angle.emissionDirection.y_rotation = behaviour->emissionDirection.y_rotation;
+            emitter->angle.emissionDirection.x_rotation = behaviour->emissionDirection.x_rotation;
+            emitter->angle.emissionDirection.z_rotation = behaviour->emissionDirection.z_rotation;
         }
     }
     emitter->flags &= ~PARTICLE_BEHAVIOR_FLAG_200;
     emitter->flags |= PARTICLE_BEHAVIOR_FLAG_8000 | PARTICLE_BEHAVIOR_FLAG_2000;
-    obj->segment.unk1A++;
+    obj->segment.numActiveEmitters++;
 }
 
 void func_800AF6E4(Object *obj, s32 emitterIndex) {
@@ -703,7 +703,7 @@ void func_800AF6E4(Object *obj, s32 emitterIndex) {
     emitter = &obj->particleEmitter[emitterIndex];
 
     emitter->flags &= ~PARTICLE_BEHAVIOR_FLAG_8000;
-    obj->segment.unk1A--;
+    obj->segment.numActiveEmitters--;
 }
 
 void func_800AF714(Object *racerObj, s32 updateRate) {
@@ -821,8 +821,9 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
                 } else if (racerObj->particleEmitter[i].flags & PARTICLE_POINT) {
                     func_800AFE5C(racerObj, &racerObj->particleEmitter[i]);
                 } else {
-                    racerObj->particleEmitter[i].opacity += updateRate;
-                    if (racerObj->particleEmitter[i].opacity >= racerObj->particleEmitter[i].behaviour->unk40) {
+                    racerObj->particleEmitter[i].timeFromLastSpawn += updateRate;
+                    if (racerObj->particleEmitter[i].timeFromLastSpawn >=
+                        racerObj->particleEmitter[i].behaviour->spawnInterval) {
                         func_800AFE5C(racerObj, &racerObj->particleEmitter[i]);
                     }
                 }
@@ -836,7 +837,7 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
                 if (racerObj->particleEmitter[i].flags & PARTICLE_POINT) {
                     new_var = &racerObj->particleEmitter[i];
                     racerObj->particleEmitter[i].flags |= PARTICLE_BEHAVIOR_FLAG_200;
-                    if (new_var->pointsNumber == 0) {
+                    if (new_var->pointCount == 0) {
                         func_800AF6E4(racerObj, i);
                     }
                 } else {
@@ -871,8 +872,8 @@ void obj_spawn_particle(Object *obj, s32 updateRate) {
             } else if ((obj->particleEmitter[i].flags & PARTICLE_POINT)) {
                 func_800AFE5C(obj, &obj->particleEmitter[i]);
             } else {
-                obj->particleEmitter[i].opacity += updateRate;
-                if (obj->particleEmitter[i].opacity >= obj->particleEmitter[i].behaviour->unk40) {
+                obj->particleEmitter[i].timeFromLastSpawn += updateRate;
+                if (obj->particleEmitter[i].timeFromLastSpawn >= obj->particleEmitter[i].behaviour->spawnInterval) {
                     func_800AFE5C(obj, &obj->particleEmitter[i]);
                 }
             }
@@ -893,7 +894,7 @@ void obj_spawn_particle(Object *obj, s32 updateRate) {
                 } else if ((obj->particleEmitter[i].flags & PARTICLE_POINT)) {
                     ParticleEmitter *temp_s1_2 = &obj->particleEmitter[i];
                     obj->particleEmitter[i].flags |= PARTICLE_BEHAVIOR_FLAG_200;
-                    if (temp_s1_2->pointsNumber == 0) {
+                    if (temp_s1_2->pointCount == 0) {
                         func_800AF6E4(obj, i);
                     }
                 } else {
@@ -911,9 +912,9 @@ void func_800AFE5C(Object *obj, ParticleEmitter *emitter) {
 
     behavior = emitter->behaviour;
     if (emitter->flags & PARTICLE_LINE) {
-        Particle *tempObj = init_line_particle(obj, emitter);
-        if (tempObj != NULL) {
-            add_particle_to_entity_list((Object *) tempObj);
+        Particle *particle = init_line_particle(obj, emitter);
+        if (particle != NULL) {
+            add_particle_to_entity_list((Object *) particle);
         }
         emitter->flags &= ~PARTICLE_BEHAVIOR_FLAG_2000;
         if (emitter->line_unk6 + 64 > 255) {
@@ -922,25 +923,25 @@ void func_800AFE5C(Object *obj, ParticleEmitter *emitter) {
             emitter->line_unk6 += 64;
         }
     } else if (emitter->flags & PARTICLE_POINT) {
-        if (emitter->pointsNumber < emitter->lifeTime) {
-            PointParticle *temp_s0 = init_point_particle(obj, emitter);
+        if (emitter->pointCount < emitter->maxPointCount) {
+            PointParticle *particle = init_point_particle(obj, emitter);
             emitter->flags &= ~PARTICLE_BEHAVIOR_FLAG_2000;
-            if (temp_s0 != NULL) {
-                add_particle_to_entity_list((Object *) temp_s0);
-                temp_s0->unk74 = emitter->pointsNumber;
-                temp_s0->base.unk40 |= PARTICLE_F40_2000;
-                emitter->unkC_400.unkC_60[emitter->pointsNumber] = temp_s0;
-                emitter->pointsNumber++;
+            if (particle != NULL) {
+                add_particle_to_entity_list((Object *) particle);
+                particle->pointIndex = emitter->pointCount;
+                particle->base.miscFlags |= PARTICLE_F40_2000;
+                emitter->unkC_400.unkC_60[emitter->pointCount] = particle;
+                emitter->pointCount++;
             }
         }
     } else {
-        while (emitter->opacity >= behavior->unk40) {
-            emitter->opacity -= behavior->unk40;
-            for (i = 0; i < behavior->unk42; i++) {
-                Particle *tempObj2 = init_general_particle(obj, emitter);
-                if (tempObj2 != NULL) {
-                    add_particle_to_entity_list((Object *) tempObj2);
-                    particle_update(tempObj2, emitter->opacity);
+        while (emitter->timeFromLastSpawn >= behavior->spawnInterval) {
+            emitter->timeFromLastSpawn -= behavior->spawnInterval;
+            for (i = 0; i < behavior->burstCount; i++) {
+                Particle *particle = init_general_particle(obj, emitter);
+                if (particle != NULL) {
+                    add_particle_to_entity_list((Object *) particle);
+                    particle_update(particle, emitter->timeFromLastSpawn);
                 }
                 emitter->flags &= ~PARTICLE_BEHAVIOR_FLAG_2000;
             }
@@ -969,18 +970,18 @@ void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *e
     if (randomizationFlags) {
         if (randomizationFlags & PARTICLE_RANDOM_VELOCITY_X) {
             particle->velocity.x += (f32) get_random_number_from_range(-behavior->velocityModifierRange.x,
-                                                                               behavior->velocityModifierRange.x) *
-                                            0.00001525878906;
+                                                                       behavior->velocityModifierRange.x) *
+                                    0.00001525878906;
         }
         if (randomizationFlags & PARTICLE_RANDOM_VELOCITY_Y) {
             particle->velocity.y += (f32) get_random_number_from_range(-behavior->velocityModifierRange.y,
-                                                                               behavior->velocityModifierRange.y) *
-                                            0.00001525878906;
+                                                                       behavior->velocityModifierRange.y) *
+                                    0.00001525878906;
         }
         if (randomizationFlags & PARTICLE_RANDOM_VELOCITY_Z) {
             particle->velocity.z += (f32) get_random_number_from_range(-behavior->velocityModifierRange.z,
-                                                                               behavior->velocityModifierRange.z) *
-                                            0.00001525878906;
+                                                                       behavior->velocityModifierRange.z) *
+                                    0.00001525878906;
         }
     }
 
@@ -1004,20 +1005,22 @@ void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *e
         sourceVel.z = -behavior->emissionSpeed;
 
         randomizationFlags = behavior->randomizationFlags;
-        if (randomizationFlags & PARTICLE_UNK00000010) {
+        if (randomizationFlags & PARTICLE_RANDOM_EMISSION_SPEED) {
             sourceVel.z +=
                 (f32) get_random_number_from_range(-behavior->emissionSpeedRange, behavior->emissionSpeedRange) *
                 0.00001525878906;
         }
 
-        if (randomizationFlags & (PARTICLE_UNK00000040 | PARTICLE_UNK00000020)) {
+        if (randomizationFlags & (PARTICLE_RANDOM_EMISSION_DIR_PITCH | PARTICLE_RANDOM_EMISSION_DIR_YAW)) {
             angle.y_rotation = emitter->angle.emissionDirection.y_rotation;
-            if (randomizationFlags & PARTICLE_UNK00000020) {
-                angle.y_rotation += get_random_number_from_range(-behavior->angleRangeY2, behavior->angleRangeY2);
+            if (randomizationFlags & PARTICLE_RANDOM_EMISSION_DIR_YAW) {
+                angle.y_rotation += get_random_number_from_range(-behavior->emissionDirRange.y_rotation,
+                                                                 behavior->emissionDirRange.y_rotation);
             }
             angle.x_rotation = emitter->angle.emissionDirection.x_rotation;
-            if (randomizationFlags & PARTICLE_UNK00000040) {
-                angle.x_rotation += get_random_number_from_range(-behavior->angleRangeX2, behavior->angleRangeX2);
+            if (randomizationFlags & PARTICLE_RANDOM_EMISSION_DIR_PITCH) {
+                angle.x_rotation += get_random_number_from_range(-behavior->emissionDirRange.x_rotation,
+                                                                 behavior->emissionDirRange.x_rotation);
             }
             f32_vec3_apply_object_rotation3(&angle, &sourceVel.x);
         } else {
@@ -1040,6 +1043,7 @@ void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *e
     particle->localPos.y = emitter->position.y;
     particle->localPos.z = emitter->position.z;
 
+    // particle->movementParam shares memory with other fields; use the appropriate one based on movement type
     particle->movementParam = behaviour->movementParam;
     if (behaviour->randomizationFlags & PARTICLE_RANDOM_MOVEMENT_PARAM) {
         particle->movementParam +=
@@ -1109,7 +1113,7 @@ PointParticle *init_point_particle(Object *obj, ParticleEmitter *emitter) {
     particle->base.segmentID = obj->segment.object.segmentID;
     particle->base.trans.flags = OBJ_FLAGS_PARTICLE;
     particle->base.movementType = descriptor->movementType;
-    particle->base.unk40 = descriptor->unk2;
+    particle->base.miscFlags = descriptor->unk2;
     particle->base.parentObj = obj;
     particle->pointEmitter = emitter;
     particle->base.trans.scale = descriptor->scale * behavior->scale;
@@ -1122,19 +1126,20 @@ PointParticle *init_point_particle(Object *obj, ParticleEmitter *emitter) {
     particle->base.colour.b = descriptor->colour.b;
     particle->base.colour.a = descriptor->colour.a;
 
-    if (particle->base.unk40 & PARTICLE_F40_800 && obj->shading != NULL) {
+    if (particle->base.miscFlags & PARTICLE_F40_800 && obj->shading != NULL) {
         particle->base.brightness = obj->shading->unk0 * 255.0f;
     } else {
         particle->base.brightness = 255;
     }
+
     particle->base.opacityTimer = descriptor->opacityTimer;
     if (emitter->flags & PARTICLE_BEHAVIOR_FLAG_100) {
-        particle->base.opacity = emitter->opacity;
+        particle->base.opacity = emitter->point_opacity;
     } else {
         particle->base.opacity = descriptor->opacity << 8;
     }
     if (descriptor->opacity < 255) {
-        if (particle->base.unk40 & PARTICLE_F40_1000) {
+        if (particle->base.miscFlags & PARTICLE_F40_1000) {
             particle->base.trans.flags |= OBJ_FLAGS_UNK_0100;
         } else {
             particle->base.trans.flags |= OBJ_FLAGS_UNK_0080;
@@ -1168,23 +1173,25 @@ PointParticle *init_point_particle(Object *obj, ParticleEmitter *emitter) {
 
     setup_particle_velocity(&particle->base, obj, emitter, behavior);
 
-    particle->base.gravity = gParticleGravityTable[(particle->base.unk40 >> 4) & 7];
+    particle->base.gravity = gParticleGravityTable[(particle->base.miscFlags >> 4) & 7];
     if (particle->base.movementType == PARTICLE_MOVEMENT_FORWARD) {
         particle->base.forwardVel = sqrtf((particle->base.velocity.x * particle->base.velocity.x) +
                                           (particle->base.velocity.y * particle->base.velocity.y) +
                                           (particle->base.velocity.z * particle->base.velocity.z));
     }
+
     if (behavior->flags & PARTICLE_SOURCE_ROTATION_ENABLED) {
-        emitter->angle.sourceRotation.z_rotation += behavior->unk1C.y_rotation;
-        emitter->angle.emissionDirection.y_rotation += behavior->unk1C.x_rotation;
-        ;
+        emitter->unkC_400.unk10 += behavior->sourceAngularVelocity.y_rotation;
+        emitter->unkC_400.unk12 += behavior->sourceAngularVelocity.x_rotation;
     }
-    if (behavior->flags & PARTICLE_BEHAVIOR_FLAG_8) {
-        emitter->angle.emissionDirection.x_rotation += behavior->unk2A;
-        emitter->angle.emissionDirection.z_rotation += behavior->unk2C;
+    if (behavior->flags & PARTICLE_ROTATING_DIRECTION) {
+        emitter->angle.emissionDirection.x_rotation += behavior->emissionDirAngularVelocity.y_rotation;
+        emitter->angle.emissionDirection.z_rotation += behavior->emissionDirAngularVelocity.x_rotation;
     }
-    particle->base.unk1A = descriptor->unk6;
+
+    particle->base.textureFrameStep = descriptor->textureFrameStep;
     particle->base.textureFrame = 0;
+
     model = particle->base.model;
     if (descriptor->textureID == -1) {
         model->texture = NULL;
@@ -1192,19 +1199,21 @@ PointParticle *init_point_particle(Object *obj, ParticleEmitter *emitter) {
         model->texture = load_texture(descriptor->textureID);
         if (model->texture != NULL) {
             if (model->texture->flags & 4) {
-                if (particle->base.unk40 & PARTICLE_F40_1000) {
+                if (particle->base.miscFlags & PARTICLE_F40_1000) {
                     particle->base.trans.flags |= OBJ_FLAGS_UNK_0100;
                 } else {
                     particle->base.trans.flags |= OBJ_FLAGS_UNK_0080;
                 }
             }
-            if ((particle->base.unk40 & (PARTICLE_F40_1 | PARTICLE_F40_2)) == PARTICLE_F40_2) {
+            if ((particle->base.miscFlags &
+                 (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) ==
+                PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED) {
                 particle->base.textureFrame = model->texture->numOfTextures - 1;
             }
         }
     }
     particle->modelFrame = 0;
-    particle->unk76 = ((u32) (u16) descriptor->lifeTimeRange) >> 10;
+    particle->unk76 = descriptor->qwe;
     particle->unk77 = 0;
     if (model->texture == NULL) {
         particle_deallocate(&particle->base);
@@ -1233,7 +1242,7 @@ Particle *init_line_particle(Object *obj, ParticleEmitter *emitter) {
     particle->segmentID = obj->segment.object.segmentID;
     particle->trans.flags = OBJ_FLAGS_PARTICLE;
     particle->movementType = descriptor->movementType;
-    particle->unk40 = descriptor->unk2;
+    particle->miscFlags = descriptor->unk2;
     particle->parentObj = obj;
     particle->lineEmitter = emitter;
     particle->trans.scale = descriptor->scale * sp28->scale;
@@ -1249,23 +1258,23 @@ Particle *init_line_particle(Object *obj, ParticleEmitter *emitter) {
         particle->colour.b = descriptor->colour.b;
     }
     particle->colour.a = descriptor->colour.a;
-    if (particle->unk40 & PARTICLE_F40_800 && obj->shading != NULL) {
+    if (particle->miscFlags & PARTICLE_F40_800 && obj->shading != NULL) {
         particle->brightness = obj->shading->unk0 * 255.0f;
     } else {
         particle->brightness = 0xFF;
     }
     particle->opacityTimer = descriptor->opacityTimer;
     particle->opacity = descriptor->opacity << 8;
-    if (descriptor->opacity < 0xFF) {
-        if (particle->unk40 & PARTICLE_F40_1000) {
+    if (descriptor->opacity < 255) {
+        if (particle->miscFlags & PARTICLE_F40_1000) {
             particle->trans.flags |= OBJ_FLAGS_UNK_0100;
         } else {
             particle->trans.flags |= OBJ_FLAGS_UNK_0080;
         }
     }
     if (particle->opacityTimer < particle->destroyTimer) {
-        particle->opacityVel = (((descriptor->opacityVel - descriptor->opacity) << 8) /
-                                (particle->destroyTimer - particle->opacityTimer));
+        particle->opacityVel =
+            (((descriptor->opacityVel - descriptor->opacity) << 8) / (particle->destroyTimer - particle->opacityTimer));
     } else {
         particle->opacityVel = 0;
     }
@@ -1281,7 +1290,7 @@ Particle *init_line_particle(Object *obj, ParticleEmitter *emitter) {
     particle->unk68b = 0;
     particle->unk6Ab = 0;
     particle->unk6Bb = -1;
-    particle->unk1A = descriptor->unk6;
+    particle->textureFrameStep = descriptor->textureFrameStep;
     particle->textureFrame = 0;
     model = particle->model;
     if (descriptor->textureID == -1) {
@@ -1290,13 +1299,15 @@ Particle *init_line_particle(Object *obj, ParticleEmitter *emitter) {
         model->texture = load_texture(descriptor->textureID);
         if (model->texture != NULL) {
             if (model->texture->flags & 4) {
-                if (particle->unk40 & PARTICLE_F40_1000) {
+                if (particle->miscFlags & PARTICLE_F40_1000) {
                     particle->trans.flags |= OBJ_FLAGS_UNK_0100;
                 } else {
                     particle->trans.flags |= OBJ_FLAGS_UNK_0080;
                 }
             }
-            if ((particle->unk40 & (PARTICLE_F40_1 | PARTICLE_F40_2)) == PARTICLE_F40_2) {
+            if ((particle->miscFlags &
+                 (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) ==
+                PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED) {
                 particle->textureFrame = model->texture->numOfTextures - 1;
             }
         }
@@ -1324,7 +1335,7 @@ Particle *init_line_particle(Object *obj, ParticleEmitter *emitter) {
     particle->trans.x_position = obj->segment.trans.x_position;
     particle->trans.y_position = obj->segment.trans.y_position;
     particle->trans.z_position = obj->segment.trans.z_position;
-    emitter->opacity = 0;
+    emitter->line_opacity = 0;
     return particle;
 }
 
@@ -1352,9 +1363,9 @@ Particle *init_general_particle(Object *obj, ParticleEmitter *emitter) {
     particle->segmentID = obj->segment.object.segmentID;
     particle->trans.flags = OBJ_FLAGS_PARTICLE;
     particle->movementType = descriptor->movementType;
-    particle->unk40 = descriptor->unk2;
+    particle->miscFlags = descriptor->unk2;
     particle->parentObj = obj;
-    if ((particle->unk40 & PARTICLE_F40_800) && obj->shading != NULL) {
+    if ((particle->miscFlags & PARTICLE_F40_800) && obj->shading != NULL) {
         particle->brightness = obj->shading->unk0 * 255.0f;
     } else {
         particle->brightness = 255;
@@ -1362,27 +1373,30 @@ Particle *init_general_particle(Object *obj, ParticleEmitter *emitter) {
 
     scale = behaviour->scale;
     if (behaviour->randomizationFlags & PARTICLE_RANDOM_SCALE) {
-        scale += (f32) get_random_number_from_range(-behaviour->unk8C, behaviour->unk8C) * 0.00001525878906;
+        scale += (f32) get_random_number_from_range(-behaviour->scaleRange, behaviour->scaleRange) * 0.00001525878906;
     }
     particle->trans.scale = descriptor->scale * scale;
 
     scale = behaviour->scaleVelocity;
     if (behaviour->randomizationFlags & PARTICLE_RANDOM_SCALE_VELOCITY) {
-        scale += (f32) get_random_number_from_range(-behaviour->unk90, behaviour->unk90) * 0.00001525878906;
+        scale += (f32) get_random_number_from_range(-behaviour->scaleVelocityRange, behaviour->scaleVelocityRange) *
+                 0.00001525878906;
     }
     if (behaviour->flags & PARTICLE_SCALE_VELOCITY_INHERITS_PARENT_SPEED) {
         particle->scaleVelocity = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
-                                                (obj->segment.y_velocity * obj->segment.y_velocity) +
-                                                (obj->segment.z_velocity * obj->segment.z_velocity)) *
-                                          scale * 0.1f;
+                                        (obj->segment.y_velocity * obj->segment.y_velocity) +
+                                        (obj->segment.z_velocity * obj->segment.z_velocity)) *
+                                  scale * 0.1f;
     } else {
         particle->scaleVelocity = descriptor->scale * scale;
     }
 
     particle->destroyTimer =
         get_random_number_from_range(-descriptor->lifeTimeRange, descriptor->lifeTimeRange) + descriptor->lifeTime;
+
     particle->unk38 = 0;
     particle->unk34 = 0.0f;
+
     if (D_800E2D00[0].word != 0) {
         particle->colour.word = D_800E2D00[0].word;
     } else if ((s32) colorLoop != -1) {
@@ -1419,7 +1433,7 @@ Particle *init_general_particle(Object *obj, ParticleEmitter *emitter) {
     particle->opacityTimer = descriptor->opacityTimer;
     particle->opacity = descriptor->opacity * gParticleOpacity;
     if (descriptor->opacity < 255) {
-        if (particle->unk40 & PARTICLE_F40_1000) {
+        if (particle->miscFlags & PARTICLE_F40_1000) {
             particle->trans.flags |= OBJ_FLAGS_UNK_0100;
         } else {
             particle->trans.flags |= OBJ_FLAGS_UNK_0080;
@@ -1432,24 +1446,27 @@ Particle *init_general_particle(Object *obj, ParticleEmitter *emitter) {
         particle->opacityVel = 0;
     }
     sp23 = 0;
-    particle->unk1A = descriptor->unk6;
+    particle->textureFrameStep = descriptor->textureFrameStep;
     if (particle->kind == PARTICLE_KIND_SPRITE) {
         particle->sprite = (Sprite *) func_8007C12C(descriptor->textureID, 0);
         if (particle->sprite != NULL) {
             if (particle->sprite->frames[0]->flags & 4) {
-                if (particle->unk40 & PARTICLE_F40_1000) {
+                if (particle->miscFlags & PARTICLE_F40_1000) {
                     particle->trans.flags |= OBJ_FLAGS_UNK_0100;
                 } else {
                     particle->trans.flags |= OBJ_FLAGS_UNK_0080;
                 }
             }
-            if (behaviour->flags & PARTICLE_ANGLE_Y) {
-                particle->textureFrame = get_random_number_from_range(0, particle->sprite->baseTextureId - 1)
-                                                 << 8;
-                if ((particle->unk40 & (PARTICLE_F40_1 | PARTICLE_F40_2)) == PARTICLE_F40_2) {
+            if (behaviour->flags & PARTICLE_BEHAVIOR_FLAG_800) {
+                particle->textureFrame = get_random_number_from_range(0, particle->sprite->baseTextureId - 1) << 8;
+                if ((particle->miscFlags &
+                     (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) ==
+                    PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED) {
                     particle->textureFrame |= 0xFF;
                 }
-            } else if ((particle->unk40 & (PARTICLE_F40_1 | PARTICLE_F40_2)) == PARTICLE_F40_2) {
+            } else if ((particle->miscFlags &
+                        (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) ==
+                       PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED) {
                 particle->textureFrame = (particle->sprite->baseTextureId << 8) - 1;
             } else {
                 particle->textureFrame = 0;
@@ -1457,26 +1474,28 @@ Particle *init_general_particle(Object *obj, ParticleEmitter *emitter) {
         } else {
             sp23 = 1;
         }
-    } else if ((particle->kind == PARTICLE_KIND_RECTANGLE) ||
-               (particle->kind == PARTICLE_KIND_TRIANGLE)) {
+    } else if ((particle->kind == PARTICLE_KIND_RECTANGLE) || (particle->kind == PARTICLE_KIND_TRIANGLE)) {
         texture = &particle->model->texture;
         if (texture) {
             *texture = load_texture(descriptor->textureID);
             if (*texture != NULL) {
                 if ((*texture)->flags & 4) {
-                    if (particle->unk40 & PARTICLE_F40_1000) {
+                    if (particle->miscFlags & PARTICLE_F40_1000) {
                         particle->trans.flags |= OBJ_FLAGS_UNK_0100;
                     } else {
                         particle->trans.flags |= OBJ_FLAGS_UNK_0080;
                     }
                 }
                 if (behaviour->flags & PARTICLE_BEHAVIOR_FLAG_800) {
-                    particle->textureFrame =
-                        get_random_number_from_range(0, ((*texture)->numOfTextures >> 8) - 1) << 8;
-                    if ((particle->unk40 & (PARTICLE_F40_1 | PARTICLE_F40_2)) == PARTICLE_F40_2) {
+                    particle->textureFrame = get_random_number_from_range(0, ((*texture)->numOfTextures >> 8) - 1) << 8;
+                    if ((particle->miscFlags &
+                         (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) ==
+                        PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED) {
                         particle->textureFrame |= 0xFF;
                     }
-                } else if ((particle->unk40 & (PARTICLE_F40_1 | PARTICLE_F40_2)) == PARTICLE_F40_2) {
+                } else if ((particle->miscFlags &
+                            (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) ==
+                           PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED) {
                     particle->textureFrame = (*texture)->numOfTextures - 1;
                 } else {
                     particle->textureFrame = 0;
@@ -1502,69 +1521,72 @@ Particle *init_general_particle(Object *obj, ParticleEmitter *emitter) {
         particle->trans.rotation.x_rotation = behaviour->rotation.x_rotation;
         particle->trans.rotation.z_rotation = behaviour->rotation.z_rotation;
     } else {
-        particle->trans.rotation.y_rotation =
-            obj->segment.trans.rotation.y_rotation + behaviour->rotation.y_rotation;
-        particle->trans.rotation.x_rotation =
-            obj->segment.trans.rotation.x_rotation + behaviour->rotation.x_rotation;
-        particle->trans.rotation.z_rotation =
-            obj->segment.trans.rotation.z_rotation + behaviour->rotation.z_rotation;
+        particle->trans.rotation.y_rotation = obj->segment.trans.rotation.y_rotation + behaviour->rotation.y_rotation;
+        particle->trans.rotation.x_rotation = obj->segment.trans.rotation.x_rotation + behaviour->rotation.x_rotation;
+        particle->trans.rotation.z_rotation = obj->segment.trans.rotation.z_rotation + behaviour->rotation.z_rotation;
     }
-    randomizationFlags = behaviour->randomizationFlags & (PARTICLE_ANGLE_Z | PARTICLE_ANGLE_X | PARTICLE_ANGLE_Y);
+    randomizationFlags =
+        behaviour->randomizationFlags & (PARTICLE_RANDOM_ROLL | PARTICLE_RANDOM_PITCH | PARTICLE_RANDOM_YAW);
     if (randomizationFlags != 0) {
-        if (randomizationFlags & PARTICLE_ANGLE_Y) {
+        if (randomizationFlags & PARTICLE_RANDOM_YAW) {
             particle->trans.rotation.y_rotation +=
-                get_random_number_from_range(-behaviour->angleRangeY3, behaviour->angleRangeY3);
+                get_random_number_from_range(-behaviour->rotationRange.y_rotation, behaviour->rotationRange.y_rotation);
         }
-        if (randomizationFlags & PARTICLE_ANGLE_X) {
+        if (randomizationFlags & PARTICLE_RANDOM_PITCH) {
             particle->trans.rotation.x_rotation +=
-                get_random_number_from_range(-behaviour->angleRangeX3, behaviour->angleRangeX3);
+                get_random_number_from_range(-behaviour->rotationRange.x_rotation, behaviour->rotationRange.x_rotation);
         }
-        if (randomizationFlags & PARTICLE_ANGLE_Z) {
+        if (randomizationFlags & PARTICLE_RANDOM_ROLL) {
             particle->trans.rotation.z_rotation +=
-                get_random_number_from_range(-behaviour->angleRangeZ3, behaviour->angleRangeZ3);
+                get_random_number_from_range(-behaviour->rotationRange.z_rotation, behaviour->rotationRange.z_rotation);
         }
     }
+
     particle->angularVelocity.y_rotation = behaviour->angularVelocity.y_rotation;
     particle->angularVelocity.x_rotation = behaviour->angularVelocity.x_rotation;
     particle->angularVelocity.z_rotation = behaviour->angularVelocity.z_rotation;
     randomizationFlags =
-        behaviour->randomizationFlags & (PARTICLE_ANGLEVEL_Z | PARTICLE_ANGLEVEL_X | PARTICLE_ANGLEVEL_Y);
+        behaviour->randomizationFlags &
+        (PARTCILE_RANDOM_ROLL_VELOCITY | PARTCILE_RANDOM_PITCH_VELOCITY | PARTCILE_RANDOM_YAW_VELOCITY);
     if (randomizationFlags) {
-        if (randomizationFlags & PARTICLE_ANGLEVEL_Y) {
-            particle->angularVelocity.y_rotation += get_random_number_from_range(-behaviour->unk86, behaviour->unk86);
+        if (randomizationFlags & PARTCILE_RANDOM_YAW_VELOCITY) {
+            particle->angularVelocity.y_rotation += get_random_number_from_range(
+                -behaviour->angularVelocityRange.y_rotation, behaviour->angularVelocityRange.y_rotation);
         }
-        if (randomizationFlags & PARTICLE_ANGLEVEL_X) {
-            particle->angularVelocity.x_rotation += get_random_number_from_range(-behaviour->unk88, behaviour->unk88);
+        if (randomizationFlags & PARTCILE_RANDOM_PITCH_VELOCITY) {
+            particle->angularVelocity.x_rotation += get_random_number_from_range(
+                -behaviour->angularVelocityRange.x_rotation, behaviour->angularVelocityRange.x_rotation);
         }
-        if (randomizationFlags & PARTICLE_ANGLEVEL_Z) {
-            particle->angularVelocity.z_rotation += get_random_number_from_range(-behaviour->unk8A, behaviour->unk8A);
+        if (randomizationFlags & PARTCILE_RANDOM_ROLL_VELOCITY) {
+            particle->angularVelocity.z_rotation += get_random_number_from_range(
+                -behaviour->angularVelocityRange.z_rotation, behaviour->angularVelocityRange.z_rotation);
         }
     }
 
     setup_particle_velocity(particle, obj, emitter, behaviour);
 
-    particle->gravity = gParticleGravityTable[(particle->unk40 >> 4) & 7];
+    particle->gravity = gParticleGravityTable[(particle->miscFlags >> 4) & 7];
     if (particle->movementType == PARTICLE_MOVEMENT_FORWARD) {
-        particle->forwardVel = sqrtf((particle->velocity.x * particle->velocity.x) +
-                                     (particle->velocity.y * particle->velocity.y) +
-                                     (particle->velocity.z * particle->velocity.z));
+        particle->forwardVel =
+            sqrtf((particle->velocity.x * particle->velocity.x) + (particle->velocity.y * particle->velocity.y) +
+                  (particle->velocity.z * particle->velocity.z));
     }
     if (behaviour->flags & PARTICLE_SOURCE_ROTATION_ENABLED) {
-        emitter->general_unk6++;
-        if (emitter->general_unk6 >= behaviour->unk1A) {
-            emitter->angle.sourceRotation.y_rotation += behaviour->unk1C.y_rotation;
-            emitter->angle.sourceRotation.x_rotation += behaviour->unk1C.x_rotation;
-            emitter->angle.sourceRotation.z_rotation += behaviour->unk14.z_rotation;
-            emitter->general_unk6 -= behaviour->unk1A;
+        emitter->sourceRotationCounter++;
+        if (emitter->sourceRotationCounter >= behaviour->maxParticlesFromSamePos) {
+            emitter->angle.sourceRotation.y_rotation += behaviour->sourceAngularVelocity.y_rotation;
+            emitter->angle.sourceRotation.x_rotation += behaviour->sourceAngularVelocity.x_rotation;
+            emitter->angle.sourceRotation.z_rotation += behaviour->sourceRotation.z_rotation; //!@bug wrong field used
+            emitter->sourceRotationCounter -= behaviour->maxParticlesFromSamePos;
         }
     }
-    if (behaviour->flags & PARTICLE_BEHAVIOR_FLAG_8) {
-        emitter->lifeTime++;
-        if (emitter->lifeTime >= behaviour->unk28) {
-            emitter->angle.emissionDirection.y_rotation += behaviour->unk2A;
-            emitter->angle.emissionDirection.x_rotation += behaviour->unk2C;
-            emitter->angle.emissionDirection.z_rotation += behaviour->unk2E;
-            emitter->lifeTime -= behaviour->unk28;
+    if (behaviour->flags & PARTICLE_ROTATING_DIRECTION) {
+        emitter->emissionDirRotationCounter++;
+        if (emitter->emissionDirRotationCounter >= behaviour->maxParticlesInSameDir) {
+            emitter->angle.emissionDirection.y_rotation += behaviour->emissionDirAngularVelocity.y_rotation;
+            emitter->angle.emissionDirection.x_rotation += behaviour->emissionDirAngularVelocity.x_rotation;
+            emitter->angle.emissionDirection.z_rotation += behaviour->emissionDirAngularVelocity.z_rotation;
+            emitter->emissionDirRotationCounter -= behaviour->maxParticlesInSameDir;
         }
     }
     if (particle->model == NULL) {
@@ -1674,6 +1696,8 @@ void particle_deallocate(Particle *particle) {
     TextureHeader *tex;
 
     switch (particle->kind) {
+        case PARTICLE_KIND_NONE:
+            break;
         case PARTICLE_KIND_SPRITE:
             if (gNumSpriteParticles > 0) {
                 if (particle->model) {
@@ -1682,9 +1706,7 @@ void particle_deallocate(Particle *particle) {
                 gNumSpriteParticles--;
                 particle->kind = PARTICLE_KIND_NONE;
             }
-            break;
-        case PARTICLE_KIND_NONE:
-            return;
+            break;        
         case PARTICLE_KIND_TRIANGLE:
             if (gNumTriangleParticles > 0) {
                 tex = particle->model->texture;
@@ -1730,15 +1752,15 @@ void particle_deallocate(Particle *particle) {
 }
 
 void emitter_cleanup(ParticleEmitter *emitter) {
-    PointParticle *temp_v0;
+    PointParticle *pointParticle;
     s32 i;
 
     if (emitter->flags & PARTICLE_POINT) {
         if (emitter->unkC_400.unkC_60 != NULL) {
-            for (i = 0; i < emitter->pointsNumber; i++) {
-                temp_v0 = emitter->unkC_400.unkC_60[i];
-                temp_v0->base.destroyTimer = 0;
-                temp_v0->pointEmitter = 0;
+            for (i = 0; i < emitter->pointCount; i++) {
+                pointParticle = emitter->unkC_400.unkC_60[i];
+                pointParticle->base.destroyTimer = 0;
+                pointParticle->pointEmitter = NULL;
             }
             mempool_free(emitter->unkC_400.unkC_60);
             emitter->unkC_400.unkC_60 = NULL;
@@ -1761,9 +1783,9 @@ void particle_update(Particle *particle, s32 updateRate) {
         return;
     }
 
-    if (particle->unk40 & (PARTICLE_F40_1 | PARTICLE_F40_2)) {
+    if (particle->miscFlags & (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) {
         if (gParticleUpdateRate > 0) {
-            set_particle_texture_frame(particle);
+            update_particle_texture_frame(particle);
         }
     }
     if (particle->kind == PARTICLE_KIND_POINT) {
@@ -1774,8 +1796,8 @@ void particle_update(Particle *particle, s32 updateRate) {
     if (pointParticle == NULL || (pointParticle != NULL && pointParticle->pointEmitter != NULL)) {
         if (particle->movementType == PARTICLE_MOVEMENT_ACCELERATION) {
             move_particle_with_acceleration(particle);
-        } else if (particle->movementType == PARTICLE_MOVEMENT_VELOCITY_PARENT) {
-            move_particle_velocity_parent(particle);
+        } else if (particle->movementType == PARTICLE_MOVEMENT_ATTACHED_TO_PARENT) {
+            move_particle_attached_to_parent(particle);
         } else if (particle->movementType == PARTICLE_MOVEMENT_BASIC_PARENT) {
             move_particle_basic_parent(particle);
         } else if (particle->movementType == PARTICLE_MOVEMENT_FORWARD) {
@@ -1788,15 +1810,11 @@ void particle_update(Particle *particle, s32 updateRate) {
 
     boundingBox = get_segment_bounding_box(particle->segmentID);
     if (boundingBox != NULL) {
-        if (particle->trans.x_position < boundingBox->x1 ||
-            boundingBox->x2 < particle->trans.x_position ||
-            particle->trans.y_position < boundingBox->y1 ||
-            boundingBox->y2 < particle->trans.y_position ||
-            particle->trans.z_position < boundingBox->z1 ||
-            boundingBox->z2 < particle->trans.z_position) {
+        if (particle->trans.x_position < boundingBox->x1 || boundingBox->x2 < particle->trans.x_position ||
+            particle->trans.y_position < boundingBox->y1 || boundingBox->y2 < particle->trans.y_position ||
+            particle->trans.z_position < boundingBox->z1 || boundingBox->z2 < particle->trans.z_position) {
             particle->segmentID = get_level_segment_index_from_position(
-                particle->trans.x_position, particle->trans.y_position,
-                particle->trans.z_position);
+                particle->trans.x_position, particle->trans.y_position, particle->trans.z_position);
         }
     } else {
         particle->segmentID = get_level_segment_index_from_position(
@@ -1808,11 +1826,10 @@ void particle_update(Particle *particle, s32 updateRate) {
         free_object((Object *) particle);
         return;
     }
-
     if (particle->opacityTimer == 0) {
         particle->opacity += gParticleUpdateRate * particle->opacityVel;
         if (particle->opacity < 255) {
-            if (particle->unk40 & PARTICLE_F40_1000) {
+            if (particle->miscFlags & PARTICLE_F40_1000) {
                 particle->trans.flags |= OBJ_FLAGS_UNK_0100;
             } else {
                 particle->trans.flags |= OBJ_FLAGS_UNK_0080;
@@ -1836,13 +1853,13 @@ void func_800B263C(PointParticle *arg0) {
     temp_v0 = arg0->pointEmitter;
     if (temp_v0 != NULL) {
         new_var = temp_v0;
-        if (temp_v0->pointsNumber != 0) {
-            if (arg0 == temp_v0->unkC_400.unkC_60[arg0->unk74]) {
-                temp_v0->pointsNumber--;
-                for (i = arg0->unk74; i < temp_v0->pointsNumber; i++) {
+        if (temp_v0->pointCount != 0) {
+            if (arg0 == temp_v0->unkC_400.unkC_60[arg0->pointIndex]) {
+                temp_v0->pointCount--;
+                for (i = arg0->pointIndex; i < temp_v0->pointCount; i++) {
                     new_var->unkC_400.unkC_60[i] = new_var->unkC_400.unkC_60[i + 1];
                     new_var2 = new_var->unkC_400.unkC_60[i];
-                    new_var2->unk74 = i;
+                    new_var2->pointIndex = i;
                 }
             }
         }
@@ -1856,16 +1873,16 @@ void update_line_particle(Particle *particle) {
     ParticleModel *model;
     Object *obj;
     ParticleEmitter *emitter;
-    ColorLoopEntry *sp2C;
+    ColorLoopEntry *colorLoop;
     ColorLoopEntry **sp2C_ptr;
 
     obj = particle->parentObj;
     model = NULL;
-    sp2C_ptr = &sp2C;
+    sp2C_ptr = &colorLoop;
 
     if (obj != NULL) {
         emitter = particle->lineEmitter;
-        sp2C = emitter->behaviour->colorLoop;
+        colorLoop = emitter->behaviour->colorLoop;
         model = particle->model;
     }
     if (particle->unk68b < 2 && obj != NULL) {
@@ -1877,7 +1894,7 @@ void update_line_particle(Particle *particle) {
         } else {
             scale = particle->trans.scale;
         }
-        if (!(particle->unk40 & PARTICLE_F40_4000)) {
+        if (!(particle->miscFlags & PARTICLE_F40_4000)) {
             sp44.x = 0.0f;
             sp44.y = 0.0f;
             sp44.z = 0.0f;
@@ -1975,7 +1992,7 @@ void update_line_particle(Particle *particle) {
         } else if (particle->opacityTimer == 0) {
             particle->opacity += gParticleUpdateRate * particle->opacityVel;
             if (particle->opacity < 255) {
-                if (particle->unk40 & PARTICLE_F40_1000) {
+                if (particle->miscFlags & PARTICLE_F40_1000) {
                     particle->trans.flags |= OBJ_FLAGS_UNK_0100;
                 } else {
                     particle->trans.flags |= OBJ_FLAGS_UNK_0080;
@@ -1989,65 +2006,69 @@ void update_line_particle(Particle *particle) {
             }
         }
     }
-    if (model != NULL && model->texture != NULL && (particle->unk40 & (PARTICLE_F40_1 | PARTICLE_F40_2)) &&
+    if (model != NULL && model->texture != NULL &&
+        (particle->miscFlags & (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) &&
         gParticleUpdateRate > 0) {
-        set_particle_texture_frame(particle);
+        update_particle_texture_frame(particle);
     }
 }
 
-void set_particle_texture_frame(Particle *particle) {
-    s32 someFlag;
+/**
+ * Updates the current animation frame based on the animation flags.
+ */
+void update_particle_texture_frame(Particle *particle) {
+    s32 currentlyBackward;
     s32 keepGoing;
     s32 i;
     s32 textureCount;
-    s32 someFlag2;
-    s32 someFlag3;
-    s32 someFlag4;
+    s32 backwardEnabled;
+    s32 isLooped;
+    s32 forwardEnabled;
 
     keepGoing = -1;
+    i = 0; // required to match
+    textureCount = particle->kind == PARTICLE_KIND_SPRITE ? particle->sprite->baseTextureId * 256
+                                                          : particle->model->texture->numOfTextures;
 
-    i = PARTICLE_KIND_SPRITE; // This is needed to match.
-    if (particle->kind == PARTICLE_KIND_SPRITE) {
-        textureCount = particle->sprite->baseTextureId * 256;
-    } else {
-        textureCount = particle->model->texture->numOfTextures;
-    }
+    forwardEnabled = particle->miscFlags & PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED;
+    backwardEnabled = particle->miscFlags & PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED;
+    isLooped = particle->miscFlags & PARTICLE_TEXTURE_ANIM_LOOP;
+    currentlyBackward = particle->miscFlags & PARTICLE_CURRENT_ANIMATION_BACKWARD;
 
-    someFlag4 = particle->unk40 & PARTICLE_F40_1;
-    someFlag2 = particle->unk40 & PARTICLE_F40_2;
-    someFlag3 = particle->unk40 & PARTICLE_F40_4;
-    someFlag = particle->unk40 & PARTICLE_F40_8;
     for (i = 0; (i++ < gParticleUpdateRate) && keepGoing;) {
-        if (!someFlag) {
-            particle->textureFrame += particle->unk1A;
+        if (!currentlyBackward) {
+            particle->textureFrame += particle->textureFrameStep;
             if (particle->textureFrame >= textureCount) {
-                if (someFlag2) {
-                    particle->textureFrame = ((textureCount * 2) - particle->textureFrame) - 1;
-                    someFlag = TRUE;
-                    particle->unk40 |= PARTICLE_F40_8;
-                } else if (someFlag3) {
+                if (backwardEnabled) {
+                    //!@bug the last frame is displayed twice
+                    particle->textureFrame = 2 * textureCount - 1 - particle->textureFrame;
+                    currentlyBackward = TRUE;
+                    particle->miscFlags |= PARTICLE_CURRENT_ANIMATION_BACKWARD;
+                } else if (isLooped) {
                     particle->textureFrame -= textureCount;
                 } else {
                     particle->textureFrame = textureCount - 1;
                     keepGoing = FALSE;
-                    particle->unk40 &= ~(PARTICLE_F40_1 | PARTICLE_F40_2);
+                    particle->miscFlags &=
+                        ~(PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED);
                 }
             }
         } else {
-            particle->textureFrame -= particle->unk1A;
+            particle->textureFrame -= particle->textureFrameStep;
             if (particle->textureFrame < 0) {
-                if (someFlag3) {
-                    if (someFlag4) {
+                if (isLooped) {
+                    if (forwardEnabled) {
                         particle->textureFrame = -particle->textureFrame;
-                        someFlag = FALSE;
-                        particle->unk40 &= ~PARTICLE_F40_8;
+                        currentlyBackward = FALSE;
+                        particle->miscFlags &= ~PARTICLE_CURRENT_ANIMATION_BACKWARD;
                     } else {
                         particle->textureFrame += textureCount;
                     }
                 } else {
                     particle->textureFrame = 0;
                     keepGoing = FALSE;
-                    particle->unk40 &= ~(PARTICLE_F40_1 | PARTICLE_F40_2);
+                    particle->miscFlags &=
+                        ~(PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED);
                 }
             }
         }
@@ -2089,7 +2110,7 @@ void move_particle_basic_parent(Particle *particle) {
  * Translates the particle downward in the object's local coordinate system by downOffset.
  * Applies additional translation based on the parent's position.
  */
-void move_particle_velocity_parent(Particle *particle) {
+void move_particle_attached_to_parent(Particle *particle) {
     s32 i = gParticleUpdateRate;
     Object *parent;
 
@@ -2176,6 +2197,8 @@ void move_particle_forward(Particle *particle) {
         particle->velocity.z = -particle->forwardVel;
         f32_vec3_apply_object_rotation3(&particle->trans.rotation, particle->velocity.f);
         particle->trans.x_position += particle->velocity.x;
+        // Gravity is subtracted here, but velocity isn't actually affected by it — possible bug?
+        // Might cause the particle to drift downward instead of moving straight forward.
         particle->trans.y_position += particle->velocity.y - particle->gravity;
         particle->trans.z_position += particle->velocity.z;
         particle->trans.scale += particle->scaleVelocity;
@@ -2186,7 +2209,8 @@ void move_particle_forward(Particle *particle) {
 }
 
 /**
- * Iterate through every object and render it as particle if applicable.
+ * Iterates through every object and renders it as a particle if applicable.
+ * Only particles with the PARTICLE_UNK_FLAG_8000 flag set will be rendered.
  */
 UNUSED void render_active_particles(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
     UNUSED s32 pad;
@@ -2198,7 +2222,7 @@ UNUSED void render_active_particles(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
     objects = (Particle **) objGetObjList(&minObjIndex, &maxObjIndex);
     for (; minObjIndex < maxObjIndex; minObjIndex++) {
         if (objects[minObjIndex]->trans.flags & OBJ_FLAGS_PARTICLE) {
-            if (objects[minObjIndex]->unk40 & PARTICLE_F40_8000) {
+            if (objects[minObjIndex]->miscFlags & PARTICLE_UNK_FLAG_8000) {
                 render_particle(objects[minObjIndex], dList, mtx, vtx, 0);
             }
         }
@@ -2218,15 +2242,14 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
     renderFlags = (RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
 
     // Never true
-    if ((particle->unk40 & flags) && D_800E2CDC < 512) {
+    if ((particle->miscFlags & flags) && D_800E2CDC < 512) {
         return;
     }
     alpha = (particle->opacity >> 8) & 0xFF;
     if (alpha <= 0) {
         return;
     }
-    if (particle->kind != PARTICLE_KIND_POINT &&
-        particle->kind != PARTICLE_KIND_LINE) {
+    if (particle->kind != PARTICLE_KIND_POINT && particle->kind != PARTICLE_KIND_LINE) {
         gDPSetEnvColor((*dList)++, particle->colour.r, particle->colour.g, particle->colour.b, particle->colour.a);
         if (alpha != 255) {
             renderFlags = (RENDER_Z_UPDATE | RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE);
@@ -2304,128 +2327,137 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
 void func_800B3E64(PointParticle *obj) {
     UNUSED s32 pad;
     s32 index;
-    Vec3f vec3_1;
-    Vec3f vec3_0;
-    PointParticle *temp_s0;
-    PointParticle *prev_s0;
+    Vec3f vec_up;
+    Vec3f vec_right;
+    PointParticle *particle;
+    PointParticle *prev_particle;
     ParticleEmitter *emitter;
-    ParticleModel *temp_s1;
+    ParticleModel *model;
     Vertex *otherVerts;
     Vertex *verts;
-    ParticleModel *prev_s1;
+    ParticleModel *prev_model;
 
     emitter = obj->pointEmitter;
-    prev_s0 = NULL;
-    prev_s1 = NULL;
+    prev_particle = NULL;
+    prev_model = NULL;
     if (emitter != NULL) {
         if (emitter->unkC_400.unkC_60 != NULL) {
-            index = emitter->pointsNumber - 1;
-            while (index >= 0) {
-                temp_s0 = emitter->unkC_400.unkC_60[index];
-                if (temp_s0->base.destroyTimer != 0) {
-                    temp_s1 = temp_s0->base.model;
-                    vec3_0.x = temp_s0->base.trans.scale;
-                    vec3_0.y = 0.0f;
-                    vec3_0.z = 0.0f;
-                    f32_vec3_apply_object_rotation(&temp_s0->base.trans, vec3_0.f);
-                    vec3_1.x = 0.0f;
-                    vec3_1.y = temp_s0->base.trans.scale;
-                    vec3_1.z = 0.0f;
-                    f32_vec3_apply_object_rotation(&temp_s0->base.trans, vec3_1.f);
-
-                    // It seems super odd to do negative indices. Why not just increment by 4 and add up from there?
-                    verts = &temp_s1->vertices[temp_s0->modelFrame << 3];
-                    if (1) {}
-                    if (1) {}
-                    if (1) {}
-                    if (1) {}
-                    if (1) {}
-                    if (1) {} // Fake
-                    verts += 7;
-                    verts[-3].x = temp_s0->base.trans.x_position + vec3_0.f[0];
-                    verts[-3].y = temp_s0->base.trans.y_position + vec3_0.f[1];
-                    verts[-3].z = temp_s0->base.trans.z_position + vec3_0.f[2];
-                    verts[-3].r = temp_s0->base.colour.r;
-                    verts[-3].g = temp_s0->base.colour.g;
-                    verts[-3].b = temp_s0->base.colour.b;
-                    verts[-3].a = temp_s0->base.opacity >> 8;
-
-                    verts[-2].x = temp_s0->base.trans.x_position + vec3_1.f[0];
-                    verts[-2].y = temp_s0->base.trans.y_position + vec3_1.f[1];
-                    verts[-2].z = temp_s0->base.trans.z_position + vec3_1.f[2];
-                    verts[-2].r = temp_s0->base.colour.r;
-                    verts[-2].g = temp_s0->base.colour.g;
-                    verts[-2].b = temp_s0->base.colour.b;
-                    verts[-2].a = temp_s0->base.opacity >> 8;
-
-                    verts[-1].x = temp_s0->base.trans.x_position - vec3_0.f[0];
-                    verts[-1].y = temp_s0->base.trans.y_position - vec3_0.f[1];
-                    verts[-1].z = temp_s0->base.trans.z_position - vec3_0.f[2];
-                    verts[-1].r = temp_s0->base.colour.r;
-                    verts[-1].g = temp_s0->base.colour.g;
-                    verts[-1].b = temp_s0->base.colour.b;
-                    verts[-1].a = temp_s0->base.opacity >> 8;
-
-                    verts[0].x = temp_s0->base.trans.x_position - vec3_1.f[0];
-                    verts[0].y = temp_s0->base.trans.y_position - vec3_1.f[1];
-                    verts[0].z = temp_s0->base.trans.z_position - vec3_1.f[2];
-                    verts[0].r = temp_s0->base.colour.r;
-                    verts[0].g = temp_s0->base.colour.g;
-                    verts[0].b = temp_s0->base.colour.b;
-                    verts[0].a = temp_s0->base.opacity >> 8;
-
-                    verts = &temp_s1->vertices[temp_s0->modelFrame << 3];
-                    if (prev_s1 != NULL) {
-                        if (1) { // Fake
-                            otherVerts = &prev_s1->vertices[prev_s0->modelFrame << 3];
-                        }
-                        otherVerts += 4;
-                    } else {
-                        otherVerts = &temp_s1->vertices[temp_s0->modelFrame << 3];
-                        otherVerts += 4;
-                    }
-
-                    index--;
-                    verts += 3;
-                    otherVerts += 3;
-
-                    prev_s0 = temp_s0;
-                    prev_s1 = temp_s1;
-
-                    verts[-3].x = otherVerts[-3].x;
-                    verts[-3].y = otherVerts[-3].y;
-                    verts[-3].z = otherVerts[-3].z;
-                    verts[-3].r = otherVerts[-3].r;
-                    verts[-3].g = otherVerts[-3].g;
-                    verts[-3].b = otherVerts[-3].b;
-                    verts[-3].a = otherVerts[-3].a;
-                    verts[-2].x = otherVerts[-2].x;
-                    verts[-2].y = otherVerts[-2].y;
-                    verts[-2].z = otherVerts[-2].z;
-                    verts[-2].r = otherVerts[-2].r;
-                    verts[-2].g = otherVerts[-2].g;
-                    verts[-2].b = otherVerts[-2].b;
-                    verts[-2].a = otherVerts[-2].a;
-                    verts[-1].x = otherVerts[-1].x;
-                    verts[-1].y = otherVerts[-1].y;
-                    verts[-1].z = otherVerts[-1].z;
-                    verts[-1].r = otherVerts[-1].r;
-                    verts[-1].g = otherVerts[-1].g;
-                    verts[-1].b = otherVerts[-1].b;
-                    verts[-1].a = otherVerts[-1].a;
-                    verts[0].x = otherVerts[0].x;
-                    verts[0].y = otherVerts[0].y;
-                    verts[0].z = otherVerts[0].z;
-                    verts[0].r = otherVerts[0].r;
-                    verts[0].g = otherVerts[0].g;
-                    verts[0].b = otherVerts[0].b;
-                    verts[0].a = otherVerts[0].a;
-
-                    temp_s0->unk77 = -1;
-
-                    continue;
+            for (index = emitter->pointCount - 1; index >= 0; index--) {
+                particle = emitter->unkC_400.unkC_60[index];
+                if (particle->base.destroyTimer == 0) {
+                    break;
                 }
-                break;
+
+                model = particle->base.model;
+                vec_right.x = particle->base.trans.scale;
+                vec_right.y = 0.0f;
+                vec_right.z = 0.0f;
+                f32_vec3_apply_object_rotation(&particle->base.trans, vec_right.f);
+                vec_up.x = 0.0f;
+                vec_up.y = particle->base.trans.scale;
+                vec_up.z = 0.0f;
+                f32_vec3_apply_object_rotation(&particle->base.trans, vec_up.f);
+
+                verts = &model->vertices[(particle->modelFrame << 3)];
+                if (1) {}
+                if (1) {}
+                if (1) {}
+                if (1) {} // Fake
+
+                verts += 4;
+
+                verts->x = particle->base.trans.x_position + vec_right.f[0];
+                verts->y = particle->base.trans.y_position + vec_right.f[1];
+                verts->z = particle->base.trans.z_position + vec_right.f[2];
+                verts->r = particle->base.colour.r;
+                verts->g = particle->base.colour.g;
+                verts->b = particle->base.colour.b;
+                verts->a = particle->base.opacity >> 8;
+                verts++;
+
+                verts->x = particle->base.trans.x_position + vec_up.f[0];
+                verts->y = particle->base.trans.y_position + vec_up.f[1];
+                verts->z = particle->base.trans.z_position + vec_up.f[2];
+                verts->r = particle->base.colour.r;
+                verts->g = particle->base.colour.g;
+                verts->b = particle->base.colour.b;
+                verts->a = particle->base.opacity >> 8;
+                verts++;
+
+                verts->x = particle->base.trans.x_position - vec_right.f[0];
+                verts->y = particle->base.trans.y_position - vec_right.f[1];
+                verts->z = particle->base.trans.z_position - vec_right.f[2];
+                verts->r = particle->base.colour.r;
+                verts->g = particle->base.colour.g;
+                verts->b = particle->base.colour.b;
+                verts->a = particle->base.opacity >> 8;
+                verts++;
+
+                verts->x = particle->base.trans.x_position - vec_up.f[0];
+                verts->y = particle->base.trans.y_position - vec_up.f[1];
+                verts->z = particle->base.trans.z_position - vec_up.f[2];
+                verts->r = particle->base.colour.r;
+                verts->g = particle->base.colour.g;
+                verts->b = particle->base.colour.b;
+                verts->a = particle->base.opacity >> 8;
+                verts++;
+
+                verts = &model->vertices[particle->modelFrame << 3];
+                if (prev_model != NULL) {
+                    otherVerts = &prev_model->vertices[prev_particle->modelFrame << 3];
+                    otherVerts += 4;
+                } else {
+                    otherVerts = &model->vertices[particle->modelFrame << 3];
+                    otherVerts += 4;
+                }
+
+                verts->x = otherVerts->x;
+                verts->y = otherVerts->y;
+                verts->z = otherVerts->z;
+                verts->r = otherVerts->r;
+                verts->g = otherVerts->g;
+                verts->b = otherVerts->b;
+                verts->a = otherVerts->a;
+                verts++;
+                otherVerts++;
+                
+
+                verts->x = otherVerts->x;
+                verts->y = otherVerts->y;
+                verts->z = otherVerts->z;
+                verts->r = otherVerts->r;
+                verts->g = otherVerts->g;
+                verts->b = otherVerts->b;
+                verts->a = otherVerts->a;
+                verts++;
+                otherVerts++;
+                
+
+                verts->x = otherVerts->x;
+                verts->y = otherVerts->y;
+                verts->z = otherVerts->z;
+                verts->r = otherVerts->r;
+                verts->g = otherVerts->g;
+                verts->b = otherVerts->b;
+                verts->a = otherVerts->a;
+                verts++;
+                otherVerts++;
+                
+
+                verts->x = otherVerts->x;
+                verts->y = otherVerts->y;
+                verts->z = otherVerts->z;
+                verts->r = otherVerts->r;
+                verts->g = otherVerts->g;
+                verts->b = otherVerts->b;
+                verts->a = otherVerts->a;
+                verts++;
+                otherVerts++;
+
+                prev_particle = particle;
+                prev_model = model;
+
+                particle->unk77 = -1;
             }
         }
     }
@@ -2495,11 +2527,11 @@ void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3) {
     s32 temp_v0;
 
     arg3 <<= 8;
-    temp_v0 = (obj->particleEmitter[idx].opacity & 0xFFFF) + arg2;
+    temp_v0 = (obj->particleEmitter[idx].point_opacity & 0xFFFF) + arg2;
     if (arg3 < temp_v0) {
-        obj->particleEmitter[idx].opacity = arg3;
+        obj->particleEmitter[idx].point_opacity = arg3;
     } else {
-        obj->particleEmitter[idx].opacity = temp_v0;
+        obj->particleEmitter[idx].point_opacity = temp_v0;
     }
     obj->particleEmitter[idx].flags |= PARTICLE_BEHAVIOR_FLAG_100;
 }
@@ -2508,11 +2540,11 @@ void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3) {
     s32 temp_v0;
 
     arg3 <<= 8;
-    temp_v0 = (obj->particleEmitter[idx].opacity & 0xFFFF) - arg2;
+    temp_v0 = (obj->particleEmitter[idx].point_opacity & 0xFFFF) - arg2;
     if (temp_v0 < arg3) {
-        obj->particleEmitter[idx].opacity = arg3;
+        obj->particleEmitter[idx].point_opacity = arg3;
     } else {
-        obj->particleEmitter[idx].opacity = temp_v0;
+        obj->particleEmitter[idx].point_opacity = temp_v0;
     }
     obj->particleEmitter[idx].flags |= PARTICLE_BEHAVIOR_FLAG_100;
 }
