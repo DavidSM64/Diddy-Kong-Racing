@@ -122,37 +122,30 @@ enum ParticleField40 {
     PARTICLE_F40_8000 = 0x8000,
 };
 
-typedef struct ParticleProperties {
+typedef struct ParticleDescriptor {
   /* 0x00 */ u8 kind; // ParticleKind
   /* 0x01 */ u8 movementType; // ParticleMovement
   /* 0x02 */ u16 unk2;
   /* 0x04 */ s16 textureID;
   /* 0x06 */ s16 unk6;
+  /* 0x08 */ s16 lifeTime;
   union {
+    /* 0x0A */ s16 lifeTimeRange;
     struct {
-        /* 0x08 */ s16 lifeTime;
-        union {
-        /* 0x0A */ s16 lifeTimeRange;
-        /* 0x0A */ u16 lifeTimeRangeUnsigned;
-        };
+    /* 0x0A */ u16 unkA : 6;
+    /* 0x0A */ u16 unkB : 6;
     };
-    /* 0x08 */ s32 lifeTimeWord;
   };
   /* 0x0C */ u8 opacity;
   /* 0x0D */ u8 opacityVel;
   /* 0x0E */ s16 opacityTimer;
   /* 0x10 */ f32 scale;
   /* 0x14 */ ColourRGBA colour;
-} ParticleProperties;
+} ParticleDescriptor;
 
 typedef struct XYStruct {
     s16 x, y;
 } XYStruct;
-
-typedef struct unk800B1CB8_44_8 {
-    u8 pad0[6];
-    s16 unk6;
-} unk800B1CB8_44_8;
 
 typedef struct ColorLoopEntry {
     s32 unk0;
@@ -228,34 +221,22 @@ typedef struct unk800AF29C_C_400 {
 typedef struct ParticleEmitter {
     /* 0x00 */ ParticleBehavior *behaviour;
     /* 0x04 */ s16 flags;
-    /* 0x06 */ u8 unk6;
+    union {
+    /* 0x06 */ u8 general_unk6; // Used by general particles
+    /* 0x06 */ u8 line_unk6; // Used by line particles
+    /* 0x06 */ u8 pointsNumber; // Used by point particles
+    };
     /* 0x07 */ u8 lifeTime;
-    /* 0x08 */ s16 propertyID;
+    /* 0x08 */ s16 descriptorID;
     /* 0x0A */ s16 opacity;
     union {
-    /* 0x000C */ Vec3f pos; // Valid for line particle
+    /* 0x000C */ Vec3f lineAnchor; // Valid for line particle
     /* 0x000C */ unk800AF29C_C_400 unkC_400;
     /* 0x000C */ ParticleAngle angle;
     };
     /* 0x0018 */ Vec3s position; // Relative to parent object
     /* 0x001E */ s16 colorIndex;
 } ParticleEmitter;
-
-// TODO merge this struct with ObjectSegment
-typedef struct ParticleSegment {
-  /* 0x0000 */ ObjectTransform trans;
-  /* 0x0018 */ s16 textureFrame;
-  /* 0x001A */ s16 unk1A;
-  /* 0x001C */ Vec3f velocity;
-  /* 0x0028 */ f32 scaleVelocity;
-  union {
-      SegmentPropertiesObject object;
-      SegmentPropertiesParticle particle;
-      SegmentPropertiesCamera camera;
-  };
-  /* 0x003C */ Object *parentObj;
-  /* 0x0040 */ s32 unk40;
-} ParticleSegment;
 
 typedef struct ParticleModel {
     /* 0x00 */ TextureHeader *texture;
@@ -266,12 +247,25 @@ typedef struct ParticleModel {
 } ParticleModel;
 
 typedef struct Particle {
-    /* 0x0000 */ ParticleSegment segment;
+    /* 0x0000 */ ObjectTransform trans;
+    /* 0x0018 */ s16 textureFrame;
+    /* 0x001A */ s16 unk1A;
+    /* 0x001C */ Vec3f velocity;
+    /* 0x0028 */ f32 scaleVelocity;
+    /* 0x002C */ s16 kind;
+    /* 0x002E */ s16 segmentID;
+    /* 0x0030 */ f32 unk30;
+    /* 0x0034 */ f32 unk34;
+    /* 0x0038 */ u8 unk38;
+    /* 0x0039 */ u8 movementType;
+    /* 0x003A */ s16 destroyTimer;
+    /* 0x003C */ Object *parentObj;
+    /* 0x0040 */ s32 unk40;
     union {
     /* 0x0044 */ ParticleModel *model;
     /* 0x0044 */ Sprite *sprite; // Unclear whether this is the same as unk80068514_arg4
     };
-    /* 0x0048 */ s16 behaviorId;
+    /* 0x0048 */ s16 unk_48;
     /* 0x004A */ s16 brightness;
     /* 0x004C */ Vec3f localPos;
     union {
@@ -327,7 +321,7 @@ void init_particle_assets(void);
 void set_particle_texture_frame(Particle *particle);
 void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehavior *behaviour);
 void particle_deallocate(Particle *particle);
-void handle_particle_movement(Particle *particle, s32 updateRate);
+void particle_update(Particle *particle, s32 updateRate);
 void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehavior *behavior);
 PointParticle *init_point_particle(Object *obj, ParticleEmitter *emitter);
 Particle *particle_allocate(s32 kind);
@@ -340,7 +334,7 @@ void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void obj_spawn_particle(Object *obj, s32 updateRate);
 void func_800B3E64(PointParticle *obj);
-void move_line_particle(Particle *particle);
+void update_line_particle(Particle *particle);
 void func_800AF714(Object *racerObj, s32 updateRate);
 Particle* init_line_particle(Object* obj, ParticleEmitter* emitter);
 
