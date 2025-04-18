@@ -65,7 +65,7 @@ const char D_800E9260[] = "\nError :: can not add another wave swell, reached li
 
 /************ .bss ************/
 
-s32 D_80129FC0;
+Gfx *D_80129FC0;
 s32 D_80129FC4;
 unk80129FC8 D_80129FC8;
 s32 D_8012A018;
@@ -918,8 +918,42 @@ void func_800BA288(s32 arg0, s32 arg1) {
     }
 }
 
-// https://decomp.me/scratch/h4uac
-#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BA4B8.s")
+void func_800BA4B8(TextureHeader *tex, s32 arg1) {
+    s32 sp5C;
+    s32 var_a2;
+    u32 texWidth;
+
+    texWidth = tex->width;
+    var_a2 = 0;
+    if (texWidth == 0x10) {
+        if (arg1 != 0) {
+            var_a2 = 384; // 0x180
+        }
+        sp5C = 4;
+    } else if (texWidth == 0x20) {
+        sp5C = 5;
+        if (arg1 != 0) {
+            var_a2 = 256; // 0x100
+        }
+    } else {
+        texWidth = 3;
+        if (arg1 != 0) {
+            var_a2 = 384; // 0x180
+        }
+    }
+
+    // difference is G_IM_SIZ_32b vs G_IM_SIZ_16b
+    if ((tex->format & 0xF) == 0) {
+        gDPLoadMultiBlock(D_80129FC0++, OS_PHYSICAL_TO_K0(tex + 1), var_a2, arg1, G_IM_FMT_RGBA, G_IM_SIZ_32b, texWidth,
+                          texWidth, 0, 0, 0, sp5C, sp5C, 0, 0);
+
+        return;
+    }
+
+    gDPLoadMultiBlock(D_80129FC0++, OS_PHYSICAL_TO_K0(tex + 1), var_a2, arg1, G_IM_FMT_RGBA, G_IM_SIZ_16b, texWidth,
+                      texWidth, 0, 0, 0, sp5C, sp5C, 0, 0);
+}
+
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BA8E4.s")
 
 f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
