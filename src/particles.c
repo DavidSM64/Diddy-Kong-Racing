@@ -29,19 +29,19 @@ const char D_800E8B44[] = "\nError :: particle %x is not indexed correctly in tr
 /************ .data ************/
 
 s32 gNumTriangleParticles = 0;
-s32 gTriangleParticleBufferFull = 0;
+s32 gTriangleParticleBufferFull = FALSE;
 Particle *gTriangleParticleBuffer = NULL;
 s32 gNumRectangleParticles = 0;
-s32 gRectangleParticleBufferFull = 0;
+s32 gRectangleParticleBufferFull = FALSE;
 Particle *gRectangleParticleBuffer = NULL;
 s32 gNumSpriteParticles = 0;
-s32 gSpriteParticleBufferFull = 0;
+s32 gSpriteParticleBufferFull = FALSE;
 Particle *gSpriteParticleBuffer = NULL;
 s32 gNumLineParticles = 0;
-s32 gLineParticleBufferFull = 0;
+s32 gLineParticleBufferFull = FALSE;
 Particle *gLineParticleBuffer = NULL;
 s32 gNumPointParticles = 0;
-s32 gPointParticleBufferFull = 0;
+s32 gPointParticleBufferFull = FALSE;
 PointParticle *gPointParticleBuffer = NULL;
 
 UNUSED s32 D_800E2CDC = 0; // Only ever and checked for being less than 512.
@@ -322,15 +322,15 @@ void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, 
         maxPointParticles = 0x40;
     }
     gMaxTriangleParticles = maxTriangleParticles;
-    gTriangleParticleBufferFull = 0;
+    gTriangleParticleBufferFull = FALSE;
     gMaxRectangleParticles = maxRectangleParticles;
-    gRectangleParticleBufferFull = 0;
+    gRectangleParticleBufferFull = FALSE;
     gMaxSpriteParticles = maxSpriteParticles;
-    gSpriteParticleBufferFull = 0;
+    gSpriteParticleBufferFull = FALSE;
     gMaxLineParticles = maxLineParticles;
-    gLineParticleBufferFull = 0;
+    gLineParticleBufferFull = FALSE;
     gMaxPointParticles = maxPointParticles;
-    gPointParticleBufferFull = 0;
+    gPointParticleBufferFull = FALSE;
 
     free_particle_vertices_triangles();
     gParticleVertexBuffer = mempool_alloc_safe(
