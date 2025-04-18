@@ -925,12 +925,12 @@ void func_800BA4B8(TextureHeader *tex, s32 arg1) {
 
     texWidth = tex->width;
     var_a2 = 0;
-    if (texWidth == 0x10) {
+    if (texWidth == 16) {
         if (arg1 != 0) {
             var_a2 = 384; // 0x180
         }
         sp5C = 4;
-    } else if (texWidth == 0x20) {
+    } else if (texWidth == 32) {
         sp5C = 5;
         if (arg1 != 0) {
             var_a2 = 256; // 0x100
@@ -943,7 +943,7 @@ void func_800BA4B8(TextureHeader *tex, s32 arg1) {
     }
 
     // difference is G_IM_SIZ_32b vs G_IM_SIZ_16b
-    if ((tex->format & 0xF) == 0) {
+    if ((tex->format & 0xF) == TEX_FORMAT_RGBA32) {
         gDPLoadMultiBlock(D_80129FC0++, OS_PHYSICAL_TO_K0(tex + 1), var_a2, arg1, G_IM_FMT_RGBA, G_IM_SIZ_32b, texWidth,
                           texWidth, 0, 0, 0, sp5C, sp5C, 0, 0);
 
