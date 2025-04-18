@@ -129,7 +129,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     obj->segment.animFrame = racer->animationSpeed;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
-    func_800AF714(obj, updateRate);
+    update_vehicle_particles(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
     if (*startTimer != 100) {
         someObj = func_8000BF44(-1);

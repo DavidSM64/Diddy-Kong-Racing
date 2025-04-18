@@ -356,7 +356,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
     gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
     rain_fog();
     update_fog(numViewports, tempUpdateRate);
-    func_800AF404(tempUpdateRate);
+    scroll_particle_textures(tempUpdateRate);
     if (gCurrentLevelModel->numberOfAnimatedTextures > 0) {
         animate_level_textures(tempUpdateRate);
     }

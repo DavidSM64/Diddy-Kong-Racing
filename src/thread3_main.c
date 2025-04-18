@@ -411,7 +411,7 @@ void unload_level_game(void) {
     }
     clear_audio_and_track();
     transition_begin(&D_800DD3F4);
-    func_800AE270();
+    reset_particles();
     hud_free();
     free_game_text_table();
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
@@ -896,7 +896,7 @@ void unload_level_menu(void) {
         mempool_free_timer(0);
         clear_audio_and_track();
         transition_begin(&D_800DD3F4);
-        func_800AE270();
+        reset_particles();
         hud_free();
         free_game_text_table();
         mempool_free_timer(2);

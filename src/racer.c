@@ -1537,7 +1537,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     } else {
         obj->segment.y_velocity += updateRate * gCurrentRacerWeightStat;
-        func_800AF714(obj, updateRate);
+        update_vehicle_particles(obj, updateRate);
         obj->segment.y_velocity -= updateRate * gCurrentRacerWeightStat;
     }
     gCurrentRacerTransform.rotation.y_rotation = -obj->segment.trans.rotation.y_rotation;
@@ -3235,7 +3235,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
             }
         }
         if (racer->vehicleID < VEHICLE_BOSSES) {
-            func_800AF714(racerObj, updateRate);
+            update_vehicle_particles(racerObj, updateRate);
         }
         second_racer_camera_update(racerObj, racer, 0, updateRateF);
         if (gNumViewports == 1 && racer->velocity > -3.0 && get_settings()->courseId != ASSET_LEVEL_WIZPIG1) {
@@ -4665,7 +4665,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
     if (!racer->unk201) {
         obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     } else if (racer->vehicleID < VEHICLE_BOSSES) {
-        func_800AF714(obj, updateRate);
+        update_vehicle_particles(obj, updateRate);
     }
     func_80053750(obj, racer, updateRateF);
     tempVel = 1.0f / updateRateF;
@@ -7491,7 +7491,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     racer->unkFC.y = obj->segment.trans.y_position;
     racer->unkFC.z = obj->segment.trans.z_position;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
-    func_800AF714(obj, updateRate);
+    update_vehicle_particles(obj, updateRate);
 }
 
 #ifdef ANTI_TAMPER
