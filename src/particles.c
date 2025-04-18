@@ -1010,7 +1010,7 @@ void obj_trigger_emitter(Object *obj, ParticleEmitter *emitter) {
             if (particle != NULL) {
                 add_particle_to_entity_list((Object *) particle);
                 particle->pointIndex = emitter->pointCount;
-                particle->base.descFlags |= PARTICLE_F40_2000;
+                particle->base.descFlags |= PARTICLE_DESC_FLAG_2000;
                 emitter->refPoints[emitter->pointCount] = particle;
                 emitter->pointCount++;
             }
@@ -1420,7 +1420,7 @@ Particle *create_line_particle(Object *obj, ParticleEmitter *emitter) {
 
     if ((u32) colorLoop != -1U) {
         emitter->colorIndex++;
-        if (emitter->colorIndex >= colorLoop[0].unk0) {
+        if (emitter->colorIndex >= colorLoop[0].numEntries) {
             emitter->colorIndex = 0;
         }
         model->vertices[0].r = colorLoop[emitter->colorIndex + 2].r;
@@ -1508,7 +1508,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
         particle->colour.word = gParticleOverrideColor[0].word;
     } else if ((s32) colorLoop != -1) {
         emitter->colorIndex++;
-        if (emitter->colorIndex >= colorLoop->unk0) {
+        if (emitter->colorIndex >= colorLoop->numEntries) {
             emitter->colorIndex = 0;
         }
         particle->colour.r = colorLoop[emitter->colorIndex + 2].r;
