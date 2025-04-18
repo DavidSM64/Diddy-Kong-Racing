@@ -2028,9 +2028,6 @@ void update_line_particle(Particle *particle) {
 
         Eventually, all vertices form a chevron shape, so when multiple particles from the same 
         emitter are spawned, they merge into one continuous line.
-
-        However, the developers either made a mistake or did it intentionally — only a triangle 
-        from the first phase is rendered, which makes the line appear as a sequence of triangles.
     */
 
     if (particle->lineCreationPhase < 2 && obj != NULL) {
