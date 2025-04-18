@@ -523,7 +523,7 @@ s8 gInAdvModeTrophyRace = FALSE;
 // Height scale of the wooden frames in the track select menu.
 f32 gTrackSelectWoodFrameHeightScale = 1.0f;
 
-s32 gResetTitleScale = 1;
+s32 gResetTitleScale = TRUE;
 
 s32 gTitleScreenCurrentOption = 0; // 0 = "Start", 1 = "Options"
 
@@ -545,11 +545,11 @@ s32 gTrackSpecifiedWithTrackIdToLoad = 0;
 s32 gMenuDelay = 0;
 s32 gNumberOfReadyPlayers = 0;
 s32 D_800DF484 = 0;
-s32 gTitleScreenLoaded = 0;
-s32 unused_800DF48C = 0;
-s32 unused_800DF490 = 0;
-s32 gIsInAdventureTwo = 0;
-s32 gPlayerHasSeenCautionMenu = 0;
+s32 gTitleScreenLoaded = FALSE;
+UNUSED s32 unused_800DF48C = 0;
+UNUSED s32 unused_800DF490 = 0;
+s32 gIsInAdventureTwo = FALSE;
+s32 gPlayerHasSeenCautionMenu = FALSE;
 s32 *gMenuTextLangTable = NULL;
 
 char **gMenuText = NULL;
@@ -563,7 +563,7 @@ u8 sMenuGuiColourBlendFactor = 0;
 // Seems like it doesn't matter what you set it as?
 s32 gMenuSpriteFlags = 0;
 
-s32 gIsInTracksMode = 1;
+s32 gIsInTracksMode = TRUE;
 s32 gNumberOfActivePlayers = 1;
 s32 gIsInTwoPlayerAdventure = 0;
 s32 gTrackIdForPreview = ASSET_LEVEL_CENTRALAREAHUB;
@@ -1288,9 +1288,7 @@ char *sControllerPakFullMenuText[5] = { 0, 0, 0, 0, 0 };
 char *sNoControllerPakMenuText[5] = { 0, 0, 0, 0, 0 };
 
 // CORRUPT DATA / If you wish to change / Controller Pak or Rumble Pak, / please do so now.
-char *sCorruptDataMenuText[3] = { 0, 0, 0 }; // This should be 5 in size? This is unclear still.
-
-char *D_800E09F8[3] = { 0, 0, 0 };
+char *sCorruptDataMenuText[6] = { 0, 0, 0, 0, 0, 0 };
 
 // If you wish to use / the Controller Pak / insert it now!
 char *sInsertControllerPakMenuText[3] = { 0, 0, 0 };
@@ -1408,8 +1406,8 @@ s32 gFilenameY = 120;
 s32 gFilenameFont = ASSET_FONTS_BIGFONT;
 s32 gNameEntryLength = 0;
 s32 D_800E0FA4 = 0;
-char gCheckAdvEnterInitials[4] = "DKR"; // Default file name?
-s32 D_800E0FAC = 0;
+char gCheckAdvEnterInitials[] = "DKR"; // Default file name
+s32 D_800E0FAC = FALSE;
 s32 gIndexOfCurInputCharacter = 0;
 
 s16 gAdvTrackInitObjectIndices[18] = { 0x0004, 0x0000, 0x0001, 0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D,
@@ -3307,7 +3305,7 @@ void menu_title_screen_init(void) {
     s32 i;
     s32 numberOfPlayers;
 
-    gTitleScreenLoaded = 1;
+    gTitleScreenLoaded = TRUE;
     gOptionBlinkTimer = 0;
     gMenuDelay = 0;
     reset_character_id_slots();
@@ -4142,7 +4140,7 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
             texture = gMenuAssets[TEXTURE_SURFACE_BUTTON_WOOD];
             colour = COLOUR_RGBA32(176, 224, 192, 255);
             if (!gSavefileData[file->controllerIndex]->newGame) {
-                filename_decompress(gSavefileData[file->controllerIndex]->filename, buffer, 3);
+                filename_decompress(gSavefileData[file->controllerIndex]->filename, buffer, MAX_INITIALS_LENGTH);
                 filename_trim(buffer, buffer);
                 text2 = buffer;
                 firstDigit = *gSavefileData[file->controllerIndex]->balloonsPtr / 10;
@@ -4168,7 +4166,7 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
             texture = gMenuAssets[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[file->controllerIndex];
             text2 = buffer;
-            filename_decompress(file->compressedFilename, buffer, 3);
+            filename_decompress(file->compressedFilename, buffer, MAX_INITIALS_LENGTH);
             // char *gConPakAdvSavePrefix = " (ADV.";
             for (i = 0; gConPakAdvSavePrefix[i] != '\0'; i++) {
                 buffer[i + 3] = gConPakAdvSavePrefix[i];
@@ -5562,13 +5560,17 @@ void bootscreen_init_cpak(void) {
 #endif
 }
 
+#if REGION == REGION_JP
+#define PAKMENU_JP_OFFSET 2
+#else
+#define PAKMENU_JP_OFFSET 0
+#endif
 /**
  * Render the controller pak menu.
  * Lists the pak index, as well as remaining pages, then displays all known files.
  * Also draws the confirmation box.
  * Visual Aid : https://i.imgur.com/7T2Scdr.png
  */
-#if REGION != REGION_JP
 void pakmenu_render(UNUSED s32 updateRate) {
     s32 highlight;
     s32 i;
@@ -5608,15 +5610,19 @@ void pakmenu_render(UNUSED s32 updateRate) {
         set_dialogue_font(6, ASSET_FONTS_FUNFONT);
         set_current_text_colour(6, 255, 255, 255, 0, 255);
         set_current_text_background_colour(6, 0, 0, 0, 0);
-        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[ASSET_MENU_TEXT_CONTPAK1 + gMenuOption], 1,
-                             HORZ_ALIGN_CENTER); // CONTROLLER PAK 1 / 2 / 3 / 4
-        render_dialogue_text(6, POS_CENTRED, 16, gMenuText[ASSET_MENU_TEXT_FREEPAGESX], sCurrentControllerPakFreePages,
-                             HORZ_ALIGN_CENTER); // FREE PAGES: ~
+        render_dialogue_text(6, POS_CENTRED, 2 - PAKMENU_JP_OFFSET, gMenuText[ASSET_MENU_TEXT_CONTPAK1 + gMenuOption],
+                             1, HORZ_ALIGN_CENTER); // CONTROLLER PAK 1 / 2 / 3 / 4
+        render_dialogue_text(6, POS_CENTRED, 16 - PAKMENU_JP_OFFSET, gMenuText[ASSET_MENU_TEXT_FREEPAGESX],
+                             sCurrentControllerPakFreePages, HORZ_ALIGN_CENTER); // FREE PAGES: ~
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
 
         yPos += 34; // To 82
 
+#if REGION == REGION_JP
+        set_dialogue_font(6, ASSET_FONTS_SUBTITLEFONT);
+#else
         set_dialogue_font(6, ASSET_FONTS_SMALLFONT);
+#endif
         set_current_text_background_colour(6, 0, 0, 0, 0);
         for (i = -1; i < sControllerPakMenuNumberOfRows; i++) {
             dialogue_clear(6);
@@ -5642,9 +5648,19 @@ void pakmenu_render(UNUSED s32 updateRate) {
                 fileNameText = gBootPakData[gOpacityDecayTimer + i];
                 numberOfPages = sCurrentControllerPakNumberOfPages[gOpacityDecayTimer + i];
             }
+#if REGION == REGION_JP
+            render_dialogue_text(6, 21, 2, noteText, gOpacityDecayTimer + i + 1, HORZ_ALIGN_CENTER);
+            if (i < 0) {
+                render_dialogue_text(6, POS_CENTRED, 2, fileNameText, 1, HORZ_ALIGN_CENTER);
+            } else {
+                render_dialogue_text(6, 44, 2, fileNameText, 1, HORZ_ALIGN_LEFT);
+            }
+            render_dialogue_text(6, 241, 2, pagesText, numberOfPages, HORZ_ALIGN_CENTER);
+#else
             render_dialogue_text(6, 26, 2, noteText, gOpacityDecayTimer + i + 1, HORZ_ALIGN_CENTER);
             render_dialogue_text(6, 56, 2, fileNameText, 1, HORZ_ALIGN_LEFT);
             render_dialogue_text(6, 240, 2, pagesText, numberOfPages, HORZ_ALIGN_CENTER);
+#endif
 #if VERSION >= VERSION_79
             set_kerning(TRUE);
 #endif
@@ -5677,16 +5693,29 @@ void pakmenu_render(UNUSED s32 updateRate) {
                 yPos = SCREEN_HEIGHT_HALF;
             }
             dialogue_clear(6);
+#if REGION == REGION_JP
+            set_dialogue_font(6, ASSET_FONTS_SMALLFONT);
+            set_current_dialogue_box_coords(6, 56, yPos - 28, 264, yPos + 28);
+#else
             set_dialogue_font(6, ASSET_FONTS_FUNFONT);
             set_current_dialogue_box_coords(6, 76, yPos - 28, 244, yPos + 28);
+#endif
             set_current_dialogue_background_colour(6, 0, 0, 0, 160);
 
             yPos = 4;
             for (i = 0; i <= 2; i++) {
                 if (i == 0) {
+#if REGION == REGION_JP
+                    set_current_text_colour(6, 208, 128, 255, 255, 255);
+#else
                     set_current_text_colour(6, 255, 0, 255, 64, 255);
+#endif
                 } else if (i == gMenuStage) {
+#if REGION == REGION_JP
+                    set_current_text_colour(6, 255, highlight, highlight, 255, 255);
+#else
                     set_current_text_colour(6, 255, 255, 255, highlight, 255);
+#endif
                 } else {
                     set_current_text_colour(6, 255, 255, 255, 0, 255);
                 }
@@ -5715,10 +5744,6 @@ void pakmenu_render(UNUSED s32 updateRate) {
         }
     }
 }
-#else
-// No match JPN pakmenu_render
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/pakmenu_render.s")
-#endif
 
 /**
  * Handles the controller pak menu accessed from the boot screen.
@@ -7089,7 +7114,7 @@ s32 menu_character_select_loop(s32 updateRate) {
             charselect_assign_ai(charSlot);
             charselect_assign_players(gActivePlayersArray);
 
-            gIsInTracksMode = 1;
+            gIsInTracksMode = TRUE;
             if (confirmOffset >= gNumberOfActivePlayers) {
                 music_change_off();
                 load_level_for_menu(ASSET_LEVEL_OPTIONSBACKGROUND, -1, 0);
@@ -7226,7 +7251,7 @@ void menu_caution_init(void) {
     load_font(ASSET_FONTS_BIGFONT);
 #endif
     transition_begin(&sMenuTransitionFadeOut);
-    gPlayerHasSeenCautionMenu = 1;
+    gPlayerHasSeenCautionMenu = TRUE;
 #if REGION == REGION_JP
     func_800C663C_C723C();
 #endif
@@ -7553,7 +7578,7 @@ void fileselect_render(UNUSED s32 updateRate) {
     menu_camera_centre();
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
-        if (gSavefileInfo[i].isAdventure2 == gIsInAdventureTwo || gSavefileInfo[i].isStarted == 0) {
+        if (gSavefileInfo[i].isAdventure2 == gIsInAdventureTwo || gSavefileInfo[i].isStarted == FALSE) {
             colour = COLOUR_RGBA32(176, 224, 192, 255);
         } else {
             colour = COLOUR_RGBA32(106, 144, 115, 255);
@@ -7985,7 +8010,7 @@ s32 menu_file_select_loop(s32 updateRate) {
                     }
                     gSavefileInfo[i].isStarted = TRUE;
                     gSavefileInfo[i].balloonCount = *gSavefileData[i]->balloonsPtr;
-                    filename_decompress(gSavefileData[i]->filename, gSavefileInfo[i].name, 3);
+                    filename_decompress(gSavefileData[i]->filename, gSavefileInfo[i].name, MAX_INITIALS_LENGTH);
                 }
             }
             gOpacityDecayTimer = 0;
@@ -8020,7 +8045,7 @@ s32 menu_file_select_loop(s32 updateRate) {
                 menu_unload_bigfont();
                 gFileNew = FALSE;
                 gSavefileInfo[gSaveFileIndex].isAdventure2 = 0;
-                if (gIsInAdventureTwo != 0) {
+                if (gIsInAdventureTwo) {
                     gSavefileInfo[gSaveFileIndex].isAdventure2 = 1;
                 }
                 gSavefileInfo[gSaveFileIndex].isStarted = 1;
@@ -8070,7 +8095,7 @@ s32 menu_file_select_loop(s32 updateRate) {
             fontUseFont();
         }
         gNumberOfActivePlayers = 1;
-        D_800E0FAC = 1;
+        D_800E0FAC = TRUE;
         fileselect_free();
         music_change_on();
         init_racer_headers();
@@ -8195,12 +8220,12 @@ void menu_track_select_init(void) {
     settings = get_settings();
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
     trackIds = (s8 *) get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
-    if (gTitleScreenLoaded != 0) {
+    if (gTitleScreenLoaded != FALSE) {
         gTrackSelectCursorX = 0;
         gTrackSelectCursorY = 0;
         gTracksMenuTimeTrialHighlightIndex = 0;
         gTracksMenuAdventureHighlightIndex = 0;
-        gTitleScreenLoaded = 0;
+        gTitleScreenLoaded = FALSE;
     }
     gTrackSelectViewPortX = fb_size();
     gTrackSelectViewportY = GET_VIDEO_HEIGHT(gTrackSelectViewPortX) & 0xFFFF;
@@ -8689,7 +8714,7 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
         set_text_colour(255, 255, 255, 0, opacity);
         draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, (yTemp - sp6C) - 88, hubName, ALIGN_MIDDLE_CENTER);
         gTrackMenuHubName = hubName;
-        set_kerning(0);
+        set_kerning(FALSE);
     }
 #if REGION == REGION_JP
     set_text_colour(0, 0, 0, 255, opacity / 2);
@@ -9182,14 +9207,14 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
 #endif
             set_text_colour(255, 128, 255, 96, sMenuGuiOpacity);
             filename_decompress(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview],
-                                filename.buffer, 3);
+                                filename.buffer, MAX_INITIALS_LENGTH);
 #if REGION == REGION_JP
             draw_text(&sMenuCurrDisplayList, 249, regionOffset + 70, filename.buffer, ALIGN_MIDDLE_CENTER);
 #else
             draw_text(&sMenuCurrDisplayList, 250, regionOffset + 72, filename.buffer, ALIGN_MIDDLE_CENTER);
 #endif
             filename_decompress(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview], filename.buffer,
-                                3);
+                                MAX_INITIALS_LENGTH);
 #if REGION == REGION_JP
             draw_text(&sMenuCurrDisplayList, 249, regionOffset + 89, filename.buffer, ALIGN_MIDDLE_CENTER);
 #else
@@ -9864,11 +9889,11 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
                                   gMenuText[ASSET_MENU_TEXT_BESTLAP], ADVENTURETRACK_ALIGN);
                         set_text_colour(255, 128, 255, 96, 255);
                         filename_decompress(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][mapID],
-                                            (char *) &filename, 3);
+                                            (char *) &filename, MAX_INITIALS_LENGTH);
                         draw_text(&sMenuCurrDisplayList, ADVENTURETRACK_XPOS2, yOffset + ADVENTURETRACK_YPOS3,
                                   (char *) &filename, ALIGN_MIDDLE_CENTER);
                         filename_decompress(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][mapID],
-                                            (char *) &filename, 3);
+                                            (char *) &filename, MAX_INITIALS_LENGTH);
                         draw_text(&sMenuCurrDisplayList, ADVENTURETRACK_XPOS2, yOffset + ADVENTURETRACK_YPOS2,
                                   (char *) &filename, ALIGN_MIDDLE_CENTER);
                         menu_timestamp_render(settings->courseTimesPtr[gPlayerSelectVehicle[0]][ADVENTURETRACK_MAPID],
@@ -10309,7 +10334,7 @@ s32 menu_pause_loop(UNUSED Gfx **dl, s32 updateRate) {
             if (gMenuSubOption == 1) {
                 if (gTrophyRaceWorldId != 0) {
                     gTrophyRaceWorldId = 0;
-                    if (gIsInTracksMode == 0) {
+                    if (gIsInTracksMode == FALSE) {
                         return PAUSE_QUIT_LOBBY;
                     }
                     return PAUSE_QUIT_TRACKS;
@@ -10874,17 +10899,17 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
                     gRecordTimesMenuElements[6].t.numberU16 =
                         &settings->flapTimesPtr[*gPlayerSelectVehicle][settings->courseId];
                     filename_decompress(settings->courseInitialsPtr[*gPlayerSelectVehicle][settings->courseId],
-                                        gCourseInitials, 3);
+                                        gCourseInitials, MAX_INITIALS_LENGTH);
                     filename_decompress(settings->flapInitialsPtr[*gPlayerSelectVehicle][settings->courseId],
-                                        gFLapInitials, 3);
+                                        gFLapInitials, MAX_INITIALS_LENGTH);
                     if (settings->racers[0].best_times != 0) {
                         gMenuStage = POSTRACE_STAGE_ENTER_INITIALS;
-                        if ((gIsInTracksMode == 0) && (D_800E0FAC)) {
-                            filename_decompress(settings->filename, gCheckAdvEnterInitials, 3);
-                            D_800E0FAC = 0;
+                        if (gIsInTracksMode == FALSE && D_800E0FAC != FALSE) {
+                            filename_decompress(settings->filename, gCheckAdvEnterInitials, MAX_INITIALS_LENGTH);
+                            D_800E0FAC = FALSE;
                         }
                         filename_init(textOffsetY + 196, 160, textOffsetY + 120, 2, &D_800E0FA4, gCheckAdvEnterInitials,
-                                      3);
+                                      MAX_INITIALS_LENGTH);
                     } else {
                         postrace_offsets(gRecordTimesMenuElements, 0.5f, 15.0f, 0.5f, textOffsetY, timeOffsetY);
                         gMenuStage = POSTRACE_STAGE_RACE_RECORDS;
@@ -10904,15 +10929,15 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
             if (filename_enter(updateRate)) {
                 if (settings->racers[0].best_times & 0x7F) {
                     settings->flapInitialsPtr[*gPlayerSelectVehicle][settings->courseId] =
-                        filename_compress(gCheckAdvEnterInitials, 3);
+                        filename_compress(gCheckAdvEnterInitials, MAX_INITIALS_LENGTH);
                     filename_decompress(settings->flapInitialsPtr[*gPlayerSelectVehicle][settings->courseId],
-                                        gFLapInitials, 3);
+                                        gFLapInitials, MAX_INITIALS_LENGTH);
                 }
                 if (settings->racers[0].best_times & 0x80) {
                     settings->courseInitialsPtr[*gPlayerSelectVehicle][settings->courseId] =
-                        filename_compress(gCheckAdvEnterInitials, 3);
+                        filename_compress(gCheckAdvEnterInitials, MAX_INITIALS_LENGTH);
                     filename_decompress(settings->courseInitialsPtr[*gPlayerSelectVehicle][settings->courseId],
-                                        gCourseInitials, 3);
+                                        gCourseInitials, MAX_INITIALS_LENGTH);
                 }
                 postrace_offsets(gRecordTimesMenuElements, 0.5f, 15.0f, 0.5f, textOffsetY, timeOffsetY);
                 gMenuStage = POSTRACE_STAGE_RACE_RECORDS;
@@ -12328,7 +12353,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                         temp6 = 0;
                     }
                     gRankingsPortraitIDs[temp6] = -1;
-                    if (gIsInTracksMode == 1) {
+                    if (gIsInTracksMode == TRUE) {
                         if (sp34 >= 3) {
                             menu_init(MENU_TRACK_SELECT);
                         } else {

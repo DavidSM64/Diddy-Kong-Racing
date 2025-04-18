@@ -1082,8 +1082,7 @@ void render_rain_overlay(RainGfxData *rainGfx, s32 time) {
     s32 i;
     f32 zSin;
     f32 zCos;
-    int unused;
-    int unused2;
+    UNUSED s32 pad[2];
     TextureHeader *tex;
     Gfx *curDL;
     Triangle *tri;

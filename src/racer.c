@@ -3519,8 +3519,8 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
                 sound_play_spatial(SOUND_CAR_SLIDE, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                    obj->segment.trans.z_position, (s32 **) &racer->unk10);
             } else {
-                func_80009B7C((void *) racer->unk10, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                              obj->segment.trans.z_position);
+                audioline_reverb((void *) racer->unk10, obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                 obj->segment.trans.z_position);
             }
             if (racer->unk14) {
                 sound_stop((void *) racer->unk14);

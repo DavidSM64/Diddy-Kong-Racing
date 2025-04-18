@@ -122,6 +122,5 @@ void sound_volume_set_relative(u16 soundID, void *soundState, u8 volume);
 void music_sequence_init(ALCSPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *seq);
 void sound_play(u16 soundID, s32* soundMask);
 f32 music_animation_fraction(void);
-void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z);
 
 #endif

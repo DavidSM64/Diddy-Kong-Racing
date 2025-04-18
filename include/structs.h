@@ -8,6 +8,7 @@
 #include "level_object_entries.h"
 #include "object_properties.h"
 #include "gbi.h"
+#include "PR/libaudio.h"
 
 // Stolen from PD
 // This hacky structure allows coords to be accessed using
@@ -98,7 +99,7 @@ typedef struct SoundMask {
     /* 0x11 */ u8 unk11;
     /* 0x12 */ u8 unk12;
     /* 0x14 */ s32 distance;
-    /* 0x18 */ s32 unk18;
+    /* 0x18 */ ALSoundState *soundPtr;
     /* 0x1C */ struct SoundMask **soundMask;
     /* 0x20 */ u8 unk20;
     /* 0x21 */ u8 unk21;
@@ -150,6 +151,13 @@ typedef struct DrawTexture {
     s16 xOffset; // Offset from the center of the screen.
     s16 yOffset; // Offset from the center of the screen.
 } DrawTexture;
+
+// Probably not unique to the boot menu.
+typedef struct ShadowHeapProperties {
+  TextureHeader *texture; // Pointer to texture to draw.
+  s16 triCount; // Offset from the center of the screen.
+  s16 vtxCount; // Offset from the center of the screen.
+} ShadowHeapProperties;
 
 typedef struct Sprite {
   /* 0x00 */ s16 baseTextureId;
@@ -658,6 +666,13 @@ typedef struct ObjectModel {
     /* 0x54 */ u8 pad[0x2C];
 } ObjectModel;      
 
+typedef struct CollisionNode {
+    u16 triangleIndex; // This triangle index
+    u16 closestTri01;  // The closest triangle index to the line made from indices 0 & 1.
+    u16 closestTri12;  // The closest triangle index to the line made from indices 1 & 2.
+    u16 closestTri20;  // The closest triangle index to the line made from indices 2 & 0.
+} CollisionNode;
+
 /* Size: 0x44 bytes */
 typedef struct LevelModelSegment {
 /* 0x00 */ Vertex *vertices;
@@ -665,7 +680,7 @@ typedef struct LevelModelSegment {
 /* 0x08 */ s32 unk8;
 /* 0x0C */ TriangleBatchInfo *batches;
 /* 0x10 */ s16 *unk10;
-/* 0x14 */ u16 *unk14;
+/* 0x14 */ CollisionNode *unk14;
 /* 0x18 */ f32 *unk18;
 /* 0x1C */ s16 numberOfVertices;
 /* 0x1E */ s16 numberOfTriangles;
@@ -790,10 +805,10 @@ typedef struct ObjectHeader {
   /* 0x40 */ s16 shadeAngleZ;
   /* 0x42 */ s16 unk42;
   /* 0x44 */ s16 unk44;
-  /* 0x48 */ s16 unk46;
-  /* 0x48 */ s16 unk48;
-  /* 0x4A */ s16 unk4A;
-  /* 0x4C */ s16 unk4C;
+  /* 0x48 */ s16 shadowBottom; // Lower bounds for shadow
+  /* 0x48 */ s16 shadowTop; // Upper bounds for shadow
+  /* 0x4A */ s16 shadowFadeMin; // Close reference distance for shadow opacity
+  /* 0x4C */ s16 shadowFadeMax; // Far reference distance for shadow opacity
   /* 0x4E */ s16 drawDistance;
   /* 0x50 */ s16 unk50;
   /* 0x52 */ s8 unk52;

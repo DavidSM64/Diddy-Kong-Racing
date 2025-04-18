@@ -116,8 +116,8 @@ MAP_FILE = DkrMapFile()
 # Adding regional and other version functions here to ignore since we're only scoring US_1.0 for now.
 NOT_FUNCTION_NAMES = ['if', 'else', 'switch', 'while', 'for', 'dmacopy_internal', 'func_80082BC8_837C8', 'rumble_enable',
     'func_800C6464_C7064', 'func_800C663C_C723C', 'func_800C67F4_C73F4', 'func_800C6870_C7470',
-    'func_800C68CC_C74CC', 'func_800C6DD4_C79D4', 'func_800C7744_C8344', 'func_800C7804_C8404',
-    'func_800C7864_C8464', 'func_800C78E0_C84E0']
+    'func_800C68CC_C74CC', 'fontCreateDisplayList', 'func_800C7744_C8344', 'func_800C7804_C8404',
+    'fontConvertString', 'func_800C78E0_C84E0']
 
 class ScoreFileMatch:
     def __init__(self, comment, functionName):

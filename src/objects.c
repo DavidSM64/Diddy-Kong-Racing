@@ -772,6 +772,7 @@ void try_free_object_header(s32 index) {
  * Converts the passed value into an accurate countdown value based on the systems region.
  * Since PAL runs at 50Hz, it therefore will reduce the timer to 5/6 to match, keeping
  * it consistent with non PAL timers, running 60Hz.
+ * Official Name: objTvTimes
  */
 s32 normalise_time(s32 timer) {
     if (osTvType != OS_TV_TYPE_PAL || timer < 0) {
