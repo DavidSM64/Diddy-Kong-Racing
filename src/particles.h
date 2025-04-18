@@ -76,10 +76,10 @@ enum ParticleBehaviorFlags {
     PARTICLE_VELOCITY_ABSOLUTE = 0x20,
     PARTICLE_VELOCITY_SCALED_FROM_PARENT = 0x40,
     PARTICLE_ROTATION_ABSOLUTE = 0x80,
-    PARTICLE_BEHAVIOR_FLAG_100 = 0x100,
+    PARTICLE_OVERRIDE_OPACITY_FROM_DESCRIPTOR = 0x100,
     PARTICLE_POINT_EMITTER_DISABLED = 0x200,
     PARTICLE_POINT = 0x400,
-    PARTICLE_BEHAVIOR_FLAG_800 = 0x800,
+    PARTICLE_RANDOM_TEXTURE_FRAME = 0x800,
     PARTICLE_SCALE_VELOCITY_INHERITS_PARENT_SPEED = 0x1000,
     PARTICLE_EMITTER_AWAITING_SPAWN = 0x2000,
     PARTICLE_LINE = 0x4000,
@@ -95,7 +95,7 @@ enum ParticleMovement {
     PARTICLE_MOVEMENT_FORWARD,
 };
 
-enum ParticleField40 {
+enum ParticleDescriptorFlags {
     PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED = 0x1,
     PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED = 0x2,
     PARTICLE_TEXTURE_ANIM_LOOP = 0x4,
@@ -103,27 +103,27 @@ enum ParticleField40 {
     PARTICLE_F40_GRAVITY_1 = 0x10,
     PARTICLE_F40_GRAVITY_2 = 0x20,
     PARTICLE_F40_GRAVITY_3 = 0x40,
-    PARTICLE_F40_800 = 0x800,
-    PARTICLE_F40_1000 = 0x1000,
+    PARTICLE_SHADED = 0x800,
+    PARTICLE_DESC_FLAG_1000 = 0x1000,
     PARTICLE_F40_2000 = 0x2000,
-    PARTICLE_F40_4000 = 0x4000,
+    PARTICLE_LINE_ALONG_VELOCITY = 0x4000,
     PARTICLE_UNK_FLAG_8000 = 0x8000,
 };
 
 typedef struct ParticleDescriptor {
     /* 0x00 */ u8 kind; // ParticleKind
     /* 0x01 */ u8 movementType; // ParticleMovement
-    /* 0x02 */ u16 unk2;
-    /* 0x04 */ s16 textureID;
+    /* 0x02 */ u16 flags; // ParticleDescriptorFlags
+    /* 0x04 */ s16 textureID; // -1 if texture is not assigned
     /* 0x06 */ s16 textureFrameStep;
     /* 0x08 */ s16 lifeTime;
     union {
         /* 0x0A */ s16 lifeTimeRange; // Used by general particle
         struct {
-            /* 0x0A */ u16 unkA : 6; // Used by line particle
-            /* 0x0A */ u16 unkB : 6; // Used by line particle
+            /* 0x0A */ u16 lineOrientation : 6; // Used by line particle
+            /* 0x0A */ u16 line_unused_B : 6; // (Not) Used by line particle
         };
-        /* 0x0A */ u16 qwe : 6; // Used by point particle
+        /* 0x0A */ u16 unused_point_field : 6; // (Not) Used by point particle
     };
     /* 0x0C */ u8 opacity;
     /* 0x0D */ u8 opacityVel;
@@ -249,12 +249,12 @@ typedef struct Particle {
     /* 0x002C */ s16 kind;
     /* 0x002E */ s16 segmentID;
     /* 0x0030 */ f32 unk30;
-    /* 0x0034 */ f32 unk34;
-    /* 0x0038 */ u8 unk38;
+    /* 0x0034 */ f32 unk34; // set to zero but never used
+    /* 0x0038 */ u8 unk38; // set to zero but never used
     /* 0x0039 */ u8 movementType;
     /* 0x003A */ s16 destroyTimer;
     /* 0x003C */ Object *parentObj;
-    /* 0x0040 */ s32 miscFlags;
+    /* 0x0040 */ s32 descFlags;
     union {
     /* 0x0044 */ ParticleModel *model;
     /* 0x0044 */ Sprite *sprite; // Unclear whether this is the same as unk80068514_arg4
@@ -276,10 +276,10 @@ typedef struct Particle {
     union {
     /* 0x0068 */ f32 gravity;
     struct {
-    /* 0x0068 */ u8 unk68b;
-    /* 0x0069 */ u8 unk69b;
-    /* 0x006A */ s8 unk6Ab;
-    /* 0x006B */ s8 unk6Bb;
+    /* 0x0068 */ u8 lineCreationPhase;
+    /* 0x0069 */ u8 line_unused_69;
+    /* 0x006A */ s8 lineOrientation;
+    /* 0x006B */ s8 line_unused_6B; // set on particle creation but never used
     };
     };
     /* 0x006C */ ColourRGBA colour;
@@ -290,8 +290,8 @@ typedef struct PointParticle {
     /* 0x0070 */ ParticleEmitter *pointEmitter;
     /* 0x0074 */ u8 pointIndex;
     /* 0x0075 */ u8 modelFrame;
-    /* 0x0076 */ u8 unk76;
-    /* 0x0077 */ s8 unk77;
+    /* 0x0076 */ u8 unused_76;
+    /* 0x0077 */ s8 meshRegenerated;
 } PointParticle;
 
 void reset_particles(void);
@@ -310,7 +310,7 @@ void emitter_init(ParticleEmitter *emitter, s32 behaviourID, s32 particleID);
 void emitter_init_with_pos(ParticleEmitter *emitter, s32 behaviourID, s32 particleID, s16 posX, s16 posY, s16 posZ);
 void obj_disable_emitter(Object *obj, s32 emitterIndex);
 void emitter_cleanup(ParticleEmitter *emitter);
-void func_800B263C(PointParticle *arg0);
+void delete_point_particle_from_sequence(PointParticle *arg0);
 void init_particle_assets(void);
 void update_particle_texture_frame(Particle *particle);
 void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehavior *behaviour);
@@ -324,10 +324,10 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter);
 void obj_enable_emitter(Object *obj, s32 emitterIndex);
 void emitter_change_settings(ParticleEmitter *emitter, s32 behaviourID, s32 particleID, s16 posX, s16 posY, s16 posZ);
 void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags);
-void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3);
-void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);
+void increase_emitter_opacity(Object *obj, s32 idx, s32 arg2, s32 arg3);
+void decrease_emitter_opacity(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void obj_spawn_particle(Object *obj, s32 updateRate);
-void func_800B3E64(PointParticle *obj);
+void regenerate_point_particles_mesh(PointParticle *obj);
 void update_line_particle(Particle *particle);
 void update_vehicle_particles(Object *racerObj, s32 updateRate);
 Particle* create_line_particle(Object* obj, ParticleEmitter* emitter);

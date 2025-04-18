@@ -1487,9 +1487,9 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (gNumViewports < 2 && obj->segment.header->particleCount >= 9) {
         if ((gCurrentRacerInput & (A_BUTTON | R_TRIG)) == (A_BUTTON | R_TRIG) &&
             (gCurrentStickX < -30 || gCurrentStickX > 30)) {
-            func_800B4668(obj, 8, updateRate << 10, 0x80);
+            increase_emitter_opacity(obj, 8, updateRate << 10, 0x80);
         } else {
-            func_800B46BC(obj, 8, updateRate << 9, 0x20);
+            decrease_emitter_opacity(obj, 8, updateRate << 9, 0x20);
         }
     }
     if (gCurrentPlayerIndex >= PLAYER_ONE && racer->buoyancy > 0.0) {
