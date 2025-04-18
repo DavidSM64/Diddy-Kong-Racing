@@ -16,7 +16,7 @@ Vec2s *D_800E3044 = NULL;
 Vec2s *D_800E3048 = NULL;
 f32 *D_800E304C[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-Vertex *D_800E3070[4] = { NULL, NULL, NULL, NULL };
+Vertex *D_800E3070[4][1] = { NULL, NULL, NULL, NULL };
 Triangle *D_800E3080[4][1] = { NULL, NULL, NULL, NULL };
 Triangle D_800E3090[4] = {
     { { BACKFACE_DRAW, 0x00, 0x02, 0x01 }, 0, 0, 0, 0, 0, 0 },
@@ -141,7 +141,7 @@ void free_waves(void) {
     FREE_MEM(D_800E3044);
     FREE_MEM(D_800E3048);
     FREE_MEM(D_800E304C[0]);
-    FREE_MEM(D_800E3070[0]);
+    FREE_MEM(D_800E3070[0][0]);
     FREE_MEM(D_800E3080[0][0]);
     FREE_TEX(D_800E30D0);
     FREE_MEM(D_800E30D4);
@@ -170,13 +170,13 @@ void wave_init(void) {
     temp = (D_80129FC8.unk0 + 1);
     allocSize = (temp * 250 * (D_80129FC8.unk0 + 1));
     if (D_8012A078 != 2) {
-        D_800E3070[0] = (Vertex *) mempool_alloc_safe(allocSize << 1, COLOUR_TAG_CYAN);
-        D_800E3070[1] = (Vertex *) (((u32) D_800E3070[0]) + allocSize);
+        D_800E3070[0][0] = (Vertex *) mempool_alloc_safe(allocSize << 1, COLOUR_TAG_CYAN);
+        D_800E3070[1][0] = (Vertex *) (((u32) D_800E3070[0][0]) + allocSize);
     } else {
-        D_800E3070[0] = (Vertex *) mempool_alloc_safe(allocSize << 2, COLOUR_TAG_CYAN);
-        D_800E3070[1] = (Vertex *) (((u32) D_800E3070[0]) + allocSize);
-        D_800E3070[2] = (Vertex *) (((u32) D_800E3070[1]) + allocSize);
-        D_800E3070[3] = (Vertex *) (((u32) D_800E3070[2]) + allocSize);
+        D_800E3070[0][0] = (Vertex *) mempool_alloc_safe(allocSize << 2, COLOUR_TAG_CYAN);
+        D_800E3070[1][0] = (Vertex *) (((u32) D_800E3070[0][0]) + allocSize);
+        D_800E3070[2][0] = (Vertex *) (((u32) D_800E3070[1][0]) + allocSize);
+        D_800E3070[3][0] = (Vertex *) (((u32) D_800E3070[2][0]) + allocSize);
     }
     allocSize = (D_80129FC8.unk0 * 32) * D_80129FC8.unk0;
     if (D_8012A078 != 2) {
@@ -299,18 +299,18 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
             do {
                 for (j_2 = 0; D_80129FC8.unk0 >= j_2; j_2++) {
                     for (k = 0; k < arg2; k++) {
-                        D_800E3070[k][var_s5].x = (j_2 * D_8012A0B8) + 0.5;
-                        D_800E3070[k][var_s5].z = (i_2 * D_8012A0BC) + 0.5;
+                        D_800E3070[0][k][var_s5].x = (j_2 * D_8012A0B8) + 0.5;
+                        D_800E3070[0][k][var_s5].z = (i_2 * D_8012A0BC) + 0.5;
                         if (D_80129FC8.unk4C == 0) {
-                            D_800E3070[k][var_s5].r = 255;
-                            D_800E3070[k][var_s5].g = 255;
-                            D_800E3070[k][var_s5].b = 255;
+                            D_800E3070[0][k][var_s5].r = 255;
+                            D_800E3070[0][k][var_s5].g = 255;
+                            D_800E3070[0][k][var_s5].b = 255;
                         } else {
-                            D_800E3070[k][var_s5].r = 0;
-                            D_800E3070[k][var_s5].g = 0;
-                            D_800E3070[k][var_s5].b = 0;
+                            D_800E3070[0][k][var_s5].r = 0;
+                            D_800E3070[0][k][var_s5].g = 0;
+                            D_800E3070[0][k][var_s5].b = 0;
                         }
-                        D_800E3070[k][var_s5].a = 255;
+                        D_800E3070[0][k][var_s5].a = 255;
                     }
                     var_s5++;
                 }
@@ -341,38 +341,38 @@ void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
     func_800BC6C8();
 
     var_s5 = (D_80129FC8.unk0 + 1) * D_80129FC8.unk0;
-    for (i = 0; i < 2; i++) {
-        D_8012A028[i][0].x = D_800E3070[i][0].x;
+    for (i = 0; i < ARRAY_COUNT(D_8012A028); i++) {
+        D_8012A028[i][0].x = D_800E3070[i][0][0].x;
         D_8012A028[i][0].y = 0;
-        D_8012A028[i][0].z = D_800E3070[i][0].z;
-        D_8012A028[i][0].r = D_800E3070[i][0].r;
-        D_8012A028[i][0].g = D_800E3070[i][0].g;
-        D_8012A028[i][0].b = D_800E3070[i][0].b;
-        D_8012A028[i][0].a = D_800E3070[i][0].a;
+        D_8012A028[i][0].z = D_800E3070[i][0][0].z;
+        D_8012A028[i][0].r = D_800E3070[i][0][0].r;
+        D_8012A028[i][0].g = D_800E3070[i][0][0].g;
+        D_8012A028[i][0].b = D_800E3070[i][0][0].b;
+        D_8012A028[i][0].a = D_800E3070[i][0][0].a;
 
-        D_8012A028[i][1].x = D_800E3070[i][D_80129FC8.unk0].x;
+        D_8012A028[i][1].x = D_800E3070[i][0][D_80129FC8.unk0].x;
         D_8012A028[i][1].y = 0;
-        D_8012A028[i][1].z = D_800E3070[i][D_80129FC8.unk0].z;
-        D_8012A028[i][1].r = D_800E3070[i][D_80129FC8.unk0].r;
-        D_8012A028[i][1].g = D_800E3070[i][D_80129FC8.unk0].g;
-        D_8012A028[i][1].b = D_800E3070[i][D_80129FC8.unk0].b;
-        D_8012A028[i][1].a = D_800E3070[i][D_80129FC8.unk0].a;
+        D_8012A028[i][1].z = D_800E3070[i][0][D_80129FC8.unk0].z;
+        D_8012A028[i][1].r = D_800E3070[i][0][D_80129FC8.unk0].r;
+        D_8012A028[i][1].g = D_800E3070[i][0][D_80129FC8.unk0].g;
+        D_8012A028[i][1].b = D_800E3070[i][0][D_80129FC8.unk0].b;
+        D_8012A028[i][1].a = D_800E3070[i][0][D_80129FC8.unk0].a;
 
-        D_8012A028[i][2].x = D_800E3070[i][var_s5].x;
+        D_8012A028[i][2].x = D_800E3070[i][0][var_s5].x;
         D_8012A028[i][2].y = 0;
-        D_8012A028[i][2].z = D_800E3070[i][var_s5].z;
-        D_8012A028[i][2].r = D_800E3070[i][var_s5].r;
-        D_8012A028[i][2].g = D_800E3070[i][var_s5].g;
-        D_8012A028[i][2].b = D_800E3070[i][var_s5].b;
-        D_8012A028[i][2].a = D_800E3070[i][var_s5].a;
+        D_8012A028[i][2].z = D_800E3070[i][0][var_s5].z;
+        D_8012A028[i][2].r = D_800E3070[i][0][var_s5].r;
+        D_8012A028[i][2].g = D_800E3070[i][0][var_s5].g;
+        D_8012A028[i][2].b = D_800E3070[i][0][var_s5].b;
+        D_8012A028[i][2].a = D_800E3070[i][0][var_s5].a;
 
-        D_8012A028[i][3].x = D_800E3070[i][var_s5 + D_80129FC8.unk0].x;
+        D_8012A028[i][3].x = D_800E3070[i][0][var_s5 + D_80129FC8.unk0].x;
         D_8012A028[i][3].y = 0;
-        D_8012A028[i][3].z = D_800E3070[i][var_s5 + D_80129FC8.unk0].z;
-        D_8012A028[i][3].r = D_800E3070[i][var_s5 + D_80129FC8.unk0].r;
-        D_8012A028[i][3].g = D_800E3070[i][var_s5 + D_80129FC8.unk0].g;
-        D_8012A028[i][3].b = D_800E3070[i][var_s5 + D_80129FC8.unk0].b;
-        D_8012A028[i][3].a = D_800E3070[i][var_s5 + D_80129FC8.unk0].a;
+        D_8012A028[i][3].z = D_800E3070[i][0][var_s5 + D_80129FC8.unk0].z;
+        D_8012A028[i][3].r = D_800E3070[i][0][var_s5 + D_80129FC8.unk0].r;
+        D_8012A028[i][3].g = D_800E3070[i][0][var_s5 + D_80129FC8.unk0].g;
+        D_8012A028[i][3].b = D_800E3070[i][0][var_s5 + D_80129FC8.unk0].b;
+        D_8012A028[i][3].a = D_800E3070[i][0][var_s5 + D_80129FC8.unk0].a;
     }
 
     func_800BCC70(arg0);
@@ -606,7 +606,7 @@ void func_800B92F4(s32 arg0, s32 arg1) {
         }
 
         sp84 = D_8012A5E8[k].unk6;
-        vertices = &D_800E3070[D_8012A018 + arg1][sp90 * sp98];
+        vertices = &D_800E3070[D_8012A018 + arg1][0][sp90 * sp98];
         sp98 = D_800E30E4[sp98];
         vertexIdx = 0;
         for (i = 0; i <= D_80129FC8.unk0; i++) {
@@ -715,7 +715,7 @@ void func_800B97A8(s32 arg0, s32 arg1) {
         }
 
         var_a0 = D_8012A5E8[k].unk6;
-        vertices = &D_800E3070[D_8012A018 + arg1][spA0 * spA8];
+        vertices = &D_800E3070[D_8012A018 + arg1][0][spA0 * spA8];
         spA8 = D_800E30E4[spA8];
         i = 0;
         vertexIdx = 0;
@@ -919,7 +919,39 @@ void func_800BA288(s32 arg0, s32 arg1) {
 
 // https://decomp.me/scratch/h4uac
 void func_800BA4B8(TextureHeader* arg0, s32 arg1);
+#ifdef NON_EQUIVALENT
+void func_800BA4B8(TextureHeader* tex, s32 arg1) {
+    s32 sp5C;
+    s32 tmem;
+    u8 width;
+
+    width = tex->width;
+    tmem = 0;
+    if (width == 16) {
+        if (arg1 != 0) {
+            tmem = 0x180;
+        }
+        sp5C = 4;
+    } else if (width == 32) {
+        if (arg1 != 0) {
+            tmem = 0x100;
+        }
+        sp5C = 5;
+    } else {
+        width = 3;
+        if (arg1 != 0) {
+            tmem = 0x180;
+        }
+    }
+    if ((tex->format & 0xF) == TEX_FORMAT_RGBA32) {
+        gDPLoadTextureBlock(D_80129FC0++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_32b, width, width, 0, tmem, tmem, sp5C, sp5C, 0, 0);
+    } else {
+        gDPLoadTextureBlock(D_80129FC0++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, width, 0, tmem, tmem, sp5C, sp5C, 0, 0);
+    }
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BA4B8.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 void func_800BA8E4(Gfx **dList, MatrixS** mtx, s32 arg2) {
