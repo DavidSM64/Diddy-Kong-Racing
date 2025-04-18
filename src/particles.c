@@ -113,34 +113,28 @@ Vec2s gParticleCoordListQuad[4] = {
 };
 
 ColourRGBA gVehicleTrackMarkColors[16] = {
-    { { { 0, 0, 0, 0 } } },         // SURFACE_DEFAULT
-    { { { 192, 8, 64, 255 } } },    // SURFACE_GRASS
-    { { { 255, 96, 8, 255 } } },    // SURFACE_SAND
-    { { { 64, 64, 64, 255 } } },    // SURFACE_ZIP_PAD
-    { { { 0, 0, 0, 0 } } },         // SURFACE_STONE
-    { { { 0, 0, 0, 0 } } },         // SURFACE_EGG_SPAWN
-    { { { 0, 0, 0, 0 } } },         // SURFACE_EGG_01
-    { { { 0, 0, 0, 0 } } },         // SURFACE_EGG_02
-    { { { 0, 0, 0, 0 } } },         // SURFACE_EGG_03
-    { { { 0, 0, 0, 0 } } },         // SURFACE_EGG_04
-    { { { 0, 0, 0, 0 } } },         // SURFACE_FROZEN_WATER
-    { { { 0, 0, 0, 0 } } },         // SURFACE_UNK0B
-    { { { 0, 0, 0, 0 } } },         // SURFACE_TAJ_PAD
-    { { { 16, 112, 255, 255 } } },  // SURFACE_SNOW
-    { { { 0, 0, 0, 0 } } },         // SURFACE_UNK0E
-    { { { 0, 0, 0, 0 } } },         // SURFACE_UNK0F
+    { { { 0, 0, 0, 0 } } },        // SURFACE_DEFAULT
+    { { { 192, 8, 64, 255 } } },   // SURFACE_GRASS
+    { { { 255, 96, 8, 255 } } },   // SURFACE_SAND
+    { { { 64, 64, 64, 255 } } },   // SURFACE_ZIP_PAD
+    { { { 0, 0, 0, 0 } } },        // SURFACE_STONE
+    { { { 0, 0, 0, 0 } } },        // SURFACE_EGG_SPAWN
+    { { { 0, 0, 0, 0 } } },        // SURFACE_EGG_01
+    { { { 0, 0, 0, 0 } } },        // SURFACE_EGG_02
+    { { { 0, 0, 0, 0 } } },        // SURFACE_EGG_03
+    { { { 0, 0, 0, 0 } } },        // SURFACE_EGG_04
+    { { { 0, 0, 0, 0 } } },        // SURFACE_FROZEN_WATER
+    { { { 0, 0, 0, 0 } } },        // SURFACE_UNK0B
+    { { { 0, 0, 0, 0 } } },        // SURFACE_TAJ_PAD
+    { { { 16, 112, 255, 255 } } }, // SURFACE_SNOW
+    { { { 0, 0, 0, 0 } } },        // SURFACE_UNK0E
+    { { { 0, 0, 0, 0 } } },        // SURFACE_UNK0F
 };
 
 ColourRGBA D_800E2EC4[10] = {
-    { { { 64, 64, 64, 255 } } },
-    { { { 64, 64, 64, 255 } } },
-    { { { 0, 45, 0, 255 } } },
-    { { { 0, 45, 0, 255 } } },
-    { { { 64, 60, 10, 255 } } },
-    { { { 64, 60, 10, 255 } } },
-    { { { 64, 64, 255, 255 } } },
-    { { { 64, 64, 255, 255 } } },
-    { { { 64, 64, 64, 255 } } },
+    { { { 64, 64, 64, 255 } } },  { { { 64, 64, 64, 255 } } },  { { { 0, 45, 0, 255 } } },
+    { { { 0, 45, 0, 255 } } },    { { { 64, 60, 10, 255 } } },  { { { 64, 60, 10, 255 } } },
+    { { { 64, 64, 255, 255 } } }, { { { 64, 64, 255, 255 } } }, { { { 64, 64, 64, 255 } } },
     { { { 64, 64, 64, 255 } } },
 };
 
@@ -668,8 +662,8 @@ void emitter_init_with_pos(ParticleEmitter *emitter, s32 behaviourID, s32 partic
         } else {
             emitter->maxPointCount = 255;
         }
-        emitter->refPoints = (PointParticle **) mempool_alloc_safe(
-            emitter->maxPointCount * sizeof(PointParticle *), COLOUR_TAG_SEMITRANS_GREY);
+        emitter->refPoints = (PointParticle **) mempool_alloc_safe(emitter->maxPointCount * sizeof(PointParticle *),
+                                                                   COLOUR_TAG_SEMITRANS_GREY);
         emitter->pointSourceRotation.y_rotation = behaviour->sourceRotation.y_rotation;
         emitter->pointSourceRotation.x_rotation = behaviour->sourceRotation.x_rotation;
         emitter->pointEmissionDirection.y_rotation = behaviour->emissionDirection.y_rotation;
@@ -778,7 +772,8 @@ void obj_disable_emitter(Object *obj, s32 emitterIndex) {
 
 /**
  * Creates particles for vehicle-related effects like dust, tire marks, and wing trails.
- * The color of the particles is determined by the surface type the vehicle is moving on, which is why this logic is separated.
+ * The color of the particles is determined by the surface type the vehicle is moving on, which is why this logic is
+ * separated.
  */
 void update_vehicle_particles(Object *racerObj, s32 updateRate) {
     Object_Racer *racer;
@@ -787,7 +782,7 @@ void update_vehicle_particles(Object *racerObj, s32 updateRate) {
     s32 temp_v1;
     s32 i;
     ParticleEmitter *new_var;
-    
+
     s32 var_t1;
     s32 someBool;
     s8 vehicleId;
@@ -842,25 +837,29 @@ void update_vehicle_particles(Object *racerObj, s32 updateRate) {
                                 if (racer->wheel_surfaces[2] == SURFACE_NONE) {
                                     someBool = FALSE;
                                 }
-                                gParticleOverrideColor[0].word = gVehicleTrackMarkColors[racer->wheel_surfaces[2] & 0xF].word;
+                                gParticleOverrideColor[0].word =
+                                    gVehicleTrackMarkColors[racer->wheel_surfaces[2] & 0xF].word;
                                 break;
                             case 11:
                                 if (racer->wheel_surfaces[3] == SURFACE_NONE) {
                                     someBool = FALSE;
                                 }
-                                gParticleOverrideColor[0].word = gVehicleTrackMarkColors[racer->wheel_surfaces[3] & 0xF].word;
+                                gParticleOverrideColor[0].word =
+                                    gVehicleTrackMarkColors[racer->wheel_surfaces[3] & 0xF].word;
                                 break;
                             case 12:
                                 if (racer->wheel_surfaces[0] == SURFACE_NONE) {
                                     someBool = FALSE;
                                 }
-                                gParticleOverrideColor[0].word = gVehicleTrackMarkColors[racer->wheel_surfaces[0] & 0xF].word;
+                                gParticleOverrideColor[0].word =
+                                    gVehicleTrackMarkColors[racer->wheel_surfaces[0] & 0xF].word;
                                 break;
                             case 13:
                                 if (racer->wheel_surfaces[1] == SURFACE_NONE) {
                                     someBool = FALSE;
                                 }
-                                gParticleOverrideColor[0].word = gVehicleTrackMarkColors[racer->wheel_surfaces[1] & 0xF].word;
+                                gParticleOverrideColor[0].word =
+                                    gVehicleTrackMarkColors[racer->wheel_surfaces[1] & 0xF].word;
                                 break;
                         }
                     }
@@ -956,7 +955,8 @@ void obj_spawn_particle(Object *obj, s32 updateRate) {
         } else {
             if (obj->particleEmitter[i].flags & PARTICLE_EMITTER_ENABLED) {
                 if (obj->particleEmitter[i].flags & PARTICLE_LINE) {
-                    // Line particles are not immediately disabled, but instead, they gradually fade away over a few frames.
+                    // Line particles are not immediately disabled, but instead, they gradually fade away over a few
+                    // frames.
                     ParticleEmitter *emitter = &obj->particleEmitter[i];
                     new_opacity = emitter->lineOpacity - 64;
                     if (new_opacity < 0) {
@@ -1549,7 +1549,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
     }
     if (particle->opacityTimer < particle->destroyTimer) {
         particle->opacityVel = (descriptor->opacityVel - descriptor->opacity) * gCurrentHovercraftParticleOpacity /
-                                      (particle->destroyTimer - particle->opacityTimer);
+                               (particle->destroyTimer - particle->opacityTimer);
     } else {
         particle->opacityVel = 0;
     }
@@ -2017,21 +2017,21 @@ void update_line_particle(Particle *particle) {
 
     /*
         This is a description of how it works.
-        
+
         In the first step, only vertex 0 exists and nothing is rendered.
-        
-        In the second step, the vehicle (and therefore the emitter) moves some distance, 
-        and three more vertices are added: one at the current emitter position, and two others 
+
+        In the second step, the vehicle (and therefore the emitter) moves some distance,
+        and three more vertices are added: one at the current emitter position, and two others
         to the sides of it (depending on orientation).
-        
+
         In the third step, the emitter moves further and two more side vertices are added.
 
-        Eventually, all vertices form a chevron shape, so when multiple particles from the same 
+        Eventually, all vertices form a chevron shape, so when multiple particles from the same
         emitter are spawned, they merge into one continuous line.
     */
 
     if (particle->lineCreationPhase < 2 && obj != NULL) {
-        
+
         if (emitter->behaviour->flags & PARTICLE_SCALE_VELOCITY_INHERITS_PARENT_SPEED) {
             scale = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
                           (obj->segment.y_velocity * obj->segment.y_velocity) +
@@ -2114,7 +2114,7 @@ void update_line_particle(Particle *particle) {
             model->vertices[3].g = model->vertices->g;
             model->vertices[3].b = model->vertices->b;
             model->vertices[3].a = emitter->lineOpacity;
-            particle->lineCreationPhase = 1;            
+            particle->lineCreationPhase = 1;
         } else if (model != NULL) {
             // Phase 3: add two more vertices
 
