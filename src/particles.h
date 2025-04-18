@@ -143,7 +143,7 @@ typedef struct ColorLoopEntry {
 } ColorLoopEntry;
 
 /* Size: 0xA0 bytes */
-typedef struct ParticleBehavior {
+typedef struct ParticleBehaviour {
     /* 0x00 */ s32 flags;
     /* 0x04 */ Vec3f emitterPos;
     /* 0x10 */ f32 sourceDistance;
@@ -179,12 +179,12 @@ typedef struct ParticleBehavior {
     /* 0x99 */ u8 colourRangeG;
     /* 0x9A */ u8 colourRangeB;
     /* 0x9B */ u8 colourRangeA;
-    /* 0x9C */ ColorLoopEntry *colorLoop;
-} ParticleBehavior;
+    /* 0x9C */ ColorLoopEntry *colourLoop;
+} ParticleBehaviour;
 
 /* Size: 0x20 bytes */
 typedef struct ParticleEmitter {
-    /* 0x00 */ ParticleBehavior *behaviour;
+    /* 0x00 */ ParticleBehaviour *behaviour;
     /* 0x04 */ s16 flags;
     union {
     /* 0x06 */ u8 sourceRotationCounter; // Used by general particles
@@ -214,7 +214,7 @@ typedef struct ParticleEmitter {
         }; // Used by general particles
     };
     /* 0x18 */ Vec3s position; // Relative to parent object
-    /* 0x1E */ s16 colorIndex;
+    /* 0x1E */ s16 colourIndex;
 } ParticleEmitter;
 
 typedef struct ParticleModel {
@@ -298,10 +298,10 @@ void emitter_cleanup(ParticleEmitter *emitter);
 void delete_point_particle_from_sequence(PointParticle *particle);
 void init_particle_assets(void);
 void update_particle_texture_frame(Particle *particle);
-void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehavior *behaviour);
+void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehaviour *behaviour);
 void particle_deallocate(Particle *particle);
 void particle_update(Particle *particle, s32 updateRate);
-void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehavior *behavior);
+void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehaviour *behaviour);
 PointParticle *create_point_particle(Object *obj, ParticleEmitter *emitter);
 Particle *particle_allocate(s32 kind);
 void obj_trigger_emitter(Object *obj, ParticleEmitter *emitter);

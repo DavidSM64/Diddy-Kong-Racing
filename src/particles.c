@@ -53,7 +53,7 @@ s32 *gParticlesAssets = NULL;
 ParticleDescriptor **gParticlesAssetTable = NULL;
 s32 gParticleBehavioursAssetTableCount = 0;
 s32 *gParticleBehavioursAssets = NULL;
-ParticleBehavior **gParticleBehavioursAssetTable = NULL;
+ParticleBehaviour **gParticleBehavioursAssetTable = NULL;
 ColourRGBA gParticleOverrideColor[2] = { { { { 0 } } }, { { { 0 } } } };
 
 Triangle gLineParticleTriangles[5] = {
@@ -265,7 +265,7 @@ void init_particle_assets(void) {
         gParticlesAssetTable[i] = (ParticleDescriptor *) (((u8 *) gParticlesAssets) + ((s32) gParticlesAssetTable[i]));
     }
 
-    gParticleBehavioursAssetTable = (ParticleBehavior **) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
+    gParticleBehavioursAssetTable = (ParticleBehaviour **) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
     gParticleBehavioursAssetTableCount = -1;
     while (((s32) gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount + 1]) != -1) {
         gParticleBehavioursAssetTableCount++;
@@ -274,10 +274,10 @@ void init_particle_assets(void) {
     gParticleBehavioursAssets = (s32 *) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS);
     for (i = 0; i < gParticleBehavioursAssetTableCount; i++) {
         gParticleBehavioursAssetTable[i] =
-            (ParticleBehavior *) (((u8 *) gParticleBehavioursAssets) + ((s32) gParticleBehavioursAssetTable[i]));
-        if (((u32) gParticleBehavioursAssetTable[i]->colorLoop) != 0xFFFFFFFF) {
-            gParticleBehavioursAssetTable[i]->colorLoop =
-                (ColorLoopEntry *) get_misc_asset((s32) gParticleBehavioursAssetTable[i]->colorLoop);
+            (ParticleBehaviour *) (((u8 *) gParticleBehavioursAssets) + ((s32) gParticleBehavioursAssetTable[i]));
+        if (((u32) gParticleBehavioursAssetTable[i]->colourLoop) != 0xFFFFFFFF) {
+            gParticleBehavioursAssetTable[i]->colourLoop =
+                (ColorLoopEntry *) get_misc_asset((s32) gParticleBehavioursAssetTable[i]->colourLoop);
         }
     }
 }
@@ -600,12 +600,12 @@ void set_rectangle_texture_coords(Particle *particle) {
 }
 
 /**
- * Sets the particle type, behavior, and position for the emitter.
- * Ignores the emitter position specified for the current behavior.
- * Does nothing if the particle type and behavior are the same as previously set.
+ * Sets the particle type, behaviour, and position for the emitter.
+ * Ignores the emitter position specified for the current behaviour.
+ * Does nothing if the particle type and behaviour are the same as previously set.
  */
 void emitter_change_settings(ParticleEmitter *emitter, s32 behaviourID, s32 particleID, s16 posX, s16 posY, s16 posZ) {
-    ParticleBehavior *behaviour;
+    ParticleBehaviour *behaviour;
     if (particleID >= gParticlesAssetTableCount) {
         particleID = 0;
     }
@@ -620,10 +620,10 @@ void emitter_change_settings(ParticleEmitter *emitter, s32 behaviourID, s32 part
 }
 
 /**
- * Initializes the emitter with the specified particle type and behavior.
+ * Initializes the emitter with the specified particle type and behaviour.
  */
 void emitter_init(ParticleEmitter *emitter, s32 behaviourID, s32 particleID) {
-    ParticleBehavior *behaviour;
+    ParticleBehaviour *behaviour;
 
     if (behaviourID < gParticleBehavioursAssetTableCount) {
         behaviour = gParticleBehavioursAssetTable[behaviourID];
@@ -637,7 +637,7 @@ void emitter_init(ParticleEmitter *emitter, s32 behaviourID, s32 particleID) {
  * Sets the geometry used for generating particles, depending on the particle type.
  */
 void emitter_init_with_pos(ParticleEmitter *emitter, s32 behaviourID, s32 particleID, s16 posX, s16 posY, s16 posZ) {
-    ParticleBehavior *behaviour;
+    ParticleBehaviour *behaviour;
 
     behaviour = gParticleBehavioursAssetTable[behaviourID];
     emitter->descriptorID = particleID;
@@ -645,7 +645,7 @@ void emitter_init_with_pos(ParticleEmitter *emitter, s32 behaviourID, s32 partic
     emitter->position.x = posX;
     emitter->position.y = posY;
     emitter->position.z = posZ;
-    emitter->colorIndex = 0;
+    emitter->colourIndex = 0;
 
     if (behaviour->flags & PARTICLE_LINE) {
         emitter->flags = PARTICLE_LINE;
@@ -712,7 +712,7 @@ void scroll_particle_textures(s32 updateRate) {
 void obj_enable_emitter(Object *obj, s32 emitterIndex) {
     s32 i;
     ParticleEmitter *emitter;
-    ParticleBehavior *behaviour;
+    ParticleBehaviour *behaviour;
 
     emitter = &obj->particleEmitter[emitterIndex];
     behaviour = emitter->behaviour;
@@ -771,8 +771,8 @@ void obj_disable_emitter(Object *obj, s32 emitterIndex) {
 }
 
 /**
- * Creates particles for vehicle-related effects like dust, tire marks, and wing trails.
- * The color of the particles is determined by the surface type the vehicle is moving on, which is why this logic is
+ * Creates particles for vehicle-related effects like dust, tyre marks, and wing trails.
+ * The colour of the particles is determined by the surface type the vehicle is moving on, which is why this logic is
  * separated.
  */
 void update_vehicle_particles(Object *racerObj, s32 updateRate) {
@@ -985,13 +985,13 @@ void obj_spawn_particle(Object *obj, s32 updateRate) {
 
 /**
  * Generates particles from a specific emitter attached to the object.
- * The particles are created according to the emitter's settings and behavior.
+ * The particles are created according to the emitter's settings and behaviour.
  */
 void obj_trigger_emitter(Object *obj, ParticleEmitter *emitter) {
     s32 i;
-    ParticleBehavior *behavior;
+    ParticleBehaviour *behaviour;
 
-    behavior = emitter->behaviour;
+    behaviour = emitter->behaviour;
     if (emitter->flags & PARTICLE_LINE) {
         Particle *particle = create_line_particle(obj, emitter);
         if (particle != NULL) {
@@ -1016,9 +1016,9 @@ void obj_trigger_emitter(Object *obj, ParticleEmitter *emitter) {
             }
         }
     } else {
-        while (emitter->timeFromLastSpawn >= behavior->spawnInterval) {
-            emitter->timeFromLastSpawn -= behavior->spawnInterval;
-            for (i = 0; i < behavior->burstCount; i++) {
+        while (emitter->timeFromLastSpawn >= behaviour->spawnInterval) {
+            emitter->timeFromLastSpawn -= behaviour->spawnInterval;
+            for (i = 0; i < behaviour->burstCount; i++) {
                 Particle *particle = create_general_particle(obj, emitter);
                 if (particle != NULL) {
                     add_particle_to_entity_list((Object *) particle);
@@ -1033,43 +1033,43 @@ void obj_trigger_emitter(Object *obj, ParticleEmitter *emitter) {
 /**
  * Initializes the particle velocity.
  */
-void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehavior *behavior) {
+void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehaviour *behaviour) {
     s32 randomizationFlags;
     Vec3f sourceVel;
     Vec3s angle;
 
-    if (behavior->flags &
+    if (behaviour->flags &
         (PARTICLE_VELOCITY_RELATIVE_TO_PARENT | PARTICLE_VELOCITY_ABSOLUTE | PARTICLE_VELOCITY_SCALED_FROM_PARENT)) {
-        particle->velocity.x = behavior->velocityModifier.x;
-        particle->velocity.y = behavior->velocityModifier.y;
-        particle->velocity.z = behavior->velocityModifier.z;
+        particle->velocity.x = behaviour->velocityModifier.x;
+        particle->velocity.y = behaviour->velocityModifier.y;
+        particle->velocity.z = behaviour->velocityModifier.z;
     } else {
         particle->velocity.x = 0.0f;
         particle->velocity.y = 0.0f;
         particle->velocity.z = 0.0f;
     }
 
-    randomizationFlags = behavior->randomizationFlags &
+    randomizationFlags = behaviour->randomizationFlags &
                          (PARTICLE_RANDOM_VELOCITY_Z | PARTICLE_RANDOM_VELOCITY_Y | PARTICLE_RANDOM_VELOCITY_X);
     if (randomizationFlags) {
         if (randomizationFlags & PARTICLE_RANDOM_VELOCITY_X) {
-            particle->velocity.x += (f32) get_random_number_from_range(-behavior->velocityModifierRange.x,
-                                                                       behavior->velocityModifierRange.x) *
+            particle->velocity.x += (f32) get_random_number_from_range(-behaviour->velocityModifierRange.x,
+                                                                       behaviour->velocityModifierRange.x) *
                                     0.00001525878906;
         }
         if (randomizationFlags & PARTICLE_RANDOM_VELOCITY_Y) {
-            particle->velocity.y += (f32) get_random_number_from_range(-behavior->velocityModifierRange.y,
-                                                                       behavior->velocityModifierRange.y) *
+            particle->velocity.y += (f32) get_random_number_from_range(-behaviour->velocityModifierRange.y,
+                                                                       behaviour->velocityModifierRange.y) *
                                     0.00001525878906;
         }
         if (randomizationFlags & PARTICLE_RANDOM_VELOCITY_Z) {
-            particle->velocity.z += (f32) get_random_number_from_range(-behavior->velocityModifierRange.z,
-                                                                       behavior->velocityModifierRange.z) *
+            particle->velocity.z += (f32) get_random_number_from_range(-behaviour->velocityModifierRange.z,
+                                                                       behaviour->velocityModifierRange.z) *
                                     0.00001525878906;
         }
     }
 
-    switch (behavior->flags & (PARTICLE_VELOCITY_RELATIVE_TO_PARENT | PARTICLE_VELOCITY_ABSOLUTE |
+    switch (behaviour->flags & (PARTICLE_VELOCITY_RELATIVE_TO_PARENT | PARTICLE_VELOCITY_ABSOLUTE |
                                PARTICLE_VELOCITY_SCALED_FROM_PARENT)) {
         case PARTICLE_VELOCITY_RELATIVE_TO_PARENT:
             particle->velocity.x += obj->segment.x_velocity;
@@ -1083,28 +1083,28 @@ void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *e
             break;
     }
 
-    if (behavior->flags & PARTICLE_SOURCE_EMITS_WITH_VELOCITY) {
+    if (behaviour->flags & PARTICLE_SOURCE_EMITS_WITH_VELOCITY) {
         sourceVel.x = 0.0f;
         sourceVel.y = 0.0f;
-        sourceVel.z = -behavior->emissionSpeed;
+        sourceVel.z = -behaviour->emissionSpeed;
 
-        randomizationFlags = behavior->randomizationFlags;
+        randomizationFlags = behaviour->randomizationFlags;
         if (randomizationFlags & PARTICLE_RANDOM_EMISSION_SPEED) {
             sourceVel.z +=
-                (f32) get_random_number_from_range(-behavior->emissionSpeedRange, behavior->emissionSpeedRange) *
+                (f32) get_random_number_from_range(-behaviour->emissionSpeedRange, behaviour->emissionSpeedRange) *
                 0.00001525878906;
         }
 
         if (randomizationFlags & (PARTICLE_RANDOM_EMISSION_DIR_PITCH | PARTICLE_RANDOM_EMISSION_DIR_YAW)) {
             angle.y_rotation = emitter->emissionDirection.y_rotation;
             if (randomizationFlags & PARTICLE_RANDOM_EMISSION_DIR_YAW) {
-                angle.y_rotation += get_random_number_from_range(-behavior->emissionDirRange.y_rotation,
-                                                                 behavior->emissionDirRange.y_rotation);
+                angle.y_rotation += get_random_number_from_range(-behaviour->emissionDirRange.y_rotation,
+                                                                 behaviour->emissionDirRange.y_rotation);
             }
             angle.x_rotation = emitter->emissionDirection.x_rotation;
             if (randomizationFlags & PARTICLE_RANDOM_EMISSION_DIR_PITCH) {
-                angle.x_rotation += get_random_number_from_range(-behavior->emissionDirRange.x_rotation,
-                                                                 behavior->emissionDirRange.x_rotation);
+                angle.x_rotation += get_random_number_from_range(-behaviour->emissionDirRange.x_rotation,
+                                                                 behaviour->emissionDirRange.x_rotation);
             }
             f32_vec3_apply_object_rotation3(&angle, &sourceVel.x);
         } else {
@@ -1121,7 +1121,7 @@ void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *e
 /**
  * Initializes the particle position.
  */
-void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehavior *behaviour) {
+void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *emitter, ParticleBehaviour *behaviour) {
     s32 randomizationFlags;
     Vec3f sourcePos;
     Vec3s sourceDir;
@@ -1189,13 +1189,13 @@ PointParticle *create_point_particle(Object *obj, ParticleEmitter *emitter) {
     ParticleDescriptor *descriptor;
     PointParticle *particle;
     ParticleModel *model;
-    ParticleBehavior *behavior;
+    ParticleBehaviour *behaviour;
 
     descriptor = gParticlesAssetTable[emitter->descriptorID];
     if (descriptor->kind != PARTICLE_KIND_POINT) {
         return NULL;
     }
-    behavior = emitter->behaviour;
+    behaviour = emitter->behaviour;
     particle = (PointParticle *) particle_allocate(PARTICLE_KIND_POINT);
     if (particle == NULL) {
         return particle;
@@ -1207,8 +1207,8 @@ PointParticle *create_point_particle(Object *obj, ParticleEmitter *emitter) {
     particle->base.descFlags = descriptor->flags;
     particle->base.parentObj = obj;
     particle->pointEmitter = emitter;
-    particle->base.trans.scale = descriptor->scale * behavior->scale;
-    particle->base.scaleVelocity = descriptor->scale * behavior->scaleVelocity;
+    particle->base.trans.scale = descriptor->scale * behaviour->scale;
+    particle->base.scaleVelocity = descriptor->scale * behaviour->scaleVelocity;
     particle->base.destroyTimer = descriptor->lifeTime;
     particle->base.unk34 = 0.0f;
     particle->base.unk38 = 0;
@@ -1243,26 +1243,26 @@ PointParticle *create_point_particle(Object *obj, ParticleEmitter *emitter) {
         particle->base.opacityVel = 0;
     }
 
-    setup_particle_position(&particle->base, obj, emitter, behavior);
+    setup_particle_position(&particle->base, obj, emitter, behaviour);
 
     // Setup particle rotation
-    if (behavior->flags & PARTICLE_ROTATION_ABSOLUTE) {
-        particle->base.trans.rotation.y_rotation = behavior->rotation.y_rotation;
-        particle->base.trans.rotation.x_rotation = behavior->rotation.x_rotation;
-        particle->base.trans.rotation.z_rotation = behavior->rotation.z_rotation;
+    if (behaviour->flags & PARTICLE_ROTATION_ABSOLUTE) {
+        particle->base.trans.rotation.y_rotation = behaviour->rotation.y_rotation;
+        particle->base.trans.rotation.x_rotation = behaviour->rotation.x_rotation;
+        particle->base.trans.rotation.z_rotation = behaviour->rotation.z_rotation;
     } else {
         particle->base.trans.rotation.y_rotation =
-            obj->segment.trans.rotation.y_rotation + behavior->rotation.y_rotation;
+            obj->segment.trans.rotation.y_rotation + behaviour->rotation.y_rotation;
         particle->base.trans.rotation.x_rotation =
-            obj->segment.trans.rotation.x_rotation + behavior->rotation.x_rotation;
+            obj->segment.trans.rotation.x_rotation + behaviour->rotation.x_rotation;
         particle->base.trans.rotation.z_rotation =
-            obj->segment.trans.rotation.z_rotation + behavior->rotation.z_rotation;
+            obj->segment.trans.rotation.z_rotation + behaviour->rotation.z_rotation;
     }
-    particle->base.angularVelocity.y_rotation = behavior->angularVelocity.y_rotation;
-    particle->base.angularVelocity.x_rotation = behavior->angularVelocity.x_rotation;
-    particle->base.angularVelocity.z_rotation = behavior->angularVelocity.z_rotation;
+    particle->base.angularVelocity.y_rotation = behaviour->angularVelocity.y_rotation;
+    particle->base.angularVelocity.x_rotation = behaviour->angularVelocity.x_rotation;
+    particle->base.angularVelocity.z_rotation = behaviour->angularVelocity.z_rotation;
 
-    setup_particle_velocity(&particle->base, obj, emitter, behavior);
+    setup_particle_velocity(&particle->base, obj, emitter, behaviour);
 
     particle->base.gravity = gParticleGravityTable[(particle->base.descFlags >> 4) & 7];
 
@@ -1272,13 +1272,13 @@ PointParticle *create_point_particle(Object *obj, ParticleEmitter *emitter) {
                                           (particle->base.velocity.z * particle->base.velocity.z));
     }
 
-    if (behavior->flags & PARTICLE_SOURCE_ROTATION_ENABLED) {
-        emitter->pointSourceRotation.y_rotation += behavior->sourceAngularVelocity.y_rotation;
-        emitter->pointSourceRotation.x_rotation += behavior->sourceAngularVelocity.x_rotation;
+    if (behaviour->flags & PARTICLE_SOURCE_ROTATION_ENABLED) {
+        emitter->pointSourceRotation.y_rotation += behaviour->sourceAngularVelocity.y_rotation;
+        emitter->pointSourceRotation.x_rotation += behaviour->sourceAngularVelocity.x_rotation;
     }
-    if (behavior->flags & PARTICLE_ROTATING_DIRECTION) {
-        emitter->pointEmissionDirection.y_rotation += behavior->emissionDirAngularVelocity.y_rotation;
-        emitter->pointEmissionDirection.x_rotation += behavior->emissionDirAngularVelocity.x_rotation;
+    if (behaviour->flags & PARTICLE_ROTATING_DIRECTION) {
+        emitter->pointEmissionDirection.y_rotation += behaviour->emissionDirAngularVelocity.y_rotation;
+        emitter->pointEmissionDirection.x_rotation += behaviour->emissionDirAngularVelocity.x_rotation;
     }
 
     particle->base.textureFrameStep = descriptor->textureFrameStep;
@@ -1322,15 +1322,15 @@ Particle *create_line_particle(Object *obj, ParticleEmitter *emitter) {
     ParticleDescriptor *descriptor;
     Particle *particle;
     ParticleModel *model;
-    ParticleBehavior *behaviour;
-    ColorLoopEntry *colorLoop;
+    ParticleBehaviour *behaviour;
+    ColorLoopEntry *colourLoop;
 
     descriptor = gParticlesAssetTable[emitter->descriptorID];
     if (descriptor->kind != PARTICLE_KIND_LINE) {
         return NULL;
     }
     behaviour = emitter->behaviour;
-    colorLoop = behaviour->colorLoop;
+    colourLoop = behaviour->colourLoop;
     particle = particle_allocate(PARTICLE_KIND_LINE);
     if (particle == NULL) {
         return NULL;
@@ -1418,14 +1418,14 @@ Particle *create_line_particle(Object *obj, ParticleEmitter *emitter) {
     model->vertices[0].y = emitter->lineRefPoint.y;
     model->vertices[0].z = emitter->lineRefPoint.z;
 
-    if ((u32) colorLoop != -1U) {
-        emitter->colorIndex++;
-        if (emitter->colorIndex >= colorLoop[0].numEntries) {
-            emitter->colorIndex = 0;
+    if ((u32) colourLoop != -1U) {
+        emitter->colourIndex++;
+        if (emitter->colourIndex >= colourLoop[0].numEntries) {
+            emitter->colourIndex = 0;
         }
-        model->vertices[0].r = colorLoop[emitter->colorIndex + 2].r;
-        model->vertices[0].g = colorLoop[emitter->colorIndex + 2].g;
-        model->vertices[0].b = colorLoop[emitter->colorIndex + 2].b;
+        model->vertices[0].r = colourLoop[emitter->colourIndex + 2].r;
+        model->vertices[0].g = colourLoop[emitter->colourIndex + 2].g;
+        model->vertices[0].b = colourLoop[emitter->colourIndex + 2].b;
         model->vertices[0].a = emitter->lineOpacity;
     } else {
         model->vertices[0].r = particle->colour.r;
@@ -1450,8 +1450,8 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
     ParticleDescriptor *descriptor;
     Particle *particle;
     TextureHeader **texture;
-    ParticleBehavior *behaviour;
-    ColorLoopEntry *colorLoop;
+    ParticleBehaviour *behaviour;
+    ColorLoopEntry *colourLoop;
     f32 scale;
     s8 noTexture;
 
@@ -1461,7 +1461,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
     }
 
     behaviour = emitter->behaviour;
-    colorLoop = behaviour->colorLoop;
+    colourLoop = behaviour->colourLoop;
 
     particle = particle_allocate(descriptor->kind);
     if (particle == NULL) {
@@ -1506,15 +1506,15 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
 
     if (gParticleOverrideColor[0].word != 0) {
         particle->colour.word = gParticleOverrideColor[0].word;
-    } else if ((s32) colorLoop != -1) {
-        emitter->colorIndex++;
-        if (emitter->colorIndex >= colorLoop->numEntries) {
-            emitter->colorIndex = 0;
+    } else if ((s32) colourLoop != -1) {
+        emitter->colourIndex++;
+        if (emitter->colourIndex >= colourLoop->numEntries) {
+            emitter->colourIndex = 0;
         }
-        particle->colour.r = colorLoop[emitter->colorIndex + 2].r;
-        particle->colour.g = colorLoop[emitter->colorIndex + 2].g;
-        particle->colour.b = colorLoop[emitter->colorIndex + 2].b;
-        particle->colour.a = colorLoop[emitter->colorIndex + 2].a;
+        particle->colour.r = colourLoop[emitter->colourIndex + 2].r;
+        particle->colour.g = colourLoop[emitter->colourIndex + 2].g;
+        particle->colour.b = colourLoop[emitter->colourIndex + 2].b;
+        particle->colour.a = colourLoop[emitter->colourIndex + 2].a;
     } else {
         particle->colour.r = descriptor->colour.r;
         particle->colour.g = descriptor->colour.g;
@@ -2002,16 +2002,16 @@ void update_line_particle(Particle *particle) {
     ParticleModel *model;
     Object *obj;
     ParticleEmitter *emitter;
-    ColorLoopEntry *colorLoop;
-    ColorLoopEntry **colorLoopPtr;
+    ColorLoopEntry *colourLoop;
+    ColorLoopEntry **colourLoopPtr;
 
     obj = particle->parentObj;
     model = NULL;
-    colorLoopPtr = &colorLoop;
+    colourLoopPtr = &colourLoop;
 
     if (obj != NULL) {
         emitter = particle->lineEmitter;
-        colorLoop = emitter->behaviour->colorLoop;
+        colourLoop = emitter->behaviour->colourLoop;
         model = particle->model;
     }
 
@@ -2096,10 +2096,10 @@ void update_line_particle(Particle *particle) {
             model->vertices[2].x = emitter->lineRefPoint.x;
             model->vertices[2].y = emitter->lineRefPoint.y;
             model->vertices[2].z = emitter->lineRefPoint.z;
-            if ((s32) *colorLoopPtr != -1) {
-                model->vertices[2].r = (*colorLoopPtr)[emitter->colorIndex + 2].r;
-                model->vertices[2].g = (*colorLoopPtr)[emitter->colorIndex + 2].g;
-                model->vertices[2].b = (*colorLoopPtr)[emitter->colorIndex + 2].b;
+            if ((s32) *colourLoopPtr != -1) {
+                model->vertices[2].r = (*colourLoopPtr)[emitter->colourIndex + 2].r;
+                model->vertices[2].g = (*colourLoopPtr)[emitter->colourIndex + 2].g;
+                model->vertices[2].b = (*colourLoopPtr)[emitter->colourIndex + 2].b;
                 model->vertices[2].a = emitter->lineOpacity;
             } else {
                 model->vertices[2].r = particle->colour.r;
@@ -2475,7 +2475,7 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
 }
 
 /**
- * Sets the position and colors of all vertices for all particles spawned by a single emitter.
+ * Sets the position and colours of all vertices for all particles spawned by a single emitter.
  * Together, they form the shape of a continuous pipe-like structure.
  */
 void regenerate_point_particles_mesh(PointParticle *obj) {
@@ -2651,7 +2651,7 @@ UNUSED ParticleDescriptor *get_previous_particle_table(s32 *idx) {
 /**
  * Return the particle behaviour ID from the behaviour table.
  */
-UNUSED ParticleBehavior *get_particle_behaviour(s32 idx) {
+UNUSED ParticleBehaviour *get_particle_behaviour(s32 idx) {
     if (idx < gParticleBehavioursAssetTableCount) {
         return gParticleBehavioursAssetTable[idx];
     }
@@ -2662,7 +2662,7 @@ UNUSED ParticleBehavior *get_particle_behaviour(s32 idx) {
  * Return the next particle behaviour ID from the behaviour table.
  * Make sure the index is in range by wrapping it.
  */
-UNUSED ParticleBehavior *get_next_particle_behaviour(s32 *idx) {
+UNUSED ParticleBehaviour *get_next_particle_behaviour(s32 *idx) {
     *idx += 1;
     while (*idx >= gParticleBehavioursAssetTableCount) {
         *idx -= gParticleBehavioursAssetTableCount;
@@ -2674,7 +2674,7 @@ UNUSED ParticleBehavior *get_next_particle_behaviour(s32 *idx) {
  * Return the previous particle behaviour ID from the behaviour table.
  * Make sure the index is in range by wrapping it.
  */
-UNUSED ParticleBehavior *get_previous_particle_behaviour(s32 *idx) {
+UNUSED ParticleBehaviour *get_previous_particle_behaviour(s32 *idx) {
     *idx -= 1;
     while (*idx < 0) {
         *idx += gParticleBehavioursAssetTableCount;
