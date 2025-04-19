@@ -413,12 +413,12 @@ void func_8000B290(void) {
     for (i = 0; i < 10; i++) {
         sprite = asset20[i].unk78;
         if (sprite != NULL) {
-            free_sprite(sprite);
+            sprite_free(sprite);
             asset20[i].unk78 = NULL;
         }
         texture = asset20[i].unk7C;
         if (texture != NULL) {
-            free_texture(texture);
+            tex_free(texture);
             asset20[i].unk7C = NULL;
         }
     }
@@ -1827,7 +1827,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         address = (u32 *) ((uintptr_t) address + sizeOfobj);
         if (sizeOfobj == 0) {
             if (D_8011AE50 != NULL) {
-                free_texture((TextureHeader *) D_8011AE50);
+                tex_free((TextureHeader *) D_8011AE50);
             }
             objFreeAssets(curObj, assetCount, objType);
             try_free_object_header(var_a0);
@@ -1855,10 +1855,10 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     newObj = mempool_alloc_pool((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
     if (newObj == NULL) {
         if (D_8011AE50 != NULL) {
-            free_texture((TextureHeader *) D_8011AE50);
+            tex_free((TextureHeader *) D_8011AE50);
         }
         if (D_8011AE54 != NULL) {
-            free_texture((TextureHeader *) D_8011AE54);
+            tex_free((TextureHeader *) D_8011AE54);
         }
         objFreeAssets(curObj, assetCount, objType);
         try_free_object_header(var_a0);
@@ -1925,10 +1925,10 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     if (newObj->segment.header->unk56 > 0 && newObj->segment.header->unk56 < 10 && func_8000F99C(newObj)) {
         if (D_8011AE50 != NULL) {
-            free_texture(D_8011AE50);
+            tex_free(D_8011AE50);
         }
         if (D_8011AE54 != NULL) {
-            free_texture(D_8011AE54);
+            tex_free(D_8011AE54);
         }
         objFreeAssets(newObj, assetCount, objType);
         try_free_object_header(var_a0);
@@ -1964,13 +1964,13 @@ void objFreeAssets(Object *obj, s32 count, s32 objType) {
     } else if (objType == OBJECT_MODEL_TYPE_MISC) {
         for (i = 0; i < count; i++) {
             if (obj->unk68[i] != NULL) {
-                free_texture((TextureHeader *) (s32) obj->unk68[i]);
+                tex_free((TextureHeader *) (s32) obj->unk68[i]);
             }
         }
     } else { // Sprite
         for (i = 0; i < count; i++) {
             if (obj->unk68[i] != NULL) {
-                free_sprite((Sprite *) (s32) obj->unk68[i]);
+                sprite_free((Sprite *) (s32) obj->unk68[i]);
             }
         }
     }
@@ -2705,7 +2705,7 @@ void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *tr
     if (tex != NULL) {
         hasTexture = TRUE;
     }
-    load_and_set_texture(&gObjectCurrDisplayList, (TextureHeader *) tex, flags, texOffset);
+    material_set(&gObjectCurrDisplayList, (TextureHeader *) tex, flags, texOffset);
     gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), numVertices, 0);
     gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numTriangles, hasTexture);
     apply_matrix_from_stack(&gObjectCurrDisplayList);
@@ -2972,7 +2972,7 @@ void render_3d_model(Object *obj) {
         if (obj->segment.header->unk71) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->unk18, obj->shading->unk19,
                             obj->shading->unk1A, alpha);
-            enable_primitive_colour();
+            tex_primcolour_on();
         } else if (hasOpacity) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
         } else {
@@ -2989,7 +2989,7 @@ void render_3d_model(Object *obj) {
             } else {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
-            disable_primitive_colour();
+            tex_primcolour_off();
         }
         if (obj->unk60 != NULL) {
             obj60_unk0 = obj->unk60->unk0;
@@ -3075,11 +3075,11 @@ void render_3d_model(Object *obj) {
             if (obj->segment.header->unk71) {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->unk18, obj->shading->unk19,
                                 obj->shading->unk1A, alpha);
-                enable_primitive_colour();
+                tex_primcolour_on();
             }
             render_mesh(objModel, obj, meshBatch, RENDER_SEMI_TRANSPARENT, spB0);
             if (obj->segment.header->unk71) {
-                disable_primitive_colour();
+                tex_primcolour_off();
             }
         }
         if (hasOpacity || obj->segment.header->unk71) {
@@ -3526,15 +3526,15 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             mdl = gfxData->objModel;
             gMagnetEffectObject->curVertData = (Vertex *) gfxData->vertices[gfxData->animationTaskNum];
             opacity = ((D_8011B078[var_t0].g * 8) & 0x7F) + 0x80;
-            func_8007F594(&gObjectCurrDisplayList, 2, COLOUR_RGBA32(255, 255, 255, opacity),
-                          gMagnetColours[racer->magnetModelID]);
+            gfx_init_basic_xlu(&gObjectCurrDisplayList, DRAW_BASIC_2CYCLE, COLOUR_RGBA32(255, 255, 255, opacity),
+                               gMagnetColours[racer->magnetModelID]);
             apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);
             gObjectTexAnim = TRUE;
             render_mesh(mdl, gMagnetEffectObject, 0, RENDER_SEMI_TRANSPARENT, 0);
             gObjectTexAnim = FALSE;
             gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-            reset_render_settings(&gObjectCurrDisplayList);
+            rendermode_reset(&gObjectCurrDisplayList);
             *dList = gObjectCurrDisplayList;
             *mtx = gObjectCurrMatrix;
             *vtxList = gObjectCurrVertexList;
@@ -3623,7 +3623,7 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
                     texToSetFlags |= RENDER_SEMI_TRANSPARENT;
                 }
                 if (gObjectTexAnim == FALSE) {
-                    load_and_set_texture(&dList, texToSet, texToSetFlags, texOffset);
+                    material_set(&dList, texToSet, texToSetFlags, texOffset);
                 } else {
                     texToSet = set_animated_texture_header(texToSet, texOffset);
                     gDkrDmaDisplayList(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(texToSet->cmd),
@@ -5062,7 +5062,7 @@ Object *get_racer_object_by_port(s32 index) {
 UNUSED void debug_render_checkpoints(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
     s32 i;
 
-    load_and_set_texture_no_offset(dList, NULL, RENDER_Z_COMPARE);
+    material_set_no_tex_offset(dList, NULL, RENDER_Z_COMPARE);
     if (gNumberOfCheckpoints > 3) {
         for (i = 0; i < gNumberOfCheckpoints; i++) {
             // Ground path

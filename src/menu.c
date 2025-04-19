@@ -2301,7 +2301,7 @@ void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s
         gDPPipeSync((*dList)++);
         gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip]), 20, 0);
         gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].triangles[gMenuTrisFlip]), 10, i);
-        reset_render_settings(dList);
+        rendermode_reset(dList);
     } else {
         gMenuGeometry[gWoodPanelCount].unk18[gMenuTrisFlip] = 0;
     }
@@ -2342,7 +2342,7 @@ void func_80080BC8(Gfx **dList) {
     }
     gWoodPanelCount = 0;
     gMenuTrisFlip = 1 - gMenuTrisFlip;
-    reset_render_settings(dList);
+    rendermode_reset(dList);
 }
 
 /**
@@ -2444,7 +2444,7 @@ void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s
 
     gDPPipeSync((*dList)++);
     gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
-    reset_render_settings(dList);
+    rendermode_reset(dList);
 }
 
 void init_save_data(void) {
@@ -2947,7 +2947,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                 case 1:
                     if (shouldResetRenderSettings) {
                         shouldResetRenderSettings = FALSE;
-                        reset_render_settings(&sMenuCurrDisplayList);
+                        rendermode_reset(&sMenuCurrDisplayList);
                     }
                     sMenuGuiOpacity = elems->opacity;
                     menu_timestamp_render(*elems->t.numberU16, xPos - SCREEN_WIDTH_HALF,
@@ -2957,7 +2957,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                 case 2: // Number
                     if (shouldResetRenderSettings) {
                         shouldResetRenderSettings = FALSE;
-                        reset_render_settings(&sMenuCurrDisplayList);
+                        rendermode_reset(&sMenuCurrDisplayList);
                     }
                     menu_number_render(*elems->t.number, xPos - SCREEN_WIDTH_HALF,
                                        (-yPos - gPostraceTimestampOffset) + SCREEN_HEIGHT_HALF, elems->filterRed,
@@ -2980,7 +2980,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                 case 5:
                     if (shouldResetRenderSettings) {
                         shouldResetRenderSettings = FALSE;
-                        reset_render_settings(&sMenuCurrDisplayList);
+                        rendermode_reset(&sMenuCurrDisplayList);
                     }
                     sprite_anim_off(TRUE);
                     sprite_opaque(FALSE);
@@ -3019,7 +3019,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
         elems++; // Go onto the next element.
     }
     if (shouldResetRenderSettings) {
-        reset_render_settings(&sMenuCurrDisplayList);
+        rendermode_reset(&sMenuCurrDisplayList);
     }
     sMenuGuiColourR = 255;
     sMenuGuiColourG = 255;
@@ -3872,7 +3872,7 @@ void func_80084854(UNUSED s32 updateRate) {
                  255);
     texrect_draw(&sMenuCurrDisplayList, gMenuSelectionArrowLeft, (gMusicVolumeSliderValue >> 1) + 96, 160, 255, 255,
                  255, 255);
-    reset_render_settings(&sMenuCurrDisplayList);
+    rendermode_reset(&sMenuCurrDisplayList);
     set_text_background_colour(0, 0, 0, 0);
 
     // j must be here.
@@ -5495,7 +5495,7 @@ s32 menu_boot_loop(s32 updateRate) {
 
     if (y < 300) {
         texrect_draw(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, y, 255, 255, 255, 255);
-        reset_render_settings(&sMenuCurrDisplayList);
+        rendermode_reset(&sMenuCurrDisplayList);
     }
 
     return out;
@@ -5674,7 +5674,7 @@ void pakmenu_render(UNUSED s32 updateRate) {
             if ((gOptionBlinkTimer & 8) != 0) {
                 texrect_draw(&sMenuCurrDisplayList, gMenuSelectionArrowDown, SCREEN_WIDTH_HALF, yPos + 8, 255, 255, 255,
                              255);
-                reset_render_settings(&sMenuCurrDisplayList);
+                rendermode_reset(&sMenuCurrDisplayList);
             }
         } else {
             set_text_font(ASSET_FONTS_FUNFONT);
@@ -6831,7 +6831,7 @@ void charselect_render_text(UNUSED s32 updateRate) {
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, "OK?", ALIGN_MIDDLE_CENTER);
 #endif
         }
-        reset_render_settings(&sMenuCurrDisplayList);
+        rendermode_reset(&sMenuCurrDisplayList);
         update_camera_fov(40.0f);
     }
 }
@@ -8586,7 +8586,7 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
     camDisableUserView(0, TRUE);
     camera_init_tracks_menu(dList, mtx);
     set_ortho_matrix_view(dList, mtx);
-    reset_render_settings(dList);
+    rendermode_reset(dList);
     gDPPipeSync((*dList)++);
     sp7C = gTrackSelectX;
     temp2 = -gTrackSelectY;
@@ -8651,7 +8651,7 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
             flags = RENDER_VTX_ALPHA | RENDER_Z_UPDATE;
         }
 
-        load_and_set_texture(dList, bgTexture, flags, 0);
+        material_set(dList, bgTexture, flags, 0);
         gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertices), 4, 0);
         gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(triangles), 2, hasTexture);
         curIndex = data[0];
@@ -8748,7 +8748,7 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
                 texrect_draw_scaled(&sMenuCurrDisplayList, arg7, xTemp, yTemp, sp58, sp54, (rectOpacity & 0xFF) | ~0xFF,
                                     0);
             }
-            reset_render_settings(&sMenuCurrDisplayList);
+            rendermode_reset(&sMenuCurrDisplayList);
         }
     }
     gMenuImages[imageId].x = x;
@@ -8769,7 +8769,7 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
                          offsets[(i << 1) + 1] + yTemp - 1, 255, 255, 255, 255);
         }
     }
-    reset_render_settings(&sMenuCurrDisplayList);
+    rendermode_reset(&sMenuCurrDisplayList);
 }
 
 #ifdef NON_MATCHING
@@ -8879,7 +8879,7 @@ void func_8008FF1C(UNUSED s32 updateRate) {
         camDisableUserView(0, TRUE);
         menu_camera_centre();
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-        reset_render_settings(&sMenuCurrDisplayList);
+        rendermode_reset(&sMenuCurrDisplayList);
         gDPPipeSync(sMenuCurrDisplayList++);
         D_80126928 = 64;
         D_8012692C = 32;
@@ -9317,7 +9317,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
                     texrect_draw(&sMenuCurrDisplayList, gRaceSelectionImages[gPlayerSelectVehicle[PLAYER_TWO] * 3], 176,
                                  y, 255, 255, 255, sMenuGuiOpacity);
                 }
-                reset_render_settings(&sMenuCurrDisplayList);
+                rendermode_reset(&sMenuCurrDisplayList);
                 if (gNumberOfActivePlayers <= 2 && !sp74) {
                     // Draw border around vehicle images
                     gMenuImages[7].y = -52.0f;
@@ -9411,7 +9411,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
             trackmenu_staff_beaten(gTrackIdForPreview) >= 0) {
             texrect_draw(&sMenuCurrDisplayList, gRaceSelectionTTTexture, 204, regionOffset + 122, 255, 255, 255,
                          sMenuGuiOpacity);
-            reset_render_settings(&sMenuCurrDisplayList);
+            rendermode_reset(&sMenuCurrDisplayList);
         }
         if (gTrackSelectCursorX != 5) {
             if ((gMenuStage == TRACKMENU_OPT_2 && !sp74) || (gMenuStage == TRACKMENU_OPT_3 && sp74) ||
@@ -9933,7 +9933,7 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
                     }
                     texrect_draw(&sMenuCurrDisplayList, gRaceSelectionImages[gPlayerSelectVehicle[0] * 3], 149, y, 255,
                                  255, 255, 255);
-                    reset_render_settings(&sMenuCurrDisplayList);
+                    rendermode_reset(&sMenuCurrDisplayList);
                     gMenuImages[7].x = 21.0f;
                     gMenuImages[7].y = -52.0f;
                     menu_element_render(7);
@@ -11286,7 +11286,7 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         set_text_colour(255, 255, 192, 96, 255);
         draw_text(&sMenuCurrDisplayList, time - 34, y2 + offsetY + 2, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER);
 #endif
-        reset_render_settings(&sMenuCurrDisplayList);
+        rendermode_reset(&sMenuCurrDisplayList);
         sprite_anim_off(TRUE);
         sprite_opaque(FALSE);
         sMenuGuiColourR = 255;
@@ -12642,7 +12642,7 @@ void ghostmenu_render(UNUSED s32 updateRate) {
         }
         texrect_draw_scaled(&sMenuCurrDisplayList, vehicleSelectTex, (gGhostDataElementPositions[4] + 40),
                             (gGhostDataElementPositions[5] + y), 0.625f, 0.625f, COLOUR_RGBA32(255, 255, 255, 255), 0);
-        reset_render_settings(&sMenuCurrDisplayList);
+        rendermode_reset(&sMenuCurrDisplayList);
         gMenuImages[7].x = (gGhostDataElementPositions[6] - SCREEN_HEIGHT_HALF);
         gMenuImages[7].y = ((-gGhostDataElementPositions[7] - y) + heightAdjust + SCREEN_HEIGHT_HALF);
         gMenuImages[7].scale = 0.075f;
@@ -12696,7 +12696,7 @@ void ghostmenu_render(UNUSED s32 updateRate) {
             texrect_draw(&sMenuCurrDisplayList, gMenuSelectionArrowUp, SCREEN_WIDTH_HALF + 1, 54, 0, 0, 0, 128);
             texrect_draw(&sMenuCurrDisplayList, gMenuSelectionArrowUp, SCREEN_WIDTH_HALF - 1, 52, 255, 255, 255, 255);
         }
-        reset_render_settings(&sMenuCurrDisplayList);
+        rendermode_reset(&sMenuCurrDisplayList);
     }
 }
 
@@ -13024,7 +13024,7 @@ void credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
     gDPPipeSync(sMenuCurrDisplayList++);
     gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
 
-    reset_render_settings(&sMenuCurrDisplayList);
+    rendermode_reset(&sMenuCurrDisplayList);
 }
 
 #if REGION != REGION_JP
@@ -13087,7 +13087,7 @@ s32 menu_credits_loop(s32 updateRate) {
                          (((coss_s16(var_s5) * var_s4) >> 16) + textPos) - 20, 255, 255, 255, 255);
             var_s5 += 0x1999;
         }
-        reset_render_settings(&sMenuCurrDisplayList);
+        rendermode_reset(&sMenuCurrDisplayList);
     }
 
     if (D_80126BE0 != FALSE) {
@@ -13675,16 +13675,16 @@ void menu_assetgroup_free(s16 *assetGroup) {
 void menu_asset_free(s32 assetID) {
     if (gMenuAssetActive[assetID]) {
         if (gMenuAssets[assetID] != NULL) {
-            if (((*gAssetsMenuElementIds)[assetID] & HUD_ELEMENT_TEXTURE) == HUD_ELEMENT_TEXTURE &&
+            if (((*gAssetsMenuElementIds)[assetID] & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE &&
                 gMenuAssets[assetID] != NULL) {
                 mempool_free_timer(0);
-                free_texture(gMenuAssets[assetID]);
+                tex_free(gMenuAssets[assetID]);
                 mempool_free_timer(2);
             } else {
-                if ((*gAssetsMenuElementIds)[assetID] & HUD_ELEMENT_SPRITE) {
-                    free_sprite((Sprite *) (u32) gMenuAssets[assetID]);
+                if ((*gAssetsMenuElementIds)[assetID] & ASSET_MASK_SPRITE) {
+                    sprite_free((Sprite *) (u32) gMenuAssets[assetID]);
                 } else {
-                    if ((*gAssetsMenuElementIds)[assetID] & HUD_ELEMENT_OBJECT) {
+                    if ((*gAssetsMenuElementIds)[assetID] & ASSET_MASK_OBJECT) {
                         free_object((Object *) (u32) gMenuAssets[assetID]);
                     } else {
                         free_3d_model((ObjectModel **) (u32) gMenuAssets[assetID]);
@@ -13743,11 +13743,11 @@ void menu_asset_load(s32 assetID) {
     if (!gMenuAssetActive[assetID]) {
         i = (*gAssetsMenuElementIds)[assetID];
 
-        if ((i & HUD_ELEMENT_TEXTURE) == HUD_ELEMENT_TEXTURE) {
+        if ((i & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE) {
             gMenuAssets[assetID] = (TextureHeader *) load_texture(i & 0x3FFF);
-        } else if (i & HUD_ELEMENT_SPRITE) {
+        } else if (i & ASSET_MASK_SPRITE) {
             gMenuAssets[assetID] = (TextureHeader *) func_8007C12C(i & 0x3FFF, 0);
-        } else if (i & HUD_ELEMENT_OBJECT) {
+        } else if (i & ASSET_MASK_OBJECT) {
             if (gMenuElementIdCount) {} // Fakematch
             entry.objectID = i & 0xFFFF;
             entry.size = sizeof(LevelObjectEntryCommon);
@@ -13814,8 +13814,8 @@ void menu_element_render(s32 elementID) {
     ObjectModel **model;
 
     if (gMenuAssets[gMenuImages[elementID].spriteID] != NULL) {
-        if (((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & HUD_ELEMENT_TEXTURE) != HUD_ELEMENT_TEXTURE) {
-            if ((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & HUD_ELEMENT_OBJECT) {
+        if (((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & ASSET_MASK_TEXTURE) != ASSET_MASK_TEXTURE) {
+            if ((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & ASSET_MASK_OBJECT) {
                 if (0) {} // Fakematch
                 object = (Object *) gMenuAssets[gMenuImages[elementID].spriteID];
                 asset = (MenuAsset *) &gMenuImages[elementID];
@@ -13833,7 +13833,7 @@ void menu_element_render(s32 elementID) {
                 object->segment.object.opacity = sMenuGuiOpacity;
                 render_object(&sMenuCurrDisplayList, &sMenuCurrHudMat, &sMenuCurrHudVerts, object);
             } else {
-                if ((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & HUD_ELEMENT_SPRITE) {
+                if ((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & ASSET_MASK_SPRITE) {
                     sprite = (Sprite *) gMenuAssets[gMenuImages[elementID].spriteID];
                     gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, sMenuGuiColourR, sMenuGuiColourG, sMenuGuiColourB,
                                     sMenuGuiOpacity);
@@ -13904,7 +13904,7 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
                 texEnabled = TRUE;
                 texOffset = objMdl->batches[i].unk7 << 14;
             }
-            load_and_set_texture(&sMenuCurrDisplayList, tex, flags, texOffset);
+            material_set(&sMenuCurrDisplayList, tex, flags, texOffset);
 
             gSPVertexDKR(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
             gSPPolygon(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), numTris, texEnabled);
