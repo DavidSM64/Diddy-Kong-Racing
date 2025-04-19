@@ -152,6 +152,13 @@ typedef struct DrawTexture {
     s16 yOffset; // Offset from the center of the screen.
 } DrawTexture;
 
+// Probably not unique to the boot menu.
+typedef struct ShadowHeapProperties {
+  TextureHeader *texture; // Pointer to texture to draw.
+  s16 triCount; // Offset from the center of the screen.
+  s16 vtxCount; // Offset from the center of the screen.
+} ShadowHeapProperties;
+
 typedef struct Sprite {
   /* 0x00 */ s16 baseTextureId;
   /* 0x02 */ s16 numberOfFrames; // 1 means static texture
@@ -659,6 +666,13 @@ typedef struct ObjectModel {
     /* 0x54 */ u8 pad[0x2C];
 } ObjectModel;      
 
+typedef struct CollisionNode {
+    u16 triangleIndex; // This triangle index
+    u16 closestTri01;  // The closest triangle index to the line made from indices 0 & 1.
+    u16 closestTri12;  // The closest triangle index to the line made from indices 1 & 2.
+    u16 closestTri20;  // The closest triangle index to the line made from indices 2 & 0.
+} CollisionNode;
+
 /* Size: 0x44 bytes */
 typedef struct LevelModelSegment {
 /* 0x00 */ Vertex *vertices;
@@ -666,7 +680,7 @@ typedef struct LevelModelSegment {
 /* 0x08 */ s32 unk8;
 /* 0x0C */ TriangleBatchInfo *batches;
 /* 0x10 */ s16 *unk10;
-/* 0x14 */ u16 *unk14;
+/* 0x14 */ CollisionNode *unk14;
 /* 0x18 */ f32 *unk18;
 /* 0x1C */ s16 numberOfVertices;
 /* 0x1E */ s16 numberOfTriangles;
@@ -791,10 +805,10 @@ typedef struct ObjectHeader {
   /* 0x40 */ s16 shadeAngleZ;
   /* 0x42 */ s16 unk42;
   /* 0x44 */ s16 unk44;
-  /* 0x48 */ s16 unk46;
-  /* 0x48 */ s16 unk48;
-  /* 0x4A */ s16 unk4A;
-  /* 0x4C */ s16 unk4C;
+  /* 0x48 */ s16 shadowBottom; // Lower bounds for shadow
+  /* 0x48 */ s16 shadowTop; // Upper bounds for shadow
+  /* 0x4A */ s16 shadowFadeMin; // Close reference distance for shadow opacity
+  /* 0x4C */ s16 shadowFadeMax; // Far reference distance for shadow opacity
   /* 0x4E */ s16 drawDistance;
   /* 0x50 */ s16 unk50;
   /* 0x52 */ s8 unk52;
@@ -816,32 +830,6 @@ typedef struct ObjectHeader {
   /* 0x72 */ u8 unk72;
              u8 pad73[0x5];
 } ObjectHeader;
-
-typedef struct Object_44_0 {
-    u8 unk0;
-    u8 unk1;
-} Object_44_0;
-
-typedef struct Object_44_C {
-    u8 pad0[0x4];
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-    u8  pad10[0x6];
-    s16 unk16;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-} Object_44_C;
-
-typedef struct Object_44 {
-    Object_44_0 *unk0;
-    u8  pad4[8];
-    Object_44_C *unkC;
-} Object_44;
 
 typedef struct ObjectInteraction {
  /* 0x00 */ struct Object *obj;
@@ -1723,89 +1711,6 @@ typedef struct Object_68 {
   /* 0x50 */ s16 unk50;
  } Object_68;
  
-/* Size: 0x20 bytes */
-typedef struct ParticleEmitter {
-    /* 0x00 */ struct Particle *unk0;
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ u8 unk6;
-    /* 0x07 */ u8 unk7;
-    /* 0x08 */ s16 unk8;
-    /* 0x0A */ s16 unkA;
-    /* 0x0C */ u8  padC[0x14];
-} ParticleEmitter;
-
-/* Size: 0xA0 bytes */
-typedef struct ParticleBehavior {
-    s32 flags;
-    f32 velX;
-    f32 velY;
-    f32 velZ;
-    f32 unk10;
-    s16 unk14;
-    s16 unk16;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    s16 unk26;
-    s16 unk28;
-    s16 unk2A;
-    s16 unk2C;
-    s16 unk2E;
-    f32 unk30;
-    f32 unk34;
-    f32 unk38;
-    f32 unk3C;
-    s16 unk40;
-    s16 unk42;
-    s16 angleOffsetY;
-    s16 angleOffsetX;
-    s16 angleOffsetZ;
-    s16 angleVelY;
-    s16 angleVelX;
-    s16 angleVelZ;
-    f32 unk50;
-    f32 unk54;
-    f32 forwardVel;
-    s32 behaviourFlags;
-    s32 gravityRange1;
-    s16 angleRangeY1;
-    s16 angleRangeX1;
-    s16 angleRangeZ1;
-    s16 angleRangeY2;
-    s16 angleRangeX2;
-    s16 angleRangeZ2;
-    s32 gravityRange2;
-    s32 velocityRangeX1;
-    s32 velocityRangeY1;
-    s32 velocityRangeZ1;
-    s16 angleRangeY3;
-    s16 angleRangeX3;
-    s16 angleRangeZ3;
-    s16 unk86;
-    s16 unk88;
-    s16 unk8A;
-    s32 unk8C; // Something to do with scale
-    s32 unk90; // Something to do with scale
-    s32 velocityRange;
-    u8 colourRangeR;
-    u8 colourRangeG;
-    u8 colourRangeB;
-    u8 colourRangeA;
-    s32 *unk9C;
-} ParticleBehavior;
-
-typedef struct unk800AF29C_C_400 {
-    s32 *unkC;
-    s16 unk10;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
-} unk800AF29C_C_400;
-
 typedef struct unk800B2260_C {
     s32 unk0;
     s32 unk4;
@@ -1842,16 +1747,6 @@ typedef struct SegmentPropertiesObject {
   /* 0x003B */ s8 animationID;
 } SegmentPropertiesObject;
 
-typedef struct SegmentPropertiesParticle {
-  /* 0x002C */ s16 unk2C;
-  /* 0x002E */ s16 blockID;
-  /* 0x0030 */ f32 unk30;
-  /* 0x0034 */ f32 unk34;
-  /* 0x0038 */ u8 unk38;
-  /* 0x0039 */ u8 movementType;
-  /* 0x003A */ s16 destroyTimer;
-} SegmentPropertiesParticle;
-
 typedef struct SegmentPropertiesCamera {
   /* 0x002C */ f32 unk2C;
   /* 0x0030 */ f32 distanceToCamera;
@@ -1864,14 +1759,13 @@ typedef struct SegmentPropertiesCamera {
 typedef struct ObjectSegment {
   /* 0x0000 */ ObjectTransform trans;
   /* 0x0018 */ s16 animFrame;
-  /* 0x001A */ s16 unk1A;
+  /* 0x001A */ s16 numActiveEmitters;
   /* 0x001C */ f32 x_velocity;
   /* 0x0020 */ f32 y_velocity;
   /* 0x0024 */ f32 z_velocity;
   /* 0x0028 */ f32 unk28;
   union {
       SegmentPropertiesObject object;
-      SegmentPropertiesParticle particle;
       SegmentPropertiesCamera camera;
   };
   /* 0x003C */ LevelObjectEntry* level_entry;
@@ -1922,9 +1816,9 @@ typedef struct Object {
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
-  /* 0x006C */ ParticleEmitter *particleEmitter; //player + 0x370
+  /* 0x006C */ struct ParticleEmitter *particleEmitter; //player + 0x370
   /* 0x0070 */ Object_LightData **lightData;
-  /* 0x0074 */ u32 particleEmitFlags;
+  /* 0x0074 */ u32 particleEmittersEnabled;
   /* 0x0078 */ ObjProperties properties;
   /* 0x0080 */ void *unk80;
   /* 0x0084 */ u32 unk84;

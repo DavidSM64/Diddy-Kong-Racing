@@ -92,8 +92,17 @@ typedef enum TransFlags {
     OBJ_FLAGS_SHADOW_ONLY =         (1 << 12), // Still has a shadow, but the model is invisible.
     OBJ_FLAGS_UNK_2000 =            (1 << 13),
     OBJ_FLAGS_INVISIBLE =           (1 << 14), // Invisible, and hidden shadow too.
-    OBJ_FLAGS_DEACTIVATED =         (1 << 15)  // Object is invisible and inactive.
+    OBJ_FLAGS_PARTICLE =            (1 << 15)  // Object is a particle.
 } TransFlags;
+
+typedef enum HeaderFlags {
+    HEADER_FLAGS_NONE,
+    HEADER_FLAGS_UNK_0001 = (1 << 0),
+    HEADER_FLAGS_UNK_0002 = (1 << 1),
+    HEADER_FLAGS_UNK_0004 = (1 << 2),
+    HEADER_FLAGS_UNK_0008 = (1 << 3),
+    HEADER_FLAGS_WATER_EFFECT = (1 << 4),
+} HeaderFlags;
 
 #define TEX_TABLE_2D 0
 #define TEX_TABLE_3D 1

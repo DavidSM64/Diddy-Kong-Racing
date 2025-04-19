@@ -162,7 +162,7 @@ void obj_loop_scenery(Object *obj, s32 updateRate) {
                     } else {
                         particleFlagShift = get_random_number_from_range(0, obj->segment.header->particleCount - 1);
                     }
-                    obj->particleEmitFlags = OBJ_EMIT_PARTICLE_1 << particleFlagShift;
+                    obj->particleEmittersEnabled = OBJ_EMIT_1 << particleFlagShift;
                     obj_spawn_particle(obj, LOGIC_30FPS);
                 }
             }
@@ -277,7 +277,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         }
     }
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON) {
-        obj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
+        obj->particleEmittersEnabled = OBJ_EMIT_1;
         obj_spawn_particle(obj, updateRate);
         obj->properties.fireball.timer -= updateRate;
         if (obj->properties.fireball.timer < 0) {
@@ -1907,7 +1907,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
             wizShipObj->properties.fireball.timer = 0;
         }
         if ((wizShipObj->unk60 != NULL) && (wizShipObj->properties.fireball.timer == 0)) {
-            if (wizShipObj->particleEmitFlags & OBJ_EMIT_PARTICLE_1) {
+            if (wizShipObj->particleEmittersEnabled & OBJ_EMIT_1) {
                 wizShipObj->properties.fireball.timer = 20;
                 object_transform_to_matrix(shipMtx, &wizShipObj->segment.trans);
                 trans.x_position = 0.0f;
@@ -2055,7 +2055,7 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
     var_s0 = 0;
     func_8001F460(charSelectObj, updateRate, NULL);
     charSelect = &charSelectObj->unk64->characterSelect;
-    charSelectObj->particleEmitFlags = OBJ_EMIT_OFF;
+    charSelectObj->particleEmittersEnabled = OBJ_EMIT_NONE;
     if (charSelect != NULL) {
         gfxData = charSelectObj->unk68[charSelectObj->segment.object.modelIndex];
         if (gfxData != NULL) {
@@ -2101,7 +2101,7 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
                     status = charselect_status();
                     for (i2 = 0; i2 < sp4F; i2++) {
                         if (status[sp50[i2]] == 1) {
-                            charSelectObj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
+                            charSelectObj->particleEmittersEnabled = OBJ_EMIT_1;
                             obj_spawn_particle(charSelectObj, LOGIC_30FPS);
                         }
                     }
@@ -2286,7 +2286,7 @@ void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) 
     if (entry->unk8) {
         obj->properties.bombExplosion.unk4 |= (entry2->unk8 << 8) & 0xFF00;
     }
-    obj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
+    obj->particleEmittersEnabled = OBJ_EMIT_1;
 }
 
 void obj_loop_bombexplosion(Object *obj, s32 updateRate) {
@@ -2309,10 +2309,10 @@ void obj_loop_bombexplosion(Object *obj, s32 updateRate) {
         free_object(obj);
     }
 
-    if (obj->particleEmitFlags) {
+    if (obj->particleEmittersEnabled) {
         if (get_number_of_active_players() < THREE_PLAYERS) {
             obj_spawn_particle(obj, LOGIC_30FPS);
-            obj->particleEmitFlags = OBJ_EMIT_OFF;
+            obj->particleEmittersEnabled = OBJ_EMIT_NONE;
         }
     }
 }
@@ -2572,7 +2572,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     }
     taj = (Object_NPC *) obj->unk64;
     levelHeader = get_current_level_header();
-    obj->particleEmitFlags = OBJ_EMIT_OFF;
+    obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     if (obj->segment.animFrame == 0 && taj->animFrameF > 1.0) {
         taj->animFrameF = 0.0f;
     }
@@ -2811,10 +2811,10 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             racer_set_dialogue_camera();
             taj->animFrameF += updateRateF * 2.0;
             if (taj->animFrameF > 25.0) {
-                obj->particleEmitFlags = OBJ_EMIT_PARTICLE_1 | OBJ_EMIT_PARTICLE_2 | OBJ_EMIT_PARTICLE_4;
+                obj->particleEmittersEnabled = OBJ_EMIT_1 | OBJ_EMIT_2 | OBJ_EMIT_4;
             }
             if (taj->animFrameF > 50.0) {
-                obj->particleEmitFlags = OBJ_EMIT_OFF;
+                obj->particleEmittersEnabled = OBJ_EMIT_NONE;
             }
             if (taj->animFrameF > 60.0) {
                 taj->animFrameF = 60.0f;
@@ -3420,7 +3420,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
     flag = 0x10000 << levelEntry->goldenBalloon.balloonID;
     if (settings->courseFlagsPtr[settings->courseId] & flag) {
         if (obj->properties.npc.timer > 0) {
-            obj->particleEmitFlags = OBJ_EMIT_PARTICLE_2;
+            obj->particleEmittersEnabled = OBJ_EMIT_2;
             obj_spawn_particle(obj, updateRate);
             obj->properties.npc.timer -= updateRate;
         } else {
@@ -3452,7 +3452,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                         sound_play_spatial(SOUND_COLLECT_BALLOON, obj->segment.trans.x_position,
                                            obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                         obj->properties.npc.timer = 16;
-                        obj->particleEmitFlags = OBJ_EMIT_PARTICLE_2;
+                        obj->particleEmittersEnabled = OBJ_EMIT_2;
                         obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
                         obj_spawn_particle(obj, updateRate);
                     }
@@ -4352,7 +4352,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
     if (properties->status == BANANA_COLLECTED) {
         obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
         properties->destroyTimer -= updateRate;
-        obj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
+        obj->particleEmittersEnabled = OBJ_EMIT_1;
         obj_spawn_particle(obj, updateRate);
         if (properties->destroyTimer <= 0) {
             free_object(obj);
@@ -4451,7 +4451,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
                         free_object(obj);
                     } else {
                         properties->status = BANANA_COLLECTED;
-                        obj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
+                        obj->particleEmittersEnabled = OBJ_EMIT_1;
                         obj_spawn_particle(obj, updateRate);
                     }
                 }
@@ -4545,7 +4545,7 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
     }
     if (obj->properties.npc.timer > 0) {
         obj->properties.npc.timer -= updateRate;
-        obj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
+        obj->particleEmittersEnabled = OBJ_EMIT_1;
         obj_spawn_particle(obj, updateRate);
     }
 }
@@ -4687,7 +4687,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
         weaponBalloonObj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
     }
     if (weaponBalloonObj->properties.weaponBalloon.particleTimer > 0) {
-        weaponBalloonObj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
+        weaponBalloonObj->particleEmittersEnabled = OBJ_EMIT_1;
         obj_spawn_particle(weaponBalloonObj, updateRate);
         weaponBalloonObj->properties.weaponBalloon.particleTimer -= updateRate;
     }
@@ -4766,7 +4766,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                             sound_play(SOUND_COLLECT_ITEM + racer->balloon_level, NULL);
                         }
                     }
-                    weaponBalloonObj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
+                    weaponBalloonObj->particleEmittersEnabled = OBJ_EMIT_1;
                     obj_spawn_particle(weaponBalloonObj, updateRate);
                     weaponBalloon->respawnTime = 90;
                 }
@@ -5081,7 +5081,7 @@ void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon 
     }
     play_rocket_trailing_sound(obj, rocket, SOUND_HOMING_ROCKET);
     if (get_number_of_active_players() < 3) {
-        obj->particleEmitFlags |= OBJ_EMIT_PARTICLE_1;
+        obj->particleEmittersEnabled |= OBJ_EMIT_1;
         obj_spawn_particle(obj, updateRate);
     }
 }
@@ -5264,7 +5264,7 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
             }
         }
         if (weaponProperties->status == WEAPON_DESTROY) {
-            weaponObj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
+            weaponObj->particleEmittersEnabled = OBJ_EMIT_1;
             obj_spawn_particle(weaponObj, updateRate);
             weaponObj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
             weaponProperties->scale -= updateRate;
@@ -6278,7 +6278,7 @@ void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
 
 /* Official name: bubblerInit */
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
-    func_800AF134((Particle *) obj->particleEmitter, entry->particleBehaviourID, entry->particlePropertyID, 0, 0, 0);
+    emitter_change_settings(obj->particleEmitter, entry->particleBehaviourID, entry->particlePropertyID, 0, 0, 0);
     obj->properties.common.unk0 = entry->particleDensity;
 }
 
@@ -6289,9 +6289,9 @@ void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
  */
 void obj_loop_bubbler(Object *obj, s32 updateRate) {
     if (obj->properties.common.unk0 >= get_random_number_from_range(0, 1024)) {
-        obj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
+        obj->particleEmittersEnabled = OBJ_EMIT_1;
     } else {
-        obj->particleEmitFlags = OBJ_EMIT_OFF;
+        obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     }
     if (get_number_of_active_players() < 2) {
         obj_spawn_particle(obj, updateRate);
@@ -6328,9 +6328,9 @@ void obj_loop_rangetrigger(Object *obj, s32 updateRate) {
 
     entry = &obj->segment.level_entry->rangeTrigger;
     if (obj_dist_racer(obj->segment.trans.x_position, 0, obj->segment.trans.z_position, entry->radius, 1, objs) > 0) {
-        obj->particleEmitFlags = entry->particleFlags;
+        obj->particleEmittersEnabled = entry->particleFlags;
     } else {
-        obj->particleEmitFlags = OBJ_EMIT_OFF;
+        obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     }
     obj_spawn_particle(obj, updateRate);
 }
