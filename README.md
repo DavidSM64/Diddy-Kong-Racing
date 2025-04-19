@@ -9,7 +9,7 @@ As of April 19, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 79.89%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 50.27%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 52.64%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -125,7 +125,7 @@ As of April 19, 2025, this is our current score:
                     # Decompiled functions: 1856
                      # GLOBAL_ASM remaining: 94
                     # NON_MATCHING functions: 12
-                 # NON_EQUIVALENT WIP functions: 28
+                 # NON_EQUIVALENT WIP functions: 29
  --------------------------- Game Status ---------------------------
               Balloons: 38/47, Keys: 4/4, Trophies: 3/5
                T.T. Amulets: 4/4, Wizpig Amulets: 3/4
@@ -133,14 +133,14 @@ As of April 19, 2025, this is our current score:
  We are collecting silver coins in Haunted Woods. (6/8 silver coins)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 50.27% Complete -------------------------
-                    # Documented functions: 1091
-                    # Undocumented remaining: 562
+ ------------------------- 52.64% Complete -------------------------
+                    # Documented functions: 1126
+                    # Undocumented remaining: 527
  --------------------------- Game Status ---------------------------
-              Balloons: 25/47, Keys: 3/4, Trophies: 2/5
+              Balloons: 26/47, Keys: 3/4, Trophies: 2/5
                T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  -------------------------------------------------------------------
-             We are racing in Treasure Caves. (Lap 1/3)
+          We are racing the octopus boss Bubbler. (Lap 3/3)
  ===================================================================
 ```
 <!-- README_SCORE_END -->
