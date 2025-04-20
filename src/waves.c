@@ -128,11 +128,11 @@ s32 gWavePowerDivisor;
         mempool_free(tempMem); \
         mem = NULL;            \
     }
-#define FREE_TEX(tex)          \
-    tempTex = tex;             \
-    if (tempTex != NULL) {     \
-        free_texture(tempTex); \
-        tex = NULL;            \
+#define FREE_TEX(tex)      \
+    tempTex = tex;         \
+    if (tempTex != NULL) { \
+        tex_free(tempTex); \
+        tex = NULL;        \
     }
 
 void free_waves(void) {

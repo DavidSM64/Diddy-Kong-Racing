@@ -163,7 +163,7 @@ typedef struct Sprite {
   /* 0x00 */ s16 baseTextureId;
   /* 0x02 */ s16 numberOfFrames; // 1 means static texture
   /* 0x04 */ s16 numberOfInstances;
-  /* 0x06 */ s16 unk6;
+  /* 0x06 */ s16 drawFlags;
   /* 0x08 */ TextureHeader **frames;
   union {
     /* 0x0C */ u8 val[1]; // Actual size varies.

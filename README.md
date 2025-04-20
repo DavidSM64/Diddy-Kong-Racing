@@ -9,7 +9,7 @@ As of April 19, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 79.89%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 52.64%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 53.78%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -133,14 +133,14 @@ As of April 19, 2025, this is our current score:
  We are collecting silver coins in Haunted Woods. (6/8 silver coins)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 52.64% Complete -------------------------
-                    # Documented functions: 1126
-                    # Undocumented remaining: 527
+ ------------------------- 53.78% Complete -------------------------
+                    # Documented functions: 1136
+                    # Undocumented remaining: 517
  --------------------------- Game Status ---------------------------
               Balloons: 26/47, Keys: 3/4, Trophies: 2/5
                T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  -------------------------------------------------------------------
-          We are racing the octopus boss Bubbler. (Lap 3/3)
+      We are battling in Darkwater Beach. (2 opponents remain)
  ===================================================================
 ```
 <!-- README_SCORE_END -->

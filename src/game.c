@@ -710,7 +710,7 @@ void clear_audio_and_track(void) {
     }
     //! @bug this will never be true because skyDome is signed.
     if (gCurrentLevelHeader->skyDome == 0xFF) {
-        free_texture(gCurrentLevelHeader->unkA4);
+        tex_free(gCurrentLevelHeader->unkA4);
     }
 }
 
