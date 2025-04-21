@@ -50,7 +50,7 @@ s32 D_800DC920 = -1;
 // T.T.カメラ  -  T.T. Camera
 char gJpnTTCam[] = { 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x55, 0x80, 0x71, 0x80, 0x76 };
 #endif
-s32 *D_800DC924 = NULL;
+u8 *D_800DC924 = NULL;
 s32 D_800DC928 = 0; // Currently unknown, might be a different type.
 
 s8 D_800DC92C[24] = {
@@ -162,7 +162,7 @@ s8 *D_8011D47C;
 Vertex *D_8011D480[2];
 Vertex *D_8011D488;
 s32 D_8011D48C;
-TriangleList *D_8011D490[2];
+Triangle *D_8011D490[2];
 Triangle *D_8011D498;
 s16 D_8011D49C;
 s16 D_8011D49E;
@@ -461,13 +461,59 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
 UNUSED const char gTrackClippingErrorString[] = "Solid Clipping x0=x1 Error!!!\n";
 UNUSED const char gTrackHeightOverflowString[] = "TrackGetHeight() - Overflow!!!\n";
 
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80025510.s")
+void func_80025510(s32 count) {
+    s32 i;
+    s32 sp30;
+    s32 sp2C;
+    s32 sp28;
+    s32 sp24;
+    u8* ptr;
+
+    D_8011D4BA = 175;
+    D_8011D4BC = 45;
+    if (count >= 2) {
+        D_8011D4BC >>= 1;
+    }
+
+    sp30 = (D_8011D4BA + 6) * sizeof(unk8011D478);
+    sp2C = D_8011D4BA + 5;
+    sp28 = (D_8011D4BC + 5) * 4 * sizeof(Vertex);
+    sp24 = (D_8011D4BC + 5) * 2 * sizeof(Triangle);
+
+    D_8011D474 = mempool_alloc_safe(count * sizeof(unk8011D474), COLOUR_TAG_CYAN);
+    D_800DC924 = mempool_alloc_safe(sp30 + sp2C + (sp28 + sp24) * 2 * count, COLOUR_TAG_CYAN);
+
+    ptr = D_800DC924;
+    
+    if (ptr != NULL) {        
+        D_8011D478 = (unk8011D478 *)ptr;
+        ptr += sp30;
+        
+        D_8011D47C = ptr;
+        ptr = (s8*) ((s32)(ptr + sp2C + 8) & ~7);
+        
+        for(i = 0; i < count; i++) {
+            D_8011D474[i].unk0 = (Triangle*)ptr;
+            ptr += sp24;
+            
+            D_8011D474[i].unk4 = (Triangle*)ptr;
+            ptr += sp24;
+            
+            D_8011D474[i].unk8 = (Vertex*)ptr;
+            ptr += sp28;
+            
+            D_8011D474[i].unkC = (Vertex*)ptr;
+            ptr += sp28;
+        }
+    }
+    D_8011D4B4 = 0;
+}
 
 void func_800257D0(void) {
-    if (D_800DC924 != 0) {
+    if (D_800DC924 != NULL) {
         mempool_free(D_8011D474);
         mempool_free(D_800DC924);
-        D_800DC924 = 0;
+        D_800DC924 = NULL;
     }
 }
 
@@ -1658,7 +1704,7 @@ void render_level_geometry_and_objects(void) {
         }
     }
 
-    if (D_800DC924 && func_80027568()) {
+    if (D_800DC924 != NULL && func_80027568()) {
         func_8002581C(segmentIds, numberOfSegments, get_current_viewport());
     }
     gAntiAliasing = FALSE;

@@ -81,8 +81,8 @@ typedef struct unk8011B330 {
 
 /* Size: 0x10 bytes */
 typedef struct unk8011D474 {
-    TriangleList *unk0;
-    TriangleList *unk4;
+    Triangle *unk0;
+    Triangle *unk4;
     Vertex *unk8;
     Vertex *unkC;
 } unk8011D474;
