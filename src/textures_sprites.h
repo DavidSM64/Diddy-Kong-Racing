@@ -9,6 +9,14 @@
 #include "memory.h"
 #include <ultra64.h>
 
+#define TEX_TABLE_2D 0
+#define TEX_TABLE_3D 1
+
+// Gets the texture type. E.g: rgba16
+#define TEX_FORMAT(x) (x & 0xF)
+// Gets the texture render mode type. E.g: transparent
+#define TEX_RENDERMODE(x) ((x >> 4) & 0xF)
+
 /**
  * First two entries are combine mode.
  * Third entry is othermode high word. (Most importantly, the cycle mode and texture filter settings)
@@ -92,7 +100,7 @@ typedef enum TransFlags {
     OBJ_FLAGS_SHADOW_ONLY =         (1 << 12), // Still has a shadow, but the model is invisible.
     OBJ_FLAGS_UNK_2000 =            (1 << 13),
     OBJ_FLAGS_INVISIBLE =           (1 << 14), // Invisible, and hidden shadow too.
-    OBJ_FLAGS_DEACTIVATED =         (1 << 15)  // Object is invisible and inactive.
+    OBJ_FLAGS_PARTICLE =            (1 << 15)  // Object is a particle.
 } TransFlags;
 
 typedef enum HeaderFlags {
@@ -104,8 +112,13 @@ typedef enum HeaderFlags {
     HEADER_FLAGS_WATER_EFFECT = (1 << 4),
 } HeaderFlags;
 
-#define TEX_TABLE_2D 0
-#define TEX_TABLE_3D 1
+typedef enum BasicRenderIDs {
+    DRAW_BASIC_ZB_OFF,
+    DRAW_BASIC_1CYCLE,
+    DRAW_BASIC_2CYCLE,
+
+    DRAW_BASIC_IDS
+} BasicRenderIDs;
 
 typedef struct TextureCacheEntry {
     s32 id;
@@ -127,20 +140,20 @@ typedef struct TempTexHeader {
 
 void tex_disable_modes(s32 flags);
 void tex_enable_modes(s32 flags);
-s32 get_loaded_2D_textures(void);
-s32 get_loaded_3D_textures(void);
-s32 func_8007AE64(void);
+s32 tex_get_table_2D(void);
+s32 tex_get_table_3D(void);
+s32 sprite_table_size(void);
 void set_texture_colour_tag(s32 tagID);
-void reset_render_settings(Gfx **dList);
-void enable_primitive_colour(void);
-void disable_primitive_colour(void);
-void load_and_set_texture_no_offset(Gfx **dList, TextureHeader *texhead, u32 flags);
+void rendermode_reset(Gfx **dList);
+void tex_primcolour_on(void);
+void tex_primcolour_off(void);
+void material_set_no_tex_offset(Gfx **dList, TextureHeader *texhead, u32 flags);
 void sprite_opaque(s32 setting);
-s32 func_8007EF64(s16 arg0);
-void load_and_set_texture(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset);
-void free_sprite(Sprite *sprite);
-void free_texture(TextureHeader *tex);
-void func_8007BF34(Gfx **dList, s32 flags);
+s32 tex_palette_id(s16 paletteID);
+void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset);
+void sprite_free(Sprite *sprite);
+void tex_free(TextureHeader *tex);
+void material_load_simple(Gfx **dList, s32 flags);
 
 // There might be a file boundary here.
 void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate);
@@ -149,17 +162,17 @@ void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
 TextureHeader *set_animated_texture_header(TextureHeader *texHead, s32 offset);
 TextureHeader *load_texture(s32 arg0); // Non Matching
-s32 get_texture_size_from_id(s32 id);  // Non Matching
-s32 func_8007C860(s32 spriteIndex); // Non Matching
+s32 tex_asset_size(s32 id);  // Non Matching
+s32 tex_cache_asset_id(s32 cacheID); // Non Matching
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut,
                      s32 *sizeOut);                                                   // Non Matching
-void func_8007F594(Gfx **dList, u32 index, u32 primitiveColor, u32 environmentColor); // Non Matching
+void gfx_init_basic_xlu(Gfx **dList, u32 index, u32 primitiveColor, u32 environmentColor); // Non Matching
 void func_8007CA68(s32 spriteID, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4); // Non Matching
 MemoryPoolSlot *func_8007C12C(s32 spriteID, s32 arg1); // Non Matching
 void tex_init_textures(void); // Non Matching
-void load_blinking_lights_texture(Gfx **dList, TextureHeader *texture_list, u32 flags,
+void material_set_blinking_lights(Gfx **dList, TextureHeader *texture_list, u32 flags,
                                   s32 texture_index);        // Non Matching
-void build_tex_display_list(TextureHeader *tex, Gfx *_dList);   // Non Matching
+void material_init(TextureHeader *tex, Gfx *_dList);   // Non Matching
 void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2); // Non Matching
 
 #endif

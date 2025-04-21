@@ -98,7 +98,7 @@ s32 D_8012A0D0;
 s32 D_8012A0D4;
 s32 D_8012A0D8;
 s32 D_8012A0DC;
-s32 D_8012A0E0;
+s32 gNumberOfLevelSegments;
 s32 D_8012A0E8[64];
 s16 D_8012A1E8[512];
 
@@ -127,11 +127,11 @@ s32 gWavePowerDivisor;
         mempool_free(tempMem); \
         mem = NULL;            \
     }
-#define FREE_TEX(tex)          \
-    tempTex = tex;             \
-    if (tempTex != NULL) {     \
-        free_texture(tempTex); \
-        tex = NULL;            \
+#define FREE_TEX(tex)      \
+    tempTex = tex;         \
+    if (tempTex != NULL) { \
+        tex_free(tempTex); \
+        tex = NULL;        \
     }
 
 void free_waves(void) {
@@ -475,7 +475,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
                             // clang-format on
                             var_t4 = var_t5 + var_s4;
                             D_800E30D4[var_t2] |= D_800E30E0[i * D_80129FC8.unk24 + j] << var_t4;
-                            for (k = 0; k < D_8012A0E0; k++) {
+                            for (k = 0; k < gNumberOfLevelSegments; k++) {
                                 if (var_t2 == (&D_800E30D8[k])->unkC) {
                                     temp = &D_8012A5E8[k];
                                     temp->unk0 = k;
@@ -533,7 +533,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
                     ) {
                         // clang-format on
                         D_800E30D4[var_t2] = D_800E30E0[i * D_80129FC8.unk24 + j];
-                        for (k = 0; k < D_8012A0E0; k++) {
+                        for (k = 0; k < gNumberOfLevelSegments; k++) {
                             if (var_t2 == (&D_800E30D8[k])->unkC) {
                                 temp = &D_8012A5E8[k];
                                 temp->unk0 = k;
@@ -558,7 +558,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
 s32 func_800B9228(LevelModelSegment *arg0) {
     s32 v0 = 0;
     s32 result = FALSE;
-    while (v0 < D_8012A0E0 && arg0 != D_800E30D8[v0].unk00) {
+    while (v0 < gNumberOfLevelSegments && arg0 != D_800E30D8[v0].unk00) {
         v0++;
     };
     if (D_800E30D4[D_800E30D8[v0].unkC]) {
@@ -879,7 +879,7 @@ void func_800BA288(s32 arg0, s32 arg1) {
     s32 j;
 
     arg1 <<= 3;
-    for (i = 0; i < D_8012A0E0; i++) {
+    for (i = 0; i < gNumberOfLevelSegments; i++) {
         if (D_8012A0E8[D_800E30D8[i].unkB] & (1 << D_800E30D8[i].unkA)) {
             if (D_80129FC8.unk28 != 0) {
                 for (j = 0; j < 4; j++) {
@@ -936,7 +936,7 @@ void func_800BA4B8(TextureHeader *tex, s32 rtile) {
         }
     } else {
         //!@bug: txmask is not set, so it's value will be UB. I wonder if they accidentally set the width to 3 instead
-        //!of the mask?
+        //! of the mask?
         texWidth = 3;
         if (rtile != 0) {
             tmem = 384;
@@ -978,7 +978,7 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
     if (D_800E30DC > 0) {
         D_80129FC0 = *dList;
         D_80129FC4 = *mtx;
-        reset_render_settings(&D_80129FC0);
+        rendermode_reset(&D_80129FC0);
         gSPSetGeometryMode(D_80129FC0++, G_ZBUFFER);
         if (D_80129FC8.unk4C != 0) {
             gSPClearGeometryMode(D_80129FC0++, G_FOG);
@@ -1073,7 +1073,7 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
                                 var_t0 += D_80129FC8.unk0 + 1;
                             }
                         } else {
-                            gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(D_8012A028[D_8012A018]), 4, 0);
+                            gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_8012A028[D_8012A018]), 4, 0);
                             // temp_a3_18 = D_80129FC0;
                             // D_80129FC0 = temp_a3_18 + 8;
                             // temp_a3_18->words.w0 = (((((s32) (D_8012A028[D_8012A018] + 0x80000000) & 6) | 0x18) &
@@ -1158,7 +1158,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
     s32 sp58;
     s32 pad;
 
-    if (arg0 < 0 || arg0 >= D_8012A0E0) {
+    if (arg0 < 0 || arg0 >= gNumberOfLevelSegments) {
         arg0 = 0;
     }
 
@@ -1377,7 +1377,93 @@ void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BBF78.s")
-#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BC6C8.s")
+
+void func_800BC6C8(void) {
+    s32 i;
+    s32 j;
+    s32 k;
+    s32 var_s0;
+    s32 var_v0;
+    f32 sp34[0x80];
+
+    var_v0 = 0x4000 / D_80129FC8.unk0;
+    var_s0 = 0;
+    for (i = 0; i < D_80129FC8.unk0;) {
+        sp34[i++] = sins_f(var_s0);
+        var_s0 += var_v0;
+    }
+    sp34[0] = 0.0f;
+    sp34[D_80129FC8.unk0] = 1.0f;
+
+    k = 0;
+    for (i = 0; i <= D_80129FC8.unk0; i++) {
+        for (j = 0; j <= D_80129FC8.unk0; j++) {
+            D_800E304C[4][k] = 1.0f;
+            k++;
+        }
+    }
+
+    k = 0;
+    for (i = 0; i <= D_80129FC8.unk0; i++) {
+        for (j = 0; j <= D_80129FC8.unk0; j++) {
+            D_800E304C[1][k] = sp34[i];
+            k++;
+        }
+    }
+
+    k = 0;
+    for (i = 0; i <= D_80129FC8.unk0; i++) {
+        for (j = 0; j <= D_80129FC8.unk0;) {
+            D_800E304C[3][k++] = sp34[j++];
+        }
+    }
+
+    k = 0;
+    for (i = 0; i <= D_80129FC8.unk0; i++) {
+        for (j = 0; j <= D_80129FC8.unk0;) {
+            D_800E304C[5][k++] = sp34[D_80129FC8.unk0 - j++];
+        }
+    }
+
+    k = 0;
+    for (i = 0; i <= D_80129FC8.unk0; i++) {
+        for (j = 0; j <= D_80129FC8.unk0; j++) {
+            D_800E304C[7][k] = sp34[D_80129FC8.unk0 - i];
+            k++;
+        }
+    }
+
+    for (i = 0; i <= D_80129FC8.unk0; i++) {
+        for (j = i; j <= D_80129FC8.unk0; j++) {
+            D_800E304C[0][i * (D_80129FC8.unk0 + 1) + j] = sp34[i];
+            D_800E304C[0][j * (D_80129FC8.unk0 + 1) + i] = sp34[i];
+        }
+    }
+
+    for (i = 0; i <= D_80129FC8.unk0; i++) {
+        for (j = i; j <= D_80129FC8.unk0; j++) {
+            D_800E304C[2][(i * (D_80129FC8.unk0 + 1)) + D_80129FC8.unk0 - j] = sp34[i];
+            D_800E304C[2][(j * (D_80129FC8.unk0 + 1)) + D_80129FC8.unk0 - i] = sp34[i];
+        }
+    }
+
+    for (i = 0; i <= D_80129FC8.unk0; i++) {
+        for (j = i; j <= D_80129FC8.unk0; j++) {
+            D_800E304C[6][(D_80129FC8.unk0 * (D_80129FC8.unk0 + 1)) - (i * (D_80129FC8.unk0 + 1)) + j] = sp34[i];
+            D_800E304C[6][(D_80129FC8.unk0 * (D_80129FC8.unk0 + 1)) - (j * (D_80129FC8.unk0 + 1)) + i] = sp34[i];
+        }
+    }
+
+    for (i = 0; i <= D_80129FC8.unk0; i++) {
+        for (j = i; j <= D_80129FC8.unk0; j++) {
+            // clang-format off
+            D_800E304C[8][(D_80129FC8.unk0 * (D_80129FC8.unk0 + 1)) - (i * (D_80129FC8.unk0 + 1)) + D_80129FC8.unk0 - j] = sp34[i];
+            D_800E304C[8][(D_80129FC8.unk0 * (D_80129FC8.unk0 + 1)) - (j * (D_80129FC8.unk0 + 1)) + D_80129FC8.unk0 - i] = sp34[i];
+            // clang-format on
+        }
+    }
+}
+
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BCC70.s")
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BDC80.s")
 // https://decomp.me/scratch/2RF3k

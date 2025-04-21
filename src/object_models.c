@@ -106,8 +106,8 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
 
     // Check if the model already exists in the cache.
     for (i = 0; i < gModelCacheCount; i++) {
-        if (modelID == gModelCache[MODELCACHE_ID(i)]) {
-            objMdl = (ObjectModel *) gModelCache[MODELCACHE_DATA(i)];
+        if (modelID == gModelCache[ASSETCACHE_ID(i)]) {
+            objMdl = (ObjectModel *) gModelCache[ASSETCACHE_PTR(i)];
             ret = model_init_type(objMdl, flags);
             if (ret != NULL) {
                 objMdl->references++;
@@ -185,8 +185,8 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
         if ((func_80060EA8(objMdl) == 0) && (func_80061A00(objMdl, modelID) == 0)) {
             ret = model_init_type(objMdl, flags);
             if (ret != NULL) {
-                gModelCache[MODELCACHE_ID(cacheIndex)] = modelID;
-                gModelCache[MODELCACHE_DATA(cacheIndex)] = (s32) objMdl;
+                gModelCache[ASSETCACHE_ID(cacheIndex)] = modelID;
+                gModelCache[ASSETCACHE_PTR(cacheIndex)] = (s32) objMdl;
                 if (gModelCacheCount < MODEL_LOADED_MAX) {
                     ret->animUpdateTimer = 0;
                     return ret;
@@ -314,7 +314,7 @@ void free_3d_model(ObjectModel **modelPtr) {
 
     modelIndex = -1;
     for (i = 0; i < gModelCacheCount; i++) {
-        if (model == (ObjectModel *) gModelCache[MODELCACHE_DATA(i)]) {
+        if (model == (ObjectModel *) gModelCache[ASSETCACHE_PTR(i)]) {
             modelIndex = i;
         }
     }
@@ -323,8 +323,8 @@ void free_3d_model(ObjectModel **modelPtr) {
         free_model_data(model);
         D_8011D628[D_8011D634] = modelIndex;
         D_8011D634++;
-        gModelCache[MODELCACHE_ID(modelIndex)] = -1;
-        gModelCache[MODELCACHE_DATA(modelIndex)] = -1;
+        gModelCache[ASSETCACHE_ID(modelIndex)] = -1;
+        gModelCache[ASSETCACHE_PTR(modelIndex)] = -1;
         mempool_free(modelPtr);
     }
 }
@@ -341,7 +341,7 @@ void free_model_data(ObjectModel *mdl) {
         do {
             TextureHeader *header = mdl->textures[textureIndex].texture;
             if (header != NULL) {
-                free_texture(header);
+                tex_free(header);
                 numTextures = mdl->numberOfTextures;
             }
             texturesFreed++;

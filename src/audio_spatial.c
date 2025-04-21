@@ -576,7 +576,7 @@ void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, f32 coords[
 
     temp_verts = *verts;
     temp_tris = *tris;
-    load_and_set_texture_no_offset(&temp_dlist, NULL, RENDER_NONE);
+    material_set_no_tex_offset(&temp_dlist, NULL, RENDER_NONE);
     gSPVertexDKR(temp_dlist++, OS_PHYSICAL_TO_K0(temp_verts), 4, 0);
     gSPPolygon(temp_dlist++, OS_PHYSICAL_TO_K0(temp_tris), 2, 0);
     temp_verts[0].x = x1;

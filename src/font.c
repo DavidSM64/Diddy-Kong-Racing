@@ -240,7 +240,7 @@ void unload_font(s32 fontID) {
             if (fontData->loadedFonts[0] == 0) {
                 s32 i = 0;
                 while (i < 32 && fontData->textureID[i] != -1) {
-                    free_texture(fontData->texturePointers[i]);
+                    tex_free(fontData->texturePointers[i]);
                     fontData->texturePointers[i] = NULL;
                     i++;
                 }
@@ -508,7 +508,7 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
         if (box != gDialogueBoxBackground) {
             viewport_scissor(dList);
         }
-        reset_render_settings(dList);
+        rendermode_reset(dList);
         gDPPipeSync((*dList)++);
     }
 }
@@ -702,7 +702,7 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
     if (box != gDialogueBoxBackground) {
         viewport_scissor(dList);
     }
-    reset_render_settings(dList);
+    rendermode_reset(dList);
     gDPPipeSync((*dList)++);
 }
 #endif
