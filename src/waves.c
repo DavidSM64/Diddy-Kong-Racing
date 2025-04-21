@@ -917,44 +917,44 @@ void func_800BA288(s32 arg0, s32 arg1) {
     }
 }
 
-// https://decomp.me/scratch/h4uac
-void func_800BA4B8(TextureHeader* arg0, s32 arg1);
-#ifdef NON_EQUIVALENT
-void func_800BA4B8(TextureHeader* tex, s32 arg1) {
-    s32 sp5C;
+void func_800BA4B8(TextureHeader *tex, s32 rtile) {
+    s32 txmask;
     s32 tmem;
-    u8 width;
+    u32 texWidth;
 
-    width = tex->width;
+    texWidth = tex->width;
     tmem = 0;
-    if (width == 16) {
-        if (arg1 != 0) {
-            tmem = 0x180;
+    if (texWidth == 16) {
+        txmask = 4;
+        if (rtile != 0) {
+            tmem = 384;
         }
-        sp5C = 4;
-    } else if (width == 32) {
-        if (arg1 != 0) {
-            tmem = 0x100;
+    } else if (texWidth == 32) {
+        txmask = 5;
+        if (rtile != 0) {
+            tmem = 256;
         }
-        sp5C = 5;
     } else {
-        width = 3;
-        if (arg1 != 0) {
-            tmem = 0x180;
+        //!@bug: txmask is not set, so it's value will be UB. I wonder if they accidentally set the width to 3 instead
+        //!of the mask?
+        texWidth = 3;
+        if (rtile != 0) {
+            tmem = 384;
         }
     }
+
+    // difference is G_IM_SIZ_32b vs G_IM_SIZ_16b
     if ((tex->format & 0xF) == TEX_FORMAT_RGBA32) {
-        gDPLoadTextureBlock(D_80129FC0++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_32b, width, width, 0, tmem, tmem, sp5C, sp5C, 0, 0);
+        gDPLoadMultiBlock(D_80129FC0++, OS_PHYSICAL_TO_K0(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_32b, texWidth,
+                          texWidth, 0, 0, 0, txmask, txmask, 0, 0);
     } else {
-        gDPLoadTextureBlock(D_80129FC0++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, width, 0, tmem, tmem, sp5C, sp5C, 0, 0);
+        gDPLoadMultiBlock(D_80129FC0++, OS_PHYSICAL_TO_K0(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_16b, texWidth,
+                          texWidth, 0, 0, 0, txmask, txmask, 0, 0);
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BA4B8.s")
-#endif
 
 #ifdef NON_EQUIVALENT
-void func_800BA8E4(Gfx **dList, MatrixS** mtx, s32 arg2) {
+void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
     s32 temp_v0_3; // sp11C
     TextureHeader *tex1;
     TextureHeader *tex2;
@@ -993,28 +993,31 @@ void func_800BA8E4(Gfx **dList, MatrixS** mtx, s32 arg2) {
                 gDPSetOtherMode(D_80129FC0++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_AA_ZB_OPA_SURF2);
             }
             gDPSetPrimColor(D_80129FC0++, 0, 0, 255, 255, 255, 0);
-            //gDPSetPrimColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 0));
+            // gDPSetPrimColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 0));
             if (D_800E3180 != NULL) {
                 gDPSetEnvColor(D_80129FC0++, D_800E3180->red, D_800E3180->green, D_800E3180->blue, D_800E3180->alpha);
-                //gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(D_800E3180->red, D_800E3180->green, D_800E3180->blue, D_800E3180->alpha));
+                // gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(D_800E3180->red, D_800E3180->green, D_800E3180->blue,
+                // D_800E3180->alpha));
             } else {
                 gDPSetEnvColor(D_80129FC0++, 255, 255, 255, 0);
-                //gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 0));
+                // gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 0));
             }
         } else {
             gSPSetGeometryMode(D_80129FC0++, G_FOG);
             tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
             gDkrDmaDisplayList(D_80129FC0++, OS_K0_TO_PHYSICAL(tex1->cmd), tex1->numberOfCommands);
             gDPSetCombineMode(D_80129FC0++, DKR_CC_UNK16, DKR_CC_UNK8);
-            gDPSetOtherMode(D_80129FC0++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);
+            gDPSetOtherMode(D_80129FC0++, DKR_OMH_2CYC_BILERP,
+                            DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);
             gDPSetPrimColor(D_80129FC0++, 0, 0, 255, 255, 255, 255);
-            //gDPSetPrimColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 255));
+            // gDPSetPrimColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 255));
             if (D_800E3180 != NULL) {
                 gDPSetEnvColor(D_80129FC0++, D_800E3180->red, D_800E3180->green, D_800E3180->blue, D_800E3180->alpha);
-                //gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(D_800E3180->red, D_800E3180->green, D_800E3180->blue, D_800E3180->alpha));
+                // gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(D_800E3180->red, D_800E3180->green, D_800E3180->blue,
+                // D_800E3180->alpha));
             } else {
                 gDPSetEnvColor(D_80129FC0++, 255, 255, 255, 0);
-                //gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 0));
+                // gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 0));
             }
         }
         if (D_80129FC8.unk28 != 0) {
@@ -1025,7 +1028,7 @@ void func_800BA8E4(Gfx **dList, MatrixS** mtx, s32 arg2) {
         spE4.rotation.z = 0;
         spE4.rotation.y = 0;
         spE4.rotation.x = 0;
-        for (spDC = 0; spDC < D_800E30DC; spDC++){
+        for (spDC = 0; spDC < D_800E30DC; spDC++) {
             if (D_80129FC8.unk4C != 0) {
                 func_800B92F4(D_8012A1E8[spDC], arg2);
             } else {
@@ -1049,19 +1052,23 @@ void func_800BA8E4(Gfx **dList, MatrixS** mtx, s32 arg2) {
                                 temp_a0_3 = D_8012A018 + arg2;
                                 temp_lo = (D_80129FC8.unk0 * 2) * var_s0;
 
-                                gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3070[temp_a0_3][var_t0]), temp_v1 * 2, 0);
-                                
+                                gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3070[temp_a0_3][var_t0]),
+                                             temp_v1 * 2, 0);
+
                                 // temp_a3_16 = D_80129FC0;
                                 // temp_a1 = &D_800E3070[temp_a0_3][var_t0] + 0x80000000;
                                 // D_80129FC0 = temp_a3_16 + 8;
                                 // temp_a3_16->words.w1 = (u32) temp_a1;
-                                // temp_a3_16->words.w0 = ((((((temp_v1 * 2) - 1) * 8) | ((s32) temp_a1 & 6)) & 0xFF) << 0x10) | 0x04000000 | (((temp_v1 * 18 * 2) + 8) & 0xFFFF);
-                                
-                                gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3080[temp_a0_3][temp_lo]), temp_a0_2, 1);
+                                // temp_a3_16->words.w0 = ((((((temp_v1 * 2) - 1) * 8) | ((s32) temp_a1 & 6)) & 0xFF) <<
+                                // 0x10) | 0x04000000 | (((temp_v1 * 18 * 2) + 8) & 0xFFFF);
+
+                                gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3080[temp_a0_3][temp_lo]), temp_a0_2,
+                                           1);
                                 // temp_a3_17 = D_80129FC0;
                                 // D_80129FC0 = temp_a3_17 + 8;
                                 // temp_a3_17->words.w1 = (u32) (&(*D_800E3080[temp_a0_3])[temp_lo] + 0x80000000);
-                                // temp_a3_17->words.w0 = (((((temp_a0_2 - 1) * 16) | 1) & 0xFF) << 16) | 0x05000000 | ((temp_a0_2 * 0x10) & 0xFFFF);
+                                // temp_a3_17->words.w0 = (((((temp_a0_2 - 1) * 16) | 1) & 0xFF) << 16) | 0x05000000 |
+                                // ((temp_a0_2 * 0x10) & 0xFFFF);
 
                                 var_t0 += D_80129FC8.unk0 + 1;
                             }
@@ -1069,9 +1076,10 @@ void func_800BA8E4(Gfx **dList, MatrixS** mtx, s32 arg2) {
                             gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(D_8012A028[D_8012A018]), 4, 0);
                             // temp_a3_18 = D_80129FC0;
                             // D_80129FC0 = temp_a3_18 + 8;
-                            // temp_a3_18->words.w0 = (((((s32) (D_8012A028[D_8012A018] + 0x80000000) & 6) | 0x18) & 0xFF) << 0x10) | 0x04000000 | 0x50;
-                            // temp_a3_18->words.w1 = (u32) (D_8012A028[D_8012A018] + 0x80000000);
-                            
+                            // temp_a3_18->words.w0 = (((((s32) (D_8012A028[D_8012A018] + 0x80000000) & 6) | 0x18) &
+                            // 0xFF) << 0x10) | 0x04000000 | 0x50; temp_a3_18->words.w1 = (u32) (D_8012A028[D_8012A018]
+                            // + 0x80000000);
+
                             gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3090[D_8012A018 << 1]), 2, 1);
                             // temp_a3_19 = D_80129FC0;
                             // D_80129FC0 = temp_a3_19 + 8;
@@ -1081,10 +1089,10 @@ void func_800BA8E4(Gfx **dList, MatrixS** mtx, s32 arg2) {
                         apply_matrix_from_stack(&D_80129FC0);
                         sp104 >>= 8;
                         spE4.x_position += D_8012A0A0 * 0.5f;
-                    }                        
+                    }
                     spE4.z_position += D_8012A0A4 * 0.5f;
                 }
-            } else {                    
+            } else {
                 camera_push_model_mtx(&D_80129FC0, &D_80129FC4, &spE4, 1.0f, 0.0f);
                 temp_v1 = D_80129FC8.unk0 + 1;
                 temp_a0_2 = D_80129FC8.unk0 * 2;
@@ -1092,21 +1100,22 @@ void func_800BA8E4(Gfx **dList, MatrixS** mtx, s32 arg2) {
                 for (var_s0 = 0; var_s0 < D_80129FC8.unk0; var_s0++) {
                     temp_a0_3 = D_8012A018 + arg2;
                     temp_lo = var_s0 * (D_80129FC8.unk0 * 2);
-                    
+
                     gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3070[temp_a0_3][var_t0]), temp_v1 * 2, 0);
                     // temp_a3_20 = D_80129FC0;
                     // temp_a1_2 = &D_800E3070[temp_a0_3][var_t0] + 0x80000000;
                     // D_80129FC0 = temp_a3_20 + 8;
                     // temp_a3_20->words.w1 = (u32) temp_a1_2;
-                    // temp_a3_20->words.w0 = ((((((temp_v1 * 2) - 1) * 8) | ((s32) temp_a1_2 & 6)) & 0xFF) << 16) 
+                    // temp_a3_20->words.w0 = ((((((temp_v1 * 2) - 1) * 8) | ((s32) temp_a1_2 & 6)) & 0xFF) << 16)
                     //     | 0x04000000 | (((temp_v1 * 0x12 * 2) + 8) & 0xFFFF);
-                    
+
                     gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3080[temp_a0_3][temp_lo]), temp_a0_2, 0);
                     // temp_a3_21 = D_80129FC0;
                     // D_80129FC0 = temp_a3_21 + 8;
                     // temp_a3_21->words.w1 = (u32) (&(*D_800E3080[temp_a0_3])[temp_lo] + 0x80000000);
-                    // temp_a3_21->words.w0 = (((((temp_a0_2 - 1) * 0x10) | 1) & 0xFF) << 16) | 0x05000000 | ((temp_a0_2 * 16) & 0xFFFF);
-                    
+                    // temp_a3_21->words.w0 = (((((temp_a0_2 - 1) * 0x10) | 1) & 0xFF) << 16) | 0x05000000 | ((temp_a0_2
+                    // * 16) & 0xFFFF);
+
                     var_t0 += D_80129FC8.unk0 + 1;
                 }
                 apply_matrix_from_stack(&D_80129FC0);
@@ -1115,7 +1124,7 @@ void func_800BA8E4(Gfx **dList, MatrixS** mtx, s32 arg2) {
         if (D_80129FC8.unk4C != 0) {
             gSPSetGeometryMode(D_80129FC0++, G_FOG);
             gDPSetPrimColor(D_80129FC0++, 0, 0, 255, 255, 255, 255);
-            //gDPSetPrimColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 255));
+            // gDPSetPrimColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 255));
         }
         *dList = D_80129FC0;
         *mtx = D_80129FC4;
