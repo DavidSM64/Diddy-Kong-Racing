@@ -954,6 +954,7 @@ void func_800BA4B8(TextureHeader *tex, s32 rtile) {
 }
 
 #ifdef NON_EQUIVALENT
+// https://decomp.me/scratch/9b2EF
 void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
     s32 temp_v0_3; // sp11C
     TextureHeader *tex1;
@@ -1376,7 +1377,140 @@ void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BBF78.s")
+void func_800BBF78(LevelModel *model) {
+    LevelModelSegmentBoundingBox *levelSegmentBoundingBoxes;
+    s32 j;
+    s32 temp_t1;
+    s32 segmentVertexY;
+    s32 temp_t2;
+    s32 pad;
+    s32 sp44;
+    LevelModelSegment *levelSegments;
+    s32 i;
+    s32 var_v0;
+    LevelModel_Alternate *otherModel;
+
+    levelSegments = model->segments;
+    levelSegmentBoundingBoxes = model->segmentsBoundingBoxes;
+    sp44 = D_80129FC8.unk0;
+    if (D_80129FC8.unk28 != 0) {
+        sp44 = sp44 * 2;
+    }
+    D_8012A0C0 = levelSegmentBoundingBoxes->x1;
+    D_8012A0C8 = levelSegmentBoundingBoxes->x2;
+    D_8012A0C4 = levelSegmentBoundingBoxes->z1;
+    D_8012A0CC = levelSegmentBoundingBoxes->z2;
+    for (i = 1; i < model->numberOfSegments; i++) {
+        if (levelSegmentBoundingBoxes[i].x1 < D_8012A0C0) {
+            D_8012A0C0 = levelSegmentBoundingBoxes[i].x1;
+        }
+        if (D_8012A0C8 < levelSegmentBoundingBoxes[i].x2) {
+            D_8012A0C8 = levelSegmentBoundingBoxes[i].x2;
+        }
+        if (levelSegmentBoundingBoxes[i].z1 < D_8012A0C4) {
+            D_8012A0C4 = levelSegmentBoundingBoxes[i].z1;
+        }
+        if (D_8012A0CC < levelSegmentBoundingBoxes[i].z2) {
+            D_8012A0CC = levelSegmentBoundingBoxes[i].z2;
+        }
+    }
+
+    D_8012A0D0 = gWaveBoundingBoxX1;
+    while (D_8012A0C0 < D_8012A0D0) {
+        D_8012A0D0 -= gWaveBoundingBoxDiffX;
+    }
+
+    D_8012A0D4 = gWaveBoundingBoxZ1;
+    while (D_8012A0C4 < D_8012A0D4) {
+        D_8012A0D4 -= gWaveBoundingBoxDiffZ;
+    }
+
+    D_8012A0D8 = ((D_8012A0C8 - D_8012A0D0) / gWaveBoundingBoxDiffX) + 1;
+    D_8012A0DC = ((D_8012A0CC - D_8012A0D4) / gWaveBoundingBoxDiffZ) + 1;
+    D_800E318C = (sp44 * D_8012A0D8) + 1;
+
+    if (D_800E30D4 != NULL) {
+        mempool_free(D_800E30D4);
+    }
+    D_800E30D4 = mempool_alloc_safe(D_8012A0D8 * D_8012A0DC * 4, 0xFFFFFF);
+
+    if (D_800E30D8 != NULL) {
+        mempool_free(D_800E30D8);
+    }
+
+    // clang-format off
+    D_800E30D8 = mempool_alloc_safe(
+        (model->numberOfSegments * sizeof(LevelModel_Alternate)) + (D_800E318C * 8) + 0x880,
+        0xFFFFFF
+    );
+    // clang-format on
+
+    D_800E3190 = (u32) D_800E30D8 + model->numberOfSegments * sizeof(LevelModel_Alternate);
+    D_800E3194 = (u32) D_800E3190 + 0x800;
+    D_800E3184 = (u32) D_800E3194 + 0x80;
+
+    for (i = 0; i < (D_800E318C * 8); i++) {
+        D_800E3184->unk0[i] = 0xFF;
+    }
+
+    // 0x20 / 32 sizeof what?
+    for (i = 0; i < 32; i++) {
+        D_800E3194[i] = 0;
+    }
+
+    D_800E3188 = 0;
+
+    for (i = 0; i < (D_8012A0D8 * D_8012A0DC); i++) {
+        D_800E30D4[i] = 0;
+    }
+
+    for (i = 0; i < ARRAY_COUNT(D_8012A0E8); i++) {
+        D_8012A0E8[i] = 0;
+    }
+
+    gNumberOfLevelSegments = model->numberOfSegments;
+    for (i = 0; i < gNumberOfLevelSegments; i++) {
+        temp_t1 = levelSegmentBoundingBoxes[i].x1 - D_8012A0D0 + 8;
+        temp_t2 = levelSegmentBoundingBoxes[i].z1 - D_8012A0D4 + 8;
+        temp_t1 = ((temp_t1 / gWaveBoundingBoxDiffX) * gWaveBoundingBoxDiffX) + D_8012A0D0;
+        temp_t2 = ((temp_t2 / gWaveBoundingBoxDiffZ) * gWaveBoundingBoxDiffZ) + D_8012A0D4;
+        segmentVertexY = 0;
+        for (j = 0; j < levelSegments[i].numberOfBatches; j++) {
+            if ((levelSegments[i].batches[j].flags & 0x2000) && (levelSegments[i].batches[j].flags & 0x400000)) {
+                segmentVertexY = levelSegments[i].vertices[levelSegments[i].batches[j].verticesOffset].y;
+            }
+        }
+
+        otherModel = &D_800E30D8[i];
+        otherModel->unk00 = &levelSegments[i];
+        otherModel->unk4 = temp_t1;
+        otherModel->unk6 = segmentVertexY;
+        otherModel->unk8 = temp_t2;
+        otherModel->unkA = (temp_t1 - D_8012A0D0) / gWaveBoundingBoxDiffX;
+        otherModel->unkB = (temp_t2 - D_8012A0D4) / gWaveBoundingBoxDiffZ;
+        otherModel->unkC = otherModel->unkA + (otherModel->unkB * D_8012A0D8);
+        otherModel->unk12 = 0;
+        otherModel->unk10 = 0;
+        if (levelSegments[i].hasWaves != 0) {
+            var_v0 = otherModel->unkA * sp44;
+            while (var_v0 >= D_80129FC8.unk4) {
+                var_v0 -= D_80129FC8.unk4;
+            }
+            otherModel->unk12 = var_v0;
+            var_v0 = otherModel->unkB * sp44;
+            while (var_v0 >= D_80129FC8.unk4) {
+                var_v0 -= D_80129FC8.unk4;
+            }
+            otherModel->unk10 = var_v0;
+            D_8012A0E8[otherModel->unkB] |= (1 << otherModel->unkA);
+        }
+
+        for (j = 0; j < 4; j++) {
+            otherModel->unk14[0].unk0[j] = 0x80;
+            otherModel->unk14[1].unk0[j] = 0x80;
+        }
+    }
+}
 
 void func_800BC6C8(void) {
     s32 i;
@@ -1465,7 +1599,322 @@ void func_800BC6C8(void) {
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BCC70.s")
+
+#ifdef NON_EQUIVALENT
+typedef struct unkArg1 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+    s16 unk12;
+} unkArg1;
+
+typedef struct unkArg2 {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+} unkArg2;
+
+// arg0
+// arg1 is s32 D_8011C3B8[320]; according to func_8002EEEC
+// arg2 might be s32 D_8011C8B8[512]
+
+s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition, f32 shadowZNegPosition,
+                  f32 shadowXPosition, f32 shadowZPosition) {
+    s32 sp36C;
+    s32 sp368;
+    s32 sp364;
+    f32 var_f0;
+    f32 var_f12;
+    s32 sp358;
+    s32 sp354;
+    f32 var_f14;
+    s32 sp34C;
+    f32 var_f16;
+    f32 var_f18;
+    f32 var_f24;
+    f32 var_f26;
+    f32 var_f28;
+    f32 var_f20;
+    s16 var_a1; // sp332
+    f32 var_f22;
+    s16 var_s8;
+    s16 var_s2_s16;
+    s16 var_s3_2;
+    s32 var_s5;
+    s32 var_a2_2;
+    s32 var_lo;
+    s32 var_lo_2;
+    s32 var_s0;
+    s32 var_s1;
+    s32 var_v1;
+    s32 var_s6;
+    s32 var_t0;
+    s32 temp1_2;
+    s32 temp2_2;
+    s16 spD8[0x110]; // probably incorrect size
+    s32 var_s2;
+    s32 var_s4;
+    f32 spCC;
+    f32 spC8;
+    s32 var_v0;
+    s32 spA4;
+    unkArg2 *var_v0_4;
+    s32 sp98;
+    unkArg1 *var_s0_2;
+    s32 sp90;
+    s32 temp3_2;
+    s32 temp4_2;
+    s32 var_s7; // sp74
+    s32 var_t8;
+
+    var_t0 = (arg0 * D_800E317C);
+    spCC = D_8012A0B8;
+    spC8 = D_8012A0BC;
+    var_f24 = (1.0f - D_80129FC8.unk44) / 127.0f;
+    if (D_80129FC8.unk28 != 0) {
+        sp36C = D_80129FC8.unk0 * 2;
+        spCC *= 0.5;
+        spC8 *= 0.5;
+        var_f22 = 0.5f;
+    } else {
+        var_f22 = 1.0f;
+        sp36C = D_80129FC8.unk0;
+    }
+
+    var_f12 = shadowXNegPosition - D_800E30D8[arg0].unk4;
+    var_f14 = shadowZNegPosition - D_800E30D8[arg0].unk8;
+    var_f16 = shadowXPosition - D_800E30D8[arg0].unk4;
+    var_f18 = shadowZPosition - D_800E30D8[arg0].unk8;
+
+    if (var_f12 < 0.0f) {
+        sp368 = 0;
+    } else {
+        sp368 = var_f12 / spCC;
+    }
+
+    if (var_f14 < 0.0f) {
+        sp364 = 0;
+    } else {
+        sp364 = var_f14 / spC8;
+    }
+
+    if (D_8012A0A0 <= var_f16) {
+        sp358 = sp36C;
+    } else {
+        sp358 = (s32) (var_f16 / spCC) + 1;
+    }
+
+    if (D_8012A0A4 <= var_f18) {
+        sp354 = sp36C;
+    } else {
+        sp354 = (s32) (var_f18 / spCC) + 1;
+    }
+
+    var_v1 = D_800E30D8[arg0].unk12 + sp368;
+    while (var_v1 >= D_80129FC8.unk4) {
+        var_v1 -= D_80129FC8.unk4;
+    }
+
+    var_v0 = D_800E30D8[arg0].unk10 + sp364;
+    while (var_v0 >= D_80129FC8.unk4) {
+        var_v0 -= D_80129FC8.unk4;
+    }
+
+    var_s6 = sp364;
+    var_s7 = 0;
+    if (sp354 >= sp364) {
+        spA4 = var_t0 + sp368 + (sp364 * sp36C);
+        sp90 = sp354 + 1;
+        sp34C = var_v0;
+        do {
+            var_s4 = spA4;
+            var_s0 = var_v1;
+            var_s2 = (sp34C * D_80129FC8.unk4) + var_v1;
+            if (sp358 >= sp368) {
+                var_s1 = sp368;
+                var_s5 = sp358 + 1;
+                do {
+                    var_f20 = (D_800E3040[D_800E3044[var_s2].s[0]] + D_800E3040[D_800E3044[var_s2].s[1]]) *
+                              D_80129FC8.magnitude;
+                    if (D_800E3188 > 0) {
+                        var_f20 += func_800BEFC4(arg0, var_s1, var_s6);
+                    }
+                    if (D_800E3178[var_s4] < 0x7F) {
+                        // s32 cast below required
+                        var_f20 *= D_80129FC8.unk44 + ((s32) D_800E3178[var_s4] * var_f24);
+                    }
+                    var_s1++;
+                    var_s7++;
+                    var_s0++;
+                    var_s4++;
+                    var_s2++;
+                    spD8[var_s7 - 1] = D_800E30D8[arg0].unk6 + (s32) (var_f20 * var_f22);
+                    if (var_s0 >= D_80129FC8.unk4) {
+                        var_s0 -= D_80129FC8.unk4;
+                        var_s2 -= D_80129FC8.unk4;
+                    }
+                } while (var_s5 != var_s1);
+            }
+            sp34C++;
+            if (sp34C >= D_80129FC8.unk4) {
+                sp34C -= D_80129FC8.unk4;
+            }
+            spA4 += sp36C;
+            var_s6++;
+        } while (sp90 != var_s6);
+    }
+
+    var_s7 = 0;
+    sp36C = (sp358 - sp368) + 1;
+    var_a1 = D_800E30D8[arg0].unk8 + (s32) (sp364 * spC8);
+    if (sp364 < sp354) {
+        sp98 = sp368 * spCC;
+        var_s6 = sp364;
+        do {
+            var_s8 = D_800E30D8[arg0].unk8 + (s32) ((var_s6 + 1) * spC8);
+            var_s3_2 = D_800E30D8[arg0].unk4 + sp98;
+            if (sp368 < sp358) {
+                var_s0_2 = &arg1[var_s7];
+                // a3 / t5 as index
+                var_lo = (var_s6 - sp364) * sp36C;
+                // t0 / t8 as index
+                var_lo_2 = ((var_s6 - sp364) + 1) * sp36C;
+                /*
+                    t4 = sp368
+                    t8 = t4 - t4 ????
+                    t6 = t8 * 2
+                    t3 = spD8
+                    v0 = t6 + t3
+                    --
+                    a3 = a2 * t7 (var_lo)
+                    t5 = a3 * 2
+                    s4 = v0 + t5
+                */
+                // temp1 = &spD8[sp368 - sp368 + var_lo];
+                var_t8 = sp368;
+                temp1_2 = sp368 + var_lo - sp368;
+                /*
+                    t4 = sp368
+                    t6 = t4 * 2
+                    at = neg t4
+                    t3 = at * 2
+                    t9 = t6 + t3
+                    t1 = t9 + t5
+                    --
+                    a3 = a2 * t7 (var_lo)
+                    t5 = a3 * 2
+                    a3 = t5
+                    --
+                    v1 = t1 + a3
+                */
+                // temp2 = &spD8[sp368 + var_lo];
+                temp2_2 = sp368 + var_lo;
+                /*
+                    t4 = sp368
+                    t8 = t4 - t4 ????
+                    t6 = t8 * 2
+                    t3 = spD8
+                    v0 = t6 + t3
+                    --
+                    t0 = t2 * t7 (var_lo_2)
+                    t8 = t0 * 2
+                    --
+                    s5 = v0 + t8
+                */
+                // temp3 = &spD8[(sp368 - sp368) + var_lo_2];
+                temp3_2 = sp368 + var_lo_2 - sp368;
+                /*
+                    t4 = sp368
+                    t6 = t4 * 2
+                    at = neg t4
+                    t3 = at * 2
+                    t9 = t6 + t3
+                    t1 = t9 + t5
+                    --
+                    t0 = t2 * t7 (var_lo_2)
+                    t8 = t0 * 2
+                    --
+                    a0 = t1 + t8
+                */
+                // temp4 = &spD8[sp368 + var_lo_2];
+                temp4_2 = sp368 + var_lo_2;
+                var_s1 = var_s6;
+                var_f26 = spCC * spC8;
+                var_f28 = var_f26 * var_f26;
+                do {
+                    var_s0_2->unk0 = var_s3_2;
+                    var_s2_s16 = D_800E30D8[arg0].unk4 + (s32) (var_s1 * spCC);
+                    var_s0_2->unk6 = var_s3_2;
+                    var_s0_2->unkC = var_s2_s16;
+                    var_s0_2->unk2 = spD8[temp1_2];
+                    var_s0_2->unk8 = spD8[temp3_2];
+                    var_s0_2->unkE = spD8[temp2_2 + 1];
+                    var_s0_2->unk4 = var_a1;
+                    var_s0_2->unkA = var_s8;
+                    var_s0_2->unk10 = var_a1;
+                    var_f20 = (var_s0_2->unk2 - var_s0_2->unkE) * spC8;
+                    var_f22 = (var_s0_2->unk2 - var_s0_2->unk8) * spCC;
+                    var_f0 = sqrtf((var_f20 * var_f20) + var_f28 + (var_f22 * var_f22));
+                    if (var_f0 > 0.0f) {
+                        var_f24 = (1.0f / var_f0);
+                        var_v0_4 = &arg2[var_s7];
+                        var_v0_4->unk0 = var_f20 * var_f24;
+                        var_v0_4->unk4 = var_f26 * var_f24;
+                        var_v0_4->unk8 = var_f22 * var_f24;
+                        var_v0_4->unkC = -((var_v0_4->unk8 * var_s0_2->unk4) +
+                                           ((var_s0_2->unk0 * var_v0_4->unk0) + (var_s0_2->unk2 * var_v0_4->unk4)));
+                        var_s7++;
+                        var_s0_2++;
+                    }
+                    var_s0_2->unk0 = var_s2_s16;
+                    var_s0_2->unk6 = var_s3_2;
+                    var_s0_2->unkC = var_s2_s16;
+                    var_s0_2->unk2 = spD8[temp1_2 + 1];
+                    var_s0_2->unk8 = spD8[temp3_2];
+                    var_s0_2->unkE = spD8[temp4_2 + 1];
+                    var_s0_2->unk4 = var_a1;
+                    var_s0_2->unkA = var_s8;
+                    var_s0_2->unk10 = var_s8;
+                    var_f20 = (var_s0_2->unk8 - var_s0_2->unkE) * spC8;
+                    var_f22 = (var_s0_2->unk2 - var_s0_2->unkE) * spCC;
+                    var_f0 = sqrtf((var_f20 * var_f20) + var_f28 + (var_f22 * var_f22));
+                    if (var_f0 > 0.0f) {
+                        var_f24 = (1.0f / var_f0);
+                        var_v0_4 = &arg2[var_s7];
+                        var_v0_4->unk0 = var_f20 * var_f24;
+                        var_v0_4->unk4 = var_f26 * var_f24;
+                        var_v0_4->unk8 = var_f22 * var_f24;
+
+                        var_v0_4->unkC = -((var_v0_4->unk8 * var_s0_2->unk4) +
+                                           ((var_s0_2->unk0 * var_v0_4->unk0) + (var_s0_2->unk2 * var_v0_4->unk4)));
+                        var_s7++;
+                        var_s0_2++;
+                    }
+                    var_s1++;
+                    temp1_2++;
+                    temp3_2++;
+                    temp2_2++;
+                    temp4_2++;
+                    var_s3_2 = var_s2_s16;
+                } while (var_s1 != sp358);
+            }
+            var_a1 = var_s8;
+            var_s6++;
+        } while (var_s6 != sp354);
+    }
+
+    return var_s7;
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BDC80.s")
+#endif
 // https://decomp.me/scratch/2RF3k
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BE654.s")
 
