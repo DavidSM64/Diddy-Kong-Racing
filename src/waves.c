@@ -19,10 +19,10 @@ f32 *D_800E304C[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 Vertex *D_800E3070[4][1] = { NULL, NULL, NULL, NULL };
 Triangle *D_800E3080[4][1] = { NULL, NULL, NULL, NULL };
 Triangle D_800E3090[4] = {
-    { { BACKFACE_DRAW, 0x00, 0x02, 0x01 }, 0, 0, 0, 0, 0, 0 },
-    { { BACKFACE_DRAW, 0x01, 0x02, 0x03 }, 0, 0, 0, 0, 0, 0 },
-    { { BACKFACE_DRAW, 0x00, 0x02, 0x01 }, 0, 0, 0, 0, 0, 0 },
-    { { BACKFACE_DRAW, 0x01, 0x02, 0x03 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 0, 2, 1 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 1, 2, 3 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 0, 2, 1 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 1, 2, 3 }, 0, 0, 0, 0, 0, 0 },
 };
 
 TextureHeader *D_800E30D0 = NULL;
@@ -926,19 +926,19 @@ void func_800BA4B8(TextureHeader *tex, s32 rtile) {
     tmem = 0;
     if (texWidth == 16) {
         txmask = 4;
-        if (rtile != 0) {
+        if (rtile != G_TX_RENDERTILE) {
             tmem = 384;
         }
     } else if (texWidth == 32) {
         txmask = 5;
-        if (rtile != 0) {
+        if (rtile != G_TX_RENDERTILE) {
             tmem = 256;
         }
     } else {
         //!@bug: txmask is not set, so it's value will be UB. I wonder if they accidentally set the width to 3 instead
         //! of the mask?
         texWidth = 3;
-        if (rtile != 0) {
+        if (rtile != G_TX_RENDERTILE) {
             tmem = 384;
         }
     }
@@ -984,8 +984,8 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
             gSPClearGeometryMode(D_80129FC0++, G_FOG);
             tex1 = set_animated_texture_header(D_800E30D0, D_8012A09C << 8);
             tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
-            func_800BA4B8(tex1, 1);
-            func_800BA4B8(tex2, 0);
+            func_800BA4B8(tex1, G_TX_RENDERTILE + 1);
+            func_800BA4B8(tex2, G_TX_RENDERTILE);
             gDPSetCombineMode(D_80129FC0++, DKR_CC_UNK14, DKR_CC_UNK15);
             if ((tex1->format & 0xF) == TEX_FORMAT_RGBA32 && get_viewport_count() <= 0) {
                 gDPSetOtherMode(D_80129FC0++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_AA_ZB_XLU_INTER2);
@@ -1004,8 +1004,8 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
             }
         } else {
             gSPSetGeometryMode(D_80129FC0++, G_FOG);
-            tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
-            gDkrDmaDisplayList(D_80129FC0++, OS_K0_TO_PHYSICAL(tex1->cmd), tex1->numberOfCommands);
+            tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
+            gDkrDmaDisplayList(D_80129FC0++, OS_K0_TO_PHYSICAL(tex2->cmd), tex2->numberOfCommands);
             gDPSetCombineMode(D_80129FC0++, DKR_CC_UNK16, DKR_CC_UNK8);
             gDPSetOtherMode(D_80129FC0++, DKR_OMH_2CYC_BILERP,
                             DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);
