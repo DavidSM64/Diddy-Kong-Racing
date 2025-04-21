@@ -1198,16 +1198,15 @@ void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
     }
 }
 
-#ifdef NON_MATCHING
 void func_800BBF78(LevelModel *model) {
     LevelModelSegmentBoundingBox *levelSegmentBoundingBoxes;
-    s32 temp_s1; // sp58
+    s32 j;
     s32 temp_t1;
-    s32 var_a3;
-    s32 temp_lo;
+    s32 segmentVertexY;
     s32 temp_t2;
+    s32 pad;
     s32 sp44;
-    LevelModelSegment *levelSegments; // sp40
+    LevelModelSegment *levelSegments;
     s32 i;
     s32 var_v0;
     LevelModel_Alternate *otherModel;
@@ -1259,14 +1258,19 @@ void func_800BBF78(LevelModel *model) {
     if (D_800E30D8 != NULL) {
         mempool_free(D_800E30D8);
     }
-    
-    D_800E30D8 = mempool_alloc_safe((model->numberOfSegments * sizeof(LevelModel_Alternate)) + (D_800E318C * 8) + 0x880, 0xFFFFFF);
 
-    D_800E3190 = (u32)D_800E30D8 + model->numberOfSegments * sizeof(LevelModel_Alternate);
-    D_800E3194 = (u32)D_800E3190 + 0x800;
-    D_800E3184 = (u32)D_800E3194 + 0x80;
-    
-    for (i = 0; i < (D_800E318C * 8); i++){
+    // clang-format off
+    D_800E30D8 = mempool_alloc_safe(
+        (model->numberOfSegments * sizeof(LevelModel_Alternate)) + (D_800E318C * 8) + 0x880,
+        0xFFFFFF
+    );
+    // clang-format on
+
+    D_800E3190 = (u32) D_800E30D8 + model->numberOfSegments * sizeof(LevelModel_Alternate);
+    D_800E3194 = (u32) D_800E3190 + 0x800;
+    D_800E3184 = (u32) D_800E3194 + 0x80;
+
+    for (i = 0; i < (D_800E318C * 8); i++) {
         D_800E3184->unk0[i] = 0xFF;
     }
 
@@ -1287,28 +1291,23 @@ void func_800BBF78(LevelModel *model) {
 
     gNumberOfLevelSegments = model->numberOfSegments;
     for (i = 0; i < gNumberOfLevelSegments; i++) {
-        temp_t1 = levelSegmentBoundingBoxes[i].x1 - D_8012A0D0 + 8; 
+        temp_t1 = levelSegmentBoundingBoxes[i].x1 - D_8012A0D0 + 8;
         temp_t2 = levelSegmentBoundingBoxes[i].z1 - D_8012A0D4 + 8;
         temp_t1 = ((temp_t1 / gWaveBoundingBoxDiffX) * gWaveBoundingBoxDiffX) + D_8012A0D0;
         temp_t2 = ((temp_t2 / gWaveBoundingBoxDiffZ) * gWaveBoundingBoxDiffZ) + D_8012A0D4;
-        var_a3 = 0;
-        for (temp_s1 = 0; temp_s1 < levelSegments[i].numberOfBatches; temp_s1++) {
-            if ((levelSegments[i].batches[temp_s1].flags & 0x2000) && (levelSegments[i].batches[temp_s1].flags & 0x400000)) {
-                // @fake?
-                var_a3++;
-                var_a3--;
-                var_a3 = levelSegments[i].vertices[levelSegments[i].batches[temp_s1].verticesOffset].y;
+        segmentVertexY = 0;
+        for (j = 0; j < levelSegments[i].numberOfBatches; j++) {
+            if ((levelSegments[i].batches[j].flags & 0x2000) && (levelSegments[i].batches[j].flags & 0x400000)) {
+                segmentVertexY = levelSegments[i].vertices[levelSegments[i].batches[j].verticesOffset].y;
             }
         }
 
         otherModel = &D_800E30D8[i];
         otherModel->unk00 = &levelSegments[i];
         otherModel->unk4 = temp_t1;
-        otherModel->unk6 = var_a3;
+        otherModel->unk6 = segmentVertexY;
         otherModel->unk8 = temp_t2;
         otherModel->unkA = (temp_t1 - D_8012A0D0) / gWaveBoundingBoxDiffX;
-        // @fake?
-        temp_lo = (temp_t2 - D_8012A0D4) / gWaveBoundingBoxDiffZ;
         otherModel->unkB = (temp_t2 - D_8012A0D4) / gWaveBoundingBoxDiffZ;
         otherModel->unkC = otherModel->unkA + (otherModel->unkB * D_8012A0D8);
         otherModel->unk12 = 0;
@@ -1327,19 +1326,12 @@ void func_800BBF78(LevelModel *model) {
             D_8012A0E8[otherModel->unkB] |= (1 << otherModel->unkA);
         }
 
-        otherModel->unk14[0].unk0[1] = 0x80;
-        otherModel->unk14[1].unk0[1] = 0x80;
-        otherModel->unk14[0].unk0[2] = 0x80;
-        otherModel->unk14[1].unk0[2] = 0x80;
-        otherModel->unk14[0].unk0[3] = 0x80;
-        otherModel->unk14[1].unk0[3] = 0x80;
-        otherModel->unk14[0].unk0[0] = 0x80;
-        otherModel->unk14[1].unk0[0] = 0x80;
+        for (j = 0; j < 4; j++) {
+            otherModel->unk14[0].unk0[j] = 0x80;
+            otherModel->unk14[1].unk0[j] = 0x80;
+        }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BBF78.s")
-#endif
 
 void func_800BC6C8(void) {
     s32 i;
@@ -1454,7 +1446,8 @@ typedef struct unkArg2 {
 // arg1 is s32 D_8011C3B8[320]; according to func_8002EEEC
 // arg2 might be s32 D_8011C8B8[512]
 
-s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition, f32 shadowZNegPosition, f32 shadowXPosition, f32 shadowZPosition) {
+s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition, f32 shadowZNegPosition,
+                  f32 shadowXPosition, f32 shadowZPosition) {
     s32 sp36C;
     s32 sp368;
     s32 sp364;
@@ -1493,9 +1486,9 @@ s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition
     f32 spC8;
     s32 var_v0;
     s32 spA4;
-    unkArg2* var_v0_4;
+    unkArg2 *var_v0_4;
     s32 sp98;
-    unkArg1* var_s0_2;
+    unkArg1 *var_s0_2;
     s32 sp90;
     s32 temp3_2;
     s32 temp4_2;
@@ -1569,13 +1562,14 @@ s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition
                 var_s1 = sp368;
                 var_s5 = sp358 + 1;
                 do {
-                    var_f20 = (D_800E3040[D_800E3044[var_s2].s[0]] + D_800E3040[D_800E3044[var_s2].s[1]]) * D_80129FC8.magnitude;
+                    var_f20 = (D_800E3040[D_800E3044[var_s2].s[0]] + D_800E3040[D_800E3044[var_s2].s[1]]) *
+                              D_80129FC8.magnitude;
                     if (D_800E3188 > 0) {
                         var_f20 += func_800BEFC4(arg0, var_s1, var_s6);
                     }
                     if (D_800E3178[var_s4] < 0x7F) {
                         // s32 cast below required
-                        var_f20 *= D_80129FC8.unk44 + ((s32)D_800E3178[var_s4] * var_f24);
+                        var_f20 *= D_80129FC8.unk44 + ((s32) D_800E3178[var_s4] * var_f24);
                     }
                     var_s1++;
                     var_s7++;
@@ -1607,7 +1601,7 @@ s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition
         do {
             var_s8 = D_800E30D8[arg0].unk8 + (s32) ((var_s6 + 1) * spC8);
             var_s3_2 = D_800E30D8[arg0].unk4 + sp98;
-            if (sp368  < sp358) {
+            if (sp368 < sp358) {
                 var_s0_2 = &arg1[var_s7];
                 // a3 / t5 as index
                 var_lo = (var_s6 - sp364) * sp36C;
@@ -1695,10 +1689,8 @@ s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition
                         var_v0_4->unk0 = var_f20 * var_f24;
                         var_v0_4->unk4 = var_f26 * var_f24;
                         var_v0_4->unk8 = var_f22 * var_f24;
-                        var_v0_4->unkC = -(
-                            (var_v0_4->unk8 * var_s0_2->unk4) + 
-                            ((var_s0_2->unk0 * var_v0_4->unk0) + (var_s0_2->unk2 * var_v0_4->unk4))
-                        );
+                        var_v0_4->unkC = -((var_v0_4->unk8 * var_s0_2->unk4) +
+                                           ((var_s0_2->unk0 * var_v0_4->unk0) + (var_s0_2->unk2 * var_v0_4->unk4)));
                         var_s7++;
                         var_s0_2++;
                     }
@@ -1720,14 +1712,11 @@ s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition
                         var_v0_4->unk0 = var_f20 * var_f24;
                         var_v0_4->unk4 = var_f26 * var_f24;
                         var_v0_4->unk8 = var_f22 * var_f24;
-                        
-                        var_v0_4->unkC = -(
-                            (var_v0_4->unk8 * var_s0_2->unk4) + 
-                            ((var_s0_2->unk0 * var_v0_4->unk0) + (var_s0_2->unk2 * var_v0_4->unk4))
-                        );
+
+                        var_v0_4->unkC = -((var_v0_4->unk8 * var_s0_2->unk4) +
+                                           ((var_s0_2->unk0 * var_v0_4->unk0) + (var_s0_2->unk2 * var_v0_4->unk4)));
                         var_s7++;
                         var_s0_2++;
-        
                     }
                     var_s1++;
                     temp1_2++;
