@@ -50,24 +50,24 @@ typedef struct unk800E3184 {
 typedef struct unk80129FC8 {
     s32 unk0; // count or index?
     s32 unk4; // compared to and substracted
-    s32 unk8;
-    f32 unkC;
-    s32 unk10; // used in sins_f
-    s32 unk14;
-    f32 unk18;
-    s32 unk1C; // used in sins_f
-    s32 unk20; // max count of something? Maybe D_800E3040?
-    s32 unk24;
-    s32 unk28; // some sort of flag? maybe bool?
-    s32 unk2C; // something to do with texture? maybe id?
-    s32 unk30;
-    s32 unk34;
-    s32 unk38;
-    s32 unk3C;
+    s32 unk8; // used to populate D_800E3040
+    f32 unkC; // used to populate D_800E3040
+    s32 unk10; // used to populate D_800E3040
+    s32 unk14; // used to populate D_800E3040
+    f32 unk18; // used to populate D_800E3040
+    s32 unk1C; // used to populate D_800E3040
+    s32 unk20; // count of elements in D_800E3040
+    s32 unk24; // possible values: 3 or 5, controls what's set for D_800E30E0 and D_800E30E4
+    s32 unk28; // some sort of flag
+    s32 textureId;
+    s32 unk30; // multiplier for texture width
+    s32 unk34; // multiplier for texture height
+    s32 unk38; // used in u of uv calculation for wave triangles
+    s32 unk3C; // used in v of uv calculation for wave triangles
     f32 magnitude; // Global wave strength
-    f32 unk44; // something related to scale?
-    f32 unk48;
-    s32 unk4C;
+    f32 unk44; // something related to height / scale
+    f32 unk48; // used in vertex RGBA calculation
+    s32 darkVertexColours;
 } unk80129FC8;
 
 typedef struct unk800BBE08_arg1 {

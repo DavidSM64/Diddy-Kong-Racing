@@ -26,7 +26,7 @@ Triangle D_800E3090[4] = {
 };
 
 TextureHeader *gWaveTextureHeader = NULL;
-s32 *D_800E30D4 = NULL; // indexed by D_800E30D4.unkC
+s32 *D_800E30D4 = NULL; // indexed by D_800E30D8.unkC
 LevelModel_Alternate *D_800E30D8 = NULL;
 s32 D_800E30DC = 0;     // Tracks an index into D_8012A1E8
 s16 *D_800E30E0 = NULL; // Points to either D_800E30E8 or D_800E3110 and is used for D_800E30D4
@@ -68,8 +68,8 @@ Gfx *gWaveDL;
 MatrixS *D_80129FC4;
 unk80129FC8 D_80129FC8; // holds lots of control information used in this file
 s32 D_8012A018;         // either 1 or 0, toggled in func_800B9C18, used to index vertices and triangles
-f32 D_8012A01C;         // some sort of min/max value for func_800B97A8
-f32 D_8012A020;         // some sort of min/max value for func_800B97A8
+f32 D_8012A01C;         // is set to lowest value of D_800E3040
+f32 D_8012A020;         // is set to highest value of D_800E3040
 UNUSED s32 D_8012A024;
 Vertex D_8012A028[2][4]; // stores values of gWaveVertices to be used in func_800BA8E4
 s32 D_8012A078;          // controls whether 2 or 4 items are used in gWaveVertices / gWaveTriangles
@@ -77,10 +77,10 @@ TriangleBatchInfo *gWaveBatch;
 TextureHeader *gWaveTexture;
 s32 D_8012A084; // u value for D_800E3048
 s32 D_8012A088; // v value for D_800E3048
-s32 D_8012A08C; // is added onto D_8012A084 (ratio relating to texture width)
-s32 D_8012A090; // ratio relating to texture height
-s32 D_8012A094; // something width (related to texture)
-s32 D_8012A098; // something height (related to texture)
+s32 D_8012A08C; // is added onto u of D_8012A084, is multiplied with texture width
+s32 D_8012A090; // is added onto v of D_8012A084, is multiplied with texture height
+s32 D_8012A094; // bitmask / something width (related to texture)
+s32 D_8012A098; // bitmask / something height (related to texture)
 s32 D_8012A09C; // stores / relates to frameAdvanceDelay, used in func_800BA8E4
 f32 D_8012A0A0; // copy of gWaveBoundingBoxDiffX
 f32 D_8012A0A4; // copy of gWaveBoundingBoxDiffZ
@@ -161,10 +161,10 @@ void wave_init(void) {
     s32 i;
 
     free_waves();
-    D_800E3040 = (f32 *) mempool_alloc_safe(D_80129FC8.unk20 << 2, COLOUR_TAG_CYAN);
-    D_800E3044 = (Vec2s *) mempool_alloc_safe((D_80129FC8.unk4 << 2) * D_80129FC8.unk4, COLOUR_TAG_CYAN);
-    D_800E3048 =
-        (TexCoords *) mempool_alloc_safe(((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1), COLOUR_TAG_CYAN);
+    D_800E3040 = (f32 *) mempool_alloc_safe(D_80129FC8.unk20 * sizeof(f32 *), COLOUR_TAG_CYAN);
+    D_800E3044 = (Vec2s *) mempool_alloc_safe((D_80129FC8.unk4 * sizeof(Vec2s *)) * D_80129FC8.unk4, COLOUR_TAG_CYAN);
+    D_800E3048 = (TexCoords *) mempool_alloc_safe(((D_80129FC8.unk0 + 1) * sizeof(TexCoords *)) * (D_80129FC8.unk0 + 1),
+                                                  COLOUR_TAG_CYAN);
     allocSize = ((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1);
     D_800E304C[0] = mempool_alloc_safe(allocSize * ARRAY_COUNT(D_800E304C), COLOUR_TAG_CYAN);
     for (i = 1; i < ARRAY_COUNT(D_800E304C); i++) {
@@ -191,7 +191,7 @@ void wave_init(void) {
         gWaveTriangles[2][0] = (Triangle *) (((u32) gWaveTriangles[1][0]) + allocSize);
         gWaveTriangles[3][0] = (Triangle *) (((u32) gWaveTriangles[2][0]) + allocSize);
     }
-    gWaveTextureHeader = load_texture(D_80129FC8.unk2C);
+    gWaveTextureHeader = load_texture(D_80129FC8.textureId);
 }
 
 void func_800B8134(LevelHeader *header) {
@@ -214,7 +214,7 @@ void func_800B8134(LevelHeader *header) {
         D_80129FC8.unk24 = 3;
     }
     D_80129FC8.unk28 = header->unk71;
-    D_80129FC8.unk2C = header->unk68 & 0xFFFF;
+    D_80129FC8.textureId = header->textureId & 0xFFFF;
     D_80129FC8.unk30 = header->unk6A;
     D_80129FC8.unk34 = header->unk6B;
     D_80129FC8.unk38 = header->unk6C;
@@ -222,7 +222,7 @@ void func_800B8134(LevelHeader *header) {
     D_80129FC8.magnitude = header->wavePower / 256.0f;
     D_80129FC8.unk44 = header->unk64 / 256.0f;
     D_80129FC8.unk48 = header->unk66 / 256.0f;
-    D_80129FC8.unk4C = header->unk70_u8;
+    D_80129FC8.darkVertexColours = header->darkVertexColours;
 }
 
 void func_800B82B4(LevelModel *model, LevelHeader *header, s32 arg2) {
@@ -266,7 +266,7 @@ void func_800B82B4(LevelModel *model, LevelHeader *header, s32 arg2) {
     D_8012A020 = -10000.0f;
     for (i_2 = 0; i_2 < D_80129FC8.unk20; i_2++) {
         D_800E3040[i_2] = (sins_f(var_s6) * D_80129FC8.unkC) + (sins_f(var_fp) * D_80129FC8.unk18);
-        if (D_80129FC8.unk28 != 0) {
+        if (D_80129FC8.unk28 != FALSE) {
             D_800E3040[i_2] *= 2.0f;
         }
         if (D_800E3040[i_2] < D_8012A01C) {
@@ -304,7 +304,8 @@ void func_800B82B4(LevelModel *model, LevelHeader *header, s32 arg2) {
                     for (k = 0; k < arg2; k++) {
                         gWaveVertices[k][var_s5].x = (j_2 * D_8012A0B8) + 0.5;
                         gWaveVertices[k][var_s5].z = (i_2 * D_8012A0BC) + 0.5;
-                        if (D_80129FC8.unk4C == 0) {
+                        // this is only 0 for hot top volcano
+                        if (D_80129FC8.darkVertexColours == 0) {
                             gWaveVertices[k][var_s5].r = 255;
                             gWaveVertices[k][var_s5].g = 255;
                             gWaveVertices[k][var_s5].b = 255;
@@ -433,7 +434,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
         D_8012A600[var_v1 + 18] = -1;
     }
 
-    if (D_80129FC8.unk28 != 0) {
+    if (D_80129FC8.unk28 != FALSE) {
         var_t5 = gWaveBoundingBoxDiffZ;
         var_v1 = 0;
         var_s4 = 0;
@@ -588,7 +589,7 @@ void func_800B92F4(s32 arg0, s32 arg1) {
             continue;
         }
 
-        if (D_80129FC8.unk28 != 0) {
+        if (D_80129FC8.unk28 != FALSE) {
             sp98 = (((u32) D_800E30D4[sp6C->unkC] >> (D_8012A5E8[k].unk2 * 8)) & 0xFF) - 1;
             sp8C = (D_8012A5E8[k].unk2 & 1) * D_80129FC8.unk0;
             sp88 = ((D_8012A5E8[k].unk2 & 2) >> 1) * D_80129FC8.unk0;
@@ -649,7 +650,7 @@ void func_800B92F4(s32 arg0, s32 arg1) {
             if (sp84 >= D_80129FC8.unk4) {
                 sp84 -= D_80129FC8.unk4;
             }
-            if (D_80129FC8.unk28 != 0) {
+            if (D_80129FC8.unk28 != FALSE) {
                 D_8012A5E8[k].unk8 += D_80129FC8.unk0;
             }
         }
@@ -687,7 +688,7 @@ void func_800B97A8(s32 arg0, s32 arg1) {
             continue;
         }
 
-        if (D_80129FC8.unk28 != 0) {
+        if (D_80129FC8.unk28 != FALSE) {
             spA8 = (((u32) D_800E30D4[sp78->unkC] >> (D_8012A5E8[k].unk2 * 8)) & 0xFF) - 1;
             sp9C = (D_8012A5E8[k].unk2 & 1) * D_80129FC8.unk0;
             sp98 = ((s32) (D_8012A5E8[k].unk2 & 2) >> 1) * D_80129FC8.unk0;
@@ -735,7 +736,7 @@ void func_800B97A8(s32 arg0, s32 arg1) {
             if (var_a0 >= D_80129FC8.unk4) {
                 var_a0 -= D_80129FC8.unk4;
             }
-            if (D_80129FC8.unk28 != 0) {
+            if (D_80129FC8.unk28 != FALSE) {
                 D_8012A5E8[k].unk8 += D_80129FC8.unk0;
             }
         }
@@ -864,7 +865,7 @@ void func_800BA288(s32 arg0, s32 arg1) {
     arg1 <<= 3;
     for (i = 0; i < gNumberOfLevelSegments; i++) {
         if (D_8012A0E8[D_800E30D8[i].unkB] & (1 << D_800E30D8[i].unkA)) {
-            if (D_80129FC8.unk28 != 0) {
+            if (D_80129FC8.unk28 != FALSE) {
                 for (j = 0; j < 4; j++) {
                     if (D_800E30D4[D_800E30D8[i].unkC] & (0xFF << (j << 3))) {
                         if (arg1 < D_800E30D8[i].unk14[arg0].unk0[j]) {
@@ -972,7 +973,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
     var_f16 = (1.0f - D_80129FC8.unk44) / 127.0f;
     sp58 = arg0 * D_800E317C;
 
-    if (D_80129FC8.unk28 != 0) {
+    if (D_80129FC8.unk28 != FALSE) {
         sp90 *= 0.5f;
         sp94 *= 0.5f;
         sp60 = (D_80129FC8.unk0 * 2) + 1;
@@ -1054,7 +1055,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
             var_f2 *= D_80129FC8.unk44 + (var_v0 * var_f16);
         }
 
-        if (D_80129FC8.unk28 != 0) {
+        if (D_80129FC8.unk28 != FALSE) {
             spA0 *= 0.5f;
             var_f12 *= 0.5f;
             var_f2 *= 0.5f;
@@ -1108,7 +1109,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
             var_f2 *= D_80129FC8.unk44 + (var_v0 * var_f16);
         }
 
-        if (D_80129FC8.unk28 != 0) {
+        if (D_80129FC8.unk28 != FALSE) {
             spA0 *= 0.5f;
             var_f12 *= 0.5f;
             var_f2 *= 0.5f;
@@ -1201,7 +1202,7 @@ void func_800BBF78(LevelModel *model) {
     levelSegments = model->segments;
     levelSegmentBoundingBoxes = model->segmentsBoundingBoxes;
     sp44 = D_80129FC8.unk0;
-    if (D_80129FC8.unk28 != 0) {
+    if (D_80129FC8.unk28 != FALSE) {
         sp44 = sp44 * 2;
     }
     D_8012A0C0 = levelSegmentBoundingBoxes->x1;
@@ -1486,7 +1487,7 @@ s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition
     spCC = D_8012A0B8;
     spC8 = D_8012A0BC;
     var_f24 = (1.0f - D_80129FC8.unk44) / 127.0f;
-    if (D_80129FC8.unk28 != 0) {
+    if (D_80129FC8.unk28 != FALSE) {
         sp36C = D_80129FC8.unk0 * 2;
         spCC *= 0.5;
         spC8 *= 0.5;
@@ -1786,7 +1787,7 @@ f32 func_800BEFC4(s32 arg0, s32 arg1, s32 arg2) {
     var_v1 = D_80129FC8.unk0;
     var_f0 = D_8012A0B8;
     var_f2 = D_8012A0BC;
-    if (D_80129FC8.unk28 != 0) {
+    if (D_80129FC8.unk28 != FALSE) {
         var_v1 *= 2;
         var_f0 *= 0.5f;
         var_f2 *= 0.5f;
@@ -1919,7 +1920,7 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
             D_800E3194[i] = obj;
             D_800E3188++;
             var_f0 = D_8012A0B8;
-            if (D_80129FC8.unk28 != 0) {
+            if (D_80129FC8.unk28 != FALSE) {
                 var_f0 /= 2.0f;
             }
 
@@ -1997,7 +1998,7 @@ UNUSED void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2) {
 
     var_f0 = D_8012A0B8;
     iteration = 0;
-    if (D_80129FC8.unk28 != 0) {
+    if (D_80129FC8.unk28 != FALSE) {
         var_f0 *= 0.5f;
     }
     temp_v1 = arg0->unk18;
