@@ -2674,7 +2674,247 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
     }
 }
 
+#ifdef NON_EQUIVALENT
+s32 func_8002CC30(LevelModelSegment *arg0) {
+    s32 spF4;
+    s32 spEC;
+    s32 spD0;
+    f32 spBC;
+    f32 spA0;
+    f32 sp9C;
+    f32 sp98;
+    s32 sp78;
+    s32 sp74;
+    Triangle *temp_v1_4;
+    Vertex *temp_a0;
+    Vertex *temp_a0_2;
+    f32 temp_f0;
+    f32 temp_f0_2;
+    f32 temp_f0_3;
+    f32 temp_f0_4;
+    f32 temp_f12;
+    f32 temp_f12_2;
+    f32 temp_f14;
+    f32 temp_f14_2;
+    f32 temp_f16;
+    f32 temp_f16_2;
+    f32 temp_f18;
+    f32 temp_f18_2;
+    f32 temp_f20;
+    f32 temp_f22;
+    f32 temp_f24;
+    f32 temp_f24_2;
+    f32 temp_f28;
+    f32 temp_f28_2;
+    f32 temp_f2;
+    f32 temp_f2_2;
+    f32 temp_f30;
+    f32 temp_f30_2;
+    f32 temp_f4;
+    f32 var_f20;
+    f32 var_f22;
+    f32 var_f26;
+    s16 temp_fp;
+    s16 temp_fp_2;
+    s16 temp_t7_2;
+    s16 temp_t8;
+    s16 temp_v1;
+    s16 var_a1;
+    s16 var_s7;
+    s16 var_v1;
+    s32 temp_s6;
+    s32 temp_t2;
+    s32 temp_t4;
+    s32 temp_t7;
+    s32 temp_t9;
+    s32 var_a0;
+    s32 var_a1_2;
+    s32 var_at;
+    s32 var_s0;
+    s32 var_s4;
+    s32 var_s5;
+    s32 var_t1;
+    s32 var_v0;
+    s32 var_v0_2;
+    u16 temp_s0;
+    u16 temp_s1;
+    u16 temp_t3;
+    u8 *temp_v1_2;
+    TriangleBatchInfo *temp_v0;
+    Vertex *temp_v0_2;
+    Vertex *temp_v0_3;
+    Vertex *temp_v0_4;
+    TriangleBatchInfo *temp_v0_5;
+    Vertex *temp_v0_6;
+    Vertex *temp_v0_7;
+    f32 *temp_v1_3;
+    f32 *temp_v1_5;
+    CollisionNode *temp_v1_6;
+
+    spEC = 0;
+    var_a1 = arg0->numberOfBatches;
+    var_s4 = 0;
+    if (var_a1 > 0) {
+        sp74 = 0;
+        do {
+            temp_v0 = arg0->batches + sp74;
+            temp_v1 = temp_v0->facesOffset;
+            temp_t8 = temp_v0[1].verticesOffset;
+            temp_fp = temp_v0->verticesOffset;
+            spF4 = (s32) temp_t8;
+            if (temp_v1 < temp_t8) {
+                var_a1_2 = temp_v1 * sizeof(Triangle);
+                do {
+                    temp_v1_2 = &arg0->triangles->verticesArray[var_a1_2];
+                    if (!(temp_v1_2[0] & 0x80)) {
+                        temp_a0 = arg0->vertices;
+                        temp_v0_2 = ((temp_v1_2[1] + temp_fp) * 0xA) + temp_a0;
+                        spBC = (f32) temp_v0_2->z;
+                        temp_f30 = (f32) temp_v0_2->y;
+                        temp_f28 = (f32) temp_v0_2->x;
+                        temp_v0_3 = ((temp_v1_2[2] + temp_fp) * 0xA) + temp_a0;
+                        temp_f12 = (f32) temp_v0_3->y;
+                        temp_f14 = (f32) temp_v0_3->z;
+                        temp_v0_4 = ((temp_v1_2[3] + temp_fp) * 0xA) + temp_a0;
+                        temp_f0 = (f32) temp_v0_4->z;
+                        sp78 = var_a1_2;
+                        temp_f2 = (f32) temp_v0_3->x;
+                        temp_f16 = (f32) temp_v0_4->x;
+                        temp_f18 = (f32) temp_v0_4->y;
+                        temp_f20 = ((temp_f14 - temp_f0) * temp_f30) + (temp_f12 * (temp_f0 - spBC)) + (temp_f18 * (spBC - temp_f14));
+                        spA0 = temp_f20;
+                        temp_f22 = ((temp_f2 - temp_f16) * spBC) + (temp_f14 * (temp_f16 - temp_f28)) + (temp_f0 * (temp_f28 - temp_f2));
+                        sp9C = temp_f22;
+                        temp_f24 = ((temp_f12 - temp_f18) * temp_f28) + (temp_f2 * (temp_f18 - temp_f30)) + (temp_f16 * (temp_f30 - temp_f12));
+                        sp98 = temp_f24;
+                        temp_f0_2 = sqrtf((temp_f20 * temp_f20) + (temp_f22 * temp_f22) + (temp_f24 * temp_f24));
+                        if (temp_f0_2 > 0.0) {
+                            spA0 = temp_f20 / temp_f0_2;
+                            sp9C = temp_f22 / temp_f0_2;
+                            sp98 = temp_f24 / temp_f0_2;
+                        }
+                        temp_t7 = var_s4 * 0x10;
+                        arg0->unk18[temp_t7] = spA0;
+                        arg0->unk18[temp_t7 + 1] = sp9C;
+                        arg0->unk18[temp_t7 + 2] = sp98;
+                        var_s4 += 1;
+                        arg0->unk18[temp_t7 + 3] = (f32) -((temp_f28 * spA0) + (temp_f30 * sp9C) + (spBC * sp98));
+                        var_a1_2 = sp78;
+                    }
+                    var_a1_2 += sizeof(Triangle);
+                } while (var_a1_2 < (temp_t8 * 0x10));
+                var_a1 = arg0->numberOfBatches;
+            }
+            temp_t9 = spEC + 1;
+            sp74 += 0xC;
+            spEC = temp_t9;
+        } while (temp_t9 < var_a1);
+    }
+    var_t1 = var_s4;
+    if (D_8011B0F8 != 0) {
+
+    } else {
+        spEC = 0;
+        if (var_a1 > 0) {
+            sp74 = 0;
+            do {
+                temp_v0_5 = arg0->batches + sp74;
+                temp_t7_2 = temp_v0_5[1].verticesOffset;
+                var_v1 = temp_v0_5->facesOffset;
+                temp_fp_2 = temp_v0_5->verticesOffset;
+                spF4 = (s32) temp_t7_2;
+                var_at = var_v1 < spF4;
+                if (temp_v0_5->flags & 0x200) {
+                    var_v1 = temp_t7_2;
+                    var_at = var_v1 < spF4;
+                }
+                var_s7 = var_v1;
+                if (var_at != 0) {
+                    var_a0 = var_v1 * 0x10;
+                    do {
+                        if (!(arg0->triangles->verticesArray[var_a0] & 0x80)) {
+                            temp_s1 = arg0->unk14[var_s7].triangleIndex;
+                            temp_v1_3 = arg0->unk18 + (temp_s1 * 0x10);
+                            var_v0 = 0;
+                            spA0 = temp_v1_3[0];
+                            var_s5 = 0;
+                            sp9C = temp_v1_3[1];
+                            sp78 = var_a0;
+                            sp98 = temp_v1_3[2];
+                            do {
+                                temp_s6 = var_v0 + 1;
+                                temp_v1_4 = &arg0->triangles[var_s7];
+                                var_s0 = temp_s6;
+                                if (temp_s6 >= 3) {
+                                    var_s0 = 0;
+                                }
+                                temp_s0 = (&arg0->unk14[var_s7] + var_s5)->closestTri01;
+                                if ((s32) temp_s0 < var_t1) {
+                                    temp_v1_5 = arg0->unk18 + (temp_s0 * 0x10);
+                                    temp_a0_2 = arg0->vertices;
+                                    temp_v0_6 = temp_a0_2 + ((temp_v1_4->verticesArray[var_v0 + 1] + temp_fp_2) * 0xA); //((temp_v1_4->verticesArray[var_v0].unk1 + temp_fp_2) * 0xA);
+                                    temp_f4 = (f32) temp_v0_6->z;
+                                    spBC = temp_f4;
+                                    temp_v0_7 = temp_a0_2 + ((temp_v1_4->verticesArray[var_s0 + 1] + temp_fp_2) * 0xA);
+                                    temp_f28_2 = (f32) temp_v0_6->x;
+                                    spD0 = var_t1;
+                                    temp_f30_2 = (f32) temp_v0_6->y;
+                                    temp_f2_2 = (f32) temp_v0_7->x;
+                                    temp_f16_2 = ((temp_v1_5[0] + spA0) * 10.0f) + temp_f28_2;
+                                    temp_f12_2 = (f32) temp_v0_7->y;
+                                    temp_f14_2 = (f32) temp_v0_7->z;
+                                    temp_f18_2 = ((temp_v1_5[1] + sp9C) * 10.0f) + temp_f30_2;
+                                    temp_f0_3 = ((temp_v1_5[2] + sp98) * 10.0f) + temp_f4;
+                                    var_f20 = ((temp_f14_2 - temp_f0_3) * temp_f30_2) + (temp_f12_2 * (temp_f0_3 - temp_f4)) + (temp_f18_2 * (temp_f4 - temp_f14_2));
+                                    var_f22 = ((temp_f2_2 - temp_f16_2) * temp_f4) + (temp_f14_2 * (temp_f16_2 - temp_f28_2)) + (temp_f0_3 * (temp_f28_2 - temp_f2_2));
+                                    temp_f24_2 = ((temp_f12_2 - temp_f18_2) * temp_f28_2) + (temp_f2_2 * (temp_f18_2 - temp_f30_2)) + (temp_f16_2 * (temp_f30_2 - temp_f12_2));
+                                    var_f26 = temp_f24_2;
+                                    temp_f0_4 = sqrtf((var_f20 * var_f20) + (var_f22 * var_f22) + (temp_f24_2 * temp_f24_2));
+                                    if ((f64) temp_f0_4 > 0.0) {
+                                        var_f20 /= temp_f0_4;
+                                        var_f22 /= temp_f0_4;
+                                        var_f26 = temp_f24_2 / temp_f0_4;
+                                    }
+                                    if (temp_s0 != temp_s1) {
+                                        var_v0_2 = 0;
+                                        do {
+                                            temp_v1_6 = &arg0->unk14[temp_s0] + var_v0_2;
+                                            temp_t3 = temp_v1_6->closestTri01;
+                                            var_v0_2 += 2;
+                                            if (temp_s1 == temp_t3) {
+                                                temp_v1_6->closestTri01 = (s16) (var_s4 | 0x8000);
+                                            }
+                                        } while (var_v0_2 != 6);
+                                    }
+                                    (&arg0->unk14[var_s7] + var_s5)->closestTri01 = (s16) var_s4;
+                                    temp_t2 = var_s4 * 0x10;
+                                    (arg0->unk18[temp_t2]) = var_f20;
+                                    (arg0->unk18[temp_t2 + 1]) = var_f22;
+                                    (arg0->unk18[temp_t2 + 2]) = var_f26;
+                                    var_s4 += 1;
+                                    arg0->unk18[temp_t2 + 3] = (f32) -((temp_f28_2 * var_f20) + (temp_f30_2 * var_f22) + (spBC * var_f26));
+                                }
+                                var_v0 = temp_s6;
+                                var_s5 += 2;
+                            } while (temp_s6 != 3);
+                            var_a0 = sp78;
+                        }
+                        var_s7 += 1;
+                        var_a0 += 0x10;
+                    } while (var_s7 != spF4);
+                    var_a1 = arg0->numberOfBatches;
+                }
+                temp_t4 = spEC + 1;
+                sp74 += 0xC;
+                spEC = temp_t4;
+            } while (temp_t4 < var_a1);
+        }
+    }
+    return var_s4 * 0x10;
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002CC30.s")
+#endif
 
 typedef struct unk8002D30C_a0 {
     u8 pad00[0x04];
