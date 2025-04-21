@@ -475,7 +475,7 @@ typedef struct LevelHeader {
 
     //func_800B8134 Seems to use this struct, and it differs on unk70 only.
     union {
-  /* 0x70 */ LevelHeader_70 *unk70;
+  /* 0x70 */ LevelHeader_70 *unk70[1]; // unknown size, however only size of 1 matches
         struct {
   /* 0x70 */ u8 unk70_u8;
   /* 0x71 */ u8 unk71;
