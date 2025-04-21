@@ -17,7 +17,7 @@ typedef struct {
     s16 unk8; // something with z
     u8 unkA; // some sort of x ratio
     u8 unkB; // some sort of z ratio / index of D_8012A0E8
-    u32 unkC;
+    u32 unkC; // indexes D_800E30D4
     s16 unk10;
     s16 unk12;
     LevelModelSubArray unk14[2];

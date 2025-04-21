@@ -11,10 +11,10 @@
 
 /************ .data ************/
 
-f32 *D_800E3040 = NULL;
+f32 *D_800E3040 = NULL;   // indexed by values of D_800E3044
 Vec2s *D_800E3044 = NULL; // holds some sort of index?
 TexCoords *D_800E3048 = NULL;
-f32 *D_800E304C[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+f32 *D_800E304C[9] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
 Vertex *gWaveVertices[4] = { NULL, NULL };
 Triangle *gWaveTriangles[4][1] = { NULL, NULL, NULL, NULL };
@@ -26,11 +26,11 @@ Triangle D_800E3090[4] = {
 };
 
 TextureHeader *gWaveTextureHeader = NULL;
-s32 *D_800E30D4 = NULL;
+s32 *D_800E30D4 = NULL; // indexed by D_800E30D4.unkC
 LevelModel_Alternate *D_800E30D8 = NULL;
 s32 D_800E30DC = 0;     // Tracks an index into D_8012A1E8
-s16 *D_800E30E0 = NULL; // Points to either D_800E30E8 or D_800E3110
-s16 *D_800E30E4 = NULL; // Points to either D_800E30FC or D_800E3144
+s16 *D_800E30E0 = NULL; // Points to either D_800E30E8 or D_800E3110 and is used for D_800E30D4
+s16 *D_800E30E4 = NULL; // Points to either D_800E30FC or D_800E3144 and is used to index D_800E304C
 
 s16 D_800E30E8[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 
@@ -41,11 +41,11 @@ s16 D_800E3110[26] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
 s16 D_800E3144[26] = { 0, 1, 1, 1, 2, 3, 4, 4, 4, 5, 3, 4, 4, 4, 5, 3, 4, 4, 4, 5, 6, 7, 7, 7, 8, 0 };
 
 u8 *D_800E3178 = NULL;
-s32 D_800E317C = 0;
+s32 D_800E317C = 0; // some sort of count? Relative to D_80129FC8.unk0
 LevelHeader_70 *D_800E3180 = NULL;
-unk800E3184 *D_800E3184 = NULL;
-s32 D_800E3188 = 0;
-s32 D_800E318C = 0; // used in mempool_alloc_safe size calculation, multiplied with 8
+unk800E3184 *D_800E3184 = NULL; // tracks an index into D_800E3190
+s32 D_800E3188 = 0;             // counter for something, incremented in func_800BF634, decremented in func_800BF3E4
+s32 D_800E318C = 0;             // used in mempool_alloc_safe size calculation, multiplied with 8
 unk800E3190 *D_800E3190 = NULL;
 Object **D_800E3194 = NULL; // might be a length of 32
 Object *gWaveGeneratorObj = NULL;
@@ -64,15 +64,15 @@ const char D_800E9260[] = "\nError :: can not add another wave swell, reached li
 
 /************ .bss ************/
 
-Gfx *D_80129FC0;
-s32 D_80129FC4;
-unk80129FC8 D_80129FC8;
-s32 D_8012A018;
-f32 D_8012A01C;
-f32 D_8012A020;
+Gfx *gWaveDL;
+MatrixS *D_80129FC4;
+unk80129FC8 D_80129FC8; // holds lots of control information used in this file
+s32 D_8012A018;         // either 1 or 0, toggled in func_800B9C18, used to index vertices and triangles
+f32 D_8012A01C;         // some sort of min/max value for func_800B97A8
+f32 D_8012A020;         // some sort of min/max value for func_800B97A8
 UNUSED s32 D_8012A024;
-Vertex D_8012A028[2][4];
-s32 D_8012A078; // controls whether 2 or 4 items are used in gWaveVertices / gWaveTriangles
+Vertex D_8012A028[2][4]; // stores values of gWaveVertices to be used in func_800BA8E4
+s32 D_8012A078;          // controls whether 2 or 4 items are used in gWaveVertices / gWaveTriangles
 TriangleBatchInfo *gWaveBatch;
 TextureHeader *gWaveTexture;
 s32 D_8012A084; // u value for D_800E3048
@@ -100,7 +100,7 @@ s32 D_8012A0D8; // used in mempool_alloc_safe size calculation
 s32 D_8012A0DC; // used in mempool_alloc_safe size calculation
 s32 gNumberOfLevelSegments;
 s32 D_8012A0E8[64];
-s16 D_8012A1E8[512];
+s16 D_8012A1E8[512]; // used to index D_800E30D8 and as arg0 for func_800B92F4 and func_800B97A8
 
 typedef struct unk8012A5E8 {
     s16 unk0;
@@ -110,7 +110,9 @@ typedef struct unk8012A5E8 {
     s32 unk8;
 } unk8012A5E8;
 
+// This could be (and probably is) just a pointer
 unk8012A5E8 D_8012A5E8[1];
+// might be the same as D_8012A5E8
 s16 D_8012A5F4;
 UNUSED s32 D_8012A5F8;
 UNUSED s32 D_8012A5FC;
@@ -150,7 +152,7 @@ void free_waves(void) {
     D_800E3190 = NULL;
     D_800E3194 = NULL;
     D_800E3184 = NULL;
-    D_800E3188 = NULL;
+    D_800E3188 = 0;
 }
 
 void wave_init(void) {
@@ -423,11 +425,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
     D_8012A5E8[0].unk0 = -1;
     D_8012A5F4 = -1;
 
-    // This is incorrect because the assembly compares
-    // var_v1 != gWavePowerBase
-    // however gWavePowerBase is a f32
-    // so instead we (for now) set every 6th values in the struct to -1
-    // D_8012A600 seems unused anyway though
+    // D_8012A600 seems to be unused
     for (var_v1 = 0; var_v1 < 144; var_v1 += 24) {
         D_8012A600[var_v1] = -1;
         D_8012A600[var_v1 + 6] = -1;
@@ -927,13 +925,13 @@ void func_800BA4B8(TextureHeader *tex, s32 rtile) {
 
     // difference is G_IM_SIZ_32b vs G_IM_SIZ_16b
     if ((tex->format & 0xF) == TEX_FORMAT_RGBA32) {
-        gDPLoadMultiBlock(D_80129FC0++, OS_PHYSICAL_TO_K0(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_32b, texWidth,
+        gDPLoadMultiBlock(gWaveDL++, OS_PHYSICAL_TO_K0(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_32b, texWidth,
                           texWidth, 0, 0, 0, mask, mask, 0, 0);
 
         return;
     }
 
-    gDPLoadMultiBlock(D_80129FC0++, OS_PHYSICAL_TO_K0(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_16b, texWidth,
+    gDPLoadMultiBlock(gWaveDL++, OS_PHYSICAL_TO_K0(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_16b, texWidth,
                       texWidth, 0, 0, 0, mask, mask, 0, 0);
 }
 
