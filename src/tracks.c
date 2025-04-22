@@ -1375,8 +1375,8 @@ void draw_gradient_background(void) {
     headerBlue1 = gCurrentLevelHeader2->BGColourBottomB;
     rendermode_reset(&gSceneCurrDisplayList);
     material_set_no_tex_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE);
-    gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), 4, 0);
-    gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), 2, 0);
+    gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), 4, 0);
+    gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(tris), 2, 0);
     set_twenty = 20;
     if (osTvType == OS_TV_TYPE_PAL) {
         y0 = -180;
@@ -1771,8 +1771,8 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
             color = gCurrentLevelHeader2->pulseLightData->outColorValue;
             gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, color, color, color, color);
             material_set_blinking_lights(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
-            gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), numberVertices, 0);
-            gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
+            gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vertices), numberVertices, 0);
+            gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
             gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         } else {
             material_set(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
