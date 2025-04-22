@@ -1254,9 +1254,9 @@ void func_800BBF78(LevelModel *model) {
     );
     // clang-format on
 
-    D_800E3190 = (u32) D_800E30D8 + model->numberOfSegments * sizeof(LevelModel_Alternate);
-    D_800E3194 = (u32) D_800E3190 + sizeof(unk800E3190) * 32;
-    D_800E3184 = (u32) D_800E3194 + sizeof(Object *) * 32;
+    D_800E3190 = (unk800E3190 *) ((u32) D_800E30D8 + model->numberOfSegments * sizeof(LevelModel_Alternate));
+    D_800E3194 = (Object **) (D_800E3190 + sizeof(unk800E3190 *) * 8);
+    D_800E3184 = (unk800E3184 *) (D_800E3194 + sizeof(Object *) * 8);
 
     for (i = 0; i < (D_800E318C * 8); i++) {
         D_800E3184->unk0[i] = 0xFF;
