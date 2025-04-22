@@ -1070,7 +1070,7 @@ void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *e
     }
 
     switch (behaviour->flags & (PARTICLE_VELOCITY_RELATIVE_TO_PARENT | PARTICLE_VELOCITY_ABSOLUTE |
-                               PARTICLE_VELOCITY_SCALED_FROM_PARENT)) {
+                                PARTICLE_VELOCITY_SCALED_FROM_PARENT)) {
         case PARTICLE_VELOCITY_RELATIVE_TO_PARENT:
             particle->velocity.x += obj->segment.x_velocity;
             particle->velocity.y += obj->segment.y_velocity;
