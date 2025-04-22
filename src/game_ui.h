@@ -5,10 +5,13 @@
 #include "structs.h"
 #include <ultra64.h>
 
-#define HUD_ELEMENT_MODEL       0x0000
-#define HUD_ELEMENT_OBJECT      0x4000
-#define HUD_ELEMENT_SPRITE      0x8000
-#define HUD_ELEMENT_TEXTURE     0xC000
+#define ASSET_MASK_MODEL       0x0000
+#define ASSET_MASK_OBJECT      0x4000
+#define ASSET_MASK_SPRITE      0x8000
+#define ASSET_MASK_TEXTURE     0xC000
+
+#define ASSET_MASK_TEX2D       0x0000
+#define ASSET_MASK_TEX3D       0x8000
 
 #define HUD_EGG_TOTAL 3
 

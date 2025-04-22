@@ -342,7 +342,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
         flip = TRUE;
     }
 #endif
-    reset_render_settings(&gSceneCurrDisplayList);
+    rendermode_reset(&gSceneCurrDisplayList);
     gDkrDisableBillboard(gSceneCurrDisplayList++);
     gSPClearGeometryMode(gSceneCurrDisplayList++, G_CULL_FRONT);
     gDPSetBlendColor(gSceneCurrDisplayList++, 0, 0, 0, 0x64);
@@ -535,9 +535,7 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     D_8011D490[1] = D_8011D474[viewportIndex].unk4;
     D_8011D480[0] = D_8011D474[viewportIndex].unk8;
     D_8011D480[1] = D_8011D474[viewportIndex].unkC;
-
-    load_and_set_texture_no_offset(&gSceneCurrDisplayList, NULL, RENDER_ANTI_ALIASING | RENDER_Z_COMPARE);
-
+    material_set_no_tex_offset(&gSceneCurrDisplayList, NULL, RENDER_ANTI_ALIASING | RENDER_Z_COMPARE);
     D_8011D49C = 0;
     D_8011D49E = 0;
 
@@ -1375,10 +1373,10 @@ void draw_gradient_background(void) {
     headerRed1 = gCurrentLevelHeader2->BGColourBottomR;
     headerGreen1 = gCurrentLevelHeader2->BGColourBottomG;
     headerBlue1 = gCurrentLevelHeader2->BGColourBottomB;
-    reset_render_settings(&gSceneCurrDisplayList);
-    load_and_set_texture_no_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE);
-    gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), 4, 0);
-    gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(tris), 2, 0);
+    rendermode_reset(&gSceneCurrDisplayList);
+    material_set_no_tex_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE);
+    gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), 4, 0);
+    gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), 2, 0);
     set_twenty = 20;
     if (osTvType == OS_TV_TYPE_PAL) {
         y0 = -180;
@@ -1572,7 +1570,7 @@ void render_level_geometry_and_objects(void) {
         objectsVisible[1] = TRUE;
     }
 
-    reset_render_settings(&gSceneCurrDisplayList);
+    rendermode_reset(&gSceneCurrDisplayList);
     sort_objects_by_dist(sp160, objCount - 1);
     visibleFlags = OBJ_FLAGS_INVIS_PLAYER1 << (get_current_viewport() & 1);
 
@@ -1636,8 +1634,8 @@ void render_level_geometry_and_objects(void) {
         func_800BA8E4(&gSceneCurrDisplayList, &gSceneCurrMatrix, get_current_viewport());
     }
 
-    reset_render_settings(&gSceneCurrDisplayList);
-    load_and_set_texture_no_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
+    rendermode_reset(&gSceneCurrDisplayList);
+    material_set_no_tex_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
     func_80012C3C(&gSceneCurrDisplayList);
 
     // Particles and FX
@@ -1772,12 +1770,12 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
         if (batchFlags & BATCH_FLAGS_PULSATING_LIGHTS) {
             color = gCurrentLevelHeader2->pulseLightData->outColorValue;
             gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, color, color, color, color);
-            load_blinking_lights_texture(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
-            gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vertices), numberVertices, 0);
-            gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
+            material_set_blinking_lights(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
+            gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), numberVertices, 0);
+            gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
             gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         } else {
-            load_and_set_texture(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
+            material_set(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
             batchFlags = TRUE;
             if (texture == NULL) {
                 batchFlags = FALSE;
@@ -2592,12 +2590,12 @@ void free_track(void) {
         free_waves();
     }
     for (i = 0; i < gCurrentLevelModel->numberOfTextures; i++) {
-        free_texture(gCurrentLevelModel->textures[i].texture);
+        tex_free(gCurrentLevelModel->textures[i].texture);
     }
     mempool_free(gTrackModelHeap);
     mempool_free(D_8011D370);
     mempool_free(D_8011D374);
-    free_sprite((Sprite *) gCurrentLevelModel->minimapSpriteIndex);
+    sprite_free((Sprite *) gCurrentLevelModel->minimapSpriteIndex);
     for (i = 0; i < ARRAY_COUNT(gShadowHeapData); i++) {
         mempool_free(gShadowHeapData[i]);
         mempool_free(gShadowHeapTris[i]);
@@ -2756,7 +2754,7 @@ void shadow_render(Object *obj, ShadowData *shadow) {
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, alpha);
             }
             while (i < shadow->meshEnd) {
-                load_and_set_texture_no_offset(&gSceneCurrDisplayList, gCurrShadowHeapData[i].texture, flags);
+                material_set_no_tex_offset(&gSceneCurrDisplayList, gCurrShadowHeapData[i].texture, flags);
                 // I hope we can clean this part up.
                 tri2 = triCount = gCurrShadowHeapData[i].triCount; // Fakematch
                 vtx2 = vtxCount = gCurrShadowHeapData[i].vtxCount;
@@ -2806,7 +2804,7 @@ void watereffect_render(Object *obj, WaterEffect *effect) {
             gCurrShadowTris = gShadowHeapTris[gWaterEffectIndex];
             gCurrShadowVerts = gShadowHeapVerts[gWaterEffectIndex];
             while (i < effect->meshEnd) {
-                load_and_set_texture_no_offset(&gSceneCurrDisplayList, gCurrShadowHeapData[i].texture, flags);
+                material_set_no_tex_offset(&gSceneCurrDisplayList, gCurrShadowHeapData[i].texture, flags);
                 triCount = gCurrShadowHeapData[i].triCount; // Fakematch
                 vtxCount = gCurrShadowHeapData[i].vtxCount; // Fakematch
                 numTris = gCurrShadowHeapData[i + 1].triCount - gCurrShadowHeapData[i].triCount;

@@ -196,11 +196,11 @@ void weather_clip_planes(s16 near, s16 far) {
         mempool_free(tempMem); \
         mem = NULL;            \
     }
-#define FREE_TEX(tex)          \
-    tempTex = tex;             \
-    if (tempTex != NULL) {     \
-        free_texture(tempTex); \
-        tex = NULL;            \
+#define FREE_TEX(tex)      \
+    tempTex = tex;         \
+    if (tempTex != NULL) { \
+        tex_free(tempTex); \
+        tex = NULL;        \
     }
 
 /**
@@ -527,7 +527,7 @@ void snow_render(void) {
             mtx = (u32) get_projection_matrix_s16();
             gSPMatrix(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
             gDkrInsertMatrix(gCurrWeatherDisplayList++, G_MTX_DKR_INDEX_0, 0);
-            load_and_set_texture_no_offset(&gCurrWeatherDisplayList, gSnowGfx.texture, RENDER_Z_COMPARE);
+            material_set_no_tex_offset(&gCurrWeatherDisplayList, gSnowGfx.texture, RENDER_Z_COMPARE);
             while (i + gSnowVertOffset < gSnowVertCount) {
                 vtx = (u32) &gSnowVerts[i];
                 gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(vtx), gSnowVertOffset, 0);
@@ -719,7 +719,7 @@ void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment
                 gDPFillRectangle(gfxTemp++, 0, 0, width, height);
                 gDPPipeSync(gfxTemp++);
                 *dList = gfxTemp;
-                reset_render_settings(dList);
+                rendermode_reset(dList);
             }
         }
     }
@@ -816,17 +816,17 @@ void rain_init(s32 intensity, s32 opacity) {
  */
 void free_rain_memory(void) {
     if (gRainGfx[0].tex != NULL) {
-        free_texture(gRainGfx[0].tex);
+        tex_free(gRainGfx[0].tex);
         gRainOverlayUnusedValue = NULL;
     }
 
     if (gRainGfx[1].tex != NULL) {
-        free_texture(gRainGfx[1].tex);
+        tex_free(gRainGfx[1].tex);
         gRainOverlayUnusedValue = NULL;
     }
 
     if (gRainSplashGfx != NULL) {
-        free_sprite(gRainSplashGfx);
+        sprite_free(gRainSplashGfx);
         gRainSplashGfx = NULL;
     }
 
@@ -898,7 +898,7 @@ void rain_update(s32 updateRate) {
             }
             gDPSetPrimColor(gCurrWeatherDisplayList++, 0, 0, 255, 255, 255, 255);
             gDPSetEnvColor(gCurrWeatherDisplayList++, 255, 255, 255, 0);
-            reset_render_settings(&gCurrWeatherDisplayList);
+            rendermode_reset(&gCurrWeatherDisplayList);
             viewport_reset(&gCurrWeatherDisplayList);
         }
     }
@@ -1144,9 +1144,9 @@ void render_rain_overlay(RainGfxData *rainGfx, s32 time) {
     tri->uv2.v = v0;
     tri++;
 
-    func_8007F594(&curDL, 0,
-                  COLOUR_RGBA32(rainGfx->primitiveRed, rainGfx->primitiveGreen, rainGfx->primitiveBlue, opacity),
-                  COLOUR_RGBA32(rainGfx->environmentRed, rainGfx->environmentGreen, rainGfx->environmentBlue, 0));
+    gfx_init_basic_xlu(&curDL, 0,
+                       COLOUR_RGBA32(rainGfx->primitiveRed, rainGfx->primitiveGreen, rainGfx->primitiveBlue, opacity),
+                       COLOUR_RGBA32(rainGfx->environmentRed, rainGfx->environmentGreen, rainGfx->environmentBlue, 0));
     gDkrDmaDisplayList(curDL++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
     gSPVertexDKR(curDL++, OS_PHYSICAL_TO_K0(gRainVertices + gRainVertexFlip), 4, 0);
     gSPPolygon(curDL++, OS_PHYSICAL_TO_K0(gCurrWeatherTriList), 2, 1);

@@ -75,7 +75,7 @@ typedef struct unk80068514_arg4 {
     s16 textureCount;
     s16 unk2;
     s16 unk4;
-    s16 unk6;
+    s16 drawFlags;
     Gfx *unk8[1];
 } unk80068514_arg4;
 

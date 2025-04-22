@@ -343,11 +343,11 @@ void hud_free(void) {
     s32 i;
     for (i = 0; i < gAssetHudElementIdsCount; i++) {
         if (gAssetHudElements->entry[i] != NULL) {
-            if ((gAssetHudElementIds[i] & HUD_ELEMENT_TEXTURE) == HUD_ELEMENT_TEXTURE) {
-                free_texture(gAssetHudElements->entry[i]);
-            } else if (gAssetHudElementIds[i] & HUD_ELEMENT_SPRITE) {
-                free_sprite((Sprite *) gAssetHudElements->entry[i]);
-            } else if (gAssetHudElementIds[i] & HUD_ELEMENT_OBJECT) {
+            if ((gAssetHudElementIds[i] & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE) {
+                tex_free(gAssetHudElements->entry[i]);
+            } else if (gAssetHudElementIds[i] & ASSET_MASK_SPRITE) {
+                sprite_free((Sprite *) gAssetHudElements->entry[i]);
+            } else if (gAssetHudElementIds[i] & ASSET_MASK_OBJECT) {
                 free_object((Object *) gAssetHudElements->entry[i]);
             } else {
                 free_3d_model((ObjectModel **) gAssetHudElements->entry[i]);
@@ -805,7 +805,7 @@ void hud_main_treasure(s32 countdown, Object *obj, s32 updateRate) {
             break;
     }
     racer = &obj->unk64->racer;
-    reset_render_settings(&gHudDL);
+    rendermode_reset(&gHudDL);
     hud_bananas(racer, updateRate);
     hud_weapon(obj, updateRate);
     sprite_anim_off(FALSE);
@@ -1076,7 +1076,7 @@ void hud_lives_render(Object_Racer *racer, UNUSED s32 updateRate) {
         hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT]);
         D_80126CD5 = FALSE;
         rdp_init(&gHudDL);
-        reset_render_settings(&gHudDL);
+        rendermode_reset(&gHudDL);
     }
     if (racer->bananas < 10) {
         gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].spriteOffset = racer->bananas;
@@ -1529,7 +1529,7 @@ void hud_speedometre(Object *obj, UNUSED s32 updateRate) {
                         opacity = 255;
                     }
                     hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_SPEEDOMETRE_BG]);
-                    reset_render_settings(&gHudDL);
+                    rendermode_reset(&gHudDL);
                     sprite_opaque(TRUE);
                     gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, opacity);
                     hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_SPEEDOMETRE_ARROW]);
@@ -3043,11 +3043,11 @@ void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate
     for (i = 0; i < gAssetHudElementIdsCount; i++) {
         if (gAssetHudElements->entry[i] && i != 40) {
             if (++gAssetHudElementStaleCounter[i] > 60) {
-                if ((gAssetHudElementIds[i] & HUD_ELEMENT_TEXTURE) == HUD_ELEMENT_TEXTURE) {
-                    free_texture((TextureHeader *) gAssetHudElements->entry[i]);
-                } else if (gAssetHudElementIds[i] & HUD_ELEMENT_SPRITE) {
-                    free_sprite((Sprite *) gAssetHudElements->entry[i]);
-                } else if (gAssetHudElementIds[i] & HUD_ELEMENT_OBJECT) {
+                if ((gAssetHudElementIds[i] & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE) {
+                    tex_free((TextureHeader *) gAssetHudElements->entry[i]);
+                } else if (gAssetHudElementIds[i] & ASSET_MASK_SPRITE) {
+                    sprite_free((Sprite *) gAssetHudElements->entry[i]);
+                } else if (gAssetHudElementIds[i] & ASSET_MASK_OBJECT) {
                     free_object((Object *) gAssetHudElements->entry[i]);
                 } else {
                     free_3d_model((ObjectModel **) gAssetHudElements->entry[i]);
@@ -3065,7 +3065,7 @@ void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate
     if (gHudLevelHeader->race_type == RACETYPE_CHALLENGE_EGGS) {
         if (gNumActivePlayers == 2 && gHudToggleSettings[gHUDNumPlayers] == 0) {
             hud_draw_eggs(NULL, updateRate);
-            reset_render_settings(&gHudDL);
+            rendermode_reset(&gHudDL);
         } else {
             // Render player 4's egg challenge portrait if they are AI controlled.
             if (gNumActivePlayers == 3) {
@@ -3107,7 +3107,7 @@ void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate
             set_ortho_matrix_view(&gHudDL, &gHudMtx);
             func_800A1E48(0, updateRate);
             sprite_anim_off(FALSE);
-            reset_render_settings(&gHudDL);
+            rendermode_reset(&gHudDL);
             sprite_opaque(TRUE);
         } else {
             // In 3/4 player, just show the life counter.
@@ -3180,7 +3180,7 @@ void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x = spE4;
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y = spE0;
                     sprite_opaque(TRUE);
-                    reset_render_settings(&gHudDL);
+                    rendermode_reset(&gHudDL);
                     sprite_anim_off(FALSE);
                 }
             }
@@ -3262,7 +3262,7 @@ void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate
         test:
             return;
         } else {
-            reset_render_settings(&gHudDL);
+            rendermode_reset(&gHudDL);
             set_ortho_matrix_view(&gHudDL, &gHudMtx);
             lvlMdl = get_current_level_model();
             if (lvlMdl == NULL) {
@@ -3510,7 +3510,7 @@ void hud_draw_model(ObjectModel *objModel) {
             } else {
                 texPtr = objModel->textures[texIndex].texture;
             }
-            load_and_set_texture_no_offset(&gHudDL, texPtr, flags & ~RENDER_Z_COMPARE);
+            material_set_no_tex_offset(&gHudDL, texPtr, flags & ~RENDER_Z_COMPARE);
             gSPVertexDKR(gHudDL++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
             if (texPtr == NULL) {
                 textureEnabled = TRIN_DISABLE_TEXTURE;

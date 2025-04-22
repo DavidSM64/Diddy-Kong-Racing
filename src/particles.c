@@ -178,7 +178,7 @@ void free_unknown_particle_sprites(void) {
 
     if (D_800E2E60 != NULL) {
         for (i = 0; i < D_800E2E64; i++) {
-            free_sprite(D_800E2E60[i]);
+            sprite_free(D_800E2E60[i]);
         }
         mempool_free(D_800E2E60);
         D_800E2E60 = 0;
@@ -1820,7 +1820,7 @@ void particle_deallocate(Particle *particle) {
         case PARTICLE_KIND_SPRITE:
             if (gNumSpriteParticles > 0) {
                 if (particle->model) {
-                    free_sprite((Sprite *) particle->sprite);
+                    sprite_free((Sprite *) particle->sprite);
                 }
                 gNumSpriteParticles--;
                 particle->kind = PARTICLE_KIND_NONE;
@@ -1830,7 +1830,7 @@ void particle_deallocate(Particle *particle) {
             if (gNumTriangleParticles > 0) {
                 tex = particle->model->texture;
                 if (tex != NULL) {
-                    free_texture(tex);
+                    tex_free(tex);
                 }
                 gNumTriangleParticles--;
                 particle->kind = PARTICLE_KIND_NONE;
@@ -1840,7 +1840,7 @@ void particle_deallocate(Particle *particle) {
             if (gNumRectangleParticles > 0) {
                 tex = particle->model->texture;
                 if (tex != NULL) {
-                    free_texture(tex);
+                    tex_free(tex);
                 }
                 gNumRectangleParticles--;
                 particle->kind = PARTICLE_KIND_NONE;
@@ -1850,7 +1850,7 @@ void particle_deallocate(Particle *particle) {
             if (gNumLineParticles > 0) {
                 tex = particle->model->texture;
                 if (tex != NULL) {
-                    free_texture(tex);
+                    tex_free(tex);
                 }
                 gNumLineParticles--;
                 particle->kind = PARTICLE_KIND_NONE;
@@ -1861,7 +1861,7 @@ void particle_deallocate(Particle *particle) {
                 delete_point_particle_from_sequence((PointParticle *) particle);
                 tex = particle->model->texture;
                 if (tex != NULL) {
-                    free_texture(tex);
+                    tex_free(tex);
                 }
                 gNumPointParticles--;
                 particle->kind = PARTICLE_KIND_NONE;
@@ -2418,7 +2418,7 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
             model = particle->model;
             if (model->texture) {
                 camera_push_model_mtx(dList, mtx, &particle->trans, 1.0f, 0.0f);
-                load_and_set_texture(dList, model->texture, renderFlags, particle->textureFrame << 8);
+                material_set(dList, model->texture, renderFlags, particle->textureFrame << 8);
                 gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(model->vertices), model->vertexCount, 0);
                 gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(model->triangles), model->triangleCount, TRIN_ENABLE_TEXTURE);
                 apply_matrix_from_stack(dList);
@@ -2446,7 +2446,7 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
                 temp = ((PointParticle *) particle)->modelFrame;
                 temp <<= 3;
                 tempvtx = &model->vertices[temp];
-                load_and_set_texture(dList, model->texture, renderFlags, particle->textureFrame << 8);
+                material_set(dList, model->texture, renderFlags, particle->textureFrame << 8);
                 gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(tempvtx), model->vertexCount, 0);
                 gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(model->triangles), model->triangleCount, TRIN_ENABLE_TEXTURE);
                 if (particle->brightness != 255) {
@@ -2457,12 +2457,12 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
             gDPSetPrimColor((*dList)++, 0, 0, particle->brightness, particle->brightness, particle->brightness, alpha);
             if (particle->lineCreationPhase >= 2) {
                 model = particle->model;
-                load_and_set_texture(dList, model->texture, renderFlags, particle->textureFrame << 8);
+                material_set(dList, model->texture, renderFlags, particle->textureFrame << 8);
                 gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(model->vertices), model->vertexCount, 0);
                 gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(model->triangles), model->triangleCount, TRIN_ENABLE_TEXTURE);
             } else if (particle->lineCreationPhase > 0) {
                 model = particle->model;
-                load_and_set_texture(dList, model->texture, renderFlags, particle->textureFrame << 8);
+                material_set(dList, model->texture, renderFlags, particle->textureFrame << 8);
                 gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(model->vertices), 4, 0);
                 gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(&model->triangles[model->triangleCount]), 1,
                            TRIN_ENABLE_TEXTURE);
