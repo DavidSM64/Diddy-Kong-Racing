@@ -8279,12 +8279,12 @@ void menu_track_select_init(void) {
     }
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 40; j++) {
-            gTrackSelectBgTriangles[i][j].flags = 0x40; // 0x40 = Draw backface
+            gTrackSelectBgTriangles[i][j].flags = BACKFACE_DRAW;
             gTrackSelectBgTriangles[i][j].vi0 = 0;
             gTrackSelectBgTriangles[i][j].vi1 = 2;
             gTrackSelectBgTriangles[i][j].vi2 = 1;
             j++;
-            gTrackSelectBgTriangles[i][j].flags = 0x40;
+            gTrackSelectBgTriangles[i][j].flags = BACKFACE_DRAW;
             gTrackSelectBgTriangles[i][j].vi0 = 1;
             gTrackSelectBgTriangles[i][j].vi1 = 2;
             gTrackSelectBgTriangles[i][j].vi2 = 3;
