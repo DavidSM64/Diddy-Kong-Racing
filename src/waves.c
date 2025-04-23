@@ -16,13 +16,13 @@ Vec2s *D_800E3044 = NULL; // holds some sort of index?
 TexCoords *D_800E3048 = NULL;
 f32 *D_800E304C[9] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-Vertex *gWaveVertices[4] = { NULL, NULL };
+Vertex *gWaveVertices[4][1] = { NULL, NULL };
 Triangle *gWaveTriangles[4][1] = { NULL, NULL, NULL, NULL };
 Triangle D_800E3090[4] = {
-    { { BACKFACE_DRAW, 0x00, 0x02, 0x01 }, 0, 0, 0, 0, 0, 0 },
-    { { BACKFACE_DRAW, 0x01, 0x02, 0x03 }, 0, 0, 0, 0, 0, 0 },
-    { { BACKFACE_DRAW, 0x00, 0x02, 0x01 }, 0, 0, 0, 0, 0, 0 },
-    { { BACKFACE_DRAW, 0x01, 0x02, 0x03 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 0, 2, 1 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 1, 2, 3 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 0, 2, 1 }, 0, 0, 0, 0, 0, 0 },
+    { { BACKFACE_DRAW, 1, 2, 3 }, 0, 0, 0, 0, 0, 0 },
 };
 
 TextureHeader *gWaveTextureHeader = NULL;
@@ -143,7 +143,7 @@ void free_waves(void) {
     FREE_MEM(D_800E3044);
     FREE_MEM(D_800E3048);
     FREE_MEM(D_800E304C[0]);
-    FREE_MEM(gWaveVertices[0]);
+    FREE_MEM(gWaveVertices[0][0]);
     FREE_MEM(gWaveTriangles[0][0]);
     FREE_TEX(gWaveTextureHeader);
     FREE_MEM(D_800E30D4);
@@ -173,13 +173,13 @@ void wave_init(void) {
     temp = (D_80129FC8.unk0 + 1);
     allocSize = (temp * 250 * (D_80129FC8.unk0 + 1));
     if (D_8012A078 != 2) {
-        gWaveVertices[0] = (Vertex *) mempool_alloc_safe(allocSize << 1, COLOUR_TAG_CYAN);
-        gWaveVertices[1] = (Vertex *) (((u32) gWaveVertices[0]) + allocSize);
+        gWaveVertices[0][0] = (Vertex *) mempool_alloc_safe(allocSize << 1, COLOUR_TAG_CYAN);
+        gWaveVertices[1][0] = (Vertex *) (((u32) gWaveVertices[0][0]) + allocSize);
     } else {
-        gWaveVertices[0] = (Vertex *) mempool_alloc_safe(allocSize << 2, COLOUR_TAG_CYAN);
-        gWaveVertices[1] = (Vertex *) (((u32) gWaveVertices[0]) + allocSize);
-        gWaveVertices[2] = (Vertex *) (((u32) gWaveVertices[1]) + allocSize);
-        gWaveVertices[3] = (Vertex *) (((u32) gWaveVertices[2]) + allocSize);
+        gWaveVertices[0][0] = (Vertex *) mempool_alloc_safe(allocSize << 2, COLOUR_TAG_CYAN);
+        gWaveVertices[1][0] = (Vertex *) (((u32) gWaveVertices[0][0]) + allocSize);
+        gWaveVertices[2][0] = (Vertex *) (((u32) gWaveVertices[1][0]) + allocSize);
+        gWaveVertices[3][0] = (Vertex *) (((u32) gWaveVertices[2][0]) + allocSize);
     }
     allocSize = (D_80129FC8.unk0 * 32) * D_80129FC8.unk0;
     if (D_8012A078 != 2) {
@@ -302,19 +302,19 @@ void func_800B82B4(LevelModel *model, LevelHeader *header, s32 arg2) {
             do {
                 for (j_2 = 0; D_80129FC8.unk0 >= j_2; j_2++) {
                     for (k = 0; k < arg2; k++) {
-                        gWaveVertices[k][var_s5].x = (j_2 * D_8012A0B8) + 0.5;
-                        gWaveVertices[k][var_s5].z = (i_2 * D_8012A0BC) + 0.5;
+                        gWaveVertices[0][k][var_s5].x = (j_2 * D_8012A0B8) + 0.5;
+                        gWaveVertices[0][k][var_s5].z = (i_2 * D_8012A0BC) + 0.5;
                         // this is only 0 for hot top volcano
                         if (D_80129FC8.darkVertexColours == 0) {
-                            gWaveVertices[k][var_s5].r = 255;
-                            gWaveVertices[k][var_s5].g = 255;
-                            gWaveVertices[k][var_s5].b = 255;
+                            gWaveVertices[0][k][var_s5].r = 255;
+                            gWaveVertices[0][k][var_s5].g = 255;
+                            gWaveVertices[0][k][var_s5].b = 255;
                         } else {
-                            gWaveVertices[k][var_s5].r = 0;
-                            gWaveVertices[k][var_s5].g = 0;
-                            gWaveVertices[k][var_s5].b = 0;
+                            gWaveVertices[0][k][var_s5].r = 0;
+                            gWaveVertices[0][k][var_s5].g = 0;
+                            gWaveVertices[0][k][var_s5].b = 0;
                         }
-                        gWaveVertices[k][var_s5].a = 255;
+                        gWaveVertices[0][k][var_s5].a = 255;
                     }
                     var_s5++;
                 }
@@ -346,37 +346,37 @@ void func_800B82B4(LevelModel *model, LevelHeader *header, s32 arg2) {
 
     var_s5 = (D_80129FC8.unk0 + 1) * D_80129FC8.unk0;
     for (i = 0; i < ARRAY_COUNT(D_8012A028); i++) {
-        D_8012A028[i][0].x = gWaveVertices[i][0].x;
+        D_8012A028[i][0].x = gWaveVertices[i][0][0].x;
         D_8012A028[i][0].y = 0;
-        D_8012A028[i][0].z = gWaveVertices[i][0].z;
-        D_8012A028[i][0].r = gWaveVertices[i][0].r;
-        D_8012A028[i][0].g = gWaveVertices[i][0].g;
-        D_8012A028[i][0].b = gWaveVertices[i][0].b;
-        D_8012A028[i][0].a = gWaveVertices[i][0].a;
+        D_8012A028[i][0].z = gWaveVertices[i][0][0].z;
+        D_8012A028[i][0].r = gWaveVertices[i][0][0].r;
+        D_8012A028[i][0].g = gWaveVertices[i][0][0].g;
+        D_8012A028[i][0].b = gWaveVertices[i][0][0].b;
+        D_8012A028[i][0].a = gWaveVertices[i][0][0].a;
 
-        D_8012A028[i][1].x = gWaveVertices[i][D_80129FC8.unk0].x;
+        D_8012A028[i][1].x = gWaveVertices[i][0][D_80129FC8.unk0].x;
         D_8012A028[i][1].y = 0;
-        D_8012A028[i][1].z = gWaveVertices[i][D_80129FC8.unk0].z;
-        D_8012A028[i][1].r = gWaveVertices[i][D_80129FC8.unk0].r;
-        D_8012A028[i][1].g = gWaveVertices[i][D_80129FC8.unk0].g;
-        D_8012A028[i][1].b = gWaveVertices[i][D_80129FC8.unk0].b;
-        D_8012A028[i][1].a = gWaveVertices[i][D_80129FC8.unk0].a;
+        D_8012A028[i][1].z = gWaveVertices[i][0][D_80129FC8.unk0].z;
+        D_8012A028[i][1].r = gWaveVertices[i][0][D_80129FC8.unk0].r;
+        D_8012A028[i][1].g = gWaveVertices[i][0][D_80129FC8.unk0].g;
+        D_8012A028[i][1].b = gWaveVertices[i][0][D_80129FC8.unk0].b;
+        D_8012A028[i][1].a = gWaveVertices[i][0][D_80129FC8.unk0].a;
 
-        D_8012A028[i][2].x = gWaveVertices[i][var_s5].x;
+        D_8012A028[i][2].x = gWaveVertices[i][0][var_s5].x;
         D_8012A028[i][2].y = 0;
-        D_8012A028[i][2].z = gWaveVertices[i][var_s5].z;
-        D_8012A028[i][2].r = gWaveVertices[i][var_s5].r;
-        D_8012A028[i][2].g = gWaveVertices[i][var_s5].g;
-        D_8012A028[i][2].b = gWaveVertices[i][var_s5].b;
-        D_8012A028[i][2].a = gWaveVertices[i][var_s5].a;
+        D_8012A028[i][2].z = gWaveVertices[i][0][var_s5].z;
+        D_8012A028[i][2].r = gWaveVertices[i][0][var_s5].r;
+        D_8012A028[i][2].g = gWaveVertices[i][0][var_s5].g;
+        D_8012A028[i][2].b = gWaveVertices[i][0][var_s5].b;
+        D_8012A028[i][2].a = gWaveVertices[i][0][var_s5].a;
 
-        D_8012A028[i][3].x = gWaveVertices[i][var_s5 + D_80129FC8.unk0].x;
+        D_8012A028[i][3].x = gWaveVertices[i][0][var_s5 + D_80129FC8.unk0].x;
         D_8012A028[i][3].y = 0;
-        D_8012A028[i][3].z = gWaveVertices[i][var_s5 + D_80129FC8.unk0].z;
-        D_8012A028[i][3].r = gWaveVertices[i][var_s5 + D_80129FC8.unk0].r;
-        D_8012A028[i][3].g = gWaveVertices[i][var_s5 + D_80129FC8.unk0].g;
-        D_8012A028[i][3].b = gWaveVertices[i][var_s5 + D_80129FC8.unk0].b;
-        D_8012A028[i][3].a = gWaveVertices[i][var_s5 + D_80129FC8.unk0].a;
+        D_8012A028[i][3].z = gWaveVertices[i][0][var_s5 + D_80129FC8.unk0].z;
+        D_8012A028[i][3].r = gWaveVertices[i][0][var_s5 + D_80129FC8.unk0].r;
+        D_8012A028[i][3].g = gWaveVertices[i][0][var_s5 + D_80129FC8.unk0].g;
+        D_8012A028[i][3].b = gWaveVertices[i][0][var_s5 + D_80129FC8.unk0].b;
+        D_8012A028[i][3].a = gWaveVertices[i][0][var_s5 + D_80129FC8.unk0].a;
     }
 
     func_800BCC70(model);
@@ -600,7 +600,7 @@ void func_800B92F4(s32 arg0, s32 arg1) {
         }
 
         sp84 = D_8012A5E8[k].unk6;
-        vertices = &gWaveVertices[D_8012A018 + arg1][sp90 * sp98];
+        vertices = &gWaveVertices[D_8012A018 + arg1][0][sp90 * sp98];
         sp98 = D_800E30E4[sp98];
         vertexIdx = 0;
         for (i = 0; i <= D_80129FC8.unk0; i++) {
@@ -699,7 +699,7 @@ void func_800B97A8(s32 arg0, s32 arg1) {
         }
 
         var_a0 = D_8012A5E8[k].unk6;
-        vertices = &gWaveVertices[D_8012A018 + arg1][spA0 * spA8];
+        vertices = &gWaveVertices[D_8012A018 + arg1][0][spA0 * spA8];
         spA8 = D_800E30E4[spA8];
         for (i = 0, vertexIdx = 0; i <= D_80129FC8.unk0; i++) {
             var_s1 = D_8012A5E8[k].unk4;
@@ -901,43 +901,173 @@ void func_800BA288(s32 arg0, s32 arg1) {
 }
 
 void func_800BA4B8(TextureHeader *tex, s32 rtile) {
-    s32 mask;
+    s32 txmask;
     s32 tmem;
     u32 texWidth;
 
     texWidth = tex->width;
     tmem = 0;
     if (texWidth == 16) {
-        if (rtile != 0) {
-            tmem = 384; // 0x180
+        txmask = 4;
+        if (rtile != G_TX_RENDERTILE) {
+            tmem = 384;
         }
-        mask = 4;
     } else if (texWidth == 32) {
-        mask = 5;
-        if (rtile != 0) {
-            tmem = 256; // 0x100
+        txmask = 5;
+        if (rtile != G_TX_RENDERTILE) {
+            tmem = 256;
         }
     } else {
+        //!@bug: txmask is not set, so it's value will be UB. I wonder if they accidentally set the width to 3 instead
+        //! of the mask?
         texWidth = 3;
-        if (rtile != 0) {
-            tmem = 384; // 0x180
+        if (rtile != G_TX_RENDERTILE) {
+            tmem = 384;
         }
     }
 
     // difference is G_IM_SIZ_32b vs G_IM_SIZ_16b
     if ((tex->format & 0xF) == TEX_FORMAT_RGBA32) {
         gDPLoadMultiBlock(gWaveDL++, OS_PHYSICAL_TO_K0(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_32b, texWidth,
-                          texWidth, 0, 0, 0, mask, mask, 0, 0);
-
-        return;
+                          texWidth, 0, 0, 0, txmask, txmask, 0, 0);
+    } else {
+        gDPLoadMultiBlock(gWaveDL++, OS_PHYSICAL_TO_K0(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_16b, texWidth,
+                          texWidth, 0, 0, 0, txmask, txmask, 0, 0);
     }
-
-    gDPLoadMultiBlock(gWaveDL++, OS_PHYSICAL_TO_K0(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_16b, texWidth,
-                      texWidth, 0, 0, 0, mask, mask, 0, 0);
 }
 
-// https://decomp.me/scratch/9b2EF
-#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BA8E4.s")
+void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
+    s32 sp11C;
+    Vertex *vtx;
+    Triangle *tri;
+    s32 numTris;
+    s32 numVerts;
+    s32 j;
+    s32 sp104;
+    s32 var_fp;
+    s32 var_t0;
+    ObjectTransform spE4;
+    LevelModel_Alternate *spE0;
+    s32 i; // spDC
+    TextureHeader *tex1;
+    TextureHeader *tex2;
+
+    if ((arg2 != 1) || (D_8012A078 != 2)) {
+        arg2 = 0;
+    } else {
+        arg2 = 2;
+    }
+
+    if (D_800E30DC > 0) {
+        gWaveDL = *dList;
+        D_80129FC4 = *mtx;
+        i = 0;
+        rendermode_reset(&gWaveDL);
+        gSPSetGeometryMode(gWaveDL++, G_ZBUFFER);
+        if (D_80129FC8.darkVertexColours) {
+            gSPClearGeometryMode(gWaveDL++, G_FOG);
+            tex1 = set_animated_texture_header(gWaveTextureHeader, D_8012A09C << 8);
+            tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
+            func_800BA4B8(tex1, 1);
+            func_800BA4B8(tex2, 0);
+            gDPSetCombineMode(gWaveDL++, DKR_CC_UNK14, DKR_CC_UNK15);
+            if ((tex1->format & 0xF) == TEX_FORMAT_RGBA32 && get_viewport_count() <= 0) {
+                gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_AA_ZB_XLU_INTER2);
+            } else {
+                gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_AA_ZB_OPA_SURF2);
+            }
+            gDPSetPrimColor(gWaveDL++, 0, 0, 255, 255, 255, 0);
+            if (D_800E3180 != NULL) {
+                gDPSetEnvColor(gWaveDL++, D_800E3180->red, D_800E3180->green, D_800E3180->blue, D_800E3180->alpha);
+            } else {
+                gDPSetEnvColor(gWaveDL++, 255, 255, 255, 0);
+            }
+        } else {
+            gSPSetGeometryMode(gWaveDL++, G_FOG);
+            tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
+            gDkrDmaDisplayList(gWaveDL++, OS_K0_TO_PHYSICAL(tex1->cmd), tex1->numberOfCommands);
+            gDPSetCombineMode(gWaveDL++, DKR_CC_UNK16, DKR_CC_UNK8);
+            gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);
+            gDPSetPrimColor(gWaveDL++, 0, 0, 255, 255, 255, 255);
+            if (D_800E3180 != NULL) {
+                gDPSetEnvColor(gWaveDL++, D_800E3180->red, D_800E3180->green, D_800E3180->blue, D_800E3180->alpha);
+            } else {
+                gDPSetEnvColor(gWaveDL++, 255, 255, 255, 0);
+            }
+        }
+        if (D_80129FC8.unk28) {
+            spE4.scale = 0.5f;
+        } else {
+            spE4.scale = 1.0f;
+        }
+
+        spE4.rotation.x = spE4.rotation.y = spE4.rotation.z = 0;
+        for (; i < D_800E30DC; i++) {
+            if (D_80129FC8.darkVertexColours) {
+                func_800B92F4(D_8012A1E8[i], arg2);
+            } else {
+                func_800B97A8(D_8012A1E8[i], arg2);
+            }
+            spE0 = &D_800E30D8[D_8012A1E8[i]];
+            spE4.x_position = spE0->unk4;
+            spE4.y_position = spE0->unk6;
+            spE4.z_position = spE0->unk8;
+            sp104 = D_800E30D4[spE0->unkC];
+            if (D_80129FC8.unk28) {
+                for (sp11C = 0; sp11C < 2; sp11C++) {
+                    spE4.x_position = spE0->unk4;
+                    for (var_fp = 0; var_fp < 2; var_fp++) {
+                        camera_push_model_mtx(&gWaveDL, &D_80129FC4, &spE4, 1.0f, 0.0f);
+                        if (sp104 & 0xFF) {
+                            numTris = D_80129FC8.unk0 << 1;
+                            numVerts = D_80129FC8.unk0 + 1;
+                            var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
+                            for (j = 0; j < D_80129FC8.unk0; j++) {
+                                vtx = &gWaveVertices[D_8012A018 + arg2][0][var_t0];
+                                tri = &gWaveTriangles[D_8012A018 + arg2][0][j * (D_80129FC8.unk0 << 1)];
+
+                                gSPVertexDKR(gWaveDL++, OS_K0_TO_PHYSICAL(vtx), numVerts << 1, 0);
+                                gSPPolygon(gWaveDL++, OS_K0_TO_PHYSICAL(tri), numTris, TRIN_ENABLE_TEXTURE);
+
+                                var_t0 += D_80129FC8.unk0 + 1;
+                            }
+                        } else {
+                            gSPVertexDKR(gWaveDL++, OS_K0_TO_PHYSICAL(&D_8012A028[D_8012A018]), 4, 0);
+                            gSPPolygon(gWaveDL++, OS_K0_TO_PHYSICAL(&D_800E3090[D_8012A018 << 1]), 2,
+                                       TRIN_ENABLE_TEXTURE);
+                        }
+                        apply_matrix_from_stack(&gWaveDL);
+                        sp104 >>= 8;
+                        spE4.x_position += D_8012A0A0 * 0.5f;
+                    }
+                    spE4.z_position += D_8012A0A4 * 0.5f;
+                }
+            } else {
+                camera_push_model_mtx(&gWaveDL, &D_80129FC4, &spE4, 1.0f, 0.0f);
+                numTris = D_80129FC8.unk0 << 1;
+                numVerts = D_80129FC8.unk0 + 1;
+                var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
+                for (j = 0; j < D_80129FC8.unk0; j++) {
+                    vtx = &gWaveVertices[D_8012A018 + arg2][0][var_t0];
+                    tri = &gWaveTriangles[D_8012A018 + arg2][0][j * (D_80129FC8.unk0 << 1)];
+
+                    gSPVertexDKR(gWaveDL++, OS_K0_TO_PHYSICAL(vtx), numVerts << 1, 0);
+                    gSPPolygon(gWaveDL++, OS_K0_TO_PHYSICAL(tri), numTris, TRIN_ENABLE_TEXTURE);
+
+                    var_t0 += D_80129FC8.unk0 + 1;
+                }
+                apply_matrix_from_stack(&gWaveDL);
+            }
+        }
+        if (D_80129FC8.darkVertexColours) {
+            gSPSetGeometryMode(gWaveDL++, G_FOG);
+            gDPSetPrimColor(gWaveDL++, 0, 0, 255, 255, 255, 255);
+        }
+        *dList = gWaveDL;
+        *mtx = D_80129FC4;
+    }
+    D_800E30DC = 0;
+}
 
 f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
     f32 spA4;
