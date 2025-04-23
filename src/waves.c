@@ -948,7 +948,7 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
     s32 var_t0;
     ObjectTransform spE4;
     LevelModel_Alternate *spE0;
-    s32 i; // spDC
+    s32 i;
     TextureHeader *tex1;
     TextureHeader *tex2;
 
