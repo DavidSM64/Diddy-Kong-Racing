@@ -987,8 +987,7 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
             tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
             gDkrDmaDisplayList(gWaveDL++, OS_K0_TO_PHYSICAL(tex1->cmd), tex1->numberOfCommands);
             gDPSetCombineMode(gWaveDL++, DKR_CC_UNK16, DKR_CC_UNK8);
-            gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP,
-                            DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);
+            gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);
             gDPSetPrimColor(gWaveDL++, 0, 0, 255, 255, 255, 255);
             if (D_800E3180 != NULL) {
                 gDPSetEnvColor(gWaveDL++, D_800E3180->red, D_800E3180->green, D_800E3180->blue, D_800E3180->alpha);
