@@ -953,40 +953,45 @@ void func_800BA4B8(TextureHeader *tex, s32 rtile) {
     }
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
+void rendermode_reset(Gfx **dList);
 // https://decomp.me/scratch/9b2EF
 void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
-    s32 temp_v0_3; // sp11C
     TextureHeader *tex1;
     TextureHeader *tex2;
-    s32 temp_a0_2;
-    s32 temp_a0_3;
-    s32 var_fp;
+    s32 sp11C;
+    Vertex *vtx;
+    Triangle *tri;
+    s32 numTris;
+    s32 numVerts;
+    s32 j;
     s32 sp104;
-    s32 temp_lo;
-    s32 temp_v1;
-    ObjectTransform spE4;
-    LevelModel_Alternate *temp_v0_2; // spE0
-    s32 spDC;
-    s32 var_s0;
+    s32 var_fp;
     s32 var_t0;
+    ObjectTransform spE4;
+    LevelModel_Alternate *spE0;
+    s32 i; // spDC
+    s32 temp;
 
     if ((arg2 != 1) || (D_8012A078 != 2)) {
         arg2 = 0;
     } else {
         arg2 = 2;
     }
+
     if (D_800E30DC > 0) {
         D_80129FC0 = *dList;
         D_80129FC4 = *mtx;
+        temp = D_80129FC8.unk0; // fake?
+        i = 0;
         rendermode_reset(&D_80129FC0);
         gSPSetGeometryMode(D_80129FC0++, G_ZBUFFER);
-        if (D_80129FC8.unk4C != 0) {
+        if (D_80129FC8.unk4C) {
             gSPClearGeometryMode(D_80129FC0++, G_FOG);
             tex1 = set_animated_texture_header(D_800E30D0, D_8012A09C << 8);
             tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
-            func_800BA4B8(tex1, G_TX_RENDERTILE + 1);
-            func_800BA4B8(tex2, G_TX_RENDERTILE);
+            func_800BA4B8(tex1, 1);
+            func_800BA4B8(tex2, 0);
             gDPSetCombineMode(D_80129FC0++, DKR_CC_UNK14, DKR_CC_UNK15);
             if ((tex1->format & 0xF) == TEX_FORMAT_RGBA32 && get_viewport_count() <= 0) {
                 gDPSetOtherMode(D_80129FC0++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_AA_ZB_XLU_INTER2);
@@ -994,98 +999,66 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
                 gDPSetOtherMode(D_80129FC0++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_AA_ZB_OPA_SURF2);
             }
             gDPSetPrimColor(D_80129FC0++, 0, 0, 255, 255, 255, 0);
-            // gDPSetPrimColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 0));
             if (D_800E3180 != NULL) {
                 gDPSetEnvColor(D_80129FC0++, D_800E3180->red, D_800E3180->green, D_800E3180->blue, D_800E3180->alpha);
-                // gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(D_800E3180->red, D_800E3180->green, D_800E3180->blue,
-                // D_800E3180->alpha));
             } else {
                 gDPSetEnvColor(D_80129FC0++, 255, 255, 255, 0);
-                // gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 0));
             }
         } else {
             gSPSetGeometryMode(D_80129FC0++, G_FOG);
-            tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
-            gDkrDmaDisplayList(D_80129FC0++, OS_K0_TO_PHYSICAL(tex2->cmd), tex2->numberOfCommands);
+            tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
+            gDkrDmaDisplayList(D_80129FC0++, OS_K0_TO_PHYSICAL(tex1->cmd), tex1->numberOfCommands);
             gDPSetCombineMode(D_80129FC0++, DKR_CC_UNK16, DKR_CC_UNK8);
             gDPSetOtherMode(D_80129FC0++, DKR_OMH_2CYC_BILERP,
                             DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);
             gDPSetPrimColor(D_80129FC0++, 0, 0, 255, 255, 255, 255);
-            // gDPSetPrimColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 255));
             if (D_800E3180 != NULL) {
                 gDPSetEnvColor(D_80129FC0++, D_800E3180->red, D_800E3180->green, D_800E3180->blue, D_800E3180->alpha);
-                // gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(D_800E3180->red, D_800E3180->green, D_800E3180->blue,
-                // D_800E3180->alpha));
             } else {
                 gDPSetEnvColor(D_80129FC0++, 255, 255, 255, 0);
-                // gDPSetEnvColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 0));
             }
         }
-        if (D_80129FC8.unk28 != 0) {
+        if (D_80129FC8.unk28) {
             spE4.scale = 0.5f;
         } else {
             spE4.scale = 1.0f;
         }
-        spE4.rotation.z = 0;
-        spE4.rotation.y = 0;
-        spE4.rotation.x = 0;
-        for (spDC = 0; spDC < D_800E30DC; spDC++) {
-            if (D_80129FC8.unk4C != 0) {
-                func_800B92F4(D_8012A1E8[spDC], arg2);
+
+        spE4.rotation.x = spE4.rotation.y = spE4.rotation.z = 0;
+        for (; i < D_800E30DC; i++) {
+            if (D_80129FC8.unk4C) {
+                func_800B92F4(D_8012A1E8[i], arg2);
             } else {
-                func_800B97A8(D_8012A1E8[spDC], arg2);
+                func_800B97A8(D_8012A1E8[i], arg2);
             }
-            temp_v0_2 = &D_800E30D8[D_8012A1E8[spDC]];
-            spE4.x_position = (f32) temp_v0_2->unk4;
-            spE4.y_position = (f32) temp_v0_2->unk6;
-            spE4.z_position = (f32) temp_v0_2->unk8;
-            sp104 = D_800E30D4[temp_v0_2->unkC];
-            if (D_80129FC8.unk28 != 0) {
-                for (temp_v0_3 = 0; temp_v0_3 != 2; temp_v0_3++) {
-                    spE4.x_position = temp_v0_2->unk4;
+            spE0 = &D_800E30D8[D_8012A1E8[i]];
+            spE4.x_position = spE0->unk4;
+            spE4.y_position = spE0->unk6;
+            spE4.z_position = spE0->unk8;
+            sp104 = D_800E30D4[spE0->unkC];
+            if (D_80129FC8.unk28) {
+                if (1) {} // fake
+                for (sp11C = 0; sp11C != 2; sp11C++) {
+                    spE4.x_position = spE0->unk4;
                     for (var_fp = 0; var_fp != 2; var_fp++) {
                         camera_push_model_mtx(&D_80129FC0, &D_80129FC4, &spE4, 1.0f, 0.0f);
                         if (sp104 & 0xFF) {
-                            temp_v1 = D_80129FC8.unk0 + 1;
-                            temp_a0_2 = D_80129FC8.unk0 * 2;
-                            var_t0 = ((sp104 & 0xFF) - 1) * temp_v1 * temp_v1;
-                            for (var_s0 = 0; var_s0 < D_80129FC8.unk0; var_s0++) {
-                                temp_a0_3 = D_8012A018 + arg2;
-                                temp_lo = (D_80129FC8.unk0 * 2) * var_s0;
+                            numTris = D_80129FC8.unk0;
+                            numVerts = D_80129FC8.unk0 + 1;
+                            var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
+                            for (j = 0; j < D_80129FC8.unk0; j++) {
+                                vtx = &D_800E3070[D_8012A018 + arg2][0][var_t0];
+                                tri = &D_800E3080[D_8012A018 + arg2][0][j * (D_80129FC8.unk0 << 1)];
 
-                                gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3070[temp_a0_3][var_t0]),
-                                             temp_v1 * 2, 0);
-
-                                // temp_a3_16 = D_80129FC0;
-                                // temp_a1 = &D_800E3070[temp_a0_3][var_t0] + 0x80000000;
-                                // D_80129FC0 = temp_a3_16 + 8;
-                                // temp_a3_16->words.w1 = (u32) temp_a1;
-                                // temp_a3_16->words.w0 = ((((((temp_v1 * 2) - 1) * 8) | ((s32) temp_a1 & 6)) & 0xFF) <<
-                                // 0x10) | 0x04000000 | (((temp_v1 * 18 * 2) + 8) & 0xFFFF);
-
-                                gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3080[temp_a0_3][temp_lo]), temp_a0_2,
-                                           1);
-                                // temp_a3_17 = D_80129FC0;
-                                // D_80129FC0 = temp_a3_17 + 8;
-                                // temp_a3_17->words.w1 = (u32) (&(*D_800E3080[temp_a0_3])[temp_lo] + 0x80000000);
-                                // temp_a3_17->words.w0 = (((((temp_a0_2 - 1) * 16) | 1) & 0xFF) << 16) | 0x05000000 |
-                                // ((temp_a0_2 * 0x10) & 0xFFFF);
+                                gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(vtx), numVerts * 2, 0);
+                                gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(tri), numTris * 2, TRIN_ENABLE_TEXTURE);
 
                                 var_t0 += D_80129FC8.unk0 + 1;
                             }
                         } else {
                             gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_8012A028[D_8012A018]), 4, 0);
-                            // temp_a3_18 = D_80129FC0;
-                            // D_80129FC0 = temp_a3_18 + 8;
-                            // temp_a3_18->words.w0 = (((((s32) (D_8012A028[D_8012A018] + 0x80000000) & 6) | 0x18) &
-                            // 0xFF) << 0x10) | 0x04000000 | 0x50; temp_a3_18->words.w1 = (u32) (D_8012A028[D_8012A018]
-                            // + 0x80000000);
-
-                            gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3090[D_8012A018 << 1]), 2, 1);
-                            // temp_a3_19 = D_80129FC0;
-                            // D_80129FC0 = temp_a3_19 + 8;
-                            // temp_a3_19->words.w0 = 0x05110020;
-                            // temp_a3_19->words.w1 = (u32) ((D_8012A018 << 5) + 0x80000000 + D_800E3090);
+                            gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3090[D_8012A018 << 1]), 2,
+                                       TRIN_ENABLE_TEXTURE);
                         }
                         apply_matrix_from_stack(&D_80129FC0);
                         sp104 >>= 8;
@@ -1095,37 +1068,25 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
                 }
             } else {
                 camera_push_model_mtx(&D_80129FC0, &D_80129FC4, &spE4, 1.0f, 0.0f);
-                temp_v1 = D_80129FC8.unk0 + 1;
-                temp_a0_2 = D_80129FC8.unk0 * 2;
-                var_t0 = ((sp104 & 0xFF) - 1) * temp_v1 * temp_v1;
-                for (var_s0 = 0; var_s0 < D_80129FC8.unk0; var_s0++) {
-                    temp_a0_3 = D_8012A018 + arg2;
-                    temp_lo = var_s0 * (D_80129FC8.unk0 * 2);
+                numTris = D_80129FC8.unk0;
+                numVerts = D_80129FC8.unk0 + 1;
+                var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
+                if (1) {} // fake
+                for (j = 0; j < D_80129FC8.unk0; j++) {
+                    vtx = &D_800E3070[D_8012A018 + arg2][0][var_t0];
+                    tri = &D_800E3080[D_8012A018 + arg2][0][j * (D_80129FC8.unk0 << 1)];
 
-                    gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3070[temp_a0_3][var_t0]), temp_v1 * 2, 0);
-                    // temp_a3_20 = D_80129FC0;
-                    // temp_a1_2 = &D_800E3070[temp_a0_3][var_t0] + 0x80000000;
-                    // D_80129FC0 = temp_a3_20 + 8;
-                    // temp_a3_20->words.w1 = (u32) temp_a1_2;
-                    // temp_a3_20->words.w0 = ((((((temp_v1 * 2) - 1) * 8) | ((s32) temp_a1_2 & 6)) & 0xFF) << 16)
-                    //     | 0x04000000 | (((temp_v1 * 0x12 * 2) + 8) & 0xFFFF);
-
-                    gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(&D_800E3080[temp_a0_3][temp_lo]), temp_a0_2, 0);
-                    // temp_a3_21 = D_80129FC0;
-                    // D_80129FC0 = temp_a3_21 + 8;
-                    // temp_a3_21->words.w1 = (u32) (&(*D_800E3080[temp_a0_3])[temp_lo] + 0x80000000);
-                    // temp_a3_21->words.w0 = (((((temp_a0_2 - 1) * 0x10) | 1) & 0xFF) << 16) | 0x05000000 | ((temp_a0_2
-                    // * 16) & 0xFFFF);
+                    gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(vtx), numVerts * 2, 0);
+                    gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(tri), numTris * 2, TRIN_ENABLE_TEXTURE);
 
                     var_t0 += D_80129FC8.unk0 + 1;
                 }
                 apply_matrix_from_stack(&D_80129FC0);
             }
         }
-        if (D_80129FC8.unk4C != 0) {
+        if (D_80129FC8.unk4C) {
             gSPSetGeometryMode(D_80129FC0++, G_FOG);
             gDPSetPrimColor(D_80129FC0++, 0, 0, 255, 255, 255, 255);
-            // gDPSetPrimColorRGBA(D_80129FC0++, COLOUR_RGBA32(255, 255, 255, 255));
         }
         *dList = D_80129FC0;
         *mtx = D_80129FC4;
