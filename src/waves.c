@@ -953,12 +953,7 @@ void func_800BA4B8(TextureHeader *tex, s32 rtile) {
     }
 }
 
-#ifdef NON_MATCHING
-void rendermode_reset(Gfx **dList);
-// https://decomp.me/scratch/9b2EF
 void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
-    TextureHeader *tex1;
-    TextureHeader *tex2;
     s32 sp11C;
     Vertex *vtx;
     Triangle *tri;
@@ -971,7 +966,8 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
     ObjectTransform spE4;
     LevelModel_Alternate *spE0;
     s32 i; // spDC
-    s32 temp;
+    TextureHeader *tex1;
+    TextureHeader *tex2;
 
     if ((arg2 != 1) || (D_8012A078 != 2)) {
         arg2 = 0;
@@ -982,7 +978,6 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
     if (D_800E30DC > 0) {
         D_80129FC0 = *dList;
         D_80129FC4 = *mtx;
-        temp = D_80129FC8.unk0; // fake?
         i = 0;
         rendermode_reset(&D_80129FC0);
         gSPSetGeometryMode(D_80129FC0++, G_ZBUFFER);
@@ -1037,21 +1032,20 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
             spE4.z_position = spE0->unk8;
             sp104 = D_800E30D4[spE0->unkC];
             if (D_80129FC8.unk28) {
-                if (1) {} // fake
-                for (sp11C = 0; sp11C != 2; sp11C++) {
+                for (sp11C = 0; sp11C < 2; sp11C++) {
                     spE4.x_position = spE0->unk4;
-                    for (var_fp = 0; var_fp != 2; var_fp++) {
+                    for (var_fp = 0; var_fp < 2; var_fp++) {
                         camera_push_model_mtx(&D_80129FC0, &D_80129FC4, &spE4, 1.0f, 0.0f);
                         if (sp104 & 0xFF) {
-                            numTris = D_80129FC8.unk0;
+                            numTris = D_80129FC8.unk0 << 1;
                             numVerts = D_80129FC8.unk0 + 1;
                             var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
                             for (j = 0; j < D_80129FC8.unk0; j++) {
                                 vtx = &D_800E3070[D_8012A018 + arg2][0][var_t0];
                                 tri = &D_800E3080[D_8012A018 + arg2][0][j * (D_80129FC8.unk0 << 1)];
 
-                                gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(vtx), numVerts * 2, 0);
-                                gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(tri), numTris * 2, TRIN_ENABLE_TEXTURE);
+                                gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(vtx), numVerts << 1, 0);
+                                gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(tri), numTris, TRIN_ENABLE_TEXTURE);
 
                                 var_t0 += D_80129FC8.unk0 + 1;
                             }
@@ -1068,16 +1062,15 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
                 }
             } else {
                 camera_push_model_mtx(&D_80129FC0, &D_80129FC4, &spE4, 1.0f, 0.0f);
-                numTris = D_80129FC8.unk0;
+                numTris = D_80129FC8.unk0 << 1;
                 numVerts = D_80129FC8.unk0 + 1;
                 var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
-                if (1) {} // fake
                 for (j = 0; j < D_80129FC8.unk0; j++) {
                     vtx = &D_800E3070[D_8012A018 + arg2][0][var_t0];
                     tri = &D_800E3080[D_8012A018 + arg2][0][j * (D_80129FC8.unk0 << 1)];
 
-                    gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(vtx), numVerts * 2, 0);
-                    gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(tri), numTris * 2, TRIN_ENABLE_TEXTURE);
+                    gSPVertexDKR(D_80129FC0++, OS_K0_TO_PHYSICAL(vtx), numVerts << 1, 0);
+                    gSPPolygon(D_80129FC0++, OS_K0_TO_PHYSICAL(tri), numTris, TRIN_ENABLE_TEXTURE);
 
                     var_t0 += D_80129FC8.unk0 + 1;
                 }
@@ -1093,9 +1086,6 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
     }
     D_800E30DC = 0;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BA8E4.s")
-#endif
 
 f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
     f32 spA4;
