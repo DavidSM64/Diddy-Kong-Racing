@@ -9,6 +9,13 @@ StackInfo *stack_pointer(void) {
     return (StackInfo *) __$sp;
 }
 #else
-// Easiest method to support getting the stack pointer on all platforms.
-#pragma GLOBAL_ASM("asm/nonmatchings/get_stack_pointer/stack_pointer.s")
+/**
+ * Uses GCC specific code to get the current stack pointer.
+ * Official Name: diCpuTraceCurrentStack
+ */
+StackInfo *stack_pointer(void) {
+    register StackInfo *sp;
+    asm volatile ("move %0, $sp\n": "=r"(sp));
+    return sp;
+}
 #endif
