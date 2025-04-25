@@ -10,6 +10,7 @@
 #include "game.h"
 #include "stacks.h"
 #include "PR/os_internal_thread.h"
+#include "PRinternal/rmonint.h"
 
 /************ .rodata ************/
 
@@ -49,14 +50,15 @@ void thread0_create(void) {
 
 /**
  * Main thread for the epc lockup screen. Thread 0.
+ * Official Name: diCpuThread
  */
 void thread0_Main(UNUSED void *unused) {
     s32 sp34;
     s32 s0 = 0;
 
     osCreateMesgQueue(&D_80129790, D_801297A8, ARRAY_COUNT(D_801297A8));
-    osSetEventMesg(OS_EVENT_FAULT, &D_80129790, (OSMesg) 8);
-    osSetEventMesg(OS_EVENT_CPU_BREAK, &D_80129790, (OSMesg) 2);
+    osSetEventMesg(OS_EVENT_FAULT, &D_80129790, (OSMesg) RMON_MESG_FAULT);
+    osSetEventMesg(OS_EVENT_CPU_BREAK, &D_80129790, (OSMesg) RMON_MESG_CPU_BREAK);
     osCreatePiManager(150, &D_801297E8, D_801297C8, ARRAY_COUNT(D_801297C8));
 
     while (1) {
@@ -66,11 +68,11 @@ void thread0_Main(UNUSED void *unused) {
             continue;
         }
         s0 |= sp34;
-        if ((s0 & 8) == 0 && (s0 & 2) == 0) {
+        if (!(s0 & RMON_MESG_FAULT) && !(s0 & RMON_MESG_CPU_BREAK)) {
             continue;
         }
 #endif
-        s0 &= ~8;
+        s0 &= ~RMON_MESG_FAULT;
         stubbed_printf(">fault< ");
         enable_interupts_on_main();
         stop_all_threads_except_main();
@@ -279,7 +281,7 @@ void render_epc_lock_up_display(void) {
             gObjectStackTrace[OBJECT_SPAWN] = gEpcInfo.objectStackTrace[OBJECT_SPAWN];
             gObjectStackTrace[OBJECT_UPDATE] = gEpcInfo.objectStackTrace[OBJECT_UPDATE];
             gObjectStackTrace[OBJECT_DRAW] = gEpcInfo.objectStackTrace[OBJECT_DRAW];
-            if (((u32 *) gEpcInfo.objectStackTrace)[-4] == -1U) { // TODO: find better solution
+            if (gEpcInfo.unk128[-2] == -1U) { // TODO: find better solution. This should be gEpcInfo.cause
                 render_printf(" epc\t\t0x%08x\n", gEpcInfo.epc);
                 render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", GET_REG(a0), GET_REG(a1));
                 for (i = 0; i < 3; i++) {

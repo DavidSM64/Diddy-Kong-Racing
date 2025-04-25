@@ -640,6 +640,7 @@ u8 get_current_level_race_type(void) {
 
 /**
  * Return the header data of the current level.
+ * Official Name: levelGetLevel
  */
 LevelHeader *get_current_level_header(void) {
     return gCurrentLevelHeader;

@@ -95,7 +95,7 @@ segments:
       - [0xB5540, c, printf]
       - [0xB7B40, c, ../libultra/src/debug/assert]
       - [0xB7B50, c, thread0_epc]
-      - [0xB8910, hasm, hasm/get_stack_pointer]
+      - [0xB8910, c, get_stack_pointer]
       - [0xB8920, c, waves]
       - [0xC0D70, c, fade_transition]
       - [0xC35F0, c, game_text]
