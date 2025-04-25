@@ -258,7 +258,7 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_CHECK := :
 
 # Allow dollar sign to be used in var names for this file alone
 # It allows us to return the current stack pointer
-$(BUILD_DIR)/$(SRC_DIR)/get_stack_pointer.c.o: OPT_FLAGS := -dollar
+$(BUILD_DIR)/$(SRC_DIR)/get_stack_pointer.c.o: OPT_FLAGS += -dollar
 
 ### Targets
 

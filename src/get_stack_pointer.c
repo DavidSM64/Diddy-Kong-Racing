@@ -1,16 +1,14 @@
 #include "memory.h"
 
 #ifdef __sgi
-#define STACK_POINTER __$sp
-#else
-#define STACK_POINTER gStackPointer
-StackInfo *gStackPointer;
-#endif
-
 /**
  * Uses IDO specific -dollar compiler flag to get the current stack pointer.
  * Official Name: diCpuTraceCurrentStack
  */
 StackInfo *stack_pointer(void) {
-    return (StackInfo *) STACK_POINTER;
+    return (StackInfo *) __$sp;
 }
+#else
+// Easiest method to support getting the stack pointer on all platforms.
+#pragma GLOBAL_ASM("asm/nonmatchings/get_stack_pointer/stack_pointer.s")
+#endif

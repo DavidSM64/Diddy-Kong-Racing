@@ -281,7 +281,7 @@ void render_epc_lock_up_display(void) {
             gObjectStackTrace[OBJECT_SPAWN] = gEpcInfo.objectStackTrace[OBJECT_SPAWN];
             gObjectStackTrace[OBJECT_UPDATE] = gEpcInfo.objectStackTrace[OBJECT_UPDATE];
             gObjectStackTrace[OBJECT_DRAW] = gEpcInfo.objectStackTrace[OBJECT_DRAW];
-            if (((u32 *) gEpcInfo.objectStackTrace)[-4] == -1U) { // TODO: find better solution
+            if (gEpcInfo.unk128[-2] == -1U) { // TODO: find better solution. This should be gEpcInfo.cause
                 render_printf(" epc\t\t0x%08x\n", gEpcInfo.epc);
                 render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", GET_REG(a0), GET_REG(a1));
                 for (i = 0; i < 3; i++) {
