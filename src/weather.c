@@ -852,6 +852,7 @@ void rain_set(s32 lightningFrequency, s32 opacity, f32 time) {
 
 /**
  * If it's currently raining, update the fog levels to match the intensity of the storm.
+ * Official Name: rainSetFog
  */
 void rain_fog(void) {
     s32 a, b;

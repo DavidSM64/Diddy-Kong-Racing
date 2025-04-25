@@ -3503,6 +3503,7 @@ void func_800304C8(Vec4f *arg0) {
 
 /**
  * Instantly update current fog properties.
+ * Official Name: trackSetFog
  */
 void set_fog(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue) {
     s32 tempNear;
@@ -3545,6 +3546,7 @@ void set_fog(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue) {
 /**
  * Writes the current fog settings to the arguments.
  * Pre-shifts the data, so the raw values are correct.
+ * Official Name: trackGetFog
  */
 void get_fog_settings(s32 playerID, s16 *near, s16 *far, u8 *r, u8 *g, u8 *b) {
     *near = gFogData[playerID].fog.near >> 16;
@@ -3557,6 +3559,7 @@ void get_fog_settings(s32 playerID, s16 *near, s16 *far, u8 *r, u8 *g, u8 *b) {
 /**
  * Sets the fog of the player ID to the default values.
  * Current fog attributes are rightshifted 16 bytes.
+ * Official Name: trackSetFogOff
  */
 void reset_fog(s32 playerID) {
     gFogData[playerID].addFog.near = 0;
@@ -3615,6 +3618,7 @@ void apply_fog(s32 playerID) {
  * Sets the active viewport's fog target when passed through.
  * Used in courses to make less, or more dense.
  * @bug: Timer doesn't account for PAL, meaning fog will scroll 20% slower on PAL systems.
+ * Official Name: trackChangeFog
  */
 void obj_loop_fogchanger(Object *obj) {
     s32 nearTemp;
@@ -3708,6 +3712,7 @@ void obj_loop_fogchanger(Object *obj) {
 /**
  * Set the fog properties from the current values to the target, over a time specified by switchTimer.
  * @bug: Timer doesn't account for PAL, meaning fog will scroll 20% slower on PAL systems.
+ * Official Name: trackFadeFog
  */
 void slowly_change_fog(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 far, s32 switchTimer) {
     s32 temp;
