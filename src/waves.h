@@ -4,22 +4,26 @@
 #include "types.h"
 #include "structs.h"
 
+/* Size: 4 bytes */
 typedef struct {
     u8 unk0[4];
 } LevelModelSubArray;
+
+/* Size: 0x1C bytes */
 typedef struct {
     LevelModelSegment *unk00;
-    s16 unk4;
-    s16 unk6; // used as playerIndex
-    s16 unk8;
-    u8 unkA;
-    u8 unkB;
-    u32 unkC;
+    s16 unk4; // something with x
+    s16 unk6; // something with y AND used as playerIndex
+    s16 unk8; // something with z
+    u8 unkA; // some sort of x ratio
+    u8 unkB; // some sort of z ratio / index of D_8012A0E8
+    u32 unkC; // indexes D_800E30D4
     s16 unk10;
     s16 unk12;
     LevelModelSubArray unk14[2];
 } LevelModel_Alternate;
 
+/* Size: 0x40 bytes */
 typedef struct unk800E3190 {
     f32 unk0;
     f32 unk4;
@@ -44,26 +48,26 @@ typedef struct unk800E3184 {
 } unk800E3184;
 
 typedef struct unk80129FC8 {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s32 unk14;
-    f32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s32 unk24;
-    s32 unk28;
-    s32 unk2C;
-    s32 unk30;
-    s32 unk34;
-    s32 unk38;
-    s32 unk3C;
+    s32 unk0; // count or index?
+    s32 unk4; // compared to and substracted
+    s32 unk8; // used to populate D_800E3040
+    f32 unkC; // used to populate D_800E3040
+    s32 unk10; // used to populate D_800E3040
+    s32 unk14; // used to populate D_800E3040
+    f32 unk18; // used to populate D_800E3040
+    s32 unk1C; // used to populate D_800E3040
+    s32 unk20; // count of elements in D_800E3040
+    s32 unk24; // possible values: 3 or 5, controls what's set for D_800E30E0 and D_800E30E4
+    s32 unk28; // some sort of flag
+    s32 textureId;
+    s32 unk30; // multiplier for texture width
+    s32 unk34; // multiplier for texture height
+    s32 unk38; // used in u of uv calculation for wave triangles
+    s32 unk3C; // used in v of uv calculation for wave triangles
     f32 magnitude; // Global wave strength
-    f32 unk44;
-    f32 unk48;
-    s32 unk4C;
+    f32 unk44; // something related to height / scale
+    f32 unk48; // used in vertex RGBA calculation
+    s32 darkVertexColours;
 } unk80129FC8;
 
 typedef struct unk800BBE08_arg1 {
@@ -122,7 +126,7 @@ s32 func_800B9228(LevelModelSegment *arg0);
 void func_800BBDDC(LevelModel *level, LevelHeader *header);
 void func_800BFE98(s32 arg0);
 void func_800B8134(LevelHeader *header);
-void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1);
+void func_800BBE08(LevelModel *level, LevelHeader *header);
 void obj_loop_wavepower(Object *obj);
 void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
 void func_800BF3E4(Object *obj);
@@ -131,9 +135,10 @@ void func_800BA288(s32 arg0, s32 arg1);
 void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2);
 unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8);
 void wave_init(void);
+void func_800BA4B8(TextureHeader *tex, s32 rtile);
 
 Object_64 *func_800BE654(s16, f32, f32); // Non Matching
-void func_800BBF78(LevelModel *arg0); // Non Matching
+void func_800BBF78(LevelModel *model);   // Non Matching
 f32 func_800BB2F4(s32, f32, f32, Vec3f *);
 void func_800B8C04(s32, s32, s32, s32, s32);
 void func_800BF524(Object *);

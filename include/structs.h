@@ -454,33 +454,33 @@ typedef struct LevelHeader {
   /* 0x52 */ u8 music;
   /* 0x53 */ u8 unk53;
   /* 0x54 */ u16 instruments;
-  /* 0x56 */ u8 unk56;
-  /* 0x57 */ u8 unk57;
-  /* 0x58 */ u8 unk58;
-  /* 0x59 */ u8 unk59;
-  /* 0x5A */ s16 unk5A;
-  /* 0x5C */ u8 unk5C;
-  /* 0x5D */ u8 unk5D;
-  /* 0x5E */ s16 unk5E;
-  /* 0x60 */ s16 unk60;
-  /* 0x62 */ s16 wavePower;
-  /* 0x64 */ s16 unk64; // Some form of secondary power
-  /* 0x66 */ s16 unk66;
-  /* 0x68 */ s16 unk68;
-  /* 0x6A */ u8 unk6A;
-  /* 0x6B */ u8 unk6B;
-  /* 0x6C */ s8 unk6C;
-  /* 0x6D */ s8 unk6D;
-  /* 0x6E */ s16 unk6E;
+  /* 0x56 */ u8 unk56; // values between 2 and 8 (except 5 and 7), used to determine waves count?
+  /* 0x57 */ u8 unk57; // possible values: 2,4,8,16,20, related to waves
+  /* 0x58 */ u8 unk58; // possible values: 1,2,4
+  /* 0x59 */ u8 unk59; // always 0?
+  /* 0x5A */ s16 unk5A; // values between 512 and 4608
+  /* 0x5C */ u8 unk5C; // possible values: 1,2,4
+  /* 0x5D */ u8 unk5D; // always 0?
+  /* 0x5E */ s16 unk5E; // values between 512 and 4963
+  /* 0x60 */ s16 unk60; // possible values: 120, 130, 157, 178, 187
+  /* 0x62 */ s16 wavePower; // always 256
+  /* 0x64 */ s16 unk64; // Always 153 except in Smokey Castle where it's 0 and the title screen where it's 256 (Some form of secondary power)
+  /* 0x66 */ s16 unk66; // values between 908 and 2560
+  /* 0x68 */ s16 textureId; // always 62 except in the trophy race where it's 205
+  /* 0x6A */ u8 unk6A; // values between 1 and 6
+  /* 0x6B */ u8 unk6B; // values between 1 and 6
+  /* 0x6C */ s8 unk6C; // values between 0 and 4
+  /* 0x6D */ s8 unk6D; // values between 0 and 2 except in Hot Top Volcano where it's -2
+  /* 0x6E */ s16 unk6E; // possible values: 3,5
 
     //func_800B8134 Seems to use this struct, and it differs on unk70 only.
-    union {
-  /* 0x70 */ LevelHeader_70 *unk70;
-        struct {
-  /* 0x70 */ u8 unk70_u8;
-  /* 0x71 */ u8 unk71;
-        };
-    };
+  union {
+  /* 0x70 */ LevelHeader_70 *unk70[1]; // unknown size, however only size of 1 matches
+      struct {
+  /* 0x70 */ u8 darkVertexColours; // always 1 except in Hot Top Volcano where it's 0
+  /* 0x71 */ u8 unk71; // possible values: 0,1
+      };
+  };
 
   /* 0x74 */ LevelHeader_70 *unk74[7];
 
