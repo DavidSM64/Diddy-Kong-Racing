@@ -287,7 +287,7 @@ s32 D_8011AED4;
 s16 gTajChallengeType;
 Object *(*gCameraObjList)[CAMCONTROL_COUNT]; // Camera objects with a maximum of 20
 s32 gCameraObjCount;                         // The number of camera objects in the above list
-Object *(*gRacers)[10]; // Official Name: playerlist
+Object *(*gRacers)[10];                      // Official Name: playerlist
 // Similar to gRacers, but sorts the pointer by the players' current position in the race.
 Object **gRacersByPosition;
 // Similar to gRacers, but sorts the pointer by controller ports 1-4, then CPUs.

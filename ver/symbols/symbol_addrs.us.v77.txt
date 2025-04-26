@@ -2392,9 +2392,9 @@ gRumbleKillTimer = 0x800DE48C;
 
 // rcp.c .data
 gGfxTaskMesgNums = 0x800DE490;
-sBGPrimColourrR = 0x800DE4B0;
-sBGPrimColourrG = 0x800DE4B4;
-sBGPrimColourrB = 0x800DE4B8;
+sBGPrimColourR = 0x800DE4B0;
+sBGPrimColourG = 0x800DE4B4;
+sBGPrimColourB = 0x800DE4B8;
 sBackgroundFillColour = 0x800DE4BC;
 gTexBGShiftX = 0x800DE4C0;
 gTexBGTex1 = 0x800DE4C4;

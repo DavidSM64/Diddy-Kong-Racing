@@ -2398,9 +2398,9 @@ gRumbleEnable = 0x800DFE30;
 
 // rcp.c .data
 gGfxTaskMesgNums = 0x800DFE40;
-sBGPrimColourrR = 0x800DFE60;
-sBGPrimColourrG = 0x800DFE64;
-sBGPrimColourrB = 0x800DFE68;
+sBGPrimColourR = 0x800DFE60;
+sBGPrimColourG = 0x800DFE64;
+sBGPrimColourB = 0x800DFE68;
 sBackgroundFillColour = 0x800DFE6C;
 gTexBGShiftX = 0x800DFE70;
 gTexBGTex1 = 0x800DFE74;
