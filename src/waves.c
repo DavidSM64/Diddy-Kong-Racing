@@ -101,22 +101,8 @@ s32 D_8012A0DC; // used in mempool_alloc_safe size calculation
 s32 gNumberOfLevelSegments;
 s32 D_8012A0E8[64];
 s16 D_8012A1E8[512]; // used to index D_800E30D8 and as arg0 for func_800B92F4 and func_800B97A8
-
-typedef struct unk8012A5E8 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s32 unk8;
-} unk8012A5E8;
-
-// This could be (and probably is) just a pointer
-unk8012A5E8 D_8012A5E8[1];
-// might be the same as D_8012A5E8
-s16 D_8012A5F4;
-UNUSED s32 D_8012A5F8;
-UNUSED s32 D_8012A5FC;
-s16 D_8012A600[144];
+unk8012A5E8 D_8012A5E8[2];
+unk8012A5E8 D_8012A600[24];
 f32 gWavePowerBase;
 f32 gWaveMagnitude;
 s32 gWavePowerDivisor;
@@ -403,46 +389,46 @@ void func_800B8B8C(void) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewport, s32 updateRate) {
-    s32 i;
-    s32 j;
-    s32 k;
-    s32 var_t4;
-    s32 tempXPosRatio;
-    u32 var_t2;
-    s32 var_v1;
     s32 xPosRatio;
     s32 zPosRatio;
-    s32 var_a0;
+    s32 tempXPosRatio;
+    s32 var_v1;
+    s32 var_s5;
+    u32 var_t2;
     s32 var_t5;
+    s32 var_v0;
     s32 var_s4;
-    s32 var_t9;
-    unk8012A5E8 *temp;
+    s32 var_a3;
+    s32 var_s6;
 
-    // possible fake:
     xPosRatio = (xPosition - D_8012A0D0) / gWaveBoundingBoxDiffX;
     zPosRatio = (zPosition - D_8012A0D4) / gWaveBoundingBoxDiffZ;
-    D_8012A5E8[0].unk0 = -1;
-    D_8012A5F4 = -1;
 
-    // D_8012A600 seems to be unused
-    for (var_v1 = 0; var_v1 < 144; var_v1 += 24) {
-        D_8012A600[var_v1] = -1;
-        D_8012A600[var_v1 + 6] = -1;
-        D_8012A600[var_v1 + 12] = -1;
-        D_8012A600[var_v1 + 18] = -1;
+    if (0) {}
+
+    for (var_v1 = 0; var_v1 != ARRAY_COUNT(D_8012A600); var_v1 += 4) {
+        D_8012A5E8[0].unk0 = -1;
+        D_8012A5E8[1].unk0 = -1;
+        D_8012A600[var_v1].unk0 = -1;
+        D_8012A600[var_v1 + 1].unk0 = -1;
+        D_8012A600[var_v1 + 2].unk0 = -1;
+        D_8012A600[var_v1 + 3].unk0 = -1;
     }
 
-    if (D_80129FC8.unk28 != FALSE) {
-        var_t5 = gWaveBoundingBoxDiffZ;
-        var_v1 = 0;
-        var_s4 = 0;
-        if ((gWaveBoundingBoxDiffX >> 1) < ((xPosition - (xPosRatio * gWaveBoundingBoxDiffX)) - D_8012A0D0)) {
+    if (D_80129FC8.unk28 != 0) {
+        xPosition -= (xPosRatio * gWaveBoundingBoxDiffX) + D_8012A0D0;
+        zPosition -= (zPosRatio * gWaveBoundingBoxDiffZ) + D_8012A0D4;
+        if ((gWaveBoundingBoxDiffX >> 1) < xPosition) {
             var_v1 = 8;
+        } else {
+            var_v1 = 0;
         }
-        if ((gWaveBoundingBoxDiffZ >> 1) < ((zPosition - (zPosRatio * gWaveBoundingBoxDiffZ)) - D_8012A0D4)) {
+
+        if ((gWaveBoundingBoxDiffZ >> 1) < zPosition) {
             var_s4 = 16;
+        } else {
+            var_s4 = 0;
         }
 
         for (var_v1 -= (D_80129FC8.unk24 >> 1) * 8; var_v1 < 0; var_v1 += 16) {
@@ -453,72 +439,12 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
             zPosRatio -= 1;
         }
 
-        for (i = 0; i < D_80129FC8.unk24; i++) {
-            if (zPosRatio >= 0) {
-                if (zPosRatio < D_8012A0DC) {
-                    var_t5 = var_v1;
-                    tempXPosRatio = xPosRatio;
-                    var_t2 = (zPosRatio * D_8012A0D8) + xPosRatio;
-                    for (j = 0; j < D_80129FC8.unk24; j++) {
-                        // clang-format off
-                        if (
-                            (tempXPosRatio >= 0) &&
-                            (tempXPosRatio < D_8012A0D8) &&
-                            (D_8012A0E8[zPosRatio] & (1 << tempXPosRatio))
-                        ) {
-                            // clang-format on
-                            var_t4 = var_t5 + var_s4;
-                            D_800E30D4[var_t2] |= D_800E30E0[i * D_80129FC8.unk24 + j] << var_t4;
-                            for (k = 0; k < gNumberOfLevelSegments; k++) {
-                                if (var_t2 == (&D_800E30D8[k])->unkC) {
-                                    temp = &D_8012A5E8[k];
-                                    temp->unk0 = k;
-                                    temp->unk2 = var_t4 >> 3;
-                                    temp->unk8 = k * D_800E317C;
-                                    temp->unk4 = (&D_800E30D8[k])->unk12;
-                                    if (var_t5 != 0) {
-                                        temp->unk8 = k * D_800E317C + D_80129FC8.unk0;
-                                        temp->unk4 += D_80129FC8.unk0;
-                                        while (temp->unk4 >= D_80129FC8.unk4) {
-                                            temp->unk4 -= D_80129FC8.unk4;
-                                        }
-                                    }
-                                    temp->unk6 = (&D_800E30D8[k])->unk10;
-                                    if (var_s4 != 0) {
-                                        temp->unk8 += ((D_80129FC8.unk0 * 2) + 1) * D_80129FC8.unk0;
-                                        temp->unk6 += D_80129FC8.unk0;
-                                        while (temp->unk6 >= D_80129FC8.unk4) {
-                                            temp->unk6 -= D_80129FC8.unk4;
-                                        }
-                                    }
-                                    k = 0x7FFF;
-                                }
-                            }
-                        }
-                        var_t5 += 8;
-                        if (var_t5 > 8) {
-                            var_t5 -= 16;
-                            tempXPosRatio += 1;
-                            var_t2 += 1;
-                        }
-                    }
-                }
-            }
-            var_s4 += 16;
-            if (var_s4 > 16) {
-                var_s4 -= 32;
-                zPosRatio += 1;
-            }
-        }
-    } else {
-        xPosRatio -= D_80129FC8.unk24 >> 1; // a1
-        zPosRatio -= D_80129FC8.unk24 >> 1; // s7
-        for (i = 0; i < D_80129FC8.unk24; i++, zPosRatio++) {
+        for (var_s6 = 0, var_a3 = 0; var_s6 < D_80129FC8.unk24; var_s6++) {
             if ((zPosRatio >= 0) && (zPosRatio < D_8012A0DC)) {
                 tempXPosRatio = xPosRatio;
-                var_t2 = (zPosRatio * D_8012A0D8) + tempXPosRatio;
-                for (j = 0; j < D_80129FC8.unk24; j++, tempXPosRatio++, var_t2++) {
-
+                var_t5 = var_v1;
+                var_t2 = (zPosRatio * D_8012A0D8) + xPosRatio;
+                for (var_s5 = 0; var_s5 < D_80129FC8.unk24; var_s5++) {
                     // clang-format off
                     if (
                         (tempXPosRatio >= 0) &&
@@ -526,16 +452,72 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
                         (D_8012A0E8[zPosRatio] & (1 << tempXPosRatio))
                     ) {
                         // clang-format on
-                        D_800E30D4[var_t2] = D_800E30E0[i * D_80129FC8.unk24 + j];
-                        for (k = 0; k < gNumberOfLevelSegments; k++) {
-                            if (var_t2 == (&D_800E30D8[k])->unkC) {
-                                temp = &D_8012A5E8[k];
-                                temp->unk0 = k;
-                                temp->unk2 = 0;
-                                temp->unk4 = (&D_800E30D8[k])->unk12;
-                                temp->unk6 = (&D_800E30D8[k])->unk10;
-                                temp->unk8 = k * D_800E317C;
-                                k = 0x7FFF;
+                        D_800E30D4[var_t2] |= D_800E30E0[var_s6 * D_80129FC8.unk24 + var_s5] << (var_t5 + var_s4);
+                        for (var_v0 = 0; var_v0 < gNumberOfLevelSegments; var_v0++) {
+                            if (var_t2 == D_800E30D8[var_v0].unkC) {
+                                D_8012A5E8[var_a3].unk0 = var_v0;
+                                D_8012A5E8[var_a3].unk2 = (var_t5 + var_s4) >> 3;
+                                D_8012A5E8[var_a3].unk8 = var_v0 * D_800E317C;
+                                D_8012A5E8[var_a3].unk4 = D_800E30D8[var_v0].unk12;
+                                if (var_t5 != 0) {
+                                    D_8012A5E8[var_a3].unk8 += D_80129FC8.unk0;
+                                    D_8012A5E8[var_a3].unk4 += D_80129FC8.unk0;
+                                    while (D_8012A5E8[var_a3].unk4 >= D_80129FC8.unk4) {
+                                        D_8012A5E8[var_a3].unk4 -= D_80129FC8.unk4;
+                                    }
+                                }
+                                D_8012A5E8[var_a3].unk6 = D_800E30D8[var_v0].unk10;
+                                if (var_s4 != 0) {
+                                    D_8012A5E8[var_a3].unk8 += ((D_80129FC8.unk0 * 2) + 1) * D_80129FC8.unk0;
+                                    D_8012A5E8[var_a3].unk6 += D_80129FC8.unk0;
+                                    while (D_8012A5E8[var_a3].unk6 >= D_80129FC8.unk4) {
+                                        D_8012A5E8[var_a3].unk6 -= D_80129FC8.unk4;
+                                    }
+                                }
+                                var_a3++;
+                                var_v0 = 0x7FFF;
+                            }
+                        }
+                    }
+                    var_t5 += 8;
+                    if (var_t5 > 8) {
+                        var_t5 -= 16;
+                        tempXPosRatio++;
+                        var_t2++;
+                    }
+                }
+            }
+            var_s4 += 16;
+            if (var_s4 > 16) {
+                var_s4 -= 32;
+                zPosRatio++;
+            }
+        }
+    } else {
+        xPosRatio -= D_80129FC8.unk24 >> 1;
+        zPosRatio -= D_80129FC8.unk24 >> 1;
+        for (var_s6 = 0, var_a3 = 0; var_s6 < D_80129FC8.unk24; var_s6++, zPosRatio++) {
+            if ((zPosRatio >= 0) && (zPosRatio < D_8012A0DC)) {
+                tempXPosRatio = xPosRatio;
+                var_t2 = (zPosRatio * D_8012A0D8) + xPosRatio;
+                for (var_s5 = 0; var_s5 < D_80129FC8.unk24; var_s5++, tempXPosRatio++, var_t2++) {
+                    // clang-format off
+                    if (
+                        (tempXPosRatio >= 0) &&
+                        (tempXPosRatio < D_8012A0D8) &&
+                        (D_8012A0E8[zPosRatio] & (1 << tempXPosRatio))
+                    ) {
+                        // clang-format on
+                        D_800E30D4[var_t2] = D_800E30E0[var_s6 * D_80129FC8.unk24 + var_s5];
+                        for (var_v0 = 0; var_v0 < gNumberOfLevelSegments; var_v0++) {
+                            if (var_t2 == D_800E30D8[var_v0].unkC) {
+                                D_8012A5E8[var_a3].unk0 = var_v0;
+                                D_8012A5E8[var_a3].unk2 = 0;
+                                D_8012A5E8[var_a3].unk4 = D_800E30D8[var_v0].unk12;
+                                D_8012A5E8[var_a3].unk6 = D_800E30D8[var_v0].unk10;
+                                D_8012A5E8[var_a3].unk8 = var_v0 * D_800E317C;
+                                var_a3++;
+                                var_v0 = 0x7FFF;
                             }
                         }
                     }
@@ -543,11 +525,9 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
             }
         }
     }
+
     func_800BA288(currentViewport, updateRate);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800B8C04.s")
-#endif
 
 s32 func_800B9228(LevelModelSegment *arg0) {
     s32 v0 = 0;
@@ -790,7 +770,7 @@ void func_800B9C18(s32 arg0) {
             D_800E3048[var_s0].u = var_v1;
             D_800E3048[var_s0].v = var_a2;
             var_v1 += D_8012A08C;
-            var_s0 += 1;
+            var_s0++;
         }
         var_a2 += D_8012A090;
     }
@@ -948,7 +928,7 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 arg2) {
     s32 var_t0;
     ObjectTransform spE4;
     LevelModel_Alternate *spE0;
-    s32 i; // spDC
+    s32 i;
     TextureHeader *tex1;
     TextureHeader *tex2;
 
@@ -1179,7 +1159,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
             var_f2 += func_800BEFC4(arg0, sp70 + 1, sp6C);
         }
         var_a0 = sp58 + sp70 + (sp6C * sp60);
-        var_a0 += 1;
+        var_a0++;
         var_v0 = D_800E3178[var_a0];
         if (D_800E3178[var_a0] < 0x7F) {
             var_f2 *= D_80129FC8.unk44 + (var_v0 * var_f16);
@@ -1206,7 +1186,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
             spA0 += func_800BEFC4(arg0, sp70 + 1, sp6C);
         }
         var_a0 = sp58 + sp70 + (sp6C * sp60);
-        var_a0 += 1;
+        var_a0++;
         var_v0 = D_800E3178[var_a0];
         if (D_800E3178[var_a0] < 0x7F) {
             spA0 *= D_80129FC8.unk44 + (var_v0 * var_f16);
@@ -1233,7 +1213,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
             var_f2 += func_800BEFC4(arg0, sp70 + 1, sp6C + 1);
         }
         var_a0 = sp58 + sp70 + ((sp6C + 1) * sp60);
-        var_a0 += 1;
+        var_a0++;
         var_v0 = D_800E3178[var_a0];
         if (var_v0 < 0x7F) {
             var_f2 *= D_80129FC8.unk44 + (var_v0 * var_f16);

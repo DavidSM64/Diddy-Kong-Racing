@@ -256,6 +256,12 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/audio/env.c.o: MIPSISET := -mips1
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_WARNINGS := -w
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_CHECK := :
 
+ifeq ($(COMPILER),ido)
+# Allow dollar sign to be used in var names for this file alone
+# It allows us to return the current stack pointer
+$(BUILD_DIR)/$(SRC_DIR)/get_stack_pointer.c.o: OPT_FLAGS += -dollar
+endif
+
 ### Targets
 
 ifeq ($(COMPILER),gcc)
