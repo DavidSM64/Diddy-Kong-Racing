@@ -190,7 +190,7 @@ void free_track(void);
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex);
 s32 func_80027568(void);
 s32 func_8002CC30(LevelModelSegment*);
-s32 func_8002B0F4(s32, f32 xPos, f32 zPos, WaterProperties***); // Definitely not triple pointer, but easiest way to fix warns.
+s32 func_8002B0F4(s32, f32 xIn, f32 zIn, WaterProperties***); // Definitely not triple pointer, but easiest way to fix warns.
 void func_800278E8(s32);
 void func_80028050(void);
 void initialise_player_viewport_vars(s32);

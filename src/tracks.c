@@ -2356,14 +2356,13 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
 
     XInInt = xIn;
     ZInInt = zIn;
-    
+
     for (var_fp = 0; var_fp < sp108; var_fp++) {
         currentSegment = &gCurrentLevelModel->segments[spB0[var_fp]];
         currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[spB0[var_fp]];
         var_a1 = 1;
         var_s1 = 0;
-        
-    
+
         temp_a2 = ((currentBoundingBox->x2 - currentBoundingBox->x1) >> 3) + 1;
         var_t0 = temp_a2 + currentBoundingBox->x1;
         var_t1 = currentBoundingBox->x1;
@@ -2375,7 +2374,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
             var_t1 += temp_a2;
             var_a1 *= 2;
         }
-    
+
         // Same as above, but for Z
         temp_a2 = ((currentBoundingBox->z2 - currentBoundingBox->z1) >> 3) + 1;
         var_t0 = temp_a2 + currentBoundingBox->z1;
@@ -2390,18 +2389,19 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
         }
 
         yOutCount = 0;
-    
+
         for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
             currentBatch = &currentSegment->batches[batchNum];
-            temp_s2 = gCurrentLevelModel->textures[currentBatch->textureIndex].unk7;            
+            temp_s2 = gCurrentLevelModel->textures[currentBatch->textureIndex].unk7;
             currentFaceOffset = currentBatch->facesOffset;
             nextFaceOffset = currentBatch[1].facesOffset;
             currentVerticesOffset = currentBatch->verticesOffset;
-    
-            if (temp_s2 != 11 && temp_s2 != 15 && (currentBatch->flags & (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_UNK00000200))) {
+
+            if (temp_s2 != 11 && temp_s2 != 15 &&
+                (currentBatch->flags & (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_UNK00000200))) {
                 currentFaceOffset = nextFaceOffset;
             }
-            
+
             for (faceNum = currentFaceOffset; faceNum < nextFaceOffset; faceNum++) {
                 if (var_s1 == (currentSegment->unk10[faceNum] & var_s1)) {
                     tri = &currentSegment->triangles[faceNum];
@@ -2414,9 +2414,12 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
                     vert = &currentSegment->vertices[tri->verticesArray[3] + currentVerticesOffset];
                     vert3X = vert->x;
                     vert3Z = vert->z;
-                    temp_ra_1 = ((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0);
-                    temp_ra_2 = ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0);
-                    temp_ra_3 = ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                    temp_ra_1 =
+                        ((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0);
+                    temp_ra_2 =
+                        ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                    temp_ra_3 =
+                        ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
                     if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
                         temp = currentSegment->unk14[faceNum].triangleIndex;
                         temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
@@ -2426,7 +2429,8 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
                         tempVec4f.w = temp_v1_4[3];
                         if (tempVec4f.y != 0.0) {
                             D_8011D128[yOutCount].type = temp_s2;
-                            D_8011D128[yOutCount].waveHeight = -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
+                            D_8011D128[yOutCount].waveHeight =
+                                -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
                             D_8011D128[yOutCount].rot.x = tempVec4f.x;
                             D_8011D128[yOutCount].rot.y = tempVec4f.y;
                             D_8011D128[yOutCount].rot.z = tempVec4f.z;
@@ -2547,7 +2551,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     if (levelSegmentIndex < 0 || levelSegmentIndex >= gCurrentLevelModel->numberOfSegments) {
         return 0;
     }
-    
+
     vert = NULL; // fake?
     currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
     currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex];
@@ -2583,7 +2587,8 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
 
     yOutCount = 0;
     for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
-        do { } while (0);
+        do {
+        } while (0);
         currentBatch = &currentSegment->batches[batchNum];
         currentFaceOffset = currentBatch->facesOffset;
         nextFaceOffset = currentBatch[1].facesOffset;
@@ -3681,7 +3686,7 @@ void func_800304C8(Vec4f *arg0) {
     temp = (gNewShadowObj->segment.trans.z_position - arg0[1].z);
 
     if ((((gNewShadowObj->segment.trans.x_position - arg0[0].x) * (arg0[1].z - arg00z)) -
-         ((arg0[1].x - arg0[0].x) * (((0, gNewShadowObj->segment.trans.z_position)) -arg00z))) >= compare) {
+         ((arg0[1].x - arg0[0].x) * (((0, gNewShadowObj->segment.trans.z_position)) - arg00z))) >= compare) {
         found1 = TRUE;
     }
     if ((((gNewShadowObj->segment.trans.x_position - arg0[1].x) * (arg0[2].z - arg0[1].z)) -
