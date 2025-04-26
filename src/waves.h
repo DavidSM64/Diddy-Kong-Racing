@@ -47,6 +47,14 @@ typedef struct unk800E3184 {
     u8 unk0[8];
 } unk800E3184;
 
+typedef struct unk8012A5E8 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s32 unk8;
+} unk8012A5E8;
+
 typedef struct unk80129FC8 {
     s32 unk0; // count or index?
     s32 unk4; // compared to and substracted
