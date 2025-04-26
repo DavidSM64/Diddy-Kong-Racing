@@ -6,7 +6,8 @@
 #include "helpers/jsonHelper.h"
 #include "helpers/debugHelper.h"
 
-#include "misc/settings.hpp"
+#include "misc/args.h"
+#include "misc/globalSettings.h"
 
 #include "extract/extractor.h"
 #include "builder/builder.h"
@@ -18,20 +19,33 @@ using namespace DkrAssetsTool;
 /*******************************************************************************************************/
 
 int main(int argc, char *argv[]) {
+    DebugHelper::get().set_asserts();
+    
+    GlobalSettings::parse_values_from_json_file("dkr_assets_tool_settings.json");
+    //GlobalSettings::print_all_values();
+
+    Args::parse(argc, argv);
+
+    switch (Args::get_command()) {
+        default:
+            Args::print_help();
+            break;
+        case Args::ToolCommand::EXTRACT:
+            AssetExtractor::extract_all(Args::get<fs::path>("-o", ""));
+            break;
+    }
+    
+    /*
     argparse::ArgumentParser args(DKRAT_NAME, DKRAT_VERSION);
     
     DkrAssetsSettings settings;
     
-    /*** Extract tool ***/ 
     argparse::ArgumentParser extract("extract");
     
-    /*** Build tool ***/
     argparse::ArgumentParser builder("build");
     
-    /*** Pre-Build tool ***/
     argparse::ArgumentParser prebuild("prebuild");
     
-    /*** Test tool (For testing functionality) ***/
     argparse::ArgumentParser tester("test");
     
     builder.add_argument("-i", "--input")
@@ -98,4 +112,5 @@ int main(int argc, char *argv[]) {
     }
     
     return 0;
+    */
 }

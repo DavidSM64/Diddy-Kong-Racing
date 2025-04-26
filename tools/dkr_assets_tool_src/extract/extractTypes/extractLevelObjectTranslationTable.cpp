@@ -1,7 +1,5 @@
 #include "extractLevelObjectTranslationTable.h"
 
-using namespace DkrAssetsTool;
-
 #include <string>
 
 // Defines LOTT_ENTRY and LOTT_SIZE
@@ -11,20 +9,25 @@ using namespace DkrAssetsTool;
 #include "helpers/fileHelper.h"
 #include "helpers/assetsHelper.h"
 
-ExtractLOTT::ExtractLOTT(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
-    fs::path _outFilepath = _settings.pathToAssets / _info.get_out_filepath(".json");
-    DebugHelper::info_custom("Extracting Level Object Translation Table", YELLOW_TEXT, _outFilepath);
+#include "extract/stats.h"
+
+using namespace DkrAssetsTool;
+
+void ExtractLOTT::extract(ExtractInfo &info) {
+    DebugHelper::info_custom("Extracting Level Object Translation Table", YELLOW_TEXT, info.get_out_filepath(".json"));
     
-    WritableJsonFile jsonFile(_outFilepath);
+    const ExtractStats &stats = info.get_stats();
+    
+    WritableJsonFile &jsonFile = info.get_json_file();
     jsonFile.set_string("/type", "LevelObjectTranslationTable");
     
     std::vector<uint8_t> rawBytes;
-    _info.get_data_from_rom(rawBytes);
+    info.get_data_from_rom(rawBytes);
     
     // Make sure the table bytes are formatted correctly.
     DebugHelper::assert(
         (rawBytes.size() / sizeof(LOTT_ENTRY)) == LOTT_SIZE, 
-        "(ExtractLOTT::ExtractLOTT) LevelObjectTranslationTable data has an invalid size",
+        "(ExtractLOTT::extract) LevelObjectTranslationTable data has an invalid size",
         ". Raw binary size = ", rawBytes.size(), 
         ", Entry size = ", sizeof(LOTT_ENTRY), 
         ", Table size = ", LOTT_SIZE
@@ -45,12 +48,9 @@ ExtractLOTT::ExtractLOTT(DkrAssetsSettings &settings, ExtractInfo &info) : _sett
             jsonFile.set_null("/table/" + std::to_string(i));
             continue;
         }
-        std::string objectBuildId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_OBJECTS", entry);
+        std::string objectBuildId = stats.get_build_id_from_file_index("ASSET_OBJECTS", entry);
         jsonFile.set_string("/table/" + std::to_string(i), objectBuildId);
     }
     
-    jsonFile.save();
-}
-
-ExtractLOTT::~ExtractLOTT() {
+    info.write_json_file();
 }

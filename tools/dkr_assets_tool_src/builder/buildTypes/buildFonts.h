@@ -1,6 +1,18 @@
 #pragma once
 
 #include "builder/buildInfo.h"
+#include "helpers/c/cContext.h"
+
+namespace DkrAssetsTool {
+namespace BuildFonts {
+    void build(BuildInfo &info);
+}
+}
+
+/*
+#pragma once
+
+#include "builder/buildInfo.h"
 #include "misc/settings.hpp"
 
 #include "fileTypes/fonts.hpp"
@@ -18,7 +30,8 @@ private:
     DkrAssetsSettings &_settings;
     BuildInfo &_info;
     
-    JsonFile *_get_font_file(fs::path &localFontPath);
-    void _parse_ascii_encoding(JsonFile *fontJson, FontFile *fontFile);
+    std::reference_wrapper<JsonFile> _get_font_file(fs::path &localFontPath);
+    void _parse_ascii_encoding(const JsonFile &fontJson, FontFile *fontFile);
 };
 }
+*/

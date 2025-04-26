@@ -1,7 +1,5 @@
 #include "cEnumsHelper.h"
 
-using namespace DkrAssetsTool;
-
 #include <stdexcept>
 #include <sstream>
 
@@ -9,10 +7,13 @@ using namespace DkrAssetsTool;
 #include "helpers/regexHelper.h"
 #include "helpers/debugHelper.h"
 #include "helpers/stringHelper.h"
+#include "helpers/dataHelper.h"
 
 #include "libs/calculator.hpp"
 
 #include "cContext.h"
+
+using namespace DkrAssetsTool;
 
 const std::string C_ENUM_DEFINITION = R"((typedef)?\s*(enum)\s*([A-Za-z_][A-Za-z_0-9]*)?\s*\{([^}]*)\}\s*([A-Za-z_][A-Za-z_0-9]*)?\s*;)";
 const std::string C_ENUM_MEMBER = R"(\s*([A-Za-z_][A-Za-z0-9_]*)\s*((?:(?:=)\s*([^,]*))|(?:\,)|(?:$)))";
@@ -30,7 +31,7 @@ void CEnum::_evaluate_enum_symbols(std::string &enumValue) {
         int value;
         if(!get_value_of_member(symbol, value)) {
             // If the value is not a part of this enum, then go check to see if the context has it.
-            value = _context->get_int_value_of_symbol(symbol);
+            value = _context.get_int_value_of_symbol(symbol);
         }
         std::string valueAsString = std::to_string(value);
         enumValue = enumValue.replace(offset, symbol.length(), valueAsString);
@@ -59,10 +60,10 @@ int CEnum::_parse_enum_value(std::string &enumValue) {
     return _evaluate_enum(enumValue);
 }
 
-CEnum::CEnum(CContext *context) : _context(context) {
+CEnum::CEnum(CContext &context) : _context(context) {
 }
 
-CEnum::CEnum(CContext *context, const std::string &rawCode) : _context(context) {
+CEnum::CEnum(CContext &context, const std::string &rawCode) : _context(context) {
     RegexMatch *enumDefMatch = RegexHelper::get_first_match(rawCode, C_ENUM_DEFINITION);
     DebugHelper::assert(enumDefMatch != nullptr, "rawCode \"", rawCode, "\" is not valid.");
     
@@ -107,11 +108,11 @@ CEnum::CEnum(CContext *context, const std::string &rawCode) : _context(context) 
         nextValue++;
     }
     
-    _context->register_enum(this);
+    _context.register_enum(this);
 }
 
 CEnum::~CEnum() {
-    _context->deregister_enum(_name);
+    _context.deregister_enum(_name);
 }
 
 std::string CEnum::get_name() {
@@ -203,8 +204,7 @@ std::string WriteableCEnum::to_string() {
 
 const std::string LOOKFOR_C_ENUM_REGEX = R"(\s*(typedef)?\s*(enum)\s*([A-Za-z_][A-Za-z0-9_]*)\s*\{[^}]*\}\s*([A-Za-z_][A-Za-z0-9_]*)?\s*;)";
 
-// TODO: Implement these!
-void CEnumsHelper::get_enums_from_code(CContext *context, const std::string &code, std::vector<CEnum*> &out) {
+void CEnumsHelper::get_enums_from_code(CContext &context, const std::string &code, std::vector<CEnum*> &out) {
     std::vector<RegexMatch> matches;
     RegexHelper::get_matches(code, LOOKFOR_C_ENUM_REGEX, matches);
     
@@ -216,7 +216,13 @@ void CEnumsHelper::get_enums_from_code(CContext *context, const std::string &cod
     }
 }
 
-void CEnumsHelper::load_enums_from_file(CContext *context, fs::path filepath) {
+std::vector<fs::path> _loadedFiles;
+
+void CEnumsHelper::load_enums_from_file(CContext &context, fs::path filepath) {
+    if(DataHelper::vector_has(_loadedFiles, filepath)) {
+        return; // Already loaded. Don't do it again!
+    }
+    _loadedFiles.emplace_back(filepath);
     std::vector<CEnum*> dummy; // Not actually used.
     std::string cFileCode = FileHelper::read_text_file(filepath);
     get_enums_from_code(context, cFileCode, dummy);

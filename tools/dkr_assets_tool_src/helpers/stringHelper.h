@@ -15,6 +15,8 @@ namespace StringHelper {
     
     bool starts_with(const std::string &input, const std::string &sub);
     bool ends_with(const std::string &input, const std::string &sub);
+
+    bool is_a_number(const std::string& input);
     
     // Trim functions from: https://stackoverflow.com/a/25385766
     void rtrim(std::string &input); // Trim whitespace from the end of the string
@@ -24,6 +26,9 @@ namespace StringHelper {
     void remove_all_whitespace(std::string &input);
     
     void replace(std::string &input, std::string oldPattern, std::string newPattern);
+    
+    // Returns a string that is made lowercase, whitespace removed, and all dashes `-` and underscores `_` removed.
+    std::string simplify(const std::string& input);
     
     // Splits the input string by a single character into out, so "A,B,C" would be put into [A,B,C]. input is NOT modified!
     void split(std::string &input, const char delim, std::vector<std::string> &out);
@@ -36,6 +41,7 @@ namespace StringHelper {
     std::string upper_snake_case_to_pascal_case(const std::string &input);
     
     std::string to_hex(uint64_t value, int numDigits=0);
+    std::string to_uppercase_hex(uint64_t value, int numDigits = 0);
     
     // Returns offset + length of string + 1 (for null-terminator)
     size_t get_ascii_from_data(std::vector<uint8_t> &data, size_t offset, std::string &out);

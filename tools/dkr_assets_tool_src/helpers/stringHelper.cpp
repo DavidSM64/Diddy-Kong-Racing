@@ -1,12 +1,12 @@
 #include "stringHelper.h"
 
-using namespace DkrAssetsTool;
-
 #include "helpers/debugHelper.h"
 
 #include <algorithm>
 #include <sstream>
 #include <cstring> // for std::strchr
+
+using namespace DkrAssetsTool;
 
 bool StringHelper::has(const std::string &input, const char* substring) {
     return input.find(substring) != std::string::npos;
@@ -33,6 +33,10 @@ bool StringHelper::ends_with(const std::string &input, const std::string &sub) {
     return std::equal(input.begin() + input.size() - sub.size(), input.end(), sub.begin());
 }
 
+bool StringHelper::is_a_number(const std::string& input) {
+    return (!input.empty()) && (std::all_of(input.begin(), input.end(), ::isdigit));
+}
+
 const char* WHITESPACE = " \t\n\r\f\v";
 
 void StringHelper::rtrim(std::string& input) {
@@ -52,6 +56,17 @@ void StringHelper::remove_all_whitespace(std::string &input) {
     input.erase(std::remove_if(input.begin(), input.end(), [](char c) {
         return std::strchr(WHITESPACE, c) != nullptr;
     }), input.end());
+}
+
+std::string StringHelper::simplify(const std::string& input) {
+    std::string output(input); // Create a copy of the input
+
+    make_lowercase(output);
+    remove_all_whitespace(output);
+    replace(output, "-", ""); // Remove all dashes
+    replace(output, "_", ""); // Remove all underscores
+
+    return output;
 }
 
 void StringHelper::replace(std::string &input, std::string oldPattern, std::string newPattern) {
@@ -134,6 +149,12 @@ std::string StringHelper::to_hex(uint64_t value, int numDigits) {
     }
     ss << value;
     return ss.str();
+}
+
+std::string StringHelper::to_uppercase_hex(uint64_t value, int numDigits) {
+    std::string out = to_hex(value, numDigits);
+    make_uppercase(out);
+    return out;
 }
 
 // Returns offset + length of string + 1 (for null-terminator)

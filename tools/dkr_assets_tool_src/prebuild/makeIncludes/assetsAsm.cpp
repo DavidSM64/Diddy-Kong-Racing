@@ -10,6 +10,8 @@
 
 #include "helpers/c/cEnumsHelper.h"
 
+#include "misc/globalSettings.h"
+
 using namespace DkrAssetsTool;
 
 const std::string ASSETS_START_LABEL = "ASSETS_START";
@@ -18,12 +20,12 @@ const std::string ASSETS_SIZE_LABEL = ASSETS_END_LABEL + " - " + ASSETS_START_LA
     
 const std::string sectionsPtr = "/assets/sections";
 
-AssetsAsm::AssetsAsm(DkrAssetsSettings &settings) : _settings(settings) {
-    _preload_c_context();
+AssetsAsm::AssetsAsm() {
+    CEnumsHelper::load_enums_from_file(_cContext, GlobalSettings::get_decomp_path("include_subpath", "/include") / "enums.h");
     
-    _outFilepath = _settings.pathToAsm / "assets/assets.s";
+    _outFilepath = GlobalSettings::get_decomp_path("asm_subpath", "asm/") / "assets/assets.s";
     
-    _outPrefix = _settings.pathToBuild / "assets/";
+    _outPrefix = GlobalSettings::get_decomp_path("build_subpath", "build/") / "assets/";
     
     _write();
 }
@@ -48,10 +50,10 @@ void AssetsAsm::_write() {
 }
 
 void AssetsAsm::_write_asset_sections() {
-    JsonFile *mainJson = AssetsHelper::get_main_json(_settings);
+    JsonFile &mainJson = AssetsHelper::get_main_json();
     
     std::vector<std::string> mainOrder;
-    mainJson->get_array<std::string>("/assets/order", mainOrder);
+    mainJson.get_array<std::string>("/assets/order", mainOrder);
     
     _write_main_table(mainOrder);
     
@@ -72,11 +74,11 @@ void AssetsAsm::_write_asset_sections() {
     _asm.write_global_label(ASSETS_END_LABEL, true);
 }
 
-void AssetsAsm::_write_asset_section(JsonFile *mainJson, std::string &sectionId) {
+void AssetsAsm::_write_asset_section(const JsonFile &mainJson, std::string &sectionId) {
     std::string sectionPtr = sectionsPtr + "/" + sectionId;
         
-    bool isDeferred = mainJson->get_bool(sectionPtr + "/deferred");
-    std::string type = mainJson->get_string(sectionPtr + "/type");
+    bool isDeferred = mainJson.get_bool(sectionPtr + "/deferred");
+    std::string type = mainJson.get_string(sectionPtr + "/type");
     
     DebugHelper::assert(!type.empty(), "(AssetsAsm::_write_asset_sections) [", sectionPtr, 
         "] does not have a type in the main json file!");
@@ -93,17 +95,17 @@ void AssetsAsm::_write_asset_section(JsonFile *mainJson, std::string &sectionId)
     
     // Tables are handeled differently.
     if(type == "Table") {
-        std::string forSectionId = mainJson->get_string(sectionPtr + "/for");
+        std::string forSectionId = mainJson.get_string(sectionPtr + "/for");
         DebugHelper::assert(!forSectionId.empty(), "(AssetsAsm::_write_asset_sections) [", sectionPtr, 
             "] table does not have a \"for\" property!");
         std::string forSectionPtr = sectionsPtr + "/" + forSectionId;
-        bool isForDeferred = mainJson->get_bool(forSectionPtr + "/deferred");
+        bool isForDeferred = mainJson.get_bool(forSectionPtr + "/deferred");
         if(isForDeferred) {
             _write_deferred_asset_table(mainJson, forSectionPtr, forSectionId);
         } else {
             _write_asset_table(forSectionId);
         }
-        std::string forType = mainJson->get_string(forSectionPtr + "/type");
+        std::string forType = mainJson.get_string(forSectionPtr + "/type");
         
         if(forType == "TTGhost") {
             _asm.write_two_words("0xFFFF0000", forSectionId + "_END - " + forSectionId);
@@ -121,15 +123,12 @@ void AssetsAsm::_write_asset_section(JsonFile *mainJson, std::string &sectionId)
     
     // Not deferred, so write them out normally.
     
-    std::string filename = mainJson->get_string(sectionPtr + "/filename");
+    std::string filename = mainJson.get_string(sectionPtr + "/filename");
     
     DebugHelper::assert(!filename.empty(), "(AssetsAsm::_write_asset_sections) [", sectionPtr, 
         "] does not have a filename set in the main json file!");
     
-    JsonFile *assetSectionJson = AssetsHelper::get_asset_section_json(_settings, sectionId);
-    
-    DebugHelper::assert(assetSectionJson != nullptr, 
-        "(AssetsAsm::_write_asset) [", sectionPtr, "] Could not get section json!");
+    JsonFile &assetSectionJson = AssetsHelper::get_asset_section_json(sectionId);
         
     _write_asset(assetSectionJson);
 }
@@ -150,23 +149,23 @@ void AssetsAsm::_write_main_table(std::vector<std::string> &mainOrder) {
     _asm.write_newline();
 }
 
-void AssetsAsm::_write_deferred_asset(JsonFile *mainJson, const std::string &sectionPtr) {
+void AssetsAsm::_write_deferred_asset(const JsonFile &mainJson, const std::string &sectionPtr) {
     std::string deferInfoPtr = sectionPtr + "/defer-info";
     
-    std::string fromSectionId = mainJson->get_string(deferInfoPtr + "/from-section");
-    std::string idPostfix = mainJson->get_string(deferInfoPtr + "/id-postfix");
-    fs::path outputLocalPath = mainJson->get_path(deferInfoPtr + "/output-path");
+    std::string fromSectionId = mainJson.get_string(deferInfoPtr + "/from-section");
+    std::string idPostfix = mainJson.get_string(deferInfoPtr + "/id-postfix");
+    fs::path outputLocalPath = mainJson.get_path(deferInfoPtr + "/output-path");
     
-    JsonFile *fromSectionJson = AssetsHelper::get_asset_section_json(_settings, fromSectionId);
+    JsonFile &fromSectionJson = AssetsHelper::get_asset_section_json(fromSectionId);
     
     std::vector<std::string> sectionOrder;
-    fromSectionJson->get_array<std::string>("/files/order", sectionOrder);
+    fromSectionJson.get_array<std::string>("/files/order", sectionOrder);
     
-    fs::path fromSectionFolder = fromSectionJson->get_path("/folder");
+    fs::path fromSectionFolder = fromSectionJson.get_path("/folder");
     
     for(std::string &assetBuildId : sectionOrder) {
         std::string fileSectionPtr = "/files/sections/"+assetBuildId;
-        fs::path filename = fromSectionJson->get_string(fileSectionPtr+"/filename");
+        fs::path filename = fromSectionJson.get_string(fileSectionPtr+"/filename");
         filename.replace_extension(".bin");
         
         // TODO: This only works for LevelNames. 
@@ -176,13 +175,13 @@ void AssetsAsm::_write_deferred_asset(JsonFile *mainJson, const std::string &sec
     }
 }
 
-void AssetsAsm::_write_asset(JsonFile *assetSectionJson) {
-    fs::path folder = assetSectionJson->get_path("/folder");
+void AssetsAsm::_write_asset(const JsonFile &assetSectionJson) {
+    fs::path folder = assetSectionJson.get_path("/folder");
     
-    if(!assetSectionJson->has("/files")) {
+    if(!assetSectionJson.has("/files")) {
         // Single file asset.
-        if(assetSectionJson->has("/filename")) {
-            std::string filename = assetSectionJson->get_string("/filename");
+        if(assetSectionJson.has("/filename")) {
+            std::string filename = assetSectionJson.get_string("/filename");
             fs::path localFilepath = folder / filename;
             localFilepath.replace_extension(".bin");
             _asm.write_binary_include(_outPrefix / localFilepath);
@@ -191,14 +190,14 @@ void AssetsAsm::_write_asset(JsonFile *assetSectionJson) {
     }
     
     std::vector<std::string> sectionOrder;
-    assetSectionJson->get_array<std::string>("/files/order", sectionOrder);
+    assetSectionJson.get_array<std::string>("/files/order", sectionOrder);
     
     for(std::string &assetBuildId : sectionOrder) {
         std::string fileSectionPtr = "/files/sections/"+assetBuildId;
-        std::string filename = assetSectionJson->get_string(fileSectionPtr+"/filename");
+        std::string filename = assetSectionJson.get_string(fileSectionPtr+"/filename");
         DebugHelper::assert(!filename.empty(), "(AssetsAsm::_write_asset) [",
             fileSectionPtr,"] does not define a filename!");
-        fs::path localFolder = assetSectionJson->get_string(fileSectionPtr+"/folder");
+        fs::path localFolder = assetSectionJson.get_string(fileSectionPtr+"/folder");
         fs::path localFilepath = folder;
         if(!localFolder.empty()) {
             localFilepath /= localFolder;
@@ -213,29 +212,25 @@ void AssetsAsm::_write_asset(JsonFile *assetSectionJson) {
 }
 
 void AssetsAsm::_write_asset_table(const std::string &assetSectionId) {
-    JsonFile *targetSectionJson = AssetsHelper::get_asset_section_json(_settings, assetSectionId);
+    JsonFile &targetSectionJson = AssetsHelper::get_asset_section_json(assetSectionId);
     
-    if(targetSectionJson == nullptr) {
+    if(!targetSectionJson.has("/files")) {
         return;
     }
     
-    if(!targetSectionJson->has("/files")) {
-        return;
-    }
-    
-    std::string targetType = targetSectionJson->get_string("/type");
+    std::string targetType = targetSectionJson.get_string("/type");
     
     if(targetType == "MenuText") {
         // Write the number of entries in each language.
-        JsonFile *menuTextSection = AssetsHelper::get_asset_section_json(_settings, "ASSET_MENU_TEXT");
-        size_t numberOfTextEntries = menuTextSection->length_of_array("/menu-text-build-ids");
+        JsonFile &menuTextSection = AssetsHelper::get_asset_section_json("ASSET_MENU_TEXT");
+        size_t numberOfTextEntries = menuTextSection.length_of_array("/menu-text-build-ids");
         _asm.write_word(std::to_string(numberOfTextEntries));
     }
     
     bool first = true;
     
     std::vector<std::string> sectionOrder;
-    targetSectionJson->get_array<std::string>("/files/order", sectionOrder);
+    targetSectionJson.get_array<std::string>("/files/order", sectionOrder);
     for(std::string &assetBuildId : sectionOrder) {
         
         if(first && targetType == "Audio") {
@@ -248,8 +243,8 @@ void AssetsAsm::_write_asset_table(const std::string &assetSectionId) {
         if(targetType == "Miscellaneous") {
             tableEntry = "(" + tableEntry + ") / 4";
         } else if (targetType == "GameText") {
-            JsonFile *gameTextEntry = AssetsHelper::get_asset_json(_settings, assetSectionId, assetBuildId);
-            bool isDialog = gameTextEntry->get_string("/text-type") == "Dialog";
+            JsonFile &gameTextEntry = AssetsHelper::get_asset_json(assetSectionId, assetBuildId);
+            bool isDialog = gameTextEntry.get_string("/text-type") == "Dialog";
             if(isDialog) {
                 // Upper-most bit of the entry signifies that it is a dialog instead of a textbox.
                 tableEntry = "(" + tableEntry + ") | 0x80000000";
@@ -257,7 +252,7 @@ void AssetsAsm::_write_asset_table(const std::string &assetSectionId) {
         }
         
         if(targetType == "TTGhost") {
-            JsonFile *ghostJson = AssetsHelper::get_asset_json(_settings, assetSectionId, assetBuildId);
+            JsonFile &ghostJson = AssetsHelper::get_asset_json(assetSectionId, assetBuildId);
             std::string ghostInfo = _get_ghost_level_and_vehicle(ghostJson);
             _asm.write_two_words(ghostInfo, tableEntry);
             continue;
@@ -267,12 +262,12 @@ void AssetsAsm::_write_asset_table(const std::string &assetSectionId) {
     }
 }
 
-std::string AssetsAsm::_get_ghost_level_and_vehicle(JsonFile *ghostJson) {
-    std::string levelId = ghostJson->get_string("/header/level");
-    std::string vehicleId = ghostJson->get_string("/header/vehicle");
+std::string AssetsAsm::_get_ghost_level_and_vehicle(const JsonFile &ghostJson) {
+    std::string levelId = ghostJson.get_string("/header/level");
+    std::string vehicleId = ghostJson.get_string("/header/vehicle");
     
-    uint32_t levelIndex = (uint32_t)AssetsHelper::get_asset_index(_settings, "ASSET_LEVEL_HEADERS", levelId);
-    uint32_t vehicleIndex = (uint32_t)_c_context.get_int_value_of_symbol(vehicleId);
+    uint32_t levelIndex = (uint32_t)AssetsHelper::get_asset_index("ASSET_LEVEL_HEADERS", levelId);
+    uint32_t vehicleIndex = (uint32_t)_cContext.get_int_value_of_symbol(vehicleId);
     
     // First byte is the level index, second is the vehicle index. Bytes 3 & 4 are always zero.
     uint32_t word = ((levelIndex << 24) | (vehicleIndex << 16)) & 0xFFFF0000;
@@ -287,36 +282,20 @@ std::string AssetsAsm::_get_ghost_level_and_vehicle(JsonFile *ghostJson) {
     return ss.str();
 }
 
-
-void AssetsAsm::_write_deferred_asset_table(JsonFile *mainJson, const std::string &sectionPtr, const std::string &assetSectionId) {
+void AssetsAsm::_write_deferred_asset_table(const JsonFile &mainJson, const std::string &sectionPtr, const std::string &assetSectionId) {
     std::string deferInfoPtr = sectionPtr + "/defer-info";
     
-    std::string fromSectionId = mainJson->get_string(deferInfoPtr + "/from-section");
-    std::string idPostfix = mainJson->get_string(deferInfoPtr + "/id-postfix");
-    //fs::path outputLocalPath = mainJson->get_path(deferInfoPtr + "/output-path");
+    std::string fromSectionId = mainJson.get_string(deferInfoPtr + "/from-section");
+    std::string idPostfix = mainJson.get_string(deferInfoPtr + "/id-postfix");
+    //fs::path outputLocalPath = mainJson.get_path(deferInfoPtr + "/output-path");
     
-    JsonFile *fromSectionJson = AssetsHelper::get_asset_section_json(_settings, fromSectionId);
+    JsonFile &fromSectionJson = AssetsHelper::get_asset_section_json(fromSectionId);
     
     std::vector<std::string> sectionOrder;
-    fromSectionJson->get_array<std::string>("/files/order", sectionOrder);
+    fromSectionJson.get_array<std::string>("/files/order", sectionOrder);
     for(std::string &assetBuildId : sectionOrder) {
         // TODO: This only works for LevelNames. 
         //       Will need to be modified later since Object Animations aren't one-to-one with Object Models.
         _asm.write_word(assetBuildId + idPostfix + " - " + assetSectionId);
-    }
-}
-
-void AssetsAsm::_preload_c_context() {
-    fs::path includeFolder = _settings.pathToRepo / "include/";
-    
-    // No structs are needed.
-    
-    // Only need enums.h
-    fs::path enumPaths[] = {
-        includeFolder / "enums.h"
-    };
-    
-    for(fs::path enumPath : enumPaths) {
-        CEnumsHelper::load_enums_from_file(&_c_context, enumPath);
     }
 }

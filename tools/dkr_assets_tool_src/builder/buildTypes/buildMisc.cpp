@@ -2,63 +2,46 @@
 
 using namespace DkrAssetsTool;
 
+#include "fileTypes/misc.hpp"
+
 #include "helpers/dataHelper.h"
 #include "helpers/assetsHelper.h"
 #include "helpers/miscHelper.h"
+#include "helpers/debugHelper.h"
+#include "helpers/fileHelper.h"
+#include "helpers/jsonHelper.h"
+#include "helpers/c/cContext.h"
 
 #include <functional>
 #include <unordered_map>
 #include <cstring> // for std::strcpy & std::memset
 
-#define MISC_ARGS BuildInfo &info, size_t &outDataSize
-#define MISC_LAMDA(func) [this](MISC_ARGS) { return func(info, outDataSize); }
+#define MISC_ARGS BuildInfo &info_
+#define MISC_LAMDA(func) [](MISC_ARGS) { func(info_); }
 
 typedef void (*MiscFuncPtr)(MISC_ARGS);
 
-BuildMisc::BuildMisc(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
-    //std::string rawPath = info.srcFile->get_string("raw");
-    
-    std::string miscType = info.srcFile->get_string("/misc-type");
-    
-    const std::unordered_map<std::string, std::function<uint8_t *(MISC_ARGS)>> miscFunctions = {
-        {            "Binary", MISC_LAMDA(_build_binary)             },
-        {         "RacerStat", MISC_LAMDA(_build_racer_stat)         },
-        { "RacerAcceleration", MISC_LAMDA(_build_racer_acceleration) },
-        {          "TrackIds", MISC_LAMDA(_build_track_ids)          },
-        {        "MagicCodes", MISC_LAMDA(_build_magic_codes)        },
-        {  "TitleScreenDemos", MISC_LAMDA(_build_title_screen_demos) },
-    };
-    
-    size_t outDataSize;
-    uint8_t *outData = miscFunctions.at(miscType)(info, outDataSize);
-    
-    if(outData == nullptr) {
-       return;
-    }
-    
-    FileHelper::write_binary_file(outData, outDataSize, info.dstPath, true);
-    delete outData;
-}
-
-BuildMisc::~BuildMisc() {
-    
-}
-
-uint8_t *BuildMisc::_build_binary(BuildInfo &info, size_t &outDataSize) {
+void build_binary(BuildInfo &info) {
     std::string rawPath = info.srcFile->get_string("/raw");
     
-    DebugHelper::assert(!rawPath.empty(), "(BuildMisc::_build_binary) \"raw\" not specified!");
+    DebugHelper::assert(!rawPath.empty(), "(build_binary) \"raw\" not specified!");
     
-    // Copy file from rawPath to destination path.
-    FileHelper::copy(_info.localDirectory / rawPath, info.dstPath);
-    return nullptr;
+    if(info.build_to_file()) {
+        // Copy file from rawPath to destination path.
+        FileHelper::copy(info.localDirectory / rawPath, info.dstPath);
+    } else {
+        // Load raw binary into info's out
+        info.out = FileHelper::read_binary_file(info.localDirectory / rawPath);
+    }
 }
 
-uint8_t *BuildMisc::_build_racer_stat(BuildInfo &info, size_t &outDataSize) {
-    // Load enums
-    _preload_c_context();
+void build_racer_stat(BuildInfo &info) {
+    // Make sure the enums in "/include/enums.h" are loaded.
+    info.load_enums_into_c_context({ "enums.h" });
     
-    CEnum *characters = _c_context.get_enum("Character");
+    const CContext &cContext = info.get_c_context();
+    
+    CEnum *characters = cContext.get_enum("Character");
     
     int numberOfCharacters;
 
@@ -67,10 +50,11 @@ uint8_t *BuildMisc::_build_racer_stat(BuildInfo &info, size_t &outDataSize) {
         numberOfCharacters = characters->get_member_count();
     }
     
-    outDataSize = sizeof(be_float) * numberOfCharacters;
-    uint8_t *out = new uint8_t[outDataSize];
-    std::memset(out, 0, outDataSize); // zero out memory.
-    be_float *values = reinterpret_cast<be_float *>(out);
+    size_t outDataSize = sizeof(be_float) * numberOfCharacters;
+    
+    info.out.resize(outDataSize);
+    
+    be_float *values = reinterpret_cast<be_float *>(&info.out[0]);
     
     for(int i = 0; i < numberOfCharacters; i++) {
         std::string charId;
@@ -80,52 +64,44 @@ uint8_t *BuildMisc::_build_racer_stat(BuildInfo &info, size_t &outDataSize) {
         }
         values[i] = info.srcFile->get_float("/values/" + charId);
     }
-    
-    return out;
 }
 
-uint8_t *BuildMisc::_build_racer_acceleration(BuildInfo &info, size_t &outDataSize) {
-    size_t numberOfValues = _info.srcFile->length_of_array("/values");
+void build_racer_acceleration(BuildInfo &info) {
+    size_t numberOfValues = info.srcFile->length_of_array("/values");
     
-    outDataSize = sizeof(be_float) * numberOfValues;
+    size_t outDataSize = sizeof(be_float) * numberOfValues;
     outDataSize = DataHelper::align8(outDataSize); // Make sure the data is 16-byte aligned.
     
-    uint8_t *out = new uint8_t[outDataSize];
-    std::memset(out, 0, outDataSize); // zero out memory.
+    info.out.resize(outDataSize);
     
-    be_float *values = reinterpret_cast<be_float *>(out);
+    be_float *values = reinterpret_cast<be_float *>(&info.out[0]);
     
     for(size_t i = 0; i < numberOfValues; i++) {
         values[i] = info.srcFile->get_float("/values/" + std::to_string(i));
     }
-    
-    return out;
 }
 
-uint8_t *BuildMisc::_build_track_ids(BuildInfo &info, size_t &outDataSize) {
-    size_t numberOfIds = _info.srcFile->length_of_array("/ids");
-    outDataSize = DataHelper::align4(numberOfIds);
-    uint8_t *out = new uint8_t[outDataSize];
-    std::memset(out, 0, outDataSize); // zero out memory.
+void build_track_ids(BuildInfo &info) {
+    size_t numberOfIds = info.srcFile->length_of_array("/ids");
+    size_t outDataSize = DataHelper::align4(numberOfIds);
+    info.out.resize(outDataSize);
     
     for(size_t i = 0; i < numberOfIds; i++) {
         std::string ptr = "/ids/" + std::to_string(i);
         if(info.srcFile->is_value_null(ptr)) {
-             out[i] = 0xFF; // Marks the end of the list for some files.
+             info.out[i] = 0xFF; // Marks the end of the list for some files.
              continue;
         }
         std::string levelBuildId = info.srcFile->get_string(ptr);
-        out[i] = AssetsHelper::get_asset_index(_settings, "ASSET_LEVEL_HEADERS", levelBuildId);
+        info.out[i] = AssetsHelper::get_asset_index("ASSET_LEVEL_HEADERS", levelBuildId);
     }
-    
-    return out;
 }
 
-uint8_t *BuildMisc::_build_magic_codes(BuildInfo &info, size_t &outDataSize) {
-    size_t numberOfCheats = _info.srcFile->length_of_array("/cheats");
+void build_magic_codes(BuildInfo &info) {
+    size_t numberOfCheats = info.srcFile->length_of_array("/cheats");
     
     // The first two bytes are the total number of cheats
-    outDataSize = sizeof(be_int16_t);
+    size_t outDataSize = sizeof(be_int16_t);
     
     // Then comes the lookup table.
     outDataSize += (numberOfCheats) * sizeof(be_int16_t) * 2;
@@ -137,8 +113,8 @@ uint8_t *BuildMisc::_build_magic_codes(BuildInfo &info, size_t &outDataSize) {
         std::string cheatPtr = "/cheats/" + std::to_string(i);
         
         // +1 for null terminator
-        size_t codeLen = _info.srcFile->length_of_string(cheatPtr + "/code") + 1;
-        size_t descLen = _info.srcFile->length_of_string(cheatPtr + "/description") + 1;
+        size_t codeLen = info.srcFile->length_of_string(cheatPtr + "/code") + 1;
+        size_t descLen = info.srcFile->length_of_string(cheatPtr + "/description") + 1;
         
         outDataSize += codeLen + descLen;
     }
@@ -146,9 +122,9 @@ uint8_t *BuildMisc::_build_magic_codes(BuildInfo &info, size_t &outDataSize) {
     // Make sure cheats data is 16-byte aligned.
     outDataSize = DataHelper::align16(outDataSize);
     
-    uint8_t *out = new uint8_t[outDataSize];
-    std::memset(out, 0, outDataSize); // zero out memory.
-    be_int16_t *cheatsTable = reinterpret_cast<be_int16_t *>(&out[0]);
+    info.out.resize(outDataSize);
+    
+    be_int16_t *cheatsTable = reinterpret_cast<be_int16_t *>(&info.out[0]);
     
     // Set number of cheats.
     cheatsTable[0] = numberOfCheats;
@@ -158,47 +134,46 @@ uint8_t *BuildMisc::_build_magic_codes(BuildInfo &info, size_t &outDataSize) {
     // Second loop to write the data for each cheat entry.
     for(size_t i = 0; i < numberOfCheats; i++) {
         std::string cheatPtr = "/cheats/" + std::to_string(i);
-        std::string code = _info.srcFile->get_string(cheatPtr + "/code");
-        std::string description = _info.srcFile->get_string(cheatPtr + "/description");
+        std::string code = info.srcFile->get_string(cheatPtr + "/code");
+        std::string description = info.srcFile->get_string(cheatPtr + "/description");
         
         entries[i].codeOffset = offsetToText;
         offsetToText += code.size() + 1; // +1 for null terminator
         entries[i].descOffset = offsetToText;
         offsetToText += description.size() + 1; // +1 for null terminator
         
-        char *codeOut = reinterpret_cast<char *>(&out[entries[i].codeOffset]);
-        char *descriptionOut = reinterpret_cast<char *>(&out[entries[i].descOffset]);
+        char *codeOut = reinterpret_cast<char *>(&info.out[entries[i].codeOffset]);
+        char *descriptionOut = reinterpret_cast<char *>(&info.out[entries[i].descOffset]);
         
-        // Copy strings to out.
+        // Copy strings to info.out.
         std::strcpy(codeOut, code.c_str());
         std::strcpy(descriptionOut, description.c_str());
     }
     
+    /*
     if(_settings.debugBuildKeepUncompressed) {
         fs::path unencryptedCheatsPath = _settings.pathToBuild / "debug/cheats" / info.dstPath.filename();
-        FileHelper::write_binary_file(out, outDataSize, unencryptedCheatsPath, true);
+        FileHelper::write_binary_file(info.out, outDataSize, unencryptedCheatsPath, true);
     }
+    */
     
-    MiscHelper::process_cheats_encryption(out, outDataSize); // Encrypt the cheats data.
-    
-    return out;
+    MiscHelper::process_cheats_encryption(info.out.data(), outDataSize); // Encrypt the cheats data.
 }
 
-uint8_t *BuildMisc::_build_title_screen_demos(BuildInfo &info, size_t &outDataSize) {
-    size_t numberOfEntries = _info.srcFile->length_of_array("/entries");
+void build_title_screen_demos(BuildInfo &info) {
+    size_t numberOfEntries = info.srcFile->length_of_array("/entries");
     
     size_t entriesSize = ((numberOfEntries + 1) * 3);
-    outDataSize = DataHelper::align8(entriesSize);
+    size_t outDataSize = DataHelper::align8(entriesSize);
     
-    uint8_t *out = new uint8_t[outDataSize];
-    std::memset(out, 0, outDataSize); // zero out memory.
+    info.out.resize(outDataSize);
     
-    TitleScreenDemos *demos = reinterpret_cast<TitleScreenDemos *>(out);
+    TitleScreenDemos *demos = reinterpret_cast<TitleScreenDemos *>(&info.out[0]);
     
     for(size_t i = 0; i < numberOfEntries; i++) {
         std::string ptr = "/entries/" + std::to_string(i);
-        std::string levelBuildId = _info.srcFile->get_string(ptr + "/level");
-        demos[i].levelId = AssetsHelper::get_asset_index(_settings, "ASSET_LEVEL_HEADERS", levelBuildId);
+        std::string levelBuildId = info.srcFile->get_string(ptr + "/level");
+        demos[i].levelId = AssetsHelper::get_asset_index("ASSET_LEVEL_HEADERS", levelBuildId);
         
         // Different default values for the title screen.
         int defaultNumberOfPlayers = 0;
@@ -207,23 +182,28 @@ uint8_t *BuildMisc::_build_title_screen_demos(BuildInfo &info, size_t &outDataSi
             defaultNumberOfPlayers = -2;
             defaultCutsceneId = 100;
         }
-        demos[i].numberOfPlayers = _info.srcFile->get_int(ptr + "/number-of-players", defaultNumberOfPlayers);
-        demos[i].cutsceneId = _info.srcFile->get_int(ptr + "/cutscene-id", defaultCutsceneId);
+        demos[i].numberOfPlayers = info.srcFile->get_int(ptr + "/number-of-players", defaultNumberOfPlayers);
+        demos[i].cutsceneId = info.srcFile->get_int(ptr + "/cutscene-id", defaultCutsceneId);
     }
     demos[numberOfEntries].levelId = 0xFF; // Mark end of data with 0xFF.
-    
-    return out;
 }
 
-void BuildMisc::_preload_c_context() {
-    fs::path includeFolder = _settings.pathToRepo / "include/";
+void BuildMisc::build(BuildInfo &info) {
     
-    // Load all enums from these files.
-    fs::path enumPaths[] = {
-        includeFolder / "enums.h"
+    std::string miscType = info.srcFile->get_string("/misc-type");
+    
+    const std::unordered_map<std::string, std::function<void(MISC_ARGS)>> miscFunctions = {
+        {            "Binary", MISC_LAMDA(build_binary)             },
+        {         "RacerStat", MISC_LAMDA(build_racer_stat)         },
+        { "RacerAcceleration", MISC_LAMDA(build_racer_acceleration) },
+        {          "TrackIds", MISC_LAMDA(build_track_ids)          },
+        {        "MagicCodes", MISC_LAMDA(build_magic_codes)        },
+        {  "TitleScreenDemos", MISC_LAMDA(build_title_screen_demos) },
     };
     
-    for(fs::path &enumPath : enumPaths) {
-        CEnumsHelper::load_enums_from_file(&_c_context, enumPath);
+    miscFunctions.at(miscType)(info);
+    
+    if(info.build_to_file()) {
+        info.write_out_to_dstPath();
     }
 }

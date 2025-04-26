@@ -2,16 +2,16 @@
 
 using namespace DkrAssetsTool;
 
-BuildParticleBehavior::BuildParticleBehavior(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
+void BuildParticleBehavior::build(BuildInfo &info) {
     std::string rawPath = info.srcFile->get_string("/raw");
     
     DebugHelper::assert(!rawPath.empty(), "(BuildParticleBehavior::BuildParticleBehavior) \"raw\" not specified!");
     
-    // Copy file from rawPath to destination path.
-    FileHelper::copy(_info.localDirectory / rawPath, _info.dstPath);
+    if(info.build_to_file()) {
+        // Copy file from rawPath to destination path.
+        FileHelper::copy(info.localDirectory / rawPath, info.dstPath);
+    } else {
+        // Load raw binary into info's out
+        info.out = FileHelper::read_binary_file(info.localDirectory / rawPath);
+    }
 }
-
-BuildParticleBehavior::~BuildParticleBehavior() {
-    
-}
-

@@ -1,30 +1,36 @@
 #include "buildObjectModel.h"
 
-using namespace DkrAssetsTool;
-
 #include "helpers/debugHelper.h"
 #include "helpers/stringHelper.h"
 
 #include "buildModel/objModel.h"
 #include "buildModel/gltfModel.h"
 
-BuildObjectModel::BuildObjectModel(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
+using namespace DkrAssetsTool;
+
+void BuildObjectModel::build(BuildInfo &info) {
     // Vanilla models will just use the original raw binary.
     if(info.srcFile->has("/raw")) {
         std::string rawPath = info.srcFile->get_string("/raw");
         
         // Copy file from rawPath to destination path.
-        FileHelper::copy(_info.localDirectory / rawPath, info.dstPath);
+        if(info.build_to_file()) {
+            // Copy file from rawPath to destination path.
+            FileHelper::copy(info.localDirectory / rawPath, info.dstPath);
+        } else {
+            // Load raw binary into info's out
+            info.out = FileHelper::read_binary_file(info.localDirectory / rawPath);
+        }
         return;
     }
     
-    // Custom models should support .obj (simple static models) and .gltf
+    // Custom models should support .obj (simple static models) and .gltf (for animated models)
     
     std::string localPathToModel = info.srcFile->get_string("/model");
     
-    DebugHelper::assert_(!localPathToModel.empty(), "(BuildObjectModel::BuildObjectModel) \"model\" property not specified!");
+    DebugHelper::assert_(!localPathToModel.empty(), "(BuildObjectModel::build) \"model\" property not specified!");
     
-    fs::path modelPath = _info.localDirectory / localPathToModel;
+    fs::path modelPath = info.localDirectory / localPathToModel;
     
     std::string modelExtension = modelPath.extension().generic_string();
     
@@ -32,16 +38,11 @@ BuildObjectModel::BuildObjectModel(DkrAssetsSettings &settings, BuildInfo &info)
     StringHelper::make_lowercase(modelExtension);
     
     if(modelExtension == ".obj") {
-        ObjBuildModel objModel(modelPath, settings);
+        ObjBuildModel objModel(modelPath);
         objModel.generate_object_model(info.dstPath);
     } else if(modelExtension == ".gltf") {
-        DebugHelper::error("TODO: GLTF support");
+        DebugHelper::error("(BuildObjectModel::build) TODO: GLTF support");
     } else {
-        DebugHelper::error("Unsupported model type: \"", modelExtension, "\"");
+        DebugHelper::error("(BuildObjectModel::build) Unsupported model type: \"", modelExtension, "\"");
     }
 }
-
-BuildObjectModel::~BuildObjectModel() {
-    
-}
-

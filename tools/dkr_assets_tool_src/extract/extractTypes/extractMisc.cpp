@@ -1,7 +1,5 @@
 #include "extractMisc.h"
 
-using namespace DkrAssetsTool;
-
 #include "fileTypes/misc.hpp"
 
 #include "helpers/jsonHelper.h"
@@ -13,68 +11,43 @@ using namespace DkrAssetsTool;
 #include <functional>
 #include <string>
 
-#define MISC_ARGS WritableJsonFile &jsonFile, std::vector<uint8_t> &rawBytes
-#define MISC_LAMDA(func) [this](MISC_ARGS) { func(jsonFile, rawBytes); }
+#define MISC_ARGS ExtractInfo &info
+#define MISC_LAMDA(func) [](MISC_ARGS) { func(info); }
+
+using namespace DkrAssetsTool;
 
 typedef void (*MiscFuncPtr)(MISC_ARGS);
 
-ExtractMisc::ExtractMisc(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
-    fs::path _outFilepath = _settings.pathToAssets / _info.get_out_filepath(".json");
-    DebugHelper::info_custom("Extracting Miscellaneous", YELLOW_TEXT, _outFilepath);
-    
-    _miscType = _info.get_tag<std::string>("miscType", "Binary");
-    
-    WritableJsonFile jsonFile(_outFilepath);
-    jsonFile.set_string("/type", "Miscellaneous");
-    jsonFile.set_string("/misc-type", _miscType);
-    
+void extract_binary(ExtractInfo &info) {
+    WritableJsonFile &jsonFile = info.get_json_file();
+    jsonFile.set_string("/raw", info.get_filename(".bin"));
+    info.write_raw_data_file();
+}
+
+void extract_racer_stat(ExtractInfo &info) {
+    WritableJsonFile &jsonFile = info.get_json_file();
     std::vector<uint8_t> rawBytes;
-    _info.get_data_from_rom(rawBytes);
+    info.get_data_from_rom(rawBytes);
     
-    const std::unordered_map<std::string, std::function<void(MISC_ARGS)>> miscFunctions = {
-        {            "Binary", MISC_LAMDA(_extract_binary)             },
-        {         "RacerStat", MISC_LAMDA(_extract_racer_stat)         },
-        { "RacerAcceleration", MISC_LAMDA(_extract_racer_acceleration) },
-        {          "TrackIds", MISC_LAMDA(_extract_track_ids)          },
-        {        "MagicCodes", MISC_LAMDA(_extract_magic_codes)        },
-        {  "TitleScreenDemos", MISC_LAMDA(_extract_title_screen_demos) },
-    };
-    
-    // Make sure the misc type has a function to extract it.
-    DebugHelper::assert(miscFunctions.find(_miscType) != miscFunctions.end(), 
-        "(ExtractMisc::ExtractMisc) Misc type \"", _miscType, " has extract function associated with it.");
-    
-    // Call the specific _extract_* function based on misc type.
-    miscFunctions.at(_miscType)(jsonFile, rawBytes);
-    
-    jsonFile.save();
-}
-
-ExtractMisc::~ExtractMisc() {
-}
-
-void ExtractMisc::_extract_binary(WritableJsonFile &jsonFile, std::vector<uint8_t> &rawBytes) {
-    fs::path _outRawFilepath = _settings.pathToAssets / _info.get_out_filepath(".bin");
-    jsonFile.set_string("/raw", _info.get_filename(".bin"));
-    FileHelper::write_binary_file(rawBytes, _outRawFilepath, true);
-}
-
-void ExtractMisc::_extract_racer_stat(WritableJsonFile &jsonFile, std::vector<uint8_t> &rawBytes) {
     const int racerStatFloatRound = 2; // Round float to 2 decimal places.
     
     be_float *values = reinterpret_cast<be_float *>(&rawBytes[0]);
-    CEnum *characters = _info.c_context->get_enum("Character");
+    CEnum *characters = info.get_c_context().get_enum("Character");
     
     size_t numberOfFloats = rawBytes.size() / 4;
     for(size_t i = 0; i < numberOfFloats; i++) {
         std::string charId; 
         DebugHelper::assert(characters->get_symbol_of_value(i, charId), 
-            "(ExtractMisc::_extract_racer_stat) Enum \"Character\" does not have the index: ", i);
+            "(extract_racer_stat) Enum \"Character\" does not have the index: ", i);
         jsonFile.set_float("/values/" + charId, values[i], racerStatFloatRound);
     }
 }
 
-void ExtractMisc::_extract_racer_acceleration(WritableJsonFile &jsonFile, std::vector<uint8_t> &rawBytes) {
+void extract_racer_acceleration(ExtractInfo &info) {
+    WritableJsonFile &jsonFile = info.get_json_file();
+    std::vector<uint8_t> rawBytes;
+    info.get_data_from_rom(rawBytes);
+    
     const int racerAccelFloatRound = 2; // Round float to 2 decimal places.
     
     be_float *floats = reinterpret_cast<be_float *>(&rawBytes[0]);
@@ -90,7 +63,11 @@ void ExtractMisc::_extract_racer_acceleration(WritableJsonFile &jsonFile, std::v
     }
 }
 
-void ExtractMisc::_extract_track_ids(WritableJsonFile &jsonFile, std::vector<uint8_t> &rawBytes) {
+void extract_track_ids(ExtractInfo &info) {
+    WritableJsonFile &jsonFile = info.get_json_file();
+    std::vector<uint8_t> rawBytes;
+    info.get_data_from_rom(rawBytes);
+    
     size_t endPoint = rawBytes.size();
     
     // Get last non-zero value as the real end point. (Avoid padding)
@@ -106,18 +83,17 @@ void ExtractMisc::_extract_track_ids(WritableJsonFile &jsonFile, std::vector<uin
             continue;
         }
         
-        std::string levelBuildId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_LEVEL_HEADERS", rawBytes[i]);
+        std::string levelBuildId = AssetsHelper::get_build_id_of_index("ASSET_LEVEL_HEADERS", rawBytes[i]);
         jsonFile.set_string(ptr, levelBuildId);
     }
 }
 
-void ExtractMisc::_extract_magic_codes(WritableJsonFile &jsonFile, std::vector<uint8_t> &rawBytes) {
-    MiscHelper::process_cheats_encryption(rawBytes); // Decrypt the cheats data.
+void extract_magic_codes(ExtractInfo &info) {
+    WritableJsonFile &jsonFile = info.get_json_file();
+    std::vector<uint8_t> rawBytes;
+    info.get_data_from_rom(rawBytes);
     
-    if(_settings.debugExtractKeepUncompressed) {
-        fs::path unencryptedCheatsPath = _settings.pathToAssets / "debug/cheats" / _info.get_filename(".bin");
-        FileHelper::write_binary_file(rawBytes, unencryptedCheatsPath, true);
-    }
+    MiscHelper::process_cheats_encryption(rawBytes); // Decrypt the cheats data.
     
     be_int16_t *cheatsTable = reinterpret_cast<be_int16_t *>(&rawBytes[0]);
     
@@ -139,7 +115,11 @@ void ExtractMisc::_extract_magic_codes(WritableJsonFile &jsonFile, std::vector<u
     
 }
 
-void ExtractMisc::_extract_title_screen_demos(WritableJsonFile &jsonFile, std::vector<uint8_t> &rawBytes) {
+void extract_title_screen_demos(ExtractInfo &info) {
+    WritableJsonFile &jsonFile = info.get_json_file();
+    std::vector<uint8_t> rawBytes;
+    info.get_data_from_rom(rawBytes);
+    
     TitleScreenDemos *demos = reinterpret_cast<TitleScreenDemos *>(&rawBytes[0]);
     
     size_t numberOfDemos = rawBytes.size() / 3;
@@ -151,7 +131,7 @@ void ExtractMisc::_extract_title_screen_demos(WritableJsonFile &jsonFile, std::v
         
         std::string ptr = "/entries/" + std::to_string(i);
         
-        std::string levelBuildId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_LEVEL_HEADERS", demos[i].levelId);
+        std::string levelBuildId = AssetsHelper::get_build_id_of_index("ASSET_LEVEL_HEADERS", demos[i].levelId);
         
         jsonFile.set_string(ptr + "/level", levelBuildId);
         
@@ -164,4 +144,32 @@ void ExtractMisc::_extract_title_screen_demos(WritableJsonFile &jsonFile, std::v
             jsonFile.set_int_if_not_value(ptr + "/cutscene-id", demos[i].cutsceneId, 100);
         }
     }
+}
+
+void ExtractMisc::extract(ExtractInfo &info) {
+    DebugHelper::info_custom("Extracting Miscellaneous", YELLOW_TEXT, info.get_out_filepath(".json"));
+    
+    std::string miscType = info.get_tag<std::string>("miscType", "Binary");
+    
+    WritableJsonFile &jsonFile = info.get_json_file();
+    jsonFile.set_string("/type", "Miscellaneous");
+    jsonFile.set_string("/misc-type", miscType);
+    
+    const std::unordered_map<std::string, std::function<void(MISC_ARGS)>> miscFunctions = {
+        {            "Binary", MISC_LAMDA(extract_binary)             },
+        {         "RacerStat", MISC_LAMDA(extract_racer_stat)         },
+        { "RacerAcceleration", MISC_LAMDA(extract_racer_acceleration) },
+        {          "TrackIds", MISC_LAMDA(extract_track_ids)          },
+        {        "MagicCodes", MISC_LAMDA(extract_magic_codes)        },
+        {  "TitleScreenDemos", MISC_LAMDA(extract_title_screen_demos) },
+    };
+    
+    // Make sure the misc type has a function to extract it.
+    DebugHelper::assert(miscFunctions.find(miscType) != miscFunctions.end(), 
+        "(ExtractMisc::ExtractMisc) Misc type \"", miscType, " has extract function associated with it.");
+    
+    // Call the specific _extract_* function based on misc type.
+    miscFunctions.at(miscType)(info);
+    
+    info.write_json_file();
 }

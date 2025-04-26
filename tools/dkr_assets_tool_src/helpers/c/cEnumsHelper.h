@@ -13,8 +13,8 @@ class CContext;
 
 class CEnum {
 public:
-    CEnum(CContext *context); // Empty enum
-    CEnum(CContext *context, const std::string &rawCode); // Parse from a enum string.
+    CEnum(CContext &context); // Empty enum
+    CEnum(CContext &context, const std::string &rawCode); // Parse from a enum string.
     ~CEnum();
     
     std::string get_name();
@@ -33,7 +33,7 @@ public:
     std::unordered_map<std::string, int>::iterator get_end_iterator();
     
 private:
-    CContext *_context;
+    CContext &_context;
     std::unordered_map<std::string, int> _members;
     
      // Multiple keys may have the same value, that is the reason for the vector here.
@@ -65,7 +65,7 @@ private:
 };
 
 namespace CEnumsHelper {
-    void get_enums_from_code(CContext *context, const std::string &code, std::vector<CEnum*> &out);
-    void load_enums_from_file(CContext *context, fs::path filepath);
+    void get_enums_from_code(CContext &context, const std::string &code, std::vector<CEnum*> &out);
+    void load_enums_from_file(CContext &context, fs::path filepath);
 }
 }

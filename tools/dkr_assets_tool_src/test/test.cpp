@@ -11,6 +11,8 @@
 #include "helpers/c/cStructHelper.h"
 #include "helpers/c/cContext.h"
 
+#include "misc/globalSettings.h"
+
 using namespace DkrAssetsTool;
 
 void test_string_helper() {
@@ -222,7 +224,7 @@ void test_regex_helper() {
     test_regex_engine(RegexEngine::PCRE2);
 }
 
-void test_cstruct_helper_engine(RegexEngine engine, DkrAssetsSettings &settings) {
+void test_cstruct_helper_engine(RegexEngine engine) {
     if(!RegexHelper::set_engine(engine)) {
         DebugHelper::warn("Regex engine ", engine, " is not implemented!");
         return;
@@ -246,7 +248,7 @@ void test_cstruct_helper_engine(RegexEngine engine, DkrAssetsSettings &settings)
         };
     )";
     
-    CStruct test0(&ctx, input);
+    CStruct test0(ctx, input);
     
     DebugHelper::assert(test0.is_trivial(), "Failed test 0.0 (struct was not trivial)");
     DebugHelper::assert(test0.get_byte_size() == 16, "Failed test 0.1 (struct was incorrect size, was ", test0.get_byte_size(), " when it should be 16)");
@@ -271,7 +273,7 @@ void test_cstruct_helper_engine(RegexEngine engine, DkrAssetsSettings &settings)
             s16 x, y, z; // Position in level
         } LevelObjectEntryCommon;
     )";
-    CStruct entryCommon(&ctx, input);
+    CStruct entryCommon(ctx, input);
     
     input = R"(
         typedef struct LevelObjectEntry_Racer {
@@ -283,7 +285,7 @@ void test_cstruct_helper_engine(RegexEngine engine, DkrAssetsSettings &settings)
         } LevelObjectEntry_Racer;
     )";
     
-    CStruct test1(&ctx, input);
+    CStruct test1(ctx, input);
     DebugHelper::assert(!test1.is_trivial(), "Failed test 1.0 (struct was trivial)");
     DebugHelper::assert(test1.get_byte_size() == 16, "Failed test 1.1 (struct size incorrect, was ", test1.get_byte_size(), " when it should be 16)");
     DebugHelper::assert(test1.get_entry(1)->get_hint_type() == "Angle", "Failed test 1.2 (Invalid hint type, was \"", test1.get_entry(1)->get_hint_type(), 
@@ -305,7 +307,7 @@ void test_cstruct_helper_engine(RegexEngine engine, DkrAssetsSettings &settings)
             s16 x, y, z; // Position in level
         } LevelObjectEntryCommon;
     )";
-    CStruct entryCommon2(&ctx, input);
+    CStruct entryCommon2(ctx, input);
     
     input = R"(
         typedef struct LevelObjectEntry_Exit {
@@ -382,7 +384,7 @@ void test_cstruct_helper_engine(RegexEngine engine, DkrAssetsSettings &settings)
             };
         } LevelObjectEntry_Exit;
     )";
-    CStruct test2(&ctx, input);
+    CStruct test2(ctx, input);
     
     DebugHelper::assert(!test2.is_trivial(), "Failed test 2.0 (struct was trivial)");
     
@@ -394,8 +396,8 @@ void test_cstruct_helper_engine(RegexEngine engine, DkrAssetsSettings &settings)
     
     DebugHelper::DebugTimer timer2;
     
-    fs::path levelObjectEntriesFilepath = settings.pathToRepo / "include/level_object_entries.h";
-    CStructHelper::load_structs_from_file(&ctx, levelObjectEntriesFilepath);
+    fs::path levelObjectEntriesFilepath = GlobalSettings::get_decomp_path("include_subpath", "/include") / "level_object_entries.h";
+    CStructHelper::load_structs_from_file(ctx, levelObjectEntriesFilepath);
     
     DebugHelper::info(YELLOW_TEXT, "Took ", timer2.elapsed(), " to parse level_object_entries.h", RESET_TEXT);
     
@@ -432,12 +434,12 @@ void test_cstruct_helper_engine(RegexEngine engine, DkrAssetsSettings &settings)
     DebugHelper::info(GREEN_TEXT, "C Struct Helper (using regex engine \"", regexEngineName, "\") passed all tests!", RESET_TEXT, " Took ", timer.elapsed());
 }
 
-void test_cstruct_helper(DkrAssetsSettings &settings) {
-    test_cstruct_helper_engine(RegexEngine::STL, settings);
-    test_cstruct_helper_engine(RegexEngine::PCRE2, settings);
+void test_cstruct_helper() {
+    test_cstruct_helper_engine(RegexEngine::STL);
+    test_cstruct_helper_engine(RegexEngine::PCRE2);
 }
 
-void test_cenum_helper_engine(RegexEngine engine, DkrAssetsSettings &settings) {
+void test_cenum_helper_engine(RegexEngine engine) {
     if(!RegexHelper::set_engine(engine)) {
         DebugHelper::warn("Regex engine ", engine, " is not implemented!");
         return;
@@ -457,7 +459,7 @@ void test_cenum_helper_engine(RegexEngine engine, DkrAssetsSettings &settings) {
             FOO_BAR_4 = 123
         } Test;
     )";
-    CEnum testEnum(&ctx, input);
+    CEnum testEnum(ctx, input);
     
     input = R"(
         typedef enum Test2 {
@@ -468,7 +470,7 @@ void test_cenum_helper_engine(RegexEngine engine, DkrAssetsSettings &settings) {
             AE = FOO_BAR_4 | AD
         } Test2;
     )";
-    CEnum test0(&ctx, input);
+    CEnum test0(ctx, input);
     
     DebugHelper::assert(ctx.get_int_value_of_symbol("AA") == -1, "Failed test 0.1 (AA has the incorrect value)");
     DebugHelper::assert(ctx.get_int_value_of_symbol("AB") == 2, "Failed test 0.2 (AB has the incorrect value)");
@@ -479,8 +481,8 @@ void test_cenum_helper_engine(RegexEngine engine, DkrAssetsSettings &settings) {
     ctx.clear_enums();
     
     // Test enums.h
-    fs::path enumsFilepath = settings.pathToRepo / "include/enums.h";
-    CEnumsHelper::load_enums_from_file(&ctx, enumsFilepath);
+    fs::path enumsFilepath = GlobalSettings::get_decomp_path("include_subpath", "/include") / "enums.h";
+    CEnumsHelper::load_enums_from_file(ctx, enumsFilepath);
     
     // Check a single member from each enum.
     DebugHelper::assert(ctx.get_int_value_of_symbol("VEHICLE_PLANE") == 2, "Failed test 1.1 (VEHICLE_PLANE has the incorrect value)");
@@ -496,19 +498,14 @@ void test_cenum_helper_engine(RegexEngine engine, DkrAssetsSettings &settings) {
     DebugHelper::info(GREEN_TEXT, "C Enum Helper (using regex engine \"", regexEngineName, "\") passed all tests!", RESET_TEXT, " Took ", timer.elapsed());
 }
 
-void test_cenum_helper(DkrAssetsSettings &settings) {
-    test_cenum_helper_engine(RegexEngine::STL, settings);
-    test_cenum_helper_engine(RegexEngine::PCRE2, settings);
+void test_cenum_helper() {
+    test_cenum_helper_engine(RegexEngine::STL);
+    test_cenum_helper_engine(RegexEngine::PCRE2);
 }
 
-TestDKRAT::TestDKRAT(DkrAssetsSettings &settings) : _settings(settings) {
+void Test::test_all() {
     DebugHelper::info("Testing helpers!");
-    //test_string_helper();
     test_regex_helper();
-    test_cstruct_helper(_settings);
-    test_cenum_helper(_settings);
-}
-
-TestDKRAT::~TestDKRAT() {
-    
+    test_cstruct_helper();
+    test_cenum_helper();
 }

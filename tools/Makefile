@@ -1,5 +1,5 @@
 # Make `OPT` -g for better debugging info.
-OPT := -O2
+OPT := -g
 CC := gcc
 CXX := g++
 CFLAGS := -I . -Wall -Wextra -Wno-unused-parameter -pedantic -std=c99 $(OPT) -s

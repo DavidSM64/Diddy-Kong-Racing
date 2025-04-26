@@ -1,24 +1,29 @@
 #include "extractSprite.h"
 
-using namespace DkrAssetsTool;
+#include <optional>
+#include <string>
 
 #include "fileTypes/sprite.hpp"
 
 #include "helpers/jsonHelper.h"
 #include "helpers/assetsHelper.h"
 
-ExtractSprite::ExtractSprite(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
-    fs::path _outFilepath = _settings.pathToAssets / _info.get_out_filepath(".json");
-    DebugHelper::info_custom("Extracting Sprite", YELLOW_TEXT, _outFilepath);
+#include "extract/stats.h"
+
+using namespace DkrAssetsTool;
+
+void ExtractSprite::extract(ExtractInfo &info) {
+    DebugHelper::info_custom("Extracting Sprite", YELLOW_TEXT, info.get_out_filepath(".json"));
     
-    WritableJsonFile jsonFile(_outFilepath);
+    WritableJsonFile &jsonFile = info.get_json_file();
     
     std::vector<uint8_t> rawBytes;
-    _info.get_data_from_rom(rawBytes);
+    info.get_data_from_rom(rawBytes);
     
     SpriteHeader *spriteHeader = reinterpret_cast<SpriteHeader *>(&rawBytes[0]);
     
-    std::string texBuildId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_TEXTURES_2D", spriteHeader->startTextureIndex);
+    
+    std::string texBuildId = info.get_stats().get_build_id_from_file_index("ASSET_TEXTURES_2D", spriteHeader->startTextureIndex);
     
     jsonFile.set_string("/type", "Sprite");
     jsonFile.set_string("/start-texture", texBuildId);
@@ -34,8 +39,5 @@ ExtractSprite::ExtractSprite(DkrAssetsSettings &settings, ExtractInfo &info) : _
         jsonFile.set_int(frameTexCountPtr + "/" + std::to_string(i), data[i + 1] - data[i]);
     }
     
-    jsonFile.save();
-}
-
-ExtractSprite::~ExtractSprite() {
+    info.write_json_file();
 }

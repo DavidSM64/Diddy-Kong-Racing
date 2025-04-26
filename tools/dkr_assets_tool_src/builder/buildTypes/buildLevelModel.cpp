@@ -2,16 +2,17 @@
 
 using namespace DkrAssetsTool;
 
-BuildLevelModel::BuildLevelModel(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
+void BuildLevelModel::build(BuildInfo &info) {
     std::string rawPath = info.srcFile->get_string("/raw");
     
-    DebugHelper::assert(!rawPath.empty(), "(BuildLevelModel::BuildLevelModel) \"raw\" not specified!");
+    DebugHelper::assert(!rawPath.empty(), "(BuildLevelModel::build) \"raw\" not specified!");
     
-    // Copy file from rawPath to destination path.
-    FileHelper::copy(_info.localDirectory / rawPath, info.dstPath);
-}
-
-BuildLevelModel::~BuildLevelModel() {
-    
+     if(info.build_to_file()) {
+        // Copy file from rawPath to destination path.
+        FileHelper::copy(info.localDirectory / rawPath, info.dstPath);
+    } else {
+        // Load raw binary into info's out
+        info.out = FileHelper::read_binary_file(info.localDirectory / rawPath);
+    }
 }
 

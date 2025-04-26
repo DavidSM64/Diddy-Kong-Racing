@@ -1,24 +1,24 @@
 #include "extractMenuText.h"
 
-using namespace DkrAssetsTool;
-
 #include "fileTypes/types.hpp"
 
 #include "helpers/jsonHelper.h"
 
-ExtractMenuText::ExtractMenuText(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
-    fs::path _outFilepath = _settings.pathToAssets / _info.get_out_filepath(".json");
-    DebugHelper::info_custom("Extracting Menu Text", YELLOW_TEXT, _outFilepath);
+using namespace DkrAssetsTool;
+
+void ExtractMenuText::extract(ExtractInfo &info) {
+    DebugHelper::info_custom("Extracting Menu Text", YELLOW_TEXT, info.get_out_filepath(".json"));
     
     std::vector<uint8_t> rawBytes;
-    _info.get_data_from_rom(rawBytes);
+    info.get_data_from_rom(rawBytes);
+    /*
+    DkrExtractMenuTextSection &menuTextConfig = info.assetSection->specific.menuText; 
+    std::string language = info.get_tag<std::string>("language", "");
     
-    DkrExtractMenuTextSection &menuTextConfig = _info.assetSection->specific.menuText; 
-    std::string language = _info.get_tag<std::string>("language", "");
+    DebugHelper::assert(!language.empty(), 
+        "(ExtractMenuText::extract) Language not set for ", info.get_out_filepath(".json"));
     
-    DebugHelper::assert(!language.empty(), "(ExtractMenuText::ExtractMenuText) Language not set for ", _outFilepath);
-    
-    WritableJsonFile jsonFile(_outFilepath);
+    WritableJsonFile &jsonFile = info.get_json_file();
     
     jsonFile.set_string("/language", language);
     jsonFile.set_string("/type", "MenuText");
@@ -43,10 +43,6 @@ ExtractMenuText::ExtractMenuText(DkrAssetsSettings &settings, ExtractInfo &info)
         //jsonFile.set_string(orderPtr + "/" + std::to_string(i), textBuildId);
         jsonFile.set_string(sectionsPtr + "/" + textBuildId, text);
     }
-    
-    jsonFile.save();
+    */
+    info.write_json_file();
 }
-
-ExtractMenuText::~ExtractMenuText() {
-}
-

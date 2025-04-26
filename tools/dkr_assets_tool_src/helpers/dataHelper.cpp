@@ -1,4 +1,6 @@
 #include "dataHelper.h"
+#include "libs/sha1.hpp"
+#include <streambuf>
 
 using namespace DkrAssetsTool;
 
@@ -25,3 +27,29 @@ bool DataHelper::is_power_of_two(uint32_t value) {
     }
     return (value & (value - 1)) == 0; 
 }
+
+// As far as I know, this is needed to convert a std::vector<uint8_t> into a std::istream
+class VectorStreamBuf : public std::streambuf {
+public:
+    VectorStreamBuf(const std::vector<uint8_t>& vec) {
+        char* begin = reinterpret_cast<char*>(const_cast<uint8_t*>(vec.data()));
+        this->setg(begin, begin, begin + vec.size());
+    }
+};
+
+std::string make_sha1_hash_of_bytes(const std::vector<uint8_t>& bytes) {
+    VectorStreamBuf buf(bytes);
+    std::istream stream(&buf); // Need an std::istream for the sha1 library.
+    SHA1 sha1;
+    sha1.update(stream);
+    return sha1.final();
+}
+
+std::string DataHelper::make_sha1_hash_of_bytes(BytesView bytes) {
+    BytesViewStreamBuf buf(bytes);
+    std::istream stream(&buf); // Need an std::istream for the sha1 library.
+    SHA1 sha1;
+    sha1.update(stream);
+    return sha1.final();
+}
+

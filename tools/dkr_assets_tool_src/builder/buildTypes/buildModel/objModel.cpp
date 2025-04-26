@@ -5,7 +5,7 @@
 
 using namespace DkrAssetsTool;
 
-ObjBuildModel::ObjBuildModel(fs::path filepath, DkrAssetsSettings &settings) {
+ObjBuildModel::ObjBuildModel(fs::path filepath) {
     DebugHelper::warn("Obj file: ", filepath);
     
     std::string objText = FileHelper::read_text_file(filepath);
@@ -34,9 +34,9 @@ ObjBuildModel::ObjBuildModel(fs::path filepath, DkrAssetsSettings &settings) {
             double z = std::stod(components[3]);
             
             // Scale the model according that is specified in settings.
-            settings.adjust_from_model_scale(x);
-            settings.adjust_from_model_scale(y);
-            settings.adjust_from_model_scale(z);
+            //settings.adjust_from_model_scale(x);
+            //settings.adjust_from_model_scale(y);
+           // settings.adjust_from_model_scale(z);
             
             // Add the new vertex
             vertices.emplace_back(Vec3f(x, y, z));

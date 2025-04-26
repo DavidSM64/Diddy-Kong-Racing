@@ -5,6 +5,7 @@ using namespace DkrAssetsTool;
 #include <string>
 #include <sstream>
 
+#include "helpers/dataHelper.h"
 #include "helpers/debugHelper.h"
 #include "helpers/regexHelper.h"
 #include "helpers/stringHelper.h"
@@ -13,7 +14,7 @@ using namespace DkrAssetsTool;
 #include "cContext.h"
 #include "cTypes.h"
 
-CStructEntry::CStructEntry(CContext *context, CStruct *parent, std::string &type, std::string &pointer, std::string &name, 
+CStructEntry::CStructEntry(CContext &context, CStruct *parent, std::string &type, std::string &pointer, std::string &name, 
     std::string &arrayBrackets, std::string hint) : type(type), pointer(pointer), name(name), arrayBrackets(arrayBrackets), 
     _context(context), _parent(parent) {
         // Make sure the strings have no whitespace. Makes processing easier.
@@ -191,7 +192,7 @@ size_t CStructEntry::get_byte_size() {
         outSize = CTypes::get_size_of_type(type);
         if(outSize == 0) { 
             // Not a trivial type, try to get it from global context.
-            outSize = _context->get_size_of_element(type);
+            outSize = _context.get_size_of_element(type);
         }
     }
     
@@ -323,16 +324,16 @@ void CStructEntry::_calc_array_multiplier() {
     }
 }
 
-CContext *CStructEntry::get_context() {
+CContext &CStructEntry::get_context() {
     return _context;
 }
 
-CStruct::CStruct(CContext *context) : _context(context) {
+CStruct::CStruct(CContext &context) : _context(context) {
 }
 
 CStruct::~CStruct() {
     // Should be fine to call even if the struct is already not registered.
-    _context->deregister_struct(_name);
+    _context.deregister_struct(_name);
     
     for(CStructEntry *entry : _entries) {
         delete entry;
@@ -477,7 +478,7 @@ int get_next_member(const std::string &structCode, int offsetInCode, CStructMemb
     return out.end;
 }
 
-CStruct::CStruct(CContext *context, const std::string &rawCode) : _context(context) {
+CStruct::CStruct(CContext &context, const std::string &rawCode) : _context(context) {
     RegexMatch *structDefMatch = RegexHelper::get_first_match(rawCode, C_STRUCT_DEFINITION);
     DebugHelper::assert(structDefMatch != nullptr, "rawCode \"", rawCode, "\" is not valid.");
     
@@ -563,7 +564,7 @@ CStruct::CStruct(CContext *context, const std::string &rawCode) : _context(conte
     }
     
     _calc_trivialness();
-    _context->register_struct(this);
+    _context.register_struct(this);
 }
 
 std::string CStruct::get_name() {
@@ -650,7 +651,7 @@ void CStruct::_calc_trivialness() {
 
 const std::string LOOKFOR_C_STRUCT_REGEX = R"(\s*(typedef)?\s*(struct|union)\s*([A-Za-z_][A-Za-z0-9_]*)\s*\{)";
 
-void CStructHelper::get_structs_from_code(CContext *context, const std::string &code, std::vector<CStruct*> &out) {
+void CStructHelper::get_structs_from_code(CContext &context, const std::string &code, std::vector<CStruct*> &out) {
     size_t codeLength = code.length();
     size_t curPos = 0;
     RegexMatch *currentMatch = RegexHelper::get_first_match(code, LOOKFOR_C_STRUCT_REGEX, curPos);
@@ -678,7 +679,13 @@ void CStructHelper::get_structs_from_code(CContext *context, const std::string &
     
 }
 
-void CStructHelper::load_structs_from_file(CContext *context, fs::path filepath) {
+std::vector<fs::path> _loadedStructFiles;
+
+void CStructHelper::load_structs_from_file(CContext &context, fs::path filepath) {
+    if(DataHelper::vector_has(_loadedStructFiles, filepath)) {
+        return; // Already loaded. Don't do it again!
+    }
+    _loadedStructFiles.emplace_back(filepath);
     std::vector<CStruct*> dummy; // Not actually used.
     std::string cFileCode = FileHelper::read_text_file(filepath);
     get_structs_from_code(context, cFileCode, dummy);

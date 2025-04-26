@@ -36,10 +36,10 @@ void CContext::deregister_struct(std::string &structName) {
     _structsByName.erase(structName);
 }
 
-CStruct *CContext::get_struct(const std::string &structName) {
+CStruct *CContext::get_struct(const std::string &structName) const {
     DebugHelper::assert(_structsByName.find(structName) != _structsByName.end(), 
         "(CContext::get_struct) struct \"", structName, "\" is not defined!");
-    return _structsByName[structName];
+    return _structsByName.at(structName);
 }
 
 // Returns 0 if element was not found.
@@ -88,10 +88,10 @@ void CContext::deregister_enum(std::string &enumName) {
     _enumsByName.erase(enumName);
 }
 
-CEnum *CContext::get_enum(const std::string &enumName) {
+CEnum *CContext::get_enum(const std::string &enumName) const {
     DebugHelper::assert(_enumsByName.find(enumName) != _enumsByName.end(), 
         "(CContext::get_enum) enum \"", enumName, "\" is not defined!");
-    return _enumsByName[enumName];
+    return _enumsByName.at(enumName);
 }
 
 void CContext::clear_enums() {
@@ -100,16 +100,16 @@ void CContext::clear_enums() {
 }
 
 // Currently just gets loaded enum values.
-int CContext::get_int_value_of_symbol(const std::string &symbolName) {
+int CContext::get_int_value_of_symbol(const std::string &symbolName) const {
     if(_enumValues.find(symbolName) != _enumValues.end()) {
-        return _enumValues[symbolName];
+        return _enumValues.at(symbolName);
     }
     DebugHelper::error("(CContext::get_int_value_of_symbol) Could not evaluate the symbol \"", symbolName, "\"");
     return 0;
 }
 
 
-std::string CContext::get_symbol_of_enum_int(std::string enumName, int index) {
+std::string CContext::get_symbol_of_enum_int(std::string enumName, int index) const {
     CEnum *e = get_enum(enumName);
     DebugHelper::assert(e != nullptr, "(CContext::get_symbol_of_enum_int) Enum \"", enumName, "\" does not exist!");
     std::string out;

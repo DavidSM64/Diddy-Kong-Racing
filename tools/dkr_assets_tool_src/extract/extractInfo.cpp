@@ -1,8 +1,16 @@
 #include "extractInfo.h"
 
+#include <sstream>
+
+#include "misc/globalSettings.h"
+
+#include "stats.h"
+
 using namespace DkrAssetsTool;
 
-#include <sstream>
+/*****************************************************/
+
+std::unordered_map<std::string, std::vector<ExtractInfo>> _extractions;
 
 void DeferredExtractions::add_extraction(std::string key, ExtractInfo newExtract) {
     if(_extractions.find(key) == _extractions.end()) {
@@ -21,120 +29,109 @@ ExtractInfo &DeferredExtractions::get_extraction(std::string key, size_t index) 
 
 /*****************************************************/
 
-ExtractInfo::ExtractInfo(std::string &type, fs::path filename, fs::path folder, DkrExtractROM *rom, DkrExtractConfig *config, CContext *ctx, uint32_t dataOffset, size_t dataLength, size_t fileIndex) 
-: rom(rom), config(config), c_context(ctx), _type(type), _filename(filename), _folder(folder), _dataOffset(dataOffset), _dataLength(dataLength), _fileIndex(fileIndex), _isAsset(false)
+ExtractInfo::ExtractInfo(std::string &type, std::string buildId, fs::path filename, fs::path folder, BytesView view, AssetExtractConfig &config, std::string sectionPtr, CContext &ctx, size_t fileIndex, ExtractStats &stats) 
+:  _type(type), _buildId(buildId), _filename(filename), _folder(folder), _view(view), _sectionPtr(sectionPtr), _config(config), _cContext(ctx), _stats(stats), _fileIndex(fileIndex)
 {
-    _check_params();
-}
-
-ExtractInfo::ExtractInfo(std::string &type, fs::path filename, fs::path folder, DkrExtractROM *rom, DkrExtractConfig *config, CContext *ctx, uint32_t dataOffset, size_t dataLength, size_t fileIndex, DkrExtractAssetSection *assetSection) 
-: assetSection(assetSection), rom(rom), config(config), c_context(ctx), _type(type), _filename(filename), _folder(folder), _dataOffset(dataOffset), _dataLength(dataLength), _fileIndex(fileIndex), _isAsset(true)
-{
-    if(_filename.empty()) {
-        DebugHelper::error("No filename was set for the type \"", _type, "\" in the folder \"", folder, "\"");
-    }
-    _check_params();
+    DebugHelper::assert_(!_filename.empty(),
+        "(ExtractInfo::ExtractInfo) No filename was set for the type \"", _type, "\" in the folder \"", folder, "\"");
+    DebugHelper::assert_(!_buildId.empty(),
+        "(ExtractInfo::ExtractInfo) No build id was set for the filename \"", _filename, "\"");
+    
+    //DebugHelper::info(_filename, " was created!");
 }
 
 ExtractInfo::~ExtractInfo(){
-    
+    //DebugHelper::warn(_filename, " is being deleted!");
 }
 
 void ExtractInfo::set_tag(const std::string &key, const std::any value) {
     _tags[key] = value;
 }
 
-/*
-void ExtractInfo::set_tag_as_array(const std::string &key, size_t numElements) {
-    _tags[key] = std::vector<ExtractInfoTagValue>(numElements);
-}
-
-void ExtractInfo::add_elem_to_tag_array(const std::string &key, ExtractInfoTagValue elem, int32_t index) {
-    std::vector<ExtractInfoTagValue> &arr = std::get<std::vector<ExtractInfoTagValue>>(_tags[key]);
-    if(index < 0) {
-        arr.push_back(elem);
-        return;
-    }
-    arr[index] = elem;
-}
-*/
-
-bool ExtractInfo::is_asset() {
-    return _isAsset;
-}
-
-std::string ExtractInfo::get_type() {
+std::string ExtractInfo::get_type() const {
     return _type;
 }
 
-fs::path ExtractInfo::get_folder() {
+std::string ExtractInfo::get_build_id() const {
+    return _buildId;
+}
+
+fs::path ExtractInfo::get_folder() const {
     return _folder;
 }
 
-fs::path ExtractInfo::get_filename(const char *extension) {
+fs::path ExtractInfo::get_filename(std::string extension) const {
     fs::path out = _filename;
-    if(extension[0] != '\0') {
+    if(!extension.empty()) {
         out.replace_extension(extension);
     }
     return out;
 }
 
-uint32_t ExtractInfo::get_data_offset() {
-    return _dataOffset;
+const CContext &ExtractInfo::get_c_context() const {
+    return _cContext.value();
 }
 
-size_t ExtractInfo::get_data_size() {
-    return _dataLength;
+const AssetExtractConfig &ExtractInfo::get_config() const {
+    return _config.value();
 }
 
-size_t ExtractInfo::get_file_index() {
+ExtractStats &ExtractInfo::get_stats() const {
+    return _stats.value();
+}
+
+size_t ExtractInfo::get_file_index()  const{
     return _fileIndex;
 }
 
-fs::path ExtractInfo::get_out_filepath(const char *extension) {
-    fs::path out = _folder / _filename;
-    if(assetSection != nullptr) {
-        out = assetSection->folder / out;
-    }
-    if(extension[0] != '\0') {
+fs::path ExtractInfo::get_out_filepath(std::string extension) const {
+    fs::path out = get_out_folder() / _filename;
+    if(!extension.empty()) {
         out.replace_extension(extension);
     }
     return out;
 }
 
-fs::path ExtractInfo::get_out_folder() {
-    fs::path out = _folder;
-    if(assetSection != nullptr) {
-        out = assetSection->folder / out;
-    }
-    return out;
+fs::path ExtractInfo::get_out_folder() const {
+    return _folder;
 }
 
-void ExtractInfo::get_data_from_rom(std::vector<uint8_t> &out) {
-    rom->get_data(_dataOffset, _dataLength, out);
+const BytesView &ExtractInfo::get_view() const {
+    return _view;
 }
 
-void ExtractInfo::write_rom_data_to_file(fs::path finalFilepath, uint32_t offset, int32_t length) {
-    if(length < 0) {
-        length = (int32_t)_dataLength;
-        if(length < 1) {
-            DebugHelper::info_verbose("Auto-set length to ", _dataLength);
-        }
+size_t ExtractInfo::get_data_size() const {
+    return _view.size();
+}
+
+// TODO: Remove this in favor of just getting the byte-view
+void ExtractInfo::get_data_from_rom(std::vector<uint8_t> &out, size_t offset, size_t length) {
+    if(length == (size_t)-1) {
+        length = _view.size();
     }
-    if(length < 1) {
-        DebugHelper::error("(ExtractInfo::write_rom_data_to_file) Invalid length of ", length, " for path ", finalFilepath);
+    out = std::vector<uint8_t>(_view.data() + offset, _view.data() + offset + length);
+}
+    
+WritableJsonFile &ExtractInfo::get_json_file() {
+    _make_sure_json_file_is_defined();
+    return _jsonFile.value();
+}
+
+void ExtractInfo::write_json_file() {
+    _make_sure_json_file_is_defined();
+    _jsonFile.value().save();
+}
+
+void ExtractInfo::write_raw_data_file() {
+    fs::path outPath = GlobalSettings::get_decomp_path_to_vanilla_assets() / get_out_filepath(".bin");
+    FileHelper::write_binary_file(_view, outPath, true);
+}
+
+void ExtractInfo::_make_sure_json_file_is_defined() {
+    if(_jsonFile.has_value()) {
+        return;
     }
     
-    if((size_t)(offset + length) > _dataLength) {
-        DebugHelper::error("(ExtractInfo::write_rom_data_to_file) Out of bounds! (offset + length) was larger than dataLength for path ", finalFilepath);
-    }
-    
-    rom->write_rom_section_to_binary_file(finalFilepath, _dataOffset + offset, length);
-}
-
-void ExtractInfo::_check_params() {
-    if(_type == "GameText") {
-        _tags["dialog"] = (_dataOffset & 0x80000000) != 0;
-        _dataOffset &= 0x7FFFFFFF;
-    }
+    fs::path outPath = GlobalSettings::get_decomp_path_to_vanilla_assets() / get_out_filepath(".json");
+    _jsonFile = WritableJsonFile(outPath);
 }

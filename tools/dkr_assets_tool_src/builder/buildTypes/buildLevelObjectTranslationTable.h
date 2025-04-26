@@ -1,6 +1,18 @@
 #pragma once
 
 #include "builder/buildInfo.h"
+#include "helpers/c/cContext.h"
+
+namespace DkrAssetsTool {
+namespace BuildLOTT {
+    void build(BuildInfo &info);
+}
+}
+
+/*
+#pragma once
+
+#include "builder/buildInfo.h"
 #include "misc/settings.hpp"
 
 #include "fileTypes/fonts.hpp"
@@ -19,3 +31,4 @@ private:
     BuildInfo &_info;
 };
 }
+*/

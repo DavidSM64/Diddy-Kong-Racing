@@ -1,7 +1,5 @@
 #include "buildTexture.h"
 
-using namespace DkrAssetsTool;
-
 #include <cmath> // for std::round
 
 #include "helpers/dataHelper.h"
@@ -9,33 +7,51 @@ using namespace DkrAssetsTool;
 #include "helpers/gzipHelper.h"
 #include "fileTypes/texture.hpp"
 
-BuildTexture::BuildTexture(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
-    std::vector<uint8_t> out(_calculate_out_size());
+using namespace DkrAssetsTool;
+
+size_t calculate_out_size(BuildInfo &info) {
+    int numberOfTextures = info.srcFile->length_of_array("/images");
+    std::string format = info.srcFile->get_string_uppercase("/format", DEFAULT_TEXTURE_FORMAT);
     
-    int numberOfTextures = _info.srcFile->length_of_array("/images");
-    std::string format = _info.srcFile->get_string_uppercase("/format", DEFAULT_TEXTURE_FORMAT);
+    size_t sizeOfAllImages = 0;
     
-    bool isCompressed = _info.srcFile->get_bool("/compressed");
-    bool isFlipped = _info.srcFile->get_bool("/flipped-image", false);
-    int frameAdvanceDelay = std::round(_info.srcFile->get_float("/frame-advance-delay", 0) * TEXTURE_FPS);
-    std::string renderMode = _info.srcFile->get_string("/render-mode", "OPAQUE");
+    for(int i = 0; i < numberOfTextures; i++) {
+        fs::path localImagePath = info.srcFile->get_string("/images/" + std::to_string(i));
+        fs::path filepath = info.localDirectory / localImagePath;
+        
+        sizeOfAllImages += ImageHelper::image_size(filepath, format);
+    }
     
-    int spriteX = _info.srcFile->get_int("/sprite-x", 0);
-    int spriteY = _info.srcFile->get_int("/sprite-y", 0);
+    return (numberOfTextures * sizeof(TextureHeader)) + sizeOfAllImages;
+}
+
+void BuildTexture::build(BuildInfo &info) {
+    info.out.resize(calculate_out_size(info));
     
-    bool writeSize = _info.srcFile->get_bool("/write-size");
+    int numberOfTextures = info.srcFile->length_of_array("/images");
+    std::string format = info.srcFile->get_string_uppercase("/format", DEFAULT_TEXTURE_FORMAT);
+    
+    bool isCompressed = info.srcFile->get_bool("/compressed");
+    bool isFlipped = info.srcFile->get_bool("/flipped-image", false);
+    int frameAdvanceDelay = std::round(info.srcFile->get_float("/frame-advance-delay", 0) * TEXTURE_FPS);
+    std::string renderMode = info.srcFile->get_string("/render-mode", "OPAQUE");
+    
+    int spriteX = info.srcFile->get_int("/sprite-x", 0);
+    int spriteY = info.srcFile->get_int("/sprite-y", 0);
+    
+    bool writeSize = info.srcFile->get_bool("/write-size");
     
     uint8_t formatVal = DataHelper::vector_index_of<std::string>(TEXTURE_FORMAT_INT_TO_STRING, format);
     uint8_t renderModeVal = DataHelper::vector_index_of<std::string>(TEXTURE_RENDER_MODES, renderMode);
     
     size_t currentOffset = 0;
     
-    bool wrapSClamped = _info.srcFile->get_string_lowercase("/flags/wrap-s", "wrap") == "clamp";
-    bool wrapTClamped = _info.srcFile->get_string_lowercase("/flags/wrap-t", "wrap") == "clamp";
-    bool antiAliased = _info.srcFile->get_bool("/flags/anti-aliased");
-    bool semiTransparent = _info.srcFile->get_bool("/flags/semi-transparent");
-    bool cutout = _info.srcFile->get_bool("/flags/cutout");
-    bool interlaced = _info.srcFile->get_bool("/flags/interlaced");
+    bool wrapSClamped = info.srcFile->get_string_lowercase("/flags/wrap-s", "wrap") == "clamp";
+    bool wrapTClamped = info.srcFile->get_string_lowercase("/flags/wrap-t", "wrap") == "clamp";
+    bool antiAliased = info.srcFile->get_bool("/flags/anti-aliased");
+    bool semiTransparent = info.srcFile->get_bool("/flags/semi-transparent");
+    bool cutout = info.srcFile->get_bool("/flags/cutout");
+    bool interlaced = info.srcFile->get_bool("/flags/interlaced");
     
     // TODO: Make flags not hardcoded!
     be_int16_t flags = (
@@ -48,7 +64,7 @@ BuildTexture::BuildTexture(DkrAssetsSettings &settings, BuildInfo &info) : _sett
     );
     
     for(int i = 0; i < numberOfTextures; i++) {
-        TextureHeader *header = reinterpret_cast<TextureHeader *>(&out[currentOffset]);
+        TextureHeader *header = reinterpret_cast<TextureHeader *>(&info.out[currentOffset]);
         
         header->format = (renderModeVal << 4) | formatVal;
         header->spriteX = spriteX;
@@ -59,11 +75,11 @@ BuildTexture::BuildTexture(DkrAssetsSettings &settings, BuildInfo &info) : _sett
         header->flags = flags;
         
         currentOffset += sizeof(TextureHeader);
-        uint8_t *textureData = &out[currentOffset];
+        uint8_t *textureData = &info.out[currentOffset];
         
-        fs::path localImgPath = _info.srcFile->get_string("/images/" + std::to_string(i));
+        fs::path localImgPath = info.srcFile->get_string("/images/" + std::to_string(i));
         
-        N64Image img(_info.localDirectory / localImgPath, format);
+        N64Image img(info.localDirectory / localImgPath, format);
         
         int imgWidth = img.get_width();
         int imgHeight = img.get_height();
@@ -94,57 +110,36 @@ BuildTexture::BuildTexture(DkrAssetsSettings &settings, BuildInfo &info) : _sett
     }
     
     if(!writeSize) {
-        // Make sure `out` is 16-byte aligned.
-        while(out.size() % 16 != 0) {
-            out.push_back(0);
+        // Make sure `out` is 16-byte aligned only for this specific case?
+        while(info.out.size() % 16 != 0) {
+            info.out.push_back(0);
         }
     }
     
+    /*
     if(_settings.debugBuildKeepUncompressed) {
         // Have the uncompressed binary in a seperate directory in the build folder.
-        fs::path outUncompressedPath = _settings.pathToBuild / "debug/textures" /  (_info.dstPath.stem().string() + ".bin");
+        fs::path outUncompressedPath = _settings.pathToBuild / "debug/textures" /  (info.dstPath.stem().string() + ".bin");
         FileHelper::write_binary_file(out, outUncompressedPath, true);
     }
+    */
     
     if(isCompressed) {
         std::vector<uint8_t> compressedHeader;
         
         // Copy header from first texture into compressedHeader vector.
-        compressedHeader.insert(compressedHeader.end(), out.begin(), out.begin() + sizeof(TextureHeader));
+        compressedHeader.insert(compressedHeader.end(), info.out.begin(), info.out.begin() + sizeof(TextureHeader));
         
         TextureHeader *compressedTexHeader = reinterpret_cast<TextureHeader *>(&compressedHeader[0]);
         compressedTexHeader->isCompressed = 1; // Very important for this to be set for compressed textures!
         
-        // out is garbled at this point, so don't use it after this point!
-        std::vector<uint8_t> compressedOut = GzipHelper::compress_gzip(out);
+        info.out = GzipHelper::compress_gzip(info.out);
         
         // Add the compressed header to the start of compressedOut
-        compressedOut.insert(compressedOut.begin(), compressedHeader.begin(), compressedHeader.end());
-        
-        FileHelper::write_binary_file(compressedOut, _info.dstPath, true);
-    
-        return;
+        info.out.insert(info.out.begin(), compressedHeader.begin(), compressedHeader.end());
     }
     
-    FileHelper::write_binary_file(out, _info.dstPath, true);
-}
-
-BuildTexture::~BuildTexture() {
-    
-}
-
-size_t BuildTexture::_calculate_out_size() {
-    int numberOfTextures = _info.srcFile->length_of_array("/images");
-    std::string format = _info.srcFile->get_string_uppercase("/format", DEFAULT_TEXTURE_FORMAT);
-    
-    size_t sizeOfAllImages = 0;
-    
-    for(int i = 0; i < numberOfTextures; i++) {
-        fs::path localImagePath = _info.srcFile->get_string("/images/" + std::to_string(i));
-        fs::path filepath = _info.localDirectory / localImagePath;
-        
-        sizeOfAllImages += ImageHelper::image_size(filepath, format);
+    if(info.build_to_file()) {
+        info.write_out_to_dstPath();
     }
-    
-    return (numberOfTextures * sizeof(TextureHeader)) + sizeOfAllImages;
 }

@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <any>
+#include <optional>
 
 #include "helpers/fileHelper.h"
 #include "helpers/debugHelper.h"
@@ -15,84 +16,81 @@
 namespace DkrAssetsTool {
 
 class ExtractInfo;
+class ExtractStats;
 
-class DeferredExtractions {
-public:
-    static DeferredExtractions& get() {
-        static DeferredExtractions instance;
-        return instance;
-    }
-
+namespace DeferredExtractions {
     void add_extraction(std::string key, ExtractInfo newExtract);
     ExtractInfo &get_extraction(std::string key, size_t index);
-private:
-    std::unordered_map<std::string, std::vector<ExtractInfo>> _extractions;
-};
+}
 
 class ExtractInfo {
 public:
-    // Code file info
-    ExtractInfo(std::string &type, fs::path filename, fs::path folder, DkrExtractROM *rom, DkrExtractConfig *config, CContext *ctx,
-        uint32_t dataOffset, size_t dataLength, size_t fileIndex);
-    // Asset file info
-    ExtractInfo(std::string &type, fs::path filename, fs::path folder, DkrExtractROM *rom, DkrExtractConfig *config, CContext *ctx,
-        uint32_t dataOffset, size_t dataLength, size_t fileIndex, DkrExtractAssetSection *assetSection);
+    ExtractInfo(std::string &type, std::string buildId, fs::path filename, fs::path folder, BytesView view, 
+        AssetExtractConfig &config, std::string sectionPtr, CContext &ctx, size_t fileIndex, ExtractStats &stats);
     ~ExtractInfo();
     
     void set_tag(const std::string &key, const std::any elem);
-    //void set_tag_as_array(const std::string &key, size_t numElements=1);
-    //void add_elem_to_tag_array(const std::string &key, const ExtractInfoTagValue elem, int32_t index=-1);
     
     template <typename T>
     T get_tag(const std::string &key, T defaultValue) {
         if(_tags.find(key) == _tags.end()) {
             return defaultValue;
         }
-        
-        return std::any_cast<T>(_tags[key]);
+        try {
+            return std::any_cast<T>(_tags[key]);
+        } catch(std::bad_any_cast &err) {
+            return defaultValue;
+        }
     }
     
-    // There may or may not be a pointer to a DkrExtractAssetSection. Code sections will not have it for obvious reasons.
-    // TODO: I think I'm just being lazy here. Probably needs to be refactored.
-    DkrExtractAssetSection *assetSection = nullptr;
+    std::string get_type() const;
+    std::string get_build_id() const;
+    fs::path get_folder() const;
+    fs::path get_filename(std::string extension="") const;
+    fs::path get_out_filepath(std::string extension="") const;
+    fs::path get_out_folder() const;
     
-    DkrExtractROM *rom;
-    DkrExtractConfig *config;
+    const BytesView &get_view() const;
+    size_t get_data_size() const;
     
-    CContext *c_context; // C Code context. (For loading enums & structs)
+    const CContext &get_c_context() const;
+    const AssetExtractConfig &get_config() const;
+    ExtractStats &get_stats() const;
     
-    bool is_asset();
+    size_t get_file_index() const;
     
-    std::string get_type();
-    fs::path get_folder();
-    fs::path get_filename(const char *extension = "\0");
-    fs::path get_out_filepath(const char *extension = "\0");
-    fs::path get_out_folder();
+    void get_data_from_rom(std::vector<uint8_t> &out, size_t offset=0, size_t length=-1);
     
-    uint32_t get_data_offset();
-    size_t get_data_size();
+    WritableJsonFile &get_json_file();
+    void write_json_file();
+    void write_raw_data_file();
     
-    size_t get_file_index();
-    
-    void get_data_from_rom(std::vector<uint8_t> &out);
-    
-    void write_rom_data_to_file(fs::path finalFilepath, uint32_t offset=0, int32_t length=-1);
+    template <typename T>
+    T get_from_config_section(std::string property, T defaultValue) const {
+        if(!_config.has_value()) {
+            return defaultValue;
+        }
+        AssetExtractConfig &config = _config.value();
+        return config.get<T>(_sectionPtr + property, defaultValue);
+    }
     
 private:
-    
     std::string _type;
+    std::string _buildId;
     fs::path _filename;
     fs::path _folder;
-    uint32_t _dataOffset;
-    size_t _dataLength;
+    BytesView _view;
+    std::string _sectionPtr;
+    std::optional<WritableJsonFile> _jsonFile = std::nullopt;
+    std::optional<std::reference_wrapper<AssetExtractConfig>> _config = std::nullopt;
+    std::optional<std::reference_wrapper<CContext>> _cContext = std::nullopt;
+    std::optional<std::reference_wrapper<ExtractStats>> _stats = std::nullopt;
     
     size_t _fileIndex;
     
-    bool _isAsset;
-    
     std::unordered_map<std::string, std::any> _tags;
     
-    void _check_params();
+    void _make_sure_json_file_is_defined();
 };
 
 }

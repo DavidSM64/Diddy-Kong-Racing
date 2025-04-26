@@ -1,17 +1,23 @@
 #include "extractor.h"
 
-using namespace DkrAssetsTool;
-
 #include <functional>
+#include <optional>
+#include <any>
 
 #include "helpers/stringHelper.h"
+#include "helpers/dataHelper.h"
 #include "helpers/jsonHelper.h"
 #include "misc/constants.hpp"
+#include "misc/globalSettings.h"
 
 #include "helpers/c/cStructHelper.h"
 #include "helpers/c/cEnumsHelper.h"
 
 #include "libs/ThreadPool.h"
+
+#include "assetTable.h"
+#include "config.h"
+#include "stats.h"
 
 // Extract types
 #include "extractTypes/extractAudio.h"
@@ -34,109 +40,376 @@ using namespace DkrAssetsTool;
 #include "extractTypes/extractTTGhost.h"
 #include "extractTypes/extractMisc.h"
 
+using namespace DkrAssetsTool;
+
 /************************ Hope this part doesn't cause too much cringe. **************************/
 
-#define EXTRACTOR_ARGS DkrAssetsSettings &settings, ExtractInfo &info
-#define EXTRACTOR_LAMDA(classConstructorCode) [](EXTRACTOR_ARGS) { classConstructorCode(settings, info); }
-
+#define EXTRACTOR_ARGS ExtractInfo &info
+#define EXTRACTOR_LAMDA(extractFunction) [](EXTRACTOR_ARGS) { extractFunction(info); }
 typedef std::function<void(EXTRACTOR_ARGS)> ExtractorFunction;
 
-// Put type with the extract class here!
 std::unordered_map<std::string, ExtractorFunction> extractorMap = {
-    {                      "Binary", EXTRACTOR_LAMDA(ExtractBinary)           },
-    {                       "Fonts", EXTRACTOR_LAMDA(ExtractFonts)            },
-    { "LevelObjectTranslationTable", EXTRACTOR_LAMDA(ExtractLOTT)             },
-    {                     "Texture", EXTRACTOR_LAMDA(ExtractTexture)          },
-    {              "LevelObjectMap", EXTRACTOR_LAMDA(ExtractObjectMap)        },
-    {                  "LevelModel", EXTRACTOR_LAMDA(ExtractLevelModel)       },
-    {                 "LevelHeader", EXTRACTOR_LAMDA(ExtractLevelHeader)      },
-    {                "ObjectHeader", EXTRACTOR_LAMDA(ExtractObjectHeader)     },
-    {                 "ObjectModel", EXTRACTOR_LAMDA(ExtractObjectModel)      },
-    {             "ObjectAnimation", EXTRACTOR_LAMDA(ExtractObjectAnimation)  },
-    {                     "TTGhost", EXTRACTOR_LAMDA(ExtractTTGhost)          },
-    {                    "GameText", EXTRACTOR_LAMDA(ExtractGameText)         },
-    {                    "MenuText", EXTRACTOR_LAMDA(ExtractMenuText)         },
-    {               "Miscellaneous", EXTRACTOR_LAMDA(ExtractMisc)             },
-    {                      "Sprite", EXTRACTOR_LAMDA(ExtractSprite)           },
-    {                       "Audio", EXTRACTOR_LAMDA(ExtractAudio)            },
-    {                    "Particle", EXTRACTOR_LAMDA(ExtractParticle)         },
-    {            "ParticleBehavior", EXTRACTOR_LAMDA(ExtractParticleBehavior) },
+    {                      "Binary", EXTRACTOR_LAMDA(ExtractBinary::extract)           },
+    {                       "Fonts", EXTRACTOR_LAMDA(ExtractFonts::extract)            },
+    { "LevelObjectTranslationTable", EXTRACTOR_LAMDA(ExtractLOTT::extract)             },
+    {                     "Texture", EXTRACTOR_LAMDA(ExtractTexture::extract)          },
+    {              "LevelObjectMap", EXTRACTOR_LAMDA(ExtractObjectMap::extract)        },
+    {                  "LevelModel", EXTRACTOR_LAMDA(ExtractLevelModel::extract)       },
+    {                 "LevelHeader", EXTRACTOR_LAMDA(ExtractLevelHeader::extract)      },
+    {                "ObjectHeader", EXTRACTOR_LAMDA(ExtractObjectHeader::extract)     },
+    {                 "ObjectModel", EXTRACTOR_LAMDA(ExtractObjectModel::extract)      },
+    {             "ObjectAnimation", EXTRACTOR_LAMDA(ExtractObjectAnimation::extract)  },
+    {                     "TTGhost", EXTRACTOR_LAMDA(ExtractTTGhost::extract)          },
+    {                    "GameText", EXTRACTOR_LAMDA(ExtractGameText::extract)         },
+    {                    "MenuText", EXTRACTOR_LAMDA(ExtractMenuText::extract)         },
+    {               "Miscellaneous", EXTRACTOR_LAMDA(ExtractMisc::extract)             },
+    {                      "Sprite", EXTRACTOR_LAMDA(ExtractSprite::extract)           },
+    {                       "Audio", EXTRACTOR_LAMDA(ExtractAudio::extract)            },
+    {                    "Particle", EXTRACTOR_LAMDA(ExtractParticle::extract)         },
+    {            "ParticleBehavior", EXTRACTOR_LAMDA(ExtractParticleBehavior::extract) },
 };
 
 /*************************************************************************************************/
 
-DkrExtract::DkrExtract(DkrAssetsSettings &settings) : _settings(settings) {
-    fs::path pathToVanillaAssets = _settings.pathToAssets / ".vanilla/";
-    _settings.pathToAssets = pathToVanillaAssets / (settings.dkrVersion + "/");
+void generate_section_json_file(const AssetExtractConfig &config, const ExtractStats &stats, int sectionIndex, fs::path filepath) {
+    std::string configSectionPtr = "/sections/" + std::to_string(sectionIndex);
     
-    // First find config
-    DebugHelper::info_verbose("Finding config...");
-    _find_config();
-    if(_config == nullptr) {
-        DebugHelper::error("Could not find a config file for DKR version: ", _settings.dkrVersion);
-    }
+    std::string type = config.get<std::string>(configSectionPtr + "/default-type", "Binary");
+    std::string folder = config.get<std::string>(configSectionPtr + "/folder", "");
+    std::string sectionBuildId = config.get<std::string>(configSectionPtr + "/build-id", "");
     
-    // Then find a valid rom.
-    DebugHelper::info_verbose("Finding ROM...");
-    _find_rom(_settings.pathToBaseroms, true);
-    if(_rom == nullptr) {
-        // If no rom was found in the baseroms directory, then try the root directory (non-recursively).
-        _find_rom(_settings.pathToRepo, false);
-    }
+    WritableJsonFile jsonFile(filepath);
+    jsonFile.set_string("/type", type);
+    jsonFile.set_string("/folder", folder);
     
-    if(_rom == nullptr) {
-        DebugHelper::error("Could not find a valid ROM file for DKR version: ", _settings.dkrVersion);
-    }
+    auto tryGetSectionFilesFromStats = stats.get_section_info(sectionBuildId);
     
-    DebugHelper::info_verbose("Parsing config...");
-    // Parse the config. (Wanted to make sure there was a ROM before parsing the config)
-    _config->parse();
-    
-    // Preload structs & enums into context.
-    _preload_c_context();
-    
-    DebugHelper::info_verbose("Extracting...");
-    // Finally, run the extraction!
-    _extract();
-}
-
-DkrExtract::~DkrExtract() {
-    if(_config != nullptr) {
-        delete _config;
-    }
-    if(_rom != nullptr) {
-        delete _rom;
-    }
-}
-
-void DkrExtract::_find_config() {
-    std::vector<fs::path> configFiles = FileHelper::get_files_from_directory_with_extension(_settings.pathToConfigs, ".config.json", false);
-    DebugHelper::info_verbose("Number of configs: ", configFiles.size());
-    for(size_t i = 0; i < configFiles.size(); i++) {
-        _config = new DkrExtractConfig(configFiles[i]);
-        if(_config->get_dkr_version() == _settings.dkrVersion) {
-            DebugHelper::info("Using config file: ", configFiles[i]);
-            return;
+    if(tryGetSectionFilesFromStats.has_value()) {
+        const std::vector<ExtractStatInfo> &sectionFilesInfo = tryGetSectionFilesFromStats.value();
+        
+        size_t numberOfFiles = sectionFilesInfo.size();
+        for(size_t i = 0; i < numberOfFiles; i++) {
+            const ExtractStatInfo &info = sectionFilesInfo[i];
+            
+            jsonFile.set_string("/files/order/" + std::to_string(i), info.buildId);
+            jsonFile.set_string("/files/sections/" + info.buildId + "/filename", info.outFilepath);
         }
-        delete _config;
     }
-    _config = nullptr; // Could not find the config.
+    
+    jsonFile.save();
 }
 
-void DkrExtract::_find_rom(const std::string &directory, bool recursive) {
+void generate_main_json_file(const AssetExtractConfig &config, const ExtractStats &stats) {
+    fs::path outFilename = GlobalSettings::get_decomp_path_to_vanilla_assets() / "assets.meta.json";
+    WritableJsonFile jsonFile(outFilename);
+    
+    jsonFile.set_int("/@dkrat-version/release", DKRAT_VERSION_RELEASE);
+    jsonFile.set_int("/@dkrat-version/major", DKRAT_VERSION_MAJOR);
+    jsonFile.set_int("/@dkrat-version/minor", DKRAT_VERSION_MINOR);
+    jsonFile.set_string("/@dkr-version", GlobalSettings::get_dkr_version());
+    
+    size_t numberOfSections = config.number_of_sections();
+    
+    DebugHelper::info("numberOfSections = ", numberOfSections);
+    
+    for(size_t i = 0; i < numberOfSections; i++) {
+        std::string configSectionPtr = "/sections/" + std::to_string(i);
+        std::string sectionBuildId = config.get<std::string>(configSectionPtr + "/build-id", "");
+        std::string sectionType = config.get<std::string>(configSectionPtr + "/default-type", "Binary");
+        
+        jsonFile.set_string("/assets/order/" + std::to_string(i), sectionBuildId);
+        
+        std::string outSectionPtr = "/assets/sections/" + sectionBuildId;
+        jsonFile.set_string(outSectionPtr + "/type", sectionType);
+        if(sectionType == "Table") {
+            std::string forId = config.get<std::string>(configSectionPtr + "/for", "");
+            jsonFile.set_string(outSectionPtr + "/for", forId);
+        } else if (sectionType == "Empty") {
+            // Do nothing.
+        } else {
+            std::string filename = sectionBuildId;
+            bool isDeferred = config.get<bool>(configSectionPtr + "/defer", false);
+            if(isDeferred) {
+                // Copy info from config to the main json.
+                std::string fromSection = config.get<std::string>(configSectionPtr + "/defer-info/from-section", "");
+                std::string idPostfix = config.get<std::string>(configSectionPtr + "/defer-info/id-postfix", "_UNK");
+                std::string outputPath = config.get<std::string>(configSectionPtr + "/defer-info/output-path", ".");
+                jsonFile.set_bool(outSectionPtr + "/deferred", true);
+                jsonFile.set_string(outSectionPtr + "/defer-info/from-section", fromSection);
+                jsonFile.set_string(outSectionPtr + "/defer-info/id-postfix", idPostfix);
+                jsonFile.set_string(outSectionPtr + "/defer-info/output-path", outputPath);
+            } else {
+                StringHelper::make_lowercase(filename);
+                filename += ".meta.json";
+                jsonFile.set_string(outSectionPtr + "/filename", filename);
+                generate_section_json_file(config, stats, i, GlobalSettings::get_decomp_path_to_vanilla_assets() / filename);
+            }
+        }
+    }
+    
+    jsonFile.save();
+}
+
+/*************************************************************************************************/
+
+fs::path get_valid_baserom(const AssetExtractConfig &config) {
+    std::vector<fs::path> baseromFiles = FileHelper::get_files_from_directory(GlobalSettings::get_decomp_path("baseroms_subpath", "baseroms/"));
+    for(fs::path &filepath : baseromFiles) {
+        if(config.is_input_file_valid(filepath)) {
+            return filepath;
+        }
+    }
+    
+    DebugHelper::error("No valid ROM file found for the DKR version \"", GlobalSettings::get_dkr_version(), "\"");
+    
+    return "";
+}
+
+void AssetExtractor::extract_all(const fs::path &dstPath) {
+    std::string dkrVersion = GlobalSettings::get_dkr_version();
+    
+    // Load up the config file. (Done automatically using settings)
+    AssetExtractConfig config;
+    
+    // Setup stats so that extractions can get certain information. (Mainly for file-index to build-id conversions)
+    ExtractStats stats;
+    
+    // Get the appropriate rom, given the DKR version.
+    fs::path baseromPath = get_valid_baserom(config);
+    
+    // Load the data from the rom.
+    config.load_input_file(baseromPath);
+    
+    size_t numberOfSections = config.number_of_sections();
+    
+    // Load c context with necessary enums and structs
+    CContext cContext;
+    fs::path includeFolder = GlobalSettings::get_decomp_path("include_subpath", "include/");
+    CEnumsHelper::load_enums_from_file(cContext, includeFolder / "enums.h");
+    CEnumsHelper::load_enums_from_file(cContext, includeFolder / "object_behaviors.h");
+    CStructHelper::load_structs_from_file(cContext, includeFolder / "level_object_entries.h");
+    
+    config.init_obj_beh_to_entry_map(cContext);
+    
+    const BytesView &assetsView = config.get_rom_assets_view();
+    
+    AssetTable mainTable(assetsView, DkrAssetTableType::FixedTable);
+    
+    DebugHelper::assert_(mainTable.number_of_entries() == numberOfSections,
+        "(AssetExtractor::extract_all) The number of asset sections in the config does not match the rom!");
+    
+    size_t mainTableBytesSize = mainTable.total_size();
+    
+    std::vector<BytesView> sectionViews(numberOfSections);
+    
+    // First pass to get the views for all sections.
+    for(size_t i = 0; i < numberOfSections; i++) {
+        sectionViews[i] = assetsView.get_sub_view(mainTable.get_entry_offset(i) + mainTableBytesSize, mainTable.get_entry_size(i));
+    }
+    
+    std::map<int, std::vector<ExtractInfo>> extractions;
+    
+    // Second pass to get the extractions.
+    for(size_t i = 0; i < numberOfSections; i++) {
+        std::string sectionPtr = "/sections/" + std::to_string(i);
+        std::string sectionType = config.get<std::string>(sectionPtr + "/default-type", "Binary"); // Section is treated as raw binary unless you specify a type.
+        
+        if(sectionType == "Empty" || sectionType == "Table") {
+            continue; // ignore empty and table sections for now.
+        }
+        
+        std::string sectionBuildId = config.get<std::string>(sectionPtr + "/build-id", "");
+        std::string sectionFolder = config.get<std::string>(sectionPtr + "/folder", "");
+        bool sectionIsDeferred = config.get<bool>(sectionPtr + "/defer", false);
+        int groupNumber = config.get<int>(sectionPtr + "/group", 0); // Defaults to group 0. Smaller group numbers get extracted first.
+        
+        DebugHelper::assert_(!sectionBuildId.empty(), "(AssetExtractor::extract_all) Section ", i, " does NOT have a build id!");
+        
+        // Check if this asset section has an associated table section.
+        std::optional<size_t> tableIndex = config.get_section_table_index(sectionBuildId);
+        
+        if(!tableIndex.has_value()) {
+            // No table, so the section is a single extraction.
+            std::string sectionSha1 = DataHelper::make_sha1_hash_of_bytes(sectionViews[i]);
+            
+            std::optional<size_t> fileIndex = config.get_file_index_from_sha1(sectionSha1);
+            
+            DebugHelper::assert_(fileIndex.has_value(), 
+                "(AssetExtractor::extract_all) Could not find a file for section ", sectionBuildId, ", sha1 = ", sectionSha1);
+            
+            std::string filePtr = "/files/" + std::to_string(fileIndex.value());
+            std::string filename = config.get<std::string>(filePtr + "/filename", "");
+            std::string folder = config.get<std::string>(filePtr + "/folder", "");
+            std::string type = config.get<std::string>(filePtr + "/type", "");
+            
+            if(!sectionFolder.empty()) {
+                folder = sectionFolder + "/" + folder;
+            }
+            
+            if(type.empty()) {
+                type = sectionType;
+            }
+            
+            if(extractions.find(groupNumber) == extractions.end()) {
+                extractions[groupNumber] = std::vector<ExtractInfo>();
+                extractions[groupNumber].reserve(8192); // Arbitrary allocation amount, trying to prevent many reallocations. Size is about ~2.5 MB per group.
+            }
+            
+            if(sectionIsDeferred) {
+                DeferredExtractions::add_extraction(sectionBuildId, 
+                    ExtractInfo(type, sectionBuildId, filename, folder, sectionViews[i], config, sectionPtr, cContext, 0, stats));
+            } else {
+                extractions[groupNumber].emplace_back(type, sectionBuildId, filename, folder, 
+                    sectionViews[i], config, sectionPtr, cContext, 0, stats);
+            }
+            
+            fs::path outputJsonPath = (GlobalSettings::get_decomp_path_to_vanilla_assets() / folder) / (filename + ".json");
+                
+            // Add info to stats
+            stats.add_info(sectionBuildId, { sectionBuildId, outputJsonPath });
+            
+            continue;
+        }
+        
+        // Has a table, so multiple files need to be extracted.
+        std::string tableSectionPtr = "/sections/" + std::to_string(tableIndex.value());
+        std::string tableBuildId = config.get<std::string>(tableSectionPtr + "/build-id", "");
+        //DebugHelper::info(sectionBuildId, " table is ", tableBuildId);
+        DkrAssetTableType tableType = AssetTable::table_type_from_section_type(sectionType);
+        AssetTable sectionTable(sectionViews[tableIndex.value()], tableType);
+        size_t numberOfEntriesInTable = sectionTable.number_of_entries();
+        
+        // map that tracks how many times a hash was found in files, needed since there are some files that are duplicates. Also, lots of empty files that will all have the same hash.
+        std::unordered_map<std::string, size_t> foundSoFar; 
+        
+        for(size_t entryIndex = 0; entryIndex < numberOfEntriesInTable; entryIndex++) {
+            size_t entryOffset = sectionTable.get_entry_offset(entryIndex) & 0x7FFFFFFF; // GameText uses highest bit to determine if dialog or textbox.
+            size_t entrySize = sectionTable.get_entry_size(entryIndex);
+            
+            BytesView fileView = sectionViews[i].get_sub_view(entryOffset, entrySize);
+            std::string fileViewSha1 = DataHelper::make_sha1_hash_of_bytes(fileView);
+            
+            if(foundSoFar.find(fileViewSha1) == foundSoFar.end()) {
+                foundSoFar[fileViewSha1] = 0;
+            }
+            
+            std::optional<size_t> fileEntryIndex = config.get_file_index_from_sha1(fileViewSha1, foundSoFar[fileViewSha1]);
+            
+            DebugHelper::assert_(fileEntryIndex.has_value(),
+                "(AssetExtractor::extract_all) Could not find a file for entry ", entryIndex, " for section ", sectionBuildId, "; The hash was ", fileViewSha1);
+            
+            size_t fileEntryIndexValue = fileEntryIndex.value();
+            std::string filePtr = "/files/" + std::to_string(fileEntryIndexValue);
+            std::string filename = config.get<std::string>(filePtr + "/filename", "");
+            std::string fileBuildId = config.get<std::string>(filePtr + "/build-id", "");
+            std::string folder = config.get<std::string>(filePtr + "/folder", "");
+            std::string type = config.get<std::string>(filePtr + "/type", "");
+            
+            if(!sectionFolder.empty()) {
+                folder = sectionFolder + "/" + folder;
+            }
+            
+            if(sectionIsDeferred) {
+                DeferredExtractions::add_extraction(sectionBuildId, 
+                    ExtractInfo(type, fileBuildId, filename, folder, fileView, config, sectionPtr, cContext, entryIndex, stats));
+            } else {
+                extractions[groupNumber].emplace_back(type, fileBuildId, filename, folder, 
+                    fileView, config, sectionPtr, cContext, entryIndex, stats);
+                if(type == "GameText") {
+                    bool isDialog = sectionTable.get_entry_offset(entryIndex) & 0x80000000;
+                    extractions[groupNumber].back().set_tag("isDialog", std::any(isDialog));
+                }
+            }
+            
+            fs::path outputJsonPath = (GlobalSettings::get_decomp_path_to_vanilla_assets() / folder) / (filename + ".json");
+            
+            // Add info to stats
+            stats.add_info(sectionBuildId, { fileBuildId, outputJsonPath });
+            
+            foundSoFar[fileViewSha1]++;
+        }
+    }
+    
+    generate_main_json_file(config, stats);
+     
+    size_t threadCount = GlobalSettings::get_max_thread_count();
+    bool multithreaded = threadCount != 1;
+    DebugHelper::info("Using ", threadCount, " thread", (multithreaded ? "s" : ""));
+    
+    // Run the extraction!
+    // extractions should be sorted by the group number.
+    for (auto &pair : extractions) {
+        std::vector<ExtractInfo> &extracts = pair.second;
+        bool errorOccured = false;
+        if(multithreaded) {
+            // Multi-threaded version (better for performance)
+            std::exception_ptr ex;
+            {
+                ThreadPool pool(threadCount);
+                for(ExtractInfo &info : extracts) {
+                    std::string type = info.get_type();
+                    // Check to make sure the builderMap has the given type.
+                    if(extractorMap.find(type) == extractorMap.end()) {
+                        // For now this is a warning, but maybe make it an error instead?
+                        DebugHelper::warn("The input type \"", type, "\" is currently not implemented.");
+                        continue;
+                    }
+                    pool.enqueue([type, &info = info, &errorOccured = errorOccured, &ex = ex] {
+                        if(errorOccured) {
+                            return;
+                        }
+                        // Call the class constructor of a type.
+                        try {
+                            extractorMap[type]((ExtractInfo &)info);
+                        } catch (...) {
+                            errorOccured = true;
+                            ex = std::current_exception();
+                        }
+                    });
+                    if(errorOccured) {
+                        break;
+                    }
+                }
+            }
+            // ThreadPool's destructor will join the threads.
+            if(errorOccured) {
+                std::rethrow_exception(ex);
+            }
+        } else {
+            // Single-threaded version (better for debugging)
+            for(ExtractInfo &info : extracts) {
+                std::string type = info.get_type();
+                // Check to make sure the builderMap has the given type.
+                if(extractorMap.find(type) == extractorMap.end()) {
+                    // For now this is a warning, but maybe make it an error instead?
+                    DebugHelper::warn("The input type \"", type, "\" is currently not implemented.");
+                    continue;
+                }
+                extractorMap[type]((ExtractInfo &)info);
+            }
+        }
+        
+    }
+}
+
+void AssetExtractor::extract(const fs::path &srcPath, const fs::path &dstPath) {
+    
+}
+
+/*
+void find_rom(const std::string &directory, bool recursive) {
     std::vector<fs::path> romFiles = FileHelper::get_files_from_directory(directory, recursive);
     for(size_t i = 0; i < romFiles.size(); i++) {
-        _rom = new DkrExtractROM(romFiles[i]);
-        if(_rom->is_valid() && _config->get_md5() == _rom->get_calculated_md5()) {
+        rom = new DkrExtractROM(romFiles[i]);
+        if(rom->is_valid() && config->get_md5() == rom->get_calculated_md5()) {
             DebugHelper::info("Using ROM file: ", romFiles[i]);
             return;
         }
-        delete _rom;
+        delete rom;
     }
-    _rom = nullptr; // Could not find a rom.
+    rom = nullptr; // Could not find a rom.
 }
-
-void DkrExtract::_extract() {
+void extract() {
     DebugHelper::DebugTimer timer;
     uint32_t romOffset = 0;
     DebugHelper::info_verbose("Getting code sections...");
@@ -193,7 +466,7 @@ void DkrExtract::_extract() {
 }
 
 // Group defaults to 0 if not specified.
-void DkrExtract::_add_new_extraction(ExtractInfo &newExtract, int group) {
+void add_new_extraction(ExtractInfo &newExtract, int group) {
     // Make sure the group exists in the map
     if(extractions.find(group) == extractions.end()) {
         extractions[group] = std::vector<ExtractInfo>(); // New group
@@ -201,15 +474,15 @@ void DkrExtract::_add_new_extraction(ExtractInfo &newExtract, int group) {
     extractions[group].push_back(newExtract);
 }
 
-void DkrExtract::_get_code_extractions(uint32_t &romOffset) {
-    for(DkrExtractCodeSection &codeSection : _config->codeSections) {
+void get_code_extractions(uint32_t &romOffset) {
+    for(DkrExtractCodeSection &codeSection : config->codeSections) {
         for(DkrExtractCodeSectionFile &codeFile : codeSection.files) {
             if(codeSection.type == "NoExtract") {
                 DebugHelper::info_verbose(DebugHelper::to_hex(romOffset), ",", codeSection.type, ",\"", codeFile.filename, "\",", DebugHelper::to_hex(codeFile.length));
                 romOffset += codeFile.length;
                 continue;
             }
-            ExtractInfo newExtract(codeSection.type, codeFile.filename, codeSection.folder, _rom, _config, &_c_context, romOffset, codeFile.length, 0);
+            ExtractInfo newExtract(codeSection.type, codeFile.filename, codeSection.folder, rom, config, &_c_context, romOffset, codeFile.length, 0);
             _add_new_extraction(newExtract);
             DebugHelper::info_verbose(DebugHelper::to_hex(romOffset), ",", codeSection.type, ",\"", codeFile.filename, "\",\"", codeSection.folder, "\",", DebugHelper::to_hex(codeFile.length));
             romOffset += codeFile.length;
@@ -218,7 +491,7 @@ void DkrExtract::_get_code_extractions(uint32_t &romOffset) {
 }
 
 // Note: sectionFile could be null.
-void DkrExtract::_get_asset_section_file_info(DkrExtractAssetSection *assetSection, DkrExtractAssetSectionFile *sectionFile, size_t fileNum, uint32_t romOffset, size_t length) {
+void get_asset_section_file_info(DkrExtractAssetSection *assetSection, DkrExtractAssetSectionFile *sectionFile, size_t fileNum, uint32_t romOffset, size_t length) {
     std::string filename = "";
     std::string buildId = "";
     std::string folder = "";
@@ -238,7 +511,7 @@ void DkrExtract::_get_asset_section_file_info(DkrExtractAssetSection *assetSecti
         folder = assetSection->filesDefaultFolder;
     }
     
-    ExtractInfo newExtract(assetSection->type, filename, folder, _rom, _config, &_c_context, romOffset, length, fileNum, assetSection);
+    ExtractInfo newExtract(assetSection->type, filename, folder, rom, config, &_c_context, romOffset, length, fileNum, assetSection);
     
     if(assetSection->type == "Texture") {
         newExtract.set_tag("flipTex", (sectionFile != nullptr) ? sectionFile->specific.texture.flipTex : assetSection->specific.textures.flipTexturesByDefault);
@@ -258,17 +531,17 @@ void DkrExtract::_get_asset_section_file_info(DkrExtractAssetSection *assetSecti
     _add_new_extraction(newExtract, assetSection->group);
 }
 
-void DkrExtract::_get_asset_files_from_table(DkrExtractAssetSection *assetSection, int sectionOffset, int tableSectionOffset) {
+void get_asset_files_from_table(DkrExtractAssetSection *assetSection, int sectionOffset, int tableSectionOffset) {
     DebugHelper::info_verbose("Section offset = ", DebugHelper::to_hex(sectionOffset));
     
     // Get the table type from a section type name.
     DkrAssetTableType tableType = AssetTable::table_type_from_section_type(assetSection->type);
     
-    AssetTable assetSectionTable(_rom, tableSectionOffset, tableType);
+    AssetTable assetSectionTable(rom, tableSectionOffset, tableType);
     
     if(tableType == DkrAssetTableType::MenuTextTable) {
         // First entry determines the number of text entries for each language.
-        assetSection->specific.menuText.numberOfTextEntries = _rom->get_s32(tableSectionOffset);
+        assetSection->specific.menuText.numberOfTextEntries = rom->get_s32(tableSectionOffset);
     }
     
     size_t numFilesInSection = assetSectionTable.size();
@@ -282,7 +555,7 @@ void DkrExtract::_get_asset_files_from_table(DkrExtractAssetSection *assetSectio
     _generate_section_json_file(assetSection, &assetSectionTable);
 }
 
-void DkrExtract::_get_single_asset_info(DkrExtractAssetSection *assetSection, uint32_t romOffset, size_t length) {
+void get_single_asset_info(DkrExtractAssetSection *assetSection, uint32_t romOffset, size_t length) {
     DkrExtractAssetSectionFile *sectionFile = assetSection->get_single_file();
     
     std::string filename = "";
@@ -304,7 +577,7 @@ void DkrExtract::_get_single_asset_info(DkrExtractAssetSection *assetSection, ui
         folder = assetSection->filesDefaultFolder;
     }
     
-    ExtractInfo newExtract(assetSection->type, filename, folder, _rom, _config, &_c_context, romOffset, length, 0, assetSection);
+    ExtractInfo newExtract(assetSection->type, filename, folder, rom, config, &_c_context, romOffset, length, 0, assetSection);
     
     if(assetSection->isDeferred) {
         // This will be extracted as a part of another file.
@@ -315,20 +588,20 @@ void DkrExtract::_get_single_asset_info(DkrExtractAssetSection *assetSection, ui
     _add_new_extraction(newExtract, assetSection->group);
 }
 
-void DkrExtract::_get_asset_extractions(uint32_t &romOffset) {
-    AssetTable mainAssetsTable(_rom, romOffset, DkrAssetTableType::FixedTable);
+void get_asset_extractions(uint32_t &romOffset) {
+    AssetTable mainAssetsTable(rom, romOffset, DkrAssetTableType::FixedTable);
     
     size_t numAssetSections = mainAssetsTable.size();
     
     // Assets start past the main table. 
     romOffset += (numAssetSections + 2) * 4; 
     
-    DebugHelper::assert_(_config->assetSections.size() == numAssetSections, 
-        "(DkrExtract::_get_asset_extractions) Number of assets in config does not match the ROM! Num assets in config: ", 
-        _config->assetSections.size(), ", in ROM: ", numAssetSections);
+    DebugHelper::assert_(config->assetSections.size() == numAssetSections, 
+        "(get_asset_extractions) Number of assets in config does not match the ROM! Num assets in config: ", 
+        config->assetSections.size(), ", in ROM: ", numAssetSections);
     
     for(size_t sectionIndex = 0; sectionIndex < numAssetSections; sectionIndex++) {
-        DkrExtractAssetSection *assetSection = &_config->assetSections[sectionIndex];
+        DkrExtractAssetSection *assetSection = &config->assetSections[sectionIndex];
         
         if(assetSection->type == "Empty") {
             // Don't bother extracting empty sections.
@@ -354,7 +627,7 @@ void DkrExtract::_get_asset_extractions(uint32_t &romOffset) {
 }
 
 // sectionTable is nullptr when the asset section doesn't have a table (Is a single file)
-void DkrExtract::_generate_section_json_file(DkrExtractAssetSection *assetSection, AssetTable *sectionTable) {
+void generate_section_json_file(DkrExtractAssetSection *assetSection, AssetTable *sectionTable) {
     if(assetSection->isDeferred) {
         return;
     }
@@ -389,7 +662,7 @@ void DkrExtract::_generate_section_json_file(DkrExtractAssetSection *assetSectio
     }
     
     // This section has a table.
-    jsonFile.set_string("/table", _config->get_build_id_of_section(assetSection->table));
+    jsonFile.set_string("/table", config->get_build_id_of_section(assetSection->table));
     
     std::string orderPtr = "/files/order/";
     std::string sectionsPtr = "/files/sections/";
@@ -424,90 +697,32 @@ void DkrExtract::_generate_section_json_file(DkrExtractAssetSection *assetSectio
 }
 
 // Creates the "assets.meta.json" file
-void DkrExtract::_generate_main_json_file() {
-    fs::path outFilename = _settings.pathToAssets / "assets.meta.json";
-    WritableJsonFile jsonFile(outFilename);
+void generate_main_json_file() {
     
-    jsonFile.set_int("/@revision", DKRAT_REVISION_MAJOR);
-    jsonFile.set_int("/@revision-minor", DKRAT_REVISION_MINOR);
-    jsonFile.set_string("/@version", _settings.dkrVersion);
-    
-    for(size_t i = 0; i < _config->assetSections.size(); i++) {
-        DkrExtractAssetSection *assetSection = &_config->assetSections[i];
-        
-        jsonFile.set_string("/assets/order/" + std::to_string(i), assetSection->buildId);
-        std::string sectionStr = "/assets/sections/" + assetSection->buildId;
-        
-        if(assetSection->type == "Table") {
-            std::string forId = _config->get_build_id_of_section_from_table_id(assetSection->buildId);
-            jsonFile.set_string(sectionStr + "/for", forId);
-        } else if (assetSection->type == "Empty") {
-            // Do nothing.
-        } else {
-            std::string filename = assetSection->buildId;
-            if(assetSection->isDeferred) {
-                jsonFile.set_bool(sectionStr + "/deferred", true);
-                jsonFile.set_string(sectionStr + "/defer-info/from-section", assetSection->deferInfo.fromSection);
-                jsonFile.set_string(sectionStr + "/defer-info/id-postfix", assetSection->deferInfo.idPostfix);
-                jsonFile.set_string(sectionStr + "/defer-info/output-path", assetSection->deferInfo.outputPath);
-            } else {
-                StringHelper::make_lowercase(filename);
-                filename += ".meta.json";
-                jsonFile.set_string(sectionStr + "/filename", filename);
-            }
-        }
-        jsonFile.set_string(sectionStr + "/type", assetSection->type);
-    }
-    
-    jsonFile.save();
 }
 
-void DkrExtract::_generate_obj_behavior_to_entry_json_file() {
+void generate_obj_behavior_to_entry_json_file() {
     fs::path outFilename = _settings.pathToAssets / "objects/obj_beh_to_entry.meta.json";
     WritableJsonFile jsonFile(outFilename);
     
     CEnum *objBehaviors = _c_context.get_enum("ObjectBehaviours");
     
     std::vector<std::string> defaultObjEntriesOrder;
-    _config->get_default_object_entries_order_array(defaultObjEntriesOrder);
+    config->get_default_object_entries_order_array(defaultObjEntriesOrder);
     
     for(int i = 0; i < 128; i++) {
         std::string symbol;
         DebugHelper::assert_(objBehaviors->get_symbol_of_value(i, symbol),
-            "(DkrExtract::_generate_obj_behavior_to_entry_json_file) Could not get a symbol for the value ", i, " in the ObjectBehaviors enum.");
+            "(generate_obj_behavior_to_entry_json_file) Could not get a symbol for the value ", i, " in the ObjectBehaviors enum.");
         
         
         CStruct *entryStruct = _c_context.get_struct(defaultObjEntriesOrder[i]);
         DebugHelper::assert_(entryStruct != nullptr, 
-            "(DkrExtract::_generate_obj_behavior_to_entry_json_file) Could not find struct \"", defaultObjEntriesOrder[i], "\"");
+            "(generate_obj_behavior_to_entry_json_file) Could not find struct \"", defaultObjEntriesOrder[i], "\"");
         
         jsonFile.set_string("/" + symbol, defaultObjEntriesOrder[i]);
     }
     
     jsonFile.save();
 }
-
-// Preload structs & enums into context.
-void DkrExtract::_preload_c_context() {
-    fs::path includeFolder = _settings.pathToRepo / "include/";
-    
-    // Load all structs from these files.
-    fs::path structPaths[] = {
-        includeFolder / "level_object_entries.h",
-    };
-    
-    for(fs::path &structPath : structPaths) {
-        CStructHelper::load_structs_from_file(&_c_context, structPath);
-    }
-    
-    // Load all enums from these files.
-    fs::path enumPaths[] = {
-        includeFolder / "enums.h",
-        includeFolder / "object_behaviors.h",
-    };
-    
-    for(fs::path &enumPath : enumPaths) {
-        CEnumsHelper::load_enums_from_file(&_c_context, enumPath);
-    }
-    
-}
+*/

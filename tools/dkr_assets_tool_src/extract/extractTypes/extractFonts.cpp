@@ -1,21 +1,26 @@
 #include "extractFonts.h"
 
-using namespace DkrAssetsTool;
-
 #include "helpers/assetsHelper.h"
 #include "helpers/stringHelper.h"
 
 #include "fileTypes/fonts.hpp"
 
-ExtractFonts::ExtractFonts(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
-    fs::path _outFilepath = _settings.pathToAssets / _info.get_out_filepath(".json");
-    DebugHelper::info_custom("Extracting Font", YELLOW_TEXT, _outFilepath);
+#include "misc/globalSettings.h"
+
+#include "extract/stats.h"
+
+using namespace DkrAssetsTool;
+
+void ExtractFonts::extract(ExtractInfo &info) {
+    DebugHelper::info_custom("Extracting Font", YELLOW_TEXT, info.get_out_filepath(".json"));
     
-    WritableJsonFile jsonFile(_outFilepath);
+    ExtractStats &stats = info.get_stats(); // Note: not const here, since we are setting tags for GameText to read later.
+    
+    WritableJsonFile &jsonFile = info.get_json_file();
     jsonFile.set_string("/type", "Fonts");
     
     std::vector<uint8_t> rawBytes;
-    _info.get_data_from_rom(rawBytes);
+    info.get_data_from_rom(rawBytes);
     
     FontData *fontsData = reinterpret_cast<FontData *>(&rawBytes[0]);
     
@@ -23,15 +28,19 @@ ExtractFonts::ExtractFonts(DkrAssetsSettings &settings, ExtractInfo &info) : _se
         FontFile &font = fontsData->fonts[i];
         
         std::string fontName(font.name);
-        std::string fontBuildId = info.assetSection->buildId + "_" + fontName;
+        std::string fontBuildId = info.get_from_config_section<std::string>("/build-id", "ASSET_FONTS") + "_" + fontName;
+        
+        std::string fontTag = "FONT_" + std::to_string(i);
+        stats.set_tag(fontTag, fontBuildId); // Associate FONT_N with the build id of this font. Used for Game Text.
+        
         StringHelper::make_uppercase(fontBuildId);
         fs::path fontLocalPath = FONTS_SUBDIRECTORY / (fontName + ".meta.json");
-        fs::path _outFontFilepath = _settings.pathToAssets / _info.get_out_folder() / fontLocalPath;
+        fs::path outFontFilepath = GlobalSettings::get_decomp_path_to_vanilla_assets() / info.get_out_folder() / fontLocalPath;
         
         jsonFile.set_string("/fonts-order/" + std::to_string(i), fontBuildId);
         jsonFile.set_string("/fonts/" + fontBuildId, fontLocalPath);
         
-        WritableJsonFile fontJsonFont(_outFontFilepath);
+        WritableJsonFile fontJsonFont(outFontFilepath);
         
         fontJsonFont.set_string("/name", fontName);
         fontJsonFont.set_int("/fixed-width", font.fixedWidth);
@@ -48,7 +57,7 @@ ExtractFonts::ExtractFonts(DkrAssetsSettings &settings, ExtractInfo &info) : _se
                 fontJsonFont.set_null("/textures/" + std::to_string(j) + "");
                 continue;
             }
-            std::string texBuildId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_TEXTURES_2D", font.textureIndices[j]);
+            std::string texBuildId = stats.get_build_id_from_file_index("ASSET_TEXTURES_2D", font.textureIndices[j]);
             fontJsonFont.set_string("/textures/" + std::to_string(j) + "", texBuildId);
         }
         
@@ -81,8 +90,5 @@ ExtractFonts::ExtractFonts(DkrAssetsSettings &settings, ExtractInfo &info) : _se
         fontJsonFont.save();
     }
     
-    jsonFile.save();
-}
-
-ExtractFonts::~ExtractFonts() {
+    info.write_json_file();
 }

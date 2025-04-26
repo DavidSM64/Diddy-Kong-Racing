@@ -2,9 +2,12 @@
 
 using namespace DkrAssetsTool;
 
-BuildAudio::BuildAudio(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
+void BuildAudio::build(BuildInfo &info)  {
     if(info.srcFile->is_value_null("/raw")) {
-        FileHelper::write_empty_file(_info.dstPath, true);
+        if(info.build_to_file()) {
+            FileHelper::write_empty_file(info.dstPath, true);
+        }
+        // Don't need to do anything for the BUILD_TO_BINARY case.
         return;
     }
     
@@ -12,11 +15,12 @@ BuildAudio::BuildAudio(DkrAssetsSettings &settings, BuildInfo &info) : _settings
     
     DebugHelper::assert(!rawPath.empty(), "(BuildAudio::BuildAudio) \"raw\" not specified!");
     
-    // Copy file from rawPath to destination path.
-    FileHelper::copy(_info.localDirectory / rawPath, info.dstPath);
-}
-
-BuildAudio::~BuildAudio() {
-    
+    if(info.build_to_file()) {
+        // Copy file from rawPath to destination path.
+        FileHelper::copy(info.localDirectory / rawPath, info.dstPath);
+    } else {
+        // Load raw binary into info's out
+        info.out = FileHelper::read_binary_file(info.localDirectory / rawPath);
+    }
 }
 

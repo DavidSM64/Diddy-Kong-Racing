@@ -1,7 +1,5 @@
 #include "extractLevelHeader.h"
 
-using namespace DkrAssetsTool;
-
 #include <vector>
 #include <string>
 
@@ -11,35 +9,118 @@ using namespace DkrAssetsTool;
 #include "helpers/stringHelper.h"
 #include "helpers/c/cContext.h"
 
-ExtractLevelHeader::ExtractLevelHeader(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
-    fs::path _outFilepath = _settings.pathToAssets / _info.get_out_filepath(".json");
-    DebugHelper::info_custom("Extracting Level Header", YELLOW_TEXT, _outFilepath);
+#include "fileTypes/levelHeader.hpp"
+
+#include "extract/stats.h"
+
+using namespace DkrAssetsTool;
+
+void extract_weather(WritableJsonFile &jsonFile, std::string ptr, LevelHeader_Weather &weather) {
+    jsonFile.set_int(ptr + "/enable", weather.enable);
+    jsonFile.set_int(ptr + "/type", weather.type);
+    jsonFile.set_int(ptr + "/intensity", weather.intensity);
+    jsonFile.set_int(ptr + "/opacity", weather.opacity);
+    jsonFile.set_int(ptr + "/velocity/x", weather.velocity[0]);
+    jsonFile.set_int(ptr + "/velocity/y", weather.velocity[1]);
+    jsonFile.set_int(ptr + "/velocity/z", weather.velocity[2]);
+}
+
+void extract_ai_levels(WritableJsonFile &jsonFile, std::string ptr, LevelHeader_AiLevels &aiLevels) {
+    jsonFile.set_int(ptr + "/base", aiLevels.baseAiLevel);
+    jsonFile.set_int(ptr + "/silver-coins", aiLevels.silverCoinsAiLevel);
+    jsonFile.set_int(ptr + "/completed", aiLevels.completedAiLevel);
+    jsonFile.set_int(ptr + "/tracks-mode", aiLevels.tracksModeAiLevel);
+    jsonFile.set_int(ptr + "/trophy-race", aiLevels.trophyRaceAiLevel);
+}
+
+void extract_fog(WritableJsonFile &jsonFile, std::string ptr, LevelHeader_Fog &fogInfo) {
+    jsonFile.set_int(ptr + "/near", fogInfo.near);
+    jsonFile.set_int(ptr + "/far", fogInfo.far);
+    jsonFile.set_int(ptr + "/colour/red", fogInfo.colour[0]);
+    jsonFile.set_int(ptr + "/colour/green", fogInfo.colour[1]);
+    jsonFile.set_int(ptr + "/colour/blue", fogInfo.colour[2]);
+}
+
+void extract_name(ExtractInfo &info, WritableJsonFile &jsonFile, std::string ptr) {
+    ExtractInfo &levelNameExtract = DeferredExtractions::get_extraction("ASSET_LEVEL_NAMES", info.get_file_index());
     
     std::vector<uint8_t> rawBytes;
-    _info.get_data_from_rom(rawBytes);
+    levelNameExtract.get_data_from_rom(rawBytes);
+    
+    CEnum *languages = info.get_c_context().get_enum("Language");
+    
+    size_t numLanguages = languages->get_member_count();
+    
+    size_t curOffset = 0;
+    
+    for(size_t i = 0; i < numLanguages; i++) {
+        std::string lang, levelNameInLang;
+        DebugHelper::assert(languages->get_symbol_of_value(i, lang), 
+            "(extract_name) Index ", i, " is out of range.");
+            
+        // TODO: If a language (other than English) uses the same name as English, then don't bother exporting it.
+        
+        // Get the current language name.
+        curOffset = StringHelper::get_ascii_from_data(rawBytes, curOffset, levelNameInLang);
+        
+        jsonFile.set_string(ptr + "/" + lang, levelNameInLang);
+    }
+}
+
+template<typename T>
+void extract_enum_bitfield(ExtractInfo &info, WritableJsonFile &jsonFile, std::string ptr, std::string enumName, T value) {
+    size_t numBits = sizeof(T) * 8;
+    
+    const CContext &cContext = info.get_c_context();
+    
+    size_t count = 0;
+    for(size_t i = 0; i < numBits; i++) {
+        size_t bitFlag = 1 << i;
+        if((value & bitFlag) == 0) { // Make sure the bit is set.
+            continue;
+        }
+        
+        std::string enumSymbol = cContext.get_symbol_of_enum_int(enumName, i);
+        
+        jsonFile.set_string(ptr + "/" + std::to_string(count), enumSymbol);
+        
+        count++;
+    }
+}
+
+void ExtractLevelHeader::extract(ExtractInfo &info) {
+    DebugHelper::info_custom("Extracting Level Header", YELLOW_TEXT, info.get_out_filepath(".json"));
+    
+    const ExtractStats &stats = info.get_stats();
+    
+    std::vector<uint8_t> rawBytes;
+    info.get_data_from_rom(rawBytes);
     
     LevelHeader *header = reinterpret_cast<LevelHeader *>(&rawBytes[0]);
     
-    WritableJsonFile jsonFile(_outFilepath);
+    const CContext &cContext = info.get_c_context();
+    
+    WritableJsonFile &jsonFile = info.get_json_file();
     jsonFile.set_string("/type", "LevelHeader");
     
     // Name
-    _extract_name(jsonFile, "/name");
+    extract_name(info, jsonFile, "/name");
     
     // World ID
-    std::string worldId = _info.c_context->get_symbol_of_enum_int("World", header->world);
+    std::string worldId = cContext.get_symbol_of_enum_int("World", header->world);
     jsonFile.set_string("/world", worldId);
     
     // Course Height
     jsonFile.set_float("/course-height", header->courseHeight);
     
     // Track ID
-    std::string levelModelId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_LEVEL_MODELS", header->geometry);
+    std::string levelModelId = stats.get_build_id_from_file_index("ASSET_LEVEL_MODELS", header->geometry);
     jsonFile.set_string("/model", levelModelId);
     
     // Object Maps
-    std::string collectablesMap = AssetsHelper::get_build_id_of_index(_settings, "ASSET_LEVEL_OBJECT_MAPS", header->collectablesObjMap);
-    std::string objMap2 = AssetsHelper::get_build_id_of_index(_settings, "ASSET_LEVEL_OBJECT_MAPS", header->objectMap2);
+    std::string collectablesMap = stats.get_build_id_from_file_index("ASSET_LEVEL_OBJECT_MAPS", header->collectablesObjMap);
+    std::string objMap2 = stats.get_build_id_from_file_index("ASSET_LEVEL_OBJECT_MAPS", header->objectMap2);
+    
     jsonFile.set_string("/map-collectables", collectablesMap);
     jsonFile.set_string("/map-2", objMap2);
     
@@ -51,12 +132,12 @@ ExtractLevelHeader::ExtractLevelHeader(DkrAssetsSettings &settings, ExtractInfo 
     // Pulsing light data
     be_int32_t pulsatingLightsOffset = header->pulseLightData; 
     if(pulsatingLightsOffset != -1) {
-        std::string pulseId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_MISC", pulsatingLightsOffset);
+        std::string pulseId = stats.get_build_id_from_file_index("ASSET_MISC", pulsatingLightsOffset);
         jsonFile.set_string("/pulsating-lights", pulseId);
     }
     
     // Race Type
-    std::string raceTypeId = _info.c_context->get_symbol_of_enum_int("RaceType", header->raceType);
+    std::string raceTypeId = cContext.get_symbol_of_enum_int("RaceType", header->raceType);
     jsonFile.set_string("/race-type", raceTypeId);
     
     // Audio related
@@ -69,30 +150,29 @@ ExtractLevelHeader::ExtractLevelHeader(DkrAssetsSettings &settings, ExtractInfo 
             continue;
         }
         
-        std::string miscAssetId = AssetsHelper::get_build_id_of_index(_settings, 
-            "ASSET_MISC", header->miscAssets[i]);
+        std::string miscAssetId = stats.get_build_id_from_file_index("ASSET_MISC", header->miscAssets[i]);
         
         jsonFile.set_string("/misc-assets/" + std::to_string(i), miscAssetId);
     }
     
     // Vehicle info
-    std::string defaultVehicle = _info.c_context->get_symbol_of_enum_int("Vehicle", header->vehicle);
+    std::string defaultVehicle = cContext.get_symbol_of_enum_int("Vehicle", header->vehicle);
     jsonFile.set_string("/default-vehicle", defaultVehicle);
-    _extract_enum_bitfield<int8_t>(jsonFile, "/avaliable-vehicles", "Vehicle", header->avaliableVehicles);
+    extract_enum_bitfield<int8_t>(info, jsonFile, "/avaliable-vehicles", "Vehicle", header->avaliableVehicles);
     
     // AI levels
-    _extract_ai_levels(jsonFile, "/ai-levels/adv1", header->adv1AiLevels);
-    _extract_ai_levels(jsonFile, "/ai-levels/adv2", header->adv2AiLevels);
+    extract_ai_levels(jsonFile, "/ai-levels/adv1", header->adv1AiLevels);
+    extract_ai_levels(jsonFile, "/ai-levels/adv2", header->adv2AiLevels);
     
     // Weather
-    _extract_weather(jsonFile, "/weather", header->weather);
+    extract_weather(jsonFile, "/weather", header->weather);
     
     // Fog
-    _extract_fog(jsonFile, "/fog", header->fog);
+    extract_fog(jsonFile, "/fog", header->fog);
     
     // Background related stuff
     if(header->skybox >= 0) {
-        std::string skyboxObjId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_OBJECTS", header->skybox);
+        std::string skyboxObjId = stats.get_build_id_from_file_index("ASSET_OBJECTS", header->skybox);
         jsonFile.set_string("/background/skybox/id", skyboxObjId);
     }
     if(header->specialSky != 0) {
@@ -180,89 +260,12 @@ ExtractLevelHeader::ExtractLevelHeader(DkrAssetsSettings &settings, ExtractInfo 
     jsonFile.set_int("/unknown/unkB5", header->unkB5);
     jsonFile.set_int("/unknown/unkB6", header->unkB6);
     jsonFile.set_int("/unknown/unkB7", header->unkB7);
-    std::string bossRaceID = _info.c_context->get_symbol_of_enum_int("BossSetupTypes", header->bossRaceID);
+    std::string bossRaceID = cContext.get_symbol_of_enum_int("BossSetupTypes", header->bossRaceID);
     jsonFile.set_string("/boss-race-id", bossRaceID);
     jsonFile.set_int("/unknown/unkB9", header->unkB9);
     jsonFile.set_int("/unknown/unkBC", header->unkBC);
     jsonFile.set_int("/unknown/unkBD", header->unkBD);
     jsonFile.set_int("/unknown/unkC4", header->unkC4);
     
-    
-    jsonFile.save();
+    info.write_json_file();
 }
-
-ExtractLevelHeader::~ExtractLevelHeader() {
-}
-
-void ExtractLevelHeader::_extract_weather(WritableJsonFile &jsonFile, std::string ptr, LevelHeader_Weather &weather) {
-    jsonFile.set_int(ptr + "/enable", weather.enable);
-    jsonFile.set_int(ptr + "/type", weather.type);
-    jsonFile.set_int(ptr + "/intensity", weather.intensity);
-    jsonFile.set_int(ptr + "/opacity", weather.opacity);
-    jsonFile.set_int(ptr + "/velocity/x", weather.velocity[0]);
-    jsonFile.set_int(ptr + "/velocity/y", weather.velocity[1]);
-    jsonFile.set_int(ptr + "/velocity/z", weather.velocity[2]);
-}
-
-void ExtractLevelHeader::_extract_ai_levels(WritableJsonFile &jsonFile, std::string ptr, LevelHeader_AiLevels &aiLevels) {
-    jsonFile.set_int(ptr + "/base", aiLevels.baseAiLevel);
-    jsonFile.set_int(ptr + "/silver-coins", aiLevels.silverCoinsAiLevel);
-    jsonFile.set_int(ptr + "/completed", aiLevels.completedAiLevel);
-    jsonFile.set_int(ptr + "/tracks-mode", aiLevels.tracksModeAiLevel);
-    jsonFile.set_int(ptr + "/trophy-race", aiLevels.trophyRaceAiLevel);
-}
-
-void ExtractLevelHeader::_extract_fog(WritableJsonFile &jsonFile, std::string ptr, LevelHeader_Fog &fogInfo) {
-    jsonFile.set_int(ptr + "/near", fogInfo.near);
-    jsonFile.set_int(ptr + "/far", fogInfo.far);
-    jsonFile.set_int(ptr + "/colour/red", fogInfo.colour[0]);
-    jsonFile.set_int(ptr + "/colour/green", fogInfo.colour[1]);
-    jsonFile.set_int(ptr + "/colour/blue", fogInfo.colour[2]);
-}
-
-void ExtractLevelHeader::_extract_name(WritableJsonFile &jsonFile, std::string ptr) {
-    ExtractInfo &levelNameExtract = DeferredExtractions::get().get_extraction("ASSET_LEVEL_NAMES", _info.get_file_index());
-    
-    std::vector<uint8_t> rawBytes;
-    levelNameExtract.get_data_from_rom(rawBytes);
-    
-    CEnum *languages = _info.c_context->get_enum("Language");
-    
-    size_t numLanguages = languages->get_member_count();
-    
-    size_t curOffset = 0;
-    
-    for(size_t i = 0; i < numLanguages; i++) {
-        std::string lang, levelNameInLang;
-        DebugHelper::assert(languages->get_symbol_of_value(i, lang), 
-            "(ExtractLevelHeader::_extract_name) Index ", i, " is out of range.");
-            
-        // TODO: If a language (other than English) uses the same name as English, then don't bother exporting it.
-        
-        // Get the current language name.
-        curOffset = StringHelper::get_ascii_from_data(rawBytes, curOffset, levelNameInLang);
-        
-        jsonFile.set_string(ptr + "/" + lang, levelNameInLang);
-    }
-}
-
-template<typename T>
-void ExtractLevelHeader::_extract_enum_bitfield(WritableJsonFile &jsonFile, std::string ptr, std::string enumName, T value) {
-    size_t numBits = sizeof(T) * 8;
-    
-    size_t count = 0;
-    for(size_t i = 0; i < numBits; i++) {
-        size_t bitFlag = 1 << i;
-        if((value & bitFlag) == 0) { // Make sure the bit is set.
-            continue;
-        }
-        
-        std::string enumSymbol = _info.c_context->get_symbol_of_enum_int(enumName, i);
-        
-        jsonFile.set_string(ptr + "/" + std::to_string(count), enumSymbol);
-        
-        count++;
-    }
-}
-
-

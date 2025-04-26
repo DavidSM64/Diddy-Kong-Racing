@@ -8,7 +8,7 @@ namespace DkrAssetsTool {
 
 class ObjBuildModel : public BuildModel {
 public:
-    ObjBuildModel(fs::path filepath, DkrAssetsSettings &settings);
+    ObjBuildModel(fs::path filepath);
 private:
 
 };
