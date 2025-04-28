@@ -1392,7 +1392,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         index--;
         while (index >= 0) {
             if ((water[index]->type != WATER_CALM) && (water[index]->type != WATER_WAVY) &&
-                (water[index]->rotY > 0.0)) {
+                (water[index]->rot.y > 0.0)) {
                 obj->segment.trans.y_position = water[index]->waveHeight;
             }
             index--;
@@ -3118,7 +3118,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         var_a2--;
         while (var_a2 >= 0) {
             if ((water[var_a2]->type != WATER_CALM) && (water[var_a2]->type != WATER_WAVY) &&
-                (water[var_a2]->rotY > 0.0)) {
+                (water[var_a2]->rot.y > 0.0)) {
                 obj->segment.trans.y_position = water[var_a2]->waveHeight;
             }
             var_a2--;
