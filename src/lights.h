@@ -25,7 +25,7 @@ typedef struct SubMiscAssetObjectHeader24 {
 typedef struct MiscAssetObjectHeader24 {
     s32 unk0;
     u8 pad2[16];
-    SubMiscAssetObjectHeader24 *unk14;
+    SubMiscAssetObjectHeader24 unk14[1];
 } MiscAssetObjectHeader24;
 
 /* Size: 0x88 bytes */
@@ -53,7 +53,10 @@ typedef struct ObjectLight {
     u16 unk3E;
     u16 unk40;
     u16 unk42;
-    SubMiscAssetObjectHeader24 *unk44;
+    union {
+        SubMiscAssetObjectHeader24 *unk44;
+        MiscAssetObjectHeader24 *unk44_asset;
+    };    
     u16 unk48;
     u16 unk4A;
     u16 unk4C;

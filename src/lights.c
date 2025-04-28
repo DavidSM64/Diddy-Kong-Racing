@@ -66,83 +66,77 @@ void setup_lights(s32 count) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry) {
+ObjectLight *func_80031CAC(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) {
     s32 i;
-    ObjectLight *newLight;
-    LevelHeader_70 *test;
-    s32 temp_a0;
+    ObjectLight *light;
+    LevelHeader *levelHeader;
+    MiscAssetObjectHeader24 *miscAsset;
 
-    newLight = NULL;
+    light = NULL;
     if (gNumActiveLights < gMaxLights) {
-        newLight = gActiveLights[gNumActiveLights++];
-        newLight->unk0 = (lightEntry->unk8 & 0xF0) >> 4;
-        newLight->type = lightEntry->unk8 & 0xF;
-        newLight->unk1 = (lightEntry->unk9 & 0xE0) >> 5;
-        newLight->unk2 = lightEntry->unk9 & 0x1F;
-        newLight->enabled = TRUE;
-        newLight->owner = NULL;
-        newLight->homeX = 0;
-        newLight->homeY = 0;
-        newLight->homeZ = 0;
-        if (light != NULL) {
-            newLight->pos.x = light->segment.trans.x_position;
-            newLight->pos.y = light->segment.trans.y_position;
-            newLight->pos.z = light->segment.trans.z_position;
+        light = gActiveLights[gNumActiveLights++];
+        light->unk0 = (lightEntry->unk8 & 0xF0) >> 4;
+        light->type = lightEntry->unk8 & 0xF;
+        light->unk1 = (lightEntry->unk9 & 0xE0) >> 5;
+        light->unk2 = lightEntry->unk9 & 0x1F;
+        light->enabled = TRUE;
+        light->owner = NULL;
+        light->homeX = 0;
+        light->homeY = 0;
+        light->homeZ = 0;
+        if (obj != NULL) {
+            light->pos.x = obj->segment.trans.x_position;
+            light->pos.y = obj->segment.trans.y_position;
+            light->pos.z = obj->segment.trans.z_position;
         } else {
-            newLight->pos.x = lightEntry->common.x;
-            newLight->pos.y = lightEntry->common.y;
-            newLight->pos.z = lightEntry->common.z;
+            light->pos.x = lightEntry->common.x;
+            light->pos.y = lightEntry->common.y;
+            light->pos.z = lightEntry->common.z;
         }
-        newLight->unk1C = lightEntry->unkA << 16;
-        newLight->unk2C = 0;
-        newLight->unk3C = 0;
-        newLight->unk20 = lightEntry->unkB << 16;
-        newLight->unk30 = 0;
-        newLight->unk3E = 0;
-        newLight->unk24 = lightEntry->unkC << 16;
-        newLight->unk34 = 0;
-        newLight->unk40 = 0;
-        newLight->unk28 = lightEntry->unkD << 16;
-        newLight->unk38 = 0;
-        newLight->unk42 = 0;
-        newLight->unk44 = NULL;
+        light->unk1C = lightEntry->unkA << 16;
+        light->unk2C = 0;
+        light->unk3C = 0;
+        light->unk20 = lightEntry->unkB << 16;
+        light->unk30 = 0;
+        light->unk3E = 0;
+        light->unk24 = lightEntry->unkC << 16;
+        light->unk34 = 0;
+        light->unk40 = 0;
+        light->unk28 = lightEntry->unkD << 16;
+        light->unk38 = 0;
+        light->unk42 = 0;
+        light->unk44 = NULL;
         if (lightEntry->unk1C < 7) {
-            test = (LevelHeader_70 *) get_current_level_header()->unk74[lightEntry->unk1C];
-            if (((s32) test) != -1) {
-                newLight->unk44 = (SubMiscAssetObjectHeader24 *) &test->unk4;
-                newLight->unk44 = (SubMiscAssetObjectHeader24 *) &test->unk0;
-                newLight->unk4A = 0;
-                if (lightEntry && lightEntry && lightEntry) {}
-                newLight->unk4C = 0;
-                newLight->unk4E = 0;
-                newLight->unk48 = (u16) (u32) &test->red2;
-                temp_a0 = (u16) (u32) &test->red2;
-                for (i = 0; i < temp_a0;) {
-                    newLight->unk4E += test->unk18[i++].unk0;
-                }
+            levelHeader = get_current_level_header();
+            if (((s32) levelHeader->unk74[lightEntry->unk1C]) != -1) {
+                light->unk44_asset = (MiscAssetObjectHeader24 *) levelHeader->unk74[lightEntry->unk1C];
+                light->unk48 = light->unk44_asset->unk0;
+                light->unk4A = 0;
+                light->unk4C = 0;
+                light->unk4E = 0;
+                light->unk44 = light->unk44_asset->unk14;
+                // clang-format off
+                for (i = 0; i < light->unk48; i++) { light->unk4E += light->unk44[i].unk4; } // Must be on one line!
+                // clang-format on
             }
         }
-        newLight->radius = lightEntry->unkE;
-        newLight->unk60 = lightEntry->unk10;
-        newLight->unk64 = lightEntry->unk12;
-        newLight->radiusSquare = newLight->radius * newLight->radius;
-        newLight->radiusMag = 1 / newLight->radius;
-        newLight->unk70 = lightEntry->unk14;
-        newLight->unk74 = lightEntry->unk18;
-        newLight->unk78 = (lightEntry->unk18) ? 0xFFFF : 0;
-        newLight->unk72 = lightEntry->unk16;
-        newLight->unk76 = lightEntry->unk1A;
-        newLight->unk7A = (lightEntry->unk1A) ? 0xFFFF : 0;
-        newLight->unk7A = 0;
-        newLight->unk5 = 1;
-        func_80032424(newLight, 0);
+        light->radius = lightEntry->unkE;
+        light->unk60 = lightEntry->unk10;
+        light->unk64 = lightEntry->unk12;
+        light->radiusSquare = light->radius * light->radius;
+        light->radiusMag = 1 / light->radius;
+        light->unk70 = lightEntry->unk14;
+        light->unk74 = lightEntry->unk18;
+        light->unk78 = (lightEntry->unk18) ? 0xFFFF : 0;
+        light->unk72 = lightEntry->unk16;
+        light->unk76 = lightEntry->unk1A;
+        light->unk7A = (lightEntry->unk1A) ? 0xFFFF : 0;
+        light->unk7A = 0;
+        light->unk5 = 1;
+        func_80032424(light, 0);
     }
-    return newLight;
+    return light;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/lights/func_80031CAC.s")
-#endif
 
 /**
  * Official Name: addObjectLight
@@ -150,7 +144,6 @@ ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry
 ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
     s32 i;
     ObjectLight *light;
-    MiscAssetObjectHeader24 *miscAsset;
 
     light = NULL;
     if (gNumActiveLights < gMaxLights) {
@@ -180,13 +173,12 @@ ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
         light->unk38 = 0;
         light->unk42 = 0;
         if (arg1->unk6 != 0xFFFF) {
-            miscAsset = (MiscAssetObjectHeader24 *) get_misc_asset(arg1->unk6);
-            light->unk44 = (SubMiscAssetObjectHeader24 *) miscAsset;
-            light->unk48 = miscAsset->unk0;
+            light->unk44_asset = (MiscAssetObjectHeader24 *) get_misc_asset(arg1->unk6);
+            light->unk48 = light->unk44_asset->unk0;
             light->unk4A = 0;
             light->unk4C = 0;
             light->unk4E = 0;
-            light->unk44 = (SubMiscAssetObjectHeader24 *) &miscAsset->unk14;
+            light->unk44 = light->unk44_asset->unk14;
             // clang-format off
             for (i = 0; i < light->unk48; i++) { light->unk4E += light->unk44[i].unk4; } // Must be on one line!
             // clang-format on

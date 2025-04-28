@@ -15,7 +15,7 @@ StackInfo *stack_pointer(void) {
  */
 StackInfo *stack_pointer(void) {
     register StackInfo *sp;
-    asm volatile ("move %0, $sp\n": "=r"(sp));
+    asm volatile("move %0, $sp\n" : "=r"(sp));
     return sp;
 }
 #endif
