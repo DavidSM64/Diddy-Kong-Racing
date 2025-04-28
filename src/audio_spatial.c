@@ -11,8 +11,6 @@
 #include "tracks.h"
 #include "math_util.h"
 
-#define ABS(x) ((x) >= 0 ? (x) : -(x))
-
 /************ .data ************/
 
 u16 gUsedMasks = 0;
