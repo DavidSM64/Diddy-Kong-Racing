@@ -11,6 +11,8 @@
 #include "tracks.h"
 #include "math_util.h"
 
+#define ABS(x) ((x) >= 0 ? (x) : -(x))
+
 /************ .data ************/
 
 u16 gUsedMasks = 0;
@@ -87,7 +89,7 @@ void audioline_reset(void) {
     s32 j;
     ALSoundState *sound;
     SoundMask *heap;
-    f32* ptr;
+    f32 *ptr;
 
     heap = gSoundMaskHeap;
     gFreeMasks = 0;
@@ -443,7 +445,79 @@ void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009D6C.s")
+u8 func_80009D6C(unk8011A6D8 *arg0, f32 arg1, f32 arg2, f32 arg3) {
+    f32 deltaX;
+    f32 deltaY;
+    f32 deltaZ;
+    f32 *coords;
+    f32 x1, y1, z1;
+    f32 x2, y2, z2;
+    f32 dx, dy, dz;
+    f32 f20;
+    f32 sp5C;
+    f32 length;
+    u8 sp57;
+    f32 f12;
+
+    if (arg0->unkBC == 0.0f) {
+        coords = arg0->unk4_floats;
+        for (f20 = 0.0f; f20 < arg0->unkB8; f20 += 1.0f) {
+            deltaX = coords[3] - coords[0];
+            deltaY = coords[4] - coords[1];
+            deltaZ = coords[5] - coords[2];
+            arg0->unkBC += sqrtf((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ));
+            coords += 3;
+        }
+    }
+
+    coords = arg0->unk4_floats;
+    sp5C = 0.0f;
+    sp57 = FALSE;
+
+    for (; !sp57; coords += 3) {
+        x1 = coords[0];
+        y1 = coords[1];
+        z1 = coords[2];
+        x2 = coords[3];
+        y2 = coords[4];
+        z2 = coords[5];
+        dx = x2 - x1;
+        dy = y2 - y1;
+        dz = z2 - z1;
+        length = sqrtf((dx * dx) + (dy * dy) + (dz * dz));
+
+        if (arg1 >= x1 && arg1 <= x2 || arg1 >= x2 && arg1 <= x1) {
+            if (dx != 0.0f) {
+                f12 = (arg1 - x1) / dx;
+            } else if (dy != 0.0f) {
+                f12 = (arg2 - y1) / dy;
+            } else if (dz != 0.0f) {
+                f12 = (arg3 - z1) / dz;
+            } else {
+                f12 = 0.0f;
+            }
+
+            if (ABS(dy * f12 + y1 - arg2) < 2.0f && ABS(dz * f12 + z1 - arg3) < 2.0f) {
+                sp57 = TRUE;
+                sp5C += f12 * length;
+            } else {
+                sp5C += length;
+            }
+        } else {
+            sp5C += length;
+        }
+    }
+
+    if (sp5C > arg0->unkBC / 2) {
+        sp5C = arg0->unkBC - sp5C;
+    }
+
+    if (sp5C < 300.0f) {
+        return arg0->unk0_02 * sp5C / 300.0f;
+    } else {
+        return arg0->unk0_02;
+    }
+}
 
 void debug_render_audio_effects(Gfx **dList, Vertex **verts, Triangle **tris) {
     s32 i, j;
