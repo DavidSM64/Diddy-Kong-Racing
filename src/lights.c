@@ -47,20 +47,23 @@ void free_lights(void) {
 /**
  * Official Name: setupLights
  */
+
 void setup_lights(s32 count) {
     s32 i;
-    s32 newCount;
-    ObjectLight **temp_v0;
+    u8 *buffer;
+    s32 temp;
 
     free_lights();
     gMaxLights = count;
-    temp_v0 = (ObjectLight **) mempool_alloc_safe(
+    buffer = (ObjectLight **) mempool_alloc_safe(
         gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(unk800DC960) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
-    newCount = gMaxLights;
-    gActiveLights = temp_v0;
-    D_800DC954 = (ObjectLight *) (newCount + (0, temp_v0));    // fakematch
-    D_800DC960 = (unk800DC960 *) (newCount + (0, D_800DC954)); // fakematch
-    D_800DC964 = (Vec3f *) (newCount + (0, D_800DC960));       // fakematch
+
+    temp = gMaxLights;
+    gActiveLights = buffer;
+    buffer += temp * sizeof(ObjectLight *);
+    D_800DC954 = (ObjectLight *) buffer;
+    D_800DC960 = (unk800DC960 *) ((u32) D_800DC954 + temp * sizeof(ObjectLight));
+    D_800DC964 = (Vec3f *) ((u32) D_800DC960 + temp * sizeof(unk800DC960));
     for (i = 0; i < gMaxLights; i++) {
         gActiveLights[i] = &D_800DC954[i];
     }
@@ -427,26 +430,27 @@ s32 get_light_count(void) {
     return gNumActiveLights;
 }
 
-#ifdef NON_EQUIVALENT
-// Close to matching. Should be functionally equivalent.
 void func_80032C7C(Object *object) {
+    ObjectLight *light;
+    s16 phi_a0, phi_a1;
+    f32 f20;
     s16 sp82;
     s16 sp80;
     s16 sp7E;
-    s32 i; // sp68
-    s32 sp64;
-    f32 f20;
-    f32 temp;
-    s16 phi_a0, phi_a1;
-    ObjectLight *entry;
+    u8 sp64;
+    s32 i;
 
     if (object->segment.header->unk3D == 0) {
         switch (object->segment.header->modelType) {
-            case OBJECT_MODEL_TYPE_3D_MODEL: // 3D Model
+            case OBJECT_MODEL_TYPE_3D_MODEL:
                 sp64 = 2;
                 break;
-            case OBJECT_MODEL_TYPE_SPRITE_BILLBOARD: // 2D Billboard
-            case OBJECT_MODEL_TYPE_VEHICLE_PART:     // Vehicle Part
+            case OBJECT_MODEL_TYPE_SPRITE_BILLBOARD:
+                sp64 = 4;
+                break;
+            case OBJECT_MODEL_TYPE_VEHICLE_PART:
+                sp64 = 4;
+                break;
             case OBJECT_MODEL_TYPE_UNKNOWN3:
                 sp64 = 4;
                 break;
@@ -460,55 +464,55 @@ void func_80032C7C(Object *object) {
         sp7E = object->segment.trans.z_position;
         D_800DC968 = 0;
         for (i = 0; i < gNumActiveLights; i++) {
-            entry = gActiveLights[i];
-            if ((entry->unk2 & sp64) && (entry->enabled == 1) && (sp82 >= entry->unk50) && (entry->unk56 >= sp82) &&
-                (sp80 >= entry->unk52) && (entry->unk58 >= sp80) && (sp7E >= entry->unk54) && (entry->unk5A >= sp7E)) {
-                if (entry->unk0 == 0) {
-                    if (entry->unk28 >= 0x10000) {
-                        D_800DC960[D_800DC968].unk0 = (s32) entry->unk0;
-                        D_800DC960[D_800DC968].unk4 = entry->unk1C >> 0x10;
-                        D_800DC960[D_800DC968].unk8 = entry->unk20 >> 0x10;
-                        D_800DC960[D_800DC968].unkC = entry->unk24 >> 0x10;
-                        D_800DC960[D_800DC968].unk10 = entry->unk28 >> 0x10;
-                        D_800DC968 = D_800DC968 + 1;
+            light = gActiveLights[i];
+            if ((light->unk2 & sp64) && (light->enabled == 1) && (sp82 >= light->unk50) && (light->unk56 >= sp82) &&
+                (sp80 >= light->unk52) && (light->unk58 >= sp80) && (sp7E >= light->unk54) && (light->unk5A >= sp7E)) {
+                if (light->unk0 == 0) {
+                    if (light->unk28 >= 0x10000) {
+                        D_800DC960[D_800DC968].unk0 = light;
+                        D_800DC960[D_800DC968].unk4 = light->unk1C >> 0x10;
+                        D_800DC960[D_800DC968].unk8 = light->unk20 >> 0x10;
+                        D_800DC960[D_800DC968].unkC = light->unk24 >> 0x10;
+                        D_800DC960[D_800DC968].unk10 = light->unk28 >> 0x10;
+                        D_800DC968++;
                     }
                 } else {
-                    gLightDiffX = entry->pos.x - object->segment.trans.x_position;
-                    gLightDiffY = entry->pos.y - object->segment.trans.y_position;
-                    gLightDiffZ = entry->pos.z - object->segment.trans.z_position;
-                    if (entry->unk0 == 2) {
+                    gLightDiffX = light->pos.x - object->segment.trans.x_position;
+                    gLightDiffY = light->pos.y - object->segment.trans.y_position;
+                    gLightDiffZ = light->pos.z - object->segment.trans.z_position;
+                    if (light->unk0 == 2) {
                         gLightDiffY = 0.0f;
                     }
                     gLightDistance =
                         (gLightDiffX * gLightDiffX) + (gLightDiffY * gLightDiffY) + (gLightDiffZ * gLightDiffZ);
-                    if (gLightDistance < entry->radiusSquare) {
-                        if (entry->unk1 == 2) {
-                            f20 = light_direction_calc(entry);
+                    if (gLightDistance < light->radiusSquare) {
+                        if (light->unk1 == 2) {
+                            f20 = light_direction_calc(light);
                         } else {
                             f20 = 1.0f;
                         }
                         if (f20 > 0.0f) {
-                            f20 *= light_distance_calc(entry);
+                            f20 *= light_distance_calc(light);
                             if (f20 > 0.0f) {
                                 if (object->segment.header->unk71 != 0) {
                                     if (gLightDistance > 0.0f) {
-                                        temp = 1.0f / sqrtf(gLightDistance);
+                                        f32 temp = 1.0f / sqrtf(gLightDistance);
                                         gLightDiffX *= temp;
                                         gLightDiffY *= temp;
                                         gLightDiffZ *= temp;
                                     } else {
-                                        gLightDiffX = 0.0f;
-                                        gLightDiffY = 0.0f;
+                                        gLightDiffX = 0;
+                                        gLightDiffY = 0;
                                         gLightDiffZ = -1.0f;
                                     }
                                     D_800DC964[D_800DC968].x = gLightDiffX;
                                     D_800DC964[D_800DC968].y = gLightDiffY;
                                     D_800DC964[D_800DC968].z = gLightDiffZ;
                                 }
-                                D_800DC960[D_800DC968].unk0 = (s32) entry;
-                                D_800DC960[D_800DC968].unk4 = entry->unk1C >> 0x10;
-                                D_800DC960[D_800DC968].unk8 = entry->unk20 >> 0x10;
-                                D_800DC960[D_800DC968].unkC = entry->unk24 >> 0x10;
+                                D_800DC960[D_800DC968].unk0 = light;
+                                D_800DC960[D_800DC968].unk4 = light->unk1C >> 0x10;
+                                D_800DC960[D_800DC968].unk8 = light->unk20 >> 0x10;
+                                D_800DC960[D_800DC968].unkC = light->unk24 >> 0x10;
                                 D_800DC960[D_800DC968].unk10 = (u8) f20;
                                 D_800DC968++;
                             }
@@ -540,8 +544,8 @@ void func_80032C7C(Object *object) {
                     phi_a1 = 0;
                 }
                 for (i = 2; i < D_800DC968; i++) {
-                    if (D_800DC960[phi_a1].unk10 < D_800DC960[i + 2].unk10) {
-                        if (D_800DC960[phi_a0].unk10 < D_800DC960[i + 2].unk10) {
+                    if (D_800DC960[phi_a1].unk10 < D_800DC960[i].unk10) {
+                        if (D_800DC960[phi_a0].unk10 < D_800DC960[i].unk10) {
                             phi_a1 = phi_a0;
                             phi_a0 = i;
                         } else {
@@ -582,45 +586,33 @@ void func_80032C7C(Object *object) {
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/lights/func_80032C7C.s")
-#endif
 
 void func_800337E4(void) {
-    s32 temp_a2;
-    s32 index;
-    s32 temp_a3;
     s32 temp_lo;
     s32 i;
-    unk800DC960 *temp_a1;
 
     for (i = 1; i < D_800DC968; i++) {
-        index = i;                          // Needed?
-        if ((&D_800DC960[index])->unk10) {} // Fakematch
-        temp_a1 = (0, D_800DC960) + index;
-        temp_a2 = temp_a1->unk10;
-        if (temp_a2 >= 2) {
-            temp_a3 = D_800DC960->unk10;
-            if (temp_a3 >= temp_a2) {
-                temp_lo = ((s32) (temp_a2 << 16)) / temp_a3;
-                D_800DC960->unk4 = D_800DC960->unk4 + (((s32) (temp_a1->unk4 * temp_lo)) >> 16);
-                D_800DC960->unk8 += ((s32) ((&D_800DC960[index])->unk8 * temp_lo)) >> 16;
-                D_800DC960->unkC += ((s32) ((&D_800DC960[index])->unkC * temp_lo)) >> 16;
+        if (D_800DC960[i].unk10 >= 2) {
+            if (D_800DC960[0].unk10 >= D_800DC960[i].unk10) {
+                temp_lo = (D_800DC960[i].unk10 << 16) / D_800DC960[0].unk10;
+                D_800DC960[0].unk4 += (D_800DC960[i].unk4 * temp_lo) >> 16;
+                D_800DC960[0].unk8 += (D_800DC960[i].unk8 * temp_lo) >> 16;
+                D_800DC960[0].unkC += (D_800DC960[i].unkC * temp_lo) >> 16;
             } else {
-                temp_lo = ((s32) (temp_a3 << 16)) / temp_a2;
-                D_800DC960->unk4 = temp_a1->unk4 + (((s32) (D_800DC960->unk4 * temp_lo)) >> 16);
-                D_800DC960->unk8 = (&D_800DC960[index])->unk8 + (((s32) ((D_800DC960->unk8 * temp_lo) ^ 0)) >> 16);
-                D_800DC960->unkC = (&D_800DC960[index])->unkC + (((s32) (D_800DC960->unkC * temp_lo)) >> 16);
-                D_800DC960->unk10 = (&D_800DC960[index])->unk10;
+                temp_lo = (D_800DC960[0].unk10 << 16) / D_800DC960[i].unk10;
+                D_800DC960[0].unk4 = ((D_800DC960[0].unk4 * temp_lo) >> 16) + D_800DC960[i].unk4;
+                D_800DC960[0].unk8 = ((D_800DC960[0].unk8 * temp_lo) >> 16) + D_800DC960[i].unk8;
+                D_800DC960[0].unkC = ((D_800DC960[0].unkC * temp_lo) >> 16) + D_800DC960[i].unkC;
+                D_800DC960[0].unk10 = D_800DC960[i].unk10;
             }
-            if (D_800DC960->unk4 >= 256) {
-                D_800DC960->unk4 = 255;
+            if (D_800DC960[0].unk4 >= 256) {
+                D_800DC960[0].unk4 = 255;
             }
-            if (D_800DC960->unk8 >= 256) {
-                D_800DC960->unk8 = 255;
+            if (D_800DC960[0].unk8 >= 256) {
+                D_800DC960[0].unk8 = 255;
             }
-            if (D_800DC960->unkC >= 256) {
-                D_800DC960->unkC = 255;
+            if (D_800DC960[0].unkC >= 256) {
+                D_800DC960[0].unkC = 255;
             }
         }
     }

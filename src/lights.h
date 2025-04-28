@@ -85,7 +85,7 @@ typedef struct ObjectLight {
 
 /* Size: 0x14 bytes */
 typedef struct unk800DC960 {
-    s32 unk0;
+    ObjectLight* unk0;
     s32 unk4;
     s32 unk8;
     s32 unkC;
