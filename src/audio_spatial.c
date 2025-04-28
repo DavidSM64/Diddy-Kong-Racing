@@ -62,7 +62,7 @@ void audioline_init(void) {
     for (i = 0; i < SOUND_MASK_HEAP_COUNT; i++) {
         gSoundMaskHeap[i].soundPtr = NULL;
     }
-    func_80008174();
+    audioline_reset();
 }
 
 /**
@@ -82,14 +82,12 @@ void audioline_on(void) {
     gAudioLinesOff = FALSE;
 }
 
-#ifdef NON_EQUIVALENT
-// audioline_reset
-s16 D_8011AC20[128];
-void func_80008174(void) {
+void audioline_reset(void) {
     s32 i;
     s32 j;
     ALSoundState *sound;
     SoundMask *heap;
+    f32* ptr;
 
     heap = gSoundMaskHeap;
     gFreeMasks = 0;
@@ -122,10 +120,11 @@ void func_80008174(void) {
         }
         D_80119C58[i].unk17C = -1;
 
+        ptr = D_80119C58[i].unk4_floats;
         for (j = 0; j < 30; j++) {
-            D_80119C58[i].unk4_floats[3 * j + 0] = -100000.0f;
-            D_80119C58[i].unk4_floats[3 * j + 1] = -100000.0f;
-            D_80119C58[i].unk4_floats[3 * j + 2] = -100000.0f;
+            *ptr++ = -100000.0f;
+            *ptr++ = -100000.0f;
+            *ptr++ = -100000.0f;
         }
     }
 
@@ -134,18 +133,16 @@ void func_80008174(void) {
         D_8011A6D8[i].unk0_02 = 0;
         D_8011A6D8[i].unkBC = 0.0f;
 
+        ptr = D_8011A6D8[i].unk4_floats;
         for (j = 0; j < 15; j++) {
-            D_8011A6D8[i].unk4_floats[3 * j + 0] = -100000.0f;
-            D_8011A6D8[i].unk4_floats[3 * j + 1] = -100000.0f;
-            D_8011A6D8[i].unk4_floats[3 * j + 2] = -100000.0f;
+            *ptr++ = -100000.0f;
+            *ptr++ = -100000.0f;
+            *ptr++ = -100000.0f;
         }
     }
 
     gAudioLinesOff = 0;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80008174.s")
-#endif
 
 // audioline_ambient
 // Official Name: amPlayAudioMap
