@@ -62,7 +62,7 @@ void audioline_init(void) {
     for (i = 0; i < SOUND_MASK_HEAP_COUNT; i++) {
         gSoundMaskHeap[i].soundPtr = NULL;
     }
-    func_80008174();
+    audioline_reset();
 }
 
 /**
@@ -82,20 +82,12 @@ void audioline_on(void) {
     gAudioLinesOff = FALSE;
 }
 
-#ifdef NON_EQUIVALENT
-s16 D_8011AC20[128];
-// audioline_reset
-void func_80008174(void) {
+void audioline_reset(void) {
     s32 i;
     s32 j;
     ALSoundState *sound;
     SoundMask *heap;
-    // unk8011A6D8 *var_a1;
-    // unk8011A6D8 *var_a2;
-    // unk8011A6E0 *var_a3;
-    // unk80119C58 *var_s1;
-    // u32 target;
-    // f32 *var_v0;
+    f32 *ptr;
 
     heap = gSoundMaskHeap;
     gFreeMasks = 0;
@@ -116,96 +108,41 @@ void func_80008174(void) {
     }
     gUsedMasks = 0;
 
-    //  var_s1 = D_80119C58;
-    //  do {
-    //      var_s1->soundID = 0;
-    //      sound = var_s1->soundPtr;
-    //      if (sound != 0) {
-    //          if (var_s1->unk0.unk0_02 == 0) {
-    //              sound_stop(sound);
-    //          } else if (var_s1->unk0.unk0_02 == 1) {
-    //              music_jingle_stop();
-    //          }
-    //          var_s1->soundPtr = NULL;
-    //          var_s1->unk17C = -1;
-    //      }
-    //      var_s1->unk4.unk4_floats[0] = -100000.0f;;
-    //      var_s1->unk4.unk4_floats[1] = -100000.0f;
-    //      var_v0 = var_s1->unk4.unk4_floats;
-    //      var_v0[4] = -100000.0f;
-    //      var_v0[3] = -100000.0f;
-    //      var_v0[2] = -100000.0f;
-    //      var_v0[1] = -100000.0f;
+    for (i = 0; i < 7; i++) {
+        D_80119C58[i].soundID = 0;
+        if (D_80119C58[i].soundPtr != 0) {
+            if (D_80119C58[i].unk0_02 == 0) {
+                sound_stop(D_80119C58[i].soundPtr);
+            } else if (D_80119C58[i].unk0_02 == 1) {
+                music_jingle_stop();
+            }
+            D_80119C58[i].soundPtr = NULL;
+        }
+        D_80119C58[i].unk17C = -1;
 
-    //      var_v0 = &var_s1->unk4.unk4_floats[5];
-    //      for (j = 2; j != 30; j++, j+= 3) {// this should be j+=4 but has to be split up to match?
-    //          // 2, 6, 10, 14, 18, 22, 26
-    //          var_v0[3] = -100000.0f;;
-    //          var_v0[4] = -100000.0f;
-    //          var_v0[5] = -100000.0f;
-    //          var_v0[6] = -100000.0f;
-    //          var_v0[7] = -100000.0f;
-    //          var_v0[8] = -100000.0f;
-    //          var_v0[9] = -100000.0f;
-    //          var_v0[10] = -100000.0f;
-    //          var_v0[11] = -100000.0f;
-    //          var_v0+= 12;
-    //          var_v0[-12] =  -100000.0f;
-    //          var_v0[-11] =  -100000.0f;
-    //          var_v0[-10] =  -100000.0f;
-    //      };
-    //      var_s1++;
-    //      i++;
-    // } while (i != ARRAY_COUNT(D_80119C58));
+        ptr = D_80119C58[i].unk4_floats;
+        for (j = 0; j < 30; j++) {
+            *ptr++ = -100000.0f;
+            *ptr++ = -100000.0f;
+            *ptr++ = -100000.0f;
+        }
+    }
 
-    //  target = D_8011AC20;
-    //  var_a3 = D_8011A6E0;
-    //  var_a2 = &D_8011A6DC;
-    //  var_a1 = D_8011A6D8;
-    //  do {
-    //      var_a1->unkB8 = -1;
-    //      var_a1->unk0.unk0_02 = 0;
-    //      var_a1->unkBC = 0.0f;
-    //      var_a1 = var_a2;
-    //      var_a1->unk0.unk0_01 = -100000.0f;
+    for (i = 0; i < 7; i++) {
+        D_8011A6D8[i].unkB8 = -1;
+        D_8011A6D8[i].unk0_02 = 0;
+        D_8011A6D8[i].unkBC = 0.0f;
 
-    //      var_a3->unk0 =  -100000.0f;
-    //      var_a3->unk1C = -100000.0f;
-    //      var_a3->unk18 = -100000.0f;
-    //      var_a3->unk14 = -100000.0f;
-    //      var_a3->unk10 = -100000.0f;
-    //      var_a3->unkC = -100000.0f;;
-    //      var_a3->unk8 =  -100000.0f;
-    //      var_a3->unk4 =  -100000.0f;
-
-    //      var_v0_2 = var_a3->unk20;
-    //      for (j = 3; j != 15; j++, j+= 3) {// this should be j+=4 but has to be split up to match?
-    //          // 3, 7, 11
-    //          var_v0_2->unkC = -100000.0f;;
-    //          var_v0_2->unk10 = -100000.0f;
-    //          var_v0_2->unk14 = -100000.0f;
-    //          var_v0_2->unk18 = -100000.0f;
-    //          var_v0_2->unk1C = -100000.0f;
-    //          var_v0_2->unk20 = -100000.0f;
-    //          var_v0_2->unk24 = -100000.0f;
-    //          var_v0_2->unk28 = -100000.0f;
-    //          var_v0_2->unk2C = -100000.0f;
-    //          var_v0_2++;
-    //          var_v0_2[-1].unk0 =  -100000.0f;
-    //          var_v0_2[-1].unk4 =  -100000.0f;
-    //          var_v0_2[-1].unk8 =  -100000.0f;
-    //      };
-
-    //      var_a3++;
-    //      var_a1++;
-    //      var_a2++;
-    //  } while((s32)var_a3 != target);
+        ptr = D_8011A6D8[i].unk4_floats;
+        for (j = 0; j < 15; j++) {
+            *ptr++ = -100000.0f;
+            *ptr++ = -100000.0f;
+            *ptr++ = -100000.0f;
+        }
+    }
 
     gAudioLinesOff = 0;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80008174.s")
-#endif
 
 // audioline_ambient
 // Official Name: amPlayAudioMap
@@ -371,13 +308,13 @@ void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5
 
     if (lineID < 7 && argC < 30) {
         temp_v1 = &D_80119C58[lineID];
-        temp_a0 = &temp_v1->unk4.unk4_floats[argC * 3];
+        temp_a0 = &temp_v1->unk4_floats[argC * 3];
         temp_a0[0] = x;
         temp_a0[1] = y;
         temp_a0[2] = z;
         if (argC == 0) {
             temp_v1->soundID = soundId;
-            temp_v1->unk0.unk0_02 = arg0;
+            temp_v1->unk0_02 = arg0;
             temp_v1->unk170 = arg9;
             temp_v1->unk17D = argA;
             temp_v1->unk174 = arg6;
@@ -393,13 +330,13 @@ void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5
 
 void audioline_reverb_create(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
     unk8011A6D8 *temp;
-    if (arg4 < ARRAY_COUNT(D_8011A6D8) && arg5 < ARRAY_COUNT(D_8011A6D8[0].unk4.unk4_vec)) {
+    if (arg4 < ARRAY_COUNT(D_8011A6D8) && arg5 < 15) {
         temp = &D_8011A6D8[arg4];
-        temp->unk4.unk4_floats[3 * arg5 + 0] = x;
-        temp->unk4.unk4_floats[3 * arg5 + 1] = y;
-        temp->unk4.unk4_floats[3 * arg5 + 2] = z;
+        temp->unk4_floats[3 * arg5 + 0] = x;
+        temp->unk4_floats[3 * arg5 + 1] = y;
+        temp->unk4_floats[3 * arg5 + 2] = z;
         if (arg5 == 0) {
-            temp->unk0.unk0_02 = arg3;
+            temp->unk0_02 = arg3;
         }
         if (temp->unkB8 < arg5) {
             temp->unkB8 = arg5;
@@ -411,21 +348,22 @@ s32 func_800099EC(u8 arg0) {
     s32 ret;
     s32 i;
     unk80119C58 *temp_v0;
-    Vec3f *var_a2;
+    f32 *var_a2;
 
     ret = 1;
     temp_v0 = &D_80119C58[arg0];
-    var_a2 = temp_v0->unk4.unk4_vec;
+    var_a2 = temp_v0->unk4_floats;
 
     if (temp_v0->unk17C <= 0) {
         return 0;
     }
 
     for (i = 0; i < temp_v0->unk17C; i++) {
-        if (var_a2->x == -100000.0 || var_a2->x + 1 == -100000.0 || var_a2->x + 2 == -100000.0) {
+        //@bug should be *(var_a2 + 0), *(var_a2 + 1), *(var_a2 + 2)
+        if (*var_a2 + 0 == -100000.0 || *var_a2 + 1 == -100000.0 || *var_a2 + 2 == -100000.0) {
             ret = 0;
         }
-        var_a2 += 1;
+        var_a2 += 3;
     }
 
     return ret;
@@ -435,21 +373,22 @@ s32 func_80009AB4(u8 arg0) {
     s32 ret;
     s32 i;
     unk8011A6D8 *temp_v0;
-    Vec3f *var_a2;
+    f32 *var_a2;
 
     ret = 1;
     temp_v0 = &D_8011A6D8[arg0];
-    var_a2 = temp_v0->unk4.unk4_vec;
+    var_a2 = temp_v0->unk4_floats;
 
     if (temp_v0->unkB8 <= 0) {
         return 0;
     }
 
     for (i = 0; i < temp_v0->unkB8; i++) {
-        if (var_a2->x == -100000.0 || var_a2->x + 1 == -100000.0 || var_a2->x + 2 == -100000.0) {
+        //@bug should be *(var_a2 + 0), *(var_a2 + 1), *(var_a2 + 2)
+        if (*var_a2 == -100000.0 || *var_a2 + 1 == -100000.0 || *var_a2 + 2 == -100000.0) {
             ret = 0;
         }
-        var_a2 += 1;
+        var_a2 += 3;
     }
 
     return ret;
@@ -477,9 +416,9 @@ void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z) {
     maxDist = 400;
     for (i = 0; i < ARRAY_COUNT(D_8011A6D8); i++) {
         temp = &D_8011A6D8[i];
-        if (temp->unk0.unk0_02 != 0) {
+        if (temp->unk0_02 != 0) {
             if (func_80009AB4(i) != 0) {
-                coords = temp->unk4.unk4_floats;
+                coords = temp->unk4_floats;
                 for (j = 0; j < temp->unkB8; j++) {
                     distBetween = audioline_distance(x, y, z, coords, &outX, &outY, &outZ);
                     if (distBetween < maxDist) {
@@ -504,7 +443,79 @@ void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80009D6C.s")
+u8 func_80009D6C(unk8011A6D8 *arg0, f32 arg1, f32 arg2, f32 arg3) {
+    f32 deltaX;
+    f32 deltaY;
+    f32 deltaZ;
+    f32 *coords;
+    f32 x1, y1, z1;
+    f32 x2, y2, z2;
+    f32 dx, dy, dz;
+    f32 f20;
+    f32 sp5C;
+    f32 length;
+    u8 sp57;
+    f32 f12;
+
+    if (arg0->unkBC == 0.0f) {
+        coords = arg0->unk4_floats;
+        for (f20 = 0.0f; f20 < arg0->unkB8; f20 += 1.0f) {
+            deltaX = coords[3] - coords[0];
+            deltaY = coords[4] - coords[1];
+            deltaZ = coords[5] - coords[2];
+            arg0->unkBC += sqrtf((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ));
+            coords += 3;
+        }
+    }
+
+    coords = arg0->unk4_floats;
+    sp5C = 0.0f;
+    sp57 = FALSE;
+
+    for (; !sp57; coords += 3) {
+        x1 = coords[0];
+        y1 = coords[1];
+        z1 = coords[2];
+        x2 = coords[3];
+        y2 = coords[4];
+        z2 = coords[5];
+        dx = x2 - x1;
+        dy = y2 - y1;
+        dz = z2 - z1;
+        length = sqrtf((dx * dx) + (dy * dy) + (dz * dz));
+
+        if (arg1 >= x1 && arg1 <= x2 || arg1 >= x2 && arg1 <= x1) {
+            if (dx != 0.0f) {
+                f12 = (arg1 - x1) / dx;
+            } else if (dy != 0.0f) {
+                f12 = (arg2 - y1) / dy;
+            } else if (dz != 0.0f) {
+                f12 = (arg3 - z1) / dz;
+            } else {
+                f12 = 0.0f;
+            }
+
+            if (ABS(dy * f12 + y1 - arg2) < 2.0f && ABS(dz * f12 + z1 - arg3) < 2.0f) {
+                sp57 = TRUE;
+                sp5C += f12 * length;
+            } else {
+                sp5C += length;
+            }
+        } else {
+            sp5C += length;
+        }
+    }
+
+    if (sp5C > arg0->unkBC / 2) {
+        sp5C = arg0->unkBC - sp5C;
+    }
+
+    if (sp5C < 300.0f) {
+        return arg0->unk0_02 * sp5C / 300.0f;
+    } else {
+        return arg0->unk0_02;
+    }
+}
 
 void debug_render_audio_effects(Gfx **dList, Vertex **verts, Triangle **tris) {
     s32 i, j;
@@ -514,7 +525,7 @@ void debug_render_audio_effects(Gfx **dList, Vertex **verts, Triangle **tris) {
 
     for (i = 0; i < ARRAY_COUNT(D_80119C58); i++) {
         var_s2 = &D_80119C58[i];
-        coords = var_s2->unk4.unk4_floats;
+        coords = var_s2->unk4_floats;
         if (D_80119C58[i].soundID != 0) {
             for (j = 0; j < var_s2->unk17C; j++) {
                 debug_render_line(dList, verts, tris, coords, 255, 255, 0);
@@ -525,8 +536,8 @@ void debug_render_audio_effects(Gfx **dList, Vertex **verts, Triangle **tris) {
 
     for (i = 0; i < ARRAY_COUNT(D_8011A6D8); i++) {
         var_s2_2 = &D_8011A6D8[i];
-        coords = var_s2_2->unk4.unk4_floats;
-        if (D_8011A6D8[i].unk0.unk0_02 != 0) {
+        coords = var_s2_2->unk4_floats;
+        if (D_8011A6D8[i].unk0_02 != 0) {
             for (j = 0; j < var_s2_2->unkB8; j++) {
                 debug_render_line(dList, verts, tris, coords, 255, 0, 255);
                 coords += 3;
