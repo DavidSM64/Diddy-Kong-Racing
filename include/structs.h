@@ -556,7 +556,7 @@ typedef struct TextureInfo {
 /* 0x04 */ u8 width;
 /* 0x05 */ u8 height;
 /* 0x06 */ u8 format;
-/* 0x07 */ u8 unk7;
+/* 0x07 */ s8 unk7;
 } TextureInfo;
 
 /* Size: 10 bytes */
