@@ -1834,8 +1834,206 @@ s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BDC80.s")
 #endif
-// https://decomp.me/scratch/2RF3k
-#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BE654.s")
+
+Object_64* func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
+    f32 spE4;
+    f32 temp_f;
+    s32 pad;
+    f32 var_f0;
+    s32 pad2;
+    f32 var_f12;
+    s32 var_t4;    
+    f32 temp_f2;
+    s32 spC4;
+    s32 spC0;
+    f32 var_f18;
+    f32 var_f20;
+    f32 var_f22;
+    s32 spB0;
+    s32 var_t1;
+    s32 var_a0;
+    s16 var_t0;
+    s16 var_v1;
+    s16 var_a3;
+    s16 var_a1;
+    f32 var_f2;
+    s32 var_v0;
+    f32 var_f14;
+    s32 var_v0_2;
+    s32 var_a2;
+    s32 sp80[3];
+    s32 sp68[6];
+    s32 sp5C[3];
+    f32 sp50[3];
+    Object_64* object;
+
+    var_t0 = 0x80;
+    object = NULL;
+    if ((D_800E3040 != NULL) && (arg0 >= 0) && (arg0 < gNumberOfLevelSegments)) {
+        object = mempool_alloc_safe((D_80129FC8.unk20 >> 1) + 0xE, 0xFFFFFFU);
+        object->effect_box.unk0 = D_800E30D8[arg0].unk6;
+        object->effect_box.unk2 = 0;
+        object->effect_box.unk3 = 1;
+        object->effect_box.unk4 = 0;
+        object->effect_box.unk6 = D_80129FC8.unk20;
+        var_f20 = D_8012A0BC;
+        var_f22 = D_8012A0B8;
+        temp_f2 = (1.0f - D_80129FC8.unk44) / 127.0f;
+        var_f2 = temp_f2;
+        spB0 = (arg0 * D_800E317C);
+        if (D_80129FC8.unk28 != 0) {
+            var_t4 = (D_80129FC8.unk0 * 2) + 1;
+            var_f20 *= 0.5f;
+            var_f22 *= 0.5f;
+        } else {
+            var_t4 = D_80129FC8.unk0 + 1;
+        }
+        arg1 -= D_800E30D8[arg0].unk4;
+        if (arg1 < 0.0f) {
+            arg1 = 0.0f;
+            // clang-format off
+        } else if (arg1 >= D_8012A0A0) { \
+            arg1 = D_8012A0A0 - 1;
+            // clang-format on
+        }
+        arg2 -= D_800E30D8[arg0].unk8;
+        if (arg2 < 0.0f) {
+            arg2 = 0.0f;
+        } else if (D_8012A0A4 <= arg2) {
+            arg2 = D_8012A0A4 - 1;
+        }
+        spC4 = arg1 / var_f22;
+        spC0 = arg2 / var_f20;
+        object->effect_box.unk8 = spC4;
+        object->effect_box.unkA = spC0;
+        object->effect_box.unkC = arg0;
+        arg1 -= (spC4 * var_f22);
+        arg2 -= (spC0 * var_f20);
+        var_a0 = D_800E30D8[arg0].unk12 + spC4;
+        while (var_a0 >= D_80129FC8.unk4) {
+            var_a0 -= D_80129FC8.unk4;
+        }
+        
+        var_v0 = D_800E30D8[arg0].unk10 + spC0;
+        while (var_v0 >= D_80129FC8.unk4) {
+            var_v0 -= D_80129FC8.unk4;
+        }
+    
+        var_t1 = 0;
+        if ((arg2 != var_f20) && (arg1 < (((var_f20 - arg2) / var_f20) * var_f22))) {
+            var_t1 = 1;
+        }
+        
+        if (var_t1 != 0) {
+            sp80[0] = (var_v0 * D_80129FC8.unk4) + var_a0;
+
+            if ((var_v0 + 1) >= D_80129FC8.unk4) {
+                sp80[1] = var_a0;
+            } else {
+                sp80[1] = ((var_v0 + 1) * D_80129FC8.unk4) + var_a0;
+            }
+
+            if ((var_a0 + 1) >= D_80129FC8.unk4) {
+                sp80[2] = (var_v0 * D_80129FC8.unk4);
+            } else {
+                sp80[2] = (var_v0 * D_80129FC8.unk4) + var_a0 + 1;
+            }
+
+            spE4 = 0.0f;
+            sp5C[0] = (spB0 + spC4) + (spC0 * var_t4);
+            sp5C[1] = (spB0 + spC4) + ((spC0 + 1) * var_t4);
+            sp5C[2] = (spB0 + spC4) + (spC0 * var_t4) + 1;
+        } else {
+            if ((var_a0 + 1) >= D_80129FC8.unk4) {
+                sp80[0] = var_v0 * D_80129FC8.unk4;
+            } else {
+                sp80[0] = var_a0 + 1 + (var_v0 * D_80129FC8.unk4);
+            }
+
+            if ((var_v0 + 1) >= D_80129FC8.unk4) {
+                sp80[1] = var_a0;
+            } else {
+                sp80[1] = ((var_v0 + 1) * D_80129FC8.unk4) + var_a0;
+            }
+
+            if ((var_a0 + 1) >= D_80129FC8.unk4) {
+                sp80[2] = 0;
+            } else {
+                sp80[2] = var_a0 + 1; 
+            }
+            
+            if ((var_v0 + 1) < D_80129FC8.unk4) {
+                sp80[2] += (var_v0 + 1) * D_80129FC8.unk4;
+            }
+            
+            spE4 = var_f22;
+            sp5C[0] = (spC4 + spB0) + (spC0 * var_t4) + 1;
+            sp5C[1] = (spC4 + spB0) + (spC0 + 1) * var_t4;
+            sp5C[2] = (spC4 + spB0) + (spC0 + 1) * var_t4 + 1;
+        }
+
+        for (var_a3 = 0; var_a3 < 3; var_a3++) {
+            sp68[var_a3 * 2] = D_800E3044[sp80[var_a3]].s[0];
+            sp68[var_a3 * 2 + 1] = D_800E3044[sp80[var_a3]].s[1];
+            sp50[var_a3] = 1.0f;
+
+            var_a2 = D_800E3178[sp5C[var_a3]];
+            if (var_a2 < 0x7F) {
+                sp50[var_a3] *= D_80129FC8.unk44 + (var_a2 * var_f2);
+            }
+        }
+
+        if (D_80129FC8.unk28 != 0) {
+            sp50[0] *= 0.5;
+            sp50[1] *= 0.5;
+            sp50[2] *= 0.5;
+        }
+
+        for (var_a3 = 0; var_a3 < (D_80129FC8.unk20 >> 1); var_a3++) {
+            temp_f = (D_800E3040[sp68[0]] + D_800E3040[sp68[1]]) * sp50[0];
+            var_f12 = (D_800E3040[sp68[2]] + D_800E3040[sp68[3]]) * sp50[1];
+            var_f0 = (D_800E3040[sp68[4]] + D_800E3040[sp68[5]]) * sp50[2];
+            if (var_t1 != 0) {
+                var_f2 = (temp_f - var_f0) * var_f20;
+                var_f14 = (temp_f - var_f12) * var_f22;
+            } else {
+                var_f2 = (var_f12 - var_f0) * var_f20;
+                var_f14 = (temp_f - var_f0) * var_f22;
+            }
+            var_f18 = var_f20 * var_f22;
+            var_f0 = sqrtf((var_f2 * var_f2) + (var_f18 * var_f18) + (var_f14 * var_f14));
+            var_f2 /= var_f0;
+            var_f14 /= var_f0;
+            var_f12 = var_f18 / var_f0;
+            var_v0_2 = -(s32) (
+                (
+                (var_f2 * arg1) + (var_f14 * arg2) - ((spE4 * var_f2) + (temp_f * var_f12))
+                ) * 16.0f / var_f12
+                );
+            if ((var_v0_2 >= var_t0) || (var_v0_2 < -var_t0)) {
+                var_v1 = 0;
+                do {
+                    var_t0 += var_t0;
+                    var_v1++;
+                } while(var_v0_2 >= var_t0 || var_v0_2 < -var_t0);
+                
+                for (var_a1 = 0; var_a1 < var_a3; var_a1++) { 
+                    object->effect_box.unkE[var_a1] >>= var_v1;
+                }
+                object->effect_box.unk2 += var_v1;
+            }                
+            object->effect_box.unkE[var_a3] = (var_v0_2 >> object->effect_box.unk2);
+            for (var_a1 = 0; var_a1 < 6; var_a1++) {
+                sp68[var_a1] += 2;
+                while (sp68[var_a1] >= D_80129FC8.unk20) {
+                    sp68[var_a1] -= D_80129FC8.unk20;
+                }
+            }
+        }
+    }
+
+    return object;
+}
 
 /**
  * Finds the wave height and returns it for the spinning log object.
