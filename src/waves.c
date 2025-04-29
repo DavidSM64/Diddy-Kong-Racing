@@ -1870,7 +1870,7 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
     var_t0 = 0x80;
     object = NULL;
     if ((D_800E3040 != NULL) && (arg0 >= 0) && (arg0 < gNumberOfLevelSegments)) {
-        object = mempool_alloc_safe((D_80129FC8.unk20 >> 1) + 0xE, 0xFFFFFFU);
+        object = mempool_alloc_safe((D_80129FC8.unk20 >> 1) + 0xE, COLOUR_TAG_CYAN);
         object->effect_box.unk0 = D_800E30D8[arg0].unk6;
         object->effect_box.unk2 = 0;
         object->effect_box.unk3 = 1;
