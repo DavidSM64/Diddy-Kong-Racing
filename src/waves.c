@@ -1835,14 +1835,14 @@ s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BDC80.s")
 #endif
 
-Object_64* func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
+Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
     f32 spE4;
     f32 temp_f;
     s32 pad;
     f32 var_f0;
     s32 pad2;
     f32 var_f12;
-    s32 var_t4;    
+    s32 var_t4;
     f32 temp_f2;
     s32 spC4;
     s32 spC0;
@@ -1865,7 +1865,7 @@ Object_64* func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
     s32 sp68[6];
     s32 sp5C[3];
     f32 sp50[3];
-    Object_64* object;
+    Object_64 *object;
 
     var_t0 = 0x80;
     object = NULL;
@@ -1913,17 +1913,17 @@ Object_64* func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
         while (var_a0 >= D_80129FC8.unk4) {
             var_a0 -= D_80129FC8.unk4;
         }
-        
+
         var_v0 = D_800E30D8[arg0].unk10 + spC0;
         while (var_v0 >= D_80129FC8.unk4) {
             var_v0 -= D_80129FC8.unk4;
         }
-    
+
         var_t1 = 0;
         if ((arg2 != var_f20) && (arg1 < (((var_f20 - arg2) / var_f20) * var_f22))) {
             var_t1 = 1;
         }
-        
+
         if (var_t1 != 0) {
             sp80[0] = (var_v0 * D_80129FC8.unk4) + var_a0;
 
@@ -1959,13 +1959,13 @@ Object_64* func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
             if ((var_a0 + 1) >= D_80129FC8.unk4) {
                 sp80[2] = 0;
             } else {
-                sp80[2] = var_a0 + 1; 
+                sp80[2] = var_a0 + 1;
             }
-            
+
             if ((var_v0 + 1) < D_80129FC8.unk4) {
                 sp80[2] += (var_v0 + 1) * D_80129FC8.unk4;
             }
-            
+
             spE4 = var_f22;
             sp5C[0] = (spC4 + spB0) + (spC0 * var_t4) + 1;
             sp5C[1] = (spC4 + spB0) + (spC0 + 1) * var_t4;
@@ -2005,23 +2005,20 @@ Object_64* func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
             var_f2 /= var_f0;
             var_f14 /= var_f0;
             var_f12 = var_f18 / var_f0;
-            var_v0_2 = -(s32) (
-                (
-                (var_f2 * arg1) + (var_f14 * arg2) - ((spE4 * var_f2) + (temp_f * var_f12))
-                ) * 16.0f / var_f12
-                );
+            var_v0_2 = -(s32) (((var_f2 * arg1) + (var_f14 * arg2) - ((spE4 * var_f2) + (temp_f * var_f12))) * 16.0f /
+                               var_f12);
             if ((var_v0_2 >= var_t0) || (var_v0_2 < -var_t0)) {
                 var_v1 = 0;
                 do {
                     var_t0 += var_t0;
                     var_v1++;
-                } while(var_v0_2 >= var_t0 || var_v0_2 < -var_t0);
-                
-                for (var_a1 = 0; var_a1 < var_a3; var_a1++) { 
+                } while (var_v0_2 >= var_t0 || var_v0_2 < -var_t0);
+
+                for (var_a1 = 0; var_a1 < var_a3; var_a1++) {
                     object->effect_box.unkE[var_a1] >>= var_v1;
                 }
                 object->effect_box.unk2 += var_v1;
-            }                
+            }
             object->effect_box.unkE[var_a3] = (var_v0_2 >> object->effect_box.unk2);
             for (var_a1 = 0; var_a1 < 6; var_a1++) {
                 sp68[var_a1] += 2;
