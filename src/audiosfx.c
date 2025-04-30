@@ -1,6 +1,5 @@
 #include "audiosfx.h"
 #include "memory.h"
-#include "audio_internal.h"
 #include "video.h"
 #include "math_util.h"
 #include "asset_loading.h"
@@ -55,6 +54,7 @@ void alSndPNew(audioMgrConfig *c) {
     u32 i;
     unk800DC6BC_40 *tmp1;
     ALEvent evt;
+    ALEventListItem * items;
 
     /*
      * Init member variables
@@ -63,17 +63,20 @@ void alSndPNew(audioMgrConfig *c) {
     gAlSndPlayerPtr->soundChannels = c->maxChannels;
     gAlSndPlayerPtr->unk3C = 0;
     gAlSndPlayerPtr->frameTime = 33000; // AL_USEC_PER_FRAME        /* time between API events */
-    gAlSndPlayerPtr->unk40 = (unk800DC6BC_40 *) alHeapAlloc(c->hp, 1, c->unk00 * sizeof(unk800DC6BC_40));
-    alEvtqNew(&(gAlSndPlayerPtr->evtq), alHeapAlloc(c->hp, 1, (c->unk04) * 28), c->unk04);
-    D_800DC6B0.unk8 = (ALSoundState *) gAlSndPlayerPtr->unk40;
-    for (i = 1; i < c->unk00; i++) {
-        tmp1 = gAlSndPlayerPtr->unk40;
-        alLink((ALLink *) (i + tmp1), (ALLink *) (i + tmp1 - 1));
-    }
+    gAlSndPlayerPtr->sndState = (unk800DC6BC_40 *) alHeapAlloc(c->hp, 1, c->maxSounds * sizeof(unk800DC6BC_40));
 
     /*
      * init the event queue
      */
+    items = (ALEventListItem *) alHeapAlloc(c->hp, 1, c->maxEvents * sizeof(ALEventListItem));
+    alEvtqNew(&gAlSndPlayerPtr->evtq, items, c->maxEvents);
+
+    D_800DC6B0.freeList = (ALSoundState *) gAlSndPlayerPtr->sndState;
+    for (i = 1; i < c->maxSounds; i++) {
+        tmp1 = gAlSndPlayerPtr->sndState;
+        alLink(&(tmp1 + i)->node, &(tmp1 + i - 1)->node);
+    }
+
     gSoundChannelVolume = alHeapAlloc(c->hp, 2, c->unk10);
     for (i = 0; i < c->unk10; i++) {
         gSoundChannelVolume[i] = 32767;
@@ -181,13 +184,11 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     ALSoundState *nextAllocList;
     ALSoundState *nextFreeList;
     ALSoundState *prevFreeList;
-    ALSoundState *queue;
 
     mask = osSetIntMask(OS_IM_NONE);
-    queue = (ALSoundState *) &D_800DC6B0;
-    nextFreeList = queue->next;
-    nextAllocList = queue->unk8;
-    prevFreeList = queue->prev;
+    nextFreeList = D_800DC6B0.list1;
+    nextAllocList = D_800DC6B0.freeList;
+    prevFreeList = D_800DC6B0.list2;
 
     for (freeListNextIndex = 0; nextFreeList != NULL; freeListNextIndex++) {
         nextFreeList = nextFreeList->next;
@@ -212,73 +213,74 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
 // This function is full of names like next / prev that I made up based on other funcs.
 // It's in no way guaranteed to be correct.
 // I'm really not even sure what it's supposed to be returning as a type.
-ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
+ALSoundState *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
     s32 temp;
     ALKeyMap *temp_a2;
-    unk80004384 *nextAllocList;
+    ALSoundState *state;
     u32 mask;
     s32 temp_a1;
 
-    nextAllocList = (unk80004384 *) D_800DC6B0.unk8;
+    state = D_800DC6B0.freeList;
     temp_a2 = arg1->keyMap;
-    if (nextAllocList != NULL) {
+    if (state != NULL) {
         mask = osSetIntMask(OS_IM_NONE);
-        D_800DC6B0.unk8 = nextAllocList->next;
-        alUnlink((ALLink *) nextAllocList);
-        if (D_800DC6B0.next != NULL) {
-            nextAllocList->next = D_800DC6B0.next;
-            nextAllocList->prev = NULL;
-            D_800DC6B0.next->prev = (ALSoundState *) nextAllocList;
-            D_800DC6B0.next = (ALSoundState *) nextAllocList;
+        D_800DC6B0.freeList = state->next;
+        alUnlink((ALLink *) state);
+        if (D_800DC6B0.list1 != NULL) {
+            state->next = D_800DC6B0.list1;
+            state->prev = NULL;
+            D_800DC6B0.list1->prev = (ALSoundState *) state;
+            D_800DC6B0.list1 = (ALSoundState *) state;
         } else {
-            nextAllocList->prev = NULL;
-            nextAllocList->next = NULL;
-            D_800DC6B0.next = (ALSoundState *) nextAllocList;
-            D_800DC6B0.prev = (ALSoundState *) nextAllocList;
+            state->prev = NULL;
+            state->next = NULL;
+            D_800DC6B0.list1 = (ALSoundState *) state;
+            D_800DC6B0.list2 = (ALSoundState *) state;
         }
         osSetIntMask(mask);
+
         temp = ((arg1->envelope->decayTime + 1) == 0);
         temp_a1 = temp + 0x40;
         temp = 6000;
-        nextAllocList->unk36 = temp_a1;
-        nextAllocList->unk3F = 5;
-        nextAllocList->unk38 = 2;
-        nextAllocList->unk8 = (ALSoundState *) arg1;
-        nextAllocList->unk2C = 1.0f;
-        nextAllocList->unk3E = temp_a2->keyMax & 0xF0;
-        nextAllocList->unk30 = 0;
-        if (nextAllocList->unk3E & 0x20) {
-            nextAllocList->unk28 = alCents2Ratio((temp_a2->keyBase * 100) - temp);
+        state->unk36 = temp_a1;
+        state->soundState = 5;
+        state->unk38 = 2;
+        state->unk8 = arg1;
+        state->unk2C = 1.0f;
+        state->flags = temp_a2->keyMax & 0xF0;
+        state->unk30 = 0;
+        if (state->flags & 0x20) {
+            state->unk28 = alCents2Ratio((temp_a2->keyBase * 100) - temp);
         } else {
-            nextAllocList->unk28 = alCents2Ratio(((temp_a2->keyBase * 100) + temp_a2->detune) - temp);
+            state->unk28 = alCents2Ratio(((temp_a2->keyBase * 100) + temp_a2->detune) - temp);
         }
         if (temp_a1 != 0x40) {
-            nextAllocList->unk3E |= 2;
+            state->flags |= 2;
         }
-        nextAllocList->unk3D = 0;
-        nextAllocList->unk3C = 0x40;
-        nextAllocList->unk34 = 0x7FFF;
+        state->unk3D = 0;
+        state->unk3C = 0x40;
+        state->unk34 = 0x7FFF;
     }
-    return (ALSound *) nextAllocList;
+    return state;
 }
 
 void func_80004520(ALSoundState *soundState) {
-    if (soundState == D_800DC6B0.next) {
-        D_800DC6B0.next = soundState->next;
+    if (soundState == D_800DC6B0.list1) {
+        D_800DC6B0.list1 = soundState->next;
     }
-    if (soundState == D_800DC6B0.prev) {
-        D_800DC6B0.prev = soundState->prev;
+    if (soundState == D_800DC6B0.list2) {
+        D_800DC6B0.list2 = soundState->prev;
     }
     alUnlink((ALLink *) soundState);
-    if (D_800DC6B0.unk8 != NULL) {
-        soundState->next = D_800DC6B0.unk8;
+    if (D_800DC6B0.freeList != NULL) {
+        soundState->next = D_800DC6B0.freeList;
         soundState->prev = NULL;
-        D_800DC6B0.unk8->prev = soundState;
-        D_800DC6B0.unk8 = soundState;
+        D_800DC6B0.freeList->prev = soundState;
+        D_800DC6B0.freeList = soundState;
     } else {
         soundState->prev = NULL;
         soundState->next = NULL;
-        D_800DC6B0.unk8 = soundState;
+        D_800DC6B0.freeList = soundState;
     }
     if (soundState->flags & AL_SNDP_PAN_EVT) {
         D_800DC6C4--;
@@ -297,7 +299,7 @@ void func_80004520(ALSoundState *soundState) {
  */
 void func_80004604(ALSoundState *sndp, u8 priority) {
     if (sndp != NULL) {
-        sndp->soundPriority = priority;
+        sndp->unk36 = priority;
     }
 }
 
@@ -312,17 +314,82 @@ UNUSED u8 func_8000461C(ALSoundState *sndp) {
     }
 }
 
-s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask) {
+ALSoundState *func_80004638(ALBank *bnk, s16 sndIndx, ALSoundState **soundMask) {
     return func_80004668(bnk, sndIndx, 0, soundMask);
 }
 
-#ifdef NON_EQUIVALENT
-s32 func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, SoundMask *soundMask) {
-    return 0;
+ALSoundState *func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, ALSoundState **soundMask) {
+    ALSound* temp_s2;
+    ALSoundState* s7;
+    ALSoundState* v0;
+    ALMicroTime s4;
+    s16 sp6E;
+    ALMicroTime sp68;
+    ALMicroTime s3;
+    ALKeyMap *keyMap;
+
+    s7 = NULL;
+    sp6E = 0;
+    s4 = 0;        
+
+    if (sndIndx == 0) {
+        return NULL;
+    }
+
+    do {
+        temp_s2 = bnk->instArray[0]->soundArray[sndIndx - 1];
+        v0 = func_80004384(bnk, temp_s2);
+        if (v0 != NULL) {
+            ALSndpEvent evt;
+
+            gAlSndPlayerPtr->unk3C = v0;
+
+            evt.common.type = AL_SNDP_PLAY_EVT;
+            evt.common.state = v0;
+            s3 = temp_s2->keyMap->velocityMax * 33333;
+
+            if (arg2 != 0) {
+                v0->unk36 = arg2;
+            }
+
+            if (v0->flags & 0x10) {
+                v0->flags &= ~0x10;
+                alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent*)&evt, s4 + 1);
+                sp68 = s3 + 1;
+                sp6E = sndIndx;
+            } else {
+                alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent*)&evt, s3 + 1);
+            }
+
+            s7 = v0;
+        }
+
+        s4 += s3;
+        keyMap = temp_s2->keyMap;
+        sndIndx = keyMap->velocityMin + (keyMap->keyMin & 0xC0) * 4; // What is going on here?
+
+    } while (sndIndx != 0 && v0 != NULL);
+
+    if (s7 != NULL) {
+        s7->flags |= 1;
+        s7->unk30 = soundMask;
+        if (sp6E != 0) {
+            ALSndpEvent evt2;
+
+            s7->flags |= 0x10;
+            evt2.unk9.type = AL_SNDP_UNK_9_EVT;
+            evt2.unk9.state = s7;
+            evt2.unk9.unk8 = sp6E;
+            evt2.unk9.unkC = bnk;
+            alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent*)&evt2, sp68);
+        }
+    }
+
+    if (soundMask != NULL) {
+        *soundMask = s7;
+    }
+    return s7;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/func_80004668.s")
-#endif
 
 /**
  * input typing not right (some type of struct)
@@ -349,7 +416,7 @@ void func_800048D8(u8 event) {
     ALSoundState *queue;
 
     mask = osSetIntMask(OS_IM_NONE);
-    queue = D_800DC6B0.next;
+    queue = D_800DC6B0.list1;
     while (queue != NULL) {
         evt.type = AL_SNDP_UNK_10_EVT;
         evt.msg.sndpevent.soundState = queue;
@@ -388,7 +455,7 @@ void sound_stop_all(void) {
  * Send a message to the sound player to update an existing property of the sound entry.
  * Official Name: gsSndpSetParam
  */
-void sound_event_update(s32 soundMask, s16 type, u32 volume) {
+void sound_event_update(SoundHandle soundMask, s16 type, u32 volume) {
     ALEvent2 sndEvt;
     sndEvt.snd_event.type = type;
     sndEvt.snd_event.state = (void *) soundMask;
@@ -422,7 +489,7 @@ void set_sound_channel_volume(u8 channel, u16 volume) {
     ALEvent evt;
 
     mask = osSetIntMask(OS_IM_NONE);
-    queue = (ALEventQueue *) D_800DC6B0.next;
+    queue = (ALEventQueue *) D_800DC6B0.list1;
     gSoundChannelVolume[channel] = volume;
 
     while (queue != NULL) {

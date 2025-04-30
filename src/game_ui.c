@@ -224,9 +224,9 @@ u8 gHudSlide;
 u8 gHideRaceTimer;
 u8 gNumActivePlayers;
 u8 gWrongWayNagPrefix;
-SoundMask *gRaceStartSoundMask;
-s32 gHUDVoiceSoundMask;
-SoundMask *gHudBalloonSoundMask;
+ALSoundState *gRaceStartSoundMask;
+SoundHandle gHUDVoiceSoundMask;
+ALSoundState *gHudBalloonSoundMask;
 s16 D_80126D48;
 s32 D_80126D4C;
 s32 D_80126D50;
@@ -605,7 +605,7 @@ void hud_audio_update(s32 updateRate) {
     for (i = 0; i < 2; i++) {
         if (gHudAudioData[i].volume) {
             if (gHudAudioData[i].soundMask == NULL) {
-                sound_play(gHudAudioData[i].soundID, (s32 *) &gHudAudioData[i].soundMask);
+                sound_play(gHudAudioData[i].soundID, &gHudAudioData[i].soundMask);
             }
             sound_volume_set_relative(gHudAudioData[i].soundID, gHudAudioData[i].soundMask, gHudAudioData[i].volume);
             if (gHudAudioData[i].volumeRamp > 0) {
@@ -2634,7 +2634,7 @@ void hud_balloons(UNUSED Object_Racer *racer) {
         balloonCount = *settings->balloonsPtr;
         if (cutscene_id() == 10) {
             if (get_balloon_cutscene_timer() < balloonTickTimer + 8 && gHudBalloonSoundMask == NULL) {
-                sound_play(SOUND_HUD_LAP_TICK, (s32 *) &gHudBalloonSoundMask);
+                sound_play(SOUND_HUD_LAP_TICK, &gHudBalloonSoundMask);
             }
         }
     }

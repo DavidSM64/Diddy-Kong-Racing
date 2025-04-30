@@ -1,7 +1,6 @@
 #include "audio_spatial.h"
 #include "types.h"
 #include "macros.h"
-#include "audio_internal.h"
 #include "audio_vehicle.h"
 #include "memory.h"
 #include "audio.h"
@@ -85,7 +84,7 @@ void audioline_on(void) {
 void audioline_reset(void) {
     s32 i;
     s32 j;
-    ALSoundState *sound;
+    SoundHandle sound;
     SoundMask *heap;
     f32 *ptr;
 

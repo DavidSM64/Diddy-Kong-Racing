@@ -5,7 +5,6 @@
 #include "macros.h"
 #include "asset_enums.h"
 #include "asset_loading.h"
-#include "audio_internal.h"
 #include "audiomgr.h"
 #include "audiosfx.h"
 #include "audio_spatial.h"
@@ -67,9 +66,9 @@ ALCSeq gJingleSequence;
 u8 gSkipResetChannels; // Stored and used by a single function, but redundant.
 u8 gAudioVolumeSetting;
 u32 gDynamicMusicChannelMask;
-SoundMask *gGlobalSoundMask;
-SoundMask *gSpatialSoundMask;
-SoundMask *gRacerSoundMask;
+ALSoundState *gGlobalSoundMask;
+ALSoundState *gSpatialSoundMask;
+ALSoundState *gRacerSoundMask;
 
 /******************************/
 
@@ -142,8 +141,8 @@ void audio_init(OSSched *sc) {
     gJinglePlayer = sound_seqplayer_init(16, 50);
     gMusicSequenceData = mempool_alloc_safe(seqLength, COLOUR_TAG_CYAN);
     gJingleSequenceData = mempool_alloc_safe(seqLength, COLOUR_TAG_CYAN);
-    audConfig.unk04 = 150;
-    audConfig.unk00 = 32;
+    audConfig.maxEvents = 150;
+    audConfig.maxSounds = 32;
     audConfig.maxChannels = AUDIO_CHANNELS;
     audConfig.unk10 = 1;
     audConfig.hp = &gALHeap;
@@ -337,13 +336,13 @@ void sound_update_queue(u8 updateRate) {
             gDelayedSounds[i].timer -= updateRate;
             if (gDelayedSounds[i].timer <= 0) {
                 j = i;
-                sound_play(gDelayedSounds[i].soundId, (s32 *) gDelayedSounds[i].soundMask);
+                sound_play(gDelayedSounds[i].soundId, gDelayedSounds[i].handlePtr);
 
                 gDelayedSoundsCount -= 1;
                 while (j < gDelayedSoundsCount) {
                     gDelayedSounds[i].soundId = gDelayedSounds[i + 1].soundId;
                     gDelayedSounds[i].timer = gDelayedSounds[i + 1].timer;
-                    gDelayedSounds[i].soundMask = gDelayedSounds[i + 1].soundMask;
+                    gDelayedSounds[i].handlePtr = gDelayedSounds[i + 1].handlePtr;
                     j++;
                 }
                 j++;
@@ -364,10 +363,10 @@ void sound_update_queue(u8 updateRate) {
  * Add a sound to a queue to play after a set time has passed.
  * Delay time is in seconds. (1.0f = 1 second)
  */
-void sound_play_delayed(u16 soundId, SoundMask *soundMask, f32 delayTime) {
+void sound_play_delayed(u16 soundId, SoundHandle *handlePtr, f32 delayTime) {
     if (gDelayedSoundsCount < 8) {
         gDelayedSounds[gDelayedSoundsCount].soundId = soundId;
-        gDelayedSounds[gDelayedSoundsCount].soundMask = soundMask;
+        gDelayedSounds[gDelayedSoundsCount].handlePtr = handlePtr;
         gDelayedSounds[gDelayedSoundsCount].timer = delayTime * 60.0f;
         gDelayedSoundsCount++;
     }
@@ -795,37 +794,37 @@ u16 sound_distance(u16 soundId) {
  * Add the requested sound to the queue and update the mask to show that this sound is playing at that source.
  * If no soundmask is provided, then instead use the global mask.
  */
-void sound_play(u16 soundID, s32 *soundMask) {
+void sound_play(u16 soundID, SoundHandle *handlePtr) {
     f32 pitch;
     s32 soundBite;
 
     if (soundID > gSoundCount) {
-        if (soundMask != NULL) {
-            *soundMask = NULL;
+        if (handlePtr != NULL) {
+            *handlePtr = NULL;
         }
         stubbed_printf("amSndPlay: Illegal sound effects table index\n");
         return;
     }
     soundBite = gSoundTable[soundID].soundBite;
     if (soundBite == NULL) {
-        if (soundMask != NULL) {
-            *soundMask = NULL;
+        if (handlePtr != NULL) {
+            *handlePtr = NULL;
         }
         return;
     }
     pitch = gSoundTable[soundID].pitch / 100.0f;
-    if (soundMask != NULL) {
-        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, (SoundMask *) soundMask);
-        if (*soundMask != NULL) {
-            sound_event_update(*soundMask, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
-            sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
+    if (handlePtr != NULL) {
+        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, handlePtr);
+        if (*handlePtr != NULL) {
+            sound_event_update(*handlePtr, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
+            sound_event_update(*handlePtr, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
         }
     } else {
-        soundMask = (s32 *) &gGlobalSoundMask;
-        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, (SoundMask *) &gGlobalSoundMask);
-        if (*soundMask != NULL) {
-            sound_event_update(*soundMask, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
-            sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
+        handlePtr = &gGlobalSoundMask;
+        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, &gGlobalSoundMask);
+        if (*handlePtr != NULL) {
+            sound_event_update(*handlePtr, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
+            sound_event_update(*handlePtr, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
         }
     }
 }
@@ -835,7 +834,7 @@ void sound_play(u16 soundID, s32 *soundMask) {
  * This then makes the audio pan around in 3D space.
  * If it is not given a mask, then it will use the global mask.
  */
-void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **soundMask) {
+void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, SoundHandle *soundMask) {
     if (soundMask == NULL) {
         soundMask = (s32 **) &gSpatialSoundMask;
     }
@@ -856,28 +855,28 @@ void func_80001F14(u16 soundID, s32 *soundMask) {
         return;
     }
     if (soundMask) {
-        func_80004638(gSoundBank->bankArray[0], (s16) soundID, (SoundMask *) soundMask);
+        func_80004638(gSoundBank->bankArray[0], (s16) soundID, soundMask);
     } else {
-        func_80004638(gSoundBank->bankArray[0], (s16) soundID, (SoundMask *) &gRacerSoundMask);
+        func_80004638(gSoundBank->bankArray[0], (s16) soundID, &gRacerSoundMask);
     }
 }
 
 /**
  * Set the volume of the sound relative to the baseline volume of the sound ID.
  */
-void sound_volume_set_relative(u16 soundID, void *soundState, u8 volume) {
+void sound_volume_set_relative(u16 soundID, SoundHandle soundHandle, u8 volume) {
     s32 newVolume = ((s32) (gSoundTable[soundID].volume * (volume / 127.0f))) * 256;
-    if (soundState) {
-        sound_event_update((s32) soundState, AL_SNDP_VOL_EVT, newVolume);
+    if (soundHandle) {
+        sound_event_update(soundHandle, AL_SNDP_VOL_EVT, newVolume);
     }
 }
 
 /**
  * Updates the volume of the given sound mask.
  */
-UNUSED void sound_volume_set(SoundMask *soundMask, u8 arg1) {
-    if (soundMask != NULL) {
-        sound_event_update((s32) soundMask, AL_SNDP_VOL_EVT, arg1 * 256);
+UNUSED void sound_volume_set(SoundHandle soundHandle, u8 arg1) {
+    if (soundHandle != NULL) {
+        sound_event_update(soundHandle, AL_SNDP_VOL_EVT, arg1 * 256);
     }
 }
 
@@ -885,10 +884,10 @@ UNUSED void sound_volume_set(SoundMask *soundMask, u8 arg1) {
  * Updates the pitch of the given sound mask.
  * Official name: amSndSetPitchDirect
  */
-UNUSED void sound_pitch_set(SoundMask *soundMask, u32 pitch) {
+UNUSED void sound_pitch_set(SoundHandle soundHandle, u32 pitch) {
     u32 *pitchAddr = &pitch;
-    if (soundMask != NULL) {
-        sound_event_update((s32) soundMask, AL_SNDP_PITCH_EVT, *pitchAddr);
+    if (soundHandle != NULL) {
+        sound_event_update(soundHandle, AL_SNDP_PITCH_EVT, *pitchAddr);
     }
 }
 

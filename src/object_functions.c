@@ -96,8 +96,8 @@ VertexPosition D_800DCB28[6] = {
 /************ .bss ************/
 
 f32 gNPCPosY;
-s32 gTajSoundMask;
-s32 gTTSoundMask;
+SoundHandle gTajSoundMask;
+SoundHandle gTTSoundMask;
 s32 gRocketSoundTimer;
 s8 gTajDialogueChoice;
 s16 gTajSoundID; // Taj Voice clips
@@ -1419,7 +1419,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
  */
 void play_tt_voice_clip(u16 soundID, s32 interrupt) {
     if (gTTSoundMask && interrupt & 1) {
-        sound_stop(gTTSoundMask); // This is likely wrong and will need to be fixed
+        sound_stop(gTTSoundMask);
         gTTSoundMask = NULL;
     }
     if (gTTSoundMask == NULL) {

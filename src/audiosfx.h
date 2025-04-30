@@ -3,11 +3,11 @@
 
 #include "types.h"
 #include "macros.h"
-#include "audio_internal.h"
 #include "asset_enums.h"
 #include <ultra64.h>
 #include "sched.h"
 #include "structs.h"
+#include "audio.h"
 
 #define AL_SNDP_PLAY_EVT (1 << 0)
 #define AL_SNDP_STOP_EVT (1 << 1)
@@ -22,12 +22,6 @@
 #define AL_SNDP_UNK_10_EVT (1 << 10)
 #define AL_SNDP_UNK_11_EVT (1 << 11)
 
-typedef struct ALUnkStruct {
-  /* 0x00 */ struct ALSoundState *next;
-  /* 0x04 */ struct ALSoundState *prev;
-  /* 0x08 */ struct ALSoundState *unk8;
-} ALUnkStruct;
-
 // typedef struct {
 //     u8 pad[0x36];
 //     u8 priority;
@@ -36,22 +30,11 @@ typedef struct ALUnkStruct {
 //     u8 state;
 // } AlMsgUnk400Type_Unk0;
 
-typedef struct unk80004384 {
-  /* 0x00 */ struct ALSoundState *next;
-  /* 0x04 */ struct ALSoundState *prev;
-  /* 0x08 */ struct ALSoundState *unk8;
-  /* 0x0C */ ALVoice     voice;
-  /* 0x28 */ f32 unk28;
-  /* 0x2C */ f32 unk2C;
-  /* 0x30 */ s32 unk30;
-  /* 0x34 */ s16 unk34;
-  /* 0x36 */ u8 unk36;
-  /* 0x38 */ s32 unk38;
-  /* 0x3C */ u8 unk3C;
-  /* 0x3C */ u8 unk3D;
-  /* 0x3C */ u8 unk3E;
-  /* 0x3F */ u8 unk3F;
-} unk80004384; // ALSoundState based?
+typedef struct ALUnkStruct {
+    /* 0x00 */ ALSoundState *list1;
+    /* 0x04 */ ALSoundState *list2;
+    /* 0x08 */ ALSoundState *freeList;
+  } ALUnkStruct;
 
 typedef struct unk800DC6BC_40 {
     ALLink node;
@@ -77,7 +60,7 @@ typedef struct unk800DC6BC {
     ALEvent         nextEvent;
     ALSynth        *drvr;
     u32             unk3C;
-    unk800DC6BC_40 *unk40;
+    unk800DC6BC_40 *sndState;
     s32             soundChannelsMax;
     s32             soundChannels;
     s32             frameTime;
@@ -128,12 +111,19 @@ typedef union {
         ALSoundState    *state;
         u8              mix;
     } fx;
+
+    struct {
+        s16             type;
+        ALSoundState    *state;
+        s32             unk8;
+        s32             unkC;
+    } unk9;
     
 } ALSndpEvent;
 
 typedef struct audioMgrConfig_s{
-    u32 unk00;
-    u32 unk04;
+    u32 maxSounds;
+    u32 maxEvents;
     u32 maxChannels;
     ALHeap *hp;
     u16  unk10; // Heap Size?
@@ -160,19 +150,19 @@ ALMicroTime  _sndpVoiceHandler(void *node);
 void func_8000410C(ALSoundState *state);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
 void func_80004604(ALSoundState *sndp, u8 priority);
-s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask);
+ALSoundState *func_80004638(ALBank *bnk, s16 sndIndx, ALSoundState **soundMask);
 void sound_stop_all(void);
-void sound_event_update(s32 soundMask, s16 type, u32 volume);
+void sound_event_update(SoundHandle soundMask, s16 type, u32 volume);
 u16 get_sound_channel_volume(u8 channel);
 void set_sound_channel_volume(u8 channel, u16 volume);
 void func_8000418C(ALVoiceState *voiceState);
 void func_800048D8(u8 event);
-INCONSISTENT void sound_stop();
-ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1);
+void sound_stop(SoundHandle soundMask);
+ALSoundState *func_80004384(UNUSED ALBank *arg0, ALSound *arg1);
 
 // Non Matching
 void func_80004520(ALSoundState *);
-s32 func_80004668(ALBank *bnk, s16 sndIndx, u8, SoundMask *soundMask);
+ALSoundState * func_80004668(ALBank *bnk, s16 sndIndx, u8, ALSoundState **soundMask);
 void _handleEvent(unk800DC6BC *sndp, ALSndpEvent *event);
 
 #endif

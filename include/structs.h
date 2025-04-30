@@ -9,6 +9,7 @@
 #include "object_properties.h"
 #include "gbi.h"
 #include "PR/libaudio.h"
+#include "audio.h"
 
 // Stolen from PD
 // This hacky structure allows coords to be accessed using
@@ -99,7 +100,7 @@ typedef struct SoundMask {
     /* 0x11 */ u8 unk11;
     /* 0x12 */ u8 unk12;
     /* 0x14 */ s32 distance;
-    /* 0x18 */ ALSoundState *soundPtr;
+    /* 0x18 */ SoundHandle soundPtr;
     /* 0x1C */ struct SoundMask **soundMask;
     /* 0x20 */ u8 unk20;
     /* 0x21 */ u8 unk21;
@@ -954,7 +955,7 @@ typedef struct Object_Animation {
   /* 0x0C */ f32 x;
   /* 0x10 */ f32 y;
   /* 0x14 */ f32 z; 
-  /* 0x18 */ u8 *unk18; 
+  /* 0x18 */ SoundHandle unk18; 
   /* 0x1C */ struct Object *unk1C;
   /* 0x20 */ s32 unk20;
   /* 0x24 */ s16 unk24;
@@ -1021,7 +1022,7 @@ typedef struct Object_Weapon {
   /* 0x18 */ u8 weaponID;
   /* 0x19 */ s8 checkpoint;
   /* 0x19 */ s16 unk1A;
-  /* 0x19 */ SoundMask *soundMask;
+  /* 0x19 */ SoundHandle soundMask;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {
@@ -1207,12 +1208,12 @@ typedef struct Object_Racer {
   /* 0x004 */ s32 unk4;
   /* 0x008 */ f32 forwardVel;
   /* 0x00C */ f32 animationSpeed;
-  /* 0x010 */ s32 unk10;
-  /* 0x014 */ s32 unk14;
-  /* 0x018 */ s32 unk18;
-  /* 0x01C */ s32 unk1C;
-  /* 0x020 */ s32 unk20;
-  /* 0x024 */ SoundMask *soundMask;
+  /* 0x010 */ SoundHandle unk10;
+  /* 0x014 */ SoundHandle unk14;
+  /* 0x018 */ SoundHandle unk18;
+  /* 0x01C */ SoundHandle unk1C;
+  /* 0x020 */ SoundHandle unk20;
+  /* 0x024 */ SoundMask* soundMask;
   /* 0x028 */ u16 lastSoundID;
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
@@ -1294,7 +1295,7 @@ typedef struct Object_Racer {
   /* 0x174 */ s8 balloon_level;
   /* 0x175 */ s8 magnetTimer;
   /* 0x176 */ s16 unk176;
-  /* 0x178 */ void *magnetSoundMask;
+  /* 0x178 */ SoundHandle magnetSoundMask;
   /* 0x17C */ SoundMask *shieldSoundMask;
   /* 0x180 */ SoundMask *bananaSoundMask;
   /* 0x184 */ s8 magnetModelID;
@@ -1409,14 +1410,14 @@ typedef struct Object_Racer {
   /* 0x215 */ s8 unk215;
   /* 0x216 */ u8 unk216;
   /* 0x217 */ u8 unk217;
-  /* 0x218 */ s32 weaponSoundMask;
-  /* 0x21C */ SoundMask *unk21C;
-  /* 0x220 */ s32 unk220;
+  /* 0x218 */ SoundHandle weaponSoundMask;
+  /* 0x21C */ SoundHandle unk21C;
+  /* 0x220 */ SoundHandle unk220;
 } Object_Racer;
 
 typedef struct Object_Door {
   /* 0x00 */ f32 homeY;
-  /* 0x04 */ SoundMask *soundMask;
+  /* 0x04 */ SoundHandle soundMask;
   /* 0x08 */ s32 jingleTimer;
   /* 0x0A */ s16 jingleCooldown;
   /* 0x0E */ s8 doorID;
@@ -1448,7 +1449,7 @@ typedef struct Object_Audio {
   /* 0x05 */ u8 unk5;
   /* 0x06 */ u8 unk6;
   /* 0x07 */ u8 unk7;
-  /* 0x08 */ SoundMask *soundMask;
+  /* 0x08 */ SoundMask* soundMask;
   /* 0x0C */ u8 unkC;
   /* 0x0D */ u8 unkD;
 } Object_Audio;
@@ -1533,7 +1534,7 @@ typedef struct Object_TT {
 
 typedef struct Object_Bridge_WhaleRamp {
   /* 0x0 */ f32 homeY;
-  /* 0x4 */ SoundMask *soundMask;
+  /* 0x4 */ SoundHandle soundMask;
 } Object_Bridge_WhaleRamp;
 
 typedef struct Object_64_80021400 {
@@ -1560,7 +1561,7 @@ typedef struct Object_Log {
 
 typedef struct Object_Fireball_Octoweapon {
     u8 pad0[0x1C];
-    s32 soundMask;
+    SoundHandle soundMask;
 } Object_Fireball_Octoweapon;
 
 typedef struct Object_AnimatedObject {

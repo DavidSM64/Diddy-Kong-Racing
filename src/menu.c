@@ -372,7 +372,7 @@ s32 gMenuButtons[5]; // Buttons pressed per player plus an an extra containing e
 s8 *gCinematicParams;
 s32 buttonsPressed[5];
 s8 *gCinematicPortraits;
-SoundMask *gMenuSoundMasks[MAXCONTROLLERS]; // Soundmask values
+SoundHandle gMenuSoundMasks[MAXCONTROLLERS]; // Soundmask values
 s16 gMenuStickX[5];
 s32 gCinematicEnd;
 UNUSED s8 sUnused_80126828; // Set to 0 in menu_init, and never used again.
@@ -380,9 +380,9 @@ UNUSED s32 D_8012682C;
 s16 gMenuStickY[5];
 s16 D_8012683A;
 s32 gCinematicSkipA;
-SoundMask *gTrackTTSoundMask;
+SoundHandle gTrackTTSoundMask;
 s32 gCinematicSkipB;
-SoundMask *D_80126848;
+SoundHandle D_80126848;
 s32 gCinematicMusicChangeOff;
 s32 *D_80126850; // Never set, but it's read? Is it part of a larger struct being set?
 s32 gMenuElementScaleTimer;
@@ -423,7 +423,7 @@ f32 gTrackSelectTargetY;
 char *gTrackMenuHubName;
 s32 gSelectedTrackX;
 s32 gSelectedTrackY;
-SoundMask *gSoundOptionMask;
+SoundHandle gSoundOptionMask;
 s32 gSaveMenuOptionCountLower;
 SaveFileData *gSaveMenuFilesDest;
 s32 gSaveMenuOptionCountUpper;
@@ -3472,22 +3472,22 @@ s32 menu_title_screen_loop(s32 updateRate) {
     if (gTitleRevealTimer) {
         if (gTitleRevealTimer < 32) {
             if (gTitleRevealTimer == 1) {
-                sound_play(SOUND_WHOOSH1, 0);
+                sound_play(SOUND_WHOOSH1, NULL);
             }
             gTitleRevealTimer += updateRate;
             if (gTitleRevealTimer >= 32) {
                 gTitleRevealTimer = 32;
                 sp18->object.distanceToCamera = 8.0f;
-                sound_play(SOUND_EXPLOSION, 0);
+                sound_play(SOUND_EXPLOSION, NULL);
             }
         } else {
             if (gTitleAudioCounter < 6.0f) {
                 gTitleAudioCounter += updateRateF;
                 if (gTitleAudioCounter > 0.67f && gMenuStage == TITLESCREEN_START) {
-                    sound_play(SOUND_VOICE_TT_DIDDY_KONG_RACING, 0);
+                    sound_play(SOUND_VOICE_TT_DIDDY_KONG_RACING, NULL);
                     gMenuStage = TITLESCREEN_NAME;
                 } else if (gTitleAudioCounter > 2.83f && gMenuStage == TITLESCREEN_NAME) {
-                    sound_play(SOUND_VOICE_TT_PRESS_START, 0);
+                    sound_play(SOUND_VOICE_TT_PRESS_START, NULL);
                     gMenuStage = TITLESCREEN_PRESS_START;
                 }
             }
@@ -3527,7 +3527,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             gMenuDelay = 1;
             transition_begin(&sMenuTransitionFadeIn);
             enable_new_screen_transitions();
-            sound_play(SOUND_SELECT2, 0);
+            sound_play(SOUND_SELECT2, NULL);
         }
     }
     if (gMenuDelay > 30) {
@@ -4026,7 +4026,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
             }
             if (gOptionsMenuItemIndex == 1) {
                 if (gSoundOptionMask == NULL) {
-                    sound_play(SOUND_VOICE_DIDDY_POSITIVE5, (s32 *) &gSoundOptionMask);
+                    sound_play(SOUND_VOICE_DIDDY_POSITIVE5, &gSoundOptionMask);
                 }
             } else if (gSoundOptionMask != NULL) {
                 sound_stop(gSoundOptionMask);
@@ -6904,7 +6904,7 @@ void charselect_pick(void) {
         }
         sound_play((*gCurrCharacterSelectData)[gPlayersCharacterArray[characterSelected]].voiceID +
                        SOUND_VOICE_CHARACTER_SELECTED,
-                   (s32 *) &gMenuSoundMasks[characterSelected]);
+                   &gMenuSoundMasks[characterSelected]);
         if (gNumberOfActivePlayers > 2 ||
             (gNumberOfActivePlayers > 1 && !(gActiveMagicCodes & CHEAT_TWO_PLAYER_ADVENTURE)) ||
             gEnteredCharSelectFrom == 1) {
@@ -6922,7 +6922,7 @@ void charselect_pick(void) {
                     }
                     sound_play(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID +
                                 SOUND_VOICE_CHARACTER_DESELECTED),
-                               (s32 *) &gMenuSoundMasks[i]);
+                               &gMenuSoundMasks[i]);
                 }
             }
         }
@@ -6951,7 +6951,7 @@ void charselect_input(s8 *activePlayers) {
                     }
                     sound_play(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID +
                                 SOUND_VOICE_CHARACTER_DESELECTED),
-                               (s32 *) &gMenuSoundMasks[i]);
+                               &gMenuSoundMasks[i]);
                 }
             } else {
                 if (gMenuButtons[i] & B_BUTTON) {
@@ -6986,7 +6986,7 @@ void charselect_input(s8 *activePlayers) {
                     }
                     sound_play(
                         ((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID + SOUND_VOICE_CHARACTER_SELECT),
-                        (s32 *) &gMenuSoundMasks[i]);
+                        &gMenuSoundMasks[i]);
                 } else {
                     charSelectData = (*gCurrCharacterSelectData) + gPlayersCharacterArray[i];
                     if (gMenuStickY[i] > 0) {
@@ -9068,7 +9068,7 @@ void trackmenu_input(s32 updateRate) {
  */
 void trackmenu_timetrial_sound(UNUSED s32 updateRate) {
     if (gMenuStage == TRACKMENU_CHOOSE && gTracksMenuTimeTrialHighlightIndex == 0 && gTrackTTSoundMask == NULL) {
-        sound_play(SOUND_VOICE_TT_SNORE, (s32 *) &gTrackTTSoundMask);
+        sound_play(SOUND_VOICE_TT_SNORE, &gTrackTTSoundMask);
     }
 }
 
@@ -9603,7 +9603,7 @@ void func_80092188(s32 updateRate) {
                 }
                 if (gMenuStickY[0] > 0 && gTracksMenuTimeTrialHighlightIndex > 0) {
                     if (D_80126848 != NULL) {
-                        sound_stop((u8 *) D_80126848);
+                        sound_stop(D_80126848);
                     }
                     gTracksMenuTimeTrialHighlightIndex--;
                     menuChanged = TRUE;
@@ -9612,12 +9612,12 @@ void func_80092188(s32 updateRate) {
                     if (gTracksMenuTimeTrialHighlightIndex <= 0) {
                         menuChanged = TRUE;
                         if (gTrackTTSoundMask != NULL) {
-                            sound_stop((u8 *) gTrackTTSoundMask);
+                            sound_stop(gTrackTTSoundMask);
                         }
                         if (get_random_number_from_range(0, 255) >= 128) {
-                            sound_play(SOUND_VOICE_TT_INTRO, (s32 *) &D_80126848);
+                            sound_play(SOUND_VOICE_TT_INTRO, &D_80126848);
                         } else {
-                            sound_play(SOUND_VOICE_TT_GO_FOR_IT, (s32 *) &D_80126848);
+                            sound_play(SOUND_VOICE_TT_GO_FOR_IT, &D_80126848);
                         }
                         gTracksMenuTimeTrialHighlightIndex++;
                     }
