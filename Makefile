@@ -197,6 +197,7 @@ CHECK_WARNINGS := -Wall -Wextra -Wno-unknown-pragmas -Wno-unused-parameter -Wno-
 ifeq ($(DETECTED_OS), macos)
 	ifeq ($(NON_MATCHING),0)
 		CHECK_WARNINGS += -Wno-unused-value -Wno-deprecated-non-prototype -Wno-array-bounds -Wno-self-assign -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-variable
+		CHECK_WARNINGS += -Wno-pointer-to-int-cast -Wno-constant-conversion -Wno-int-to-pointer-cast
 	endif
 else
 	ifeq ($(NON_MATCHING),0)
