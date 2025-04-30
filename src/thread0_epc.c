@@ -12,13 +12,6 @@
 #include "PR/os_internal_thread.h"
 #include "PRinternal/rmonint.h"
 
-/************ .rodata ************/
-
-UNUSED const char D_800E8E70[] = "\nAssertion failed: '%s' in file %s, line %d\n";
-UNUSED const char D_800E8EA0[] = "\nAssertion failed: '%s' in file %s, line %d\n";
-
-/*********************************/
-
 /************ .data ************/
 
 s32 sLockupStatus = -1;
@@ -27,12 +20,12 @@ s32 sLockupDelay = 0;
 
 /*******************************/
 
-u64 gEPCStack[0x200];
+u64 gEPCStack[STACKSIZE(STACK_EPC)];
 OSThread gEPCThread;
-OSMesgQueue D_80129790;
-OSMesg D_801297A8[8];
-OSMesg D_801297C8[8];
-OSMesgQueue D_801297E8;
+OSMesgQueue gEPCMesgQueue;
+OSMesg gEPCMesgBuf[8];
+OSMesg gEPCPIBuf[8];
+OSMesgQueue gEPCPIQueue;
 
 /**
  * Start the exception program counter thread.
@@ -41,7 +34,7 @@ OSMesgQueue D_801297E8;
 void thread0_create(void) {
     s32 i;
 
-    osCreateThread(&gEPCThread, 0, thread0_Main, 0, &gEPCStack[0x200], OS_PRIORITY_MAX);
+    osCreateThread(&gEPCThread, 0, thread0_Main, 0, &gEPCStack[STACKSIZE(STACK_EPC)], OS_PRIORITY_MAX);
     osStartThread(&gEPCThread);
     for (i = 0; i < 3; i++) {
         gObjectStackTrace[i] = -1;
@@ -56,13 +49,13 @@ void thread0_Main(UNUSED void *unused) {
     s32 sp34;
     s32 s0 = 0;
 
-    osCreateMesgQueue(&D_80129790, D_801297A8, ARRAY_COUNT(D_801297A8));
-    osSetEventMesg(OS_EVENT_FAULT, &D_80129790, (OSMesg) RMON_MESG_FAULT);
-    osSetEventMesg(OS_EVENT_CPU_BREAK, &D_80129790, (OSMesg) RMON_MESG_CPU_BREAK);
-    osCreatePiManager(150, &D_801297E8, D_801297C8, ARRAY_COUNT(D_801297C8));
+    osCreateMesgQueue(&gEPCMesgQueue, gEPCMesgBuf, ARRAY_COUNT(gEPCMesgBuf));
+    osSetEventMesg(OS_EVENT_FAULT, &gEPCMesgQueue, (OSMesg) RMON_MESG_FAULT);
+    osSetEventMesg(OS_EVENT_CPU_BREAK, &gEPCMesgQueue, (OSMesg) RMON_MESG_CPU_BREAK);
+    osCreatePiManager(150, &gEPCPIQueue, gEPCPIBuf, ARRAY_COUNT(gEPCPIBuf));
 
     while (1) {
-        osRecvMesg(&D_80129790, (OSMesg) &sp34, OS_MESG_BLOCK);
+        osRecvMesg(&gEPCMesgQueue, (OSMesg) &sp34, OS_MESG_BLOCK);
 #if VERSION < VERSION_80
         if (!(get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY)) {
             continue;
@@ -192,7 +185,7 @@ void dump_memory_to_cpak(s32 epc, s32 size, u32 colourTag) {
             }
         }
         i = sizeof(sp40) + sizeof(sp240) + sizeof(sp440); // fakematch?
-        write_controller_pak_file(0, -1, "CORE", "", sp40, i);
+        write_controller_pak_file(0, -1, "CORE", "", sp40, sizeof(sp40) + sizeof(sp240) + sizeof(sp440));
         while (1) {} // Infinite loop; waiting for the player to reset the console?
     }
 }
