@@ -55,11 +55,11 @@ void setup_lights(s32 count) {
 
     free_lights();
     gMaxLights = count;
-    buffer = (ObjectLight **) mempool_alloc_safe(
+    buffer = (u8 *) mempool_alloc_safe(
         gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(unk800DC960) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
 
     temp = gMaxLights;
-    gActiveLights = buffer;
+    gActiveLights = (ObjectLight **) buffer;
     buffer += temp * sizeof(ObjectLight *);
     D_800DC954 = (ObjectLight *) buffer;
     D_800DC960 = (unk800DC960 *) ((u32) D_800DC954 + temp * sizeof(ObjectLight));

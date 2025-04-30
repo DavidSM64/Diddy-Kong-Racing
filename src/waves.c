@@ -16,13 +16,13 @@ Vec2s *D_800E3044 = NULL; // holds some sort of index?
 TexCoords *D_800E3048 = NULL;
 f32 *D_800E304C[9] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-Vertex *gWaveVertices[4][1] = { NULL, NULL };
-Triangle *gWaveTriangles[4][1] = { NULL, NULL, NULL, NULL };
+Vertex *gWaveVertices[4][1] = { { NULL }, { NULL } };
+Triangle *gWaveTriangles[4][1] = { { NULL }, { NULL }, { NULL }, { NULL } };
 Triangle D_800E3090[4] = {
-    { { BACKFACE_DRAW, 0, 2, 1 }, 0, 0, 0, 0, 0, 0 },
-    { { BACKFACE_DRAW, 1, 2, 3 }, 0, 0, 0, 0, 0, 0 },
-    { { BACKFACE_DRAW, 0, 2, 1 }, 0, 0, 0, 0, 0, 0 },
-    { { BACKFACE_DRAW, 1, 2, 3 }, 0, 0, 0, 0, 0, 0 },
+    { { { BACKFACE_DRAW, 0, 2, 1 } }, { { { 0, 0 } } }, { { { 0, 0 } } }, { { { 0, 0 } } } },
+    { { { BACKFACE_DRAW, 1, 2, 3 } }, { { { 0, 0 } } }, { { { 0, 0 } } }, { { { 0, 0 } } } },
+    { { { BACKFACE_DRAW, 0, 2, 1 } }, { { { 0, 0 } } }, { { { 0, 0 } } }, { { { 0, 0 } } } },
+    { { { BACKFACE_DRAW, 1, 2, 3 } }, { { { 0, 0 } } }, { { { 0, 0 } } }, { { { 0, 0 } } } },
 };
 
 TextureHeader *gWaveTextureHeader = NULL;

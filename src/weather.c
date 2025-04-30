@@ -71,10 +71,10 @@ Object *gLensFlare = NULL;
 s32 gLensFlareOff = TRUE;
 s32 gLensFlareOverrideObjs = 0;
 Vec2f gRainQuad[4] = {
-    { -200.0f, 200.0f },
-    { 200.0f, 200.0f },
-    { 200.0f, -200.0f },
-    { -200.0f, -200.0f },
+    { { { -200.0f, 200.0f } } },
+    { { { 200.0f, 200.0f } } },
+    { { { 200.0f, -200.0f } } },
+    { { { -200.0f, -200.0f } } },
 };
 
 Vertex gRainVertices[16] = {

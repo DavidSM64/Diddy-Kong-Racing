@@ -47,7 +47,7 @@
 #endif
 
 // Use built-in pseudocode where possible in NON_MATCHING builds
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(CC_CHECK)
 #define abs(x)      __builtin_abs(x)
 #define fabsf(x)    __builtin_fabsf(x)
 #define sqrtf(f)    __builtin_sqrtf(f)
