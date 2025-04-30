@@ -1614,7 +1614,7 @@ rain_update = 0x800AD4B8;
 rain_render_splashes = 0x800AD658;
 rain_lightning = 0x800ADAB8;
 rain_sound = 0x800ADBC8;
-render_rain_overlay = 0x800ADCBC;
+rain_render = 0x800ADCBC;
 
 // particles.c .text
 reset_particles = 0x800AE270;
