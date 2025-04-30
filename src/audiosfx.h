@@ -21,6 +21,7 @@
 #define AL_SNDP_UNK_9_EVT (1 << 9)
 #define AL_SNDP_UNK_10_EVT (1 << 10)
 #define AL_SNDP_UNK_11_EVT (1 << 11)
+#define AL_SNDP_UNK_12_EVT (1 << 12)
 
 // typedef struct {
 //     u8 pad[0x36];
@@ -84,14 +85,15 @@ typedef union {
     ALEvent             msg;
 
     struct {
-        s16             type;
+        u16             type;
         ALSoundState    *state;
+        s32             unk8;
     } common;
     
     struct {
         s16             type;
         ALSoundState    *state;
-        s16             vol;
+        s32             vol;
     } vol;
     
     struct {
@@ -116,7 +118,7 @@ typedef union {
         s16             type;
         ALSoundState    *state;
         s32             unk8;
-        s32             unkC;
+        ALBank          *unkC;
     } unk9;
     
 } ALSndpEvent;

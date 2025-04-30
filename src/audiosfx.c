@@ -11,7 +11,7 @@ unk800DC6BC gAlSndPlayer;
 unk800DC6BC *gAlSndPlayerPtr = &gAlSndPlayer;
 s32 sfxVolumeSlider = 256;
 s16 D_800DC6C4 = 0;
-u16 *gSoundChannelVolume;
+s16 *gSoundChannelVolume;
 
 /**** Debug strings ****/
 const char D_800E4AB0[] = "Bad soundState: voices =%d, states free =%d, states busy =%d, type %d data %x\n";
@@ -22,6 +22,7 @@ const char D_800E4B5C[] = "Don't worry - game should cope OK\n";
 const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
 static void _removeEvents(ALEventQueue *, ALSoundState *, u16);
+void func_80065A80(ALSynth *arg0, struct PVoice_s *arg1, s16 arg2);
 
 void set_sfx_volume_slider(u32 volume) {
     if (volume > 256) {
@@ -122,7 +123,244 @@ ALMicroTime _sndpVoiceHandler(void *node) {
     return sndp->nextDelta;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/audiosfx/_handleEvent.s")
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+
+void _handleEvent(unk800DC6BC *sndp, ALSndpEvent *event) {
+    ALVoiceConfig spC8;
+    ALVoice* s3;
+    s32 delta;
+    s32 s0;
+    ALSndpEvent spAC;
+    ALSndpEvent sp9C;
+    ALSound *s2;
+    ALKeyMap *s6;
+    s32 sp90;    
+    s32 fxMix;
+    s32 someFlags;
+    ALPan pan;
+    s32 sp80;
+    s32 sp7C;
+    ALSoundState *s1;
+    ALSoundState *sp74;
+
+    sp80 = TRUE;
+    sp7C = FALSE;
+    s1 = NULL;
+    sp74 = NULL;
+
+    do {
+        if (sp74 != NULL) {
+            sp9C.common.state = s1;
+            sp9C.common.type = event->common.type;
+            sp9C.common.unk8 = event->common.unk8;            
+            event = &sp9C;
+        }
+
+        s1 = event->common.state;
+        s2 = s1->unk8;
+
+        if (s2 == NULL) {
+            u16 n2, n3;
+            func_800042CC(&n2, &n3);
+            return;
+        }
+
+        s6 = s2->keyMap;
+        sp74 = s1->next;        
+
+        switch (event->common.type) {
+            case AL_SNDP_PLAY_EVT:
+                if (s1->soundState != 5 && s1->soundState != 4) {
+                    return;
+                }
+
+                spC8.fxBus = 0;
+                spC8.priority = s1->unk36;
+                spC8.unityPitch = 0;
+                
+                s0 = sndp->soundChannels <= D_800DC6C4;
+
+                if (!s0 || (s1->flags & 0x10)) {
+                    sp7C = alSynAllocVoice(sndp->drvr, &s1->voice, &spC8);
+                }
+                if (sp7C) {
+                    func_80065A80(sndp->drvr, s1->voice.pvoice, 1);
+                }
+
+                s3 = &s1->voice;
+                if (!sp7C) {
+                    if ((s1->flags & (0x10 | 0x2)) || s1->unk38 > 0) {
+                        s1->soundState = 4;
+                        s1->unk38--;
+                        alEvtqPostEvent(&sndp->evtq, (ALEvent *) event, 33333);
+                    } else if (s0) {
+                        ALSoundState* iterState = D_800DC6B0.list2;
+
+                        do {
+                            if (iterState->unk36 <= s1->unk36 && iterState->soundState != 3) {
+                                ALSndpEvent sp5C;
+
+                                sp5C.common.type = AL_SNDP_END_EVT;
+                                sp5C.common.state = iterState;
+                                iterState->soundState = 3;
+                                s0 = FALSE;
+                                alEvtqPostEvent(&sndp->evtq, (ALEvent *) &sp5C, 1000);
+                                alSynSetVol(sndp->drvr, &iterState->voice, (s1->soundState == 1) * 0, 1000); // FAKE
+                            }
+                            iterState = iterState->prev;
+                        } while (s0 && iterState != NULL);
+
+                        if (!s0) {
+                            s1->unk38 = 2;
+                            alEvtqPostEvent(&sndp->evtq, (ALEvent *) event, 1001);
+                        } else {
+                            func_8000410C(s1);
+                        }
+                    } else {
+                        func_8000410C(s1);
+                    }
+                    return;
+                }
+
+                s1->flags |= 4;
+                alSynStartVoice(sndp->drvr, s3, s2->wavetable);
+                s1->soundState = 1;
+                D_800DC6C4++;
+
+                delta = s2->envelope->attackTime / s1->unk2C / s1->unk28;
+                sp90 = MAX(0, gSoundChannelVolume[s6->keyMin & 0x3F] * (s2->envelope->attackVolume * s1->unk34 * s2->sampleVolume / 16129) / 32767 - 1);
+                sp90 = (u32)(sp90 * sfxVolumeSlider) >> 8;
+                alSynSetVol(sndp->drvr, &s1->voice, 0, 0);
+                alSynSetVol(sndp->drvr, &s1->voice, sp90, delta);
+
+                pan = MIN(MAX((s1->unk3C + s2->samplePan - AL_PAN_CENTER), AL_PAN_LEFT), AL_PAN_RIGHT);
+                alSynSetPan(sndp->drvr, &s1->voice, pan);
+
+                alSynSetPitch(sndp->drvr, &s1->voice, s1->unk2C * s1->unk28);
+
+                fxMix = (s1->unk3D + (s6->keyMax & 0xF)) * 8;
+                fxMix = MIN(127, MAX(0, fxMix));
+                alSynSetFXMix(sndp->drvr, &s1->voice, fxMix);
+
+                spAC.common.type = AL_SNDP_DECAY_EVT;
+                spAC.common.state = s1;
+                alEvtqPostEvent(&sndp->evtq, (ALEvent *) &spAC, s2->envelope->attackTime / s1->unk2C / s1->unk28);
+                break;
+            case AL_SNDP_STOP_EVT:
+            case AL_SNDP_UNK_10_EVT:
+            case AL_SNDP_UNK_12_EVT:
+                if (event->common.type != AL_SNDP_UNK_12_EVT || (s1->flags & 2)) {
+                    switch (s1->soundState) {
+                        case 1:
+                            _removeEvents(&sndp->evtq, s1, AL_SNDP_DECAY_EVT);
+                            delta = s2->envelope->releaseTime / s1->unk28 / s1->unk2C;
+                            alSynSetVol(sndp->drvr, &s1->voice, 0, delta);
+                            if (delta != 0) {
+                                spAC.common.type = AL_SNDP_END_EVT;
+                                spAC.common.state = s1;
+                                alEvtqPostEvent(&sndp->evtq, (ALEvent *) &spAC, delta);
+                                s1->soundState = 2;
+                            } else {
+                                func_8000410C(s1);
+                            }
+                            break;
+                        case 4:
+                        case 5:
+                            func_8000410C(s1);
+                            break;
+                    }
+                    if (event->common.type == AL_SNDP_STOP_EVT) {
+                        event->common.type = AL_SNDP_UNK_12_EVT;
+                    }
+                }
+                break;
+            case AL_SNDP_PAN_EVT:
+                s1->unk3C = event->common.unk8;
+                if (s1->soundState == 1) {
+                    pan = MIN(MAX((s1->unk3C + s2->samplePan - AL_PAN_CENTER), AL_PAN_LEFT), AL_PAN_RIGHT);
+                    alSynSetPan(sndp->drvr, &s1->voice, pan);
+                }
+                break;
+            case AL_SNDP_PITCH_EVT:
+                s1->unk2C = *(f32*)&event->common.unk8;
+                if (s1->soundState == 1) {
+                    alSynSetPitch(sndp->drvr, &s1->voice, s1->unk2C * s1->unk28);
+                    if (s1->flags & 0x20) {
+                        func_8000418C(s1);
+                    }
+                }
+                break;
+            case AL_SNDP_FX_EVT:
+                s1->unk3D = event->common.unk8;
+                if (s1->soundState == 1) {
+                    fxMix = (s1->unk3D + (s6->keyMax & 0xF)) * 8;
+                    fxMix = MIN(127, MAX(0, fxMix));
+                    alSynSetFXMix(sndp->drvr, &s1->voice, fxMix);
+                }
+                break;
+            case AL_SNDP_VOL_EVT:
+                s1->unk34 = event->vol.vol;
+                if (s1->soundState == 1) {
+                    sp90 = MAX(0, gSoundChannelVolume[s6->keyMin & 0x3F] * (s2->envelope->decayVolume * s1->unk34 * s2->sampleVolume / 16129) / 32767 - 1);
+                    sp90 = (u32)(sp90 * sfxVolumeSlider) >> 8;
+                    alSynSetVol(sndp->drvr, &s1->voice, sp90, 1000);
+                }
+                break;
+            case AL_SNDP_UNK_11_EVT:
+                if (s1->soundState == 1) {
+                    delta = s2->envelope->releaseTime / s1->unk28 / s1->unk2C;
+                    sp90 = MAX(0, gSoundChannelVolume[s6->keyMin & 0x3F] * (s2->envelope->decayVolume * s1->unk34 * s2->sampleVolume / 16129) / 32767 - 1);
+                    sp90 = (u32)(sp90 * sfxVolumeSlider) >> 8;                    
+                    alSynSetVol(sndp->drvr, &s1->voice, sp90, delta);
+                }
+                break;
+            case AL_SNDP_DECAY_EVT:
+                if (!(s1->flags & 2)) {
+                    sp90 = MAX(0, gSoundChannelVolume[s6->keyMin & 0x3F] * (s2->envelope->decayVolume * s1->unk34 * s2->sampleVolume / 16129) / 32767 - 1);
+                    sp90 = (u32)(sp90 * sfxVolumeSlider) >> 8;
+                    delta = s2->envelope->decayTime / s1->unk28 / s1->unk2C;
+                    alSynSetVol(sndp->drvr, &s1->voice, sp90, delta);
+
+                    spAC.common.type = AL_SNDP_STOP_EVT;
+                    spAC.common.state = s1;
+                    alEvtqPostEvent(&sndp->evtq, (ALEvent *) &spAC, delta);
+
+                    if (s1->flags & 0x20) {
+                        func_8000418C(s1);
+                    }
+                }
+                break;
+            case AL_SNDP_END_EVT:
+                func_8000410C(s1);
+                break;
+            case AL_SNDP_UNK_9_EVT:
+                if (s1->flags & 0x10) {
+                    ALSoundState* newSOund = func_80004638(event->unk9.unkC, event->unk9.unk8, s1->unk30);
+                    if (newSOund != NULL) {
+                        sound_event_update(newSOund, AL_SNDP_VOL_EVT, s1->unk34);
+                        if ((!event) && (!event)) {}
+                        sound_event_update(newSOund, AL_SNDP_PAN_EVT, s1->unk3C);
+                        sound_event_update(newSOund, AL_SNDP_FX_EVT, s1->unk3D);
+                        sound_event_update(newSOund, AL_SNDP_PITCH_EVT, *(s32*)&s1->unk2C);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        s1 = sp74;
+        someFlags = event->common.type & (AL_SNDP_PLAY_EVT | AL_SNDP_PITCH_EVT | AL_SNDP_DECAY_EVT | AL_SNDP_END_EVT | AL_SNDP_UNK_9_EVT);
+        
+        if (s1 != NULL && !someFlags) {
+            sp80 = s1->flags & 1;
+        }
+
+        
+    } while (!sp80 && s1 != NULL && !someFlags);
+}
 
 void func_8000410C(ALSoundState *state) {
     if (state->flags & AL_SNDP_PAN_EVT) {
@@ -318,7 +556,7 @@ ALSoundState *func_80004638(ALBank *bnk, s16 sndIndx, ALSoundState **soundMask) 
     return func_80004668(bnk, sndIndx, 0, soundMask);
 }
 
-ALSoundState *func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, ALSoundState **soundMask) {
+ALSoundState *func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, ALSoundState **handlePtr) {
     ALSound* temp_s2;
     ALSoundState* s7;
     ALSoundState* v0;
@@ -372,7 +610,7 @@ ALSoundState *func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, ALSoundState **so
 
     if (s7 != NULL) {
         s7->flags |= 1;
-        s7->unk30 = soundMask;
+        s7->unk30 = handlePtr;
         if (sp6E != 0) {
             ALSndpEvent evt2;
 
@@ -385,8 +623,8 @@ ALSoundState *func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, ALSoundState **so
         }
     }
 
-    if (soundMask != NULL) {
-        *soundMask = s7;
+    if (handlePtr != NULL) {
+        *handlePtr = s7;
     }
     return s7;
 }
