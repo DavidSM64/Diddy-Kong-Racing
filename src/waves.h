@@ -145,7 +145,7 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
 void wave_init(void);
 void func_800BA4B8(TextureHeader *tex, s32 rtile);
 
-Object_64 *func_800BE654(s16, f32, f32); // Non Matching
+Object_64 *func_800BE654(s32, f32, f32);
 void func_800BBF78(LevelModel *model);   // Non Matching
 f32 func_800BB2F4(s32, f32, f32, Vec3f *);
 void func_800B8C04(s32, s32, s32, s32, s32);

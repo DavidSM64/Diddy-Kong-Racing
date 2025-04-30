@@ -1065,9 +1065,17 @@ typedef struct Object_Boost {
 } Object_Boost;
 
 typedef struct Object_EffectBox {
-  /* 0x000 */ u8 pad0[0x1FE];
-  /* 0x1FE */ u8 unk1FE;
-  /* 0x1FF */ u8 unk1FF;
+  s16 unk0;
+  u8 unk2;
+  u8 unk3;
+  s16 unk4;
+  s16 unk6;
+  s16 unk8;
+  s16 unkA;
+  s16 unkC;
+  s8 unkE[0x1FE - 0xE];
+  u8 unk1FE;
+  u8 unk1FF;
 } Object_EffectBox;
 
 typedef struct Object_EggCreator {
