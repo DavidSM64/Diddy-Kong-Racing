@@ -2192,7 +2192,7 @@ s32 check_if_in_draw_range(Object *obj) {
             case BHV_HIT_TESTER_2:      // animated objects?
             case BHV_ANIMATED_OBJECT_2: // space ships
                 obj64 = obj->unk64;
-                obj->segment.object.opacity = obj64->effect_box.pad0[0x42];
+                obj->segment.object.opacity = obj64->wizpig2.pad0[0x42];
                 break;
             case BHV_PARK_WARDEN:
             case BHV_GOLDEN_BALLOON:
@@ -3686,7 +3686,7 @@ void func_800304C8(Vec4f *arg0) {
     temp = (gNewShadowObj->segment.trans.z_position - arg0[1].z);
 
     if ((((gNewShadowObj->segment.trans.x_position - arg0[0].x) * (arg0[1].z - arg00z)) -
-         ((arg0[1].x - arg0[0].x) * (((0, gNewShadowObj->segment.trans.z_position)) -arg00z))) >= compare) {
+         ((arg0[1].x - arg0[0].x) * (((0, gNewShadowObj->segment.trans.z_position)) - arg00z))) >= compare) {
         found1 = TRUE;
     }
     if ((((gNewShadowObj->segment.trans.x_position - arg0[1].x) * (arg0[2].z - arg0[1].z)) -
