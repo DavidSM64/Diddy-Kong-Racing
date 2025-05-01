@@ -3607,14 +3607,15 @@ void func_8002EEEC(s32 arg0) {
                             var_a1 = -1;
                             var_v1 = 0;
                             while (var_v1 < D_8011B118 && var_a1 == -1) {
-                                if ((D_8011B120[var_v1].x == spA8[var_t1].unk0) && (D_8011B120[var_v1].z == spA8[var_t1].unk8)) {
+                                if ((D_8011B120[var_v1].x == spA8[var_t1].unk0) &&
+                                    (D_8011B120[var_v1].z == spA8[var_t1].unk8)) {
                                     var_a1 = var_v1;
                                 }
                                 var_v1++;
                             }
                             if (var_a1 == -1) {
                                 D_8011B120[D_8011B118].x = spA8[var_t1].unk0;
-                                D_8011B120[D_8011B118].unkC = (unk8011B120_unkC* ) D_8011D0BC;
+                                D_8011B120[D_8011B118].unkC = (unk8011B120_unkC *) D_8011D0BC;
                                 D_8011B120[D_8011B118].z = spA8[var_t1].unk8;
                                 D_8011C238[tempIdx].unk2[var_t1] = D_8011B118++;
                             } else {
@@ -3624,7 +3625,6 @@ void func_8002EEEC(s32 arg0) {
                             D_8011C238[tempIdx].unk2[var_t1] = spA8[var_t1].unkE;
                             D_8011C238[tempIdx].unk1 |= 1 << var_t1;
                         }
-
                     }
                     D_8011C230 = tempIdx + 1;
                     D_8011C238[tempIdx].unk0 = temp_v0_3;
