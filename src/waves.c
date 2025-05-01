@@ -1776,31 +1776,7 @@ void func_800BCC70(LevelModel *arg0) {
 }
 
 #ifdef NON_EQUIVALENT
-typedef struct unkArg1 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-    s16 unk10;
-    s16 unk12;
-} unkArg1;
-
-typedef struct unkArg2 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-} unkArg2;
-
-// arg0
-// arg1 is s32 D_8011C3B8[320]; according to func_8002EEEC
-// arg2 might be s32 D_8011C8B8[512]
-
-s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition, f32 shadowZNegPosition,
+s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNegPosition, f32 shadowZNegPosition,
                   f32 shadowXPosition, f32 shadowZPosition) {
     s32 sp36C;
     s32 sp368;
@@ -1840,9 +1816,9 @@ s32 func_800BDC80(s32 arg0, unkArg1 *arg1, unkArg2 *arg2, f32 shadowXNegPosition
     f32 spC8;
     s32 var_v0;
     s32 spA4;
-    unkArg2 *var_v0_4;
+    unk8011C8B8 *var_v0_4;
     s32 sp98;
-    unkArg1 *var_s0_2;
+    unk8011C3B8 *var_s0_2;
     s32 sp90;
     s32 temp3_2;
     s32 temp4_2;

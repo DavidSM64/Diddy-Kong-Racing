@@ -106,10 +106,10 @@ unk8011B330 D_8011B330[120]; // Struct sizeof(0x20) / sizeof(32)
 s32 D_8011C230;
 s32 D_8011C234;
 unk8011C238 D_8011C238[32]; // Struct sizeof(0xC) / sizeof(12)
-s32 D_8011C3B8[320];
-s32 D_8011C8B8[512];
+unk8011C3B8 D_8011C3B8[64];
+unk8011C8B8 D_8011C8B8[128];
 s32 D_8011D0B8;
-Vec4f *D_8011D0BC;
+unk8011C8B8 *D_8011D0BC;
 TextureHeader *gNewShadowTexture;
 Object *gNewShadowObj;
 f32 D_8011D0C8;
@@ -3547,7 +3547,94 @@ void shadow_generate(Object *obj, s32 isWater) {
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002E904.s")
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002EEEC.s")
+
+void func_8002EEEC(s32 arg0) {
+    unk8011C8B8 spA8[8];
+    f32 sp88[8];
+    s32 var_v0;
+    s32 var_a0;
+    s32 var_a1;
+    s32 temp_v0;
+    s32 temp_v0_3;
+    s32 var_s4;
+    s32 var_t1;
+    s32 var_v1;
+    s32 tempIdx;
+
+    sp88[0] = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    sp88[1] = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    sp88[2] = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    sp88[3] = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    sp88[4] = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    sp88[5] = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    sp88[6] = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    sp88[7] = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    temp_v0 = func_800BDC80(arg0, D_8011C3B8, &D_8011C8B8[D_8011D0B8], sp88[4], sp88[5], sp88[0], sp88[1]);
+
+    for (var_s4 = 0; var_s4 < temp_v0; var_s4++) {
+        var_a0 = D_8011C3B8[var_s4].unk2;
+        var_a1 = D_8011C3B8[var_s4].unk2;
+        if (D_8011C3B8[var_s4].unk8 < var_a1) {
+            var_a0 = D_8011C3B8[var_s4].unk8;
+        } else if (var_a1 < D_8011C3B8[var_s4].unk8) {
+            var_a1 = D_8011C3B8[var_s4].unk8;
+        }
+        if (D_8011C3B8[var_s4].unkE < var_a0) {
+            var_a0 = D_8011C3B8[var_s4].unkE;
+        } else if (var_a1 < D_8011C3B8[var_s4].unkE) {
+            var_a1 = D_8011C3B8[var_s4].unkE;
+        }
+        if (gNewShadowY2 >= var_a0) {
+            if (var_a1 >= gNewShadowY1) {
+                spA8[0].unk0 = D_8011C3B8[var_s4].unk0;
+                spA8[0].unk8 = D_8011C3B8[var_s4].unk4;
+                spA8[1].unk0 = D_8011C3B8[var_s4].unk6;
+                spA8[1].unk8 = D_8011C3B8[var_s4].unkA;
+                spA8[2].unk0 = D_8011C3B8[var_s4].unkC;
+                spA8[2].unk8 = D_8011C3B8[var_s4].unk10;
+
+                for (var_v0 = 0; var_v0 != 3; var_v0++) {
+                    spA8[var_v0].unkE = -1;
+                }
+
+                D_8011D0BC = &D_8011C8B8[D_8011D0B8 + var_s4];
+                temp_v0_3 = func_8002FF6C(3, spA8, 4, sp88);
+                if (temp_v0_3 >= 3) {
+                    tempIdx = D_8011C230;
+                    D_8011C238[tempIdx].unk1 = 0;
+                    for (var_t1 = 0; var_t1 < temp_v0_3; var_t1++) {
+                        if (spA8[var_t1].unkE < 0) {
+                            var_a1 = -1;
+                            var_v1 = 0;
+                            while (var_v1 < D_8011B118 && var_a1 == -1) {
+                                if ((D_8011B120[var_v1].x == spA8[var_t1].unk0) && (D_8011B120[var_v1].z == spA8[var_t1].unk8)) {
+                                    var_a1 = var_v1;
+                                }
+                                var_v1++;
+                            }
+                            if (var_a1 == -1) {
+                                D_8011B120[D_8011B118].x = spA8[var_t1].unk0;
+                                D_8011B120[D_8011B118].unkC = (unk8011B120_unkC* ) D_8011D0BC;
+                                D_8011B120[D_8011B118].z = spA8[var_t1].unk8;
+                                D_8011C238[tempIdx].unk2[var_t1] = D_8011B118++;
+                            } else {
+                                D_8011C238[tempIdx].unk2[var_t1] = var_a1;
+                            }
+                        } else {
+                            D_8011C238[tempIdx].unk2[var_t1] = spA8[var_t1].unkE;
+                            D_8011C238[tempIdx].unk1 |= 1 << var_t1;
+                        }
+
+                    }
+                    D_8011C230 = tempIdx + 1;
+                    D_8011C238[tempIdx].unk0 = temp_v0_3;
+                }
+            }
+        }
+    }
+
+    D_8011D0B8 += temp_v0;
+}
 
 #ifdef NON_EQUIVALENT
 void func_8002F2AC(void) {
