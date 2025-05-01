@@ -10,6 +10,18 @@
 #include "gbi.h"
 #include "PR/libaudio.h"
 
+typedef struct Vec4f {
+  union {
+    struct {
+      f32 x;
+      f32 y;
+      f32 z;
+      f32 w;
+    };
+    f32 f[4];
+  };
+} Vec4f;
+
 // Stolen from PD
 // This hacky structure allows coords to be accessed using
 // coord->x, coord->y and coord->z, but also as
@@ -77,17 +89,15 @@ typedef struct Vec3i {
   };
 } Vec3i;
 
-typedef struct Vec4f {
+typedef struct Vec2i {
   union {
-    struct {
-      f32 x;
-      f32 y;
-      f32 z;
-      f32 w;
-    };
-    f32 f[4];
+      struct {
+          s32 x;
+          s32 y;
+      };
+      s32 i[2];
   };
-} Vec4f;
+} Vec2i;
 
 /* Size: 0x24 / 36 bytes */
 typedef struct SoundMask {
