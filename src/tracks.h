@@ -103,6 +103,30 @@ typedef struct unk8011D478 {
     s8 unk7;
 } unk8011D478;
 
+
+/* Size: 0x10 bytes */
+typedef struct unk8011C8B8 {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    s16 unkC;
+    s16 unkE;
+} unk8011C8B8;
+
+/* Size: 0x14 bytes */
+typedef struct unk8011C3B8 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+    s16 unk12;
+} unk8011C3B8;
+
 // In this struct, data is rightshifted 16 bytes, so make the smooth transition more precise.
 typedef struct EnvironmentFog {
     s32 r;
@@ -212,5 +236,7 @@ void func_80025510(s32);
 void func_8002C0C4(s32 modelId);
 void func_800304C8(Vec4f *arg0);
 s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
+s32 func_8002FF6C(s32, unk8011C8B8 *, s32, f32 *);
+s32 func_800BDC80(s32, unk8011C3B8 *, unk8011C8B8 *, f32, f32, f32, f32);
 
 #endif
