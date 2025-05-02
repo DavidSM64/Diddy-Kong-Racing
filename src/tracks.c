@@ -3561,19 +3561,19 @@ void func_8002EEEC(s32 arg0) {
     s32 var_v1;
     s32 tempIdx;
 
-    sp88[0].f[0] = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
-    sp88[0].f[1] = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
-    sp88[1].f[0] = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
-    sp88[1].f[1] = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
-    sp88[2].f[0] = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
-    sp88[2].f[1] = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
-    sp88[3].f[0] = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
-    sp88[3].f[1] = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    sp88[0].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    sp88[0].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    sp88[1].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    sp88[1].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    sp88[2].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    sp88[2].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    sp88[3].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    sp88[3].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
     // clang-format off
     temp_v0 = func_800BDC80(
         arg0, D_8011C3B8, &D_8011C8B8[D_8011D0B8],
-        sp88[2].f[0], sp88[2].f[1],
-        sp88[0].f[0], sp88[0].f[1]
+        sp88[2].x, sp88[2].y,
+        sp88[0].x, sp88[0].y
     );
     // clang-format on
 
@@ -3794,13 +3794,13 @@ s32 func_8002FF6C(s32 arg0, unk8011C8B8 *arg1, s32 arg2, Vec2f *arg3) {
             var_v1 = 0;
         }
 
-        temp_f12 = arg3[var_v1].f[1] - arg3[var_v0].f[1];
-        temp_f14 = -(arg3[var_v1].f[0] - arg3[var_v0].f[0]);
-        if (arg3[var_v0].f[0] < arg3[var_v1].f[0]) {
-            var_f2 = (temp_f12 * arg3[var_v0].f[0]) + (arg3[var_v0].f[1] * temp_f14);
+        temp_f12 = arg3[var_v1].y - arg3[var_v0].y;
+        temp_f14 = -(arg3[var_v1].x - arg3[var_v0].x);
+        if (arg3[var_v0].x < arg3[var_v1].x) {
+            var_f2 = (temp_f12 * arg3[var_v0].x) + (arg3[var_v0].y * temp_f14);
             var_f2 = -var_f2;
         } else {
-            var_f2 = (temp_f12 * arg3[var_v1].f[0]) + (arg3[var_v1].f[1] * temp_f14);
+            var_f2 = (temp_f12 * arg3[var_v1].x) + (arg3[var_v1].y * temp_f14);
             var_f2 = -var_f2;
         }
 
