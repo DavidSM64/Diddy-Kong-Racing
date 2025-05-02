@@ -237,21 +237,28 @@ s32 audioline_distance(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 
 
 /**
  * Play Sound at position
+ * Official Name: amSndPlayXYZ
  */
 void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, SoundMask **soundMask) {
     func_8000974C(D_80119C40[soundId].soundBite, x, y, z, arg4, D_80119C40[soundId].unk3, D_80119C40[soundId].volume,
                   D_80119C40[soundId].distance, 0, D_80119C40[soundId].pitch, D_80119C40[soundId].unk8, soundMask);
 }
 
+/**
+ * Official Name: amSndPlayDirectXYZ
+ */
 void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 pitch, SoundMask **soundMask) {
     func_8000974C(soundId, x, y, z, arg4, 100, arg5, 15000, 0, pitch, 0x3F, soundMask);
 }
 
-// I think this function is used to update the world position of any sound associated with the given soundmask.
-void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z) {
-    arg0->pos.x = x;
-    arg0->pos.y = y;
-    arg0->pos.z = z;
+/**
+ * I think this function is used to update the world position of any sound associated with the given soundmask.
+ * Official Name: amSndSetXYZ
+ */
+void update_spatial_audio_position(SoundMask *soundMask, f32 x, f32 y, f32 z) {
+    soundMask->pos.x = x;
+    soundMask->pos.y = y;
+    soundMask->pos.z = z;
 }
 
 /**
@@ -267,6 +274,9 @@ void func_800096F8(SoundMask *soundMask) {
     }
 }
 
+/**
+ * Official Name: amCreateAudioPoint
+ */
 void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volume, u16 distance, u8 arg8, u8 pitch,
                    u8 argA, SoundMask **soundMask) {
     SoundMask *newMask;

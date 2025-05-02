@@ -1890,7 +1890,7 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
         }
         // clang-format off
         arg1 -= D_800E30D8[arg0].unk4;
-        if (arg1 < 0.0f) { arg1 = 0.0f; } 
+        if (arg1 < 0.0f) { arg1 = 0.0f; }
         else if (arg1 >= D_8012A0A0) { arg1 = D_8012A0A0 - 1; }
         arg2 -= D_800E30D8[arg0].unk8;
         if (arg2 < 0.0f) { arg2 = 0.0f; }

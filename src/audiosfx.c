@@ -130,14 +130,15 @@ void func_8000410C(ALSoundState *state) {
     _removeEvents(&gAlSndPlayerPtr->evtq, state, 0xFFFF);
 }
 
+//sndp_apply_detune_pitch in PD
 void func_8000418C(ALVoiceState *voiceState) {
     ALEvent_unk8000418C evt;
-    f32 sp1C;
+    f32 pitch;
 
-    sp1C = alCents2Ratio(((ALLink_unk8000418C *) voiceState->voice.node.prev->prev)->unk5) * voiceState->vibrato;
-    evt.type = AL_SEQP_STOP_EVT;
+    pitch = alCents2Ratio(((ALLink_unk8000418C *) voiceState->voice.node.prev->prev)->unk5) * voiceState->vibrato;
+    evt.type = AL_SNDP_PITCH_EVT;
     evt.unk4 = voiceState;
-    evt.unk8 = *((s32 *) &sp1C); // But why tho?
+    evt.unk8 = *(u32 *)&pitch;
     alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &evt, 33333);
 }
 
@@ -212,6 +213,7 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
 // This function is full of names like next / prev that I made up based on other funcs.
 // It's in no way guaranteed to be correct.
 // I'm really not even sure what it's supposed to be returning as a type.
+// sndp_alloc_state in PD
 ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
     s32 temp;
     ALKeyMap *temp_a2;
@@ -238,7 +240,7 @@ ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
         }
         osSetIntMask(mask);
         temp = ((arg1->envelope->decayTime + 1) == 0);
-        temp_a1 = temp + 0x40;
+        temp_a1 = temp + 64;
         temp = 6000;
         nextAllocList->unk36 = temp_a1;
         nextAllocList->unk3F = 5;
@@ -252,16 +254,17 @@ ALSound *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
         } else {
             nextAllocList->unk28 = alCents2Ratio(((temp_a2->keyBase * 100) + temp_a2->detune) - temp);
         }
-        if (temp_a1 != 0x40) {
-            nextAllocList->unk3E |= 2;
+        if (temp_a1 != 64) {
+            nextAllocList->unk3E |= 2; //SNDSTATEFLAG_NO_DECAY
         }
         nextAllocList->unk3D = 0;
-        nextAllocList->unk3C = 0x40;
-        nextAllocList->unk34 = 0x7FFF;
+        nextAllocList->unk3C = AL_PAN_CENTER;
+        nextAllocList->unk34 = 0x7FFF; //AL_VOL_FULL;
     }
     return (ALSound *) nextAllocList;
 }
 
+// sndp_free_state2 in PD
 void func_80004520(ALSoundState *soundState) {
     if (soundState == D_800DC6B0.next) {
         D_800DC6B0.next = soundState->next;
