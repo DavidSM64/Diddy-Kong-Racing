@@ -73,10 +73,10 @@ typedef struct unk8011B330 {
     f32 y;
     f32 z;
     unk8011B120_unkC *unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    f32 unk1C;
 } unk8011B330;
 
 /* Size: 0x10 bytes */
@@ -236,7 +236,7 @@ void func_80025510(s32);
 void func_8002C0C4(s32 modelId);
 void func_800304C8(Vec4f *arg0);
 s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
-s32 func_8002FF6C(s32, unk8011C8B8 *, s32, f32 *);
+s32 func_8002FF6C(s32, unk8011C8B8 *, s32, Vec2f *);
 s32 func_800BDC80(s32, unk8011C3B8 *, unk8011C8B8 *, f32, f32, f32, f32);
 
 #endif
