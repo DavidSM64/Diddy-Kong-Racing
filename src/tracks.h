@@ -52,19 +52,21 @@ enum ShadowUpdate {
 	SHADOW_ACTORS
 };
 
-typedef struct unk8011B120_unkC {
+/* Size: 0x10 bytes */
+typedef struct unk8011C8B8 {
     f32 unk0;
     f32 unk4;
     f32 unk8;
-    f32 unkC;
-} unk8011B120_unkC;
+    s16 unkC;
+    s16 unkE;
+} unk8011C8B8;
 
 /* Size: 0x10 bytes */
 typedef struct unk8011B120 {
     f32 x;
     f32 y;
     f32 z;
-    unk8011B120_unkC *unkC;
+    unk8011C8B8 *unkC;
 } unk8011B120;
 
 /* Size: 0x20 bytes */
@@ -72,7 +74,7 @@ typedef struct unk8011B330 {
     f32 x;
     f32 y;
     f32 z;
-    unk8011B120_unkC *unkC;
+    unk8011C8B8 *unkC;
     f32 unk10;
     f32 unk14;
     f32 unk18;
@@ -102,16 +104,6 @@ typedef struct unk8011D478 {
     s8 unk6;
     s8 unk7;
 } unk8011D478;
-
-
-/* Size: 0x10 bytes */
-typedef struct unk8011C8B8 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    s16 unkC;
-    s16 unkE;
-} unk8011C8B8;
 
 /* Size: 0x14 bytes */
 typedef struct unk8011C3B8 {
