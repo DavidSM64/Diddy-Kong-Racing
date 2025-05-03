@@ -3550,7 +3550,7 @@ void shadow_generate(Object *obj, s32 isWater) {
 
 void func_8002EEEC(s32 arg0) {
     unk8011C8B8 spA8[8];
-    f32 sp88[8];
+    Vec2f sp88[4];
     s32 var_v0;
     s32 var_a0;
     s32 var_a1;
@@ -3561,15 +3561,21 @@ void func_8002EEEC(s32 arg0) {
     s32 var_v1;
     s32 tempIdx;
 
-    sp88[0] = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
-    sp88[1] = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
-    sp88[2] = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
-    sp88[3] = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
-    sp88[4] = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
-    sp88[5] = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
-    sp88[6] = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
-    sp88[7] = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
-    temp_v0 = func_800BDC80(arg0, D_8011C3B8, &D_8011C8B8[D_8011D0B8], sp88[4], sp88[5], sp88[0], sp88[1]);
+    sp88[0].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    sp88[0].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    sp88[1].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    sp88[1].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    sp88[2].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    sp88[2].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    sp88[3].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    sp88[3].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    // clang-format off
+    temp_v0 = func_800BDC80(
+        arg0, D_8011C3B8, &D_8011C8B8[D_8011D0B8],
+        sp88[2].x, sp88[2].y,
+        sp88[0].x, sp88[0].y
+    );
+    // clang-format on
 
     for (var_s4 = 0; var_s4 < temp_v0; var_s4++) {
         var_a0 = D_8011C3B8[var_s4].unk2;
@@ -3615,7 +3621,7 @@ void func_8002EEEC(s32 arg0) {
                             }
                             if (var_a1 == -1) {
                                 D_8011B120[D_8011B118].x = spA8[var_t1].unk0;
-                                D_8011B120[D_8011B118].unkC = (unk8011B120_unkC *) D_8011D0BC;
+                                D_8011B120[D_8011B118].unkC = D_8011D0BC;
                                 D_8011B120[D_8011B118].z = spA8[var_t1].unk8;
                                 D_8011C238[tempIdx].unk2[var_t1] = D_8011B118++;
                             } else {
@@ -3640,7 +3646,7 @@ void func_8002EEEC(s32 arg0) {
 void func_8002F2AC(void) {
     f32 temp_f12;
     f32 temp_f16;
-    unk8011B120_unkC *var_v0;
+    unk8011C8B8 *var_v0;
     s32 i, j;
 
     for (i = 0; i < D_8011B118; i++) {
@@ -3752,7 +3758,133 @@ s32 func_8002FD74(f32 x0, f32 z0, f32 x1, f32 x2, s32 count, Vec4f *arg5) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002FF6C.s")
+// arg0 is always 3
+// arg1 always has size 8 (that's why spE0 is also of size 8)
+// arg2 is always 4
+// arg3 always has size 4
+s32 func_8002FF6C(s32 arg0, unk8011C8B8 *arg1, s32 arg2, Vec2f *arg3) {
+    unk8011C8B8 spE0[8];
+    f32 temp_f12;
+    f32 temp_f14;
+    f32 temp_f16;
+    f32 temp_f22;
+    f32 temp_f24;
+    f32 var_f2;
+    s32 var_a1;
+    s32 var_v1_3;
+    s32 var_a0;
+    s32 var_t2;
+    UNUSED s32 var_t5;
+    s32 var_v0;
+    s32 var_v1;
+    s32 var_t1;
+    s32 var_s2;
+    unk8011C8B8 *var_s0;
+    unk8011C8B8 *var_s3;
+    unk8011C8B8 *swap; // swap var for var_s0 and var_s3
+
+    var_s3 = arg1;
+    var_s0 = spE0;
+    var_s2 = arg0;
+    var_v0 = 0;
+
+    while (var_v0 < arg2 && var_s2 >= 3) {
+        var_v1 = var_v0 + 1;
+        if (var_v1 >= arg2) {
+            var_v1 = 0;
+        }
+
+        temp_f12 = arg3[var_v1].y - arg3[var_v0].y;
+        temp_f14 = -(arg3[var_v1].x - arg3[var_v0].x);
+        if (arg3[var_v0].x < arg3[var_v1].x) {
+            var_f2 = (temp_f12 * arg3[var_v0].x) + (arg3[var_v0].y * temp_f14);
+            var_f2 = -var_f2;
+        } else {
+            var_f2 = (temp_f12 * arg3[var_v1].x) + (arg3[var_v1].y * temp_f14);
+            var_f2 = -var_f2;
+        }
+
+        for (var_t1 = 0, var_t2 = 0; var_t1 < var_s2; var_t1++) {
+            var_v1 = var_t1 + 1;
+            if (var_v1 >= var_s2) {
+                var_v1 = 0;
+            }
+            temp_f16 = (temp_f12 * var_s3[var_t1].unk0) + (var_s3[var_t1].unk8 * temp_f14) + var_f2;
+            temp_f22 = (temp_f12 * var_s3[var_v1].unk0) + (var_s3[var_v1].unk8 * temp_f14) + var_f2;
+            if ((temp_f16 >= 0.0f && temp_f22 < 0.0f) || (temp_f16 < 0.0f && temp_f22 >= 0.0f)) {
+                var_a0 = D_8011B320[var_v0];
+                var_a1 = -1;
+                var_v1_3 = var_v0 << 5;
+                while (var_a0 > 0 && var_a1 < 0) {
+                    if ((D_8011B330[var_v1_3].unk10 == var_s3[var_t1].unk0) &&
+                        (D_8011B330[var_v1_3].unk14 == var_s3[var_t1].unk8) &&
+                        (D_8011B330[var_v1_3].unk18 == var_s3[var_v1].unk0) &&
+                        (D_8011B330[var_v1_3].unk1C == var_s3[var_v1].unk8)) {
+                        var_a1 = var_v1_3;
+                    } else if ((D_8011B330[var_v1_3].unk10 == var_s3[var_v1].unk0) &&
+                               (D_8011B330[var_v1_3].unk14 == var_s3[var_v1].unk8) &&
+                               (D_8011B330[var_v1_3].unk18 == var_s3[var_t1].unk0) &&
+                               (D_8011B330[var_v1_3].unk1C == var_s3[var_t1].unk8)) {
+                        var_a1 = var_v1_3;
+                    }
+                    var_a0 -= 1;
+                    var_v1_3++;
+                }
+                if (var_a1 >= 0) {
+                    var_s0[var_t2].unkE = var_a1;
+                    var_s0[var_t2].unk0 = D_8011B330[var_a1].x;
+                    var_s0[var_t2].unk8 = D_8011B330[var_a1].z;
+                    var_t2++;
+                } else {
+                    temp_f24 = temp_f16 / (temp_f16 - temp_f22);
+                    var_s0[var_t2].unk0 =
+                        var_s3[var_t1].unk0 + ((var_s3[var_v1].unk0 - var_s3[var_t1].unk0) * temp_f24);
+                    var_s0[var_t2].unk8 =
+                        var_s3[var_t1].unk8 + ((var_s3[var_v1].unk8 - var_s3[var_t1].unk8) * temp_f24);
+                    if (D_8011B320[var_v0] > 0x1F) {
+                        D_8011B320[var_v0] = 0x1F;
+                    }
+                    var_v1_3 = D_8011B320[var_v0] + (var_v0 << 5);
+                    D_8011B330[var_v1_3].unk10 = var_s3[var_t1].unk0;
+                    D_8011B330[var_v1_3].unk14 = var_s3[var_t1].unk8;
+                    D_8011B330[var_v1_3].unk18 = var_s3[var_v1].unk0;
+                    D_8011B330[var_v1_3].unk1C = var_s3[var_v1].unk8;
+                    D_8011B330[var_v1_3].x = var_s0[var_t2].unk0;
+                    D_8011B330[var_v1_3].z = var_s0[var_t2].unk8;
+                    D_8011B330[var_v1_3].unkC = D_8011D0BC;
+                    D_8011B320[var_v0]++;
+                    var_s0[var_t2].unkE = var_v1_3;
+                    var_t2++;
+                }
+            }
+            if (temp_f22 <= 0.0f) {
+                var_s0[var_t2].unkE = var_s3[var_v1].unkE;
+                var_s0[var_t2].unk0 = var_s3[var_v1].unk0;
+                var_s0[var_t2].unk8 = var_s3[var_v1].unk8;
+                var_t2++;
+            }
+        }
+        var_s2 = var_t2;
+        var_v0++;
+
+        swap = var_s3;
+        var_s3 = var_s0;
+        var_s0 = swap;
+    }
+
+    if (var_s2 >= 3) {
+        if (var_s3 != arg1) {
+            for (var_t1 = 0; var_t1 < var_s2; var_t1++) {
+                arg1[var_t1].unk0 = var_s3[var_t1].unk0;
+                arg1[var_t1].unk8 = var_s3[var_t1].unk8;
+                arg1[var_t1].unkE = var_s3[var_t1].unkE;
+            }
+        }
+    } else {
+        var_s2 = 0;
+    }
+    return var_s2;
+}
 
 #ifdef NON_EQUIUVALENT
 void func_800304C8(Vec4f *arg0) {
