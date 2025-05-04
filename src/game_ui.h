@@ -439,8 +439,6 @@ void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement
 void hud_main_time_trial(s32, Object*, s32);
 void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate);
 void func_800A1E48(Object*, s32 updateRate);
-
-// Non Matching
 void hud_init_element(void);
 
 #endif
