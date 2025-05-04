@@ -52,19 +52,21 @@ enum ShadowUpdate {
 	SHADOW_ACTORS
 };
 
-typedef struct unk8011B120_unkC {
+/* Size: 0x10 bytes */
+typedef struct unk8011C8B8 {
     f32 unk0;
     f32 unk4;
     f32 unk8;
-    f32 unkC;
-} unk8011B120_unkC;
+    s16 unkC;
+    s16 unkE;
+} unk8011C8B8;
 
 /* Size: 0x10 bytes */
 typedef struct unk8011B120 {
     f32 x;
     f32 y;
     f32 z;
-    unk8011B120_unkC *unkC;
+    unk8011C8B8 *unkC;
 } unk8011B120;
 
 /* Size: 0x20 bytes */
@@ -72,11 +74,11 @@ typedef struct unk8011B330 {
     f32 x;
     f32 y;
     f32 z;
-    unk8011B120_unkC *unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
+    unk8011C8B8 *unkC;
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    f32 unk1C;
 } unk8011B330;
 
 /* Size: 0x10 bytes */
@@ -102,16 +104,6 @@ typedef struct unk8011D478 {
     s8 unk6;
     s8 unk7;
 } unk8011D478;
-
-
-/* Size: 0x10 bytes */
-typedef struct unk8011C8B8 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    s16 unkC;
-    s16 unkE;
-} unk8011C8B8;
 
 /* Size: 0x14 bytes */
 typedef struct unk8011C3B8 {
@@ -234,9 +226,9 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
 void func_800B82B4(LevelModel *, LevelHeader *, s32);
 void func_80025510(s32);
 void func_8002C0C4(s32 modelId);
-void func_800304C8(Vec4f *arg0);
+void func_800304C8(unk8011C8B8 *arg0);
 s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
-s32 func_8002FF6C(s32, unk8011C8B8 *, s32, f32 *);
+s32 func_8002FF6C(s32, unk8011C8B8 *, s32, Vec2f *);
 s32 func_800BDC80(s32, unk8011C3B8 *, unk8011C8B8 *, f32, f32, f32, f32);
 
 #endif

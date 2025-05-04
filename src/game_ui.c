@@ -21,6 +21,20 @@
 #include "joypad.h"
 #include "PRinternal/viint.h"
 
+/************ .rodata ************/
+
+const char D_800E8640[] = "CAN'T";
+const char D_800E8648[] = "SAVE";
+const char D_800E8650[] = "GHOST";
+const char D_800E8658[] = " CONTROLLER";
+const char D_800E8664[] = "PAK";
+const char D_800E8668[] = "FULL";
+const char D_800E8670[] = " CONTROLLER";
+const char D_800E867C[] = "PAK";
+const char D_800E8680[] = "DAMAGED";
+
+/*********************************/
+
 /************ .data ************/
 
 // Unused?
@@ -229,7 +243,7 @@ u8 gWrongWayNagPrefix;
 SoundMask *gRaceStartSoundMask;
 s32 gHUDVoiceSoundMask;
 SoundMask *gHudBalloonSoundMask;
-s16 D_80126D48;
+u16 D_80126D48;
 s32 D_80126D4C;
 s32 D_80126D50;
 u8 gMinimapRed;
@@ -984,21 +998,19 @@ void hud_main_battle(s32 countdown, Object *obj, s32 updateRate) {
     }
 }
 
-#ifdef NON_MATCHING
-// hud_lives
 void func_800A1E48(Object *racerObj, s32 updateRate) {
-    f32 temp;
+    s32 pad0;
     s32 i;
     Object_Racer *racer;
     s32 numRacers;
     Object **racers;
-    s32 prevCurrHudUnk64C;
-    s32 prevCurrHudUnk650;
-    f32 temp2;
+    s32 prevChallengerPortraitX;
+    s32 prevChallengerPortraitY;
     Object_Racer *curRacer;
-    s32 offset;
-    s32 temp3;
-    s32 temp4;
+    s32 offsetX;
+    s32 offsetY;
+    s32 tempX;
+    s32 tempY;
 
     racers = get_racer_objects(&numRacers);
     if (racerObj != NULL) {
@@ -1009,63 +1021,54 @@ void func_800A1E48(Object *racerObj, s32 updateRate) {
 
     sprite_anim_off(TRUE);
     if (numRacers == 4) {
-        offset = 0;
-        prevCurrHudUnk64C = gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x;
-        prevCurrHudUnk650 = gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
+        offsetX = 0;
+        offsetY = 0;
+        prevChallengerPortraitX = gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x;
+        prevChallengerPortraitY = gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
         for (i = 0; i < 4; i++) {
             curRacer = &racers[i]->unk64->racer;
-            temp = prevCurrHudUnk64C ^ 0;
-            temp3 = temp - gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x;
-            temp = temp3;
-            temp2 = offset + prevCurrHudUnk650;
-            temp4 = temp2 - gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
-            temp2 = temp4;
-            gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x += temp;
-            gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y += temp2;
-            gCurrentHud->entry[HUD_BATTLE_BANANA_ICON].pos.x += temp;
-            gCurrentHud->entry[HUD_BATTLE_BANANA_ICON].pos.y -= temp2;
-            gCurrentHud->entry[HUD_BATTLE_BANANA_X].pos.x += temp;
-            gCurrentHud->entry[HUD_BATTLE_BANANA_X].pos.y += temp2;
-            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].pos.x += temp;
-            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].pos.y += temp2;
-            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.x += temp;
-            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.y += temp2;
+            tempX = (offsetX + prevChallengerPortraitX) - gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x;
+            tempY = (offsetY + prevChallengerPortraitY) - gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
+            gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x += tempX;
+            gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y += tempY;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_ICON].pos.x += tempX;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_ICON].pos.y -= tempY;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_X].pos.x += tempX;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_X].pos.y += tempY;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].pos.x += tempX;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].pos.y += tempY;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.x += tempX;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.y += tempY;
             if (gNumActivePlayers < 3 || racer->playerIndex == curRacer->playerIndex) {
                 hud_lives_render(curRacer, updateRate);
             }
             if (gNumActivePlayers == 1) {
-                prevCurrHudUnk64C += 68;
+                offsetX += 68;
             } else if (gNumActivePlayers == 2) {
                 if (osTvType == OS_TV_TYPE_PAL) {
-                    offset += 66.0;
+                    offsetY += 66.0;
                 } else {
-                    offset += 55;
+                    offsetY += 55;
                 }
             }
         }
 
-        temp = prevCurrHudUnk64C;
-        temp3 = temp - gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x;
-        temp = temp3;
-        temp2 = prevCurrHudUnk650;
-        temp4 = temp2 - gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
-        temp2 = temp4;
-        gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x += temp;
-        gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y += temp2;
-        gCurrentHud->entry[HUD_BATTLE_BANANA_ICON].pos.x += temp;
-        gCurrentHud->entry[HUD_BATTLE_BANANA_ICON].pos.y -= temp2;
-        gCurrentHud->entry[HUD_BATTLE_BANANA_X].pos.x += temp;
-        gCurrentHud->entry[HUD_BATTLE_BANANA_X].pos.y += temp2;
-        gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].pos.x += temp;
-        gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].pos.y += temp2;
-        gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.x += temp;
-        gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.y += temp2;
+        tempX = prevChallengerPortraitX - gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x;
+        tempY = prevChallengerPortraitY - gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
+        gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x += tempX;
+        gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y += tempY;
+        gCurrentHud->entry[HUD_BATTLE_BANANA_ICON].pos.x += tempX;
+        gCurrentHud->entry[HUD_BATTLE_BANANA_ICON].pos.y -= tempY;
+        gCurrentHud->entry[HUD_BATTLE_BANANA_X].pos.x += tempX;
+        gCurrentHud->entry[HUD_BATTLE_BANANA_X].pos.y += tempY;
+        gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].pos.x += tempX;
+        gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].pos.y += tempY;
+        gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.x += tempX;
+        gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.y += tempY;
     }
+
     sprite_anim_off(FALSE);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/func_800A1E48.s")
-#endif
 
 /**
  * Render the portrait and life counter in the battle mode.
@@ -1165,9 +1168,6 @@ void hud_main_hub(Object *obj, s32 updateRate) {
     }
 }
 
-#ifdef NON_MATCHING
-// https://decomp.me/scratch/BWqz9
-// Draws Time Trial HUD. Also handles music/audio?
 void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     s32 i;
     s32 spB8;
@@ -1181,33 +1181,32 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     Object_68 *obj68;
     LevelObjectEntryCommon ttSWBody;
     LevelObjectEntryCommon ttSWArms;
-    UNUSED s32 temp_a0_2;
+    UNUSED s32 pad;
+    UNUSED s32 pad2;
     s32 temp_t6;
-    u16 stopwatchEndSoundID;
-    s32 recordTime;
-    u16 newLapSoundID;
+    f32 animcationFraction;
     f32 posX;
     f32 posY;
     f32 posZ;
-    UNUSED f32 new_var;
-    char *SWMessage[3];
+    u16 soundID;
 
     curRacer = &playerRacerObj->unk64->racer;
     stopwatchTimer = 0;
-    if (gAssetHudElements->entry[20] == NULL) {
-        ttSWBody.objectID = gAssetHudElementIds[20] & 0xFFFF;
+    if (gAssetHudElements->entry[HUD_BALLOON_COUNT_X] == NULL) {
+        ttSWBody.objectID = gAssetHudElementIds[HUD_BALLOON_COUNT_X] & 0xFFFF;
         ttSWBody.size = sizeof(LevelObjectEntryCommon);
         ttSWBody.x = 0;
         ttSWBody.y = 0;
         ttSWBody.z = 0;
-        gAssetHudElements->entry[20] = spawn_object(&ttSWBody, 0);
+        gAssetHudElements->entry[HUD_BALLOON_COUNT_X] = spawn_object(&ttSWBody, 0);
         gCurrentHud->entry[HUD_STOPWATCH_HANDS].rotation.y_rotation = -0x8000;
-        if (gAssetHudElements->entry[20] != NULL) {
-            ((Object *) gAssetHudElements->entry[20])->segment.animFrame = 0;
+        if (gAssetHudElements->entry[HUD_BALLOON_COUNT_X] != NULL) {
+            ((Object *) gAssetHudElements->entry[HUD_BALLOON_COUNT_X])->segment.animFrame = 0;
         }
     }
-    if (gAssetHudElements->entry[34] == 0) {
-        ttSWArms.objectID = gAssetHudElementIds[34] & 0xFFFF;
+
+    if (gAssetHudElements->entry[HUD_STOPWATCH] == NULL) {
+        ttSWArms.objectID = gAssetHudElementIds[HUD_STOPWATCH] & 0xFFFF;
         ttSWArms.size = sizeof(LevelObjectEntryCommon);
         ttSWArms.x = 0;
         ttSWArms.y = 0;
@@ -1215,220 +1214,235 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         gAssetHudElements->entry[34] = spawn_object(&ttSWArms, 0);
         gCurrentHud->entry[HUD_STOPWATCH].rotation.y_rotation = -0x8000;
     }
-    ttSWBodyObject = gAssetHudElements->entry[20];
-    if (ttSWBodyObject != NULL) {
-        ttSWBodyObject->segment.object.animationID = gStopwatchFaceID;
-        obj68 = (Object_68 *) ttSWBodyObject->unk68[0];
-        obj68->objModel->unk52 = updateRate;
-        if (gStopwatchFaceID != 0xFF) {
-            if ((gStopwatchFaceID == 4) && ((get_race_countdown()) || (!music_is_playing()))) {
-                ttSWBodyObject->segment.animFrame = 16;
-            } else if (gStopwatchFaceID == 4) {
-                posX = music_animation_fraction();
-                temp_t6 = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
-                if (posX == -1.0) {
-                    ttSWBodyObject->segment.animFrame = 0.0;
-                } else if (posX > 0.5) {
-                    ttSWBodyObject->segment.animFrame = (temp_t6 - ((f32) (2.0 * (f32) (posX - 0.5)) * temp_t6));
-                } else {
-                    new_var = posX;
-                    ttSWBodyObject->segment.animFrame = temp_t6 * (posX * 2);
-                }
-            } else if (!is_game_paused()) {
-                if (D_80126D69 < 0) {
-                    if (-(updateRate * D_80126D69) < ttSWBodyObject->segment.animFrame) {
-                        ttSWBodyObject->segment.animFrame += (updateRate * D_80126D69);
-                    } else {
-                        ttSWBodyObject->segment.animFrame = 1;
-                        D_80126D69 = -D_80126D69;
-                    }
-                } else {
-                    ttSWBodyObject->segment.animFrame += (updateRate * D_80126D69);
-                    temp_lo = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
-                    if (ttSWBodyObject->segment.animFrame >= temp_lo) {
-                        if (D_80126D68 != 0) {
-                            D_80126D69 = -D_80126D69;
-                            ttSWBodyObject->segment.animFrame = temp_lo - 1;
-                        } else {
-                            ttSWBodyObject->segment.animFrame = 0;
-                            if (curRacer->wrongWayCounter == 0 && curRacer->raceFinished == 0) {
-                                hud_stopwatch_face(4, 0, 4, 1, 1);
-                            }
-                        }
-                    }
-                }
-            }
-            obj_animate(ttSWBodyObject);
-        }
-        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_STOPWATCH_HANDS]);
 
-        for (i = 0; curRacer->lap >= i && i < 5; i++) {
-            stopwatchTimer += curRacer->lap_times[i];
-        }
-
-        if (osTvType == OS_TV_TYPE_PAL) {
-            stopwatchTimer = (f32) stopwatchTimer * 1.2;
-        }
-        if (normalise_time(36000) < stopwatchTimer) {
-            stopwatchTimer = normalise_time(36000);
-        }
-        gCurrentHud->entry[HUD_STOPWATCH].rotation.z_rotation = ((stopwatchTimer * 0x444) + 0x7FF8);
-        if (get_contpak_error() <= 0) {
-            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_STOPWATCH]);
-        }
-        gCurrentHud->entry[HUD_STOPWATCH].rotation.z_rotation = ((((stopwatchTimer / 60) + 30) % 60) * 0x444);
-        gCurrentHud->entry[HUD_STOPWATCH].pos.y = gCurrentHud->entry[HUD_STOPWATCH_HANDS].pos.y + 28.0f;
-        if (get_contpak_error() <= 0) {
-            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_STOPWATCH]);
-        }
-        obj68->animUpdateTimer = 0;
-        sprite_anim_off(TRUE);
-        hud_course_arrows(curRacer, updateRate);
-        if (!curRacer->raceFinished) {
-            spB8 = gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.y;
-            for (i = 0; i < curRacer->countLap && i < gHudLevelHeader->laps; i++) {
-                // FAKEMATCH
-                get_timestamp_from_frames(curRacer->lap_times[i] & 0xFFFFFFFFFFFFFFFF, &spB4, &spB0, &spAC);
-                gHudColour = gHudLapColours[i];
-                hud_timer_render(gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x, spB8, spB4, spB0, spAC, 1);
-                gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
-                spB8 += 12;
-                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
-                gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER].spriteOffset = i + 1;
-                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx,
-                                   (HudElement *) &gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER]);
-                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx,
-                                   (HudElement *) &gCurrentHud->entry[HUD_TIME_TRIAL_LAP_TEXT]);
-                gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER].pos.y += 12.0f;
-                gCurrentHud->entry[HUD_TIME_TRIAL_LAP_TEXT].pos.y += 12.0f;
-            }
-            if (1) {} // FAKEMATCH
-            posX = ((i * 4) - i) * 4;
-            gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER].pos.y -= posX;
-            gCurrentHud->entry[HUD_TIME_TRIAL_LAP_TEXT].pos.y -= posX;
-            if ((curRacer->boost_sound & BOOST_SOUND_UNK4) && (D_80126D4C <= 0)) {
-                hud_stopwatch_face(7, 3, 0, 4, 0);
-                D_80126D4C = 60;
-                curRacer->boost_sound &= ~BOOST_SOUND_UNK4;
-            }
-            if (D_80126D4C > 0) {
-                D_80126D4C -= updateRate;
-                if (D_80126D4C < 0) {
-                    D_80126D4C = 0;
-                }
-            }
-            if ((D_80126D4C == 0) && (!curRacer->raceFinished)) {
-                D_80126D4C = -100;
-                if (gHUDVoiceSoundMask == 0) {
-                    stopwatchEndSoundID = get_random_number_from_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
-                    while (D_80126D48 == stopwatchEndSoundID) {
-                        stopwatchEndSoundID = get_random_number_from_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
-                    }
-                    D_80126D48 = (u16) stopwatchEndSoundID;
-                    sound_play(stopwatchEndSoundID, &gHUDVoiceSoundMask);
-                    D_80126D64 = 1;
-                }
-            }
-        }
-        if ((curRacer->lap > 0) && (curRacer->lap < gHudLevelHeader->laps) &&
-            (curRacer->lap_times[curRacer->lap] < 20) && (gHUDVoiceSoundMask == 0) &&
-            (curRacer->vehicleID <= VEHICLE_PLANE)) {
-            gHudSettings = get_settings();
-            if (curRacer->lap_times[curRacer->lap - 1] <
-                gHudSettings->flapTimesPtr[curRacer->vehicleID][get_current_map_id()]) {
-                recordTime = curRacer->lap_times[curRacer->lap - 1];
-                for (i = 0; i < curRacer->lap - 1; i++) {
-                    if (recordTime >= curRacer->lap_times[i]) {
-                        recordTime = 0;
-                    }
-                }
-                if (recordTime) {
-                    sound_play(SOUND_VOICE_TT_LAP_RECORD, &gHUDVoiceSoundMask);
-                }
-            }
-        }
-        if (timetrial_valid_player_ghost()) {
-            ttSWBodyObject = timetrial_player_ghost();
-            if (ttSWBodyObject != NULL) {
-                if ((get_race_countdown() == 0) && (curRacer->raceFinished == 0)) {
-                    posY = ttSWBodyObject->segment.trans.y_position - playerRacerObj->segment.trans.y_position;
-                    posX = ttSWBodyObject->segment.trans.x_position - playerRacerObj->segment.trans.x_position;
-                    posZ = ttSWBodyObject->segment.trans.z_position - playerRacerObj->segment.trans.z_position;
-                    if ((sqrtf(posX * posX + (posY * posY) + (posZ * posZ)) < 600.0f) && (gHUDVoiceSoundMask == 0) &&
-                        (D_80126D50 == 0)) {
-                        newLapSoundID = (get_random_number_from_range(0, 2) + SOUND_VOICE_TT_GO_FOR_IT);
-                        while (D_80126D48 == newLapSoundID) {
-                            newLapSoundID = (get_random_number_from_range(0, 2) + SOUND_VOICE_TT_GO_FOR_IT);
-                        }
-                        D_80126D48 = newLapSoundID;
-                        sound_play(newLapSoundID, &gHUDVoiceSoundMask);
-                        D_80126D50 = get_random_number_from_range(120, 1200);
-                    }
-                    D_80126D50 -= updateRate;
-                    if (D_80126D50 < 0) {
-                        D_80126D50 = 0;
-                    }
-                }
-            }
-        }
-        if ((curRacer->lap_times[curRacer->lap] < 30) && (curRacer->lap != 0)) {
-            hud_stopwatch_face(5, 1, 2, 2, 0);
-        } else if (curRacer->boostTimer > 0) {
-            hud_stopwatch_face(6, 2, 3, 2, 0);
-        } else if (curRacer->wrongWayCounter > 120) {
-            hud_stopwatch_face(6, 3, 1, 4, 0);
-        }
-        hud_lap_count(curRacer, updateRate);
-        hud_race_time(curRacer, updateRate);
-        hud_bananas(curRacer, updateRate);
-        hud_wrong_way(curRacer, updateRate);
-        hud_race_start(arg0, updateRate);
-        hud_speedometre(playerRacerObj, updateRate);
-        if (get_contpak_error() > 0) {
-            switch (get_contpak_error()) {
-                case CONTPAK_ERROR_UNKNOWN:
-                    SWMessage[0] = "CAN'T";
-                    SWMessage[1] = "SAVE";
-                    SWMessage[2] = "GHOST";
-                    break;
-                case CONTPAK_ERROR_FULL:
-                    SWMessage[0] = " CONTROLLER";
-                    SWMessage[1] = "PAK";
-                    SWMessage[2] = "FULL";
-                    break;
-                case CONTPAK_ERROR_DAMAGED:
-                    SWMessage[0] = " CONTROLLER";
-                    SWMessage[1] = "PAK";
-                    SWMessage[2] = "DAMAGED";
-                    break;
-            }
-            set_kerning(1);
-            set_text_font(ASSET_FONTS_FUNFONT);
-            // Draw text shadow.
-            set_text_colour(0, 0, 0, 255, 255);
-            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 1, SWMessage[0],
-                      ALIGN_MIDDLE_CENTER);
-            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 15, SWMessage[1],
-                      ALIGN_MIDDLE_CENTER);
-            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 29, SWMessage[2],
-                      ALIGN_MIDDLE_CENTER);
-            // Draw actual text.
-            set_text_colour(D_80127194->red, D_80127194->green, D_80127194->blue, 128, D_80127194->alpha);
-            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY, SWMessage[0],
-                      ALIGN_MIDDLE_CENTER);
-            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 14, SWMessage[1],
-                      ALIGN_MIDDLE_CENTER);
-            draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 28, SWMessage[2],
-                      ALIGN_MIDDLE_CENTER);
-            update_colour_cycle(D_80127194, updateRate);
-            set_kerning(0);
-        }
-        sprite_anim_off(FALSE);
+    ttSWBodyObject = gAssetHudElements->entry[HUD_BALLOON_COUNT_X];
+    if (ttSWBodyObject == NULL) {
+        return;
     }
+
+    ttSWBodyObject->segment.object.animationID = gStopwatchFaceID;
+    obj68 = ttSWBodyObject->unk68[0];
+    obj68->objModel->unk52 = updateRate;
+    if (gStopwatchFaceID != 0xFF) {
+        if ((gStopwatchFaceID == 4) && ((get_race_countdown()) || (!music_is_playing()))) {
+            ttSWBodyObject->segment.animFrame = 16;
+        } else if (gStopwatchFaceID == 4) {
+            animcationFraction = music_animation_fraction();
+            temp_t6 = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
+            if (animcationFraction == -1.0) {
+                ttSWBodyObject->segment.animFrame = 0.0;
+            } else if (animcationFraction > 0.5) {
+                animcationFraction -= 0.5;
+                animcationFraction *= 2.0;
+                ttSWBodyObject->segment.animFrame = temp_t6 - (animcationFraction * temp_t6);
+            } else {
+                animcationFraction *= 2;
+                ttSWBodyObject->segment.animFrame = temp_t6 * animcationFraction;
+            }
+        } else if (is_game_paused() == FALSE) {
+            if (D_80126D69 < 0) {
+                if (ttSWBodyObject->segment.animFrame > -(updateRate * D_80126D69)) {
+                    ttSWBodyObject->segment.animFrame += (updateRate * D_80126D69);
+                } else {
+                    ttSWBodyObject->segment.animFrame = 1;
+                    D_80126D69 = -D_80126D69;
+                }
+            } else {
+                ttSWBodyObject->segment.animFrame += (updateRate * D_80126D69);
+                temp_lo = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
+                if (ttSWBodyObject->segment.animFrame >= temp_lo) {
+                    if (D_80126D68 != 0) {
+                        D_80126D69 = -D_80126D69;
+                        ttSWBodyObject->segment.animFrame = temp_lo - 1;
+                    } else {
+                        ttSWBodyObject->segment.animFrame = 0;
+                        if (curRacer->wrongWayCounter == 0 && curRacer->raceFinished == 0) {
+                            hud_stopwatch_face(4, 0, 4, 1, 1);
+                        }
+                    }
+                }
+            }
+        }
+        obj_animate(ttSWBodyObject);
+    }
+
+    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_STOPWATCH_HANDS]);
+
+    for (i = 0; curRacer->lap >= i && i < 5; i++) {
+        stopwatchTimer += curRacer->lap_times[i];
+    }
+
+    if (osTvType == OS_TV_TYPE_PAL) {
+        stopwatchTimer = (f32) stopwatchTimer * 1.2;
+    }
+
+    if (normalise_time(36000) < stopwatchTimer) {
+        stopwatchTimer = normalise_time(36000);
+    }
+
+    gCurrentHud->entry[HUD_STOPWATCH].rotation.z_rotation = ((stopwatchTimer * 0x444) + 0x7FF8);
+    if (get_contpak_error() <= 0) {
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_STOPWATCH]);
+    }
+
+    stopwatchTimer = (((stopwatchTimer / 60) + 30) % 60);
+    gCurrentHud->entry[HUD_STOPWATCH].rotation.z_rotation = stopwatchTimer * 0x444;
+    gCurrentHud->entry[HUD_STOPWATCH].pos.y = gCurrentHud->entry[HUD_STOPWATCH_HANDS].pos.y + 28.0f;
+    if (get_contpak_error() <= 0) {
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_STOPWATCH]);
+    }
+
+    obj68->animUpdateTimer = 0;
+    sprite_anim_off(TRUE);
+    hud_course_arrows(curRacer, updateRate);
+    if (curRacer->raceFinished == FALSE) {
+        spB8 = gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.y;
+        for (i = 0; i < curRacer->countLap && i < gHudLevelHeader->laps; i++) {
+            get_timestamp_from_frames(curRacer->lap_times[i], &spB4, &spB0, &spAC);
+            gHudColour = gHudLapColours[i];
+            hud_timer_render(gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x, spB8, spB4, spB0, spAC, 1);
+            gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
+            spB8 += 12;
+            gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
+            gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER].spriteOffset = i + 1;
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx,
+                               (HudElement *) &gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER]);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx,
+                               (HudElement *) &gCurrentHud->entry[HUD_TIME_TRIAL_LAP_TEXT]);
+            gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER].pos.y += 12.0f;
+            gCurrentHud->entry[HUD_TIME_TRIAL_LAP_TEXT].pos.y += 12.0f;
+        }
+
+        gCurrentHud->entry[HUD_TIME_TRIAL_LAP_NUMBER].pos.y -= i * 0xC;
+        gCurrentHud->entry[HUD_TIME_TRIAL_LAP_TEXT].pos.y -= i * 0xC;
+        if ((curRacer->boost_sound & BOOST_SOUND_UNK4) && (D_80126D4C <= 0)) {
+            hud_stopwatch_face(7, 3, 0, 4, 0);
+            D_80126D4C = 60;
+            curRacer->boost_sound &= ~BOOST_SOUND_UNK4;
+        }
+        if (D_80126D4C > 0) {
+            D_80126D4C -= updateRate;
+            if (D_80126D4C < 0) {
+                D_80126D4C = 0;
+            }
+        }
+        if ((D_80126D4C == 0) && (!curRacer->raceFinished)) {
+            D_80126D4C = -100;
+            if (gHUDVoiceSoundMask == 0) {
+                soundID = get_random_number_from_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
+                while (soundID == D_80126D48) {
+                    soundID = get_random_number_from_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
+                }
+                D_80126D48 = soundID;
+                sound_play(soundID, &gHUDVoiceSoundMask);
+                D_80126D64 = 1;
+            }
+        }
+    }
+
+    if ((curRacer->lap > 0) && (curRacer->lap < gHudLevelHeader->laps) && (curRacer->lap_times[curRacer->lap] < 20) &&
+        (gHUDVoiceSoundMask == 0) && (curRacer->vehicleID <= VEHICLE_PLANE)) {
+        gHudSettings = get_settings();
+        if (curRacer->lap_times[curRacer->lap - 1] <
+            gHudSettings->flapTimesPtr[curRacer->vehicleID][get_current_map_id()]) {
+            stopwatchTimer = curRacer->lap_times[curRacer->lap - 1];
+            for (i = 0; i < curRacer->lap - 1; i++) {
+                if (stopwatchTimer >= curRacer->lap_times[i]) {
+                    stopwatchTimer = 0;
+                }
+            }
+            if (stopwatchTimer != 0) {
+                sound_play(SOUND_VOICE_TT_LAP_RECORD, &gHUDVoiceSoundMask);
+            }
+        }
+    }
+
+    if (timetrial_valid_player_ghost()) {
+        ttSWBodyObject = timetrial_player_ghost();
+        if (ttSWBodyObject != NULL) {
+            if ((get_race_countdown() == 0) && (curRacer->raceFinished == 0)) {
+                posX = ttSWBodyObject->segment.trans.x_position - playerRacerObj->segment.trans.x_position;
+                posY = ttSWBodyObject->segment.trans.y_position - playerRacerObj->segment.trans.y_position;
+                posZ = ttSWBodyObject->segment.trans.z_position - playerRacerObj->segment.trans.z_position;
+                if ((sqrtf((posX * posX) + (posY * posY) + (posZ * posZ)) < 600.0f) && (gHUDVoiceSoundMask == 0) &&
+                    (D_80126D50 == 0)) {
+                    soundID = SOUND_VOICE_TT_GO_FOR_IT + get_random_number_from_range(0, 2);
+                    while (soundID == D_80126D48) {
+                        soundID = SOUND_VOICE_TT_GO_FOR_IT + get_random_number_from_range(0, 2);
+                    }
+                    D_80126D48 = soundID;
+                    sound_play(soundID, &gHUDVoiceSoundMask);
+                    D_80126D50 = get_random_number_from_range(120, 1200);
+                }
+                D_80126D50 -= updateRate;
+                if (D_80126D50 < 0) {
+                    D_80126D50 = 0;
+                }
+            }
+        }
+    }
+
+    if ((curRacer->lap_times[curRacer->lap] < 30) && (curRacer->lap != 0)) {
+        hud_stopwatch_face(5, 1, 2, 2, 0);
+    } else if (curRacer->boostTimer > 0) {
+        hud_stopwatch_face(6, 2, 3, 2, 0);
+    } else if (curRacer->wrongWayCounter > 120) {
+        hud_stopwatch_face(6, 3, 1, 4, 0);
+    }
+
+    hud_lap_count(curRacer, updateRate);
+    hud_race_time(curRacer, updateRate);
+    hud_bananas(curRacer, updateRate);
+    hud_wrong_way(curRacer, updateRate);
+    hud_race_start(arg0, updateRate);
+    hud_speedometre(playerRacerObj, updateRate);
+    if (get_contpak_error() > 0) {
+        // has to be defined here to match
+        char *SWMessage[3];
+        switch (get_contpak_error()) {
+            // Print "CAN'T SAVE GOST"
+            case CONTPAK_ERROR_UNKNOWN:
+                SWMessage[2] = D_800E8640;
+                SWMessage[1] = D_800E8648;
+                SWMessage[0] = D_800E8650;
+                break;
+            // Print "CONTROLLER PAK FULL"
+            case CONTPAK_ERROR_FULL:
+                SWMessage[2] = D_800E8658;
+                SWMessage[1] = D_800E8664;
+                SWMessage[0] = D_800E8668;
+                break;
+            // Print "CONTROLLER PAK DAMAGED"
+            case CONTPAK_ERROR_DAMAGED:
+                SWMessage[2] = D_800E8670;
+                SWMessage[1] = D_800E867C;
+                SWMessage[0] = D_800E8680;
+                break;
+        }
+        set_kerning(1);
+        set_text_font(ASSET_FONTS_FUNFONT);
+        // Draw text shadow.
+        set_text_colour(0, 0, 0, 255, 255);
+        draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 1, SWMessage[2],
+                  ALIGN_MIDDLE_CENTER);
+        draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 15, SWMessage[1],
+                  ALIGN_MIDDLE_CENTER);
+        draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 29, SWMessage[0],
+                  ALIGN_MIDDLE_CENTER);
+        // Draw actual text.
+        set_text_colour(D_80127194->red, D_80127194->green, D_80127194->blue, 128, D_80127194->alpha);
+        draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY, SWMessage[2],
+                  ALIGN_MIDDLE_CENTER);
+        draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 14, SWMessage[1],
+                  ALIGN_MIDDLE_CENTER);
+        draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 28, SWMessage[0],
+                  ALIGN_MIDDLE_CENTER);
+        update_colour_cycle(D_80127194, updateRate);
+        set_kerning(0);
+    }
+
+    sprite_anim_off(FALSE);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/hud_main_time_trial.s")
-#endif
 
 void hud_stopwatch_face(u8 arg0, u8 arg1, u8 faceID, u8 arg3, u8 arg4) {
     s32 var_a3;
@@ -2248,8 +2262,6 @@ void hud_finish_position(Object_Racer *racer) {
     }
 }
 
-#ifdef NON_MATCHING
-// hud_render_finish
 void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate) {
     UNUSED s32 *var_a0;
     UNUSED s32 var_t0;
@@ -2389,10 +2401,11 @@ void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate) {
                 curLevelHeader = get_current_level_header();
                 totalRaceTime = 0;
                 fastestLapTime = racer->lap_times[0];
-                for (var_v1 = 0; var_v1 < (var_a2 = curLevelHeader->laps); var_v1++) {
-                    totalRaceTime += racer->lap_times[var_v1];
-                    if (racer->lap_times[var_v1] < fastestLapTime) {
-                        fastestLapTime = racer->lap_times[var_v1];
+                temp_v0_4 = 0;
+                for (updateRate = 0; temp_v0_4 < curLevelHeader->laps; updateRate++, temp_v0_4++) {
+                    totalRaceTime += racer->lap_times[updateRate];
+                    if (racer->lap_times[updateRate] < fastestLapTime) {
+                        fastestLapTime = racer->lap_times[updateRate];
                     }
                 }
                 get_timestamp_from_frames(fastestLapTime, &minutes, &seconds, &hundredths);
@@ -2407,9 +2420,10 @@ void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate) {
             break;
         case 1:
             var_a2 = TRUE;
+            temp_v0_4 = (updateRate * 13);
             if (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].pos.x <
-                (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.targetPos - (updateRate * 13)) + 160) {
-                var_v1 = (updateRate * 13);
+                (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.targetPos - temp_v0_4) + 160) {
+                var_v1 = temp_v0_4;
                 var_a2 = FALSE;
             } else {
                 var_v1 = (gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.targetPos + 160) -
@@ -2418,14 +2432,16 @@ void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate) {
             gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].pos.x += var_v1;
             gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_2].pos.x += var_v1;
             if (gNumActivePlayers != 1) {
-                if ((gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.unk1D + (updateRate * 13) + 160) <
-                    gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x) {
+                if (gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x >
+                    (gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.unk1D + temp_v0_4 + 160)) {
+                    var_v1 = temp_v0_4;
                     var_a2 = FALSE;
                 } else {
                     var_v1 = gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x -
                              (gCurrentHud->entry[HUD_RACE_TIME_NUMBER].timer.unk1D + 160);
                 }
                 gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.x -= var_v1;
+                var_v1 = temp_v0_4;
                 if (gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x <
                     (gCurrentHud->entry[HUD_LAP_TIME_TEXT].timer.unk1D - var_v1) + 160) {
                     var_a2 = FALSE;
@@ -2435,10 +2451,8 @@ void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate) {
                 }
                 gCurrentHud->entry[HUD_LAP_TIME_TEXT].pos.x += var_v1;
             }
-            temp_v0_4 = 2; // fakematch?
             if (var_a2) {
-                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status =
-                    temp_v0_4; // fakematch? Why not just set directly to 2?
+                gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.status = 2;
                 gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTimer = -120;
                 gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].raceFinishPos.textOutTicks = 0;
                 if (gHUDVoiceSoundMask == NULL) {
@@ -2506,9 +2520,6 @@ void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate) {
             break;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/hud_race_finish_multiplayer.s")
-#endif
 
 /**
  * Play the normal race finish message, unless you beat your time record,

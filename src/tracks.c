@@ -27,6 +27,9 @@
 #define LEVEL_MODEL_MAX_SIZE 0x82A00
 #define LEVEL_SEGMENT_MAX 128
 
+#define FLAGS_8002E904 \
+    (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_RECEIVE_SHADOWS | BATCH_FLAGS_WATER | BATCH_FLAGS_FORCE_NO_SHADOWS)
+
 /************ .data ************/
 
 s32 D_800DC870 = 0; // Currently unknown, might be a different type.
@@ -3546,11 +3549,116 @@ void shadow_generate(Object *obj, s32 isWater) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002E904.s")
+void func_8002E904(LevelModelSegment *arg0, s32 arg1, s32 arg2) {
+    unk8011C8B8 sp100[8];
+    Vec2f spD0[4];
+    s32 spAC;
+    Triangle *triangles;
+    s32 nextFacesOffset;
+    Vertex *vertices;
+    s32 yPos;
+    s32 minY;
+    s32 foundIndex;
+    s32 maxY;
+    s32 temp_t6;
+    s32 sp88;
+    s32 someCount;
+    s32 i2;
+    s32 i;
+    s32 curFacesOffset;
+
+    spD0[0].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    spD0[0].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    spD0[1].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    spD0[1].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    spD0[2].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    spD0[2].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    spD0[3].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    spD0[3].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+
+    for (spAC = 0; spAC < arg0->numberOfBatches; spAC++) {
+        if ((arg2 && (arg0->batches[spAC].flags & BATCH_FLAGS_WATER)) ||
+            (!arg2 && !(arg0->batches[spAC].flags & FLAGS_8002E904))) {
+            curFacesOffset = arg0->batches[spAC].facesOffset;
+            nextFacesOffset = arg0->batches[spAC + 1].facesOffset;
+            vertices = &arg0->vertices[arg0->batches[spAC].verticesOffset];
+            sp88 = (arg0->batches[spAC].flags >> 0x13) & 7;
+            for (; curFacesOffset < nextFacesOffset; curFacesOffset++) {
+                if (((arg0->unk10[curFacesOffset] & arg1) & 0xFF) && ((arg0->unk10[curFacesOffset] & arg1) & 0xFF00)) {
+                    triangles = &arg0->triangles[curFacesOffset];
+                    maxY = minY = vertices[triangles->verticesArray[1]].y;
+                    for (i = 1; i < 3; i++) {
+                        yPos = vertices[triangles->verticesArray[i + 1]].y;
+                        if (yPos < minY) {
+                            minY = yPos;
+                        } else if (maxY < yPos) {
+                            maxY = yPos;
+                        }
+                    }
+                    if (gNewShadowY2 >= minY) {
+                        if (maxY >= gNewShadowY1) {
+                            for (i = 0; i < 3; i++) {
+                                sp100[i].unk0 = vertices[triangles->verticesArray[i + 1]].x;
+                                sp100[i].unk8 = vertices[triangles->verticesArray[i + 1]].z;
+                                sp100[i].unkE = -1;
+                            }
+                            // @note while the cast to Vec4f is incorrect, func_8002FD74 only uses unk0 and unk8 which
+                            // are both floats so this is fine as the size is the same
+                            if (func_8002FD74(spD0[2].x, spD0[2].y, spD0[0].x, spD0[0].y, 3, (Vec4f *) sp100) != 0) {
+                                temp_t6 = arg0->unk14[curFacesOffset].triangleIndex * 4;
+                                D_8011D0BC = (unk8011C8B8 *) &(arg0->unk18)[temp_t6];
+                                if (arg0->unk18[temp_t6 + 1] != 0) {
+                                    if (D_8011D0F0 > 0.0f) {
+                                        func_800304C8(sp100);
+                                    }
+                                    someCount = func_8002FF6C(3, sp100, 4, spD0);
+                                    if (someCount >= 3) {
+                                        D_8011C238[D_8011C230].unk1 = 0;
+                                        for (i2 = 0; i2 < someCount; i2++) {
+                                            if (sp100[i2].unkE < 0) {
+                                                foundIndex = -1;
+                                                i = 0;
+                                                while ((i < D_8011B118) && (foundIndex == -1)) {
+                                                    if ((D_8011B120[i].x == sp100[i2].unk0) &&
+                                                        (D_8011B120[i].z == sp100[i2].unk8)) {
+                                                        foundIndex = i;
+                                                    }
+                                                    i++;
+                                                }
+                                                if (foundIndex == -1) {
+                                                    D_8011B120[D_8011B118].x = sp100[i2].unk0;
+                                                    D_8011B120[D_8011B118].unkC = D_8011D0BC;
+                                                    D_8011B120[D_8011B118].z = sp100[i2].unk8;
+                                                    D_8011C238[D_8011C230].unk2[i2] = D_8011B118++;
+                                                } else {
+                                                    D_8011C238[D_8011C230].unk2[i2] = foundIndex;
+                                                }
+                                            } else {
+                                                D_8011C238[D_8011C230].unk2[i2] = sp100[i2].unkE;
+                                                D_8011C238[D_8011C230].unk1 |= 1 << i2;
+                                            }
+                                        }
+                                        D_8011C238[D_8011C230].unk0 = someCount;
+                                        D_8011C238[D_8011C230].unkA = sp88;
+                                        D_8011C230 += 1;
+                                        if ((D_8011D0E8 >= 0) && (sp88 != D_8011D0E8)) {
+                                            D_8011D0EC = 0;
+                                        }
+                                        D_8011D0E8 = sp88;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 void func_8002EEEC(s32 arg0) {
     unk8011C8B8 spA8[8];
-    f32 sp88[8];
+    Vec2f sp88[4];
     s32 var_v0;
     s32 var_a0;
     s32 var_a1;
@@ -3561,15 +3669,21 @@ void func_8002EEEC(s32 arg0) {
     s32 var_v1;
     s32 tempIdx;
 
-    sp88[0] = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
-    sp88[1] = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
-    sp88[2] = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
-    sp88[3] = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
-    sp88[4] = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
-    sp88[5] = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
-    sp88[6] = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
-    sp88[7] = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
-    temp_v0 = func_800BDC80(arg0, D_8011C3B8, &D_8011C8B8[D_8011D0B8], sp88[4], sp88[5], sp88[0], sp88[1]);
+    sp88[0].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    sp88[0].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    sp88[1].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    sp88[1].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    sp88[2].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    sp88[2].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    sp88[3].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    sp88[3].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    // clang-format off
+    temp_v0 = func_800BDC80(
+        arg0, D_8011C3B8, &D_8011C8B8[D_8011D0B8],
+        sp88[2].x, sp88[2].y,
+        sp88[0].x, sp88[0].y
+    );
+    // clang-format on
 
     for (var_s4 = 0; var_s4 < temp_v0; var_s4++) {
         var_a0 = D_8011C3B8[var_s4].unk2;
@@ -3615,7 +3729,7 @@ void func_8002EEEC(s32 arg0) {
                             }
                             if (var_a1 == -1) {
                                 D_8011B120[D_8011B118].x = spA8[var_t1].unk0;
-                                D_8011B120[D_8011B118].unkC = (unk8011B120_unkC *) D_8011D0BC;
+                                D_8011B120[D_8011B118].unkC = D_8011D0BC;
                                 D_8011B120[D_8011B118].z = spA8[var_t1].unk8;
                                 D_8011C238[tempIdx].unk2[var_t1] = D_8011B118++;
                             } else {
@@ -3640,7 +3754,7 @@ void func_8002EEEC(s32 arg0) {
 void func_8002F2AC(void) {
     f32 temp_f12;
     f32 temp_f16;
-    unk8011B120_unkC *var_v0;
+    unk8011C8B8 *var_v0;
     s32 i, j;
 
     for (i = 0; i < D_8011B118; i++) {
@@ -3752,10 +3866,136 @@ s32 func_8002FD74(f32 x0, f32 z0, f32 x1, f32 x2, s32 count, Vec4f *arg5) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002FF6C.s")
+// arg0 is always 3
+// arg1 always has size 8 (that's why spE0 is also of size 8)
+// arg2 is always 4
+// arg3 always has size 4
+s32 func_8002FF6C(s32 arg0, unk8011C8B8 *arg1, s32 arg2, Vec2f *arg3) {
+    unk8011C8B8 spE0[8];
+    f32 temp_f12;
+    f32 temp_f14;
+    f32 temp_f16;
+    f32 temp_f22;
+    f32 temp_f24;
+    f32 var_f2;
+    s32 var_a1;
+    s32 var_v1_3;
+    s32 var_a0;
+    s32 var_t2;
+    UNUSED s32 var_t5;
+    s32 var_v0;
+    s32 var_v1;
+    s32 var_t1;
+    s32 var_s2;
+    unk8011C8B8 *var_s0;
+    unk8011C8B8 *var_s3;
+    unk8011C8B8 *swap; // swap var for var_s0 and var_s3
+
+    var_s3 = arg1;
+    var_s0 = spE0;
+    var_s2 = arg0;
+    var_v0 = 0;
+
+    while (var_v0 < arg2 && var_s2 >= 3) {
+        var_v1 = var_v0 + 1;
+        if (var_v1 >= arg2) {
+            var_v1 = 0;
+        }
+
+        temp_f12 = arg3[var_v1].y - arg3[var_v0].y;
+        temp_f14 = -(arg3[var_v1].x - arg3[var_v0].x);
+        if (arg3[var_v0].x < arg3[var_v1].x) {
+            var_f2 = (temp_f12 * arg3[var_v0].x) + (arg3[var_v0].y * temp_f14);
+            var_f2 = -var_f2;
+        } else {
+            var_f2 = (temp_f12 * arg3[var_v1].x) + (arg3[var_v1].y * temp_f14);
+            var_f2 = -var_f2;
+        }
+
+        for (var_t1 = 0, var_t2 = 0; var_t1 < var_s2; var_t1++) {
+            var_v1 = var_t1 + 1;
+            if (var_v1 >= var_s2) {
+                var_v1 = 0;
+            }
+            temp_f16 = (temp_f12 * var_s3[var_t1].unk0) + (var_s3[var_t1].unk8 * temp_f14) + var_f2;
+            temp_f22 = (temp_f12 * var_s3[var_v1].unk0) + (var_s3[var_v1].unk8 * temp_f14) + var_f2;
+            if ((temp_f16 >= 0.0f && temp_f22 < 0.0f) || (temp_f16 < 0.0f && temp_f22 >= 0.0f)) {
+                var_a0 = D_8011B320[var_v0];
+                var_a1 = -1;
+                var_v1_3 = var_v0 << 5;
+                while (var_a0 > 0 && var_a1 < 0) {
+                    if ((D_8011B330[var_v1_3].unk10 == var_s3[var_t1].unk0) &&
+                        (D_8011B330[var_v1_3].unk14 == var_s3[var_t1].unk8) &&
+                        (D_8011B330[var_v1_3].unk18 == var_s3[var_v1].unk0) &&
+                        (D_8011B330[var_v1_3].unk1C == var_s3[var_v1].unk8)) {
+                        var_a1 = var_v1_3;
+                    } else if ((D_8011B330[var_v1_3].unk10 == var_s3[var_v1].unk0) &&
+                               (D_8011B330[var_v1_3].unk14 == var_s3[var_v1].unk8) &&
+                               (D_8011B330[var_v1_3].unk18 == var_s3[var_t1].unk0) &&
+                               (D_8011B330[var_v1_3].unk1C == var_s3[var_t1].unk8)) {
+                        var_a1 = var_v1_3;
+                    }
+                    var_a0 -= 1;
+                    var_v1_3++;
+                }
+                if (var_a1 >= 0) {
+                    var_s0[var_t2].unkE = var_a1;
+                    var_s0[var_t2].unk0 = D_8011B330[var_a1].x;
+                    var_s0[var_t2].unk8 = D_8011B330[var_a1].z;
+                    var_t2++;
+                } else {
+                    temp_f24 = temp_f16 / (temp_f16 - temp_f22);
+                    var_s0[var_t2].unk0 =
+                        var_s3[var_t1].unk0 + ((var_s3[var_v1].unk0 - var_s3[var_t1].unk0) * temp_f24);
+                    var_s0[var_t2].unk8 =
+                        var_s3[var_t1].unk8 + ((var_s3[var_v1].unk8 - var_s3[var_t1].unk8) * temp_f24);
+                    if (D_8011B320[var_v0] > 0x1F) {
+                        D_8011B320[var_v0] = 0x1F;
+                    }
+                    var_v1_3 = D_8011B320[var_v0] + (var_v0 << 5);
+                    D_8011B330[var_v1_3].unk10 = var_s3[var_t1].unk0;
+                    D_8011B330[var_v1_3].unk14 = var_s3[var_t1].unk8;
+                    D_8011B330[var_v1_3].unk18 = var_s3[var_v1].unk0;
+                    D_8011B330[var_v1_3].unk1C = var_s3[var_v1].unk8;
+                    D_8011B330[var_v1_3].x = var_s0[var_t2].unk0;
+                    D_8011B330[var_v1_3].z = var_s0[var_t2].unk8;
+                    D_8011B330[var_v1_3].unkC = D_8011D0BC;
+                    D_8011B320[var_v0]++;
+                    var_s0[var_t2].unkE = var_v1_3;
+                    var_t2++;
+                }
+            }
+            if (temp_f22 <= 0.0f) {
+                var_s0[var_t2].unkE = var_s3[var_v1].unkE;
+                var_s0[var_t2].unk0 = var_s3[var_v1].unk0;
+                var_s0[var_t2].unk8 = var_s3[var_v1].unk8;
+                var_t2++;
+            }
+        }
+        var_s2 = var_t2;
+        var_v0++;
+
+        swap = var_s3;
+        var_s3 = var_s0;
+        var_s0 = swap;
+    }
+
+    if (var_s2 >= 3) {
+        if (var_s3 != arg1) {
+            for (var_t1 = 0; var_t1 < var_s2; var_t1++) {
+                arg1[var_t1].unk0 = var_s3[var_t1].unk0;
+                arg1[var_t1].unk8 = var_s3[var_t1].unk8;
+                arg1[var_t1].unkE = var_s3[var_t1].unkE;
+            }
+        }
+    } else {
+        var_s2 = 0;
+    }
+    return var_s2;
+}
 
 #ifdef NON_EQUIUVALENT
-void func_800304C8(Vec4f *arg0) {
+void func_800304C8(unk8011C8B8 *arg0) {
     s16 found1;
     s16 found2;
     s16 found3;
