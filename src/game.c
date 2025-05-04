@@ -385,11 +385,11 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     }
 
     if (numberOfPlayers == ONE_PLAYER) {
-        set_sound_channel_count(8);
+        sndp_set_channel_count(8);
     } else if (numberOfPlayers == TWO_PLAYERS) {
-        set_sound_channel_count(12);
+        sndp_set_channel_count(12);
     } else {
-        set_sound_channel_count(16);
+        sndp_set_channel_count(16);
     }
     settings = get_settings();
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);

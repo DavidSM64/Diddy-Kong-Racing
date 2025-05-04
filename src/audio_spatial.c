@@ -102,7 +102,7 @@ void audioline_reset(void) {
         sound = gSoundMaskHeapUsed[i]->soundPtr;
         gSoundMaskHeapUsed[i]->unk12 = 0;
         if (sound != NULL) {
-            sound_stop(sound);
+            sndp_stop(sound);
         }
     }
     gUsedMasks = 0;
@@ -111,7 +111,7 @@ void audioline_reset(void) {
         D_80119C58[i].soundID = 0;
         if (D_80119C58[i].soundPtr != 0) {
             if (D_80119C58[i].unk0_02 == 0) {
-                sound_stop(D_80119C58[i].soundPtr);
+                sndp_stop(D_80119C58[i].soundPtr);
             } else if (D_80119C58[i].unk0_02 == 1) {
                 music_jingle_stop();
             }
@@ -438,7 +438,7 @@ void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z) {
         }
     }
     if (soundState != NULL) {
-        sound_event_update((s32) soundState, AL_SNDP_FX_EVT, (u32) volume);
+        sndp_set_param((s32) soundState, AL_SNDP_FX_EVT, (u32) volume);
     }
 }
 
@@ -548,7 +548,7 @@ void debug_render_audio_effects(Gfx **dList, Vertex **verts, Triangle **tris) {
 void func_8000A2E8(s32 arg0) {
     if (gUsedMasks != 0) {
         if (gSoundMaskHeapUsed[arg0]->soundPtr != 0) {
-            sound_stop(gSoundMaskHeapUsed[arg0]->soundPtr);
+            sndp_stop(gSoundMaskHeapUsed[arg0]->soundPtr);
         }
         if (gSoundMaskHeapUsed[arg0]->soundMask != NULL) {
             *gSoundMaskHeapUsed[arg0]->soundMask = NULL;

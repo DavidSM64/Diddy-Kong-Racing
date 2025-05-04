@@ -145,12 +145,12 @@ void audio_init(OSSched *sc) {
     audConfig.maxSounds = 32;
     audConfig.maxChannels = AUDIO_CHANNELS;
     audConfig.unk10 = 1;
-    audConfig.hp = &gALHeap;
-    alSndPNew(&audConfig);
+    audConfig.heap = &gALHeap;
+    sndp_init_player(&audConfig);
     audioStartThread();
     sound_volume_change(VOLUME_NORMAL);
     mempool_free(addrPtr);
-    set_sound_channel_count(10);
+    sndp_set_channel_count(10);
     gBlockMusicChange = FALSE;
     gMusicPlaying = FALSE;
     gJinglePlaying = FALSE;
@@ -172,10 +172,10 @@ void sound_volume_reset(u8 skipReset) {
         if (gSkipResetChannels == FALSE) {
             gGlobalMusicVolume = 256;
             music_volume_set(gMusicBaseVolume);
-            set_sound_channel_volume(0, gGlobalMusicVolume * 128 - 1);
-            set_sound_channel_volume(1, gGlobalMusicVolume * 128 - 1);
-            set_sound_channel_volume(2, gGlobalMusicVolume * 128 - 1);
-            set_sound_channel_volume(4, gGlobalMusicVolume * 128 - 1);
+            sndp_set_channel_volume(0, gGlobalMusicVolume * 128 - 1);
+            sndp_set_channel_volume(1, gGlobalMusicVolume * 128 - 1);
+            sndp_set_channel_volume(2, gGlobalMusicVolume * 128 - 1);
+            sndp_set_channel_volume(4, gGlobalMusicVolume * 128 - 1);
         }
     }
 }
@@ -186,32 +186,32 @@ void sound_volume_reset(u8 skipReset) {
 void sound_volume_change(s32 behaviour) {
     switch (behaviour) {
         case VOLUME_LOWER: // Mute most sound effects and half the volume of music.
-            set_sound_channel_volume(0, 0);
-            set_sound_channel_volume(1, 32767);
-            set_sound_channel_volume(2, 0);
-            set_sound_channel_volume(4, 0);
+            sndp_set_channel_volume(0, 0);
+            sndp_set_channel_volume(1, 32767);
+            sndp_set_channel_volume(2, 0);
+            sndp_set_channel_volume(4, 0);
             alCSPSetVol(gMusicPlayer, (s16) (gMusicBaseVolume * gMusicSliderVolume >> 2));
             alCSPSetVol(gJinglePlayer, 0);
             break;
         case VOLUME_LOWER_AMBIENT: // Mute the ambient channel, making course elements stop making noise.
-            set_sound_channel_volume(0, 0);
-            set_sound_channel_volume(1, 32767);
-            set_sound_channel_volume(2, 32767);
-            set_sound_channel_volume(4, 32767);
+            sndp_set_channel_volume(0, 0);
+            sndp_set_channel_volume(1, 32767);
+            sndp_set_channel_volume(2, 32767);
+            sndp_set_channel_volume(4, 32767);
             break;
         case VOLUME_UNK03:
-            set_sound_channel_volume(0, 0);
-            set_sound_channel_volume(1, 32767);
-            set_sound_channel_volume(2, 0);
-            set_sound_channel_volume(4, 0);
+            sndp_set_channel_volume(0, 0);
+            sndp_set_channel_volume(1, 32767);
+            sndp_set_channel_volume(2, 0);
+            sndp_set_channel_volume(4, 0);
             break;
         default: // Restore sound back to normal.
-            set_sound_channel_volume(0, 32767);
-            set_sound_channel_volume(1, 32767);
-            set_sound_channel_volume(2, 32767);
-            set_sound_channel_volume(4, 32767);
+            sndp_set_channel_volume(0, 32767);
+            sndp_set_channel_volume(1, 32767);
+            sndp_set_channel_volume(2, 32767);
+            sndp_set_channel_volume(4, 32767);
             alCSPSetVol(gMusicPlayer, (s16) (gMusicBaseVolume * gMusicSliderVolume));
-            alCSPSetVol(gJinglePlayer, (s16) (get_sfx_volume_slider() * sfxRelativeVolume));
+            alCSPSetVol(gJinglePlayer, (s16) (sndp_get_master_volume() * sfxRelativeVolume));
             break;
     }
     gAudioVolumeSetting = behaviour;
@@ -734,7 +734,7 @@ s32 music_volume_config(void) {
  */
 void music_jingle_volume_set(u8 arg0) {
     sfxRelativeVolume = arg0;
-    alCSPSetVol(gJinglePlayer, (s16) (get_sfx_volume_slider() * sfxRelativeVolume));
+    alCSPSetVol(gJinglePlayer, (s16) (sndp_get_master_volume() * sfxRelativeVolume));
 }
 
 /**
@@ -776,7 +776,7 @@ u32 music_jingle_playing(void) {
 UNUSED void sound_channel_volume_all(u16 volume) {
     u32 i;
     for (i = 0; i < 64; i++) {
-        set_sound_channel_volume(i, volume << 8);
+        sndp_set_channel_volume(i, volume << 8);
     }
 }
 
@@ -814,17 +814,17 @@ void sound_play(u16 soundID, SoundHandle *handlePtr) {
     }
     pitch = gSoundTable[soundID].pitch / 100.0f;
     if (handlePtr != NULL) {
-        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, handlePtr);
+        sndp_play_with_priority(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, handlePtr);
         if (*handlePtr != NULL) {
-            sound_event_update(*handlePtr, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
-            sound_event_update(*handlePtr, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
+            sndp_set_param(*handlePtr, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
+            sndp_set_param(*handlePtr, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
         }
     } else {
         handlePtr = &gGlobalSoundMask;
-        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, &gGlobalSoundMask);
+        sndp_play_with_priority(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, &gGlobalSoundMask);
         if (*handlePtr != NULL) {
-            sound_event_update(*handlePtr, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
-            sound_event_update(*handlePtr, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
+            sndp_set_param(*handlePtr, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
+            sndp_set_param(*handlePtr, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
         }
     }
 }
@@ -855,9 +855,9 @@ void func_80001F14(u16 soundID, s32 *soundMask) {
         return;
     }
     if (soundMask) {
-        func_80004638(gSoundBank->bankArray[0], (s16) soundID, soundMask);
+        sndp_play(gSoundBank->bankArray[0], (s16) soundID, soundMask);
     } else {
-        func_80004638(gSoundBank->bankArray[0], (s16) soundID, &gRacerSoundMask);
+        sndp_play(gSoundBank->bankArray[0], (s16) soundID, &gRacerSoundMask);
     }
 }
 
@@ -867,7 +867,7 @@ void func_80001F14(u16 soundID, s32 *soundMask) {
 void sound_volume_set_relative(u16 soundID, SoundHandle soundHandle, u8 volume) {
     s32 newVolume = ((s32) (gSoundTable[soundID].volume * (volume / 127.0f))) * 256;
     if (soundHandle) {
-        sound_event_update(soundHandle, AL_SNDP_VOL_EVT, newVolume);
+        sndp_set_param(soundHandle, AL_SNDP_VOL_EVT, newVolume);
     }
 }
 
@@ -876,7 +876,7 @@ void sound_volume_set_relative(u16 soundID, SoundHandle soundHandle, u8 volume) 
  */
 UNUSED void sound_volume_set(SoundHandle soundHandle, u8 arg1) {
     if (soundHandle != NULL) {
-        sound_event_update(soundHandle, AL_SNDP_VOL_EVT, arg1 * 256);
+        sndp_set_param(soundHandle, AL_SNDP_VOL_EVT, arg1 * 256);
     }
 }
 
@@ -887,7 +887,7 @@ UNUSED void sound_volume_set(SoundHandle soundHandle, u8 arg1) {
 UNUSED void sound_pitch_set(SoundHandle soundHandle, u32 pitch) {
     u32 *pitchAddr = &pitch;
     if (soundHandle != NULL) {
-        sound_event_update(soundHandle, AL_SNDP_PITCH_EVT, *pitchAddr);
+        sndp_set_param(soundHandle, AL_SNDP_PITCH_EVT, *pitchAddr);
     }
 }
 

@@ -310,7 +310,7 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     if (((gSoundRacerObj->unk10 != 0) || (gSoundRacerObj->unk14 != 0) || !(buttonsHeld & B_BUTTON) ||
          (gSoundRacerObj->velocity > -0.1) || (gSoundRacerObj->vehicleID == 4)) &&
         (gRacerSound->unkA8 != 0)) {
-        sound_stop(gRacerSound->unkA8);
+        sndp_stop(gRacerSound->unkA8);
         gRacerSound->unkA8 = 0;
     } else if ((buttonsPressed & B_BUTTON) && (gRacerSound->unkA8 == 0) && (gSoundRacerObj->playerIndex >= 0)) {
         if (gSoundRacerObj->velocity < 0.0f) {
@@ -325,7 +325,7 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
         sp6C = (((var_f20 * 0.5) / 12.0) + 0.5);
         temp_a0_4 = (s32) gRacerSound->unkA8;
         if (temp_a0_4 != 0) {
-            sound_event_update(temp_a0_4, AL_SNDP_PITCH_EVT, *((u32 *) &sp6C));
+            sndp_set_param(temp_a0_4, AL_SNDP_PITCH_EVT, *((u32 *) &sp6C));
         }
         gRacerSound->unkAC = 110;
         gRacerSound->unkD0 = 0;
@@ -337,9 +337,9 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
             gRacerSound->unkD0 = 0;
         }
         if (gRacerSound->unkD0 >= 10) {
-            sound_event_update((s32) gRacerSound->unkA8, AL_SNDP_VOL_EVT, 0);
+            sndp_set_param((s32) gRacerSound->unkA8, AL_SNDP_VOL_EVT, 0);
         } else {
-            sound_event_update((s32) gRacerSound->unkA8, AL_SNDP_VOL_EVT, gRacerSound->unkAC << 8);
+            sndp_set_param((s32) gRacerSound->unkA8, AL_SNDP_VOL_EVT, gRacerSound->unkAC << 8);
             audioline_reverb((s32 *) gRacerSound->unkA8, obj->segment.trans.x_position, obj->segment.trans.y_position,
                              obj->segment.trans.z_position);
         }
@@ -549,7 +549,7 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     } else if (gSoundRacerObj->spinout_timer == 0) {
         gRacerSound->brakeSound = FALSE;
         if (gRacerSound->brakeSoundMask != NULL) {
-            sound_stop(gRacerSound->brakeSoundMask);
+            sndp_stop(gRacerSound->brakeSoundMask);
         }
     }
 }
@@ -567,16 +567,16 @@ void racer_sound_free(Object *obj) {
     if (gRacerSound != NULL) {
         for (i = 0; i != 2; i++) {
             if (gRacerSound->unk48[i] != NULL) {
-                sound_stop(gRacerSound->unk48[i]);
+                sndp_stop(gRacerSound->unk48[i]);
                 gRacerSound->unk48[i] = 0;
             }
         }
         if (gRacerSound->unk50 != NULL) {
-            sound_stop(gRacerSound->unk50);
+            sndp_stop(gRacerSound->unk50);
             gRacerSound->unk50 = NULL;
         }
         if (gRacerSound->unkA8 != NULL) {
-            sound_stop(gRacerSound->unkA8);
+            sndp_stop(gRacerSound->unkA8);
             gRacerSound->unkA8 = 0;
         }
         for (i = 0; i < ARRAY_COUNT(D_80119C30); i++) {
@@ -732,17 +732,17 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                         audioline_reverb((s32 *) gRacerSound->unk50, objs[loopCount1]->segment.trans.x_position,
                                          objs[loopCount1]->segment.trans.y_position,
                                          objs[loopCount1]->segment.trans.z_position);
-                        sound_event_update((s32) gRacerSound->unk50, AL_SNDP_VOL_EVT, temp_s3 << 8);
-                        sound_event_update((s32) gRacerSound->unk50, AL_SNDP_PITCH_EVT, *((u32 *) &sp8C));
-                        func_80004604((ALSoundState *) gRacerSound->unk50, 80);
-                        sound_event_update((s32) gRacerSound->unk50, AL_SNDP_PAN_EVT, gRacerSound->unk91[0]);
+                        sndp_set_param((s32) gRacerSound->unk50, AL_SNDP_VOL_EVT, temp_s3 << 8);
+                        sndp_set_param((s32) gRacerSound->unk50, AL_SNDP_PITCH_EVT, *((u32 *) &sp8C));
+                        sndp_set_priority((ALSoundState *) gRacerSound->unk50, 80);
+                        sndp_set_param((s32) gRacerSound->unk50, AL_SNDP_PAN_EVT, gRacerSound->unk91[0]);
                     }
                 } else if (gRacerSound->unk50 != NULL) {
-                    sound_stop(gRacerSound->unk50);
+                    sndp_stop(gRacerSound->unk50);
                     gRacerSound->unk50 = 0;
                 }
             } else if (gRacerSound->unk50 != NULL) {
-                sound_stop(gRacerSound->unk50);
+                sndp_stop(gRacerSound->unk50);
                 gRacerSound->unk50 = 0;
             }
             for (loopCount2 = 0; loopCount2 < 2 && gRacerSound->unk0[loopCount2] != 0 && var_f26 != 0.0; loopCount2++) {
@@ -754,12 +754,12 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                 }
                 if ((loopCount2 == 0) && (gRacerSound->unk44[0] & 1)) {
                     if (gRacerSound->unk48[0] != NULL) {
-                        sound_stop(gRacerSound->unk48[0]);
+                        sndp_stop(gRacerSound->unk48[0]);
                         gRacerSound->unk48[0] = NULL;
                     }
                 } else {
                     if ((gRacerSound->unk48[loopCount2] != NULL) && (temp_s3 == 0)) {
-                        sound_stop(gRacerSound->unk48[loopCount2]);
+                        sndp_stop(gRacerSound->unk48[loopCount2]);
                         gRacerSound->unk48[loopCount2] = NULL;
                     } else {
                         if (gRacerSound->unk48[loopCount2] == NULL) {
@@ -769,15 +769,14 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             audioline_reverb(
                                 (s32 *) gRacerSound->unk48[loopCount2], objs[loopCount1]->segment.trans.x_position,
                                 objs[loopCount1]->segment.trans.y_position, objs[loopCount1]->segment.trans.z_position);
-                            sound_event_update((s32) gRacerSound->unk48[loopCount2], AL_SNDP_VOL_EVT, temp_s3 << 8);
-                            sound_event_update((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PITCH_EVT,
-                                               *((u32 *) &sp8C));
-                            func_80004604((ALSoundState *) gRacerSound->unk48[loopCount2], 80);
+                            sndp_set_param((s32) gRacerSound->unk48[loopCount2], AL_SNDP_VOL_EVT, temp_s3 << 8);
+                            sndp_set_param((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PITCH_EVT, *((u32 *) &sp8C));
+                            sndp_set_priority((ALSoundState *) gRacerSound->unk48[loopCount2], 80);
                             if (arg3 != 1) {
                                 gRacerSound->unk91[0] = 64;
                             }
-                            sound_event_update((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PAN_EVT,
-                                               gRacerSound->unk91[0]);
+                            sndp_set_param((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PAN_EVT,
+                                           gRacerSound->unk91[0]);
                         }
                     }
                 }
@@ -847,7 +846,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
         for (loopCount3 = 0; loopCount3 < ARRAY_COUNT(D_80119C30); loopCount3++) {
             if (D_80119C30[loopCount3] != NULL) {
                 if (D_80119C30[loopCount3]->unk48[0] != NULL && D_80119C30[loopCount3]->unk88 < 8) {
-                    sound_stop(D_80119C30[loopCount3]->unk48[0]);
+                    sndp_stop(D_80119C30[loopCount3]->unk48[0]);
                     D_80119C30[loopCount3]->unk48[0] = NULL;
                     D_80119C30[loopCount3]->unk74 = 0;
                     D_80119C30[loopCount3] = NULL;
@@ -884,7 +883,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                                 gRacerSound->unk74 = 2;
                                 if (D_80119C30[loopCount3] != NULL) {
                                     if (D_80119C30[loopCount3]->unk48[0] != NULL) {
-                                        sound_stop(D_80119C30[loopCount3]->unk48[0]);
+                                        sndp_stop(D_80119C30[loopCount3]->unk48[0]);
                                         D_80119C30[loopCount3]->unk48[0] = NULL;
                                         gRacerSound->unk74 = 1;
                                     }
@@ -912,13 +911,13 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             if (temp->unk48[0] != NULL) {
                                 audioline_reverb((s32 *) temp->unk48[0], temp->racerPos.x, temp->racerPos.y,
                                                  temp->racerPos.z);
-                                sound_event_update((s32) temp->unk48[0], AL_SNDP_VOL_EVT, temp->unk88 << 8);
-                                sound_event_update((s32) temp->unk48[0], AL_SNDP_PITCH_EVT, *((u32 *) &temp->unk8C));
+                                sndp_set_param((s32) temp->unk48[0], AL_SNDP_VOL_EVT, temp->unk88 << 8);
+                                sndp_set_param((s32) temp->unk48[0], AL_SNDP_PITCH_EVT, *((u32 *) &temp->unk8C));
                                 if (arg3 != 1) {
                                     temp->unk91[0] = 64;
                                 }
-                                sound_event_update((s32) temp->unk48[0], AL_SNDP_PAN_EVT, temp->unk91[0]);
-                                func_80004604((ALSoundState *) temp->unk48[0], 70);
+                                sndp_set_param((s32) temp->unk48[0], AL_SNDP_PAN_EVT, temp->unk91[0]);
+                                sndp_set_priority((ALSoundState *) temp->unk48[0], 70);
                             }
                         }
                     }

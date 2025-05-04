@@ -3803,7 +3803,7 @@ void menu_audio_options_init(void) {
     transition_begin(&sMenuTransitionFadeOut);
     func_8007FFEC(2);
     gMusicVolumeSliderValue = music_volume_config();
-    gSfxVolumeSliderValue = get_sfx_volume_slider();
+    gSfxVolumeSliderValue = sndp_get_master_volume();
     if (gActiveMagicCodes & CHEAT_MUSIC_MENU) { // Check if "JUKEBOX" cheat is active
         gAudioMenuStrings[6].text = gMusicTestString;
         gAudioMenuStrings[3].y = 212;
@@ -3986,7 +3986,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
                     } else if (gSfxVolumeSliderValue > 256) {
                         gSfxVolumeSliderValue = 256;
                     }
-                    set_sfx_volume_slider(gSfxVolumeSliderValue);
+                    sndp_set_master_volume(gSfxVolumeSliderValue);
                 } else if (gOptionsMenuItemIndex == 2) {
                     gMusicVolumeSliderValue += contXAxis;
                     if (gMusicVolumeSliderValue < 0) {
@@ -4029,7 +4029,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
                     sound_play(SOUND_VOICE_DIDDY_POSITIVE5, &gSoundOptionMask);
                 }
             } else if (gSoundOptionMask != NULL) {
-                sound_stop(gSoundOptionMask);
+                sndp_stop(gSoundOptionMask);
             }
             if (playSound == 3) {
                 sound_play(SOUND_MENU_BACK3, NULL);
@@ -4054,7 +4054,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
  */
 void soundoptions_free(void) {
     if (gSoundOptionMask != NULL) {
-        sound_stop(gSoundOptionMask);
+        sndp_stop(gSoundOptionMask);
     }
     if (gOpacityDecayTimer >= 0) {
         music_voicelimit_set(24);
@@ -6900,7 +6900,7 @@ void charselect_pick(void) {
             }
         }
         if (gMenuSoundMasks[characterSelected] != 0) {
-            sound_stop(gMenuSoundMasks[characterSelected]);
+            sndp_stop(gMenuSoundMasks[characterSelected]);
         }
         sound_play((*gCurrCharacterSelectData)[gPlayersCharacterArray[characterSelected]].voiceID +
                        SOUND_VOICE_CHARACTER_SELECTED,
@@ -6918,7 +6918,7 @@ void charselect_pick(void) {
                     gCharselectStatus[i] = 0;
                     gNumberOfReadyPlayers--;
                     if (gMenuSoundMasks[i] != 0) {
-                        sound_stop(gMenuSoundMasks[i]);
+                        sndp_stop(gMenuSoundMasks[i]);
                     }
                     sound_play(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID +
                                 SOUND_VOICE_CHARACTER_DESELECTED),
@@ -6947,7 +6947,7 @@ void charselect_input(s8 *activePlayers) {
                     gCharselectStatus[i] = 0;
                     gNumberOfReadyPlayers -= 1;
                     if (gMenuSoundMasks[i] != 0) {
-                        sound_stop(gMenuSoundMasks[i]);
+                        sndp_stop(gMenuSoundMasks[i]);
                     }
                     sound_play(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID +
                                 SOUND_VOICE_CHARACTER_DESELECTED),
@@ -6982,7 +6982,7 @@ void charselect_input(s8 *activePlayers) {
                     gCharselectStatus[i] = 1;
                     gNumberOfReadyPlayers++;
                     if (gMenuSoundMasks[i] != 0) {
-                        sound_stop(gMenuSoundMasks[i]);
+                        sndp_stop(gMenuSoundMasks[i]);
                     }
                     sound_play(
                         ((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID + SOUND_VOICE_CHARACTER_SELECT),
@@ -9603,7 +9603,7 @@ void func_80092188(s32 updateRate) {
                 }
                 if (gMenuStickY[0] > 0 && gTracksMenuTimeTrialHighlightIndex > 0) {
                     if (D_80126848 != NULL) {
-                        sound_stop(D_80126848);
+                        sndp_stop(D_80126848);
                     }
                     gTracksMenuTimeTrialHighlightIndex--;
                     menuChanged = TRUE;
@@ -9612,7 +9612,7 @@ void func_80092188(s32 updateRate) {
                     if (gTracksMenuTimeTrialHighlightIndex <= 0) {
                         menuChanged = TRUE;
                         if (gTrackTTSoundMask != NULL) {
-                            sound_stop(gTrackTTSoundMask);
+                            sndp_stop(gTrackTTSoundMask);
                         }
                         if (get_random_number_from_range(0, 255) >= 128) {
                             sound_play(SOUND_VOICE_TT_INTRO, &D_80126848);

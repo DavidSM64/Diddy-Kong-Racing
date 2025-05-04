@@ -321,14 +321,14 @@ void hud_init(UNUSED s32 viewportCount) {
     gMinimapXlu = 0;
     D_80127194 = (LevelHeader_70 *) get_misc_asset(ASSET_MISC_58);
     func_8007F1E8(D_80127194);
-    set_sound_channel_volume(0, 32767);
-    set_sound_channel_volume(2, 32767);
+    sndp_set_channel_volume(0, 32767);
+    sndp_set_channel_volume(2, 32767);
     for (i = 0; i < 2; i++) {
         gHudAudioData[i].volume = 0;
         gHudAudioData[i].volumeRamp = 0;
         gHudAudioData[i].playerIndex = PLAYER_COMPUTER;
         if (gHudAudioData[i].soundMask) {
-            sound_stop(gHudAudioData[i].soundMask);
+            sndp_stop(gHudAudioData[i].soundMask);
         }
     }
 }
@@ -455,7 +455,7 @@ void hud_render_player(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *
                         music_stop();
                         music_channel_reset_all();
                         music_play(SEQUENCE_RACE_START_FANFARE);
-                        set_sound_channel_count(12);
+                        sndp_set_channel_count(12);
                     } else {
                         start_level_music(1.0f);
                     }
@@ -577,7 +577,7 @@ void hud_audio_init(void) {
     s32 i;
     for (i = 0; i < 2; i++) {
         if (gHudAudioData[i].soundMask) {
-            sound_stop(gHudAudioData[i].soundMask);
+            sndp_stop(gHudAudioData[i].soundMask);
             gHudAudioData[i].soundMask = NULL;
             gHudAudioData[i].volume = 0;
         }
@@ -627,7 +627,7 @@ void hud_audio_update(s32 updateRate) {
             }
         } else {
             if (gHudAudioData[i].soundMask) {
-                sound_stop(gHudAudioData[i].soundMask);
+                sndp_stop(gHudAudioData[i].soundMask);
                 gHudAudioData[i].soundMask = 0;
             }
         }
@@ -635,11 +635,11 @@ void hud_audio_update(s32 updateRate) {
     if (gHudAudioReset && gHudAudioData[0].volume == 0) {
         gHudAudioReset = FALSE;
         if (gNumActivePlayers == 1) {
-            set_sound_channel_count(8);
+            sndp_set_channel_count(8);
         } else if (gNumActivePlayers == 2) {
-            set_sound_channel_count(12);
+            sndp_set_channel_count(12);
         } else {
-            set_sound_channel_count(16);
+            sndp_set_channel_count(16);
         }
     }
 }

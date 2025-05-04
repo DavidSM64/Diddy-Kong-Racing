@@ -595,18 +595,18 @@ typedef struct {
 typedef struct ALSoundState {
     /* 0x00 */ struct ALSoundState *next;
     /* 0x04 */ struct ALSoundState *prev;
-    /* 0x08 */ ALSound *unk8;
+    /* 0x08 */ ALSound *sound;
     /* 0x0C */ ALVoice     voice;
     /* 0x28 */ f32 unk28;
-    /* 0x2C */ f32 unk2C;
-    /* 0x30 */ struct ALSoundState *unk30;
-    /* 0x34 */ s16 unk34;
-    /* 0x36 */ u8 unk36;
-    /* 0x38 */ s32 unk38;
-    /* 0x3C */ u8 unk3C;
-    /* 0x3D */ u8 unk3D;
+    /* 0x2C */ f32 pitch;
+    /* 0x30 */ struct ALSoundState **userHandle;
+    /* 0x34 */ s16 volume;
+    /* 0x36 */ u8 priority;
+    /* 0x38 */ s32 retries;
+    /* 0x3C */ u8 pan;
+    /* 0x3D */ u8 fxmix;
     /* 0x3E */ u8 flags;
-    /* 0x3F */ u8 soundState;
+    /* 0x3F */ u8 state;
 } ALSoundState;
 
 typedef struct {

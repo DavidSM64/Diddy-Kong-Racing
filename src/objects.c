@@ -4492,7 +4492,7 @@ void race_transition_adventure(s32 updateRate) {
                 sp30 = i;
             }
             if (racer->magnetSoundMask != NULL) {
-                sound_stop(racer->magnetSoundMask);
+                sndp_stop(racer->magnetSoundMask);
             }
             if (racer->shieldSoundMask != NULL) {
                 func_800096F8(racer->shieldSoundMask);
@@ -6014,7 +6014,7 @@ void obj_init_animcamera(Object *arg0, Object *animObj) {
     anim->unk3C = animEntry->fadeAlpha;
     anim->unk42 = 0xFF;
     if (anim->unk18 != NULL) {
-        sound_stop(anim->unk18);
+        sndp_stop(anim->unk18);
     }
     anim->unk18 = NULL;
     anim->unk43 = animEntry->unk30;

@@ -6,10 +6,13 @@
 #include "objects.h"
 #include "PR/libaudio.h"
 
-ALUnkStruct D_800DC6B0 = { NULL, NULL, NULL };
-unk800DC6BC gAlSndPlayer;
-unk800DC6BC *gAlSndPlayerPtr = &gAlSndPlayer;
-s32 sfxVolumeSlider = 256;
+#define SOUND_PARAM_DURATION(m) (m->velocityMax * 33333)
+#define SOUND_PARAM_NEXT_SOUND(m) (m->velocityMin + (m->keyMin & 0xC0) * 4);
+
+ALSoundStateLists gSoundStateLists = { NULL, NULL, NULL };
+SoundPlayer gSoundPlayer;
+SoundPlayer *gSoundPlayerPtr = &gSoundPlayer;
+s32 gSoundMasterVolume = 256;
 s16 D_800DC6C4 = 0;
 s16 *gSoundChannelVolume;
 
@@ -21,29 +24,29 @@ const char D_800E4B34[] = "Sound state allocate failed - sndId %d\n";
 const char D_800E4B5C[] = "Don't worry - game should cope OK\n";
 const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
-static void _removeEvents(ALEventQueue *, ALSoundState *, u16);
+static void sndp_remove_events(ALEventQueue *, ALSoundState *, u16);
 void func_80065A80(ALSynth *arg0, struct PVoice_s *arg1, s16 arg2);
 
-void set_sfx_volume_slider(u32 volume) {
+void sndp_set_master_volume(u32 volume) {
     if (volume > 256) {
         volume = 256;
     }
 
-    sfxVolumeSlider = volume;
+    gSoundMasterVolume = volume;
 }
 
-s32 get_sfx_volume_slider(void) {
-    return sfxVolumeSlider;
+s32 sndp_get_master_volume(void) {
+    return gSoundMasterVolume;
 }
 
 /**
  * Sets the number of active sound channels to either the passed number, or the maximum amount, whichever's lower.
  */
-void set_sound_channel_count(s32 numChannels) {
-    if (gAlSndPlayerPtr->soundChannelsMax >= numChannels) {
-        gAlSndPlayerPtr->soundChannels = numChannels;
+void sndp_set_channel_count(s32 numChannels) {
+    if (gSoundPlayerPtr->soundChannelsMax >= numChannels) {
+        gSoundPlayerPtr->soundChannels = numChannels;
     } else {
-        gAlSndPlayerPtr->soundChannels = gAlSndPlayerPtr->soundChannelsMax;
+        gSoundPlayerPtr->soundChannels = gSoundPlayerPtr->soundChannelsMax;
     }
 }
 
@@ -51,34 +54,34 @@ void set_sound_channel_count(s32 numChannels) {
  * Initialise a sound player and ready it for use with the sound event system.
  * Official Name: gsSndpNew
  */
-void alSndPNew(audioMgrConfig *c) {
+void sndp_init_player(audioMgrConfig *c) {
     u32 i;
-    unk800DC6BC_40 *tmp1;
+    ALSoundState *sounds;
     ALEvent evt;
-    ALEventListItem * items;
+    ALEventListItem *items;
 
     /*
      * Init member variables
      */
-    gAlSndPlayerPtr->soundChannelsMax = c->maxChannels;
-    gAlSndPlayerPtr->soundChannels = c->maxChannels;
-    gAlSndPlayerPtr->unk3C = 0;
-    gAlSndPlayerPtr->frameTime = 33000; // AL_USEC_PER_FRAME        /* time between API events */
-    gAlSndPlayerPtr->sndState = (unk800DC6BC_40 *) alHeapAlloc(c->hp, 1, c->maxSounds * sizeof(unk800DC6BC_40));
+    gSoundPlayerPtr->soundChannelsMax = c->maxChannels;
+    gSoundPlayerPtr->soundChannels = c->maxChannels;
+    gSoundPlayerPtr->lastSoundState = NULL;
+    gSoundPlayerPtr->frameTime = 33000; // AL_USEC_PER_FRAME        /* time between API events */
+    gSoundPlayerPtr->soundStatesArray = (ALSoundState *) alHeapAlloc(c->heap, 1, c->maxSounds * sizeof(ALSoundState));
 
     /*
      * init the event queue
      */
-    items = (ALEventListItem *) alHeapAlloc(c->hp, 1, c->maxEvents * sizeof(ALEventListItem));
-    alEvtqNew(&gAlSndPlayerPtr->evtq, items, c->maxEvents);
+    items = (ALEventListItem *) alHeapAlloc(c->heap, 1, c->maxEvents * sizeof(ALEventListItem));
+    alEvtqNew(&gSoundPlayerPtr->evtq, items, c->maxEvents);
 
-    D_800DC6B0.freeList = (ALSoundState *) gAlSndPlayerPtr->sndState;
+    gSoundStateLists.freeHead = (ALSoundState *) gSoundPlayerPtr->soundStatesArray;
     for (i = 1; i < c->maxSounds; i++) {
-        tmp1 = gAlSndPlayerPtr->sndState;
-        alLink(&(tmp1 + i)->node, &(tmp1 + i - 1)->node);
+        sounds = gSoundPlayerPtr->soundStatesArray;
+        alLink(&(sounds + i)->next, &(sounds + i - 1)->next);
     }
 
-    gSoundChannelVolume = alHeapAlloc(c->hp, 2, c->unk10);
+    gSoundChannelVolume = alHeapAlloc(c->heap, 2, c->unk10);
     for (i = 0; i < c->unk10; i++) {
         gSoundChannelVolume[i] = 32767;
     }
@@ -86,22 +89,22 @@ void alSndPNew(audioMgrConfig *c) {
     /*
      * add ourselves to the driver
      */
-    gAlSndPlayerPtr->drvr = (ALSynth *) alGlobals;
-    gAlSndPlayerPtr->node.next = NULL;
-    gAlSndPlayerPtr->node.handler = _sndpVoiceHandler;
-    gAlSndPlayerPtr->node.clientData = gAlSndPlayerPtr;
-    alSynAddPlayer(gAlSndPlayerPtr->drvr, (ALPlayer *) gAlSndPlayerPtr);
+    gSoundPlayerPtr->drvr = &alGlobals->drvr;
+    gSoundPlayerPtr->node.next = NULL;
+    gSoundPlayerPtr->node.handler = sndp_voice_handler;
+    gSoundPlayerPtr->node.clientData = gSoundPlayerPtr;
+    alSynAddPlayer(gSoundPlayerPtr->drvr, &gSoundPlayerPtr->node);
 
     /*
      * Start responding to API events
      */
     evt.type = AL_SNDP_API_EVT;
-    alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &evt, gAlSndPlayerPtr->frameTime);
-    gAlSndPlayerPtr->nextDelta = alEvtqNextEvent(&gAlSndPlayerPtr->evtq, &gAlSndPlayerPtr->nextEvent);
+    alEvtqPostEvent(&gSoundPlayerPtr->evtq, (ALEvent *) &evt, gSoundPlayerPtr->frameTime);
+    gSoundPlayerPtr->nextDelta = alEvtqNextEvent(&gSoundPlayerPtr->evtq, &gSoundPlayerPtr->nextEvent);
 }
 
-ALMicroTime _sndpVoiceHandler(void *node) {
-    unk800DC6BC *sndp = (unk800DC6BC *) node;
+ALMicroTime sndp_voice_handler(void *node) {
+    SoundPlayer *sndp = (SoundPlayer *) node;
     ALSndpEvent evt;
     u32 eventType = AL_SNDP_API_EVT;
 
@@ -113,7 +116,7 @@ ALMicroTime _sndpVoiceHandler(void *node) {
                 break;
 
             default:
-                _handleEvent(sndp, (ALSndpEvent *) &sndp->nextEvent);
+                sndp_handle_event(sndp, (ALSndpEvent *) &sndp->nextEvent);
                 break;
         }
         sndp->nextDelta = alEvtqNextEvent(&sndp->evtq, &sndp->nextEvent);
@@ -123,227 +126,243 @@ ALMicroTime _sndpVoiceHandler(void *node) {
     return sndp->nextDelta;
 }
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-
-
-void _handleEvent(unk800DC6BC *sndp, ALSndpEvent *event) {
-    ALVoiceConfig spC8;
-    ALVoice* s3;
+void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event) {
+    ALVoiceConfig config;
+    ALVoice *voice;
     s32 delta;
-    s32 s0;
+    s32 fullQueue;
     ALSndpEvent spAC;
     ALSndpEvent sp9C;
-    ALSound *s2;
-    ALKeyMap *s6;
-    s32 sp90;    
+    ALSound *sound;
+    ALKeyMap *keyMap;
+    s32 volume;
     s32 fxMix;
-    s32 someFlags;
+    s32 isEventForSingleSound;
     ALPan pan;
-    s32 sp80;
-    s32 sp7C;
-    ALSoundState *s1;
-    ALSoundState *sp74;
+    s32 lastInSequence;
+    s32 isVoiceAllocated;
+    ALSoundState *soundState;
+    ALSoundState *nextState;
 
-    sp80 = TRUE;
-    sp7C = FALSE;
-    s1 = NULL;
-    sp74 = NULL;
+    lastInSequence = TRUE;
+    isVoiceAllocated = FALSE;
+    soundState = NULL;
+    nextState = NULL;
 
     do {
-        if (sp74 != NULL) {
-            sp9C.common.state = s1;
+        if (nextState != NULL) {
+            sp9C.common.state = soundState;
             sp9C.common.type = event->common.type;
-            sp9C.common.unk8 = event->common.unk8;            
+            sp9C.common.param = event->common.param;
             event = &sp9C;
         }
 
-        s1 = event->common.state;
-        s2 = s1->unk8;
+        soundState = event->common.state;
+        sound = soundState->sound;
 
-        if (s2 == NULL) {
+        if (sound == NULL) {
             u16 n2, n3;
-            func_800042CC(&n2, &n3);
+            sndp_get_state_counts(&n2, &n3);
             return;
         }
 
-        s6 = s2->keyMap;
-        sp74 = s1->next;        
+        keyMap = sound->keyMap;
+        nextState = soundState->next;
 
         switch (event->common.type) {
             case AL_SNDP_PLAY_EVT:
-                if (s1->soundState != 5 && s1->soundState != 4) {
+                if (soundState->state != SOUND_STATE_5 && soundState->state != SOUND_STATE_4) {
                     return;
                 }
 
-                spC8.fxBus = 0;
-                spC8.priority = s1->unk36;
-                spC8.unityPitch = 0;
-                
-                s0 = sndp->soundChannels <= D_800DC6C4;
+                config.fxBus = 0;
+                config.priority = soundState->priority;
+                config.unityPitch = 0;
 
-                if (!s0 || (s1->flags & 0x10)) {
-                    sp7C = alSynAllocVoice(sndp->drvr, &s1->voice, &spC8);
+                fullQueue = sndp->soundChannels <= D_800DC6C4;
+
+                if (!fullQueue || (soundState->flags & SOUND_FLAG_LOOPING)) {
+                    isVoiceAllocated = alSynAllocVoice(sndp->drvr, &soundState->voice, &config);
                 }
-                if (sp7C) {
-                    func_80065A80(sndp->drvr, s1->voice.pvoice, 1);
+                if (isVoiceAllocated) {
+                    func_80065A80(sndp->drvr, soundState->voice.pvoice, 1);
                 }
 
-                s3 = &s1->voice;
-                if (!sp7C) {
-                    if ((s1->flags & (0x10 | 0x2)) || s1->unk38 > 0) {
-                        s1->soundState = 4;
-                        s1->unk38--;
+                voice = &soundState->voice;
+                if (!isVoiceAllocated) {
+                    if ((soundState->flags & (SOUND_FLAG_LOOPING | SOUND_FLAG_PERSISTENT)) || soundState->retries > 0) {
+                        soundState->state = SOUND_STATE_4;
+                        soundState->retries--;
                         alEvtqPostEvent(&sndp->evtq, (ALEvent *) event, 33333);
-                    } else if (s0) {
-                        ALSoundState* iterState = D_800DC6B0.list2;
+                    } else if (fullQueue) {
+                        ALSoundState *iterState = gSoundStateLists.allocTail;
 
                         do {
-                            if (iterState->unk36 <= s1->unk36 && iterState->soundState != 3) {
-                                ALSndpEvent sp5C;
+                            if (iterState->priority <= soundState->priority &&
+                                iterState->state != SOUND_STATE_PREEMPT) {
+                                // Found a lower-priority sound; it can be preempted
+                                ALSndpEvent interruptEvent;
 
-                                sp5C.common.type = AL_SNDP_END_EVT;
-                                sp5C.common.state = iterState;
-                                iterState->soundState = 3;
-                                s0 = FALSE;
-                                alEvtqPostEvent(&sndp->evtq, (ALEvent *) &sp5C, 1000);
-                                alSynSetVol(sndp->drvr, &iterState->voice, (s1->soundState == 1) * 0, 1000); // FAKE
+                                interruptEvent.common.type = AL_SNDP_END_EVT;
+                                interruptEvent.common.state = iterState;
+                                iterState->state = SOUND_STATE_PREEMPT;
+                                fullQueue = FALSE;
+                                alEvtqPostEvent(&sndp->evtq, (ALEvent *) &interruptEvent, 1000);
+                                alSynSetVol(sndp->drvr, &iterState->voice, (soundState->state == 1) * 0, 1000); // FAKE
                             }
                             iterState = iterState->prev;
-                        } while (s0 && iterState != NULL);
+                        } while (fullQueue && iterState != NULL);
 
-                        if (!s0) {
-                            s1->unk38 = 2;
+                        if (!fullQueue) {
+                            soundState->retries = 2;
                             alEvtqPostEvent(&sndp->evtq, (ALEvent *) event, 1001);
                         } else {
-                            func_8000410C(s1);
+                            sndp_end(soundState);
                         }
                     } else {
-                        func_8000410C(s1);
+                        sndp_end(soundState);
                     }
                     return;
                 }
 
-                s1->flags |= 4;
-                alSynStartVoice(sndp->drvr, s3, s2->wavetable);
-                s1->soundState = 1;
+                soundState->flags |= SOUND_FLAG_PLAYING;
+                alSynStartVoice(sndp->drvr, voice, sound->wavetable);
+                soundState->state = SOUND_STATE_PLAYING;
                 D_800DC6C4++;
 
-                delta = s2->envelope->attackTime / s1->unk2C / s1->unk28;
-                sp90 = MAX(0, gSoundChannelVolume[s6->keyMin & 0x3F] * (s2->envelope->attackVolume * s1->unk34 * s2->sampleVolume / 16129) / 32767 - 1);
-                sp90 = (u32)(sp90 * sfxVolumeSlider) >> 8;
-                alSynSetVol(sndp->drvr, &s1->voice, 0, 0);
-                alSynSetVol(sndp->drvr, &s1->voice, sp90, delta);
+                delta = sound->envelope->attackTime / soundState->pitch / soundState->unk28;
+                volume =
+                    MAX(0, gSoundChannelVolume[keyMap->keyMin & 0x3F] *
+                                   (sound->envelope->attackVolume * soundState->volume * sound->sampleVolume / 16129) /
+                                   32767 -
+                               1);
+                volume = (u32) (volume * gSoundMasterVolume) >> 8;
+                alSynSetVol(sndp->drvr, &soundState->voice, 0, 0);
+                alSynSetVol(sndp->drvr, &soundState->voice, volume, delta);
 
-                pan = MIN(MAX((s1->unk3C + s2->samplePan - AL_PAN_CENTER), AL_PAN_LEFT), AL_PAN_RIGHT);
-                alSynSetPan(sndp->drvr, &s1->voice, pan);
+                pan = MIN(MAX((soundState->pan + sound->samplePan - AL_PAN_CENTER), AL_PAN_LEFT), AL_PAN_RIGHT);
+                alSynSetPan(sndp->drvr, &soundState->voice, pan);
 
-                alSynSetPitch(sndp->drvr, &s1->voice, s1->unk2C * s1->unk28);
+                alSynSetPitch(sndp->drvr, &soundState->voice, soundState->pitch * soundState->unk28);
 
-                fxMix = (s1->unk3D + (s6->keyMax & 0xF)) * 8;
+                fxMix = (soundState->fxmix + (keyMap->keyMax & 0xF)) * 8;
                 fxMix = MIN(127, MAX(0, fxMix));
-                alSynSetFXMix(sndp->drvr, &s1->voice, fxMix);
+                alSynSetFXMix(sndp->drvr, &soundState->voice, fxMix);
 
                 spAC.common.type = AL_SNDP_DECAY_EVT;
-                spAC.common.state = s1;
-                alEvtqPostEvent(&sndp->evtq, (ALEvent *) &spAC, s2->envelope->attackTime / s1->unk2C / s1->unk28);
+                spAC.common.state = soundState;
+                alEvtqPostEvent(&sndp->evtq, (ALEvent *) &spAC,
+                                sound->envelope->attackTime / soundState->pitch / soundState->unk28);
                 break;
+            case AL_SNDP_RELEASE_EVT:
             case AL_SNDP_STOP_EVT:
-            case AL_SNDP_UNK_10_EVT:
             case AL_SNDP_UNK_12_EVT:
-                if (event->common.type != AL_SNDP_UNK_12_EVT || (s1->flags & 2)) {
-                    switch (s1->soundState) {
-                        case 1:
-                            _removeEvents(&sndp->evtq, s1, AL_SNDP_DECAY_EVT);
-                            delta = s2->envelope->releaseTime / s1->unk28 / s1->unk2C;
-                            alSynSetVol(sndp->drvr, &s1->voice, 0, delta);
+                if (!(event->common.type == AL_SNDP_UNK_12_EVT && !(soundState->flags & SOUND_FLAG_PERSISTENT))) {
+                    switch (soundState->state) {
+                        case SOUND_STATE_PLAYING:
+                            sndp_remove_events(&sndp->evtq, soundState, AL_SNDP_DECAY_EVT);
+                            delta = sound->envelope->releaseTime / soundState->unk28 / soundState->pitch;
+                            alSynSetVol(sndp->drvr, &soundState->voice, 0, delta);
                             if (delta != 0) {
                                 spAC.common.type = AL_SNDP_END_EVT;
-                                spAC.common.state = s1;
+                                spAC.common.state = soundState;
                                 alEvtqPostEvent(&sndp->evtq, (ALEvent *) &spAC, delta);
-                                s1->soundState = 2;
+                                soundState->state = SOUND_STATE_STOPPING;
                             } else {
-                                func_8000410C(s1);
+                                sndp_end(soundState);
                             }
                             break;
-                        case 4:
-                        case 5:
-                            func_8000410C(s1);
+                        case SOUND_STATE_4:
+                        case SOUND_STATE_5:
+                            sndp_end(soundState);
                             break;
                     }
-                    if (event->common.type == AL_SNDP_STOP_EVT) {
+                    if (event->common.type == AL_SNDP_RELEASE_EVT) {
                         event->common.type = AL_SNDP_UNK_12_EVT;
                     }
                 }
                 break;
             case AL_SNDP_PAN_EVT:
-                s1->unk3C = event->common.unk8;
-                if (s1->soundState == 1) {
-                    pan = MIN(MAX((s1->unk3C + s2->samplePan - AL_PAN_CENTER), AL_PAN_LEFT), AL_PAN_RIGHT);
-                    alSynSetPan(sndp->drvr, &s1->voice, pan);
+                soundState->pan = event->common.param;
+                if (soundState->state == SOUND_STATE_PLAYING) {
+                    pan = MIN(MAX((soundState->pan + sound->samplePan - AL_PAN_CENTER), AL_PAN_LEFT), AL_PAN_RIGHT);
+                    alSynSetPan(sndp->drvr, &soundState->voice, pan);
                 }
                 break;
             case AL_SNDP_PITCH_EVT:
-                s1->unk2C = *(f32*)&event->common.unk8;
-                if (s1->soundState == 1) {
-                    alSynSetPitch(sndp->drvr, &s1->voice, s1->unk2C * s1->unk28);
-                    if (s1->flags & 0x20) {
-                        func_8000418C(s1);
+                soundState->pitch = *(f32 *) &event->common.param;
+                if (soundState->state == SOUND_STATE_PLAYING) {
+                    alSynSetPitch(sndp->drvr, &soundState->voice, soundState->pitch * soundState->unk28);
+                    if (soundState->flags & SOUND_FLAG_PITCH_SLIDE) {
+                        func_8000418C(soundState);
                     }
                 }
                 break;
             case AL_SNDP_FX_EVT:
-                s1->unk3D = event->common.unk8;
-                if (s1->soundState == 1) {
-                    fxMix = (s1->unk3D + (s6->keyMax & 0xF)) * 8;
+                soundState->fxmix = event->common.param;
+                if (soundState->state == SOUND_STATE_PLAYING) {
+                    fxMix = (soundState->fxmix + (keyMap->keyMax & 0xF)) * 8;
                     fxMix = MIN(127, MAX(0, fxMix));
-                    alSynSetFXMix(sndp->drvr, &s1->voice, fxMix);
+                    alSynSetFXMix(sndp->drvr, &soundState->voice, fxMix);
                 }
                 break;
             case AL_SNDP_VOL_EVT:
-                s1->unk34 = event->vol.vol;
-                if (s1->soundState == 1) {
-                    sp90 = MAX(0, gSoundChannelVolume[s6->keyMin & 0x3F] * (s2->envelope->decayVolume * s1->unk34 * s2->sampleVolume / 16129) / 32767 - 1);
-                    sp90 = (u32)(sp90 * sfxVolumeSlider) >> 8;
-                    alSynSetVol(sndp->drvr, &s1->voice, sp90, 1000);
+                soundState->volume = event->common.param;
+                if (soundState->state == SOUND_STATE_PLAYING) {
+                    volume = MAX(
+                        0, gSoundChannelVolume[keyMap->keyMin & 0x3F] *
+                                   (sound->envelope->decayVolume * soundState->volume * sound->sampleVolume / 16129) /
+                                   32767 -
+                               1);
+                    volume = (u32) (volume * gSoundMasterVolume) >> 8;
+                    alSynSetVol(sndp->drvr, &soundState->voice, volume, 1000);
                 }
                 break;
             case AL_SNDP_UNK_11_EVT:
-                if (s1->soundState == 1) {
-                    delta = s2->envelope->releaseTime / s1->unk28 / s1->unk2C;
-                    sp90 = MAX(0, gSoundChannelVolume[s6->keyMin & 0x3F] * (s2->envelope->decayVolume * s1->unk34 * s2->sampleVolume / 16129) / 32767 - 1);
-                    sp90 = (u32)(sp90 * sfxVolumeSlider) >> 8;                    
-                    alSynSetVol(sndp->drvr, &s1->voice, sp90, delta);
+                if (soundState->state == SOUND_STATE_PLAYING) {
+                    delta = sound->envelope->releaseTime / soundState->unk28 / soundState->pitch;
+                    volume = MAX(
+                        0, gSoundChannelVolume[keyMap->keyMin & 0x3F] *
+                                   (sound->envelope->decayVolume * soundState->volume * sound->sampleVolume / 16129) /
+                                   32767 -
+                               1);
+                    volume = (u32) (volume * gSoundMasterVolume) >> 8;
+                    alSynSetVol(sndp->drvr, &soundState->voice, volume, delta);
                 }
                 break;
             case AL_SNDP_DECAY_EVT:
-                if (!(s1->flags & 2)) {
-                    sp90 = MAX(0, gSoundChannelVolume[s6->keyMin & 0x3F] * (s2->envelope->decayVolume * s1->unk34 * s2->sampleVolume / 16129) / 32767 - 1);
-                    sp90 = (u32)(sp90 * sfxVolumeSlider) >> 8;
-                    delta = s2->envelope->decayTime / s1->unk28 / s1->unk2C;
-                    alSynSetVol(sndp->drvr, &s1->voice, sp90, delta);
+                if (!(soundState->flags & SOUND_FLAG_PERSISTENT)) {
+                    volume = MAX(
+                        0, gSoundChannelVolume[keyMap->keyMin & 0x3F] *
+                                   (sound->envelope->decayVolume * soundState->volume * sound->sampleVolume / 16129) /
+                                   32767 -
+                               1);
+                    volume = (u32) (volume * gSoundMasterVolume) >> 8;
+                    delta = sound->envelope->decayTime / soundState->unk28 / soundState->pitch;
+                    alSynSetVol(sndp->drvr, &soundState->voice, volume, delta);
 
-                    spAC.common.type = AL_SNDP_STOP_EVT;
-                    spAC.common.state = s1;
+                    spAC.common.type = AL_SNDP_RELEASE_EVT;
+                    spAC.common.state = soundState;
                     alEvtqPostEvent(&sndp->evtq, (ALEvent *) &spAC, delta);
 
-                    if (s1->flags & 0x20) {
-                        func_8000418C(s1);
+                    if (soundState->flags & SOUND_FLAG_PITCH_SLIDE) {
+                        func_8000418C(soundState);
                     }
                 }
                 break;
             case AL_SNDP_END_EVT:
-                func_8000410C(s1);
+                sndp_end(soundState);
                 break;
-            case AL_SNDP_UNK_9_EVT:
-                if (s1->flags & 0x10) {
-                    ALSoundState* newSOund = func_80004638(event->unk9.unkC, event->unk9.unk8, s1->unk30);
-                    if (newSOund != NULL) {
-                        sound_event_update(newSOund, AL_SNDP_VOL_EVT, s1->unk34);
-                        if ((!event) && (!event)) {}
-                        sound_event_update(newSOund, AL_SNDP_PAN_EVT, s1->unk3C);
-                        sound_event_update(newSOund, AL_SNDP_FX_EVT, s1->unk3D);
-                        sound_event_update(newSOund, AL_SNDP_PITCH_EVT, *(s32*)&s1->unk2C);
+            case AL_SNDP_LOOP_RESTART_EVT:
+                if (soundState->flags & SOUND_FLAG_LOOPING) {
+                    ALSoundState *newSound =
+                        sndp_play(event->loopRestart.bank, event->loopRestart.soundIndex, soundState->userHandle);
+                    if (newSound != NULL) {
+                        sndp_set_param(newSound, AL_SNDP_VOL_EVT, soundState->volume);
+                        if ((!event) && (!event)) {} // Fake
+                        sndp_set_param(newSound, AL_SNDP_PAN_EVT, soundState->pan);
+                        sndp_set_param(newSound, AL_SNDP_FX_EVT, soundState->fxmix);
+                        sndp_set_param(newSound, AL_SNDP_PITCH_EVT, *(s32 *) &soundState->pitch);
                     }
                 }
                 break;
@@ -351,38 +370,38 @@ void _handleEvent(unk800DC6BC *sndp, ALSndpEvent *event) {
                 break;
         }
 
-        s1 = sp74;
-        someFlags = event->common.type & (AL_SNDP_PLAY_EVT | AL_SNDP_PITCH_EVT | AL_SNDP_DECAY_EVT | AL_SNDP_END_EVT | AL_SNDP_UNK_9_EVT);
-        
-        if (s1 != NULL && !someFlags) {
-            sp80 = s1->flags & 1;
+        soundState = nextState;
+        isEventForSingleSound = event->common.type & (AL_SNDP_PLAY_EVT | AL_SNDP_PITCH_EVT | AL_SNDP_DECAY_EVT |
+                                                      AL_SNDP_END_EVT | AL_SNDP_LOOP_RESTART_EVT);
+
+        if (soundState != NULL && !isEventForSingleSound) {
+            lastInSequence = soundState->flags & SOUND_FLAG_FINAL_IN_SEQUENCE;
         }
 
-        
-    } while (!sp80 && s1 != NULL && !someFlags);
+    } while (!lastInSequence && soundState != NULL && !isEventForSingleSound);
 }
 
-void func_8000410C(ALSoundState *state) {
-    if (state->flags & AL_SNDP_PAN_EVT) {
-        alSynStopVoice(gAlSndPlayerPtr->drvr, &state->voice);
-        alSynFreeVoice(gAlSndPlayerPtr->drvr, &state->voice);
+void sndp_end(ALSoundState *state) {
+    if (state->flags & SOUND_FLAG_PLAYING) {
+        alSynStopVoice(gSoundPlayerPtr->drvr, &state->voice);
+        alSynFreeVoice(gSoundPlayerPtr->drvr, &state->voice);
     }
-    func_80004520(state);
-    _removeEvents(&gAlSndPlayerPtr->evtq, state, 0xFFFF);
+    sndp_deallocate(state);
+    sndp_remove_events(&gSoundPlayerPtr->evtq, state, 0xFFFF);
 }
 
-void func_8000418C(ALVoiceState *voiceState) {
-    ALEvent_unk8000418C evt;
-    f32 sp1C;
+void func_8000418C(ALSoundState *soundState) {
+    ALSndpEvent evt;
+    f32 pitch;
 
-    sp1C = alCents2Ratio(((ALLink_unk8000418C *) voiceState->voice.node.prev->prev)->unk5) * voiceState->vibrato;
-    evt.type = AL_SEQP_STOP_EVT;
-    evt.unk4 = voiceState;
-    evt.unk8 = *((s32 *) &sp1C); // But why tho?
-    alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &evt, 33333);
+    pitch = alCents2Ratio(soundState->sound->keyMap->detune) * soundState->pitch;
+    evt.common.type = AL_SNDP_PITCH_EVT;
+    evt.common.state = soundState;
+    evt.common.param = *((s32 *) &pitch);
+    alEvtqPostEvent(&gSoundPlayerPtr->evtq, (ALEvent *) &evt, 33333);
 }
 
-static void _removeEvents(ALEventQueue *evtq, ALSoundState *state, u16 eventType) {
+static void sndp_remove_events(ALEventQueue *evtq, ALSoundState *state, u16 eventType) {
     ALLink *thisNode;
     ALLink *nextNode;
     ALEventListItem *thisItem;
@@ -398,7 +417,7 @@ static void _removeEvents(ALEventQueue *evtq, ALSoundState *state, u16 eventType
         thisItem = (ALEventListItem *) thisNode;
         nextItem = (ALEventListItem *) nextNode;
         thisEvent = (ALSndpEvent *) &thisItem->evt;
-        if (thisEvent->common.state == state && (u16) thisEvent->msg.type & eventType) {
+        if (thisEvent->common.state == state && thisEvent->common.type & eventType) {
             if (nextItem) {
                 nextItem->delta += thisItem->delta;
             }
@@ -414,253 +433,250 @@ static void _removeEvents(ALEventQueue *evtq, ALSoundState *state, u16 eventType
 /**
  * Official Name: getSoundStateCounts
  */
-u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
+u16 sndp_get_state_counts(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     OSIntMask mask;
-    u16 freeListNextIndex;
-    u16 allocListNextIndex;
+    u16 numUsed;
+    u16 numFree;
     u16 freeListLastIndex;
-    ALSoundState *nextAllocList;
-    ALSoundState *nextFreeList;
-    ALSoundState *prevFreeList;
+    ALSoundState *freePtr;
+    ALSoundState *usedPtr;
+    ALSoundState *usedRevPtr;
 
     mask = osSetIntMask(OS_IM_NONE);
-    nextFreeList = D_800DC6B0.list1;
-    nextAllocList = D_800DC6B0.freeList;
-    prevFreeList = D_800DC6B0.list2;
+    usedPtr = gSoundStateLists.allocHead;
+    freePtr = gSoundStateLists.freeHead;
+    usedRevPtr = gSoundStateLists.allocTail;
 
-    for (freeListNextIndex = 0; nextFreeList != NULL; freeListNextIndex++) {
-        nextFreeList = nextFreeList->next;
+    for (numUsed = 0; usedPtr != NULL; numUsed++) {
+        usedPtr = usedPtr->next;
     }
 
-    for (allocListNextIndex = 0; nextAllocList != NULL; allocListNextIndex++) {
-        nextAllocList = nextAllocList->next;
+    for (numFree = 0; freePtr != NULL; numFree++) {
+        freePtr = freePtr->next;
     }
 
-    for (freeListLastIndex = 0; prevFreeList != NULL; freeListLastIndex++) {
-        prevFreeList = prevFreeList->prev;
+    for (freeListLastIndex = 0; usedRevPtr != NULL; freeListLastIndex++) {
+        usedRevPtr = usedRevPtr->prev;
     }
 
-    *lastAllocListIndex = allocListNextIndex;
-    *lastFreeListIndex = freeListNextIndex;
+    *lastAllocListIndex = numFree;
+    *lastFreeListIndex = numUsed;
 
     osSetIntMask(mask);
 
     return freeListLastIndex;
 }
 
-// This function is full of names like next / prev that I made up based on other funcs.
-// It's in no way guaranteed to be correct.
-// I'm really not even sure what it's supposed to be returning as a type.
-ALSoundState *func_80004384(UNUSED ALBank *arg0, ALSound *arg1) {
+ALSoundState *sndp_allocate(UNUSED ALBank *bank, ALSound *sound) {
     s32 temp;
-    ALKeyMap *temp_a2;
+    ALKeyMap *keyMap;
     ALSoundState *state;
     u32 mask;
     s32 temp_a1;
 
-    state = D_800DC6B0.freeList;
-    temp_a2 = arg1->keyMap;
+    state = gSoundStateLists.freeHead;
+    keyMap = sound->keyMap;
     if (state != NULL) {
         mask = osSetIntMask(OS_IM_NONE);
-        D_800DC6B0.freeList = state->next;
+        gSoundStateLists.freeHead = state->next;
         alUnlink((ALLink *) state);
-        if (D_800DC6B0.list1 != NULL) {
-            state->next = D_800DC6B0.list1;
+        if (gSoundStateLists.allocHead != NULL) {
+            state->next = gSoundStateLists.allocHead;
             state->prev = NULL;
-            D_800DC6B0.list1->prev = (ALSoundState *) state;
-            D_800DC6B0.list1 = (ALSoundState *) state;
+            gSoundStateLists.allocHead->prev = state;
+            gSoundStateLists.allocHead = state;
         } else {
             state->prev = NULL;
             state->next = NULL;
-            D_800DC6B0.list1 = (ALSoundState *) state;
-            D_800DC6B0.list2 = (ALSoundState *) state;
+            gSoundStateLists.allocHead = state;
+            gSoundStateLists.allocTail = state;
         }
         osSetIntMask(mask);
 
-        temp = ((arg1->envelope->decayTime + 1) == 0);
-        temp_a1 = temp + 0x40;
+        temp = sound->envelope->decayTime == -1;
+        temp_a1 = temp + 64;
         temp = 6000;
-        state->unk36 = temp_a1;
-        state->soundState = 5;
-        state->unk38 = 2;
-        state->unk8 = arg1;
-        state->unk2C = 1.0f;
-        state->flags = temp_a2->keyMax & 0xF0;
-        state->unk30 = 0;
-        if (state->flags & 0x20) {
-            state->unk28 = alCents2Ratio((temp_a2->keyBase * 100) - temp);
+        state->priority = temp_a1;
+        state->state = SOUND_STATE_5;
+        state->retries = 2;
+        state->sound = sound;
+        state->pitch = 1.0f;
+        state->flags = keyMap->keyMax & 0xF0;
+        state->userHandle = NULL;
+        if (state->flags & SOUND_FLAG_PITCH_SLIDE) {
+            state->unk28 = alCents2Ratio(keyMap->keyBase * 100 - 6000);
         } else {
-            state->unk28 = alCents2Ratio(((temp_a2->keyBase * 100) + temp_a2->detune) - temp);
+            state->unk28 = alCents2Ratio(keyMap->keyBase * 100 + keyMap->detune - 6000);
         }
-        if (temp_a1 != 0x40) {
-            state->flags |= 2;
+        if (temp_a1 != 64) {
+            state->flags |= SOUND_FLAG_PERSISTENT;
         }
-        state->unk3D = 0;
-        state->unk3C = 0x40;
-        state->unk34 = 0x7FFF;
+        state->fxmix = 0;
+        state->pan = AL_PAN_CENTER;
+        state->volume = 0x7FFF;
     }
     return state;
 }
 
-void func_80004520(ALSoundState *soundState) {
-    if (soundState == D_800DC6B0.list1) {
-        D_800DC6B0.list1 = soundState->next;
+void sndp_deallocate(ALSoundState *state) {
+    if (state == gSoundStateLists.allocHead) {
+        gSoundStateLists.allocHead = state->next;
     }
-    if (soundState == D_800DC6B0.list2) {
-        D_800DC6B0.list2 = soundState->prev;
+    if (state == gSoundStateLists.allocTail) {
+        gSoundStateLists.allocTail = state->prev;
     }
-    alUnlink((ALLink *) soundState);
-    if (D_800DC6B0.freeList != NULL) {
-        soundState->next = D_800DC6B0.freeList;
-        soundState->prev = NULL;
-        D_800DC6B0.freeList->prev = soundState;
-        D_800DC6B0.freeList = soundState;
+    alUnlink((ALLink *) state);
+    if (gSoundStateLists.freeHead != NULL) {
+        state->next = gSoundStateLists.freeHead;
+        state->prev = NULL;
+        gSoundStateLists.freeHead->prev = state;
+        gSoundStateLists.freeHead = state;
     } else {
-        soundState->prev = NULL;
-        soundState->next = NULL;
-        D_800DC6B0.freeList = soundState;
+        state->prev = NULL;
+        state->next = NULL;
+        gSoundStateLists.freeHead = state;
     }
-    if (soundState->flags & AL_SNDP_PAN_EVT) {
+    if (state->flags & SOUND_FLAG_PLAYING) {
         D_800DC6C4--;
     }
-    soundState->soundState = 0;
-    if (soundState->unk30 != NULL) {
-        if (soundState == soundState->unk30->next) {
-            soundState->unk30->next = NULL;
+    state->state = SOUND_STATE_NONE;
+    if (state->userHandle != NULL) {
+        if (state == *state->userHandle) {
+            *state->userHandle = NULL;
         }
-        soundState->unk30 = NULL;
+        state->userHandle = NULL;
     }
 }
 
 /**
  * Official Name: gsSndpSetPriority
  */
-void func_80004604(ALSoundState *sndp, u8 priority) {
+void sndp_set_priority(ALSoundState *sndp, u8 priority) {
     if (sndp != NULL) {
-        sndp->unk36 = priority;
+        sndp->priority = priority;
     }
 }
 
 /**
  * Official Name: gsSndpGetState
  */
-UNUSED u8 func_8000461C(ALSoundState *sndp) {
+UNUSED u8 sndp_get_state(ALSoundState *sndp) {
     if (sndp != NULL) {
-        return sndp->soundState;
+        return sndp->state;
     } else {
-        return 0;
+        return SOUND_STATE_NONE;
     }
 }
 
-ALSoundState *func_80004638(ALBank *bnk, s16 sndIndx, ALSoundState **soundMask) {
-    return func_80004668(bnk, sndIndx, 0, soundMask);
+ALSoundState *sndp_play(ALBank *bnk, s16 sndIndx, ALSoundState **handlePtr) {
+    return sndp_play_with_priority(bnk, sndIndx, 0, handlePtr);
 }
 
-ALSoundState *func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, ALSoundState **handlePtr) {
-    ALSound* temp_s2;
-    ALSoundState* s7;
-    ALSoundState* v0;
-    ALMicroTime s4;
-    s16 sp6E;
-    ALMicroTime sp68;
-    ALMicroTime s3;
+ALSoundState *sndp_play_with_priority(ALBank *bank, s16 sndIndx, u8 priority, ALSoundState **handlePtr) {
+    ALSound *sound;
+    ALSoundState *lastSoundState;
+    ALSoundState *soundState;
+    ALMicroTime totalDuration;
+    s16 loopingSoundID;
+    ALMicroTime loopingSoundDuration;
+    ALMicroTime duration;
     ALKeyMap *keyMap;
 
-    s7 = NULL;
-    sp6E = 0;
-    s4 = 0;        
+    lastSoundState = NULL;
+    loopingSoundID = 0;
+    totalDuration = 0;
 
-    if (sndIndx == 0) {
+    if (sndIndx == SOUND_NONE) {
         return NULL;
     }
 
     do {
-        temp_s2 = bnk->instArray[0]->soundArray[sndIndx - 1];
-        v0 = func_80004384(bnk, temp_s2);
-        if (v0 != NULL) {
-            ALSndpEvent evt;
+        sound = bank->instArray[0]->soundArray[sndIndx - 1];
+        soundState = sndp_allocate(bank, sound);
+        if (soundState != NULL) {
+            ALSndpEvent playEvent;
 
-            gAlSndPlayerPtr->unk3C = v0;
+            gSoundPlayerPtr->lastSoundState = soundState;
 
-            evt.common.type = AL_SNDP_PLAY_EVT;
-            evt.common.state = v0;
-            s3 = temp_s2->keyMap->velocityMax * 33333;
+            playEvent.common.type = AL_SNDP_PLAY_EVT;
+            playEvent.common.state = soundState;
+            duration = SOUND_PARAM_DURATION(sound->keyMap);
 
-            if (arg2 != 0) {
-                v0->unk36 = arg2;
+            if (priority != 0) {
+                soundState->priority = priority;
             }
 
-            if (v0->flags & 0x10) {
-                v0->flags &= ~0x10;
-                alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent*)&evt, s4 + 1);
-                sp68 = s3 + 1;
-                sp6E = sndIndx;
+            if (soundState->flags & SOUND_FLAG_LOOPING) {
+                soundState->flags &= ~SOUND_FLAG_LOOPING;
+                alEvtqPostEvent(&gSoundPlayerPtr->evtq, (ALEvent *) &playEvent, totalDuration + 1);
+                loopingSoundDuration = duration + 1;
+                loopingSoundID = sndIndx;
             } else {
-                alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent*)&evt, s3 + 1);
+                //!@bug The 'delay' parameter must match 'totalDuration' to ensure sequential playback.
+                // Mismatch causes sounds to overlap or trigger at wrong times.
+                alEvtqPostEvent(&gSoundPlayerPtr->evtq, (ALEvent *) &playEvent, duration + 1);
             }
 
-            s7 = v0;
+            lastSoundState = soundState;
         }
 
-        s4 += s3;
-        keyMap = temp_s2->keyMap;
-        sndIndx = keyMap->velocityMin + (keyMap->keyMin & 0xC0) * 4; // What is going on here?
+        totalDuration += duration; // UB: duration may be uninitialized
+        keyMap = sound->keyMap;
+        sndIndx = SOUND_PARAM_NEXT_SOUND(keyMap);
 
-    } while (sndIndx != 0 && v0 != NULL);
+    } while (sndIndx != SOUND_NONE && soundState != NULL);
 
-    if (s7 != NULL) {
-        s7->flags |= 1;
-        s7->unk30 = handlePtr;
-        if (sp6E != 0) {
-            ALSndpEvent evt2;
+    if (lastSoundState != NULL) {
+        lastSoundState->flags |= SOUND_FLAG_FINAL_IN_SEQUENCE;
+        lastSoundState->userHandle = handlePtr;
+        if (loopingSoundID != SOUND_NONE) {
+            ALSndpEvent evtRestart;
 
-            s7->flags |= 0x10;
-            evt2.unk9.type = AL_SNDP_UNK_9_EVT;
-            evt2.unk9.state = s7;
-            evt2.unk9.unk8 = sp6E;
-            evt2.unk9.unkC = bnk;
-            alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent*)&evt2, sp68);
+            lastSoundState->flags |= SOUND_FLAG_LOOPING;
+            evtRestart.loopRestart.type = AL_SNDP_LOOP_RESTART_EVT;
+            evtRestart.loopRestart.state = lastSoundState;
+            evtRestart.loopRestart.soundIndex = loopingSoundID;
+            evtRestart.loopRestart.bank = bank;
+            alEvtqPostEvent(&gSoundPlayerPtr->evtq, (ALEvent *) &evtRestart, loopingSoundDuration);
         }
     }
 
     if (handlePtr != NULL) {
-        *handlePtr = s7;
+        *handlePtr = lastSoundState;
     }
-    return s7;
+    return lastSoundState;
 }
 
 /**
- * input typing not right (some type of struct)
- * 99% sure this function will clear the audio buffer associated with a given sound mask.
  * Official Name: gsSndpStop
  */
-void sound_stop(ALSoundState *sndp) {
-    ALEvent alEvent;
+void sndp_stop(ALSoundState *state) {
+    ALSndpEvent alEvent;
 
-    alEvent.type = AL_SNDP_UNK_10_EVT;
-    alEvent.msg.sndpevent.soundState = sndp;
-    if (sndp != NULL) {
-        sndp->flags &= ~AL_SNDP_PITCH_EVT;
-        alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &alEvent, 0);
+    alEvent.common.type = AL_SNDP_STOP_EVT;
+    alEvent.common.state = state;
+    if (state != NULL) {
+        state->flags &= ~SOUND_FLAG_LOOPING;
+        alEvtqPostEvent(&gSoundPlayerPtr->evtq, &alEvent, 0);
     } else {
         // From JFG
         // osSyncPrintf("WARNING: Attempt to stop NULL sound aborted\n");
     }
 }
 
-void func_800048D8(u8 event) {
+void sndp_stop_with_flags(u8 flags) {
     OSIntMask mask;
-    ALEvent evt;
+    ALSndpEvent evt;
     ALSoundState *queue;
 
     mask = osSetIntMask(OS_IM_NONE);
-    queue = D_800DC6B0.list1;
+    queue = gSoundStateLists.allocHead;
     while (queue != NULL) {
-        evt.type = AL_SNDP_UNK_10_EVT;
-        evt.msg.sndpevent.soundState = queue;
-        if ((queue->flags & event) == event) {
-            evt.msg.sndpevent.soundState->flags &= ~AL_SNDP_PITCH_EVT;
-            alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt, 0);
+        evt.common.type = AL_SNDP_STOP_EVT;
+        evt.common.state = queue;
+        if ((queue->flags & flags) == flags) {
+            evt.common.state->flags &= ~SOUND_FLAG_LOOPING;
+            alEvtqPostEvent(&gSoundPlayerPtr->evtq, &evt, 0);
         }
         queue = queue->next;
     }
@@ -671,14 +687,14 @@ void func_800048D8(u8 event) {
  * Official Name: gsSndpStopAll
  */
 UNUSED void func_80004998(void) {
-    func_800048D8(AL_SNDP_PLAY_EVT);
+    sndp_stop_with_flags(SOUND_FLAG_FINAL_IN_SEQUENCE);
 }
 
 /**
  * Official Name: gsSndpStopAllRetrigger
  */
 UNUSED void func_800049B8(void) {
-    func_800048D8(AL_SNDP_PLAY_EVT | AL_SNDP_PITCH_EVT);
+    sndp_stop_with_flags(SOUND_FLAG_FINAL_IN_SEQUENCE | SOUND_FLAG_LOOPING);
 }
 
 /**
@@ -686,20 +702,20 @@ UNUSED void func_800049B8(void) {
  * Official Name: gsSndpStopAllLooped
  */
 void sound_stop_all(void) {
-    func_800048D8(AL_SNDP_PLAY_EVT | AL_SNDP_STOP_EVT);
+    sndp_stop_with_flags(SOUND_FLAG_FINAL_IN_SEQUENCE | SOUND_FLAG_PERSISTENT);
 }
 
 /**
  * Send a message to the sound player to update an existing property of the sound entry.
  * Official Name: gsSndpSetParam
  */
-void sound_event_update(SoundHandle soundMask, s16 type, u32 volume) {
-    ALEvent2 sndEvt;
-    sndEvt.snd_event.type = type;
-    sndEvt.snd_event.state = (void *) soundMask;
-    sndEvt.snd_event.param = volume;
+void sndp_set_param(SoundHandle soundMask, s16 type, u32 paramValue) {
+    ALSndpEvent evt;
+    evt.common.type = type;
+    evt.common.state = (void *) soundMask;
+    evt.common.param = paramValue;
     if (soundMask != NULL) {
-        alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &sndEvt, 0);
+        alEvtqPostEvent(&gSoundPlayerPtr->evtq, (ALEvent *) &evt, 0);
     } else {
         // From JFG
         // osSyncPrintf("WARNING: Attempt to modify NULL sound aborted\n");
@@ -710,7 +726,7 @@ void sound_event_update(SoundHandle soundMask, s16 type, u32 volume) {
  * Returns the volume level of the channel ID.
  * Official Name: gsSndpGetMasterVolume
  */
-u16 get_sound_channel_volume(u8 channel) {
+u16 sndp_get_channel_volume(u8 channel) {
     return gSoundChannelVolume[channel];
 }
 
@@ -720,24 +736,23 @@ u16 get_sound_channel_volume(u8 channel) {
  * Looks for the intended audio channel in the main buffer and adjusts its volume
  * Official Name: gsSndpSetMasterVolume
  */
-void set_sound_channel_volume(u8 channel, u16 volume) {
+void sndp_set_channel_volume(u8 channel, u16 volume) {
     OSIntMask mask;
-    ALEventQueue *queue;
+    ALSoundState *state;
     UNUSED s32 pad;
-    ALEvent evt;
+    ALSndpEvent evt;
 
     mask = osSetIntMask(OS_IM_NONE);
-    queue = (ALEventQueue *) D_800DC6B0.list1;
+    state = gSoundStateLists.allocHead;
     gSoundChannelVolume[channel] = volume;
 
-    while (queue != NULL) {
-        // This is almost definitely the wrong struct list, but it matches so I'm not going to complain
-        if ((((ALInstrument *) queue->allocList.next->prev)->priority & 0x3F) == channel) {
-            evt.type = AL_SNDP_UNK_11_EVT;
-            evt.msg.spseq.seq = (void *) queue;
-            alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt, 0);
+    while (state != NULL) {
+        if ((state->sound->keyMap->keyMin & 0x3F) == channel) {
+            evt.common.type = AL_SNDP_UNK_11_EVT;
+            evt.common.state = state;
+            alEvtqPostEvent(&gSoundPlayerPtr->evtq, (ALEvent *) &evt, 0);
         }
-        queue = (ALEventQueue *) queue->freeList.next;
+        state = state->next;
     }
 
     osSetIntMask(mask);

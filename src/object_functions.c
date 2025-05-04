@@ -307,7 +307,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         if (obj->properties.fireball.timer == 0) {
             soundMask = weapon->soundMask;
             if (soundMask != NULL) {
-                sound_stop(soundMask);
+                sndp_stop(soundMask);
             }
             play_sound_at_position(SOUND_POP, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                    obj->segment.trans.z_position, 4, NULL);
@@ -1419,7 +1419,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
  */
 void play_tt_voice_clip(u16 soundID, s32 interrupt) {
     if (gTTSoundMask && interrupt & 1) {
-        sound_stop(gTTSoundMask);
+        sndp_stop(gTTSoundMask);
         gTTSoundMask = NULL;
     }
     if (gTTSoundMask == NULL) {
@@ -3144,7 +3144,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
  */
 void play_taj_voice_clip(u16 soundID, s32 interrupt) {
     if (gTajSoundMask && interrupt & 1) {
-        sound_stop(gTajSoundMask);
+        sndp_stop(gTajSoundMask);
         gTajSoundMask = NULL;
     }
     if (!gTajSoundMask) {
