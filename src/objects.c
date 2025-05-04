@@ -2447,41 +2447,39 @@ void func_80011134(Object *arg0, s32 arg1) {
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80011134.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-// Probably NON_MATCHING, but not sure.
 // This is a function for doors
 void func_80011264(ObjectModel *model, Object *obj) {
+    Object_64 *obj64;
     s32 current;
     s32 remaining;
     s32 i;
-    Object_Door *door;
     TriangleBatchInfo *batch;
 
-    if (model->unk50 > 0) {
-        batch = &model->batches[0];
-        door = &obj->unk64->door;
-        current = ((door->balloonCount / 10) - 1) << 2;
-        if (model->textures[batch->textureIndex].texture) {} // fakematch
-        if (1) {                                             // fakematch
-            remaining = ((door->balloonCount % 10) << 2);
-        }
-        for (i = 0; i < model->numberOfBatches; i++, batch++) {
-            if (batch->flags & 0x10000) {
-                if (batch->textureIndex != 0xFF) { // 0xFF = No Texture
-                    if (model->textures[batch->textureIndex].texture->numOfTextures > 0x900) {
-                        batch->unk7 = remaining;
-                    } else if (current >= 0) {
-                        batch->unk7 = current;
-                    }
-                    if (door) {} // fakematch
+    if (model->unk50 <= 0) {
+        return;
+    }
+
+    obj64 = obj->unk64;
+    remaining = obj64->door.balloonCount;
+    current = ((remaining / 10) - 1) << 2;
+    remaining = (remaining % 10) << 2;
+    i = 0;
+    batch = model->batches;
+
+    while (i < model->numberOfBatches) {
+        if (batch[i].flags & 0x10000) {
+            if (batch[i].textureIndex != 0xFF) { // 0xFF = No Texture
+                if ((((0, model->textures[batch[i].textureIndex])).texture && model->textures[((0, batch[i])).textureIndex].texture) && model->textures[batch[i].textureIndex].texture) {}
+                if ((model->textures[batch[i].textureIndex].texture->numOfTextures) > 0x900) {
+                    batch[i].unk7 = remaining;
+                } else if (current >= 0) {
+                    batch[i].unk7 = current;
                 }
             }
         }
+        i++;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80011264.s")
-#endif
 
 /**
  * Do nothing. Unused.
