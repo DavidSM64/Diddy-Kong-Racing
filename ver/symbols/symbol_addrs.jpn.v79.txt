@@ -1537,7 +1537,7 @@ is_drumstick_unlocked = 0x8009F294;
 
 // game_ui.c .text
 hud_init = 0x8009F2B0;
-func_8009F034 = 0x8009F5F4;
+hud_init_element = 0x8009F5F4;
 hud_free = 0x800A05FC;
 race_starting = 0x800A0750;
 hud_render_player = 0x800A0760;
@@ -3397,17 +3397,17 @@ D_800E8520 = 0x800EA030;
 jpt_800E8574 = 0x800EA084;
 
 // game_ui .rodata
-D_800E86A8 = 0x800EA160; // type:f64 function_owner:func_8009F034
-D_800E86B0 = 0x800EA168; // type:f64 function_owner:func_8009F034
-D_800E86B8 = 0x800EA170; // type:f32 function_owner:func_8009F034
-D_800E86BC = 0x800EA174; // type:f32 function_owner:func_8009F034
-D_800E86C0 = 0x800EA178; // type:f32 function_owner:func_8009F034
-D_800E86C8 = 0x800EA180; // type:f64 function_owner:func_8009F034
-D_800E86D0 = 0x800EA188; // type:f64 function_owner:func_8009F034
-D_800E86D8 = 0x800EA190; // type:f64 function_owner:func_8009F034
-D_800E86E0 = 0x800EA198; // type:f64 function_owner:func_8009F034
-D_800E86E8 = 0x800EA1A0; // type:f64 function_owner:func_8009F034
-D_800E86F0 = 0x800EA1A8; // type:f64 function_owner:func_8009F034
+D_800E86A8 = 0x800EA160; // type:f64 function_owner:hud_init_element
+D_800E86B0 = 0x800EA168; // type:f64 function_owner:hud_init_element
+D_800E86B8 = 0x800EA170; // type:f32 function_owner:hud_init_element
+D_800E86BC = 0x800EA174; // type:f32 function_owner:hud_init_element
+D_800E86C0 = 0x800EA178; // type:f32 function_owner:hud_init_element
+D_800E86C8 = 0x800EA180; // type:f64 function_owner:hud_init_element
+D_800E86D0 = 0x800EA188; // type:f64 function_owner:hud_init_element
+D_800E86D8 = 0x800EA190; // type:f64 function_owner:hud_init_element
+D_800E86E0 = 0x800EA198; // type:f64 function_owner:hud_init_element
+D_800E86E8 = 0x800EA1A0; // type:f64 function_owner:hud_init_element
+D_800E86F0 = 0x800EA1A8; // type:f64 function_owner:hud_init_element
 D_800E8718 = 0x800EA1D0;
 D_800E8720 = 0x800EA1D8;
 D_800E8728 = 0x800EA1E0;

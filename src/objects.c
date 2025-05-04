@@ -6343,7 +6343,7 @@ void mode_init_taj_race(void) {
         D_8011ADC0 = 1;
         levelHeader->laps = 3;
         levelHeader->race_type = RACETYPE_DEFAULT;
-        func_8009F034();
+        hud_init_element();
         // clang-format off
         for (i = 0; i < ARRAY_COUNT(racer->lap_times); i++) { racer->lap_times[i] = 0; } // Must be a single line.
         // clang-format on

@@ -89,7 +89,7 @@ HudElement gHudElementBase[HUD_ELEMENT_COUNT] = {
     { 0, 0, 0, HUD_SPRITE_PLACE_ST, 1.0f, 160.0f, 5.0f, 0.0f, 0, 0, 0, 0, 0 },
 };
 
-u16 D_800E25C4[96] = {
+s16 D_800E25C4[96] = {
     0x0000, 0x0035, 0x0010, 0x0001, 0x0036, 0x0012, 0x0004, 0x00CB, 0x0013, 0x0005, 0x00D3, 0x0013, 0x0006, 0x00DC,
     0x0013, 0x0002, 0xFF88, 0xFFE1, 0x001B, 0x0021, 0x0016, 0x0008, 0x00D3, 0x0013, 0x0009, 0x00DC, 0x0013, 0x000B,
     0x00A7, 0x0013, 0x000E, 0x0000, 0x000A, 0x0010, 0x003B, 0x0023, 0x0011, 0x003B, 0x0023, 0x0007, 0x0021, 0x0016,
@@ -304,7 +304,7 @@ void hud_init(UNUSED s32 viewportCount) {
     gPlayerHud[PLAYER_TWO] = (HudData *) ((u8 *) gPlayerHud[PLAYER_ONE] + sizeof(HudData));
     gPlayerHud[PLAYER_THREE] = (HudData *) ((u8 *) gPlayerHud[PLAYER_TWO] + sizeof(HudData));
     gPlayerHud[PLAYER_FOUR] = (HudData *) ((u8 *) gPlayerHud[PLAYER_THREE] + sizeof(HudData));
-    func_8009F034();
+    hud_init_element();
     D_80126D64 = 0;
     gWrongWayNagTimer = 0;
     D_80126D48 = 0;
@@ -333,8 +333,247 @@ void hud_init(UNUSED s32 viewportCount) {
     }
 }
 
-// hud_init_element
-#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/func_8009F034.s")
+void hud_init_element(void) {
+    s32 i;
+    s32 j;
+    s32 activePlayers;
+    HudElement *hudElement;
+    s16 *temp800E2684;
+    s16 *temp800E25C4;
+    s32 k;
+    s32 var_v0;
+
+    var_v0 = get_current_level_race_type();
+    if ((var_v0 == 1) || (var_v0 == 5)) {
+        gHudOffsetX = 0;
+        gHudRaceStart = 1;
+    } else {
+        if (gHUDNumPlayers < 2) {
+            gHudOffsetX = 0x140;
+            gHudBounceMag = 2.0f;
+        } else {
+            gHudOffsetX = 0xC8;
+            gHudBounceMag = 2.0f;
+        }
+        gHudRaceStart = 0;
+    }
+    gHudBounceTimer = 0;
+    gRaceStartShowHudStep = 0;
+    gHideRaceTimer = 0;
+    gWrongWayNagPrefix = 0;
+    gHudSlide = 0;
+    gMinimapOpacity = 0;
+    gMinimapOpacityTarget = osTvType == OS_TV_TYPE_PAL ? 0x3C : 0x32;
+    gMinimapFade = 0;
+    gShowHUD = 0;
+    D_80126CD5 = 0;
+    D_80127189 = 0;
+    D_80126D4C = -0x64;
+    D_80126D50 = get_random_number_from_range(0x78, 0x168);
+    D_8012718A = func_8000E158();
+    gStopwatchErrorX = 0x37;
+    gStopwatchErrorY = 0xB3;
+    if (osTvType == OS_TV_TYPE_PAL) {
+        gStopwatchErrorY += 0x1E;
+        gStopwatchErrorX -= 4;
+    }
+    gHudTimeTrialGhost = timetrial_ghost_staff() == NULL ? 0 : 1;
+    activePlayers = gNumActivePlayers != 3 ? gNumActivePlayers : 4;
+    for (j = 0; j < activePlayers; j++) {
+        gCurrentHud = gPlayerHud[j];
+        for (k = 0; k < ARRAY_COUNT(gHudElementBase); k++) {
+            gCurrentHud->entry[k].pos.f[0] = gHudElementBase[k].pos.f[0];
+            gCurrentHud->entry[k].pos.f[1] = gHudElementBase[k].pos.f[1];
+            gCurrentHud->entry[k].pos.f[2] = gHudElementBase[k].pos.f[2];
+            gCurrentHud->entry[k].scale = gHudElementBase[k].scale;
+            gCurrentHud->entry[k].rotation.s[2] = gHudElementBase[k].rotation.s[2];
+            gCurrentHud->entry[k].rotation.s[1] = gHudElementBase[k].rotation.s[1];
+            gCurrentHud->entry[k].rotation.s[0] = gHudElementBase[k].rotation.s[0];
+            gCurrentHud->entry[k].spriteID = gHudElementBase[k].spriteID;
+            gCurrentHud->entry[k].spriteOffset = gHudElementBase[k].spriteOffset;
+            gCurrentHud->entry[k].timer.minutes = gHudElementBase[k].timer.minutes;
+            gCurrentHud->entry[k].timer.seconds = gHudElementBase[k].timer.seconds;
+            gCurrentHud->entry[k].timer.hundredths = gHudElementBase[k].timer.hundredths;
+            gCurrentHud->entry[k].timer.unk1D = gHudElementBase[k].timer.unk1D;
+        }
+        gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.offsetY = 5;
+        if (gHUDNumPlayers == 1) {
+            for (temp800E25C4 = D_800E25C4; temp800E25C4[0] != -1; temp800E25C4 += 3) {
+                gCurrentHud->entry[temp800E25C4[0]].pos.f[0] = temp800E25C4[1];
+                if ((gAssetHudElementIds[gCurrentHud->entry[temp800E25C4[0]].spriteID] & ASSET_MASK_TEXTURE) ==
+                    ASSET_MASK_TEXTURE) {
+                    if (j == 0) {
+                        gCurrentHud->entry[temp800E25C4[0]].pos.f[1] = temp800E25C4[2];
+                    } else {
+                        gCurrentHud->entry[temp800E25C4[0]].pos.f[1] = temp800E25C4[2] + 0x6C;
+                    }
+                } else if (j == 0) {
+                    gCurrentHud->entry[temp800E25C4[0]].pos.f[1] = temp800E25C4[2] + 0x3C;
+                } else {
+                    gCurrentHud->entry[temp800E25C4[0]].pos.f[1] = temp800E25C4[2] - 0x30;
+                }
+            }
+            gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.f[0] = 263.0f;
+            gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.f[1] = 17.0f;
+            gCurrentHud->entry[HUD_TREASURE_METRE].pos.f[0] = 247.0f;
+            gCurrentHud->entry[HUD_TREASURE_METRE].pos.f[1] = 45.0f;
+            gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].pos.f[0] = 259.0f;
+            gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].pos.f[1] = 49.0f;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_ICON].pos.f[0] = 103.0f;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_ICON].pos.f[1] = 49.0f;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_X].pos.f[0] = 264.0f;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_X].pos.f[1] = 50.0f;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].pos.f[0] = 265.0f;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_1].pos.f[1] = 51.0f;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.f[0] = 274.0f;
+            gCurrentHud->entry[HUD_BATTLE_BANANA_COUNT_2].pos.f[1] = 51.0f;
+            gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.f[1] = 17.0f;
+            gCurrentHud->entry[HUD_SILVER_COIN_TALLY].silverCoinTally.offsetY = 3;
+        } else if ((gHUDNumPlayers == 2) || (gHUDNumPlayers == 3)) {
+            for (temp800E2684 = D_800E2684; temp800E2684[0] != -1; temp800E2684 += 4) {
+                if ((gAssetHudElementIds[gCurrentHud->entry[temp800E2684[0]].spriteID] & ASSET_MASK_TEXTURE) ==
+                    ASSET_MASK_TEXTURE) {
+                    if ((j == 0) || (j == 2)) {
+                        gCurrentHud->entry[temp800E2684[0]].pos.f[0] = temp800E2684[1];
+                    } else {
+                        gCurrentHud->entry[temp800E2684[0]].pos.f[0] = temp800E2684[3] + 0xA0;
+                    }
+                    if ((j == 0) || (j == 1)) {
+                        gCurrentHud->entry[temp800E2684[0]].pos.f[1] = temp800E2684[2];
+                    } else {
+                        gCurrentHud->entry[temp800E2684[0]].pos.f[1] = temp800E2684[2] + 0x6C;
+                    }
+                } else {
+                    if ((j == 0) || (j == 2)) {
+                        gCurrentHud->entry[temp800E2684[0]].pos.f[0] = temp800E2684[1] - 0x50;
+                    } else {
+                        gCurrentHud->entry[temp800E2684[0]].pos.f[0] = temp800E2684[3] + 0x50;
+                    }
+                    if ((j == 0) || (j == 1)) {
+                        gCurrentHud->entry[temp800E2684[0]].pos.f[1] = temp800E2684[2] + 0x3C;
+                    } else {
+                        gCurrentHud->entry[temp800E2684[0]].pos.f[1] = temp800E2684[2] - 0x30;
+                    }
+                }
+            }
+        }
+        if (gHUDNumPlayers != 0) {
+            for (i = 0; i < HUD_ELEMENT_COUNT; i++) {
+                if (gCurrentHud->entry[i].spriteID == 9) {
+                    gCurrentHud->entry[i].spriteID = 0xA;
+                } else if (gCurrentHud->entry[i].spriteID == 4) {
+                    gCurrentHud->entry[i].spriteID = 0xF;
+                } else if (gCurrentHud->entry[i].spriteID == 0xB) {
+                    gCurrentHud->entry[i].spriteID = 0xC;
+                } else if (gCurrentHud->entry[i].spriteID == 0x12) {
+                    gCurrentHud->entry[i].spriteID = 0x1C;
+                } else if (gCurrentHud->entry[i].spriteID == 0x36) {
+                    gCurrentHud->entry[i].scale *= 0.6;
+                } else if ((i != 0) && (i != 1) && (i != 2) && (i != 37) && (i != 47) && (i != 48) && (i != 3) &&
+                           (i != 50) && (i != 51) && ((i < 52) || (i >= 56) || (i == 28) || (i == 9))) {
+                    gCurrentHud->entry[i].scale *= 0.75;
+                }
+            }
+        }
+        if (gHUDNumPlayers >= 2) {
+            gCurrentHud->entry[HUD_LAP_TEXT_LAP].scale = 1.0f;
+            gCurrentHud->entry[HUD_LAP_TEXT_TWO].scale = 1.0f;
+            gCurrentHud->entry[HUD_LAP_TEXT_FINAL].scale = 1.0f;
+            gCurrentHud->entry[HUD_RACE_START_GO].scale = 1.0f;
+            gCurrentHud->entry[HUD_RACE_START_READY].scale = 1.0f;
+            gCurrentHud->entry[HUD_WRONGWAY_1].scale = 1.0f;
+            gCurrentHud->entry[HUD_WRONGWAY_2].scale = 1.0f;
+            gCurrentHud->entry[HUD_RACE_END_FINISH].scale = 1.0f;
+            gCurrentHud->entry[HUD_LAP_TEXT_LAP].spriteID = 0x26;
+            gCurrentHud->entry[HUD_LAP_TEXT_TWO].spriteID = 0x2B;
+            gCurrentHud->entry[HUD_LAP_TEXT_FINAL].spriteID = 0x29;
+            gCurrentHud->entry[HUD_RACE_START_GO].spriteID = 0x25;
+            gCurrentHud->entry[HUD_RACE_START_READY].spriteID = 0x27;
+            gCurrentHud->entry[HUD_WRONGWAY_1].spriteID = 0x2D;
+            gCurrentHud->entry[HUD_WRONGWAY_2].spriteID = 0x2C;
+            gCurrentHud->entry[HUD_RACE_END_FINISH].spriteID = 0x2A;
+        } else {
+            gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.prevLevel = 1;
+            // while weaponDisplay is not correct union "type" we need the value to be set to be a s8 instead of u8
+            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC].weaponDisplay.prevLevel = 1;
+        }
+        if (is_in_time_trial() != 0) {
+            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].pos.f[0] += -25.0f;
+            gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_1].pos.f[0] += -25.0f;
+            gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_2].pos.f[0] += -25.0f;
+            gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].pos.f[0] += -25.0f;
+            gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC].pos.f[0] += -25.0f;
+            gCurrentHud->entry[HUD_BANANA_COUNT_X].pos.f[0] += -25.0f;
+            gCurrentHud->entry[HUD_LAP_COUNT_CURRENT].pos.f[0] += -58.0f;
+            gCurrentHud->entry[HUD_LAP_COUNT_SEPERATOR].pos.f[0] += -58.0f;
+            gCurrentHud->entry[HUD_LAP_COUNT_TOTAL].pos.f[0] += -58.0f;
+            gCurrentHud->entry[HUD_LAP_COUNT_LABEL].pos.f[0] += -58.0f;
+            gCurrentHud->entry[HUD_LAP_COUNT_FLAG].pos.f[0] += -58.0f;
+        }
+        switch (get_current_level_race_type()) {
+            case 0x8:
+                gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].pos.f[0] += -120.0f;
+                gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_1].pos.f[0] += -120.0f;
+                gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_2].pos.f[0] += -120.0f;
+                gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].pos.f[0] += -120.0f;
+                gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC].pos.f[0] += -120.0f;
+                gCurrentHud->entry[HUD_BANANA_COUNT_X].pos.f[0] += -120.0f;
+                gCurrentHud->entry[HUD_LAP_COUNT_LABEL].pos.f[0] += 28.0f;
+                gCurrentHud->entry[HUD_LAP_COUNT_CURRENT].pos.f[0] += 28.0f;
+                gCurrentHud->entry[HUD_LAP_COUNT_SEPERATOR].pos.f[0] += 28.0f;
+                gCurrentHud->entry[HUD_LAP_COUNT_TOTAL].pos.f[0] += 28.0f;
+                gCurrentHud->entry[HUD_LAP_COUNT_FLAG].pos.f[0] += 28.0f;
+                break;
+            case 0x41:
+                if (osTvType == OS_TV_TYPE_PAL) {
+                    gCurrentHud->entry[HUD_TREASURE_METRE].pos.f[1] -= 4.0f;
+                }
+                if (gNumActivePlayers >= 3) {
+                    var_v0 = (j == 0) || (j == 2) ? 0xF : -0xA;
+                } else {
+                    var_v0 = gNumActivePlayers == 1 ? -0xA : 0;
+                }
+                gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC].pos.f[0] += var_v0;
+                gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].pos.f[0] += var_v0;
+                gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_1].pos.f[0] += var_v0;
+                gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_2].pos.f[0] += var_v0;
+                gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].pos.f[0] += var_v0;
+                gCurrentHud->entry[HUD_BANANA_COUNT_X].pos.f[0] += var_v0;
+                break;
+        }
+        if (is_taj_challenge() != 0) {
+            gCurrentHud->entry[HUD_LAP_COUNT_LABEL].pos.f[0] += 28.0f;
+            gCurrentHud->entry[HUD_LAP_COUNT_CURRENT].pos.f[0] += 28.0f;
+            gCurrentHud->entry[HUD_LAP_COUNT_SEPERATOR].pos.f[0] += 28.0f;
+            gCurrentHud->entry[HUD_LAP_COUNT_TOTAL].pos.f[0] += 28.0f;
+            gCurrentHud->entry[HUD_LAP_COUNT_FLAG].pos.f[0] += 28.0f;
+        }
+        if (osTvType == OS_TV_TYPE_PAL) {
+            for (k = 0; (k < HUD_ELEMENT_COUNT) ^ 0; k++) {
+                i = k;
+                gCurrentHud->entry[k].pos.f[1] *= 1.2;
+                gCurrentHud->entry[k].pos.f[0] -= 4.0f;
+                if ((gAssetHudElementIds[gCurrentHud->entry[k].spriteID] & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE) {
+                    gCurrentHud->entry[i].pos.f[1] -= 10.0f;
+                }
+            }
+
+            for (k = HUD_SPEEDOMETRE_0; k < HUD_SILVER_COIN_TALLY; k++) {
+                gCurrentHud->entry[k].pos.f[1] += 10.0f;
+            }
+        }
+        gCurrentHud->entry[HUD_BALLOON_COUNT_ICON].scale = 1.0f;
+        gCurrentHud->entry[HUD_BALLOON_COUNT_X].spriteID = 0x12;
+        gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_1].spriteID = 9;
+        gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_2].spriteID = 9;
+    }
+    if (get_current_level_race_type() & 0x40) {
+        gPrevToggleSetting = gHudToggleSettings[1];
+        gHudToggleSettings[1] = 0;
+        return;
+    }
+    gHudToggleSettings[1] = gPrevToggleSetting;
+}
 
 /**
  * Frees all elements in the hud, and the player hud, and flushes particles
