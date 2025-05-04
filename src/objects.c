@@ -2396,7 +2396,8 @@ void obj_update(s32 updateRate) {
     func_800179D0();
 
     // @fake
-    do { } while (0);
+    do {
+    } while (0);
     if (D_8011AF00 == 1) {
         if ((gEventCountdown == 0x50) && (gCutsceneID == 0)) {
             sp54 = 0;
@@ -5483,7 +5484,7 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
                         temp = spD4[sp36C];
                         spD4[sp36C] = spD4[sp36C - 1];
                         spD4[sp36C - 1] = temp;
-                        temp = sp54[sp36C] ;
+                        temp = sp54[sp36C];
                         sp54[sp36C] = sp54[sp36C - 1] & 0xFF & 0xFF & 0xFF;
                         sp54[sp36C - 1] = temp & 0xFF;
                         sp36C--;
@@ -6342,7 +6343,7 @@ void mode_init_taj_race(void) {
         D_8011ADC0 = 1;
         levelHeader->laps = 3;
         levelHeader->race_type = RACETYPE_DEFAULT;
-        func_8009F034();
+        hud_init_element();
         // clang-format off
         for (i = 0; i < ARRAY_COUNT(racer->lap_times); i++) { racer->lap_times[i] = 0; } // Must be a single line.
         // clang-format on
