@@ -7,7 +7,7 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of May 4, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 82.77%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 83.68%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 53.79%
 <!-- README_SCORE_SUMMARY_END -->
@@ -119,28 +119,28 @@ s32 is_drumstick_unlocked(void) {
 <!-- README_SCORE_BEGIN -->
 As of May 4, 2025, this is our current score:
 ```
- =======================================================================
-                 ADVENTURE ONE (ASM -> C Decompilation)
- ---------------- 82.77% Complete (85.23% NON_MATCHING) ----------------
-                      # Decompiled functions: 1872
-                       # GLOBAL_ASM remaining: 79
-                      # NON_MATCHING functions: 11
-                   # NON_EQUIVALENT WIP functions: 27
- ----------------------------- Game Status -----------------------------
-                Balloons: 39/47, Keys: 4/4, Trophies: 3/5
-                 T.T. Amulets: 4/4, Wizpig Amulets: 4/4
- -----------------------------------------------------------------------
- We are participating in the Trophy Race of Dragon Forest. (Round Three)
- =======================================================================
-                  ADVENTURE TWO (Cleanup & Documentation)
- --------------------------- 53.79% Complete ---------------------------
-                      # Documented functions: 1138
-                      # Undocumented remaining: 516
- ----------------------------- Game Status -----------------------------
-                Balloons: 26/47, Keys: 3/4, Trophies: 2/5
-                 T.T. Amulets: 2/4, Wizpig Amulets: 2/4
- -----------------------------------------------------------------------
-        We are battling in Darkwater Beach. (2 opponents remain)
- =======================================================================
+ ========================================================
+          ADVENTURE ONE (ASM -> C Decompilation)
+ -------- 83.68% Complete (85.23% NON_MATCHING) ---------
+               # Decompiled functions: 1875
+                # GLOBAL_ASM remaining: 76
+               # NON_MATCHING functions: 8
+            # NON_EQUIVALENT WIP functions: 27
+ --------------------- Game Status ----------------------
+        Balloons: 39/47, Keys: 4/4, Trophies: 4/5
+          T.T. Amulets: 4/4, Wizpig Amulets: 4/4
+ --------------------------------------------------------
+   We are racing the wizard pig boss Wizpig. (Lap 1/3)
+ ========================================================
+          ADVENTURE TWO (Cleanup & Documentation)
+ ------------------- 53.79% Complete --------------------
+               # Documented functions: 1138
+              # Undocumented remaining: 516
+ --------------------- Game Status ----------------------
+        Balloons: 26/47, Keys: 3/4, Trophies: 2/5
+          T.T. Amulets: 2/4, Wizpig Amulets: 2/4
+ --------------------------------------------------------
+ We are battling in Darkwater Beach. (2 opponents remain)
+ ========================================================
 ```
 <!-- README_SCORE_END -->
