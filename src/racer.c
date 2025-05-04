@@ -6438,11 +6438,11 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
             if (temp_v0_4->altRouteID == -1) {
                 racer->unk1C8 = 0;
             }
-            counter = racer->checkpoint - 1;
-            if (counter < 0) {
-                counter += temp_v0;
+            angle = racer->checkpoint - 1;
+            if (angle < 0) {
+                angle += temp_v0;
             }
-            temp_v0_4 = get_checkpoint_node(counter);
+            temp_v0_4 = get_checkpoint_node(angle);
             if (temp_v0_4->altRouteID == -1) {
                 racer->unk1C8 = 0;
             }
