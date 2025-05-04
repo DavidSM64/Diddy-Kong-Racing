@@ -2468,7 +2468,7 @@ void func_80011264(ObjectModel *model, Object *obj) {
 
     while (i < model->numberOfBatches) {
         if (batch[i].flags & 0x10000) {
-            if (batch[i].textureIndex != 0xFF) { // 0xFF = No Texture
+            if (batch[i].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 if ((((0, model->textures[batch[i].textureIndex])).texture && model->textures[((0, batch[i])).textureIndex].texture) && model->textures[batch[i].textureIndex].texture) {}
                 if ((model->textures[batch[i].textureIndex].texture->numOfTextures) > 0x900) {
                     batch[i].unk7 = remaining;
