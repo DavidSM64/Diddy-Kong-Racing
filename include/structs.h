@@ -1213,7 +1213,7 @@ typedef struct Object_Racer {
   /* 0x018 */ SoundHandle unk18;
   /* 0x01C */ SoundHandle unk1C;
   /* 0x020 */ SoundHandle unk20;
-  /* 0x024 */ SoundMask* soundMask;
+  /* 0x024 */ SoundMask *soundMask;
   /* 0x028 */ u16 lastSoundID;
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
@@ -1449,7 +1449,7 @@ typedef struct Object_Audio {
   /* 0x05 */ u8 unk5;
   /* 0x06 */ u8 unk6;
   /* 0x07 */ u8 unk7;
-  /* 0x08 */ SoundMask* soundMask;
+  /* 0x08 */ SoundMask *soundMask;
   /* 0x0C */ u8 unkC;
   /* 0x0D */ u8 unkD;
 } Object_Audio;

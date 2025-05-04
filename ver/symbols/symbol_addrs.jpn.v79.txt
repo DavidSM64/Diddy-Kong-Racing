@@ -2189,7 +2189,7 @@ gFunc80019808Length = 0x800DE024;
 gSoundStateLists = 0x800DE040; // size:0xC
 gSoundPlayerPtr = 0x800DE04C;
 gSoundMasterVolume = 0x800DE050;
-D_800DC6C4 = 0x800DE054;
+gNumActiveSounds = 0x800DE054;
 
 // audio_vehicle.c .data
 gVehicleSounds = 0x800DE060;

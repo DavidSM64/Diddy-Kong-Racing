@@ -7,13 +7,15 @@
 #include "PR/libaudio.h"
 
 #define SOUND_PARAM_DURATION(m) (m->velocityMax * 33333)
-#define SOUND_PARAM_NEXT_SOUND(m) (m->velocityMin + (m->keyMin & 0xC0) * 4);
+#define SOUND_PARAM_NEXT_SOUND(m) (m->velocityMin + (m->keyMin & 0xC0) * 4)
+#define SOUND_PARAM_CHANNEL(m) (m->keyMin & 0x3F)
+#define SOUND_PARAM_FLAGS(m) (m->keyMax & 0xF0)
 
 ALSoundStateLists gSoundStateLists = { NULL, NULL, NULL };
 SoundPlayer gSoundPlayer;
 SoundPlayer *gSoundPlayerPtr = &gSoundPlayer;
 s32 gSoundMasterVolume = 256;
-s16 D_800DC6C4 = 0;
+s16 gNumActiveSounds = 0;
 s16 *gSoundChannelVolume;
 
 /**** Debug strings ****/
@@ -42,9 +44,9 @@ s32 sndp_get_master_volume(void) {
 /**
  * Sets the number of active sound channels to either the passed number, or the maximum amount, whichever's lower.
  */
-void sndp_set_channel_count(s32 numChannels) {
-    if (gSoundPlayerPtr->soundChannelsMax >= numChannels) {
-        gSoundPlayerPtr->soundChannels = numChannels;
+void sndp_set_channel_count(s32 numSounds) {
+    if (gSoundPlayerPtr->soundChannelsMax >= numSounds) {
+        gSoundPlayerPtr->soundChannels = numSounds;
     } else {
         gSoundPlayerPtr->soundChannels = gSoundPlayerPtr->soundChannelsMax;
     }
@@ -132,7 +134,7 @@ void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event) {
     s32 delta;
     s32 fullQueue;
     ALSndpEvent spAC;
-    ALSndpEvent sp9C;
+    ALSndpEvent nextStateEvent;
     ALSound *sound;
     ALKeyMap *keyMap;
     s32 volume;
@@ -151,18 +153,18 @@ void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event) {
 
     do {
         if (nextState != NULL) {
-            sp9C.common.state = soundState;
-            sp9C.common.type = event->common.type;
-            sp9C.common.param = event->common.param;
-            event = &sp9C;
+            nextStateEvent.common.state = soundState;
+            nextStateEvent.common.type = event->common.type;
+            nextStateEvent.common.param = event->common.param;
+            event = &nextStateEvent;
         }
 
         soundState = event->common.state;
         sound = soundState->sound;
 
         if (sound == NULL) {
-            u16 n2, n3;
-            sndp_get_state_counts(&n2, &n3);
+            u16 numFree, numAlloc;
+            sndp_get_state_counts(&numFree, &numAlloc);
             return;
         }
 
@@ -179,7 +181,7 @@ void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event) {
                 config.priority = soundState->priority;
                 config.unityPitch = 0;
 
-                fullQueue = sndp->soundChannels <= D_800DC6C4;
+                fullQueue = sndp->soundChannels <= gNumActiveSounds;
 
                 if (!fullQueue || (soundState->flags & SOUND_FLAG_LOOPING)) {
                     isVoiceAllocated = alSynAllocVoice(sndp->drvr, &soundState->voice, &config);
@@ -228,11 +230,11 @@ void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event) {
                 soundState->flags |= SOUND_FLAG_PLAYING;
                 alSynStartVoice(sndp->drvr, voice, sound->wavetable);
                 soundState->state = SOUND_STATE_PLAYING;
-                D_800DC6C4++;
+                gNumActiveSounds++;
 
                 delta = sound->envelope->attackTime / soundState->pitch / soundState->unk28;
                 volume =
-                    MAX(0, gSoundChannelVolume[keyMap->keyMin & 0x3F] *
+                    MAX(0, gSoundChannelVolume[SOUND_PARAM_CHANNEL(keyMap)] *
                                    (sound->envelope->attackVolume * soundState->volume * sound->sampleVolume / 16129) /
                                    32767 -
                                1);
@@ -310,7 +312,7 @@ void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event) {
                 soundState->volume = event->common.param;
                 if (soundState->state == SOUND_STATE_PLAYING) {
                     volume = MAX(
-                        0, gSoundChannelVolume[keyMap->keyMin & 0x3F] *
+                        0, gSoundChannelVolume[SOUND_PARAM_CHANNEL(keyMap)] *
                                    (sound->envelope->decayVolume * soundState->volume * sound->sampleVolume / 16129) /
                                    32767 -
                                1);
@@ -322,7 +324,7 @@ void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event) {
                 if (soundState->state == SOUND_STATE_PLAYING) {
                     delta = sound->envelope->releaseTime / soundState->unk28 / soundState->pitch;
                     volume = MAX(
-                        0, gSoundChannelVolume[keyMap->keyMin & 0x3F] *
+                        0, gSoundChannelVolume[SOUND_PARAM_CHANNEL(keyMap)] *
                                    (sound->envelope->decayVolume * soundState->volume * sound->sampleVolume / 16129) /
                                    32767 -
                                1);
@@ -333,7 +335,7 @@ void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event) {
             case AL_SNDP_DECAY_EVT:
                 if (!(soundState->flags & SOUND_FLAG_PERSISTENT)) {
                     volume = MAX(
-                        0, gSoundChannelVolume[keyMap->keyMin & 0x3F] *
+                        0, gSoundChannelVolume[SOUND_PARAM_CHANNEL(keyMap)] *
                                    (sound->envelope->decayVolume * soundState->volume * sound->sampleVolume / 16129) /
                                    32767 -
                                1);
@@ -501,7 +503,7 @@ ALSoundState *sndp_allocate(UNUSED ALBank *bank, ALSound *sound) {
         state->retries = 2;
         state->sound = sound;
         state->pitch = 1.0f;
-        state->flags = keyMap->keyMax & 0xF0;
+        state->flags = SOUND_PARAM_FLAGS(keyMap);
         state->userHandle = NULL;
         if (state->flags & SOUND_FLAG_PITCH_SLIDE) {
             state->unk28 = alCents2Ratio(keyMap->keyBase * 100 - 6000);
@@ -537,7 +539,7 @@ void sndp_deallocate(ALSoundState *state) {
         gSoundStateLists.freeHead = state;
     }
     if (state->flags & SOUND_FLAG_PLAYING) {
-        D_800DC6C4--;
+        gNumActiveSounds--;
     }
     state->state = SOUND_STATE_NONE;
     if (state->userHandle != NULL) {
@@ -747,7 +749,7 @@ void sndp_set_channel_volume(u8 channel, u16 volume) {
     gSoundChannelVolume[channel] = volume;
 
     while (state != NULL) {
-        if ((state->sound->keyMap->keyMin & 0x3F) == channel) {
+        if (SOUND_PARAM_CHANNEL(state->sound->keyMap) == channel) {
             evt.common.type = AL_SNDP_UNK_11_EVT;
             evt.common.state = state;
             alEvtqPostEvent(&gSoundPlayerPtr->evtq, (ALEvent *) &evt, 0);
