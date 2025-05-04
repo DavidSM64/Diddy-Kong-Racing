@@ -226,7 +226,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
 void func_800B82B4(LevelModel *, LevelHeader *, s32);
 void func_80025510(s32);
 void func_8002C0C4(s32 modelId);
-void func_800304C8(Vec4f *arg0);
+void func_800304C8(unk8011C8B8 *arg0);
 s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
 s32 func_8002FF6C(s32, unk8011C8B8 *, s32, Vec2f *);
 s32 func_800BDC80(s32, unk8011C3B8 *, unk8011C8B8 *, f32, f32, f32, f32);
