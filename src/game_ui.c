@@ -21,20 +21,6 @@
 #include "joypad.h"
 #include "PRinternal/viint.h"
 
-/************ .rodata ************/
-
-const char D_800E8640[] = "CAN'T";
-const char D_800E8648[] = "SAVE";
-const char D_800E8650[] = "GHOST";
-const char D_800E8658[] = " CONTROLLER";
-const char D_800E8664[] = "PAK";
-const char D_800E8668[] = "FULL";
-const char D_800E8670[] = " CONTROLLER";
-const char D_800E867C[] = "PAK";
-const char D_800E8680[] = "DAMAGED";
-
-/*********************************/
-
 /************ .data ************/
 
 // Unused?
@@ -1397,26 +1383,51 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     if (get_contpak_error() > 0) {
         // has to be defined here to match
         char *SWMessage[3];
+
+#if REGION == REGION_JP
         switch (get_contpak_error()) {
             // Print "CAN'T SAVE GOST"
             case CONTPAK_ERROR_UNKNOWN:
-                SWMessage[2] = D_800E8640;
-                SWMessage[1] = D_800E8648;
-                SWMessage[0] = D_800E8650;
+                SWMessage[2] = D_800E42DC_E4EDC;
+                SWMessage[1] = D_800E42D4_E4ED4;
+                SWMessage[0] = D_800E42C8_E4EC8;
                 break;
             // Print "CONTROLLER PAK FULL"
             case CONTPAK_ERROR_FULL:
-                SWMessage[2] = D_800E8658;
-                SWMessage[1] = D_800E8664;
-                SWMessage[0] = D_800E8668;
+                SWMessage[2] = D_800E42E8_E4EE8;
+                SWMessage[1] = D_800E42EC_E4EEC;
+                SWMessage[0] = D_800E42F4_E4EF4;
                 break;
             // Print "CONTROLLER PAK DAMAGED"
             case CONTPAK_ERROR_DAMAGED:
-                SWMessage[2] = D_800E8670;
-                SWMessage[1] = D_800E867C;
-                SWMessage[0] = D_800E8680;
+                SWMessage[2] = D_800E42FC_E4EFC;
+                SWMessage[1] = D_800E4300_E4F00;
+                SWMessage[0] = D_800E4308_E4F08;
                 break;
         }
+#else
+        switch (get_contpak_error()) {
+            // Print "CAN'T SAVE GOST"
+            case CONTPAK_ERROR_UNKNOWN:
+                SWMessage[2] = "CAN'T";
+                SWMessage[1] = "SAVE";
+                SWMessage[0] = "GHOST";
+                break;
+            // Print "CONTROLLER PAK FULL"
+            case CONTPAK_ERROR_FULL:
+                SWMessage[2] = " CONTROLLER";
+                SWMessage[1] = "PAK";
+                SWMessage[0] = "FULL";
+                break;
+            // Print "CONTROLLER PAK DAMAGED"
+            case CONTPAK_ERROR_DAMAGED:
+                SWMessage[2] = " CONTROLLER";
+                SWMessage[1] = "PAK";
+                SWMessage[0] = "DAMAGED";
+                break;
+        }
+#endif
+
         set_kerning(1);
         set_text_font(ASSET_FONTS_FUNFONT);
         // Draw text shadow.
@@ -3481,8 +3492,187 @@ void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspec
                                                    ((scaledX * angleSin) - (scaledY * angleCos)) + gMinimapDotOffsetY;
 }
 
-// hud_draw_element
-#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/hud_element_render.s")
+void hud_element_render(Gfx **arg0, MatrixS **arg1, Vertex **arg2, HudElement *arg3) {
+    TextureHeader **textureHeader3;
+    TextureHeader *textureHeader2;
+    TextureHeader *textureHeader;
+    ObjectSegment *objSegment;
+    LevelObjectEntry_Hud sp9C;
+    UNUSED s32 pad1;
+    Object *tempObject;
+    HudDrawTexture sp88;
+    UNUSED s32 pad2[3];
+    HudDrawTexture sp70;
+    s32 var_v1;
+    u32 var_v0;
+    s32 spriteID;
+    HudDrawTexture sp58;
+    UNUSED s32 pad3;
+    HudDrawTexture sp48;
+    Sprite *sprite;
+    UNUSED s32 pad4[2];
+    s32 spriteElementId;
+
+    spriteID = arg3->spriteID;
+    spriteElementId = gAssetHudElementIds[spriteID];
+    if ((spriteElementId & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE) {
+        sp9C.unk8 = -gMinimapOpacity;
+    } else {
+        sp9C.unk8 = gMinimapOpacity;
+    }
+
+    if (gAssetHudElements->entry[spriteID] == NULL) {
+        if ((spriteElementId & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE) {
+            gAssetHudElements->entry[arg3->spriteID] = load_texture(spriteElementId & 0x3FFF);
+        } else if (spriteElementId & ASSET_MASK_SPRITE) {
+            gAssetHudElements->entry[arg3->spriteID] = func_8007C12C(spriteElementId & 0x3FFF, 1);
+        } else if (spriteElementId & ASSET_MASK_OBJECT) {
+            sp9C.common.objectID = spriteElementId & 0xFF;
+            sp9C.common.size = ((gAssetHudElementIds[arg3->spriteID] & 0x100) >> 1) | 8;
+            sp9C.common.x = 0;
+            sp9C.common.y = 0;
+            sp9C.common.z = 0;
+            gAssetHudElements->entry[arg3->spriteID] = spawn_object((LevelObjectEntryCommon *) &sp9C, 0);
+        } else {
+            gAssetHudElements->entry[arg3->spriteID] = object_model_init(spriteElementId, 0);
+        }
+
+        spriteID = arg3->spriteID;
+        if (gAssetHudElements->entry[spriteID] == NULL) {
+            return;
+        }
+    }
+
+    gAssetHudElementStaleCounter[spriteID] = 0;
+
+    gHudDL = *arg0;
+    gHudMtx = *arg1;
+    gHudVtx = *arg2;
+    spriteID = arg3->spriteID;
+    if (spriteID != 0x28) {
+        if ((spriteID != 0xE) && (spriteID != 0x1B) && ((spriteID < 0x2F) || (spriteID >= 0x36)) &&
+            (spriteID != 0x2E) && (gMinimapXlu & 1)) {
+            arg3->pos.f[1] += sp9C.unk8;
+        }
+        arg3->pos.f[0] += gHudOffsetX + gHudBounceX;
+    }
+    spriteID = arg3->spriteID;
+    if ((gAssetHudElementIds[spriteID] & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE) {
+        if ((spriteID >= 0x2F) && (spriteID < 0x36)) {
+            if (osTvType == OS_TV_TYPE_PAL) {
+                arg3->pos.f[1] -= 8.0f;
+            }
+
+            if (gMinimapXlu & 2) {
+                var_v1 = (255.0f - ((gMinimapOpacity * 255.0f) / gMinimapOpacityTarget));
+            } else {
+                var_v1 = 0xFF;
+            }
+            spriteID = arg3->spriteID;
+            textureHeader = gAssetHudElements->entry[spriteID];
+            textureHeader =
+                (TextureHeader *) (((u8 *) textureHeader) + arg3->spriteOffset * textureHeader->textureSize);
+            sp88.drawTexture.texture = textureHeader;
+            sp88.drawTexture.xOffset = arg3->pos.f[0];
+            sp88.drawTexture.yOffset = arg3->pos.f[1];
+            sp88.unk8 = 0;
+            if (osTvType == OS_TV_TYPE_PAL) {
+                if (arg3->spriteID == 0x35) {
+                    if (var_v1 == 0xFF) {
+                        var_v0 = -2;
+                    } else {
+                        var_v0 = var_v1 | ~0xFF;
+                    }
+                    sp88.drawTexture.xOffset = 0;
+                    sp88.drawTexture.yOffset = 0;
+                    texrect_draw_scaled(&gHudDL, &sp88.drawTexture, arg3->pos.f[0], arg3->pos.f[1], 1.0f, 1.1f, var_v0,
+                                        1);
+                } else {
+                    texrect_draw(&gHudDL, &sp88.drawTexture, 0, 0, 0xFF, 0xFF, 0xFF, var_v1);
+                }
+            } else {
+                texrect_draw(&gHudDL, &sp88.drawTexture, 0, 0, 0xFF, 0xFF, 0xFF, var_v1);
+            }
+            if (osTvType == OS_TV_TYPE_PAL) {
+                arg3->pos.f[1] += 8.0f;
+            }
+        } else if ((D_80126CD5 != 0) && (osTvType == OS_TV_TYPE_PAL)) {
+            textureHeader = gAssetHudElements->entry[spriteID];
+            textureHeader =
+                (TextureHeader *) (((u8 *) textureHeader) + arg3->spriteOffset * textureHeader->textureSize);
+            sp70.drawTexture.texture = textureHeader;
+            sp70.drawTexture.xOffset = 0;
+            sp70.drawTexture.yOffset = 0;
+            sp70.unk8 = 0;
+            texrect_draw_scaled(&gHudDL, &sp70.drawTexture, arg3->pos.f[0], arg3->pos.f[1], arg3->scale,
+                                arg3->scale * 1.1, gHudColour, 1);
+        } else if (arg3->scale == 1.0) {
+            textureHeader2 = gAssetHudElements->entry[spriteID];
+            textureHeader2 =
+                (TextureHeader *) (((u8 *) textureHeader2) + arg3->spriteOffset * textureHeader2->textureSize);
+            if (gHudColour == -2) {
+                gHudSprites[D_80127180].texture = textureHeader2;
+                gHudSprites[D_80127180].xOffset = arg3->pos.f[0];
+                gHudSprites[D_80127180].yOffset = arg3->pos.f[1];
+                D_80127180++;
+            } else {
+                sp58.drawTexture.texture = textureHeader2;
+                sp58.drawTexture.xOffset = arg3->pos.f[0];
+                sp58.drawTexture.yOffset = arg3->pos.f[1];
+                sp58.unk8 = 0;
+                texrect_draw(&gHudDL, &sp58.drawTexture, 0, 0, (gHudColour >> 0x18) & 0xFF, (gHudColour >> 0x10) & 0xFF,
+                             (gHudColour >> 8) & 0xFF, gHudColour & 0xFF);
+                rendermode_reset(&gHudDL);
+            }
+        } else {
+            textureHeader = gAssetHudElements->entry[spriteID];
+            textureHeader =
+                (TextureHeader *) (((u8 *) textureHeader) + arg3->spriteOffset * textureHeader->textureSize);
+            sp48.drawTexture.texture = textureHeader;
+            sp48.drawTexture.xOffset = 0;
+            sp48.drawTexture.yOffset = 0;
+            sp48.unk8 = 0;
+            texrect_draw_scaled(&gHudDL, &sp48.drawTexture, arg3->pos.f[0], arg3->pos.f[1], arg3->scale, arg3->scale,
+                                gHudColour, 1);
+            rendermode_reset(&gHudDL);
+        }
+    } else if (gAssetHudElementIds[spriteID] & ASSET_MASK_SPRITE) {
+        objSegment = get_active_camera_segment();
+        sprite = gAssetHudElements->entry[arg3->spriteID];
+        arg3->rotation.s[2] -= objSegment->trans.rotation.s[2];
+        render_ortho_triangle_image(&gHudDL, &gHudMtx, &gHudVtx, (ObjectSegment *) arg3, sprite, 0);
+        arg3->rotation.s[2] += objSegment->trans.rotation.s[2];
+    } else if (gAssetHudElementIds[spriteID] & ASSET_MASK_OBJECT) {
+        tempObject = gAssetHudElements->entry[spriteID];
+        tempObject->segment.trans.rotation.x = arg3->rotation.s[0];
+        tempObject->segment.trans.rotation.y = arg3->rotation.s[1];
+        tempObject->segment.trans.rotation.z = arg3->rotation.s[2];
+        tempObject->segment.trans.x_position = arg3->pos.f[0];
+        tempObject->segment.trans.y_position = arg3->pos.f[1];
+        tempObject->segment.trans.z_position = arg3->pos.f[2];
+        tempObject->segment.trans.scale = arg3->scale;
+        tempObject->segment.object.modelIndex = 0;
+        tempObject->segment.object.opacity = 0xFF;
+        render_object(&gHudDL, &gHudMtx, &gHudVtx, tempObject);
+    } else {
+        camera_push_model_mtx(&gHudDL, &gHudMtx, (ObjectTransform *) arg3, 1.0f, 0.0f);
+        if (0) {}
+        textureHeader3 = gAssetHudElements->entry[arg3->spriteID];
+        hud_draw_model((ObjectModel *) *textureHeader3);
+        apply_matrix_from_stack(&gHudDL);
+    }
+    spriteID = arg3->spriteID;
+    if (spriteID != 0x28) {
+        if ((spriteID != 0xE) && (spriteID != 0x1B) && ((spriteID < 0x2F) || (spriteID >= 0x36)) &&
+            (spriteID != 0x2E) && (gMinimapXlu & 1)) {
+            arg3->pos.f[1] -= sp9C.unk8;
+        }
+        arg3->pos.f[0] -= gHudOffsetX + gHudBounceX;
+    }
+    *arg0 = gHudDL;
+    *arg1 = gHudMtx;
+    *arg2 = gHudVtx;
+}
 
 /**
  * Renders a 3D model onscreen.

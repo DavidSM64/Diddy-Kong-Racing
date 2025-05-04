@@ -7,7 +7,7 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of May 4, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 83.68%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 83.97%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 53.79%
 <!-- README_SCORE_SUMMARY_END -->
@@ -121,16 +121,16 @@ As of May 4, 2025, this is our current score:
 ```
  ========================================================
           ADVENTURE ONE (ASM -> C Decompilation)
- -------- 83.68% Complete (85.23% NON_MATCHING) ---------
-               # Decompiled functions: 1875
-                # GLOBAL_ASM remaining: 76
+ -------- 83.97% Complete (85.51% NON_MATCHING) ---------
+               # Decompiled functions: 1876
+                # GLOBAL_ASM remaining: 75
                # NON_MATCHING functions: 8
             # NON_EQUIVALENT WIP functions: 27
  --------------------- Game Status ----------------------
         Balloons: 39/47, Keys: 4/4, Trophies: 4/5
           T.T. Amulets: 4/4, Wizpig Amulets: 4/4
  --------------------------------------------------------
-   We are racing the wizard pig boss Wizpig. (Lap 1/3)
+   We are racing the wizard pig boss Wizpig. (Lap 2/3)
  ========================================================
           ADVENTURE TWO (Cleanup & Documentation)
  ------------------- 53.79% Complete --------------------
