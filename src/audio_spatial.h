@@ -19,6 +19,9 @@ typedef struct floatXYZVals {
 /* Size: 0x180 / 384 bytes */
 typedef struct unk80119C58 {
     /* 0x000 */ u8 unk0_02;
+    /* 0x000 */ u8 unk0_03;
+    /* 0x000 */ u8 unk0_04;
+    /* 0x000 */ u8 unk0_05;
     /* 0x004 */ f32 unk4_floats[30 * 3]; // Should be a Vec3f, but that just doesn't match
     /* 0x16C */ s32 soundID;
     /* 0x170 */ s32 unk170;

@@ -145,7 +145,387 @@ void audioline_reset(void) {
 
 // audioline_ambient
 // Official Name: amPlayAudioMap
+#ifdef NON_EQUVALENT
+void func_80008438(Object **objRacers, s32 numRacers, s32 updateRate) {
+    s32 sp260;
+    s32 sp254;
+    s32 sp250;
+    s32 sp24C;
+    s32 sp248;
+    s32 sp244;
+    f32 sp22C;
+    f32 sp228;
+    f32 sp224;
+    s32 sp1A8;
+    s32 sp12C;
+    s32 spB0;
+    ObjectSegment *spAC;
+    f32 spA8;
+    f32 sp98;
+    f32 sp90;
+    unk80119C58 *sp88;
+    f32 *sp70;
+    ALSoundState *temp_a0_3;
+    ALSoundState *temp_a0_4;
+    ALSoundState *var_a0_3;
+    ObjectSegment *temp_s3;
+    ObjectSegment *var_s3;
+    ObjectSegment *var_s3_2;
+    f32 *var_s4_2;
+    f32 temp_f0;
+    f32 temp_f0_2;
+    f32 temp_f0_3;
+    f32 temp_f0_4;
+    f32 temp_f0_5;
+    f32 temp_f12;
+    f32 temp_f16_3;
+    f32 temp_f20;
+    f32 temp_f20_2;
+    f32 temp_f20_3;
+    f32 temp_f22;
+    f32 temp_f22_2;
+    f32 temp_f22_3;
+    f32 temp_f2;
+    f32 temp_f4;
+    f32 var_f10;
+    f32 var_f10_2;
+    f32 var_f18;
+    f32 var_f24;
+    f32 var_f4;
+    f32 var_f6;
+    s32 *temp_v1_3;
+    s32 *var_s0;
+    s32 *var_s0_2;
+    s32 *var_s1;
+    s32 *var_s1_2;
+    s32 *var_v0_5;
+    s32 *var_v0_6;
+    s32 temp_a0;
+    s32 temp_a0_2;
+    s32 temp_f16;
+    s32 temp_f16_2;
+    s32 temp_f8;
+    s32 temp_t1;
+    s32 temp_t4;
+    s32 temp_v1;
+    s32 temp_v1_2;
+    s32 var_a0;
+    s32 var_a0_2;
+    s32 var_a2;
+    s32 var_at;
+    s32 var_fp;
+    s32 var_fp_2;
+    s32 var_fp_3;
+    s32 var_s2;
+    s32 var_s2_2;
+    s32 var_s4;
+    s32 var_s5;
+    s32 var_s6;
+    s32 var_v0;
+    s32 var_v0_2;
+    s32 var_v0_4;
+    s32 var_v1;
+    s8 var_v1_2;
+    u8 temp_t1_2;
+    u8 temp_t6;
+    u8 temp_t8;
+    u8 temp_t9;
+    u8 temp_t9_2;
+    u8 temp_v0;
+    u8 temp_v0_2;
+    unk80119C58 *var_v0_3;
+    SoundMask *temp_s1;
+    s32 *spB8;
+
+    sp24C = 0;
+    spB0 = set_active_viewports_and_max(get_viewport_count());
+    spAC = get_cutscene_camera_segment();
+    sp260 = 0;
+    if ((s32) gUsedMasks > 0) {
+        var_s4 = 0;
+        do {
+            temp_s1 = *(gSoundMaskHeapUsed + var_s4);
+            sp254 = 0;
+            if (temp_s1->unk11 & 2) {
+                if (spB0 == 1) {
+                    temp_f20 = temp_s1->pos.x - spAC->trans.x_position;
+                    temp_f0 = temp_s1->pos.y - spAC->trans.y_position;
+                    temp_f22 = temp_s1->pos.z - spAC->trans.z_position;
+                    temp_a0 = temp_s1->distance;
+                    temp_f16 = (s32) sqrtf((temp_f20 * temp_f20) + (temp_f0 * temp_f0) + (temp_f22 * temp_f22));
+                    var_at = temp_a0 < temp_f16;
+                    if ((temp_f16 < temp_a0) && (var_at = temp_a0 < temp_f16, (temp_s1->unk12 == 0))) {
+                        if ((temp_s1->soundPtr == NULL) && ((temp_s1->unk22 == 0) || !(temp_s1->unk11 & 4))) {
+                            func_80001F14(temp_s1->soundId, temp_s1 + 24);
+                            temp_s1->unk22 = 1U;
+                        }
+                        if (temp_s1->soundPtr != NULL) {
+                            temp_t8 = temp_s1->pitch;
+                            var_f4 = (f32) temp_t8;
+                            if ((s32) temp_t8 < 0) {
+                                var_f4 += 4294967296.0f;
+                            }
+                            spA8 = var_f4 / 100.0f;
+                            sndp_set_param(temp_s1->soundPtr, 8, temp_s1->volume << 8);
+                            sndp_set_param(temp_s1->soundPtr, 0x10, *((u32 *) &spA8));
+                            var_a2 = func_800090C0(temp_f20, temp_f22, (s32) spAC->trans.rotation.x);
+                            if (spB0 != 1) {
+                                var_a2 = 0x40;
+                            }
+                            sndp_set_param(temp_s1->soundPtr, 4, (u32) var_a2);
+                            audioline_reverb(temp_s1->soundPtr, temp_s1->pos.x, temp_s1->pos.y, temp_s1->pos.z);
+                            sndp_set_priority(temp_s1->soundPtr, temp_s1->unk21);
+                        }
+                        temp_s1->unk12 = 1U;
+                    } else if ((var_at != 0) && (temp_s1->unk12 != 0)) {
+                        temp_s1->unk12 = 0U;
+                    }
+                }
+            } else {
+                var_fp = 0;
+                if (spB0 > 0) {
+                    var_s3 = spAC;
+                    do {
+                        temp_f20_2 = temp_s1->pos.x - var_s3->trans.x_position;
+                        temp_f0_2 = temp_s1->pos.y - var_s3->trans.y_position;
+                        temp_f22_2 = temp_s1->pos.z - var_s3->trans.z_position;
+                        temp_a0_2 = temp_s1->distance;
+                        temp_f8 = (s32) sqrtf((temp_f20_2 * temp_f20_2) + (temp_f0_2 * temp_f0_2) + (temp_f22_2 * temp_f22_2));
+                        if (temp_f8 < temp_a0_2) {
+                            if (temp_s1->unk20 == 0) {
+                                temp_t6 = temp_s1->volume;
+                                var_f18 = (f32) temp_t6;
+                                if ((s32) temp_t6 < 0) {
+                                    var_f18 += 4294967296.0f;
+                                }
+                                var_v0 = (s32) ((1.0f - ((f32) temp_f8 / (f32) temp_a0_2)) * var_f18);
+                            } else {
+                                temp_t9 = temp_s1->volume;
+                                temp_f0_3 = (f32) (temp_a0_2 - temp_f8) / (f32) temp_a0_2;
+                                var_f10 = (f32) temp_t9;
+                                if ((s32) temp_t9 < 0) {
+                                    var_f10 += 4294967296.0f;
+                                }
+                                var_v0 = (s32) (temp_f0_3 * temp_f0_3 * var_f10);
+                            }
+                            if (sp254 < var_v0) {
+                                sp254 = var_v0;
+                                sp250 = func_800090C0(temp_f20_2, temp_f22_2, (s32) var_s3->trans.rotation.x);
+                            }
+                        }
+                        var_fp += 1;
+                        var_s3 += 0x44;
+                    } while (var_fp != spB0);
+                }
+                if (sp254 < (s32) temp_s1->unk10) {
+                    var_f24 = 999999.0f;
+                    var_fp_2 = 0;
+                    if (spB0 > 0) {
+                        var_s3_2 = spAC;
+                        do {
+                            temp_f20_3 = temp_s1->pos.x - var_s3_2->trans.x_position;
+                            temp_f0_4 = temp_s1->pos.y - var_s3_2->trans.y_position;
+                            temp_f22_3 = temp_s1->pos.z - var_s3_2->trans.z_position;
+                            temp_f16_2 = (s32) sqrtf((temp_f20_3 * temp_f20_3) + (temp_f0_4 * temp_f0_4) + (temp_f22_3 * temp_f22_3));
+                            if ((f32) temp_f16_2 < var_f24) {
+                                sp250 = func_800090C0(temp_f20_3, temp_f22_3, (s32) var_s3_2->trans.rotation.x);
+                                var_f24 = (f32) temp_f16_2;
+                            }
+                            var_fp_2 += 1;
+                            var_s3_2 += 0x44;
+                        } while (var_fp_2 != spB0);
+                    }
+                    sp254 = (s32) temp_s1->unk10;
+                }
+                if (sp254 >= 0xB) {
+                    if ((temp_s1->soundPtr == NULL) && ((temp_s1->unk22 == 0) || !(temp_s1->unk11 & 4))) {
+                        func_80001F14(temp_s1->soundId, temp_s1 + 0x18);
+                        temp_s1->unk22 = 1U;
+                    }
+                    if (temp_s1->soundPtr != NULL) {
+                        temp_t1_2 = temp_s1->pitch;
+                        var_f10_2 = (f32) temp_t1_2;
+                        if ((s32) temp_t1_2 < 0) {
+                            var_f10_2 += 4294967296.0f;
+                        }
+                        sp98 = var_f10_2 / 100.0f;
+                        sndp_set_param(temp_s1->soundPtr, 8, sp254 << 8);
+                        sndp_set_param(temp_s1->soundPtr, 0x10, *((u32 *) &sp98));
+                        if (spB0 != 1) {
+                            sp250 = 0x40;
+                        }
+                        sndp_set_param(temp_s1->soundPtr, 4, (u32) sp250);
+                        sndp_set_priority(temp_s1->soundPtr, temp_s1->unk21);
+                        audioline_reverb(temp_s1->soundPtr, temp_s1->pos.x, temp_s1->pos.y, temp_s1->pos.z);
+                    }
+                    var_v0_2 = temp_s1->unk11 & 4;
+                } else {
+                    temp_a0_3 = temp_s1->soundPtr;
+                    if (temp_a0_3 != NULL) {
+                        sndp_stop(temp_a0_3);
+                        var_v0_2 = temp_s1->unk11 & 4;
+                    } else {
+                        temp_s1->unk22 = 1U;
+                        var_v0_2 = temp_s1->unk11 & 4;
+                    }
+                }
+                if ((var_v0_2 != 0) && (temp_s1->unk22 != 0) && (temp_s1->soundPtr == NULL)) {
+                    func_8000A2E8(sp260);
+                }
+            }
+            temp_t1 = sp260 + 1;
+            sp260 = temp_t1;
+            var_s4 += 4;
+        } while (temp_t1 < (s32) gUsedMasks);
+        sp260 = 0;
+    }
+    var_v0_3 = D_80119C58;
+    do {
+        sp88 = var_v0_3;
+        if (var_v0_3->soundID != 0) {
+            sp88 = var_v0_3;
+            if (func_800099EC(var_v0_3->unk0_02/*unksp263*/) != 0) {
+                sp254 = 0;
+                var_fp_3 = 0;
+                if (spB0 > 0) {
+                    sp70 = sp88->unk4_floats;
+                    do {
+                        var_s4_2 = sp70;
+                        var_v1 = sp88->unk170;
+                        var_s5 = 0;
+                        var_s2 = 0;
+                        var_s6 = var_v1;
+                        if (sp88->unk17C > 0) {
+                            var_s0 = &sp1A8;
+                            var_s1 = &sp12C;
+                            temp_s3 = &spAC[var_fp_3];
+                            do {
+                                *var_s0 = audioline_distance(temp_s3->trans.x_position, temp_s3->trans.y_position, temp_s3->trans.z_position, var_s4_2, &sp22C, &sp228, &sp224);
+                                temp_v1 = *var_s0;
+                                *var_s1 = func_800090C0(sp22C - temp_s3->trans.x_position, sp224 - temp_s3->trans.z_position, (s32) temp_s3->trans.rotation.x);
+                                var_s4_2 += 0xC;
+                                if (temp_v1 < var_s6) {
+                                    var_s6 = temp_v1;
+                                }
+                                var_s2 += 1;
+                                var_s0 += 4;
+                                var_s1 += 4;
+                                var_s5 += temp_v1;
+                            } while (var_s2 < var_v0_3->unk17C);
+                            var_v1 = sp88->unk170;
+                        }
+                        temp_f2 = (f32) var_v1;
+                        temp_f12 = (f32) sp88->unk174;
+                        if (sp88->unk17D == 0) {
+                            var_v0_4 = (s32) ((1.0f - ((f32) var_s6 / temp_f2)) * temp_f12);
+                        } else {
+                            temp_f0_5 = (f32) (var_v1 - var_s6) / temp_f2;
+                            var_v0_4 = (s32) (temp_f0_5 * temp_f0_5 * temp_f12);
+                        }
+                        if (var_v0_4 >= sp254) {
+                            sp254 = var_v0_4;
+                            var_v1_2 = sp88->unk17C;
+                            var_a0 = 0;
+                            if (var_v1_2 == 1) {
+                                sp250 = sp12C;
+                            } else {
+                                var_s2_2 = 0;
+                                sp250 = 0;
+                                if (var_v1_2 > 0) {
+                                    var_s0_2 = &sp1A8;
+                                    var_v0_5 = &spB8[0];
+                                    do {
+                                        var_s2_2 += 1;
+                                        temp_v1_2 = var_s5 - *var_s0_2;
+                                        *var_v0_5 = temp_v1_2;
+                                        var_s0_2 += 4;
+                                        var_v0_5 += 4;
+                                        var_a0 += temp_v1_2;
+                                    } while (var_s2_2 < var_v0_3->unk17C);
+                                    var_v1_2 = sp88->unk17C;
+                                }
+                                var_s1_2 = &sp12C;
+                                if (var_v1_2 > 0) {
+                                    var_v0_6 = &spB8[0];
+                                    var_a0_2 = sp250;
+                                    temp_v1_3 = &var_v0_6[var_v0_3->unk17C];
+                                    do {
+                                        temp_f16_3 = (f32) *var_v0_6;
+                                        var_v0_6 += 4;
+                                        temp_f4 = (f32) *var_s1_2;
+                                        var_s1_2 += 4;
+                                        var_a0_2 = (s32) ((f32) var_a0_2 + ((temp_f16_3 / (f32) var_a0) * temp_f4));
+                                    } while ((u32) var_v0_6 < (u32) temp_v1_3);
+                                    sp250 = var_a0_2;
+                                }
+                            }
+                            if (var_s6 < 0x190) {
+                                sp250 = (s32) (((f32) (sp250 - 0x40) * ((f32) var_s6 / 400.0f)) + 64.0f);
+                            }
+                        }
+                        var_fp_3 += 1;
+                    } while (var_fp_3 != spB0);
+                }
+                temp_v0 = sp88->unk0_02;
+                if (temp_v0 == 0) {
+                    temp_v0_2 = sp88->unk175;
+                    if (sp254 < (s32) temp_v0_2) {
+                        sp254 = (s32) temp_v0_2;
+                    }
+                    if (sp254 >= 0xB) {
+                        temp_t9_2 = sp88->unk176;
+                        var_f6 = (f32) temp_t9_2;
+                        if ((s32) temp_t9_2 < 0) {
+                            var_f6 += 4294967296.0f;
+                        }
+                        sp90 = var_f6 / 100.0f;
+                        var_a0_3 = sp88->soundPtr;
+                        if (var_a0_3 == NULL) {
+                            func_80001F14(sp88->soundID, (s32 *) &sp88->soundPtr);
+                            var_a0_3 = sp88->soundPtr;
+                        }
+                        if (var_a0_3 != NULL) {
+                            sndp_set_param(var_a0_3, 8, sp254 << 8);
+                            sndp_set_param(sp88->soundPtr, 0x10, *((u32 *) &sp90));
+                            if (spB0 != 1) {
+                                sp250 = 0x40;
+                            }
+                            sndp_set_param(sp88->soundPtr, 4, (u32) sp250);
+                            sndp_set_priority(sp88->soundPtr, sp88->unk17E);
+                        }
+                    } else {
+                        temp_a0_4 = sp88->soundPtr;
+                        if (temp_a0_4 != NULL) {
+                            sndp_stop(temp_a0_4);
+                        }
+                    }
+                } else if ((temp_v0 == 1) && (sp24C < sp254)) {
+                    sp24C = sp254;
+                    sp248 = sp250;
+                    sp244 = sp88->soundID;
+                }
+            }
+        }
+        temp_t4 = sp260 + 1;
+        sp260 = temp_t4;
+        var_v0_3 = &sp88[1];
+    } while (temp_t4 != 7);
+    if ((sp24C >= 0xB) && ((u8) gAudioLinesOff == 0)) {
+        if (sp244 != music_jingle_current()) {
+            music_jingle_play_safe(var_v0_3->unk0_02/*unksp247*/);
+        }
+        music_jingle_volume_set(var_v0_3->unk0_05/*unksp24F*/);
+        music_jingle_pan_set(var_v0_3->unk0_03/*unksp24B*/);
+    } else {
+        music_jingle_stop();
+    }
+    if (numRacers != 0) {
+        func_80006FC8(objRacers, numRacers, spAC, spB8[0]/*unkspB3*/, updateRate);
+    }
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80008438.s")
+#endif
 
 /**
  * Official Name: amCalcSfxStereo
