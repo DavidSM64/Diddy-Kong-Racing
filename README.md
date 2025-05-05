@@ -9,7 +9,7 @@ As of May 5, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 84.89%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 54.49%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 54.50%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -133,9 +133,9 @@ As of May 5, 2025, this is our current score:
        We are racing in Spacedust Alley. (Lap 1/3)
  ========================================================
           ADVENTURE TWO (Cleanup & Documentation)
- ------------------- 54.49% Complete --------------------
-               # Documented functions: 1154
-              # Undocumented remaining: 500
+ ------------------- 54.50% Complete --------------------
+               # Documented functions: 1155
+              # Undocumented remaining: 499
  --------------------- Game Status ----------------------
         Balloons: 26/47, Keys: 3/4, Trophies: 2/5
           T.T. Amulets: 2/4, Wizpig Amulets: 2/4
