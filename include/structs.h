@@ -11,6 +11,18 @@
 #include "PR/libaudio.h"
 #include "audio.h"
 
+typedef struct Vec4f {
+  union {
+    struct {
+      f32 x;
+      f32 y;
+      f32 z;
+      f32 w;
+    };
+    f32 f[4];
+  };
+} Vec4f;
+
 // Stolen from PD
 // This hacky structure allows coords to be accessed using
 // coord->x, coord->y and coord->z, but also as
@@ -78,17 +90,15 @@ typedef struct Vec3i {
   };
 } Vec3i;
 
-typedef struct Vec4f {
+typedef struct Vec2i {
   union {
-    struct {
-      f32 x;
-      f32 y;
-      f32 z;
-      f32 w;
-    };
-    f32 f[4];
+      struct {
+          s32 x;
+          s32 y;
+      };
+      s32 i[2];
   };
-} Vec4f;
+} Vec2i;
 
 /* Size: 0x24 / 36 bytes */
 typedef struct SoundMask {
@@ -1066,9 +1076,17 @@ typedef struct Object_Boost {
 } Object_Boost;
 
 typedef struct Object_EffectBox {
-  /* 0x000 */ u8 pad0[0x1FE];
-  /* 0x1FE */ u8 unk1FE;
-  /* 0x1FF */ u8 unk1FF;
+  s16 unk0;
+  u8 unk2;
+  u8 unk3;
+  s16 unk4;
+  s16 unk6;
+  s16 unk8;
+  s16 unkA;
+  s16 unkC;
+  s8 unkE[0x1FE - 0xE];
+  u8 unk1FE;
+  u8 unk1FF;
 } Object_EffectBox;
 
 typedef struct Object_EggCreator {

@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of April 30, 2025, this is our current score:
+As of May 5, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 81.70%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 84.46%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 53.79%
 <!-- README_SCORE_SUMMARY_END -->
@@ -117,20 +117,20 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of April 30, 2025, this is our current score:
+As of May 5, 2025, this is our current score:
 ```
  ========================================================
           ADVENTURE ONE (ASM -> C Decompilation)
- -------- 81.70% Complete (84.51% NON_MATCHING) ---------
-               # Decompiled functions: 1867
-                # GLOBAL_ASM remaining: 84
-               # NON_MATCHING functions: 13
+ -------- 84.46% Complete (86.01% NON_MATCHING) ---------
+               # Decompiled functions: 1878
+                # GLOBAL_ASM remaining: 73
+               # NON_MATCHING functions: 8
             # NON_EQUIVALENT WIP functions: 26
  --------------------- Game Status ----------------------
-        Balloons: 39/47, Keys: 4/4, Trophies: 3/5
-          T.T. Amulets: 4/4, Wizpig Amulets: 3/4
+        Balloons: 39/47, Keys: 4/4, Trophies: 4/5
+          T.T. Amulets: 4/4, Wizpig Amulets: 4/4
  --------------------------------------------------------
-  We are racing in the rematch against Smokey. (Lap 3/3)
+   We are racing the wizard pig boss Wizpig. (Lap 3/3)
  ========================================================
           ADVENTURE TWO (Cleanup & Documentation)
  ------------------- 53.79% Complete --------------------

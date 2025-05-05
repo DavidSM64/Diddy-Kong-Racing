@@ -444,7 +444,7 @@ void mode_game(s32 updateRate) {
 #endif
     // Update all objects
     if (!gIsPaused) {
-        func_80010994(updateRate);
+        obj_update(updateRate);
         if (check_if_showing_cutscene_camera() == 0 || get_race_countdown()) {
             if (buttonPressedInputs & START_BUTTON && get_level_property_stack_pos() == 0 &&
                 gDrumstickSceneLoadTimer == 0 && gGameMode == GAMEMODE_INGAME && gPostRaceViewPort == FALSE &&
@@ -910,7 +910,7 @@ void unload_level_menu(void) {
  */
 void update_menu_scene(s32 updateRate) {
     if (bgload_active() == FALSE) {
-        func_80010994(updateRate);
+        obj_update(updateRate);
         gParticlePtrList_flush();
         ainode_update();
         render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);

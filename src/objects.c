@@ -2265,17 +2265,13 @@ void gParticlePtrList_flush(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800101AC.s")
 
-#ifdef NON_MATCHING
-// Minor regalloc diffs
-// obj_update
-void func_80010994(s32 updateRate) {
+void obj_update(s32 updateRate) {
     s32 i;
-    s32 tempVal;
+    s32 j;
     Object_Racer *racer;
-    Object *obj;
-    s32 sp54;
     Object_68 *obj68;
-    UNUSED Object_64 *obj64;
+    s32 sp54;
+    Object *obj;
 
     func_800245B4(-1);
     gEventStartTimer = gEventCountdown;
@@ -2291,14 +2287,12 @@ void func_80010994(s32 updateRate) {
     D_8011AD3D = 0;
     D_8011AD21 = 1 - D_8011AD21;
     D_8011AD22[D_8011AD21] = 0;
-    for (i = 0; i < gNumRacers; i++) {
-        obj = (*gRacers)[i];
-        racer = &obj->unk64->racer;
-        racer->prev_x_position = (f32) (*gRacers)[i]->segment.trans.x_position;
-        racer->prev_y_position = (f32) (*gRacers)[i]->segment.trans.y_position;
-        racer->prev_z_position = (f32) (*gRacers)[i]->segment.trans.z_position;
+    for (j = 0; j < gNumRacers; j++) {
+        racer = &(*gRacers)[j]->unk64->racer;
+        racer->prev_x_position = (f32) (*gRacers)[j]->segment.trans.x_position;
+        racer->prev_y_position = (f32) (*gRacers)[j]->segment.trans.y_position;
+        racer->prev_z_position = (f32) (*gRacers)[j]->segment.trans.z_position;
     }
-    i = 1; // FAKEMATCH
     obj_tick_anims();
     process_object_interactions();
     func_8001E89C();
@@ -2309,8 +2303,8 @@ void func_80010994(s32 updateRate) {
     for (i = 0; i < D_8011AE70; i++) {
         func_8001709C(D_8011AE6C[i]);
     }
-    tempVal = gObjectCount;
-    for (i = gObjectListStart; i < tempVal; i++) {
+    j = gObjectCount;
+    for (i = gObjectListStart; i < j; i++) {
         obj = gObjPtrList[i];
         if (!(obj->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
             if ((obj->behaviorId != BHV_LIGHT_RGBA) && (obj->behaviorId != BHV_WEAPON) &&
@@ -2325,12 +2319,7 @@ void func_80010994(s32 updateRate) {
                 if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
                     for (sp54 = 0; sp54 < obj->segment.header->numberOfModelIds; sp54++) {
                         obj68 = obj->unk68[sp54];
-
-                        // FAKEMATCH
-                        if (!gObjPtrList) {}
-
                         if (obj68 != NULL) {
-                            if (1) {} // FAKEMATCH
                             obj68->objModel->unk52 = updateRate;
                         }
                     }
@@ -2354,7 +2343,7 @@ void func_80010994(s32 updateRate) {
         }
     }
     func_8000BADC(updateRate);
-    for (i = gObjectListStart; i < tempVal; i++) {
+    for (i = gObjectListStart; i < j; i++) {
         obj = gObjPtrList[i];
         if ((!(obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) && (obj->behaviorId == BHV_WEAPON)) ||
             (obj->behaviorId == BHV_FOG_CHANGER)) {
@@ -2362,7 +2351,7 @@ void func_80010994(s32 updateRate) {
         }
     }
     if (gParticleCount > 0) {
-        for (i = gObjectListStart; i < tempVal; i++) {
+        for (i = gObjectListStart; i < j; i++) {
             obj = gObjPtrList[i];
             if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
                 // Why is this object being treated as a Particle?
@@ -2370,48 +2359,50 @@ void func_80010994(s32 updateRate) {
             }
         }
     }
-    do { // FAKEMATCH
-        lightUpdateLights(updateRate);
-        if (get_light_count() > 0) {
-            for (i = gObjectListStart; i < gObjectCount; i++) {
-                obj = gObjPtrList[i];
-                if (!(obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) && (obj->shading != NULL)) {
-                    func_80032C7C(obj);
-                }
+
+    lightUpdateLights(updateRate);
+    if (get_light_count() > 0) {
+        for (i = gObjectListStart; i < gObjectCount; i++) {
+            obj = gObjPtrList[i];
+            if (!(obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) && (obj->shading != NULL)) {
+                func_80032C7C(obj);
             }
         }
-        func_8001E6EC(0);
-        if (gTajRaceInit != 0) {
-            mode_init_taj_race();
+    }
+    func_8001E6EC(0);
+    if (gTajRaceInit != 0) {
+        mode_init_taj_race();
+    }
+    if (gPathUpdateOff == FALSE) {
+        gParticlePtrList_flush();
+        func_80017E98();
+        spectate_update();
+        func_8001E93C();
+    }
+    if (gNumRacers != 0) {
+        if (gRaceEndTimer == 0) {
+            func_80019808(updateRate);
+        } else {
+            race_transition_adventure(updateRate);
         }
-        if (gPathUpdateOff == FALSE) {
-            gParticlePtrList_flush();
-            func_80017E98();
-            spectate_update();
-            func_8001E93C();
-        }
-        if (gNumRacers != 0) {
-            if (gRaceEndTimer == 0) {
-                func_80019808(updateRate);
-            } else {
-                race_transition_adventure(updateRate);
-            }
-        }
-        func_80008438(gRacersByPort, gNumRacers, updateRate);
-        gPathUpdateOff = TRUE;
-        gObjectUpdateRateF = (f32) updateRate;
-        D_8011AD24[0] = 0;
-        D_8011AD53 = 0;
-        transform_player_vehicle();
-        dialogue_try_close();
-        func_800179D0();
-    } while (0); // FAKEMATCH
+    }
+    func_80008438(gRacersByPort, gNumRacers, updateRate);
+    gPathUpdateOff = TRUE;
+    gObjectUpdateRateF = (f32) updateRate;
+    D_8011AD24[0] = 0;
+    D_8011AD53 = 0;
+    transform_player_vehicle();
+    dialogue_try_close();
+    func_800179D0();
+
+    // @fake
+    do {
+    } while (0);
     if (D_8011AF00 == 1) {
         if ((gEventCountdown == 0x50) && (gCutsceneID == 0)) {
             sp54 = 0;
-            for (i = 0; i < MAXCONTROLLERS; i++) {
-                tempVal = input_pressed(i);
-                sp54 |= tempVal;
+            for (j = 0; j < MAXCONTROLLERS; j++) {
+                sp54 |= input_pressed(j);
             }
 
             if (sp54 & A_BUTTON) {
@@ -2424,9 +2415,6 @@ void func_80010994(s32 updateRate) {
         D_8011AF00 = 1;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80010994.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 void func_80011134(Object *arg0, s32 arg1) {
@@ -2459,41 +2447,40 @@ void func_80011134(Object *arg0, s32 arg1) {
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80011134.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-// Probably NON_MATCHING, but not sure.
 // This is a function for doors
 void func_80011264(ObjectModel *model, Object *obj) {
+    Object_64 *obj64;
     s32 current;
     s32 remaining;
     s32 i;
-    Object_Door *door;
     TriangleBatchInfo *batch;
 
-    if (model->unk50 > 0) {
-        batch = &model->batches[0];
-        door = &obj->unk64->door;
-        current = ((door->balloonCount / 10) - 1) << 2;
-        if (model->textures[batch->textureIndex].texture) {} // fakematch
-        if (1) {                                             // fakematch
-            remaining = ((door->balloonCount % 10) << 2);
-        }
-        for (i = 0; i < model->numberOfBatches; i++, batch++) {
-            if (batch->flags & 0x10000) {
-                if (batch->textureIndex != 0xFF) { // 0xFF = No Texture
-                    if (model->textures[batch->textureIndex].texture->numOfTextures > 0x900) {
-                        batch->unk7 = remaining;
-                    } else if (current >= 0) {
-                        batch->unk7 = current;
-                    }
-                    if (door) {} // fakematch
+    if (model->unk50 <= 0) {
+        return;
+    }
+
+    obj64 = obj->unk64;
+    remaining = obj64->door.balloonCount;
+    current = ((remaining / 10) - 1) << 2;
+    remaining = (remaining % 10) << 2;
+    i = 0;
+    batch = model->batches;
+
+    while (i < model->numberOfBatches) {
+        if (batch[i].flags & 0x10000) {
+            if (batch[i].textureIndex != TEX_INDEX_NO_TEXTURE) {
+                // Fakematch
+                if (model->textures[batch[i].textureIndex].texture) {}
+                if ((model->textures[batch[i].textureIndex].texture->numOfTextures) > 0x900) {
+                    batch[i].unk7 = remaining;
+                } else if (current >= 0) {
+                    batch[i].unk7 = current;
                 }
             }
         }
+        i++;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80011264.s")
-#endif
 
 /**
  * Do nothing. Unused.
@@ -5414,7 +5401,6 @@ s32 ainode_find_next(s32 nodeId, s32 arg1, s32 direction) {
     }
 }
 
-#ifdef NON_MATCHING
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     s16 result;
     s32 sp370;
@@ -5498,8 +5484,8 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
                         spD4[sp36C] = spD4[sp36C - 1];
                         spD4[sp36C - 1] = temp;
                         temp = sp54[sp36C];
-                        sp54[sp36C] = sp54[sp36C - 1];
-                        sp54[sp36C - 1] = temp;
+                        sp54[sp36C] = sp54[sp36C - 1] & 0xFF & 0xFF & 0xFF;
+                        sp54[sp36C - 1] = temp & 0xFF;
                         sp36C--;
                     }
                 }
@@ -5515,7 +5501,7 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
             aiNode = &aiNodeObj->unk64->ai_node;
             someBool = 0;
             if (arg1 & 0x100) {
-                if ((arg1 & AINODE_COUNT) == spD4[var_t1]) {
+                if ((arg1 & 0x7F) == spD4[var_t1]) {
                     result = var_s3;
                 }
             } else if (arg1 == aiNodeEntry->unk8) {
@@ -5538,9 +5524,6 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     }
     return result;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001CD28.s")
-#endif
 
 /**
  * Signal that AI nodes exist, so the game knows to initialise them.
@@ -6359,7 +6342,7 @@ void mode_init_taj_race(void) {
         D_8011ADC0 = 1;
         levelHeader->laps = 3;
         levelHeader->race_type = RACETYPE_DEFAULT;
-        func_8009F034();
+        hud_init_element();
         // clang-format off
         for (i = 0; i < ARRAY_COUNT(racer->lap_times); i++) { racer->lap_times[i] = 0; } // Must be a single line.
         // clang-format on
