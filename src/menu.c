@@ -13377,7 +13377,7 @@ void menu_camera_centre(void) {
     cam->trans.z_position = -32.0f;
 
     update_envmap_position(0, 0, -1);
-    func_80066CDC(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    viewport_main(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
     cam->trans.rotation.y_rotation = angleY;
     cam->trans.rotation.x_rotation = angleX;
