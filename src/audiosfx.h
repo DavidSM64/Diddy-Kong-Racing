@@ -122,7 +122,7 @@ ALMicroTime  sndp_voice_handler(void *node);
 void sndp_end(ALSoundState *state);
 u16 sndp_get_state_counts(u16 *numFree, u16 *numAllocated);
 void sndp_set_priority(ALSoundState *sndp, u8 priority);
-ALSoundState *sndp_play(ALBank *bnk, s16 sndIndx, ALSoundState **soundMask);
+ALSoundState *sndp_play(ALBank *bnk, s16 sndIndx, SoundHandle *soundMask);
 void sndp_stop_all_looped(void);
 void sndp_set_param(SoundHandle soundMask, s16 type, u32 volume);
 u16 sndp_get_group_volume(u8 channel);
@@ -132,7 +132,7 @@ void sndp_stop_with_flags(u8 event);
 void sndp_stop(SoundHandle soundMask);
 ALSoundState *sndp_allocate(UNUSED ALBank *arg0, ALSound *arg1);
 void sndp_deallocate(ALSoundState *);
-ALSoundState *sndp_play_with_priority(ALBank *bnk, s16 sndIndx, u8, ALSoundState **soundMask);
+ALSoundState *sndp_play_with_priority(ALBank *bnk, s16 sndIndx, u8 priority, SoundHandle *soundMask);
 void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event);
 
 #endif
