@@ -775,8 +775,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             if (arg3 != 1) {
                                 gRacerSound->unk91[0] = 64;
                             }
-                            sndp_set_param(gRacerSound->unk48[loopCount2], AL_SNDP_PAN_EVT,
-                                           gRacerSound->unk91[0]);
+                            sndp_set_param(gRacerSound->unk48[loopCount2], AL_SNDP_PAN_EVT, gRacerSound->unk91[0]);
                         }
                     }
                 }
