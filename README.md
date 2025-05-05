@@ -7,9 +7,9 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of May 5, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 84.46%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 84.89%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 53.79%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 54.49%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -121,26 +121,26 @@ As of May 5, 2025, this is our current score:
 ```
  ========================================================
           ADVENTURE ONE (ASM -> C Decompilation)
- -------- 84.46% Complete (86.01% NON_MATCHING) ---------
-               # Decompiled functions: 1878
-                # GLOBAL_ASM remaining: 73
+ -------- 84.89% Complete (86.44% NON_MATCHING) ---------
+               # Decompiled functions: 1880
+                # GLOBAL_ASM remaining: 71
                # NON_MATCHING functions: 8
-            # NON_EQUIVALENT WIP functions: 26
+            # NON_EQUIVALENT WIP functions: 25
  --------------------- Game Status ----------------------
         Balloons: 39/47, Keys: 4/4, Trophies: 4/5
           T.T. Amulets: 4/4, Wizpig Amulets: 4/4
  --------------------------------------------------------
-   We are racing the wizard pig boss Wizpig. (Lap 3/3)
+       We are racing in Spacedust Alley. (Lap 1/3)
  ========================================================
           ADVENTURE TWO (Cleanup & Documentation)
- ------------------- 53.79% Complete --------------------
-               # Documented functions: 1138
-              # Undocumented remaining: 516
+ ------------------- 54.49% Complete --------------------
+               # Documented functions: 1154
+              # Undocumented remaining: 500
  --------------------- Game Status ----------------------
         Balloons: 26/47, Keys: 3/4, Trophies: 2/5
           T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  --------------------------------------------------------
- We are battling in Darkwater Beach. (2 opponents remain)
+ We are battling in Darkwater Beach. (1 opponent remains)
  ========================================================
 ```
 <!-- README_SCORE_END -->

@@ -370,7 +370,7 @@ typedef struct HudAudio {
     u16 soundID;
     u8 volume;
     s8 volumeRamp;
-    SoundMask *soundMask;
+    SoundHandle soundMask;
     s32 unk8;
     s8 playerIndex;
     s8 unkD;

@@ -4016,7 +4016,7 @@ void func_80016500(Object *obj, Object_Racer *racer) {
         }
         if (racer->unk1F6 == 0) {
             sound_play(SOUND_CRASH_CHARACTER, &racer->unk220);
-            sound_volume_set_relative(SOUND_CRASH_CHARACTER, (s32 *) racer->unk220, angle);
+            sound_volume_set_relative(SOUND_CRASH_CHARACTER, racer->unk220, angle);
         }
         if (racer->unk1F6 == 0 && angle >= 56) {
             if (!racer->raceFinished) {
@@ -4479,7 +4479,7 @@ void race_transition_adventure(s32 updateRate) {
                 sp30 = i;
             }
             if (racer->magnetSoundMask != NULL) {
-                sound_stop(racer->magnetSoundMask);
+                sndp_stop(racer->magnetSoundMask);
             }
             if (racer->shieldSoundMask != NULL) {
                 func_800096F8(racer->shieldSoundMask);
@@ -4491,7 +4491,7 @@ void race_transition_adventure(s32 updateRate) {
         racer_sound_free((*gRacers)[0]);
         hud_audio_init();
         reset_rocket_sound_timer();
-        sound_stop_all();
+        sndp_stop_all_looped();
         if (is_in_two_player_adventure()) {
             set_scene_viewport_num(0);
             set_active_viewports_and_max(0);
@@ -5997,7 +5997,7 @@ void obj_init_animcamera(Object *arg0, Object *animObj) {
     anim->unk3C = animEntry->fadeAlpha;
     anim->unk42 = 0xFF;
     if (anim->unk18 != NULL) {
-        sound_stop(anim->unk18);
+        sndp_stop(anim->unk18);
     }
     anim->unk18 = NULL;
     anim->unk43 = animEntry->unk30;
