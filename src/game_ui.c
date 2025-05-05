@@ -363,7 +363,11 @@ void hud_init_element(void) {
     gWrongWayNagPrefix = 0;
     gHudSlide = 0;
     gMinimapOpacity = 0;
+#if VERSION == VERSION_80
+    gMinimapOpacityTarget = osTvType == OS_TV_TYPE_PAL ? 0x3D : 0x33;
+#else
     gMinimapOpacityTarget = osTvType == OS_TV_TYPE_PAL ? 0x3C : 0x32;
+#endif
     gMinimapFade = 0;
     gShowHUD = 0;
     D_80126CD5 = 0;
@@ -1628,9 +1632,9 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         switch (get_contpak_error()) {
             // Print "ゴースト セーブ ふかのう" - "Ghost Save Impossible"
             case CONTPAK_ERROR_UNKNOWN:
-                SWMessage[2] = &gHudTimeTrialJp_Ghost;
-                SWMessage[1] = &gHudTimeTrialJp_Save;
-                SWMessage[0] = &gHudTimeTrialJp_Impossible;
+                SWMessage[2] = gHudTimeTrialJp_Ghost;
+                SWMessage[1] = gHudTimeTrialJp_Save;
+                SWMessage[0] = gHudTimeTrialJp_Impossible;
                 break;
             // Print "{blank} パック フル " - "{blank} Pak Full"
             case CONTPAK_ERROR_FULL:
@@ -1640,9 +1644,9 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
                 break;
             // Print "{blank} パック ふりょう" - "{blank} Pak Defective"
             case CONTPAK_ERROR_DAMAGED:
-                SWMessage[1] = &gHudTimeTrialJp_DamagedPak;
-                SWMessage[0] = &gHudTimeTrialJp_Defective;
-                SWMessage[2] = &gHudTimeTrialJp_DamagedBlank;
+                SWMessage[1] = gHudTimeTrialJp_DamagedPak;
+                SWMessage[0] = gHudTimeTrialJp_Defective;
+                SWMessage[2] = gHudTimeTrialJp_DamagedBlank;
                 break;
             default:
                 SWMessage[2] = NULL;
@@ -1670,6 +1674,13 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
                 SWMessage[1] = "PAK";
                 SWMessage[0] = "DAMAGED";
                 break;
+#if VERSION >= VERSION_79
+            default:
+                SWMessage[2] = NULL;
+                SWMessage[1] = NULL;
+                SWMessage[0] = NULL;
+                break;
+#endif
         }
 #endif
 
@@ -1692,7 +1703,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 28, SWMessage[0],
                   ALIGN_MIDDLE_CENTER);
         update_colour_cycle(D_80127194, updateRate);
-        set_kerning(0);
+        set_kerning(FALSE);
     }
 
     sprite_anim_off(FALSE);
