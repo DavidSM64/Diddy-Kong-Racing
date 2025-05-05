@@ -55,7 +55,7 @@ void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5
 s32 func_800099EC(u8 arg0);
 void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, f32 coords[6], u8 red, u8 green, u8 blue);
 void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 updateRate);
-void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z);
+void update_spatial_audio_position(SoundMask *soundMask, f32 x, f32 y, f32 z);
 s32 func_80009AB4(u8 arg0);
 void audioline_init(void);
 void audioline_reverb_create(f32, f32, f32, u8, u8, u8);
