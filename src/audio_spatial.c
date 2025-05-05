@@ -40,7 +40,7 @@ u8 gFreeMasks;
 SoundMask **gSoundMaskHeapFree;
 unk80119C58 D_80119C58[7];
 unk8011A6D8 D_8011A6D8[7]; // Reverb stuff
-s8 gAudioLinesOff;
+u8 gAudioLinesOff;
 s32 D_8011AC1C;
 
 #define SOUND_MASK_HEAP_COUNT 40
@@ -145,33 +145,43 @@ void audioline_reset(void) {
 
 // audioline_ambient
 // Official Name: amPlayAudioMap
-//#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80008438.s")
 void func_80008438(Object **objList, s32 numObjects, s32 updateRate) {
+    s32 viewportCount;
     s32 sp260;
+    s32 fp;
+    s32 s2;
     s32 sp254;
     s32 sp250;
+    s32 sp24C;
+    s32 sp248;
+    s32 sp244;
+    f32 dx, dy, dz;
+    s32 distance;
+    SoundMask* s1;
     f32 sp22C;
     f32 sp228;
     f32 sp224;
-    s32 spB0;
+    s32 s6;
+    s32 v0;
+    s32 sp1A8[29];
+    s32 pan;
+    s32 a0;
+    s32 sp12C[29];
+    s32 spB8[29];
+    s32 s5;
+    s32 spB0; 
     ObjectSegment* spAC;
     f32 spA8;
+    f32 temp;
+    f32 f24;
+    f32 *sp70;
     f32 sp98;
-    SoundMask* s1;
-    f32 dx, dy, dz;
-    s32 distance;
-    s32 pan;
-    s32 fp;
-    s32 v0;
-    s32 s2;
-    s32 sp1A8[1]; // size ?
-    s32 sp12C[1]; // size ?
-    s32 spB8[1]; // size ?
-    s32 s6;
-    s32 s5;
-    s32 a0;
+    s32 unused;
+    f32 sp90;
 
-    spB0 = set_active_viewports_and_max(get_viewport_count());
+    sp24C = 0;
+    viewportCount = get_viewport_count();
+    spB0 = set_active_viewports_and_max(viewportCount);
     spAC = get_cutscene_camera_segment();
 
     for (sp260 = 0; sp260 < gUsedMasks; sp260++) {
@@ -194,7 +204,6 @@ void func_80008438(Object **objList, s32 numObjects, s32 updateRate) {
                         spA8 = s1->pitch / 100.0f;
                         sndp_set_param(s1->soundPtr, AL_SNDP_VOL_EVT, s1->volume * 256);
                         sndp_set_param(s1->soundPtr, AL_SNDP_PITCH_EVT, *(s32*) &spA8);
-                        // sp250 ?
                         pan = func_800090C0(dx, dz, spAC[0].trans.rotation.y_rotation);
                         if (spB0 != 1) {
                             pan = 64;
@@ -219,7 +228,7 @@ void func_80008438(Object **objList, s32 numObjects, s32 updateRate) {
                     if (!s1->unk20) {
                         v0 = (1.0f - (f32)distance / (f32)s1->distance) * s1->volume;
                     } else {
-                        f32 temp = (f32)(s1->distance - distance) / (f32)s1->distance;
+                        temp = (f32)(s1->distance - distance) / (f32)s1->distance;
                         v0 = temp * temp * s1->volume;
                     }
 
@@ -231,7 +240,7 @@ void func_80008438(Object **objList, s32 numObjects, s32 updateRate) {
             }
 
             if (sp254 < s1->unk10) {
-                f32 f24 = 999999.0f;
+                f24 = 999999.0f;
 
                 for (fp = 0; fp < spB0; fp++) {
                     dx = s1->pos.x - spAC[fp].trans.x_position;
@@ -255,7 +264,7 @@ void func_80008438(Object **objList, s32 numObjects, s32 updateRate) {
 
                 if (s1->soundPtr != NULL) {
                     sp98 = s1->pitch / 100.0f;
-                    sndp_set_param(s1->soundPtr, AL_SNDP_VOL_EVT, s1->volume * 256);
+                    sndp_set_param(s1->soundPtr, AL_SNDP_VOL_EVT, sp254 * 256);
                     sndp_set_param(s1->soundPtr, AL_SNDP_PITCH_EVT, *(s32*) &sp98);
                     if (spB0 != 1) {
                         sp250 = 64;
@@ -279,52 +288,102 @@ void func_80008438(Object **objList, s32 numObjects, s32 updateRate) {
     }
 
     for (sp260 = 0; sp260 < 7; sp260++) {
-        if (D_80119C58[sp260].soundID != SOUND_NONE && func_800099EC(sp260)) {
+        unk80119C58* sp88 = &D_80119C58[sp260];
+
+        if (sp88->soundID != SOUND_NONE && func_800099EC(sp260)) {
             sp254 = 0;
 
             for (fp = 0; fp < spB0; fp++) {
+                sp70 = sp88->unk4_floats;
                 s5 = 0;
-                s6 = D_80119C58[sp260].unk170;
-                for (s2 = 0; s2 < D_80119C58[sp260].unk17C; s2++) {
-                    sp1A8[s2] = audioline_distance(spAC[fp].trans.x_position, spAC[fp].trans.y_position, spAC[fp].trans.z_position, &D_80119C58[sp260].unk4_floats[3 * s2], &sp22C, &sp228, &sp224);
+                s6 = sp88->unk170;
+                for (s2 = 0; s2 < sp88->unk17C; s2++) {
+                    sp1A8[s2] = audioline_distance(spAC[fp].trans.x_position, spAC[fp].trans.y_position, spAC[fp].trans.z_position, sp70, &sp22C, &sp228, &sp224);
                     sp12C[s2] = func_800090C0(sp22C - spAC[fp].trans.x_position, sp224 - spAC[fp].trans.z_position, spAC[fp].trans.rotation.y_rotation);
                     if (s6 > sp1A8[s2]) {
                         s6 = sp1A8[s2];
                     }
-                    s5 += sp1A8[s2];
+                    sp70 += 3;
+                    s5 += sp1A8[s2];                    
                 }
 
-                if (!D_80119C58[sp260].unk17D) {
-                    v0 = (1.0f - (f32)s6 / (f32)D_80119C58[sp260].unk170) * D_80119C58[sp260].unk174;
+                if (!sp88->unk17D) {
+                    v0 = (1.0f - (f32)s6 / (f32)sp88->unk170) * sp88->unk174;
                 } else {
-                    f32 temp = (f32)(D_80119C58[sp260].unk170 - s6) / (f32)D_80119C58[sp260].unk170;
-                    v0 = temp * temp * D_80119C58[sp260].unk174;
+                    temp = (f32)(sp88->unk170 - s6) / (f32)sp88->unk170;
+                    v0 = temp * temp * sp88->unk174;
                 }
 
-                if (sp254 < v0) {
+                if (sp254 <= v0) {
                     sp254 = v0;
 
-                    if (D_80119C58[sp260].unk17C == 1) {
+                    if (sp88->unk17C == 1) {
                         sp250 = sp12C[0];
                     } else {
                         a0 = 0;
-                        for (s2 = 0; s2 < D_80119C58[sp260].unk17C; s2++) {
+                        for (s2 = 0; s2 < sp88->unk17C; s2++) {
                             spB8[s2] = s5 - sp1A8[s2];
                             a0 += spB8[s2];
                         }
 
                         sp250 = 0;
-                        for (s2 = 0; s2 < D_80119C58[sp260].unk17C; s2++) {
+                        for (s2 = 0; s2 < sp88->unk17C; s2++) {
                             sp250 += (f32)spB8[s2] / (f32)a0 * (f32)sp12C[s2];
                         }
                     }
 
                     if (s6 < 400) {
-                        sp250 = 
+                        sp250 = (sp250 - 64) * (s6 / 400.0f) + 64;
                     }
                 }
             }
+
+            if (sp88->unk0_02 == 0) {
+                if (sp254 < sp88->unk175) {
+                    sp254 = sp88->unk175;
+                }
+
+                if (sp254 > 10) {
+                    sp90 = sp88->unk176 / 100.0f;
+
+                    if (sp88->soundPtr == NULL) {
+                        func_80001F14(sp88->soundID, &sp88->soundPtr);
+                    }
+    
+                    if (sp88->soundPtr != NULL) {
+                        sndp_set_param(sp88->soundPtr, AL_SNDP_VOL_EVT, sp254 * 256);
+                        sndp_set_param(sp88->soundPtr, AL_SNDP_PITCH_EVT, *(s32*) &sp90);
+                        if (spB0 != 1) {
+                            sp250 = 64;
+                        }
+                        sndp_set_param(sp88->soundPtr, AL_SNDP_PAN_EVT, sp250);
+                        sndp_set_priority(sp88->soundPtr, sp88->unk17E);
+                    }
+                } else {
+                    if (sp88->soundPtr != NULL) {
+                        sndp_stop(sp88->soundPtr);
+                    }
+                }
+            } else if (sp88->unk0_02 == 1 && sp254 > sp24C) {
+                sp24C = sp254;
+                sp248 = sp250;
+                sp244 = sp88->soundID;
+            }
         }
+    }
+
+    if (sp24C > 10 && !gAudioLinesOff) {
+        if (music_jingle_current() != sp244) {
+            music_jingle_play_safe(sp244);
+        }
+        music_jingle_volume_set(sp24C);
+        music_jingle_pan_set(sp248);
+    } else {
+        music_jingle_stop();
+    }
+
+    if (numObjects != 0) {
+        func_80006FC8(objList, numObjects, spAC, spB0, updateRate);
     }
 }
 /**
