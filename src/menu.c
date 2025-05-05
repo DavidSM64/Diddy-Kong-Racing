@@ -3803,7 +3803,7 @@ void menu_audio_options_init(void) {
     transition_begin(&sMenuTransitionFadeOut);
     func_8007FFEC(2);
     gMusicVolumeSliderValue = music_volume_config();
-    gSfxVolumeSliderValue = sndp_get_master_volume();
+    gSfxVolumeSliderValue = sndp_get_global_volume();
     if (gActiveMagicCodes & CHEAT_MUSIC_MENU) { // Check if "JUKEBOX" cheat is active
         gAudioMenuStrings[6].text = gMusicTestString;
         gAudioMenuStrings[3].y = 212;
@@ -3986,7 +3986,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
                     } else if (gSfxVolumeSliderValue > 256) {
                         gSfxVolumeSliderValue = 256;
                     }
-                    sndp_set_master_volume(gSfxVolumeSliderValue);
+                    sndp_set_global_volume(gSfxVolumeSliderValue);
                 } else if (gOptionsMenuItemIndex == 2) {
                     gMusicVolumeSliderValue += contXAxis;
                     if (gMusicVolumeSliderValue < 0) {

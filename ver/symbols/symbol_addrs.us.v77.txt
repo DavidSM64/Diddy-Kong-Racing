@@ -93,14 +93,14 @@ __amDmaNew = 0x80003008;
 __clearAudioDMA = 0x80003040;
 
 //audiosfx.c .text
-sndp_set_master_volume = 0x80003160;
-sndp_get_master_volume = 0x8000317C;
-sndp_set_channel_count = 0x8000318C;
+sndp_set_global_volume = 0x80003160;
+sndp_get_global_volume = 0x8000317C;
+sndp_set_active_sound_limit = 0x8000318C;
 sndp_init_player = 0x800031C0;
 sndp_voice_handler = 0x800033C8;
 sndp_handle_event = 0x80003470;
 sndp_end = 0x8000410C;
-func_8000418C = 0x8000418C;
+sndp_apply_pitch_slide = 0x8000418C;
 sndp_remove_events = 0x800041FC;
 sndp_get_state_counts = 0x800042CC;
 sndp_allocate = 0x80004384;
@@ -111,12 +111,12 @@ sndp_play = 0x80004638;
 sndp_play_with_priority = 0x80004668;
 sndp_stop = 0x8000488C;
 sndp_stop_with_flags = 0x800048D8;
-func_80004998 = 0x80004998;
-func_800049B8 = 0x800049B8;
-sound_stop_all = 0x800049D8;
+sndp_stop_all = 0x80004998;
+sndp_stop_all_retrigger = 0x800049B8;
+sndp_stop_all_looped = 0x800049D8;
 sndp_set_param = 0x800049F8;
-sndp_get_channel_volume = 0x80004A3C;
-sndp_set_channel_volume = 0x80004A60;
+sndp_get_group_volume = 0x80004A3C;
+sndp_set_group_volume = 0x80004A60;
 
 // audio_vehicle.c .text
 func_80004B40 = 0x80004B40;
@@ -2183,7 +2183,7 @@ gFunc80019808Length = 0x800DC694;
 // audiosfx.c .data
 gSoundStateLists = 0x800DC6B0; // size:0xC
 gSoundPlayerPtr = 0x800DC6BC;
-gSoundMasterVolume = 0x800DC6C0;
+gSoundGlobalVolume = 0x800DC6C0;
 gNumActiveSounds = 0x800DC6C4;
 
 // audio_vehicle.c .data
@@ -3670,7 +3670,7 @@ audDMAMessageBuf = 0x80119B08;
 
 // audiosfx .bss
 gSoundPlayer = 0x80119BD0;
-gSoundChannelVolume = 0x80119C28;
+gSoundGroupVolume = 0x80119C28;
 
 // audio_vehicle .bss
 D_80119C30 = 0x80119C30;

@@ -385,11 +385,11 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     }
 
     if (numberOfPlayers == ONE_PLAYER) {
-        sndp_set_channel_count(8);
+        sndp_set_active_sound_limit(8);
     } else if (numberOfPlayers == TWO_PLAYERS) {
-        sndp_set_channel_count(12);
+        sndp_set_active_sound_limit(12);
     } else {
-        sndp_set_channel_count(16);
+        sndp_set_active_sound_limit(16);
     }
     settings = get_settings();
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
@@ -698,7 +698,7 @@ void clear_audio_and_track(void) {
     free_ai_behaviour_table();
     bgdraw_primcolour(0, 0, 0);
     mempool_free(gCurrentLevelHeader);
-    sound_stop_all();
+    sndp_stop_all_looped();
     music_stop();
     music_jingle_stop();
     music_channel_reset_all();

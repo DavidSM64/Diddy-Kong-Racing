@@ -14,7 +14,7 @@ enum AudioVolumeBehaviour {
     VOLUME_UNK03,
 };
 
-typedef ALSoundState* SoundHandle;
+typedef struct ALSoundState* SoundHandle;
 
 /* Size: 0x0A bytes */
 typedef struct SoundData {

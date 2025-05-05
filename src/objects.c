@@ -4504,7 +4504,7 @@ void race_transition_adventure(s32 updateRate) {
         racer_sound_free((*gRacers)[0]);
         hud_audio_init();
         reset_rocket_sound_timer();
-        sound_stop_all();
+        sndp_stop_all_looped();
         if (is_in_two_player_adventure()) {
             set_scene_viewport_num(0);
             set_active_viewports_and_max(0);

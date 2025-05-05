@@ -828,9 +828,9 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     alloc_displaylist_heap(PLAYER_ONE);
     gGameMode = GAMEMODE_MENU;
     gRenderMenu = TRUE;
-    sndp_set_channel_volume(0, 32767);
-    sndp_set_channel_volume(1, 32767);
-    sndp_set_channel_volume(2, 32767);
+    sndp_set_group_volume(0, 32767);
+    sndp_set_group_volume(1, 32767);
+    sndp_set_group_volume(2, 32767);
     camera_init();
 
     if (!gIsLoading) {

@@ -144,13 +144,13 @@ void audio_init(OSSched *sc) {
     audConfig.maxEvents = 150;
     audConfig.maxSounds = 32;
     audConfig.maxChannels = AUDIO_CHANNELS;
-    audConfig.unk10 = 1;
+    audConfig.numGroups = 1;
     audConfig.heap = &gALHeap;
     sndp_init_player(&audConfig);
     audioStartThread();
     sound_volume_change(VOLUME_NORMAL);
     mempool_free(addrPtr);
-    sndp_set_channel_count(10);
+    sndp_set_active_sound_limit(10);
     gBlockMusicChange = FALSE;
     gMusicPlaying = FALSE;
     gJinglePlaying = FALSE;
@@ -172,10 +172,10 @@ void sound_volume_reset(u8 skipReset) {
         if (gSkipResetChannels == FALSE) {
             gGlobalMusicVolume = 256;
             music_volume_set(gMusicBaseVolume);
-            sndp_set_channel_volume(0, gGlobalMusicVolume * 128 - 1);
-            sndp_set_channel_volume(1, gGlobalMusicVolume * 128 - 1);
-            sndp_set_channel_volume(2, gGlobalMusicVolume * 128 - 1);
-            sndp_set_channel_volume(4, gGlobalMusicVolume * 128 - 1);
+            sndp_set_group_volume(0, gGlobalMusicVolume * 128 - 1);
+            sndp_set_group_volume(1, gGlobalMusicVolume * 128 - 1);
+            sndp_set_group_volume(2, gGlobalMusicVolume * 128 - 1);
+            sndp_set_group_volume(4, gGlobalMusicVolume * 128 - 1);
         }
     }
 }
@@ -186,32 +186,32 @@ void sound_volume_reset(u8 skipReset) {
 void sound_volume_change(s32 behaviour) {
     switch (behaviour) {
         case VOLUME_LOWER: // Mute most sound effects and half the volume of music.
-            sndp_set_channel_volume(0, 0);
-            sndp_set_channel_volume(1, 32767);
-            sndp_set_channel_volume(2, 0);
-            sndp_set_channel_volume(4, 0);
+            sndp_set_group_volume(0, 0);
+            sndp_set_group_volume(1, 32767);
+            sndp_set_group_volume(2, 0);
+            sndp_set_group_volume(4, 0);
             alCSPSetVol(gMusicPlayer, (s16) (gMusicBaseVolume * gMusicSliderVolume >> 2));
             alCSPSetVol(gJinglePlayer, 0);
             break;
         case VOLUME_LOWER_AMBIENT: // Mute the ambient channel, making course elements stop making noise.
-            sndp_set_channel_volume(0, 0);
-            sndp_set_channel_volume(1, 32767);
-            sndp_set_channel_volume(2, 32767);
-            sndp_set_channel_volume(4, 32767);
+            sndp_set_group_volume(0, 0);
+            sndp_set_group_volume(1, 32767);
+            sndp_set_group_volume(2, 32767);
+            sndp_set_group_volume(4, 32767);
             break;
         case VOLUME_UNK03:
-            sndp_set_channel_volume(0, 0);
-            sndp_set_channel_volume(1, 32767);
-            sndp_set_channel_volume(2, 0);
-            sndp_set_channel_volume(4, 0);
+            sndp_set_group_volume(0, 0);
+            sndp_set_group_volume(1, 32767);
+            sndp_set_group_volume(2, 0);
+            sndp_set_group_volume(4, 0);
             break;
         default: // Restore sound back to normal.
-            sndp_set_channel_volume(0, 32767);
-            sndp_set_channel_volume(1, 32767);
-            sndp_set_channel_volume(2, 32767);
-            sndp_set_channel_volume(4, 32767);
+            sndp_set_group_volume(0, 32767);
+            sndp_set_group_volume(1, 32767);
+            sndp_set_group_volume(2, 32767);
+            sndp_set_group_volume(4, 32767);
             alCSPSetVol(gMusicPlayer, (s16) (gMusicBaseVolume * gMusicSliderVolume));
-            alCSPSetVol(gJinglePlayer, (s16) (sndp_get_master_volume() * sfxRelativeVolume));
+            alCSPSetVol(gJinglePlayer, (s16) (sndp_get_global_volume() * sfxRelativeVolume));
             break;
     }
     gAudioVolumeSetting = behaviour;
@@ -734,7 +734,7 @@ s32 music_volume_config(void) {
  */
 void music_jingle_volume_set(u8 arg0) {
     sfxRelativeVolume = arg0;
-    alCSPSetVol(gJinglePlayer, (s16) (sndp_get_master_volume() * sfxRelativeVolume));
+    alCSPSetVol(gJinglePlayer, (s16) (sndp_get_global_volume() * sfxRelativeVolume));
 }
 
 /**
@@ -776,7 +776,7 @@ u32 music_jingle_playing(void) {
 UNUSED void sound_channel_volume_all(u16 volume) {
     u32 i;
     for (i = 0; i < 64; i++) {
-        sndp_set_channel_volume(i, volume << 8);
+        sndp_set_group_volume(i, volume << 8);
     }
 }
 
