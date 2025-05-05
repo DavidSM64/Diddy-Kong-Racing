@@ -59,7 +59,7 @@ u8 gBeatStaffGhost = FALSE;
 s8 D_800DC73C = 0;
 s8 D_800DC740 = 0;
 s8 gSwapLeadPlayer = FALSE;
-s8 D_800DC748 = 0;
+s8 D_800DC748 = FALSE;
 s32 D_800DC74C[2] = { 0, 0 }; // Have a feeling these are both the same array.
 s32 D_800DC754[2] = { 0, 0 };
 Object *gShieldEffectObject = NULL;
@@ -700,7 +700,7 @@ void clear_object_pointers(void) {
 void free_all_objects(void) {
     s32 i, len;
     timetrial_free_staff_ghost();
-    D_800DC748 = 0;
+    D_800DC748 = FALSE;
     if (D_800DC71C) {
         rumble_init(TRUE);
     }
