@@ -403,7 +403,7 @@ s32 func_80009AB4(u8 arg0) {
     return ret;
 }
 
-void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z) {
+void audioline_reverb(SoundHandle soundHandle, f32 x, f32 y, f32 z) {
     s32 i;
     s32 j;
     unk8011A6D8 *temp;
@@ -447,8 +447,8 @@ void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z) {
             }
         }
     }
-    if (soundState != NULL) {
-        sndp_set_param((s32) soundState, AL_SNDP_FX_EVT, (u32) volume);
+    if (soundHandle != NULL) {
+        sndp_set_param((SoundHandle) (s32) soundHandle, AL_SNDP_FX_EVT, (u32) volume);
     }
 }
 
@@ -493,7 +493,7 @@ u8 func_80009D6C(unk8011A6D8 *arg0, f32 arg1, f32 arg2, f32 arg3) {
         dz = z2 - z1;
         length = sqrtf((dx * dx) + (dy * dy) + (dz * dz));
 
-        if (arg1 >= x1 && arg1 <= x2 || arg1 >= x2 && arg1 <= x1) {
+        if ((arg1 >= x1 && arg1 <= x2) || (arg1 >= x2 && arg1 <= x1)) {
             if (dx != 0.0f) {
                 f12 = (arg1 - x1) / dx;
             } else if (dy != 0.0f) {

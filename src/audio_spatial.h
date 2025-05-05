@@ -59,7 +59,7 @@ void update_spatial_audio_position(SoundMask *soundMask, f32 x, f32 y, f32 z);
 s32 func_80009AB4(u8 arg0);
 void audioline_init(void);
 void audioline_reverb_create(f32, f32, f32, u8, u8, u8);
-void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z);
+void audioline_reverb(SoundHandle soundHandle, f32 x, f32 y, f32 z);
 
 s32 audioline_distance(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 *outY, f32 *outZ);
 void audioline_reset(void);
