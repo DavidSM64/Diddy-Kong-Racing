@@ -344,15 +344,15 @@ void hud_init_element(void) {
     s32 var_v0;
 
     var_v0 = get_current_level_race_type();
-    if ((var_v0 == 1) || (var_v0 == 5)) {
+    if (var_v0 == RACETYPE_UNK1 || var_v0 == RACETYPE_HUBWORLD) {
         gHudOffsetX = 0;
         gHudRaceStart = 1;
     } else {
         if (gHUDNumPlayers < 2) {
-            gHudOffsetX = 0x140;
+            gHudOffsetX = SCREEN_WIDTH;
             gHudBounceMag = 2.0f;
         } else {
-            gHudOffsetX = 0xC8;
+            gHudOffsetX = SCREEN_WIDTH - 120;
             gHudBounceMag = 2.0f;
         }
         gHudRaceStart = 0;
@@ -364,9 +364,9 @@ void hud_init_element(void) {
     gHudSlide = 0;
     gMinimapOpacity = 0;
 #if VERSION == VERSION_80
-    gMinimapOpacityTarget = osTvType == OS_TV_TYPE_PAL ? 0x3D : 0x33;
+    gMinimapOpacityTarget = osTvType == OS_TV_TYPE_PAL ? 61 : 51;
 #else
-    gMinimapOpacityTarget = osTvType == OS_TV_TYPE_PAL ? 0x3C : 0x32;
+    gMinimapOpacityTarget = osTvType == OS_TV_TYPE_PAL ? 60 : 50;
 #endif
     gMinimapFade = 0;
     gShowHUD = 0;

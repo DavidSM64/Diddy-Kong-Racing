@@ -2333,7 +2333,7 @@ void obj_update(s32 updateRate) {
     for (i = 0; i < gNumRacers; i++) {
         update_player_racer((*gRacers)[i], updateRate);
     }
-    if (get_current_level_race_type() == 0) {
+    if (get_current_level_race_type() == RACETYPE_DEFAULT) {
         for (i = 0; i < gNumRacers; i++) {
             racer = &gRacersByPosition[i]->unk64->racer;
             if (racer->playerIndex != -1) {
