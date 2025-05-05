@@ -2396,7 +2396,8 @@ void obj_update(s32 updateRate) {
     func_800179D0();
 
     // @fake
-    do { } while (0);
+    do {
+    } while (0);
     if (D_8011AF00 == 1) {
         if ((gEventCountdown == 0x50) && (gCutsceneID == 0)) {
             sp54 = 0;
@@ -2446,41 +2447,40 @@ void func_80011134(Object *arg0, s32 arg1) {
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80011134.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-// Probably NON_MATCHING, but not sure.
 // This is a function for doors
 void func_80011264(ObjectModel *model, Object *obj) {
+    Object_64 *obj64;
     s32 current;
     s32 remaining;
     s32 i;
-    Object_Door *door;
     TriangleBatchInfo *batch;
 
-    if (model->unk50 > 0) {
-        batch = &model->batches[0];
-        door = &obj->unk64->door;
-        current = ((door->balloonCount / 10) - 1) << 2;
-        if (model->textures[batch->textureIndex].texture) {} // fakematch
-        if (1) {                                             // fakematch
-            remaining = ((door->balloonCount % 10) << 2);
-        }
-        for (i = 0; i < model->numberOfBatches; i++, batch++) {
-            if (batch->flags & 0x10000) {
-                if (batch->textureIndex != 0xFF) { // 0xFF = No Texture
-                    if (model->textures[batch->textureIndex].texture->numOfTextures > 0x900) {
-                        batch->unk7 = remaining;
-                    } else if (current >= 0) {
-                        batch->unk7 = current;
-                    }
-                    if (door) {} // fakematch
+    if (model->unk50 <= 0) {
+        return;
+    }
+
+    obj64 = obj->unk64;
+    remaining = obj64->door.balloonCount;
+    current = ((remaining / 10) - 1) << 2;
+    remaining = (remaining % 10) << 2;
+    i = 0;
+    batch = model->batches;
+
+    while (i < model->numberOfBatches) {
+        if (batch[i].flags & 0x10000) {
+            if (batch[i].textureIndex != TEX_INDEX_NO_TEXTURE) {
+                // Fakematch
+                if (model->textures[batch[i].textureIndex].texture) {}
+                if ((model->textures[batch[i].textureIndex].texture->numOfTextures) > 0x900) {
+                    batch[i].unk7 = remaining;
+                } else if (current >= 0) {
+                    batch[i].unk7 = current;
                 }
             }
         }
+        i++;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80011264.s")
-#endif
 
 /**
  * Do nothing. Unused.
@@ -5483,7 +5483,7 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
                         temp = spD4[sp36C];
                         spD4[sp36C] = spD4[sp36C - 1];
                         spD4[sp36C - 1] = temp;
-                        temp = sp54[sp36C] ;
+                        temp = sp54[sp36C];
                         sp54[sp36C] = sp54[sp36C - 1] & 0xFF & 0xFF & 0xFF;
                         sp54[sp36C - 1] = temp & 0xFF;
                         sp36C--;
@@ -6342,7 +6342,7 @@ void mode_init_taj_race(void) {
         D_8011ADC0 = 1;
         levelHeader->laps = 3;
         levelHeader->race_type = RACETYPE_DEFAULT;
-        func_8009F034();
+        hud_init_element();
         // clang-format off
         for (i = 0; i < ARRAY_COUNT(racer->lap_times); i++) { racer->lap_times[i] = 0; } // Must be a single line.
         // clang-format on
