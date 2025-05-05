@@ -69,7 +69,7 @@ s32 alAuxBusParam(void *filter, s32 paramID, void *param) {
     
 }
 
-void func_80065A80(ALSynth *arg0, PVoice *arg1, s16 arg2) {
+void func_80065A80(ALSynth *arg0, struct PVoice_s *arg1, s16 arg2) {
     if (arg2 != arg1->unkDC) {
         alAuxBusParam(&arg0->auxBus[arg1->unkDC], AL_FILTER_UNK11, &arg1->envmixer);
         alAuxBusParam(&arg0->auxBus[arg2], AL_FILTER_ADD_SOURCE, &arg1->envmixer);

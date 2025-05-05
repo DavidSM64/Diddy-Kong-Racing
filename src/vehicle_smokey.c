@@ -106,7 +106,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->segment.animFrame = animFrame;
     if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_SMOKEY_DAMAGE) {
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
-        sound_play(SOUND_EXPLOSION, 0);
+        sound_play(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         obj->segment.object.animationID = ANIM_SMOKEY_DAMAGE;
         obj->segment.x_velocity *= 0.27;

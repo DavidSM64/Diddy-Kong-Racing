@@ -100,7 +100,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         obj->segment.object.animationID = ANIM_BUBBLER_DAMAGE;
         obj->segment.y_velocity += 7.5;
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
-        sound_play(SOUND_EXPLOSION, 0);
+        sound_play(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         racer->velocity *= 0.3;
         racer->animationSpeed = 0.0f;
