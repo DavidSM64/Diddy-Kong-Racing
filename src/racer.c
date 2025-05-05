@@ -3523,19 +3523,19 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
                                  obj->segment.trans.z_position);
             }
             if (racer->unk14) {
-                sndp_stop((s32) racer->unk14); // type cast requierd to match
+                sndp_stop((s32) racer->unk14); // type cast required to match
             }
         } else {
             if (racer->unk10) {
-                sndp_stop((s32) racer->unk10); // type cast requierd to match
+                sndp_stop((s32) racer->unk10); // type cast required to match
             }
         }
     } else {
         if (racer->unk10) {
-            sndp_stop((s32) racer->unk10); // type cast requierd to match
+            sndp_stop((s32) racer->unk10); // type cast required to match
         }
         if (racer->unk14) {
-            sndp_stop((s32) racer->unk14); // type cast requierd to match
+            sndp_stop((s32) racer->unk14); // type cast required to match
         }
     }
     // Velocity of steering input
@@ -3714,7 +3714,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         sound_play(surfaceType, &racer->unk18);
     }
     if (racer->unk18 != 0 && (surfaceType == SOUND_NONE || racer->velocity > -2.0)) {
-        sndp_stop((s32) racer->unk18); // type cast requierd to match
+        sndp_stop((s32) racer->unk18); // type cast required to match
     }
     // Apply a bobbing effect when on grass and sand.
     if (racer->velocity < -2.0 && sp68 >= 4) {
@@ -4170,13 +4170,13 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
         racer->x_rotation_vel += (angle >> 3); //!@Delta
     }
     if (racer->unk18) {
-        sndp_stop((s32) racer->unk18); // type cast requierd to match
+        sndp_stop((s32) racer->unk18); // type cast required to match
     }
     if (racer->unk10) {
-        sndp_stop((s32) racer->unk10); // type cast requierd to match
+        sndp_stop((s32) racer->unk10); // type cast required to match
     }
     if (racer->unk14) {
-        sndp_stop((s32) racer->unk14); // type cast requierd to match
+        sndp_stop((s32) racer->unk14); // type cast required to match
     }
     if (racer->unk1FE == 1 || racer->unk1FE == 3) {
         racer->unk1E8 = racer->steerAngle;
