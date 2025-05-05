@@ -227,7 +227,7 @@ u8 gWrongWayNagPrefix;
 ALSoundState *gRaceStartSoundMask;
 SoundHandle gHUDVoiceSoundMask;
 ALSoundState *gHudBalloonSoundMask;
-s16 D_80126D48;
+u16 D_80126D48;
 s32 D_80126D4C;
 s32 D_80126D50;
 u8 gMinimapRed;
