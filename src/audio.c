@@ -66,9 +66,9 @@ ALCSeq gJingleSequence;
 u8 gSkipResetChannels; // Stored and used by a single function, but redundant.
 u8 gAudioVolumeSetting;
 u32 gDynamicMusicChannelMask;
-ALSoundState *gGlobalSoundMask;
-ALSoundState *gSpatialSoundMask;
-ALSoundState *gRacerSoundMask;
+SoundHandle gGlobalSoundMask;
+SoundHandle gSpatialSoundMask;
+SoundHandle gRacerSoundMask;
 
 /******************************/
 

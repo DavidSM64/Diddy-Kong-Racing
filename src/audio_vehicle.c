@@ -732,10 +732,10 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                         audioline_reverb((s32 *) gRacerSound->unk50, objs[loopCount1]->segment.trans.x_position,
                                          objs[loopCount1]->segment.trans.y_position,
                                          objs[loopCount1]->segment.trans.z_position);
-                        sndp_set_param((s32) gRacerSound->unk50, AL_SNDP_VOL_EVT, temp_s3 << 8);
-                        sndp_set_param((s32) gRacerSound->unk50, AL_SNDP_PITCH_EVT, *((u32 *) &sp8C));
-                        sndp_set_priority((ALSoundState *) gRacerSound->unk50, 80);
-                        sndp_set_param((s32) gRacerSound->unk50, AL_SNDP_PAN_EVT, gRacerSound->unk91[0]);
+                        sndp_set_param(gRacerSound->unk50, AL_SNDP_VOL_EVT, temp_s3 << 8);
+                        sndp_set_param(gRacerSound->unk50, AL_SNDP_PITCH_EVT, *((u32 *) &sp8C));
+                        sndp_set_priority(gRacerSound->unk50, 80);
+                        sndp_set_param(gRacerSound->unk50, AL_SNDP_PAN_EVT, gRacerSound->unk91[0]);
                     }
                 } else if (gRacerSound->unk50 != NULL) {
                     sndp_stop(gRacerSound->unk50);
@@ -769,13 +769,13 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             audioline_reverb(
                                 (s32 *) gRacerSound->unk48[loopCount2], objs[loopCount1]->segment.trans.x_position,
                                 objs[loopCount1]->segment.trans.y_position, objs[loopCount1]->segment.trans.z_position);
-                            sndp_set_param((s32) gRacerSound->unk48[loopCount2], AL_SNDP_VOL_EVT, temp_s3 << 8);
-                            sndp_set_param((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PITCH_EVT, *((u32 *) &sp8C));
-                            sndp_set_priority((ALSoundState *) gRacerSound->unk48[loopCount2], 80);
+                            sndp_set_param(gRacerSound->unk48[loopCount2], AL_SNDP_VOL_EVT, temp_s3 << 8);
+                            sndp_set_param(gRacerSound->unk48[loopCount2], AL_SNDP_PITCH_EVT, *((u32 *) &sp8C));
+                            sndp_set_priority(gRacerSound->unk48[loopCount2], 80);
                             if (arg3 != 1) {
                                 gRacerSound->unk91[0] = 64;
                             }
-                            sndp_set_param((s32) gRacerSound->unk48[loopCount2], AL_SNDP_PAN_EVT,
+                            sndp_set_param(gRacerSound->unk48[loopCount2], AL_SNDP_PAN_EVT,
                                            gRacerSound->unk91[0]);
                         }
                     }
@@ -911,13 +911,13 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             if (temp->unk48[0] != NULL) {
                                 audioline_reverb((s32 *) temp->unk48[0], temp->racerPos.x, temp->racerPos.y,
                                                  temp->racerPos.z);
-                                sndp_set_param((s32) temp->unk48[0], AL_SNDP_VOL_EVT, temp->unk88 << 8);
-                                sndp_set_param((s32) temp->unk48[0], AL_SNDP_PITCH_EVT, *((u32 *) &temp->unk8C));
+                                sndp_set_param(temp->unk48[0], AL_SNDP_VOL_EVT, temp->unk88 << 8);
+                                sndp_set_param(temp->unk48[0], AL_SNDP_PITCH_EVT, *((u32 *) &temp->unk8C));
                                 if (arg3 != 1) {
                                     temp->unk91[0] = 64;
                                 }
-                                sndp_set_param((s32) temp->unk48[0], AL_SNDP_PAN_EVT, temp->unk91[0]);
-                                sndp_set_priority((ALSoundState *) temp->unk48[0], 70);
+                                sndp_set_param(temp->unk48[0], AL_SNDP_PAN_EVT, temp->unk91[0]);
+                                sndp_set_priority(temp->unk48[0], 70);
                             }
                         }
                     }
