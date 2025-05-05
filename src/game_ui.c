@@ -146,29 +146,29 @@ u32 gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
 
 #if REGION == REGION_JP
 // ゴースト  -  Ghost
-char D_800E42C8_E4EC8[] = { 0x80, 0x80, 0x80, 0x3B, 0x80, 0x5C, 0x80, 0x63, 0x00, 0x00 };
+char gHudTimeTrialJp_Ghost[] = { 0x80, 0x80, 0x80, 0x3B, 0x80, 0x5C, 0x80, 0x63, 0x00, 0x00 };
 
 // セーブ  -  Save
-char D_800E42D4_E4ED4[] = { 0x80, 0x5D, 0x80, 0x3B, 0x80, 0x8D };
+char gHudTimeTrialJp_Save[] = { 0x80, 0x5D, 0x80, 0x3B, 0x80, 0x8D };
 
 // ふかのう - Impossible
-char D_800E42DC_E4EDC[] = { 0x80, 0xD5, 0x80, 0xBF, 0x80, 0xD2, 0x80, 0xBC, 0x00, 0x00 };
+char gHudTimeTrialJp_Impossible[] = { 0x80, 0xD5, 0x80, 0xBF, 0x80, 0xD2, 0x80, 0xBC, 0x00, 0x00 };
 
-char D_800E42E8_E4EE8[] = { 0x00, 0x00, 0x00, 0x00 };
+char gHudTimeTrialJp_FullBlank[] = { 0x00, 0x00, 0x00, 0x00 };
 
 // パック  -  Pak
-char D_800E42EC_E4EEC[] = { 0x80, 0x90, 0x80, 0x4A, 0x80, 0x57 };
+char gHudTimeTrialJp_FullPak[] = { 0x80, 0x90, 0x80, 0x4A, 0x80, 0x57 };
 
 // フル  -  Full
-char D_800E42F4_E4EF4[] = { 0x80, 0x6B, 0x80, 0x78, 0x00, 0x00 };
+char gHudTimeTrialJp_Full[] = { 0x80, 0x6B, 0x80, 0x78, 0x00, 0x00 };
 
-char D_800E42FC_E4EFC[] = { 0x00, 0x00, 0x00, 0x00 };
+char gHudTimeTrialJp_DamagedBlank[] = { 0x00, 0x00, 0x00, 0x00 };
 
 // パック  -  Pak
-char D_800E4300_E4F00[] = { 0x80, 0x90, 0x80, 0x4A, 0x80, 0x57 };
+char gHudTimeTrialJp_DamagedPak[] = { 0x80, 0x90, 0x80, 0x4A, 0x80, 0x57 };
 
 // ふりょう  - Defective
-char D_800E4308_E4F08[] = { 0x80, 0xD5, 0x80, 0xE1, 0x80, 0xB7, 0x80, 0xBC, 0x00, 0x00 };
+char gHudTimeTrialJp_Defective[] = { 0x80, 0xD5, 0x80, 0xE1, 0x80, 0xB7, 0x80, 0xBC, 0x00, 0x00 };
 #endif
 
 UNUSED f32 sRecordVel = 0.0f; // Set to whatever the highest velocity recorded is, but never actually used.
@@ -1391,6 +1391,7 @@ void hud_main_hub(Object *obj, s32 updateRate) {
     }
 }
 
+#if REGION != REGION_JP
 void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     s32 i;
     s32 spB8;
@@ -1625,23 +1626,28 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
 
 #if REGION == REGION_JP
         switch (get_contpak_error()) {
-            // Print "CAN'T SAVE GOST"
+            // Print "ゴースト セーブ ふかのう" - "Ghost Save Impossible"
             case CONTPAK_ERROR_UNKNOWN:
-                SWMessage[2] = D_800E42DC_E4EDC;
-                SWMessage[1] = D_800E42D4_E4ED4;
-                SWMessage[0] = D_800E42C8_E4EC8;
+                SWMessage[2] = &gHudTimeTrialJp_Ghost;
+                SWMessage[1] = &gHudTimeTrialJp_Save;
+                SWMessage[0] = &gHudTimeTrialJp_Impossible;
                 break;
-            // Print "CONTROLLER PAK FULL"
+            // Print "{blank} パック フル " - "{blank} Pak Full"
             case CONTPAK_ERROR_FULL:
-                SWMessage[2] = D_800E42E8_E4EE8;
-                SWMessage[1] = D_800E42EC_E4EEC;
-                SWMessage[0] = D_800E42F4_E4EF4;
+                SWMessage[1] = gHudTimeTrialJp_FullBlank;
+                SWMessage[0] = gHudTimeTrialJp_FullPak;
+                SWMessage[2] = gHudTimeTrialJp_Full;
                 break;
-            // Print "CONTROLLER PAK DAMAGED"
+            // Print "{blank} パック ふりょう" - "{blank} Pak Defective"
             case CONTPAK_ERROR_DAMAGED:
-                SWMessage[2] = D_800E42FC_E4EFC;
-                SWMessage[1] = D_800E4300_E4F00;
-                SWMessage[0] = D_800E4308_E4F08;
+                SWMessage[1] = &gHudTimeTrialJp_DamagedPak;
+                SWMessage[0] = &gHudTimeTrialJp_Defective;
+                SWMessage[2] = &gHudTimeTrialJp_DamagedBlank;
+                break;
+            default:
+                SWMessage[2] = NULL;
+                SWMessage[1] = NULL;
+                SWMessage[0] = NULL;
                 break;
         }
 #else
@@ -1667,7 +1673,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         }
 #endif
 
-        set_kerning(1);
+        set_kerning(TRUE);
         set_text_font(ASSET_FONTS_FUNFONT);
         // Draw text shadow.
         set_text_colour(0, 0, 0, 255, 255);
@@ -1691,6 +1697,9 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
 
     sprite_anim_off(FALSE);
 }
+#else
+#pragma GLOBAL_ASM("asm/nonmatchings/game_ui/hud_main_time_trial.s")
+#endif
 
 void hud_stopwatch_face(u8 arg0, u8 arg1, u8 faceID, u8 arg3, u8 arg4) {
     s32 var_a3;

@@ -2758,6 +2758,15 @@ gHudLapColours = 0x800E423C;
 gHudIndicatorTimer = 0x800E4248;
 gHudMinimapColours = 0x800E424C;
 gHudColour = 0x800E42C4;
+gHudTimeTrialJp_Ghost = 0x800E42C8;
+gHudTimeTrialJp_Save = 0x800E42D4;
+gHudTimeTrialJp_Impossible = 0x800E42DC;
+gHudTimeTrialJp_FullBlank = 0x800E42E8;
+gHudTimeTrialJp_FullPak = 0x800E42EC;
+gHudTimeTrialJp_Full = 0x800E42F4;
+gHudTimeTrialJp_DamagedBlank = 0x800E42FC;
+gHudTimeTrialJp_DamagedPak = 0x800E4300;
+gHudTimeTrialJp_Defective = 0x800E4308;
 sRecordVel = 0x800E4314;
 D_800E283C = 0x800E4318;
 
