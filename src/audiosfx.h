@@ -131,10 +131,8 @@ void sndp_apply_pitch_slide(ALSoundState *voiceState);
 void sndp_stop_with_flags(u8 event);
 void sndp_stop(SoundHandle soundMask);
 ALSoundState *sndp_allocate(UNUSED ALBank *arg0, ALSound *arg1);
-
-// Non Matching
 void sndp_deallocate(ALSoundState *);
-ALSoundState * sndp_play_with_priority(ALBank *bnk, s16 sndIndx, u8, ALSoundState **soundMask);
+ALSoundState *sndp_play_with_priority(ALBank *bnk, s16 sndIndx, u8, ALSoundState **soundMask);
 void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event);
 
 #endif
