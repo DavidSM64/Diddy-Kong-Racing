@@ -4013,7 +4013,7 @@ void func_800304C8(unk8011C8B8 *arg0) {
     temp = (gNewShadowObj->segment.trans.z_position - arg0[1].z);
 
     if ((((gNewShadowObj->segment.trans.x_position - arg0[0].x) * (arg0[1].z - arg00z)) -
-         ((arg0[1].x - arg0[0].x) * (((0, gNewShadowObj->segment.trans.z_position)) -arg00z))) >= compare) {
+         ((arg0[1].x - arg0[0].x) * (((0, gNewShadowObj->segment.trans.z_position)) - arg00z))) >= compare) {
         found1 = TRUE;
     }
     if ((((gNewShadowObj->segment.trans.x_position - arg0[1].x) * (arg0[2].z - arg0[1].z)) -

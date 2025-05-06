@@ -311,7 +311,6 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
          (gSoundRacerObj->velocity > -0.1) || (gSoundRacerObj->vehicleID == 4)) &&
         (gRacerSound->unkA8 != 0)) {
         sndp_stop(gRacerSound->unkA8);
-        sndp_stop(gRacerSound->unkA8);
         gRacerSound->unkA8 = 0;
     } else if ((buttonsPressed & B_BUTTON) && (gRacerSound->unkA8 == 0) && (gSoundRacerObj->playerIndex >= 0)) {
         if (gSoundRacerObj->velocity < 0.0f) {
