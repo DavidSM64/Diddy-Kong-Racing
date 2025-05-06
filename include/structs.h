@@ -950,7 +950,6 @@ typedef struct Object_Animation {
   /* 0x10 */ f32 y;
   /* 0x14 */ f32 z; 
   /* 0x18 */ SoundHandle unk18; 
-  /* 0x18 */ SoundHandle unk18; 
   /* 0x1C */ struct Object *unk1C;
   /* 0x20 */ s32 unk20;
   /* 0x24 */ s16 unk24;

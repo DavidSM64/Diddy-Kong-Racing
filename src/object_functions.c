@@ -151,7 +151,7 @@ void obj_loop_scenery(Object *obj, s32 updateRate) {
         }
         if (obj->interactObj->flags & INTERACT_FLAGS_COLLIDED && properties->hitTimer <= 0) {
             audspat_play_sound_at_position(SOUND_TWANG, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                   obj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
+                                           obj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
             properties->interactObj = obj->interactObj->obj;
             properties->angleVel = 0x71C;
             properties->hitTimer = 10;
@@ -310,7 +310,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                 sndp_stop(soundMask);
             }
             audspat_play_sound_at_position(SOUND_POP, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                   obj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
+                                           obj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
             free_object(obj);
         }
     }
@@ -381,8 +381,9 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
             spawnObj.z = obj->segment.trans.z_position;
             spawnObj.size = sizeof(LevelObjectEntryCommon);
             spawnObj.objectID = ASSET_OBJECT_ID_LASERBOLT;
-            audspat_play_sound_at_position(SOUND_LASER_GUN, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                   obj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
+            audspat_play_sound_at_position(SOUND_LASER_GUN, obj->segment.trans.x_position,
+                                           obj->segment.trans.y_position, obj->segment.trans.z_position,
+                                           AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
             laserBoltObj = spawn_object(&spawnObj, 1);
             if (laserBoltObj != NULL) {
                 laserBoltObj->segment.level_entry = NULL;
@@ -1943,8 +1944,9 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                                 guMtxXFMF(laserMtx, 0.0f, 0.0f, -30.0f, &newObj->segment.x_velocity,
                                           &newObj->segment.y_velocity, &newObj->segment.z_velocity);
                                 audspat_play_sound_at_position(SOUND_LASER_GUN, wizShipObj->segment.trans.x_position,
-                                                       wizShipObj->segment.trans.y_position,
-                                                       wizShipObj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
+                                                               wizShipObj->segment.trans.y_position,
+                                                               wizShipObj->segment.trans.z_position,
+                                                               AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
                             }
                         }
                     }
@@ -2021,8 +2023,9 @@ void obj_loop_snowball(Object *obj, s32 updateRate) {
     }
     if (obj64->currentSound != SOUND_NONE) {
         if (obj64->soundMask == NULL) {
-            audspat_play_sound_at_position(obj64->currentSound, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                   obj->segment.trans.z_position, AUDIO_POINT_FLAG_1, (AudioPoint **) &obj64->soundMask);
+            audspat_play_sound_at_position(obj64->currentSound, obj->segment.trans.x_position,
+                                           obj->segment.trans.y_position, obj->segment.trans.z_position,
+                                           AUDIO_POINT_FLAG_1, (AudioPoint **) &obj64->soundMask);
         } else {
             audspat_point_set_position((AudioPoint *) obj64->soundMask, obj->segment.trans.x_position,
                                        obj->segment.trans.y_position, obj->segment.trans.z_position);
@@ -2497,7 +2500,8 @@ void obj_loop_dino_whale(Object *obj, s32 updateRate) {
         if (obj->properties.common.unk0 == 0) {
             obj->properties.common.unk0 = 60;
             audspat_play_sound_at_position(SOUND_VOICE_BRONTO_ROAR, obj->segment.trans.x_position,
-                                   obj->segment.trans.y_position, obj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
+                                           obj->segment.trans.y_position, obj->segment.trans.z_position,
+                                           AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
         }
     }
 }
@@ -3331,9 +3335,9 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
                     if (temp < 0.0f) {
                         if (racer->bananas < 10) {
                             racer->bananas = 10;
-                            audspat_play_sound_at_position(SOUND_SELECT, racerObj->segment.trans.x_position,
-                                                   racerObj->segment.trans.y_position,
-                                                   racerObj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
+                            audspat_play_sound_at_position(
+                                SOUND_SELECT, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position,
+                                racerObj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
                             sound_play_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position,
                                                racerObj->segment.trans.y_position, racerObj->segment.trans.z_position,
                                                NULL);
@@ -3698,8 +3702,8 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
         if (playSound) {
             if (door->soundMask == NULL) {
                 audspat_play_sound_at_position(SOUND_DOOR_OPEN, doorObj->segment.trans.x_position,
-                                       doorObj->segment.trans.y_position, doorObj->segment.trans.z_position, AUDIO_POINT_FLAG_1,
-                                       &door->soundMask);
+                                               doorObj->segment.trans.y_position, doorObj->segment.trans.z_position,
+                                               AUDIO_POINT_FLAG_1, &door->soundMask);
             }
         } else {
             door->openDir = DOOR_CLOSED;
@@ -3839,8 +3843,9 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     }
     if (openDoor) {
         if (ttDoor->soundMask == NULL) {
-            audspat_play_sound_at_position(SOUND_DOOR_OPEN, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                   obj->segment.trans.z_position, 1, &ttDoor->soundMask);
+            audspat_play_sound_at_position(SOUND_DOOR_OPEN, obj->segment.trans.x_position,
+                                           obj->segment.trans.y_position, obj->segment.trans.z_position, 1,
+                                           &ttDoor->soundMask);
         }
     } else if (ttDoor->soundMask != NULL) {
         audspat_point_stop((AudioPoint *) ((s32) ttDoor->soundMask));
@@ -4433,8 +4438,8 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
                 if (get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS || racer->bananas < 2) {
                     prevSoundMask = racer->bananaSoundMask;
                     audspat_play_sound_at_position(SOUND_SELECT, racerObj->segment.trans.x_position,
-                                           racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 4,
-                                           &racer->bananaSoundMask);
+                                                   racerObj->segment.trans.y_position,
+                                                   racerObj->segment.trans.z_position, 4, &racer->bananaSoundMask);
                     if (prevSoundMask) {
                         audspat_point_stop(prevSoundMask);
                     }
@@ -4740,8 +4745,8 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                     }
                     if (racer->playerIndex == PLAYER_COMPUTER) {
                         audspat_play_sound_at_position(SOUND_BALLOON_POP, weaponBalloonObj->segment.trans.x_position,
-                                               weaponBalloonObj->segment.trans.y_position,
-                                               weaponBalloonObj->segment.trans.z_position, 4, NULL);
+                                                       weaponBalloonObj->segment.trans.y_position,
+                                                       weaponBalloonObj->segment.trans.z_position, 4, NULL);
                     } else {
                         if (levelMask == racer->balloon_level) {
                             if (racer->raceFinished == FALSE) {
@@ -4754,9 +4759,9 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                                     sound_play(SOUND_COLLECT_ITEM + prevBalloonQuantity, NULL);
                                 } else {
                                     audspat_play_sound_at_position(SOUND_BALLOON_POP,
-                                                           weaponBalloonObj->segment.trans.x_position,
-                                                           weaponBalloonObj->segment.trans.y_position,
-                                                           weaponBalloonObj->segment.trans.z_position, 4, NULL);
+                                                                   weaponBalloonObj->segment.trans.x_position,
+                                                                   weaponBalloonObj->segment.trans.y_position,
+                                                                   weaponBalloonObj->segment.trans.z_position, 4, NULL);
                                 }
                             }
                         } else if (racer->raceFinished == FALSE) {
@@ -5133,7 +5138,7 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
         if (weapon->soundMask == NULL) {
             if (gRocketSoundTimer < 8) {
                 audspat_play_sound_at_position(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                       obj->segment.trans.z_position, 1, &weapon->soundMask);
+                                               obj->segment.trans.z_position, 1, &weapon->soundMask);
                 gRocketSoundTimer++;
             }
         } else {
@@ -5259,8 +5264,8 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
                     weapon->soundMask = NULL;
                 }
                 audspat_play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,
-                                       weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4,
-                                       NULL);
+                                               weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position,
+                                               4, NULL);
             }
         }
         if (weaponProperties->status == WEAPON_DESTROY) {
@@ -5309,15 +5314,15 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
                                 weaponProperties->status = WEAPON_DESTROY;
 
                                 audspat_play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,
-                                                       weaponObj->segment.trans.y_position,
-                                                       weaponObj->segment.trans.z_position, 4, NULL);
+                                                               weaponObj->segment.trans.y_position,
+                                                               weaponObj->segment.trans.z_position, 4, NULL);
                             } else {
                                 weapon->target = weaponInteractObj;
 
-                                audspat_play_sound_at_position(SOUND_BUBBLE, weaponInteractObj->segment.trans.x_position,
-                                                       weaponInteractObj->segment.trans.y_position,
-                                                       weaponInteractObj->segment.trans.z_position, 4,
-                                                       &weapon->soundMask);
+                                audspat_play_sound_at_position(
+                                    SOUND_BUBBLE, weaponInteractObj->segment.trans.x_position,
+                                    weaponInteractObj->segment.trans.y_position,
+                                    weaponInteractObj->segment.trans.z_position, 4, &weapon->soundMask);
                                 weaponHit->attackType = ATTACK_BUBBLE;
                                 weaponProperties->status = WEAPON_TRIGGERED;
                                 weaponProperties->submerged = 0;
@@ -5349,8 +5354,8 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
                 } else if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
                     weaponProperties->status = WEAPON_DESTROY;
                     audspat_play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,
-                                           weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4,
-                                           NULL);
+                                                   weaponObj->segment.trans.y_position,
+                                                   weaponObj->segment.trans.z_position, 4, NULL);
                 } else {
                     obj_spawn_effect(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
                                      weaponObj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION,
@@ -6412,7 +6417,8 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                 if (frog->squishCooldown <= 0 && (diffX * diffX) + (diffY * diffY) + (diffZ * diffZ) < 40.0f * 40.0f) {
                     if (frog->drumstick) {
                         audspat_play_sound_at_position(SOUND_VOICE_DRUMSTICK_POSITIVE2, obj->segment.trans.x_position,
-                                               obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                                                       obj->segment.trans.y_position, obj->segment.trans.z_position, 4,
+                                                       NULL);
                         set_eeprom_settings_value(2);
                         set_magic_code_flags(CHEAT_CONTROL_DRUMSTICK);
                         set_drumstick_unlock_transition();
@@ -6421,7 +6427,8 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                     } else {
                         frog->action = FROG_SQUISH;
                         audspat_play_sound_at_position(SOUND_SPLAT, obj->segment.trans.x_position,
-                                               obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                                                       obj->segment.trans.y_position, obj->segment.trans.z_position, 4,
+                                                       NULL);
                     }
                 } else {
                     frog->forwardVel = 72.0f;
@@ -6459,10 +6466,12 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                 }
                 if (frog->drumstick) {
                     audspat_play_sound_at_position(SOUND_VOICE_DRUMSTICK_POSITIVE6, obj->segment.trans.x_position,
-                                           obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                                                   obj->segment.trans.y_position, obj->segment.trans.z_position, 4,
+                                                   NULL);
                 } else {
-                    audspat_play_sound_at_position(SOUND_RIBBIT, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                           obj->segment.trans.z_position, 4, NULL);
+                    audspat_play_sound_at_position(SOUND_RIBBIT, obj->segment.trans.x_position,
+                                                   obj->segment.trans.y_position, obj->segment.trans.z_position, 4,
+                                                   NULL);
                 }
                 frog->action = FROG_HOP;
                 frog->hopStartX = obj->segment.trans.x_position;
@@ -6501,7 +6510,8 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                                    obj->segment.trans.z_position, 40.0f, 0, &racerObj)) {
                     if (frog->drumstick) {
                         audspat_play_sound_at_position(SOUND_VOICE_DRUMSTICK_POSITIVE2, obj->segment.trans.x_position,
-                                               obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                                                       obj->segment.trans.y_position, obj->segment.trans.z_position, 4,
+                                                       NULL);
                         set_eeprom_settings_value(2);
                         set_magic_code_flags(CHEAT_CONTROL_DRUMSTICK);
                         set_drumstick_unlock_transition();
@@ -6509,7 +6519,8 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                     } else {
                         frog->action = FROG_SQUISH;
                         audspat_play_sound_at_position(SOUND_SPLAT, obj->segment.trans.x_position,
-                                               obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                                                       obj->segment.trans.y_position, obj->segment.trans.z_position, 4,
+                                                       NULL);
                     }
                 }
             }
@@ -6526,8 +6537,8 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
             frog->hopTimer -= updateRate;
             if (frog->hopTimer < 0) {
                 frog->action = FROG_UNSQUISH;
-                audspat_play_sound_at_position(SOUND_PLOP2, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                       obj->segment.trans.z_position, 4, NULL);
+                audspat_play_sound_at_position(SOUND_PLOP2, obj->segment.trans.x_position,
+                                               obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
             }
             break;
         case FROG_UNSQUISH:

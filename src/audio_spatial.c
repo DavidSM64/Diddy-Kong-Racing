@@ -113,7 +113,6 @@ void audspat_reset(void) {
         gAudioPoints[i]->inRange = FALSE;
         if (sound != NULL) {
             sndp_stop(sound);
-            sndp_stop(sound);
         }
     }
     gNumAudioPoints = 0;
@@ -321,11 +320,12 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
                 sumOfDistances = 0;
                 minDist = line->range;
                 for (k = 0; k < line->numSegments; k++) {
-                    lineDistances[k] = audspat_distance_to_segment(cameras[j].trans.x_position, cameras[j].trans.y_position,
-                                                           cameras[j].trans.z_position, coords, &outX, &outY, &outZ);
+                    lineDistances[k] =
+                        audspat_distance_to_segment(cameras[j].trans.x_position, cameras[j].trans.y_position,
+                                                    cameras[j].trans.z_position, coords, &outX, &outY, &outZ);
                     linePans[k] = audspat_calculate_spatial_pan(outX - cameras[j].trans.x_position,
-                                                             outZ - cameras[j].trans.z_position,
-                                                             cameras[j].trans.rotation.y_rotation);
+                                                                outZ - cameras[j].trans.z_position,
+                                                                cameras[j].trans.rotation.y_rotation);
                     if (minDist > lineDistances[k]) {
                         minDist = lineDistances[k];
                     }
@@ -512,8 +512,8 @@ s32 audspat_distance_to_segment(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *o
  */
 void audspat_play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 flags, AudioPoint **handlePtr) {
     audspat_point_create(gSpatialSoundTable[soundId].soundBite, x, y, z, flags, gSpatialSoundTable[soundId].minVolume,
-                         gSpatialSoundTable[soundId].volume, gSpatialSoundTable[soundId].range, FALSE, gSpatialSoundTable[soundId].pitch,
-                         gSpatialSoundTable[soundId].priority, handlePtr);
+                         gSpatialSoundTable[soundId].volume, gSpatialSoundTable[soundId].range, FALSE,
+                         gSpatialSoundTable[soundId].pitch, gSpatialSoundTable[soundId].priority, handlePtr);
 }
 
 /**
@@ -521,7 +521,8 @@ void audspat_play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 flags, 
  * and bypasses the sound table.
  * Official Name: amSndPlayDirectXYZ
  */
-void audspat_play_sound_direct(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 volume, f32 pitch, AudioPoint **handlePtr) {
+void audspat_play_sound_direct(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 volume, f32 pitch,
+                               AudioPoint **handlePtr) {
     audspat_point_create(soundBite, x, y, z, flags, /* minVolume */ 100, volume, /* range */ 15000, FALSE, pitch,
                          /* priority */ 63, handlePtr);
 }
@@ -881,7 +882,7 @@ void audspat_point_stop_by_index(s32 index) {
             *gAudioPoints[index]->userHandlePtr = NULL;
             func_800245B4(gAudioPoints[index]->soundBite | 0x5000);
         }
-        
+
         // put it to the free list
         gLastFreePointIndex++;
         gFreeAudioPoints[gLastFreePointIndex] = gAudioPoints[index];

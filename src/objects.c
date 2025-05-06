@@ -2566,7 +2566,7 @@ s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 e
                     soundId = evenSoundId; // Always set to SOUND_STOMP3
                 }
                 audspat_play_sound_at_position(soundId, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                       obj->segment.trans.z_position, 4, NULL);
+                                               obj->segment.trans.z_position, 4, NULL);
                 ret = i + 1;
                 i = asset0; // Come on, just use break!
             }
