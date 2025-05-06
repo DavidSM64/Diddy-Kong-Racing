@@ -3404,8 +3404,8 @@ void func_800135B8(Object *boostObj) {
     objTransform.unk18 = 0;
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
-    render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, (Object *) &objTransform,
-                            asset->unk78, 0x10A);
+    render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
+                            (Object *) &objTransform, asset->unk78, 0x10A);
     if (boost->unk70 == 2) {
         material_set(&gObjectCurrDisplayList, asset->unk7C, 0xE, 0);
         if (asset->unk7C != NULL) {
