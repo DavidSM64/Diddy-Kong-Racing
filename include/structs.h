@@ -1052,10 +1052,23 @@ typedef struct Object_Fish {
   /* 0x11c */ f32 unk11C;
 } Object_Fish;
 
+typedef struct Object_Boost_Inner {
+  Vec3f position;
+  f32 unkC;
+  f32 unk10;
+  u8 pad[0x24 - 0x14];
+} Object_Boost_Inner;
+
 typedef struct Object_Boost {
-  /* 0x000 */ u8 pad[0x70];
-  /* 0x070 */ u8 unk70;
-  /* 0x074 */ f32 unk74;
+  Object_Boost_Inner unk0;
+  Object_Boost_Inner unk24;
+  Object_Boost_Inner unk48;
+  u8 pad6C[4];
+  u8 unk70;
+  u8 unk71;
+  u8 unk72;
+  u8 unk73;
+  f32 unk74;
 } Object_Boost;
 
 typedef struct Object_EffectBox {
