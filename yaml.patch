@@ -1,0 +1,70 @@
+diff --git a/ver/splat/dkr.jpn.v79.yaml b/ver/splat/dkr.jpn.v79.yaml
+index d7dc18b4..7746ba82 100644
+--- a/ver/splat/dkr.jpn.v79.yaml
++++ b/ver/splat/dkr.jpn.v79.yaml
+@@ -357,7 +357,8 @@ segments:
+       - [0xEAEA0, .rodata, weather]
+       - [0xEAEF0, .rodata, particles]
+       - [0xEB2B0, .rodata, printf]
+-      - [0xEB520, .rodata, thread0_epc]
++      - [0xEB520, .rodata, ../libultra/src/debug/assert]
++      - [0xEB580, .rodata, thread0_epc]
+       - [0xEB810, .rodata, waves]
+       - [0xEB980, .rodata, fade_transition]
+       - [0xEB9E0, .rodata, game_text]
+diff --git a/ver/splat/dkr.pal.v77.yaml b/ver/splat/dkr.pal.v77.yaml
+index fa473994..ca878e28 100644
+--- a/ver/splat/dkr.pal.v77.yaml
++++ b/ver/splat/dkr.pal.v77.yaml
+@@ -357,7 +357,8 @@ segments:
+       - [0xE9480, .rodata, weather]
+       - [0xE94D0, .rodata, particles]
+       - [0xE9890, .rodata, printf]
+-      - [0xE9B00, .rodata, thread0_epc]
++      - [0xE9B00, .rodata, ../libultra/src/debug/assert]
++      - [0xE9B60, .rodata, thread0_epc]
+       - [0xE9DF0, .rodata, waves]
+       - [0xE9F60, .rodata, fade_transition]
+       - [0xE9FC0, .rodata, game_text]
+diff --git a/ver/splat/dkr.pal.v80.yaml b/ver/splat/dkr.pal.v80.yaml
+index 9e9c77b8..721665cd 100644
+--- a/ver/splat/dkr.pal.v80.yaml
++++ b/ver/splat/dkr.pal.v80.yaml
+@@ -357,7 +357,8 @@ segments:
+       - [0xE9A00, .rodata, weather]
+       - [0xE9A50, .rodata, particles]
+       - [0xE9E10, .rodata, printf]
+-      - [0xEA080, .rodata, thread0_epc]
++      - [0xEA080, .rodata, ../libultra/src/debug/assert]
++      - [0xEA0E0, .rodata, thread0_epc]
+       - [0xEA370, .rodata, waves]
+       - [0xEA4E0, .rodata, fade_transition]
+       - [0xEA540, .rodata, game_text]
+diff --git a/ver/splat/dkr.us.v77.yaml b/ver/splat/dkr.us.v77.yaml
+index 6e2a76e0..ff063743 100644
+--- a/ver/splat/dkr.us.v77.yaml
++++ b/ver/splat/dkr.us.v77.yaml
+@@ -357,7 +357,8 @@ segments:
+       - [0xE93F0, .rodata, weather]
+       - [0xE9440, .rodata, particles]
+       - [0xE9800, .rodata, printf]
+-      - [0xE9A70, .rodata, thread0_epc]
++      - [0xE9A70, .rodata, ../libultra/src/debug/assert]
++      - [0xE9AD0, .rodata, thread0_epc]
+       - [0xE9D60, .rodata, waves]
+       - [0xE9ED0, .rodata, fade_transition]
+       - [0xE9F30, .rodata, game_text]
+diff --git a/ver/splat/dkr.us.v80.yaml b/ver/splat/dkr.us.v80.yaml
+index 45295de7..84798adb 100644
+--- a/ver/splat/dkr.us.v80.yaml
++++ b/ver/splat/dkr.us.v80.yaml
+@@ -357,7 +357,8 @@ segments:
+       - [0xE9970, .rodata, weather]
+       - [0xE99C0, .rodata, particles]
+       - [0xE9D80, .rodata, printf]
+-      - [0xE9FF0, .rodata, thread0_epc]
++      - [0xE9FF0, .rodata, ../libultra/src/debug/assert]
++      - [0xEA050, .rodata, thread0_epc]
+       - [0xEA2E0, .rodata, waves]
+       - [0xEA450, .rodata, fade_transition]
+       - [0xEA4B0, .rodata, game_text]
