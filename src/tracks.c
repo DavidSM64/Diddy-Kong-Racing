@@ -1353,7 +1353,7 @@ void set_skydome_visbility(s32 renderSky) {
 }
 
 // init_skydome
-// https://decomp.me/scratch/jmbc1
+// https://decomp.me/scratch/80umh
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80028050.s")
 
 /**
