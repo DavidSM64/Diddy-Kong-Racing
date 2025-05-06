@@ -3704,7 +3704,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
         } else {
             door->openDir = DOOR_CLOSED;
             if (door->soundMask != NULL) {
-                func_800096F8((AudioPoint *) (s32) door->soundMask);
+                audspat_point_stop((AudioPoint *) (s32) door->soundMask);
                 door->soundMask = NULL;
             }
         }
@@ -3843,7 +3843,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
                                    obj->segment.trans.z_position, 1, &ttDoor->soundMask);
         }
     } else if (ttDoor->soundMask != NULL) {
-        func_800096F8((AudioPoint *) ((s32) ttDoor->soundMask));
+        audspat_point_stop((AudioPoint *) ((s32) ttDoor->soundMask));
         ttDoor->soundMask = NULL;
     }
     obj->interactObj->distance = 0xFF;
@@ -4032,7 +4032,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
         } else {
             obj->segment.trans.rotation.x_rotation = 0;
             if (whaleRamp->soundMask != NULL) {
-                func_800096F8(whaleRamp->soundMask);
+                audspat_point_stop(whaleRamp->soundMask);
             }
         }
     }
@@ -4436,7 +4436,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
                                            racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 4,
                                            &racer->bananaSoundMask);
                     if (prevSoundMask) {
-                        func_800096F8(prevSoundMask);
+                        audspat_point_stop(prevSoundMask);
                     }
                     if (racer->playerIndex != PLAYER_COMPUTER && racer->bananas == 9) {
                         sound_play_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position,
@@ -5142,7 +5142,7 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
         }
     } else {
         if (weapon->soundMask) {
-            func_800096F8(weapon->soundMask);
+            audspat_point_stop(weapon->soundMask);
             weapon->soundMask = NULL;
             gRocketSoundTimer -= 1;
         }
@@ -5255,7 +5255,7 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
             if (weaponProperties->submerged > 120) {
                 weaponProperties->status = WEAPON_DESTROY;
                 if (weapon->soundMask != NULL) {
-                    func_800096F8(weapon->soundMask);
+                    audspat_point_stop(weapon->soundMask);
                     weapon->soundMask = NULL;
                 }
                 audspat_play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,

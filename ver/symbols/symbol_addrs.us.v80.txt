@@ -143,7 +143,7 @@ audspat_distance_to_segment = 0x800092A8;
 audspat_play_sound_at_position = 0x80009558;
 audspat_play_sound_direct = 0x800095E8;
 audspat_point_set_position = 0x800096D8;
-func_800096F8 = 0x800096F8;
+audspat_point_stop = 0x800096F8;
 audspat_point_create = 0x8000974C;
 audspat_line_add_vertex = 0x800098A4;
 audspat_reverb_add_vertex = 0x80009968;
@@ -152,7 +152,7 @@ audspat_reverb_validate = 0x80009AB4;
 audspat_calculate_echo = 0x80009B7C;
 audspat_reverb_get_strength_at_point = 0x80009D6C;
 audspat_debug_render_lines = 0x8000A184;
-audspat_point_stop = 0x8000A2E8;
+audspat_point_stop_by_index = 0x8000A2E8;
 audspat_debug_render_line = 0x8000A414;
 
 // seqplayer.c .text

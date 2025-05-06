@@ -831,7 +831,7 @@ void free_rain_memory(void) {
     }
 
     if (gWeatherSoundMask != NULL) {
-        func_800096F8(gWeatherSoundMask);
+        audspat_point_stop(gWeatherSoundMask);
         gWeatherSoundMask = NULL;
     }
 

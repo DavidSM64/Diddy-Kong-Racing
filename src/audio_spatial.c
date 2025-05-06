@@ -50,9 +50,9 @@ s32 D_8011AC1C;
 
 /*******************************/
 
-/*
+/**
  * Initializes the audio spatial system.
-*/
+ */
 void audspat_init(void) {
     s32 i;
 
@@ -88,6 +88,9 @@ void audspat_jingle_on(void) {
     gJinglesOff = FALSE;
 }
 
+/**
+ * Stops all sounds and deletes all created audio points and lines.
+ */
 void audspat_reset(void) {
     s32 i;
     s32 j;
@@ -167,23 +170,23 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
     f32 dx, dy, dz;
     s32 distance;
     AudioPoint *audioPoint;
-    f32 sp22C;
-    f32 sp228;
-    f32 sp224;
-    s32 s6;
+    f32 outX;
+    f32 outY;
+    f32 outZ;
+    s32 minDist;
     s32 adjustedVolume;
-    s32 sp1A8[29];
+    s32 lineDistances[29];
     s32 pan2;
-    s32 a0;
-    s32 sp12C[29];
-    s32 spB8[29];
-    s32 s5;
+    s32 inverseSum;
+    s32 linePans[29];
+    s32 inverseDistances[29];
+    s32 sumOfDistances;
     s32 numCameras;
     ObjectSegment *cameras;
     f32 pitch1;
     f32 temp;
     f32 minDistance;
-    f32 *sp70;
+    f32 *coords;
     f32 pitch2;
     s32 unused;
     f32 pitch3;
@@ -238,7 +241,7 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
                 dz = audioPoint->pos.z - cameras[j].trans.z_position;
                 distance = sqrtf(dx * dx + dy * dy + dz * dz);
                 if (distance < audioPoint->range) {
-                    if (!audioPoint->quadraticAttenuation) {
+                    if (!audioPoint->fastFalloff) {
                         adjustedVolume = (1.0f - (f32) distance / (f32) audioPoint->range) * audioPoint->volume;
                     } else {
                         temp = (f32) (audioPoint->range - distance) / (f32) audioPoint->range;
@@ -300,7 +303,7 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
 
             if ((audioPoint->flags & AUDIO_POINT_FLAG_ONE_TIME_TRIGGER) && audioPoint->triggeredOnce &&
                 audioPoint->soundHandle == NULL) {
-                audspat_point_stop(i);
+                audspat_point_stop_by_index(i);
             }
         }
     }
@@ -313,26 +316,26 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
             volume = 0;
 
             for (j = 0; j < numCameras; j++) {
-                sp70 = line->coords;
-                s5 = 0;
-                s6 = line->unk170;
+                coords = line->coords;
+                sumOfDistances = 0;
+                minDist = line->range;
                 for (k = 0; k < line->numSegments; k++) {
-                    sp1A8[k] = audspat_distance_to_segment(cameras[j].trans.x_position, cameras[j].trans.y_position,
-                                                           cameras[j].trans.z_position, sp70, &sp22C, &sp228, &sp224);
-                    sp12C[k] = audspat_calculate_spatial_pan(sp22C - cameras[j].trans.x_position,
-                                                             sp224 - cameras[j].trans.z_position,
+                    lineDistances[k] = audspat_distance_to_segment(cameras[j].trans.x_position, cameras[j].trans.y_position,
+                                                           cameras[j].trans.z_position, coords, &outX, &outY, &outZ);
+                    linePans[k] = audspat_calculate_spatial_pan(outX - cameras[j].trans.x_position,
+                                                             outZ - cameras[j].trans.z_position,
                                                              cameras[j].trans.rotation.y_rotation);
-                    if (s6 > sp1A8[k]) {
-                        s6 = sp1A8[k];
+                    if (minDist > lineDistances[k]) {
+                        minDist = lineDistances[k];
                     }
-                    sp70 += 3;
-                    s5 += sp1A8[k];
+                    coords += 3;
+                    sumOfDistances += lineDistances[k];
                 }
 
-                if (!line->unk17D) {
-                    adjustedVolume = (1.0f - (f32) s6 / (f32) line->unk170) * line->unk174;
+                if (!line->fastFalloff) {
+                    adjustedVolume = (1.0f - (f32) minDist / (f32) line->range) * line->unk174;
                 } else {
-                    temp = (f32) (line->unk170 - s6) / (f32) line->unk170;
+                    temp = (f32) (line->range - minDist) / (f32) line->range;
                     adjustedVolume = temp * temp * line->unk174;
                 }
 
@@ -340,22 +343,22 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
                     volume = adjustedVolume;
 
                     if (line->numSegments == 1) {
-                        pan = sp12C[0];
+                        pan = linePans[0];
                     } else {
-                        a0 = 0;
+                        inverseSum = 0;
                         for (k = 0; k < line->numSegments; k++) {
-                            spB8[k] = s5 - sp1A8[k];
-                            a0 += spB8[k];
+                            inverseDistances[k] = sumOfDistances - lineDistances[k];
+                            inverseSum += inverseDistances[k];
                         }
 
                         pan = 0;
                         for (k = 0; k < line->numSegments; k++) {
-                            pan += (f32) spB8[k] / (f32) a0 * (f32) sp12C[k];
+                            pan += (f32) inverseDistances[k] / (f32) inverseSum * (f32) linePans[k];
                         }
                     }
 
-                    if (s6 < 400) {
-                        pan = (pan - 64) * (s6 / 400.0f) + 64;
+                    if (minDist < 400) {
+                        pan = (pan - 64) * (minDist / 400.0f) + 64;
                     }
                 }
             }
@@ -531,22 +534,23 @@ void audspat_point_set_position(AudioPoint *audioPoint, f32 x, f32 y, f32 z) {
 
 /**
  * Official Name: amSndStopXYZ
+ * Stops the sound associated with the audio point.
  */
-void func_800096F8(AudioPoint *point) {
+void audspat_point_stop(AudioPoint *point) {
     s32 i;
     for (i = 0; i < MAX_AUDIO_POINTS; i++) {
         if (point == gAudioPoints[i]) {
-            audspat_point_stop(i);
+            audspat_point_stop_by_index(i);
             break;
         }
     }
 }
 
-/*
+/**
  * Creates a point sound source and sets its parameters
  */
 void audspat_point_create(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 minVolume, u8 volume, u16 range,
-                          u8 quadraticAttenuation, u8 pitch, u8 priority, AudioPoint **handlePtr) {
+                          u8 fastFalloff, u8 pitch, u8 priority, AudioPoint **handlePtr) {
     AudioPoint *audioPoint;
 
     if (handlePtr != NULL) {
@@ -569,7 +573,7 @@ void audspat_point_create(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 minVo
     audioPoint->volume = volume;
     audioPoint->pitch = pitch;
     audioPoint->range = range;
-    audioPoint->quadraticAttenuation = quadraticAttenuation;
+    audioPoint->fastFalloff = fastFalloff;
     audioPoint->priority = priority;
     audioPoint->triggeredOnce = 0;
     audioPoint->userHandlePtr = handlePtr;
@@ -579,7 +583,7 @@ void audspat_point_create(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 minVo
     }
 }
 
-/*
+/**
  * Adds a vertex to the audio line.
  * An audio line is a sound source in the form of a polyline
  * The first vertex defines the sound ID and other properties.
@@ -598,8 +602,8 @@ void audspat_line_add_vertex(u8 type, u16 soundBite, f32 x, f32 y, f32 z, u8 arg
         if (vertexIndex == 0) {
             line->soundBite = soundBite;
             line->type = type;
-            line->unk170 = arg9;
-            line->unk17D = argA;
+            line->range = arg9;
+            line->fastFalloff = argA;
             line->unk174 = arg6;
             line->maxVolume = arg5;
             line->unk176 = arg7;
@@ -611,7 +615,7 @@ void audspat_line_add_vertex(u8 type, u16 soundBite, f32 x, f32 y, f32 z, u8 arg
     }
 }
 
-/*
+/**
  * Adds a vertex to a reverb line.
  * Reverb lines are used to calculate echo effects in the game.
  * The first vertex defines the reverb intensity.
@@ -632,7 +636,7 @@ void audspat_reverb_add_vertex(f32 x, f32 y, f32 z, u8 reverbAmount, u8 lineID, 
     }
 }
 
-/*
+/**
  * Checks that all vertex coordinates are defined.
  */
 s32 audspat_line_validate(u8 lineID) {
@@ -660,7 +664,7 @@ s32 audspat_line_validate(u8 lineID) {
     return ret;
 }
 
-/*
+/**
  * Checks that all vertex coordinates are defined.
  */
 s32 audspat_reverb_validate(u8 reverbLineID) {
@@ -747,7 +751,7 @@ void audspat_calculate_echo(SoundHandle soundHandle, f32 x, f32 y, f32 z) {
     }
 }
 
-/*
+/**
  * Returns the reverb strength at a point along the line.
  * The strength is calculated based on the distance from the start or the end of the line.
  * Maximum strength is returned if the point is not within 300 units of the start or end.
@@ -827,6 +831,9 @@ u8 audspat_reverb_get_strength_at_point(ReverbLine *line, f32 x, f32 y, f32 z) {
     }
 }
 
+/**
+ * Makes audio and reverb lines visible, useful for debugging.
+ */
 void audspat_debug_render_lines(Gfx **dList, Vertex **verts, Triangle **tris) {
     s32 i, j;
     f32 *coords;
@@ -856,11 +863,11 @@ void audspat_debug_render_lines(Gfx **dList, Vertex **verts, Triangle **tris) {
     }
 }
 
-/*
+/**
  * Stops the sound associated with the given audio point.
  * If the sound is currently playing, it stops it and removes the audio point from the list.
  */
-void audspat_point_stop(s32 index) {
+void audspat_point_stop_by_index(s32 index) {
     if (gNumAudioPoints != 0) {
         if (gAudioPoints[index]->soundHandle != NULL) {
             sndp_stop(gAudioPoints[index]->soundHandle);

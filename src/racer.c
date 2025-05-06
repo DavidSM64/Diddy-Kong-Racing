@@ -2861,7 +2861,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                                            obj->segment.trans.z_position, 1, &tempRacer->shieldSoundMask);
                 }
             } else if (tempRacer->shieldSoundMask) {
-                func_800096F8(tempRacer->shieldSoundMask);
+                audspat_point_stop(tempRacer->shieldSoundMask);
                 tempRacer->shieldSoundMask = NULL;
             }
             tempRacer->shieldTimer -= updateRate;
@@ -5671,7 +5671,7 @@ void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 flags)
     if (tempRacer->exitObj == 0 && (!(flags & 0x80) || gCurrentPlayerIndex != PLAYER_COMPUTER)) {
         if (flags == 2) {
             if (tempRacer->soundMask != NULL && soundID != tempRacer->unk2A) {
-                func_800096F8(tempRacer->soundMask);
+                audspat_point_stop(tempRacer->soundMask);
                 tempRacer->soundMask = 0;
             }
         }
@@ -7188,7 +7188,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
             }
         } else {
             if (racer->shieldSoundMask) {
-                func_800096F8(racer->shieldSoundMask);
+                audspat_point_stop(racer->shieldSoundMask);
                 racer->shieldSoundMask = NULL;
             }
         }

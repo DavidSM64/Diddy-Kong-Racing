@@ -4482,7 +4482,7 @@ void race_transition_adventure(s32 updateRate) {
                 sndp_stop(racer->magnetSoundMask);
             }
             if (racer->shieldSoundMask != NULL) {
-                func_800096F8(racer->shieldSoundMask);
+                audspat_point_stop(racer->shieldSoundMask);
             }
         }
         prevPort0Racer = (*gRacers)[0];
