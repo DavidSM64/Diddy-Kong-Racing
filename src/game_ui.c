@@ -384,7 +384,7 @@ void hud_init(UNUSED s32 viewportCount) {
 
 /**
  * Done on race start, set all the hud elements to their default values.
- *
+ * Numerous override cases for different game modes and multiplayer.
  */
 void hud_init_element(void) {
     s32 i;
@@ -3803,6 +3803,12 @@ void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspec
                                                    ((scaledX * angleSin) - (scaledY * angleCos)) + gMinimapDotOffsetY;
 }
 
+/**
+ * Renders a HUD element onscreen.
+ * Loads the asset if it does not yet exist, and refreshes the stale counter to keep it loaded.
+ * Since hud elements can be all sorts of things, the function checks what asset type it is, before
+ * deciding to draw a texture rectangle, ortho tris, or a 3D model entirely.
+ */
 void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement *hud) {
     TextureHeader **textureHeader3;
     TextureHeader *textureHeader2;
