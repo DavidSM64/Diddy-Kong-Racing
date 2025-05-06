@@ -343,7 +343,7 @@ void transition_render(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
                 break;
         }
 
-        func_80066CDC(dList, mtx);
+        viewport_main(dList, mtx);
     }
 }
 

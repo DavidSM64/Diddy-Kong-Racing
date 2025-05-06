@@ -1204,6 +1204,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             if (racer->groundedWheels) {
                 if (gRaceStartTimer != 100 && racer->playerIndex != PLAYER_COMPUTER && racer->trickType >= 6) {
                     sound_play(SOUND_BOUNCE, &racer->unk21C);
+                    sound_play(SOUND_BOUNCE, &racer->unk21C);
                     sound_volume_set_relative(SOUND_BOUNCE, racer->unk21C, (racer->trickType * 2) + 50);
                 }
             } else if (racer->approachTarget == NULL) {
@@ -3517,6 +3518,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (racer->drift_direction != 0 || racer->drifting != 0 || racer->unk1FB != 0) {
             if (racer->unk10 == 0) {
                 sound_play_spatial(SOUND_CAR_SLIDE, obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                   obj->segment.trans.z_position, &racer->unk10);
                                    obj->segment.trans.z_position, &racer->unk10);
             } else {
                 audspat_calculate_echo((s32) racer->unk10, obj->segment.trans.x_position, obj->segment.trans.y_position,

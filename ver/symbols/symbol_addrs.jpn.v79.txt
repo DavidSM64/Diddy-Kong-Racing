@@ -904,7 +904,7 @@ set_viewport_properties = 0x80066B78;
 copy_viewport_background_size_to_coords = 0x80066C78;
 copy_viewport_frame_size_to_coords = 0x80066CFC;
 copy_framebuffer_size_to_coords = 0x80066D50;
-func_80066CDC = 0x80066DAC;
+viewport_main = 0x80066DAC;
 viewport_scissor = 0x80067B0C;
 func_80067D3C = 0x80067E0C;
 set_ortho_matrix_height = 0x80067FF0;
@@ -2398,9 +2398,9 @@ gRumbleEnable = 0x800DFE30;
 
 // rcp.c .data
 gGfxTaskMesgNums = 0x800DFE40;
-sBGPrimColourrR = 0x800DFE60;
-sBGPrimColourrG = 0x800DFE64;
-sBGPrimColourrB = 0x800DFE68;
+sBGPrimColourR = 0x800DFE60;
+sBGPrimColourG = 0x800DFE64;
+sBGPrimColourB = 0x800DFE68;
 sBackgroundFillColour = 0x800DFE6C;
 gTexBGShiftX = 0x800DFE70;
 gTexBGTex1 = 0x800DFE74;
@@ -2758,6 +2758,15 @@ gHudLapColours = 0x800E423C;
 gHudIndicatorTimer = 0x800E4248;
 gHudMinimapColours = 0x800E424C;
 gHudColour = 0x800E42C4;
+gHudTimeTrialJp_Ghost = 0x800E42C8;
+gHudTimeTrialJp_Save = 0x800E42D4;
+gHudTimeTrialJp_Impossible = 0x800E42DC;
+gHudTimeTrialJp_FullBlank = 0x800E42E8;
+gHudTimeTrialJp_FullPak = 0x800E42EC;
+gHudTimeTrialJp_Full = 0x800E42F4;
+gHudTimeTrialJp_DamagedBlank = 0x800E42FC;
+gHudTimeTrialJp_DamagedPak = 0x800E4300;
+gHudTimeTrialJp_Defective = 0x800E4308;
 sRecordVel = 0x800E4314;
 D_800E283C = 0x800E4318;
 

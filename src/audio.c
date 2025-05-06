@@ -809,6 +809,8 @@ void sound_play(u16 soundID, SoundHandle *handlePtr) {
     if (soundBite == NULL) {
         if (handlePtr != NULL) {
             *handlePtr = NULL;
+        if (handlePtr != NULL) {
+            *handlePtr = NULL;
         }
         return;
     }
@@ -857,6 +859,7 @@ void func_80001F14(u16 soundID, SoundHandle *handlePtr) {
     if (handlePtr) {
         sndp_play(gSoundBank->bankArray[0], (s16) soundID, handlePtr);
     } else {
+        sndp_play(gSoundBank->bankArray[0], (s16) soundID, &gRacerSoundMask);
         sndp_play(gSoundBank->bankArray[0], (s16) soundID, &gRacerSoundMask);
     }
 }

@@ -10,6 +10,7 @@
 #include "gbi.h"
 #include "PR/libaudio.h"
 #include "audio.h"
+#include "audio.h"
 
 typedef struct Vec4f {
   union {
@@ -948,6 +949,7 @@ typedef struct Object_Animation {
   /* 0x0C */ f32 x;
   /* 0x10 */ f32 y;
   /* 0x14 */ f32 z; 
+  /* 0x18 */ SoundHandle unk18; 
   /* 0x18 */ SoundHandle unk18; 
   /* 0x1C */ struct Object *unk1C;
   /* 0x20 */ s32 unk20;

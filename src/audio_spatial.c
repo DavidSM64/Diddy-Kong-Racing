@@ -113,6 +113,7 @@ void audspat_reset(void) {
         gAudioPoints[i]->inRange = FALSE;
         if (sound != NULL) {
             sndp_stop(sound);
+            sndp_stop(sound);
         }
     }
     gNumAudioPoints = 0;
@@ -507,6 +508,7 @@ s32 audspat_distance_to_segment(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *o
 
 /**
  * Play Sound at position
+ * Official Name: amSndPlayXYZ
  */
 void audspat_play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 flags, AudioPoint **handlePtr) {
     audspat_point_create(gSpatialSoundTable[soundId].soundBite, x, y, z, flags, gSpatialSoundTable[soundId].minVolume,
@@ -517,6 +519,7 @@ void audspat_play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 flags, 
 /**
  * Uncertain of the exact purpose of this function, but it directly takes a sound ID
  * and bypasses the sound table.
+ * Official Name: amSndPlayDirectXYZ
  */
 void audspat_play_sound_direct(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 volume, f32 pitch, AudioPoint **handlePtr) {
     audspat_point_create(soundBite, x, y, z, flags, /* minVolume */ 100, volume, /* range */ 15000, FALSE, pitch,
@@ -525,6 +528,7 @@ void audspat_play_sound_direct(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 
 
 /**
  * Sets the position of an audio point.
+ * Official Name: amSndSetXYZ
  */
 void audspat_point_set_position(AudioPoint *audioPoint, f32 x, f32 y, f32 z) {
     audioPoint->pos.x = x;
@@ -548,6 +552,7 @@ void audspat_point_stop(AudioPoint *point) {
 
 /**
  * Creates a point sound source and sets its parameters
+ * Official Name: amCreateAudioPoint
  */
 void audspat_point_create(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 minVolume, u8 volume, u16 range,
                           u8 fastFalloff, u8 pitch, u8 priority, AudioPoint **handlePtr) {
