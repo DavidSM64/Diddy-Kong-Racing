@@ -83,6 +83,7 @@ typedef enum World {
 
 typedef enum RaceType {
     RACETYPE_DEFAULT           =  0,
+    RACETYPE_UNK1              =  1,
     RACETYPE_HORSESHOE_GULCH   =  3,
     RACETYPE_HUBWORLD          =  5,
     RACETYPE_CUTSCENE_1        =  6, // Not sure what the difference between these two are.

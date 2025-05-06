@@ -47,7 +47,6 @@ void free_lights(void) {
 /**
  * Official Name: setupLights
  */
-
 void setup_lights(s32 count) {
     s32 i;
     u8 *buffer;
@@ -227,9 +226,9 @@ UNUSED void enable_object_light(ObjectLight *light) {
 UNUSED void toggle_object_light(ObjectLight *light) {
     if (light->enabled == TRUE) {
         light->enabled = FALSE;
-        return;
+    } else {
+        light->enabled = TRUE;
     }
-    light->enabled = TRUE;
 }
 
 UNUSED void func_80032248(ObjectLight *light, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
