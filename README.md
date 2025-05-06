@@ -9,7 +9,7 @@ As of May 6, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 85.64%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 55.54%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 56.69%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -119,28 +119,28 @@ s32 is_drumstick_unlocked(void) {
 <!-- README_SCORE_BEGIN -->
 As of May 6, 2025, this is our current score:
 ```
- ===============================================================
-             ADVENTURE ONE (ASM -> C Decompilation)
- ------------ 85.64% Complete (86.80% NON_MATCHING) ------------
-                  # Decompiled functions: 1882
-                   # GLOBAL_ASM remaining: 69
-                   # NON_MATCHING functions: 7
-               # NON_EQUIVALENT WIP functions: 25
- ------------------------- Game Status -------------------------
-            Balloons: 39/47, Keys: 4/4, Trophies: 4/5
-             T.T. Amulets: 4/4, Wizpig Amulets: 4/4
- ---------------------------------------------------------------
-           We are racing in Spacedust Alley. (Lap 2/3)
- ===============================================================
-              ADVENTURE TWO (Cleanup & Documentation)
- ----------------------- 55.54% Complete -----------------------
-                  # Documented functions: 1170
-                  # Undocumented remaining: 484
- ------------------------- Game Status -------------------------
-            Balloons: 26/47, Keys: 3/4, Trophies: 2/5
-             T.T. Amulets: 3/4, Wizpig Amulets: 2/4
- ---------------------------------------------------------------
- We are collecting silver coins in Whale Bay. (5/8 silver coins)
- ===============================================================
+ =====================================================================
+                ADVENTURE ONE (ASM -> C Decompilation)
+ --------------- 85.64% Complete (86.80% NON_MATCHING) ---------------
+                     # Decompiled functions: 1882
+                      # GLOBAL_ASM remaining: 69
+                      # NON_MATCHING functions: 7
+                  # NON_EQUIVALENT WIP functions: 25
+ ---------------------------- Game Status ----------------------------
+               Balloons: 39/47, Keys: 4/4, Trophies: 4/5
+                T.T. Amulets: 4/4, Wizpig Amulets: 4/4
+ ---------------------------------------------------------------------
+              We are racing in Spacedust Alley. (Lap 2/3)
+ =====================================================================
+                 ADVENTURE TWO (Cleanup & Documentation)
+ -------------------------- 56.69% Complete --------------------------
+                     # Documented functions: 1174
+                     # Undocumented remaining: 480
+ ---------------------------- Game Status ----------------------------
+               Balloons: 27/47, Keys: 3/4, Trophies: 2/5
+                T.T. Amulets: 3/4, Wizpig Amulets: 2/4
+ ---------------------------------------------------------------------
+ We are collecting silver coins in Crescent Island. (3/8 silver coins)
+ =====================================================================
 ```
 <!-- README_SCORE_END -->
