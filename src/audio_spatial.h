@@ -58,26 +58,26 @@ typedef struct ReverbLine {
 void audspat_jingle_on(void);
 void audspat_point_stop(AudioPoint *);
 void audspat_jingle_off(void);
-void audspat_point_create(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volume, u16 distance, u8 arg8, u8 pitch,
-                   u8 argA, AudioPoint **handlePtr);
+void audspat_point_create(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 minVolume, u8 volume, u16 range, u8 fastFalloff, u8 pitch,
+                   u8 priority, AudioPoint **handlePtr);
 void audspat_play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 flags, AudioPoint **handlePtr);
-void audspat_point_stop_by_index(s32 arg0);
+void audspat_point_stop_by_index(s32 index);
 s32 audspat_calculate_spatial_pan(f32, f32, s32);
-void audspat_play_sound_direct(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 pitch, AudioPoint **handlePtr);
-void audspat_line_add_vertex(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 arg8, u16 arg9,
-                              u8 argA, u8 lineID, u8 argC);
-s32 audspat_line_validate(u8 arg0);
+void audspat_play_sound_direct(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 volume, f32 pitch, AudioPoint **handlePtr);
+void audspat_line_add_vertex(u8 type, u16 soundBite, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 priority, u16 arg9,
+                              u8 argA, u8 lineID, u8 vertexIndex);
+s32 audspat_line_validate(u8 lineID);
 void audspat_debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, f32 coords[6], u8 red, u8 green, u8 blue);
 void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 updateRate);
-void audspat_point_set_position(AudioPoint *arg0, f32 x, f32 y, f32 z);
-s32 audspat_reverb_validate(u8 arg0);
+void audspat_point_set_position(AudioPoint *audioPoint, f32 x, f32 y, f32 z);
+s32 audspat_reverb_validate(u8 reverbLineID);
 void audspat_init(void);
 void audspat_reverb_add_vertex(f32, f32, f32, u8, u8, u8);
-void audspat_calculate_echo(SoundHandle soundState, f32 x, f32 y, f32 z);
+void audspat_calculate_echo(SoundHandle soundHandle, f32 x, f32 y, f32 z);
 
 s32 audspat_distance_to_segment(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 *outY, f32 *outZ);
 void audspat_reset(void);
-void audspat_update_all(Object **arg0, s32 numRacers, s32 updateRate); // Non Matching
+void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate); // Non Matching
 void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3, s32 updateRate); // Non Matching
 u8 audspat_reverb_get_strength_at_point(ReverbLine *, f32, f32, f32);
 
