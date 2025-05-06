@@ -3205,6 +3205,7 @@ void init_title_screen_variables(void) {
 }
 
 #ifdef NON_MATCHING
+// Differs in v80
 // Single regswap diff
 void func_80083098(f32 updateRateF) {
     f32 temp;
