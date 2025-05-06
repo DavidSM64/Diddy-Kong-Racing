@@ -10,7 +10,6 @@
 #include "gbi.h"
 #include "PR/libaudio.h"
 #include "audio.h"
-#include "audio.h"
 
 typedef struct Vec4f {
   union {

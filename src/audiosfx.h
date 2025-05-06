@@ -8,7 +8,6 @@
 #include "sched.h"
 #include "structs.h"
 #include "audio.h"
-#include "audio.h"
 
 #define AL_SNDP_PLAY_EVT (1 << 0)
 #define AL_SNDP_RELEASE_EVT (1 << 1)
