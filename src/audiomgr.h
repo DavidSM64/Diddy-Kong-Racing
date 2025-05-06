@@ -3,7 +3,6 @@
 
 #include "types.h"
 #include "macros.h"
-#include "audio_internal.h"
 #include "asset_enums.h"
 #include <ultra64.h>
 #include "sched.h"

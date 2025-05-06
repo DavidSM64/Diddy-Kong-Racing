@@ -367,7 +367,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
         apply_fog(gSceneCurrentPlayerID);
         gDPPipeSync(gSceneCurrDisplayList++);
         set_active_camera(gSceneCurrentPlayerID);
-        func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+        viewport_main(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         func_8002A31C();
         // Show detailed skydome in single player.
         if (numViewports < 2) {
@@ -409,7 +409,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
             set_active_camera(PLAYER_FOUR);
             disable_cutscene_camera();
             func_800278E8(updateRate);
-            func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+            viewport_main(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_8002A31C();
             func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             draw_gradient_background();

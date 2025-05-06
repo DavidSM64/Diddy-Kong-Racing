@@ -43,9 +43,6 @@ typedef struct DKR_OSTask {
 
 extern s16 gGfxTaskMesgNums[16];
 
-extern u8 sBGPrimColourrR;
-extern u8 sBGPrimColourrG;
-extern u8 sBGPrimColourrB;
 extern s32 sBackgroundFillColour;
 
 extern TextureHeader *gTexBGTex1;

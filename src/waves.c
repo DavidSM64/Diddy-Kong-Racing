@@ -2105,7 +2105,7 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
 
     var_t0 = 0x80;
     object = NULL;
-    if ((D_800E3040 != NULL) && (arg0 >= 0) && (arg0 < gNumberOfLevelSegments)) {
+    if (D_800E3040 != NULL && arg0 >= 0 && arg0 < gNumberOfLevelSegments) {
         object = mempool_alloc_safe((D_80129FC8.unk20 >> 1) + 0xE, COLOUR_TAG_CYAN);
         object->effect_box.unk0 = D_800E30D8[arg0].unk6;
         object->effect_box.unk2 = 0;
@@ -2124,20 +2124,14 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
         } else {
             var_t4 = D_80129FC8.unk0 + 1;
         }
+        // clang-format off
         arg1 -= D_800E30D8[arg0].unk4;
-        if (arg1 < 0.0f) {
-            arg1 = 0.0f;
-            // clang-format off
-        } else if (arg1 >= D_8012A0A0) { \
-            arg1 = D_8012A0A0 - 1;
-            // clang-format on
-        }
+        if (arg1 < 0.0f) { arg1 = 0.0f; }
+        else if (arg1 >= D_8012A0A0) { arg1 = D_8012A0A0 - 1; }
         arg2 -= D_800E30D8[arg0].unk8;
-        if (arg2 < 0.0f) {
-            arg2 = 0.0f;
-        } else if (D_8012A0A4 <= arg2) {
-            arg2 = D_8012A0A4 - 1;
-        }
+        if (arg2 < 0.0f) { arg2 = 0.0f; }
+        else if (arg2 >= D_8012A0A4) { arg2 = D_8012A0A4 - 1; }
+        // clang-format on
         spC4 = arg1 / var_f22;
         spC0 = arg2 / var_f20;
         object->effect_box.unk8 = spC4;
@@ -2155,12 +2149,12 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
             var_v0 -= D_80129FC8.unk4;
         }
 
-        var_t1 = 0;
-        if ((arg2 != var_f20) && (arg1 < (((var_f20 - arg2) / var_f20) * var_f22))) {
-            var_t1 = 1;
+        var_t1 = FALSE;
+        if (arg2 != var_f20 && arg1 < (((var_f20 - arg2) / var_f20) * var_f22)) {
+            var_t1 = TRUE;
         }
 
-        if (var_t1 != 0) {
+        if (var_t1 != FALSE) {
             sp80[0] = (var_v0 * D_80129FC8.unk4) + var_a0;
 
             if ((var_v0 + 1) >= D_80129FC8.unk4) {
@@ -2229,7 +2223,7 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
             temp_f = (D_800E3040[sp68[0]] + D_800E3040[sp68[1]]) * sp50[0];
             var_f12 = (D_800E3040[sp68[2]] + D_800E3040[sp68[3]]) * sp50[1];
             var_f0 = (D_800E3040[sp68[4]] + D_800E3040[sp68[5]]) * sp50[2];
-            if (var_t1 != 0) {
+            if (var_t1 != FALSE) {
                 var_f2 = (temp_f - var_f0) * var_f20;
                 var_f14 = (temp_f - var_f12) * var_f22;
             } else {
@@ -2243,7 +2237,7 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
             var_f12 = var_f18 / var_f0;
             var_v0_2 = -(s32) (((var_f2 * arg1) + (var_f14 * arg2) - ((spE4 * var_f2) + (temp_f * var_f12))) * 16.0f /
                                var_f12);
-            if ((var_v0_2 >= var_t0) || (var_v0_2 < -var_t0)) {
+            if (var_v0_2 >= var_t0 || var_v0_2 < -var_t0) {
                 var_v1 = 0;
                 do {
                     var_t0 += var_t0;

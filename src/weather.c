@@ -658,7 +658,7 @@ void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment
             f32_matrix_dot(get_projection_matrix_f32(), (Matrix *) &pos[1].x, (Matrix *) &pos[1].x);
             magnitude = ((gLensFlarePos.x * pos[1].x) + (gLensFlarePos.y * pos[1].y)) + (gLensFlarePos.z * pos[1].z);
             if (magnitude > 0.0f) {
-                func_80066CDC(dList, mats);
+                viewport_main(dList, mats);
                 matrix_world_origin(dList, mats);
                 pos[0].x = (gLensFlarePos.x * 256.0f) + segment->trans.x_position;
                 pos[0].y = (gLensFlarePos.y * 256.0f) + segment->trans.y_position;
