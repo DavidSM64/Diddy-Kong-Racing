@@ -116,7 +116,7 @@ s32 gRainSplashDelay = 0;
 TextureHeader *gRainOverlayUnusedValue = NULL; // Set, but never read.
 Sprite *gRainSplashGfx = NULL;
 s32 gRainVertexFlip = 0;
-SoundMask *gWeatherSoundMask = NULL;
+AudioPoint *gWeatherSoundMask = NULL;
 
 FadeTransition gThunderTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_INVERT, FADE_COLOR_WHITE, 5, 2);
 
@@ -1066,9 +1066,9 @@ void rain_sound(UNUSED s32 updateRate) {
     yPos = gWeatherCamera->trans.y_position;
     zPos = gWeatherCamera->trans.z_position + (-sineOffset - cosOffset);
     if (gWeatherSoundMask) {
-        update_spatial_audio_position(gWeatherSoundMask, xPos, yPos, zPos);
+        audspat_point_set_position(gWeatherSoundMask, xPos, yPos, zPos);
     } else {
-        play_sound_at_position(SOUND_RAIN, xPos, yPos, zPos, 1, &gWeatherSoundMask);
+        audspat_play_sound_at_position(SOUND_RAIN, xPos, yPos, zPos, 1, &gWeatherSoundMask);
     }
 }
 

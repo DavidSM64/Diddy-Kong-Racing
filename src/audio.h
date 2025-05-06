@@ -20,11 +20,11 @@ typedef struct ALSoundState* SoundHandle;
 typedef struct SoundData {
  u16 soundBite; // Audio file index.
  u8 volume; // Multiplied by 256. 128 = 32768, max volume.
- u8 unk3;
+ u8 minVolume;
  u8 pitch; // Fractional. 100 = 1.0f.
  u8 unk5;
- u16 distance; // Ingame units distance, same as any other.
- u8 unk8;
+ u16 range; // Ingame units distance, same as any other.
+ u8 priority;
  u8 unk9;
 } SoundData;
 
@@ -40,7 +40,7 @@ typedef struct MusicData {
 typedef struct DelayedSound {
     /* 0x00 */ u16 soundId;
     /* 0x02 */ s16 timer;
-    /* 0x04 */ SoundHandle handlePtr;
+    /* 0x04 */ SoundHandle *handlePtr;
 } DelayedSound;
 
 void  alCSPNew(ALCSPlayer *seqp, ALSeqpConfig *config); //lib/src/al/csplayer.c
@@ -106,8 +106,8 @@ void music_jingle_pan_set(ALPan pan);
 void music_jingle_play(u8 seqID);
 u32 music_jingle_playing(void);
 u16 sound_distance(u16 soundId);
-void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, SoundHandle*soundMask);
-void func_80001F14(u16 soundID, s32 *soundMask);
+void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, SoundHandle *soundMask);
+void func_80001F14(u16 soundID, SoundHandle *handlePtr);
 u16 sound_count(void);
 u8 music_sequence_count(void);
 void sound_table_properties(SoundData **table, s32 *size, s32 *count);

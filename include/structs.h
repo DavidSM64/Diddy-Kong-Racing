@@ -101,21 +101,21 @@ typedef struct Vec2i {
 } Vec2i;
 
 /* Size: 0x24 / 36 bytes */
-typedef struct SoundMask {
+typedef struct AudioPoint {
     /* 0x00 */ Vec3f pos;
-    /* 0x0C */ u16 soundId;
+    /* 0x0C */ u16 soundBite;
     /* 0x0E */ u8 volume;
     /* 0x0F */ u8 pitch;
-    /* 0x10 */ u8 unk10;
-    /* 0x11 */ u8 unk11;
-    /* 0x12 */ u8 unk12;
-    /* 0x14 */ s32 distance;
-    /* 0x18 */ SoundHandle soundPtr;
-    /* 0x1C */ struct SoundMask **soundMask;
-    /* 0x20 */ u8 unk20;
-    /* 0x21 */ u8 unk21;
-    /* 0x22 */ u8 unk22;
-} SoundMask;
+    /* 0x10 */ u8 minVolume;
+    /* 0x11 */ u8 flags;
+    /* 0x12 */ u8 inRange;
+    /* 0x14 */ s32 range;
+    /* 0x18 */ SoundHandle soundHandle;
+    /* 0x1C */ struct AudioPoint **userHandlePtr;
+    /* 0x20 */ u8 quadraticAttenuation;
+    /* 0x21 */ u8 priority;
+    /* 0x22 */ u8 triggeredOnce;
+} AudioPoint;
 
 /* Size: 0x20 bytes */
 typedef struct TextureHeader {
@@ -1231,7 +1231,7 @@ typedef struct Object_Racer {
   /* 0x018 */ SoundHandle unk18;
   /* 0x01C */ SoundHandle unk1C;
   /* 0x020 */ SoundHandle unk20;
-  /* 0x024 */ SoundMask *soundMask;
+  /* 0x024 */ AudioPoint *soundMask;
   /* 0x028 */ u16 lastSoundID;
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
@@ -1314,8 +1314,8 @@ typedef struct Object_Racer {
   /* 0x175 */ s8 magnetTimer;
   /* 0x176 */ s16 unk176;
   /* 0x178 */ SoundHandle magnetSoundMask;
-  /* 0x17C */ SoundMask *shieldSoundMask;
-  /* 0x180 */ SoundMask *bananaSoundMask;
+  /* 0x17C */ AudioPoint *shieldSoundMask;
+  /* 0x180 */ AudioPoint *bananaSoundMask;
   /* 0x184 */ s8 magnetModelID;
   /* 0x185 */ s8 bananas;
   /* 0x186 */ u8 unk186;
@@ -1435,7 +1435,7 @@ typedef struct Object_Racer {
 
 typedef struct Object_Door {
   /* 0x00 */ f32 homeY;
-  /* 0x04 */ SoundHandle soundMask;
+  /* 0x04 */ AudioPoint* soundMask;
   /* 0x08 */ s32 jingleTimer;
   /* 0x0A */ s16 jingleCooldown;
   /* 0x0E */ s8 doorID;
@@ -1467,7 +1467,7 @@ typedef struct Object_Audio {
   /* 0x05 */ u8 unk5;
   /* 0x06 */ u8 unk6;
   /* 0x07 */ u8 unk7;
-  /* 0x08 */ SoundMask *soundMask;
+  /* 0x08 */ AudioPoint *soundMask;
   /* 0x0C */ u8 unkC;
   /* 0x0D */ u8 unkD;
 } Object_Audio;

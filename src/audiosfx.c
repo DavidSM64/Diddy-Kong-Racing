@@ -857,10 +857,11 @@ u16 sndp_get_group_volume(u8 groupID) {
 
 /**
  * Sets the volume for the specified group and updates the volume of all sounds in that group.
- * 
- * !@bug: No bounds checking is performed on the group index. In DKR, only one group is defined and memory is allocated for a single group.
- * This leads to out-of-bounds access, which can cause undefined behavior, including potential crashes.
- * 
+ *
+ * !@bug: No bounds checking is performed on the group index. In DKR, only one group is defined and memory is allocated
+ * for a single group. This leads to out-of-bounds access, which can cause undefined behavior, including potential
+ * crashes.
+ *
  * Official Name: gsSndpSetMasterVolume
  */
 void sndp_set_group_volume(u8 groupID, u16 volume) {

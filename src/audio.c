@@ -787,7 +787,7 @@ u16 sound_distance(u16 soundId) {
     if (soundId > gSoundCount) {
         return 0;
     }
-    return gSoundTable[soundId].distance;
+    return gSoundTable[soundId].range;
 }
 
 /**
@@ -814,14 +814,14 @@ void sound_play(u16 soundID, SoundHandle *handlePtr) {
     }
     pitch = gSoundTable[soundID].pitch / 100.0f;
     if (handlePtr != NULL) {
-        sndp_play_with_priority(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, handlePtr);
+        sndp_play_with_priority(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].priority, handlePtr);
         if (*handlePtr != NULL) {
             sndp_set_param(*handlePtr, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
             sndp_set_param(*handlePtr, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
         }
     } else {
         handlePtr = &gGlobalSoundMask;
-        sndp_play_with_priority(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, &gGlobalSoundMask);
+        sndp_play_with_priority(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].priority, &gGlobalSoundMask);
         if (*handlePtr != NULL) {
             sndp_set_param(*handlePtr, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
             sndp_set_param(*handlePtr, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
@@ -834,28 +834,28 @@ void sound_play(u16 soundID, SoundHandle *handlePtr) {
  * This then makes the audio pan around in 3D space.
  * If it is not given a mask, then it will use the global mask.
  */
-void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, SoundHandle *soundMask) {
-    if (soundMask == NULL) {
-        soundMask = (s32 **) &gSpatialSoundMask;
+void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, SoundHandle *handlePtr) {
+    if (handlePtr == NULL) {
+        handlePtr = &gSpatialSoundMask;
     }
 
-    sound_play(soundID, (s32 *) soundMask);
+    sound_play(soundID, handlePtr);
 
-    if (*soundMask != NULL) {
-        audioline_reverb(*soundMask, x, y, z);
+    if (*handlePtr != NULL) {
+        audspat_calculate_echo(*handlePtr, x, y, z);
     }
 }
 
-void func_80001F14(u16 soundID, s32 *soundMask) {
+void func_80001F14(u16 soundID, SoundHandle *handlePtr) {
     if (soundID <= 0 || sound_count() < soundID) {
         stubbed_printf("amSndPlayDirect: Somebody tried to play illegal sound %d\n", soundID);
-        if (soundMask) {
-            *soundMask = NULL;
+        if (handlePtr) {
+            *handlePtr = NULL;
         }
         return;
     }
-    if (soundMask) {
-        sndp_play(gSoundBank->bankArray[0], (s16) soundID, soundMask);
+    if (handlePtr) {
+        sndp_play(gSoundBank->bankArray[0], (s16) soundID, handlePtr);
     } else {
         sndp_play(gSoundBank->bankArray[0], (s16) soundID, &gRacerSoundMask);
     }

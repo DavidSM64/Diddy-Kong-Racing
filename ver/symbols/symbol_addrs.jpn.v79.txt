@@ -133,27 +133,27 @@ sound_vehicle_check = 0x80007F94;
 func_80007FA4 = 0x80007FA4;
 
 // audio_spatial.c .text
-audioline_init = 0x80008040;
-audioline_off = 0x80008140;
-audioline_on = 0x80008168;
-audioline_reset = 0x80008174;
-func_80008438 = 0x80008438;
-func_800090C0 = 0x800090C0;
-audioline_distance = 0x800092A8;
-play_sound_at_position = 0x80009558;
-func_800095E8 = 0x800095E8;
-update_spatial_audio_position = 0x800096D8;
+audspat_init = 0x80008040;
+audspat_jingle_off = 0x80008140;
+audspat_jingle_on = 0x80008168;
+audspat_reset = 0x80008174;
+audspat_update_all = 0x80008438;
+audspat_calculate_spatial_pan = 0x800090C0;
+audspat_distance_to_segment = 0x800092A8;
+audspat_play_sound_at_position = 0x80009558;
+audspat_play_sound_direct = 0x800095E8;
+audspat_point_set_position = 0x800096D8;
 func_800096F8 = 0x800096F8;
-func_8000974C = 0x8000974C;
-audioline_ambient_create = 0x800098A4;
-audioline_reverb_create = 0x80009968;
-func_800099EC = 0x800099EC;
-func_80009AB4 = 0x80009AB4;
-audioline_reverb = 0x80009B7C;
-func_80009D6C = 0x80009D6C;
-debug_render_audio_effects = 0x8000A184;
-func_8000A2E8 = 0x8000A2E8;
-debug_render_line = 0x8000A414;
+audspat_point_create = 0x8000974C;
+audspat_line_add_vertex = 0x800098A4;
+audspat_reverb_add_vertex = 0x80009968;
+audspat_line_validate = 0x800099EC;
+audspat_reverb_validate = 0x80009AB4;
+audspat_calculate_echo = 0x80009B7C;
+audspat_reverb_get_strength_at_point = 0x80009D6C;
+audspat_debug_render_lines = 0x8000A184;
+audspat_point_stop = 0x8000A2E8;
+audspat_debug_render_line = 0x8000A414;
 
 // seqplayer.c .text
 dummy_8000A710 = 0x8000A710;
@@ -2197,7 +2197,7 @@ D_800DC6D4 = 0x800DE064;
 D_800DC6D8 = 0x800DE068;
 
 // audio_spatial.c .data
-gUsedMasks = 0x800DE070;
+gNumAudioPoints = 0x800DE070;
 
 // objects.c .data
 gTajChallengeTransition = 0x800DE080;
@@ -3554,14 +3554,14 @@ gSoundGroupVolume = 0x8011B698;
 D_80119C30 = 0x8011B6A0;
 gRacerSound = 0x8011B6A8;
 gSoundRacerObj = 0x8011B6AC;
-D_80119C40 = 0x8011B6B0;
-gSoundMaskHeapUsed = 0x8011B6B4;
+gSpatialSoundTable = 0x8011B6B0;
+gAudioPoints = 0x8011B6B4;
 gSoundMaskHeap = 0x8011B6B8;
-gFreeMasks = 0x8011B6BC;
-gSoundMaskHeapFree = 0x8011B6C0;
-D_80119C58 = 0x8011B6C8; // size:0xA80
-D_8011A6D8 = 0x8011C148; // size:0x540
-gAudioLinesOff = 0x8011C688;
+gLastFreePointIndex = 0x8011B6BC;
+gFreeAudioPoints = 0x8011B6C0;
+gAudioLines = 0x8011B6C8; // size:0xA80
+gReverbLines = 0x8011C148; // size:0x540
+gJinglesOff = 0x8011C688;
 D_8011AC1C = 0x8011C68C;
 
 // objects .bss
