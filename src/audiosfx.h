@@ -11,6 +11,7 @@
 
 #define AL_SNDP_PLAY_EVT (1 << 0)
 #define AL_SNDP_RELEASE_EVT (1 << 1)
+#define AL_SNDP_RELEASE_EVT (1 << 1)
 #define AL_SNDP_PAN_EVT (1 << 2)
 #define AL_SNDP_VOL_EVT (1 << 3)
 #define AL_SNDP_PITCH_EVT (1 << 4)
@@ -116,23 +117,23 @@ extern void alEvtqPostEvent(ALEventQueue *evtq, ALEvent *evt, ALMicroTime delta)
 
 void sndp_set_global_volume(u32 volume);
 s32 sndp_get_global_volume(void);
-void sndp_set_active_sound_limit(s32 numSounds);
+void sndp_set_active_sound_limit(s32 numChannels);
 void sndp_init_player(audioMgrConfig *c);
 ALMicroTime  sndp_voice_handler(void *node);
 void sndp_end(ALSoundState *state);
 u16 sndp_get_state_counts(u16 *numFree, u16 *numAllocated);
 void sndp_set_priority(ALSoundState *sndp, u8 priority);
-ALSoundState *sndp_play(ALBank *bnk, s16 sndIndx, SoundHandle *handlePtr);
+ALSoundState *sndp_play(ALBank *bnk, s16 sndIndx, SoundHandle *soundMask);
 void sndp_stop_all_looped(void);
-void sndp_set_param(SoundHandle soundMask, s16 type, u32 paramValue);
-u16 sndp_get_group_volume(u8 groupID);
-void sndp_set_group_volume(u8 groupID, u16 volume);
-void sndp_apply_pitch_slide(ALSoundState *soundState);
-void sndp_stop_with_flags(u8 flags);
-void sndp_stop(SoundHandle state);
-ALSoundState *sndp_allocate(UNUSED ALBank *arg0, ALSound *sound);
+void sndp_set_param(SoundHandle soundMask, s16 type, u32 volume);
+u16 sndp_get_group_volume(u8 channel);
+void sndp_set_group_volume(u8 channel, u16 volume);
+void sndp_apply_pitch_slide(ALSoundState *voiceState);
+void sndp_stop_with_flags(u8 event);
+void sndp_stop(SoundHandle soundMask);
+ALSoundState *sndp_allocate(UNUSED ALBank *arg0, ALSound *arg1);
 void sndp_deallocate(ALSoundState *);
-ALSoundState *sndp_play_with_priority(ALBank *bank, s16 sndIndx, u8 priority, SoundHandle *handlePtr);
+ALSoundState *sndp_play_with_priority(ALBank *bnk, s16 sndIndx, u8 priority, SoundHandle *soundMask);
 void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event);
 
 #endif

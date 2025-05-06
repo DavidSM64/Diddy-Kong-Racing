@@ -537,7 +537,7 @@ void spectate_update(void);
 void func_8001E93C(void);
 void func_80019808(s32 updateRate);
 void func_80014090(Object*, s32, ObjectHeader*);
-void func_80008438(Object**, s32, s32);
+void audspat_update_all(Object**, s32, s32);
 void func_8001E89C(void);
 CheckpointNode *func_800230D0(Object*, Object_Racer*);
 void obj_update(s32 updateRate);
