@@ -72,7 +72,7 @@ f32 D_8012A01C;         // is set to lowest value of D_800E3040
 f32 D_8012A020;         // is set to highest value of D_800E3040
 UNUSED s32 D_8012A024;
 Vertex D_8012A028[2][4]; // stores values of gWaveVertices to be used in func_800BA8E4
-s32 gWavePlayerCount;          // controls whether 2 or 4 items are used in gWaveVertices / gWaveTriangles
+s32 gWavePlayerCount;    // controls whether 2 or 4 items are used in gWaveVertices / gWaveTriangles
 TriangleBatchInfo *gWaveBatch;
 TextureHeader *gWaveTexture;
 s32 D_8012A084; // u value for D_800E3048
@@ -883,7 +883,7 @@ void func_800BA288(s32 arg0, s32 arg1) {
 /**
  * Loads a texture into texture memory.
  * Can offset the texture address in bytes, since waves use multi-texturing.
-*/
+ */
 void wave_load_material(TextureHeader *tex, s32 rtile) {
     s32 txmask;
     s32 tmem;

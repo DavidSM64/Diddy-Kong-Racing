@@ -66,7 +66,7 @@ void audioline_reverb(SoundHandle soundHandle, f32 x, f32 y, f32 z);
 
 s32 audioline_distance(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 *outY, f32 *outZ);
 void audioline_reset(void);
-void func_80008438(Object **arg0, s32 numRacers, s32 updateRate); // Non Matching
+void func_80008438(Object **objRacers, s32 numRacers, s32 updateRate);                             // Non Matching
 void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3, s32 updateRate); // Non Matching
 u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);
 

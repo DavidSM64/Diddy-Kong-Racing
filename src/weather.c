@@ -1074,7 +1074,7 @@ void rain_sound(UNUSED s32 updateRate) {
 
 /**
  * Set the intended UV coordinates for the current rain plane, then render it onscreen.
-*/
+ */
 void rain_render(RainGfxData *rainGfx, s32 time) {
     s32 u0;
     s32 v0;

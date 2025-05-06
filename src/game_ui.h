@@ -15,6 +15,19 @@
 
 #define HUD_EGG_TOTAL 3
 
+typedef struct HudPresets2P {
+    s16 assetID;
+    s16 x;
+    s16 y;
+} HudPresets2P;
+
+typedef struct HudPresets4P {
+    s16 assetID;
+    s16 xLeft;
+    s16 y;
+    s16 xRight;
+} HudPresets4P;
+
 typedef enum RaceFinishStages {
     HUD_RACEFINISH_MUTE,
     HUD_RACEFINISH_TEXT_IN,
@@ -53,8 +66,6 @@ typedef enum WrongWayDirection {
     WRONGWAY_OUT = -1,
     WRONGWAY_IN = 1
 } WrongWayDirection;
-
-
 
 enum CourseIndicatorArrows {
     INDICATOR_NONE,

@@ -158,7 +158,7 @@ void func_80008438(Object **objRacers, s32 numRacers, s32 updateRate) {
     f32 sp224;
     s32 sp1A8;
     s32 sp12C;
-    s32 numActivePlayers; //numActivePlayers
+    s32 numActivePlayers; // numActivePlayers
     ObjectSegment *spAC;
     f32 spA8;
     f32 sp98;
@@ -337,7 +337,7 @@ void func_80008438(Object **objRacers, s32 numRacers, s32 updateRate) {
         sp88 = var_v0_3;
         if (var_v0_3->soundID != 0) {
             sp88 = var_v0_3;
-            if (func_800099EC(var_v0_3->unk0_02/*unksp263*/) != 0) {
+            if (func_800099EC(var_v0_3->unk0_02 /*unksp263*/) != 0) {
                 sp254 = 0;
                 i = 0;
                 if (numActivePlayers > 0) {
@@ -353,9 +353,12 @@ void func_80008438(Object **objRacers, s32 numRacers, s32 updateRate) {
                             var_s1 = &sp12C;
                             temp_s3 = &spAC[i];
                             do {
-                                *var_s0 = audioline_distance(temp_s3->trans.x_position, temp_s3->trans.y_position, temp_s3->trans.z_position, var_s4_2, &sp22C, &sp228, &sp224);
+                                *var_s0 =
+                                    audioline_distance(temp_s3->trans.x_position, temp_s3->trans.y_position,
+                                                       temp_s3->trans.z_position, var_s4_2, &sp22C, &sp228, &sp224);
                                 temp_v1 = *var_s0;
-                                *var_s1 = func_800090C0(sp22C - temp_s3->trans.x_position, sp224 - temp_s3->trans.z_position, temp_s3->trans.rotation.x);
+                                *var_s1 = func_800090C0(sp22C - temp_s3->trans.x_position,
+                                                        sp224 - temp_s3->trans.z_position, temp_s3->trans.rotation.x);
                                 var_s4_2 += 0xC;
                                 if (temp_v1 < var_s6) {
                                     var_s6 = temp_v1;
@@ -454,15 +457,15 @@ void func_80008438(Object **objRacers, s32 numRacers, s32 updateRate) {
     } while (sp260 != 7);
     if (sp24C > 10 && gAudioLinesOff == FALSE) {
         if (sp244 != music_jingle_current()) {
-            music_jingle_play_safe(var_v0_3->unk0_02/*unksp247*/);
+            music_jingle_play_safe(var_v0_3->unk0_02 /*unksp247*/);
         }
-        music_jingle_volume_set(var_v0_3->unk0_05/*unksp24F*/);
-        music_jingle_pan_set(var_v0_3->unk0_03/*unksp24B*/);
+        music_jingle_volume_set(var_v0_3->unk0_05 /*unksp24F*/);
+        music_jingle_pan_set(var_v0_3->unk0_03 /*unksp24B*/);
     } else {
         music_jingle_stop();
     }
     if (numRacers != 0) {
-        func_80006FC8(objRacers, numRacers, spAC, spB8[0]/*unkspB3*/, updateRate);
+        func_80006FC8(objRacers, numRacers, spAC, spB8[0] /*unkspB3*/, updateRate);
     }
 }
 #else
