@@ -137,13 +137,13 @@ s32 *gLevelModelTable;
 UNUSED f32 gPrevCameraX;          // Set but never read
 UNUSED f32 gPrevCameraY;          // Set but never read
 UNUSED f32 gPrevCameraZ;          // Set but never read
-Triangle *gShadowHeapTris[2 * 2]; // Triangle Data for shadows
+Triangle *gShadowHeapTris[2 + 2]; // Triangle Data for shadows
 Triangle *gCurrShadowTris;
 UNUSED s32 D_8011D334;
-Vertex *gShadowHeapVerts[2 * 2]; // Vertex Data for shadows
+Vertex *gShadowHeapVerts[2 + 2]; // Vertex Data for shadows
 Vertex *gCurrShadowVerts;
 UNUSED s32 D_8011D34C;
-ShadowHeapProperties *gShadowHeapData[2 * 2]; // General data for shadows. Texture and geometry size.
+ShadowHeapProperties *gShadowHeapData[2 + 2]; // General data for shadows. Texture and geometry size.
 ShadowHeapProperties *gCurrShadowHeapData;
 s32 gShadowTail;        // Position in the heap the shadow data ends at.
 s32 gNewShadowTriCount; // xOffset?

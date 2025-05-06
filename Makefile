@@ -193,22 +193,18 @@ CFLAGS := -G 0 -non_shared -verbose -Xcpluscomm -nostdinc -Wab,-r4300_mul
 CFLAGS += $(C_DEFINES)
 CFLAGS += $(INCLUDE_CFLAGS)
 
-CHECK_WARNINGS := -Wall -Wextra -Werror-implicit-function-declaration -Wno-format-security -Wno-unknown-pragmas -Wno-unused-parameter -Wno-missing-braces \
-                  -Wno-main -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-switch -Wno-pointer-sign
+CHECK_WARNINGS := -Wall -Wextra -Wno-unknown-pragmas -Wno-unused-parameter -Wno-switch -Werror-implicit-function-declaration
 ifeq ($(DETECTED_OS), macos)
-	CHECK_WARNINGS += -Wno-constant-conversion -Wno-for-loop-analysis
-	# Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
 	ifeq ($(NON_MATCHING),0)
 		CHECK_WARNINGS += -Wno-unused-value -Wno-deprecated-non-prototype -Wno-array-bounds -Wno-self-assign -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-variable
+		CHECK_WARNINGS += -Wno-pointer-to-int-cast -Wno-constant-conversion -Wno-int-to-pointer-cast
 	endif
 else
-  	CHECK_WARNINGS += -Wno-builtin-declaration-mismatch
-	# Disable GCC complaining about fakematches necessary to match if building a matching ROM. Example: "var2 = (0, var1)"
 	ifeq ($(NON_MATCHING),0)
-		CHECK_WARNINGS += -Wno-unused-value -Wno-array-bounds -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-variable
+		CHECK_WARNINGS += -Wno-unused-variable -Wno-unused-value -Wno-unused-but-set-variable
 	endif
 endif
-CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -DAVOID_UB -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
+CC_CHECK := $(GCC) -fsyntax-only -fno-builtin -funsigned-char $(C_STANDARD) -DAVOID_UB -DCC_CHECK -D_LANGUAGE_C -DNON_MATCHING -DNON_EQUIVALENT $(CHECK_WARNINGS) $(INCLUDE_CFLAGS) $(C_DEFINES) $(GCC_COLOR)
 
 # Only add -m32 for x86_64 machines.
 ifneq ($(filter x86_64%,$(UNAME_M)),)
