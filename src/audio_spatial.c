@@ -10,9 +10,14 @@
 #include "tracks.h"
 #include "math_util.h"
 
+#define MAX_AUDIO_POINTS 40
+#define MAX_AUDIO_LINES 7
+#define MAX_REVERB_LINES 7
+#define MIN_VOLUME_THRESHOLD 10
+
 /************ .data ************/
 
-u16 gUsedMasks = 0;
+u16 gNumAudioPoints = 0;
 
 /*******************************/
 
@@ -33,487 +38,427 @@ UNUSED const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=
 
 /************ .bss ************/
 
-SoundData *D_80119C40;
-SoundMask **gSoundMaskHeapUsed;
-SoundMask *gSoundMaskHeap; // 0x24 struct size - 0x5A0 total size - should be 40 elements
-u8 gFreeMasks;
-SoundMask **gSoundMaskHeapFree;
-unk80119C58 D_80119C58[7];
-unk8011A6D8 D_8011A6D8[7]; // Reverb stuff
-u8 gAudioLinesOff;
+SoundData *gSpatialSoundTable;
+AudioPoint **gAudioPoints;
+AudioPoint *gAudioPointsPool; // 0x24 struct size - 0x5A0 total size - should be 40 elements
+u8 gLastFreePointIndex;
+AudioPoint **gFreeAudioPoints;
+AudioLine gAudioLines[MAX_AUDIO_LINES];
+ReverbLine gReverbLines[MAX_REVERB_LINES]; // Reverb stuff
+u8 gJinglesOff;
 s32 D_8011AC1C;
-
-#define SOUND_MASK_HEAP_COUNT 40
 
 /*******************************/
 
-void audioline_init(void) {
+/**
+ * Initializes the audio spatial system.
+ */
+void audspat_init(void) {
     s32 i;
 
-    sound_table_properties(&D_80119C40, NULL, NULL);
-    gSoundMaskHeap = mempool_alloc_safe(sizeof(SoundMask) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
-    gSoundMaskHeapFree = mempool_alloc_safe(sizeof(uintptr_t) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
-    gSoundMaskHeapUsed = mempool_alloc_safe(sizeof(uintptr_t) * SOUND_MASK_HEAP_COUNT, COLOUR_TAG_CYAN);
-    gUsedMasks = 0;
-    for (i = 0; i < ARRAY_COUNT(D_80119C58); i++) {
-        D_80119C58[i].soundPtr = NULL;
+    sound_table_properties(&gSpatialSoundTable, NULL, NULL);
+    gAudioPointsPool = mempool_alloc_safe(sizeof(AudioPoint) * MAX_AUDIO_POINTS, COLOUR_TAG_CYAN);
+    gFreeAudioPoints = mempool_alloc_safe(sizeof(uintptr_t) * MAX_AUDIO_POINTS, COLOUR_TAG_CYAN);
+    gAudioPoints = mempool_alloc_safe(sizeof(uintptr_t) * MAX_AUDIO_POINTS, COLOUR_TAG_CYAN);
+    gNumAudioPoints = 0;
+    for (i = 0; i < ARRAY_COUNT(gAudioLines); i++) {
+        gAudioLines[i].soundHandle = NULL;
     }
-    for (i = 0; i < SOUND_MASK_HEAP_COUNT; i++) {
-        gSoundMaskHeap[i].soundPtr = NULL;
+    for (i = 0; i < MAX_AUDIO_POINTS; i++) {
+        gAudioPointsPool[i].soundHandle = NULL;
     }
-    audioline_reset();
+    audspat_reset();
 }
 
 /**
  * Stop any playing jingles, then block audio lines from playing anymore.
+ * Does not stop audio lines that are playing sounds of type AUDIO_LINE_TYPE_SOUND.
  * Official Name: amAmbientPause
  */
-void audioline_off(void) {
+void audspat_jingle_off(void) {
     music_jingle_stop();
-    gAudioLinesOff = TRUE;
+    gJinglesOff = TRUE;
 }
 
 /**
  * Allow audio lines to play jingles.
  * Official Name: amAmbientRestart
  */
-void audioline_on(void) {
-    gAudioLinesOff = FALSE;
+void audspat_jingle_on(void) {
+    gJinglesOff = FALSE;
 }
 
-void audioline_reset(void) {
+/**
+ * Stops all sounds and deletes all created audio points and lines.
+ */
+void audspat_reset(void) {
     s32 i;
     s32 j;
     SoundHandle sound;
-    SoundMask *heap;
-    f32 *ptr;
+    AudioPoint *audioPoint;
+    f32 *coords;
 
-    heap = gSoundMaskHeap;
-    gFreeMasks = 0;
-    while (gFreeMasks < SOUND_MASK_HEAP_COUNT) {
-        gSoundMaskHeapFree[gFreeMasks] = heap;
-        heap++;
-        gFreeMasks++;
+    audioPoint = gAudioPointsPool;
+    gLastFreePointIndex = 0;
+    while (gLastFreePointIndex < MAX_AUDIO_POINTS) {
+        gFreeAudioPoints[gLastFreePointIndex] = audioPoint;
+        audioPoint++;
+        gLastFreePointIndex++;
     }
 
-    gFreeMasks--;
+    gLastFreePointIndex--;
 
-    for (i = 0; i < gUsedMasks; i++) {
-        sound = gSoundMaskHeapUsed[i]->soundPtr;
-        gSoundMaskHeapUsed[i]->unk12 = 0;
+    for (i = 0; i < gNumAudioPoints; i++) {
+        sound = gAudioPoints[i]->soundHandle;
+        gAudioPoints[i]->inRange = FALSE;
         if (sound != NULL) {
             sndp_stop(sound);
         }
     }
-    gUsedMasks = 0;
+    gNumAudioPoints = 0;
 
-    for (i = 0; i < 7; i++) {
-        D_80119C58[i].soundID = 0;
-        if (D_80119C58[i].soundPtr != 0) {
-            if (D_80119C58[i].unk0_02 == 0) {
-                sndp_stop(D_80119C58[i].soundPtr);
-            } else if (D_80119C58[i].unk0_02 == 1) {
+    for (i = 0; i < MAX_AUDIO_LINES; i++) {
+        gAudioLines[i].soundBite = 0;
+        if (gAudioLines[i].soundHandle != 0) {
+            if (gAudioLines[i].type == AUDIO_LINE_TYPE_SOUND) {
+                sndp_stop(gAudioLines[i].soundHandle);
+            } else if (gAudioLines[i].type == AUDIO_LINE_TYPE_JINGLE) {
                 music_jingle_stop();
             }
-            D_80119C58[i].soundPtr = NULL;
+            gAudioLines[i].soundHandle = NULL;
         }
-        D_80119C58[i].unk17C = -1;
+        gAudioLines[i].numSegments = -1;
 
-        ptr = D_80119C58[i].unk4_floats;
+        coords = gAudioLines[i].coords;
         for (j = 0; j < 30; j++) {
-            *ptr++ = -100000.0f;
-            *ptr++ = -100000.0f;
-            *ptr++ = -100000.0f;
+            *coords++ = -100000.0f;
+            *coords++ = -100000.0f;
+            *coords++ = -100000.0f;
         }
     }
 
-    for (i = 0; i < 7; i++) {
-        D_8011A6D8[i].unkB8 = -1;
-        D_8011A6D8[i].unk0_02 = 0;
-        D_8011A6D8[i].unkBC = 0.0f;
+    for (i = 0; i < MAX_REVERB_LINES; i++) {
+        gReverbLines[i].numSegments = -1;
+        gReverbLines[i].reverbAmount = 0;
+        gReverbLines[i].totalLength = 0.0f;
 
-        ptr = D_8011A6D8[i].unk4_floats;
+        coords = gReverbLines[i].coords;
         for (j = 0; j < 15; j++) {
-            *ptr++ = -100000.0f;
-            *ptr++ = -100000.0f;
-            *ptr++ = -100000.0f;
+            *coords++ = -100000.0f;
+            *coords++ = -100000.0f;
+            *coords++ = -100000.0f;
         }
     }
 
-    gAudioLinesOff = FALSE;
+    gJinglesOff = FALSE;
 }
 
-// audioline_ambient
-// Official Name: amPlayAudioMap
-#ifdef NON_EQUIVALENT
-void func_80008438(Object **objRacers, s32 numRacers, s32 updateRate) {
-    s32 sp260;
-    s32 sp254;
-    s32 sp250;
-    s32 sp24C;
-    s32 sp248;
-    s32 sp244;
-    f32 sp22C;
-    f32 sp228;
-    f32 sp224;
-    s32 sp1A8;
-    s32 sp12C;
-    s32 numActivePlayers; // numActivePlayers
-    ObjectSegment *spAC;
-    f32 spA8;
-    f32 sp98;
-    f32 sp90;
-    unk80119C58 *sp88;
-    f32 *sp70;
-    ObjectSegment *temp_s3;
-    ObjectSegment *var_s3;
-    ObjectSegment *var_s3_2;
-    f32 *var_s4_2;
-    f32 temp_f0;
-    f32 temp_f0_2;
-    f32 temp_f0_3;
-    f32 temp_f0_4;
-    f32 temp_f0_5;
-    f32 temp_f12;
-    f32 temp_f16_3;
-    f32 temp_f20;
-    f32 temp_f20_2;
-    f32 temp_f20_3;
-    f32 temp_f22;
-    f32 temp_f22_2;
-    f32 temp_f22_3;
-    f32 temp_f2;
-    f32 temp_f4;
-    f32 var_f24;
-    s32 *temp_v1_3;
-    s32 *var_s0;
-    s32 *var_s0_2;
-    s32 *var_s1;
-    s32 *var_s1_2;
-    s32 *var_v0_5;
-    s32 *var_v0_6;
-    s32 temp_a0;
-    s32 temp_a0_2;
-    s32 temp_f16;
-    s32 temp_f16_2;
-    s32 temp_f8;
-    s32 temp_v1;
-    s32 temp_v1_2;
-    s32 var_a0;
-    s32 var_a0_2;
-    s32 var_a2;
-    s32 var_at;
-    s32 var_fp;
-    s32 var_fp_2;
-    s32 var_s2;
-    s32 var_s2_2;
+/**
+ * Updates the parameters for audio points and lines, and invokes the handler for vehicle sounds.
+ * Official Name: amPlayAudioMap
+ */
+void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
+    s32 viewportCount;
     s32 i;
-    s32 var_s5;
-    s32 var_s6;
-    s32 var_v0;
-    s32 var_v0_4;
-    s32 var_v1;
-    s8 var_v1_2;
-    unk80119C58 *var_v0_3;
-    SoundMask *temp_s1;
-    s32 *spB8;
+    s32 j;
+    s32 k;
+    s32 volume;
+    s32 pan;
+    s32 jingleVolume;
+    s32 jinglePan;
+    s32 jingleSound;
+    f32 dx, dy, dz;
+    s32 distance;
+    AudioPoint *audioPoint;
+    f32 outX;
+    f32 outY;
+    f32 outZ;
+    s32 minDist;
+    s32 adjustedVolume;
+    s32 lineDistances[29];
+    s32 pan2;
+    s32 inverseSum;
+    s32 linePans[29];
+    s32 inverseDistances[29];
+    s32 sumOfDistances;
+    s32 numCameras;
+    ObjectSegment *cameras;
+    f32 pitch1;
+    f32 temp;
+    f32 minDistance;
+    f32 *coords;
+    f32 pitch2;
+    s32 unused;
+    f32 pitch3;
 
-    sp24C = 0;
-    numActivePlayers = set_active_viewports_and_max(get_viewport_count());
-    spAC = get_cutscene_camera_segment();
-    sp260 = 0;
-    if (gUsedMasks > 0) {
-        i = 0;
-        do {
-            temp_s1 = gSoundMaskHeapUsed[i];
-            sp254 = 0;
-            if (temp_s1->unk11 & 2) {
-                if (numActivePlayers == 1) {
-                    temp_f20 = temp_s1->pos.x - spAC->trans.x_position;
-                    temp_f0 = temp_s1->pos.y - spAC->trans.y_position;
-                    temp_f22 = temp_s1->pos.z - spAC->trans.z_position;
-                    temp_f16 = sqrtf((temp_f20 * temp_f20) + (temp_f0 * temp_f0) + (temp_f22 * temp_f22));
-                    if ((temp_f16 < temp_s1->distance) && ((temp_s1->unk12 == 0))) {
-                        if (temp_s1->soundPtr == NULL && (temp_s1->unk22 == 0 || !(temp_s1->unk11 & 4))) {
-                            func_80001F14(temp_s1->soundId, &temp_s1->soundPtr);
-                            temp_s1->unk22 = 1;
-                        }
-                        if (temp_s1->soundPtr != NULL) {
-                            spA8 = temp_s1->pitch / 100.0f;
-                            sndp_set_param(temp_s1->soundPtr, AL_SNDP_VOL_EVT, temp_s1->volume << 8);
-                            sndp_set_param(temp_s1->soundPtr, AL_SNDP_PITCH_EVT, *((u32 *) &spA8));
-                            var_a2 = func_800090C0(temp_f20, temp_f22, spAC->trans.rotation.x);
-                            if (numActivePlayers != 1) {
-                                var_a2 = 0x40;
-                            }
-                            sndp_set_param(temp_s1->soundPtr, AL_SNDP_PAN_EVT, var_a2);
-                            audioline_reverb(temp_s1->soundPtr, temp_s1->pos.x, temp_s1->pos.y, temp_s1->pos.z);
-                            sndp_set_priority(temp_s1->soundPtr, temp_s1->unk21);
-                        }
-                        temp_s1->unk12 = 1;
-                    } else if (temp_s1->distance < temp_f16 && temp_s1->unk12 != 0) {
-                        temp_s1->unk12 = 0;
+    jingleVolume = 0;
+    viewportCount = get_viewport_count();
+    numCameras = set_active_viewports_and_max(viewportCount);
+    cameras = get_cutscene_camera_segment();
+
+    // Update audio points
+    for (i = 0; i < gNumAudioPoints; i++) {
+        audioPoint = gAudioPoints[i];
+        volume = 0;
+
+        if (audioPoint->flags & AUDIO_POINT_FLAG_SINGLE_PLAYER) {
+            if (numCameras == 1) {
+                dx = audioPoint->pos.x - cameras[0].trans.x_position;
+                dy = audioPoint->pos.y - cameras[0].trans.y_position;
+                dz = audioPoint->pos.z - cameras[0].trans.z_position;
+                distance = sqrtf(dx * dx + dy * dy + dz * dz);
+                if (distance < audioPoint->range && !audioPoint->inRange) {
+                    if (audioPoint->soundHandle == NULL &&
+                        (!audioPoint->triggeredOnce || !(audioPoint->flags & AUDIO_POINT_FLAG_ONE_TIME_TRIGGER))) {
+                        func_80001F14(audioPoint->soundBite, &audioPoint->soundHandle);
+                        audioPoint->triggeredOnce = TRUE;
                     }
+
+                    if (audioPoint->soundHandle != NULL) {
+                        pitch1 = audioPoint->pitch / 100.0f;
+                        sndp_set_param(audioPoint->soundHandle, AL_SNDP_VOL_EVT, audioPoint->volume * 256);
+                        sndp_set_param(audioPoint->soundHandle, AL_SNDP_PITCH_EVT, *(s32 *) &pitch1);
+                        pan2 = audspat_calculate_spatial_pan(dx, dz, cameras[0].trans.rotation.y_rotation);
+                        if (numCameras != 1) {
+                            pan2 = 64;
+                        }
+                        sndp_set_param(audioPoint->soundHandle, AL_SNDP_PAN_EVT, pan2);
+                        audspat_calculate_echo(audioPoint->soundHandle, audioPoint->pos.x, audioPoint->pos.y,
+                                               audioPoint->pos.z);
+                        sndp_set_priority(audioPoint->soundHandle, audioPoint->priority);
+                    }
+
+                    audioPoint->inRange = TRUE;
+                } else if (distance > audioPoint->range && audioPoint->inRange) {
+                    audioPoint->inRange = FALSE;
+                }
+            }
+        } else {
+            // Calculate volume and pan for all cameras and find the max volume
+            for (j = 0; j < numCameras; j++) {
+                dx = audioPoint->pos.x - cameras[j].trans.x_position;
+                dy = audioPoint->pos.y - cameras[j].trans.y_position;
+                dz = audioPoint->pos.z - cameras[j].trans.z_position;
+                distance = sqrtf(dx * dx + dy * dy + dz * dz);
+                if (distance < audioPoint->range) {
+                    if (!audioPoint->fastFalloff) {
+                        adjustedVolume = (1.0f - (f32) distance / (f32) audioPoint->range) * audioPoint->volume;
+                    } else {
+                        temp = (f32) (audioPoint->range - distance) / (f32) audioPoint->range;
+                        adjustedVolume = temp * temp * audioPoint->volume;
+                    }
+
+                    if (volume < adjustedVolume) {
+                        volume = adjustedVolume;
+                        pan = audspat_calculate_spatial_pan(dx, dz, cameras[j].trans.rotation.y_rotation);
+                    }
+                }
+            }
+
+            // If all cameras are far enough then set volume to minVolume
+            // and calculate pan based on the closest camera
+            if (volume < audioPoint->minVolume) {
+                minDistance = 999999.0f;
+
+                for (j = 0; j < numCameras; j++) {
+                    dx = audioPoint->pos.x - cameras[j].trans.x_position;
+                    dy = audioPoint->pos.y - cameras[j].trans.y_position;
+                    dz = audioPoint->pos.z - cameras[j].trans.z_position;
+                    distance = sqrtf(dx * dx + dy * dy + dz * dz);
+                    if (distance < minDistance) {
+                        pan = audspat_calculate_spatial_pan(dx, dz, cameras[j].trans.rotation.y_rotation);
+                        minDistance = distance;
+                    }
+                }
+
+                volume = audioPoint->minVolume;
+            }
+
+            if (volume > MIN_VOLUME_THRESHOLD) {
+                if (audioPoint->soundHandle == NULL &&
+                    (!audioPoint->triggeredOnce || !(audioPoint->flags & AUDIO_POINT_FLAG_ONE_TIME_TRIGGER))) {
+                    func_80001F14(audioPoint->soundBite, &audioPoint->soundHandle);
+                    audioPoint->triggeredOnce = TRUE;
+                }
+
+                if (audioPoint->soundHandle != NULL) {
+                    pitch2 = audioPoint->pitch / 100.0f;
+                    sndp_set_param(audioPoint->soundHandle, AL_SNDP_VOL_EVT, volume * 256);
+                    sndp_set_param(audioPoint->soundHandle, AL_SNDP_PITCH_EVT, *(s32 *) &pitch2);
+                    if (numCameras != 1) {
+                        pan = 64;
+                    }
+                    sndp_set_param(audioPoint->soundHandle, AL_SNDP_PAN_EVT, pan);
+                    sndp_set_priority(audioPoint->soundHandle, audioPoint->priority);
+                    audspat_calculate_echo(audioPoint->soundHandle, audioPoint->pos.x, audioPoint->pos.y,
+                                           audioPoint->pos.z);
                 }
             } else {
-                var_fp = 0;
-                if (numActivePlayers > 0) {
-                    var_s3 = spAC;
-                    do {
-                        temp_f20 = temp_s1->pos.x - var_s3->trans.x_position;
-                        temp_f0 = temp_s1->pos.y - var_s3->trans.y_position;
-                        temp_f22 = temp_s1->pos.z - var_s3->trans.z_position;
-                        temp_f16 = sqrtf((temp_f20 * temp_f20) + (temp_f0 * temp_f0) + (temp_f22 * temp_f22));
-                        if (temp_f16 < temp_s1->distance) {
-                            if (temp_s1->unk20 == 0) {
-                                var_v0 = ((1.0f - ((f32) temp_f16 / (f32) temp_s1->distance)) * temp_s1->volume);
-                            } else {
-                                temp_f0_3 = (temp_s1->distance - temp_f16) / (f32) temp_s1->distance;
-                                var_v0 = (temp_f0_3 * temp_f0_3 * temp_s1->volume);
-                            }
-                            if (sp254 < var_v0) {
-                                sp254 = var_v0;
-                                sp250 = func_800090C0(temp_f20, temp_f22, var_s3->trans.rotation.x);
-                            }
-                        }
-                        var_fp++;
-                        var_s3++;
-                    } while (var_fp != numActivePlayers);
+                if (audioPoint->soundHandle != NULL) {
+                    sndp_stop(audioPoint->soundHandle);
+                } else {
+                    audioPoint->triggeredOnce = TRUE;
                 }
-                if (sp254 < temp_s1->unk10) {
-                    var_fp = 0;
-                    var_f24 = 999999.0f;
-                    if (numActivePlayers > 0) {
-                        var_s3 = spAC;
-                        do {
-                            temp_f20 = temp_s1->pos.x - var_s3->trans.x_position;
-                            temp_f0 = temp_s1->pos.y - var_s3->trans.y_position;
-                            temp_f22 = temp_s1->pos.z - var_s3->trans.z_position;
-                            temp_f16 = sqrtf((temp_f20 * temp_f20) + (temp_f0 * temp_f0) + (temp_f22 * temp_f22));
-                            if (temp_f16 < var_f24) {
-                                sp250 = func_800090C0(temp_f20, temp_f22, var_s3->trans.rotation.x);
-                                var_f24 = temp_f16;
-                            }
-                            var_fp++;
-                            var_s3++;
-                        } while (var_fp != numActivePlayers);
+            }
+
+            if ((audioPoint->flags & AUDIO_POINT_FLAG_ONE_TIME_TRIGGER) && audioPoint->triggeredOnce &&
+                audioPoint->soundHandle == NULL) {
+                audspat_point_stop_by_index(i);
+            }
+        }
+    }
+
+    // Update audio lines
+    for (i = 0; i < MAX_AUDIO_LINES; i++) {
+        AudioLine *line = &gAudioLines[i];
+
+        if (line->soundBite != SOUND_NONE && audspat_line_validate(i)) {
+            volume = 0;
+
+            for (j = 0; j < numCameras; j++) {
+                coords = line->coords;
+                sumOfDistances = 0;
+                minDist = line->range;
+                for (k = 0; k < line->numSegments; k++) {
+                    lineDistances[k] =
+                        audspat_distance_to_segment(cameras[j].trans.x_position, cameras[j].trans.y_position,
+                                                    cameras[j].trans.z_position, coords, &outX, &outY, &outZ);
+                    linePans[k] = audspat_calculate_spatial_pan(outX - cameras[j].trans.x_position,
+                                                                outZ - cameras[j].trans.z_position,
+                                                                cameras[j].trans.rotation.y_rotation);
+                    if (minDist > lineDistances[k]) {
+                        minDist = lineDistances[k];
                     }
-                    sp254 = temp_s1->unk10;
+                    coords += 3;
+                    sumOfDistances += lineDistances[k];
                 }
-                if (sp254 > 10) {
-                    if ((temp_s1->soundPtr == NULL) && ((temp_s1->unk22 == 0) || !(temp_s1->unk11 & 4))) {
-                        func_80001F14(temp_s1->soundId, &temp_s1->soundPtr);
-                        temp_s1->unk22 = 1;
-                    }
-                    if (temp_s1->soundPtr != NULL) {
-                        sp98 = temp_s1->pitch / 100.0f;
-                        sndp_set_param(temp_s1->soundPtr, AL_SNDP_VOL_EVT, sp254 << 8);
-                        sndp_set_param(temp_s1->soundPtr, AL_SNDP_PITCH_EVT, *((u32 *) &sp98));
-                        if (numActivePlayers != 1) {
-                            sp250 = 0x40;
+
+                if (!line->fastFalloff) {
+                    adjustedVolume = (1.0f - (f32) minDist / (f32) line->range) * line->unk174;
+                } else {
+                    temp = (f32) (line->range - minDist) / (f32) line->range;
+                    adjustedVolume = temp * temp * line->unk174;
+                }
+
+                if (volume <= adjustedVolume) {
+                    volume = adjustedVolume;
+
+                    if (line->numSegments == 1) {
+                        pan = linePans[0];
+                    } else {
+                        inverseSum = 0;
+                        for (k = 0; k < line->numSegments; k++) {
+                            inverseDistances[k] = sumOfDistances - lineDistances[k];
+                            inverseSum += inverseDistances[k];
                         }
-                        sndp_set_param(temp_s1->soundPtr, AL_SNDP_PAN_EVT, sp250);
-                        sndp_set_priority(temp_s1->soundPtr, temp_s1->unk21);
-                        audioline_reverb(temp_s1->soundPtr, temp_s1->pos.x, temp_s1->pos.y, temp_s1->pos.z);
+
+                        pan = 0;
+                        for (k = 0; k < line->numSegments; k++) {
+                            pan += (f32) inverseDistances[k] / (f32) inverseSum * (f32) linePans[k];
+                        }
+                    }
+
+                    if (minDist < 400) {
+                        pan = (pan - 64) * (minDist / 400.0f) + 64;
+                    }
+                }
+            }
+
+            if (line->type == AUDIO_LINE_TYPE_SOUND) {
+                if (volume < line->maxVolume) {
+                    volume = line->maxVolume;
+                }
+
+                if (volume > MIN_VOLUME_THRESHOLD) {
+                    pitch3 = line->unk176 / 100.0f;
+
+                    if (line->soundHandle == NULL) {
+                        func_80001F14(line->soundBite, &line->soundHandle);
+                    }
+
+                    if (line->soundHandle != NULL) {
+                        sndp_set_param(line->soundHandle, AL_SNDP_VOL_EVT, volume * 256);
+                        sndp_set_param(line->soundHandle, AL_SNDP_PITCH_EVT, *(s32 *) &pitch3);
+                        if (numCameras != 1) {
+                            pan = 64;
+                        }
+                        sndp_set_param(line->soundHandle, AL_SNDP_PAN_EVT, pan);
+                        sndp_set_priority(line->soundHandle, line->priority);
                     }
                 } else {
-                    if (temp_s1->soundPtr != NULL) {
-                        sndp_stop(temp_s1->soundPtr);
-                    } else {
-                        temp_s1->unk22 = 1;
+                    if (line->soundHandle != NULL) {
+                        sndp_stop(line->soundHandle);
                     }
                 }
-                if ((temp_s1->unk11 & 4) && temp_s1->unk22 && temp_s1->soundPtr == NULL) {
-                    func_8000A2E8(sp260);
-                }
+            } else if (line->type == AUDIO_LINE_TYPE_JINGLE && volume > jingleVolume) {
+                jingleVolume = volume;
+                jinglePan = pan;
+                jingleSound = line->soundBite;
             }
-            sp260++;
-            i++;
-        } while (sp260 < gUsedMasks);
-        sp260 = 0;
+        }
     }
-    var_v0_3 = D_80119C58;
-    do {
-        sp88 = var_v0_3;
-        if (var_v0_3->soundID != 0) {
-            sp88 = var_v0_3;
-            if (func_800099EC(var_v0_3->unk0_02 /*unksp263*/) != 0) {
-                sp254 = 0;
-                i = 0;
-                if (numActivePlayers > 0) {
-                    sp70 = sp88->unk4_floats;
-                    do {
-                        var_s4_2 = sp70;
-                        var_v1 = sp88->unk170;
-                        var_s5 = 0;
-                        var_s2 = 0;
-                        var_s6 = var_v1;
-                        if (sp88->unk17C > 0) {
-                            var_s0 = &sp1A8;
-                            var_s1 = &sp12C;
-                            temp_s3 = &spAC[i];
-                            do {
-                                *var_s0 =
-                                    audioline_distance(temp_s3->trans.x_position, temp_s3->trans.y_position,
-                                                       temp_s3->trans.z_position, var_s4_2, &sp22C, &sp228, &sp224);
-                                temp_v1 = *var_s0;
-                                *var_s1 = func_800090C0(sp22C - temp_s3->trans.x_position,
-                                                        sp224 - temp_s3->trans.z_position, temp_s3->trans.rotation.x);
-                                var_s4_2 += 0xC;
-                                if (temp_v1 < var_s6) {
-                                    var_s6 = temp_v1;
-                                }
-                                var_s2 += 1;
-                                var_s0 += 4;
-                                var_s1 += 4;
-                                var_s5 += temp_v1;
-                            } while (var_s2 < var_v0_3->unk17C);
-                            var_v1 = sp88->unk170;
-                        }
-                        temp_f2 = (f32) var_v1;
-                        temp_f12 = (f32) sp88->unk174;
-                        if (sp88->unk17D == 0) {
-                            var_v0_4 = (s32) ((1.0f - ((f32) var_s6 / temp_f2)) * temp_f12);
-                        } else {
-                            temp_f0_5 = (f32) (var_v1 - var_s6) / temp_f2;
-                            var_v0_4 = (s32) (temp_f0_5 * temp_f0_5 * temp_f12);
-                        }
-                        if (var_v0_4 >= sp254) {
-                            sp254 = var_v0_4;
-                            var_v1_2 = sp88->unk17C;
-                            var_a0 = 0;
-                            if (var_v1_2 == 1) {
-                                sp250 = sp12C;
-                            } else {
-                                var_s2_2 = 0;
-                                sp250 = 0;
-                                if (var_v1_2 > 0) {
-                                    var_s0_2 = &sp1A8;
-                                    var_v0_5 = &spB8[0];
-                                    do {
-                                        var_s2_2 += 1;
-                                        temp_v1_2 = var_s5 - *var_s0_2;
-                                        *var_v0_5 = temp_v1_2;
-                                        var_s0_2 += 4;
-                                        var_v0_5 += 4;
-                                        var_a0 += temp_v1_2;
-                                    } while (var_s2_2 < var_v0_3->unk17C);
-                                    var_v1_2 = sp88->unk17C;
-                                }
-                                var_s1_2 = &sp12C;
-                                if (var_v1_2 > 0) {
-                                    var_v0_6 = &spB8[0];
-                                    var_a0_2 = sp250;
-                                    temp_v1_3 = &var_v0_6[var_v0_3->unk17C];
-                                    do {
-                                        temp_f16_3 = (f32) *var_v0_6;
-                                        var_v0_6 += 4;
-                                        temp_f4 = (f32) *var_s1_2;
-                                        var_s1_2 += 4;
-                                        var_a0_2 = (s32) ((f32) var_a0_2 + ((temp_f16_3 / (f32) var_a0) * temp_f4));
-                                    } while ((u32) var_v0_6 < (u32) temp_v1_3);
-                                    sp250 = var_a0_2;
-                                }
-                            }
-                            if (var_s6 < 400) {
-                                sp250 = (((sp250 - 64) * (var_s6 / 400.0f)) + 64.0f);
-                            }
-                        }
-                        i++;
-                    } while (i != numActivePlayers);
-                }
-                if (sp88->unk0_02 == 0) {
-                    if (sp254 < sp88->unk175) {
-                        sp254 = sp88->unk175;
-                    }
-                    if (sp254 > 10) {
-                        sp90 = sp88->unk176 / 100.0f;
-                        if (sp88->soundPtr == NULL) {
-                            func_80001F14(sp88->soundID, &sp88->soundPtr);
-                        }
-                        if (sp88->soundPtr != NULL) {
-                            sndp_set_param(sp88->soundPtr, AL_SNDP_VOL_EVT, sp254 << 8);
-                            sndp_set_param(sp88->soundPtr, AL_SNDP_PITCH_EVT, *((u32 *) &sp90));
-                            if (numActivePlayers != 1) {
-                                sp250 = 0x40;
-                            }
-                            sndp_set_param(sp88->soundPtr, AL_SNDP_PAN_EVT, (u32) sp250);
-                            sndp_set_priority(sp88->soundPtr, sp88->unk17E);
-                        }
-                    } else {
-                        if (sp88->soundPtr != NULL) {
-                            sndp_stop(sp88->soundPtr);
-                        }
-                    }
-                } else if (sp88->unk0_02 == 1 && sp24C < sp254) {
-                    sp24C = sp254;
-                    sp248 = sp250;
-                    sp244 = sp88->soundID;
-                }
-            }
+
+    // Update jingle parameters
+    if (jingleVolume > MIN_VOLUME_THRESHOLD && !gJinglesOff) {
+        if (music_jingle_current() != jingleSound) {
+            music_jingle_play_safe(jingleSound);
         }
-        sp260++;
-        var_v0_3 = &sp88[1];
-    } while (sp260 != 7);
-    if (sp24C > 10 && gAudioLinesOff == FALSE) {
-        if (sp244 != music_jingle_current()) {
-            music_jingle_play_safe(var_v0_3->unk0_02 /*unksp247*/);
-        }
-        music_jingle_volume_set(var_v0_3->unk0_05 /*unksp24F*/);
-        music_jingle_pan_set(var_v0_3->unk0_03 /*unksp24B*/);
+        music_jingle_volume_set(jingleVolume);
+        music_jingle_pan_set(jinglePan);
     } else {
         music_jingle_stop();
     }
-    if (numRacers != 0) {
-        func_80006FC8(objRacers, numRacers, spAC, spB8[0] /*unkspB3*/, updateRate);
+
+    // Update vehicle sounds
+    if (numObjects != 0) {
+        func_80006FC8(objList, numObjects, cameras, numCameras, updateRate);
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_spatial/func_80008438.s")
-#endif
 
 /**
+ * Computes the pan value based on the camera's position and orientation relative to the sound source.
  * Official Name: amCalcSfxStereo
  */
-s32 func_800090C0(f32 x, f32 z, s32 yRot) {
-    s32 temp_v1;
-    s32 ret;
-    f32 sp1C;
+s32 audspat_calculate_spatial_pan(f32 x, f32 z, s32 yaw) {
+    s32 angle;
+    s32 pan;
+    f32 distance;
 
-    sp1C = sqrtf((x * x) + (z * z));
-    temp_v1 = 0xFFFF - arctan2_f(x, z);
+    distance = sqrtf((x * x) + (z * z));
+    angle = 0xFFFF - arctan2_f(x, z);
 
-    if (temp_v1 < yRot) {
-        if (sp1C <= 1.0f) {
-            ret = 64 - ((sins_s16(yRot - temp_v1) / 1024) * (sp1C * 1));
+    if (angle < yaw) {
+        if (distance <= 1.0f) {
+            pan = 64 - ((sins_s16(yaw - angle) / 1024) * (distance * 1));
         } else {
-            ret = 64 - (sins_2(yRot - temp_v1) / 1024);
+            pan = 64 - (sins_2(yaw - angle) / 1024);
         }
-    } else if (sp1C <= 1.0f) {
-        ret = (sins_s16(temp_v1 - yRot) / 1024) * (sp1C * 1) + 64;
     } else {
-        ret = (sins_2(temp_v1 - yRot) / 1024) + 64;
+        if (distance <= 1.0f) {
+            pan = (sins_s16(angle - yaw) / 1024) * (distance * 1) + 64;
+        } else {
+            pan = (sins_2(angle - yaw) / 1024) + 64;
+        }
     }
 
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
-        ret = 128 - ret;
+        pan = 128 - pan;
     }
 
-    return ret;
+    return pan;
 }
 
 /**
- * Calculates the position between two points, then the distance from the nearest point.
- * Write the adjusted positions to the arguments.
- * Returns the distance between the input and the nearest endpoint.
+ * Computes the distance from a point to a line segment in 3D space,
+ * and returns the coordinates of the closest point on the segment.
  */
-s32 audioline_distance(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 *outY, f32 *outZ) {
+s32 audspat_distance_to_segment(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 *outY, f32 *outZ) {
     f32 dx, dy, dz;
     f32 x1, y1, z1;
     f32 x2, y2, z2;
 
-    f32 mag;
-    f32 ret;
+    f32 projection;
+    f32 distance;
 
     x1 = coords[0];
     y1 = coords[1];
@@ -521,263 +466,304 @@ s32 audioline_distance(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 
     x2 = coords[3];
     y2 = coords[4];
     z2 = coords[5];
-    mag = 0.0f;
+    projection = 0.0f;
 
     dx = x2 - x1;
     dy = y2 - y1;
     dz = z2 - z1;
 
     if (dx == 0.0 && dy == 0.0 && dz == 0.0) {
-        mag = 0.0f;
+        projection = 0.0f;
     } else {
-        mag = ((inX - x1) * dx + (inY - y1) * dy + (inZ - z1) * dz) / (dx * dx + dy * dy + dz * dz);
+        projection = ((inX - x1) * dx + (inY - y1) * dy + (inZ - z1) * dz) / (dx * dx + dy * dy + dz * dz);
     }
 
-    if (mag < 0.0f) {
+    if (projection < 0.0f) {
+        // First vertex is the closest
         *outX = x1;
         *outY = y1;
         *outZ = z1;
         dx = x1 - inX;
         dy = y1 - inY;
         dz = z1 - inZ;
-        ret = sqrtf(dx * dx + dy * dy + dz * dz);
-    } else if (mag > 1.0f) {
+        distance = sqrtf(dx * dx + dy * dy + dz * dz);
+    } else if (projection > 1.0f) {
+        // Second vertex is the closest
         *outX = x2;
         *outY = y2;
         *outZ = z2;
         dx = x2 - inX;
         dy = y2 - inY;
         dz = z2 - inZ;
-        ret = sqrtf(dx * dx + dy * dy + dz * dz);
+        distance = sqrtf(dx * dx + dy * dy + dz * dz);
     } else {
-        *outX = mag * dx + x1, // Comma required here as this was likely all one line.
-            *outY = mag * dy + y1, *outZ = mag * dz + z1;
-
-        ret = sqrtf((*outX - inX) * (*outX - inX) + (*outY - inY) * (*outY - inY) + (*outZ - inZ) * (*outZ - inZ));
+        // Closest point is between the two vertices
+        // Calculate the point on the line
+        *outX = projection * dx + x1, *outY = projection * dy + y1, *outZ = projection * dz + z1;
+        distance = sqrtf((*outX - inX) * (*outX - inX) + (*outY - inY) * (*outY - inY) + (*outZ - inZ) * (*outZ - inZ));
     }
 
-    return ret;
+    return distance;
 }
 
 /**
  * Play Sound at position
  * Official Name: amSndPlayXYZ
  */
-void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, SoundMask **soundMask) {
-    func_8000974C(D_80119C40[soundId].soundBite, x, y, z, arg4, D_80119C40[soundId].unk3, D_80119C40[soundId].volume,
-                  D_80119C40[soundId].distance, 0, D_80119C40[soundId].pitch, D_80119C40[soundId].unk8, soundMask);
+void audspat_play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 flags, AudioPoint **handlePtr) {
+    audspat_point_create(gSpatialSoundTable[soundId].soundBite, x, y, z, flags, gSpatialSoundTable[soundId].minVolume,
+                         gSpatialSoundTable[soundId].volume, gSpatialSoundTable[soundId].range, FALSE,
+                         gSpatialSoundTable[soundId].pitch, gSpatialSoundTable[soundId].priority, handlePtr);
 }
 
 /**
+ * Uncertain of the exact purpose of this function, but it directly takes a sound ID
+ * and bypasses the sound table.
  * Official Name: amSndPlayDirectXYZ
  */
-void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 pitch, SoundMask **soundMask) {
-    func_8000974C(soundId, x, y, z, arg4, 100, arg5, 15000, 0, pitch, 0x3F, soundMask);
+void audspat_play_sound_direct(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 volume, f32 pitch,
+                               AudioPoint **handlePtr) {
+    audspat_point_create(soundBite, x, y, z, flags, /* minVolume */ 100, volume, /* range */ 15000, FALSE, pitch,
+                         /* priority */ 63, handlePtr);
 }
 
 /**
- * I think this function is used to update the world position of any sound associated with the given soundmask.
+ * Sets the position of an audio point.
  * Official Name: amSndSetXYZ
  */
-void update_spatial_audio_position(SoundMask *soundMask, f32 x, f32 y, f32 z) {
-    soundMask->pos.x = x;
-    soundMask->pos.y = y;
-    soundMask->pos.z = z;
+void audspat_point_set_position(AudioPoint *audioPoint, f32 x, f32 y, f32 z) {
+    audioPoint->pos.x = x;
+    audioPoint->pos.y = y;
+    audioPoint->pos.z = z;
 }
 
 /**
  * Official Name: amSndStopXYZ
+ * Stops the sound associated with the audio point.
  */
-void func_800096F8(SoundMask *soundMask) {
+void audspat_point_stop(AudioPoint *point) {
     s32 i;
-    for (i = 0; i < SOUND_MASK_HEAP_COUNT; i++) {
-        if (soundMask == gSoundMaskHeapUsed[i]) {
-            func_8000A2E8(i);
+    for (i = 0; i < MAX_AUDIO_POINTS; i++) {
+        if (point == gAudioPoints[i]) {
+            audspat_point_stop_by_index(i);
             break;
         }
     }
 }
 
 /**
+ * Creates a point sound source and sets its parameters
  * Official Name: amCreateAudioPoint
  */
-void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volume, u16 distance, u8 arg8, u8 pitch,
-                   u8 argA, SoundMask **soundMask) {
-    SoundMask *newMask;
+void audspat_point_create(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 minVolume, u8 volume, u16 range,
+                          u8 fastFalloff, u8 pitch, u8 priority, AudioPoint **handlePtr) {
+    AudioPoint *audioPoint;
 
-    if (soundMask != NULL) {
+    if (handlePtr != NULL) {
         func_800245B4(soundBite | 0xE000);
     }
-    if (gUsedMasks == SOUND_MASK_HEAP_COUNT) {
-        if (soundMask != NULL) {
-            *soundMask = NULL;
+    if (gNumAudioPoints == MAX_AUDIO_POINTS) {
+        if (handlePtr != NULL) {
+            *handlePtr = NULL;
         }
         func_800245B4(0xAA55);
         return;
     }
-    newMask = gSoundMaskHeapFree[gFreeMasks--];
-    newMask->pos.x = x;
-    newMask->pos.y = y;
-    newMask->pos.z = z;
-    newMask->soundId = soundBite;
-    newMask->unk11 = arg4;
-    newMask->unk10 = arg5;
-    newMask->volume = volume;
-    newMask->pitch = pitch;
-    newMask->distance = distance;
-    newMask->unk20 = arg8;
-    newMask->unk21 = argA;
-    newMask->unk22 = 0;
-    newMask->soundMask = soundMask;
-    gSoundMaskHeapUsed[gUsedMasks++] = newMask;
-    if (soundMask != NULL) {
-        *soundMask = newMask;
+    audioPoint = gFreeAudioPoints[gLastFreePointIndex--];
+    audioPoint->pos.x = x;
+    audioPoint->pos.y = y;
+    audioPoint->pos.z = z;
+    audioPoint->soundBite = soundBite;
+    audioPoint->flags = flags;
+    audioPoint->minVolume = minVolume;
+    audioPoint->volume = volume;
+    audioPoint->pitch = pitch;
+    audioPoint->range = range;
+    audioPoint->fastFalloff = fastFalloff;
+    audioPoint->priority = priority;
+    audioPoint->triggeredOnce = 0;
+    audioPoint->userHandlePtr = handlePtr;
+    gAudioPoints[gNumAudioPoints++] = audioPoint;
+    if (handlePtr != NULL) {
+        *handlePtr = audioPoint;
     }
 }
 
-void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 arg8, u16 arg9,
-                              u8 argA, u8 lineID, u8 argC) {
-    unk80119C58 *temp_v1;
-    f32 *temp_a0;
+/**
+ * Adds a vertex to the audio line.
+ * An audio line is a sound source in the form of a polyline
+ * The first vertex defines the sound ID and other properties.
+ */
+void audspat_line_add_vertex(u8 type, u16 soundBite, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 priority,
+                             u16 arg9, u8 argA, u8 lineID, u8 vertexIndex) {
+    AudioLine *line;
+    f32 *coords;
 
-    if (lineID < 7 && argC < 30) {
-        temp_v1 = &D_80119C58[lineID];
-        temp_a0 = &temp_v1->unk4_floats[argC * 3];
-        temp_a0[0] = x;
-        temp_a0[1] = y;
-        temp_a0[2] = z;
-        if (argC == 0) {
-            temp_v1->soundID = soundId;
-            temp_v1->unk0_02 = arg0;
-            temp_v1->unk170 = arg9;
-            temp_v1->unk17D = argA;
-            temp_v1->unk174 = arg6;
-            temp_v1->unk175 = arg5;
-            temp_v1->unk176 = arg7;
-            temp_v1->unk17E = arg8;
+    if (lineID < MAX_AUDIO_LINES && vertexIndex < 30) {
+        line = &gAudioLines[lineID];
+        coords = &line->coords[vertexIndex * 3];
+        coords[0] = x;
+        coords[1] = y;
+        coords[2] = z;
+        if (vertexIndex == 0) {
+            line->soundBite = soundBite;
+            line->type = type;
+            line->range = arg9;
+            line->fastFalloff = argA;
+            line->unk174 = arg6;
+            line->maxVolume = arg5;
+            line->unk176 = arg7;
+            line->priority = priority;
         }
-        if (temp_v1->unk17C < argC) {
-            temp_v1->unk17C = argC;
-        }
-    }
-}
-
-void audioline_reverb_create(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
-    unk8011A6D8 *temp;
-    if (arg4 < ARRAY_COUNT(D_8011A6D8) && arg5 < 15) {
-        temp = &D_8011A6D8[arg4];
-        temp->unk4_floats[3 * arg5 + 0] = x;
-        temp->unk4_floats[3 * arg5 + 1] = y;
-        temp->unk4_floats[3 * arg5 + 2] = z;
-        if (arg5 == 0) {
-            temp->unk0_02 = arg3;
-        }
-        if (temp->unkB8 < arg5) {
-            temp->unkB8 = arg5;
+        if (line->numSegments < vertexIndex) {
+            line->numSegments = vertexIndex;
         }
     }
 }
 
-s32 func_800099EC(u8 arg0) {
+/**
+ * Adds a vertex to a reverb line.
+ * Reverb lines are used to calculate echo effects in the game.
+ * The first vertex defines the reverb intensity.
+ */
+void audspat_reverb_add_vertex(f32 x, f32 y, f32 z, u8 reverbAmount, u8 lineID, u8 vertexIndex) {
+    ReverbLine *line;
+    if (lineID < ARRAY_COUNT(gReverbLines) && vertexIndex < 15) {
+        line = &gReverbLines[lineID];
+        line->coords[3 * vertexIndex + 0] = x;
+        line->coords[3 * vertexIndex + 1] = y;
+        line->coords[3 * vertexIndex + 2] = z;
+        if (vertexIndex == 0) {
+            line->reverbAmount = reverbAmount;
+        }
+        if (line->numSegments < vertexIndex) {
+            line->numSegments = vertexIndex;
+        }
+    }
+}
+
+/**
+ * Checks that all vertex coordinates are defined.
+ */
+s32 audspat_line_validate(u8 lineID) {
     s32 ret;
     s32 i;
-    unk80119C58 *temp_v0;
-    f32 *var_a2;
+    AudioLine *line;
+    f32 *coords;
 
-    ret = 1;
-    temp_v0 = &D_80119C58[arg0];
-    var_a2 = temp_v0->unk4_floats;
+    ret = TRUE;
+    line = &gAudioLines[lineID];
+    coords = line->coords;
 
-    if (temp_v0->unk17C <= 0) {
-        return 0;
+    if (line->numSegments <= 0) {
+        return FALSE;
     }
 
-    for (i = 0; i < temp_v0->unk17C; i++) {
-        //@bug should be *(var_a2 + 0), *(var_a2 + 1), *(var_a2 + 2)
-        if (*var_a2 + 0 == -100000.0 || *var_a2 + 1 == -100000.0 || *var_a2 + 2 == -100000.0) {
-            ret = 0;
+    for (i = 0; i < line->numSegments; i++) {
+        //@bug should be *(coords + 0), *(coords + 1), *(coords + 2)
+        if (*coords + 0 == -100000.0 || *coords + 1 == -100000.0 || *coords + 2 == -100000.0) {
+            ret = FALSE;
         }
-        var_a2 += 3;
+        coords += 3;
     }
 
     return ret;
 }
 
-s32 func_80009AB4(u8 arg0) {
+/**
+ * Checks that all vertex coordinates are defined.
+ */
+s32 audspat_reverb_validate(u8 reverbLineID) {
     s32 ret;
     s32 i;
-    unk8011A6D8 *temp_v0;
-    f32 *var_a2;
+    ReverbLine *line;
+    f32 *coords;
 
-    ret = 1;
-    temp_v0 = &D_8011A6D8[arg0];
-    var_a2 = temp_v0->unk4_floats;
+    ret = TRUE;
+    line = &gReverbLines[reverbLineID];
+    coords = line->coords;
 
-    if (temp_v0->unkB8 <= 0) {
-        return 0;
+    if (line->numSegments <= 0) {
+        return FALSE;
     }
 
-    for (i = 0; i < temp_v0->unkB8; i++) {
-        //@bug should be *(var_a2 + 0), *(var_a2 + 1), *(var_a2 + 2)
-        if (*var_a2 == -100000.0 || *var_a2 + 1 == -100000.0 || *var_a2 + 2 == -100000.0) {
-            ret = 0;
+    for (i = 0; i < line->numSegments; i++) {
+        //@bug should be *(coords + 0), *(coords + 1), *(coords + 2)
+        if (*coords == -100000.0 || *coords + 1 == -100000.0 || *coords + 2 == -100000.0) {
+            ret = FALSE;
         }
-        var_a2 += 3;
+        coords += 3;
     }
 
     return ret;
 }
 
-void audioline_reverb(SoundHandle soundHandle, f32 x, f32 y, f32 z) {
+/**
+ * Calculates and sets the reverb amount for a sound at the given position.
+ * It checks all ReverbLine curves and finds the closest one to the specified point.
+ * Reverberation is disabled if there is no surface above the point (i.e., the point is not inside a tunnel).
+ */
+void audspat_calculate_echo(SoundHandle soundHandle, f32 x, f32 y, f32 z) {
     s32 i;
     s32 j;
-    unk8011A6D8 *temp;
+    ReverbLine *reverbLine;
     s32 k;
     f32 outX;
     f32 outY;
     f32 outZ;
-    s32 distBetween;
-    s32 maxDist;
+    s32 distToSegment;
+    s32 minDist;
     s32 levelSegmentIndex;
     s32 numOfYVals;
-    u8 volume;
-    u8 temp_v0_4;
+    u8 maxReverbAmt;
+    u8 reverbAmt;
     f32 *coords;
     f32 yVals[10];
 
     levelSegmentIndex = get_level_segment_index_from_position(x, y, z);
-    volume = 0;
-    maxDist = 400;
-    for (i = 0; i < ARRAY_COUNT(D_8011A6D8); i++) {
-        temp = &D_8011A6D8[i];
-        if (temp->unk0_02 != 0) {
-            if (func_80009AB4(i) != 0) {
-                coords = temp->unk4_floats;
-                for (j = 0; j < temp->unkB8; j++) {
-                    distBetween = audioline_distance(x, y, z, coords, &outX, &outY, &outZ);
-                    if (distBetween < maxDist) {
-                        numOfYVals = func_8002BAB0(levelSegmentIndex, x, z, yVals);
-                        for (k = 0; k < numOfYVals; k++) {
-                            if (y < yVals[k]) {
-                                maxDist = distBetween;
-                                temp_v0_4 = func_80009D6C(&D_8011A6D8[i], outX, outY, outZ);
-                                if (volume < temp_v0_4) {
-                                    volume = temp_v0_4;
-                                }
+    maxReverbAmt = 0;
+    minDist = 400;
+
+    for (i = 0; i < MAX_REVERB_LINES; i++) {
+        reverbLine = &gReverbLines[i];
+        if (reverbLine->reverbAmount != 0 && audspat_reverb_validate(i)) {
+            coords = reverbLine->coords;
+            for (j = 0; j < reverbLine->numSegments; j++) {
+                distToSegment = audspat_distance_to_segment(x, y, z, coords, &outX, &outY, &outZ);
+                // There seems to be a logic mistake here: the maximum reverb effect may not necessarily come from the
+                // nearest segment. The closest segment could be near the beginning of the curve and not contribute much
+                // to the echo. It would be better to iterate through all segments, but this approach would be slower.
+                if (distToSegment < minDist) {
+                    // Check if the point is below the ceiling (indicating it is inside a tunnel).
+                    // This check should ideally be performed only once per call.
+                    numOfYVals = func_8002BAB0(levelSegmentIndex, x, z, yVals);
+                    for (k = 0; k < numOfYVals; k++) {
+                        if (y < yVals[k]) {
+                            minDist = distToSegment;
+                            reverbAmt = audspat_reverb_get_strength_at_point(reverbLine, outX, outY, outZ);
+                            if (maxReverbAmt < reverbAmt) {
+                                maxReverbAmt = reverbAmt;
                             }
                         }
                     }
-                    coords += 3;
                 }
+                coords += 3;
             }
         }
     }
+
     if (soundHandle != NULL) {
-        sndp_set_param((SoundHandle) (s32) soundHandle, AL_SNDP_FX_EVT, (u32) volume);
+        sndp_set_param(soundHandle, AL_SNDP_FX_EVT, maxReverbAmt);
     }
 }
 
-u8 func_80009D6C(unk8011A6D8 *arg0, f32 arg1, f32 arg2, f32 arg3) {
+/**
+ * Returns the reverb strength at a point along the line.
+ * The strength is calculated based on the distance from the start or the end of the line.
+ * Maximum strength is returned if the point is not within 300 units of the start or end.
+ * The strength is linearly interpolated between 0 and the maximum reverb amount.
+ */
+u8 audspat_reverb_get_strength_at_point(ReverbLine *line, f32 x, f32 y, f32 z) {
     f32 deltaX;
     f32 deltaY;
     f32 deltaZ;
@@ -785,28 +771,28 @@ u8 func_80009D6C(unk8011A6D8 *arg0, f32 arg1, f32 arg2, f32 arg3) {
     f32 x1, y1, z1;
     f32 x2, y2, z2;
     f32 dx, dy, dz;
-    f32 f20;
-    f32 sp5C;
-    f32 length;
-    u8 sp57;
-    f32 f12;
+    f32 i;
+    f32 distanceAlong;
+    f32 segmentLength;
+    u8 segmentFound;
+    f32 projection;
 
-    if (arg0->unkBC == 0.0f) {
-        coords = arg0->unk4_floats;
-        for (f20 = 0.0f; f20 < arg0->unkB8; f20 += 1.0f) {
+    if (line->totalLength == 0.0f) {
+        coords = line->coords;
+        for (i = 0.0f; i < line->numSegments; i += 1.0f) {
             deltaX = coords[3] - coords[0];
             deltaY = coords[4] - coords[1];
             deltaZ = coords[5] - coords[2];
-            arg0->unkBC += sqrtf((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ));
+            line->totalLength += sqrtf((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ));
             coords += 3;
         }
     }
 
-    coords = arg0->unk4_floats;
-    sp5C = 0.0f;
-    sp57 = FALSE;
+    coords = line->coords;
+    distanceAlong = 0.0f;
+    segmentFound = FALSE;
 
-    for (; !sp57; coords += 3) {
+    for (; !segmentFound; coords += 3) {
         x1 = coords[0];
         y1 = coords[1];
         z1 = coords[2];
@@ -816,83 +802,93 @@ u8 func_80009D6C(unk8011A6D8 *arg0, f32 arg1, f32 arg2, f32 arg3) {
         dx = x2 - x1;
         dy = y2 - y1;
         dz = z2 - z1;
-        length = sqrtf((dx * dx) + (dy * dy) + (dz * dz));
+        segmentLength = sqrtf((dx * dx) + (dy * dy) + (dz * dz));
 
-        if ((arg1 >= x1 && arg1 <= x2) || (arg1 >= x2 && arg1 <= x1)) {
+        if ((x >= x1 && x <= x2) || (x >= x2 && x <= x1)) {
             if (dx != 0.0f) {
-                f12 = (arg1 - x1) / dx;
+                projection = (x - x1) / dx;
             } else if (dy != 0.0f) {
-                f12 = (arg2 - y1) / dy;
+                projection = (y - y1) / dy;
             } else if (dz != 0.0f) {
-                f12 = (arg3 - z1) / dz;
+                projection = (z - z1) / dz;
             } else {
-                f12 = 0.0f;
+                projection = 0.0f;
             }
 
-            if (ABS(dy * f12 + y1 - arg2) < 2.0f && ABS(dz * f12 + z1 - arg3) < 2.0f) {
-                sp57 = TRUE;
-                sp5C += f12 * length;
+            if (ABS2(dy * projection + y1 - y) < 2.0f && ABS2(dz * projection + z1 - z) < 2.0f) {
+                segmentFound = TRUE;
+                distanceAlong += projection * segmentLength;
             } else {
-                sp5C += length;
+                distanceAlong += segmentLength;
             }
         } else {
-            sp5C += length;
+            distanceAlong += segmentLength;
         }
     }
 
-    if (sp5C > arg0->unkBC / 2) {
-        sp5C = arg0->unkBC - sp5C;
+    if (distanceAlong > line->totalLength / 2) {
+        distanceAlong = line->totalLength - distanceAlong;
     }
 
-    if (sp5C < 300.0f) {
-        return arg0->unk0_02 * sp5C / 300.0f;
+    if (distanceAlong < 300.0f) {
+        return line->reverbAmount * distanceAlong / 300.0f;
     } else {
-        return arg0->unk0_02;
+        return line->reverbAmount;
     }
 }
 
-void debug_render_audio_effects(Gfx **dList, Vertex **verts, Triangle **tris) {
+/**
+ * Makes audio and reverb lines visible, useful for debugging.
+ */
+void audspat_debug_render_lines(Gfx **dList, Vertex **verts, Triangle **tris) {
     s32 i, j;
     f32 *coords;
-    unk80119C58 *var_s2;
-    unk8011A6D8 *var_s2_2;
+    AudioLine *audioLine;
+    ReverbLine *reverbLine;
 
-    for (i = 0; i < ARRAY_COUNT(D_80119C58); i++) {
-        var_s2 = &D_80119C58[i];
-        coords = var_s2->unk4_floats;
-        if (D_80119C58[i].soundID != 0) {
-            for (j = 0; j < var_s2->unk17C; j++) {
-                debug_render_line(dList, verts, tris, coords, 255, 255, 0);
+    for (i = 0; i < ARRAY_COUNT(gAudioLines); i++) {
+        audioLine = &gAudioLines[i];
+        coords = audioLine->coords;
+        if (gAudioLines[i].soundBite != 0) {
+            for (j = 0; j < audioLine->numSegments; j++) {
+                audspat_debug_render_line(dList, verts, tris, coords, 255, 255, 0);
                 coords += 3;
             }
         }
     }
 
-    for (i = 0; i < ARRAY_COUNT(D_8011A6D8); i++) {
-        var_s2_2 = &D_8011A6D8[i];
-        coords = var_s2_2->unk4_floats;
-        if (D_8011A6D8[i].unk0_02 != 0) {
-            for (j = 0; j < var_s2_2->unkB8; j++) {
-                debug_render_line(dList, verts, tris, coords, 255, 0, 255);
+    for (i = 0; i < ARRAY_COUNT(gReverbLines); i++) {
+        reverbLine = &gReverbLines[i];
+        coords = reverbLine->coords;
+        if (gReverbLines[i].reverbAmount != 0) {
+            for (j = 0; j < reverbLine->numSegments; j++) {
+                audspat_debug_render_line(dList, verts, tris, coords, 255, 0, 255);
                 coords += 3;
             }
         }
     }
 }
 
-void func_8000A2E8(s32 arg0) {
-    if (gUsedMasks != 0) {
-        if (gSoundMaskHeapUsed[arg0]->soundPtr != 0) {
-            sndp_stop(gSoundMaskHeapUsed[arg0]->soundPtr);
+/**
+ * Stops the sound associated with the given audio point.
+ * If the sound is currently playing, it stops it and removes the audio point from the list.
+ */
+void audspat_point_stop_by_index(s32 index) {
+    if (gNumAudioPoints != 0) {
+        if (gAudioPoints[index]->soundHandle != NULL) {
+            sndp_stop(gAudioPoints[index]->soundHandle);
         }
-        if (gSoundMaskHeapUsed[arg0]->soundMask != NULL) {
-            *gSoundMaskHeapUsed[arg0]->soundMask = NULL;
-            func_800245B4(gSoundMaskHeapUsed[arg0]->soundId | 0x5000);
+        if (gAudioPoints[index]->userHandlePtr != NULL) {
+            *gAudioPoints[index]->userHandlePtr = NULL;
+            func_800245B4(gAudioPoints[index]->soundBite | 0x5000);
         }
-        gFreeMasks++;
-        gSoundMaskHeapFree[gFreeMasks] = gSoundMaskHeapUsed[arg0];
-        gSoundMaskHeapUsed[arg0] = gSoundMaskHeapUsed[gUsedMasks - 1];
-        gUsedMasks--;
+
+        // put it to the free list
+        gLastFreePointIndex++;
+        gFreeAudioPoints[gLastFreePointIndex] = gAudioPoints[index];
+        // move the last element to the index of the one we are removing
+        gAudioPoints[index] = gAudioPoints[gNumAudioPoints - 1];
+        gNumAudioPoints--;
     }
 }
 
@@ -900,7 +896,7 @@ void func_8000A2E8(s32 arg0) {
  * Generates and renders a coloured line visible from anywhere.
  * Allows use of a colour, that interpolates from bright to dark from the beginning to the end of the line.
  */
-void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, f32 coords[6], u8 red, u8 green, u8 blue) {
+void audspat_debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, f32 coords[6], u8 red, u8 green, u8 blue) {
     Gfx *temp_dlist;
     Vertex *temp_verts;
     Triangle *temp_tris;

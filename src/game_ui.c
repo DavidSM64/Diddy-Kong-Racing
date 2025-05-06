@@ -1920,10 +1920,11 @@ void hud_race_start(s32 countdown, s32 updateRate) {
                 if (racer->vehicleID == VEHICLE_CAR) {
                     if (get_random_number_from_range(0, 100) >= 96) {
                         frequency = 1.25 - ((get_random_number_from_range(0, 7) * 0.5) / 7.0);
-                        func_800095E8(76, randomRacer->segment.trans.x_position, randomRacer->segment.trans.y_position,
-                                      randomRacer->segment.trans.z_position, 4,
-                                      ((get_random_number_from_range(0, 7) * 63) / 7) + 24, frequency * 100.0f,
-                                      &gRaceStartSoundMask);
+                        audspat_play_sound_direct(
+                            76, randomRacer->segment.trans.x_position, randomRacer->segment.trans.y_position,
+                            randomRacer->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER,
+                            ((get_random_number_from_range(0, 7) * 63) / 7) + 24, frequency * 100.0f,
+                            &gRaceStartSoundMask);
                     }
                 }
             }
