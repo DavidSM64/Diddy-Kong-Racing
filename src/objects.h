@@ -21,6 +21,8 @@
 
 #define NODE_NONE 255
 
+#define BOOST_DEFAULT -1
+
 enum ObjectBehaviours {
     BHV_NONE,
     BHV_RACER,
@@ -348,9 +350,16 @@ typedef struct Asset20 {
     TextureHeader *unk7C;
 } Asset20;
 
+typedef struct RacerFXData {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+} RacerFXData;
+
 extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
 
-Object *func_8000BF44(s32 arg0);
+Object *racerfx_get_boost(s32 boostID);
 void allocate_object_pools(void);
 void clear_object_pointers(void);
 void free_all_objects(void);
@@ -464,7 +473,7 @@ s32 timetrial_load_staff_ghost(s32 mapId);
 void render_3d_billboard(Object *obj);
 void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles,
                        TextureHeader *tex, u32 flags, u32 texOffset, f32 scale);
-void func_8000B290(void);
+void racerfx_free(void);
 void func_80016BC4(Object *obj);
 s32 ainode_register(Object *obj);
 void obj_taj_create_balloon(s32 blockID, f32 x, f32 y, f32 z);
@@ -510,11 +519,11 @@ void func_80016748(Object *obj0, Object *obj1);
 void race_finish_time_trial(void);
 s32 obj_dist_racer(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **sortObj);
 void mode_init_taj_race(void);
-void func_8000BADC(s32 updateRate);
+void racerfx_update(s32 updateRate);
 f32 func_8002277C(f32 *data, s32 index, f32 x);
 void race_transition_adventure(s32 updateRate);
 void func_8001E4C4(void);
-void func_8000B020(s32 numberOfVertices, s32 numberOfTriangles);
+void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles);
 s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
 
 /**

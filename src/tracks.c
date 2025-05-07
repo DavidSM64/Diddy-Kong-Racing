@@ -242,7 +242,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     func_8000C8F8(collectables, 1);
     gScenePlayerViewports = numberOfPlayers;
     func_8000CC7C(vehicle, entranceId, numberOfPlayers);
-    func_8000B020(72, 64);
+    racerfx_alloc(72, 64);
 
     if (geometry == 0 && entranceId == 0) {
         transition_begin(&gCircleFadeToBlack);
@@ -2784,7 +2784,7 @@ LevelModel *get_current_level_model(void) {
 void free_track(void) {
     s32 i;
 
-    func_8000B290();
+    racerfx_free();
     if (gWaveBlockCount != 0) {
         free_waves();
     }
