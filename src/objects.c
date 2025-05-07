@@ -3366,11 +3366,11 @@ void func_800135B8(Object *boostObj) {
     ObjectTransform_800135B8 objTransform;
     Object_Boost_Inner *boostData;
     Object_Boost *boost;
-    UnkAsset_800135B8 *asset;
+    Asset20 *asset;
     s32 hasTexture;
     s32 idx;
 
-    idx = (boostObj->properties.common.unk4 >> 0x1C) & 0xF;
+    idx = (boostObj->properties.common.unk4 >> 28) & 0xF;
     boost = &boostObj->unk64->boost;
     switch (D_8011B048[idx]) {
         case 0:
@@ -3383,7 +3383,7 @@ void func_800135B8(Object *boostObj) {
             boostData = &boost->unk48;
             break;
     }
-    asset = (UnkAsset_800135B8 *) get_misc_asset(20);
+    asset = (Asset20 *) get_misc_asset(ASSET_MISC_20);
     asset = &asset[D_8011B058[idx]];
     object_do_player_tumble((Object *) boostObj->properties.common.unk0);
     camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
@@ -3392,7 +3392,7 @@ void func_800135B8(Object *boostObj) {
     objTransform.trans.x_position = boostData->position.x;
     objTransform.trans.y_position = boostData->position.y;
     objTransform.trans.z_position = boostData->position.z;
-    objTransform.trans.scale = boostData->unkC + (boostData->unk10 * coss_f(boost->unk72 << 0xC));
+    objTransform.trans.scale = boostData->unkC + (boostData->unk10 * coss_f(boost->unk72 << 12));
     if (boost->unk70 < 2) {
         objTransform.trans.scale *= boost->unk74;
     }
@@ -3406,13 +3406,15 @@ void func_800135B8(Object *boostObj) {
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
-                            (Object *) &objTransform, asset->unk78, 0x10A);
+                            (Object *) &objTransform, asset->unk78,
+                            (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE));
     if (boost->unk70 == 2) {
-        material_set(&gObjectCurrDisplayList, asset->unk7C, 0xE, 0);
+        material_set(&gObjectCurrDisplayList, asset->unk7C,
+                     (RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_FOG_ACTIVE), 0);
         if (asset->unk7C != NULL) {
-            hasTexture = 1;
+            hasTexture = TRUE;
         } else {
-            hasTexture = 0;
+            hasTexture = FALSE;
         }
 
         vtx = &D_800DC74C[D_8011B008][(boostObj->properties.common.unk4 >> 14) & 0x3FFF];
