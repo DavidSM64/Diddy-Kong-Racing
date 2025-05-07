@@ -3383,6 +3383,7 @@ void func_800135B8(Object *boostObj) {
             boostData = &boost->unk48;
             break;
     }
+    // the "& 0xFF"s are to get temp registers to align for the match
     asset = (UnkAsset_800135B8 *) (get_misc_asset(20) + ((D_8011B058[idx] & 0xFF & 0xFF & 0xFF & 0xFF & 0xFF) << 5));
     object_do_player_tumble((Object *) boostObj->properties.common.unk0);
     camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
