@@ -3347,7 +3347,7 @@ void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate
     s32 sp144;
     s32 racerCount;
     UNUSED s32 pad2;
-    ObjectSegment *someObjSeg;
+    Camera *someObjSeg;
     Object **racerGroup;
     s32 spBC;
     s32 temp_s0_2;
@@ -3814,7 +3814,7 @@ void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement
     TextureHeader **textureHeader3;
     TextureHeader *textureHeader2;
     TextureHeader *textureHeader;
-    ObjectSegment *objSegment;
+    Camera *objSegment;
     LevelObjectEntry_Hud objEntry;
     UNUSED s32 pad1;
     Object *tempObject;

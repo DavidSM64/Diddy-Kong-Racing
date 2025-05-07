@@ -589,7 +589,7 @@ void racer_sound_free(Object *obj) {
     }
 }
 
-void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 updateRate) {
+void func_80006BFC(Object *obj, Camera *segment, Object *obj2, s32 updateRate) {
     Object_Racer *racer;
     f32 velocity;
     f32 xPos;
@@ -667,7 +667,7 @@ void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 update
 
 #ifdef NON_EQUIVALENT
 // https://decomp.me/scratch/utYpK
-void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3, s32 updateRate) {
+void func_80006FC8(Object **objs, s32 numRacers, Camera *segment, u8 arg3, s32 updateRate) {
     f32 tempxPos;
     f32 tempyPos;
     f32 tempzPos;

@@ -2561,7 +2561,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     u32 buttonsPressed;
     s8 spawnSmoke;
     LevelHeader *levelHeader;
-    ObjectSegment *temp_v0_22;
+    Camera *temp_v0_22;
     f32 var_f2;
     s32 arctan;
     s32 temp;

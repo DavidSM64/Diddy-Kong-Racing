@@ -54,6 +54,28 @@ enum ViewPortFlags {
     VIEWPORT_HEIGHT_CUSTOM = 0x0040
 };
 
+/* Size: 0x44 bytes */
+typedef struct Camera {
+    /* 0x0000 */ ObjectTransform trans;
+    /* 0x0018 */ f32 animFrame;
+    /* 0x001C */ f32 x_velocity;
+    /* 0x0020 */ f32 y_velocity;
+    /* 0x0024 */ f32 z_velocity;
+    /* 0x0028 */ f32 unk28;
+    /* 0x002C */ f32 unk2C;
+    /* 0x0030 */ f32 distanceToCamera;
+    /* 0x0034 */ s16 cameraSegmentID;
+    /* 0x0036 */ s16 unk36;
+    /* 0x0038 */ s16 unk38;
+    /* 0x003A */ s8 unk3A;
+    /* 0x003B */ u8 unk3B;
+    /* 0x003C */ u8 unk3C;
+    /* 0x003D */ u8 unk3D;
+    /* 0x003E */ u8 unk3E;
+    /* 0x003F */ u8 unk3F;
+    /* 0x0040 */ ObjectHeader *header;
+  } Camera;
+
 /* Size: 0x34 bytes. */
 typedef struct ScreenViewport {
     /* 0x00 */ s32 x1;
@@ -111,9 +133,9 @@ void viewport_rsp_set(Gfx **dList, s32 width, s32 height, s32 posX, s32 posY);
 void viewport_reset(Gfx **dList);
 void matrix_world_origin(Gfx **dList, MatrixS **mtx);
 void sprite_anim_off(s32 setting);
-ObjectSegment *get_active_camera_segment_no_cutscenes(void);
-ObjectSegment *get_active_camera_segment(void);
-ObjectSegment *get_cutscene_camera_segment(void);
+Camera *get_active_camera_segment_no_cutscenes(void);
+Camera *get_active_camera_segment(void);
+Camera *get_cutscene_camera_segment(void);
 Matrix *get_projection_matrix_f32(void);
 MatrixS *get_projection_matrix_s16(void);
 Matrix *get_camera_matrix(void);

@@ -901,7 +901,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     s32 spB4[8];
     s32 sp94[8];
     LevelHeader *levelHeader;
-    ObjectSegment *cutsceneCameraSegment; // sp74
+    Camera *cutsceneCameraSegment; // sp74
     s16 objectId;
     s8 sp127;
     u8 raceType;
@@ -940,8 +940,8 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     cutsceneID = -1;
     if (is_time_trial_enabled() && raceType == RACETYPE_DEFAULT) {
         cutsceneCameraSegment = get_cutscene_camera_segment();
-        cutsceneID = (u8) cutsceneCameraSegment->object.animationID;
-        cutsceneCameraSegment->object.animationID = 1;
+        cutsceneID = (u8) cutsceneCameraSegment->unk3B;
+        cutsceneCameraSegment->unk3B = 1;
     }
     gameMode = get_game_mode();
     settings = get_settings();
@@ -1348,7 +1348,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     }
     *D_8011AD24 = 1;
     if (cutsceneID >= 0) {
-        cutsceneCameraSegment->object.animationID = cutsceneID;
+        cutsceneCameraSegment->unk3B = cutsceneID;
     }
     if (func_8000E148() != 0) {
         rumble_init(FALSE);
@@ -1695,7 +1695,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     curObj->objectID = objType;
     func_800245B4(objType);
     curObj->segment.trans.scale = curObj->segment.header->scale;
-    curObj->segment.camera.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
+    curObj->segment.object.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
     curObj->segment.object.opacity = 0xFF;
     sp50 = obj_init_property_flags(curObj->segment.header->behaviorId);
     curObj->segment.header->unk52++;
@@ -3369,7 +3369,7 @@ void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj,
     f32 x;
     f32 y;
     f32 z;
-    ObjectSegment *cameraSegment;
+    Camera *cameraSegment;
     f32 dist;
 
     f32_vec3_apply_object_rotation(trans, &obj->segment.trans.x_position);
@@ -3733,11 +3733,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 0:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.x_position -
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.x_position -
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -3752,11 +3752,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 1:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.y_position -
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.y_position -
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -3771,11 +3771,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 2:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.z_position -
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.z_position -
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -3790,11 +3790,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 8:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.x_position +
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.x_position +
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -3809,11 +3809,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 9:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.y_position +
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.y_position +
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -3828,11 +3828,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 10:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.z_position +
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.z_position +
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -4036,7 +4036,7 @@ void func_80016500(Object *obj, Object_Racer *racer) {
         }
         racer->unk1F6 = 30;
         set_active_camera(racer->playerIndex);
-        get_active_camera_segment()->object.distanceToCamera = sp3C;
+        get_active_camera_segment()->distanceToCamera = sp3C;
     }
 }
 
@@ -6093,7 +6093,7 @@ s32 func_800210CC(s8 arg0) {
 }
 
 void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry) {
-    ObjectSegment *seg;
+    Camera *camera;
     ObjectTransform *animObjTrans;
 
     animObjTrans = (ObjectTransform *) animObj->unk1C;
@@ -6103,16 +6103,16 @@ void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Anim
     }
     if (entry->unk22 == 18) {
         set_active_camera(animObj->cameraID);
-        seg = get_active_camera_segment_no_cutscenes();
-        animObjTrans->x_position = seg->trans.x_position;
-        animObjTrans->y_position = seg->trans.y_position;
-        animObjTrans->z_position = seg->trans.z_position;
-        animObjTrans->rotation.y_rotation = (0x8000 - seg->trans.rotation.y_rotation);
-        animObjTrans->rotation.x_rotation = -seg->trans.rotation.x_rotation;
-        animObjTrans->rotation.z_rotation = seg->trans.rotation.z_rotation;
+        camera = get_active_camera_segment_no_cutscenes();
+        animObjTrans->x_position = camera->trans.x_position;
+        animObjTrans->y_position = camera->trans.y_position;
+        animObjTrans->z_position = camera->trans.z_position;
+        animObjTrans->rotation.y_rotation = (0x8000 - camera->trans.rotation.y_rotation);
+        animObjTrans->rotation.x_rotation = -camera->trans.rotation.x_rotation;
+        animObjTrans->rotation.z_rotation = camera->trans.rotation.z_rotation;
     }
     if ((entry->unk22 >= 10) && (entry->unk22 < 18)) {
-        seg = &(*gRacers)[entry->unk22 - 10]->segment;
+        ObjectSegment *seg = &(*gRacers)[entry->unk22 - 10]->segment;
         if (seg != NULL) {
             animObjTrans->x_position = seg->trans.x_position;
             animObjTrans->y_position = seg->trans.y_position;
@@ -6495,7 +6495,7 @@ void mode_end_taj_race(s32 reason) {
 
 CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
     CheckpointNode *lastCheckpointNode;
-    ObjectSegment *activeCameraSegment;
+    Camera *activeCameraSegment;
     s32 yOutCount;
     f32 yOut[9];
     Object *ptrList;

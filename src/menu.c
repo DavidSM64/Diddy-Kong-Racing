@@ -3410,7 +3410,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
     s8 *demo;
     s32 contrIndex;
     f32 updateRateF;
-    ObjectSegment *sp18;
+    Camera *sp18;
     s8 playerCount;
 
     sp18 = get_active_camera_segment();
@@ -3478,7 +3478,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             gTitleRevealTimer += updateRate;
             if (gTitleRevealTimer >= 32) {
                 gTitleRevealTimer = 32;
-                sp18->object.distanceToCamera = 8.0f;
+                sp18->distanceToCamera = 8.0f;
                 sound_play(SOUND_EXPLOSION, NULL);
             }
         } else {
@@ -13351,7 +13351,7 @@ void credits_free(void) {
  * Write the original coordinates back once done.
  */
 void menu_camera_centre(void) {
-    ObjectSegment *cam;
+    Camera *cam;
     s16 angleY;
     s16 angleX;
     s16 angleZ;

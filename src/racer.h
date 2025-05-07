@@ -131,26 +131,6 @@ typedef enum TajInteraction {
 #define AI_MIN_STEP 2
 #define AI_MAX_STEP 3
 
-typedef struct ObjectCamera {
-  /* 0x0014 */ ObjectTransform trans;
-  /* 0x0018 */ f32 unk18;
-  /* 0x001C */ f32 unk1C;
-  /* 0x0020 */ f32 unk20;
-  /* 0x0024 */ f32 offsetX;
-  /* 0x0028 */ f32 offsetY;
-  /* 0x002C */ f32 offsetZ;
-  /* 0x0030 */ f32 unk30;
-  /* 0x0034 */ s16 segmentIndex;
-  /* 0x0036 */ s16 mode;
-  /* 0x0038 */ s16 pitchOffset;
-  /* 0x003A */ s8 unk3A;
-  /* 0x003B */ u8 zoom;
-  /* 0x003C */ u8 unk3C;
-  /* 0x003D */ u8 unk3D;
-  /* 0x003E */ u8 unk3E;
-  /* 0x003F */ u8 unk3F;
-} ObjectCamera;
-
 typedef struct AIBehaviourTable {
     f32 unk0;
     f32 unk4;

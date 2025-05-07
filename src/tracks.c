@@ -71,7 +71,7 @@ MatrixS *gSceneCurrMatrix;
 Vertex *gSceneCurrVertexList;
 Triangle *gSceneCurrTriList;
 
-ObjectSegment *gSceneActiveCamera;
+Camera *gSceneActiveCamera;
 
 s32 gSceneCurrentPlayerID;
 Object *gSkydomeSegment;
@@ -1111,8 +1111,8 @@ s32 func_80027568(void) {
     if (numRacers == 0) {
         return FALSE;
     }
-    if ((check_if_showing_cutscene_camera() != 0) || (gSceneActiveCamera->object.unk36 >= 5) ||
-        (gSceneActiveCamera->object.unk36 == 3)) {
+    if ((check_if_showing_cutscene_camera() != 0) || (gSceneActiveCamera->unk36 >= 5) ||
+        (gSceneActiveCamera->unk36 == 3)) {
         return FALSE;
     }
     curViewport = get_current_viewport();
@@ -1195,7 +1195,7 @@ void func_800278E8(s32 updateRate) {
     f32 yDelta;
     f32 zDelta;
     f32 xzSqr;
-    ObjectSegment *segment;
+    Camera *segment;
     Object *thisObject;
     Object **racerGroup;
     Object *lastObject;
@@ -1276,7 +1276,7 @@ void func_800278E8(s32 updateRate) {
             segment->trans.rotation.x_rotation = atan2s(yDelta, xzSqr);
         }
         segment->trans.rotation.z_rotation = 0;
-        segment->object.cameraSegmentID = get_level_segment_index_from_position(
+        segment->cameraSegmentID = get_level_segment_index_from_position(
             segment->trans.x_position, currentRacer->oy1, segment->trans.z_position);
         D_8011B104 = currentRacer->cameraIndex;
     }
@@ -1469,7 +1469,7 @@ void draw_gradient_background(void) {
  * Sets the position to the current camera's position then renders the skydome if set to be visible.
  */
 void render_skydome(void) {
-    ObjectSegment *cam;
+    Camera *cam;
     if (gSkydomeSegment == NULL) {
         return;
     }
@@ -1504,7 +1504,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     compute_scene_camera_transform_matrix();
     update_envmap_position(gScenePerspectivePos.x / 65536.0f, gScenePerspectivePos.y / 65536.0f,
                            gScenePerspectivePos.z / 65536.0f);
-    segmentIndex = gSceneActiveCamera->object.cameraSegmentID;
+    segmentIndex = gSceneActiveCamera->cameraSegmentID;
     if (segmentIndex > -1 && (segmentIndex < gCurrentLevelModel->numberOfSegments)) {
         gSceneStartSegment = gCurrentLevelModel->segments[segmentIndex].unk28;
     } else {
@@ -1516,7 +1516,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     if (gWaveBlockCount != 0) {
         func_800B8B8C();
         racers = get_racer_objects(&numRacers);
-        if (gSceneActiveCamera->object.unk36 != 7 && numRacers > 0 && !check_if_showing_cutscene_camera()) {
+        if (gSceneActiveCamera->unk36 != 7 && numRacers > 0 && !check_if_showing_cutscene_camera()) {
             i = -1;
             do {
                 i++;
@@ -1608,7 +1608,7 @@ void render_level_geometry_and_objects(void) {
             visible = 0;
         }
         if (obj != NULL && visible == 255 && check_if_in_draw_range(obj) &&
-            (objectsVisible[obj->segment.object.segmentID + 1] || obj->segment.camera.unk34 > 1000.0)) {
+            (objectsVisible[obj->segment.object.segmentID + 1] || obj->segment.object.unk34 > 1000.0)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
                 render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
@@ -2211,7 +2211,7 @@ s32 check_if_in_draw_range(Object *obj) {
             w = D_8011D0F8[i].w;
             y = D_8011D0F8[i].y;
             accum = (x * obj->segment.trans.x_position) + (y * obj->segment.trans.y_position) +
-                    (z * obj->segment.trans.z_position) + w + obj->segment.camera.unk34;
+                    (z * obj->segment.trans.z_position) + w + obj->segment.object.unk34;
             if (accum < 0.0f) {
                 return FALSE;
             }
@@ -4181,7 +4181,7 @@ void obj_loop_fogchanger(Object *obj) {
     Object_Racer *racer;
     UNUSED s32 pad2;
     FogData *fog;
-    ObjectSegment *camera;
+    Camera *camera;
 
     racers = NULL;
     fogChanger = (LevelObjectEntry_FogChanger *) obj->segment.level_entry;

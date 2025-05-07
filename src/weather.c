@@ -135,7 +135,7 @@ Gfx *gCurrWeatherDisplayList;
 MatrixS *gCurrWeatherMatrix;
 Vertex *gCurrWeatherVertexList;
 Triangle *gCurrWeatherTriList;
-ObjectSegment *gWeatherCamera;
+Camera *gWeatherCamera;
 Matrix *gWeatherCameraMatrix;
 LensFlareData *gLensFlareSet1;
 LensFlareData *gLensFlareSet2;
@@ -634,7 +634,7 @@ void lensflare_init(Object *obj) {
  * Based on face direction, start rendering lens flare effects on screen.
  * Each element is shifted based on the preset to create the effect of the sun shining in your face.
  */
-void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *segment) {
+void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, Camera *segment) {
     u16 height;
     f32 mag2;
     UNUSED s32 pad;
@@ -766,7 +766,7 @@ void lensflare_override_remove(Object *obj) {
  * Check if the camera is inside the radius of a lens flare override.
  * If so, disable the lens flare effect while it remains inside.
  */
-void lensflare_override(ObjectSegment *cameraSegment) {
+void lensflare_override(Camera *cameraSegment) {
     LevelObjectEntry_LensFlareSwitch *lensFlare;
     f32 xDiff;
     f32 zDiff;

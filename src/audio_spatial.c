@@ -182,7 +182,7 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
     s32 inverseDistances[29];
     s32 sumOfDistances;
     s32 numCameras;
-    ObjectSegment *cameras;
+    Camera *cameras;
     f32 pitch1;
     f32 temp;
     f32 minDistance;
