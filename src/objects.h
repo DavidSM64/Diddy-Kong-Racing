@@ -306,6 +306,19 @@ typedef struct unk80022CFC_1 {
     s32 unk78;
 } unk80022CFC_1;
 
+/* Size: 0x1A bytes */
+typedef struct ObjectTransform_800135B8 {
+    ObjectTransform trans;
+    s16 unk18;
+} ObjectTransform_800135B8;
+
+/* Size: 0x80 bytes */
+typedef struct UnkAsset_800135B8 {
+    u8 pad0[0x78];
+    unk80068514_arg4 *unk78;
+    TextureHeader *unk7C;
+} UnkAsset_800135B8;
+
 typedef struct unk8001A7D8_arg0 {
     u8 pad0[4];
     s32 *unk4;

@@ -60,8 +60,8 @@ s8 D_800DC73C = 0;
 s8 D_800DC740 = 0;
 s8 gSwapLeadPlayer = FALSE;
 s8 D_800DC748 = FALSE;
-s32 D_800DC74C[2] = { 0, 0 }; // Have a feeling these are both the same array.
-s32 D_800DC754[2] = { 0, 0 };
+Vertex *D_800DC74C[2] = { 0, 0 };
+Triangle *D_800DC754[2] = { 0, 0 };
 Object *gShieldEffectObject = NULL;
 s32 D_800DC760 = 9; // Currently unknown, might be a different type.
 Object *gMagnetEffectObject = NULL;
@@ -319,11 +319,11 @@ s32 D_8011AFF8;
 s32 D_8011AFFC;
 s32 D_8011B000;
 s32 D_8011B004;
-s32 D_8011B008;
+s32 D_8011B008; // indexes D_800DC74C and D_800DC754
 u8 D_8011B010[16];
 Object *D_8011B020[NUMBER_OF_CHARACTERS];
-s32 D_8011B048[4];
-s32 D_8011B058[4];
+u8 D_8011B048[16];
+u8 D_8011B058[16];
 u8 D_8011B068[16];
 ColourRGBA D_8011B078[NUMBER_OF_CHARACTERS]; // Note: D_8011B078 might not be a ColourRGBA.
 
@@ -342,10 +342,11 @@ void func_8000B020(s32 numberOfVertices, s32 numberOfTriangles) {
     LevelObjectEntry_unk8000B020 objEntry;
     s32 i;
 
-    D_800DC754[0] = (s32) mempool_alloc_safe(((numberOfTriangles * 16) + (numberOfVertices * 10)) * 2, COLOUR_TAG_BLUE);
-    D_800DC754[1] = D_800DC754[0] + (numberOfTriangles * 16);
-    D_800DC74C[0] = D_800DC754[1] + (numberOfTriangles * 16);
-    D_800DC74C[1] = D_800DC74C[0] + (numberOfVertices * 10);
+    D_800DC754[0] = (Triangle *) mempool_alloc_safe(
+        ((numberOfTriangles * sizeof(Triangle)) + (numberOfVertices * sizeof(Vertex))) * 2, COLOUR_TAG_BLUE);
+    D_800DC754[1] = (Triangle *) ((u32) D_800DC754[0] + numberOfTriangles * sizeof(Triangle));
+    D_800DC74C[0] = (Vertex *) ((u32) D_800DC754[1] + numberOfTriangles * sizeof(Triangle));
+    D_800DC74C[1] = (Vertex *) ((u32) D_800DC74C[0] + numberOfVertices * sizeof(Vertex));
     D_8011AFF8 = numberOfVertices;
     D_8011AFFC = 0;
     D_8011B000 = numberOfTriangles;
@@ -397,13 +398,11 @@ void func_8000B020(s32 numberOfVertices, s32 numberOfTriangles) {
 void func_8000B290(void) {
     Sprite *sprite;
     TextureHeader *texture;
-    s32 temp_a0;
     Asset20 *asset20;
     u32 i;
 
-    temp_a0 = D_800DC754[0];
-    if (temp_a0 != 0) {
-        mempool_free((void *) temp_a0);
+    if (D_800DC754[0] != 0) {
+        mempool_free(D_800DC754[0]);
         D_800DC754[0] = 0;
         D_800DC754[1] = 0;
         D_800DC74C[0] = 0;
@@ -3360,7 +3359,69 @@ void unset_temp_model_transforms(Object *obj) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800135B8.s")
+// Renders the boost graphics.
+void func_800135B8(Object *boostObj) {
+    Vertex *vtx;
+    Triangle *tri;
+    ObjectTransform_800135B8 objTransform;
+    Object_Boost_Inner *boostData;
+    Object_Boost *boost;
+    UnkAsset_800135B8 *asset;
+    s32 hasTexture;
+    s32 idx;
+
+    idx = (boostObj->properties.common.unk4 >> 0x1C) & 0xF;
+    boost = &boostObj->unk64->boost;
+    switch (D_8011B048[idx]) {
+        case 0:
+            boostData = &boost->unk0;
+            break;
+        case 1:
+            boostData = &boost->unk24;
+            break;
+        default:
+            boostData = &boost->unk48;
+            break;
+    }
+    asset = (UnkAsset_800135B8 *)get_misc_asset(20);
+    asset = &asset[D_8011B058[idx]];
+    object_do_player_tumble((Object *) boostObj->properties.common.unk0);
+    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
+                          (ObjectTransform *) boostObj->properties.common.unk0, 1.0f, 0.0f);
+    object_undo_player_tumble((Object *) boostObj->properties.common.unk0);
+    objTransform.trans.x_position = boostData->position.x;
+    objTransform.trans.y_position = boostData->position.y;
+    objTransform.trans.z_position = boostData->position.z;
+    objTransform.trans.scale = boostData->unkC + (boostData->unk10 * coss_f(boost->unk72 << 0xC));
+    if (boost->unk70 < 2) {
+        objTransform.trans.scale *= boost->unk74;
+    }
+    if (D_8011B058[idx] != 0) {
+        objTransform.trans.scale *= 1.15f;
+    }
+    objTransform.trans.rotation.z_rotation = 0;
+    objTransform.trans.rotation.x_rotation = 0;
+    objTransform.trans.rotation.y_rotation = 0;
+    objTransform.unk18 = 0;
+    gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+    render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
+                            (Object *) &objTransform, asset->unk78, 0x10A);
+    if (boost->unk70 == 2) {
+        material_set(&gObjectCurrDisplayList, asset->unk7C, 0xE, 0);
+        if (asset->unk7C != NULL) {
+            hasTexture = 1;
+        } else {
+            hasTexture = 0;
+        }
+
+        vtx = &D_800DC74C[D_8011B008][(boostObj->properties.common.unk4 >> 14) & 0x3FFF];
+        tri = &D_800DC754[D_8011B008][boostObj->properties.common.unk4 & 0x3FFF];
+        gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), 9, 0);
+        gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), 8, hasTexture);
+    }
+    apply_matrix_from_stack(&gObjectCurrDisplayList);
+}
 
 /**
  * Render the bubble trap weapon.
