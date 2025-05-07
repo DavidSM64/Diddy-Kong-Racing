@@ -3383,8 +3383,8 @@ void func_800135B8(Object *boostObj) {
             boostData = &boost->unk48;
             break;
     }
-    sp48 = (UnkAsset20*)get_misc_asset(20);
-    sp48 = &sp48[D_8011B058[temp_s0]];
+    asset = (UnkAsset20*)get_misc_asset(20);
+    asset = &asset[D_8011B058[idx]];
     object_do_player_tumble((Object *) boostObj->properties.common.unk0);
     camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
                           (ObjectTransform *) boostObj->properties.common.unk0, 1.0f, 0.0f);
