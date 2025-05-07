@@ -510,8 +510,6 @@ void func_800257D0(void) {
 }
 
 #ifdef NON_MATCHING
-void func_80026070(LevelModelSegmentBoundingBox *, f32, f32, f32);
-void func_80026430(LevelModelSegment *, f32, f32, f32);
 // URL: https://decomp.me/scratch/Hz4qp
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     s16 i;
@@ -553,14 +551,15 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
 
     i = 0;
     for (; i < numberOfSegments; i++) {
-        bbox = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIds[i]];
+        LevelModel *levelModel = gCurrentLevelModel; // fake ?
+        bbox = &levelModel->segmentsBoundingBoxes[segmentIds[i]];
         sum = 0;
         sum += bbox->x1 * yCameraSins + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
         sum += yCameraSins * bbox->x2 + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
         sum += bbox->x1 * yCameraSins + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
         sum += yCameraSins * bbox->x2 + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
         if (sum & 3) {
-            func_80026430(&gCurrentLevelModel->segments[segmentIds[i]], yCameraSins, yCameraCoss, temp_f22);
+            func_80026430(&levelModel->segments[segmentIds[i]], yCameraSins, yCameraCoss, temp_f22);
             if (gCurrentLevelModel->segments[segmentIds[i]].unk3C & 2) {
                 func_80026070(bbox, yCameraSins, yCameraCoss, temp_f22);
             }
@@ -970,14 +969,15 @@ void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
 s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     Vertex *verts;
     Triangle *tris;
-    u8 triIndex;
-    s32 vertZ1;
-    s32 vertX2;
-    s32 vertZ2;
-    s32 vertX1;
+    s32 triIndex;
+    s16 vertZ1;
+    s16 vertX2;
+    s16 vertZ2;
+    s16 vertX1;
     s32 colour_r;
     s32 colour_g;
     s32 colour_b;
+    s32 colour_a;
 
     if (D_8011D4B8 >= D_8011D4BC) {
         return 0;
@@ -993,6 +993,7 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
         colour_r = D_8011B0E1;
         colour_g = D_8011B0E2;
         colour_b = D_8011B0E3;
+        colour_a = 0xFF;
 
         vertX1 = arg2 * D_8011D4A0 + D_8011D4AC;
         vertZ1 = arg2 * D_8011D4A4 + D_8011D4B0;
@@ -1001,39 +1002,39 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
 
         verts = gSceneCurrVertexList;
         verts->x = vertX1;
-        verts->y = arg0[0] + 2;
+        verts->y = arg0[0] + 2.0f;
         verts->z = vertZ1;
         verts->r = colour_r;
         verts->g = colour_g;
         verts->b = colour_b;
-        verts->a = 255;
+        verts->a = colour_a;
         verts++;
 
         verts->x = vertX2;
-        verts->y = arg0[1] + 2;
+        verts->y = arg0[1] + 2.0f;
         verts->z = vertZ2;
         verts->r = colour_r;
         verts->g = colour_g;
         verts->b = colour_b;
-        verts->a = 255;
+        verts->a = colour_a;
         verts++;
 
         verts->x = vertX1;
-        verts->y = arg1[0] - 2;
+        verts->y = arg1[0] - 2.0f;
         verts->z = vertZ1;
         verts->r = colour_r;
         verts->g = colour_g;
         verts->b = colour_b;
-        verts->a = 255;
+        verts->a = colour_a;
         verts++;
 
         verts->x = vertX2;
-        verts->y = arg1[1] - 2;
+        verts->y = arg1[1] - 2.0f;
         verts->z = vertZ2;
         verts->r = colour_r;
         verts->g = colour_g;
         verts->b = colour_b;
-        verts->a = 255;
+        verts->a = colour_a;
         verts++;
 
         gSceneCurrVertexList = verts;
@@ -1043,7 +1044,7 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
         tris->flags = BACKFACE_DRAW;
         tris->vi0 = triIndex + 2;
         tris->vi1 = triIndex + 1;
-        tris->vi2 = triIndex;
+        tris->vi2 = triIndex + 0;
         tris->uv0.u = 0x3E0;
         tris->uv0.v = 0x3E0;
         tris->uv1.u = 0x3E0;
@@ -1352,9 +1353,184 @@ void set_skydome_visbility(s32 renderSky) {
     gSceneRenderSkyDome = renderSky;
 }
 
+#ifdef NON_EQUIVALENT
+// This function creates the flashy sky effect in the wizpig 2 race.
 // init_skydome
-// https://decomp.me/scratch/80umh
+// https://decomp.me/scratch/F52TP
+void func_80028050(void) {
+    // sp154 ?
+    s32 uCoordMask; // sp150 ?
+    s32 vCoordMask; // sp14C
+    s16 uCoords[9]; // sp128
+    s16 vCoords[9]; // sp114
+    f32 yRotCos;    // sp10C
+    f32 yRotSin;
+    f32 xPositions[9]; // spDC
+    f32 zPositions[9]; // spB8
+    f32 spB4;
+    s8 *sp7C;
+    s32 sp78;
+    TextureHeader *sp74;
+    f32 sp48;
+    f32 sp3C;
+    f32 sp38;
+    f32 sp2C;
+    ObjectSegment *objSeg;
+    s16 temp_a1;
+    s16 temp_v0_2;
+    s16 temp_v1_2;
+    Vertex *verts;
+    Triangle *tris;
+    s8 *var_t2;
+    s8 *var_v0;
+    u8 *var_v0_3;
+    u32 var_a2;
+    u32 var_a3;
+    s32 i;
+    s16 yPos;
+
+    verts = gSceneCurrVertexList;
+    tris = gSceneCurrTriList;
+    objSeg = get_active_camera_segment();
+    sp74 = gCurrentLevelHeader2->unkA4;
+    uCoordMask = (sp74->width << 5) - 1;
+    vCoordMask = (sp74->height << 5) - 1;
+    yRotCos = coss_f(-objSeg->trans.rotation.y_rotation);
+    yRotSin = sins_f(-objSeg->trans.rotation.y_rotation);
+
+    xPositions[0] = -(yRotSin * 1280.0f) - (yRotCos * 1280.0f); // spDC OK
+    zPositions[0] = -(yRotSin * 1280.0f) + (yRotCos * 1280.0f); // spB8 OK
+
+    zPositions[1] = (yRotSin * 1280.0f) - (yRotCos * 1280.0f);  // spE0 OK
+    xPositions[1] = -(yRotSin * 1280.0f) - (yRotCos * 1280.0f); // spBC OK
+
+    xPositions[2] = (yRotSin * 1280.0f) + (yRotCos * 1280.0f); // spE4 OK
+    zPositions[2] = (yRotSin * 1280.0f) - (yRotCos * 1280.0f); // spC0 OK
+
+    xPositions[3] = -(yRotSin * 1280.0f) + (yRotCos * 1280.0f); // spE8 OK
+    zPositions[3] = (yRotSin * 1280.0f) + (yRotCos * 1280.0f);  // spC4 OK
+
+    xPositions[4] = 0.0f; // spEC OK
+    zPositions[4] = 0.0f; // spC8 OK
+
+    xPositions[5] = -(yRotSin * 1280.0f) - (2.0f * (yRotCos * 1280.0f)); // spF0
+    zPositions[5] = (yRotCos * 1280.0f) - (2.0f * (yRotSin * 1280.0f));  // spCC
+
+    zPositions[6] = -(2.0f * (yRotSin * 1280.0f)) - (yRotCos * 1280.0f); // spF4
+    xPositions[6] = (yRotSin * 1280.0f) - (2.0f * (yRotCos * 1280.0f));  // spD0
+
+    xPositions[7] = (yRotSin * 1280.0f) + (2.0f * (yRotCos * 1280.0f)); // spF8
+    zPositions[7] = (2.0f * (yRotSin * 1280.0f)) - (yRotCos * 1280.0f); // spD4
+
+    xPositions[8] = -(yRotSin * 1280.0f) + (2.0f * (yRotCos * 1280.0f)); // spFC
+    zPositions[8] = (2.0f * (yRotSin * 1280.0f)) + (yRotCos * 1280.0f);  // spD8
+
+    sp38 = (f32) (sp74->width * 16 * gCurrentLevelHeader2->unkA0);
+    temp_v0_2 =
+        ((s32) (objSeg->trans.x_position * ((1280.0f * 0.25f) / sp38)) + ((s16) gCurrentLevelHeader2->unkA8 >> 4)) &
+        uCoordMask;
+    sp48 = (f32) (sp74->height * 16 * gCurrentLevelHeader2->unkA1);
+    temp_v1_2 =
+        ((s32) (objSeg->trans.z_position * ((1280.0f * 0.25f) / sp48)) + ((s16) gCurrentLevelHeader2->unkAA >> 4)) &
+        vCoordMask;
+
+    uCoords[0] = (s32) (-(sp38 * yRotSin) - (sp48 * yRotCos)) + temp_v0_2;
+    vCoords[0] = (s32) ((sp48 * yRotCos) - (sp38 * yRotSin)) + temp_v1_2;
+
+    uCoords[1] = (s32) ((sp38 * yRotSin) - (sp48 * yRotCos)) + temp_v0_2;
+    vCoords[1] = (s32) (-(sp38 * yRotSin) - (sp48 * yRotCos)) + temp_v1_2;
+
+    uCoords[2] = (s32) ((sp38 * yRotSin) + (sp48 * yRotCos)) + temp_v0_2;
+    vCoords[2] = (s32) ((sp38 * yRotSin) - (sp48 * yRotCos)) + temp_v1_2;
+
+    uCoords[3] = (s32) ((sp48 * yRotCos) - (sp38 * yRotSin)) + temp_v0_2;
+    vCoords[3] = (s32) ((sp38 * yRotSin) + (sp48 * yRotCos)) + temp_v1_2;
+
+    uCoords[4] = temp_v0_2;
+    vCoords[4] = temp_v1_2;
+
+    uCoords[5] = (s32) (-(sp38 * yRotSin) - (2.0f * (sp48 * yRotCos))) + temp_v0_2;
+    vCoords[5] = (s32) ((sp48 * yRotCos) - (2.0f * (sp38 * yRotSin))) + temp_v1_2;
+
+    uCoords[6] = (s32) ((sp38 * yRotSin) - (2.0f * (sp48 * yRotCos))) + temp_v0_2;
+    vCoords[6] = (s32) (-(2.0f * (sp38 * yRotSin)) - (sp48 * yRotCos)) + temp_v1_2;
+
+    uCoords[7] = (s32) ((sp38 * yRotSin) + (2.0f * (sp48 * yRotCos))) + temp_v0_2;
+    vCoords[7] = (s32) ((2.0f * (sp38 * yRotSin)) - (sp48 * yRotCos)) + temp_v1_2;
+
+    uCoords[8] = (s32) ((2.0f * (sp48 * yRotCos)) - (sp38 * yRotSin)) + temp_v0_2;
+    vCoords[8] = (s32) ((2.0f * (sp38 * yRotSin)) + (sp48 * yRotCos)) + temp_v1_2;
+
+    matrix_world_origin(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+    var_t2 = gCurrentLevelHeader2->unk74[0];
+    var_a2 = 0xFFFFFFFF;
+    if (var_t2 != (s8 *) -1) {
+        var_v0 = gCurrentLevelHeader2->unk74[1];
+        if (var_v0 == (s8 *) -1) {
+            var_v0 = var_t2;
+        }
+    } else {
+        var_v0 = sp78;
+        var_t2 = NULL;
+    }
+    var_a3 = 0xFFFFFF00;
+    if (var_t2 != NULL) {
+        var_a2 = var_t2[0x10];
+        var_a3 = var_v0[0x10] & ~0xFF;
+    }
+    sp7C = var_t2;
+    gfx_init_basic_xlu(&gSceneCurrDisplayList, 1, var_a2, var_a3);
+    sp74 = (TextureHeader *) set_animated_texture_header(sp74, D_8011B110 << 8);
+    gDkrDmaDisplayList(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(sp74->cmd), sp74->numberOfCommands);
+    gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gSceneCurrVertexList), 9, 0);
+    gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gSceneCurrTriList), 8, 1);
+    gDPPipeSync(gSceneCurrDisplayList++);
+    if (var_t2 != NULL) {
+        gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
+    }
+    rendermode_reset(&gSceneCurrDisplayList);
+
+    yPos = objSeg->trans.y_position + 192.0f;
+    for (i = 0; i < 9; i++) {
+        verts->y = yPos;
+        verts->x = objSeg->trans.x_position + xPositions[i];
+        verts->z = objSeg->trans.z_position + zPositions[i];
+        verts->r = 255;
+        verts->g = 255;
+        verts->b = 255;
+        verts->a = (i <= 4) ? 255 : 0;
+        verts++;
+    }
+
+    var_v0_3 = D_800DC92C;
+    for (i = 0; i < 8; i++) {
+        tris->flags = 0x40;
+
+        tris->vi0 = *var_v0_3;
+        tris->uv0.u = uCoords[*var_v0_3];
+        tris->uv0.v = vCoords[*var_v0_3];
+        var_v0_3++;
+
+        tris->vi1 = *var_v0_3;
+        tris->uv1.u = uCoords[*var_v0_3];
+        tris->uv1.v = vCoords[*var_v0_3];
+        var_v0_3++;
+
+        tris->vi2 = *var_v0_3;
+        tris->uv2.u = uCoords[*var_v0_3];
+        tris->uv2.v = vCoords[*var_v0_3];
+        var_v0_3++;
+
+        tris++;
+    }
+
+    gSceneCurrVertexList = verts;
+    gSceneCurrTriList = tris;
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80028050.s")
+#endif
 
 /**
  * Instead of drawing the skydome with textures, draw a solid coloured background.
