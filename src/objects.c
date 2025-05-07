@@ -341,7 +341,7 @@ typedef struct LevelObjectEntry_unk8000B020 {
  * Spawns control objects for racer boost visuals, as well as shield and magnet visuals.
  * Boost geometry is made in real time, and allocated here.
  * This function is called on every level load, but only racers use the stuff here.
-*/
+ */
 void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     Asset20 *miscAsset20;
     LevelObjectEntry_unk8000B020 objEntry;
@@ -404,7 +404,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
 
 /**
  * Attempts to free the boost, shield and magnet objects and assets.
-*/
+ */
 void racerfx_free(void) {
     Sprite *sprite;
     TextureHeader *texture;
@@ -449,7 +449,7 @@ void racerfx_free(void) {
 /**
  * Updates the racer FX object states.
  * This includes the shield wobble timer, and the texture frames for the magnet and shield.
-*/
+ */
 void racerfx_update(s32 updateRate) {
     s32 i;
     Asset20 *asset20Part;
@@ -555,7 +555,7 @@ void racerfx_update(s32 updateRate) {
 /**
  * Returns the boost object with the given ID.
  * Returns a specific ID if the arg passed is -1.
-*/
+ */
 Object *racerfx_get_boost(s32 boostID) {
     if (boostID == -1) {
         boostID = gBoostObjOverrideID;
@@ -3401,7 +3401,7 @@ void func_800135B8(Object *boostObj) {
             boostData = &boost->unk48;
             break;
     }
-    asset = (UnkAsset_800135B8 *)get_misc_asset(20);
+    asset = (UnkAsset_800135B8 *) get_misc_asset(20);
     asset = &asset[D_8011B058[idx]];
     object_do_player_tumble((Object *) boostObj->properties.common.unk0);
     camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,

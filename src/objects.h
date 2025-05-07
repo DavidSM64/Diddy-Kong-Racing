@@ -357,7 +357,7 @@ typedef struct RacerFXData {
 
 extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
 
-Object *racerfx_get_boost(s32 arg0);
+Object *racerfx_get_boost(s32 boostID);
 void allocate_object_pools(void);
 void clear_object_pointers(void);
 void free_all_objects(void);
