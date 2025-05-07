@@ -554,10 +554,10 @@ void racerfx_update(s32 updateRate) {
 
 /**
  * Returns the boost object with the given ID.
- * Returns a specific ID if the arg passed is -1.
+ * Returns a specific ID if the arg passed is BOOST_DEFAULT.
  */
 Object *racerfx_get_boost(s32 boostID) {
-    if (boostID == -1) {
+    if (boostID == BOOST_DEFAULT) {
         boostID = gBoostObjOverrideID;
     }
     if (boostID < 0 || boostID >= NUMBER_OF_CHARACTERS) {

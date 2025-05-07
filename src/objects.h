@@ -21,6 +21,8 @@
 
 #define NODE_NONE 255
 
+#define BOOST_DEFAULT -1
+
 enum ObjectBehaviours {
     BHV_NONE,
     BHV_RACER,

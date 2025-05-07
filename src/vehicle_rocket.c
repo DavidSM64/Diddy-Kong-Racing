@@ -132,7 +132,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     update_vehicle_particles(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
     if (*startTimer != 100) {
-        someObj = racerfx_get_boost(-1);
+        someObj = racerfx_get_boost(BOOST_DEFAULT);
         if (someObj != NULL) {
             rocket = (Object_WizpigRocket *) someObj->unk64;
             someObj->properties.racer.unk0 = 0;
