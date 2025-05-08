@@ -2624,6 +2624,7 @@ dDebugFontSettings = 0x800E3548;
 sLockupStatus = 0x800E35B0;
 sLockupPage = 0x800E35B4;
 sLockupDelay = 0x800E35B8;
+objStatusString = 0x800E35BC; // size:0xC
 D_800E3040 = 0x800E35D0;
 D_800E3044 = 0x800E35D4;
 D_800E3048 = 0x800E35D8;

@@ -2853,6 +2853,7 @@ dDebugFontSettings = 0x800E2FB8;
 sLockupStatus = 0x800E3020;
 sLockupPage = 0x800E3024;
 sLockupDelay = 0x800E3028;
+objStatusString = 0x800E302C; // size:0xC
 
 // waves.c .data
 D_800E3040 = 0x800E3040;
