@@ -6559,7 +6559,7 @@ void obj_loop_pigrocketeer(Object *obj, s32 updateRate) {
     Object_Wizpig2 *obj64;
 
     func_8001F460(obj, updateRate, obj);
-    someObj = func_8000BF44(-1);
+    someObj = racerfx_get_boost(BOOST_DEFAULT);
 
     if (someObj != NULL) {
         obj64 = &someObj->unk64->wizpig2;
