@@ -219,6 +219,7 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
                         sndp_set_param(audioPoint->soundHandle, AL_SNDP_VOL_EVT, audioPoint->volume * 256);
                         sndp_set_param(audioPoint->soundHandle, AL_SNDP_PITCH_EVT, *(s32 *) &pitch1);
                         pan2 = audspat_calculate_spatial_pan(dx, dz, cameras[0].trans.rotation.y_rotation);
+                        // This can never be true
                         if (numCameras != 1) {
                             pan2 = 64;
                         }

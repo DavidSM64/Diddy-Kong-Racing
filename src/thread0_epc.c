@@ -7,7 +7,6 @@
 #include "printf.h"
 #include "objects.h"
 #include "joypad.h"
-#include "game.h"
 #include "stacks.h"
 #include "PR/os_internal_thread.h"
 #include "PRinternal/rmonint.h"

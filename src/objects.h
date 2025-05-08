@@ -5,9 +5,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "object_functions.h"
-#include "libc/math.h"
 #include "camera.h"
-#include "lights.h"
 #include "particles.h"
 
 

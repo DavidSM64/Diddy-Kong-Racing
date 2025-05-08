@@ -15,7 +15,6 @@
 #include "game_ui.h"
 #include "weather.h"
 #include "particles.h"
-#include "libultra/src/libc/rmonPrintf.h"
 #include "objects.h"
 #include "math_util.h"
 #include "printf.h"
@@ -1903,9 +1902,10 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     s32 endPos;
     s32 batchFlags;
     s32 textureFlags;
+    //! @bug: batchInfo is uninitalized
     numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
     segment = &gCurrentLevelModel->segments[segmentId];
-    sp78 = (nonOpaque && gWaveBlockCount) ? (func_800B9228(segment)) : (0);
+    sp78 = (nonOpaque && gWaveBlockCount) ? func_800B9228(segment) : 0;
     if (nonOpaque) {
         startPos = segment->numberofOpaqueBatches;
         endPos = segment->numberOfBatches;

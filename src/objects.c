@@ -1789,7 +1789,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     var_v1 = FALSE;
     if (objType == 0) {
-        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
+        for (; var_a2 < assetCount; var_a2++) {
             if (assetCount) {} // FAKEMATCH?
             if (var_a2 == 0 && arg1 & 4) {
                 curObj->unk68[var_a2] = NULL;
@@ -1803,14 +1803,14 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
             }
         }
     } else if (objType == 4) {
-        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
+        for (; var_a2 < assetCount; var_a2++) {
             curObj->unk68[var_a2] = (Object_68 *) load_texture(curObj->segment.header->modelIds[var_a2]);
             if (curObj->unk68[var_a2] == NULL) {
                 var_v1 = TRUE;
             }
         }
     } else {
-        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
+        for (; var_a2 < assetCount; var_a2++) {
             curObj->unk68[var_a2] = (Object_68 *) func_8007C12C(curObj->segment.header->modelIds[var_a2], 10);
             if (curObj->unk68[var_a2] == NULL) {
                 var_v1 = TRUE;
