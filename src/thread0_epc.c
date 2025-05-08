@@ -26,6 +26,18 @@ OSMesg gEPCMesgBuf[8];
 OSMesg gEPCPIBuf[8];
 OSMesgQueue gEPCPIQueue;
 
+typedef struct epcStaticData {
+    epcInfo info;
+    s32 stack1[128];
+    u16 stack2[512]; // epcStack?
+} epcStaticData;
+static epcStaticData gEpcInfo;
+
+// static s32 D_801299B0[128];
+// static u16 D_80129BB0[512]; // epcStack?
+s32 gObjectStackTrace[3];
+
+
 /**
  * Start the exception program counter thread.
  * Official Name: diCpuTraceInit
@@ -212,8 +224,7 @@ s32 get_lockup_status(void) {
     u64 sp420[128]; // Overwrite epcStack?
     s32 sp220[128];
     u8 dataFromControllerPak[_ALIGN128(sizeof(epcInfo))];
-    extern epcInfo gEpcInfo;
-    extern s32 D_801299B0[128];
+    extern epcStaticData gEpcInfo;
 
     if (sLockupStatus != -1) {
         return sLockupStatus;
@@ -224,9 +235,9 @@ s32 get_lockup_status(void) {
             (get_file_number(controllerIndex, "CORE", "", &fileNum) == CONTROLLER_PAK_GOOD) &&
             (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak, 
                 sizeof(sp420) + sizeof(sp220) + sizeof(dataFromControllerPak)) == CONTROLLER_PAK_GOOD)) {
-            bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(epcInfo));
-            bcopy(&sp220, &D_801299B0, sizeof(sp220));
-            bcopy(&sp420, &D_80129BB0, sizeof(sp420));
+            bcopy(&dataFromControllerPak, &gEpcInfo.info, sizeof(epcInfo));
+            bcopy(&sp220, &gEpcInfo.stack1, sizeof(sp220));
+            bcopy(&sp420, &gEpcInfo.stack2, sizeof(sp420));
             sLockupStatus = 1;
         }
         start_reading_controller_data(controllerIndex);
@@ -250,7 +261,7 @@ void mode_lockup(s32 updateRate) {
     }
 }
 
-#define GET_REG(reg) (s32) gEpcInfo.reg
+#define GET_REG(reg) (s32) info->info.reg
 
 /**
  * Draw onscreen the four pages of the crash screen.
@@ -258,27 +269,27 @@ void mode_lockup(s32 updateRate) {
  * Page 1-3 show the stack dump of the crashed thread.
  * Page 4 appears to show the data of the EPC stack itself?
  */
+#if 0
 void render_epc_lock_up_display(void) {
-    u16 *temp;
+    epcStaticData *info;
     char *objStatusString[3] = { "setup", "control", "print" };
     s32 offset;
     s32 s3;
     s32 j;
     s32 i;
-    static epcInfo gEpcInfo;
-    static s32 D_801299B0[128];
+
 
     s3 = 0;
 
     set_render_printf_position(16, 32);
-
     switch (sLockupPage) {
         case EPC_PAGE_REGISTER:
-            gObjectStackTrace[OBJECT_SPAWN] = gEpcInfo.objectStackTrace[OBJECT_SPAWN];
-            gObjectStackTrace[OBJECT_UPDATE] = gEpcInfo.objectStackTrace[OBJECT_UPDATE];
-            gObjectStackTrace[OBJECT_DRAW] = gEpcInfo.objectStackTrace[OBJECT_DRAW];
-            if (gEpcInfo.unk128[-2] == -1U) { // TODO: find better solution. This should be gEpcInfo.cause
-                render_printf(" epc\t\t0x%08x\n", gEpcInfo.epc);
+            info = &gEpcInfo;
+            gObjectStackTrace[OBJECT_SPAWN] = info->info.objectStackTrace[OBJECT_SPAWN];
+            gObjectStackTrace[OBJECT_UPDATE] = info->info.objectStackTrace[OBJECT_UPDATE];
+            gObjectStackTrace[OBJECT_DRAW] = info->info.objectStackTrace[OBJECT_DRAW];
+            if (info->info.cause == -1U) { // TODO: find better solution. This should be gEpcInfo.cause
+                render_printf(" epc\t\t0x%08x\n", info->info.epc);
                 render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", GET_REG(a0), GET_REG(a1));
                 for (i = 0; i < 3; i++) {
                     if (gObjectStackTrace[i] != OBJECT_CLEAR) {
@@ -293,11 +304,11 @@ void render_epc_lock_up_display(void) {
                 render_printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
                 break;
             }
-            render_printf(" Fault in thread %d\n", gEpcInfo.thread[0]);
-            render_printf(" epc\t\t0x%08x\n", gEpcInfo.epc);
-            render_printf(" cause\t\t0x%08x\n", gEpcInfo.cause);
-            render_printf(" sr\t\t0x%08x\n", gEpcInfo.sr);
-            render_printf(" badvaddr\t0x%08x\n", gEpcInfo.badvaddr);
+            render_printf(" Fault in thread %d\n", info->info.thread[0]);
+            render_printf(" epc\t\t0x%08x\n", info->info.epc);
+            render_printf(" cause\t\t0x%08x\n", info->info.cause);
+            render_printf(" sr\t\t0x%08x\n", info->info.sr);
+            render_printf(" badvaddr\t0x%08x\n", info->info.badvaddr);
             for (i = 0; i < 3; i++) {
                 if (gObjectStackTrace[i] != OBJECT_CLEAR) {
                     if (!s3) {
@@ -323,18 +334,18 @@ void render_epc_lock_up_display(void) {
         case EPC_PAGE_STACK_MIDDLE:
         case EPC_PAGE_STACK_BOTTOM:
             offset = (sLockupPage - 1) * 48;
-            for (j = (s32) &D_801299B0[offset], i = 0; i < 16; i++) {
+            for (j = (s32) &gEpcInfo.stack1[offset], i = 0; i < 16; i++) {
                 render_printf("   %08x %08x %08x\n", ((u8 **) j)[0], ((u8 **) j)[16], ((u8 **) j)[32]);
                 j = (s32) ((s32 *) j + 1);
             }
             break;
         case EPC_PAGE_UNK04:
             offset = (sLockupPage - 4) * 128;
-            for (temp = (u16 *) &D_80129BB0[offset], i = 0; i < 16; i++) {
+            for (i = 0; i < 16; i++) {
                 render_printf("  ");
                 for (j = 0; j < 8; j++) {
-                    render_printf("%04x ", temp[0]);
-                    temp++;
+                    render_printf("%04x ", gEpcInfo.stack2[offset - 472]);
+                    offset++;
                 }
                 render_printf("\n");
             }
@@ -346,3 +357,7 @@ void render_epc_lock_up_display(void) {
             return;
     }
 }
+#else
+char *objStatusString[3] = { "setup", "control", "print" };
+#pragma GLOBAL_ASM("asm/nonmatchings/thread0_epc/render_epc_lock_up_display.s")
+#endif
