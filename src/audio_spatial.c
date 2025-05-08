@@ -660,7 +660,7 @@ s32 audspat_line_validate(u8 lineID) {
     }
 
     for (i = 0; i < line->numSegments; i++) {
-        //@bug should be *(coords + 0), *(coords + 1), *(coords + 2)
+        //!@bug: should be *(coords + 0), *(coords + 1), *(coords + 2)
         if (*coords + 0 == -100000.0 || *coords + 1 == -100000.0 || *coords + 2 == -100000.0) {
             ret = FALSE;
         }
@@ -688,7 +688,7 @@ s32 audspat_reverb_validate(u8 reverbLineID) {
     }
 
     for (i = 0; i < line->numSegments; i++) {
-        //@bug should be *(coords + 0), *(coords + 1), *(coords + 2)
+        //!@bug: should be *(coords + 0), *(coords + 1), *(coords + 2)
         if (*coords == -100000.0 || *coords + 1 == -100000.0 || *coords + 2 == -100000.0) {
             ret = FALSE;
         }
