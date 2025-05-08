@@ -199,17 +199,21 @@ void update_object_stack_trace(s32 index, s32 value) {
     }
 }
 
+#ifndef _ALIGN128
+#define _ALIGN128(a)  (((u32) (a) + 0x7F) & ~(u32) 0x7F )
+#endif
+
 /**
  * Called as a check to see if render_epc_lock_up_display should be called.
  */
 s32 get_lockup_status(void) {
     s32 fileNum;
     s32 controllerIndex = 0;
-    s64 sp420[128]; // Overwrite epcStack?
-    s64 sp220[64];
-    u8 dataFromControllerPak[512]; // Looks to be sizeof(epcInfo), aligned to 64
+    u64 sp420[128]; // Overwrite epcStack?
+    s32 sp220[128];
+    u8 dataFromControllerPak[_ALIGN128(sizeof(epcInfo))];
     extern epcInfo gEpcInfo;
-    extern s32 D_801299B0[64];
+    extern s32 D_801299B0[128];
 
     if (sLockupStatus != -1) {
         return sLockupStatus;
@@ -218,8 +222,8 @@ s32 get_lockup_status(void) {
         // Looks like it reads EpcInfo data from the controller pak, which is interesting
         if ((get_si_device_status(controllerIndex) == CONTROLLER_PAK_GOOD) &&
             (get_file_number(controllerIndex, "CORE", "", &fileNum) == CONTROLLER_PAK_GOOD) &&
-            (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak, 0x800) ==
-             CONTROLLER_PAK_GOOD)) {
+            (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak, 
+                sizeof(sp420) + sizeof(sp220) + sizeof(dataFromControllerPak)) == CONTROLLER_PAK_GOOD)) {
             bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(epcInfo));
             bcopy(&sp220, &D_801299B0, sizeof(sp220));
             bcopy(&sp420, &D_80129BB0, sizeof(sp420));
@@ -262,7 +266,7 @@ void render_epc_lock_up_display(void) {
     s32 j;
     s32 i;
     static epcInfo gEpcInfo;
-    static s32 D_801299B0[64];
+    static s32 D_801299B0[128];
 
     s3 = 0;
 
