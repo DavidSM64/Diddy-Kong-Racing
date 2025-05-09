@@ -2,7 +2,6 @@
 #include "types.h"
 #include "macros.h"
 #include "f3ddkr.h"
-#include "thread0_epc.h"
 #include "stdarg.h"
 #include "textures_sprites.h"
 #include "rcp_dkr.h"

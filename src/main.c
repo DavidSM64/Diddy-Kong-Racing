@@ -1,7 +1,6 @@
 #include "main.h"
 #include "thread0_epc.h"
 #include "game.h"
-#include "libultra/src/libc/rmonPrintf.h"
 #include "stacks.h"
 
 /************ .bss ************/

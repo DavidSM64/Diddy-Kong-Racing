@@ -91,7 +91,7 @@ s32 input_update(s32 saveDataFlags, s32 updateRate) {
             if (saveDataFlags & SAVE_DATA_FLAG_ERASE_SAVE_DATA) {
                 erase_save_file(SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER(saveDataFlags), settings);
             }
-            // @bug These next two if statements check the same bits
+            //!@bug: These next two if statements check the same bits
             // as the ones used to set the save file number to read from.
             if (saveDataFlags & SAVE_DATA_FLAG_READ_EEPROM_SETTINGS) {
                 read_eeprom_settings(get_eeprom_settings_pointer());

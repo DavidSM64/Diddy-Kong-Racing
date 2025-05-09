@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  verify-build:
+  verify-all-versions:
     runs-on: ubuntu-latest
 
     steps:
