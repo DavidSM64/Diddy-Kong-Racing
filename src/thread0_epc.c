@@ -213,24 +213,25 @@ void update_object_stack_trace(s32 index, s32 value) {
 s32 get_lockup_status(void) {
     s32 fileNum;
     s32 controllerIndex = 0;
-    u64 sp420[STACKSIZE(STACK_EPCINFO2)]; // Overwrite epcStack?
-    u64 sp220[STACKSIZE(STACK_EPCINFO1)];
-    u8 dataFromControllerPak[_ALIGN128(sizeof(epcInfo))];
+    struct {
+        u8 epcInfo[_ALIGN128(sizeof(epcInfo))];
+        u64 epcInfoStack1[STACKSIZE(STACK_EPCINFO1)];
+        u64 epcInfoStack2[STACKSIZE(STACK_EPCINFO2)];
+    } dataFromControllerPak;
 
     if (sLockupStatus != -1) {
         return sLockupStatus;
     } else {
-        sLockupStatus = 0;
+        sLockupStatus = FALSE;
         // Looks like it reads EpcInfo data from the controller pak, which is interesting
         if ((get_si_device_status(controllerIndex) == CONTROLLER_PAK_GOOD) &&
             (get_file_number(controllerIndex, "CORE", "", &fileNum) == CONTROLLER_PAK_GOOD) &&
-            (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak,
-                                           sizeof(sp420) + sizeof(sp220) + sizeof(dataFromControllerPak)) ==
-             CONTROLLER_PAK_GOOD)) {
-            bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(epcInfo));
-            bcopy(&sp220, &gEpcInfoStack1, sizeof(sp220));
-            bcopy(&sp420, &gEpcInfoStack2, sizeof(sp420));
-            sLockupStatus = 1;
+            (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *) &dataFromControllerPak,
+                                           sizeof(dataFromControllerPak)) == CONTROLLER_PAK_GOOD)) {
+            bcopy(&dataFromControllerPak.epcInfo, &gEpcInfo, sizeof(epcInfo));
+            bcopy(&dataFromControllerPak.epcInfoStack1, &gEpcInfoStack1, sizeof(dataFromControllerPak.epcInfoStack1));
+            bcopy(&dataFromControllerPak.epcInfoStack2, &gEpcInfoStack2, sizeof(dataFromControllerPak.epcInfoStack2));
+            sLockupStatus = TRUE;
         }
         start_reading_controller_data(controllerIndex);
         if (sLockupStatus) {
