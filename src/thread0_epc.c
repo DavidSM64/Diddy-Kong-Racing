@@ -116,7 +116,7 @@ void stop_all_threads_except_main(void) {
  */
 void write_epc_data_to_cpak(void) {
     OSThread *thread;
-    UNUSED s16 sp444[0x200];
+    s16 sp444[0x200];
     u8 sp244[0x200];
     u8 sp44[0x200];
     s16 *v0;
@@ -291,7 +291,8 @@ void render_epc_lock_up_display(void) {
                 render_printf("\n");
                 render_printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             } else {
-                render_printf(" Fault in thread %d\n", epcinfo->thread[GET_REG(t9) * 0]); // fake GET_REG
+                epcinfo = &gEpcInfo;
+                render_printf(" Fault in thread %d\n", epcinfo->thread[0]);
                 render_printf(" epc\t\t0x%08x\n", epcinfo->epc);
                 render_printf(" cause\t\t0x%08x\n", epcinfo->cause);
                 render_printf(" sr\t\t0x%08x\n", epcinfo->sr);
