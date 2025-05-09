@@ -9,6 +9,19 @@
 #include "object_properties.h"
 #include "gbi.h"
 #include "PR/libaudio.h"
+#include "audio.h"
+
+typedef struct Vec4f {
+  union {
+    struct {
+      f32 x;
+      f32 y;
+      f32 z;
+      f32 w;
+    };
+    f32 f[4];
+  };
+} Vec4f;
 
 // Stolen from PD
 // This hacky structure allows coords to be accessed using
@@ -77,34 +90,15 @@ typedef struct Vec3i {
   };
 } Vec3i;
 
-typedef struct Vec4f {
+typedef struct Vec2i {
   union {
-    struct {
-      f32 x;
-      f32 y;
-      f32 z;
-      f32 w;
-    };
-    f32 f[4];
+      struct {
+          s32 x;
+          s32 y;
+      };
+      s32 i[2];
   };
-} Vec4f;
-
-/* Size: 0x24 / 36 bytes */
-typedef struct SoundMask {
-    /* 0x00 */ Vec3f pos;
-    /* 0x0C */ u16 soundId;
-    /* 0x0E */ u8 volume;
-    /* 0x0F */ u8 pitch;
-    /* 0x10 */ u8 unk10;
-    /* 0x11 */ u8 unk11;
-    /* 0x12 */ u8 unk12;
-    /* 0x14 */ s32 distance;
-    /* 0x18 */ ALSoundState *soundPtr;
-    /* 0x1C */ struct SoundMask **soundMask;
-    /* 0x20 */ u8 unk20;
-    /* 0x21 */ u8 unk21;
-    /* 0x22 */ u8 unk22;
-} SoundMask;
+} Vec2i;
 
 /* Size: 0x20 bytes */
 typedef struct TextureHeader {
@@ -163,7 +157,7 @@ typedef struct Sprite {
   /* 0x00 */ s16 baseTextureId;
   /* 0x02 */ s16 numberOfFrames; // 1 means static texture
   /* 0x04 */ s16 numberOfInstances;
-  /* 0x06 */ s16 unk6;
+  /* 0x06 */ s16 drawFlags;
   /* 0x08 */ TextureHeader **frames;
   union {
     /* 0x0C */ u8 val[1]; // Actual size varies.
@@ -454,33 +448,33 @@ typedef struct LevelHeader {
   /* 0x52 */ u8 music;
   /* 0x53 */ u8 unk53;
   /* 0x54 */ u16 instruments;
-  /* 0x56 */ u8 unk56;
-  /* 0x57 */ u8 unk57;
-  /* 0x58 */ u8 unk58;
-  /* 0x59 */ u8 unk59;
-  /* 0x5A */ s16 unk5A;
-  /* 0x5C */ u8 unk5C;
-  /* 0x5D */ u8 unk5D;
-  /* 0x5E */ s16 unk5E;
-  /* 0x60 */ s16 unk60;
-  /* 0x62 */ s16 wavePower;
-  /* 0x64 */ s16 unk64; // Some form of secondary power
-  /* 0x66 */ s16 unk66;
-  /* 0x68 */ s16 unk68;
-  /* 0x6A */ u8 unk6A;
-  /* 0x6B */ u8 unk6B;
-  /* 0x6C */ s8 unk6C;
-  /* 0x6D */ s8 unk6D;
-  /* 0x6E */ s16 unk6E;
+  /* 0x56 */ u8 unk56; // values between 2 and 8 (except 5 and 7), used to determine waves count?
+  /* 0x57 */ u8 unk57; // possible values: 2,4,8,16,20, related to waves
+  /* 0x58 */ u8 unk58; // possible values: 1,2,4
+  /* 0x59 */ u8 unk59; // always 0?
+  /* 0x5A */ s16 unk5A; // values between 512 and 4608
+  /* 0x5C */ u8 unk5C; // possible values: 1,2,4
+  /* 0x5D */ u8 unk5D; // always 0?
+  /* 0x5E */ s16 unk5E; // values between 512 and 4963
+  /* 0x60 */ s16 unk60; // possible values: 120, 130, 157, 178, 187
+  /* 0x62 */ s16 wavePower; // always 256
+  /* 0x64 */ s16 unk64; // Always 153 except in Smokey Castle where it's 0 and the title screen where it's 256 (Some form of secondary power)
+  /* 0x66 */ s16 unk66; // values between 908 and 2560
+  /* 0x68 */ s16 textureId; // always 62 except in the trophy race where it's 205
+  /* 0x6A */ u8 unk6A; // values between 1 and 6
+  /* 0x6B */ u8 unk6B; // values between 1 and 6
+  /* 0x6C */ s8 unk6C; // values between 0 and 4
+  /* 0x6D */ s8 unk6D; // values between 0 and 2 except in Hot Top Volcano where it's -2
+  /* 0x6E */ s16 unk6E; // possible values: 3,5
 
     //func_800B8134 Seems to use this struct, and it differs on unk70 only.
-    union {
-  /* 0x70 */ LevelHeader_70 *unk70;
-        struct {
-  /* 0x70 */ u8 unk70_u8;
-  /* 0x71 */ u8 unk71;
-        };
-    };
+  union {
+  /* 0x70 */ LevelHeader_70 *unk70[1]; // unknown size, however only size of 1 matches
+      struct {
+  /* 0x70 */ u8 darkVertexColours; // always 1 except in Hot Top Volcano where it's 0
+  /* 0x71 */ u8 unk71; // possible values: 0,1
+      };
+  };
 
   /* 0x74 */ LevelHeader_70 *unk74[7];
 
@@ -556,7 +550,7 @@ typedef struct TextureInfo {
 /* 0x04 */ u8 width;
 /* 0x05 */ u8 height;
 /* 0x06 */ u8 format;
-/* 0x07 */ u8 unk7;
+/* 0x07 */ s8 unk7;
 } TextureInfo;
 
 /* Size: 10 bytes */
@@ -954,7 +948,7 @@ typedef struct Object_Animation {
   /* 0x0C */ f32 x;
   /* 0x10 */ f32 y;
   /* 0x14 */ f32 z; 
-  /* 0x18 */ u8 *unk18; 
+  /* 0x18 */ SoundHandle unk18; 
   /* 0x1C */ struct Object *unk1C;
   /* 0x20 */ s32 unk20;
   /* 0x24 */ s16 unk24;
@@ -1021,7 +1015,7 @@ typedef struct Object_Weapon {
   /* 0x18 */ u8 weaponID;
   /* 0x19 */ s8 checkpoint;
   /* 0x19 */ s16 unk1A;
-  /* 0x19 */ SoundMask *soundMask;
+  /* 0x19 */ SoundHandle soundMask;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {
@@ -1058,16 +1052,37 @@ typedef struct Object_Fish {
   /* 0x11c */ f32 unk11C;
 } Object_Fish;
 
+typedef struct Object_Boost_Inner {
+  Vec3f position;
+  f32 unkC;
+  f32 unk10;
+  u8 pad[0x24 - 0x14];
+} Object_Boost_Inner;
+
 typedef struct Object_Boost {
-  /* 0x000 */ u8 pad[0x70];
-  /* 0x070 */ u8 unk70;
-  /* 0x074 */ f32 unk74;
+  Object_Boost_Inner unk0;
+  Object_Boost_Inner unk24;
+  Object_Boost_Inner unk48;
+  u8 pad6C[4];
+  u8 unk70;
+  u8 unk71;
+  u8 unk72;
+  u8 unk73;
+  f32 unk74;
 } Object_Boost;
 
 typedef struct Object_EffectBox {
-  /* 0x000 */ u8 pad0[0x1FE];
-  /* 0x1FE */ u8 unk1FE;
-  /* 0x1FF */ u8 unk1FF;
+  s16 unk0;
+  u8 unk2;
+  u8 unk3;
+  s16 unk4;
+  s16 unk6;
+  s16 unk8;
+  s16 unkA;
+  s16 unkC;
+  s8 unkE[0x1FE - 0xE];
+  u8 unk1FE;
+  u8 unk1FF;
 } Object_EffectBox;
 
 typedef struct Object_EggCreator {
@@ -1207,12 +1222,12 @@ typedef struct Object_Racer {
   /* 0x004 */ s32 unk4;
   /* 0x008 */ f32 forwardVel;
   /* 0x00C */ f32 animationSpeed;
-  /* 0x010 */ s32 unk10;
-  /* 0x014 */ s32 unk14;
-  /* 0x018 */ s32 unk18;
-  /* 0x01C */ s32 unk1C;
-  /* 0x020 */ s32 unk20;
-  /* 0x024 */ SoundMask *soundMask;
+  /* 0x010 */ SoundHandle unk10;
+  /* 0x014 */ SoundHandle unk14;
+  /* 0x018 */ SoundHandle unk18;
+  /* 0x01C */ SoundHandle unk1C;
+  /* 0x020 */ SoundHandle unk20;
+  /* 0x024 */ struct AudioPoint *soundMask;
   /* 0x028 */ u16 lastSoundID;
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
@@ -1294,9 +1309,9 @@ typedef struct Object_Racer {
   /* 0x174 */ s8 balloon_level;
   /* 0x175 */ s8 magnetTimer;
   /* 0x176 */ s16 unk176;
-  /* 0x178 */ void *magnetSoundMask;
-  /* 0x17C */ SoundMask *shieldSoundMask;
-  /* 0x180 */ SoundMask *bananaSoundMask;
+  /* 0x178 */ SoundHandle magnetSoundMask;
+  /* 0x17C */ struct AudioPoint *shieldSoundMask;
+  /* 0x180 */ struct AudioPoint *bananaSoundMask;
   /* 0x184 */ s8 magnetModelID;
   /* 0x185 */ s8 bananas;
   /* 0x186 */ u8 unk186;
@@ -1409,14 +1424,14 @@ typedef struct Object_Racer {
   /* 0x215 */ s8 unk215;
   /* 0x216 */ u8 unk216;
   /* 0x217 */ u8 unk217;
-  /* 0x218 */ s32 weaponSoundMask;
-  /* 0x21C */ SoundMask *unk21C;
-  /* 0x220 */ s32 unk220;
+  /* 0x218 */ SoundHandle weaponSoundMask;
+  /* 0x21C */ SoundHandle unk21C;
+  /* 0x220 */ SoundHandle unk220;
 } Object_Racer;
 
 typedef struct Object_Door {
   /* 0x00 */ f32 homeY;
-  /* 0x04 */ SoundMask *soundMask;
+  /* 0x04 */ struct AudioPoint* soundMask;
   /* 0x08 */ s32 jingleTimer;
   /* 0x0A */ s16 jingleCooldown;
   /* 0x0E */ s8 doorID;
@@ -1448,7 +1463,7 @@ typedef struct Object_Audio {
   /* 0x05 */ u8 unk5;
   /* 0x06 */ u8 unk6;
   /* 0x07 */ u8 unk7;
-  /* 0x08 */ SoundMask *soundMask;
+  /* 0x08 */ struct AudioPoint *soundMask;
   /* 0x0C */ u8 unkC;
   /* 0x0D */ u8 unkD;
 } Object_Audio;
@@ -1533,7 +1548,7 @@ typedef struct Object_TT {
 
 typedef struct Object_Bridge_WhaleRamp {
   /* 0x0 */ f32 homeY;
-  /* 0x4 */ SoundMask *soundMask;
+  /* 0x4 */ struct AudioPoint *soundMask;
 } Object_Bridge_WhaleRamp;
 
 typedef struct Object_64_80021400 {
@@ -1560,7 +1575,7 @@ typedef struct Object_Log {
 
 typedef struct Object_Fireball_Octoweapon {
     u8 pad0[0x1C];
-    s32 soundMask;
+    SoundHandle soundMask;
 } Object_Fireball_Octoweapon;
 
 typedef struct Object_AnimatedObject {

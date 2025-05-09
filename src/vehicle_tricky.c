@@ -232,7 +232,7 @@ void racer_boss_sound_spatial(f32 x, f32 y, f32 z, s32 offset) {
         randomOffset = 0;
     }
     offset += randomOffset;
-    play_sound_at_position(gBossSoundIDOffset[offset], x, y, z, 4, NULL);
+    audspat_play_sound_at_position(gBossSoundIDOffset[offset], x, y, z, 4, NULL);
 }
 
 /**

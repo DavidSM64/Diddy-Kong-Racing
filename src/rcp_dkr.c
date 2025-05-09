@@ -11,9 +11,9 @@
 
 s16 gGfxTaskMesgNums[16] = { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-u8 sBGPrimColourrR = 0;
-u8 sBGPrimColourrG = 0;
-u8 sBGPrimColourrB = 0;
+u8 sBGPrimColourR = 0;
+u8 sBGPrimColourG = 0;
+u8 sBGPrimColourB = 0;
 s32 sBackgroundFillColour = GPACK_RGBA5551(0, 0, 0, 1) | (GPACK_RGBA5551(0, 0, 0, 1) << 16);
 
 u32 gTexBGShiftX = 64;
@@ -386,9 +386,9 @@ UNUSED void gfxtask_run_rdp(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
  * Official name: rcpSetScreenColour
  */
 void bgdraw_primcolour(u8 red, u8 green, u8 blue) {
-    sBGPrimColourrR = red;
-    sBGPrimColourrG = green;
-    sBGPrimColourrB = blue;
+    sBGPrimColourR = red;
+    sBGPrimColourG = green;
+    sBGPrimColourB = blue;
 }
 
 /**
@@ -445,7 +445,7 @@ void bgdraw_render(Gfx **dList, MatrixS **mtx, s32 drawBG) {
             // fillmode.
             if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
                 gDPSetCycleType((*dList)++, G_CYC_1CYCLE);
-                gDPSetPrimColor((*dList)++, 0, 0, sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 255);
+                gDPSetPrimColor((*dList)++, 0, 0, sBGPrimColourR, sBGPrimColourG, sBGPrimColourB, 255);
                 gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
                 gDPSetRenderMode((*dList)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
                 gDPFillRectangle((*dList)++, x1, y1, x2, y2);
@@ -458,9 +458,8 @@ void bgdraw_render(Gfx **dList, MatrixS **mtx, s32 drawBG) {
             } else if (gBGDrawFunc.ptr != NULL) {
                 gBGDrawFunc.function(dList, mtx);
             } else {
-                gDPSetFillColor((*dList)++,
-                                (GPACK_RGBA5551(sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 1) << 16) |
-                                    GPACK_RGBA5551(sBGPrimColourrR, sBGPrimColourrG, sBGPrimColourrB, 1));
+                gDPSetFillColor((*dList)++, (GPACK_RGBA5551(sBGPrimColourR, sBGPrimColourG, sBGPrimColourB, 1) << 16) |
+                                                GPACK_RGBA5551(sBGPrimColourR, sBGPrimColourG, sBGPrimColourB, 1));
                 gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
             }
         }

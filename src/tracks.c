@@ -27,6 +27,9 @@
 #define LEVEL_MODEL_MAX_SIZE 0x82A00
 #define LEVEL_SEGMENT_MAX 128
 
+#define FLAGS_8002E904 \
+    (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_RECEIVE_SHADOWS | BATCH_FLAGS_WATER | BATCH_FLAGS_FORCE_NO_SHADOWS)
+
 /************ .data ************/
 
 s32 D_800DC870 = 0; // Currently unknown, might be a different type.
@@ -50,7 +53,7 @@ s32 D_800DC920 = -1;
 // T.T.カメラ  -  T.T. Camera
 char gJpnTTCam[] = { 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x55, 0x80, 0x71, 0x80, 0x76 };
 #endif
-s32 *D_800DC924 = NULL;
+u8 *D_800DC924 = NULL;
 s32 D_800DC928 = 0; // Currently unknown, might be a different type.
 
 s8 D_800DC92C[24] = {
@@ -106,10 +109,10 @@ unk8011B330 D_8011B330[120]; // Struct sizeof(0x20) / sizeof(32)
 s32 D_8011C230;
 s32 D_8011C234;
 unk8011C238 D_8011C238[32]; // Struct sizeof(0xC) / sizeof(12)
-s32 D_8011C3B8[320];
-s32 D_8011C8B8[512];
+unk8011C3B8 D_8011C3B8[64];
+unk8011C8B8 D_8011C8B8[128];
 s32 D_8011D0B8;
-Vec4f *D_8011D0BC;
+unk8011C8B8 *D_8011D0BC;
 TextureHeader *gNewShadowTexture;
 Object *gNewShadowObj;
 f32 D_8011D0C8;
@@ -126,10 +129,7 @@ s32 D_8011D0EC;
 f32 D_8011D0F0;
 f32 D_8011D0F4;
 Vec4f D_8011D0F8[3];
-Vec4f D_8011D128[3];
-s32 D_8011D158[3]; // Unused? Or part of something bigger above?
-s32 D_8011D164;
-s32 D_8011D168[84];
+WaterProperties D_8011D128[20];
 WaterProperties *gTrackWaves[20];
 s8 D_8011D308;
 LevelModel *gTrackModelHeap;
@@ -137,13 +137,13 @@ s32 *gLevelModelTable;
 UNUSED f32 gPrevCameraX;          // Set but never read
 UNUSED f32 gPrevCameraY;          // Set but never read
 UNUSED f32 gPrevCameraZ;          // Set but never read
-Triangle *gShadowHeapTris[2 * 2]; // Triangle Data for shadows
+Triangle *gShadowHeapTris[2 + 2]; // Triangle Data for shadows
 Triangle *gCurrShadowTris;
 UNUSED s32 D_8011D334;
-Vertex *gShadowHeapVerts[2 * 2]; // Vertex Data for shadows
+Vertex *gShadowHeapVerts[2 + 2]; // Vertex Data for shadows
 Vertex *gCurrShadowVerts;
 UNUSED s32 D_8011D34C;
-ShadowHeapProperties *gShadowHeapData[2 * 2]; // General data for shadows. Texture and geometry size.
+ShadowHeapProperties *gShadowHeapData[2 + 2]; // General data for shadows. Texture and geometry size.
 ShadowHeapProperties *gCurrShadowHeapData;
 s32 gShadowTail;        // Position in the heap the shadow data ends at.
 s32 gNewShadowTriCount; // xOffset?
@@ -162,7 +162,7 @@ s8 *D_8011D47C;
 Vertex *D_8011D480[2];
 Vertex *D_8011D488;
 s32 D_8011D48C;
-TriangleList *D_8011D490[2];
+Triangle *D_8011D490[2];
 Triangle *D_8011D498;
 s16 D_8011D49C;
 s16 D_8011D49E;
@@ -172,15 +172,7 @@ f32 D_8011D4A8;
 f32 D_8011D4AC;
 f32 D_8011D4B0;
 s8 D_8011D4B4;
-typedef struct Unk8011D4B6 {
-    union {
-        struct {
-            u8 one, two;
-        };
-        s16 whole;
-    };
-} Unk8011D4B6;
-Unk8011D4B6 D_8011D4B6;
+s16 D_8011D4B6;
 s16 D_8011D4B8;
 s16 D_8011D4BA;
 s16 D_8011D4BC;
@@ -250,7 +242,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     func_8000C8F8(collectables, 1);
     gScenePlayerViewports = numberOfPlayers;
     func_8000CC7C(vehicle, entranceId, numberOfPlayers);
-    func_8000B020(72, 64);
+    racerfx_alloc(72, 64);
 
     if (geometry == 0 && entranceId == 0) {
         transition_begin(&gCircleFadeToBlack);
@@ -350,7 +342,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
         flip = TRUE;
     }
 #endif
-    reset_render_settings(&gSceneCurrDisplayList);
+    rendermode_reset(&gSceneCurrDisplayList);
     gDkrDisableBillboard(gSceneCurrDisplayList++);
     gSPClearGeometryMode(gSceneCurrDisplayList++, G_CULL_FRONT);
     gDPSetBlendColor(gSceneCurrDisplayList++, 0, 0, 0, 0x64);
@@ -375,7 +367,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
         apply_fog(gSceneCurrentPlayerID);
         gDPPipeSync(gSceneCurrDisplayList++);
         set_active_camera(gSceneCurrentPlayerID);
-        func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+        viewport_main(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         func_8002A31C();
         // Show detailed skydome in single player.
         if (numViewports < 2) {
@@ -417,7 +409,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
             set_active_camera(PLAYER_FOUR);
             disable_cutscene_camera();
             func_800278E8(updateRate);
-            func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+            viewport_main(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_8002A31C();
             func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             draw_gradient_background();
@@ -461,180 +453,206 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
 UNUSED const char gTrackClippingErrorString[] = "Solid Clipping x0=x1 Error!!!\n";
 UNUSED const char gTrackHeightOverflowString[] = "TrackGetHeight() - Overflow!!!\n";
 
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80025510.s")
+void func_80025510(s32 count) {
+    s32 i;
+    s32 sp30;
+    s32 sp2C;
+    s32 sp28;
+    s32 sp24;
+    u8 *ptr;
+
+    D_8011D4BA = 175;
+    D_8011D4BC = 45;
+    if (count >= 2) {
+        D_8011D4BC >>= 1;
+    }
+
+    sp30 = (D_8011D4BA + 6) * sizeof(unk8011D478);
+    sp2C = D_8011D4BA + 5;
+    sp28 = (D_8011D4BC + 5) * 4 * sizeof(Vertex);
+    sp24 = (D_8011D4BC + 5) * 2 * sizeof(Triangle);
+
+    D_8011D474 = mempool_alloc_safe(count * sizeof(unk8011D474), COLOUR_TAG_CYAN);
+    D_800DC924 = mempool_alloc_safe(sp30 + sp2C + (sp28 + sp24) * 2 * count, COLOUR_TAG_CYAN);
+
+    ptr = D_800DC924;
+
+    if (ptr != NULL) {
+        D_8011D478 = (unk8011D478 *) ptr;
+        ptr += sp30;
+
+        D_8011D47C = (s8 *) ptr;
+        ptr = (u8 *) ((s32) (ptr + sp2C + 8) & ~7);
+
+        for (i = 0; i < count; i++) {
+            D_8011D474[i].unk0 = (Triangle *) ptr;
+            ptr += sp24;
+
+            D_8011D474[i].unk4 = (Triangle *) ptr;
+            ptr += sp24;
+
+            D_8011D474[i].unk8 = (Vertex *) ptr;
+            ptr += sp28;
+
+            D_8011D474[i].unkC = (Vertex *) ptr;
+            ptr += sp28;
+        }
+    }
+    D_8011D4B4 = 0;
+}
 
 void func_800257D0(void) {
-    if (D_800DC924 != 0) {
+    if (D_800DC924 != NULL) {
         mempool_free(D_8011D474);
         mempool_free(D_800DC924);
-        D_800DC924 = 0;
+        D_800DC924 = NULL;
     }
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 void func_80026070(LevelModelSegmentBoundingBox *, f32, f32, f32);
 void func_80026430(LevelModelSegment *, f32, f32, f32);
-// Alternative Attempt: https://decomp.me/scratch/2C6dJ
+// URL: https://decomp.me/scratch/Hz4qp
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
-    Vertex *spAC;
-    s8 *spA8;
-    s8 sp7C;
-    LevelModelSegmentBoundingBox *bbox;
-    Vertex *temp_t6;
-    f32 yCameraCoss;
-    f32 x1Sins;
-    f32 x2Sins;
-    f32 z2Coss;
-    f32 temp_f22;
-    f32 yCameraSins;
-    f32 z1Coss;
-    s16 *var_a0;
-    s16 temp_s3;
-    s32 temp_t3_2;
-    s16 var_s0;
     s16 i;
+    s16 j;
+    f32 yCameraSins;
+    f32 yCameraCoss;
+    f32 temp_f22;
+    Vertex *spAC;
+    Triangle *spA8;
+    s16 temp_s3;
+    s16 var_s0;
     s16 var_s4;
-    s16 var_v1;
-    s32 temp_t3;
-    s32 temp_t4;
-    s32 continueLoop;
-    s16 check1;
-    s16 check2;
-    s16 check3;
-    s16 check4;
-    s8 *temp_t3_3;
-    s8 *temp_t7;
-    s8 *temp_v0_4;
-    s8 *var_t6;
-    s8 temp_t3_4;
-    u8 segmentIndex;
+    s32 breakLoop;
+    s32 *ptr2;
+    LevelModelSegmentBoundingBox *bbox;
+    s16 sum;
+    s8 sp7C[20]; // possible UB here, real size is unknown
+    s16 tmp;
 
     D_8011D490[0] = D_8011D474[viewportIndex].unk0;
     D_8011D490[1] = D_8011D474[viewportIndex].unk4;
     D_8011D480[0] = D_8011D474[viewportIndex].unk8;
     D_8011D480[1] = D_8011D474[viewportIndex].unkC;
-    load_and_set_texture_no_offset(&gSceneCurrDisplayList, NULL, RENDER_ANTI_ALIASING | RENDER_Z_COMPARE);
+    material_set_no_tex_offset(&gSceneCurrDisplayList, NULL, RENDER_ANTI_ALIASING | RENDER_Z_COMPARE);
     D_8011D49C = 0;
     D_8011D49E = 0;
-    yCameraSins = sins_f(gSceneActiveCamera->trans.rotation.y_rotation * -1);
-    yCameraCoss = coss_f(gSceneActiveCamera->trans.rotation.y_rotation * -1);
-    D_8011D4AC = (gSceneActiveCamera->trans.x_position + (yCameraSins * 250.0));
-    D_8011D4B0 = (gSceneActiveCamera->trans.z_position + (yCameraCoss * 250.0));
+
+    yCameraSins = sins_f(-gSceneActiveCamera->trans.rotation.y_rotation);
+    yCameraCoss = coss_f(-gSceneActiveCamera->trans.rotation.y_rotation);
+
+    D_8011D4AC = gSceneActiveCamera->trans.x_position + yCameraSins * 250.0;
+    D_8011D4B0 = gSceneActiveCamera->trans.z_position + yCameraCoss * 250.0;
+
+    temp_f22 = -(yCameraSins * D_8011D4AC + yCameraCoss * D_8011D4B0);
+
     D_8011D4A0 = -yCameraCoss;
     D_8011D4A4 = yCameraSins;
-    temp_f22 = -((yCameraSins * D_8011D4AC) + (yCameraCoss * D_8011D4B0));
-    D_8011D4A8 = -((D_8011D4A0 * D_8011D4AC) + (D_8011D4A4 * D_8011D4B0));
-    for (i = 0; i < numberOfSegments; i++) {
-        segmentIndex = segmentIds[i];
-        bbox = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex];
-        x1Sins = bbox->x1 * yCameraSins;
-        z1Coss = bbox->z1 * yCameraCoss;
-        x2Sins = bbox->x2 * yCameraSins;
-        z2Coss = bbox->z2 * yCameraCoss;
-        check1 = FALSE;
-        check2 = FALSE;
-        check3 = FALSE;
-        check4 = FALSE;
-        if ((x1Sins + z1Coss + temp_f22) <= 0.0) {
-            check1 = TRUE;
-        }
-        if ((x2Sins + z1Coss + temp_f22) <= 0.0) {
-            check2 = TRUE;
-        }
-        if ((x1Sins + z2Coss + temp_f22) <= 0.0) {
-            check3 = TRUE;
-        }
-        if ((x2Sins + z2Coss + temp_f22) <= 0.0) {
-            check4 = TRUE;
-        }
-        if (((s16) ((s16) (check1 + check2) + check3) + check4) & 3) {
-            func_80026430((LevelModelSegment *) bbox, yCameraSins, yCameraCoss, temp_f22);
-            if (gCurrentLevelModel->segments[segmentIndex].unk3C & 2) {
+    D_8011D4A8 = -(D_8011D4A0 * D_8011D4AC + D_8011D4A4 * D_8011D4B0);
+
+    i = 0;
+    for (; i < numberOfSegments; i++) {
+        bbox = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIds[i]];
+        sum = 0;
+        sum += bbox->x1 * yCameraSins + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
+        sum += yCameraSins * bbox->x2 + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
+        sum += bbox->x1 * yCameraSins + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
+        sum += yCameraSins * bbox->x2 + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
+        if (sum & 3) {
+            func_80026430(&gCurrentLevelModel->segments[segmentIds[i]], yCameraSins, yCameraCoss, temp_f22);
+            if (gCurrentLevelModel->segments[segmentIds[i]].unk3C & 2) {
                 func_80026070(bbox, yCameraSins, yCameraCoss, temp_f22);
             }
         }
     }
-    func_80026C14(300, (gCurrentLevelModel->lowerYBounds - 195), 1);
-    func_80026C14(-300, (gCurrentLevelModel->lowerYBounds - 195), 1);
-    func_80026C14(300, (gCurrentLevelModel->upperYBounds + 195), 0);
-    func_80026C14(-300, (gCurrentLevelModel->upperYBounds + 195), 0);
-    if (D_8011D49E < D_8011D4BA && D_8011D49E != 0) {
-        continueLoop = TRUE;
-        do {
-            for (i = 0; i < D_8011D49E - 1; i++) {
-                if (D_8011D478[i].unk7 < D_8011D478[i].unk0) {
-                    temp_t3 = D_8011D478[i].unk7;
-                    D_8011D478[i].unk7 = D_8011D478[i].unk0;
-                    temp_t4 = D_8011D478[i + 1].unk0;
-                    D_8011D478[i].unk0 = temp_t3;
-                    D_8011D478[i + 1].unk0 = D_8011D478[i].unk4;
-                    D_8011D478[i].unk4 = temp_t4;
-                    continueLoop = FALSE;
-                }
-            }
-        } while (!continueLoop);
-        var_s0 = 0;
-        for (i = 0; i < D_8011D49E; i++) {
-            temp_t3_2 = D_8011D478[var_s0].unk7 * 2;
-            if (D_8011D47C[temp_t3_2] == -1) {
-                D_8011D478[i].unk4 = (D_8011D478[i].unk7 | 2);
-                D_8011D47C[temp_t3_2] = i;
-            } else {
-                D_8011D47C[temp_t3_2] = i;
+
+    func_80026C14(300, gCurrentLevelModel->lowerYBounds - 195, 1);
+    func_80026C14(-300, gCurrentLevelModel->lowerYBounds - 195, 1);
+    func_80026C14(300, gCurrentLevelModel->upperYBounds + 195, 0);
+    func_80026C14(-300, gCurrentLevelModel->upperYBounds + 195, 0);
+
+    if (D_8011D49E >= D_8011D4BA || D_8011D49E == 0) {
+        return;
+    }
+
+    do {
+        breakLoop = TRUE;
+        ptr2 = (s32 *) D_8011D478;
+        for (i = 0; i < D_8011D49E - 1; i++, ptr2 += 2) {
+            if (D_8011D478[i + 1].unk0 < D_8011D478[i].unk0) {
+                s32 tmp;
+
+                tmp = ptr2[0];
+                ptr2[0] = ptr2[2];
+                ptr2[2] = tmp;
+
+                tmp = ptr2[1];
+                ptr2[1] = ptr2[3];
+                ptr2[3] = tmp;
+
+                breakLoop = FALSE;
             }
         }
-        temp_t6 = gSceneCurrVertexList;
-        gSceneCurrVertexList = D_8011D480[D_8011D4B4];
-        temp_t7 = (s8 *) gSceneCurrTriList;
-        gSceneCurrTriList = (Triangle *) D_8011D490[D_8011D4B4];
-        D_8011D4B4 = 1 - D_8011D4B4;
-        var_s4 = D_8011D478->unk0;
-        D_8011D488 = gSceneCurrVertexList;
-        D_8011D498 = gSceneCurrTriList;
-        D_8011D4B6.whole = 0;
-        D_8011D4B8 = 0;
-        spAC = temp_t6;
-        spA8 = temp_t7;
-        for (i = 0; i < D_8011D49E; i++) {
-            if ((i < D_8011D49E) != 0) {
-                var_a0 = &D_8011D478[i].unk0;
-                if (var_s4 == *var_a0) {
-                    temp_t3_3 = &(&sp7C)[var_s0];
-                    if (var_a0[3] & 2) {
-                        var_s0++;
-                        *temp_t3_3 = var_a0[7];
-                    } else {
-                        for (var_v1 = 0; var_v1 < var_s0; var_v1++) {
-                            var_t6 = &(&sp7C)[var_v1];
-                            if (*var_t6 == var_a0[7]) {
-                                var_s0 -= 1;
-                                while (var_v1 < var_s0) {
-                                    temp_v0_4 = &(&sp7C)[var_v1];
-                                    temp_t3_4 = temp_v0_4[1];
-                                    temp_v0_4[0] = temp_t3_4;
-                                    var_v1++;
-                                }
-                            }
+    } while (!breakLoop);
+
+    var_s0 = 0;
+
+    for (i = 0; i < D_8011D49E; i++) {
+        tmp = D_8011D478[i].unk7 * 2;
+        if (D_8011D47C[tmp] == -1) {
+            D_8011D478[i].unk6 |= 2;
+            D_8011D47C[tmp] = i;
+        } else {
+            D_8011D47C[tmp + 1] = i;
+        }
+    }
+    var_s4 = temp_s3 = D_8011D478[0].unk0;
+
+    spAC = gSceneCurrVertexList;
+    spA8 = gSceneCurrTriList;
+    gSceneCurrVertexList = D_8011D480[D_8011D4B4];
+    gSceneCurrTriList = D_8011D490[D_8011D4B4];
+
+    D_8011D4B4 = 1 - D_8011D4B4;
+    D_8011D488 = gSceneCurrVertexList;
+    D_8011D498 = gSceneCurrTriList;
+    D_8011D4B6 = 0;
+    D_8011D4B8 = 0;
+
+    i = 0;
+    while (i < D_8011D49E) {
+        while (i < D_8011D49E && var_s4 == D_8011D478[i].unk0) {
+            if (D_8011D478[i].unk6 & 2) {
+                sp7C[var_s0] = D_8011D478[i].unk7;
+                var_s0++;
+            } else {
+                for (j = 0; j < var_s0; j++) {
+                    if (sp7C[j] == D_8011D478[i].unk7) {
+                        var_s0--;
+                        while (j < var_s0) {
+                            sp7C[j] = sp7C[j + 1];
+                            j++;
                         }
                     }
                 }
             }
-            if (i < D_8011D49E) {
-                temp_s3 = D_8011D478[i].unk0;
-                if (var_s4 != temp_s3) {
-                    func_80026E54(var_s0, &sp7C, (f32) temp_s3, (f32) var_s4);
-                    var_s4 = temp_s3;
-                }
+            i++;
+        }
+        if (i < D_8011D49E) {
+            temp_s3 = D_8011D478[i].unk0;
+            if (var_s4 != temp_s3) {
+                func_80026E54(var_s0, sp7C, temp_s3, var_s4);
+                var_s4 = temp_s3;
             }
         }
-        if (D_8011D4B6.whole != 0) {
-            gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(D_8011D488), D_8011D4B6.whole, 0);
-            gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(D_8011D498), (D_8011D4B6.whole >> 1),
-                       TRIN_DISABLE_TEXTURE);
-        }
-        gSceneCurrVertexList = spAC;
-        gSceneCurrTriList = (Triangle *) spA8;
     }
+    if (D_8011D4B6 != 0) {
+        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6, 0);
+        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), D_8011D4B6 >> 1, TRIN_DISABLE_TEXTURE);
+    }
+    gSceneCurrVertexList = spAC;
+    gSceneCurrTriList = spA8;
 }
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002581C.s")
@@ -952,93 +970,103 @@ void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
 s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     Vertex *verts;
     Triangle *tris;
-    s32 two;
-    UNUSED s32 test;
+    u8 triIndex;
     s32 vertZ1;
     s32 vertX2;
     s32 vertZ2;
     s32 vertX1;
-    ColourRGBA colour;
+    s32 colour_r;
+    s32 colour_g;
+    s32 colour_b;
 
     if (D_8011D4B8 >= D_8011D4BC) {
         return 0;
     } else {
-        if (D_8011D4B6.whole == 24) {
-            gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(D_8011D488), D_8011D4B6.whole, 0);
-            if (two) {}
-            gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(D_8011D498), (D_8011D4B6.whole >> 1),
-                       TRIN_DISABLE_TEXTURE);
-            D_8011D4B6.whole = 0;
+        if (D_8011D4B6 == 24) {
+            gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6, 0);
+            gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), (D_8011D4B6 >> 1), TRIN_DISABLE_TEXTURE);
             D_8011D488 = gSceneCurrVertexList;
+            D_8011D4B6 = 0;
             D_8011D498 = gSceneCurrTriList;
         }
+
+        colour_r = D_8011B0E1;
+        colour_g = D_8011B0E2;
+        colour_b = D_8011B0E3;
+
+        vertX1 = arg2 * D_8011D4A0 + D_8011D4AC;
+        vertZ1 = arg2 * D_8011D4A4 + D_8011D4B0;
+        vertX2 = arg3 * D_8011D4A0 + D_8011D4AC;
+        vertZ2 = arg3 * D_8011D4A4 + D_8011D4B0;
+
         verts = gSceneCurrVertexList;
-        colour.r = D_8011B0E1;
-        colour.g = D_8011B0E2;
-        colour.b = D_8011B0E3;
-        colour.a = 0xFF;
-        vertX1 = ((arg2 * D_8011D4A0) + D_8011D4AC);
-        vertZ1 = ((arg2 * D_8011D4A4) + D_8011D4B0);
-        vertX2 = ((arg3 * D_8011D4A0) + D_8011D4AC);
-        vertZ2 = ((arg3 * D_8011D4A4) + D_8011D4B0);
-        two = D_8011D4B6.two;
-        verts[0].x = vertX1;
-        verts[0].y = (arg0[0] + 2.0f);
-        verts[0].z = vertZ1;
-        if (1) {
-            verts[0].r = colour.r;
-            verts[0].g = colour.g;
-            verts[0].b = colour.b;
-            verts[0].a = colour.a;
-            verts[1].x = vertX2;
-            verts[1].y = (arg0[1] + 2.0f);
-            verts[1].z = vertZ2;
-            verts[1].r = colour.r;
-            verts[1].g = colour.g;
-            verts[1].b = colour.b;
-            verts[1].a = colour.a;
-            verts[2].x = vertX1;
-            verts[2].y = (arg1[0] - 2.0f);
-            verts[2].z = vertZ1;
-            verts[2].r = colour.r;
-        }
-        verts[2].g = colour.g;
-        verts[2].b = colour.b;
-        verts[2].a = colour.a;
-        verts[3].x = vertX2;
-        verts[3].y = (arg1[1] - 2.0f);
-        verts[3].z = vertZ2;
-        verts[3].r = colour.r;
-        verts[3].g = colour.g;
-        verts[3].b = colour.b;
-        verts[3].a = colour.a;
-        verts += 4;
+        verts->x = vertX1;
+        verts->y = arg0[0] + 2;
+        verts->z = vertZ1;
+        verts->r = colour_r;
+        verts->g = colour_g;
+        verts->b = colour_b;
+        verts->a = 255;
+        verts++;
+
+        verts->x = vertX2;
+        verts->y = arg0[1] + 2;
+        verts->z = vertZ2;
+        verts->r = colour_r;
+        verts->g = colour_g;
+        verts->b = colour_b;
+        verts->a = 255;
+        verts++;
+
+        verts->x = vertX1;
+        verts->y = arg1[0] - 2;
+        verts->z = vertZ1;
+        verts->r = colour_r;
+        verts->g = colour_g;
+        verts->b = colour_b;
+        verts->a = 255;
+        verts++;
+
+        verts->x = vertX2;
+        verts->y = arg1[1] - 2;
+        verts->z = vertZ2;
+        verts->r = colour_r;
+        verts->g = colour_g;
+        verts->b = colour_b;
+        verts->a = 255;
+        verts++;
+
         gSceneCurrVertexList = verts;
+        triIndex = (u8) D_8011D4B6;
+
         tris = gSceneCurrTriList;
-        tris[0].flags = 0x40;
-        tris[0].vi0 = two + 2;
-        tris[0].vi1 = two + 1;
-        tris[0].vi2 = two;
-        tris[0].uv0.u = 0x3E0;
-        tris[0].uv0.v = 0x3E0;
-        tris[0].uv1.u = 0x3E0;
-        tris[0].uv1.v = 0;
-        tris[0].uv2.u = 1;
-        tris[0].uv2.v = 0;
-        tris[1].flags = 0x40;
-        tris[1].vi0 = two + 3;
-        tris[1].vi1 = two + 1;
-        tris[1].vi2 = two + 2;
-        tris[1].uv0.u = 1;
-        tris[1].uv0.v = 0x3E0;
-        tris[1].uv1.u = 0x3E0;
-        tris[1].uv1.v = 0x3E0;
-        tris[1].uv2.u = 1;
-        tris[1].uv2.v = 0;
-        tris += 2;
+        tris->flags = BACKFACE_DRAW;
+        tris->vi0 = triIndex + 2;
+        tris->vi1 = triIndex + 1;
+        tris->vi2 = triIndex;
+        tris->uv0.u = 0x3E0;
+        tris->uv0.v = 0x3E0;
+        tris->uv1.u = 0x3E0;
+        tris->uv1.v = 0;
+        tris->uv2.u = 1;
+        tris->uv2.v = 0;
+        tris++;
+
+        tris->flags = BACKFACE_DRAW;
+        tris->vi1 = triIndex + 1;
+        tris->vi2 = triIndex + 2;
+        tris->vi0 = triIndex + 3;
+        tris->uv0.u = 1;
+        tris->uv0.v = 0x3E0;
+        tris->uv1.u = 0x3E0;
+        tris->uv1.v = 0x3E0;
+        tris->uv2.u = 1;
+        tris->uv2.v = 0;
+        tris++;
         gSceneCurrTriList = tris;
-        D_8011D4B6.whole += 4;
-        D_8011D4B8 += 1;
+
+        D_8011D4B6 += 4;
+        D_8011D4B8++;
     }
 
     return 0;
@@ -1059,14 +1087,8 @@ typedef struct Unk80027568_1 {
 } Unk80027568_1;
 
 s32 func_80027568(void) {
-    f32 camXPos;
-    f32 camYPos;
-    f32 camZPos;
     f32 projectedRacerPos;
     f32 projectedCamPos;
-    f32 racerXPos;
-    f32 racerYPos;
-    f32 racerZPos;
     f32 temp_f18_2;
     f32 var_f16;
     f32 scalingFactor;
@@ -1076,13 +1098,14 @@ s32 func_80027568(void) {
     s32 ret;
     s32 var_t4;
     s32 i;
-    s32 var_v0_1;
+    u16 *var_v0_1;
     u16 var_v0;
     Vec4f *vector;
     Object **racerGroup;
     s32 numRacers;
-    Unk80027568_1 *var_ra;
+    Unk80027568_1 *var_ra; // spE4
     Object *currentObjRacer;
+    f32 x, y, z;
 
     racerGroup = get_racer_objects(&numRacers);
     if (numRacers == 0) {
@@ -1095,7 +1118,8 @@ s32 func_80027568(void) {
     curViewport = get_current_viewport();
     currentObjRacer = NULL;
     for (i = 0; i < numRacers; i++) {
-        if (curViewport == racerGroup[i]->unk64->racer.playerIndex) {
+        Object_Racer *racer = &racerGroup[i]->unk64->racer;
+        if (curViewport == racer->playerIndex) {
             currentObjRacer = racerGroup[i];
             i = numRacers; // Come on! Just use break!
         }
@@ -1107,30 +1131,26 @@ s32 func_80027568(void) {
     ret = FALSE;
     // bug? var_ra can be undefined?
     for (var_t4 = 0; var_t4 < D_8011D378 && ret == FALSE; var_t4++) {
-        var_v0_1 = (s32) D_8011D370[var_t4];
-        if (var_v0_1 > 0) {
-            var_ra = (void *) PHYS_TO_K0(var_v0_1);
+        if ((s32) D_8011D370[var_t4] > 0) {
+            var_ra = (void *) PHYS_TO_K0(D_8011D370[var_t4]);
         } else {
-            ret = TRUE;
-            vector = &var_ra->unk18[var_v0_1];
-            camXPos = gSceneActiveCamera->trans.x_position;
-            camYPos = gSceneActiveCamera->trans.y_position;
-            camZPos = gSceneActiveCamera->trans.z_position;
-            projectedCamPos =
-                (((vector->x * camXPos) + (vector->y * camYPos) + (vector->z * camZPos) + vector->w) - 14.0);
+            vector = &var_ra->unk18[D_8011D370[var_t4][0]];
+            projectedCamPos = vector->x * gSceneActiveCamera->trans.x_position +
+                              vector->y * gSceneActiveCamera->trans.y_position +
+                              vector->z * gSceneActiveCamera->trans.z_position + vector->w - 14.0;
             if (projectedCamPos < -0.1) {
-                racerXPos = currentObjRacer->segment.trans.x_position;
-                racerYPos = currentObjRacer->segment.trans.y_position;
-                racerZPos = currentObjRacer->segment.trans.z_position;
-                projectedRacerPos =
-                    (vector->x * racerXPos) + (vector->y * racerYPos) + (vector->z * racerZPos) + vector->w;
+                projectedRacerPos = vector->x * currentObjRacer->segment.trans.x_position +
+                                    vector->y * currentObjRacer->segment.trans.y_position +
+                                    vector->z * currentObjRacer->segment.trans.z_position + vector->w;
                 if (projectedRacerPos >= -0.1) {
+                    ret = TRUE;
+
                     if (projectedRacerPos != projectedCamPos) {
                         scalingFactor = projectedRacerPos / (projectedRacerPos - projectedCamPos);
                     } else {
                         scalingFactor = 0.0f;
                     }
-                    for (var_a1 = 1; var_a1 < 3 && ret == TRUE; var_a1++) {
+                    for (var_a1 = 0; var_a1 < 3 && ret == TRUE; var_a1++) {
                         var_v0 = D_8011D370[var_t4][var_a1 + 1];
                         isNegative = FALSE;
                         if (var_v0 & 0x8000) {
@@ -1138,12 +1158,22 @@ s32 func_80027568(void) {
                             isNegative = TRUE;
                         }
                         vector = &var_ra->unk18[var_v0];
-                        temp_f18_2 = (vector->x * (racerXPos + ((camXPos - racerXPos) * scalingFactor))) +
-                                     (vector->y * (racerYPos + ((camYPos - racerYPos) * scalingFactor))) +
-                                     (vector->z * (racerZPos + ((camZPos - racerZPos) * scalingFactor))) + vector->w;
-                        var_f16 = temp_f18_2;
+                        var_f16 =
+                            vector->x *
+                                (currentObjRacer->segment.trans.x_position +
+                                 (gSceneActiveCamera->trans.x_position - currentObjRacer->segment.trans.x_position) *
+                                     scalingFactor) +
+                            vector->y *
+                                (currentObjRacer->segment.trans.y_position +
+                                 (gSceneActiveCamera->trans.y_position - currentObjRacer->segment.trans.y_position) *
+                                     scalingFactor) +
+                            vector->z *
+                                (currentObjRacer->segment.trans.z_position +
+                                 (gSceneActiveCamera->trans.z_position - currentObjRacer->segment.trans.z_position) *
+                                     scalingFactor) +
+                            vector->w;
                         if (isNegative) {
-                            var_f16 = -temp_f18_2;
+                            var_f16 = -var_f16;
                         }
                         if (var_f16 > 4.0f) {
                             ret = FALSE;
@@ -1323,7 +1353,7 @@ void set_skydome_visbility(s32 renderSky) {
 }
 
 // init_skydome
-// https://decomp.me/scratch/jmbc1
+// https://decomp.me/scratch/80umh
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80028050.s")
 
 /**
@@ -1332,7 +1362,8 @@ void set_skydome_visbility(s32 renderSky) {
  * it gives the background a gradient effect.
  */
 void draw_gradient_background(void) {
-    s32 set_zero;
+    s16 z;
+    UNUSED s16 pad;
     s16 y0;
     s16 y1;
     u8 headerRed0;
@@ -1343,23 +1374,22 @@ void draw_gradient_background(void) {
     u8 headerBlue1;
     Vertex *verts;
     Triangle *tris;
-    s32 also_one;
-    s64 set_twenty;
 
     verts = (Vertex *) gSceneCurrVertexList;
     tris = (Triangle *) gSceneCurrTriList;
+
     headerRed0 = gCurrentLevelHeader2->BGColourTopR;
-    also_one = 1;
     headerGreen0 = gCurrentLevelHeader2->BGColourTopG;
     headerBlue0 = gCurrentLevelHeader2->BGColourTopB;
     headerRed1 = gCurrentLevelHeader2->BGColourBottomR;
     headerGreen1 = gCurrentLevelHeader2->BGColourBottomG;
     headerBlue1 = gCurrentLevelHeader2->BGColourBottomB;
-    reset_render_settings(&gSceneCurrDisplayList);
-    load_and_set_texture_no_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE);
-    gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), 4, 0);
-    gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), 2, 0);
-    set_twenty = 20;
+    rendermode_reset(&gSceneCurrDisplayList);
+    material_set_no_tex_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE);
+    gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), 4, 0);
+    gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(tris), 2, 0);
+
+    z = 20;
     if (osTvType == OS_TV_TYPE_PAL) {
         y0 = -180;
         y1 = 180;
@@ -1371,59 +1401,68 @@ void draw_gradient_background(void) {
         y0 >>= 1;
         y1 >>= 1;
     }
-    verts[0].x = -200;
-    verts[0].y = y0;
-    verts[0].z = set_twenty;
-    verts[0].r = headerRed0;
-    verts[0].g = headerGreen0;
-    verts[0].b = headerBlue0;
-    verts[0].a = 255;
-    verts[also_one].x = 200;
-    verts[1].y = y0;
-    verts[1].z = set_twenty;
-    verts[1].r = headerRed0;
-    verts[1].g = headerGreen0;
-    verts[1].b = headerBlue0;
-    verts[1].a = 255;
-    verts[2].x = -200;
-    verts[2].y = y1;
-    verts[2].z = set_twenty;
-    verts[2].r = headerRed1;
-    verts[2].g = headerGreen1;
-    verts[2].b = headerBlue1;
-    verts[2].a = 255;
-    verts[3].x = 200;
-    set_zero = 0;
-    verts[3].y = y1;
-    verts[3].z = set_twenty;
-    verts[3].r = headerRed1;
-    verts[3].g = headerGreen1;
-    verts[3].b = headerBlue1;
-    verts[3].a = 255;
-    tris[0].flags = 0x40;
-    tris[0].vi0 = 2;
-    tris[0].vi1 = 1;
-    tris[0].vi2 = 0;
-    tris[0].uv0.u = 0;
-    tris[0].uv0.v = set_zero;
-    tris[set_zero].uv1.u = set_zero;
-    tris[set_zero].uv1.v = set_zero;
-    tris[set_zero].uv2.u = set_zero;
-    tris[0].uv2.v = 0;
-    tris[1].flags = 0x40;
-    tris[1].vi0 = 3;
-    tris[1].vi1 = 2;
-    tris[1].vi2 = 1;
-    tris[1].uv0.u = 0;
-    tris[1].uv0.v = 0;
-    tris[1].uv1.u = 0;
-    tris[1].uv1.v = 0;
-    tris[1].uv2.u = 0;
-    tris[1].uv2.v = 0;
-    verts += 4;
+    verts->x = -200;
+    verts->y = y0;
+    verts->z = z;
+    verts->r = headerRed0;
+    verts->g = headerGreen0;
+    verts->b = headerBlue0;
+    verts->a = 255;
+    verts++;
+
+    verts->x = 200;
+    verts->y = y0;
+    verts->z = z;
+    verts->r = headerRed0;
+    verts->g = headerGreen0;
+    verts->b = headerBlue0;
+    verts->a = 255;
+    verts++;
+
+    verts->x = -200;
+    verts->y = y1;
+    verts->z = z;
+    verts->r = headerRed1;
+    verts->g = headerGreen1;
+    verts->b = headerBlue1;
+    verts->a = 255;
+    verts++;
+
+    verts->x = 200;
+    verts->y = y1;
+    verts->z = z;
+    verts->r = headerRed1;
+    verts->g = headerGreen1;
+    verts->b = headerBlue1;
+    verts->a = 255;
+    verts++;
+
+    tris->flags = BACKFACE_DRAW;
+    tris->vi0 = 2;
+    tris->vi1 = 1;
+    tris->vi2 = 0;
+    tris->uv0.u = 0;
+    tris->uv0.v = 0;
+    tris->uv1.u = 0;
+    tris->uv1.v = 0;
+    tris->uv2.u = 0;
+    tris->uv2.v = 0;
+    tris++;
+
+    tris->flags = BACKFACE_DRAW;
+    tris->vi0 = 3;
+    tris->vi1 = 2;
+    tris->vi2 = 1;
+    tris->uv0.u = 0;
+    tris->uv0.v = 0;
+    tris->uv1.u = 0;
+    tris->uv1.v = 0;
+    tris->uv2.u = 0;
+    tris->uv2.v = 0;
+    tris++;
+
     gSceneCurrVertexList = verts;
-    tris += 2;
-    gSceneCurrTriList = (Triangle *) tris;
+    gSceneCurrTriList = tris;
 }
 
 /**
@@ -1552,7 +1591,7 @@ void render_level_geometry_and_objects(void) {
         objectsVisible[1] = TRUE;
     }
 
-    reset_render_settings(&gSceneCurrDisplayList);
+    rendermode_reset(&gSceneCurrDisplayList);
     sort_objects_by_dist(sp160, objCount - 1);
     visibleFlags = OBJ_FLAGS_INVIS_PLAYER1 << (get_current_viewport() & 1);
 
@@ -1616,8 +1655,8 @@ void render_level_geometry_and_objects(void) {
         func_800BA8E4(&gSceneCurrDisplayList, &gSceneCurrMatrix, get_current_viewport());
     }
 
-    reset_render_settings(&gSceneCurrDisplayList);
-    load_and_set_texture_no_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
+    rendermode_reset(&gSceneCurrDisplayList);
+    material_set_no_tex_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
     func_80012C3C(&gSceneCurrDisplayList);
 
     // Particles and FX
@@ -1658,7 +1697,7 @@ void render_level_geometry_and_objects(void) {
         }
     }
 
-    if (D_800DC924 && func_80027568()) {
+    if (D_800DC924 != NULL && func_80027568()) {
         func_8002581C(segmentIds, numberOfSegments, get_current_viewport());
     }
     gAntiAliasing = FALSE;
@@ -1752,18 +1791,18 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
         if (batchFlags & BATCH_FLAGS_PULSATING_LIGHTS) {
             color = gCurrentLevelHeader2->pulseLightData->outColorValue;
             gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, color, color, color, color);
-            load_blinking_lights_texture(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
-            gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), numberVertices, 0);
-            gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
+            material_set_blinking_lights(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
+            gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vertices), numberVertices, 0);
+            gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
             gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         } else {
-            load_and_set_texture(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
+            material_set(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
             batchFlags = TRUE;
             if (texture == NULL) {
                 batchFlags = FALSE;
             }
-            gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), numberVertices, 0);
-            gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, batchFlags);
+            gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vertices), numberVertices, 0);
+            gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numberTriangles, batchFlags);
         }
     }
 }
@@ -2156,7 +2195,7 @@ s32 check_if_in_draw_range(Object *obj) {
             case BHV_HIT_TESTER_2:      // animated objects?
             case BHV_ANIMATED_OBJECT_2: // space ships
                 obj64 = obj->unk64;
-                obj->segment.object.opacity = obj64->effect_box.pad0[0x42];
+                obj->segment.object.opacity = obj64->wizpig2.pad0[0x42];
                 break;
             case BHV_PARK_WARDEN:
             case BHV_GOLDEN_BALLOON:
@@ -2249,7 +2288,7 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     for (i = 0; i < len; i++) {
         height = wave[i]->waveHeight;
         if (wave[i]->type == WATER_CALM || wave[i]->type == WATER_WAVY) {
-            if (yPos < height + 25.0 && (wave[i]->rotY > 0.5 || var_a0 == 1)) {
+            if (yPos < height + 25.0 && (wave[i]->rot.y > 0.5 || var_a0 == 1)) {
                 index = i;
             }
         } else if (index >= 0 && var_a0 >= 2 && yPos < height - 20.0) {
@@ -2261,14 +2300,193 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     }
     *waterHeight = gTrackWaves[index]->waveHeight;
     if (rotation != NULL) {
-        rotation->f[0] = gTrackWaves[index]->rotX;
-        rotation->f[1] = gTrackWaves[index]->rotY;
-        rotation->f[2] = gTrackWaves[index]->rotZ;
+        rotation->f[0] = gTrackWaves[index]->rot.x;
+        rotation->f[1] = gTrackWaves[index]->rot.y;
+        rotation->f[2] = gTrackWaves[index]->rot.z;
     }
     return gTrackWaves[index]->type;
 }
 
+#ifdef NON_EQUIVALENT
+s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***arg3) {
+    LevelModelSegment *currentSegment;
+    LevelModelSegmentBoundingBox *currentBoundingBox;
+    Triangle *tri;
+    Vertex *vert;
+    f32 temp_f2_2;
+    s16 vert2X;
+    s16 vert2Z;
+    s16 temp_a2;
+    s16 vert3X;
+    s16 vert3Z;
+    s32 currentVerticesOffset;
+    s16 nextFaceOffset;
+    s16 vert1X;
+    s16 currentFaceOffset;
+    s16 vert1Z;
+    s16 var_a1;
+    s32 faceNum;
+    s16 var_s1;
+    s16 var_t0;
+    s16 var_t1;
+    s32 XInInt;
+    s32 ZInInt;
+    s32 temp_ra_1;
+    s32 temp_ra_2;
+    s32 temp_ra_3;
+    s32 yOutCount;
+    s32 batchNum;
+    s32 i;
+    s32 var_v0;
+    s32 stopSorting;
+    TriangleBatchInfo *currentBatch;
+    f32 *temp_v1_4;
+    Vec4f tempVec4f;
+    u16 temp;
+
+    s32 sp108;
+    s32 spB0[8];
+    s32 temp_s2;
+    s32 var_fp;
+
+    D_8011D308 = 0;
+    *arg3 = NULL;
+
+    sp108 = get_inside_segment_count_xz(xIn, zIn, spB0);
+    if (sp108 == 0 || sp108 >= 8) {
+        return 0;
+    }
+
+    XInInt = xIn;
+    ZInInt = zIn;
+
+    for (var_fp = 0; var_fp < sp108; var_fp++) {
+        currentSegment = &gCurrentLevelModel->segments[spB0[var_fp]];
+        currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[spB0[var_fp]];
+        var_a1 = 1;
+        var_s1 = 0;
+
+        temp_a2 = ((currentBoundingBox->x2 - currentBoundingBox->x1) >> 3) + 1;
+        var_t0 = temp_a2 + currentBoundingBox->x1;
+        var_t1 = currentBoundingBox->x1;
+        for (i = 0; i < 8; i++) {
+            if (var_t0 >= XInInt && XInInt >= var_t1) {
+                var_s1 |= var_a1;
+            }
+            var_t0 += temp_a2;
+            var_t1 += temp_a2;
+            var_a1 *= 2;
+        }
+
+        // Same as above, but for Z
+        temp_a2 = ((currentBoundingBox->z2 - currentBoundingBox->z1) >> 3) + 1;
+        var_t0 = temp_a2 + currentBoundingBox->z1;
+        var_t1 = currentBoundingBox->z1;
+        for (i = 0; i < 8; i++) {
+            if (var_t0 >= ZInInt && ZInInt >= var_t1) {
+                var_s1 |= var_a1;
+            }
+            var_t0 += temp_a2;
+            var_t1 += temp_a2;
+            var_a1 *= 2;
+        }
+
+        yOutCount = 0;
+
+        for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
+            currentBatch = &currentSegment->batches[batchNum];
+            temp_s2 = gCurrentLevelModel->textures[currentBatch->textureIndex].unk7;
+            currentFaceOffset = currentBatch->facesOffset;
+            nextFaceOffset = currentBatch[1].facesOffset;
+            currentVerticesOffset = currentBatch->verticesOffset;
+
+            if (temp_s2 != 11 && temp_s2 != 15 &&
+                (currentBatch->flags & (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_UNK00000200))) {
+                currentFaceOffset = nextFaceOffset;
+            }
+
+            for (faceNum = currentFaceOffset; faceNum < nextFaceOffset; faceNum++) {
+                if (var_s1 == (currentSegment->unk10[faceNum] & var_s1)) {
+                    tri = &currentSegment->triangles[faceNum];
+                    vert = &currentSegment->vertices[tri->verticesArray[1] + currentVerticesOffset];
+                    vert1X = vert->x;
+                    vert1Z = vert->z;
+                    vert = &currentSegment->vertices[tri->verticesArray[2] + currentVerticesOffset];
+                    vert2X = vert->x;
+                    vert2Z = vert->z;
+                    vert = &currentSegment->vertices[tri->verticesArray[3] + currentVerticesOffset];
+                    vert3X = vert->x;
+                    vert3Z = vert->z;
+                    temp_ra_1 =
+                        ((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0);
+                    temp_ra_2 =
+                        ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                    temp_ra_3 =
+                        ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                    if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
+                        temp = currentSegment->unk14[faceNum].triangleIndex;
+                        temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
+                        tempVec4f.x = temp_v1_4[0];
+                        tempVec4f.y = temp_v1_4[1];
+                        tempVec4f.z = temp_v1_4[2];
+                        tempVec4f.w = temp_v1_4[3];
+                        if (tempVec4f.y != 0.0) {
+                            D_8011D128[yOutCount].type = temp_s2;
+                            D_8011D128[yOutCount].waveHeight =
+                                -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
+                            D_8011D128[yOutCount].rot.x = tempVec4f.x;
+                            D_8011D128[yOutCount].rot.y = tempVec4f.y;
+                            D_8011D128[yOutCount].rot.z = tempVec4f.z;
+                            yOutCount++;
+
+                            if (yOutCount >= 20) {
+                                batchNum = currentSegment->numberOfBatches;
+                                faceNum = nextFaceOffset;
+                                var_fp = sp108;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (levelSegmentIndex >= 0 && levelSegmentIndex < gCurrentLevelModel->numberOfSegments) {
+        D_8011D128[yOutCount].type = WATER_WAVY;
+        if (gCurrentLevelModel->segments[levelSegmentIndex].hasWaves && gWaveBlockCount != 0) {
+            D_8011D128[yOutCount].waveHeight = func_800BB2F4(levelSegmentIndex, xIn, zIn, &D_8011D128[yOutCount].rot);
+        } else {
+            D_8011D128[yOutCount].waveHeight = gCurrentLevelModel->segments[levelSegmentIndex].unk38;
+            D_8011D128[yOutCount].rot.x = 0.0f;
+            D_8011D128[yOutCount].rot.y = 1.0f;
+            D_8011D128[yOutCount].rot.z = 0.0f;
+        }
+        yOutCount++;
+    }
+
+    // clang-format off
+    for (i = 0; i < yOutCount; i++) { gTrackWaves[i] = &D_8011D128[i]; }
+    // clang-format on
+
+    do {
+        stopSorting = TRUE;
+        for (i = 0; i < yOutCount - 1; i++) {
+            if (gTrackWaves[i]->waveHeight < gTrackWaves[i + 1]->waveHeight) {
+                WaterProperties *wave = gTrackWaves[i];
+                stopSorting = FALSE;
+                gTrackWaves[i] = gTrackWaves[i + 1];
+                gTrackWaves[i + 1] = wave;
+            }
+        }
+    } while (!stopSorting);
+
+    *arg3 = gTrackWaves;
+    D_8011D308 = yOutCount;
+    return yOutCount;
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002B0F4.s")
+#endif
 
 s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3) {
     LevelModelSegment *seg;
@@ -2337,7 +2555,6 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
         return 0;
     }
 
-    // if (!temp_v1_4){} //Fake, but fixes one regalloc, at the cost of a much worse stack.
     vert = NULL; // fake?
     currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
     currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex];
@@ -2373,10 +2590,11 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
 
     yOutCount = 0;
     for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
-        if (1) {} // fake
+        do {
+        } while (0);
         currentBatch = &currentSegment->batches[batchNum];
         currentFaceOffset = currentBatch->facesOffset;
-        nextFaceOffset = (currentBatch + 1)->facesOffset;
+        nextFaceOffset = currentBatch[1].facesOffset;
         currentVerticesOffset = currentBatch->verticesOffset;
         for (faceNum = currentFaceOffset; faceNum < nextFaceOffset; faceNum++) {
             if (var_s1 == (currentSegment->unk10[faceNum] & var_s1)) {
@@ -2393,7 +2611,6 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
                 temp_ra_1 = ((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0);
                 temp_ra_2 = ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0);
                 temp_ra_3 = ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
-                var_v0 = faceNum; // fake?
                 if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
                     temp = currentSegment->unk14[faceNum].triangleIndex;
                     temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
@@ -2567,17 +2784,17 @@ LevelModel *get_current_level_model(void) {
 void free_track(void) {
     s32 i;
 
-    func_8000B290();
+    racerfx_free();
     if (gWaveBlockCount != 0) {
         free_waves();
     }
     for (i = 0; i < gCurrentLevelModel->numberOfTextures; i++) {
-        free_texture(gCurrentLevelModel->textures[i].texture);
+        tex_free(gCurrentLevelModel->textures[i].texture);
     }
     mempool_free(gTrackModelHeap);
     mempool_free(D_8011D370);
     mempool_free(D_8011D374);
-    free_sprite((Sprite *) gCurrentLevelModel->minimapSpriteIndex);
+    sprite_free((Sprite *) gCurrentLevelModel->minimapSpriteIndex);
     for (i = 0; i < ARRAY_COUNT(gShadowHeapData); i++) {
         mempool_free(gShadowHeapData[i]);
         mempool_free(gShadowHeapTris[i]);
@@ -2674,7 +2891,240 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
     }
 }
 
+#ifdef NON_EQUIVALENT
+s32 func_8002CC30(LevelModelSegment *segment) {
+    s32 spF4;
+    s32 spEC;
+    s32 spD0;
+    f32 tri1z;
+    f32 spA0;
+    f32 sp9C;
+    f32 sp98;
+    s32 sp78;
+    s32 i;
+    Triangle *temp_v1_4;
+    Vertex *temp_a0;
+    Vertex *temp_a0_2;
+    f32 tri3z;
+    f32 temp_f0_2;
+    f32 temp_f0_3;
+    f32 temp_f0_4;
+    f32 tri2y;
+    f32 temp_f12_2;
+    f32 tri2z;
+    f32 temp_f14_2;
+    f32 tri3x;
+    f32 temp_f16_2;
+    f32 tri3y;
+    f32 temp_f18_2;
+    f32 temp_f20;
+    f32 temp_f22;
+    f32 temp_f24;
+    f32 temp_f24_2;
+    f32 tri1x;
+    f32 temp_f28_2;
+    f32 tri2x;
+    f32 temp_f2_2;
+    f32 tri1y;
+    f32 temp_f30_2;
+    f32 temp_f4;
+    f32 var_f20;
+    f32 var_f22;
+    f32 var_f26;
+    s16 vertsOffset;
+    s16 temp_fp_2;
+    s16 temp_t7_2;
+    s16 endTri;
+    s16 startTri;
+    s16 var_a1;
+    s16 var_s7;
+    s16 var_v1;
+    s32 temp_s6;
+    s32 temp_t2;
+    s32 temp_t4;
+    s32 temp_t7;
+    s32 temp_t9;
+    s32 var_a0;
+    s32 var_a1_2;
+    s32 var_at;
+    s32 var_s0;
+    s32 var_s4;
+    s32 var_s5;
+    s32 var_t1;
+    s32 var_v0;
+    s32 var_v0_2;
+    u16 temp_s0;
+    u16 temp_s1;
+    u16 temp_t3;
+    u8 *temp_v1_2;
+    Vertex *temp_v0_2;
+    Vertex *temp_v0_3;
+    Vertex *temp_v0_4;
+    TriangleBatchInfo *temp_v0_5;
+    Vertex *temp_v0_6;
+    Vertex *temp_v0_7;
+    f32 *temp_v1_3;
+    f32 *temp_v1_5;
+    CollisionNode *temp_v1_6;
+
+    spEC = 0;
+    var_s4 = 0;
+    for (i = 0; i < segment->numberOfBatches; i++) {
+        startTri = segment->batches[i].facesOffset;
+        endTri = segment->batches[i + 1].facesOffset;
+        vertsOffset = segment->batches[i].verticesOffset;
+        if (startTri < endTri) {
+            var_a1_2 = startTri * sizeof(Triangle);
+            do {
+                temp_v1_2 = &segment->triangles->verticesArray[var_a1_2];
+                if (!(temp_v1_2[0] & 0x80)) {
+                    temp_a0 = segment->vertices;
+                    temp_v0_2 = &temp_a0[temp_v1_2[1] + vertsOffset]; //((temp_v1_2[1] + temp_fp) * 0xA) + temp_a0;
+                    tri1x = temp_v0_2->x;
+                    tri1y = temp_v0_2->y;
+                    tri1z = temp_v0_2->z;
+                    temp_v0_3 =
+                        &temp_a0[temp_v1_2[2] + vertsOffset]; //((temp_v1_2[2] + curVertOffset) * 0xA) + temp_a0;
+                    tri2x = temp_v0_3->x;
+                    tri2y = temp_v0_3->y;
+                    tri2z = temp_v0_3->z;
+                    temp_v0_4 =
+                        &temp_a0[temp_v1_2[3] + vertsOffset]; //((temp_v1_2[3] + curVertOffset) * 0xA) + temp_a0;
+                    tri3x = temp_v0_4->x;
+                    tri3y = temp_v0_4->y;
+                    tri3z = temp_v0_4->z;
+                    temp_f20 = ((tri2z - tri3z) * tri1y) + (tri2y * (tri3z - tri1z)) + (tri3y * (tri1z - tri2z));
+                    temp_f22 = ((tri2x - tri3x) * tri1z) + (tri2z * (tri3x - tri1x)) + (tri3z * (tri1x - tri2x));
+                    temp_f24 = ((tri2y - tri3y) * tri1x) + (tri2x * (tri3y - tri1y)) + (tri3x * (tri1y - tri2y));
+                    temp_f0_2 = sqrtf((temp_f20 * temp_f20) + (temp_f22 * temp_f22) + (temp_f24 * temp_f24));
+                    if (temp_f0_2 > 0.0) {
+                        temp_f20 /= temp_f0_2;
+                        temp_f22 /= temp_f0_2;
+                        temp_f24 /= temp_f0_2;
+                    }
+                    segment->unk18[var_s4 + 0] = temp_f20;
+                    segment->unk18[var_s4 + 1] = temp_f22;
+                    segment->unk18[var_s4 + 2] = temp_f24;
+                    segment->unk18[var_s4 + 3] = -((tri1x * temp_f20) + (tri1y * temp_f22) + (tri1z * temp_f24));
+                    var_s4++;
+                }
+                var_a1_2 += sizeof(Triangle);
+            } while (var_a1_2 < (endTri * 0x10));
+        }
+    }
+    var_t1 = var_s4;
+    if (D_8011B0F8 == 0) {
+        spEC = 0;
+        if (var_a1 > 0) {
+            i = 0;
+            do {
+                temp_v0_5 = segment->batches + i;
+                temp_t7_2 = temp_v0_5[1].verticesOffset;
+                var_v1 = temp_v0_5->facesOffset;
+                temp_fp_2 = temp_v0_5->verticesOffset;
+                spF4 = (s32) temp_t7_2;
+                var_at = var_v1 < spF4;
+                if (temp_v0_5->flags & 0x200) {
+                    var_v1 = temp_t7_2;
+                    var_at = var_v1 < spF4;
+                }
+                var_s7 = var_v1;
+                if (var_at != 0) {
+                    var_a0 = var_v1 * 0x10;
+                    do {
+                        if (!(segment->triangles->verticesArray[var_a0] & 0x80)) {
+                            temp_s1 = segment->unk14[var_s7].triangleIndex;
+                            temp_v1_3 = segment->unk18 + (temp_s1 * 0x10);
+                            var_v0 = 0;
+                            spA0 = temp_v1_3[0];
+                            var_s5 = 0;
+                            sp9C = temp_v1_3[1];
+                            sp78 = var_a0;
+                            temp_f24 = temp_v1_3[2];
+                            do {
+                                temp_s6 = var_v0 + 1;
+                                temp_v1_4 = &segment->triangles[var_s7];
+                                var_s0 = temp_s6;
+                                if (temp_s6 >= 3) {
+                                    var_s0 = 0;
+                                }
+                                temp_s0 = (&segment->unk14[var_s7] + var_s5)->closestTri01;
+                                if ((s32) temp_s0 < var_t1) {
+                                    temp_v1_5 = segment->unk18 + (temp_s0 * 0x10);
+                                    temp_a0_2 = segment->vertices;
+                                    temp_v0_6 = temp_a0_2 +
+                                                ((temp_v1_4->verticesArray[var_v0 + 1] + temp_fp_2) *
+                                                 0xA); //((temp_v1_4->verticesArray[var_v0].unk1 + temp_fp_2) * 0xA);
+                                    temp_f4 = (f32) temp_v0_6->z;
+                                    tri1z = temp_f4;
+                                    temp_v0_7 = temp_a0_2 + ((temp_v1_4->verticesArray[var_s0 + 1] + temp_fp_2) * 0xA);
+                                    temp_f28_2 = (f32) temp_v0_6->x;
+                                    spD0 = var_t1;
+                                    temp_f30_2 = (f32) temp_v0_6->y;
+                                    temp_f2_2 = (f32) temp_v0_7->x;
+                                    temp_f16_2 = ((temp_v1_5[0] + spA0) * 10.0f) + temp_f28_2;
+                                    temp_f12_2 = (f32) temp_v0_7->y;
+                                    temp_f14_2 = (f32) temp_v0_7->z;
+                                    temp_f18_2 = ((temp_v1_5[1] + sp9C) * 10.0f) + temp_f30_2;
+                                    temp_f0_3 = ((temp_v1_5[2] + temp_f24) * 10.0f) + temp_f4;
+                                    var_f20 = ((temp_f14_2 - temp_f0_3) * temp_f30_2) +
+                                              (temp_f12_2 * (temp_f0_3 - temp_f4)) +
+                                              (temp_f18_2 * (temp_f4 - temp_f14_2));
+                                    var_f22 = ((temp_f2_2 - temp_f16_2) * temp_f4) +
+                                              (temp_f14_2 * (temp_f16_2 - temp_f28_2)) +
+                                              (temp_f0_3 * (temp_f28_2 - temp_f2_2));
+                                    temp_f24_2 = ((temp_f12_2 - temp_f18_2) * temp_f28_2) +
+                                                 (temp_f2_2 * (temp_f18_2 - temp_f30_2)) +
+                                                 (temp_f16_2 * (temp_f30_2 - temp_f12_2));
+                                    var_f26 = temp_f24_2;
+                                    temp_f0_4 =
+                                        sqrtf((var_f20 * var_f20) + (var_f22 * var_f22) + (temp_f24_2 * temp_f24_2));
+                                    if ((f64) temp_f0_4 > 0.0) {
+                                        var_f20 /= temp_f0_4;
+                                        var_f22 /= temp_f0_4;
+                                        var_f26 = temp_f24_2 / temp_f0_4;
+                                    }
+                                    if (temp_s0 != temp_s1) {
+                                        var_v0_2 = 0;
+                                        do {
+                                            temp_v1_6 = &segment->unk14[temp_s0] + var_v0_2;
+                                            temp_t3 = temp_v1_6->closestTri01;
+                                            var_v0_2 += 2;
+                                            if (temp_s1 == temp_t3) {
+                                                temp_v1_6->closestTri01 = (s16) (var_s4 | 0x8000);
+                                            }
+                                        } while (var_v0_2 != 6);
+                                    }
+                                    (&segment->unk14[var_s7] + var_s5)->closestTri01 = (s16) var_s4;
+                                    temp_t2 = var_s4 * 0x10;
+                                    (segment->unk18[temp_t2]) = var_f20;
+                                    (segment->unk18[temp_t2 + 1]) = var_f22;
+                                    (segment->unk18[temp_t2 + 2]) = var_f26;
+                                    var_s4 += 1;
+                                    segment->unk18[temp_t2 + 3] =
+                                        (f32) - ((temp_f28_2 * var_f20) + (temp_f30_2 * var_f22) + (tri1z * var_f26));
+                                }
+                                var_v0 = temp_s6;
+                                var_s5 += 2;
+                            } while (temp_s6 != 3);
+                            var_a0 = sp78;
+                        }
+                        var_s7 += 1;
+                        var_a0 += 0x10;
+                    } while (var_s7 != spF4);
+                    var_a1 = segment->numberOfBatches;
+                }
+                temp_t4 = spEC + 1;
+                i += 0xC;
+                spEC = temp_t4;
+            } while (temp_t4 < var_a1);
+        }
+    }
+    return var_s4 * 0x10;
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002CC30.s")
+#endif
 
 typedef struct unk8002D30C_a0 {
     u8 pad00[0x04];
@@ -2736,7 +3186,7 @@ void shadow_render(Object *obj, ShadowData *shadow) {
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, alpha);
             }
             while (i < shadow->meshEnd) {
-                load_and_set_texture_no_offset(&gSceneCurrDisplayList, gCurrShadowHeapData[i].texture, flags);
+                material_set_no_tex_offset(&gSceneCurrDisplayList, gCurrShadowHeapData[i].texture, flags);
                 // I hope we can clean this part up.
                 tri2 = triCount = gCurrShadowHeapData[i].triCount; // Fakematch
                 vtx2 = vtxCount = gCurrShadowHeapData[i].vtxCount;
@@ -2786,7 +3236,7 @@ void watereffect_render(Object *obj, WaterEffect *effect) {
             gCurrShadowTris = gShadowHeapTris[gWaterEffectIndex];
             gCurrShadowVerts = gShadowHeapVerts[gWaterEffectIndex];
             while (i < effect->meshEnd) {
-                load_and_set_texture_no_offset(&gSceneCurrDisplayList, gCurrShadowHeapData[i].texture, flags);
+                material_set_no_tex_offset(&gSceneCurrDisplayList, gCurrShadowHeapData[i].texture, flags);
                 triCount = gCurrShadowHeapData[i].triCount; // Fakematch
                 vtxCount = gCurrShadowHeapData[i].vtxCount; // Fakematch
                 numTris = gCurrShadowHeapData[i + 1].triCount - gCurrShadowHeapData[i].triCount;
@@ -3099,14 +3549,212 @@ void shadow_generate(Object *obj, s32 isWater) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002E904.s")
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002EEEC.s")
+void func_8002E904(LevelModelSegment *arg0, s32 arg1, s32 arg2) {
+    unk8011C8B8 sp100[8];
+    Vec2f spD0[4];
+    s32 spAC;
+    Triangle *triangles;
+    s32 nextFacesOffset;
+    Vertex *vertices;
+    s32 yPos;
+    s32 minY;
+    s32 foundIndex;
+    s32 maxY;
+    s32 temp_t6;
+    s32 sp88;
+    s32 someCount;
+    s32 i2;
+    s32 i;
+    s32 curFacesOffset;
+
+    spD0[0].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    spD0[0].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    spD0[1].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    spD0[1].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    spD0[2].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    spD0[2].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    spD0[3].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    spD0[3].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+
+    for (spAC = 0; spAC < arg0->numberOfBatches; spAC++) {
+        if ((arg2 && (arg0->batches[spAC].flags & BATCH_FLAGS_WATER)) ||
+            (!arg2 && !(arg0->batches[spAC].flags & FLAGS_8002E904))) {
+            curFacesOffset = arg0->batches[spAC].facesOffset;
+            nextFacesOffset = arg0->batches[spAC + 1].facesOffset;
+            vertices = &arg0->vertices[arg0->batches[spAC].verticesOffset];
+            sp88 = (arg0->batches[spAC].flags >> 0x13) & 7;
+            for (; curFacesOffset < nextFacesOffset; curFacesOffset++) {
+                if (((arg0->unk10[curFacesOffset] & arg1) & 0xFF) && ((arg0->unk10[curFacesOffset] & arg1) & 0xFF00)) {
+                    triangles = &arg0->triangles[curFacesOffset];
+                    maxY = minY = vertices[triangles->verticesArray[1]].y;
+                    for (i = 1; i < 3; i++) {
+                        yPos = vertices[triangles->verticesArray[i + 1]].y;
+                        if (yPos < minY) {
+                            minY = yPos;
+                        } else if (maxY < yPos) {
+                            maxY = yPos;
+                        }
+                    }
+                    if (gNewShadowY2 >= minY) {
+                        if (maxY >= gNewShadowY1) {
+                            for (i = 0; i < 3; i++) {
+                                sp100[i].unk0 = vertices[triangles->verticesArray[i + 1]].x;
+                                sp100[i].unk8 = vertices[triangles->verticesArray[i + 1]].z;
+                                sp100[i].unkE = -1;
+                            }
+                            // @note while the cast to Vec4f is incorrect, func_8002FD74 only uses unk0 and unk8 which
+                            // are both floats so this is fine as the size is the same
+                            if (func_8002FD74(spD0[2].x, spD0[2].y, spD0[0].x, spD0[0].y, 3, (Vec4f *) sp100) != 0) {
+                                temp_t6 = arg0->unk14[curFacesOffset].triangleIndex * 4;
+                                D_8011D0BC = (unk8011C8B8 *) &(arg0->unk18)[temp_t6];
+                                if (arg0->unk18[temp_t6 + 1] != 0) {
+                                    if (D_8011D0F0 > 0.0f) {
+                                        func_800304C8(sp100);
+                                    }
+                                    someCount = func_8002FF6C(3, sp100, 4, spD0);
+                                    if (someCount >= 3) {
+                                        D_8011C238[D_8011C230].unk1 = 0;
+                                        for (i2 = 0; i2 < someCount; i2++) {
+                                            if (sp100[i2].unkE < 0) {
+                                                foundIndex = -1;
+                                                i = 0;
+                                                while ((i < D_8011B118) && (foundIndex == -1)) {
+                                                    if ((D_8011B120[i].x == sp100[i2].unk0) &&
+                                                        (D_8011B120[i].z == sp100[i2].unk8)) {
+                                                        foundIndex = i;
+                                                    }
+                                                    i++;
+                                                }
+                                                if (foundIndex == -1) {
+                                                    D_8011B120[D_8011B118].x = sp100[i2].unk0;
+                                                    D_8011B120[D_8011B118].unkC = D_8011D0BC;
+                                                    D_8011B120[D_8011B118].z = sp100[i2].unk8;
+                                                    D_8011C238[D_8011C230].unk2[i2] = D_8011B118++;
+                                                } else {
+                                                    D_8011C238[D_8011C230].unk2[i2] = foundIndex;
+                                                }
+                                            } else {
+                                                D_8011C238[D_8011C230].unk2[i2] = sp100[i2].unkE;
+                                                D_8011C238[D_8011C230].unk1 |= 1 << i2;
+                                            }
+                                        }
+                                        D_8011C238[D_8011C230].unk0 = someCount;
+                                        D_8011C238[D_8011C230].unkA = sp88;
+                                        D_8011C230 += 1;
+                                        if ((D_8011D0E8 >= 0) && (sp88 != D_8011D0E8)) {
+                                            D_8011D0EC = 0;
+                                        }
+                                        D_8011D0E8 = sp88;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void func_8002EEEC(s32 arg0) {
+    unk8011C8B8 spA8[8];
+    Vec2f sp88[4];
+    s32 var_v0;
+    s32 var_a0;
+    s32 var_a1;
+    s32 temp_v0;
+    s32 temp_v0_3;
+    s32 var_s4;
+    s32 var_t1;
+    s32 var_v1;
+    s32 tempIdx;
+
+    sp88[0].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    sp88[0].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    sp88[1].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    sp88[1].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
+    sp88[2].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
+    sp88[2].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    sp88[3].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
+    sp88[3].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    // clang-format off
+    temp_v0 = func_800BDC80(
+        arg0, D_8011C3B8, &D_8011C8B8[D_8011D0B8],
+        sp88[2].x, sp88[2].y,
+        sp88[0].x, sp88[0].y
+    );
+    // clang-format on
+
+    for (var_s4 = 0; var_s4 < temp_v0; var_s4++) {
+        var_a0 = D_8011C3B8[var_s4].unk2;
+        var_a1 = D_8011C3B8[var_s4].unk2;
+        if (D_8011C3B8[var_s4].unk8 < var_a1) {
+            var_a0 = D_8011C3B8[var_s4].unk8;
+        } else if (var_a1 < D_8011C3B8[var_s4].unk8) {
+            var_a1 = D_8011C3B8[var_s4].unk8;
+        }
+        if (D_8011C3B8[var_s4].unkE < var_a0) {
+            var_a0 = D_8011C3B8[var_s4].unkE;
+        } else if (var_a1 < D_8011C3B8[var_s4].unkE) {
+            var_a1 = D_8011C3B8[var_s4].unkE;
+        }
+        if (gNewShadowY2 >= var_a0) {
+            if (var_a1 >= gNewShadowY1) {
+                spA8[0].unk0 = D_8011C3B8[var_s4].unk0;
+                spA8[0].unk8 = D_8011C3B8[var_s4].unk4;
+                spA8[1].unk0 = D_8011C3B8[var_s4].unk6;
+                spA8[1].unk8 = D_8011C3B8[var_s4].unkA;
+                spA8[2].unk0 = D_8011C3B8[var_s4].unkC;
+                spA8[2].unk8 = D_8011C3B8[var_s4].unk10;
+
+                for (var_v0 = 0; var_v0 != 3; var_v0++) {
+                    spA8[var_v0].unkE = -1;
+                }
+
+                D_8011D0BC = &D_8011C8B8[D_8011D0B8 + var_s4];
+                temp_v0_3 = func_8002FF6C(3, spA8, 4, sp88);
+                if (temp_v0_3 >= 3) {
+                    tempIdx = D_8011C230;
+                    D_8011C238[tempIdx].unk1 = 0;
+                    for (var_t1 = 0; var_t1 < temp_v0_3; var_t1++) {
+                        if (spA8[var_t1].unkE < 0) {
+                            var_a1 = -1;
+                            var_v1 = 0;
+                            while (var_v1 < D_8011B118 && var_a1 == -1) {
+                                if ((D_8011B120[var_v1].x == spA8[var_t1].unk0) &&
+                                    (D_8011B120[var_v1].z == spA8[var_t1].unk8)) {
+                                    var_a1 = var_v1;
+                                }
+                                var_v1++;
+                            }
+                            if (var_a1 == -1) {
+                                D_8011B120[D_8011B118].x = spA8[var_t1].unk0;
+                                D_8011B120[D_8011B118].unkC = D_8011D0BC;
+                                D_8011B120[D_8011B118].z = spA8[var_t1].unk8;
+                                D_8011C238[tempIdx].unk2[var_t1] = D_8011B118++;
+                            } else {
+                                D_8011C238[tempIdx].unk2[var_t1] = var_a1;
+                            }
+                        } else {
+                            D_8011C238[tempIdx].unk2[var_t1] = spA8[var_t1].unkE;
+                            D_8011C238[tempIdx].unk1 |= 1 << var_t1;
+                        }
+                    }
+                    D_8011C230 = tempIdx + 1;
+                    D_8011C238[tempIdx].unk0 = temp_v0_3;
+                }
+            }
+        }
+    }
+
+    D_8011D0B8 += temp_v0;
+}
 
 #ifdef NON_EQUIVALENT
 void func_8002F2AC(void) {
     f32 temp_f12;
     f32 temp_f16;
-    unk8011B120_unkC *var_v0;
+    unk8011C8B8 *var_v0;
     s32 i, j;
 
     for (i = 0; i < D_8011B118; i++) {
@@ -3218,10 +3866,136 @@ s32 func_8002FD74(f32 x0, f32 z0, f32 x1, f32 x2, s32 count, Vec4f *arg5) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002FF6C.s")
+// arg0 is always 3
+// arg1 always has size 8 (that's why spE0 is also of size 8)
+// arg2 is always 4
+// arg3 always has size 4
+s32 func_8002FF6C(s32 arg0, unk8011C8B8 *arg1, s32 arg2, Vec2f *arg3) {
+    unk8011C8B8 spE0[8];
+    f32 temp_f12;
+    f32 temp_f14;
+    f32 temp_f16;
+    f32 temp_f22;
+    f32 temp_f24;
+    f32 var_f2;
+    s32 var_a1;
+    s32 var_v1_3;
+    s32 var_a0;
+    s32 var_t2;
+    UNUSED s32 var_t5;
+    s32 var_v0;
+    s32 var_v1;
+    s32 var_t1;
+    s32 var_s2;
+    unk8011C8B8 *var_s0;
+    unk8011C8B8 *var_s3;
+    unk8011C8B8 *swap; // swap var for var_s0 and var_s3
+
+    var_s3 = arg1;
+    var_s0 = spE0;
+    var_s2 = arg0;
+    var_v0 = 0;
+
+    while (var_v0 < arg2 && var_s2 >= 3) {
+        var_v1 = var_v0 + 1;
+        if (var_v1 >= arg2) {
+            var_v1 = 0;
+        }
+
+        temp_f12 = arg3[var_v1].y - arg3[var_v0].y;
+        temp_f14 = -(arg3[var_v1].x - arg3[var_v0].x);
+        if (arg3[var_v0].x < arg3[var_v1].x) {
+            var_f2 = (temp_f12 * arg3[var_v0].x) + (arg3[var_v0].y * temp_f14);
+            var_f2 = -var_f2;
+        } else {
+            var_f2 = (temp_f12 * arg3[var_v1].x) + (arg3[var_v1].y * temp_f14);
+            var_f2 = -var_f2;
+        }
+
+        for (var_t1 = 0, var_t2 = 0; var_t1 < var_s2; var_t1++) {
+            var_v1 = var_t1 + 1;
+            if (var_v1 >= var_s2) {
+                var_v1 = 0;
+            }
+            temp_f16 = (temp_f12 * var_s3[var_t1].unk0) + (var_s3[var_t1].unk8 * temp_f14) + var_f2;
+            temp_f22 = (temp_f12 * var_s3[var_v1].unk0) + (var_s3[var_v1].unk8 * temp_f14) + var_f2;
+            if ((temp_f16 >= 0.0f && temp_f22 < 0.0f) || (temp_f16 < 0.0f && temp_f22 >= 0.0f)) {
+                var_a0 = D_8011B320[var_v0];
+                var_a1 = -1;
+                var_v1_3 = var_v0 << 5;
+                while (var_a0 > 0 && var_a1 < 0) {
+                    if ((D_8011B330[var_v1_3].unk10 == var_s3[var_t1].unk0) &&
+                        (D_8011B330[var_v1_3].unk14 == var_s3[var_t1].unk8) &&
+                        (D_8011B330[var_v1_3].unk18 == var_s3[var_v1].unk0) &&
+                        (D_8011B330[var_v1_3].unk1C == var_s3[var_v1].unk8)) {
+                        var_a1 = var_v1_3;
+                    } else if ((D_8011B330[var_v1_3].unk10 == var_s3[var_v1].unk0) &&
+                               (D_8011B330[var_v1_3].unk14 == var_s3[var_v1].unk8) &&
+                               (D_8011B330[var_v1_3].unk18 == var_s3[var_t1].unk0) &&
+                               (D_8011B330[var_v1_3].unk1C == var_s3[var_t1].unk8)) {
+                        var_a1 = var_v1_3;
+                    }
+                    var_a0 -= 1;
+                    var_v1_3++;
+                }
+                if (var_a1 >= 0) {
+                    var_s0[var_t2].unkE = var_a1;
+                    var_s0[var_t2].unk0 = D_8011B330[var_a1].x;
+                    var_s0[var_t2].unk8 = D_8011B330[var_a1].z;
+                    var_t2++;
+                } else {
+                    temp_f24 = temp_f16 / (temp_f16 - temp_f22);
+                    var_s0[var_t2].unk0 =
+                        var_s3[var_t1].unk0 + ((var_s3[var_v1].unk0 - var_s3[var_t1].unk0) * temp_f24);
+                    var_s0[var_t2].unk8 =
+                        var_s3[var_t1].unk8 + ((var_s3[var_v1].unk8 - var_s3[var_t1].unk8) * temp_f24);
+                    if (D_8011B320[var_v0] > 0x1F) {
+                        D_8011B320[var_v0] = 0x1F;
+                    }
+                    var_v1_3 = D_8011B320[var_v0] + (var_v0 << 5);
+                    D_8011B330[var_v1_3].unk10 = var_s3[var_t1].unk0;
+                    D_8011B330[var_v1_3].unk14 = var_s3[var_t1].unk8;
+                    D_8011B330[var_v1_3].unk18 = var_s3[var_v1].unk0;
+                    D_8011B330[var_v1_3].unk1C = var_s3[var_v1].unk8;
+                    D_8011B330[var_v1_3].x = var_s0[var_t2].unk0;
+                    D_8011B330[var_v1_3].z = var_s0[var_t2].unk8;
+                    D_8011B330[var_v1_3].unkC = D_8011D0BC;
+                    D_8011B320[var_v0]++;
+                    var_s0[var_t2].unkE = var_v1_3;
+                    var_t2++;
+                }
+            }
+            if (temp_f22 <= 0.0f) {
+                var_s0[var_t2].unkE = var_s3[var_v1].unkE;
+                var_s0[var_t2].unk0 = var_s3[var_v1].unk0;
+                var_s0[var_t2].unk8 = var_s3[var_v1].unk8;
+                var_t2++;
+            }
+        }
+        var_s2 = var_t2;
+        var_v0++;
+
+        swap = var_s3;
+        var_s3 = var_s0;
+        var_s0 = swap;
+    }
+
+    if (var_s2 >= 3) {
+        if (var_s3 != arg1) {
+            for (var_t1 = 0; var_t1 < var_s2; var_t1++) {
+                arg1[var_t1].unk0 = var_s3[var_t1].unk0;
+                arg1[var_t1].unk8 = var_s3[var_t1].unk8;
+                arg1[var_t1].unkE = var_s3[var_t1].unkE;
+            }
+        }
+    } else {
+        var_s2 = 0;
+    }
+    return var_s2;
+}
 
 #ifdef NON_EQUIUVALENT
-void func_800304C8(Vec4f *arg0) {
+void func_800304C8(unk8011C8B8 *arg0) {
     s16 found1;
     s16 found2;
     s16 found3;
@@ -3270,6 +4044,7 @@ void func_800304C8(Vec4f *arg0) {
 
 /**
  * Instantly update current fog properties.
+ * Official Name: trackSetFog
  */
 void set_fog(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue) {
     s32 tempNear;
@@ -3312,6 +4087,7 @@ void set_fog(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue) {
 /**
  * Writes the current fog settings to the arguments.
  * Pre-shifts the data, so the raw values are correct.
+ * Official Name: trackGetFog
  */
 void get_fog_settings(s32 playerID, s16 *near, s16 *far, u8 *r, u8 *g, u8 *b) {
     *near = gFogData[playerID].fog.near >> 16;
@@ -3324,6 +4100,7 @@ void get_fog_settings(s32 playerID, s16 *near, s16 *far, u8 *r, u8 *g, u8 *b) {
 /**
  * Sets the fog of the player ID to the default values.
  * Current fog attributes are rightshifted 16 bytes.
+ * Official Name: trackSetFogOff
  */
 void reset_fog(s32 playerID) {
     gFogData[playerID].addFog.near = 0;
@@ -3382,6 +4159,7 @@ void apply_fog(s32 playerID) {
  * Sets the active viewport's fog target when passed through.
  * Used in courses to make less, or more dense.
  * @bug: Timer doesn't account for PAL, meaning fog will scroll 20% slower on PAL systems.
+ * Official Name: trackChangeFog
  */
 void obj_loop_fogchanger(Object *obj) {
     s32 nearTemp;
@@ -3475,6 +4253,7 @@ void obj_loop_fogchanger(Object *obj) {
 /**
  * Set the fog properties from the current values to the target, over a time specified by switchTimer.
  * @bug: Timer doesn't account for PAL, meaning fog will scroll 20% slower on PAL systems.
+ * Official Name: trackFadeFog
  */
 void slowly_change_fog(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 far, s32 switchTimer) {
     s32 temp;

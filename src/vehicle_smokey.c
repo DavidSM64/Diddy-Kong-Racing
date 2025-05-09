@@ -106,7 +106,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->segment.animFrame = animFrame;
     if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_SMOKEY_DAMAGE) {
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
-        sound_play(SOUND_EXPLOSION, 0);
+        sound_play(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         obj->segment.object.animationID = ANIM_SMOKEY_DAMAGE;
         obj->segment.x_velocity *= 0.27;
@@ -227,8 +227,8 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             stepFrame = 3;
         }
         if (animFrame == stepFrame && stepFrame + 1 == obj->segment.animFrame >> 4) {
-            play_sound_at_position(SOUND_UNK_223, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                   obj->segment.trans.z_position, 4, NULL);
+            audspat_play_sound_at_position(SOUND_UNK_223, obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                           obj->segment.trans.z_position, 4, NULL);
         }
     }
     if (racer->vehicleIDPrev == VEHICLE_SMOKEY && racer->playerIndex == PLAYER_COMPUTER && func_80023568()) {
@@ -318,9 +318,9 @@ void spawn_boss_hazard(Object *obj, Object_Racer *racer, f32 offset, s32 objectI
                             newObj->properties.racer.unk0 = tempObj;
                             newObj->properties.racer.unk4 = (s8) entry->animation.y_rotation * 60;
                             newObj->segment.animFrame = get_random_number_from_range(0, 255);
-                            play_sound_at_position(soundID, newObj->segment.trans.x_position,
-                                                   newObj->segment.trans.y_position, newObj->segment.trans.z_position,
-                                                   4, NULL);
+                            audspat_play_sound_at_position(soundID, newObj->segment.trans.x_position,
+                                                           newObj->segment.trans.y_position,
+                                                           newObj->segment.trans.z_position, 4, NULL);
                         }
                     }
                 } else {

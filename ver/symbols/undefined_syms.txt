@@ -2,7 +2,7 @@
    The exact address isn't the same for each region, so I'm doing a hacky 
    offset from the previous BSS variable that is declared  */
 
-gEpcInfo = D_801297E8 + 0x18;
+gEpcInfo = gEPCPIQueue + 0x18;
 D_801299B0 = gEpcInfo + 0x1B0;
 
 /* We have to define these addresses because they're hasm and share space with the coss funcs. */

@@ -39,13 +39,17 @@ Gfx dTransitionFadeSettings[] = {
 };
 
 Vec2s gTransitionBarnHorizontalCoords[14] = {
-    { -480, 120 },  { -320, 120 },  { -160, 120 },  { 0, 120 },  { 160, 120 },  { 320, 120 },  { 480, 120 },
-    { -480, -120 }, { -320, -120 }, { -160, -120 }, { 0, -120 }, { 160, -120 }, { 320, -120 }, { 480, -120 },
+    { { { -480, 120 } } },  { { { -320, 120 } } },  { { { -160, 120 } } }, { { { 0, 120 } } },
+    { { { 160, 120 } } },   { { { 320, 120 } } },   { { { 480, 120 } } },  { { { -480, -120 } } },
+    { { { -320, -120 } } }, { { { -160, -120 } } }, { { { 0, -120 } } },   { { { 160, -120 } } },
+    { { { 320, -120 } } },  { { { 480, -120 } } },
 };
 
 Vec2s gTransitionBarnVerticalCoords[14] = {
-    { -160, 360 }, { -160, 240 }, { -160, 120 }, { -160, 0 }, { -160, -120 }, { -160, -240 }, { -160, -240 },
-    { 160, 360 },  { 160, 240 },  { 160, 120 },  { 160, 0 },  { 160, -120 },  { 160, -240 },  { 160, -240 },
+    { { { -160, 360 } } },  { { { -160, 240 } } },  { { { -160, 120 } } },  { { { -160, 0 } } },
+    { { { -160, -120 } } }, { { { -160, -240 } } }, { { { -160, -240 } } }, { { { 160, 360 } } },
+    { { { 160, 240 } } },   { { { 160, 120 } } },   { { { 160, 0 } } },     { { { 160, -120 } } },
+    { { { 160, -240 } } },  { { { 160, -240 } } },
 };
 
 TriangleList D_800E32A0[12] = {
@@ -65,8 +69,9 @@ u8 gTransitionBarnDoorAlpha[12] = {
 };
 
 Vec2s gTransitionBarnDiagCoords[12] = {
-    { -800, 120 },  { -480, 120 },  { -160, 120 },  { 160, 120 },  { 480, 120 },  { 800, 120 },
-    { -800, -120 }, { -480, -120 }, { -160, -120 }, { 160, -120 }, { 480, -120 }, { 800, -120 },
+    { { { -800, 120 } } },  { { { -480, 120 } } }, { { { -160, 120 } } },  { { { 160, 120 } } },
+    { { { 480, 120 } } },   { { { 800, 120 } } },  { { { -800, -120 } } }, { { { -480, -120 } } },
+    { { { -160, -120 } } }, { { { 160, -120 } } }, { { { 480, -120 } } },  { { { 800, -120 } } },
 };
 
 TriangleList D_800E330C[12] = {
@@ -86,15 +91,22 @@ u8 gTransitionBarnDoorDiagAlpha[12] = {
 };
 
 Vec2s gTransitionWaveCoords[63] = {
-    { -160, 160 },  { -144, 160 },  { -128, 160 },  { -112, 160 },  { -96, 160 },  { -80, 160 },  { -64, 160 },
-    { -48, 160 },   { -32, 160 },   { -16, 160 },   { 0, 160 },     { 16, 160 },   { 32, 160 },   { 48, 160 },
-    { 64, 160 },    { 80, 160 },    { 96, 160 },    { 112, 160 },   { 128, 160 },  { 144, 160 },  { 160, 160 },
-    { -160, -200 }, { -144, -160 }, { -128, -140 }, { -112, -130 }, { -96, -140 }, { -80, -200 }, { -64, -240 },
-    { -48, -260 },  { -32, -270 },  { -16, -260 },  { 0, -220 },    { 16, -210 },  { 32, -200 },  { 48, -210 },
-    { 64, -220 },   { 80, -260 },   { 96, -270 },   { 112, -260 },  { 128, -220 }, { 144, -160 }, { 160, -140 },
-    { -160, -280 }, { -144, -280 }, { -128, -280 }, { -112, -280 }, { -96, -280 }, { -80, -280 }, { -64, -280 },
-    { -48, -280 },  { -32, -280 },  { -16, -280 },  { 0, -280 },    { 16, -280 },  { 32, -280 },  { 48, -280 },
-    { 64, -280 },   { 80, -280 },   { 96, -280 },   { 112, -280 },  { 128, -280 }, { 144, -280 }, { 160, -280 }
+    { { { -160, 160 } } },  { { { -144, 160 } } },  { { { -128, 160 } } },  { { { -112, 160 } } },
+    { { { -96, 160 } } },   { { { -80, 160 } } },   { { { -64, 160 } } },   { { { -48, 160 } } },
+    { { { -32, 160 } } },   { { { -16, 160 } } },   { { { 0, 160 } } },     { { { 16, 160 } } },
+    { { { 32, 160 } } },    { { { 48, 160 } } },    { { { 64, 160 } } },    { { { 80, 160 } } },
+    { { { 96, 160 } } },    { { { 112, 160 } } },   { { { 128, 160 } } },   { { { 144, 160 } } },
+    { { { 160, 160 } } },   { { { -160, -200 } } }, { { { -144, -160 } } }, { { { -128, -140 } } },
+    { { { -112, -130 } } }, { { { -96, -140 } } },  { { { -80, -200 } } },  { { { -64, -240 } } },
+    { { { -48, -260 } } },  { { { -32, -270 } } },  { { { -16, -260 } } },  { { { 0, -220 } } },
+    { { { 16, -210 } } },   { { { 32, -200 } } },   { { { 48, -210 } } },   { { { 64, -220 } } },
+    { { { 80, -260 } } },   { { { 96, -270 } } },   { { { 112, -260 } } },  { { { 128, -220 } } },
+    { { { 144, -160 } } },  { { { 160, -140 } } },  { { { -160, -280 } } }, { { { -144, -280 } } },
+    { { { -128, -280 } } }, { { { -112, -280 } } }, { { { -96, -280 } } },  { { { -80, -280 } } },
+    { { { -64, -280 } } },  { { { -48, -280 } } },  { { { -32, -280 } } },  { { { -16, -280 } } },
+    { { { 0, -280 } } },    { { { 16, -280 } } },   { { { 32, -280 } } },   { { { 48, -280 } } },
+    { { { 64, -280 } } },   { { { 80, -280 } } },   { { { 96, -280 } } },   { { { 112, -280 } } },
+    { { { 128, -280 } } },  { { { 144, -280 } } },  { { { 160, -280 } } }
 };
 
 u8 D_800E3440[92] = {
@@ -343,7 +355,7 @@ void transition_render(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
                 break;
         }
 
-        func_80066CDC(dList, mtx);
+        viewport_main(dList, mtx);
     }
 }
 
@@ -430,7 +442,7 @@ void transition_render_fullscreen(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vert
     gDPSetPrimColor((*dList)++, 0, 0, gCurFadeRed, gCurFadeGreen, gCurFadeBlue, gCurFadeAlpha);
     gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
     gDPFillRectangle((*dList)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF);
-    reset_render_settings(dList);
+    rendermode_reset(dList);
 }
 
 /**
@@ -553,11 +565,11 @@ void transition_update_shape(s32 updateRate) {
  * Renders a transition effect on screen that will close in from both sides horizonally.
  */
 void transition_render_barndoor_hor(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
-    reset_render_settings(dList);
+    rendermode_reset(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
     gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum]), 12, 0);
     gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum]), 8, TRIN_DISABLE_TEXTURE);
-    reset_render_settings(dList);
+    rendermode_reset(dList);
 }
 
 /**
@@ -565,11 +577,11 @@ void transition_render_barndoor_hor(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Ve
  * Codewise, exactly the same as above, but uses a different vertex layout to make the difference.
  */
 void transition_render_barndoor_vert(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
-    reset_render_settings(dList);
+    rendermode_reset(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
     gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum]), 12, 0);
     gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum]), 8, TRIN_DISABLE_TEXTURE);
-    reset_render_settings(dList);
+    rendermode_reset(dList);
 }
 
 void transition_init_circle(FadeTransition *transition) {
@@ -738,7 +750,7 @@ void transition_render_circle(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex *
     Gfx *gfx;
     s32 i;
 
-    reset_render_settings(dList);
+    rendermode_reset(dList);
     gfx = *dList;
 
     vertsToRender = (Vertex *) sTransitionVtx[sTransitionTaskNum];
@@ -753,7 +765,7 @@ void transition_render_circle(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex *
     }
 
     *dList = gfx;
-    reset_render_settings(dList);
+    rendermode_reset(dList);
 }
 
 /**
@@ -764,7 +776,7 @@ void transition_render_waves(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **
     s32 i;
     Vertex *v;
     Triangle *t;
-    reset_render_settings(dList);
+    rendermode_reset(dList);
     gfx = *dList;
     v = (Vertex *) sTransitionVtx[sTransitionTaskNum];
     t = (Triangle *) sTransitionTris[sTransitionTaskNum];
@@ -791,18 +803,18 @@ void transition_render_waves(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **
         }
     }
     *dList = gfx;
-    reset_render_settings(dList);
+    rendermode_reset(dList);
 }
 
 /**
  * Renders a transition effect on screen that will close in from the opposite corners of the screen.
  */
 void transition_render_barndoor_diag(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
-    reset_render_settings(dList);
+    rendermode_reset(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
     gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum]), 10, 0);
     gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum]), 6, TRIN_DISABLE_TEXTURE);
-    reset_render_settings(dList);
+    rendermode_reset(dList);
 }
 
 /**
@@ -861,5 +873,5 @@ void transition_render_blank(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **
     gDPSetPrimColor((*dList)++, 0, 0, (gLastFadeRed >> 16), (gLastFadeGreen >> 16), (gLastFadeBlue >> 16), 255);
     gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
     gDPFillRectangle((*dList)++, 0, 0, GET_VIDEO_WIDTH(screenSize), GET_VIDEO_HEIGHT(screenSize) & 0x3FF);
-    reset_render_settings(dList);
+    rendermode_reset(dList);
 }

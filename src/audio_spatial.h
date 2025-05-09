@@ -7,93 +7,78 @@
 #include "PR/gbi.h"
 #include "PR/libaudio.h"
 
-typedef struct floatXYZVals {
-    f32 x1;
-    f32 y1;
-    f32 z1;
-    f32 x2;
-    f32 y2;
-    f32 z2;
-} floatXYZVals;
+#define AUDIO_LINE_TYPE_SOUND 0
+#define AUDIO_LINE_TYPE_JINGLE 1
 
-/* Size: 0x0C / 12 bytes - Possibly just a Vec3f? */
-typedef struct unk8011A6D8_04 {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ f32 unk4;
-  /* 0x08 */ f32 unk8;
-} unk8011A6D8_04;
+#define AUDIO_POINT_FLAG_1 1 // Unused
+#define AUDIO_POINT_FLAG_SINGLE_PLAYER 2
+#define AUDIO_POINT_FLAG_ONE_TIME_TRIGGER 4
+
+/* Size: 0x24 / 36 bytes */
+typedef struct AudioPoint {
+  /* 0x00 */ Vec3f pos;
+  /* 0x0C */ u16 soundBite;
+  /* 0x0E */ u8 volume;
+  /* 0x0F */ u8 pitch;
+  /* 0x10 */ u8 minVolume;
+  /* 0x11 */ u8 flags;
+  /* 0x12 */ u8 inRange;
+  /* 0x14 */ s32 range;
+  /* 0x18 */ SoundHandle soundHandle;
+  /* 0x1C */ struct AudioPoint **userHandlePtr;
+  /* 0x20 */ u8 fastFalloff;
+  /* 0x21 */ u8 priority;
+  /* 0x22 */ u8 triggeredOnce;
+} AudioPoint;
 
 /* Size: 0x180 / 384 bytes */
-typedef struct unk80119C58 {
-    union {
-        /* 0x00 */ f32 unk0_01;
-        /* 0x00 */ u8 unk0_02;
-        /* 0x00 */ s32 unk0_03;
-    } unk0;
-    union {
-        /* 0x004 */ f32 unk4_floats[30 * 3]; // Should be a Vec3f, but that just doesn't match
-        /* 0x004 */ Vec3f unk4_vec[30];
-    } unk4;
-    /* 0x16C */ s32 soundID;
-    /* 0x170 */ s32 unk170;
+typedef struct AudioLine {
+    /* 0x000 */ u8 type; // 0 - sound, 1 - jingle
+    /* 0x004 */ f32 coords[30 * 3];
+    /* 0x16C */ s32 soundBite;
+    /* 0x170 */ s32 range;
     /* 0x174 */ u8 unk174;
-    /* 0x175 */ u8 unk175;
+    /* 0x175 */ u8 maxVolume;
     /* 0x176 */ u8 unk176;
     /* 0x177 */ u8 unk177;
-    /* 0x178 */ ALSoundState *soundPtr;
-    /* 0x17C */ s8 unk17C;
-    /* 0x17D */ u8 unk17D;
-    /* 0x17E */ u8 unk17E;
-} unk80119C58;
+    /* 0x178 */ SoundHandle soundHandle;
+    /* 0x17C */ s8 numSegments;
+    /* 0x17D */ u8 fastFalloff;
+    /* 0x17E */ u8 priority;
+} AudioLine;
 
-/* Size: 0xC0 / 192 bytes - Thought it was a LevelHeader, but that didn't match other usages */
-typedef struct unk8011A6D8 {
-  union {
-    /* 0x00 */ f32 unk0_01;
-    /* 0x00 */ u8 unk0_02;
-  } unk0;
-  union {
-    f32 unk4_floats[15 * 3];
-    Vec3f unk4_vec[15];
-  } unk4;
-  /* 0xB8 */ s8 unkB8;
-  /* 0xB9 */ u8 padB9[0x03];
-  /* 0xBC */ f32 unkBC;
-} unk8011A6D8;
+/* Size: 0xC0 / 192 bytes */
+typedef struct ReverbLine {
+  /* 0x00 */ u8 reverbAmount;
+  /* 0x04 */ f32 coords[15 * 3];
+  /* 0xB8 */ s8 numSegments;
+  /* 0xBC */ f32 totalLength;
+} ReverbLine;
 
-typedef struct unk800A414_arg3 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-} unk800A414_arg3;
-
-void audioline_on(void);
-void func_800096F8(SoundMask *);
-void audioline_off(void);
-void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volume, u16 distance, u8 arg8, u8 pitch,
-                   u8 argA, SoundMask **soundMask);
-void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, SoundMask **soundMask);
-void func_8000A2E8(s32 arg0);
-s32 func_800090C0(f32, f32, s32);
-void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 pitch, SoundMask **soundMask);
-void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 arg8, u16 arg9,
-                              u8 argA, u8 lineID, u8 argC);
-s32 func_800099EC(u8 arg0);
-void debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, f32 coords[6], u8 red, u8 green, u8 blue);
+void audspat_jingle_on(void);
+void audspat_point_stop(AudioPoint *);
+void audspat_jingle_off(void);
+void audspat_point_create(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 minVolume, u8 volume, u16 range, u8 fastFalloff, u8 pitch,
+                   u8 priority, AudioPoint **handlePtr);
+void audspat_play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 flags, AudioPoint **handlePtr);
+void audspat_point_stop_by_index(s32 index);
+s32 audspat_calculate_spatial_pan(f32, f32, s32);
+void audspat_play_sound_direct(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 volume, f32 pitch, AudioPoint **handlePtr);
+void audspat_line_add_vertex(u8 type, u16 soundBite, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 priority, u16 arg9,
+                              u8 argA, u8 lineID, u8 vertexIndex);
+s32 audspat_line_validate(u8 lineID);
+void audspat_debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, f32 coords[6], u8 red, u8 green, u8 blue);
 void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 updateRate);
-void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z);
-s32 func_80009AB4(u8 arg0);
-void audioline_init(void);
-void audioline_reverb_create(f32, f32, f32, u8, u8, u8);
-void audioline_reverb(s32 *soundState, f32 x, f32 y, f32 z);
+void audspat_point_set_position(AudioPoint *audioPoint, f32 x, f32 y, f32 z);
+s32 audspat_reverb_validate(u8 reverbLineID);
+void audspat_init(void);
+void audspat_reverb_add_vertex(f32, f32, f32, u8, u8, u8);
+void audspat_calculate_echo(SoundHandle soundHandle, f32 x, f32 y, f32 z);
 
-s32 audioline_distance(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 *outY, f32 *outZ);
-void func_80008174(void); // Non Matching
-void func_80008438(Object **arg0, s32 numRacers, s32 updateRate); // Non Matching
+s32 audspat_distance_to_segment(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 *outY, f32 *outZ);
+void audspat_reset(void);
+void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate); // Non Matching
 void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3, s32 updateRate); // Non Matching
-u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);
+u8 audspat_reverb_get_strength_at_point(ReverbLine *, f32, f32, f32);
 
 #endif

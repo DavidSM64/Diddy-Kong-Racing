@@ -25,7 +25,7 @@ typedef struct SubMiscAssetObjectHeader24 {
 typedef struct MiscAssetObjectHeader24 {
     s32 unk0;
     u8 pad2[16];
-    SubMiscAssetObjectHeader24 *unk14;
+    SubMiscAssetObjectHeader24 unk14[1];
 } MiscAssetObjectHeader24;
 
 /* Size: 0x88 bytes */
@@ -53,7 +53,10 @@ typedef struct ObjectLight {
     u16 unk3E;
     u16 unk40;
     u16 unk42;
-    SubMiscAssetObjectHeader24 *unk44;
+    union {
+        SubMiscAssetObjectHeader24 *unk44;
+        MiscAssetObjectHeader24 *unk44_asset;
+    };    
     u16 unk48;
     u16 unk4A;
     u16 unk4C;
@@ -82,7 +85,7 @@ typedef struct ObjectLight {
 
 /* Size: 0x14 bytes */
 typedef struct unk800DC960 {
-    s32 unk0;
+    ObjectLight* unk0;
     s32 unk4;
     s32 unk8;
     s32 unkC;
@@ -95,7 +98,7 @@ void func_80032BAC(ObjectLight *light);
 s32 get_light_count(void);
 f32 light_distance_calc(ObjectLight *light);
 f32 light_direction_calc(ObjectLight *light);
-ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry);
+ObjectLight *func_80031CAC(Object *obj, LevelObjectEntry_RgbaLight *lightEntry);
 ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1);
 void func_80032424(ObjectLight *light, s32 updateRate);
 

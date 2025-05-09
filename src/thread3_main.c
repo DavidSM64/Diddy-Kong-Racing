@@ -212,7 +212,7 @@ void init_game(void) {
     init_PI_mesg_queue();
     gfxtask_init(&gMainSched);
     audio_init(&gMainSched);
-    audioline_init();
+    audspat_init();
     sControllerStatus = input_init();
     tex_init_textures();
     allocate_object_model_pools();
@@ -444,7 +444,7 @@ void mode_game(s32 updateRate) {
 #endif
     // Update all objects
     if (!gIsPaused) {
-        func_80010994(updateRate);
+        obj_update(updateRate);
         if (check_if_showing_cutscene_camera() == 0 || get_race_countdown()) {
             if (buttonPressedInputs & START_BUTTON && get_level_property_stack_pos() == 0 &&
                 gDrumstickSceneLoadTimer == 0 && gGameMode == GAMEMODE_INGAME && gPostRaceViewPort == FALSE &&
@@ -828,9 +828,9 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     alloc_displaylist_heap(PLAYER_ONE);
     gGameMode = GAMEMODE_MENU;
     gRenderMenu = TRUE;
-    set_sound_channel_volume(0, 32767);
-    set_sound_channel_volume(1, 32767);
-    set_sound_channel_volume(2, 32767);
+    sndp_set_group_volume(0, 32767);
+    sndp_set_group_volume(1, 32767);
+    sndp_set_group_volume(2, 32767);
     camera_init();
 
     if (!gIsLoading) {
@@ -910,7 +910,7 @@ void unload_level_menu(void) {
  */
 void update_menu_scene(s32 updateRate) {
     if (bgload_active() == FALSE) {
-        func_80010994(updateRate);
+        obj_update(updateRate);
         gParticlePtrList_flush();
         ainode_update();
         render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);

@@ -52,19 +52,21 @@ enum ShadowUpdate {
 	SHADOW_ACTORS
 };
 
-typedef struct unk8011B120_unkC {
+/* Size: 0x10 bytes */
+typedef struct unk8011C8B8 {
     f32 unk0;
     f32 unk4;
     f32 unk8;
-    f32 unkC;
-} unk8011B120_unkC;
+    s16 unkC;
+    s16 unkE;
+} unk8011C8B8;
 
 /* Size: 0x10 bytes */
 typedef struct unk8011B120 {
     f32 x;
     f32 y;
     f32 z;
-    unk8011B120_unkC *unkC;
+    unk8011C8B8 *unkC;
 } unk8011B120;
 
 /* Size: 0x20 bytes */
@@ -72,17 +74,17 @@ typedef struct unk8011B330 {
     f32 x;
     f32 y;
     f32 z;
-    unk8011B120_unkC *unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
+    unk8011C8B8 *unkC;
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    f32 unk1C;
 } unk8011B330;
 
 /* Size: 0x10 bytes */
 typedef struct unk8011D474 {
-    TriangleList *unk0;
-    TriangleList *unk4;
+    Triangle *unk0;
+    Triangle *unk4;
     Vertex *unk8;
     Vertex *unkC;
 } unk8011D474;
@@ -102,6 +104,20 @@ typedef struct unk8011D478 {
     s8 unk6;
     s8 unk7;
 } unk8011D478;
+
+/* Size: 0x14 bytes */
+typedef struct unk8011C3B8 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+    s16 unk12;
+} unk8011C3B8;
 
 // In this struct, data is rightshifted 16 bytes, so make the smooth transition more precise.
 typedef struct EnvironmentFog {
@@ -129,12 +145,11 @@ typedef struct FogData {
     Object *fogChanger;
 } FogData;
 
+/* Size: 0x14 bytes */
 typedef struct WaterProperties {
-    f32 waveHeight;
-    f32 rotX;
-    f32 rotY;
-    f32 rotZ;
-    s8 type;
+    /* 0x00 */ f32 waveHeight;
+    /* 0x04 */ Vec3f rot;
+    /* 0x10 */ s8 type;
 } WaterProperties;
 
 enum WaveTypes {
@@ -191,7 +206,7 @@ void free_track(void);
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex);
 s32 func_80027568(void);
 s32 func_8002CC30(LevelModelSegment*);
-s8 func_8002B0F4(s32, f32 xPos, f32 zPos, WaterProperties***); // Definitely not triple pointer, but easiest way to fix warns.
+s32 func_8002B0F4(s32, f32 xIn, f32 zIn, WaterProperties***); // Definitely not triple pointer, but easiest way to fix warns.
 void func_800278E8(s32);
 void func_80028050(void);
 void initialise_player_viewport_vars(s32);
@@ -201,7 +216,7 @@ void func_800B9C18(s32);
 void func_800BA8E4(Gfx**, MatrixS**, s32);
 void func_8002DE30(Object*);
 void shadow_generate(Object*, s32);
-void func_8002E904(LevelModelSegment *, s32, s32 bool);
+void func_8002E904(LevelModelSegment *, s32, s32 arg2);
 void func_8002EEEC(s32 arg0);
 void func_8002F2AC(void);
 void func_8002F440(void);
@@ -211,7 +226,9 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
 void func_800B82B4(LevelModel *, LevelHeader *, s32);
 void func_80025510(s32);
 void func_8002C0C4(s32 modelId);
-void func_800304C8(Vec4f *arg0);
+void func_800304C8(unk8011C8B8 *arg0);
 s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
+s32 func_8002FF6C(s32, unk8011C8B8 *, s32, Vec2f *);
+s32 func_800BDC80(s32, unk8011C3B8 *, unk8011C8B8 *, f32, f32, f32, f32);
 
 #endif

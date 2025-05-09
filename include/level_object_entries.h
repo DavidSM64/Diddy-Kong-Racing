@@ -885,6 +885,11 @@ typedef struct LevelObjectEntry_Unknown127 {
     LevelObjectEntryCommon common;
 } LevelObjectEntry_Unknown127;
 
+typedef struct LevelObjectEntry_Hud {
+    LevelObjectEntryCommon common;
+    s32 offsetY;
+} LevelObjectEntry_Hud;
+
 typedef struct LevelObjectEntry {
     union {
         LevelObjectEntry_Racer racer;
@@ -978,6 +983,7 @@ typedef struct LevelObjectEntry {
         LevelObjectEntry800BF524 unk800BF524;
         LevelObjectEntry_WavePower wavePower;
         LevelObjectEntry_CharacterSelect characterSelect;
+        LevelObjectEntry_Hud hud;
     };
 } LevelObjectEntry;
 

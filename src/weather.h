@@ -110,7 +110,7 @@ void rain_update(s32 updateRate);
 void rain_sound(s32 updateRate);
 void rain_render_splashes(s32 updateRate);
 void rain_lightning(s32 updateRate);
-void render_rain_overlay(RainGfxData*, s32);
+void rain_render(RainGfxData*, s32);
 void weather_update(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, Triangle **currHudTris, s32 updateRate);
 void snow_render(void);
 void weather_free(void);

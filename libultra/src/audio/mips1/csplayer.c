@@ -56,7 +56,7 @@ static void             __CSPHandleMIDIMsg(ALCSPlayer_Custom *seqp, ALEvent *eve
 static void             __CSPHandleMetaMsg(ALCSPlayer *seqp, ALEvent *event);
 static void             __CSPRepostEvent(ALEventQueue *evtq, ALEventListItem *item);
 static void		__setUsptFromTempo(ALCSPlayer *seqp, f32 tempo);		/* sct 1/8/96 */
-       void func_80065A80(ALSynth *arg0, PVoice *arg1, s16 arg2);
+       void func_80065A80(ALSynth *arg0, struct PVoice_s *arg1, s16 arg2);
 
 
 /*

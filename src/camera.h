@@ -75,7 +75,7 @@ typedef struct unk80068514_arg4 {
     s16 textureCount;
     s16 unk2;
     s16 unk4;
-    s16 unk6;
+    s16 drawFlags;
     Gfx *unk8[1];
 } unk80068514_arg4;
 
@@ -123,15 +123,13 @@ void set_camera_shake(f32 magnitude);
 void func_80067D3C(Gfx **dList, MatrixS **mats);
 void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags);
 s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
-void camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY);
+s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY);
 void viewport_scissor(Gfx **dList);
 void apply_matrix_from_stack(Gfx **dList);
 void copy_viewports_to_stack(void);
 void apply_head_turning_matrix(Gfx **dList, MatrixS **mtx, Object_68 *objGfx, s16 headAngle);
 void apply_object_shear_matrix(Gfx **dList, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear);
-
-// Non Matching
 void camera_init(void);
-void func_80066CDC(Gfx **dList, MatrixS **mats);
+void viewport_main(Gfx **dlist, MatrixS **mats);
 
 #endif

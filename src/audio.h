@@ -2,9 +2,7 @@
 #define _AUDIO_H_
 
 #include "types.h"
-#include "audio_internal.h"
 #include "sched.h"
-#include "structs.h"
 
 #define AUDIO_CHANNELS 16
 #define MUSIC_CHAN_MASK_NONE 0xFFFFFFFF
@@ -16,15 +14,17 @@ enum AudioVolumeBehaviour {
     VOLUME_UNK03,
 };
 
+typedef struct ALSoundState* SoundHandle;
+
 /* Size: 0x0A bytes */
 typedef struct SoundData {
  u16 soundBite; // Audio file index.
  u8 volume; // Multiplied by 256. 128 = 32768, max volume.
- u8 unk3;
+ u8 minVolume;
  u8 pitch; // Fractional. 100 = 1.0f.
  u8 unk5;
- u16 distance; // Ingame units distance, same as any other.
- u8 unk8;
+ u16 range; // Ingame units distance, same as any other.
+ u8 priority;
  u8 unk9;
 } SoundData;
 
@@ -40,7 +40,7 @@ typedef struct MusicData {
 typedef struct DelayedSound {
     /* 0x00 */ u16 soundId;
     /* 0x02 */ s16 timer;
-    /* 0x04 */ SoundMask *soundMask;
+    /* 0x04 */ SoundHandle *handlePtr;
 } DelayedSound;
 
 void  alCSPNew(ALCSPlayer *seqp, ALSeqpConfig *config); //lib/src/al/csplayer.c
@@ -74,7 +74,7 @@ void music_jingle_voicelimit_set(u8 voiceLimit);
 void music_fade(s32 time);
 void music_volume_reset(void);
 void sound_update_queue(u8 updateRate);
-void sound_play_delayed(u16 soundId, SoundMask *soundMask, f32 delayTime);
+void sound_play_delayed(u16 soundId, SoundHandle *handlePtr, f32 delayTime);
 void sound_clear_delayed(void);
 u16 music_channel_get_mask(void);
 void music_dynamic_set(u16 channelMask);
@@ -106,8 +106,8 @@ void music_jingle_pan_set(ALPan pan);
 void music_jingle_play(u8 seqID);
 u32 music_jingle_playing(void);
 u16 sound_distance(u16 soundId);
-void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **soundMask);
-void func_80001F14(u16 soundID, s32 *soundMask);
+void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, SoundHandle *handlePtr);
+void func_80001F14(u16 soundID, SoundHandle *handlePtr);
 u16 sound_count(void);
 u8 music_sequence_count(void);
 void sound_table_properties(SoundData **table, s32 *size, s32 *count);
@@ -118,9 +118,10 @@ void music_sequence_stop(ALCSPlayer *seqPlayer);
 void sound_reverb_set(u8 setting);
 void alSeqFileNew(ALSeqFile *file, u8 *base);
 void func_80063A90(ALCSPlayer *seqp, u8 channel);
-void sound_volume_set_relative(u16 soundID, void *soundState, u8 volume);
+void sound_volume_set_relative(u16 soundID, SoundHandle soundHandle, u8 volume);
 void music_sequence_init(ALCSPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *seq);
-void sound_play(u16 soundID, s32* soundMask);
+void sound_play(u16 soundID, SoundHandle* handlePtr);
+void sound_play(u16 soundID, SoundHandle* handlePtr);
 f32 music_animation_fraction(void);
 
 #endif

@@ -5,12 +5,28 @@
 #include "structs.h"
 #include <ultra64.h>
 
-#define HUD_ELEMENT_MODEL       0x0000
-#define HUD_ELEMENT_OBJECT      0x4000
-#define HUD_ELEMENT_SPRITE      0x8000
-#define HUD_ELEMENT_TEXTURE     0xC000
+#define ASSET_MASK_MODEL       0x0000
+#define ASSET_MASK_OBJECT      0x4000
+#define ASSET_MASK_SPRITE      0x8000
+#define ASSET_MASK_TEXTURE     0xC000
+
+#define ASSET_MASK_TEX2D       0x0000
+#define ASSET_MASK_TEX3D       0x8000
 
 #define HUD_EGG_TOTAL 3
+
+typedef struct HudPresets2P {
+    s16 assetID;
+    s16 x;
+    s16 y;
+} HudPresets2P;
+
+typedef struct HudPresets4P {
+    s16 assetID;
+    s16 xLeft;
+    s16 y;
+    s16 xRight;
+} HudPresets4P;
 
 typedef enum RaceFinishStages {
     HUD_RACEFINISH_MUTE,
@@ -50,8 +66,6 @@ typedef enum WrongWayDirection {
     WRONGWAY_OUT = -1,
     WRONGWAY_IN = 1
 } WrongWayDirection;
-
-
 
 enum CourseIndicatorArrows {
     INDICATOR_NONE,
@@ -333,12 +347,12 @@ typedef struct HudElement_RaceTimeLabel {
 } HudElement_RaceTimeLabel;
 
 typedef struct HudElement {
-    Vec3s rotation;
-    s16 spriteID;
-    f32 scale;
-    Vec3f pos;
-    s16 spriteOffset;
-    union {
+    /* 0x00 */ Vec3s rotation;
+    /* 0x06 */ s16 spriteID;
+    /* 0x08 */ f32 scale;
+    /* 0x0C */ Vec3f pos;
+    /* 0x14 */ s16 spriteOffset;
+    /* 0x16 */ union {
         u8 filler[4];   // Ensures this union is 6 bytes, since Rare never actually use more than four.
         HudElement_ChallengeEggs challengeEggs;
         HudElement_RaceStartGo raceStartGo;
@@ -367,7 +381,7 @@ typedef struct HudAudio {
     u16 soundID;
     u8 volume;
     s8 volumeRamp;
-    SoundMask *soundMask;
+    SoundHandle soundMask;
     s32 unk8;
     s8 playerIndex;
     s8 unkD;
@@ -378,6 +392,11 @@ typedef struct HudAudio {
 typedef struct HudElements {
     void *entry[HUD_ELEMENT_COUNT];
 } HudElements;
+
+typedef struct HudDrawTexture {
+    DrawTexture drawTexture;
+    s32 unk8; // Field is always set to 0 and never read/written outside of hud_element_render
+} HudDrawTexture;
 
 extern u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
@@ -427,12 +446,10 @@ void hud_treasure(Object_Racer *racer);
 void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspectRatio);
 void hud_timer_render(s32 x, s32 y, s32 minutes, s32 seconds, s32 hundredths, s32 smallFont);
 void hud_draw_model(ObjectModel *objModel);
-
-// Non Matching
-void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement *arg3);
+void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement *hud);
 void hud_main_time_trial(s32, Object*, s32);
 void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate);
 void func_800A1E48(Object*, s32 updateRate);
-void func_8009F034(void);
+void hud_init_element(void);
 
 #endif

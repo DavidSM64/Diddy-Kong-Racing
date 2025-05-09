@@ -385,11 +385,11 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     }
 
     if (numberOfPlayers == ONE_PLAYER) {
-        set_sound_channel_count(8);
+        sndp_set_active_sound_limit(8);
     } else if (numberOfPlayers == TWO_PLAYERS) {
-        set_sound_channel_count(12);
+        sndp_set_active_sound_limit(12);
     } else {
-        set_sound_channel_count(16);
+        sndp_set_active_sound_limit(16);
     }
     settings = get_settings();
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
@@ -640,6 +640,7 @@ u8 get_current_level_race_type(void) {
 
 /**
  * Return the header data of the current level.
+ * Official Name: levelGetLevel
  */
 LevelHeader *get_current_level_header(void) {
     return gCurrentLevelHeader;
@@ -697,20 +698,20 @@ void clear_audio_and_track(void) {
     free_ai_behaviour_table();
     bgdraw_primcolour(0, 0, 0);
     mempool_free(gCurrentLevelHeader);
-    sound_stop_all();
+    sndp_stop_all_looped();
     music_stop();
     music_jingle_stop();
     music_channel_reset_all();
     free_lights();
     free_track();
-    func_80008174();
+    audspat_reset();
     sound_volume_change(VOLUME_NORMAL);
     if (gCurrentLevelHeader->weatherEnable > 0) {
         weather_free();
     }
     //! @bug this will never be true because skyDome is signed.
     if (gCurrentLevelHeader->skyDome == 0xFF) {
-        free_texture(gCurrentLevelHeader->unkA4);
+        tex_free(gCurrentLevelHeader->unkA4);
     }
 }
 

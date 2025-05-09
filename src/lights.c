@@ -49,100 +49,96 @@ void free_lights(void) {
  */
 void setup_lights(s32 count) {
     s32 i;
-    s32 newCount;
-    ObjectLight **temp_v0;
+    u8 *buffer;
+    s32 temp;
 
     free_lights();
     gMaxLights = count;
-    temp_v0 = (ObjectLight **) mempool_alloc_safe(
+    buffer = (u8 *) mempool_alloc_safe(
         gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(unk800DC960) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
-    newCount = gMaxLights;
-    gActiveLights = temp_v0;
-    D_800DC954 = (ObjectLight *) (newCount + (0, temp_v0));    // fakematch
-    D_800DC960 = (unk800DC960 *) (newCount + (0, D_800DC954)); // fakematch
-    D_800DC964 = (Vec3f *) (newCount + (0, D_800DC960));       // fakematch
+
+    temp = gMaxLights;
+    gActiveLights = (ObjectLight **) buffer;
+    buffer += temp * sizeof(ObjectLight *);
+    D_800DC954 = (ObjectLight *) buffer;
+    D_800DC960 = (unk800DC960 *) ((u32) D_800DC954 + temp * sizeof(ObjectLight));
+    D_800DC964 = (Vec3f *) ((u32) D_800DC960 + temp * sizeof(unk800DC960));
     for (i = 0; i < gMaxLights; i++) {
         gActiveLights[i] = &D_800DC954[i];
     }
 }
 
-#ifdef NON_EQUIVALENT
-ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry) {
+ObjectLight *func_80031CAC(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) {
     s32 i;
-    ObjectLight *newLight;
-    LevelHeader_70 *test;
-    s32 temp_a0;
+    ObjectLight *light;
+    LevelHeader *levelHeader;
+    MiscAssetObjectHeader24 *miscAsset;
 
-    newLight = NULL;
+    light = NULL;
     if (gNumActiveLights < gMaxLights) {
-        newLight = gActiveLights[gNumActiveLights++];
-        newLight->unk0 = (lightEntry->unk8 & 0xF0) >> 4;
-        newLight->type = lightEntry->unk8 & 0xF;
-        newLight->unk1 = (lightEntry->unk9 & 0xE0) >> 5;
-        newLight->unk2 = lightEntry->unk9 & 0x1F;
-        newLight->enabled = TRUE;
-        newLight->owner = NULL;
-        newLight->homeX = 0;
-        newLight->homeY = 0;
-        newLight->homeZ = 0;
-        if (light != NULL) {
-            newLight->pos.x = light->segment.trans.x_position;
-            newLight->pos.y = light->segment.trans.y_position;
-            newLight->pos.z = light->segment.trans.z_position;
+        light = gActiveLights[gNumActiveLights++];
+        light->unk0 = (lightEntry->unk8 & 0xF0) >> 4;
+        light->type = lightEntry->unk8 & 0xF;
+        light->unk1 = (lightEntry->unk9 & 0xE0) >> 5;
+        light->unk2 = lightEntry->unk9 & 0x1F;
+        light->enabled = TRUE;
+        light->owner = NULL;
+        light->homeX = 0;
+        light->homeY = 0;
+        light->homeZ = 0;
+        if (obj != NULL) {
+            light->pos.x = obj->segment.trans.x_position;
+            light->pos.y = obj->segment.trans.y_position;
+            light->pos.z = obj->segment.trans.z_position;
         } else {
-            newLight->pos.x = lightEntry->common.x;
-            newLight->pos.y = lightEntry->common.y;
-            newLight->pos.z = lightEntry->common.z;
+            light->pos.x = lightEntry->common.x;
+            light->pos.y = lightEntry->common.y;
+            light->pos.z = lightEntry->common.z;
         }
-        newLight->unk1C = lightEntry->unkA << 16;
-        newLight->unk2C = 0;
-        newLight->unk3C = 0;
-        newLight->unk20 = lightEntry->unkB << 16;
-        newLight->unk30 = 0;
-        newLight->unk3E = 0;
-        newLight->unk24 = lightEntry->unkC << 16;
-        newLight->unk34 = 0;
-        newLight->unk40 = 0;
-        newLight->unk28 = lightEntry->unkD << 16;
-        newLight->unk38 = 0;
-        newLight->unk42 = 0;
-        newLight->unk44 = NULL;
+        light->unk1C = lightEntry->unkA << 16;
+        light->unk2C = 0;
+        light->unk3C = 0;
+        light->unk20 = lightEntry->unkB << 16;
+        light->unk30 = 0;
+        light->unk3E = 0;
+        light->unk24 = lightEntry->unkC << 16;
+        light->unk34 = 0;
+        light->unk40 = 0;
+        light->unk28 = lightEntry->unkD << 16;
+        light->unk38 = 0;
+        light->unk42 = 0;
+        light->unk44 = NULL;
         if (lightEntry->unk1C < 7) {
-            test = (LevelHeader_70 *) get_current_level_header()->unk74[lightEntry->unk1C];
-            if (((s32) test) != -1) {
-                newLight->unk44 = (SubMiscAssetObjectHeader24 *) &test->unk4;
-                newLight->unk44 = (SubMiscAssetObjectHeader24 *) &test->unk0;
-                newLight->unk4A = 0;
-                if (lightEntry && lightEntry && lightEntry) {}
-                newLight->unk4C = 0;
-                newLight->unk4E = 0;
-                newLight->unk48 = (u16) (u32) &test->red2;
-                temp_a0 = (u16) (u32) &test->red2;
-                for (i = 0; i < temp_a0;) {
-                    newLight->unk4E += test->unk18[i++].unk0;
-                }
+            levelHeader = get_current_level_header();
+            if (((s32) levelHeader->unk74[lightEntry->unk1C]) != -1) {
+                light->unk44_asset = (MiscAssetObjectHeader24 *) levelHeader->unk74[lightEntry->unk1C];
+                light->unk48 = light->unk44_asset->unk0;
+                light->unk4A = 0;
+                light->unk4C = 0;
+                light->unk4E = 0;
+                light->unk44 = light->unk44_asset->unk14;
+                // clang-format off
+                for (i = 0; i < light->unk48; i++) { light->unk4E += light->unk44[i].unk4; } // Must be on one line!
+                // clang-format on
             }
         }
-        newLight->radius = lightEntry->unkE;
-        newLight->unk60 = lightEntry->unk10;
-        newLight->unk64 = lightEntry->unk12;
-        newLight->radiusSquare = newLight->radius * newLight->radius;
-        newLight->radiusMag = 1 / newLight->radius;
-        newLight->unk70 = lightEntry->unk14;
-        newLight->unk74 = lightEntry->unk18;
-        newLight->unk78 = (lightEntry->unk18) ? 0xFFFF : 0;
-        newLight->unk72 = lightEntry->unk16;
-        newLight->unk76 = lightEntry->unk1A;
-        newLight->unk7A = (lightEntry->unk1A) ? 0xFFFF : 0;
-        newLight->unk7A = 0;
-        newLight->unk5 = 1;
-        func_80032424(newLight, 0);
+        light->radius = lightEntry->unkE;
+        light->unk60 = lightEntry->unk10;
+        light->unk64 = lightEntry->unk12;
+        light->radiusSquare = light->radius * light->radius;
+        light->radiusMag = 1 / light->radius;
+        light->unk70 = lightEntry->unk14;
+        light->unk74 = lightEntry->unk18;
+        light->unk78 = (lightEntry->unk18) ? 0xFFFF : 0;
+        light->unk72 = lightEntry->unk16;
+        light->unk76 = lightEntry->unk1A;
+        light->unk7A = (lightEntry->unk1A) ? 0xFFFF : 0;
+        light->unk7A = 0;
+        light->unk5 = 1;
+        func_80032424(light, 0);
     }
-    return newLight;
+    return light;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/lights/func_80031CAC.s")
-#endif
 
 /**
  * Official Name: addObjectLight
@@ -150,7 +146,6 @@ ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry
 ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
     s32 i;
     ObjectLight *light;
-    MiscAssetObjectHeader24 *miscAsset;
 
     light = NULL;
     if (gNumActiveLights < gMaxLights) {
@@ -180,13 +175,12 @@ ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
         light->unk38 = 0;
         light->unk42 = 0;
         if (arg1->unk6 != 0xFFFF) {
-            miscAsset = (MiscAssetObjectHeader24 *) get_misc_asset(arg1->unk6);
-            light->unk44 = (SubMiscAssetObjectHeader24 *) miscAsset;
-            light->unk48 = miscAsset->unk0;
+            light->unk44_asset = (MiscAssetObjectHeader24 *) get_misc_asset(arg1->unk6);
+            light->unk48 = light->unk44_asset->unk0;
             light->unk4A = 0;
             light->unk4C = 0;
             light->unk4E = 0;
-            light->unk44 = (SubMiscAssetObjectHeader24 *) &miscAsset->unk14;
+            light->unk44 = light->unk44_asset->unk14;
             // clang-format off
             for (i = 0; i < light->unk48; i++) { light->unk4E += light->unk44[i].unk4; } // Must be on one line!
             // clang-format on
@@ -232,9 +226,9 @@ UNUSED void enable_object_light(ObjectLight *light) {
 UNUSED void toggle_object_light(ObjectLight *light) {
     if (light->enabled == TRUE) {
         light->enabled = FALSE;
-        return;
+    } else {
+        light->enabled = TRUE;
     }
-    light->enabled = TRUE;
 }
 
 UNUSED void func_80032248(ObjectLight *light, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
@@ -435,26 +429,27 @@ s32 get_light_count(void) {
     return gNumActiveLights;
 }
 
-#ifdef NON_EQUIVALENT
-// Close to matching. Should be functionally equivalent.
 void func_80032C7C(Object *object) {
+    ObjectLight *light;
+    s16 phi_a0, phi_a1;
+    f32 f20;
     s16 sp82;
     s16 sp80;
     s16 sp7E;
-    s32 i; // sp68
-    s32 sp64;
-    f32 f20;
-    f32 temp;
-    s16 phi_a0, phi_a1;
-    ObjectLight *entry;
+    u8 sp64;
+    s32 i;
 
     if (object->segment.header->unk3D == 0) {
         switch (object->segment.header->modelType) {
-            case OBJECT_MODEL_TYPE_3D_MODEL: // 3D Model
+            case OBJECT_MODEL_TYPE_3D_MODEL:
                 sp64 = 2;
                 break;
-            case OBJECT_MODEL_TYPE_SPRITE_BILLBOARD: // 2D Billboard
-            case OBJECT_MODEL_TYPE_VEHICLE_PART:     // Vehicle Part
+            case OBJECT_MODEL_TYPE_SPRITE_BILLBOARD:
+                sp64 = 4;
+                break;
+            case OBJECT_MODEL_TYPE_VEHICLE_PART:
+                sp64 = 4;
+                break;
             case OBJECT_MODEL_TYPE_UNKNOWN3:
                 sp64 = 4;
                 break;
@@ -468,55 +463,55 @@ void func_80032C7C(Object *object) {
         sp7E = object->segment.trans.z_position;
         D_800DC968 = 0;
         for (i = 0; i < gNumActiveLights; i++) {
-            entry = gActiveLights[i];
-            if ((entry->unk2 & sp64) && (entry->enabled == 1) && (sp82 >= entry->unk50) && (entry->unk56 >= sp82) &&
-                (sp80 >= entry->unk52) && (entry->unk58 >= sp80) && (sp7E >= entry->unk54) && (entry->unk5A >= sp7E)) {
-                if (entry->unk0 == 0) {
-                    if (entry->unk28 >= 0x10000) {
-                        D_800DC960[D_800DC968].unk0 = (s32) entry->unk0;
-                        D_800DC960[D_800DC968].unk4 = entry->unk1C >> 0x10;
-                        D_800DC960[D_800DC968].unk8 = entry->unk20 >> 0x10;
-                        D_800DC960[D_800DC968].unkC = entry->unk24 >> 0x10;
-                        D_800DC960[D_800DC968].unk10 = entry->unk28 >> 0x10;
-                        D_800DC968 = D_800DC968 + 1;
+            light = gActiveLights[i];
+            if ((light->unk2 & sp64) && (light->enabled == 1) && (sp82 >= light->unk50) && (light->unk56 >= sp82) &&
+                (sp80 >= light->unk52) && (light->unk58 >= sp80) && (sp7E >= light->unk54) && (light->unk5A >= sp7E)) {
+                if (light->unk0 == 0) {
+                    if (light->unk28 >= 0x10000) {
+                        D_800DC960[D_800DC968].unk0 = light;
+                        D_800DC960[D_800DC968].unk4 = light->unk1C >> 0x10;
+                        D_800DC960[D_800DC968].unk8 = light->unk20 >> 0x10;
+                        D_800DC960[D_800DC968].unkC = light->unk24 >> 0x10;
+                        D_800DC960[D_800DC968].unk10 = light->unk28 >> 0x10;
+                        D_800DC968++;
                     }
                 } else {
-                    gLightDiffX = entry->pos.x - object->segment.trans.x_position;
-                    gLightDiffY = entry->pos.y - object->segment.trans.y_position;
-                    gLightDiffZ = entry->pos.z - object->segment.trans.z_position;
-                    if (entry->unk0 == 2) {
+                    gLightDiffX = light->pos.x - object->segment.trans.x_position;
+                    gLightDiffY = light->pos.y - object->segment.trans.y_position;
+                    gLightDiffZ = light->pos.z - object->segment.trans.z_position;
+                    if (light->unk0 == 2) {
                         gLightDiffY = 0.0f;
                     }
                     gLightDistance =
                         (gLightDiffX * gLightDiffX) + (gLightDiffY * gLightDiffY) + (gLightDiffZ * gLightDiffZ);
-                    if (gLightDistance < entry->radiusSquare) {
-                        if (entry->unk1 == 2) {
-                            f20 = light_direction_calc(entry);
+                    if (gLightDistance < light->radiusSquare) {
+                        if (light->unk1 == 2) {
+                            f20 = light_direction_calc(light);
                         } else {
                             f20 = 1.0f;
                         }
                         if (f20 > 0.0f) {
-                            f20 *= light_distance_calc(entry);
+                            f20 *= light_distance_calc(light);
                             if (f20 > 0.0f) {
                                 if (object->segment.header->unk71 != 0) {
                                     if (gLightDistance > 0.0f) {
-                                        temp = 1.0f / sqrtf(gLightDistance);
+                                        f32 temp = 1.0f / sqrtf(gLightDistance);
                                         gLightDiffX *= temp;
                                         gLightDiffY *= temp;
                                         gLightDiffZ *= temp;
                                     } else {
-                                        gLightDiffX = 0.0f;
-                                        gLightDiffY = 0.0f;
+                                        gLightDiffX = 0;
+                                        gLightDiffY = 0;
                                         gLightDiffZ = -1.0f;
                                     }
                                     D_800DC964[D_800DC968].x = gLightDiffX;
                                     D_800DC964[D_800DC968].y = gLightDiffY;
                                     D_800DC964[D_800DC968].z = gLightDiffZ;
                                 }
-                                D_800DC960[D_800DC968].unk0 = (s32) entry;
-                                D_800DC960[D_800DC968].unk4 = entry->unk1C >> 0x10;
-                                D_800DC960[D_800DC968].unk8 = entry->unk20 >> 0x10;
-                                D_800DC960[D_800DC968].unkC = entry->unk24 >> 0x10;
+                                D_800DC960[D_800DC968].unk0 = light;
+                                D_800DC960[D_800DC968].unk4 = light->unk1C >> 0x10;
+                                D_800DC960[D_800DC968].unk8 = light->unk20 >> 0x10;
+                                D_800DC960[D_800DC968].unkC = light->unk24 >> 0x10;
                                 D_800DC960[D_800DC968].unk10 = (u8) f20;
                                 D_800DC968++;
                             }
@@ -548,8 +543,8 @@ void func_80032C7C(Object *object) {
                     phi_a1 = 0;
                 }
                 for (i = 2; i < D_800DC968; i++) {
-                    if (D_800DC960[phi_a1].unk10 < D_800DC960[i + 2].unk10) {
-                        if (D_800DC960[phi_a0].unk10 < D_800DC960[i + 2].unk10) {
+                    if (D_800DC960[phi_a1].unk10 < D_800DC960[i].unk10) {
+                        if (D_800DC960[phi_a0].unk10 < D_800DC960[i].unk10) {
                             phi_a1 = phi_a0;
                             phi_a0 = i;
                         } else {
@@ -590,45 +585,33 @@ void func_80032C7C(Object *object) {
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/lights/func_80032C7C.s")
-#endif
 
 void func_800337E4(void) {
-    s32 temp_a2;
-    s32 index;
-    s32 temp_a3;
     s32 temp_lo;
     s32 i;
-    unk800DC960 *temp_a1;
 
     for (i = 1; i < D_800DC968; i++) {
-        index = i;                          // Needed?
-        if ((&D_800DC960[index])->unk10) {} // Fakematch
-        temp_a1 = (0, D_800DC960) + index;
-        temp_a2 = temp_a1->unk10;
-        if (temp_a2 >= 2) {
-            temp_a3 = D_800DC960->unk10;
-            if (temp_a3 >= temp_a2) {
-                temp_lo = ((s32) (temp_a2 << 16)) / temp_a3;
-                D_800DC960->unk4 = D_800DC960->unk4 + (((s32) (temp_a1->unk4 * temp_lo)) >> 16);
-                D_800DC960->unk8 += ((s32) ((&D_800DC960[index])->unk8 * temp_lo)) >> 16;
-                D_800DC960->unkC += ((s32) ((&D_800DC960[index])->unkC * temp_lo)) >> 16;
+        if (D_800DC960[i].unk10 >= 2) {
+            if (D_800DC960[0].unk10 >= D_800DC960[i].unk10) {
+                temp_lo = (D_800DC960[i].unk10 << 16) / D_800DC960[0].unk10;
+                D_800DC960[0].unk4 += (D_800DC960[i].unk4 * temp_lo) >> 16;
+                D_800DC960[0].unk8 += (D_800DC960[i].unk8 * temp_lo) >> 16;
+                D_800DC960[0].unkC += (D_800DC960[i].unkC * temp_lo) >> 16;
             } else {
-                temp_lo = ((s32) (temp_a3 << 16)) / temp_a2;
-                D_800DC960->unk4 = temp_a1->unk4 + (((s32) (D_800DC960->unk4 * temp_lo)) >> 16);
-                D_800DC960->unk8 = (&D_800DC960[index])->unk8 + (((s32) ((D_800DC960->unk8 * temp_lo) ^ 0)) >> 16);
-                D_800DC960->unkC = (&D_800DC960[index])->unkC + (((s32) (D_800DC960->unkC * temp_lo)) >> 16);
-                D_800DC960->unk10 = (&D_800DC960[index])->unk10;
+                temp_lo = (D_800DC960[0].unk10 << 16) / D_800DC960[i].unk10;
+                D_800DC960[0].unk4 = ((D_800DC960[0].unk4 * temp_lo) >> 16) + D_800DC960[i].unk4;
+                D_800DC960[0].unk8 = ((D_800DC960[0].unk8 * temp_lo) >> 16) + D_800DC960[i].unk8;
+                D_800DC960[0].unkC = ((D_800DC960[0].unkC * temp_lo) >> 16) + D_800DC960[i].unkC;
+                D_800DC960[0].unk10 = D_800DC960[i].unk10;
             }
-            if (D_800DC960->unk4 >= 256) {
-                D_800DC960->unk4 = 255;
+            if (D_800DC960[0].unk4 >= 256) {
+                D_800DC960[0].unk4 = 255;
             }
-            if (D_800DC960->unk8 >= 256) {
-                D_800DC960->unk8 = 255;
+            if (D_800DC960[0].unk8 >= 256) {
+                D_800DC960[0].unk8 = 255;
             }
-            if (D_800DC960->unkC >= 256) {
-                D_800DC960->unkC = 255;
+            if (D_800DC960[0].unkC >= 256) {
+                D_800DC960[0].unkC = 255;
             }
         }
     }

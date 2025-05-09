@@ -47,7 +47,7 @@
 #endif
 
 // Use built-in pseudocode where possible in NON_MATCHING builds
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(CC_CHECK)
 #define abs(x)      __builtin_abs(x)
 #define fabsf(x)    __builtin_fabsf(x)
 #define sqrtf(f)    __builtin_sqrtf(f)
@@ -59,6 +59,8 @@
 #define inline
 #define ABSF(x) (x < 0.f ? -x : x)
 #endif
+
+#define ABS2(x) ((x) >= 0 ? (x) : -(x))
 
 // convert a virtual address to physical.
 #define VIRTUAL_TO_PHYSICAL(addr)   ((uintptr_t)(addr) & 0x1FFFFFFF)
@@ -73,6 +75,14 @@
 #define INCONSISTENT 
 
 // Used to make a u32 colour value look clearer. Transforms 0xFF0000FF to 255, 0, 0, 255
-#define COLOUR_RGBA32(r, g, b, a) (((r << 24) | (g << 16) |  (b << 8) | a))
+#define COLOUR_RGBA32(r, g, b, a) ((u32)((r << 24) | (g << 16) |  (b << 8) | a))
+
+// A few systems in the game use an array as a cache table. This gives you the asset ID
+#define ASSETCACHE_ID(x)    ((x << 1) + 0)
+// A few systems in the game use an array as a cache table. This gives you the pointer to the asset
+#define ASSETCACHE_PTR(x)   ((x << 1) + 1)
+
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 #endif
