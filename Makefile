@@ -91,8 +91,9 @@ O_FILES := $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(BIN_FILES),$(BUILD_DIR)/$(file).o)
 
-O_FILES_LD := $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
-           	  $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o)
+O_FILES_LD := $(filter-out $(BUILD_DIR)/asm/assets/assets.s.o, \
+	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
+	$(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o))
 
 find-command = $(shell which $(1) 2>/dev/null)
 
