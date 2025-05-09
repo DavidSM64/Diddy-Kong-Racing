@@ -213,8 +213,8 @@ void update_object_stack_trace(s32 index, s32 value) {
 s32 get_lockup_status(void) {
     s32 fileNum;
     s32 controllerIndex = 0;
-    u64 sp420[128]; // Overwrite epcStack?
-    u64 sp220[64];
+    u64 sp420[STACKSIZE(STACK_EPCINFO2)]; // Overwrite epcStack?
+    u64 sp220[STACKSIZE(STACK_EPCINFO1)];
     u8 dataFromControllerPak[_ALIGN128(sizeof(epcInfo))];
 
     if (sLockupStatus != -1) {
@@ -276,7 +276,7 @@ void render_epc_lock_up_display(void) {
             gObjectStackTrace[OBJECT_SPAWN] = epcinfo->objectStackTrace[OBJECT_SPAWN];
             gObjectStackTrace[OBJECT_UPDATE] = epcinfo->objectStackTrace[OBJECT_UPDATE];
             gObjectStackTrace[OBJECT_DRAW] = epcinfo->objectStackTrace[OBJECT_DRAW];
-            if (epcinfo->cause == -1) {
+            if (epcinfo->cause == 0xFFFFFFFF) {
                 render_printf(" epc\t\t0x%08x\n", epcinfo->epc);
                 render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", GET_REG(a0), GET_REG(a1));
                 for (i = 0; i < ARRAY_COUNT(gObjectStackTrace); i++) {
@@ -318,12 +318,13 @@ void render_epc_lock_up_display(void) {
                 render_printf(" s8 0x%08x ra 0x%08x\n\n", GET_REG(s8), GET_REG(ra));
             }
             break;
-        case EPC_PAGE_STACK_TOP: /* fall through */
+        case EPC_PAGE_STACK_TOP:    /* fall through */
         case EPC_PAGE_STACK_MIDDLE: /* fall through */
         case EPC_PAGE_STACK_BOTTOM:
             offset = (sLockupPage - 1) * 48;
-            for ( i = 0; i < 16; i++) {
-                render_printf("   %08x %08x %08x\n", ((u16 **) &gEpcInfoStack1)[offset], ((u16 **) &gEpcInfoStack1)[offset + 16], ((u16 **) &gEpcInfoStack1)[offset + 32]);
+            for (i = 0; i < 16; i++) {
+                render_printf("   %08x %08x %08x\n", ((u16 **) &gEpcInfoStack1)[offset],
+                              ((u16 **) &gEpcInfoStack1)[offset + 16], ((u16 **) &gEpcInfoStack1)[offset + 32]);
                 offset++;
             }
             break;
