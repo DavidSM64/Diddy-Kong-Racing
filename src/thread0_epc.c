@@ -40,7 +40,7 @@ void thread0_create(void) {
 
     osCreateThread(&gEPCThread, 0, thread0_Main, 0, &gEPCStack[STACKSIZE(STACK_EPC)], OS_PRIORITY_MAX);
     osStartThread(&gEPCThread);
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < ARRAY_COUNT(gObjectStackTrace); i++) {
         gObjectStackTrace[i] = -1;
     }
 }

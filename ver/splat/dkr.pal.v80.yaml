@@ -421,7 +421,6 @@ segments:
       - { type: .bss, vram: 0x801282D0, name: particles }
       - { type: .bss, vram: 0x801282F0, name: printf }
       - { type: .bss, vram: 0x80128C30, name: thread0_epc }
-      - { type: .bss, vram: 0x8012A200, name: stacks }
       - { type: .bss, vram: 0x8012A610, name: waves }
       - { type: .bss, vram: 0x8012AD80, name: fade_transition }
       - { type: .bss, vram: 0x8012ADD0, name: game_text }
