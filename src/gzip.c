@@ -37,7 +37,7 @@ s32 byteswap32(u8 *arg0) {
     value = *arg0++;
     value |= (*arg0++ << 8);
     value |= (*arg0++ << 16);
-    value |= (*arg0++ << 24);
+    value |= (*arg0 << 24);
     return value;
 }
 

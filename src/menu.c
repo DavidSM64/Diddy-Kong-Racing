@@ -7352,7 +7352,6 @@ void gameselect_render(UNUSED s32 updateRate) {
 
     if (gMenuDelay > -22 && gMenuDelay < 22) {
         fade = gOptionBlinkTimer * 8;
-        fade = fade;
         if (fade > 255) {
             fade = 511 - fade;
         }
@@ -7441,7 +7440,6 @@ s32 menu_game_select_loop(s32 updateRate) {
         if ((gMenuDelay == 0) && (gOpacityDecayTimer == 0)) {
             playerInputs = input_pressed(PLAYER_ONE);
             playerYDir = gControllersYAxisDirection[0];
-            playerInputs = playerInputs;
             if (gNumberOfActivePlayers == 2) {
                 playerInputs |= input_pressed(1);
                 playerYDir += gControllersYAxisDirection[1];

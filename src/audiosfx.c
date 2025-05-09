@@ -427,7 +427,7 @@ void sndp_handle_event(SoundPlayer *sndp, ALSndpEvent *event) {
                         sndp_play(event->retrigger.bank, event->retrigger.soundIndex, soundState->userHandle);
                     if (newSound != NULL) {
                         sndp_set_param(newSound, AL_SNDP_VOL_EVT, soundState->volume);
-                        if ((!event) && (!event)) {} // Fake
+                        if (!event && !event) {} // Fake
                         sndp_set_param(newSound, AL_SNDP_PAN_EVT, soundState->pan);
                         sndp_set_param(newSound, AL_SNDP_FX_EVT, soundState->fxmix);
                         sndp_set_param(newSound, AL_SNDP_PITCH_EVT, *(s32 *) &soundState->pitch);

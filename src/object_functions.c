@@ -25,7 +25,6 @@
 #include "fade_transition.h"
 #include "audio_vehicle.h"
 #include "object_models.h"
-#include "libultra/src/libc/rmonPrintf.h"
 #include "collision.h"
 #include "joypad.h"
 #include "printf.h"
@@ -197,7 +196,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
     Object_Racer *racer;
     UNUSED s32 pad2[6];
     ObjectInteraction *interactObj;
-    s32 soundMask;
+    SoundHandle soundMask;
     f32 waveHeight;
 
     someObj = obj->properties.fireball.obj;

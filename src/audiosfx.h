@@ -73,7 +73,7 @@ typedef struct SoundPlayer {
     ALEventQueue    evtq;
     ALEvent         nextEvent;
     ALSynth        *drvr;
-    u32             lastSoundState;
+    ALSoundState   *lastSoundState;
     ALSoundState   *soundStatesArray;
     s32             maxSystemSoundChannels;
     s32             maxActiveSounds;

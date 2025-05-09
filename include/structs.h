@@ -4,11 +4,9 @@
 /* Note: Structs are not complete, take them with a grain of salt. */
 
 #include "types.h"
-#include "enums.h"
 #include "level_object_entries.h"
 #include "object_properties.h"
 #include "gbi.h"
-#include "PR/libaudio.h"
 #include "audio.h"
 
 typedef struct Vec4f {
@@ -491,7 +489,8 @@ typedef struct LevelHeader {
   /* 0x9D */ u8 bgColorRed;
   /* 0x9E */ u8 bgColorGreen;
   /* 0x9F */ u8 bgColorBlue;
-  /* 0xA0 */ s16 unkA0;
+  /* 0xA0 */ u8 unkA0;
+  /* 0xA1 */ u8 unkA1;
   /* 0xA2 */ s8 unkA2;
   /* 0xA3 */ s8 unkA3;
   /* 0xA4 */ TextureHeader *unkA4;
@@ -1701,8 +1700,7 @@ typedef struct Object_68 {
       ObjectModel *objModel;
       TextureHeader *texHeader;
   };
-  /* 0x04 */ Vertex *vertices[2];
-  /* 0x0C */ s32 *unkC;
+  /* 0x04 */ Vertex *vertices[3];
   /* 0x10 */ s16 animationID;
   /* 0x12 */ s16 animationFrame;
   /* 0x14 */ s16 animationFrameCount;

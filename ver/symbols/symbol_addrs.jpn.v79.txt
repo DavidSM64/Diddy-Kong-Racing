@@ -2871,6 +2871,7 @@ dDebugFontSettings = 0x800E4AA8;
 sLockupStatus = 0x800E4B10;
 sLockupPage = 0x800E4B14;
 sLockupDelay = 0x800E4B18;
+objStatusString = 0x800E4B1C; // size:0xC
 
 // waves.c .data
 D_800E3040 = 0x800E4B30;
@@ -4479,11 +4480,8 @@ gEPCMesgBuf = 0x8012B258;
 gEPCPIBuf = 0x8012B278;
 gEPCPIQueue = 0x8012B298;
 gEpcInfo = 0x8012B2B0; // size:0x1B0
-D_801299B0 = 0x8012B460; // size:0x100
-
-// stacks .bss
-D_80129AB0 = 0x8012B560; // size:0x100
-D_80129BB0 = 0x8012B660; // size:0x400
+gEpcInfoStack1 = 0x8012B460; // size:0x200
+gEpcInfoStack2 = 0x8012B660; // size:0x400
 gObjectStackTrace = 0x8012BA60; // size:0x10
 
 // waves .bss
