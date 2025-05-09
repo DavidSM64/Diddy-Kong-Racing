@@ -50,7 +50,7 @@ typedef struct epcInfo {
 /* 0x114 */ s32 unk114;
 /* 0x118 */ s32 sr;
 /* 0x11C */ s32 epc;
-/* 0x120 */ s32 cause;
+/* 0x120 */ u32 cause;
 /* 0x124 */ s32 badvaddr;
 /* 0x128 */ u32 unk128[2];
 /* 0x130 */ f32 objectStackTrace[3];

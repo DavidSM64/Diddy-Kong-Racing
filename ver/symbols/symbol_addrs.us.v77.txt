@@ -4600,10 +4600,8 @@ gEPCMesgBuf = 0x801297A8;
 gEPCPIBuf = 0x801297C8;
 gEPCPIQueue = 0x801297E8;
 gEpcInfo = 0x80129800; // size:0x1B0
-D_801299B0 = 0x801299B0; // size:0x100
-
-// stacks .bss
-gEpcStacks2 = 0x80129BB0; // size:0x400
+gEpcInfoStack1 = 0x801299B0; // size:0x200
+gEpcInfoStack2 = 0x80129BB0; // size:0x400
 gObjectStackTrace = 0x80129FB0; // size:0x10
 
 // waves .bss

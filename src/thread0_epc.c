@@ -25,10 +25,9 @@ OSMesgQueue gEPCMesgQueue;
 OSMesg gEPCMesgBuf[8];
 OSMesg gEPCPIBuf[8];
 OSMesgQueue gEPCPIQueue;
-
 epcInfo gEpcInfo;
-u16 gEpcStacks1[256];
-u16 gEpcStacks2[512];
+u64 gEpcInfoStack1[STACKSIZE(STACK_EPCINFO1)];
+u64 gEpcInfoStack2[STACKSIZE(STACK_EPCINFO2)];
 s32 gObjectStackTrace[3];
 
 /**
@@ -215,7 +214,7 @@ s32 get_lockup_status(void) {
     s32 fileNum;
     s32 controllerIndex = 0;
     u64 sp420[128]; // Overwrite epcStack?
-    s32 sp220[128];
+    u64 sp220[64];
     u8 dataFromControllerPak[_ALIGN128(sizeof(epcInfo))];
 
     if (sLockupStatus != -1) {
@@ -229,8 +228,8 @@ s32 get_lockup_status(void) {
                                            sizeof(sp420) + sizeof(sp220) + sizeof(dataFromControllerPak)) ==
              CONTROLLER_PAK_GOOD)) {
             bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(epcInfo));
-            bcopy(&sp220, &gEpcStacks1, sizeof(sp220));
-            bcopy(&sp420, &gEpcStacks2, sizeof(sp420));
+            bcopy(&sp220, &gEpcInfoStack1, sizeof(sp220));
+            bcopy(&sp420, &gEpcInfoStack2, sizeof(sp420));
             sLockupStatus = 1;
         }
         start_reading_controller_data(controllerIndex);
@@ -254,7 +253,7 @@ void mode_lockup(s32 updateRate) {
     }
 }
 
-#define GET_REG(reg) (s32) (*epcinfo).reg
+#define GET_REG(reg) (s32) epcinfo->reg
 
 /**
  * Draw onscreen the four pages of the crash screen.
@@ -273,14 +272,14 @@ void render_epc_lock_up_display(void) {
     set_render_printf_position(16, 32);
     switch (sLockupPage) {
         case EPC_PAGE_REGISTER:
-            gObjectStackTrace[OBJECT_SPAWN] = gEpcInfo.objectStackTrace[OBJECT_SPAWN];
-            gObjectStackTrace[OBJECT_UPDATE] = gEpcInfo.objectStackTrace[OBJECT_UPDATE];
-            gObjectStackTrace[OBJECT_DRAW] = gEpcInfo.objectStackTrace[OBJECT_DRAW];
             epcinfo = &gEpcInfo;
-            if ((*epcinfo).cause == (-1U)) {
-                render_printf(" epc\t\t0x%08x\n", (*epcinfo).epc);
-                render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", (s32) (*epcinfo).a0, (s32) (*epcinfo).a1);
-                for (i = 0; i < 3; i++) {
+            gObjectStackTrace[OBJECT_SPAWN] = epcinfo->objectStackTrace[OBJECT_SPAWN];
+            gObjectStackTrace[OBJECT_UPDATE] = epcinfo->objectStackTrace[OBJECT_UPDATE];
+            gObjectStackTrace[OBJECT_DRAW] = epcinfo->objectStackTrace[OBJECT_DRAW];
+            if (epcinfo->cause == -1) {
+                render_printf(" epc\t\t0x%08x\n", epcinfo->epc);
+                render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", GET_REG(a0), GET_REG(a1));
+                for (i = 0; i < ARRAY_COUNT(gObjectStackTrace); i++) {
                     if (gObjectStackTrace[i] != OBJECT_CLEAR) {
                         if (!s3) {
                             s3 = TRUE;
@@ -289,72 +288,60 @@ void render_epc_lock_up_display(void) {
                         render_printf("%s %d ", objStatusString[i], gObjectStackTrace[i]);
                     }
                 }
-
                 render_printf("\n");
-                if (((!epcinfo) && (!epcinfo)) && (!epcinfo)){}
                 render_printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                break;
-            }
-            //render_printf(" Fault in thread %d\n", (*new_var).thread[0]);
-            render_printf(" Fault in thread %d\n", (*epcinfo).thread[((s32) (*epcinfo).t9) * 0]);
-            render_printf(" epc\t\t0x%08x\n", (*epcinfo).epc);
-            render_printf(" cause\t\t0x%08x\n", (*epcinfo).cause);
-            render_printf(" sr\t\t0x%08x\n", (*epcinfo).sr);
-            render_printf(" badvaddr\t0x%08x\n", (*epcinfo).badvaddr);
-            for (i = 0; i < 3; i++) {
-                if (gObjectStackTrace[i] != OBJECT_CLEAR) {
-                    if (!s3) {
-                        s3 = TRUE;
-                        render_printf(" object\t\t");
+            } else {
+                render_printf(" Fault in thread %d\n", epcinfo->thread[GET_REG(t9) * 0]); // fake GET_REG
+                render_printf(" epc\t\t0x%08x\n", epcinfo->epc);
+                render_printf(" cause\t\t0x%08x\n", epcinfo->cause);
+                render_printf(" sr\t\t0x%08x\n", epcinfo->sr);
+                render_printf(" badvaddr\t0x%08x\n", epcinfo->badvaddr);
+                for (i = 0; i < ARRAY_COUNT(gObjectStackTrace); i++) {
+                    if (gObjectStackTrace[i] != OBJECT_CLEAR) {
+                        if (!s3) {
+                            s3 = TRUE;
+                            render_printf(" object\t\t");
+                        }
+                        render_printf("%s %d ", objStatusString[i], gObjectStackTrace[i]);
                     }
-                    render_printf("%s %d ", objStatusString[i], gObjectStackTrace[i]);
                 }
+                render_printf("\n");
+                render_printf(" at 0x%08x v0 0x%08x v1 0x%08x\n", GET_REG(at), GET_REG(v0), GET_REG(v1));
+                render_printf(" a0 0x%08x a1 0x%08x a2 0x%08x\n", GET_REG(a0), GET_REG(a1), GET_REG(a2));
+                render_printf(" a3 0x%08x t0 0x%08x t1 0x%08x\n", GET_REG(a3), GET_REG(t0), GET_REG(t1));
+                render_printf(" t2 0x%08x t3 0x%08x t4 0x%08x\n", GET_REG(t2), GET_REG(t3), GET_REG(t4));
+                render_printf(" t5 0x%08x t6 0x%08x t7 0x%08x\n", GET_REG(t5), GET_REG(t6), GET_REG(t7));
+                render_printf(" s0 0x%08x s1 0x%08x s2 0x%08x\n", GET_REG(s0), GET_REG(s1), GET_REG(s2));
+                render_printf(" s3 0x%08x s4 0x%08x s5 0x%08x\n", GET_REG(s3), GET_REG(s4), GET_REG(s5));
+                render_printf(" s6 0x%08x s7 0x%08x t8 0x%08x\n", GET_REG(s6), GET_REG(s7), GET_REG(t8));
+                render_printf(" t9 0x%08x gp 0x%08x sp 0x%08x\n", GET_REG(t9), GET_REG(gp), GET_REG(sp));
+                render_printf(" s8 0x%08x ra 0x%08x\n\n", GET_REG(s8), GET_REG(ra));
             }
-
-            render_printf("\n");
-            render_printf(" at 0x%08x v0 0x%08x v1 0x%08x\n", GET_REG(at), GET_REG(v0), GET_REG(v1));
-            render_printf(" a0 0x%08x a1 0x%08x a2 0x%08x\n", GET_REG(a0), GET_REG(a1), GET_REG(a2));
-            render_printf(" a3 0x%08x t0 0x%08x t1 0x%08x\n", GET_REG(a3), GET_REG(t0), GET_REG(t1));
-            render_printf(" t2 0x%08x t3 0x%08x t4 0x%08x\n", GET_REG(t2), GET_REG(t3), GET_REG(t4));
-            render_printf(" t5 0x%08x t6 0x%08x t7 0x%08x\n", GET_REG(t5), GET_REG(t6), GET_REG(t7));
-            render_printf(" s0 0x%08x s1 0x%08x s2 0x%08x\n", GET_REG(s0), GET_REG(s1), GET_REG(s2));
-            render_printf(" s3 0x%08x s4 0x%08x s5 0x%08x\n", GET_REG(s3), GET_REG(s4), GET_REG(s5));
-            render_printf(" s6 0x%08x s7 0x%08x t8 0x%08x\n", GET_REG(s6), GET_REG(s7), GET_REG(t8));
-            render_printf(" t9 0x%08x gp 0x%08x sp 0x%08x\n", GET_REG(t9), GET_REG(gp), GET_REG(sp));
-            render_printf(" s8 0x%08x ra 0x%08x\n\n", GET_REG(s8), GET_REG(ra));
             break;
-
-        case EPC_PAGE_STACK_TOP:
-
-        case EPC_PAGE_STACK_MIDDLE:
-
+        case EPC_PAGE_STACK_TOP: /* fall through */
+        case EPC_PAGE_STACK_MIDDLE: /* fall through */
         case EPC_PAGE_STACK_BOTTOM:
             offset = (sLockupPage - 1) * 48;
             for ( i = 0; i < 16; i++) {
-                render_printf("   %08x %08x %08x\n", ((u16 **) &gEpcStacks1)[offset], ((u16 **) &gEpcStacks1)[offset + 16], ((u16 **) &gEpcStacks1)[offset + 32]);
+                render_printf("   %08x %08x %08x\n", ((u16 **) &gEpcInfoStack1)[offset], ((u16 **) &gEpcInfoStack1)[offset + 16], ((u16 **) &gEpcInfoStack1)[offset + 32]);
                 offset++;
             }
-
             break;
-
         case EPC_PAGE_UNK04:
             offset = (sLockupPage - 4) * 128;
             for (i = 0; i < 16; i++) {
                 render_printf("  ");
                 for (j = 0; j < 8; j++) {
-                    render_printf("%04x ", (((u16 *) &gEpcStacks2)[offset]));
+                    render_printf("%04x ", (((u16 *) &gEpcInfoStack2)[offset]));
                     offset++;
                 }
                 render_printf("\n");
             }
-
             break;
-
         case EPC_PAGE_EXIT:
             sLockupPage = 0;
-            return;
-
+            break;
         default:
-            return;
+            break;
     }
 }
