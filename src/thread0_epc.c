@@ -26,15 +26,9 @@ OSMesg gEPCMesgBuf[8];
 OSMesg gEPCPIBuf[8];
 OSMesgQueue gEPCPIQueue;
 
-typedef struct epcStaticData {
-    epcInfo info;
-    u16 stack1[256];
-    u16 stack2[512]; // epcStack?
-} epcStaticData;
-epcStaticData gEpcInfo;
-
-// static s32 D_801299B0[128];
-// static u16 D_80129BB0[512]; // epcStack?
+epcInfo gEpcInfo;
+u16 gEpcStacks1[256];
+u16 gEpcStacks2[512];
 s32 gObjectStackTrace[3];
 
 /**
@@ -223,7 +217,6 @@ s32 get_lockup_status(void) {
     u64 sp420[128]; // Overwrite epcStack?
     s32 sp220[128];
     u8 dataFromControllerPak[_ALIGN128(sizeof(epcInfo))];
-    extern epcStaticData gEpcInfo;
 
     if (sLockupStatus != -1) {
         return sLockupStatus;
@@ -235,9 +228,9 @@ s32 get_lockup_status(void) {
             (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak,
                                            sizeof(sp420) + sizeof(sp220) + sizeof(dataFromControllerPak)) ==
              CONTROLLER_PAK_GOOD)) {
-            bcopy(&dataFromControllerPak, &gEpcInfo.info, sizeof(epcInfo));
-            bcopy(&sp220, &gEpcInfo.stack1, sizeof(sp220));
-            bcopy(&sp420, &gEpcInfo.stack2, sizeof(sp420));
+            bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(epcInfo));
+            bcopy(&sp220, &gEpcStacks1, sizeof(sp220));
+            bcopy(&sp420, &gEpcStacks2, sizeof(sp420));
             sLockupStatus = 1;
         }
         start_reading_controller_data(controllerIndex);
@@ -269,7 +262,6 @@ void mode_lockup(s32 updateRate) {
  * Page 1-3 show the stack dump of the crashed thread.
  * Page 4 appears to show the data of the EPC stack itself?
  */
-#if 0
 void render_epc_lock_up_display(void) {
     epcInfo *epcinfo;
     char *objStatusString[3] = { "setup", "control", "print" };
@@ -281,10 +273,10 @@ void render_epc_lock_up_display(void) {
     set_render_printf_position(16, 32);
     switch (sLockupPage) {
         case EPC_PAGE_REGISTER:
-            gObjectStackTrace[OBJECT_SPAWN] = gEpcInfo.info.objectStackTrace[OBJECT_SPAWN];
-            gObjectStackTrace[OBJECT_UPDATE] = gEpcInfo.info.objectStackTrace[OBJECT_UPDATE];
-            gObjectStackTrace[OBJECT_DRAW] = gEpcInfo.info.objectStackTrace[OBJECT_DRAW];
-            epcinfo = &gEpcInfo.info;
+            gObjectStackTrace[OBJECT_SPAWN] = gEpcInfo.objectStackTrace[OBJECT_SPAWN];
+            gObjectStackTrace[OBJECT_UPDATE] = gEpcInfo.objectStackTrace[OBJECT_UPDATE];
+            gObjectStackTrace[OBJECT_DRAW] = gEpcInfo.objectStackTrace[OBJECT_DRAW];
+            epcinfo = &gEpcInfo;
             if ((*epcinfo).cause == (-1U)) {
                 render_printf(" epc\t\t0x%08x\n", (*epcinfo).epc);
                 render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", (s32) (*epcinfo).a0, (s32) (*epcinfo).a1);
@@ -339,7 +331,7 @@ void render_epc_lock_up_display(void) {
         case EPC_PAGE_STACK_BOTTOM:
             offset = (sLockupPage - 1) * 48;
             for ( i = 0; i < 16; i++) {
-                render_printf("   %08x %08x %08x\n", ((u16 **) &gEpcInfo)[offset], ((u16 **) &gEpcInfo)[offset + 16], ((u16 **) &gEpcInfo)[offset + 32]);
+                render_printf("   %08x %08x %08x\n", ((u16 **) &gEpcStacks1)[offset], ((u16 **) &gEpcStacks1)[offset + 16], ((u16 **) &gEpcStacks1)[offset + 32]);
                 offset++;
             }
 
@@ -350,7 +342,7 @@ void render_epc_lock_up_display(void) {
             for (i = 0; i < 16; i++) {
                 render_printf("  ");
                 for (j = 0; j < 8; j++) {
-                    render_printf("%04x ", (((u16 *) &gEpcInfo)[offset]));
+                    render_printf("%04x ", (((u16 *) &gEpcStacks2)[offset]));
                     offset++;
                 }
                 render_printf("\n");
@@ -366,8 +358,3 @@ void render_epc_lock_up_display(void) {
             return;
     }
 }
-
-#else
-char *objStatusString[3] = { "setup", "control", "print" };
-#pragma GLOBAL_ASM("asm/nonmatchings/thread0_epc/render_epc_lock_up_display.s")
-#endif

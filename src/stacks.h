@@ -12,7 +12,7 @@
 
 #define STACKSIZE(x) (x / sizeof(u64))
 
-extern u16 D_80129BB0[512];
+extern u16 gEpcStacks2[512];
 extern s32 gObjectStackTrace[3];
 
 #endif
