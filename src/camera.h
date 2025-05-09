@@ -66,9 +66,9 @@ typedef struct Camera {
     /* 0x0030 */ f32 distanceToCamera;
     /* 0x0034 */ s16 cameraSegmentID;
     /* 0x0036 */ s16 unk36;
-    /* 0x0038 */ s16 unk38;
+    /* 0x0038 */ s16 pitch;
     /* 0x003A */ s8 unk3A;
-    /* 0x003B */ u8 unk3B;
+    /* 0x003B */ u8 zoom;
     /* 0x003C */ u8 unk3C;
     /* 0x003D */ u8 unk3D;
     /* 0x003E */ u8 unk3E;
@@ -101,7 +101,7 @@ typedef struct unk80068514_arg4 {
     Gfx *unk8[1];
 } unk80068514_arg4;
 
-void func_80066060(s32 cameraID, s32 zoomLevel);
+void cam_set_zoom(s32 cameraID, s32 zoomLevel);
 void set_viewport_tv_type(s8 setting);
 void func_800660C0(void);
 void func_800660D0(void);
@@ -151,7 +151,7 @@ void apply_matrix_from_stack(Gfx **dList);
 void copy_viewports_to_stack(void);
 void apply_head_turning_matrix(Gfx **dList, MatrixS **mtx, Object_68 *objGfx, s16 headAngle);
 void apply_object_shear_matrix(Gfx **dList, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear);
-void camera_init(void);
+void cam_init(void);
 void viewport_main(Gfx **dlist, MatrixS **mats);
 
 #endif

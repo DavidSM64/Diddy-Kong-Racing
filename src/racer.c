@@ -1708,9 +1708,9 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         phi_f18 = 50.0f;
     }
     brakeVar = racer->brake;
-    tempZoom = gCameraObject->unk3B;
+    tempZoom = gCameraObject->zoom;
     baseSpeed = racer->forwardVel;
-    switch (gCameraObject->unk3B) {
+    switch (gCameraObject->zoom) {
         case 1:
             phi_f14 += 35.0f;
             break;
@@ -2188,10 +2188,10 @@ void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
         zoom = 160.0f;
     }
     // A little bit of indecisiveness.
-    if (gCameraObject->unk3B == ZOOM_FAR) {
+    if (gCameraObject->zoom == ZOOM_FAR) {
         zoom += 35.0f;
     }
-    if (gCameraObject->unk3B == ZOOM_FAR) {
+    if (gCameraObject->zoom == ZOOM_FAR) {
         zoom -= 35.0f;
     }
     gCameraObject->x_velocity += (zoom - gCameraObject->x_velocity) * 0.125;
@@ -5921,14 +5921,14 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
     s32 angle;
 
     if (gCurrentButtonsPressed & U_CBUTTONS && race_starting()) {
-        gCameraObject->unk3B++;
-        if (gCameraObject->unk3B > ZOOM_VERY_CLOSE) {
-            gCameraObject->unk3B = ZOOM_MEDIUM;
+        gCameraObject->zoom++;
+        if (gCameraObject->zoom > ZOOM_VERY_CLOSE) {
+            gCameraObject->zoom = ZOOM_MEDIUM;
         }
         if (racer->playerIndex != PLAYER_COMPUTER) {
-            func_80066060(racer->playerIndex, gCameraObject->unk3B);
+            cam_set_zoom(racer->playerIndex, gCameraObject->zoom);
         }
-        switch (gCameraObject->unk3B) {
+        switch (gCameraObject->zoom) {
             case ZOOM_MEDIUM:
                 sound_play(SOUND_MENU_BACK, NULL);
                 break;
@@ -5989,7 +5989,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
                                gCameraObject->trans.z_position) *
                               dialogueAngle);
     gCameraObject->unk28 = (((get_npc_pos_y() + 48.5) - gCameraObject->trans.y_position) * dialogueAngle);
-    gCameraObject->unk38 = -gCameraObject->trans.rotation.x_rotation * dialogueAngle;
+    gCameraObject->pitch = -gCameraObject->trans.rotation.x_rotation * dialogueAngle;
     gCameraObject->trans.x_position += gCameraObject->z_velocity;
     gCameraObject->trans.y_position += gCameraObject->unk28 + gCameraObject->distanceToCamera;
     gCameraObject->trans.z_position += gCameraObject->unk2C;

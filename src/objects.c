@@ -940,8 +940,8 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     cutsceneID = -1;
     if (is_time_trial_enabled() && raceType == RACETYPE_DEFAULT) {
         cutsceneCameraSegment = get_cutscene_camera_segment();
-        cutsceneID = (u8) cutsceneCameraSegment->unk3B;
-        cutsceneCameraSegment->unk3B = 1;
+        cutsceneID = (u8) cutsceneCameraSegment->zoom;
+        cutsceneCameraSegment->zoom = 1;
     }
     gameMode = get_game_mode();
     settings = get_settings();
@@ -1348,7 +1348,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     }
     *D_8011AD24 = 1;
     if (cutsceneID >= 0) {
-        cutsceneCameraSegment->unk3B = cutsceneID;
+        cutsceneCameraSegment->zoom = cutsceneID;
     }
     if (func_8000E148() != 0) {
         rumble_init(FALSE);

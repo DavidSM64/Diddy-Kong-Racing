@@ -116,7 +116,7 @@ Matrix gCurrentModelMatrixS;
  * Official Name: camInit
  */
 extern s32 D_B0000578;
-void camera_init(void) {
+void cam_init(void) {
     s32 i;
     s32 j;
     u32 stat;
@@ -136,7 +136,7 @@ void camera_init(void) {
     gCameraMatrixPos = 0;
     gNumberOfViewports = 0;
     gSpriteAnimOff = FALSE;
-    D_80120D18 = 0;
+    D_80120D18 = FALSE;
     gAdjustViewportHeight = 0;
     gAntiPiracyViewport = FALSE;
 
@@ -153,10 +153,10 @@ void camera_init(void) {
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
 
-void func_80066060(s32 cameraID, s32 zoomLevel) {
+void cam_set_zoom(s32 cameraID, s32 zoomLevel) {
     if (cameraID >= 0 && cameraID <= 3) {
         gCameraZoomLevels[cameraID] = zoomLevel;
-        gCameraSegment[cameraID].unk3B = zoomLevel;
+        gCameraSegment[cameraID].zoom = zoomLevel;
     }
 }
 
@@ -171,11 +171,11 @@ void set_viewport_tv_type(s8 setting) {
 }
 
 void func_800660C0(void) {
-    D_80120D18 = 1;
+    D_80120D18 = TRUE;
 }
 
 void func_800660D0(void) {
-    D_80120D18 = 0;
+    D_80120D18 = FALSE;
 }
 
 /**
@@ -253,17 +253,17 @@ void camera_init_tracks_menu(Gfx **dList, MatrixS **mtxS) {
     posX = cam->trans.x_position;
     posY = cam->trans.y_position;
     posZ = cam->trans.z_position;
-    sp24 = cam->unk38;
+    sp24 = cam->pitch;
     cam->trans.rotation.z_rotation = 0;
     cam->trans.rotation.x_rotation = 0;
     cam->trans.rotation.y_rotation = -0x8000;
-    cam->unk38 = 0;
+    cam->pitch = 0;
     cam->trans.x_position = 0.0f;
     cam->trans.y_position = 0.0f;
     cam->trans.z_position = 0.0f;
     update_envmap_position(0.0f, 0.0f, -1.0f);
     viewport_main(dList, mtxS);
-    cam->unk38 = sp24;
+    cam->pitch = sp24;
     cam->trans.rotation.y_rotation = angleY;
     cam->trans.rotation.x_rotation = angleX;
     cam->trans.rotation.z_rotation = angleZ;
@@ -301,14 +301,14 @@ void camera_reset(s32 xPos, s32 yPos, s32 zPos, s32 angleZ, s32 angleX, s32 angl
     gCameraSegment[gActiveCameraID].trans.y_position = (f32) yPos;
     gCameraSegment[gActiveCameraID].trans.z_position = (f32) zPos;
     gCameraSegment[gActiveCameraID].trans.rotation.x_rotation = (s16) (angleX * 0xB6);
-    gCameraSegment[gActiveCameraID].unk38 = 0;
+    gCameraSegment[gActiveCameraID].pitch = 0;
     gCameraSegment[gActiveCameraID].z_velocity = 0.0f;
     gCameraSegment[gActiveCameraID].unk28 = 0.0f;
     gCameraSegment[gActiveCameraID].unk2C = 0.0f;
     gCameraSegment[gActiveCameraID].distanceToCamera = 0.0f;
     gCameraSegment[gActiveCameraID].x_velocity = 160.0f;
     gCameraSegment[gActiveCameraID].trans.rotation.y_rotation = (s16) (angleY * 0xB6);
-    gCameraSegment[gActiveCameraID].unk3B = gCameraZoomLevels[gActiveCameraID];
+    gCameraSegment[gActiveCameraID].zoom = gCameraZoomLevels[gActiveCameraID];
 }
 
 /**
@@ -318,7 +318,7 @@ void camera_reset(s32 xPos, s32 yPos, s32 zPos, s32 angleZ, s32 angleX, s32 angl
  */
 void write_to_object_render_stack(s32 stackPos, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6) {
     stackPos += 4;
-    gCameraSegment[stackPos].unk38 = 0;
+    gCameraSegment[stackPos].pitch = 0;
     gCameraSegment[stackPos].trans.x_position = xPos;
     gCameraSegment[stackPos].trans.y_position = yPos;
     gCameraSegment[stackPos].trans.z_position = zPos;
@@ -872,12 +872,12 @@ void func_80067D3C(Gfx **dList, UNUSED MatrixS **mats) {
 
     gCameraTransform.rotation.y_rotation = 0x8000 + gCameraSegment[gActiveCameraID].trans.rotation.y_rotation;
     gCameraTransform.rotation.x_rotation =
-        gCameraSegment[gActiveCameraID].trans.rotation.x_rotation + gCameraSegment[gActiveCameraID].unk38;
+        gCameraSegment[gActiveCameraID].trans.rotation.x_rotation + gCameraSegment[gActiveCameraID].pitch;
     gCameraTransform.rotation.z_rotation = gCameraSegment[gActiveCameraID].trans.rotation.z_rotation;
 
     gCameraTransform.x_position = -gCameraSegment[gActiveCameraID].trans.x_position;
     gCameraTransform.y_position = -gCameraSegment[gActiveCameraID].trans.y_position;
-    if (D_80120D18 != 0) {
+    if (D_80120D18) {
         gCameraTransform.y_position -= gCameraSegment[gActiveCameraID].distanceToCamera;
     }
     gCameraTransform.z_position = -gCameraSegment[gActiveCameraID].trans.z_position;
@@ -887,12 +887,12 @@ void func_80067D3C(Gfx **dList, UNUSED MatrixS **mats) {
 
     gCameraTransform.rotation.y_rotation = -0x8000 - gCameraSegment[gActiveCameraID].trans.rotation.y_rotation;
     gCameraTransform.rotation.x_rotation =
-        -(gCameraSegment[gActiveCameraID].trans.rotation.x_rotation + gCameraSegment[gActiveCameraID].unk38);
+        -(gCameraSegment[gActiveCameraID].trans.rotation.x_rotation + gCameraSegment[gActiveCameraID].pitch);
     gCameraTransform.rotation.z_rotation = -gCameraSegment[gActiveCameraID].trans.rotation.z_rotation;
     gCameraTransform.scale = 1.0f;
     gCameraTransform.x_position = gCameraSegment[gActiveCameraID].trans.x_position;
     gCameraTransform.y_position = gCameraSegment[gActiveCameraID].trans.y_position;
-    if (D_80120D18 != 0) {
+    if (D_80120D18) {
         gCameraTransform.y_position += gCameraSegment[gActiveCameraID].distanceToCamera;
     }
     gCameraTransform.z_position = gCameraSegment[gActiveCameraID].trans.z_position;

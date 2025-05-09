@@ -874,8 +874,8 @@ thread1_main = 0x80065D98;
 thread3_verify_stack = 0x80065E30;
 
 // camera.c .text
-camera_init = 0x80065EA0;
-func_80066060 = 0x80066060;
+cam_init = 0x80065EA0;
+cam_set_zoom = 0x80066060;
 set_viewport_tv_type = 0x80066098;
 func_800660C0 = 0x800660C0;
 func_800660D0 = 0x800660D0;
