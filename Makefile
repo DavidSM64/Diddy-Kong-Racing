@@ -91,6 +91,10 @@ O_FILES := $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(BIN_FILES),$(BUILD_DIR)/$(file).o)
 
+O_FILES_LD := $(filter-out $(BUILD_DIR)/asm/assets/assets.s.o, \
+	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
+	$(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o))
+
 find-command = $(shell which $(1) 2>/dev/null)
 
 # Tools
@@ -212,9 +216,15 @@ ifneq ($(filter x86_64%,$(UNAME_M)),)
 endif
 
 TARGET     = $(BUILD_DIR)/$(BASENAME).$(REGION).$(VERSION)
+LD_FLAGS  :=
+ifeq ($(NON_MATCHING), 0)
 LD_SCRIPT  = ver/$(BASENAME).$(REGION).$(VERSION).ld
+else
+LD_SCRIPT  = mods/dkr.custom.ld
+LD_FLAGS += $(O_FILES_LD)
+endif
 
-LD_FLAGS   = -T $(LD_SCRIPT) -T $(SYMBOLS_DIR)/undefined_syms.txt -Map $(TARGET).map
+LD_FLAGS   += -T $(LD_SCRIPT) -T $(SYMBOLS_DIR)/undefined_syms.txt -Map $(TARGET).map
 
 ASM_PROCESSOR_DIR := $(TOOLS_DIR)/asm-processor
 ASM_PROCESSOR      = $(PYTHON) $(ASM_PROCESSOR_DIR)/build.py
@@ -356,7 +366,7 @@ distclean: clean
 	rm -rf $(ASM_DIRS)
 	rm -rf $(BIN_DIRS)
 	rm -f $(SYMBOLS_DIR)/*auto.$(REGION).$(VERSION).txt
-	rm -f $(LD_SCRIPT)
+	rm -f ver/$(BASENAME).$(REGION).$(VERSION).ld
 
 distcleanall: cleanall
 	rm -rf asm
@@ -476,11 +486,6 @@ $(BUILD_DIR)/asm/header.s.o: src/hasm/header.s | $(ALL_ASSETS_BUILT)
 	$(V)$(AS) $(ASFLAGS) -o $(BUILD_DIR)/asm/header.s.o $<
 
 ifeq ($(NON_MATCHING),1)
-# Specifically override llcvt file for NON_MATCHING builds
-$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: src/hasm/llmuldiv_gcc.s | $(ALL_ASSETS_BUILT)
-	$(call print,Assembling llmuldiv_gcc:,$<,$@)
-	$(V)$(AS) $(ASFLAGS) --defsym NON_MATCHING=1 -o $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o $<
-
 # If doing a NON_MATCHING build, and the custom boot file exists, use that.
 ifneq ("$(wildcard $(BOOT_CUSTOM))","")
 $(BUILD_DIR)/assets/boot.bin.o: $(BOOT_CUSTOM) | $(ALL_ASSETS_BUILT)
