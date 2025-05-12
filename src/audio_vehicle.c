@@ -414,28 +414,22 @@ void racer_sound_hovercraft(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsH
     gRacerSound->unk54[1] = 0.0f;
 }
 
-#ifdef NON_EQUIVALENT
 void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
+    f32 var_f18;
     f32 sp28;
     f32 var_f2;
     u16 temp_f10;
+    f32 temp_f8;    
     f32 var_f14;
-    f32 temp_f8;
-    f32 var_f18;
     u8 i;
     s32 var_a0;
     u8 var_t0;
-    f32 xVel;
-    f32 yVel;
-    f32 zVel;
+    f32 temp;
+    f32 temp2;
 
     if (get_race_countdown() == 0) {
-        xVel = obj->segment.x_velocity;
-        zVel = obj->segment.z_velocity;
-        yVel = obj->segment.y_velocity;
-        var_f18 = sqrtf((xVel * xVel) + (zVel * zVel) + (yVel * yVel));
-        // var_f18 = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity *
-        // obj->segment.z_velocity) + (obj->segment.y_velocity * obj->segment.y_velocity));
+        var_f18 = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity *
+                obj->segment.z_velocity) + (obj->segment.y_velocity * obj->segment.y_velocity));
     } else {
         var_f18 = 0.0f;
     }
@@ -458,42 +452,45 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     }
     var_f14 = gRacerSound->basePitch;
     if (buttonsHeld & A_BUTTON) {
-        gRacerSound->throttlePitch += gRacerSound->throttlePitchVel * (f32) updateRate;
+        gRacerSound->throttlePitch += gRacerSound->throttlePitchVel * updateRate;
         if (gRacerSound->throttlePitchCeil < gRacerSound->throttlePitch) {
             gRacerSound->throttlePitch = gRacerSound->throttlePitchCeil;
         }
     } else {
-        gRacerSound->throttlePitch -= gRacerSound->throttlePitchDecay * (f32) updateRate;
+        gRacerSound->throttlePitch -= gRacerSound->throttlePitchDecay * updateRate;
     }
     if (gRacerSound->throttlePitch < 0) {
         gRacerSound->throttlePitch = 0;
     }
     if (race_starting() == 0) {
-        gRacerSound->throttlePitch = 0.0f;
+        gRacerSound->throttlePitch = 0;
     }
     var_f14 += gRacerSound->throttlePitch;
     sp28 = sins_f(obj->segment.trans.rotation.x_rotation);
-    var_f2 = sins_f(obj->segment.trans.rotation.z_rotation) * gRacerSound->unkC0;
-    if (var_f2 < 0.0f) {
-        var_f2 = -var_f2;
-    }
+    var_f2 = sins_f(obj->segment.trans.rotation.z_rotation);
+    temp = gRacerSound->unkC4 * sp28;
+    temp2 = gRacerSound->unkC0 * var_f2;
+    temp2 = ABSF(temp2);
+    var_f14 += temp + temp2;
+
     if (var_f18 > 10.0) {
         var_f18 -= 10.0;
     } else {
-        var_f18 = 0.0;
+        var_f18 = 0.0f;
     }
-    var_f14 += ((gRacerSound->unkC4 * sp28) + var_f2);
-    var_f14 += (var_f18 * gRacerSound->unkCC);
-    if ((var_f18 != 0.0) && (gSoundRacerObj->bananas != 0)) {
+
+    
+    var_f14 += var_f18 * gRacerSound->unkCC;
+    if (var_f18 != 0.0 && gSoundRacerObj->bananas != 0) {
         if (gSoundRacerObj->bananas <= 10) {
             var_a0 = gSoundRacerObj->bananas;
         } else {
             var_a0 = 10;
         }
-        if (gRacerSound->bananaPitch < (0.05 * var_a0)) {
-            gRacerSound->bananaPitch += ((0.05 * var_a0) / (var_a0 * 64));
-        } else if (gRacerSound->bananaPitch > (0.05 * var_a0)) {
-            gRacerSound->bananaPitch = (0.05 * var_a0);
+        if (gRacerSound->bananaPitch < 0.05 * var_a0) {
+            gRacerSound->bananaPitch += (0.05 * var_a0) / (var_a0 * 64);
+        } else if (gRacerSound->bananaPitch > 0.05 * var_a0) {
+            gRacerSound->bananaPitch = 0.05 * var_a0;
         }
         var_f14 += gRacerSound->bananaPitch;
     } else {
@@ -505,7 +502,7 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
         gRacerSound->unk5C[0] = (0x7FFF / 5000.0); // 6.5534
     }
     gRacerSound->unk5C[1] = 1.0f;
-    gRacerSound->unk54[1] = 0.0f;
+    gRacerSound->unk54[1] = 0;
     if ((gSoundRacerObj->playerIndex != PLAYER_COMPUTER) && (gSoundRacerObj->spinout_timer != 0) &&
         !gRacerSound->brakeSound) {
         gRacerSound->brakeSound = TRUE;
@@ -517,9 +514,6 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_vehicle/func_800063EC.s")
-#endif
 
 /**
  * Stops all associated sounds and then frees the vehicle sound data from RAM.
