@@ -145,7 +145,7 @@ u16 gGhostChecksumIDsPak[6];
 u8 gGhostLevelIDsMenu[6];
 u8 gGhostCharacterIDsMenu[6];
 UNUSED s32 D_801282D2_EEA82;
-SoundMask *gMenuSoundMasks[MAXCONTROLLERS]; // Soundmask values
+SoundHandle gMenuSoundMasks[MAXCONTROLLERS]; // Soundmask values
 u8 gGhostVehicleIDsMenu[6];
 UNUSED s8 sUnused_80126828; // Set to 0 in menu_init, and never used again.
 u16 gGhostChecksumIDsMenu[6];
@@ -167,9 +167,9 @@ s16 gMenuStickY[5];
 s16 D_8012683A;
 s32 gCinematicSkipA;
 s32 gPostraceScaleOut;
-SoundMask *gTrackTTSoundMask;
+SoundHandle gTrackTTSoundMask;
 s32 gCinematicSkipB;
-SoundMask *D_80126848;
+SoundHandle D_80126848;
 s32 gCinematicMusicChangeOff;
 s32 gTitleDemoIndex;
 s32 gTitleRevealTimer;
@@ -202,7 +202,7 @@ f32 gTrackSelectTargetY;
 char *gTrackMenuHubName;
 s32 gSelectedTrackX;
 s32 gSelectedTrackY;
-SoundMask *gSoundOptionMask;
+SoundHandle gSoundOptionMask;
 s32 gSaveMenuOptionCountLower;
 SaveFileData *gSaveMenuFilesDest;
 s32 gSaveMenuOptionCountUpper;
@@ -3205,6 +3205,7 @@ void init_title_screen_variables(void) {
 }
 
 #ifdef NON_MATCHING
+// Differs in v80
 // Single regswap diff
 void func_80083098(f32 updateRateF) {
     f32 temp;
@@ -7351,7 +7352,6 @@ void gameselect_render(UNUSED s32 updateRate) {
 
     if (gMenuDelay > -22 && gMenuDelay < 22) {
         fade = gOptionBlinkTimer * 8;
-        fade = fade;
         if (fade > 255) {
             fade = 511 - fade;
         }
@@ -7440,7 +7440,6 @@ s32 menu_game_select_loop(s32 updateRate) {
         if ((gMenuDelay == 0) && (gOpacityDecayTimer == 0)) {
             playerInputs = input_pressed(PLAYER_ONE);
             playerYDir = gControllersYAxisDirection[0];
-            playerInputs = playerInputs;
             if (gNumberOfActivePlayers == 2) {
                 playerInputs |= input_pressed(1);
                 playerYDir += gControllersYAxisDirection[1];

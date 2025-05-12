@@ -130,6 +130,6 @@ void copy_viewports_to_stack(void);
 void apply_head_turning_matrix(Gfx **dList, MatrixS **mtx, Object_68 *objGfx, s16 headAngle);
 void apply_object_shear_matrix(Gfx **dList, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear);
 void camera_init(void);
-void viewport_main(Gfx **dList, MatrixS **mats);
+void viewport_main(Gfx **dlist, MatrixS **mats);
 
 #endif

@@ -11,6 +11,7 @@
 
 #define AL_SNDP_PLAY_EVT (1 << 0)
 #define AL_SNDP_RELEASE_EVT (1 << 1)
+#define AL_SNDP_RELEASE_EVT (1 << 1)
 #define AL_SNDP_PAN_EVT (1 << 2)
 #define AL_SNDP_VOL_EVT (1 << 3)
 #define AL_SNDP_PITCH_EVT (1 << 4)
@@ -72,7 +73,7 @@ typedef struct SoundPlayer {
     ALEventQueue    evtq;
     ALEvent         nextEvent;
     ALSynth        *drvr;
-    u32             lastSoundState;
+    ALSoundState   *lastSoundState;
     ALSoundState   *soundStatesArray;
     s32             maxSystemSoundChannels;
     s32             maxActiveSounds;

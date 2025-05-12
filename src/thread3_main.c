@@ -212,7 +212,7 @@ void init_game(void) {
     init_PI_mesg_queue();
     gfxtask_init(&gMainSched);
     audio_init(&gMainSched);
-    audioline_init();
+    audspat_init();
     sControllerStatus = input_init();
     tex_init_textures();
     allocate_object_model_pools();

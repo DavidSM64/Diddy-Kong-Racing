@@ -1,22 +1,14 @@
 #include "game.h"
 
-#include <PR/os_cont.h>
-#include <PR/gu.h>
-#include <PR/os_time.h>
 #include "memory.h"
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
-#include "f3ddkr.h"
 #include "asset_enums.h"
 #include "asset_loading.h"
 #include "menu.h"
 #include "video.h"
 #include "set_rsp_segment.h"
-#include "gzip.h"
-#include "printf.h"
-#include "thread0_epc.h"
-#include "thread30_bgload.h"
 #include "weather.h"
 #include "audio.h"
 #include "objects.h"
@@ -24,22 +16,11 @@
 #include "save_data.h"
 #include "rcp_dkr.h"
 #include "audiosfx.h"
-#include "audiomgr.h"
 #include "lights.h"
 #include "textures_sprites.h"
-#include "PR/os_internal.h"
-#include "printf.h"
-#include "fade_transition.h"
-#include "borders.h"
 #include "audio_spatial.h"
 #include "tracks.h"
-#include "game_text.h"
-#include "game_ui.h"
-#include "main.h"
-#include "object_models.h"
 #include "racer.h"
-#include "particles.h"
-#include "math_util.h"
 #include "joypad.h"
 #include "common.h"
 
@@ -704,7 +685,7 @@ void clear_audio_and_track(void) {
     music_channel_reset_all();
     free_lights();
     free_track();
-    audioline_reset();
+    audspat_reset();
     sound_volume_change(VOLUME_NORMAL);
     if (gCurrentLevelHeader->weatherEnable > 0) {
         weather_free();

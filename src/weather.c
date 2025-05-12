@@ -71,10 +71,10 @@ Object *gLensFlare = NULL;
 s32 gLensFlareOff = TRUE;
 s32 gLensFlareOverrideObjs = 0;
 Vec2f gRainQuad[4] = {
-    { -200.0f, 200.0f },
-    { 200.0f, 200.0f },
-    { 200.0f, -200.0f },
-    { -200.0f, -200.0f },
+    { { { -200.0f, 200.0f } } },
+    { { { 200.0f, 200.0f } } },
+    { { { 200.0f, -200.0f } } },
+    { { { -200.0f, -200.0f } } },
 };
 
 Vertex gRainVertices[16] = {
@@ -116,7 +116,7 @@ s32 gRainSplashDelay = 0;
 TextureHeader *gRainOverlayUnusedValue = NULL; // Set, but never read.
 Sprite *gRainSplashGfx = NULL;
 s32 gRainVertexFlip = 0;
-SoundMask *gWeatherSoundMask = NULL;
+AudioPoint *gWeatherSoundMask = NULL;
 
 FadeTransition gThunderTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_INVERT, FADE_COLOR_WHITE, 5, 2);
 
@@ -831,7 +831,7 @@ void free_rain_memory(void) {
     }
 
     if (gWeatherSoundMask != NULL) {
-        func_800096F8(gWeatherSoundMask);
+        audspat_point_stop(gWeatherSoundMask);
         gWeatherSoundMask = NULL;
     }
 
@@ -895,7 +895,7 @@ void rain_update(s32 updateRate) {
         if (gLightningFrequency > 255) {
             set_ortho_matrix_view(&gCurrWeatherDisplayList, &gCurrWeatherMatrix);
             for (i = 0; i < 2; i++) {
-                render_rain_overlay(&gRainGfx[i], updateRate);
+                rain_render(&gRainGfx[i], updateRate);
             }
             gDPSetPrimColor(gCurrWeatherDisplayList++, 0, 0, 255, 255, 255, 255);
             gDPSetEnvColor(gCurrWeatherDisplayList++, 255, 255, 255, 0);
@@ -1066,13 +1066,16 @@ void rain_sound(UNUSED s32 updateRate) {
     yPos = gWeatherCamera->trans.y_position;
     zPos = gWeatherCamera->trans.z_position + (-sineOffset - cosOffset);
     if (gWeatherSoundMask) {
-        update_spatial_audio_position(gWeatherSoundMask, xPos, yPos, zPos);
+        audspat_point_set_position(gWeatherSoundMask, xPos, yPos, zPos);
     } else {
-        play_sound_at_position(SOUND_RAIN, xPos, yPos, zPos, 1, &gWeatherSoundMask);
+        audspat_play_sound_at_position(SOUND_RAIN, xPos, yPos, zPos, 1, &gWeatherSoundMask);
     }
 }
 
-void render_rain_overlay(RainGfxData *rainGfx, s32 time) {
+/**
+ * Set the intended UV coordinates for the current rain plane, then render it onscreen.
+ */
+void rain_render(RainGfxData *rainGfx, s32 time) {
     s32 u0;
     s32 v0;
     s32 vertical;

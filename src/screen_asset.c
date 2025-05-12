@@ -1,5 +1,4 @@
 #include "screen_asset.h"
-#include "libultra/src/libc/rmonPrintf.h"
 
 // Render settings for the screens
 Gfx gRdpSetModeScreenAsset[] = {

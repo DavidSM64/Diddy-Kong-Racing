@@ -1,0 +1,65 @@
+name: Verify All Versions
+
+on:
+  pull_request_target:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  verify-all-versions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      - name: Install packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libssl-dev pkg-config git python3 python3-pip binutils-mips-linux-gnu python3-venv libpcre2-dev libpcre2-8-0
+
+      - name: Get US v77 ROM
+        run: wget -q -O baseroms/baserom.us.v77.z64 ${{secrets.ROMURL}}
+
+      - name: Get PAL v77 ROM
+        run: wget -q -O baseroms/baserom.pal.v77.z64 ${{secrets.ROMURL_PALv77}}
+
+      - name: Get JPN v79 ROM
+        run: wget -q -O baseroms/baserom.jpn.v79.z64 ${{secrets.ROMURL_JPNv79}}
+
+      - name: Get US v80 ROM
+        run: wget -q -O baseroms/baserom.us.v80.z64 ${{secrets.ROMURL_USv80}}
+
+      - name: Get PAL v80 ROM
+        run: wget -q -O baseroms/baserom.pal.v80.z64 ${{secrets.ROMURL_PALv80}}
+
+      - name: Verify US v77 ROM
+        run: if [[ $(echo "0cb115d8716dbbc2922fda38e533b9fe63bb9670 baseroms/baserom.us.v77.z64" | sha1sum -c --quiet -) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
+
+      - name: Verify PAL v77 ROM
+        run: if [[ $(echo "dd5d64dd140cb7aa28404fa35abdcaba33c29260 baseroms/baserom.pal.v77.z64" | sha1sum -c --quiet -) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
+
+      - name: Verify JPN v79 ROM
+        run: if [[ $(echo "23ba3d302025153d111416e751027cef11213a19 baseroms/baserom.jpn.v79.z64" | sha1sum -c --quiet -) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
+
+      - name: Verify US v80 ROM
+        run: if [[ $(echo "6d96743d46f8c0cd0edb0ec5600b003c89b93755 baseroms/baserom.us.v80.z64" | sha1sum -c --quiet -) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
+
+      - name: Verify PAL v80 ROM
+        run: if [[ $(echo "b7f628073237b3d211d40406aa0884ff8fdd70d5 baseroms/baserom.pal.v80.z64" | sha1sum -c --quiet -) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
+
+      - name: Make Setup
+        run: make setup -j4
+
+      - name: Run Compile All Script
+        run: ./compile_all.sh
+
+      # We only need to verify the last one, as the compile all script will error out on any versions failing. 
+      # So if this one passes, they all pass.
+      - name: Verify Final Build
+        run: if [[ $(sha1sum -c --quiet ver/verification/dkr.us.v77.sha1) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi

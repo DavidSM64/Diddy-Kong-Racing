@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of May 6, 2025, this is our current score:
+As of May 9, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 85.28%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 85.73%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 54.50%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 56.95%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -117,30 +117,30 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of May 6, 2025, this is our current score:
+As of May 9, 2025, this is our current score:
 ```
- ========================================================
-          ADVENTURE ONE (ASM -> C Decompilation)
- -------- 85.28% Complete (86.44% NON_MATCHING) ---------
-               # Decompiled functions: 1881
-                # GLOBAL_ASM remaining: 70
-               # NON_MATCHING functions: 7
-            # NON_EQUIVALENT WIP functions: 26
- --------------------- Game Status ----------------------
-        Balloons: 39/47, Keys: 4/4, Trophies: 4/5
-          T.T. Amulets: 4/4, Wizpig Amulets: 4/4
- --------------------------------------------------------
-       We are racing in Spacedust Alley. (Lap 1/3)
- ========================================================
-          ADVENTURE TWO (Cleanup & Documentation)
- ------------------- 54.50% Complete --------------------
-               # Documented functions: 1155
-              # Undocumented remaining: 499
- --------------------- Game Status ----------------------
-        Balloons: 26/47, Keys: 3/4, Trophies: 2/5
-          T.T. Amulets: 2/4, Wizpig Amulets: 2/4
- --------------------------------------------------------
- We are battling in Darkwater Beach. (1 opponent remains)
- ========================================================
+ =====================================================================
+                ADVENTURE ONE (ASM -> C Decompilation)
+ --------------- 85.73% Complete (86.89% NON_MATCHING) ---------------
+                     # Decompiled functions: 1883
+                      # GLOBAL_ASM remaining: 68
+                      # NON_MATCHING functions: 7
+                  # NON_EQUIVALENT WIP functions: 26
+ ---------------------------- Game Status ----------------------------
+               Balloons: 39/47, Keys: 4/4, Trophies: 4/5
+                T.T. Amulets: 4/4, Wizpig Amulets: 4/4
+ ---------------------------------------------------------------------
+              We are racing in Spacedust Alley. (Lap 2/3)
+ =====================================================================
+                 ADVENTURE TWO (Cleanup & Documentation)
+ -------------------------- 56.95% Complete --------------------------
+                     # Documented functions: 1178
+                     # Undocumented remaining: 476
+ ---------------------------- Game Status ----------------------------
+               Balloons: 27/47, Keys: 3/4, Trophies: 2/5
+                T.T. Amulets: 3/4, Wizpig Amulets: 2/4
+ ---------------------------------------------------------------------
+ We are collecting silver coins in Crescent Island. (5/8 silver coins)
+ =====================================================================
 ```
 <!-- README_SCORE_END -->

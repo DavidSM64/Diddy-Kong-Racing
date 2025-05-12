@@ -887,7 +887,7 @@ typedef struct LevelObjectEntry_Unknown127 {
 
 typedef struct LevelObjectEntry_Hud {
     LevelObjectEntryCommon common;
-    s32 unk8;
+    s32 offsetY;
 } LevelObjectEntry_Hud;
 
 typedef struct LevelObjectEntry {

@@ -4,11 +4,9 @@
 /* Note: Structs are not complete, take them with a grain of salt. */
 
 #include "types.h"
-#include "enums.h"
 #include "level_object_entries.h"
 #include "object_properties.h"
 #include "gbi.h"
-#include "PR/libaudio.h"
 #include "audio.h"
 
 typedef struct Vec4f {
@@ -99,23 +97,6 @@ typedef struct Vec2i {
       s32 i[2];
   };
 } Vec2i;
-
-/* Size: 0x24 / 36 bytes */
-typedef struct SoundMask {
-    /* 0x00 */ Vec3f pos;
-    /* 0x0C */ u16 soundId;
-    /* 0x0E */ u8 volume;
-    /* 0x0F */ u8 pitch;
-    /* 0x10 */ u8 unk10;
-    /* 0x11 */ u8 unk11;
-    /* 0x12 */ u8 unk12;
-    /* 0x14 */ s32 distance;
-    /* 0x18 */ SoundHandle soundPtr;
-    /* 0x1C */ struct SoundMask **soundMask;
-    /* 0x20 */ u8 unk20;
-    /* 0x21 */ u8 unk21;
-    /* 0x22 */ u8 unk22;
-} SoundMask;
 
 /* Size: 0x20 bytes */
 typedef struct TextureHeader {
@@ -508,7 +489,8 @@ typedef struct LevelHeader {
   /* 0x9D */ u8 bgColorRed;
   /* 0x9E */ u8 bgColorGreen;
   /* 0x9F */ u8 bgColorBlue;
-  /* 0xA0 */ s16 unkA0;
+  /* 0xA0 */ u8 unkA0;
+  /* 0xA1 */ u8 unkA1;
   /* 0xA2 */ s8 unkA2;
   /* 0xA3 */ s8 unkA3;
   /* 0xA4 */ TextureHeader *unkA4;
@@ -1069,10 +1051,23 @@ typedef struct Object_Fish {
   /* 0x11c */ f32 unk11C;
 } Object_Fish;
 
+typedef struct Object_Boost_Inner {
+  Vec3f position;
+  f32 unkC;
+  f32 unk10;
+  u8 pad[0x24 - 0x14];
+} Object_Boost_Inner;
+
 typedef struct Object_Boost {
-  /* 0x000 */ u8 pad[0x70];
-  /* 0x070 */ u8 unk70;
-  /* 0x074 */ f32 unk74;
+  Object_Boost_Inner unk0;
+  Object_Boost_Inner unk24;
+  Object_Boost_Inner unk48;
+  u8 pad6C[4];
+  u8 unk70;
+  u8 unk71;
+  u8 unk72;
+  u8 unk73;
+  f32 unk74;
 } Object_Boost;
 
 typedef struct Object_EffectBox {
@@ -1231,7 +1226,7 @@ typedef struct Object_Racer {
   /* 0x018 */ SoundHandle unk18;
   /* 0x01C */ SoundHandle unk1C;
   /* 0x020 */ SoundHandle unk20;
-  /* 0x024 */ SoundMask *soundMask;
+  /* 0x024 */ struct AudioPoint *soundMask;
   /* 0x028 */ u16 lastSoundID;
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
@@ -1314,8 +1309,8 @@ typedef struct Object_Racer {
   /* 0x175 */ s8 magnetTimer;
   /* 0x176 */ s16 unk176;
   /* 0x178 */ SoundHandle magnetSoundMask;
-  /* 0x17C */ SoundMask *shieldSoundMask;
-  /* 0x180 */ SoundMask *bananaSoundMask;
+  /* 0x17C */ struct AudioPoint *shieldSoundMask;
+  /* 0x180 */ struct AudioPoint *bananaSoundMask;
   /* 0x184 */ s8 magnetModelID;
   /* 0x185 */ s8 bananas;
   /* 0x186 */ u8 unk186;
@@ -1435,7 +1430,7 @@ typedef struct Object_Racer {
 
 typedef struct Object_Door {
   /* 0x00 */ f32 homeY;
-  /* 0x04 */ SoundHandle soundMask;
+  /* 0x04 */ struct AudioPoint* soundMask;
   /* 0x08 */ s32 jingleTimer;
   /* 0x0A */ s16 jingleCooldown;
   /* 0x0E */ s8 doorID;
@@ -1467,7 +1462,7 @@ typedef struct Object_Audio {
   /* 0x05 */ u8 unk5;
   /* 0x06 */ u8 unk6;
   /* 0x07 */ u8 unk7;
-  /* 0x08 */ SoundMask *soundMask;
+  /* 0x08 */ struct AudioPoint *soundMask;
   /* 0x0C */ u8 unkC;
   /* 0x0D */ u8 unkD;
 } Object_Audio;
@@ -1552,7 +1547,7 @@ typedef struct Object_TT {
 
 typedef struct Object_Bridge_WhaleRamp {
   /* 0x0 */ f32 homeY;
-  /* 0x4 */ SoundHandle soundMask;
+  /* 0x4 */ struct AudioPoint *soundMask;
 } Object_Bridge_WhaleRamp;
 
 typedef struct Object_64_80021400 {
@@ -1705,8 +1700,7 @@ typedef struct Object_68 {
       ObjectModel *objModel;
       TextureHeader *texHeader;
   };
-  /* 0x04 */ Vertex *vertices[2];
-  /* 0x0C */ s32 *unkC;
+  /* 0x04 */ Vertex *vertices[3];
   /* 0x10 */ s16 animationID;
   /* 0x12 */ s16 animationFrame;
   /* 0x14 */ s16 animationFrameCount;
