@@ -16,7 +16,6 @@
 
 u8 gVehicleSounds = TRUE;
 s32 D_800DC6D4 = 0; // Currently unknown, might be a different type.
-s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 
 /*******************************/
 
@@ -29,15 +28,20 @@ Object_Racer *gSoundRacerObj;
 /******************************/
 
 // racer_sound_init
-VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
+//#pragma GLOBAL_ASM("asm/nonmatchings/audio_vehicle/func_80004B40.s")
+
+VehicleSoundData *func_80004B40(s32 characterId, s32 vehicleId) {
     s32 i;
     s32 j;
     s32 k;
     s32 *addrPtr;
+    s32 s1;
     unkAudioAsset *asset4C;
     VehicleSoundData *soundData;
     u8 *ptr;
-    f32 temp_f10;
+    s16 v1;
+
+    static s32 D_800DC6D8 = TRUE;
 
     if (characterId >= 11) {
         characterId = 11;
@@ -51,8 +55,9 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
     }
 
     addrPtr = (s32 *) load_asset_section_from_rom(ASSET_AUDIO_TABLE);
+    s1 = addrPtr[ASSET_AUDIO_7] + (vehicleId * 10 + characterId) * sizeof(unkAudioAsset);
     asset4C = (unkAudioAsset*)mempool_alloc_safe(sizeof(unkAudioAsset), COLOUR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, (u32)asset4C, addrPtr[ASSET_AUDIO_7] + (vehicleId * 10 + characterId) * sizeof(unkAudioAsset), sizeof(unkAudioAsset));
+    load_asset_to_address(ASSET_AUDIO, (u32)asset4C, s1, sizeof(unkAudioAsset));
 
     soundData = (VehicleSoundData*)mempool_alloc_safe(sizeof(VehicleSoundData), COLOUR_TAG_CYAN);
 
@@ -66,9 +71,7 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
     soundData->unk38 = asset4C->unk38;
     soundData->unk39 = asset4C->unk39;
     soundData->unk64 = asset4C->unk3A;
-    soundData->unkB8 = asset4C->unk3B;
-
-    soundData->brakeSound = FALSE;
+    
     
     soundData->throttlePitchCeil = asset4C->unk46 / 10000.0f;
     soundData->throttlePitchVel = asset4C->unk3E / 10000.0f;
@@ -76,11 +79,14 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
     soundData->unkC0 = asset4C->unk42 / 10000.0f;
     soundData->unkC4 = asset4C->unk44 / 10000.0f;
     soundData->unkBC = asset4C->unk3C / 10000.0f;
+    soundData->unkB8 = asset4C->unk3B;
     soundData->unkCC = asset4C->unk48 / 10000.0f;
+    soundData->brakeSound = FALSE;
+    
 
     for (i = 0; i < 2; i++) {
         soundData->unk0[i] = asset4C->unk0[i];
-
+        
         for (j = 0; j < 5; j++) {
             soundData->unk4[i][j] = asset4C->unk4[i][j];
             soundData->unk18[i][j] = asset4C->unk18[i][j];
@@ -100,8 +106,14 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
         }
     } else {
         soundData->unk5C[0] = soundData->basePitch;
-        temp_f10 = gRacerSound->unk5C[0] * 10000.0f;
-        for (j = 0; temp_f10 >= gRacerSound->unk18[0][j] && j < 4; i++) {}
+        v1 = soundData->unk5C[0] * 10000.0f;
+        if (v1 < 0) {
+            v1 = -1;
+        }
+        for (j = 0; v1 >= soundData->unk18[0][j] && j < 4; j++) {}
+
+        soundData->unk54[0] = (soundData->unk2C[0][j + 1] - soundData->unk2C[0][j]) * 
+            ((f32)(v1 - soundData->unk18[0][j]) / (soundData->unk18[0][j + 1] - soundData->unk18[0][j])) + soundData->unk2C[0][j];
     }
 
     mempool_free(addrPtr);
@@ -109,6 +121,7 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
 
     return soundData;
 }
+
 
 /**
  * Update the sound of the engine and braking during gameplay, for later.
