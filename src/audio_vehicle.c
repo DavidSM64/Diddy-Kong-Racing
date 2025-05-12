@@ -28,18 +28,18 @@ Object_Racer *gSoundRacerObj;
 /******************************/
 
 // racer_sound_init
-//#pragma GLOBAL_ASM("asm/nonmatchings/audio_vehicle/func_80004B40.s")
-
 VehicleSoundData *func_80004B40(s32 characterId, s32 vehicleId) {
+    s32 unused[2];
     s32 i;
-    s32 j;
-    s32 k;
-    s32 *addrPtr;
-    s32 s1;
-    unkAudioAsset *asset4C;
-    VehicleSoundData *soundData;
     u8 *ptr;
-    s16 v1;
+    VehicleSoundData *soundData;
+    s32 l;    
+    s32 *addrPtr;
+    unkAudioAsset *asset4C;
+    s32 s1;    
+    u16 j;    
+    f32 tmp;
+    u16 v1;
 
     static s32 D_800DC6D8 = TRUE;
 
@@ -62,7 +62,7 @@ VehicleSoundData *func_80004B40(s32 characterId, s32 vehicleId) {
     soundData = (VehicleSoundData*)mempool_alloc_safe(sizeof(VehicleSoundData), COLOUR_TAG_CYAN);
 
     ptr = (u8*)soundData;
-    for (k = 0; k < sizeof(VehicleSoundData); k++) {
+    for (l = 0; l < sizeof(VehicleSoundData); l++) {
         *ptr++ = 0;
     }
 
@@ -87,11 +87,11 @@ VehicleSoundData *func_80004B40(s32 characterId, s32 vehicleId) {
     for (i = 0; i < 2; i++) {
         soundData->unk0[i] = asset4C->unk0[i];
         
-        for (j = 0; j < 5; j++) {
-            soundData->unk4[i][j] = asset4C->unk4[i][j];
-            soundData->unk18[i][j] = asset4C->unk18[i][j];
-            soundData->unkE[i][j] = asset4C->unkE[i][j];
-            soundData->unk2C[i][j] = asset4C->unk2C[i][j];
+        for (l = 0; l < 5; l++) {
+            soundData->unk4[i][l] = asset4C->unk4[i][l];
+            soundData->unk18[i][l] = asset4C->unk18[i][l];
+            soundData->unkE[i][l] = asset4C->unkE[i][l];
+            soundData->unk2C[i][l] = asset4C->unk2C[i][l];
         }
     }
 
@@ -100,20 +100,19 @@ VehicleSoundData *func_80004B40(s32 characterId, s32 vehicleId) {
     soundData->basePitch = asset4C->unk4A / 100.0f;
 
     if (vehicleId == VEHICLE_CAR) {
-        for (i = 0; i < 2; i++) {
-            soundData->unk54[i] = soundData->unk2C[i][0];
-            soundData->unk5C[i] = soundData->unk18[i][0] / 10000.0f;
-        }
+        soundData->unk54[0] = soundData->unk2C[0][0];
+        soundData->unk5C[0] = soundData->unk18[0][0] / 10000.0f;
+        soundData->unk54[1] = soundData->unk2C[1][0];
+        soundData->unk5C[1] = soundData->unk18[1][0] / 10000.0f;
     } else {
         soundData->unk5C[0] = soundData->basePitch;
         v1 = soundData->unk5C[0] * 10000.0f;
-        if (v1 < 0) {
-            v1 = -1;
-        }
-        for (j = 0; v1 >= soundData->unk18[0][j] && j < 4; j++) {}
 
-        soundData->unk54[0] = (soundData->unk2C[0][j + 1] - soundData->unk2C[0][j]) * 
-            ((f32)(v1 - soundData->unk18[0][j]) / (soundData->unk18[0][j + 1] - soundData->unk18[0][j])) + soundData->unk2C[0][j];
+        for (j = 0; v1 >= soundData->unk18[0][j] && j < 4; j++) {}
+        j--;
+
+        tmp = (f32)(v1 - soundData->unk18[0][j]) / (soundData->unk18[0][j + 1] - soundData->unk18[0][j]); 
+        soundData->unk54[0] = soundData->unk2C[0][j] + (soundData->unk2C[0][j + 1] - soundData->unk2C[0][j]) * tmp;
     }
 
     mempool_free(addrPtr);
