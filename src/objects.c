@@ -2433,36 +2433,31 @@ void obj_update(s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-void func_80011134(Object *arg0, s32 arg1) {
+void func_80011134(Object *obj, s32 updateRate) {
+    ObjectModel *model;
+    TriangleBatchInfo *batch;
     s32 sp5C;
-    ObjectModel *temp_s3;
-    TriangleBatchInfo *temp_s4;
-    TriangleBatchInfo *var_s0;
-    TextureHeader *var_t5;
+    TextureHeader *tex;
     s16 temp_s5;
-    s32 var_s1;
-    u8 temp_v0;
+    s32 batchNumber;
+    Object_68 *obj68;
 
-    temp_s3 = arg0->unk68[arg0->segment.object.modelIndex]->objModel;
-    temp_s5 = temp_s3->unk50;
-    temp_s4 = temp_s3->batches;
-    for (var_s1 = 0; temp_s5 > 0 && var_s1 < temp_s3->numberOfBatches; var_s1++) {
-        var_s0 = &temp_s4[var_s1];
-        if (var_s0->flags & 0x10000) { // Texture is animated
-            temp_v0 = var_s0->textureIndex;
-            if (temp_v0 != 0xFF) {
-                var_t5 = temp_s3->textures[temp_v0].texture;
-                sp5C = var_s0->unk7 << 6;
-                tex_animate_texture(var_t5, (u32 *) temp_s4[var_s1].flags, &sp5C, arg1);
-                var_s0->unk7 = sp5C >> 6;
+    obj68 = obj->unk68[obj->segment.object.modelIndex];
+    model = obj68->objModel;
+    batch = model->batches;
+    temp_s5 = model->unk50;
+    for (batchNumber = 0; temp_s5 > 0 && batchNumber < model->numberOfBatches; batchNumber++) {
+        if (batch[batchNumber].flags & OBJ_FLAGS_ANIMATED) {
+            if (batch[batchNumber].textureIndex != TEX_INDEX_NO_TEXTURE) {
+                tex = model->textures[batch[batchNumber].textureIndex].texture;
+                sp5C = batch[batchNumber].unk7;
+                sp5C <<= 6;
+                tex_animate_texture(tex, &batch[batchNumber].flags, &sp5C, updateRate);
+                batch[batchNumber].unk7 = (sp5C >> 6) & 0xFF;
             }
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80011134.s")
-#endif
 
 // This is a function for doors
 void func_80011264(ObjectModel *model, Object *obj) {
@@ -2484,7 +2479,7 @@ void func_80011264(ObjectModel *model, Object *obj) {
     batch = model->batches;
 
     while (i < model->numberOfBatches) {
-        if (batch[i].flags & 0x10000) {
+        if (batch[i].flags & OBJ_FLAGS_ANIMATED) {
             if (batch[i].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 // Fakematch
                 if (model->textures[batch[i].textureIndex].texture) {}
@@ -3325,7 +3320,7 @@ void func_80012F94(Object *obj) {
             }
             racerLightTimer *= 4;
             for (batchNum = 0; batchNum < temp_a1_3->numberOfBatches; batchNum++) {
-                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == 0x10000) {
+                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == OBJ_FLAGS_ANIMATED) {
                     temp_a1_3->batches[batchNum].unk7 = racerLightTimer;
                 }
             }
