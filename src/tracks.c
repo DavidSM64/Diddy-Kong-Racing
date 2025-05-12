@@ -84,9 +84,9 @@ s32 gSceneStartSegment;
 s32 D_8011B0D8;
 s32 gSceneRenderSkyDome;
 s8 gDrawLevelSegments;
-u8 D_8011B0E1;
-u8 D_8011B0E2;
-u8 D_8011B0E3;
+u8 D_8011B0E1; // R of RGB
+u8 D_8011B0E2; // G of RGB
+u8 D_8011B0E3; // B of RGB
 f32 D_8011B0E4;
 f32 D_8011B0E8;
 f32 D_8011B0EC;
@@ -165,13 +165,21 @@ Triangle *D_8011D490[2];
 Triangle *D_8011D498;
 s16 D_8011D49C;
 s16 D_8011D49E;
-f32 D_8011D4A0;
-f32 D_8011D4A4;
+f32 D_8011D4A0; // something x coordinate related
+f32 D_8011D4A4; // something z coordinate related
 f32 D_8011D4A8;
-f32 D_8011D4AC;
-f32 D_8011D4B0;
+f32 D_8011D4AC; // something x coordinate related
+f32 D_8011D4B0; // something z coordinate related
 s8 D_8011D4B4;
-s16 D_8011D4B6;
+typedef struct Unk8011D4B6 {
+    union {
+        struct {
+            u8 one, two;
+        };
+        s16 whole;
+    };
+} Unk8011D4B6;
+Unk8011D4B6 D_8011D4B6;
 s16 D_8011D4B8;
 s16 D_8011D4BA;
 s16 D_8011D4BC;
@@ -268,9 +276,9 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     shadow_update(SHADOW_ACTORS, SHADOW_ACTORS, LOGIC_NULL);
     gShadowHeapFlip = 0;
     if (gCurrentLevelHeader2->unkB7) {
-        D_8011B0E1 = gCurrentLevelHeader2->unkB4;
-        D_8011B0E2 = gCurrentLevelHeader2->unkB5;
-        D_8011B0E3 = gCurrentLevelHeader2->unkB6;
+        D_8011B0E1 = gCurrentLevelHeader2->rgb.red;
+        D_8011B0E2 = gCurrentLevelHeader2->rgb.green;
+        D_8011B0E3 = gCurrentLevelHeader2->rgb.blue;
         func_80025510(numberOfPlayers + 1);
     }
 }
@@ -615,7 +623,7 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     D_8011D4B4 = 1 - D_8011D4B4;
     D_8011D488 = gSceneCurrVertexList;
     D_8011D498 = gSceneCurrTriList;
-    D_8011D4B6 = 0;
+    D_8011D4B6.whole = 0;
     D_8011D4B8 = 0;
 
     i = 0;
@@ -645,9 +653,9 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
             }
         }
     }
-    if (D_8011D4B6 != 0) {
-        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6, 0);
-        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), D_8011D4B6 >> 1, TRIN_DISABLE_TEXTURE);
+    if (D_8011D4B6.whole != 0) {
+        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6.whole, 0);
+        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), D_8011D4B6.whole >> 1, TRIN_DISABLE_TEXTURE);
     }
     gSceneCurrVertexList = spAC;
     gSceneCurrTriList = spA8;
@@ -964,7 +972,6 @@ void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     Vertex *verts;
     Triangle *tris;
@@ -973,107 +980,104 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     s16 vertX2;
     s16 vertZ2;
     s16 vertX1;
-    s32 colour_r;
-    s32 colour_g;
-    s32 colour_b;
-    s32 colour_a;
+    u8 colour_r;
+    u8 colour_g;
+    u8 colour_b;
+    u8 colour_a;
 
     if (D_8011D4B8 >= D_8011D4BC) {
-        return 0;
-    } else {
-        if (D_8011D4B6 == 24) {
-            gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6, 0);
-            gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), (D_8011D4B6 >> 1), TRIN_DISABLE_TEXTURE);
-            D_8011D488 = gSceneCurrVertexList;
-            D_8011D4B6 = 0;
-            D_8011D498 = gSceneCurrTriList;
-        }
-
-        colour_r = D_8011B0E1;
-        colour_g = D_8011B0E2;
-        colour_b = D_8011B0E3;
-        colour_a = 0xFF;
-
-        vertX1 = arg2 * D_8011D4A0 + D_8011D4AC;
-        vertZ1 = arg2 * D_8011D4A4 + D_8011D4B0;
-        vertX2 = arg3 * D_8011D4A0 + D_8011D4AC;
-        vertZ2 = arg3 * D_8011D4A4 + D_8011D4B0;
-
-        verts = gSceneCurrVertexList;
-        verts->x = vertX1;
-        verts->y = arg0[0] + 2.0f;
-        verts->z = vertZ1;
-        verts->r = colour_r;
-        verts->g = colour_g;
-        verts->b = colour_b;
-        verts->a = colour_a;
-        verts++;
-
-        verts->x = vertX2;
-        verts->y = arg0[1] + 2.0f;
-        verts->z = vertZ2;
-        verts->r = colour_r;
-        verts->g = colour_g;
-        verts->b = colour_b;
-        verts->a = colour_a;
-        verts++;
-
-        verts->x = vertX1;
-        verts->y = arg1[0] - 2.0f;
-        verts->z = vertZ1;
-        verts->r = colour_r;
-        verts->g = colour_g;
-        verts->b = colour_b;
-        verts->a = colour_a;
-        verts++;
-
-        verts->x = vertX2;
-        verts->y = arg1[1] - 2.0f;
-        verts->z = vertZ2;
-        verts->r = colour_r;
-        verts->g = colour_g;
-        verts->b = colour_b;
-        verts->a = colour_a;
-        verts++;
-
-        gSceneCurrVertexList = verts;
-        triIndex = (u8) D_8011D4B6;
-
-        tris = gSceneCurrTriList;
-        tris->flags = BACKFACE_DRAW;
-        tris->vi0 = triIndex + 2;
-        tris->vi1 = triIndex + 1;
-        tris->vi2 = triIndex + 0;
-        tris->uv0.u = 0x3E0;
-        tris->uv0.v = 0x3E0;
-        tris->uv1.u = 0x3E0;
-        tris->uv1.v = 0;
-        tris->uv2.u = 1;
-        tris->uv2.v = 0;
-        tris++;
-
-        tris->flags = BACKFACE_DRAW;
-        tris->vi1 = triIndex + 1;
-        tris->vi2 = triIndex + 2;
-        tris->vi0 = triIndex + 3;
-        tris->uv0.u = 1;
-        tris->uv0.v = 0x3E0;
-        tris->uv1.u = 0x3E0;
-        tris->uv1.v = 0x3E0;
-        tris->uv2.u = 1;
-        tris->uv2.v = 0;
-        tris++;
-        gSceneCurrTriList = tris;
-
-        D_8011D4B6 += 4;
-        D_8011D4B8++;
+        return NULL;
     }
 
-    return 0;
+    if (D_8011D4B6.whole == 24) {
+        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6.whole, 0);
+        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), (D_8011D4B6.whole >> 1),
+                   TRIN_DISABLE_TEXTURE);
+        D_8011D488 = gSceneCurrVertexList;
+        D_8011D4B6.whole = 0;
+        D_8011D498 = gSceneCurrTriList;
+    }
+
+    vertX1 = arg2 * D_8011D4A0 + D_8011D4AC;
+    vertZ1 = arg2 * D_8011D4A4 + D_8011D4B0;
+    vertX2 = arg3 * D_8011D4A0 + D_8011D4AC;
+    vertZ2 = arg3 * D_8011D4A4 + D_8011D4B0;
+
+    colour_r = D_8011B0E1;
+    colour_g = D_8011B0E2;
+    colour_b = D_8011B0E3;
+    colour_a = 0xFF;
+
+    verts = gSceneCurrVertexList;
+    verts[0].x = vertX1;
+    verts[0].y = arg0[0] + 2.0f;
+    verts[0].z = vertZ1;
+    verts[0].r = colour_r;
+    verts[0].g = colour_g;
+    verts[0].b = colour_b;
+    verts[0].a = colour_a;
+
+    verts[1].x = vertX2;
+    verts[1].y = arg0[1] + 2.0f;
+    verts[1].z = vertZ2;
+    verts[1].r = colour_r;
+    verts[1].g = colour_g;
+    verts[1].b = colour_b;
+    verts[1].a = colour_a;
+
+    verts[2].x = vertX1;
+    verts[2].y = arg1[0] - 2.0f;
+    verts[2].z = vertZ1;
+    verts[2].r = colour_r;
+    verts[2].g = colour_g;
+    verts[2].b = colour_b;
+    verts[2].a = colour_a;
+
+    verts[3].x = vertX2;
+    verts[3].y = arg1[1] - 2.0f;
+    verts[3].z = vertZ2;
+    verts[3].r = colour_r;
+    verts[3].g = colour_g;
+    verts[3].b = colour_b;
+    verts[3].a = colour_a;
+    // @fake
+    if (1) {}
+    verts += 4;
+    gSceneCurrVertexList = verts;
+
+    tris = gSceneCurrTriList;
+    triIndex = D_8011D4B6.two;
+
+    // @fake, using index 0 directly doesn't match
+    vertX2 = 0;
+    tris[vertX2].flags = BACKFACE_DRAW;
+    tris[vertX2].vi0 = triIndex + 2;
+    tris[vertX2].vi1 = triIndex + 1;
+    tris[vertX2].vi2 = triIndex;
+    tris[vertX2].uv0.u = 0x3E0;
+    tris[vertX2].uv0.v = 0x3E0;
+    tris[vertX2].uv1.u = 0x3E0;
+    tris[vertX2].uv1.v = 0;
+    tris[vertX2].uv2.u = 1;
+    tris[vertX2].uv2.v = 0;
+
+    tris[1].flags = BACKFACE_DRAW;
+    tris[1].vi0 = triIndex + 3;
+    tris[1].vi1 = triIndex + 1;
+    tris[1].vi2 = triIndex + 2;
+    tris[1].uv0.u = 1;
+    tris[1].uv0.v = 0x3E0;
+    tris[1].uv1.u = 0x3E0;
+    tris[1].uv1.v = 0x3E0;
+    tris[1].uv2.u = 1;
+    tris[1].uv2.v = 0;
+    tris += 2;
+    gSceneCurrTriList = tris;
+
+    D_8011D4B6.whole += 4;
+    D_8011D4B8++;
+    return NULL;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80027184.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 typedef struct Unk80027568_2 {

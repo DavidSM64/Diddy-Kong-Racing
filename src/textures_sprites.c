@@ -904,7 +904,7 @@ s32 tex_asset_size(s32 id) {
     s32 size;
     s32 new_var3;
     s32 textureTableType;
-    s32 numOfTextures;
+    u16 numOfTextures;
     TempTexHeader *new_var4;
 
     textureTable = ASSET_TEXTURES_2D;
