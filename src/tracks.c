@@ -508,8 +508,6 @@ void func_800257D0(void) {
     }
 }
 
-#ifdef NON_MATCHING
-// URL: https://decomp.me/scratch/Hz4qp
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     s16 i;
     s16 j;
@@ -521,12 +519,12 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     s16 temp_s3;
     s16 var_s0;
     s16 var_s4;
-    s32 breakLoop;
+    s16 breakLoop;
     s32 *ptr2;
     LevelModelSegmentBoundingBox *bbox;
     s16 sum;
-    s8 sp7C[20]; // possible UB here, real size is unknown
-    s16 tmp;
+    s8 sp7C[24]; // possible UB here, real size is unknown
+    s32 pad;
 
     D_8011D490[0] = D_8011D474[viewportIndex].unk0;
     D_8011D490[1] = D_8011D474[viewportIndex].unk4;
@@ -550,15 +548,14 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
 
     i = 0;
     for (; i < numberOfSegments; i++) {
-        LevelModel *levelModel = gCurrentLevelModel; // fake ?
-        bbox = &levelModel->segmentsBoundingBoxes[segmentIds[i]];
-        sum = 0;
-        sum += bbox->x1 * yCameraSins + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
-        sum += yCameraSins * bbox->x2 + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
-        sum += bbox->x1 * yCameraSins + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
-        sum += yCameraSins * bbox->x2 + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
-        if (sum & 3) {
-            func_80026430(&levelModel->segments[segmentIds[i]], yCameraSins, yCameraCoss, temp_f22);
+        bbox = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIds[i]];
+        breakLoop = 0;
+        breakLoop += bbox->x1 * yCameraSins + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
+        breakLoop += yCameraSins * bbox->x2 + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
+        breakLoop += bbox->x1 * yCameraSins + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
+        breakLoop += yCameraSins * bbox->x2 + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
+        if (breakLoop & 3) {
+            func_80026430(&gCurrentLevelModel->segments[segmentIds[i]], yCameraSins, yCameraCoss, temp_f22);
             if (gCurrentLevelModel->segments[segmentIds[i]].unk3C & 2) {
                 func_80026070(bbox, yCameraSins, yCameraCoss, temp_f22);
             }
@@ -597,12 +594,12 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     var_s0 = 0;
 
     for (i = 0; i < D_8011D49E; i++) {
-        tmp = D_8011D478[i].unk7 * 2;
-        if (D_8011D47C[tmp] == -1) {
+        j = D_8011D478[i].unk7 * 2;
+        if (D_8011D47C[j] == -1) {
             D_8011D478[i].unk6 |= 2;
-            D_8011D47C[tmp] = i;
+            D_8011D47C[j] = i;
         } else {
-            D_8011D47C[tmp + 1] = i;
+            D_8011D47C[j + 1] = i;
         }
     }
     var_s4 = temp_s3 = D_8011D478[0].unk0;
@@ -652,9 +649,6 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     gSceneCurrVertexList = spAC;
     gSceneCurrTriList = spA8;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002581C.s")
-#endif
 
 void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 arg3) {
     f32 sp80[4];
