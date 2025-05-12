@@ -445,8 +445,8 @@ TextureHeader *load_texture(s32 arg0) {
         arg0 = 0;
     }
     for (i = 0; i < gNumberOfLoadedTextures; i++) {
-        if (arg0 == gTextureCache[(i << 1)]) {
-            tex = (TextureHeader *) gTextureCache[(i << 1) + 1];
+        if (arg0 == gTextureCache[ASSETCACHE_ID(i)]) {
+            tex = (TextureHeader *) gTextureCache[ASSETCACHE_PTR(i)];
             tex->numberOfInstances++;
             return tex;
         }
@@ -457,13 +457,13 @@ TextureHeader *load_texture(s32 arg0) {
     numberOfTextures = gTempTextureHeader->header.numOfTextures >> 8;
 
     if (!gTempTextureHeader->header.isCompressed) {
-        tex = (TextureHeader *) mempool_alloc((numberOfTextures * 0x60) + assetSize, gTexColourTag);
+        tex = (TextureHeader *) mempool_alloc(numberOfTextures * 0x60 + assetSize, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
         load_asset_to_address(assetSection, (u32) tex, assetOffset, assetSize);
     } else {
-        sp3C = byteswap32((u8 *) &gTempTextureHeader->uncompressedSize) + 0x20;
+        sp3C = byteswap32((u8 *) &gTempTextureHeader->uncompressedSize) + sizeof(TextureHeader);
         tex = (TextureHeader *) mempool_alloc(numberOfTextures * 0x60 + sp3C, gTexColourTag);
         if (tex == NULL) {
             return NULL;
@@ -471,12 +471,12 @@ TextureHeader *load_texture(s32 arg0) {
         temp_a1 = (((s32) tex + sp3C) - assetSize);
         temp_a1 = (s32) temp_a1 - (s32) temp_a1 % 16;
         load_asset_to_address(assetSection, temp_a1, assetOffset, assetSize);
-        gzip_inflate((u8 *) (temp_a1 + 0x20), (u8 *) tex);
-        assetSize = sp3C - 0x20;
+        gzip_inflate((u8 *) (temp_a1 + sizeof(TextureHeader)), (u8 *) tex);
+        assetSize = sp3C - sizeof(TextureHeader);
     }
     texIndex = -1;
     for (i = 0; i < gNumberOfLoadedTextures; i++) {
-        if (gTextureCache[(i << 1)] == -1) {
+        if (gTextureCache[ASSETCACHE_ID(i)] == -1) {
             texIndex = i;
         }
     }
@@ -484,8 +484,8 @@ TextureHeader *load_texture(s32 arg0) {
         texIndex = gNumberOfLoadedTextures;
         gNumberOfLoadedTextures++;
     }
-    gTextureCache[(texIndex << 1)] = arg0;
-    gTextureCache[(texIndex << 1) + 1] = (s32) tex;
+    gTextureCache[ASSETCACHE_ID(texIndex)] = arg0;
+    gTextureCache[ASSETCACHE_PTR(texIndex)] = (s32) tex;
     paletteOffset = -1;
     if ((tex->format & 0xF) == TEX_FORMAT_CI4) {
         if (D_80126344 == 0) {
@@ -505,7 +505,7 @@ TextureHeader *load_texture(s32 arg0) {
     }
     D_80126344 = 0;
 
-    assetOffset = align16((u8 *) ((s32) tex + assetSize));
+    assetOffset = (s32)align16((u8 *) ((s32) tex + assetSize));
     texTemp = tex;
     for (i = 0; i < numberOfTextures; i++) {
         material_init(texTemp, (Gfx *) assetOffset);
@@ -519,7 +519,7 @@ TextureHeader *load_texture(s32 arg0) {
     if (gCiPalettesSize >= 0x280) {
         return NULL;
     }
-    if (gNumberOfLoadedTextures >= 701) {
+    if (gNumberOfLoadedTextures > 700) {
         return NULL;
     }
     return tex;
