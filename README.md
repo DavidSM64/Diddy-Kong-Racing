@@ -7,9 +7,9 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of May 12, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 85.89%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 85.69%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 56.95%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 56.73%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -121,26 +121,26 @@ As of May 12, 2025, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- --------------- 85.89% Complete (87.05% NON_MATCHING) ---------------
-                     # Decompiled functions: 1884
-                      # GLOBAL_ASM remaining: 67
+ --------------- 85.69% Complete (86.85% NON_MATCHING) ---------------
+                     # Decompiled functions: 1883
+                      # GLOBAL_ASM remaining: 66
                       # NON_MATCHING functions: 7
-                  # NON_EQUIVALENT WIP functions: 25
+                  # NON_EQUIVALENT WIP functions: 24
  ---------------------------- Game Status ----------------------------
                Balloons: 39/47, Keys: 4/4, Trophies: 4/5
                 T.T. Amulets: 4/4, Wizpig Amulets: 4/4
  ---------------------------------------------------------------------
-              We are racing in Spacedust Alley. (Lap 3/3)
+              We are racing in Spacedust Alley. (Lap 2/3)
  =====================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
- -------------------------- 56.95% Complete --------------------------
-                     # Documented functions: 1178
-                     # Undocumented remaining: 476
+ -------------------------- 56.73% Complete --------------------------
+                     # Documented functions: 1177
+                     # Undocumented remaining: 475
  ---------------------------- Game Status ----------------------------
                Balloons: 27/47, Keys: 3/4, Trophies: 2/5
                 T.T. Amulets: 3/4, Wizpig Amulets: 2/4
  ---------------------------------------------------------------------
- We are collecting silver coins in Crescent Island. (5/8 silver coins)
+ We are collecting silver coins in Crescent Island. (3/8 silver coins)
  =====================================================================
 ```
 <!-- README_SCORE_END -->
