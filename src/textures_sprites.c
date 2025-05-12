@@ -416,26 +416,21 @@ UNUSED s32 sprite_table_size(void) {
     return gSpriteTableSize;
 }
 
-#ifdef NON_EQUIVALENT
-// Minor matching issues with loops, but should be functionally the same.
-// Official Name: texLoadTexture
+//  Official Name: texLoadTexture
 TextureHeader *load_texture(s32 arg0) {
-    s32 assetSection;
+    TextureHeader *tex;
+    TextureHeader *texTemp;
+    u32 temp_a1;
     s32 assetIndex;
     s32 assetOffset;
     s32 assetSize;
-    s32 assetTable;
-    s32 texIndex;
-    s32 temp_a1;
     s32 paletteOffset;
+    s32 assetSection;
+    s32 texIndex;
+    s32 assetTable;
     s32 i;
-    u8 *alignedAddress;
-    TextureHeader *tex;
-    TextureHeader *texTemp;
-    s32 numberOfTextures;
+    u16 numberOfTextures;
     s32 sp3C;
-    s32 temp_a0;
-    s32 temp_v0_5;
 
     arg0 &= 0xFFFF;
     assetIndex = arg0;
@@ -459,7 +454,7 @@ TextureHeader *load_texture(s32 arg0) {
     assetOffset = gTextureAssetTable[assetTable][assetIndex];
     assetSize = gTextureAssetTable[assetTable][assetIndex + 1] - assetOffset;
     load_asset_to_address(assetSection, (u32) gTempTextureHeader, assetOffset, 0x28);
-    numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
+    numberOfTextures = gTempTextureHeader->header.numOfTextures >> 8;
 
     if (!gTempTextureHeader->header.isCompressed) {
         tex = (TextureHeader *) mempool_alloc((numberOfTextures * 0x60) + assetSize, gTexColourTag);
@@ -468,15 +463,13 @@ TextureHeader *load_texture(s32 arg0) {
         }
         load_asset_to_address(assetSection, (u32) tex, assetOffset, assetSize);
     } else {
-        temp_v0_5 = byteswap32((u8 *) &gTempTextureHeader->uncompressedSize);
-        temp_a0 = (numberOfTextures * 0x60) + temp_v0_5;
-        sp3C = temp_v0_5 + 0x20;
-        tex = (TextureHeader *) mempool_alloc(temp_a0 + 0x20, gTexColourTag);
+        sp3C = byteswap32((u8 *) &gTempTextureHeader->uncompressedSize) + 0x20;
+        tex = (TextureHeader *) mempool_alloc(numberOfTextures * 0x60 + sp3C, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
-        temp_a1 = ((s32) tex + sp3C) - assetSize;
-        temp_a1 -= temp_a1 % 0x10;
+        temp_a1 = (((s32) tex + sp3C) - assetSize);
+        temp_a1 = (s32) temp_a1 - (s32) temp_a1 % 16;
         load_asset_to_address(assetSection, temp_a1, assetOffset, assetSize);
         gzip_inflate((u8 *) (temp_a1 + 0x20), (u8 *) tex);
         assetSize = sp3C - 0x20;
@@ -488,7 +481,8 @@ TextureHeader *load_texture(s32 arg0) {
         }
     }
     if (texIndex == -1) {
-        texIndex = gNumberOfLoadedTextures++;
+        texIndex = gNumberOfLoadedTextures;
+        gNumberOfLoadedTextures++;
     }
     gTextureCache[(texIndex << 1)] = arg0;
     gTextureCache[(texIndex << 1) + 1] = (s32) tex;
@@ -510,15 +504,16 @@ TextureHeader *load_texture(s32 arg0) {
         paletteOffset = gCiPalettesSize - 128;
     }
     D_80126344 = 0;
+
+    assetOffset = align16((u8 *) ((s32) tex + assetSize));
     texTemp = tex;
-    alignedAddress = align16((u8 *) ((s32) texTemp + assetSize));
     for (i = 0; i < numberOfTextures; i++) {
-        material_init(texTemp, (Gfx *) alignedAddress);
+        material_init(texTemp, (Gfx *) assetOffset);
         if (paletteOffset >= 0) {
             texTemp->ciPaletteOffset = paletteOffset;
-            alignedAddress += 0x30; // I'm guessing it takes 6 f3d commands to load the palette
+            assetOffset += 0x30; // I'm guessing it takes 6 f3d commands to load the palette
         }
-        alignedAddress += 0x60; // I'm guessing it takes 12 f3d commands to load the texture
+        assetOffset += 0x60; // I'm guessing it takes 12 f3d commands to load the texture
         texTemp = (TextureHeader *) ((s32) texTemp + texTemp->textureSize);
     }
     if (gCiPalettesSize >= 0x280) {
@@ -529,9 +524,6 @@ TextureHeader *load_texture(s32 arg0) {
     }
     return tex;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/load_texture.s")
-#endif
 
 /**
  * This function attempts to free the texture from memory.
