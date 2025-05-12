@@ -7,7 +7,7 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of May 12, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 86.85%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 86.89%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 56.95%
 <!-- README_SCORE_SUMMARY_END -->
@@ -121,16 +121,16 @@ As of May 12, 2025, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- --------------- 86.85% Complete (88.01% NON_MATCHING) ---------------
-                     # Decompiled functions: 1887
-                      # GLOBAL_ASM remaining: 64
+ --------------- 86.89% Complete (88.05% NON_MATCHING) ---------------
+                     # Decompiled functions: 1888
+                      # GLOBAL_ASM remaining: 63
                       # NON_MATCHING functions: 7
-                  # NON_EQUIVALENT WIP functions: 22
+                  # NON_EQUIVALENT WIP functions: 21
  ---------------------------- Game Status ----------------------------
                Balloons: 40/47, Keys: 4/4, Trophies: 4/5
                 T.T. Amulets: 4/4, Wizpig Amulets: 4/4
  ---------------------------------------------------------------------
-             We are racing in Darkmoon Caverns. (Lap 1/3)
+             We are racing in Darkmoon Caverns. (Lap 2/3)
  =====================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
  -------------------------- 56.95% Complete --------------------------
