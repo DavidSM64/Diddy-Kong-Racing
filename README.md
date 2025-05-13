@@ -121,7 +121,6 @@ As of May 13, 2025, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
-
  --------------- 87.01% Complete (88.17% NON_MATCHING) ---------------
                      # Decompiled functions: 1889
                       # GLOBAL_ASM remaining: 62
