@@ -6833,7 +6833,7 @@ void charselect_render_text(UNUSED s32 updateRate) {
 #endif
         }
         rendermode_reset(&sMenuCurrDisplayList);
-        update_camera_fov(40.0f);
+        cam_set_fov(40.0f);
     }
 }
 
@@ -10420,7 +10420,7 @@ void postrace_start(s32 finishState, s32 worldID) {
     header = get_current_level_header();
     gPostraceFinishState = finishState;
     if (is_in_two_player_adventure()) {
-        set_scene_viewport_num(VIEWPORTS_COUNT_1_PLAYER);
+        set_scene_viewport_num(VIEWPORT_LAYOUT_1_PLAYER);
     }
     gPostRace1Player = FALSE;
     if (gNumberOfActivePlayers == 1 && gTrophyRaceWorldId == 0) {
@@ -13359,7 +13359,7 @@ void menu_camera_centre(void) {
     f32 posY;
     f32 posZ;
 
-    set_active_viewports_and_max(0);
+    set_active_viewports_and_max(VIEWPORT_LAYOUT_1_PLAYER);
     set_active_camera(0);
 
     cam = get_active_camera_segment();

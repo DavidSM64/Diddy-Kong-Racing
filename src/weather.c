@@ -650,7 +650,7 @@ void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, Camera *segme
     s32 i;
 
     if (gLensFlare != NULL && gLensFlareOff == 0) {
-        if (get_viewport_count() == 0) {
+        if (cam_get_viewport_layout() == 0) {
             lensFlareEntry = &gLensFlare->segment.level_entry->lensFlare;
             pos[1].x = 0.0f;
             pos[1].y = 0.0f;
@@ -856,7 +856,7 @@ void rain_set(s32 lightningFrequency, s32 opacity, f32 time) {
  */
 void rain_fog(void) {
     s32 a, b;
-    if (gWeatherType != WEATHER_SNOW && get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER) {
+    if (gWeatherType != WEATHER_SNOW && cam_get_viewport_layout() == VIEWPORT_LAYOUT_1_PLAYER) {
         a = ((gLightningFrequency * -38) >> 16) + 1018;
         b = ((gLightningFrequency * -20) >> 16) + 1023;
         set_fog(0, a, b, 28, 15, 36);
@@ -877,7 +877,7 @@ UNUSED void rain_opacity_set(s32 opacity) {
 void rain_update(s32 updateRate) {
     s32 i;
 
-    if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && gWeatherType != WEATHER_SNOW) {
+    if (cam_get_viewport_layout() == VIEWPORT_LAYOUT_1_PLAYER && gWeatherType != WEATHER_SNOW) {
         if (gRainHiddenTimer > 0) {
             if (updateRate < gRainHiddenTimer) {
                 gRainHiddenTimer -= updateRate;

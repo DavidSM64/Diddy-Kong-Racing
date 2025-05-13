@@ -1543,7 +1543,7 @@ void obj_loop_fish(Object *fishObj, s32 updateRate) {
     Vertex *verts;
     s32 randNumber;
 
-    if (get_viewport_count() > 0) {
+    if (cam_get_viewport_layout() > 0) {
         free_object(fishObj);
         return;
     }
@@ -2152,7 +2152,7 @@ void obj_loop_animcamera(Object *obj, s32 updateRate) {
     obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     camera = &obj->unk64->animation;
     if (temp_v0 == 0) {
-        if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER) {
+        if (cam_get_viewport_layout() == VIEWPORT_LAYOUT_1_PLAYER) {
             updateCam = func_800210CC(camera->unk44);
         } else {
             updateCam = TRUE;

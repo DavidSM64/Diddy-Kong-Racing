@@ -2900,7 +2900,7 @@ void render_3d_model(Object *obj) {
                     racerObj->playerIndex == PLAYER_COMPUTER) {
                     flags = FALSE;
                 }
-                if (get_viewport_count() != VIEWPORTS_COUNT_1_PLAYER) {
+                if (cam_get_viewport_layout() != VIEWPORT_LAYOUT_1_PLAYER) {
                     flags = FALSE;
                 }
                 obj->curVertData = (Vertex *) obj68->vertices[obj68->animationTaskNum];
@@ -3224,7 +3224,7 @@ void func_80012F94(Object *obj) {
                     }
                     batchNum = 0;
                     bossAsset = (u8 *) get_misc_asset(var_t0); // 40 bytes of data u8[8][5]?
-                    bossAsset = &bossAsset[(get_viewport_count() * 10)];
+                    bossAsset = &bossAsset[(cam_get_viewport_layout() * 10)];
                     var_a1 = bossAsset;
                     if (get_current_viewport() != objRacer->playerIndex) {
                         var_a1 += 5;
@@ -4494,7 +4494,7 @@ void race_transition_adventure(s32 updateRate) {
         sndp_stop_all_looped();
         if (is_in_two_player_adventure()) {
             set_scene_viewport_num(0);
-            set_active_viewports_and_max(0);
+            set_active_viewports_and_max(VIEWPORT_LAYOUT_1_PLAYER);
             prevRacer0Obj = (*gRacers)[0];
             prevPort0Racer = gRacersByPort[0];
             racer = &prevRacer0Obj->unk64->racer;
@@ -6030,9 +6030,9 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
         if (newObj->segment.header->behaviorId == BHV_CAMERA_ANIMATION) {
             camera = &newObj->unk64->anim_camera;
             camera->unk44 = D_8011AD3E;
-            viewportCount = get_viewport_count();
+            viewportCount = cam_get_viewport_layout();
             if (is_two_player_adventure_race()) {
-                viewportCount = VIEWPORTS_COUNT_2_PLAYERS;
+                viewportCount = VIEWPORT_LAYOUT_2_PLAYERS;
             }
             for (i = 0; i < viewportCount;) {
                 newObj = spawn_object(&newObjEntry, 1);

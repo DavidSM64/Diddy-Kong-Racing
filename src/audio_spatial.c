@@ -192,7 +192,7 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
     f32 pitch3;
 
     jingleVolume = 0;
-    viewportCount = get_viewport_count();
+    viewportCount = cam_get_viewport_layout();
     numCameras = set_active_viewports_and_max(viewportCount);
     cameras = get_cutscene_camera_segment();
 

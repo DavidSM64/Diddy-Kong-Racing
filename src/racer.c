@@ -1698,7 +1698,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     sp24 = 0x400;
     tempUpdateRate = (s32) updateRate;
     // Place the camera a bit closer with 2+ players to help visibility.
-    numViewports = get_viewport_count();
+    numViewports = cam_get_viewport_layout();
     if (numViewports == 1) {
         phi_f14 = 200.0f;
         phi_f18 = 51.0f;
@@ -1744,7 +1744,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         WRAP(tempAngle, -0x8000, 0x8000);
         gCameraObject->trans.rotation.x_rotation += (tempAngle * tempUpdateRate) >> 4;
     }
-    get_viewport_count();
+    cam_get_viewport_layout();
     if (racer->velocity < 0.0) {
         yVel = -(racer->velocity * brakeVar) * 6.0f;
         if (racer->velocity) {} // Fakematch
@@ -1980,7 +1980,7 @@ void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
     if (temp_f16 > 200.0f) {
         temp_f16 = 200.0f;
     }
-    numViewports = get_viewport_count();
+    numViewports = cam_get_viewport_layout();
     if (numViewports == 1) {
         baseFloat2 = 180.0f;
         baseFloat1 = 50.0f;
@@ -2184,7 +2184,7 @@ void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
         zoom += ((f32) (gRaceStartTimer - 60) * 4.0f);
     }
     racer->cameraYaw = 0x8000 - racer->steerVisualRotation;
-    if (get_viewport_count() == 1) {
+    if (cam_get_viewport_layout() == 1) {
         zoom = 160.0f;
     }
     // A little bit of indecisiveness.
@@ -2333,7 +2333,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
         gCameraObject->trans.rotation.z_rotation = 0;
         gCameraObject->trans.rotation.x_rotation = 0x400;
         gCameraObject->trans.rotation.y_rotation = tempRacer->cameraYaw;
-        gCameraObject->unk36 = CAMERA_CAR;
+        gCameraObject->mode = CAMERA_CAR;
         gCameraObject->unk3C = 0xFF;
         gCameraObject->unk3D = 0xFF;
         gCameraObject->unk3E = 0xFF;
@@ -2396,7 +2396,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     s32 i;
     struct LevelObjectEntryCommon newObject;
 
-    gNumViewports = get_viewport_count() + 1;
+    gNumViewports = cam_get_viewport_layout() + 1;
     gCurrentSurfaceType = SURFACE_DEFAULT;
     gRaceStartTimer = get_race_countdown();
     updateRateF = updateRate;
@@ -3692,7 +3692,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     } else {
         racer->unk1EE = 0;
     }
-    if (get_viewport_count() < THREE_PLAYERS) {
+    if (cam_get_viewport_layout() < THREE_PLAYERS) {
         if ((sp60 != 0 && racer->velocity < -2.0) || sp58 != 0 || racer->unk1FB != 0) {
             if (racer->wheel_surfaces[2] < SURFACE_NONE) {
                 obj->particleEmittersEnabled |= gSurfaceFlagTable[racer->wheel_surfaces[2]];
@@ -4111,7 +4111,7 @@ void racer_spinout_car(Object *obj, Object_Racer *racer, s32 updateRate, f32 upd
     }
     angleVel = racer->y_rotation_vel;
     if (gCurrentPlayerIndex > PLAYER_COMPUTER) {
-        if (gNumViewports < VIEWPORTS_COUNT_4_PLAYERS) {
+        if (gNumViewports < VIEWPORT_LAYOUT_4_PLAYERS) {
             obj->particleEmittersEnabled |= 0x4FC00;
         } else {
             if (racer->wheel_surfaces[2] < SURFACE_NONE) {
@@ -4793,7 +4793,7 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
     } else {
         racer->unk1EE = 0;
     }
-    if (get_viewport_count() < 2 && sp38 && racer->velocity < -2.0) {
+    if (cam_get_viewport_layout() < 2 && sp38 && racer->velocity < -2.0) {
         if (racer->wheel_surfaces[2] < SURFACE_NONE) {
             obj->particleEmittersEnabled |= 1 << (racer->wheel_surfaces[2] * 2);
         }
@@ -5940,14 +5940,14 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
                 break;
         }
     }
-    if (racer->raceFinished == TRUE && gCameraObject->unk36 != CAMERA_FINISH_CHALLENGE) {
-        gCameraObject->unk36 = CAMERA_FINISH_RACE;
+    if (racer->raceFinished == TRUE && gCameraObject->mode != CAMERA_FINISH_CHALLENGE) {
+        gCameraObject->mode = CAMERA_FINISH_RACE;
     }
     if (racer->exitObj) {
-        gCameraObject->unk36 = CAMERA_FIXED;
+        gCameraObject->mode = CAMERA_FIXED;
     }
     // Set the camera behaviour based on current mode.
-    switch (gCameraObject->unk36) {
+    switch (gCameraObject->mode) {
         default:
             break;
         case CAMERA_CAR:
@@ -6033,12 +6033,12 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
 void second_racer_camera_update(Object *obj, Object_Racer *racer, s32 mode, f32 updateRateF) {
     f32 xPos, yPos, zPos;
     if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->raceFinished != TRUE) {
-        if (mode != gCameraObject->unk36) {
+        if (mode != gCameraObject->mode) {
             update_player_camera(obj, racer, updateRateF);
             xPos = gCameraObject->trans.x_position;
             yPos = gCameraObject->trans.y_position;
             zPos = gCameraObject->trans.z_position;
-            gCameraObject->unk36 = mode;
+            gCameraObject->mode = mode;
             update_player_camera(obj, racer, updateRateF);
             if (gRaceStartTimer == 0 && gTajInteractStatus == TAJ_WANDER) {
                 gCameraObject->z_velocity = xPos - gCameraObject->trans.x_position;
@@ -6074,7 +6074,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     s32 tempAngle;
     s32 delta = (s32) updateRate;
 
-    numViewports = get_viewport_count();
+    numViewports = cam_get_viewport_layout();
     if (numViewports == 1) {
         baseDistance = 192.0f;
         baseAngle = 0x200;
@@ -6303,7 +6303,7 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
     cameraID = racer->spectateCamID;
     cam = spectate_nearest(obj, &cameraID);
     if (cam == NULL) {
-        gCameraObject->unk36 = CAMERA_FINISH_CHALLENGE;
+        gCameraObject->mode = CAMERA_FINISH_CHALLENGE;
         return;
     }
     racer->spectateCamID = cameraID;

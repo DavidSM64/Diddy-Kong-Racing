@@ -38,10 +38,10 @@
 #define VIEWPORT_AUTO 0x8000
 
 enum ViewportCount {
-    VIEWPORTS_COUNT_1_PLAYER,
-    VIEWPORTS_COUNT_2_PLAYERS,
-    VIEWPORTS_COUNT_3_PLAYERS,
-    VIEWPORTS_COUNT_4_PLAYERS
+    VIEWPORT_LAYOUT_1_PLAYER,
+    VIEWPORT_LAYOUT_2_PLAYERS,
+    VIEWPORT_LAYOUT_3_PLAYERS,
+    VIEWPORT_LAYOUT_4_PLAYERS
 };
 
 enum ViewPortFlags {
@@ -65,7 +65,7 @@ typedef struct Camera {
     /* 0x002C */ f32 unk2C;
     /* 0x0030 */ f32 distanceToCamera;
     /* 0x0034 */ s16 cameraSegmentID;
-    /* 0x0036 */ s16 unk36;
+    /* 0x0036 */ s16 mode;
     /* 0x0038 */ s16 pitch;
     /* 0x003A */ s8 unk3A;
     /* 0x003B */ u8 zoom;
@@ -105,10 +105,10 @@ void cam_set_zoom(s32 cameraID, s32 zoomLevel);
 void set_viewport_tv_type(s8 setting);
 void func_800660C0(void);
 void func_800660D0(void);
-UNUSED f32 get_current_camera_fov(void);
-void update_camera_fov(f32 camFieldOfView);
+UNUSED f32 cam_get_fov(void);
+void cam_set_fov(f32 camFieldOfView);
 Matrix *matrix_get_model_s16(void);
-s32 get_viewport_count(void);
+s32 cam_get_viewport_layout(void);
 s32 get_current_viewport(void);
 void camera_init_tracks_menu(Gfx **dList, MatrixS **mtxS);
 f32 get_distance_to_active_camera(f32 xPos, f32 yPos, f32 zPos);

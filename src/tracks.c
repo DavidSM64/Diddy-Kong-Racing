@@ -1111,8 +1111,8 @@ s32 func_80027568(void) {
     if (numRacers == 0) {
         return FALSE;
     }
-    if ((check_if_showing_cutscene_camera() != 0) || (gSceneActiveCamera->unk36 >= 5) ||
-        (gSceneActiveCamera->unk36 == 3)) {
+    if ((check_if_showing_cutscene_camera() != 0) || (gSceneActiveCamera->mode >= 5) ||
+        (gSceneActiveCamera->mode == 3)) {
         return FALSE;
     }
     curViewport = get_current_viewport();
@@ -1397,7 +1397,7 @@ void draw_gradient_background(void) {
         y0 = -150;
         y1 = 150;
     }
-    if (get_viewport_count() == TWO_PLAYERS) {
+    if (cam_get_viewport_layout() == TWO_PLAYERS) {
         y0 >>= 1;
         y1 >>= 1;
     }
@@ -1516,7 +1516,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     if (gWaveBlockCount != 0) {
         func_800B8B8C();
         racers = get_racer_objects(&numRacers);
-        if (gSceneActiveCamera->unk36 != 7 && numRacers > 0 && !check_if_showing_cutscene_camera()) {
+        if (gSceneActiveCamera->mode != 7 && numRacers > 0 && !check_if_showing_cutscene_camera()) {
             i = -1;
             do {
                 i++;
@@ -3281,7 +3281,7 @@ void shadow_update(s32 group, s32 waterGroup, s32 updateRate) {
     gShadowTail = 0;
     gNewShadowTriCount = 0;
     gNewShadowVtxCount = 0;
-    numViewports = get_viewport_count();
+    numViewports = cam_get_viewport_layout();
     objects = objGetObjList(&objIndex, &objectCount);
     while (objIndex < objectCount) {
         obj = objects[objIndex];
@@ -3471,7 +3471,7 @@ void shadow_generate(Object *obj, s32 isWater) {
         gNewShadowTexture = set_animated_texture_header(obj->waterEffect->texture, obj->waterEffect->textureFrame << 8);
         gNewShadowY2 = obj->segment.header->shadowTop + yPos;
         gNewShadowY1 = obj->segment.header->shadowBottom + yPos;
-        if (gWaveBlockCount == 0 || get_viewport_count() < VIEWPORTS_COUNT_2_PLAYERS) {
+        if (gWaveBlockCount == 0 || cam_get_viewport_layout() < VIEWPORT_LAYOUT_2_PLAYERS) {
             D_8011D0C8 = 0;
         }
         gNewShadowScale = (obj->waterEffect->scale * character_scale);
@@ -4189,7 +4189,7 @@ void obj_loop_fogchanger(Object *obj) {
 
     if (check_if_showing_cutscene_camera()) {
         camera = get_cutscene_camera_segment();
-        views = get_viewport_count() + 1;
+        views = cam_get_viewport_layout() + 1;
     } else {
         racers = get_racer_objects(&views);
     }

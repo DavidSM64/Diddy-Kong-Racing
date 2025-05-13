@@ -319,7 +319,7 @@ void hud_init(UNUSED s32 viewportCount) {
     s32 i;
     s32 playerCount;
 
-    gHUDNumPlayers = get_viewport_count();
+    gHUDNumPlayers = cam_get_viewport_layout();
     gNumActivePlayers = set_active_viewports_and_max(gHUDNumPlayers);
     gHudSettings = get_settings();
     gHudSilverCoinRace = check_if_silver_coin_race();
@@ -839,7 +839,7 @@ void hud_render_player(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *
                     sprite_anim_off(TRUE);
                     if (is_in_time_trial()) {
                         hud_time_trial_finish(racer, updateRate);
-                    } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->finishPosition == 1) {
+                    } else if (cam_get_viewport_layout() == VIEWPORT_LAYOUT_1_PLAYER && racer->finishPosition == 1) {
                         if (is_in_two_player_adventure()) {
                             if (get_current_level_race_type() == RACETYPE_BOSS) {
                                 goto showFinishRace;
@@ -1437,7 +1437,7 @@ void hud_main_hub(Object *obj, s32 updateRate) {
     Object_Racer *racer;
     HudElement *portrait;
 
-    if (get_viewport_count() == PLAYER_ONE) {
+    if (cam_get_viewport_layout() == PLAYER_ONE) {
         racer = (Object_Racer *) obj->unk64;
         sprite_anim_off(TRUE);
         hud_balloons(racer);
@@ -1936,7 +1936,7 @@ void hud_race_start(s32 countdown, s32 updateRate) {
             if (gCurrentHud->entry[HUD_RACE_START_GO].raceStartGo.musicStartTimer[gHudCurrentViewport] >= 60) {
                 if (gRaceStartShowHudStep == 4) {
                     // Mute background music in 3/4 player.
-                    if (get_viewport_count() > TWO_PLAYERS) {
+                    if (cam_get_viewport_layout() > TWO_PLAYERS) {
                         music_play(SEQUENCE_NONE);
                     } else {
                         start_level_music(1.0f);
