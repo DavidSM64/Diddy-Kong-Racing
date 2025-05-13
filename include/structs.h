@@ -1651,6 +1651,7 @@ typedef struct Object_CharacterSelect {
     s8 pad42;
     s8 unk43;
 } Object_CharacterSelect;
+
 typedef struct Object_64 {
     union {
         Object_Laser laser;
