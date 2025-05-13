@@ -1020,8 +1020,8 @@ typedef struct Object_Weapon {
   /* 0x14 */ s16 unk16;
   /* 0x18 */ u8 weaponID;
   /* 0x19 */ s8 checkpoint;
-  /* 0x19 */ s16 unk1A;
-  /* 0x19 */ SoundHandle soundMask;
+  /* 0x1A */ s16 unk1A;
+  /* 0x1C */ struct AudioPoint *soundMask;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {

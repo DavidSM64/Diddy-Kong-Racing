@@ -3512,14 +3512,14 @@ s32 menu_title_screen_loop(s32 updateRate) {
     } else if ((gMenuDelay == 0) && !is_controller_missing()) {
         s32 temp0 = gTitleScreenCurrentOption;
         // gMenuStickY[PLAYER_MENU] = +1 when going up, and -1 when going down.
-        if ((gMenuStickY[PLAYER_MENU] < 0) && (gTitleScreenCurrentOption < 1)) {
+        if (gMenuStickY[PLAYER_MENU] < 0 && gTitleScreenCurrentOption < 1) {
             gTitleScreenCurrentOption++;
         }
-        if ((gMenuStickY[PLAYER_MENU] > 0) && (gTitleScreenCurrentOption > 0)) {
+        if (gMenuStickY[PLAYER_MENU] > 0 && gTitleScreenCurrentOption > 0) {
             gTitleScreenCurrentOption--;
         }
         if (temp0 != gTitleScreenCurrentOption) {
-            sound_play(SOUND_MENU_PICK2, (s32 *) (0 * contrIndex)); // TODO: The `* contrIndex` here is a fake match.
+            sound_play(SOUND_MENU_PICK2, (SoundHandle *) (s32 *) (0 * contrIndex)); // TODO: The `* contrIndex` here is a fake match.
         }
         if (gMenuButtons[PLAYER_MENU] & (A_BUTTON | START_BUTTON)) {
             for (contrIndex = 3; contrIndex > 0 && !(gMenuButtons[contrIndex] & (A_BUTTON | START_BUTTON));
