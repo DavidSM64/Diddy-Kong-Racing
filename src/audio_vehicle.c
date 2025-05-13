@@ -27,8 +27,7 @@ Object_Racer *gSoundRacerObj;
 
 /******************************/
 
-// racer_sound_init
-VehicleSoundData *func_80004B40(s32 characterId, s32 vehicleId) {
+VehicleSoundData *racer_sound_init(s32 characterId, s32 vehicleId) {
     s32 unused[2];
     s32 i;
     u8 *ptr;

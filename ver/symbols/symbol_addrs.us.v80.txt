@@ -119,7 +119,7 @@ sndp_get_group_volume = 0x80004A3C;
 sndp_set_group_volume = 0x80004A60;
 
 // audio_vehicle.c .text
-func_80004B40 = 0x80004B40;
+racer_sound_init = 0x80004B40;
 racer_sound_update = 0x800050D0;
 func_80005254 = 0x80005254;
 racer_sound_hovercraft = 0x80005D08;

@@ -1292,7 +1292,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 }
             }
             if ((gameMode != GAMEMODE_MENU || D_8011AD3C == 2) && vehicle < VEHICLE_BOSSES) {
-                curRacer->vehicleSound = func_80004B40(curRacer->characterId, curRacer->vehicleID);
+                curRacer->vehicleSound = racer_sound_init(curRacer->characterId, curRacer->vehicleID);
             } else {
                 curRacer->vehicleSound = NULL;
             }
