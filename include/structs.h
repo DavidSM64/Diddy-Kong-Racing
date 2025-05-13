@@ -156,7 +156,10 @@ typedef struct Sprite {
   /* 0x02 */ s16 numberOfFrames; // 1 means static texture
   /* 0x04 */ s16 numberOfInstances;
   /* 0x06 */ s16 drawFlags;
-  /* 0x08 */ TextureHeader **frames;
+  union {
+    /* 0x08 */ TextureHeader **frames;
+    /* 0x08 */ Gfx *gfx[1];
+  };
   union {
     /* 0x0C */ u8 val[1]; // Actual size varies.
     /* 0x0C */ u8 *ptr[1]; // Display list?
@@ -1059,19 +1062,25 @@ typedef struct Object_Boost_Inner {
   Vec3f position;
   f32 unkC;
   f32 unk10;
-  u8 pad[0x24 - 0x14];
+  f32 unk14;
+  f32 unk18;
+  f32 unk1C;
+  f32 unk20;
 } Object_Boost_Inner;
 
 typedef struct Object_Boost {
   Object_Boost_Inner unk0;
   Object_Boost_Inner unk24;
   Object_Boost_Inner unk48;
-  u8 pad6C[4];
+  s16 unk6C;
+  s16 unk6E;
   u8 unk70;
   u8 unk71;
   u8 unk72;
-  u8 unk73;
+  s8 unk73;
   f32 unk74;
+  Sprite *unk78;
+  TextureHeader *unk7C;
 } Object_Boost;
 
 typedef struct Object_EffectBox {

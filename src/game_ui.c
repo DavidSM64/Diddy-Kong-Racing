@@ -3117,7 +3117,7 @@ void hud_weapon(Object *obj, s32 updateRate) {
  * If currently using a magnet, render a reticle over the racer that's being targeted.
  */
 void hud_magnet_reticle(Object *racerObj) {
-    unk80068514_arg4 *entry;
+    Sprite *entry;
     HudElement *hud;
     Object_Racer *racer;
 

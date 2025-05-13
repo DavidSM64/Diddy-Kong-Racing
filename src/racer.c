@@ -923,7 +923,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s32 var_v1;
     Unknown80046524 *temp_v0_16;
     s32 var_t0;
-    Asset20 *asset20;
+    Object_Boost *asset20;
     s8 lastWheelSurface;
     s8 wave_properties;
     s8 wheelsOnStone;
@@ -1520,7 +1520,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
     if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->boostTimer == 0 && gNumViewports < 2) {
-        asset20 = (Asset20 *) get_misc_asset(ASSET_MISC_20);
+        asset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
         asset20 = &asset20[racer->racerIndex];
         iTemp = ((racer->boostType & EMPOWER_BOOST) >> 2) + 10;
         if (iTemp > 10) {
@@ -2969,7 +2969,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
     f32 spA0;
     Matrix sp60;
     LevelHeader *currentLevelHeader;
-    Asset20 *asset20;
+    Object_Boost *asset20;
     s32 var_v1;
     s8 playerObjectHasMoved;
     s32 objectMoved;
@@ -3208,7 +3208,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
             }
         }
         if (racer->boostTimer == 0 && gNumViewports < 2) {
-            asset20 = (Asset20 *) get_misc_asset(ASSET_MISC_20);
+            asset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
             asset20 = &asset20[racer->racerIndex];
             var_v1 = ((racer->boostType & EMPOWER_BOOST) >> 2) + 0x10;
             if (var_v1 > 0x10) {
