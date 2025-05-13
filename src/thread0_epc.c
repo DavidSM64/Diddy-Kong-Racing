@@ -116,7 +116,7 @@ void stop_all_threads_except_main(void) {
  */
 void write_epc_data_to_cpak(void) {
     OSThread *thread;
-    UNUSED s16 sp444[0x200];
+    s16 sp444[0x200];
     u8 sp244[0x200];
     u8 sp44[0x200];
     s16 *v0;
@@ -213,24 +213,25 @@ void update_object_stack_trace(s32 index, s32 value) {
 s32 get_lockup_status(void) {
     s32 fileNum;
     s32 controllerIndex = 0;
-    u64 sp420[STACKSIZE(STACK_EPCINFO2)]; // Overwrite epcStack?
-    u64 sp220[STACKSIZE(STACK_EPCINFO1)];
-    u8 dataFromControllerPak[_ALIGN128(sizeof(epcInfo))];
+    struct {
+        u8 epcInfo[_ALIGN128(sizeof(epcInfo))];
+        u64 epcInfoStack1[STACKSIZE(STACK_EPCINFO1)];
+        u64 epcInfoStack2[STACKSIZE(STACK_EPCINFO2)];
+    } dataFromControllerPak;
 
     if (sLockupStatus != -1) {
         return sLockupStatus;
     } else {
-        sLockupStatus = 0;
+        sLockupStatus = FALSE;
         // Looks like it reads EpcInfo data from the controller pak, which is interesting
         if ((get_si_device_status(controllerIndex) == CONTROLLER_PAK_GOOD) &&
             (get_file_number(controllerIndex, "CORE", "", &fileNum) == CONTROLLER_PAK_GOOD) &&
-            (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak,
-                                           sizeof(sp420) + sizeof(sp220) + sizeof(dataFromControllerPak)) ==
-             CONTROLLER_PAK_GOOD)) {
-            bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(epcInfo));
-            bcopy(&sp220, &gEpcInfoStack1, sizeof(sp220));
-            bcopy(&sp420, &gEpcInfoStack2, sizeof(sp420));
-            sLockupStatus = 1;
+            (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *) &dataFromControllerPak,
+                                           sizeof(dataFromControllerPak)) == CONTROLLER_PAK_GOOD)) {
+            bcopy(&dataFromControllerPak.epcInfo, &gEpcInfo, sizeof(epcInfo));
+            bcopy(&dataFromControllerPak.epcInfoStack1, &gEpcInfoStack1, sizeof(dataFromControllerPak.epcInfoStack1));
+            bcopy(&dataFromControllerPak.epcInfoStack2, &gEpcInfoStack2, sizeof(dataFromControllerPak.epcInfoStack2));
+            sLockupStatus = TRUE;
         }
         start_reading_controller_data(controllerIndex);
         if (sLockupStatus) {
@@ -291,7 +292,8 @@ void render_epc_lock_up_display(void) {
                 render_printf("\n");
                 render_printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             } else {
-                render_printf(" Fault in thread %d\n", epcinfo->thread[GET_REG(t9) * 0]); // fake GET_REG
+                epcinfo = &gEpcInfo;
+                render_printf(" Fault in thread %d\n", epcinfo->thread[0]);
                 render_printf(" epc\t\t0x%08x\n", epcinfo->epc);
                 render_printf(" cause\t\t0x%08x\n", epcinfo->cause);
                 render_printf(" sr\t\t0x%08x\n", epcinfo->sr);
