@@ -3520,7 +3520,8 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
                 sound_play_spatial(SOUND_CAR_SLIDE, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                    obj->segment.trans.z_position, &racer->unk10);
             } else {
-                audspat_calculate_echo((SoundHandle) (s32) racer->unk10, obj->segment.trans.x_position, obj->segment.trans.y_position,
+                audspat_calculate_echo((SoundHandle) (s32) racer->unk10, obj->segment.trans.x_position,
+                                       obj->segment.trans.y_position,
                                        obj->segment.trans.z_position); // type cast required to match
             }
             if (racer->unk14) {
