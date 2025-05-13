@@ -2447,7 +2447,7 @@ void func_80011134(Object *obj, s32 updateRate) {
     batch = model->batches;
     temp_s5 = model->unk50;
     for (batchNumber = 0; temp_s5 > 0 && batchNumber < model->numberOfBatches; batchNumber++) {
-        if (batch[batchNumber].flags & OBJ_FLAGS_ANIMATED) {
+        if (batch[batchNumber].flags & BATCH_FLAGS_TEXTURE_ANIM) {
             if (batch[batchNumber].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 tex = model->textures[batch[batchNumber].textureIndex].texture;
                 sp5C = batch[batchNumber].unk7;
@@ -2479,7 +2479,7 @@ void func_80011264(ObjectModel *model, Object *obj) {
     batch = model->batches;
 
     while (i < model->numberOfBatches) {
-        if (batch[i].flags & OBJ_FLAGS_ANIMATED) {
+        if (batch[i].flags & BATCH_FLAGS_TEXTURE_ANIM) {
             if (batch[i].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 // Fakematch
                 if (model->textures[batch[i].textureIndex].texture) {}
@@ -3320,7 +3320,7 @@ void func_80012F94(Object *obj) {
             }
             racerLightTimer *= 4;
             for (batchNum = 0; batchNum < temp_a1_3->numberOfBatches; batchNum++) {
-                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == OBJ_FLAGS_ANIMATED) {
+                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == BATCH_FLAGS_TEXTURE_ANIM) {
                     temp_a1_3->batches[batchNum].unk7 = racerLightTimer;
                 }
             }
