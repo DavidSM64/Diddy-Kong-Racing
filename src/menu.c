@@ -8792,103 +8792,109 @@ void func_8008FF1C(UNUSED s32 updateRate) {
 
     settings = get_settings();
     trackMenuIds = (s8 *) get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
-    if (gMenuDelay <= -23 || gMenuDelay >= 23) {
-        return;
-    }
-
-    if (gFFLUnlocked == -1) {
-        maxTrackY = 3;
-    } else {
-        maxTrackY = 4;
-    }
-    trackSelectX = (gTrackSelectX / 320);
-    temp = (gTrackSelectY / -gTrackSelectViewportY);
-    trackY = temp - 1;
-    startIndex = -1;
-    for (i = startIndex, cur = gTrackSelectRenderDetails; i < 2; i++) {
-        for (j = startIndex; j < 2; j++, cur++) {
-            trackX = trackSelectX + j;
-            if ((trackY < 0) || (maxTrackY < trackY) || (trackX < 0) || (trackX >= 6)) {
-                cur->visible = 0;
-                continue;
-            }
-
-            cur->visible = 1;
-            cur->hubName = get_level_name(get_hub_area_id(trackY + 1));
-            if ((gTrackSelectIDs[trackY][trackX]) != -1) {
-                cur->trackName = get_level_name(trackMenuIds[(trackY * 6) + trackX]);
-                if (trackX == 4) {
-                    if (((settings->trophies >> (trackY * 2)) & 3) == 3) {
-                        cur->visible = 2;
+    if (gMenuDelay > -23 && gMenuDelay < 23) {
+        if (gFFLUnlocked == -1) {
+            maxTrackY = 3;
+        } else {
+            maxTrackY = 4;
+        }
+        trackSelectX = (gTrackSelectX / 320);
+        temp = (gTrackSelectY / -gTrackSelectViewportY);
+        trackY = temp - 1;
+        startIndex = -1;
+        for (i = startIndex, cur = gTrackSelectRenderDetails; i < 2; i++) {
+            for (j = startIndex; j < 2; j++) {
+                trackX = trackSelectX + j;
+                if ((trackY < 0) || (maxTrackY < trackY) || (trackX < 0) || (trackX >= 6)) {
+                    cur->visible = 0;
+                } else {
+                    cur->visible = 1;
+                    hubName = get_level_name(get_hub_area_id(trackY + 1));
+                    temp4 = gTrackSelectIDs[trackY][trackX];
+                    cur->hubName = hubName;
+                    if ((temp4) != -1) {
+                        cur->trackName = get_level_name(trackMenuIds[(trackY * 6) + trackX]);
+                        if (trackX == 4) {
+                            if (((settings->trophies >> (trackY * 2)) & 3) == 3) {
+                                cur->visible = 2;
+                            }
+                        } else if ((settings->courseFlagsPtr[trackMenuIds[(trackY * 6) + trackX]] & 2)) {
+                            cur->visible = 2;
+                        }
+                    } else {
+                        cur->trackName = (char *) gQMarkPtr;
                     }
-                } else if ((settings->courseFlagsPtr[trackMenuIds[(trackY * 6) + trackX]] & 2)) {
-                    cur->visible = 2;
+                    cur->xOff = ((trackX * 320) - gTrackSelectX);
+                    if (1) {} // Fakematch
+                    cur->yOff = ((-trackY * gTrackSelectViewportY) - gTrackSelectY);
+                    cur->opacity = 0xFF;
+                    if ((trackX == gSelectedTrackX) && (trackY == gSelectedTrackY)) {
+                        cur->copyViewPort = (cur->copyViewPort & 0xFF) | 0x80;
+                        if (gOpacityDecayTimer < 32) {
+                            cur->opacity = gOpacityDecayTimer * 8;
+                        }
+                    } else {
+                        cur->copyViewPort = cur->copyViewPort & 0xFF7F;
+                    }
+                    cur->copyViewPort = cur->copyViewPort & 0xFF80;
+                    if (gMenuDelay == 0) {
+                        if (trackY > 0) {
+                            cur->copyViewPort =
+                                (((cur->copyViewPort & 0xFF) | 1) & 0x7F) | (cur->copyViewPort & 0xFF80);
+                        }
+                        if (trackX < 5) {
+                            cur->copyViewPort =
+                                (((cur->copyViewPort & 0xFF) | 2) & 0x7F) | (cur->copyViewPort & 0xFF80);
+                        }
+                        if (trackY < maxTrackY) {
+                            cur->copyViewPort =
+                                (((cur->copyViewPort & 0xFF) | 4) & 0x7F) | (cur->copyViewPort & 0xFF80);
+                        }
+                        if (trackX > 0) {
+                            cur->copyViewPort =
+                                (((cur->copyViewPort & 0xFF) | 8) & 0x7F) | (cur->copyViewPort & 0xFF80);
+                        }
+                        if (trackX == 4 && trackY == 4) {
+                            cur->copyViewPort =
+                                ((cur->copyViewPort & 0xFF & 0xFF) & 0x7D) | (cur->copyViewPort & 0xFF80);
+                        }
+                        if (trackX == 5 && trackY == 3) {
+                            cur->copyViewPort =
+                                ((cur->copyViewPort & 0xFF & 0xFF) & 0x7B) | (cur->copyViewPort & 0xFF80);
+                        }
+                    }
+                    if (trackX == 4) {
+                        cur->border = 6;
+                    } else if (trackX == 5) {
+                        cur->border = 5;
+                    } else {
+                        cur->border = 4;
+                    }
                 }
-            } else {
-                cur->trackName = (char *) gQMarkPtr;
+                cur++;
             }
-            cur->xOff = ((trackX * 320) - gTrackSelectX);
-            if (1) {} // Fakematch
-            cur->yOff = ((-trackY * gTrackSelectViewportY) - gTrackSelectY);
-            cur->opacity = 0xFF;
-            if ((trackX == gSelectedTrackX) && (trackY == gSelectedTrackY)) {
-                cur->copyViewPort = (cur->copyViewPort & 0xFF) | 0x80;
-                if (gOpacityDecayTimer < 32) {
-                    cur->opacity = gOpacityDecayTimer * 8;
-                }
-            } else {
-                cur->copyViewPort = cur->copyViewPort & 0xFF7F;
-            }
-            cur->copyViewPort = cur->copyViewPort & 0xFF80;
-            if (gMenuDelay == 0) {
-                if (trackY > 0) {
-                    cur->copyViewPort = (((cur->copyViewPort & 0xFF) | 1) & 0x7F) | (cur->copyViewPort & 0xFF80);
-                }
-                if (trackX < 5) {
-                    cur->copyViewPort = (((cur->copyViewPort & 0xFF) | 2) & 0x7F) | (cur->copyViewPort & 0xFF80);
-                }
-                if (trackY < maxTrackY) {
-                    cur->copyViewPort = (((cur->copyViewPort & 0xFF) | 4) & 0x7F) | (cur->copyViewPort & 0xFF80);
-                }
-                if (trackX > 0) {
-                    cur->copyViewPort = (((cur->copyViewPort & 0xFF) | 8) & 0x7F) | (cur->copyViewPort & 0xFF80);
-                }
-                if (trackX == 4 && trackY == 4) {
-                    cur->copyViewPort = ((cur->copyViewPort & 0xFF & 0xFF) & 0x7D) | (cur->copyViewPort & 0xFF80);
-                }
-                if (trackX == 5 && trackY == 3) {
-                    cur->copyViewPort = ((cur->copyViewPort & 0xFF & 0xFF) & 0x7B) | (cur->copyViewPort & 0xFF80);
-                }
-            }
-            if (trackX == 4) {
-                cur->border = 6;
-            } else if (trackX == 5) {
-                cur->border = 5;
-            } else {
-                cur->border = 4;
+            trackY++;
+        }
+        camDisableUserView(0, TRUE);
+        menu_camera_centre();
+        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+        rendermode_reset(&sMenuCurrDisplayList);
+        gDPPipeSync(sMenuCurrDisplayList++);
+        D_80126928 = 64;
+        D_8012692C = 32;
+        gTrackMenuHubName = NULL;
+        for (i = 0; i < ARRAY_COUNT(gTrackSelectRenderDetails); i++) {
+            if (gTrackSelectRenderDetails[i].visible != 0) {
+                trackmenu_render_2D(gTrackSelectRenderDetails[i].xOff, gTrackSelectRenderDetails[i].yOff,
+                                    gTrackSelectRenderDetails[i].hubName, gTrackSelectRenderDetails[i].trackName,
+                                    gTrackSelectRenderDetails[i].opacity, gTrackSelectRenderDetails[i].border,
+                                    ((u32) gTrackSelectRenderDetails[i].viewPort) >> 0xF,
+                                    (gTrackSelectRenderDetails[i].visible == 1) ? D_800E05D4 : D_800E05F4,
+                                    gTrackSelectRenderDetails[i].copyViewPort & 0x7F);
             }
         }
-        trackY++;
+        gTrackSelectVertsFlip = 1 - gTrackSelectVertsFlip;
     }
-    camDisableUserView(0, TRUE);
-    menu_camera_centre();
-    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-    rendermode_reset(&sMenuCurrDisplayList);
-    gDPPipeSync(sMenuCurrDisplayList++);
-    D_80126928 = 64;
-    D_8012692C = 32;
-    gTrackMenuHubName = NULL;
-    for (i = 0; i < ARRAY_COUNT(gTrackSelectRenderDetails); i++) {
-        if (gTrackSelectRenderDetails[i].visible != 0) {
-            trackmenu_render_2D(gTrackSelectRenderDetails[i].xOff, gTrackSelectRenderDetails[i].yOff,
-                                gTrackSelectRenderDetails[i].hubName, gTrackSelectRenderDetails[i].trackName,
-                                gTrackSelectRenderDetails[i].opacity, gTrackSelectRenderDetails[i].border,
-                                ((u32) gTrackSelectRenderDetails[i].viewPort) >> 0xF,
-                                (gTrackSelectRenderDetails[i].visible == 1) ? D_800E05D4 : D_800E05F4,
-                                gTrackSelectRenderDetails[i].copyViewPort & 0x7F);
-        }
-    }
-    gTrackSelectVertsFlip = 1 - gTrackSelectVertsFlip;
 }
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/func_8008FF1C.s")
