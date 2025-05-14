@@ -685,20 +685,26 @@ void emitter_init_with_pos(ParticleEmitter *emitter, s32 behaviourID, s32 partic
  */
 #ifdef NON_EQUIVALENT
 void scroll_particle_textures(s32 updateRate) {
+    s32 temp;
     s32 i;
 
     gParticleTextureScrollOffset = (gParticleTextureScrollOffset + (updateRate << 6)) & 0x1FF;
 
-    for (i = 0; i < ARRAY_COUNT(gLineParticleTriangles); i++) {
-        gLineParticleTriangles[i].uv2.v = gLineParticleVCoords[i].s[0] + gParticleTextureScrollOffset;
-        gLineParticleTriangles[i].uv1.v = gLineParticleVCoords[i].s[1] + gParticleTextureScrollOffset;
-        gLineParticleTriangles[i].uv0.v = gLineParticleVCoords[i].s[2] + gParticleTextureScrollOffset;
-    }
+    // One liner somehow?
+    for (i = 0; i < ARRAY_COUNT(gLineParticleTriangles); i++) {\
+        temp  = gParticleTextureScrollOffset;\
+        if (temp) { }\
+        gLineParticleTriangles[i - 1].uv2.v = gLineParticleVCoords[i].s[0] + temp;\
+        gLineParticleTriangles[i - 1].uv1.v = gLineParticleVCoords[i].s[1] + temp;\
+        gLineParticleTriangles[i - 1].uv0.v = gLineParticleVCoords[i].s[2] + temp;\
+    }\
 
     for (i = 0; i < ARRAY_COUNT(gPointParticleTriangles); i++) {
-        gPointParticleTriangles[i].uv0.v = gPointParticleVCoords[i].s[0] + gParticleTextureScrollOffset;
-        gPointParticleTriangles[i].uv1.v = gPointParticleVCoords[i].s[1] + gParticleTextureScrollOffset;
-        gPointParticleTriangles[i].uv2.v = gPointParticleVCoords[i].s[2] + gParticleTextureScrollOffset;
+        temp  = gParticleTextureScrollOffset;
+        if (temp) { }
+        gPointParticleTriangles[i].uv0.v = gPointParticleVCoords[i].s[0] + temp;
+        gPointParticleTriangles[i].uv1.v = gPointParticleVCoords[i].s[1] + temp;
+        gPointParticleTriangles[i].uv2.v = gPointParticleVCoords[i].s[2] + temp;
     }
 }
 #else
