@@ -2527,26 +2527,28 @@ void obj_update(s32 updateRate) {
 }
 
 void func_80011134(Object *obj, s32 updateRate) {
-    ObjectModel *model;
-    TriangleBatchInfo *batch;
-    s32 sp5C;
-    TextureHeader *tex;
-    s16 temp_s5;
-    s32 batchNumber;
     Object_68 *obj68;
+    TriangleBatchInfo *temp_s4;
+    s32 sp5C;
+    ObjectModel *model;
+    TextureHeader *texture;
+    s32 batchNumber;
+    s16 temp_s5;
+    s32 var_s1;
+    u8 temp_v0;
 
-    obj68 = obj->unk68[obj->segment.object.modelIndex];
-    model = obj68->objModel;
-    batch = model->batches;
-    temp_s5 = model->unk50;
-    for (batchNumber = 0; temp_s5 > 0 && batchNumber < model->numberOfBatches; batchNumber++) {
-        if (batch[batchNumber].flags & BATCH_FLAGS_TEXTURE_ANIM) {
-            if (batch[batchNumber].textureIndex != TEX_INDEX_NO_TEXTURE) {
-                tex = model->textures[batch[batchNumber].textureIndex].texture;
-                sp5C = batch[batchNumber].unk7;
-                sp5C <<= 6;
-                tex_animate_texture(tex, &batch[batchNumber].flags, &sp5C, updateRate);
-                batch[batchNumber].unk7 = (sp5C >> 6) & 0xFF;
+    temp_s3 = obj->unk68[obj->segment.object.modelIndex]->objModel;
+    temp_s5 = temp_s3->unk50;
+    temp_s4 = temp_s3->batches;
+    for (var_s1 = 0; temp_s5 > 0 && var_s1 < temp_s3->numberOfBatches; var_s1++) {
+        var_s0 = &temp_s4[var_s1];
+        if (var_s0->flags & 0x10000) { // Texture is animated
+            temp_v0 = var_s0->textureIndex;
+            if (temp_v0 != 0xFF) {
+                var_t5 = temp_s3->textures[temp_v0].texture;
+                sp5C = var_s0->unk7 << 6;
+                tex_animate_texture(var_t5, (u32 *) temp_s4[var_s1].flags, &sp5C, updateRate);
+                var_s0->unk7 = sp5C >> 6;
             }
         }
     }
