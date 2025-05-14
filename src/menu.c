@@ -8559,27 +8559,24 @@ void menu_track_select_unload(void) {
 #endif
 }
 
-#ifdef NON_EQUIVALENT
 s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
     s32 sp7C;
-    u8 *data;
+    s32 yPos;
     s32 texU;
     s32 texV;
-    UNUSED s32 pad1;
-    s32 yPos;
     s32 flags;
     s32 hasTexture;
-    UNUSED s32 pad2;
-    s32 numVertices;
     s32 index;
     s32 prevAlpha;
     s32 prevIndex;
+    s32 numVertices;
     s32 temp;
     s32 temp2;
-    Vertex *vertices;
+    Vertex *tempVertices;
     Triangle *triangles;
+    Triangle *tempTriangles;
+    Vertex *vertices;
     TextureHeader *bgTexture;
-    s32 prevAlpha2;
     s32 curIndex;
 
     numVertices = 0;
@@ -8590,36 +8587,43 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
     gDPPipeSync((*dList)++);
     sp7C = gTrackSelectX;
     temp2 = -gTrackSelectY;
-    temp = temp2 / (gTrackSelectViewportY >> 3);
-    if (temp >= 42) {
+    curIndex = temp2 / (gTrackSelectViewportY >> 3);
+    if (curIndex >= 42) {
         return 1;
     }
-    temp2 -= (temp * (gTrackSelectViewportY >> 3));
+    temp2 -= (curIndex * (gTrackSelectViewportY >> 3));
     yPos = gTrackSelectViewPortHalfY + temp2;
     gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor((*dList)++, 255, 255, 255, 0);
-    vertices = (Vertex *) (&gTrackSelectBgVertices)[gTrackSelectVertsFlip];
-    triangles = (Triangle *) (&gTrackSelectBgTriangles)[gTrackSelectVertsFlip];
-    for (index = 0; gTrackSelectBgData[index] < temp; index += 5) {}
+    vertices = gTrackSelectBgVertices[gTrackSelectVertsFlip];
+    triangles = gTrackSelectBgTriangles[gTrackSelectVertsFlip];
 
-    data = &gTrackSelectBgData[index];
-    while ((yPos >= -gTrackSelectViewPortHalfY) && (data[0] < 42) && (numVertices < 64)) {
-        bgTexture = gTracksMenuBgTextures[data[1]];
+    for (index = 0; gTrackSelectBgData[index] < curIndex; index += 5) {}
+
+    while ((yPos >= -gTrackSelectViewPortHalfY) && (gTrackSelectBgData[index] < 42) && (numVertices < 64)) {
+        bgTexture = gTracksMenuBgTextures[gTrackSelectBgData[index + 1]];
+        curIndex = gTrackSelectBgData[index];
+        tempVertices = vertices;
+        // @fake
+        vertices++;
+        vertices--;
+        tempTriangles = triangles;
         vertices[0].y = yPos;
+        vertices[0].a = gTrackSelectBgData[index + 2];
         vertices[1].y = yPos;
-        vertices[0].a = data[2];
-        vertices[1].a = data[2];
-        prevIndex = data[0];
-        prevAlpha = data[2];
+        vertices[1].a = gTrackSelectBgData[index + 2];
+        prevIndex = gTrackSelectBgData[index + 2];
         vertices[2].y = yPos - (gTrackSelectViewportY >> 3);
-        vertices[2].a = data[3];
-        vertices[3].y = (gTrackSelectViewPortHalfY + temp2) - (gTrackSelectViewportY >> 3);
-        vertices[3].a = data[3];
-        prevAlpha2 = data[3];
-        data += 4;
-        if (bgTexture != 0) {
-            texU = (((bgTexture->width - 1) & sp7C) << 5) + (data[0] << 5);
-            data++;
+        vertices[2].a = gTrackSelectBgData[index + 3];
+        vertices[3].y = yPos - (gTrackSelectViewportY >> 3);
+        vertices[3].a = gTrackSelectBgData[index + 3];
+        vertices += 4;
+        prevIndex += gTrackSelectBgData[index + 3];
+        index += 4;
+        if (bgTexture != NULL) {
+            texU = ((bgTexture->width - 1) & sp7C) << 5;
+            texU += (gTrackSelectBgData[index] << 5);
+            index++;
             texV = bgTexture->height << 5;
         }
         triangles[0].uv0.u = texU;
@@ -8634,9 +8638,7 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
         triangles[1].uv1.v = texV;
         triangles[1].uv2.u = texU + 0x2800;
         triangles[1].uv2.v = texV;
-
         triangles += 2;
-        vertices += 4;
 
         if (bgTexture != 0) {
             hasTexture = 1;
@@ -8645,27 +8647,25 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
         }
 
         // If both alphas are 255, then don't set the transparency flags.
-        if ((prevAlpha + prevAlpha2) == 255 + 255) {
+        if (prevIndex == 255 + 255) {
             flags = 0;
         } else {
             flags = RENDER_VTX_ALPHA | RENDER_Z_UPDATE;
         }
 
         material_set(dList, bgTexture, flags, 0);
-        gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertices), 4, 0);
-        gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(triangles), 2, hasTexture);
-        curIndex = data[0];
-        if (prevIndex != curIndex) {
+        gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(tempVertices), 4, 0);
+        gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(tempTriangles), 2, hasTexture);
+        prevIndex = gTrackSelectBgData[index];
+        if (curIndex != prevIndex) {
             yPos -= (gTrackSelectViewportY >> 3);
         }
         numVertices += 4;
     }
+
     camEnableUserView(0, TRUE);
     return 0;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_8008F618.s")
-#endif
 
 /**
  * Render the text and frame around the viewport onscreen.
