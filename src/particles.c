@@ -683,33 +683,26 @@ void emitter_init_with_pos(ParticleEmitter *emitter, s32 behaviourID, s32 partic
  * Scrolls textures downward for point and line particles.
  * Texture state repeats in an 8-frame loop.
  */
-#ifdef NON_EQUIVALENT
 void scroll_particle_textures(s32 updateRate) {
-    s32 temp;
     s32 i;
+    s32 j;
 
     gParticleTextureScrollOffset = (gParticleTextureScrollOffset + (updateRate << 6)) & 0x1FF;
 
-    // One liner somehow?
-    for (i = 0; i < ARRAY_COUNT(gLineParticleTriangles); i++) {\
-        temp  = gParticleTextureScrollOffset;\
-        if (temp) { }\
-        gLineParticleTriangles[i - 1].uv2.v = gLineParticleVCoords[i].s[0] + temp;\
-        gLineParticleTriangles[i - 1].uv1.v = gLineParticleVCoords[i].s[1] + temp;\
-        gLineParticleTriangles[i - 1].uv0.v = gLineParticleVCoords[i].s[2] + temp;\
-    }\
+    for (i = 0, j = 0; i < ARRAY_COUNT(gLineParticleTriangles); i++) {
+        gLineParticleTriangles[i].uv0.v = gLineParticleVCoords[j].s[0] + gParticleTextureScrollOffset;
+        gLineParticleTriangles[i].uv1.v = gLineParticleVCoords[j].s[1] + gParticleTextureScrollOffset;
+        gLineParticleTriangles[i].uv2.v = gLineParticleVCoords[j].s[2] + gParticleTextureScrollOffset;
+        j++;
+    }
 
-    for (i = 0; i < ARRAY_COUNT(gPointParticleTriangles); i++) {
-        temp  = gParticleTextureScrollOffset;
-        if (temp) { }
-        gPointParticleTriangles[i].uv0.v = gPointParticleVCoords[i].s[0] + temp;
-        gPointParticleTriangles[i].uv1.v = gPointParticleVCoords[i].s[1] + temp;
-        gPointParticleTriangles[i].uv2.v = gPointParticleVCoords[i].s[2] + temp;
+    for (i = 0, j = 0; i < ARRAY_COUNT(gPointParticleTriangles); i++) {
+        gPointParticleTriangles[i].uv0.v = gPointParticleVCoords[j].s[0] + gParticleTextureScrollOffset;
+        gPointParticleTriangles[i].uv1.v = gPointParticleVCoords[j].s[1] + gParticleTextureScrollOffset;
+        gPointParticleTriangles[i].uv2.v = gPointParticleVCoords[j].s[2] + gParticleTextureScrollOffset;
+        j++;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/particles/scroll_particle_textures.s")
-#endif
 
 /**
  * Initializes the emitter if it has been activated for an object.
