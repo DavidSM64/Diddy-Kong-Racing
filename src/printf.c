@@ -350,7 +350,7 @@ UNUSED s32 debug_text_width(const char *format, ...) {
     return stringLength;
 }
 
-s32 func_800B653C(Gfx **dList, char *buffer) {
+s32 func_800B653C(Gfx **dList, u8 *buffer) {
     u8 *bufferCopy;
     s32 xOffset;
     u8 red;
