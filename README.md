@@ -7,9 +7,9 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of May 14, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 87.61%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 87.64%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 56.95%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 56.98%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -121,11 +121,11 @@ As of May 14, 2025, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- --------------- 87.61% Complete (88.53% NON_MATCHING) ---------------
-                     # Decompiled functions: 1893
-                      # GLOBAL_ASM remaining: 58
+ --------------- 87.64% Complete (88.56% NON_MATCHING) ---------------
+                     # Decompiled functions: 1894
+                      # GLOBAL_ASM remaining: 57
                       # NON_MATCHING functions: 6
-                  # NON_EQUIVALENT WIP functions: 18
+                  # NON_EQUIVALENT WIP functions: 17
  ---------------------------- Game Status ----------------------------
                Balloons: 40/47, Keys: 4/4, Trophies: 4/5
                 T.T. Amulets: 4/4, Wizpig Amulets: 4/4
@@ -133,9 +133,9 @@ As of May 14, 2025, this is our current score:
              We are racing in Darkmoon Caverns. (Lap 3/3)
  =====================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
- -------------------------- 56.95% Complete --------------------------
-                     # Documented functions: 1178
-                     # Undocumented remaining: 476
+ -------------------------- 56.98% Complete --------------------------
+                     # Documented functions: 1179
+                     # Undocumented remaining: 475
  ---------------------------- Game Status ----------------------------
                Balloons: 27/47, Keys: 3/4, Trophies: 2/5
                 T.T. Amulets: 3/4, Wizpig Amulets: 2/4
