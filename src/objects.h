@@ -326,21 +326,6 @@ typedef struct unk800149C0 {
     s16 unk6;
 } unk800149C0;
 
-// Size: 0x80 bytes.
-typedef struct Asset20 {
-    f32 unk0;
-    u8 pad4[0x68];
-    s16 unk6C;
-    s16 unk6E;
-    u8 unk70;
-    u8 unk71;
-    u8 unk72;
-    s8 unk73;
-    f32 unk74;
-    Sprite *unk78;
-    TextureHeader *unk7C;
-} Asset20;
-
 typedef struct RacerFXData {
     u8 unk0;
     u8 unk1;
@@ -535,7 +520,7 @@ void decrypt_magic_codes(s32 *data, s32 length);
 s32 get_first_active_object(s32 *);
 Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
-void func_8000B750(Object *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void func_8000B750(Object *obj, s32 objId, s32 arg2, s32 arg3, s32 arg4);
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); 
 void func_80011134(Object *, s32);

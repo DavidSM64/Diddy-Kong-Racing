@@ -343,7 +343,7 @@ typedef struct LevelObjectEntry_unk8000B020 {
  * This function is called on every level load, but only racers use the stuff here.
  */
 void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
-    Asset20 *miscAsset20;
+    Object_Boost *miscAsset20;
     LevelObjectEntry_unk8000B020 objEntry;
     s32 i;
 
@@ -357,7 +357,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     gBoostTriCount = numberOfTriangles;
     D_8011B004 = 0;
     gBoostVertFlip = 0;
-    miscAsset20 = (Asset20 *) get_misc_asset(ASSET_MISC_20);
+    miscAsset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     // Makes 10 boost objects, but only 8 racers can actually exist at once.
     for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
         objEntry.common.objectID = ASSET_OBJECT_ID_BOOST;
@@ -408,7 +408,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
 void racerfx_free(void) {
     Sprite *sprite;
     TextureHeader *texture;
-    Asset20 *asset20;
+    Object_Boost *asset20;
     u32 i;
 
     if (gBoostTris[0]) {
@@ -418,7 +418,7 @@ void racerfx_free(void) {
         gBoostVerts[0] = NULL;
         gBoostVerts[1] = NULL;
     }
-    asset20 = (Asset20 *) get_misc_asset(ASSET_MISC_20);
+    asset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
         sprite = asset20[i].unk78;
         if (sprite != NULL) {
@@ -444,7 +444,100 @@ void racerfx_free(void) {
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B38C.s")
+
+#ifdef NON_EQUIVALENT
+void func_8000B38C(Vertex *, Triangle *, ObjectTransform *, f32, f32, s16, TextureHeader *arg6);
+void func_8000B750(Object *obj, s32 objId, s32 arg2, s32 arg3, s32 arg4) {
+    Vec3f sp74;
+    ObjectTransform sp50;
+    Object_Boost **temp_v0;
+    Object **var_t2;
+    f32 temp_f0;
+    f32 var_f14;
+    f32 var_f2;
+    Object_Boost *temp_t4;
+    Object_Boost *temp_v1;
+    Object_Boost_Inner *var_v0;
+
+    if (objId == -1) {
+        objId = gBoostObjOverrideID;
+        gBoostObjOverrideID--;
+    }
+    if (gBoostObjOverrideID < 0) {
+        gBoostObjOverrideID = 0;
+    }
+    if (objId >= 0 && objId < 10) {
+        temp_v0 = get_misc_asset(ASSET_MISC_20);
+        var_t2 = &gBoostEffectObjects[objId];
+        temp_t4 = &temp_v0[(arg3 << 5)];
+        temp_v1 = &temp_v0[(objId << 5)];
+        if (*var_t2 != NULL) {
+            switch (arg2) {
+                default:
+                    var_v0 = &temp_v1->unk48;
+                    if (arg2 != 0xD) {
+                        var_v0 = NULL;
+                    }
+                    break;
+                case 0:
+                    var_v0 = &temp_v1->unk0;
+                    break;
+                case 1:
+                    var_v0 = &temp_v1->unk24;
+                    break;
+                case 2:
+                    var_v0 = &temp_v1->unk48;
+                    break;
+            }
+            if (var_v0 != NULL) {
+                D_8011B048[objId] = arg2;
+                D_8011B058[objId] = arg3;
+                if (temp_v1->unk70 == 2) {
+                    temp_f0 = coss_f(temp_v1->unk72 << 12);
+                    var_f2 = (var_v0->unk14 + (temp_f0 * var_v0->unk18)) * temp_v1->unk74;
+                    var_f14 = (var_v0->unk1C + (temp_f0 * var_v0->unk20)) * temp_v1->unk74;
+                    if ((arg3 & 3) == 1) {
+                        var_f2 *= 1.09f;
+                        var_f14 *= 1.09f;
+                    }
+                    if ((arg3 & 3) >= 2) {
+                        var_f2 *= 1.18f;
+                        var_f14 *= 1.18f;
+                    }
+                    sp50.x_position = var_v0->position.x;
+                    sp50.y_position = var_v0->position.y;
+                    sp50.z_position = var_v0->position.z;
+                    sp50.scale = 1.0f;
+                    sp50.rotation.x_rotation = -0x8000;
+                    sp50.rotation.y_rotation = 0;
+                    sp50.rotation.z_rotation = 0;
+                    func_8000B38C(&gBoostVerts[gBoostVertFlip][D_8011AFFC], &gBoostTris[gBoostVertFlip][D_8011B004],
+                                  &sp50, var_f2, var_f14, (temp_v1->unk72), &temp_t4->unk7C);
+                    (*var_t2)->properties.common.unk4 = (objId << 28) | (D_8011AFFC << 14) | D_8011B004;
+                    D_8011AFFC += 9;
+                    D_8011B004 += 8;
+                }
+                (*var_t2)->properties.common.unk0 = (s32) obj;
+                (*var_t2)->segment.trans.x_position = 0.0f;
+                (*var_t2)->segment.trans.y_position = 0.0f;
+                (*var_t2)->segment.trans.z_position = 0.0f;
+                sp74.x = var_v0->position.x;
+                sp74.y = var_v0->position.y;
+                sp74.z = var_v0->position.z;
+                f32_vec3_apply_object_rotation(&obj->segment.trans, &sp74);
+                ignore_bounds_check();
+                move_object(var_t2, sp74.x + obj->segment.trans.x_position, sp74.y + obj->segment.trans.y_position,
+                            sp74.z + obj->segment.trans.z_position);
+            }
+            if (arg4 != 0) {
+                D_8011B068[objId] = 0;
+            }
+        }
+    }
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B750.s")
+#endif
 
 /**
  * Updates the racer FX object states.
@@ -452,16 +545,16 @@ void racerfx_free(void) {
  */
 void racerfx_update(s32 updateRate) {
     s32 i;
-    Asset20 *asset20Part;
+    Object_Boost *asset20Part;
     s32 temp;
-    Asset20 *asset20;
+    Object_Boost *asset20;
     f32 updateRateF;
     Object_Racer *racer;
 
     gBoostVertFlip = 1 - gBoostVertFlip;
     D_8011AFFC = 0;
     D_8011B004 = 0;
-    asset20 = (Asset20 *) get_misc_asset(ASSET_MISC_20);
+    asset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     gBoostObjOverrideID = 9;
     for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
         if (D_8011B068[i] && gBoostEffectObjects[i] != NULL) {
@@ -1199,7 +1292,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 }
             }
             if ((gameMode != GAMEMODE_MENU || D_8011AD3C == 2) && vehicle < VEHICLE_BOSSES) {
-                curRacer->vehicleSound = func_80004B40(curRacer->characterId, curRacer->vehicleID);
+                curRacer->vehicleSound = racer_sound_init(curRacer->characterId, curRacer->vehicleID);
             } else {
                 curRacer->vehicleSound = NULL;
             }
@@ -2846,7 +2939,7 @@ void render_3d_billboard(Object *obj) {
                            RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
     } else {
         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj,
-                                (unk80068514_arg4 *) gfxData, flags);
+                                (Sprite *) gfxData, flags);
     }
     if (hasPrimCol) {
         gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -3034,9 +3127,9 @@ void render_3d_model(Object *obj) {
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
                                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
                             }
-                            loopObj->properties.common.unk0 = render_sprite_billboard(
-                                &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj,
-                                (unk80068514_arg4 *) something, flags);
+                            loopObj->properties.common.unk0 =
+                                render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix,
+                                                        &gObjectCurrVertexList, loopObj, (Sprite *) something, flags);
                             if (var_v0_2) {
                                 gDkrInsertMatrix(gObjectCurrDisplayList++, 0, 0);
                                 func_80012CE8(&gObjectCurrDisplayList);
@@ -3065,7 +3158,7 @@ void render_3d_model(Object *obj) {
                     loopObj->segment.trans.z_position += (vtxZ - loopObj->segment.trans.z_position) * 0.25;
                     if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
                         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
-                                                loopObj, (unk80068514_arg4 *) something, flags);
+                                                loopObj, (Sprite *) something, flags);
                     }
                 }
             }
@@ -3379,7 +3472,7 @@ void func_800135B8(Object *boostObj) {
     ObjectTransform_800135B8 objTransform;
     Object_Boost_Inner *boostData;
     Object_Boost *boost;
-    Asset20 *asset;
+    Object_Boost *asset;
     s32 hasTexture;
     s32 idx;
 
@@ -3396,7 +3489,7 @@ void func_800135B8(Object *boostObj) {
             boostData = &boost->unk48;
             break;
     }
-    asset = (Asset20 *) get_misc_asset(ASSET_MISC_20);
+    asset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     asset = &asset[D_8011B058[idx]];
     object_do_player_tumble((Object *) boostObj->properties.common.unk0);
     camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
@@ -3467,7 +3560,7 @@ void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj,
     obj->segment.trans.y_position += y;
     obj->segment.trans.z_position += z;
     render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj,
-                            (unk80068514_arg4 *) gfxData, flags);
+                            (Sprite *) gfxData, flags);
 }
 
 /**

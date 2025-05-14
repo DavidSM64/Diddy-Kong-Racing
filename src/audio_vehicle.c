@@ -27,8 +27,7 @@ Object_Racer *gSoundRacerObj;
 
 /******************************/
 
-// racer_sound_init
-VehicleSoundData *func_80004B40(s32 characterId, s32 vehicleId) {
+VehicleSoundData *racer_sound_init(s32 characterId, s32 vehicleId) {
     s32 unused[2];
     s32 i;
     u8 *ptr;
@@ -503,10 +502,10 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     }
     gRacerSound->unk5C[1] = 1.0f;
     gRacerSound->unk54[1] = 0;
-    if ((gSoundRacerObj->playerIndex != PLAYER_COMPUTER) && (gSoundRacerObj->spinout_timer != 0) &&
+    if (gSoundRacerObj->playerIndex != PLAYER_COMPUTER && gSoundRacerObj->spinout_timer != 0 &&
         !gRacerSound->brakeSound) {
         gRacerSound->brakeSound = TRUE;
-        sound_play(SOUND_UNK_13D, (s32 *) &gRacerSound->brakeSoundMask);
+        sound_play(SOUND_UNK_13D, &gRacerSound->brakeSoundMask);
     } else if (gSoundRacerObj->spinout_timer == 0) {
         gRacerSound->brakeSound = FALSE;
         if (gRacerSound->brakeSoundMask != NULL) {

@@ -505,7 +505,7 @@ TextureHeader *load_texture(s32 arg0) {
     }
     D_80126344 = 0;
 
-    assetOffset = (s32)align16((u8 *) ((s32) tex + assetSize));
+    assetOffset = (s32) align16((u8 *) ((s32) tex + assetSize));
     texTemp = tex;
     for (i = 0; i < numberOfTextures; i++) {
         material_init(texTemp, (Gfx *) assetOffset);

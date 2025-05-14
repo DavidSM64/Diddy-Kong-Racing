@@ -92,7 +92,7 @@ void sndp_init_player(audioMgrConfig *c) {
     gSoundStateLists.freeHead = (ALSoundState *) gSoundPlayerPtr->soundStatesArray;
     for (i = 1; i < c->maxSounds; i++) {
         sounds = gSoundPlayerPtr->soundStatesArray;
-        alLink(&(sounds + i)->next, &(sounds + i - 1)->next);
+        alLink((ALLink *) &sounds[i].next, (ALLink *) &(&sounds[i] - 1)->next);
     }
 
     /*
@@ -777,7 +777,7 @@ void sndp_stop(ALSoundState *state) {
     alEvent.common.state = state;
     if (state != NULL) {
         state->flags &= ~SOUND_FLAG_RETRIGGER;
-        alEvtqPostEvent(&gSoundPlayerPtr->evtq, &alEvent, 0);
+        alEvtqPostEvent(&gSoundPlayerPtr->evtq, (ALEvent *) &alEvent, 0);
     } else {
         // From JFG
         // osSyncPrintf("WARNING: Attempt to stop NULL sound aborted\n");
@@ -799,7 +799,7 @@ void sndp_stop_with_flags(u8 flags) {
         evt.common.state = soundState;
         if ((soundState->flags & flags) == flags) {
             evt.common.state->flags &= ~SOUND_FLAG_RETRIGGER;
-            alEvtqPostEvent(&gSoundPlayerPtr->evtq, &evt, 0);
+            alEvtqPostEvent(&gSoundPlayerPtr->evtq, (ALEvent *) &evt, 0);
         }
         soundState = soundState->next;
     }

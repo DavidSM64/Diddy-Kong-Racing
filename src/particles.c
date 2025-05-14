@@ -2411,8 +2411,7 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
             temp = particle->textureFrame;
             particle->textureFrame >>= 8;
             particle->textureFrame = (particle->textureFrame * 255) / (particle->sprite->baseTextureId);
-            render_sprite_billboard(dList, mtx, vtx, (Object *) particle, (unk80068514_arg4 *) particle->sprite,
-                                    renderFlags);
+            render_sprite_billboard(dList, mtx, vtx, (Object *) particle, particle->sprite, renderFlags);
             particle->textureFrame = temp;
         } else {
             model = particle->model;

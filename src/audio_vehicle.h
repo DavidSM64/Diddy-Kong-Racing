@@ -82,7 +82,7 @@ void racer_sound_update(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 up
 void racer_sound_free(Object *);
 
 f32 func_80007FA4(f32 arg0);
-VehicleSoundData *func_80004B40(s32 characterId, s32 vehicleId);
+VehicleSoundData *racer_sound_init(s32 characterId, s32 vehicleId);
 void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 void racer_sound_hovercraft(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 void func_800063EC(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);

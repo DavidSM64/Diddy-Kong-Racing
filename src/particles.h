@@ -242,7 +242,7 @@ typedef struct Particle {
     /* 0x40 */ s32 descFlags;
     union {
     /* 0x44 */ ParticleModel *model;
-    /* 0x44 */ Sprite *sprite; // Unclear whether this is the same as unk80068514_arg4
+    /* 0x44 */ Sprite *sprite;
     };
     /* 0x48 */ s16 unk_48;
     /* 0x4A */ s16 brightness;
