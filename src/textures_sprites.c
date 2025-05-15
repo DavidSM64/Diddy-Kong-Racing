@@ -1041,15 +1041,10 @@ void sprite_free(Sprite *sprite) {
     }
 }
 
-#ifdef NON_MATCHING
 void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
     UNUSED s32 pad[2];
-    s32 sprUnk4;
-    s32 sprUnk6;
-    s32 y0;
-    s32 x0;
-    s32 x1;
-    s32 y1;
+    s32 spriteCount;
+    s32 spriteDrawFlags;
     s32 xTemp;
     s32 yTemp;
     s32 left;
@@ -1062,15 +1057,13 @@ void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
     Vertex *vertices;
     Vertex *curVerts;
     Triangle *triangles;
-    u8 *temp_a3;
     Gfx *dlptr;
     TextureHeader *tex;
 
-    temp_a3 = &sprite1->unkC.val[arg2];
-    sprUnk4 = sprite1->numberOfInstances;
-    sprUnk6 = sprite1->drawFlags;
-    i = temp_a3[0];
-    j = temp_a3[1];
+    spriteCount = sprite1->numberOfInstances;
+    spriteDrawFlags = sprite1->drawFlags;
+    i = sprite1->unkC.val[arg2];
+    j = sprite1->unkC.val[arg2 + 1];
     dlptr = D_80126364;
     vertices = D_80126360;
     triangles = D_80126368;
@@ -1081,45 +1074,44 @@ void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
     curVertIndex = 0;
     var_t5 = 0;
     while (i < j) {
+        curVerts = vertices;
         tex = sprite2->frames[i];
         texWidth = tex->width;
         texHeight = tex->height;
-        xTemp = (tex->unk3 - sprUnk4);
-        x0 = xTemp;
-        x1 = (xTemp + texWidth) - 1;
-        yTemp = (sprUnk6 - tex->unk4);
-        y0 = yTemp - 1;
-        y1 = (yTemp - texHeight);
-        curVerts = vertices;
-        vertices[0].x = x0;
-        vertices[0].y = y0;
-        vertices[0].z = 0;
-        vertices[0].r = 255;
-        vertices[0].g = 255;
-        vertices[0].b = 255;
-        vertices[0].a = 255;
-        vertices[1].x = x1;
-        vertices[1].y = y0;
-        vertices[1].z = 0;
-        vertices[1].r = 255;
-        vertices[1].g = 255;
-        vertices[1].b = 255;
-        vertices[1].a = 255;
-        vertices[2].x = x1;
-        vertices[2].y = y1;
-        vertices[2].z = 0;
-        vertices[2].r = 255;
-        vertices[2].g = 255;
-        vertices[2].b = 255;
-        vertices[2].a = 255;
-        vertices[3].x = x0;
-        vertices[3].y = y1;
-        vertices[3].z = 0;
-        vertices[3].r = 255;
-        vertices[3].g = 255;
-        vertices[3].b = 255;
-        vertices[3].a = 255;
-        vertices += 4;
+        xTemp = tex->unk3 - spriteCount;
+        yTemp = spriteDrawFlags - tex->unk4;
+        vertices->x = xTemp;
+        vertices->y = yTemp - 1;
+        vertices->z = 0;
+        vertices->r = 255;
+        vertices->g = 255;
+        vertices->b = 255;
+        vertices->a = 255;
+        vertices++;
+        vertices->x = xTemp + texWidth - 1;
+        vertices->y = yTemp - 1;
+        vertices->z = 0;
+        vertices->r = 255;
+        vertices->g = 255;
+        vertices->b = 255;
+        vertices->a = 255;
+        vertices++;
+        vertices->x = xTemp + texWidth - 1;
+        vertices->y = yTemp - texHeight;
+        vertices->z = 0;
+        vertices->r = 255;
+        vertices->g = 255;
+        vertices->b = 255;
+        vertices->a = 255;
+        vertices++;
+        vertices->x = xTemp;
+        vertices->y = yTemp - texHeight;
+        vertices->z = 0;
+        vertices->r = 255;
+        vertices->g = 255;
+        vertices->b = 255;
+        vertices->a = 255;
+        vertices++;
         gDkrDmaDisplayList(dlptr++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
         if (var_t5 == 0) {
             left = j - i;
@@ -1164,9 +1156,6 @@ void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
     D_80126360 = vertices;
     D_80126368 = triangles;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007CDC0.s")
-#endif
 
 /**
  * Build the display list for the texture.
