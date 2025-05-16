@@ -99,6 +99,17 @@ void StringHelper::split_and_trim(std::string &input, const char delim, std::vec
     }
 }
 
+std::string StringHelper::join(const std::vector<std::string> &input, std::string delim, size_t startIndex) {
+    std::stringstream ss;
+    for(size_t i = startIndex; i < input.size(); i++) {
+        ss << input[i];
+        if(i < input.size() - 1) {
+            ss << delim;
+        }
+    }
+    return ss.str();
+}
+
 int StringHelper::find_closing_brace(const std::string &input, int inputOffset) {
     int curOffset = inputOffset;
     int limit = input.length();

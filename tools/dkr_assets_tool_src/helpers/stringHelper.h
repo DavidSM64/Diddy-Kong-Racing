@@ -35,6 +35,8 @@ namespace StringHelper {
     void split(std::string &input, const char delim, std::vector<std::string> &out);
     void split_and_trim(std::string &input, const char delim, std::vector<std::string> &out);
     
+    std::string join(const std::vector<std::string> &input, std::string delim, size_t startIndex = 0);
+    
     // Returns the index of the closing brace of the first opening brace encountered. Or -1 if none was encountered.
     int find_closing_brace(const std::string &input, int inputOffset=0);
     

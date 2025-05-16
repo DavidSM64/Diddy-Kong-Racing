@@ -427,6 +427,16 @@ bool FileHelper::does_filename_equal(const fs::path &path, std::string filename,
     }
 }
 
+// Returns the full path, whether filepath is relative or absolute. Returns std::nullopt if the file does not exist.
+std::optional<fs::path> FileHelper::determine_full_filepath(fs::path filepath, fs::path localDirectory) {
+    if(filepath.is_absolute() && path_exists(filepath)) {
+        return filepath;
+    } else if(filepath.is_relative() && path_exists(localDirectory / filepath)) {
+        return localDirectory / filepath;
+    }
+    return std::nullopt;
+}
+
 fs::path FileHelper::get_working_directory() {
     return fs::current_path();
 }

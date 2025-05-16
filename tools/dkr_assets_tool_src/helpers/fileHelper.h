@@ -65,6 +65,9 @@ namespace FileHelper {
     fs::path get_filename_from_path(const fs::path& path, bool exclude_extension = false);
 
     bool does_filename_equal(const fs::path& path, std::string filename, bool exclude_extension = false);
+    
+    // Returns the full path, whether filepath is relative or absolute. Returns std::nullopt if the file does not exist.
+    std::optional<fs::path> determine_full_filepath(fs::path filepath, fs::path localDirectory);
 
     fs::path get_working_directory();
     fs::path get_directory(const fs::path& path);

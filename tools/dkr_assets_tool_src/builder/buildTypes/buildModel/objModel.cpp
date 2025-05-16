@@ -88,8 +88,6 @@ ObjBuildModel::ObjBuildModel(fs::path filepath) {
                 Vec2f uv1 = _get_adjusted_uv(uvs[uvBIndex], currentMaterial);
                 Vec2f uv2 = _get_adjusted_uv(uvs[uvCIndex], currentMaterial);
                 
-                DebugHelper::info(uv0, " ", uv1, " ", uv2);
-                
                 // Add the new triangle with UV coordinates.
                 _add_new_triangle_to_current_block(vertices[positionAIndex], vertices[positionBIndex], vertices[positionCIndex], uv0, uv1, uv2);
             }
@@ -106,7 +104,12 @@ ObjBuildModel::ObjBuildModel(fs::path filepath) {
             continue;
         }
         if(components[0] == "mtllib") {
-            _parse_mtllib(filepath.parent_path() / components[1]);
+            fs::path mtlFilepath = StringHelper::join(components, " ", 1);
+            auto tryGetFilepath = FileHelper::determine_full_filepath(mtlFilepath, filepath.parent_path());
+            if(!tryGetFilepath.has_value()) {
+                DebugHelper::error("Could not find the .mtl file: ", mtlFilepath);
+            }
+            _parse_mtllib(tryGetFilepath.value());
             continue;
         }
     }
@@ -160,7 +163,12 @@ void ObjBuildModel::_parse_mtllib(fs::path pathToLib) {
             continue;
         }
         if(components[0] == "map_Kd") {
-            currentTexture = pathToLib.parent_path() / components[1];
+            fs::path texturePath = StringHelper::join(components, " ", 1);
+            auto tryGetFilepath = FileHelper::determine_full_filepath(texturePath, pathToLib.parent_path());
+            if(!tryGetFilepath.has_value()) {
+                DebugHelper::error("Could not find the texture image: ", texturePath);
+            }
+            currentTexture = tryGetFilepath.value();
             continue;
         }
     }
