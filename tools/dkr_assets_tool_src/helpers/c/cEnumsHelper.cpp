@@ -175,17 +175,28 @@ std::string CEnum::to_string() const {
     ss << "typedef enum " << _name << " { " << std::endl;
     
     // Iterate over the map
-    for (const auto& member : _members) {
-        ss << indent << member.first;
-        if(member.second != checkVal) {
-            checkVal = member.second;
-            ss << " = " << checkVal;
+    for(auto &pair : _values) {
+        bool lastEntry = pair == *std::prev(_values.end());
+        int value = pair.first;
+        const std::vector<std::string> &symbols = pair.second;
+        // Iterate over the keys for that value
+        for(size_t i = 0; i < symbols.size(); i++) {
+            if(i > 0) {
+                ss << "," << std::endl;
+            }
+            ss << indent << symbols[i];
+            if(value != checkVal) {
+                checkVal = value;
+                ss << " = " << checkVal;
+            }
+            checkVal++;
         }
-        if (member != *std::prev(_members.end())) {
+        
+        if(!lastEntry) {
             ss << ",";
         }
+        
         ss << std::endl;
-        checkVal++;
     }
     
     ss << "} " << _name << ";" << std::endl;
