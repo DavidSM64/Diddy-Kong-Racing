@@ -401,9 +401,6 @@ expected: verify
 #Run this to use the asset builder to customize assets
 assets: all
 
-# Only compile the assets when running `make assets` or if we're making a NON_MATCHING build
-ifeq ($(MAKECMDGOALS),assets)
-
 ASSETS_OUTPUT := assets/assets.bin
 
 ifeq ($(NON_MATCHING),1)
@@ -411,74 +408,73 @@ ifeq ($(NON_MATCHING),1)
 MODDED_ARG := -m
 endif
 
-$(info Building Assets...)
-DUMMY != $(TOOLS_DIR)/dkr_assets_tool build -o $(ASSETS_OUTPUT) -dkrv $(REGION).$(VERSION) $(MODDED_ARG) >&2 || echo FAIL
-
-endif
+build_assets:
+	$(info Building Assets...)
+	$(TOOLS_DIR)/dkr_assets_tool build -o $(ASSETS_OUTPUT) -dkrv $(REGION).$(VERSION) $(MODDED_ARG) >&2 || echo FAIL
 
 ###############################
 
 $(GLOBAL_ASM_O_FILES): CC := $(ASM_PROCESSOR) $(CC) -- $(AS) $(ASFLAGS) --
 
-$(TARGET).elf: dirs $(LD_SCRIPT) $(O_FILES) | $(ALL_ASSETS_BUILT)
+$(TARGET).elf: dirs $(LD_SCRIPT) $(O_FILES) | build_assets
 	@$(PRINT) "$(GREEN)Linking: $(BLUE)$@$(NO_COL)\n"
 	$(V)$(LD) $(LD_FLAGS) -o $@
 
 ifndef PERMUTER
-$(GLOBAL_ASM_O_FILES): $(BUILD_DIR)/%.c.o: %.c | $(ALL_ASSETS_BUILT)
+$(GLOBAL_ASM_O_FILES): $(BUILD_DIR)/%.c.o: %.c | build_assets
 	$(call print,Compiling:,$<,$@)
 	$(V)$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 endif
 
 # non asm-processor recipe
-$(BUILD_DIR)/%.c.o: %.c | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/%.c.o: %.c | build_assets
 	$(call print,Compiling:,$<,$@)
 	$(V)$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 
-$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: $(LIBULTRA_DIR)/src/libc/llcvt.c | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: $(LIBULTRA_DIR)/src/libc/llcvt.c | build_assets
 	$(call print,Compiling mips3:,$<,$@)
 	@$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 	$(V)$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@
 
-$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | build_assets
 	$(call print,Compiling mips3:,$<,$@)
 	@$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 	$(V)$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@
 
-$(BUILD_DIR)/%.s.o: %.s | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/%.s.o: %.s | build_assets
 	$(call print,Assembling:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $< 
 
 # Specifically override the assets bin output location to match what splat output to the ld file.
-$(BUILD_DIR)/asm/assets/assets.s.o: asm/assets/assets.s | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/asm/assets/assets.s.o: asm/assets/assets.s | build_assets
 	$(call print,Assembling Assets:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -o $(BUILD_DIR)/assets/assets.bin.o $<
 
 # Specifically override the header file from what splat extracted to be replaced by what we have in the hasm folder
-$(BUILD_DIR)/asm/header.s.o: src/hasm/header.s | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/asm/header.s.o: src/hasm/header.s | build_assets
 	$(call print,Assembling Header:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -o $(BUILD_DIR)/asm/header.s.o $<
 
 ifeq ($(NON_MATCHING),1)
 # If doing a NON_MATCHING build, and the custom boot file exists, use that.
 ifneq ("$(wildcard $(BOOT_CUSTOM))","")
-$(BUILD_DIR)/assets/boot.bin.o: $(BOOT_CUSTOM) | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/assets/boot.bin.o: $(BOOT_CUSTOM) | build_assets
 	$(call print,Linking Custom Boot:,$<,$@)
 	$(V)$(LD) -r -b binary -o $@ $<
 endif
 endif
 
-$(BUILD_DIR)/%.bin.o: %.bin | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/%.bin.o: %.bin | build_assets
 	$(call print,Linking Binary:,$<,$@)
 	$(V)$(LD) -r -b binary -o $@ $<
 
-$(TARGET).bin: $(TARGET).elf | $(ALL_ASSETS_BUILT)
+$(TARGET).bin: $(TARGET).elf | build_assets
 	$(call print,Objcopy:,$<,$@)
 	$(V)$(OBJCOPY) $(OBJCOPYFLAGS) $< $@
 
-$(TARGET).z64: $(TARGET).bin | $(ALL_ASSETS_BUILT)
+$(TARGET).z64: $(TARGET).bin | build_assets
 	$(call print,CopyRom:,$<,$@)
 	$(V)$(PYTHON) $(TOOLS_DIR)/python/CopyRom.py $< $@
 
