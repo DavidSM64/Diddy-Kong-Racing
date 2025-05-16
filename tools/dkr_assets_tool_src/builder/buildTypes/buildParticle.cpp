@@ -1,15 +1,20 @@
 #include "buildParticle.h"
 
-BuildParticle::BuildParticle(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
-    std::string rawPath = info.srcFile->get_string("/raw");
-    
-    DebugHelper::assert(!rawPath.empty(), "(BuildParticle::BuildParticle) \"raw\" not specified!");
-    
-    // Copy file from rawPath to destination path.
-    FileHelper::copy(_info.localDirectory / rawPath, info.dstPath);
-}
+using namespace DkrAssetsTool;
 
-BuildParticle::~BuildParticle() {
+void BuildParticle::build(BuildInfo &info) {
+    const JsonFile &jsonFile = info.get_src_json_file();
+    std::string rawPath = jsonFile.get_string("/raw");
     
+    DebugHelper::assert(!rawPath.empty(), "(BuildParticle::build) \"raw\" not specified!");
+    
+    fs::path dir = info.get_path_to_directory();
+    
+    if(info.build_to_file()) {
+        // Copy file from rawPath to destination path.
+        info.copy_to_dstPath(dir / rawPath);
+    } else {
+        // Load raw binary into info's out
+        info.out = FileHelper::read_binary_file(dir / rawPath);
+    }
 }
-

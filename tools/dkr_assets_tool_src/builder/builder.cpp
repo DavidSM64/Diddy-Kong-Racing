@@ -3,18 +3,36 @@
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include <memory>
 
+#include "libs/bytes_view.hpp"
+
+#include "prebuild/compileAssets/compile.h"
+
+#include "helpers/assetsHelper.h"
 #include "helpers/stringHelper.h"
 #include "helpers/jsonHelper.h"
 #include "helpers/fileHelper.h"
 #include "helpers/debugHelper.h"
+#include "helpers/dataHelper.h"
+#include "helpers/c/cContext.h"
+#include "helpers/c/cHeader.h"
+
+#include "misc/args.h"
+#include "misc/globalSettings.h"
+
+#include "fileTypes/types.hpp"
 
 #include "builder/buildInfo.h"
+#include "builder/buildInfoCollection.h"
+#include "builder/buildAssetTable.h"
+#include "builder/stats.h"
 
 #include "buildTypes/buildAudio.h"
 #include "buildTypes/buildBinary.h"
 #include "buildTypes/buildTexture.h"
 #include "buildTypes/buildFonts.h"
+#include "buildTypes/buildJpFonts.h"
 #include "buildTypes/buildGameText.h"
 #include "buildTypes/buildLevelModel.h"
 #include "buildTypes/buildLevelHeader.h"
@@ -30,53 +48,349 @@
 #include "buildTypes/buildTTGhost.h"
 #include "buildTypes/buildMisc.h"
 
-// Hope this doesn't cause too much cringe.
-#define BUILDER_ARGS DkrAssetsSettings &settings, BuildInfo &info
-#define BUILDER_LAMDA(classConstructorCode) [](BUILDER_ARGS) { classConstructorCode(settings, info); }
+using namespace DkrAssetsTool;
+
+/*************************************************************************************************/
+
+#define BUILDER_ARGS BuildInfo &info
+#define BUILDER_LAMDA(classConstructorCode) [](BUILDER_ARGS) { classConstructorCode(info); }
 
 typedef std::function<void(BUILDER_ARGS)> BuilderFunction;
 
-// Put build class constructors here with the type in the JSON file!
 std::unordered_map<std::string, BuilderFunction> builderMap = {
-    {                      "Binary", BUILDER_LAMDA(BuildBinary)           },
-    {                       "Fonts", BUILDER_LAMDA(BuildFonts)            },
-    { "LevelObjectTranslationTable", BUILDER_LAMDA(BuildLOTT)             },
-    {                     "Texture", BUILDER_LAMDA(BuildTexture)          },
-    {              "LevelObjectMap", BUILDER_LAMDA(BuildObjectMap)        },
-    {                  "LevelModel", BUILDER_LAMDA(BuildLevelModel)       },
-    {                 "LevelHeader", BUILDER_LAMDA(BuildLevelHeader)      },
-    {                "ObjectHeader", BUILDER_LAMDA(BuildObjectHeader)     },
-    {                 "ObjectModel", BUILDER_LAMDA(BuildObjectModel)      },
-    {             "ObjectAnimation", BUILDER_LAMDA(BuildObjectAnimation)  },
-    {                     "TTGhost", BUILDER_LAMDA(BuildTTGhost)          },
-    {                    "GameText", BUILDER_LAMDA(BuildGameText)         },
-    {                    "MenuText", BUILDER_LAMDA(BuildMenuText)         },
-    {               "Miscellaneous", BUILDER_LAMDA(BuildMisc)             },
-    {                      "Sprite", BUILDER_LAMDA(BuildSprite)           },
-    {                       "Audio", BUILDER_LAMDA(BuildAudio)            },
-    {                    "Particle", BUILDER_LAMDA(BuildParticle)         },
-    {            "ParticleBehavior", BUILDER_LAMDA(BuildParticleBehavior) },
+    {                      "Binary", BUILDER_LAMDA(BuildBinary::build)           },
+    {                       "Fonts", BUILDER_LAMDA(BuildFonts::build)            },
+    {                     "JPFonts", BUILDER_LAMDA(BuildJPFonts::build)          },
+    { "LevelObjectTranslationTable", BUILDER_LAMDA(BuildLOTT::build)             },
+    {                     "Texture", BUILDER_LAMDA(BuildTexture::build)          },
+    {              "LevelObjectMap", BUILDER_LAMDA(BuildObjectMap::build)        },
+    {                  "LevelModel", BUILDER_LAMDA(BuildLevelModel::build)       },
+    {                 "LevelHeader", BUILDER_LAMDA(BuildLevelHeader::build)      },
+    {                "ObjectHeader", BUILDER_LAMDA(BuildObjectHeader::build)     },
+    {                 "ObjectModel", BUILDER_LAMDA(BuildObjectModel::build)      },
+    {             "ObjectAnimation", BUILDER_LAMDA(BuildObjectAnimation::build)  },
+    {                     "TTGhost", BUILDER_LAMDA(BuildTTGhost::build)          },
+    {                    "GameText", BUILDER_LAMDA(BuildGameText::build)         },
+    {                    "MenuText", BUILDER_LAMDA(BuildMenuText::build)         },
+    {               "Miscellaneous", BUILDER_LAMDA(BuildMisc::build)             },
+    {                      "Sprite", BUILDER_LAMDA(BuildSprite::build)           },
+    {                       "Audio", BUILDER_LAMDA(BuildAudio::build)            },
+    {                    "Particle", BUILDER_LAMDA(BuildParticle::build)         },
+    {            "ParticleBehavior", BUILDER_LAMDA(BuildParticleBehavior::build) },
 };
 
-DkrAssetBuilder::DkrAssetBuilder(DkrAssetsSettings &settings, const fs::path &srcPath, const fs::path &dstPath) {
-    settings.pathToAssets /= settings.dkrVersion + "/";
+/*************************************************************************************************/
+
+// Generate the asset_enums.h file in the include folder.
+void generate_asset_enums_header_file(BuildInfoCollection &collection, std::vector<std::string> &sectionIds) {
+    WritableCHeader assetEnumsHeader;
+    
+    assetEnumsHeader.write_comment("// This file is automatically generated. Any changes you make to this file will get overwritten when building assets.");
+    assetEnumsHeader.write_newline();
+    assetEnumsHeader.write_raw_text_line("#ifndef _ASSET_ENUMS_H");
+    assetEnumsHeader.write_raw_text_line("#define _ASSET_ENUMS_H");
+    assetEnumsHeader.write_newline();
+    
+    assetEnumsHeader.write_header_comment("Asset Sections");
+    WriteableCEnum assetSectionsEnum("AssetSectionsEnum");
+    
+    for(const std::string &sectionBuildId : sectionIds) {
+        assetSectionsEnum.add_symbol(sectionBuildId);
+    }
+    
+    assetSectionsEnum.add_symbol("ASSET_SECTIONS_COUNT");
+    
+    assetEnumsHeader.write_enum(assetSectionsEnum);
+    
+    for(const std::string &sectionBuildId : sectionIds) {
+        
+        if(collection.get_file_count_for_section(sectionBuildId) == 1) {
+            if(sectionBuildId == "ASSET_FONTS" || sectionBuildId == "ASSET_LEVEL_OBJECT_TRANSLATION_TABLE") {
+                assetEnumsHeader.write_header_comment(sectionBuildId.c_str());
+                std::string enumName = StringHelper::upper_snake_case_to_pascal_case(sectionBuildId) + "Enum";
+                WriteableCEnum assetEnum(enumName);
+                
+                if(sectionBuildId == "ASSET_FONTS") {
+                    // Need to list out the individual fonts for ASSET_FONTS
+                    JsonFile &fontJson = AssetsHelper::get_asset_json(sectionBuildId);
+                    std::vector<std::string> fontBuildIds;
+                    fontJson.get_array<std::string>("/fonts-order", fontBuildIds);
+                    for(const std::string &fontBuildId : fontBuildIds) {
+                        assetEnum.add_symbol(fontBuildId);
+                    }
+                } else if(sectionBuildId == "ASSET_LEVEL_OBJECT_TRANSLATION_TABLE") {
+                    // Need to list out the object ids for this table.
+                    JsonFile &lottJson = AssetsHelper::get_asset_json(sectionBuildId);
+                    size_t tableLen = lottJson.length_of_array("/table");
+                    for(size_t i = 0; i < tableLen; i++) {
+                        std::string ptr = "/table/" + std::to_string(i);
+                        if(lottJson.is_value_null(ptr)) {
+                            assetEnum.add_symbol("NULL_OBJECT_" + std::to_string(i) + "_ID");
+                            continue;
+                        }
+                        std::string objectId = lottJson.get_string(ptr);
+                        
+                        if(StringHelper::starts_with(objectId, "ASSET_OBJECT_")) {
+                            objectId.insert(13, "ID_");
+                        } else {
+                            objectId += "_ID";
+                        }
+                        
+                        assetEnum.add_symbol(objectId);
+                    }
+                }
+                
+                assetEnum.add_symbol(sectionBuildId + "_COUNT");
+                
+                assetEnumsHeader.write_enum(assetEnum);
+            }
+            
+            // Ignore sections with only one entry, since the build id is already covered in AssetSectionsEnum.
+            continue;
+        }
+        
+        assetEnumsHeader.write_header_comment(sectionBuildId.c_str());
+            
+        std::string enumName = StringHelper::upper_snake_case_to_pascal_case(sectionBuildId) + "Enum";
+        WriteableCEnum assetEnum(enumName);
+            
+        collection.get_infos_for_section(sectionBuildId, [&assetEnum](BuildInfo &info){
+            assetEnum.add_symbol(info.get_build_id());
+        });
+        
+        assetEnum.add_symbol(sectionBuildId + "_COUNT");
+        
+        assetEnumsHeader.write_enum(assetEnum);
+        
+        if(sectionBuildId == "ASSET_MENU_TEXT") {
+            std::string enumName = StringHelper::upper_snake_case_to_pascal_case(sectionBuildId) + "IdsEnum";
+            WriteableCEnum menuTextIdsEnum(enumName);
+            JsonFile &menuTextSectionJson = AssetsHelper::get_asset_section_json(sectionBuildId);
+            std::vector<std::string> menuTextIds;
+            menuTextSectionJson.get_array<std::string>("/menu-text-build-ids", menuTextIds);
+            
+            for(const std::string &menuTextId : menuTextIds) {
+                menuTextIdsEnum.add_symbol(menuTextId);
+            }
+            
+            assetEnumsHeader.write_enum(menuTextIdsEnum);
+        }
+    }
+    
+    assetEnumsHeader.write_raw_text_line("#endif");
+    assetEnumsHeader.write_newline();
+    
+    fs::path assetEnumsHeaderPath = GlobalSettings::get_decomp_path("/include-subpath", "include/") / "asset_enums.h";
+    
+    assetEnumsHeader.save(assetEnumsHeaderPath);
+    
+    DebugHelper::info("Generated asset_enums.h in the include folder.");
+}
+
+/*************************************************************************************************/
+
+// Build all assets.
+void AssetBuilder::build_all(const fs::path &dstPath) {
+    
+    if(Args::get<bool>("-m", false)) {
+        // Attempt to compile assets if mods/order.json has any.
+        CompileAssets::compile();
+    }
+    
+    JsonFile &mainJson = AssetsHelper::get_main_json();
+    
+    std::vector<std::string> sectionIds;
+    mainJson.get_array<std::string>("/assets/order", sectionIds);
+    size_t numberOfAssetSections = sectionIds.size();
+    
+    CContext cContext;
+    BuildStats stats;
+    BuildInfoCollection collection;
+    
+    // BuildInfoContext holds info that is shared between all assets.
+    BuildInfoContext infoContext(cContext, stats, collection);
+    
+    fs::path includeFolder = GlobalSettings::get_decomp_path("include_subpath", "include/");
+    CEnumsHelper::load_enums_from_file(cContext, includeFolder / "enums.h");
+    
+    // Need to do this here for Object Maps to get built correctly.
+    CEnumsHelper::load_enums_from_file(cContext, includeFolder / "object_behaviors.h");
+    CStructHelper::load_structs_from_file(cContext, includeFolder / "level_object_entries.h");
+    infoContext.init_obj_beh_to_entry_map();
+    
+    // First loop to get all the information about assets to be extracted, and put them into the BuildInfoCollection.
+    for(size_t sectionIndex = 0; sectionIndex < numberOfAssetSections; sectionIndex++) {
+        std::string sectionBuildId = sectionIds[sectionIndex];
+        
+        std::string sectionPtr = "/assets/sections/" + sectionBuildId;
+        std::string sectionType = mainJson.get_string(sectionPtr + "/type");
+        bool isDeferred = mainJson.get_bool(sectionPtr + "/deferred");
+        
+        if(isDeferred || sectionType == "Table" || sectionType == "Empty" || sectionType == "NoExtract") {
+            continue;
+        }
+        
+        JsonFile &sectionJson = AssetsHelper::get_asset_section_json(sectionBuildId);
+        std::string sectionFolder = sectionJson.get_string("/folder");
+        
+        if(sectionJson.has("/filename")) {
+            JsonFile &assetJson = AssetsHelper::get_asset_json(sectionBuildId);
+            collection.add_build_info(sectionBuildId, sectionBuildId, assetJson, sectionFolder, infoContext);
+            continue;
+        }
+        
+        std::vector<std::string> sectionFileBuildIds;
+        sectionJson.get_array<std::string>("/files/order", sectionFileBuildIds);
+        size_t numberOfFiles = sectionFileBuildIds.size();
+        
+        for(size_t fileIndex = 0; fileIndex < numberOfFiles; fileIndex++) {
+            std::string fileBuildId = sectionFileBuildIds[fileIndex];
+            JsonFile &assetJson = AssetsHelper::get_asset_json(sectionBuildId, fileBuildId);
+            collection.add_build_info(sectionBuildId, fileBuildId, assetJson, assetJson.get_filepath().parent_path(), infoContext);
+        }
+    }
+    
+    // Build all the assets
+    collection.run_builds([](BuildInfo &info) {
+        std::string type = info.get_type();
+        builderMap[type](info);
+    });
+    
+    // Second loop to create the tables for the asset sections.
+    for(size_t sectionIndex = 0; sectionIndex < numberOfAssetSections; sectionIndex++) {
+        std::string sectionBuildId = sectionIds[sectionIndex];
+        
+        std::string sectionPtr = "/assets/sections/" + sectionBuildId;
+        std::string sectionType = mainJson.get_string(sectionPtr + "/type");
+        
+        if(sectionType != "Table" && sectionType != "ObjectAnimationIdsTable") {
+            continue;
+        }
+        
+        bool isNormalTable = sectionType == "Table";
+        
+        std::string forSection = mainJson.get_string(sectionPtr + "/for");
+        
+        DebugHelper::assert_(!forSection.empty(),
+            "(AssetBuilder::build_all) Table section \"", sectionBuildId, "\" needs a `for` parameter.");
+            
+        std::string forSectionPtr = "/assets/sections/" + forSection;
+        
+        std::string forType = mainJson.get_string(forSectionPtr + "/type", "Binary");
+        
+        BuildAssetTable table(isNormalTable ? forType : "ObjectAnimationIdsTable");
+        
+        // Add entries into the table.
+        collection.get_infos_for_section(forSection, [&table, &isNormalTable](BuildInfo &info) {
+            bool highestBitSet = false;
+            std::string type = info.get_type();
+            
+            if(type == "GameText") {
+                const JsonFile &infoJson = info.get_src_json_file();
+                highestBitSet = infoJson.get_string("/text-type", "Textbox") == "Dialog";
+            }
+            
+            if(isNormalTable) {
+                table.add_entry(info.out.size(), highestBitSet);
+            } else { 
+                // ObjectAnimationIdsTable
+                const JsonFile &infoJson = info.get_src_json_file();
+                std::string modelBuildId = infoJson.get_string("/for-model");
+                int modelIndex = AssetsHelper::get_asset_index("ASSET_OBJECT_MODELS", modelBuildId);
+                DebugHelper::assert_(modelIndex >= 0, 
+                    "(AssetBuilder::build_all) Could not find object model \"", modelBuildId, "\" in ASSETS_OBJECT_MODELS section.");
+                table.add_object_animation_ids_entry(modelIndex);
+            }
+        });
+        
+        BytesView tableView = table.get_view(cContext);
+        
+        const std::vector<uint8_t> &tableData = tableView.data_vector();
+        
+        collection.add_deferred_build_info(sectionBuildId, sectionBuildId, tableData, "", infoContext);
+    }
+    
+    //collection.print_section_counts();
+    
+    BuildAssetTable mainTable(DkrAssetTableType::FixedTable);
+    
+    // Third loop to fill in the entries for the main assets table
+    for(const std::string &sectionId : sectionIds) {
+        mainTable.add_entry(collection.get_size_of_section(sectionId));
+    }
+    
+    BytesView mainTableView = mainTable.get_view(cContext);
+    
+    size_t assetsSize = mainTableView.size() + mainTable.get_size_of_entries();
+    
+    std::vector<uint8_t> outAssets(assetsSize);
+    
+    BytesView outAssetsView(outAssets);
+    
+    outAssetsView.copy_from(mainTableView, 0); // Put the mainTable at the start of outAssets. 
+    
+    size_t currentAssetsOffset = mainTableView.size();
+    
+    // For the map
+    std::map<size_t, std::string> offsetToId;
+    
+    // Fourth loop to fill copy all the built data to outAssets
+    for(size_t sectionIndex = 0; sectionIndex < numberOfAssetSections; sectionIndex++) {
+        std::string sectionBuildId = sectionIds[sectionIndex];
+        collection.get_infos_for_section(sectionBuildId, [&outAssetsView, &currentAssetsOffset, &offsetToId](BuildInfo &info) {
+            outAssetsView.copy_from(info.out, currentAssetsOffset);
+            offsetToId[currentAssetsOffset] = info.get_build_id();
+            currentAssetsOffset += info.out.size();
+        });
+        // Make sure the alignment for each section is at a 16-byte boundary.
+        currentAssetsOffset = DataHelper::align16(currentAssetsOffset);
+    }
+    
+    // Write the output file to the destination.
+    FileHelper::write_binary_file(outAssets, dstPath, true);
+    DebugHelper::info("Wrote assets to ", dstPath);
+    
+    // Generate the include/asset_enums.h file
+    generate_asset_enums_header_file(collection, sectionIds);
+    
+    if(GlobalSettings::get_value<bool>("/debug/write-assets-map", false)) {
+        std::stringstream ss;
+        
+        for(auto &entry : offsetToId) {
+            ss << std::uppercase << std::hex << std::setw(8) << std::setfill('0');
+            ss << entry.first << ": " << entry.second << std::endl;
+        }
+        
+        fs::path mapDstPath = dstPath;
+        mapDstPath.replace_extension(".map.txt");
+        FileHelper::write_text_file(ss.str(), mapDstPath, true);
+    }
+}
+
+void AssetBuilder::build(const fs::path &srcPath, const fs::path &dstPath) {
+    DebugHelper::error("(AssetBuilder::build) Not implemented. Yell at the dev to get off his lazy butt.");
+    
+    /*
+    //settings.pathToAssets /= GlobalSettings::get_value<std::string>("dkr_version", "us_1.0") + "/";
     
     // Make sure the input file is a JSON file.
     DebugHelper::assert_(StringHelper::ends_with(srcPath, ".json"), "(DkrAssetBuilder::DkrAssetBuilder) Input file is not a JSON file! Input file = \"", srcPath, "\"");
     
-    JsonFile *jsonFile;
+    auto tryGetJsonFile = JsonHelper::get_file(srcPath);
     
     // Get the file, and throw an error if it doesn't exist.
-    DebugHelper::assert_(JsonHelper::get().get_file(srcPath, &jsonFile), "(DkrAssetBuilder::DkrAssetBuilder) Could not find input file \"", srcPath, "\"");
+    DebugHelper::assert_(tryGetJsonFile.has_value(), "(DkrAssetBuilder::DkrAssetBuilder) Could not find input file \"", srcPath, "\"");
+    
+    JsonFile &jsonFile = tryGetJsonFile.value();
     
     fs::path localDirectory = FileHelper::get_directory(srcPath);
     
-    BuildInfo info(jsonFile, dstPath, localDirectory);
+    BuildInfo info(&jsonFile, dstPath, localDirectory);
     
     // Make sure the json file has the "type" key.
-    DebugHelper::assert_(jsonFile->has("/type"), "(DkrAssetBuilder::DkrAssetBuilder) Input JSON file does not have a \"type\"! Input file = \"", srcPath, "\"");
+    DebugHelper::assert_(jsonFile.has("/type"), "(DkrAssetBuilder::DkrAssetBuilder) Input JSON file does not have a \"type\"! Input file = \"", srcPath, "\"");
     
-    std::string type = jsonFile->get_string("/type");
+    std::string type = jsonFile.get_string("/type");
     
     // Check to make sure the builderMap has the given type.
     if(builderMap.find(type) == builderMap.end()) {
@@ -86,8 +400,6 @@ DkrAssetBuilder::DkrAssetBuilder(DkrAssetsSettings &settings, const fs::path &sr
     }
     
     // Call the class constructor of a type.
-    builderMap[type](settings, info);
-}
-
-DkrAssetBuilder::~DkrAssetBuilder() {
+    builderMap[type](info);
+    */
 }

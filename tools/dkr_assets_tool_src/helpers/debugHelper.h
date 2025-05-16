@@ -18,7 +18,7 @@
 
 #define RESET_TEXT "\033[0m"
 
-
+namespace DkrAssetsTool {
 
 /**
  * Singleton class that deals with info / logging / errors
@@ -127,7 +127,7 @@ public:
         return ss.str();
     }
     
-    static std::string bytes_to_hex_string(uint8_t *data, uint32_t dataLength) {
+    static std::string bytes_to_hex_string(const uint8_t *data, uint32_t dataLength) {
         std::stringstream ss;
         ss << std::hex << std::setfill('0');
         for(uint32_t i = 0; i < dataLength; ++i)
@@ -150,3 +150,4 @@ private:
     bool _assertsEnabled = false;
     int timerChannel = 0;
 };
+}

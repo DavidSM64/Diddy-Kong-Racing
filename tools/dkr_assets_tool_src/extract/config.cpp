@@ -1,281 +1,132 @@
 #include "config.h"
 
-#define INVALID_CONFIG_STR "<INVALID CONFIG>"
-#define INVALID_CONFIG_INT -1
+#include "misc/globalSettings.h"
+#include "helpers/c/cContext.h"
 
-DkrExtractConfig::DkrExtractConfig(std::string filepath){
-    _filepath = filepath;
-    _isValid = _load_config();
+using namespace DkrAssetsTool;
+
+AssetExtractConfig::AssetExtractConfig() {
+    fs::path configPath = GlobalSettings::get_decomp_path("extract_config", "tools/dkr_assets_tool_extract.json");
+    
+    _configJson = JsonHelper::get_file(configPath);
+    
+    DebugHelper::assert_(_configJson.has_value(),
+        "(AssetExtractConfig::AssetExtractConfig) Could not find or parse dkr_assets_tool_extract.json");
+    
+    const JsonFile &jsonFile = get_config_json();
+    
+    // Doing this for performance reasons. Turns the array of files into a hashmap with the sha1 property being the key.
+    // Multiple files will have the same sha1 hash (duplicate textures mostly), so that is why I'm using std::vector<size_t> as the map's value.
+    _sha1HashToFileIndex = jsonFile.create_map_of_indices_from_property_value<std::string>("/files", "sha1");
 }
 
-DkrExtractConfig::~DkrExtractConfig() {
-}  
-
-bool DkrExtractConfig::is_valid() {
-    return _isValid;
-}  
-
-std::string DkrExtractConfig::get_dkr_version() {
-    if(!_isValid) {
-        return INVALID_CONFIG_STR;
-    }
-    return _configJson->get_string("/subfolder");
+AssetExtractConfig::~AssetExtractConfig() {
 }
 
-std::string DkrExtractConfig::get_name() {
-    if(!_isValid) {
-        return INVALID_CONFIG_STR;
-    }
-    return _configJson->get_string("/config-name");
+const JsonFile &AssetExtractConfig::get_config_json() const {
+    return _configJson.value();
 }
 
-std::string DkrExtractConfig::get_md5() {
-    if(!_isValid) {
-        return INVALID_CONFIG_STR;
-    }
-    return _configJson->get_string("/checksum-md5");
+const BytesView &AssetExtractConfig::get_rom_assets_view() const {
+    DebugHelper::assert_(_romAssetsView.has_value(),
+        "(AssetExtractConfig::get_rom_assets_view) ROM file has not been loaded yet!");
+    return _romAssetsView.value();
 }
 
-int DkrExtractConfig::get_revision() {
-    if(!_isValid) {
-        return INVALID_CONFIG_INT;
+bool AssetExtractConfig::is_input_file_valid(fs::path baseromPath) const {
+    const JsonFile &configJson = get_config_json();
+    
+    std::string fileSha1 = FileHelper::get_sha1_of_file(baseromPath);
+    
+    std::optional<size_t> tryFindEntryFromSha1 = configJson.get_index_of_object_that_has_property<std::string>("/inputs-supported", "sha1", fileSha1);
+    
+    if(!tryFindEntryFromSha1.has_value()) {
+        return false; // File was not in the "inputs-supported" array.
     }
-    return _configJson->get_int("/revision");
-}
-
-bool DkrExtractConfig::_load_config() {
-    if(!JsonHelper::get().get_file(_filepath, &_configJson)) {
-        DebugHelper::warn("Could not load config: ", _filepath);
-        return false;
+    
+    size_t entryIndex = tryFindEntryFromSha1.value();
+    
+    std::string dkrVersion = GlobalSettings::get_dkr_version();
+    std::string fileDkrVersion = configJson.get_string_lowercase("/inputs-supported/" + std::to_string(entryIndex) + "/dkr_version");
+    
+    if(dkrVersion != fileDkrVersion) {
+        return false; // DKR version of file was not correct.
     }
+    
     return true;
 }
 
-void DkrExtractConfig::parse() {
-    DebugHelper::DebugTimer timer;
-    _parse_code_sections();
-    _parse_asset_sections();
-    DebugHelper::info_verbose("Took ", timer.elapsed(), " to parse config file");
+void AssetExtractConfig::load_input_file(fs::path baseromPath) {
+    const JsonFile &configJson = get_config_json();
+    
+    std::string fileSha1 = FileHelper::get_sha1_of_file(baseromPath);
+    std::optional<size_t> tryFindEntryFromSha1 = configJson.get_index_of_object_that_has_property<std::string>("/inputs-supported", "sha1", fileSha1);
+    DebugHelper::assert_(tryFindEntryFromSha1.has_value(),
+        "(AssetExtractConfig::load_input_file) Trying to load an invalid ROM file!");
+    size_t entryIndex = tryFindEntryFromSha1.value();
+    std::string entryPtr = "/inputs-supported/" + std::to_string(entryIndex);
+    
+    _rom = FileHelper::read_binary_file(baseromPath);
+    
+    size_t assetsStart = configJson.get_int(entryPtr + "/assets");
+    size_t assetsEnd = configJson.get_int(entryPtr + "/assets_end");
+    
+    _romAssetsView = BytesView(_rom, assetsStart, assetsEnd - assetsStart);
+}
+    
+size_t AssetExtractConfig::number_of_sections() const {
+    return get_config_json().length_of_array("/sections");
 }
 
-std::string DkrExtractConfig::get_build_id_of_section(int sectionIndex) {
-    return assetSections[sectionIndex].buildId;
+std::optional<size_t> AssetExtractConfig::get_section_table_index(std::string buildId) const {
+    const JsonFile &configJson = get_config_json();
+    return configJson.get_index_of_object_that_has_property<std::string>("/sections", "for", buildId);
 }
 
+std::vector<size_t> AssetExtractConfig::get_file_indices_from_sha1(std::string sha1Hash) const {
+    if(_sha1HashToFileIndex.find(sha1Hash) == _sha1HashToFileIndex.end()) {
+        return {} ; // No files entries found.
+    }
+    return _sha1HashToFileIndex.at(sha1Hash);
+}
 
-// Use AssetsHelper::get_build_id_of_index() instead.
 /*
-std::string DkrExtractConfig::get_build_id_of_file_from_section(std::string sectionBuildId, int fileIndex) {
-    // Make sure the build ID is valid.
-    DebugHelper::assert(_sectionIdToIndex.find(sectionBuildId) != _sectionIdToIndex.end(), 
-        "(DkrExtractConfig::get_build_id_of_file_from_section) Section Build ID \"", sectionBuildId, "\" was not defined.");
-    
-    DkrExtractAssetSection &assetSection = assetSections[_sectionIdToIndex[sectionBuildId]];
-    DkrExtractAssetSectionFile *file;
-    
-    if(fileIndex >= 0) {
-        file = assetSection.get_asset_section_file(fileIndex);
-    } else {
-        file = assetSection.get_single_file();
+std::optional<size_t> AssetExtractConfig::get_file_index_from_sha1(std::string sha1Hash, size_t foundSoFar) const {
+    if(_sha1HashToFileIndex.find(sha1Hash) == _sha1HashToFileIndex.end()) {
+        return std::nullopt; // File not found in "files" array.
     }
-    
-    if(file != nullptr) {
-        return file->buildId;
-    }
-    
-    // file is null, so get a generic id.
-    if(fileIndex >= 0) {
-        return sectionBuildId + "_" + std::to_string(fileIndex);
-    } else {
-        return sectionBuildId; // Single files just use the build id of the section.
-    }
+    size_t numberOfFilesForHash = _sha1HashToFileIndex.at(sha1Hash).size();
+    DebugHelper::assert_(foundSoFar < numberOfFilesForHash, 
+        "(AssetExtractConfig::get_file_index_from_sha1) foundSoFar out of bounds! ",
+        "foundSoFar = ", foundSoFar, ", numberOfFilesForHash = ", numberOfFilesForHash, "; hash is \"", sha1Hash, "\"");
+    return _sha1HashToFileIndex.at(sha1Hash).at(foundSoFar);
 }
 */
 
-// Returns the build id of the section that the table belongs to. Throws an error if it doesn't exist.
-std::string DkrExtractConfig::get_build_id_of_section_from_table_id(std::string tableBuildId) {
-    // Make sure the build ID is valid.
-    DebugHelper::assert(_sectionIdToIndex.find(tableBuildId) != _sectionIdToIndex.end(), 
-        "(DkrExtractConfig::get_build_id_of_section_from_table_id) Table Build ID \"", tableBuildId, "\" was not defined.");
+std::string AssetExtractConfig::get_object_entry_from_behavior(std::string objBehavior) const {
+    DebugHelper::assert_(_objBehaviorToEntry.find(objBehavior) != _objBehaviorToEntry.end(),
+        "(AssetExtractConfig::get_object_entry_from_behavior) ", objBehavior, 
+        " was not in the _objBehaviorToEntry map!");
     
-    int tableIndex = _sectionIdToIndex[tableBuildId];
-    
-    for(size_t i = 0; i < assetSections.size(); i++) {
-        if(assetSections[i].table == tableIndex) {
-            return assetSections[i].buildId;
-        }
-    }
-    
-    DebugHelper::error("(DkrExtractConfig::get_build_id_of_section_from_table_id) Could not find a section that uses the table \"", 
-        tableBuildId, "\"");
-    
-    return std::string();
+    return _objBehaviorToEntry.at(objBehavior);
 }
 
-std::string DkrExtractConfig::get_folder_path_to_section(std::string sectionBuildId) {
-    // Make sure the build ID is valid.
-    DebugHelper::assert(_sectionIdToIndex.find(sectionBuildId) != _sectionIdToIndex.end(), 
-        "(DkrExtractConfig::get_build_id_of_file_from_section) Section Build ID \"", sectionBuildId, "\" was not defined.");
+void AssetExtractConfig::init_obj_beh_to_entry_map(CContext &cContext) {
+    const JsonFile &configJson = get_config_json();
+    CEnum *objBehaviors = cContext.get_enum("ObjectBehaviours");
     
-    DkrExtractAssetSection &assetSection = assetSections[_sectionIdToIndex[sectionBuildId]];
-    return assetSection.folder;
-}
-
-std::string DkrExtractConfig::get_path_to_file(std::string sectionBuildId, int fileIndex) {
-     // Make sure the build ID is valid.
-    DebugHelper::assert(_sectionIdToIndex.find(sectionBuildId) != _sectionIdToIndex.end(), 
-        "(DkrExtractConfig::get_build_id_of_file_from_section) Section Build ID \"", sectionBuildId, "\" was not defined.");
+    std::vector<std::string> defaultObjEntriesOrder;
+    configJson.get_array<std::string>("/misc/default-object-entries-order", defaultObjEntriesOrder);
     
-    DkrExtractAssetSection &assetSection = assetSections[_sectionIdToIndex[sectionBuildId]];
-    DkrExtractAssetSectionFile *file;
-    
-    if(fileIndex >= 0) {
-        file = assetSection.get_asset_section_file(fileIndex);
-    } else {
-        file = assetSection.get_single_file();
-    }
-    
-    DebugHelper::assert(file != nullptr, "(std::string get_path_to_file) File ", fileIndex, " was not specified.");
-    
-    return assetSection.folder / file->folder / file->filename;
-}
-
-// May return nullptr
-DkrExtractAssetSectionFile *DkrExtractAssetSection::get_asset_section_file(int index) {
-    for(DkrExtractAssetSectionFile &file : files) {
-        if(file.index == index) {
-            return &file;
-        }
-    }
-    return nullptr;
-}
-
-// May return nullptr
-DkrExtractAssetSectionFile *DkrExtractAssetSection::get_single_file() {
-    DebugHelper::assert(files.size() < 2, "(DkrExtractAssetSection::get_single_file) Section \"", type, "\" has more than one file!");
-    
-    if(files.empty()) {
-        return nullptr;
-    }
-    
-    return &files[0];
-}
-
-void DkrExtractConfig::get_default_object_entries_order_array(std::vector<std::string> &out) {
-    size_t len = _configJson->length_of_array("/assets/misc/default-object-entries-order");
-    for(size_t i = 0; i < len; i++) {
-        out.push_back(_configJson->get_string("/assets/misc/default-object-entries-order/" + std::to_string(i)));
+    for(int i = 0; i < 128; i++) {
+        std::string symbol;
+        DebugHelper::assert_(objBehaviors->get_symbol_of_value(i, symbol),
+            "(generate_obj_behavior_to_entry_json_file) Could not get a symbol for the value ", i, " in the ObjectBehaviors enum.");
+        
+        CStruct *entryStruct = cContext.get_struct(defaultObjEntriesOrder[i]);
+        DebugHelper::assert_(entryStruct != nullptr, 
+            "(generate_obj_behavior_to_entry_json_file) Could not find struct \"", defaultObjEntriesOrder[i], "\"");
+        
+        _objBehaviorToEntry[symbol] = defaultObjEntriesOrder[i];
     }
 }
-
-void DkrExtractConfig::_parse_code_sections() {
-    int numOfCodeSections = _configJson->length_of_array("/code/sections");
-    for(int i = 0; i < numOfCodeSections; i++) {
-        DkrExtractCodeSection codeSection;
-        codeSection.type = _configJson->get_string("/code/sections/" + std::to_string(i) + "/type");
-        codeSection.folder = _configJson->get_string("/code/sections/" + std::to_string(i) + "/folder");
-        FileHelper::format_folder_string(codeSection.folder);
-        DebugHelper::info_verbose("code section: ", codeSection.type, ", ", codeSection.folder);
-            
-        int numOfCodeFilesInSection = _configJson->length_of_array("/code/sections/" + std::to_string(i) + "/files");
-        for(int j = 0; j < numOfCodeFilesInSection; j++) {
-            DkrExtractCodeSectionFile codeFile;
-            codeFile.filename = _configJson->get_string("/code/sections/" + std::to_string(i) + "/files/" + std::to_string(j) + "/filename");
-            std::string lengthAsHex = _configJson->get_string("/code/sections/" + std::to_string(i) + "/files/" + std::to_string(j) + "/length");
-            codeFile.length = std::stoi(lengthAsHex, 0, 16);
-            DebugHelper::info_verbose("  code file: ", codeFile.filename, ", ", DebugHelper::to_hex(codeFile.length));
-            codeSection.files.push_back(codeFile);
-        }
-        
-        codeSections.push_back(codeSection);
-    }
-}
-
-void DkrExtractConfig::_parse_asset_sections() {
-    int numOfAssetSections = _configJson->length_of_array("/assets/sections");
-    for(int i = 0; i < numOfAssetSections; i++) {
-        DkrExtractAssetSection assetSection;
-        
-        assetSection.buildId = _configJson->get_string("/assets/sections/" + std::to_string(i) + "/build-id");
-        assetSection.type = _configJson->get_string("/assets/sections/" + std::to_string(i) + "/type");
-        assetSection.folder = _configJson->get_path("/assets/sections/" + std::to_string(i) + "/folder");
-        assetSection.table = _configJson->get_int("/assets/sections/" + std::to_string(i) + "/table");
-        
-        assetSection.isDeferred = _configJson->get_bool("/assets/sections/" + std::to_string(i) + "/defer", false);
-        
-        if(assetSection.isDeferred) {
-            std::string deferInfoPtr = "/assets/sections/" + std::to_string(i) + "/defer-info";
-            assetSection.deferInfo.fromSection = _configJson->get_string(deferInfoPtr + "/from-section");
-            assetSection.deferInfo.idPostfix = _configJson->get_string(deferInfoPtr + "/id-postfix");
-            assetSection.deferInfo.outputPath = _configJson->get_path(deferInfoPtr + "/output-path");
-        }
-        
-        // Defaults to group 0 if not specified.
-        assetSection.group = _configJson->get_int("/assets/sections/" + std::to_string(i) + "/group", 0);
-        
-        assetSection.filesDefaultFolder = _configJson->get_path("/assets/sections/" + std::to_string(i) + "/files-default-folder");
-        assetSection.defaultBuildIdPrefix = _configJson->get_string("/assets/sections/" + std::to_string(i) + "/default-build-id-prefix");
-        
-        bool isTexture = (assetSection.type == "Texture");
-        bool isTable = (assetSection.type == "Table");
-        bool isFonts = (assetSection.type == "Fonts");
-        bool isMenuText = (assetSection.type == "MenuText");
-        bool isMisc = (assetSection.type == "Miscellaneous");
-        
-        if(isTexture) {
-            assetSection.specific.textures.flipTexturesByDefault = _configJson->get_bool( "/assets/sections/" + std::to_string(i) + "/flip-textures-by-default");
-        } else if(isTable) {
-            assetSection.specific.tableData.forSection = _configJson->get_string( "/assets/sections/" + std::to_string(i) + "/for");
-        } else if(isFonts) {
-            _configJson->get_array<std::string>( "/assets/sections/" + std::to_string(i) + "/font-names", assetSection.specific.fonts.fontNames);
-        } else if(isMenuText) {
-            _configJson->get_array<std::string>( "/assets/sections/" + std::to_string(i) + "/language-order", assetSection.specific.menuText.languageOrder);
-            _configJson->get_array<std::string>( "/assets/sections/" + std::to_string(i) + "/menu-text-build-ids", assetSection.specific.menuText.menuTextBuildIds);
-        }
-        
-        DebugHelper::info_verbose("asset section: ", assetSection.buildId, ",", 
-                                                    assetSection.type, ",", 
-                                                    assetSection.folder, ",", 
-                                                    assetSection.table, ",", 
-                                                    assetSection.filesDefaultFolder, ",", 
-                                                    assetSection.defaultBuildIdPrefix);
-                                                    
-        if(_configJson->has("/assets/sections/" + std::to_string(i) + "/files")) {
-            int numOfAssetFilesInSection = _configJson->length_of_array("/assets/sections/" + std::to_string(i) + "/files");
-            for(int j = 0; j < numOfAssetFilesInSection; j++) {
-                
-                std::string filePtr = "/assets/sections/" + std::to_string(i) + "/files/" + std::to_string(j);
-                
-                DkrExtractAssetSectionFile assetFile;
-                assetFile.section = &assetSection;
-                assetFile.index = _configJson->get_int(filePtr + "/index", -1);
-                assetFile.filename = _configJson->get_string(filePtr + "/filename", "");
-                assetFile.buildId = _configJson->get_string(filePtr + "/build-id", "");
-                assetFile.folder = _configJson->get_path(filePtr + "/folder", "");
-                
-                if(isTexture) {
-                    assetFile.specific.texture.flipTex = _configJson->get_bool(filePtr + "/flip-tex", assetSection.specific.textures.flipTexturesByDefault);
-                } else if(isMenuText) {
-                    assetFile.specific.menuText.language = _configJson->get_string("/assets/sections/" + std::to_string(i) + "/language-order/" + std::to_string(j));
-                } else if(isMisc) {
-                    // Set to "Binary" by default if not specified.
-                    assetFile.specific.misc.miscType = _configJson->get_string(filePtr + "/misc-type", "Binary");
-                }
-                
-                DebugHelper::info_verbose("  asset file: ", assetFile.index, ",", assetFile.filename, ",", assetFile.buildId, ",", assetFile.folder);
-                assetSection.files.push_back(assetFile);
-            }
-        }
-        
-        assetSections.push_back(assetSection);
-    }
-    _populate_sectionIdToIndex_map();
-}
-
-void DkrExtractConfig::_populate_sectionIdToIndex_map() {
-    for(size_t i = 0; i < assetSections.size(); i++) {
-        DkrExtractAssetSection &assetSection = assetSections[i];
-        _sectionIdToIndex[assetSection.buildId] = i;
-    }
-}
-

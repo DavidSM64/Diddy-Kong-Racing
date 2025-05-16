@@ -3,6 +3,11 @@ REGION  := us
 VERSION  := v77
 NON_MATCHING ?= 0
 
+# NM is shorthand for NON_MATCHING
+ifneq ($(NM),)
+	NON_MATCHING := 1
+endif
+
 # Experimental option for nonmatching builds. GCC may not function identically to ido.
 COMPILER ?= ido
 $(eval $(call validate-option,NON_MATCHING,ido gcc))
@@ -327,6 +332,7 @@ no_verify: $(TARGET).z64
 
 extract:
 	$(SPLAT) ver/splat/$(BASENAME).$(REGION).$(VERSION).yaml
+	$(TOOLS_DIR)/dkr_assets_tool extract -dkrv $(REGION).$(VERSION) >&2 || echo FAIL
 #These are the only 4 jpn region functions that match elsewhere, but not for this region. As a temp hack for progress script reasons, just delete these for other regions.
 ifneq ($(REGION),jpn)
 	@$(RM) asm/nonmatchings/menu/savemenu_render_element.s asm/nonmatchings/menu/pakmenu_render.s asm/nonmatchings/menu/results_render.s asm/nonmatchings/menu/menu_credits_loop.s
@@ -395,114 +401,80 @@ expected: verify
 #Run this to use the asset builder to customize assets
 assets: all
 
-# Only compile the assets when running `make assets` or if we're making a NON_MATCHING build
-ifeq ($(MAKECMDGOALS),assets)
+ASSETS_OUTPUT := assets/assets.bin
 
-ASSETS_VERSION := us_1.0
-ASSETS := assets/$(ASSETS_VERSION)
-ASSETS_BUILD_DIR := $(BUILD_DIR)/assets
-BUILDER = $(TOOLS_DIR)/dkr_assets_tool -dkrv $(ASSETS_VERSION) build
-
-######## Extract Assets & Microcode ########
-DUMMY != $(PYTHON) $(TOOLS_DIR)/python/check_if_need_to_extract.py $(ASSETS_VERSION) >&2 || echo FAIL
-
-######## Prebuild step (Compile assets, generate linker file, etc.) ########
-DUMMY != $(TOOLS_DIR)/dkr_assets_tool -dkrv $(ASSETS_VERSION) prebuild >&2 || echo FAIL
-
-# Helps fix an issue with parallel jobs.
-$(ALL_ASSETS_BUILT): | $(BUILD_DIR)
-
-# This is here to prevent make from deleting all the asset files after the build completes/fails.
-dont_remove_asset_files: $(ALL_ASSETS_BUILT)
-
-# Add .json files
-JSON_FILES := $(shell find $(ASSETS) -type f -name '*.json')
-
-# Ignore .meta.json files
-IGNORE_JSON_FILES := $(shell find $(ASSETS) -type f -name '*.meta.json')
-JSON_FILES := $(filter-out $(IGNORE_JSON_FILES),$(JSON_FILES))
-
-# $1 = asset path (e.g. assets/levels/models/...), $2 = cmd to run
-define DEFINE_ASSET_TARGET
-$(eval BASE_PATH := $(subst $(ASSETS),$(ASSETS_BUILD_DIR),$(basename $1)))
-$$(BASE_PATH).bin: $1
-	$2
-$(eval ALL_ASSETS_BUILT+=$(BASE_PATH).bin)
-endef
-
-# $1 = Print message
-define JSON_FILE_ACTION
-	$$(call print,$1:,$$<,$$@)
-	$$(V)$$(BUILDER) -i $$< -o $$@
-endef
-
-$(foreach FILE,$(JSON_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call JSON_FILE_ACTION,Building))))
-
+ifeq ($(NON_MATCHING),1)
+# The -m flag will attempt to compile assets. Only want to do this on non-matching builds.
+MODDED_ARG := -m
 endif
+
+build_assets:
+	$(info Building Assets...)
+	$(TOOLS_DIR)/dkr_assets_tool build -o $(ASSETS_OUTPUT) -dkrv $(REGION).$(VERSION) $(MODDED_ARG) >&2 || echo FAIL
 
 ###############################
 
 $(GLOBAL_ASM_O_FILES): CC := $(ASM_PROCESSOR) $(CC) -- $(AS) $(ASFLAGS) --
 
-$(TARGET).elf: dirs $(LD_SCRIPT) $(O_FILES) | $(ALL_ASSETS_BUILT)
+$(TARGET).elf: dirs $(LD_SCRIPT) $(O_FILES) | build_assets
 	@$(PRINT) "$(GREEN)Linking: $(BLUE)$@$(NO_COL)\n"
 	$(V)$(LD) $(LD_FLAGS) -o $@
 
 ifndef PERMUTER
-$(GLOBAL_ASM_O_FILES): $(BUILD_DIR)/%.c.o: %.c | $(ALL_ASSETS_BUILT)
+$(GLOBAL_ASM_O_FILES): $(BUILD_DIR)/%.c.o: %.c | build_assets
 	$(call print,Compiling:,$<,$@)
 	$(V)$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 endif
 
 # non asm-processor recipe
-$(BUILD_DIR)/%.c.o: %.c | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/%.c.o: %.c | build_assets
 	$(call print,Compiling:,$<,$@)
 	$(V)$(CC_CHECK) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 
-$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: $(LIBULTRA_DIR)/src/libc/llcvt.c | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/llcvt.c.o: $(LIBULTRA_DIR)/src/libc/llcvt.c | build_assets
 	$(call print,Compiling mips3:,$<,$@)
 	@$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 	$(V)$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@
 
-$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | build_assets
 	$(call print,Compiling mips3:,$<,$@)
 	@$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 	$(V)$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@
 
-$(BUILD_DIR)/%.s.o: %.s | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/%.s.o: %.s | build_assets
 	$(call print,Assembling:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $< 
 
 # Specifically override the assets bin output location to match what splat output to the ld file.
-$(BUILD_DIR)/asm/assets/assets.s.o: asm/assets/assets.s | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/asm/assets/assets.s.o: asm/assets/assets.s | build_assets
 	$(call print,Assembling Assets:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -o $(BUILD_DIR)/assets/assets.bin.o $<
 
 # Specifically override the header file from what splat extracted to be replaced by what we have in the hasm folder
-$(BUILD_DIR)/asm/header.s.o: src/hasm/header.s | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/asm/header.s.o: src/hasm/header.s | build_assets
 	$(call print,Assembling Header:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -o $(BUILD_DIR)/asm/header.s.o $<
 
 ifeq ($(NON_MATCHING),1)
 # If doing a NON_MATCHING build, and the custom boot file exists, use that.
 ifneq ("$(wildcard $(BOOT_CUSTOM))","")
-$(BUILD_DIR)/assets/boot.bin.o: $(BOOT_CUSTOM) | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/assets/boot.bin.o: $(BOOT_CUSTOM) | build_assets
 	$(call print,Linking Custom Boot:,$<,$@)
 	$(V)$(LD) -r -b binary -o $@ $<
 endif
 endif
 
-$(BUILD_DIR)/%.bin.o: %.bin | $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/%.bin.o: %.bin | build_assets
 	$(call print,Linking Binary:,$<,$@)
 	$(V)$(LD) -r -b binary -o $@ $<
 
-$(TARGET).bin: $(TARGET).elf | $(ALL_ASSETS_BUILT)
+$(TARGET).bin: $(TARGET).elf | build_assets
 	$(call print,Objcopy:,$<,$@)
 	$(V)$(OBJCOPY) $(OBJCOPYFLAGS) $< $@
 
-$(TARGET).z64: $(TARGET).bin | $(ALL_ASSETS_BUILT)
+$(TARGET).z64: $(TARGET).bin | build_assets
 	$(call print,CopyRom:,$<,$@)
 	$(V)$(PYTHON) $(TOOLS_DIR)/python/CopyRom.py $< $@
 

@@ -1,5 +1,7 @@
 #include "gltfDkrVertex.h"
 
+using namespace DkrAssetsTool;
+
 GltfDkrVertex::GltfDkrVertex(DkrVertex *vertex, DkrTexCoords *uv, int texWidth, int texHeight){
     x = (float)vertex->x * MODEL_SCALE_GLTF;
     y = (float)vertex->y * MODEL_SCALE_GLTF;

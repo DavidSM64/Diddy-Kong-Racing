@@ -4,7 +4,11 @@
 #include "helpers/c/cContext.h"
 #include "helpers/c/cTypes.h"
 
+#include "misc/globalSettings.h"
+
 #include <cmath> // for std::round
+
+using namespace DkrAssetsTool;
 
 enum StructHintType {
     NO_HINT,
@@ -31,8 +35,8 @@ std::unordered_map<std::string, StructHintType> hintTypes = {
 // Assumption: structMember has the "Enum" hint.
 std::string get_hint_enum_value(CStructEntry *structMember, int value) {
     std::string enumName = structMember->get_hint_value("Enum");
-    CContext *context = structMember->get_context();
-    CEnum *hintEnum = context->get_enum(enumName);
+    CContext &context = structMember->get_context();
+    CEnum *hintEnum = context.get_enum(enumName);
     std::string enumValue;
     
     DebugHelper::assert_(hintEnum->get_symbol_of_value(value, enumValue), 
@@ -46,8 +50,8 @@ std::string get_hint_enum_value(CStructEntry *structMember, int value) {
 // Assumption: structMember has the "Enum" hint.
 int get_value_from_hint_enum(CStructEntry *structMember, std::string &enumValue) {
     std::string enumName = structMember->get_hint_value("Enum");
-    CContext *context = structMember->get_context();
-    CEnum *hintEnum = context->get_enum(enumName);
+    CContext &context = structMember->get_context();
+    CEnum *hintEnum = context.get_enum(enumName);
     int value;
     
     DebugHelper::assert_(hintEnum->get_value_of_member(enumValue, value), 
@@ -59,20 +63,20 @@ int get_value_from_hint_enum(CStructEntry *structMember, std::string &enumValue)
 
 // AssetId
 
-std::string get_hint_asset_build_id(DkrAssetsSettings &settings, CStructEntry *structMember, int value) {
+std::string get_hint_asset_build_id(CStructEntry *structMember, int value) {
     std::string assetSectionId = structMember->get_hint_value("AssetId");
-    if(value == -1 || (value >= AssetsHelper::get_asset_section_count(settings, assetSectionId))) {
+    if(value == -1 || (value >= AssetsHelper::get_asset_section_count(assetSectionId))) {
         return "";
     }
-    return AssetsHelper::get_build_id_of_index(settings, assetSectionId, value);
+    return AssetsHelper::get_build_id_of_index(assetSectionId, value);
 }
 
-int get_value_from_hint_asset_build_id(DkrAssetsSettings &settings, CStructEntry *structMember, std::string &buildId) {
+int get_value_from_hint_asset_build_id(CStructEntry *structMember, std::string &buildId) {
     if(buildId.empty()) {
         return -1;
     }
     std::string assetSectionId = structMember->get_hint_value("AssetId");
-    return AssetsHelper::get_asset_index(settings, assetSectionId, buildId);
+    return AssetsHelper::get_asset_index(assetSectionId, buildId);
 }
 
 // Angle
@@ -124,20 +128,20 @@ int get_value_from_hint_scale(CStructEntry *structMember, double scale) {
 
 // Object
 
-std::string get_hint_object(DkrAssetsSettings &settings, CStructEntry *structMember, int objectIndex) {
+std::string get_hint_object(CStructEntry *structMember, int objectIndex) {
     if(objectIndex < 0) {
         return "";
     }
-    JsonFile *transTable = AssetsHelper::get_asset_json(settings, "ASSET_LEVEL_OBJECT_TRANSLATION_TABLE");
-    return transTable->get_string("/table/" + std::to_string(objectIndex));
+    JsonFile &transTable = AssetsHelper::get_asset_json("ASSET_LEVEL_OBJECT_TRANSLATION_TABLE");
+    return transTable.get_string("/table/" + std::to_string(objectIndex));
 }
 
-int get_value_from_hint_object(DkrAssetsSettings &settings, CStructEntry *structMember, std::string &buildId) {
+int get_value_from_hint_object(CStructEntry *structMember, std::string &buildId) {
     if(buildId.empty()) {
         return -1;
     }
-    JsonFile *transTable = AssetsHelper::get_asset_json(settings, "ASSET_LEVEL_OBJECT_TRANSLATION_TABLE");
-    return transTable->get_index_of_elem_in_array<std::string>("/table", buildId);
+    JsonFile &transTable = AssetsHelper::get_asset_json("ASSET_LEVEL_OBJECT_TRANSLATION_TABLE");
+    return transTable.get_index_of_elem_in_array<std::string>("/table", buildId);
 }
 
 // Time
@@ -145,7 +149,7 @@ int get_value_from_hint_object(DkrAssetsSettings &settings, CStructEntry *struct
 double get_hint_time(CStructEntry *structMember, int value) {
     std::string roundToPlacesStr = structMember->get_hint_value("RoundToPlaces", ""); // Defaults to no rounding.
         
-    double timeSeconds = (double)value / DKR_FPS;
+    double timeSeconds = (double)value / GlobalSettings::get_value<double>("max_tickrate", 60.0);
     
     if(!roundToPlacesStr.empty()) {
         double roundToPlaces = std::stod(roundToPlacesStr);
@@ -161,12 +165,12 @@ double get_hint_time(CStructEntry *structMember, int value) {
 }
 
 int get_value_from_hint_time(CStructEntry *structMember, double timeSeconds) {
-    return (int)std::round(timeSeconds * DKR_FPS);
+    return (int)std::round(timeSeconds * GlobalSettings::get_value<double>("max_tickrate", 60.0));
 }
 
 /***************************************************************************************/
 
-void CStructGltfHelper::put_struct_entry_into_gltf_node_extra(DkrAssetsSettings &settings, CStructEntry *structMember, WriteableGltfFile &gltfFile, int gltfNode, uint8_t *bytes) {
+void CStructGltfHelper::put_struct_entry_into_gltf_node_extra(CStructEntry *structMember, WriteableGltfFile &gltfFile, int gltfNode, uint8_t *bytes) {
     CStructEntry::InternalType internalType = structMember->get_internal_type();
     StructHintType hintType = StructHintType::NO_HINT;
     if(structMember->has_hint()) {
@@ -188,7 +192,7 @@ void CStructGltfHelper::put_struct_entry_into_gltf_node_extra(DkrAssetsSettings 
                 }
                 case StructHintType::ASSET_ID:
                 {
-                    std::string buildId = get_hint_asset_build_id(settings, structMember, value);
+                    std::string buildId = get_hint_asset_build_id(structMember, value);
                     if(!buildId.empty()) {
                         gltfFile.set_node_extra<std::string>(gltfNode, structMember->name, buildId);
                     }
@@ -208,7 +212,7 @@ void CStructGltfHelper::put_struct_entry_into_gltf_node_extra(DkrAssetsSettings 
                 }
                 case StructHintType::OBJECT:
                 {
-                    std::string buildId = get_hint_object(settings, structMember, value);
+                    std::string buildId = get_hint_object(structMember, value);
                     if(!buildId.empty()) {
                         gltfFile.set_node_extra<std::string>(gltfNode, structMember->name, buildId);
                     }
@@ -247,7 +251,7 @@ void CStructGltfHelper::put_struct_entry_into_gltf_node_extra(DkrAssetsSettings 
                     }
                     case StructHintType::ASSET_ID:
                     {
-                        std::string buildId = get_hint_asset_build_id(settings, structMember, value);
+                        std::string buildId = get_hint_asset_build_id(structMember, value);
                         if(!buildId.empty()) {
                             arrayOfValues.push_back(tinygltf::Value(buildId));
                         } else {
@@ -269,7 +273,7 @@ void CStructGltfHelper::put_struct_entry_into_gltf_node_extra(DkrAssetsSettings 
                     }
                     case StructHintType::OBJECT:
                     {
-                        std::string buildId = get_hint_object(settings, structMember, value);
+                        std::string buildId = get_hint_object(structMember, value);
                         if(!buildId.empty()) {
                             arrayOfValues.push_back(tinygltf::Value(buildId));
                         } else {
@@ -302,7 +306,7 @@ void CStructGltfHelper::put_struct_entry_into_gltf_node_extra(DkrAssetsSettings 
     }
 }
 
-void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(DkrAssetsSettings &settings, CStructEntry *structMember, GltfFileNode *objNode, uint8_t *bytes) {
+void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(CStructEntry *structMember, GltfFileNode *objNode, uint8_t *bytes) {
     CStructEntry::InternalType internalType = structMember->get_internal_type();
     StructHintType hintType = StructHintType::NO_HINT;
     
@@ -330,7 +334,7 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(DkrAssetsSettings 
                     if(buildId.empty()) {
                         value = -1;
                     } else {
-                        value = get_value_from_hint_asset_build_id(settings, structMember, buildId);
+                        value = get_value_from_hint_asset_build_id(structMember, buildId);
                     }
                     break;
                 }
@@ -352,7 +356,7 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(DkrAssetsSettings 
                     if(buildId.empty()) {
                         value = -1;
                     } else {
-                        value = get_value_from_hint_object(settings, structMember, buildId);
+                        value = get_value_from_hint_object(structMember, buildId);
                     }
                     break;
                 }
@@ -389,7 +393,7 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(DkrAssetsSettings 
                         if(val.Type() == 0) { // Check if null
                             values.push_back(-1);
                         } else {
-                            values.push_back(get_value_from_hint_asset_build_id(settings, structMember, val.Get<std::string>()));
+                            values.push_back(get_value_from_hint_asset_build_id(structMember, val.Get<std::string>()));
                         }
                         break;
                     case StructHintType::ANGLE:
@@ -402,7 +406,7 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(DkrAssetsSettings 
                         if(val.Type() == 0) { // Check if null
                             values.push_back(-1);
                         } else {
-                            values.push_back(get_value_from_hint_object(settings, structMember, val.Get<std::string>()));
+                            values.push_back(get_value_from_hint_object(structMember, val.Get<std::string>()));
                         }
                         break;
                     case StructHintType::TIME:

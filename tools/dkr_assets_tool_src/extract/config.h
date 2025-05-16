@@ -1,153 +1,58 @@
 #pragma once
 
-#include <map>
-#include <vector>
-#include <string>
+#include <optional>
 
-#include "helpers/jsonHelper.h"
-#include "helpers/debugHelper.h"
 #include "helpers/fileHelper.h"
+#include "helpers/jsonHelper.h"
+#include "libs/bytes_view.hpp"
+#include "helpers/c/cContext.h"
 
+namespace DkrAssetsTool {
 
-/*******************************************************/
-
-struct DkrExtractCodeSectionFile {
-    std::string filename;
-    uint32_t length;
-};
-
-struct DkrExtractCodeSection {
-    std::string type;
-    fs::path folder; // directory to extract to
-    std::vector<DkrExtractCodeSectionFile> files;
-};
-
-/*******************************************************/
-
-struct DkrExtractAssetSectionFileMenuText {
-    std::string language;
-};
-
-struct DkrExtractAssetSectionFileTexture {
-    bool flipTex = false; // Should the texture be flipped vertically? (No by default)
-};
-
-struct DkrExtractAssetSectionFileMisc {
-    std::string miscType; // Defaults to "Binary"
-};
-
-// TODO: Refactor this into a union.
-struct DkrExtractAssetSectionFileSpecific { // section specific info
-    DkrExtractAssetSectionFileTexture texture;
-    DkrExtractAssetSectionFileMenuText menuText;
-    DkrExtractAssetSectionFileMisc misc;
-};
-
-struct DkrExtractAssetSection;
-
-struct DkrExtractAssetSectionFile {
-    // Pointer to the section this belong to. Wish this was a reference instead, but it ended up being a big hassle.
-    struct DkrExtractAssetSection *section = nullptr; 
-    int index;
-    std::string buildId; // Id for the file.
-    std::string filename;
-    fs::path folder; // directory to extract to
-    DkrExtractAssetSectionFileSpecific specific;
-};
-
-/************************/
-
-struct DkrExtractTexturesSection {
-    bool flipTexturesByDefault;
-};
-
-struct DkrExtractTableSection {
-    std::string forSection;
-};
-
-struct DkrExtractFontsSection {
-    std::vector<std::string> fontNames;
-};
-
-struct DkrExtractMenuTextSection {
-    // Set in extractor.c
-    size_t numberOfTextEntries; // Number of entries per each language. 
-    // Set in config.c
-    std::vector<std::string> languageOrder;
-    std::vector<std::string> menuTextBuildIds;
-};
-
-// TODO: Refactor this into a union.
-struct DkrExtractAssetSectionSpecific { // section specific info
-    DkrExtractTexturesSection textures;
-    DkrExtractTableSection tableData;
-    DkrExtractFontsSection fonts;
-    DkrExtractMenuTextSection menuText;
-};
-
-struct DeferInfo {
-    std::string fromSection;
-    std::string idPostfix;
-    std::string outputPath;
-};
-
-struct DkrExtractAssetSection {
-    std::string buildId; // Id for the section.
-    std::string type;
-    fs::path folder; // directory to extract to
-    int table;
-    int group; // Extraction group. (Need to delay some groups to make sure things are in the correct order).
-    std::string filesDefaultFolder;
-    std::string defaultBuildIdPrefix;
-    DkrExtractAssetSectionSpecific specific;
-    std::vector<DkrExtractAssetSectionFile> files;
-    bool isDeferred;
-    DeferInfo deferInfo;
-    
-    // May return null
-    DkrExtractAssetSectionFile *get_asset_section_file(int index);
-    // May return null
-    DkrExtractAssetSectionFile *get_single_file();
-};
-
-/*******************************************************/
-
-class DkrExtractConfig {
+class AssetExtractConfig {
 public:
-    DkrExtractConfig(std::string filepath);
-    ~DkrExtractConfig();
+    AssetExtractConfig();
+    ~AssetExtractConfig();
     
-    std::string get_dkr_version();
-    std::string get_name();
-    std::string get_md5();
-    int get_revision();
-    bool is_valid();
-    void parse();
+    const JsonFile &get_config_json() const;
+    const BytesView &get_rom_assets_view() const;
     
-    std::vector<DkrExtractCodeSection> codeSections;
-    std::vector<DkrExtractAssetSection> assetSections;
+    bool is_input_file_valid(fs::path baseromPath) const;
+    void load_input_file(fs::path baseromPath);
     
-    std::string get_build_id_of_section(int sectionIndex);
+    size_t number_of_sections() const;
     
-    // Use AssetsHelper::get_build_id_of_index() instead.
-    //std::string get_build_id_of_file_from_section(std::string sectionBuildId, int fileIndex=-1);
+    template <typename T>
+    T get(std::string ptr, T defaultValue) const {
+        const JsonFile& configJson = get_config_json();
+        try {
+            return std::any_cast<T>(configJson.get_any(ptr));
+        } catch (std::bad_any_cast &err) {
+        }
+        return defaultValue;
+    }
     
-    std::string get_folder_path_to_section(std::string sectionBuildId);
-    std::string get_path_to_file(std::string sectionBuildId, int fileIndex=-1);
+    // Returns the index into `/sections` array of the table associated with this build id. 
+    // Returns std::nullopt if no table was found.
+    std::optional<size_t> get_section_table_index(std::string buildId) const;
     
-    // Retrives the build id of the section that the table represents.
-    std::string get_build_id_of_section_from_table_id(std::string tableBuildId);
+    // Returns the indices to the files given a sha1 hash. Multiple files may contain the same hash.
+    std::vector<size_t> get_file_indices_from_sha1(std::string sha1Hash) const;
     
-    void get_default_object_entries_order_array(std::vector<std::string> &out);
+    std::string get_object_entry_from_behavior(std::string objBehavior) const;
+    
+    // initalizes _objBehaviorToEntry
+    void init_obj_beh_to_entry_map(CContext &cContext);
+    
 private:
-    JsonFile *_configJson;
-    bool _isValid;
-    fs::path _filepath;
-    bool _load_config();
+    std::optional<std::reference_wrapper<JsonFile>> _configJson;
     
-    void _parse_code_sections();
-    void _parse_asset_sections();
+    std::vector<uint8_t> _rom;
+    std::optional<BytesView> _romAssetsView;
     
-    std::unordered_map<std::string, int> _sectionIdToIndex;
-    void _populate_sectionIdToIndex_map();
+    std::unordered_map<std::string, std::vector<size_t>> _sha1HashToFileIndex;
+    std::unordered_map<std::string, std::string> _objBehaviorToEntry;
+    
 };
+
+}

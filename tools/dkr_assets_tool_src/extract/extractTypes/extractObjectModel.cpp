@@ -2,19 +2,15 @@
 
 #include "helpers/jsonHelper.h"
 
-ExtractObjectModel::ExtractObjectModel(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
-    fs::path _outRawFilepath = _settings.pathToAssets / _info.get_out_filepath(".bin");
-    fs::path _outFilepath = _settings.pathToAssets / _info.get_out_filepath(".json");
-    DebugHelper::info_custom("Extracting Object Model", YELLOW_TEXT, _outFilepath);
+using namespace DkrAssetsTool;
+
+void ExtractObjectModel::extract(ExtractInfo &info) {
+    DebugHelper::info_custom("Extracting Object Model", YELLOW_TEXT, info.get_out_filepath(".json"));
     
-    WritableJsonFile jsonFile(_outFilepath);
-    jsonFile.set_path("/raw", _info.get_filename(".bin"));
+    WritableJsonFile &jsonFile = info.get_json_file();
+    jsonFile.set_path("/raw", info.get_filename(".bin"));
     jsonFile.set_string("/type", "ObjectModel");
     
-    jsonFile.save();
-    
-    _info.write_rom_data_to_file(_outRawFilepath);
-}
-
-ExtractObjectModel::~ExtractObjectModel() {
+    info.write_json_file();
+    info.write_raw_data_file();
 }

@@ -1,5 +1,7 @@
 #include "match.h"
 
+using namespace DkrAssetsTool;
+
 RegexMatchGroup::RegexMatchGroup(std::string &text, int offset) : _text(text), _offset(offset) {
 }
 

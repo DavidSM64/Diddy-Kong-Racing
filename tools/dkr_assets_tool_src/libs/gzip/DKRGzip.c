@@ -1946,6 +1946,9 @@ unsigned char *dkr_gzip_compress(unsigned char *input, int inputSize, int gzipLe
         return NULL;
     }
     
+    // Must reset the window to zeroes for the gzip to work properly for subsequent compressions.
+    memset(window, 0, 2*WSIZE);
+    
     inbuf = input;
     inbufSize = inputSize;
     level = gzipLevel;
@@ -1955,4 +1958,3 @@ unsigned char *dkr_gzip_compress(unsigned char *input, int inputSize, int gzipLe
     *outputSize = outcnt;
     return outbuf;
 }
-

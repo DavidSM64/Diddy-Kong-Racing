@@ -4,6 +4,8 @@
 
 #include "helpers/fileHelper.h"
 
+namespace DkrAssetsTool {
+
 // Write-Only C Header generator class
 class WritableAsmInclude {
 public:
@@ -30,3 +32,4 @@ public:
 private:
     std::stringstream _out;
 };
+}

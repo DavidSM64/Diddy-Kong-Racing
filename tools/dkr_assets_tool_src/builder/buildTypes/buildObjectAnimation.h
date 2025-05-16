@@ -1,19 +1,10 @@
 #pragma once
 
 #include "builder/buildInfo.h"
-#include "misc/settings.hpp"
+#include "helpers/c/cContext.h"
 
-#include "fileTypes/fonts.hpp"
-
-#include "helpers/debugHelper.h"
-#include "helpers/fileHelper.h"
-#include "helpers/jsonHelper.h"
-
-class BuildObjectAnimation {
-public:
-    BuildObjectAnimation(DkrAssetsSettings &settings, BuildInfo &info);
-    ~BuildObjectAnimation();
-private:
-    DkrAssetsSettings &_settings;
-    BuildInfo &_info;
-};
+namespace DkrAssetsTool {
+namespace BuildObjectAnimation {
+    void build(BuildInfo &info);
+}
+}

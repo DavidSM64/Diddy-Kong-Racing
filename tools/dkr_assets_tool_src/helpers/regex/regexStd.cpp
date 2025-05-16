@@ -5,6 +5,8 @@
 #include "regexStd.h"
 #include "helpers/debugHelper.h"
 
+using namespace DkrAssetsTool;
+
 void RegexHelperStl::get_matches(const std::string &input, const std::string &regexInput, std::vector<RegexMatch> &out, int startOffset) {
     std::regex rgx(regexInput, std::regex_constants::ECMAScript);
     std::smatch matches;
