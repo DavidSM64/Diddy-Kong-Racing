@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <vector>
+#include <map>
 
 #include "helpers/mathHelper.h"
 
@@ -34,7 +35,7 @@ public:
     size_t number_of_triangles();
     size_t number_of_vertices();
     
-    void write_batch(DkrBatch* outBatch, DkrVertex*& outVertices, DkrTriangle*& outTriangles);
+    void write_batch(const std::map<std::string, int> &materialIds, DkrBatch* outBatch, DkrVertex*& outVertices, DkrTriangle*& outTriangles);
     
 private:
     std::vector<BuildModelTriangle> _triangles;

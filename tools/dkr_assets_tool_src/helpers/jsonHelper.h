@@ -98,6 +98,9 @@ class WritableJsonFile {
         void set_bool_if_true(const std::string &ptr, const bool value);
         void set_null(const std::string &ptr);
         
+        template<typename T>
+        void set_array(const std::string &ptr, const std::vector<T> &arr);
+        
         void save();
         
     private:

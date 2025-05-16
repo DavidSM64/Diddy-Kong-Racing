@@ -4,12 +4,13 @@ using namespace DkrAssetsTool;
 
 #include "libs/gzip/DKRCompression.h"
 
-// Compression shouldn't be thread safe, but testing suggests that the mutex isn't necessary?
-//#include <mutex>
-//std::mutex gzipMutex;
+#include <mutex>
+
+// The old version of gzip is not thread-safe, so need to lock it using a mutex.
+std::mutex gzipMutex;
 
 std::vector<uint8_t> GzipHelper::decompress_gzip(std::vector<uint8_t> &compressedData) {
-    //gzipMutex.lock();
+    gzipMutex.lock();
     
     // Needed padding to prevent errors with decompressing.
     if(compressedData[compressedData.size() - 1] != 0) {
@@ -20,15 +21,15 @@ std::vector<uint8_t> GzipHelper::decompress_gzip(std::vector<uint8_t> &compresse
     }
     DKRCompression compression;
     std::vector<uint8_t> out = compression.decompressBuffer(compressedData);
-    //gzipMutex.unlock();
+    gzipMutex.unlock();
     
     return out;
 }
 
 std::vector<uint8_t> GzipHelper::compress_gzip(std::vector<uint8_t> &uncompressedData) {
-    //gzipMutex.lock();
+    gzipMutex.lock();
     DKRCompression compression;
     std::vector<uint8_t> out = compression.compressBuffer(uncompressedData);
-    //gzipMutex.unlock();
+    gzipMutex.unlock();
     return out;
 }

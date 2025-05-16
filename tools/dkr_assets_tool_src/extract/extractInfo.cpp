@@ -1,5 +1,6 @@
 #include "extractInfo.h"
 
+#include <algorithm>
 #include <sstream>
 
 #include "misc/globalSettings.h"
@@ -22,9 +23,25 @@ void DeferredExtractions::add_extraction(std::string key, ExtractInfo newExtract
 ExtractInfo &DeferredExtractions::get_extraction(std::string key, size_t index) {
     DebugHelper::assert(_extractions.find(key) != _extractions.end(), 
         "(DeferredExtractions::get_extraction) \"", key, "\" not in map.");
-    DebugHelper::assert(index < _extractions[key].size(), 
+    DebugHelper::assert(index < _extractions[key].size(),
         "(DeferredExtractions::get_extraction) index ", index, " for key \"", key, "\" is out of range.");
     return _extractions[key][index];
+}
+
+ExtractInfo &DeferredExtractions::get_extraction(std::string key, std::string buildId) {
+    DebugHelper::assert(_extractions.find(key) != _extractions.end(), 
+        "(DeferredExtractions::get_extraction) \"", key, "\" not in map.");
+    
+    auto it = std::find_if(_extractions[key].begin(), _extractions[key].end(), 
+        [&buildId](const ExtractInfo& info) {
+            return info.get_build_id() == buildId;
+        }
+    );
+    
+    DebugHelper::assert_(it != _extractions[key].end(),
+        "(DeferredExtractions::get_extraction) Could not find build id ", buildId, " in deferred extractions");
+        
+    return _extractions[key][it->get_file_index()];
 }
 
 /*****************************************************/
@@ -33,15 +50,24 @@ ExtractInfo::ExtractInfo(std::string &type, std::string buildId, fs::path filena
 :  _type(type), _buildId(buildId), _filename(filename), _folder(folder), _view(view), _sectionPtr(sectionPtr), _config(config), _cContext(ctx), _stats(stats), _fileIndex(fileIndex)
 {
     DebugHelper::assert_(!_filename.empty(),
-        "(ExtractInfo::ExtractInfo) No filename was set for the type \"", _type, "\" in the folder \"", folder, "\"");
+        "(ExtractInfo::ExtractInfo) No filename was set for the type \"", _type, "\" in the folder ", folder);
     DebugHelper::assert_(!_buildId.empty(),
-        "(ExtractInfo::ExtractInfo) No build id was set for the filename \"", _filename, "\"");
+        "(ExtractInfo::ExtractInfo) No build id was set for the filename ", _filename);
     
     //DebugHelper::info(_filename, " was created!");
 }
 
 ExtractInfo::~ExtractInfo(){
     //DebugHelper::warn(_filename, " is being deleted!");
+}
+
+void ExtractInfo::replace_info(std::string &type, fs::path filename, fs::path folder, BytesView view, std::string sectionPtr, size_t fileIndex) {
+    _type = type;
+    _filename = filename;
+    _folder = folder;
+    _view = view;
+    _sectionPtr = sectionPtr;
+    _fileIndex = fileIndex;
 }
 
 void ExtractInfo::set_tag(const std::string &key, const std::any value) {
@@ -68,7 +94,7 @@ fs::path ExtractInfo::get_filename(std::string extension) const {
     return out;
 }
 
-const CContext &ExtractInfo::get_c_context() const {
+CContext &ExtractInfo::get_c_context() const {
     return _cContext.value();
 }
 

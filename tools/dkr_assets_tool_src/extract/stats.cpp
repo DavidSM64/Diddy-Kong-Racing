@@ -1,5 +1,7 @@
 #include "stats.h"
 
+#include <algorithm>
+
 #include "helpers/debugHelper.h"
 #include "helpers/dataHelper.h"
 
@@ -9,14 +11,31 @@ void ExtractStats::add_info(std::string sectionBuildId, ExtractStatInfo newInfo)
     if(_sectionInfos.find(sectionBuildId) == _sectionInfos.end()) {
         _sectionInfos[sectionBuildId] = {}; // new empty vector.
         if(sectionBuildId == "ASSET_TEXTURES_2D") {
-            _sectionInfos[sectionBuildId].reserve(1000); // lots of 2d textures (TODO: Don't remember the exact amount, but it was in the 900s...)
+            _sectionInfos[sectionBuildId].reserve(1000);
         }
         else if(sectionBuildId == "ASSET_TEXTURES_3D") {
-            _sectionInfos[sectionBuildId].reserve(2000); // even more 3d textures (TODO: Don't remember the exact amount, but it was less than 2000...)
+            _sectionInfos[sectionBuildId].reserve(1500);
         }
     }
     
     _sectionInfos[sectionBuildId].emplace_back(newInfo);
+}
+
+void ExtractStats::replace_info(std::string sectionBuildId, std::string buildId, fs::path newOutFilepath) {
+    DebugHelper::assert_(_sectionInfos.find(sectionBuildId) != _sectionInfos.end(),
+        "(ExtractStats::replace_info) Could not find section id ", sectionBuildId);
+        
+     auto it = std::find_if(_sectionInfos[sectionBuildId].begin(), _sectionInfos[sectionBuildId].end(), 
+        [&buildId](const ExtractStatInfo& statInfo) {
+            return statInfo.buildId == buildId;
+        }
+    );
+    
+    DebugHelper::assert_(it != _sectionInfos[sectionBuildId].end(),
+        "(ExtractStats::replace_info) Could not find build id ", buildId, " in section ", sectionBuildId);
+    
+    // New info to replace
+    it->outFilepath = newOutFilepath; 
 }
 
 std::optional<size_t> ExtractStats::try_get_file_index_of_build_id(std::string sectionBuildId, std::string fileBuildId) const {
@@ -99,6 +118,12 @@ const JsonFile &ExtractStats::get_json(std::string section, size_t fileIndex) co
 
 const JsonFile &ExtractStats::get_json(std::string section, std::string fileBuildId) const {
     return get_json(section, get_file_index_of_build_id(section, fileBuildId));
+}
+
+void ExtractStats::print_section_counts() const {
+    for (auto section : _sectionInfos) {
+        DebugHelper::info(section.first, ": ", section.second.size());
+    }
 }
 
 void ExtractStats::set_tag(const std::string &key, const std::any value) {

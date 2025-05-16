@@ -53,6 +53,8 @@ namespace FileHelper {
     std::vector<fs::path> get_files_from_directory_with_extension(const fs::path& dirPath, std::string extension, bool recursive = true);
     std::vector<fs::path> get_files_from_directory_excluding_extension(const fs::path& dirPath, std::string extension, bool recursive = true);
     std::vector<fs::path> get_folders_from_directory(const fs::path& dirPath, bool recursive = true);
+    
+    size_t count_files_with_extension(const fs::path& dirPath, std::string extension, bool recursive = true);
 
     bool does_folder_contain_paths(const fs::path& dirPath, const std::vector<fs::path>& paths);
 

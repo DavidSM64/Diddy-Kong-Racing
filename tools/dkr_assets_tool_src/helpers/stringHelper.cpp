@@ -4,11 +4,16 @@
 
 #include <algorithm>
 #include <sstream>
+#include <string>
 #include <cstring> // for std::strchr
 
 using namespace DkrAssetsTool;
 
 bool StringHelper::has(const std::string &input, const char* substring) {
+    return input.find(substring) != std::string::npos;
+}
+
+bool StringHelper::has(const std::string &input, const std::string substring) {
     return input.find(substring) != std::string::npos;
 }
 
@@ -133,11 +138,25 @@ std::string StringHelper::upper_snake_case_to_pascal_case(const std::string &inp
                 out << input[i];
                 isFirst = false;
             } else {
-                out << (char)tolower(input[i]);
+                out << static_cast<char>(std::tolower(input[i]));
             }
         }
     }
     
+    return out.str();
+}
+
+std::string StringHelper::pascal_case_to_upper_snake_case(const std::string &input) {
+    std::stringstream out;
+
+    for (size_t i = 0; i < input.size(); i++) {
+        char ch = input[i];
+        if (std::isupper(ch) && i != 0) {
+            out << '_';
+        }
+        out << static_cast<char>(std::toupper(ch));
+    }
+
     return out.str();
 }
 

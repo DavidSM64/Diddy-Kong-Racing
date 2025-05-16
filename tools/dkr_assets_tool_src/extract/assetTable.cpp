@@ -27,6 +27,9 @@ AssetTable::AssetTable(BytesView view, DkrAssetTableType type) : _view(view) {
         case DkrAssetTableType::AudioTable:
             _parse_audio_table();
             break;
+        default:
+            // Not used.
+            break;
     }
 }
 
@@ -200,7 +203,6 @@ void AssetTable::_parse_audio_table() {
         }
         int32_t entrySize = nextEntryValue - entryValue;
         
-        
         if(entryValue < 0) {
             DebugHelper::error("(AssetTable::_parse_audio_table) Invalid table entry ", DebugHelper::to_hex(entryValue), " at rom offset ", DebugHelper::to_hex(offset));
         }
@@ -217,6 +219,7 @@ std::unordered_map<std::string, DkrAssetTableType> tableTypeMap = {
     {"TTGhost", DkrAssetTableType::TTGhostTable},
     {"Miscellaneous", DkrAssetTableType::MiscTable},
     {"Audio", DkrAssetTableType::AudioTable},
+    {"ObjectAnimationIdsTable", DkrAssetTableType::ObjectAnimationIdsTable},
 };
 
 DkrAssetTableType AssetTable::table_type_from_section_type(const std::string &sectionType) {

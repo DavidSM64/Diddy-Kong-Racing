@@ -7,7 +7,8 @@
 using namespace DkrAssetsTool;
 
 void BuildSprite::build(BuildInfo &info) {
-    size_t numberOfTextures = info.srcFile->length_of_array("/frame-tex-count");
+    const JsonFile &jsonFile = info.get_src_json_file();
+    size_t numberOfTextures = jsonFile.length_of_array("/frame-tex-count");
     
     size_t outSize = sizeof(SpriteHeader) + numberOfTextures + 1;
     outSize = DataHelper::align16(outSize);
@@ -16,12 +17,13 @@ void BuildSprite::build(BuildInfo &info) {
     
     SpriteHeader *spriteHeader = reinterpret_cast<SpriteHeader *>(&info.out[0]);
     
-    std::string texBuildId = info.srcFile->get_string("/start-texture");
-    DebugHelper::assert(!texBuildId.empty(), "(BuildSprite::build) [/start-texture] was not defined!");
+    std::string texBuildId = jsonFile.get_string("/start-texture");
+    DebugHelper::assert_(!texBuildId.empty(), 
+        "(BuildSprite::build) [/start-texture] was not defined!");
     
     spriteHeader->startTextureIndex = AssetsHelper::get_asset_index("ASSET_TEXTURES_2D", texBuildId);
-    spriteHeader->unk4 = info.srcFile->get_int("/unk4");
-    spriteHeader->unk6 = info.srcFile->get_int("/unk6");
+    spriteHeader->unk4 = jsonFile.get_int("/unk4");
+    spriteHeader->unk6 = jsonFile.get_int("/unk6");
     spriteHeader->unk8 = 0; // Set in-game, always zero in ROM.
     spriteHeader->numberOfFrames = numberOfTextures;
     
@@ -31,7 +33,7 @@ void BuildSprite::build(BuildInfo &info) {
     uint8_t output = 0;
     for(size_t i = 0; i < numberOfTextures + 1; i++) {
         data[i] = output;
-        output += info.srcFile->get_int(frameTexCountPtr + "/" + std::to_string(i));
+        output += jsonFile.get_int(frameTexCountPtr + "/" + std::to_string(i));
     }
     
     if(info.build_to_file()) {

@@ -115,7 +115,15 @@ CEnum::~CEnum() {
     _context.deregister_enum(_name);
 }
 
-std::string CEnum::get_name() {
+// The namespace is needed here for g++ to resolve the function correctly.
+namespace DkrAssetsTool {
+    std::ostream& operator<<(std::ostream& os, const CEnum& cEnum) {
+        os << cEnum.to_string();
+        return os;
+    }
+}
+
+std::string CEnum::get_name() const {
     return _name;
 }
 
@@ -142,8 +150,47 @@ bool CEnum::get_symbol_of_value(int value, std::string &outSymbol) {
     return true;
 }
 
-size_t CEnum::get_member_count() {
+size_t CEnum::get_member_count() const {
     return _members.size();
+}
+
+bool CEnum::is_simple() const {
+    size_t index = 0;
+    for(auto &val : _values) {
+        if(val.first != index || val.second.size() != 1) {
+            return false;
+        }
+        index++;
+    }
+    return true;
+}
+
+std::string CEnum::to_string() const {
+    std::stringstream ss;
+    
+    const char *indent = "    ";
+    
+    int checkVal = 0;
+    
+    ss << "typedef enum " << _name << " { " << std::endl;
+    
+    // Iterate over the map
+    for (const auto& member : _members) {
+        ss << indent << member.first;
+        if(member.second != checkVal) {
+            checkVal = member.second;
+            ss << " = " << checkVal;
+        }
+        if (member != *std::prev(_members.end())) {
+            ss << ",";
+        }
+        ss << std::endl;
+        checkVal++;
+    }
+    
+    ss << "} " << _name << ";" << std::endl;
+    
+    return ss.str();
 }
 
 std::unordered_map<std::string, int>::iterator CEnum::get_start_iterator() {
@@ -162,6 +209,13 @@ WriteableCEnum::WriteableCEnum(std::string name) : _name(name), _currentValue(0)
 WriteableCEnum::~WriteableCEnum() {
 }
 
+namespace DkrAssetsTool {
+    std::ostream& operator<<(std::ostream& os, const WriteableCEnum& cEnum) {
+        os << cEnum.to_string();
+        return os;
+    }
+}
+
 void WriteableCEnum::add_symbol(std::string symbol) {
     _members[_currentValue] = symbol;
     _currentValue++;
@@ -172,7 +226,7 @@ void WriteableCEnum::add_symbol(std::string symbol, int newValue) {
     add_symbol(symbol);
 }
 
-std::string WriteableCEnum::to_string() {
+std::string WriteableCEnum::to_string() const {
     std::stringstream ss;
     
     const char *indent = "    ";

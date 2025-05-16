@@ -11,8 +11,8 @@ AssetExtractConfig::AssetExtractConfig() {
     _configJson = JsonHelper::get_file(configPath);
     
     DebugHelper::assert_(_configJson.has_value(),
-        "(AssetExtractConfig::AssetExtractConfig) Could not find dkr_assets_tool_extract.json");
-        
+        "(AssetExtractConfig::AssetExtractConfig) Could not find or parse dkr_assets_tool_extract.json");
+    
     const JsonFile &jsonFile = get_config_json();
     
     // Doing this for performance reasons. Turns the array of files into a hashmap with the sha1 property being the key.
@@ -83,6 +83,14 @@ std::optional<size_t> AssetExtractConfig::get_section_table_index(std::string bu
     return configJson.get_index_of_object_that_has_property<std::string>("/sections", "for", buildId);
 }
 
+std::vector<size_t> AssetExtractConfig::get_file_indices_from_sha1(std::string sha1Hash) const {
+    if(_sha1HashToFileIndex.find(sha1Hash) == _sha1HashToFileIndex.end()) {
+        return {} ; // No files entries found.
+    }
+    return _sha1HashToFileIndex.at(sha1Hash);
+}
+
+/*
 std::optional<size_t> AssetExtractConfig::get_file_index_from_sha1(std::string sha1Hash, size_t foundSoFar) const {
     if(_sha1HashToFileIndex.find(sha1Hash) == _sha1HashToFileIndex.end()) {
         return std::nullopt; // File not found in "files" array.
@@ -90,9 +98,10 @@ std::optional<size_t> AssetExtractConfig::get_file_index_from_sha1(std::string s
     size_t numberOfFilesForHash = _sha1HashToFileIndex.at(sha1Hash).size();
     DebugHelper::assert_(foundSoFar < numberOfFilesForHash, 
         "(AssetExtractConfig::get_file_index_from_sha1) foundSoFar out of bounds! ",
-        "foundSoFar = ", foundSoFar, ", numberOfFilesForHash = ", numberOfFilesForHash);
+        "foundSoFar = ", foundSoFar, ", numberOfFilesForHash = ", numberOfFilesForHash, "; hash is \"", sha1Hash, "\"");
     return _sha1HashToFileIndex.at(sha1Hash).at(foundSoFar);
 }
+*/
 
 std::string AssetExtractConfig::get_object_entry_from_behavior(std::string objBehavior) const {
     DebugHelper::assert_(_objBehaviorToEntry.find(objBehavior) != _objBehaviorToEntry.end(),
@@ -102,7 +111,7 @@ std::string AssetExtractConfig::get_object_entry_from_behavior(std::string objBe
     return _objBehaviorToEntry.at(objBehavior);
 }
 
-void AssetExtractConfig::init_obj_beh_to_entry_map(const CContext &cContext) {
+void AssetExtractConfig::init_obj_beh_to_entry_map(CContext &cContext) {
     const JsonFile &configJson = get_config_json();
     CEnum *objBehaviors = cContext.get_enum("ObjectBehaviours");
     

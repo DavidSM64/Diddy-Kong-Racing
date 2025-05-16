@@ -290,10 +290,43 @@ std::vector<fs::path> FileHelper::get_folders_from_directory(const fs::path &dir
                 }
             }
         }
-    } catch(fs::filesystem_error const&) {
-        DebugHelper::error("Could not find the directory ", dirPath);
+    } catch(fs::filesystem_error const& e) {
+        DebugHelper::error(e.what());
     }
     return out;
+}
+
+
+size_t count_files_with_extension(const fs::path& dirPath, std::string extension, bool recursive) {
+    if (extension[0] != '.')
+        extension = "." + extension;
+
+    size_t count = 0;
+
+    try {
+        if (!fs::exists(dirPath) || !fs::is_directory(dirPath)) {
+            DebugHelper::error("Could not find the directory ", dirPath);
+            return 0;
+        }
+
+        if(recursive) {
+            for (const auto& entry : fs::recursive_directory_iterator(dirPath)) {
+                if (entry.is_regular_file() && entry.path().extension() == extension) {
+                    ++count;
+                }
+            }
+        } else {
+            for (const auto& entry : fs::directory_iterator(dirPath)) {
+                if (entry.is_regular_file() && entry.path().extension() == extension) {
+                    ++count;
+                }
+            }
+        }
+    } catch (const fs::filesystem_error& e) {
+        DebugHelper::error(e.what());
+    }
+
+    return count;
 }
 
 bool FileHelper::does_folder_contain_paths(const fs::path& dirPath, const std::vector<fs::path>& paths) {

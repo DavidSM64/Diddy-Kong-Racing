@@ -19961,22 +19961,19 @@
         {
             "filename": "hud_element_ids",
             "build-id": "ASSET_HUD_ELEMENT_IDS",
-            "folder": "unknown",
-            "type": "Miscellaneous",
+            "type": "Binary",
             "sha1": "a6cb1705c7e66d4ef55302fcc2d869e5547be9b5"
         },
         {
             "filename": "menu_element_ids",
             "build-id": "ASSET_MENU_ELEMENT_IDS",
-            "folder": "unknown",
-            "type": "Miscellaneous",
+            "type": "Binary",
             "sha1": "b4327cd69654ff6cd13e1bf8fcee679e3aa1a190"
         },
         {
             "filename": "weather_particles",
             "build-id": "ASSET_WEATHER_PARTICLES",
-            "folder": "unknown",
-            "type": "Miscellaneous",
+            "type": "Binary",
             "sha1": "564e011e587692c51633f7e16031b0995bed4917"
         },
         {
@@ -20867,6 +20864,14 @@
             "folder": "unknown",
             "sha1": "8e8405b6cbe8c22db82d41e9da3e515aaa315f93",
             "type": "LevelObjectMap"
+        },
+        {
+            "build-id": "ASSET_LEVEL_OBJECT_MAPS_88",
+            "filename": "asset_level_object_maps_88_v80",
+            "folder": "unknown",
+            "sha1": "257bcfc3231cda1b3201053bfb566251e1b584cd",
+            "type": "LevelObjectMap",
+            "version": "v80"
         },
         {
             "filename": "asset_level_object_maps_127",
@@ -30695,7 +30700,7 @@
             "sha1": "4f392a618cfe537782e1fdccfe7664de703d500e"
         },
         {
-            "filename": "beta_jp_font",
+            "filename": "jp_fonts",
             "build-id": "ASSET_BETA_JP_FONT",
             "type": "JPFonts",
             "sha1": "9428062bff4e627639444509a29f79305f053eee"
@@ -30703,7 +30708,6 @@
         {
             "filename": "asset_binary_47",
             "build-id": "ASSET_BINARY_47",
-            "folder": "unknown",
             "type": "Binary",
             "sha1": "5ec269b3714ca7427bb945e9cf7db57d0a2fec9e"
         },
@@ -30828,2230 +30832,2755 @@
             "sha1": "3dbb827b1e3ae1933fa322323b1860d44a170636"
         },
         {
-            "filename": "blue_wall_7.9",
+            "build-id": "ASSET_LEVELMODEL_SPACEPORTALPHA",
+            "filename": "spaceport_alpha_v80",
+            "folder": "future_fun_land",
+            "type": "LevelModel",
+            "sha1": "630d4b3e8ca774bec6c3a179b0e0a27f1dd038ef",
+            "version": "v80"
+        },
+        {
+            "filename": "blue_wall_v79",
             "build-id": "ASSET_TEX3D_SPACE_BLUEWALL",
             "folder": "space",
             "type": "Texture",
-            "sha1": "5d2431816c12027330ee7bdf375d5ab21523a0bc"
+            "sha1": "5d2431816c12027330ee7bdf375d5ab21523a0bc",
+            "version": "v79"
         },
         {
-            "filename": "blue_tunnel_light_7.9",
+            "filename": "blue_tunnel_light_v79",
             "build-id": "ASSET_TEX3D_SPACE_BLUETUNNELLIGHT",
             "folder": "space",
             "type": "Texture",
-            "sha1": "b644250d76c1c8dbaeec071f5903e045b8d0d4fa"
+            "sha1": "b644250d76c1c8dbaeec071f5903e045b8d0d4fa",
+            "version": "v79"
         },
         {
-            "filename": "colored_stone_7.9",
+            "filename": "colored_stone_v79",
             "build-id": "ASSET_TEX3D_SPACE_COLOREDSTONE",
             "folder": "space",
             "type": "Texture",
-            "sha1": "be42ef0d46f4f21e67343b6bc7f9c1a9b4953de2"
+            "sha1": "be42ef0d46f4f21e67343b6bc7f9c1a9b4953de2",
+            "version": "v79"
         },
         {
-            "filename": "space_wall_7.9",
+            "filename": "space_wall_v79",
             "build-id": "ASSET_TEX3D_SPACE_SPACEWALL",
             "folder": "space",
             "type": "Texture",
-            "sha1": "5632bbe73392cbd991d3e0691a8d90c6e5aec453"
+            "sha1": "5632bbe73392cbd991d3e0691a8d90c6e5aec453",
+            "version": "v79"
         },
         {
-            "filename": "uturn_7.9",
+            "filename": "uturn_v79",
             "build-id": "ASSET_TEX3D_UNUSED_UTURN",
             "folder": "unused",
             "type": "Texture",
-            "sha1": "635ff2b28fe97aef6f3592c5fb41c09f722bb9a1"
+            "sha1": "635ff2b28fe97aef6f3592c5fb41c09f722bb9a1",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1401",
-            "filename": "asset_textures_3d_1401_7.9",
+            "filename": "asset_textures_3d_1401_v79",
             "folder": "unlabeled",
             "sha1": "f19304aea04e1a72f045088ff4924b5d9dc4fc56",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1402",
-            "filename": "asset_textures_3d_1402_7.9",
+            "filename": "asset_textures_3d_1402_v79",
             "folder": "unlabeled",
             "sha1": "d2db9b8f98f6eadea016713745d190b3b7dc14c5",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1403",
-            "filename": "asset_textures_3d_1403_7.9",
+            "filename": "asset_textures_3d_1403_v79",
             "folder": "unlabeled",
             "sha1": "baacee27a320957b83644fd7ea95a0de57e023cf",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1404",
-            "filename": "asset_textures_3d_1404_7.9",
+            "filename": "asset_textures_3d_1404_v79",
             "folder": "unlabeled",
             "sha1": "90cfce5d4c1d31f3f3185fd27f863a4771f55daa",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1405",
-            "filename": "asset_textures_3d_1405_7.9",
+            "filename": "asset_textures_3d_1405_v79",
             "folder": "unlabeled",
             "sha1": "78cb6387163541e2081dcd5612934cc20c44d6be",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1406",
-            "filename": "asset_textures_3d_1406_7.9",
+            "filename": "asset_textures_3d_1406_v79",
             "folder": "unlabeled",
             "sha1": "5414f317943ce809a0eb344a5492a3394d3c4ed5",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1407",
-            "filename": "asset_textures_3d_1407_7.9",
+            "filename": "asset_textures_3d_1407_v79",
             "folder": "unlabeled",
             "sha1": "8621579765749f3d28508ba9f0d528d694dfb2f9",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1408",
-            "filename": "asset_textures_3d_1408_7.9",
+            "filename": "asset_textures_3d_1408_v79",
             "folder": "unlabeled",
             "sha1": "da37addb47cbfb4bcb61a246fb3ae048569cfce4",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1409",
-            "filename": "asset_textures_3d_1409_7.9",
+            "filename": "asset_textures_3d_1409_v79",
             "folder": "unlabeled",
             "sha1": "1be315cd1962164774a96dc1a939791f131f16fe",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1410",
-            "filename": "asset_textures_3d_1410_7.9",
+            "filename": "asset_textures_3d_1410_v79",
             "folder": "unlabeled",
             "sha1": "7062af56e2f69bc6059a231e34bae4ab5e060e58",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1411",
-            "filename": "asset_textures_3d_1411_7.9",
+            "filename": "asset_textures_3d_1411_v79",
             "folder": "unlabeled",
             "sha1": "93941e9349940aec9902302662e48b1cb17ea62f",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1412",
-            "filename": "asset_textures_3d_1412_7.9",
+            "filename": "asset_textures_3d_1412_v79",
             "folder": "unlabeled",
             "sha1": "801bc6f0defcdf62a42dd0b01621ad3a54994ed2",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1413",
-            "filename": "asset_textures_3d_1413_7.9",
+            "filename": "asset_textures_3d_1413_v79",
             "folder": "unlabeled",
             "sha1": "65cd5dc0897f7684ad3c55b7c197454d269e22ff",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_TEXTURES_3D_1414",
-            "filename": "asset_textures_3d_1414_7.9",
+            "filename": "asset_textures_3d_1414_v79",
             "folder": "unlabeled",
             "sha1": "77e482f24f5f07da4fadea0510f2bb3093cf1005",
-            "type": "Texture"
+            "type": "Texture",
+            "version": "v79"
         },
         {
-            "filename": "red_pillar_spike2_7.9",
+            "filename": "red_pillar_spike2_v79",
             "build-id": "ASSET_TEX3D_SPACE_REDPILLARSPIKE2",
             "folder": "space",
             "type": "Texture",
-            "sha1": "52210f2b9b0b21203b9dbc198610fbe14c2be267"
+            "sha1": "52210f2b9b0b21203b9dbc198610fbe14c2be267",
+            "version": "v79"
         },
         {
-            "filename": "trademark_small_7.9",
-            "build-id": "ASSET_TEX2D_MENU_TRADEMARKSMALL",
+            "filename": "title_jp_0",
+            "build-id": "ASSET_TEX2D_MENU_TITLE_JP_0",
             "folder": "menu",
             "type": "Texture",
-            "sha1": "8f87a9a3050e8e5eff2217b9b69a621aaf8c7423"
+            "sha1": "8f87a9a3050e8e5eff2217b9b69a621aaf8c7423",
+            "version": "v79"
         },
         {
-            "filename": "fireball_unknown_0_7.9",
-            "build-id": "ASSET_TEX2D_UNKNOWN_FIREBALLUNKNOWN_0",
+            "filename": "title_jp_1",
+            "build-id": "ASSET_TEX2D_MENU_TITLE_JP_1",
             "folder": "unknown",
             "type": "Texture",
-            "sha1": "a49e8c689fc5d4fa338d579872900657ec0bf1b4"
+            "sha1": "a49e8c689fc5d4fa338d579872900657ec0bf1b4",
+            "version": "v79"
         },
         {
-            "filename": "fireball_unknown_1_7.9",
-            "build-id": "ASSET_TEX2D_UNKNOWN_FIREBALLUNKNOWN_1",
+            "filename": "title_jp_2",
+            "build-id": "ASSET_TEX2D_MENU_TITLE_JP_2",
             "folder": "unknown",
             "type": "Texture",
-            "sha1": "bc138e6a8288f9365116d45a0af73e916865285b"
+            "sha1": "bc138e6a8288f9365116d45a0af73e916865285b",
+            "version": "v79"
         },
         {
-            "filename": "fireball_unknown_2_7.9",
-            "build-id": "ASSET_TEX2D_UNKNOWN_FIREBALLUNKNOWN_2",
+            "filename": "title_jp_3",
+            "build-id": "ASSET_TEX2D_MENU_TITLE_JP_3",
             "folder": "unknown",
             "type": "Texture",
-            "sha1": "826412e097e84ed3ba5581f28dcabd866d119b8c"
+            "sha1": "826412e097e84ed3ba5581f28dcabd866d119b8c",
+            "version": "v79"
         },
         {
-            "filename": "fireball_unknown_3_7.9",
-            "build-id": "ASSET_TEX2D_UNKNOWN_FIREBALLUNKNOWN_3",
+            "filename": "title_jp_4",
+            "build-id": "ASSET_TEX2D_MENU_TITLE_JP_4",
             "folder": "unknown",
             "type": "Texture",
-            "sha1": "43ed9027185123e5cfd5442aa09ef6231f902eb1"
+            "sha1": "43ed9027185123e5cfd5442aa09ef6231f902eb1",
+            "version": "v79"
         },
         {
-            "filename": "fireball_0_7.9",
-            "build-id": "ASSET_TEX2D_OBJECTS_FIREBALL_0",
+            "filename": "title_jp_5",
+            "build-id": "ASSET_TEX2D_MENU_TITLE_JP_5",
             "folder": "objects",
             "type": "Texture",
-            "sha1": "a80ab4a0c9bd0d94b575d9139f856f1dddb97268"
+            "sha1": "a80ab4a0c9bd0d94b575d9139f856f1dddb97268",
+            "version": "v79"
         },
         {
-            "filename": "fireball_1_7.9",
-            "build-id": "ASSET_TEX2D_OBJECTS_FIREBALL_1",
+            "filename": "title_jp_6",
+            "build-id": "ASSET_TEX2D_MENU_TITLE_JP_6",
             "folder": "objects",
             "type": "Texture",
-            "sha1": "6e5d2206eb6c1c8f6c7ed1548e013c62f02feed0"
+            "sha1": "6e5d2206eb6c1c8f6c7ed1548e013c62f02feed0",
+            "version": "v79"
         },
         {
-            "filename": "fireball_2_7.9",
-            "build-id": "ASSET_TEX2D_OBJECTS_FIREBALL_2",
+            "filename": "title_jp_7",
+            "build-id": "ASSET_TEX2D_MENU_TITLE_JP_7",
             "folder": "objects",
             "type": "Texture",
-            "sha1": "edf36feffe4fd1dc623062a89595f14346ace26b"
+            "sha1": "edf36feffe4fd1dc623062a89595f14346ace26b",
+            "version": "v79"
         },
         {
-            "filename": "fireball_3_7.9",
-            "build-id": "ASSET_TEX2D_OBJECTS_FIREBALL_3",
+            "filename": "title_jp_8",
+            "build-id": "ASSET_TEX2D_MENU_TITLE_JP_8",
             "folder": "objects",
             "type": "Texture",
-            "sha1": "95f7366fce4c1aa67d74812cfb694b82a86c506d"
+            "sha1": "95f7366fce4c1aa67d74812cfb694b82a86c506d",
+            "version": "v79"
         },
         {
-            "filename": "fireball_4_7.9",
-            "build-id": "ASSET_TEX2D_OBJECTS_FIREBALL_4",
+            "filename": "title_jp_9",
+            "build-id": "ASSET_TEX2D_MENU_TITLE_JP_9",
             "folder": "objects",
             "type": "Texture",
-            "sha1": "f7a6f9b5f9f5d54c6c91323b4aa854758048d962"
+            "sha1": "f7a6f9b5f9f5d54c6c91323b4aa854758048d962",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_0",
-            "filename": "asset_game_text_0_7.9",
+            "filename": "asset_game_text_0_v79",
             "folder": "unknown",
             "sha1": "94718b2fde17df2096bfadc7b1be7cbd84b4a0d5",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_50",
-            "filename": "asset_game_text_50_7.9",
+            "filename": "asset_game_text_50_v79",
             "folder": "unknown",
             "sha1": "3a1cce67ce10eb124b97f2047b40175454999b73",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_52",
-            "filename": "asset_game_text_52_7.9",
+            "filename": "asset_game_text_52_v79",
             "folder": "unknown",
             "sha1": "19b61e88a6cff42a5bfac94a949294d32b036900",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_69",
-            "filename": "asset_game_text_69_7.9",
+            "filename": "asset_game_text_69_v79",
             "folder": "unknown",
             "sha1": "a982221bdeec666b9be832e92404701efa10d66b",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_255",
-            "filename": "asset_game_text_255_7.9",
+            "filename": "asset_game_text_255_v79",
             "folder": "unknown",
             "sha1": "de0f9ea2ab27a8468348d44fdc84dbb1dad00cd1",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_256",
+            "filename": "asset_game_text_256_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_257",
+            "filename": "asset_game_text_257_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_258",
+            "filename": "asset_game_text_258_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_259",
-            "filename": "asset_game_text_259_7.9",
+            "filename": "asset_game_text_259_v79",
             "folder": "unknown",
             "sha1": "bd24350469ed87468e1b2b6c61a6bb018a75a5ac",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_260",
+            "filename": "asset_game_text_260_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_261",
+            "filename": "asset_game_text_261_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_262",
+            "filename": "asset_game_text_262_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_263",
+            "filename": "asset_game_text_263_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_264",
-            "filename": "asset_game_text_264_7.9",
+            "filename": "asset_game_text_264_v79",
             "folder": "unknown",
             "sha1": "dca2a63c62d9810fafa7890368938f4355949c4a",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_265",
-            "filename": "asset_game_text_265_7.9",
+            "filename": "asset_game_text_265_v79",
             "folder": "unknown",
             "sha1": "6f3e4b9b38dc3a69ba0a6f990559228d21d08212",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_266",
-            "filename": "asset_game_text_266_7.9",
+            "filename": "asset_game_text_266_v79",
             "folder": "unknown",
             "sha1": "7c31ca1675ff7deb43231fda6b1a1d15bf8e31e8",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_267",
+            "filename": "asset_game_text_267_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_268",
+            "filename": "asset_game_text_268_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_269",
+            "filename": "asset_game_text_269_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_270",
+            "filename": "asset_game_text_270_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_271",
+            "filename": "asset_game_text_271_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_272",
-            "filename": "asset_game_text_272_7.9",
+            "filename": "asset_game_text_272_v79",
             "folder": "unknown",
             "sha1": "4916eaf37250199ea662410c1bc1d7916273625f",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_273",
-            "filename": "asset_game_text_273_7.9",
+            "filename": "asset_game_text_273_v79",
             "folder": "unknown",
             "sha1": "5c6a7d2d8c0cbbf55ef0eb02c4645aa4e3976886",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_274",
-            "filename": "asset_game_text_274_7.9",
+            "filename": "asset_game_text_274_v79",
             "folder": "unknown",
             "sha1": "5c6a7d2d8c0cbbf55ef0eb02c4645aa4e3976886",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_275",
-            "filename": "asset_game_text_275_7.9",
+            "filename": "asset_game_text_275_v79",
             "folder": "unknown",
             "sha1": "22c51f8471e42611399eb14488048b5ad65bfe2b",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_276",
-            "filename": "asset_game_text_276_7.9",
+            "filename": "asset_game_text_276_v79",
             "folder": "unknown",
             "sha1": "334f01813602e97817eaf71e836e0f3605c59032",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_277",
+            "filename": "asset_game_text_277_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_278",
+            "filename": "asset_game_text_278_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_279",
-            "filename": "asset_game_text_279_7.9",
+            "filename": "asset_game_text_279_v79",
             "folder": "unknown",
             "sha1": "6f7694de0b9e0eac10e75ec6313161cbdfee7270",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_280",
-            "filename": "asset_game_text_280_7.9",
+            "filename": "asset_game_text_280_v79",
             "folder": "unknown",
             "sha1": "fbaf6b859369f8795723eb04e07fa10b8b7443fb",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_281",
-            "filename": "asset_game_text_281_7.9",
+            "filename": "asset_game_text_281_v79",
             "folder": "unknown",
             "sha1": "0dbe8c1e2eb9e34999cdb8938df12d2b59ef5214",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_282",
-            "filename": "asset_game_text_282_7.9",
+            "filename": "asset_game_text_282_v79",
             "folder": "unknown",
             "sha1": "8029e9905d3bd03628844b5286ccf985ec8bb5b7",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_283",
-            "filename": "asset_game_text_283_7.9",
+            "filename": "asset_game_text_283_v79",
             "folder": "unknown",
             "sha1": "a17863401f2bbf03cabae4ac9191cd4dded8c7ce",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_284",
-            "filename": "asset_game_text_284_7.9",
+            "filename": "asset_game_text_284_v79",
             "folder": "unknown",
             "sha1": "1f5ed95151e62f4566205beada03c27173ba2108",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_285",
-            "filename": "asset_game_text_285_7.9",
+            "filename": "asset_game_text_285_v79",
             "folder": "unknown",
             "sha1": "7db0a2fa9e154f814863408df2e4599fd1c9c37f",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_286",
-            "filename": "asset_game_text_286_7.9",
+            "filename": "asset_game_text_286_v79",
             "folder": "unknown",
             "sha1": "83aaca4532ae16781cbcf308401f49c554d23ee8",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_287",
+            "filename": "asset_game_text_287_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_288",
-            "filename": "asset_game_text_288_7.9",
+            "filename": "asset_game_text_288_v79",
             "folder": "unknown",
             "sha1": "2c505d8591009ec5a9215b1b1faf908ddd9d3aeb",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_289",
-            "filename": "asset_game_text_289_7.9",
+            "filename": "asset_game_text_289_v79",
             "folder": "unknown",
             "sha1": "05b6b8e6cedbb032067e657004b6ecec78fa334e",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_290",
-            "filename": "asset_game_text_290_7.9",
+            "filename": "asset_game_text_290_v79",
             "folder": "unknown",
             "sha1": "a6a4217bbdc1e6970e337bd29c4e99ad5522af53",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_291",
-            "filename": "asset_game_text_291_7.9",
+            "filename": "asset_game_text_291_v79",
             "folder": "unknown",
             "sha1": "32fc8586066550a1f5767e8142464fb702b59790",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_292",
-            "filename": "asset_game_text_292_7.9",
+            "filename": "asset_game_text_292_v79",
             "folder": "unknown",
             "sha1": "8e8cf34690f763f2268586302e7cc777fd6bc0ee",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_293",
-            "filename": "asset_game_text_293_7.9",
+            "filename": "asset_game_text_293_v79",
             "folder": "unknown",
             "sha1": "65e6f3341ffe9ceec5a99d4b2d9f5a7a26e76067",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_294",
-            "filename": "asset_game_text_294_7.9",
+            "filename": "asset_game_text_294_v79",
             "folder": "unknown",
             "sha1": "65e6f3341ffe9ceec5a99d4b2d9f5a7a26e76067",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_295",
-            "filename": "asset_game_text_295_7.9",
+            "filename": "asset_game_text_295_v79",
             "folder": "unknown",
             "sha1": "65e6f3341ffe9ceec5a99d4b2d9f5a7a26e76067",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_296",
-            "filename": "asset_game_text_296_7.9",
+            "filename": "asset_game_text_296_v79",
             "folder": "unknown",
             "sha1": "65e6f3341ffe9ceec5a99d4b2d9f5a7a26e76067",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_297",
-            "filename": "asset_game_text_297_7.9",
+            "filename": "asset_game_text_297_v79",
             "folder": "unknown",
             "sha1": "925fcc0278ab7954f909f3715b26ceb2b2d17bc7",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_298",
-            "filename": "asset_game_text_298_7.9",
+            "filename": "asset_game_text_298_v79",
             "folder": "unknown",
             "sha1": "8e8cf34690f763f2268586302e7cc777fd6bc0ee",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_299",
-            "filename": "asset_game_text_299_7.9",
+            "filename": "asset_game_text_299_v79",
             "folder": "unknown",
             "sha1": "8e8cf34690f763f2268586302e7cc777fd6bc0ee",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_300",
+            "filename": "asset_game_text_300_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_301",
+            "filename": "asset_game_text_301_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_302",
+            "filename": "asset_game_text_302_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_303",
+            "filename": "asset_game_text_303_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_304",
-            "filename": "asset_game_text_304_7.9",
+            "filename": "asset_game_text_304_v79",
             "folder": "unknown",
             "sha1": "39f051300e4948e5e53ed2e50f5cb88138c29494",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_305",
-            "filename": "asset_game_text_305_7.9",
+            "filename": "asset_game_text_305_v79",
             "folder": "unknown",
             "sha1": "79d255fc4df63cf13b688eb9cc251457fc882046",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_306",
-            "filename": "asset_game_text_306_7.9",
+            "filename": "asset_game_text_306_v79",
             "folder": "unknown",
             "sha1": "ff9163a9ff8b60668fd2caa9feab49bb711e15b9",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_307",
-            "filename": "asset_game_text_307_7.9",
+            "filename": "asset_game_text_307_v79",
             "folder": "unknown",
             "sha1": "ceee26a4600da3afa82b0a3ddd9fd0fbb54e0d5f",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_308",
-            "filename": "asset_game_text_308_7.9",
+            "filename": "asset_game_text_308_v79",
             "folder": "unknown",
             "sha1": "44a0ee6ac8496335f1e4230db460974790999c41",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_309",
-            "filename": "asset_game_text_309_7.9",
+            "filename": "asset_game_text_309_v79",
             "folder": "unknown",
             "sha1": "e69b2ffea0227b6f19d3dbbb691bec71ef7eb832",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_310",
-            "filename": "asset_game_text_310_7.9",
+            "filename": "asset_game_text_310_v79",
             "folder": "unknown",
             "sha1": "46316474185693fe5f2fbd38f5fc2d347589e6be",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_311",
-            "filename": "asset_game_text_311_7.9",
+            "filename": "asset_game_text_311_v79",
             "folder": "unknown",
             "sha1": "67301d3f44dd47cdec4d387212d6d48a208d4a85",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_312",
-            "filename": "asset_game_text_312_7.9",
+            "filename": "asset_game_text_312_v79",
             "folder": "unknown",
             "sha1": "98cefa39dfbb65853cda517dbc4caf975c0ae282",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_313",
-            "filename": "asset_game_text_313_7.9",
+            "filename": "asset_game_text_313_v79",
             "folder": "unknown",
             "sha1": "928173d24b285f22122adfef8b8ceec011d39a8a",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_314",
-            "filename": "asset_game_text_314_7.9",
+            "filename": "asset_game_text_314_v79",
             "folder": "unknown",
             "sha1": "de735cdb8593d0bd2bd29da33f4928259dba350c",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_315",
-            "filename": "asset_game_text_315_7.9",
+            "filename": "asset_game_text_315_v79",
             "folder": "unknown",
             "sha1": "6622699fbf62a5c7af07c484928e9e732536f274",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_316",
-            "filename": "asset_game_text_316_7.9",
+            "filename": "asset_game_text_316_v79",
             "folder": "unknown",
             "sha1": "d4f0e274ab112e51867da004ad55918871353f20",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_317",
-            "filename": "asset_game_text_317_7.9",
+            "filename": "asset_game_text_317_v79",
             "folder": "unknown",
             "sha1": "d4f0e274ab112e51867da004ad55918871353f20",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_318",
-            "filename": "asset_game_text_318_7.9",
+            "filename": "asset_game_text_318_v79",
             "folder": "unknown",
             "sha1": "d25f3e63210507e3747a5e7147d28ffa540ff3fc",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_319",
-            "filename": "asset_game_text_319_7.9",
+            "filename": "asset_game_text_319_v79",
             "folder": "unknown",
             "sha1": "4e01507b4d03252915145dd27d3f2ae261341926",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_GAME_TEXT_320",
+            "filename": "asset_game_text_320_v79",
+            "folder": "unknown",
+            "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_321",
-            "filename": "asset_game_text_321_7.9",
+            "filename": "asset_game_text_321_v79",
             "folder": "unknown",
             "sha1": "29c97ba9d51383717feab5f37fa8269cf4101d01",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_322",
-            "filename": "asset_game_text_322_7.9",
+            "filename": "asset_game_text_322_v79",
             "folder": "unknown",
             "sha1": "30434a8c6e16965b1b065c499b6df25cfc2c5cae",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_323",
-            "filename": "asset_game_text_323_7.9",
+            "filename": "asset_game_text_323_v79",
             "folder": "unknown",
             "sha1": "f45a126274a21ef5d1732d6348d3360a98de93ed",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_324",
-            "filename": "asset_game_text_324_7.9",
+            "filename": "asset_game_text_324_v79",
             "folder": "unknown",
             "sha1": "86e4f2a5c7ed83aefeaee703c941dcac321c2c94",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_325",
-            "filename": "asset_game_text_325_7.9",
+            "filename": "asset_game_text_325_v79",
             "folder": "unknown",
             "sha1": "e322b586402b66241899c575ca9170b4bba8d172",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_326",
-            "filename": "asset_game_text_326_7.9",
+            "filename": "asset_game_text_326_v79",
             "folder": "unknown",
             "sha1": "265b824af1d6bb7b4b767aca988f533a343be8b1",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_327",
-            "filename": "asset_game_text_327_7.9",
+            "filename": "asset_game_text_327_v79",
             "folder": "unknown",
             "sha1": "c6a11b0cd3f38979640a9f20fa31560793a04a61",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_328",
-            "filename": "asset_game_text_328_7.9",
+            "filename": "asset_game_text_328_v79",
             "folder": "unknown",
             "sha1": "e8faa0b845c82a99148b55e580e0a916ec645670",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_329",
-            "filename": "asset_game_text_329_7.9",
+            "filename": "asset_game_text_329_v79",
             "folder": "unknown",
             "sha1": "8d5a22589228e520b266fe9feb09046ad3a64ccc",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_330",
-            "filename": "asset_game_text_330_7.9",
+            "filename": "asset_game_text_330_v79",
             "folder": "unknown",
             "sha1": "7e8d47c7c480bc22b658fba2e6751f944fcdd9b3",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_331",
-            "filename": "asset_game_text_331_7.9",
+            "filename": "asset_game_text_331_v79",
             "folder": "unknown",
             "sha1": "2f682ddfcf0af65a5c29a8d5b8ead4c4f0e7d58a",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_332",
-            "filename": "asset_game_text_332_7.9",
+            "filename": "asset_game_text_332_v79",
             "folder": "unknown",
             "sha1": "4c1c22b6ed918f6f61de2849041892e83574c04d",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_333",
-            "filename": "asset_game_text_333_7.9",
+            "filename": "asset_game_text_333_v79",
             "folder": "unknown",
             "sha1": "a5087be8cd6c25cda79ba9b282edb9c8cfd5df32",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_334",
-            "filename": "asset_game_text_334_7.9",
+            "filename": "asset_game_text_334_v79",
             "folder": "unknown",
             "sha1": "776e208d2d430ba278e055762af167cf76d51a48",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_335",
-            "filename": "asset_game_text_335_7.9",
+            "filename": "asset_game_text_335_v79",
             "folder": "unknown",
             "sha1": "e18b743a75805d5120f1f39eaf18a3c5903903bb",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_336",
-            "filename": "asset_game_text_336_7.9",
+            "filename": "asset_game_text_336_v79",
             "folder": "unknown",
             "sha1": "115d8e7753dd70d91c495ac0f82f7c4f2a218bca",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_337",
-            "filename": "asset_game_text_337_7.9",
+            "filename": "asset_game_text_337_v79",
             "folder": "unknown",
             "sha1": "62e3f3f8975ce7032957a6cc3efce5c5a3932d1d",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_338",
-            "filename": "asset_game_text_338_7.9",
+            "filename": "asset_game_text_338_v79",
             "folder": "unknown",
             "sha1": "2d0801bbe4d1b0fc072fc09bfabd0e9cd123e68b",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_GAME_TEXT_339",
-            "filename": "asset_game_text_339_7.9",
+            "filename": "asset_game_text_339_v79",
             "folder": "unknown",
             "sha1": "66f7adc85103ab29efc809d46c40c269fd344dcc",
-            "type": "GameText"
+            "type": "GameText",
+            "version": "v79"
         },
         {
-            "filename": "english_menu_text_7.9",
+            "filename": "english_menu_text_v79",
             "build-id": "ASSET_MENU_TEXT_ENGLISH",
             "type": "MenuText",
-            "sha1": "b5d5bdd424404aeeccf641a5028105438884befe"
+            "sha1": "b5d5bdd424404aeeccf641a5028105438884befe",
+            "version": "v79"
         },
         {
-            "filename": "french_menu_text_7.9",
+            "filename": "french_menu_text_v79",
             "build-id": "ASSET_MENU_TEXT_FRENCH",
             "type": "MenuText",
-            "sha1": "1ea015120abfa17a31798c40083e2dadca32346b"
+            "sha1": "1ea015120abfa17a31798c40083e2dadca32346b",
+            "version": "v79"
         },
         {
-            "filename": "german_menu_text_7.9",
+            "filename": "german_menu_text_v79",
             "build-id": "ASSET_MENU_TEXT_GERMAN",
             "type": "MenuText",
-            "sha1": "980933a56da67fce07cf1af4ae2861417211d47d"
+            "sha1": "980933a56da67fce07cf1af4ae2861417211d47d",
+            "version": "v79"
         },
         {
-            "filename": "japanese_menu_text_7.9",
+            "filename": "japanese_menu_text_v79",
             "build-id": "ASSET_MENU_TEXT_JAPANESE",
             "type": "MenuText",
-            "sha1": "480b4fbaf6a887a19f39da2a6cd46da6eabd3173"
+            "sha1": "480b4fbaf6a887a19f39da2a6cd46da6eabd3173",
+            "version": "v79"
         },
         {
-            "filename": "fireball_unknown_7.9",
+            "filename": "fireball_unknown_v79",
             "build-id": "ASSET_SPRITE_UNKNOWN_FIREBALLUNKNOWN",
             "folder": "unknown",
             "type": "Sprite",
-            "sha1": "9182fef8c5edd571207bb521f94d7a917b152d7c"
+            "sha1": "9182fef8c5edd571207bb521f94d7a917b152d7c",
+            "version": "v79"
         },
         {
-            "filename": "fireball_7.9",
+            "filename": "fireball_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_FIREBALL",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "e4b74590f18d057a65e7b6d925a85d7a74bc08c9"
+            "sha1": "e4b74590f18d057a65e7b6d925a85d7a74bc08c9",
+            "version": "v79"
         },
         {
-            "filename": "wizghost_7.9",
+            "filename": "wizghost_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_WIZGHOST",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "edb485957cecad3ce423cbc6d70495aac71d697f"
+            "sha1": "edb485957cecad3ce423cbc6d70495aac71d697f",
+            "version": "v79"
         },
         {
-            "filename": "unknown_light_7.9",
+            "filename": "unknown_light_v79",
             "build-id": "ASSET_SPRITE_UNKNOWN_UNKNOWNLIGHT",
             "folder": "unknown",
             "type": "Sprite",
-            "sha1": "7e7e669b5192a2f9fe9da7cc42048379ae8fe202"
+            "sha1": "7e7e669b5192a2f9fe9da7cc42048379ae8fe202",
+            "version": "v79"
         },
         {
-            "filename": "small_star_7.9",
+            "filename": "small_star_v79",
             "build-id": "ASSET_SPRITE_UNKNOWN_SMALLSTAR",
             "folder": "unknown",
             "type": "Sprite",
-            "sha1": "570c8041da9851055e9050ba8035ea4bf359e475"
+            "sha1": "570c8041da9851055e9050ba8035ea4bf359e475",
+            "version": "v79"
         },
         {
-            "filename": "buoy_7.9",
+            "filename": "buoy_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BUOY",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "5b12c2e801e02b2ccc46a7ee6eb141abc2c864c6"
+            "sha1": "5b12c2e801e02b2ccc46a7ee6eb141abc2c864c6",
+            "version": "v79"
         },
         {
-            "filename": "smartie_tree_7.9",
+            "filename": "smartie_tree_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_SMARTIETREE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "ceb882ab71b9e200c5ffc7c09d557d9c58f6e5f5"
+            "sha1": "ceb882ab71b9e200c5ffc7c09d557d9c58f6e5f5",
+            "version": "v79"
         },
         {
-            "filename": "beach_tree_7.9",
+            "filename": "beach_tree_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BEACHTREE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "947d45146fbefb1e8001c8686db0c48fe277e100"
+            "sha1": "947d45146fbefb1e8001c8686db0c48fe277e100",
+            "version": "v79"
         },
         {
-            "filename": "blue_berry_bush_7.9",
+            "filename": "blue_berry_bush_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BLUEBERRYBUSH",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "ebe95925b3177e7fa100bec600c9115906c06bdd"
+            "sha1": "ebe95925b3177e7fa100bec600c9115906c06bdd",
+            "version": "v79"
         },
         {
-            "filename": "rubber_snow_tree_7.9",
+            "filename": "rubber_snow_tree_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_RUBBERSNOWTREE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "04185bbb09319f1c86df91ceec9339b29d858371"
+            "sha1": "04185bbb09319f1c86df91ceec9339b29d858371",
+            "version": "v79"
         },
         {
-            "filename": "skinny_snow_tree_7.9",
+            "filename": "skinny_snow_tree_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_SKINNYSNOWTREE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "2feb9353b0b8c3dd9389b52ddd951914406f35b9"
+            "sha1": "2feb9353b0b8c3dd9389b52ddd951914406f35b9",
+            "version": "v79"
         },
         {
-            "filename": "xmas_tree_7.9",
+            "filename": "xmas_tree_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_XMASTREE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "9290b2240a26f9539ed192242f797627879bacbf"
+            "sha1": "9290b2240a26f9539ed192242f797627879bacbf",
+            "version": "v79"
         },
         {
-            "filename": "alpine_snow_tree_7.9",
+            "filename": "alpine_snow_tree_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_ALPINESNOWTREE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "569f39578c5f7e969332019b708ba4919ecad458"
+            "sha1": "569f39578c5f7e969332019b708ba4919ecad458",
+            "version": "v79"
         },
         {
-            "filename": "rubber_tree_7.9",
+            "filename": "rubber_tree_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_RUBBERTREE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "baca69371687f1f03ff4572f5b481f94632c544e"
+            "sha1": "baca69371687f1f03ff4572f5b481f94632c544e",
+            "version": "v79"
         },
         {
-            "filename": "palm_tree_top_7.9",
+            "filename": "palm_tree_top_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_PALMTREETOP",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "e9c3308d2b9e55f9c70fe00270021cc73567ea40"
+            "sha1": "e9c3308d2b9e55f9c70fe00270021cc73567ea40",
+            "version": "v79"
         },
         {
-            "filename": "palm_plant_7.9",
+            "filename": "palm_plant_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_PALMPLANT",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "c19751717abc4fd0d0a898d5e879a023914ba607"
+            "sha1": "c19751717abc4fd0d0a898d5e879a023914ba607",
+            "version": "v79"
         },
         {
-            "filename": "palm_tree_top_chea_7.9",
+            "filename": "palm_tree_top_chea_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_PALMTREETOPCHEA",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "2a3f14dc6612c10a9fb4a7dfe6f34f649d796c61"
+            "sha1": "2a3f14dc6612c10a9fb4a7dfe6f34f649d796c61",
+            "version": "v79"
         },
         {
-            "filename": "fir_tree_7.9",
+            "filename": "fir_tree_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_FIRTREE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "32487eb8ef82132514a5d3f1f17c6e76a2a6869e"
+            "sha1": "32487eb8ef82132514a5d3f1f17c6e76a2a6869e",
+            "version": "v79"
         },
         {
-            "filename": "space_tree_7.9",
+            "filename": "space_tree_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_SPACETREE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "b1018b15883b682fa30768d582197a5665db16dd"
+            "sha1": "b1018b15883b682fa30768d582197a5665db16dd",
+            "version": "v79"
         },
         {
-            "filename": "lamp_post_7.9",
+            "filename": "lamp_post_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_LAMPPOST",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "f94aa1185fb5997092b19a8f84ec8c83497dccdb"
+            "sha1": "f94aa1185fb5997092b19a8f84ec8c83497dccdb",
+            "version": "v79"
         },
         {
-            "filename": "white_buttercup_7.9",
+            "filename": "white_buttercup_v79",
             "build-id": "ASSET_SPRITE_FLOWERS_WHITEBUTTERCUP",
             "folder": "flowers",
             "type": "Sprite",
-            "sha1": "2920826a8b90e1eda0fe99d99526568817643413"
+            "sha1": "2920826a8b90e1eda0fe99d99526568817643413",
+            "version": "v79"
         },
         {
-            "filename": "yellow_bellflower_7.9",
+            "filename": "yellow_bellflower_v79",
             "build-id": "ASSET_SPRITE_FLOWERS_YELLOWBELLFLOWER",
             "folder": "flowers",
             "type": "Sprite",
-            "sha1": "82c92fb9f19ba12174ad3fbb324d2d1286b7c3cb"
+            "sha1": "82c92fb9f19ba12174ad3fbb324d2d1286b7c3cb",
+            "version": "v79"
         },
         {
-            "filename": "yellow_buttercup_7.9",
+            "filename": "yellow_buttercup_v79",
             "build-id": "ASSET_SPRITE_FLOWERS_YELLOWBUTTERCUP",
             "folder": "flowers",
             "type": "Sprite",
-            "sha1": "f760ece3b68cc93bee56dcb8f7745df741778ce4"
+            "sha1": "f760ece3b68cc93bee56dcb8f7745df741778ce4",
+            "version": "v79"
         },
         {
-            "filename": "blue_buttercup_7.9",
+            "filename": "blue_buttercup_v79",
             "build-id": "ASSET_SPRITE_FLOWERS_BLUEBUTTERCUP",
             "folder": "flowers",
             "type": "Sprite",
-            "sha1": "3d14cb848aec0ef25788ad6b12cd09b886e7b126"
+            "sha1": "3d14cb848aec0ef25788ad6b12cd09b886e7b126",
+            "version": "v79"
         },
         {
-            "filename": "water_lily_7.9",
+            "filename": "water_lily_v79",
             "build-id": "ASSET_SPRITE_FLOWERS_WATERLILY",
             "folder": "flowers",
             "type": "Sprite",
-            "sha1": "2a8f3ddafcb8fea54e80fa5c4db2a0cf65efb27b"
+            "sha1": "2a8f3ddafcb8fea54e80fa5c4db2a0cf65efb27b",
+            "version": "v79"
         },
         {
-            "filename": "reed_no_leaf_7.9",
+            "filename": "reed_no_leaf_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_REEDNOLEAF",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "4c43a68e534ff13d4d9518a4a99f5f22aeb7f925"
+            "sha1": "4c43a68e534ff13d4d9518a4a99f5f22aeb7f925",
+            "version": "v79"
         },
         {
-            "filename": "reed_leaves_7.9",
+            "filename": "reed_leaves_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_REEDLEAVES",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "28473d60d57ddde65749cabcc379fd29d0b310c1"
+            "sha1": "28473d60d57ddde65749cabcc379fd29d0b310c1",
+            "version": "v79"
         },
         {
-            "filename": "read_one_leaf_7.9",
+            "filename": "read_one_leaf_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_READONELEAF",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "5e14047aee2f5c53f94ed98c1262e0d0fb560ed6"
+            "sha1": "5e14047aee2f5c53f94ed98c1262e0d0fb560ed6",
+            "version": "v79"
         },
         {
-            "filename": "snowman_tophat_7.9",
+            "filename": "snowman_tophat_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_SNOWMANTOPHAT",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "3de7619b600cad2b146f3a3770640c482f6fccf7"
+            "sha1": "3de7619b600cad2b146f3a3770640c482f6fccf7",
+            "version": "v79"
         },
         {
-            "filename": "bell_7.9",
+            "filename": "bell_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BELL",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "7152a89a540c1e55bfd0527ce323cae486e1a7ca"
+            "sha1": "7152a89a540c1e55bfd0527ce323cae486e1a7ca",
+            "version": "v79"
         },
         {
-            "filename": "snowman_7.9",
+            "filename": "snowman_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_SNOWMAN",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "965a76417c7bf84581cadcb68e1d8ec56c9d55d8"
+            "sha1": "965a76417c7bf84581cadcb68e1d8ec56c9d55d8",
+            "version": "v79"
         },
         {
-            "filename": "torch_with_eyes_7.9",
+            "filename": "torch_with_eyes_v79",
             "build-id": "ASSET_SPRITE_UNUSED_TORCHWITHEYES",
             "folder": "unused",
             "type": "Sprite",
-            "sha1": "2397a548c1b1853648d9ad6fb759d8e1c0b06f98"
+            "sha1": "2397a548c1b1853648d9ad6fb759d8e1c0b06f98",
+            "version": "v79"
         },
         {
-            "filename": "beta_ancient_lake_sign_7.9",
+            "filename": "beta_ancient_lake_sign_v79",
             "build-id": "ASSET_SPRITE_UNUSED_BETAANCIENTLAKESIGN",
             "folder": "unused",
             "type": "Sprite",
-            "sha1": "e662fc359d9d83afd9be300e19d963ce16800543"
+            "sha1": "e662fc359d9d83afd9be300e19d963ce16800543",
+            "version": "v79"
         },
         {
-            "filename": "debug_anim_car_7.9",
+            "filename": "debug_anim_car_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_DEBUGANIMCAR",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "e6b93f01ea48f6675227b102f5b8b32459e8d522"
+            "sha1": "e6b93f01ea48f6675227b102f5b8b32459e8d522",
+            "version": "v79"
         },
         {
-            "filename": "debug_sky_control_7.9",
+            "filename": "debug_sky_control_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_DEBUGSKYCONTROL",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "f6e94c2ba83616c98584ea1c57f77d5fe486f279"
+            "sha1": "f6e94c2ba83616c98584ea1c57f77d5fe486f279",
+            "version": "v79"
         },
         {
-            "filename": "debug_camera_control_7.9",
-            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGCAMERACONTROL",
+            "filename": "debug_orb_red_v79",
+            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGORBRED",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "828ca39143101a37b42ce73d0f6481c97852044c"
+            "sha1": "828ca39143101a37b42ce73d0f6481c97852044c",
+            "version": "v79"
         },
         {
-            "filename": "debug_unknown_exit_7.9",
-            "build-id": "ASSET_SPRITE_UNUSED_DEBUGUNKNOWNEXIT",
-            "folder": "unused",
+            "filename": "debug_orb_yellow_v79",
+            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGORBYELLOW",
+            "folder": "objects",
             "type": "Sprite",
-            "sha1": "05b55c9f75968db9981df67533723d3f1f865fa2"
+            "sha1": "05b55c9f75968db9981df67533723d3f1f865fa2",
+            "version": "v79"
         },
         {
-            "filename": "debug_unknown_traffic_light_7.9",
-            "build-id": "ASSET_SPRITE_UNUSED_DEBUGUNKNOWNTRAFFICLIGHT",
-            "folder": "unused",
+            "filename": "debug_fog_changer_v79",
+            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGFOGCHANGER",
+            "folder": "objects",
             "type": "Sprite",
-            "sha1": "8dc03670cb944000121e6e37fe9b8b2585044bbe"
+            "sha1": "8dc03670cb944000121e6e37fe9b8b2585044bbe",
+            "version": "v79"
         },
         {
-            "filename": "debug_animator_7.9",
+            "filename": "debug_animator_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_DEBUGANIMATOR",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "744a3904ba3370e75910956f61f45f1ab622bb46"
+            "sha1": "744a3904ba3370e75910956f61f45f1ab622bb46",
+            "version": "v79"
         },
         {
-            "filename": "debug_audio_7.9",
+            "filename": "debug_audio_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_DEBUGAUDIO",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "9141996c91c486ef88d590b20ad0fa3fb9d7399a"
+            "sha1": "9141996c91c486ef88d590b20ad0fa3fb9d7399a",
+            "version": "v79"
         },
         {
-            "filename": "debug_audio_line_7.9",
+            "filename": "debug_audio_line_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_DEBUGAUDIOLINE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "aaa169e2667ec08c8272a2a4a5766e92ab28a847"
+            "sha1": "aaa169e2667ec08c8272a2a4a5766e92ab28a847",
+            "version": "v79"
         },
         {
-            "filename": "debug_audio_seq_line_7.9",
+            "filename": "debug_audio_seq_line_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_DEBUGAUDIOSEQLINE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "4635c18c03f86e1705f8bdcd07383fc7c2518d17"
+            "sha1": "4635c18c03f86e1705f8bdcd07383fc7c2518d17",
+            "version": "v79"
         },
         {
-            "filename": "debug_audio_seq_7.9",
-            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGAUDIOSEQ",
+            "filename": "debug_unknown_traffic_light_v79",
+            "build-id": "ASSET_SPRITE_UNUSED_DEBUGUNKNOWNTRAFFICLIGHT",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "240b1d20b26738fca00b2346dc744d83e648a733"
+            "sha1": "240b1d20b26738fca00b2346dc744d83e648a733",
+            "version": "v79"
         },
         {
-            "filename": "debug_audio_reverb_7.9",
+            "filename": "debug_audio_reverb_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_DEBUGAUDIOREVERB",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "2637c53a2dc45daf2a615c79587d31706075597e"
+            "sha1": "2637c53a2dc45daf2a615c79587d31706075597e",
+            "version": "v79"
         },
         {
-            "filename": "balloon_boost_7.9",
+            "filename": "balloon_boost_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BALLOONBOOST",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "a5d7c00707a834b9f1ffa707cdf4c45d96b3a9e9"
+            "sha1": "a5d7c00707a834b9f1ffa707cdf4c45d96b3a9e9",
+            "version": "v79"
         },
         {
-            "filename": "balloon_missle_7.9",
+            "filename": "balloon_missle_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BALLOONMISSLE",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "7ccc583a487414cd90d6e78dfaed71fe02fb3296"
+            "sha1": "7ccc583a487414cd90d6e78dfaed71fe02fb3296",
+            "version": "v79"
         },
         {
-            "filename": "balloon_trap_7.9",
+            "filename": "balloon_trap_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BALLOONTRAP",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "a3a3eda52c328def804152ce024accab59f2a36c"
+            "sha1": "a3a3eda52c328def804152ce024accab59f2a36c",
+            "version": "v79"
         },
         {
-            "filename": "balloon_shield_7.9",
+            "filename": "balloon_shield_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BALLOONSHIELD",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "c892e82c955340a2d4cba3db59a1f55d43d1b952"
+            "sha1": "c892e82c955340a2d4cba3db59a1f55d43d1b952",
+            "version": "v79"
         },
         {
-            "filename": "balloon_magnet_7.9",
+            "filename": "balloon_magnet_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BALLOONMAGNET",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "41f3699050abe4e74e1963c66d641e8f99a12c32"
+            "sha1": "41f3699050abe4e74e1963c66d641e8f99a12c32",
+            "version": "v79"
         },
         {
-            "filename": "balloon_missle_gift_7.9",
+            "filename": "balloon_missle_gift_v79",
             "build-id": "ASSET_SPRITE_UNUSED_BALLOONMISSLEGIFT",
             "folder": "unused",
             "type": "Sprite",
-            "sha1": "3e7e2fba0949705058144bd07d1058d5e86f6178"
+            "sha1": "3e7e2fba0949705058144bd07d1058d5e86f6178",
+            "version": "v79"
         },
         {
-            "filename": "balloon_boost_gift_7.9",
+            "filename": "balloon_boost_gift_v79",
             "build-id": "ASSET_SPRITE_UNUSED_BALLOONBOOSTGIFT",
             "folder": "unused",
             "type": "Sprite",
-            "sha1": "c23e1497267dfa584781cdff03fff14f48d235b5"
+            "sha1": "c23e1497267dfa584781cdff03fff14f48d235b5",
+            "version": "v79"
         },
         {
-            "filename": "balloon_gold_7.9",
+            "filename": "balloon_gold_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BALLOONGOLD",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "1a34e753a8c86121d47820be01c9ab5292786e5d"
+            "sha1": "1a34e753a8c86121d47820be01c9ab5292786e5d",
+            "version": "v79"
         },
         {
-            "filename": "balloon_silver_7.9",
+            "filename": "balloon_silver_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BALLOONSILVER",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "18bf35a74b620178e83d96c829af20ebf55615df"
+            "sha1": "18bf35a74b620178e83d96c829af20ebf55615df",
+            "version": "v79"
         },
         {
-            "filename": "banana_7.9",
+            "filename": "banana_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BANANA",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "216e1dec767318aa41baad74900c0ae92ce44a71"
+            "sha1": "216e1dec767318aa41baad74900c0ae92ce44a71",
+            "version": "v79"
         },
         {
-            "filename": "silver_coin_7.9",
+            "filename": "silver_coin_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_SILVERCOIN",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "cfad0684cf22cd7c80fc118811f7a69b4faecb88"
+            "sha1": "cfad0684cf22cd7c80fc118811f7a69b4faecb88",
+            "version": "v79"
         },
         {
-            "filename": "checkpoint_flag_7.9",
+            "filename": "checkpoint_flag_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_CHECKPOINTFLAG",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "0b1db24b35728d8cb35b0eda0c29d1d414275f1c"
+            "sha1": "0b1db24b35728d8cb35b0eda0c29d1d414275f1c",
+            "version": "v79"
         },
         {
-            "filename": "rareware_coin_7.9",
+            "filename": "rareware_coin_v79",
             "build-id": "ASSET_SPRITE_UNUSED_RAREWARECOIN",
             "folder": "unused",
             "type": "Sprite",
-            "sha1": "05ec6d466b73be8973e9eff11dafc629885f8bd9"
+            "sha1": "05ec6d466b73be8973e9eff11dafc629885f8bd9",
+            "version": "v79"
         },
         {
-            "filename": "silver_coin_vertical_7.9",
+            "filename": "silver_coin_vertical_v79",
             "build-id": "ASSET_SPRITE_UNUSED_SILVERCOINVERTICAL",
             "folder": "unused",
             "type": "Sprite",
-            "sha1": "6d2ebc8d2cd71163d5097ead93625696125d3a64"
+            "sha1": "6d2ebc8d2cd71163d5097ead93625696125d3a64",
+            "version": "v79"
         },
         {
-            "filename": "banana_icon_7.9",
+            "filename": "banana_icon_v79",
             "build-id": "ASSET_SPRITE_HUD_BANANAICON",
             "folder": "hud",
             "type": "Sprite",
-            "sha1": "a6471acf30a3ecab0e097da5bbd5b597422e5c9b"
+            "sha1": "a6471acf30a3ecab0e097da5bbd5b597422e5c9b",
+            "version": "v79"
         },
         {
-            "filename": "sparkle_7.9",
+            "filename": "sparkle_v79",
             "build-id": "ASSET_SPRITE_PARTICLES_SPARKLE",
             "folder": "particles",
             "type": "Sprite",
-            "sha1": "704a1dcc2d3cda3041237e5c55c747f8b215bb18"
+            "sha1": "704a1dcc2d3cda3041237e5c55c747f8b215bb18",
+            "version": "v79"
         },
         {
-            "filename": "debug_egg_creator_7.9",
+            "filename": "debug_egg_creator_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_DEBUGEGGCREATOR",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "a5c5505def28513df6edd5ccd475842498d87bea"
+            "sha1": "a5c5505def28513df6edd5ccd475842498d87bea",
+            "version": "v79"
         },
         {
-            "filename": "bonus_gem_7.9",
+            "filename": "bonus_gem_v79",
             "build-id": "ASSET_SPRITE_UNUSED_BONUSGEM",
             "folder": "unused",
             "type": "Sprite",
-            "sha1": "054106dc3e1adf3beccabaca20ecabad2317be9c"
+            "sha1": "054106dc3e1adf3beccabaca20ecabad2317be9c",
+            "version": "v79"
         },
         {
-            "filename": "indicator_icon_caution_7.9",
+            "filename": "indicator_icon_caution_v79",
             "build-id": "ASSET_SPRITE_HUD_INDICATORICONCAUTION",
             "folder": "hud",
             "type": "Sprite",
-            "sha1": "f63fbd66e270f0f29ed0725fa6d2745d5ec9e2ba"
+            "sha1": "f63fbd66e270f0f29ed0725fa6d2745d5ec9e2ba",
+            "version": "v79"
         },
         {
-            "filename": "indicator_icon_down_7.9",
+            "filename": "indicator_icon_down_v79",
             "build-id": "ASSET_SPRITE_HUD_INDICATORICONDOWN",
             "folder": "hud",
             "type": "Sprite",
-            "sha1": "e45d853b4e56e1baaa4ebb745cb7a7bebacc8f8f"
+            "sha1": "e45d853b4e56e1baaa4ebb745cb7a7bebacc8f8f",
+            "version": "v79"
         },
         {
-            "filename": "indicator_icon_uturn_7.9",
+            "filename": "indicator_icon_uturn_v79",
             "build-id": "ASSET_SPRITE_HUD_INDICATORICONUTURN",
             "folder": "hud",
             "type": "Sprite",
-            "sha1": "25fd7efb31c5d86751baae4c1e9d5323e0e27c1a"
+            "sha1": "25fd7efb31c5d86751baae4c1e9d5323e0e27c1a",
+            "version": "v79"
         },
         {
-            "filename": "indicator_icon_turn_7.9",
+            "filename": "indicator_icon_turn_v79",
             "build-id": "ASSET_SPRITE_HUD_INDICATORICONTURN",
             "folder": "hud",
             "type": "Sprite",
-            "sha1": "35003f0a3aae4a7f97003a61cefd1ab8d2cef877"
+            "sha1": "35003f0a3aae4a7f97003a61cefd1ab8d2cef877",
+            "version": "v79"
         },
         {
-            "filename": "indicator_icon_slight_turn_7.9",
+            "filename": "indicator_icon_slight_turn_v79",
             "build-id": "ASSET_SPRITE_HUD_INDICATORICONSLIGHTTURN",
             "folder": "hud",
             "type": "Sprite",
-            "sha1": "8eaa8fffa5d18f7e8ab224ef9e3cac635b8b23e6"
+            "sha1": "8eaa8fffa5d18f7e8ab224ef9e3cac635b8b23e6",
+            "version": "v79"
         },
         {
-            "filename": "smoke_object_7.9",
+            "filename": "smoke_object_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_SMOKEOBJECT",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "650cb06f3026592ab332170822994d941ad4ea67"
+            "sha1": "650cb06f3026592ab332170822994d941ad4ea67",
+            "version": "v79"
         },
         {
-            "filename": "smoke_cloud_7.9",
+            "filename": "smoke_cloud_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_SMOKECLOUD",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "d1ab3235f4f1624bc651d818ab7f6e8cc37f7906"
+            "sha1": "d1ab3235f4f1624bc651d818ab7f6e8cc37f7906",
+            "version": "v79"
         },
         {
-            "filename": "smoke_grass_7.9",
+            "filename": "smoke_grass_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_SMOKEGRASS",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "7932bbdcce8b7d903da5d35ccbb18a10a568253e"
+            "sha1": "7932bbdcce8b7d903da5d35ccbb18a10a568253e",
+            "version": "v79"
         },
         {
-            "filename": "mist_7.9",
+            "filename": "mist_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_MIST",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "97bb7f7ccabc1d1e542f7f8488977969fb90e240"
+            "sha1": "97bb7f7ccabc1d1e542f7f8488977969fb90e240",
+            "version": "v79"
         },
         {
-            "filename": "flaming_torch_7.9",
+            "filename": "flaming_torch_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_FLAMINGTORCH",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "9f416e60b70973d6934cee07ff5ba00f5efbb94b"
+            "sha1": "9f416e60b70973d6934cee07ff5ba00f5efbb94b",
+            "version": "v79"
         },
         {
-            "filename": "splash_7.9",
+            "filename": "splash_v79",
             "build-id": "ASSET_SPRITE_UNUSED_SPLASH",
             "folder": "unused",
             "type": "Sprite",
-            "sha1": "ff292056736ceee590259fa224fcf321a27debe0"
+            "sha1": "ff292056736ceee590259fa224fcf321a27debe0",
+            "version": "v79"
         },
         {
-            "filename": "weapon_balloon_pop_7.9",
+            "filename": "weapon_balloon_pop_v79",
             "build-id": "ASSET_SPRITE_UNUSED_WEAPONBALLOONPOP",
             "folder": "unused",
             "type": "Sprite",
-            "sha1": "06db4a11133cdc4252fa7ac9df3f1dc413bd66e8"
+            "sha1": "06db4a11133cdc4252fa7ac9df3f1dc413bd66e8",
+            "version": "v79"
         },
         {
-            "filename": "lava_spurt_7.9",
+            "filename": "lava_spurt_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_LAVASPURT",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "1eb67863b2b05579c6d27caa99d5ecc40d207ead"
+            "sha1": "1eb67863b2b05579c6d27caa99d5ecc40d207ead",
+            "version": "v79"
         },
         {
-            "filename": "unknown_small_pop_7.9",
+            "filename": "unknown_small_pop_v79",
             "build-id": "ASSET_SPRITE_UNKNOWN_UNKNOWNSMALLPOP",
             "folder": "unknown",
             "type": "Sprite",
-            "sha1": "69a4ec323444d320a8e0e75655a2e91c941a4e82"
+            "sha1": "69a4ec323444d320a8e0e75655a2e91c941a4e82",
+            "version": "v79"
         },
         {
-            "filename": "tyre0_7.9",
+            "filename": "tyre0_v79",
             "build-id": "ASSET_SPRITE_VEHICLE_PARTS_TYRE0",
             "folder": "vehicle_parts",
             "type": "Sprite",
-            "sha1": "bbd25abfd7a331415be350c4969bb38509706128"
+            "sha1": "bbd25abfd7a331415be350c4969bb38509706128",
+            "version": "v79"
         },
         {
-            "filename": "tyre1_7.9",
+            "filename": "tyre1_v79",
             "build-id": "ASSET_SPRITE_VEHICLE_PARTS_TYRE1",
             "folder": "vehicle_parts",
             "type": "Sprite",
-            "sha1": "7652a48e20a4671c3c8e595f6c83af8cb82b21f6"
+            "sha1": "7652a48e20a4671c3c8e595f6c83af8cb82b21f6",
+            "version": "v79"
         },
         {
-            "filename": "tyre2_7.9",
+            "filename": "tyre2_v79",
             "build-id": "ASSET_SPRITE_VEHICLE_PARTS_TYRE2",
             "folder": "vehicle_parts",
             "type": "Sprite",
-            "sha1": "8f5712e736df207067a36fdcec24bee31cc97567"
+            "sha1": "8f5712e736df207067a36fdcec24bee31cc97567",
+            "version": "v79"
         },
         {
-            "filename": "tyre3_7.9",
+            "filename": "tyre3_v79",
             "build-id": "ASSET_SPRITE_VEHICLE_PARTS_TYRE3",
             "folder": "vehicle_parts",
             "type": "Sprite",
-            "sha1": "8b2393549344393f9ebde1a2b56ba66a78bcf423"
+            "sha1": "8b2393549344393f9ebde1a2b56ba66a78bcf423",
+            "version": "v79"
         },
         {
-            "filename": "fan0_7.9",
+            "filename": "fan0_v79",
             "build-id": "ASSET_SPRITE_VEHICLE_PARTS_FAN0",
             "folder": "vehicle_parts",
             "type": "Sprite",
-            "sha1": "de85cbf1b3e819f858e15b0e3d366435f706595f"
+            "sha1": "de85cbf1b3e819f858e15b0e3d366435f706595f",
+            "version": "v79"
         },
         {
-            "filename": "fan1_7.9",
+            "filename": "fan1_v79",
             "build-id": "ASSET_SPRITE_VEHICLE_PARTS_FAN1",
             "folder": "vehicle_parts",
             "type": "Sprite",
-            "sha1": "648e563a79873630c2c984b36db5a6b80ed0f9a5"
+            "sha1": "648e563a79873630c2c984b36db5a6b80ed0f9a5",
+            "version": "v79"
         },
         {
-            "filename": "propeller0_7.9",
+            "filename": "propeller0_v79",
             "build-id": "ASSET_SPRITE_VEHICLE_PARTS_PROPELLER0",
             "folder": "vehicle_parts",
             "type": "Sprite",
-            "sha1": "1fcda8a7fdc1497d582bcc3072a73da20957945c"
+            "sha1": "1fcda8a7fdc1497d582bcc3072a73da20957945c",
+            "version": "v79"
         },
         {
-            "filename": "propeller1_7.9",
+            "filename": "propeller1_v79",
             "build-id": "ASSET_SPRITE_VEHICLE_PARTS_PROPELLER1",
             "folder": "vehicle_parts",
             "type": "Sprite",
-            "sha1": "3b7542c7a2f3aa300ef9a0e94ac38d82dcfc2500"
+            "sha1": "3b7542c7a2f3aa300ef9a0e94ac38d82dcfc2500",
+            "version": "v79"
         },
         {
-            "filename": "rare_letters_7.9",
+            "filename": "rare_letters_v79",
             "build-id": "ASSET_SPRITE_UNUSED_RARELETTERS",
             "folder": "unused",
             "type": "Sprite",
-            "sha1": "a8c2cc4939a93b5ee2c2bc600c1490b6ecdeccb7"
+            "sha1": "a8c2cc4939a93b5ee2c2bc600c1490b6ecdeccb7",
+            "version": "v79"
         },
         {
-            "filename": "bolt_glow_7.9",
+            "filename": "bolt_glow_v79",
             "build-id": "ASSET_SPRITE_OBJECTS_BOLTGLOW",
             "folder": "objects",
             "type": "Sprite",
-            "sha1": "d135ecb5924413c55c0cad6ddd13a5f56fb857e4"
+            "sha1": "d135ecb5924413c55c0cad6ddd13a5f56fb857e4",
+            "version": "v79"
         },
         {
-            "filename": "icon_trophy_7.9",
+            "filename": "icon_trophy_v79",
             "build-id": "ASSET_SPRITE_MENU_ICONTROPHY",
             "folder": "menu",
             "type": "Sprite",
-            "sha1": "1fcd858a394094fa2e853a96dbea7e80b69f3c7f"
+            "sha1": "1fcd858a394094fa2e853a96dbea7e80b69f3c7f",
+            "version": "v79"
         },
         {
-            "filename": "icon_key_7.9",
+            "filename": "icon_key_v79",
             "build-id": "ASSET_SPRITE_MENU_ICONKEY",
             "folder": "menu",
             "type": "Sprite",
-            "sha1": "7873769bc069186fb1c079f83fb7d396571a4a40"
+            "sha1": "7873769bc069186fb1c079f83fb7d396571a4a40",
+            "version": "v79"
         },
         {
-            "filename": "icon_tt_amulet_7.9",
-            "build-id": "ASSET_SPRITE_MENU_ICONTTAMULET",
+            "filename": "icon_wizpig_amulet_v79",
+            "build-id": "ASSET_SPRITE_MENU_ICONWIZPIGAMULET",
             "folder": "menu",
             "type": "Sprite",
-            "sha1": "6e37f657cf8e528ba10f4cae8db357bf28418202"
+            "sha1": "6e37f657cf8e528ba10f4cae8db357bf28418202",
+            "version": "v79"
         },
         {
-            "filename": "magic_codes_7.9",
+            "filename": "magic_codes_v79",
             "build-id": "ASSET_MISC_MAGIC_CODES",
             "misc-type": "MagicCodes",
             "folder": "cheats",
             "type": "Miscellaneous",
-            "sha1": "e62388ef2ec31af8352be16c6073c15d93d62110"
+            "sha1": "e62388ef2ec31af8352be16c6073c15d93d62110",
+            "version": "v79"
+        },
+        {
+            "filename": "menu_element_ids_v79",
+            "build-id": "ASSET_MENU_ELEMENT_IDS",
+            "type": "Binary",
+            "sha1": "74a5d93bb16b708652952b6c779adca9ca4e951b",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_LEVEL_OBJECT_MAPS_6",
-            "filename": "asset_level_object_maps_6_7.9",
+            "filename": "asset_level_object_maps_6_v79",
             "folder": "unknown",
             "sha1": "f893a0166d38ef8fc82593599a057980f896f668",
-            "type": "LevelObjectMap"
+            "type": "LevelObjectMap",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_LEVEL_OBJECT_MAPS_18",
-            "filename": "asset_level_object_maps_18_7.9",
+            "filename": "asset_level_object_maps_18_v79",
             "folder": "unknown",
             "sha1": "4294e434b4841fa056de4a6593167ed77cce589f",
-            "type": "LevelObjectMap"
+            "type": "LevelObjectMap",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_LEVEL_OBJECT_MAPS_87",
-            "filename": "asset_level_object_maps_87_7.9",
+            "filename": "asset_level_object_maps_87_v79",
             "folder": "unknown",
             "sha1": "aaf6c5d614e4679a134cab44bf86bc2b02d8f752",
-            "type": "LevelObjectMap"
+            "type": "LevelObjectMap",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_LEVEL_OBJECT_MAPS_129",
-            "filename": "asset_level_object_maps_129_7.9",
+            "filename": "asset_level_object_maps_129_v79",
             "folder": "unknown",
             "sha1": "9869c32a01adbe155c38ad7de680088b335c0851",
-            "type": "LevelObjectMap"
+            "type": "LevelObjectMap",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_LEVEL_OBJECT_MAPS_131",
-            "filename": "asset_level_object_maps_131_7.9",
+            "filename": "asset_level_object_maps_131_v79",
             "folder": "unknown",
             "sha1": "f38ac0b2f7a9a1729ef4a69e4cfd32625508811f",
-            "type": "LevelObjectMap"
+            "type": "LevelObjectMap",
+            "version": "v79"
         },
         {
-            "filename": "CentralAreaHub_7.9",
+            "filename": "CentralAreaHub_v79",
             "build-id": "ASSET_LEVEL_CENTRALAREAHUB",
             "type": "LevelHeader",
-            "sha1": "3ab50616e0447042822af0604b22673032e65a58"
+            "sha1": "3ab50616e0447042822af0604b22673032e65a58",
+            "version": "v79"
         },
         {
-            "filename": "Bluey1_7.9",
+            "filename": "Bluey1_v79",
             "build-id": "ASSET_LEVEL_BLUEY1",
             "type": "LevelHeader",
-            "sha1": "57aa6005862d4bd7ddf1f865b787fde21c1f27b1"
+            "sha1": "57aa6005862d4bd7ddf1f865b787fde21c1f27b1",
+            "version": "v79"
         },
         {
-            "filename": "DragonForestHub_7.9",
+            "filename": "DragonForestHub_v79",
             "build-id": "ASSET_LEVEL_DRAGONFORESTHUB",
             "type": "LevelHeader",
-            "sha1": "e142ab0703dad7249401ff7ec57f4214921c5a63"
+            "sha1": "e142ab0703dad7249401ff7ec57f4214921c5a63",
+            "version": "v79"
         },
         {
-            "filename": "FossilCanyon_7.9",
+            "filename": "FossilCanyon_v79",
             "build-id": "ASSET_LEVEL_FOSSILCANYON",
             "type": "LevelHeader",
-            "sha1": "6c9d38ff6c77ad0ddcbb981f22a860fc2f5bffe1"
+            "sha1": "6c9d38ff6c77ad0ddcbb981f22a860fc2f5bffe1",
+            "version": "v79"
         },
         {
-            "filename": "PirateLagoon_7.9",
+            "filename": "PirateLagoon_v79",
             "build-id": "ASSET_LEVEL_PIRATELAGOON",
             "type": "LevelHeader",
-            "sha1": "699c008dcf1a793389f8317b803093cc21cc0042"
+            "sha1": "699c008dcf1a793389f8317b803093cc21cc0042",
+            "version": "v79"
         },
         {
-            "filename": "AncientLake_7.9",
+            "filename": "AncientLake_v79",
             "build-id": "ASSET_LEVEL_ANCIENTLAKE",
             "type": "LevelHeader",
-            "sha1": "459e5e94766b9055f2b4c37a382fd21f0705b130"
+            "sha1": "459e5e94766b9055f2b4c37a382fd21f0705b130",
+            "version": "v79"
         },
         {
-            "filename": "WalrusCove_7.9",
+            "filename": "WalrusCove_v79",
             "build-id": "ASSET_LEVEL_WALRUSCOVE",
             "type": "LevelHeader",
-            "sha1": "853aefd96cbdf27d555fdd26faaf01fdbd258e7e"
+            "sha1": "853aefd96cbdf27d555fdd26faaf01fdbd258e7e",
+            "version": "v79"
         },
         {
-            "filename": "HotTopVolcano_7.9",
+            "filename": "HotTopVolcano_v79",
             "build-id": "ASSET_LEVEL_HOTTOPVOLCANO",
             "type": "LevelHeader",
-            "sha1": "5907579e82bf3d3e0f1e395395fd4c9befb1e419"
+            "sha1": "5907579e82bf3d3e0f1e395395fd4c9befb1e419",
+            "version": "v79"
         },
         {
-            "filename": "WhaleBay_7.9",
+            "filename": "WhaleBay_v79",
             "build-id": "ASSET_LEVEL_WHALEBAY",
             "type": "LevelHeader",
-            "sha1": "ae61f763d86061bcafdcb32583a7caa8828029ed"
+            "sha1": "ae61f763d86061bcafdcb32583a7caa8828029ed",
+            "version": "v79"
         },
         {
-            "filename": "SnowballValley_7.9",
+            "filename": "SnowballValley_v79",
             "build-id": "ASSET_LEVEL_SNOWBALLVALLEY",
             "type": "LevelHeader",
-            "sha1": "5a68a73b4e3c0e181312b1ba88265b0c55cafb07"
+            "sha1": "5a68a73b4e3c0e181312b1ba88265b0c55cafb07",
+            "version": "v79"
         },
         {
-            "filename": "CrescentIsland_7.9",
+            "filename": "CrescentIsland_v79",
             "build-id": "ASSET_LEVEL_CRESCENTISLAND",
             "type": "LevelHeader",
-            "sha1": "bb411a9204da4d4845c2d0f597600522748b2725"
+            "sha1": "bb411a9204da4d4845c2d0f597600522748b2725",
+            "version": "v79"
         },
         {
-            "filename": "FireMountain_7.9",
+            "filename": "FireMountain_v79",
             "build-id": "ASSET_LEVEL_FIREMOUNTAIN",
             "type": "LevelHeader",
-            "sha1": "9c81ad18c4238cf9e75ebc53b0af76a34e17c74e"
+            "sha1": "9c81ad18c4238cf9e75ebc53b0af76a34e17c74e",
+            "version": "v79"
         },
         {
-            "filename": "DinoDomainHub_7.9",
+            "filename": "DinoDomainHub_v79",
             "build-id": "ASSET_LEVEL_DINODOMAINHUB",
             "type": "LevelHeader",
-            "sha1": "8f5882fa996477afd067052eda82857813aee3d5"
+            "sha1": "8f5882fa996477afd067052eda82857813aee3d5",
+            "version": "v79"
         },
         {
-            "filename": "EverfrostPeak_7.9",
+            "filename": "EverfrostPeak_v79",
             "build-id": "ASSET_LEVEL_EVERFROSTPEAK",
             "type": "LevelHeader",
-            "sha1": "c99cfa89c6ae18264d86331e54cdaa1c19cb3ef7"
+            "sha1": "c99cfa89c6ae18264d86331e54cdaa1c19cb3ef7",
+            "version": "v79"
         },
         {
-            "filename": "SherbetIslandHub_7.9",
+            "filename": "SherbetIslandHub_v79",
             "build-id": "ASSET_LEVEL_SHERBETISLANDHUB",
             "type": "LevelHeader",
-            "sha1": "1bc958b3f6508c110fd704fd7c0ba1456739fbc4"
+            "sha1": "1bc958b3f6508c110fd704fd7c0ba1456739fbc4",
+            "version": "v79"
         },
         {
-            "filename": "SpaceportAlpha_7.9",
+            "filename": "SpaceportAlpha_v79",
             "build-id": "ASSET_LEVEL_SPACEPORTALPHA",
             "type": "LevelHeader",
-            "sha1": "d82f286994258dc2fcbdd5a2e2d6bafc9f3c5e3b"
+            "sha1": "d82f286994258dc2fcbdd5a2e2d6bafc9f3c5e3b",
+            "version": "v79"
         },
         {
-            "filename": "HorseshoeGulch_7.9",
+            "filename": "HorseshoeGulch_v79",
             "build-id": "ASSET_LEVEL_HORSESHOEGULCH",
             "type": "LevelHeader",
-            "sha1": "26146b879f8819f8faacb483acec9493f5572996"
+            "sha1": "26146b879f8819f8faacb483acec9493f5572996",
+            "version": "v79"
         },
         {
-            "filename": "SpacedustAlley_7.9",
+            "filename": "SpacedustAlley_v79",
             "build-id": "ASSET_LEVEL_SPACEDUSTALLEY",
             "type": "LevelHeader",
-            "sha1": "f0b0b4ef160769fb49d173f1db19b062d6164da0"
+            "sha1": "f0b0b4ef160769fb49d173f1db19b062d6164da0",
+            "version": "v79"
         },
         {
-            "filename": "GreenwoodVillage_7.9",
+            "filename": "GreenwoodVillage_v79",
             "build-id": "ASSET_LEVEL_GREENWOODVILLAGE",
             "type": "LevelHeader",
-            "sha1": "483dedf9a289fe5ffe6b0dc7a2e9ef8a4fb45c29"
+            "sha1": "483dedf9a289fe5ffe6b0dc7a2e9ef8a4fb45c29",
+            "version": "v79"
         },
         {
-            "filename": "BoulderCanyon_7.9",
+            "filename": "BoulderCanyon_v79",
             "build-id": "ASSET_LEVEL_BOULDERCANYON",
             "type": "LevelHeader",
-            "sha1": "6b919512c3f807de9794b0616cba02c10f0ed624"
+            "sha1": "6b919512c3f807de9794b0616cba02c10f0ed624",
+            "version": "v79"
         },
         {
-            "filename": "WindmillPlains_7.9",
+            "filename": "WindmillPlains_v79",
             "build-id": "ASSET_LEVEL_WINDMILLPLAINS",
             "type": "LevelHeader",
-            "sha1": "634944dd96c16759bdc393ddc89ac25d8f532768"
+            "sha1": "634944dd96c16759bdc393ddc89ac25d8f532768",
+            "version": "v79"
         },
         {
-            "filename": "FrontEnd_7.9",
+            "filename": "FrontEnd_v79",
             "build-id": "ASSET_LEVEL_FRONTEND",
             "type": "LevelHeader",
-            "sha1": "63862b0e8f4f2089879a88952bd5b7d0135037c8"
+            "sha1": "63862b0e8f4f2089879a88952bd5b7d0135037c8",
+            "version": "v79"
         },
         {
-            "filename": "CharacterSelect_7.9",
+            "filename": "CharacterSelect_v79",
             "build-id": "ASSET_LEVEL_CHARACTERSELECT",
             "type": "LevelHeader",
-            "sha1": "4f6b716d015874d62353f019f9cd6966a1cbd1af"
+            "sha1": "4f6b716d015874d62353f019f9cd6966a1cbd1af",
+            "version": "v79"
         },
         {
-            "filename": "TitleScreenSequence_7.9",
+            "filename": "TitleScreenSequence_v79",
             "build-id": "ASSET_LEVEL_TITLESCREENSEQUENCE",
             "type": "LevelHeader",
-            "sha1": "84bb2947e8264ccb76eb3e032530333e885d8aa8"
+            "sha1": "84bb2947e8264ccb76eb3e032530333e885d8aa8",
+            "version": "v79"
         },
         {
-            "filename": "SnowflakeMountainHub_7.9",
+            "filename": "SnowflakeMountainHub_v79",
             "build-id": "ASSET_LEVEL_SNOWFLAKEMOUNTAINHUB",
             "type": "LevelHeader",
-            "sha1": "b6ff07570e8c36cf5c5653ef70fc40a76406d98c"
+            "sha1": "b6ff07570e8c36cf5c5653ef70fc40a76406d98c",
+            "version": "v79"
         },
         {
-            "filename": "SmokeyCastle_7.9",
+            "filename": "SmokeyCastle_v79",
             "build-id": "ASSET_LEVEL_SMOKEYCASTLE",
             "type": "LevelHeader",
-            "sha1": "c55a07238bc1f663e73cec0645dba54c23df6240"
+            "sha1": "c55a07238bc1f663e73cec0645dba54c23df6240",
+            "version": "v79"
         },
         {
-            "filename": "DarkwaterBeach_7.9",
+            "filename": "DarkwaterBeach_v79",
             "build-id": "ASSET_LEVEL_DARKWATERBEACH",
             "type": "LevelHeader",
-            "sha1": "b4b280afae5aa7c59692026322e2f21d97b4bd3a"
+            "sha1": "b4b280afae5aa7c59692026322e2f21d97b4bd3a",
+            "version": "v79"
         },
         {
-            "filename": "IciclePyramid_7.9",
+            "filename": "IciclePyramid_v79",
             "build-id": "ASSET_LEVEL_ICICLEPYRAMID",
             "type": "LevelHeader",
-            "sha1": "d56e155f9ba3b2248621a8ab209c495120ecdb7e"
+            "sha1": "d56e155f9ba3b2248621a8ab209c495120ecdb7e",
+            "version": "v79"
         },
         {
-            "filename": "FrostyVillage_7.9",
+            "filename": "FrostyVillage_v79",
             "build-id": "ASSET_LEVEL_FROSTYVILLAGE",
             "type": "LevelHeader",
-            "sha1": "73d35c6ba23b07f21c3896af12ce7f5d4c5116c3"
+            "sha1": "73d35c6ba23b07f21c3896af12ce7f5d4c5116c3",
+            "version": "v79"
         },
         {
-            "filename": "JungleFalls_7.9",
+            "filename": "JungleFalls_v79",
             "build-id": "ASSET_LEVEL_JUNGLEFALLS",
             "type": "LevelHeader",
-            "sha1": "a6594f2211f12c54e7007cb2f97a1e294d6baefb"
+            "sha1": "a6594f2211f12c54e7007cb2f97a1e294d6baefb",
+            "version": "v79"
         },
         {
-            "filename": "TreasureCaves_7.9",
+            "filename": "TreasureCaves_v79",
             "build-id": "ASSET_LEVEL_TREASURECAVES",
             "type": "LevelHeader",
-            "sha1": "ddd605cb35031d8a2d64538e6f7dd400660dc8de"
+            "sha1": "ddd605cb35031d8a2d64538e6f7dd400660dc8de",
+            "version": "v79"
         },
         {
-            "filename": "HauntedWoods_7.9",
+            "filename": "HauntedWoods_v79",
             "build-id": "ASSET_LEVEL_HAUNTEDWOODS",
             "type": "LevelHeader",
-            "sha1": "14d52b8c7b79feae269174ec1e6c17f76a61344f"
+            "sha1": "14d52b8c7b79feae269174ec1e6c17f76a61344f",
+            "version": "v79"
         },
         {
-            "filename": "DarkmoonCaverns_7.9",
+            "filename": "DarkmoonCaverns_v79",
             "build-id": "ASSET_LEVEL_DARKMOONCAVERNS",
             "type": "LevelHeader",
-            "sha1": "9867570918942d9d7f545a417b8cb58c4f367d40"
+            "sha1": "9867570918942d9d7f545a417b8cb58c4f367d40",
+            "version": "v79"
         },
         {
-            "filename": "StarCity_7.9",
+            "filename": "StarCity_v79",
             "build-id": "ASSET_LEVEL_STARCITY",
             "type": "LevelHeader",
-            "sha1": "2c6aef6ecc3ebea86ee3045ae2f1e54d7e84b74e"
+            "sha1": "2c6aef6ecc3ebea86ee3045ae2f1e54d7e84b74e",
+            "version": "v79"
         },
         {
-            "filename": "TrophyRace_7.9",
+            "filename": "TrophyRace_v79",
             "build-id": "ASSET_LEVEL_TROPHYRACE",
             "type": "LevelHeader",
-            "sha1": "2c041d8812fac208a5e985e99274cf593342c5fa"
+            "sha1": "2c041d8812fac208a5e985e99274cf593342c5fa",
+            "version": "v79"
         },
         {
-            "filename": "FutureFunLandHub_7.9",
+            "filename": "FutureFunLandHub_v79",
             "build-id": "ASSET_LEVEL_FUTUREFUNLANDHUB",
             "type": "LevelHeader",
-            "sha1": "7358d934091e517dafabf016e4310864977e4da5"
+            "sha1": "7358d934091e517dafabf016e4310864977e4da5",
+            "version": "v79"
         },
         {
-            "filename": "OpeningSequence_7.9",
+            "filename": "OpeningSequence_v79",
             "build-id": "ASSET_LEVEL_OPENINGSEQUENCE",
             "type": "LevelHeader",
-            "sha1": "cf622574e5e8e89763afcfae361cb80e9f5155b2"
+            "sha1": "cf622574e5e8e89763afcfae361cb80e9f5155b2",
+            "version": "v79"
         },
         {
-            "filename": "Wizpig1_7.9",
+            "filename": "Wizpig1_v79",
             "build-id": "ASSET_LEVEL_WIZPIG1",
             "type": "LevelHeader",
-            "sha1": "cae79b3f06b7ab5b89265d1e515a5c50cd3f801d"
+            "sha1": "cae79b3f06b7ab5b89265d1e515a5c50cd3f801d",
+            "version": "v79"
         },
         {
-            "filename": "Trickytops1_7.9",
+            "filename": "Trickytops1_v79",
             "build-id": "ASSET_LEVEL_TRICKYTOPS1",
             "type": "LevelHeader",
-            "sha1": "7c92a539a6f67e983fcfffb1c686b4350d34a5d0"
+            "sha1": "7c92a539a6f67e983fcfffb1c686b4350d34a5d0",
+            "version": "v79"
         },
         {
-            "filename": "OptionsBackground_7.9",
+            "filename": "OptionsBackground_v79",
             "build-id": "ASSET_LEVEL_OPTIONSBACKGROUND",
             "type": "LevelHeader",
-            "sha1": "0b91574eb93ae6fb3394a6da829a0e5e836e688d"
+            "sha1": "0b91574eb93ae6fb3394a6da829a0e5e836e688d",
+            "version": "v79"
         },
         {
-            "filename": "Bubbler1_7.9",
+            "filename": "Bubbler1_v79",
             "build-id": "ASSET_LEVEL_BUBBLER1",
             "type": "LevelHeader",
-            "sha1": "4a070a8346778ba9ae0e74c033e5851b06e7a931"
+            "sha1": "4a070a8346778ba9ae0e74c033e5851b06e7a931",
+            "version": "v79"
         },
         {
-            "filename": "Smokey1_7.9",
+            "filename": "Smokey1_v79",
             "build-id": "ASSET_LEVEL_SMOKEY1",
             "type": "LevelHeader",
-            "sha1": "9c5470b93c055286cd91a26a7c0d6498c900a512"
+            "sha1": "9c5470b93c055286cd91a26a7c0d6498c900a512",
+            "version": "v79"
         },
         {
-            "filename": "WizpigMouthSequence_7.9",
+            "filename": "WizpigMouthSequence_v79",
             "build-id": "ASSET_LEVEL_WIZPIGMOUTHSEQUENCE",
             "type": "LevelHeader",
-            "sha1": "6a3065a69a9b85c78c80d70b951e6a7f31af1ee9"
+            "sha1": "6a3065a69a9b85c78c80d70b951e6a7f31af1ee9",
+            "version": "v79"
         },
         {
-            "filename": "WizpigAmuletSequence_7.9",
+            "filename": "WizpigAmuletSequence_v79",
             "build-id": "ASSET_LEVEL_WIZPIGAMULETSEQUENCE",
             "type": "LevelHeader",
-            "sha1": "ff3f6a0a1f39db0b80a4c48aff6d6b2ac6551c5c"
+            "sha1": "ff3f6a0a1f39db0b80a4c48aff6d6b2ac6551c5c",
+            "version": "v79"
         },
         {
-            "filename": "TTAmuletSequence_7.9",
+            "filename": "TTAmuletSequence_v79",
             "build-id": "ASSET_LEVEL_TTAMULETSEQUENCE",
             "type": "LevelHeader",
-            "sha1": "525ca967ea70a6fd098d7fbd2f323ba79bf5841f"
+            "sha1": "525ca967ea70a6fd098d7fbd2f323ba79bf5841f",
+            "version": "v79"
         },
         {
-            "filename": "RocketSequence_7.9",
+            "filename": "RocketSequence_v79",
             "build-id": "ASSET_LEVEL_ROCKETSEQUENCE",
             "type": "LevelHeader",
-            "sha1": "b58c78d1673d54bf8c9a8a083af3d4f51fbf6357"
+            "sha1": "b58c78d1673d54bf8c9a8a083af3d4f51fbf6357",
+            "version": "v79"
         },
         {
-            "filename": "Trickytops2_7.9",
+            "filename": "Trickytops2_v79",
             "build-id": "ASSET_LEVEL_TRICKYTOPS2",
             "type": "LevelHeader",
-            "sha1": "e71fd2791531bc8ad0659a0707239d23d10af320"
+            "sha1": "e71fd2791531bc8ad0659a0707239d23d10af320",
+            "version": "v79"
         },
         {
-            "filename": "DinoDomainTrophyAnim_7.9",
+            "filename": "DinoDomainTrophyAnim_v79",
             "build-id": "ASSET_LEVEL_DINODOMAINTROPHYANIM",
             "type": "LevelHeader",
-            "sha1": "fac3071fdcea4457fe419b4cb36346cbaffd76f7"
+            "sha1": "fac3071fdcea4457fe419b4cb36346cbaffd76f7",
+            "version": "v79"
         },
         {
-            "filename": "SnowflakeMountainTrophyAnim_7.9",
+            "filename": "SnowflakeMountainTrophyAnim_v79",
             "build-id": "ASSET_LEVEL_SNOWFLAKEMOUNTAINTROPHYANIM",
             "type": "LevelHeader",
-            "sha1": "ee66a231ed0ba746c4346a3f810356b06826c877"
+            "sha1": "ee66a231ed0ba746c4346a3f810356b06826c877",
+            "version": "v79"
         },
         {
-            "filename": "SherbetIslandTrophyAnim_7.9",
+            "filename": "SherbetIslandTrophyAnim_v79",
             "build-id": "ASSET_LEVEL_SHERBETISLANDTROPHYANIM",
             "type": "LevelHeader",
-            "sha1": "3d51a930d2631b17976b87f0141ed6c56e42d044"
+            "sha1": "3d51a930d2631b17976b87f0141ed6c56e42d044",
+            "version": "v79"
         },
         {
-            "filename": "DragonForestTrophyAnim_7.9",
+            "filename": "DragonForestTrophyAnim_v79",
             "build-id": "ASSET_LEVEL_DRAGONFORESTTROPHYANIM",
             "type": "LevelHeader",
-            "sha1": "35c7d3ad1f47a35d8d0017dc47241fda6c84b284"
+            "sha1": "35c7d3ad1f47a35d8d0017dc47241fda6c84b284",
+            "version": "v79"
         },
         {
-            "filename": "FutureFunLandTrophyAnim_7.9",
+            "filename": "FutureFunLandTrophyAnim_v79",
             "build-id": "ASSET_LEVEL_FUTUREFUNLANDTROPHYANIM",
             "type": "LevelHeader",
-            "sha1": "e86529dda343274a683211535cc3ebb767864942"
+            "sha1": "e86529dda343274a683211535cc3ebb767864942",
+            "version": "v79"
         },
         {
-            "filename": "Bluey2_7.9",
+            "filename": "Bluey2_v79",
             "build-id": "ASSET_LEVEL_BLUEY2",
             "type": "LevelHeader",
-            "sha1": "1354995fb63d07b3bde7204e97436b5aef023325"
+            "sha1": "1354995fb63d07b3bde7204e97436b5aef023325",
+            "version": "v79"
         },
         {
-            "filename": "Bubbler2_7.9",
+            "filename": "Bubbler2_v79",
             "build-id": "ASSET_LEVEL_BUBBLER2",
             "type": "LevelHeader",
-            "sha1": "0c00c4f516f66dd0fbe9da7e4a6fe3035ef129e4"
+            "sha1": "0c00c4f516f66dd0fbe9da7e4a6fe3035ef129e4",
+            "version": "v79"
         },
         {
-            "filename": "Smokey2_7.9",
+            "filename": "Smokey2_v79",
             "build-id": "ASSET_LEVEL_SMOKEY2",
             "type": "LevelHeader",
-            "sha1": "5b36c89bbfcc01b61b093db2848c42b649ea3f84"
+            "sha1": "5b36c89bbfcc01b61b093db2848c42b649ea3f84",
+            "version": "v79"
         },
         {
-            "filename": "Wizpig2_7.9",
+            "filename": "Wizpig2_v79",
             "build-id": "ASSET_LEVEL_WIZPIG2",
             "type": "LevelHeader",
-            "sha1": "eec55885faa6db754a85bc266a5decb738b15d2c"
+            "sha1": "eec55885faa6db754a85bc266a5decb738b15d2c",
+            "version": "v79"
         },
         {
-            "filename": "PartySequence_7.9",
+            "filename": "PartySequence_v79",
             "build-id": "ASSET_LEVEL_PARTYSEQUENCE",
             "type": "LevelHeader",
-            "sha1": "91ede38aa7006f043deb2a36b91adb8587dcf85b"
+            "sha1": "91ede38aa7006f043deb2a36b91adb8587dcf85b",
+            "version": "v79"
         },
         {
-            "filename": "TricktopsAnim_7.9",
+            "filename": "TricktopsAnim_v79",
             "build-id": "ASSET_LEVEL_TRICKTOPSANIM",
             "type": "LevelHeader",
-            "sha1": "cf3b2936190632ae43c122b51a94b3d70c86f647"
+            "sha1": "cf3b2936190632ae43c122b51a94b3d70c86f647",
+            "version": "v79"
         },
         {
-            "filename": "SmokeyAnim_7.9",
+            "filename": "SmokeyAnim_v79",
             "build-id": "ASSET_LEVEL_SMOKEYANIM",
             "type": "LevelHeader",
-            "sha1": "9becf40b0c13292bf40194973478117195414ffa"
+            "sha1": "9becf40b0c13292bf40194973478117195414ffa",
+            "version": "v79"
         },
         {
-            "filename": "BlueyAnim_7.9",
+            "filename": "BlueyAnim_v79",
             "build-id": "ASSET_LEVEL_BLUEYANIM",
             "type": "LevelHeader",
-            "sha1": "a1f9345fa5d2a79633f0c0936aa67be12de257bd"
+            "sha1": "a1f9345fa5d2a79633f0c0936aa67be12de257bd",
+            "version": "v79"
         },
         {
-            "filename": "Wizpig1Anim_7.9",
+            "filename": "Wizpig1Anim_v79",
             "build-id": "ASSET_LEVEL_WIZPIG1ANIM",
             "type": "LevelHeader",
-            "sha1": "1b68677f26e712e621fec72b88905a78a464961f"
+            "sha1": "1b68677f26e712e621fec72b88905a78a464961f",
+            "version": "v79"
         },
         {
-            "filename": "BubblerAnim_7.9",
+            "filename": "BubblerAnim_v79",
             "build-id": "ASSET_LEVEL_BUBBLERANIM",
             "type": "LevelHeader",
-            "sha1": "65531fdd141616c996cbf7a5055d20d06ffe92ca"
+            "sha1": "65531fdd141616c996cbf7a5055d20d06ffe92ca",
+            "version": "v79"
         },
         {
-            "filename": "Wizpig2Anim_7.9",
+            "filename": "Wizpig2Anim_v79",
             "build-id": "ASSET_LEVEL_WIZPIG2ANIM",
             "type": "LevelHeader",
-            "sha1": "a242d05d4e14c95894e382f32aba3e5fb458d3f0"
+            "sha1": "a242d05d4e14c95894e382f32aba3e5fb458d3f0",
+            "version": "v79"
         },
         {
-            "filename": "LastBit_7.9",
+            "filename": "LastBit_v79",
             "build-id": "ASSET_LEVEL_LASTBIT",
             "type": "LevelHeader",
-            "sha1": "a915e8c224bca224888a10a5f8a0a6d31b593309"
+            "sha1": "a915e8c224bca224888a10a5f8a0a6d31b593309",
+            "version": "v79"
         },
         {
-            "filename": "LastBitB_7.9",
+            "filename": "LastBitB_v79",
             "build-id": "ASSET_LEVEL_LASTBITB",
             "type": "LevelHeader",
-            "sha1": "65fe0bee76596823b38af34ece85287d6c436c5e"
+            "sha1": "65fe0bee76596823b38af34ece85287d6c436c5e",
+            "version": "v79"
         },
         {
-            "filename": "CentralAreaHubName_7.9",
+            "filename": "CentralAreaHubName_v79",
             "build-id": "ASSET_LEVELNAME_CENTRALAREAHUB",
             "type": "LevelName",
-            "sha1": "c03c18b95400a8a479e12555b0143fcc9ff4c05a"
+            "sha1": "c03c18b95400a8a479e12555b0143fcc9ff4c05a",
+            "version": "v79"
         },
         {
-            "filename": "Bluey1Name_7.9",
+            "filename": "Bluey1Name_v79",
             "build-id": "ASSET_LEVELNAME_BLUEY1",
             "type": "LevelName",
-            "sha1": "037177d26d7643c4f4f7f37ed96bb381927d2c50"
+            "sha1": "037177d26d7643c4f4f7f37ed96bb381927d2c50",
+            "version": "v79"
         },
         {
-            "filename": "DragonForestHubName_7.9",
+            "filename": "DragonForestHubName_v79",
             "build-id": "ASSET_LEVELNAME_DRAGONFORESTHUB",
             "type": "LevelName",
-            "sha1": "b5f94a54164d5a81f88322fa2c56063c6eea50ab"
+            "sha1": "b5f94a54164d5a81f88322fa2c56063c6eea50ab",
+            "version": "v79"
         },
         {
-            "filename": "FossilCanyonName_7.9",
+            "filename": "FossilCanyonName_v79",
             "build-id": "ASSET_LEVELNAME_FOSSILCANYON",
             "type": "LevelName",
-            "sha1": "583a04f7c855060cf51c5dc112d3669bdf17cbe0"
+            "sha1": "583a04f7c855060cf51c5dc112d3669bdf17cbe0",
+            "version": "v79"
         },
         {
-            "filename": "PirateLagoonName_7.9",
+            "filename": "PirateLagoonName_v79",
             "build-id": "ASSET_LEVELNAME_PIRATELAGOON",
             "type": "LevelName",
-            "sha1": "2f56a6b4e37b06b8bd0c94cd77029d87f8e48308"
+            "sha1": "2f56a6b4e37b06b8bd0c94cd77029d87f8e48308",
+            "version": "v79"
         },
         {
-            "filename": "AncientLakeName_7.9",
+            "filename": "AncientLakeName_v79",
             "build-id": "ASSET_LEVELNAME_ANCIENTLAKE",
             "type": "LevelName",
-            "sha1": "2efdcee061075cb9ba111f9843988f3d21056ddd"
+            "sha1": "2efdcee061075cb9ba111f9843988f3d21056ddd",
+            "version": "v79"
         },
         {
-            "filename": "WalrusCoveName_7.9",
+            "filename": "WalrusCoveName_v79",
             "build-id": "ASSET_LEVELNAME_WALRUSCOVE",
             "type": "LevelName",
-            "sha1": "952bcb2fff125b37dbf24720605de863922ab6e4"
+            "sha1": "952bcb2fff125b37dbf24720605de863922ab6e4",
+            "version": "v79"
         },
         {
-            "filename": "HotTopVolcanoName_7.9",
+            "filename": "HotTopVolcanoName_v79",
             "build-id": "ASSET_LEVELNAME_HOTTOPVOLCANO",
             "type": "LevelName",
-            "sha1": "3fe629df8527dd564ea19f53ef1ddf5d6cfd75cf"
+            "sha1": "3fe629df8527dd564ea19f53ef1ddf5d6cfd75cf",
+            "version": "v79"
         },
         {
-            "filename": "WhaleBayName_7.9",
+            "filename": "WhaleBayName_v79",
             "build-id": "ASSET_LEVELNAME_WHALEBAY",
             "type": "LevelName",
-            "sha1": "d74085df6c13deccb8ddab4863210f9a74b886d9"
+            "sha1": "d74085df6c13deccb8ddab4863210f9a74b886d9",
+            "version": "v79"
         },
         {
-            "filename": "SnowballValleyName_7.9",
+            "filename": "SnowballValleyName_v79",
             "build-id": "ASSET_LEVELNAME_SNOWBALLVALLEY",
             "type": "LevelName",
-            "sha1": "dde015c59653a0557af43c21d09a27f2b2ca5d24"
+            "sha1": "dde015c59653a0557af43c21d09a27f2b2ca5d24",
+            "version": "v79"
         },
         {
-            "filename": "CrescentIslandName_7.9",
+            "filename": "CrescentIslandName_v79",
             "build-id": "ASSET_LEVELNAME_CRESCENTISLAND",
             "type": "LevelName",
-            "sha1": "7aee43f028f89305d21c3e16505f1b0bc29b90f2"
+            "sha1": "7aee43f028f89305d21c3e16505f1b0bc29b90f2",
+            "version": "v79"
         },
         {
-            "filename": "FireMountainName_7.9",
+            "filename": "FireMountainName_v79",
             "build-id": "ASSET_LEVELNAME_FIREMOUNTAIN",
             "type": "LevelName",
-            "sha1": "ec284428c869d26fbb876bdbddec65829687297f"
+            "sha1": "ec284428c869d26fbb876bdbddec65829687297f",
+            "version": "v79"
         },
         {
-            "filename": "DinoDomainHubName_7.9",
+            "filename": "DinoDomainHubName_v79",
             "build-id": "ASSET_LEVELNAME_DINODOMAINHUB",
             "type": "LevelName",
-            "sha1": "dc1b61ada385599c68b3e6f95a60b8f614a2522a"
+            "sha1": "dc1b61ada385599c68b3e6f95a60b8f614a2522a",
+            "version": "v79"
         },
         {
-            "filename": "EverfrostPeakName_7.9",
+            "filename": "EverfrostPeakName_v79",
             "build-id": "ASSET_LEVELNAME_EVERFROSTPEAK",
             "type": "LevelName",
-            "sha1": "7b9f948d77269ed8eaf54ae60f24f6d0493f5053"
+            "sha1": "7b9f948d77269ed8eaf54ae60f24f6d0493f5053",
+            "version": "v79"
         },
         {
-            "filename": "SherbetIslandHubName_7.9",
+            "filename": "SherbetIslandHubName_v79",
             "build-id": "ASSET_LEVELNAME_SHERBETISLANDHUB",
             "type": "LevelName",
-            "sha1": "a4b41f4497dc3a282aed5f5ba554526048331f82"
+            "sha1": "a4b41f4497dc3a282aed5f5ba554526048331f82",
+            "version": "v79"
         },
         {
-            "filename": "SpaceportAlphaName_7.9",
+            "filename": "SpaceportAlphaName_v79",
             "build-id": "ASSET_LEVELNAME_SPACEPORTALPHA",
             "type": "LevelName",
-            "sha1": "cf78901ef3ff570014c07b6084381a858e72e12d"
+            "sha1": "cf78901ef3ff570014c07b6084381a858e72e12d",
+            "version": "v79"
         },
         {
-            "filename": "HorseshoeGulchName_7.9",
+            "filename": "HorseshoeGulchName_v79",
             "build-id": "ASSET_LEVELNAME_HORSESHOEGULCH",
             "type": "LevelName",
-            "sha1": "872b1fdacb07e8ee2c9e08f7f6c3c5132589c3ad"
+            "sha1": "872b1fdacb07e8ee2c9e08f7f6c3c5132589c3ad",
+            "version": "v79"
         },
         {
-            "filename": "SpacedustAlleyName_7.9",
+            "filename": "SpacedustAlleyName_v79",
             "build-id": "ASSET_LEVELNAME_SPACEDUSTALLEY",
             "type": "LevelName",
-            "sha1": "3ef7574b8bad97fb8dcb7acac5697ad098f768b2"
+            "sha1": "3ef7574b8bad97fb8dcb7acac5697ad098f768b2",
+            "version": "v79"
         },
         {
-            "filename": "GreenwoodVillageName_7.9",
+            "filename": "GreenwoodVillageName_v79",
             "build-id": "ASSET_LEVELNAME_GREENWOODVILLAGE",
             "type": "LevelName",
-            "sha1": "112cbdb72069e058bdbdb22e087b166c9c60cd3b"
+            "sha1": "112cbdb72069e058bdbdb22e087b166c9c60cd3b",
+            "version": "v79"
         },
         {
-            "filename": "BoulderCanyonName_7.9",
+            "filename": "BoulderCanyonName_v79",
             "build-id": "ASSET_LEVELNAME_BOULDERCANYON",
             "type": "LevelName",
-            "sha1": "487be4a068cca62ce64c9fc8a6408682d5a3cf09"
+            "sha1": "487be4a068cca62ce64c9fc8a6408682d5a3cf09",
+            "version": "v79"
         },
         {
-            "filename": "WindmillPlainsName_7.9",
+            "filename": "WindmillPlainsName_v79",
             "build-id": "ASSET_LEVELNAME_WINDMILLPLAINS",
             "type": "LevelName",
-            "sha1": "5a4ecdc0e1e0e93e91ecd099128b7d7bf599e3bb"
+            "sha1": "5a4ecdc0e1e0e93e91ecd099128b7d7bf599e3bb",
+            "version": "v79"
         },
         {
-            "filename": "FrontEndName_7.9",
+            "filename": "FrontEndName_v79",
             "build-id": "ASSET_LEVELNAME_FRONTEND",
             "type": "LevelName",
-            "sha1": "076cf50c1702db6c47f1672ee94f451c268b0543"
+            "sha1": "076cf50c1702db6c47f1672ee94f451c268b0543",
+            "version": "v79"
         },
         {
-            "filename": "CharacterSelectName_7.9",
+            "filename": "CharacterSelectName_v79",
             "build-id": "ASSET_LEVELNAME_CHARACTERSELECT",
             "type": "LevelName",
-            "sha1": "4e195203f9f3cce235538f751d06b3e3f5c6565c"
+            "sha1": "4e195203f9f3cce235538f751d06b3e3f5c6565c",
+            "version": "v79"
         },
         {
-            "filename": "TitleScreenSequenceName_7.9",
+            "filename": "TitleScreenSequenceName_v79",
             "build-id": "ASSET_LEVELNAME_TITLESCREENSEQUENCE",
             "type": "LevelName",
-            "sha1": "4d88a271baf180d84ff19a7f2b1f0ed1785ee293"
+            "sha1": "4d88a271baf180d84ff19a7f2b1f0ed1785ee293",
+            "version": "v79"
         },
         {
-            "filename": "SnowflakeMountainHubName_7.9",
+            "filename": "SnowflakeMountainHubName_v79",
             "build-id": "ASSET_LEVELNAME_SNOWFLAKEMOUNTAINHUB",
             "type": "LevelName",
-            "sha1": "ee2079303621df8cdaddafff631f169b92134095"
+            "sha1": "ee2079303621df8cdaddafff631f169b92134095",
+            "version": "v79"
         },
         {
-            "filename": "SmokeyCastleName_7.9",
+            "filename": "SmokeyCastleName_v79",
             "build-id": "ASSET_LEVELNAME_SMOKEYCASTLE",
             "type": "LevelName",
-            "sha1": "27773e3a0838f126dc66f18a15f8090cb8f7a884"
+            "sha1": "27773e3a0838f126dc66f18a15f8090cb8f7a884",
+            "version": "v79"
         },
         {
-            "filename": "DarkwaterBeachName_7.9",
+            "filename": "DarkwaterBeachName_v79",
             "build-id": "ASSET_LEVELNAME_DARKWATERBEACH",
             "type": "LevelName",
-            "sha1": "7b0ddee411708f1dc5414f946849e4b571eec255"
+            "sha1": "7b0ddee411708f1dc5414f946849e4b571eec255",
+            "version": "v79"
         },
         {
-            "filename": "IciclePyramidName_7.9",
+            "filename": "IciclePyramidName_v79",
             "build-id": "ASSET_LEVELNAME_ICICLEPYRAMID",
             "type": "LevelName",
-            "sha1": "2cfef4798d7bc6feb50cca6a6ec05cdd0b8be128"
+            "sha1": "2cfef4798d7bc6feb50cca6a6ec05cdd0b8be128",
+            "version": "v79"
         },
         {
-            "filename": "FrostyVillageName_7.9",
+            "filename": "FrostyVillageName_v79",
             "build-id": "ASSET_LEVELNAME_FROSTYVILLAGE",
             "type": "LevelName",
-            "sha1": "a6e05c67baee5b148d752cfe45f5317d34b0b855"
+            "sha1": "a6e05c67baee5b148d752cfe45f5317d34b0b855",
+            "version": "v79"
         },
         {
-            "filename": "JungleFallsName_7.9",
+            "filename": "JungleFallsName_v79",
             "build-id": "ASSET_LEVELNAME_JUNGLEFALLS",
             "type": "LevelName",
-            "sha1": "05258dfc48d6bfc4cee56494cb99bb55d9c52bc6"
+            "sha1": "05258dfc48d6bfc4cee56494cb99bb55d9c52bc6",
+            "version": "v79"
         },
         {
-            "filename": "TreasureCavesName_7.9",
+            "filename": "TreasureCavesName_v79",
             "build-id": "ASSET_LEVELNAME_TREASURECAVES",
             "type": "LevelName",
-            "sha1": "3921290adac3e888355c988d591ca98fafffc76b"
+            "sha1": "3921290adac3e888355c988d591ca98fafffc76b",
+            "version": "v79"
         },
         {
-            "filename": "HauntedWoodsName_7.9",
+            "filename": "HauntedWoodsName_v79",
             "build-id": "ASSET_LEVELNAME_HAUNTEDWOODS",
             "type": "LevelName",
-            "sha1": "50024ebcd733d318ed6d1ab1fbfcf856d678faed"
+            "sha1": "50024ebcd733d318ed6d1ab1fbfcf856d678faed",
+            "version": "v79"
         },
         {
-            "filename": "DarkmoonCavernsName_7.9",
+            "filename": "DarkmoonCavernsName_v79",
             "build-id": "ASSET_LEVELNAME_DARKMOONCAVERNS",
             "type": "LevelName",
-            "sha1": "6ceb727cb974307d56ea2c19286d7f75444d99b0"
+            "sha1": "6ceb727cb974307d56ea2c19286d7f75444d99b0",
+            "version": "v79"
         },
         {
-            "filename": "StarCityName_7.9",
+            "filename": "StarCityName_v79",
             "build-id": "ASSET_LEVELNAME_STARCITY",
             "type": "LevelName",
-            "sha1": "18fb487ce8a1ba8211ddf8ede1f49685e1e574cc"
+            "sha1": "18fb487ce8a1ba8211ddf8ede1f49685e1e574cc",
+            "version": "v79"
         },
         {
-            "filename": "TrophyRaceName_7.9",
+            "filename": "TrophyRaceName_v79",
             "build-id": "ASSET_LEVELNAME_TROPHYRACE",
             "type": "LevelName",
-            "sha1": "c12b498a823ad0ad10c2374d2e58f282de50d09a"
+            "sha1": "c12b498a823ad0ad10c2374d2e58f282de50d09a",
+            "version": "v79"
         },
         {
-            "filename": "FutureFunLandHubName_7.9",
+            "filename": "FutureFunLandHubName_v79",
             "build-id": "ASSET_LEVELNAME_FUTUREFUNLANDHUB",
             "type": "LevelName",
-            "sha1": "87ad30c91877fc9ecdd63eb2d30b1b46a329e14f"
+            "sha1": "87ad30c91877fc9ecdd63eb2d30b1b46a329e14f",
+            "version": "v79"
         },
         {
-            "filename": "OpeningSequenceName_7.9",
+            "filename": "OpeningSequenceName_v79",
             "build-id": "ASSET_LEVELNAME_OPENINGSEQUENCE",
             "type": "LevelName",
-            "sha1": "44288922ea595e97e97bc63563a5a73b3011b40d"
+            "sha1": "44288922ea595e97e97bc63563a5a73b3011b40d",
+            "version": "v79"
         },
         {
-            "filename": "Wizpig1Name_7.9",
+            "filename": "Wizpig1Name_v79",
             "build-id": "ASSET_LEVELNAME_WIZPIG1",
             "type": "LevelName",
-            "sha1": "51116c287ac369a13f0961002b43f0ed145e6cd7"
+            "sha1": "51116c287ac369a13f0961002b43f0ed145e6cd7",
+            "version": "v79"
         },
         {
-            "filename": "Trickytops1Name_7.9",
+            "filename": "Trickytops1Name_v79",
             "build-id": "ASSET_LEVELNAME_TRICKYTOPS1",
             "type": "LevelName",
-            "sha1": "dda475f22b4242e46557feeb417001c2077ef766"
+            "sha1": "dda475f22b4242e46557feeb417001c2077ef766",
+            "version": "v79"
         },
         {
-            "filename": "OptionsBackgroundName_7.9",
+            "filename": "OptionsBackgroundName_v79",
             "build-id": "ASSET_LEVELNAME_OPTIONSBACKGROUND",
             "type": "LevelName",
-            "sha1": "7c400ad9486f697257ef21eb515c8ddf6bff7b3a"
+            "sha1": "7c400ad9486f697257ef21eb515c8ddf6bff7b3a",
+            "version": "v79"
         },
         {
-            "filename": "Bubbler1Name_7.9",
+            "filename": "Bubbler1Name_v79",
             "build-id": "ASSET_LEVELNAME_BUBBLER1",
             "type": "LevelName",
-            "sha1": "ef96a185c09addc919300694ea7cf0a2d9039332"
+            "sha1": "ef96a185c09addc919300694ea7cf0a2d9039332",
+            "version": "v79"
         },
         {
-            "filename": "Smokey1Name_7.9",
+            "filename": "Smokey1Name_v79",
             "build-id": "ASSET_LEVELNAME_SMOKEY1",
             "type": "LevelName",
-            "sha1": "c509b2e0366c8f94da775b90bb92d41c69dce618"
+            "sha1": "c509b2e0366c8f94da775b90bb92d41c69dce618",
+            "version": "v79"
         },
         {
-            "filename": "WizpigMouthSequenceName_7.9",
+            "filename": "WizpigMouthSequenceName_v79",
             "build-id": "ASSET_LEVELNAME_WIZPIGMOUTHSEQUENCE",
             "type": "LevelName",
-            "sha1": "d4035be066643b6f2bfdc56468ef4f23dffbe3db"
+            "sha1": "d4035be066643b6f2bfdc56468ef4f23dffbe3db",
+            "version": "v79"
         },
         {
-            "filename": "WizpigAmuletSequenceName_7.9",
+            "filename": "WizpigAmuletSequenceName_v79",
             "build-id": "ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE",
             "type": "LevelName",
-            "sha1": "2bf23b33c9a22babbae680384cae4592b7ad7710"
+            "sha1": "2bf23b33c9a22babbae680384cae4592b7ad7710",
+            "version": "v79"
         },
         {
-            "filename": "TTAmuletSequenceName_7.9",
+            "filename": "TTAmuletSequenceName_v79",
             "build-id": "ASSET_LEVELNAME_TTAMULETSEQUENCE",
             "type": "LevelName",
-            "sha1": "6b42f03ac7c93a9717443c8a15193ea9a1428873"
+            "sha1": "6b42f03ac7c93a9717443c8a15193ea9a1428873",
+            "version": "v79"
         },
         {
-            "filename": "RocketSequenceName_7.9",
+            "filename": "RocketSequenceName_v79",
             "build-id": "ASSET_LEVELNAME_ROCKETSEQUENCE",
             "type": "LevelName",
-            "sha1": "2713c239ae45981115dc3613fda67a7105b77611"
+            "sha1": "2713c239ae45981115dc3613fda67a7105b77611",
+            "version": "v79"
         },
         {
-            "filename": "Trickytops2Name_7.9",
+            "filename": "Trickytops2Name_v79",
             "build-id": "ASSET_LEVELNAME_TRICKYTOPS2",
             "type": "LevelName",
-            "sha1": "740b447c96c1ae6369e371b1599435e23ba1a53f"
+            "sha1": "740b447c96c1ae6369e371b1599435e23ba1a53f",
+            "version": "v79"
         },
         {
-            "filename": "DinoDomainTrophyAnimName_7.9",
+            "filename": "DinoDomainTrophyAnimName_v79",
             "build-id": "ASSET_LEVELNAME_DINODOMAINTROPHYANIM",
             "type": "LevelName",
-            "sha1": "d0a31a840391c839a690599eae2992185744d4fb"
+            "sha1": "d0a31a840391c839a690599eae2992185744d4fb",
+            "version": "v79"
         },
         {
-            "filename": "SnowflakeMountainTrophyAnimName_7.9",
+            "filename": "SnowflakeMountainTrophyAnimName_v79",
             "build-id": "ASSET_LEVELNAME_SNOWFLAKEMOUNTAINTROPHYANIM",
             "type": "LevelName",
-            "sha1": "2e03f230ca4cc85315e7338f9d42e9dbd7106433"
+            "sha1": "2e03f230ca4cc85315e7338f9d42e9dbd7106433",
+            "version": "v79"
         },
         {
-            "filename": "SherbetIslandTrophyAnimName_7.9",
+            "filename": "SherbetIslandTrophyAnimName_v79",
             "build-id": "ASSET_LEVELNAME_SHERBETISLANDTROPHYANIM",
             "type": "LevelName",
-            "sha1": "460094d19342ac6236f8b1d5da854f3cf078df0d"
+            "sha1": "460094d19342ac6236f8b1d5da854f3cf078df0d",
+            "version": "v79"
         },
         {
-            "filename": "DragonForestTrophyAnimName_7.9",
+            "filename": "DragonForestTrophyAnimName_v79",
             "build-id": "ASSET_LEVELNAME_DRAGONFORESTTROPHYANIM",
             "type": "LevelName",
-            "sha1": "0ac6257dc408839a632847102a28f0805cce6d3f"
+            "sha1": "0ac6257dc408839a632847102a28f0805cce6d3f",
+            "version": "v79"
         },
         {
-            "filename": "FutureFunLandTrophyAnimName_7.9",
+            "filename": "FutureFunLandTrophyAnimName_v79",
             "build-id": "ASSET_LEVELNAME_FUTUREFUNLANDTROPHYANIM",
             "type": "LevelName",
-            "sha1": "b98fd5e9c00c8a80ece64f7159882578c8e823da"
+            "sha1": "b98fd5e9c00c8a80ece64f7159882578c8e823da",
+            "version": "v79"
         },
         {
-            "filename": "Bluey2Name_7.9",
+            "filename": "Bluey2Name_v79",
             "build-id": "ASSET_LEVELNAME_BLUEY2",
             "type": "LevelName",
-            "sha1": "d6291eb8d23afa42bb4a3a527ac0643eba400448"
+            "sha1": "d6291eb8d23afa42bb4a3a527ac0643eba400448",
+            "version": "v79"
         },
         {
-            "filename": "Bubbler2Name_7.9",
+            "filename": "Bubbler2Name_v79",
             "build-id": "ASSET_LEVELNAME_BUBBLER2",
             "type": "LevelName",
-            "sha1": "ba4efb7103c5cf87fdb41b1b94a1a24b737e2a44"
+            "sha1": "ba4efb7103c5cf87fdb41b1b94a1a24b737e2a44",
+            "version": "v79"
         },
         {
-            "filename": "Smokey2Name_7.9",
+            "filename": "Smokey2Name_v79",
             "build-id": "ASSET_LEVELNAME_SMOKEY2",
             "type": "LevelName",
-            "sha1": "296e85a47323d2c7c2d10ced85187ff9254036b8"
+            "sha1": "296e85a47323d2c7c2d10ced85187ff9254036b8",
+            "version": "v79"
         },
         {
-            "filename": "Wizpig2Name_7.9",
+            "filename": "Wizpig2Name_v79",
             "build-id": "ASSET_LEVELNAME_WIZPIG2",
             "type": "LevelName",
-            "sha1": "d3492af0123adcc07285b1f9e0a8151c88ea00ba"
+            "sha1": "d3492af0123adcc07285b1f9e0a8151c88ea00ba",
+            "version": "v79"
         },
         {
-            "filename": "PartySequenceName_7.9",
+            "filename": "PartySequenceName_v79",
             "build-id": "ASSET_LEVELNAME_PARTYSEQUENCE",
             "type": "LevelName",
-            "sha1": "143eb9b97bc2cf99207987521306a8e5fb3f1d71"
+            "sha1": "143eb9b97bc2cf99207987521306a8e5fb3f1d71",
+            "version": "v79"
         },
         {
-            "filename": "TricktopsAnimName_7.9",
+            "filename": "TricktopsAnimName_v79",
             "build-id": "ASSET_LEVELNAME_TRICKTOPSANIM",
             "type": "LevelName",
-            "sha1": "76987b40f0f648b89682261d508c67cb28f97b14"
+            "sha1": "76987b40f0f648b89682261d508c67cb28f97b14",
+            "version": "v79"
         },
         {
-            "filename": "SmokeyAnimName_7.9",
+            "filename": "SmokeyAnimName_v79",
             "build-id": "ASSET_LEVELNAME_SMOKEYANIM",
             "type": "LevelName",
-            "sha1": "6f503121189929e896f6246d2256273c159b60c5"
+            "sha1": "6f503121189929e896f6246d2256273c159b60c5",
+            "version": "v79"
         },
         {
-            "filename": "BlueyAnimName_7.9",
+            "filename": "BlueyAnimName_v79",
             "build-id": "ASSET_LEVELNAME_BLUEYANIM",
             "type": "LevelName",
-            "sha1": "5d807f218ed9794431a86bc3bad7528410d70643"
+            "sha1": "5d807f218ed9794431a86bc3bad7528410d70643",
+            "version": "v79"
         },
         {
-            "filename": "Wizpig1AnimName_7.9",
+            "filename": "Wizpig1AnimName_v79",
             "build-id": "ASSET_LEVELNAME_WIZPIG1ANIM",
             "type": "LevelName",
-            "sha1": "64f6ab92faeaf84b4bdd8fab936d8f517964e030"
+            "sha1": "64f6ab92faeaf84b4bdd8fab936d8f517964e030",
+            "version": "v79"
         },
         {
-            "filename": "BubblerAnimName_7.9",
+            "filename": "BubblerAnimName_v79",
             "build-id": "ASSET_LEVELNAME_BUBBLERANIM",
             "type": "LevelName",
-            "sha1": "8743bd9be58c8b5610f450350465700d145bf19a"
+            "sha1": "8743bd9be58c8b5610f450350465700d145bf19a",
+            "version": "v79"
         },
         {
-            "filename": "Wizpig2AnimName_7.9",
+            "filename": "Wizpig2AnimName_v79",
             "build-id": "ASSET_LEVELNAME_WIZPIG2ANIM",
             "type": "LevelName",
-            "sha1": "a70b003068f310b401e51eca34e599f93928d7dd"
+            "sha1": "a70b003068f310b401e51eca34e599f93928d7dd",
+            "version": "v79"
         },
         {
-            "filename": "LastBitName_7.9",
+            "filename": "LastBitName_v79",
             "build-id": "ASSET_LEVELNAME_LASTBIT",
             "type": "LevelName",
-            "sha1": "fbff962412e8a9040d8f933ac30c5b8dac4792c6"
+            "sha1": "fbff962412e8a9040d8f933ac30c5b8dac4792c6",
+            "version": "v79"
         },
         {
-            "filename": "LastBitBName_7.9",
+            "filename": "LastBitBName_v79",
             "build-id": "ASSET_LEVELNAME_LASTBITB",
             "type": "LevelName",
-            "sha1": "ab58e50324fc78e47dc9d52adafcd904efa25d19"
+            "sha1": "ab58e50324fc78e47dc9d52adafcd904efa25d19",
+            "version": "v79"
         },
         {
-            "filename": "pirate_lagoon_7.9",
+            "filename": "pirate_lagoon_v79",
             "build-id": "ASSET_LEVELMODEL_PIRATELAGOON",
             "folder": "sherbet_island",
             "type": "LevelModel",
-            "sha1": "214863549c50c96d5aceb59657cb90b6cc2187f3"
+            "sha1": "214863549c50c96d5aceb59657cb90b6cc2187f3",
+            "version": "v79"
         },
         {
-            "filename": "crescent_island_7.9",
+            "filename": "crescent_island_v79",
             "build-id": "ASSET_LEVELMODEL_CRESCENTISLAND",
             "folder": "sherbet_island",
             "type": "LevelModel",
-            "sha1": "ccc9b60eac883c5b213f77a840174b3381d742f7"
+            "sha1": "ccc9b60eac883c5b213f77a840174b3381d742f7",
+            "version": "v79"
         },
         {
-            "filename": "fire_mountain_7.9",
+            "filename": "fire_mountain_v79",
             "build-id": "ASSET_LEVELMODEL_FIREMOUNTAIN",
             "folder": "dino_domain",
             "type": "LevelModel",
-            "sha1": "89754df3c98c6f7d692524c2c0a2517eb113fd29"
+            "sha1": "89754df3c98c6f7d692524c2c0a2517eb113fd29",
+            "version": "v79"
         },
         {
-            "filename": "spaceport_alpha_7.9",
+            "filename": "spaceport_alpha_v79",
             "build-id": "ASSET_LEVELMODEL_SPACEPORTALPHA",
             "folder": "future_fun_land",
             "type": "LevelModel",
-            "sha1": "b29378890d354467e9ace91f6f88a8fb0e075d51"
+            "sha1": "b29378890d354467e9ace91f6f88a8fb0e075d51",
+            "version": "v79"
         },
         {
-            "filename": "star_city_7.9",
+            "filename": "star_city_v79",
             "build-id": "ASSET_LEVELMODEL_STARCITY",
             "folder": "future_fun_land",
             "type": "LevelModel",
-            "sha1": "c42f572a49bd6d7cb79d640f0abe10a4374a1ef3"
+            "sha1": "c42f572a49bd6d7cb79d640f0abe10a4374a1ef3",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_AUDIO_7",
-            "filename": "asset_audio_7_7.9",
+            "filename": "asset_audio_7_v79",
             "folder": "unknown",
             "sha1": "b34110a6c19d32b6bd4ba6dcbd10aacda2b49113",
-            "type": "Audio"
+            "type": "Audio",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_PARTICLE_BEHAVIORS_0",
-            "filename": "asset_particle_behaviors_0_7.9",
+            "filename": "asset_particle_behaviors_0_v79",
             "folder": "unknown",
             "sha1": "f8497a470b13d4d62c626afa8d0cf6f954d5db35",
-            "type": "ParticleBehavior"
+            "type": "ParticleBehavior",
+            "version": "v79"
         },
         {
             "build-id": "ASSET_PARTICLE_BEHAVIORS_1",
-            "filename": "asset_particle_behaviors_1_7.9",
+            "filename": "asset_particle_behaviors_1_v79",
             "folder": "unknown",
             "sha1": "b235a069a22c0dd24462ea264e0a97925c1d078a",
-            "type": "ParticleBehavior"
+            "type": "ParticleBehavior",
+            "version": "v79"
         },
         {
-            "filename": "spaceport_alpha_8.0",
-            "build-id": "ASSET_LEVELMODEL_SPACEPORTALPHA",
-            "folder": "future_fun_land",
-            "type": "LevelModel",
-            "sha1": "630d4b3e8ca774bec6c3a179b0e0a27f1dd038ef"
+            "build-id": "ASSET_FONTS",
+            "filename": "fonts_v79",
+            "sha1": "4bc24a772953547c046d67e011804338880da241",
+            "type": "Fonts",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_JAPANESE_FONTS_TABLE",
+            "filename": "asset_japanese_fonts_table_v79",
+            "sha1": "fd5cd900959bfff5f859ffbc2a5d3a1bd78e27f2",
+            "type": "JPFontsTable",
+            "version": "v79"
+        },
+        {
+            "build-id": "ASSET_JAPANESE_FONTS",
+            "filename": "jp_fonts_v79",
+            "sha1": "3fb32ccabc14277b1c0ccedccd1bad024e905cae",
+            "type": "JPFonts",
+            "version": "v79"
         }
     ],
     "file-type-attributes": {
@@ -33248,7 +33777,13 @@
                 "ASSET_MENU_TEXT_SUBTITLESON",
                 "ASSET_MENU_TEXT_SUBTITLESOFF",
                 "ASSET_MENU_TEXT_CORRUPTDATA_0",
-                "ASSET_MENU_TEXT_CORRUPTDATA_1"
+                "ASSET_MENU_TEXT_CORRUPTDATA_1",
+                "ASSET_MENU_TEXT_UNKNOWN_186",
+                "ASSET_MENU_TEXT_UNKNOWN_187",
+                "ASSET_MENU_TEXT_UNKNOWN_188",
+                "ASSET_MENU_TEXT_UNKNOWN_189",
+                "ASSET_MENU_TEXT_UNKNOWN_190",
+                "ASSET_MENU_TEXT_UNKNOWN_191"
             ]
         }
     },
@@ -33424,7 +33959,8 @@
         {
             "build-id": "ASSET_ANIMATION_IDS",
             "folder": "objects",
-            "default-type": "Binary"
+            "default-type": "ObjectAnimationIdsTable",
+            "defer": true
         },
         {
             "build-id": "ASSET_OBJECT_ANIMATIONS_TABLE",
@@ -33496,7 +34032,6 @@
             "default-type": "Fonts"
         },
         {
-            "comment": "TODO: Can I make this into a normal table?",
             "build-id": "ASSET_JAPANESE_FONTS_TABLE",
             "folder": "fonts",
             "default-type": "JPFontsTable",

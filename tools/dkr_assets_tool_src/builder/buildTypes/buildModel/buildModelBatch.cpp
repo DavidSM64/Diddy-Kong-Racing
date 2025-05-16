@@ -38,7 +38,6 @@ void BuildModelBatch::set_material(std::optional<std::string> materialId) {
     _materialId = materialId;
 }
 
-
 size_t BuildModelBatch::number_of_triangles() {
     return _triangles.size();
 }
@@ -47,8 +46,13 @@ size_t BuildModelBatch::number_of_vertices() {
     return _vertices.size();
 }
 
-void BuildModelBatch::write_batch(DkrBatch* outBatch, DkrVertex*& outVertices, DkrTriangle*& outTriangles) {
-    outBatch->textureIndex = 0xFF;
+void BuildModelBatch::write_batch(const std::map<std::string, int> &materialIds, DkrBatch* outBatch, DkrVertex*& outVertices, DkrTriangle*& outTriangles) {
+    if(_materialId.has_value()) {
+        outBatch->textureIndex = materialIds.at(_materialId.value());
+    } else {
+        outBatch->textureIndex = 0xFF; // No texture
+    }
+    
     //outBatch->lightSource = 0; // 0xFF = vertex colors, 0 = Use generated normals.
     outBatch->flags = 0x00000003; // TODO
     
@@ -62,7 +66,12 @@ void BuildModelBatch::write_batch(DkrBatch* outBatch, DkrVertex*& outVertices, D
         outTriangles->vi0 = tri.a;
         outTriangles->vi1 = tri.b;
         outTriangles->vi2 = tri.c;
-        // TODO: UVs
+        outTriangles->uv0.u = tri.uv0.u;
+        outTriangles->uv0.v = tri.uv0.v;
+        outTriangles->uv1.u = tri.uv1.u;
+        outTriangles->uv1.v = tri.uv1.v;
+        outTriangles->uv2.u = tri.uv2.u;
+        outTriangles->uv2.v = tri.uv2.v;
         outTriangles++; // next out triangle.
     }
 }

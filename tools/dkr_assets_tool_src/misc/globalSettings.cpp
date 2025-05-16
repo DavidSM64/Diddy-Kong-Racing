@@ -141,15 +141,27 @@ std::optional<fs::path> GlobalSettings::find_decomp_root() {
 }
 
 fs::path GlobalSettings::get_decomp_path(std::string key, fs::path defaultSubpath) {
+    if(!defaultSubpath.empty()) {
+        DebugHelper::assert_(defaultSubpath.generic_string()[0] != '/',
+            "(GlobalSettings::get_decomp_path) HEY! defaultSubpath should not start with '/', it goes at the END.");
+    }
     std::optional<fs::path> decompRoot = find_decomp_root();
-    DebugHelper::assert_(decompRoot.has_value(), "(GlobalSettings::get_decomp_path) Could not find the DKR decomp folder!");
+    DebugHelper::assert_(decompRoot.has_value(), 
+        "(GlobalSettings::get_decomp_path) Could not find the DKR decomp folder!");
     return decompRoot.value() / get_value<fs::path>(key, defaultSubpath);
 }
 
-fs::path GlobalSettings::get_decomp_path_to_output_assets() {
+fs::path GlobalSettings::get_decomp_path_to_output_assets(bool fallbackToVanillaPath) {
     std::optional<fs::path> decompPath = get_decomp_path("/assets_subpath", "assets/");
     DebugHelper::assert_(decompPath.has_value(), "(GlobalSettings::get_decomp_path_to_output_assets) Could not find the DKR decomp folder!");
-    return decompPath.value() / get_dkr_version();
+    fs::path out = decompPath.value() / get_dkr_version();
+    
+    // Use vanilla directory if the output directory doesn't exist yet.
+    if(!FileHelper::path_exists(out) && fallbackToVanillaPath) {
+        return get_decomp_path_to_vanilla_assets();
+    }
+    
+    return out;
 }
 
 fs::path GlobalSettings::get_decomp_path_to_vanilla_assets() {

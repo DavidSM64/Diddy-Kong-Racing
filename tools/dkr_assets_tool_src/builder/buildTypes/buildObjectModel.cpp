@@ -9,28 +9,31 @@
 using namespace DkrAssetsTool;
 
 void BuildObjectModel::build(BuildInfo &info) {
+    const JsonFile &jsonFile = info.get_src_json_file();
+    
     // Vanilla models will just use the original raw binary.
-    if(info.srcFile->has("/raw")) {
-        std::string rawPath = info.srcFile->get_string("/raw");
+    if(jsonFile.has("/raw")) {
+        std::string rawPath = jsonFile.get_string("/raw");
         
-        // Copy file from rawPath to destination path.
+        fs::path dir = info.get_path_to_directory();
+        
         if(info.build_to_file()) {
             // Copy file from rawPath to destination path.
-            FileHelper::copy(info.localDirectory / rawPath, info.dstPath);
+            info.copy_to_dstPath(dir / rawPath);
         } else {
             // Load raw binary into info's out
-            info.out = FileHelper::read_binary_file(info.localDirectory / rawPath);
+            info.out = FileHelper::read_binary_file(dir / rawPath);
         }
         return;
     }
     
     // Custom models should support .obj (simple static models) and .gltf (for animated models)
     
-    std::string localPathToModel = info.srcFile->get_string("/model");
+    std::string localPathToModel = jsonFile.get_string("/model");
     
     DebugHelper::assert_(!localPathToModel.empty(), "(BuildObjectModel::build) \"model\" property not specified!");
     
-    fs::path modelPath = info.localDirectory / localPathToModel;
+    fs::path modelPath = info.get_path_to_directory() / localPathToModel;
     
     std::string modelExtension = modelPath.extension().generic_string();
     
@@ -39,7 +42,7 @@ void BuildObjectModel::build(BuildInfo &info) {
     
     if(modelExtension == ".obj") {
         ObjBuildModel objModel(modelPath);
-        objModel.generate_object_model(info.dstPath);
+        objModel.generate_object_model(info);
     } else if(modelExtension == ".gltf") {
         DebugHelper::error("(BuildObjectModel::build) TODO: GLTF support");
     } else {

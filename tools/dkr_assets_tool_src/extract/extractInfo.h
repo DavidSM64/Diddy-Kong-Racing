@@ -21,6 +21,7 @@ class ExtractStats;
 namespace DeferredExtractions {
     void add_extraction(std::string key, ExtractInfo newExtract);
     ExtractInfo &get_extraction(std::string key, size_t index);
+    ExtractInfo &get_extraction(std::string key, std::string buildId);
 }
 
 class ExtractInfo {
@@ -28,6 +29,8 @@ public:
     ExtractInfo(std::string &type, std::string buildId, fs::path filename, fs::path folder, BytesView view, 
         AssetExtractConfig &config, std::string sectionPtr, CContext &ctx, size_t fileIndex, ExtractStats &stats);
     ~ExtractInfo();
+    
+    void replace_info(std::string &type, fs::path filename, fs::path folder, BytesView view, std::string sectionPtr, size_t fileIndex);
     
     void set_tag(const std::string &key, const std::any elem);
     
@@ -53,7 +56,7 @@ public:
     const BytesView &get_view() const;
     size_t get_data_size() const;
     
-    const CContext &get_c_context() const;
+    CContext &get_c_context() const;
     const AssetExtractConfig &get_config() const;
     ExtractStats &get_stats() const;
     

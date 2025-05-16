@@ -61,7 +61,7 @@ bool compile_check_order_files_updated(size_t modOrderCount, const JsonFile &mod
             continue;
         }
         
-        fs::path modPath = GlobalSettings::get_decomp_path("mods_subpath", "mods/");
+        fs::path modPath = GlobalSettings::get_decomp_path("mods-subpath", "mods/") / "assets";
         
         // Make sure the path is valid.
         check_mod_path(modPath);
@@ -115,7 +115,7 @@ void merge_and_copy_files(size_t modOrderCount, const JsonFile &modOrderFile, st
             continue;
         }
         
-        modDirectories[i] = GlobalSettings::get_decomp_path("mods_subdir", "mods/") / modFolderName;
+        modDirectories[i] = GlobalSettings::get_decomp_path("mods-subdir", "mods/") / "assets" / modFolderName;
         
         // Make sure the path exists.
         check_mod_path(modDirectories[i]); 
@@ -127,7 +127,7 @@ void merge_and_copy_files(size_t modOrderCount, const JsonFile &modOrderFile, st
         
             fs::path modName = modDir.stem();
             
-            fs::path extractedDir = GlobalSettings::get_decomp_path("mods_subdir", "mods/") / ".extracted";
+            fs::path extractedDir = GlobalSettings::get_decomp_path("mods-subdir", "mods/") / "assets" / ".extracted";
             
             const bool zipFileHasChanged = DataHelper::vector_has<fs::path>(modFilesModified, modDir);
             
@@ -144,7 +144,7 @@ void merge_and_copy_files(size_t modOrderCount, const JsonFile &modOrderFile, st
                 file.extractall(extractedDir);
             }
             
-            modDir = GlobalSettings::get_decomp_path("mods_subdir", "mods/") / ".extracted" / modName;
+            modDir = GlobalSettings::get_decomp_path("mods-subdir", "mods/") / "assets" / ".extracted" / modName;
             
             DebugHelper::assert_(FileHelper::path_exists(modDir), 
                 "(merge_and_copy_files) Path ", modDir, " does not exist!");
@@ -164,23 +164,21 @@ void merge_and_copy_files(size_t modOrderCount, const JsonFile &modOrderFile, st
     }
 }
 void compile_assets(size_t modOrderCount, const JsonFile &modOrderFile, StatJsonFile &statFile, std::vector<fs::path> &modFilesModified) {
-    DebugHelper::info("Compiling assets...");
-    
     statFile.set_value<int>("/last-order-size", modOrderCount);
     
     fs::path vanillaDir = GlobalSettings::get_decomp_path_to_vanilla_assets();
-    fs::path outDir = GlobalSettings::get_decomp_path_to_output_assets();
+    fs::path outDir = GlobalSettings::get_decomp_path_to_output_assets(false);
     
-    // First clear the output directory (if it exists)
+    // Clear the output directory (if it exists)
     FileHelper::delete_directory(outDir);
-    
-    // Copy all the vanilla files over to the output directory
-    FileHelper::copy(vanillaDir, outDir, true);
     
     if(modOrderCount == 0) {
         DebugHelper::info("Done! (Vanilla)");
         return;
     }
+    
+    // Copy all the vanilla files over to the output directory
+    FileHelper::copy(vanillaDir, outDir, true);
     
     merge_and_copy_files(modOrderCount, modOrderFile, modFilesModified);
     
@@ -188,13 +186,20 @@ void compile_assets(size_t modOrderCount, const JsonFile &modOrderFile, StatJson
 }
 
 void CompileAssets::compile() {
+    DebugHelper::info("Compiling modded assets...");
+    
     std::vector<fs::path> modFilesModified;
     
     StatJsonFile statFile(GlobalSettings::get_decomp_path("cache_subdir", ".cache/") / "compileAssetsCache.json");
     
     // Load order.json
-    auto tryGetModOrderFile = JsonHelper::get_file(GlobalSettings::get_decomp_path("mods_subdir", "mods/") / "order.json");
-    DebugHelper::assert_(tryGetModOrderFile.has_value(), "Failed to get order.json for compiling!");
+    auto tryGetModOrderFile = JsonHelper::get_file(GlobalSettings::get_decomp_path("mods-subdir", "mods/") / "assets/order.json");
+    
+    if(!tryGetModOrderFile.has_value()) {
+        DebugHelper::warn("Could not find mods/assets/order.json");
+        return;
+    }
+    
     const JsonFile &modOrderFile = tryGetModOrderFile.value();
 
     size_t modOrderCount = modOrderFile.length_of_array("/order");

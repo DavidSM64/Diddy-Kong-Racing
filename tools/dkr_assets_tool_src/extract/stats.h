@@ -14,12 +14,15 @@ namespace DkrAssetsTool {
 typedef struct ExtractStatInfo {
     std::string buildId;
     fs::path outFilepath;
+    fs::path localPath;
 } ExtractStatInfo;
 
 // TODO: This needs a better name.
 class ExtractStats {
 public:
     void add_info(std::string sectionBuildId, ExtractStatInfo newInfo);
+    
+    void replace_info(std::string sectionBuildId, std::string buildId, fs::path newOutFilepath);
     
     // Returns std::nullopt if not in the map
     std::optional<size_t> try_get_file_index_of_build_id(std::string sectionBuildId, std::string fileBuildId) const;
@@ -35,6 +38,8 @@ public:
     fs::path get_output_filepath_from_file_index(std::string sectionBuildId, size_t fileIndex=0) const;
     const JsonFile &get_json(std::string sectionBuildId, size_t fileIndex=0) const;
     const JsonFile &get_json(std::string sectionBuildId, std::string fileBuildId) const;
+    
+    void print_section_counts() const;
     
     // Tags are for setting/getting generic info between different types.
     void set_tag(const std::string &key, const std::any elem);

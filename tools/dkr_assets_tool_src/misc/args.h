@@ -9,8 +9,7 @@ namespace Args {
     enum ToolCommand {
         NOCMD,
         EXTRACT,
-        BUILD,
-        PREBUILD
+        BUILD
     };
 
     void parse(int argc, char* argv[]);
@@ -22,6 +21,8 @@ namespace Args {
 
     void print_help();
     std::string get_dkr_version();
+    
+    bool is_modded(); // Was the -m flag set?
 };
 
 }

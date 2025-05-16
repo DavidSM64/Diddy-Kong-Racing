@@ -1,14 +1,16 @@
 {
-    "default_dkr_version": "us_1.0",
-    "baseroms_subpath" : "baseroms/",
-    "assets_subpath" : "assets/",
-    "configs_subpath" : "extract-ver/",
-    "include_subpath" : "include/",
-    "asm_subpath" : "asm/",
-    "build_subpath" : "build/",
-    "data_subpath" : "data/",
-    "model_scale": 0.001,
+    "extract-config" : "tools/dkr_assets_tool_extract.json",
+    "baseroms-subpath" : "baseroms/",
+    "assets-subpath" : "assets/",
+    "configs-subpath" : "extract-ver/",
+    "include-subpath" : "include/",
+    "asm-subpath" : "asm/",
+    "build-subpath" : "build/",
+    "data-subpath" : "data/",
+    "model-scale": 0.001,
+    "threads" : 0,
     "debug": {
-        "keep-uncompressed": true
+        "keep-uncompressed": true,
+        "write-assets-map": false
     }
 }

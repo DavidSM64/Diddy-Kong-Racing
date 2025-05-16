@@ -12,19 +12,21 @@ void BuildLOTT::build(BuildInfo &info){
     
     LOTT_ENTRY *entries = reinterpret_cast<LOTT_ENTRY *>(&info.out[0]);
     
-    size_t numberOfEntries = info.srcFile->length_of_array("/table");
+    const JsonFile &jsonFile = info.get_src_json_file();
+    
+    size_t numberOfEntries = jsonFile.length_of_array("/table");
     
     DebugHelper::assert(numberOfEntries <= LOTT_SIZE,
         "(BuildLOTT::build) The Level-Object Translation Table has too many entries! Can only have ", LOTT_SIZE, " entries.");
 
     for(size_t i = 0; i < numberOfEntries; i++) {
         std::string ptr = "/table/" + std::to_string(i);
-        if(info.srcFile->is_value_null(ptr)) {
+        if(jsonFile.is_value_null(ptr)) {
             entries[i] = LOTT_SIZE;
             continue;
         }
         // Not null.
-        std::string entryId = info.srcFile->get_string(ptr);
+        std::string entryId = jsonFile.get_string(ptr);
         if(entryId.empty()) { 
             entries[i] = LOTT_SIZE;
             continue;

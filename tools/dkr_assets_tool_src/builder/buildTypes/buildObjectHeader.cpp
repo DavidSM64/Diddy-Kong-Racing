@@ -9,8 +9,8 @@
 
 using namespace DkrAssetsTool;
 
-be_uint16_t string_to_flags(BuildInfo &info) {
-    size_t flagCount = info.srcFile->length_of_array("/flags");
+be_uint16_t string_to_flags(BuildInfo &info, const JsonFile &jsonFile) {
+    size_t flagCount = jsonFile.length_of_array("/flags");
     
     if(flagCount < 1) {
         return 0;
@@ -19,7 +19,7 @@ be_uint16_t string_to_flags(BuildInfo &info) {
     uint16_t result = 0;
     
     for(size_t i = 0; i < flagCount; i++) {
-        std::string curFlag = info.srcFile->get_string_uppercase("/flags/" + std::to_string(i));
+        std::string curFlag = jsonFile.get_string_uppercase("/flags/" + std::to_string(i));
         uint16_t flagVal;
         if(StringHelper::starts_with(curFlag, "FLAG_")) {
             std::string flagHexVal = curFlag.substr(5);
@@ -37,13 +37,17 @@ be_uint16_t string_to_flags(BuildInfo &info) {
 }
 
 void BuildObjectHeader::build(BuildInfo &info) {
-    info.load_enums_into_c_context({ "enums.h", "object_behaviors.h" });
+    if(info.build_to_file()) {
+        info.load_enums_into_c_context({ "enums.h", "object_behaviors.h" });
+    }
+    
+    const JsonFile &jsonFile = info.get_src_json_file();
     
     // Get the counts for each section.
-    size_t numberOfModels = info.srcFile->length_of_array("/models");
-    size_t numberOfVehicleParts = info.srcFile->length_of_array("/vehicle-parts");
-    size_t numberOfParticles = info.srcFile->length_of_array("/particles");
-    size_t numberOfJunkBytes = info.srcFile->length_of_array("/junk-data");
+    size_t numberOfModels = jsonFile.length_of_array("/models");
+    size_t numberOfVehicleParts = jsonFile.length_of_array("/vehicle-parts");
+    size_t numberOfParticles = jsonFile.length_of_array("/particles");
+    size_t numberOfJunkBytes = jsonFile.length_of_array("/junk-data");
     
     // Calculate size & offsets to the different sections.
     size_t outSize = sizeof(ObjectHeader);
@@ -68,9 +72,9 @@ void BuildObjectHeader::build(BuildInfo &info) {
     ObjectHeaderParticleData *particles = reinterpret_cast<ObjectHeaderParticleData *>(&info.out[offsetToParticles]);
     uint8_t *junkData = &info.out[offsetToJunkData];
     
-    std::string modelType = info.srcFile->get_string("/model-type");
+    std::string modelType = jsonFile.get_string("/model-type");
     
-    const CContext &cContext = info.get_c_context();
+    CContext &cContext = info.get_c_context();
     
     /** Object Header **/
     
@@ -83,8 +87,8 @@ void BuildObjectHeader::build(BuildInfo &info) {
     objectHeader->unk24              = offsetToJunkData;
     
     // Behavior
-    if(info.srcFile->has("/behavior")) {
-        std::string behavior = info.srcFile->get_string("/behavior");
+    if(jsonFile.has("/behavior")) {
+        std::string behavior = jsonFile.get_string("/behavior");
         objectHeader->behaviorId = cContext.get_int_value_of_symbol(behavior);
     } else {
         objectHeader->behaviorId = -1;
@@ -94,57 +98,57 @@ void BuildObjectHeader::build(BuildInfo &info) {
     objectHeader->modelType = cContext.get_int_value_of_symbol(modelType);
     
     // Flags
-    objectHeader->flags = string_to_flags(info);
+    objectHeader->flags = string_to_flags(info, jsonFile);
     
     // Internal Name
-    std::string internalName = info.srcFile->get_string("/internal-name");
+    std::string internalName = jsonFile.get_string("/internal-name");
     std::strncpy(objectHeader->internalName, internalName.c_str(), internalName.size());
     
     // Floats
-    objectHeader->shadowScale = info.srcFile->get_float("/shadow-scale");
-    objectHeader->scale = info.srcFile->get_float("/scale");
-    objectHeader->shadeBrightness = info.srcFile->get_float("/shade-brightness");
-    objectHeader->shadeAmbient = info.srcFile->get_float("/shade-ambient");
+    objectHeader->shadowScale = jsonFile.get_float("/shadow-scale");
+    objectHeader->scale = jsonFile.get_float("/scale");
+    objectHeader->shadeBrightness = jsonFile.get_float("/shade-brightness");
+    objectHeader->shadeAmbient = jsonFile.get_float("/shade-ambient");
     
     // Unknowns
-    objectHeader->unk0 = info.srcFile->get_int("/unknown/unk0");
-    objectHeader->unk8 = info.srcFile->get_float("/unknown/unk8");
-    objectHeader->unk34 = info.srcFile->get_int("/unknown/unk34");
-    objectHeader->unk38 = info.srcFile->get_int("/unknown/unk38");
-    objectHeader->unk3A = info.srcFile->get_int("/unknown/unk3A");
-    objectHeader->unk3B = info.srcFile->get_int("/unknown/unk3B");
-    objectHeader->unk3C = info.srcFile->get_int("/unknown/unk3C");
-    objectHeader->unk3D = info.srcFile->get_int("/unknown/unk3D");
-    objectHeader->unk42 = info.srcFile->get_int("/unknown/unk42");
-    objectHeader->unk44 = info.srcFile->get_int("/unknown/unk44");
-    objectHeader->unk46 = info.srcFile->get_int("/unknown/unk46");
-    objectHeader->unk48 = info.srcFile->get_int("/unknown/unk48");
-    objectHeader->unk4A = info.srcFile->get_int("/unknown/unk4A");
-    objectHeader->unk4C = info.srcFile->get_int("/unknown/unk4C");
-    objectHeader->unk50 = info.srcFile->get_int("/unknown/unk50");
-    objectHeader->unk52 = info.srcFile->get_int("/unknown/unk52");
-    objectHeader->unk58 = info.srcFile->get_int("/unknown/unk58");
-    objectHeader->unk59 = info.srcFile->get_int("/unknown/unk59");
-    objectHeader->unk5B = info.srcFile->get_int("/unknown/unk5B");
-    objectHeader->unk5C = info.srcFile->get_int("/unknown/unk5C");
-    objectHeader->unk5D = info.srcFile->get_int("/unknown/unk5D");
-    objectHeader->unk5E = info.srcFile->get_int("/unknown/unk5E");
-    objectHeader->unk5F = info.srcFile->get_int("/unknown/unk5F");
-    objectHeader->unk70 = info.srcFile->get_int("/unknown/unk70");
-    objectHeader->unk71 = info.srcFile->get_int("/unknown/unk71");
-    objectHeader->unk72 = info.srcFile->get_int("/unknown/unk72");
-    objectHeader->unk73 = info.srcFile->get_int("/unknown/unk73");
-    objectHeader->unk74 = info.srcFile->get_int("/unknown/unk74");
-    objectHeader->unk75 = info.srcFile->get_int("/unknown/unk75");
-    objectHeader->unk76 = info.srcFile->get_int("/unknown/unk76");
-    objectHeader->unk77 = info.srcFile->get_int("/unknown/unk77");
+    objectHeader->unk0 = jsonFile.get_int("/unknown/unk0");
+    objectHeader->unk8 = jsonFile.get_float("/unknown/unk8");
+    objectHeader->unk34 = jsonFile.get_int("/unknown/unk34");
+    objectHeader->unk38 = jsonFile.get_int("/unknown/unk38");
+    objectHeader->unk3A = jsonFile.get_int("/unknown/unk3A");
+    objectHeader->unk3B = jsonFile.get_int("/unknown/unk3B");
+    objectHeader->unk3C = jsonFile.get_int("/unknown/unk3C");
+    objectHeader->unk3D = jsonFile.get_int("/unknown/unk3D");
+    objectHeader->unk42 = jsonFile.get_int("/unknown/unk42");
+    objectHeader->unk44 = jsonFile.get_int("/unknown/unk44");
+    objectHeader->unk46 = jsonFile.get_int("/unknown/unk46");
+    objectHeader->unk48 = jsonFile.get_int("/unknown/unk48");
+    objectHeader->unk4A = jsonFile.get_int("/unknown/unk4A");
+    objectHeader->unk4C = jsonFile.get_int("/unknown/unk4C");
+    objectHeader->unk50 = jsonFile.get_int("/unknown/unk50");
+    objectHeader->unk52 = jsonFile.get_int("/unknown/unk52");
+    objectHeader->unk58 = jsonFile.get_int("/unknown/unk58");
+    objectHeader->unk59 = jsonFile.get_int("/unknown/unk59");
+    objectHeader->unk5B = jsonFile.get_int("/unknown/unk5B");
+    objectHeader->unk5C = jsonFile.get_int("/unknown/unk5C");
+    objectHeader->unk5D = jsonFile.get_int("/unknown/unk5D");
+    objectHeader->unk5E = jsonFile.get_int("/unknown/unk5E");
+    objectHeader->unk5F = jsonFile.get_int("/unknown/unk5F");
+    objectHeader->unk70 = jsonFile.get_int("/unknown/unk70");
+    objectHeader->unk71 = jsonFile.get_int("/unknown/unk71");
+    objectHeader->unk72 = jsonFile.get_int("/unknown/unk72");
+    objectHeader->unk73 = jsonFile.get_int("/unknown/unk73");
+    objectHeader->unk74 = jsonFile.get_int("/unknown/unk74");
+    objectHeader->unk75 = jsonFile.get_int("/unknown/unk75");
+    objectHeader->unk76 = jsonFile.get_int("/unknown/unk76");
+    objectHeader->unk77 = jsonFile.get_int("/unknown/unk77");
     
     // Other
-    objectHeader->shadowGroup = info.srcFile->get_int("/shadow-group");
-    objectHeader->waterEffectGroup = info.srcFile->get_int("/water-effect-group");
-    objectHeader->shadeAngleY = info.srcFile->get_int("/shade-angle-y");
-    objectHeader->shadeAngleZ = info.srcFile->get_int("/shade-angle-z");
-    objectHeader->drawDistance = info.srcFile->get_int("/draw-distance");
+    objectHeader->shadowGroup = jsonFile.get_int("/shadow-group");
+    objectHeader->waterEffectGroup = jsonFile.get_int("/water-effect-group");
+    objectHeader->shadeAngleY = jsonFile.get_int("/shade-angle-y");
+    objectHeader->shadeAngleZ = jsonFile.get_int("/shade-angle-z");
+    objectHeader->drawDistance = jsonFile.get_int("/draw-distance");
     
     
     objectHeader->numberOfModelIds = numberOfModels;
@@ -168,20 +172,20 @@ void BuildObjectHeader::build(BuildInfo &info) {
     }
     
     for(size_t i = 0; i < numberOfModels; i++) {
-        std::string modelBuildId = info.srcFile->get_string("/models/" + std::to_string(i));
+        std::string modelBuildId = jsonFile.get_string("/models/" + std::to_string(i));
         modelIds[i] = AssetsHelper::get_asset_index(assetSection, modelBuildId);
     }
     
     /** Vehicle Parts **/
     for(size_t i = 0; i < numberOfVehicleParts; i++) {
-        vehiclePartIds[i] = info.srcFile->get_int("/vehicle-parts/" + std::to_string(i));
-        vehiclePartIndices[i] = info.srcFile->get_int("/vehicle-part-indices/" + std::to_string(i));
+        vehiclePartIds[i] = jsonFile.get_int("/vehicle-parts/" + std::to_string(i));
+        vehiclePartIndices[i] = jsonFile.get_int("/vehicle-part-indices/" + std::to_string(i));
     }
     
-    if(info.srcFile->has("/vehicle-part-indices-junk-bytes")) {
-        size_t numberOfJunkVehiclePartsIndexBytes = info.srcFile->length_of_array("/vehicle-part-indices-junk-bytes");
+    if(jsonFile.has("/vehicle-part-indices-junk-bytes")) {
+        size_t numberOfJunkVehiclePartsIndexBytes = jsonFile.length_of_array("/vehicle-part-indices-junk-bytes");
         for(size_t i = 0; i < numberOfJunkVehiclePartsIndexBytes; i++) {
-            vehiclePartIndices[i + numberOfVehicleParts] = info.srcFile->get_int("/vehicle-part-indices-junk-bytes/" + std::to_string(i));
+            vehiclePartIndices[i + numberOfVehicleParts] = jsonFile.get_int("/vehicle-part-indices-junk-bytes/" + std::to_string(i));
         }
     }
     
@@ -190,24 +194,24 @@ void BuildObjectHeader::build(BuildInfo &info) {
         std::string ptr = "/particles/" + std::to_string(i);
         
         // Not sure what this special case actually is. Just that the args are different.
-        bool isSpecialCase = info.srcFile->get_bool(ptr + "/special-case");
+        bool isSpecialCase = jsonFile.get_bool(ptr + "/special-case");
         if(isSpecialCase) {
-            particles[i].lower = info.srcFile->get_int(ptr + "/junk-data"); // Not actually used I think.
+            particles[i].lower = jsonFile.get_int(ptr + "/junk-data"); // Not actually used I think.
             particles[i].upper_w.s0_s = -1; // Marks this as the special case
-            particles[i].upper_w.s1_b.b0 = info.srcFile->get_int(ptr + "/arg1");
-            particles[i].upper_w.s1_b.b1 = info.srcFile->get_int(ptr + "/arg2");
+            particles[i].upper_w.s1_b.b0 = jsonFile.get_int(ptr + "/arg1");
+            particles[i].upper_w.s1_b.b1 = jsonFile.get_int(ptr + "/arg2");
         } else {
-             particles[i].upper_w.s0_b.b0 = info.srcFile->get_int(ptr + "/arg1");
-             particles[i].upper_w.s0_b.b1 = info.srcFile->get_int(ptr + "/arg2");
-             particles[i].upper_w.s1_s    = info.srcFile->get_int(ptr + "/arg3");
-             particles[i].lower_w.s0_s    = info.srcFile->get_int(ptr + "/arg4");
-             particles[i].lower_w.s1_s    = info.srcFile->get_int(ptr + "/arg5");
+             particles[i].upper_w.s0_b.b0 = jsonFile.get_int(ptr + "/arg1");
+             particles[i].upper_w.s0_b.b1 = jsonFile.get_int(ptr + "/arg2");
+             particles[i].upper_w.s1_s    = jsonFile.get_int(ptr + "/arg3");
+             particles[i].lower_w.s0_s    = jsonFile.get_int(ptr + "/arg4");
+             particles[i].lower_w.s1_s    = jsonFile.get_int(ptr + "/arg5");
         }
     }
     
     /** Junk Data **/
     for(size_t i = 0; i < numberOfJunkBytes; i++) {
-        junkData[i] = info.srcFile->get_int("/junk-data/" + std::to_string(i));
+        junkData[i] = jsonFile.get_int("/junk-data/" + std::to_string(i));
     }
     
     if(info.build_to_file()) {

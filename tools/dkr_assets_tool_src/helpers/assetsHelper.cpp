@@ -17,9 +17,9 @@ fs::path _get_path_to_assets_folder();
 
 // Note: filepath is local to assets.
 std::reference_wrapper<JsonFile> AssetsHelper::get_meta_file(fs::path filepath) {
-    fs::path pathToAsset = _get_path_to_assets_folder();
+    fs::path pathToAssets = _get_path_to_assets_folder();
 
-    auto tryGetAssetFile = JsonHelper::get_file(pathToAsset);
+    auto tryGetAssetFile = JsonHelper::get_file(pathToAssets / filepath);
     DebugHelper::assert_(tryGetAssetFile.has_value(),
         "(AssetsHelper::get_meta_file) Could not find json file in assets folder: ", filepath);
 

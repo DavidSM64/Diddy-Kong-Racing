@@ -5,6 +5,7 @@
 #include "fileTypes/fonts.hpp"
 
 #include "helpers/debugHelper.h"
+#include "helpers/dataHelper.h"
 #include "helpers/fileHelper.h"
 #include "helpers/jsonHelper.h"
 #include "helpers/stringHelper.h"
@@ -13,12 +14,13 @@
 using namespace DkrAssetsTool;
 
 static std::reference_wrapper<JsonFile> get_font_file(BuildInfo &info, fs::path &localFontFilepath) {
-    fs::path fontPath = info.localDirectory / localFontFilepath;
+    fs::path fontPath = info.get_path_to_directory() / localFontFilepath;
     
     auto tryGetJsonFile = JsonHelper::get_file(fontPath);
     
     // Get the font file, and throw an error if it doesn't exist.
-    DebugHelper::assert(tryGetJsonFile.has_value(), "(BuildFonts::get_font_file) Could not font file ", fontPath);
+    DebugHelper::assert_(tryGetJsonFile.has_value(), 
+        "(BuildFonts::get_font_file) Could not font file ", fontPath);
     
     return tryGetJsonFile.value();
 }
@@ -52,9 +54,11 @@ static std::reference_wrapper<JsonFile> get_font_file(BuildInfo &info, fs::path 
 
 
 void BuildFonts::build(BuildInfo &info) {
-    size_t numberOfFonts = info.srcFile->length_of_array("/fonts-order");
+    const JsonFile &jsonFile = info.get_src_json_file();
     
-    size_t outSize = FileHelper::align16(sizeof(be_uint32_t) + (numberOfFonts * sizeof(FontFile)));
+    size_t numberOfFonts = jsonFile.length_of_array("/fonts-order");
+    
+    size_t outSize = DataHelper::align16(sizeof(be_uint32_t) + (numberOfFonts * sizeof(FontFile)));
     info.out.resize(outSize);
     
     // Convert the raw bytes into the FontData structure.
@@ -63,8 +67,8 @@ void BuildFonts::build(BuildInfo &info) {
     fontData->numberOfFonts = numberOfFonts;
     
     for(size_t fontIndex = 0; fontIndex < numberOfFonts; fontIndex++) {
-        std::string fontBuildId = info.srcFile->get_string("/fonts-order/" + std::to_string(fontIndex));
-        fs::path localFontFilepath = info.srcFile->get_string("/fonts/" + fontBuildId);
+        std::string fontBuildId = jsonFile.get_string("/fonts-order/" + std::to_string(fontIndex));
+        fs::path localFontFilepath = jsonFile.get_string("/fonts/" + fontBuildId);
         
         JsonFile &fontJson = get_font_file(info, localFontFilepath);
         FontFile *outFontFile = &fontData->fonts[fontIndex];
@@ -81,7 +85,8 @@ void BuildFonts::build(BuildInfo &info) {
         
         if(numTextures > FONTS_NUMBER_OF_TEXTURE_INDICES) {
             std::string fontName = fontJson.get_string("/name");
-            DebugHelper::warn("(BuildFonts::build) Too many textures in font \"", fontName, "\". Have ", numTextures, " texture ids, but the limit is ", FONTS_NUMBER_OF_TEXTURE_INDICES);
+            DebugHelper::warn("(BuildFonts::build) Too many textures in font \"", fontName, "\". Have ", 
+                numTextures, " texture ids, but the limit is ", FONTS_NUMBER_OF_TEXTURE_INDICES);
             numTextures = FONTS_NUMBER_OF_TEXTURE_INDICES;
         }
         
@@ -99,8 +104,6 @@ void BuildFonts::build(BuildInfo &info) {
             
             int fontTextureIndex = AssetsHelper::get_asset_index("ASSET_TEXTURES_2D", texBuildId);
             
-            DebugHelper::info(texBuildId, " = ", fontTextureIndex);
-            
             outFontFile->textureIndices[texIndex] = fontTextureIndex;
         }
         
@@ -117,7 +120,7 @@ void BuildFonts::build(BuildInfo &info) {
         if(encodingType == "ASCII") {
             parse_ascii_encoding(fontJson, outFontFile);
         } else {
-            // TODO: Support other encodings!
+            // TODO: Support other encodings?
             DebugHelper::error("(BuildFonts::build) Unsupported font encoding type: \"", encodingType, "\"");
         }
     }

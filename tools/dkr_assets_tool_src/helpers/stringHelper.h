@@ -9,6 +9,7 @@ namespace DkrAssetsTool {
 // These are functions that I would've expected to be a part of std::string. (Except for a few)
 namespace StringHelper {
     bool has(const std::string &input, const char *substring);
+    bool has(const std::string &input, const std::string substring);
 
     void make_lowercase(std::string &input);
     void make_uppercase(std::string &input);
@@ -39,6 +40,8 @@ namespace StringHelper {
     
     // Converts `FOO_BAR` to `FooBar`.
     std::string upper_snake_case_to_pascal_case(const std::string &input);
+    // Converts `FooBar` to `FOO_BAR`
+    std::string pascal_case_to_upper_snake_case(const std::string &input);
     
     std::string to_hex(uint64_t value, int numDigits=0);
     std::string to_uppercase_hex(uint64_t value, int numDigits = 0);

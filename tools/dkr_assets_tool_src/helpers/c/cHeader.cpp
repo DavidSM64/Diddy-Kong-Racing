@@ -30,6 +30,10 @@ void WritableCHeader::write_raw_text_line(std::string text) {
     _out << text << std::endl;
 }
 
+void WritableCHeader::write_enum(const WriteableCEnum &enumValue) {
+    _out << enumValue << std::endl;
+}
+
 void WritableCHeader::save(fs::path filepath) {
     std::string headerText = _out.str();
     FileHelper::write_text_file_if_changed(headerText, filepath, true);

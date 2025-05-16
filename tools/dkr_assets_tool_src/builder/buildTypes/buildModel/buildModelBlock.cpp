@@ -33,7 +33,6 @@ void BuildModelBlock::set_material(std::optional<std::string> materialId) {
     _batches.emplace_back(_materialId); // Create a new batch with the new material.
 }
 
-
 size_t BuildModelBlock::total_number_of_triangles() {
     size_t count = 0;
     
@@ -62,11 +61,11 @@ size_t BuildModelBlock::number_of_batches_to_allocate() {
     return _batches.size() + 1; // Must have an extra entry to calculate the sizes for the last batch.
 }
 
-void BuildModelBlock::write_batches(DkrBatch*& outBatches, DkrVertex*& outVertices, DkrTriangle*& outTriangles) {
+void BuildModelBlock::write_batches(const std::map<std::string, int> &materialIds, DkrBatch*& outBatches, DkrVertex*& outVertices, DkrTriangle*& outTriangles) {
     size_t vertexCount = 0;
     size_t triCount = 0;
     for(auto &batch : _batches) {
-        batch.write_batch(outBatches, outVertices, outTriangles);
+        batch.write_batch(materialIds, outBatches, outVertices, outTriangles);
         outBatches->verticesOffset = vertexCount;
         outBatches->trianglesOffset = triCount;
         outBatches->unk1 = (int8_t)batch.number_of_vertices();

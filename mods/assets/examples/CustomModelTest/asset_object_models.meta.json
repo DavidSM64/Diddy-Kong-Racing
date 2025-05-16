@@ -5,7 +5,7 @@
         ],
         "sections": {
             "ASSET_CUSTOM_TESTCUBE": {
-                "filename": "test.json"
+                "filename": "okCube.json"
             }
         }
     }

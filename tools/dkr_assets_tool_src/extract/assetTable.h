@@ -16,11 +16,23 @@ enum DkrAssetTableType {
     TTGhostTable,
     MiscTable,
     AudioTable,
+    
+    // Special kind of table. Where each entry describes how many animations an object model has.
+    ObjectAnimationIdsTable,
 };
 
 struct DkrTableEntryInfo {
-    int32_t offset;
-    int32_t length;
+    union {
+        int32_t offset;
+        int32_t objectModelId; // Which object model this entry belongs to. (Only used for ObjectAnimationsTable)
+    };
+    
+    union {
+        int32_t length;
+        int16_t count; // Number of animations for the objectModelId. (Only used for ObjectAnimationsTable)
+    };
+    
+    DkrTableEntryInfo(int32_t off, int32_t len) : offset(off), length(len) {}
 };
 
 class AssetTable {

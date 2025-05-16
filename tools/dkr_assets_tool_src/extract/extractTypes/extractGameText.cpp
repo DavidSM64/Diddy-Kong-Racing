@@ -7,13 +7,15 @@
 #include "helpers/assetsHelper.h"
 
 #include "extract/stats.h"
+#include "text/dkrText.h"
 
 using namespace DkrAssetsTool;
 
 // TODO: Actually extract the dialog into the json instead of it being raw binary.
 void extract_dialog(ExtractInfo &info, WritableJsonFile &jsonFile) {
     jsonFile.set_path("/raw", info.get_filename(".bin"));
-    jsonFile.set_string("/type", "Binary");
+    jsonFile.set_string("/type", "GameText");
+    jsonFile.set_string("/text-type", "Dialog");
     
     info.write_raw_data_file();
 }
@@ -133,13 +135,10 @@ void extract_textbox(ExtractInfo &info, WritableJsonFile &jsonFile) {
             }
             default:
             {
-                char *text = reinterpret_cast<char *>(&rawBytes[--offset]);
+                DKRText text(rawBytes, --offset);
                 jsonFile.set_string(ptr + "/command", "Text");
-                jsonFile.set_string(ptr + "/value", text);
-                while(rawBytes[offset] != 0) {
-                    offset++;
-                }
-                offset++;
+                jsonFile.set_string(ptr + "/value", text.get_text());
+                offset += text.bytes_size() + 1;
                 break;
             }
         }

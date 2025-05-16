@@ -4,7 +4,7 @@
 
 namespace DkrAssetsTool {
 namespace AssetExtractor {
-    void extract_all(const fs::path &dstPath); // extract ALL assets
+    void extract_all(); // extract ALL assets
     void extract(const fs::path &srcPath, const fs::path &dstPath); // extract single asset
 }
 }

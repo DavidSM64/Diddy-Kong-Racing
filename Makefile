@@ -1,6 +1,6 @@
 BASENAME  = dkr
 REGION  := us
-VERSION  := v77
+VERSION  := v80
 NON_MATCHING ?= 0
 
 # NM is shorthand for NON_MATCHING
@@ -332,6 +332,7 @@ no_verify: $(TARGET).z64
 
 extract:
 	$(SPLAT) ver/splat/$(BASENAME).$(REGION).$(VERSION).yaml
+	$(TOOLS_DIR)/dkr_assets_tool extract -dkrv $(REGION).$(VERSION) >&2 || echo FAIL
 #These are the only 4 jpn region functions that match elsewhere, but not for this region. As a temp hack for progress script reasons, just delete these for other regions.
 ifneq ($(REGION),jpn)
 	@$(RM) asm/nonmatchings/menu/savemenu_render_element.s asm/nonmatchings/menu/pakmenu_render.s asm/nonmatchings/menu/results_render.s asm/nonmatchings/menu/menu_credits_loop.s
@@ -403,45 +404,15 @@ assets: all
 # Only compile the assets when running `make assets` or if we're making a NON_MATCHING build
 ifeq ($(MAKECMDGOALS),assets)
 
-ASSETS_VERSION := us_1.0
-ASSETS := assets/$(ASSETS_VERSION)
-ASSETS_BUILD_DIR := $(BUILD_DIR)/assets
-BUILDER = $(TOOLS_DIR)/dkr_assets_tool -dkrv $(ASSETS_VERSION) build
+ASSETS_OUTPUT := assets/assets.bin
 
-######## Extract Assets & Microcode ########
-DUMMY != $(PYTHON) $(TOOLS_DIR)/python/check_if_need_to_extract.py $(ASSETS_VERSION) >&2 || echo FAIL
+ifeq ($(NON_MATCHING),1)
+# The -m flag will attempt to compile assets. Only want to do this on non-matching builds.
+MODDED_ARG := -m
+endif
 
-######## Prebuild step (Compile assets, generate linker file, etc.) ########
-DUMMY != $(TOOLS_DIR)/dkr_assets_tool -dkrv $(ASSETS_VERSION) prebuild >&2 || echo FAIL
-
-# Helps fix an issue with parallel jobs.
-$(ALL_ASSETS_BUILT): | $(BUILD_DIR)
-
-# This is here to prevent make from deleting all the asset files after the build completes/fails.
-dont_remove_asset_files: $(ALL_ASSETS_BUILT)
-
-# Add .json files
-JSON_FILES := $(shell find $(ASSETS) -type f -name '*.json')
-
-# Ignore .meta.json files
-IGNORE_JSON_FILES := $(shell find $(ASSETS) -type f -name '*.meta.json')
-JSON_FILES := $(filter-out $(IGNORE_JSON_FILES),$(JSON_FILES))
-
-# $1 = asset path (e.g. assets/levels/models/...), $2 = cmd to run
-define DEFINE_ASSET_TARGET
-$(eval BASE_PATH := $(subst $(ASSETS),$(ASSETS_BUILD_DIR),$(basename $1)))
-$$(BASE_PATH).bin: $1
-	$2
-$(eval ALL_ASSETS_BUILT+=$(BASE_PATH).bin)
-endef
-
-# $1 = Print message
-define JSON_FILE_ACTION
-	$$(call print,$1:,$$<,$$@)
-	$$(V)$$(BUILDER) -i $$< -o $$@
-endef
-
-$(foreach FILE,$(JSON_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call JSON_FILE_ACTION,Building))))
+$(info Building Assets...)
+DUMMY != $(TOOLS_DIR)/dkr_assets_tool build -o $(ASSETS_OUTPUT) -dkrv $(REGION).$(VERSION) $(MODDED_ARG) >&2 || echo FAIL
 
 endif
 

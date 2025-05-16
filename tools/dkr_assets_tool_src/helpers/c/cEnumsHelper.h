@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 #include <unordered_map>
 #include <map>
 
@@ -17,7 +18,9 @@ public:
     CEnum(CContext &context, const std::string &rawCode); // Parse from a enum string.
     ~CEnum();
     
-    std::string get_name();
+    friend std::ostream& operator<<(std::ostream& os, const CEnum& cEnum);
+    
+    std::string get_name() const;
     
     // Used in CContext.
     void copy_members_to_map(std::unordered_map<std::string, int> &inputMap);
@@ -27,7 +30,11 @@ public:
     
     bool get_symbol_of_value(int value, std::string &outSymbol);
     
-    size_t get_member_count();
+    size_t get_member_count() const;
+    
+    // "simple" here just means an enum that starts at 0 and increases by 1 for each value.
+    bool is_simple() const;
+    std::string to_string() const;
     
     std::unordered_map<std::string, int>::iterator get_start_iterator();
     std::unordered_map<std::string, int>::iterator get_end_iterator();
@@ -37,7 +44,7 @@ private:
     std::unordered_map<std::string, int> _members;
     
      // Multiple keys may have the same value, that is the reason for the vector here.
-    std::unordered_map<int, std::vector<std::string>> _values;
+    std::map<int, std::vector<std::string>> _values;
     
     std::string _name;
     std::string _typedefName;
@@ -54,10 +61,12 @@ public:
     WriteableCEnum(std::string name);
     ~WriteableCEnum();
     
+    friend std::ostream& operator<<(std::ostream& os, const WriteableCEnum& cEnum);
+    
     void add_symbol(std::string symbol);
     void add_symbol(std::string symbol, int newValue);
     
-    std::string to_string();
+    std::string to_string() const;
 private:
     std::string _name;
     int _currentValue;

@@ -47,7 +47,6 @@ void BuildModelVertex::write_to(DkrVertex *outVertex) {
     outVertex->a = _color.get_alpha_as_byte();
 }
 
-
  std::ostream& operator<<(std::ostream& os, const BuildModelVertex& vertex) {
     os << "{ pos: " << vertex.position() << ", color: 0x" << std::hex << vertex.color().get_as_rgba() << std::dec << " }";
     return os;

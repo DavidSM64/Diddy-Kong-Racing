@@ -20,11 +20,13 @@ public:
     void write_raw_text(std::string text);
     void write_raw_text_line(std::string text);
     
-    void write_enum(CEnum *enumValue);
+    void write_enum(const WriteableCEnum &enumValue);
+    // TODO: write_struct ?
     
     void save(fs::path filepath);
     
 private:
     std::stringstream _out;
 };
+
 }

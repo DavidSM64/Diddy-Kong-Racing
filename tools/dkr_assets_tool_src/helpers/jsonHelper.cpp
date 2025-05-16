@@ -5,6 +5,7 @@ using namespace DkrAssetsTool;
 #include <fstream>
 #include <iostream>
 #include <cmath>
+#include <stdexcept>
 
 #include "helpers/fileHelper.h"
 #include "helpers/dataHelper.h"
@@ -26,7 +27,11 @@ namespace JSON_HELPER_DETAILS {
     public:
         JsonFileData(std::string filepath) {
             std::ifstream f(filepath);
-            data = json::parse(f);
+            try {
+                data = json::parse(f);
+            } catch (std::exception &e) {
+                DebugHelper::error("Failed to parse json file \"", filepath, "\"\n", e.what());
+            }
         }
         JsonFileData() {
         }
@@ -205,7 +210,6 @@ template std::optional<std::string> JsonFile::get_elem_from_object_array_that_ha
     const std::string& propertyName, std::string propertyValue) const;
 template std::optional<int> JsonFile::get_elem_from_object_array_that_has_property(const std::string& ptr, const std::string& valueName,
     const std::string& propertyName, std::string propertyValue) const;
-
 
 template<typename T>
 std::optional<size_t> JsonFile::get_index_of_object_that_has_property(const std::string& ptr, const std::string& propertyName, T propertyValue) const {
@@ -436,9 +440,25 @@ void WritableJsonFile::set_null(const std::string &ptr) {
     _data->data[jsonPtr] = nullptr;
 }
 
+template<typename T>
+void WritableJsonFile::set_array(const std::string &ptr, const std::vector<T> &arr) {
+    new_array(ptr);
+    for(size_t i = 0; i < arr.size(); i++) {
+        const json::json_pointer jsonPtr(ptr + "/" + std::to_string(i));
+        _data->data[jsonPtr] = arr[i];
+    }
+}
+
+template void WritableJsonFile::set_array<std::string>(const std::string &ptr, const std::vector<std::string> &arr);
+template void WritableJsonFile::set_array<int>(const std::string &ptr, const std::vector<int> &arr);
+template void WritableJsonFile::set_array<bool>(const std::string &ptr, const std::vector<bool> &arr);
+
 void WritableJsonFile::save() {
     // Make sure the directory exists first
     FileHelper::write_folder_if_it_does_not_exist(_outFilepath);
+    if(StringHelper::ends_with(_outFilepath, "menu_text.json")) {
+        DebugHelper::info(_data->data);
+    }
     std::ofstream o(_outFilepath);
     o << std::setw(4) << _data->data << std::endl;
 }
@@ -643,7 +663,8 @@ std::optional<std::reference_wrapper<JsonFile>> JsonHelper::get_file(fs::path fi
     if (_fileCache.find(filepath) == _fileCache.end()) {
         try {
             _fileCache[filepath] = new JsonFile(filepath.generic_string());
-        } catch (nlohmann::detail::parse_error&) {
+        } catch (nlohmann::detail::parse_error& ex) {
+            DebugHelper::error_no_throw(ex.what());
             _jsonHelperMutex.unlock();
             return std::nullopt;
         }

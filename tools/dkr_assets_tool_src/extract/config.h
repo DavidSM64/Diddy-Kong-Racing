@@ -36,15 +36,13 @@ public:
     // Returns std::nullopt if no table was found.
     std::optional<size_t> get_section_table_index(std::string buildId) const;
     
-    // Returns the index into `/files` array. Returns std::nullopt if the hash is not in the array.
-    // There are multiple files that have the same hash, 
-    //   so `foundSoFar` is used to get the specific file within a list of indices that use the same hash. 
-    std::optional<size_t> get_file_index_from_sha1(std::string sha1Hash, size_t foundSoFar=0) const;
+    // Returns the indices to the files given a sha1 hash. Multiple files may contain the same hash.
+    std::vector<size_t> get_file_indices_from_sha1(std::string sha1Hash) const;
     
     std::string get_object_entry_from_behavior(std::string objBehavior) const;
     
     // initalizes _objBehaviorToEntry
-    void init_obj_beh_to_entry_map(const CContext &cContext);
+    void init_obj_beh_to_entry_map(CContext &cContext);
     
 private:
     std::optional<std::reference_wrapper<JsonFile>> _configJson;

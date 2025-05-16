@@ -24,11 +24,14 @@ void ExtractFonts::extract(ExtractInfo &info) {
     
     FontData *fontsData = reinterpret_cast<FontData *>(&rawBytes[0]);
     
+    stats.set_tag("FONT_COUNT", (int)fontsData->numberOfFonts);
+    
     for(int i = 0; i < (int)fontsData->numberOfFonts; i++) {
         FontFile &font = fontsData->fonts[i];
         
         std::string fontName(font.name);
         std::string fontBuildId = info.get_from_config_section<std::string>("/build-id", "ASSET_FONTS") + "_" + fontName;
+        StringHelper::make_uppercase(fontBuildId);
         
         std::string fontTag = "FONT_" + std::to_string(i);
         stats.set_tag(fontTag, fontBuildId); // Associate FONT_N with the build id of this font. Used for Game Text.

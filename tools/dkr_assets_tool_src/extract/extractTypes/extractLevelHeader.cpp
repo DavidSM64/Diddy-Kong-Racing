@@ -13,6 +13,8 @@
 
 #include "extract/stats.h"
 
+#include "text/dkrText.h"
+
 using namespace DkrAssetsTool;
 
 void extract_weather(WritableJsonFile &jsonFile, std::string ptr, LevelHeader_Weather &weather) {
@@ -44,6 +46,7 @@ void extract_fog(WritableJsonFile &jsonFile, std::string ptr, LevelHeader_Fog &f
 void extract_name(ExtractInfo &info, WritableJsonFile &jsonFile, std::string ptr) {
     ExtractInfo &levelNameExtract = DeferredExtractions::get_extraction("ASSET_LEVEL_NAMES", info.get_file_index());
     
+    // TODO: Use BytesView instead of std::vector
     std::vector<uint8_t> rawBytes;
     levelNameExtract.get_data_from_rom(rawBytes);
     
@@ -54,16 +57,18 @@ void extract_name(ExtractInfo &info, WritableJsonFile &jsonFile, std::string ptr
     size_t curOffset = 0;
     
     for(size_t i = 0; i < numLanguages; i++) {
-        std::string lang, levelNameInLang;
+        std::string lang;
         DebugHelper::assert(languages->get_symbol_of_value(i, lang), 
             "(extract_name) Index ", i, " is out of range.");
             
         // TODO: If a language (other than English) uses the same name as English, then don't bother exporting it.
         
         // Get the current language name.
-        curOffset = StringHelper::get_ascii_from_data(rawBytes, curOffset, levelNameInLang);
+        // curOffset = StringHelper::get_ascii_from_data(rawBytes, curOffset, levelNameInLang);
+        DKRText levelNameText(rawBytes, curOffset);
+        curOffset += levelNameText.bytes_size() + 1; // +1 because the null-terminator was not included.
         
-        jsonFile.set_string(ptr + "/" + lang, levelNameInLang);
+        jsonFile.set_string(ptr + "/" + lang, levelNameText.get_text());
     }
 }
 
@@ -71,7 +76,7 @@ template<typename T>
 void extract_enum_bitfield(ExtractInfo &info, WritableJsonFile &jsonFile, std::string ptr, std::string enumName, T value) {
     size_t numBits = sizeof(T) * 8;
     
-    const CContext &cContext = info.get_c_context();
+    CContext &cContext = info.get_c_context();
     
     size_t count = 0;
     for(size_t i = 0; i < numBits; i++) {
@@ -98,7 +103,7 @@ void ExtractLevelHeader::extract(ExtractInfo &info) {
     
     LevelHeader *header = reinterpret_cast<LevelHeader *>(&rawBytes[0]);
     
-    const CContext &cContext = info.get_c_context();
+    CContext &cContext = info.get_c_context();
     
     WritableJsonFile &jsonFile = info.get_json_file();
     jsonFile.set_string("/type", "LevelHeader");

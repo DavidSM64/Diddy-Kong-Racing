@@ -8,6 +8,8 @@
 
 #include "helpers/c/cStructGltfHelper.h"
 
+#include "builder/buildInfoCollection.h"
+
 using namespace DkrAssetsTool;
 
 // Both are populated in calculate_size()
@@ -35,10 +37,14 @@ void set_obj_position(GltfFileNode *objNode, uint8_t *bytes, CStruct *entryCommo
     memberZ->set_integer_to_data(bytes, zPos);
 }
 
-size_t calculate_size(GltfFileNode *objectsNode, const JsonFile &objBehaviorToEntryTable, const CContext &cContext) {
+size_t calculate_size(GltfFileNode *objectsNode, BuildInfo &info, CContext &cContext, std::mutex &globalMutex) {
+    const BuildInfoContext &infoContext = info.get_info_context();
+    
     size_t out = 0;
     
     int numberOfChildNodes = objectsNode->get_child_count();
+    
+    globalMutex.lock();
     
     for(int i = 0; i < numberOfChildNodes; i++) {
         GltfFileNode *objNode = objectsNode->get_child_node_by_index(i);
@@ -62,7 +68,7 @@ size_t calculate_size(GltfFileNode *objectsNode, const JsonFile &objBehaviorToEn
             "(calculate_size) Object \"", objectBuildId, "\" does not specify a behavior!"
         );
         
-        std::string entryStructName = objBehaviorToEntryTable.get_string("/" + objBehavior);
+        std::string entryStructName = infoContext.get_object_entry_from_behavior(objBehavior);
         DebugHelper::assert_(
             !entryStructName.empty(),
             "(calculate_size) The behavior \"", objBehavior, "\" does not specify an entry struct!"
@@ -81,24 +87,32 @@ size_t calculate_size(GltfFileNode *objectsNode, const JsonFile &objBehaviorToEn
         out += byteSize;
     }
     
+    globalMutex.unlock();
     return out;
 }
 
 void BuildObjectMap::build(BuildInfo &info) {
-    info.load_enums_into_c_context({ "enums.h", "object_behaviors.h" });
-    info.load_structs_into_c_context({ "level_object_entries.h" });
+    std::mutex &globalMutex = info.get_collection().get_global_mutex();
     
-    const CContext &cContext = info.get_c_context();
+    if(info.build_to_file()) {
+        info.load_enums_into_c_context({ "enums.h", "object_behaviors.h" });
+        info.load_structs_into_c_context({ "level_object_entries.h" });
+    }
+    
+    CContext &cContext = info.get_c_context();
     
     JsonFile &transTable = AssetsHelper::get_asset_json("ASSET_LEVEL_OBJECT_TRANSLATION_TABLE");
-    JsonFile &objBehaviorToEntryTable = AssetsHelper::get_meta_file("objects/obj_beh_to_entry.meta.json");
     
-    if(info.srcFile->is_value_null("/objects") && info.build_to_file()) {
-        FileHelper::write_empty_file(info.dstPath, true);
+    const JsonFile &jsonFile = info.get_src_json_file();
+    
+    if(jsonFile.is_value_null("/objects")) {
+        if(info.build_to_file()) {
+            info.write_empty_file_to_dstPath();
+        }
         return;
     }
     
-    fs::path gltfPath = info.localDirectory / info.srcFile->get_string("/objects");
+    fs::path gltfPath = info.get_path_to_directory() / jsonFile.get_string("/objects");
     
     GltfFile gltf(gltfPath);
     
@@ -109,7 +123,7 @@ void BuildObjectMap::build(BuildInfo &info) {
     GltfFileNode *objectsNode = gltf.get_node(objectsNodeIndex);
     
     // calculate_size() also fills the `_objectIdToStructCache` map.
-    size_t dataSize = calculate_size(objectsNode, objBehaviorToEntryTable, cContext);
+    size_t dataSize = calculate_size(objectsNode, info, cContext, globalMutex);
     
     size_t outSize = DataHelper::align8(dataSize + sizeof(LevelObjectMapHeader));
     
@@ -157,8 +171,10 @@ void BuildObjectMap::build(BuildInfo &info) {
         
         if(entryCommon != entryStruct) {
             for(size_t entry = 0; entry < entryStruct->entry_count(); entry++) {
+                globalMutex.lock();
                 CStructEntry *structMember = entryStruct->get_entry(entry);
                 CStructGltfHelper::put_gltf_node_extra_into_struct_entry(structMember, objNode, bytes);
+                globalMutex.unlock();
             }
         }
         

@@ -12,17 +12,8 @@ argparse::ArgumentParser _args(DKRAT_NAME, DKRAT_VERSION);
 /*** Extract tool ***/
 argparse::ArgumentParser _extract("extract");
 argparse::ArgumentParser _builder("build");
-argparse::ArgumentParser _prebuild("prebuild");
 
 void Args::parse(int argc, char* argv[]) {
-
-    _extract.add_argument("-i", "--input")
-        .help("Input binary file (DKR ROM or assets)");
-
-    _extract.add_argument("-o", "--output")
-        .required()
-        .help("Destination path");
-
     _extract.add_argument("-dkrv", "--dkrVersion")
         .required()
         .help("The version of DKR being used.");
@@ -41,14 +32,13 @@ void Args::parse(int argc, char* argv[]) {
     _builder.add_argument("-dkrv", "--dkrVersion")
         .required()
         .help("The version of DKR being used.");
-
-    _prebuild.add_argument("-dkrv", "--dkrVersion")
-        .required()
-        .help("The version of DKR being used.");
+        
+    _builder.add_argument("-m", "--modded")
+        .flag()
+        .help("Will try to compile assets if this flag is set.");
 
     _args.add_subparser(_extract);
     _args.add_subparser(_builder);
-    _args.add_subparser(_prebuild);
 
     try {
         _args.parse_args(argc, argv);
@@ -65,8 +55,6 @@ void Args::parse(int argc, char* argv[]) {
         _currentCommand = ToolCommand::EXTRACT;
     } else if (_args.is_subcommand_used(_builder)) {
         _currentCommand = ToolCommand::BUILD;
-    } else if (_args.is_subcommand_used(_prebuild)) {
-        _currentCommand = ToolCommand::PREBUILD;
     }
 }
 
@@ -82,19 +70,17 @@ T Args::get(std::string key, T defaultValue) {
                 return _extract.get<T>(key);
             case ToolCommand::BUILD:
                 return _builder.get<T>(key);
-            case ToolCommand::PREBUILD:
-                return _prebuild.get<T>(key);
             default:
                 return defaultValue;
         }
     } catch (const std::bad_any_cast& err) {
+        DebugHelper::warn("Could not get ", key, " from args. ", err.what());
     }
     
     return defaultValue;
 }
 
 template std::string Args::get<std::string>(std::string key, std::string defaultValue);
-template fs::path Args::get<fs::path>(std::string key, fs::path defaultValue);
 template int Args::get<int>(std::string key, int defaultValue);
 template bool Args::get<bool>(std::string key, bool defaultValue);
 template double Args::get<double>(std::string key, double defaultValue);
