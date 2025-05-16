@@ -1,6 +1,6 @@
 BASENAME  = dkr
 REGION  := us
-VERSION  := v80
+VERSION  := v77
 NON_MATCHING ?= 0
 
 # NM is shorthand for NON_MATCHING
