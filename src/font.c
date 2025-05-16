@@ -1344,7 +1344,7 @@ void func_800C6464_C7064(void) {
         }
     }
 
-    D_8012C2A4_EE5E4 = (FontData_JP *) load_asset_section_from_rom(ASSET_BINARY_45);
+    D_8012C2A4_EE5E4 = (FontData_JP *) load_asset_section_from_rom(ASSET_JAPANESE_FONTS_TABLE);
 
     // Init the 4 pointers in D_8012C2A8_EE5E8 (table for spacing of each character in every font)
     D_8012C2A8_EE5E8[0] = mempool_alloc_safe(NUMBER_OF_JP_FONTS * JP_FONT_ARRAY_SIZE, COLOUR_TAG_RED);
@@ -1356,7 +1356,7 @@ void func_800C6464_C7064(void) {
     for (i = 0; i < 4; i++) {
         jpFontHeader = &D_8012C2A4_EE5E4[i];
         for (charIndex = 0; charIndex < JP_FONT_ARRAY_SIZE; charIndex++) {
-            load_asset_to_address(ASSET_BINARY_46, (u32) jpFontData,
+            load_asset_to_address(ASSET_JAPANESE_FONTS, (u32) jpFontData,
                                   jpFontHeader->offsetToData + (charIndex * jpFontHeader->bytesPerCharacter), 0x40);
             D_8012C2A8_EE5E8[i]->spacing[charIndex] = jpFontData->spacing;
         }
@@ -1473,7 +1473,7 @@ s32 func_800C68CC_C74CC(u16 arg0) {
                 }
             }
             asset = &D_8012C2C0_EE600[curIndex];
-            load_asset_to_address(ASSET_BINARY_46, (u32) asset,
+            load_asset_to_address(ASSET_JAPANESE_FONTS, (u32) asset,
                                   D_8012C2A4_EE5E4[fontInUse].offsetToData +
                                       (D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter * arg0),
                                   D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter);
