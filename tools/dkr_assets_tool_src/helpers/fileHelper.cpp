@@ -434,6 +434,10 @@ std::optional<fs::path> FileHelper::determine_full_filepath(fs::path filepath, f
     } else if(filepath.is_relative() && path_exists(localDirectory / filepath)) {
         return localDirectory / filepath;
     }
+    // Last ditch effort and see if the file exists in the localDirectory itself, ignoring whatever path it had before.
+    if(path_exists(localDirectory / filepath.filename())) {
+        return localDirectory / filepath.filename();
+    }
     return std::nullopt;
 }
 
