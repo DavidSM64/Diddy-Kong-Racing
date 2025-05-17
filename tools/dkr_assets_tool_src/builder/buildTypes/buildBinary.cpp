@@ -1,15 +1,24 @@
 #include "buildBinary.h"
 
-BuildBinary::BuildBinary(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
-    std::string rawPath = info.srcFile->get_string("/raw");
+#include "misc/globalSettings.h"
+
+using namespace DkrAssetsTool;
+
+void BuildBinary::build(BuildInfo &info) {
+    const JsonFile &jsonFile = info.get_src_json_file();
+    std::string rawPath = jsonFile.get_string("/raw");
     
-    DebugHelper::assert(!rawPath.empty(), "(BuildBinary::BuildBinary) \"raw\" not specified!");
+    DebugHelper::assert(!rawPath.empty(), "(BuildBinary::build) \"raw\" not specified!");
     
-    // Copy file from rawPath to destination path.
-    FileHelper::copy(_info.localDirectory / rawPath, info.dstPath);
+    fs::path dir = info.get_path_to_directory();
+    
+    if(info.build_to_file()) {
+        // Copy file from rawPath to destination path.
+        info.copy_to_dstPath(dir / rawPath);
+    } else {
+        // Load raw binary into info's out
+        info.out = FileHelper::read_binary_file(dir / rawPath);
+    }
 }
 
-BuildBinary::~BuildBinary() {
-    
-}
 

@@ -1,29 +1,17 @@
 #include "extractLevelModel.h"
 
-#include <vector>
-#include <string>
-
 #include "helpers/debugHelper.h"
 #include "helpers/jsonHelper.h"
-#include "helpers/stringHelper.h"
-#include "helpers/c/cContext.h"
 
-ExtractLevelModel::ExtractLevelModel(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
-    fs::path _outFilepath = _settings.pathToAssets / _info.get_out_filepath(".json");
-    DebugHelper::info_custom("Extracting Level Model", YELLOW_TEXT, _outFilepath);
+using namespace DkrAssetsTool;
+
+void ExtractLevelModel::extract(ExtractInfo &info) {
+    DebugHelper::info_custom("Extracting Level Model", YELLOW_TEXT, info.get_out_filepath(".json"));
     
-    std::vector<uint8_t> rawBytes;
-    _info.get_data_from_rom(rawBytes);
-    
-    WritableJsonFile jsonFile(_outFilepath);
+    WritableJsonFile &jsonFile = info.get_json_file();
     jsonFile.set_string("/type", "LevelModel");
+    jsonFile.set_path("/raw", info.get_filename(".bin"));
     
-    std::string _outRawFilepath = _settings.pathToAssets / _info.get_out_filepath(".bin");
-    jsonFile.set_path("/raw", _info.get_filename(".bin"));
-    _info.write_rom_data_to_file(_outRawFilepath);
-    
-    jsonFile.save();
-}
-
-ExtractLevelModel::~ExtractLevelModel() {
+    info.write_json_file();
+    info.write_raw_data_file();
 }

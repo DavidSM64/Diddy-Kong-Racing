@@ -7,9 +7,10 @@
 
 #include "match.h"
 
-class RegexHelperStl {
-public:
-    static void get_matches(const std::string &input, const std::string &regexInput, std::vector<RegexMatch> &out, int startOffset);
-    static RegexMatch *get_first_match(const std::string &input, const std::string &regexInput, int startOffset);
-    static std::string get_name();
-};
+namespace DkrAssetsTool {
+namespace RegexHelperStl {
+    void get_matches(const std::string &input, const std::string &regexInput, std::vector<RegexMatch> &out, int startOffset);
+    RegexMatch *get_first_match(const std::string &input, const std::string &regexInput, int startOffset);
+    std::string get_name();
+}
+}

@@ -1,6 +1,8 @@
 #include "regexHelper.h"
 #include "helpers/debugHelper.h"
 
+using namespace DkrAssetsTool;
+
 #define HAS_PCRE2 __has_include (<pcre2.h>)
 
 #if HAS_PCRE2

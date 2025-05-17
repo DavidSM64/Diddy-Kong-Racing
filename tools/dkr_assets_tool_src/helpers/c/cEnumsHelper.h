@@ -4,18 +4,23 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 #include <unordered_map>
 #include <map>
+
+namespace DkrAssetsTool {
 
 class CContext;
 
 class CEnum {
 public:
-    CEnum(CContext *context); // Empty enum
-    CEnum(CContext *context, const std::string &rawCode); // Parse from a enum string.
+    CEnum(CContext &context); // Empty enum
+    CEnum(CContext &context, const std::string &rawCode); // Parse from a enum string.
     ~CEnum();
     
-    std::string get_name();
+    friend std::ostream& operator<<(std::ostream& os, const CEnum& cEnum);
+    
+    std::string get_name() const;
     
     // Used in CContext.
     void copy_members_to_map(std::unordered_map<std::string, int> &inputMap);
@@ -25,17 +30,21 @@ public:
     
     bool get_symbol_of_value(int value, std::string &outSymbol);
     
-    size_t get_member_count();
+    size_t get_member_count() const;
+    
+    // "simple" here just means an enum that starts at 0 and increases by 1 for each value.
+    bool is_simple() const;
+    std::string to_string() const;
     
     std::unordered_map<std::string, int>::iterator get_start_iterator();
     std::unordered_map<std::string, int>::iterator get_end_iterator();
     
 private:
-    CContext *_context;
+    CContext &_context;
     std::unordered_map<std::string, int> _members;
     
      // Multiple keys may have the same value, that is the reason for the vector here.
-    std::unordered_map<int, std::vector<std::string>> _values;
+    std::map<int, std::vector<std::string>> _values;
     
     std::string _name;
     std::string _typedefName;
@@ -52,22 +61,20 @@ public:
     WriteableCEnum(std::string name);
     ~WriteableCEnum();
     
+    friend std::ostream& operator<<(std::ostream& os, const WriteableCEnum& cEnum);
+    
     void add_symbol(std::string symbol);
     void add_symbol(std::string symbol, int newValue);
     
-    std::string to_string();
+    std::string to_string() const;
 private:
     std::string _name;
     int _currentValue;
     std::map<int, std::string> _members; // Note: Inverted from CEnum version.
 };
 
-/**
- * Class that deals with reading / creating C enums.
- */
-class CEnumsHelper {
-public:
-    static void get_enums_from_code(CContext *context, const std::string &code, std::vector<CEnum*> &out);
-    static void load_enums_from_file(CContext *context, fs::path filepath);
-private:
-};
+namespace CEnumsHelper {
+    void get_enums_from_code(CContext &context, const std::string &code, std::vector<CEnum*> &out);
+    void load_enums_from_file(CContext &context, fs::path filepath);
+}
+}

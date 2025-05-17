@@ -3,8 +3,10 @@
 #include <vector>
 #include <unordered_map>
 
+#include "libs/bytes_view.hpp"
 #include "helpers/debugHelper.h"
-#include "rom.h"
+
+namespace DkrAssetsTool {
 
 enum DkrAssetTableType {
     FixedTable, // Starts with the length
@@ -14,19 +16,32 @@ enum DkrAssetTableType {
     TTGhostTable,
     MiscTable,
     AudioTable,
+    
+    // Special kind of table. Where each entry describes how many animations an object model has.
+    ObjectAnimationIdsTable,
 };
 
 struct DkrTableEntryInfo {
-    int32_t offset;
-    int32_t length;
+    union {
+        int32_t offset;
+        int32_t objectModelId; // Which object model this entry belongs to. (Only used for ObjectAnimationsTable)
+    };
+    
+    union {
+        int32_t length;
+        int16_t count; // Number of animations for the objectModelId. (Only used for ObjectAnimationsTable)
+    };
+    
+    DkrTableEntryInfo(int32_t off, int32_t len) : offset(off), length(len) {}
 };
 
 class AssetTable {
 public:
-    AssetTable(DkrExtractROM *rom, uint32_t offset, DkrAssetTableType type = DkrAssetTableType::VariableTable);
+    AssetTable(BytesView view, DkrAssetTableType type = DkrAssetTableType::VariableTable);
     ~AssetTable();
     
-    size_t size();
+    size_t number_of_entries();
+    size_t total_size();
     
     int32_t get_entry_offset(size_t entryIndex);
     int32_t get_entry_size(size_t entryIndex);
@@ -42,8 +57,11 @@ private:
     void _parse_misc_table();
     void _parse_audio_table();
     
-    DkrExtractROM *_rom;
-    uint32_t _romOffset;
+    BytesView _view;
     
     std::vector<DkrTableEntryInfo> _entries;
+    
+    size_t _totalSize = 0;
 };
+
+}

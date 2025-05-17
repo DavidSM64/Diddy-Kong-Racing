@@ -6,23 +6,55 @@
 
 #include "fileTypes/objectHeader.hpp"
 
+#include "extract/stats.h"
+
 #include <sstream>
 
-ExtractObjectHeader::ExtractObjectHeader(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
-    fs::path _outFilepath = _settings.pathToAssets / _info.get_out_filepath(".json");
+using namespace DkrAssetsTool;
+
+void flags_to_string(WritableJsonFile &jsonFile, be_uint16_t flags) {
+    if(flags == 0) {
+        return;
+    }
     
-    DebugHelper::info_custom("Extracting Object", YELLOW_TEXT, _outFilepath);
+    size_t numberOfBits = sizeof(be_uint16_t) * 8;
     
+    int count = 0;
+    
+    for(size_t i = 0; i < numberOfBits; i++) {
+        int flag = 1 << i;
+        
+        if(!(flag & flags)) {
+            continue;
+        }
+        
+        std::string ptr = "/flags/" + std::to_string(count);
+        
+        if(OBJECT_HEADER_FLAGS.has_value(flag)) {
+            jsonFile.set_string(ptr, OBJECT_HEADER_FLAGS.get_key(flag));
+        } else {
+            jsonFile.set_string(ptr, "FLAG_" + StringHelper::to_hex(flag, 4));
+        }
+        
+        count++;
+    }
+}
+
+void ExtractObjectHeader::extract(ExtractInfo &info) {
+    DebugHelper::info_custom("Extracting Object", YELLOW_TEXT, info.get_out_filepath(".json"));
+    
+    const ExtractStats &stats = info.get_stats();
+    
+    // TODO: Use ByteView instead of this!
     std::vector<uint8_t> rawBytes;
-    _info.get_data_from_rom(rawBytes);
+    info.get_data_from_rom(rawBytes);
     
     ObjectHeader *objectHeader = reinterpret_cast<ObjectHeader *>(&rawBytes[0]);
     
-    //DebugHelper::info(objectHeader->internalName);
-    WritableJsonFile jsonFile(_outFilepath);
+    WritableJsonFile &jsonFile = info.get_json_file();
     jsonFile.set_string("/type", "ObjectHeader");
     
-    CEnum *objBehaviors = _info.c_context->get_enum("ObjectBehaviours");
+    CEnum *objBehaviors = info.get_c_context().get_enum("ObjectBehaviours");
     
     int behaviorId = objectHeader->behaviorId;
     
@@ -38,11 +70,11 @@ ExtractObjectHeader::ExtractObjectHeader(DkrAssetsSettings &settings, ExtractInf
     
     // Model Type
     std::string modelTypeName = "ObjectModelType";
-    std::string modelType = _info.c_context->get_symbol_of_enum_int(modelTypeName, objectHeader->modelType);
+    std::string modelType = info.get_c_context().get_symbol_of_enum_int(modelTypeName, objectHeader->modelType);
     jsonFile.set_string("/model-type", modelType);
     
     // Flags
-    _flags_to_string(jsonFile, objectHeader->flags);
+    flags_to_string(jsonFile, objectHeader->flags);
     
     // Internal Name
     jsonFile.set_string("/internal-name", objectHeader->internalName);
@@ -107,13 +139,13 @@ ExtractObjectHeader::ExtractObjectHeader(DkrAssetsSettings &settings, ExtractInf
         std::string modelBuildId;
         switch(objectHeader->modelType) {
             case OBJECT_MODEL_TYPE_3D_MODEL:
-                modelBuildId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_OBJECT_MODELS", modelIds[i]);
+                modelBuildId = stats.get_build_id_from_file_index("ASSET_OBJECT_MODELS", modelIds[i]);
                 break;
             case OBJECT_MODEL_TYPE_MISC:
-                modelBuildId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_TEXTURES_2D", modelIds[i]);
+                modelBuildId = stats.get_build_id_from_file_index("ASSET_TEXTURES_2D", modelIds[i]);
                 break;
             default:
-                modelBuildId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_SPRITES", modelIds[i]);
+                modelBuildId = stats.get_build_id_from_file_index("ASSET_SPRITES", modelIds[i]);
                 break;
         }
         jsonFile.set_string("/models/" + std::to_string(i), modelBuildId);
@@ -154,37 +186,5 @@ ExtractObjectHeader::ExtractObjectHeader(DkrAssetsSettings &settings, ExtractInf
         jsonFile.set_int("/junk-data/"+std::to_string(i), rawBytes[offsetToJunkBytes + i]);
     }
     
-    jsonFile.save();
-}
-
-ExtractObjectHeader::~ExtractObjectHeader() {
-    
-}
-
-void ExtractObjectHeader::_flags_to_string(WritableJsonFile &jsonFile, be_uint16_t flags) {
-    if(flags == 0) {
-        return;
-    }
-    
-    size_t numberOfBits = sizeof(be_uint16_t) * 8;
-    
-    int count = 0;
-    
-    for(size_t i = 0; i < numberOfBits; i++) {
-        int flag = 1 << i;
-        
-        if(!(flag & flags)) {
-            continue;
-        }
-        
-        std::string ptr = "/flags/" + std::to_string(count);
-        
-        if(OBJECT_HEADER_FLAGS.has_value(flag)) {
-            jsonFile.set_string(ptr, OBJECT_HEADER_FLAGS.get_key(flag));
-        } else {
-            jsonFile.set_string(ptr, "FLAG_" + StringHelper::to_hex(flag, 4));
-        }
-        
-        count++;
-    }
+    info.write_json_file();
 }

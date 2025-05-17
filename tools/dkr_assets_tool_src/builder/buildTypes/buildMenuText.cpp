@@ -1,64 +1,79 @@
 #include "buildMenuText.h"
 
-#include <cstring> // for strncpy
+#include <cstring>
 
 #include "helpers/assetsHelper.h"
 #include "helpers/dataHelper.h"
 
-BuildMenuText::BuildMenuText(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
-    JsonFile *menuTextSection = AssetsHelper::get_asset_section_json(_settings, "ASSET_MENU_TEXT");
+#include "fileTypes/types.hpp"
+
+#include "misc/globalSettings.h"
+#include "text/dkrText.h"
+
+using namespace DkrAssetsTool;
+
+size_t get_total_string_lengths(BuildInfo &info, const JsonFile &jsonFile, std::vector<std::string> &menuTextOrder, bool forceDKRJP) {
+    size_t totalLength = 0;
+    
+    for(std::string &entryId : menuTextOrder) {
+        const std::string ptr = "/sections/" + entryId;
+        if(!jsonFile.has(ptr)) {
+            continue;
+        }
+        
+        std::string strValue = jsonFile.get_string(ptr);
+        DKRText text(strValue);
+        totalLength += text.bytes_size(forceDKRJP) + 1; // +1 for null terminator
+    }
+    
+    return totalLength;
+}
+
+void BuildMenuText::build(BuildInfo &info) {
+    JsonFile &menuTextSection = AssetsHelper::get_asset_section_json("ASSET_MENU_TEXT");
     
     std::vector<std::string> menuTextOrder;
-    menuTextSection->get_array<std::string>("/menu-text-build-ids", menuTextOrder);
+    menuTextSection.get_array<std::string>("/menu-text-build-ids", menuTextOrder);
     
     size_t numberOfEntries = menuTextOrder.size();
     
-    size_t outSize = (numberOfEntries * 4) + _get_total_string_lengths(menuTextOrder);
+    const JsonFile &jsonFile = info.get_src_json_file();
+    
+    std::string buildId = info.get_build_id();
+    std::string dkrVersion = GlobalSettings::get_dkr_version();
+    
+    // If the version is not v77 and the language is japanese, then we need to force the DKRJP text format.
+    bool forceDKRJP = !StringHelper::ends_with(dkrVersion, "v77") && StringHelper::has(buildId, "JAPANESE");
+    
+    size_t outSize = (numberOfEntries * 4) + get_total_string_lengths(info, jsonFile, menuTextOrder, forceDKRJP);
     outSize = DataHelper::align8(outSize); // Make sure the output is 8-byte aligned.
     
-    std::vector<uint8_t> out(outSize);
+    info.out.resize(outSize);
     
-    be_uint32_t *offsets = reinterpret_cast<be_uint32_t *>(&out[0]);
+    be_uint32_t *offsets = reinterpret_cast<be_uint32_t *>(&info.out[0]);
     
     size_t currentTextOffset = numberOfEntries * 4;
     
     for(size_t i = 0; i < numberOfEntries; i++) {
         const std::string &entryId = menuTextOrder[i];
         const std::string ptr = "/sections/" + entryId;
-        if(!_info.srcFile->has(ptr)) {
+        if(!jsonFile.has(ptr)) {
             offsets[i] = 0xFFFFFFFF; // Null entry.
             continue;
         }
         
         offsets[i] = currentTextOffset;
         
-        std::string entryStr = _info.srcFile->get_string(ptr);
-        char *text = reinterpret_cast<char *>(&out[currentTextOffset]);
-        std::strncpy(text, entryStr.c_str(), entryStr.size());
-        currentTextOffset += entryStr.size() + 1;
+        std::string entryStr = jsonFile.get_string(ptr);
+        DKRText text(entryStr);
+        std::vector<uint8_t> textBytes = text.get_bytes(forceDKRJP);
+        char *outText = reinterpret_cast<char *>(&info.out[currentTextOffset]);
         
-        // Shouldn't need to write the null terminator?
+        memcpy(outText, (char*)&textBytes[0], textBytes.size());
+        currentTextOffset += textBytes.size() + 1;
     }
     
-    FileHelper::write_binary_file(out, _info.dstPath, true);
-}
-
-BuildMenuText::~BuildMenuText() {
-    
-}
-
-size_t BuildMenuText::_get_total_string_lengths(std::vector<std::string> &menuTextOrder) {
-    size_t totalLength = 0;
-    
-    for(std::string &entryId : menuTextOrder) {
-        const std::string ptr = "/sections/" + entryId;
-        if(!_info.srcFile->has(ptr)) {
-            continue;
-        }
-        // +1 for null terminator
-        totalLength += _info.srcFile->length_of_string(ptr) + 1;
+    if(info.build_to_file()) {
+        info.write_out_to_dstPath();
     }
-    
-    return totalLength;
 }
-

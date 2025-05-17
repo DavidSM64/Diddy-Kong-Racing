@@ -1,6 +1,9 @@
 #include "imageHelper.h"
 
+using namespace DkrAssetsTool;
+
 #include <cstring> // for memcpy
+#include <algorithm>
 #include <unordered_map>
 
 #include "fileHelper.h"
@@ -9,7 +12,7 @@
 #include "libs/stb_image.h"
 #include "helpers/dataHelper.h"
 
-N64Image::N64Image(fs::path filepath, std::string &format, bool alignData) : _format(format) {
+N64Image::N64Image(fs::path filepath, std::string format, bool alignData) : _format(format) {
     bool isColourImage = (format == "RGBA16") || (format == "RGBA32") || (format == "CI4") || (format == "CI8");
     
     DebugHelper::assert(StringHelper::ends_with(filepath, ".png"), 
@@ -46,7 +49,7 @@ N64Image::N64Image(fs::path filepath, std::string &format, bool alignData) : _fo
     
 }
 
-N64Image::N64Image(int width, int height, std::string &format, bool alignData) : _width(width), _height(height), _format(format) {
+N64Image::N64Image(int width, int height, std::string format, bool alignData) : _width(width), _height(height), _format(format) {
     int size = width * height;
     switch(ImageHelper::bytes_in_format(_format)) {
         case 0: // 4-bit format
@@ -70,7 +73,7 @@ N64Image::N64Image(int width, int height, std::string &format, bool alignData) :
 N64Image::~N64Image() {
 }
 
-void N64Image::write_from(uint8_t *inData, size_t dataLength) {
+void N64Image::write_from(const uint8_t *inData, size_t dataLength) {
     memcpy(&_data[0], inData, dataLength);
 }
 
@@ -78,35 +81,94 @@ void N64Image::copy_to(uint8_t *out) {
     memcpy(out, &_data[0], size());
 }
 
+void N64Image::_prep_region_copy(size_t &srcWidth, size_t &bytesToCopyPerLine, size_t &imgWidthInBytes, size_t &xOffsetInBytes, N64Image::Region &region) {
+    // Make sure the region doesn't extend beyond the image.
+    region.x0 = std::clamp<int>(region.x0, 0, _width);
+    region.x1 = std::clamp<int>(region.x1, 0, _width);
+    region.y0 = std::clamp<int>(region.y0, 0, _height);
+    region.y1 = std::clamp<int>(region.y1, 0, _height);
+    
+    int regionWidth = region.x1 - region.x0;
+    int regionHeight = region.y1 - region.y0;
+    
+    if(regionWidth <= 0 || regionHeight <= 0) {
+        return;
+    }
+    
+    size_t bitDepth = get_bit_depth();
+    size_t bytesPerPixel = bitDepth / 8;
+    xOffsetInBytes = region.x0;
+    imgWidthInBytes = _width;
+    bytesToCopyPerLine = regionWidth;
+    
+    if(bitDepth == 4) {
+        srcWidth /= 2;
+        bytesToCopyPerLine /= 2;
+        xOffsetInBytes /= 2;
+        imgWidthInBytes /= 2;
+    } else {
+        srcWidth *= bytesPerPixel;
+        bytesToCopyPerLine *= bytesPerPixel;
+        xOffsetInBytes *= bytesPerPixel;
+        imgWidthInBytes *= bytesPerPixel;
+    }
+}
+
+// in format is assumed to be the same as this image.
+void N64Image::write_data_to_region(const uint8_t *in, size_t inWidth, N64Image::Region region) {
+    size_t bytesToCopyPerLine, imgWidthInBytes, xOffsetInBytes;
+    _prep_region_copy(inWidth, bytesToCopyPerLine, imgWidthInBytes, xOffsetInBytes, region);
+    
+    int regionHeight = region.y1 - region.y0;
+    for(int line = 0; line < regionHeight; line++) {
+        const uint8_t *src = in + (line * inWidth);
+        uint8_t *dst = _data.data() + ((region.y0 + line) * imgWidthInBytes) + xOffsetInBytes;
+        memcpy(dst, src, bytesToCopyPerLine);
+    }
+}
+
+// out format is assumed to be the same as this image.
+void N64Image::copy_data_from_region(uint8_t *out, size_t outWidth, N64Image::Region region) {
+    size_t bytesToCopyPerLine, imgWidthInBytes, xOffsetInBytes;
+    _prep_region_copy(outWidth, bytesToCopyPerLine, imgWidthInBytes, xOffsetInBytes, region);
+    
+    int regionHeight = region.y1 - region.y0;
+    for(int line = 0; line < regionHeight; line++) {
+        uint8_t *dst = out + (line * outWidth);
+        const uint8_t *src = _data.data() + ((region.y0 + line) * imgWidthInBytes) + xOffsetInBytes;
+        memcpy(dst, src, bytesToCopyPerLine);
+    }
+}
+
 void N64Image::interlace() {
     int bitDepth = get_bit_depth();
+    int bytesPerPixel = bitDepth / 8;
     int bufferSize = (bitDepth == 32) ? 8 : 4;
+    int bytesPerRow = _width;
     
     uint8_t* temp = new uint8_t[bufferSize];
     
-    int numPixels;
     if(bitDepth == 4) {
-        numPixels = ((_width * _height) / 2);
+        bytesPerRow /= 2;
     } else {
-        numPixels = (_width * _height * (bitDepth / 8));
+        bytesPerRow *= bytesPerPixel;
     }
     
     int stride = bufferSize * 2;
+    int swapsPerRow = bytesPerRow / stride;
     
-    int size = numPixels / stride;
-    
-    for(int i = 0; i < size; i++) {
-        int row;
-        if(bitDepth == 4) {
-            row = (i * stride) / _width * 2;
-        } else {
-            row = (i * stride) / _width / (bitDepth / 8);
-        }
-        if(row % 2 == 0) continue;
-        for(int j = 0; j < bufferSize; j++) {
-            temp[j] = _data[i * stride + j];
-            _data[i * stride + j] = _data[(i * stride + j + bufferSize)];
-            _data[(i * stride + j + bufferSize)] = temp[j];
+    // Only want to do the swaps on odd-number lines.
+    for(int row = 1; row < _height; row+=2) {
+        int offset = row * bytesPerRow;
+        
+        for(int swap = 0; swap < swapsPerRow; swap++) {
+            for(int j = 0; j < bufferSize; j++) {
+                temp[j] = _data[offset + j];
+                _data[offset + j] = _data[(offset + j + bufferSize)];
+                _data[(offset + j + bufferSize)] = temp[j];
+            }
+            
+            offset += stride;
         }
     }
     
@@ -359,7 +421,14 @@ size_t ImageHelper::image_size(int width, int height, std::string &format) {
 
 size_t ImageHelper::image_size(fs::path filepath, std::string &format) {
     int width, height, channels;
-    int gotInfo = stbi_info(filepath.c_str(), &width, &height, &channels);
-    DebugHelper::assert(gotInfo, filepath, " could not be loaded!");
+    int gotInfo = stbi_info(filepath.generic_string().c_str(), &width, &height, &channels);
+    DebugHelper::assert_(gotInfo, "(ImageHelper::image_size) ", filepath, " could not be loaded!");
     return image_size(width, height, format);
 }
+
+void ImageHelper::get_width_and_height(fs::path filepath, int &outWidth, int &outHeight) {
+    int channels;
+    int gotInfo = stbi_info(filepath.generic_string().c_str(), &outWidth, &outHeight, &channels);
+    DebugHelper::assert_(gotInfo, "(ImageHelper::get_width_and_height) ", filepath, " could not be loaded!");
+}
+

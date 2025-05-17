@@ -4,9 +4,12 @@
 #include <string>
 
 #include <unordered_map>
+#include <mutex>
 
 #include "helpers/c/cStructHelper.h"
 #include "helpers/c/cEnumsHelper.h"
+
+namespace DkrAssetsTool {
 
 class CContext {
 public:
@@ -35,6 +38,9 @@ private:
     std::unordered_map<std::string, CStruct*> _structsByName; 
     std::unordered_map<std::string, CEnum*> _enumsByName; 
     std::unordered_map<std::string, int> _enumValues;
+    std::mutex _mutex;
     
     void _add_enum_values(CEnum *enumRef);
 };
+
+}

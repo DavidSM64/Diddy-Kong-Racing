@@ -6,39 +6,26 @@
 #include "helpers/fileHelper.h"
 #include "helpers/assetsHelper.h"
 
-ExtractGameText::ExtractGameText(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
-    _outFilepath = _settings.pathToAssets / _info.get_out_filepath(".json");
-    DebugHelper::info_custom("Extracting Game Text", YELLOW_TEXT, _outFilepath);
+#include "extract/stats.h"
+#include "text/dkrText.h"
+
+using namespace DkrAssetsTool;
+
+// TODO: Actually extract the dialog into the json instead of it being raw binary.
+void extract_dialog(ExtractInfo &info, WritableJsonFile &jsonFile) {
+    jsonFile.set_path("/raw", info.get_filename(".bin"));
+    jsonFile.set_string("/type", "GameText");
+    jsonFile.set_string("/text-type", "Dialog");
+    
+    info.write_raw_data_file();
+}
+
+void extract_textbox(ExtractInfo &info, WritableJsonFile &jsonFile) {
+    const ExtractStats &stats = info.get_stats();
     
     std::vector<uint8_t> rawBytes;
-    _info.get_data_from_rom(rawBytes);
+    info.get_data_from_rom(rawBytes);
     
-    bool isDialog = _info.get_tag<bool>("dialog", false);
-    
-    WritableJsonFile jsonFile(_outFilepath);
-    
-    jsonFile.set_string("/text-type", isDialog ? "Dialog" : "Textbox");
-    jsonFile.set_string("/type", "GameText");
-    
-    if(isDialog) {
-        _extract_dialog(jsonFile, rawBytes);
-    } else {
-        _extract_textbox(jsonFile, rawBytes);
-    }
-    
-    jsonFile.save();
-}
-
-ExtractGameText::~ExtractGameText() {
-}
-
-void ExtractGameText::_extract_dialog(WritableJsonFile &jsonFile, std::vector<uint8_t> &rawBytes) {
-    fs::path _outRawFilepath = _settings.pathToAssets / _info.get_out_filepath(".bin");
-    jsonFile.set_path("/raw", _info.get_filename(".bin"));
-    FileHelper::write_binary_file(rawBytes, _outRawFilepath, true);
-}
-
-void ExtractGameText::_extract_textbox(WritableJsonFile &jsonFile, std::vector<uint8_t> &rawBytes) {
     int currentPage = 0;
     int commandCount = 0;
     std::string topPtr = "/pages";
@@ -68,9 +55,9 @@ void ExtractGameText::_extract_textbox(WritableJsonFile &jsonFile, std::vector<u
             case 3: // Set Font
             {
                 SetFontCommand *fontCmd = reinterpret_cast<SetFontCommand *>(&rawBytes[offset]);
-                JsonFile *fontsFile = AssetsHelper::get_asset_json(_settings, "ASSET_FONTS");
-                std::string fontBuildId = fontsFile->get_string("/fonts-order/" + std::to_string(fontCmd->fontId));
-                DebugHelper::assert(!fontBuildId.empty(), "(ExtractGameText::_extract_textbox) Invalid font id: ", fontCmd->fontId);
+                // Fonts should be extracted before GameText, so FONT_N should be a valid tag and return the build id for that font.
+                std::string fontBuildId = stats.get_tag<std::string>("FONT_" + std::to_string(fontCmd->fontId), "");
+                DebugHelper::assert(!fontBuildId.empty(), "(ExtractGameText::extract_textbox) Invalid font index: ", fontCmd->fontId);
                 jsonFile.set_string(ptr + "/command", TEXTBOX_COMMANDS[command]);
                 jsonFile.set_string(ptr + "/value", fontBuildId);
                 offset += sizeof(SetFontCommand);
@@ -148,17 +135,31 @@ void ExtractGameText::_extract_textbox(WritableJsonFile &jsonFile, std::vector<u
             }
             default:
             {
-                char *text = reinterpret_cast<char *>(&rawBytes[--offset]);
+                DKRText text(rawBytes, --offset);
                 jsonFile.set_string(ptr + "/command", "Text");
-                jsonFile.set_string(ptr + "/value", text);
-                while(rawBytes[offset] != 0) {
-                    offset++;
-                }
-                offset++;
+                jsonFile.set_string(ptr + "/value", text.get_text());
+                offset += text.bytes_size() + 1;
                 break;
             }
         }
     }
 }
 
-
+void ExtractGameText::extract(ExtractInfo &info) {
+    DebugHelper::info_custom("Extracting Game Text", YELLOW_TEXT, info.get_out_filepath(".json"));
+    
+    bool isDialog = info.get_tag<bool>("isDialog", false);
+    
+    WritableJsonFile &jsonFile = info.get_json_file();
+    
+    jsonFile.set_string("/text-type", isDialog ? "Dialog" : "Textbox");
+    jsonFile.set_string("/type", "GameText");
+    
+    if(isDialog) {
+        extract_dialog(info, jsonFile);
+    } else {
+        extract_textbox(info, jsonFile);
+    }
+    
+    info.write_json_file();
+}

@@ -1,5 +1,7 @@
 #include "gltfHelper.h"
 
+using namespace DkrAssetsTool;
+
 // Defines for the tinygltf library.
 #define TINYGLTF_IMPLEMENTATION
 #define TINYGLTF_USE_CPP14

@@ -4,8 +4,11 @@
 
 #include "regexPcre2.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/debugHelper.h"
 
+namespace DkrAssetsTool {
 class PCRE2Cache {
 public:
     static PCRE2Cache& get() {
@@ -35,6 +38,7 @@ private:
     std::unordered_map<std::string, pcre2_code*> _cache;
     
 };
+}
 
 void RegexHelperPcre2::get_matches(const std::string &input, const std::string &regexInput, std::vector<RegexMatch> &out, int startOffset) {
     pcre2_code *re = PCRE2Cache::get().compile_regex(regexInput);

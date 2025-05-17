@@ -1,21 +1,13 @@
 #pragma once
 
 #include "builder/buildInfo.h"
-#include "misc/settings.hpp"
 
-#include "fileTypes/fonts.hpp"
-
-#include "helpers/debugHelper.h"
-#include "helpers/fileHelper.h"
-#include "helpers/jsonHelper.h"
-
-class BuildTexture {
-public:
-    BuildTexture(DkrAssetsSettings &settings, BuildInfo &info);
-    ~BuildTexture();
-private:
-    DkrAssetsSettings &_settings;
-    BuildInfo &_info;
+namespace DkrAssetsTool {
+namespace BuildTexture {
+    void build(BuildInfo &info);
     
-    size_t _calculate_out_size();
-};
+    // Called from object/level model builders to add new textures.
+    // Returns the fileIndex of the new texture asset.
+    size_t build_deferred(BuildInfo &baseInfo, fs::path pathToImage);
+}
+}

@@ -1,0 +1,5 @@
+{
+    "name": "Custom Model Test",
+    "authors" : ["Example"],
+    "description": "A simple cube model with a custom texture that replaces the N64 logo on the bootup screen."
+}
