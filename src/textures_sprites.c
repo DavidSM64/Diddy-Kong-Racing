@@ -1012,7 +1012,80 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
     goto textureCouldNotBeLoaded;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007CA68.s")
+void func_8007CA68(s32 arg0, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
+    Sprite *sprite;
+    TextureHeader *tex;
+    s32 temp_a0;
+    s32 temp_v1;
+    s32 var_s1;
+    s32 var_s3;
+    s32 var_s4;
+    s32 var_s5;
+    s32 var_s6;
+    s32 temp_a1;
+    s32 temp_a2;
+
+    if ((arg0 < 0) || (arg0 >= gSpriteTableSize)) {
+        *arg2 = 0;
+        *arg3 = 0;
+        return;
+    }
+
+    temp_a2 = gSpriteOffsetTable[arg0];
+
+    // Must be on the same line. (maybe a macro?)
+    // clang-format off
+    sprite = gCurrentSprite; \
+    load_asset_to_address(12, sprite, temp_a2, gSpriteOffsetTable[arg0 + 1] - temp_a2);
+    // clang-format on
+
+    if (sprite->numberOfFrames < arg1) {
+    failedExit:
+        *arg2 = 0;
+        *arg3 = 0;
+        *arg4 = 0;
+        return;
+    }
+    tex = load_texture(sprite->unkC.val[arg1] + sprite->baseTextureId);
+    if (tex == NULL) {
+        goto failedExit;
+    }
+    *arg4 = tex_asset_size(sprite->unkC.val[arg1] + sprite->baseTextureId);
+    var_s3 = tex->unk3 - sprite->numberOfInstances;
+    var_s4 = sprite->drawFlags - tex->unk4;
+    temp_a1 = tex->width;
+    temp_a2 = tex->height;
+    var_s5 = var_s3 + temp_a1;
+    var_s6 = var_s4 - temp_a2;
+    tex_free(tex);
+
+    for (var_s1 = sprite->unkC.val[arg1] + 1; var_s1 < sprite->unkC.val[arg1 + 1]; var_s1++) {
+        tex = load_texture(sprite->baseTextureId + var_s1);
+        if (tex == NULL) {
+            goto failedExit;
+        }
+        *arg4 += tex_asset_size(sprite->baseTextureId + var_s1);
+        temp_v1 = tex->unk3 - sprite->numberOfInstances;
+        temp_a0 = sprite->drawFlags - tex->unk4;
+        temp_a1 = tex->width;
+        temp_a2 = tex->height;
+        if (temp_v1 < var_s3) {
+            var_s3 = temp_v1;
+        }
+        if (var_s5 < temp_v1 + temp_a1) {
+            var_s5 = temp_v1 + temp_a1;
+        }
+        if (temp_a0 - temp_a2 < var_s6) {
+            var_s6 = temp_a0 - temp_a2;
+        }
+        if (var_s4 < temp_a0) {
+            var_s4 = temp_a0;
+        }
+        tex_free(tex);
+    }
+    *arg2 = var_s5 - var_s3;
+    *arg3 = var_s4 - var_s6;
+}
 
 /**
  * This function attempts to free the sprite from memory.
@@ -1403,10 +1476,10 @@ void func_8007F1E8(LevelHeader_70 *arg0) {
     arg0->unk4 = 0;
     arg0->unk8 = 0;
     arg0->unkC = 0;
-    arg0->red = arg0->red2;
-    arg0->green = arg0->green2;
-    arg0->blue = arg0->blue2;
-    arg0->alpha = arg0->alpha2;
+    arg0->rgba.r = arg0->rgba2.r;
+    arg0->rgba.g = arg0->rgba2.g;
+    arg0->rgba.b = arg0->rgba2.b;
+    arg0->rgba.a = arg0->rgba2.a;
     for (i = 0; i < arg0->unk0; i++) {
         arg0->unkC += arg0->unk18[i].unk0;
     }
@@ -1452,22 +1525,22 @@ void update_colour_cycle(LevelHeader_70 *arg0, s32 updateRate) {
 
         cur = (LevelHeader_70 *) (&((LevelHeader_70_18 *) arg0)[curIndex]);
         temp = (arg0->unk8 << 16) / (cur->unk18->unk0);
-        cur_red = cur->red2;
-        cur_green = cur->green2;
-        cur_blue = cur->blue2;
-        cur_alpha = cur->alpha2;
+        cur_red = cur->rgba2.r;
+        cur_green = cur->rgba2.g;
+        cur_blue = cur->rgba2.b;
+        cur_alpha = cur->rgba2.a;
 
         next = (LevelHeader_70 *) (&((LevelHeader_70_18 *) arg0)[nextIndex]);
-        next_red = next->red2;
-        next_green = next->green2;
-        next_blue = next->blue2;
-        next_alpha = next->alpha2;
+        next_red = next->rgba2.r;
+        next_green = next->rgba2.g;
+        next_blue = next->rgba2.b;
+        next_alpha = next->rgba2.a;
 
         next = arg0;
-        arg0->red = (((next_red - cur_red) * temp) >> 16) + cur_red;
-        arg0->green = (((next_green - cur_green) * temp) >> 16) + cur_green;
-        arg0->blue = (((next_blue - cur_blue) * temp) >> 16) + cur_blue;
-        arg0->alpha = (((next_alpha - cur_alpha) * temp) >> 16) + cur_alpha;
+        arg0->rgba.r = (((next_red - cur_red) * temp) >> 16) + cur_red;
+        arg0->rgba.g = (((next_green - cur_green) * temp) >> 16) + cur_green;
+        arg0->rgba.b = (((next_blue - cur_blue) * temp) >> 16) + cur_blue;
+        arg0->rgba.a = (((next_alpha - cur_alpha) * temp) >> 16) + cur_alpha;
     }
 }
 

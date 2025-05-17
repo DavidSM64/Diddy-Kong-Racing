@@ -55,7 +55,7 @@ char gJpnTTCam[] = { 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x55,
 u8 *D_800DC924 = NULL;
 s32 D_800DC928 = 0; // Currently unknown, might be a different type.
 
-s8 D_800DC92C[24] = {
+u8 D_800DC92C[24] = {
     0, 1, 4, 1, 2, 4, 2, 3, 4, 3, 0, 4, 5,
     6, 1, 1, 0, 5, 3, 2, 7, 7, 8, 3
     // There may or may not be extra zeroes here.
@@ -1350,135 +1350,142 @@ void set_skydome_visbility(s32 renderSky) {
     gSceneRenderSkyDome = renderSky;
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 // This function creates the flashy sky effect in the wizpig 2 race.
 // init_skydome
-// https://decomp.me/scratch/F52TP
+// https://decomp.me/scratch/E1DFy
 void func_80028050(void) {
-    // sp154 ?
-    s32 uCoordMask; // sp150 ?
+    Triangle *tris;
+    Vertex *verts;
     s32 vCoordMask; // sp14C
+    s32 uCoordMask;
+    f32 scaledXSin;
+    f32 scaledXCos;
+    f32 var_f16;
     s16 uCoords[9]; // sp128
     s16 vCoords[9]; // sp114
-    f32 yRotCos;    // sp10C
-    f32 yRotSin;
+    f32 xCos;
+    f32 xSin; // sp10C
+    f32 pad_sp108;
+    ObjectSegment *objSegment;
+    f32 pad_sp100;
     f32 xPositions[9]; // spDC
     f32 zPositions[9]; // spB8
-    f32 spB4;
-    s8 *sp7C;
-    s32 sp78;
-    TextureHeader *sp74;
-    f32 sp48;
-    f32 sp3C;
-    f32 sp38;
-    f32 sp2C;
-    ObjectSegment *objSeg;
-    s16 temp_a1;
-    s16 temp_v0_2;
-    s16 temp_v1_2;
-    Vertex *verts;
-    Triangle *tris;
-    s8 *var_t2;
-    s8 *var_v0;
-    u8 *var_v0_3;
-    u32 var_a2;
-    u32 var_a3;
+    Vec3f pos;
     s32 i;
-    s16 yPos;
+    s32 var_v0;
+    s32 var_v1;
+    s32 var_a1;
+    s32 var_a2;
+    s32 var_a3;
+    u8 *var_v0_3;
+    f32 var_f14;
+    s16 vertY;
+    s16 vTempCoord;
+    s16 uTempCoord;
+    LevelHeader_70 *levelHeader;
+    LevelHeader_70 *var_t2; // sp7C
+    LevelHeader_70 *sp78;
+    TextureHeader *texHeader; // sp74
+    s32 pad[4];
 
     verts = gSceneCurrVertexList;
     tris = gSceneCurrTriList;
-    objSeg = get_active_camera_segment();
-    sp74 = gCurrentLevelHeader2->unkA4;
-    uCoordMask = (sp74->width << 5) - 1;
-    vCoordMask = (sp74->height << 5) - 1;
-    yRotCos = coss_f(-objSeg->trans.rotation.y_rotation);
-    yRotSin = sins_f(-objSeg->trans.rotation.y_rotation);
 
-    xPositions[0] = -(yRotSin * 1280.0f) - (yRotCos * 1280.0f); // spDC OK
-    zPositions[0] = -(yRotSin * 1280.0f) + (yRotCos * 1280.0f); // spB8 OK
+    objSegment = get_active_camera_segment();
+    texHeader = gCurrentLevelHeader2->unkA4;
+    uCoordMask = (texHeader->width << 5) - 1;
+    vCoordMask = (texHeader->height << 5) - 1;
+    xSin = sins_f(-objSegment->trans.rotation.x);
+    xCos = coss_f(-objSegment->trans.rotation.x);
 
-    zPositions[1] = (yRotSin * 1280.0f) - (yRotCos * 1280.0f);  // spE0 OK
-    xPositions[1] = -(yRotSin * 1280.0f) - (yRotCos * 1280.0f); // spBC OK
+    scaledXSin = xSin * 1280.0f;
+    scaledXCos = xCos * 1280.0f;
+    xPositions[0] = -scaledXCos - (xSin * 1280.0f);
+    zPositions[0] = -scaledXCos + (xSin * 1280.0f);
+    xPositions[1] = scaledXCos - (xSin * 1280.0f);
+    zPositions[1] = -scaledXCos - (xSin * 1280.0f);
+    xPositions[2] = scaledXCos + (xSin * 1280.0f);
+    zPositions[2] = scaledXCos - (xSin * 1280.0f);
+    xPositions[3] = -scaledXCos + (xSin * 1280.0f);
+    zPositions[3] = scaledXCos + scaledXSin;
+    xPositions[4] = 0.0f;
+    zPositions[4] = 0.0f;
 
-    xPositions[2] = (yRotSin * 1280.0f) + (yRotCos * 1280.0f); // spE4 OK
-    zPositions[2] = (yRotSin * 1280.0f) - (yRotCos * 1280.0f); // spC0 OK
+    zPositions[5] = scaledXSin - (2.0f * scaledXCos);
+    xPositions[6] = scaledXCos - (2.0f * scaledXSin);
+    zPositions[6] = -(2.0f * scaledXCos) - scaledXSin;
+    xPositions[5] = -scaledXCos - (2.0f * scaledXSin);
+    xPositions[7] = scaledXCos + (2.0f * scaledXSin);
+    zPositions[7] = (2.0f * scaledXCos) - scaledXSin;
+    xPositions[8] = -scaledXCos + (2.0f * scaledXSin);
+    zPositions[8] = (2.0f * scaledXCos) + scaledXSin;
 
-    xPositions[3] = -(yRotSin * 1280.0f) + (yRotCos * 1280.0f); // spE8 OK
-    zPositions[3] = (yRotSin * 1280.0f) + (yRotCos * 1280.0f);  // spC4 OK
+    var_f14 = 1280.0f;
+    var_f14 *= 0.25f;
 
-    xPositions[4] = 0.0f; // spEC OK
-    zPositions[4] = 0.0f; // spC8 OK
+    var_a1 = texHeader->width * 16 * gCurrentLevelHeader2->unkA0;
+    var_a2 = texHeader->height * 16 * gCurrentLevelHeader2->unkA1;
 
-    xPositions[5] = -(yRotSin * 1280.0f) - (2.0f * (yRotCos * 1280.0f)); // spF0
-    zPositions[5] = (yRotCos * 1280.0f) - (2.0f * (yRotSin * 1280.0f));  // spCC
+    var_v0 =
+        ((s32) (objSegment->trans.x_position * (var_f14 / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) & uCoordMask;
+    var_v1 =
+        ((s32) (objSegment->trans.z_position * (var_f14 / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) & vCoordMask;
 
-    zPositions[6] = -(2.0f * (yRotSin * 1280.0f)) - (yRotCos * 1280.0f); // spF4
-    xPositions[6] = (yRotSin * 1280.0f) - (2.0f * (yRotCos * 1280.0f));  // spD0
+    var_f14 = var_a1 * xCos;
+    pos.z = var_a1 * xCos;
+    pos.x = var_a1 * xCos;
+    var_f16 = var_a2 * xSin;
+    xCos = var_f16;
 
-    xPositions[7] = (yRotSin * 1280.0f) + (2.0f * (yRotCos * 1280.0f)); // spF8
-    zPositions[7] = (2.0f * (yRotSin * 1280.0f)) - (yRotCos * 1280.0f); // spD4
+    // @fake
+    var_a2 = texHeader->height * 16 * gCurrentLevelHeader2->unkA1;
 
-    xPositions[8] = -(yRotSin * 1280.0f) + (2.0f * (yRotCos * 1280.0f)); // spFC
-    zPositions[8] = (2.0f * (yRotSin * 1280.0f)) + (yRotCos * 1280.0f);  // spD8
+    uCoords[0] = (s16) (-var_f14 - xCos) + var_v0;
+    vCoords[0] = (s16) (var_f16 - var_f14) + var_v1;
+    uCoords[1] = (s16) (var_f14 - xCos) + var_v0;
+    vCoords[1] = (s16) (-var_f14 - var_f16) + var_v1;
+    uCoords[2] = (s16) (var_f14 + var_f16) + var_v0;
+    vCoords[2] = (s16) (var_f14 - var_f16) + var_v1;
+    uCoords[3] = (s16) (var_f16 - var_f14) + var_v0;
+    vCoords[3] = (s16) (var_f14 + var_f16) + var_v1;
 
-    sp38 = (f32) (sp74->width * 16 * gCurrentLevelHeader2->unkA0);
-    temp_v0_2 =
-        ((s32) (objSeg->trans.x_position * ((1280.0f * 0.25f) / sp38)) + ((s16) gCurrentLevelHeader2->unkA8 >> 4)) &
-        uCoordMask;
-    sp48 = (f32) (sp74->height * 16 * gCurrentLevelHeader2->unkA1);
-    temp_v1_2 =
-        ((s32) (objSeg->trans.z_position * ((1280.0f * 0.25f) / sp48)) + ((s16) gCurrentLevelHeader2->unkAA >> 4)) &
-        vCoordMask;
+    uCoords[4] = var_v0;
+    vCoords[4] = var_v1;
 
-    uCoords[0] = (s32) (-(sp38 * yRotSin) - (sp48 * yRotCos)) + temp_v0_2;
-    vCoords[0] = (s32) ((sp48 * yRotCos) - (sp38 * yRotSin)) + temp_v1_2;
-
-    uCoords[1] = (s32) ((sp38 * yRotSin) - (sp48 * yRotCos)) + temp_v0_2;
-    vCoords[1] = (s32) (-(sp38 * yRotSin) - (sp48 * yRotCos)) + temp_v1_2;
-
-    uCoords[2] = (s32) ((sp38 * yRotSin) + (sp48 * yRotCos)) + temp_v0_2;
-    vCoords[2] = (s32) ((sp38 * yRotSin) - (sp48 * yRotCos)) + temp_v1_2;
-
-    uCoords[3] = (s32) ((sp48 * yRotCos) - (sp38 * yRotSin)) + temp_v0_2;
-    vCoords[3] = (s32) ((sp38 * yRotSin) + (sp48 * yRotCos)) + temp_v1_2;
-
-    uCoords[4] = temp_v0_2;
-    vCoords[4] = temp_v1_2;
-
-    uCoords[5] = (s32) (-(sp38 * yRotSin) - (2.0f * (sp48 * yRotCos))) + temp_v0_2;
-    vCoords[5] = (s32) ((sp48 * yRotCos) - (2.0f * (sp38 * yRotSin))) + temp_v1_2;
-
-    uCoords[6] = (s32) ((sp38 * yRotSin) - (2.0f * (sp48 * yRotCos))) + temp_v0_2;
-    vCoords[6] = (s32) (-(2.0f * (sp38 * yRotSin)) - (sp48 * yRotCos)) + temp_v1_2;
-
-    uCoords[7] = (s32) ((sp38 * yRotSin) + (2.0f * (sp48 * yRotCos))) + temp_v0_2;
-    vCoords[7] = (s32) ((2.0f * (sp38 * yRotSin)) - (sp48 * yRotCos)) + temp_v1_2;
-
-    uCoords[8] = (s32) ((2.0f * (sp48 * yRotCos)) - (sp38 * yRotSin)) + temp_v0_2;
-    vCoords[8] = (s32) ((2.0f * (sp38 * yRotSin)) + (sp48 * yRotCos)) + temp_v1_2;
+    uCoords[5] = (s16) (-var_f14 - (2.0f * xCos)) + var_v0;
+    vCoords[5] = (s16) (var_f16 - (2.0f * var_f14)) + var_v1;
+    uCoords[6] = (s16) (var_f14 - (2.0f * xCos)) + var_v0;
+    vCoords[6] = (s16) ((-(2.0f * var_f14)) - var_f16) + var_v1;
+    uCoords[7] = (s16) ((2.0f * xCos) + pos.z) + var_v0;
+    vCoords[7] = (s16) ((2.0f * pos.x) - var_f16) + var_v1;
+    uCoords[8] = (s16) ((2.0f * xCos) - pos.z) + var_v0;
+    vCoords[8] = (s16) ((2.0f * pos.x) + var_f16) + var_v1;
 
     matrix_world_origin(&gSceneCurrDisplayList, &gSceneCurrMatrix);
-    var_t2 = gCurrentLevelHeader2->unk74[0];
-    var_a2 = 0xFFFFFFFF;
-    if (var_t2 != (s8 *) -1) {
-        var_v0 = gCurrentLevelHeader2->unk74[1];
-        if (var_v0 == (s8 *) -1) {
-            var_v0 = var_t2;
+
+    var_t2 = *gCurrentLevelHeader2->unk74;
+    var_a2 = -1;
+
+    if ((u32) var_t2 != -1) {
+        levelHeader = gCurrentLevelHeader2->unk74[1];
+        if ((u32) levelHeader == -1) {
+            levelHeader = var_t2;
         }
     } else {
-        var_v0 = sp78;
+        levelHeader = sp78; // @bug? sp78 is never set
         var_t2 = NULL;
     }
-    var_a3 = 0xFFFFFF00;
+
+    var_a3 = -0x100;
     if (var_t2 != NULL) {
-        var_a2 = var_t2[0x10];
-        var_a3 = var_v0[0x10] & ~0xFF;
+        var_a2 = var_t2->rgba.word;
+        var_a3 = levelHeader->rgba.word & (~0xFF);
     }
-    sp7C = var_t2;
+
     gfx_init_basic_xlu(&gSceneCurrDisplayList, 1, var_a2, var_a3);
-    sp74 = (TextureHeader *) set_animated_texture_header(sp74, D_8011B110 << 8);
-    gDkrDmaDisplayList(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(sp74->cmd), sp74->numberOfCommands);
+    texHeader = set_animated_texture_header(texHeader, D_8011B110 << 8);
+    gDkrDmaDisplayList(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(texHeader->cmd), texHeader->numberOfCommands);
     gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gSceneCurrVertexList), 9, 0);
     gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gSceneCurrTriList), 8, 1);
     gDPPipeSync(gSceneCurrDisplayList++);
@@ -1488,37 +1495,33 @@ void func_80028050(void) {
     }
     rendermode_reset(&gSceneCurrDisplayList);
 
-    yPos = objSeg->trans.y_position + 192.0f;
+    vertY = objSegment->trans.y_position + 192.0f;
     for (i = 0; i < 9; i++) {
-        verts->y = yPos;
-        verts->x = objSeg->trans.x_position + xPositions[i];
-        verts->z = objSeg->trans.z_position + zPositions[i];
-        verts->r = 255;
-        verts->g = 255;
-        verts->b = 255;
-        verts->a = (i <= 4) ? 255 : 0;
+        verts->x = xPositions[i] + objSegment->trans.x_position;
+        verts->y = vertY;
+        verts->z = zPositions[i] + objSegment->trans.z_position;
+        verts->r = 0xFF;
+        verts->g = 0xFF;
+        verts->b = 0xFF;
+        verts->a = (i <= 4) ? (255) : (0);
         verts++;
     }
 
     var_v0_3 = D_800DC92C;
     for (i = 0; i < 8; i++) {
         tris->flags = 0x40;
-
         tris->vi0 = *var_v0_3;
         tris->uv0.u = uCoords[*var_v0_3];
         tris->uv0.v = vCoords[*var_v0_3];
-        var_v0_3++;
-
+        var_v0_3 += 1;
         tris->vi1 = *var_v0_3;
         tris->uv1.u = uCoords[*var_v0_3];
         tris->uv1.v = vCoords[*var_v0_3];
-        var_v0_3++;
-
+        var_v0_3 += 1;
         tris->vi2 = *var_v0_3;
         tris->uv2.u = uCoords[*var_v0_3];
         tris->uv2.v = vCoords[*var_v0_3];
-        var_v0_3++;
-
+        var_v0_3 += 1;
         tris++;
     }
 
@@ -1955,10 +1958,11 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
         if (levelHeaderIndex != (batchInfo->verticesOffset * 0)) {
             gDPSetEnvColor(
                 gSceneCurrDisplayList++,
-                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->red,
-                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->green,
-                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->blue,
-                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->alpha);
+                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->rgba.r,
+                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->rgba.g,
+                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->rgba.b,
+                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])
+                    ->rgba.a);
         } else {
             gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
         }
