@@ -1367,7 +1367,7 @@ void func_80028050(void) {
     f32 xCos;
     f32 xSin; // sp10C
     f32 pad_sp108;
-    ObjectSegment* objSegment;
+    ObjectSegment *objSegment;
     f32 pad_sp100;
     f32 xPositions[9]; // spDC
     f32 zPositions[9]; // spB8
@@ -1378,15 +1378,15 @@ void func_80028050(void) {
     s32 var_a1;
     s32 var_a2;
     s32 var_a3;
-    u8* var_v0_3;
+    u8 *var_v0_3;
     f32 var_f14;
     s16 vertY;
     s16 vTempCoord;
     s16 uTempCoord;
-    LevelHeader_70* levelHeader;
-    LevelHeader_70* var_t2; // sp7C
-    LevelHeader_70* sp78;
-    TextureHeader* texHeader; // sp74
+    LevelHeader_70 *levelHeader;
+    LevelHeader_70 *var_t2; // sp7C
+    LevelHeader_70 *sp78;
+    TextureHeader *texHeader; // sp74
     s32 pad[4];
 
     verts = gSceneCurrVertexList;
@@ -1427,8 +1427,10 @@ void func_80028050(void) {
     var_a1 = texHeader->width * 16 * gCurrentLevelHeader2->unkA0;
     var_a2 = texHeader->height * 16 * gCurrentLevelHeader2->unkA1;
 
-    var_v0 = ((s32) (objSegment->trans.x_position * (var_f14 / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) & uCoordMask;
-    var_v1 = ((s32) (objSegment->trans.z_position * (var_f14 / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) & vCoordMask;
+    var_v0 =
+        ((s32) (objSegment->trans.x_position * (var_f14 / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) & uCoordMask;
+    var_v1 =
+        ((s32) (objSegment->trans.z_position * (var_f14 / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) & vCoordMask;
 
     var_f14 = var_a1 * xCos;
     pos.z = var_a1 * xCos;
@@ -1465,9 +1467,9 @@ void func_80028050(void) {
     var_t2 = *gCurrentLevelHeader2->unk74;
     var_a2 = -1;
 
-    if ((u32)var_t2 != -1) {
+    if ((u32) var_t2 != -1) {
         levelHeader = gCurrentLevelHeader2->unk74[1];
-        if ((u32)levelHeader == -1) {
+        if ((u32) levelHeader == -1) {
             levelHeader = var_t2;
         }
     } else {
