@@ -376,20 +376,26 @@ typedef struct LevelHeader_70_18 {
     u8 alpha; //0xFF
 } LevelHeader_70_18;
 
+typedef struct {
+  union {
+    struct {
+      u8 r;
+      u8 g;
+      u8 b;
+      u8 a;
+    };
+    u32 word;
+  };
+} ColourRGBA;
+
 /* Unknown size */
 typedef struct LevelHeader_70 {
   /* 0x00 */ s32 unk0;  //0x00000004
   /* 0x04 */ s32 unk4;  //0x00000000
   /* 0x08 */ s32 unk8;  //0x00000000
   /* 0x0C */ s32 unkC;  //0x00000000
-  /* 0x10 */ u8 red;    //0x72
-  /* 0x11 */ u8 green;  //0x75
-  /* 0x12 */ u8 blue;   //0x73
-  /* 0x13 */ u8 alpha;  //0x20
-  /* 0x14 */ u8 red2;   //0xFF
-  /* 0x15 */ u8 green2; //0x00
-  /* 0x16 */ u8 blue2;  //0x00
-  /* 0x17 */ u8 alpha2; //0xFF
+  /* 0x10 */ ColourRGBA rgba;
+  /* 0x14 */ ColourRGBA rgba2;
   /* 0x18 */ LevelHeader_70_18 unk18[1]; // Actual length depends on unk0
 } LevelHeader_70;
 
@@ -1894,17 +1900,4 @@ typedef struct GhostNode {
   /* 0x08 */ s16 xRotation;
   /* 0x0A */ s16 yRotation;
 } GhostNode;
-
-typedef struct {
-union {
-struct {
- u8 r;
- u8 g;
- u8 b;
- u8 a;
-};
-u32 word;
-};
-} ColourRGBA;
-
 #endif

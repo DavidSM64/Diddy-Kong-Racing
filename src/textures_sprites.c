@@ -1403,10 +1403,10 @@ void func_8007F1E8(LevelHeader_70 *arg0) {
     arg0->unk4 = 0;
     arg0->unk8 = 0;
     arg0->unkC = 0;
-    arg0->red = arg0->red2;
-    arg0->green = arg0->green2;
-    arg0->blue = arg0->blue2;
-    arg0->alpha = arg0->alpha2;
+    arg0->rgba.r = arg0->rgba2.r;
+    arg0->rgba.g = arg0->rgba2.g;
+    arg0->rgba.b = arg0->rgba2.b;
+    arg0->rgba.a = arg0->rgba2.a;
     for (i = 0; i < arg0->unk0; i++) {
         arg0->unkC += arg0->unk18[i].unk0;
     }
@@ -1452,22 +1452,22 @@ void update_colour_cycle(LevelHeader_70 *arg0, s32 updateRate) {
 
         cur = (LevelHeader_70 *) (&((LevelHeader_70_18 *) arg0)[curIndex]);
         temp = (arg0->unk8 << 16) / (cur->unk18->unk0);
-        cur_red = cur->red2;
-        cur_green = cur->green2;
-        cur_blue = cur->blue2;
-        cur_alpha = cur->alpha2;
+        cur_red = cur->rgba2.r;
+        cur_green = cur->rgba2.g;
+        cur_blue = cur->rgba2.b;
+        cur_alpha = cur->rgba2.a;
 
         next = (LevelHeader_70 *) (&((LevelHeader_70_18 *) arg0)[nextIndex]);
-        next_red = next->red2;
-        next_green = next->green2;
-        next_blue = next->blue2;
-        next_alpha = next->alpha2;
+        next_red = next->rgba2.r;
+        next_green = next->rgba2.g;
+        next_blue = next->rgba2.b;
+        next_alpha = next->rgba2.a;
 
         next = arg0;
-        arg0->red = (((next_red - cur_red) * temp) >> 16) + cur_red;
-        arg0->green = (((next_green - cur_green) * temp) >> 16) + cur_green;
-        arg0->blue = (((next_blue - cur_blue) * temp) >> 16) + cur_blue;
-        arg0->alpha = (((next_alpha - cur_alpha) * temp) >> 16) + cur_alpha;
+        arg0->rgba.r = (((next_red - cur_red) * temp) >> 16) + cur_red;
+        arg0->rgba.g = (((next_green - cur_green) * temp) >> 16) + cur_green;
+        arg0->rgba.b = (((next_blue - cur_blue) * temp) >> 16) + cur_blue;
+        arg0->rgba.a = (((next_alpha - cur_alpha) * temp) >> 16) + cur_alpha;
     }
 }
 

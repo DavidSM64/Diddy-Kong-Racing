@@ -1750,7 +1750,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 29, SWMessage[0],
                   ALIGN_MIDDLE_CENTER);
         // Draw actual text.
-        set_text_colour(D_80127194->red, D_80127194->green, D_80127194->blue, 128, D_80127194->alpha);
+        set_text_colour(D_80127194->rgba.r, D_80127194->rgba.g, D_80127194->rgba.b, 128, D_80127194->rgba.a);
         draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY, SWMessage[2],
                   ALIGN_MIDDLE_CENTER);
         draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 14, SWMessage[1],
