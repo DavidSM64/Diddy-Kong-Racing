@@ -868,10 +868,119 @@ void material_load_simple(Gfx **dList, s32 flags) {
     }
 }
 
-/**
- * Official Name: texLoadSprite
- */
-#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007C12C.s")
+Sprite *tex_load_sprite(s32 spriteID, s32 arg1) {
+    Sprite *refSprite;
+    Sprite *newSprite;
+    s32 cacheNum;
+    Sprite *sprite;
+    TextureHeader *tex;
+    s32 i;
+    s32 size;
+    s8 allocFailed;
+    s8 cacheFull;
+    s16 frameCount;
+    s32 allocSize;
+
+    D_8012635C = arg1;
+    if (spriteID < 0 || spriteID >= gSpriteTableSize) {
+        return NULL;
+    }
+
+    for (i = 0, cacheFull = 0; i < gSpriteCacheCount; i++) {
+        if (spriteID == gSpriteCache[ASSETCACHE_ID(i)]) {
+            refSprite = (Sprite *) gSpriteCache[ASSETCACHE_PTR(i)];
+            refSprite->numberOfInstances++;
+            return refSprite;
+        }
+    }
+
+    cacheNum = -1;
+    for (i = 0; i < gSpriteCacheCount; i++) {
+        // @fake
+        if (newSprite) {}
+        if (gSpriteCache[ASSETCACHE_ID(i)] == -1) {
+            cacheNum = i;
+        }
+    }
+
+    if (cacheNum == -1) {
+        cacheFull = TRUE;
+        cacheNum = gSpriteCacheCount;
+        gSpriteCacheCount++;
+    }
+
+    size = gSpriteOffsetTable[spriteID];
+    sprite = gCurrentSprite;
+    load_asset_to_address(12, (u32) sprite, size, gSpriteOffsetTable[spriteID + 1] - size);
+
+    frameCount = sprite->unkC.val[sprite->numberOfFrames];
+    size = frameCount * 4;
+    allocSize = size * sizeof(Vertex);
+    allocSize += size << 3;
+    allocSize += sprite->numberOfFrames * sizeof(Gfx);
+    allocSize += frameCount << 4 << 1;
+    allocSize += size;
+    allocSize += (s32) align16((u8 *) 0x10);
+    allocSize += (s32) align16((u8 *) (sprite->numberOfFrames * 4));
+    newSprite = (Sprite *) mempool_alloc(allocSize, COLOUR_TAG_MAGENTA);
+    if (newSprite == NULL) {
+        if (cacheFull) {
+            gSpriteCacheCount--;
+        }
+
+        return NULL;
+    }
+
+    D_80126368 = (Triangle *) ((s32) newSprite + (s32) align16((u8 *) sizeof(Sprite)) +
+                               (s32) align16((u8 *) (sprite->numberOfFrames * 4)));
+    D_80126364 = (Gfx *) (&((u8 *) D_80126368)[frameCount << 5]); // `<< 5` is `sizeof(Triangle) * 2`
+    D_80126360 = (Vertex *) ((Gfx *) (((s32) & ((u8 *) D_80126364)[frameCount << 5]) + (sprite->numberOfFrames << 3)));
+    newSprite->gfx[0] = (Gfx *) &((u8 *) D_80126360)[frameCount * sizeof(Vertex) * 4];
+
+    allocFailed = FALSE;
+    for (i = 0; i < frameCount; i++) {
+        gTexColourTag = COLOUR_TAG_LIME;
+        tex = load_texture(sprite->baseTextureId + i);
+        newSprite->frames[i] = tex;
+        if (newSprite->frames[i] == NULL) {
+            allocFailed = TRUE;
+        }
+
+        gTexColourTag = COLOUR_TAG_MAGENTA;
+        D_80126344 = 1;
+    }
+
+    D_80126344 = 0;
+    if (allocFailed) {
+        for (i = 0; i < frameCount; i++) {
+            tex = (TextureHeader *) newSprite->frames[i];
+            if (tex != NULL) {
+                tex_free(tex);
+            }
+        }
+        if (cacheFull) {
+            gSpriteCacheCount--;
+        }
+        mempool_free(newSprite);
+        return NULL;
+    }
+
+    newSprite->numberOfFrames = frameCount;
+    newSprite->baseTextureId = sprite->numberOfFrames;
+    for (i = 0; i < sprite->numberOfFrames; i++) {
+        newSprite->unkC.ptr[i] = (u8 *) D_80126364;
+        func_8007CDC0(sprite, newSprite, i);
+    }
+
+    if (gSpriteCacheCount >= 100) {
+        return NULL;
+    }
+
+    gSpriteCache[ASSETCACHE_ID(cacheNum)] = spriteID;
+    gSpriteCache[ASSETCACHE_PTR(cacheNum)] = (s32) newSprite;
+    newSprite->numberOfInstances = 1;
+    return newSprite;
+}
 
 /**
  * Gets the sprite cache index from the argument.
@@ -1036,7 +1145,7 @@ void func_8007CA68(s32 arg0, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
     // Must be on the same line. (maybe a macro?)
     // clang-format off
     sprite = gCurrentSprite; \
-    load_asset_to_address(12, sprite, temp_a2, gSpriteOffsetTable[arg0 + 1] - temp_a2);
+    load_asset_to_address(12, (u32)sprite, temp_a2, gSpriteOffsetTable[arg0 + 1] - temp_a2);
     // clang-format on
 
     if (sprite->numberOfFrames < arg1) {

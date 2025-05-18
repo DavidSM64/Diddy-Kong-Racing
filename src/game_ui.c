@@ -337,13 +337,13 @@ void hud_init(UNUSED s32 viewportCount) {
         gAssetHudElements->entry[i] = NULL;
     }
     gAssetHudElements->entry[HUD_ELEMENT_UNK_01] =
-        func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_01] & 0x3FFF, 1); // ID: 86 - 0x56
+        tex_load_sprite(gAssetHudElementIds[HUD_ELEMENT_UNK_01] & 0x3FFF, 1); // ID: 86 - 0x56
     gAssetHudElements->entry[HUD_ELEMENT_UNK_17] =
-        func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_17] & 0x3FFF, 1); // ID: 291 - 0x123
+        tex_load_sprite(gAssetHudElementIds[HUD_ELEMENT_UNK_17] & 0x3FFF, 1); // ID: 291 - 0x123
     gAssetHudElements->entry[HUD_ELEMENT_UNK_08] =
-        func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_08] & 0x3FFF, 1); // ID: 156 - 0x9C
+        tex_load_sprite(gAssetHudElementIds[HUD_ELEMENT_UNK_08] & 0x3FFF, 1); // ID: 156 - 0x9C
     gAssetHudElements->entry[HUD_ELEMENT_UNK_11] =
-        func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_11] & 0x3FFF, 1); // ID: 60 - 0x3C
+        tex_load_sprite(gAssetHudElementIds[HUD_ELEMENT_UNK_11] & 0x3FFF, 1); // ID: 60 - 0x3C
     if (gNumActivePlayers != 3) {
         playerCount = gNumActivePlayers;
     } else {
@@ -3298,7 +3298,7 @@ void minimap_init(LevelModel *model) {
     gMinimapBlue = model->minimapColor & 0xFF;
     load_sprite_info(model->minimapSpriteIndex, &gMinimapDotOffsetX, &gMinimapDotOffsetY, &sp2C, &sp2C, &sp2C);
     func_8007CA68(model->minimapSpriteIndex, 0, &D_80126D14, &D_80126D18, &sp2C);
-    model->minimapSpriteIndex = (s32) func_8007C12C(model->minimapSpriteIndex, 1);
+    model->minimapSpriteIndex = (s32) tex_load_sprite(model->minimapSpriteIndex, 1);
 }
 
 /**
@@ -3844,7 +3844,7 @@ void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement
         if ((spriteElementId & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE) {
             gAssetHudElements->entry[hud->spriteID] = load_texture(spriteElementId & 0x3FFF);
         } else if (spriteElementId & ASSET_MASK_SPRITE) {
-            gAssetHudElements->entry[hud->spriteID] = func_8007C12C(spriteElementId & 0x3FFF, 1);
+            gAssetHudElements->entry[hud->spriteID] = tex_load_sprite(spriteElementId & 0x3FFF, 1);
         } else if (spriteElementId & ASSET_MASK_OBJECT) {
             objEntry.common.objectID = spriteElementId & 0xFF;
             objEntry.common.size = ((gAssetHudElementIds[hud->spriteID] & 0x100) >> 1) | sizeof(LevelObjectEntryCommon);

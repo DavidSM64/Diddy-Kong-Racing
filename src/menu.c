@@ -13747,7 +13747,7 @@ void menu_asset_load(s32 assetID) {
         if ((i & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE) {
             gMenuAssets[assetID] = load_texture(i & 0x3FFF);
         } else if (i & ASSET_MASK_SPRITE) {
-            gMenuAssets[assetID] = func_8007C12C(i & 0x3FFF, 0);
+            gMenuAssets[assetID] = tex_load_sprite(i & 0x3FFF, 0);
         } else if (i & ASSET_MASK_OBJECT) {
             if (gMenuElementIdCount) {} // Fakematch
             entry.objectID = i & 0xFFFF;

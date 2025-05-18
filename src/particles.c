@@ -419,7 +419,7 @@ void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, 
 
         D_800E2E60 = mempool_alloc_safe(D_800E2E64 * 4, COLOUR_TAG_BLUE);
         for (i = 0; i < D_800E2E64; i++) {
-            D_800E2E60[i] = (Sprite *) func_8007C12C(asset2F[i] & 0x3FFF, 1);
+            D_800E2E60[i] = (Sprite *) tex_load_sprite(asset2F[i] & 0x3FFF, 1);
         }
 
         mempool_free(asset2F);
@@ -1556,7 +1556,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
     noTexture = FALSE;
     particle->textureFrameStep = descriptor->textureFrameStep;
     if (particle->kind == PARTICLE_KIND_SPRITE) {
-        particle->sprite = (Sprite *) func_8007C12C(descriptor->textureID, 0);
+        particle->sprite = (Sprite *) tex_load_sprite(descriptor->textureID, 0);
         if (particle->sprite != NULL) {
             if (particle->sprite->frames[0]->flags & 4) {
                 if (particle->descFlags & PARTICLE_DESC_FLAG_1000) {
