@@ -806,7 +806,7 @@ void rain_init(s32 intensity, s32 opacity) {
     gRainVertexFlip = 0;
     gRainGfx[0].tex = load_texture(gWeatherAssetTable[1]);
     gRainGfx[1].tex = load_texture(gWeatherAssetTable[1]);
-    gRainSplashGfx = (Sprite *) func_8007C12C(gWeatherAssetTable[3], 0);
+    gRainSplashGfx = (Sprite *) tex_load_sprite(gWeatherAssetTable[3], 0);
     gWeatherType = WEATHER_RAIN;
 }
 

@@ -38,6 +38,7 @@ typedef enum MempoolFlags {
 #define COLOUR_TAG_YELLOW 0xFFFF00FF
 // Textures
 #define COLOUR_TAG_MAGENTA 0xFF00FFFF
+#define COLOUR_TAG_LIME 0x00FF0163
 // Audio
 #define COLOUR_TAG_CYAN 0x00FFFFFF
 // Buffers and heaps

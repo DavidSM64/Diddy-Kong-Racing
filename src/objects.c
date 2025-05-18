@@ -372,7 +372,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
             gBoostEffectObjects[i]->properties.common.unk4 = 0;
             miscAsset20[i].unk70 = 0;
             miscAsset20[i].unk74 = 0.0f;
-            miscAsset20[i].unk78 = (Sprite *) func_8007C12C(miscAsset20[i].unk6C, 0);
+            miscAsset20[i].unk78 = (Sprite *) tex_load_sprite(miscAsset20[i].unk6C, 0);
             miscAsset20[i].unk7C = load_texture(miscAsset20[i].unk6E);
             miscAsset20[i].unk72 = get_random_number_from_range(0, 255);
             miscAsset20[i].unk73 = 0;
@@ -1904,7 +1904,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         }
     } else {
         for (; var_a2 < assetCount; var_a2++) {
-            curObj->unk68[var_a2] = (Object_68 *) func_8007C12C(curObj->segment.header->modelIds[var_a2], 10);
+            curObj->unk68[var_a2] = (Object_68 *) tex_load_sprite(curObj->segment.header->modelIds[var_a2], 10);
             if (curObj->unk68[var_a2] == NULL) {
                 var_v1 = TRUE;
             }
@@ -2298,7 +2298,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
         }
     } else {
         for (i = 0; i < numModelIds; i++) {
-            object->unk68[i] = (Object_68 *) func_8007C12C(object->segment.header->modelIds[i], 10);
+            object->unk68[i] = (Object_68 *) tex_load_sprite(object->segment.header->modelIds[i], 10);
             if (object->unk68[i] == NULL) {
                 failedToLoadModel = TRUE;
             }
