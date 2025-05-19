@@ -525,8 +525,8 @@ void snow_render(void) {
         if (gSnowVertCount >= 4) {
             i = 0;
             mtx = (u32) get_projection_matrix_s16();
-            gSPMatrix(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
-            gDkrInsertMatrix(gCurrWeatherDisplayList++, G_MTX_DKR_INDEX_0, 0);
+            gSPMatrixDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
+            gSPSelectMatrixDKR(gCurrWeatherDisplayList++, G_MTX_DKR_INDEX_0);
             material_set_no_tex_offset(&gCurrWeatherDisplayList, gSnowGfx.texture, RENDER_Z_COMPARE);
             while (i + gSnowVertOffset < gSnowVertCount) {
                 vtx = (u32) &gSnowVerts[i];

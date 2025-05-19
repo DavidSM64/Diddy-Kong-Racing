@@ -933,7 +933,7 @@ void set_ortho_matrix_view(Gfx **dList, MatrixS **mtx) {
     gViewportStack[gActiveCameraID + 5].vp.vtrans[0] = width * 2;
     gViewportStack[gActiveCameraID + 5].vp.vtrans[1] = height * 2;
     gSPViewport((*dList)++, OS_K0_TO_PHYSICAL(&gViewportStack[gActiveCameraID + 5]));
-    gSPMatrix((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_0);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_0);
     gModelMatrixStackPos = 0;
     gMatrixType = G_MTX_DKR_INDEX_0;
 
@@ -954,7 +954,7 @@ void func_8006807C(Gfx **dList, MatrixS **mtx) {
     object_transform_to_matrix_2((float(*)[4]) gModelMatrixF[0], &D_800DD2A0);
     f32_matrix_mult(gModelMatrixF[0], &gViewMatrixF, &gCurrentModelMatrixF);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixF, *mtx);
-    gSPMatrix((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_0);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_0);
     gModelMatrixStackPos = 0;
     gMatrixType = G_MTX_DKR_INDEX_0;
 }
@@ -1017,7 +1017,7 @@ void matrix_world_origin(Gfx **dList, MatrixS **mtx) {
     f32_matrix_mult(gModelMatrixF[gModelMatrixStackPos], &gViewMatrixF, &gCurrentModelMatrixF);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixF, *mtx);
     gModelMatrixS[gModelMatrixStackPos] = *mtx;
-    gSPMatrix((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), gMatrixType << 6);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), gMatrixType);
 }
 
 /**
@@ -1098,7 +1098,7 @@ s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Obj
         f32_matrix_mult(gModelMatrixF[gModelMatrixStackPos], &gViewMatrixF, &gCurrentModelMatrixF);
         f32_matrix_to_s16_matrix(&gCurrentModelMatrixF, *mtx);
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
-        gSPMatrix((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
+        gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
         gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(&gVehiclePartVertex), 1, 0);
     } else {
         v = *vertexList;
@@ -1124,7 +1124,7 @@ s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Obj
                                            obj->segment.trans.scale, gVideoAspectRatio);
         f32_matrix_to_s16_matrix(gModelMatrixF[gModelMatrixStackPos], *mtx);
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
-        gSPMatrix((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
+        gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dList)++);
     }
     if (gSpriteAnimOff == FALSE) {
@@ -1142,11 +1142,11 @@ s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Obj
     gSPDisplayList((*dList)++, arg4->unk8[textureFrame + 1]);
     gModelMatrixStackPos--;
     if (gModelMatrixStackPos == 0) {
-        textureFrame = 0;
+        textureFrame = G_MTX_DKR_INDEX_0;
     } else {
-        textureFrame = 1;
+        textureFrame = G_MTX_DKR_INDEX_1;
     }
-    gDkrInsertMatrix((*dList)++, 0, textureFrame << 6);
+    gSPSelectMatrixDKR((*dList)++, textureFrame);
     gDkrDisableBillboard((*dList)++);
     return result;
 }
@@ -1197,7 +1197,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         f32_matrix_mult(&gCurrentModelMatrixF, &aspectMtxF, gModelMatrixF[gModelMatrixStackPos]);
         f32_matrix_to_s16_matrix(gModelMatrixF[gModelMatrixStackPos], *mtx);
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
-        gSPMatrix((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
+        gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dList)++);
         if (gSpriteAnimOff == FALSE) {
             index = (((u8) index) * sprite->baseTextureId) >> 8;
@@ -1208,11 +1208,11 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         }
         gSPDisplayList((*dList)++, sprite->unkC.ptr[index]);
         if (--gModelMatrixStackPos == 0) {
-            index = 0;
+            index = G_MTX_DKR_INDEX_0;
         } else {
-            index = 1;
+            index = G_MTX_DKR_INDEX_1;
         }
-        gDkrInsertMatrix((*dList)++, 0, index << 6);
+        gSPSelectMatrixDKR((*dList)++, index);
         gDkrDisableBillboard((*dList)++);
     }
 }
@@ -1318,7 +1318,7 @@ void apply_object_shear_matrix(Gfx **dList, MatrixS **mtx, Object *arg2, Object 
 
     f32_matrix_mult(&matrix_mult, &gViewMatrixF, &gCurrentModelMatrixS);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixS, *mtx);
-    gSPMatrix((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_1);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_1);
 }
 
 /**
@@ -1349,7 +1349,7 @@ s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f3
     }
     if (1) {}
     if (1) {}; // Fakematch
-    gSPMatrix((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_1);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_1);
     guMtxXFMF(*gModelMatrixF[gModelMatrixStackPos], 0.0f, 0.0f, 0.0f, &tempX, &tempY, &tempZ);
     index = gActiveCameraID;
     if (gCutsceneCameraActive) {
@@ -1422,8 +1422,8 @@ void apply_head_turning_matrix(Gfx **dList, MatrixS **mtx, Object_68 *objGfx, s1
     headMtxF[3][3] = 1.0f;
     f32_matrix_mult(&headMtxF, &gCurrentModelMatrixS, &rotationMtxF);
     f32_matrix_to_s16_matrix(&rotationMtxF, *mtx);
-    gSPMatrix((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
-    gDkrInsertMatrix((*dList)++, G_MWO_MATRIX_XX_XY_I, G_MTX_DKR_INDEX_1);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
+    gSPSelectMatrixDKR((*dList)++, G_MTX_DKR_INDEX_1);
 }
 
 /**
@@ -1454,9 +1454,9 @@ void apply_matrix_from_stack(Gfx **dList) {
     } // Fakematch
 
     if (gModelMatrixStackPos > 0) {
-        gSPMatrix((*dList)++, OS_K0_TO_PHYSICAL(gModelMatrixS[gModelMatrixStackPos]), G_MTX_DKR_INDEX_1);
+        gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL(gModelMatrixS[gModelMatrixStackPos]), G_MTX_DKR_INDEX_1);
     } else {
-        gDkrInsertMatrix((*dList)++, G_MWO_MATRIX_XX_XY_I, G_MTX_DKR_INDEX_0);
+        gSPSelectMatrixDKR((*dList)++, G_MTX_DKR_INDEX_0);
     }
 }
 

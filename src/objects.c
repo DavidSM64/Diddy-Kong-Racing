@@ -3026,7 +3026,7 @@ void render_3d_model(Object *obj) {
                                 &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj,
                                 (unk80068514_arg4 *) something, flags);
                             if (var_v0_2) {
-                                gDkrInsertMatrix(gObjectCurrDisplayList++, 0, 0);
+                                gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
                                 func_80012CE8(&gObjectCurrDisplayList);
                             }
                         }
@@ -3456,7 +3456,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         }
         apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gShieldEffectObject, obj, shear);
         render_mesh(mdl, gShieldEffectObject, 0, RENDER_SEMI_TRANSPARENT, 0);
-        gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
+        gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
@@ -3519,7 +3519,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gObjectTexAnim = TRUE;
             render_mesh(mdl, gMagnetEffectObject, 0, RENDER_SEMI_TRANSPARENT, 0);
             gObjectTexAnim = FALSE;
-            gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
+            gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             rendermode_reset(&gObjectCurrDisplayList);
             *dList = gObjectCurrDisplayList;
@@ -3621,14 +3621,14 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
                 } else {
                     if (offsetStartVertex > 0) {
                         gSPVertexDKR(dList++, OS_K0_TO_PHYSICAL(vtx), offsetStartVertex, 0);
-                        gDkrInsertMatrix(dList++, 0, G_MTX_DKR_INDEX_2);
+                        gSPSelectMatrixDKR(dList++, G_MTX_DKR_INDEX_2);
                         gSPVertexDKR(dList++, OS_K0_TO_PHYSICAL(&vtx[offsetStartVertex]),
                                      (numVertices - offsetStartVertex), 1);
                     } else {
-                        gDkrInsertMatrix(dList++, 0, G_MTX_DKR_INDEX_2);
+                        gSPSelectMatrixDKR(dList++, G_MTX_DKR_INDEX_2);
                         gSPVertexDKR(dList++, OS_K0_TO_PHYSICAL(vtx), numVertices, 0);
                     }
-                    gDkrInsertMatrix(dList++, 0, G_MTX_DKR_INDEX_1);
+                    gSPSelectMatrixDKR(dList++, G_MTX_DKR_INDEX_1);
                 }
                 gSPPolygon(dList++, OS_K0_TO_PHYSICAL(tris), numTris, texEnabled);
             }
