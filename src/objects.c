@@ -4157,7 +4157,7 @@ void process_object_interactions(void) {
 void func_80016500(Object *obj, Object_Racer *racer) {
     s32 shakeMagnitude;
     s32 volume;
-    s32 angle;    
+    s32 angle;
     f32 startVelocity;
     f32 cosAngle;
     f32 sinAngle;
@@ -4241,12 +4241,12 @@ void func_80016748(Object *obj0, Object *obj1) {
         if (!((objModel->unk3C + 50.0) < sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)))) {
             obj0Interact = obj0->interactObj;
             obj1Interact = obj1->interactObj;
-            object_transform_to_matrix((float(*)[4]) obj1TransformMtx, &obj1->segment.trans);
+            object_transform_to_matrix((float (*)[4]) obj1TransformMtx, &obj1->segment.trans);
             for (i = 0; i < objModel->unk20; i += 2) {
                 xDiff = obj1->curVertData[objModel->unk1C[i]].x;
                 yDiff = obj1->curVertData[objModel->unk1C[i]].y;
                 zDiff = obj1->curVertData[objModel->unk1C[i]].z;
-                guMtxXFMF((float(*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                guMtxXFMF((float (*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
                 temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->segment.trans.scale) * 50.0;
                 xDiff -= obj0->segment.trans.x_position;
                 yDiff -= obj0->segment.trans.y_position;
@@ -4413,7 +4413,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = -obj->segment.trans.x_position;
     sp78.y_position = -obj->segment.trans.y_position;
     sp78.z_position = -obj->segment.trans.z_position;
-    object_inverse_transform_to_matrix((float(*)[4]) sp6C, (ObjectTransform *) &sp78);
+    object_inverse_transform_to_matrix((float (*)[4]) sp6C, (ObjectTransform *) &sp78);
     inverseScale = 1.0 / obj->segment.trans.scale;
     i = 0;
     while (i < 16) {

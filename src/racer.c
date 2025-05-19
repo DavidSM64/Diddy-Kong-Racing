@@ -2203,7 +2203,7 @@ void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
     object_transform_to_matrix(mtx, &gCurrentRacerTransform);
-    
+
     guMtxXFMF(mtx, 0.0f, 0.0f, gCameraObject->boomLength, &deltaX, &deltaY, &deltaZ);
     gCameraObject->trans.x_position = obj->segment.trans.x_position + deltaX;
     gCameraObject->trans.y_position = obj->segment.trans.y_position + deltaY;
@@ -5988,11 +5988,11 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
 
     dialogueAngle = gDialogueCameraAngle / 10240.0f; // Goes between 0-1
     gCameraObject->x_velocity = (((obj->segment.trans.x_position + (91.75 * racer->ox1) + (90.0 * racer->ox3)) -
-                               gCameraObject->trans.x_position) *
-                              dialogueAngle);
+                                  gCameraObject->trans.x_position) *
+                                 dialogueAngle);
     gCameraObject->z_velocity = (((obj->segment.trans.z_position + (91.75 * racer->oz1) + (90.0 * racer->oz3)) -
-                               gCameraObject->trans.z_position) *
-                              dialogueAngle);
+                                  gCameraObject->trans.z_position) *
+                                 dialogueAngle);
     gCameraObject->y_velocity = (((get_npc_pos_y() + 48.5) - gCameraObject->trans.y_position) * dialogueAngle);
     gCameraObject->pitch = -gCameraObject->trans.rotation.x_rotation * dialogueAngle;
     gCameraObject->trans.x_position += gCameraObject->x_velocity;
@@ -6325,7 +6325,7 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
     gCameraObject->trans.rotation.x_rotation = atan2s((s32) diffY, (s32) distance);
     gCameraObject->trans.rotation.z_rotation = 0;
     gCameraObject->cameraSegmentID = get_level_segment_index_from_position(gCameraObject->trans.x_position, racer->oy1,
-                                                                        gCameraObject->trans.z_position);
+                                                                           gCameraObject->trans.z_position);
 }
 
 /**
@@ -6343,7 +6343,7 @@ void update_camera_fixed(f32 updateRate, Object *obj, Object_Racer *racer) {
         ((((-atan2s(diffX, diffZ)) - gCameraObject->trans.rotation.y_rotation) + 0x8000) * updateRateF) >> 4;
     gCameraObject->trans.rotation.z_rotation -= ((s32) (gCameraObject->trans.rotation.z_rotation * updateRateF)) >> 4;
     gCameraObject->cameraSegmentID = get_level_segment_index_from_position(gCameraObject->trans.x_position, racer->oy1,
-                                                                        gCameraObject->trans.z_position);
+                                                                           gCameraObject->trans.z_position);
 }
 
 /**

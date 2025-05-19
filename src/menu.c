@@ -719,10 +719,10 @@ s32 gTitleCinematicTextColourCount = 0;
 
 // Colours used for the Character Names during the title screen cinematic
 u8 gTitleCinematicTextColours[] = {
-    255, 255, 0, 255, 204, // Yellow
-    0, 255, 0, 255, 153,   // Green
-    0, 255, 255, 255, 102, // Cyan
-    0, 0, 255, 255, 51     // Blue
+    255, 255, 0,   255, 204, // Yellow
+    0,   255, 0,   255, 153, // Green
+    0,   255, 255, 255, 102, // Cyan
+    0,   0,   255, 255, 51   // Blue
 };
 
 UNUSED u8 unused_800DFA0C[] = { 0, 0, 15, 120 };
@@ -3211,7 +3211,7 @@ void func_80083098(f32 updateRateF) {
     s32 didUpdate;
     s32 xPos;
     s32 yPos;
-    s32 i; // s1
+    s32 i;
     s32 j;
     char *text;
     unk800DF83C *introCharData;
@@ -3232,10 +3232,8 @@ void func_80083098(f32 updateRateF) {
     i = 0;
     while (i < gTitleCinematicTextColourCount) {
         j = 5 * D_80126878[i].colourIndex;
-        set_text_colour(gTitleCinematicTextColours[j + 0],
-                        gTitleCinematicTextColours[j + 1],
-                        gTitleCinematicTextColours[j + 2],
-                        gTitleCinematicTextColours[j + 3],
+        set_text_colour(gTitleCinematicTextColours[j + 0], gTitleCinematicTextColours[j + 1],
+                        gTitleCinematicTextColours[j + 2], gTitleCinematicTextColours[j + 3],
                         gTitleCinematicTextColours[j + 4]);
         draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
         D_80126878[i].colourIndex++;

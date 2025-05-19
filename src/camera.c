@@ -951,7 +951,7 @@ void set_ortho_matrix_view(Gfx **dList, MatrixS **mtx) {
 void func_8006807C(Gfx **dList, MatrixS **mtx) {
     object_inverse_transform_to_matrix(gCurrentModelMatrixF, &D_800DD288);
     f32_matrix_mult(&gCurrentModelMatrixF, &gPerspectiveMatrixF, &gViewMatrixF);
-    object_inverse_transform_to_matrix((float(*)[4]) gModelMatrixF[0], &D_800DD2A0);
+    object_inverse_transform_to_matrix((float (*)[4]) gModelMatrixF[0], &D_800DD2A0);
     f32_matrix_mult(gModelMatrixF[0], &gViewMatrixF, &gCurrentModelMatrixF);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixF, *mtx);
     gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_0);
@@ -1111,8 +1111,7 @@ s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Obj
         gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(*vertexList), 1, 0);
         (*vertexList)++;
         if (!gCutsceneCameraActive) {
-            angleDiff =
-                gCameras[gActiveCameraID].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
+            angleDiff = gCameras[gActiveCameraID].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
         } else {
             angleDiff =
                 gCameras[gActiveCameraID + 4].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
@@ -1477,14 +1476,10 @@ UNUSED void translate_camera_segment(f32 x, f32 y, f32 z) {
  * Also recalculates which block it's in.
  */
 UNUSED void transform_camera_segment(f32 x, UNUSED f32 y, f32 z) {
-    gCameras[gActiveCameraID].trans.x_position -=
-        x * coss_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
-    gCameras[gActiveCameraID].trans.z_position -=
-        x * sins_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
-    gCameras[gActiveCameraID].trans.x_position -=
-        z * sins_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
-    gCameras[gActiveCameraID].trans.z_position +=
-        z * coss_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
+    gCameras[gActiveCameraID].trans.x_position -= x * coss_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
+    gCameras[gActiveCameraID].trans.z_position -= x * sins_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
+    gCameras[gActiveCameraID].trans.x_position -= z * sins_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
+    gCameras[gActiveCameraID].trans.z_position += z * coss_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
     gCameras[gActiveCameraID].cameraSegmentID = get_level_segment_index_from_position(
         gCameras[gActiveCameraID].trans.x_position, gCameras[gActiveCameraID].trans.y_position,
         gCameras[gActiveCameraID].trans.z_position);

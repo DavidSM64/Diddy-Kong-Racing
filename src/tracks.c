@@ -426,8 +426,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
             initialise_player_viewport_vars(updateRate);
             weather_clip_planes(-1, -512);
             lensflare_override(cam_get_active_camera());
-            lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
-                             cam_get_active_camera());
+            lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, cam_get_active_camera());
             set_text_font(FONT_COLOURFUL);
             if (osTvType == OS_TV_TYPE_PAL) {
                 posX = SCREEN_WIDTH_HALF + 6;
@@ -1274,8 +1273,8 @@ void func_800278E8(s32 updateRate) {
             segment->trans.rotation.x_rotation = atan2s(yDelta, xzSqr);
         }
         segment->trans.rotation.z_rotation = 0;
-        segment->cameraSegmentID = get_level_segment_index_from_position(
-            segment->trans.x_position, currentRacer->oy1, segment->trans.z_position);
+        segment->cameraSegmentID = get_level_segment_index_from_position(segment->trans.x_position, currentRacer->oy1,
+                                                                         segment->trans.z_position);
         D_8011B104 = currentRacer->cameraIndex;
     }
 }
