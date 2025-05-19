@@ -3205,6 +3205,7 @@ void init_title_screen_variables(void) {
     load_menu_text(get_language());
 }
 
+#if REGION != REGION_JP
 void func_80083098(f32 updateRateF) {
     f32 temp;
     f32 temp2;
@@ -3289,6 +3290,10 @@ void func_80083098(f32 updateRateF) {
     set_text_colour(255, 255, 255, 0, 255);
     draw_text(&sMenuCurrDisplayList, xPos, yPos, text, ALIGN_MIDDLE_CENTER);
 }
+#else
+// No match JP func_80083098
+#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_80083098.s")
+#endif
 
 /**
  * Initialise the title screen menu.
