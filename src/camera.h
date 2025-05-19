@@ -137,7 +137,7 @@ void set_camera_shake(f32 magnitude);
 void func_80067D3C(Gfx **dList, MatrixS **mats);
 void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags);
 s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, Sprite *arg4, s32 flags);
-s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY);
+s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY);
 void viewport_scissor(Gfx **dList);
 void apply_matrix_from_stack(Gfx **dList);
 void copy_viewports_to_stack(void);

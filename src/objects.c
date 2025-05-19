@@ -2789,9 +2789,9 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
  * A much simpler, faster way to render an object model as opposed to render_3d_model
  */
 void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles,
-                       TextureHeader *tex, u32 flags, u32 texOffset, f32 scale) {
+                       TextureHeader *tex, u32 flags, u32 texOffset, f32 scaleY) {
     s32 hasTexture = FALSE;
-    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, scale, 0.0f);
+    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, scaleY, 0.0f);
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     if (tex != NULL) {
@@ -2807,7 +2807,7 @@ void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *tr
  * A few objects use unconventional means to render. They are handled here.
  */
 void render_3d_misc(Object *obj) {
-    f32 scale;
+    f32 scaleY;
     Object_64 *objData;
 
     switch (obj->behaviorId) {
@@ -2827,10 +2827,10 @@ void render_3d_misc(Object *obj) {
             break;
         case BHV_FISH:
             objData = obj->unk64;
-            scale = obj->segment.level_entry->fish.unkD;
-            scale *= 0.01f;
+            scaleY = obj->segment.level_entry->fish.unkD;
+            scaleY *= 0.01f;
             render_misc_model(obj, &objData->fish.vertices[objData->fish.unkFC * 6], 6, objData->fish.triangles, 8,
-                              objData->fish.texture, RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_CUTOUT, 0, scale);
+                              objData->fish.texture, RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_CUTOUT, 0, scaleY);
             break;
         case BHV_BOOST:
             if (obj->properties.common.unk0 && (obj->unk64->boost.unk70 > 0 || obj->unk64->boost.unk74 > 0.0f)) {

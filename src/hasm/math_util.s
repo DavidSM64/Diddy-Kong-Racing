@@ -680,7 +680,7 @@ leaf object_transform_to_matrix
 .end object_transform_to_matrix
 
 /* Official Name: mathSquashY */
-leaf f32_matrix_scale
+leaf f32_matrix_scale_y_axis
 /* 70A04 8006FE04 44859000 */  mtc1       $a1, $f18
 /* 70A08 8006FE08 C4900010 */  lwc1       $f16, 0x10($a0)
 /* 70A0C 8006FE0C 46128402 */  mul.s      $f16, $f16, $f18
@@ -692,10 +692,10 @@ leaf f32_matrix_scale
 /* 70A24 8006FE24 46128402 */  mul.s      $f16, $f16, $f18
 /* 70A28 8006FE28 03E00008 */  jr         $ra
 /* 70A2C 8006FE2C E4900018 */   swc1      $f16, 0x18($a0)
-.end f32_matrix_scale
+.end f32_matrix_scale_y_axis
 
 /* Official Name: mathTransY */
-leaf f32_matrix_y_scale
+leaf f32_matrix_translate_y_axis
 /* 70A30 8006FE30 44858000 */  mtc1       $a1, $f16
 /* 70A34 8006FE34 C4800010 */  lwc1       $f0, 0x10($a0)
 /* 70A38 8006FE38 C4840014 */  lwc1       $f4, 0x14($a0)
@@ -713,7 +713,7 @@ leaf f32_matrix_y_scale
 /* 70A68 8006FE68 E4840034 */  swc1       $f4, 0x34($a0)
 /* 70A6C 8006FE6C 03E00008 */  jr         $ra
 /* 70A70 8006FE70 E4880038 */   swc1      $f8, 0x38($a0)
-.end f32_matrix_y_scale
+.end f32_matrix_translate_y_axis
 
 /* Official Name: mathRpyXyzMtx */
 leaf object_transform_to_matrix_2

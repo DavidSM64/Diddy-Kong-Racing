@@ -122,7 +122,7 @@ void cam_init(void) {
     u32 stat;
 
     // clang-format off
-    for (i = 0; i < 5; i++) { gModelMatrixF[i] = &D_80120DA0[i << 4]; }
+    for (i = 0; i < 5; i++) { gModelMatrixF[i] = (Matrix*)&D_80120DA0[i << 4]; }
     // clang-format on
 
     for (j = 0; j < 8; j++) {
@@ -1323,7 +1323,7 @@ void apply_object_shear_matrix(Gfx **dList, MatrixS **mtx, Object *arg2, Object 
 /**
  * Official Name: camPushModelMtx
  */
-s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY) {
+s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY) {
     f32 tempX;
     f32 tempY;
     f32 tempZ;
@@ -1331,11 +1331,11 @@ s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f3
     f32 scaleFactor;
 
     object_transform_to_matrix(gCurrentModelMatrixF, trans);
-    if (scaleY != 0.0f) {
-        f32_matrix_y_scale(&gCurrentModelMatrixF, scaleY);
+    if (offsetY != 0.0f) {
+        f32_matrix_translate_y_axis(&gCurrentModelMatrixF, offsetY);
     }
-    if (scale != 1.0f) {
-        f32_matrix_scale(&gCurrentModelMatrixF, scale);
+    if (scaleY != 1.0f) {
+        f32_matrix_scale_y_axis(&gCurrentModelMatrixF, scaleY);
     }
     f32_matrix_mult(&gCurrentModelMatrixF, gModelMatrixF[gModelMatrixStackPos],
                     gModelMatrixF[gModelMatrixStackPos + 1]);

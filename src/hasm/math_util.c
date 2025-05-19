@@ -267,7 +267,7 @@ void s16_vec3_mult_by_s32_matrix(MatrixS input, Vec3s *output) {
 GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix.s")
 #endif
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 void object_transform_to_matrix(Matrix mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
@@ -277,30 +277,30 @@ void object_transform_to_matrix(Matrix mtx, ObjectTransform *trans) {
     f32 zRotCosine;
     f32 scale;
 
-    yRotSine = sins_s16(trans->rotation.y_rotation) * 0.000015f;
-    yRotCosine = coss_s16(trans->rotation.y_rotation) * 0.000015f;
-    xRotSine = sins_s16(trans->rotation.x_rotation) * 0.000015f;
-    xRotCosine = coss_s16(trans->rotation.x_rotation) * 0.000015f;
-    zRotSine = sins_s16(trans->rotation.z_rotation) * 0.000015f;
-    zRotCosine = coss_s16(trans->rotation.z_rotation) * 0.000015f;
-    scale = trans->scale * 0.000015f;
+    yRotSine = sins_s16(trans->rotation.y_rotation) * (1.0f / 0x10000);
+    yRotCosine = coss_s16(trans->rotation.y_rotation) * (1.0f / 0x10000);
+    xRotSine = sins_s16(trans->rotation.x_rotation) * (1.0f / 0x10000);
+    xRotCosine = coss_s16(trans->rotation.x_rotation) * (1.0f / 0x10000);
+    zRotSine = sins_s16(trans->rotation.z_rotation) * (1.0f / 0x10000);
+    zRotCosine = coss_s16(trans->rotation.z_rotation) * (1.0f / 0x10000);
+    scale = trans->scale;
 
-    mtx[0][0] = ((xRotSine * yRotSine * zRotSine) + (scale * yRotCosine)) * scale;
-    mtx[0][1] = (zRotSine * xRotCosine * scale);
-    mtx[0][2] = (((xRotSine * yRotCosine * zRotSine) - (scale * yRotSine)) * scale);
+    mtx[0][0] = (xRotSine * yRotSine * zRotSine + zRotCosine * yRotCosine) * scale;
+    mtx[0][1] = (zRotSine * xRotCosine) * scale;
+    mtx[0][2] = (xRotSine * yRotCosine * zRotSine - zRotCosine * yRotSine) * scale;
     mtx[0][3] = 0;
-    mtx[1][0] = (((xRotSine * yRotSine * scale) - (zRotSine * yRotCosine)) * scale);
-    mtx[1][1] = (scale * xRotCosine * scale);
-    mtx[1][2] = (((xRotSine * yRotCosine * scale) + (zRotSine * yRotSine)) * scale);
+    mtx[1][0] = (xRotSine * yRotSine * zRotCosine - zRotSine * yRotCosine) * scale;
+    mtx[1][1] = (zRotCosine * xRotCosine) * scale;
+    mtx[1][2] = (xRotSine * yRotCosine * zRotCosine + zRotSine * yRotSine) * scale;
     mtx[1][3] = 0;
-    mtx[2][0] = (xRotCosine * yRotSine * scale);
+    mtx[2][0] = (xRotCosine * yRotSine) * scale;
     mtx[2][1] = -(xRotSine * scale);
-    mtx[2][2] = (xRotCosine * yRotCosine * scale);
+    mtx[2][2] = (xRotCosine * yRotCosine) * scale;
     mtx[2][3] = 0;
     mtx[3][0] = trans->x_position;
     mtx[3][1] = trans->y_position;
-    mtx[3][2] = 1.0f;
-    mtx[3][3] = trans->z_position;
+    mtx[3][2] = trans->z_position;
+    mtx[3][3] = 1.0f;
 }
 #else
 GLOBAL_ASM("asm/math_util/object_transform_to_matrix.s")
@@ -308,24 +308,24 @@ GLOBAL_ASM("asm/math_util/object_transform_to_matrix.s")
 
 #ifdef NON_MATCHING
 /* Official name: mathSquashY */
-void f32_matrix_scale(Matrix *input, f32 scale) {
+void f32_matrix_scale_y_axis(Matrix *input, f32 scale) {
     input[0][1][0] *= scale;
     input[0][1][1] *= scale;
     input[0][1][2] *= scale;
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_matrix_scale.s")
+GLOBAL_ASM("asm/math_util/f32_matrix_scale_y_axis.s")
 #endif
 
 #ifdef NON_MATCHING
 /* Official name: mathTransY */
-void f32_matrix_y_scale(Matrix *input, f32 scale) {
-    input[0][3][0] += input[0][1][0] * scale;
-    input[0][3][1] += input[0][1][1] * scale;
-    input[0][3][2] += input[0][1][2] * scale;
+void f32_matrix_translate_y_axis(Matrix *input, f32 offset) {
+    input[0][3][0] += input[0][1][0] * offset;
+    input[0][3][1] += input[0][1][1] * offset;
+    input[0][3][2] += input[0][1][2] * offset;
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_matrix_y_scale.s")
+GLOBAL_ASM("asm/math_util/f32_matrix_translate_y_axis.s")
 #endif
 
 #ifdef NON_EQUIVALENT
@@ -339,14 +339,14 @@ void object_transform_to_matrix_2(Matrix mtx, ObjectTransform *trans) {
     f32 zRotCosine;
     f32 scale;
 
-    yRotCosine = coss_s16(trans->rotation.y_rotation) * 0.000015f;
-    yRotSine = sins_s16(trans->rotation.y_rotation) * 0.000015f;
-    xRotCosine = coss_s16(trans->rotation.x_rotation) * 0.000015f;
-    xRotSine = sins_s16(trans->rotation.x_rotation) * 0.000015f;
-    zRotCosine = coss_s16(trans->rotation.z_rotation) * 0.000015f;
-    zRotSine = sins_s16(trans->rotation.z_rotation) * 0.000015f;
+    yRotCosine = coss_s16(trans->rotation.y_rotation) * (1.0f / 0x10000);
+    yRotSine = sins_s16(trans->rotation.y_rotation) * (1.0f / 0x10000);
+    xRotCosine = coss_s16(trans->rotation.x_rotation) * (1.0f / 0x10000);
+    xRotSine = sins_s16(trans->rotation.x_rotation) * (1.0f / 0x10000);
+    zRotCosine = coss_s16(trans->rotation.z_rotation) * (1.0f / 0x10000);
+    zRotSine = sins_s16(trans->rotation.z_rotation) * (1.0f / 0x10000);
 
-    scale = trans->scale * 0.000015f;
+    scale = trans->scale * (1.0f / 0x10000);
 
     mtx[0][0] = (yRotSine * scale) - (xRotCosine * zRotCosine * yRotCosine);
     mtx[0][1] = (xRotCosine * scale * yRotCosine) + (yRotSine * zRotCosine);
@@ -375,8 +375,8 @@ GLOBAL_ASM("asm/math_util/func_80070058.s")
 void f32_matrix_from_rotation_and_scale(Matrix mtx, s32 angle, f32 arg2, f32 arg3) {
     f32 cosine, sine;
 
-    cosine = sins_s16(angle) * 0.000015f;
-    sine = coss_s16(angle) * 0.000015f;
+    cosine = sins_s16(angle) * (1.0f / 0x10000);
+    sine = coss_s16(angle) * (1.0f / 0x10000);
     mtx[0][0] = sine * arg2;
     mtx[0][1] = cosine * arg2;
     mtx[0][2] = 0;
