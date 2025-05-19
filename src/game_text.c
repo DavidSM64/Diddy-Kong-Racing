@@ -186,10 +186,10 @@ void find_next_subtitle(void) {
             done = TRUE;
         }
         gCurrentTextProperties++;
-        new_var3 = (new_var2 = gCurrentTextProperties[0]);
+        new_var2 = gCurrentTextProperties[0];
         if (gCurrentTextProperties[0] == 10) {
             gCurrentTextProperties++;
-        } else if (new_var3 == 12) {
+        } else if (new_var2 == 12) {
             gCurrentTextProperties++;
             done = TRUE;
         }

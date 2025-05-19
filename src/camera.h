@@ -93,14 +93,6 @@ typedef struct ScreenViewport {
     /* 0x30 */ s32 flags;
 } ScreenViewport;
 
-typedef struct unk80068514_arg4 {
-    s16 textureCount;
-    s16 unk2;
-    s16 unk4;
-    s16 drawFlags;
-    Gfx *unk8[1];
-} unk80068514_arg4;
-
 void cam_set_zoom(s32 cameraID, s32 zoomLevel);
 void set_viewport_tv_type(s8 setting);
 void func_800660C0(void);
@@ -144,7 +136,7 @@ void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude);
 void set_camera_shake(f32 magnitude);
 void func_80067D3C(Gfx **dList, MatrixS **mats);
 void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags);
-s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
+s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, Sprite *arg4, s32 flags);
 s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY);
 void viewport_scissor(Gfx **dList);
 void apply_matrix_from_stack(Gfx **dList);

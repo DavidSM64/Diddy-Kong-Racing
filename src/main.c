@@ -1,7 +1,6 @@
 #include "main.h"
 #include "thread0_epc.h"
 #include "game.h"
-#include "libultra/src/libc/rmonPrintf.h"
 #include "stacks.h"
 
 /************ .bss ************/
@@ -22,7 +21,7 @@ OSThread gThread3; // OSThread for thread 3
 void mainproc(void) {
     osInitialize();
 #ifdef AVOID_UB
-    bzero(&gMainMemoryPool, RAM_END - (s32) (&gMainMemoryPool));
+    bzero(&gMainMemoryPool, RAM_END - (s32) (&main_BSS_START));
 #endif
     osCreateThread(&gThread1, 1, &thread1_main, 0, &gThread1Stack[STACKSIZE(STACK_IDLE)], OS_PRIORITY_IDLE);
     osStartThread(&gThread1);

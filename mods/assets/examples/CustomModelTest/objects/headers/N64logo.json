@@ -1,0 +1,6 @@
+{
+    "models": [
+        "ASSET_CUSTOM_TESTCUBE"
+    ],
+    "merge-type": "patch"
+}

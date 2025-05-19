@@ -377,7 +377,7 @@ static s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
     AMDMABuffer *dmaPtr, *lastDmaPtr;
     UNUSED s32 pad;
 
-    lastDmaPtr = 0;
+    lastDmaPtr = NULL;
     delta = addr & 1;
     dmaPtr = dmaState.firstUsed;
     addrEnd = addr + len;
@@ -408,7 +408,7 @@ static s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
     }
 
     /*
-     * if you get here and dmaPtr is null, send back the a bogus
+     * if you get here and dmaPtr is null, send back a bogus
      * pointer, it's better than nothing
      */
     if (!dmaPtr) {
@@ -486,7 +486,7 @@ static void __clearAudioDMA(void) {
 
     /*
      * Don't block here. If dma's aren't complete, you've had an audio
-     * overrun. (Bad news, but go for it anyway, and try and recover.
+     * overrun. (Bad news, but go for it anyway, and try and recover.)
      */
     for (i = 0; i < nextDMA; i++) {
         if (osRecvMesg(&audDMAMessageQ, (OSMesg *) &iomsg, OS_MESG_NOBLOCK) == -1) {

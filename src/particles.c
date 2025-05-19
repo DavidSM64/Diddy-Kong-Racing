@@ -419,7 +419,7 @@ void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, 
 
         D_800E2E60 = mempool_alloc_safe(D_800E2E64 * 4, COLOUR_TAG_BLUE);
         for (i = 0; i < D_800E2E64; i++) {
-            D_800E2E60[i] = (Sprite *) func_8007C12C(asset2F[i] & 0x3FFF, 1);
+            D_800E2E60[i] = (Sprite *) tex_load_sprite(asset2F[i] & 0x3FFF, 1);
         }
 
         mempool_free(asset2F);
@@ -683,27 +683,26 @@ void emitter_init_with_pos(ParticleEmitter *emitter, s32 behaviourID, s32 partic
  * Scrolls textures downward for point and line particles.
  * Texture state repeats in an 8-frame loop.
  */
-#ifdef NON_EQUIVALENT
 void scroll_particle_textures(s32 updateRate) {
     s32 i;
+    s32 j;
 
     gParticleTextureScrollOffset = (gParticleTextureScrollOffset + (updateRate << 6)) & 0x1FF;
 
-    for (i = 0; i < ARRAY_COUNT(gLineParticleTriangles); i++) {
-        gLineParticleTriangles[i].uv2.v = gLineParticleVCoords[i].s[0] + gParticleTextureScrollOffset;
-        gLineParticleTriangles[i].uv1.v = gLineParticleVCoords[i].s[1] + gParticleTextureScrollOffset;
-        gLineParticleTriangles[i].uv0.v = gLineParticleVCoords[i].s[2] + gParticleTextureScrollOffset;
+    for (i = 0, j = 0; i < ARRAY_COUNT(gLineParticleTriangles); i++) {
+        gLineParticleTriangles[i].uv0.v = gLineParticleVCoords[j].s[0] + gParticleTextureScrollOffset;
+        gLineParticleTriangles[i].uv1.v = gLineParticleVCoords[j].s[1] + gParticleTextureScrollOffset;
+        gLineParticleTriangles[i].uv2.v = gLineParticleVCoords[j].s[2] + gParticleTextureScrollOffset;
+        j++;
     }
 
-    for (i = 0; i < ARRAY_COUNT(gPointParticleTriangles); i++) {
-        gPointParticleTriangles[i].uv0.v = gPointParticleVCoords[i].s[0] + gParticleTextureScrollOffset;
-        gPointParticleTriangles[i].uv1.v = gPointParticleVCoords[i].s[1] + gParticleTextureScrollOffset;
-        gPointParticleTriangles[i].uv2.v = gPointParticleVCoords[i].s[2] + gParticleTextureScrollOffset;
+    for (i = 0, j = 0; i < ARRAY_COUNT(gPointParticleTriangles); i++) {
+        gPointParticleTriangles[i].uv0.v = gPointParticleVCoords[j].s[0] + gParticleTextureScrollOffset;
+        gPointParticleTriangles[i].uv1.v = gPointParticleVCoords[j].s[1] + gParticleTextureScrollOffset;
+        gPointParticleTriangles[i].uv2.v = gPointParticleVCoords[j].s[2] + gParticleTextureScrollOffset;
+        j++;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/particles/scroll_particle_textures.s")
-#endif
 
 /**
  * Initializes the emitter if it has been activated for an object.
@@ -1557,7 +1556,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
     noTexture = FALSE;
     particle->textureFrameStep = descriptor->textureFrameStep;
     if (particle->kind == PARTICLE_KIND_SPRITE) {
-        particle->sprite = (Sprite *) func_8007C12C(descriptor->textureID, 0);
+        particle->sprite = (Sprite *) tex_load_sprite(descriptor->textureID, 0);
         if (particle->sprite != NULL) {
             if (particle->sprite->frames[0]->flags & 4) {
                 if (particle->descFlags & PARTICLE_DESC_FLAG_1000) {
@@ -2411,8 +2410,7 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
             temp = particle->textureFrame;
             particle->textureFrame >>= 8;
             particle->textureFrame = (particle->textureFrame * 255) / (particle->sprite->baseTextureId);
-            render_sprite_billboard(dList, mtx, vtx, (Object *) particle, (unk80068514_arg4 *) particle->sprite,
-                                    renderFlags);
+            render_sprite_billboard(dList, mtx, vtx, (Object *) particle, particle->sprite, renderFlags);
             particle->textureFrame = temp;
         } else {
             model = particle->model;

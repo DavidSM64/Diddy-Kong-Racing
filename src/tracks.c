@@ -15,7 +15,6 @@
 #include "game_ui.h"
 #include "weather.h"
 #include "particles.h"
-#include "libultra/src/libc/rmonPrintf.h"
 #include "objects.h"
 #include "math_util.h"
 #include "printf.h"
@@ -56,7 +55,7 @@ char gJpnTTCam[] = { 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x55,
 u8 *D_800DC924 = NULL;
 s32 D_800DC928 = 0; // Currently unknown, might be a different type.
 
-s8 D_800DC92C[24] = {
+u8 D_800DC92C[24] = {
     0, 1, 4, 1, 2, 4, 2, 3, 4, 3, 0, 4, 5,
     6, 1, 1, 0, 5, 3, 2, 7, 7, 8, 3
     // There may or may not be extra zeroes here.
@@ -85,9 +84,9 @@ s32 gSceneStartSegment;
 s32 D_8011B0D8;
 s32 gSceneRenderSkyDome;
 s8 gDrawLevelSegments;
-u8 D_8011B0E1;
-u8 D_8011B0E2;
-u8 D_8011B0E3;
+u8 D_8011B0E1; // R of RGB
+u8 D_8011B0E2; // G of RGB
+u8 D_8011B0E3; // B of RGB
 f32 D_8011B0E4;
 f32 D_8011B0E8;
 f32 D_8011B0EC;
@@ -166,13 +165,21 @@ Triangle *D_8011D490[2];
 Triangle *D_8011D498;
 s16 D_8011D49C;
 s16 D_8011D49E;
-f32 D_8011D4A0;
-f32 D_8011D4A4;
+f32 D_8011D4A0; // something x coordinate related
+f32 D_8011D4A4; // something z coordinate related
 f32 D_8011D4A8;
-f32 D_8011D4AC;
-f32 D_8011D4B0;
+f32 D_8011D4AC; // something x coordinate related
+f32 D_8011D4B0; // something z coordinate related
 s8 D_8011D4B4;
-s16 D_8011D4B6;
+typedef struct Unk8011D4B6 {
+    union {
+        struct {
+            u8 one, two;
+        };
+        s16 whole;
+    };
+} Unk8011D4B6;
+Unk8011D4B6 D_8011D4B6;
 s16 D_8011D4B8;
 s16 D_8011D4BA;
 s16 D_8011D4BC;
@@ -242,7 +249,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     func_8000C8F8(collectables, 1);
     gScenePlayerViewports = numberOfPlayers;
     func_8000CC7C(vehicle, entranceId, numberOfPlayers);
-    func_8000B020(72, 64);
+    racerfx_alloc(72, 64);
 
     if (geometry == 0 && entranceId == 0) {
         transition_begin(&gCircleFadeToBlack);
@@ -269,9 +276,9 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     shadow_update(SHADOW_ACTORS, SHADOW_ACTORS, LOGIC_NULL);
     gShadowHeapFlip = 0;
     if (gCurrentLevelHeader2->unkB7) {
-        D_8011B0E1 = gCurrentLevelHeader2->unkB4;
-        D_8011B0E2 = gCurrentLevelHeader2->unkB5;
-        D_8011B0E3 = gCurrentLevelHeader2->unkB6;
+        D_8011B0E1 = gCurrentLevelHeader2->rgb.red;
+        D_8011B0E2 = gCurrentLevelHeader2->rgb.green;
+        D_8011B0E3 = gCurrentLevelHeader2->rgb.blue;
         func_80025510(numberOfPlayers + 1);
     }
 }
@@ -509,10 +516,6 @@ void func_800257D0(void) {
     }
 }
 
-#ifdef NON_MATCHING
-void func_80026070(LevelModelSegmentBoundingBox *, f32, f32, f32);
-void func_80026430(LevelModelSegment *, f32, f32, f32);
-// URL: https://decomp.me/scratch/Hz4qp
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     s16 i;
     s16 j;
@@ -524,12 +527,12 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     s16 temp_s3;
     s16 var_s0;
     s16 var_s4;
-    s32 breakLoop;
+    s16 breakLoop;
     s32 *ptr2;
     LevelModelSegmentBoundingBox *bbox;
     s16 sum;
-    s8 sp7C[20]; // possible UB here, real size is unknown
-    s16 tmp;
+    s8 sp7C[24]; // possible UB here, real size is unknown
+    s32 pad;
 
     D_8011D490[0] = D_8011D474[viewportIndex].unk0;
     D_8011D490[1] = D_8011D474[viewportIndex].unk4;
@@ -554,12 +557,12 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     i = 0;
     for (; i < numberOfSegments; i++) {
         bbox = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIds[i]];
-        sum = 0;
-        sum += bbox->x1 * yCameraSins + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
-        sum += yCameraSins * bbox->x2 + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
-        sum += bbox->x1 * yCameraSins + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
-        sum += yCameraSins * bbox->x2 + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
-        if (sum & 3) {
+        breakLoop = 0;
+        breakLoop += bbox->x1 * yCameraSins + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
+        breakLoop += yCameraSins * bbox->x2 + yCameraCoss * bbox->z1 + temp_f22 <= 0.0;
+        breakLoop += bbox->x1 * yCameraSins + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
+        breakLoop += yCameraSins * bbox->x2 + yCameraCoss * bbox->z2 + temp_f22 <= 0.0;
+        if (breakLoop & 3) {
             func_80026430(&gCurrentLevelModel->segments[segmentIds[i]], yCameraSins, yCameraCoss, temp_f22);
             if (gCurrentLevelModel->segments[segmentIds[i]].unk3C & 2) {
                 func_80026070(bbox, yCameraSins, yCameraCoss, temp_f22);
@@ -599,12 +602,12 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     var_s0 = 0;
 
     for (i = 0; i < D_8011D49E; i++) {
-        tmp = D_8011D478[i].unk7 * 2;
-        if (D_8011D47C[tmp] == -1) {
+        j = D_8011D478[i].unk7 * 2;
+        if (D_8011D47C[j] == -1) {
             D_8011D478[i].unk6 |= 2;
-            D_8011D47C[tmp] = i;
+            D_8011D47C[j] = i;
         } else {
-            D_8011D47C[tmp + 1] = i;
+            D_8011D47C[j + 1] = i;
         }
     }
     var_s4 = temp_s3 = D_8011D478[0].unk0;
@@ -617,7 +620,7 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     D_8011D4B4 = 1 - D_8011D4B4;
     D_8011D488 = gSceneCurrVertexList;
     D_8011D498 = gSceneCurrTriList;
-    D_8011D4B6 = 0;
+    D_8011D4B6.whole = 0;
     D_8011D4B8 = 0;
 
     i = 0;
@@ -647,16 +650,13 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
             }
         }
     }
-    if (D_8011D4B6 != 0) {
-        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6, 0);
-        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), D_8011D4B6 >> 1, TRIN_DISABLE_TEXTURE);
+    if (D_8011D4B6.whole != 0) {
+        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6.whole, 0);
+        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), D_8011D4B6.whole >> 1, TRIN_DISABLE_TEXTURE);
     }
     gSceneCurrVertexList = spAC;
     gSceneCurrTriList = spA8;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002581C.s")
-#endif
 
 void func_80026070(LevelModelSegmentBoundingBox *arg0, f32 arg1, f32 arg2, f32 arg3) {
     f32 sp80[4];
@@ -966,114 +966,112 @@ void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     Vertex *verts;
     Triangle *tris;
-    u8 triIndex;
-    s32 vertZ1;
-    s32 vertX2;
-    s32 vertZ2;
-    s32 vertX1;
-    s32 colour_r;
-    s32 colour_g;
-    s32 colour_b;
+    s32 triIndex;
+    s16 vertZ1;
+    s16 vertX2;
+    s16 vertZ2;
+    s16 vertX1;
+    u8 colour_r;
+    u8 colour_g;
+    u8 colour_b;
+    u8 colour_a;
 
     if (D_8011D4B8 >= D_8011D4BC) {
-        return 0;
-    } else {
-        if (D_8011D4B6 == 24) {
-            gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6, 0);
-            gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), (D_8011D4B6 >> 1), TRIN_DISABLE_TEXTURE);
-            D_8011D488 = gSceneCurrVertexList;
-            D_8011D4B6 = 0;
-            D_8011D498 = gSceneCurrTriList;
-        }
-
-        colour_r = D_8011B0E1;
-        colour_g = D_8011B0E2;
-        colour_b = D_8011B0E3;
-
-        vertX1 = arg2 * D_8011D4A0 + D_8011D4AC;
-        vertZ1 = arg2 * D_8011D4A4 + D_8011D4B0;
-        vertX2 = arg3 * D_8011D4A0 + D_8011D4AC;
-        vertZ2 = arg3 * D_8011D4A4 + D_8011D4B0;
-
-        verts = gSceneCurrVertexList;
-        verts->x = vertX1;
-        verts->y = arg0[0] + 2;
-        verts->z = vertZ1;
-        verts->r = colour_r;
-        verts->g = colour_g;
-        verts->b = colour_b;
-        verts->a = 255;
-        verts++;
-
-        verts->x = vertX2;
-        verts->y = arg0[1] + 2;
-        verts->z = vertZ2;
-        verts->r = colour_r;
-        verts->g = colour_g;
-        verts->b = colour_b;
-        verts->a = 255;
-        verts++;
-
-        verts->x = vertX1;
-        verts->y = arg1[0] - 2;
-        verts->z = vertZ1;
-        verts->r = colour_r;
-        verts->g = colour_g;
-        verts->b = colour_b;
-        verts->a = 255;
-        verts++;
-
-        verts->x = vertX2;
-        verts->y = arg1[1] - 2;
-        verts->z = vertZ2;
-        verts->r = colour_r;
-        verts->g = colour_g;
-        verts->b = colour_b;
-        verts->a = 255;
-        verts++;
-
-        gSceneCurrVertexList = verts;
-        triIndex = (u8) D_8011D4B6;
-
-        tris = gSceneCurrTriList;
-        tris->flags = BACKFACE_DRAW;
-        tris->vi0 = triIndex + 2;
-        tris->vi1 = triIndex + 1;
-        tris->vi2 = triIndex;
-        tris->uv0.u = 0x3E0;
-        tris->uv0.v = 0x3E0;
-        tris->uv1.u = 0x3E0;
-        tris->uv1.v = 0;
-        tris->uv2.u = 1;
-        tris->uv2.v = 0;
-        tris++;
-
-        tris->flags = BACKFACE_DRAW;
-        tris->vi1 = triIndex + 1;
-        tris->vi2 = triIndex + 2;
-        tris->vi0 = triIndex + 3;
-        tris->uv0.u = 1;
-        tris->uv0.v = 0x3E0;
-        tris->uv1.u = 0x3E0;
-        tris->uv1.v = 0x3E0;
-        tris->uv2.u = 1;
-        tris->uv2.v = 0;
-        tris++;
-        gSceneCurrTriList = tris;
-
-        D_8011D4B6 += 4;
-        D_8011D4B8++;
+        return NULL;
     }
 
-    return 0;
+    if (D_8011D4B6.whole == 24) {
+        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6.whole, 0);
+        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), (D_8011D4B6.whole >> 1),
+                   TRIN_DISABLE_TEXTURE);
+        D_8011D488 = gSceneCurrVertexList;
+        D_8011D4B6.whole = 0;
+        D_8011D498 = gSceneCurrTriList;
+    }
+
+    vertX1 = arg2 * D_8011D4A0 + D_8011D4AC;
+    vertZ1 = arg2 * D_8011D4A4 + D_8011D4B0;
+    vertX2 = arg3 * D_8011D4A0 + D_8011D4AC;
+    vertZ2 = arg3 * D_8011D4A4 + D_8011D4B0;
+
+    colour_r = D_8011B0E1;
+    colour_g = D_8011B0E2;
+    colour_b = D_8011B0E3;
+    colour_a = 0xFF;
+
+    verts = gSceneCurrVertexList;
+    verts[0].x = vertX1;
+    verts[0].y = arg0[0] + 2.0f;
+    verts[0].z = vertZ1;
+    verts[0].r = colour_r;
+    verts[0].g = colour_g;
+    verts[0].b = colour_b;
+    verts[0].a = colour_a;
+
+    verts[1].x = vertX2;
+    verts[1].y = arg0[1] + 2.0f;
+    verts[1].z = vertZ2;
+    verts[1].r = colour_r;
+    verts[1].g = colour_g;
+    verts[1].b = colour_b;
+    verts[1].a = colour_a;
+
+    verts[2].x = vertX1;
+    verts[2].y = arg1[0] - 2.0f;
+    verts[2].z = vertZ1;
+    verts[2].r = colour_r;
+    verts[2].g = colour_g;
+    verts[2].b = colour_b;
+    verts[2].a = colour_a;
+
+    verts[3].x = vertX2;
+    verts[3].y = arg1[1] - 2.0f;
+    verts[3].z = vertZ2;
+    verts[3].r = colour_r;
+    verts[3].g = colour_g;
+    verts[3].b = colour_b;
+    verts[3].a = colour_a;
+    // @fake
+    if (1) {}
+    verts += 4;
+    gSceneCurrVertexList = verts;
+
+    tris = gSceneCurrTriList;
+    triIndex = D_8011D4B6.two;
+
+    // @fake, using index 0 directly doesn't match
+    vertX2 = 0;
+    tris[vertX2].flags = BACKFACE_DRAW;
+    tris[vertX2].vi0 = triIndex + 2;
+    tris[vertX2].vi1 = triIndex + 1;
+    tris[vertX2].vi2 = triIndex;
+    tris[vertX2].uv0.u = 0x3E0;
+    tris[vertX2].uv0.v = 0x3E0;
+    tris[vertX2].uv1.u = 0x3E0;
+    tris[vertX2].uv1.v = 0;
+    tris[vertX2].uv2.u = 1;
+    tris[vertX2].uv2.v = 0;
+
+    tris[1].flags = BACKFACE_DRAW;
+    tris[1].vi0 = triIndex + 3;
+    tris[1].vi1 = triIndex + 1;
+    tris[1].vi2 = triIndex + 2;
+    tris[1].uv0.u = 1;
+    tris[1].uv0.v = 0x3E0;
+    tris[1].uv1.u = 0x3E0;
+    tris[1].uv1.v = 0x3E0;
+    tris[1].uv2.u = 1;
+    tris[1].uv2.v = 0;
+    tris += 2;
+    gSceneCurrTriList = tris;
+
+    D_8011D4B6.whole += 4;
+    D_8011D4B8++;
+    return NULL;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80027184.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 typedef struct Unk80027568_2 {
@@ -1352,9 +1350,187 @@ void set_skydome_visbility(s32 renderSky) {
     gSceneRenderSkyDome = renderSky;
 }
 
+#ifdef NON_MATCHING
+// This function creates the flashy sky effect in the wizpig 2 race.
 // init_skydome
-// https://decomp.me/scratch/80umh
+// https://decomp.me/scratch/E1DFy
+void func_80028050(void) {
+    Triangle *tris;
+    Vertex *verts;
+    s32 vCoordMask; // sp14C
+    s32 uCoordMask;
+    f32 scaledXSin;
+    f32 scaledXCos;
+    f32 var_f16;
+    s16 uCoords[9]; // sp128
+    s16 vCoords[9]; // sp114
+    f32 xCos;
+    f32 xSin; // sp10C
+    f32 pad_sp108;
+    ObjectSegment *objSegment;
+    f32 pad_sp100;
+    f32 xPositions[9]; // spDC
+    f32 zPositions[9]; // spB8
+    Vec3f pos;
+    s32 i;
+    s32 var_v0;
+    s32 var_v1;
+    s32 var_a1;
+    s32 var_a2;
+    s32 var_a3;
+    u8 *var_v0_3;
+    f32 var_f14;
+    s16 vertY;
+    s16 vTempCoord;
+    s16 uTempCoord;
+    LevelHeader_70 *levelHeader;
+    LevelHeader_70 *var_t2; // sp7C
+    LevelHeader_70 *sp78;
+    TextureHeader *texHeader; // sp74
+    s32 pad[4];
+
+    verts = gSceneCurrVertexList;
+    tris = gSceneCurrTriList;
+
+    objSegment = get_active_camera_segment();
+    texHeader = gCurrentLevelHeader2->unkA4;
+    uCoordMask = (texHeader->width << 5) - 1;
+    vCoordMask = (texHeader->height << 5) - 1;
+    xSin = sins_f(-objSegment->trans.rotation.x);
+    xCos = coss_f(-objSegment->trans.rotation.x);
+
+    scaledXSin = xSin * 1280.0f;
+    scaledXCos = xCos * 1280.0f;
+    xPositions[0] = -scaledXCos - (xSin * 1280.0f);
+    zPositions[0] = -scaledXCos + (xSin * 1280.0f);
+    xPositions[1] = scaledXCos - (xSin * 1280.0f);
+    zPositions[1] = -scaledXCos - (xSin * 1280.0f);
+    xPositions[2] = scaledXCos + (xSin * 1280.0f);
+    zPositions[2] = scaledXCos - (xSin * 1280.0f);
+    xPositions[3] = -scaledXCos + (xSin * 1280.0f);
+    zPositions[3] = scaledXCos + scaledXSin;
+    xPositions[4] = 0.0f;
+    zPositions[4] = 0.0f;
+
+    zPositions[5] = scaledXSin - (2.0f * scaledXCos);
+    xPositions[6] = scaledXCos - (2.0f * scaledXSin);
+    zPositions[6] = -(2.0f * scaledXCos) - scaledXSin;
+    xPositions[5] = -scaledXCos - (2.0f * scaledXSin);
+    xPositions[7] = scaledXCos + (2.0f * scaledXSin);
+    zPositions[7] = (2.0f * scaledXCos) - scaledXSin;
+    xPositions[8] = -scaledXCos + (2.0f * scaledXSin);
+    zPositions[8] = (2.0f * scaledXCos) + scaledXSin;
+
+    var_f14 = 1280.0f;
+    var_f14 *= 0.25f;
+
+    var_a1 = texHeader->width * 16 * gCurrentLevelHeader2->unkA0;
+    var_a2 = texHeader->height * 16 * gCurrentLevelHeader2->unkA1;
+
+    var_v0 =
+        ((s32) (objSegment->trans.x_position * (var_f14 / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) & uCoordMask;
+    var_v1 =
+        ((s32) (objSegment->trans.z_position * (var_f14 / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) & vCoordMask;
+
+    var_f14 = var_a1 * xCos;
+    pos.z = var_a1 * xCos;
+    pos.x = var_a1 * xCos;
+    var_f16 = var_a2 * xSin;
+    xCos = var_f16;
+
+    // @fake
+    var_a2 = texHeader->height * 16 * gCurrentLevelHeader2->unkA1;
+
+    uCoords[0] = (s16) (-var_f14 - xCos) + var_v0;
+    vCoords[0] = (s16) (var_f16 - var_f14) + var_v1;
+    uCoords[1] = (s16) (var_f14 - xCos) + var_v0;
+    vCoords[1] = (s16) (-var_f14 - var_f16) + var_v1;
+    uCoords[2] = (s16) (var_f14 + var_f16) + var_v0;
+    vCoords[2] = (s16) (var_f14 - var_f16) + var_v1;
+    uCoords[3] = (s16) (var_f16 - var_f14) + var_v0;
+    vCoords[3] = (s16) (var_f14 + var_f16) + var_v1;
+
+    uCoords[4] = var_v0;
+    vCoords[4] = var_v1;
+
+    uCoords[5] = (s16) (-var_f14 - (2.0f * xCos)) + var_v0;
+    vCoords[5] = (s16) (var_f16 - (2.0f * var_f14)) + var_v1;
+    uCoords[6] = (s16) (var_f14 - (2.0f * xCos)) + var_v0;
+    vCoords[6] = (s16) ((-(2.0f * var_f14)) - var_f16) + var_v1;
+    uCoords[7] = (s16) ((2.0f * xCos) + pos.z) + var_v0;
+    vCoords[7] = (s16) ((2.0f * pos.x) - var_f16) + var_v1;
+    uCoords[8] = (s16) ((2.0f * xCos) - pos.z) + var_v0;
+    vCoords[8] = (s16) ((2.0f * pos.x) + var_f16) + var_v1;
+
+    matrix_world_origin(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+
+    var_t2 = *gCurrentLevelHeader2->unk74;
+    var_a2 = -1;
+
+    if ((u32) var_t2 != -1) {
+        levelHeader = gCurrentLevelHeader2->unk74[1];
+        if ((u32) levelHeader == -1) {
+            levelHeader = var_t2;
+        }
+    } else {
+        levelHeader = sp78; // @bug? sp78 is never set
+        var_t2 = NULL;
+    }
+
+    var_a3 = -0x100;
+    if (var_t2 != NULL) {
+        var_a2 = var_t2->rgba.word;
+        var_a3 = levelHeader->rgba.word & (~0xFF);
+    }
+
+    gfx_init_basic_xlu(&gSceneCurrDisplayList, 1, var_a2, var_a3);
+    texHeader = set_animated_texture_header(texHeader, D_8011B110 << 8);
+    gDkrDmaDisplayList(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(texHeader->cmd), texHeader->numberOfCommands);
+    gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gSceneCurrVertexList), 9, 0);
+    gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gSceneCurrTriList), 8, 1);
+    gDPPipeSync(gSceneCurrDisplayList++);
+    if (var_t2 != NULL) {
+        gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
+    }
+    rendermode_reset(&gSceneCurrDisplayList);
+
+    vertY = objSegment->trans.y_position + 192.0f;
+    for (i = 0; i < 9; i++) {
+        verts->x = xPositions[i] + objSegment->trans.x_position;
+        verts->y = vertY;
+        verts->z = zPositions[i] + objSegment->trans.z_position;
+        verts->r = 0xFF;
+        verts->g = 0xFF;
+        verts->b = 0xFF;
+        verts->a = (i <= 4) ? (255) : (0);
+        verts++;
+    }
+
+    var_v0_3 = D_800DC92C;
+    for (i = 0; i < 8; i++) {
+        tris->flags = 0x40;
+        tris->vi0 = *var_v0_3;
+        tris->uv0.u = uCoords[*var_v0_3];
+        tris->uv0.v = vCoords[*var_v0_3];
+        var_v0_3 += 1;
+        tris->vi1 = *var_v0_3;
+        tris->uv1.u = uCoords[*var_v0_3];
+        tris->uv1.v = vCoords[*var_v0_3];
+        var_v0_3 += 1;
+        tris->vi2 = *var_v0_3;
+        tris->uv2.u = uCoords[*var_v0_3];
+        tris->uv2.v = vCoords[*var_v0_3];
+        var_v0_3 += 1;
+        tris++;
+    }
+
+    gSceneCurrVertexList = verts;
+    gSceneCurrTriList = tris;
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80028050.s")
+#endif
 
 /**
  * Instead of drawing the skydome with textures, draw a solid coloured background.
@@ -1727,9 +1903,10 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     s32 endPos;
     s32 batchFlags;
     s32 textureFlags;
+    //! @bug: batchInfo is uninitalized
     numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
     segment = &gCurrentLevelModel->segments[segmentId];
-    sp78 = (nonOpaque && gWaveBlockCount) ? (func_800B9228(segment)) : (0);
+    sp78 = (nonOpaque && gWaveBlockCount) ? func_800B9228(segment) : 0;
     if (nonOpaque) {
         startPos = segment->numberofOpaqueBatches;
         endPos = segment->numberOfBatches;
@@ -1781,10 +1958,11 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
         if (levelHeaderIndex != (batchInfo->verticesOffset * 0)) {
             gDPSetEnvColor(
                 gSceneCurrDisplayList++,
-                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->red,
-                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->green,
-                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->blue,
-                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->alpha);
+                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->rgba.r,
+                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->rgba.g,
+                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->rgba.b,
+                ((LevelHeader_70 *) ((u8 **) (&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])
+                    ->rgba.a);
         } else {
             gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
         }
@@ -2784,7 +2962,7 @@ LevelModel *get_current_level_model(void) {
 void free_track(void) {
     s32 i;
 
-    func_8000B290();
+    racerfx_free();
     if (gWaveBlockCount != 0) {
         free_waves();
     }

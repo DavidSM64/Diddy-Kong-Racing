@@ -2,14 +2,18 @@
 
 #include <string>
 
+namespace DkrAssetsTool {
+
 const std::string DKRAT_NAME = "DKR Assets Tool";
-const std::string DKRAT_VERSION = "Revision 4";
-const int DKRAT_REVISION_MAJOR = 4;
-const int DKRAT_REVISION_MINOR = 0;
+const int DKRAT_VERSION_RELEASE = 0;
+const int DKRAT_VERSION_MAJOR = 5;
+const int DKRAT_VERSION_MINOR = 0;
+const std::string DKRAT_VERSION = "Version " + std::to_string(DKRAT_VERSION_RELEASE) + "."
+                                             + std::to_string(DKRAT_VERSION_MAJOR) + "."
+                                             + std::to_string(DKRAT_VERSION_MINOR);
 
 const std::string DKRAT_SETTINGS_FILE = "dkr_assets_tool_settings.json";
 
-const std::string DEFAULT_DKR_VERSION = "us_1.0";
 const std::string DEFAULT_BASEROMS_SUBPATH = "baseroms/";
 const std::string DEFAULT_ASSETS_SUBPATH = "assets/";
 const std::string DEFAULT_CONFIGS_SUBPATH = "extract-ver/";
@@ -28,3 +32,5 @@ const bool USING_ASSERTS = true;
 const double DEFAULT_MODEL_SCALE_GLTF = 1.0 / 1000.0;
 
 const double DKR_FPS = 60.0; // For time conversions
+
+}

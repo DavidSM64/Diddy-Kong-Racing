@@ -8,23 +8,10 @@
 /* Size: 0xE0 / 224 bytes */
 typedef struct VehicleSoundData {
     /* 0x00 */ u16 unk0[2];
-    u8 unk4[2][4];
-    /* 0x08 */ u8 pad8[0x2];
-    u8 unkC[2][4];
-    // /* 0x04 */ u8 unk4[4];
-    // /* 0x08 */ u8 pad8[0x5];
-    // /* 0x0D */ u8 unkD;
-    // /* 0x0E */ u8 unkE[4];
-    /* 0x16 */ u16 unk16;
-    /* 0x18 */ u16 unk18[4];
-    /* 0x20 */ u8 unk20[2];
-    /* 0x22 */ u16 unk22;
-    /* 0x24 */ u8 pad24[0x6];
-    /* 0x2A */ u8 unk2A[2];
-    /* 0x2C */ u8 unk2C[2];
-    /* 0x2E */ u8 pad2E[0x3];
-    /* 0x31 */ u8 unk31;
-    /* 0x32 */ u8 pad32[0x4];
+    /* 0x04 */ u8 unk4[2][5];
+    /* 0x0E */ u8 unkE[2][5];
+    /* 0x18 */ u16 unk18[2][5];
+    /* 0x2C */ u8 unk2C[2][5];
     /* 0x36 */ u8 unk36;
     /* 0x37 */ u8 unk37;
     /* 0x38 */ u8 unk38;
@@ -70,21 +57,11 @@ typedef struct VehicleSoundData {
 
 /* Size: 0x4C / 76 Bytes */
 typedef struct unkAudioAsset {
-    /* 0x00 */ u16 unk0;
-    /* 0x02 */ u8 unk2;
-    /* 0x03 */ u8 unk3;
-    /* 0x04 */ u8 unk4[4];
-    /* 0x08 */ u8 pad8[0x4];
-    /* 0x0C */ u8 unkC;
-    /* 0x0D */ u8 unkD;
-    /* 0x0E */ u8 unkE[4];
-    /* 0x12 */ u8 pad12[4];
-    /* 0x16 */ u16 unk16;
-    /* 0x18 */ u16 unk18[4];
-    /* 0x20 */ u8 pad20[0xA];
-    /* 0x2A */ u8 unk2A[2];
-    /* 0x2C */ u8 unk2C[2];
-    /* 0x2E */ u8 pad2E[0x8];
+    /* 0x00 */ u16 unk0[2];
+    /* 0x04 */ u8 unk4[2][5];
+    /* 0x0E */ u8 unkE[2][5];
+    /* 0x18 */ u16 unk18[2][5];
+    /* 0x2C */ u8 unk2C[2][5];
     /* 0x36 */ u8 unk36;
     /* 0x37 */ u8 unk37;
     /* 0x38 */ u8 unk38;
@@ -105,7 +82,7 @@ void racer_sound_update(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 up
 void racer_sound_free(Object *);
 
 f32 func_80007FA4(f32 arg0);
-VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId);
+VehicleSoundData *racer_sound_init(s32 characterId, s32 vehicleId);
 void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 void racer_sound_hovercraft(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 void func_800063EC(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);

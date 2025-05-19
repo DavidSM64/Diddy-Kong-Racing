@@ -119,7 +119,7 @@ sndp_get_group_volume = 0x80004A3C;
 sndp_set_group_volume = 0x80004A60;
 
 // audio_vehicle.c .text
-func_80004B40 = 0x80004B40;
+racer_sound_init = 0x80004B40;
 racer_sound_update = 0x800050D0;
 func_80005254 = 0x80005254;
 racer_sound_hovercraft = 0x80005D08;
@@ -174,12 +174,12 @@ __seqpStopOsc = 0x8000AEFC;
 set_voice_limit = 0x8000B010;
 
 // objects.c .text
-func_8000B020 = 0x8000B020;
-func_8000B290 = 0x8000B290;
+racerfx_alloc = 0x8000B020;
+racerfx_free = 0x8000B290;
 func_8000B38C = 0x8000B38C;
 func_8000B750 = 0x8000B750;
-func_8000BADC = 0x8000BADC;
-func_8000BF44 = 0x8000BF44;
+racerfx_update = 0x8000BADC;
+racerfx_get_boost = 0x8000BF44;
 allocate_object_pools = 0x8000BF8C;
 decrypt_magic_codes = 0x8000C2D8;
 clear_object_pointers = 0x8000C460;
@@ -1279,7 +1279,7 @@ material_set = 0x8007B4E8;
 material_set_blinking_lights = 0x8007BA5C;
 sprite_opaque = 0x8007BF1C;
 material_load_simple = 0x8007BF34;
-func_8007C12C = 0x8007C12C;
+tex_load_sprite = 0x8007C12C;
 sprite_cache_index = 0x8007C52C;
 tex_asset_size = 0x8007C57C;
 func_8007C660 = 0x8007C660;
@@ -2216,10 +2216,10 @@ D_800DC73C = 0x800DC73C;
 D_800DC740 = 0x800DC740;
 gSwapLeadPlayer = 0x800DC744;
 D_800DC748 = 0x800DC748;
-D_800DC74C = 0x800DC74C;
-D_800DC754 = 0x800DC754;
+gBoostVerts = 0x800DC74C;
+gBoostTris = 0x800DC754;
 gShieldEffectObject = 0x800DC75C;
-D_800DC760 = 0x800DC760;
+gBoostObjOverrideID = 0x800DC760;
 gMagnetEffectObject = 0x800DC764;
 D_800DC768 = 0x800DC768;
 D_800DC76C = 0x800DC76C;
@@ -2853,6 +2853,7 @@ dDebugFontSettings = 0x800E2FB8;
 sLockupStatus = 0x800E3020;
 sLockupPage = 0x800E3024;
 sLockupDelay = 0x800E3028;
+objStatusString = 0x800E302C; // size:0xC
 
 // waves.c .data
 D_800E3040 = 0x800E3040;
@@ -3811,17 +3812,17 @@ gEnvmapPos = 0x8011AFE8;
 D_8011AFEE = 0x8011AFEE;
 D_8011AFF0 = 0x8011AFF0;
 D_8011AFF4 = 0x8011AFF4;
-D_8011AFF8 = 0x8011AFF8;
+gBoostVertCount = 0x8011AFF8;
 D_8011AFFC = 0x8011AFFC;
-D_8011B000 = 0x8011B000;
+gBoostTriCount = 0x8011B000;
 D_8011B004 = 0x8011B004;
-D_8011B008 = 0x8011B008;
-D_8011B010 = 0x8011B010;
-D_8011B020 = 0x8011B020;
+gBoostVertFlip = 0x8011B008;
+gShieldSineTime = 0x8011B010;
+gBoostEffectObjects = 0x8011B020;
 D_8011B048 = 0x8011B048;
 D_8011B058 = 0x8011B058;
 D_8011B068 = 0x8011B068;
-D_8011B078 = 0x8011B078;
+gRacerFXData = 0x8011B078;
 D_8011B07B = 0x8011B07B;
 D_8011B080 = 0x8011B080;
 
@@ -4599,11 +4600,8 @@ gEPCMesgBuf = 0x801297A8;
 gEPCPIBuf = 0x801297C8;
 gEPCPIQueue = 0x801297E8;
 gEpcInfo = 0x80129800; // size:0x1B0
-D_801299B0 = 0x801299B0; // size:0x100
-
-// stacks .bss
-D_80129AB0 = 0x80129AB0; // size:0x100
-D_80129BB0 = 0x80129BB0; // size:0x400
+gEpcInfoStack1 = 0x801299B0; // size:0x200
+gEpcInfoStack2 = 0x80129BB0; // size:0x400
 gObjectStackTrace = 0x80129FB0; // size:0x10
 
 // waves .bss

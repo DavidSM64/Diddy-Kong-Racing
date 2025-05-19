@@ -1,7 +1,6 @@
 #include "memory.h"
 #include "printf.h"
 #include "thread0_epc.h"
-#include "joypad.h"
 #include "math_util.h"
 
 /************ .bss ************/
@@ -135,7 +134,7 @@ MemoryPoolSlot *mempool_slot_find(MemoryPools poolIndex, s32 size, u32 colourTag
         stubbed_printf("*** mmAlloc: size = 0 ***\n");
     }
     pool = &gMemoryPools[poolIndex];
-    if ((pool->curNumSlots + 1) == (*pool).maxNumSlots) {
+    if (pool->maxNumSlots == pool->curNumSlots + 1) {
         interrupts_enable(intFlags);
         stubbed_printf("*** mm Error *** ---> No more slots available.\n");
         return NULL;

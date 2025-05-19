@@ -694,7 +694,7 @@ void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, Camera *segme
                                             lensFlareData->colour.b,
                                             (s32) (lensFlareData->colour.a * magSquareSquared));
                             render_sprite_billboard(dList, mats, verts, (Object *) &trans,
-                                                    (unk80068514_arg4 *) gLensFlare->unk68[lensFlareData->count],
+                                                    (Sprite *) gLensFlare->unk68[lensFlareData->count],
                                                     (RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE));
                             lensFlareData++;
                         }
@@ -806,7 +806,7 @@ void rain_init(s32 intensity, s32 opacity) {
     gRainVertexFlip = 0;
     gRainGfx[0].tex = load_texture(gWeatherAssetTable[1]);
     gRainGfx[1].tex = load_texture(gWeatherAssetTable[1]);
-    gRainSplashGfx = (Sprite *) func_8007C12C(gWeatherAssetTable[3], 0);
+    gRainSplashGfx = (Sprite *) tex_load_sprite(gWeatherAssetTable[3], 0);
     gWeatherType = WEATHER_RAIN;
 }
 
@@ -1011,7 +1011,7 @@ void rain_render_splashes(s32 updateRate) {
 
                     gDPSetPrimColor(gCurrWeatherDisplayList++, 0, 0, 192, 192, 255, gRainSplashSegments[i].opacity);
                     render_sprite_billboard(&gCurrWeatherDisplayList, &gCurrWeatherMatrix, &gCurrWeatherVertexList,
-                                            (Object *) &gRainSplashSegments[i], (unk80068514_arg4 *) gRainSplashGfx,
+                                            (Object *) &gRainSplashSegments[i], gRainSplashGfx,
                                             RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_FOG_ACTIVE |
                                                 RENDER_Z_UPDATE);
                 }

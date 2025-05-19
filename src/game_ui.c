@@ -273,7 +273,7 @@ u8 gHudSlide;
 u8 gHideRaceTimer;
 u8 gNumActivePlayers;
 u8 gWrongWayNagPrefix;
-SoundHandle gRaceStartSoundMask;
+AudioPoint *gRaceStartSoundMask;
 SoundHandle gHUDVoiceSoundMask;
 SoundHandle gHudBalloonSoundMask;
 u16 gHudTTSoundID;
@@ -337,13 +337,13 @@ void hud_init(UNUSED s32 viewportCount) {
         gAssetHudElements->entry[i] = NULL;
     }
     gAssetHudElements->entry[HUD_ELEMENT_UNK_01] =
-        func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_01] & 0x3FFF, 1); // ID: 86 - 0x56
+        tex_load_sprite(gAssetHudElementIds[HUD_ELEMENT_UNK_01] & 0x3FFF, 1); // ID: 86 - 0x56
     gAssetHudElements->entry[HUD_ELEMENT_UNK_17] =
-        func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_17] & 0x3FFF, 1); // ID: 291 - 0x123
+        tex_load_sprite(gAssetHudElementIds[HUD_ELEMENT_UNK_17] & 0x3FFF, 1); // ID: 291 - 0x123
     gAssetHudElements->entry[HUD_ELEMENT_UNK_08] =
-        func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_08] & 0x3FFF, 1); // ID: 156 - 0x9C
+        tex_load_sprite(gAssetHudElementIds[HUD_ELEMENT_UNK_08] & 0x3FFF, 1); // ID: 156 - 0x9C
     gAssetHudElements->entry[HUD_ELEMENT_UNK_11] =
-        func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_11] & 0x3FFF, 1); // ID: 60 - 0x3C
+        tex_load_sprite(gAssetHudElementIds[HUD_ELEMENT_UNK_11] & 0x3FFF, 1); // ID: 60 - 0x3C
     if (gNumActivePlayers != 3) {
         playerCount = gNumActivePlayers;
     } else {
@@ -1750,7 +1750,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 29, SWMessage[0],
                   ALIGN_MIDDLE_CENTER);
         // Draw actual text.
-        set_text_colour(D_80127194->red, D_80127194->green, D_80127194->blue, 128, D_80127194->alpha);
+        set_text_colour(D_80127194->rgba.r, D_80127194->rgba.g, D_80127194->rgba.b, 128, D_80127194->rgba.a);
         draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY, SWMessage[2],
                   ALIGN_MIDDLE_CENTER);
         draw_text(&gHudDL, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 14, SWMessage[1],
@@ -1834,7 +1834,7 @@ void hud_speedometre(Object *obj, UNUSED s32 updateRate) {
                     sRecordVel = vel;
                 }
                 vel *= 4.0f;
-                //!@Bug: Planes and hovercraft use drift_direction for something else, applying this unintentionally.
+                //!@bug: Planes and hovercraft use drift_direction for something else, applying this unintentionally.
                 if (racer->drift_direction != 0) {
                     vel += 7.0f;
                 }
@@ -1916,7 +1916,7 @@ void hud_race_start(s32 countdown, s32 updateRate) {
                 s32 numRacerObjects;
                 racerGroup = get_racer_objects(&numRacerObjects);
                 randomRacer = racerGroup[get_random_number_from_range(1, numRacerObjects) - 1];
-                racer = (Object_Racer *) randomRacer->unk64;
+                racer = &randomRacer->unk64->racer;
                 if (racer->vehicleID == VEHICLE_CAR) {
                     if (get_random_number_from_range(0, 100) >= 96) {
                         frequency = 1.25 - ((get_random_number_from_range(0, 7) * 0.5) / 7.0);
@@ -3117,7 +3117,7 @@ void hud_weapon(Object *obj, s32 updateRate) {
  * If currently using a magnet, render a reticle over the racer that's being targeted.
  */
 void hud_magnet_reticle(Object *racerObj) {
-    unk80068514_arg4 *entry;
+    Sprite *entry;
     HudElement *hud;
     Object_Racer *racer;
 
@@ -3298,7 +3298,7 @@ void minimap_init(LevelModel *model) {
     gMinimapBlue = model->minimapColor & 0xFF;
     load_sprite_info(model->minimapSpriteIndex, &gMinimapDotOffsetX, &gMinimapDotOffsetY, &sp2C, &sp2C, &sp2C);
     func_8007CA68(model->minimapSpriteIndex, 0, &D_80126D14, &D_80126D18, &sp2C);
-    model->minimapSpriteIndex = (s32) func_8007C12C(model->minimapSpriteIndex, 1);
+    model->minimapSpriteIndex = (s32) tex_load_sprite(model->minimapSpriteIndex, 1);
 }
 
 /**
@@ -3581,191 +3581,192 @@ void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate
     *dList = gHudDL;
     *mtx = gHudMtx;
     *vtx = gHudVtx;
-    if (!(gHudLevelHeader->unkBC & 1)) {
-        sp113 = TRUE;
-        for (i = 0; i < objectCount; i++) {
-            someRacer = (Object_Racer *) objectGroup[i]->unk64;
-            if (someRacer != NULL && someRacer->playerIndex != PLAYER_COMPUTER && someRacer->raceFinished == FALSE) {
-                sp113 = FALSE;
-            }
-        }
-        if ((gHUDNumPlayers == THREE_PLAYERS && is_postrace_viewport_active()) || check_if_showing_cutscene_camera() ||
-            sp113) {
-            goto test;
-        } else if (gHudToggleSettings[gHUDNumPlayers] != 1) {
-        test:
-            return;
-        } else {
-            rendermode_reset(&gHudDL);
-            set_ortho_matrix_view(&gHudDL, &gHudMtx);
-            lvlMdl = get_current_level_model();
-            if (lvlMdl == NULL) {
-                return;
-            }
-            someObjSeg = get_active_camera_segment();
-            sprite_anim_off(TRUE);
-            minimap = (Sprite *) lvlMdl->minimapSpriteIndex;
-            switch (gHUDNumPlayers) {
-                case TWO_PLAYERS:
-                    gMinimapScreenX = 135;
-                    gMinimapScreenY = -gMinimapDotOffsetY / 2;
-                    break;
-                case THREE_PLAYERS:
-                    if (get_current_level_race_type() == RACETYPE_CHALLENGE_EGGS ||
-                        get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE ||
-                        get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
-                        gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8;
-                        gMinimapScreenY = -gMinimapDotOffsetY / 2;
-                    } else {
-                        gMinimapScreenX = (gMinimapDotOffsetX / 2) + 72;
-                        gMinimapScreenY = -60 - (gMinimapDotOffsetY / 2);
-                    }
-                    break;
-                case FOUR_PLAYERS:
-                    gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8;
-                    gMinimapScreenY = -gMinimapDotOffsetY / 2;
-                    break;
-                default:
-                    gMinimapScreenX = 135;
-                    gMinimapScreenY = -98;
-                    break;
-            }
-            if (osTvType == OS_TV_TYPE_PAL) {
-                gMinimapScreenY *= 1.2;
-            }
-            sprite_opaque(FALSE);
-            hudElem.pos.x = gMinimapScreenX + gHudOffsetX + gHudBounceX;
-            hudElem.pos.y = gMinimapScreenY;
-            if (osTvType == OS_TV_TYPE_PAL) {
-                hudElem.pos.x -= 4.0f;
-            }
-            hudElem.rotation.z_rotation = -someObjSeg->trans.rotation.z_rotation;
-            hudElem.rotation.x_rotation = 0;
-            if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
-                hudElem.rotation.y_rotation = -0x8000;
-                hudElem.pos.x -= gMinimapDotOffsetX;
-            } else {
-                hudElem.rotation.y_rotation = 0;
-            }
-            hudElem.spriteOffset = 0;
-            hudElem.pos.z = 0.0f;
-            hudElem.scale = 1.0f;
-            opacity = mapOpacity;
-            if (mapOpacity > 160) {
-                mapOpacity = 160;
-            }
-            if (gNumActivePlayers == 3) {
-                gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, mapOpacity);
-            } else {
-                gDPSetPrimColor(gHudDL++, 0, 0, gMinimapRed, gMinimapGreen, gMinimapBlue, mapOpacity);
-            }
-            render_ortho_triangle_image(&gHudDL, &gHudMtx, &gHudVtx, (ObjectSegment *) &hudElem, minimap, 0);
-            sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
-            sp118 = coss_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
-            sp114 = sins_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
-            if (is_in_time_trial() && timetrial_valid_player_ghost()) {
-                temp_v0_8 = timetrial_player_ghost();
-                if (temp_v0_8 != NULL) {
-                    minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
-                                       sp118, sp11C);
-                    gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_DOT;
-                    gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
-                    gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
-                    tempVar1 = (opacity * (f32) temp_v0_8->segment.object.opacity) * (1.0 / 128.0);
-                    gDPSetPrimColor(gHudDL++, 0, 0, 60, 60, 60, tempVar1);
-                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
-                }
-            }
-            temp_v0_8 = timetrial_ghost_staff();
-            if (temp_v0_8 != NULL) {
-                minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
-                                   sp118, sp11C);
-                gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
-                tempVar1 = (opacity * (f32) temp_v0_8->segment.object.opacity) * (1.0 / 128.0);
-                gDPSetPrimColor(gHudDL++, 0, 0, gHudMinimapColours[8].red, gHudMinimapColours[8].green,
-                                gHudMinimapColours[8].blue, tempVar1);
-                gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
-                gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_DOT;
-                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
-            }
-            // Draw Taj's minimap icon.
-            if (gHudLevelHeader->race_type == RACETYPE_HUBWORLD) {
-                temp_v0_8 = find_taj_object();
-                if (temp_v0_8 != NULL) {
-                    gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_DOT;
-                    minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
-                                       sp118, sp11C);
-                    gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
-                    gDPSetPrimColor(gHudDL++, 0, 0, 255, 0, 255, opacity);
-                    gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
-                    hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
-                }
-            }
-            // Draw racer minimap icons.
-            // Non AI players get an arrow instead of a blob that rotates.
-            for (i = objectCount - 1; i >= 0; i--) {
-                temp_v0_8 = objectGroup[i];
-                someRacer = (Object_Racer *) objectGroup[i]->unk64;
-                if (someRacer != NULL) {
-                    minimap_marker_pos(objectGroup[i]->segment.trans.x_position,
-                                       objectGroup[i]->segment.trans.z_position, sp114, sp118, sp11C);
-                    if (someRacer->playerIndex != PLAYER_COMPUTER) {
-                        gCurrentHud->entry[HUD_MINIMAP_MARKER].pos.y -= 1.0f;
-                        gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_ARROW;
-                        gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation =
-                            (objectGroup[i]->segment.trans.rotation.y_rotation -
-                             ((lvlMdl->minimapRotation * 0xFFFF) / 360)) &
-                            0xFFFF;
+    if ((gHudLevelHeader->unkBC & 1)) {
+        return;
+    }
 
-                        if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
-                            gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation =
-                                0xFFFF - gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation;
-                        }
-                        sprite_opaque(TRUE);
-                    } else {
-                        gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
-                        gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_DOT;
-                    }
-                    if (is_taj_challenge() && someRacer->vehicleID == VEHICLE_CARPET) {
-                        gDPSetPrimColor(gHudDL++, 0, 0, 255, 0, 255, opacity);
-                    } else {
-                        gDPSetPrimColor(gHudDL++, 0, 0, gHudMinimapColours[someRacer->characterId].red,
-                                        gHudMinimapColours[someRacer->characterId].green,
-                                        gHudMinimapColours[someRacer->characterId].blue, opacity);
-                    }
-                    if (!(get_current_level_race_type() & RACETYPE_CHALLENGE) || (!someRacer->raceFinished)) {
-                        if (osTvType == OS_TV_TYPE_PAL) {
-                            gCurrentHud->entry[HUD_MINIMAP_MARKER].pos.x -= 4.0f;
-                        }
-                        if (get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE) {
-                            switch (someRacer->elevation) {
-                                case ELEVATION_LOW:
-                                    gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 0.8f;
-                                    break;
-                                case ELEVATION_NORMAL:
-                                    gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
-                                    break;
-                                case ELEVATION_HIGH:
-                                case ELEVATION_HIGHEST:
-                                    gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.2f;
-                                    break;
-                            }
-                        } else {
-                            gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
-                        }
-                        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
-                    }
-                    sprite_opaque(FALSE);
-                }
-            }
-            gDPPipeSync(gHudDL++);
-            sprite_anim_off(FALSE);
-            sprite_opaque(TRUE);
-            *dList = gHudDL;
-            *mtx = gHudMtx;
-            *vtx = gHudVtx;
+    sp113 = TRUE;
+    for (i = 0; i < objectCount; i++) {
+        someRacer = (Object_Racer *) objectGroup[i]->unk64;
+        if (someRacer != NULL && someRacer->playerIndex != PLAYER_COMPUTER && someRacer->raceFinished == FALSE) {
+            sp113 = FALSE;
         }
     }
+    if ((gHUDNumPlayers == THREE_PLAYERS && is_postrace_viewport_active()) || check_if_showing_cutscene_camera() ||
+        sp113) {
+        goto test;
+    } else if (gHudToggleSettings[gHUDNumPlayers] != 1) {
+    test:
+        return;
+    }
+
+    rendermode_reset(&gHudDL);
+    set_ortho_matrix_view(&gHudDL, &gHudMtx);
+    lvlMdl = get_current_level_model();
+    if (lvlMdl == NULL) {
+        return;
+    }
+    someObjSeg = get_active_camera_segment();
+    sprite_anim_off(TRUE);
+    minimap = (Sprite *) lvlMdl->minimapSpriteIndex;
+    switch (gHUDNumPlayers) {
+        case TWO_PLAYERS:
+            gMinimapScreenX = 135;
+            gMinimapScreenY = -gMinimapDotOffsetY / 2;
+            break;
+        case THREE_PLAYERS:
+            if (get_current_level_race_type() == RACETYPE_CHALLENGE_EGGS ||
+                get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE ||
+                get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
+                gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8;
+                gMinimapScreenY = -gMinimapDotOffsetY / 2;
+            } else {
+                gMinimapScreenX = (gMinimapDotOffsetX / 2) + 72;
+                gMinimapScreenY = -60 - (gMinimapDotOffsetY / 2);
+            }
+            break;
+        case FOUR_PLAYERS:
+            gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8;
+            gMinimapScreenY = -gMinimapDotOffsetY / 2;
+            break;
+        default:
+            gMinimapScreenX = 135;
+            gMinimapScreenY = -98;
+            break;
+    }
+    if (osTvType == OS_TV_TYPE_PAL) {
+        gMinimapScreenY *= 1.2;
+    }
+    sprite_opaque(FALSE);
+    hudElem.pos.x = gMinimapScreenX + gHudOffsetX + gHudBounceX;
+    hudElem.pos.y = gMinimapScreenY;
+    if (osTvType == OS_TV_TYPE_PAL) {
+        hudElem.pos.x -= 4.0f;
+    }
+    hudElem.rotation.z_rotation = -someObjSeg->trans.rotation.z_rotation;
+    hudElem.rotation.x_rotation = 0;
+    if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
+        hudElem.rotation.y_rotation = -0x8000;
+        hudElem.pos.x -= gMinimapDotOffsetX;
+    } else {
+        hudElem.rotation.y_rotation = 0;
+    }
+    hudElem.spriteOffset = 0;
+    hudElem.pos.z = 0.0f;
+    hudElem.scale = 1.0f;
+    opacity = mapOpacity;
+    if (mapOpacity > 160) {
+        mapOpacity = 160;
+    }
+    if (gNumActivePlayers == 3) {
+        gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, mapOpacity);
+    } else {
+        gDPSetPrimColor(gHudDL++, 0, 0, gMinimapRed, gMinimapGreen, gMinimapBlue, mapOpacity);
+    }
+    render_ortho_triangle_image(&gHudDL, &gHudMtx, &gHudVtx, (ObjectSegment *) &hudElem, minimap, 0);
+    sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
+    sp118 = coss_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
+    sp114 = sins_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
+    if (is_in_time_trial() && timetrial_valid_player_ghost()) {
+        temp_v0_8 = timetrial_player_ghost();
+        if (temp_v0_8 != NULL) {
+            minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114, sp118,
+                               sp11C);
+            gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_DOT;
+            gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
+            gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
+            tempVar1 = (opacity * (f32) temp_v0_8->segment.object.opacity) * (1.0 / 128.0);
+            gDPSetPrimColor(gHudDL++, 0, 0, 60, 60, 60, tempVar1);
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
+        }
+    }
+    temp_v0_8 = timetrial_ghost_staff();
+    if (temp_v0_8 != NULL) {
+        minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114, sp118,
+                           sp11C);
+        gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
+        tempVar1 = (opacity * (f32) temp_v0_8->segment.object.opacity) * (1.0 / 128.0);
+        gDPSetPrimColor(gHudDL++, 0, 0, gHudMinimapColours[8].red, gHudMinimapColours[8].green,
+                        gHudMinimapColours[8].blue, tempVar1);
+        gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
+        gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_DOT;
+        hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
+    }
+    // Draw Taj's minimap icon.
+    if (gHudLevelHeader->race_type == RACETYPE_HUBWORLD) {
+        temp_v0_8 = find_taj_object();
+        if (temp_v0_8 != NULL) {
+            gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_DOT;
+            minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114, sp118,
+                               sp11C);
+            gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
+            gDPSetPrimColor(gHudDL++, 0, 0, 255, 0, 255, opacity);
+            gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
+            hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
+        }
+    }
+    // Draw racer minimap icons.
+    // Non AI players get an arrow instead of a blob that rotates.
+    for (i = objectCount - 1; i >= 0; i--) {
+        temp_v0_8 = objectGroup[i];
+        someRacer = (Object_Racer *) objectGroup[i]->unk64;
+        if (someRacer != NULL) {
+            minimap_marker_pos(objectGroup[i]->segment.trans.x_position, objectGroup[i]->segment.trans.z_position,
+                               sp114, sp118, sp11C);
+            if (someRacer->playerIndex != PLAYER_COMPUTER) {
+                gCurrentHud->entry[HUD_MINIMAP_MARKER].pos.y -= 1.0f;
+                gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_ARROW;
+                gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation =
+                    (objectGroup[i]->segment.trans.rotation.y_rotation - ((lvlMdl->minimapRotation * 0xFFFF) / 360)) &
+                    0xFFFF;
+
+                if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
+                    gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation =
+                        0xFFFF - gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation;
+                }
+                sprite_opaque(TRUE);
+            } else {
+                gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
+                gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_DOT;
+            }
+            if (is_taj_challenge() && someRacer->vehicleID == VEHICLE_CARPET) {
+                gDPSetPrimColor(gHudDL++, 0, 0, 255, 0, 255, opacity);
+            } else {
+                gDPSetPrimColor(gHudDL++, 0, 0, gHudMinimapColours[someRacer->characterId].red,
+                                gHudMinimapColours[someRacer->characterId].green,
+                                gHudMinimapColours[someRacer->characterId].blue, opacity);
+            }
+            if (!(get_current_level_race_type() & RACETYPE_CHALLENGE) || (!someRacer->raceFinished)) {
+                if (osTvType == OS_TV_TYPE_PAL) {
+                    gCurrentHud->entry[HUD_MINIMAP_MARKER].pos.x -= 4.0f;
+                }
+                if (get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE) {
+                    switch (someRacer->elevation) {
+                        case ELEVATION_LOW:
+                            gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 0.8f;
+                            break;
+                        case ELEVATION_NORMAL:
+                            gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
+                            break;
+                        case ELEVATION_HIGH:
+                        case ELEVATION_HIGHEST:
+                            gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.2f;
+                            break;
+                    }
+                } else {
+                    gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
+                }
+                hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
+            }
+            sprite_opaque(FALSE);
+        }
+    }
+    gDPPipeSync(gHudDL++);
+    sprite_anim_off(FALSE);
+    sprite_opaque(TRUE);
+    *dList = gHudDL;
+    *mtx = gHudMtx;
+    *vtx = gHudVtx;
 }
 
 /**
@@ -3843,7 +3844,7 @@ void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement
         if ((spriteElementId & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE) {
             gAssetHudElements->entry[hud->spriteID] = load_texture(spriteElementId & 0x3FFF);
         } else if (spriteElementId & ASSET_MASK_SPRITE) {
-            gAssetHudElements->entry[hud->spriteID] = func_8007C12C(spriteElementId & 0x3FFF, 1);
+            gAssetHudElements->entry[hud->spriteID] = tex_load_sprite(spriteElementId & 0x3FFF, 1);
         } else if (spriteElementId & ASSET_MASK_OBJECT) {
             objEntry.common.objectID = spriteElementId & 0xFF;
             objEntry.common.size = ((gAssetHudElementIds[hud->spriteID] & 0x100) >> 1) | sizeof(LevelObjectEntryCommon);

@@ -6,21 +6,26 @@
 #include "helpers/fileHelper.h"
 #include "helpers/assetsHelper.h"
 
-ExtractTTGhost::ExtractTTGhost(DkrAssetsSettings &settings, ExtractInfo &info) : _settings(settings), _info(info) {
-    fs::path _outFilepath = _settings.pathToAssets / _info.get_out_filepath(".json");
-    DebugHelper::info_custom("Extracting TTGhost", YELLOW_TEXT, _outFilepath);
+#include "extract/stats.h"
+
+using namespace DkrAssetsTool;
+
+void ExtractTTGhost::extract(ExtractInfo &info) {
+    DebugHelper::info_custom("Extracting TTGhost", YELLOW_TEXT, info.get_out_filepath(".json"));
+    
+    const ExtractStats &stats = info.get_stats();
     
     std::vector<uint8_t> rawBytes;
-    _info.get_data_from_rom(rawBytes);
+    info.get_data_from_rom(rawBytes);
     
     GhostHeader *ghostHeader = reinterpret_cast<GhostHeader *>(&rawBytes[0]);
     
-    WritableJsonFile jsonFile(_outFilepath);
+    WritableJsonFile &jsonFile = info.get_json_file();
     jsonFile.set_string("/type", "TTGhost");
     
-    std::string levelBuildId = AssetsHelper::get_build_id_of_index(_settings, "ASSET_LEVEL_HEADERS", ghostHeader->levelId);
+    std::string levelBuildId = stats.get_build_id_from_file_index("ASSET_LEVEL_HEADERS", ghostHeader->levelId);
     
-    std::string vehicle = _info.c_context->get_symbol_of_enum_int("Vehicle", ghostHeader->vehicleId);
+    std::string vehicle = info.get_c_context().get_symbol_of_enum_int("Vehicle", ghostHeader->vehicleId);
     
     jsonFile.set_string("/header/level", levelBuildId);
     jsonFile.set_string("/header/vehicle", vehicle);
@@ -46,8 +51,5 @@ ExtractTTGhost::ExtractTTGhost(DkrAssetsSettings &settings, ExtractInfo &info) :
         jsonFile.set_int(ptr + "/ry", ghostNodes[i].yRotation);
     }
     
-    jsonFile.save();
-}
-
-ExtractTTGhost::~ExtractTTGhost() {
+    info.write_json_file();
 }

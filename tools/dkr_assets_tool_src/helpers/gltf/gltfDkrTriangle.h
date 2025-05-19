@@ -2,6 +2,8 @@
 
 #include "fileTypes/triangle.hpp"
 
+namespace DkrAssetsTool {
+    
 class GltfDkrTriangle {
 public:
     uint16_t vi0, vi1, vi2;
@@ -20,3 +22,5 @@ public:
 
     static size_t get_size();
 };
+
+}

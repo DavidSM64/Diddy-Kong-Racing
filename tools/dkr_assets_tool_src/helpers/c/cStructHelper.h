@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <any>
 
+namespace DkrAssetsTool {
+
 class CContext;
 class CStruct;
 
@@ -38,7 +40,7 @@ struct CStructEntry {
     
     CStruct *innerStruct = nullptr; // Only used in struct/union type.
     
-    CStructEntry(CContext *context, CStruct *parent, std::string &type, std::string &pointer, std::string &name, 
+    CStructEntry(CContext &context, CStruct *parent, std::string &type, std::string &pointer, std::string &name, 
         std::string &arrayBrackets, std::string hint);
     bool is_pointer_to_type();
     bool is_array();
@@ -82,13 +84,13 @@ struct CStructEntry {
     int get_offset();
     void set_offset(int newOffset); // Note: Should only be called by the parent cstruct.
     
-    CContext *get_context();
+    CContext &get_context();
 private:
     // The hint map is specifically used for Object Maps.
     std::unordered_map<std::string, std::string> _hintMap;
     void _generate_hint_map(std::string &hint);
     
-    CContext *_context;
+    CContext &_context;
     CStruct *_parent;
     InternalType _internalType = InternalType::NOT_SET;
     int _offset = -1; // Is only calculated if get_offset is called.
@@ -104,8 +106,8 @@ private:
 // Class that represents a structure in a C file.
 class CStruct {
 public:
-    CStruct(CContext *context); // Empty struct
-    CStruct(CContext *context, const std::string &rawCode); // Parse from a struct string.
+    CStruct(CContext &context); // Empty struct
+    CStruct(CContext &context, const std::string &rawCode); // Parse from a struct string.
     ~CStruct();
     
     std::string get_name();
@@ -123,7 +125,7 @@ public:
     void calculate_offsets(int currentOffset = 0);
     
 private:
-    CContext *_context;
+    CContext &_context;
     
     std::vector<CStructEntry*> _entries;
     std::string _name = "";
@@ -136,12 +138,8 @@ private:
     void _calc_trivialness();
 };
 
-/**
- * Class that deals with reading / creating C structs.
- */
-class CStructHelper {
-public:
-    //static void get_struct_from_c_file(const std::string &filepath, const std::string &structName, CStruct &out);
-    static void get_structs_from_code(CContext *context, const std::string &code, std::vector<CStruct*> &out);
-    static void load_structs_from_file(CContext *context, fs::path filepath);
-};
+namespace CStructHelper {
+    void get_structs_from_code(CContext &context, const std::string &code, std::vector<CStruct*> &out);
+    void load_structs_from_file(CContext &context, fs::path filepath);
+}
+}

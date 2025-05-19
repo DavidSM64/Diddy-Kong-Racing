@@ -1,5 +1,7 @@
 #include "gltfDkrTriangle.h"
 
+using namespace DkrAssetsTool;
+
 #include <algorithm>
 
 GltfDkrTriangle::GltfDkrTriangle(DkrTriangle &tri) {

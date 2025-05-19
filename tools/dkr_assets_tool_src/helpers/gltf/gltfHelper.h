@@ -5,6 +5,8 @@
 #include <string>
 #include "libs/tiny_gltf.h"
 
+namespace DkrAssetsTool {
+
 class GltfFile;
 
 // Represents a node in the gltf file.
@@ -97,3 +99,5 @@ class GltfHelper {
 public:
     
 };
+
+}

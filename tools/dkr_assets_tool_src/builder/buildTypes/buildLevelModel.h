@@ -1,19 +1,10 @@
 #pragma once
 
 #include "builder/buildInfo.h"
-#include "misc/settings.hpp"
+#include "helpers/c/cContext.h"
 
-#include "fileTypes/fonts.hpp"
-
-#include "helpers/debugHelper.h"
-#include "helpers/fileHelper.h"
-#include "helpers/jsonHelper.h"
-
-class BuildLevelModel {
-public:
-    BuildLevelModel(DkrAssetsSettings &settings, BuildInfo &info);
-    ~BuildLevelModel();
-private:
-    DkrAssetsSettings &_settings;
-    BuildInfo &_info;
-};
+namespace DkrAssetsTool {
+namespace BuildLevelModel {
+    void build(BuildInfo &info);
+}
+}

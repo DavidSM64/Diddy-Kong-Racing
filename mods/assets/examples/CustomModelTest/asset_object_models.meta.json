@@ -1,0 +1,12 @@
+{
+    "files": {
+        "order": [
+            "ASSET_CUSTOM_TESTCUBE"
+        ],
+        "sections": {
+            "ASSET_CUSTOM_TESTCUBE": {
+                "filename": "okCube.json"
+            }
+        }
+    }
+}

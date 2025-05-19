@@ -60,10 +60,10 @@ s8 D_800DC73C = 0;
 s8 D_800DC740 = 0;
 s8 gSwapLeadPlayer = FALSE;
 s8 D_800DC748 = FALSE;
-s32 D_800DC74C[2] = { 0, 0 }; // Have a feeling these are both the same array.
-s32 D_800DC754[2] = { 0, 0 };
+Vertex *gBoostVerts[2] = { 0, 0 };
+Triangle *gBoostTris[2] = { 0, 0 };
 Object *gShieldEffectObject = NULL;
-s32 D_800DC760 = 9; // Currently unknown, might be a different type.
+s32 gBoostObjOverrideID = 9;
 Object *gMagnetEffectObject = NULL;
 s32 D_800DC768 = 0; // Currently unknown, might be a different type.
 
@@ -315,17 +315,17 @@ VertexPosition gEnvmapPos;
 s16 D_8011AFEE;
 s32 D_8011AFF0;
 unk800179D0 *D_8011AFF4;
-s32 D_8011AFF8;
+s32 gBoostVertCount;
 s32 D_8011AFFC;
-s32 D_8011B000;
+s32 gBoostTriCount;
 s32 D_8011B004;
-s32 D_8011B008;
-u8 D_8011B010[16];
-Object *D_8011B020[NUMBER_OF_CHARACTERS];
-s32 D_8011B048[4];
-s32 D_8011B058[4];
+s32 gBoostVertFlip; // indexes gBoostVerts and gBoostTris
+u8 gShieldSineTime[16];
+Object *gBoostEffectObjects[NUMBER_OF_CHARACTERS];
+u8 D_8011B048[16];
+u8 D_8011B058[16];
 u8 D_8011B068[16];
-ColourRGBA D_8011B078[NUMBER_OF_CHARACTERS]; // Note: D_8011B078 might not be a ColourRGBA.
+RacerFXData gRacerFXData[NUMBER_OF_CHARACTERS];
 
 extern s16 gGhostMapID;
 
@@ -337,80 +337,89 @@ typedef struct LevelObjectEntry_unk8000B020 {
     s8 unk9;
 } LevelObjectEntry_unk8000B020;
 
-void func_8000B020(s32 numberOfVertices, s32 numberOfTriangles) {
-    Asset20 *miscAsset20;
+/**
+ * Spawns control objects for racer boost visuals, as well as shield and magnet visuals.
+ * Boost geometry is made in real time, and allocated here.
+ * This function is called on every level load, but only racers use the stuff here.
+ */
+void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
+    Object_Boost *miscAsset20;
     LevelObjectEntry_unk8000B020 objEntry;
     s32 i;
 
-    D_800DC754[0] = (s32) mempool_alloc_safe(((numberOfTriangles * 16) + (numberOfVertices * 10)) * 2, COLOUR_TAG_BLUE);
-    D_800DC754[1] = D_800DC754[0] + (numberOfTriangles * 16);
-    D_800DC74C[0] = D_800DC754[1] + (numberOfTriangles * 16);
-    D_800DC74C[1] = D_800DC74C[0] + (numberOfVertices * 10);
-    D_8011AFF8 = numberOfVertices;
+    gBoostTris[0] = (Triangle *) mempool_alloc_safe(
+        ((numberOfTriangles * sizeof(Triangle)) + (numberOfVertices * sizeof(Vertex))) * 2, COLOUR_TAG_BLUE);
+    gBoostTris[1] = (Triangle *) ((u32) gBoostTris[0] + numberOfTriangles * sizeof(Triangle));
+    gBoostVerts[0] = (Vertex *) ((u32) gBoostTris[1] + numberOfTriangles * sizeof(Triangle));
+    gBoostVerts[1] = (Vertex *) ((u32) gBoostVerts[0] + numberOfVertices * sizeof(Vertex));
+    gBoostVertCount = numberOfVertices;
     D_8011AFFC = 0;
-    D_8011B000 = numberOfTriangles;
+    gBoostTriCount = numberOfTriangles;
     D_8011B004 = 0;
-    D_8011B008 = 0;
-    miscAsset20 = (Asset20 *) get_misc_asset(ASSET_MISC_20);
-    for (i = 0; i < ARRAY_COUNT(D_8011B020); i++) {
+    gBoostVertFlip = 0;
+    miscAsset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
+    // Makes 10 boost objects, but only 8 racers can actually exist at once.
+    for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
         objEntry.common.objectID = ASSET_OBJECT_ID_BOOST;
-        objEntry.common.size = 10;
+        objEntry.common.size = sizeof(LevelObjectEntry_unk8000B020);
         objEntry.common.x = 0;
         objEntry.common.y = 0;
         objEntry.common.z = 0;
         objEntry.unk8 = i;
-        D_8011B020[i] = spawn_object(&objEntry.common, 1);
-        if (D_8011B020[i] != NULL) {
-            D_8011B020[i]->properties.common.unk0 = 0;
-            D_8011B020[i]->properties.common.unk4 = 0;
+        gBoostEffectObjects[i] = spawn_object(&objEntry.common, OBJECT_SPAWN_UNK01);
+        if (gBoostEffectObjects[i] != NULL) {
+            gBoostEffectObjects[i]->properties.common.unk0 = 0;
+            gBoostEffectObjects[i]->properties.common.unk4 = 0;
             miscAsset20[i].unk70 = 0;
             miscAsset20[i].unk74 = 0.0f;
-            miscAsset20[i].unk78 = (Sprite *) func_8007C12C(miscAsset20[i].unk6C, 0);
+            miscAsset20[i].unk78 = (Sprite *) tex_load_sprite(miscAsset20[i].unk6C, 0);
             miscAsset20[i].unk7C = load_texture(miscAsset20[i].unk6E);
             miscAsset20[i].unk72 = get_random_number_from_range(0, 255);
             miscAsset20[i].unk73 = 0;
-            D_8011B010[i] = get_random_number_from_range(0, 255);
+            // This is for shields, not boosts.
+            gShieldSineTime[i] = get_random_number_from_range(0, 255);
         }
-        D_8011B068[i] = 1;
+        D_8011B068[i] = TRUE;
     }
-    D_800DC760 = 9;
+    gBoostObjOverrideID = 9;
     objEntry.common.objectID = ASSET_OBJECT_ID_SHIELD;
-    objEntry.common.size = 10;
+    objEntry.common.size = sizeof(LevelObjectEntry_unk8000B020);
     objEntry.common.x = 0;
     objEntry.common.y = 0;
     objEntry.common.z = 0;
-    gShieldEffectObject = spawn_object((LevelObjectEntryCommon *) &objEntry, 0);
-    for (i = 0; i < ARRAY_COUNT(D_8011B078); i++) {
-        D_8011B078[i].r = 0;
-        D_8011B078[i].g = get_random_number_from_range(0, 255);
-        D_8011B078[i].b = get_random_number_from_range(0, 255);
-        D_8011B078[i].a = 0;
+    gShieldEffectObject = spawn_object((LevelObjectEntryCommon *) &objEntry, OBJECT_SPAWN_NONE);
+    for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
+        gRacerFXData[i].unk0 = 0;
+        gRacerFXData[i].unk1 = get_random_number_from_range(0, 255);
+        gRacerFXData[i].unk2 = get_random_number_from_range(0, 255);
+        gRacerFXData[i].unk3 = 0;
     }
     objEntry.common.objectID = ASSET_OBJECT_ID_AINODE;
-    objEntry.common.size = 138;
+    objEntry.common.size = sizeof(LevelObjectEntry_unk8000B020) + 0x80; // Not sure where this 0x80 comes from.
     objEntry.common.x = 0;
     objEntry.common.y = 0;
     objEntry.common.z = 0;
-    gMagnetEffectObject = spawn_object((LevelObjectEntryCommon *) &objEntry, 0);
+    gMagnetEffectObject = spawn_object((LevelObjectEntryCommon *) &objEntry, OBJECT_SPAWN_NONE);
 }
 
-void func_8000B290(void) {
+/**
+ * Attempts to free the boost, shield and magnet objects and assets.
+ */
+void racerfx_free(void) {
     Sprite *sprite;
     TextureHeader *texture;
-    s32 temp_a0;
-    Asset20 *asset20;
+    Object_Boost *asset20;
     u32 i;
 
-    temp_a0 = D_800DC754[0];
-    if (temp_a0 != 0) {
-        mempool_free((void *) temp_a0);
-        D_800DC754[0] = 0;
-        D_800DC754[1] = 0;
-        D_800DC74C[0] = 0;
-        D_800DC74C[1] = 0;
+    if (gBoostTris[0]) {
+        mempool_free(gBoostTris[0]);
+        gBoostTris[0] = NULL;
+        gBoostTris[1] = NULL;
+        gBoostVerts[0] = NULL;
+        gBoostVerts[1] = NULL;
     }
-    asset20 = (Asset20 *) get_misc_asset(ASSET_MISC_20);
-    for (i = 0; i < 10; i++) {
+    asset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
+    for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
         sprite = asset20[i].unk78;
         if (sprite != NULL) {
             sprite_free(sprite);
@@ -435,26 +444,123 @@ void func_8000B290(void) {
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B38C.s")
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B750.s")
 
-void func_8000BADC(s32 updateRate) {
+#ifdef NON_EQUIVALENT
+void func_8000B38C(Vertex *, Triangle *, ObjectTransform *, f32, f32, s16, TextureHeader *arg6);
+void func_8000B750(Object *obj, s32 objId, s32 arg2, s32 arg3, s32 arg4) {
+    Vec3f sp74;
+    ObjectTransform sp50;
+    Object_Boost **temp_v0;
+    Object **var_t2;
+    f32 temp_f0;
+    f32 var_f14;
+    f32 var_f2;
+    Object_Boost *temp_t4;
+    Object_Boost *temp_v1;
+    Object_Boost_Inner *var_v0;
+
+    if (objId == -1) {
+        objId = gBoostObjOverrideID;
+        gBoostObjOverrideID--;
+    }
+    if (gBoostObjOverrideID < 0) {
+        gBoostObjOverrideID = 0;
+    }
+    if (objId >= 0 && objId < 10) {
+        temp_v0 = get_misc_asset(ASSET_MISC_20);
+        var_t2 = &gBoostEffectObjects[objId];
+        temp_t4 = &temp_v0[(arg3 << 5)];
+        temp_v1 = &temp_v0[(objId << 5)];
+        if (*var_t2 != NULL) {
+            switch (arg2) {
+                default:
+                    var_v0 = &temp_v1->unk48;
+                    if (arg2 != 0xD) {
+                        var_v0 = NULL;
+                    }
+                    break;
+                case 0:
+                    var_v0 = &temp_v1->unk0;
+                    break;
+                case 1:
+                    var_v0 = &temp_v1->unk24;
+                    break;
+                case 2:
+                    var_v0 = &temp_v1->unk48;
+                    break;
+            }
+            if (var_v0 != NULL) {
+                D_8011B048[objId] = arg2;
+                D_8011B058[objId] = arg3;
+                if (temp_v1->unk70 == 2) {
+                    temp_f0 = coss_f(temp_v1->unk72 << 12);
+                    var_f2 = (var_v0->unk14 + (temp_f0 * var_v0->unk18)) * temp_v1->unk74;
+                    var_f14 = (var_v0->unk1C + (temp_f0 * var_v0->unk20)) * temp_v1->unk74;
+                    if ((arg3 & 3) == 1) {
+                        var_f2 *= 1.09f;
+                        var_f14 *= 1.09f;
+                    }
+                    if ((arg3 & 3) >= 2) {
+                        var_f2 *= 1.18f;
+                        var_f14 *= 1.18f;
+                    }
+                    sp50.x_position = var_v0->position.x;
+                    sp50.y_position = var_v0->position.y;
+                    sp50.z_position = var_v0->position.z;
+                    sp50.scale = 1.0f;
+                    sp50.rotation.x_rotation = -0x8000;
+                    sp50.rotation.y_rotation = 0;
+                    sp50.rotation.z_rotation = 0;
+                    func_8000B38C(&gBoostVerts[gBoostVertFlip][D_8011AFFC], &gBoostTris[gBoostVertFlip][D_8011B004],
+                                  &sp50, var_f2, var_f14, (temp_v1->unk72), &temp_t4->unk7C);
+                    (*var_t2)->properties.common.unk4 = (objId << 28) | (D_8011AFFC << 14) | D_8011B004;
+                    D_8011AFFC += 9;
+                    D_8011B004 += 8;
+                }
+                (*var_t2)->properties.common.unk0 = (s32) obj;
+                (*var_t2)->segment.trans.x_position = 0.0f;
+                (*var_t2)->segment.trans.y_position = 0.0f;
+                (*var_t2)->segment.trans.z_position = 0.0f;
+                sp74.x = var_v0->position.x;
+                sp74.y = var_v0->position.y;
+                sp74.z = var_v0->position.z;
+                f32_vec3_apply_object_rotation(&obj->segment.trans, &sp74);
+                ignore_bounds_check();
+                move_object(var_t2, sp74.x + obj->segment.trans.x_position, sp74.y + obj->segment.trans.y_position,
+                            sp74.z + obj->segment.trans.z_position);
+            }
+            if (arg4 != 0) {
+                D_8011B068[objId] = 0;
+            }
+        }
+    }
+}
+#else
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B750.s")
+#endif
+
+/**
+ * Updates the racer FX object states.
+ * This includes the shield wobble timer, and the texture frames for the magnet and shield.
+ */
+void racerfx_update(s32 updateRate) {
     s32 i;
-    Asset20 *asset20Part;
+    Object_Boost *asset20Part;
     s32 temp;
-    Asset20 *asset20;
+    Object_Boost *asset20;
     f32 updateRateF;
     Object_Racer *racer;
 
-    D_8011B008 = 1 - D_8011B008;
+    gBoostVertFlip = 1 - gBoostVertFlip;
     D_8011AFFC = 0;
     D_8011B004 = 0;
-    asset20 = (Asset20 *) get_misc_asset(ASSET_MISC_20);
-    D_800DC760 = 9;
-    for (i = 0; i < 10; i++) {
-        if (D_8011B068[i] && D_8011B020[i] != NULL) {
-            D_8011B020[i]->properties.common.unk0 = 0;
+    asset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
+    gBoostObjOverrideID = 9;
+    for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
+        if (D_8011B068[i] && gBoostEffectObjects[i] != NULL) {
+            gBoostEffectObjects[i]->properties.common.unk0 = 0;
         }
-        D_8011B068[i] = 1;
+        D_8011B068[i] = TRUE;
     }
     for (i = 0; i < gNumRacers; i++) {
         updateRateF = (f32) updateRate;
@@ -464,7 +570,7 @@ void func_8000BADC(s32 updateRate) {
         racer = &(*gRacers)[i]->unk64->racer;
         asset20Part = &asset20[racer->racerIndex];
         if (racer->shieldTimer != 0) {
-            D_8011B010[racer->racerIndex] += updateRate;
+            gShieldSineTime[racer->racerIndex] += updateRate;
         }
         asset20Part->unk72 += updateRate;
         if (racer->boostTimer != 0) {
@@ -518,19 +624,19 @@ void func_8000BADC(s32 updateRate) {
             func_8000B750((*gRacers)[i], racer->racerIndex, racer->vehicleIDPrev, racer->boostType, 0);
         }
         temp = racer->racerIndex;
-        D_8011B078[temp].g += updateRate;
-        D_8011B078[temp].b += updateRate;
+        gRacerFXData[temp].unk1 += updateRate;
+        gRacerFXData[temp].unk2 += updateRate;
         if (racer->magnetTimer != 0) {
-            if (D_8011B078[temp].a + (updateRate << 2) < 32) {
-                D_8011B078[temp].a += (updateRate << 2);
+            if (gRacerFXData[temp].unk3 + (updateRate << 2) < 32) {
+                gRacerFXData[temp].unk3 += (updateRate << 2);
             } else {
-                D_8011B078[temp].a = 32;
+                gRacerFXData[temp].unk3 = 32;
             }
         } else {
-            if (D_8011B078[temp].a - updateRate > 0) {
-                D_8011B078[temp].a -= updateRate;
+            if (gRacerFXData[temp].unk3 - updateRate > 0) {
+                gRacerFXData[temp].unk3 -= updateRate;
             } else {
-                D_8011B078[temp].a = 0;
+                gRacerFXData[temp].unk3 = 0;
             }
         }
     }
@@ -539,14 +645,18 @@ void func_8000BADC(s32 updateRate) {
     }
 }
 
-Object *func_8000BF44(s32 arg0) {
-    if (arg0 == -1) {
-        arg0 = D_800DC760;
+/**
+ * Returns the boost object with the given ID.
+ * Returns a specific ID if the arg passed is BOOST_DEFAULT.
+ */
+Object *racerfx_get_boost(s32 boostID) {
+    if (boostID == BOOST_DEFAULT) {
+        boostID = gBoostObjOverrideID;
     }
-    if (arg0 < 0 || arg0 >= 10) {
+    if (boostID < 0 || boostID >= NUMBER_OF_CHARACTERS) {
         return NULL;
     }
-    return D_8011B020[arg0];
+    return gBoostEffectObjects[boostID];
 }
 
 /**
@@ -1182,7 +1292,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 }
             }
             if ((gameMode != GAMEMODE_MENU || D_8011AD3C == 2) && vehicle < VEHICLE_BOSSES) {
-                curRacer->vehicleSound = func_80004B40(curRacer->characterId, curRacer->vehicleID);
+                curRacer->vehicleSound = racer_sound_init(curRacer->characterId, curRacer->vehicleID);
             } else {
                 curRacer->vehicleSound = NULL;
             }
@@ -1772,7 +1882,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     var_v1 = FALSE;
     if (objType == 0) {
-        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
+        for (; var_a2 < assetCount; var_a2++) {
             if (assetCount) {} // FAKEMATCH?
             if (var_a2 == 0 && arg1 & 4) {
                 curObj->unk68[var_a2] = NULL;
@@ -1786,15 +1896,15 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
             }
         }
     } else if (objType == 4) {
-        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
+        for (; var_a2 < assetCount; var_a2++) {
             curObj->unk68[var_a2] = (Object_68 *) load_texture(curObj->segment.header->modelIds[var_a2]);
             if (curObj->unk68[var_a2] == NULL) {
                 var_v1 = TRUE;
             }
         }
     } else {
-        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
-            curObj->unk68[var_a2] = (Object_68 *) func_8007C12C(curObj->segment.header->modelIds[var_a2], 10);
+        for (; var_a2 < assetCount; var_a2++) {
+            curObj->unk68[var_a2] = (Object_68 *) tex_load_sprite(curObj->segment.header->modelIds[var_a2], 10);
             if (curObj->unk68[var_a2] == NULL) {
                 var_v1 = TRUE;
             }
@@ -2188,7 +2298,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
         }
     } else {
         for (i = 0; i < numModelIds; i++) {
-            object->unk68[i] = (Object_68 *) func_8007C12C(object->segment.header->modelIds[i], 10);
+            object->unk68[i] = (Object_68 *) tex_load_sprite(object->segment.header->modelIds[i], 10);
             if (object->unk68[i] == NULL) {
                 failedToLoadModel = TRUE;
             }
@@ -2342,7 +2452,7 @@ void obj_update(s32 updateRate) {
             }
         }
     }
-    func_8000BADC(updateRate);
+    racerfx_update(updateRate);
     for (i = gObjectListStart; i < j; i++) {
         obj = gObjPtrList[i];
         if ((!(obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) && (obj->behaviorId == BHV_WEAPON)) ||
@@ -2416,36 +2526,31 @@ void obj_update(s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-void func_80011134(Object *arg0, s32 arg1) {
+void func_80011134(Object *obj, s32 updateRate) {
+    ObjectModel *model;
+    TriangleBatchInfo *batch;
     s32 sp5C;
-    ObjectModel *temp_s3;
-    TriangleBatchInfo *temp_s4;
-    TriangleBatchInfo *var_s0;
-    TextureHeader *var_t5;
+    TextureHeader *tex;
     s16 temp_s5;
-    s32 var_s1;
-    u8 temp_v0;
+    s32 batchNumber;
+    Object_68 *obj68;
 
-    temp_s3 = arg0->unk68[arg0->segment.object.modelIndex]->objModel;
-    temp_s5 = temp_s3->unk50;
-    temp_s4 = temp_s3->batches;
-    for (var_s1 = 0; temp_s5 > 0 && var_s1 < temp_s3->numberOfBatches; var_s1++) {
-        var_s0 = &temp_s4[var_s1];
-        if (var_s0->flags & 0x10000) { // Texture is animated
-            temp_v0 = var_s0->textureIndex;
-            if (temp_v0 != 0xFF) {
-                var_t5 = temp_s3->textures[temp_v0].texture;
-                sp5C = var_s0->unk7 << 6;
-                tex_animate_texture(var_t5, (u32 *) temp_s4[var_s1].flags, &sp5C, arg1);
-                var_s0->unk7 = sp5C >> 6;
+    obj68 = obj->unk68[obj->segment.object.modelIndex];
+    model = obj68->objModel;
+    batch = model->batches;
+    temp_s5 = model->unk50;
+    for (batchNumber = 0; temp_s5 > 0 && batchNumber < model->numberOfBatches; batchNumber++) {
+        if (batch[batchNumber].flags & BATCH_FLAGS_TEXTURE_ANIM) {
+            if (batch[batchNumber].textureIndex != TEX_INDEX_NO_TEXTURE) {
+                tex = model->textures[batch[batchNumber].textureIndex].texture;
+                sp5C = batch[batchNumber].unk7;
+                sp5C <<= 6;
+                tex_animate_texture(tex, &batch[batchNumber].flags, &sp5C, updateRate);
+                batch[batchNumber].unk7 = (sp5C >> 6) & 0xFF;
             }
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80011134.s")
-#endif
 
 // This is a function for doors
 void func_80011264(ObjectModel *model, Object *obj) {
@@ -2467,7 +2572,7 @@ void func_80011264(ObjectModel *model, Object *obj) {
     batch = model->batches;
 
     while (i < model->numberOfBatches) {
-        if (batch[i].flags & 0x10000) {
+        if (batch[i].flags & BATCH_FLAGS_TEXTURE_ANIM) {
             if (batch[i].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 // Fakematch
                 if (model->textures[batch[i].textureIndex].texture) {}
@@ -2834,7 +2939,7 @@ void render_3d_billboard(Object *obj) {
                            RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
     } else {
         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj,
-                                (unk80068514_arg4 *) gfxData, flags);
+                                (Sprite *) gfxData, flags);
     }
     if (hasPrimCol) {
         gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -3022,9 +3127,9 @@ void render_3d_model(Object *obj) {
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
                                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
                             }
-                            loopObj->properties.common.unk0 = render_sprite_billboard(
-                                &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj,
-                                (unk80068514_arg4 *) something, flags);
+                            loopObj->properties.common.unk0 =
+                                render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix,
+                                                        &gObjectCurrVertexList, loopObj, (Sprite *) something, flags);
                             if (var_v0_2) {
                                 gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
                                 func_80012CE8(&gObjectCurrDisplayList);
@@ -3053,7 +3158,7 @@ void render_3d_model(Object *obj) {
                     loopObj->segment.trans.z_position += (vtxZ - loopObj->segment.trans.z_position) * 0.25;
                     if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
                         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
-                                                loopObj, (unk80068514_arg4 *) something, flags);
+                                                loopObj, (Sprite *) something, flags);
                     }
                 }
             }
@@ -3308,7 +3413,7 @@ void func_80012F94(Object *obj) {
             }
             racerLightTimer *= 4;
             for (batchNum = 0; batchNum < temp_a1_3->numberOfBatches; batchNum++) {
-                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == 0x10000) {
+                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == BATCH_FLAGS_TEXTURE_ANIM) {
                     temp_a1_3->batches[batchNum].unk7 = racerLightTimer;
                 }
             }
@@ -3360,7 +3465,71 @@ void unset_temp_model_transforms(Object *obj) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800135B8.s")
+// Renders the boost graphics.
+void func_800135B8(Object *boostObj) {
+    Vertex *vtx;
+    Triangle *tri;
+    ObjectTransform_800135B8 objTransform;
+    Object_Boost_Inner *boostData;
+    Object_Boost *boost;
+    Object_Boost *asset;
+    s32 hasTexture;
+    s32 idx;
+
+    idx = (boostObj->properties.common.unk4 >> 28) & 0xF;
+    boost = &boostObj->unk64->boost;
+    switch (D_8011B048[idx]) {
+        case 0:
+            boostData = &boost->unk0;
+            break;
+        case 1:
+            boostData = &boost->unk24;
+            break;
+        default:
+            boostData = &boost->unk48;
+            break;
+    }
+    asset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
+    asset = &asset[D_8011B058[idx]];
+    object_do_player_tumble((Object *) boostObj->properties.common.unk0);
+    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
+                          (ObjectTransform *) boostObj->properties.common.unk0, 1.0f, 0.0f);
+    object_undo_player_tumble((Object *) boostObj->properties.common.unk0);
+    objTransform.trans.x_position = boostData->position.x;
+    objTransform.trans.y_position = boostData->position.y;
+    objTransform.trans.z_position = boostData->position.z;
+    objTransform.trans.scale = boostData->unkC + (boostData->unk10 * coss_f(boost->unk72 << 12));
+    if (boost->unk70 < 2) {
+        objTransform.trans.scale *= boost->unk74;
+    }
+    if (D_8011B058[idx] != 0) {
+        objTransform.trans.scale *= 1.15f;
+    }
+    objTransform.trans.rotation.z_rotation = 0;
+    objTransform.trans.rotation.x_rotation = 0;
+    objTransform.trans.rotation.y_rotation = 0;
+    objTransform.unk18 = 0;
+    gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+    render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
+                            (Object *) &objTransform, asset->unk78,
+                            (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE));
+    if (boost->unk70 == 2) {
+        material_set(&gObjectCurrDisplayList, asset->unk7C,
+                     (RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_FOG_ACTIVE), 0);
+        if (asset->unk7C != NULL) {
+            hasTexture = TRUE;
+        } else {
+            hasTexture = FALSE;
+        }
+
+        vtx = &gBoostVerts[gBoostVertFlip][(boostObj->properties.common.unk4 >> 14) & 0x3FFF];
+        tri = &gBoostTris[gBoostVertFlip][boostObj->properties.common.unk4 & 0x3FFF];
+        gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), 9, 0);
+        gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), 8, hasTexture);
+    }
+    apply_matrix_from_stack(&gObjectCurrDisplayList);
+}
 
 /**
  * Render the bubble trap weapon.
@@ -3391,7 +3560,7 @@ void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj,
     obj->segment.trans.y_position += y;
     obj->segment.trans.z_position += z;
     render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj,
-                            (unk80068514_arg4 *) gfxData, flags);
+                            (Sprite *) gfxData, flags);
 }
 
 /**
@@ -3415,7 +3584,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         gObjectCurrMatrix = *mtx;
         gObjectCurrVertexList = *vtxList;
         racerIndex = racer->racerIndex;
-        if (racerIndex > 10) {
+        if (racerIndex > NUMBER_OF_CHARACTERS) {
             racerIndex = 0;
         }
         vehicleID = racer->vehicleID;
@@ -3428,11 +3597,11 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         gShieldEffectObject->segment.trans.x_position = shield->x_position;
         gShieldEffectObject->segment.trans.y_position = shield->y_position;
         gShieldEffectObject->segment.trans.z_position = shield->z_position;
-        gShieldEffectObject->segment.trans.y_position += shield->y_offset * sins_f(D_8011B010[racerIndex] * 0x200);
-        shear = (coss_f(D_8011B010[racerIndex] * 0x400) * 0.05f) + 0.95f;
+        gShieldEffectObject->segment.trans.y_position += shield->y_offset * sins_f(gShieldSineTime[racerIndex] * 0x200);
+        shear = (coss_f(gShieldSineTime[racerIndex] * 0x400) * 0.05f) + 0.95f;
         gShieldEffectObject->segment.trans.scale = shield->scale * shear;
         shear = shear * shield->turnSpeed;
-        gShieldEffectObject->segment.trans.rotation.y_rotation = D_8011B010[racerIndex] * 0x800;
+        gShieldEffectObject->segment.trans.rotation.y_rotation = gShieldSineTime[racerIndex] * 0x800;
         gShieldEffectObject->segment.trans.rotation.x_rotation = 0x800;
         gShieldEffectObject->segment.trans.rotation.z_rotation = 0;
         shieldType = racer->shieldType;
@@ -3476,14 +3645,14 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     ObjectModel *mdl;
     f32 *magnet;
     s32 vehicleID;
-    s32 var_t0;
+    s32 racerIndex;
     s32 opacity;
     f32 shear;
     UNUSED s32 pad;
 
     racer = &obj->unk64->racer;
-    var_t0 = racer->racerIndex;
-    if (D_8011B078[var_t0].a != 0) {
+    racerIndex = racer->racerIndex;
+    if (gRacerFXData[racerIndex].unk3 != 0) {
         if (gMagnetEffectObject != NULL) {
             gObjectCurrDisplayList = *dList;
             gObjectCurrMatrix = *mtx;
@@ -3494,25 +3663,25 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
                 vehicleID = VEHICLE_CAR;
             }
             magnet = &magnet[vehicleID * 5];
-            var_t0 = racer->racerIndex;
-            if (var_t0 > 10) {
-                var_t0 = 0;
+            racerIndex = racer->racerIndex;
+            if (racerIndex > NUMBER_OF_CHARACTERS) {
+                racerIndex = 0;
             }
             gMagnetEffectObject->segment.trans.x_position = magnet[0];
             gMagnetEffectObject->segment.trans.y_position = magnet[1];
             gMagnetEffectObject->segment.trans.z_position = magnet[2];
             magnet += 3;
-            shear = (coss_f((D_8011B078[var_t0].g * 0x400)) * 0.02f) + 0.98f;
+            shear = (coss_f((gRacerFXData[racerIndex].unk1 * 0x400)) * 0.02f) + 0.98f;
             gMagnetEffectObject->segment.trans.scale = magnet[0] * shear;
             magnet += 1;
             shear = magnet[0] * shear;
-            gMagnetEffectObject->segment.trans.rotation.y_rotation = D_8011B078[var_t0].b * 0x1000;
+            gMagnetEffectObject->segment.trans.rotation.y_rotation = gRacerFXData[racerIndex].unk2 * 0x1000;
             gMagnetEffectObject->segment.trans.rotation.x_rotation = 0;
             gMagnetEffectObject->segment.trans.rotation.z_rotation = 0;
             gfxData = *gMagnetEffectObject->unk68;
             mdl = gfxData->objModel;
             gMagnetEffectObject->curVertData = (Vertex *) gfxData->vertices[gfxData->animationTaskNum];
-            opacity = ((D_8011B078[var_t0].g * 8) & 0x7F) + 0x80;
+            opacity = ((gRacerFXData[racerIndex].unk1 * 8) & 0x7F) + 0x80;
             gfx_init_basic_xlu(&gObjectCurrDisplayList, DRAW_BASIC_2CYCLE, COLOUR_RGBA32(255, 255, 255, opacity),
                                gMagnetColours[racer->magnetModelID]);
             apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);

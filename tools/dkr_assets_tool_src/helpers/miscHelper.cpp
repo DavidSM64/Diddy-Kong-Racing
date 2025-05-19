@@ -1,5 +1,7 @@
 #include "miscHelper.h"
 
+using namespace DkrAssetsTool;
+
 void MiscHelper::process_cheats_encryption(uint8_t *data, size_t dataSize) {
     uint8_t a, b, c, d;
     uint32_t sp0, sp1, sp2, sp3;

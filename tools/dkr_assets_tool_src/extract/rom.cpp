@@ -3,6 +3,8 @@
 #include "libs/md5.hpp"
 #include "rom.h"
 
+using namespace DkrAssetsTool;
+
 DkrExtractROM::DkrExtractROM(fs::path filepath) {
     _filepath = filepath;
     _bytes = FileHelper::read_binary_file(filepath);

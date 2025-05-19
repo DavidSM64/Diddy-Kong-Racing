@@ -4,11 +4,9 @@
 /* Note: Structs are not complete, take them with a grain of salt. */
 
 #include "types.h"
-#include "enums.h"
 #include "level_object_entries.h"
 #include "object_properties.h"
 #include "gbi.h"
-#include "PR/libaudio.h"
 #include "audio.h"
 
 typedef struct Vec4f {
@@ -158,7 +156,10 @@ typedef struct Sprite {
   /* 0x02 */ s16 numberOfFrames; // 1 means static texture
   /* 0x04 */ s16 numberOfInstances;
   /* 0x06 */ s16 drawFlags;
-  /* 0x08 */ TextureHeader **frames;
+  union {
+    /* 0x08 */ TextureHeader **frames;
+    /* 0x08 */ Gfx *gfx[1];
+  };
   union {
     /* 0x0C */ u8 val[1]; // Actual size varies.
     /* 0x0C */ u8 *ptr[1]; // Display list?
@@ -375,20 +376,26 @@ typedef struct LevelHeader_70_18 {
     u8 alpha; //0xFF
 } LevelHeader_70_18;
 
+typedef struct {
+  union {
+    struct {
+      u8 r;
+      u8 g;
+      u8 b;
+      u8 a;
+    };
+    u32 word;
+  };
+} ColourRGBA;
+
 /* Unknown size */
 typedef struct LevelHeader_70 {
   /* 0x00 */ s32 unk0;  //0x00000004
   /* 0x04 */ s32 unk4;  //0x00000000
   /* 0x08 */ s32 unk8;  //0x00000000
   /* 0x0C */ s32 unkC;  //0x00000000
-  /* 0x10 */ u8 red;    //0x72
-  /* 0x11 */ u8 green;  //0x75
-  /* 0x12 */ u8 blue;   //0x73
-  /* 0x13 */ u8 alpha;  //0x20
-  /* 0x14 */ u8 red2;   //0xFF
-  /* 0x15 */ u8 green2; //0x00
-  /* 0x16 */ u8 blue2;  //0x00
-  /* 0x17 */ u8 alpha2; //0xFF
+  /* 0x10 */ ColourRGBA rgba;
+  /* 0x14 */ ColourRGBA rgba2;
   /* 0x18 */ LevelHeader_70_18 unk18[1]; // Actual length depends on unk0
 } LevelHeader_70;
 
@@ -406,6 +413,12 @@ typedef struct PulsatingLightData {
     s32 outColorValue;
     PulsatingLightDataFrame frames[1]; // Length varies based on numberFrames.
 } PulsatingLightData;
+
+typedef struct ByteColour {
+  u8 red;
+  u8 green;
+  u8 blue;
+} ByteColour;
 
 /* Size: 0xC4 bytes */
 typedef struct LevelHeader {
@@ -491,7 +504,8 @@ typedef struct LevelHeader {
   /* 0x9D */ u8 bgColorRed;
   /* 0x9E */ u8 bgColorGreen;
   /* 0x9F */ u8 bgColorBlue;
-  /* 0xA0 */ s16 unkA0;
+  /* 0xA0 */ u8 unkA0;
+  /* 0xA1 */ u8 unkA1;
   /* 0xA2 */ s8 unkA2;
   /* 0xA3 */ s8 unkA3;
   /* 0xA4 */ TextureHeader *unkA4;
@@ -502,9 +516,7 @@ typedef struct LevelHeader {
   /* 0xB0 */ s16 unkB0;
   /* 0xB2 */ u8 unkB2;
   /* 0xB3 */ u8 voiceLimit;
-  /* 0xB4 */ u8 unkB4;
-  /* 0xB5 */ u8 unkB5;
-  /* 0xB6 */ u8 unkB6;
+  /* 0xB4 */ ByteColour rgb;
   /* 0xB7 */ u8 unkB7;
   /* 0xB8 */ s8 bossRaceID;
   /* 0xB9 */ u8 unkB9;
@@ -1014,8 +1026,8 @@ typedef struct Object_Weapon {
   /* 0x14 */ s16 unk16;
   /* 0x18 */ u8 weaponID;
   /* 0x19 */ s8 checkpoint;
-  /* 0x19 */ s16 unk1A;
-  /* 0x19 */ SoundHandle soundMask;
+  /* 0x1A */ s16 unk1A;
+  /* 0x1C */ struct AudioPoint *soundMask;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {
@@ -1052,10 +1064,29 @@ typedef struct Object_Fish {
   /* 0x11c */ f32 unk11C;
 } Object_Fish;
 
+typedef struct Object_Boost_Inner {
+  Vec3f position;
+  f32 unkC;
+  f32 unk10;
+  f32 unk14;
+  f32 unk18;
+  f32 unk1C;
+  f32 unk20;
+} Object_Boost_Inner;
+
 typedef struct Object_Boost {
-  /* 0x000 */ u8 pad[0x70];
-  /* 0x070 */ u8 unk70;
-  /* 0x074 */ f32 unk74;
+  Object_Boost_Inner unk0;
+  Object_Boost_Inner unk24;
+  Object_Boost_Inner unk48;
+  s16 unk6C;
+  s16 unk6E;
+  u8 unk70;
+  u8 unk71;
+  u8 unk72;
+  s8 unk73;
+  f32 unk74;
+  Sprite *unk78;
+  TextureHeader *unk7C;
 } Object_Boost;
 
 typedef struct Object_EffectBox {
@@ -1626,6 +1657,7 @@ typedef struct Object_CharacterSelect {
     s8 pad42;
     s8 unk43;
 } Object_CharacterSelect;
+
 typedef struct Object_64 {
     union {
         Object_Laser laser;
@@ -1688,8 +1720,7 @@ typedef struct Object_68 {
       ObjectModel *objModel;
       TextureHeader *texHeader;
   };
-  /* 0x04 */ Vertex *vertices[2];
-  /* 0x0C */ s32 *unkC;
+  /* 0x04 */ Vertex *vertices[3];
   /* 0x10 */ s16 animationID;
   /* 0x12 */ s16 animationFrame;
   /* 0x14 */ s16 animationFrameCount;
@@ -1857,23 +1888,4 @@ typedef struct GhostNode {
   /* 0x08 */ s16 xRotation;
   /* 0x0A */ s16 yRotation;
 } GhostNode;
-
-typedef struct ByteColour {
-    u8 red;
-    u8 green;
-    u8 blue;
-} ByteColour;
-
-typedef struct {
-union {
-struct {
- u8 r;
- u8 g;
- u8 b;
- u8 a;
-};
-u32 word;
-};
-} ColourRGBA;
-
 #endif

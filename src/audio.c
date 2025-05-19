@@ -2,7 +2,6 @@
 #include "memory.h"
 
 #include "types.h"
-#include "macros.h"
 #include "asset_enums.h"
 #include "asset_loading.h"
 #include "audiomgr.h"
@@ -73,7 +72,7 @@ SoundHandle gRacerSoundMask;
 /******************************/
 
 /**
- * Allocate memory for all of the audio systems, including sequence data, sound data and heaps.
+ * Allocate memory for all the audio systems, including sequence data, sound data and heaps.
  * Afterwards, set up the audio thread and start it.
  */
 void audio_init(OSSched *sc) {
@@ -498,27 +497,26 @@ void music_channel_reset_all(void) {
     }
 }
 
-UNUSED u8 func_80001358(u8 arg0, u8 arg1, s32 arg2) {
+UNUSED u8 func_80001358(u8 chan1, u8 chan2, s32 arg2) {
     u8 val_1f;
-    u8 val_1e;
+    u8 vol;
     s32 updatedVol;
 
-    // u8 fadeIn_chan = arg0;
-    if (!(arg0 == 100)) {
-        val_1f = arg2 + alCSPGetChlVol(gMusicPlayer, arg0);
+    if (chan1 != 100) {
+        val_1f = arg2 + alCSPGetChlVol(gMusicPlayer, chan1);
         if (val_1f > 127) {
             val_1f = 127;
         }
-        alCSPSetChlVol(gMusicPlayer, arg0, val_1f);
+        alCSPSetChlVol(gMusicPlayer, chan1, val_1f);
     }
 
-    if (arg1 != 100) {
-        updatedVol = alCSPGetChlVol(gMusicPlayer, arg1);
-        val_1e = (updatedVol > arg2) ? updatedVol - arg2 : 0;
-        alCSPSetChlVol(gMusicPlayer, arg1, val_1e);
-        return val_1e;
+    if (chan2 != 100) {
+        updatedVol = alCSPGetChlVol(gMusicPlayer, chan2);
+        vol = (updatedVol > arg2) ? updatedVol - arg2 : 0;
+        alCSPSetChlVol(gMusicPlayer, chan2, vol);
+        return vol;
     } else {
-        return 127 - val_1f;
+        return 127 - val_1f; //!@bug: This could be uninitialized!
     }
 }
 

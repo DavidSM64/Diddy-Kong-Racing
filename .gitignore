@@ -24,11 +24,17 @@ bin/
 bin/*
 ucode/*
 
+# Asset enums, since it is auto-generated.
+include/asset_enums.h
+
 #compiled object files
 *.slo
 *.lo
 *.o
 *.obj
+
+# Do not ignore .obj files in the mods/ directory
+!mods/**/*.obj
 
 #Precompiled Headers
 *.gch
@@ -54,8 +60,7 @@ __pycache__/
 *__pycache__/
 expected/
 .*/
-*.ld
-*/*.ld
+ver/*.ld
 *.map
 */*.map
 *auto.txt

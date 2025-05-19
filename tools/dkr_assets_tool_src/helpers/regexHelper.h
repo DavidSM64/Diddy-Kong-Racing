@@ -5,6 +5,8 @@
 
 #include "regex/match.h"
 
+namespace DkrAssetsTool {
+
 // Supported regex engine libraries
 enum RegexEngine {
     STL, // standard C++11 library
@@ -30,3 +32,5 @@ public:
 private:
     RegexEngine _currentEngine;
 };
+
+}

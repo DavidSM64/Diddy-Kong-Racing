@@ -1,5 +1,7 @@
 #include "asmHeader.h"
 
+using namespace DkrAssetsTool;
+
 #include "helpers/fileHelper.h"
 
 WritableAsmInclude::WritableAsmInclude() {

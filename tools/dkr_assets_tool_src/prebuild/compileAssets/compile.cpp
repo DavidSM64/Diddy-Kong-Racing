@@ -1,42 +1,14 @@
 #include "compile.h"
 
 #include "helpers/dataHelper.h"
+#include "helpers/jsonHelper.h"
 #include "libs/zip_file.hpp"
 
-CompileAssets::CompileAssets(DkrAssetsSettings &settings) : _settings(settings) {
-    _vanillaAssetsPath = _settings.pathToAssets / ".vanilla" / settings.dkrVersion;
-    _outAssetsPath = _settings.pathToAssets / _settings.dkrVersion;
-    
-    _statFile = new StatJsonFile(_settings.pathToCache / "compileAssetsCache.json");
-    
-    // Load order.json
-    DebugHelper::assert_(JsonHelper::get().get_file(_settings.pathToModAssets / "order.json", &_modOrderFile),
-        "Failed to get order.json for compiling!");
+#include "misc/globalSettings.h"
 
-    _modOrderCount = _modOrderFile->length_of_array("/order");
-    
-    bool doCompile = 
-        _compile_check_assets_exist() ||
-        _compile_check_order_size();
-    
-    if(!doCompile && (_modOrderCount > 0)) {
-        // Only do these checks if there are any entries in the order.json file.
-        doCompile = _compile_check_order_of_mods() ||
-                    _compile_check_order_files_updated();
-    }
-    
-    if(doCompile) {
-        _compile_assets();
-        _update_last_mod_order();
-        _statFile->save();
-    }
-}
+using namespace DkrAssetsTool;
 
-CompileAssets::~CompileAssets() {
-    delete _statFile;
-}
-
-void CompileAssets::_check_mod_path(fs::path &modPath) {
+void check_mod_path(fs::path &modPath) {
     if(!FileHelper::path_exists(modPath)) {
         // This might just be a zip file. See if adding .zip as the extension will find it.
         fs::path tryZipPath = modPath;
@@ -44,30 +16,25 @@ void CompileAssets::_check_mod_path(fs::path &modPath) {
         if(FileHelper::path_exists(tryZipPath)) {
             modPath = tryZipPath;
         } else {
-            DebugHelper::error("(CompileAssets::_check_mod_path) Path ", modPath, " does not exist!");
+            DebugHelper::error("(check_mod_path) Path ", modPath, " does not exist!");
         }
     }
 }
 
-// Check if the main assets folder exists.
-bool CompileAssets::_compile_check_assets_exist() {
-    return !FileHelper::path_exists(_outAssetsPath);
-}
-
 // Check if the number of mods has changed.
-bool CompileAssets::_compile_check_order_size() {
-    size_t lastOrderCount = _statFile->get_value<int>("/last-order-size", 0);
-    return _modOrderCount != lastOrderCount;
+bool compile_check_order_size(size_t modOrderCount, StatJsonFile &statFile) {
+    size_t lastOrderCount = statFile.get_value<int>("/last-order-size", 0);
+    return modOrderCount != lastOrderCount;
 }
 
 // Check if the order of the mods was changed.
-bool CompileAssets::_compile_check_order_of_mods() {
-    if(_modOrderCount < 2) {
+bool compile_check_order_of_mods(size_t modOrderCount, const JsonFile &modOrderFile, StatJsonFile &statFile) {
+    if(modOrderCount < 2) {
         return false;
     }
-    for(size_t i = 0; i < _modOrderCount; i++) {
-        std::string modName = _modOrderFile->get_string("/order/" + std::to_string(i));
-        std::string lastModName = _statFile->get_value<std::string>("/last-mod-order/" + std::to_string(i) , "");
+    for(size_t i = 0; i < modOrderCount; i++) {
+        std::string modName = modOrderFile.get_string("/order/" + std::to_string(i));
+        std::string lastModName = statFile.get_value<std::string>("/last-mod-order/" + std::to_string(i) , "");
         if(modName != lastModName) {
             return true;
         }
@@ -76,87 +43,82 @@ bool CompileAssets::_compile_check_order_of_mods() {
     return false;
 }
 
-void CompileAssets::_update_last_mod_order() {
-    for(size_t i = 0; i < _modOrderCount; i++) {
-        std::string modName = _modOrderFile->get_string("/order/" + std::to_string(i));
-        _statFile->set_value<std::string>("/last-mod-order/" + std::to_string(i), modName);
+void update_last_mod_order(size_t modOrderCount, const JsonFile &modOrderFile, StatJsonFile &statFile) {
+    for(size_t i = 0; i < modOrderCount; i++) {
+        std::string modName = modOrderFile.get_string("/order/" + std::to_string(i));
+        statFile.set_value<std::string>("/last-mod-order/" + std::to_string(i), modName);
     }
 }
 
 // Check if any of the mod files have been updated.
-bool CompileAssets::_compile_check_order_files_updated() {
-    for(size_t i = 0; i < _modOrderCount; i++) {
-        std::string modFolderName = _modOrderFile->get_string("/order/" + std::to_string(i));
+bool compile_check_order_files_updated(size_t modOrderCount, const JsonFile &modOrderFile, StatJsonFile &statFile, std::vector<fs::path> &modFilesModified) {
+    std::unordered_map<fs::path, std::string, PathHash> lastModifiedDates;
+    
+    for(size_t i = 0; i < modOrderCount; i++) {
+        std::string modFolderName = modOrderFile.get_string("/order/" + std::to_string(i));
         
         if(modFolderName.empty()) {
             continue;
         }
         
-        fs::path modPath = _settings.pathToModAssets / modFolderName;
+        fs::path modPath = GlobalSettings::get_decomp_path("mods-subpath", "mods/") / "assets";
         
         // Make sure the path is valid.
-        _check_mod_path(modPath);
+        check_mod_path(modPath);
         
         // is_zip_file() checks the first 4 bytes to see if the file contains the standard .zip signature.
         if(FileHelper::is_zip_file(modPath)) {
             // If it is a zip file, then we only care about the archive file itself. Not it's contents
-            _lastModifiedDates[modPath] = FileHelper::get_last_modified_timestamp(modPath);
+            lastModifiedDates[modPath] = FileHelper::get_last_modified_timestamp(modPath);
         } else {
-            // Insert the timestamps from all the files in modPath into _lastModifiedDates
-            FileHelper::insert_timestamps_from_directory(modPath, _lastModifiedDates);
+            // Insert the timestamps from all the files in modPath into lastModifiedDates
+            FileHelper::insert_timestamps_from_directory(modPath, lastModifiedDates);
         }
     }
     
-    _modFilesModified.clear();
+    modFilesModified.clear();
     
-    for(auto &pair : _lastModifiedDates) {
-        std::string statModifiedDate = _statFile->get_entry(pair.first);
+    for(auto &pair : lastModifiedDates) {
+        std::string statModifiedDate = statFile.get_entry(pair.first);
         
         // If the file isn't on record, or if the modified date has changed, then we should compile!
         if(statModifiedDate.empty() || (statModifiedDate != pair.second)) {
-            _statFile->set_entry(pair.first, pair.second);
-            _modFilesModified.push_back(pair.first);
+            statFile.set_entry(pair.first, pair.second);
+            modFilesModified.push_back(pair.first);
         }
     }
     
-    return _modFilesModified.size() > 0;
+    return modFilesModified.size() > 0;
 }
 
-void CompileAssets::_compile_assets() {
-    DebugHelper::info("Compiling assets...");
+void merge_or_copy_file(fs::path &modDir, fs::path &path) {
+    fs::path modPath = modDir / path;
+    fs::path outPath = GlobalSettings::get_decomp_path_to_output_assets() / path;
     
-    _statFile->set_value<int>("/last-order-size", _modOrderCount);
+    bool copyFile = (path.extension() != ".json") || !FileHelper::path_exists(outPath);
     
-    // First clear the output directory (if it exists)
-    FileHelper::delete_directory(_outAssetsPath);
-    
-    // Copy all the vanilla files over to the output directory
-    FileHelper::copy(_vanillaAssetsPath, _outAssetsPath, true);
-    
-    if(_modOrderCount == 0) {
-        DebugHelper::info("Done! (Vanilla)");
-        return;
+    if(copyFile) {
+        FileHelper::copy(modPath, outPath);
+    } else { // Merge file
+        JsonHelper::patch_json(outPath, modPath);
     }
-    
-    _merge_and_copy_files();
-    
-    DebugHelper::info("Done! (", _modOrderCount, (_modOrderCount == 1) ? " mod)" : " mods)");
 }
 
-void CompileAssets::_merge_and_copy_files() {
-    std::vector<fs::path> modDirectories(_modOrderCount);
+
+void merge_and_copy_files(size_t modOrderCount, const JsonFile &modOrderFile, std::vector<fs::path> &modFilesModified) {
+    std::vector<fs::path> modDirectories(modOrderCount);
     
-    for(size_t i = 0; i < _modOrderCount; i++) {
-        std::string modFolderName = _modOrderFile->get_string("/order/" + std::to_string(i));
+    for(size_t i = 0; i < modOrderCount; i++) {
+        std::string modFolderName = modOrderFile.get_string("/order/" + std::to_string(i));
         
         if(modFolderName.empty()) {
             continue;
         }
         
-        modDirectories[i] = _settings.pathToModAssets / modFolderName;
+        modDirectories[i] = GlobalSettings::get_decomp_path("mods-subdir", "mods/") / "assets" / modFolderName;
         
         // Make sure the path exists.
-        _check_mod_path(modDirectories[i]); 
+        check_mod_path(modDirectories[i]); 
     }
     
     for(fs::path &modDir : modDirectories) {
@@ -165,9 +127,9 @@ void CompileAssets::_merge_and_copy_files() {
         
             fs::path modName = modDir.stem();
             
-            fs::path extractedDir = _settings.pathToModAssets / ".extracted";
+            fs::path extractedDir = GlobalSettings::get_decomp_path("mods-subdir", "mods/") / "assets" / ".extracted";
             
-            const bool zipFileHasChanged = DataHelper::vector_has<fs::path>(_modFilesModified, modDir);
+            const bool zipFileHasChanged = DataHelper::vector_has<fs::path>(modFilesModified, modDir);
             
             // Only extract if the zip file changed or if the mod's extracted folder does not exist.
             if(zipFileHasChanged || !FileHelper::path_exists(extractedDir / modName)) {
@@ -182,35 +144,78 @@ void CompileAssets::_merge_and_copy_files() {
                 file.extractall(extractedDir);
             }
             
-            modDir = _settings.pathToModAssets / ".extracted" / modName;
+            modDir = GlobalSettings::get_decomp_path("mods-subdir", "mods/") / "assets" / ".extracted" / modName;
             
             DebugHelper::assert_(FileHelper::path_exists(modDir), 
-                "(CompileAssets::_merge_and_copy_files) Path ", modDir, " does not exist!");
+                "(merge_and_copy_files) Path ", modDir, " does not exist!");
         } else {
             DebugHelper::info_verbose("Applying Asset Mod: ", modDir);
         }
         
-        FileHelper::append_files_from_directory_relative(modDir, _modFiles[modDir]);
-        for(fs::path &path : _modFiles[modDir]) {
+        std::unordered_map<fs::path, std::vector<fs::path>, PathHash> modFiles;
+        FileHelper::append_files_from_directory_relative(modDir, modFiles[modDir]);
+        for(fs::path &path : modFiles[modDir]) {
             if(FileHelper::does_filename_equal(path, "meta.json")) { 
                 // Don't copy meta.json over.
                 continue;
             }
-            _merge_or_copy_file(modDir, path);
+            merge_or_copy_file(modDir, path);
         }
     }
 }
-
-void CompileAssets::_merge_or_copy_file(fs::path &modDir, fs::path &path) {
-    fs::path modPath = modDir / path;
-    fs::path outPath = _outAssetsPath / path;
+void compile_assets(size_t modOrderCount, const JsonFile &modOrderFile, StatJsonFile &statFile, std::vector<fs::path> &modFilesModified) {
+    statFile.set_value<int>("/last-order-size", modOrderCount);
     
-    bool copyFile = (path.extension() != ".json") || !FileHelper::path_exists(outPath);
+    fs::path vanillaDir = GlobalSettings::get_decomp_path_to_vanilla_assets();
+    fs::path outDir = GlobalSettings::get_decomp_path_to_output_assets(false);
     
-    if(copyFile) {
-        FileHelper::copy(modPath, outPath);
-    } else { // Merge file
-        JsonHelper::get().patch_json(_settings, outPath, modPath);
+    // Clear the output directory (if it exists)
+    FileHelper::delete_directory(outDir);
+    
+    if(modOrderCount == 0) {
+        DebugHelper::info("Done! (Vanilla)");
+        return;
     }
     
+    // Copy all the vanilla files over to the output directory
+    FileHelper::copy(vanillaDir, outDir, true);
+    
+    merge_and_copy_files(modOrderCount, modOrderFile, modFilesModified);
+    
+    DebugHelper::info("Done! (", modOrderCount, (modOrderCount == 1) ? " mod)" : " mods)");
+}
+
+void CompileAssets::compile() {
+    DebugHelper::info("Compiling modded assets...");
+    
+    std::vector<fs::path> modFilesModified;
+    
+    StatJsonFile statFile(GlobalSettings::get_decomp_path("cache_subdir", ".cache/") / "compileAssetsCache.json");
+    
+    // Load order.json
+    auto tryGetModOrderFile = JsonHelper::get_file(GlobalSettings::get_decomp_path("mods-subdir", "mods/") / "assets/order.json");
+    
+    if(!tryGetModOrderFile.has_value()) {
+        DebugHelper::warn("Could not find mods/assets/order.json");
+        return;
+    }
+    
+    const JsonFile &modOrderFile = tryGetModOrderFile.value();
+
+    size_t modOrderCount = modOrderFile.length_of_array("/order");
+    
+    bool doCompile = 
+        compile_check_order_size(modOrderCount, statFile);
+    
+    if(!doCompile && (modOrderCount > 0)) {
+        // Only do these checks if there are any entries in the order.json file.
+        doCompile = compile_check_order_of_mods(modOrderCount, modOrderFile, statFile) || 
+                    compile_check_order_files_updated(modOrderCount, modOrderFile, statFile, modFilesModified);
+    }
+    
+    if(doCompile) {
+        compile_assets(modOrderCount, modOrderFile, statFile, modFilesModified);
+        update_last_mod_order(modOrderCount, modOrderFile, statFile);
+        statFile.save();
+    }
 }

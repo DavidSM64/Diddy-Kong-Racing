@@ -416,26 +416,21 @@ UNUSED s32 sprite_table_size(void) {
     return gSpriteTableSize;
 }
 
-#ifdef NON_EQUIVALENT
-// Minor matching issues with loops, but should be functionally the same.
-// Official Name: texLoadTexture
+//  Official Name: texLoadTexture
 TextureHeader *load_texture(s32 arg0) {
-    s32 assetSection;
+    TextureHeader *tex;
+    TextureHeader *texTemp;
+    u32 temp_a1;
     s32 assetIndex;
     s32 assetOffset;
     s32 assetSize;
-    s32 assetTable;
-    s32 texIndex;
-    s32 temp_a1;
     s32 paletteOffset;
+    s32 assetSection;
+    s32 texIndex;
+    s32 assetTable;
     s32 i;
-    u8 *alignedAddress;
-    TextureHeader *tex;
-    TextureHeader *texTemp;
-    s32 numberOfTextures;
+    u16 numberOfTextures;
     s32 sp3C;
-    s32 temp_a0;
-    s32 temp_v0_5;
 
     arg0 &= 0xFFFF;
     assetIndex = arg0;
@@ -450,8 +445,8 @@ TextureHeader *load_texture(s32 arg0) {
         arg0 = 0;
     }
     for (i = 0; i < gNumberOfLoadedTextures; i++) {
-        if (arg0 == gTextureCache[(i << 1)]) {
-            tex = (TextureHeader *) gTextureCache[(i << 1) + 1];
+        if (arg0 == gTextureCache[ASSETCACHE_ID(i)]) {
+            tex = (TextureHeader *) gTextureCache[ASSETCACHE_PTR(i)];
             tex->numberOfInstances++;
             return tex;
         }
@@ -459,39 +454,38 @@ TextureHeader *load_texture(s32 arg0) {
     assetOffset = gTextureAssetTable[assetTable][assetIndex];
     assetSize = gTextureAssetTable[assetTable][assetIndex + 1] - assetOffset;
     load_asset_to_address(assetSection, (u32) gTempTextureHeader, assetOffset, 0x28);
-    numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
+    numberOfTextures = gTempTextureHeader->header.numOfTextures >> 8;
 
     if (!gTempTextureHeader->header.isCompressed) {
-        tex = (TextureHeader *) mempool_alloc((numberOfTextures * 0x60) + assetSize, gTexColourTag);
+        tex = (TextureHeader *) mempool_alloc(numberOfTextures * 0x60 + assetSize, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
         load_asset_to_address(assetSection, (u32) tex, assetOffset, assetSize);
     } else {
-        temp_v0_5 = byteswap32((u8 *) &gTempTextureHeader->uncompressedSize);
-        temp_a0 = (numberOfTextures * 0x60) + temp_v0_5;
-        sp3C = temp_v0_5 + 0x20;
-        tex = (TextureHeader *) mempool_alloc(temp_a0 + 0x20, gTexColourTag);
+        sp3C = byteswap32((u8 *) &gTempTextureHeader->uncompressedSize) + sizeof(TextureHeader);
+        tex = (TextureHeader *) mempool_alloc(numberOfTextures * 0x60 + sp3C, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
-        temp_a1 = ((s32) tex + sp3C) - assetSize;
-        temp_a1 -= temp_a1 % 0x10;
+        temp_a1 = (((s32) tex + sp3C) - assetSize);
+        temp_a1 = (s32) temp_a1 - (s32) temp_a1 % 16;
         load_asset_to_address(assetSection, temp_a1, assetOffset, assetSize);
-        gzip_inflate((u8 *) (temp_a1 + 0x20), (u8 *) tex);
-        assetSize = sp3C - 0x20;
+        gzip_inflate((u8 *) (temp_a1 + sizeof(TextureHeader)), (u8 *) tex);
+        assetSize = sp3C - sizeof(TextureHeader);
     }
     texIndex = -1;
     for (i = 0; i < gNumberOfLoadedTextures; i++) {
-        if (gTextureCache[(i << 1)] == -1) {
+        if (gTextureCache[ASSETCACHE_ID(i)] == -1) {
             texIndex = i;
         }
     }
     if (texIndex == -1) {
-        texIndex = gNumberOfLoadedTextures++;
+        texIndex = gNumberOfLoadedTextures;
+        gNumberOfLoadedTextures++;
     }
-    gTextureCache[(texIndex << 1)] = arg0;
-    gTextureCache[(texIndex << 1) + 1] = (s32) tex;
+    gTextureCache[ASSETCACHE_ID(texIndex)] = arg0;
+    gTextureCache[ASSETCACHE_PTR(texIndex)] = (s32) tex;
     paletteOffset = -1;
     if ((tex->format & 0xF) == TEX_FORMAT_CI4) {
         if (D_80126344 == 0) {
@@ -510,28 +504,26 @@ TextureHeader *load_texture(s32 arg0) {
         paletteOffset = gCiPalettesSize - 128;
     }
     D_80126344 = 0;
+
+    assetOffset = (s32) align16((u8 *) ((s32) tex + assetSize));
     texTemp = tex;
-    alignedAddress = align16((u8 *) ((s32) texTemp + assetSize));
     for (i = 0; i < numberOfTextures; i++) {
-        material_init(texTemp, (Gfx *) alignedAddress);
+        material_init(texTemp, (Gfx *) assetOffset);
         if (paletteOffset >= 0) {
             texTemp->ciPaletteOffset = paletteOffset;
-            alignedAddress += 0x30; // I'm guessing it takes 6 f3d commands to load the palette
+            assetOffset += 0x30; // I'm guessing it takes 6 f3d commands to load the palette
         }
-        alignedAddress += 0x60; // I'm guessing it takes 12 f3d commands to load the texture
+        assetOffset += 0x60; // I'm guessing it takes 12 f3d commands to load the texture
         texTemp = (TextureHeader *) ((s32) texTemp + texTemp->textureSize);
     }
     if (gCiPalettesSize >= 0x280) {
         return NULL;
     }
-    if (gNumberOfLoadedTextures >= 701) {
+    if (gNumberOfLoadedTextures > 700) {
         return NULL;
     }
     return tex;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/load_texture.s")
-#endif
 
 /**
  * This function attempts to free the texture from memory.
@@ -876,10 +868,119 @@ void material_load_simple(Gfx **dList, s32 flags) {
     }
 }
 
-/**
- * Official Name: texLoadSprite
- */
-#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007C12C.s")
+Sprite *tex_load_sprite(s32 spriteID, s32 arg1) {
+    Sprite *refSprite;
+    Sprite *newSprite;
+    s32 cacheNum;
+    Sprite *sprite;
+    TextureHeader *tex;
+    s32 i;
+    s32 size;
+    s8 allocFailed;
+    s8 cacheFull;
+    s16 frameCount;
+    s32 allocSize;
+
+    D_8012635C = arg1;
+    if (spriteID < 0 || spriteID >= gSpriteTableSize) {
+        return NULL;
+    }
+
+    for (i = 0, cacheFull = 0; i < gSpriteCacheCount; i++) {
+        if (spriteID == gSpriteCache[ASSETCACHE_ID(i)]) {
+            refSprite = (Sprite *) gSpriteCache[ASSETCACHE_PTR(i)];
+            refSprite->numberOfInstances++;
+            return refSprite;
+        }
+    }
+
+    cacheNum = -1;
+    for (i = 0; i < gSpriteCacheCount; i++) {
+        // @fake
+        if (newSprite) {}
+        if (gSpriteCache[ASSETCACHE_ID(i)] == -1) {
+            cacheNum = i;
+        }
+    }
+
+    if (cacheNum == -1) {
+        cacheFull = TRUE;
+        cacheNum = gSpriteCacheCount;
+        gSpriteCacheCount++;
+    }
+
+    size = gSpriteOffsetTable[spriteID];
+    sprite = gCurrentSprite;
+    load_asset_to_address(12, (u32) sprite, size, gSpriteOffsetTable[spriteID + 1] - size);
+
+    frameCount = sprite->unkC.val[sprite->numberOfFrames];
+    size = frameCount * 4;
+    allocSize = size * sizeof(Vertex);
+    allocSize += size << 3;
+    allocSize += sprite->numberOfFrames * sizeof(Gfx);
+    allocSize += frameCount << 4 << 1;
+    allocSize += size;
+    allocSize += (s32) align16((u8 *) 0x10);
+    allocSize += (s32) align16((u8 *) (sprite->numberOfFrames * 4));
+    newSprite = (Sprite *) mempool_alloc(allocSize, COLOUR_TAG_MAGENTA);
+    if (newSprite == NULL) {
+        if (cacheFull) {
+            gSpriteCacheCount--;
+        }
+
+        return NULL;
+    }
+
+    D_80126368 = (Triangle *) ((s32) newSprite + (s32) align16((u8 *) sizeof(Sprite)) +
+                               (s32) align16((u8 *) (sprite->numberOfFrames * 4)));
+    D_80126364 = (Gfx *) (&((u8 *) D_80126368)[frameCount << 5]); // `<< 5` is `sizeof(Triangle) * 2`
+    D_80126360 = (Vertex *) ((Gfx *) (((s32) & ((u8 *) D_80126364)[frameCount << 5]) + (sprite->numberOfFrames << 3)));
+    newSprite->gfx[0] = (Gfx *) &((u8 *) D_80126360)[frameCount * sizeof(Vertex) * 4];
+
+    allocFailed = FALSE;
+    for (i = 0; i < frameCount; i++) {
+        gTexColourTag = COLOUR_TAG_LIME;
+        tex = load_texture(sprite->baseTextureId + i);
+        newSprite->frames[i] = tex;
+        if (newSprite->frames[i] == NULL) {
+            allocFailed = TRUE;
+        }
+
+        gTexColourTag = COLOUR_TAG_MAGENTA;
+        D_80126344 = 1;
+    }
+
+    D_80126344 = 0;
+    if (allocFailed) {
+        for (i = 0; i < frameCount; i++) {
+            tex = (TextureHeader *) newSprite->frames[i];
+            if (tex != NULL) {
+                tex_free(tex);
+            }
+        }
+        if (cacheFull) {
+            gSpriteCacheCount--;
+        }
+        mempool_free(newSprite);
+        return NULL;
+    }
+
+    newSprite->numberOfFrames = frameCount;
+    newSprite->baseTextureId = sprite->numberOfFrames;
+    for (i = 0; i < sprite->numberOfFrames; i++) {
+        newSprite->unkC.ptr[i] = (u8 *) D_80126364;
+        func_8007CDC0(sprite, newSprite, i);
+    }
+
+    if (gSpriteCacheCount >= 100) {
+        return NULL;
+    }
+
+    gSpriteCache[ASSETCACHE_ID(cacheNum)] = spriteID;
+    gSpriteCache[ASSETCACHE_PTR(cacheNum)] = (s32) newSprite;
+    newSprite->numberOfInstances = 1;
+    return newSprite;
+}
 
 /**
  * Gets the sprite cache index from the argument.
@@ -904,7 +1005,7 @@ s32 tex_asset_size(s32 id) {
     s32 size;
     s32 new_var3;
     s32 textureTableType;
-    s32 numOfTextures;
+    u16 numOfTextures;
     TempTexHeader *new_var4;
 
     textureTable = ASSET_TEXTURES_2D;
@@ -1020,7 +1121,80 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
     goto textureCouldNotBeLoaded;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007CA68.s")
+void func_8007CA68(s32 arg0, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
+    Sprite *sprite;
+    TextureHeader *tex;
+    s32 temp_a0;
+    s32 temp_v1;
+    s32 var_s1;
+    s32 var_s3;
+    s32 var_s4;
+    s32 var_s5;
+    s32 var_s6;
+    s32 temp_a1;
+    s32 temp_a2;
+
+    if ((arg0 < 0) || (arg0 >= gSpriteTableSize)) {
+        *arg2 = 0;
+        *arg3 = 0;
+        return;
+    }
+
+    temp_a2 = gSpriteOffsetTable[arg0];
+
+    // Must be on the same line. (maybe a macro?)
+    // clang-format off
+    sprite = gCurrentSprite; \
+    load_asset_to_address(12, (u32)sprite, temp_a2, gSpriteOffsetTable[arg0 + 1] - temp_a2);
+    // clang-format on
+
+    if (sprite->numberOfFrames < arg1) {
+    failedExit:
+        *arg2 = 0;
+        *arg3 = 0;
+        *arg4 = 0;
+        return;
+    }
+    tex = load_texture(sprite->unkC.val[arg1] + sprite->baseTextureId);
+    if (tex == NULL) {
+        goto failedExit;
+    }
+    *arg4 = tex_asset_size(sprite->unkC.val[arg1] + sprite->baseTextureId);
+    var_s3 = tex->unk3 - sprite->numberOfInstances;
+    var_s4 = sprite->drawFlags - tex->unk4;
+    temp_a1 = tex->width;
+    temp_a2 = tex->height;
+    var_s5 = var_s3 + temp_a1;
+    var_s6 = var_s4 - temp_a2;
+    tex_free(tex);
+
+    for (var_s1 = sprite->unkC.val[arg1] + 1; var_s1 < sprite->unkC.val[arg1 + 1]; var_s1++) {
+        tex = load_texture(sprite->baseTextureId + var_s1);
+        if (tex == NULL) {
+            goto failedExit;
+        }
+        *arg4 += tex_asset_size(sprite->baseTextureId + var_s1);
+        temp_v1 = tex->unk3 - sprite->numberOfInstances;
+        temp_a0 = sprite->drawFlags - tex->unk4;
+        temp_a1 = tex->width;
+        temp_a2 = tex->height;
+        if (temp_v1 < var_s3) {
+            var_s3 = temp_v1;
+        }
+        if (var_s5 < temp_v1 + temp_a1) {
+            var_s5 = temp_v1 + temp_a1;
+        }
+        if (temp_a0 - temp_a2 < var_s6) {
+            var_s6 = temp_a0 - temp_a2;
+        }
+        if (var_s4 < temp_a0) {
+            var_s4 = temp_a0;
+        }
+        tex_free(tex);
+    }
+    *arg2 = var_s5 - var_s3;
+    *arg3 = var_s4 - var_s6;
+}
 
 /**
  * This function attempts to free the sprite from memory.
@@ -1049,15 +1223,10 @@ void sprite_free(Sprite *sprite) {
     }
 }
 
-#ifdef NON_MATCHING
 void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
     UNUSED s32 pad[2];
-    s32 sprUnk4;
-    s32 sprUnk6;
-    s32 y0;
-    s32 x0;
-    s32 x1;
-    s32 y1;
+    s32 spriteCount;
+    s32 spriteDrawFlags;
     s32 xTemp;
     s32 yTemp;
     s32 left;
@@ -1070,15 +1239,13 @@ void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
     Vertex *vertices;
     Vertex *curVerts;
     Triangle *triangles;
-    u8 *temp_a3;
     Gfx *dlptr;
     TextureHeader *tex;
 
-    temp_a3 = &sprite1->unkC.val[arg2];
-    sprUnk4 = sprite1->numberOfInstances;
-    sprUnk6 = sprite1->drawFlags;
-    i = temp_a3[0];
-    j = temp_a3[1];
+    spriteCount = sprite1->numberOfInstances;
+    spriteDrawFlags = sprite1->drawFlags;
+    i = sprite1->unkC.val[arg2];
+    j = sprite1->unkC.val[arg2 + 1];
     dlptr = D_80126364;
     vertices = D_80126360;
     triangles = D_80126368;
@@ -1089,45 +1256,44 @@ void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
     curVertIndex = 0;
     var_t5 = 0;
     while (i < j) {
+        curVerts = vertices;
         tex = sprite2->frames[i];
         texWidth = tex->width;
         texHeight = tex->height;
-        xTemp = (tex->unk3 - sprUnk4);
-        x0 = xTemp;
-        x1 = (xTemp + texWidth) - 1;
-        yTemp = (sprUnk6 - tex->unk4);
-        y0 = yTemp - 1;
-        y1 = (yTemp - texHeight);
-        curVerts = vertices;
-        vertices[0].x = x0;
-        vertices[0].y = y0;
-        vertices[0].z = 0;
-        vertices[0].r = 255;
-        vertices[0].g = 255;
-        vertices[0].b = 255;
-        vertices[0].a = 255;
-        vertices[1].x = x1;
-        vertices[1].y = y0;
-        vertices[1].z = 0;
-        vertices[1].r = 255;
-        vertices[1].g = 255;
-        vertices[1].b = 255;
-        vertices[1].a = 255;
-        vertices[2].x = x1;
-        vertices[2].y = y1;
-        vertices[2].z = 0;
-        vertices[2].r = 255;
-        vertices[2].g = 255;
-        vertices[2].b = 255;
-        vertices[2].a = 255;
-        vertices[3].x = x0;
-        vertices[3].y = y1;
-        vertices[3].z = 0;
-        vertices[3].r = 255;
-        vertices[3].g = 255;
-        vertices[3].b = 255;
-        vertices[3].a = 255;
-        vertices += 4;
+        xTemp = tex->unk3 - spriteCount;
+        yTemp = spriteDrawFlags - tex->unk4;
+        vertices->x = xTemp;
+        vertices->y = yTemp - 1;
+        vertices->z = 0;
+        vertices->r = 255;
+        vertices->g = 255;
+        vertices->b = 255;
+        vertices->a = 255;
+        vertices++;
+        vertices->x = xTemp + texWidth - 1;
+        vertices->y = yTemp - 1;
+        vertices->z = 0;
+        vertices->r = 255;
+        vertices->g = 255;
+        vertices->b = 255;
+        vertices->a = 255;
+        vertices++;
+        vertices->x = xTemp + texWidth - 1;
+        vertices->y = yTemp - texHeight;
+        vertices->z = 0;
+        vertices->r = 255;
+        vertices->g = 255;
+        vertices->b = 255;
+        vertices->a = 255;
+        vertices++;
+        vertices->x = xTemp;
+        vertices->y = yTemp - texHeight;
+        vertices->z = 0;
+        vertices->r = 255;
+        vertices->g = 255;
+        vertices->b = 255;
+        vertices->a = 255;
+        vertices++;
         gDkrDmaDisplayList(dlptr++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
         if (var_t5 == 0) {
             left = j - i;
@@ -1172,9 +1338,6 @@ void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
     D_80126360 = vertices;
     D_80126368 = triangles;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/textures_sprites/func_8007CDC0.s")
-#endif
 
 /**
  * Build the display list for the texture.
@@ -1422,10 +1585,10 @@ void func_8007F1E8(LevelHeader_70 *arg0) {
     arg0->unk4 = 0;
     arg0->unk8 = 0;
     arg0->unkC = 0;
-    arg0->red = arg0->red2;
-    arg0->green = arg0->green2;
-    arg0->blue = arg0->blue2;
-    arg0->alpha = arg0->alpha2;
+    arg0->rgba.r = arg0->rgba2.r;
+    arg0->rgba.g = arg0->rgba2.g;
+    arg0->rgba.b = arg0->rgba2.b;
+    arg0->rgba.a = arg0->rgba2.a;
     for (i = 0; i < arg0->unk0; i++) {
         arg0->unkC += arg0->unk18[i].unk0;
     }
@@ -1471,22 +1634,22 @@ void update_colour_cycle(LevelHeader_70 *arg0, s32 updateRate) {
 
         cur = (LevelHeader_70 *) (&((LevelHeader_70_18 *) arg0)[curIndex]);
         temp = (arg0->unk8 << 16) / (cur->unk18->unk0);
-        cur_red = cur->red2;
-        cur_green = cur->green2;
-        cur_blue = cur->blue2;
-        cur_alpha = cur->alpha2;
+        cur_red = cur->rgba2.r;
+        cur_green = cur->rgba2.g;
+        cur_blue = cur->rgba2.b;
+        cur_alpha = cur->rgba2.a;
 
         next = (LevelHeader_70 *) (&((LevelHeader_70_18 *) arg0)[nextIndex]);
-        next_red = next->red2;
-        next_green = next->green2;
-        next_blue = next->blue2;
-        next_alpha = next->alpha2;
+        next_red = next->rgba2.r;
+        next_green = next->rgba2.g;
+        next_blue = next->rgba2.b;
+        next_alpha = next->rgba2.a;
 
         next = arg0;
-        arg0->red = (((next_red - cur_red) * temp) >> 16) + cur_red;
-        arg0->green = (((next_green - cur_green) * temp) >> 16) + cur_green;
-        arg0->blue = (((next_blue - cur_blue) * temp) >> 16) + cur_blue;
-        arg0->alpha = (((next_alpha - cur_alpha) * temp) >> 16) + cur_alpha;
+        arg0->rgba.r = (((next_red - cur_red) * temp) >> 16) + cur_red;
+        arg0->rgba.g = (((next_green - cur_green) * temp) >> 16) + cur_green;
+        arg0->rgba.b = (((next_blue - cur_blue) * temp) >> 16) + cur_blue;
+        arg0->rgba.a = (((next_alpha - cur_alpha) * temp) >> 16) + cur_alpha;
     }
 }
 

@@ -1,5 +1,7 @@
 #include "cTypes.h"
 
+using namespace DkrAssetsTool;
+
 #include <climits>
 #include <unordered_map>
 #include "helpers/debugHelper.h"

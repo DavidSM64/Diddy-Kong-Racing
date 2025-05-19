@@ -1,15 +1,18 @@
 #include "jsonHelper.h"
 
+using namespace DkrAssetsTool;
+
 #include <fstream>
 #include <iostream>
 #include <cmath>
+#include <stdexcept>
 
 #include "helpers/fileHelper.h"
 #include "helpers/dataHelper.h"
 #include "helpers/debugHelper.h"
 #include "helpers/stringHelper.h"
 
-#include "misc/settings.hpp"
+#include "misc/globalSettings.h"
 
 // TODO: Support RapidJSON
 #include "libs/json.hpp" // nlohmann JSON library. (https://github.com/nlohmann/json)
@@ -18,55 +21,60 @@
 
 using json = nlohmann::json;
 
+namespace DkrAssetsTool {
 namespace JSON_HELPER_DETAILS {
     class JsonFileData {
     public:
         JsonFileData(std::string filepath) {
             std::ifstream f(filepath);
-            data = json::parse(f);
+            try {
+                data = json::parse(f);
+            } catch (std::exception &e) {
+                DebugHelper::error("Failed to parse json file \"", filepath, "\"\n", e.what());
+            }
         }
         JsonFileData() {
         }
         json data;
     };
 }
+}
 
 /*******************************************************************************************************/
 
 JsonFile::JsonFile(std::string filepath) : _filepath(filepath) {
-    _data = new JSON_HELPER_DETAILS::JsonFileData(filepath);
+    _data = std::make_unique<JSON_HELPER_DETAILS::JsonFileData>(filepath);
 }
 
 JsonFile::~JsonFile() {
-    delete _data;
 }
 
-std::string JsonFile::get_string(const std::string &ptr, const std::string &defaultValue) {
+std::string JsonFile::get_string(const std::string &ptr, const std::string &defaultValue) const {
     const json::json_pointer jsonPtr(ptr); // Working with JSON pointers is a LOT faster than normal basic_json
     return _data->data.value(jsonPtr, defaultValue);
 }
 
 // Returns the string as lowercase, used when case shouldn't matter.
-std::string JsonFile::get_string_lowercase(const std::string &ptr, const std::string &defaultValue) {
+std::string JsonFile::get_string_lowercase(const std::string &ptr, const std::string &defaultValue) const {
     std::string out = get_string(ptr, defaultValue);
     StringHelper::make_lowercase(out);
     return out;
 }
 
 // Returns the string as uppercase, mainly used for texture formats (RGBA16, IA8, etc.)
-std::string JsonFile::get_string_uppercase(const std::string &ptr, const std::string &defaultValue) {
+std::string JsonFile::get_string_uppercase(const std::string &ptr, const std::string &defaultValue) const {
     std::string out = get_string(ptr, defaultValue);
     StringHelper::make_uppercase(out);
     return out;
 }
 
-fs::path JsonFile::get_path(const std::string &ptr, const std::string &defaultValue) {
+fs::path JsonFile::get_path(const std::string &ptr, const std::string &defaultValue) const {
     fs::path out = get_string(ptr, defaultValue);
     FileHelper::format_folder_string(out); // Make sure the returning string is in valid form.
     return out;
 }
 
-void JsonFile::copy_string_to(const std::string &ptr, char *output, size_t maxLengthForOutput, const std::string &defaultValue) {
+void JsonFile::copy_string_to(const std::string &ptr, char *output, size_t maxLengthForOutput, const std::string &defaultValue) const {
     if(maxLengthForOutput < 1) {
         return;
     }
@@ -87,23 +95,41 @@ void JsonFile::copy_string_to(const std::string &ptr, char *output, size_t maxLe
     outStr.copy(output, length);
 }
 
-int JsonFile::get_int(const std::string &ptr, const int &defaultValue) {
+int JsonFile::get_int(const std::string &ptr, const int &defaultValue) const {
     const json::json_pointer jsonPtr(ptr);
     return _data->data.value(jsonPtr, defaultValue);
 }
 
-bool JsonFile::get_bool(const std::string &ptr, const bool &defaultValue) {
+bool JsonFile::get_bool(const std::string &ptr, const bool &defaultValue) const {
     const json::json_pointer jsonPtr(ptr);
     return _data->data.value(jsonPtr, defaultValue);
 }
 
-double JsonFile::get_float(const std::string &ptr, const double &defaultValue) {
+double JsonFile::get_float(const std::string &ptr, const double &defaultValue) const {
     const json::json_pointer jsonPtr(ptr);
     return _data->data.value(jsonPtr, defaultValue);
+}
+
+std::any JsonFile::get_any(const std::string& ptr) const {
+    const json::json_pointer jsonPtr(ptr);
+
+    switch (_data->data[jsonPtr].type()) {
+        case json::value_t::boolean:
+            return std::any(_data->data.value(jsonPtr, false));
+        case json::value_t::number_float:
+            return std::any(_data->data.value(jsonPtr, 0.0));
+        case json::value_t::number_integer:
+        case json::value_t::number_unsigned:
+            return std::any(_data->data.value(jsonPtr, 0));
+        case json::value_t::string:
+            return std::any(_data->data.value(jsonPtr, ""));
+        default:
+            return std::any();
+    }
 }
 
 template<typename T>
-void JsonFile::get_array(const std::string &ptr, std::vector<T> &arr) {
+void JsonFile::get_array(const std::string &ptr, std::vector<T> &arr) const {
     const json::json_pointer jsonPtr(ptr);
     json arrayJson = _data->data[jsonPtr];
     if(!arrayJson.is_array()) {
@@ -116,14 +142,14 @@ void JsonFile::get_array(const std::string &ptr, std::vector<T> &arr) {
     }
 }
 
-template void JsonFile::get_array<std::string>(const std::string &ptr, std::vector<std::string> &arr);
-template void JsonFile::get_array<int>(const std::string &ptr, std::vector<int> &arr);
-template void JsonFile::get_array<bool>(const std::string &ptr, std::vector<bool> &arr);
+template void JsonFile::get_array<std::string>(const std::string &ptr, std::vector<std::string> &arr) const;
+template void JsonFile::get_array<int>(const std::string &ptr, std::vector<int> &arr) const;
+template void JsonFile::get_array<bool>(const std::string &ptr, std::vector<bool> &arr) const;
 
 
 // Returns the index of the element, or -1 if it doesn't exist.
 template <typename T>
-int JsonFile::get_index_of_elem_in_array(const std::string &ptr, T elem) {
+int JsonFile::get_index_of_elem_in_array(const std::string &ptr, T elem) const {
     const json::json_pointer jsonPtr(ptr);
     json arrayJson = _data->data[jsonPtr];
     if(!arrayJson.is_array()) {
@@ -140,12 +166,12 @@ int JsonFile::get_index_of_elem_in_array(const std::string &ptr, T elem) {
     return std::distance(arrayJson.cbegin(), it);
 }
 
-template int JsonFile::get_index_of_elem_in_array<std::string>(const std::string &ptr, std::string elem);
-template int JsonFile::get_index_of_elem_in_array<int>(const std::string &ptr, int elem);
-template int JsonFile::get_index_of_elem_in_array<bool>(const std::string &ptr, bool elem);
+template int JsonFile::get_index_of_elem_in_array<std::string>(const std::string &ptr, std::string elem) const;
+template int JsonFile::get_index_of_elem_in_array<int>(const std::string &ptr, int elem) const;
+template int JsonFile::get_index_of_elem_in_array<bool>(const std::string &ptr, bool elem) const;
 
 template <typename T>
-T JsonFile::get_elem_from_array(const std::string &ptr, size_t index) {
+T JsonFile::get_elem_from_array(const std::string &ptr, size_t index) const {
     const json::json_pointer jsonPtr(ptr);
     json arrayJson = _data->data[jsonPtr];
     if(!arrayJson.is_array()) {
@@ -155,12 +181,124 @@ T JsonFile::get_elem_from_array(const std::string &ptr, size_t index) {
     return arrayJson[index].get<T>();
 }
 
-template std::string JsonFile::get_elem_from_array(const std::string &ptr, size_t index);
-template int JsonFile::get_elem_from_array(const std::string &ptr, size_t index);
-template bool JsonFile::get_elem_from_array(const std::string &ptr, size_t index);
-template float JsonFile::get_elem_from_array(const std::string &ptr, size_t index);
+template std::string JsonFile::get_elem_from_array(const std::string &ptr, size_t index) const;
+template int JsonFile::get_elem_from_array(const std::string &ptr, size_t index) const;
+template bool JsonFile::get_elem_from_array(const std::string &ptr, size_t index) const;
+template float JsonFile::get_elem_from_array(const std::string &ptr, size_t index) const;
 
-size_t JsonFile::length_of_array(const std::string &ptr) {
+
+template<typename T, typename T2>
+std::optional<T> JsonFile::get_elem_from_object_array_that_has_property(const std::string& ptr, const std::string& valueName, const std::string& propertyName, T2 propertyValue) const {
+    const json::json_pointer jsonPtr(ptr);
+    json &arrayJson = _data->data[jsonPtr];
+    DebugHelper::assert_(arrayJson.is_array(), "(JsonFile::get_elem_from_object_array_that_has_property) ", 
+        _filepath, " [", ptr, "] is not an array!");
+
+    for (auto it = arrayJson.begin(); it != arrayJson.end(); it++) {
+        json &arrayJsonObj = it.value();
+        DebugHelper::assert_(arrayJsonObj.is_object(), "(JsonFile::get_elem_from_object_array_that_has_property) ", 
+            _filepath, " [", ptr, "] has an element that is not an object!");
+        if (arrayJsonObj.contains(propertyName) && arrayJsonObj[propertyName] == propertyValue) {
+            return arrayJsonObj[valueName];
+        }
+    }
+    
+    // Value does not exist in the array.
+    return std::nullopt;
+}
+template std::optional<std::string> JsonFile::get_elem_from_object_array_that_has_property(const std::string& ptr, const std::string& valueName,
+    const std::string& propertyName, std::string propertyValue) const;
+template std::optional<int> JsonFile::get_elem_from_object_array_that_has_property(const std::string& ptr, const std::string& valueName,
+    const std::string& propertyName, std::string propertyValue) const;
+
+template<typename T>
+std::optional<size_t> JsonFile::get_index_of_object_that_has_property(const std::string& ptr, const std::string& propertyName, T propertyValue) const {
+    const json::json_pointer jsonPtr(ptr);
+    json &arrayJson = _data->data[jsonPtr];
+    DebugHelper::assert_(arrayJson.is_array(), "(JsonFile::get_index_of_object_that_has_property) ",
+        _filepath, " [", ptr, "] is not an array!");
+
+    for (size_t i = 0; i < arrayJson.size(); i++) {
+        json &arrayJsonObj = arrayJson[i];
+        DebugHelper::assert_(arrayJsonObj.is_object(), "(JsonFile::get_index_of_object_that_has_property) ", 
+            _filepath, " [", ptr, "] has an element that is not an object!");
+        if (arrayJsonObj.contains(propertyName) && arrayJsonObj[propertyName] == propertyValue) {
+            return i;
+        }
+    }
+
+    // Value does not exist in the array.
+    return std::nullopt;
+}
+
+template std::optional<size_t> JsonFile::get_index_of_object_that_has_property(const std::string& ptr,
+    const std::string& propertyName, std::string propertyValue) const;
+
+template<typename T>
+std::unordered_map<T, std::vector<size_t>> JsonFile::create_map_of_indices_from_property_value(const std::string& ptr, const std::string& propertyName) const {
+    std::unordered_map<T, std::vector<size_t>> out;
+
+    const json::json_pointer jsonPtr(ptr);
+    json& arrayJson = _data->data[jsonPtr];
+    DebugHelper::assert_(arrayJson.is_array(), "(JsonFile::get_index_of_object_that_has_property) ",
+        _filepath, " [", ptr, "] is not an array!");
+
+    for (size_t i = 0; i < arrayJson.size(); i++) {
+        json& arrayJsonObj = arrayJson[i];
+        DebugHelper::assert_(arrayJsonObj.is_object(), "(JsonFile::get_index_of_object_that_has_property) ",
+            _filepath, " [", ptr, "] has an element that is not an object!");
+        if (arrayJsonObj.contains(propertyName)) {
+            T outIndex = arrayJsonObj[propertyName].get<T>();
+            if (out.find(outIndex) == out.end()) {
+                out[outIndex] = std::vector<size_t>();
+            }
+            out[outIndex].emplace_back(i); // Add the index into the out vector.
+        }
+    }
+
+    return out;
+}
+
+template std::unordered_map<std::string, std::vector<size_t>> JsonFile::create_map_of_indices_from_property_value(const std::string& ptr, const std::string& propertyName) const;
+
+
+std::vector<std::string> JsonFile::get_keys_of_object(const std::string& ptr) const {
+    std::vector<std::string> keys;
+
+    const json::json_pointer jsonPtr(ptr);
+    json data = _data->data[jsonPtr];
+
+    if (!data.is_object()) {
+        return keys; // Return empty vector.
+    }
+
+    for (auto it = data.begin(); it != data.end(); it++) {
+        keys.push_back(it.key());
+    }
+
+    return keys;
+}
+
+static void add_json_pointers(std::vector<std::string> &pointers, json &data, std::string currentPointer = "") {
+    if (!currentPointer.empty()) {
+        pointers.push_back(currentPointer);
+    }
+    if (!data.is_object() && !data.is_array()) {
+        return;
+    }
+    currentPointer += "/";
+    for (auto it = data.begin(); it != data.end(); it++) {
+        add_json_pointers(pointers, it.value(), currentPointer + it.key());
+    }
+}
+
+std::vector<std::string> JsonFile::get_all_pointers() const {
+    std::vector<std::string> pointers;
+    add_json_pointers(pointers, _data->data);
+    return pointers;
+}
+
+size_t JsonFile::length_of_array(const std::string &ptr) const {
     const json::json_pointer jsonPtr(ptr);
     json arrayJson = _data->data[jsonPtr];
     if(arrayJson.is_null()) {
@@ -172,7 +310,7 @@ size_t JsonFile::length_of_array(const std::string &ptr) {
     return arrayJson.size();
 }
 
-size_t JsonFile::length_of_string(const std::string &ptr) {
+size_t JsonFile::length_of_string(const std::string &ptr) const {
     const json::json_pointer jsonPtr(ptr);
     json strJson = _data->data[jsonPtr];
     if(!strJson.is_string()) {
@@ -182,80 +320,61 @@ size_t JsonFile::length_of_string(const std::string &ptr) {
     return strJson.get<std::string>().size();
 }
 
-bool JsonFile::has(const std::string &ptr) {
+bool JsonFile::has(const std::string &ptr) const {
     const json::json_pointer jsonPtr(ptr);
     json data = _data->data[jsonPtr];
     return !data.is_null();
 }
 
-bool JsonFile::is_value_a_number(const std::string &ptr) {
+bool JsonFile::is_value_a_number(const std::string &ptr) const {
     const json::json_pointer jsonPtr(ptr);
     json data = _data->data[jsonPtr];
     return data.is_number();
 }
 
-bool JsonFile::is_value_a_bool(const std::string &ptr) {
+bool JsonFile::is_value_a_bool(const std::string &ptr) const {
     const json::json_pointer jsonPtr(ptr);
     json data = _data->data[jsonPtr];
     return data.is_boolean();
 }
 
-bool JsonFile::is_value_a_string(const std::string &ptr) {
+bool JsonFile::is_value_a_string(const std::string &ptr) const {
     const json::json_pointer jsonPtr(ptr);
     json data = _data->data[jsonPtr];
     return data.is_string();
 }
 
-bool JsonFile::is_value_an_array(const std::string &ptr) {
+bool JsonFile::is_value_an_array(const std::string &ptr) const {
     const json::json_pointer jsonPtr(ptr);
     json data = _data->data[jsonPtr];
     return data.is_array();
 }
 
-bool JsonFile::is_value_an_object(const std::string &ptr) {
+bool JsonFile::is_value_an_object(const std::string &ptr) const {
     const json::json_pointer jsonPtr(ptr);
     json data = _data->data[jsonPtr];
     return data.is_object();
 }
 
-bool JsonFile::is_value_null(const std::string &ptr) {
+bool JsonFile::is_value_null(const std::string &ptr) const {
     return !has(ptr);
 }
 
-fs::path JsonFile::get_filepath() {
+fs::path JsonFile::get_filepath() const {
     return _filepath;
 }
 
-JSON_HELPER_DETAILS::JsonFileData *JsonFile::get_data() {
-    return _data;
+JSON_HELPER_DETAILS::JsonFileData *JsonFile::get_data() const {
+    return _data.get();
 }
 
 /*******************************************************************************************************/
 
-/*
-class WritableJsonFile {
-    public:
-        WritableJsonFile(std::string filepath);
-        ~WritableJsonFile();
-        
-        std::string set_string(const std::string &ptr, const std::string &value);
-        int set_int(const std::string &ptr, const int &value);
-        bool set_bool(const std::string &ptr, const bool &value);
-        
-        bool save_file();
-        
-    private:
-        std::string _filepath;
-        JSON_HELPER_DETAILS::JsonFileData *_data;
-};
-*/
-
 WritableJsonFile::WritableJsonFile(std::string outFilepath) : _outFilepath(outFilepath) {
-    _data = new JSON_HELPER_DETAILS::JsonFileData();
+    _data = std::make_shared<JSON_HELPER_DETAILS::JsonFileData>();
 }
 
 WritableJsonFile::~WritableJsonFile() {
-    delete _data;
 }
 
 void WritableJsonFile::new_object(const std::string &ptr) {
@@ -301,6 +420,11 @@ void WritableJsonFile::set_float(const std::string &ptr, double value, const int
     _data->data[jsonPtr] = value;
 }
 
+void WritableJsonFile::set_float_if_not_zero(const std::string& ptr, double value, const int precision) {
+    if (value == 0.0) return;
+    set_float(ptr, value, precision);
+}
+
 void WritableJsonFile::set_bool(const std::string &ptr, const bool value) {
     const json::json_pointer jsonPtr(ptr);
     _data->data[jsonPtr] = value;
@@ -316,9 +440,25 @@ void WritableJsonFile::set_null(const std::string &ptr) {
     _data->data[jsonPtr] = nullptr;
 }
 
+template<typename T>
+void WritableJsonFile::set_array(const std::string &ptr, const std::vector<T> &arr) {
+    new_array(ptr);
+    for(size_t i = 0; i < arr.size(); i++) {
+        const json::json_pointer jsonPtr(ptr + "/" + std::to_string(i));
+        _data->data[jsonPtr] = arr[i];
+    }
+}
+
+template void WritableJsonFile::set_array<std::string>(const std::string &ptr, const std::vector<std::string> &arr);
+template void WritableJsonFile::set_array<int>(const std::string &ptr, const std::vector<int> &arr);
+template void WritableJsonFile::set_array<bool>(const std::string &ptr, const std::vector<bool> &arr);
+
 void WritableJsonFile::save() {
     // Make sure the directory exists first
     FileHelper::write_folder_if_it_does_not_exist(_outFilepath);
+    if(StringHelper::ends_with(_outFilepath, "menu_text.json")) {
+        DebugHelper::info(_data->data);
+    }
     std::ofstream o(_outFilepath);
     o << std::setw(4) << _data->data << std::endl;
 }
@@ -382,13 +522,6 @@ void StatJsonFile::save() {
     o << std::setw(4) << _data->data << std::endl;
 }
 
-/*******************************************************************************************************/
-
-bool JsonHelper::get_file(fs::path filepath, JsonFile **out) {
-    *out = _load_json_from_cache(filepath);
-    return *out != nullptr;
-}
-
 /******************************************************************/
 
 // Prototype here, because of recursion. (Can't have the `json` type be in the header file either)
@@ -419,8 +552,8 @@ void json_merge_append(json &dst, json &patch) {
 
 /******************************************************************/
 
-void json_delete_file(DkrAssetsSettings &settings, json &dst, std::string filename) {
-    fs::path pathToAssets = settings.pathToAssets / settings.dkrVersion; 
+void json_delete_file(json &dst, std::string filename) {
+    fs::path pathToAssets = GlobalSettings::get_decomp_path_to_output_assets();
     std::string folder = dst[json::json_pointer("/folder")];
     fs::path fileToDelete = pathToAssets / folder / filename;
     
@@ -431,7 +564,7 @@ void json_delete_file(DkrAssetsSettings &settings, json &dst, std::string filena
 
 #define _JSON_HAS_KEY(json, key) (json.find(key) != json.end())
 
-void json_check_for_removed_file_sections(DkrAssetsSettings &settings, json &dst, json &patch) {
+void json_check_for_removed_file_sections(json &dst, json &patch) {
     json &order = dst[json::json_pointer("/files/order")];
     json &sections = dst[json::json_pointer("/files/sections")];
     json &patchSections = patch[json::json_pointer("/files/sections")];
@@ -450,7 +583,7 @@ void json_check_for_removed_file_sections(DkrAssetsSettings &settings, json &dst
             json &patchSection = patchSections.at(key);
             if(_JSON_HAS_KEY(section, "filename") && _JSON_HAS_KEY(patchSection, "filename")) { // Make sure both the patch & dst have a filename.
                 if(!section.at("filename").is_null() && patchSection.at("filename").is_null()) { // Check if the filename becomes null
-                    json_delete_file(settings, dst, section.at("filename")); // Delete the file if it exists.
+                    json_delete_file(dst, section.at("filename")); // Delete the file if it exists.
                     order.erase(order.begin() + index); // Erase the index from the order.
                     sections.erase(key); // Erase the section.
                     continue;
@@ -478,22 +611,27 @@ const std::vector<std::string> JSON_MERGE_TYPE_VALUES = {
 // Prefer appending arrays instead of overwriting them!
 const std::string DEFAULT_PATCH_TYPE = "patch-append";
 
+std::mutex _jsonHelperMutex;
+
 /******************************************************************/
 
-void JsonHelper::patch_json(DkrAssetsSettings &settings, const fs::path &dstPath, const fs::path &patchPath) {
-    JsonFile *dstJsonFile = _load_json_from_cache(dstPath);
-    JsonFile *patchJsonFile = _load_json_from_cache(patchPath);
+void JsonHelper::patch_json(const fs::path &dstPath, const fs::path &patchPath) {
+    auto tryGetDstJsonFile = get_file(dstPath);
+    auto tryGetPatchJsonFile = get_file(patchPath);
     
-    DebugHelper::assert_(dstJsonFile != nullptr, "(JsonHelper::patch_json) ", dstPath, " could not be loaded. Make sure it is formatted properly.");
-    DebugHelper::assert_(patchJsonFile != nullptr, "(JsonHelper::patch_json) ", patchPath, " could not be loaded. Make sure it is formatted properly.");
+    DebugHelper::assert_(tryGetDstJsonFile.has_value(), "(JsonHelper::patch_json) ", dstPath, " could not be loaded. Make sure it is formatted properly.");
+    DebugHelper::assert_(tryGetPatchJsonFile.has_value(), "(JsonHelper::patch_json) ", patchPath, " could not be loaded. Make sure it is formatted properly.");
     
-    std::string mergeTypeStr = patchJsonFile->get_string_lowercase("/merge-type", DEFAULT_PATCH_TYPE);
+    JsonFile &dstJsonFile = tryGetDstJsonFile.value();
+    JsonFile &patchJsonFile = tryGetPatchJsonFile.value();
+    
+    std::string mergeTypeStr = patchJsonFile.get_string_lowercase("/merge-type", DEFAULT_PATCH_TYPE);
     JsonMergeType mergeType = static_cast<JsonMergeType>(DataHelper::vector_index_of<std::string>(JSON_MERGE_TYPE_VALUES, mergeTypeStr));
     
-    JSON_HELPER_DETAILS::JsonFileData *dstJson = dstJsonFile->get_data();
-    JSON_HELPER_DETAILS::JsonFileData *patchJson = patchJsonFile->get_data();
+    JSON_HELPER_DETAILS::JsonFileData *dstJson = dstJsonFile.get_data();
+    JSON_HELPER_DETAILS::JsonFileData *patchJson = patchJsonFile.get_data();
     
-    json_check_for_removed_file_sections(settings, dstJson->data, patchJson->data);
+    json_check_for_removed_file_sections(dstJson->data, patchJson->data);
     
     switch(mergeType) {
         case JsonMergeType::MERGE_PATCH: // RFC 7386
@@ -516,17 +654,21 @@ void JsonHelper::patch_json(DkrAssetsSettings &settings, const fs::path &dstPath
     _jsonHelperMutex.unlock();
 }
 
-// Returns nullptr if unsuccessful
-JsonFile *JsonHelper::_load_json_from_cache(const fs::path &filepath) {
-     _jsonHelperMutex.lock();
-    if(_fileCache.find(filepath) == _fileCache.end()) {
+/*******************************************************************************************************/
+
+std::unordered_map<fs::path, JsonFile*> _fileCache;
+
+std::optional<std::reference_wrapper<JsonFile>> JsonHelper::get_file(fs::path filepath) {
+    _jsonHelperMutex.lock();
+    if (_fileCache.find(filepath) == _fileCache.end()) {
         try {
-            _fileCache[filepath] = new JsonFile(filepath);
-        } catch (nlohmann::detail::parse_error &err) {
+            _fileCache[filepath] = new JsonFile(filepath.generic_string());
+        } catch (nlohmann::detail::parse_error& ex) {
+            DebugHelper::error_no_throw(ex.what());
             _jsonHelperMutex.unlock();
-            return nullptr;
+            return std::nullopt;
         }
     }
     _jsonHelperMutex.unlock();
-    return _fileCache[filepath];
+    return *_fileCache[filepath];
 }

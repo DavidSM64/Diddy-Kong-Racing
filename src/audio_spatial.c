@@ -219,6 +219,7 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
                         sndp_set_param(audioPoint->soundHandle, AL_SNDP_VOL_EVT, audioPoint->volume * 256);
                         sndp_set_param(audioPoint->soundHandle, AL_SNDP_PITCH_EVT, *(s32 *) &pitch1);
                         pan2 = audspat_calculate_spatial_pan(dx, dz, cameras[0].trans.rotation.y_rotation);
+                        // This can never be true
                         if (numCameras != 1) {
                             pan2 = 64;
                         }
@@ -660,7 +661,7 @@ s32 audspat_line_validate(u8 lineID) {
     }
 
     for (i = 0; i < line->numSegments; i++) {
-        //@bug should be *(coords + 0), *(coords + 1), *(coords + 2)
+        //!@bug: should be *(coords + 0), *(coords + 1), *(coords + 2)
         if (*coords + 0 == -100000.0 || *coords + 1 == -100000.0 || *coords + 2 == -100000.0) {
             ret = FALSE;
         }
@@ -688,7 +689,7 @@ s32 audspat_reverb_validate(u8 reverbLineID) {
     }
 
     for (i = 0; i < line->numSegments; i++) {
-        //@bug should be *(coords + 0), *(coords + 1), *(coords + 2)
+        //!@bug: should be *(coords + 0), *(coords + 1), *(coords + 2)
         if (*coords == -100000.0 || *coords + 1 == -100000.0 || *coords + 2 == -100000.0) {
             ret = FALSE;
         }
