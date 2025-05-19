@@ -268,6 +268,15 @@ GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix.s")
 #endif
 
 #ifdef NON_MATCHING
+/**
+ * Converts an ObjectTransform into a transformation matrix and writes it to `mtx`.
+ * The matrix is built by applying the following operations in order:
+ * 1. Scaling
+ * 2. Rotation around Z axis (roll)
+ * 3. Rotation around X axis (pitch)
+ * 4. Rotation around Y axis (yaw)
+ * 5. Translation
+ */
 void object_transform_to_matrix(Matrix mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
@@ -329,15 +338,28 @@ GLOBAL_ASM("asm/math_util/f32_matrix_translate_y_axis.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/**
+ * Writes an inverse transformation matrix to `mtx` based on a pre-inverted `ObjectTransform`.
+ * This is used to convert world-space coordinates to local object-space coordinates.
+ * Unlike the standard transform, this version:
+ *   - Omits scaling
+ *   - Applies the transformation steps in reverse order
+ *   - Assumes that the translation and rotation values in `trans` are already negated
+ *
+ * Operation order:
+ *   1. Translate (negative offset)
+ *   2. Rotate Y (negative yaw)
+ *   3. Rotate X (negative pitch)
+ *   4. Rotate Z (negative roll)
+ */
 /* Official Name: mathRpyXyzMtx */
-void object_transform_to_matrix_2(Matrix mtx, ObjectTransform *trans) {
+void object_inverse_transform_to_matrix(Matrix mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
     f32 xRotSine;
     f32 xRotCosine;
     f32 zRotSine;
     f32 zRotCosine;
-    f32 scale;
 
     yRotCosine = coss_s16(trans->rotation.y_rotation) * (1.0f / 0x10000);
     yRotSine = sins_s16(trans->rotation.y_rotation) * (1.0f / 0x10000);
@@ -346,19 +368,17 @@ void object_transform_to_matrix_2(Matrix mtx, ObjectTransform *trans) {
     zRotCosine = coss_s16(trans->rotation.z_rotation) * (1.0f / 0x10000);
     zRotSine = sins_s16(trans->rotation.z_rotation) * (1.0f / 0x10000);
 
-    scale = trans->scale * (1.0f / 0x10000);
-
-    mtx[0][0] = (yRotSine * scale) - (xRotCosine * zRotCosine * yRotCosine);
-    mtx[0][1] = (xRotCosine * scale * yRotCosine) + (yRotSine * zRotCosine);
-    mtx[0][2] = -(yRotCosine * xRotSine);
+    mtx[0][0] = yRotCosine * zRotCosine - xRotSine * zRotSine * yRotSine;
+    mtx[0][1] = xRotSine * zRotCosine * yRotSine + yRotCosine * zRotSine;
+    mtx[0][2] = -(yRotSine * xRotCosine);
     mtx[0][3] = 0;
-    mtx[1][0] = -(xRotSine * zRotCosine);
-    mtx[1][1] = xRotSine * scale;
-    mtx[1][2] = xRotCosine;
+    mtx[1][0] = -(xRotCosine * zRotSine);
+    mtx[1][1] = xRotCosine * zRotCosine;
+    mtx[1][2] = xRotSine;
     mtx[1][3] = 0;
-    mtx[2][0] = (xRotCosine * zRotCosine * yRotSine) + (yRotCosine * scale);
-    mtx[2][1] = (yRotCosine * zRotCosine) - (xRotCosine * scale * yRotSine);
-    mtx[2][2] = yRotSine * xRotSine;
+    mtx[2][0] = xRotSine * zRotSine * yRotCosine + yRotSine * zRotCosine;
+    mtx[2][1] = yRotSine * zRotSine - xRotSine * zRotCosine * yRotCosine;
+    mtx[2][2] = yRotCosine * xRotCosine;
     mtx[2][3] = 0;
     mtx[3][0] = (mtx[0][0] * trans->x_position) + (mtx[1][0] * trans->y_position) + (mtx[2][0] * trans->z_position);
     mtx[3][1] = (mtx[0][1] * trans->x_position) + (mtx[1][1] * trans->y_position) + (mtx[2][1] * trans->z_position);
@@ -366,7 +386,7 @@ void object_transform_to_matrix_2(Matrix mtx, ObjectTransform *trans) {
     mtx[3][3] = 1.0f;
 }
 #else
-GLOBAL_ASM("asm/math_util/object_transform_to_matrix_2.s")
+GLOBAL_ASM("asm/math_util/object_inverse_transform_to_matrix.s")
 #endif
 
 GLOBAL_ASM("asm/math_util/func_80070058.s")

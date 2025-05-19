@@ -883,7 +883,7 @@ void func_80067D3C(Gfx **dList, UNUSED MatrixS **mats) {
     }
     gCameraTransform.z_position = -gCameras[gActiveCameraID].trans.z_position;
 
-    object_transform_to_matrix_2(gCameraMatrixF, &gCameraTransform);
+    object_inverse_transform_to_matrix(gCameraMatrixF, &gCameraTransform);
     f32_matrix_mult(&gCameraMatrixF, &gPerspectiveMatrixF, &gViewMatrixF);
 
     gCameraTransform.rotation.y_rotation = -0x8000 - gCameras[gActiveCameraID].trans.rotation.y_rotation;
@@ -949,9 +949,9 @@ void set_ortho_matrix_view(Gfx **dList, MatrixS **mtx) {
 
 // Official Name: camStandardPersp?
 void func_8006807C(Gfx **dList, MatrixS **mtx) {
-    object_transform_to_matrix_2(gCurrentModelMatrixF, &D_800DD288);
+    object_inverse_transform_to_matrix(gCurrentModelMatrixF, &D_800DD288);
     f32_matrix_mult(&gCurrentModelMatrixF, &gPerspectiveMatrixF, &gViewMatrixF);
-    object_transform_to_matrix_2((float(*)[4]) gModelMatrixF[0], &D_800DD2A0);
+    object_inverse_transform_to_matrix((float(*)[4]) gModelMatrixF[0], &D_800DD2A0);
     f32_matrix_mult(gModelMatrixF[0], &gViewMatrixF, &gCurrentModelMatrixF);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixF, *mtx);
     gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_0);
@@ -1192,7 +1192,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
             scale = segment->trans.scale;
             f32_matrix_from_scale(gCurrentModelMatrixF, scale, scale, 1.0f);
         }
-        object_transform_to_matrix_2(aspectMtxF, &gCameraTransform);
+        object_inverse_transform_to_matrix(aspectMtxF, &gCameraTransform);
         f32_matrix_mult(&gCurrentModelMatrixF, &aspectMtxF, gModelMatrixF[gModelMatrixStackPos]);
         f32_matrix_to_s16_matrix(gModelMatrixF[gModelMatrixStackPos], *mtx);
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
@@ -1364,7 +1364,7 @@ s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f3
     gCameraTransform.y_position = 0.0f;
     gCameraTransform.z_position = 0.0f;
     gCameraTransform.scale = 1.0f;
-    object_transform_to_matrix_2(gCurrentModelMatrixF, &gCameraTransform);
+    object_inverse_transform_to_matrix(gCurrentModelMatrixF, &gCameraTransform);
     guMtxXFMF(gCurrentModelMatrixF, tempX, tempY, tempZ, &tempX, &tempY, &tempZ);
     scaleFactor = 1.0f / trans->scale;
     tempX *= scaleFactor;

@@ -4413,7 +4413,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = -obj->segment.trans.x_position;
     sp78.y_position = -obj->segment.trans.y_position;
     sp78.z_position = -obj->segment.trans.z_position;
-    object_transform_to_matrix_2((float(*)[4]) sp6C, (ObjectTransform *) &sp78);
+    object_inverse_transform_to_matrix((float(*)[4]) sp6C, (ObjectTransform *) &sp78);
     inverseScale = 1.0 / obj->segment.trans.scale;
     i = 0;
     while (i < 16) {

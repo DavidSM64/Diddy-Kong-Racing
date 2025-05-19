@@ -1162,7 +1162,7 @@ void try_to_collect_egg(Object *obj, Object_CollectEgg *egg) {
                 transF.x_position = -interactedObj->segment.trans.x_position;
                 transF.y_position = -interactedObj->segment.trans.y_position;
                 transF.z_position = -interactedObj->segment.trans.z_position;
-                object_transform_to_matrix_2(mat, &transF);
+                object_inverse_transform_to_matrix(mat, &transF);
                 guMtxXFMF(mat, obj->segment.trans.x_position, obj->segment.trans.y_position,
                           obj->segment.trans.z_position, &obj->segment.trans.x_position, &obj->segment.trans.y_position,
                           &obj->segment.trans.z_position);
