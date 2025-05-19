@@ -398,8 +398,8 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
             weather_update(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList,
                            tempUpdateRate);
         }
-        lensflare_override(get_active_camera_segment());
-        lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
+        lensflare_override(cam_get_active_camera());
+        lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, cam_get_active_camera());
         hud_render_player(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
                           get_racer_object_by_port(gSceneCurrentPlayerID), updateRate);
     }
@@ -425,9 +425,9 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
             gDPPipeSync(gSceneCurrDisplayList++);
             initialise_player_viewport_vars(updateRate);
             weather_clip_planes(-1, -512);
-            lensflare_override(get_active_camera_segment());
+            lensflare_override(cam_get_active_camera());
             lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
-                             get_active_camera_segment());
+                             cam_get_active_camera());
             set_text_font(FONT_COLOURFUL);
             if (osTvType == OS_TV_TYPE_PAL) {
                 posX = SCREEN_WIDTH_HALF + 6;
@@ -1244,7 +1244,7 @@ void func_800278E8(s32 updateRate) {
         D_8011B100 = currentRacer->playerIndex;
     }
     if (camera != NULL) {
-        segment = get_active_camera_segment_no_cutscenes();
+        segment = cam_get_active_camera_no_cutscenes();
         segment->trans.x_position = camera->segment.trans.x_position;
         segment->trans.y_position = camera->segment.trans.y_position;
         segment->trans.z_position = camera->segment.trans.z_position;
@@ -1367,7 +1367,7 @@ void func_80028050(void) {
     f32 xCos;
     f32 xSin; // sp10C
     f32 pad_sp108;
-    ObjectSegment *objSegment;
+    Camera *objSegment;
     f32 pad_sp100;
     f32 xPositions[9]; // spDC
     f32 zPositions[9]; // spB8
@@ -1392,7 +1392,7 @@ void func_80028050(void) {
     verts = gSceneCurrVertexList;
     tris = gSceneCurrTriList;
 
-    objSegment = get_active_camera_segment();
+    objSegment = cam_get_active_camera();
     texHeader = gCurrentLevelHeader2->unkA4;
     uCoordMask = (texHeader->width << 5) - 1;
     vCoordMask = (texHeader->height << 5) - 1;
@@ -1650,7 +1650,7 @@ void render_skydome(void) {
         return;
     }
 
-    cam = get_active_camera_segment();
+    cam = cam_get_active_camera();
     if (gCurrentLevelHeader2->skyDome == 0) {
         gSkydomeSegment->segment.trans.x_position = cam->trans.x_position;
         gSkydomeSegment->segment.trans.y_position = cam->trans.y_position;
@@ -1675,7 +1675,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     s32 segmentIndex;
     Object_Racer *racer;
 
-    gSceneActiveCamera = get_active_camera_segment();
+    gSceneActiveCamera = cam_get_active_camera();
     viewportID = get_current_viewport();
     compute_scene_camera_transform_matrix();
     update_envmap_position(gScenePerspectivePos.x / 65536.0f, gScenePerspectivePos.y / 65536.0f,
@@ -1692,7 +1692,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     if (gWaveBlockCount != 0) {
         func_800B8B8C();
         racers = get_racer_objects(&numRacers);
-        if (gSceneActiveCamera->mode != 7 && numRacers > 0 && !check_if_showing_cutscene_camera()) {
+        if (gSceneActiveCamera->mode != CAMERA_FINISH_RACE && numRacers > 0 && !check_if_showing_cutscene_camera()) {
             i = -1;
             do {
                 i++;
@@ -4470,7 +4470,7 @@ void slowly_change_fog(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 f
  * Updates the stored perspective of the camera, as well as the envmap values derived from it.
  */
 UNUSED void update_perspective_and_envmap(void) {
-    gSceneActiveCamera = get_active_camera_segment();
+    gSceneActiveCamera = cam_get_active_camera();
     compute_scene_camera_transform_matrix();
     update_envmap_position((f32) gScenePerspectivePos.x / 65536.0f, (f32) gScenePerspectivePos.y / 65536.0f,
                            (f32) gScenePerspectivePos.z / 65536.0f);

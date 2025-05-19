@@ -718,11 +718,11 @@ char *D_800E142C_E202C[] = { D_800E13A4_E1FA4, D_800E13B0_E1FB0, D_800E13BC_E1FB
 s32 gTitleCinematicTextColourCount = 0;
 
 // Colours used for the Character Names during the title screen cinematic
-MenuColour gTitleCinematicTextColours[] = {
-    { 255, 255, 0, 255, 204 }, // Yellow
-    { 0, 255, 0, 255, 153 },   // Green
-    { 0, 255, 255, 255, 102 }, // Cyan
-    { 0, 0, 255, 255, 51 }     // Blue
+u8 gTitleCinematicTextColours[] = {
+    255, 255, 0, 255, 204, // Yellow
+    0, 255, 0, 255, 153,   // Green
+    0, 255, 255, 255, 102, // Cyan
+    0, 0, 255, 255, 51     // Blue
 };
 
 UNUSED u8 unused_800DFA0C[] = { 0, 0, 15, 120 };
@@ -3205,9 +3205,6 @@ void init_title_screen_variables(void) {
     load_menu_text(get_language());
 }
 
-#ifdef NON_MATCHING
-// Differs in v80
-// Single regswap diff
 void func_80083098(f32 updateRateF) {
     f32 temp;
     f32 temp2;
@@ -3234,10 +3231,12 @@ void func_80083098(f32 updateRateF) {
     set_text_background_colour(0, 0, 0, 0);
     i = 0;
     while (i < gTitleCinematicTextColourCount) {
-        j = D_80126878[i].colourIndex;
-        set_text_colour(gTitleCinematicTextColours[j].red, gTitleCinematicTextColours[j].green,
-                        gTitleCinematicTextColours[j].blue, gTitleCinematicTextColours[j].alpha,
-                        gTitleCinematicTextColours[j].opacity);
+        j = 5 * D_80126878[i].colourIndex;
+        set_text_colour(gTitleCinematicTextColours[j + 0],
+                        gTitleCinematicTextColours[j + 1],
+                        gTitleCinematicTextColours[j + 2],
+                        gTitleCinematicTextColours[j + 3],
+                        gTitleCinematicTextColours[j + 4]);
         draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
         D_80126878[i].colourIndex++;
         if (D_80126878[i].colourIndex >= 4) {
@@ -3278,8 +3277,6 @@ void func_80083098(f32 updateRateF) {
         }
     }
 
-    if (gTitleCinematicTextColours) {}
-
     if (!didUpdate) {
         return;
     }
@@ -3294,9 +3291,6 @@ void func_80083098(f32 updateRateF) {
     set_text_colour(255, 255, 255, 0, 255);
     draw_text(&sMenuCurrDisplayList, xPos, yPos, text, ALIGN_MIDDLE_CENTER);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_80083098.s")
-#endif
 
 /**
  * Initialise the title screen menu.
@@ -3414,7 +3408,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
     Camera *sp18;
     s8 playerCount;
 
-    sp18 = get_active_camera_segment();
+    sp18 = cam_get_active_camera();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     menu_input();
     if (osTvType == OS_TV_TYPE_PAL) {
@@ -3479,7 +3473,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             gTitleRevealTimer += updateRate;
             if (gTitleRevealTimer >= 32) {
                 gTitleRevealTimer = 32;
-                sp18->distanceToCamera = 8.0f;
+                sp18->shakeMagnitude = 8.0f;
                 sound_play(SOUND_EXPLOSION, NULL);
             }
         } else {
@@ -13362,7 +13356,7 @@ void menu_camera_centre(void) {
     set_active_viewports_and_max(VIEWPORT_LAYOUT_1_PLAYER);
     set_active_camera(0);
 
-    cam = get_active_camera_segment();
+    cam = cam_get_active_camera();
 
     angleY = cam->trans.rotation.y_rotation;
     angleX = cam->trans.rotation.x_rotation;

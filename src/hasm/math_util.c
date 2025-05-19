@@ -392,22 +392,22 @@ GLOBAL_ASM("asm/math_util/object_inverse_transform_to_matrix.s")
 GLOBAL_ASM("asm/math_util/func_80070058.s")
 
 #ifdef NON_MATCHING
-void f32_matrix_from_rotation_and_scale(Matrix mtx, s32 angle, f32 arg2, f32 arg3) {
+void f32_matrix_from_rotation_and_scale(Matrix mtx, s32 angle, f32 scale, f32 scaleY) {
     f32 cosine, sine;
 
-    cosine = sins_s16(angle) * (1.0f / 0x10000);
-    sine = coss_s16(angle) * (1.0f / 0x10000);
-    mtx[0][0] = sine * arg2;
-    mtx[0][1] = cosine * arg2;
+    sine = sins_s16(angle) * (1.0f / 0x10000);
+    cosine = coss_s16(angle) * (1.0f / 0x10000);
+    mtx[0][0] = cosine * scale;
+    mtx[0][1] = sine * scale;
     mtx[0][2] = 0;
     mtx[0][3] = 0;
-    mtx[1][0] = -cosine * arg2;
-    mtx[1][1] = (sine * arg2) * arg3;
+    mtx[1][0] = -sine * scale;
+    mtx[1][1] = (cosine * scale) * scaleY;
     mtx[1][2] = 0;
     mtx[1][3] = 0;
     mtx[2][0] = 0;
     mtx[2][1] = 0;
-    mtx[2][2] = arg2;
+    mtx[2][2] = scale;
     mtx[2][3] = 0;
     mtx[3][0] = 0;
     mtx[3][1] = 0;

@@ -137,7 +137,7 @@ void cam_init(void) {
     gViewportLayout = 0;
     gSpriteAnimOff = FALSE;
     D_80120D18 = FALSE;
-    gAdjustViewportHeight = 0;
+    gAdjustViewportHeight = FALSE;
     gAntiPiracyViewport = FALSE;
 
     WAIT_ON_IOBUSY(stat);
@@ -246,7 +246,7 @@ void camera_init_tracks_menu(Gfx **dList, MatrixS **mtxS) {
 
     set_active_viewports_and_max(VIEWPORT_LAYOUT_1_PLAYER);
     set_active_camera(0);
-    cam = get_active_camera_segment();
+    cam = cam_get_active_camera();
     angleY = cam->trans.rotation.y_rotation;
     angleX = cam->trans.rotation.x_rotation;
     angleZ = cam->trans.rotation.z_rotation;
@@ -302,11 +302,11 @@ void camera_reset(s32 xPos, s32 yPos, s32 zPos, s32 angleZ, s32 angleX, s32 angl
     gCameras[gActiveCameraID].trans.z_position = zPos;
     gCameras[gActiveCameraID].trans.rotation.x_rotation = angleX * (0x7FFF / 180);
     gCameras[gActiveCameraID].pitch = 0;
+    gCameras[gActiveCameraID].x_velocity = 0.0f;
+    gCameras[gActiveCameraID].y_velocity = 0.0f;
     gCameras[gActiveCameraID].z_velocity = 0.0f;
-    gCameras[gActiveCameraID].unk28 = 0.0f;
-    gCameras[gActiveCameraID].unk2C = 0.0f;
-    gCameras[gActiveCameraID].distanceToCamera = 0.0f;
-    gCameras[gActiveCameraID].x_velocity = 160.0f;
+    gCameras[gActiveCameraID].shakeMagnitude = 0.0f;
+    gCameras[gActiveCameraID].boomLength = 160.0f;
     gCameras[gActiveCameraID].trans.rotation.y_rotation = angleY * (0x7FFF / 180);
     gCameras[gActiveCameraID].zoom = gCameraZoomLevels[gActiveCameraID];
 }
@@ -748,7 +748,7 @@ void viewport_main(Gfx **dlist, MatrixS **mats) {
             posY = tempX + sp58_height;
             posX = tempY + sp54_width;
             if (osTvType == OS_TV_TYPE_PAL) {
-                if (gActiveCameraID < 2) {
+                if (gActiveCameraID <= 1) {
                     posY -= 20;
                 } else {
                     posY -= 6;
@@ -879,7 +879,7 @@ void func_80067D3C(Gfx **dList, UNUSED MatrixS **mats) {
     gCameraTransform.x_position = -gCameras[gActiveCameraID].trans.x_position;
     gCameraTransform.y_position = -gCameras[gActiveCameraID].trans.y_position;
     if (D_80120D18) {
-        gCameraTransform.y_position -= gCameras[gActiveCameraID].distanceToCamera;
+        gCameraTransform.y_position -= gCameras[gActiveCameraID].shakeMagnitude;
     }
     gCameraTransform.z_position = -gCameras[gActiveCameraID].trans.z_position;
 
@@ -894,7 +894,7 @@ void func_80067D3C(Gfx **dList, UNUSED MatrixS **mats) {
     gCameraTransform.x_position = gCameras[gActiveCameraID].trans.x_position;
     gCameraTransform.y_position = gCameras[gActiveCameraID].trans.y_position;
     if (D_80120D18) {
-        gCameraTransform.y_position += gCameras[gActiveCameraID].distanceToCamera;
+        gCameraTransform.y_position += gCameras[gActiveCameraID].shakeMagnitude;
     }
     gCameraTransform.z_position = gCameras[gActiveCameraID].trans.z_position;
 
@@ -1502,14 +1502,14 @@ UNUSED void rotate_camera_segment(s32 angleX, s32 angleY, s32 angleZ) {
 /**
  * Returns the segment data of the active camera, but won't apply the offset for cutscenes.
  */
-Camera *get_active_camera_segment_no_cutscenes(void) {
+Camera *cam_get_active_camera_no_cutscenes(void) {
     return &gCameras[gActiveCameraID];
 }
 
 /**
  * Returns the segment data of the active camera.
  */
-Camera *get_active_camera_segment(void) {
+Camera *cam_get_active_camera(void) {
     if (gCutsceneCameraActive) {
         return &gCameras[gActiveCameraID + 4];
     }
@@ -1575,7 +1575,7 @@ void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude) 
         diffZ = z - gCameras[i].trans.z_position;
         distance = sqrtf(((diffX * diffX) + (diffY * diffY)) + (diffZ * diffZ));
         if (distance < dist) {
-            gCameras[i].distanceToCamera = ((dist - distance) * magnitude) / dist;
+            gCameras[i].shakeMagnitude = ((dist - distance) * magnitude) / dist;
         }
     }
 }
@@ -1586,7 +1586,7 @@ void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude) 
 void set_camera_shake(f32 magnitude) {
     s32 i;
     for (i = 0; i <= gViewportLayout; i++) {
-        gCameras[i].distanceToCamera = magnitude;
+        gCameras[i].shakeMagnitude = magnitude;
     }
 }
 

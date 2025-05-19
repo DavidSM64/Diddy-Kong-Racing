@@ -402,7 +402,7 @@ void weather_update(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHu
     gCurrWeatherMatrix = *currHudMat;
     gCurrWeatherVertexList = *currHudVerts;
     gCurrWeatherTriList = *currHudTris;
-    gWeatherCamera = get_active_camera_segment();
+    gWeatherCamera = cam_get_active_camera();
     gWeatherCameraMatrix = get_camera_matrix();
     if (gWeatherType != WEATHER_SNOW) {
         rain_update(updateRate);

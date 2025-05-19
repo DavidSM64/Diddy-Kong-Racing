@@ -3545,7 +3545,7 @@ void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj,
     obj->segment.trans.x_position += trans->x_position;
     obj->segment.trans.y_position += trans->y_position;
     obj->segment.trans.z_position += trans->z_position;
-    cameraSegment = get_active_camera_segment();
+    cameraSegment = cam_get_active_camera();
     x = cameraSegment->trans.x_position - obj->segment.trans.x_position;
     y = cameraSegment->trans.y_position - obj->segment.trans.y_position;
     z = cameraSegment->trans.z_position - obj->segment.trans.z_position;
@@ -4155,9 +4155,9 @@ void process_object_interactions(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800159C8.s")
 
 void func_80016500(Object *obj, Object_Racer *racer) {
-    s32 sp3C;
-    s32 angle;
-    UNUSED s32 pad;
+    s32 shakeMagnitude;
+    s32 volume;
+    s32 angle;    
     f32 startVelocity;
     f32 cosAngle;
     f32 sinAngle;
@@ -4175,37 +4175,37 @@ void func_80016500(Object *obj, Object_Racer *racer) {
     racer->lateral_velocity = (obj->segment.x_velocity * cosAngle) + (obj->segment.z_velocity * sinAngle);
     racer->velocity = (-obj->segment.x_velocity * sinAngle) + (obj->segment.z_velocity * cosAngle);
     if (racer->playerIndex != PLAYER_COMPUTER) {
-        angle = (startVelocity - racer->velocity) * 14.0f;
-        if (angle < 0) {
-            angle = -angle;
+        volume = (startVelocity - racer->velocity) * 14.0f;
+        if (volume < 0) {
+            volume = -volume;
         }
-        angle += 35;
-        if (angle >= 128) {
-            angle = 127;
+        volume += 35;
+        if (volume > 127) {
+            volume = 127;
         }
         if (racer->unk1F6 == 0) {
             sound_play(SOUND_CRASH_CHARACTER, &racer->unk220);
-            sound_volume_set_relative(SOUND_CRASH_CHARACTER, racer->unk220, angle);
+            sound_volume_set_relative(SOUND_CRASH_CHARACTER, racer->unk220, volume);
         }
-        if (racer->unk1F6 == 0 && angle >= 56) {
+        if (racer->unk1F6 == 0 && volume > 55) {
             if (!racer->raceFinished) {
                 rumble_set(racer->playerIndex, RUMBLE_TYPE_18);
             }
             racer->unk1F3 |= 8;
         }
-        if (angle >= 56) {
+        if (volume > 55) {
             play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 1);
         }
-        sp3C = (startVelocity - racer->velocity);
-        if (sp3C < 0) {
-            sp3C = -sp3C;
+        shakeMagnitude = (startVelocity - racer->velocity);
+        if (shakeMagnitude < 0) {
+            shakeMagnitude = -shakeMagnitude;
         }
-        if (sp3C >= 4) {
-            sp3C = 3;
+        if (shakeMagnitude > 3) {
+            shakeMagnitude = 3;
         }
         racer->unk1F6 = 30;
         set_active_camera(racer->playerIndex);
-        get_active_camera_segment()->distanceToCamera = sp3C;
+        cam_get_active_camera()->shakeMagnitude = shakeMagnitude;
     }
 }
 
@@ -6272,7 +6272,7 @@ void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Anim
     }
     if (entry->unk22 == 18) {
         set_active_camera(animObj->cameraID);
-        camera = get_active_camera_segment_no_cutscenes();
+        camera = cam_get_active_camera_no_cutscenes();
         animObjTrans->x_position = camera->trans.x_position;
         animObjTrans->y_position = camera->trans.y_position;
         animObjTrans->z_position = camera->trans.z_position;
@@ -6733,7 +6733,7 @@ CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
     racer->vehicleID = racer->vehicleIDPrev;
     if (racer->playerIndex != -1) {
         set_active_camera(racer->playerIndex);
-        activeCameraSegment = get_active_camera_segment_no_cutscenes();
+        activeCameraSegment = cam_get_active_camera_no_cutscenes();
         activeCameraSegment->trans.x_position = obj->segment.trans.x_position;
         activeCameraSegment->trans.y_position = obj->segment.trans.y_position;
         activeCameraSegment->trans.z_position = obj->segment.trans.z_position;

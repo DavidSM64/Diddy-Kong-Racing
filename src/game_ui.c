@@ -1998,9 +1998,9 @@ void hud_bananas(Object_Racer *racer, s32 updateRate) {
         }
         if (prevSprite == 0) {
             sprite_opaque(TRUE);
-            set_viewport_tv_type(OS_TV_TYPE_NTSC);
+            set_viewport_tv_type(TRUE);
             hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC]);
-            set_viewport_tv_type(OS_TV_TYPE_PAL);
+            set_viewport_tv_type(FALSE);
             sprite_opaque(FALSE);
             gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset = prevSprite;
             if (gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.sparkleCounter) {
@@ -2014,18 +2014,18 @@ void hud_bananas(Object_Racer *racer, s32 updateRate) {
                         gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].spriteOffset++;
                     }
                 }
-                set_viewport_tv_type(OS_TV_TYPE_NTSC);
+                set_viewport_tv_type(TRUE);
                 hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE]);
-                set_viewport_tv_type(OS_TV_TYPE_PAL);
+                set_viewport_tv_type(FALSE);
             }
         } else {
             gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset = prevSprite + 128;
             sprite_anim_off(FALSE);
             sprite_opaque(TRUE);
-            set_viewport_tv_type(OS_TV_TYPE_NTSC);
+            set_viewport_tv_type(TRUE);
             hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN]);
             sprite_opaque(FALSE);
-            set_viewport_tv_type(OS_TV_TYPE_PAL);
+            set_viewport_tv_type(FALSE);
             sprite_anim_off(TRUE);
             gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset -= 128;
         }
@@ -2984,13 +2984,13 @@ void hud_balloons(UNUSED Object_Racer *racer) {
         gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_1].spriteOffset = balloonCount % 10;
     }
     hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_1]);
-    set_viewport_tv_type(OS_TV_TYPE_NTSC);
+    set_viewport_tv_type(TRUE);
     if (osTvType == OS_TV_TYPE_PAL) {
         sprite_opaque(TRUE);
     }
     hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BALLOON_COUNT_ICON]);
     sprite_opaque(FALSE);
-    set_viewport_tv_type(OS_TV_TYPE_PAL);
+    set_viewport_tv_type(FALSE);
     hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BALLOON_COUNT_X]);
 }
 
@@ -3034,7 +3034,7 @@ void hud_weapon(Object *obj, s32 updateRate) {
 
     racer = (Object_Racer *) obj->unk64;
     if (racer->raceFinished == FALSE) {
-        set_viewport_tv_type(OS_TV_TYPE_NTSC);
+        set_viewport_tv_type(TRUE);
         temp_a0 = (racer->balloon_type * 3) + (racer->balloon_level);
         if (gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.prevLevel != racer->balloon_level) {
             if (racer->balloon_level == 0) {
@@ -3109,7 +3109,7 @@ void hud_weapon(Object *obj, s32 updateRate) {
             }
         }
         gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
-        set_viewport_tv_type(OS_TV_TYPE_PAL);
+        set_viewport_tv_type(FALSE);
     }
 }
 
@@ -3606,7 +3606,7 @@ void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate
     if (lvlMdl == NULL) {
         return;
     }
-    someObjSeg = get_active_camera_segment();
+    someObjSeg = cam_get_active_camera();
     sprite_anim_off(TRUE);
     minimap = (Sprite *) lvlMdl->minimapSpriteIndex;
     switch (gHUDNumPlayers) {
@@ -3954,7 +3954,7 @@ void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement
             rendermode_reset(&gHudDL);
         }
     } else if (gAssetHudElementIds[spriteID] & ASSET_MASK_SPRITE) {
-        objSegment = get_active_camera_segment();
+        objSegment = cam_get_active_camera();
         sprite = gAssetHudElements->entry[hud->spriteID];
         hud->rotation.z -= objSegment->trans.rotation.z;
         render_ortho_triangle_image(&gHudDL, &gHudMtx, &gHudVtx, (ObjectSegment *) hud, sprite, 0);
