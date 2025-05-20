@@ -270,14 +270,7 @@ typedef enum TitleDemoIndex {
 /* Size: 0x20 bytes */
 // So this is looking to be a struct for menu images.
 typedef struct MenuAsset {
-    s16 y_rotation;
-    s16 x_rotation;
-    s16 z_rotation;
-    s16 spriteID;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
+    ObjectTransform trans;
     s16 spriteOffset;
     s8 unk1A;
     s8 unk1B;
