@@ -38,10 +38,10 @@
 #define VIEWPORT_AUTO 0x8000
 
 enum ViewportCount {
-    VIEWPORTS_COUNT_1_PLAYER,
-    VIEWPORTS_COUNT_2_PLAYERS,
-    VIEWPORTS_COUNT_3_PLAYERS,
-    VIEWPORTS_COUNT_4_PLAYERS
+    VIEWPORT_LAYOUT_1_PLAYER,
+    VIEWPORT_LAYOUT_2_PLAYERS,
+    VIEWPORT_LAYOUT_3_PLAYERS,
+    VIEWPORT_LAYOUT_4_PLAYERS
 };
 
 enum ViewPortFlags {
@@ -53,6 +53,28 @@ enum ViewPortFlags {
     VIEWPORT_WIDTH_CUSTOM  = 0x0020,
     VIEWPORT_HEIGHT_CUSTOM = 0x0040
 };
+
+/* Size: 0x44 bytes */
+typedef struct Camera {
+    /* 0x0000 */ ObjectTransform trans;
+    /* 0x0018 */ f32 cam_unk_18;
+    /* 0x001C */ f32 boomLength;
+    /* 0x0020 */ f32 cam_unk_20;
+    /* 0x0024 */ f32 x_velocity;
+    /* 0x0028 */ f32 y_velocity;
+    /* 0x002C */ f32 z_velocity;
+    /* 0x0030 */ f32 shakeMagnitude;
+    /* 0x0034 */ s16 cameraSegmentID;
+    /* 0x0036 */ s16 mode;
+    /* 0x0038 */ s16 pitch;
+    /* 0x003A */ s8 shakeTimer;
+    /* 0x003B */ u8 zoom;
+    /* 0x003C */ u8 unk3C;
+    /* 0x003D */ u8 unk3D;
+    /* 0x003E */ u8 unk3E;
+    /* 0x003F */ u8 unk3F;
+    /* 0x0040 */ ObjectHeader *header;
+  } Camera;
 
 /* Size: 0x34 bytes. */
 typedef struct ScreenViewport {
@@ -71,14 +93,14 @@ typedef struct ScreenViewport {
     /* 0x30 */ s32 flags;
 } ScreenViewport;
 
-void func_80066060(s32 cameraID, s32 zoomLevel);
-void set_viewport_tv_type(s8 setting);
+void cam_set_zoom(s32 cameraID, s32 zoomLevel);
+void enable_pal_viewport_height_adjust(s8 setting);
 void func_800660C0(void);
 void func_800660D0(void);
-UNUSED f32 get_current_camera_fov(void);
-void update_camera_fov(f32 camFieldOfView);
+UNUSED f32 cam_get_fov(void);
+void cam_set_fov(f32 camFieldOfView);
 Matrix *matrix_get_model_s16(void);
-s32 get_viewport_count(void);
+s32 cam_get_viewport_layout(void);
 s32 get_current_viewport(void);
 void camera_init_tracks_menu(Gfx **dList, MatrixS **mtxS);
 f32 get_distance_to_active_camera(f32 xPos, f32 yPos, f32 zPos);
@@ -86,7 +108,7 @@ void camera_reset(s32 xPos, s32 yPos, s32 zPos, s32 angleZ, s32 angleX, s32 angl
 void write_to_object_render_stack(s32 stackPos, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
 void disable_cutscene_camera(void);
 s8 check_if_showing_cutscene_camera(void);
-s32 set_active_viewports_and_max(s32 num);
+s32 cam_set_layout(s32 layoutID);
 void set_active_camera(s32 num);
 void camEnableUserView(s32 viewPortIndex, s32 arg1);
 void camDisableUserView(s32 viewPortIndex, s32 arg1);
@@ -103,9 +125,9 @@ void viewport_rsp_set(Gfx **dList, s32 width, s32 height, s32 posX, s32 posY);
 void viewport_reset(Gfx **dList);
 void matrix_world_origin(Gfx **dList, MatrixS **mtx);
 void sprite_anim_off(s32 setting);
-ObjectSegment *get_active_camera_segment_no_cutscenes(void);
-ObjectSegment *get_active_camera_segment(void);
-ObjectSegment *get_cutscene_camera_segment(void);
+Camera *cam_get_active_camera_no_cutscenes(void);
+Camera *cam_get_active_camera(void);
+Camera *get_cutscene_camera_segment(void);
 Matrix *get_projection_matrix_f32(void);
 MatrixS *get_projection_matrix_s16(void);
 Matrix *get_camera_matrix(void);
@@ -115,13 +137,13 @@ void set_camera_shake(f32 magnitude);
 void func_80067D3C(Gfx **dList, MatrixS **mats);
 void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags);
 s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, Sprite *arg4, s32 flags);
-s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY);
+s32 cam_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY);
 void viewport_scissor(Gfx **dList);
 void apply_matrix_from_stack(Gfx **dList);
 void copy_viewports_to_stack(void);
 void apply_head_turning_matrix(Gfx **dList, MatrixS **mtx, Object_68 *objGfx, s16 headAngle);
 void apply_object_shear_matrix(Gfx **dList, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear);
-void camera_init(void);
+void cam_init(void);
 void viewport_main(Gfx **dlist, MatrixS **mats);
 
 #endif

@@ -1011,7 +1011,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     s32 spB4[8];
     s32 sp94[8];
     LevelHeader *levelHeader;
-    ObjectSegment *cutsceneCameraSegment; // sp74
+    Camera *cutsceneCameraSegment; // sp74
     s16 objectId;
     s8 sp127;
     u8 raceType;
@@ -1050,8 +1050,8 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     cutsceneID = -1;
     if (is_time_trial_enabled() && raceType == RACETYPE_DEFAULT) {
         cutsceneCameraSegment = get_cutscene_camera_segment();
-        cutsceneID = (u8) cutsceneCameraSegment->object.animationID;
-        cutsceneCameraSegment->object.animationID = 1;
+        cutsceneID = (u8) cutsceneCameraSegment->zoom;
+        cutsceneCameraSegment->zoom = 1;
     }
     gameMode = get_game_mode();
     settings = get_settings();
@@ -1458,7 +1458,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     }
     *D_8011AD24 = 1;
     if (cutsceneID >= 0) {
-        cutsceneCameraSegment->object.animationID = cutsceneID;
+        cutsceneCameraSegment->zoom = cutsceneID;
     }
     if (func_8000E148() != 0) {
         rumble_init(FALSE);
@@ -1805,7 +1805,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     curObj->objectID = objType;
     func_800245B4(objType);
     curObj->segment.trans.scale = curObj->segment.header->scale;
-    curObj->segment.camera.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
+    curObj->segment.object.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
     curObj->segment.object.opacity = 0xFF;
     sp50 = obj_init_property_flags(curObj->segment.header->behaviorId);
     curObj->segment.header->unk52++;
@@ -2789,9 +2789,9 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
  * A much simpler, faster way to render an object model as opposed to render_3d_model
  */
 void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles,
-                       TextureHeader *tex, u32 flags, u32 texOffset, f32 scale) {
+                       TextureHeader *tex, u32 flags, u32 texOffset, f32 scaleY) {
     s32 hasTexture = FALSE;
-    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, scale, 0.0f);
+    cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, scaleY, 0.0f);
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     if (tex != NULL) {
@@ -2807,7 +2807,7 @@ void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *tr
  * A few objects use unconventional means to render. They are handled here.
  */
 void render_3d_misc(Object *obj) {
-    f32 scale;
+    f32 scaleY;
     Object_64 *objData;
 
     switch (obj->behaviorId) {
@@ -2827,10 +2827,10 @@ void render_3d_misc(Object *obj) {
             break;
         case BHV_FISH:
             objData = obj->unk64;
-            scale = obj->segment.level_entry->fish.unkD;
-            scale *= 0.01f;
+            scaleY = obj->segment.level_entry->fish.unkD;
+            scaleY *= 0.01f;
             render_misc_model(obj, &objData->fish.vertices[objData->fish.unkFC * 6], 6, objData->fish.triangles, 8,
-                              objData->fish.texture, RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_CUTOUT, 0, scale);
+                              objData->fish.texture, RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_CUTOUT, 0, scaleY);
             break;
         case BHV_BOOST:
             if (obj->properties.common.unk0 && (obj->unk64->boost.unk70 > 0 || obj->unk64->boost.unk74 > 0.0f)) {
@@ -3005,7 +3005,7 @@ void render_3d_model(Object *obj) {
                     racerObj->playerIndex == PLAYER_COMPUTER) {
                     flags = FALSE;
                 }
-                if (get_viewport_count() != VIEWPORTS_COUNT_1_PLAYER) {
+                if (cam_get_viewport_layout() != VIEWPORT_LAYOUT_1_PLAYER) {
                     flags = FALSE;
                 }
                 obj->curVertData = (Vertex *) obj68->vertices[obj68->animationTaskNum];
@@ -3033,7 +3033,7 @@ void render_3d_model(Object *obj) {
             func_80011134(obj, objModel->unk52);
             obj68->objModel->unk52 = 0;
         }
-        camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
+        cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
         spB0 = FALSE;
         if (racerObj != NULL) {
             object_undo_player_tumble(obj);
@@ -3131,7 +3131,7 @@ void render_3d_model(Object *obj) {
                                 render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix,
                                                         &gObjectCurrVertexList, loopObj, (Sprite *) something, flags);
                             if (var_v0_2) {
-                                gDkrInsertMatrix(gObjectCurrDisplayList++, 0, 0);
+                                gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
                                 func_80012CE8(&gObjectCurrDisplayList);
                             }
                         }
@@ -3329,7 +3329,7 @@ void func_80012F94(Object *obj) {
                     }
                     batchNum = 0;
                     bossAsset = (u8 *) get_misc_asset(var_t0); // 40 bytes of data u8[8][5]?
-                    bossAsset = &bossAsset[(get_viewport_count() * 10)];
+                    bossAsset = &bossAsset[(cam_get_viewport_layout() * 10)];
                     var_a1 = bossAsset;
                     if (get_current_viewport() != objRacer->playerIndex) {
                         var_a1 += 5;
@@ -3492,7 +3492,7 @@ void func_800135B8(Object *boostObj) {
     asset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     asset = &asset[D_8011B058[idx]];
     object_do_player_tumble((Object *) boostObj->properties.common.unk0);
-    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
+    cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
                           (ObjectTransform *) boostObj->properties.common.unk0, 1.0f, 0.0f);
     object_undo_player_tumble((Object *) boostObj->properties.common.unk0);
     objTransform.trans.x_position = boostData->position.x;
@@ -3538,14 +3538,14 @@ void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj,
     f32 x;
     f32 y;
     f32 z;
-    ObjectSegment *cameraSegment;
+    Camera *cameraSegment;
     f32 dist;
 
     f32_vec3_apply_object_rotation(trans, &obj->segment.trans.x_position);
     obj->segment.trans.x_position += trans->x_position;
     obj->segment.trans.y_position += trans->y_position;
     obj->segment.trans.z_position += trans->z_position;
-    cameraSegment = get_active_camera_segment();
+    cameraSegment = cam_get_active_camera();
     x = cameraSegment->trans.x_position - obj->segment.trans.x_position;
     y = cameraSegment->trans.y_position - obj->segment.trans.y_position;
     z = cameraSegment->trans.z_position - obj->segment.trans.z_position;
@@ -3625,7 +3625,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         }
         apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gShieldEffectObject, obj, shear);
         render_mesh(mdl, gShieldEffectObject, 0, RENDER_SEMI_TRANSPARENT, 0);
-        gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
+        gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
@@ -3688,7 +3688,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gObjectTexAnim = TRUE;
             render_mesh(mdl, gMagnetEffectObject, 0, RENDER_SEMI_TRANSPARENT, 0);
             gObjectTexAnim = FALSE;
-            gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
+            gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             rendermode_reset(&gObjectCurrDisplayList);
             *dList = gObjectCurrDisplayList;
@@ -3790,14 +3790,14 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
                 } else {
                     if (offsetStartVertex > 0) {
                         gSPVertexDKR(dList++, OS_K0_TO_PHYSICAL(vtx), offsetStartVertex, 0);
-                        gDkrInsertMatrix(dList++, 0, G_MTX_DKR_INDEX_2);
+                        gSPSelectMatrixDKR(dList++, G_MTX_DKR_INDEX_2);
                         gSPVertexDKR(dList++, OS_K0_TO_PHYSICAL(&vtx[offsetStartVertex]),
                                      (numVertices - offsetStartVertex), 1);
                     } else {
-                        gDkrInsertMatrix(dList++, 0, G_MTX_DKR_INDEX_2);
+                        gSPSelectMatrixDKR(dList++, G_MTX_DKR_INDEX_2);
                         gSPVertexDKR(dList++, OS_K0_TO_PHYSICAL(vtx), numVertices, 0);
                     }
-                    gDkrInsertMatrix(dList++, 0, G_MTX_DKR_INDEX_1);
+                    gSPSelectMatrixDKR(dList++, G_MTX_DKR_INDEX_1);
                 }
                 gSPPolygon(dList++, OS_K0_TO_PHYSICAL(tris), numTris, texEnabled);
             }
@@ -3902,11 +3902,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 0:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.x_position -
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.x_position -
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -3921,11 +3921,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 1:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.y_position -
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.y_position -
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -3940,11 +3940,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 2:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.z_position -
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.z_position -
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -3959,11 +3959,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 8:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.x_position +
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.x_position +
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -3978,11 +3978,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 9:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.y_position +
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.y_position +
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -3997,11 +3997,11 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
         case 10:
             while (arg1 >= arg0) {
                 while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->segment.trans.z_position +
-                                             gObjPtrList[arg0]->segment.camera.unk34) < arg2)) {
+                                             gObjPtrList[arg0]->segment.object.unk34) < arg2)) {
                     arg0++;
                 }
                 while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->segment.trans.z_position +
-                                                     gObjPtrList[arg1]->segment.camera.unk34))) {
+                                                     gObjPtrList[arg1]->segment.object.unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -4155,9 +4155,9 @@ void process_object_interactions(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800159C8.s")
 
 void func_80016500(Object *obj, Object_Racer *racer) {
-    s32 sp3C;
+    s32 shakeMagnitude;
+    s32 volume;
     s32 angle;
-    UNUSED s32 pad;
     f32 startVelocity;
     f32 cosAngle;
     f32 sinAngle;
@@ -4175,37 +4175,37 @@ void func_80016500(Object *obj, Object_Racer *racer) {
     racer->lateral_velocity = (obj->segment.x_velocity * cosAngle) + (obj->segment.z_velocity * sinAngle);
     racer->velocity = (-obj->segment.x_velocity * sinAngle) + (obj->segment.z_velocity * cosAngle);
     if (racer->playerIndex != PLAYER_COMPUTER) {
-        angle = (startVelocity - racer->velocity) * 14.0f;
-        if (angle < 0) {
-            angle = -angle;
+        volume = (startVelocity - racer->velocity) * 14.0f;
+        if (volume < 0) {
+            volume = -volume;
         }
-        angle += 35;
-        if (angle >= 128) {
-            angle = 127;
+        volume += 35;
+        if (volume > 127) {
+            volume = 127;
         }
         if (racer->unk1F6 == 0) {
             sound_play(SOUND_CRASH_CHARACTER, &racer->unk220);
-            sound_volume_set_relative(SOUND_CRASH_CHARACTER, racer->unk220, angle);
+            sound_volume_set_relative(SOUND_CRASH_CHARACTER, racer->unk220, volume);
         }
-        if (racer->unk1F6 == 0 && angle >= 56) {
+        if (racer->unk1F6 == 0 && volume > 55) {
             if (!racer->raceFinished) {
                 rumble_set(racer->playerIndex, RUMBLE_TYPE_18);
             }
             racer->unk1F3 |= 8;
         }
-        if (angle >= 56) {
+        if (volume > 55) {
             play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 1);
         }
-        sp3C = (startVelocity - racer->velocity);
-        if (sp3C < 0) {
-            sp3C = -sp3C;
+        shakeMagnitude = (startVelocity - racer->velocity);
+        if (shakeMagnitude < 0) {
+            shakeMagnitude = -shakeMagnitude;
         }
-        if (sp3C >= 4) {
-            sp3C = 3;
+        if (shakeMagnitude > 3) {
+            shakeMagnitude = 3;
         }
         racer->unk1F6 = 30;
         set_active_camera(racer->playerIndex);
-        get_active_camera_segment()->object.distanceToCamera = sp3C;
+        cam_get_active_camera()->shakeMagnitude = shakeMagnitude;
     }
 }
 
@@ -4241,12 +4241,12 @@ void func_80016748(Object *obj0, Object *obj1) {
         if (!((objModel->unk3C + 50.0) < sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)))) {
             obj0Interact = obj0->interactObj;
             obj1Interact = obj1->interactObj;
-            object_transform_to_matrix((float(*)[4]) obj1TransformMtx, &obj1->segment.trans);
+            object_transform_to_matrix((float (*)[4]) obj1TransformMtx, &obj1->segment.trans);
             for (i = 0; i < objModel->unk20; i += 2) {
                 xDiff = obj1->curVertData[objModel->unk1C[i]].x;
                 yDiff = obj1->curVertData[objModel->unk1C[i]].y;
                 zDiff = obj1->curVertData[objModel->unk1C[i]].z;
-                guMtxXFMF((float(*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                guMtxXFMF((float (*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
                 temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->segment.trans.scale) * 50.0;
                 xDiff -= obj0->segment.trans.x_position;
                 yDiff -= obj0->segment.trans.y_position;
@@ -4413,7 +4413,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = -obj->segment.trans.x_position;
     sp78.y_position = -obj->segment.trans.y_position;
     sp78.z_position = -obj->segment.trans.z_position;
-    object_transform_to_matrix_2((float(*)[4]) sp6C, (ObjectTransform *) &sp78);
+    object_inverse_transform_to_matrix((float (*)[4]) sp6C, (ObjectTransform *) &sp78);
     inverseScale = 1.0 / obj->segment.trans.scale;
     i = 0;
     while (i < 16) {
@@ -4663,7 +4663,7 @@ void race_transition_adventure(s32 updateRate) {
         sndp_stop_all_looped();
         if (is_in_two_player_adventure()) {
             set_scene_viewport_num(0);
-            set_active_viewports_and_max(0);
+            cam_set_layout(VIEWPORT_LAYOUT_1_PLAYER);
             prevRacer0Obj = (*gRacers)[0];
             prevPort0Racer = gRacersByPort[0];
             racer = &prevRacer0Obj->unk64->racer;
@@ -6199,9 +6199,9 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
         if (newObj->segment.header->behaviorId == BHV_CAMERA_ANIMATION) {
             camera = &newObj->unk64->anim_camera;
             camera->unk44 = D_8011AD3E;
-            viewportCount = get_viewport_count();
+            viewportCount = cam_get_viewport_layout();
             if (is_two_player_adventure_race()) {
-                viewportCount = VIEWPORTS_COUNT_2_PLAYERS;
+                viewportCount = VIEWPORT_LAYOUT_2_PLAYERS;
             }
             for (i = 0; i < viewportCount;) {
                 newObj = spawn_object(&newObjEntry, 1);
@@ -6262,7 +6262,7 @@ s32 func_800210CC(s8 arg0) {
 }
 
 void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry) {
-    ObjectSegment *seg;
+    Camera *camera;
     ObjectTransform *animObjTrans;
 
     animObjTrans = (ObjectTransform *) animObj->unk1C;
@@ -6272,16 +6272,16 @@ void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Anim
     }
     if (entry->unk22 == 18) {
         set_active_camera(animObj->cameraID);
-        seg = get_active_camera_segment_no_cutscenes();
-        animObjTrans->x_position = seg->trans.x_position;
-        animObjTrans->y_position = seg->trans.y_position;
-        animObjTrans->z_position = seg->trans.z_position;
-        animObjTrans->rotation.y_rotation = (0x8000 - seg->trans.rotation.y_rotation);
-        animObjTrans->rotation.x_rotation = -seg->trans.rotation.x_rotation;
-        animObjTrans->rotation.z_rotation = seg->trans.rotation.z_rotation;
+        camera = cam_get_active_camera_no_cutscenes();
+        animObjTrans->x_position = camera->trans.x_position;
+        animObjTrans->y_position = camera->trans.y_position;
+        animObjTrans->z_position = camera->trans.z_position;
+        animObjTrans->rotation.y_rotation = (0x8000 - camera->trans.rotation.y_rotation);
+        animObjTrans->rotation.x_rotation = -camera->trans.rotation.x_rotation;
+        animObjTrans->rotation.z_rotation = camera->trans.rotation.z_rotation;
     }
     if ((entry->unk22 >= 10) && (entry->unk22 < 18)) {
-        seg = &(*gRacers)[entry->unk22 - 10]->segment;
+        ObjectSegment *seg = &(*gRacers)[entry->unk22 - 10]->segment;
         if (seg != NULL) {
             animObjTrans->x_position = seg->trans.x_position;
             animObjTrans->y_position = seg->trans.y_position;
@@ -6664,7 +6664,7 @@ void mode_end_taj_race(s32 reason) {
 
 CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
     CheckpointNode *lastCheckpointNode;
-    ObjectSegment *activeCameraSegment;
+    Camera *activeCameraSegment;
     s32 yOutCount;
     f32 yOut[9];
     Object *ptrList;
@@ -6733,7 +6733,7 @@ CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
     racer->vehicleID = racer->vehicleIDPrev;
     if (racer->playerIndex != -1) {
         set_active_camera(racer->playerIndex);
-        activeCameraSegment = get_active_camera_segment_no_cutscenes();
+        activeCameraSegment = cam_get_active_camera_no_cutscenes();
         activeCameraSegment->trans.x_position = obj->segment.trans.x_position;
         activeCameraSegment->trans.y_position = obj->segment.trans.y_position;
         activeCameraSegment->trans.z_position = obj->segment.trans.z_position;

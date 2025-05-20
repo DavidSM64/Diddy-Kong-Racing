@@ -319,8 +319,8 @@ void hud_init(UNUSED s32 viewportCount) {
     s32 i;
     s32 playerCount;
 
-    gHUDNumPlayers = get_viewport_count();
-    gNumActivePlayers = set_active_viewports_and_max(gHUDNumPlayers);
+    gHUDNumPlayers = cam_get_viewport_layout();
+    gNumActivePlayers = cam_set_layout(gHUDNumPlayers);
     gHudSettings = get_settings();
     gHudSilverCoinRace = check_if_silver_coin_race();
     gAssetHudElementIds = (s16 *) load_asset_section_from_rom(ASSET_HUD_ELEMENT_IDS);
@@ -839,7 +839,7 @@ void hud_render_player(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *
                     sprite_anim_off(TRUE);
                     if (is_in_time_trial()) {
                         hud_time_trial_finish(racer, updateRate);
-                    } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->finishPosition == 1) {
+                    } else if (cam_get_viewport_layout() == VIEWPORT_LAYOUT_1_PLAYER && racer->finishPosition == 1) {
                         if (is_in_two_player_adventure()) {
                             if (get_current_level_race_type() == RACETYPE_BOSS) {
                                 goto showFinishRace;
@@ -1437,7 +1437,7 @@ void hud_main_hub(Object *obj, s32 updateRate) {
     Object_Racer *racer;
     HudElement *portrait;
 
-    if (get_viewport_count() == PLAYER_ONE) {
+    if (cam_get_viewport_layout() == PLAYER_ONE) {
         racer = (Object_Racer *) obj->unk64;
         sprite_anim_off(TRUE);
         hud_balloons(racer);
@@ -1936,7 +1936,7 @@ void hud_race_start(s32 countdown, s32 updateRate) {
             if (gCurrentHud->entry[HUD_RACE_START_GO].raceStartGo.musicStartTimer[gHudCurrentViewport] >= 60) {
                 if (gRaceStartShowHudStep == 4) {
                     // Mute background music in 3/4 player.
-                    if (get_viewport_count() > TWO_PLAYERS) {
+                    if (cam_get_viewport_layout() > TWO_PLAYERS) {
                         music_play(SEQUENCE_NONE);
                     } else {
                         start_level_music(1.0f);
@@ -1998,9 +1998,9 @@ void hud_bananas(Object_Racer *racer, s32 updateRate) {
         }
         if (prevSprite == 0) {
             sprite_opaque(TRUE);
-            set_viewport_tv_type(OS_TV_TYPE_NTSC);
+            enable_pal_viewport_height_adjust(TRUE);
             hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_ICON_STATIC]);
-            set_viewport_tv_type(OS_TV_TYPE_PAL);
+            enable_pal_viewport_height_adjust(FALSE);
             sprite_opaque(FALSE);
             gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset = prevSprite;
             if (gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].bananaCountSparkle.sparkleCounter) {
@@ -2014,18 +2014,18 @@ void hud_bananas(Object_Racer *racer, s32 updateRate) {
                         gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE].spriteOffset++;
                     }
                 }
-                set_viewport_tv_type(OS_TV_TYPE_NTSC);
+                enable_pal_viewport_height_adjust(TRUE);
                 hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_SPARKLE]);
-                set_viewport_tv_type(OS_TV_TYPE_PAL);
+                enable_pal_viewport_height_adjust(FALSE);
             }
         } else {
             gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset = prevSprite + 128;
             sprite_anim_off(FALSE);
             sprite_opaque(TRUE);
-            set_viewport_tv_type(OS_TV_TYPE_NTSC);
+            enable_pal_viewport_height_adjust(TRUE);
             hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN]);
             sprite_opaque(FALSE);
-            set_viewport_tv_type(OS_TV_TYPE_PAL);
+            enable_pal_viewport_height_adjust(FALSE);
             sprite_anim_off(TRUE);
             gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].spriteOffset -= 128;
         }
@@ -2984,13 +2984,13 @@ void hud_balloons(UNUSED Object_Racer *racer) {
         gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_1].spriteOffset = balloonCount % 10;
     }
     hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_1]);
-    set_viewport_tv_type(OS_TV_TYPE_NTSC);
+    enable_pal_viewport_height_adjust(TRUE);
     if (osTvType == OS_TV_TYPE_PAL) {
         sprite_opaque(TRUE);
     }
     hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BALLOON_COUNT_ICON]);
     sprite_opaque(FALSE);
-    set_viewport_tv_type(OS_TV_TYPE_PAL);
+    enable_pal_viewport_height_adjust(FALSE);
     hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_BALLOON_COUNT_X]);
 }
 
@@ -3034,7 +3034,7 @@ void hud_weapon(Object *obj, s32 updateRate) {
 
     racer = (Object_Racer *) obj->unk64;
     if (racer->raceFinished == FALSE) {
-        set_viewport_tv_type(OS_TV_TYPE_NTSC);
+        enable_pal_viewport_height_adjust(TRUE);
         temp_a0 = (racer->balloon_type * 3) + (racer->balloon_level);
         if (gCurrentHud->entry[HUD_WEAPON_DISPLAY].weaponDisplay.prevLevel != racer->balloon_level) {
             if (racer->balloon_level == 0) {
@@ -3109,7 +3109,7 @@ void hud_weapon(Object *obj, s32 updateRate) {
             }
         }
         gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
-        set_viewport_tv_type(OS_TV_TYPE_PAL);
+        enable_pal_viewport_height_adjust(FALSE);
     }
 }
 
@@ -3347,7 +3347,7 @@ void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate
     s32 sp144;
     s32 racerCount;
     UNUSED s32 pad2;
-    ObjectSegment *someObjSeg;
+    Camera *someObjSeg;
     Object **racerGroup;
     s32 spBC;
     s32 temp_s0_2;
@@ -3606,7 +3606,7 @@ void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate
     if (lvlMdl == NULL) {
         return;
     }
-    someObjSeg = get_active_camera_segment();
+    someObjSeg = cam_get_active_camera();
     sprite_anim_off(TRUE);
     minimap = (Sprite *) lvlMdl->minimapSpriteIndex;
     switch (gHUDNumPlayers) {
@@ -3815,7 +3815,7 @@ void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement
     TextureHeader **textureHeader3;
     TextureHeader *textureHeader2;
     TextureHeader *textureHeader;
-    ObjectSegment *objSegment;
+    Camera *camera;
     LevelObjectEntry_Hud objEntry;
     UNUSED s32 pad1;
     Object *tempObject;
@@ -3954,11 +3954,11 @@ void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement
             rendermode_reset(&gHudDL);
         }
     } else if (gAssetHudElementIds[spriteID] & ASSET_MASK_SPRITE) {
-        objSegment = get_active_camera_segment();
+        camera = cam_get_active_camera();
         sprite = gAssetHudElements->entry[hud->spriteID];
-        hud->rotation.z -= objSegment->trans.rotation.z;
+        hud->rotation.z -= camera->trans.rotation.z;
         render_ortho_triangle_image(&gHudDL, &gHudMtx, &gHudVtx, (ObjectSegment *) hud, sprite, 0);
-        hud->rotation.z += objSegment->trans.rotation.z;
+        hud->rotation.z += camera->trans.rotation.z;
     } else if (gAssetHudElementIds[spriteID] & ASSET_MASK_OBJECT) {
         tempObject = gAssetHudElements->entry[spriteID];
         tempObject->segment.trans.rotation.x = hud->rotation.x;
@@ -3972,7 +3972,7 @@ void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement
         tempObject->segment.object.opacity = 0xFF;
         render_object(&gHudDL, &gHudMtx, &gHudVtx, tempObject);
     } else {
-        camera_push_model_mtx(&gHudDL, &gHudMtx, (ObjectTransform *) hud, 1.0f, 0.0f);
+        cam_push_model_mtx(&gHudDL, &gHudMtx, (ObjectTransform *) hud, 1.0f, 0.0f);
         if (0) {}
         textureHeader3 = gAssetHudElements->entry[hud->spriteID];
         hud_draw_model((ObjectModel *) *textureHeader3);

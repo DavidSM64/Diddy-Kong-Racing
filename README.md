@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of May 18, 2025, this is our current score:
+As of May 19, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 87.92%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 88.06%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 56.98%
 <!-- README_SCORE_SUMMARY_END -->
@@ -117,14 +117,14 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of May 18, 2025, this is our current score:
+As of May 19, 2025, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- --------------- 87.92% Complete (89.02% NON_MATCHING) ---------------
-                     # Decompiled functions: 1897
-                      # GLOBAL_ASM remaining: 54
-                      # NON_MATCHING functions: 6
+ --------------- 88.06% Complete (89.02% NON_MATCHING) ---------------
+                     # Decompiled functions: 1898
+                      # GLOBAL_ASM remaining: 53
+                      # NON_MATCHING functions: 5
                   # NON_EQUIVALENT WIP functions: 16
  ---------------------------- Game Status ----------------------------
                Balloons: 41/47, Keys: 4/4, Trophies: 4/5

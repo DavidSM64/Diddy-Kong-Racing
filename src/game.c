@@ -585,7 +585,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
             (PulsatingLightData *) get_misc_asset((s32) gCurrentLevelHeader->pulseLightData);
         init_pulsating_light_data(gCurrentLevelHeader->pulseLightData);
     }
-    update_camera_fov(gCurrentLevelHeader->cameraFOV);
+    cam_set_fov(gCurrentLevelHeader->cameraFOV);
     bgdraw_primcolour(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen,
                       gCurrentLevelHeader->bgColorBlue);
     video_delta_reset();
