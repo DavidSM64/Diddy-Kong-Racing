@@ -2791,7 +2791,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
 void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles,
                        TextureHeader *tex, u32 flags, u32 texOffset, f32 scaleY) {
     s32 hasTexture = FALSE;
-    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, scaleY, 0.0f);
+    cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, scaleY, 0.0f);
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     if (tex != NULL) {
@@ -3033,7 +3033,7 @@ void render_3d_model(Object *obj) {
             func_80011134(obj, objModel->unk52);
             obj68->objModel->unk52 = 0;
         }
-        camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
+        cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
         spB0 = FALSE;
         if (racerObj != NULL) {
             object_undo_player_tumble(obj);
@@ -3492,7 +3492,7 @@ void func_800135B8(Object *boostObj) {
     asset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     asset = &asset[D_8011B058[idx]];
     object_do_player_tumble((Object *) boostObj->properties.common.unk0);
-    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
+    cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
                           (ObjectTransform *) boostObj->properties.common.unk0, 1.0f, 0.0f);
     object_undo_player_tumble((Object *) boostObj->properties.common.unk0);
     objTransform.trans.x_position = boostData->position.x;
@@ -4663,7 +4663,7 @@ void race_transition_adventure(s32 updateRate) {
         sndp_stop_all_looped();
         if (is_in_two_player_adventure()) {
             set_scene_viewport_num(0);
-            set_active_viewports_and_max(VIEWPORT_LAYOUT_1_PLAYER);
+            cam_set_layout(VIEWPORT_LAYOUT_1_PLAYER);
             prevRacer0Obj = (*gRacers)[0];
             prevPort0Racer = gRacersByPort[0];
             racer = &prevRacer0Obj->unk64->racer;

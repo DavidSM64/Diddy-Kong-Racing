@@ -13368,7 +13368,7 @@ void menu_camera_centre(void) {
     f32 posY;
     f32 posZ;
 
-    set_active_viewports_and_max(VIEWPORT_LAYOUT_1_PLAYER);
+    cam_set_layout(VIEWPORT_LAYOUT_1_PLAYER);
     set_active_camera(0);
 
     cam = cam_get_active_camera();
@@ -13858,7 +13858,7 @@ void menu_element_render(s32 elementID) {
                         gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                     };
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
-                    camera_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat,
+                    cam_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat,
                                           (ObjectTransform *) (&gMenuImages[elementID]),
                                           gTrackSelectWoodFrameHeightScale, 0);
                     model = ((ObjectModel **) gMenuAssets[gMenuImages[elementID].spriteID]);

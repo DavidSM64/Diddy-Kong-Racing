@@ -94,7 +94,7 @@ typedef struct ScreenViewport {
 } ScreenViewport;
 
 void cam_set_zoom(s32 cameraID, s32 zoomLevel);
-void set_viewport_tv_type(s8 setting);
+void enable_pal_viewport_height_adjust(s8 setting);
 void func_800660C0(void);
 void func_800660D0(void);
 UNUSED f32 cam_get_fov(void);
@@ -108,7 +108,7 @@ void camera_reset(s32 xPos, s32 yPos, s32 zPos, s32 angleZ, s32 angleX, s32 angl
 void write_to_object_render_stack(s32 stackPos, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
 void disable_cutscene_camera(void);
 s8 check_if_showing_cutscene_camera(void);
-s32 set_active_viewports_and_max(s32 num);
+s32 cam_set_layout(s32 layoutID);
 void set_active_camera(s32 num);
 void camEnableUserView(s32 viewPortIndex, s32 arg1);
 void camDisableUserView(s32 viewPortIndex, s32 arg1);
@@ -137,7 +137,7 @@ void set_camera_shake(f32 magnitude);
 void func_80067D3C(Gfx **dList, MatrixS **mats);
 void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags);
 s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, Sprite *arg4, s32 flags);
-s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY);
+s32 cam_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY);
 void viewport_scissor(Gfx **dList);
 void apply_matrix_from_stack(Gfx **dList);
 void copy_viewports_to_stack(void);

@@ -634,7 +634,7 @@ void lensflare_init(Object *obj) {
  * Based on face direction, start rendering lens flare effects on screen.
  * Each element is shifted based on the preset to create the effect of the sun shining in your face.
  */
-void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, Camera *segment) {
+void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, Camera *camera) {
     u16 height;
     f32 mag2;
     UNUSED s32 pad;
@@ -660,9 +660,9 @@ void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, Camera *segme
             if (magnitude > 0.0f) {
                 viewport_main(dList, mats);
                 matrix_world_origin(dList, mats);
-                pos[0].x = (gLensFlarePos.x * 256.0f) + segment->trans.x_position;
-                pos[0].y = (gLensFlarePos.y * 256.0f) + segment->trans.y_position;
-                pos[0].z = (gLensFlarePos.z * 256.0f) + segment->trans.z_position;
+                pos[0].x = (gLensFlarePos.x * 256.0f) + camera->trans.x_position;
+                pos[0].y = (gLensFlarePos.y * 256.0f) + camera->trans.y_position;
+                pos[0].z = (gLensFlarePos.z * 256.0f) + camera->trans.z_position;
                 magSquared = magnitude * magnitude;
                 magSquareSquared = magSquared * magSquared;
                 trans.rotation.y_rotation = 0;

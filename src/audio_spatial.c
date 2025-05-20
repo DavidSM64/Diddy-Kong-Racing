@@ -158,7 +158,7 @@ void audspat_reset(void) {
  * Official Name: amPlayAudioMap
  */
 void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
-    s32 viewportCount;
+    s32 viewportLayout;
     s32 i;
     s32 j;
     s32 k;
@@ -192,8 +192,8 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
     f32 pitch3;
 
     jingleVolume = 0;
-    viewportCount = cam_get_viewport_layout();
-    numCameras = set_active_viewports_and_max(viewportCount);
+    viewportLayout = cam_get_viewport_layout();
+    numCameras = cam_set_layout(viewportLayout);
     cameras = get_cutscene_camera_segment();
 
     // Update audio points

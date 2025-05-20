@@ -164,7 +164,7 @@ void cam_set_zoom(s32 cameraID, s32 zoomLevel) {
  * Set gAdjustViewportHeight to PAL mode if necessary, if setting is 1.
  * Otherwise, set it to 0, regardless of TV type.
  */
-void set_viewport_tv_type(s8 setting) {
+void enable_pal_viewport_height_adjust(s8 setting) {
     if (osTvType == OS_TV_TYPE_PAL) {
         gAdjustViewportHeight = setting;
     }
@@ -244,7 +244,7 @@ void camera_init_tracks_menu(Gfx **dList, MatrixS **mtxS) {
     f32 posY;
     f32 posZ;
 
-    set_active_viewports_and_max(VIEWPORT_LAYOUT_1_PLAYER);
+    cam_set_layout(VIEWPORT_LAYOUT_1_PLAYER);
     set_active_camera(0);
     cam = cam_get_active_camera();
     angleY = cam->trans.rotation.y_rotation;
@@ -345,11 +345,10 @@ void disable_cutscene_camera(void) {
 }
 
 /**
- * Sets the cap for the viewports. Usually reflecting how many there are.
- * If the number passed is within 1-4, then the stack cap is set to
- * how many active viewports there are.
+ * Sets the current layout and returns the number of active cameras for that layout.
+ * The layoutID argument must be from the ViewportCount enumeration.
  */
-s32 set_active_viewports_and_max(s32 layoutID) {
+s32 cam_set_layout(s32 layoutID) {
     if (layoutID >= VIEWPORT_LAYOUT_1_PLAYER && layoutID <= VIEWPORT_LAYOUT_4_PLAYERS) {
         gViewportLayout = layoutID;
     } else {
@@ -1322,7 +1321,7 @@ void apply_object_shear_matrix(Gfx **dList, MatrixS **mtx, Object *arg2, Object 
 /**
  * Official Name: camPushModelMtx
  */
-s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY) {
+s32 cam_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY) {
     f32 tempX;
     f32 tempY;
     f32 tempZ;

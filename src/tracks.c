@@ -240,7 +240,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
         func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, i);
     }
 
-    set_active_viewports_and_max(numberOfPlayers);
+    cam_set_layout(numberOfPlayers);
     spawn_skydome(skybox);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
@@ -256,7 +256,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     } else {
         transition_begin(&gFullFadeToBlack);
     }
-    set_active_viewports_and_max(gScenePlayerViewports);
+    cam_set_layout(gScenePlayerViewports);
 
     numberOfPlayers = gScenePlayerViewports;
     gAntiAliasing = FALSE;
@@ -304,7 +304,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
     gDisableShadows = FALSE;
     D_8011B0C0 = 0;
     gIsNearCurrBBox = FALSE;
-    numViewports = set_active_viewports_and_max(gScenePlayerViewports);
+    numViewports = cam_set_layout(gScenePlayerViewports);
     if (is_game_paused()) {
         tempUpdateRate = 0;
     } else {
@@ -1192,7 +1192,7 @@ void func_800278E8(s32 updateRate) {
     f32 yDelta;
     f32 zDelta;
     f32 xzSqr;
-    Camera *segment;
+    Camera *camera;
     Object *thisObject;
     Object **racerGroup;
     Object *lastObject;
@@ -1203,7 +1203,7 @@ void func_800278E8(s32 updateRate) {
     s32 numRacers;
     s32 i;
     s32 cameraId;
-    Object *camera;
+    Object *camObj;
 
     racerGroup = get_racer_objects(&numRacers);
     lastRacer = NULL;
@@ -1235,46 +1235,46 @@ void func_800278E8(s32 updateRate) {
         currentRacer = racerFirstPlace;
         thisObject = objectFirstPlace;
     }
-    camera = spectate_object(currentRacer->cameraIndex);
+    camObj = spectate_object(currentRacer->cameraIndex);
     if (D_8011B104 != currentRacer->cameraIndex) {
         D_8011B108 = 0;
     } else if (D_8011B100 != currentRacer->playerIndex) {
         D_8011B108 = 180;
         D_8011B100 = currentRacer->playerIndex;
     }
-    if (camera != NULL) {
-        segment = cam_get_active_camera_no_cutscenes();
-        segment->trans.x_position = camera->segment.trans.x_position;
-        segment->trans.y_position = camera->segment.trans.y_position;
-        segment->trans.z_position = camera->segment.trans.z_position;
-        xDelta = segment->trans.x_position - thisObject->segment.trans.x_position;
-        yDelta = segment->trans.y_position - thisObject->segment.trans.y_position;
-        zDelta = segment->trans.z_position - thisObject->segment.trans.z_position;
+    if (camObj != NULL) {
+        camera = cam_get_active_camera_no_cutscenes();
+        camera->trans.x_position = camObj->segment.trans.x_position;
+        camera->trans.y_position = camObj->segment.trans.y_position;
+        camera->trans.z_position = camObj->segment.trans.z_position;
+        xDelta = camera->trans.x_position - thisObject->segment.trans.x_position;
+        yDelta = camera->trans.y_position - thisObject->segment.trans.y_position;
+        zDelta = camera->trans.z_position - thisObject->segment.trans.z_position;
         xzSqr = sqrtf((xDelta * xDelta) + (zDelta * zDelta));
         if (D_8011B108 != 0) {
-            angleDiff = ((s32) (-atan2s(xDelta, zDelta) - segment->trans.rotation.y_rotation) + 0x8000);
+            angleDiff = ((s32) (-atan2s(xDelta, zDelta) - camera->trans.rotation.y_rotation) + 0x8000);
             //!@bug Never true, since angleDiff is signed. Should be >=.
             if (angleDiff > 0x8000) {
                 angleDiff = -(0xFFFF - angleDiff);
             }
-            segment->trans.rotation.y_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
-            angleDiff = atan2s(yDelta, xzSqr) - segment->trans.rotation.x_rotation;
+            camera->trans.rotation.y_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
+            angleDiff = atan2s(yDelta, xzSqr) - camera->trans.rotation.x_rotation;
             //!@bug Never true, since angleDiff is signed. Should be >=.
             if (angleDiff > 0x8000) {
                 angleDiff = -(0xFFFF - angleDiff);
             }
-            segment->trans.rotation.x_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
+            camera->trans.rotation.x_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
             D_8011B108 -= updateRate;
             if (D_8011B108 < 0) {
                 D_8011B108 = 0;
             }
         } else {
-            segment->trans.rotation.y_rotation = 0x8000 - atan2s(xDelta, zDelta);
-            segment->trans.rotation.x_rotation = atan2s(yDelta, xzSqr);
+            camera->trans.rotation.y_rotation = 0x8000 - atan2s(xDelta, zDelta);
+            camera->trans.rotation.x_rotation = atan2s(yDelta, xzSqr);
         }
-        segment->trans.rotation.z_rotation = 0;
-        segment->cameraSegmentID = get_level_segment_index_from_position(segment->trans.x_position, currentRacer->oy1,
-                                                                         segment->trans.z_position);
+        camera->trans.rotation.z_rotation = 0;
+        camera->cameraSegmentID = get_level_segment_index_from_position(camera->trans.x_position, currentRacer->oy1,
+                                                                         camera->trans.z_position);
         D_8011B104 = currentRacer->cameraIndex;
     }
 }
@@ -1366,7 +1366,7 @@ void func_80028050(void) {
     f32 xCos;
     f32 xSin; // sp10C
     f32 pad_sp108;
-    Camera *objSegment;
+    Camera *camera;
     f32 pad_sp100;
     f32 xPositions[9]; // spDC
     f32 zPositions[9]; // spB8
@@ -1391,12 +1391,12 @@ void func_80028050(void) {
     verts = gSceneCurrVertexList;
     tris = gSceneCurrTriList;
 
-    objSegment = cam_get_active_camera();
+    camera = cam_get_active_camera();
     texHeader = gCurrentLevelHeader2->unkA4;
     uCoordMask = (texHeader->width << 5) - 1;
     vCoordMask = (texHeader->height << 5) - 1;
-    xSin = sins_f(-objSegment->trans.rotation.x);
-    xCos = coss_f(-objSegment->trans.rotation.x);
+    xSin = sins_f(-camera->trans.rotation.x);
+    xCos = coss_f(-camera->trans.rotation.x);
 
     scaledXSin = xSin * 1280.0f;
     scaledXCos = xCos * 1280.0f;
@@ -1427,9 +1427,9 @@ void func_80028050(void) {
     var_a2 = texHeader->height * 16 * gCurrentLevelHeader2->unkA1;
 
     var_v0 =
-        ((s32) (objSegment->trans.x_position * (var_f14 / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) & uCoordMask;
+        ((s32) (camera->trans.x_position * (var_f14 / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) & uCoordMask;
     var_v1 =
-        ((s32) (objSegment->trans.z_position * (var_f14 / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) & vCoordMask;
+        ((s32) (camera->trans.z_position * (var_f14 / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) & vCoordMask;
 
     var_f14 = var_a1 * xCos;
     pos.z = var_a1 * xCos;
@@ -1494,11 +1494,11 @@ void func_80028050(void) {
     }
     rendermode_reset(&gSceneCurrDisplayList);
 
-    vertY = objSegment->trans.y_position + 192.0f;
+    vertY = camera->trans.y_position + 192.0f;
     for (i = 0; i < 9; i++) {
-        verts->x = xPositions[i] + objSegment->trans.x_position;
+        verts->x = xPositions[i] + camera->trans.x_position;
         verts->y = vertY;
-        verts->z = zPositions[i] + objSegment->trans.z_position;
+        verts->z = zPositions[i] + camera->trans.z_position;
         verts->r = 0xFF;
         verts->g = 0xFF;
         verts->b = 0xFF;

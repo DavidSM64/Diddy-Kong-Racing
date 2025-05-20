@@ -1004,7 +1004,7 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 viewportID) {
                 for (sp11C = 0; sp11C < 2; sp11C++) {
                     spE4.x_position = spE0->unk4;
                     for (var_fp = 0; var_fp < 2; var_fp++) {
-                        camera_push_model_mtx(&gWaveDL, &D_80129FC4, &spE4, 1.0f, 0.0f);
+                        cam_push_model_mtx(&gWaveDL, &D_80129FC4, &spE4, 1.0f, 0.0f);
                         if (sp104 & 0xFF) {
                             numTris = D_80129FC8.unk0 << 1;
                             numVerts = D_80129FC8.unk0 + 1;
@@ -1030,7 +1030,7 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 viewportID) {
                     spE4.z_position += D_8012A0A4 * 0.5f;
                 }
             } else {
-                camera_push_model_mtx(&gWaveDL, &D_80129FC4, &spE4, 1.0f, 0.0f);
+                cam_push_model_mtx(&gWaveDL, &D_80129FC4, &spE4, 1.0f, 0.0f);
                 numTris = D_80129FC8.unk0 << 1;
                 numVerts = D_80129FC8.unk0 + 1;
                 var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
