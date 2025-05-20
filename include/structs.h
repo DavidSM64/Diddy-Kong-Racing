@@ -1660,6 +1660,7 @@ typedef struct Object_CharacterSelect {
 
 typedef struct Object_64 {
     union {
+        struct Object *obj;
         Object_Laser laser;
         Object_TrophyCabinet trophy_cabinet;
         Object_Animator animator;

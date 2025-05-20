@@ -1788,7 +1788,7 @@ void obj_loop_animator(Object *obj, s32 updateRate) {
 }
 
 void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2) {
-    Object_Animation *obj64;
+    Object *obj64;
     s8 tempOrderIndex;
     f32 scalef;
 
@@ -1839,11 +1839,11 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
         (entry->objectIdToSpawn != -1)) {
         func_8001F23C(obj, entry);
     }
-    obj64 = &obj->unk64->animation;
-    if (obj->unk64 != 0) {
-        obj_init_animcamera(obj, (Object *) obj64);
-        if (entry->order != 0 || obj64->unk4A != entry->objectIdToSpawn) {
-            free_object((Object *) obj64);
+    obj64 = (Object *) &obj->unk64->obj;
+    if (obj->unk64 != NULL) {
+        obj_init_animcamera(obj, obj64);
+        if (entry->order != 0 || obj64->objectID != entry->objectIdToSpawn) {
+            free_object(obj64);
             obj->unk64 = NULL;
         }
     }
