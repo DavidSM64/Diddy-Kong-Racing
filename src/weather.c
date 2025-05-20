@@ -135,7 +135,7 @@ Gfx *gCurrWeatherDisplayList;
 MatrixS *gCurrWeatherMatrix;
 Vertex *gCurrWeatherVertexList;
 Triangle *gCurrWeatherTriList;
-ObjectSegment *gWeatherCamera;
+Camera *gWeatherCamera;
 Matrix *gWeatherCameraMatrix;
 LensFlareData *gLensFlareSet1;
 LensFlareData *gLensFlareSet2;
@@ -402,7 +402,7 @@ void weather_update(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHu
     gCurrWeatherMatrix = *currHudMat;
     gCurrWeatherVertexList = *currHudVerts;
     gCurrWeatherTriList = *currHudTris;
-    gWeatherCamera = get_active_camera_segment();
+    gWeatherCamera = cam_get_active_camera();
     gWeatherCameraMatrix = get_camera_matrix();
     if (gWeatherType != WEATHER_SNOW) {
         rain_update(updateRate);
@@ -525,8 +525,8 @@ void snow_render(void) {
         if (gSnowVertCount >= 4) {
             i = 0;
             mtx = (u32) get_projection_matrix_s16();
-            gSPMatrix(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
-            gDkrInsertMatrix(gCurrWeatherDisplayList++, G_MTX_DKR_INDEX_0, 0);
+            gSPMatrixDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
+            gSPSelectMatrixDKR(gCurrWeatherDisplayList++, G_MTX_DKR_INDEX_0);
             material_set_no_tex_offset(&gCurrWeatherDisplayList, gSnowGfx.texture, RENDER_Z_COMPARE);
             while (i + gSnowVertOffset < gSnowVertCount) {
                 vtx = (u32) &gSnowVerts[i];
@@ -634,7 +634,7 @@ void lensflare_init(Object *obj) {
  * Based on face direction, start rendering lens flare effects on screen.
  * Each element is shifted based on the preset to create the effect of the sun shining in your face.
  */
-void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment *segment) {
+void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, Camera *camera) {
     u16 height;
     f32 mag2;
     UNUSED s32 pad;
@@ -650,7 +650,7 @@ void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment
     s32 i;
 
     if (gLensFlare != NULL && gLensFlareOff == 0) {
-        if (get_viewport_count() == 0) {
+        if (cam_get_viewport_layout() == 0) {
             lensFlareEntry = &gLensFlare->segment.level_entry->lensFlare;
             pos[1].x = 0.0f;
             pos[1].y = 0.0f;
@@ -660,9 +660,9 @@ void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, ObjectSegment
             if (magnitude > 0.0f) {
                 viewport_main(dList, mats);
                 matrix_world_origin(dList, mats);
-                pos[0].x = (gLensFlarePos.x * 256.0f) + segment->trans.x_position;
-                pos[0].y = (gLensFlarePos.y * 256.0f) + segment->trans.y_position;
-                pos[0].z = (gLensFlarePos.z * 256.0f) + segment->trans.z_position;
+                pos[0].x = (gLensFlarePos.x * 256.0f) + camera->trans.x_position;
+                pos[0].y = (gLensFlarePos.y * 256.0f) + camera->trans.y_position;
+                pos[0].z = (gLensFlarePos.z * 256.0f) + camera->trans.z_position;
                 magSquared = magnitude * magnitude;
                 magSquareSquared = magSquared * magSquared;
                 trans.rotation.y_rotation = 0;
@@ -766,7 +766,7 @@ void lensflare_override_remove(Object *obj) {
  * Check if the camera is inside the radius of a lens flare override.
  * If so, disable the lens flare effect while it remains inside.
  */
-void lensflare_override(ObjectSegment *cameraSegment) {
+void lensflare_override(Camera *cameraSegment) {
     LevelObjectEntry_LensFlareSwitch *lensFlare;
     f32 xDiff;
     f32 zDiff;
@@ -806,7 +806,7 @@ void rain_init(s32 intensity, s32 opacity) {
     gRainVertexFlip = 0;
     gRainGfx[0].tex = load_texture(gWeatherAssetTable[1]);
     gRainGfx[1].tex = load_texture(gWeatherAssetTable[1]);
-    gRainSplashGfx = (Sprite *) func_8007C12C(gWeatherAssetTable[3], 0);
+    gRainSplashGfx = (Sprite *) tex_load_sprite(gWeatherAssetTable[3], 0);
     gWeatherType = WEATHER_RAIN;
 }
 
@@ -856,7 +856,7 @@ void rain_set(s32 lightningFrequency, s32 opacity, f32 time) {
  */
 void rain_fog(void) {
     s32 a, b;
-    if (gWeatherType != WEATHER_SNOW && get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER) {
+    if (gWeatherType != WEATHER_SNOW && cam_get_viewport_layout() == VIEWPORT_LAYOUT_1_PLAYER) {
         a = ((gLightningFrequency * -38) >> 16) + 1018;
         b = ((gLightningFrequency * -20) >> 16) + 1023;
         set_fog(0, a, b, 28, 15, 36);
@@ -877,7 +877,7 @@ UNUSED void rain_opacity_set(s32 opacity) {
 void rain_update(s32 updateRate) {
     s32 i;
 
-    if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && gWeatherType != WEATHER_SNOW) {
+    if (cam_get_viewport_layout() == VIEWPORT_LAYOUT_1_PLAYER && gWeatherType != WEATHER_SNOW) {
         if (gRainHiddenTimer > 0) {
             if (updateRate < gRainHiddenTimer) {
                 gRainHiddenTimer -= updateRate;

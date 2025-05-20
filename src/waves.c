@@ -955,14 +955,16 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 viewportID) {
             wave_load_material(tex1, 1);
             wave_load_material(tex2, 0);
             gDPSetCombineMode(gWaveDL++, DKR_CC_UNK14, DKR_CC_UNK15);
-            if (TEX_FORMAT(tex1->format) == TEX_FORMAT_RGBA32 && get_viewport_count() <= VIEWPORTS_COUNT_1_PLAYER) {
+            if (TEX_FORMAT(tex1->format) == TEX_FORMAT_RGBA32 &&
+                cam_get_viewport_layout() <= VIEWPORT_LAYOUT_1_PLAYER) {
                 gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_AA_ZB_XLU_INTER2);
             } else {
                 gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_AA_ZB_OPA_SURF2);
             }
             gDPSetPrimColor(gWaveDL++, 0, 0, 255, 255, 255, 0);
             if (D_800E3180 != NULL) {
-                gDPSetEnvColor(gWaveDL++, D_800E3180->red, D_800E3180->green, D_800E3180->blue, D_800E3180->alpha);
+                gDPSetEnvColor(gWaveDL++, D_800E3180->rgba.r, D_800E3180->rgba.g, D_800E3180->rgba.b,
+                               D_800E3180->rgba.a);
             } else {
                 gDPSetEnvColor(gWaveDL++, 255, 255, 255, 0);
             }
@@ -974,7 +976,8 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 viewportID) {
             gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);
             gDPSetPrimColor(gWaveDL++, 0, 0, 255, 255, 255, 255);
             if (D_800E3180 != NULL) {
-                gDPSetEnvColor(gWaveDL++, D_800E3180->red, D_800E3180->green, D_800E3180->blue, D_800E3180->alpha);
+                gDPSetEnvColor(gWaveDL++, D_800E3180->rgba.r, D_800E3180->rgba.g, D_800E3180->rgba.b,
+                               D_800E3180->rgba.a);
             } else {
                 gDPSetEnvColor(gWaveDL++, 255, 255, 255, 0);
             }
@@ -1001,7 +1004,7 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 viewportID) {
                 for (sp11C = 0; sp11C < 2; sp11C++) {
                     spE4.x_position = spE0->unk4;
                     for (var_fp = 0; var_fp < 2; var_fp++) {
-                        camera_push_model_mtx(&gWaveDL, &D_80129FC4, &spE4, 1.0f, 0.0f);
+                        cam_push_model_mtx(&gWaveDL, &D_80129FC4, &spE4, 1.0f, 0.0f);
                         if (sp104 & 0xFF) {
                             numTris = D_80129FC8.unk0 << 1;
                             numVerts = D_80129FC8.unk0 + 1;
@@ -1027,7 +1030,7 @@ void func_800BA8E4(Gfx **dList, MatrixS **mtx, s32 viewportID) {
                     spE4.z_position += D_8012A0A4 * 0.5f;
                 }
             } else {
-                camera_push_model_mtx(&gWaveDL, &D_80129FC4, &spE4, 1.0f, 0.0f);
+                cam_push_model_mtx(&gWaveDL, &D_80129FC4, &spE4, 1.0f, 0.0f);
                 numTris = D_80129FC8.unk0 << 1;
                 numVerts = D_80129FC8.unk0 + 1;
                 var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;

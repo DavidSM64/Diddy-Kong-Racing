@@ -416,9 +416,12 @@ typedef struct SaveFileData {
   /* 0x0C */ u32 fileSize; // Game Data File Size
 } SaveFileData;
 
-// Size: 12 bytes
+// Size: 12 or 16 bytes
 typedef struct unk80126878 {
   /* 0x00 */ char *text;
+#if VERSION >= VERSION_79
+  /* 0x00 */ char *text2;
+#endif
   /* 0x04 */ s16 x;
   /* 0x06 */ s16 y;
   /* 0x08 */ s32 colourIndex;

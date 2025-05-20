@@ -1162,7 +1162,7 @@ void try_to_collect_egg(Object *obj, Object_CollectEgg *egg) {
                 transF.x_position = -interactedObj->segment.trans.x_position;
                 transF.y_position = -interactedObj->segment.trans.y_position;
                 transF.z_position = -interactedObj->segment.trans.z_position;
-                object_transform_to_matrix_2(mat, &transF);
+                object_inverse_transform_to_matrix(mat, &transF);
                 guMtxXFMF(mat, obj->segment.trans.x_position, obj->segment.trans.y_position,
                           obj->segment.trans.z_position, &obj->segment.trans.x_position, &obj->segment.trans.y_position,
                           &obj->segment.trans.z_position);
@@ -1542,7 +1542,7 @@ void obj_loop_fish(Object *fishObj, s32 updateRate) {
     Vertex *verts;
     s32 randNumber;
 
-    if (get_viewport_count() > 0) {
+    if (cam_get_viewport_layout() > 0) {
         free_object(fishObj);
         return;
     }
@@ -2151,7 +2151,7 @@ void obj_loop_animcamera(Object *obj, s32 updateRate) {
     obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     camera = &obj->unk64->animation;
     if (temp_v0 == 0) {
-        if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER) {
+        if (cam_get_viewport_layout() == VIEWPORT_LAYOUT_1_PLAYER) {
             updateCam = func_800210CC(camera->unk44);
         } else {
             updateCam = TRUE;
@@ -2560,7 +2560,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     u32 buttonsPressed;
     s8 spawnSmoke;
     LevelHeader *levelHeader;
-    ObjectSegment *temp_v0_22;
+    Camera *temp_v0_22;
     f32 var_f2;
     s32 arctan;
     s32 temp;

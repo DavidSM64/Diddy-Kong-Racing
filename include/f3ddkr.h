@@ -77,14 +77,11 @@
 
 #define G_TRIN  5
 #define G_DMADL 7
-#define G_MTX_DKR_INDEX_0 0x00
-#define G_MTX_DKR_INDEX_1 0x40
-#define G_MTX_DKR_INDEX_2 0x80
+#define G_MTX_DKR_INDEX_0 0
+#define G_MTX_DKR_INDEX_1 1
+#define G_MTX_DKR_INDEX_2 2
 #define G_MW_BILLBOARD 0x02 //0x01 = billboarding enabled, 0x00 = disabled
-#define G_MW_MVMATRIX 0x0A  //Specifies the index of the modelview matrix. 
-
-#define gDkrInsertMatrix(pkt, where, num)   \
-	gMoveWd(pkt, G_MW_MVMATRIX, where, num)
+#define G_MW_MVPMATRIX 0x0A  //Specifies the index of the mvp matrix. 
 
 #define gDkrEnableBillboard(pkt)            \
 	gMoveWd(pkt, G_MW_BILLBOARD, 0, 1)  
@@ -94,6 +91,11 @@
 
 #define gSPVertexDKR(pkt, v, n, v0) \
     gDma1p(pkt, G_VTX, v, (((n) * 8 + (n)) << 1) + 8, ((n)-1)<<3|(((u32)(v) & 6))|(v0))
+
+#define gSPMatrixDKR(pkt, m, i) \
+    gSPMatrix(pkt, m, (i) << 6)
+#define gSPSelectMatrixDKR(pkt, num)   \
+	gMoveWd(pkt, G_MW_MVPMATRIX, 0, (num) << 6)
 
 #define TRIN_DISABLE_TEXTURE 0
 #define TRIN_ENABLE_TEXTURE 1

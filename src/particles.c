@@ -419,7 +419,7 @@ void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, 
 
         D_800E2E60 = mempool_alloc_safe(D_800E2E64 * 4, COLOUR_TAG_BLUE);
         for (i = 0; i < D_800E2E64; i++) {
-            D_800E2E60[i] = (Sprite *) func_8007C12C(asset2F[i] & 0x3FFF, 1);
+            D_800E2E60[i] = (Sprite *) tex_load_sprite(asset2F[i] & 0x3FFF, 1);
         }
 
         mempool_free(asset2F);
@@ -1556,7 +1556,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
     noTexture = FALSE;
     particle->textureFrameStep = descriptor->textureFrameStep;
     if (particle->kind == PARTICLE_KIND_SPRITE) {
-        particle->sprite = (Sprite *) func_8007C12C(descriptor->textureID, 0);
+        particle->sprite = (Sprite *) tex_load_sprite(descriptor->textureID, 0);
         if (particle->sprite != NULL) {
             if (particle->sprite->frames[0]->flags & 4) {
                 if (particle->descFlags & PARTICLE_DESC_FLAG_1000) {
@@ -2415,7 +2415,7 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
         } else {
             model = particle->model;
             if (model->texture) {
-                camera_push_model_mtx(dList, mtx, &particle->trans, 1.0f, 0.0f);
+                cam_push_model_mtx(dList, mtx, &particle->trans, 1.0f, 0.0f);
                 material_set(dList, model->texture, renderFlags, particle->textureFrame << 8);
                 gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(model->vertices), model->vertexCount, 0);
                 gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(model->triangles), model->triangleCount, TRIN_ENABLE_TEXTURE);

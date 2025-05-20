@@ -27,20 +27,20 @@ void divider_draw(Gfx **dList) {
     yOffset = height / 128;
     gDPSetCycleType((*dList)++, G_CYC_FILL);
     gDPSetFillColor((*dList)++, GPACK_RGBA5551(0, 0, 0, 1) << 16 | GPACK_RGBA5551(0, 0, 0, 1)); // Black fill color
-    switch (get_viewport_count()) {
-        case VIEWPORTS_COUNT_2_PLAYERS:
+    switch (cam_get_viewport_layout()) {
+        case VIEWPORT_LAYOUT_2_PLAYERS:
             // Draws a solid horizontal black line in the middle of the screen.
             y = (height >> 1) - yOffset;
             gDPFillRectangle((*dList)++, height * 0, y, width, y + yOffset);
             break;
-        case VIEWPORTS_COUNT_3_PLAYERS:
+        case VIEWPORT_LAYOUT_3_PLAYERS:
             levelHeader = get_current_level_header();
             // Draw black square in the bottom-right corner.
             if (hud_setting() || (levelHeader->race_type & RACETYPE_CHALLENGE)) {
                 gDPFillRectangle((*dList)++, width >> 1, height >> 1, width, height);
             }
             // There is no break statement here. This is intentional.
-        case VIEWPORTS_COUNT_4_PLAYERS:
+        case VIEWPORT_LAYOUT_4_PLAYERS:
             x = (width >> 1) - xOffset;
             // Draws 2 black lines in the middle of the screen. One vertical, another horizontal.
             gDPFillRectangle((*dList)++, height * 0, (height >> 1) - yOffset, width,
@@ -72,13 +72,13 @@ void divider_clear_coverage(Gfx **dList) {
     gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
     gDPSetRenderMode((*dList)++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetPrimColor((*dList)++, 0, 0, 0, 0, 0, 0);
-    switch (get_viewport_count()) {
-        case VIEWPORTS_COUNT_2_PLAYERS:
+    switch (cam_get_viewport_layout()) {
+        case VIEWPORT_LAYOUT_2_PLAYERS:
             tempY = (screenHeight / 2) - (height / 2);
             gDPFillRectangle((*dList)++, 0, tempY, screenWidth, tempY + height);
             break;
-        case VIEWPORTS_COUNT_3_PLAYERS:
-        case VIEWPORTS_COUNT_4_PLAYERS:
+        case VIEWPORT_LAYOUT_3_PLAYERS:
+        case VIEWPORT_LAYOUT_4_PLAYERS:
             tempY = (screenHeight / 2) - (height / 2);
             tempX = (screenWidth / 2) - (width / 2);
             gDPFillRectangle((*dList)++, 0, tempY, screenWidth, tempY + height);

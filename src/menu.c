@@ -177,7 +177,6 @@ f32 gTitleAudioCounter;
 s8 *sTitleScreenDemoIds; // Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
 s16 gTitleDemoTimer;
 unk80126878 D_80126878[8];
-u8 D_80126E78[0x20]; // NEW BSS, or BIGGER D_80126878?
 f32 D_801268D8;
 UNUSED s32 D_801268DC; // Set to 0 during the title screen, never read.
 s32 gOpeningNameID;
@@ -395,9 +394,6 @@ s32 gTitleRevealTimer;
 f32 gTitleAudioCounter;
 s8 *sTitleScreenDemoIds; // Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
 unk80126878 D_80126878[8];
-#if VERSION >= VERSION_79
-u8 D_80126E78[0x20]; // NEW BSS, or BIGGER D_80126878?
-#endif
 f32 D_801268D8;
 UNUSED s32 D_801268DC; // Set to 0 during the title screen, never read.
 s32 gOpeningNameID;
@@ -718,11 +714,11 @@ char *D_800E142C_E202C[] = { D_800E13A4_E1FA4, D_800E13B0_E1FB0, D_800E13BC_E1FB
 s32 gTitleCinematicTextColourCount = 0;
 
 // Colours used for the Character Names during the title screen cinematic
-MenuColour gTitleCinematicTextColours[] = {
-    { 255, 255, 0, 255, 204 }, // Yellow
-    { 0, 255, 0, 255, 153 },   // Green
-    { 0, 255, 255, 255, 102 }, // Cyan
-    { 0, 0, 255, 255, 51 }     // Blue
+u8 gTitleCinematicTextColours[] = {
+    255, 255, 0,   255, 204, // Yellow
+    0,   255, 0,   255, 153, // Green
+    0,   255, 255, 255, 102, // Cyan
+    0,   0,   255, 255, 51   // Blue
 };
 
 UNUSED u8 unused_800DFA0C[] = { 0, 0, 15, 120 };
@@ -3205,18 +3201,18 @@ void init_title_screen_variables(void) {
     load_menu_text(get_language());
 }
 
-#ifdef NON_MATCHING
-// Differs in v80
-// Single regswap diff
 void func_80083098(f32 updateRateF) {
     f32 temp;
     f32 temp2;
     s32 didUpdate;
     s32 xPos;
     s32 yPos;
-    s32 i; // s1
+    s32 i;
     s32 j;
     char *text;
+#if REGION == REGION_JP
+    char *text2;
+#endif
     unk800DF83C *introCharData;
 
     didUpdate = FALSE;
@@ -3229,21 +3225,32 @@ void func_80083098(f32 updateRateF) {
     }
 
     introCharData = &gTitleCinematicText[gOpeningNameID];
+#if REGION == REGION_JP
+    text2 = D_800E142C_E202C[gOpeningNameID];
+#endif
     D_801268D8 += updateRateF;
     set_text_font(ASSET_FONTS_BIGFONT);
     set_text_background_colour(0, 0, 0, 0);
     i = 0;
     while (i < gTitleCinematicTextColourCount) {
-        j = D_80126878[i].colourIndex;
-        set_text_colour(gTitleCinematicTextColours[j].red, gTitleCinematicTextColours[j].green,
-                        gTitleCinematicTextColours[j].blue, gTitleCinematicTextColours[j].alpha,
-                        gTitleCinematicTextColours[j].opacity);
+        j = 5 * D_80126878[i].colourIndex;
+        set_text_colour(gTitleCinematicTextColours[j + 0], gTitleCinematicTextColours[j + 1],
+                        gTitleCinematicTextColours[j + 2], gTitleCinematicTextColours[j + 3],
+                        gTitleCinematicTextColours[j + 4]);
         draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
+#if REGION == REGION_JP
+        set_text_font(ASSET_FONTS_FUNFONT);
+        draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y - 24, D_80126878[i].text2, ALIGN_MIDDLE_CENTER);
+        set_text_font(ASSET_FONTS_BIGFONT);
+#endif
         D_80126878[i].colourIndex++;
         if (D_80126878[i].colourIndex >= 4) {
             gTitleCinematicTextColourCount--;
             for (j = i; j < gTitleCinematicTextColourCount; j++) {
                 D_80126878[j].text = D_80126878[j + 1].text;
+#if REGION == REGION_JP
+                D_80126878[j].text2 = D_80126878[j + 1].text2;
+#endif
                 D_80126878[j].x = D_80126878[j + 1].x;
                 D_80126878[j].y = D_80126878[j + 1].y;
                 D_80126878[j].colourIndex = D_80126878[j + 1].colourIndex;
@@ -3278,8 +3285,6 @@ void func_80083098(f32 updateRateF) {
         }
     }
 
-    if (gTitleCinematicTextColours) {}
-
     if (!didUpdate) {
         return;
     }
@@ -3287,16 +3292,20 @@ void func_80083098(f32 updateRateF) {
     if (gTitleCinematicTextColourCount < 4) {
         D_80126878[gTitleCinematicTextColourCount].colourIndex = 0;
         D_80126878[gTitleCinematicTextColourCount].text = text;
+#if REGION == REGION_JP
+        D_80126878[gTitleCinematicTextColourCount].text2 = text2;
+#endif
         D_80126878[gTitleCinematicTextColourCount].x = xPos;
         D_80126878[gTitleCinematicTextColourCount].y = yPos;
         gTitleCinematicTextColourCount++;
     }
     set_text_colour(255, 255, 255, 0, 255);
     draw_text(&sMenuCurrDisplayList, xPos, yPos, text, ALIGN_MIDDLE_CENTER);
-}
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_80083098.s")
+#if REGION == REGION_JP
+    set_text_font(ASSET_FONTS_FUNFONT);
+    draw_text(&sMenuCurrDisplayList, xPos, yPos - 24, text2, ALIGN_MIDDLE_CENTER);
 #endif
+}
 
 /**
  * Initialise the title screen menu.
@@ -3411,10 +3420,10 @@ s32 menu_title_screen_loop(s32 updateRate) {
     s8 *demo;
     s32 contrIndex;
     f32 updateRateF;
-    ObjectSegment *sp18;
+    Camera *sp18;
     s8 playerCount;
 
-    sp18 = get_active_camera_segment();
+    sp18 = cam_get_active_camera();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     menu_input();
     if (osTvType == OS_TV_TYPE_PAL) {
@@ -3479,7 +3488,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             gTitleRevealTimer += updateRate;
             if (gTitleRevealTimer >= 32) {
                 gTitleRevealTimer = 32;
-                sp18->object.distanceToCamera = 8.0f;
+                sp18->shakeMagnitude = 8.0f;
                 sound_play(SOUND_EXPLOSION, NULL);
             }
         } else {
@@ -6835,7 +6844,7 @@ void charselect_render_text(UNUSED s32 updateRate) {
 #endif
         }
         rendermode_reset(&sMenuCurrDisplayList);
-        update_camera_fov(40.0f);
+        cam_set_fov(40.0f);
     }
 }
 
@@ -10420,7 +10429,7 @@ void postrace_start(s32 finishState, s32 worldID) {
     header = get_current_level_header();
     gPostraceFinishState = finishState;
     if (is_in_two_player_adventure()) {
-        set_scene_viewport_num(VIEWPORTS_COUNT_1_PLAYER);
+        set_scene_viewport_num(VIEWPORT_LAYOUT_1_PLAYER);
     }
     gPostRace1Player = FALSE;
     if (gNumberOfActivePlayers == 1 && gTrophyRaceWorldId == 0) {
@@ -13351,7 +13360,7 @@ void credits_free(void) {
  * Write the original coordinates back once done.
  */
 void menu_camera_centre(void) {
-    ObjectSegment *cam;
+    Camera *cam;
     s16 angleY;
     s16 angleX;
     s16 angleZ;
@@ -13359,10 +13368,10 @@ void menu_camera_centre(void) {
     f32 posY;
     f32 posZ;
 
-    set_active_viewports_and_max(0);
+    cam_set_layout(VIEWPORT_LAYOUT_1_PLAYER);
     set_active_camera(0);
 
-    cam = get_active_camera_segment();
+    cam = cam_get_active_camera();
 
     angleY = cam->trans.rotation.y_rotation;
     angleX = cam->trans.rotation.x_rotation;
@@ -13747,7 +13756,7 @@ void menu_asset_load(s32 assetID) {
         if ((i & ASSET_MASK_TEXTURE) == ASSET_MASK_TEXTURE) {
             gMenuAssets[assetID] = load_texture(i & 0x3FFF);
         } else if (i & ASSET_MASK_SPRITE) {
-            gMenuAssets[assetID] = func_8007C12C(i & 0x3FFF, 0);
+            gMenuAssets[assetID] = tex_load_sprite(i & 0x3FFF, 0);
         } else if (i & ASSET_MASK_OBJECT) {
             if (gMenuElementIdCount) {} // Fakematch
             entry.objectID = i & 0xFFFF;
@@ -13849,7 +13858,7 @@ void menu_element_render(s32 elementID) {
                         gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                     };
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
-                    camera_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat,
+                    cam_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat,
                                           (ObjectTransform *) (&gMenuImages[elementID]),
                                           gTrackSelectWoodFrameHeightScale, 0);
                     model = ((ObjectModel **) gMenuAssets[gMenuImages[elementID].spriteID]);

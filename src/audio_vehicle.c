@@ -546,7 +546,7 @@ void racer_sound_free(Object *obj) {
     }
 }
 
-void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 updateRate) {
+void func_80006BFC(Object *obj, Camera *camera, Object *obj2, s32 updateRate) {
     Object_Racer *racer;
     f32 velocity;
     f32 xPos;
@@ -565,10 +565,10 @@ void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 update
     racer2 = &obj2->unk64->racer;
     gRacerSound = (VehicleSoundData *) racer2->vehicleSound;
     if (gRacerSound != NULL) {
-        if (segment != NULL) {
-            xPos = segment[racer->playerIndex].trans.x_position;
-            yPos = segment[racer->playerIndex].trans.y_position;
-            zPos = segment[racer->playerIndex].trans.z_position;
+        if (camera != NULL) {
+            xPos = camera[racer->playerIndex].trans.x_position;
+            yPos = camera[racer->playerIndex].trans.y_position;
+            zPos = camera[racer->playerIndex].trans.z_position;
             sp1C = 1.0f;
         } else {
             xPos = obj->segment.trans.x_position;
@@ -622,7 +622,7 @@ void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 update
     }
 }
 
-void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3, s32 updateRate) {
+void func_80006FC8(Object **objs, s32 numRacers, Camera *camera, u8 arg3, s32 updateRate) {
     f32 tempxPos;
     f32 tempyPos;
     f32 tempzPos;
@@ -652,17 +652,17 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
 
         if (gRacerSound != NULL && gRacerSound->unk0[0] != 0) {
             if (racer->raceFinished || check_if_showing_cutscene_camera()) {
-                tempxPos = objs[loopCount1]->segment.trans.x_position - segment[loopCount1].trans.x_position;
-                tempyPos = objs[loopCount1]->segment.trans.y_position - segment[loopCount1].trans.y_position;
-                tempzPos = objs[loopCount1]->segment.trans.z_position - segment[loopCount1].trans.z_position;
-                func_80006BFC(objs[loopCount1], segment, objs[loopCount1], updateRate);
+                tempxPos = objs[loopCount1]->segment.trans.x_position - camera[loopCount1].trans.x_position;
+                tempyPos = objs[loopCount1]->segment.trans.y_position - camera[loopCount1].trans.y_position;
+                tempzPos = objs[loopCount1]->segment.trans.z_position - camera[loopCount1].trans.z_position;
+                func_80006BFC(objs[loopCount1], camera, objs[loopCount1], updateRate);
                 gRacerSound->unk84 = sqrtf((tempxPos * tempxPos) + (tempyPos * tempyPos) + (tempzPos * tempzPos));
                 if (gRacerSound->unk84 < 1500.0f) {
                     var_f26 = 2250000.0f; //(1500.0f * 1500.0f)
                     var_f26 = (var_f26 - (gRacerSound->unk84 * gRacerSound->unk84)) / var_f26;
                     var_f26 *= var_f26;
                     gRacerSound->unk91[0] = audspat_calculate_spatial_pan(
-                        tempxPos, tempzPos, segment[loopCount1].trans.rotation.y_rotation);
+                        tempxPos, tempzPos, camera[loopCount1].trans.rotation.y_rotation);
                 } else {
                     var_f26 = 0.0f;
                 }
@@ -760,9 +760,9 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                 gRacerSound = objs[loopCount2]->unk64->racer.vehicleSound;
                 if (gRacerSound != 0) {
                     if (racer->raceFinished != 0) {
-                        tempxPos = objs[loopCount2]->segment.trans.x_position - segment[loopCount1].trans.x_position;
-                        tempyPos = objs[loopCount2]->segment.trans.y_position - segment[loopCount1].trans.y_position;
-                        tempzPos = objs[loopCount2]->segment.trans.z_position - segment[loopCount1].trans.z_position;
+                        tempxPos = objs[loopCount2]->segment.trans.x_position - camera[loopCount1].trans.x_position;
+                        tempyPos = objs[loopCount2]->segment.trans.y_position - camera[loopCount1].trans.y_position;
+                        tempzPos = objs[loopCount2]->segment.trans.z_position - camera[loopCount1].trans.z_position;
                     } else {
                         tempxPos =
                             objs[loopCount2]->segment.trans.x_position - objs[loopCount1]->segment.trans.x_position;
@@ -783,9 +783,9 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                         if (gRacerSound->unk88 < v0) {
                             gRacerSound->unk88 = v0;
                             gRacerSound->unk91[0] =
-                                audspat_calculate_spatial_pan(tempxPos, tempzPos, segment->trans.rotation.y_rotation);
+                                audspat_calculate_spatial_pan(tempxPos, tempzPos, camera->trans.rotation.y_rotation);
                             if (racer->raceFinished != 0) {
-                                func_80006BFC(objs[loopCount1], segment, objs[loopCount2], updateRate);
+                                func_80006BFC(objs[loopCount1], camera, objs[loopCount2], updateRate);
                             } else {
                                 func_80006BFC(objs[loopCount1], NULL, objs[loopCount2], updateRate);
                             }

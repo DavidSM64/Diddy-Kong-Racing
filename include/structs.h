@@ -376,20 +376,26 @@ typedef struct LevelHeader_70_18 {
     u8 alpha; //0xFF
 } LevelHeader_70_18;
 
+typedef struct {
+  union {
+    struct {
+      u8 r;
+      u8 g;
+      u8 b;
+      u8 a;
+    };
+    u32 word;
+  };
+} ColourRGBA;
+
 /* Unknown size */
 typedef struct LevelHeader_70 {
   /* 0x00 */ s32 unk0;  //0x00000004
   /* 0x04 */ s32 unk4;  //0x00000000
   /* 0x08 */ s32 unk8;  //0x00000000
   /* 0x0C */ s32 unkC;  //0x00000000
-  /* 0x10 */ u8 red;    //0x72
-  /* 0x11 */ u8 green;  //0x75
-  /* 0x12 */ u8 blue;   //0x73
-  /* 0x13 */ u8 alpha;  //0x20
-  /* 0x14 */ u8 red2;   //0xFF
-  /* 0x15 */ u8 green2; //0x00
-  /* 0x16 */ u8 blue2;  //0x00
-  /* 0x17 */ u8 alpha2; //0xFF
+  /* 0x10 */ ColourRGBA rgba;
+  /* 0x14 */ ColourRGBA rgba2;
   /* 0x18 */ LevelHeader_70_18 unk18[1]; // Actual length depends on unk0
 } LevelHeader_70;
 
@@ -1766,21 +1772,12 @@ typedef struct SegmentPropertiesObject {
   /* 0x002C */ s16 unk2C;
   /* 0x002E */ s16 segmentID;
   /* 0x0030 */ f32 distanceToCamera;
-  /* 0x0034 */ s16 cameraSegmentID;
-  /* 0x0036 */ s16 unk36;
+  /* 0x0034 */ f32 unk34;
   /* 0x0038 */ s8 unk38;
   /* 0x0039 */ u8 opacity;
   /* 0x003A */ s8 modelIndex;
   /* 0x003B */ s8 animationID;
 } SegmentPropertiesObject;
-
-typedef struct SegmentPropertiesCamera {
-  /* 0x002C */ f32 unk2C;
-  /* 0x0030 */ f32 distanceToCamera;
-  /* 0x0034 */ f32 unk34;
-  /* 0x0038 */ s16 unk38;
-  /* 0x003A */ s16 unk3A;
-} SegmentPropertiesCamera;
 
 /* Size: 0x44 bytes */
 typedef struct ObjectSegment {
@@ -1791,10 +1788,7 @@ typedef struct ObjectSegment {
   /* 0x0020 */ f32 y_velocity;
   /* 0x0024 */ f32 z_velocity;
   /* 0x0028 */ f32 unk28;
-  union {
-      SegmentPropertiesObject object;
-      SegmentPropertiesCamera camera;
-  };
+  /* 0x002C */ SegmentPropertiesObject object;
   /* 0x003C */ LevelObjectEntry* level_entry;
   /* 0x0040 */ ObjectHeader *header;
 } ObjectSegment;
@@ -1894,17 +1888,4 @@ typedef struct GhostNode {
   /* 0x08 */ s16 xRotation;
   /* 0x0A */ s16 yRotation;
 } GhostNode;
-
-typedef struct {
-union {
-struct {
- u8 r;
- u8 g;
- u8 b;
- u8 a;
-};
-u32 word;
-};
-} ColourRGBA;
-
 #endif
