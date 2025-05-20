@@ -372,7 +372,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
             gBoostEffectObjects[i]->properties.common.unk4 = 0;
             miscAsset20[i].unk70 = 0;
             miscAsset20[i].unk74 = 0.0f;
-            miscAsset20[i].unk78 = (Sprite *) tex_load_sprite(miscAsset20[i].unk6C, 0);
+            miscAsset20[i].unk78 = tex_load_sprite(miscAsset20[i].unk6C, 0);
             miscAsset20[i].unk7C = load_texture(miscAsset20[i].unk6E);
             miscAsset20[i].unk72 = get_random_number_from_range(0, 255);
             miscAsset20[i].unk73 = 0;
@@ -387,7 +387,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     objEntry.common.x = 0;
     objEntry.common.y = 0;
     objEntry.common.z = 0;
-    gShieldEffectObject = spawn_object((LevelObjectEntryCommon *) &objEntry, OBJECT_SPAWN_NONE);
+    gShieldEffectObject = spawn_object(&objEntry.common, OBJECT_SPAWN_NONE);
     for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
         gRacerFXData[i].unk0 = 0;
         gRacerFXData[i].unk1 = get_random_number_from_range(0, 255);
@@ -399,7 +399,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     objEntry.common.x = 0;
     objEntry.common.y = 0;
     objEntry.common.z = 0;
-    gMagnetEffectObject = spawn_object((LevelObjectEntryCommon *) &objEntry, OBJECT_SPAWN_NONE);
+    gMagnetEffectObject = spawn_object(&objEntry.common, OBJECT_SPAWN_NONE);
 }
 
 /**
@@ -450,7 +450,7 @@ void func_8000B38C(Vertex *, Triangle *, ObjectTransform *, f32, f32, s16, Textu
 void func_8000B750(Object *obj, s32 objId, s32 arg2, s32 arg3, s32 arg4) {
     Vec3f sp74;
     ObjectTransform sp50;
-    Object_Boost **temp_v0;
+    Object_Boost *temp_v0;
     Object **var_t2;
     f32 temp_f0;
     f32 var_f14;
@@ -467,10 +467,10 @@ void func_8000B750(Object *obj, s32 objId, s32 arg2, s32 arg3, s32 arg4) {
         gBoostObjOverrideID = 0;
     }
     if (objId >= 0 && objId < 10) {
-        temp_v0 = get_misc_asset(ASSET_MISC_20);
+        temp_v0 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
         var_t2 = &gBoostEffectObjects[objId];
-        temp_t4 = &temp_v0[(arg3 << 5)];
-        temp_v1 = &temp_v0[(objId << 5)];
+        temp_t4 = &temp_v0[arg3];
+        temp_v1 = &temp_v0[objId];
         if (*var_t2 != NULL) {
             switch (arg2) {
                 default:
@@ -1600,7 +1600,7 @@ void transform_player_vehicle(void) {
     spawnObj.common.z = gTransformPosZ;
     spawnObj.unkC = gTransformAngleY;
     set_taj_status(TAJ_DIALOGUE);
-    player = spawn_object((LevelObjectEntryCommon *) &spawnObj, 0x10 | 0x1);
+    player = spawn_object(&spawnObj.common, 0x10 | 0x1);
     gNumRacers = 1;
     (*gRacers)[PLAYER_ONE] = player;
     gRacersByPort[PLAYER_ONE] = player;
@@ -2194,15 +2194,15 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
 
     obj->shadow = shadow;
     shadow->texture = NULL;
-    objHeader = ((ObjectSegment *) obj)->header;
+    objHeader = obj->segment.header;
     if (objHeader->shadowGroup) {
-        shadow->texture = load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
-        objHeader = ((ObjectSegment *) obj)->header;
+        shadow->texture = load_texture(objHeader->unk34);
+        objHeader = obj->segment.header;
     }
     shadow->scale = objHeader->shadowScale;
     shadow->meshStart = -1;
     D_8011AE50 = shadow->texture;
-    if (((ObjectSegment *) obj)->header->shadowGroup && shadow->texture == NULL) {
+    if (obj->segment.header->shadowGroup && shadow->texture == NULL) {
         return 0;
     }
     return sizeof(ShadowData);
@@ -2385,7 +2385,7 @@ void obj_update(s32 updateRate) {
 
     func_800245B4(-1);
     gEventStartTimer = gEventCountdown;
-    if ((gEventCountdown > 0) && (race_starting() != 0)) {
+    if (gEventCountdown > 0 && race_starting() != FALSE) {
         gEventCountdown -= updateRate;
         D_8011ADBC = 0;
     } else {
@@ -2399,9 +2399,9 @@ void obj_update(s32 updateRate) {
     D_8011AD22[D_8011AD21] = 0;
     for (j = 0; j < gNumRacers; j++) {
         racer = &(*gRacers)[j]->unk64->racer;
-        racer->prev_x_position = (f32) (*gRacers)[j]->segment.trans.x_position;
-        racer->prev_y_position = (f32) (*gRacers)[j]->segment.trans.y_position;
-        racer->prev_z_position = (f32) (*gRacers)[j]->segment.trans.z_position;
+        racer->prev_x_position = (*gRacers)[j]->segment.trans.x_position;
+        racer->prev_y_position = (*gRacers)[j]->segment.trans.y_position;
+        racer->prev_z_position = (*gRacers)[j]->segment.trans.z_position;
     }
     obj_tick_anims();
     process_object_interactions();
@@ -2576,7 +2576,7 @@ void func_80011264(ObjectModel *model, Object *obj) {
             if (batch[i].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 // Fakematch
                 if (model->textures[batch[i].textureIndex].texture) {}
-                if ((model->textures[batch[i].textureIndex].texture->numOfTextures) > 0x900) {
+                if (model->textures[batch[i].textureIndex].texture->numOfTextures > 0x900) {
                     batch[i].unk7 = remaining;
                 } else if (current >= 0) {
                     batch[i].unk7 = current;
@@ -2797,7 +2797,7 @@ void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *tr
     if (tex != NULL) {
         hasTexture = TRUE;
     }
-    material_set(&gObjectCurrDisplayList, (TextureHeader *) tex, flags, texOffset);
+    material_set(&gObjectCurrDisplayList, tex, flags, texOffset);
     gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), numVertices, 0);
     gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numTriangles, hasTexture);
     apply_matrix_from_stack(&gObjectCurrDisplayList);
@@ -2853,7 +2853,7 @@ void render_3d_billboard(Object *obj) {
     s32 hasEnvCol;
     ObjectTransformExt objTrans;
     Object *bubbleTrap;
-    Object_68 *gfxData;
+    Sprite *gfxData;
 
     intensity = 255;
     hasPrimCol = FALSE;
@@ -2930,7 +2930,7 @@ void render_3d_billboard(Object *obj) {
         objTrans.animFrame = obj->segment.animFrame;
         objTrans.unk1A = 32;
         if (bubbleTrap == NULL) {
-            bubbleTrap = (Object *) obj->unk64->weapon.target;
+            bubbleTrap = obj->unk64->weapon.target;
             if (bubbleTrap == NULL) {
                 bubbleTrap = obj;
             }
@@ -2939,7 +2939,7 @@ void render_3d_billboard(Object *obj) {
                            RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
     } else {
         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj,
-                                (Sprite *) gfxData, flags);
+                                gfxData, flags);
     }
     if (hasPrimCol) {
         gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -2975,7 +2975,7 @@ void render_3d_model(Object *obj) {
     Object_68 *obj68;
     Object_Racer *racerObj;
     ObjectModel *objModel;
-    Object_68 *something;
+    Sprite *something;
 
     obj68 = obj->unk68[obj->segment.object.modelIndex];
     if (obj68 != NULL) {
@@ -2995,7 +2995,7 @@ void render_3d_model(Object *obj) {
             racerObj = NULL;
         }
         if (obj68->animUpdateTimer <= 0) {
-            obj->curVertData = (Vertex *) obj68->vertices[obj68->animationTaskNum];
+            obj->curVertData = obj68->vertices[obj68->animationTaskNum];
             if (obj68->modelType == MODELTYPE_ANIMATED) {
                 obj_animate(obj);
             }
@@ -3008,7 +3008,7 @@ void render_3d_model(Object *obj) {
                 if (cam_get_viewport_layout() != VIEWPORT_LAYOUT_1_PLAYER) {
                     flags = FALSE;
                 }
-                obj->curVertData = (Vertex *) obj68->vertices[obj68->animationTaskNum];
+                obj->curVertData = obj68->vertices[obj68->animationTaskNum];
                 if (obj->behaviorId == BHV_UNK_3F) { // 63 = stopwatchicon, stopwatchhand
                     obj_shade_fancy(objModel, obj, 0, gCurrentLightIntensity);
                 } else if (flags) {
@@ -3025,7 +3025,7 @@ void render_3d_model(Object *obj) {
                 obj68->animUpdateTimer = 1;
             }
         }
-        obj->curVertData = (Vertex *) obj68->vertices[obj68->animationTaskNum];
+        obj->curVertData = obj68->vertices[obj68->animationTaskNum];
         if (obj->behaviorId == BHV_DOOR) {
             func_80011264(objModel, obj);
         }
@@ -3089,7 +3089,7 @@ void render_3d_model(Object *obj) {
                 obj60_unk0 = 0;
             }
             for (i = 0; i < obj60_unk0; i++) {
-                loopObj = ((Object **) obj->unk60)[i + 1];
+                loopObj = obj->unk60->unk4[i];
                 if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->unk60->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
@@ -3129,7 +3129,7 @@ void render_3d_model(Object *obj) {
                             }
                             loopObj->properties.common.unk0 =
                                 render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix,
-                                                        &gObjectCurrVertexList, loopObj, (Sprite *) something, flags);
+                                                        &gObjectCurrVertexList, loopObj, something, flags);
                             if (var_v0_2) {
                                 gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
                                 func_80012CE8(&gObjectCurrDisplayList);
@@ -3158,7 +3158,7 @@ void render_3d_model(Object *obj) {
                     loopObj->segment.trans.z_position += (vtxZ - loopObj->segment.trans.z_position) * 0.25;
                     if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
                         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
-                                                loopObj, (Sprite *) something, flags);
+                                                loopObj, something, flags);
                     }
                 }
             }
@@ -3476,7 +3476,7 @@ void func_800135B8(Object *boostObj) {
     s32 hasTexture;
     s32 idx;
 
-    idx = (boostObj->properties.common.unk4 >> 28) & 0xF;
+    idx = (boostObj->properties.boost.unk4 >> 28) & 0xF;
     boost = &boostObj->unk64->boost;
     switch (D_8011B048[idx]) {
         case 0:
@@ -3491,10 +3491,10 @@ void func_800135B8(Object *boostObj) {
     }
     asset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     asset = &asset[D_8011B058[idx]];
-    object_do_player_tumble((Object *) boostObj->properties.common.unk0);
+    object_do_player_tumble(boostObj->properties.boost.obj);
     cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
-                       (ObjectTransform *) boostObj->properties.common.unk0, 1.0f, 0.0f);
-    object_undo_player_tumble((Object *) boostObj->properties.common.unk0);
+                       &boostObj->properties.boost.obj->segment.trans, 1.0f, 0.0f);
+    object_undo_player_tumble(boostObj->properties.boost.obj);
     objTransform.trans.x_position = boostData->position.x;
     objTransform.trans.y_position = boostData->position.y;
     objTransform.trans.z_position = boostData->position.z;
@@ -3523,8 +3523,8 @@ void func_800135B8(Object *boostObj) {
             hasTexture = FALSE;
         }
 
-        vtx = &gBoostVerts[gBoostVertFlip][(boostObj->properties.common.unk4 >> 14) & 0x3FFF];
-        tri = &gBoostTris[gBoostVertFlip][boostObj->properties.common.unk4 & 0x3FFF];
+        vtx = &gBoostVerts[gBoostVertFlip][(boostObj->properties.boost.unk4 >> 14) & 0x3FFF];
+        tri = &gBoostTris[gBoostVertFlip][boostObj->properties.boost.unk4 & 0x3FFF];
         gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), 9, 0);
         gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), 8, hasTexture);
     }
@@ -3534,7 +3534,7 @@ void func_800135B8(Object *boostObj) {
 /**
  * Render the bubble trap weapon.
  */
-void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags) {
+void render_bubble_trap(ObjectTransform *trans, Sprite *gfxData, Object *obj, s32 flags) {
     f32 x;
     f32 y;
     f32 z;
@@ -3560,7 +3560,7 @@ void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj,
     obj->segment.trans.y_position += y;
     obj->segment.trans.z_position += z;
     render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj,
-                            (Sprite *) gfxData, flags);
+                            gfxData, flags);
 }
 
 /**
@@ -3616,7 +3616,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         shear *= scale;
         gfxData = gShieldEffectObject->unk68[shieldType];
         mdl = gfxData->objModel;
-        gShieldEffectObject->curVertData = (Vertex *) gfxData->vertices[gfxData->animationTaskNum];
+        gShieldEffectObject->curVertData = gfxData->vertices[gfxData->animationTaskNum];
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, racer->shieldTimer * 4);
@@ -3680,7 +3680,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gMagnetEffectObject->segment.trans.rotation.z_rotation = 0;
             gfxData = *gMagnetEffectObject->unk68;
             mdl = gfxData->objModel;
-            gMagnetEffectObject->curVertData = (Vertex *) gfxData->vertices[gfxData->animationTaskNum];
+            gMagnetEffectObject->curVertData = gfxData->vertices[gfxData->animationTaskNum];
             opacity = ((gRacerFXData[racerIndex].unk1 * 8) & 0x7F) + 0x80;
             gfx_init_basic_xlu(&gObjectCurrDisplayList, DRAW_BASIC_2CYCLE, COLOUR_RGBA32(255, 255, 255, opacity),
                                gMagnetColours[racer->magnetModelID]);
@@ -4413,7 +4413,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = -obj->segment.trans.x_position;
     sp78.y_position = -obj->segment.trans.y_position;
     sp78.z_position = -obj->segment.trans.z_position;
-    object_inverse_transform_to_matrix((float(*)[4]) sp6C, (ObjectTransform *) &sp78);
+    object_inverse_transform_to_matrix((float(*)[4]) sp6C, &sp78);
     inverseScale = 1.0 / obj->segment.trans.scale;
     i = 0;
     while (i < 16) {
@@ -4432,7 +4432,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = obj->segment.trans.x_position;
     sp78.y_position = obj->segment.trans.y_position;
     sp78.z_position = obj->segment.trans.z_position;
-    object_transform_to_matrix(obj5C->_matrices[(obj5C->unk104 + 2) << 1], (ObjectTransform *) &sp78);
+    object_transform_to_matrix(obj5C->_matrices[(obj5C->unk104 + 2) << 1], &sp78);
     obj5C->unk100 = NULL;
 }
 
@@ -5505,7 +5505,7 @@ s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
     dist = 50000.0;
     result = 0xFF;
     for (numSteps = 0; numSteps != AINODE_COUNT; numSteps++) {
-        segment = (ObjectSegment *) (*gAINodes)[numSteps];
+        segment = &(*gAINodes)[numSteps]->segment;
         if (segment) {
             levelObj = &((segment->level_entry)->aiNode);
             findDist = TRUE;
@@ -6184,7 +6184,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
     NEW_OBJECT_ENTRY(newObjEntry, animEntry->objectIdToSpawn, 8, animEntry->common.x, animEntry->common.y,
                      animEntry->common.z);
 
-    obj->unk64 = (Object_64 *) spawn_object((LevelObjectEntryCommon *) &newObjEntry, 1);
+    obj->unk64 = (Object_64 *) spawn_object(&newObjEntry, 1);
     newObj = (Object *) obj->unk64;
     // (newObj->behaviorId == BHV_DINO_WHALE) is Dinosaur1, Dinosaur2, Dinosaur3, Whale, and Dinoisle
     if (obj->unk64 != NULL && newObj->behaviorId == BHV_DINO_WHALE && gTimeTrialEnabled) {
@@ -6265,7 +6265,7 @@ void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Anim
     Camera *camera;
     ObjectTransform *animObjTrans;
 
-    animObjTrans = (ObjectTransform *) animObj->unk1C;
+    animObjTrans = &animObj->unk1C->segment.trans;
     if (obj->behaviorId == BHV_CAMERA_ANIMATION) {
         animObj->unk44 = D_8011AD3E;
         D_8011AD3E++;

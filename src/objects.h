@@ -463,7 +463,7 @@ void render_3d_misc(Object *obj);
 Object *spectate_nearest(Object *obj, s32 *cameraId);
 s32 init_object_shadow(Object *obj, ShadowData *shadow);
 s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
-void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
+void render_bubble_trap(ObjectTransform *trans, Sprite *gfxData, Object *obj, s32 flags);
 void gParticlePtrList_flush(void);
 s32 init_object_shading(Object *obj, ShadeProperties *shadeData);
 ObjectHeader *load_object_header(s32 index);
