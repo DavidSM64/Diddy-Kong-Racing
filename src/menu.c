@@ -586,32 +586,32 @@ s8 gDialogueOptionTangible = FALSE;
 s32 unused_800DF4F0[] = { 0x4000, 0x8000, 0x1000, 0x2000, 0x8000, 0x10, 0x400, 0x00 };
 
 MenuAsset sMenuImageProperties[18] = {
-    { 0, 0, 0, 0x00, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x01, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x02, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x03, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x05, 0.215f, 0.0f, 0.0f, -500.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x06, 0.215f, 0.0f, 0.0f, -500.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x07, 0.215f, 0.0f, 0.0f, -500.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x04, 0.125f, 0.0f, -40.0f, -500.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x00 }, 1.0f, 0.0f, 0.0f, -32.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x01 }, 1.0f, 0.0f, 0.0f, -32.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x02 }, 1.0f, 0.0f, 0.0f, -32.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x03 }, 1.0f, 0.0f, 0.0f, -32.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x05 }, 0.215f, 0.0f, 0.0f, -500.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x06 }, 0.215f, 0.0f, 0.0f, -500.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x07 }, 0.215f, 0.0f, 0.0f, -500.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x04 }, 0.125f, 0.0f, -40.0f, -500.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #if VERSION >= VERSION_79
-    { 0, 0, 0, 0x66, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x67, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x66 }, 0.75f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x67 }, 0.75f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #else
-    { 0, 0, 0, 0x5B, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x5C, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x5B }, 0.75f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x5C }, 0.75f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #endif
-    { 0, 0, 0, 0x42, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x40, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x41, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x4C, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x4D, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x4E, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x4F, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x42 }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x40 }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x41 }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x4C }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x4D }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x4E }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x4F }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #if VERSION >= VERSION_79
-    { 0, 0, 0, 0x68, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x68 }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #else
-    { 0, 0, 0, 0x5D, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x5D }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #endif
 };
 
@@ -2980,7 +2980,8 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                     sprite_anim_off(TRUE);
                     sprite_opaque(FALSE);
                     gMenuImages[elems->t.assetID].trans.x_position = xPos - SCREEN_WIDTH_HALF;
-                    gMenuImages[elems->t.assetID].trans.y_position = (-yPos - gPostraceTimestampOffset) + SCREEN_HEIGHT_HALF;
+                    gMenuImages[elems->t.assetID].trans.y_position =
+                        (-yPos - gPostraceTimestampOffset) + SCREEN_HEIGHT_HALF;
                     gMenuImages[elems->t.assetID].spriteOffset = elems->textFont;
                     gMenuImages[elems->t.assetID].trans.rotation.z = elems->details.background.backgroundRed;
                     gMenuImages[elems->t.assetID].trans.rotation.y = elems->details.background.backgroundGreen;
@@ -10878,7 +10879,7 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
                 viewport_menu_set(0, 80, gTrackSelectViewPortHalfY - ((gTrackSelectViewPortHalfY * 4) / 5),
                                   SCREEN_HEIGHT, (gTrackSelectViewPortHalfY / 5) + gTrackSelectViewPortHalfY);
                 gMenuImages[4].trans.x_position = 0.0f;
-                gMenuImages[4].trans.y_position= 36.0f;
+                gMenuImages[4].trans.y_position = 36.0f;
                 gMenuImages[4].trans.scale = sMenuImageProperties[4].trans.scale;
                 if (get_map_race_type(settings->courseId) & RACETYPE_CHALLENGE) {
                     gMenuStage = POSTRACE_STAGE_OPTIONS;
@@ -13823,7 +13824,8 @@ void menu_element_render(s32 elementID) {
     ObjectModel **model;
 
     if (gMenuAssets[gMenuImages[elementID].trans.spriteID] != NULL) {
-        if (((*gAssetsMenuElementIds)[gMenuImages[elementID].trans.spriteID] & ASSET_MASK_TEXTURE) != ASSET_MASK_TEXTURE) {
+        if (((*gAssetsMenuElementIds)[gMenuImages[elementID].trans.spriteID] & ASSET_MASK_TEXTURE) !=
+            ASSET_MASK_TEXTURE) {
             if ((*gAssetsMenuElementIds)[gMenuImages[elementID].trans.spriteID] & ASSET_MASK_OBJECT) {
                 if (0) {} // Fakematch
                 object = (Object *) gMenuAssets[gMenuImages[elementID].trans.spriteID];
@@ -13857,8 +13859,8 @@ void menu_element_render(s32 elementID) {
                         gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                     };
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
-                    cam_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat,
-                                       &gMenuImages[elementID].trans, gTrackSelectWoodFrameHeightScale, 0);
+                    cam_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat, &gMenuImages[elementID].trans,
+                                       gTrackSelectWoodFrameHeightScale, 0);
                     model = ((ObjectModel **) gMenuAssets[gMenuImages[elementID].trans.spriteID]);
                     render_track_selection_viewport_border(*model);
                     apply_matrix_from_stack(&sMenuCurrDisplayList);
