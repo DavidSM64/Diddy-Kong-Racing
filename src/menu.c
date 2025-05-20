@@ -177,7 +177,6 @@ f32 gTitleAudioCounter;
 s8 *sTitleScreenDemoIds; // Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
 s16 gTitleDemoTimer;
 unk80126878 D_80126878[8];
-u8 D_80126E78[0x20]; // NEW BSS, or BIGGER D_80126878?
 f32 D_801268D8;
 UNUSED s32 D_801268DC; // Set to 0 during the title screen, never read.
 s32 gOpeningNameID;
@@ -395,9 +394,6 @@ s32 gTitleRevealTimer;
 f32 gTitleAudioCounter;
 s8 *sTitleScreenDemoIds; // Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
 unk80126878 D_80126878[8];
-#if VERSION >= VERSION_79
-u8 D_80126E78[0x20]; // NEW BSS, or BIGGER D_80126878?
-#endif
 f32 D_801268D8;
 UNUSED s32 D_801268DC; // Set to 0 during the title screen, never read.
 s32 gOpeningNameID;
@@ -3205,7 +3201,6 @@ void init_title_screen_variables(void) {
     load_menu_text(get_language());
 }
 
-#if REGION != REGION_JP
 void func_80083098(f32 updateRateF) {
     f32 temp;
     f32 temp2;
@@ -3215,6 +3210,9 @@ void func_80083098(f32 updateRateF) {
     s32 i;
     s32 j;
     char *text;
+#if REGION == REGION_JP
+    char *text2;
+#endif
     unk800DF83C *introCharData;
 
     didUpdate = FALSE;
@@ -3227,6 +3225,9 @@ void func_80083098(f32 updateRateF) {
     }
 
     introCharData = &gTitleCinematicText[gOpeningNameID];
+#if REGION == REGION_JP
+    text2 = D_800E142C_E202C[gOpeningNameID];
+#endif
     D_801268D8 += updateRateF;
     set_text_font(ASSET_FONTS_BIGFONT);
     set_text_background_colour(0, 0, 0, 0);
@@ -3237,11 +3238,19 @@ void func_80083098(f32 updateRateF) {
                         gTitleCinematicTextColours[j + 2], gTitleCinematicTextColours[j + 3],
                         gTitleCinematicTextColours[j + 4]);
         draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
+#if REGION == REGION_JP
+        set_text_font(ASSET_FONTS_FUNFONT);
+        draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y - 24, D_80126878[i].text2, ALIGN_MIDDLE_CENTER);
+        set_text_font(ASSET_FONTS_BIGFONT);
+#endif
         D_80126878[i].colourIndex++;
         if (D_80126878[i].colourIndex >= 4) {
             gTitleCinematicTextColourCount--;
             for (j = i; j < gTitleCinematicTextColourCount; j++) {
                 D_80126878[j].text = D_80126878[j + 1].text;
+#if REGION == REGION_JP
+                D_80126878[j].text2 = D_80126878[j + 1].text2;
+#endif
                 D_80126878[j].x = D_80126878[j + 1].x;
                 D_80126878[j].y = D_80126878[j + 1].y;
                 D_80126878[j].colourIndex = D_80126878[j + 1].colourIndex;
@@ -3283,17 +3292,20 @@ void func_80083098(f32 updateRateF) {
     if (gTitleCinematicTextColourCount < 4) {
         D_80126878[gTitleCinematicTextColourCount].colourIndex = 0;
         D_80126878[gTitleCinematicTextColourCount].text = text;
+#if REGION == REGION_JP
+        D_80126878[gTitleCinematicTextColourCount].text2 = text2;
+#endif
         D_80126878[gTitleCinematicTextColourCount].x = xPos;
         D_80126878[gTitleCinematicTextColourCount].y = yPos;
         gTitleCinematicTextColourCount++;
     }
     set_text_colour(255, 255, 255, 0, 255);
     draw_text(&sMenuCurrDisplayList, xPos, yPos, text, ALIGN_MIDDLE_CENTER);
-}
-#else
-// No match JP func_80083098
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_80083098.s")
+#if REGION == REGION_JP
+    set_text_font(ASSET_FONTS_FUNFONT);
+    draw_text(&sMenuCurrDisplayList, xPos, yPos - 24, text2, ALIGN_MIDDLE_CENTER);
 #endif
+}
 
 /**
  * Initialise the title screen menu.
