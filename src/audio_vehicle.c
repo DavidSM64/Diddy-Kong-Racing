@@ -661,8 +661,8 @@ void func_80006FC8(Object **objs, s32 numRacers, Camera *camera, u8 arg3, s32 up
                     var_f26 = 2250000.0f; //(1500.0f * 1500.0f)
                     var_f26 = (var_f26 - (gRacerSound->unk84 * gRacerSound->unk84)) / var_f26;
                     var_f26 *= var_f26;
-                    gRacerSound->unk91[0] = audspat_calculate_spatial_pan(
-                        tempxPos, tempzPos, camera[loopCount1].trans.rotation.y_rotation);
+                    gRacerSound->unk91[0] =
+                        audspat_calculate_spatial_pan(tempxPos, tempzPos, camera[loopCount1].trans.rotation.y_rotation);
                 } else {
                     var_f26 = 0.0f;
                 }

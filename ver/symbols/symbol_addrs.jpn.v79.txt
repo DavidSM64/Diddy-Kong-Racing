@@ -2523,12 +2523,13 @@ sGameTitleTileTextures = 0x800E1174; // size:0x18
 sGameTitleTileOffsets = 0x800E118C; // size:0x60
 gTitleCinematicText = 0x800E11EC;
 
-D_800E142C_E202C = 0x800E142C; // new?
+gTitleCinematicTextJpn = 0x800E142C;
 gTitleCinematicTextColourCount = 0x800E1454;
 gTitleCinematicTextColours = 0x800E1458;
 unused_800DFA0C = 0x800E146C;
 gOptionMenuStrings = 0x800E1470; // size:0x1C
-gOptionMenuTextures = 0x800E148C; // size:0x10
+gOptionMenuTextures = 0x800E148C; // size:0xC
+gOptionMenuImageIndices = 0x800E1498; // size:0x2
 gAudioMenuStrings = 0x800E149C; // size:0x80
 gMusicTestSongIndex = 0x800E151C;
 gSfxVolumeSliderValue = 0x800E1520;

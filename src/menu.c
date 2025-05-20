@@ -687,27 +687,24 @@ unk800DF83C gTitleCinematicText[10] = {
 };
 
 #if REGION == REGION_JP
-char D_800E13A4_E1FA4[] = { 0x80, 0x62, 0x80, 0x46, 0x80, 0x4F, 0x80, 0x8B, 0x80, 0x3B, 0x00, 0x00 };
-
-char D_800E13B0_E1FB0[] = { 0x80, 0x8B, 0x80, 0x4F, 0x80, 0x90, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
-char D_800E13BC_E1FBC[] = { 0x80, 0x59, 0x80, 0x4F, 0x80, 0x55, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
-
-char D_800E13C8_E1FC8[] = { 0x80, 0x62, 0x80, 0x46, 0x80, 0x4A, 0x80, 0x92,
-                            0x80, 0x5F, 0x80, 0x4A, 0x80, 0x92, 0x00, 0x00 };
-char D_800E13D8_E1FD8[] = { 0x80, 0x8A, 0x80, 0x76, 0x80, 0x70, 0x80, 0x5C, 0x80, 0x62,
-                            0x80, 0x46, 0x80, 0x4A, 0x80, 0x57, 0x00, 0x00, 0x00, 0x00 };
-
-char D_800E13EC_E1FEC[] = { 0x80, 0x91, 0x80, 0x92, 0x80, 0x5B, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
-char D_800E13F8_E1FF8[] = { 0x80, 0x8B, 0x80, 0x4F, 0x80, 0x82, 0x80, 0x4D, 0x80, 0x3B, 0x00, 0x00 };
-
-char D_800E1404_E2004[] = { 0x80, 0x57, 0x80, 0x76, 0x80, 0x4F, 0x80, 0x60, 0x00, 0x00, 0x00, 0x00 };
-char D_800E1410_E2010[] = { 0x80, 0x52, 0x80, 0x46, 0x80, 0x83, 0x80, 0x91,
-                            0x80, 0x4A, 0x80, 0x7E, 0x00, 0x00, 0x00, 0x00 };
-
-char D_800E1420_E2020[] = { 0x80, 0x89, 0x80, 0x46, 0x80, 0x89, 0x80, 0x46, 0x80, 0x3B, 0x00, 0x00 };
-
-char *D_800E142C_E202C[] = { D_800E13A4_E1FA4, D_800E13B0_E1FB0, D_800E13BC_E1FBC, D_800E13C8_E1FC8, D_800E13D8_E1FD8,
-                             D_800E13EC_E1FEC, D_800E13F8_E1FF8, D_800E1404_E2004, D_800E1410_E2010, D_800E1420_E2020 };
+char gTimberNameJpn[] = { 0x80, 0x62, 0x80, 0x46, 0x80, 0x4F, 0x80, 0x8B, 0x80, 0x3B, 0x00, 0x00 };
+char gBumperNameJpn[] = { 0x80, 0x8B, 0x80, 0x4F, 0x80, 0x90, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
+char gConkerNameJpn[] = { 0x80, 0x59, 0x80, 0x4F, 0x80, 0x55, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
+char gTiptupNameJpn[] = {
+    0x80, 0x62, 0x80, 0x46, 0x80, 0x4A, 0x80, 0x92, 0x80, 0x5F, 0x80, 0x4A, 0x80, 0x92, 0x00, 0x00
+};
+char gDrumstickNameJpn[] = { 0x80, 0x8A, 0x80, 0x76, 0x80, 0x70, 0x80, 0x5C, 0x80, 0x62,
+                             0x80, 0x46, 0x80, 0x4A, 0x80, 0x57, 0x00, 0x00, 0x00, 0x00 };
+char gPipsyNameJpn[] = { 0x80, 0x91, 0x80, 0x92, 0x80, 0x5B, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
+char gBanjoNameJpn[] = { 0x80, 0x8B, 0x80, 0x4F, 0x80, 0x82, 0x80, 0x4D, 0x80, 0x3B, 0x00, 0x00 };
+char gKrunchNameJpn[] = { 0x80, 0x57, 0x80, 0x76, 0x80, 0x4F, 0x80, 0x60, 0x00, 0x00, 0x00, 0x00 };
+char gWizpigNameJpn[] = {
+    0x80, 0x52, 0x80, 0x46, 0x80, 0x83, 0x80, 0x91, 0x80, 0x4A, 0x80, 0x7E, 0x00, 0x00, 0x00, 0x00
+};
+char gDiddyNameJpn[] = { 0x80, 0x89, 0x80, 0x46, 0x80, 0x89, 0x80, 0x46, 0x80, 0x3B, 0x00, 0x00 };
+// Japanese text for the character names in the title screen cinematic.
+char *gTitleCinematicTextJpn[] = { gTimberNameJpn, gBumperNameJpn, gConkerNameJpn, gTiptupNameJpn, gDrumstickNameJpn,
+                                   gPipsyNameJpn,  gBanjoNameJpn,  gKrunchNameJpn, gWizpigNameJpn, gDiddyNameJpn };
 #endif
 
 // Number of active colours used in the title screen cinematic.
@@ -725,7 +722,8 @@ UNUSED u8 unused_800DFA0C[] = { 0, 0, 15, 120 };
 
 char *gOptionMenuStrings[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-s16 gOptionMenuTextures[] = { 0x3D, 0x3C, 0x3F, 0x3E, 0x44, -1, -1, 0 };
+s16 gOptionMenuTextures[] = { 0x3D, 0x3C, 0x3F, 0x3E, 0x44, -1 };
+s16 gOptionMenuImageIndices[] = { -1 };
 
 unk800DFA3C gAudioMenuStrings[] = {
     { 160, 80, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
@@ -794,9 +792,31 @@ DrawTexture gDrawTexTrashIcon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 
 UNUSED s8 unused_800DFC70[] = { 0x40, 0x40, 0x04, 0x04, -1 };
 
-s16 gSaveMenuObjectIndices[] = { 0x0024, 0x0025, 0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x003D,
-                                 0x003F, 0x003E, 0x003C, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047, 0x0048,
-                                 0x0049, 0x004A, 0x004B, 0x0040, 0x0041, 0x0002, -1 };
+s16 gSaveMenuObjectIndices[] = { TEXTURE_ICON_TIMETRIAL_ON_TOP,
+                                 TEXTURE_ICON_TIMETRIAL_ON_BOTTOM,
+                                 TEXTURE_ICON_VEHICLE_CAR_TOP,
+                                 TEXTURE_ICON_VEHICLE_CAR_BOTTOM,
+                                 0x001A,
+                                 0x001B,
+                                 0x001C,
+                                 0x001D,
+                                 0x003D,
+                                 0x003F,
+                                 0x003E,
+                                 0x003C,
+                                 0x0043,
+                                 0x0044,
+                                 0x0045,
+                                 0x0046,
+                                 0x0047,
+                                 0x0048,
+                                 0x0049,
+                                 0x004A,
+                                 0x004B,
+                                 0x0040,
+                                 0x0041,
+                                 0x0002,
+                                 -1 };
 
 s16 gSaveMenuImageIndices[] = { 0x000B, 0x000C, 0x0002, -1 };
 
@@ -3226,7 +3246,7 @@ void func_80083098(f32 updateRateF) {
 
     introCharData = &gTitleCinematicText[gOpeningNameID];
 #if REGION == REGION_JP
-    text2 = D_800E142C_E202C[gOpeningNameID];
+    text2 = gTitleCinematicTextJpn[gOpeningNameID];
 #endif
     D_801268D8 += updateRateF;
     set_text_font(ASSET_FONTS_BIGFONT);
@@ -3240,7 +3260,8 @@ void func_80083098(f32 updateRateF) {
         draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
 #if REGION == REGION_JP
         set_text_font(ASSET_FONTS_FUNFONT);
-        draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y - 24, D_80126878[i].text2, ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y - 24, D_80126878[i].text2,
+                  ALIGN_MIDDLE_CENTER);
         set_text_font(ASSET_FONTS_BIGFONT);
 #endif
         D_80126878[i].colourIndex++;
@@ -3810,7 +3831,7 @@ void menu_audio_options_init(void) {
     gSoundOptionMask = NULL;
     gOpacityDecayTimer = -1;
     menu_assetgroup_load(gOptionMenuTextures);
-    menu_imagegroup_load(&gOptionMenuTextures[6]);
+    menu_imagegroup_load(gOptionMenuImageIndices);
     menu_init_arrow_textures();
     transition_begin(&sMenuTransitionFadeOut);
     func_8007FFEC(2);
@@ -13859,8 +13880,8 @@ void menu_element_render(s32 elementID) {
                     };
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
                     cam_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat,
-                                          (ObjectTransform *) (&gMenuImages[elementID]),
-                                          gTrackSelectWoodFrameHeightScale, 0);
+                                       (ObjectTransform *) (&gMenuImages[elementID]), gTrackSelectWoodFrameHeightScale,
+                                       0);
                     model = ((ObjectModel **) gMenuAssets[gMenuImages[elementID].spriteID]);
                     render_track_selection_viewport_border(*model);
                     apply_matrix_from_stack(&sMenuCurrDisplayList);
