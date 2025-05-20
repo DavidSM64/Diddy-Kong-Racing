@@ -792,31 +792,9 @@ DrawTexture gDrawTexTrashIcon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 
 UNUSED s8 unused_800DFC70[] = { 0x40, 0x40, 0x04, 0x04, -1 };
 
-s16 gSaveMenuObjectIndices[] = { TEXTURE_ICON_TIMETRIAL_ON_TOP,
-                                 TEXTURE_ICON_TIMETRIAL_ON_BOTTOM,
-                                 TEXTURE_ICON_VEHICLE_CAR_TOP,
-                                 TEXTURE_ICON_VEHICLE_CAR_BOTTOM,
-                                 0x001A,
-                                 0x001B,
-                                 0x001C,
-                                 0x001D,
-                                 0x003D,
-                                 0x003F,
-                                 0x003E,
-                                 0x003C,
-                                 0x0043,
-                                 0x0044,
-                                 0x0045,
-                                 0x0046,
-                                 0x0047,
-                                 0x0048,
-                                 0x0049,
-                                 0x004A,
-                                 0x004B,
-                                 0x0040,
-                                 0x0041,
-                                 0x0002,
-                                 -1 };
+s16 gSaveMenuObjectIndices[] = { 0x0024, 0x0025, 0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x003D,
+                                 0x003F, 0x003E, 0x003C, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047, 0x0048,
+                                 0x0049, 0x004A, 0x004B, 0x0040, 0x0041, 0x0002, -1 };
 
 s16 gSaveMenuImageIndices[] = { 0x000B, 0x000C, 0x0002, -1 };
 
