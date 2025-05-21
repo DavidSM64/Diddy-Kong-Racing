@@ -36,6 +36,16 @@ void BuildModelMaterial::write_to(DkrTextureInfo *outTexInfo, BuildInfo &info) {
 bool BuildModelMaterial::has_texture() const {
     return _texturePath.has_value();
 }
+
+bool BuildModelMaterial::is_texture_animated() {
+    if(!_texturePath.has_value()) {
+        return false;
+    }
+    if(!_isTextureAnimated.has_value()) {
+        _isTextureAnimated = ImageHelper::guess_if_texture_is_animated(_texturePath.value());
+    }
+    return _isTextureAnimated.value();
+}
     
 void BuildModelMaterial::get_texture_width_and_height(int &outWidth, int &outHeight) {
     if(!_texturePath.has_value()) {

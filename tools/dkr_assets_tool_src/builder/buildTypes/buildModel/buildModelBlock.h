@@ -5,6 +5,7 @@
 #include <map>
 
 #include "buildModelVertex.h"
+#include "buildModelMaterial.h"
 #include "buildModelBatch.h"
 
 #include "fileTypes/vertex.hpp"
@@ -25,7 +26,8 @@ public:
     size_t number_of_batches();
     size_t number_of_batches_to_allocate();
     
-    void write_batches(const std::map<std::string, int> &materialIds, DkrBatch*& outBatches, DkrVertex*& outVertices, DkrTriangle*& outTriangles);
+    void write_batches(const std::map<std::string, int> &materialIds, std::vector<BuildModelMaterial> &materials, 
+        DkrBatch*& outBatches, DkrVertex*& outVertices, DkrTriangle*& outTriangles);
     
 private:
     std::vector<BuildModelBatch> _batches;

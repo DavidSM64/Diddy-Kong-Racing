@@ -132,6 +132,17 @@ class StatJsonFile {
 namespace JsonHelper {
     std::optional<std::reference_wrapper<JsonFile>> get_file(fs::path filepath);
     void patch_json(const fs::path &dst, const fs::path &patch);
+    
+    template<class... Args>
+    JsonFile &get_file_or_error(fs::path filepath, Args... args) {
+        std::optional<std::reference_wrapper<JsonFile>> tryGetJsonFile = get_file(filepath);
+        
+        if(!tryGetJsonFile.has_value()) {
+            DebugHelper::error(args...);
+        }
+        
+        return tryGetJsonFile.value();
+    }
 }
 
 }

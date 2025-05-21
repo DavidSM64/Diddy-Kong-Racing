@@ -46,23 +46,37 @@ size_t BuildModelBatch::number_of_vertices() {
     return _vertices.size();
 }
 
-void BuildModelBatch::write_batch(const std::map<std::string, int> &materialIds, DkrBatch* outBatch, DkrVertex*& outVertices, DkrTriangle*& outTriangles) {
+void BuildModelBatch::write_batch(const std::map<std::string, int> &materialIds, std::vector<BuildModelMaterial> &materials, 
+  DkrBatch* outBatch, DkrVertex*& outVertices, DkrTriangle*& outTriangles) {
+    uint32_t flags = 0x00000003;
+    
     if(_materialId.has_value()) {
         outBatch->textureIndex = materialIds.at(_materialId.value());
+        BuildModelMaterial &material = materials[outBatch->textureIndex];
+        if(material.is_texture_animated()) {
+            flags |= 0x10000; // BATCH_FLAGS_TEXTURE_ANIM
+        }
     } else {
         outBatch->textureIndex = 0xFF; // No texture
     }
     
-    //outBatch->lightSource = 0; // 0xFF = vertex colors, 0 = Use generated normals.
-    outBatch->flags = 0x00000003; // TODO
+    outBatch->flags = flags;
     
+    bool useVertexColors = false;
     for(auto &vertex : _vertices) {
         vertex.write_to(outVertices);
         outVertices++; // Next out vertex.
+        if(!vertex.is_color_white()) {
+            useVertexColors = true;
+        }
     }
     
+    outBatch->lightSource = useVertexColors ? 0xFF : 0x00;
+    
+    uint8_t triFlags = 0; // 0x40 = double-sided, TODO: Support double-sided materials with .glTF files.
+    
     for(auto &tri : _triangles) {
-        outTriangles->flags = 0x40; // double-sided (debug)
+        outTriangles->flags = triFlags; 
         outTriangles->vi0 = tri.a;
         outTriangles->vi1 = tri.b;
         outTriangles->vi2 = tri.c;

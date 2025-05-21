@@ -211,7 +211,7 @@ std::vector<fs::path> FileHelper::get_files_from_directory_that_start_with(const
             }
         } else {
             for (const auto& file : fs::directory_iterator(dirPath)) {
-                if (StringHelper::starts_with(file.path().generic_string(), prefix)) {
+                if (StringHelper::starts_with(file.path().filename().generic_string(), prefix)) {
                     out.push_back(file);
                 }
             }

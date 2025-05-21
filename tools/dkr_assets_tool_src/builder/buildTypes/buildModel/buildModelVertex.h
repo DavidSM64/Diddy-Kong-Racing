@@ -26,6 +26,8 @@ public:
     Vec3f position() const;
     Vec4f color() const;
     
+    bool is_color_white() const;
+    
     void write_to(DkrVertex *outVertex);
     
 private:
