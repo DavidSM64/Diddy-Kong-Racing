@@ -447,57 +447,57 @@ void racerfx_free(void) {
 
 void func_8000B38C(Vertex *, Triangle *, ObjectTransform *, f32, f32, s16, TextureHeader *arg6);
 
-void func_8000B750(Object *obj, s32 objId, s32 arg2, s32 arg3, s32 arg4) {
+void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4) {
     f32 sp74[3];
     f32 temp_f0;
     f32 var_f2;
-    Object_Boost *temp_v0;
+    Object_Boost *boostAsset;
     ObjectTransform objTrans;
-    Object_Boost *temp_v1;
-    Object_Boost *temp_t4;
+    Object_Boost *objBoostRacer;
+    Object_Boost *objBoostType;
     Object_Boost_Inner *var_v0;
 
-    if (objId == -1) {
-        objId = gBoostObjOverrideID;
+    if (racerIndex == -1) {
+        racerIndex = gBoostObjOverrideID;
         gBoostObjOverrideID--;
     }
     if (gBoostObjOverrideID < 0) {
         gBoostObjOverrideID = 0;
     }
-    if (objId >= 0 && objId < 10) {
-        temp_v0 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
-        temp_t4 = &temp_v0[arg3];
-        temp_v1 = &temp_v0[objId];
-        if (gBoostEffectObjects[objId] != NULL) {
-            switch (arg2) {
+    if (racerIndex >= 0 && racerIndex < 10) {
+        boostAsset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
+        objBoostType = &boostAsset[boostType];
+        objBoostRacer = &boostAsset[racerIndex];
+        if (gBoostEffectObjects[racerIndex] != NULL) {
+            switch (vehicleIDPrev) {
                 default:
                     var_v0 = NULL;
                     break;
-                case 0:
-                    var_v0 = &temp_v1->unk0;
+                case VEHICLE_CAR:
+                    var_v0 = &objBoostRacer->unk0;
                     break;
-                case 1:
-                    var_v0 = &temp_v1->unk24;
+                case VEHICLE_HOVERCRAFT:
+                    var_v0 = &objBoostRacer->unk24;
                     break;
-                case 2:
-                    var_v0 = &temp_v1->unk48;
+                case VEHICLE_PLANE:
+                    var_v0 = &objBoostRacer->unk48;
                     break;
-                case 13:
-                    var_v0 = &temp_v1->unk48;
+                case VEHICLE_ROCKET:
+                    var_v0 = &objBoostRacer->unk48;
                     break;
             }
             if (var_v0 != NULL) {
-                D_8011B048[objId] = arg2;
-                D_8011B058[objId] = arg3;
-                if (temp_v1->unk70 == 2) {
-                    temp_f0 = coss_f(temp_v1->unk72 << 12);
-                    var_f2 = (var_v0->unk14 + (temp_f0 * var_v0->unk18)) * temp_v1->unk74;
-                    temp_f0 = (var_v0->unk1C + (temp_f0 * var_v0->unk20)) * temp_v1->unk74;
-                    if ((arg3 & 3) == 1) {
+                D_8011B048[racerIndex] = vehicleIDPrev;
+                D_8011B058[racerIndex] = boostType;
+                if (objBoostRacer->unk70 == 2) {
+                    temp_f0 = coss_f(objBoostRacer->unk72 << 12);
+                    var_f2 = (var_v0->unk14 + (temp_f0 * var_v0->unk18)) * objBoostRacer->unk74;
+                    temp_f0 = (var_v0->unk1C + (temp_f0 * var_v0->unk20)) * objBoostRacer->unk74;
+                    if ((boostType & BOOST_UNK3) == 1) {
                         var_f2 *= 1.09f;
                         temp_f0 *= 1.09f;
                     }
-                    if ((arg3 & 3) >= 2) {
+                    if ((boostType & BOOST_UNK3) >= 2) {
                         var_f2 *= 1.18f;
                         temp_f0 *= 1.18f;
                     }
@@ -509,25 +509,26 @@ void func_8000B750(Object *obj, s32 objId, s32 arg2, s32 arg3, s32 arg4) {
                     objTrans.rotation.x_rotation = 0;
                     objTrans.rotation.z_rotation = 0;
                     func_8000B38C(&gBoostVerts[gBoostVertFlip][D_8011AFFC], &gBoostTris[gBoostVertFlip][D_8011B004],
-                                  &objTrans, var_f2, temp_f0, temp_v1->unk72 << 12, temp_t4->unk7C);
-                    gBoostEffectObjects[objId]->properties.boost.unk4 = (objId << 28) | (D_8011AFFC << 14) | D_8011B004;
+                                  &objTrans, var_f2, temp_f0, objBoostRacer->unk72 << 12, objBoostType->unk7C);
+                    gBoostEffectObjects[racerIndex]->properties.boost.unk4 =
+                        (racerIndex << 28) | (D_8011AFFC << 14) | D_8011B004;
                     D_8011AFFC += 9;
                     D_8011B004 += 8;
                 }
-                gBoostEffectObjects[objId]->properties.boost.obj = obj;
-                gBoostEffectObjects[objId]->segment.trans.x_position = 0.0f;
-                gBoostEffectObjects[objId]->segment.trans.y_position = 0.0f;
-                gBoostEffectObjects[objId]->segment.trans.z_position = 0.0f;
+                gBoostEffectObjects[racerIndex]->properties.boost.obj = racerObj;
+                gBoostEffectObjects[racerIndex]->segment.trans.x_position = 0.0f;
+                gBoostEffectObjects[racerIndex]->segment.trans.y_position = 0.0f;
+                gBoostEffectObjects[racerIndex]->segment.trans.z_position = 0.0f;
                 sp74[0] = var_v0->position.x;
                 sp74[1] = var_v0->position.y;
                 sp74[2] = var_v0->position.z;
-                f32_vec3_apply_object_rotation(&obj->segment.trans, sp74);
+                f32_vec3_apply_object_rotation(&racerObj->segment.trans, sp74);
                 ignore_bounds_check();
-                move_object(gBoostEffectObjects[objId], obj->segment.trans.x_position + sp74[0],
-                            obj->segment.trans.y_position + sp74[1], obj->segment.trans.z_position + sp74[2]);
+                move_object(gBoostEffectObjects[racerIndex], racerObj->segment.trans.x_position + sp74[0],
+                            racerObj->segment.trans.y_position + sp74[1], racerObj->segment.trans.z_position + sp74[2]);
             }
-            if (arg4 != 0) {
-                D_8011B068[objId] = 0;
+            if (arg4 != FALSE) {
+                D_8011B068[racerIndex] = FALSE;
             }
         }
     }
