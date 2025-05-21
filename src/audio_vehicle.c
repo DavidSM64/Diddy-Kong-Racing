@@ -147,10 +147,10 @@ void racer_sound_update(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 up
                         racer_sound_hovercraft(obj, buttonsPressed, buttonsHeld, updateRate);
                         break;
                     case VEHICLE_PLANE:
-                        func_800063EC(obj, buttonsPressed, buttonsHeld, updateRate);
+                        racer_sound_plane(obj, buttonsPressed, buttonsHeld, updateRate);
                         break;
                     default:
-                        func_80005254(obj, buttonsPressed, buttonsHeld, updateRate);
+                        racer_sound_car(obj, buttonsPressed, buttonsHeld, updateRate);
                         break;
                 }
             }
@@ -158,12 +158,12 @@ void racer_sound_update(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 up
     }
 }
 
-void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
+void racer_sound_car(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
     f32 temp_f14;
     f32 temp_f16;
     f32 temp_f18;
     u8 temp_f4;
-    f32 var_f0;
+    f32 velocity;
     s32 var_s0;
     s32 innerLoop;
     f32 var_f20;
@@ -175,14 +175,14 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     s32 var_v1_3;
 
     if (gSoundRacerObj->unk1FB != 0) {
-        var_f0 = 12.0f;
+        velocity = 12.0f;
     } else {
-        var_f0 = gSoundRacerObj->velocity;
+        velocity = gSoundRacerObj->velocity;
     }
-    if (var_f0 < 0.0f) {
-        var_f0 = -var_f0;
+    if (velocity < 0.0f) {
+        velocity = -velocity;
     }
-    var_s0 = (var_f0 / 16) * 100;
+    var_s0 = (velocity / 16) * 100;
     var_s0 += 5;
     if (var_s0 > 100) {
         var_s0 = 100;
@@ -338,6 +338,7 @@ void racer_sound_hovercraft(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsH
     } else {
         velocity = 0.0f;
     }
+
     pitch = gRacerSound->basePitch;
     if (buttonsHeld & A_BUTTON) {
         gRacerSound->throttlePitch += gRacerSound->throttlePitchVel * updateRate;
@@ -360,7 +361,7 @@ void racer_sound_hovercraft(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsH
     } else {
         var_f18 = 0.0f;
     }
-    if (race_starting() == FALSE) {
+    if (!race_starting()) {
         gRacerSound->throttlePitch = 0.0f;
     }
     if (velocity > 10.0) {
@@ -413,8 +414,8 @@ void racer_sound_hovercraft(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsH
     gRacerSound->unk54[1] = 0.0f;
 }
 
-void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
-    f32 var_f18;
+void racer_sound_plane(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
+    f32 velocity;
     f32 sp28;
     f32 var_f2;
     u16 temp_f10;
@@ -427,13 +428,14 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     f32 temp2;
 
     if (get_race_countdown() == 0) {
-        var_f18 = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
+        velocity = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
                         (obj->segment.z_velocity * obj->segment.z_velocity) +
                         (obj->segment.y_velocity * obj->segment.y_velocity));
     } else {
-        var_f18 = 0.0f;
+        velocity = 0.0f;
     }
-    if (var_f18 < 2.0f) {
+
+    if (velocity < 2.0f) {
         gRacerSound->unk54[0] += ((gRacerSound->unk37 - gRacerSound->unk54[0]) / 8);
     } else {
         temp_f10 = gRacerSound->unk5C[0] * 10000.0f;
@@ -451,6 +453,7 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
         gRacerSound->unk54[0] += ((var_t0 - gRacerSound->unk54[0]) / 8);
     }
     var_f14 = gRacerSound->basePitch;
+
     if (buttonsHeld & A_BUTTON) {
         gRacerSound->throttlePitch += gRacerSound->throttlePitchVel * updateRate;
         if (gRacerSound->throttlePitchCeil < gRacerSound->throttlePitch) {
@@ -462,7 +465,7 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     if (gRacerSound->throttlePitch < 0) {
         gRacerSound->throttlePitch = 0;
     }
-    if (race_starting() == 0) {
+    if (!race_starting()) {
         gRacerSound->throttlePitch = 0;
     }
     var_f14 += gRacerSound->throttlePitch;
@@ -473,14 +476,14 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     temp2 = ABSF(temp2);
     var_f14 += temp + temp2;
 
-    if (var_f18 > 10.0) {
-        var_f18 -= 10.0;
+    if (velocity > 10.0) {
+        velocity -= 10.0;
     } else {
-        var_f18 = 0.0f;
+        velocity = 0.0f;
     }
 
-    var_f14 += var_f18 * gRacerSound->unkCC;
-    if (var_f18 != 0.0 && gSoundRacerObj->bananas != 0) {
+    var_f14 += velocity * gRacerSound->unkCC;
+    if (velocity != 0.0 && gSoundRacerObj->bananas != 0) {
         if (gSoundRacerObj->bananas <= 10) {
             var_a0 = gSoundRacerObj->bananas;
         } else {
@@ -520,7 +523,7 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
 void racer_sound_free(Object *obj) {
     s32 i;
 
-    gRacerSound = (VehicleSoundData *) obj->unk64->racer.vehicleSound;
+    gRacerSound = obj->unk64->racer.vehicleSound;
     if (gRacerSound != NULL) {
         for (i = 0; i != 2; i++) {
             if (gRacerSound->unk48[i] != NULL) {
