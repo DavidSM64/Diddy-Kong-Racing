@@ -183,6 +183,11 @@ size_t BuildTexture::build_deferred(BuildInfo &baseInfo, fs::path pathToImage) {
         frameAdvanceDelay = std::round(animTexTiming * TEXTURE_FPS);
     }
     
+    std::string wrapS, wrapT;
+    ImageHelper::guess_texture_wrap_mode(pathToImage, wrapS, wrapT);
+    bool wrapSClamped = wrapS == "clamp";
+    bool wrapTClamped = wrapT == "clamp";
+    
     std::vector<uint8_t> out(totalSize);
     
     size_t offset = 0;
@@ -210,10 +215,15 @@ size_t BuildTexture::build_deferred(BuildInfo &baseInfo, fs::path pathToImage) {
             header->frameAdvanceDelay = frameAdvanceDelay;
         }
         
-        int16_t flags = (
-            ((int)1 << 6) |
-            ((int)1 << 7)
-        );
+        int16_t flags = 0;
+        
+        if(wrapSClamped) {
+            flags |= (1 << 6);
+        }
+        
+        if(wrapTClamped) {
+            flags |= (1 << 7);
+        }
         
         img.flip_vertically();
         

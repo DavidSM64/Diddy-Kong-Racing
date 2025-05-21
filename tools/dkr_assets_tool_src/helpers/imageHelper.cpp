@@ -490,6 +490,24 @@ std::optional<fs::path> ImageHelper::guess_associated_json_file(fs::path imgFile
     }
     return std::nullopt;
 }
+
+void ImageHelper::guess_texture_wrap_mode(fs::path filepath, std::string &outWrapS, std::string &outWrapT) {
+    // Use "wrap" as the default.
+    outWrapS = "wrap";
+    outWrapT = "wrap";
+    
+    // Check to see if there is an accompanying json file with the image file.
+    // That json file more than likely has a format/render-mode associated with it.
+    std::optional<fs::path> jsonFilepath = guess_associated_json_file(filepath);
+    
+    if(jsonFilepath.has_value()) {
+        JsonFile &jsonFile = JsonHelper::get_file_or_error(jsonFilepath.value(), 
+            "Could not load json file ", jsonFilepath.value());
+        
+        outWrapS = jsonFile.get_string_lowercase("/flags/wrap-s", "wrap");
+        outWrapT = jsonFile.get_string_lowercase("/flags/wrap-t", "wrap");
+    }
+}
     
 void ImageHelper::guess_texture_format_and_render_mode(fs::path filepath, std::string &outFormat, std::string &outRenderMode, bool ignoreTextureSize) {
     outFormat = "";
@@ -506,7 +524,7 @@ void ImageHelper::guess_texture_format_and_render_mode(fs::path filepath, std::s
         outFormat = jsonFile.get_string("/format");
         outRenderMode = jsonFile.get_string("/render-mode");
     }
-        
+
     if(!outFormat.empty() && !outRenderMode.empty()) {
         return;
     } 
