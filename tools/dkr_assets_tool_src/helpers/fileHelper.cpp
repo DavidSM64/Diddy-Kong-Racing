@@ -538,6 +538,14 @@ void FileHelper::insert_timestamps_from_directory(const fs::path &dirPath, std::
     }
 }
 
+void FileHelper::update_timestamp(const fs::path& path) {
+    if(!path_exists(path)) {
+        return;
+    }
+    auto now = std::chrono::system_clock::now();
+    fs::last_write_time(path, now);
+}
+
 bool FileHelper::are_files_the_same(const fs::path& file1, const fs::path& file2) {
     std::optional<std::string> noReason = std::nullopt;
     return FileHelper::are_files_the_same(file1, file2, noReason);

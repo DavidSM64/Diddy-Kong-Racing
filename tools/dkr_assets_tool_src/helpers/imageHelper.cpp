@@ -622,6 +622,22 @@ bool ImageHelper::guess_if_texture_is_animated(fs::path imgFilepath) {
     return get_multiple_textures_from_one(imgFilepath).size() > 1;
 }
 
+bool ImageHelper::guess_if_texture_double_sided(fs::path filepath) {
+    // Check to see if there is an accompanying json file with the image file.
+    // That json file more than likely has a format/render-mode associated with it.
+    std::optional<fs::path> jsonFilepath = guess_associated_json_file(filepath);
+    
+    if(jsonFilepath.has_value()) {
+        JsonFile &jsonFile = JsonHelper::get_file_or_error(jsonFilepath.value(), 
+            "Could not load json file ", jsonFilepath.value());
+        return jsonFile.get_bool("/doubleSided", false);
+    }
+    
+    DebugHelper::error("Could not find json file for: ", filepath);
+    
+    return false;
+}
+
 float ImageHelper::guess_animated_texture_timing(fs::path imgFilepath) {
     // Check to see if there is an accompanying json file with the image file.
     std::optional<fs::path> jsonFilepath = guess_associated_json_file(imgFilepath);

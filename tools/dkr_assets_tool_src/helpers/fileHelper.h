@@ -88,6 +88,7 @@ namespace FileHelper {
 
     std::string get_last_modified_timestamp(const fs::path& path);
     void insert_timestamps_from_directory(const fs::path& dirPath, std::unordered_map<fs::path, std::string, PathHash>& timestamps);
+    void update_timestamp(const fs::path& path);
 
     bool are_files_the_same(const fs::path& file1, const fs::path& file2);
     bool are_files_the_same(const fs::path& file1, const fs::path& file2, std::optional<std::string>& outNotTrueReason);
