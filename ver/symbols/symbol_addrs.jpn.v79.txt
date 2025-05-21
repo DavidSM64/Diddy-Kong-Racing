@@ -1683,7 +1683,7 @@ memset = 0x800B4F0C;
 
 // printf.c .text
 _itoa = 0x800B4F40;
-func_800B4A08 = 0x800B5008;
+sprintfSetSpacingCodes = 0x800B5008;
 sprintf = 0x800B5014;
 vsprintf = 0x800B5040;
 debug_text_init = 0x800B6488;
@@ -2523,12 +2523,13 @@ sGameTitleTileTextures = 0x800E1174; // size:0x18
 sGameTitleTileOffsets = 0x800E118C; // size:0x60
 gTitleCinematicText = 0x800E11EC;
 
-D_800E142C_E202C = 0x800E142C; // new?
+gTitleCinematicTextJpn = 0x800E142C;
 gTitleCinematicTextColourCount = 0x800E1454;
 gTitleCinematicTextColours = 0x800E1458;
 unused_800DFA0C = 0x800E146C;
 gOptionMenuStrings = 0x800E1470; // size:0x1C
-gOptionMenuTextures = 0x800E148C; // size:0x10
+gOptionMenuTextures = 0x800E148C; // size:0xC
+gOptionMenuImageIndices = 0x800E1498; // size:0x2
 gAudioMenuStrings = 0x800E149C; // size:0x80
 gMusicTestSongIndex = 0x800E151C;
 gSfxVolumeSliderValue = 0x800E1520;
@@ -2863,7 +2864,7 @@ D_800E2EC4 = 0x800E49B4;
 gCurrentHovercraftParticleOpacity = 0x800E49DC;
 
 // printf.c .data
-D_800E2EF0 = 0x800E49E0;
+gSprintfSpacingCode = 0x800E49E0;
 gDebugFontCoords = 0x800E49E4;
 dDebugFontSettings = 0x800E4AA8;
 
@@ -4459,7 +4460,7 @@ gDebugTextX = 0x8012975C;
 gDebugTextY = 0x8012975E;
 D_80127CB0 = 0x80129760;
 D_80127CB2 = 0x80129762;
-D_80127CB4 = 0x80129764;
+gDebugFixedWidthMode = 0x80129764;
 gDebugTextOn = 0x80129768;
 gDebugBoundsX1 = 0x8012976C;
 gDebugBoundsX2 = 0x80129770;

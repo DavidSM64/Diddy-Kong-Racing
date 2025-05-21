@@ -586,32 +586,32 @@ s8 gDialogueOptionTangible = FALSE;
 s32 unused_800DF4F0[] = { 0x4000, 0x8000, 0x1000, 0x2000, 0x8000, 0x10, 0x400, 0x00 };
 
 MenuAsset sMenuImageProperties[18] = {
-    { 0, 0, 0, 0x00, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x01, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x02, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x03, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x05, 0.215f, 0.0f, 0.0f, -500.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x06, 0.215f, 0.0f, 0.0f, -500.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x07, 0.215f, 0.0f, 0.0f, -500.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x04, 0.125f, 0.0f, -40.0f, -500.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x00 }, 1.0f, 0.0f, 0.0f, -32.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x01 }, 1.0f, 0.0f, 0.0f, -32.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x02 }, 1.0f, 0.0f, 0.0f, -32.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x03 }, 1.0f, 0.0f, 0.0f, -32.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x05 }, 0.215f, 0.0f, 0.0f, -500.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x06 }, 0.215f, 0.0f, 0.0f, -500.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x07 }, 0.215f, 0.0f, 0.0f, -500.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x04 }, 0.125f, 0.0f, -40.0f, -500.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #if VERSION >= VERSION_79
-    { 0, 0, 0, 0x66, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x67, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x66 }, 0.75f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x67 }, 0.75f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #else
-    { 0, 0, 0, 0x5B, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x5C, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x5B }, 0.75f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x5C }, 0.75f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #endif
-    { 0, 0, 0, 0x42, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x40, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x41, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x4C, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x4D, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x4E, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0x4F, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x42 }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x40 }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x41 }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x4C }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x4D }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x4E }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x4F }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #if VERSION >= VERSION_79
-    { 0, 0, 0, 0x68, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x68 }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #else
-    { 0, 0, 0, 0x5D, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { { { { { 0, 0, 0 } } }, { 0x5D }, 1.0f, 0.0f, 0.0f, 0.0f }, 0, 0, 0, 0, 0, 0, 0 },
 #endif
 };
 
@@ -687,27 +687,24 @@ unk800DF83C gTitleCinematicText[10] = {
 };
 
 #if REGION == REGION_JP
-char D_800E13A4_E1FA4[] = { 0x80, 0x62, 0x80, 0x46, 0x80, 0x4F, 0x80, 0x8B, 0x80, 0x3B, 0x00, 0x00 };
-
-char D_800E13B0_E1FB0[] = { 0x80, 0x8B, 0x80, 0x4F, 0x80, 0x90, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
-char D_800E13BC_E1FBC[] = { 0x80, 0x59, 0x80, 0x4F, 0x80, 0x55, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
-
-char D_800E13C8_E1FC8[] = { 0x80, 0x62, 0x80, 0x46, 0x80, 0x4A, 0x80, 0x92,
-                            0x80, 0x5F, 0x80, 0x4A, 0x80, 0x92, 0x00, 0x00 };
-char D_800E13D8_E1FD8[] = { 0x80, 0x8A, 0x80, 0x76, 0x80, 0x70, 0x80, 0x5C, 0x80, 0x62,
-                            0x80, 0x46, 0x80, 0x4A, 0x80, 0x57, 0x00, 0x00, 0x00, 0x00 };
-
-char D_800E13EC_E1FEC[] = { 0x80, 0x91, 0x80, 0x92, 0x80, 0x5B, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
-char D_800E13F8_E1FF8[] = { 0x80, 0x8B, 0x80, 0x4F, 0x80, 0x82, 0x80, 0x4D, 0x80, 0x3B, 0x00, 0x00 };
-
-char D_800E1404_E2004[] = { 0x80, 0x57, 0x80, 0x76, 0x80, 0x4F, 0x80, 0x60, 0x00, 0x00, 0x00, 0x00 };
-char D_800E1410_E2010[] = { 0x80, 0x52, 0x80, 0x46, 0x80, 0x83, 0x80, 0x91,
-                            0x80, 0x4A, 0x80, 0x7E, 0x00, 0x00, 0x00, 0x00 };
-
-char D_800E1420_E2020[] = { 0x80, 0x89, 0x80, 0x46, 0x80, 0x89, 0x80, 0x46, 0x80, 0x3B, 0x00, 0x00 };
-
-char *D_800E142C_E202C[] = { D_800E13A4_E1FA4, D_800E13B0_E1FB0, D_800E13BC_E1FBC, D_800E13C8_E1FC8, D_800E13D8_E1FD8,
-                             D_800E13EC_E1FEC, D_800E13F8_E1FF8, D_800E1404_E2004, D_800E1410_E2010, D_800E1420_E2020 };
+char gTimberNameJpn[] = { 0x80, 0x62, 0x80, 0x46, 0x80, 0x4F, 0x80, 0x8B, 0x80, 0x3B, 0x00, 0x00 };
+char gBumperNameJpn[] = { 0x80, 0x8B, 0x80, 0x4F, 0x80, 0x90, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
+char gConkerNameJpn[] = { 0x80, 0x59, 0x80, 0x4F, 0x80, 0x55, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
+char gTiptupNameJpn[] = {
+    0x80, 0x62, 0x80, 0x46, 0x80, 0x4A, 0x80, 0x92, 0x80, 0x5F, 0x80, 0x4A, 0x80, 0x92, 0x00, 0x00
+};
+char gDrumstickNameJpn[] = { 0x80, 0x8A, 0x80, 0x76, 0x80, 0x70, 0x80, 0x5C, 0x80, 0x62,
+                             0x80, 0x46, 0x80, 0x4A, 0x80, 0x57, 0x00, 0x00, 0x00, 0x00 };
+char gPipsyNameJpn[] = { 0x80, 0x91, 0x80, 0x92, 0x80, 0x5B, 0x80, 0x3B, 0x00, 0x00, 0x00, 0x00 };
+char gBanjoNameJpn[] = { 0x80, 0x8B, 0x80, 0x4F, 0x80, 0x82, 0x80, 0x4D, 0x80, 0x3B, 0x00, 0x00 };
+char gKrunchNameJpn[] = { 0x80, 0x57, 0x80, 0x76, 0x80, 0x4F, 0x80, 0x60, 0x00, 0x00, 0x00, 0x00 };
+char gWizpigNameJpn[] = {
+    0x80, 0x52, 0x80, 0x46, 0x80, 0x83, 0x80, 0x91, 0x80, 0x4A, 0x80, 0x7E, 0x00, 0x00, 0x00, 0x00
+};
+char gDiddyNameJpn[] = { 0x80, 0x89, 0x80, 0x46, 0x80, 0x89, 0x80, 0x46, 0x80, 0x3B, 0x00, 0x00 };
+// Japanese text for the character names in the title screen cinematic.
+char *gTitleCinematicTextJpn[] = { gTimberNameJpn, gBumperNameJpn, gConkerNameJpn, gTiptupNameJpn, gDrumstickNameJpn,
+                                   gPipsyNameJpn,  gBanjoNameJpn,  gKrunchNameJpn, gWizpigNameJpn, gDiddyNameJpn };
 #endif
 
 // Number of active colours used in the title screen cinematic.
@@ -725,7 +722,8 @@ UNUSED u8 unused_800DFA0C[] = { 0, 0, 15, 120 };
 
 char *gOptionMenuStrings[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-s16 gOptionMenuTextures[] = { 0x3D, 0x3C, 0x3F, 0x3E, 0x44, -1, -1, 0 };
+s16 gOptionMenuTextures[] = { 0x3D, 0x3C, 0x3F, 0x3E, 0x44, -1 };
+s16 gOptionMenuImageIndices[] = { -1 };
 
 unk800DFA3C gAudioMenuStrings[] = {
     { 160, 80, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, NULL },
@@ -2676,8 +2674,8 @@ void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green,
     sMenuGuiColourG = green;
     sMenuGuiColourB = blue;
     if (fontID == ASSET_FONTS_FUNFONT) {
-        gMenuImages[0].y = yPos;
-        gMenuImages[1].y = yPos - 2;
+        gMenuImages[0].trans.y_position = yPos;
+        gMenuImages[1].trans.y_position = yPos - 2;
         imageIndex = 0;
         imageIndex2 = 1;
         xPos -= 39;
@@ -2685,8 +2683,8 @@ void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green,
         xOffset2 = 11;
         xOffset3 = 10;
     } else {
-        gMenuImages[2].y = yPos;
-        gMenuImages[3].y = yPos - 1;
+        gMenuImages[2].trans.y_position = yPos;
+        gMenuImages[3].trans.y_position = yPos - 1;
         imageIndex = 2;
         imageIndex2 = 3;
         xPos -= 28;
@@ -2699,40 +2697,40 @@ void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green,
     sprite_opaque(FALSE);
 
     gMenuImages[imageIndex].spriteOffset = minutes / 10;
-    gMenuImages[imageIndex].x = xPos;
+    gMenuImages[imageIndex].trans.x_position = xPos;
     menu_element_render(imageIndex);
 
     xPos += xOffset1;
     gMenuImages[imageIndex].spriteOffset = minutes % 10;
-    gMenuImages[imageIndex].x = xPos;
+    gMenuImages[imageIndex].trans.x_position = xPos;
     menu_element_render(imageIndex);
 
     xPos += xOffset2;
-    gMenuImages[imageIndex2].x = xPos;
+    gMenuImages[imageIndex2].trans.x_position = xPos;
     menu_element_render(imageIndex2);
 
     xPos += xOffset3;
     gMenuImages[imageIndex].spriteOffset = seconds / 10;
-    gMenuImages[imageIndex].x = xPos;
+    gMenuImages[imageIndex].trans.x_position = xPos;
     menu_element_render(imageIndex);
 
     xPos += xOffset1;
     gMenuImages[imageIndex].spriteOffset = seconds % 10;
-    gMenuImages[imageIndex].x = xPos;
+    gMenuImages[imageIndex].trans.x_position = xPos;
     menu_element_render(imageIndex);
 
     xPos += xOffset2;
-    gMenuImages[imageIndex2].x = xPos;
+    gMenuImages[imageIndex2].trans.x_position = xPos;
     menu_element_render(imageIndex2);
 
     xPos += xOffset3;
     gMenuImages[imageIndex].spriteOffset = hundredths / 10;
-    gMenuImages[imageIndex].x = xPos;
+    gMenuImages[imageIndex].trans.x_position = xPos;
     menu_element_render(imageIndex);
 
     xPos += xOffset1;
     gMenuImages[imageIndex].spriteOffset = hundredths % 10;
-    gMenuImages[imageIndex].x = xPos;
+    gMenuImages[imageIndex].trans.x_position = xPos;
     menu_element_render(imageIndex);
 
     sprite_anim_off(FALSE);
@@ -2791,9 +2789,9 @@ void menu_number_render(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UN
     sprite_opaque(0);
     sprite_anim_off(TRUE);
     if (powerOfTen && number) {} // Fakematch
-    gMenuImages[0].y = y;
+    gMenuImages[0].trans.y_position = y;
     for (i = 0; i < strLen; i++) {
-        gMenuImages[0].x = x;
+        gMenuImages[0].trans.x_position = x;
         gMenuImages[0].spriteOffset = digits[i];
         menu_element_render(0);
         x += 12;
@@ -2981,13 +2979,14 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                     }
                     sprite_anim_off(TRUE);
                     sprite_opaque(FALSE);
-                    gMenuImages[elems->t.assetID].x = xPos - SCREEN_WIDTH_HALF;
-                    gMenuImages[elems->t.assetID].y = (-yPos - gPostraceTimestampOffset) + SCREEN_HEIGHT_HALF;
+                    gMenuImages[elems->t.assetID].trans.x_position = xPos - SCREEN_WIDTH_HALF;
+                    gMenuImages[elems->t.assetID].trans.y_position =
+                        (-yPos - gPostraceTimestampOffset) + SCREEN_HEIGHT_HALF;
                     gMenuImages[elems->t.assetID].spriteOffset = elems->textFont;
-                    gMenuImages[elems->t.assetID].z_rotation = elems->details.background.backgroundRed;
-                    gMenuImages[elems->t.assetID].x_rotation = elems->details.background.backgroundGreen;
-                    gMenuImages[elems->t.assetID].y_rotation = elems->details.background.backgroundBlue;
-                    gMenuImages[elems->t.assetID].scale = elems->details.background.backgroundAlpha / 256.0f;
+                    gMenuImages[elems->t.assetID].trans.rotation.z = elems->details.background.backgroundRed;
+                    gMenuImages[elems->t.assetID].trans.rotation.y = elems->details.background.backgroundGreen;
+                    gMenuImages[elems->t.assetID].trans.rotation.x = elems->details.background.backgroundBlue;
+                    gMenuImages[elems->t.assetID].trans.scale = elems->details.background.backgroundAlpha / 256.0f;
                     sMenuGuiColourR = elems->filterRed;
                     sMenuGuiColourG = elems->filterGreen;
                     sMenuGuiColourB = elems->filterBlue;
@@ -3226,7 +3225,7 @@ void func_80083098(f32 updateRateF) {
 
     introCharData = &gTitleCinematicText[gOpeningNameID];
 #if REGION == REGION_JP
-    text2 = D_800E142C_E202C[gOpeningNameID];
+    text2 = gTitleCinematicTextJpn[gOpeningNameID];
 #endif
     D_801268D8 += updateRateF;
     set_text_font(ASSET_FONTS_BIGFONT);
@@ -3240,7 +3239,8 @@ void func_80083098(f32 updateRateF) {
         draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
 #if REGION == REGION_JP
         set_text_font(ASSET_FONTS_FUNFONT);
-        draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y - 24, D_80126878[i].text2, ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y - 24, D_80126878[i].text2,
+                  ALIGN_MIDDLE_CENTER);
         set_text_font(ASSET_FONTS_BIGFONT);
 #endif
         D_80126878[i].colourIndex++;
@@ -3810,7 +3810,7 @@ void menu_audio_options_init(void) {
     gSoundOptionMask = NULL;
     gOpacityDecayTimer = -1;
     menu_assetgroup_load(gOptionMenuTextures);
-    menu_imagegroup_load(&gOptionMenuTextures[6]);
+    menu_imagegroup_load(gOptionMenuImageIndices);
     menu_init_arrow_textures();
     transition_begin(&sMenuTransitionFadeOut);
     func_8007FFEC(2);
@@ -4297,17 +4297,17 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
         }
         sprite_anim_off(TRUE);
         offsetY = (i - y);
-        gMenuImages[2].y = offsetY - 49;
-        gMenuImages[spriteID].y = offsetY - 24;
+        gMenuImages[2].trans.y_position = offsetY - 49;
+        gMenuImages[spriteID].trans.y_position = offsetY - 24;
         sprite_opaque(0);
-        gMenuImages[2].x = x - (133 - SAVE_MENU_SPRITE_OFFSET);
+        gMenuImages[2].trans.x_position = x - (133 - SAVE_MENU_SPRITE_OFFSET);
         gMenuImages[2].spriteOffset = firstDigit;
         menu_element_render(2);
-        gMenuImages[2].x = x - (125 - SAVE_MENU_SPRITE_OFFSET);
+        gMenuImages[2].trans.x_position = x - (125 - SAVE_MENU_SPRITE_OFFSET);
         gMenuImages[2].spriteOffset = secondDigit;
         menu_element_render(2);
         sprite_opaque(1);
-        gMenuImages[spriteID].x = x - (128 - SAVE_MENU_SPRITE_OFFSET);
+        gMenuImages[spriteID].trans.x_position = x - (128 - SAVE_MENU_SPRITE_OFFSET);
         menu_element_render(spriteID);
         sprite_anim_off(FALSE);
     }
@@ -7552,16 +7552,16 @@ void fileselect_render_element(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s
     sMenuGuiColourG = green;
     sMenuGuiColourB = blue;
     sMenuGuiOpacity = opacity;
-    gMenuImages[imageID].x = xOffset - 159;
-    gMenuImages[imageID].y = 119 - yOffset;
+    gMenuImages[imageID].trans.x_position = xOffset - 159;
+    gMenuImages[imageID].trans.y_position = 119 - yOffset;
     menu_element_render(imageID);
     // And this then draws it again, with colour
     sMenuGuiColourR = tempRed;
     sMenuGuiColourG = tempGreen;
     sMenuGuiColourB = tempBlue;
     sMenuGuiOpacity = tempOpacity;
-    gMenuImages[imageID].x = xOffset - 161;
-    gMenuImages[imageID].y = 121 - yOffset;
+    gMenuImages[imageID].trans.x_position = xOffset - 161;
+    gMenuImages[imageID].trans.y_position = 121 - yOffset;
     menu_element_render(imageID);
 }
 
@@ -8761,8 +8761,8 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
             rendermode_reset(&sMenuCurrDisplayList);
         }
     }
-    gMenuImages[imageId].x = x;
-    gMenuImages[imageId].y = y;
+    gMenuImages[imageId].trans.x_position = x;
+    gMenuImages[imageId].trans.y_position = y;
     if (osTvType == OS_TV_TYPE_PAL) {
         gTrackSelectWoodFrameHeightScale = 1.2f;
         offsets = gTracksMenuArrowPositionsPAL;
@@ -8986,9 +8986,9 @@ void trackmenu_input(s32 updateRate) {
         y2 = (((scaleOffset + 20) * gTrackSelectViewPortHalfY) / 40) + centreY;
         y1 = centreY - (((scaleOffset + 20) * gTrackSelectViewPortHalfY) / 40);
         viewport_menu_set(0, (centreX - (scaleOffset * 4)) - 80, y1, (scaleOffset * 4) + centreX + 80, y2);
-        gMenuImages[4].scale = (f32) (sMenuImageProperties[4].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
-        gMenuImages[6].scale = (f32) (sMenuImageProperties[6].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
-        gMenuImages[5].scale = (f32) (sMenuImageProperties[5].scale * (1.0f + ((f32) scaleOffset / 20.0f)));
+        gMenuImages[4].trans.scale = (f32) (sMenuImageProperties[4].trans.scale * (1.0f + ((f32) scaleOffset / 20.0f)));
+        gMenuImages[6].trans.scale = (f32) (sMenuImageProperties[6].trans.scale * (1.0f + ((f32) scaleOffset / 20.0f)));
+        gMenuImages[5].trans.scale = (f32) (sMenuImageProperties[5].trans.scale * (1.0f + ((f32) scaleOffset / 20.0f)));
     }
     camEnableUserView(0, FALSE);
     if (bgload_active() == FALSE) {
@@ -9126,8 +9126,8 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
         } else {
             sp84 = 4;
         }
-        gMenuImages[sp84].x = 0.0f;
-        gMenuImages[sp84].y = 0.0f;
+        gMenuImages[sp84].trans.x_position = 0.0f;
+        gMenuImages[sp84].trans.y_position = 0.0f;
         if (osTvType == OS_TV_TYPE_PAL) {
             gTrackSelectWoodFrameHeightScale = 1.2f;
         }
@@ -9330,14 +9330,14 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
                 rendermode_reset(&sMenuCurrDisplayList);
                 if (gNumberOfActivePlayers <= 2 && !sp74) {
                     // Draw border around vehicle images
-                    gMenuImages[7].y = -52.0f;
+                    gMenuImages[7].trans.y_position = -52.0f;
                     if (gNumberOfActivePlayers == 1) {
-                        gMenuImages[7].x = 21.0f;
+                        gMenuImages[7].trans.x_position = 21.0f;
                         menu_element_render(7);
                     } else {
-                        gMenuImages[7].x = -48.0f;
+                        gMenuImages[7].trans.x_position = -48.0f;
                         menu_element_render(7);
-                        gMenuImages[7].x = 48.0f;
+                        gMenuImages[7].trans.x_position = 48.0f;
                         menu_element_render(7);
                     }
                 }
@@ -9377,12 +9377,12 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
                                 sMenuGuiColourB = 0;
                             }
                         }
-                        gMenuImages->x =
+                        gMenuImages[0].trans.x_position =
                             (gTwoPlayerRacerCountMenu.textPos[(temp2 << 1) + 2] + gTwoPlayerRacerCountMenu.x) - 160;
-                        gMenuImages->y =
+                        gMenuImages[0].trans.y_position =
                             (-gTwoPlayerRacerCountMenu.textPos[(temp2 << 1) + 2 + 1] - gTwoPlayerRacerCountMenu.y) +
                             120;
-                        gMenuImages->spriteOffset = (temp2 << 1) + 2;
+                        gMenuImages[0].spriteOffset = (temp2 << 1) + 2;
                         menu_element_render(0);
                         sMenuGuiColourG = 255;
                         sMenuGuiColourB = 255;
@@ -9398,20 +9398,20 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
             if (gIsInAdventureTwo) {
                 k = 12;
             }
-            gMenuImages[k].y = 42.0f;
+            gMenuImages[k].trans.y_position = 42.0f;
             if ((settings->courseFlagsPtr[gTrackIdForPreview] & 2) || (is_adventure_two_unlocked())) {
 #if VERSION >= VERSION_79
-                gMenuImages[k].x = (f32) ((gIsInAdventureTwo * 2) - 128);
+                gMenuImages[k].trans.x_position = (f32) ((gIsInAdventureTwo * 2) - 128);
 #else
-                gMenuImages[k].x = -128.0f;
+                gMenuImages[k].trans.x_position = -128.0f;
 #endif
                 menu_element_render(k);
             }
             if ((settings->courseFlagsPtr[gTrackIdForPreview] & 4) || (is_adventure_two_unlocked())) {
 #if VERSION >= VERSION_79
-                gMenuImages[k].x = (f32) ((gIsInAdventureTwo * 2) + 120);
+                gMenuImages[k].trans.x_position = (f32) ((gIsInAdventureTwo * 2) + 120);
 #else
-                gMenuImages[k].x = 120.0f;
+                gMenuImages[k].trans.x_position = 120.0f;
 #endif
                 menu_element_render(k);
             }
@@ -9491,9 +9491,9 @@ void func_80092188(s32 updateRate) {
         yOffset = ((xOffset + 20) * gTrackSelectViewPortHalfY) / 40;
         yOffset2 = yOffset + gTrackSelectViewPortHalfY;
         viewport_menu_set(0, 80 - (xOffset * 4), gTrackSelectViewPortHalfY - yOffset, (xOffset * 4) + 240, yOffset2);
-        gMenuImages[4].scale = sMenuImageProperties[4].scale * (1.0f + ((f32) xOffset / 20.0f));
-        gMenuImages[5].scale = sMenuImageProperties[5].scale * (1.0f + ((f32) xOffset / 20.0f));
-        gMenuImages[6].scale = sMenuImageProperties[6].scale * (1.0f + ((f32) xOffset / 20.0f));
+        gMenuImages[4].trans.scale = sMenuImageProperties[4].trans.scale * (1.0f + ((f32) xOffset / 20.0f));
+        gMenuImages[5].trans.scale = sMenuImageProperties[5].trans.scale * (1.0f + ((f32) xOffset / 20.0f));
+        gMenuImages[6].trans.scale = sMenuImageProperties[6].trans.scale * (1.0f + ((f32) xOffset / 20.0f));
     }
     if (gMenuDelay > 0) {
         sMenuMusicVolume -= updateRate * 4;
@@ -9944,8 +9944,8 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
                     texrect_draw(&sMenuCurrDisplayList, gRaceSelectionImages[gPlayerSelectVehicle[0] * 3], 149, y, 255,
                                  255, 255, 255);
                     rendermode_reset(&sMenuCurrDisplayList);
-                    gMenuImages[7].x = 21.0f;
-                    gMenuImages[7].y = -52.0f;
+                    gMenuImages[7].trans.x_position = 21.0f;
+                    gMenuImages[7].trans.y_position = -52.0f;
                     menu_element_render(7);
                     if (gMenuStage != ADVENTURESETUP_VEHICLE) {
                         set_text_font(FONT_LARGE);
@@ -10619,9 +10619,9 @@ void func_80094D28(UNUSED s32 updateRate) {
                 gTrackSelectViewportY - (((gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY / 5)) * var_s0) / 60);
             var_v0 = (var_s0 * 80) / 60;
             viewport_menu_set(0, var_v0, temp, SCREEN_WIDTH - var_v0, sp50);
-            gMenuImages[4].x = 0.0f;
-            gMenuImages[4].y = gTrackSelectViewPortHalfY - ((var_s2 + sp50) >> 1);
-            gMenuImages[4].scale = sMenuImageProperties[4].scale * (2.0f - (var_s0 / 60.0f));
+            gMenuImages[4].trans.x_position = 0.0f;
+            gMenuImages[4].trans.y_position = gTrackSelectViewPortHalfY - ((var_s2 + sp50) >> 1);
+            gMenuImages[4].trans.scale = sMenuImageProperties[4].trans.scale * (2.0f - (var_s0 / 60.0f));
             break;
         case 2:
             for (i = 0; i < 3; i++) {
@@ -10878,9 +10878,9 @@ s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 update
             if (gPostRaceTimer > 60 || buttonsPressed & (A_BUTTON | START_BUTTON)) {
                 viewport_menu_set(0, 80, gTrackSelectViewPortHalfY - ((gTrackSelectViewPortHalfY * 4) / 5),
                                   SCREEN_HEIGHT, (gTrackSelectViewPortHalfY / 5) + gTrackSelectViewPortHalfY);
-                gMenuImages[4].x = 0.0f;
-                gMenuImages[4].y = 36.0f;
-                gMenuImages[4].scale = sMenuImageProperties[4].scale;
+                gMenuImages[4].trans.x_position = 0.0f;
+                gMenuImages[4].trans.y_position = 36.0f;
+                gMenuImages[4].trans.scale = sMenuImageProperties[4].trans.scale;
                 if (get_map_race_type(settings->courseId) & RACETYPE_CHALLENGE) {
                     gMenuStage = POSTRACE_STAGE_OPTIONS;
                 } else if (!settings->display_times) {
@@ -11320,22 +11320,22 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
 
             // I'm 99% sure these need to be gMenuImages[0]
             // Changing it to gMenuImages[spA0] or gMenuImages[i] makes the score worse.
-            gMenuImages[0].y = (SCREEN_HEIGHT_HALF - y2);
+            gMenuImages[0].trans.y_position = (SCREEN_HEIGHT_HALF - y2);
             if (hundredths > 0) {
-                gMenuImages[0].x = (x2 - 172);
+                gMenuImages[0].trans.x_position = (x2 - 172);
                 gMenuImages[0].spriteOffset = hundredths;
                 menu_element_render(0);
-                gMenuImages[0].x += 12.0f;
+                gMenuImages[0].trans.x_position += 12.0f;
                 gMenuImages[0].spriteOffset = tens;
                 menu_element_render(0);
-                gMenuImages[0].x += 12.0f;
+                gMenuImages[0].trans.x_position += 12.0f;
             } else if (tens > 0) {
-                gMenuImages[0].x = (x2 - 166);
+                gMenuImages[0].trans.x_position = (x2 - 166);
                 gMenuImages[0].spriteOffset = tens;
                 menu_element_render(0);
-                gMenuImages[0].x += 12.0f;
+                gMenuImages[0].trans.x_position += 12.0f;
             } else {
-                gMenuImages[0].x = (x2 - 160);
+                gMenuImages[0].trans.x_position = (x2 - 160);
             }
             gMenuImages[0].spriteOffset = time;
             menu_element_render(0);
@@ -12653,9 +12653,9 @@ void ghostmenu_render(UNUSED s32 updateRate) {
         texrect_draw_scaled(&sMenuCurrDisplayList, vehicleSelectTex, (gGhostDataElementPositions[4] + 40),
                             (gGhostDataElementPositions[5] + y), 0.625f, 0.625f, COLOUR_RGBA32(255, 255, 255, 255), 0);
         rendermode_reset(&sMenuCurrDisplayList);
-        gMenuImages[7].x = (gGhostDataElementPositions[6] - SCREEN_HEIGHT_HALF);
-        gMenuImages[7].y = ((-gGhostDataElementPositions[7] - y) + heightAdjust + SCREEN_HEIGHT_HALF);
-        gMenuImages[7].scale = 0.075f;
+        gMenuImages[7].trans.x_position = (gGhostDataElementPositions[6] - SCREEN_HEIGHT_HALF);
+        gMenuImages[7].trans.y_position = ((-gGhostDataElementPositions[7] - y) + heightAdjust + SCREEN_HEIGHT_HALF);
+        gMenuImages[7].trans.scale = 0.075f;
         menu_element_render(7);
         sMenuGuiOpacity = 128;
         // Timestamp Shadow gets drawn first
@@ -13792,14 +13792,14 @@ void menu_image_load(s32 imageID) {
         gMenuImages = mempool_alloc_safe(sizeof(MenuAsset) * 18, COLOUR_TAG_RED);
     }
 
-    gMenuImages[imageID].y_rotation = sMenuImageProperties[imageID].y_rotation;
-    gMenuImages[imageID].x_rotation = sMenuImageProperties[imageID].x_rotation;
-    gMenuImages[imageID].z_rotation = sMenuImageProperties[imageID].z_rotation;
-    gMenuImages[imageID].spriteID = sMenuImageProperties[imageID].spriteID;
-    gMenuImages[imageID].x = sMenuImageProperties[imageID].x;
-    gMenuImages[imageID].y = sMenuImageProperties[imageID].y;
-    gMenuImages[imageID].z = sMenuImageProperties[imageID].z;
-    gMenuImages[imageID].scale = sMenuImageProperties[imageID].scale;
+    gMenuImages[imageID].trans.rotation.x = sMenuImageProperties[imageID].trans.rotation.x;
+    gMenuImages[imageID].trans.rotation.y = sMenuImageProperties[imageID].trans.rotation.y;
+    gMenuImages[imageID].trans.rotation.z = sMenuImageProperties[imageID].trans.rotation.z;
+    gMenuImages[imageID].trans.spriteID = sMenuImageProperties[imageID].trans.spriteID;
+    gMenuImages[imageID].trans.x_position = sMenuImageProperties[imageID].trans.x_position;
+    gMenuImages[imageID].trans.y_position = sMenuImageProperties[imageID].trans.y_position;
+    gMenuImages[imageID].trans.z_position = sMenuImageProperties[imageID].trans.z_position;
+    gMenuImages[imageID].trans.scale = sMenuImageProperties[imageID].trans.scale;
     gMenuImages[imageID].spriteOffset = sMenuImageProperties[imageID].spriteOffset;
     gMenuImages[imageID].unk1A = get_random_number_from_range(0, 0xFFFF);
     gMenuImages[imageID].unk1B = get_random_number_from_range(0, 0xFFFF);
@@ -13823,19 +13823,20 @@ void menu_element_render(s32 elementID) {
     Sprite *sprite;
     ObjectModel **model;
 
-    if (gMenuAssets[gMenuImages[elementID].spriteID] != NULL) {
-        if (((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & ASSET_MASK_TEXTURE) != ASSET_MASK_TEXTURE) {
-            if ((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & ASSET_MASK_OBJECT) {
+    if (gMenuAssets[gMenuImages[elementID].trans.spriteID] != NULL) {
+        if (((*gAssetsMenuElementIds)[gMenuImages[elementID].trans.spriteID] & ASSET_MASK_TEXTURE) !=
+            ASSET_MASK_TEXTURE) {
+            if ((*gAssetsMenuElementIds)[gMenuImages[elementID].trans.spriteID] & ASSET_MASK_OBJECT) {
                 if (0) {} // Fakematch
-                object = (Object *) gMenuAssets[gMenuImages[elementID].spriteID];
+                object = (Object *) gMenuAssets[gMenuImages[elementID].trans.spriteID];
                 asset = (MenuAsset *) &gMenuImages[elementID];
-                object->segment.trans.rotation.y_rotation = asset->y_rotation;
-                object->segment.trans.rotation.x_rotation = asset->x_rotation;
-                object->segment.trans.rotation.z_rotation = asset->z_rotation;
-                object->segment.trans.x_position = asset->x;
-                object->segment.trans.y_position = asset->y;
-                object->segment.trans.z_position = asset->z;
-                object->segment.trans.scale = asset->scale;
+                object->segment.trans.rotation.y_rotation = asset->trans.rotation.y_rotation;
+                object->segment.trans.rotation.x_rotation = asset->trans.rotation.x_rotation;
+                object->segment.trans.rotation.z_rotation = asset->trans.rotation.z_rotation;
+                object->segment.trans.x_position = asset->trans.x_position;
+                object->segment.trans.y_position = asset->trans.y_position;
+                object->segment.trans.z_position = asset->trans.z_position;
+                object->segment.trans.scale = asset->trans.scale;
                 if (gMenuDisableObjAnim == FALSE) {
                     object->segment.animFrame = asset->unk1D;
                     object->segment.object.modelIndex = asset->spriteOffset;
@@ -13843,8 +13844,8 @@ void menu_element_render(s32 elementID) {
                 object->segment.object.opacity = sMenuGuiOpacity;
                 render_object(&sMenuCurrDisplayList, &sMenuCurrHudMat, &sMenuCurrHudVerts, object);
             } else {
-                if ((*gAssetsMenuElementIds)[gMenuImages[elementID].spriteID] & ASSET_MASK_SPRITE) {
-                    sprite = (Sprite *) gMenuAssets[gMenuImages[elementID].spriteID];
+                if ((*gAssetsMenuElementIds)[gMenuImages[elementID].trans.spriteID] & ASSET_MASK_SPRITE) {
+                    sprite = (Sprite *) gMenuAssets[gMenuImages[elementID].trans.spriteID];
                     gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, sMenuGuiColourR, sMenuGuiColourG, sMenuGuiColourB,
                                     sMenuGuiOpacity);
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
@@ -13858,10 +13859,9 @@ void menu_element_render(s32 elementID) {
                         gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                     };
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
-                    cam_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat,
-                                          (ObjectTransform *) (&gMenuImages[elementID]),
-                                          gTrackSelectWoodFrameHeightScale, 0);
-                    model = ((ObjectModel **) gMenuAssets[gMenuImages[elementID].spriteID]);
+                    cam_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat, &gMenuImages[elementID].trans,
+                                       gTrackSelectWoodFrameHeightScale, 0);
+                    model = ((ObjectModel **) gMenuAssets[gMenuImages[elementID].trans.spriteID]);
                     render_track_selection_viewport_border(*model);
                     apply_matrix_from_stack(&sMenuCurrDisplayList);
                     if (sMenuGuiOpacity < 255) {
@@ -14589,38 +14589,38 @@ void dialogue_tt_gamestatus(void) {
         numOfItem = 9;
     }
     tempX = -74;
-    gMenuImages[numOfItem].x = tempX;
-    gMenuImages[numOfItem].y = 65 - y;
+    gMenuImages[numOfItem].trans.x_position = tempX;
+    gMenuImages[numOfItem].trans.y_position = 65 - y;
     menu_element_render(numOfItem);
     sprite_opaque(FALSE);
     tempX = -29;
-    gMenuImages[0].x = tempX;
-    gMenuImages[0].y = 98 - y;
-    gMenuImages[0].x -= 6.0f;
+    gMenuImages[0].trans.x_position = tempX;
+    gMenuImages[0].trans.y_position = 98 - y;
+    gMenuImages[0].trans.x_position -= 6.0f;
 
     flag = settings->balloonsPtr[0] / 10; // settings->balloonsPtr[0] is the total balloon count.
     numBalloonsTensDigit = flag;
     if (numBalloonsTensDigit) {
         gMenuImages[0].spriteOffset = numBalloonsTensDigit;
         menu_element_render(0);
-        gMenuImages[0].x += 12.0f;
+        gMenuImages[0].trans.x_position += 12.0f;
     }
     gMenuImages[0].spriteOffset = settings->balloonsPtr[0] % 10;
     menu_element_render(0);
     tempX = -49;
-    gMenuImages[10].x = tempX;
-    gMenuImages[10].y = 98 - y;
+    gMenuImages[10].trans.x_position = tempX;
+    gMenuImages[10].trans.y_position = 98 - y;
     menu_element_render(10);
     sprite_opaque(TRUE);
     y += 50;
     tempX = -89;
-    gMenuImages[15].x = tempX;
-    gMenuImages[15].y = 95 - y;
+    gMenuImages[15].trans.x_position = tempX;
+    gMenuImages[15].trans.y_position = 95 - y;
     gMenuImages[15].spriteOffset = settings->wizpigAmulet;
     menu_element_render(15);
     tempX = -29;
-    gMenuImages[16].x = tempX;
-    gMenuImages[16].y = 95 - y;
+    gMenuImages[16].trans.x_position = tempX;
+    gMenuImages[16].trans.y_position = 95 - y;
     gMenuImages[16].spriteOffset = settings->ttAmulet;
     menu_element_render(16);
 
@@ -14631,8 +14631,8 @@ void dialogue_tt_gamestatus(void) {
     }
     y += 50;
     for (x = 20, i = 0; i < 4; i++, x += 30) {
-        gMenuImages[13].x = (x - 124);
-        gMenuImages[13].y = (95 - y);
+        gMenuImages[13].trans.x_position = (x - 124);
+        gMenuImages[13].trans.y_position = (95 - y);
         if (i < numOfItem) {
             gMenuImages[13].spriteOffset = 1;
         } else {
@@ -14647,8 +14647,8 @@ void dialogue_tt_gamestatus(void) {
     }
     y += 45;
     for (x = 20, i = 0; i < 4; i++, x += 30) {
-        gMenuImages[14].x = (x - 124);
-        gMenuImages[14].y = (95 - (y));
+        gMenuImages[14].trans.x_position = (x - 124);
+        gMenuImages[14].trans.y_position = (95 - (y));
         if (i < numOfItem) {
             gMenuImages[14].spriteOffset = 1;
         } else {

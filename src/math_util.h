@@ -48,7 +48,7 @@ void object_transform_to_matrix(Matrix mtx, ObjectTransform *trans);
 void f32_matrix_scale_y_axis(Matrix *input, f32 scale);
 void f32_matrix_translate_y_axis(Matrix *input, f32 offset);
 void object_inverse_transform_to_matrix(Matrix mtx, ObjectTransform *trans);
-void f32_matrix_from_rotation_and_scale(Matrix mtx, s32 angle, f32 arg2, f32 arg3);
+void f32_matrix_from_rotation_and_scale(Matrix mtx, s32 angle, f32 scale, f32 scaleY);
 void s16_vec3_apply_object_rotation(ObjectTransform *trans, s16 *vec3Arg);
 void f32_vec3_apply_object_rotation(ObjectTransform *trans, f32 *vec3_f32);
 void f32_vec3_apply_object_rotation2(ObjectTransform *trans, f32 *arg1);

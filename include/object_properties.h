@@ -170,6 +170,11 @@ typedef struct ObjPropertyTimeTrial {
     struct ObjectHeader *header; 
 } ObjPropertyTimeTrial;
 
+typedef struct ObjPropertyBoost {
+    struct Object *obj;
+    s32 unk4;
+} ObjPropertyBoost;
+
 typedef struct ObjProperties {
     union {
         ObjPropertyCommon common;
@@ -204,6 +209,7 @@ typedef struct ObjProperties {
         ObjPropertyWeapon weapon;
         ObjPropertyCamControl camControl;
         ObjPropertyTimeTrial timeTrial;
+        ObjPropertyBoost boost;
     };
 } ObjProperties;
 

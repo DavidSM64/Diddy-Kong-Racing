@@ -1678,7 +1678,7 @@ memset = 0x800B490C;
 
 // printf.c .text
 _itoa = 0x800B4940;
-func_800B4A08 = 0x800B4A08;
+sprintfSetSpacingCodes = 0x800B4A08;
 sprintf = 0x800B4A14;
 vsprintf = 0x800B4A40;
 debug_text_init = 0x800B5E88;
@@ -2520,7 +2520,8 @@ gTitleCinematicTextColourCount = 0x800DF9F4;
 gTitleCinematicTextColours = 0x800DF9F8;
 unused_800DFA0C = 0x800DFA0C;
 gOptionMenuStrings = 0x800DFA10; // size:0x1C
-gOptionMenuTextures = 0x800DFA2C; // size:0x10
+gOptionMenuTextures = 0x800DFA2C; // size:0xC
+gOptionMenuImageIndices = 0x800DFA38; // size:0x2
 gAudioMenuStrings = 0x800DFA3C; // size:0x80
 gMusicTestSongIndex = 0x800DFABC;
 gSfxVolumeSliderValue = 0x800DFAC0;
@@ -2845,7 +2846,7 @@ D_800E2EC4 = 0x800E2EC4;
 gCurrentHovercraftParticleOpacity = 0x800E2EEC;
 
 // printf.c .data
-D_800E2EF0 = 0x800E2EF0;
+gSprintfSpacingCode = 0x800E2EF0;
 gDebugFontCoords = 0x800E2EF4;
 dDebugFontSettings = 0x800E2FB8;
 
@@ -4579,7 +4580,7 @@ gDebugTextX = 0x80127CAC;
 gDebugTextY = 0x80127CAE;
 D_80127CB0 = 0x80127CB0;
 D_80127CB2 = 0x80127CB2;
-D_80127CB4 = 0x80127CB4;
+gDebugFixedWidthMode = 0x80127CB4;
 gDebugTextOn = 0x80127CB8;
 gDebugBoundsX1 = 0x80127CBC;
 gDebugBoundsX2 = 0x80127CC0;

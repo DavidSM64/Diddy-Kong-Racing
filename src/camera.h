@@ -121,7 +121,7 @@ void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void set_ortho_matrix_height(f32 value);
 void set_ortho_matrix_view(Gfx **dList, MatrixS **mtx);
 void func_8006807C(Gfx **dList, MatrixS **mtx);
-void viewport_rsp_set(Gfx **dList, s32 width, s32 height, s32 posX, s32 posY);
+void viewport_rsp_set(Gfx **dList, s32 halfWidth, s32 halfHeight, s32 centerX, s32 centerY);
 void viewport_reset(Gfx **dList);
 void matrix_world_origin(Gfx **dList, MatrixS **mtx);
 void sprite_anim_off(s32 setting);
