@@ -79,10 +79,10 @@ u8 gCameraZoomLevels[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 /************ .bss ************/
 
-ObjectSegment gCameraSegment[8];
-s32 gNumberOfViewports;
+Camera gCameras[8];
+s32 gViewportLayout;
 s32 gActiveCameraID;
-s32 gViewportCap;
+s32 gNumCameras;
 UNUSED s32 D_80120CEC;
 ObjectTransform gCameraTransform;
 s32 gMatrixType;
@@ -100,7 +100,7 @@ f32 gModelMatrixViewZ[5];
 u16 perspNorm;
 Matrix *gModelMatrixF[6];
 MatrixS *gModelMatrixS[6];
-Matrix *D_80120DA0[10][8]; // Not sure why, but gModelMatrixF is populated from here, even though this is never set.
+f32 D_80120DA0[5 * 16];
 Matrix gPerspectiveMatrixF;
 Matrix gViewMatrixF;
 Matrix gCameraMatrixF;
@@ -116,14 +116,13 @@ Matrix gCurrentModelMatrixS;
  * Official Name: camInit
  */
 extern s32 D_B0000578;
-void camera_init(void) {
+void cam_init(void) {
     s32 i;
     s32 j;
     u32 stat;
 
     // clang-format off
-    // This section is highly suspicous to be undefined behaviour as we have it defined right now.
-    for (i = 0; i < 5; i++) { gModelMatrixF[i] = (Matrix *) &D_80120DA0[(i << 1)]; }
+    for (i = 0; i < 5; i++) { gModelMatrixF[i] = (Matrix*)&D_80120DA0[i << 4]; }
     // clang-format on
 
     for (j = 0; j < 8; j++) {
@@ -135,10 +134,10 @@ void camera_init(void) {
     gActiveCameraID = 0;
     gModelMatrixStackPos = 0;
     gCameraMatrixPos = 0;
-    gNumberOfViewports = 0;
+    gViewportLayout = 0;
     gSpriteAnimOff = FALSE;
-    D_80120D18 = 0;
-    gAdjustViewportHeight = 0;
+    D_80120D18 = FALSE;
+    gAdjustViewportHeight = FALSE;
     gAntiPiracyViewport = FALSE;
 
     WAIT_ON_IOBUSY(stat);
@@ -154,10 +153,10 @@ void camera_init(void) {
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
 
-void func_80066060(s32 cameraID, s32 zoomLevel) {
-    if (cameraID >= 0 && cameraID < 4) {
+void cam_set_zoom(s32 cameraID, s32 zoomLevel) {
+    if (cameraID >= 0 && cameraID <= 3) {
         gCameraZoomLevels[cameraID] = zoomLevel;
-        gCameraSegment[cameraID].object.animationID = zoomLevel;
+        gCameras[cameraID].zoom = zoomLevel;
     }
 }
 
@@ -165,25 +164,25 @@ void func_80066060(s32 cameraID, s32 zoomLevel) {
  * Set gAdjustViewportHeight to PAL mode if necessary, if setting is 1.
  * Otherwise, set it to 0, regardless of TV type.
  */
-void set_viewport_tv_type(s8 setting) {
+void enable_pal_viewport_height_adjust(s8 setting) {
     if (osTvType == OS_TV_TYPE_PAL) {
         gAdjustViewportHeight = setting;
     }
 }
 
 void func_800660C0(void) {
-    D_80120D18 = 1;
+    D_80120D18 = TRUE;
 }
 
 void func_800660D0(void) {
-    D_80120D18 = 0;
+    D_80120D18 = FALSE;
 }
 
 /**
  * Unused function that will return the current camera's FoV.
  * Official Name: camGetFOV
  */
-UNUSED f32 get_current_camera_fov(void) {
+UNUSED f32 cam_get_fov(void) {
     return gCurCamFOV;
 }
 
@@ -191,7 +190,7 @@ UNUSED f32 get_current_camera_fov(void) {
  * Set the FoV of the viewspace, then recalculate the perspective matrix.
  * Official Name: camSetFOV
  */
-void update_camera_fov(f32 camFieldOfView) {
+void cam_set_fov(f32 camFieldOfView) {
     if (CAMERA_MIN_FOV < camFieldOfView && camFieldOfView < CAMERA_MAX_FOV && camFieldOfView != gCurCamFOV) {
         gCurCamFOV = camFieldOfView;
         guPerspectiveF(gPerspectiveMatrixF, &perspNorm, camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR,
@@ -203,7 +202,7 @@ void update_camera_fov(f32 camFieldOfView) {
 /**
  * Unused function that recalculates the perspective matrix.
  */
-UNUSED void calculate_camera_perspective(void) {
+UNUSED void cam_reset_fov(void) {
     guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR,
                    CAMERA_SCALE);
     f32_matrix_to_s16_matrix(&gPerspectiveMatrixF, &gProjectionMatrixS);
@@ -219,8 +218,8 @@ UNUSED Matrix *matrix_get_model_s16(void) {
 /**
  * Returns the number of active viewports.
  */
-s32 get_viewport_count(void) {
-    return gNumberOfViewports;
+s32 cam_get_viewport_layout(void) {
+    return gViewportLayout;
 }
 
 /**
@@ -236,7 +235,7 @@ s32 get_current_viewport(void) {
  * Initialises the camera object for the tracks menu.
  */
 void camera_init_tracks_menu(Gfx **dList, MatrixS **mtxS) {
-    ObjectSegment *cam;
+    Camera *cam;
     s16 angleY;
     s16 angleX;
     s16 angleZ;
@@ -245,26 +244,26 @@ void camera_init_tracks_menu(Gfx **dList, MatrixS **mtxS) {
     f32 posY;
     f32 posZ;
 
-    set_active_viewports_and_max(0);
+    cam_set_layout(VIEWPORT_LAYOUT_1_PLAYER);
     set_active_camera(0);
-    cam = get_active_camera_segment();
+    cam = cam_get_active_camera();
     angleY = cam->trans.rotation.y_rotation;
     angleX = cam->trans.rotation.x_rotation;
     angleZ = cam->trans.rotation.z_rotation;
     posX = cam->trans.x_position;
     posY = cam->trans.y_position;
     posZ = cam->trans.z_position;
-    sp24 = cam->camera.unk38;
+    sp24 = cam->pitch;
     cam->trans.rotation.z_rotation = 0;
     cam->trans.rotation.x_rotation = 0;
     cam->trans.rotation.y_rotation = -0x8000;
-    cam->camera.unk38 = 0;
+    cam->pitch = 0;
     cam->trans.x_position = 0.0f;
     cam->trans.y_position = 0.0f;
     cam->trans.z_position = 0.0f;
     update_envmap_position(0.0f, 0.0f, -1.0f);
     viewport_main(dList, mtxS);
-    cam->camera.unk38 = sp24;
+    cam->pitch = sp24;
     cam->trans.rotation.y_rotation = angleY;
     cam->trans.rotation.x_rotation = angleX;
     cam->trans.rotation.z_rotation = angleZ;
@@ -286,9 +285,9 @@ f32 get_distance_to_active_camera(f32 xPos, f32 yPos, f32 zPos) {
         index += 4;
     }
 
-    dz = zPos - gCameraSegment[index].trans.z_position;
-    dx = xPos - gCameraSegment[index].trans.x_position;
-    dy = yPos - gCameraSegment[index].trans.y_position;
+    dz = zPos - gCameras[index].trans.z_position;
+    dx = xPos - gCameras[index].trans.x_position;
+    dy = yPos - gCameras[index].trans.y_position;
     return sqrtf((dz * dz) + ((dx * dx) + (dy * dy)));
 }
 
@@ -297,19 +296,19 @@ f32 get_distance_to_active_camera(f32 xPos, f32 yPos, f32 zPos) {
  * Also sets the other properties of the camera to a default.
  */
 void camera_reset(s32 xPos, s32 yPos, s32 zPos, s32 angleZ, s32 angleX, s32 angleY) {
-    gCameraSegment[gActiveCameraID].trans.rotation.z_rotation = (s16) (angleZ * 0xB6);
-    gCameraSegment[gActiveCameraID].trans.x_position = (f32) xPos;
-    gCameraSegment[gActiveCameraID].trans.y_position = (f32) yPos;
-    gCameraSegment[gActiveCameraID].trans.z_position = (f32) zPos;
-    gCameraSegment[gActiveCameraID].trans.rotation.x_rotation = (s16) (angleX * 0xB6);
-    gCameraSegment[gActiveCameraID].camera.unk38 = 0;
-    gCameraSegment[gActiveCameraID].z_velocity = 0.0f;
-    gCameraSegment[gActiveCameraID].unk28 = 0.0f;
-    gCameraSegment[gActiveCameraID].camera.unk2C = 0.0f;
-    gCameraSegment[gActiveCameraID].camera.distanceToCamera = 0.0f;
-    gCameraSegment[gActiveCameraID].x_velocity = 160.0f;
-    gCameraSegment[gActiveCameraID].trans.rotation.y_rotation = (s16) (angleY * 0xB6);
-    gCameraSegment[gActiveCameraID].object.animationID = gCameraZoomLevels[gActiveCameraID];
+    gCameras[gActiveCameraID].trans.rotation.z_rotation = angleZ * (0x7FFF / 180);
+    gCameras[gActiveCameraID].trans.x_position = xPos;
+    gCameras[gActiveCameraID].trans.y_position = yPos;
+    gCameras[gActiveCameraID].trans.z_position = zPos;
+    gCameras[gActiveCameraID].trans.rotation.x_rotation = angleX * (0x7FFF / 180);
+    gCameras[gActiveCameraID].pitch = 0;
+    gCameras[gActiveCameraID].x_velocity = 0.0f;
+    gCameras[gActiveCameraID].y_velocity = 0.0f;
+    gCameras[gActiveCameraID].z_velocity = 0.0f;
+    gCameras[gActiveCameraID].shakeMagnitude = 0.0f;
+    gCameras[gActiveCameraID].boomLength = 160.0f;
+    gCameras[gActiveCameraID].trans.rotation.y_rotation = angleY * (0x7FFF / 180);
+    gCameras[gActiveCameraID].zoom = gCameraZoomLevels[gActiveCameraID];
 }
 
 /**
@@ -319,14 +318,14 @@ void camera_reset(s32 xPos, s32 yPos, s32 zPos, s32 angleZ, s32 angleX, s32 angl
  */
 void write_to_object_render_stack(s32 stackPos, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6) {
     stackPos += 4;
-    gCameraSegment[stackPos].camera.unk38 = 0;
-    gCameraSegment[stackPos].trans.x_position = xPos;
-    gCameraSegment[stackPos].trans.y_position = yPos;
-    gCameraSegment[stackPos].trans.z_position = zPos;
-    gCameraSegment[stackPos].trans.rotation.y_rotation = arg4;
-    gCameraSegment[stackPos].trans.rotation.x_rotation = arg5;
-    gCameraSegment[stackPos].trans.rotation.z_rotation = arg6;
-    gCameraSegment[stackPos].object.cameraSegmentID = get_level_segment_index_from_position(xPos, yPos, zPos);
+    gCameras[stackPos].pitch = 0;
+    gCameras[stackPos].trans.x_position = xPos;
+    gCameras[stackPos].trans.y_position = yPos;
+    gCameras[stackPos].trans.z_position = zPos;
+    gCameras[stackPos].trans.rotation.y_rotation = arg4;
+    gCameras[stackPos].trans.rotation.x_rotation = arg5;
+    gCameras[stackPos].trans.rotation.z_rotation = arg6;
+    gCameras[stackPos].cameraSegmentID = get_level_segment_index_from_position(xPos, yPos, zPos);
     gCutsceneCameraActive = TRUE;
 }
 
@@ -346,34 +345,33 @@ void disable_cutscene_camera(void) {
 }
 
 /**
- * Sets the cap for the viewports. Usually reflecting how many there are.
- * If the number passed is within 1-4, then the stack cap is set to
- * how many active viewports there are.
+ * Sets the current layout and returns the number of active cameras for that layout.
+ * The layoutID argument must be from the ViewportCount enumeration.
  */
-s32 set_active_viewports_and_max(s32 num) {
-    if (num >= 0 && num < 4) {
-        gNumberOfViewports = num;
+s32 cam_set_layout(s32 layoutID) {
+    if (layoutID >= VIEWPORT_LAYOUT_1_PLAYER && layoutID <= VIEWPORT_LAYOUT_4_PLAYERS) {
+        gViewportLayout = layoutID;
     } else {
-        gNumberOfViewports = 0;
+        gViewportLayout = VIEWPORT_LAYOUT_1_PLAYER;
     }
-    switch (gNumberOfViewports) {
-        case VIEWPORTS_COUNT_1_PLAYER:
-            gViewportCap = 1;
+    switch (gViewportLayout) {
+        case VIEWPORT_LAYOUT_1_PLAYER:
+            gNumCameras = 1;
             break;
-        case VIEWPORTS_COUNT_2_PLAYERS:
-            gViewportCap = 2;
+        case VIEWPORT_LAYOUT_2_PLAYERS:
+            gNumCameras = 2;
             break;
-        case VIEWPORTS_COUNT_3_PLAYERS:
-            gViewportCap = 3;
+        case VIEWPORT_LAYOUT_3_PLAYERS:
+            gNumCameras = 3;
             break;
-        case VIEWPORTS_COUNT_4_PLAYERS:
-            gViewportCap = 4;
+        case VIEWPORT_LAYOUT_4_PLAYERS:
+            gNumCameras = 4;
             break;
     }
-    if (gActiveCameraID >= gViewportCap) {
+    if (gActiveCameraID >= gNumCameras) {
         gActiveCameraID = 0;
     }
-    return gViewportCap;
+    return gNumCameras;
 }
 
 /**
@@ -410,6 +408,7 @@ void copy_viewports_to_stack(void) {
             gScreenViewports[i].flags |= VIEWPORT_EXTRA_BG;
         }
         gScreenViewports[i].flags &= ~(VIEWPORT_UNK_02 | VIEWPORT_UNK_04);
+
         if (gScreenViewports[i].flags & VIEWPORT_EXTRA_BG) {
             if (!(gScreenViewports[i].flags & VIEWPORT_X_CUSTOM)) {
                 xPos = (((gScreenViewports[i].x2 - gScreenViewports[i].x1) + 1) << 1) + (gScreenViewports[i].x1 * 4);
@@ -627,7 +626,7 @@ void viewport_main(Gfx **dlist, MatrixS **mats) {
     originalCameraID = gActiveCameraID;
     savedCameraID = gActiveCameraID;
 
-    if (func_8000E184() && gNumberOfViewports == VIEWPORTS_COUNT_1_PLAYER) {
+    if (func_8000E184() && gViewportLayout == VIEWPORT_LAYOUT_1_PLAYER) {
         gActiveCameraID = 1;
         savedCameraID = 0;
     }
@@ -649,9 +648,9 @@ void viewport_main(Gfx **dlist, MatrixS **mats) {
         return;
     }
 
-    viewports = gNumberOfViewports;
-    if (viewports == VIEWPORTS_COUNT_3_PLAYERS) {
-        viewports = VIEWPORTS_COUNT_4_PLAYERS;
+    viewports = gViewportLayout;
+    if (viewports == VIEWPORT_LAYOUT_3_PLAYERS) {
+        viewports = VIEWPORT_LAYOUT_4_PLAYERS;
     }
     x = videoWidth >> 1;
     sp54_width = x;
@@ -663,7 +662,7 @@ void viewport_main(Gfx **dlist, MatrixS **mats) {
     }
 
     switch (viewports) {
-        case VIEWPORTS_COUNT_1_PLAYER:
+        case VIEWPORT_LAYOUT_1_PLAYER:
             posX = sp54_width;
             posY = sp58_height;
             if (osTvType == OS_TV_TYPE_PAL) {
@@ -671,7 +670,7 @@ void viewport_main(Gfx **dlist, MatrixS **mats) {
             }
             gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, videoWidth, videoHeight);
             break;
-        case VIEWPORTS_COUNT_2_PLAYERS:
+        case VIEWPORT_LAYOUT_2_PLAYERS:
             // 2 players = split screen horizontally
             // first player has top half
             posX = sp54_width;
@@ -694,7 +693,7 @@ void viewport_main(Gfx **dlist, MatrixS **mats) {
             break;
         // this is probably never reached because of an if above that sets the viewport to 4 players if its currently 3
         // players
-        case VIEWPORTS_COUNT_3_PLAYERS:
+        case VIEWPORT_LAYOUT_3_PLAYERS:
             posY = sp58_height;
             // 3 player splits screen in 4 parts, first player = top left, second = top right, third = bottom left and
             // bottom right has map of race track
@@ -709,7 +708,7 @@ void viewport_main(Gfx **dlist, MatrixS **mats) {
                 gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, tempX, 0, videoWidth - (videoWidth >> 8), videoHeight);
             }
             break;
-        case VIEWPORTS_COUNT_4_PLAYERS:
+        case VIEWPORT_LAYOUT_4_PLAYERS:
             sp58_height >>= 1;
             sp54_width >>= 1;
             tempY = 0;
@@ -748,7 +747,7 @@ void viewport_main(Gfx **dlist, MatrixS **mats) {
             posY = tempX + sp58_height;
             posX = tempY + sp54_width;
             if (osTvType == OS_TV_TYPE_PAL) {
-                if (gActiveCameraID < 2) {
+                if (gActiveCameraID <= 1) {
                     posY -= 20;
                 } else {
                     posY -= 6;
@@ -788,11 +787,11 @@ void viewport_scissor(Gfx **dList) {
     size = fb_size();
     height = (u16) GET_VIDEO_HEIGHT(size);
     width = (u16) size;
-    numViewports = gNumberOfViewports;
+    numViewports = gViewportLayout;
 
-    if (numViewports != 0) {
-        if (numViewports == VIEWPORTS_COUNT_3_PLAYERS) {
-            numViewports = VIEWPORTS_COUNT_4_PLAYERS;
+    if (numViewports != VIEWPORT_LAYOUT_1_PLAYER) {
+        if (numViewports == VIEWPORT_LAYOUT_3_PLAYERS) {
+            numViewports = VIEWPORT_LAYOUT_4_PLAYERS;
         }
         lrx = ulx = 0;
         lry = uly = 0;
@@ -855,9 +854,9 @@ void viewport_scissor(Gfx **dList) {
                 break;
         }
         gDPSetScissor((*dList)++, 0, ulx, uly, lrx, lry);
-        return;
+    } else {
+        gDPSetScissor((*dList)++, 0, 0, 0, width, height);
     }
-    gDPSetScissor((*dList)++, 0, 0, 0, width, height);
 }
 
 // Official Name: camGetPlayerProjMtx / camSetProjMtx - ??
@@ -871,32 +870,32 @@ void func_80067D3C(Gfx **dList, UNUSED MatrixS **mats) {
         gActiveCameraID += 4;
     }
 
-    gCameraTransform.rotation.y_rotation = 0x8000 + gCameraSegment[gActiveCameraID].trans.rotation.y_rotation;
+    gCameraTransform.rotation.y_rotation = 0x8000 + gCameras[gActiveCameraID].trans.rotation.y_rotation;
     gCameraTransform.rotation.x_rotation =
-        gCameraSegment[gActiveCameraID].trans.rotation.x_rotation + gCameraSegment[gActiveCameraID].camera.unk38;
-    gCameraTransform.rotation.z_rotation = gCameraSegment[gActiveCameraID].trans.rotation.z_rotation;
+        gCameras[gActiveCameraID].trans.rotation.x_rotation + gCameras[gActiveCameraID].pitch;
+    gCameraTransform.rotation.z_rotation = gCameras[gActiveCameraID].trans.rotation.z_rotation;
 
-    gCameraTransform.x_position = -gCameraSegment[gActiveCameraID].trans.x_position;
-    gCameraTransform.y_position = -gCameraSegment[gActiveCameraID].trans.y_position;
-    if (D_80120D18 != 0) {
-        gCameraTransform.y_position -= gCameraSegment[gActiveCameraID].camera.distanceToCamera;
+    gCameraTransform.x_position = -gCameras[gActiveCameraID].trans.x_position;
+    gCameraTransform.y_position = -gCameras[gActiveCameraID].trans.y_position;
+    if (D_80120D18) {
+        gCameraTransform.y_position -= gCameras[gActiveCameraID].shakeMagnitude;
     }
-    gCameraTransform.z_position = -gCameraSegment[gActiveCameraID].trans.z_position;
+    gCameraTransform.z_position = -gCameras[gActiveCameraID].trans.z_position;
 
-    object_transform_to_matrix_2(gCameraMatrixF, &gCameraTransform);
+    object_inverse_transform_to_matrix(gCameraMatrixF, &gCameraTransform);
     f32_matrix_mult(&gCameraMatrixF, &gPerspectiveMatrixF, &gViewMatrixF);
 
-    gCameraTransform.rotation.y_rotation = -0x8000 - gCameraSegment[gActiveCameraID].trans.rotation.y_rotation;
+    gCameraTransform.rotation.y_rotation = -0x8000 - gCameras[gActiveCameraID].trans.rotation.y_rotation;
     gCameraTransform.rotation.x_rotation =
-        -(gCameraSegment[gActiveCameraID].trans.rotation.x_rotation + gCameraSegment[gActiveCameraID].camera.unk38);
-    gCameraTransform.rotation.z_rotation = -gCameraSegment[gActiveCameraID].trans.rotation.z_rotation;
+        -(gCameras[gActiveCameraID].trans.rotation.x_rotation + gCameras[gActiveCameraID].pitch);
+    gCameraTransform.rotation.z_rotation = -gCameras[gActiveCameraID].trans.rotation.z_rotation;
     gCameraTransform.scale = 1.0f;
-    gCameraTransform.x_position = gCameraSegment[gActiveCameraID].trans.x_position;
-    gCameraTransform.y_position = gCameraSegment[gActiveCameraID].trans.y_position;
-    if (D_80120D18 != 0) {
-        gCameraTransform.y_position += gCameraSegment[gActiveCameraID].camera.distanceToCamera;
+    gCameraTransform.x_position = gCameras[gActiveCameraID].trans.x_position;
+    gCameraTransform.y_position = gCameras[gActiveCameraID].trans.y_position;
+    if (D_80120D18) {
+        gCameraTransform.y_position += gCameras[gActiveCameraID].shakeMagnitude;
     }
-    gCameraTransform.z_position = gCameraSegment[gActiveCameraID].trans.z_position;
+    gCameraTransform.z_position = gCameras[gActiveCameraID].trans.z_position;
 
     object_transform_to_matrix(gProjectionMatrixF, &gCameraTransform);
     f32_matrix_to_s16_matrix(&gProjectionMatrixF, &gUnusedProjectionMatrixS);
@@ -933,7 +932,7 @@ void set_ortho_matrix_view(Gfx **dList, MatrixS **mtx) {
     gViewportStack[gActiveCameraID + 5].vp.vtrans[0] = width * 2;
     gViewportStack[gActiveCameraID + 5].vp.vtrans[1] = height * 2;
     gSPViewport((*dList)++, OS_K0_TO_PHYSICAL(&gViewportStack[gActiveCameraID + 5]));
-    gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_0);
     gModelMatrixStackPos = 0;
     gMatrixType = G_MTX_DKR_INDEX_0;
 
@@ -949,12 +948,12 @@ void set_ortho_matrix_view(Gfx **dList, MatrixS **mtx) {
 
 // Official Name: camStandardPersp?
 void func_8006807C(Gfx **dList, MatrixS **mtx) {
-    object_transform_to_matrix_2(gCurrentModelMatrixF, &D_800DD288);
+    object_inverse_transform_to_matrix(gCurrentModelMatrixF, &D_800DD288);
     f32_matrix_mult(&gCurrentModelMatrixF, &gPerspectiveMatrixF, &gViewMatrixF);
-    object_transform_to_matrix_2((float(*)[4]) gModelMatrixF[0], &D_800DD2A0);
+    object_inverse_transform_to_matrix((float (*)[4]) gModelMatrixF[0], &D_800DD2A0);
     f32_matrix_mult(gModelMatrixF[0], &gViewMatrixF, &gCurrentModelMatrixF);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixF, *mtx);
-    gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_0);
     gModelMatrixStackPos = 0;
     gMatrixType = G_MTX_DKR_INDEX_0;
 }
@@ -964,23 +963,23 @@ void func_8006807C(Gfx **dList, MatrixS **mtx) {
  * Viewports have a centre position and a scale factor, rather than a standard four corners.
  * Official Name: camSetViewport
  */
-void viewport_rsp_set(Gfx **dList, s32 width, s32 height, s32 posX, s32 posY) {
-    s32 tempWidth = (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) ? -width : width;
+void viewport_rsp_set(Gfx **dList, s32 halfWidth, s32 halfHeight, s32 centerX, s32 centerY) {
+    s32 tempWidth = (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) ? -halfWidth : halfWidth;
 #ifdef ANTI_TAMPER
     // Antipiracy measure. Flips the screen upside down.
     if (gAntiPiracyViewport) {
-        height = -height;
-        tempWidth = -width;
+        halfHeight = -halfHeight;
+        tempWidth = -halfWidth;
     }
 #endif
     if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG)) {
-        gViewportStack[gActiveCameraID].vp.vtrans[0] = posX * 4;
-        gViewportStack[gActiveCameraID].vp.vtrans[1] = posY * 4;
+        gViewportStack[gActiveCameraID].vp.vtrans[0] = centerX * 4;
+        gViewportStack[gActiveCameraID].vp.vtrans[1] = centerY * 4;
         gViewportStack[gActiveCameraID].vp.vscale[0] = tempWidth * 4;
-        gViewportStack[gActiveCameraID].vp.vscale[1] = height * 4;
-        gSPViewport((*dList)++, OS_PHYSICAL_TO_K0(&gViewportStack[gActiveCameraID]));
+        gViewportStack[gActiveCameraID].vp.vscale[1] = halfHeight * 4;
+        gSPViewport((*dList)++, OS_K0_TO_PHYSICAL(&gViewportStack[gActiveCameraID]));
     } else {
-        gSPViewport((*dList)++, OS_PHYSICAL_TO_K0(&gViewportStack[gActiveCameraID + 10 + (gViewportWithBG * 5)]));
+        gSPViewport((*dList)++, OS_K0_TO_PHYSICAL(&gViewportStack[gActiveCameraID + 10 + (gViewportWithBG * 5)]));
     }
 }
 
@@ -1017,7 +1016,7 @@ void matrix_world_origin(Gfx **dList, MatrixS **mtx) {
     f32_matrix_mult(gModelMatrixF[gModelMatrixStackPos], &gViewMatrixF, &gCurrentModelMatrixF);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixF, *mtx);
     gModelMatrixS[gModelMatrixStackPos] = *mtx;
-    gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), gMatrixType << 6);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), gMatrixType);
 }
 
 /**
@@ -1097,7 +1096,7 @@ s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Obj
         f32_matrix_mult(gModelMatrixF[gModelMatrixStackPos], &gViewMatrixF, &gCurrentModelMatrixF);
         f32_matrix_to_s16_matrix(&gCurrentModelMatrixF, *mtx);
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
-        gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
+        gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
         gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(&gVehiclePartVertex), 1, 0);
     } else {
         v = *vertexList;
@@ -1108,14 +1107,13 @@ s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Obj
         v->g = 255;
         v->b = 255;
         v->a = 255;
-        gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(*vertexList), 1, 0);
+        gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(*vertexList), 1, 0);
         (*vertexList)++;
-        if (gCutsceneCameraActive == 0) {
-            angleDiff =
-                gCameraSegment[gActiveCameraID].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
+        if (!gCutsceneCameraActive) {
+            angleDiff = gCameras[gActiveCameraID].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
         } else {
             angleDiff =
-                gCameraSegment[gActiveCameraID + 4].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
+                gCameras[gActiveCameraID + 4].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
         }
         textureFrame = obj->segment.animFrame;
         gModelMatrixStackPos++;
@@ -1123,7 +1121,7 @@ s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Obj
                                            obj->segment.trans.scale, gVideoAspectRatio);
         f32_matrix_to_s16_matrix(gModelMatrixF[gModelMatrixStackPos], *mtx);
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
-        gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
+        gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dList)++);
     }
     if (gSpriteAnimOff == FALSE) {
@@ -1141,11 +1139,11 @@ s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Obj
     gSPDisplayList((*dList)++, arg4->gfx[textureFrame + 1]);
     gModelMatrixStackPos--;
     if (gModelMatrixStackPos == 0) {
-        textureFrame = 0;
+        textureFrame = G_MTX_DKR_INDEX_0;
     } else {
-        textureFrame = 1;
+        textureFrame = G_MTX_DKR_INDEX_1;
     }
-    gDkrInsertMatrix((*dList)++, 0, textureFrame << 6);
+    gSPSelectMatrixDKR((*dList)++, textureFrame);
     gDkrDisableBillboard((*dList)++);
     return result;
 }
@@ -1172,14 +1170,14 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         temp_v1->g = 255;
         temp_v1->b = 255;
         temp_v1->a = 255;
-        gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(*vtx), 1, 0);
+        gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(*vtx), 1, 0);
         (*vtx)++; // Can't be done in the macro?
         index = segment->animFrame;
         gModelMatrixStackPos++;
         gCameraTransform.rotation.y_rotation = -segment->trans.rotation.y_rotation;
         gCameraTransform.rotation.x_rotation = -segment->trans.rotation.x_rotation;
         gCameraTransform.rotation.z_rotation =
-            gCameraSegment[gActiveCameraID].trans.rotation.z_rotation + segment->trans.rotation.z_rotation;
+            gCameras[gActiveCameraID].trans.rotation.z_rotation + segment->trans.rotation.z_rotation;
         gCameraTransform.x_position = 0.0f;
         gCameraTransform.y_position = 0.0f;
         gCameraTransform.z_position = 0.0f;
@@ -1192,11 +1190,11 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
             scale = segment->trans.scale;
             f32_matrix_from_scale(gCurrentModelMatrixF, scale, scale, 1.0f);
         }
-        object_transform_to_matrix_2(aspectMtxF, &gCameraTransform);
+        object_inverse_transform_to_matrix(aspectMtxF, &gCameraTransform);
         f32_matrix_mult(&gCurrentModelMatrixF, &aspectMtxF, gModelMatrixF[gModelMatrixStackPos]);
         f32_matrix_to_s16_matrix(gModelMatrixF[gModelMatrixStackPos], *mtx);
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
-        gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
+        gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dList)++);
         if (gSpriteAnimOff == FALSE) {
             index = (((u8) index) * sprite->baseTextureId) >> 8;
@@ -1207,11 +1205,11 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         }
         gSPDisplayList((*dList)++, sprite->unkC.ptr[index]);
         if (--gModelMatrixStackPos == 0) {
-            index = 0;
+            index = G_MTX_DKR_INDEX_0;
         } else {
-            index = 1;
+            index = G_MTX_DKR_INDEX_1;
         }
-        gDkrInsertMatrix((*dList)++, 0, index << 6);
+        gSPSelectMatrixDKR((*dList)++, index);
         gDkrDisableBillboard((*dList)++);
     }
 }
@@ -1317,13 +1315,13 @@ void apply_object_shear_matrix(Gfx **dList, MatrixS **mtx, Object *arg2, Object 
 
     f32_matrix_mult(&matrix_mult, &gViewMatrixF, &gCurrentModelMatrixS);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixS, *mtx);
-    gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_1);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_1);
 }
 
 /**
  * Official Name: camPushModelMtx
  */
-s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY) {
+s32 cam_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY) {
     f32 tempX;
     f32 tempY;
     f32 tempZ;
@@ -1331,11 +1329,11 @@ s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f3
     f32 scaleFactor;
 
     object_transform_to_matrix(gCurrentModelMatrixF, trans);
-    if (scaleY != 0.0f) {
-        f32_matrix_y_scale(&gCurrentModelMatrixF, scaleY);
+    if (offsetY != 0.0f) {
+        f32_matrix_translate_y_axis(&gCurrentModelMatrixF, offsetY);
     }
-    if (scale != 1.0f) {
-        f32_matrix_scale(&gCurrentModelMatrixF, scale);
+    if (scaleY != 1.0f) {
+        f32_matrix_scale_y_axis(&gCurrentModelMatrixF, scaleY);
     }
     f32_matrix_mult(&gCurrentModelMatrixF, gModelMatrixF[gModelMatrixStackPos],
                     gModelMatrixF[gModelMatrixStackPos + 1]);
@@ -1348,15 +1346,15 @@ s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f3
     }
     if (1) {}
     if (1) {}; // Fakematch
-    gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_1);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_1);
     guMtxXFMF(*gModelMatrixF[gModelMatrixStackPos], 0.0f, 0.0f, 0.0f, &tempX, &tempY, &tempZ);
     index = gActiveCameraID;
     if (gCutsceneCameraActive) {
         index += 4;
     }
-    tempX = gCameraSegment[index].trans.x_position - tempX;
-    tempY = gCameraSegment[index].trans.y_position - tempY;
-    tempZ = gCameraSegment[index].trans.z_position - tempZ;
+    tempX = gCameras[index].trans.x_position - tempX;
+    tempY = gCameras[index].trans.y_position - tempY;
+    tempZ = gCameras[index].trans.z_position - tempZ;
     gCameraTransform.rotation.y_rotation = -trans->rotation.y_rotation;
     gCameraTransform.rotation.x_rotation = -trans->rotation.x_rotation;
     gCameraTransform.rotation.z_rotation = -trans->rotation.z_rotation;
@@ -1364,7 +1362,7 @@ s32 camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f3
     gCameraTransform.y_position = 0.0f;
     gCameraTransform.z_position = 0.0f;
     gCameraTransform.scale = 1.0f;
-    object_transform_to_matrix_2(gCurrentModelMatrixF, &gCameraTransform);
+    object_inverse_transform_to_matrix(gCurrentModelMatrixF, &gCameraTransform);
     guMtxXFMF(gCurrentModelMatrixF, tempX, tempY, tempZ, &tempX, &tempY, &tempZ);
     scaleFactor = 1.0f / trans->scale;
     tempX *= scaleFactor;
@@ -1421,8 +1419,8 @@ void apply_head_turning_matrix(Gfx **dList, MatrixS **mtx, Object_68 *objGfx, s1
     headMtxF[3][3] = 1.0f;
     f32_matrix_mult(&headMtxF, &gCurrentModelMatrixS, &rotationMtxF);
     f32_matrix_to_s16_matrix(&rotationMtxF, *mtx);
-    gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
-    gDkrInsertMatrix((*dList)++, G_MWO_MATRIX_XX_XY_I, G_MTX_DKR_INDEX_1);
+    gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
+    gSPSelectMatrixDKR((*dList)++, G_MTX_DKR_INDEX_1);
 }
 
 /**
@@ -1453,9 +1451,9 @@ void apply_matrix_from_stack(Gfx **dList) {
     } // Fakematch
 
     if (gModelMatrixStackPos > 0) {
-        gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0(gModelMatrixS[gModelMatrixStackPos]), G_MTX_DKR_INDEX_1);
+        gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL(gModelMatrixS[gModelMatrixStackPos]), G_MTX_DKR_INDEX_1);
     } else {
-        gDkrInsertMatrix((*dList)++, G_MWO_MATRIX_XX_XY_I, G_MTX_DKR_INDEX_0);
+        gSPSelectMatrixDKR((*dList)++, G_MTX_DKR_INDEX_0);
     }
 }
 
@@ -1464,12 +1462,12 @@ void apply_matrix_from_stack(Gfx **dList) {
  * Also recalculates which block it's in.
  */
 UNUSED void translate_camera_segment(f32 x, f32 y, f32 z) {
-    gCameraSegment[gActiveCameraID].trans.x_position += x;
-    gCameraSegment[gActiveCameraID].trans.y_position += y;
-    gCameraSegment[gActiveCameraID].trans.z_position += z;
-    gCameraSegment[gActiveCameraID].object.cameraSegmentID = get_level_segment_index_from_position(
-        gCameraSegment[gActiveCameraID].trans.x_position, gCameraSegment[gActiveCameraID].trans.y_position,
-        gCameraSegment[gActiveCameraID].trans.z_position);
+    gCameras[gActiveCameraID].trans.x_position += x;
+    gCameras[gActiveCameraID].trans.y_position += y;
+    gCameras[gActiveCameraID].trans.z_position += z;
+    gCameras[gActiveCameraID].cameraSegmentID = get_level_segment_index_from_position(
+        gCameras[gActiveCameraID].trans.x_position, gCameras[gActiveCameraID].trans.y_position,
+        gCameras[gActiveCameraID].trans.z_position);
 }
 
 /**
@@ -1477,54 +1475,50 @@ UNUSED void translate_camera_segment(f32 x, f32 y, f32 z) {
  * Also recalculates which block it's in.
  */
 UNUSED void transform_camera_segment(f32 x, UNUSED f32 y, f32 z) {
-    gCameraSegment[gActiveCameraID].trans.x_position -=
-        x * coss_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
-    gCameraSegment[gActiveCameraID].trans.z_position -=
-        x * sins_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
-    gCameraSegment[gActiveCameraID].trans.x_position -=
-        z * sins_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
-    gCameraSegment[gActiveCameraID].trans.z_position +=
-        z * coss_f(gCameraSegment[gActiveCameraID].trans.rotation.y_rotation);
-    gCameraSegment[gActiveCameraID].object.cameraSegmentID = get_level_segment_index_from_position(
-        gCameraSegment[gActiveCameraID].trans.x_position, gCameraSegment[gActiveCameraID].trans.y_position,
-        gCameraSegment[gActiveCameraID].trans.z_position);
+    gCameras[gActiveCameraID].trans.x_position -= x * coss_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
+    gCameras[gActiveCameraID].trans.z_position -= x * sins_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
+    gCameras[gActiveCameraID].trans.x_position -= z * sins_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
+    gCameras[gActiveCameraID].trans.z_position += z * coss_f(gCameras[gActiveCameraID].trans.rotation.y_rotation);
+    gCameras[gActiveCameraID].cameraSegmentID = get_level_segment_index_from_position(
+        gCameras[gActiveCameraID].trans.x_position, gCameras[gActiveCameraID].trans.y_position,
+        gCameras[gActiveCameraID].trans.z_position);
 }
 
 /**
  * Rotate the camera with the given angles.
  */
 UNUSED void rotate_camera_segment(s32 angleX, s32 angleY, s32 angleZ) {
-    gCameraSegment[gActiveCameraID].trans.rotation.y_rotation += angleX;
-    gCameraSegment[gActiveCameraID].trans.rotation.x_rotation += angleY;
-    gCameraSegment[gActiveCameraID].trans.rotation.z_rotation += angleZ;
+    gCameras[gActiveCameraID].trans.rotation.y_rotation += angleX;
+    gCameras[gActiveCameraID].trans.rotation.x_rotation += angleY;
+    gCameras[gActiveCameraID].trans.rotation.z_rotation += angleZ;
 }
 
 /**
  * Returns the segment data of the active camera, but won't apply the offset for cutscenes.
  */
-ObjectSegment *get_active_camera_segment_no_cutscenes(void) {
-    return &gCameraSegment[gActiveCameraID];
+Camera *cam_get_active_camera_no_cutscenes(void) {
+    return &gCameras[gActiveCameraID];
 }
 
 /**
  * Returns the segment data of the active camera.
  */
-ObjectSegment *get_active_camera_segment(void) {
+Camera *cam_get_active_camera(void) {
     if (gCutsceneCameraActive) {
-        return &gCameraSegment[gActiveCameraID + 4];
+        return &gCameras[gActiveCameraID + 4];
     }
-    return &gCameraSegment[gActiveCameraID];
+    return &gCameras[gActiveCameraID];
 }
 
 /**
  * Returns the segment data of the active cutscene camera.
  * If no cutscene is active, return player 1's camera.
  */
-ObjectSegment *get_cutscene_camera_segment(void) {
+Camera *get_cutscene_camera_segment(void) {
     if (gCutsceneCameraActive) {
-        return &gCameraSegment[4];
+        return &gCameras[4];
     }
-    return &gCameraSegment[PLAYER_ONE];
+    return &gCameras[PLAYER_ONE];
 }
 
 /**
@@ -1569,13 +1563,13 @@ void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude) 
     f32 diffY;
     s32 i;
 
-    for (i = 0; i <= gNumberOfViewports; i++) {
-        diffX = x - gCameraSegment[i].trans.x_position;
-        diffY = y - gCameraSegment[i].trans.y_position;
-        diffZ = z - gCameraSegment[i].trans.z_position;
+    for (i = 0; i <= gViewportLayout; i++) {
+        diffX = x - gCameras[i].trans.x_position;
+        diffY = y - gCameras[i].trans.y_position;
+        diffZ = z - gCameras[i].trans.z_position;
         distance = sqrtf(((diffX * diffX) + (diffY * diffY)) + (diffZ * diffZ));
         if (distance < dist) {
-            gCameraSegment[i].camera.distanceToCamera = ((dist - distance) * magnitude) / dist;
+            gCameras[i].shakeMagnitude = ((dist - distance) * magnitude) / dist;
         }
     }
 }
@@ -1585,8 +1579,8 @@ void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude) 
  */
 void set_camera_shake(f32 magnitude) {
     s32 i;
-    for (i = 0; i <= gNumberOfViewports; i++) {
-        gCameraSegment[i].camera.distanceToCamera = magnitude;
+    for (i = 0; i <= gViewportLayout; i++) {
+        gCameras[i].shakeMagnitude = magnitude;
     }
 }
 

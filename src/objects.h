@@ -448,7 +448,7 @@ s32 init_object_water_effect(Object *obj, WaterEffect *waterEffect);
 s32 timetrial_load_staff_ghost(s32 mapId);
 void render_3d_billboard(Object *obj);
 void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles,
-                       TextureHeader *tex, u32 flags, u32 texOffset, f32 scale);
+                       TextureHeader *tex, u32 flags, u32 texOffset, f32 scaleY);
 void racerfx_free(void);
 void func_80016BC4(Object *obj);
 s32 ainode_register(Object *obj);

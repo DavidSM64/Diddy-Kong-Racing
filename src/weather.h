@@ -4,6 +4,7 @@
 #include "types.h"
 #include "textures_sprites.h"
 #include "audio.h"
+#include "camera.h"
 
 typedef enum WeatherType {
     WEATHER_SNOW,
@@ -115,14 +116,14 @@ void weather_update(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHu
 void snow_render(void);
 void weather_free(void);
 void weather_set(s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity, s32 time);
-void lensflare_override(ObjectSegment *cameraSegment);
+void lensflare_override(Camera *cameraSegment);
 void snow_update(s32 updateRate);
 void snow_init(void);
 void rain_init(s32 intensity, s32 opacity);
 void weather_init(void);
 void snow_vertices(void);
 void lensflare_init(Object *);
-void lensflare_render(Gfx**, MatrixS**, Vertex**, ObjectSegment*);
+void lensflare_render(Gfx**, MatrixS**, Vertex**, Camera*);
 void weather_reset(s32 weatherType, s32 density, s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity);
 
 #endif

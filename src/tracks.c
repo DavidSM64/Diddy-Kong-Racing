@@ -70,7 +70,7 @@ MatrixS *gSceneCurrMatrix;
 Vertex *gSceneCurrVertexList;
 Triangle *gSceneCurrTriList;
 
-ObjectSegment *gSceneActiveCamera;
+Camera *gSceneActiveCamera;
 
 s32 gSceneCurrentPlayerID;
 Object *gSkydomeSegment;
@@ -240,7 +240,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
         func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, i);
     }
 
-    set_active_viewports_and_max(numberOfPlayers);
+    cam_set_layout(numberOfPlayers);
     spawn_skydome(skybox);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
@@ -256,7 +256,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     } else {
         transition_begin(&gFullFadeToBlack);
     }
-    set_active_viewports_and_max(gScenePlayerViewports);
+    cam_set_layout(gScenePlayerViewports);
 
     numberOfPlayers = gScenePlayerViewports;
     gAntiAliasing = FALSE;
@@ -304,7 +304,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
     gDisableShadows = FALSE;
     D_8011B0C0 = 0;
     gIsNearCurrBBox = FALSE;
-    numViewports = set_active_viewports_and_max(gScenePlayerViewports);
+    numViewports = cam_set_layout(gScenePlayerViewports);
     if (is_game_paused()) {
         tempUpdateRate = 0;
     } else {
@@ -398,8 +398,8 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
             weather_update(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList,
                            tempUpdateRate);
         }
-        lensflare_override(get_active_camera_segment());
-        lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
+        lensflare_override(cam_get_active_camera());
+        lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, cam_get_active_camera());
         hud_render_player(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
                           get_racer_object_by_port(gSceneCurrentPlayerID), updateRate);
     }
@@ -425,9 +425,8 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
             gDPPipeSync(gSceneCurrDisplayList++);
             initialise_player_viewport_vars(updateRate);
             weather_clip_planes(-1, -512);
-            lensflare_override(get_active_camera_segment());
-            lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
-                             get_active_camera_segment());
+            lensflare_override(cam_get_active_camera());
+            lensflare_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, cam_get_active_camera());
             set_text_font(FONT_COLOURFUL);
             if (osTvType == OS_TV_TYPE_PAL) {
                 posX = SCREEN_WIDTH_HALF + 6;
@@ -1109,8 +1108,8 @@ s32 func_80027568(void) {
     if (numRacers == 0) {
         return FALSE;
     }
-    if ((check_if_showing_cutscene_camera() != 0) || (gSceneActiveCamera->object.unk36 >= 5) ||
-        (gSceneActiveCamera->object.unk36 == 3)) {
+    if ((check_if_showing_cutscene_camera() != 0) || (gSceneActiveCamera->mode >= 5) ||
+        (gSceneActiveCamera->mode == 3)) {
         return FALSE;
     }
     curViewport = get_current_viewport();
@@ -1193,7 +1192,7 @@ void func_800278E8(s32 updateRate) {
     f32 yDelta;
     f32 zDelta;
     f32 xzSqr;
-    ObjectSegment *segment;
+    Camera *camera;
     Object *thisObject;
     Object **racerGroup;
     Object *lastObject;
@@ -1204,7 +1203,7 @@ void func_800278E8(s32 updateRate) {
     s32 numRacers;
     s32 i;
     s32 cameraId;
-    Object *camera;
+    Object *camObj;
 
     racerGroup = get_racer_objects(&numRacers);
     lastRacer = NULL;
@@ -1236,46 +1235,46 @@ void func_800278E8(s32 updateRate) {
         currentRacer = racerFirstPlace;
         thisObject = objectFirstPlace;
     }
-    camera = spectate_object(currentRacer->cameraIndex);
+    camObj = spectate_object(currentRacer->cameraIndex);
     if (D_8011B104 != currentRacer->cameraIndex) {
         D_8011B108 = 0;
     } else if (D_8011B100 != currentRacer->playerIndex) {
         D_8011B108 = 180;
         D_8011B100 = currentRacer->playerIndex;
     }
-    if (camera != NULL) {
-        segment = get_active_camera_segment_no_cutscenes();
-        segment->trans.x_position = camera->segment.trans.x_position;
-        segment->trans.y_position = camera->segment.trans.y_position;
-        segment->trans.z_position = camera->segment.trans.z_position;
-        xDelta = segment->trans.x_position - thisObject->segment.trans.x_position;
-        yDelta = segment->trans.y_position - thisObject->segment.trans.y_position;
-        zDelta = segment->trans.z_position - thisObject->segment.trans.z_position;
+    if (camObj != NULL) {
+        camera = cam_get_active_camera_no_cutscenes();
+        camera->trans.x_position = camObj->segment.trans.x_position;
+        camera->trans.y_position = camObj->segment.trans.y_position;
+        camera->trans.z_position = camObj->segment.trans.z_position;
+        xDelta = camera->trans.x_position - thisObject->segment.trans.x_position;
+        yDelta = camera->trans.y_position - thisObject->segment.trans.y_position;
+        zDelta = camera->trans.z_position - thisObject->segment.trans.z_position;
         xzSqr = sqrtf((xDelta * xDelta) + (zDelta * zDelta));
         if (D_8011B108 != 0) {
-            angleDiff = ((s32) (-atan2s(xDelta, zDelta) - segment->trans.rotation.y_rotation) + 0x8000);
+            angleDiff = ((s32) (-atan2s(xDelta, zDelta) - camera->trans.rotation.y_rotation) + 0x8000);
             //!@bug Never true, since angleDiff is signed. Should be >=.
             if (angleDiff > 0x8000) {
                 angleDiff = -(0xFFFF - angleDiff);
             }
-            segment->trans.rotation.y_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
-            angleDiff = atan2s(yDelta, xzSqr) - segment->trans.rotation.x_rotation;
+            camera->trans.rotation.y_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
+            angleDiff = atan2s(yDelta, xzSqr) - camera->trans.rotation.x_rotation;
             //!@bug Never true, since angleDiff is signed. Should be >=.
             if (angleDiff > 0x8000) {
                 angleDiff = -(0xFFFF - angleDiff);
             }
-            segment->trans.rotation.x_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
+            camera->trans.rotation.x_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
             D_8011B108 -= updateRate;
             if (D_8011B108 < 0) {
                 D_8011B108 = 0;
             }
         } else {
-            segment->trans.rotation.y_rotation = 0x8000 - atan2s(xDelta, zDelta);
-            segment->trans.rotation.x_rotation = atan2s(yDelta, xzSqr);
+            camera->trans.rotation.y_rotation = 0x8000 - atan2s(xDelta, zDelta);
+            camera->trans.rotation.x_rotation = atan2s(yDelta, xzSqr);
         }
-        segment->trans.rotation.z_rotation = 0;
-        segment->object.cameraSegmentID = get_level_segment_index_from_position(
-            segment->trans.x_position, currentRacer->oy1, segment->trans.z_position);
+        camera->trans.rotation.z_rotation = 0;
+        camera->cameraSegmentID = get_level_segment_index_from_position(camera->trans.x_position, currentRacer->oy1,
+                                                                         camera->trans.z_position);
         D_8011B104 = currentRacer->cameraIndex;
     }
 }
@@ -1367,7 +1366,7 @@ void func_80028050(void) {
     f32 xCos;
     f32 xSin; // sp10C
     f32 pad_sp108;
-    ObjectSegment *objSegment;
+    Camera *camera;
     f32 pad_sp100;
     f32 xPositions[9]; // spDC
     f32 zPositions[9]; // spB8
@@ -1392,12 +1391,12 @@ void func_80028050(void) {
     verts = gSceneCurrVertexList;
     tris = gSceneCurrTriList;
 
-    objSegment = get_active_camera_segment();
+    camera = cam_get_active_camera();
     texHeader = gCurrentLevelHeader2->unkA4;
     uCoordMask = (texHeader->width << 5) - 1;
     vCoordMask = (texHeader->height << 5) - 1;
-    xSin = sins_f(-objSegment->trans.rotation.x);
-    xCos = coss_f(-objSegment->trans.rotation.x);
+    xSin = sins_f(-camera->trans.rotation.x);
+    xCos = coss_f(-camera->trans.rotation.x);
 
     scaledXSin = xSin * 1280.0f;
     scaledXCos = xCos * 1280.0f;
@@ -1428,9 +1427,9 @@ void func_80028050(void) {
     var_a2 = texHeader->height * 16 * gCurrentLevelHeader2->unkA1;
 
     var_v0 =
-        ((s32) (objSegment->trans.x_position * (var_f14 / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) & uCoordMask;
+        ((s32) (camera->trans.x_position * (var_f14 / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) & uCoordMask;
     var_v1 =
-        ((s32) (objSegment->trans.z_position * (var_f14 / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) & vCoordMask;
+        ((s32) (camera->trans.z_position * (var_f14 / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) & vCoordMask;
 
     var_f14 = var_a1 * xCos;
     pos.z = var_a1 * xCos;
@@ -1495,11 +1494,11 @@ void func_80028050(void) {
     }
     rendermode_reset(&gSceneCurrDisplayList);
 
-    vertY = objSegment->trans.y_position + 192.0f;
+    vertY = camera->trans.y_position + 192.0f;
     for (i = 0; i < 9; i++) {
-        verts->x = xPositions[i] + objSegment->trans.x_position;
+        verts->x = xPositions[i] + camera->trans.x_position;
         verts->y = vertY;
-        verts->z = zPositions[i] + objSegment->trans.z_position;
+        verts->z = zPositions[i] + camera->trans.z_position;
         verts->r = 0xFF;
         verts->g = 0xFF;
         verts->b = 0xFF;
@@ -1573,7 +1572,7 @@ void draw_gradient_background(void) {
         y0 = -150;
         y1 = 150;
     }
-    if (get_viewport_count() == TWO_PLAYERS) {
+    if (cam_get_viewport_layout() == TWO_PLAYERS) {
         y0 >>= 1;
         y1 >>= 1;
     }
@@ -1645,12 +1644,12 @@ void draw_gradient_background(void) {
  * Sets the position to the current camera's position then renders the skydome if set to be visible.
  */
 void render_skydome(void) {
-    ObjectSegment *cam;
+    Camera *cam;
     if (gSkydomeSegment == NULL) {
         return;
     }
 
-    cam = get_active_camera_segment();
+    cam = cam_get_active_camera();
     if (gCurrentLevelHeader2->skyDome == 0) {
         gSkydomeSegment->segment.trans.x_position = cam->trans.x_position;
         gSkydomeSegment->segment.trans.y_position = cam->trans.y_position;
@@ -1675,12 +1674,12 @@ void initialise_player_viewport_vars(s32 updateRate) {
     s32 segmentIndex;
     Object_Racer *racer;
 
-    gSceneActiveCamera = get_active_camera_segment();
+    gSceneActiveCamera = cam_get_active_camera();
     viewportID = get_current_viewport();
     compute_scene_camera_transform_matrix();
     update_envmap_position(gScenePerspectivePos.x / 65536.0f, gScenePerspectivePos.y / 65536.0f,
                            gScenePerspectivePos.z / 65536.0f);
-    segmentIndex = gSceneActiveCamera->object.cameraSegmentID;
+    segmentIndex = gSceneActiveCamera->cameraSegmentID;
     if (segmentIndex > -1 && (segmentIndex < gCurrentLevelModel->numberOfSegments)) {
         gSceneStartSegment = gCurrentLevelModel->segments[segmentIndex].unk28;
     } else {
@@ -1692,7 +1691,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     if (gWaveBlockCount != 0) {
         func_800B8B8C();
         racers = get_racer_objects(&numRacers);
-        if (gSceneActiveCamera->object.unk36 != 7 && numRacers > 0 && !check_if_showing_cutscene_camera()) {
+        if (gSceneActiveCamera->mode != CAMERA_FINISH_RACE && numRacers > 0 && !check_if_showing_cutscene_camera()) {
             i = -1;
             do {
                 i++;
@@ -1784,7 +1783,7 @@ void render_level_geometry_and_objects(void) {
             visible = 0;
         }
         if (obj != NULL && visible == 255 && check_if_in_draw_range(obj) &&
-            (objectsVisible[obj->segment.object.segmentID + 1] || obj->segment.camera.unk34 > 1000.0)) {
+            (objectsVisible[obj->segment.object.segmentID + 1] || obj->segment.object.unk34 > 1000.0)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
                 render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
@@ -2389,7 +2388,7 @@ s32 check_if_in_draw_range(Object *obj) {
             w = D_8011D0F8[i].w;
             y = D_8011D0F8[i].y;
             accum = (x * obj->segment.trans.x_position) + (y * obj->segment.trans.y_position) +
-                    (z * obj->segment.trans.z_position) + w + obj->segment.camera.unk34;
+                    (z * obj->segment.trans.z_position) + w + obj->segment.object.unk34;
             if (accum < 0.0f) {
                 return FALSE;
             }
@@ -3459,7 +3458,7 @@ void shadow_update(s32 group, s32 waterGroup, s32 updateRate) {
     gShadowTail = 0;
     gNewShadowTriCount = 0;
     gNewShadowVtxCount = 0;
-    numViewports = get_viewport_count();
+    numViewports = cam_get_viewport_layout();
     objects = objGetObjList(&objIndex, &objectCount);
     while (objIndex < objectCount) {
         obj = objects[objIndex];
@@ -3649,7 +3648,7 @@ void shadow_generate(Object *obj, s32 isWater) {
         gNewShadowTexture = set_animated_texture_header(obj->waterEffect->texture, obj->waterEffect->textureFrame << 8);
         gNewShadowY2 = obj->segment.header->shadowTop + yPos;
         gNewShadowY1 = obj->segment.header->shadowBottom + yPos;
-        if (gWaveBlockCount == 0 || get_viewport_count() < VIEWPORTS_COUNT_2_PLAYERS) {
+        if (gWaveBlockCount == 0 || cam_get_viewport_layout() < VIEWPORT_LAYOUT_2_PLAYERS) {
             D_8011D0C8 = 0;
         }
         gNewShadowScale = (obj->waterEffect->scale * character_scale);
@@ -4359,7 +4358,7 @@ void obj_loop_fogchanger(Object *obj) {
     Object_Racer *racer;
     UNUSED s32 pad2;
     FogData *fog;
-    ObjectSegment *camera;
+    Camera *camera;
 
     racers = NULL;
     fogChanger = (LevelObjectEntry_FogChanger *) obj->segment.level_entry;
@@ -4367,7 +4366,7 @@ void obj_loop_fogchanger(Object *obj) {
 
     if (check_if_showing_cutscene_camera()) {
         camera = get_cutscene_camera_segment();
-        views = get_viewport_count() + 1;
+        views = cam_get_viewport_layout() + 1;
     } else {
         racers = get_racer_objects(&views);
     }
@@ -4470,7 +4469,7 @@ void slowly_change_fog(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 f
  * Updates the stored perspective of the camera, as well as the envmap values derived from it.
  */
 UNUSED void update_perspective_and_envmap(void) {
-    gSceneActiveCamera = get_active_camera_segment();
+    gSceneActiveCamera = cam_get_active_camera();
     compute_scene_camera_transform_matrix();
     update_envmap_position((f32) gScenePerspectivePos.x / 65536.0f, (f32) gScenePerspectivePos.y / 65536.0f,
                            (f32) gScenePerspectivePos.z / 65536.0f);
