@@ -455,7 +455,7 @@ void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boos
     ObjectTransform objTrans;
     Object_Boost *objBoostRacer;
     Object_Boost *objBoostType;
-    Object_Boost_Inner *var_v0;
+    Object_Boost_Inner *boostData;
 
     if (racerIndex == -1) {
         racerIndex = gBoostObjOverrideID;
@@ -464,46 +464,46 @@ void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boos
     if (gBoostObjOverrideID < 0) {
         gBoostObjOverrideID = 0;
     }
-    if (racerIndex >= 0 && racerIndex < 10) {
+    if (racerIndex >= 0 && racerIndex < NUMBER_OF_CHARACTERS) {
         boostAsset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
         objBoostType = &boostAsset[boostType];
         objBoostRacer = &boostAsset[racerIndex];
         if (gBoostEffectObjects[racerIndex] != NULL) {
             switch (vehicleIDPrev) {
                 default:
-                    var_v0 = NULL;
+                    boostData = NULL;
                     break;
                 case VEHICLE_CAR:
-                    var_v0 = &objBoostRacer->unk0;
+                    boostData = &objBoostRacer->unk0;
                     break;
                 case VEHICLE_HOVERCRAFT:
-                    var_v0 = &objBoostRacer->unk24;
+                    boostData = &objBoostRacer->unk24;
                     break;
                 case VEHICLE_PLANE:
-                    var_v0 = &objBoostRacer->unk48;
+                    boostData = &objBoostRacer->unk48;
                     break;
                 case VEHICLE_ROCKET:
-                    var_v0 = &objBoostRacer->unk48;
+                    boostData = &objBoostRacer->unk48;
                     break;
             }
-            if (var_v0 != NULL) {
+            if (boostData != NULL) {
                 D_8011B048[racerIndex] = vehicleIDPrev;
                 D_8011B058[racerIndex] = boostType;
                 if (objBoostRacer->unk70 == 2) {
                     temp_f0 = coss_f(objBoostRacer->unk72 << 12);
-                    var_f2 = (var_v0->unk14 + (temp_f0 * var_v0->unk18)) * objBoostRacer->unk74;
-                    temp_f0 = (var_v0->unk1C + (temp_f0 * var_v0->unk20)) * objBoostRacer->unk74;
-                    if ((boostType & BOOST_UNK3) == 1) {
+                    var_f2 = (boostData->unk14 + (temp_f0 * boostData->unk18)) * objBoostRacer->unk74;
+                    temp_f0 = (boostData->unk1C + (temp_f0 * boostData->unk20)) * objBoostRacer->unk74;
+                    if ((boostType & 3) == BOOST_MEDIUM) {
                         var_f2 *= 1.09f;
                         temp_f0 *= 1.09f;
                     }
-                    if ((boostType & BOOST_UNK3) >= 2) {
+                    if ((boostType & 3) >= BOOST_LARGE) {
                         var_f2 *= 1.18f;
                         temp_f0 *= 1.18f;
                     }
-                    objTrans.x_position = var_v0->position.x;
-                    objTrans.y_position = var_v0->position.y;
-                    objTrans.z_position = var_v0->position.z;
+                    objTrans.x_position = boostData->position.x;
+                    objTrans.y_position = boostData->position.y;
+                    objTrans.z_position = boostData->position.z;
                     objTrans.scale = 1.0f;
                     objTrans.rotation.y_rotation = -0x8000;
                     objTrans.rotation.x_rotation = 0;
@@ -519,9 +519,9 @@ void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boos
                 gBoostEffectObjects[racerIndex]->segment.trans.x_position = 0.0f;
                 gBoostEffectObjects[racerIndex]->segment.trans.y_position = 0.0f;
                 gBoostEffectObjects[racerIndex]->segment.trans.z_position = 0.0f;
-                sp74[0] = var_v0->position.x;
-                sp74[1] = var_v0->position.y;
-                sp74[2] = var_v0->position.z;
+                sp74[0] = boostData->position.x;
+                sp74[1] = boostData->position.y;
+                sp74[2] = boostData->position.z;
                 f32_vec3_apply_object_rotation(&racerObj->segment.trans, sp74);
                 ignore_bounds_check();
                 move_object(gBoostEffectObjects[racerIndex], racerObj->segment.trans.x_position + sp74[0],
