@@ -7,7 +7,7 @@
 
 /* Size: 0xE0 / 224 bytes */
 typedef struct VehicleSoundData {
-    /* 0x00 */ u16 unk0[2];
+    /* 0x00 */ u16 soundBite[2];
     /* 0x04 */ u8 unk4[2][5];
     /* 0x0E */ u8 unkE[2][5];
     /* 0x18 */ u16 unk18[2][5];
@@ -51,8 +51,8 @@ typedef struct VehicleSoundData {
     /* 0xCC */ f32 unkCC;
     /* 0xD0 */ u8 unkD0;
     /* 0xD4 */ f32 basePitch;
-    /* 0xD8 */ u8 brakeSound; //Sound is playing bool?
-    /* 0xDC */ SoundHandle brakeSoundMask; //soundMask / soundState?
+    /* 0xD8 */ u8 spinoutSoundOn; // bool
+    /* 0xDC */ SoundHandle spinoutSound;
 } VehicleSoundData;
 
 /* Size: 0x4C / 76 Bytes */
