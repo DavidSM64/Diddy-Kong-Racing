@@ -639,6 +639,11 @@ float ImageHelper::guess_animated_texture_timing(fs::path imgFilepath) {
 // Returns a list of paths of .png images (for animated textures)
 std::vector<fs::path> ImageHelper::get_multiple_textures_from_one(fs::path imgFilepath) {
     fs::path filepath = strip_postfix_number(imgFilepath);
+    
+    if(filepath == imgFilepath) {
+        return { imgFilepath };
+    }
+    
     std::string prefix = filepath.filename().stem().generic_string();
     std::vector<fs::path> paths = FileHelper::get_files_from_directory_that_start_with(imgFilepath.parent_path(), prefix, false);
     
@@ -649,6 +654,10 @@ std::vector<fs::path> ImageHelper::get_multiple_textures_from_one(fs::path imgFi
         if(index >= 0) {
             order[index] = p;
         }
+    }
+    
+    if(order.size() == 0) {
+        return { imgFilepath };
     }
     
     std::vector<fs::path> out;

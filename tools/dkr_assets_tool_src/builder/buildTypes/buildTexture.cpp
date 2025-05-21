@@ -168,6 +168,9 @@ size_t BuildTexture::build_deferred(BuildInfo &baseInfo, fs::path pathToImage) {
     
     std::vector<fs::path> texturePaths = ImageHelper::get_multiple_textures_from_one(pathToImage);
     
+    DebugHelper::assert_(texturePaths.size() > 0, 
+        "(BuildTexture::build_deferred) ImageHelper::get_multiple_textures_from_one() failed for ", pathToImage.filename());
+    
     size_t totalSize = 0;
     
     for(auto &path : texturePaths) {
@@ -175,6 +178,9 @@ size_t BuildTexture::build_deferred(BuildInfo &baseInfo, fs::path pathToImage) {
         ImageHelper::get_width_and_height(path, width, height);
         totalSize += DataHelper::align16(sizeof(TextureHeader) + ImageHelper::image_size(width, height, format));
     }
+    
+    DebugHelper::assert_(totalSize > 0, 
+        "(BuildTexture::build_deferred) Could not calculate texture size for ", pathToImage.filename());
     
     int frameAdvanceDelay = 0;
     
