@@ -451,7 +451,6 @@ void func_8000B750(Object *obj, s32 objId, s32 arg2, s32 arg3, s32 arg4) {
     Vec3f sp74;
     ObjectTransform sp50;
     Object_Boost *temp_v0;
-    Object **var_t2;
     f32 temp_f0;
     f32 var_f14;
     f32 var_f2;
@@ -468,10 +467,9 @@ void func_8000B750(Object *obj, s32 objId, s32 arg2, s32 arg3, s32 arg4) {
     }
     if (objId >= 0 && objId < 10) {
         temp_v0 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
-        var_t2 = &gBoostEffectObjects[objId];
         temp_t4 = &temp_v0[arg3];
         temp_v1 = &temp_v0[objId];
-        if (*var_t2 != NULL) {
+        if (gBoostEffectObjects[objId] != NULL) {
             switch (arg2) {
                 default:
                     var_v0 = &temp_v1->unk48;
@@ -512,21 +510,21 @@ void func_8000B750(Object *obj, s32 objId, s32 arg2, s32 arg3, s32 arg4) {
                     sp50.rotation.y_rotation = 0;
                     sp50.rotation.z_rotation = 0;
                     func_8000B38C(&gBoostVerts[gBoostVertFlip][D_8011AFFC], &gBoostTris[gBoostVertFlip][D_8011B004],
-                                  &sp50, var_f2, var_f14, (temp_v1->unk72), &temp_t4->unk7C);
-                    (*var_t2)->properties.common.unk4 = (objId << 28) | (D_8011AFFC << 14) | D_8011B004;
+                                  &sp50, var_f2, var_f14, temp_v1->unk72 << 12, &temp_t4->unk7C);
+                    gBoostEffectObjects[objId]->properties.boost.unk4 = (objId << 28) | (D_8011AFFC << 14) | D_8011B004;
                     D_8011AFFC += 9;
                     D_8011B004 += 8;
                 }
-                (*var_t2)->properties.common.unk0 = (s32) obj;
-                (*var_t2)->segment.trans.x_position = 0.0f;
-                (*var_t2)->segment.trans.y_position = 0.0f;
-                (*var_t2)->segment.trans.z_position = 0.0f;
+                gBoostEffectObjects[objId]->properties.boost.obj = obj;
+                gBoostEffectObjects[objId]->segment.trans.x_position = 0.0f;
+                gBoostEffectObjects[objId]->segment.trans.y_position = 0.0f;
+                gBoostEffectObjects[objId]->segment.trans.z_position = 0.0f;
                 sp74.x = var_v0->position.x;
                 sp74.y = var_v0->position.y;
                 sp74.z = var_v0->position.z;
-                f32_vec3_apply_object_rotation(&obj->segment.trans, &sp74);
+                f32_vec3_apply_object_rotation(&obj->segment.trans, &sp74.f);
                 ignore_bounds_check();
-                move_object(var_t2, sp74.x + obj->segment.trans.x_position, sp74.y + obj->segment.trans.y_position,
+                move_object(gBoostEffectObjects[objId], sp74.x + obj->segment.trans.x_position, sp74.y + obj->segment.trans.y_position,
                             sp74.z + obj->segment.trans.z_position);
             }
             if (arg4 != 0) {
