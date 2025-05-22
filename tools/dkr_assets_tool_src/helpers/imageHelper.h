@@ -60,5 +60,14 @@ namespace ImageHelper {
     size_t image_size(int width, int height, std::string &format);
     size_t image_size(fs::path filepath, std::string &format); // Get byte-size of .png image
     void get_width_and_height(fs::path filepath, int &outWidth, int &outHeight); // Get width and height of a .png image
+    
+    std::optional<fs::path> guess_associated_json_file(fs::path imgFilepath);
+    void guess_texture_wrap_mode(fs::path filepath, std::string &outWrapS, std::string &outWrapT);
+    void guess_texture_format_and_render_mode(fs::path filepath, std::string &outFormat, std::string &outRenderMode, bool ignoreTextureSize=false);
+    bool guess_if_texture_is_animated(fs::path imgFilepath);
+    bool guess_if_texture_double_sided(fs::path filepath);
+    float guess_animated_texture_timing(fs::path imgFilepath); // Returns time to advance texture in seconds.
+    
+    std::vector<fs::path> get_multiple_textures_from_one(fs::path imgFilepath);
 }
 }

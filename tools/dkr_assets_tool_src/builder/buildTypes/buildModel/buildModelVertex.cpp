@@ -34,6 +34,10 @@ Vec4f BuildModelVertex::color() const {
     return _color;
 }
 
+bool BuildModelVertex::is_color_white() const {
+    return _color == COLOR_WHITE;
+}
+
 void BuildModelVertex::write_to(DkrVertex *outVertex) {
     // Write position
     outVertex->x = static_cast<int16_t>(_position.x * 10);

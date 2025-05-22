@@ -1,9 +1,87 @@
 #include "objModel.h"
 
+#include <sstream>
 #include "helpers/fileHelper.h"
+#include "helpers/dataHelper.h"
 #include "helpers/debugHelper.h"
 
+#include "libs/TriangulatePolygon.hpp"
+
 using namespace DkrAssetsTool;
+
+typedef struct ObjFaceComponent {
+    int vertexIndex = -1;
+    int uvIndex = -1;
+    int normalIndex = -1; // Not used in DKR, since normals are generated automatically.
+} ObjFaceComponent;
+
+typedef struct ObjTriangle {
+    ObjFaceComponent a;
+    ObjFaceComponent b;
+    ObjFaceComponent c;
+    
+    ObjTriangle(ObjFaceComponent newA, ObjFaceComponent newB, ObjFaceComponent newC)
+    : a(newA), b(newB), c(newC) {}
+} ObjTriangle;
+
+ObjFaceComponent parse_face_component(std::string component) {
+    std::vector<std::string> faceComponents;
+    StringHelper::split(component, '/', faceComponents);
+    ObjFaceComponent out;
+    
+    out.vertexIndex = std::stoi(faceComponents[0]) - 1;
+    
+    if((faceComponents.size() > 1) && (!faceComponents[1].empty())) {
+        out.uvIndex = std::stoi(faceComponents[1]) - 1;
+    }
+    
+    if((faceComponents.size() > 2) && (!faceComponents[2].empty())) {
+        out.normalIndex = std::stoi(faceComponents[2]) - 1;
+    }
+    
+    return out;
+}
+
+std::vector<ObjTriangle> triangulate_polygon(const std::vector<std::string> &components, const std::vector<BuildModelVertex> &vertices) {
+    size_t numberOfOutTriangles = components.size() - 3;
+    
+    std::vector<ObjTriangle> out;
+    
+    if(numberOfOutTriangles == 1) {
+        // No need to triangulate.
+        out.push_back({
+            parse_face_component(components[1]),
+            parse_face_component(components[2]),
+            parse_face_component(components[3])
+        });
+    } else {
+        std::vector<ObjFaceComponent> faceComponents(components.size() - 1);
+        std::vector<triangulate::Point> polygonPoints;
+        
+        for(size_t i = 1; i < components.size(); i++) {
+            faceComponents[i - 1] = parse_face_component(components[i]);
+            const BuildModelVertex &vertex = vertices.at(faceComponents[i - 1].vertexIndex);
+            Vec3f vertexPos = vertex.position();
+            polygonPoints.emplace_back(vertexPos.x, vertexPos.y, vertexPos.z);
+        }
+        
+        const auto triangles = triangulate::triangulate(polygonPoints);
+        
+        for(auto &tri : triangles) {
+            int index0 = DataHelper::vector_index_of(polygonPoints, tri.p0);
+            int index1 = DataHelper::vector_index_of(polygonPoints, tri.p1);
+            int index2 = DataHelper::vector_index_of(polygonPoints, tri.p2);
+            
+            DebugHelper::assert_(index0 >= 0, "(triangulate_polygon) Invalid point 0");
+            DebugHelper::assert_(index1 >= 0, "(triangulate_polygon) Invalid point 1");
+            DebugHelper::assert_(index2 >= 0, "(triangulate_polygon) Invalid point 2");
+            
+            out.emplace_back(faceComponents[index0], faceComponents[index1], faceComponents[index2]);
+        }
+    }
+    
+    return out;
+}
 
 ObjBuildModel::ObjBuildModel(fs::path filepath) {
     std::string objText = FileHelper::read_text_file(filepath);
@@ -15,8 +93,6 @@ ObjBuildModel::ObjBuildModel(fs::path filepath) {
     std::vector<Vec2f> uvs;
     
     std::string currentMaterial = "";
-    
-    size_t faceIndex = 0;
     
     for(std::string &line : lines) {
         if(line[0] == '#' || line.empty()) {
@@ -30,15 +106,18 @@ ObjBuildModel::ObjBuildModel(fs::path filepath) {
             double x = std::stod(components[1]);
             double y = std::stod(components[2]);
             double z = std::stod(components[3]);
-            
-            // Scale the model according that is specified in settings.
-            //settings.adjust_from_model_scale(x);
-            //settings.adjust_from_model_scale(y);
-           // settings.adjust_from_model_scale(z);
-            
-            // Add the new vertex
-            vertices.emplace_back(Vec3f(x, y, z));
-            continue;
+           
+           if(components.size() < 6) {
+                // Add the new vertex
+                vertices.emplace_back(Vec3f(x, y, z));
+                continue;
+           }
+           
+           double r = std::stod(components[4]);
+           double g = std::stod(components[5]);
+           double b = std::stod(components[6]);
+           vertices.emplace_back(Vec3f(x, y, z), Vec4f(r, g, b, 1.0f));
+           continue;
         }
         if(components[0] == "vn") {
             // User-generated normals are not used in DKR.
@@ -52,47 +131,24 @@ ObjBuildModel::ObjBuildModel(fs::path filepath) {
             continue;
         }
         if(components[0] == "f") {
-            std::vector<std::string> faceComponentsA;
-            std::vector<std::string> faceComponentsB;
-            std::vector<std::string> faceComponentsC;
+            std::vector<ObjTriangle> tris = triangulate_polygon(components, vertices);
             
-            // split the different indicies for a face.
-            StringHelper::split(components[1], '/', faceComponentsA);
-            StringHelper::split(components[2], '/', faceComponentsB);
-            StringHelper::split(components[3], '/', faceComponentsC);
-            
-            // parse index for vertex.
-            int positionAIndex = std::stoi(faceComponentsA[0]) - 1;
-            int positionBIndex = std::stoi(faceComponentsB[0]) - 1;
-            int positionCIndex = std::stoi(faceComponentsC[0]) - 1;
-            
-            // Make sure the indicies are in the correct range.
-            DebugHelper::assert_((positionAIndex >= 0) && (positionAIndex < vertices.size()), 
-                "(ObjBuildModel::ObjBuildModel) Face ", faceIndex, " first index is out of range!");
-            DebugHelper::assert_((positionBIndex >= 0) && (positionBIndex < vertices.size()), 
-                "(ObjBuildModel::ObjBuildModel) Face ", faceIndex, " second index is out of range!");
-            DebugHelper::assert_((positionCIndex >= 0) && (positionCIndex < vertices.size()), 
-                "(ObjBuildModel::ObjBuildModel) Face ", faceIndex, " third index is out of range!");
-            
-            if(faceComponentsA.size() == 1 || faceComponentsA[1].empty()) {
-                DebugHelper::info("No UVs!");
-                // Add the new triangle with no UV coordinates.
-                _add_new_triangle_to_current_block(vertices[positionAIndex], vertices[positionBIndex], vertices[positionCIndex]);
-            } else {
-                int uvAIndex = std::stoi(faceComponentsA[1]) - 1;
-                int uvBIndex = std::stoi(faceComponentsB[1]) - 1;
-                int uvCIndex = std::stoi(faceComponentsC[1]) - 1;
-                
-                // Adjust the uv coordinates to the N64 format.
-                Vec2f uv0 = _get_adjusted_uv(uvs[uvAIndex], currentMaterial);
-                Vec2f uv1 = _get_adjusted_uv(uvs[uvBIndex], currentMaterial);
-                Vec2f uv2 = _get_adjusted_uv(uvs[uvCIndex], currentMaterial);
-                
-                // Add the new triangle with UV coordinates.
-                _add_new_triangle_to_current_block(vertices[positionAIndex], vertices[positionBIndex], vertices[positionCIndex], uv0, uv1, uv2);
+            for(ObjTriangle &tri : tris) {
+                BuildModelVertex &vertexA = vertices[tri.a.vertexIndex];
+                BuildModelVertex &vertexB = vertices[tri.b.vertexIndex];
+                BuildModelVertex &vertexC = vertices[tri.c.vertexIndex];
+                if(currentMaterial.empty() || (tri.a.uvIndex == -1)) {
+                    // Add triangle without UV coordinates.
+                    _add_new_triangle_to_current_block(vertexA, vertexB, vertexC);
+                } else {
+                    Vec2f uv0 = _get_adjusted_uv(uvs[tri.a.uvIndex], currentMaterial);
+                    Vec2f uv1 = _get_adjusted_uv(uvs[tri.b.uvIndex], currentMaterial);
+                    Vec2f uv2 = _get_adjusted_uv(uvs[tri.c.uvIndex], currentMaterial);
+                    
+                    // Add the new triangle with UV coordinates.
+                    _add_new_triangle_to_current_block(vertexA, vertexB, vertexC, uv0, uv1, uv2);
+                }
             }
-            
-            faceIndex++;
             continue;
         }
         if(components[0] == "usemtl") {
@@ -113,8 +169,6 @@ ObjBuildModel::ObjBuildModel(fs::path filepath) {
             continue;
         }
     }
-    
-    DebugHelper::info("Done!");
 }
 
 Vec2f ObjBuildModel::_get_adjusted_uv(Vec2f uv, std::string materialId) {
