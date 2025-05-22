@@ -633,8 +633,6 @@ bool ImageHelper::guess_if_texture_double_sided(fs::path filepath) {
         return jsonFile.get_bool("/doubleSided", false);
     }
     
-    DebugHelper::error("Could not find json file for: ", filepath);
-    
     return false;
 }
 
