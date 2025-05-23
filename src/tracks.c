@@ -1274,7 +1274,7 @@ void func_800278E8(s32 updateRate) {
         }
         camera->trans.rotation.z_rotation = 0;
         camera->cameraSegmentID = get_level_segment_index_from_position(camera->trans.x_position, currentRacer->oy1,
-                                                                         camera->trans.z_position);
+                                                                        camera->trans.z_position);
         D_8011B104 = currentRacer->cameraIndex;
     }
 }
@@ -1426,10 +1426,8 @@ void func_80028050(void) {
     var_a1 = texHeader->width * 16 * gCurrentLevelHeader2->unkA0;
     var_a2 = texHeader->height * 16 * gCurrentLevelHeader2->unkA1;
 
-    var_v0 =
-        ((s32) (camera->trans.x_position * (var_f14 / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) & uCoordMask;
-    var_v1 =
-        ((s32) (camera->trans.z_position * (var_f14 / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) & vCoordMask;
+    var_v0 = ((s32) (camera->trans.x_position * (var_f14 / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) & uCoordMask;
+    var_v1 = ((s32) (camera->trans.z_position * (var_f14 / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) & vCoordMask;
 
     var_f14 = var_a1 * xCos;
     pos.z = var_a1 * xCos;

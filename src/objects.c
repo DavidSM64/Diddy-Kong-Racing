@@ -3493,7 +3493,7 @@ void func_800135B8(Object *boostObj) {
     asset = &asset[D_8011B058[idx]];
     object_do_player_tumble((Object *) boostObj->properties.common.unk0);
     cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
-                          (ObjectTransform *) boostObj->properties.common.unk0, 1.0f, 0.0f);
+                       (ObjectTransform *) boostObj->properties.common.unk0, 1.0f, 0.0f);
     object_undo_player_tumble((Object *) boostObj->properties.common.unk0);
     objTransform.trans.x_position = boostData->position.x;
     objTransform.trans.y_position = boostData->position.y;

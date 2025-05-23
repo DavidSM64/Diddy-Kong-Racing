@@ -29,18 +29,18 @@ typedef struct VehicleSoundData {
     /* 0x6C */ f32 unk6C[2];
     /* 0x74 */ u8 unk74;
     /* 0x78 */ Vec3f racerPos;
-    /* 0x84 */ f32 unk84;
+    /* 0x84 */ f32 distToCamera;
     /* 0x88 */ u8 unk88; // Volume?
     /* 0x8C */ f32 unk8C; // Volume?
     /* 0x90 */ s8 unk90;
-    /* 0x91 */ u8 unk91[3];
+    /* 0x91 */ u8 pan;
     /* 0x94 */ f32 enginePitch; // Engine noise for the car.
     /* 0x98 */ u8 unk98;
     /* 0x99 */ u8 pad99[0x7];
     /* 0xA0 */ u8 unkA0;
     /* 0xA4 */ f32 throttlePitch; // Engine noise for the hovercraft and plane.
-    /* 0xA8 */ SoundHandle unkA8;
-    /* 0xAC */ u16 unkAC;
+    /* 0xA8 */ SoundHandle brakeSound;
+    /* 0xAC */ u16 brakeSoundVolume;
     /* 0xB0 */ f32 throttlePitchVel;
     /* 0xB4 */ f32 throttlePitchDecay;
     /* 0xB8 */ u8 unkB8;
@@ -49,7 +49,7 @@ typedef struct VehicleSoundData {
     /* 0xC4 */ f32 unkC4;
     /* 0xC8 */ f32 throttlePitchCeil;
     /* 0xCC */ f32 unkCC;
-    /* 0xD0 */ u8 unkD0;
+    /* 0xD0 */ u8 airTime;
     /* 0xD4 */ f32 basePitch;
     /* 0xD8 */ u8 spinoutSoundOn; // bool
     /* 0xDC */ SoundHandle spinoutSound;

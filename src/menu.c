@@ -3240,7 +3240,8 @@ void func_80083098(f32 updateRateF) {
         draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
 #if REGION == REGION_JP
         set_text_font(ASSET_FONTS_FUNFONT);
-        draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y - 24, D_80126878[i].text2, ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y - 24, D_80126878[i].text2,
+                  ALIGN_MIDDLE_CENTER);
         set_text_font(ASSET_FONTS_BIGFONT);
 #endif
         D_80126878[i].colourIndex++;
@@ -13859,8 +13860,8 @@ void menu_element_render(s32 elementID) {
                     };
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
                     cam_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat,
-                                          (ObjectTransform *) (&gMenuImages[elementID]),
-                                          gTrackSelectWoodFrameHeightScale, 0);
+                                       (ObjectTransform *) (&gMenuImages[elementID]), gTrackSelectWoodFrameHeightScale,
+                                       0);
                     model = ((ObjectModel **) gMenuAssets[gMenuImages[elementID].spriteID]);
                     render_track_selection_viewport_border(*model);
                     apply_matrix_from_stack(&sMenuCurrDisplayList);
