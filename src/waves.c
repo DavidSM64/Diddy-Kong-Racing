@@ -70,8 +70,8 @@ Gfx *gWaveDL;
 MatrixS *D_80129FC4;
 WaveControl gWaveController; // holds lots of control information used in this file
 s32 gWaveVertexFlip;    // either 1 or 0, toggled in func_800B9C18, used to index vertices and triangles
-f32 D_8012A01C;         // is set to lowest value of D_800E3040
-f32 D_8012A020;         // is set to highest value of D_800E3040
+f32 gWaveLowerY;         // is set to lowest value of D_800E3040
+f32 gWaveUpperY;         // is set to highest value of D_800E3040
 UNUSED s32 D_8012A024;
 Vertex D_8012A028[2][4]; // stores values of gWaveVertices to be used in waves_render
 s32 gWavePlayerCount;    // controls whether 2 or 4 items are used in gWaveVertices / gWaveTriangles
@@ -79,19 +79,19 @@ TriangleBatchInfo *gWaveBatch;
 TextureHeader *gWaveTexture;
 s32 D_8012A084; // u value for D_800E3048
 s32 D_8012A088; // v value for D_800E3048
-s32 D_8012A08C; // is added onto u of D_8012A084, is multiplied with texture width
-s32 D_8012A090; // is added onto v of D_8012A084, is multiplied with texture height
-s32 D_8012A094; // bitmask / something width (related to texture)
-s32 D_8012A098; // bitmask / something height (related to texture)
-s32 D_8012A09C; // stores / relates to frameAdvanceDelay, used in waves_render
+s32 gWaveUVStepX; // is added onto u of D_8012A084, is multiplied with texture width
+s32 gWaveUVStepY; // is added onto v of D_8012A084, is multiplied with texture height
+s32 gWaveTexUVMaskX; // bitmask / something width (related to texture)
+s32 gWaveTexUVMaskY; // bitmask / something height (related to texture)
+s32 gWaveTexAnimFrame; // stores / relates to frameAdvanceDelay, used in waves_render
 f32 gWaveBoundingBoxW; // copy of gWaveBoundingBoxDiffX
 f32 gWaveBoundingBoxH; // copy of gWaveBoundingBoxDiffZ
 s32 gWaveBoundingBoxDiffX;
 s32 gWaveBoundingBoxDiffZ;
 s32 gWaveBoundingBoxX1;
 s32 gWaveBoundingBoxZ1;
-f32 D_8012A0B8; // some sort of ratio for x
-f32 D_8012A0BC; // some sort of ratio for z
+f32 gWaveVtxStepX; // some sort of ratio for x
+f32 gWaveVtxStepZ; // some sort of ratio for z
 s32 D_8012A0C0; // level bounding box x1
 s32 D_8012A0C4; // level bounding box x2
 s32 D_8012A0C8; // level bounding box z1
@@ -208,7 +208,7 @@ void waves_init_header(LevelHeader *header) {
     gWaveController.unk14 = header->unk5C;
     gWaveController.unk18 = header->unk5E / 256.0f;
     gWaveController.unk1C = header->unk5D << 8;
-    gWaveController.unk20 = header->unk60 & ~1;
+    gWaveController.unk20 = header->unk60 & ~1; // Always an even number.
     if (gWavePlayerCount != 2) {
         gWaveController.unk24 = header->unk6E;
     } else {
@@ -250,31 +250,31 @@ void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
     func_800BBDDC(model, header);
     gWaveBoundingBoxW = gWaveBoundingBoxDiffX;
     gWaveBoundingBoxH = gWaveBoundingBoxDiffZ;
-    D_8012A0B8 = gWaveBoundingBoxW / gWaveController.subdivisions;
-    D_8012A0BC = gWaveBoundingBoxH / gWaveController.subdivisions;
+    gWaveVtxStepX = gWaveBoundingBoxW / gWaveController.subdivisions;
+    gWaveVtxStepZ = gWaveBoundingBoxH / gWaveController.subdivisions;
     D_8012A084 = 0;
     D_8012A088 = 0;
-    D_8012A08C = ((gWaveTexture->width * gWaveController.unk30) * 32) / gWaveController.subdivisions;
-    D_8012A090 = ((gWaveTexture->height * gWaveController.unk34) * 32) / gWaveController.subdivisions;
-    D_8012A094 = (gWaveTexture->width * 32) - 1;
-    D_8012A098 = (gWaveTexture->height * 32) - 1;
-    D_8012A09C = 0;
+    gWaveUVStepX = ((gWaveTexture->width * gWaveController.unk30) * 32) / gWaveController.subdivisions;
+    gWaveUVStepY = ((gWaveTexture->height * gWaveController.unk34) * 32) / gWaveController.subdivisions;
+    gWaveTexUVMaskX = (gWaveTexture->width * 32) - 1;
+    gWaveTexUVMaskY = (gWaveTexture->height * 32) - 1;
+    gWaveTexAnimFrame = 0;
     var_s6 = gWaveController.unk10;
     sp54 = (gWaveController.unk8 << 16) / gWaveController.unk20;
     var_fp = gWaveController.unk1C;
     sp4C = (gWaveController.unk14 << 16) / gWaveController.unk20;
-    D_8012A01C = 10000.0f;
-    D_8012A020 = -10000.0f;
+    gWaveLowerY = 10000.0f;
+    gWaveUpperY = -10000.0f;
     for (i_2 = 0; i_2 < gWaveController.unk20; i_2++) {
         D_800E3040[i_2] = (sins_f(var_s6) * gWaveController.unkC) + (sins_f(var_fp) * gWaveController.unk18);
         if (gWaveController.unk28 != FALSE) {
             D_800E3040[i_2] *= 2.0f;
         }
-        if (D_800E3040[i_2] < D_8012A01C) {
-            D_8012A01C = D_800E3040[i_2];
+        if (D_800E3040[i_2] < gWaveLowerY) {
+            gWaveLowerY = D_800E3040[i_2];
         }
-        if (D_8012A020 < D_800E3040[i_2]) {
-            D_8012A020 = D_800E3040[i_2];
+        if (gWaveUpperY < D_800E3040[i_2]) {
+            gWaveUpperY = D_800E3040[i_2];
         }
         var_s6 += sp54;
         var_fp += sp4C;
@@ -303,8 +303,8 @@ void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
             do {
                 for (j_2 = 0; gWaveController.subdivisions >= j_2; j_2++) {
                     for (k = 0; k < playerCount; k++) {
-                        gWaveVertices[0][k][var_s5].x = (j_2 * D_8012A0B8) + 0.5;
-                        gWaveVertices[0][k][var_s5].z = (i_2 * D_8012A0BC) + 0.5;
+                        gWaveVertices[0][k][var_s5].x = (j_2 * gWaveVtxStepX) + 0.5;
+                        gWaveVertices[0][k][var_s5].z = (i_2 * gWaveVtxStepZ) + 0.5;
                         // this is only 0 for hot top volcano
                         if (gWaveController.xlu == 0) {
                             gWaveVertices[0][k][var_s5].r = 255;
@@ -672,12 +672,12 @@ void func_800B97A8(s32 arg0, s32 arg1) {
     s32 k;
 
     k = 0;
-    temp_f26 = (D_8012A020 * 2.0f) - (D_8012A01C * 2.0f);
+    temp_f26 = (gWaveUpperY * 2.0f) - (gWaveLowerY * 2.0f);
     spA0 = (gWaveController.subdivisions + 1) * (gWaveController.subdivisions + 1);
     sp78 = &D_800E30D8[arg0];
     var_f28 = temp_f26 <= 0 ? 0 : 1.0f / temp_f26;
 
-    temp_f26 = D_8012A01C * 2.0f;
+    temp_f26 = gWaveLowerY * 2.0f;
     for (; D_8012A5E8[k].unk0 != -1; k++) {
         if (arg0 != D_8012A5E8[k].unk0) {
             continue;
@@ -767,27 +767,27 @@ void func_800B9C18(s32 arg0) {
         }
     }
 
-    D_8012A09C += gWaveTextureHeader->frameAdvanceDelay * arg0;
-    if (D_8012A09C < 0) {
-        D_8012A09C = 0;
+    gWaveTexAnimFrame += gWaveTextureHeader->frameAdvanceDelay * arg0;
+    if (gWaveTexAnimFrame < 0) {
+        gWaveTexAnimFrame = 0;
     } else {
-        while (D_8012A09C >= gWaveTextureHeader->numOfTextures) {
-            D_8012A09C -= gWaveTextureHeader->numOfTextures;
+        while (gWaveTexAnimFrame >= gWaveTextureHeader->numOfTextures) {
+            gWaveTexAnimFrame -= gWaveTextureHeader->numOfTextures;
         }
     }
 
-    D_8012A084 = ((gWaveController.unk38 * arg0) + D_8012A084) & D_8012A094;
-    D_8012A088 = ((gWaveController.unk3C * arg0) + D_8012A088) & D_8012A098;
+    D_8012A084 = ((gWaveController.unk38 * arg0) + D_8012A084) & gWaveTexUVMaskX;
+    D_8012A088 = ((gWaveController.unk3C * arg0) + D_8012A088) & gWaveTexUVMaskY;
     var_a2 = D_8012A088;
     for (i = 0, var_s0 = 0; i <= gWaveController.subdivisions; i++) {
         var_v1 = D_8012A084;
         for (j = 0; j <= gWaveController.subdivisions; j++) {
             D_800E3048[var_s0].u = var_v1;
             D_800E3048[var_s0].v = var_a2;
-            var_v1 += D_8012A08C;
+            var_v1 += gWaveUVStepX;
             var_s0++;
         }
-        var_a2 += D_8012A090;
+        var_a2 += gWaveUVStepY;
     }
 
     if (gWavePlayerCount != 2) {
@@ -965,8 +965,8 @@ void waves_render(Gfx **dList, MatrixS **mtx, s32 viewportID) {
         gSPSetGeometryMode(gWaveDL++, G_ZBUFFER);
         if (gWaveController.xlu) {
             gSPClearGeometryMode(gWaveDL++, G_FOG);
-            tex1 = set_animated_texture_header(gWaveTextureHeader, D_8012A09C << 8);
-            tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
+            tex1 = set_animated_texture_header(gWaveTextureHeader, gWaveTexAnimFrame * (16 * 16));
+            tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 * (128 * 128));
             wave_load_material(tex1, 1);
             wave_load_material(tex2, 0);
             gDPSetCombineMode(gWaveDL++, DKR_CC_UNK14, DKR_CC_UNK15);
@@ -985,7 +985,7 @@ void waves_render(Gfx **dList, MatrixS **mtx, s32 viewportID) {
             }
         } else {
             gSPSetGeometryMode(gWaveDL++, G_FOG);
-            tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 << 14);
+            tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 * (128 * 128));
             gDkrDmaDisplayList(gWaveDL++, OS_K0_TO_PHYSICAL(tex1->cmd), tex1->numberOfCommands);
             gDPSetCombineMode(gWaveDL++, DKR_CC_UNK16, DKR_CC_UNK8);
             gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);
@@ -1100,8 +1100,8 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
 
     sp78 = D_800E30D8[arg0].unk6;
 
-    sp90 = D_8012A0BC;
-    sp94 = D_8012A0B8;
+    sp90 = gWaveVtxStepZ;
+    sp94 = gWaveVtxStepX;
     var_f16 = (1.0f - gWaveController.unk44) / 127.0f;
     sp58 = arg0 * D_800E317C;
 
@@ -1848,8 +1848,8 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNeg
     s32 var_t8;
 
     var_t0 = (arg0 * D_800E317C);
-    spCC = D_8012A0B8;
-    spC8 = D_8012A0BC;
+    spCC = gWaveVtxStepX;
+    spC8 = gWaveVtxStepZ;
     var_f24 = (1.0f - gWaveController.unk44) / 127.0f;
     if (gWaveController.unk28 != FALSE) {
         sp36C = gWaveController.subdivisions * 2;
@@ -2130,8 +2130,8 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
         object->effect_box.unk3 = 1;
         object->effect_box.unk4 = 0;
         object->effect_box.unk6 = gWaveController.unk20;
-        var_f20 = D_8012A0BC;
-        var_f22 = D_8012A0B8;
+        var_f20 = gWaveVtxStepZ;
+        var_f22 = gWaveVtxStepX;
         temp_f2 = (1.0f - gWaveController.unk44) / 127.0f;
         var_f2 = temp_f2;
         spB0 = (arg0 * D_800E317C);
@@ -2338,8 +2338,8 @@ f32 func_800BEFC4(s32 arg0, s32 arg1, s32 arg2) {
     }
 
     var_v1 = gWaveController.subdivisions;
-    var_f0 = D_8012A0B8;
-    var_f2 = D_8012A0BC;
+    var_f0 = gWaveVtxStepX;
+    var_f2 = gWaveVtxStepZ;
     if (gWaveController.unk28 != FALSE) {
         var_v1 *= 2;
         var_f0 *= 0.5f;
@@ -2472,7 +2472,7 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
         if (var_a0 != 0) {
             D_800E3194[i] = obj;
             D_800E3188++;
-            var_f0 = D_8012A0B8;
+            var_f0 = gWaveVtxStepX;
             if (gWaveController.unk28 != FALSE) {
                 var_f0 /= 2.0f;
             }
@@ -2549,7 +2549,7 @@ UNUSED void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2) {
         return;
     }
 
-    var_f0 = D_8012A0B8;
+    var_f0 = gWaveVtxStepX;
     iteration = 0;
     if (gWaveController.unk28 != FALSE) {
         var_f0 *= 0.5f;
