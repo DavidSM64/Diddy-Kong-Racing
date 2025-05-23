@@ -6537,14 +6537,14 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
 
 f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x) {
     f32 ret;
-    f32 temp3, temp2, temp;
+    f32 c, b, a;
 
-    temp = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
-    temp2 = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
-    temp3 = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
+    a = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
+    b = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
+    c = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
 
     ret = (1.0 * data[index + 1]);
-    ret = (((((temp * x) + temp2) * x) + temp3) * x) + ret;
+    ret = (((((a * x) + b) * x) + c) * x) + ret;
 
     return ret;
 }
@@ -6554,48 +6554,50 @@ f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x) {
  */
 f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative) {
     f32 ret;
-    f32 temp3, temp2, temp;
+    f32 c, b, a;
 
-    temp = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
-    temp2 = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
-    temp3 = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
+    a = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
+    b = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
+    c = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
 
     ret = (1.0 * data[index + 1]);
-    *derivative = (((temp * 3 * x) + (2 * temp2)) * x) + temp3;
-    ret = (((((temp * x) + temp2) * x) + temp3) * x) + ret;
+    *derivative = (((a * 3 * x) + (2 * b)) * x) + c;
+    ret = (((((a * x) + b) * x) + c) * x) + ret;
 
     return ret;
 }
 
-f32 func_8002277C(f32 *data, s32 index, f32 x) {
+f32 catmull_rom_derivative(f32 *data, s32 index, f32 x) {
     f32 derivative;
-    f32 temp3, temp2, temp;
+    f32 c, b, a;
 
-    temp = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
-    temp2 = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
-    temp3 = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
+    a = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
+    b = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
+    c = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
 
-    derivative = (((temp * 3 * x) + (2 * temp2)) * x) + temp3;
+    derivative = (((a * 3 * x) + (2 * b)) * x) + c;
 
     return derivative;
 }
 
-UNUSED f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
-    f32 result = arg0[arg1 + 1] + ((arg0[arg1 + 2] - arg0[arg1 + 1]) * arg2);
+/**
+ * Imprecise method, which does not guarantee v = v1 when t = 1. (From Wikipedia)
+ */
+f32 lerp(f32 *data, u32 index, f32 t) {
+    f32 result = data[index + 1] + t * ((data[index + 2] - data[index + 1]));
     return result;
 }
 
-UNUSED f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
-    f32 new_var2;
-    f32 temp_f12;
-    f32 new_var;
-    f32 temp_f2;
-    new_var = arg0[arg1 + 2] - arg0[arg1 + 1];
-    temp_f2 = new_var * arg2;
-    temp_f12 = arg0[arg1 + 1];
-    new_var2 = temp_f12 + temp_f2;
-    *arg3 = arg0[arg1 + 2] - arg0[arg1 + 1];
-    return new_var2;
+/**
+ * Peforms the lerp, and also returns the distance between the two points.
+ */
+f32 lerp_and_get_derivative(f32 *data, u32 index, f32 t, f32 *derivative) {
+    f32 lerp;
+    f32 vector;
+    vector = data[index + 2] - data[index + 1];
+    lerp = data[index + 1] + (vector * t);
+    *derivative = vector;
+    return lerp;
 }
 
 UNUSED void func_800228DC(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {

@@ -757,9 +757,9 @@ void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate) {
         racer->unk1BA = magnitude; //(s16) (s32) (((sp7C - sp78) * var_f20) + sp78);
         racer->unk1BC = magnitude; //(s16) (s32) (((sp6C - sp68) * var_f20) + sp68);
     }
-    xDerivative = func_8002277C(splineX, 0, magnitude);
-    yDerivative = func_8002277C(splineY, 0, magnitude);
-    zDerivative = func_8002277C(splineZ, 0, magnitude);
+    xDerivative = catmull_rom_derivative(splineX, 0, magnitude);
+    yDerivative = catmull_rom_derivative(splineY, 0, magnitude);
+    zDerivative = catmull_rom_derivative(splineZ, 0, magnitude);
     temp_f0 = sqrtf((xDerivative * xDerivative) + (yDerivative * yDerivative) + (zDerivative * zDerivative));
     if (temp_f0 != 0.0f) {
         temp_f0 = 100.0f / temp_f0;
