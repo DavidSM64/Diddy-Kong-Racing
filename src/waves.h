@@ -55,15 +55,16 @@ typedef struct unk8012A5E8 {
     s32 unk8;
 } unk8012A5E8;
 
+typedef struct WaveControlSine {
+    s32 sineStep;   // Amount the sine angle increases by.
+    f32 height;     // Peak height of the wave level.
+    s32 sineBase;   // Value the sine angle starts at.
+} WaveControlSine;
+
 typedef struct WaveControl {
     s32 subdivisions; // Number of subdivisions the wave plane has. Higher values use more triangles
     s32 unk4; // compared to and substracted
-    s32 unk8; // used to populate D_800E3040
-    f32 unkC; // used to populate D_800E3040
-    s32 unk10; // used to populate D_800E3040
-    s32 unk14; // used to populate D_800E3040
-    f32 unk18; // used to populate D_800E3040
-    s32 unk1C; // used to populate D_800E3040
+    WaveControlSine initSine[2];
     s32 unk20; // count of elements in D_800E3040
     s32 waveViewDist; // View distance refers to number of blocks away wavegen works on that tile. Vanilla sets 3 or 5.
     s32 unk28; // some sort of flag

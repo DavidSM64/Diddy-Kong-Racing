@@ -202,12 +202,12 @@ void waves_init_header(LevelHeader *header) {
         gWaveController.subdivisions = 4;
     }
     gWaveController.unk4 = header->unk57;
-    gWaveController.unk8 = header->unk58;
-    gWaveController.unkC = header->unk5A / 256.0f;
-    gWaveController.unk10 = header->unk59 << 8;
-    gWaveController.unk14 = header->unk5C;
-    gWaveController.unk18 = header->unk5E / 256.0f;
-    gWaveController.unk1C = header->unk5D << 8;
+    gWaveController.initSine[0].sineStep = header->unk58;
+    gWaveController.initSine[0].height = header->unk5A / 256.0f;
+    gWaveController.initSine[0].sineBase = header->unk59 << 8;
+    gWaveController.initSine[1].sineStep = header->unk5C;
+    gWaveController.initSine[1].height = header->unk5E / 256.0f;
+    gWaveController.initSine[1].sineBase = header->unk5D << 8;
     gWaveController.unk20 = header->unk60 & ~1; // Always an even number.
     if (gWavePlayerCount != 2) {
         gWaveController.waveViewDist = header->waveViewDist;
@@ -259,14 +259,14 @@ void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
     gWaveTexUVMaskX = (gWaveTexture->width * 32) - 1;
     gWaveTexUVMaskY = (gWaveTexture->height * 32) - 1;
     gWaveTexAnimFrame = 0;
-    var_s6 = gWaveController.unk10;
-    sp54 = (gWaveController.unk8 << 16) / gWaveController.unk20;
-    var_fp = gWaveController.unk1C;
-    sp4C = (gWaveController.unk14 << 16) / gWaveController.unk20;
+    var_s6 = gWaveController.initSine[0].sineBase;
+    sp54 = (gWaveController.initSine[0].sineStep << 16) / gWaveController.unk20;
+    var_fp = gWaveController.initSine[1].sineBase;
+    sp4C = (gWaveController.initSine[1].sineStep << 16) / gWaveController.unk20;
     gWaveLowerY = 10000.0f;
     gWaveUpperY = -10000.0f;
     for (i_2 = 0; i_2 < gWaveController.unk20; i_2++) {
-        D_800E3040[i_2] = (sins_f(var_s6) * gWaveController.unkC) + (sins_f(var_fp) * gWaveController.unk18);
+        D_800E3040[i_2] = (sins_f(var_s6) * gWaveController.initSine[0].height) + (gWaveController.initSine[1].height * sins_f(var_fp));
         if (gWaveController.unk28 != FALSE) {
             D_800E3040[i_2] *= 2.0f;
         }
