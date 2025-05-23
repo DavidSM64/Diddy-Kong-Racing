@@ -2859,7 +2859,7 @@ objStatusString = 0x800E302C; // size:0xC
 // waves.c .data
 gWaveHeightTable = 0x800E3040;
 D_800E3044 = 0x800E3044;
-D_800E3048 = 0x800E3048;
+gWaveUVTable = 0x800E3048;
 D_800E304C = 0x800E304C;
 gWaveVertices = 0x800E3070;
 gWaveTriangles = 0x800E3080;
@@ -2867,7 +2867,7 @@ D_800E3090 = 0x800E3090;
 gWaveTextureHeader = 0x800E30D0;
 D_800E30D4 = 0x800E30D4;
 D_800E30D8 = 0x800E30D8;
-D_800E30DC = 0x800E30DC;
+gVisibleWaveTiles = 0x800E30DC;
 D_800E30E0 = 0x800E30E0;
 D_800E30E4 = 0x800E30E4;
 D_800E30E8 = 0x800E30E8;
@@ -4607,7 +4607,7 @@ gObjectStackTrace = 0x80129FB0; // size:0x10
 
 // waves .bss
 gWaveDL = 0x80129FC0;
-D_80129FC4 = 0x80129FC4;
+gWaveMtx = 0x80129FC4;
 gWaveController = 0x80129FC8; // size:0x50
 gWaveVertexFlip = 0x8012A018;
 gWaveLowerY = 0x8012A01C;

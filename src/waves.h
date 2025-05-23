@@ -63,16 +63,16 @@ typedef struct WaveControlSine {
 
 typedef struct WaveControl {
     s32 subdivisions; // Number of subdivisions the wave plane has. Higher values use more triangles
-    s32 unk4; // compared to and substracted
+    s32 tileCount; // Number of wave tiles squared.
     WaveControlSine initSine[2];
     s32 unk20; // count of elements in gWaveHeightTable
     s32 waveViewDist; // View distance refers to number of blocks away wavegen works on that tile. Vanilla sets 3 or 5.
     s32 doubleDensity; // If active, doubles the level of subdivisons done with waves.
     s32 textureId;
-    s32 unk30; // multiplier for texture width
-    s32 unk34; // multiplier for texture height
-    s32 unk38; // used in u of uv calculation for wave triangles
-    s32 unk3C; // used in v of uv calculation for wave triangles
+    s32 uvScaleX; // multiplier for texture width
+    s32 uvScaleY; // multiplier for texture height
+    s32 uvScrollX;
+    s32 uvScrollY;
     f32 magnitude; // Global wave strength
     f32 unk44; // something related to height / scale
     f32 unk48; // used in vertex RGBA calculation
@@ -133,7 +133,7 @@ void waves_free(void);
 void func_800B8B8C(void);
 s32 func_800B9228(LevelModelSegment *arg0);
 void func_800BBDDC(LevelModel *level, LevelHeader *header);
-void func_800BFE98(s32 arg0);
+void func_800BFE98(s32 updateRate);
 void waves_init_header(LevelHeader *header);
 void func_800BBE08(LevelModel *level, LevelHeader *header);
 void obj_loop_wavepower(Object *obj);
