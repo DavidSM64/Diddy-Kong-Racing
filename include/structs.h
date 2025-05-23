@@ -461,7 +461,7 @@ typedef struct LevelHeader {
   /* 0x52 */ u8 music;
   /* 0x53 */ u8 unk53;
   /* 0x54 */ u16 instruments;
-  /* 0x56 */ u8 unk56; // values between 2 and 8 (except 5 and 7), used to determine waves count?
+  /* 0x56 */ u8 waveSubdivisons; // values between 2 and 8 (except 5 and 7), used to determine waves count?
   /* 0x57 */ u8 unk57; // possible values: 2,4,8,16,20, related to waves
   /* 0x58 */ u8 unk58; // possible values: 1,2,4
   /* 0x59 */ u8 unk59; // always 0?
@@ -480,11 +480,11 @@ typedef struct LevelHeader {
   /* 0x6D */ s8 unk6D; // values between 0 and 2 except in Hot Top Volcano where it's -2
   /* 0x6E */ s16 unk6E; // possible values: 3,5
 
-    //func_800B8134 Seems to use this struct, and it differs on unk70 only.
+    //waves_init_header Seems to use this struct, and it differs on unk70 only.
   union {
   /* 0x70 */ LevelHeader_70 *unk70[1]; // unknown size, however only size of 1 matches
       struct {
-  /* 0x70 */ u8 darkVertexColours; // always 1 except in Hot Top Volcano where it's 0
+  /* 0x70 */ u8 wavesXlu; // always 1 except in Hot Top Volcano where it's 0
   /* 0x71 */ u8 unk71; // possible values: 0,1
       };
   };

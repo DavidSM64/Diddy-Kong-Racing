@@ -237,7 +237,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     }
 
     if (gWaveBlockCount) {
-        func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, i);
+        waves_init(gCurrentLevelModel, gCurrentLevelHeader2, i);
     }
 
     cam_set_layout(numberOfPlayers);
@@ -1825,7 +1825,7 @@ void render_level_geometry_and_objects(void) {
     }
 
     if (gWaveBlockCount != 0) {
-        func_800BA8E4(&gSceneCurrDisplayList, &gSceneCurrMatrix, get_current_viewport());
+        waves_render(&gSceneCurrDisplayList, &gSceneCurrMatrix, get_current_viewport());
     }
 
     rendermode_reset(&gSceneCurrDisplayList);
@@ -2961,7 +2961,7 @@ void free_track(void) {
 
     racerfx_free();
     if (gWaveBlockCount != 0) {
-        free_waves();
+        waves_free();
     }
     for (i = 0; i < gCurrentLevelModel->numberOfTextures; i++) {
         tex_free(gCurrentLevelModel->textures[i].texture);
