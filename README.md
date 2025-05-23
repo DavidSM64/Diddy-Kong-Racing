@@ -9,7 +9,7 @@ As of May 23, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 88.37%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 56.99%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 57.00%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -133,9 +133,9 @@ As of May 23, 2025, this is our current score:
               We are racing in Spaceport Alpha. (Lap 1/3)
  =====================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
- -------------------------- 56.99% Complete --------------------------
-                     # Documented functions: 1181
-                     # Undocumented remaining: 473
+ -------------------------- 57.00% Complete --------------------------
+                     # Documented functions: 1183
+                     # Undocumented remaining: 471
  ---------------------------- Game Status ----------------------------
                Balloons: 27/47, Keys: 3/4, Trophies: 2/5
                 T.T. Amulets: 3/4, Wizpig Amulets: 2/4
