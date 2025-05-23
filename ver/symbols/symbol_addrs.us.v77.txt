@@ -2857,7 +2857,7 @@ sLockupDelay = 0x800E3028;
 objStatusString = 0x800E302C; // size:0xC
 
 // waves.c .data
-D_800E3040 = 0x800E3040;
+gWaveHeightTable = 0x800E3040;
 D_800E3044 = 0x800E3044;
 D_800E3048 = 0x800E3048;
 D_800E304C = 0x800E304C;

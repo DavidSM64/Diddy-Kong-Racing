@@ -13,7 +13,7 @@
 
 /************ .data ************/
 
-f32 *D_800E3040 = NULL;   // indexed by values of D_800E3044
+f32 *gWaveHeightTable = NULL;   // indexed by values of D_800E3044
 Vec2s *D_800E3044 = NULL; // holds some sort of index?
 TexCoords *D_800E3048 = NULL;
 f32 *D_800E304C[9] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
@@ -70,8 +70,8 @@ Gfx *gWaveDL;
 MatrixS *D_80129FC4;
 WaveControl gWaveController; // holds lots of control information used in this file
 s32 gWaveVertexFlip;    // either 1 or 0, toggled in waves_update, used to index vertices and triangles
-f32 gWaveLowerY;         // is set to lowest value of D_800E3040
-f32 gWaveUpperY;         // is set to highest value of D_800E3040
+f32 gWaveLowerY;         // is set to lowest value of gWaveHeightTable
+f32 gWaveUpperY;         // is set to highest value of gWaveHeightTable
 UNUSED s32 D_8012A024;
 Vertex D_8012A028[2][4]; // stores values of gWaveVertices to be used in waves_render
 s32 gWavePlayerCount;    // controls whether 2 or 4 items are used in gWaveVertices / gWaveTriangles
@@ -131,7 +131,7 @@ s32 gWavePowerDivisor;
 void waves_free(void) {
     TextureHeader *tempTex;
     s32 *tempMem;
-    FREE_MEM(D_800E3040);
+    FREE_MEM(gWaveHeightTable);
     FREE_MEM(D_800E3044);
     FREE_MEM(D_800E3048);
     FREE_MEM(D_800E304C[0]);
@@ -158,7 +158,7 @@ void waves_alloc(void) {
     s32 i;
 
     waves_free();
-    D_800E3040 = (f32 *) mempool_alloc_safe(gWaveController.unk20 * sizeof(f32 *), COLOUR_TAG_CYAN);
+    gWaveHeightTable = (f32 *) mempool_alloc_safe(gWaveController.unk20 * sizeof(f32 *), COLOUR_TAG_CYAN);
     D_800E3044 = (Vec2s *) mempool_alloc_safe((gWaveController.unk4 * sizeof(Vec2s *)) * gWaveController.unk4, COLOUR_TAG_CYAN);
     D_800E3048 = (TexCoords *) mempool_alloc_safe(((gWaveController.subdivisions + 1) * sizeof(TexCoords *)) * (gWaveController.subdivisions + 1),
                                                   COLOUR_TAG_CYAN);
@@ -214,7 +214,7 @@ void waves_init_header(LevelHeader *header) {
     } else {
         gWaveController.waveViewDist = 3;
     }
-    gWaveController.unk28 = header->unk71;
+    gWaveController.doubleDensity = header->waveDoubleDensity;
     gWaveController.textureId = header->textureId & 0xFFFF;
     gWaveController.unk30 = header->unk6A;
     gWaveController.unk34 = header->unk6B;
@@ -228,14 +228,14 @@ void waves_init_header(LevelHeader *header) {
 
 void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
     s32 k;
-    s32 var_fp;
+    s32 sineVar2;
     s32 j_2;
     s32 var_s3;
     s32 var_s5;
-    s32 var_s6;
-    s32 sp54;
+    s32 sineVar1;
+    s32 sineStep1;
     s32 i;
-    s32 sp4C;
+    s32 sineStep2;
     s32 j;
     s32 i_2;
     s32 var_t0;
@@ -259,25 +259,25 @@ void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
     gWaveTexUVMaskX = (gWaveTexture->width * 32) - 1;
     gWaveTexUVMaskY = (gWaveTexture->height * 32) - 1;
     gWaveTexAnimFrame = 0;
-    var_s6 = gWaveController.initSine[0].sineBase;
-    sp54 = (gWaveController.initSine[0].sineStep << 16) / gWaveController.unk20;
-    var_fp = gWaveController.initSine[1].sineBase;
-    sp4C = (gWaveController.initSine[1].sineStep << 16) / gWaveController.unk20;
+    sineVar1 = gWaveController.initSine[0].sineBase;
+    sineStep1 = (gWaveController.initSine[0].sineStep << 16) / gWaveController.unk20;
+    sineVar2 = gWaveController.initSine[1].sineBase;
+    sineStep2 = (gWaveController.initSine[1].sineStep << 16) / gWaveController.unk20;
     gWaveLowerY = 10000.0f;
     gWaveUpperY = -10000.0f;
     for (i_2 = 0; i_2 < gWaveController.unk20; i_2++) {
-        D_800E3040[i_2] = (sins_f(var_s6) * gWaveController.initSine[0].height) + (gWaveController.initSine[1].height * sins_f(var_fp));
-        if (gWaveController.unk28 != FALSE) {
-            D_800E3040[i_2] *= 2.0f;
+        gWaveHeightTable[i_2] = (sins_f(sineVar1) * gWaveController.initSine[0].height) + (gWaveController.initSine[1].height * sins_f(sineVar2));
+        if (gWaveController.doubleDensity) {
+            gWaveHeightTable[i_2] *= 2.0f;
         }
-        if (D_800E3040[i_2] < gWaveLowerY) {
-            gWaveLowerY = D_800E3040[i_2];
+        if (gWaveHeightTable[i_2] < gWaveLowerY) {
+            gWaveLowerY = gWaveHeightTable[i_2];
         }
-        if (gWaveUpperY < D_800E3040[i_2]) {
-            gWaveUpperY = D_800E3040[i_2];
+        if (gWaveUpperY < gWaveHeightTable[i_2]) {
+            gWaveUpperY = gWaveHeightTable[i_2];
         }
-        var_s6 += sp54;
-        var_fp += sp4C;
+        sineVar1 += sineStep1;
+        sineVar2 += sineStep2;
     };
     save_rng_seed();
     set_rng_seed(0x57415646);
@@ -431,7 +431,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
         D_8012A600[var_v1 + 3].unk0 = -1;
     }
 
-    if (gWaveController.unk28 != 0) {
+    if (gWaveController.doubleDensity) {
         xPosition -= (xPosRatio * gWaveBoundingBoxDiffX) + D_8012A0D0;
         zPosition -= (zPosRatio * gWaveBoundingBoxDiffZ) + D_8012A0D4;
         if ((gWaveBoundingBoxDiffX >> 1) < xPosition) {
@@ -584,7 +584,7 @@ void func_800B92F4(s32 arg0, s32 arg1) {
             continue;
         }
 
-        if (gWaveController.unk28 != FALSE) {
+        if (gWaveController.doubleDensity) {
             sp98 = (((u32) D_800E30D4[sp6C->unkC] >> (D_8012A5E8[k].unk2 * 8)) & 0xFF) - 1;
             sp8C = (D_8012A5E8[k].unk2 & 1) * gWaveController.subdivisions;
             sp88 = ((D_8012A5E8[k].unk2 & 2) >> 1) * gWaveController.subdivisions;
@@ -603,7 +603,7 @@ void func_800B92F4(s32 arg0, s32 arg1) {
             var_s2 = (sp84 * gWaveController.unk4) + var_s1;
             for (j = 0; j <= gWaveController.subdivisions; j++) {
                 vertexY =
-                    (D_800E3040[D_800E3044[var_s2].s[0]] + D_800E3040[D_800E3044[var_s2].s[1]]) * gWaveController.magnitude;
+                    (gWaveHeightTable[D_800E3044[var_s2].s[0]] + gWaveHeightTable[D_800E3044[var_s2].s[1]]) * gWaveController.magnitude;
                 if (D_800E3188 > 0) {
                     vertexY += waves_get_y(arg0, j + sp8C, i + sp88);
                 }
@@ -645,7 +645,7 @@ void func_800B92F4(s32 arg0, s32 arg1) {
             if (sp84 >= gWaveController.unk4) {
                 sp84 -= gWaveController.unk4;
             }
-            if (gWaveController.unk28 != FALSE) {
+            if (gWaveController.doubleDensity) {
                 D_8012A5E8[k].unk8 += gWaveController.subdivisions;
             }
         }
@@ -683,7 +683,7 @@ void func_800B97A8(s32 arg0, s32 arg1) {
             continue;
         }
 
-        if (gWaveController.unk28 != FALSE) {
+        if (gWaveController.doubleDensity) {
             spA8 = (((u32) D_800E30D4[sp78->unkC] >> (D_8012A5E8[k].unk2 * 8)) & 0xFF) - 1;
             sp9C = (D_8012A5E8[k].unk2 & 1) * gWaveController.subdivisions;
             sp98 = ((s32) (D_8012A5E8[k].unk2 & 2) >> 1) * gWaveController.subdivisions;
@@ -701,7 +701,7 @@ void func_800B97A8(s32 arg0, s32 arg1) {
             var_s2 = (var_a0 * gWaveController.unk4) + var_s1;
             for (j = 0; j <= gWaveController.subdivisions; j++) {
                 var_f20 =
-                    (D_800E3040[D_800E3044[var_s2].s[0]] + D_800E3040[D_800E3044[var_s2].s[1]]) * gWaveController.magnitude;
+                    (gWaveHeightTable[D_800E3044[var_s2].s[0]] + gWaveHeightTable[D_800E3044[var_s2].s[1]]) * gWaveController.magnitude;
                 if (D_800E3188 > 0) {
                     var_f20 += waves_get_y(arg0, j + sp9C, i + sp98);
                 }
@@ -731,7 +731,7 @@ void func_800B97A8(s32 arg0, s32 arg1) {
             if (var_a0 >= gWaveController.unk4) {
                 var_a0 -= gWaveController.unk4;
             }
-            if (gWaveController.unk28 != FALSE) {
+            if (gWaveController.doubleDensity) {
                 D_8012A5E8[k].unk8 += gWaveController.subdivisions;
             }
         }
@@ -860,7 +860,7 @@ void func_800BA288(s32 arg0, s32 arg1) {
     arg1 <<= 3;
     for (i = 0; i < gNumberOfLevelSegments; i++) {
         if (D_8012A0E8[D_800E30D8[i].unkB] & (1 << D_800E30D8[i].unkA)) {
-            if (gWaveController.unk28 != FALSE) {
+            if (gWaveController.doubleDensity) {
                 for (j = 0; j < 4; j++) {
                     if (D_800E30D4[D_800E30D8[i].unkC] & (0xFF << (j << 3))) {
                         if (arg1 < D_800E30D8[i].unk14[arg0].unk0[j]) {
@@ -997,7 +997,7 @@ void waves_render(Gfx **dList, MatrixS **mtx, s32 viewportID) {
                 gDPSetEnvColor(gWaveDL++, 255, 255, 255, 0);
             }
         }
-        if (gWaveController.unk28) {
+        if (gWaveController.doubleDensity) {
             spE4.scale = 0.5f;
         } else {
             spE4.scale = 1.0f;
@@ -1015,7 +1015,7 @@ void waves_render(Gfx **dList, MatrixS **mtx, s32 viewportID) {
             spE4.y_position = spE0->unk6;
             spE4.z_position = spE0->unk8;
             sp104 = D_800E30D4[spE0->unkC];
-            if (gWaveController.unk28) {
+            if (gWaveController.doubleDensity) {
                 for (sp11C = 0; sp11C < 2; sp11C++) {
                     spE4.x_position = spE0->unk4;
                     for (var_fp = 0; var_fp < 2; var_fp++) {
@@ -1105,9 +1105,9 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
     var_f16 = (1.0f - gWaveController.unk44) / 127.0f;
     sp58 = arg0 * D_800E317C;
 
-    if (gWaveController.unk28 != FALSE) {
-        sp90 *= 0.5f;
-        sp94 *= 0.5f;
+    if (gWaveController.doubleDensity) {
+        sp90 /= 2.0f;
+        sp94 /= 2.0f;
         sp60 = (gWaveController.subdivisions * 2) + 1;
     } else {
         sp60 = gWaveController.subdivisions + 1;
@@ -1149,7 +1149,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
 
     if (var_v0) {
         var_a0 = (var_a3 * gWaveController.unk4) + var_t0;
-        spA0 = (D_800E3040[D_800E3044[var_a0].s[0]] + D_800E3040[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
+        spA0 = (gWaveHeightTable[D_800E3044[var_a0].s[0]] + gWaveHeightTable[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
         var_a0 = sp58 + sp70 + (sp6C * sp60);
         if (D_800E3188 > 0) {
             spA0 += waves_get_y(arg0, sp70, sp6C);
@@ -1161,7 +1161,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
         }
 
         var_a0 = (var_a3 + 1) >= gWaveController.unk4 ? var_t0 : ((var_a3 + 1) * gWaveController.unk4) + var_t0;
-        var_f12 = (D_800E3040[D_800E3044[var_a0].s[0]] + D_800E3040[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
+        var_f12 = (gWaveHeightTable[D_800E3044[var_a0].s[0]] + gWaveHeightTable[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
         if (D_800E3188 > 0) {
             var_f12 += waves_get_y(arg0, sp70, sp6C + 1);
         }
@@ -1176,7 +1176,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
         } else {
             var_a0 = (var_t0 + 0) + (var_a3 * gWaveController.unk4) + 1;
         }
-        var_f2 = (D_800E3040[D_800E3044[var_a0].s[0]] + D_800E3040[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
+        var_f2 = (gWaveHeightTable[D_800E3044[var_a0].s[0]] + gWaveHeightTable[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
         if (D_800E3188 > 0) {
             var_f2 += waves_get_y(arg0, sp70 + 1, sp6C);
         }
@@ -1187,10 +1187,10 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
             var_f2 *= gWaveController.unk44 + (var_v0 * var_f16);
         }
 
-        if (gWaveController.unk28 != FALSE) {
-            spA0 *= 0.5f;
-            var_f12 *= 0.5f;
-            var_f2 *= 0.5f;
+        if (gWaveController.doubleDensity) {
+            spA0 /= 2.0f;
+            var_f12 /= 2.0f;
+            var_f2 /= 2.0f;
         }
 
         spA4 = 0.0f;
@@ -1203,7 +1203,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
         } else {
             var_a0 = (var_t0 + 0) + (var_a3 * gWaveController.unk4) + 1;
         }
-        spA0 = (D_800E3040[D_800E3044[var_a0].s[0]] + D_800E3040[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
+        spA0 = (gWaveHeightTable[D_800E3044[var_a0].s[0]] + gWaveHeightTable[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
         if (D_800E3188 > 0) {
             spA0 += waves_get_y(arg0, sp70 + 1, sp6C);
         }
@@ -1215,7 +1215,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
         }
 
         var_a0 = (var_a3 + 1) >= gWaveController.unk4 ? var_t0 : ((var_a3 + 1) * gWaveController.unk4) + var_t0;
-        var_f12 = (D_800E3040[D_800E3044[var_a0].s[0]] + D_800E3040[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
+        var_f12 = (gWaveHeightTable[D_800E3044[var_a0].s[0]] + gWaveHeightTable[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
         if (D_800E3188 > 0) {
             var_f12 += waves_get_y(arg0, sp70, sp6C + 1);
         }
@@ -1230,7 +1230,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
             var_a0 += (var_a3 + 1) * gWaveController.unk4;
         }
 
-        var_f2 = (D_800E3040[D_800E3044[var_a0].s[0]] + D_800E3040[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
+        var_f2 = (gWaveHeightTable[D_800E3044[var_a0].s[0]] + gWaveHeightTable[D_800E3044[var_a0].s[1]]) * gWaveController.magnitude;
         if (D_800E3188 > 0) {
             var_f2 += waves_get_y(arg0, sp70 + 1, sp6C + 1);
         }
@@ -1241,10 +1241,10 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
             var_f2 *= gWaveController.unk44 + (var_v0 * var_f16);
         }
 
-        if (gWaveController.unk28 != FALSE) {
-            spA0 *= 0.5f;
-            var_f12 *= 0.5f;
-            var_f2 *= 0.5f;
+        if (gWaveController.doubleDensity) {
+            spA0 /= 2.0f;
+            var_f12 /= 2.0f;
+            var_f2 /= 2.0f;
         }
 
         spA4 = sp94;
@@ -1334,8 +1334,8 @@ void func_800BBF78(LevelModel *model) {
     levelSegments = model->segments;
     levelSegmentBoundingBoxes = model->segmentsBoundingBoxes;
     sp44 = gWaveController.subdivisions;
-    if (gWaveController.unk28 != FALSE) {
-        sp44 = sp44 * 2;
+    if (gWaveController.doubleDensity) {
+        sp44 *= 2;
     }
     D_8012A0C0 = levelSegmentBoundingBoxes->x1;
     D_8012A0C8 = levelSegmentBoundingBoxes->x2;
@@ -1566,7 +1566,7 @@ void func_800BCC70(LevelModel *arg0) {
     u8 *spA0;
 
     var_s4 = gWaveController.subdivisions;
-    if (gWaveController.unk28 != 0) {
+    if (gWaveController.doubleDensity) {
         var_s4 *= 2;
     }
     D_800E317C = (var_s4 + 1) * (var_s4 + 1);
@@ -1851,7 +1851,7 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNeg
     spCC = gWaveVtxStepX;
     spC8 = gWaveVtxStepZ;
     var_f24 = (1.0f - gWaveController.unk44) / 127.0f;
-    if (gWaveController.unk28 != FALSE) {
+    if (gWaveController.doubleDensity != FALSE) {
         sp36C = gWaveController.subdivisions * 2;
         spCC *= 0.5;
         spC8 *= 0.5;
@@ -1914,7 +1914,7 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNeg
                 var_s1 = sp368;
                 var_s5 = sp358 + 1;
                 do {
-                    var_f20 = (D_800E3040[D_800E3044[var_s2].s[0]] + D_800E3040[D_800E3044[var_s2].s[1]]) *
+                    var_f20 = (gWaveHeightTable[D_800E3044[var_s2].s[0]] + gWaveHeightTable[D_800E3044[var_s2].s[1]]) *
                               gWaveController.magnitude;
                     if (D_800E3188 > 0) {
                         var_f20 += waves_get_y(arg0, var_s1, var_s6);
@@ -2123,7 +2123,7 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
 
     var_t0 = 0x80;
     object = NULL;
-    if (D_800E3040 != NULL && arg0 >= 0 && arg0 < gNumberOfLevelSegments) {
+    if (gWaveHeightTable != NULL && arg0 >= 0 && arg0 < gNumberOfLevelSegments) {
         object = mempool_alloc_safe((gWaveController.unk20 >> 1) + 0xE, COLOUR_TAG_CYAN);
         object->effect_box.unk0 = D_800E30D8[arg0].unk6;
         object->effect_box.unk2 = 0;
@@ -2135,10 +2135,10 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
         temp_f2 = (1.0f - gWaveController.unk44) / 127.0f;
         var_f2 = temp_f2;
         spB0 = (arg0 * D_800E317C);
-        if (gWaveController.unk28 != 0) {
+        if (gWaveController.doubleDensity) {
             var_t4 = (gWaveController.subdivisions * 2) + 1;
-            var_f20 *= 0.5f;
-            var_f22 *= 0.5f;
+            var_f20 /= 2.0f;
+            var_f22 /= 2.0f;
         } else {
             var_t4 = gWaveController.subdivisions + 1;
         }
@@ -2231,16 +2231,16 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
             }
         }
 
-        if (gWaveController.unk28 != 0) {
-            sp50[0] *= 0.5;
-            sp50[1] *= 0.5;
-            sp50[2] *= 0.5;
+        if (gWaveController.doubleDensity) {
+            sp50[0] /= 2.0;
+            sp50[1] /= 2.0;
+            sp50[2] /= 2.0;
         }
 
         for (var_a3 = 0; var_a3 < (gWaveController.unk20 >> 1); var_a3++) {
-            temp_f = (D_800E3040[sp68[0]] + D_800E3040[sp68[1]]) * sp50[0];
-            var_f12 = (D_800E3040[sp68[2]] + D_800E3040[sp68[3]]) * sp50[1];
-            var_f0 = (D_800E3040[sp68[4]] + D_800E3040[sp68[5]]) * sp50[2];
+            temp_f = (gWaveHeightTable[sp68[0]] + gWaveHeightTable[sp68[1]]) * sp50[0];
+            var_f12 = (gWaveHeightTable[sp68[2]] + gWaveHeightTable[sp68[3]]) * sp50[1];
+            var_f0 = (gWaveHeightTable[sp68[4]] + gWaveHeightTable[sp68[5]]) * sp50[2];
             if (var_t1 != FALSE) {
                 var_f2 = (temp_f - var_f0) * var_f20;
                 var_f14 = (temp_f - var_f12) * var_f22;
@@ -2340,10 +2340,10 @@ f32 waves_get_y(s32 arg0, s32 arg1, s32 arg2) {
     var_v1 = gWaveController.subdivisions;
     var_f0 = gWaveVtxStepX;
     var_f2 = gWaveVtxStepZ;
-    if (gWaveController.unk28 != FALSE) {
+    if (gWaveController.doubleDensity) {
         var_v1 *= 2;
-        var_f0 *= 0.5f;
-        var_f2 *= 0.5f;
+        var_f0 /= 2.0f;
+        var_f2 /= 2.0f;
     }
     temp_a1 = (D_800E30D8[arg0].unkA * var_v1) + arg1;
     temp_a3 = &D_800E3184[temp_a1];
@@ -2473,7 +2473,7 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
             D_800E3194[i] = obj;
             D_800E3188++;
             var_f0 = gWaveVtxStepX;
-            if (gWaveController.unk28 != FALSE) {
+            if (gWaveController.doubleDensity) {
                 var_f0 /= 2.0f;
             }
 
@@ -2551,8 +2551,8 @@ UNUSED void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2) {
 
     var_f0 = gWaveVtxStepX;
     iteration = 0;
-    if (gWaveController.unk28 != FALSE) {
-        var_f0 *= 0.5f;
+    if (gWaveController.doubleDensity) {
+        var_f0 /= 2.0f;
     }
     temp_v1 = arg0->unk18;
     while (iteration != 2) {

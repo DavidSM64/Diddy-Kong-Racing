@@ -65,9 +65,9 @@ typedef struct WaveControl {
     s32 subdivisions; // Number of subdivisions the wave plane has. Higher values use more triangles
     s32 unk4; // compared to and substracted
     WaveControlSine initSine[2];
-    s32 unk20; // count of elements in D_800E3040
+    s32 unk20; // count of elements in gWaveHeightTable
     s32 waveViewDist; // View distance refers to number of blocks away wavegen works on that tile. Vanilla sets 3 or 5.
-    s32 unk28; // some sort of flag
+    s32 doubleDensity; // If active, doubles the level of subdivisons done with waves.
     s32 textureId;
     s32 unk30; // multiplier for texture width
     s32 unk34; // multiplier for texture height

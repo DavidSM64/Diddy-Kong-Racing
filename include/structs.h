@@ -485,7 +485,7 @@ typedef struct LevelHeader {
   /* 0x70 */ LevelHeader_70 *unk70[1]; // unknown size, however only size of 1 matches
       struct {
   /* 0x70 */ u8 wavesXlu; // always 1 except in Hot Top Volcano where it's 0
-  /* 0x71 */ u8 unk71; // possible values: 0,1
+  /* 0x71 */ u8 waveDoubleDensity; // possible values: 0,1
       };
   };
 
