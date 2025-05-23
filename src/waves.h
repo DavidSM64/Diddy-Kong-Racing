@@ -65,7 +65,7 @@ typedef struct WaveControl {
     f32 unk18; // used to populate D_800E3040
     s32 unk1C; // used to populate D_800E3040
     s32 unk20; // count of elements in D_800E3040
-    s32 unk24; // possible values: 3 or 5, controls what's set for D_800E30E0 and D_800E30E4
+    s32 waveViewDist; // View distance refers to number of blocks away wavegen works on that tile. Vanilla sets 3 or 5.
     s32 unk28; // some sort of flag
     s32 textureId;
     s32 unk30; // multiplier for texture width
@@ -150,7 +150,7 @@ void func_800BBF78(LevelModel *model);   // Non Matching
 f32 func_800BB2F4(s32, f32, f32, Vec3f *);
 void func_800B8C04(s32, s32, s32, s32, s32);
 void func_800BF524(Object *);
-f32 func_800BEFC4(s32, s32, s32);
+f32 waves_get_y(s32, s32, s32);
 void func_800BC6C8(void);
 void func_800BCC70(LevelModel *arg0);
 

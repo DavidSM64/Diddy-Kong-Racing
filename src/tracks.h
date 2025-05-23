@@ -214,7 +214,7 @@ void func_80028050(void);
 void initialise_player_viewport_vars(s32);
 void func_8002A31C(void);
 void update_colour_cycle(LevelHeader_70 *arg0, s32 updateRate);
-void func_800B9C18(s32);
+void waves_update(s32);
 void waves_render(Gfx**, MatrixS**, s32);
 void func_8002DE30(Object*);
 void shadow_generate(Object*, s32);

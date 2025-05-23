@@ -311,7 +311,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
         tempUpdateRate = updateRate;
     }
     if (gWaveBlockCount) {
-        func_800B9C18(tempUpdateRate);
+        waves_update(tempUpdateRate);
     }
     shadow_update(SHADOW_ACTORS, SHADOW_ACTORS, updateRate);
     for (i = 0; i < 7; i++) {
