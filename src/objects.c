@@ -28,6 +28,7 @@
 #include "audio_vehicle.h"
 #include "vehicle_misc.h"
 #include "PRinternal/viint.h"
+#include "printf.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -443,9 +444,8 @@ void racerfx_free(void) {
     gParticlePtrList_flush();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B38C.s")
-
 void func_8000B38C(Vertex *, Triangle *, ObjectTransform *, f32, f32, s16, TextureHeader *arg6);
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B38C.s")
 
 void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4) {
     f32 sp74[3];
@@ -4493,7 +4493,165 @@ UNUSED s16 get_taj_challenge_type(void) {
     return gTajChallengeType;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017E98.s")
+void func_80017E98(void) {
+    f32 xDiff;
+    f32 zDiff;
+    f32 yDiff;
+    s32 temp_v1;
+    s32 checkpointNum;
+    s32 duplicateCheckpoint;
+    s32 breakOut;
+    s32 altRouteId;
+    s32 i;
+    s32 altId;
+    s32 var_a0;
+    f32 ox;
+    f32 oy;
+    f32 oz;
+    Object *obj;
+    CheckpointNode *checkpoint;
+    LevelObjectEntry_Checkpoint *checkpointEntry;
+    f32 mtx[4][4];
+    ObjectTransform transform;
+    s32 var_t2;
+
+    var_t2 = 0;
+    gNumberOfCheckpoints = 0;
+    for (i = 0; i < gObjectCount; i++) {
+        obj = gObjPtrList[i];
+        if (!(obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) && obj->behaviorId == BHV_CHECKPOINT &&
+            gNumberOfCheckpoints < MAX_CHECKPOINTS) {
+            checkpointEntry = &obj->segment.level_entry->checkpoint;
+            if (checkpointEntry->unk1A == gTajChallengeType) {
+                gTrackCheckpoints[gNumberOfCheckpoints].obj = obj;
+                var_a0 = checkpointEntry->unk9;
+                if (checkpointEntry->unk17) {
+                    var_a0 += 255;
+                    var_t2++;
+                }
+                gTrackCheckpoints[gNumberOfCheckpoints].unk2C = var_a0;
+                gTrackCheckpoints[gNumberOfCheckpoints].altRouteID = -1;
+                gNumberOfCheckpoints++;
+            }
+        }
+    }
+
+    duplicateCheckpoint = FALSE;
+    do {
+        altId = TRUE;
+
+        for (i = 0; i < gNumberOfCheckpoints - 1; i++) {
+            if (gTrackCheckpoints[i].unk2C == gTrackCheckpoints[i + 1].unk2C) {
+                duplicateCheckpoint = TRUE;
+                checkpointNum = gTrackCheckpoints[i].unk2C;
+            }
+
+            if (gTrackCheckpoints[i + 1].unk2C < gTrackCheckpoints[i].unk2C) {
+                temp_v1 = gTrackCheckpoints[i].unk2C;
+                obj = gTrackCheckpoints[i].obj;
+                gTrackCheckpoints[i].unk2C = gTrackCheckpoints[i + 1].unk2C;
+                gTrackCheckpoints[i].obj = gTrackCheckpoints[i + 1].obj;
+                gTrackCheckpoints[i + 1].unk2C = temp_v1;
+                gTrackCheckpoints[i + 1].obj = obj;
+                altId = FALSE;
+            }
+        }
+    } while (!altId);
+    D_8011AED4 = gNumberOfCheckpoints;
+    gNumberOfCheckpoints -= var_t2;
+    if (duplicateCheckpoint) {
+        set_render_printf_position(20, 220);
+        render_printf(sDuplicateCheckpointString /* "Error: Multiple checkpoint no: %d !!\n"; */, checkpointNum);
+    }
+    for (i = gNumberOfCheckpoints; i < D_8011AED4; i++) {
+        temp_v1 = gTrackCheckpoints[i].unk2C - 255;
+        for (var_a0 = 0, breakOut = FALSE; var_a0 < gNumberOfCheckpoints && !breakOut; var_a0++) {
+            if (temp_v1 == gTrackCheckpoints[var_a0].unk2C) {
+                gTrackCheckpoints[var_a0].altRouteID = i;
+                gTrackCheckpoints[i].altRouteID = var_a0;
+                breakOut = TRUE;
+            }
+        }
+    }
+
+    for (i = 0; i < D_8011AED4; i++) {
+        checkpoint = &gTrackCheckpoints[i];
+        obj = checkpoint->obj;
+        checkpointEntry = &obj->segment.level_entry->checkpoint;
+        transform.rotation.y_rotation = obj->segment.trans.rotation.y_rotation;
+        transform.rotation.x_rotation = obj->segment.trans.rotation.x_rotation;
+        transform.rotation.z_rotation = obj->segment.trans.rotation.z_rotation;
+        transform.scale = 1.0f;
+        transform.x_position = 0.0f;
+        transform.y_position = 0.0f;
+        transform.z_position = 0.0f;
+        object_transform_to_matrix(&mtx[0], &transform);
+        guMtxXFMF(&mtx[0], 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
+        checkpoint->rotationXFrac = ox;
+        checkpoint->rotationYFrac = oy;
+        checkpoint->rotationZFrac = oz;
+        checkpoint->unkC = -(((obj->segment.trans.x_position * ox) + (obj->segment.trans.y_position * oy)) +
+                             (obj->segment.trans.z_position * oz));
+        checkpoint->x = obj->segment.trans.x_position;
+        checkpoint->y = obj->segment.trans.y_position;
+        checkpoint->z = obj->segment.trans.z_position;
+        checkpoint->scale = obj->segment.trans.scale * 2;
+        checkpoint->unk2C = obj->segment.trans.scale * 128.0f;
+        checkpoint->unk24 = 0.0f;
+        checkpoint->distance = 0.0f;
+        if (i < gNumberOfCheckpoints) {
+            temp_v1 = i + 1;
+            if (temp_v1 == gNumberOfCheckpoints) {
+                temp_v1 = 0;
+            }
+            xDiff = obj->segment.trans.x_position - gTrackCheckpoints[temp_v1].obj->segment.trans.x_position;
+            yDiff = obj->segment.trans.y_position - gTrackCheckpoints[temp_v1].obj->segment.trans.y_position;
+            zDiff = obj->segment.trans.z_position - gTrackCheckpoints[temp_v1].obj->segment.trans.z_position;
+            checkpoint->distance = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
+            altRouteId = gTrackCheckpoints[temp_v1].altRouteID;
+            if (altRouteId != -1) {
+                xDiff = obj->segment.trans.x_position - gTrackCheckpoints[altRouteId].obj->segment.trans.x_position;
+                yDiff = obj->segment.trans.y_position - gTrackCheckpoints[altRouteId].obj->segment.trans.y_position;
+                zDiff = obj->segment.trans.z_position - gTrackCheckpoints[altRouteId].obj->segment.trans.z_position;
+                checkpoint->unk24 = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
+            } else {
+                checkpoint->unk24 = checkpoint->distance;
+            }
+        } else {
+            temp_v1 = gTrackCheckpoints[i].altRouteID + 1;
+            if (temp_v1 == gNumberOfCheckpoints) {
+                temp_v1 = 0;
+            }
+            xDiff = obj->segment.trans.x_position - gTrackCheckpoints[temp_v1].obj->segment.trans.x_position;
+            yDiff = obj->segment.trans.y_position - gTrackCheckpoints[temp_v1].obj->segment.trans.y_position;
+            zDiff = obj->segment.trans.z_position - gTrackCheckpoints[temp_v1].obj->segment.trans.z_position;
+            checkpoint->distance = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
+            altRouteId = gTrackCheckpoints[temp_v1].altRouteID;
+            if (altRouteId != -1) {
+                xDiff = obj->segment.trans.x_position - gTrackCheckpoints[altRouteId].obj->segment.trans.x_position;
+                yDiff = obj->segment.trans.y_position - gTrackCheckpoints[altRouteId].obj->segment.trans.y_position;
+                zDiff = obj->segment.trans.z_position - gTrackCheckpoints[altRouteId].obj->segment.trans.z_position;
+                checkpoint->unk24 = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
+            } else {
+                checkpoint->unk24 = checkpoint->distance;
+            }
+        }
+        checkpoint->unk2E[0] = checkpointEntry->unkB;
+        checkpoint->unk32[0] = checkpointEntry->unkF;
+        checkpoint->unk36[0] = checkpointEntry->unk13;
+        checkpoint->unk2E[1] = checkpointEntry->unkC;
+        checkpoint->unk32[1] = checkpointEntry->unk10;
+        checkpoint->unk36[1] = checkpointEntry->unk14;
+        checkpoint->unk2E[2] = checkpointEntry->unkD;
+        checkpoint->unk32[2] = checkpointEntry->unk11;
+        checkpoint->unk36[2] = checkpointEntry->unk15;
+        checkpoint->unk2E[3] = checkpointEntry->unkE;
+        checkpoint->unk32[3] = checkpointEntry->unk12;
+        checkpoint->unk36[3] = checkpointEntry->unk16;
+        checkpoint->unk3B = checkpointEntry->unk19;
+    }
+}
+
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800185E4.s")
 
 /**
@@ -6379,14 +6537,14 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
 
 f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x) {
     f32 ret;
-    f32 temp3, temp2, temp;
+    f32 c, b, a;
 
-    temp = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
-    temp2 = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
-    temp3 = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
+    a = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
+    b = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
+    c = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
 
     ret = (1.0 * data[index + 1]);
-    ret = (((((temp * x) + temp2) * x) + temp3) * x) + ret;
+    ret = (((((a * x) + b) * x) + c) * x) + ret;
 
     return ret;
 }
@@ -6396,48 +6554,50 @@ f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x) {
  */
 f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative) {
     f32 ret;
-    f32 temp3, temp2, temp;
+    f32 c, b, a;
 
-    temp = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
-    temp2 = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
-    temp3 = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
+    a = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
+    b = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
+    c = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
 
     ret = (1.0 * data[index + 1]);
-    *derivative = (((temp * 3 * x) + (2 * temp2)) * x) + temp3;
-    ret = (((((temp * x) + temp2) * x) + temp3) * x) + ret;
+    *derivative = (((a * 3 * x) + (2 * b)) * x) + c;
+    ret = (((((a * x) + b) * x) + c) * x) + ret;
 
     return ret;
 }
 
-f32 func_8002277C(f32 *data, s32 index, f32 x) {
+f32 catmull_rom_derivative(f32 *data, s32 index, f32 x) {
     f32 derivative;
-    f32 temp3, temp2, temp;
+    f32 c, b, a;
 
-    temp = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
-    temp2 = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
-    temp3 = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
+    a = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
+    b = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
+    c = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
 
-    derivative = (((temp * 3 * x) + (2 * temp2)) * x) + temp3;
+    derivative = (((a * 3 * x) + (2 * b)) * x) + c;
 
     return derivative;
 }
 
-UNUSED f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
-    f32 result = arg0[arg1 + 1] + ((arg0[arg1 + 2] - arg0[arg1 + 1]) * arg2);
+/**
+ * Imprecise method, which does not guarantee v = v1 when t = 1. (From Wikipedia)
+ */
+f32 lerp(f32 *data, u32 index, f32 t) {
+    f32 result = data[index + 1] + t * ((data[index + 2] - data[index + 1]));
     return result;
 }
 
-UNUSED f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
-    f32 new_var2;
-    f32 temp_f12;
-    f32 new_var;
-    f32 temp_f2;
-    new_var = arg0[arg1 + 2] - arg0[arg1 + 1];
-    temp_f2 = new_var * arg2;
-    temp_f12 = arg0[arg1 + 1];
-    new_var2 = temp_f12 + temp_f2;
-    *arg3 = arg0[arg1 + 2] - arg0[arg1 + 1];
-    return new_var2;
+/**
+ * Peforms the lerp, and also returns the distance between the two points.
+ */
+f32 lerp_and_get_derivative(f32 *data, u32 index, f32 t, f32 *derivative) {
+    f32 lerp;
+    f32 vector;
+    vector = data[index + 2] - data[index + 1];
+    lerp = data[index + 1] + (vector * t);
+    *derivative = vector;
+    return lerp;
 }
 
 UNUSED void func_800228DC(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
