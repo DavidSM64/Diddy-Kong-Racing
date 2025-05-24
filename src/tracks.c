@@ -1687,7 +1687,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     gPrevCameraY = gSceneActiveCamera->trans.y_position;
     gPrevCameraZ = gSceneActiveCamera->trans.z_position;
     if (gWaveBlockCount != 0) {
-        func_800B8B8C();
+        waves_visibility_reset();
         racers = get_racer_objects(&numRacers);
         if (gSceneActiveCamera->mode != CAMERA_FINISH_RACE && numRacers > 0 && !check_if_showing_cutscene_camera()) {
             i = -1;
@@ -1903,7 +1903,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     //! @bug: batchInfo is uninitalized
     numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
     segment = &gCurrentLevelModel->segments[segmentId];
-    sp78 = (nonOpaque && gWaveBlockCount) ? func_800B9228(segment) : 0;
+    sp78 = (nonOpaque && gWaveBlockCount) ? waves_visibility(segment) : 0;
     if (nonOpaque) {
         startPos = segment->numberofOpaqueBatches;
         endPos = segment->numberOfBatches;

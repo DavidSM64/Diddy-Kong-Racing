@@ -11,7 +11,7 @@ typedef struct {
 
 /* Size: 0x1C bytes */
 typedef struct {
-    LevelModelSegment *unk00;
+    LevelModelSegment *block;
     s16 unk4; // something with x
     s16 unk6; // something with y AND used as playerIndex
     s16 unk8; // something with z
@@ -130,8 +130,8 @@ typedef struct unk8012A028 {
 // } Vertex;
 
 void waves_free(void);
-void func_800B8B8C(void);
-s32 func_800B9228(LevelModelSegment *arg0);
+void waves_visibility_reset(void);
+s32 waves_visibility(LevelModelSegment *arg0);
 void func_800BBDDC(LevelModel *level, LevelHeader *header);
 void func_800BFE98(s32 updateRate);
 void waves_init_header(LevelHeader *header);
