@@ -5753,8 +5753,12 @@ void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *ent
     obj->segment.trans.scale /= 40.0f;
 }
 
+/**
+ * Wave Generator init func.
+ * Calls a function to add a wave generator point for the waves system.
+*/
 void obj_init_wavegenerator(Object *obj, UNUSED LevelObjectEntry_WaveGenerator *entry, UNUSED s32 arg2) {
-    func_800BF524(obj);
+    wavegen_add(obj);
 }
 
 void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 param) {

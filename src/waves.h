@@ -65,7 +65,7 @@ typedef struct WaveControl {
     s32 subdivisions; // Number of subdivisions the wave plane has. Higher values use more triangles
     s32 tileCount; // Number of wave tiles squared.
     WaveControlSine initSine[2];
-    s32 unk20; // count of elements in gWaveHeightTable
+    s32 seedSize; // count of elements in gWaveHeightTable
     s32 waveViewDist; // View distance refers to number of blocks away wavegen works on that tile. Vanilla sets 3 or 5.
     s32 doubleDensity; // If active, doubles the level of subdivisons done with waves.
     s32 textureId;
@@ -79,26 +79,7 @@ typedef struct WaveControl {
     s32 xlu; // Determines whether to use semitransparent or opaque render modes by default.
 } WaveControl;
 
-typedef struct unk800BBE08_arg1 {
-    u8 pad[0x70];
-    s32 unk70[1]; // Unknown length.
-} unk800BBE08_arg1;
-
 typedef struct unk800BFC54_arg0 {
-    f32 unk0;
-    f32 unk4;
-    u8 pad8[0x4];
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[0x8];
-    u32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-} unk800BFC54_arg0;
-
-typedef struct unk800BF9F8 {
     f32 unk0;
     f32 unk4;
     f32 unk8;
@@ -106,17 +87,13 @@ typedef struct unk800BF9F8 {
     f32 unk10;
     u8 pad14[4];
     u16 unk18;
-} unk800BF9F8;
-
-// 4 Vertexes
-// Size: 0x28 - 40 bytes/
-typedef struct unk8012A028 {
-    Vertex vert[4];
-    // Vertex vertexA;
-    // Vertex vertexB;
-    // Vertex vertexC;
-    // Vertex vertexD;
-} unk8012A028;
+    u16 unk1A;
+    u32 unk1C;
+    f32 unk20;
+    f32 unk24;
+    f32 unk28;
+    f32 unk2C;
+} unk800BFC54_arg0;
 
 // /* Size: 10 bytes */
 // typedef struct Vertex {
@@ -141,7 +118,7 @@ void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg
 void func_800BF3E4(Object *obj);
 f32 log_wave_height(Object_Log *log, s32 updateRate);
 void func_800BA288(s32 arg0, s32 arg1);
-void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2);
+void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2);
 unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8);
 void waves_alloc(void);
 void wave_load_material(TextureHeader *tex, s32 rtile);
@@ -150,7 +127,7 @@ Object_64 *func_800BE654(s32, f32, f32);
 void func_800BBF78(LevelModel *model);   // Non Matching
 f32 func_800BB2F4(s32, f32, f32, Vec3f *);
 void func_800B8C04(s32, s32, s32, s32, s32);
-void func_800BF524(Object *);
+void wavegen_add(Object *);
 f32 waves_get_y(s32, s32, s32);
 void func_800BC6C8(void);
 void func_800BCC70(LevelModel *arg0);
