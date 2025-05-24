@@ -25,22 +25,24 @@ typedef struct {
 
 /* Size: 0x40 bytes */
 typedef struct unk800E3190 {
-    f32 minZ;
-    f32 maxZ;
-    f32 x_position;
-    f32 z_position;
-    f32 radius;
-    f32 radiusSq;
-    s16 index;
-    u16 unk1A;
-    u32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    u8 unk31;
-    u8 unk32;
-    u8 pad33[0xE];
+  /* 0x00 */ f32 minZ;
+  /* 0x04 */ f32 maxZ;
+  /* 0x08 */ f32 x_position;
+  /* 0x0C */ f32 z_position;
+  /* 0x10 */ f32 radius;
+  /* 0x14 */ f32 radiusSq;
+  /* 0x18 */ u16 index;
+  /* 0x1A */ u16 unk1A;
+  /* 0x1C */ u32 unk1C;
+  /* 0x20 */ f32 unk20;
+  /* 0x24 */ f32 unk24;
+  /* 0x28 */ f32 unk28;
+  /* 0x2C */ f32 unk2C;
+  /* 0x30 */ u8 unk30;
+  /* 0x31 */ u8 unk31;
+  /* 0x32 */ u8 unk32;
+  /* 0x33 */ u8 unk33;
+  u32 pad34[3];
 } unk800E3190;
 
 typedef struct unk800E3184 {
@@ -79,22 +81,6 @@ typedef struct WaveControl {
     s32 xlu; // Determines whether to use semitransparent or opaque render modes by default.
 } WaveControl;
 
-typedef struct unk800BFC54_arg0 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 pad14[4];
-    u16 unk18;
-    u16 unk1A;
-    u32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-} unk800BFC54_arg0;
-
 // /* Size: 10 bytes */
 // typedef struct Vertex {
 // /* 0x00 */ s16 x;
@@ -114,11 +100,11 @@ void func_800BFE98(s32 updateRate);
 void waves_init_header(LevelHeader *header);
 void func_800BBE08(LevelModel *level, LevelHeader *header);
 void obj_loop_wavepower(Object *obj);
-void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
+void wavegen_scale(unk800E3190 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
 void wavegen_destroy(Object *obj);
 f32 log_wave_height(Object_Log *log, s32 updateRate);
 void func_800BA288(s32 arg0, s32 arg1);
-void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2);
+void func_800BF9F8(unk800E3190 *arg0, f32 arg1, f32 arg2);
 unk800E3190 *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8);
 void waves_alloc(void);
 void wave_load_material(TextureHeader *tex, s32 rtile);

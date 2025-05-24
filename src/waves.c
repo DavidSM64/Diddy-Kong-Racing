@@ -43,7 +43,7 @@ s16 D_800E3110[26] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
 s16 D_800E3144[26] = { 0, 1, 1, 1, 2, 3, 4, 4, 4, 5, 3, 4, 4, 4, 5, 3, 4, 4, 4, 5, 6, 7, 7, 7, 8, 0 };
 
 u8 *D_800E3178 = NULL;
-s32 D_800E317C = 0; // some sort of count? Relative to gWaveController.subdivisions
+s32 gWaveTileTotal = 0; // some sort of count? Relative to gWaveController.subdivisions
 LevelHeader_70 *D_800E3180 = NULL;
 unk800E3184 *D_800E3184 = NULL; // tracks an index into D_800E3190
 s32 gWaveGenCount = 0;             // counter for something, incremented in wavegen_register, decremented in wavegen_destroy
@@ -476,7 +476,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
                             if (var_t2 == gWaveModel[var_v0].unkC) {
                                 D_8012A5E8[var_a3].unk0 = var_v0;
                                 D_8012A5E8[var_a3].unk2 = (var_t5 + var_s4) >> 3;
-                                D_8012A5E8[var_a3].unk8 = var_v0 * D_800E317C;
+                                D_8012A5E8[var_a3].unk8 = var_v0 * gWaveTileTotal;
                                 D_8012A5E8[var_a3].unk4 = gWaveModel[var_v0].unk12;
                                 if (var_t5 != 0) {
                                     D_8012A5E8[var_a3].unk8 += gWaveController.subdivisions;
@@ -535,7 +535,7 @@ void func_800B8C04(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentViewp
                                 D_8012A5E8[var_a3].unk2 = 0;
                                 D_8012A5E8[var_a3].unk4 = gWaveModel[var_v0].unk12;
                                 D_8012A5E8[var_a3].unk6 = gWaveModel[var_v0].unk10;
-                                D_8012A5E8[var_a3].unk8 = var_v0 * D_800E317C;
+                                D_8012A5E8[var_a3].unk8 = var_v0 * gWaveTileTotal;
                                 var_a3++;
                                 var_v0 = 0x7FFF;
                             }
@@ -1119,7 +1119,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
     sp90 = gWaveVtxStepZ;
     sp94 = gWaveVtxStepX;
     var_f16 = (1.0f - gWaveController.unk44) / 127.0f;
-    sp58 = arg0 * D_800E317C;
+    sp58 = arg0 * gWaveTileTotal;
 
     if (gWaveController.doubleDensity) {
         sp90 /= 2.0f;
@@ -1566,7 +1566,7 @@ void func_800BC6C8(void) {
     }
 }
 
-void func_800BCC70(LevelModel *arg0) {
+void func_800BCC70(LevelModel *model) {
     s32 sp18C;
     u32 pad_sp188;
     s32 sp184;
@@ -1585,25 +1585,25 @@ void func_800BCC70(LevelModel *arg0) {
     s32 var_a2;
     s32 var_a3;
     s32 var_s2;
-    s32 var_s4;
+    s32 subdivisions;
     s32 var_s5;
     f32 spAC[30];
     f32 *spA8;
     Vec2i *spA4;
     u8 *spA0;
 
-    var_s4 = gWaveController.subdivisions;
+    subdivisions = gWaveController.subdivisions;
     if (gWaveController.doubleDensity) {
-        var_s4 *= 2;
+        subdivisions *= 2;
     }
-    D_800E317C = (var_s4 + 1) * (var_s4 + 1);
+    gWaveTileTotal = (subdivisions + 1) * (subdivisions + 1);
     if (D_800E3178 != NULL) {
         mempool_free(D_800E3178);
     }
-    D_800E3178 = mempool_alloc_safe(arg0->numberOfSegments * D_800E317C, COLOUR_TAG_CYAN);
-    spA0 = mempool_alloc_safe(arg0->numberOfSegments * 4, COLOUR_TAG_CYAN);
+    D_800E3178 = mempool_alloc_safe(model->numberOfSegments * gWaveTileTotal, COLOUR_TAG_CYAN);
+    spA0 = mempool_alloc_safe(model->numberOfSegments * 4, COLOUR_TAG_CYAN);
     spA4 = mempool_alloc_safe((gWaveTileCountX * gWaveTileCountZ) * 8, COLOUR_TAG_CYAN);
-    spA8 = mempool_alloc_safe((var_s4 * 4) + 4, COLOUR_TAG_CYAN);
+    spA8 = mempool_alloc_safe((subdivisions * 4) + 4, COLOUR_TAG_CYAN);
 
     // temp assignment required for match
     pad_sp188 = -1;
@@ -1612,21 +1612,21 @@ void func_800BCC70(LevelModel *arg0) {
         spA4[var_a3].i[1] = pad_sp188;
     }
 
-    for (var_t2 = 0; var_t2 <= var_s4; var_t2++) {
-        spA8[var_t2] = (((var_s4 - (var_t2 << 1)) / (f32) var_s4) * 8.0f);
+    for (var_t2 = 0; var_t2 <= subdivisions; var_t2++) {
+        spA8[var_t2] = (((subdivisions - (var_t2 << 1)) / (f32) subdivisions) * 8.0f);
     }
 
-    var_f26 = gWaveBoundingBoxW / var_s4;
-    var_f28 = gWaveBoundingBoxH / var_s4;
-    for (sp18C = 0, var_s5 = 0; sp18C < arg0->numberOfSegments; sp18C++) {
+    var_f26 = gWaveBoundingBoxW / subdivisions;
+    var_f28 = gWaveBoundingBoxH / subdivisions;
+    for (sp18C = 0, var_s5 = 0; sp18C < model->numberOfSegments; sp18C++) {
         if (D_8012A0E8[gWaveModel[sp18C].unkB] & (1 << gWaveModel[sp18C].unkA)) {
             spA4[(gWaveModel[sp18C].unkB * gWaveTileCountX) + gWaveModel[sp18C].unkA].i[0] = sp18C;
             spA4[(gWaveModel[sp18C].unkB * gWaveTileCountX) + gWaveModel[sp18C].unkA].i[1] = var_s5;
             var_f20 = gWaveModel[sp18C].unk6;
             var_f24 = gWaveModel[sp18C].unk8;
-            for (sp184 = 0; sp184 <= var_s4; sp184++) {
+            for (sp184 = 0; sp184 <= subdivisions; sp184++) {
                 var_f22 = gWaveModel[sp18C].unk4;
-                for (var_t2 = 0; var_t2 <= var_s4; var_t2++) {
+                for (var_t2 = 0; var_t2 <= subdivisions; var_t2++) {
                     // var_v0 stores the length of spAC
                     var_v0 = func_8002BAB0(sp18C, spA8[var_t2] + var_f22, spA8[sp184] + var_f24, spAC);
                     if (var_v0 == 0) {
@@ -1656,7 +1656,7 @@ void func_800BCC70(LevelModel *arg0) {
         } else {
             // clang-format off
             // @note \ required here
-            for (var_t2 = 0; var_t2 < D_800E317C; var_t2++) { \
+            for (var_t2 = 0; var_t2 < gWaveTileTotal; var_t2++) { \
                 D_800E3178[var_s5++] = 0xFF;
             }
             // clang-format on
@@ -1670,9 +1670,9 @@ void func_800BCC70(LevelModel *arg0) {
                 if (sp184 < (gWaveTileCountZ - 1)) {
                     var_v0 = spA4[((sp184 + 1) * gWaveTileCountX) + var_t2].i[1];
                     if (var_v0 != -1) {
-                        var_a1 = ((var_s4 + 1) * var_s4) + var_t4 + 1;
+                        var_a1 = ((subdivisions + 1) * subdivisions) + var_t4 + 1;
                         var_v1 = var_v0 + 1;
-                        for (var_a3 = 0; var_a3 < var_s4 - 1; var_a3++) {
+                        for (var_a3 = 0; var_a3 < subdivisions - 1; var_a3++) {
                             var_a2 = (D_800E3178[var_a1] + D_800E3178[var_v1]) >> 1;
                             D_800E3178[var_a1] = var_a2;
                             D_800E3178[var_v1] = var_a2;
@@ -1684,16 +1684,16 @@ void func_800BCC70(LevelModel *arg0) {
                 if (var_t2 < (gWaveTileCountX - 1)) {
                     var_v0 = spA4[(sp184 * gWaveTileCountX) + var_t2 + 1].i[1];
                     if (var_v0 != -1) {
-                        var_a1 = (var_s4 * 2) + var_t4 + 1;
-                        var_v1 = var_v0 + var_s4 + 1;
-                        for (var_a3 = 0; var_a3 < var_s4 - 1; var_a3++) {
+                        var_a1 = (subdivisions * 2) + var_t4 + 1;
+                        var_v1 = var_v0 + subdivisions + 1;
+                        for (var_a3 = 0; var_a3 < subdivisions - 1; var_a3++) {
                             var_a2 = (D_800E3178[var_a1] + D_800E3178[var_v1]) >> 1;
                             D_800E3178[var_a1] = var_a2;
                             if (!var_v1) {}
                             D_800E3178[var_v1] = var_a2;
-                            var_v1 += var_s4;
+                            var_v1 += subdivisions;
                             var_v1++;
-                            var_a1 += var_s4;
+                            var_a1 += subdivisions;
                             var_a1++;
                         }
                     }
@@ -1702,14 +1702,14 @@ void func_800BCC70(LevelModel *arg0) {
         }
     }
 
-    for (var_t4 = 0, sp18C = 0; sp18C < arg0->numberOfSegments; sp18C++, var_t4 += D_800E317C) {
+    for (var_t4 = 0, sp18C = 0; sp18C < model->numberOfSegments; sp18C++, var_t4 += gWaveTileTotal) {
         spA0[(sp18C * 4) + 0] = D_800E3178[var_t4];
-        spA0[(sp18C * 4) + 1] = D_800E3178[var_t4 + (var_s4)];
-        spA0[(sp18C * 4) + 2] = D_800E3178[var_t4 + ((var_s4 + 1) * var_s4)];
-        spA0[(sp18C * 4) + 3] = D_800E3178[var_t4 + ((var_s4 + 1) * (var_s4 + 1)) - 1];
+        spA0[(sp18C * 4) + 1] = D_800E3178[var_t4 + (subdivisions)];
+        spA0[(sp18C * 4) + 2] = D_800E3178[var_t4 + ((subdivisions + 1) * subdivisions)];
+        spA0[(sp18C * 4) + 3] = D_800E3178[var_t4 + ((subdivisions + 1) * (subdivisions + 1)) - 1];
     }
 
-    for (var_t4 = 0, sp18C = 0; sp18C < arg0->numberOfSegments; sp18C++, var_t4 += D_800E317C) {
+    for (var_t4 = 0, sp18C = 0; sp18C < model->numberOfSegments; sp18C++, var_t4 += gWaveTileTotal) {
         var_s5 = (gWaveModel[sp18C].unkB * gWaveTileCountX) + gWaveModel[sp18C].unkA;
         if (spA4[var_s5].i[0] != -1) {
             for (var_a3 = 0; var_a3 < ARRAY_COUNT(sp140); var_a3++) {
@@ -1778,7 +1778,7 @@ void func_800BCC70(LevelModel *arg0) {
                 var_a3++;
                 var_a2 += spA0[sp140[4] * 4];
             }
-            D_800E3178[var_t4 + var_s4] = var_a2 / var_a3;
+            D_800E3178[var_t4 + subdivisions] = var_a2 / var_a3;
 
             var_a2 = spA0[(sp18C * 4) + 2];
             var_a3 = 1;
@@ -1796,7 +1796,7 @@ void func_800BCC70(LevelModel *arg0) {
                 var_a3++;
                 var_a2 += spA0[sp140[6] * 4];
             }
-            D_800E3178[var_t4 + ((var_s4 + 1) * var_s4)] = var_a2 / var_a3;
+            D_800E3178[var_t4 + ((subdivisions + 1) * subdivisions)] = var_a2 / var_a3;
 
             var_a2 = spA0[(sp18C * 4) + 3];
             var_a3 = 1;
@@ -1815,7 +1815,7 @@ void func_800BCC70(LevelModel *arg0) {
                 var_a2 += spA0[sp140[7] * 4];
             }
 
-            D_800E3178[var_t4 + ((var_s4 + 1) * (var_s4 + 1)) - 1] = var_a2 / var_a3;
+            D_800E3178[var_t4 + ((subdivisions + 1) * (subdivisions + 1)) - 1] = var_a2 / var_a3;
         }
     }
 
@@ -1874,7 +1874,7 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNeg
     s32 var_s7; // sp74
     s32 var_t8;
 
-    var_t0 = (arg0 * D_800E317C);
+    var_t0 = (arg0 * gWaveTileTotal);
     spCC = gWaveVtxStepX;
     spC8 = gWaveVtxStepZ;
     var_f24 = (1.0f - gWaveController.unk44) / 127.0f;
@@ -2116,7 +2116,7 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNeg
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BDC80.s")
 #endif
 
-Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
+Object_64 *func_800BE654(s32 blockID, f32 x, f32 z) {
     f32 spE4;
     f32 temp_f;
     s32 pad;
@@ -2148,11 +2148,11 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
     f32 sp50[3];
     Object_64 *object;
 
-    var_t0 = 0x80;
+    var_t0 = 128;
     object = NULL;
-    if (gWaveHeightTable != NULL && arg0 >= 0 && arg0 < gNumberOfLevelSegments) {
+    if (gWaveHeightTable != NULL && blockID >= 0 && blockID < gNumberOfLevelSegments) {
         object = mempool_alloc_safe((gWaveController.seedSize >> 1) + 0xE, COLOUR_TAG_CYAN);
-        object->effect_box.unk0 = gWaveModel[arg0].unk6;
+        object->effect_box.unk0 = gWaveModel[blockID].unk6;
         object->effect_box.unk2 = 0;
         object->effect_box.unk3 = 1;
         object->effect_box.unk4 = 0;
@@ -2161,7 +2161,7 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
         var_f22 = gWaveVtxStepX;
         temp_f2 = (1.0f - gWaveController.unk44) / 127.0f;
         var_f2 = temp_f2;
-        spB0 = (arg0 * D_800E317C);
+        spB0 = (blockID * gWaveTileTotal);
         if (gWaveController.doubleDensity) {
             var_t4 = (gWaveController.subdivisions * 2) + 1;
             var_f20 /= 2.0f;
@@ -2170,32 +2170,32 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
             var_t4 = gWaveController.subdivisions + 1;
         }
         // clang-format off
-        arg1 -= gWaveModel[arg0].unk4;
-        if (arg1 < 0.0f) { arg1 = 0.0f; }
-        else if (arg1 >= gWaveBoundingBoxW) { arg1 = gWaveBoundingBoxW - 1; }
-        arg2 -= gWaveModel[arg0].unk8;
-        if (arg2 < 0.0f) { arg2 = 0.0f; }
-        else if (arg2 >= gWaveBoundingBoxH) { arg2 = gWaveBoundingBoxH - 1; }
+        x -= gWaveModel[blockID].unk4;
+        if (x < 0.0f) { x = 0.0f; }
+        else if (x >= gWaveBoundingBoxW) { x = gWaveBoundingBoxW - 1; }
+        z -= gWaveModel[blockID].unk8;
+        if (z < 0.0f) { z = 0.0f; }
+        else if (z >= gWaveBoundingBoxH) { z = gWaveBoundingBoxH - 1; }
         // clang-format on
-        spC4 = arg1 / var_f22;
-        spC0 = arg2 / var_f20;
+        spC4 = x / var_f22;
+        spC0 = z / var_f20;
         object->effect_box.unk8 = spC4;
         object->effect_box.unkA = spC0;
-        object->effect_box.unkC = arg0;
-        arg1 -= (spC4 * var_f22);
-        arg2 -= (spC0 * var_f20);
-        var_a0 = gWaveModel[arg0].unk12 + spC4;
+        object->effect_box.unkC = blockID;
+        x -= (spC4 * var_f22);
+        z -= (spC0 * var_f20);
+        var_a0 = gWaveModel[blockID].unk12 + spC4;
         while (var_a0 >= gWaveController.tileCount) {
             var_a0 -= gWaveController.tileCount;
         }
 
-        var_v0 = gWaveModel[arg0].unk10 + spC0;
+        var_v0 = gWaveModel[blockID].unk10 + spC0;
         while (var_v0 >= gWaveController.tileCount) {
             var_v0 -= gWaveController.tileCount;
         }
 
         var_t1 = FALSE;
-        if (arg2 != var_f20 && arg1 < (((var_f20 - arg2) / var_f20) * var_f22)) {
+        if (z != var_f20 && x < (((var_f20 - z) / var_f20) * var_f22)) {
             var_t1 = TRUE;
         }
 
@@ -2280,7 +2280,7 @@ Object_64 *func_800BE654(s32 arg0, f32 arg1, f32 arg2) {
             var_f2 /= var_f0;
             var_f14 /= var_f0;
             var_f12 = var_f18 / var_f0;
-            var_v0_2 = -(s32) (((var_f2 * arg1) + (var_f14 * arg2) - ((spE4 * var_f2) + (temp_f * var_f12))) * 16.0f /
+            var_v0_2 = -(s32) (((var_f2 * x) + (var_f14 * z) - ((spE4 * var_f2) + (temp_f * var_f12))) * 16.0f /
                                var_f12);
             if (var_v0_2 >= var_t0 || var_v0_2 < -var_t0) {
                 var_v1 = 0;
@@ -2346,22 +2346,22 @@ f32 waves_get_y(s32 arg0, s32 arg1, s32 arg2) {
     f32 diffX;
     f32 diffZ;
     f32 temp_f24;
-    f32 temp_f26;
+    f32 zeroCheck;
     f32 temp_f30;
     f32 stepX;
-    f32 var_f28;
+    f32 y;
     f32 stepZ;
     u32 var_s0;
     s32 temp_a1;
-    s32 var_s3;
+    s32 i;
     s32 subdivisons;
     s32 temp_0;
     unk800E3184 *temp_a3;
     unk800E3190 *gen;
 
-    var_f28 = 0.0f;
+    y = 0.0f;
     if (gWaveGenCount <= 0) {
-        return var_f28;
+        return y;
     }
 
     subdivisons = gWaveController.subdivisions;
@@ -2378,10 +2378,10 @@ f32 waves_get_y(s32 arg0, s32 arg1, s32 arg2) {
         temp_0 = arg2 + (subdivisons * gWaveModel[arg0].unkB);
         temp_f30 = gWaveBlockPosX + (temp_a1 * stepX);
         temp_f24 = gWaveBlockPosZ + (temp_0 * stepZ);
-        temp_f26 = 0;
-        var_s3 = 0;
+        zeroCheck = 0;
+        i = 0;
         do {
-            gen = &D_800E3190[temp_a3->unk0[var_s3]];
+            gen = &D_800E3190[temp_a3->unk0[i]];
             if (gen->minZ <= temp_f24 && temp_f24 <= gen->maxZ) {
                 diffX = temp_f30 - gen->x_position;
                 diffZ = temp_f24 - gen->z_position;
@@ -2389,14 +2389,14 @@ f32 waves_get_y(s32 arg0, s32 arg1, s32 arg2) {
                 if (distSq < gen->radiusSq) {
                     dist = sqrtf(distSq);
                     var_s0 = gen->unk1A;
-                    if (gen->unk31 != 0) {
-                        if (diffX < temp_f26) {
+                    if (gen->unk30) {
+                        if (diffX < zeroCheck) {
                             var_s0 -= (s32) (diffX * gen->unk20);
                         } else {
                             var_s0 += (s32) (diffX * gen->unk20);
                         }
-                    } else if (gen->unk32 != 0) {
-                        if (diffX < temp_f26) {
+                    } else if (gen->unk31) {
+                        if (diffX < zeroCheck) {
                             var_s0 -= (s32) (diffZ * gen->unk20);
                         } else {
                             var_s0 += (s32) (diffZ * gen->unk20);
@@ -2405,14 +2405,14 @@ f32 waves_get_y(s32 arg0, s32 arg1, s32 arg2) {
                         var_s0 += (s32) (dist * gen->unk20);
                     }
                     diffX = coss_f((dist * 65536.0f) / gen->radius);
-                    var_f28 += gen->unk24 * sins_f(var_s0) * diffX;
+                    y += gen->unk24 * sins_f(var_s0) * diffX;
                 }
             }
-            var_s3++;
-        } while (var_s3 < 8 && temp_a3->unk0[var_s3] != 0xFF);
+            i++;
+        } while (i < 8 && temp_a3->unk0[i] != 0xFF);
     }
 
-    return var_f28;
+    return y;
 }
 
 void wavegen_destroy(Object *obj) {
@@ -2460,28 +2460,28 @@ void wavegen_destroy(Object *obj) {
 
 void wavegen_add(Object *obj) {
     LevelObjectEntry_WaveGenerator *temp_v0;
-    s32 var_v1;
+    s32 flags;
 
     temp_v0 = &obj->segment.level_entry->waveGenerator;
-    var_v1 = 0;
+    flags = 0;
     if (temp_v0->unk10 != 0) {
-        var_v1 = 1;
+        flags = 1;
     }
 
     if (temp_v0->unk11 != 0) {
-        var_v1 |= 2;
+        flags |= 2;
     }
 
     wavegen_register(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32) temp_v0->waveSize,
                   temp_v0->unk9 << 8, (f32) temp_v0->unk8 / 16.0, (f32) temp_v0->unkE, (f32) temp_v0->unkC / 16.0,
-                  var_v1);
+                  flags);
 }
 
 
 const char D_800E9228[] = "\nError :: more than eight swells overlap on column %d.";
 
 unk800E3190 *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32 arg4, f32 arg5, f32 arg6, f32 arg7,
-                           s32 arg8) {
+                           s32 flags) {
     f32 stepSize;
     s32 emptyWave;
     s32 minX;
@@ -2557,8 +2557,8 @@ unk800E3190 *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32
             result->unk20 = 65536.0f / arg6;
             result->unk24 = arg7;
             result->unk28 = arg5;
-            result->unk31 = arg8 & 1;
-            result->unk32 = arg8 & 2;
+            result->unk30 = flags & 1;
+            result->unk31 = flags & 2;
             result->unk2C = arg6;
         }
     }
@@ -2566,7 +2566,7 @@ unk800E3190 *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32
     return result;
 }
 
-UNUSED void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2) {
+UNUSED void func_800BF9F8(unk800E3190 *gen, f32 arg1, f32 arg2) {
     UNUSED s32 pad[4];
     s32 sp1C;
     f32 var_f0;
@@ -2575,10 +2575,10 @@ UNUSED void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2) {
     s32 var_a2;
     s32 j;
     s32 iteration;
-    s32 temp_v1;
+    s32 index;
     u8 *var_a2_2;
 
-    if (arg0 == NULL) {
+    if (gen == NULL) {
         return;
     }
 
@@ -2587,10 +2587,10 @@ UNUSED void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2) {
     if (gWaveController.doubleDensity) {
         var_f0 /= 2.0f;
     }
-    temp_v1 = arg0->unk18;
+    index = gen->index;
     while (iteration != 2) {
         var_a1 = TRUE;
-        var_a2 = ((arg0->unk8 - arg0->unk10) - gWaveBlockPosX) / var_f0;
+        var_a2 = ((gen->x_position - gen->radius) - gWaveBlockPosX) / var_f0;
         if (var_a2 >= gWaveTileGridCount) {
             var_a1 = FALSE;
         } else if (var_a2 < 0) {
@@ -2598,7 +2598,7 @@ UNUSED void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2) {
         }
 
         if (var_a1) {
-            sp1C = ((arg0->unk8 + arg0->unk10) - gWaveBlockPosX) / var_f0;
+            sp1C = ((gen->x_position + gen->radius) - gWaveBlockPosX) / var_f0;
             if (sp1C < 0) {
                 var_a1 = FALSE;
             } else if (sp1C >= gWaveTileGridCount) {
@@ -2615,11 +2615,11 @@ UNUSED void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2) {
                         while (var_a2_2[0] != 0xFF) {
                             var_a2_2++;
                         }
-                        var_a2_2[0] = temp_v1;
+                        var_a2_2[0] = index;
                     }
                 } else {
                     while (j < 8) {
-                        if (temp_v1 == var_a2_2[j]) {
+                        if (index == var_a2_2[j]) {
                             while (j < 7) {
                                 var_a2_2[j] = var_a2_2[j + 1];
                                 j++;
@@ -2634,41 +2634,41 @@ UNUSED void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2) {
         }
 
         if (iteration == 0) {
-            arg0->unk8 += arg1;
-            arg0->unkC += arg2;
-            arg0->unk0 += arg2;
-            arg0->unk4 += arg2;
+            gen->x_position += arg1;
+            gen->z_position += arg2;
+            gen->minZ += arg2;
+            gen->maxZ += arg2;
         }
         iteration++;
     }
 }
 
-UNUSED void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
-    if (arg0 == NULL) {
+UNUSED void wavegen_scale(unk800E3190 *gen, f32 radiusAdd, f32 arg2, f32 arg3, f32 arg4) {
+    if (gen == NULL) {
         return;
     }
 
-    arg0->unk10 = (arg0->unk10 + arg1);
-    if (arg0->unk10 < 1.0) {
-        arg0->unk10 = 1.0f;
+    gen->radius += radiusAdd;
+    if (gen->radius < 1.0) {
+        gen->radius = 1.0f;
     }
 
-    arg0->unk0 = (arg0->unkC - arg0->unk10);
-    arg0->unk4 = (arg0->unkC + arg0->unk10);
-    arg0->unk28 += arg2;
+    gen->minZ = (gen->z_position - gen->radius);
+    gen->maxZ = (gen->z_position + gen->radius);
+    gen->unk28 += arg2;
     if (osTvType == OS_TV_TYPE_PAL) {
-        arg0->unk1C = arg0->unk28 * 20971.52; //(f64) (0x80000 / 25.0);
+        gen->unk1C = gen->unk28 * 20971.52; //(f64) (0x80000 / 25.0);
     } else {
-        arg0->unk1C = arg0->unk28 * 17476.27; //(f64) ((0x80000 / 1.2) / 25.0);
+        gen->unk1C = gen->unk28 * 17476.27; //(f64) ((0x80000 / 1.2) / 25.0);
     }
 
-    arg0->unk2C = arg0->unk2C + arg3;
-    if (arg0->unk2C < 1.0) {
-        arg0->unk2C = 1.0f;
+    gen->unk2C = gen->unk2C + arg3;
+    if (gen->unk2C < 1.0) {
+        gen->unk2C = 1.0f;
     }
 
-    arg0->unk20 = 65536.0f / arg0->unk2C; // 0x10000
-    arg0->unk24 = arg0->unk24 + arg4;
+    gen->unk20 = 65536.0f / gen->unk2C; // 0x10000
+    gen->unk24 += arg4;
 }
 
 void func_800BFE98(s32 updateRate) {
