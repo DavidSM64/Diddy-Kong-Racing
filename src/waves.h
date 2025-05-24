@@ -119,7 +119,7 @@ void func_800BF3E4(Object *obj);
 f32 log_wave_height(Object_Log *log, s32 updateRate);
 void func_800BA288(s32 arg0, s32 arg1);
 void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2);
-unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8);
+unk800E3190 *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8);
 void waves_alloc(void);
 void wave_load_material(TextureHeader *tex, s32 rtile);
 

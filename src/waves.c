@@ -46,7 +46,7 @@ u8 *D_800E3178 = NULL;
 s32 D_800E317C = 0; // some sort of count? Relative to gWaveController.subdivisions
 LevelHeader_70 *D_800E3180 = NULL;
 unk800E3184 *D_800E3184 = NULL; // tracks an index into D_800E3190
-s32 D_800E3188 = 0;             // counter for something, incremented in func_800BF634, decremented in func_800BF3E4
+s32 D_800E3188 = 0;             // counter for something, incremented in wavegen_register, decremented in func_800BF3E4
 s32 gWaveTileGridCount = 0;             // used in mempool_alloc_safe size calculation, multiplied with 8
 unk800E3190 *D_800E3190 = NULL;
 Object **D_800E3194 = NULL; // might be a length of 32
@@ -2458,11 +2458,12 @@ void func_800BF3E4(Object *obj) {
     D_800E3188--;
 }
 
+
 void wavegen_add(Object *obj) {
-    LevelObjectEntry800BF524 *temp_v0;
+    LevelObjectEntry_WaveGenerator *temp_v0;
     s32 var_v1;
 
-    temp_v0 = &obj->segment.level_entry->unk800BF524;
+    temp_v0 = &obj->segment.level_entry->waveGenerator;
     var_v1 = 0;
     if (temp_v0->unk10 != 0) {
         var_v1 = 1;
@@ -2472,12 +2473,12 @@ void wavegen_add(Object *obj) {
         var_v1 |= 2;
     }
 
-    func_800BF634(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32) temp_v0->waveSize,
+    wavegen_register(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32) temp_v0->waveSize,
                   temp_v0->unk9 << 8, (f32) temp_v0->unk8 / 16.0, (f32) temp_v0->unkE, (f32) temp_v0->unkC / 16.0,
                   var_v1);
 }
 
-unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32 arg4, f32 arg5, f32 arg6, f32 arg7,
+unk800E3190 *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32 arg4, f32 arg5, f32 arg6, f32 arg7,
                            s32 arg8) {
     f32 stepSize;
     s32 var_a0;
