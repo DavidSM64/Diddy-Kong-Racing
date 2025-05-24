@@ -24,7 +24,7 @@ typedef struct {
 } LevelModel_Alternate;
 
 /* Size: 0x40 bytes */
-typedef struct unk800E3190 {
+typedef struct WaveGen {
   /* 0x00 */ f32 minZ;
   /* 0x04 */ f32 maxZ;
   /* 0x08 */ f32 x_position;
@@ -43,7 +43,7 @@ typedef struct unk800E3190 {
   /* 0x32 */ u8 unk32;
   /* 0x33 */ u8 unk33;
   u32 pad34[3];
-} unk800E3190;
+} WaveGen;
 
 typedef struct unk800E3184 {
     u8 unk0[8];
@@ -81,41 +81,30 @@ typedef struct WaveControl {
     s32 xlu; // Determines whether to use semitransparent or opaque render modes by default.
 } WaveControl;
 
-// /* Size: 10 bytes */
-// typedef struct Vertex {
-// /* 0x00 */ s16 x;
-// /* 0x02 */ s16 y;
-// /* 0x04 */ s16 z;
-// /* 0x06 */ u8  r;
-// /* 0x07 */ u8  g;
-// /* 0x08 */ u8  b;
-// /* 0x09 */ u8  a;
-// } Vertex;
-
 void waves_free(void);
 void waves_visibility_reset(void);
-s32 waves_visibility(LevelModelSegment *arg0);
+s32 waves_visibility(LevelModelSegment *block);
 void func_800BBDDC(LevelModel *level, LevelHeader *header);
 void func_800BFE98(s32 updateRate);
 void waves_init_header(LevelHeader *header);
 void func_800BBE08(LevelModel *level, LevelHeader *header);
 void obj_loop_wavepower(Object *obj);
-void wavegen_scale(unk800E3190 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
+void wavegen_scale(WaveGen *gen, f32 radiusAdd, f32 arg2, f32 arg3, f32 arg4);
 void wavegen_destroy(Object *obj);
-f32 log_wave_height(Object_Log *log, s32 updateRate);
+f32 obj_wave_height(Object_Log *log, s32 updateRate);
 void func_800BA288(s32 arg0, s32 arg1);
-void func_800BF9F8(unk800E3190 *arg0, f32 arg1, f32 arg2);
-unk800E3190 *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8);
+void func_800BF9F8(WaveGen *gen, f32 arg1, f32 arg2);
+WaveGen *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32 arg4, f32 arg5, f32 arg6, f32 arg7,
+                          s32 flags);
 void waves_alloc(void);
 void wave_load_material(TextureHeader *tex, s32 rtile);
-
 Object_64 *func_800BE654(s32, f32, f32);
-void func_800BBF78(LevelModel *model);   // Non Matching
+void func_800BBF78(LevelModel *model);
 f32 func_800BB2F4(s32, f32, f32, Vec3f *);
 void func_800B8C04(s32, s32, s32, s32, s32);
 void wavegen_add(Object *);
 f32 waves_get_y(s32, s32, s32);
 void func_800BC6C8(void);
-void func_800BCC70(LevelModel *arg0);
+void func_800BCC70(LevelModel *model);
 
 #endif

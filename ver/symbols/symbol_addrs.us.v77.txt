@@ -1737,7 +1737,7 @@ func_800BC6C8 = 0x800BC6C8;
 func_800BCC70 = 0x800BCC70;
 func_800BDC80 = 0x800BDC80;
 func_800BE654 = 0x800BE654;
-log_wave_height = 0x800BEEB4;
+obj_wave_height = 0x800BEEB4;
 waves_get_y = 0x800BEFC4;
 wavegen_destroy = 0x800BF3E4;
 wavegen_add = 0x800BF524;
@@ -2880,7 +2880,7 @@ D_800E3180 = 0x800E3180;
 D_800E3184 = 0x800E3184;
 gWaveGenCount = 0x800E3188;
 gWaveTileGridCount = 0x800E318C;
-D_800E3190 = 0x800E3190;
+gWaveGenList = 0x800E3190;
 gWaveGenObjs = 0x800E3194;
 gWaveGeneratorObj = 0x800E3198;
 

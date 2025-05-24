@@ -469,7 +469,7 @@ typedef struct LevelHeader {
   /* 0x5C */ u8 waveSineStep1; // possible values: 1,2,4
   /* 0x5D */ u8 waveSineBase1; // always 0?
   /* 0x5E */ s16 waveSineHeight1; // values between 512 and 4963
-  /* 0x60 */ s16 unk60; // possible values: 120, 130, 157, 178, 187
+  /* 0x60 */ s16 waveSeedSize; // possible values: 120, 130, 157, 178, 187
   /* 0x62 */ s16 wavePower; // always 256
   /* 0x64 */ s16 unk64; // Always 153 except in Smokey Castle where it's 0 and the title screen where it's 256 (Some form of secondary power)
   /* 0x66 */ s16 unk66; // values between 908 and 2560
