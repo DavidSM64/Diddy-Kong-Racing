@@ -715,7 +715,7 @@ typedef struct LevelObjectEntry800BF524 {
     LevelObjectEntryCommon common;
     u8 unk8;
     u8 unk9;
-    u16 unkA;
+    u16 waveSize;
     u16 unkC;
     u16 unkE;
     u8 unk10;

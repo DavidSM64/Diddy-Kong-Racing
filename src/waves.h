@@ -27,10 +27,10 @@ typedef struct {
 typedef struct unk800E3190 {
     f32 unk0;
     f32 unk4;
-    f32 unk8;
-    f32 unkC;
+    f32 x_position;
+    f32 z_position;
     f32 unk10;
-    f32 unk14;
+    f32 radius;
     s16 unk18;
     u16 unk1A;
     u32 unk1C;

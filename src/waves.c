@@ -47,7 +47,7 @@ s32 D_800E317C = 0; // some sort of count? Relative to gWaveController.subdivisi
 LevelHeader_70 *D_800E3180 = NULL;
 unk800E3184 *D_800E3184 = NULL; // tracks an index into D_800E3190
 s32 D_800E3188 = 0;             // counter for something, incremented in func_800BF634, decremented in func_800BF3E4
-s32 D_800E318C = 0;             // used in mempool_alloc_safe size calculation, multiplied with 8
+s32 gWaveTileGridCount = 0;             // used in mempool_alloc_safe size calculation, multiplied with 8
 unk800E3190 *D_800E3190 = NULL;
 Object **D_800E3194 = NULL; // might be a length of 32
 Object *gWaveGeneratorObj = NULL;
@@ -60,7 +60,6 @@ const char D_800E9160[] = "\nCouldn't find a block to pick wave details from.\nU
 const char D_800E91AC[] = "\n\nBlock may be specified using 'P' on water group node.";
 const char D_800E91E4[] = "\nError :: can not remove a wave swell object which doesn't exist !";
 const char D_800E9228[] = "\nError :: more than eight swells overlap on column %d.";
-const char D_800E9260[] = "\nError :: can not add another wave swell, reached limit of %d.";
 
 /*********************************/
 
@@ -1396,7 +1395,7 @@ void func_800BBF78(LevelModel *model) {
 
     gWaveTileCountX = ((gWaveBlockBoundsX2 - gWaveBlockPosX) / gWaveBoundingBoxDiffX) + 1;
     gWaveTileCountZ = ((gWaveBlockBoundsZ2 - gWaveBlockPosZ) / gWaveBoundingBoxDiffZ) + 1;
-    D_800E318C = (subdivisions * gWaveTileCountX) + 1;
+    gWaveTileGridCount = (subdivisions * gWaveTileCountX) + 1;
 
     if (D_800E30D4 != NULL) {
         mempool_free(D_800E30D4);
@@ -1409,7 +1408,7 @@ void func_800BBF78(LevelModel *model) {
 
     // clang-format off
     gWaveModel = mempool_alloc_safe(
-        (model->numberOfSegments * sizeof(LevelModel_Alternate)) + (D_800E318C * 8) + 0x880,
+        (model->numberOfSegments * sizeof(LevelModel_Alternate)) + (gWaveTileGridCount * 8) + 0x880,
         COLOUR_TAG_CYAN
     );
     // clang-format on
@@ -1418,7 +1417,7 @@ void func_800BBF78(LevelModel *model) {
     D_800E3194 = (Object **) (D_800E3190 + sizeof(unk800E3190 *) * 8);
     D_800E3184 = (unk800E3184 *) (D_800E3194 + sizeof(Object *) * 8);
 
-    for (i = 0; i < (D_800E318C * 8); i++) {
+    for (i = 0; i < (gWaveTileGridCount * 8); i++) {
         D_800E3184->unk0[i] = 0xFF;
     }
 
@@ -2344,71 +2343,71 @@ f32 log_wave_height(Object_Log *log, s32 updateRate) {
 
 // height related calculation?
 f32 waves_get_y(s32 arg0, s32 arg1, s32 arg2) {
-    f32 temp_f0;
-    f32 temp_f12;
-    f32 temp_f20;
-    f32 temp_f22;
+    f32 dist;
+    f32 distSq;
+    f32 diffX;
+    f32 diffZ;
     f32 temp_f24;
     f32 temp_f26;
     f32 temp_f30;
-    f32 var_f0;
+    f32 stepX;
     f32 var_f28;
-    f32 var_f2;
+    f32 stepZ;
     u32 var_s0;
     s32 temp_a1;
     s32 var_s3;
-    s32 var_v1;
+    s32 subdivisons;
     s32 temp_0;
     unk800E3184 *temp_a3;
-    unk800E3190 *temp_s1;
+    unk800E3190 *gen;
 
     var_f28 = 0.0f;
     if (D_800E3188 <= 0) {
         return var_f28;
     }
 
-    var_v1 = gWaveController.subdivisions;
-    var_f0 = gWaveVtxStepX;
-    var_f2 = gWaveVtxStepZ;
+    subdivisons = gWaveController.subdivisions;
+    stepX = gWaveVtxStepX;
+    stepZ = gWaveVtxStepZ;
     if (gWaveController.doubleDensity) {
-        var_v1 *= 2;
-        var_f0 /= 2.0f;
-        var_f2 /= 2.0f;
+        subdivisons *= 2;
+        stepX /= 2.0f;
+        stepZ /= 2.0f;
     }
-    temp_a1 = (gWaveModel[arg0].unkA * var_v1) + arg1;
+    temp_a1 = (gWaveModel[arg0].unkA * subdivisons) + arg1;
     temp_a3 = &D_800E3184[temp_a1];
     if (temp_a3->unk0[0] != 0xFF) {
-        temp_0 = arg2 + (var_v1 * gWaveModel[arg0].unkB);
-        temp_f30 = gWaveBlockPosX + (temp_a1 * var_f0);
-        temp_f24 = gWaveBlockPosZ + (temp_0 * var_f2);
+        temp_0 = arg2 + (subdivisons * gWaveModel[arg0].unkB);
+        temp_f30 = gWaveBlockPosX + (temp_a1 * stepX);
+        temp_f24 = gWaveBlockPosZ + (temp_0 * stepZ);
         temp_f26 = 0;
         var_s3 = 0;
         do {
-            temp_s1 = &D_800E3190[temp_a3->unk0[var_s3]];
-            if ((temp_s1->unk0 <= temp_f24) && (temp_f24 <= temp_s1->unk4)) {
-                temp_f20 = temp_f30 - temp_s1->unk8;
-                temp_f22 = temp_f24 - temp_s1->unkC;
-                temp_f12 = (temp_f20 * temp_f20) + (temp_f22 * temp_f22);
-                if (temp_f12 < temp_s1->unk14) {
-                    temp_f0 = sqrtf(temp_f12);
-                    var_s0 = temp_s1->unk1A;
-                    if (temp_s1->unk31 != 0) {
-                        if (temp_f20 < temp_f26) {
-                            var_s0 -= (s32) (temp_f20 * temp_s1->unk20);
+            gen = &D_800E3190[temp_a3->unk0[var_s3]];
+            if ((gen->unk0 <= temp_f24) && (temp_f24 <= gen->unk4)) {
+                diffX = temp_f30 - gen->x_position;
+                diffZ = temp_f24 - gen->z_position;
+                distSq = (diffX * diffX) + (diffZ * diffZ);
+                if (distSq < gen->radius) {
+                    dist = sqrtf(distSq);
+                    var_s0 = gen->unk1A;
+                    if (gen->unk31 != 0) {
+                        if (diffX < temp_f26) {
+                            var_s0 -= (s32) (diffX * gen->unk20);
                         } else {
-                            var_s0 += (s32) (temp_f20 * temp_s1->unk20);
+                            var_s0 += (s32) (diffX * gen->unk20);
                         }
-                    } else if (temp_s1->unk32 != 0) {
-                        if (temp_f20 < temp_f26) {
-                            var_s0 -= (s32) (temp_f22 * temp_s1->unk20);
+                    } else if (gen->unk32 != 0) {
+                        if (diffX < temp_f26) {
+                            var_s0 -= (s32) (diffZ * gen->unk20);
                         } else {
-                            var_s0 += (s32) (temp_f22 * temp_s1->unk20);
+                            var_s0 += (s32) (diffZ * gen->unk20);
                         }
                     } else {
-                        var_s0 += (s32) (temp_f0 * temp_s1->unk20);
+                        var_s0 += (s32) (dist * gen->unk20);
                     }
-                    temp_f20 = coss_f((temp_f0 * 65536.0f) / temp_s1->unk10);
-                    var_f28 += temp_s1->unk24 * sins_f(var_s0) * temp_f20;
+                    diffX = coss_f((dist * 65536.0f) / gen->unk10);
+                    var_f28 += gen->unk24 * sins_f(var_s0) * diffX;
                 }
             }
             var_s3++;
@@ -2440,7 +2439,7 @@ void func_800BF3E4(Object *obj) {
     }
 
     i--;
-    for (j = 0; j < D_800E318C; j++) {
+    for (j = 0; j < gWaveTileGridCount; j++) {
         for (k = 0, temp_a1 = &D_800E3184[j]; k < 8 && temp_a1->unk0[k] != 0xFF; k++) {
             if (i != temp_a1->unk0[k]) {
                 continue;
@@ -2473,18 +2472,18 @@ void wavegen_add(Object *obj) {
         var_v1 |= 2;
     }
 
-    func_800BF634(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32) temp_v0->unkA,
+    func_800BF634(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32) temp_v0->waveSize,
                   temp_v0->unk9 << 8, (f32) temp_v0->unk8 / 16.0, (f32) temp_v0->unkE, (f32) temp_v0->unkC / 16.0,
                   var_v1);
 }
 
-unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7,
+unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32 arg4, f32 arg5, f32 arg6, f32 arg7,
                            s32 arg8) {
-    f32 var_f0;
+    f32 stepSize;
     s32 var_a0;
-    s32 var_a0_2;
+    s32 minX;
     s32 j;
-    s32 var_a2_2;
+    s32 maxX;
     s32 k;
     s32 i;
     unk800E3184 *temp;
@@ -2502,30 +2501,31 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
         if (var_a0 != 0) {
             D_800E3194[i] = obj;
             D_800E3188++;
-            var_f0 = gWaveVtxStepX;
+            stepSize = gWaveVtxStepX;
             if (gWaveController.doubleDensity) {
-                var_f0 /= 2.0f;
+                stepSize /= 2.0f;
             }
 
-            var_a0_2 = (((xPos - arg3) - gWaveBlockPosX) / var_f0);
-            if (var_a0_2 >= D_800E318C) {
+            minX = ((xPos - waveSize) - gWaveBlockPosX) / stepSize;
+            if (minX >= gWaveTileGridCount) {
+                stubbed_printf("\nError :: can not add another wave swell, reached limit of %d.", gWaveTileGridCount);
                 return result;
             }
 
-            var_a2_2 = (((xPos + arg3) - gWaveBlockPosX) / var_f0);
-            if (var_a2_2 < 0) {
+            maxX = ((xPos + waveSize) - gWaveBlockPosX) / stepSize;
+            if (maxX < 0) {
                 return result;
             }
 
-            if (var_a0_2 < 0) {
-                var_a0_2 = 0;
+            if (minX < 0) {
+                minX = 0;
             }
 
-            if (var_a2_2 >= D_800E318C) {
-                var_a2_2 = D_800E318C - 1;
+            if (maxX >= gWaveTileGridCount) {
+                maxX = gWaveTileGridCount - 1;
             }
 
-            for (j = var_a0_2; j <= var_a2_2; j++) {
+            for (j = minX; j <= maxX; j++) {
                 temp = &D_800E3184[j];
                 if (temp->unk0[7] != 0xFF) {
                     continue;
@@ -2538,13 +2538,13 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
                 temp->unk0[k] = i;
             }
             result = &D_800E3190[i];
-            result->unk0 = zPos - arg3;
-            result->unk4 = zPos + arg3;
-            result->unk8 = xPos;
-            result->unkC = zPos;
-            result->unk10 = arg3;
+            result->unk0 = zPos - waveSize;
+            result->unk4 = zPos + waveSize;
+            result->x_position = xPos;
+            result->z_position = zPos;
+            result->unk10 = waveSize;
             result->unk18 = i;
-            result->unk14 = arg3 * arg3;
+            result->radius = waveSize * waveSize;
             result->unk1A = arg4;
             if (osTvType == OS_TV_TYPE_PAL) {
                 result->unk1C = arg5 * 20971.52; //(f64) (0x80000 / 25.0);
@@ -2588,7 +2588,7 @@ UNUSED void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2) {
     while (iteration != 2) {
         var_a1 = TRUE;
         var_a2 = ((arg0->unk8 - arg0->unk10) - gWaveBlockPosX) / var_f0;
-        if (var_a2 >= D_800E318C) {
+        if (var_a2 >= gWaveTileGridCount) {
             var_a1 = FALSE;
         } else if (var_a2 < 0) {
             var_a2 = 0;
@@ -2598,8 +2598,8 @@ UNUSED void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2) {
             sp1C = ((arg0->unk8 + arg0->unk10) - gWaveBlockPosX) / var_f0;
             if (sp1C < 0) {
                 var_a1 = FALSE;
-            } else if (sp1C >= D_800E318C) {
-                sp1C = D_800E318C - 1;
+            } else if (sp1C >= gWaveTileGridCount) {
+                sp1C = gWaveTileGridCount - 1;
             }
         }
 
