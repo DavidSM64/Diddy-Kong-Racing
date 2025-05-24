@@ -1695,10 +1695,10 @@ void initialise_player_viewport_vars(s32 updateRate) {
                 i++;
                 racer = &racers[i]->unk64->racer;
             } while (i < numRacers - 1 && viewportID != racer->playerIndex);
-            waves_order(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position,
+            waves_visibility(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position,
                           racers[i]->segment.trans.z_position, get_current_viewport(), updateRate);
         } else {
-            waves_order(gSceneActiveCamera->trans.x_position, gSceneActiveCamera->trans.y_position,
+            waves_visibility(gSceneActiveCamera->trans.x_position, gSceneActiveCamera->trans.y_position,
                           gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
         }
     }
@@ -1903,7 +1903,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     //! @bug: batchInfo is uninitalized
     numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
     segment = &gCurrentLevelModel->segments[segmentId];
-    sp78 = (nonOpaque && gWaveBlockCount) ? waves_visibility(segment) : 0;
+    sp78 = (nonOpaque && gWaveBlockCount) ? waves_block_hq(segment) : 0;
     if (nonOpaque) {
         startPos = segment->numberofOpaqueBatches;
         endPos = segment->numberOfBatches;

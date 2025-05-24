@@ -12,9 +12,9 @@ typedef struct {
 /* Size: 0x1C bytes */
 typedef struct {
     LevelModelSegment *block;
-    s16 unk4; // something with x
-    s16 unk6; // something with y AND used as playerIndex
-    s16 unk8; // something with z
+    s16 originX; // something with x
+    s16 originY; // something with y AND used as playerIndex
+    s16 originZ; // something with z
     u8 unkA; // some sort of x ratio
     u8 unkB; // some sort of z ratio / index of D_8012A0E8
     u32 unkC; // indexes D_800E30D4
@@ -83,7 +83,7 @@ typedef struct WaveControl {
 
 void waves_free(void);
 void waves_visibility_reset(void);
-s32 waves_visibility(LevelModelSegment *block);
+s32 waves_block_hq(LevelModelSegment *block);
 void func_800BBDDC(LevelModel *level, LevelHeader *header);
 void func_800BFE98(s32 updateRate);
 void waves_init_header(LevelHeader *header);
@@ -101,7 +101,7 @@ void wave_load_material(TextureHeader *tex, s32 rtile);
 Object_Log *obj_wave_init(s32, f32, f32);
 void func_800BBF78(LevelModel *model);
 f32 func_800BB2F4(s32, f32, f32, Vec3f *);
-void waves_order(s32, s32, s32, s32, s32);
+void waves_visibility(s32, s32, s32, s32, s32);
 void wavegen_add(Object *);
 f32 waves_get_y(s32, s32, s32);
 void func_800BC6C8(void);
