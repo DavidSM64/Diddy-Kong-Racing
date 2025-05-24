@@ -1695,10 +1695,10 @@ void initialise_player_viewport_vars(s32 updateRate) {
                 i++;
                 racer = &racers[i]->unk64->racer;
             } while (i < numRacers - 1 && viewportID != racer->playerIndex);
-            func_800B8C04(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position,
+            waves_order(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position,
                           racers[i]->segment.trans.z_position, get_current_viewport(), updateRate);
         } else {
-            func_800B8C04(gSceneActiveCamera->trans.x_position, gSceneActiveCamera->trans.y_position,
+            waves_order(gSceneActiveCamera->trans.x_position, gSceneActiveCamera->trans.y_position,
                           gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
         }
     }

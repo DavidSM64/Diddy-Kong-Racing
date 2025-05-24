@@ -1587,7 +1587,7 @@ typedef struct Object_Log {
     /* 0x06 */ u16 unk6;
     /* 0x08 */ u16 unk8;
     /* 0x0A */ u16 unkA;
-    /* 0x0C */ u16 unkC;
+    /* 0x0C */ u16 blockID;
     /* 0x0E */ s8 unkE[2];
 } Object_Log;
 

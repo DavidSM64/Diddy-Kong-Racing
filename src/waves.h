@@ -50,7 +50,7 @@ typedef struct unk800E3184 {
 } unk800E3184;
 
 typedef struct unk8012A5E8 {
-    s16 unk0;
+    s16 blockID;
     s16 unk2;
     s16 unk4;
     s16 unk6;
@@ -98,10 +98,10 @@ WaveGen *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32 arg
                           s32 flags);
 void waves_alloc(void);
 void wave_load_material(TextureHeader *tex, s32 rtile);
-Object_64 *func_800BE654(s32, f32, f32);
+Object_Log *obj_wave_init(s32, f32, f32);
 void func_800BBF78(LevelModel *model);
 f32 func_800BB2F4(s32, f32, f32, Vec3f *);
-void func_800B8C04(s32, s32, s32, s32, s32);
+void waves_order(s32, s32, s32, s32, s32);
 void wavegen_add(Object *);
 f32 waves_get_y(s32, s32, s32);
 void func_800BC6C8(void);
