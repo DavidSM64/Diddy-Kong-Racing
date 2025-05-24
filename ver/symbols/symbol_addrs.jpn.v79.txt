@@ -1745,7 +1745,7 @@ func_800BDC80 = 0x800BE280;
 func_800BE654 = 0x800BEC54;
 log_wave_height = 0x800BF4B4;
 waves_get_y = 0x800BF5C4;
-func_800BF3E4 = 0x800BF9E4;
+wavegen_destroy = 0x800BF9E4;
 wavegen_add = 0x800BFB24;
 func_800BF634 = 0x800BFC34;
 func_800BF9F8 = 0x800BFFF8;
@@ -2896,10 +2896,10 @@ D_800E3178 = 0x800E4C68;
 D_800E317C = 0x800E4C6C;
 D_800E3180 = 0x800E4C70;
 D_800E3184 = 0x800E4C74;
-D_800E3188 = 0x800E4C78;
+gWaveGenCount = 0x800E4C78;
 gWaveTileGridCount = 0x800E4C7C;
 D_800E3190 = 0x800E4C80;
-D_800E3194 = 0x800E4C84;
+gWaveGenObjs = 0x800E4C84;
 gWaveGeneratorObj = 0x800E4C88;
 
 // fade_transition.c .data

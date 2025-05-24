@@ -25,13 +25,13 @@ typedef struct {
 
 /* Size: 0x40 bytes */
 typedef struct unk800E3190 {
-    f32 unk0;
-    f32 unk4;
+    f32 minZ;
+    f32 maxZ;
     f32 x_position;
     f32 z_position;
-    f32 unk10;
     f32 radius;
-    s16 unk18;
+    f32 radiusSq;
+    s16 index;
     u16 unk1A;
     u32 unk1C;
     f32 unk20;
@@ -115,7 +115,7 @@ void waves_init_header(LevelHeader *header);
 void func_800BBE08(LevelModel *level, LevelHeader *header);
 void obj_loop_wavepower(Object *obj);
 void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
-void func_800BF3E4(Object *obj);
+void wavegen_destroy(Object *obj);
 f32 log_wave_height(Object_Log *log, s32 updateRate);
 void func_800BA288(s32 arg0, s32 arg1);
 void func_800BF9F8(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2);

@@ -46,10 +46,10 @@ u8 *D_800E3178 = NULL;
 s32 D_800E317C = 0; // some sort of count? Relative to gWaveController.subdivisions
 LevelHeader_70 *D_800E3180 = NULL;
 unk800E3184 *D_800E3184 = NULL; // tracks an index into D_800E3190
-s32 D_800E3188 = 0;             // counter for something, incremented in wavegen_register, decremented in func_800BF3E4
+s32 gWaveGenCount = 0;             // counter for something, incremented in wavegen_register, decremented in wavegen_destroy
 s32 gWaveTileGridCount = 0;             // used in mempool_alloc_safe size calculation, multiplied with 8
 unk800E3190 *D_800E3190 = NULL;
-Object **D_800E3194 = NULL; // might be a length of 32
+Object **gWaveGenObjs = NULL; // might be a length of 32
 Object *gWaveGeneratorObj = NULL;
 
 /*******************************/
@@ -58,8 +58,6 @@ Object *gWaveGeneratorObj = NULL;
 
 const char D_800E9160[] = "\nCouldn't find a block to pick wave details from.\nUsing block 0 as default.";
 const char D_800E91AC[] = "\n\nBlock may be specified using 'P' on water group node.";
-const char D_800E91E4[] = "\nError :: can not remove a wave swell object which doesn't exist !";
-const char D_800E9228[] = "\nError :: more than eight swells overlap on column %d.";
 
 /*********************************/
 
@@ -141,9 +139,9 @@ void waves_free(void) {
     FREE_MEM(gWaveModel);
     FREE_MEM(D_800E3178);
     D_800E3190 = NULL;
-    D_800E3194 = NULL;
+    gWaveGenObjs = NULL;
     D_800E3184 = NULL;
-    D_800E3188 = 0;
+    gWaveGenCount = 0;
 }
 
 /**
@@ -391,7 +389,7 @@ void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
         D_800E30E0 = D_800E3110;
         D_800E30E4 = D_800E3144;
     }
-    D_800E3188 = 0;
+    gWaveGenCount = 0;
     gWavePowerDivisor = 0;
     gWaveGeneratorObj = NULL;
     gWaveVertexFlip = 0;
@@ -611,7 +609,7 @@ void func_800B92F4(s32 arg0, s32 viewportID) {
             for (j = 0; j <= gWaveController.subdivisions; j++) {
                 vertexY = (gWaveHeightTable[gWaveHeightIndices[var_s2].s[0]] + gWaveHeightTable[gWaveHeightIndices[var_s2].s[1]]) *
                           gWaveController.magnitude;
-                if (D_800E3188 > 0) {
+                if (gWaveGenCount > 0) {
                     vertexY += waves_get_y(arg0, j + sp8C, i + sp88);
                 }
                 vertexY *= D_800E304C[sp98][vertexIdx];
@@ -709,7 +707,7 @@ void func_800B97A8(s32 arg0, s32 arg1) {
             for (j = 0; j <= gWaveController.subdivisions; j++) {
                 y = (gWaveHeightTable[gWaveHeightIndices[var_s2].s[0]] + gWaveHeightTable[gWaveHeightIndices[var_s2].s[1]]) *
                           gWaveController.magnitude;
-                if (D_800E3188 > 0) {
+                if (gWaveGenCount > 0) {
                     y += waves_get_y(arg0, j + sp9C, i + sp98);
                 }
                 y *= D_800E304C[spA8][vertexIdx];
@@ -851,7 +849,7 @@ void waves_update(s32 updateRate) {
         gWaveUVTable[gWaveController.subdivisions * (gWaveController.subdivisions + 1) + gWaveController.subdivisions]
             .v;
 
-    if (D_800E3188 > 0) {
+    if (gWaveGenCount > 0) {
         func_800BFE98(updateRate);
     }
 
@@ -1170,7 +1168,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
         spA0 = (gWaveHeightTable[gWaveHeightIndices[var_a0].s[0]] + gWaveHeightTable[gWaveHeightIndices[var_a0].s[1]]) *
                gWaveController.magnitude;
         var_a0 = sp58 + sp70 + (sp6C * sp60);
-        if (D_800E3188 > 0) {
+        if (gWaveGenCount > 0) {
             spA0 += waves_get_y(arg0, sp70, sp6C);
         }
 
@@ -1183,7 +1181,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
             (var_a3 + 1) >= gWaveController.tileCount ? var_t0 : ((var_a3 + 1) * gWaveController.tileCount) + var_t0;
         var_f12 = (gWaveHeightTable[gWaveHeightIndices[var_a0].s[0]] + gWaveHeightTable[gWaveHeightIndices[var_a0].s[1]]) *
                   gWaveController.magnitude;
-        if (D_800E3188 > 0) {
+        if (gWaveGenCount > 0) {
             var_f12 += waves_get_y(arg0, sp70, sp6C + 1);
         }
         var_a0 = sp58 + sp70 + ((sp6C + 1) * sp60);
@@ -1199,7 +1197,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
         }
         var_f2 = (gWaveHeightTable[gWaveHeightIndices[var_a0].s[0]] + gWaveHeightTable[gWaveHeightIndices[var_a0].s[1]]) *
                  gWaveController.magnitude;
-        if (D_800E3188 > 0) {
+        if (gWaveGenCount > 0) {
             var_f2 += waves_get_y(arg0, sp70 + 1, sp6C);
         }
         var_a0 = sp58 + sp70 + (sp6C * sp60);
@@ -1227,7 +1225,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
         }
         spA0 = (gWaveHeightTable[gWaveHeightIndices[var_a0].s[0]] + gWaveHeightTable[gWaveHeightIndices[var_a0].s[1]]) *
                gWaveController.magnitude;
-        if (D_800E3188 > 0) {
+        if (gWaveGenCount > 0) {
             spA0 += waves_get_y(arg0, sp70 + 1, sp6C);
         }
         var_a0 = sp58 + sp70 + (sp6C * sp60);
@@ -1241,7 +1239,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
             (var_a3 + 1) >= gWaveController.tileCount ? var_t0 : ((var_a3 + 1) * gWaveController.tileCount) + var_t0;
         var_f12 = (gWaveHeightTable[gWaveHeightIndices[var_a0].s[0]] + gWaveHeightTable[gWaveHeightIndices[var_a0].s[1]]) *
                   gWaveController.magnitude;
-        if (D_800E3188 > 0) {
+        if (gWaveGenCount > 0) {
             var_f12 += waves_get_y(arg0, sp70, sp6C + 1);
         }
         var_a0 = sp58 + sp70 + ((sp6C + 1) * sp60);
@@ -1257,7 +1255,7 @@ f32 func_800BB2F4(s32 arg0, f32 arg1, f32 arg2, Vec3f *arg3) {
 
         var_f2 = (gWaveHeightTable[gWaveHeightIndices[var_a0].s[0]] + gWaveHeightTable[gWaveHeightIndices[var_a0].s[1]]) *
                  gWaveController.magnitude;
-        if (D_800E3188 > 0) {
+        if (gWaveGenCount > 0) {
             var_f2 += waves_get_y(arg0, sp70 + 1, sp6C + 1);
         }
         var_a0 = sp58 + sp70 + ((sp6C + 1) * sp60);
@@ -1414,8 +1412,8 @@ void func_800BBF78(LevelModel *model) {
     // clang-format on
 
     D_800E3190 = (unk800E3190 *) ((u32) gWaveModel + model->numberOfSegments * sizeof(LevelModel_Alternate));
-    D_800E3194 = (Object **) (D_800E3190 + sizeof(unk800E3190 *) * 8);
-    D_800E3184 = (unk800E3184 *) (D_800E3194 + sizeof(Object *) * 8);
+    gWaveGenObjs = (Object **) (D_800E3190 + sizeof(unk800E3190 *) * 8);
+    D_800E3184 = (unk800E3184 *) (gWaveGenObjs + 32);
 
     for (i = 0; i < (gWaveTileGridCount * 8); i++) {
         D_800E3184->unk0[i] = 0xFF;
@@ -1423,10 +1421,10 @@ void func_800BBF78(LevelModel *model) {
 
     // 0x20 / 32 sizeof what?
     for (i = 0; i < 32; i++) {
-        D_800E3194[i] = 0;
+        gWaveGenObjs[i] = 0;
     }
 
-    D_800E3188 = 0;
+    gWaveGenCount = 0;
 
     for (i = 0; i < (gWaveTileCountX * gWaveTileCountZ); i++) {
         D_800E30D4[i] = 0;
@@ -1945,7 +1943,7 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNeg
                 do {
                     var_f20 = (gWaveHeightTable[gWaveHeightIndices[var_s2].s[0]] + gWaveHeightTable[gWaveHeightIndices[var_s2].s[1]]) *
                               gWaveController.magnitude;
-                    if (D_800E3188 > 0) {
+                    if (gWaveGenCount > 0) {
                         var_f20 += waves_get_y(arg0, var_s1, var_s6);
                     }
                     if (D_800E3178[var_s4] < 0x7F) {
@@ -2362,7 +2360,7 @@ f32 waves_get_y(s32 arg0, s32 arg1, s32 arg2) {
     unk800E3190 *gen;
 
     var_f28 = 0.0f;
-    if (D_800E3188 <= 0) {
+    if (gWaveGenCount <= 0) {
         return var_f28;
     }
 
@@ -2384,11 +2382,11 @@ f32 waves_get_y(s32 arg0, s32 arg1, s32 arg2) {
         var_s3 = 0;
         do {
             gen = &D_800E3190[temp_a3->unk0[var_s3]];
-            if ((gen->unk0 <= temp_f24) && (temp_f24 <= gen->unk4)) {
+            if (gen->minZ <= temp_f24 && temp_f24 <= gen->maxZ) {
                 diffX = temp_f30 - gen->x_position;
                 diffZ = temp_f24 - gen->z_position;
                 distSq = (diffX * diffX) + (diffZ * diffZ);
-                if (distSq < gen->radius) {
+                if (distSq < gen->radiusSq) {
                     dist = sqrtf(distSq);
                     var_s0 = gen->unk1A;
                     if (gen->unk31 != 0) {
@@ -2406,7 +2404,7 @@ f32 waves_get_y(s32 arg0, s32 arg1, s32 arg2) {
                     } else {
                         var_s0 += (s32) (dist * gen->unk20);
                     }
-                    diffX = coss_f((dist * 65536.0f) / gen->unk10);
+                    diffX = coss_f((dist * 65536.0f) / gen->radius);
                     var_f28 += gen->unk24 * sins_f(var_s0) * diffX;
                 }
             }
@@ -2417,24 +2415,25 @@ f32 waves_get_y(s32 arg0, s32 arg1, s32 arg2) {
     return var_f28;
 }
 
-void func_800BF3E4(Object *obj) {
+void wavegen_destroy(Object *obj) {
     s32 i;
     s32 k;
     s32 j;
-    s32 m;
+    s32 hasWave;
     unk800E3184 *temp_a1;
 
     if (D_800E3190 == NULL) {
         return;
     }
 
-    for (i = 0, m = 0; i < D_800E3188 && m == 0; i++) {
-        if (obj == D_800E3194[i]) {
-            m = -1;
+    for (i = 0, hasWave = FALSE; i < gWaveGenCount && hasWave == FALSE; i++) {
+        if (obj == gWaveGenObjs[i]) {
+            hasWave = -1;
         }
     }
 
-    if (m == 0) {
+    if (hasWave == FALSE) {
+        stubbed_printf("\nError :: can not remove a wave swell object which doesn't exist !");
         return;
     }
 
@@ -2454,8 +2453,8 @@ void func_800BF3E4(Object *obj) {
         }
     }
 
-    D_800E3194[j] = NULL;
-    D_800E3188--;
+    gWaveGenObjs[j] = NULL;
+    gWaveGenCount--;
 }
 
 
@@ -2478,10 +2477,13 @@ void wavegen_add(Object *obj) {
                   var_v1);
 }
 
+
+const char D_800E9228[] = "\nError :: more than eight swells overlap on column %d.";
+
 unk800E3190 *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32 arg4, f32 arg5, f32 arg6, f32 arg7,
                            s32 arg8) {
     f32 stepSize;
-    s32 var_a0;
+    s32 emptyWave;
     s32 minX;
     s32 j;
     s32 maxX;
@@ -2492,16 +2494,16 @@ unk800E3190 *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32
 
     result = NULL;
     if (D_800E3190 != NULL) {
-        for (i = 0, var_a0 = 0; i < 32 && var_a0 == 0; i++) {
-            if (D_800E3194[i] == NULL) {
-                var_a0 = -1;
+        for (i = 0, emptyWave = FALSE; i < 32 && emptyWave == FALSE; i++) {
+            if (gWaveGenObjs[i] == NULL) {
+                emptyWave = -1; // Why it is -1 is anyone's guess. Though all that's important is that it's nonzero.
             }
         }
 
         i--;
-        if (var_a0 != 0) {
-            D_800E3194[i] = obj;
-            D_800E3188++;
+        if (emptyWave) {
+            gWaveGenObjs[i] = obj;
+            gWaveGenCount++;
             stepSize = gWaveVtxStepX;
             if (gWaveController.doubleDensity) {
                 stepSize /= 2.0f;
@@ -2539,13 +2541,13 @@ unk800E3190 *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32
                 temp->unk0[k] = i;
             }
             result = &D_800E3190[i];
-            result->unk0 = zPos - waveSize;
-            result->unk4 = zPos + waveSize;
+            result->minZ = zPos - waveSize;
+            result->maxZ = zPos + waveSize;
             result->x_position = xPos;
             result->z_position = zPos;
-            result->unk10 = waveSize;
-            result->unk18 = i;
-            result->radius = waveSize * waveSize;
+            result->radius = waveSize;
+            result->index = i;
+            result->radiusSq = waveSize * waveSize;
             result->unk1A = arg4;
             if (osTvType == OS_TV_TYPE_PAL) {
                 result->unk1C = arg5 * 20971.52; //(f64) (0x80000 / 25.0);
@@ -2673,7 +2675,7 @@ void func_800BFE98(s32 updateRate) {
     s32 i;
 
     for (i = 0; i < 32; i++) {
-        if (D_800E3194[i] != NULL) {
+        if (gWaveGenObjs[i] != NULL) {
             D_800E3190[i].unk1A += (0, D_800E3190[i].unk1C * updateRate) >> 4;
         }
     }
