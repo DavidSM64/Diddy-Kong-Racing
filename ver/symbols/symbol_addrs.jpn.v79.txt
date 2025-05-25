@@ -125,12 +125,12 @@ racer_sound_car = 0x80005254;
 racer_sound_hovercraft = 0x80005D08;
 racer_sound_plane = 0x800063EC;
 racer_sound_free = 0x80006AC8;
-func_80006BFC = 0x80006BFC;
+vehsnd_calculate_doppler_effect = 0x80006BFC;
 func_80006FC8 = 0x80006FC8;
 sound_vehicle_enable = 0x80007F78;
 sound_vehicle_disable = 0x80007F88;
 sound_vehicle_check = 0x80007F94;
-func_80007FA4 = 0x80007FA4;
+log = 0x80007FA4;
 
 // audio_spatial.c .text
 audspat_init = 0x80008040;

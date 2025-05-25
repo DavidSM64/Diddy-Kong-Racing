@@ -69,7 +69,6 @@ void audspat_line_add_vertex(u8 type, u16 soundBite, f32 x, f32 y, f32 z, u8 arg
                               u8 argA, u8 lineID, u8 vertexIndex);
 s32 audspat_line_validate(u8 lineID);
 void audspat_debug_render_line(Gfx **dList, Vertex **verts, Triangle **tris, f32 coords[6], u8 red, u8 green, u8 blue);
-void func_80006BFC(Object *obj, Camera *camera, Object *obj2, s32 updateRate);
 void audspat_point_set_position(AudioPoint *audioPoint, f32 x, f32 y, f32 z);
 s32 audspat_reverb_validate(u8 reverbLineID);
 void audspat_init(void);

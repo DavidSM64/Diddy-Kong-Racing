@@ -4,6 +4,7 @@
 #include "types.h"
 #include "structs.h"
 #include "audio.h"
+#include "camera.h"
 
 /* Size: 0xE0 / 224 bytes */
 typedef struct VehicleSoundData {
@@ -23,10 +24,10 @@ typedef struct VehicleSoundData {
     /* 0x48 */ SoundHandle unk48[2]; //soundMask / soundState?
     /* 0x50 */ SoundHandle unk50;
     /* 0x54 */ f32 unk54[2];
-    /* 0x5C */ f32 unk5C[2];
+    /* 0x5C */ f32 basePitch[2];
     /* 0x64 */ u8 unk64;
     /* 0x68 */ f32 unk68;
-    /* 0x6C */ f32 unk6C[2];
+    /* 0x6C */ f32 prevDistance[2];
     /* 0x74 */ u8 unk74;
     /* 0x78 */ Vec3f racerPos;
     /* 0x84 */ f32 distToCamera;
@@ -50,7 +51,7 @@ typedef struct VehicleSoundData {
     /* 0xC8 */ f32 throttlePitchCeil;
     /* 0xCC */ f32 unkCC;
     /* 0xD0 */ u8 airTime;
-    /* 0xD4 */ f32 basePitch;
+    /* 0xD4 */ f32 somePitch;
     /* 0xD8 */ u8 spinoutSoundOn; // bool
     /* 0xDC */ SoundHandle spinoutSound;
 } VehicleSoundData;
@@ -81,7 +82,9 @@ typedef struct unkAudioAsset {
 void racer_sound_update(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 void racer_sound_free(Object *);
 
-f32 func_80007FA4(f32 arg0);
+void vehsnd_calculate_doppler_effect(Object *observerObj, Camera *camera, Object *sourceObj, s32 updateRate);
+
+f32 log(f32 arg0);
 VehicleSoundData *racer_sound_init(s32 characterId, s32 vehicleId);
 void racer_sound_car(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 void racer_sound_hovercraft(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
