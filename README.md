@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of May 19, 2025, this is our current score:
+As of May 26, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 88.06%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 56.98%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 58.38%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -117,30 +117,30 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of May 19, 2025, this is our current score:
+As of May 26, 2025, this is our current score:
 ```
- =====================================================================
-                ADVENTURE ONE (ASM -> C Decompilation)
- --------------- 88.06% Complete (89.02% NON_MATCHING) ---------------
-                     # Decompiled functions: 1898
-                      # GLOBAL_ASM remaining: 53
-                      # NON_MATCHING functions: 5
-                  # NON_EQUIVALENT WIP functions: 16
- ---------------------------- Game Status ----------------------------
-               Balloons: 41/47, Keys: 4/4, Trophies: 4/5
-                T.T. Amulets: 4/4, Wizpig Amulets: 4/4
- ---------------------------------------------------------------------
-              We are racing in Spaceport Alpha. (Lap 1/3)
- =====================================================================
-                 ADVENTURE TWO (Cleanup & Documentation)
- -------------------------- 56.98% Complete --------------------------
-                     # Documented functions: 1179
-                     # Undocumented remaining: 475
- ---------------------------- Game Status ----------------------------
-               Balloons: 27/47, Keys: 3/4, Trophies: 2/5
-                T.T. Amulets: 3/4, Wizpig Amulets: 2/4
- ---------------------------------------------------------------------
- We are collecting silver coins in Crescent Island. (5/8 silver coins)
- =====================================================================
+ ===================================================================
+               ADVENTURE ONE (ASM -> C Decompilation)
+ -------------- 88.06% Complete (89.02% NON_MATCHING) --------------
+                    # Decompiled functions: 1898
+                     # GLOBAL_ASM remaining: 53
+                     # NON_MATCHING functions: 5
+                 # NON_EQUIVALENT WIP functions: 16
+ --------------------------- Game Status ---------------------------
+              Balloons: 41/47, Keys: 4/4, Trophies: 4/5
+               T.T. Amulets: 4/4, Wizpig Amulets: 4/4
+ -------------------------------------------------------------------
+             We are racing in Spaceport Alpha. (Lap 1/3)
+ ===================================================================
+                ADVENTURE TWO (Cleanup & Documentation)
+ ------------------------- 58.38% Complete -------------------------
+                    # Documented functions: 1185
+                    # Undocumented remaining: 469
+ --------------------------- Game Status ---------------------------
+              Balloons: 28/47, Keys: 3/4, Trophies: 2/5
+               T.T. Amulets: 3/4, Wizpig Amulets: 2/4
+ -------------------------------------------------------------------
+ We are collecting silver coins in Pirate Lagoon. (4/8 silver coins)
+ ===================================================================
 ```
 <!-- README_SCORE_END -->
