@@ -19,11 +19,15 @@ public:
     
     std::optional<fs::path> get_texture_path();
     bool has_texture() const;
+    bool is_texture_animated();
+    bool is_texture_double_sided();
     
     void get_texture_width_and_height(int &outWidth, int &outHeight);
     
 private:
     std::optional<fs::path> _texturePath;
+    std::optional<bool> _isTextureAnimated = std::nullopt;
+    std::optional<bool> _isTextureDoubleSided = std::nullopt;
 };
 
 }

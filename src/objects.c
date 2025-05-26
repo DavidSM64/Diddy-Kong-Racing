@@ -28,6 +28,7 @@
 #include "audio_vehicle.h"
 #include "vehicle_misc.h"
 #include "PRinternal/viint.h"
+#include "printf.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -372,7 +373,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
             gBoostEffectObjects[i]->properties.common.unk4 = 0;
             miscAsset20[i].unk70 = 0;
             miscAsset20[i].unk74 = 0.0f;
-            miscAsset20[i].unk78 = (Sprite *) tex_load_sprite(miscAsset20[i].unk6C, 0);
+            miscAsset20[i].unk78 = tex_load_sprite(miscAsset20[i].unk6C, 0);
             miscAsset20[i].unk7C = load_texture(miscAsset20[i].unk6E);
             miscAsset20[i].unk72 = get_random_number_from_range(0, 255);
             miscAsset20[i].unk73 = 0;
@@ -387,7 +388,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     objEntry.common.x = 0;
     objEntry.common.y = 0;
     objEntry.common.z = 0;
-    gShieldEffectObject = spawn_object((LevelObjectEntryCommon *) &objEntry, OBJECT_SPAWN_NONE);
+    gShieldEffectObject = spawn_object(&objEntry.common, OBJECT_SPAWN_NONE);
     for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
         gRacerFXData[i].unk0 = 0;
         gRacerFXData[i].unk1 = get_random_number_from_range(0, 255);
@@ -399,7 +400,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     objEntry.common.x = 0;
     objEntry.common.y = 0;
     objEntry.common.z = 0;
-    gMagnetEffectObject = spawn_object((LevelObjectEntryCommon *) &objEntry, OBJECT_SPAWN_NONE);
+    gMagnetEffectObject = spawn_object(&objEntry.common, OBJECT_SPAWN_NONE);
 }
 
 /**
@@ -443,101 +444,95 @@ void racerfx_free(void) {
     gParticlePtrList_flush();
 }
 
+void func_8000B38C(Vertex *, Triangle *, ObjectTransform *, f32, f32, s16, TextureHeader *arg6);
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B38C.s")
 
-#ifdef NON_EQUIVALENT
-void func_8000B38C(Vertex *, Triangle *, ObjectTransform *, f32, f32, s16, TextureHeader *arg6);
-void func_8000B750(Object *obj, s32 objId, s32 arg2, s32 arg3, s32 arg4) {
-    Vec3f sp74;
-    ObjectTransform sp50;
-    Object_Boost **temp_v0;
-    Object **var_t2;
+void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4) {
+    f32 sp74[3];
     f32 temp_f0;
-    f32 var_f14;
     f32 var_f2;
-    Object_Boost *temp_t4;
-    Object_Boost *temp_v1;
-    Object_Boost_Inner *var_v0;
+    Object_Boost *boostAsset;
+    ObjectTransform objTrans;
+    Object_Boost *objBoostRacer;
+    Object_Boost *objBoostType;
+    Object_Boost_Inner *boostData;
 
-    if (objId == -1) {
-        objId = gBoostObjOverrideID;
+    if (racerIndex == -1) {
+        racerIndex = gBoostObjOverrideID;
         gBoostObjOverrideID--;
     }
     if (gBoostObjOverrideID < 0) {
         gBoostObjOverrideID = 0;
     }
-    if (objId >= 0 && objId < 10) {
-        temp_v0 = get_misc_asset(ASSET_MISC_20);
-        var_t2 = &gBoostEffectObjects[objId];
-        temp_t4 = &temp_v0[(arg3 << 5)];
-        temp_v1 = &temp_v0[(objId << 5)];
-        if (*var_t2 != NULL) {
-            switch (arg2) {
+    if (racerIndex >= 0 && racerIndex < NUMBER_OF_CHARACTERS) {
+        boostAsset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
+        objBoostType = &boostAsset[boostType];
+        objBoostRacer = &boostAsset[racerIndex];
+        if (gBoostEffectObjects[racerIndex] != NULL) {
+            switch (vehicleIDPrev) {
                 default:
-                    var_v0 = &temp_v1->unk48;
-                    if (arg2 != 0xD) {
-                        var_v0 = NULL;
-                    }
+                    boostData = NULL;
                     break;
-                case 0:
-                    var_v0 = &temp_v1->unk0;
+                case VEHICLE_CAR:
+                    boostData = &objBoostRacer->unk0;
                     break;
-                case 1:
-                    var_v0 = &temp_v1->unk24;
+                case VEHICLE_HOVERCRAFT:
+                    boostData = &objBoostRacer->unk24;
                     break;
-                case 2:
-                    var_v0 = &temp_v1->unk48;
+                case VEHICLE_PLANE:
+                    boostData = &objBoostRacer->unk48;
+                    break;
+                case VEHICLE_ROCKET:
+                    boostData = &objBoostRacer->unk48;
                     break;
             }
-            if (var_v0 != NULL) {
-                D_8011B048[objId] = arg2;
-                D_8011B058[objId] = arg3;
-                if (temp_v1->unk70 == 2) {
-                    temp_f0 = coss_f(temp_v1->unk72 << 12);
-                    var_f2 = (var_v0->unk14 + (temp_f0 * var_v0->unk18)) * temp_v1->unk74;
-                    var_f14 = (var_v0->unk1C + (temp_f0 * var_v0->unk20)) * temp_v1->unk74;
-                    if ((arg3 & 3) == 1) {
+            if (boostData != NULL) {
+                D_8011B048[racerIndex] = vehicleIDPrev;
+                D_8011B058[racerIndex] = boostType;
+                if (objBoostRacer->unk70 == 2) {
+                    temp_f0 = coss_f(objBoostRacer->unk72 << 12);
+                    var_f2 = (boostData->unk14 + (temp_f0 * boostData->unk18)) * objBoostRacer->unk74;
+                    temp_f0 = (boostData->unk1C + (temp_f0 * boostData->unk20)) * objBoostRacer->unk74;
+                    if ((boostType & 3) == BOOST_MEDIUM) {
                         var_f2 *= 1.09f;
-                        var_f14 *= 1.09f;
+                        temp_f0 *= 1.09f;
                     }
-                    if ((arg3 & 3) >= 2) {
+                    if ((boostType & 3) >= BOOST_LARGE) {
                         var_f2 *= 1.18f;
-                        var_f14 *= 1.18f;
+                        temp_f0 *= 1.18f;
                     }
-                    sp50.x_position = var_v0->position.x;
-                    sp50.y_position = var_v0->position.y;
-                    sp50.z_position = var_v0->position.z;
-                    sp50.scale = 1.0f;
-                    sp50.rotation.x_rotation = -0x8000;
-                    sp50.rotation.y_rotation = 0;
-                    sp50.rotation.z_rotation = 0;
+                    objTrans.x_position = boostData->position.x;
+                    objTrans.y_position = boostData->position.y;
+                    objTrans.z_position = boostData->position.z;
+                    objTrans.scale = 1.0f;
+                    objTrans.rotation.y_rotation = -0x8000;
+                    objTrans.rotation.x_rotation = 0;
+                    objTrans.rotation.z_rotation = 0;
                     func_8000B38C(&gBoostVerts[gBoostVertFlip][D_8011AFFC], &gBoostTris[gBoostVertFlip][D_8011B004],
-                                  &sp50, var_f2, var_f14, (temp_v1->unk72), &temp_t4->unk7C);
-                    (*var_t2)->properties.common.unk4 = (objId << 28) | (D_8011AFFC << 14) | D_8011B004;
+                                  &objTrans, var_f2, temp_f0, objBoostRacer->unk72 << 12, objBoostType->unk7C);
+                    gBoostEffectObjects[racerIndex]->properties.boost.unk4 =
+                        (racerIndex << 28) | (D_8011AFFC << 14) | D_8011B004;
                     D_8011AFFC += 9;
                     D_8011B004 += 8;
                 }
-                (*var_t2)->properties.common.unk0 = (s32) obj;
-                (*var_t2)->segment.trans.x_position = 0.0f;
-                (*var_t2)->segment.trans.y_position = 0.0f;
-                (*var_t2)->segment.trans.z_position = 0.0f;
-                sp74.x = var_v0->position.x;
-                sp74.y = var_v0->position.y;
-                sp74.z = var_v0->position.z;
-                f32_vec3_apply_object_rotation(&obj->segment.trans, &sp74);
+                gBoostEffectObjects[racerIndex]->properties.boost.obj = racerObj;
+                gBoostEffectObjects[racerIndex]->segment.trans.x_position = 0.0f;
+                gBoostEffectObjects[racerIndex]->segment.trans.y_position = 0.0f;
+                gBoostEffectObjects[racerIndex]->segment.trans.z_position = 0.0f;
+                sp74[0] = boostData->position.x;
+                sp74[1] = boostData->position.y;
+                sp74[2] = boostData->position.z;
+                f32_vec3_apply_object_rotation(&racerObj->segment.trans, sp74);
                 ignore_bounds_check();
-                move_object(var_t2, sp74.x + obj->segment.trans.x_position, sp74.y + obj->segment.trans.y_position,
-                            sp74.z + obj->segment.trans.z_position);
+                move_object(gBoostEffectObjects[racerIndex], racerObj->segment.trans.x_position + sp74[0],
+                            racerObj->segment.trans.y_position + sp74[1], racerObj->segment.trans.z_position + sp74[2]);
             }
-            if (arg4 != 0) {
-                D_8011B068[objId] = 0;
+            if (arg4 != FALSE) {
+                D_8011B068[racerIndex] = FALSE;
             }
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B750.s")
-#endif
 
 /**
  * Updates the racer FX object states.
@@ -1600,7 +1595,7 @@ void transform_player_vehicle(void) {
     spawnObj.common.z = gTransformPosZ;
     spawnObj.unkC = gTransformAngleY;
     set_taj_status(TAJ_DIALOGUE);
-    player = spawn_object((LevelObjectEntryCommon *) &spawnObj, 0x10 | 0x1);
+    player = spawn_object(&spawnObj.common, 0x10 | 0x1);
     gNumRacers = 1;
     (*gRacers)[PLAYER_ONE] = player;
     gRacersByPort[PLAYER_ONE] = player;
@@ -2194,15 +2189,15 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
 
     obj->shadow = shadow;
     shadow->texture = NULL;
-    objHeader = ((ObjectSegment *) obj)->header;
+    objHeader = obj->segment.header;
     if (objHeader->shadowGroup) {
-        shadow->texture = load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
-        objHeader = ((ObjectSegment *) obj)->header;
+        shadow->texture = load_texture(objHeader->unk34);
+        objHeader = obj->segment.header;
     }
     shadow->scale = objHeader->shadowScale;
     shadow->meshStart = -1;
     D_8011AE50 = shadow->texture;
-    if (((ObjectSegment *) obj)->header->shadowGroup && shadow->texture == NULL) {
+    if (obj->segment.header->shadowGroup && shadow->texture == NULL) {
         return 0;
     }
     return sizeof(ShadowData);
@@ -2385,7 +2380,7 @@ void obj_update(s32 updateRate) {
 
     func_800245B4(-1);
     gEventStartTimer = gEventCountdown;
-    if ((gEventCountdown > 0) && (race_starting() != 0)) {
+    if (gEventCountdown > 0 && race_starting() != FALSE) {
         gEventCountdown -= updateRate;
         D_8011ADBC = 0;
     } else {
@@ -2399,9 +2394,9 @@ void obj_update(s32 updateRate) {
     D_8011AD22[D_8011AD21] = 0;
     for (j = 0; j < gNumRacers; j++) {
         racer = &(*gRacers)[j]->unk64->racer;
-        racer->prev_x_position = (f32) (*gRacers)[j]->segment.trans.x_position;
-        racer->prev_y_position = (f32) (*gRacers)[j]->segment.trans.y_position;
-        racer->prev_z_position = (f32) (*gRacers)[j]->segment.trans.z_position;
+        racer->prev_x_position = (*gRacers)[j]->segment.trans.x_position;
+        racer->prev_y_position = (*gRacers)[j]->segment.trans.y_position;
+        racer->prev_z_position = (*gRacers)[j]->segment.trans.z_position;
     }
     obj_tick_anims();
     process_object_interactions();
@@ -2576,7 +2571,7 @@ void func_80011264(ObjectModel *model, Object *obj) {
             if (batch[i].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 // Fakematch
                 if (model->textures[batch[i].textureIndex].texture) {}
-                if ((model->textures[batch[i].textureIndex].texture->numOfTextures) > 0x900) {
+                if (model->textures[batch[i].textureIndex].texture->numOfTextures > 0x900) {
                     batch[i].unk7 = remaining;
                 } else if (current >= 0) {
                     batch[i].unk7 = current;
@@ -2797,7 +2792,7 @@ void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *tr
     if (tex != NULL) {
         hasTexture = TRUE;
     }
-    material_set(&gObjectCurrDisplayList, (TextureHeader *) tex, flags, texOffset);
+    material_set(&gObjectCurrDisplayList, tex, flags, texOffset);
     gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), numVertices, 0);
     gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numTriangles, hasTexture);
     apply_matrix_from_stack(&gObjectCurrDisplayList);
@@ -2853,7 +2848,7 @@ void render_3d_billboard(Object *obj) {
     s32 hasEnvCol;
     ObjectTransformExt objTrans;
     Object *bubbleTrap;
-    Object_68 *gfxData;
+    Sprite *gfxData;
 
     intensity = 255;
     hasPrimCol = FALSE;
@@ -2930,7 +2925,7 @@ void render_3d_billboard(Object *obj) {
         objTrans.animFrame = obj->segment.animFrame;
         objTrans.unk1A = 32;
         if (bubbleTrap == NULL) {
-            bubbleTrap = (Object *) obj->unk64->weapon.target;
+            bubbleTrap = obj->unk64->weapon.target;
             if (bubbleTrap == NULL) {
                 bubbleTrap = obj;
             }
@@ -2938,8 +2933,8 @@ void render_3d_billboard(Object *obj) {
         render_bubble_trap(&bubbleTrap->segment.trans, gfxData, (Object *) &objTrans,
                            RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
     } else {
-        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj,
-                                (Sprite *) gfxData, flags);
+        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, gfxData,
+                                flags);
     }
     if (hasPrimCol) {
         gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -2975,7 +2970,7 @@ void render_3d_model(Object *obj) {
     Object_68 *obj68;
     Object_Racer *racerObj;
     ObjectModel *objModel;
-    Object_68 *something;
+    Sprite *something;
 
     obj68 = obj->unk68[obj->segment.object.modelIndex];
     if (obj68 != NULL) {
@@ -2995,7 +2990,7 @@ void render_3d_model(Object *obj) {
             racerObj = NULL;
         }
         if (obj68->animUpdateTimer <= 0) {
-            obj->curVertData = (Vertex *) obj68->vertices[obj68->animationTaskNum];
+            obj->curVertData = obj68->vertices[obj68->animationTaskNum];
             if (obj68->modelType == MODELTYPE_ANIMATED) {
                 obj_animate(obj);
             }
@@ -3008,7 +3003,7 @@ void render_3d_model(Object *obj) {
                 if (cam_get_viewport_layout() != VIEWPORT_LAYOUT_1_PLAYER) {
                     flags = FALSE;
                 }
-                obj->curVertData = (Vertex *) obj68->vertices[obj68->animationTaskNum];
+                obj->curVertData = obj68->vertices[obj68->animationTaskNum];
                 if (obj->behaviorId == BHV_UNK_3F) { // 63 = stopwatchicon, stopwatchhand
                     obj_shade_fancy(objModel, obj, 0, gCurrentLightIntensity);
                 } else if (flags) {
@@ -3025,7 +3020,7 @@ void render_3d_model(Object *obj) {
                 obj68->animUpdateTimer = 1;
             }
         }
-        obj->curVertData = (Vertex *) obj68->vertices[obj68->animationTaskNum];
+        obj->curVertData = obj68->vertices[obj68->animationTaskNum];
         if (obj->behaviorId == BHV_DOOR) {
             func_80011264(objModel, obj);
         }
@@ -3089,7 +3084,7 @@ void render_3d_model(Object *obj) {
                 obj60_unk0 = 0;
             }
             for (i = 0; i < obj60_unk0; i++) {
-                loopObj = ((Object **) obj->unk60)[i + 1];
+                loopObj = obj->unk60->unk4[i];
                 if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->unk60->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
@@ -3129,7 +3124,7 @@ void render_3d_model(Object *obj) {
                             }
                             loopObj->properties.common.unk0 =
                                 render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix,
-                                                        &gObjectCurrVertexList, loopObj, (Sprite *) something, flags);
+                                                        &gObjectCurrVertexList, loopObj, something, flags);
                             if (var_v0_2) {
                                 gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
                                 func_80012CE8(&gObjectCurrDisplayList);
@@ -3158,7 +3153,7 @@ void render_3d_model(Object *obj) {
                     loopObj->segment.trans.z_position += (vtxZ - loopObj->segment.trans.z_position) * 0.25;
                     if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
                         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
-                                                loopObj, (Sprite *) something, flags);
+                                                loopObj, something, flags);
                     }
                 }
             }
@@ -3476,7 +3471,7 @@ void func_800135B8(Object *boostObj) {
     s32 hasTexture;
     s32 idx;
 
-    idx = (boostObj->properties.common.unk4 >> 28) & 0xF;
+    idx = (boostObj->properties.boost.unk4 >> 28) & 0xF;
     boost = &boostObj->unk64->boost;
     switch (D_8011B048[idx]) {
         case 0:
@@ -3491,10 +3486,10 @@ void func_800135B8(Object *boostObj) {
     }
     asset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     asset = &asset[D_8011B058[idx]];
-    object_do_player_tumble((Object *) boostObj->properties.common.unk0);
-    cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix,
-                       (ObjectTransform *) boostObj->properties.common.unk0, 1.0f, 0.0f);
-    object_undo_player_tumble((Object *) boostObj->properties.common.unk0);
+    object_do_player_tumble(boostObj->properties.boost.obj);
+    cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &boostObj->properties.boost.obj->segment.trans,
+                       1.0f, 0.0f);
+    object_undo_player_tumble(boostObj->properties.boost.obj);
     objTransform.trans.x_position = boostData->position.x;
     objTransform.trans.y_position = boostData->position.y;
     objTransform.trans.z_position = boostData->position.z;
@@ -3523,8 +3518,8 @@ void func_800135B8(Object *boostObj) {
             hasTexture = FALSE;
         }
 
-        vtx = &gBoostVerts[gBoostVertFlip][(boostObj->properties.common.unk4 >> 14) & 0x3FFF];
-        tri = &gBoostTris[gBoostVertFlip][boostObj->properties.common.unk4 & 0x3FFF];
+        vtx = &gBoostVerts[gBoostVertFlip][(boostObj->properties.boost.unk4 >> 14) & 0x3FFF];
+        tri = &gBoostTris[gBoostVertFlip][boostObj->properties.boost.unk4 & 0x3FFF];
         gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), 9, 0);
         gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), 8, hasTexture);
     }
@@ -3534,7 +3529,7 @@ void func_800135B8(Object *boostObj) {
 /**
  * Render the bubble trap weapon.
  */
-void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags) {
+void render_bubble_trap(ObjectTransform *trans, Sprite *gfxData, Object *obj, s32 flags) {
     f32 x;
     f32 y;
     f32 z;
@@ -3559,8 +3554,7 @@ void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj,
     obj->segment.trans.x_position += x;
     obj->segment.trans.y_position += y;
     obj->segment.trans.z_position += z;
-    render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj,
-                            (Sprite *) gfxData, flags);
+    render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, gfxData, flags);
 }
 
 /**
@@ -3616,7 +3610,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         shear *= scale;
         gfxData = gShieldEffectObject->unk68[shieldType];
         mdl = gfxData->objModel;
-        gShieldEffectObject->curVertData = (Vertex *) gfxData->vertices[gfxData->animationTaskNum];
+        gShieldEffectObject->curVertData = gfxData->vertices[gfxData->animationTaskNum];
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, racer->shieldTimer * 4);
@@ -3680,7 +3674,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gMagnetEffectObject->segment.trans.rotation.z_rotation = 0;
             gfxData = *gMagnetEffectObject->unk68;
             mdl = gfxData->objModel;
-            gMagnetEffectObject->curVertData = (Vertex *) gfxData->vertices[gfxData->animationTaskNum];
+            gMagnetEffectObject->curVertData = gfxData->vertices[gfxData->animationTaskNum];
             opacity = ((gRacerFXData[racerIndex].unk1 * 8) & 0x7F) + 0x80;
             gfx_init_basic_xlu(&gObjectCurrDisplayList, DRAW_BASIC_2CYCLE, COLOUR_RGBA32(255, 255, 255, opacity),
                                gMagnetColours[racer->magnetModelID]);
@@ -4241,12 +4235,12 @@ void func_80016748(Object *obj0, Object *obj1) {
         if (!((objModel->unk3C + 50.0) < sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)))) {
             obj0Interact = obj0->interactObj;
             obj1Interact = obj1->interactObj;
-            object_transform_to_matrix((float (*)[4]) obj1TransformMtx, &obj1->segment.trans);
+            object_transform_to_matrix((float(*)[4]) obj1TransformMtx, &obj1->segment.trans);
             for (i = 0; i < objModel->unk20; i += 2) {
                 xDiff = obj1->curVertData[objModel->unk1C[i]].x;
                 yDiff = obj1->curVertData[objModel->unk1C[i]].y;
                 zDiff = obj1->curVertData[objModel->unk1C[i]].z;
-                guMtxXFMF((float (*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                guMtxXFMF((float(*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
                 temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->segment.trans.scale) * 50.0;
                 xDiff -= obj0->segment.trans.x_position;
                 yDiff -= obj0->segment.trans.y_position;
@@ -4413,7 +4407,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = -obj->segment.trans.x_position;
     sp78.y_position = -obj->segment.trans.y_position;
     sp78.z_position = -obj->segment.trans.z_position;
-    object_inverse_transform_to_matrix((float (*)[4]) sp6C, (ObjectTransform *) &sp78);
+    object_inverse_transform_to_matrix((float(*)[4]) sp6C, &sp78);
     inverseScale = 1.0 / obj->segment.trans.scale;
     i = 0;
     while (i < 16) {
@@ -4432,7 +4426,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = obj->segment.trans.x_position;
     sp78.y_position = obj->segment.trans.y_position;
     sp78.z_position = obj->segment.trans.z_position;
-    object_transform_to_matrix(obj5C->_matrices[(obj5C->unk104 + 2) << 1], (ObjectTransform *) &sp78);
+    object_transform_to_matrix(obj5C->_matrices[(obj5C->unk104 + 2) << 1], &sp78);
     obj5C->unk100 = NULL;
 }
 
@@ -4499,7 +4493,165 @@ UNUSED s16 get_taj_challenge_type(void) {
     return gTajChallengeType;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017E98.s")
+void func_80017E98(void) {
+    f32 xDiff;
+    f32 zDiff;
+    f32 yDiff;
+    s32 temp_v1;
+    s32 checkpointNum;
+    s32 duplicateCheckpoint;
+    s32 breakOut;
+    s32 altRouteId;
+    s32 i;
+    s32 altId;
+    s32 var_a0;
+    f32 ox;
+    f32 oy;
+    f32 oz;
+    Object *obj;
+    CheckpointNode *checkpoint;
+    LevelObjectEntry_Checkpoint *checkpointEntry;
+    f32 mtx[4][4];
+    ObjectTransform transform;
+    s32 var_t2;
+
+    var_t2 = 0;
+    gNumberOfCheckpoints = 0;
+    for (i = 0; i < gObjectCount; i++) {
+        obj = gObjPtrList[i];
+        if (!(obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) && obj->behaviorId == BHV_CHECKPOINT &&
+            gNumberOfCheckpoints < MAX_CHECKPOINTS) {
+            checkpointEntry = &obj->segment.level_entry->checkpoint;
+            if (checkpointEntry->unk1A == gTajChallengeType) {
+                gTrackCheckpoints[gNumberOfCheckpoints].obj = obj;
+                var_a0 = checkpointEntry->unk9;
+                if (checkpointEntry->unk17) {
+                    var_a0 += 255;
+                    var_t2++;
+                }
+                gTrackCheckpoints[gNumberOfCheckpoints].unk2C = var_a0;
+                gTrackCheckpoints[gNumberOfCheckpoints].altRouteID = -1;
+                gNumberOfCheckpoints++;
+            }
+        }
+    }
+
+    duplicateCheckpoint = FALSE;
+    do {
+        altId = TRUE;
+
+        for (i = 0; i < gNumberOfCheckpoints - 1; i++) {
+            if (gTrackCheckpoints[i].unk2C == gTrackCheckpoints[i + 1].unk2C) {
+                duplicateCheckpoint = TRUE;
+                checkpointNum = gTrackCheckpoints[i].unk2C;
+            }
+
+            if (gTrackCheckpoints[i + 1].unk2C < gTrackCheckpoints[i].unk2C) {
+                temp_v1 = gTrackCheckpoints[i].unk2C;
+                obj = gTrackCheckpoints[i].obj;
+                gTrackCheckpoints[i].unk2C = gTrackCheckpoints[i + 1].unk2C;
+                gTrackCheckpoints[i].obj = gTrackCheckpoints[i + 1].obj;
+                gTrackCheckpoints[i + 1].unk2C = temp_v1;
+                gTrackCheckpoints[i + 1].obj = obj;
+                altId = FALSE;
+            }
+        }
+    } while (!altId);
+    D_8011AED4 = gNumberOfCheckpoints;
+    gNumberOfCheckpoints -= var_t2;
+    if (duplicateCheckpoint) {
+        set_render_printf_position(20, 220);
+        render_printf(sDuplicateCheckpointString /* "Error: Multiple checkpoint no: %d !!\n"; */, checkpointNum);
+    }
+    for (i = gNumberOfCheckpoints; i < D_8011AED4; i++) {
+        temp_v1 = gTrackCheckpoints[i].unk2C - 255;
+        for (var_a0 = 0, breakOut = FALSE; var_a0 < gNumberOfCheckpoints && !breakOut; var_a0++) {
+            if (temp_v1 == gTrackCheckpoints[var_a0].unk2C) {
+                gTrackCheckpoints[var_a0].altRouteID = i;
+                gTrackCheckpoints[i].altRouteID = var_a0;
+                breakOut = TRUE;
+            }
+        }
+    }
+
+    for (i = 0; i < D_8011AED4; i++) {
+        checkpoint = &gTrackCheckpoints[i];
+        obj = checkpoint->obj;
+        checkpointEntry = &obj->segment.level_entry->checkpoint;
+        transform.rotation.y_rotation = obj->segment.trans.rotation.y_rotation;
+        transform.rotation.x_rotation = obj->segment.trans.rotation.x_rotation;
+        transform.rotation.z_rotation = obj->segment.trans.rotation.z_rotation;
+        transform.scale = 1.0f;
+        transform.x_position = 0.0f;
+        transform.y_position = 0.0f;
+        transform.z_position = 0.0f;
+        object_transform_to_matrix(&mtx[0], &transform);
+        guMtxXFMF(&mtx[0], 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
+        checkpoint->rotationXFrac = ox;
+        checkpoint->rotationYFrac = oy;
+        checkpoint->rotationZFrac = oz;
+        checkpoint->unkC = -(((obj->segment.trans.x_position * ox) + (obj->segment.trans.y_position * oy)) +
+                             (obj->segment.trans.z_position * oz));
+        checkpoint->x = obj->segment.trans.x_position;
+        checkpoint->y = obj->segment.trans.y_position;
+        checkpoint->z = obj->segment.trans.z_position;
+        checkpoint->scale = obj->segment.trans.scale * 2;
+        checkpoint->unk2C = obj->segment.trans.scale * 128.0f;
+        checkpoint->unk24 = 0.0f;
+        checkpoint->distance = 0.0f;
+        if (i < gNumberOfCheckpoints) {
+            temp_v1 = i + 1;
+            if (temp_v1 == gNumberOfCheckpoints) {
+                temp_v1 = 0;
+            }
+            xDiff = obj->segment.trans.x_position - gTrackCheckpoints[temp_v1].obj->segment.trans.x_position;
+            yDiff = obj->segment.trans.y_position - gTrackCheckpoints[temp_v1].obj->segment.trans.y_position;
+            zDiff = obj->segment.trans.z_position - gTrackCheckpoints[temp_v1].obj->segment.trans.z_position;
+            checkpoint->distance = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
+            altRouteId = gTrackCheckpoints[temp_v1].altRouteID;
+            if (altRouteId != -1) {
+                xDiff = obj->segment.trans.x_position - gTrackCheckpoints[altRouteId].obj->segment.trans.x_position;
+                yDiff = obj->segment.trans.y_position - gTrackCheckpoints[altRouteId].obj->segment.trans.y_position;
+                zDiff = obj->segment.trans.z_position - gTrackCheckpoints[altRouteId].obj->segment.trans.z_position;
+                checkpoint->unk24 = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
+            } else {
+                checkpoint->unk24 = checkpoint->distance;
+            }
+        } else {
+            temp_v1 = gTrackCheckpoints[i].altRouteID + 1;
+            if (temp_v1 == gNumberOfCheckpoints) {
+                temp_v1 = 0;
+            }
+            xDiff = obj->segment.trans.x_position - gTrackCheckpoints[temp_v1].obj->segment.trans.x_position;
+            yDiff = obj->segment.trans.y_position - gTrackCheckpoints[temp_v1].obj->segment.trans.y_position;
+            zDiff = obj->segment.trans.z_position - gTrackCheckpoints[temp_v1].obj->segment.trans.z_position;
+            checkpoint->distance = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
+            altRouteId = gTrackCheckpoints[temp_v1].altRouteID;
+            if (altRouteId != -1) {
+                xDiff = obj->segment.trans.x_position - gTrackCheckpoints[altRouteId].obj->segment.trans.x_position;
+                yDiff = obj->segment.trans.y_position - gTrackCheckpoints[altRouteId].obj->segment.trans.y_position;
+                zDiff = obj->segment.trans.z_position - gTrackCheckpoints[altRouteId].obj->segment.trans.z_position;
+                checkpoint->unk24 = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
+            } else {
+                checkpoint->unk24 = checkpoint->distance;
+            }
+        }
+        checkpoint->unk2E[0] = checkpointEntry->unkB;
+        checkpoint->unk32[0] = checkpointEntry->unkF;
+        checkpoint->unk36[0] = checkpointEntry->unk13;
+        checkpoint->unk2E[1] = checkpointEntry->unkC;
+        checkpoint->unk32[1] = checkpointEntry->unk10;
+        checkpoint->unk36[1] = checkpointEntry->unk14;
+        checkpoint->unk2E[2] = checkpointEntry->unkD;
+        checkpoint->unk32[2] = checkpointEntry->unk11;
+        checkpoint->unk36[2] = checkpointEntry->unk15;
+        checkpoint->unk2E[3] = checkpointEntry->unkE;
+        checkpoint->unk32[3] = checkpointEntry->unk12;
+        checkpoint->unk36[3] = checkpointEntry->unk16;
+        checkpoint->unk3B = checkpointEntry->unk19;
+    }
+}
+
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800185E4.s")
 
 /**
@@ -5505,7 +5657,7 @@ s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
     dist = 50000.0;
     result = 0xFF;
     for (numSteps = 0; numSteps != AINODE_COUNT; numSteps++) {
-        segment = (ObjectSegment *) (*gAINodes)[numSteps];
+        segment = &(*gAINodes)[numSteps]->segment;
         if (segment) {
             levelObj = &((segment->level_entry)->aiNode);
             findDist = TRUE;
@@ -6184,7 +6336,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
     NEW_OBJECT_ENTRY(newObjEntry, animEntry->objectIdToSpawn, 8, animEntry->common.x, animEntry->common.y,
                      animEntry->common.z);
 
-    obj->unk64 = (Object_64 *) spawn_object((LevelObjectEntryCommon *) &newObjEntry, 1);
+    obj->unk64 = (Object_64 *) spawn_object(&newObjEntry, 1);
     newObj = (Object *) obj->unk64;
     // (newObj->behaviorId == BHV_DINO_WHALE) is Dinosaur1, Dinosaur2, Dinosaur3, Whale, and Dinoisle
     if (obj->unk64 != NULL && newObj->behaviorId == BHV_DINO_WHALE && gTimeTrialEnabled) {
@@ -6265,7 +6417,7 @@ void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Anim
     Camera *camera;
     ObjectTransform *animObjTrans;
 
-    animObjTrans = (ObjectTransform *) animObj->unk1C;
+    animObjTrans = &animObj->unk1C->segment.trans;
     if (obj->behaviorId == BHV_CAMERA_ANIMATION) {
         animObj->unk44 = D_8011AD3E;
         D_8011AD3E++;
@@ -6385,14 +6537,14 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
 
 f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x) {
     f32 ret;
-    f32 temp3, temp2, temp;
+    f32 c, b, a;
 
-    temp = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
-    temp2 = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
-    temp3 = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
+    a = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
+    b = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
+    c = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
 
     ret = (1.0 * data[index + 1]);
-    ret = (((((temp * x) + temp2) * x) + temp3) * x) + ret;
+    ret = (((((a * x) + b) * x) + c) * x) + ret;
 
     return ret;
 }
@@ -6402,48 +6554,50 @@ f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x) {
  */
 f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative) {
     f32 ret;
-    f32 temp3, temp2, temp;
+    f32 c, b, a;
 
-    temp = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
-    temp2 = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
-    temp3 = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
+    a = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
+    b = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
+    c = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
 
     ret = (1.0 * data[index + 1]);
-    *derivative = (((temp * 3 * x) + (2 * temp2)) * x) + temp3;
-    ret = (((((temp * x) + temp2) * x) + temp3) * x) + ret;
+    *derivative = (((a * 3 * x) + (2 * b)) * x) + c;
+    ret = (((((a * x) + b) * x) + c) * x) + ret;
 
     return ret;
 }
 
-f32 func_8002277C(f32 *data, s32 index, f32 x) {
+f32 catmull_rom_derivative(f32 *data, s32 index, f32 x) {
     f32 derivative;
-    f32 temp3, temp2, temp;
+    f32 c, b, a;
 
-    temp = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
-    temp2 = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
-    temp3 = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
+    a = (-0.5 * data[index]) + (1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + (0.5 * data[index + 3]);
+    b = (1.0 * data[index]) + (-2.5 * data[index + 1]) + (2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
+    c = (data[index + 2] * 0.5) + (0.0 * data[index + 1]) + (-0.5 * data[index]) + (0.0 * data[index + 3]);
 
-    derivative = (((temp * 3 * x) + (2 * temp2)) * x) + temp3;
+    derivative = (((a * 3 * x) + (2 * b)) * x) + c;
 
     return derivative;
 }
 
-UNUSED f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
-    f32 result = arg0[arg1 + 1] + ((arg0[arg1 + 2] - arg0[arg1 + 1]) * arg2);
+/**
+ * Imprecise method, which does not guarantee v = v1 when t = 1. (From Wikipedia)
+ */
+f32 lerp(f32 *data, u32 index, f32 t) {
+    f32 result = data[index + 1] + t * ((data[index + 2] - data[index + 1]));
     return result;
 }
 
-UNUSED f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
-    f32 new_var2;
-    f32 temp_f12;
-    f32 new_var;
-    f32 temp_f2;
-    new_var = arg0[arg1 + 2] - arg0[arg1 + 1];
-    temp_f2 = new_var * arg2;
-    temp_f12 = arg0[arg1 + 1];
-    new_var2 = temp_f12 + temp_f2;
-    *arg3 = arg0[arg1 + 2] - arg0[arg1 + 1];
-    return new_var2;
+/**
+ * Peforms the lerp, and also returns the distance between the two points.
+ */
+f32 lerp_and_get_derivative(f32 *data, u32 index, f32 t, f32 *derivative) {
+    f32 lerp;
+    f32 vector;
+    vector = data[index + 2] - data[index + 1];
+    lerp = data[index + 1] + (vector * t);
+    *derivative = vector;
+    return lerp;
 }
 
 UNUSED void func_800228DC(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {

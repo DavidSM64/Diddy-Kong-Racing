@@ -10,6 +10,8 @@
 #include "helpers/jsonHelper.h"
 #include "helpers/c/cContext.h"
 
+#include "builder/buildInfoContext.h"
+
 namespace DkrAssetsTool {
 
 typedef enum BuildInfoType {
@@ -17,38 +19,17 @@ typedef enum BuildInfoType {
     BUILD_TO_BINARY // When building all assets
 } BuildInfoType;
 
-class BuildStats;
 class BuildInfoCollection;
-
-class BuildInfoContext {
-public:
-    BuildInfoContext(CContext &cContext, BuildStats &stats, BuildInfoCollection &collection);
-    
-    CContext &get_c_context() const;
-    BuildStats &get_stats() const;
-    BuildInfoCollection &get_collection() const;
-    
-    // Used in BuildObjectMap
-    void init_obj_beh_to_entry_map(); 
-    std::string get_object_entry_from_behavior(std::string objBehavior) const;
-private:
-    std::reference_wrapper<CContext> _cContext;
-    std::reference_wrapper<BuildStats> _stats;
-    std::reference_wrapper<BuildInfoCollection> _collection;
-    
-    std::unordered_map<std::string, std::string> _objBehaviorToEntry;
-};
 
 class BuildInfo {
 public:
     BuildInfo();
     //BuildInfo(std::string buildId, JsonFile *src, const fs::path &dst, const fs::path &dir); // BUILD_TO_FILE, TODO
     //BuildInfo(std::string buildId, JsonFile *src, const fs::path &dir); // BUILD_TO_BINARY
-    BuildInfo(std::string buildId, const JsonFile &src, size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext); // BUILD_TO_BINARY
-    BuildInfo(std::string buildId, const std::vector<uint8_t> &outData, size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext); // BUILD_TO_BINARY
+    BuildInfo(std::string buildId, std::string buildSectionId, const JsonFile &src, size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext); 
+    BuildInfo(std::string buildId, std::string buildSectionId, const std::vector<uint8_t> &outData, size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext);
     ~BuildInfo();
     
-    //JsonFile *srcFile; // Deprecated!
     std::vector<uint8_t> out;
     
     BuildInfoType get_build_type() const;
@@ -63,14 +44,10 @@ public:
     fs::path get_dst_folder() const;
     fs::path get_dst_filename() const;
     
-    //void set_c_context(CContext &cContext);
-    //void set_stats(BuildStats &stats);
-    //void set_collection(BuildInfoCollection &collection);
-    
     fs::path get_path_to_directory() const; 
     
     CContext &get_c_context() const;
-    BuildStats &get_stats() const;
+    BuildTextureCache &get_texture_cache() const;
     BuildInfoCollection &get_collection() const;
     
     const JsonFile &get_src_json_file() const;
@@ -78,6 +55,7 @@ public:
     
     std::string get_type() const;
     std::string get_build_id() const;
+    std::string get_section_build_id() const;
     size_t get_file_index() const;
     
     bool is_complete() const;
@@ -96,6 +74,7 @@ private:
     std::optional<std::reference_wrapper<const BuildInfoContext>> _infoContext;
     
     std::string _buildId;
+    std::string _buildSectionId;
     std::string _type;
     size_t _fileIndex;
     BuildInfoType _buildType;

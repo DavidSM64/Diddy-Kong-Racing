@@ -6,69 +6,6 @@
 
 using namespace DkrAssetsTool;
 
-/**************************************************************************/
-
-BuildInfoContext::BuildInfoContext(CContext &cContext, BuildStats &stats, BuildInfoCollection &collection) 
-    : _cContext(cContext), _stats(stats), _collection(collection) {}
-
-CContext &BuildInfoContext::get_c_context() const {
-    return _cContext;
-}
-
-BuildStats &BuildInfoContext::get_stats() const {
-    return _stats;
-}
-
-BuildInfoCollection &BuildInfoContext::get_collection() const {
-    return _collection;
-}
-
-void BuildInfoContext::init_obj_beh_to_entry_map() {
-    if(!_objBehaviorToEntry.empty()) {
-        return; // Don't redo this if the map is already filled!
-    }
-    
-    // TODO: This was copy-pasted from extract/config.cpp; need to refactor to not require the config file.
-    
-    fs::path pathToConfig = GlobalSettings::get_decomp_path("tools", "tools/") / "dkr_assets_tool_extract.json";
-    auto tryGetConfigFile = JsonHelper::get_file(pathToConfig);
-    DebugHelper::assert_(tryGetConfigFile.has_value(), 
-        "(BuildInfoContext::init_obj_beh_to_entry_map) Could not find the config file at: ", pathToConfig);
-    JsonFile &configJson = tryGetConfigFile.value();
-    
-    CContext &cContext = get_c_context();
-    
-    CEnum *objBehaviors = cContext.get_enum("ObjectBehaviours");
-    
-    DebugHelper::assert_(objBehaviors != nullptr, 
-        "(BuildInfoContext::init_obj_beh_to_entry_map) The enum ObjectBehaviours could not be loaded!");
-    
-    std::vector<std::string> defaultObjEntriesOrder;
-    configJson.get_array<std::string>("/misc/default-object-entries-order", defaultObjEntriesOrder);
-    
-    for(int i = 0; i < 128; i++) {
-        std::string symbol;
-        DebugHelper::assert_(objBehaviors->get_symbol_of_value(i, symbol),
-            "(BuildInfoContext::init_obj_beh_to_entry_map) Could not get a symbol for the value ", i, " in the ObjectBehaviors enum.");
-        
-        CStruct *entryStruct = cContext.get_struct(defaultObjEntriesOrder[i]);
-        DebugHelper::assert_(entryStruct != nullptr, 
-            "(BuildInfoContext::init_obj_beh_to_entry_map) Could not find struct \"", defaultObjEntriesOrder[i], "\"");
-        
-        _objBehaviorToEntry[symbol] = defaultObjEntriesOrder[i];
-    }
-}
-
-std::string BuildInfoContext::get_object_entry_from_behavior(std::string objBehavior) const {
-    DebugHelper::assert_(_objBehaviorToEntry.find(objBehavior) != _objBehaviorToEntry.end(),
-        "(AssetExtractConfig::get_object_entry_from_behavior) ", objBehavior, 
-        " was not in the _objBehaviorToEntry map!");
-    
-    return _objBehaviorToEntry.at(objBehavior);
-}
-
-/**************************************************************************/
-
 BuildInfo::BuildInfo() {
     DebugHelper::error("Must not initalize empty build info.");
 }
@@ -85,15 +22,15 @@ BuildInfo::BuildInfo(JsonFile *src, const fs::path &dir)
 }
 */
 
-BuildInfo::BuildInfo(std::string buildId, const JsonFile &src, size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext) 
-    : _dstPath(""), _localDirectory(dir), _jsonFile(src), _infoContext(infoContext), _buildId(buildId), _fileIndex(fileIndex) {
+BuildInfo::BuildInfo(std::string buildId, std::string buildSectionId, const JsonFile &src, size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext) 
+    : _dstPath(""), _localDirectory(dir), _jsonFile(src), _infoContext(infoContext), _buildId(buildId), _buildSectionId(buildSectionId), _fileIndex(fileIndex) {
     _buildType = BUILD_TO_BINARY;
     const JsonFile &jsonFile = get_src_json_file();
     _type = jsonFile.get_string("/type", "NoType");
 }
 
-BuildInfo::BuildInfo(std::string buildId, const std::vector<uint8_t> &outData, size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext) 
-    : out(outData), _dstPath(""), _localDirectory(dir), _jsonFile(std::nullopt), _infoContext(infoContext), _buildId(buildId), _type("Binary"), _fileIndex(fileIndex) {
+BuildInfo::BuildInfo(std::string buildId, std::string buildSectionId, const std::vector<uint8_t> &outData, size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext) 
+    : out(outData), _dstPath(""), _localDirectory(dir), _jsonFile(std::nullopt), _infoContext(infoContext), _buildId(buildId), _buildSectionId(buildSectionId), _type("Binary"), _fileIndex(fileIndex) {
     _buildType = BUILD_TO_BINARY;
 }
 
@@ -145,11 +82,11 @@ CContext &BuildInfo::get_c_context() const {
     return infoContext.get_c_context();
 }
     
-BuildStats &BuildInfo::get_stats() const {
+BuildTextureCache &BuildInfo::get_texture_cache() const {
     const BuildInfoContext &infoContext = _infoContext.value();
-    return infoContext.get_stats();
+    return infoContext.get_texture_cache();
 }
-    
+
 BuildInfoCollection &BuildInfo::get_collection() const {
     const BuildInfoContext &infoContext = _infoContext.value();
     return infoContext.get_collection();
@@ -173,6 +110,10 @@ std::string BuildInfo::get_type() const {
 
 std::string BuildInfo::get_build_id() const {
     return _buildId;
+}
+
+std::string BuildInfo::get_section_build_id() const {
+    return _buildSectionId;
 }
 
 size_t BuildInfo::get_file_index() const {

@@ -410,7 +410,7 @@ endif
 
 build_assets:
 	$(info Building Assets...)
-	$(TOOLS_DIR)/dkr_assets_tool build -o $(ASSETS_OUTPUT) -dkrv $(REGION).$(VERSION) $(MODDED_ARG) >&2 || echo FAIL
+	@$(TOOLS_DIR)/dkr_assets_tool build -o $(ASSETS_OUTPUT) -dkrv $(REGION).$(VERSION) $(MODDED_ARG) >&2 || echo FAIL
 
 ###############################
 
@@ -446,11 +446,6 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | bu
 $(BUILD_DIR)/%.s.o: %.s | build_assets
 	$(call print,Assembling:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $< 
-
-# Specifically override the assets bin output location to match what splat output to the ld file.
-$(BUILD_DIR)/asm/assets/assets.s.o: asm/assets/assets.s | build_assets
-	$(call print,Assembling Assets:,$<,$@)
-	$(V)$(AS) $(ASFLAGS) -o $(BUILD_DIR)/assets/assets.bin.o $<
 
 # Specifically override the header file from what splat extracted to be replaced by what we have in the hasm folder
 $(BUILD_DIR)/asm/header.s.o: src/hasm/header.s | build_assets

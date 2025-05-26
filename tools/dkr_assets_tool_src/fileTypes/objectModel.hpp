@@ -38,7 +38,7 @@ typedef struct ObjectModel {
     /* 0x48 */ be_int16_t reservedNumberOfAnimations; // Reserved for in-game only.
     /* 0x4A */ be_int16_t numberOfAnimatedVertices; // Number of animated vertices
     /* 0x4C */ be_int32_t animatedVertexIndices; // Animated vertices list.
-    /* 0x50 */ be_int16_t unk50; // Update rate maybe? Only checked if greater than 0.
+    /* 0x50 */ be_int16_t hasAnimatedTexture;  // Game only checks if this is zero or not.
     /* 0x52 */ be_int16_t reserved52; // Reserved for in-game only.
     /* 0x54 */ be_int32_t unused54; // Not used?
 } ObjectModel;

@@ -53,12 +53,16 @@ void BuildModel::generate_object_model(BuildInfo &info) {
     DkrTriangle *triangles = reinterpret_cast<DkrTriangle *>(&info.out[objectModelHeader->triangles]);
     DkrBatch *batches = reinterpret_cast<DkrBatch *>(&info.out[objectModelHeader->batches]);
     
+    bool hasAnimatedTexture = false;
     for(size_t materialIndex = 0; materialIndex < numberOfTextures; materialIndex++) {
-        _materials[materialIndex].write_to(&textures[materialIndex], info);
+        BuildModelMaterial &material = _materials[materialIndex];
+        material.write_to(&textures[materialIndex], info);
+        hasAnimatedTexture = hasAnimatedTexture || material.is_texture_animated();
     }
+    objectModelHeader->hasAnimatedTexture = (int)hasAnimatedTexture;
     
     for(auto &block : _blocks) {
-        block.write_batches(_materialIds, batches, vertices, triangles);
+        block.write_batches(_materialIds, _materials, batches, vertices, triangles);
     }
     
     bool debugKeepUncompressed = GlobalSettings::get_value<bool>("/debug/keep-uncompressed", false);

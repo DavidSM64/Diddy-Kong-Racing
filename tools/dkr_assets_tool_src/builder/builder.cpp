@@ -25,8 +25,9 @@
 
 #include "builder/buildInfo.h"
 #include "builder/buildInfoCollection.h"
+#include "builder/buildInfoContext.h"
 #include "builder/buildAssetTable.h"
-#include "builder/stats.h"
+#include "builder/textureCache.h"
 
 #include "buildTypes/buildAudio.h"
 #include "buildTypes/buildBinary.h"
@@ -204,11 +205,11 @@ void AssetBuilder::build_all(const fs::path &dstPath) {
     size_t numberOfAssetSections = sectionIds.size();
     
     CContext cContext;
-    BuildStats stats;
+    BuildTextureCache textureCache;
     BuildInfoCollection collection;
     
     // BuildInfoContext holds info that is shared between all assets.
-    BuildInfoContext infoContext(cContext, stats, collection);
+    BuildInfoContext infoContext(cContext, textureCache, collection);
     
     fs::path includeFolder = GlobalSettings::get_decomp_path("include_subpath", "include/");
     CEnumsHelper::load_enums_from_file(cContext, includeFolder / "enums.h");
@@ -254,7 +255,7 @@ void AssetBuilder::build_all(const fs::path &dstPath) {
     collection.run_builds([](BuildInfo &info) {
         std::string type = info.get_type();
         builderMap[type](info);
-    });
+    }, sectionIds);
     
     // Second loop to create the tables for the asset sections.
     for(size_t sectionIndex = 0; sectionIndex < numberOfAssetSections; sectionIndex++) {

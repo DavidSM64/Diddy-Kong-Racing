@@ -38,7 +38,7 @@ void BuildInfoCollection::add_build_info(std::string sectionBuildId, std::string
         "(BuildInfoCollection::add_build_info) Max number of assets reached! Limit was ", MAX_NUMBER_OF_BUILD_INFOS);
     
     size_t fileIndex = _buildInfoSections[sectionBuildId].size();
-    _buildInfos.emplace_back(buildId, src, fileIndex, dir, infoContext);
+    _buildInfos.emplace_back(buildId, sectionBuildId, src, fileIndex, dir, infoContext);
     
     // Add the index to the section.
     _buildInfoSections[sectionBuildId].emplace_back(index);
@@ -59,7 +59,7 @@ size_t BuildInfoCollection::add_deferred_build_info(std::string sectionBuildId, 
         "(BuildInfoCollection::add_build_info) Max number of assets reached! Limit was ", MAX_NUMBER_OF_BUILD_INFOS);
         
     size_t fileIndex = _buildInfoSections[sectionBuildId].size();
-    _buildInfos.emplace_back(buildId, out, fileIndex, dir, infoContext);
+    _buildInfos.emplace_back(buildId, sectionBuildId, out, fileIndex, dir, infoContext);
     
     // Do not process deferred assets.
     _buildInfos.back().done();
@@ -89,7 +89,7 @@ void BuildInfoCollection::add_deferred_build_info(std::string sectionBuildId, st
     DebugHelper::assert_(index < MAX_NUMBER_OF_BUILD_INFOS,
         "(BuildInfoCollection::add_build_info) Max number of assets reached! Limit was ", MAX_NUMBER_OF_BUILD_INFOS);
         
-    _buildInfos.emplace_back(buildId, out, fileIndex, dir, infoContext);
+    _buildInfos.emplace_back(buildId, sectionBuildId, out, fileIndex, dir, infoContext);
     
     // Do not process deferred assets.
     _buildInfos.back().done();
@@ -100,7 +100,7 @@ void BuildInfoCollection::add_deferred_build_info(std::string sectionBuildId, st
     _buildInfoMutex.unlock();
 }
 
-void BuildInfoCollection::run_builds(std::function<void(BuildInfo &)> callbackFunction) {
+void BuildInfoCollection::run_builds(std::function<void(BuildInfo &)> callbackFunction, const std::vector<std::string> &sectionsOrder) {
     size_t threadCount = GlobalSettings::get_max_thread_count();
     bool multithreaded = threadCount != 1;
     DebugHelper::info_verbose("Using ", threadCount, " thread", (multithreaded ? "s" : ""));
@@ -108,8 +108,12 @@ void BuildInfoCollection::run_builds(std::function<void(BuildInfo &)> callbackFu
     if(multithreaded) {
         // Multi-threaded (Better for performance)
         ThreadPool pool(threadCount);
-        for(auto &pair : _buildInfoSections) {
-            for(int buildInfoIndex : pair.second) {
+        for(const std::string &sectionBuildId : sectionsOrder) {
+            if(_buildInfoSections.find(sectionBuildId) == _buildInfoSections.end()) {
+                // Skip empty sections.
+                continue;
+            }
+            for(int buildInfoIndex : _buildInfoSections[sectionBuildId]) {
                 BuildInfo &info = _buildInfos[buildInfoIndex];
                 pool.enqueue([&info, &callbackFunction] {
                     if(!info.is_complete()) {
@@ -121,8 +125,12 @@ void BuildInfoCollection::run_builds(std::function<void(BuildInfo &)> callbackFu
         }
     } else {
         // Single-threaded (Better for debugging)
-        for(auto &pair : _buildInfoSections) {
-            for(int buildInfoIndex : pair.second) {
+        for(const std::string &sectionBuildId : sectionsOrder) {
+            if(_buildInfoSections.find(sectionBuildId) == _buildInfoSections.end()) {
+                // Skip empty sections.
+                continue;
+            }
+            for(int buildInfoIndex : _buildInfoSections[sectionBuildId]) {
                 BuildInfo &info = _buildInfos[buildInfoIndex];
                 if(!info.is_complete()) {
                     callbackFunction(info);

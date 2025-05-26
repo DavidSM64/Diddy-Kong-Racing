@@ -8,7 +8,7 @@
 
 /************ .data ************/
 
-s32 D_800E2EF0 = FALSE;
+s32 gSprintfSpacingCode = FALSE; // Used to determine if vsprintf should use fixed width mode or not
 
 // Char width is (v - u) + 1
 TexFontCoords gDebugFontCoords[3][32] = {
@@ -158,7 +158,7 @@ u16 gDebugTextX;
 u16 gDebugTextY;
 u16 D_80127CB0;
 u16 D_80127CB2;
-s32 D_80127CB4;
+s32 gDebugFixedWidthMode;
 s32 gDebugTextOn;
 s32 gDebugBoundsX1;
 s32 gDebugBoundsX2;
@@ -189,12 +189,17 @@ char *_itoa(u64 n, char *outBuffer, u32 radix, s32 useUpperCase) {
     return buffer;
 }
 
-// Official Name: sprintfSetSpacingCodes
-void func_800B4A08(s32 setting) {
-    D_800E2EF0 = setting;
+/**
+ * Used to determine if vsprintf should use fixed width mode or not
+ * Official Name: sprintfSetSpacingCodes
+ */
+void sprintfSetSpacingCodes(s32 setting) {
+    gSprintfSpacingCode = setting;
 }
 
-/* Official name: sprintf */
+/**
+ * Official name: sprintf
+ */
 UNUSED int sprintf(char *s, const char *format, ...) {
     s32 ret;
     va_list args;
@@ -227,9 +232,9 @@ s32 render_printf(const char *format, ...) {
         stubbed_printf("*** diPrintf Error *** ---> Out of string space. (Print less text!)\n");
         return -1;
     }
-    func_800B4A08(TRUE);
+    sprintfSetSpacingCodes(TRUE);
     written = vsprintf(gDebugPrintBufferEnd, format, args);
-    func_800B4A08(FALSE);
+    sprintfSetSpacingCodes(FALSE);
     if (written > 0) {
         gDebugPrintBufferEnd = &gDebugPrintBufferEnd[written] + 1;
     }
@@ -255,7 +260,7 @@ void debug_text_print(Gfx **dList) {
     buffer = (char *) gDebugPrintBufferStart;
     debug_text_origin();
     gDebugFontTexture = -1;
-    D_80127CB4 = 0;
+    gDebugFixedWidthMode = FALSE;
     D_80127CB0 = gDebugTextX;
     D_80127CB2 = gDebugTextY;
     while ((s32) buffer != (s32) gDebugPrintBufferEnd) {
@@ -266,7 +271,7 @@ void debug_text_print(Gfx **dList) {
     buffer = (char *) gDebugPrintBufferStart;
     debug_text_origin();
     gDebugFontTexture = -1;
-    D_80127CB4 = 0;
+    gDebugFixedWidthMode = FALSE;
     while ((s32) buffer != (s32) gDebugPrintBufferEnd) {
         gDebugTextOn = TRUE;
         buffer += func_800B653C(dList, buffer);
@@ -318,9 +323,9 @@ UNUSED s32 debug_text_width(const char *format, ...) {
     va_start(args, format);
 
     stringLength = 0;
-    func_800B4A08(TRUE);
+    sprintfSetSpacingCodes(TRUE);
     vsprintf(s, format, args);
-    func_800B4A08(FALSE);
+    sprintfSetSpacingCodes(FALSE);
     for (ch = (u8 *) &s[0]; *ch != '\0'; ch++) {
         pad = *ch;
         if (*ch != (0, '\n')) {
@@ -328,18 +333,18 @@ UNUSED s32 debug_text_width(const char *format, ...) {
                 stringLength += 6;
                 if (1) {}
             } else {
-                if (*ch < '@') {
+                if (*ch < 0x40) {
                     // Character is a symbol or number and not a letter
-                    gDebugFontTexture = 0;
-                    *ch -= '!';
-                } else if (*ch < '`') {
+                    gDebugFontTexture = ASSET_TEX2D_SMALLFONT_0;
+                    *ch -= 0x21;
+                } else if (*ch < 0x60) {
                     // Character is a upper case letter
-                    gDebugFontTexture = 1;
-                    *ch -= '@';
+                    gDebugFontTexture = ASSET_TEX2D_SMALLFONT_1;
+                    *ch -= 0x40;
                 } else if (*ch <= 0x7F) {
                     // Character is a lower case letter
-                    gDebugFontTexture = 2;
-                    *ch -= '`';
+                    gDebugFontTexture = ASSET_TEX2D_SMALLFONT_2;
+                    *ch -= 0x60;
                 }
                 fontCharU = gDebugFontCoords[gDebugFontTexture][*ch].u;
                 stringLength = ((stringLength + gDebugFontCoords[gDebugFontTexture][*ch].v) - fontCharU) + (pad = 1);
@@ -350,8 +355,8 @@ UNUSED s32 debug_text_width(const char *format, ...) {
     return stringLength;
 }
 
-s32 func_800B653C(Gfx **dList, u8 *buffer) {
-    u8 *bufferCopy;
+s32 func_800B653C(Gfx **dList, char *buffer) {
+    char *bufferCopy;
     s32 xOffset;
     u8 red;
     u8 green;
@@ -365,13 +370,13 @@ s32 func_800B653C(Gfx **dList, u8 *buffer) {
     while (bufferValue != NULL) {
         xOffset = 0;
         switch (bufferValue) {
-            case 0x83:
-                D_80127CB4 = 0;
+            case 0x83: // Leave fixed-width mode
+                gDebugFixedWidthMode = FALSE;
                 break;
-            case 0x84:
-                D_80127CB4 = 1;
+            case 0x84: // Enter fixed-width mode
+                gDebugFixedWidthMode = TRUE;
                 break;
-            case 0x81:
+            case 0x81: // Set the text color from the next 4 bytes
                 red = buffer[0];
                 green = buffer[1];
                 blue = buffer[2];
@@ -381,7 +386,7 @@ s32 func_800B653C(Gfx **dList, u8 *buffer) {
                     gDPSetEnvColor((*dList)++, red, green, blue, alpha);
                 }
                 break;
-            case 0x85:
+            case 0x85: // Set the background color from the next 4 bytes
                 red = buffer[0];
                 green = buffer[1];
                 blue = buffer[2];
@@ -391,7 +396,7 @@ s32 func_800B653C(Gfx **dList, u8 *buffer) {
                     gDPSetPrimColor((*dList)++, 0, 0, red, green, blue, alpha);
                 }
                 break;
-            case 0x82:
+            case 0x82: // Set debug text position from the next 4 bytes
                 if (!gDebugTextOn) {
                     debug_text_background(dList, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
                 }
@@ -403,10 +408,10 @@ s32 func_800B653C(Gfx **dList, u8 *buffer) {
                 D_80127CB2 = gDebugTextY;
                 buffer += 4;
                 break;
-            case 0x20:
+            case ' ': // Space
                 xOffset = 6;
                 break;
-            case 10:
+            case '\n': // Line Feed
                 if (!gDebugTextOn) {
                     debug_text_background(dList, D_80127CB0, D_80127CB2, gDebugTextX, gDebugTextY + 10);
                 }
@@ -414,7 +419,7 @@ s32 func_800B653C(Gfx **dList, u8 *buffer) {
                 D_80127CB0 = gDebugTextX;
                 D_80127CB2 = gDebugTextY;
                 break;
-            case 9:
+            case '\t': // HT - Horizontal Tab
                 if (!(gDebugTextX % 32)) {
                     xOffset = 32;
                 } else {
@@ -426,7 +431,7 @@ s32 func_800B653C(Gfx **dList, u8 *buffer) {
                 break;
         }
 
-        if (D_80127CB4 != 0 && bufferValue >= 32 && bufferValue < 0x80) {
+        if (gDebugFixedWidthMode && bufferValue >= 0x20 && bufferValue < 0x80) {
             xOffset = 7;
         }
         gDebugTextX += xOffset;
@@ -468,7 +473,7 @@ s32 debug_text_character(Gfx **dList, s32 asciiVal) {
     s32 fontCharWidth;
     s32 fontCharU;
 
-    if (asciiVal < '@') {
+    if (asciiVal < 0x40) {
         // Character is a symbol or number and not a letter
         if (gDebugFontTexture != 0) {
             if (gDebugTextOn) {
@@ -477,8 +482,8 @@ s32 debug_text_character(Gfx **dList, s32 asciiVal) {
             }
             gDebugFontTexture = 0;
         }
-        asciiVal -= '!';
-    } else if (asciiVal < '`') {
+        asciiVal -= 0x21;
+    } else if (asciiVal < 0x60) {
         // Character is a upper case letter
         if (gDebugFontTexture != 1) {
             if (gDebugTextOn) {
@@ -487,7 +492,7 @@ s32 debug_text_character(Gfx **dList, s32 asciiVal) {
             }
             gDebugFontTexture = 1;
         }
-        asciiVal -= '@';
+        asciiVal -= 0x40;
     } else if (asciiVal <= 0x7F) {
         // Character is a lower case letter
         if (gDebugFontTexture != 2) {
@@ -497,7 +502,7 @@ s32 debug_text_character(Gfx **dList, s32 asciiVal) {
             }
             gDebugFontTexture = 2;
         }
-        asciiVal -= '`';
+        asciiVal -= 0x60;
     }
     fontCharU = gDebugFontCoords[gDebugFontTexture][asciiVal].u;
     fontCharWidth = (gDebugFontCoords[gDebugFontTexture][asciiVal].v - fontCharU) + 1;

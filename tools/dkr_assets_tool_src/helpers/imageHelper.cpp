@@ -5,12 +5,16 @@ using namespace DkrAssetsTool;
 #include <cstring> // for memcpy
 #include <algorithm>
 #include <unordered_map>
+#include <map>
 
+#include "jsonHelper.h"
 #include "fileHelper.h"
 #include "debugHelper.h"
 #include "libs/n64graphics/n64graphics.h"
 #include "libs/stb_image.h"
 #include "helpers/dataHelper.h"
+#include "misc/globalSettings.h"
+#include "fileTypes/texture.hpp"
 
 N64Image::N64Image(fs::path filepath, std::string format, bool alignData) : _format(format) {
     bool isColourImage = (format == "RGBA16") || (format == "RGBA32") || (format == "CI4") || (format == "CI8");
@@ -430,5 +434,253 @@ void ImageHelper::get_width_and_height(fs::path filepath, int &outWidth, int &ou
     int channels;
     int gotInfo = stbi_info(filepath.generic_string().c_str(), &outWidth, &outHeight, &channels);
     DebugHelper::assert_(gotInfo, "(ImageHelper::get_width_and_height) ", filepath, " could not be loaded!");
+}
+
+// If a texture uses multiple images, it will have a number at the end like "_2".
+// so this function should remove that so we can find the correct json file.
+fs::path strip_postfix_number(fs::path path) {
+    std::string filename = path.filename().stem().generic_string();
+    
+    int offset = filename.size() - 1;
+    while((offset >= 0) && ((filename[offset] >= '0') && (filename[offset] <= '9'))) {
+        offset--;
+    }
+    
+    if(filename[offset] != '_') {
+        return path;
+    }
+    
+    if((offset > 0) && (offset < filename.size() - 1)) {
+        fs::path outPath = path.parent_path() / filename.substr(0, offset);
+        outPath.replace_extension(path.extension()); // Add the extension back in.
+        return outPath;
+    }
+    
+    return path;
+}
+
+int get_postfix_number(fs::path path) {
+    std::string filename = path.filename().stem().generic_string();
+    
+    int offset = filename.size() - 1;
+    while((offset >= 0) && ((filename[offset] >= '0') && (filename[offset] <= '9'))) {
+        offset--;
+    }
+    
+    if(filename[offset] != '_') {
+        return -1;
+    }
+    
+    if((offset > 0) && (offset < filename.size() - 1)) {
+        return std::stoi(filename.substr(offset + 1));
+    }
+    
+    return -1;
+}
+
+std::optional<fs::path> ImageHelper::guess_associated_json_file(fs::path imgFilepath) {
+    fs::path filepath = imgFilepath;
+    filepath.replace_extension(".json");
+    if(FileHelper::path_exists(filepath)) {
+        return filepath;
+    }
+    filepath = strip_postfix_number(filepath);
+    if(FileHelper::path_exists(filepath)) {
+        return filepath;
+    }
+    return std::nullopt;
+}
+
+void ImageHelper::guess_texture_wrap_mode(fs::path filepath, std::string &outWrapS, std::string &outWrapT) {
+    // Use "wrap" as the default.
+    outWrapS = "wrap";
+    outWrapT = "wrap";
+    
+    // Check to see if there is an accompanying json file with the image file.
+    // That json file more than likely has a format/render-mode associated with it.
+    std::optional<fs::path> jsonFilepath = guess_associated_json_file(filepath);
+    
+    if(jsonFilepath.has_value()) {
+        JsonFile &jsonFile = JsonHelper::get_file_or_error(jsonFilepath.value(), 
+            "Could not load json file ", jsonFilepath.value());
+        
+        outWrapS = jsonFile.get_string_lowercase("/flags/wrap-s", "wrap");
+        outWrapT = jsonFile.get_string_lowercase("/flags/wrap-t", "wrap");
+    }
+}
+    
+void ImageHelper::guess_texture_format_and_render_mode(fs::path filepath, std::string &outFormat, std::string &outRenderMode, bool ignoreTextureSize) {
+    outFormat = "";
+    outRenderMode = "";
+
+    // Check to see if there is an accompanying json file with the image file.
+    // That json file more than likely has a format/render-mode associated with it.
+    std::optional<fs::path> jsonFilepath = guess_associated_json_file(filepath);
+    
+    if(jsonFilepath.has_value()) {
+        JsonFile &jsonFile = JsonHelper::get_file_or_error(jsonFilepath.value(), 
+            "Could not load json file ", jsonFilepath.value());
+        
+        outFormat = jsonFile.get_string("/format");
+        outRenderMode = jsonFile.get_string("/render-mode");
+    }
+
+    if(!outFormat.empty() && !outRenderMode.empty()) {
+        return;
+    } 
+    
+    // Check and see if the image has the format in the filename. Example: `tex.rgba16.png`
+    
+    if(outFormat.empty()) {
+        std::vector<std::string> filenameSplit;
+        std::string filenameAsString = filepath.filename().generic_string();
+        StringHelper::split(filenameAsString, '.', filenameSplit); // Split filename using the dots.
+        for(size_t i = 1; i < filenameSplit.size() - 1; i++) {
+            std::string &filenamePart = filenameSplit[i];
+            StringHelper::make_uppercase(filenamePart);
+            if(DataHelper::vector_has(TEXTURE_FORMAT_INT_TO_STRING, filenamePart)) {
+                outFormat = filenamePart;
+                break;
+            }
+        }
+    }
+
+    // Load the image and take a guess from the pixels.
+    
+    int imgWidth, imgHeight;
+    
+    rgba *data = (rgba*)png2rgba(filepath.c_str(), &imgWidth, &imgHeight);
+    
+    int numberOfPixels = imgWidth * imgHeight;
+    
+    bool isTransparent = false;
+    bool isSemiTransparent = false;
+    bool hasColor = false;
+    
+    for(int y = 0; y < imgHeight; y++) {
+        for(int x = 0; x < imgWidth; x++) {
+            int i = (y * imgWidth) + x;
+            bool isGray = (data[i].red == data[i].green) && (data[i].green == data[i].blue);
+            
+            hasColor = hasColor || !isGray;
+            isTransparent = isTransparent || (data[i].alpha < 255);
+            isSemiTransparent = isSemiTransparent || (isTransparent && (data[i].alpha > 0));
+        }
+    }
+    
+    if(outFormat.empty()) {
+        if(hasColor) {
+            // Color image (RGBA16, RGBA32)
+            if(!ignoreTextureSize && (numberOfPixels > 32*32)) {
+                // Can't use 32-bit formats at this point
+                if(numberOfPixels > 64*32) {
+                    DebugHelper::error("(ImageHelper::guess_texture_format_and_render_mode) ", 
+                        filepath.filename(), " is too large for a colored image!");
+                } else {
+                    outFormat = "RGBA16";
+                }
+            } else {
+                outFormat = (isSemiTransparent ? "RGBA32" : "RGBA16");
+            }
+        } else {
+            // Grayscale image (I4, IA4, I8, IA8, IA16)
+            if(!ignoreTextureSize && (numberOfPixels > 64*32)) {
+                // Can't use 16-bit formats at this point
+                if(numberOfPixels > 64*64) {
+                    // Can't use 8-bit formats at this point.
+                    if(numberOfPixels > 128*64) {
+                        DebugHelper::error("(ImageHelper::guess_texture_format_and_render_mode) ", 
+                            filepath.filename(), " is too large for a grayscale image!");
+                    } else {
+                        outFormat = (isTransparent ? "IA4" : "I4");
+                    }
+                } else {
+                    outFormat = (isTransparent ? "IA8" : "I8");
+                }
+            } else {
+                outFormat = (isTransparent ? "IA16" : "I8");
+            }
+        }
+    }
+    
+    if(outRenderMode.empty()) {
+        outRenderMode = (isTransparent ? "TRANSPARENT" : "OPAQUE");
+    }
+}
+
+bool ImageHelper::guess_if_texture_is_animated(fs::path imgFilepath) {
+    // Check to see if there is an accompanying json file with the image file.
+    std::optional<fs::path> jsonFilepath = guess_associated_json_file(imgFilepath);
+    
+    if(jsonFilepath.has_value()) {
+        JsonFile &jsonFile = JsonHelper::get_file_or_error(jsonFilepath.value(), 
+            "Could not load json file ", jsonFilepath.value());
+        return jsonFile.length_of_array("/images") > 1;
+    }
+    
+    // Check if there exist multiple texture paths based off the imgFilepath provided.
+    return get_multiple_textures_from_one(imgFilepath).size() > 1;
+}
+
+bool ImageHelper::guess_if_texture_double_sided(fs::path filepath) {
+    // Check to see if there is an accompanying json file with the image file.
+    // That json file more than likely has a format/render-mode associated with it.
+    std::optional<fs::path> jsonFilepath = guess_associated_json_file(filepath);
+    
+    if(jsonFilepath.has_value()) {
+        JsonFile &jsonFile = JsonHelper::get_file_or_error(jsonFilepath.value(), 
+            "Could not load json file ", jsonFilepath.value());
+        return jsonFile.get_bool("/doubleSided", false);
+    }
+    
+    return false;
+}
+
+float ImageHelper::guess_animated_texture_timing(fs::path imgFilepath) {
+    // Check to see if there is an accompanying json file with the image file.
+    std::optional<fs::path> jsonFilepath = guess_associated_json_file(imgFilepath);
+    
+    if(jsonFilepath.has_value()) {
+        JsonFile &jsonFile = JsonHelper::get_file_or_error(jsonFilepath.value(), 
+            "Could not load json file ", jsonFilepath.value());
+        return jsonFile.get_float("/frame-advance-delay", 1.0f);
+    }
+    
+    // Use 1 second as the default timing.
+    return (float)GlobalSettings::get_value<double>("/build/default-frame-advance-delay", 1.0);
+}
+
+// Returns a list of paths of .png images (for animated textures)
+std::vector<fs::path> ImageHelper::get_multiple_textures_from_one(fs::path imgFilepath) {
+    fs::path filepath = strip_postfix_number(imgFilepath);
+    
+    if(filepath == imgFilepath) {
+        return { imgFilepath };
+    }
+    
+    std::string prefix = filepath.filename().stem().generic_string();
+    std::vector<fs::path> paths = FileHelper::get_files_from_directory_that_start_with(imgFilepath.parent_path(), prefix, false);
+    
+    std::map<int, fs::path> order;
+    
+    for(fs::path &p : paths) {
+        int index = get_postfix_number(p);
+        if(index >= 0) {
+            order[index] = p;
+        }
+    }
+    
+    if(order.size() == 0) {
+        return { imgFilepath };
+    }
+    
+    std::vector<fs::path> out;
+    out.reserve(order.size());
+    
+    for(auto& pair : order) {
+        out.emplace_back(pair.second);
+    }
+    
+    return out;
 }
 

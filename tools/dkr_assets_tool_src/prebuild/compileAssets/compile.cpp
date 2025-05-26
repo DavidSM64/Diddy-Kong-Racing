@@ -186,7 +186,6 @@ void compile_assets(size_t modOrderCount, const JsonFile &modOrderFile, StatJson
 }
 
 void CompileAssets::compile() {
-    DebugHelper::info("Compiling modded assets...");
     
     std::vector<fs::path> modFilesModified;
     
@@ -214,8 +213,11 @@ void CompileAssets::compile() {
     }
     
     if(doCompile) {
+        DebugHelper::info("Compiling modded assets...");
         compile_assets(modOrderCount, modOrderFile, statFile, modFilesModified);
         update_last_mod_order(modOrderCount, modOrderFile, statFile);
         statFile.save();
+    } else {
+        DebugHelper::info("Assets were not compiled. (Up to date)");
     }
 }
