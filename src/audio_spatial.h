@@ -77,8 +77,6 @@ void audspat_calculate_echo(SoundHandle soundHandle, f32 x, f32 y, f32 z);
 s32 audspat_distance_to_segment(f32 inX, f32 inY, f32 inZ, f32 coords[6], f32 *outX, f32 *outY, f32 *outZ);
 void audspat_reset(void);
 void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate);
-void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate); // Non Matching
-void func_80006FC8(Object **objs, s32 numRacers, Camera *camera, u8 arg3, s32 updateRate); // Non Matching
 u8 audspat_reverb_get_strength_at_point(ReverbLine *, f32, f32, f32);
 
 #endif
