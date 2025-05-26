@@ -1101,21 +1101,21 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
 /**
  * Enable the vehicle sounds made during gameplay.
  */
-UNUSED void sound_vehicle_enable(void) {
+UNUSED void racer_sound_enable(void) {
     gVehicleSounds = TRUE;
 }
 
 /**
  * Disable the vehicle sounds made during gameplay.
  */
-UNUSED void sound_vehicle_disable(void) {
+UNUSED void racer_sound_disable(void) {
     gVehicleSounds = FALSE;
 }
 
 /**
  * Return whether vehicle sounds should be playing during gameplay.
  */
-UNUSED u8 sound_vehicle_check(void) {
+UNUSED u8 racer_sound_check(void) {
     return gVehicleSounds;
 }
 
