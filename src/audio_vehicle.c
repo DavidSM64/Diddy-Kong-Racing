@@ -15,7 +15,7 @@
 /************ .data ************/
 
 u8 gVehicleSounds = TRUE;
-s32 gBackgroundSoundSwapTimer = 0; // Currently unknown, might be a different type.
+s32 gBackgroundSoundSwapTimer = 0;
 
 /*******************************/
 

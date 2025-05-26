@@ -6,7 +6,7 @@
 #include "audio.h"
 #include "camera.h"
 
-enum VehicleAmbientSoundStates {
+enum VehicleBackgroundSoundStates {
     VEHICLE_BACKGROUND_STOPPED,
     VEHICLE_BACKGROUND_PENDING,
     VEHICLE_BACKGROUND_PLAYING
