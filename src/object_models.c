@@ -424,47 +424,36 @@ s32 func_80060AC8(ObjectModel *mdl, s32 arg1, s32 arg2, s32 arg3, s32 *outBatchI
     return -1;
 }
 
-s32 func_80060C58(Vertex *vertices, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+s32 func_80060C58(Vertex *vertices, s32 i1, s32 i2, s32 i3, s32 i4) {
     Vertex *a;
     Vertex *b;
     Vertex *c;
     Vertex *d;
-    if (((arg1 == arg3) && (arg2 == arg4)) || ((arg1 == arg4) && (arg2 == arg3))) {
+
+#define NEARBY(a, b, x) (b->x - 4 < a->x && a->x < b->x + 4)
+
+    if (i1 == i3 && i2 == i4 || i1 == i4 && i2 == i3) {
         return 1;
     }
-    a = &vertices[arg1];
-    b = &vertices[arg2];
-    c = &vertices[arg3];
-    d = &vertices[arg4];
-    if (((c->x - 4) < a->x) && (a->x < (c->x + 4))) {
-        if (((c->y - 4) < a->y) && (a->y < (c->y + 4))) {
-            if (((c->z - 4) < a->z) && (a->z < (c->z + 4))) {
-                if (((d->x - 4) < b->x) && (b->x < (d->x + 4))) {
-                    if (((d->y - 4) < b->y) && (b->y < (d->y + 4))) {
-                        if (((d->z - 4) < b->z) && (b->z < (d->z + 4))) {
-                            return 2;
-                        }
-                    }
-                }
-                goto end;
-            }
+
+    a = &vertices[i1];
+    b = &vertices[i2];
+    c = &vertices[i3];
+    d = &vertices[i4];
+
+    if (NEARBY(a, c, x) && NEARBY(a, c, y) && NEARBY(a, c, z)) {
+        if (NEARBY(b, d, x) && NEARBY(b, d, y) && NEARBY(b, d, z)) {
+            return 2;
+        }
+    } else if (NEARBY(a, d, x) && NEARBY(a, d, y) && NEARBY(a, d, z)) {
+        if (NEARBY(b, c, x) && NEARBY(b, c, y) && NEARBY(b, c, z)) {
+            return 2;
         }
     }
-    if (((d->x - 4) < a->x) && (a->x < (d->x + 4))) {
-        if (((d->y - 4) < a->y) && (a->y < (d->y + 4))) {
-            if (((d->z - 4) < a->z) && (a->z < (d->z + 4))) {
-                if (((c->x - 4) < b->x) && (b->x < (c->x + 4))) {
-                    if (((c->y - 4) < b->y) && (b->y < (c->y + 4))) {
-                        if (((c->z - 4) < b->z) && (b->z < (c->z + 4))) {
-                            return 2;
-                        }
-                    }
-                }
-            }
-        }
-    }
-end:
+
     return 0;
+
+#undef NEARBY
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_80060EA8.s")
