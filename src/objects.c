@@ -6047,8 +6047,8 @@ void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRo
     f32_matrix_to_s32_matrix(&objRotMtxF32, &objRotMtxS32);
 
     for (i = 0; i < model->numberOfBatches; i++) {
-        if (model->batches[i].flags & BATCH_FLAGS_ENVMAP) {
-            sp70 = ((model->batches[i].flags & BATCH_FLAGS_UNK00020000) | BATCH_FLAGS_ENVMAP) ^ BATCH_FLAGS_ENVMAP;
+        if (model->batches[i].flags & RENDER_ENVMAP) {
+            sp70 = ((model->batches[i].flags & RENDER_UNK_0020000) | RENDER_ENVMAP) ^ RENDER_ENVMAP;
             tex = model->textures[model->batches[i].textureIndex].texture;
             k = 0;
 
