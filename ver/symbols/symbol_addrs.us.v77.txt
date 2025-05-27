@@ -121,16 +121,16 @@ sndp_set_group_volume = 0x80004A60;
 // audio_vehicle.c .text
 racer_sound_init = 0x80004B40;
 racer_sound_update = 0x800050D0;
-func_80005254 = 0x80005254;
+racer_sound_car = 0x80005254;
 racer_sound_hovercraft = 0x80005D08;
-func_800063EC = 0x800063EC;
+racer_sound_plane = 0x800063EC;
 racer_sound_free = 0x80006AC8;
-func_80006BFC = 0x80006BFC;
-func_80006FC8 = 0x80006FC8;
-sound_vehicle_enable = 0x80007F78;
-sound_vehicle_disable = 0x80007F88;
-sound_vehicle_check = 0x80007F94;
-func_80007FA4 = 0x80007FA4;
+racer_sound_doppler_effect = 0x80006BFC;
+racer_sound_update_all = 0x80006FC8;
+racer_sound_enable = 0x80007F78;
+racer_sound_disable = 0x80007F88;
+racer_sound_check = 0x80007F94;
+log = 0x80007FA4;
 
 // audio_spatial.c .text
 audspat_init = 0x80008040;
@@ -2188,8 +2188,8 @@ gNumActiveSounds = 0x800DC6C4;
 
 // audio_vehicle.c .data
 gVehicleSounds = 0x800DC6D0;
-D_800DC6D4 = 0x800DC6D4;
-D_800DC6D8 = 0x800DC6D8;
+gBackgroundSoundSwapTimer = 0x800DC6D4;
+resetAmbient = 0x800DC6D8;
 
 // audio_spatial.c .data
 gNumAudioPoints = 0x800DC6E0;
@@ -3675,7 +3675,7 @@ gSoundPlayer = 0x80119BD0;
 gSoundGroupVolume = 0x80119C28;
 
 // audio_vehicle .bss
-D_80119C30 = 0x80119C30;
+gBackgroundRacerSounds = 0x80119C30;
 gRacerSound = 0x80119C38;
 gSoundRacerObj = 0x80119C3C;
 

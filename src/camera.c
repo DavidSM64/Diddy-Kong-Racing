@@ -950,7 +950,7 @@ void set_ortho_matrix_view(Gfx **dList, MatrixS **mtx) {
 void func_8006807C(Gfx **dList, MatrixS **mtx) {
     object_inverse_transform_to_matrix(gCurrentModelMatrixF, &D_800DD288);
     f32_matrix_mult(&gCurrentModelMatrixF, &gPerspectiveMatrixF, &gViewMatrixF);
-    object_inverse_transform_to_matrix((float(*)[4]) gModelMatrixF[0], &D_800DD2A0);
+    object_inverse_transform_to_matrix((float (*)[4]) gModelMatrixF[0], &D_800DD2A0);
     f32_matrix_mult(gModelMatrixF[0], &gViewMatrixF, &gCurrentModelMatrixF);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixF, *mtx);
     gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_0);

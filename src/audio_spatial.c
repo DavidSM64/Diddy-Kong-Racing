@@ -412,7 +412,7 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
 
     // Update vehicle sounds
     if (numObjects != 0) {
-        func_80006FC8(objList, numObjects, cameras, numCameras, updateRate);
+        racer_sound_update_all(objList, numObjects, cameras, numCameras, updateRate);
     }
 }
 
