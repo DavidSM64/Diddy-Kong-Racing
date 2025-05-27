@@ -377,7 +377,53 @@ void free_model_data(ObjectModel *mdl) {
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_8006017C.s")
-#pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_80060910.s")
+
+void func_80060910(ObjectModel *mdl) {
+    s32 count;
+    s32 i;
+    s32 vertOffset;
+    s32 triIndex;
+    s32 startTri;
+    s32 endTri;    
+    s32 nextVertIndex;
+    s32 vertIndex;
+    s32 vertIndex0;
+    s32 vertIndex1;
+    s32 result;
+    s32 sp60;
+    s32 sp5C;
+    
+    count = 0;
+    for (i = 0; i < mdl->numberOfBatches; i++) {
+        startTri = mdl->batches[i].facesOffset;
+        vertOffset = mdl->batches[i].verticesOffset;
+        endTri = mdl->batches[i + 1].facesOffset;
+        if (mdl->batches[i].flags & BATCH_FLAGS_UNK00000200) {
+            endTri = startTri - 1;
+        }
+        
+        for (triIndex = startTri; triIndex < endTri; triIndex++, count++) {
+            mdl->unkC[count].unk0[0] = count;
+            
+            for (vertIndex = 0; vertIndex < 3; vertIndex++) {
+                nextVertIndex = vertIndex + 1;
+                if (nextVertIndex >= 3) {
+                    nextVertIndex = 0;
+                }
+                
+                vertIndex0 = mdl->triangles[triIndex].verticesArray[vertIndex + 1] + vertOffset;
+                vertIndex1 = mdl->triangles[triIndex].verticesArray[nextVertIndex + 1] + vertOffset;
+
+                result = func_80060AC8(mdl, triIndex, vertIndex0, vertIndex1, &sp5C, &sp60);
+                if (result != -1) {
+                    mdl->unkC[count].unk0[1 + vertIndex] = result;
+                } else {
+                    mdl->unkC[count].unk0[1 + vertIndex] = count;
+                }
+            }
+        }
+    }
+}
 
 s32 func_80060AC8(ObjectModel *mdl, s32 arg1, s32 arg2, s32 arg3, s32 *outBatchIndex, s32 *outVertexIndex) {
     s32 i;
