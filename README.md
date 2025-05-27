@@ -9,7 +9,7 @@ As of May 27, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 88.58%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 58.39%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 58.62%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -133,14 +133,14 @@ As of May 27, 2025, this is our current score:
              We are racing in Spaceport Alpha. (Lap 2/3)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 58.39% Complete -------------------------
-                    # Documented functions: 1189
-                    # Undocumented remaining: 465
+ ------------------------- 58.62% Complete -------------------------
+                    # Documented functions: 1195
+                    # Undocumented remaining: 459
  --------------------------- Game Status ---------------------------
               Balloons: 28/47, Keys: 3/4, Trophies: 2/5
                T.T. Amulets: 3/4, Wizpig Amulets: 2/4
  -------------------------------------------------------------------
- We are collecting silver coins in Pirate Lagoon. (4/8 silver coins)
+ We are collecting silver coins in Pirate Lagoon. (6/8 silver coins)
  ===================================================================
 ```
 <!-- README_SCORE_END -->
