@@ -5578,8 +5578,8 @@ void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s
  * Sets hitbox data from spawn info.
  */
 void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateShip *entry, UNUSED s32 arg2) {
-    obj->unk64 =
-        func_800BE654(obj->segment.object.segmentID, obj->segment.trans.x_position, obj->segment.trans.z_position);
+    obj->unk64 = (Object_Log *) obj_wave_init(obj->segment.object.segmentID, obj->segment.trans.x_position,
+                                              obj->segment.trans.z_position);
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 30;
@@ -5593,7 +5593,7 @@ void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateSh
  */
 void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
     if (obj->unk64 != NULL) {
-        obj->segment.trans.y_position = log_wave_height((Object_Log *) obj->unk64, updateRate);
+        obj->segment.trans.y_position = obj_wave_height((Object_Log *) obj->unk64, updateRate);
     }
     obj->segment.animFrame += updateRate * 8;
 }
@@ -5604,8 +5604,8 @@ void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
  */
 void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     f32 radius;
-    obj->unk64 =
-        func_800BE654(obj->segment.object.segmentID, obj->segment.trans.x_position, obj->segment.trans.z_position);
+    obj->unk64 = (Object_Log *) obj_wave_init(obj->segment.object.segmentID, obj->segment.trans.x_position,
+                                              obj->segment.trans.z_position);
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 30;
@@ -5634,7 +5634,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
 
     log = (Object_Log *) obj->unk64;
     if (log != NULL) {
-        obj->segment.trans.y_position = log_wave_height(log, updateRate);
+        obj->segment.trans.y_position = obj_wave_height(log, updateRate);
     } else {
         obj->segment.trans.y_position = ((LevelObjectEntryCommon *) obj->segment.level_entry)->y;
     }
@@ -5753,8 +5753,12 @@ void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *ent
     obj->segment.trans.scale /= 40.0f;
 }
 
+/**
+ * Wave Generator init func.
+ * Calls a function to add a wave generator point for the waves system.
+ */
 void obj_init_wavegenerator(Object *obj, UNUSED LevelObjectEntry_WaveGenerator *entry, UNUSED s32 arg2) {
-    func_800BF524(obj);
+    wavegen_add(obj);
 }
 
 void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 param) {

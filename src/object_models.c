@@ -568,7 +568,7 @@ void func_80060910(ObjectModel *mdl) {
         startTri = mdl->batches[i].facesOffset;
         vertOffset = mdl->batches[i].verticesOffset;
         endTri = mdl->batches[i + 1].facesOffset;
-        if (mdl->batches[i].flags & BATCH_FLAGS_UNK00000200) {
+        if (mdl->batches[i].flags & RENDER_UNK_200) {
             endTri = startTri - 1;
         }
 
@@ -613,7 +613,7 @@ s32 func_80060AC8(ObjectModel *mdl, s32 arg1, s32 arg2, s32 arg3, s32 *outBatchI
         startTri = mdl->batches[i].facesOffset;
         vertOffset = mdl->batches[i].verticesOffset;
         endTri = mdl->batches[i + 1].facesOffset;
-        if (mdl->batches[i].flags & BATCH_FLAGS_UNK00000200) {
+        if (mdl->batches[i].flags & RENDER_UNK_200) {
             endTri = startTri - 1;
         }
         for (triIndex = startTri; triIndex < endTri; triIndex++, count++) {
