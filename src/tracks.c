@@ -26,8 +26,7 @@
 #define LEVEL_MODEL_MAX_SIZE 0x82A00
 #define LEVEL_SEGMENT_MAX 128
 
-#define FLAGS_8002E904 \
-    (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_RECEIVE_SHADOWS | BATCH_FLAGS_WATER | BATCH_FLAGS_FORCE_NO_SHADOWS)
+#define FLAGS_8002E904 (RENDER_HIDDEN | RENDER_DECAL | RENDER_WATER | RENDER_NO_SHADOW)
 
 /************ .data ************/
 
@@ -766,7 +765,7 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
         currFaceOffset = segment->batches[i].facesOffset;
         verticesOffset = segment->batches[i].verticesOffset;
         nextFaceOffset = segment->batches[i + 1].facesOffset;
-        if (segment->batches[i].flags & (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_UNK00000200)) {
+        if (segment->batches[i].flags & (RENDER_HIDDEN | RENDER_UNK_200)) {
             currFaceOffset = nextFaceOffset;
         }
         for (j = currFaceOffset; j < nextFaceOffset; j++) {
@@ -1293,12 +1292,12 @@ void animate_level_textures(s32 updateRate) {
     for (segmentNumber = 0; segmentNumber < gCurrentLevelModel->numberOfSegments; segmentNumber++) {
         batch = segment[segmentNumber].batches;
         for (batchNumber = 0; batchNumber < segment[segmentNumber].numberOfBatches; batchNumber++) {
-            if (batch[batchNumber].flags & BATCH_FLAGS_TEXTURE_ANIM) {
+            if (batch[batchNumber].flags & RENDER_TEX_ANIM) {
                 if (batch[batchNumber].textureIndex != 0xFF) {
                     texture = gCurrentLevelModel->textures[batch[batchNumber].textureIndex].texture;
                     if (texture->numOfTextures != 0x100 && texture->frameAdvanceDelay) {
                         temp = batch[batchNumber].unk7 << 6;
-                        if (batch[batchNumber].flags & BATCH_FLAGS_UNK80000000) {
+                        if (batch[batchNumber].flags & RENDER_UNK_80000000) {
                             temp |= batch[batchNumber].unk6;
                             tex_animate_texture(texture, &batch[batchNumber].flags, &temp, updateRate);
                             batch[batchNumber].unk6 = temp & 0x3F;
@@ -1696,10 +1695,10 @@ void initialise_player_viewport_vars(s32 updateRate) {
                 racer = &racers[i]->unk64->racer;
             } while (i < numRacers - 1 && viewportID != racer->playerIndex);
             waves_visibility(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position,
-                          racers[i]->segment.trans.z_position, get_current_viewport(), updateRate);
+                             racers[i]->segment.trans.z_position, get_current_viewport(), updateRate);
         } else {
             waves_visibility(gSceneActiveCamera->trans.x_position, gSceneActiveCamera->trans.y_position,
-                          gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
+                             gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
         }
     }
     get_current_level_header()->unk3 = 1;
@@ -1914,7 +1913,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     for (i = startPos; i < endPos; i++) {
         batchInfo = &segment->batches[i];
         textureFlags = RENDER_NONE;
-        isInvisible = batchInfo->flags & BATCH_FLAGS_HIDDEN;
+        isInvisible = batchInfo->flags & RENDER_HIDDEN;
         if (isInvisible) {
             continue;
         }
@@ -1926,18 +1925,17 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
             texture = gCurrentLevelModel->textures[batchInfo->textureIndex].texture;
             textureFlags = texture->flags;
         }
-        batchFlags |= BATCH_FLAGS_UNK00000008 | BATCH_FLAGS_UNK00000002;
-        if (!(batchFlags & BATCH_FLAGS_DEPTH_WRITE) && !(batchFlags & BATCH_FLAGS_RECEIVE_SHADOWS)) {
+        batchFlags |= RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
+        if (!(batchFlags & RENDER_CUTOUT) && !(batchFlags & RENDER_DECAL)) {
             batchFlags |= gAntiAliasing;
         }
-        if ((!(textureFlags & RENDER_SEMI_TRANSPARENT) && !(batchFlags & BATCH_FLAGS_WATER)) ||
-            batchFlags & BATCH_FLAGS_RECEIVE_SHADOWS) {
+        if ((!(textureFlags & RENDER_SEMI_TRANSPARENT) && !(batchFlags & RENDER_WATER)) || batchFlags & RENDER_DECAL) {
             renderBatch = TRUE;
         }
         if (nonOpaque) {
             renderBatch = (renderBatch + 1) & 1;
         }
-        if (sp78 && batchFlags & BATCH_FLAGS_WATER) {
+        if (sp78 && batchFlags & RENDER_WATER) {
             renderBatch = FALSE;
         }
         if (!renderBatch) {
@@ -1963,7 +1961,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
         } else {
             gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
         }
-        if (batchFlags & BATCH_FLAGS_PULSATING_LIGHTS) {
+        if (batchFlags & RENDER_PULSING_LIGHTS) {
             color = gCurrentLevelHeader2->pulseLightData->outColorValue;
             gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, color, color, color, color);
             material_set_blinking_lights(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
@@ -2575,8 +2573,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
             nextFaceOffset = currentBatch[1].facesOffset;
             currentVerticesOffset = currentBatch->verticesOffset;
 
-            if (temp_s2 != 11 && temp_s2 != 15 &&
-                (currentBatch->flags & (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_UNK00000200))) {
+            if (temp_s2 != 11 && temp_s2 != 15 && (currentBatch->flags & (RENDER_HIDDEN | RENDER_UNK_200))) {
                 currentFaceOffset = nextFaceOffset;
             }
 
@@ -3574,10 +3571,9 @@ void func_8002DE30(Object *obj) {
                                obj->segment.trans.x_position + 16.0f, obj->segment.trans.z_position + 16.0f);
         block = &gCurrentLevelModel->segments[blockId];
         for (i = 0; i < block->numberOfBatches && !foundResult; i++) {
-            if (!(block->batches[i].flags & (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_RECEIVE_SHADOWS | BATCH_FLAGS_WATER |
-                                             BATCH_FLAGS_FORCE_NO_SHADOWS))) {
+            if (!(block->batches[i].flags & (RENDER_HIDDEN | RENDER_DECAL | RENDER_WATER | RENDER_NO_SHADOW))) {
                 batchFlags = (block->batches[i].flags >> 19) &
-                             (BATCH_FLAGS_UNK00000001 | BATCH_FLAGS_UNK00000002 | BATCH_FLAGS_UNK00000004);
+                             (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT);
                 vertices = &block->vertices[block->batches[i].verticesOffset];
                 for (j = block->batches[i].facesOffset; j < block->batches[i + 1].facesOffset && !foundResult; j++) {
                     blockId = block->unk10[j] & var_t3;
@@ -3752,7 +3748,7 @@ void func_8002E904(LevelModelSegment *arg0, s32 arg1, s32 arg2) {
     spD0[3].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
 
     for (spAC = 0; spAC < arg0->numberOfBatches; spAC++) {
-        if ((arg2 && (arg0->batches[spAC].flags & BATCH_FLAGS_WATER)) ||
+        if ((arg2 && (arg0->batches[spAC].flags & RENDER_WATER)) ||
             (!arg2 && !(arg0->batches[spAC].flags & FLAGS_8002E904))) {
             curFacesOffset = arg0->batches[spAC].facesOffset;
             nextFacesOffset = arg0->batches[spAC + 1].facesOffset;

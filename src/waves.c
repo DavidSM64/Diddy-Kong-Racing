@@ -551,7 +551,7 @@ void waves_visibility(s32 xPosition, s32 yPosition, s32 zPosition, s32 currentVi
 
 /**
  * Returns whether the current wave tile is expected to be the high quality wavegen, over the standard flat plane.
-*/
+ */
 s32 waves_block_hq(LevelModelSegment *block) {
     s32 indexNum = 0;
     s32 result = FALSE;
@@ -1324,8 +1324,8 @@ void func_800BBE08(LevelModel *level, LevelHeader *header) {
     for (i = 0; curBatch == 0 && i < numSegments; i++) {
         segment = &level->segments[i];
         for (j = 0; curBatch == 0 && j < segment->numberOfBatches; j++) {
-            if ((segment->batches[j].flags & (BATCH_FLAGS_UNK01000000 | BATCH_FLAGS_WATER | BATCH_FLAGS_HIDDEN)) ==
-                (BATCH_FLAGS_UNK01000000 | BATCH_FLAGS_WATER)) {
+            if ((segment->batches[j].flags & (RENDER_UNK_1000000 | RENDER_WATER | RENDER_HIDDEN)) ==
+                (RENDER_UNK_1000000 | RENDER_WATER)) {
                 curBatch = &segment->batches[j];
             }
         }
@@ -1344,7 +1344,7 @@ void func_800BBE08(LevelModel *level, LevelHeader *header) {
     gWaveBatch = curBatch;
     gWaveTexture = level->textures[curBatch->textureIndex].texture;
     // Change these batch flags to 0, 1, 2 and 4
-    colourID = (curBatch->flags & (BATCH_FLAGS_UNK40000000 | BATCH_FLAGS_UNK20000000 | BATCH_FLAGS_UNK10000000)) >> 28;
+    colourID = (curBatch->flags & (RENDER_UNK_40000000 | RENDER_UNK_20000000 | RENDER_UNK_10000000)) >> 28;
     if (colourID > 0) {
         D_800E3180 = header->unk70[colourID];
     } else {
@@ -1451,8 +1451,8 @@ void func_800BBF78(LevelModel *model) {
         temp_t2 = ((temp_t2 / gWaveBoundingBoxDiffZ) * gWaveBoundingBoxDiffZ) + gWaveBlockPosZ;
         segmentVertexY = 0;
         for (j = 0; j < levelSegments[i].numberOfBatches; j++) {
-            if ((levelSegments[i].batches[j].flags & BATCH_FLAGS_WATER) &&
-                (levelSegments[i].batches[j].flags & BATCH_FLAGS_UNK00400000)) {
+            if ((levelSegments[i].batches[j].flags & RENDER_WATER) &&
+                (levelSegments[i].batches[j].flags & RENDER_UNK_0400000)) {
                 segmentVertexY = levelSegments[i].vertices[levelSegments[i].batches[j].verticesOffset].y;
             }
         }
