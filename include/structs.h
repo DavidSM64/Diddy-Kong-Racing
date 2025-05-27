@@ -673,7 +673,7 @@ typedef struct ObjectModel {
     /* 0x34 */ u8 pad34[4];
     /* 0x38 */ TriangleBatchInfo* batches;
     /* 0x3C */ f32 unk3C;
-    /* 0x40 */ s32* unk40;
+    /* 0x40 */ Vec3s* unk40;
     /* 0x44 */ ObjectModel_44* animations;
     /* 0x48 */ s16 numberOfAnimations;
     /* 0x4A */ s16 unk4A;
