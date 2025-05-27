@@ -214,14 +214,9 @@ GLOBAL_ASM("asm/math_util/rng.s")
 
 #ifdef NON_EQUIVALENT
 /* Official name: fastShortReflection */
-void s16_matrix_rotate(s16 *arg0[4][4], s16 arg1[4][4]) {
-    s32 temp_t6;
-
-    temp_t6 = (s32) ((*arg0[0][0] * arg1[0][0]) + (*arg0[0][1] * arg1[0][1]) + (*arg0[0][2] * *arg0[0][2])) >> 12;
-    *arg0[1][0] = (s16) (((s32) (temp_t6 * arg1[0][0]) >> 13) - *arg0[0][0]);
-    *arg0[1][1] = (s16) (((s32) (temp_t6 * arg1[0][1]) >> 13) - *arg0[0][1]);
-    *arg0[1][2] =
-        (s16) (((s32) (temp_t6 * arg1[0][2]) >> 13) - *arg0[0][0]); // Did they mean to do `- *arg0[0][2]` here?
+// name and code are incorrect
+void s16_matrix_rotate(Vec3s *arg0, Vec3s *arg1) {
+    // TODO
 }
 #else
 GLOBAL_ASM("asm/math_util/s16_matrix_rotate.s")

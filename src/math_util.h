@@ -42,7 +42,7 @@ void guMtxXFMF(float mf[4][4], float x, float y, float z, float *ox, float *oy, 
 void f32_matrix_dot(Matrix *mat1, Matrix *mat2, Matrix *output);
 void f32_matrix_mult(Matrix *mat1, Matrix *mat2, Matrix *output);
 void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output);
-void s16_matrix_rotate(s16 *arg0[4][4], s16 arg1[4][4]);
+void s16_matrix_rotate(Vec3s *arg0, Vec3s *arg1);
 void s16_vec3_mult_by_s32_matrix(MatrixS input, Vec3s *output);
 void object_transform_to_matrix(Matrix mtx, ObjectTransform *trans);
 void f32_matrix_scale_y_axis(Matrix *input, f32 scale);

@@ -639,12 +639,23 @@ typedef struct ObjectModel_44 {
 /* 0x04 */ s32 unk4; // Number of frames in animation?
 } ObjectModel_44;
 
+typedef struct ObjectModel_C {
+    u16 unk0[4];
+} ObjectModel_C;
+
+typedef struct ObjectModel_10 {
+    f32 A;
+    f32 B;
+    f32 C;
+    f32 D;
+} ObjectModel_10;
+
 typedef struct ObjectModel {
     /* 0x00 */ TextureInfo* textures;
     /* 0x04 */ Vertex* vertices;
     /* 0x08 */ Triangle* triangles;
-    /* 0x0C */ s32* unkC;
-    /* 0x10 */ s32* unk10;
+    /* 0x0C */ ObjectModel_C *unkC;
+    /* 0x10 */ ObjectModel_10 *unk10;
     /* 0x14 */ s16 *unk14;
     /* 0x18 */ s16 unk18;
     /* 0x1A */ s16 unk1A;
@@ -662,7 +673,7 @@ typedef struct ObjectModel {
     /* 0x34 */ u8 pad34[4];
     /* 0x38 */ TriangleBatchInfo* batches;
     /* 0x3C */ f32 unk3C;
-    /* 0x40 */ s32* unk40;
+    /* 0x40 */ Vec3s* unk40;
     /* 0x44 */ ObjectModel_44* animations;
     /* 0x48 */ s16 numberOfAnimations;
     /* 0x4A */ s16 unk4A;
