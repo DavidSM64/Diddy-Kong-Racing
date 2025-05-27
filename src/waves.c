@@ -146,8 +146,8 @@ void waves_free(void) {
 
 /**
  * Allocates and sets up pointers for all wave geometry and data.
+ * Allocates a set for each viewport, up to 2.
  * Calls waves_free as a precautionary.
- * Supports up to 2 players.
  */
 void waves_alloc(void) {
     s32 temp;
@@ -306,7 +306,7 @@ void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
                         gWaveVertices[0][k][var_s5].x = (j_2 * gWaveVtxStepX) + 0.5;
                         gWaveVertices[0][k][var_s5].z = (i_2 * gWaveVtxStepZ) + 0.5;
                         // this is only 0 for hot top volcano
-                        if (gWaveController.xlu == 0) {
+                        if (gWaveController.xlu == FALSE) {
                             gWaveVertices[0][k][var_s5].r = 255;
                             gWaveVertices[0][k][var_s5].g = 255;
                             gWaveVertices[0][k][var_s5].b = 255;
