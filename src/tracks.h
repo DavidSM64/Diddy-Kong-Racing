@@ -10,42 +10,6 @@
 #define LOCAL_OFFSET_TO_RAM_ADDRESS(type, ptr) \
     ptr = (type)((s32)((u8*)ptr) + (s32)((u8*)mdl))
 
-enum TriangleBatchFlags {
-    BATCH_FLAGS_NONE = 0,
-    BATCH_FLAGS_UNK00000001 = (1 << 0),
-    BATCH_FLAGS_UNK00000002 = (1 << 1),
-    BATCH_FLAGS_UNK00000004 = (1 << 2),
-    BATCH_FLAGS_UNK00000008 = (1 << 3),
-    BATCH_FLAGS_DEPTH_WRITE = (1 << 4),
-    BATCH_FLAGS_UNK00000020 = (1 << 5),
-    BATCH_FLAGS_UNK00000040 = (1 << 6),
-    BATCH_FLAGS_UNK00000080 = (1 << 7),
-    BATCH_FLAGS_HIDDEN = (1 << 8),
-    BATCH_FLAGS_UNK00000200 = (1 << 9),
-    BATCH_FLAGS_UNK00000400 = (1 << 10),
-    BATCH_FLAGS_RECEIVE_SHADOWS = (1 << 11),
-    BATCH_FLAGS_UNK00001000 = (1 << 12),
-    BATCH_FLAGS_WATER =             (1 << 13),
-    BATCH_FLAGS_FORCE_NO_SHADOWS =  (1 << 14),
-    BATCH_FLAGS_ENVMAP = (1 << 15),
-    BATCH_FLAGS_TEXTURE_ANIM = (1 << 16),
-    BATCH_FLAGS_UNK00020000 = (1 << 17),
-    BATCH_FLAGS_PULSATING_LIGHTS = (1 << 18),
-    BATCH_FLAGS_UNK00080000 = (1 << 19),
-    BATCH_FLAGS_UNK00100000 = (1 << 20),
-    BATCH_FLAGS_UNK00200000 = (1 << 21),
-    BATCH_FLAGS_UNK00400000 = (1 << 22),
-    BATCH_FLAGS_UNK00800000 = (1 << 23),
-    BATCH_FLAGS_UNK01000000 = (1 << 24),
-    BATCH_FLAGS_UNK02000000 = (1 << 25),
-    BATCH_FLAGS_UNK04000000 = (1 << 26),
-    BATCH_FLAGS_UNK08000000 = (1 << 27),
-    BATCH_FLAGS_UNK10000000 = (1 << 28),
-    BATCH_FLAGS_UNK20000000 = (1 << 29),
-    BATCH_FLAGS_UNK40000000 = (1 << 30),
-    BATCH_FLAGS_UNK80000000 = (1 << 31),
-};
-
 enum ShadowUpdate {
 	SHADOW_NONE,
 	SHADOW_SCENERY,
@@ -214,8 +178,8 @@ void func_80028050(void);
 void initialise_player_viewport_vars(s32);
 void func_8002A31C(void);
 void update_colour_cycle(LevelHeader_70 *arg0, s32 updateRate);
-void func_800B9C18(s32);
-void func_800BA8E4(Gfx**, MatrixS**, s32);
+void waves_update(s32);
+void waves_render(Gfx**, MatrixS**, s32);
 void func_8002DE30(Object*);
 void shadow_generate(Object*, s32);
 void func_8002E904(LevelModelSegment *, s32, s32 arg2);
@@ -225,7 +189,7 @@ void func_8002F440(void);
 f32 func_8002FA64(void);
 s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut);
 void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6);
-void func_800B82B4(LevelModel *, LevelHeader *, s32);
+void waves_init(LevelModel *, LevelHeader *, s32);
 void func_80025510(s32);
 void func_8002C0C4(s32 modelId);
 void func_800304C8(unk8011C8B8 *arg0);

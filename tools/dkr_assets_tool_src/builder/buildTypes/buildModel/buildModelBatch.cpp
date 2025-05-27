@@ -55,7 +55,7 @@ void BuildModelBatch::write_batch(const std::map<std::string, int> &materialIds,
         outBatch->textureIndex = materialIds.at(_materialId.value());
         BuildModelMaterial &material = materials[outBatch->textureIndex];
         if(material.is_texture_animated()) {
-            flags |= 0x10000; // BATCH_FLAGS_TEXTURE_ANIM
+            flags |= 0x10000; // RENDER_TEX_ANIM
         }
         materialDoubleSided = material.is_texture_double_sided();
     } else {

@@ -2537,7 +2537,7 @@ void func_80011134(Object *obj, s32 updateRate) {
     batch = model->batches;
     temp_s5 = model->unk50;
     for (batchNumber = 0; temp_s5 > 0 && batchNumber < model->numberOfBatches; batchNumber++) {
-        if (batch[batchNumber].flags & BATCH_FLAGS_TEXTURE_ANIM) {
+        if (batch[batchNumber].flags & RENDER_TEX_ANIM) {
             if (batch[batchNumber].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 tex = model->textures[batch[batchNumber].textureIndex].texture;
                 sp5C = batch[batchNumber].unk7;
@@ -2569,7 +2569,7 @@ void func_80011264(ObjectModel *model, Object *obj) {
     batch = model->batches;
 
     while (i < model->numberOfBatches) {
-        if (batch[i].flags & BATCH_FLAGS_TEXTURE_ANIM) {
+        if (batch[i].flags & RENDER_TEX_ANIM) {
             if (batch[i].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 // Fakematch
                 if (model->textures[batch[i].textureIndex].texture) {}
@@ -3410,7 +3410,7 @@ void func_80012F94(Object *obj) {
             }
             racerLightTimer *= 4;
             for (batchNum = 0; batchNum < temp_a1_3->numberOfBatches; batchNum++) {
-                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == BATCH_FLAGS_TEXTURE_ANIM) {
+                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == RENDER_TEX_ANIM) {
                     temp_a1_3->batches[batchNum].unk7 = racerLightTimer;
                 }
             }
@@ -3746,9 +3746,9 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
     i = startIndex;
     endLoop = FALSE;
     while (i < objModel->numberOfBatches && !endLoop) {
-        if (!(objModel->batches[i].flags & BATCH_FLAGS_UNK00000004) || flags & RENDER_SEMI_TRANSPARENT) {
+        if (!(objModel->batches[i].flags & RENDER_SEMI_TRANSPARENT) || flags & RENDER_SEMI_TRANSPARENT) {
             // Hidden/Invisible geometry
-            textureIndex = objModel->batches[i].flags & BATCH_FLAGS_HIDDEN;
+            textureIndex = objModel->batches[i].flags & RENDER_HIDDEN;
             // Probably a fakematch to use textureIndex here, but it works.
             if (!textureIndex) {
                 vertOffset = objModel->batches[i].verticesOffset;
@@ -3769,7 +3769,7 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
                     texEnabled = TRUE;
                     texToSet = objModel->textures[textureIndex].texture;
                 }
-                texToSetFlags = objModel->batches[i].flags | BATCH_FLAGS_UNK00000008;
+                texToSetFlags = objModel->batches[i].flags | RENDER_FOG_ACTIVE;
                 if (flags & RENDER_SEMI_TRANSPARENT &&
                     !(objModel->batches[i].flags & (flags & ~RENDER_SEMI_TRANSPARENT))) {
                     texToSetFlags |= RENDER_SEMI_TRANSPARENT;
@@ -5988,7 +5988,7 @@ void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity
         if (model->batches[i].unk6 != 0xFF) {
             dynamicLightingEnabled = -1; // This is a bit weird, but I guess it works.
         }
-        if (model->batches[i].flags & BATCH_FLAGS_ENVMAP) {
+        if (model->batches[i].flags & RENDER_ENVMAP) {
             environmentMappingEnabled = -1;
         }
     }
@@ -6047,8 +6047,8 @@ void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRo
     f32_matrix_to_s32_matrix(&objRotMtxF32, &objRotMtxS32);
 
     for (i = 0; i < model->numberOfBatches; i++) {
-        if (model->batches[i].flags & BATCH_FLAGS_ENVMAP) {
-            sp70 = ((model->batches[i].flags & BATCH_FLAGS_UNK00020000) | BATCH_FLAGS_ENVMAP) ^ BATCH_FLAGS_ENVMAP;
+        if (model->batches[i].flags & RENDER_ENVMAP) {
+            sp70 = ((model->batches[i].flags & RENDER_UNK_0020000) | RENDER_ENVMAP) ^ RENDER_ENVMAP;
             tex = model->textures[model->batches[i].textureIndex].texture;
             k = 0;
 
