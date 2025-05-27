@@ -125,7 +125,7 @@ As of May 27, 2025, this is our current score:
                     # Decompiled functions: 1902
                      # GLOBAL_ASM remaining: 49
                      # NON_MATCHING functions: 5
-                 # NON_EQUIVALENT WIP functions: 15
+                 # NON_EQUIVALENT WIP functions: 16
  --------------------------- Game Status ---------------------------
               Balloons: 41/47, Keys: 4/4, Trophies: 4/5
                T.T. Amulets: 4/4, Wizpig Amulets: 4/4

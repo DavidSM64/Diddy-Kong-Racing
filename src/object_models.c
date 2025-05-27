@@ -376,7 +376,177 @@ void free_model_data(ObjectModel *mdl) {
     mempool_free(mdl);
 }
 
+#ifdef NON_EQUIVALENT
+// url: https://decomp.me/scratch/VJ34p
+void func_8006017C(ObjectModel* arg0) {
+    s32 facesOffset; // v1
+    s32 verticesOffset; // s5
+    s32 nextFacesOffset; // spF4
+    s32 s4;
+    s32 i; // spEC
+    s32 j; // s6
+    Vertex *v;
+    s32 v1, v2;
+    f32 x5, y5, z5; // f20, f24, f26
+    f32 x1, y1, z1; // spCC, spC8, spC4
+    f32 x2, y2, z2; // f14, f16, f18
+    f32 x3, y3, z3; // f22, spB0, f0    
+    f32 nx, ny, nz;    // spA8, spA4, spA0
+    f32 mag;
+    s32 s3;
+    s32 k;
+    s32 l;
+    s32 temp1, temp2, temp3;
+
+    if (arg0->unkC != NULL) {
+        return;
+    }
+
+    s4 = 0;
+    for (i = 0; i < arg0->numberOfBatches; i++) {
+        facesOffset = arg0->batches[i].facesOffset;
+        nextFacesOffset = arg0->batches[i + 1].facesOffset;
+        if (arg0->batches[i].flags & 0x200) {
+            continue;
+        }
+        s4 += nextFacesOffset - facesOffset;
+    }
+
+    arg0->unkC = (ObjectModel_C*)mempool_alloc(s4 * sizeof(ObjectModel_C), COLOUR_TAG_RED);
+    if (v) {} // FAKE
+    if (arg0->unkC == NULL) {
+        return;
+    }
+
+    arg0->unk10 = (ObjectModel_10*)mempool_alloc(s4 * 64, COLOUR_TAG_RED);
+    if (arg0->unk10 == NULL) {
+        mempool_free(arg0->unkC);
+        arg0->unkC = NULL;
+        return;
+    }
+
+    s4 = 0;
+    for (i = 0; i < arg0->numberOfBatches; i++) {
+        facesOffset = arg0->batches[i].facesOffset;
+        verticesOffset = arg0->batches[i].verticesOffset;
+        nextFacesOffset = arg0->batches[i + 1].facesOffset;
+        if (arg0->batches[i].flags & 0x200) {
+            nextFacesOffset = facesOffset - 1;
+        }
+
+        for (j = facesOffset; j < nextFacesOffset; j++) {
+            v = &arg0->vertices[arg0->triangles[j].vi0 + verticesOffset];
+            x1 = v->x;
+            y1 = v->y;
+            z1 = v->z;
+
+            v = &arg0->vertices[arg0->triangles[j].vi1 + verticesOffset];
+            x2 = v->x;
+            y2 = v->y;
+            z2 = v->z;
+
+            v = &arg0->vertices[arg0->triangles[j].vi2 + verticesOffset];
+            x3 = v->x;
+            y3 = v->y;
+            z3 = v->z;
+
+            nx = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
+            ny = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
+            nz = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
+
+            mag = sqrtf(nx * nx + ny * ny + nz * nz);
+            if (mag > 0.0) {
+                nx /= mag;
+                ny /= mag;
+                nz /= mag;
+            }
+
+            arg0->unk10[s4].A = nx;
+            arg0->unk10[s4].B = ny;
+            arg0->unk10[s4].C = nz;
+            arg0->unk10[s4].D = -(x1 * nx + y1 * ny + z1 * nz);
+
+            arg0->unkC[s4].unk0[0] = s4;
+            arg0->unkC[s4].unk0[1] = s4;
+            arg0->unkC[s4].unk0[2] = s4;
+            arg0->unkC[s4].unk0[3] = s4;
+
+            s4++;
+        }
+    }
+
+    arg0->unk32 = s4;
+
+    func_80060910(arg0);
+
+    s3 = 0;
+    for (i = 0; i < arg0->numberOfBatches; i++) {
+        facesOffset = arg0->batches[i].facesOffset;
+        verticesOffset = arg0->batches[i].verticesOffset;
+        nextFacesOffset = arg0->batches[i + 1].facesOffset;
+        if (arg0->batches[i].flags & 0x200) {
+            nextFacesOffset = facesOffset - 1;
+        }
+
+        for (j = facesOffset; j < nextFacesOffset; j++) {
+            nx = arg0->unk10[arg0->unkC[s3].unk0[0]].A;
+            ny = arg0->unk10[arg0->unkC[s3].unk0[0]].B;
+            nz = arg0->unk10[arg0->unkC[s3].unk0[0]].C;
+
+            for (k = 0; k < 3; k++) {
+                l = k + 1;
+                if (l >= 3) {
+                    l = 0;
+                }
+
+                v1 = arg0->triangles[j].verticesArray[1 + k];
+                v2 = arg0->triangles[j].verticesArray[1 + l];
+                
+                x5 = nx + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].A;
+                y5 = ny + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].B;
+                z5 = nz + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].C;
+                
+                v = &arg0->vertices[v1 + verticesOffset];
+                x1 = v->x;
+                y1 = v->y;
+                z1 = v->z;
+
+                v = &arg0->vertices[v2 + verticesOffset];
+                x2 = v->x;
+                y2 = v->y;
+                z2 = v->z;
+                
+                x3 = x5 * 10.0f + x1;
+                y3 = y5 * 10.0f + y1;
+                z3 = z5 * 10.0f + z1;
+
+                x5 = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
+                y5 = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
+                z5 = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
+
+                mag = sqrtf(x5 * x5 + y5 * y5 + z5 * z5);
+                if (mag > 0.0) {
+                    x5 /= mag;
+                    y5 /= mag;
+                    z5 /= mag;
+                }
+
+                arg0->unkC[s3].unk0[k + 1] = s4;
+                arg0->unk10[s4].A = x5;
+                arg0->unk10[s4].B = y5;
+                arg0->unk10[s4].C = z5;
+                arg0->unk10[s4].D = -(x1 * x5 + y1 * y5 + z1 * z5);
+                s4++;
+            }
+
+            s3++;
+        }
+    }
+}
+
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_8006017C.s")
+#endif
 
 void func_80060910(ObjectModel *mdl) {
     s32 count;
