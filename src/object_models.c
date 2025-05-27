@@ -378,9 +378,9 @@ void free_model_data(ObjectModel *mdl) {
 
 #ifdef NON_EQUIVALENT
 // url: https://decomp.me/scratch/VJ34p
-void func_8006017C(ObjectModel* arg0) {
-    s32 facesOffset; // v1
-    s32 verticesOffset; // s5
+void func_8006017C(ObjectModel *arg0) {
+    s32 facesOffset;     // v1
+    s32 verticesOffset;  // s5
     s32 nextFacesOffset; // spF4
     s32 s4;
     s32 i; // spEC
@@ -390,8 +390,8 @@ void func_8006017C(ObjectModel* arg0) {
     f32 x5, y5, z5; // f20, f24, f26
     f32 x1, y1, z1; // spCC, spC8, spC4
     f32 x2, y2, z2; // f14, f16, f18
-    f32 x3, y3, z3; // f22, spB0, f0    
-    f32 nx, ny, nz;    // spA8, spA4, spA0
+    f32 x3, y3, z3; // f22, spB0, f0
+    f32 nx, ny, nz; // spA8, spA4, spA0
     f32 mag;
     s32 s3;
     s32 k;
@@ -412,13 +412,13 @@ void func_8006017C(ObjectModel* arg0) {
         s4 += nextFacesOffset - facesOffset;
     }
 
-    arg0->unkC = (ObjectModel_C*)mempool_alloc(s4 * sizeof(ObjectModel_C), COLOUR_TAG_RED);
+    arg0->unkC = (ObjectModel_C *) mempool_alloc(s4 * sizeof(ObjectModel_C), COLOUR_TAG_RED);
     if (v) {} // FAKE
     if (arg0->unkC == NULL) {
         return;
     }
 
-    arg0->unk10 = (ObjectModel_10*)mempool_alloc(s4 * 64, COLOUR_TAG_RED);
+    arg0->unk10 = (ObjectModel_10 *) mempool_alloc(s4 * 64, COLOUR_TAG_RED);
     if (arg0->unk10 == NULL) {
         mempool_free(arg0->unkC);
         arg0->unkC = NULL;
@@ -501,11 +501,11 @@ void func_8006017C(ObjectModel* arg0) {
 
                 v1 = arg0->triangles[j].verticesArray[1 + k];
                 v2 = arg0->triangles[j].verticesArray[1 + l];
-                
+
                 x5 = nx + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].A;
                 y5 = ny + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].B;
                 z5 = nz + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].C;
-                
+
                 v = &arg0->vertices[v1 + verticesOffset];
                 x1 = v->x;
                 y1 = v->y;
@@ -515,7 +515,7 @@ void func_8006017C(ObjectModel* arg0) {
                 x2 = v->x;
                 y2 = v->y;
                 z2 = v->z;
-                
+
                 x3 = x5 * 10.0f + x1;
                 y3 = y5 * 10.0f + y1;
                 z3 = z5 * 10.0f + z1;
@@ -554,7 +554,7 @@ void func_80060910(ObjectModel *mdl) {
     s32 vertOffset;
     s32 triIndex;
     s32 startTri;
-    s32 endTri;    
+    s32 endTri;
     s32 nextVertIndex;
     s32 vertIndex;
     s32 vertIndex0;
@@ -562,7 +562,7 @@ void func_80060910(ObjectModel *mdl) {
     s32 result;
     s32 sp60;
     s32 sp5C;
-    
+
     count = 0;
     for (i = 0; i < mdl->numberOfBatches; i++) {
         startTri = mdl->batches[i].facesOffset;
@@ -571,16 +571,16 @@ void func_80060910(ObjectModel *mdl) {
         if (mdl->batches[i].flags & BATCH_FLAGS_UNK00000200) {
             endTri = startTri - 1;
         }
-        
+
         for (triIndex = startTri; triIndex < endTri; triIndex++, count++) {
             mdl->unkC[count].unk0[0] = count;
-            
+
             for (vertIndex = 0; vertIndex < 3; vertIndex++) {
                 nextVertIndex = vertIndex + 1;
                 if (nextVertIndex >= 3) {
                     nextVertIndex = 0;
                 }
-                
+
                 vertIndex0 = mdl->triangles[triIndex].verticesArray[vertIndex + 1] + vertOffset;
                 vertIndex1 = mdl->triangles[triIndex].verticesArray[nextVertIndex + 1] + vertOffset;
 
@@ -607,7 +607,7 @@ s32 func_80060AC8(ObjectModel *mdl, s32 arg1, s32 arg2, s32 arg3, s32 *outBatchI
     s32 vertIndex;
     s32 vertIndex0;
     s32 vertIndex1;
-    
+
     count = 0;
     for (i = 0; i < mdl->numberOfBatches; i++) {
         startTri = mdl->batches[i].facesOffset;
@@ -623,7 +623,7 @@ s32 func_80060AC8(ObjectModel *mdl, s32 arg1, s32 arg2, s32 arg3, s32 *outBatchI
                     if (nextVertIndex >= 3) {
                         nextVertIndex = 0;
                     }
-                    
+
                     vertIndex0 = mdl->triangles[triIndex].verticesArray[vertIndex + 1] + vertOffset;
                     vertIndex1 = mdl->triangles[triIndex].verticesArray[nextVertIndex + 1] + vertOffset;
                     if (func_80060C58(mdl->vertices, arg2, arg3, vertIndex0, vertIndex1) != 0) {
@@ -632,7 +632,6 @@ s32 func_80060AC8(ObjectModel *mdl, s32 arg1, s32 arg2, s32 arg3, s32 *outBatchI
                         return count;
                     }
                 }
-                
             }
         }
     }
