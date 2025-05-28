@@ -6063,10 +6063,6 @@ void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity
     }
 }
 
-// #pragma GLOBAL_ASM("asm/nonmatchings/objects/calc_dynamic_lighting_for_object_1.s")
-
-#define MIN2(a, b) ((a) > (b)) ? (b) : (a)
-
 void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 arg2, Object *anotherObject,
                                         f32 intensity, f32 arg5) {
     s16 sp9E;
