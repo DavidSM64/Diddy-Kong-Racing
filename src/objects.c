@@ -71,10 +71,8 @@ Object *gShieldEffectObject = NULL;
 s32 gBoostObjOverrideID = 9;
 Object *gMagnetEffectObject = NULL;
 
-f32 D_800DC768[16] = {  0.0f, 1.0f ,   0.70711f, 0.70711f ,
-                         1.0f, 0.0f ,   0.70711f, -0.70711f ,
-                         0.0f, -1.0f ,  -0.70711f, -0.70711f ,
-                         -1.0f, 0.0f ,  -0.70711f, 0.70711f };
+f32 D_800DC768[16] = { 0.0f, 1.0f,  0.70711f,  0.70711f,  1.0f,  0.0f, 0.70711f,  -0.70711f,
+                       0.0f, -1.0f, -0.70711f, -0.70711f, -1.0f, 0.0f, -0.70711f, 0.70711f };
 
 u16 D_800DC7A8[] = {
     // Car
@@ -456,7 +454,7 @@ void func_8000B38C(Vertex *vertices, Triangle *triangles, ObjectTransform *trans
     f32 *ptr;
     s32 temp;
 
-    v = (s16*)vertices;
+    v = (s16 *) vertices;
 
     sp64[2] = -arg4;
     f32_vec3_apply_object_rotation3(&trans->rotation, sp64);
@@ -493,7 +491,7 @@ void func_8000B38C(Vertex *vertices, Triangle *triangles, ObjectTransform *trans
         arg5 += 0x2000;
     }
 
-    tri = (s32*)triangles;
+    tri = (s32 *) triangles;
     for (i = 0; i < 8; i++) {
         *tri++ = DKR_TRIANGLE(BACKFACE_CULL, 0, i + 1, ((i + 1) & 7) + 1);
         *tri++ = ((width & 0xFFFF) << 16) | (height & 0xFFFF);
