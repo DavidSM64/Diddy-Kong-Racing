@@ -36,6 +36,8 @@
 #define OBJECT_SLOT_COUNT 512
 #define AINODE_COUNT 128
 #define CAMCONTROL_COUNT 20
+#define BOOST_VERT_COUNT 9
+#define BOOST_TRI_COUNT 8
 
 #define SET_SHIFT_AND_MASK(varShift, varMask, x) \
     varShift = x;                                \
@@ -316,13 +318,13 @@ TexCoords D_8011AF68[32];
 Vec3s gEnvmapPos[2];
 unk800179D0 *D_8011AFF4;
 s32 gBoostVertCount;
-s32 D_8011AFFC;
+s32 gNumOfBoostVerts;
 s32 gBoostTriCount;
-s32 D_8011B004;
+s32 gNumOfBoostTris;
 s32 gBoostVertFlip; // indexes gBoostVerts and gBoostTris
 u8 gShieldSineTime[16];
 Object *gBoostEffectObjects[NUMBER_OF_CHARACTERS];
-u8 D_8011B048[16];
+u8 D_8011B048[16]; // Vehicle IDs for the boost objects, used to determine which racer is using which boost object.
 u8 D_8011B058[16];
 u8 D_8011B068[16];
 RacerFXData gRacerFXData[NUMBER_OF_CHARACTERS];
@@ -343,7 +345,7 @@ typedef struct LevelObjectEntry_unk8000B020 {
  * This function is called on every level load, but only racers use the stuff here.
  */
 void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
-    Object_Boost *miscAsset20;
+    Object_Boost *boostObj;
     LevelObjectEntry_unk8000B020 objEntry;
     s32 i;
 
@@ -353,11 +355,11 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     gBoostVerts[0] = (Vertex *) ((u32) gBoostTris[1] + numberOfTriangles * sizeof(Triangle));
     gBoostVerts[1] = (Vertex *) ((u32) gBoostVerts[0] + numberOfVertices * sizeof(Vertex));
     gBoostVertCount = numberOfVertices;
-    D_8011AFFC = 0;
+    gNumOfBoostVerts = 0;
     gBoostTriCount = numberOfTriangles;
-    D_8011B004 = 0;
+    gNumOfBoostTris = 0;
     gBoostVertFlip = 0;
-    miscAsset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
+    boostObj = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     // Makes 10 boost objects, but only 8 racers can actually exist at once.
     for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
         objEntry.common.objectID = ASSET_OBJECT_ID_BOOST;
@@ -370,12 +372,12 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
         if (gBoostEffectObjects[i] != NULL) {
             gBoostEffectObjects[i]->properties.common.unk0 = 0;
             gBoostEffectObjects[i]->properties.common.unk4 = 0;
-            miscAsset20[i].unk70 = 0;
-            miscAsset20[i].unk74 = 0.0f;
-            miscAsset20[i].unk78 = tex_load_sprite(miscAsset20[i].unk6C, 0);
-            miscAsset20[i].unk7C = load_texture(miscAsset20[i].unk6E);
-            miscAsset20[i].unk72 = get_random_number_from_range(0, 255);
-            miscAsset20[i].unk73 = 0;
+            boostObj[i].unk70 = 0;
+            boostObj[i].unk74 = 0.0f;
+            boostObj[i].sprite = tex_load_sprite(boostObj[i].spriteId, 0);
+            boostObj[i].tex = load_texture(boostObj[i].textureId);
+            boostObj[i].unk72 = get_random_number_from_range(0, 255);
+            boostObj[i].unk73 = 0;
             // This is for shields, not boosts.
             gShieldSineTime[i] = get_random_number_from_range(0, 255);
         }
@@ -408,7 +410,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
 void racerfx_free(void) {
     Sprite *sprite;
     TextureHeader *texture;
-    Object_Boost *asset20;
+    Object_Boost *objBoost;
     u32 i;
 
     if (gBoostTris[0]) {
@@ -418,17 +420,17 @@ void racerfx_free(void) {
         gBoostVerts[0] = NULL;
         gBoostVerts[1] = NULL;
     }
-    asset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
+    objBoost = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
-        sprite = asset20[i].unk78;
+        sprite = objBoost[i].sprite;
         if (sprite != NULL) {
             sprite_free(sprite);
-            asset20[i].unk78 = NULL;
+            objBoost[i].sprite = NULL;
         }
-        texture = asset20[i].unk7C;
+        texture = objBoost[i].tex;
         if (texture != NULL) {
             tex_free(texture);
-            asset20[i].unk7C = NULL;
+            objBoost[i].tex = NULL;
         }
     }
     if (gShieldEffectObject != NULL) {
@@ -527,16 +529,16 @@ void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boos
                     boostData = NULL;
                     break;
                 case VEHICLE_CAR:
-                    boostData = &objBoostRacer->unk0;
+                    boostData = &objBoostRacer->carBoostData;
                     break;
                 case VEHICLE_HOVERCRAFT:
-                    boostData = &objBoostRacer->unk24;
+                    boostData = &objBoostRacer->hovercraftBoostData;
                     break;
                 case VEHICLE_PLANE:
-                    boostData = &objBoostRacer->unk48;
+                    boostData = &objBoostRacer->flyingBoostData;
                     break;
                 case VEHICLE_ROCKET:
-                    boostData = &objBoostRacer->unk48;
+                    boostData = &objBoostRacer->flyingBoostData;
                     break;
             }
             if (boostData != NULL) {
@@ -561,12 +563,13 @@ void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boos
                     objTrans.rotation.y_rotation = -0x8000;
                     objTrans.rotation.x_rotation = 0;
                     objTrans.rotation.z_rotation = 0;
-                    func_8000B38C(&gBoostVerts[gBoostVertFlip][D_8011AFFC], &gBoostTris[gBoostVertFlip][D_8011B004],
-                                  &objTrans, var_f2, temp_f0, objBoostRacer->unk72 << 12, objBoostType->unk7C);
-                    gBoostEffectObjects[racerIndex]->properties.boost.unk4 =
-                        (racerIndex << 28) | (D_8011AFFC << 14) | D_8011B004;
-                    D_8011AFFC += 9;
-                    D_8011B004 += 8;
+                    func_8000B38C(&gBoostVerts[gBoostVertFlip][gNumOfBoostVerts],
+                                  &gBoostTris[gBoostVertFlip][gNumOfBoostTris], &objTrans, var_f2, temp_f0,
+                                  objBoostRacer->unk72 << 12, objBoostType->tex);
+                    gBoostEffectObjects[racerIndex]->properties.boost.indexes =
+                        (racerIndex << 28) | (gNumOfBoostVerts << 14) | gNumOfBoostTris;
+                    gNumOfBoostVerts += BOOST_VERT_COUNT;
+                    gNumOfBoostTris += BOOST_TRI_COUNT;
                 }
                 gBoostEffectObjects[racerIndex]->properties.boost.obj = racerObj;
                 gBoostEffectObjects[racerIndex]->segment.trans.x_position = 0.0f;
@@ -593,15 +596,15 @@ void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boos
  */
 void racerfx_update(s32 updateRate) {
     s32 i;
-    Object_Boost *asset20Part;
+    Object_Boost *boostObj;
     s32 temp;
     Object_Boost *asset20;
     f32 updateRateF;
     Object_Racer *racer;
 
     gBoostVertFlip = 1 - gBoostVertFlip;
-    D_8011AFFC = 0;
-    D_8011B004 = 0;
+    gNumOfBoostVerts = 0;
+    gNumOfBoostTris = 0;
     asset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     gBoostObjOverrideID = 9;
     for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
@@ -616,59 +619,59 @@ void racerfx_update(s32 updateRate) {
             updateRateF *= 1.2f;
         }
         racer = &(*gRacers)[i]->unk64->racer;
-        asset20Part = &asset20[racer->racerIndex];
+        boostObj = &asset20[racer->racerIndex];
         if (racer->shieldTimer != 0) {
             gShieldSineTime[racer->racerIndex] += updateRate;
         }
-        asset20Part->unk72 += updateRate;
+        boostObj->unk72 += updateRate;
         if (racer->boostTimer != 0) {
-            asset20Part->unk73 = 20;
-            if (asset20Part->unk70 == 0) {
-                asset20Part->unk74 += updateRateF * 0.25f;
+            boostObj->unk73 = 20;
+            if (boostObj->unk70 == 0) {
+                boostObj->unk74 += updateRateF * 0.25f;
                 updateRateF = 0.0f;
-                if (asset20Part->unk74 > 2.4f) {
-                    asset20Part->unk74 = (f32) (4.8f - asset20Part->unk74);
-                    asset20Part->unk70 = 1;
+                if (boostObj->unk74 > 2.4f) {
+                    boostObj->unk74 = (f32) (4.8f - boostObj->unk74);
+                    boostObj->unk70 = 1;
                 }
             }
-            if (asset20Part->unk70 == 1) {
-                asset20Part->unk74 -= updateRateF * 0.25f;
+            if (boostObj->unk70 == 1) {
+                boostObj->unk74 -= updateRateF * 0.25f;
                 updateRateF = 0.0f;
-                if (asset20Part->unk74 < 1.0f) {
-                    asset20Part->unk70 = 2;
-                    asset20Part->unk74 = 1.0f - asset20Part->unk74;
+                if (boostObj->unk74 < 1.0f) {
+                    boostObj->unk70 = 2;
+                    boostObj->unk74 = 1.0f - boostObj->unk74;
                 }
             }
-            if (asset20Part->unk70 == 2) {
-                if (asset20Part->unk74 < 1.0f) {
-                    asset20Part->unk74 += updateRateF * 0.125f;
-                    if (asset20Part->unk74 > 1.0f) {
-                        asset20Part->unk74 = 1.0f;
+            if (boostObj->unk70 == 2) {
+                if (boostObj->unk74 < 1.0f) {
+                    boostObj->unk74 += updateRateF * 0.125f;
+                    if (boostObj->unk74 > 1.0f) {
+                        boostObj->unk74 = 1.0f;
                     }
                 }
             }
         } else {
-            if (asset20Part->unk73 > 0) {
-                asset20Part->unk73 -= updateRate;
+            if (boostObj->unk73 > 0) {
+                boostObj->unk73 -= updateRate;
             } else {
-                if (asset20Part->unk70 == 2) {
-                    asset20Part->unk74 -= updateRateF * 0.05f;
+                if (boostObj->unk70 == 2) {
+                    boostObj->unk74 -= updateRateF * 0.05f;
                     updateRateF = 0.0f;
-                    if (asset20Part->unk74 < 0.0f) {
-                        asset20Part->unk70 = 0;
-                        asset20Part->unk74 += 1.0f;
+                    if (boostObj->unk74 < 0.0f) {
+                        boostObj->unk70 = 0;
+                        boostObj->unk74 += 1.0f;
                     }
                 }
-                if (asset20Part->unk70 < 2) {
-                    asset20Part->unk74 -= (updateRateF * 0.1f);
-                    if (asset20Part->unk74 < 0.0f) {
-                        asset20Part->unk74 = 0.0f;
+                if (boostObj->unk70 < 2) {
+                    boostObj->unk74 -= (updateRateF * 0.1f);
+                    if (boostObj->unk74 < 0.0f) {
+                        boostObj->unk74 = 0.0f;
                     }
-                    asset20Part->unk70 = 0;
+                    boostObj->unk70 = 0;
                 }
             }
         }
-        if ((asset20Part->unk70 > 0) || (asset20Part->unk74 > 0.0f)) {
+        if ((boostObj->unk70 > 0) || (boostObj->unk74 > 0.0f)) {
             func_8000B750((*gRacers)[i], racer->racerIndex, racer->vehicleIDPrev, racer->boostType, 0);
         }
         temp = racer->racerIndex;
@@ -3522,23 +3525,23 @@ void func_800135B8(Object *boostObj) {
     Object_Boost *boost;
     Object_Boost *asset;
     s32 hasTexture;
-    s32 idx;
+    s32 racerIndex;
 
-    idx = (boostObj->properties.boost.unk4 >> 28) & 0xF;
+    racerIndex = (boostObj->properties.boost.racerIndex) & 0xF;
     boost = &boostObj->unk64->boost;
-    switch (D_8011B048[idx]) {
-        case 0:
-            boostData = &boost->unk0;
+    switch (D_8011B048[racerIndex]) {
+        case VEHICLE_CAR:
+            boostData = &boost->carBoostData;
             break;
-        case 1:
-            boostData = &boost->unk24;
+        case VEHICLE_HOVERCRAFT:
+            boostData = &boost->hovercraftBoostData;
             break;
         default:
-            boostData = &boost->unk48;
+            boostData = &boost->flyingBoostData;
             break;
     }
     asset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
-    asset = &asset[D_8011B058[idx]];
+    asset = &asset[D_8011B058[racerIndex]];
     object_do_player_tumble(boostObj->properties.boost.obj);
     cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &boostObj->properties.boost.obj->segment.trans,
                        1.0f, 0.0f);
@@ -3550,7 +3553,7 @@ void func_800135B8(Object *boostObj) {
     if (boost->unk70 < 2) {
         objTransform.trans.scale *= boost->unk74;
     }
-    if (D_8011B058[idx] != 0) {
+    if (D_8011B058[racerIndex] != 0) {
         objTransform.trans.scale *= 1.15f;
     }
     objTransform.trans.rotation.z_rotation = 0;
@@ -3560,21 +3563,21 @@ void func_800135B8(Object *boostObj) {
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
-                            (Object *) &objTransform, asset->unk78,
+                            (Object *) &objTransform, asset->sprite,
                             (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE));
     if (boost->unk70 == 2) {
-        material_set(&gObjectCurrDisplayList, asset->unk7C,
+        material_set(&gObjectCurrDisplayList, asset->tex,
                      (RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_FOG_ACTIVE), 0);
-        if (asset->unk7C != NULL) {
+        if (asset->tex != NULL) {
             hasTexture = TRUE;
         } else {
             hasTexture = FALSE;
         }
 
-        vtx = &gBoostVerts[gBoostVertFlip][(boostObj->properties.boost.unk4 >> 14) & 0x3FFF];
-        tri = &gBoostTris[gBoostVertFlip][boostObj->properties.boost.unk4 & 0x3FFF];
-        gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), 9, 0);
-        gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), 8, hasTexture);
+        vtx = &gBoostVerts[gBoostVertFlip][(boostObj->properties.boost.indexes >> 14) & 0x3FFF];
+        tri = &gBoostTris[gBoostVertFlip][boostObj->properties.boost.indexes & 0x3FFF];
+        gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), BOOST_VERT_COUNT, 0);
+        gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), BOOST_TRI_COUNT, hasTexture);
     }
     apply_matrix_from_stack(&gObjectCurrDisplayList);
 }
@@ -4288,12 +4291,12 @@ void func_80016748(Object *obj0, Object *obj1) {
         if (!((objModel->unk3C + 50.0) < sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)))) {
             obj0Interact = obj0->interactObj;
             obj1Interact = obj1->interactObj;
-            object_transform_to_matrix((float (*)[4]) obj1TransformMtx, &obj1->segment.trans);
+            object_transform_to_matrix((float(*)[4]) obj1TransformMtx, &obj1->segment.trans);
             for (i = 0; i < objModel->unk20; i += 2) {
                 xDiff = obj1->curVertData[objModel->unk1C[i]].x;
                 yDiff = obj1->curVertData[objModel->unk1C[i]].y;
                 zDiff = obj1->curVertData[objModel->unk1C[i]].z;
-                guMtxXFMF((float (*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                guMtxXFMF((float(*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
                 temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->segment.trans.scale) * 50.0;
                 xDiff -= obj0->segment.trans.x_position;
                 yDiff -= obj0->segment.trans.y_position;
@@ -4460,7 +4463,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = -obj->segment.trans.x_position;
     sp78.y_position = -obj->segment.trans.y_position;
     sp78.z_position = -obj->segment.trans.z_position;
-    object_inverse_transform_to_matrix((float (*)[4]) sp6C, &sp78);
+    object_inverse_transform_to_matrix((float(*)[4]) sp6C, &sp78);
     inverseScale = 1.0 / obj->segment.trans.scale;
     i = 0;
     while (i < 16) {
