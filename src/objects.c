@@ -6012,7 +6012,103 @@ void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/calc_dynamic_lighting_for_object_1.s")
+//#pragma GLOBAL_ASM("asm/nonmatchings/objects/calc_dynamic_lighting_for_object_1.s")
+
+#define MIN2(a, b) ((a) > (b)) ? (b) : (a)
+
+void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 arg2, Object *anotherObject, f32 intensity, f32 arg5) {
+    s16 sp9E;
+    s16 j;
+    s16 i;
+    Vec3s sp94;
+    s32 s6;
+    s32 x1, y1, z1;
+    s32 x2, y2, z2;
+    s32 ambientTemp;
+    s32 brightnessTemp;
+    s32 t8;
+    s32 v1;
+    Vec3f sp5C;
+    Vertex *vertices;
+    Vec3s *model40Entries; // sp54
+    
+
+    if (object->shading == NULL) {
+        return;
+    }
+
+    vertices = object->curVertData;
+    model40Entries = model->unk40;
+    sp9E = 0;
+
+    sp5C.x = -(object->shading->unk8 << 3);
+    sp5C.y = -(object->shading->unkA << 3);
+    sp5C.z = -(object->shading->unkC << 3);
+    sp94.y_rotation = -object->segment.trans.rotation.y_rotation;
+    sp94.x_rotation = -object->segment.trans.rotation.x_rotation;
+    sp94.z_rotation = -object->segment.trans.rotation.z_rotation;
+    f32_vec3_apply_object_rotation2(&sp94, &sp5C.f);
+
+    if (object->segment.header->unk3D != 0 && arg2) {
+        f32_matrix_dot(get_projection_matrix_f32(), (Matrix*)&sp5C, (Matrix*)&sp5C);
+    }
+
+    
+    x1 = -sp5C.x;
+    y1 = -sp5C.y;
+    z1 = -sp5C.z;
+    s6 = object->shading->unk7;
+    sp5C.x = object->shading->unk1C << 2;
+    sp5C.y = object->shading->unk1E << 2;
+    sp5C.z = object->shading->unk20 << 2;
+
+    if (arg2) {
+        f32_matrix_dot(get_projection_matrix_f32(), (Matrix*)&sp5C, (Matrix*)&sp5C);
+    }
+    f32_vec3_apply_object_rotation2(&sp94, &sp5C.f);
+
+    x2 = sp5C.x;
+    y2 = sp5C.y;
+    z2 = sp5C.z;
+
+    brightnessTemp = object->shading->brightness * object->shading->unk0 * 255.0f * intensity;
+    ambientTemp = object->shading->ambient * object->shading->unk0 * 255.0f * intensity;
+
+    for (i = 0; i < model->numberOfBatches; i++) {
+        if (model->batches[i].unk6 != 0xFF) { // 0xFF means use vertex colors
+            for (j = model->batches[i].verticesOffset; j < model->batches[i + 1].verticesOffset; j++) {
+                t8 = (model40Entries[sp9E].x * x1 + model40Entries[sp9E].y * y1 + model40Entries[sp9E].z * z1) >> 13;
+                if (t8 > 0) {
+                    t8 = (t8 * s6) >> 16;
+                    if (t8 > 255) {
+                        t8 = 255;
+                    }
+                } else {
+                    t8 = 0;
+                }
+
+                v1 = (model40Entries[sp9E].x * x2 + model40Entries[sp9E].y * y2 + model40Entries[sp9E].z * z2) >> 13;
+                if (v1 > 0) {
+                    v1 = (v1 * ambientTemp) >> 16;
+                    v1 += brightnessTemp;
+                    if (v1 > 255) {
+                        v1 = 255;
+                    }
+                } else {
+                    v1 = brightnessTemp;
+                }
+
+                vertices[j].r = t8;
+                vertices[j].g = t8;
+                vertices[j].b = t8;
+                vertices[j].a = v1;
+                sp9E++;
+            }
+        } else if (model->batches[i].flags & RENDER_ENVMAP) {
+            sp9E += model->batches[i + 1].verticesOffset - model->batches[i].verticesOffset;
+        }
+    }
+}
 
 void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRot) {
     MatrixS objRotMtxS32;
