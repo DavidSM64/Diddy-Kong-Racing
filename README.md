@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of May 27, 2025, this is our current score:
+As of May 28, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 88.58%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 88.73%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 58.39%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 58.62%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -117,12 +117,12 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of May 27, 2025, this is our current score:
+As of May 28, 2025, this is our current score:
 ```
  ===================================================================
                ADVENTURE ONE (ASM -> C Decompilation)
- -------------- 88.58% Complete (89.54% NON_MATCHING) --------------
-                    # Decompiled functions: 1903
+ -------------- 88.73% Complete (89.70% NON_MATCHING) --------------
+                    # Decompiled functions: 1904
                      # GLOBAL_ASM remaining: 48
                      # NON_MATCHING functions: 5
                  # NON_EQUIVALENT WIP functions: 16
@@ -133,14 +133,14 @@ As of May 27, 2025, this is our current score:
              We are racing in Spaceport Alpha. (Lap 2/3)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 58.39% Complete -------------------------
-                    # Documented functions: 1189
-                    # Undocumented remaining: 465
+ ------------------------- 58.62% Complete -------------------------
+                    # Documented functions: 1195
+                    # Undocumented remaining: 460
  --------------------------- Game Status ---------------------------
               Balloons: 28/47, Keys: 3/4, Trophies: 2/5
                T.T. Amulets: 3/4, Wizpig Amulets: 2/4
  -------------------------------------------------------------------
- We are collecting silver coins in Pirate Lagoon. (4/8 silver coins)
+ We are collecting silver coins in Pirate Lagoon. (6/8 silver coins)
  ===================================================================
 ```
 <!-- README_SCORE_END -->

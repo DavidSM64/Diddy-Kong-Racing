@@ -6012,11 +6012,12 @@ void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity
     }
 }
 
-//#pragma GLOBAL_ASM("asm/nonmatchings/objects/calc_dynamic_lighting_for_object_1.s")
+// #pragma GLOBAL_ASM("asm/nonmatchings/objects/calc_dynamic_lighting_for_object_1.s")
 
 #define MIN2(a, b) ((a) > (b)) ? (b) : (a)
 
-void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 arg2, Object *anotherObject, f32 intensity, f32 arg5) {
+void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 arg2, Object *anotherObject,
+                                        f32 intensity, f32 arg5) {
     s16 sp9E;
     s16 j;
     s16 i;
@@ -6030,8 +6031,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     s32 v1;
     Vec3f sp5C;
     Vertex *vertices;
-    Vec3s *model40Entries; // sp54
-    
+    Vec3s *model40Entries;
 
     if (object->shading == NULL) {
         return;
@@ -6050,10 +6050,9 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     f32_vec3_apply_object_rotation2(&sp94, &sp5C.f);
 
     if (object->segment.header->unk3D != 0 && arg2) {
-        f32_matrix_dot(get_projection_matrix_f32(), (Matrix*)&sp5C, (Matrix*)&sp5C);
+        f32_matrix_dot(get_projection_matrix_f32(), (Matrix *) &sp5C, (Matrix *) &sp5C);
     }
 
-    
     x1 = -sp5C.x;
     y1 = -sp5C.y;
     z1 = -sp5C.z;
@@ -6063,7 +6062,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     sp5C.z = object->shading->unk20 << 2;
 
     if (arg2) {
-        f32_matrix_dot(get_projection_matrix_f32(), (Matrix*)&sp5C, (Matrix*)&sp5C);
+        f32_matrix_dot(get_projection_matrix_f32(), (Matrix *) &sp5C, (Matrix *) &sp5C);
     }
     f32_vec3_apply_object_rotation2(&sp94, &sp5C.f);
 
