@@ -163,7 +163,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_mult.s")
 #ifdef NON_MATCHING
 /* Official name: mathMtxF2L */
 void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output) {
-    guMtxF2L((float (*)[4]) input, (Mtx *) output);
+    guMtxF2L((float(*)[4]) input, (Mtx *) output);
 }
 #else
 GLOBAL_ASM("asm/math_util/f32_matrix_to_s16_matrix.s")
