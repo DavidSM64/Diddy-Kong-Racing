@@ -70,12 +70,11 @@ Triangle *gBoostTris[2] = { 0, 0 };
 Object *gShieldEffectObject = NULL;
 s32 gBoostObjOverrideID = 9;
 Object *gMagnetEffectObject = NULL;
-s32 D_800DC768 = 0; // Currently unknown, might be a different type.
 
-UNUSED f32 D_800DC76C[15] = {
-    1.0f,  0.70711f,  0.70711f,  1.0f,  0.0f, 0.70711f,  -0.70711f, 0.0f,
-    -1.0f, -0.70711f, -0.70711f, -1.0f, 0.0f, -0.70711f, 0.70711f,
-};
+f32 D_800DC768[16] = {  0.0f, 1.0f ,   0.70711f, 0.70711f ,
+                         1.0f, 0.0f ,   0.70711f, -0.70711f ,
+                         0.0f, -1.0f ,  -0.70711f, -0.70711f ,
+                         -1.0f, 0.0f ,  -0.70711f, 0.70711f };
 
 u16 D_800DC7A8[] = {
     // Car
@@ -446,8 +445,62 @@ void racerfx_free(void) {
     gParticlePtrList_flush();
 }
 
-void func_8000B38C(Vertex *, Triangle *, ObjectTransform *, f32, f32, s16, TextureHeader *arg6);
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000B38C.s")
+void func_8000B38C(Vertex *vertices, Triangle *triangles, ObjectTransform *trans, f32 arg3, f32 arg4, s16 arg5,
+                   TextureHeader *tex) {
+    s32 sp80[8];
+    s32 i;
+    s32 height, width;
+    s16 *v;
+    f32 sp64[3];
+    s32 *tri;
+    f32 *ptr;
+    s32 temp;
+
+    v = (s16*)vertices;
+
+    sp64[2] = -arg4;
+    f32_vec3_apply_object_rotation3(&trans->rotation, sp64);
+
+    // A rather strange way to fill structures
+
+    *v++ = sp64[0] + trans->x_position;
+    *v++ = sp64[1] + trans->y_position;
+    *v++ = sp64[2] + trans->z_position;
+    *v++ = -1;
+    *v++ = -1;
+
+    ptr = D_800DC768;
+    for (i = 0; i < 8; i++) {
+        sp64[0] = *ptr++ * arg3;
+        sp64[1] = *ptr++ * arg3;
+        sp64[2] = 0.0f;
+
+        f32_vec3_apply_object_rotation(trans, sp64);
+
+        *v++ = sp64[0] + trans->x_position;
+        *v++ = sp64[1] + trans->y_position;
+        *v++ = sp64[2] + trans->z_position;
+        *v++ = -1;
+        *v++ = -1;
+    }
+
+    width = (tex->width - 1) << 4;
+    height = (tex->height - 1) << 4;
+
+    for (i = 0; i < 8; i++) {
+        sp80[i] = width + ((sins_s16(arg5) * width) >> 16);
+        sp80[i] |= ((height << 16) + height * coss_s16(arg5)) & 0xFFFF0000;
+        arg5 += 0x2000;
+    }
+
+    tri = (s32*)triangles;
+    for (i = 0; i < 8; i++) {
+        *tri++ = DKR_TRIANGLE(BACKFACE_CULL, 0, i + 1, ((i + 1) & 7) + 1);
+        *tri++ = ((width & 0xFFFF) << 16) | (height & 0xFFFF);
+        *tri++ = sp80[i];
+        *tri++ = sp80[(i + 1) & 7];
+    }
+}
 
 void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4) {
     f32 sp74[3];
