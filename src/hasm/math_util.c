@@ -494,7 +494,7 @@ GLOBAL_ASM("asm/math_util/f32_vec3_apply_object_rotation.s")
 
 #ifdef NON_EQUIVALENT
 /* Official Name: mathOneFloatYPR */
-void f32_vec3_apply_object_rotation2(ObjectTransform *trans, f32 *arg1) {
+void f32_vec3_apply_object_rotation2(Vec3s *trans, f32 *arg1) {
     f32 yRotSine;
     f32 yRotCosine;
     f32 xRotSine;
