@@ -516,8 +516,8 @@ typedef struct LevelHeader {
   /* 0xB0 */ s16 unkB0;
   /* 0xB2 */ u8 unkB2;
   /* 0xB3 */ u8 voiceLimit;
-  /* 0xB4 */ ByteColour rgb;
-  /* 0xB7 */ u8 unkB7;
+  /* 0xB4 */ ByteColour voidColour;
+  /* 0xB7 */ u8 useVoid; // Disallow the player from looking through walls by drawing a blank screen behind walls.
   /* 0xB8 */ s8 bossRaceID;
   /* 0xB9 */ u8 unkB9;
   /* 0xBA */ s16 unkBA;

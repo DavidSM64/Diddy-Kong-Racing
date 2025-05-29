@@ -83,9 +83,9 @@ s32 gSceneStartSegment;
 s32 D_8011B0D8;
 s32 gSceneRenderSkyDome;
 s8 gDrawLevelSegments;
-u8 D_8011B0E1; // R of RGB
-u8 D_8011B0E2; // G of RGB
-u8 D_8011B0E3; // B of RGB
+u8 gVoidColourR; // R of RGB
+u8 gVoidColourG; // G of RGB
+u8 gVoidColourB; // B of RGB
 f32 D_8011B0E4;
 f32 D_8011B0E8;
 f32 D_8011B0EC;
@@ -158,10 +158,10 @@ unk8011D474 *D_8011D474; // 0x10 bytes struct?
 unk8011D478 *D_8011D478; // 0xC bytes struct?
 s8 *D_8011D47C;
 Vertex *D_8011D480[2];
-Vertex *D_8011D488;
+Vertex *gVoidVerts;
 s32 D_8011D48C;
 Triangle *D_8011D490[2];
-Triangle *D_8011D498;
+Triangle *gVoidTris;
 s16 D_8011D49C;
 s16 D_8011D49E;
 f32 D_8011D4A0; // something x coordinate related
@@ -175,10 +175,10 @@ typedef struct Unk8011D4B6 {
         struct {
             u8 one, two;
         };
-        s16 whole;
+        s16 vertCount;
     };
 } Unk8011D4B6;
-Unk8011D4B6 D_8011D4B6;
+Unk8011D4B6 gVoidMesh;
 s16 D_8011D4B8;
 s16 D_8011D4BA;
 s16 D_8011D4BC;
@@ -274,11 +274,11 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     shadow_update(SHADOW_SCENERY, SHADOW_SCENERY, LOGIC_NULL);
     shadow_update(SHADOW_ACTORS, SHADOW_ACTORS, LOGIC_NULL);
     gShadowHeapFlip = 0;
-    if (gCurrentLevelHeader2->unkB7) {
-        D_8011B0E1 = gCurrentLevelHeader2->rgb.red;
-        D_8011B0E2 = gCurrentLevelHeader2->rgb.green;
-        D_8011B0E3 = gCurrentLevelHeader2->rgb.blue;
-        func_80025510(numberOfPlayers + 1);
+    if (gCurrentLevelHeader2->useVoid) {
+        gVoidColourR = gCurrentLevelHeader2->voidColour.red;
+        gVoidColourG = gCurrentLevelHeader2->voidColour.green;
+        gVoidColourB = gCurrentLevelHeader2->voidColour.blue;
+        void_init(numberOfPlayers + 1);
     }
 }
 
@@ -458,27 +458,28 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
 UNUSED const char gTrackClippingErrorString[] = "Solid Clipping x0=x1 Error!!!\n";
 UNUSED const char gTrackHeightOverflowString[] = "TrackGetHeight() - Overflow!!!\n";
 
-void func_80025510(s32 count) {
+void void_init(s32 viewportCount) {
     s32 i;
     s32 sp30;
     s32 sp2C;
-    s32 sp28;
-    s32 sp24;
+    s32 vtxLimit;
+    s32 triLimit;
     u8 *ptr;
 
     D_8011D4BA = 175;
     D_8011D4BC = 45;
-    if (count >= 2) {
+    // Halve the 
+    if (viewportCount >= 2) {
         D_8011D4BC >>= 1;
     }
 
     sp30 = (D_8011D4BA + 6) * sizeof(unk8011D478);
     sp2C = D_8011D4BA + 5;
-    sp28 = (D_8011D4BC + 5) * 4 * sizeof(Vertex);
-    sp24 = (D_8011D4BC + 5) * 2 * sizeof(Triangle);
+    vtxLimit = (D_8011D4BC + 5) * 4 * sizeof(Vertex);
+    triLimit = (D_8011D4BC + 5) * 2 * sizeof(Triangle);
 
-    D_8011D474 = mempool_alloc_safe(count * sizeof(unk8011D474), COLOUR_TAG_CYAN);
-    D_800DC924 = mempool_alloc_safe(sp30 + sp2C + (sp28 + sp24) * 2 * count, COLOUR_TAG_CYAN);
+    D_8011D474 = mempool_alloc_safe(viewportCount * sizeof(unk8011D474), COLOUR_TAG_CYAN);
+    D_800DC924 = mempool_alloc_safe(sp30 + sp2C + (vtxLimit + triLimit) * 2 * viewportCount, COLOUR_TAG_CYAN);
 
     ptr = D_800DC924;
 
@@ -487,20 +488,21 @@ void func_80025510(s32 count) {
         ptr += sp30;
 
         D_8011D47C = (s8 *) ptr;
+        // Align by 8
         ptr = (u8 *) ((s32) (ptr + sp2C + 8) & ~7);
 
-        for (i = 0; i < count; i++) {
+        for (i = 0; i < viewportCount; i++) {
             D_8011D474[i].unk0 = (Triangle *) ptr;
-            ptr += sp24;
+            ptr += triLimit;
 
             D_8011D474[i].unk4 = (Triangle *) ptr;
-            ptr += sp24;
+            ptr += triLimit;
 
             D_8011D474[i].unk8 = (Vertex *) ptr;
-            ptr += sp28;
+            ptr += vtxLimit;
 
             D_8011D474[i].unkC = (Vertex *) ptr;
-            ptr += sp28;
+            ptr += vtxLimit;
         }
     }
     D_8011D4B4 = 0;
@@ -514,7 +516,8 @@ void func_800257D0(void) {
     }
 }
 
-void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
+// root func for the out of bounds void rendering
+void void_check(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     s16 i;
     s16 j;
     f32 yCameraSins;
@@ -616,9 +619,9 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     gSceneCurrTriList = D_8011D490[D_8011D4B4];
 
     D_8011D4B4 = 1 - D_8011D4B4;
-    D_8011D488 = gSceneCurrVertexList;
-    D_8011D498 = gSceneCurrTriList;
-    D_8011D4B6.whole = 0;
+    gVoidVerts = gSceneCurrVertexList;
+    gVoidTris = gSceneCurrTriList;
+    gVoidMesh.vertCount = 0;
     D_8011D4B8 = 0;
 
     i = 0;
@@ -648,9 +651,9 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
             }
         }
     }
-    if (D_8011D4B6.whole != 0) {
-        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6.whole, 0);
-        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), D_8011D4B6.whole >> 1, TRIN_DISABLE_TEXTURE);
+    if (gVoidMesh.vertCount != 0) {
+        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidVerts), gVoidMesh.vertCount, 0);
+        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidTris), gVoidMesh.vertCount >> 1, TRIN_DISABLE_TEXTURE);
     }
     gSceneCurrVertexList = spAC;
     gSceneCurrTriList = spA8;
@@ -981,13 +984,13 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
         return NULL;
     }
 
-    if (D_8011D4B6.whole == 24) {
-        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D488), D_8011D4B6.whole, 0);
-        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(D_8011D498), (D_8011D4B6.whole >> 1),
+    if (gVoidMesh.vertCount == 24) {
+        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidVerts), gVoidMesh.vertCount, 0);
+        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidTris), (gVoidMesh.vertCount >> 1),
                    TRIN_DISABLE_TEXTURE);
-        D_8011D488 = gSceneCurrVertexList;
-        D_8011D4B6.whole = 0;
-        D_8011D498 = gSceneCurrTriList;
+        gVoidVerts = gSceneCurrVertexList;
+        gVoidMesh.vertCount = 0;
+        gVoidTris = gSceneCurrTriList;
     }
 
     vertX1 = arg2 * D_8011D4A0 + D_8011D4AC;
@@ -995,9 +998,9 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     vertX2 = arg3 * D_8011D4A0 + D_8011D4AC;
     vertZ2 = arg3 * D_8011D4A4 + D_8011D4B0;
 
-    colour_r = D_8011B0E1;
-    colour_g = D_8011B0E2;
-    colour_b = D_8011B0E3;
+    colour_r = gVoidColourR;
+    colour_g = gVoidColourG;
+    colour_b = gVoidColourB;
     colour_a = 0xFF;
 
     verts = gSceneCurrVertexList;
@@ -1038,7 +1041,7 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     gSceneCurrVertexList = verts;
 
     tris = gSceneCurrTriList;
-    triIndex = D_8011D4B6.two;
+    triIndex = gVoidMesh.two;
 
     // @fake, using index 0 directly doesn't match
     vertX2 = 0;
@@ -1066,7 +1069,7 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     tris += 2;
     gSceneCurrTriList = tris;
 
-    D_8011D4B6.whole += 4;
+    gVoidMesh.vertCount += 4;
     D_8011D4B8++;
     return NULL;
 }
@@ -1870,7 +1873,7 @@ void render_level_geometry_and_objects(void) {
     }
 
     if (D_800DC924 != NULL && func_80027568()) {
-        func_8002581C(segmentIds, numberOfSegments, get_current_viewport());
+        void_check(segmentIds, numberOfSegments, get_current_viewport());
     }
     gAntiAliasing = FALSE;
 }

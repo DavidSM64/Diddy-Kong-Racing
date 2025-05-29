@@ -273,10 +273,12 @@ void BuildLevelHeader::build(BuildInfo &info) {
     header->unkB0 = jsonFile.get_int("/unknown/unkB0");
     header->unkB2 = jsonFile.get_int("/unknown/unkB2");
     header->unkB3 = jsonFile.get_int("/unknown/unkB3");
-    header->unkB4 = jsonFile.get_int("/unknown/unkB4");
-    header->unkB5 = jsonFile.get_int("/unknown/unkB5");
-    header->unkB6 = jsonFile.get_int("/unknown/unkB6");
-    header->unkB7 = jsonFile.get_int("/unknown/unkB7");
+    // Void
+    header->voidColour[0] = jsonFile.get_int("/void/colour/red");
+    header->voidColour[1] = jsonFile.get_int("/void/colour/green");
+    header->voidColour[2] = jsonFile.get_int("/void/colour/blue");
+    header->useVoid = jsonFile.get_int("/void/enabled");
+
     std::string bossRaceID = jsonFile.get_string("/boss-race-id");
     header->bossRaceID = cContext.get_int_value_of_symbol(bossRaceID);
     header->unkB9 = jsonFile.get_int("/unknown/unkB9");

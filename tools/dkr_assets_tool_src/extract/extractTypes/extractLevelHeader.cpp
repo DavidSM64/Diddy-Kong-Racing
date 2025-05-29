@@ -261,10 +261,12 @@ void ExtractLevelHeader::extract(ExtractInfo &info) {
     jsonFile.set_int("/unknown/unkB0", header->unkB0);
     jsonFile.set_int("/unknown/unkB2", header->unkB2);
     jsonFile.set_int("/unknown/unkB3", header->unkB3);
-    jsonFile.set_int("/unknown/unkB4", header->unkB4);
-    jsonFile.set_int("/unknown/unkB5", header->unkB5);
-    jsonFile.set_int("/unknown/unkB6", header->unkB6);
-    jsonFile.set_int("/unknown/unkB7", header->unkB7);
+    // Void
+    jsonFile.set_int("/void/colour/red", header->voidColour[0]);
+    jsonFile.set_int("/void/colour/green", header->voidColour[1]);
+    jsonFile.set_int("/void/colour/blue", header->voidColour[2]);
+    jsonFile.set_int("/void/enabled", header->useVoid);
+
     std::string bossRaceID = cContext.get_symbol_of_enum_int("BossSetupTypes", header->bossRaceID);
     jsonFile.set_string("/boss-race-id", bossRaceID);
     jsonFile.set_int("/unknown/unkB9", header->unkB9);
