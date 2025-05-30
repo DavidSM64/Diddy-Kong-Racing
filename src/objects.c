@@ -461,9 +461,9 @@ void func_8000B38C(Vertex *vertices, Triangle *triangles, ObjectTransform *trans
 
     // A rather strange way to fill structures
 
-    *v++ = sp64.x + trans->x_position;
-    *v++ = sp64.y + trans->y_position;
-    *v++ = sp64.z + trans->z_position;
+    *v++ = sp64.f[0] + trans->x_position;
+    *v++ = sp64.f[1] + trans->y_position;
+    *v++ = sp64.f[2] + trans->z_position;
     *v++ = -1;
     *v++ = -1;
 
@@ -475,9 +475,9 @@ void func_8000B38C(Vertex *vertices, Triangle *triangles, ObjectTransform *trans
 
         f32_vec3_apply_object_rotation(&trans->rotation, &sp64);
 
-        *v++ = sp64.x + trans->x_position;
-        *v++ = sp64.y + trans->y_position;
-        *v++ = sp64.z + trans->z_position;
+        *v++ = sp64.f[0] + trans->x_position;
+        *v++ = sp64.f[1] + trans->y_position;
+        *v++ = sp64.f[2] + trans->z_position;
         *v++ = -1;
         *v++ = -1;
     }
@@ -577,8 +577,8 @@ void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boos
                 sp74.z = boostData->position.z;
                 f32_vec3_apply_object_rotation(&racerObj->segment.trans.rotation, &sp74);
                 ignore_bounds_check();
-                move_object(gBoostEffectObjects[racerIndex], racerObj->segment.trans.x_position + sp74.x,
-                            racerObj->segment.trans.y_position + sp74.y, racerObj->segment.trans.z_position + sp74.z);
+                move_object(gBoostEffectObjects[racerIndex], racerObj->segment.trans.x_position + sp74.f[0],
+                            racerObj->segment.trans.y_position + sp74.f[1], racerObj->segment.trans.z_position + sp74.f[2]);
             }
             if (arg4 != FALSE) {
                 D_8011B068[racerIndex] = FALSE;
