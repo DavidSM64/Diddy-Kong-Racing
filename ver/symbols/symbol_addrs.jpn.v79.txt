@@ -3713,10 +3713,10 @@ D_8011B07B = 0x8011CAEB;
 D_8011B080 = 0x8011CAF0;
 
 // tracks .bss
-gSceneCurrDisplayList = 0x8011CB10;
+gTrackDL = 0x8011CB10;
 gSceneCurrMatrix = 0x8011CB14;
-gSceneCurrVertexList = 0x8011CB18;
-gSceneCurrTriList = 0x8011CB1C;
+gTrackVtxPtr = 0x8011CB18;
+gTrackTriPtr = 0x8011CB1C;
 gSceneActiveCamera = 0x8011CB20;
 gSceneCurrentPlayerID = 0x8011CB24;
 gSkydomeSegment = 0x8011CB28;
