@@ -2762,7 +2762,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
 
     yOutCount = 0;
     for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
-        if (1) { }
+        if (1) {}
         currentBatch = &currentSegment->batches[batchNum];
         currentFaceOffset = currentBatch->facesOffset;
         nextFaceOffset = currentBatch[1].facesOffset;
@@ -3953,8 +3953,98 @@ void func_8002F2AC(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002F2AC.s")
 #endif
 
-// https://decomp.me/scratch/DP2Yj
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002F440.s")
+void func_8002F440(void) {
+    s32 spAC;
+    s32 var_t0;
+    Triangle *tri;
+    Vertex *vert;
+    s32 alpha;
+    s16 sp90[6];
+    s32 var_s2;
+    s16 sp80[6];
+    f32 temp_f18;
+    f32 yRotCos;
+    f32 yRotSin;
+    f32 zDiff;
+    f32 someY;
+    f32 scale;
+    f32 xDiff;
+    s32 i;
+    UNUSED s32 pad;
+
+    alpha = 255;
+    yRotSin = sins_f(gNewShadowObj->segment.trans.rotation.y_rotation);
+    yRotCos = coss_f(gNewShadowObj->segment.trans.rotation.y_rotation);
+    temp_f18 = gNewShadowTexture->width * 16;
+    scale = ((gNewShadowTexture->width * 16) / gNewShadowWidth);
+    scale *= 1.4142f;
+    if (D_8011D0F0 > 0.0f) {
+        someY = gNewShadowObj->segment.trans.y_position - D_8011D0D0;
+        if (D_8011D0F0 < someY) {
+            alpha = 255;
+            alpha -= (s32) ((255 * (someY - D_8011D0F0)) / D_8011D0F4);
+            if (alpha < 0) {
+                alpha = 0;
+            }
+        }
+        if (someY > 0.0f) {
+            scale *= 1.0f + (0.005f * someY);
+        }
+    }
+    alpha *= gShadowOpacity;
+    var_s2 = 25;
+    for (spAC = 0; spAC < D_8011C230; spAC++) {
+        if ((D_8011C238[spAC].unk0 + var_s2) >= 24) {
+            gCurrShadowHeapData[gShadowTail].texture = gNewShadowTexture;
+            gCurrShadowHeapData[gShadowTail].triCount = gNewShadowTriCount;
+            gCurrShadowHeapData[gShadowTail].vtxCount = gNewShadowVtxCount;
+            gShadowTail++;
+            var_s2 = 0;
+        }
+        var_t0 = D_8011C238[spAC].unk1;
+
+        for (i = 0; i < D_8011C238[spAC].unk0; i++) {
+            vert = &gCurrShadowVerts[gNewShadowVtxCount];
+            gNewShadowVtxCount++;
+            if (var_t0 & 1) {
+                vert->x = D_8011B330[D_8011C238[spAC].unk2[i]].x;
+                xDiff = D_8011B330[D_8011C238[spAC].unk2[i]].x - gNewShadowObj->segment.trans.x_position;
+                vert->y = (D_8011B330[D_8011C238[spAC].unk2[i]].y + D_8011D0C8);
+                vert->z = D_8011B330[D_8011C238[spAC].unk2[i]].z;
+                zDiff = D_8011B330[D_8011C238[spAC].unk2[i]].z - gNewShadowObj->segment.trans.z_position;
+            } else {
+                vert->x = D_8011B120[D_8011C238[spAC].unk2[i]].x;
+                xDiff = D_8011B120[D_8011C238[spAC].unk2[i]].x - gNewShadowObj->segment.trans.x_position;
+                vert->y = (D_8011B120[D_8011C238[spAC].unk2[i]].y + D_8011D0C8);
+                vert->z = D_8011B120[D_8011C238[spAC].unk2[i]].z;
+                zDiff = D_8011B120[D_8011C238[spAC].unk2[i]].z - gNewShadowObj->segment.trans.z_position;
+            }
+            var_t0 >>= 1;
+            vert->r = 255;
+            vert->g = 255;
+            vert->b = 255;
+            vert->a = alpha;
+            sp90[i] = ((((xDiff * yRotCos) - (zDiff * yRotSin)) * scale) + temp_f18);
+            sp80[i] = ((((zDiff * yRotCos) + (xDiff * yRotSin)) * scale) + temp_f18);
+        }
+
+        for (i = 1; i < (D_8011C238[spAC].unk0 - 1); i++) {
+            tri = &gCurrShadowTris[gNewShadowTriCount];
+            gNewShadowTriCount++;
+            tri->flags = 0x40;
+            tri->vi0 = var_s2 + i;
+            tri->vi1 = var_s2 + i + 1;
+            tri->vi2 = var_s2;
+            tri->uv0.u = sp90[i];
+            tri->uv0.v = sp80[i];
+            tri->uv1.u = sp90[i + 1];
+            tri->uv1.v = sp80[i + 1];
+            tri->uv2.u = sp90[0];
+            tri->uv2.v = sp80[0];
+        }
+        var_s2 += D_8011C238[spAC].unk0;
+    }
+}
 
 // Transition points between different lighting levels, used by certain objects
 f32 func_8002FA64(void) {

@@ -2428,7 +2428,7 @@ void gParticlePtrList_flush(void) {
 }
 
 // https://decomp.me/scratch/bJM0P
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800101AC.s") 
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800101AC.s")
 
 void obj_update(s32 updateRate) {
     s32 i;
@@ -4798,7 +4798,7 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
 }
 
 // https://decomp.me/scratch/QupaR
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80019808.s") 
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80019808.s")
 
 /**
  * Mark the course as finished for the appropriate mode.

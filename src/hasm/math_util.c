@@ -186,13 +186,14 @@ void mtxf_to_mtx(MtxF *mf, Mtx *m) {
     ai = &m->m[0][0];
     af = &m->m[2][0];
 
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++) {
         for (j = 0; j < 4; j += 2) {
             e1 = FTOFIX32((*mf)[i][j]);
             e2 = FTOFIX32((*mf)[i][j + 1]);
             *ai++ = (e1 & 0xFFFF0000) | ((e2 >> 16) & 0xFFFF);
             *af++ = ((e1 << 16) & 0xFFFF0000) | (e2 & 0xFFFF);
         }
+    }
 }
 }
 #else

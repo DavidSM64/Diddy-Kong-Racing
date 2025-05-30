@@ -700,7 +700,7 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
     sp38 = levelHeader->unk2A;
     if (aiRacer->unk1CD == 0) {
         temp = ainode_find_nearest(aiRacerObj->segment.trans.x_position, aiRacerObj->segment.trans.y_position,
-                                    aiRacerObj->segment.trans.z_position, 0);
+                                   aiRacerObj->segment.trans.z_position, 0);
         if (temp != 0xFF) {
             aiRacer->unk154 = ainode_get(temp);
             aiRacer->unk1CD = 1;
@@ -743,7 +743,7 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
                 if (roll_percent_chance(sp38[3]) != 0) {
                     aiRacer->unk1CD = 3;
                 } else if ((roll_percent_chance(sp38[6]) != 0) && (raceType == RACETYPE_CHALLENGE_BANANAS) &&
-                            (aiRacer->bananas >= 2)) {
+                           (aiRacer->bananas >= 2)) {
                     aiRacer->unk1CD = 7;
                 } else if ((roll_percent_chance(sp38[5]) != 0) && (D_8011D58C[aiRacer->racerIndex] != 0)) {
                     aiRacer->unk1C6 = 1200;
@@ -754,7 +754,7 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
                     aiRacer->unk1C6 = 300;
                 }
             } else if ((roll_percent_chance(sp38[6]) != 0) && (raceType == RACETYPE_CHALLENGE_BANANAS) &&
-                        (aiRacer->bananas >= 2)) {
+                       (aiRacer->bananas >= 2)) {
                 aiRacer->unk1CD = 7;
             } else if (roll_percent_chance(sp38[0]) != 0) {
                 if (roll_percent_chance(50) != 0) {
@@ -915,8 +915,7 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
                 if (aiRacer->nodeCurrent == NULL) {
                     switch (aiRacer->unk1CD) {
                         case 3:
-                            temp =
-                                func_8001CD28(sp6C->animation.x_rotation, 1, aiRacer->unk1CE, aiRacer->racerIndex);
+                            temp = func_8001CD28(sp6C->animation.x_rotation, 1, aiRacer->unk1CE, aiRacer->racerIndex);
                             break;
                         case 4:
                             tempRacerObj = get_racer_object(aiRacer->eggHudCounter);
@@ -932,27 +931,25 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
                                     aiRacer->unk1CE, aiRacer->racerIndex);
                             } else {
                                 temp = ainode_find_nearest(tempRacerObj->segment.trans.x_position,
-                                                            tempRacerObj->segment.trans.y_position,
-                                                            tempRacerObj->segment.trans.z_position, 0);
+                                                           tempRacerObj->segment.trans.y_position,
+                                                           tempRacerObj->segment.trans.z_position, 0);
                                 temp = func_8001CD28(sp6C->animation.x_rotation, temp | 0x100, aiRacer->unk1CE,
-                                                        aiRacer->racerIndex);
+                                                     aiRacer->racerIndex);
                             }
                             break;
                         case 5:
-                            temp =
-                                func_8001CD28(sp6C->animation.x_rotation, 1, aiRacer->unk1CE, aiRacer->racerIndex);
+                            temp = func_8001CD28(sp6C->animation.x_rotation, 1, aiRacer->unk1CE, aiRacer->racerIndex);
                             break;
                         case 7:
-                            temp = func_8001CD28(sp6C->animation.x_rotation, aiRacer->racerIndex + 4,
-                                                    aiRacer->unk1CE, aiRacer->racerIndex);
+                            temp = func_8001CD28(sp6C->animation.x_rotation, aiRacer->racerIndex + 4, aiRacer->unk1CE,
+                                                 aiRacer->racerIndex);
                             break;
                         default:
 #ifdef FAKEMATCH
                             temp = ainode_find_next(sp6C->animation.x_rotation, aiRacer->unk1CE,
                                                     aiRacer->racerIndex & 0xFFFFFFFFFFFFFFFFu); // Fake
 #else
-                            temp =
-                                ainode_find_next(sp6C->animation.x_rotation, aiRacer->unk1CE, aiRacer->racerIndex);
+                            temp = ainode_find_next(sp6C->animation.x_rotation, aiRacer->unk1CE, aiRacer->racerIndex);
 #endif
                             break;
                     }
@@ -979,7 +976,7 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
             break;
         case 6:
             temp = ainode_find_nearest(aiRacerObj->segment.trans.x_position, aiRacerObj->segment.trans.y_position,
-                                        aiRacerObj->segment.trans.z_position, 2);
+                                       aiRacerObj->segment.trans.z_position, 2);
             if (temp != 0xFF) {
                 aiRacer->unk154 = ainode_get(temp);
                 aiRacer->unk1CD = 1;
