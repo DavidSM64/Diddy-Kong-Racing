@@ -1039,7 +1039,7 @@ void waves_render(Gfx **dList, MatrixS **mtx, s32 viewportID) {
                 for (sp11C = 0; sp11C < 2; sp11C++) {
                     transform.x_position = spE0->originX;
                     for (var_fp = 0; var_fp < 2; var_fp++) {
-                        cam_push_model_mtx(&gWaveDL, &gWaveMtx, &transform, 1.0f, 0.0f);
+                        mtx_cam_push(&gWaveDL, &gWaveMtx, &transform, 1.0f, 0.0f);
                         if (sp104 & 0xFF) {
                             numTris = gWaveController.subdivisions << 1;
                             numVerts = gWaveController.subdivisions + 1;
@@ -1059,14 +1059,14 @@ void waves_render(Gfx **dList, MatrixS **mtx, s32 viewportID) {
                             gSPPolygon(gWaveDL++, OS_K0_TO_PHYSICAL(&D_800E3090[gWaveVertexFlip << 1]), 2,
                                        TRIN_ENABLE_TEXTURE);
                         }
-                        apply_matrix_from_stack(&gWaveDL);
+                        mtx_pop(&gWaveDL);
                         sp104 >>= 8;
                         transform.x_position += gWaveBoundingBoxW * 0.5f;
                     }
                     transform.z_position += gWaveBoundingBoxH * 0.5f;
                 }
             } else {
-                cam_push_model_mtx(&gWaveDL, &gWaveMtx, &transform, 1.0f, 0.0f);
+                mtx_cam_push(&gWaveDL, &gWaveMtx, &transform, 1.0f, 0.0f);
                 numTris = gWaveController.subdivisions << 1;
                 numVerts = gWaveController.subdivisions + 1;
                 var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
@@ -1079,7 +1079,7 @@ void waves_render(Gfx **dList, MatrixS **mtx, s32 viewportID) {
 
                     var_t0 += gWaveController.subdivisions + 1;
                 }
-                apply_matrix_from_stack(&gWaveDL);
+                mtx_pop(&gWaveDL);
             }
         }
         if (gWaveController.xlu) {

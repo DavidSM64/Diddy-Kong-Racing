@@ -343,7 +343,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
     rendermode_reset(&gTrackDL);
     gDkrDisableBillboard(gTrackDL++);
     gSPClearGeometryMode(gTrackDL++, G_CULL_FRONT);
-    gDPSetBlendColor(gTrackDL++, 0, 0, 0, 0x64);
+    gDPSetBlendColor(gTrackDL++, 0, 0, 0, 100);
     gDPSetPrimColor(gTrackDL++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gTrackDL++, 255, 255, 255, 0);
     rain_fog();
@@ -369,17 +369,17 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
         func_8002A31C();
         // Show detailed skydome in single player.
         if (numViewports < 2) {
-            matrix_world_origin(&gTrackDL, &gSceneCurrMatrix);
+            mtx_world_origin(&gTrackDL, &gSceneCurrMatrix);
             if (gCurrentLevelHeader2->skyDome == -1) {
                 func_80028050();
             } else {
                 render_skydome();
             }
         } else {
-            func_8006807C(&gTrackDL, &gSceneCurrMatrix);
+            mtx_perspective(&gTrackDL, &gSceneCurrMatrix);
             draw_gradient_background();
             func_80067D3C(&gTrackDL, &gSceneCurrMatrix);
-            matrix_world_origin(&gTrackDL, &gSceneCurrMatrix);
+            mtx_world_origin(&gTrackDL, &gSceneCurrMatrix);
         }
         gDPPipeSync(gTrackDL++);
         initialise_player_viewport_vars(updateRate);
@@ -409,10 +409,10 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32
             func_800278E8(updateRate);
             viewport_main(&gTrackDL, &gSceneCurrMatrix);
             func_8002A31C();
-            func_8006807C(&gTrackDL, &gSceneCurrMatrix);
+            mtx_perspective(&gTrackDL, &gSceneCurrMatrix);
             draw_gradient_background();
             func_80067D3C(&gTrackDL, &gSceneCurrMatrix);
-            matrix_world_origin(&gTrackDL, &gSceneCurrMatrix);
+            mtx_world_origin(&gTrackDL, &gSceneCurrMatrix);
             gDPPipeSync(gTrackDL++);
             initialise_player_viewport_vars(updateRate);
             weather_clip_planes(-1, -512);
@@ -1461,7 +1461,7 @@ void func_80028050(void) {
     uCoords[8] = (s16) ((2.0f * xCos) - pos.z) + var_v0;
     vCoords[8] = (s16) ((2.0f * pos.x) + var_f16) + var_v1;
 
-    matrix_world_origin(&gTrackDL, &gSceneCurrMatrix);
+    mtx_world_origin(&gTrackDL, &gSceneCurrMatrix);
 
     var_t2 = *gCurrentLevelHeader2->unk74;
     var_a2 = -1;
@@ -1656,7 +1656,7 @@ void render_skydome(void) {
         gSkydomeSegment->segment.trans.z_position = cam->trans.z_position;
     }
 
-    matrix_world_origin(&gTrackDL, &gSceneCurrMatrix);
+    mtx_world_origin(&gTrackDL, &gSceneCurrMatrix);
     if (gSceneRenderSkyDome) {
         render_object(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, gSkydomeSegment);
     }

@@ -2842,7 +2842,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
 void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles,
                        TextureHeader *tex, u32 flags, u32 texOffset, f32 scaleY) {
     s32 hasTexture = FALSE;
-    cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, scaleY, 0.0f);
+    mtx_cam_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, scaleY, 0.0f);
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     if (tex != NULL) {
@@ -2851,7 +2851,7 @@ void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *tr
     material_set(&gObjectCurrDisplayList, tex, flags, texOffset);
     gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), numVertices, 0);
     gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numTriangles, hasTexture);
-    apply_matrix_from_stack(&gObjectCurrDisplayList);
+    mtx_pop(&gObjectCurrDisplayList);
 }
 
 /**
@@ -3084,12 +3084,12 @@ void render_3d_model(Object *obj) {
             func_80011134(obj, objModel->unk52);
             obj68->objModel->unk52 = 0;
         }
-        cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
+        mtx_cam_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
         spB0 = FALSE;
         if (racerObj != NULL) {
             object_undo_player_tumble(obj);
             if (obj->segment.object.animationID == 0 || racerObj->vehicleID >= VEHICLE_BOSSES) {
-                apply_head_turning_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, racerObj->headAngle);
+                mtx_head_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, racerObj->headAngle);
                 spB0 = TRUE;
             } else {
                 racerObj->headAngle = 0;
@@ -3231,7 +3231,7 @@ void render_3d_model(Object *obj) {
         if (hasEnvCol) {
             gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         }
-        apply_matrix_from_stack(&gObjectCurrDisplayList);
+        mtx_pop(&gObjectCurrDisplayList);
     }
 }
 
@@ -3543,7 +3543,7 @@ void func_800135B8(Object *boostObj) {
     asset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     asset = &asset[D_8011B058[racerIndex]];
     object_do_player_tumble(boostObj->properties.boost.obj);
-    cam_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &boostObj->properties.boost.obj->segment.trans,
+    mtx_cam_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, &boostObj->properties.boost.obj->segment.trans,
                        1.0f, 0.0f);
     object_undo_player_tumble(boostObj->properties.boost.obj);
     objTransform.trans.x_position = boostData->position.x;
@@ -3579,7 +3579,7 @@ void func_800135B8(Object *boostObj) {
         gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), BOOST_VERT_COUNT, 0);
         gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), BOOST_TRI_COUNT, hasTexture);
     }
-    apply_matrix_from_stack(&gObjectCurrDisplayList);
+    mtx_pop(&gObjectCurrDisplayList);
 }
 
 /**
@@ -3673,7 +3673,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         } else {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
-        apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gShieldEffectObject, obj, shear);
+        mtx_shear_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, gShieldEffectObject, obj, shear);
         render_mesh(mdl, gShieldEffectObject, 0, RENDER_SEMI_TRANSPARENT, 0);
         gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
         if (racer->shieldTimer < 64) {
@@ -3734,7 +3734,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             opacity = ((gRacerFXData[racerIndex].unk1 * 8) & 0x7F) + 0x80;
             gfx_init_basic_xlu(&gObjectCurrDisplayList, DRAW_BASIC_2CYCLE, COLOUR_RGBA32(255, 255, 255, opacity),
                                gMagnetColours[racer->magnetModelID]);
-            apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);
+            mtx_shear_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);
             gObjectTexAnim = TRUE;
             render_mesh(mdl, gMagnetEffectObject, 0, RENDER_SEMI_TRANSPARENT, 0);
             gObjectTexAnim = FALSE;

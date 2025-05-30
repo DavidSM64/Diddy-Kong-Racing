@@ -2415,11 +2415,11 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
         } else {
             model = particle->model;
             if (model->texture) {
-                cam_push_model_mtx(dList, mtx, &particle->trans, 1.0f, 0.0f);
+                mtx_cam_push(dList, mtx, &particle->trans, 1.0f, 0.0f);
                 material_set(dList, model->texture, renderFlags, particle->textureFrame << 8);
                 gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(model->vertices), model->vertexCount, 0);
                 gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(model->triangles), model->triangleCount, TRIN_ENABLE_TEXTURE);
-                apply_matrix_from_stack(dList);
+                mtx_pop(dList);
             }
         }
         // Restore primitive and environment colour

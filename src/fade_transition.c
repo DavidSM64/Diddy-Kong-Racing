@@ -329,7 +329,7 @@ void transition_render(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
         } else {
             set_ortho_matrix_height(1.2f);
         }
-        set_ortho_matrix_view(dList, mtx);
+        mtx_ortho(dList, mtx);
         set_ortho_matrix_height(1.0f);
         switch (gCurFadeTransition) {
             case FADE_FULLSCREEN:

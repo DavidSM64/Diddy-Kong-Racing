@@ -2915,7 +2915,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
         return;
     }
 
-    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     while (elems->t.element != NULL) {
         if ((elems->t.element != &D_80126850)) {                      // fakematch
             if (state == ((elems->t.element != (&D_80126850)) * 0)) { // fakematch
@@ -3339,7 +3339,7 @@ void menu_title_screen_init(void) {
         sGameTitleTileOffsets[i].texture = gMenuAssets[sGameTitleTileTextures[i]];
     }
     music_voicelimit_set(27);
-    func_800660C0();
+    cam_shake_off();
     set_text_font(ASSET_FONTS_FUNFONT);
 #if REGION != REGION_JP
     load_font(ASSET_FONTS_BIGFONT);
@@ -3375,7 +3375,7 @@ void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
     s32 posY;
 
     if (gTitleRevealTimer) {
-        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+        mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         scale = (f32) gTitleRevealTimer * (1.0f / 32.0f);
         sMenuGuiOpacity = (gTitleRevealTimer * 8) - 1;
         sprite_anim_off(FALSE);
@@ -3577,7 +3577,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
 void titlescreen_free(void) {
     menu_assetgroup_free(sGameTitleTileTextures);
     music_voicelimit_set(16);
-    func_800660D0();
+    cam_shake_on();
 #if REGION != REGION_JP
     unload_font(ASSET_FONTS_BIGFONT);
 #endif
@@ -3862,7 +3862,7 @@ void func_80084854(UNUSED s32 updateRate) {
         temp = 511 - temp;
     }
     gAudioMenuStrings[0].text = gAudioOutputStrings[gAudioOutputType];
-    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
     if (osTvType == OS_TV_TYPE_PAL) {
         yOffset = 101;
@@ -4387,7 +4387,7 @@ void savemenu_render(UNUSED s32 updateRate) {
     if (gMenuStage & 8) {
         drawDialogueBox = TRUE;
     }
-    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     set_text_background_colour(0, 0, 0, 0);
     set_text_font(ASSET_FONTS_BIGFONT);
     set_text_colour(0, 0, 0, 255, 128);
@@ -7366,7 +7366,7 @@ void gameselect_render(UNUSED s32 updateRate) {
         if (fade > 255) {
             fade = 511 - fade;
         }
-        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+        mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
         for (i = 0; i <= gMenuStage; i++) {
             filterBlendFactor = 0;
@@ -7586,7 +7586,7 @@ void fileselect_render(UNUSED s32 updateRate) {
     }
 
     menu_camera_centre();
-    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         if (gSavefileInfo[i].isAdventure2 == gIsInAdventureTwo || gSavefileInfo[i].isStarted == FALSE) {
             colour = COLOUR_RGBA32(176, 224, 192, 255);
@@ -8592,7 +8592,7 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
     numVertices = 0;
     camDisableUserView(0, TRUE);
     camera_init_tracks_menu(dList, mtx);
-    set_ortho_matrix_view(dList, mtx);
+    mtx_ortho(dList, mtx);
     rendermode_reset(dList);
     gDPPipeSync((*dList)++);
     sp7C = gTrackSelectX;
@@ -8888,7 +8888,7 @@ void func_8008FF1C(UNUSED s32 updateRate) {
         }
         camDisableUserView(0, TRUE);
         menu_camera_centre();
-        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+        mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         rendermode_reset(&sMenuCurrDisplayList);
         gDPPipeSync(sMenuCurrDisplayList++);
         D_80126928 = 64;
@@ -9117,7 +9117,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
     }
     camDisableUserView(0, TRUE);
     menu_camera_centre();
-    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (gMenuDelay < 0) {
         if (gSelectedTrackX == 4) {
             sp84 = 6;
@@ -9845,7 +9845,7 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
     mapID = ((Settings4C *) ((u8 *) settings->unk4C + gTrackIdForPreview))->mapID;
     gSPClearGeometryMode(sMenuCurrDisplayList++, G_CULL_FRONT);
     menu_camera_centre();
-    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (gMenuDelay >= -20) {
         if (gMenuDelay <= 20) {
             mask = get_map_available_vehicles(mapID);
@@ -10600,7 +10600,7 @@ void func_80094D28(UNUSED s32 updateRate) {
 
     settings = get_settings();
     if (gNumberOfActivePlayers == 1) {
-        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+        mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     }
     camDisableUserView(0, TRUE);
     var_s3 = gOptionBlinkTimer * 8;
@@ -11230,7 +11230,7 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
     if (osTvType == OS_TV_TYPE_PAL) {
         offsetY = 12;
     }
-    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (opacity < 0.0f) {
         opacity = 0.0f;
     }
@@ -12566,7 +12566,7 @@ void ghostmenu_render(UNUSED s32 updateRate) {
     char *levelName;
     char textBuffer[64];
 
-    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (osTvType == OS_TV_TYPE_PAL) {
         heightAdjust = 12;
     } else {
@@ -13859,11 +13859,11 @@ void menu_element_render(s32 elementID) {
                         gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                     };
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
-                    cam_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat, &gMenuImages[elementID].trans,
+                    mtx_cam_push(&sMenuCurrDisplayList, &sMenuCurrHudMat, &gMenuImages[elementID].trans,
                                        gTrackSelectWoodFrameHeightScale, 0);
                     model = ((ObjectModel **) gMenuAssets[gMenuImages[elementID].trans.spriteID]);
                     render_track_selection_viewport_border(*model);
-                    apply_matrix_from_stack(&sMenuCurrDisplayList);
+                    mtx_pop(&sMenuCurrDisplayList);
                     if (sMenuGuiOpacity < 255) {
                         gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                     }
@@ -14715,7 +14715,7 @@ f32 dialogue_ortho(UNUSED DialogueBoxBackground *textbox, Gfx **dList, MatrixS *
     sMenuCurrDisplayList = *dList;
     sMenuCurrHudMat = *mat;
     sMenuCurrHudVerts = *verts;
-    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (gGameStatusVisible && sCurrentMenuID == MENU_UNUSED_4) {
         dialogue_tt_gamestatus();
     }
