@@ -2481,7 +2481,7 @@ void obj_update(s32 updateRate) {
                     for (sp54 = 0; sp54 < obj->segment.header->numberOfModelIds; sp54++) {
                         obj68 = obj->unk68[sp54];
                         if (obj68 != NULL) {
-                            obj68->objModel->unk52 = updateRate;
+                            obj68->objModel->texOffsetUpdateRate = updateRate;
                         }
                     }
                     if (obj->segment.header->unk72 != 0xFF) {
@@ -2594,17 +2594,19 @@ void func_80011134(Object *obj, s32 updateRate) {
         if (batch[batchNumber].flags & RENDER_TEX_ANIM) {
             if (batch[batchNumber].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 tex = model->textures[batch[batchNumber].textureIndex].texture;
-                sp5C = batch[batchNumber].unk7;
+                sp5C = batch[batchNumber].texOffset;
                 sp5C <<= 6;
                 tex_animate_texture(tex, &batch[batchNumber].flags, &sp5C, updateRate);
-                batch[batchNumber].unk7 = (sp5C >> 6) & 0xFF;
+                batch[batchNumber].texOffset = (sp5C >> 6) & 0xFF;
             }
         }
     }
 }
 
-// This is a function for doors
-void func_80011264(ObjectModel *model, Object *obj) {
+/**
+ * Sets the texture offset on the door number based on the balloon requirement.
+*/
+void obj_door_number(ObjectModel *model, Object *obj) {
     Object_64 *obj64;
     s32 current;
     s32 remaining;
@@ -2628,9 +2630,9 @@ void func_80011264(ObjectModel *model, Object *obj) {
                 // Fakematch
                 if (model->textures[batch[i].textureIndex].texture) {}
                 if (model->textures[batch[i].textureIndex].texture->numOfTextures > 0x900) {
-                    batch[i].unk7 = remaining;
+                    batch[i].texOffset = remaining;
                 } else if (current >= 0) {
-                    batch[i].unk7 = current;
+                    batch[i].texOffset = current;
                 }
             }
         }
@@ -3010,7 +3012,7 @@ void render_3d_model(Object *obj) {
     s32 i;
     s32 intensity;
     s32 alpha;
-    s32 spB0;
+    s32 vertOffset;
     s32 obj60_unk0;
     s32 hasOpacity;
     s32 hasEnvCol;
@@ -3078,19 +3080,19 @@ void render_3d_model(Object *obj) {
         }
         obj->curVertData = obj68->vertices[obj68->animationTaskNum];
         if (obj->behaviorId == BHV_DOOR) {
-            func_80011264(objModel, obj);
+            obj_door_number(objModel, obj);
         }
-        if (objModel->unk52 && objModel->unk50 > 0) {
-            func_80011134(obj, objModel->unk52);
-            obj68->objModel->unk52 = 0;
+        if (objModel->texOffsetUpdateRate && objModel->unk50 > 0) {
+            func_80011134(obj, objModel->texOffsetUpdateRate);
+            obj68->objModel->texOffsetUpdateRate = 0;
         }
         mtx_cam_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
-        spB0 = FALSE;
+        vertOffset = FALSE;
         if (racerObj != NULL) {
             object_undo_player_tumble(obj);
             if (obj->segment.object.animationID == 0 || racerObj->vehicleID >= VEHICLE_BOSSES) {
                 mtx_head_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, racerObj->headAngle);
-                spB0 = TRUE;
+                vertOffset = TRUE;
             } else {
                 racerObj->headAngle = 0;
             }
@@ -3122,9 +3124,9 @@ void render_3d_model(Object *obj) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
         if (alpha < 255) {
-            meshBatch = render_mesh(objModel, obj, 0, RENDER_SEMI_TRANSPARENT, spB0);
+            meshBatch = render_mesh(objModel, obj, 0, RENDER_SEMI_TRANSPARENT, vertOffset);
         } else {
-            meshBatch = render_mesh(objModel, obj, 0, RENDER_NONE, spB0);
+            meshBatch = render_mesh(objModel, obj, 0, RENDER_NONE, vertOffset);
         }
         if (obj->segment.header->unk71) {
             if (hasOpacity) {
@@ -3220,7 +3222,7 @@ void render_3d_model(Object *obj) {
                                 obj->shading->unk1A, alpha);
                 tex_primcolour_on();
             }
-            render_mesh(objModel, obj, meshBatch, RENDER_SEMI_TRANSPARENT, spB0);
+            render_mesh(objModel, obj, meshBatch, RENDER_SEMI_TRANSPARENT, vertOffset);
             if (obj->segment.header->unk71) {
                 tex_primcolour_off();
             }
@@ -3465,7 +3467,7 @@ void func_80012F94(Object *obj) {
             racerLightTimer *= 4;
             for (batchNum = 0; batchNum < temp_a1_3->numberOfBatches; batchNum++) {
                 if ((temp_a1_3->batches[batchNum].flags & 0x810000) == RENDER_TEX_ANIM) {
-                    temp_a1_3->batches[batchNum].unk7 = racerLightTimer;
+                    temp_a1_3->batches[batchNum].texOffset = racerLightTimer;
                 }
             }
             obj->segment.trans.x_position += objRacer->carBobX;
@@ -3778,8 +3780,9 @@ void obj_tick_anims(void) {
 
 /**
  * Renders every triangle batch in an objects mesh.
+ * If vertOffset is true, then draw in two passes, utilising the head matrix and vertex ID offset in the batch.
  */
-s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool) {
+s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 overrideVerts) {
     s32 i;
     s32 textureIndex;
     s32 triOffset;
@@ -3808,7 +3811,7 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
                 vertOffset = objModel->batches[i].verticesOffset;
                 triOffset = objModel->batches[i].facesOffset;
                 numVertices = objModel->batches[i + 1].verticesOffset - vertOffset;
-                offsetStartVertex = (someBool) ? objModel->batches[i].unk1 : numVertices;
+                offsetStartVertex = (overrideVerts) ? objModel->batches[i].vertOverride : numVertices;
                 numTris = objModel->batches[i + 1].facesOffset - triOffset;
                 tris = &objModel->triangles[triOffset];
                 vtx = &obj->curVertData[vertOffset];
@@ -3819,7 +3822,7 @@ s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s
                     texToSet = NULL;
                     texEnabled = FALSE;
                 } else {
-                    texOffset = objModel->batches[i].unk7 << 14;
+                    texOffset = objModel->batches[i].texOffset << 14;
                     texEnabled = TRUE;
                     texToSet = objModel->textures[textureIndex].texture;
                 }
@@ -6039,7 +6042,7 @@ void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity
     environmentMappingEnabled = 0;
 
     for (i = 0; i < model->numberOfBatches; i++) {
-        if (model->batches[i].unk6 != 0xFF) {
+        if (model->batches[i].miscData != BATCH_VTX_COL) {
             dynamicLightingEnabled = -1; // This is a bit weird, but I guess it works.
         }
         if (model->batches[i].flags & RENDER_ENVMAP) {
@@ -6124,7 +6127,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     ambientTemp = object->shading->ambient * object->shading->unk0 * 255.0f * intensity;
 
     for (i = 0; i < model->numberOfBatches; i++) {
-        if (model->batches[i].unk6 != 0xFF) { // 0xFF means use vertex colors
+        if (model->batches[i].miscData != BATCH_VTX_COL) { // 0xFF means use vertex colors
             for (j = model->batches[i].verticesOffset; j < model->batches[i + 1].verticesOffset; j++) {
                 t8 = (model40Entries[sp9E].x * x1 + model40Entries[sp9E].y * y1 + model40Entries[sp9E].z * z1) >> 13;
                 if (t8 > 0) {
@@ -6257,7 +6260,7 @@ void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRo
                 triangles[j].uv2.u = D_8011AF68[triangles[j].vi2].u;
                 triangles[j].uv2.v = D_8011AF68[triangles[j].vi2].v;
             }
-        } else if (model->batches[i].unk6 < 0xFF) {
+        } else if (model->batches[i].miscData < BATCH_VTX_COL) {
             count += model->batches[i + 1].verticesOffset - model->batches[i].verticesOffset;
         }
     }

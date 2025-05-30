@@ -1505,7 +1505,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
 
     ttSWBodyObject->segment.object.animationID = gStopwatchAnimID;
     obj68 = ttSWBodyObject->unk68[0];
-    obj68->objModel->unk52 = updateRate;
+    obj68->objModel->texOffsetUpdateRate = updateRate;
     if (gStopwatchAnimID != 0xFF) {
         if (gStopwatchAnimID == 4 && (get_race_countdown() || !music_is_playing())) {
             ttSWBodyObject->segment.animFrame = 16;

@@ -612,24 +612,15 @@ typedef struct Triangle {
 /* Size: 12 bytes */
 typedef struct TriangleBatchInfo {
 /* 0x00 */ u8  textureIndex; // 0xFF = No texture
-/* 0x01 */ s8  unk1;
+/* 0x01 */ s8  vertOverride; // If used, will end a draw this many verts in, so it can do something mid mesh.
 /* 0x02 */ s16 verticesOffset;
 /* 0x04 */ s16 facesOffset;
-/* 0x06 */ u8  unk6; // 0xFF = vertex colors, otherwise use dynamic lighting normals (Objects only)
-/* 0x07 */ u8  unk7;
-/* 0x08 */ u32 flags;
-    // 0x00000002 = ???
-    // 0x00000008 = ???
-    // 0x00000010 = Depth write
-    // 0x00000100 = Hidden/Invisible geometry
-    // 0x00000200 = ??? Used in func_80060AC8
-    // 0x00000800 = ???
-    // 0x00002000 = ???
-    // 0x00008000 = Environment mapping
-    // 0x00010000 = Texture is animated
-    // 0x00040000 = Has pulsating light data.
-    // 0x70000000 = bits 28, 29, & 30 are some kind of index. Not used in any levels.
+/* 0x06 */ u8  miscData; // 0xFF = vertex colors, otherwise use dynamic lighting normals (Objects only)
+/* 0x07 */ u8  texOffset;
+/* 0x08 */ u32 flags; // See RenderFlags in textures_sprites.c
 } TriangleBatchInfo;
+
+#define BATCH_VTX_COL 0xFF
 
 /* Size: 8 bytes */
 typedef struct ObjectModel_44 {
@@ -680,7 +671,7 @@ typedef struct ObjectModel {
     /* 0x4A */ s16 unk4A;
     /* 0x4C */ s32 *unk4C;
     /* 0x50 */ s16 unk50;
-    /* 0x52 */ s16 unk52;
+    /* 0x52 */ s16 texOffsetUpdateRate; // Set to the current updaterate for the first model.
     /* 0x54 */ u8 pad[0x2C];
 } ObjectModel;      
 

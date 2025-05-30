@@ -13912,7 +13912,7 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
             } else {
                 tex = objMdl->textures[objMdl->batches[i].textureIndex].texture;
                 texEnabled = TRUE;
-                texOffset = objMdl->batches[i].unk7 << 14;
+                texOffset = objMdl->batches[i].texOffset << 14;
             }
             material_set(&sMenuCurrDisplayList, tex, flags, texOffset);
 

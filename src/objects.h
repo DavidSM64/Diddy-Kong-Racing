@@ -540,7 +540,7 @@ void func_8001E89C(void);
 CheckpointNode *func_800230D0(Object*, Object_Racer*);
 void obj_update(s32 updateRate);
 void func_800159C8(Object *, Object *);
-void func_80011264(ObjectModel *, Object *);
+void obj_door_number(ObjectModel *, Object *);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 
 #endif

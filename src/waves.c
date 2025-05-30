@@ -985,7 +985,7 @@ void waves_render(Gfx **dList, MatrixS **mtx, s32 viewportID) {
         if (gWaveController.xlu) {
             gSPClearGeometryMode(gWaveDL++, G_FOG);
             tex1 = set_animated_texture_header(gWaveTextureHeader, gWaveTexAnimFrame * (16 * 16));
-            tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 * (128 * 128));
+            tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->texOffset * (128 * 128));
             wave_load_material(tex1, 1);
             wave_load_material(tex2, 0);
             gDPSetCombineMode(gWaveDL++, DKR_CC_UNK14, DKR_CC_UNK15);
@@ -1004,7 +1004,7 @@ void waves_render(Gfx **dList, MatrixS **mtx, s32 viewportID) {
             }
         } else {
             gSPSetGeometryMode(gWaveDL++, G_FOG);
-            tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 * (128 * 128));
+            tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->texOffset * (128 * 128));
             gDkrDmaDisplayList(gWaveDL++, OS_K0_TO_PHYSICAL(tex1->cmd), tex1->numberOfCommands);
             gDPSetCombineMode(gWaveDL++, DKR_CC_UNK16, DKR_CC_UNK8);
             gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);

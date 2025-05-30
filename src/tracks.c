@@ -1299,15 +1299,15 @@ void animate_level_textures(s32 updateRate) {
                 if (batch[batchNumber].textureIndex != 0xFF) {
                     texture = gCurrentLevelModel->textures[batch[batchNumber].textureIndex].texture;
                     if (texture->numOfTextures != 0x100 && texture->frameAdvanceDelay) {
-                        temp = batch[batchNumber].unk7 << 6;
+                        temp = batch[batchNumber].texOffset << 6;
                         if (batch[batchNumber].flags & RENDER_UNK_80000000) {
-                            temp |= batch[batchNumber].unk6;
+                            temp |= batch[batchNumber].miscData;
                             tex_animate_texture(texture, &batch[batchNumber].flags, &temp, updateRate);
-                            batch[batchNumber].unk6 = temp & 0x3F;
+                            batch[batchNumber].miscData = temp & 0x3F;
                         } else {
                             tex_animate_texture(texture, &batch[batchNumber].flags, &temp, updateRate);
                         }
-                        batch[batchNumber].unk7 = (temp >> 6) & 0xFF;
+                        batch[batchNumber].texOffset = (temp >> 6) & 0xFF;
                     }
                 }
             }
@@ -1951,7 +1951,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
             vertices = (s32) &segment->vertices[batchInfo->verticesOffset];
         } while (0);
         triangles = (s32) &segment->triangles[batchInfo->facesOffset];
-        texOffset = batchInfo->unk7 << 14;
+        texOffset = batchInfo->texOffset << 14;
         levelHeaderIndex = (batchFlags >> 28) & 7;
         if (levelHeaderIndex != (batchInfo->verticesOffset * 0)) {
             gDPSetEnvColor(
