@@ -586,7 +586,7 @@ GLOBAL_ASM("asm/math_util/vec3f_rotate.s")
  * The result is written back into the same vector.
  */
 /* Official Name: mathOneFloatYPR */
-void vec3f_rotate_rpy(Vec3s *rotation, Vec3f *vec) {
+void vec3f_rotate_ypr(Vec3s *rotation, Vec3f *vec) {
     f32 sine;
     f32 cosine;
     f32 x1, y1, z1;
@@ -619,7 +619,7 @@ void vec3f_rotate_rpy(Vec3s *rotation, Vec3f *vec) {
     vec->z = z2;
 }
 #else
-GLOBAL_ASM("asm/math_util/vec3f_rotate_rpy.s")
+GLOBAL_ASM("asm/math_util/vec3f_rotate_ypr.s")
 #endif
 
 #ifdef NON_MATCHING

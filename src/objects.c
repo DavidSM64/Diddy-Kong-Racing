@@ -6098,7 +6098,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     sp94.y_rotation = -object->segment.trans.rotation.y_rotation;
     sp94.x_rotation = -object->segment.trans.rotation.x_rotation;
     sp94.z_rotation = -object->segment.trans.rotation.z_rotation;
-    vec3f_rotate_rpy(&sp94, &sp5C.f);
+    vec3f_rotate_ypr(&sp94, &sp5C.f);
 
     if (object->segment.header->unk3D != 0 && arg2) {
         mtxf_transform_dir(get_projection_matrix_f32(), (Matrix *) &sp5C, (Matrix *) &sp5C);
@@ -6115,7 +6115,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     if (arg2) {
         mtxf_transform_dir(get_projection_matrix_f32(), (Matrix *) &sp5C, (Matrix *) &sp5C);
     }
-    vec3f_rotate_rpy(&sp94, &sp5C.f);
+    vec3f_rotate_ypr(&sp94, &sp5C.f);
 
     x2 = sp5C.x;
     y2 = sp5C.y;

@@ -1078,7 +1078,7 @@ leaf vec3f_rotate
 .end vec3f_rotate
 
 /* Official Name: mathOneFloatYPR */
-leaf vec3f_rotate_rpy
+leaf vec3f_rotate_ypr
 /* 70FD8 800703D8 27BDFFF8 */  addiu      $sp, $sp, -0x8
 /* 70FDC 800703DC FFBF0000 */  sd         $ra, 0x0($sp)
 /* 70FE0 800703E0 00803025 */  or         $a2, $a0, $zero
@@ -1125,7 +1125,7 @@ leaf vec3f_rotate_rpy
 /* 71084 80070484 27BD0008 */  addiu      $sp, $sp, 0x8
 /* 71088 80070488 03E00008 */  jr         $ra
 /* 7108C 8007048C 00000000 */   nop
-.end vec3f_rotate_rpy
+.end vec3f_rotate_ypr
 
 /* Official Name: mathOneFloatPY */
 leaf vec3f_rotate_py

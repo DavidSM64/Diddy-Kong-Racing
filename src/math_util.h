@@ -57,7 +57,7 @@ void mtxf_from_inverse_transform(Matrix *mtx, ObjectTransform *trans);
 void mtxf_billboard(Matrix *mtx, s32 angle, f32 scale, f32 scaleY);
 void vec3s_rotate_rpy(RPYAngles *rotation, Vec3s *vec3Arg);
 void vec3f_rotate(Vec3s *rotation, Vec3f *vec);
-void vec3f_rotate_rpy(Vec3s *rotation, Vec3f *vec);
+void vec3f_rotate_ypr(Vec3s *rotation, Vec3f *vec);
 void vec3f_rotate_py(Vec3s *rotation, Vec3f *vec);
 s32 tri2d_xz_contains_point(s32 x, s32 z, Vec3s *vec3A, Vec3s *vec3B, Vec3s *vec3C);
 void mtxf_from_translation(Matrix *mtx, f32 x, f32 y, f32 z);

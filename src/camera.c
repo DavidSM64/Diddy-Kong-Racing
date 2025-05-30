@@ -99,14 +99,14 @@ f32 gModelMatrixViewY[6];
 f32 gModelMatrixViewZ[5];
 u16 perspNorm;
 Matrix *gModelMatrixF[6];
-Mtx *gModelMatrixS[6];
+Mtx *gModelMatrix[6];
 f32 D_80120DA0[5 * 16];
 Matrix gPerspectiveMatrixF;
 Matrix gViewMatrixF;
 Matrix gCameraMatrixF;
 Matrix gProjectionMatrixF;
-Mtx gProjectionMatrixS;
-UNUSED Mtx gUnusedProjectionMatrixS; // Copied to the same way as gProjectionMatrixS, but not actually used.
+Mtx gProjectionMatrix;
+UNUSED Mtx gUnusedProjectionMatrix; // Copied to the same way as gProjectionMatrix, but not actually used.
 Matrix gCurrentModelMatrixF;
 Matrix gCurrentModelMatrixS;
 
@@ -149,7 +149,7 @@ void cam_init(void) {
 
     guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR,
                    CAMERA_SCALE);
-    mtxf_to_mtx(&gPerspectiveMatrixF, &gProjectionMatrixS);
+    mtxf_to_mtx(&gPerspectiveMatrixF, &gProjectionMatrix);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
 
@@ -195,7 +195,7 @@ void cam_set_fov(f32 camFieldOfView) {
         gCurCamFOV = camFieldOfView;
         guPerspectiveF(gPerspectiveMatrixF, &perspNorm, camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR,
                        CAMERA_SCALE);
-        mtxf_to_mtx(&gPerspectiveMatrixF, &gProjectionMatrixS);
+        mtxf_to_mtx(&gPerspectiveMatrixF, &gProjectionMatrix);
     }
 }
 
@@ -205,7 +205,7 @@ void cam_set_fov(f32 camFieldOfView) {
 UNUSED void cam_reset_fov(void) {
     guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR,
                    CAMERA_SCALE);
-    mtxf_to_mtx(&gPerspectiveMatrixF, &gProjectionMatrixS);
+    mtxf_to_mtx(&gPerspectiveMatrixF, &gProjectionMatrix);
 }
 
 /**
@@ -898,7 +898,7 @@ void func_80067D3C(Gfx **dList, UNUSED Mtx **mats) {
     gCameraTransform.z_position = gCameras[gActiveCameraID].trans.z_position;
 
     mtxf_from_transform(&gProjectionMatrixF, &gCameraTransform);
-    mtxf_to_mtx(&gProjectionMatrixF, &gUnusedProjectionMatrixS);
+    mtxf_to_mtx(&gProjectionMatrixF, &gUnusedProjectionMatrix);
 
     gActiveCameraID = temp;
 }
@@ -926,7 +926,7 @@ void set_ortho_matrix_view(Gfx **dList, Mtx **mtx) {
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
     mtxf_to_mtx(&gOrthoMatrixF, *mtx);
-    gModelMatrixS[0] = *mtx;
+    gModelMatrix[0] = *mtx;
     gViewportStack[gActiveCameraID + 5].vp.vscale[0] = width * 2;
     gViewportStack[gActiveCameraID + 5].vp.vscale[1] = width * 2;
     gViewportStack[gActiveCameraID + 5].vp.vtrans[0] = width * 2;
@@ -1015,7 +1015,7 @@ void matrix_world_origin(Gfx **dList, Mtx **mtx) {
     mtxf_from_translation(gModelMatrixF[gModelMatrixStackPos], 0.0f, 0.0f, 0.0f);
     mtxf_mul(gModelMatrixF[gModelMatrixStackPos], &gViewMatrixF, &gCurrentModelMatrixF);
     mtxf_to_mtx(&gCurrentModelMatrixF, *mtx);
-    gModelMatrixS[gModelMatrixStackPos] = *mtx;
+    gModelMatrix[gModelMatrixStackPos] = *mtx;
     gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), gMatrixType);
 }
 
@@ -1094,7 +1094,7 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object 
         mtxf_mul(&gCurrentModelMatrixF, gModelMatrixF[gModelMatrixStackPos - 1], gModelMatrixF[gModelMatrixStackPos]);
         mtxf_mul(gModelMatrixF[gModelMatrixStackPos], &gViewMatrixF, &gCurrentModelMatrixF);
         mtxf_to_mtx(&gCurrentModelMatrixF, *mtx);
-        gModelMatrixS[gModelMatrixStackPos] = *mtx;
+        gModelMatrix[gModelMatrixStackPos] = *mtx;
         gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
         gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(&gVehiclePartVertex), 1, 0);
     } else {
@@ -1118,7 +1118,7 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object 
         gModelMatrixStackPos++;
         mtxf_billboard(gModelMatrixF[gModelMatrixStackPos], angleDiff, obj->segment.trans.scale, gVideoAspectRatio);
         mtxf_to_mtx(gModelMatrixF[gModelMatrixStackPos], *mtx);
-        gModelMatrixS[gModelMatrixStackPos] = *mtx;
+        gModelMatrix[gModelMatrixStackPos] = *mtx;
         gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dList)++);
     }
@@ -1191,7 +1191,7 @@ void render_ortho_triangle_image(Gfx **dList, Mtx **mtx, Vertex **vtx, ObjectSeg
         mtxf_from_inverse_transform(&aspectMtxF, &gCameraTransform);
         mtxf_mul(&gCurrentModelMatrixF, &aspectMtxF, gModelMatrixF[gModelMatrixStackPos]);
         mtxf_to_mtx(gModelMatrixF[gModelMatrixStackPos], *mtx);
-        gModelMatrixS[gModelMatrixStackPos] = *mtx;
+        gModelMatrix[gModelMatrixStackPos] = *mtx;
         gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dList)++);
         if (gSpriteAnimOff == FALSE) {
@@ -1337,8 +1337,8 @@ s32 cam_push_model_mtx(Gfx **dList, Mtx **mtx, ObjectTransform *trans, f32 scale
     mtxf_mul(gModelMatrixF[gModelMatrixStackPos + 1], &gViewMatrixF, &gCurrentModelMatrixS);
     mtxf_to_mtx(&gCurrentModelMatrixS, *mtx);
     gModelMatrixStackPos++;
-    gModelMatrixS[0, gModelMatrixStackPos] = *mtx; // Should be [gModelMatrixStackPos]
-    if (gModelMatrixStackPos >= ARRAY_COUNT(gModelMatrixS)) {
+    gModelMatrix[0, gModelMatrixStackPos] = *mtx; // Should be [gModelMatrixStackPos]
+    if (gModelMatrixStackPos >= ARRAY_COUNT(gModelMatrix)) {
         stubbed_printf("cameraPushModelMtx: model stack overflow!!\n");
     }
     if (1) {}
@@ -1448,7 +1448,7 @@ void apply_matrix_from_stack(Gfx **dList) {
     } // Fakematch
 
     if (gModelMatrixStackPos > 0) {
-        gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL(gModelMatrixS[gModelMatrixStackPos]), G_MTX_DKR_INDEX_1);
+        gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL(gModelMatrix[gModelMatrixStackPos]), G_MTX_DKR_INDEX_1);
     } else {
         gSPSelectMatrixDKR((*dList)++, G_MTX_DKR_INDEX_0);
     }
@@ -1529,7 +1529,7 @@ Matrix *get_projection_matrix_f32(void) {
  * Return the current fixed point projection matrix.
  */
 Mtx *get_projection_matrix_s16(void) {
-    return &gProjectionMatrixS;
+    return &gProjectionMatrix;
 }
 
 /**
