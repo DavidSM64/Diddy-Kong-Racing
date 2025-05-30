@@ -1170,7 +1170,7 @@ void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *e
     particle->trans.y_position = particle->localPos.y;
     particle->trans.z_position = particle->localPos.z;
     if (particle->movementType == PARTICLE_MOVEMENT_BASIC_PARENT) {
-        vec3f_rotate(&obj->segment.trans.rotation, &particle->trans.x_position);
+        vec3f_rotate(&obj->segment.trans.rotation, (Vec3f *) &particle->trans.x_position);
     }
 
     particle->trans.x_position += obj->segment.trans.x_position;
@@ -2268,7 +2268,7 @@ void move_particle_attached_to_parent(Particle *particle) {
     particle->trans.x_position = 0.0f;
     particle->trans.y_position = -particle->downOffset;
     particle->trans.z_position = 0.0f;
-    vec3f_rotate(&particle->trans.rotation, &particle->trans.x_position);
+    vec3f_rotate(&particle->trans.rotation, (Vec3f *) &particle->trans.x_position);
     particle->trans.x_position += particle->localPos.x;
     particle->trans.y_position += particle->localPos.y;
     particle->trans.z_position += particle->localPos.z;

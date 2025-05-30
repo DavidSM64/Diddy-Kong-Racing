@@ -3594,9 +3594,9 @@ void func_8002DE30(Object *obj) {
                         }
                         if (maxYPos >= sp90 && sp94 >= minYPos) {
                             if (tri2d_xz_contains_point(obj->segment.trans.x_position, obj->segment.trans.z_position,
-                                                        &vertices[triangle->verticesArray[1]].x,
-                                                        &vertices[triangle->verticesArray[2]].x,
-                                                        &vertices[triangle->verticesArray[3]].x)) {
+                                                        (Vec3s *) &vertices[triangle->verticesArray[1]].x,
+                                                        (Vec3s *) &vertices[triangle->verticesArray[2]].x,
+                                                        (Vec3s *) &vertices[triangle->verticesArray[3]].x)) {
                                 foundResult = TRUE;
                                 obj->shading->unk0 += (((1.0f - D_800DC884[batchFlags]) - obj->shading->unk0) * 0.2);
                             }

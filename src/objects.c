@@ -2963,7 +2963,7 @@ void render_3d_billboard(Object *obj) {
     } else {
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     }
-    gfxData = obj->unk68[obj->segment.object.modelIndex];
+    gfxData = (Sprite *) obj->unk68[obj->segment.object.modelIndex];
     bubbleTrap = NULL;
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2) {
         bubbleTrap = obj->properties.fireball.obj;
@@ -3147,7 +3147,7 @@ void render_3d_model(Object *obj) {
                 if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->unk60->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
-                        something = loopObj->unk68[loopObj->segment.object.modelIndex];
+                        something = (Sprite *) loopObj->unk68[loopObj->segment.object.modelIndex];
                         vtxX = obj->curVertData[objModel->unk14[index]].x;
                         vtxY = obj->curVertData[objModel->unk14[index]].y;
                         vtxZ = obj->curVertData[objModel->unk14[index]].z;
@@ -3203,7 +3203,7 @@ void render_3d_model(Object *obj) {
                 index = obj->segment.header->unk58;
                 if (index >= 0 && index < objModel->unk18) {
                     flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
-                    something = loopObj->unk68[loopObj->segment.object.modelIndex];
+                    something = (Sprite *) loopObj->unk68[loopObj->segment.object.modelIndex];
                     vtxX = obj->curVertData[objModel->unk14[index]].x;
                     vtxY = obj->curVertData[objModel->unk14[index]].y;
                     vtxZ = obj->curVertData[objModel->unk14[index]].z;
@@ -3595,7 +3595,7 @@ void render_bubble_trap(ObjectTransform *trans, Sprite *gfxData, Object *obj, s3
     Camera *cameraSegment;
     f32 dist;
 
-    vec3f_rotate(&trans->rotation, &obj->segment.trans.x_position);
+    vec3f_rotate(&trans->rotation, (Vec3f *) &obj->segment.trans.x_position);
     obj->segment.trans.x_position += trans->x_position;
     obj->segment.trans.y_position += trans->y_position;
     obj->segment.trans.z_position += trans->z_position;
@@ -4486,7 +4486,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = obj->segment.trans.x_position;
     sp78.y_position = obj->segment.trans.y_position;
     sp78.z_position = obj->segment.trans.z_position;
-    mtxf_from_transform(obj5C->_matrices[(obj5C->unk104 + 2) << 1], &sp78);
+    mtxf_from_transform((MtxF *) obj5C->_matrices[(obj5C->unk104 + 2) << 1], &sp78);
     obj5C->unk100 = NULL;
 }
 
@@ -6101,7 +6101,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     sp94.y_rotation = -object->segment.trans.rotation.y_rotation;
     sp94.x_rotation = -object->segment.trans.rotation.x_rotation;
     sp94.z_rotation = -object->segment.trans.rotation.z_rotation;
-    vec3f_rotate_ypr(&sp94, &sp5C.f);
+    vec3f_rotate_ypr(&sp94, &sp5C);
 
     if (object->segment.header->unk3D != 0 && arg2) {
         mtxf_transform_dir(get_projection_matrix_f32(), &sp5C, &sp5C);
@@ -6118,7 +6118,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     if (arg2) {
         mtxf_transform_dir(get_projection_matrix_f32(), &sp5C, &sp5C);
     }
-    vec3f_rotate_ypr(&sp94, &sp5C.f);
+    vec3f_rotate_ypr(&sp94, &sp5C);
 
     x2 = sp5C.x;
     y2 = sp5C.y;

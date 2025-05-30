@@ -10,12 +10,6 @@
 #include "PRinternal/piint.h"
 #include "PRinternal/viint.h"
 
-/************ .rodata ************/
-
-UNUSED const char D_800E6F00[] = "Camera Error: Illegal mode!\n";
-
-/*********************************/
-
 /************ .data ************/
 
 s8 gAntiPiracyViewport = FALSE;
@@ -375,6 +369,7 @@ s32 cam_set_layout(s32 layoutID) {
             break;
     }
     if (gActiveCameraID >= gNumCameras) {
+        stubbed_printf("Camera Error: Illegal mode!\n");
         gActiveCameraID = 0;
     }
     return gNumCameras;
@@ -1385,6 +1380,9 @@ s32 mtx_cam_push(Gfx **dList, Mtx **mtx, ObjectTransform *trans, f32 scaleY, f32
     if (0) {
         stubbed_printf("camPushModelMtx: bsp stack overflow!!\n");
     }
+#ifdef AVOID_UB
+    return 0;
+#endif
 }
 
 /**
