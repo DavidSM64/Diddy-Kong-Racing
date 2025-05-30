@@ -65,7 +65,7 @@ u8 D_800DC92C[24] = {
 /************ .bss ************/
 
 Gfx *gSceneCurrDisplayList;
-MatrixS *gSceneCurrMatrix;
+Mtx *gSceneCurrMatrix;
 Vertex *gSceneCurrVertexList;
 Triangle *gSceneCurrTriList;
 
@@ -286,7 +286,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
  * The root function for rendering the entire scene.
  * Handles drawing the track, objects and the majority of the HUD in single player.
  */
-void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, Triangle **tris, s32 updateRate) {
+void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 updateRate) {
     s32 i;
     s32 numViewports;
     s32 tempUpdateRate;
@@ -2198,7 +2198,7 @@ void func_8002A31C(void) {
     f32 ox3;
     f32 oy3;
     f32 oz3;
-    Matrix *cameraMatrix;
+    MtxF *cameraMatrix;
     f32 inverseMagnitude;
     f32 x;
     f32 y;
@@ -2214,21 +2214,21 @@ void func_8002A31C(void) {
         ox1 = x;
         oy1 = y;
         oz1 = z;
-        guMtxXFMF(*cameraMatrix, x, y, z, &ox1, &oy1, &oz1);
+        mtxf_transform_point(cameraMatrix, x, y, z, &ox1, &oy1, &oz1);
         x = D_800DC8AC[i][1].x;
         y = D_800DC8AC[i][1].y;
         z = D_800DC8AC[i][1].z;
         ox2 = x;
         oy2 = y;
         oz2 = z;
-        guMtxXFMF(*cameraMatrix, x, y, z, &ox2, &oy2, &oz2);
+        mtxf_transform_point(cameraMatrix, x, y, z, &ox2, &oy2, &oz2);
         x = D_800DC8AC[i][2].x;
         y = D_800DC8AC[i][2].y;
         z = D_800DC8AC[i][2].z;
         ox3 = x;
         oy3 = y;
         oz3 = z;
-        guMtxXFMF(*cameraMatrix, x, y, z, &ox3, &oy3, &oz3);
+        mtxf_transform_point(cameraMatrix, x, y, z, &ox3, &oy3, &oz3);
         x = ((oz2 - oz3) * oy1) + (oy2 * (oz3 - oz1)) + (oy3 * (oz1 - oz2));
         y = ((ox2 - ox3) * oz1) + (oz2 * (ox3 - ox1)) + (oz3 * (ox1 - ox2));
         z = ((oy2 - oy3) * ox1) + (ox2 * (oy3 - oy1)) + (ox3 * (oy1 - oy2));
@@ -3590,10 +3590,10 @@ void func_8002DE30(Object *obj) {
                             }
                         }
                         if (maxYPos >= sp90 && sp94 >= minYPos) {
-                            if (point_triangle_2d_xz_intersection(
-                                    obj->segment.trans.x_position, obj->segment.trans.z_position,
-                                    &vertices[triangle->verticesArray[1]].x, &vertices[triangle->verticesArray[2]].x,
-                                    &vertices[triangle->verticesArray[3]].x)) {
+                            if (tri2d_xz_contains_point(obj->segment.trans.x_position, obj->segment.trans.z_position,
+                                                        &vertices[triangle->verticesArray[1]].x,
+                                                        &vertices[triangle->verticesArray[2]].x,
+                                                        &vertices[triangle->verticesArray[3]].x)) {
                                 foundResult = TRUE;
                                 obj->shading->unk0 += (((1.0f - D_800DC884[batchFlags]) - obj->shading->unk0) * 0.2);
                             }
@@ -4473,7 +4473,7 @@ UNUSED void update_perspective_and_envmap(void) {
  * Take the current camera position and calculate the perspective position, for envmapping.
  */
 void compute_scene_camera_transform_matrix(void) {
-    Matrix mtx;
+    MtxF mtx;
     ObjectTransform trans;
 
     f32 x = 0.0f;
@@ -4488,8 +4488,8 @@ void compute_scene_camera_transform_matrix(void) {
     trans.z_position = 0.0f;
     trans.scale = 1.0f;
 
-    object_transform_to_matrix(mtx, &trans);
-    guMtxXFMF(mtx, x, y, z, &x, &y, &z);
+    mtxf_from_transform(&mtx, &trans);
+    mtxf_transform_point(&mtx, x, y, z, &x, &y, &z);
 
     // Store x/y/z as integers
     gScenePerspectivePos.x = x;

@@ -227,7 +227,7 @@ void set_boss_voice_clip_offset(u16 *soundID) {
  * Also has worldspace values.
  */
 void racer_boss_sound_spatial(f32 x, f32 y, f32 z, s32 offset) {
-    s8 randomOffset = get_random_number_from_range(0, 1);
+    s8 randomOffset = rand_range(0, 1);
     if (offset == 0) {
         randomOffset = 0;
     }
@@ -239,7 +239,7 @@ void racer_boss_sound_spatial(f32 x, f32 y, f32 z, s32 offset) {
  * Add a random amount to offset, then play a random voice clip within that range.
  */
 void play_random_boss_sound(s32 offset) {
-    s8 randomOffset = get_random_number_from_range(0, 1);
+    s8 randomOffset = rand_range(0, 1);
     if (offset == 0) {
         randomOffset = 0;
     }

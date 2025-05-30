@@ -20,10 +20,7 @@ enum TextureRectangleFlags {
     TEXRECT_FLIP_Y = (1 << 13),
 };
 
-typedef union {
-    void (*function)(Gfx **, MatrixS **);
-    void *ptr;
-} BackgroundFunction;
+typedef s32 (*BackgroundFunction)(Gfx **, Mtx **);
 
 typedef struct DKR_OSTask {
     struct DKR_OSTask *next;
@@ -74,8 +71,8 @@ void gfxtask_run_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
 void texrect_draw(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue,
                                u8 alpha);
 void bgdraw_chequer(Gfx** dList);
-void bgdraw_render(Gfx **dList, MatrixS **mtx, s32 drawBG);
-void bgdraw_set_func(void *func);
+void bgdraw_render(Gfx **dList, Mtx **mtx, s32 drawBG);
+void bgdraw_set_func(BackgroundFunction func);
 void texrect_draw_scaled(Gfx **dList, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour, s32 flags);
 
 
