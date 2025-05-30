@@ -4292,7 +4292,7 @@ void func_80016748(Object *obj0, Object *obj1) {
         if (!((objModel->unk3C + 50.0) < sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)))) {
             obj0Interact = obj0->interactObj;
             obj1Interact = obj1->interactObj;
-            transform_to_mtxf((Matrix *) obj1TransformMtx, &obj1->segment.trans);
+            mtxf_from_transform((Matrix *) obj1TransformMtx, &obj1->segment.trans);
             for (i = 0; i < objModel->unk20; i += 2) {
                 xDiff = obj1->curVertData[objModel->unk1C[i]].x;
                 yDiff = obj1->curVertData[objModel->unk1C[i]].y;
@@ -4464,7 +4464,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = -obj->segment.trans.x_position;
     sp78.y_position = -obj->segment.trans.y_position;
     sp78.z_position = -obj->segment.trans.z_position;
-    inverse_transform_to_mtxf(sp6C, &sp78);
+    mtxf_from_inverse_transform(sp6C, &sp78);
     inverseScale = 1.0 / obj->segment.trans.scale;
     i = 0;
     while (i < 16) {
@@ -4483,7 +4483,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = obj->segment.trans.x_position;
     sp78.y_position = obj->segment.trans.y_position;
     sp78.z_position = obj->segment.trans.z_position;
-    transform_to_mtxf(obj5C->_matrices[(obj5C->unk104 + 2) << 1], &sp78);
+    mtxf_from_transform(obj5C->_matrices[(obj5C->unk104 + 2) << 1], &sp78);
     obj5C->unk100 = NULL;
 }
 
@@ -4642,7 +4642,7 @@ void func_80017E98(void) {
         transform.x_position = 0.0f;
         transform.y_position = 0.0f;
         transform.z_position = 0.0f;
-        transform_to_mtxf(&mtx, &transform);
+        mtxf_from_transform(&mtx, &transform);
         mtxf_transform_point(&mtx, 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
         checkpoint->rotationXFrac = ox;
         checkpoint->rotationYFrac = oy;
@@ -6189,7 +6189,7 @@ void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRo
     objTrans.y_position = 0.0f;
     objTrans.z_position = 0.0f;
     objTrans.scale = 1.0f;
-    transform_to_mtxf(&objRotMtxF32, &objTrans);
+    mtxf_from_transform(&objRotMtxF32, &objTrans);
     mtxf_to_mtxs(&objRotMtxF32, &objRotMtxS32);
 
     for (i = 0; i < model->numberOfBatches; i++) {

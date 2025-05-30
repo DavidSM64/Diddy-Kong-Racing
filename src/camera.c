@@ -882,7 +882,7 @@ void func_80067D3C(Gfx **dList, UNUSED Mtx **mats) {
     }
     gCameraTransform.z_position = -gCameras[gActiveCameraID].trans.z_position;
 
-    inverse_transform_to_mtxf(&gCameraMatrixF, &gCameraTransform);
+    mtxf_from_inverse_transform(&gCameraMatrixF, &gCameraTransform);
     mtxf_mul(&gCameraMatrixF, &gPerspectiveMatrixF, &gViewMatrixF);
 
     gCameraTransform.rotation.y_rotation = -0x8000 - gCameras[gActiveCameraID].trans.rotation.y_rotation;
@@ -897,7 +897,7 @@ void func_80067D3C(Gfx **dList, UNUSED Mtx **mats) {
     }
     gCameraTransform.z_position = gCameras[gActiveCameraID].trans.z_position;
 
-    transform_to_mtxf(&gProjectionMatrixF, &gCameraTransform);
+    mtxf_from_transform(&gProjectionMatrixF, &gCameraTransform);
     mtxf_to_mtx(&gProjectionMatrixF, &gUnusedProjectionMatrixS);
 
     gActiveCameraID = temp;
@@ -948,9 +948,9 @@ void set_ortho_matrix_view(Gfx **dList, Mtx **mtx) {
 
 // Official Name: camStandardPersp?
 void func_8006807C(Gfx **dList, Mtx **mtx) {
-    inverse_transform_to_mtxf(&gCurrentModelMatrixF, &D_800DD288);
+    mtxf_from_inverse_transform(&gCurrentModelMatrixF, &D_800DD288);
     mtxf_mul(&gCurrentModelMatrixF, &gPerspectiveMatrixF, &gViewMatrixF);
-    inverse_transform_to_mtxf(gModelMatrixF[0], &D_800DD2A0);
+    mtxf_from_inverse_transform(gModelMatrixF[0], &D_800DD2A0);
     mtxf_mul(gModelMatrixF[0], &gViewMatrixF, &gCurrentModelMatrixF);
     mtxf_to_mtx(&gCurrentModelMatrixF, *mtx);
     gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_0);
@@ -1089,7 +1089,7 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object 
         gCameraTransform.x_position = obj->segment.trans.x_position;
         gCameraTransform.y_position = obj->segment.trans.y_position;
         gCameraTransform.z_position = obj->segment.trans.z_position;
-        transform_to_mtxf(&gCurrentModelMatrixF, &gCameraTransform);
+        mtxf_from_transform(&gCurrentModelMatrixF, &gCameraTransform);
         gModelMatrixStackPos++;
         mtxf_mul(&gCurrentModelMatrixF, gModelMatrixF[gModelMatrixStackPos - 1], gModelMatrixF[gModelMatrixStackPos]);
         mtxf_mul(gModelMatrixF[gModelMatrixStackPos], &gViewMatrixF, &gCurrentModelMatrixF);
@@ -1188,7 +1188,7 @@ void render_ortho_triangle_image(Gfx **dList, Mtx **mtx, Vertex **vtx, ObjectSeg
             scale = segment->trans.scale;
             mtxf_from_scale(&gCurrentModelMatrixF, scale, scale, 1.0f);
         }
-        inverse_transform_to_mtxf(&aspectMtxF, &gCameraTransform);
+        mtxf_from_inverse_transform(&aspectMtxF, &gCameraTransform);
         mtxf_mul(&gCurrentModelMatrixF, &aspectMtxF, gModelMatrixF[gModelMatrixStackPos]);
         mtxf_to_mtx(gModelMatrixF[gModelMatrixStackPos], *mtx);
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
@@ -1326,7 +1326,7 @@ s32 cam_push_model_mtx(Gfx **dList, Mtx **mtx, ObjectTransform *trans, f32 scale
     s32 index;
     f32 scaleFactor;
 
-    transform_to_mtxf(&gCurrentModelMatrixF, trans);
+    mtxf_from_transform(&gCurrentModelMatrixF, trans);
     if (offsetY != 0.0f) {
         mtxf_translate_y(&gCurrentModelMatrixF, offsetY);
     }
@@ -1359,7 +1359,7 @@ s32 cam_push_model_mtx(Gfx **dList, Mtx **mtx, ObjectTransform *trans, f32 scale
     gCameraTransform.y_position = 0.0f;
     gCameraTransform.z_position = 0.0f;
     gCameraTransform.scale = 1.0f;
-    inverse_transform_to_mtxf(&gCurrentModelMatrixF, &gCameraTransform);
+    mtxf_from_inverse_transform(&gCurrentModelMatrixF, &gCameraTransform);
     mtxf_transform_point(&gCurrentModelMatrixF, tempX, tempY, tempZ, &tempX, &tempY, &tempZ);
     scaleFactor = 1.0f / trans->scale;
     tempX *= scaleFactor;

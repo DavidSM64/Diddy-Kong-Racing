@@ -332,7 +332,7 @@ GLOBAL_ASM("asm/math_util/mtxs_transform_dir.s")
  * 4. Rotation around Y axis (yaw)
  * 5. Translation
  */
-void transform_to_mtxf(Matrix *mtx, ObjectTransform *trans) {
+void mtxf_from_transform(Matrix *mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
     f32 xRotSine;
@@ -367,7 +367,7 @@ void transform_to_mtxf(Matrix *mtx, ObjectTransform *trans) {
     (*mtx)[3][3] = 1.0f;
 }
 #else
-GLOBAL_ASM("asm/math_util/transform_to_mtxf.s")
+GLOBAL_ASM("asm/math_util/mtxf_from_transform.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -418,7 +418,7 @@ GLOBAL_ASM("asm/math_util/mtxf_translate_y.s")
  *   4. Rotate Z (negative roll)
  */
 /* Official Name: mathRpyXyzMtx */
-void inverse_transform_to_mtxf(Matrix *mtx, ObjectTransform *trans) {
+void mtxf_from_inverse_transform(Matrix *mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
     f32 xRotSine;
@@ -454,7 +454,7 @@ void inverse_transform_to_mtxf(Matrix *mtx, ObjectTransform *trans) {
     (*mtx)[3][3] = 1.0f;
 }
 #else
-GLOBAL_ASM("asm/math_util/inverse_transform_to_mtxf.s")
+GLOBAL_ASM("asm/math_util/mtxf_from_inverse_transform.s")
 #endif
 
 GLOBAL_ASM("asm/math_util/func_80070058.s")

@@ -397,7 +397,7 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
                 trans.rotation.y_rotation = obj->segment.trans.rotation.y_rotation;
                 trans.rotation.x_rotation = obj->segment.trans.rotation.x_rotation;
                 trans.rotation.z_rotation = 0;
-                transform_to_mtxf(&mtx, &trans);
+                mtxf_from_transform(&mtx, &trans);
                 diffX = 30.0f; // Need to use diffX to match.
                 if (lasergun->targeting == FALSE) {
                     diffX = 45.0f;
@@ -1162,7 +1162,7 @@ void try_to_collect_egg(Object *obj, Object_CollectEgg *egg) {
                 transF.x_position = -interactedObj->segment.trans.x_position;
                 transF.y_position = -interactedObj->segment.trans.y_position;
                 transF.z_position = -interactedObj->segment.trans.z_position;
-                inverse_transform_to_mtxf(&mat, &transF);
+                mtxf_from_inverse_transform(&mat, &transF);
                 mtxf_transform_point(&mat, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                      obj->segment.trans.z_position, &obj->segment.trans.x_position,
                                      &obj->segment.trans.y_position, &obj->segment.trans.z_position);
@@ -1908,7 +1908,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
         if ((wizShipObj->unk60 != NULL) && (wizShipObj->properties.fireball.timer == 0)) {
             if (wizShipObj->particleEmittersEnabled & OBJ_EMIT_1) {
                 wizShipObj->properties.fireball.timer = 20;
-                transform_to_mtxf(&shipMtx, &wizShipObj->segment.trans);
+                mtxf_from_transform(&shipMtx, &wizShipObj->segment.trans);
                 trans.x_position = 0.0f;
                 trans.y_position = 0.0f;
                 trans.z_position = 0.0f;
@@ -1916,7 +1916,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                 trans.rotation.y_rotation = wizShipObj->segment.trans.rotation.y_rotation;
                 trans.rotation.x_rotation = wizShipObj->segment.trans.rotation.x_rotation;
                 trans.rotation.z_rotation = 0;
-                transform_to_mtxf(&laserMtx, &trans);
+                mtxf_from_transform(&laserMtx, &trans);
 
                 for (i = 0; i < wizShipObj->unk60->unk0; i++) {
                     index = wizShipObj->unk60->unk2C[i];
@@ -4868,7 +4868,7 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     trans.y_position = 0.0f;
     trans.z_position = 0.0f;
     trans.scale = 1.0f;
-    transform_to_mtxf(&mtxf, &trans);
+    mtxf_from_transform(&mtxf, &trans);
     mtxf_transform_point(&mtxf, 0.0f, 0.0f, weapon->forwardVel, &obj->segment.x_velocity, &obj->segment.y_velocity,
                          &obj->segment.z_velocity);
     updateRateF = updateRate;
@@ -6167,7 +6167,7 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     transform.x_position = 0.0f;
     transform.y_position = 0.0f;
     transform.z_position = 0.0f;
-    transform_to_mtxf(&mtx, &transform);
+    mtxf_from_transform(&mtx, &transform);
     mtxf_transform_point(&mtx, 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
     obj64->midi_fade.unk8 = ox;
     obj64->midi_fade.unkC = oy;

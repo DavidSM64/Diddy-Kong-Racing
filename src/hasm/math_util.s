@@ -559,7 +559,7 @@ leaf mtxs_transform_dir
 /* 7082C 8006FC2C A4AC0004 */   sh        $t4, 0x4($a1)
 .end mtxs_transform_dir
 
-leaf transform_to_mtxf
+leaf mtxf_from_transform
 /* 70830 8006FC30 27BDFFF8 */  addiu      $sp, $sp, -0x8
 /* 70834 8006FC34 3C013780 */  lui        $at, (0x37800000 >> 16)
 /* 70838 8006FC38 FFBF0000 */  sd         $ra, 0x0($sp)
@@ -677,7 +677,7 @@ leaf transform_to_mtxf
 /* 709F8 8006FDF8 27BD0008 */  addiu      $sp, $sp, 0x8
 /* 709FC 8006FDFC 03E00008 */  jr         $ra
 /* 70A00 8006FE00 00000000 */   nop
-.end transform_to_mtxf
+.end mtxf_from_transform
 
 /* Official Name: mathSquashY */
 leaf mtxf_scale_y
@@ -716,7 +716,7 @@ leaf mtxf_translate_y
 .end mtxf_translate_y
 
 /* Official Name: mathRpyXyzMtx */
-leaf inverse_transform_to_mtxf
+leaf mtxf_from_inverse_transform
 /* 70A74 8006FE74 27BDFFF8 */  addiu      $sp, $sp, -0x8
 /* 70A78 8006FE78 3C013780 */  lui        $at, (0x37800000 >> 16)
 /* 70A7C 8006FE7C FFBF0000 */  sd         $ra, 0x0($sp)
@@ -838,7 +838,7 @@ leaf inverse_transform_to_mtxf
 /* 70C4C 8007004C 27BD0008 */  addiu      $sp, $sp, 0x8
 /* 70C50 80070050 03E00008 */  jr         $ra
 /* 70C54 80070054 00000000 */   nop
-.end inverse_transform_to_mtxf
+.end mtxf_from_inverse_transform
 
 leaf func_80070058
 /* 70C58 80070058 27BDFFF8 */  addiu      $sp, $sp, -0x8

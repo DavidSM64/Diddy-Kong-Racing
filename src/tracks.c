@@ -4488,7 +4488,7 @@ void compute_scene_camera_transform_matrix(void) {
     trans.z_position = 0.0f;
     trans.scale = 1.0f;
 
-    transform_to_mtxf(&mtx, &trans);
+    mtxf_from_transform(&mtx, &trans);
     mtxf_transform_point(&mtx, x, y, z, &x, &y, &z);
 
     // Store x/y/z as integers

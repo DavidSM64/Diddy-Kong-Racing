@@ -158,7 +158,7 @@ leaf calc_dynamic_lighting_for_object_2
 /* 25408 80024808 A70A0004 */  sh         $t2, 0x4($t8)
 /* 2540C 8002480C AF030010 */  sw         $v1, 0x10($t8)
 /* 25410 80024810 AF030014 */  sw         $v1, 0x14($t8)
-/* 25414 80024814 0C01BF9D */  jal        inverse_transform_to_mtxf
+/* 25414 80024814 0C01BF9D */  jal        mtxf_from_inverse_transform
 /* 25418 80024818 03002825 */   or        $a1, $t8, $zero
 /* 2541C 8002481C 27A50010 */  addiu      $a1, $sp, 0x10
 /* 25420 80024820 27A40034 */  addiu      $a0, $sp, 0x34
