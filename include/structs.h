@@ -628,7 +628,7 @@ typedef struct ObjectModel_44 {
 /* 0x00 */ s32 *anim;
 /* 0x00 */ u8 *animData;
     };
-/* 0x04 */ s32 unk4; // Number of frames in animation?
+/* 0x04 */ s32 animLength; // Animation length is the result of 16-frame length keyframes.
 } ObjectModel_44;
 
 typedef struct ObjectModel_C {

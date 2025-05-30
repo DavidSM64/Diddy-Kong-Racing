@@ -1511,7 +1511,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
             ttSWBodyObject->segment.animFrame = 16;
         } else if (gStopwatchAnimID == 4) {
             animcationFraction = music_animation_fraction();
-            temp_t6 = (obj68->objModel->animations[gStopwatchAnimID].unk4 - 1) << 4;
+            temp_t6 = (obj68->objModel->animations[gStopwatchAnimID].animLength - 1) << 4;
             if (animcationFraction == -1.0) {
                 ttSWBodyObject->segment.animFrame = 0.0;
             } else if (animcationFraction > 0.5) {
@@ -1532,7 +1532,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
                 }
             } else {
                 ttSWBodyObject->segment.animFrame += (updateRate * D_80126D69);
-                temp_lo = (obj68->objModel->animations[gStopwatchAnimID].unk4 - 1) << 4;
+                temp_lo = (obj68->objModel->animations[gStopwatchAnimID].animLength - 1) << 4;
                 if (ttSWBodyObject->segment.animFrame >= temp_lo) {
                     if (D_80126D68 != 0) {
                         D_80126D69 = -D_80126D69;

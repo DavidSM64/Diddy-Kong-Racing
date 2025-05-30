@@ -728,7 +728,7 @@ s32 func_80061A00(ObjectModel *model, s32 animTableIndex) {
         load_asset_to_address(ASSET_OBJECT_ANIMATIONS, animAddress, assetOffset, assetSize);
         gzip_inflate((u8 *) animAddress, (u8 *) model->animations[i].anim);
         temp = model->animations[i].anim;
-        model->animations[i].unk4 = *temp;
+        model->animations[i].animLength = *temp;
         model->animations[i].anim++;
         i++;
         start++;
@@ -760,7 +760,7 @@ void func_80061C0C(Object *obj) {
             obj->segment.object.animationID = mdl->numberOfAnimations - 1;
         }
         if (mdl->numberOfAnimations > 0) {
-            var_v1 = mdl->animations[obj->segment.object.animationID].unk4 - 2;
+            var_v1 = mdl->animations[obj->segment.object.animationID].animLength - 2;
         } else {
             var_v1 = 0;
         }
