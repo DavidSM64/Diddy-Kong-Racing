@@ -2762,8 +2762,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
 
     yOutCount = 0;
     for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
-        do {
-        } while (0);
+        if (1) { }
         currentBatch = &currentSegment->batches[batchNum];
         currentFaceOffset = currentBatch->facesOffset;
         nextFaceOffset = currentBatch[1].facesOffset;
@@ -2783,6 +2782,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
                 temp_ra_1 = ((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0);
                 temp_ra_2 = ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0);
                 temp_ra_3 = ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                var_v0 = faceNum; // fake?
                 if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
                     temp = currentSegment->unk14[faceNum].triangleIndex;
                     temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
@@ -2790,6 +2790,11 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
                     tempVec4f.y = temp_v1_4[1];
                     tempVec4f.z = temp_v1_4[2];
                     tempVec4f.w = temp_v1_4[3];
+                    // temp = currentSegment->unk14[faceNum].triangleIndex;
+                    // tempVec4f.x = currentSegment->unk18_vec4f[temp].x;
+                    // tempVec4f.y = currentSegment->unk18_vec4f[temp].y;
+                    // tempVec4f.z = currentSegment->unk18_vec4f[temp].z;
+                    // tempVec4f.w = currentSegment->unk18_vec4f[temp].w;
                     if (tempVec4f.y != 0.0) {
                         yOut[yOutCount] = -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
                         yOutCount++;
@@ -3948,6 +3953,7 @@ void func_8002F2AC(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002F2AC.s")
 #endif
 
+// https://decomp.me/scratch/DP2Yj
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002F440.s")
 
 // Transition points between different lighting levels, used by certain objects

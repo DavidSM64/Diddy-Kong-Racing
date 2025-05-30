@@ -1737,7 +1737,9 @@ UNUSED s32 func_8000E558(Object *arg0) {
     return TRUE;
 }
 
+// https://decomp.me/scratch/QHVHG
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000E5EC.s")
+// https://decomp.me/scratch/btRnW
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000E79C.s")
 
 UNUSED u8 *func_8000E898(u8 *arg0, s32 arg1) {
@@ -2425,7 +2427,8 @@ void gParticlePtrList_flush(void) {
     gFreeListCount = 0;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800101AC.s")
+// https://decomp.me/scratch/bJM0P
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800101AC.s") 
 
 void obj_update(s32 updateRate) {
     s32 i;
@@ -3749,6 +3752,7 @@ void render_racer_magnet(Gfx **dList, Mtx **mtx, Vertex **vtxList, Object *obj) 
     }
 }
 
+// https://decomp.me/scratch/0fEHd
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80014090.s")
 
 /**
@@ -4203,6 +4207,7 @@ void process_object_interactions(void) {
     }
 }
 
+// Nothing
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800159C8.s")
 
 void func_80016500(Object *obj, Object_Racer *racer) {
@@ -4487,6 +4492,7 @@ void func_8001709C(Object *obj) {
     obj5C->unk100 = NULL;
 }
 
+// https://decomp.me/scratch/qYswd
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017248.s")
 
 unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
@@ -4533,6 +4539,7 @@ u32 func_800179D0(void) {
 #endif
 }
 
+// Nothing
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017A18.s")
 
 /**
@@ -4709,6 +4716,7 @@ void func_80017E98(void) {
     }
 }
 
+// https://decomp.me/scratch/xQbet
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800185E4.s")
 
 /**
@@ -4727,6 +4735,7 @@ Object *find_taj_object(void) {
     return NULL;
 }
 
+// https://decomp.me/scratch/MTL0u
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80018CE0.s")
 
 // Rocket Path
@@ -4788,7 +4797,8 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
     return TRUE;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80019808.s")
+// https://decomp.me/scratch/QupaR
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80019808.s") 
 
 /**
  * Mark the course as finished for the appropriate mode.
@@ -5739,6 +5749,7 @@ s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
     return result;
 }
 
+// https://decomp.me/scratch/cfVAM
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001C6C4.s")
 
 s32 ainode_find_next(s32 nodeId, s32 arg1, s32 direction) {
@@ -6486,6 +6497,7 @@ void func_8001E89C(void) {
     }
 }
 
+// https://decomp.me/scratch/G2ZOW
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001E93C.s")
 
 void func_8001EE74(void) {
@@ -6654,6 +6666,7 @@ void func_8001F450(void) {
     D_8011AD53 = 1;
 }
 
+// Nothing
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001F460.s")
 
 s32 func_800210CC(s8 arg0) {
@@ -6784,6 +6797,7 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
     return 0;
 }
 
+// Nothing
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80021600.s")
 
 f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x) {
