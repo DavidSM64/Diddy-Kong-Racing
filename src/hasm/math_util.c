@@ -29,7 +29,7 @@ extern s16 gArcTanTable[];
  * from being interrupted by others, letting you safely
  * work with delicate areas in memory. Kind of like a mutex.
  * Returns what the interrupt mask wask before.
- * Official Name: disableInterrupts 
+ * Official Name: disableInterrupts
  */
 u32 interrupts_disable(void) {
     if (gIntDisFlag) {
@@ -71,7 +71,7 @@ GLOBAL_ASM("asm/math_util/set_gIntDisFlag.s")
 #ifdef NON_MATCHING
 /**
  * Gets the global interrupt disable flag, which indicates whether hardware interrupts are enabled or disabled.
- * Official Name: getIntDisFlag 
+ * Official Name: getIntDisFlag
  */
 u8 get_gIntDisFlag(void) {
     return gIntDisFlag;
@@ -424,8 +424,8 @@ GLOBAL_ASM("asm/math_util/mtxf_translate_y.s")
  *   2. Rotate Y (negative yaw)
  *   3. Rotate X (negative pitch)
  *   4. Rotate Z (negative roll)
- * 
- * Official Name: mathRpyXyzMtx 
+ *
+ * Official Name: mathRpyXyzMtx
  */
 void mtxf_from_inverse_transform(MtxF *mtx, ObjectTransform *trans) {
     f32 yRotSine;
