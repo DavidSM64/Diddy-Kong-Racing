@@ -376,10 +376,10 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
             boostObj[i].unk74 = 0.0f;
             boostObj[i].sprite = tex_load_sprite(boostObj[i].spriteId, 0);
             boostObj[i].tex = load_texture(boostObj[i].textureId);
-            boostObj[i].unk72 = get_random_number_from_range(0, 255);
+            boostObj[i].unk72 = rand_range(0, 255);
             boostObj[i].unk73 = 0;
             // This is for shields, not boosts.
-            gShieldSineTime[i] = get_random_number_from_range(0, 255);
+            gShieldSineTime[i] = rand_range(0, 255);
         }
         D_8011B068[i] = TRUE;
     }
@@ -392,8 +392,8 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     gShieldEffectObject = spawn_object(&objEntry.common, OBJECT_SPAWN_NONE);
     for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
         gRacerFXData[i].unk0 = 0;
-        gRacerFXData[i].unk1 = get_random_number_from_range(0, 255);
-        gRacerFXData[i].unk2 = get_random_number_from_range(0, 255);
+        gRacerFXData[i].unk1 = rand_range(0, 255);
+        gRacerFXData[i].unk2 = rand_range(0, 255);
         gRacerFXData[i].unk3 = 0;
     }
     objEntry.common.objectID = ASSET_OBJECT_ID_AINODE;
@@ -459,7 +459,7 @@ void func_8000B38C(Vertex *vertices, Triangle *triangles, ObjectTransform *trans
     v = (s16 *) vertices;
 
     sp64.z = -arg4;
-    f32_vec3_apply_object_rotation3(&trans->rotation, &sp64);
+    vec3f_rotate_py(&trans->rotation, &sp64);
 
     // A rather strange way to fill structures
 
@@ -475,7 +475,7 @@ void func_8000B38C(Vertex *vertices, Triangle *triangles, ObjectTransform *trans
         sp64.y = *ptr++ * arg3;
         sp64.z = 0.0f;
 
-        f32_vec3_apply_object_rotation(&trans->rotation, &sp64);
+        vec3f_rotate(&trans->rotation, &sp64);
 
         *v++ = sp64.f[0] + trans->x_position;
         *v++ = sp64.f[1] + trans->y_position;
@@ -578,10 +578,11 @@ void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boos
                 sp74.x = boostData->position.x;
                 sp74.y = boostData->position.y;
                 sp74.z = boostData->position.z;
-                f32_vec3_apply_object_rotation(&racerObj->segment.trans.rotation, &sp74);
+                vec3f_rotate(&racerObj->segment.trans.rotation, &sp74);
                 ignore_bounds_check();
                 move_object(gBoostEffectObjects[racerIndex], racerObj->segment.trans.x_position + sp74.f[0],
-                            racerObj->segment.trans.y_position + sp74.f[1], racerObj->segment.trans.z_position + sp74.f[2]);
+                            racerObj->segment.trans.y_position + sp74.f[1],
+                            racerObj->segment.trans.z_position + sp74.f[2]);
             }
             if (arg4 != FALSE) {
                 D_8011B068[racerIndex] = FALSE;
@@ -3592,7 +3593,7 @@ void render_bubble_trap(ObjectTransform *trans, Sprite *gfxData, Object *obj, s3
     Camera *cameraSegment;
     f32 dist;
 
-    f32_vec3_apply_object_rotation(&trans->rotation, &obj->segment.trans.x_position);
+    vec3f_rotate(&trans->rotation, &obj->segment.trans.x_position);
     obj->segment.trans.x_position += trans->x_position;
     obj->segment.trans.y_position += trans->y_position;
     obj->segment.trans.z_position += trans->z_position;
@@ -4291,12 +4292,12 @@ void func_80016748(Object *obj0, Object *obj1) {
         if (!((objModel->unk3C + 50.0) < sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)))) {
             obj0Interact = obj0->interactObj;
             obj1Interact = obj1->interactObj;
-            object_transform_to_matrix((Matrix*) obj1TransformMtx, &obj1->segment.trans);
+            transform_to_mtxf((Matrix *) obj1TransformMtx, &obj1->segment.trans);
             for (i = 0; i < objModel->unk20; i += 2) {
                 xDiff = obj1->curVertData[objModel->unk1C[i]].x;
                 yDiff = obj1->curVertData[objModel->unk1C[i]].y;
                 zDiff = obj1->curVertData[objModel->unk1C[i]].z;
-                guMtxXFMF_dkr((Matrix*) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                mtxf_transform_point((Matrix *) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
                 temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->segment.trans.scale) * 50.0;
                 xDiff -= obj0->segment.trans.x_position;
                 yDiff -= obj0->segment.trans.y_position;
@@ -4463,7 +4464,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = -obj->segment.trans.x_position;
     sp78.y_position = -obj->segment.trans.y_position;
     sp78.z_position = -obj->segment.trans.z_position;
-    object_inverse_transform_to_matrix(sp6C, &sp78);
+    inverse_transform_to_mtxf(sp6C, &sp78);
     inverseScale = 1.0 / obj->segment.trans.scale;
     i = 0;
     while (i < 16) {
@@ -4474,7 +4475,7 @@ void func_8001709C(Object *obj) {
     sp2C[1][1] = inverseScale;
     sp2C[2][2] = inverseScale;
     sp2C[3][3] = 1.0f;
-    f32_matrix_mult(sp6C, &sp2C, sp6C);
+    mtxf_mul(sp6C, &sp2C, sp6C);
     sp78.rotation.y_rotation = obj->segment.trans.rotation.y_rotation;
     sp78.rotation.x_rotation = obj->segment.trans.rotation.x_rotation;
     sp78.rotation.z_rotation = obj->segment.trans.rotation.z_rotation;
@@ -4482,7 +4483,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = obj->segment.trans.x_position;
     sp78.y_position = obj->segment.trans.y_position;
     sp78.z_position = obj->segment.trans.z_position;
-    object_transform_to_matrix(obj5C->_matrices[(obj5C->unk104 + 2) << 1], &sp78);
+    transform_to_mtxf(obj5C->_matrices[(obj5C->unk104 + 2) << 1], &sp78);
     obj5C->unk100 = NULL;
 }
 
@@ -4641,8 +4642,8 @@ void func_80017E98(void) {
         transform.x_position = 0.0f;
         transform.y_position = 0.0f;
         transform.z_position = 0.0f;
-        object_transform_to_matrix(&mtx, &transform);
-        guMtxXFMF_dkr(&mtx, 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
+        transform_to_mtxf(&mtx, &transform);
+        mtxf_transform_point(&mtx, 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
         checkpoint->rotationXFrac = ox;
         checkpoint->rotationYFrac = oy;
         checkpoint->rotationZFrac = oz;
@@ -5999,7 +6000,7 @@ void set_shading_properties(ShadeProperties *arg0, f32 brightness, f32 ambient, 
     velocityPos.z = -16384.0f;
     velocityPos.x = 0.0f;
     velocityPos.y = 0.0f;
-    f32_vec3_apply_object_rotation(&angle, &velocityPos);
+    vec3f_rotate(&angle, &velocityPos);
     arg0->unk1C = -velocityPos.x;
     arg0->unk1E = -velocityPos.y;
     arg0->unk20 = -velocityPos.z;
@@ -6097,10 +6098,10 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     sp94.y_rotation = -object->segment.trans.rotation.y_rotation;
     sp94.x_rotation = -object->segment.trans.rotation.x_rotation;
     sp94.z_rotation = -object->segment.trans.rotation.z_rotation;
-    f32_vec3_apply_object_rotation2(&sp94, &sp5C.f);
+    vec3f_rotate_rpy(&sp94, &sp5C.f);
 
     if (object->segment.header->unk3D != 0 && arg2) {
-        f32_matrix_dot(get_projection_matrix_f32(), (Matrix *) &sp5C, (Matrix *) &sp5C);
+        mtxf_transform_dir(get_projection_matrix_f32(), (Matrix *) &sp5C, (Matrix *) &sp5C);
     }
 
     x1 = -sp5C.x;
@@ -6112,9 +6113,9 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     sp5C.z = object->shading->unk20 << 2;
 
     if (arg2) {
-        f32_matrix_dot(get_projection_matrix_f32(), (Matrix *) &sp5C, (Matrix *) &sp5C);
+        mtxf_transform_dir(get_projection_matrix_f32(), (Matrix *) &sp5C, (Matrix *) &sp5C);
     }
-    f32_vec3_apply_object_rotation2(&sp94, &sp5C.f);
+    vec3f_rotate_rpy(&sp94, &sp5C.f);
 
     x2 = sp5C.x;
     y2 = sp5C.y;
@@ -6188,8 +6189,8 @@ void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRo
     objTrans.y_position = 0.0f;
     objTrans.z_position = 0.0f;
     objTrans.scale = 1.0f;
-    object_transform_to_matrix(&objRotMtxF32, &objTrans);
-    f32_matrix_to_s32_matrix(&objRotMtxF32, &objRotMtxS32);
+    transform_to_mtxf(&objRotMtxF32, &objTrans);
+    mtxf_to_mtxs(&objRotMtxF32, &objRotMtxS32);
 
     for (i = 0; i < model->numberOfBatches; i++) {
         if (model->batches[i].flags & RENDER_ENVMAP) {
@@ -6231,9 +6232,9 @@ void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRo
                 gEnvmapPos[1].y = model40Entries[count].y;
                 gEnvmapPos[1].z = model40Entries[count].z;
                 count++;
-                s16_vec3_mult_by_s32_matrix(&objRotMtxS32, &gEnvmapPos[1]);
+                mtxs_transform_dir(&objRotMtxS32, &gEnvmapPos[1]);
                 if (sp70 == 0) {
-                    s16_matrix_rotate(&gEnvmapPos[0], &gEnvmapPos[1]);
+                    vec3s_reflect(&gEnvmapPos[0], &gEnvmapPos[1]);
                 }
                 var_v0 = gEnvmapPos[1].x;
                 var_v1 = gEnvmapPos[1].y;

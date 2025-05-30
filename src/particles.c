@@ -1052,19 +1052,19 @@ void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *e
                          (PARTICLE_RANDOM_VELOCITY_Z | PARTICLE_RANDOM_VELOCITY_Y | PARTICLE_RANDOM_VELOCITY_X);
     if (randomizationFlags) {
         if (randomizationFlags & PARTICLE_RANDOM_VELOCITY_X) {
-            particle->velocity.x += (f32) get_random_number_from_range(-behaviour->velocityModifierRange.x,
-                                                                       behaviour->velocityModifierRange.x) *
-                                    0.00001525878906;
+            particle->velocity.x +=
+                (f32) rand_range(-behaviour->velocityModifierRange.x, behaviour->velocityModifierRange.x) *
+                0.00001525878906;
         }
         if (randomizationFlags & PARTICLE_RANDOM_VELOCITY_Y) {
-            particle->velocity.y += (f32) get_random_number_from_range(-behaviour->velocityModifierRange.y,
-                                                                       behaviour->velocityModifierRange.y) *
-                                    0.00001525878906;
+            particle->velocity.y +=
+                (f32) rand_range(-behaviour->velocityModifierRange.y, behaviour->velocityModifierRange.y) *
+                0.00001525878906;
         }
         if (randomizationFlags & PARTICLE_RANDOM_VELOCITY_Z) {
-            particle->velocity.z += (f32) get_random_number_from_range(-behaviour->velocityModifierRange.z,
-                                                                       behaviour->velocityModifierRange.z) *
-                                    0.00001525878906;
+            particle->velocity.z +=
+                (f32) rand_range(-behaviour->velocityModifierRange.z, behaviour->velocityModifierRange.z) *
+                0.00001525878906;
         }
     }
 
@@ -1090,26 +1090,25 @@ void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *e
         randomizationFlags = behaviour->randomizationFlags;
         if (randomizationFlags & PARTICLE_RANDOM_EMISSION_SPEED) {
             sourceVel.z +=
-                (f32) get_random_number_from_range(-behaviour->emissionSpeedRange, behaviour->emissionSpeedRange) *
-                0.00001525878906;
+                (f32) rand_range(-behaviour->emissionSpeedRange, behaviour->emissionSpeedRange) * 0.00001525878906;
         }
 
         if (randomizationFlags & (PARTICLE_RANDOM_EMISSION_DIR_PITCH | PARTICLE_RANDOM_EMISSION_DIR_YAW)) {
             angle.y_rotation = emitter->emissionDirection.y_rotation;
             if (randomizationFlags & PARTICLE_RANDOM_EMISSION_DIR_YAW) {
-                angle.y_rotation += get_random_number_from_range(-behaviour->emissionDirRange.y_rotation,
-                                                                 behaviour->emissionDirRange.y_rotation);
+                angle.y_rotation +=
+                    rand_range(-behaviour->emissionDirRange.y_rotation, behaviour->emissionDirRange.y_rotation);
             }
             angle.x_rotation = emitter->emissionDirection.x_rotation;
             if (randomizationFlags & PARTICLE_RANDOM_EMISSION_DIR_PITCH) {
-                angle.x_rotation += get_random_number_from_range(-behaviour->emissionDirRange.x_rotation,
-                                                                 behaviour->emissionDirRange.x_rotation);
+                angle.x_rotation +=
+                    rand_range(-behaviour->emissionDirRange.x_rotation, behaviour->emissionDirRange.x_rotation);
             }
-            f32_vec3_apply_object_rotation3(&angle, &sourceVel);
+            vec3f_rotate_py(&angle, &sourceVel);
         } else {
-            f32_vec3_apply_object_rotation3(&emitter->emissionDirection, &sourceVel);
+            vec3f_rotate_py(&emitter->emissionDirection, &sourceVel);
         }
-        f32_vec3_apply_object_rotation(&particle->parentObj->segment.trans.rotation, &sourceVel);
+        vec3f_rotate(&particle->parentObj->segment.trans.rotation, &sourceVel);
 
         particle->velocity.x += sourceVel.x;
         particle->velocity.y += sourceVel.y;
@@ -1132,9 +1131,8 @@ void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *e
     // particle->movementParam shares memory with other fields; use the appropriate one based on movement type
     particle->movementParam = behaviour->movementParam;
     if (behaviour->randomizationFlags & PARTICLE_RANDOM_MOVEMENT_PARAM) {
-        particle->movementParam +=
-            (f32) get_random_number_from_range(-behaviour->movementParamRange, behaviour->movementParamRange) *
-            0.00001525878906; // 0.00001525878906 ~= 1.0/65536.0
+        particle->movementParam += (f32) rand_range(-behaviour->movementParamRange, behaviour->movementParamRange) *
+                                   0.00001525878906; // 0.00001525878906 ~= 1.0/65536.0
     }
 
     if (behaviour->flags & PARTICLE_SOURCE_OFFSET_ENABLED) {
@@ -1144,36 +1142,35 @@ void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *e
         randomizationFlags = behaviour->randomizationFlags;
         if (randomizationFlags & PARTICLE_RANDOM_SOURCE_DISTANCE) {
             sourcePos.z +=
-                (f32) get_random_number_from_range(-behaviour->sourceDistanceRange, behaviour->sourceDistanceRange) *
-                0.00001525878906;
+                (f32) rand_range(-behaviour->sourceDistanceRange, behaviour->sourceDistanceRange) * 0.00001525878906;
         }
         if (randomizationFlags & (PARTICLE_RANDOM_SOURCE_PITCH | PARTICLE_RANDOM_SOURCE_YAW)) {
             sourceDir.y_rotation = emitter->sourceRotation.y_rotation;
             if (randomizationFlags & PARTICLE_RANDOM_SOURCE_YAW) {
-                sourceDir.y_rotation += get_random_number_from_range(-behaviour->sourceDirRange.y_rotation,
-                                                                     behaviour->sourceDirRange.y_rotation);
+                sourceDir.y_rotation +=
+                    rand_range(-behaviour->sourceDirRange.y_rotation, behaviour->sourceDirRange.y_rotation);
             }
             sourceDir.x_rotation = emitter->sourceRotation.x_rotation;
             if (randomizationFlags & PARTICLE_RANDOM_SOURCE_PITCH) {
-                sourceDir.x_rotation += get_random_number_from_range(-behaviour->sourceDirRange.x_rotation,
-                                                                     behaviour->sourceDirRange.x_rotation);
+                sourceDir.x_rotation +=
+                    rand_range(-behaviour->sourceDirRange.x_rotation, behaviour->sourceDirRange.x_rotation);
             }
-            f32_vec3_apply_object_rotation3(&sourceDir, &sourcePos);
+            vec3f_rotate_py(&sourceDir, &sourcePos);
         } else {
-            f32_vec3_apply_object_rotation(&emitter->sourceRotation, &sourcePos);
+            vec3f_rotate(&emitter->sourceRotation, &sourcePos);
         }
         particle->localPos.x += sourcePos.x;
         particle->localPos.y += sourcePos.y;
         particle->localPos.z += sourcePos.z;
     }
     if (particle->movementType != PARTICLE_MOVEMENT_BASIC_PARENT) {
-        f32_vec3_apply_object_rotation(&obj->segment.trans.rotation, &particle->localPos);
+        vec3f_rotate(&obj->segment.trans.rotation, &particle->localPos);
     }
     particle->trans.x_position = particle->localPos.x;
     particle->trans.y_position = particle->localPos.y;
     particle->trans.z_position = particle->localPos.z;
     if (particle->movementType == PARTICLE_MOVEMENT_BASIC_PARENT) {
-        f32_vec3_apply_object_rotation(&obj->segment.trans.rotation, &particle->trans.x_position);
+        vec3f_rotate(&obj->segment.trans.rotation, &particle->trans.x_position);
     }
 
     particle->trans.x_position += obj->segment.trans.x_position;
@@ -1381,7 +1378,7 @@ Particle *create_line_particle(Object *obj, ParticleEmitter *emitter) {
     emitter->lineRefPoint.x = emitter->position.x;
     emitter->lineRefPoint.y = emitter->position.y;
     emitter->lineRefPoint.z = emitter->position.z;
-    f32_vec3_apply_object_rotation(&obj->segment.trans.rotation, &emitter->lineRefPoint);
+    vec3f_rotate(&obj->segment.trans.rotation, &emitter->lineRefPoint);
     emitter->lineRefPoint.x += obj->segment.trans.x_position;
     emitter->lineRefPoint.y += obj->segment.trans.y_position;
     emitter->lineRefPoint.z += obj->segment.trans.z_position;
@@ -1479,14 +1476,13 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
 
     scale = behaviour->scale;
     if (behaviour->randomizationFlags & PARTICLE_RANDOM_SCALE) {
-        scale += (f32) get_random_number_from_range(-behaviour->scaleRange, behaviour->scaleRange) * 0.00001525878906;
+        scale += (f32) rand_range(-behaviour->scaleRange, behaviour->scaleRange) * 0.00001525878906;
     }
     particle->trans.scale = descriptor->scale * scale;
 
     scale = behaviour->scaleVelocity;
     if (behaviour->randomizationFlags & PARTICLE_RANDOM_SCALE_VELOCITY) {
-        scale += (f32) get_random_number_from_range(-behaviour->scaleVelocityRange, behaviour->scaleVelocityRange) *
-                 0.00001525878906;
+        scale += (f32) rand_range(-behaviour->scaleVelocityRange, behaviour->scaleVelocityRange) * 0.00001525878906;
     }
     if (behaviour->flags & PARTICLE_SCALE_VELOCITY_INHERITS_PARENT_SPEED) {
         particle->scaleVelocity = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
@@ -1497,8 +1493,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
         particle->scaleVelocity = descriptor->scale * scale;
     }
 
-    particle->destroyTimer =
-        get_random_number_from_range(-descriptor->lifeTimeRange, descriptor->lifeTimeRange) + descriptor->lifeTime;
+    particle->destroyTimer = rand_range(-descriptor->lifeTimeRange, descriptor->lifeTimeRange) + descriptor->lifeTime;
 
     particle->unk38 = 0;
     particle->unk34 = 0.0f;
@@ -1524,16 +1519,16 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
                                                           PARTICLE_RANDOM_COLOUR_GREEN | PARTICLE_RANDOM_COLOUR_RED);
     if (randomizationFlags) {
         if (randomizationFlags & PARTICLE_RANDOM_COLOUR_RED) {
-            particle->colour.r += get_random_number_from_range(-behaviour->colourRangeR, behaviour->colourRangeR);
+            particle->colour.r += rand_range(-behaviour->colourRangeR, behaviour->colourRangeR);
         }
         if (randomizationFlags & PARTICLE_RANDOM_COLOUR_GREEN) {
-            particle->colour.g += get_random_number_from_range(-behaviour->colourRangeG, behaviour->colourRangeG);
+            particle->colour.g += rand_range(-behaviour->colourRangeG, behaviour->colourRangeG);
         }
         if (randomizationFlags & PARTICLE_RANDOM_COLOUR_BLUE) {
-            particle->colour.b += get_random_number_from_range(-behaviour->colourRangeB, behaviour->colourRangeB);
+            particle->colour.b += rand_range(-behaviour->colourRangeB, behaviour->colourRangeB);
         }
         if (randomizationFlags & PARTICLE_RANDOM_COLOUR_ALPHA) {
-            particle->colour.a += get_random_number_from_range(-behaviour->colourRangeA, behaviour->colourRangeA);
+            particle->colour.a += rand_range(-behaviour->colourRangeA, behaviour->colourRangeA);
         }
     }
 
@@ -1566,7 +1561,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
                 }
             }
             if (behaviour->flags & PARTICLE_RANDOM_TEXTURE_FRAME) {
-                particle->textureFrame = get_random_number_from_range(0, particle->sprite->baseTextureId - 1) << 8;
+                particle->textureFrame = rand_range(0, particle->sprite->baseTextureId - 1) << 8;
                 if ((particle->descFlags &
                      (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) ==
                     PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED) {
@@ -1595,7 +1590,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
                     }
                 }
                 if (behaviour->flags & PARTICLE_RANDOM_TEXTURE_FRAME) {
-                    particle->textureFrame = get_random_number_from_range(0, ((*texture)->numOfTextures >> 8) - 1) << 8;
+                    particle->textureFrame = rand_range(0, ((*texture)->numOfTextures >> 8) - 1) << 8;
                     if ((particle->descFlags &
                          (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) ==
                         PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED) {
@@ -1639,15 +1634,15 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
     if (randomizationFlags != 0) {
         if (randomizationFlags & PARTICLE_RANDOM_YAW) {
             particle->trans.rotation.y_rotation +=
-                get_random_number_from_range(-behaviour->rotationRange.y_rotation, behaviour->rotationRange.y_rotation);
+                rand_range(-behaviour->rotationRange.y_rotation, behaviour->rotationRange.y_rotation);
         }
         if (randomizationFlags & PARTICLE_RANDOM_PITCH) {
             particle->trans.rotation.x_rotation +=
-                get_random_number_from_range(-behaviour->rotationRange.x_rotation, behaviour->rotationRange.x_rotation);
+                rand_range(-behaviour->rotationRange.x_rotation, behaviour->rotationRange.x_rotation);
         }
         if (randomizationFlags & PARTICLE_RANDOM_ROLL) {
             particle->trans.rotation.z_rotation +=
-                get_random_number_from_range(-behaviour->rotationRange.z_rotation, behaviour->rotationRange.z_rotation);
+                rand_range(-behaviour->rotationRange.z_rotation, behaviour->rotationRange.z_rotation);
         }
     }
 
@@ -1659,16 +1654,16 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
         (PARTCILE_RANDOM_ROLL_VELOCITY | PARTCILE_RANDOM_PITCH_VELOCITY | PARTCILE_RANDOM_YAW_VELOCITY);
     if (randomizationFlags) {
         if (randomizationFlags & PARTCILE_RANDOM_YAW_VELOCITY) {
-            particle->angularVelocity.y_rotation += get_random_number_from_range(
-                -behaviour->angularVelocityRange.y_rotation, behaviour->angularVelocityRange.y_rotation);
+            particle->angularVelocity.y_rotation +=
+                rand_range(-behaviour->angularVelocityRange.y_rotation, behaviour->angularVelocityRange.y_rotation);
         }
         if (randomizationFlags & PARTCILE_RANDOM_PITCH_VELOCITY) {
-            particle->angularVelocity.x_rotation += get_random_number_from_range(
-                -behaviour->angularVelocityRange.x_rotation, behaviour->angularVelocityRange.x_rotation);
+            particle->angularVelocity.x_rotation +=
+                rand_range(-behaviour->angularVelocityRange.x_rotation, behaviour->angularVelocityRange.x_rotation);
         }
         if (randomizationFlags & PARTCILE_RANDOM_ROLL_VELOCITY) {
-            particle->angularVelocity.z_rotation += get_random_number_from_range(
-                -behaviour->angularVelocityRange.z_rotation, behaviour->angularVelocityRange.z_rotation);
+            particle->angularVelocity.z_rotation +=
+                rand_range(-behaviour->angularVelocityRange.z_rotation, behaviour->angularVelocityRange.z_rotation);
         }
     }
 
@@ -2054,7 +2049,7 @@ void update_line_particle(Particle *particle) {
                     vtxOffset.y = scale;
                     break;
             }
-            f32_vec3_apply_object_rotation(&obj->segment.trans.rotation, &vtxOffset);
+            vec3f_rotate(&obj->segment.trans.rotation, &vtxOffset);
         } else {
             vtxOffset.x = obj->segment.x_velocity;
             vtxOffset.y = obj->segment.y_velocity;
@@ -2273,7 +2268,7 @@ void move_particle_attached_to_parent(Particle *particle) {
     particle->trans.x_position = 0.0f;
     particle->trans.y_position = -particle->downOffset;
     particle->trans.z_position = 0.0f;
-    f32_vec3_apply_object_rotation(&particle->trans.rotation, &particle->trans.x_position);
+    vec3f_rotate(&particle->trans.rotation, &particle->trans.x_position);
     particle->trans.x_position += particle->localPos.x;
     particle->trans.y_position += particle->localPos.y;
     particle->trans.z_position += particle->localPos.z;
@@ -2306,7 +2301,7 @@ void move_particle_with_acceleration(Particle *particle) {
         acceleration.x = 0.0f;
         acceleration.y = -particle->downAcceleration;
         acceleration.z = 0.0f;
-        f32_vec3_apply_object_rotation(&particle->trans.rotation, &acceleration);
+        vec3f_rotate(&particle->trans.rotation, &acceleration);
         particle->velocity.x += acceleration.x;
         particle->velocity.y += acceleration.y;
         particle->velocity.y -= particle->gravity;
@@ -2344,7 +2339,7 @@ void move_particle_forward(Particle *particle) {
         particle->velocity.x = 0.0f;
         particle->velocity.y = 0.0f;
         particle->velocity.z = -particle->forwardVel;
-        f32_vec3_apply_object_rotation3(&particle->trans.rotation, &particle->velocity);
+        vec3f_rotate_py(&particle->trans.rotation, &particle->velocity);
         particle->trans.x_position += particle->velocity.x;
         // Gravity is subtracted here, but velocity isn't actually affected by it — possible bug?
         // Might cause the particle to drift downward instead of moving straight forward.
@@ -2504,11 +2499,11 @@ void regenerate_point_particles_mesh(PointParticle *obj) {
                 vec_right.x = particle->base.trans.scale;
                 vec_right.y = 0.0f;
                 vec_right.z = 0.0f;
-                f32_vec3_apply_object_rotation(&particle->base.trans.rotation, &vec_right);
+                vec3f_rotate(&particle->base.trans.rotation, &vec_right);
                 vec_up.x = 0.0f;
                 vec_up.y = particle->base.trans.scale;
                 vec_up.z = 0.0f;
-                f32_vec3_apply_object_rotation(&particle->base.trans.rotation, &vec_up);
+                vec3f_rotate(&particle->base.trans.rotation, &vec_up);
 
                 verts = &model->vertices[(particle->modelFrame << 3)];
                 if (1) {}

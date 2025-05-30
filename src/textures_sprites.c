@@ -1525,7 +1525,7 @@ void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s3
     bit25Set = *triangleBatchInfoFlags & RENDER_UNK_2000000;
     if (bit23Set) {
         if (!bit25Set) {
-            if (get_random_number_from_range(0, 1000) > 985) {
+            if (rand_range(0, 1000) > 985) {
                 *triangleBatchInfoFlags &= ~RENDER_UNK_4000000;
                 *triangleBatchInfoFlags |= RENDER_UNK_2000000;
             }

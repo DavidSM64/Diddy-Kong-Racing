@@ -467,7 +467,7 @@ typedef struct TrackRenderDetails {
 extern s32 gShowControllerPakMenu;
 extern u8 *__ROM_END;
 
-s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
+s32 rand_range(s32, s32); // No file to pull from yet.
 
 void menu_button_free(void);
 void menu_geometry_end(void);

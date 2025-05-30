@@ -287,13 +287,13 @@ void weather_reset(s32 weatherType, s32 density, s32 velX, s32 velY, s32 velZ, s
     gSnowTriIndices = (s16 *) mempool_alloc_safe(numOfElements * (sizeof(s16)), COLOUR_TAG_LIGHT_ORANGE);
     gSnowPhysics = (SnowPosData *) mempool_alloc_safe(numOfElements * (sizeof(SnowPosData)), COLOUR_TAG_LIGHT_ORANGE);
     for (i = 0; i < gSnowDensity; i++) {
-        gSnowPhysics[i].x_position = get_random_number_from_range(0, gSnowGfx.radiusX);
-        gSnowPhysics[i].y_position = get_random_number_from_range(0, gSnowGfx.radiusY);
-        gSnowPhysics[i].z_position = get_random_number_from_range(0, gSnowGfx.radiusZ);
-        gSnowPhysics[i].unused_C = 1 << (get_random_number_from_range(0, 32) + 5);
-        gSnowPhysics[i].unused_D = 1 << (get_random_number_from_range(0, 32) + 5);
-        gSnowPhysics[i].unused_E = 1 << (get_random_number_from_range(0, 32) + 5);
-        gSnowPhysics[i].index = get_random_number_from_range(0, gSnowGfx.size - 1);
+        gSnowPhysics[i].x_position = rand_range(0, gSnowGfx.radiusX);
+        gSnowPhysics[i].y_position = rand_range(0, gSnowGfx.radiusY);
+        gSnowPhysics[i].z_position = rand_range(0, gSnowGfx.radiusZ);
+        gSnowPhysics[i].unused_C = 1 << (rand_range(0, 32) + 5);
+        gSnowPhysics[i].unused_D = 1 << (rand_range(0, 32) + 5);
+        gSnowPhysics[i].unused_E = 1 << (rand_range(0, 32) + 5);
+        gSnowPhysics[i].index = rand_range(0, gSnowGfx.size - 1);
     }
 
     numOfElements = numOfElements * 4;
@@ -487,7 +487,7 @@ void snow_vertices(void) {
         posF.f[0] = (((gSnowPhysics[i].x_position - camX) & gSnowGfx.radiusX) + gSnowGfx.offsetX) * (1.0f / 65536.0f);
         posF.f[1] = (((gSnowPhysics[i].y_position - camy) & gSnowGfx.radiusY) + gSnowGfx.offsetY) * (1.0f / 65536.0f);
         posF.f[2] = (((gSnowPhysics[i].z_position - camz) & gSnowGfx.radiusZ) + gSnowGfx.offsetZ) * (1.0f / 65536.0f);
-        f32_matrix_dot(gWeatherCameraMatrix, &posF, &posF);
+        mtxf_transform_dir(gWeatherCameraMatrix, &posF, &posF);
         pos[2] = posF.f[2];
         if (pos[2] < gSnowPlane.near && gSnowPlane.current < pos[2]) {
             pos[0] = posF.f[0];
@@ -516,7 +516,7 @@ void snow_vertices(void) {
  */
 void snow_render(void) {
     s32 i;
-    Mtx* mtx;
+    Mtx *mtx;
     Vertex *vtx;
 
     if (gSnowGfx.texture != NULL) {
@@ -624,7 +624,7 @@ void lensflare_init(Object *obj) {
     gLensFlarePos.x = 0;
     gLensFlarePos.y = 0;
     gLensFlarePos.z = -1.0f;
-    f32_vec3_apply_object_rotation3(&angle, &gLensFlarePos);
+    vec3f_rotate_py(&angle, &gLensFlarePos);
     gLensFlarePos.x = -gLensFlarePos.x;
     gLensFlarePos.y = -gLensFlarePos.y;
     gLensFlarePos.z = -gLensFlarePos.z;
@@ -655,7 +655,7 @@ void lensflare_render(Gfx **dList, Mtx **mats, Vertex **verts, Camera *camera) {
             pos[1].x = 0.0f;
             pos[1].y = 0.0f;
             pos[1].z = -1.0f;
-            f32_matrix_dot(get_projection_matrix_f32(), &pos[1], &pos[1]);
+            mtxf_transform_dir(get_projection_matrix_f32(), &pos[1], &pos[1]);
             magnitude = ((gLensFlarePos.x * pos[1].x) + (gLensFlarePos.y * pos[1].y)) + (gLensFlarePos.z * pos[1].z);
             if (magnitude > 0.0f) {
                 viewport_main(dList, mats);
@@ -941,9 +941,8 @@ void rain_render_splashes(s32 updateRate) {
                         }
                     }
                     if (firstIndexWithoutFlags >= 0) {
-                        randYRot = get_random_number_from_range(-0x2000, 0x2000) +
-                                   racer->segment.trans.rotation.y_rotation + 0x8000;
-                        randFloat = (f32) get_random_number_from_range(50, 500);
+                        randYRot = rand_range(-0x2000, 0x2000) + racer->segment.trans.rotation.y_rotation + 0x8000;
+                        randFloat = (f32) rand_range(50, 500);
                         xPos = (sins_f(randYRot) * randFloat) + racer->segment.trans.x_position;
                         zPos = (coss_f(randYRot) * randFloat) + racer->segment.trans.z_position;
                         i = func_8002B0F4(
@@ -987,7 +986,7 @@ void rain_render_splashes(s32 updateRate) {
                                 gRainSplashSegments[firstIndexWithoutFlags].animFrame = 0;
                                 gRainSplashSegments[firstIndexWithoutFlags].trans.flags = OBJ_FLAGS_UNK_0001;
                                 gRainSplashSegments[firstIndexWithoutFlags].opacity =
-                                    get_random_number_from_range(128, (temp_t0 >> 10) + 191);
+                                    rand_range(128, (temp_t0 >> 10) + 191);
                                 gRainSplashDelay = (gRainSplashDelay - (temp_t0 >> 10)) + 64;
                                 if (gRainSplashDelay < 0) {
                                     gRainSplashDelay = 0;
@@ -1043,7 +1042,7 @@ void rain_lightning(s32 updateRate) {
         } else {
             sound_play(SOUND_THUNDER, NULL);
             gThunderTimer = 600 - ((gLightningFrequency + -48000) >> 5);
-            gLightningTimer = get_random_number_from_range(900, 1140) - ((gLightningFrequency + -48000) >> 5);
+            gLightningTimer = rand_range(900, 1140) - ((gLightningFrequency + -48000) >> 5);
         }
     }
 }

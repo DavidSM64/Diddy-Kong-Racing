@@ -426,7 +426,7 @@ void hud_init_element(void) {
     gHudPALScale = FALSE;
     gAdventurePlayerFinish = FALSE;
     D_80126D4C = -100;
-    D_80126D50 = get_random_number_from_range(120, 360);
+    D_80126D50 = rand_range(120, 360);
     D_8012718A = func_8000E158();
     gStopwatchErrorX = 55;
     gStopwatchErrorY = 179;
@@ -1612,9 +1612,9 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         if ((D_80126D4C == 0) && (!curRacer->raceFinished)) {
             D_80126D4C = -100;
             if (gHUDVoiceSoundMask == 0) {
-                soundID = get_random_number_from_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
+                soundID = rand_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
                 while (soundID == gHudTTSoundID) {
-                    soundID = get_random_number_from_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
+                    soundID = rand_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
                 }
                 gHudTTSoundID = soundID;
                 sound_play(soundID, &gHUDVoiceSoundMask);
@@ -1649,13 +1649,13 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
                 posZ = ttSWBodyObject->segment.trans.z_position - playerRacerObj->segment.trans.z_position;
                 if ((sqrtf((posX * posX) + (posY * posY) + (posZ * posZ)) < 600.0f) && (gHUDVoiceSoundMask == 0) &&
                     (D_80126D50 == 0)) {
-                    soundID = SOUND_VOICE_TT_GO_FOR_IT + get_random_number_from_range(0, 2);
+                    soundID = SOUND_VOICE_TT_GO_FOR_IT + rand_range(0, 2);
                     while (soundID == gHudTTSoundID) {
-                        soundID = SOUND_VOICE_TT_GO_FOR_IT + get_random_number_from_range(0, 2);
+                        soundID = SOUND_VOICE_TT_GO_FOR_IT + rand_range(0, 2);
                     }
                     gHudTTSoundID = soundID;
                     sound_play(soundID, &gHUDVoiceSoundMask);
-                    D_80126D50 = get_random_number_from_range(120, 1200);
+                    D_80126D50 = rand_range(120, 1200);
                 }
                 D_80126D50 -= updateRate;
                 if (D_80126D50 < 0) {
@@ -1915,16 +1915,15 @@ void hud_race_start(s32 countdown, s32 updateRate) {
                 Object_Racer *racer;
                 s32 numRacerObjects;
                 racerGroup = get_racer_objects(&numRacerObjects);
-                randomRacer = racerGroup[get_random_number_from_range(1, numRacerObjects) - 1];
+                randomRacer = racerGroup[rand_range(1, numRacerObjects) - 1];
                 racer = &randomRacer->unk64->racer;
                 if (racer->vehicleID == VEHICLE_CAR) {
-                    if (get_random_number_from_range(0, 100) >= 96) {
-                        frequency = 1.25 - ((get_random_number_from_range(0, 7) * 0.5) / 7.0);
+                    if (rand_range(0, 100) >= 96) {
+                        frequency = 1.25 - ((rand_range(0, 7) * 0.5) / 7.0);
                         audspat_play_sound_direct(
                             76, randomRacer->segment.trans.x_position, randomRacer->segment.trans.y_position,
                             randomRacer->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER,
-                            ((get_random_number_from_range(0, 7) * 63) / 7) + 24, frequency * 100.0f,
-                            &gRaceStartSoundMask);
+                            ((rand_range(0, 7) * 63) / 7) + 24, frequency * 100.0f, &gRaceStartSoundMask);
                     }
                 }
             }
@@ -2457,10 +2456,10 @@ void hud_wrong_way(Object_Racer *obj, s32 updateRate) {
         !is_game_paused()) {
         if ((gWrongWayNagPrefix || gWrongWayNagTimer == 0) && gHUDVoiceSoundMask == NULL) {
             // 20% chance that T.T decides not to precede his nagging with "No no no!"
-            if (gWrongWayNagPrefix || get_random_number_from_range(1, 10) >= 8) {
+            if (gWrongWayNagPrefix || rand_range(1, 10) >= 8) {
                 gWrongWayNagPrefix = FALSE;
                 sound_play(SOUND_VOICE_TT_WRONG_WAY, &gHUDVoiceSoundMask);
-                gWrongWayNagTimer = get_random_number_from_range(1, 480) + 120;
+                gWrongWayNagTimer = rand_range(1, 480) + 120;
             } else {
                 gWrongWayNagPrefix = TRUE;
                 sound_play(SOUND_VOICE_TT_NONONO, &gHUDVoiceSoundMask);

@@ -2578,8 +2578,7 @@ void menu_init(u32 menuId) {
 /**
  * Runs every frame. Calls the loop function of the current menu id
  */
-s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, Vertex **currHudVerts, Triangle **currHudTris,
-              s32 updateRate) {
+s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, Vertex **currHudVerts, Triangle **currHudTris, s32 updateRate) {
     s32 ret;
 
     sMenuCurrDisplayList = *currDisplayList;
@@ -7059,7 +7058,7 @@ void charselect_assign_ai(s32 charSlot) {
 
     for (i = charSlot; i < 8; i++) {
         do {
-            gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[get_random_number_from_range(0, numCharacters)].voiceID;
+            gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[rand_range(0, numCharacters)].voiceID;
             for (j = 0, foundIt = FALSE; j < i; j++) {
                 if (gCharacterIdSlots[j] == gCharacterIdSlots[i]) {
                     foundIt = TRUE;
@@ -9624,7 +9623,7 @@ void func_80092188(s32 updateRate) {
                         if (gTrackTTSoundMask != NULL) {
                             sndp_stop(gTrackTTSoundMask);
                         }
-                        if (get_random_number_from_range(0, 255) >= 128) {
+                        if (rand_range(0, 255) >= 128) {
                             sound_play(SOUND_VOICE_TT_INTRO, &D_80126848);
                         } else {
                             sound_play(SOUND_VOICE_TT_GO_FOR_IT, &D_80126848);
@@ -12987,7 +12986,7 @@ void menu_credits_init(void) {
             gCreditsArray[84] = gCreditsLastMessageArray[0]; // "THE END?"
         }
 
-        cheat = gCheatsInCreditsArray[get_random_number_from_range(0, NUMBER_CHEATS_IN_CREDITS - 1)];
+        cheat = gCheatsInCreditsArray[rand_range(0, NUMBER_CHEATS_IN_CREDITS - 1)];
         cheatIndex = -1;
         while (cheat != 0) {
             cheat >>= 1;
@@ -13801,9 +13800,9 @@ void menu_image_load(s32 imageID) {
     gMenuImages[imageID].trans.z_position = sMenuImageProperties[imageID].trans.z_position;
     gMenuImages[imageID].trans.scale = sMenuImageProperties[imageID].trans.scale;
     gMenuImages[imageID].spriteOffset = sMenuImageProperties[imageID].spriteOffset;
-    gMenuImages[imageID].unk1A = get_random_number_from_range(0, 0xFFFF);
-    gMenuImages[imageID].unk1B = get_random_number_from_range(0, 0xFFFF);
-    gMenuImages[imageID].unk1C = get_random_number_from_range(0, 0xFFFF);
+    gMenuImages[imageID].unk1A = rand_range(0, 0xFFFF);
+    gMenuImages[imageID].unk1B = rand_range(0, 0xFFFF);
+    gMenuImages[imageID].unk1C = rand_range(0, 0xFFFF);
     gMenuImages[imageID].unk1D = sMenuImageProperties[imageID].unk1D;
 }
 

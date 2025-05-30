@@ -285,8 +285,8 @@ void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
     var_s5 = 0;
     for (i_2 = 0; i_2 < gWaveController.tileCount; i_2++) {
         for (j_2 = 0; j_2 < gWaveController.tileCount; j_2++) {
-            gWaveHeightIndices[var_s5].s[0] = get_random_number_from_range(0, gWaveController.seedSize - 1);
-            gWaveHeightIndices[var_s5].s[1] = get_random_number_from_range(0, gWaveController.seedSize - 1);
+            gWaveHeightIndices[var_s5].s[0] = rand_range(0, gWaveController.seedSize - 1);
+            gWaveHeightIndices[var_s5].s[1] = rand_range(0, gWaveController.seedSize - 1);
             var_s5++;
         }
     }

@@ -72,7 +72,7 @@ leaf get_gIntDisFlag
 /* 70178 8006F578 9042D430 */   lbu       $v0, %lo(gIntDisFlag)($v0)
 .end get_gIntDisFlag
 
-leaf s32_matrix_to_s16_matrix
+leaf mtxs_to_mtx
 /* 7017C 8006F57C 34080004 */  ori        $t0, $zero, 0x4
 /* 70180 8006F580 3C0FFFFF */  lui        $t7, (0xFFFF0000 >> 16)
 .L8006F584:
@@ -99,9 +99,9 @@ leaf s32_matrix_to_s16_matrix
 /* 701D4 8006F5D4 00000000 */   nop
 /* 701D8 8006F5D8 03E00008 */  jr         $ra
 /* 701DC 8006F5DC 00000000 */   nop
-.end s32_matrix_to_s16_matrix
+.end mtxs_to_mtx
 
-leaf f32_matrix_to_s32_matrix
+leaf mtxf_to_mtxs
 /* 701E0 8006F5E0 3C014780 */  lui        $at, (0x47800000 >> 16)
 /* 701E4 8006F5E4 44816000 */  mtc1       $at, $f12
 /* 701E8 8006F5E8 34080004 */  ori        $t0, $zero, 0x4
@@ -130,10 +130,10 @@ leaf f32_matrix_to_s32_matrix
 /* 70240 8006F640 00000000 */   nop
 /* 70244 8006F644 03E00008 */  jr         $ra
 /* 70248 8006F648 00000000 */   nop
-.end f32_matrix_to_s32_matrix
+.end mtxf_to_mtxs
 
 /* Official Name: mathMtxXFMF */
-leaf guMtxXFMF_dkr
+leaf mtxf_transform_point
 /* 7024C 8006F64C 44856000 */  mtc1       $a1, $f12
 /* 70250 8006F650 C4840000 */  lwc1       $f4, 0x0($a0)
 /* 70254 8006F654 44867000 */  mtc1       $a2, $f14
@@ -174,10 +174,10 @@ leaf guMtxXFMF_dkr
 /* 702E0 8006F6E0 460A4100 */  add.s      $f4, $f8, $f10
 /* 702E4 8006F6E4 03E00008 */  jr         $ra
 /* 702E8 8006F6E8 E7040000 */   swc1      $f4, 0x0($t8)
-.end guMtxXFMF_dkr
+.end mtxf_transform_point
 
 /* Official Name: mathMtxFastXFMF */
-leaf f32_matrix_dot
+leaf mtxf_transform_dir
 /* 702EC 8006F6EC C4A40000 */  lwc1       $f4, 0x0($a1)
 /* 702F0 8006F6F0 C48A0000 */  lwc1       $f10, 0x0($a0)
 /* 702F4 8006F6F4 C4A60004 */  lwc1       $f6, 0x4($a1)
@@ -209,10 +209,10 @@ leaf f32_matrix_dot
 /* 7035C 8006F75C 460E6380 */  add.s      $f14, $f12, $f14
 /* 70360 8006F760 03E00008 */  jr         $ra
 /* 70364 8006F764 E4CE0008 */   swc1      $f14, 0x8($a2)
-.end f32_matrix_dot
+.end mtxf_transform_dir
 
 /* Official Name: mathMtxCatF */
-leaf f32_matrix_mult
+leaf mtxf_mul
 /* 70368 8006F768 27BDFFF8 */  addiu      $sp, $sp, -0x8
 /* 7036C 8006F76C F7A20000 */  sdc1       $f2, 0x0($sp)
 /* 70370 8006F770 34080004 */  ori        $t0, $zero, 0x4
@@ -280,10 +280,10 @@ leaf f32_matrix_mult
 /* 70464 8006F864 D7A20000 */  ldc1       $f2, 0x0($sp)
 /* 70468 8006F868 03E00008 */  jr         $ra
 /* 7046C 8006F86C 27BD0008 */   addiu     $sp, $sp, 0x8
-.end f32_matrix_mult
+.end mtxf_mul
 
 /* Official Name: mathMtxF2L */
-leaf f32_matrix_to_s16_matrix
+leaf mtxf_to_mtx
 /* 70470 8006F870 3C014780 */  lui        $at, (0x47800000 >> 16)
 /* 70474 8006F874 44816000 */  mtc1       $at, $f12
 /* 70478 8006F878 34080004 */  ori        $t0, $zero, 0x4
@@ -324,7 +324,7 @@ leaf f32_matrix_to_s16_matrix
 /* 70500 8006F900 00000000 */   nop
 /* 70504 8006F904 03E00008 */  jr         $ra
 /* 70508 8006F908 00000000 */   nop
-.end f32_matrix_to_s16_matrix
+.end mtxf_to_mtx
 
 /* Official Name: mathSeed */
 leaf set_rng_seed
@@ -356,7 +356,7 @@ leaf get_rng_seed
 .end get_rng_seed
 
 /* Official Name: mathRnd */
-leaf get_random_number_from_range
+leaf rand_range
 /* 7054C 8006F94C 3C08800E */  lui        $t0, %hi(gCurrentRNGSeed)
 /* 70550 8006F950 8D08D434 */  lw         $t0, %lo(gCurrentRNGSeed)($t0)
 /* 70554 8006F954 3C01800E */  lui        $at, %hi(gCurrentRNGSeed)
@@ -385,10 +385,10 @@ leaf get_random_number_from_range
 .L8006F9B0:
 /* 705B0 8006F9B0 03E00008 */  jr         $ra
 /* 705B4 8006F9B4 00000000 */   nop
-.end get_random_number_from_range
+.end rand_range
 
 /* Official Name: fastShortReflection */
-leaf s16_matrix_rotate
+leaf vec3s_reflect
 /* 705B8 8006F9B8 84880000 */  lh         $t0, 0x0($a0)
 /* 705BC 8006F9BC 84AB0000 */  lh         $t3, 0x0($a1)
 /* 705C0 8006F9C0 84890002 */  lh         $t1, 0x2($a0)
@@ -423,9 +423,9 @@ leaf s16_matrix_rotate
 /* 70634 8006FA34 01A86822 */  sub        $t5, $t5, $t0 /* handwritten instruction */
 /* 70638 8006FA38 03E00008 */  jr         $ra
 /* 7063C 8006FA3C A48D000A */   sh        $t5, 0xA($a0)
-.end s16_matrix_rotate
+.end vec3s_reflect
 
-leaf s16_matrix_to_s32_matrix
+leaf mtx_to_mtxs
 /* 70640 8006FA40 340A0010 */  ori        $t2, $zero, 0x10
 /* 70644 8006FA44 016B5826 */  xor        $t3, $t3, $t3
 .L8006FA48:
@@ -441,9 +441,9 @@ leaf s16_matrix_to_s32_matrix
 /* 7066C 8006FA6C 00000000 */   nop
 /* 70670 8006FA70 03E00008 */  jr         $ra
 /* 70674 8006FA74 00000000 */   nop
-.end s16_matrix_to_s32_matrix
+.end mtx_to_mtxs
 
-leaf s16_vec3_mult_by_s32_matrix_full
+leaf mtxs_transform_point
 /* 70678 8006FA78 84A80000 */  lh         $t0, 0x0($a1)
 /* 7067C 8006FA7C 8C8B0000 */  lw         $t3, 0x0($a0)
 /* 70680 8006FA80 84A90002 */  lh         $t1, 0x2($a1)
@@ -502,9 +502,9 @@ leaf s16_vec3_mult_by_s32_matrix_full
 /* 70754 8006FB54 000C6403 */  sra        $t4, $t4, 16
 /* 70758 8006FB58 03E00008 */  jr         $ra
 /* 7075C 8006FB5C A4AC0004 */   sh        $t4, 0x4($a1)
-.end s16_vec3_mult_by_s32_matrix_full
+.end mtxs_transform_point
 
-leaf s16_vec3_mult_by_s32_matrix
+leaf mtxs_transform_dir
 /* 70760 8006FB60 8C8B0000 */  lw         $t3, 0x0($a0)
 /* 70764 8006FB64 84A80000 */  lh         $t0, 0x0($a1)
 /* 70768 8006FB68 84A90002 */  lh         $t1, 0x2($a1)
@@ -557,9 +557,9 @@ leaf s16_vec3_mult_by_s32_matrix
 /* 70824 8006FC24 000C6403 */  sra        $t4, $t4, 16
 /* 70828 8006FC28 03E00008 */  jr         $ra
 /* 7082C 8006FC2C A4AC0004 */   sh        $t4, 0x4($a1)
-.end s16_vec3_mult_by_s32_matrix
+.end mtxs_transform_dir
 
-leaf object_transform_to_matrix
+leaf transform_to_mtxf
 /* 70830 8006FC30 27BDFFF8 */  addiu      $sp, $sp, -0x8
 /* 70834 8006FC34 3C013780 */  lui        $at, (0x37800000 >> 16)
 /* 70838 8006FC38 FFBF0000 */  sd         $ra, 0x0($sp)
@@ -677,10 +677,10 @@ leaf object_transform_to_matrix
 /* 709F8 8006FDF8 27BD0008 */  addiu      $sp, $sp, 0x8
 /* 709FC 8006FDFC 03E00008 */  jr         $ra
 /* 70A00 8006FE00 00000000 */   nop
-.end object_transform_to_matrix
+.end transform_to_mtxf
 
 /* Official Name: mathSquashY */
-leaf f32_matrix_scale_y_axis
+leaf mtxf_scale_y
 /* 70A04 8006FE04 44859000 */  mtc1       $a1, $f18
 /* 70A08 8006FE08 C4900010 */  lwc1       $f16, 0x10($a0)
 /* 70A0C 8006FE0C 46128402 */  mul.s      $f16, $f16, $f18
@@ -692,10 +692,10 @@ leaf f32_matrix_scale_y_axis
 /* 70A24 8006FE24 46128402 */  mul.s      $f16, $f16, $f18
 /* 70A28 8006FE28 03E00008 */  jr         $ra
 /* 70A2C 8006FE2C E4900018 */   swc1      $f16, 0x18($a0)
-.end f32_matrix_scale_y_axis
+.end mtxf_scale_y
 
 /* Official Name: mathTransY */
-leaf f32_matrix_translate_y_axis
+leaf mtxf_translate_y
 /* 70A30 8006FE30 44858000 */  mtc1       $a1, $f16
 /* 70A34 8006FE34 C4800010 */  lwc1       $f0, 0x10($a0)
 /* 70A38 8006FE38 C4840014 */  lwc1       $f4, 0x14($a0)
@@ -713,10 +713,10 @@ leaf f32_matrix_translate_y_axis
 /* 70A68 8006FE68 E4840034 */  swc1       $f4, 0x34($a0)
 /* 70A6C 8006FE6C 03E00008 */  jr         $ra
 /* 70A70 8006FE70 E4880038 */   swc1      $f8, 0x38($a0)
-.end f32_matrix_translate_y_axis
+.end mtxf_translate_y
 
 /* Official Name: mathRpyXyzMtx */
-leaf object_inverse_transform_to_matrix
+leaf inverse_transform_to_mtxf
 /* 70A74 8006FE74 27BDFFF8 */  addiu      $sp, $sp, -0x8
 /* 70A78 8006FE78 3C013780 */  lui        $at, (0x37800000 >> 16)
 /* 70A7C 8006FE7C FFBF0000 */  sd         $ra, 0x0($sp)
@@ -838,7 +838,7 @@ leaf object_inverse_transform_to_matrix
 /* 70C4C 8007004C 27BD0008 */  addiu      $sp, $sp, 0x8
 /* 70C50 80070050 03E00008 */  jr         $ra
 /* 70C54 80070054 00000000 */   nop
-.end object_inverse_transform_to_matrix
+.end inverse_transform_to_mtxf
 
 leaf func_80070058
 /* 70C58 80070058 27BDFFF8 */  addiu      $sp, $sp, -0x8
@@ -897,7 +897,7 @@ leaf func_80070058
 /* 70D2C 8007012C 00000000 */   nop
 .end func_80070058
 
-leaf f32_matrix_from_rotation_and_scale
+leaf mtxf_billboard
 /* 70D30 80070130 27BDFFF8 */  addiu      $sp, $sp, -0x8
 /* 70D34 80070134 00E0C825 */  or         $t9, $a3, $zero
 /* 70D38 80070138 3C013780 */  lui        $at, (0x37800000 >> 16)
@@ -943,9 +943,9 @@ leaf f32_matrix_from_rotation_and_scale
 /* 70DD8 800701D8 27BD0008 */  addiu      $sp, $sp, 0x8
 /* 70DDC 800701DC 03E00008 */  jr         $ra
 /* 70DE0 800701E0 00000000 */   nop
-.end f32_matrix_from_rotation_and_scale
+.end mtxf_billboard
 
-leaf s16_vec3_apply_object_rotation
+leaf vec3s_rotate_rpy
 /* 70DE4 800701E4 27BDFFF8 */  addiu      $sp, $sp, -0x8
 /* 70DE8 800701E8 FFBF0000 */  sd         $ra, 0x0($sp)
 /* 70DEC 800701EC 00803025 */  or         $a2, $a0, $zero
@@ -1025,10 +1025,10 @@ leaf s16_vec3_apply_object_rotation
 /* 70F14 80070314 27BD0008 */  addiu      $sp, $sp, 0x8
 /* 70F18 80070318 03E00008 */  jr         $ra
 /* 70F1C 8007031C 00000000 */   nop
-.end s16_vec3_apply_object_rotation
+.end vec3s_rotate_rpy
 
 /* Official Name: mathOneFloatRPY */
-leaf f32_vec3_apply_object_rotation
+leaf vec3f_rotate
 /* 70F20 80070320 27BDFFF8 */  addiu      $sp, $sp, -0x8
 /* 70F24 80070324 FFBF0000 */  sd         $ra, 0x0($sp)
 /* 70F28 80070328 00803025 */  or         $a2, $a0, $zero
@@ -1075,10 +1075,10 @@ leaf f32_vec3_apply_object_rotation
 /* 70FCC 800703CC 27BD0008 */  addiu      $sp, $sp, 0x8
 /* 70FD0 800703D0 03E00008 */  jr         $ra
 /* 70FD4 800703D4 00000000 */   nop
-.end f32_vec3_apply_object_rotation
+.end vec3f_rotate
 
 /* Official Name: mathOneFloatYPR */
-leaf f32_vec3_apply_object_rotation2
+leaf vec3f_rotate_rpy
 /* 70FD8 800703D8 27BDFFF8 */  addiu      $sp, $sp, -0x8
 /* 70FDC 800703DC FFBF0000 */  sd         $ra, 0x0($sp)
 /* 70FE0 800703E0 00803025 */  or         $a2, $a0, $zero
@@ -1125,10 +1125,10 @@ leaf f32_vec3_apply_object_rotation2
 /* 71084 80070484 27BD0008 */  addiu      $sp, $sp, 0x8
 /* 71088 80070488 03E00008 */  jr         $ra
 /* 7108C 8007048C 00000000 */   nop
-.end f32_vec3_apply_object_rotation2
+.end vec3f_rotate_rpy
 
 /* Official Name: mathOneFloatPY */
-leaf f32_vec3_apply_object_rotation3
+leaf vec3f_rotate_py
 /* 71090 80070490 27BDFFF8 */  addiu      $sp, $sp, -0x8
 /* 71094 80070494 FFBF0000 */  sd         $ra, 0x0($sp)
 /* 71098 80070498 00803025 */  or         $a2, $a0, $zero
@@ -1153,10 +1153,10 @@ leaf f32_vec3_apply_object_rotation3
 /* 710E4 800704E4 27BD0008 */  addiu      $sp, $sp, 0x8
 /* 710E8 800704E8 03E00008 */  jr         $ra
 /* 710EC 800704EC 00000000 */   nop
-.end f32_vec3_apply_object_rotation3
+.end vec3f_rotate_py
 
 /* Official Name: mathXZInTri */
-leaf point_triangle_2d_xz_intersection
+leaf tri2d_xz_contains_point
 /* 710F0 800704F0 8FAE0010 */  lw         $t6, 0x10($sp)
 /* 710F4 800704F4 84C80000 */  lh         $t0, 0x0($a2)
 /* 710F8 800704F8 84C90004 */  lh         $t1, 0x4($a2)
@@ -1227,10 +1227,10 @@ leaf point_triangle_2d_xz_intersection
 .L800705F0:
 /* 711F0 800705F0 03E00008 */  jr         $ra
 /* 711F4 800705F4 00000000 */   nop
-.end point_triangle_2d_xz_intersection
+.end tri2d_xz_contains_point
 
 /* Official Name: mathTranslateMtx */
-leaf f32_matrix_from_position
+leaf mtxf_from_translation
 /* 711F8 800705F8 00804025 */  or         $t0, $a0, $zero
 /* 711FC 800705FC 25090040 */  addiu      $t1, $t0, 0x40
 .L80070600:
@@ -1248,10 +1248,10 @@ leaf f32_matrix_from_position
 /* 7122C 8007062C AC860034 */  sw         $a2, 0x34($a0)
 /* 71230 80070630 03E00008 */  jr         $ra
 /* 71234 80070634 AC870038 */   sw        $a3, 0x38($a0)
-.end f32_matrix_from_position
+.end mtxf_from_translation
 
 /* Official Name: mathScaleMtx */
-leaf f32_matrix_from_scale
+leaf mtxf_from_scale
 /* 71238 80070638 00804025 */  or         $t0, $a0, $zero
 /* 7123C 8007063C 25090040 */  addiu      $t1, $t0, 0x40
 .L80070640:
@@ -1266,7 +1266,7 @@ leaf f32_matrix_from_scale
 /* 71260 80070660 AC860014 */  sw         $a2, 0x14($a0)
 /* 71264 80070664 03E00008 */  jr         $ra
 /* 71268 80070668 AC870028 */   sw        $a3, 0x28($a0)
-.end f32_matrix_from_scale
+.end mtxf_from_scale
 
 leaf atan2s
 /* 7126C 8007066C 00854025 */  or         $t0, $a0, $a1
@@ -1352,7 +1352,7 @@ leaf arctan2_f
 /* 7137C 8007077C 00000000 */   nop
 .end arctan2_f
 
-leaf s32_matrix_cell_sqrt
+leaf fix32_sqrt
 /* 71380 80070780 44840000 */  mtc1       $a0, $f0
 /* 71384 80070784 3C014780 */  lui        $at, (0x47800000 >> 16)
 /* 71388 80070788 44811000 */  mtc1       $at, $f2
@@ -1364,7 +1364,7 @@ leaf s32_matrix_cell_sqrt
 /* 713A0 800707A0 44020000 */  mfc1       $v0, $f0
 /* 713A4 800707A4 03E00008 */  jr         $ra
 /* 713A8 800707A8 00000000 */   nop
-.end s32_matrix_cell_sqrt
+.end fix32_sqrt
 
 leaf bad_int_sqrt
 /* 713AC 800707AC 44840000 */  mtc1       $a0, $f0

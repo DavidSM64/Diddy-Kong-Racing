@@ -77,7 +77,7 @@ GLOBAL_ASM("asm/math_util/get_gIntDisFlag.s")
  * into a 4×4 matrix of 32-bit signed integers, where each element is in 16.16 fixed-point format.
  */
 #ifdef NON_MATCHING
-UNUSED void s32_matrix_to_s16_matrix(Mtx *m, MatrixS *mi) {
+UNUSED void mtxs_to_mtx(Mtx *m, MatrixS *mi) {
     s32 i, j;
     s32 ei, ef;
     s32 *ai, *af;
@@ -95,7 +95,7 @@ UNUSED void s32_matrix_to_s16_matrix(Mtx *m, MatrixS *mi) {
     }
 }
 #else
-GLOBAL_ASM("asm/math_util/s32_matrix_to_s16_matrix.s")
+GLOBAL_ASM("asm/math_util/mtxs_to_mtx.s")
 #endif
 
 /**
@@ -103,7 +103,7 @@ GLOBAL_ASM("asm/math_util/s32_matrix_to_s16_matrix.s")
  * of 32-bit signed fixed-point values in 16.16 format.
  */
 #ifdef NON_MATCHING
-void f32_matrix_to_s32_matrix(Matrix *mf, MatrixS *mi) {
+void mtxf_to_mtxs(Matrix *mf, MatrixS *mi) {
     s32 i, j;
 
     for (i = 0; i < 4; i++) {
@@ -113,7 +113,7 @@ void f32_matrix_to_s32_matrix(Matrix *mf, MatrixS *mi) {
     }
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_matrix_to_s32_matrix.s")
+GLOBAL_ASM("asm/math_util/mtxf_to_mtxs.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -121,13 +121,13 @@ GLOBAL_ASM("asm/math_util/f32_matrix_to_s32_matrix.s")
  * Transforms a 3D vector using a 4×4 transformation matrix.
  */
 /* Official name: mathMtxXFMF */
-void guMtxXFMF_dkr(Matrix *mf, float x, float y, float z, float *ox, float *oy, float *oz) {
+void mtxf_transform_point(Matrix *mf, float x, float y, float z, float *ox, float *oy, float *oz) {
     *ox = (*mf)[0][0] * x + (*mf)[1][0] * y + (*mf)[2][0] * z + (*mf)[3][0];
     *oy = (*mf)[0][1] * x + (*mf)[1][1] * y + (*mf)[2][1] * z + (*mf)[3][1];
     *oz = (*mf)[0][2] * x + (*mf)[1][2] * y + (*mf)[2][2] * z + (*mf)[3][2];
 }
 #else
-GLOBAL_ASM("asm/math_util/guMtxXFMF_dkr.s")
+GLOBAL_ASM("asm/math_util/mtxf_transform_point.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -138,13 +138,13 @@ GLOBAL_ASM("asm/math_util/guMtxXFMF_dkr.s")
  * rather than points.
  */
 /* Official name: mathMtxFastXFMF */
-void f32_matrix_dot(Matrix *mf, Vec3f *in, Vec3f *out) {
+void mtxf_transform_dir(Matrix *mf, Vec3f *in, Vec3f *out) {
     out->f[0] = (in->f[0] * mf[0][0]) + (in->f[1] * mf[1][0]) + (in->f[2] * mf[2][0]);
     out->f[1] = (in->f[0] * mf[0][1]) + (in->f[1] * mf[1][1]) + (in->f[2] * mf[2][1]);
     out->f[2] = (in->f[0] * mf[0][2]) + (in->f[1] * mf[1][2]) + (in->f[2] * mf[2][2]);
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_matrix_dot.s")
+GLOBAL_ASM("asm/math_util/mtxf_transform_dir.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -152,9 +152,9 @@ GLOBAL_ASM("asm/math_util/f32_matrix_dot.s")
  * Multiplies two 4×4 matrices.
  */
 /* Official name: mathMtxCatF */
-void f32_matrix_mult(Matrix *mat1, Matrix *mat2, Matrix *output) {
+void mtxf_mul(Matrix *mat1, Matrix *mat2, Matrix *output) {
     s32 i, j, k;
-    
+
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 4; j++) {
             /*
@@ -170,7 +170,7 @@ void f32_matrix_mult(Matrix *mat1, Matrix *mat2, Matrix *output) {
     }
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_matrix_mult.s")
+GLOBAL_ASM("asm/math_util/mtxf_mul.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -178,25 +178,25 @@ GLOBAL_ASM("asm/math_util/f32_matrix_mult.s")
  * Converts a floating-point 4×4 matrix to a Mtx fixed-point matrix.
  */
 /* Official name: mathMtxF2L */
-void f32_matrix_to_s16_matrix(Matrix *mf, Mtx *m) {
-    s32	i, j;
-	s32	e1,e2;
-	s32	*ai,*af;
+void mtxf_to_mtx(Matrix *mf, Mtx *m) {
+    s32 i, j;
+    s32 e1, e2;
+    s32 *ai, *af;
 
-	ai = &m->m[0][0];
-	af = &m->m[2][0];
+    ai = &m->m[0][0];
+    af = &m->m[2][0];
 
-	for (i = 0; i < 4; i++)
-	    for (j = 0; j < 4; j += 2) {
+    for (i = 0; i < 4; i++)
+        for (j = 0; j < 4; j += 2) {
             e1 = FTOFIX32((*mf)[i][j]);
             e2 = FTOFIX32((*mf)[i][j + 1]);
             *ai++ = (e1 & 0xFFFF0000) | ((e2 >> 16) & 0xFFFF);
             *af++ = ((e1 << 16) & 0xFFFF0000) | (e2 & 0xFFFF);
         }
-	}
+}
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_matrix_to_s16_matrix.s")
+GLOBAL_ASM("asm/math_util/mtxf_to_mtx.s")
 #endif
 
 /* Official Name: mathSeed */
@@ -229,14 +229,14 @@ s32 get_rng_seed(void) {
  * Generates a random integer within the inclusive range [min, max].
  */
 /* Official Name: mathRnd */
-s32 get_random_number_from_range(s32 min, s32 max) {
+s32 rand_range(s32 min, s32 max) {
     s64 temp = gCurrentRNGSeed;
 
     temp = (temp << 32) | (temp >> 1);
     temp = temp ^ ((gCurrentRNGSeed & 0xFFFFF) << 12);
     gCurrentRNGSeed = temp ^ ((temp >> 20) & 0xFFF);
 
-    return (u32)(gCurrentRNGSeed - min) % (max - min + 1) + min;
+    return (u32) (gCurrentRNGSeed - min) % (max - min + 1) + min;
 }
 #else
 GLOBAL_ASM("asm/math_util/rng.s")
@@ -252,7 +252,7 @@ GLOBAL_ASM("asm/math_util/rng.s")
  *
  */
 /* Official name: fastShortReflection */
-void s16_matrix_rotate(Vec3s *vec, Vec3s *n) {
+void vec3s_reflect(Vec3s *vec, Vec3s *n) {
     s32 proj_x2 = (vec->x * n->x + vec->y * n->y + vec->z * n->z) >> 12;
 
     vec[1].x = ((proj_x2 * n->x) >> 13) - vec->x;
@@ -260,7 +260,7 @@ void s16_matrix_rotate(Vec3s *vec, Vec3s *n) {
     vec[1].z = ((proj_x2 * n->z) >> 13) - vec->x; //!@bug: should be vec->z
 }
 #else
-GLOBAL_ASM("asm/math_util/s16_matrix_rotate.s")
+GLOBAL_ASM("asm/math_util/vec3s_reflect.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -268,22 +268,22 @@ GLOBAL_ASM("asm/math_util/s16_matrix_rotate.s")
  * Converts an Mtx matrix (used by the RSP) into a 4x4 fixed-point matrix,
  * where each element is in 16.16 fixed-point format.
  */
-UNUSED void s16_matrix_to_s32_matrix(Mtx *m, MatrixS *mi) {
+UNUSED void mtx_to_mtxs(Mtx *m, MatrixS *mi) {
     s16 *ai;
     u16 *af;
     s32 *ptr;
     s32 i;
-    
-    ai = (s16*)&m->m[0][0];
-    af = (u16*)&m->m[2][0];
-    ptr = (s32*)&mi[0][0];
+
+    ai = (s16 *) &m->m[0][0];
+    af = (u16 *) &m->m[2][0];
+    ptr = (s32 *) &mi[0][0];
 
     for (i = 0; i < 16; i++) {
         *ptr++ = (*ai++ << 16) | (*af++);
     }
 }
 #else
-GLOBAL_ASM("asm/math_util/s16_matrix_to_s32_matrix.s")
+GLOBAL_ASM("asm/math_util/mtx_to_mtxs.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -291,7 +291,7 @@ GLOBAL_ASM("asm/math_util/s16_matrix_to_s32_matrix.s")
  * Transforms a 3D short vector using a 4×4 fixed-point (16.16) matrix.
  * The result is written back into the input vector.
  */
-UNUSED void s16_vec3_mult_by_s32_matrix_full(MatrixS *mi, Vec3s *vec) {
+UNUSED void mtxs_transform_point(MatrixS *mi, Vec3s *vec) {
     s16 x = vec->x;
     s16 y = vec->y;
     s16 z = vec->z;
@@ -301,7 +301,7 @@ UNUSED void s16_vec3_mult_by_s32_matrix_full(MatrixS *mi, Vec3s *vec) {
     vec->z = ((*mi)[0][2] * x + (*mi)[1][2] * y + (*mi)[2][2] * z + (*mi)[3][2]) >> 16;
 }
 #else
-GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix_full.s")
+GLOBAL_ASM("asm/math_util/mtxs_transform_point.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -309,7 +309,7 @@ GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix_full.s")
  * Transforms a direction vector in 3D space using a 4×4 fixed-point (16.16) matrix.
  * The result is written back into the input vector.
  */
-void s16_vec3_mult_by_s32_matrix(MatrixS *mi, Vec3s *vec) {
+void mtxs_transform_dir(MatrixS *mi, Vec3s *vec) {
     s16 x = vec->x;
     s16 y = vec->y;
     s16 z = vec->z;
@@ -319,7 +319,7 @@ void s16_vec3_mult_by_s32_matrix(MatrixS *mi, Vec3s *vec) {
     vec->z = ((*mi)[0][2] * x + (*mi)[1][2] * y + (*mi)[2][2] * z) >> 16;
 }
 #else
-GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix.s")
+GLOBAL_ASM("asm/math_util/mtxs_transform_dir.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -332,7 +332,7 @@ GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix.s")
  * 4. Rotation around Y axis (yaw)
  * 5. Translation
  */
-void object_transform_to_matrix(Matrix *mtx, ObjectTransform *trans) {
+void transform_to_mtxf(Matrix *mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
     f32 xRotSine;
@@ -367,7 +367,7 @@ void object_transform_to_matrix(Matrix *mtx, ObjectTransform *trans) {
     (*mtx)[3][3] = 1.0f;
 }
 #else
-GLOBAL_ASM("asm/math_util/object_transform_to_matrix.s")
+GLOBAL_ASM("asm/math_util/transform_to_mtxf.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -377,13 +377,13 @@ GLOBAL_ASM("asm/math_util/object_transform_to_matrix.s")
  * the model along its local Y axis.
  /
 /* Official name: mathSquashY */
-void f32_matrix_scale_y_axis(Matrix *input, f32 scale) {
+void mtxf_scale_y(Matrix *input, f32 scale) {
     (*input)[1][0] *= scale;
     (*input)[1][1] *= scale;
     (*input)[1][2] *= scale;
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_matrix_scale_y_axis.s")
+GLOBAL_ASM("asm/math_util/mtxf_scale_y.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -393,13 +393,13 @@ GLOBAL_ASM("asm/math_util/f32_matrix_scale_y_axis.s")
  * along its local Y axis in model space.
  */
 /* Official name: mathTransY */
-void f32_matrix_translate_y_axis(Matrix *input, f32 offset) {
+void mtxf_translate_y(Matrix *input, f32 offset) {
     (*input)[3][0] += (*input)[1][0] * offset;
     (*input)[3][1] += (*input)[1][1] * offset;
     (*input)[3][2] += (*input)[1][2] * offset;
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_matrix_translate_y_axis.s")
+GLOBAL_ASM("asm/math_util/mtxf_translate_y.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -418,7 +418,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_translate_y_axis.s")
  *   4. Rotate Z (negative roll)
  */
 /* Official Name: mathRpyXyzMtx */
-void object_inverse_transform_to_matrix(Matrix *mtx, ObjectTransform *trans) {
+void inverse_transform_to_mtxf(Matrix *mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
     f32 xRotSine;
@@ -445,13 +445,16 @@ void object_inverse_transform_to_matrix(Matrix *mtx, ObjectTransform *trans) {
     (*mtx)[2][1] = yRotSine * zRotSine - xRotSine * zRotCosine * yRotCosine;
     (*mtx)[2][2] = yRotCosine * xRotCosine;
     (*mtx)[2][3] = 0;
-    (*mtx)[3][0] = ((*mtx)[0][0] * trans->x_position) + ((*mtx)[1][0] * trans->y_position) + ((*mtx)[2][0] * trans->z_position);
-    (*mtx)[3][1] = ((*mtx)[0][1] * trans->x_position) + ((*mtx)[1][1] * trans->y_position) + ((*mtx)[2][1] * trans->z_position);
-    (*mtx)[3][2] = ((*mtx)[0][2] * trans->x_position) + ((*mtx)[1][2] * trans->y_position) + ((*mtx)[2][2] * trans->z_position);
+    (*mtx)[3][0] =
+        ((*mtx)[0][0] * trans->x_position) + ((*mtx)[1][0] * trans->y_position) + ((*mtx)[2][0] * trans->z_position);
+    (*mtx)[3][1] =
+        ((*mtx)[0][1] * trans->x_position) + ((*mtx)[1][1] * trans->y_position) + ((*mtx)[2][1] * trans->z_position);
+    (*mtx)[3][2] =
+        ((*mtx)[0][2] * trans->x_position) + ((*mtx)[1][2] * trans->y_position) + ((*mtx)[2][2] * trans->z_position);
     (*mtx)[3][3] = 1.0f;
 }
 #else
-GLOBAL_ASM("asm/math_util/object_inverse_transform_to_matrix.s")
+GLOBAL_ASM("asm/math_util/inverse_transform_to_mtxf.s")
 #endif
 
 GLOBAL_ASM("asm/math_util/func_80070058.s")
@@ -466,7 +469,7 @@ GLOBAL_ASM("asm/math_util/func_80070058.s")
  * This is commonly used to render flat sprites that rotate to face the camera
  * while preserving their upright orientation.
  */
-void f32_matrix_from_rotation_and_scale(Matrix *mtx, s32 angle, f32 scale, f32 scaleY) {
+void mtxf_billboard(Matrix *mtx, s32 angle, f32 scale, f32 scaleY) {
     f32 cosine, sine;
 
     sine = sins_s16(angle) * (1.0f / 0x10000);
@@ -489,7 +492,7 @@ void f32_matrix_from_rotation_and_scale(Matrix *mtx, s32 angle, f32 scale, f32 s
     (*mtx)[3][3] = 1.0f;
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_matrix_from_rotation_and_scale.s")
+GLOBAL_ASM("asm/math_util/mtxf_billboard.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -498,9 +501,9 @@ GLOBAL_ASM("asm/math_util/f32_matrix_from_rotation_and_scale.s")
  * Note: The rotation angles are specified in reverse order, but the applied rotation is standard
  * — roll first, then pitch, then yaw.
  */
-void s16_vec3_apply_object_rotation(RPYAngles *rotation, Vec3s *vec) {
-    s32 x1,y1,z1;
-    s32 x2,y2,z2;
+void vec3s_rotate_rpy(RPYAngles *rotation, Vec3s *vec) {
+    s32 x1, y1, z1;
+    s32 x2, y2, z2;
     s32 sine, cosine;
 
     x1 = vec->x;
@@ -530,7 +533,7 @@ void s16_vec3_apply_object_rotation(RPYAngles *rotation, Vec3s *vec) {
     vec->z = z2;
 }
 #else
-GLOBAL_ASM("asm/math_util/s16_vec3_apply_object_rotation.s")
+GLOBAL_ASM("asm/math_util/vec3s_rotate_rpy.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -539,7 +542,7 @@ GLOBAL_ASM("asm/math_util/s16_vec3_apply_object_rotation.s")
  * The result is written back into the same vector.
  */
 /* Official Name: mathOneFloatRPY */
-void f32_vec3_apply_object_rotation(Vec3s *rotation, Vec3f *vec) {
+void vec3f_rotate(Vec3s *rotation, Vec3f *vec) {
     f32 sine;
     f32 cosine;
     f32 x1, y1, z1;
@@ -572,18 +575,18 @@ void f32_vec3_apply_object_rotation(Vec3s *rotation, Vec3f *vec) {
     vec->z = z2;
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_vec3_apply_object_rotation.s")
+GLOBAL_ASM("asm/math_util/vec3f_rotate.s")
 #endif
 
 #ifdef NON_MATCHING
 /**
  * Applies the inverse of the object rotation using the specified angles.
  * Unlike the standard roll-pitch-yaw (Z-X-Y) order, this applies the angles in yaw-pitch-roll (Y-X-Z) order.
- * To fully reverse the effect of f32_vec3_apply_object_rotation, the input angles must also be negated.
+ * To fully reverse the effect of vec3f_rotate, the input angles must also be negated.
  * The result is written back into the same vector.
  */
 /* Official Name: mathOneFloatYPR */
-void f32_vec3_apply_object_rotation2(Vec3s *rotation, Vec3f *vec) {
+void vec3f_rotate_rpy(Vec3s *rotation, Vec3f *vec) {
     f32 sine;
     f32 cosine;
     f32 x1, y1, z1;
@@ -616,7 +619,7 @@ void f32_vec3_apply_object_rotation2(Vec3s *rotation, Vec3f *vec) {
     vec->z = z2;
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_vec3_apply_object_rotation2.s")
+GLOBAL_ASM("asm/math_util/vec3f_rotate_rpy.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -628,7 +631,7 @@ GLOBAL_ASM("asm/math_util/f32_vec3_apply_object_rotation2.s")
  * The result is written back into the same vector.
  */
 /* Official Name: mathOneFloatPY */
-void f32_vec3_apply_object_rotation3(Vec3s *rotation, Vec3f *vec) {
+void vec3f_rotate_py(Vec3s *rotation, Vec3f *vec) {
     f32 sinX;
     f32 cosX;
     f32 sinY;
@@ -647,7 +650,7 @@ void f32_vec3_apply_object_rotation3(Vec3s *rotation, Vec3f *vec) {
     vec->z = z * cosX * cosY;
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_vec3_apply_object_rotation3.s")
+GLOBAL_ASM("asm/math_util/vec3f_rotate_py.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -656,7 +659,7 @@ GLOBAL_ASM("asm/math_util/f32_vec3_apply_object_rotation3.s")
  * Points lying exactly on the triangle's edges are not considered inside.
  */
 /* Official Name: mathXZInTri */
-s32 point_triangle_2d_xz_intersection(s32 x, s32 z, Vec3s *pointA, Vec3s *pointB, Vec3s *pointC) {
+s32 tri2d_xz_contains_point(s32 x, s32 z, Vec3s *pointA, Vec3s *pointB, Vec3s *pointC) {
     s32 aX, aZ, bX, bZ, cX, cZ;
     s32 var_a1;
     s32 var_a2;
@@ -675,7 +678,7 @@ s32 point_triangle_2d_xz_intersection(s32 x, s32 z, Vec3s *pointA, Vec3s *pointB
     return var_a3 == var_a2 && var_a2 == var_a1;
 }
 #else
-GLOBAL_ASM("asm/math_util/point_triangle_2d_xz_intersection.s")
+GLOBAL_ASM("asm/math_util/tri2d_xz_contains_point.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -683,7 +686,7 @@ GLOBAL_ASM("asm/math_util/point_triangle_2d_xz_intersection.s")
  * Creates a translation matrix that moves points by the specified (x, y, z) offset.
  */
 /* Official Name: mathTranslateMtx */
-void f32_matrix_from_position(Matrix *mtx, f32 x, f32 y, f32 z) {
+void mtxf_from_translation(Matrix *mtx, f32 x, f32 y, f32 z) {
     s32 i, j;
 
     // Clear matrix
@@ -701,7 +704,7 @@ void f32_matrix_from_position(Matrix *mtx, f32 x, f32 y, f32 z) {
     (*mtx)[3][2] = z;
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_matrix_from_position.s")
+GLOBAL_ASM("asm/math_util/mtxf_from_translation.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -709,7 +712,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_from_position.s")
  * Creates a scaling matrix with the specified scale factors along the X, Y, and Z axes.
  */
 /* Official Name: mathScaleMtx */
-void f32_matrix_from_scale(Matrix *mtx, f32 scaleX, f32 scaleY, f32 scaleZ) {
+void mtxf_from_scale(Matrix *mtx, f32 scaleX, f32 scaleY, f32 scaleZ) {
     s32 i, j;
 
     // Clear matrix
@@ -725,7 +728,7 @@ void f32_matrix_from_scale(Matrix *mtx, f32 scaleX, f32 scaleY, f32 scaleZ) {
     (*mtx)[3][3] = 1.0f;
 }
 #else
-GLOBAL_ASM("asm/math_util/f32_matrix_from_scale.s")
+GLOBAL_ASM("asm/math_util/mtxf_from_scale.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -796,11 +799,11 @@ GLOBAL_ASM("asm/math_util/arctan2_f.s")
  * Due to differences in rounding, the result from this C implementation may differ by 1 from the
  * result produced by the assembly code.
  */
-UNUSED s32 s32_matrix_cell_sqrt(s32 x) {
+UNUSED s32 fix32_sqrt(s32 x) {
     return FTOFIX32(sqrtf(FIX32TOF(x)));
 }
 #else
-GLOBAL_ASM("asm/math_util/s32_matrix_cell_sqrt.s")
+GLOBAL_ASM("asm/math_util/fix32_sqrt.s")
 #endif
 
 #ifdef NON_EQUIVALENT // Untested

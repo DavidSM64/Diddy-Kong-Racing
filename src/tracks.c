@@ -2214,21 +2214,21 @@ void func_8002A31C(void) {
         ox1 = x;
         oy1 = y;
         oz1 = z;
-        guMtxXFMF_dkr(cameraMatrix, x, y, z, &ox1, &oy1, &oz1);
+        mtxf_transform_point(cameraMatrix, x, y, z, &ox1, &oy1, &oz1);
         x = D_800DC8AC[i][1].x;
         y = D_800DC8AC[i][1].y;
         z = D_800DC8AC[i][1].z;
         ox2 = x;
         oy2 = y;
         oz2 = z;
-        guMtxXFMF_dkr(cameraMatrix, x, y, z, &ox2, &oy2, &oz2);
+        mtxf_transform_point(cameraMatrix, x, y, z, &ox2, &oy2, &oz2);
         x = D_800DC8AC[i][2].x;
         y = D_800DC8AC[i][2].y;
         z = D_800DC8AC[i][2].z;
         ox3 = x;
         oy3 = y;
         oz3 = z;
-        guMtxXFMF_dkr(cameraMatrix, x, y, z, &ox3, &oy3, &oz3);
+        mtxf_transform_point(cameraMatrix, x, y, z, &ox3, &oy3, &oz3);
         x = ((oz2 - oz3) * oy1) + (oy2 * (oz3 - oz1)) + (oy3 * (oz1 - oz2));
         y = ((ox2 - ox3) * oz1) + (oz2 * (ox3 - ox1)) + (oz3 * (ox1 - ox2));
         z = ((oy2 - oy3) * ox1) + (ox2 * (oy3 - oy1)) + (ox3 * (oy1 - oy2));
@@ -3590,10 +3590,10 @@ void func_8002DE30(Object *obj) {
                             }
                         }
                         if (maxYPos >= sp90 && sp94 >= minYPos) {
-                            if (point_triangle_2d_xz_intersection(
-                                    obj->segment.trans.x_position, obj->segment.trans.z_position,
-                                    &vertices[triangle->verticesArray[1]].x, &vertices[triangle->verticesArray[2]].x,
-                                    &vertices[triangle->verticesArray[3]].x)) {
+                            if (tri2d_xz_contains_point(obj->segment.trans.x_position, obj->segment.trans.z_position,
+                                                        &vertices[triangle->verticesArray[1]].x,
+                                                        &vertices[triangle->verticesArray[2]].x,
+                                                        &vertices[triangle->verticesArray[3]].x)) {
                                 foundResult = TRUE;
                                 obj->shading->unk0 += (((1.0f - D_800DC884[batchFlags]) - obj->shading->unk0) * 0.2);
                             }
@@ -4488,8 +4488,8 @@ void compute_scene_camera_transform_matrix(void) {
     trans.z_position = 0.0f;
     trans.scale = 1.0f;
 
-    object_transform_to_matrix(&mtx, &trans);
-    guMtxXFMF_dkr(&mtx, x, y, z, &x, &y, &z);
+    transform_to_mtxf(&mtx, &trans);
+    mtxf_transform_point(&mtx, x, y, z, &x, &y, &z);
 
     // Store x/y/z as integers
     gScenePerspectivePos.x = x;
