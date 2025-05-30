@@ -228,7 +228,7 @@ s32 func_80017248(void*, s32, s32*, Vec3f*, f32*, f32*, s8* surface);
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
 void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
 void func_8004CC20(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
-void func_8004447C(Object *obj, Object_Racer *racer, s32 updateRate);
+void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate);
 void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
 void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate);

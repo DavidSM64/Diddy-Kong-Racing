@@ -84,7 +84,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
             }
             gBubblerStartBoost = TRUE;
             *startTimer = 0;
-            *input |= 0x8000;
+            *input |= A_BUTTON;
         } else {
             gBubblerStartBoost = FALSE;
         }
