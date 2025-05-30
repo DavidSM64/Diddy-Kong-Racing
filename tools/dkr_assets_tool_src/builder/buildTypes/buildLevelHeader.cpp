@@ -239,25 +239,27 @@ void BuildLevelHeader::build(BuildInfo &info) {
     }
     
     header->unk53 = jsonFile.get_int("/unknown/unk53");
-    
-    header->unk56 = jsonFile.get_int("/waves/unk56");
+    // Waves
+    header->waveSubdivisions = jsonFile.get_int("/waves/subdivisions");
     header->unk57 = jsonFile.get_int("/waves/unk57");
-    header->unk58 = jsonFile.get_int("/waves/unk58");
-    header->unk59 = jsonFile.get_int("/waves/unk59");
-    header->unk5A = jsonFile.get_int("/waves/unk5A");
-    header->unk5C = jsonFile.get_int("/waves/unk5C");
-    header->unk5D = jsonFile.get_int("/waves/unk5D");
-    header->unk5E = jsonFile.get_int("/waves/unk5E");
-    header->unk60 = jsonFile.get_int("/waves/unk60");
+    header->waveSineStep0 = jsonFile.get_int("/waves/sine-step-0");
+    header->waveSineBase0 = jsonFile.get_int("/waves/sine-base-0");
+    header->waveSineHeight0 = jsonFile.get_int("/waves/sine-height-0");
+    header->waveSineStep1 = jsonFile.get_int("/waves/sine-step-1");
+    header->waveSineBase1 = jsonFile.get_int("/waves/sine-base-1");
+    header->waveSineHeight1 = jsonFile.get_int("/waves/sine-height-1");
+    header->waveSeedSize = jsonFile.get_int("/waves/seed-size");
     header->wavePower = jsonFile.get_int("/waves/wave-power");
     header->unk64 = jsonFile.get_int("/waves/unk64");
     header->unk66 = jsonFile.get_int("/waves/unk66");
-    header->unk68 = jsonFile.get_int("/waves/unk68");
-    header->unk6A = jsonFile.get_int("/waves/unk6A");
-    header->unk6B = jsonFile.get_int("/waves/unk6B");
-    header->unk6C = jsonFile.get_int("/waves/unk6C");
-    header->unk6D = jsonFile.get_int("/waves/unk6D");
-    header->unk6E = jsonFile.get_int("/waves/unk6E");
+    std::string waveTexID = jsonFile.get_string("/waves/texture-ID");
+    header->waveTexID = AssetsHelper::get_asset_index("ASSET_TEXTURES_2D", waveTexID);
+    header->waveUVScaleX = jsonFile.get_int("/waves/UV-Scale-X");
+    header->waveUVScaleY = jsonFile.get_int("/waves/UV-Scale-Y");
+    header->waveUVScrollX = jsonFile.get_int("/waves/UV-Scroll-X");
+    header->waveUVScrollY = jsonFile.get_int("/waves/UV-Scroll-Y");
+    header->waveViewDist = jsonFile.get_int("/waves/view-distance");
+
     header->unk70 = jsonFile.get_int("/waves/unk70");
     header->unk71 = jsonFile.get_int("/waves/unk71");
     header->unk72 = jsonFile.get_int("/unknown/unk72");

@@ -144,15 +144,15 @@
         },
         {
             "filename": "water",
-            "build-id": "ASSET_TEX3D_COMMON_WATER",
-            "folder": "common",
+            "build-id": "ASSET_TEX3D_WATER_WATER",
+            "folder": "water",
             "type": "Texture",
             "sha1": "21f57fe8ca0960788b8c4ac52fd28647f59b0306"
         },
         {
             "filename": "water2",
-            "build-id": "ASSET_TEX3D_COMMON_WATER2",
-            "folder": "common",
+            "build-id": "ASSET_TEX3D_WATER_WATER2",
+            "folder": "water",
             "type": "Texture",
             "sha1": "c0b6d27b96983e9bb6c1a86cef6ee07949577349"
         },
@@ -193,15 +193,15 @@
         },
         {
             "filename": "water3",
-            "build-id": "ASSET_TEX3D_COMMON_WATER3",
-            "folder": "common",
+            "build-id": "ASSET_TEX3D_WATER_WATER3",
+            "folder": "water",
             "type": "Texture",
             "sha1": "bcd8ce3018c586a31208eb2d2dc830476553c267"
         },
         {
             "filename": "water_still",
-            "build-id": "ASSET_TEX3D_COMMON_WATERSTILL",
-            "folder": "common",
+            "build-id": "ASSET_TEX3D_WATER_WATERSTILL",
+            "folder": "water",
             "type": "Texture",
             "sha1": "3c8ba85842e3eb896b6d82a5a2283e5991bb90bd"
         },
@@ -214,8 +214,8 @@
         },
         {
             "filename": "water4",
-            "build-id": "ASSET_TEX3D_COMMON_WATER4",
-            "folder": "common",
+            "build-id": "ASSET_TEX3D_WATER_WATER4",
+            "folder": "water",
             "type": "Texture",
             "sha1": "6f6733f82068d4172dc01b8ff9038becd82d9347"
         },
@@ -1089,8 +1089,8 @@
         },
         {
             "filename": "water_still2",
-            "build-id": "ASSET_TEX3D_COMMON_WATERSTILL2",
-            "folder": "common",
+            "build-id": "ASSET_TEX3D_WATER_WATERSTILL2",
+            "folder": "water",
             "type": "Texture",
             "sha1": "960c2b9843c51703433fd57cb08e1e710e840bff"
         },
@@ -2209,8 +2209,8 @@
         },
         {
             "filename": "water_scrolling",
-            "build-id": "ASSET_TEX3D_COMMON_WATERSCROLLING",
-            "folder": "common",
+            "build-id": "ASSET_TEX3D_WATER_WATERSCROLLING",
+            "folder": "water",
             "type": "Texture",
             "sha1": "1562fe07296e0cbd1420172f1bbc44668968d95c"
         },
@@ -8206,8 +8206,8 @@
         },
         {
             "filename": "water5",
-            "build-id": "ASSET_TEX3D_COMMON_WATER5",
-            "folder": "common",
+            "build-id": "ASSET_TEX3D_WATER_WATER5",
+            "folder": "water",
             "type": "Texture",
             "sha1": "e79d60701d77b4d631fe66c470103ae0fbd3045f"
         },
@@ -10384,16 +10384,16 @@
             "sha1": "03d41b8c4cbf4b85828da377bcebb1fb94fd9392"
         },
         {
-            "filename": "animated_unknown",
-            "build-id": "ASSET_TEX2D_UNKNOWN_ANIMATEDUNKNOWN",
-            "folder": "unknown",
+            "filename": "water_detail",
+            "build-id": "ASSET_TEX2D_WATER_DETAIL",
+            "folder": "water",
             "type": "Texture",
             "sha1": "2c2f465a39e05275277d918f27c47b0f7ab6267d"
         },
         {
-            "filename": "animated_unknown2",
-            "build-id": "ASSET_TEX2D_UNKNOWN_ANIMATEDUNKNOWN2",
-            "folder": "unknown",
+            "filename": "water_detail2",
+            "build-id": "ASSET_TEX2D_WATER_DETAIL2",
+            "folder": "water",
             "type": "Texture",
             "sha1": "d7878909153563d2472869dd70f0a36c0ef2870b"
         },

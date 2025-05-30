@@ -461,6 +461,7 @@ typedef struct LevelHeader {
   /* 0x52 */ u8 music;
   /* 0x53 */ u8 unk53;
   /* 0x54 */ u16 instruments;
+  // Waves
   /* 0x56 */ u8 waveSubdivisons; // values between 2 and 8 (except 5 and 7), used to determine waves count?
   /* 0x57 */ u8 unk57; // possible values: 2,4,8,16,20, related to waves
   /* 0x58 */ u8 waveSineStep0; // possible values: 1,2,4
