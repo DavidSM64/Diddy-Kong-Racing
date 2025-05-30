@@ -99,14 +99,14 @@ f32 gModelMatrixViewY[6];
 f32 gModelMatrixViewZ[5];
 u16 perspNorm;
 Matrix *gModelMatrixF[6];
-MatrixS *gModelMatrixS[6];
+Mtx *gModelMatrixS[6];
 f32 D_80120DA0[5 * 16];
 Matrix gPerspectiveMatrixF;
 Matrix gViewMatrixF;
 Matrix gCameraMatrixF;
 Matrix gProjectionMatrixF;
-MatrixS gProjectionMatrixS;
-UNUSED MatrixS gUnusedProjectionMatrixS; // Copied to the same way as gProjectionMatrixS, but not actually used.
+Mtx gProjectionMatrixS;
+UNUSED Mtx gUnusedProjectionMatrixS; // Copied to the same way as gProjectionMatrixS, but not actually used.
 Matrix gCurrentModelMatrixF;
 Matrix gCurrentModelMatrixS;
 
@@ -234,7 +234,7 @@ s32 get_current_viewport(void) {
 /**
  * Initialises the camera object for the tracks menu.
  */
-void camera_init_tracks_menu(Gfx **dList, MatrixS **mtxS) {
+void camera_init_tracks_menu(Gfx **dList, Mtx **mtxS) {
     Camera *cam;
     s16 angleY;
     s16 angleX;
@@ -606,7 +606,7 @@ UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) 
     *y2 = GET_VIDEO_HEIGHT(widthAndHeight);
 }
 
-void viewport_main(Gfx **dlist, MatrixS **mats) {
+void viewport_main(Gfx **dlist, Mtx **mats) {
     u32 y;
     u32 x;
     u32 tempX;
@@ -860,7 +860,7 @@ void viewport_scissor(Gfx **dList) {
 }
 
 // Official Name: camGetPlayerProjMtx / camSetProjMtx - ??
-void func_80067D3C(Gfx **dList, UNUSED MatrixS **mats) {
+void func_80067D3C(Gfx **dList, UNUSED Mtx **mats) {
     s32 temp;
 
     gSPPerspNormalize((*dList)++, perspNorm);
@@ -882,7 +882,7 @@ void func_80067D3C(Gfx **dList, UNUSED MatrixS **mats) {
     }
     gCameraTransform.z_position = -gCameras[gActiveCameraID].trans.z_position;
 
-    object_inverse_transform_to_matrix(gCameraMatrixF, &gCameraTransform);
+    object_inverse_transform_to_matrix(&gCameraMatrixF, &gCameraTransform);
     f32_matrix_mult(&gCameraMatrixF, &gPerspectiveMatrixF, &gViewMatrixF);
 
     gCameraTransform.rotation.y_rotation = -0x8000 - gCameras[gActiveCameraID].trans.rotation.y_rotation;
@@ -897,7 +897,7 @@ void func_80067D3C(Gfx **dList, UNUSED MatrixS **mats) {
     }
     gCameraTransform.z_position = gCameras[gActiveCameraID].trans.z_position;
 
-    object_transform_to_matrix(gProjectionMatrixF, &gCameraTransform);
+    object_transform_to_matrix(&gProjectionMatrixF, &gCameraTransform);
     f32_matrix_to_s16_matrix(&gProjectionMatrixF, &gUnusedProjectionMatrixS);
 
     gActiveCameraID = temp;
@@ -917,7 +917,7 @@ void set_ortho_matrix_height(f32 value) {
  * Used for drawing triangles on screen as HUD.
  * Official Name: camStandardOrtho
  */
-void set_ortho_matrix_view(Gfx **dList, MatrixS **mtx) {
+void set_ortho_matrix_view(Gfx **dList, Mtx **mtx) {
     u32 widthAndHeight;
     s32 width, height;
     s32 i, j;
@@ -947,10 +947,10 @@ void set_ortho_matrix_view(Gfx **dList, MatrixS **mtx) {
 }
 
 // Official Name: camStandardPersp?
-void func_8006807C(Gfx **dList, MatrixS **mtx) {
-    object_inverse_transform_to_matrix(gCurrentModelMatrixF, &D_800DD288);
+void func_8006807C(Gfx **dList, Mtx **mtx) {
+    object_inverse_transform_to_matrix(&gCurrentModelMatrixF, &D_800DD288);
     f32_matrix_mult(&gCurrentModelMatrixF, &gPerspectiveMatrixF, &gViewMatrixF);
-    object_inverse_transform_to_matrix((float (*)[4]) gModelMatrixF[0], &D_800DD2A0);
+    object_inverse_transform_to_matrix(gModelMatrixF[0], &D_800DD2A0);
     f32_matrix_mult(gModelMatrixF[0], &gViewMatrixF, &gCurrentModelMatrixF);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixF, *mtx);
     gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_0);
@@ -1011,7 +1011,7 @@ UNUSED const char D_800E6F44[] = "cameraPushSprMtx: model stack overflow!!\n";
  * Used when the next thing rendered relies on there not being any matrix offset.
  * Official Name: camOffsetZero?
  */
-void matrix_world_origin(Gfx **dList, MatrixS **mtx) {
+void matrix_world_origin(Gfx **dList, Mtx **mtx) {
     f32_matrix_from_position(gModelMatrixF[gModelMatrixStackPos], 0.0f, 0.0f, 0.0f);
     f32_matrix_mult(gModelMatrixF[gModelMatrixStackPos], &gViewMatrixF, &gCurrentModelMatrixF);
     f32_matrix_to_s16_matrix(&gCurrentModelMatrixF, *mtx);
@@ -1030,7 +1030,7 @@ void sprite_anim_off(s32 setting) {
 /**
  * Calculates angle from object to camera, then renders the sprite as a billboard, facing the camera.
  */
-s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, Sprite *arg4, s32 flags) {
+s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj, Sprite *arg4, s32 flags) {
     f32 diffX;
     f32 diffY;
     Vertex *v;
@@ -1089,7 +1089,7 @@ s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Obj
         gCameraTransform.x_position = obj->segment.trans.x_position;
         gCameraTransform.y_position = obj->segment.trans.y_position;
         gCameraTransform.z_position = obj->segment.trans.z_position;
-        object_transform_to_matrix(gCurrentModelMatrixF, &gCameraTransform);
+        object_transform_to_matrix(&gCurrentModelMatrixF, &gCameraTransform);
         gModelMatrixStackPos++;
         f32_matrix_mult(&gCurrentModelMatrixF, gModelMatrixF[gModelMatrixStackPos - 1],
                         gModelMatrixF[gModelMatrixStackPos]);
@@ -1117,7 +1117,7 @@ s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Obj
         }
         textureFrame = obj->segment.animFrame;
         gModelMatrixStackPos++;
-        f32_matrix_from_rotation_and_scale((f32(*)[4]) gModelMatrixF[gModelMatrixStackPos], angleDiff,
+        f32_matrix_from_rotation_and_scale(gModelMatrixF[gModelMatrixStackPos], angleDiff,
                                            obj->segment.trans.scale, gVideoAspectRatio);
         f32_matrix_to_s16_matrix(gModelMatrixF[gModelMatrixStackPos], *mtx);
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
@@ -1152,7 +1152,7 @@ s32 render_sprite_billboard(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Obj
  * Sets transform and scale matrices to set position and size, loads the texture, sets the rendermodes, then draws the
  * result onscreen.
  */
-void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite,
+void render_ortho_triangle_image(Gfx **dList, Mtx **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite,
                                  s32 flags) {
     UNUSED s32 pad;
     f32 scale;
@@ -1183,14 +1183,14 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         gCameraTransform.z_position = 0.0f;
         if (gAdjustViewportHeight) {
             scale = segment->trans.scale;
-            f32_matrix_from_scale(scaleMtxF, scale, scale, 1.0f);
-            f32_matrix_from_rotation_and_scale(aspectMtxF, 0, 1.0f, gVideoAspectRatio);
+            f32_matrix_from_scale(&scaleMtxF, scale, scale, 1.0f);
+            f32_matrix_from_rotation_and_scale(&aspectMtxF, 0, 1.0f, gVideoAspectRatio);
             f32_matrix_mult(&aspectMtxF, &scaleMtxF, &gCurrentModelMatrixF);
         } else {
             scale = segment->trans.scale;
-            f32_matrix_from_scale(gCurrentModelMatrixF, scale, scale, 1.0f);
+            f32_matrix_from_scale(&gCurrentModelMatrixF, scale, scale, 1.0f);
         }
-        object_inverse_transform_to_matrix(aspectMtxF, &gCameraTransform);
+        object_inverse_transform_to_matrix(&aspectMtxF, &gCameraTransform);
         f32_matrix_mult(&gCurrentModelMatrixF, &aspectMtxF, gModelMatrixF[gModelMatrixStackPos]);
         f32_matrix_to_s16_matrix(gModelMatrixF[gModelMatrixStackPos], *mtx);
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
@@ -1218,7 +1218,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
  * Generate a matrix with rotation, scaling and shearing and run it.
  * Used for wavy type effects like the shield.
  */
-void apply_object_shear_matrix(Gfx **dList, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear) {
+void apply_object_shear_matrix(Gfx **dList, Mtx **mtx, Object *arg2, Object *arg3, f32 shear) {
     UNUSED s32 pad;
     f32 cossf_x_arg2;
     f32 cossf_y_arg2;
@@ -1321,14 +1321,14 @@ void apply_object_shear_matrix(Gfx **dList, MatrixS **mtx, Object *arg2, Object 
 /**
  * Official Name: camPushModelMtx
  */
-s32 cam_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY) {
+s32 cam_push_model_mtx(Gfx **dList, Mtx **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY) {
     f32 tempX;
     f32 tempY;
     f32 tempZ;
     s32 index;
     f32 scaleFactor;
 
-    object_transform_to_matrix(gCurrentModelMatrixF, trans);
+    object_transform_to_matrix(&gCurrentModelMatrixF, trans);
     if (offsetY != 0.0f) {
         f32_matrix_translate_y_axis(&gCurrentModelMatrixF, offsetY);
     }
@@ -1347,7 +1347,7 @@ s32 cam_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 s
     if (1) {}
     if (1) {}; // Fakematch
     gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_1);
-    guMtxXFMF(*gModelMatrixF[gModelMatrixStackPos], 0.0f, 0.0f, 0.0f, &tempX, &tempY, &tempZ);
+    guMtxXFMF_dkr(gModelMatrixF[gModelMatrixStackPos], 0.0f, 0.0f, 0.0f, &tempX, &tempY, &tempZ);
     index = gActiveCameraID;
     if (gCutsceneCameraActive) {
         index += 4;
@@ -1362,8 +1362,8 @@ s32 cam_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 s
     gCameraTransform.y_position = 0.0f;
     gCameraTransform.z_position = 0.0f;
     gCameraTransform.scale = 1.0f;
-    object_inverse_transform_to_matrix(gCurrentModelMatrixF, &gCameraTransform);
-    guMtxXFMF(gCurrentModelMatrixF, tempX, tempY, tempZ, &tempX, &tempY, &tempZ);
+    object_inverse_transform_to_matrix(&gCurrentModelMatrixF, &gCameraTransform);
+    guMtxXFMF_dkr(&gCurrentModelMatrixF, tempX, tempY, tempZ, &tempX, &tempY, &tempZ);
     scaleFactor = 1.0f / trans->scale;
     tempX *= scaleFactor;
     tempY *= scaleFactor;
@@ -1381,7 +1381,7 @@ s32 cam_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 s
 /**
  * Calculate the rotation matrix for an actors head, then run it.
  */
-void apply_head_turning_matrix(Gfx **dList, MatrixS **mtx, Object_68 *objGfx, s16 headAngle) {
+void apply_head_turning_matrix(Gfx **dList, Mtx **mtx, Object_68 *objGfx, s16 headAngle) {
     f32 coss_headAngle;
     f32 sins_headAngle;
     f32 offsetX;
@@ -1531,7 +1531,7 @@ Matrix *get_projection_matrix_f32(void) {
 /**
  * Return the current fixed point projection matrix.
  */
-MatrixS *get_projection_matrix_s16(void) {
+Mtx *get_projection_matrix_s16(void) {
     return &gProjectionMatrixS;
 }
 
@@ -1548,7 +1548,7 @@ Matrix *get_camera_matrix(void) {
 f32 get_distance_to_camera(f32 x, f32 y, f32 z) {
     f32 ox, oy, oz;
 
-    guMtxXFMF(gCameraMatrixF, x, y, z, &ox, &oy, &oz);
+    guMtxXFMF_dkr(&gCameraMatrixF, x, y, z, &ox, &oy, &oz);
 
     return oz;
 }

@@ -272,7 +272,7 @@ s16 gPrevTimeTrialVehicle; // Current Vehicle being used in track?
 s16 gMapDefaultVehicle;    // Vehicle enum
 s32 D_8011AE88;
 Gfx *gObjectCurrDisplayList;
-MatrixS *gObjectCurrMatrix;
+Mtx *gObjectCurrMatrix;
 Vertex *gObjectCurrVertexList;
 u8 *D_8011AE98[2];
 s32 D_8011AEA0[2];
@@ -449,35 +449,35 @@ void func_8000B38C(Vertex *vertices, Triangle *triangles, ObjectTransform *trans
     s32 i;
     s32 height, width;
     s16 *v;
-    f32 sp64[3];
+    Vec3f sp64;
     s32 *tri;
     f32 *ptr;
     s32 temp;
 
     v = (s16 *) vertices;
 
-    sp64[2] = -arg4;
-    f32_vec3_apply_object_rotation3(&trans->rotation, sp64);
+    sp64.z = -arg4;
+    f32_vec3_apply_object_rotation3(&trans->rotation, &sp64);
 
     // A rather strange way to fill structures
 
-    *v++ = sp64[0] + trans->x_position;
-    *v++ = sp64[1] + trans->y_position;
-    *v++ = sp64[2] + trans->z_position;
+    *v++ = sp64.x + trans->x_position;
+    *v++ = sp64.y + trans->y_position;
+    *v++ = sp64.z + trans->z_position;
     *v++ = -1;
     *v++ = -1;
 
     ptr = D_800DC768;
     for (i = 0; i < 8; i++) {
-        sp64[0] = *ptr++ * arg3;
-        sp64[1] = *ptr++ * arg3;
-        sp64[2] = 0.0f;
+        sp64.x = *ptr++ * arg3;
+        sp64.y = *ptr++ * arg3;
+        sp64.z = 0.0f;
 
-        f32_vec3_apply_object_rotation(trans, sp64);
+        f32_vec3_apply_object_rotation(&trans->rotation, &sp64);
 
-        *v++ = sp64[0] + trans->x_position;
-        *v++ = sp64[1] + trans->y_position;
-        *v++ = sp64[2] + trans->z_position;
+        *v++ = sp64.x + trans->x_position;
+        *v++ = sp64.y + trans->y_position;
+        *v++ = sp64.z + trans->z_position;
         *v++ = -1;
         *v++ = -1;
     }
@@ -501,7 +501,7 @@ void func_8000B38C(Vertex *vertices, Triangle *triangles, ObjectTransform *trans
 }
 
 void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4) {
-    f32 sp74[3];
+    Vec3f sp74;
     f32 temp_f0;
     f32 var_f2;
     Object_Boost *boostAsset;
@@ -572,13 +572,13 @@ void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boos
                 gBoostEffectObjects[racerIndex]->segment.trans.x_position = 0.0f;
                 gBoostEffectObjects[racerIndex]->segment.trans.y_position = 0.0f;
                 gBoostEffectObjects[racerIndex]->segment.trans.z_position = 0.0f;
-                sp74[0] = boostData->position.x;
-                sp74[1] = boostData->position.y;
-                sp74[2] = boostData->position.z;
-                f32_vec3_apply_object_rotation(&racerObj->segment.trans, sp74);
+                sp74.x = boostData->position.x;
+                sp74.y = boostData->position.y;
+                sp74.z = boostData->position.z;
+                f32_vec3_apply_object_rotation(&racerObj->segment.trans.rotation, &sp74);
                 ignore_bounds_check();
-                move_object(gBoostEffectObjects[racerIndex], racerObj->segment.trans.x_position + sp74[0],
-                            racerObj->segment.trans.y_position + sp74[1], racerObj->segment.trans.z_position + sp74[2]);
+                move_object(gBoostEffectObjects[racerIndex], racerObj->segment.trans.x_position + sp74.x,
+                            racerObj->segment.trans.y_position + sp74.y, racerObj->segment.trans.z_position + sp74.z);
             }
             if (arg4 != FALSE) {
                 D_8011B068[racerIndex] = FALSE;
@@ -3262,7 +3262,7 @@ void func_80012CE8(Gfx **dList) {
  * Update the object stack trace, set the draw pointers, then begin rendering the object.
  * Official Name: objPrintObject
  */
-void render_object(Gfx **dList, MatrixS **mtx, Vertex **verts, Object *obj) {
+void render_object(Gfx **dList, Mtx **mtx, Vertex **verts, Object *obj) {
     f32 scale;
     if (obj->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_SHADOW_ONLY)) {
         return;
@@ -3589,7 +3589,7 @@ void render_bubble_trap(ObjectTransform *trans, Sprite *gfxData, Object *obj, s3
     Camera *cameraSegment;
     f32 dist;
 
-    f32_vec3_apply_object_rotation(trans, &obj->segment.trans.x_position);
+    f32_vec3_apply_object_rotation(&trans->rotation, &obj->segment.trans.x_position);
     obj->segment.trans.x_position += trans->x_position;
     obj->segment.trans.y_position += trans->y_position;
     obj->segment.trans.z_position += trans->z_position;
@@ -3614,7 +3614,7 @@ void render_bubble_trap(ObjectTransform *trans, Sprite *gfxData, Object *obj, s3
  * Get the racer object data, and fetch set visual shield properties based on that racer.
  * Afterwards, render the graphics with opacity scaling with the fadetimer.
  */
-void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj) {
+void render_racer_shield(Gfx **dList, Mtx **mtx, Vertex **vtxList, Object *obj) {
     Object_Racer *racer;
     Object_68 *gfxData;
     ObjectModel *mdl;
@@ -3686,7 +3686,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
  * Get the racer object data, and fetch set visual magnet properties based on that racer.
  * Afterwards, render the graphics with opacity set by the properties.
  */
-void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj) {
+void render_racer_magnet(Gfx **dList, Mtx **mtx, Vertex **vtxList, Object *obj) {
     Object_Racer *racer;
     Object_68 *gfxData;
     ObjectModel *mdl;
@@ -4288,12 +4288,12 @@ void func_80016748(Object *obj0, Object *obj1) {
         if (!((objModel->unk3C + 50.0) < sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)))) {
             obj0Interact = obj0->interactObj;
             obj1Interact = obj1->interactObj;
-            object_transform_to_matrix((float (*)[4]) obj1TransformMtx, &obj1->segment.trans);
+            object_transform_to_matrix((Matrix*) obj1TransformMtx, &obj1->segment.trans);
             for (i = 0; i < objModel->unk20; i += 2) {
                 xDiff = obj1->curVertData[objModel->unk1C[i]].x;
                 yDiff = obj1->curVertData[objModel->unk1C[i]].y;
                 zDiff = obj1->curVertData[objModel->unk1C[i]].z;
-                guMtxXFMF((float (*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                guMtxXFMF_dkr((Matrix*) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
                 temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->segment.trans.scale) * 50.0;
                 xDiff -= obj0->segment.trans.x_position;
                 yDiff -= obj0->segment.trans.y_position;
@@ -4460,7 +4460,7 @@ void func_8001709C(Object *obj) {
     sp78.x_position = -obj->segment.trans.x_position;
     sp78.y_position = -obj->segment.trans.y_position;
     sp78.z_position = -obj->segment.trans.z_position;
-    object_inverse_transform_to_matrix((float (*)[4]) sp6C, &sp78);
+    object_inverse_transform_to_matrix(sp6C, &sp78);
     inverseScale = 1.0 / obj->segment.trans.scale;
     i = 0;
     while (i < 16) {
@@ -4564,7 +4564,7 @@ void func_80017E98(void) {
     Object *obj;
     CheckpointNode *checkpoint;
     LevelObjectEntry_Checkpoint *checkpointEntry;
-    f32 mtx[4][4];
+    Matrix mtx;
     ObjectTransform transform;
     s32 var_t2;
 
@@ -4638,8 +4638,8 @@ void func_80017E98(void) {
         transform.x_position = 0.0f;
         transform.y_position = 0.0f;
         transform.z_position = 0.0f;
-        object_transform_to_matrix(&mtx[0], &transform);
-        guMtxXFMF(&mtx[0], 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
+        object_transform_to_matrix(&mtx, &transform);
+        guMtxXFMF_dkr(&mtx, 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
         checkpoint->rotationXFrac = ox;
         checkpoint->rotationYFrac = oy;
         checkpoint->rotationZFrac = oz;
@@ -5421,7 +5421,7 @@ Object *get_racer_object_by_port(s32 index) {
  * Unused function that would've iterated through all active checkpoints to render their visual nodes.
  * The function it calls is completely stubbed out.
  */
-UNUSED void debug_render_checkpoints(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
+UNUSED void debug_render_checkpoints(Gfx **dList, Mtx **mtx, Vertex **vtx) {
     s32 i;
 
     material_set_no_tex_offset(dList, NULL, RENDER_Z_COMPARE);
@@ -5442,7 +5442,7 @@ UNUSED void debug_render_checkpoints(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
  * visual representation of what these checkpoints would've looked like ingame.
  */
 UNUSED void debug_render_checkpoint_node(UNUSED s32 checkpointID, UNUSED s32 pathID, UNUSED Gfx **dList,
-                                         UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
+                                         UNUSED Mtx **mtx, UNUSED Vertex **vtx) {
 }
 
 /**
@@ -5990,13 +5990,13 @@ void set_shading_properties(ShadeProperties *arg0, f32 brightness, f32 ambient, 
     arg0->unk0 = 1.0f;
     arg0->unk24 = angleY;
     arg0->unk26 = angleZ;
-    angle.z = angleX;
-    angle.x = angleZ;
-    angle.y = angleY;
+    angle.z_rotation = angleX;
+    angle.y_rotation = angleZ;
+    angle.x_rotation = angleY;
     velocityPos.z = -16384.0f;
     velocityPos.x = 0.0f;
     velocityPos.y = 0.0f;
-    f32_vec3_apply_object_rotation((ObjectTransform *) &angle, (f32 *) &velocityPos);
+    f32_vec3_apply_object_rotation(&angle, &velocityPos);
     arg0->unk1C = -velocityPos.x;
     arg0->unk1E = -velocityPos.y;
     arg0->unk20 = -velocityPos.z;
@@ -6094,7 +6094,7 @@ void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRo
     objTrans.y_position = 0.0f;
     objTrans.z_position = 0.0f;
     objTrans.scale = 1.0f;
-    object_transform_to_matrix(objRotMtxF32, &objTrans);
+    object_transform_to_matrix(&objRotMtxF32, &objTrans);
     f32_matrix_to_s32_matrix(&objRotMtxF32, &objRotMtxS32);
 
     for (i = 0; i < model->numberOfBatches; i++) {
@@ -6137,7 +6137,7 @@ void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRo
                 gEnvmapPos[1].y = model40Entries[count].y;
                 gEnvmapPos[1].z = model40Entries[count].z;
                 count++;
-                s16_vec3_mult_by_s32_matrix(objRotMtxS32, &gEnvmapPos[1]);
+                s16_vec3_mult_by_s32_matrix(&objRotMtxS32, &gEnvmapPos[1]);
                 if (sp70 == 0) {
                     s16_matrix_rotate(&gEnvmapPos[0], &gEnvmapPos[1]);
                 }

@@ -112,7 +112,7 @@ void rain_sound(s32 updateRate);
 void rain_render_splashes(s32 updateRate);
 void rain_lightning(s32 updateRate);
 void rain_render(RainGfxData*, s32);
-void weather_update(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, Triangle **currHudTris, s32 updateRate);
+void weather_update(Gfx **currDisplayList, Mtx **currHudMat, Vertex **currHudVerts, Triangle **currHudTris, s32 updateRate);
 void snow_render(void);
 void weather_free(void);
 void weather_set(s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity, s32 time);
@@ -123,7 +123,7 @@ void rain_init(s32 intensity, s32 opacity);
 void weather_init(void);
 void snow_vertices(void);
 void lensflare_init(Object *);
-void lensflare_render(Gfx**, MatrixS**, Vertex**, Camera*);
+void lensflare_render(Gfx**, Mtx**, Vertex**, Camera*);
 void weather_reset(s32 weatherType, s32 density, s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity);
 
 #endif

@@ -132,7 +132,7 @@ s32 gSnowVertOffset;
 s32 gSnowTriCount;
 s32 gSnowVertexFlip;
 Gfx *gCurrWeatherDisplayList;
-MatrixS *gCurrWeatherMatrix;
+Mtx *gCurrWeatherMatrix;
 Vertex *gCurrWeatherVertexList;
 Triangle *gCurrWeatherTriList;
 Camera *gWeatherCamera;
@@ -395,7 +395,7 @@ void weather_set(s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity, s32 t
  * The root function for handling all weather.
  * Decide whether to perform rain or snow logic, execute it, then set it to render right after.
  */
-void weather_update(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, Triangle **currHudTris,
+void weather_update(Gfx **currDisplayList, Mtx **currHudMat, Vertex **currHudVerts, Triangle **currHudTris,
                     s32 updateRate) {
     UNUSED s32 unused;
     gCurrWeatherDisplayList = *currDisplayList;
@@ -471,7 +471,7 @@ void snow_update(s32 updateRate) {
  */
 void snow_vertices(void) {
     s16 pos[3];
-    f32 posF[3];
+    Vec3f posF;
     s32 i;
     Vertex *verts;
     s32 camX;
@@ -484,14 +484,14 @@ void snow_vertices(void) {
     gSnowVertCount = 0;
     verts = gSnowVerts;
     for (i = 0; i < gSnowParticleCount; i++) {
-        posF[0] = (((gSnowPhysics[i].x_position - camX) & gSnowGfx.radiusX) + gSnowGfx.offsetX) * (1.0f / 65536.0f);
-        posF[1] = (((gSnowPhysics[i].y_position - camy) & gSnowGfx.radiusY) + gSnowGfx.offsetY) * (1.0f / 65536.0f);
-        posF[2] = (((gSnowPhysics[i].z_position - camz) & gSnowGfx.radiusZ) + gSnowGfx.offsetZ) * (1.0f / 65536.0f);
-        f32_matrix_dot(gWeatherCameraMatrix, (Matrix *) &posF, (Matrix *) &posF);
-        pos[2] = posF[2];
+        posF.f[0] = (((gSnowPhysics[i].x_position - camX) & gSnowGfx.radiusX) + gSnowGfx.offsetX) * (1.0f / 65536.0f);
+        posF.f[1] = (((gSnowPhysics[i].y_position - camy) & gSnowGfx.radiusY) + gSnowGfx.offsetY) * (1.0f / 65536.0f);
+        posF.f[2] = (((gSnowPhysics[i].z_position - camz) & gSnowGfx.radiusZ) + gSnowGfx.offsetZ) * (1.0f / 65536.0f);
+        f32_matrix_dot(gWeatherCameraMatrix, &posF, &posF);
+        pos[2] = posF.f[2];
         if (pos[2] < gSnowPlane.near && gSnowPlane.current < pos[2]) {
-            pos[0] = posF[0];
-            pos[1] = posF[1];
+            pos[0] = posF.f[0];
+            pos[1] = posF.f[1];
             verts[0].x = pos[0] - gSnowGfx.vertOffsetW;
             verts[0].y = pos[1] + gSnowGfx.vertOffsetH;
             verts[0].z = pos[2];
@@ -516,27 +516,27 @@ void snow_vertices(void) {
  */
 void snow_render(void) {
     s32 i;
-    u32 mtx;
-    u32 vtx;
+    Mtx* mtx;
+    Vertex *vtx;
 
     if (gSnowGfx.texture != NULL) {
         gSnowVertOffset = 4;
         gSnowTriCount = 2;
         if (gSnowVertCount >= 4) {
             i = 0;
-            mtx = (u32) get_projection_matrix_s16();
-            gSPMatrixDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
+            mtx = get_projection_matrix_s16();
+            gSPMatrixDKR(gCurrWeatherDisplayList++, OS_K0_TO_PHYSICAL(mtx), G_MTX_DKR_INDEX_0);
             gSPSelectMatrixDKR(gCurrWeatherDisplayList++, G_MTX_DKR_INDEX_0);
             material_set_no_tex_offset(&gCurrWeatherDisplayList, gSnowGfx.texture, RENDER_Z_COMPARE);
             while (i + gSnowVertOffset < gSnowVertCount) {
-                vtx = (u32) &gSnowVerts[i];
-                gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(vtx), gSnowVertOffset, 0);
-                gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(gSnowTriangles), gSnowTriCount, 1);
+                vtx = &gSnowVerts[i];
+                gSPVertexDKR(gCurrWeatherDisplayList++, OS_K0_TO_PHYSICAL(vtx), gSnowVertOffset, 0);
+                gSPPolygon(gCurrWeatherDisplayList++, OS_K0_TO_PHYSICAL(gSnowTriangles), gSnowTriCount, 1);
                 i += gSnowVertOffset;
             }
-            vtx = (u32) &gSnowVerts[i];
-            gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(vtx), (gSnowVertCount - i), 0);
-            gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(gSnowTriangles), ((s32) (gSnowVertCount - i) >> 1),
+            vtx = &gSnowVerts[i];
+            gSPVertexDKR(gCurrWeatherDisplayList++, OS_K0_TO_PHYSICAL(vtx), (gSnowVertCount - i), 0);
+            gSPPolygon(gCurrWeatherDisplayList++, OS_K0_TO_PHYSICAL(gSnowTriangles), ((s32) (gSnowVertCount - i) >> 1),
                        1);
         }
     }
@@ -624,7 +624,7 @@ void lensflare_init(Object *obj) {
     gLensFlarePos.x = 0;
     gLensFlarePos.y = 0;
     gLensFlarePos.z = -1.0f;
-    f32_vec3_apply_object_rotation3(&angle, gLensFlarePos.f);
+    f32_vec3_apply_object_rotation3(&angle, &gLensFlarePos);
     gLensFlarePos.x = -gLensFlarePos.x;
     gLensFlarePos.y = -gLensFlarePos.y;
     gLensFlarePos.z = -gLensFlarePos.z;
@@ -634,7 +634,7 @@ void lensflare_init(Object *obj) {
  * Based on face direction, start rendering lens flare effects on screen.
  * Each element is shifted based on the preset to create the effect of the sun shining in your face.
  */
-void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, Camera *camera) {
+void lensflare_render(Gfx **dList, Mtx **mats, Vertex **verts, Camera *camera) {
     u16 height;
     f32 mag2;
     UNUSED s32 pad;
@@ -655,7 +655,7 @@ void lensflare_render(Gfx **dList, MatrixS **mats, Vertex **verts, Camera *camer
             pos[1].x = 0.0f;
             pos[1].y = 0.0f;
             pos[1].z = -1.0f;
-            f32_matrix_dot(get_projection_matrix_f32(), (Matrix *) &pos[1].x, (Matrix *) &pos[1].x);
+            f32_matrix_dot(get_projection_matrix_f32(), &pos[1], &pos[1]);
             magnitude = ((gLensFlarePos.x * pos[1].x) + (gLensFlarePos.y * pos[1].y)) + (gLensFlarePos.z * pos[1].z);
             if (magnitude > 0.0f) {
                 viewport_main(dList, mats);
@@ -1151,9 +1151,9 @@ void rain_render(RainGfxData *rainGfx, s32 time) {
     gfx_init_basic_xlu(&curDL, 0,
                        COLOUR_RGBA32(rainGfx->primitiveRed, rainGfx->primitiveGreen, rainGfx->primitiveBlue, opacity),
                        COLOUR_RGBA32(rainGfx->environmentRed, rainGfx->environmentGreen, rainGfx->environmentBlue, 0));
-    gDkrDmaDisplayList(curDL++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
-    gSPVertexDKR(curDL++, OS_PHYSICAL_TO_K0(gRainVertices + gRainVertexFlip), 4, 0);
-    gSPPolygon(curDL++, OS_PHYSICAL_TO_K0(gCurrWeatherTriList), 2, 1);
+    gDkrDmaDisplayList(curDL++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
+    gSPVertexDKR(curDL++, OS_K0_TO_PHYSICAL(gRainVertices + gRainVertexFlip), 4, 0);
+    gSPPolygon(curDL++, OS_K0_TO_PHYSICAL(gCurrWeatherTriList), 2, 1);
     gDPPipeSync(curDL++);
     gRainVertexFlip = (gRainVertexFlip + 4) & 0xF;
     gCurrWeatherDisplayList = curDL;

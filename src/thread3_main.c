@@ -103,8 +103,8 @@ FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FAD
 Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
 UNUSED s32 D_801211FC;
-MatrixS *gMatrixHeap[2];
-MatrixS *gGameCurrMatrix;
+Mtx *gMatrixHeap[2];
+Mtx *gGameCurrMatrix;
 Vertex *gVertexHeap[2];
 Vertex *gGameCurrVertexList;
 Triangle *gTriangleHeap[2];
@@ -1375,7 +1375,7 @@ void alloc_displaylist_heap(s32 numberOfPlayers) {
         mempool_free_timer(0);
         mempool_free(gDisplayLists[0]);
         mempool_free(gDisplayLists[1]);
-        totalSize = ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))) + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))) +
+        totalSize = ((gNumF3dCmdsPerPlayer[num] * sizeof(Gfx))) + ((gNumHudMatPerPlayer[num] * sizeof(Mtx))) +
                     ((gNumHudVertsPerPlayer[num] * sizeof(Vertex))) + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle)));
         gDisplayLists[0] = (Gfx *) mempool_alloc_fixed(totalSize, (u8 *) gDisplayLists[0], COLOUR_TAG_RED);
         gDisplayLists[1] = (Gfx *) mempool_alloc_fixed(totalSize, (u8 *) gDisplayLists[1], COLOUR_TAG_YELLOW);
@@ -1390,11 +1390,11 @@ void alloc_displaylist_heap(s32 numberOfPlayers) {
             }
             default_alloc_displaylist_heap();
         }
-        gMatrixHeap[0] = (MatrixS *) ((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))));
-        gTriangleHeap[0] = (Triangle *) ((u8 *) gMatrixHeap[0] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
+        gMatrixHeap[0] = (Mtx *) ((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gfx))));
+        gTriangleHeap[0] = (Triangle *) ((u8 *) gMatrixHeap[0] + ((gNumHudMatPerPlayer[num] * sizeof(Mtx))));
         gVertexHeap[0] = (Vertex *) ((u8 *) gTriangleHeap[0] + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle))));
-        gMatrixHeap[1] = (MatrixS *) ((u8 *) gDisplayLists[1] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))));
-        gTriangleHeap[1] = (Triangle *) ((u8 *) gMatrixHeap[1] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
+        gMatrixHeap[1] = (Mtx *) ((u8 *) gDisplayLists[1] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gfx))));
+        gTriangleHeap[1] = (Triangle *) ((u8 *) gMatrixHeap[1] + ((gNumHudMatPerPlayer[num] * sizeof(Mtx))));
         gVertexHeap[1] = (Vertex *) ((u8 *) gTriangleHeap[1] + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle))));
         gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[num];
         gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[num];
@@ -1432,19 +1432,19 @@ void default_alloc_displaylist_heap(void) {
 
     numberOfPlayers = FOUR_PLAYERS;
     gPrevPlayerCount = numberOfPlayers;
-    totalSize = (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)) +
-                (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)) +
+    totalSize = (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gfx)) +
+                (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Mtx)) +
                 (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)) +
                 (gNumHudTrisPerPlayer[numberOfPlayers] * sizeof(Triangle));
 
     gDisplayLists[0] = (Gfx *) mempool_alloc_safe(totalSize, COLOUR_TAG_RED);
-    gMatrixHeap[0] = (MatrixS *) ((u8 *) gDisplayLists[0] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
-    gVertexHeap[0] = (Vertex *) ((u8 *) gMatrixHeap[0] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gMatrixHeap[0] = (Mtx *) ((u8 *) gDisplayLists[0] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gfx)));
+    gVertexHeap[0] = (Vertex *) ((u8 *) gMatrixHeap[0] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Mtx)));
     gTriangleHeap[0] = (Triangle *) ((u8 *) gVertexHeap[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
     gDisplayLists[1] = (Gfx *) mempool_alloc_safe(totalSize, COLOUR_TAG_YELLOW);
-    gMatrixHeap[1] = (MatrixS *) ((u8 *) gDisplayLists[1] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
-    gVertexHeap[1] = (Vertex *) ((u8 *) gMatrixHeap[1] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gMatrixHeap[1] = (Mtx *) ((u8 *) gDisplayLists[1] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gfx)));
+    gVertexHeap[1] = (Vertex *) ((u8 *) gMatrixHeap[1] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Mtx)));
     gTriangleHeap[1] = (Triangle *) ((u8 *) gVertexHeap[1] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
     gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[numberOfPlayers];

@@ -473,7 +473,7 @@ void menu_button_free(void);
 void menu_geometry_end(void);
 void reset_title_logo_scale(void);
 void menu_init(u32 menuId);
-s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, Triangle **currHudTris, s32 updateRate);
+s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, Vertex **currHudVerts, Triangle **currHudTris, s32 updateRate);
 void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
 void postrace_offsets(MenuElement *elements, f32 in, f32 mid, f32 out, s32 textOffset, s32 timestampOffset);
 void trackmenu_set_records(void);
@@ -584,7 +584,7 @@ s32 dialogue_race_defeat(void);
 s32 trophy_race_cabinet_menu_loop(void);
 void dialogue_open_stub(void);
 void dialogue_close_stub(void);
-f32 dialogue_ortho(DialogueBoxBackground *arg0, Gfx **dList, MatrixS **mat, Vertex **verts);
+f32 dialogue_ortho(DialogueBoxBackground *arg0, Gfx **dList, Mtx **mat, Vertex **verts);
 u64 *get_eeprom_settings_pointer(void);
 s32 set_eeprom_settings_value(u64 valueToSet);
 s32 unset_eeprom_settings_value(u64 valueToUnset);
@@ -646,7 +646,7 @@ s32 savemenu_input_message(s32 buttonsPressed, s32 yAxis);
 void savemenu_render_element(SaveFileData *file, s32 x, s32 y);
 void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
 void pausemenu_render(UNUSED s32 updateRate);
-s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 updateRate);
+s32 menu_postrace(Gfx **dList, Mtx **matrices, Vertex **vertices, s32 updateRate);
 void ghostmenu_render(UNUSED s32 updateRate);
 s32 ghostmenu_erase(s32 id);
 void cheatmenu_render(s32 updateRate);
@@ -685,7 +685,7 @@ void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s
                    s32 colour, TextureHeader *tex);
 void fileselect_input_copy(s32 updateRate);
 
-s32 func_8008F618(Gfx **dList, MatrixS **mtx);
+s32 func_8008F618(Gfx **dList, Mtx **mtx);
 void func_80080BC8(Gfx **);
 void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour0, s32 colour1, s32 colour2, s32 colour3);

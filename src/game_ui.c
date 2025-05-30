@@ -255,7 +255,7 @@ s16 *gAssetHudElementIds;
 HudElements *gAssetHudElements;
 s32 gAssetHudElementIdsCount;
 Gfx *gHudDL;
-MatrixS *gHudMtx;
+Mtx *gHudMtx;
 Vertex *gHudVtx;
 s32 gHudCurrentViewport;
 s32 gHUDNumPlayers;
@@ -672,7 +672,7 @@ u8 race_starting(void) {
  * Root function for the HUD updating and rendering for individual players.
  * The player can toggle specific overrides and settings for displays based on their current game modes.
  */
-void hud_render_player(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s32 updateRate) {
+void hud_render_player(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj, s32 updateRate) {
     s32 countdown;
     Object_Racer *racer;
 
@@ -3316,7 +3316,7 @@ s8 hud_setting(void) {
  * Renders HUD elements concerning all players.
  * This includes the minimap and score counters for challenge modes.
  */
-void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate) {
+void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
     Object_Racer *curRacerObj;
     LevelModel *lvlMdl;
     Sprite *minimap;
@@ -3811,7 +3811,7 @@ void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspec
  * Since hud elements can be all sorts of things, the function checks what asset type it is, before
  * deciding to draw a texture rectangle, ortho tris, or a 3D model entirely.
  */
-void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement *hud) {
+void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hud) {
     TextureHeader **textureHeader3;
     TextureHeader *textureHeader2;
     TextureHeader *textureHeader;
@@ -4029,11 +4029,11 @@ void hud_draw_model(ObjectModel *objModel) {
                 texPtr = objModel->textures[texIndex].texture;
             }
             material_set_no_tex_offset(&gHudDL, texPtr, flags & ~RENDER_Z_COMPARE);
-            gSPVertexDKR(gHudDL++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
+            gSPVertexDKR(gHudDL++, OS_K0_TO_PHYSICAL(verts), numVerts, 0);
             if (texPtr == NULL) {
                 textureEnabled = TRIN_DISABLE_TEXTURE;
             }
-            gSPPolygon(gHudDL++, OS_PHYSICAL_TO_K0(tris), numTris, textureEnabled);
+            gSPPolygon(gHudDL++, OS_K0_TO_PHYSICAL(tris), numTris, textureEnabled);
             numBatches = objModel->numberOfBatches;
         }
     }

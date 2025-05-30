@@ -589,7 +589,7 @@ typedef struct TexCoords {
 #define BACKFACE_CULL 0x00
 #define BACKFACE_DRAW 0x40
 
-#define DKR_TRIANGLE(flags, ind0, ind1, ind2) ((flags << 24) | (ind0 << 16) | (ind1 << 8) | (ind2 << 0))
+#define DKR_TRIANGLE(flags, ind0, ind1, ind2) (((flags) << 24) | ((ind0) << 16) | ((ind1) << 8) | ((ind2) << 0))
 
 /* Size: 0x10 bytes */
 typedef struct Triangle {

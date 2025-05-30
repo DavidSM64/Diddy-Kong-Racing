@@ -5,6 +5,12 @@
 #include "structs.h"
 #include "memory.h"
 
+typedef struct RPYAngles {
+    s16 z_rotation;
+    s16 x_rotation;
+    s16 y_rotation;
+} RPYAngles;
+
 /**
  * Keeps the value within the range.
  */
@@ -37,25 +43,25 @@ void save_rng_seed(void);
 void load_rng_seed(void);
 s32 get_rng_seed(void);
 s32 get_random_number_from_range(s32, s32);
-void f32_matrix_to_s32_matrix(Matrix *input, MatrixS *output);
-void guMtxXFMF(float mf[4][4], float x, float y, float z, float *ox, float *oy, float *oz);
-void f32_matrix_dot(Matrix *mat1, Matrix *mat2, Matrix *output);
+void f32_matrix_to_s32_matrix(Matrix *mf, MatrixS *mi);
+void guMtxXFMF_dkr(Matrix *mf, float x, float y, float z, float *ox, float *oy, float *oz);
+void f32_matrix_dot(Matrix *mf, Vec3f *in, Vec3f *out);
 void f32_matrix_mult(Matrix *mat1, Matrix *mat2, Matrix *output);
-void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output);
-void s16_matrix_rotate(Vec3s *arg0, Vec3s *arg1);
-void s16_vec3_mult_by_s32_matrix(MatrixS input, Vec3s *output);
-void object_transform_to_matrix(Matrix mtx, ObjectTransform *trans);
+void f32_matrix_to_s16_matrix(Matrix *input, Mtx *output);
+void s16_matrix_rotate(Vec3s *vec, Vec3s *n);
+void s16_vec3_mult_by_s32_matrix(MatrixS *input, Vec3s *output);
+void object_transform_to_matrix(Matrix *mtx, ObjectTransform *trans);
 void f32_matrix_scale_y_axis(Matrix *input, f32 scale);
 void f32_matrix_translate_y_axis(Matrix *input, f32 offset);
-void object_inverse_transform_to_matrix(Matrix mtx, ObjectTransform *trans);
-void f32_matrix_from_rotation_and_scale(Matrix mtx, s32 angle, f32 scale, f32 scaleY);
-void s16_vec3_apply_object_rotation(ObjectTransform *trans, s16 *vec3Arg);
-void f32_vec3_apply_object_rotation(ObjectTransform *trans, f32 *vec3_f32);
-void f32_vec3_apply_object_rotation2(ObjectTransform *trans, f32 *arg1);
-void f32_vec3_apply_object_rotation3(Vec3s *trans, f32 *vec3_f32);
-s32 point_triangle_2d_xz_intersection(s32 x, s32 z, s16 *vec3A, s16 *vec3B, s16 *vec3C);
+void object_inverse_transform_to_matrix(Matrix *mtx, ObjectTransform *trans);
+void f32_matrix_from_rotation_and_scale(Matrix *mtx, s32 angle, f32 scale, f32 scaleY);
+void s16_vec3_apply_object_rotation(RPYAngles *rotation, Vec3s *vec3Arg);
+void f32_vec3_apply_object_rotation(Vec3s *rotation, Vec3f *vec);
+void f32_vec3_apply_object_rotation2(Vec3s *rotation, Vec3f *vec);
+void f32_vec3_apply_object_rotation3(Vec3s *rotation, Vec3f *vec);
+s32 point_triangle_2d_xz_intersection(s32 x, s32 z, Vec3s *vec3A, Vec3s *vec3B, Vec3s *vec3C);
 void f32_matrix_from_position(Matrix *mtx, f32 x, f32 y, f32 z);
-void f32_matrix_from_scale(Matrix, f32, f32, f32);
+void f32_matrix_from_scale(Matrix *mtx, f32 scaleX, f32 scaleY, f32 scaleZ);
 s32 atan2s(s32 xDelta, s32 zDelta);
 f32 area_triangle_2d(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2);
 void dmacopy_doubleword(void *src, void *dst, s32 end);

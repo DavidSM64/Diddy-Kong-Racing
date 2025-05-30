@@ -647,7 +647,7 @@ void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset)
 
         flags |= texhead->flags;
         if (texhead != gCurrentTextureHeader) {
-            gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(texhead->cmd), texhead->numberOfCommands);
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(texhead->cmd), texhead->numberOfCommands);
             gCurrentTextureHeader = texhead;
             doPipeSync = FALSE;
         }
@@ -695,14 +695,14 @@ void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset)
             if (flags & RENDER_VTX_ALPHA) {
                 gDkrDmaDisplayList(
                     (*dList)++,
-                    OS_PHYSICAL_TO_K0(
+                    OS_K0_TO_PHYSICAL(
                         dRenderSettingsSolidColourVtxAlpha[flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE)]),
                     numberOfGfxCommands(dRenderSettingsSolidColourVtxAlpha[0]));
                 return;
             }
             gDkrDmaDisplayList(
                 (*dList)++,
-                OS_PHYSICAL_TO_K0(dRenderSettingsSolidColour[flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT |
+                OS_K0_TO_PHYSICAL(dRenderSettingsSolidColour[flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT |
                                                                       RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)]),
                 numberOfGfxCommands(dRenderSettingsSolidColour[0]));
             return;
@@ -720,14 +720,14 @@ void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset)
                 if (flags & RENDER_COLOUR_INDEX) {
                     dlIndex |= 4; // Colour Index
                 }
-                gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(dRenderSettingsPrimOverlay[dlIndex]),
+                gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsPrimOverlay[dlIndex]),
                                    numberOfGfxCommands(dRenderSettingsPrimOverlay[0]));
                 return;
             }
             if (flags & RENDER_COLOUR_INDEX) {
                 flags = (flags ^ RENDER_COLOUR_INDEX) | RENDER_FOG_ACTIVE;
             }
-            gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(dRenderSettingsPrimCol[flags]),
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsPrimCol[flags]),
                                numberOfGfxCommands(dRenderSettingsPrimCol[0]));
             return;
         }
@@ -746,7 +746,7 @@ void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset)
             if (flags & RENDER_COLOUR_INDEX) {
                 dlIndex |= 8; // Colour Index
             }
-            gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(dRenderSettingsDecal[dlIndex]),
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsDecal[dlIndex]),
                                numberOfGfxCommands(dRenderSettingsDecal[0]));
             return;
         }
@@ -756,7 +756,7 @@ void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset)
             if (flags & RENDER_FOG_ACTIVE) {
                 dlIndex |= 8; // Fog
             }
-            gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(dRenderSettingsCutout[dlIndex]),
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsCutout[dlIndex]),
                                numberOfGfxCommands(dRenderSettingsCutout[0]));
             return;
         }
@@ -770,12 +770,12 @@ void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset)
                 gSPSetGeometryMode((*dList)++, G_ZBUFFER);
                 gCurrentRenderFlags |= RENDER_Z_COMPARE;
             }
-            gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(dRenderSettingsVtxAlpha[dlIndex]),
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsVtxAlpha[dlIndex]),
                                numberOfGfxCommands(dRenderSettingsVtxAlpha[0]));
             return;
         }
 
-        gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(dRenderSettingsCommon[flags]),
+        gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsCommon[flags]),
                            numberOfGfxCommands(dRenderSettingsCommon[0]));
         return;
     }
@@ -852,15 +852,15 @@ void material_load_simple(Gfx **dList, s32 flags) {
         flags &= ~RENDER_DECAL;
         if (gSpriteOpaque == FALSE) {
             if (gCurrentRenderFlags & RENDER_PRESERVE_COVERAGE) {
-                gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(dRenderSettingsSpriteCld[(flags >> 1) & 1]),
+                gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsSpriteCld[(flags >> 1) & 1]),
                                    numberOfGfxCommands(dRenderSettingsSpriteCld[0]));
             } else {
                 // fake ^ 0 required for some reason
-                gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(dRenderSettingsSpriteXlu[(flags - 16) ^ 0]),
+                gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsSpriteXlu[(flags - 16) ^ 0]),
                                    numberOfGfxCommands(dRenderSettingsSpriteXlu[0]));
             }
         } else {
-            gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(dRenderSettingsCommon[flags]),
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsCommon[flags]),
                                numberOfGfxCommands(dRenderSettingsCommon[0]));
         }
         gCurrentTextureHeader = NULL;
@@ -1402,14 +1402,14 @@ void material_init(TextureHeader *tex, Gfx *_dList) {
     if (!(tex->flags & RENDER_LINE_SWAP)) {
         // If it is not swapped, then use the regular loadTexBlock macros.
         if (texFormat == TEX_FORMAT_RGBA32) {
-            gDPLoadTextureBlock(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_32b, width, height, 0, cms,
+            gDPLoadTextureBlock(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_32b, width, height, 0, cms,
                                 cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
             if (texRenderMode == TRANSPARENT || texRenderMode == TRANSPARENT_2) {
                 tex->flags |= RENDER_SEMI_TRANSPARENT;
             }
         }
         if (texFormat == TEX_FORMAT_RGBA16) {
-            gDPLoadTextureBlock(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, cms,
+            gDPLoadTextureBlock(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, cms,
                                 cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
             if (texRenderMode == TRANSPARENT || texRenderMode == TRANSPARENT_2) {
                 tex->flags |= RENDER_SEMI_TRANSPARENT;
@@ -1417,7 +1417,7 @@ void material_init(TextureHeader *tex, Gfx *_dList) {
         }
         if (texFormat == TEX_FORMAT_CI4) {
             texLut = tex_palette_id(tex->ciPaletteOffset);
-            gDPLoadTextureBlock_4b(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_CI, width, height, 0, cms, cmt, masks,
+            gDPLoadTextureBlock_4b(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_CI, width, height, 0, cms, cmt, masks,
                                    maskt, G_TX_NOLOD, G_TX_NOLOD);
             gDPLoadTLUT_pal16(dList++, 0, texLut);
 
@@ -1427,40 +1427,40 @@ void material_init(TextureHeader *tex, Gfx *_dList) {
             }
         }
         if (texFormat == TEX_FORMAT_IA16) {
-            gDPLoadTextureBlock(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, G_IM_SIZ_16b, width, height, 0, cms,
+            gDPLoadTextureBlock(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_IA, G_IM_SIZ_16b, width, height, 0, cms,
                                 cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
             tex->flags |= RENDER_SEMI_TRANSPARENT;
         }
         if (texFormat == TEX_FORMAT_IA8) {
-            gDPLoadTextureBlock(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, G_IM_SIZ_8b, width, height, 0, cms,
+            gDPLoadTextureBlock(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_IA, G_IM_SIZ_8b, width, height, 0, cms,
                                 cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
             tex->flags |= RENDER_SEMI_TRANSPARENT;
         }
         if (texFormat == TEX_FORMAT_IA4) {
-            gDPLoadTextureBlock_4b(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, width, height, 0, cms, cmt, masks,
+            gDPLoadTextureBlock_4b(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_IA, width, height, 0, cms, cmt, masks,
                                    maskt, G_TX_NOLOD, G_TX_NOLOD);
             tex->flags |= RENDER_SEMI_TRANSPARENT;
         }
         if (texFormat == TEX_FORMAT_I8) {
-            gDPLoadTextureBlock(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_I, G_IM_SIZ_8b, width, height, 0, cms,
+            gDPLoadTextureBlock(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_I, G_IM_SIZ_8b, width, height, 0, cms,
                                 cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
         }
         if (texFormat == TEX_FORMAT_I4) {
-            gDPLoadTextureBlock_4b(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_I, width, height, 0, cms, cmt, masks,
+            gDPLoadTextureBlock_4b(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_I, width, height, 0, cms, cmt, masks,
                                    maskt, G_TX_NOLOD, G_TX_NOLOD);
         }
         tex->numberOfCommands = dList - tex->cmd;
     } else {
         // Textures are swapped, so we need to use the LoadTextureBlockS macros.
         if (texFormat == TEX_FORMAT_RGBA32) {
-            gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_32b, width, height, 0,
+            gDPLoadTextureBlockS(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_32b, width, height, 0,
                                  cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
             if (texRenderMode == TRANSPARENT || texRenderMode == TRANSPARENT_2) {
                 tex->flags |= RENDER_SEMI_TRANSPARENT;
             }
         }
         if (texFormat == TEX_FORMAT_RGBA16) {
-            gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0,
+            gDPLoadTextureBlockS(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0,
                                  cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
             if (texRenderMode == TRANSPARENT || texRenderMode == TRANSPARENT_2) {
                 tex->flags |= RENDER_SEMI_TRANSPARENT;
@@ -1468,7 +1468,7 @@ void material_init(TextureHeader *tex, Gfx *_dList) {
         }
         if (texFormat == TEX_FORMAT_CI4) {
             texLut = tex_palette_id(tex->ciPaletteOffset);
-            gDPLoadTextureBlock_4bS(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_CI, width, height, 0, cms, cmt, masks,
+            gDPLoadTextureBlock_4bS(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_CI, width, height, 0, cms, cmt, masks,
                                     maskt, G_TX_NOLOD, G_TX_NOLOD);
             gDPLoadTLUT_pal16(dList++, 0, texLut);
 
@@ -1478,26 +1478,26 @@ void material_init(TextureHeader *tex, Gfx *_dList) {
             }
         }
         if (texFormat == TEX_FORMAT_IA16) {
-            gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, G_IM_SIZ_16b, width, height, 0, cms,
+            gDPLoadTextureBlockS(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_IA, G_IM_SIZ_16b, width, height, 0, cms,
                                  cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
             tex->flags |= RENDER_SEMI_TRANSPARENT;
         }
         if (texFormat == TEX_FORMAT_IA8) {
-            gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, G_IM_SIZ_8b, width, height, 0, cms,
+            gDPLoadTextureBlockS(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_IA, G_IM_SIZ_8b, width, height, 0, cms,
                                  cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
             tex->flags |= RENDER_SEMI_TRANSPARENT;
         }
         if (texFormat == TEX_FORMAT_IA4) {
-            gDPLoadTextureBlock_4bS(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, width, height, 0, cms, cmt, masks,
+            gDPLoadTextureBlock_4bS(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_IA, width, height, 0, cms, cmt, masks,
                                     maskt, G_TX_NOLOD, G_TX_NOLOD);
             tex->flags |= RENDER_SEMI_TRANSPARENT;
         }
         if (texFormat == TEX_FORMAT_I8) {
-            gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_I, G_IM_SIZ_8b, width, height, 0, cms,
+            gDPLoadTextureBlockS(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_I, G_IM_SIZ_8b, width, height, 0, cms,
                                  cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
         }
         if (texFormat == TEX_FORMAT_I4) {
-            gDPLoadTextureBlock_4bS(dList++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_I, width, height, 0, cms, cmt, masks,
+            gDPLoadTextureBlock_4bS(dList++, OS_K0_TO_PHYSICAL(tex + 1), G_IM_FMT_I, width, height, 0, cms, cmt, masks,
                                     maskt, G_TX_NOLOD, G_TX_NOLOD);
         }
         tex->numberOfCommands = dList - tex->cmd;
@@ -1715,7 +1715,7 @@ void gfx_init_basic_xlu(Gfx **dList, u32 index, u32 primitiveColor, u32 environm
 
     gfxTemp = *dList;
     gSPDisplayList(gfxTemp++, tempDlist);
-    gDkrDmaDisplayList(gfxTemp++, OS_PHYSICAL_TO_K0(dBasicRenderModes[tempIndex]),
+    gDkrDmaDisplayList(gfxTemp++, OS_K0_TO_PHYSICAL(dBasicRenderModes[tempIndex]),
                        numberOfGfxCommands(dBasicRenderModes[0]));
     gDPSetPrimColorRGBA(gfxTemp++, primitiveColor);
     gDPSetEnvColorRGBA(gfxTemp++, environmentColor);

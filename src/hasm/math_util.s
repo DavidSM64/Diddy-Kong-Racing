@@ -133,7 +133,7 @@ leaf f32_matrix_to_s32_matrix
 .end f32_matrix_to_s32_matrix
 
 /* Official Name: mathMtxXFMF */
-leaf guMtxXFMF
+leaf guMtxXFMF_dkr
 /* 7024C 8006F64C 44856000 */  mtc1       $a1, $f12
 /* 70250 8006F650 C4840000 */  lwc1       $f4, 0x0($a0)
 /* 70254 8006F654 44867000 */  mtc1       $a2, $f14
@@ -174,7 +174,7 @@ leaf guMtxXFMF
 /* 702E0 8006F6E0 460A4100 */  add.s      $f4, $f8, $f10
 /* 702E4 8006F6E4 03E00008 */  jr         $ra
 /* 702E8 8006F6E8 E7040000 */   swc1      $f4, 0x0($t8)
-.end guMtxXFMF
+.end guMtxXFMF_dkr
 
 /* Official Name: mathMtxFastXFMF */
 leaf f32_matrix_dot

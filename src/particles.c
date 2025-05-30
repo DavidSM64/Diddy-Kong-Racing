@@ -1105,11 +1105,11 @@ void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *e
                 angle.x_rotation += get_random_number_from_range(-behaviour->emissionDirRange.x_rotation,
                                                                  behaviour->emissionDirRange.x_rotation);
             }
-            f32_vec3_apply_object_rotation3(&angle, &sourceVel.x);
+            f32_vec3_apply_object_rotation3(&angle, &sourceVel);
         } else {
-            f32_vec3_apply_object_rotation3(&emitter->emissionDirection, &sourceVel.x);
+            f32_vec3_apply_object_rotation3(&emitter->emissionDirection, &sourceVel);
         }
-        f32_vec3_apply_object_rotation((ObjectTransform *) particle->parentObj, &sourceVel.x);
+        f32_vec3_apply_object_rotation(&particle->parentObj->segment.trans.rotation, &sourceVel);
 
         particle->velocity.x += sourceVel.x;
         particle->velocity.y += sourceVel.y;
@@ -1158,22 +1158,22 @@ void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *e
                 sourceDir.x_rotation += get_random_number_from_range(-behaviour->sourceDirRange.x_rotation,
                                                                      behaviour->sourceDirRange.x_rotation);
             }
-            f32_vec3_apply_object_rotation3(&sourceDir, sourcePos.f);
+            f32_vec3_apply_object_rotation3(&sourceDir, &sourcePos);
         } else {
-            f32_vec3_apply_object_rotation((ObjectTransform *) &emitter->sourceRotation, sourcePos.f);
+            f32_vec3_apply_object_rotation(&emitter->sourceRotation, &sourcePos);
         }
         particle->localPos.x += sourcePos.x;
         particle->localPos.y += sourcePos.y;
         particle->localPos.z += sourcePos.z;
     }
     if (particle->movementType != PARTICLE_MOVEMENT_BASIC_PARENT) {
-        f32_vec3_apply_object_rotation((ObjectTransform *) obj, particle->localPos.f);
+        f32_vec3_apply_object_rotation(&obj->segment.trans.rotation, &particle->localPos);
     }
     particle->trans.x_position = particle->localPos.x;
     particle->trans.y_position = particle->localPos.y;
     particle->trans.z_position = particle->localPos.z;
     if (particle->movementType == PARTICLE_MOVEMENT_BASIC_PARENT) {
-        f32_vec3_apply_object_rotation((ObjectTransform *) obj, &particle->trans.x_position);
+        f32_vec3_apply_object_rotation(&obj->segment.trans.rotation, &particle->trans.x_position);
     }
 
     particle->trans.x_position += obj->segment.trans.x_position;
@@ -1381,7 +1381,7 @@ Particle *create_line_particle(Object *obj, ParticleEmitter *emitter) {
     emitter->lineRefPoint.x = emitter->position.x;
     emitter->lineRefPoint.y = emitter->position.y;
     emitter->lineRefPoint.z = emitter->position.z;
-    f32_vec3_apply_object_rotation(&obj->segment.trans, &emitter->lineRefPoint.x);
+    f32_vec3_apply_object_rotation(&obj->segment.trans.rotation, &emitter->lineRefPoint);
     emitter->lineRefPoint.x += obj->segment.trans.x_position;
     emitter->lineRefPoint.y += obj->segment.trans.y_position;
     emitter->lineRefPoint.z += obj->segment.trans.z_position;
@@ -2054,7 +2054,7 @@ void update_line_particle(Particle *particle) {
                     vtxOffset.y = scale;
                     break;
             }
-            f32_vec3_apply_object_rotation((ObjectTransform *) obj, &vtxOffset.x);
+            f32_vec3_apply_object_rotation(&obj->segment.trans.rotation, &vtxOffset);
         } else {
             vtxOffset.x = obj->segment.x_velocity;
             vtxOffset.y = obj->segment.y_velocity;
@@ -2273,7 +2273,7 @@ void move_particle_attached_to_parent(Particle *particle) {
     particle->trans.x_position = 0.0f;
     particle->trans.y_position = -particle->downOffset;
     particle->trans.z_position = 0.0f;
-    f32_vec3_apply_object_rotation(&particle->trans, &particle->trans.x_position);
+    f32_vec3_apply_object_rotation(&particle->trans.rotation, &particle->trans.x_position);
     particle->trans.x_position += particle->localPos.x;
     particle->trans.y_position += particle->localPos.y;
     particle->trans.z_position += particle->localPos.z;
@@ -2306,7 +2306,7 @@ void move_particle_with_acceleration(Particle *particle) {
         acceleration.x = 0.0f;
         acceleration.y = -particle->downAcceleration;
         acceleration.z = 0.0f;
-        f32_vec3_apply_object_rotation(&particle->trans, acceleration.f);
+        f32_vec3_apply_object_rotation(&particle->trans.rotation, &acceleration);
         particle->velocity.x += acceleration.x;
         particle->velocity.y += acceleration.y;
         particle->velocity.y -= particle->gravity;
@@ -2344,7 +2344,7 @@ void move_particle_forward(Particle *particle) {
         particle->velocity.x = 0.0f;
         particle->velocity.y = 0.0f;
         particle->velocity.z = -particle->forwardVel;
-        f32_vec3_apply_object_rotation3(&particle->trans.rotation, particle->velocity.f);
+        f32_vec3_apply_object_rotation3(&particle->trans.rotation, &particle->velocity);
         particle->trans.x_position += particle->velocity.x;
         // Gravity is subtracted here, but velocity isn't actually affected by it — possible bug?
         // Might cause the particle to drift downward instead of moving straight forward.
@@ -2361,7 +2361,7 @@ void move_particle_forward(Particle *particle) {
  * Iterates through every object and renders it as a particle if applicable.
  * Only particles with the PARTICLE_UNK_FLAG_8000 flag set will be rendered.
  */
-UNUSED void render_active_particles(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
+UNUSED void render_active_particles(Gfx **dList, Mtx **mtx, Vertex **vtx) {
     UNUSED s32 pad;
     UNUSED s32 pad2;
     Particle **objects;
@@ -2381,7 +2381,7 @@ UNUSED void render_active_particles(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
 /**
  * Load a texture then render a sprite or a billboard.
  */
-void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags) {
+void render_particle(Particle *particle, Gfx **dList, Mtx **mtx, Vertex **vtx, s32 flags) {
     s32 renderFlags;
     s32 alpha;
     s32 temp;
@@ -2504,11 +2504,11 @@ void regenerate_point_particles_mesh(PointParticle *obj) {
                 vec_right.x = particle->base.trans.scale;
                 vec_right.y = 0.0f;
                 vec_right.z = 0.0f;
-                f32_vec3_apply_object_rotation(&particle->base.trans, vec_right.f);
+                f32_vec3_apply_object_rotation(&particle->base.trans.rotation, &vec_right);
                 vec_up.x = 0.0f;
                 vec_up.y = particle->base.trans.scale;
                 vec_up.z = 0.0f;
-                f32_vec3_apply_object_rotation(&particle->base.trans, vec_up.f);
+                f32_vec3_apply_object_rotation(&particle->base.trans.rotation, &vec_up);
 
                 verts = &model->vertices[(particle->modelFrame << 3)];
                 if (1) {}
