@@ -4207,7 +4207,6 @@ void process_object_interactions(void) {
     }
 }
 
-// Nothing
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800159C8.s")
 
 void func_80016500(Object *obj, Object_Racer *racer) {
@@ -4539,7 +4538,6 @@ u32 func_800179D0(void) {
 #endif
 }
 
-// Nothing
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017A18.s")
 
 /**
@@ -6666,7 +6664,6 @@ void func_8001F450(void) {
     D_8011AD53 = 1;
 }
 
-// Nothing
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001F460.s")
 
 s32 func_800210CC(s8 arg0) {
@@ -6797,7 +6794,6 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
     return 0;
 }
 
-// Nothing
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80021600.s")
 
 f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x) {
