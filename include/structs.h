@@ -1086,18 +1086,18 @@ typedef struct Object_Boost_Inner {
 } Object_Boost_Inner;
 
 typedef struct Object_Boost {
-  Object_Boost_Inner unk0;
-  Object_Boost_Inner unk24;
-  Object_Boost_Inner unk48;
-  s16 unk6C;
-  s16 unk6E;
-  u8 unk70;
-  u8 unk71;
-  u8 unk72;
-  s8 unk73;
-  f32 unk74;
-  Sprite *unk78;
-  TextureHeader *unk7C;
+    /* 0x00 */ Object_Boost_Inner carBoostData;
+    /* 0x24 */ Object_Boost_Inner hovercraftBoostData;
+    /* 0x48 */ Object_Boost_Inner flyingBoostData;
+    /* 0x6C */ s16 spriteId;
+    /* 0x6E */ s16 textureId;
+    /* 0x70 */ u8 unk70;
+    /* 0x71 */ u8 unk71;
+    /* 0x72 */ u8 unk72;
+    /* 0x73 */ s8 unk73;
+    /* 0x74 */ f32 unk74;
+    /* 0x78 */ Sprite *sprite;
+    /* 0x7C */ TextureHeader *tex;
 } Object_Boost;
 
 typedef struct Object_EffectBox {
