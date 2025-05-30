@@ -138,7 +138,7 @@ leaf calc_dynamic_lighting_for_object_2
 /* 253BC 800247BC 00000000 */   nop
 /* 253C0 800247C0 27A50010 */  addiu      $a1, $sp, 0x10
 /* 253C4 800247C4 00402025 */  or         $a0, $v0, $zero
-/* 253C8 800247C8 0C01BDBB */  jal        f32_matrix_dot
+/* 253C8 800247C8 0C01BDBB */  jal        mtxf_transform_dir
 /* 253CC 800247CC 00A03025 */   or        $a2, $a1, $zero
 .L800247D0:
 /* 253D0 800247D0 86080000 */  lh         $t0, 0x0($s0)
@@ -158,11 +158,11 @@ leaf calc_dynamic_lighting_for_object_2
 /* 25408 80024808 A70A0004 */  sh         $t2, 0x4($t8)
 /* 2540C 8002480C AF030010 */  sw         $v1, 0x10($t8)
 /* 25410 80024810 AF030014 */  sw         $v1, 0x14($t8)
-/* 25414 80024814 0C01BF9D */  jal        object_inverse_transform_to_matrix
+/* 25414 80024814 0C01BF9D */  jal        mtxf_from_inverse_transform
 /* 25418 80024818 03002825 */   or        $a1, $t8, $zero
 /* 2541C 8002481C 27A50010 */  addiu      $a1, $sp, 0x10
 /* 25420 80024820 27A40034 */  addiu      $a0, $sp, 0x34
-/* 25424 80024824 0C01BDBB */  jal        f32_matrix_dot
+/* 25424 80024824 0C01BDBB */  jal        mtxf_transform_dir
 /* 25428 80024828 00A03025 */   or        $a2, $a1, $zero
 /* 2542C 8002482C 8E190054 */  lw         $t9, 0x54($s0)
 /* 25430 80024830 44933000 */  mtc1       $s3, $f6

@@ -290,7 +290,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
             }
             if (var_t0 < 7 && get_trophy_race_world_id() == 0 && func_80023568() == 0 && is_taj_challenge() == 0) {
                 if (gRaceStartTimer == 100) {
-                    racer->aiSkill = get_random_number_from_range(AI_MASTER, AI_HARD);
+                    racer->aiSkill = rand_range(AI_MASTER, AI_HARD);
                 }
             } else {
                 if (get_trophy_race_world_id() != 0) {
@@ -653,7 +653,7 @@ void racer_AI_pathing_inputs(Object *obj, Object_Racer *racer, s32 updateRate) {
  * Effectively, this is to make a 1-100% chance of it returning true, based on the number passed.
  */
 s32 roll_percent_chance(s32 chance) {
-    return get_random_number_from_range(0, 99) < chance;
+    return rand_range(0, 99) < chance;
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004447C.s")
@@ -928,7 +928,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s8 wave_properties;
     s8 wheelsOnStone;
     UNUSED s32 pad3;
-    Matrix transformedMtx;
+    MtxF transformedMtx;
     s8 playerObjectHasMoved;
     f32 var_f6;
 
@@ -1125,10 +1125,10 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gCurrentRacerTransform.y_position = 0.0f;
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
-    object_transform_to_matrix(transformedMtx, &gCurrentRacerTransform);
-    guMtxXFMF(transformedMtx, 0.0f, 0.0f, 1.0f, &racer->ox1, &racer->oy1, &racer->oz1);
-    guMtxXFMF(transformedMtx, 0.0f, 1.0f, 0.0f, &racer->ox2, &racer->oy2, &racer->oz2);
-    guMtxXFMF(transformedMtx, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
+    mtxf_from_transform(&transformedMtx, &gCurrentRacerTransform);
+    mtxf_transform_point(&transformedMtx, 0.0f, 0.0f, 1.0f, &racer->ox1, &racer->oy1, &racer->oz1);
+    mtxf_transform_point(&transformedMtx, 0.0f, 1.0f, 0.0f, &racer->ox2, &racer->oy2, &racer->oz2);
+    mtxf_transform_point(&transformedMtx, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
     if (racer->approachTarget == NULL) {
         obj->segment.object.animationID = 0;
         var_v0 = racer->steerAngle;
@@ -1547,9 +1547,9 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gCurrentRacerTransform.x_position = 0.0f;
     gCurrentRacerTransform.y_position = 0.0f;
     gCurrentRacerTransform.z_position = 0.0f;
-    object_inverse_transform_to_matrix(transformedMtx, &gCurrentRacerTransform);
-    guMtxXFMF(transformedMtx, obj->segment.x_velocity, obj->segment.y_velocity, obj->segment.z_velocity,
-              &racer->lateral_velocity, (f32 *) &racer->unk34, &racer->velocity);
+    mtxf_from_inverse_transform(&transformedMtx, &gCurrentRacerTransform);
+    mtxf_transform_point(&transformedMtx, obj->segment.x_velocity, obj->segment.y_velocity, obj->segment.z_velocity,
+                         &racer->lateral_velocity, (f32 *) &racer->unk34, &racer->velocity);
     if (racer->groundedWheels == 0 && racer->waterTimer == 0) {
         iTemp = (-gCurrentStickY * 0x40) & 0xFFFF;
         var_v1 = iTemp - (obj->segment.trans.rotation.x_rotation & 0xFFFF);
@@ -1812,7 +1812,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
  * When on water, apply a rotation effect based on the movement of the waves and turning direction.
  */
 f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
-    Matrix mtxF;
+    MtxF mtxF;
     f32 velocity;
     s32 angle;
     s32 angleVel;
@@ -1840,8 +1840,8 @@ f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3,
     gCurrentRacerTransform.y_position = 0.0f;
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
-    object_inverse_transform_to_matrix(mtxF, &gCurrentRacerTransform);
-    guMtxXFMF(mtxF, pos->x, pos->y, pos->z, &pos->x, &pos->y, &pos->z);
+    mtxf_from_inverse_transform(&mtxF, &gCurrentRacerTransform);
+    mtxf_transform_point(&mtxF, pos->x, pos->y, pos->z, &pos->x, &pos->y, &pos->z);
     angle = -((s16) (u16) arctan2_f(pos->x, pos->y)) * velocity;
     angle = (u16) (angle - (arg5 << 6)) - (u16) racer->x_rotation_vel;
     angle = angle > 0x8000 ? angle - 0xffff : angle;
@@ -2174,7 +2174,7 @@ void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
     f32 deltaX;
     f32 deltaY;
     f32 deltaZ;
-    Matrix mtx;
+    MtxF mtx;
     s32 angleDiff;
 
     UpdateRate = (s32) updateRateF;
@@ -2202,14 +2202,14 @@ void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
     gCurrentRacerTransform.y_position = 0.0f;
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
-    object_transform_to_matrix(mtx, &gCurrentRacerTransform);
+    mtxf_from_transform(&mtx, &gCurrentRacerTransform);
 
-    guMtxXFMF(mtx, 0.0f, 0.0f, gCameraObject->boomLength, &deltaX, &deltaY, &deltaZ);
+    mtxf_transform_point(&mtx, 0.0f, 0.0f, gCameraObject->boomLength, &deltaX, &deltaY, &deltaZ);
     gCameraObject->trans.x_position = obj->segment.trans.x_position + deltaX;
     gCameraObject->trans.y_position = obj->segment.trans.y_position + deltaY;
     gCameraObject->trans.z_position = obj->segment.trans.z_position + deltaZ;
 
-    guMtxXFMF(mtx, 0.0f, sins_f(0x800) * gCameraObject->boomLength, 0.0f, &deltaX, &deltaY, &deltaZ);
+    mtxf_transform_point(&mtx, 0.0f, sins_f(0x800) * gCameraObject->boomLength, 0.0f, &deltaX, &deltaY, &deltaZ);
     gCameraObject->trans.x_position += deltaX;
     gCameraObject->trans.y_position += deltaY;
     gCameraObject->trans.z_position += deltaZ;
@@ -2484,7 +2484,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 D_8011D544 = 0.0f;
             }
         } else {
-            tempRacer->unk1C6 = get_random_number_from_range(-60, 60) + 120;
+            tempRacer->unk1C6 = rand_range(-60, 60) + 120;
         }
         if (tempRacer->unk18C > 0) {
             tempRacer->unk18C -= updateRate;
@@ -2595,7 +2595,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             tempVar = tempRacer->unk18A & 0xF;
             tempRacer->unk18A -= updateRate;
             if (tempVar < (tempRacer->unk18A & 0xF)) {
-                tempRacer->unk1D1 = get_random_number_from_range(-80, 80);
+                tempRacer->unk1D1 = rand_range(-80, 80);
             }
             gCurrentStickX += tempRacer->unk1D1;
         } else {
@@ -2971,7 +2971,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
     f32 spA8;
     f32 spA4;
     f32 spA0;
-    Matrix sp60;
+    MtxF sp60;
     LevelHeader *currentLevelHeader;
     Object_Boost *asset20;
     s32 var_v1;
@@ -3132,9 +3132,9 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
             gCurrentRacerTransform.y_position = 0.0f;
             gCurrentRacerTransform.z_position = 0.0f;
             gCurrentRacerTransform.scale = 1.0f;
-            object_inverse_transform_to_matrix(sp60, &gCurrentRacerTransform);
-            guMtxXFMF(sp60, racer->lateral_velocity, 0.0f, racer->velocity, &racerObj->segment.x_velocity, &spBC,
-                      &racerObj->segment.z_velocity);
+            mtxf_from_inverse_transform(&sp60, &gCurrentRacerTransform);
+            mtxf_transform_point(&sp60, racer->lateral_velocity, 0.0f, racer->velocity, &racerObj->segment.x_velocity,
+                                 &spBC, &racerObj->segment.z_velocity);
         }
         if (racer->magnetTimer != 0) {
             racerObj->segment.x_velocity = gRacerMagnetVelX;
@@ -3188,8 +3188,8 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
         gCurrentRacerTransform.y_position = 0.0f;
         gCurrentRacerTransform.z_position = 0.0f;
         gCurrentRacerTransform.scale = 1.0f;
-        object_inverse_transform_to_matrix(sp60, &gCurrentRacerTransform);
-        guMtxXFMF(sp60, spB8, 0.0f, spB4, &spAC, &spBC, &spB0);
+        mtxf_from_inverse_transform(&sp60, &gCurrentRacerTransform);
+        mtxf_transform_point(&sp60, spB8, 0.0f, spB4, &spAC, &spBC, &spB0);
         if (racer->unk1D2 != 0) {
             racer->unk1D2 -= updateRate;
             if (racer->unk1D2 < 0) {
@@ -3229,11 +3229,11 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
         }
         if (gCurrentPlayerIndex != PLAYER_COMPUTER && gNumViewports < 2) {
             if (racer->buoyancy > 14.0f) {
-                if (get_random_number_from_range(0, 1) != 0) {
+                if (rand_range(0, 1) != 0) {
                     racerObj->particleEmittersEnabled |= PARTICLE_RANDOM_COLOUR_RED | PARTICLE_RANDOM_COLOUR_GREEN;
                 }
             } else if (racer->buoyancy < 6.0f) {
-                if (racer->velocity > -3.0 && racer->velocity < 0.5 && get_random_number_from_range(0, 1) != 0) {
+                if (racer->velocity > -3.0 && racer->velocity < 0.5 && rand_range(0, 1) != 0) {
                     racerObj->particleEmittersEnabled |=
                         PARTICLE_RANDOM_SCALE_VELOCITY | PARTICLE_RANDOM_MOVEMENT_PARAM;
                 }
@@ -3424,7 +3424,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             }
         }
         if ((racer->miscAnimCounter & 7) < 2) {
-            racer->unk1D1 = get_random_number_from_range(-25, 25);
+            racer->unk1D1 = rand_range(-25, 25);
         }
         gCurrentStickX += racer->unk1D1;
     }
@@ -3882,7 +3882,7 @@ void handle_racer_head_turning(Object *obj, Object_Racer *racer, UNUSED s32 upda
 
             intendedAngle = 0x2800 - intendedAngle;
 
-            racer->headAngleTarget = get_random_number_from_range(-intendedAngle, intendedAngle);
+            racer->headAngleTarget = rand_range(-intendedAngle, intendedAngle);
         }
     }
 }
@@ -4320,7 +4320,7 @@ void handle_car_steering(Object_Racer *racer) {
 }
 
 void func_800535C4(Object *obj, Object_Racer *racer) {
-    Matrix mf;
+    MtxF mf;
 
     gCurrentRacerTransform.rotation.y_rotation = -racer->steerVisualRotation;
     gCurrentRacerTransform.rotation.x_rotation = -obj->segment.trans.rotation.x_rotation;
@@ -4329,9 +4329,9 @@ void func_800535C4(Object *obj, Object_Racer *racer) {
     gCurrentRacerTransform.y_position = 0;
     gCurrentRacerTransform.z_position = 0;
     gCurrentRacerTransform.scale = 1;
-    object_inverse_transform_to_matrix(mf, &gCurrentRacerTransform);
+    mtxf_from_inverse_transform(&mf, &gCurrentRacerTransform);
 
-    guMtxXFMF(mf, 0.0f, -1.0f, 0.0f, &racer->roll, &racer->yaw, &racer->pitch);
+    mtxf_transform_point(&mf, 0.0f, -1.0f, 0.0f, &racer->roll, &racer->yaw, &racer->pitch);
 }
 
 /**
@@ -4567,7 +4567,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
     f32 xTemp;
     f32 yTemp;
     f32 zTemp;
-    Matrix mtx;
+    MtxF mtx;
     LevelHeader *header;
     s32 angle;
     s32 steerVel;
@@ -4642,9 +4642,9 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
         gCurrentRacerTransform.y_position = 0.0f;
         gCurrentRacerTransform.z_position = 0.0f;
         gCurrentRacerTransform.scale = 1.0f;
-        object_inverse_transform_to_matrix(mtx, &gCurrentRacerTransform);
-        guMtxXFMF(mtx, racer->lateral_velocity, 0.0f, racer->velocity, &obj->segment.x_velocity, &tempVel,
-                  &obj->segment.z_velocity);
+        mtxf_from_inverse_transform(&mtx, &gCurrentRacerTransform);
+        mtxf_transform_point(&mtx, racer->lateral_velocity, 0.0f, racer->velocity, &obj->segment.x_velocity, &tempVel,
+                             &obj->segment.z_velocity);
     }
     if (racer->magnetTimer) {
         obj->segment.x_velocity = gRacerMagnetVelX;
@@ -4685,8 +4685,8 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
     gCurrentRacerTransform.y_position = 0.0f;
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
-    object_inverse_transform_to_matrix(mtx, &gCurrentRacerTransform);
-    guMtxXFMF(mtx, xVel, 0.0f, zVel, &hVel, &tempVel, &yVel);
+    mtxf_from_inverse_transform(&mtx, &gCurrentRacerTransform);
+    mtxf_transform_point(&mtx, xVel, 0.0f, zVel, &hVel, &tempVel, &yVel);
     if (racer->unk1D2 != 0) {
         racer->unk1D2 -= updateRate;
         if (racer->unk1D2 < 0) {
@@ -4887,8 +4887,8 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     f32 sp108[5];
     f32 spF4[5];
     f32 spE0[5];
-    Matrix spA0;
-    Matrix sp60;
+    MtxF spA0;
+    MtxF sp60;
     s8 sp5C;
     s8 sp58[4];
 
@@ -4904,11 +4904,11 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     gCurrentRacerTransform.x_position = racerObj->segment.trans.x_position;
     gCurrentRacerTransform.y_position = racerObj->segment.trans.y_position;
     gCurrentRacerTransform.z_position = racerObj->segment.trans.z_position;
-    object_transform_to_matrix(spA0, &gCurrentRacerTransform);
+    mtxf_from_transform(&spA0, &gCurrentRacerTransform);
 
     for (i = 0; i < 4; i++) {
-        guMtxXFMF(spA0, D_8011D568[i * 4 + 0], D_8011D568[i * 4 + 1], D_8011D568[i * 4 + 2], &sp134[i * 3 + 0],
-                  &sp134[i * 3 + 1], &sp134[i * 3 + 2]);
+        mtxf_transform_point(&spA0, D_8011D568[i * 4 + 0], D_8011D568[i * 4 + 1], D_8011D568[i * 4 + 2],
+                             &sp134[i * 3 + 0], &sp134[i * 3 + 1], &sp134[i * 3 + 2]);
         spE0[i] = D_8011D568[i * 4 + 3];
         sp58[i] = -1;
     }
@@ -5026,10 +5026,10 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     gCurrentRacerTransform.x_position = -racerObj->segment.trans.x_position;
     gCurrentRacerTransform.y_position = -racerObj->segment.trans.y_position;
     gCurrentRacerTransform.z_position = -racerObj->segment.trans.z_position;
-    object_inverse_transform_to_matrix(sp60, &gCurrentRacerTransform);
+    mtxf_from_inverse_transform(&sp60, &gCurrentRacerTransform);
     for (i = 0; i < 4; i++) {
-        guMtxXFMF(sp60, ((f32 *) &racer->unkD8)[i * 3 + 0], ((f32 *) &racer->unkD8)[i * 3 + 1],
-                  ((f32 *) &racer->unkD8)[i * 3 + 2], &sp11C[i], &sp108[i], &spF4[i]);
+        mtxf_transform_point(&sp60, ((f32 *) &racer->unkD8)[i * 3 + 0], ((f32 *) &racer->unkD8)[i * 3 + 1],
+                             ((f32 *) &racer->unkD8)[i * 3 + 2], &sp11C[i], &sp108[i], &spF4[i]);
     }
     if (racer->vehicleID != VEHICLE_LOOPDELOOP) {
         sp180 = sp11C[0] + sp11C[1];
@@ -5681,13 +5681,13 @@ void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 flags)
                 tempRacer->soundMask = 0;
             }
         }
-        if (tempRacer->soundMask == NULL && (flags != 3 || get_random_number_from_range(0, 1))) {
+        if (tempRacer->soundMask == NULL && (flags != 3 || rand_range(0, 1))) {
             tempRacer->unk2A = soundID;
             soundID += tempRacer->characterId;
-            soundIndex = (get_random_number_from_range(0, range - 1) * 12) + soundID;
+            soundIndex = (rand_range(0, range - 1) * 12) + soundID;
             if (range - 1 > 0) {
                 while (soundIndex == tempRacer->lastSoundID) {
-                    soundIndex = (get_random_number_from_range(0, range - 1) * 12) + soundID;
+                    soundIndex = (rand_range(0, range - 1) * 12) + soundID;
                 }
             }
             audspat_play_sound_at_position(soundIndex, obj->segment.trans.x_position, obj->segment.trans.y_position,
@@ -5815,7 +5815,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
 }
 
 void func_800575EC(Object *obj, Object_Racer *racer) {
-    Matrix mtxF;
+    MtxF mtxF;
 
     gCurrentRacerTransform.rotation.y_rotation = obj->segment.trans.rotation.y_rotation;
     gCurrentRacerTransform.rotation.x_rotation = obj->segment.trans.rotation.x_rotation;
@@ -5824,10 +5824,10 @@ void func_800575EC(Object *obj, Object_Racer *racer) {
     gCurrentRacerTransform.y_position = 0.0f;
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
-    object_transform_to_matrix(mtxF, &gCurrentRacerTransform);
-    guMtxXFMF(mtxF, 0.0f, 0.0f, 1.0f, &racer->ox1, &racer->oy1, &racer->oz1);
-    guMtxXFMF(mtxF, 0.0f, 1.0f, 0.0f, &racer->ox2, &racer->oy2, &racer->oz2);
-    guMtxXFMF(mtxF, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
+    mtxf_from_transform(&mtxF, &gCurrentRacerTransform);
+    mtxf_transform_point(&mtxF, 0.0f, 0.0f, 1.0f, &racer->ox1, &racer->oy1, &racer->oz1);
+    mtxf_transform_point(&mtxF, 0.0f, 1.0f, 0.0f, &racer->ox2, &racer->oy2, &racer->oz2);
+    mtxf_transform_point(&mtxF, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
 }
 
 /**
@@ -5838,8 +5838,8 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
     LevelObjectEntryCommon newObject;
     Object_Banana *banana;
     s32 i;
-    s16 angle[3];
-    s16 pos[3];
+    RPYAngles angle;
+    Vec3s pos;
     Object *bananaObj;
     f32 variance;
 
@@ -5849,16 +5849,16 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
             number = racer->bananas;
         }
         if (number > 0 && number < 3) {
-            angle[0] = racer->x_rotation_vel;
-            angle[1] = obj->segment.trans.rotation.x_rotation;
-            angle[2] = racer->steerVisualRotation;
-            pos[0] = 0;
-            pos[1] = 8;
-            pos[2] = 12;
-            s16_vec3_apply_object_rotation((ObjectTransform *) angle, pos);
-            newObject.x = pos[0] + (s32) obj->segment.trans.x_position;
-            newObject.y = pos[1] + (s32) obj->segment.trans.y_position;
-            newObject.z = pos[2] + (s32) obj->segment.trans.z_position;
+            angle.z_rotation = racer->x_rotation_vel;
+            angle.x_rotation = obj->segment.trans.rotation.x_rotation;
+            angle.y_rotation = racer->steerVisualRotation;
+            pos.x = 0;
+            pos.y = 8;
+            pos.z = 12;
+            vec3s_rotate_rpy(&angle, &pos);
+            newObject.x = pos.x + (s32) obj->segment.trans.x_position;
+            newObject.y = pos.y + (s32) obj->segment.trans.y_position;
+            newObject.z = pos.z + (s32) obj->segment.trans.z_position;
             newObject.size = sizeof(LevelObjectEntryCommon);
             newObject.objectID = ASSET_OBJECT_ID_COIN;
             i = number;
@@ -6954,7 +6954,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         racer->unk1F6 = 0;
     }
     if (gRaceStartTimer != 0) {
-        racer->unk1C6 = get_random_number_from_range(-60, 60) + 120;
+        racer->unk1C6 = rand_range(-60, 60) + 120;
     }
     if (racer->unk18C > 0) {
         racer->unk18C -= updateRate;

@@ -3,8 +3,8 @@
 
 #include <PR/ultratypes.h>
 
-typedef float Matrix[4][4];
-typedef s32 MatrixS[4][4];
+typedef float MtxF[4][4];
+typedef s32 MtxS[4][4];
 typedef s16 VertexList;
 typedef u8 TriangleList;
 typedef u32 uintptr_t;

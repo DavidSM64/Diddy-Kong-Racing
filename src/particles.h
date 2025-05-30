@@ -308,7 +308,7 @@ void obj_trigger_emitter(Object *obj, ParticleEmitter *emitter);
 Particle *create_general_particle(Object *obj, ParticleEmitter *emitter);
 void obj_enable_emitter(Object *obj, s32 emitterIndex);
 void emitter_change_settings(ParticleEmitter *emitter, s32 behaviourID, s32 particleID, s16 posX, s16 posY, s16 posZ);
-void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags);
+void render_particle(Particle *particle, Gfx **dList, Mtx **mtx, Vertex **vtx, s32 flags);
 void increase_emitter_opacity(Object *obj, s32 idx, s32 delta, s32 maxOpacity);
 void decrease_emitter_opacity(Object *obj, s32 idx, s32 delta, s32 maxOpacity);
 void obj_spawn_particle(Object *obj, s32 updateRate);

@@ -292,7 +292,7 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
 #ifdef ANTI_TAMPER
         // Antipiracy measure
         if (gAntiPiracyAudioFreq) {
-            osAiSetFrequency(get_random_number_from_range(0, 10000) + OUTPUT_RATE);
+            osAiSetFrequency(rand_range(0, 10000) + OUTPUT_RATE);
         }
 #endif
     }

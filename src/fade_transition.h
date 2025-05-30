@@ -54,23 +54,23 @@ void disable_new_screen_transitions(void);
 u32 check_fadeout_transition(void);
 void transition_end(void);
 s32 transition_update(s32 updateRate);
-void transition_render(Gfx **dList, MatrixS **mtx, Vertex **vtx);
-void transition_render_fullscreen(Gfx **dList, MatrixS **mtx, Vertex **vtx);
-void transition_render_barndoor_hor(Gfx **dList, MatrixS **mtx, Vertex **vtx);
-void transition_render_barndoor_vert(Gfx **dList, MatrixS **mtx, Vertex **vtx);
-void transition_render_barndoor_diag(Gfx **dList, MatrixS **mtx, Vertex **vtx);
-void transition_render_blank(Gfx **dList, MatrixS **mtx, Vertex **vtx);
+void transition_render(Gfx **dList, Mtx **mtx, Vertex **vtx);
+void transition_render_fullscreen(Gfx **dList, Mtx **mtx, Vertex **vtx);
+void transition_render_barndoor_hor(Gfx **dList, Mtx **mtx, Vertex **vtx);
+void transition_render_barndoor_vert(Gfx **dList, Mtx **mtx, Vertex **vtx);
+void transition_render_barndoor_diag(Gfx **dList, Mtx **mtx, Vertex **vtx);
+void transition_render_blank(Gfx **dList, Mtx **mtx, Vertex **vtx);
 void transition_fullscreen_start(FadeTransition *transition);
 void transition_init_blank(FadeTransition *transition);
 void transition_update_fullscreen(s32 updateRate);
 void transition_update_blank(s32 updateRate);
 s32 transition_begin(FadeTransition *transition);
-void transition_render_circle(Gfx **dList, MatrixS **mtx, Vertex **vtx);
+void transition_render_circle(Gfx **dList, Mtx **mtx, Vertex **vtx);
 void transition_update_shape(s32 updateRate);
 void transition_init_shape(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *coords, u8 *nextPos,
                            u8 *targetPos, u8 *nextAlpha, u8 *targetAlpha, u8 *vertIndices);
 void transition_update_circle(s32 updateRate);
-void transition_render_waves(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx);
+void transition_render_waves(Gfx **dList, UNUSED Mtx **mtx, UNUSED Vertex **vtx);
 void transition_init_circle(FadeTransition *transition);
 
 #endif

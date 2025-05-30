@@ -159,7 +159,7 @@ void obj_loop_scenery(Object *obj, s32 updateRate) {
                     if (obj->segment.header->particleCount == 1) {
                         particleFlagShift = 0;
                     } else {
-                        particleFlagShift = get_random_number_from_range(0, obj->segment.header->particleCount - 1);
+                        particleFlagShift = rand_range(0, obj->segment.header->particleCount - 1);
                     }
                     obj->particleEmittersEnabled = OBJ_EMIT_1 << particleFlagShift;
                     obj_spawn_particle(obj, LOGIC_30FPS);
@@ -344,7 +344,7 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
     Object *laserBoltObj;
     f32 distance;
     ObjectTransform trans;
-    Matrix mtx;
+    MtxF mtx;
     Object *racerObj;
     f32 diffX;
     f32 diffZ;
@@ -397,13 +397,13 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
                 trans.rotation.y_rotation = obj->segment.trans.rotation.y_rotation;
                 trans.rotation.x_rotation = obj->segment.trans.rotation.x_rotation;
                 trans.rotation.z_rotation = 0;
-                object_transform_to_matrix(mtx, &trans);
+                mtxf_from_transform(&mtx, &trans);
                 diffX = 30.0f; // Need to use diffX to match.
                 if (lasergun->targeting == FALSE) {
                     diffX = 45.0f;
                 }
-                guMtxXFMF(mtx, 0.0f, 0.0f, diffX, &laserBoltObj->segment.x_velocity, &laserBoltObj->segment.y_velocity,
-                          &laserBoltObj->segment.z_velocity);
+                mtxf_transform_point(&mtx, 0.0f, 0.0f, diffX, &laserBoltObj->segment.x_velocity,
+                                     &laserBoltObj->segment.y_velocity, &laserBoltObj->segment.z_velocity);
             }
         }
     }
@@ -1144,7 +1144,7 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
 void try_to_collect_egg(Object *obj, Object_CollectEgg *egg) {
     Object_64 *racer;
     Object *interactedObj;
-    Matrix mat;
+    MtxF mat;
     ObjectTransform transF;
 
     if (obj->interactObj->distance < 40) {
@@ -1162,10 +1162,10 @@ void try_to_collect_egg(Object *obj, Object_CollectEgg *egg) {
                 transF.x_position = -interactedObj->segment.trans.x_position;
                 transF.y_position = -interactedObj->segment.trans.y_position;
                 transF.z_position = -interactedObj->segment.trans.z_position;
-                object_inverse_transform_to_matrix(mat, &transF);
-                guMtxXFMF(mat, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                          obj->segment.trans.z_position, &obj->segment.trans.x_position, &obj->segment.trans.y_position,
-                          &obj->segment.trans.z_position);
+                mtxf_from_inverse_transform(&mat, &transF);
+                mtxf_transform_point(&mat, obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                     obj->segment.trans.z_position, &obj->segment.trans.x_position,
+                                     &obj->segment.trans.y_position, &obj->segment.trans.z_position);
                 obj->segment.trans.x_position /= interactedObj->segment.trans.scale;
                 obj->segment.trans.y_position /= interactedObj->segment.trans.scale;
                 obj->segment.trans.z_position /= interactedObj->segment.trans.scale;
@@ -1448,9 +1448,9 @@ void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param)
     fish->unk10C = fishEntry->common.y;
     fish->unk110 = fishEntry->common.z;
     if (param == 0) {
-        fish->unkFE = get_random_number_from_range(0, 0x10000);
-        fish->unk102 = get_random_number_from_range(0, 0x10000);
-        fish->unk106 = get_random_number_from_range(0, 0x10000);
+        fish->unkFE = rand_range(0, 0x10000);
+        fish->unk102 = rand_range(0, 0x10000);
+        fish->unk106 = rand_range(0, 0x10000);
         fish->unkFD = 0;
     } else {
         fish->unkFE = 0x4000;
@@ -1557,10 +1557,10 @@ void obj_loop_fish(Object *fishObj, s32 updateRate) {
             fish->unkFD = 0;
         }
     } else {
-        randNumber = get_random_number_from_range(0, 7);
+        randNumber = rand_range(0, 7);
         if (randNumber == 0 && fish->unk118 >= 1.0f) {
-            fish->unkFD = get_random_number_from_range(160, 255);
-            randNumber = get_random_number_from_range(0, fish->unk118);
+            fish->unkFD = rand_range(160, 255);
+            randNumber = rand_range(0, fish->unk118);
             fishObj->segment.y_velocity = fish->unk10C - fishObj->segment.trans.y_position;
             fishObj->segment.y_velocity = (fishObj->segment.trans.y_position < fish->unk10C)
                                               ? (fishObj->segment.y_velocity + randNumber)
@@ -1636,8 +1636,7 @@ void obj_loop_lavaspurt(Object *obj, s32 updateRate) {
         obj->segment.animFrame += updateRate * 4;
         if (obj->segment.animFrame > 255) {
             obj->segment.animFrame = 0;
-            obj->properties.lavaSpurt.actionTimer =
-                get_random_number_from_range(0, 30) + obj->properties.lavaSpurt.delayTimer;
+            obj->properties.lavaSpurt.actionTimer = rand_range(0, 30) + obj->properties.lavaSpurt.delayTimer;
         }
     }
 }
@@ -1893,8 +1892,8 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
     f32 posZ;
     Object *newObj;
     ObjectModel *wizShipModel;
-    Matrix shipMtx;
-    Matrix laserMtx;
+    MtxF shipMtx;
+    MtxF laserMtx;
     LevelObjectEntryCommon newObject;
     ObjectTransform trans;
 
@@ -1909,7 +1908,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
         if ((wizShipObj->unk60 != NULL) && (wizShipObj->properties.fireball.timer == 0)) {
             if (wizShipObj->particleEmittersEnabled & OBJ_EMIT_1) {
                 wizShipObj->properties.fireball.timer = 20;
-                object_transform_to_matrix(shipMtx, &wizShipObj->segment.trans);
+                mtxf_from_transform(&shipMtx, &wizShipObj->segment.trans);
                 trans.x_position = 0.0f;
                 trans.y_position = 0.0f;
                 trans.z_position = 0.0f;
@@ -1917,7 +1916,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                 trans.rotation.y_rotation = wizShipObj->segment.trans.rotation.y_rotation;
                 trans.rotation.x_rotation = wizShipObj->segment.trans.rotation.x_rotation;
                 trans.rotation.z_rotation = 0;
-                object_transform_to_matrix(laserMtx, &trans);
+                mtxf_from_transform(&laserMtx, &trans);
 
                 for (i = 0; i < wizShipObj->unk60->unk0; i++) {
                     index = wizShipObj->unk60->unk2C[i];
@@ -1926,7 +1925,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                             posX = wizShipObj->curVertData[wizShipModel->unk14[index]].x;
                             posY = wizShipObj->curVertData[wizShipModel->unk14[index]].y;
                             posZ = wizShipObj->curVertData[wizShipModel->unk14[index]].z;
-                            guMtxXFMF(shipMtx, posX, posY, posZ, &posX, &posY, &posZ);
+                            mtxf_transform_point(&shipMtx, posX, posY, posZ, &posX, &posY, &posZ);
                             newObject.x = posX;
                             newObject.y = posY;
                             newObject.z = posZ;
@@ -1940,8 +1939,8 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                                 newObj->segment.trans.rotation.x_rotation =
                                     -wizShipObj->segment.trans.rotation.x_rotation;
                                 newObj->properties.lasergun.timer = 0x3C;
-                                guMtxXFMF(laserMtx, 0.0f, 0.0f, -30.0f, &newObj->segment.x_velocity,
-                                          &newObj->segment.y_velocity, &newObj->segment.z_velocity);
+                                mtxf_transform_point(&laserMtx, 0.0f, 0.0f, -30.0f, &newObj->segment.x_velocity,
+                                                     &newObj->segment.y_velocity, &newObj->segment.z_velocity);
                                 audspat_play_sound_at_position(SOUND_LASER_GUN, wizShipObj->segment.trans.x_position,
                                                                wizShipObj->segment.trans.y_position,
                                                                wizShipObj->segment.trans.z_position,
@@ -2281,7 +2280,7 @@ void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) 
     LevelObjectEntry_BombExplosion *entry2;
     obj->segment.animFrame = 0;
     obj->segment.trans.scale = 0.5f;
-    obj->segment.object.modelIndex = get_random_number_from_range(0, obj->segment.header->numberOfModelIds - 1);
+    obj->segment.object.modelIndex = rand_range(0, obj->segment.header->numberOfModelIds - 1);
     entry2 = entry; // Needed for a match.
     obj->properties.bombExplosion.timer = 0;
     obj->properties.bombExplosion.unk4 = 0xFF;
@@ -3077,7 +3076,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                         taj->musicFade = 0;
                         music_channel_off(14);
                         if (taj->unk30 == 0) {
-                            taj->unk30 = get_random_number_from_range(600, 900);
+                            taj->unk30 = rand_range(600, 900);
                             taj->unk2C = 0;
                         }
                     }
@@ -3085,7 +3084,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                         taj->unk2C += updateRate;
                         if (taj->unk30 < taj->unk2C) {
                             taj->unk36 = 1;
-                            taj->unk2C = get_random_number_from_range(600, 900);
+                            taj->unk2C = rand_range(600, 900);
                         }
                     } else {
                         taj->unk2C = 0;
@@ -4854,7 +4853,7 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     s32 numCheckpoints;
     Object_Racer *racer;
     s8 surface;
-    Matrix mtxf;
+    MtxF mtxf;
     ObjectTransform trans;
 
     obj->interactObj->flags |= INTERACT_FLAGS_UNK_0100;
@@ -4869,9 +4868,9 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     trans.y_position = 0.0f;
     trans.z_position = 0.0f;
     trans.scale = 1.0f;
-    object_transform_to_matrix(mtxf, &trans);
-    guMtxXFMF(mtxf, 0.0f, 0.0f, weapon->forwardVel, &obj->segment.x_velocity, &obj->segment.y_velocity,
-              &obj->segment.z_velocity);
+    mtxf_from_transform(&mtxf, &trans);
+    mtxf_transform_point(&mtxf, 0.0f, 0.0f, weapon->forwardVel, &obj->segment.x_velocity, &obj->segment.y_velocity,
+                         &obj->segment.z_velocity);
     updateRateF = updateRate;
     if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
@@ -6040,7 +6039,7 @@ void obj_loop_butterfly(Object *butterflyObj, s32 updateRate) {
                         butterfly->unkFD = 1;
                     } else {
                         if (var_v1 >= 2) {
-                            var_v1 = get_random_number_from_range(1, var_v1);
+                            var_v1 = rand_range(1, var_v1);
                         }
                         var_v1--;
                         butterfly->unk100 = sp44[var_v1];
@@ -6053,7 +6052,7 @@ void obj_loop_butterfly(Object *butterflyObj, s32 updateRate) {
                     if (((xDiff * xDiff) + (zDiff * zDiff)) > 22500.0f) {
                         butterfly->unkFD = 3;
                     } else {
-                        if (get_random_number_from_range(0, 0x64) >= 0x63) {
+                        if (rand_range(0, 0x64) >= 0x63) {
                             butterfly->unk106 = -butterfly->unk106;
                         }
                         butterflyObj->segment.trans.rotation.y_rotation += updateRate * butterfly->unk106;
@@ -6138,7 +6137,7 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     f32 oz;
     ObjectModel *objModel;
     UNUSED s32 pad;
-    Matrix mtx;
+    MtxF mtx;
     f32 sinYRot;
     f32 tempF3;
     f32 minX;
@@ -6168,8 +6167,8 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     transform.x_position = 0.0f;
     transform.y_position = 0.0f;
     transform.z_position = 0.0f;
-    object_transform_to_matrix(mtx, &transform);
-    guMtxXFMF(mtx, 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
+    mtxf_from_transform(&mtx, &transform);
+    mtxf_transform_point(&mtx, 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
     obj64->midi_fade.unk8 = ox;
     obj64->midi_fade.unkC = oy;
     obj64->midi_fade.unk10 = oz;
@@ -6296,7 +6295,7 @@ void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
  * This rolls a random number and starts emitting particles based on that for variable density.
  */
 void obj_loop_bubbler(Object *obj, s32 updateRate) {
-    if (obj->properties.common.unk0 >= get_random_number_from_range(0, 1024)) {
+    if (obj->properties.common.unk0 >= rand_range(0, 1024)) {
         obj->particleEmittersEnabled = OBJ_EMIT_1;
     } else {
         obj->particleEmittersEnabled = OBJ_EMIT_NONE;
@@ -6446,9 +6445,8 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                 frog->hopTimer -= updateRate;
                 if (frog->hopTimer < 0) {
                     hopping = TRUE;
-                    frog->forwardVel = get_random_number_from_range(40, 72);
-                    frog->hopDirection =
-                        get_random_number_from_range(-0x4000, 0x4000) + obj->segment.trans.rotation.y_rotation;
+                    frog->forwardVel = rand_range(40, 72);
+                    frog->hopDirection = rand_range(-0x4000, 0x4000) + obj->segment.trans.rotation.y_rotation;
                 }
             }
             if (hopping) {
@@ -6492,7 +6490,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
             }
             if (frog->hopFrame < 0) {
                 frog->action = FROG_IDLE;
-                frog->hopTimer = get_random_number_from_range(0, 300);
+                frog->hopTimer = rand_range(0, 300);
                 frog->hopFrame = 0;
             }
             obj->segment.animFrame = ((32 - frog->hopFrame) << 3) / 3;

@@ -284,8 +284,8 @@ void racer_sound_car(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 ticks
             // Add engine jitter effect for player cars to simulate engine vibration
             // Max pitch variation ±0.02, volume variation ±5
             if (gSoundRacerObj->playerIndex != PLAYER_COMPUTER) {
-                if (get_random_number_from_range(0, 10) < 7) {
-                    gRacerSound->engineJitter += get_random_number_from_range(0, 10) - 5;
+                if (rand_range(0, 10) < 7) {
+                    gRacerSound->engineJitter += rand_range(0, 10) - 5;
                     if (gRacerSound->engineJitter > 5) {
                         gRacerSound->engineJitter = 5;
                     } else if (gRacerSound->engineJitter < -5) {
