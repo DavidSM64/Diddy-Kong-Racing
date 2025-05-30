@@ -322,7 +322,7 @@ s32 transition_update(s32 updateRate) {
  * The rendering portion of transitions.
  * First establishes an orthogonal matrix, then renders a transition effect onscreen.
  */
-void transition_render(Gfx **dList, MatrixS **mtx, Vertex **vtx) {
+void transition_render(Gfx **dList, Mtx **mtx, Vertex **vtx) {
     if (sTransitionStatus != TRANSITION_NONE) {
         if (osTvType == OS_TV_TYPE_PAL) {
             set_ortho_matrix_height(1.4f);
@@ -436,7 +436,7 @@ void transition_update_fullscreen(s32 updateRate) {
 /**
  * Draws a simple fillrect covering the whole screen that fades in or out.
  */
-void transition_render_fullscreen(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
+void transition_render_fullscreen(Gfx **dList, UNUSED Mtx **mtx, UNUSED Vertex **vtx) {
     s32 screenSize = fb_size();
     gSPDisplayList((*dList)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dList)++, 0, 0, gCurFadeRed, gCurFadeGreen, gCurFadeBlue, gCurFadeAlpha);
@@ -564,11 +564,11 @@ void transition_update_shape(s32 updateRate) {
 /**
  * Renders a transition effect on screen that will close in from both sides horizonally.
  */
-void transition_render_barndoor_hor(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
+void transition_render_barndoor_hor(Gfx **dList, UNUSED Mtx **mtx, UNUSED Vertex **vtx) {
     rendermode_reset(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
-    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum]), 12, 0);
-    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum]), 8, TRIN_DISABLE_TEXTURE);
+    gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(sTransitionVtx[sTransitionTaskNum]), 12, 0);
+    gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(sTransitionTris[sTransitionTaskNum]), 8, TRIN_DISABLE_TEXTURE);
     rendermode_reset(dList);
 }
 
@@ -576,11 +576,11 @@ void transition_render_barndoor_hor(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Ve
  * Renders a transition effect on screen that will close in from both sides vertically.
  * Codewise, exactly the same as above, but uses a different vertex layout to make the difference.
  */
-void transition_render_barndoor_vert(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
+void transition_render_barndoor_vert(Gfx **dList, UNUSED Mtx **mtx, UNUSED Vertex **vtx) {
     rendermode_reset(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
-    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum]), 12, 0);
-    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum]), 8, TRIN_DISABLE_TEXTURE);
+    gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(sTransitionVtx[sTransitionTaskNum]), 12, 0);
+    gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(sTransitionTris[sTransitionTaskNum]), 8, TRIN_DISABLE_TEXTURE);
     rendermode_reset(dList);
 }
 
@@ -744,7 +744,7 @@ void transition_update_circle(s32 updateRate) {
 /**
  * Render a circle shape transition onscreen using previously allocated geometry.
  */
-void transition_render_circle(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
+void transition_render_circle(Gfx **dList, UNUSED Mtx **mtx, UNUSED Vertex **vtx) {
     Vertex *vertsToRender;
     Triangle *trisToRender;
     Gfx *gfx;
@@ -758,8 +758,8 @@ void transition_render_circle(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex *
     gSPDisplayList(gfx++, dTransitionShapeSettings);
 
     for (i = 0; i < 4; i++) {
-        gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
-        gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
+        gSPVertexDKR(gfx++, OS_K0_TO_PHYSICAL(vertsToRender), NUM_OF_VERTS, 0);
+        gSPPolygon(gfx++, OS_K0_TO_PHYSICAL(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
         vertsToRender += NUM_OF_VERTS;
         trisToRender += NUM_OF_TRIS;
     }
@@ -771,7 +771,7 @@ void transition_render_circle(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex *
 /**
  * Render the wavy transition onscreen using the vertex data allocated earlier.
  */
-void transition_render_waves(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
+void transition_render_waves(Gfx **dList, UNUSED Mtx **mtx, UNUSED Vertex **vtx) {
     Gfx *gfx;
     s32 i;
     Vertex *v;
@@ -791,13 +791,13 @@ void transition_render_waves(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **
     */
     for (i = 0; i < 6; i++) {
         if (i == 1 || i == 4) { // Is middle third?
-            gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(v), 14, 0);
-            gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(t), 12, TRIN_DISABLE_TEXTURE);
+            gSPVertexDKR(gfx++, OS_K0_TO_PHYSICAL(v), 14, 0);
+            gSPPolygon(gfx++, OS_K0_TO_PHYSICAL(t), 12, TRIN_DISABLE_TEXTURE);
             v += 14;
             t += 12;
         } else {
-            gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(v), 16, 0);
-            gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(t), 14, TRIN_DISABLE_TEXTURE);
+            gSPVertexDKR(gfx++, OS_K0_TO_PHYSICAL(v), 16, 0);
+            gSPPolygon(gfx++, OS_K0_TO_PHYSICAL(t), 14, TRIN_DISABLE_TEXTURE);
             v += 16;
             t += 14;
         }
@@ -809,11 +809,11 @@ void transition_render_waves(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **
 /**
  * Renders a transition effect on screen that will close in from the opposite corners of the screen.
  */
-void transition_render_barndoor_diag(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
+void transition_render_barndoor_diag(Gfx **dList, UNUSED Mtx **mtx, UNUSED Vertex **vtx) {
     rendermode_reset(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
-    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum]), 10, 0);
-    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum]), 6, TRIN_DISABLE_TEXTURE);
+    gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(sTransitionVtx[sTransitionTaskNum]), 10, 0);
+    gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(sTransitionTris[sTransitionTaskNum]), 6, TRIN_DISABLE_TEXTURE);
     rendermode_reset(dList);
 }
 
@@ -867,7 +867,7 @@ void transition_update_blank(s32 updateRate) {
 /**
  * Fill the whole screen with a solid colour.
  */
-void transition_render_blank(Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
+void transition_render_blank(Gfx **dList, UNUSED Mtx **mtx, UNUSED Vertex **vtx) {
     s32 screenSize = fb_size();
     gSPDisplayList((*dList)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dList)++, 0, 0, (gLastFadeRed >> 16), (gLastFadeGreen >> 16), (gLastFadeBlue >> 16), 255);

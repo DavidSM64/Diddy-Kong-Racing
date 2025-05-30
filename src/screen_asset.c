@@ -64,7 +64,7 @@ UNUSED void screenimage_draw(Gfx **dList, u8 *screenAddress) {
     y_pos = 0;
     while (y_pos != SCREEN_HEIGHT) {
         // Load the texture.
-        gDPLoadTextureBlockS((*dList)++, OS_PHYSICAL_TO_K0(screenAddress), G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH,
+        gDPLoadTextureBlockS((*dList)++, OS_K0_TO_PHYSICAL(screenAddress), G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH,
                              SCREEN_HEIGHT_PART, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
 
         // Draw the texture.

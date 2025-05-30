@@ -466,7 +466,7 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
                     if (lastTextureIndex != textureIndex) {
                         lastTextureIndex = textureIndex;
                         texture = fontData->texturePointers[textureIndex];
-                        gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(texture->cmd), texture->numberOfCommands);
+                        gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(texture->cmd), texture->numberOfCommands);
                     }
                     textureWidth = fontData->letter[curChar].width;
                     textureHeight = fontData->letter[curChar].height;
@@ -1120,7 +1120,7 @@ void clear_dialogue_box_open_flag(s32 dialogueBoxID) {
  * when the player exits out of one.
  * Official Name: fontWindowsDraw
  */
-void render_dialogue_boxes(Gfx **dList, MatrixS **mat, Vertex **verts) {
+void render_dialogue_boxes(Gfx **dList, Mtx **mat, Vertex **verts) {
     s32 i;
 
     if (sDialogueBoxIsOpen) {
@@ -1210,7 +1210,7 @@ void render_fill_rectangle(Gfx **dList, s32 ulx, s32 uly, s32 lrx, s32 lry) {
  * Render the selected dialogue box. Background first, then text.
  * Official Name: fontWindowDraw
  */
-void render_dialogue_box(Gfx **dList, MatrixS **mat, Vertex **verts, s32 dialogueBoxID) {
+void render_dialogue_box(Gfx **dList, Mtx **mat, Vertex **verts, s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;
     DialogueBox *dialogueTextBox;
     s32 i;
@@ -1501,7 +1501,7 @@ void fontCreateDisplayList(Gfx *dList, Asset46 *asset, s32 width, s32 height) {
     }
 
     if (asset->unk4 != NULL) {
-        gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height,
+        gDPLoadTextureBlockS(dList++, OS_K0_TO_PHYSICAL(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height,
                              0,                         // palette
                              G_TX_NOMIRROR | G_TX_WRAP, // cms
                              G_TX_NOMIRROR | G_TX_WRAP, // cmt
@@ -1510,7 +1510,7 @@ void fontCreateDisplayList(Gfx *dList, Asset46 *asset, s32 width, s32 height) {
                              G_TX_NOLOD,                // shifts
                              G_TX_NOLOD);               // shiftt
 
-        gDPLoadMultiBlock_4bS(dList++, OS_PHYSICAL_TO_K0(asset->unk4), 0x100, 1, G_IM_FMT_I, width, height,
+        gDPLoadMultiBlock_4bS(dList++, OS_K0_TO_PHYSICAL(asset->unk4), 0x100, 1, G_IM_FMT_I, width, height,
                               0,                         // palette
                               G_TX_NOMIRROR | G_TX_WRAP, // cms
                               G_TX_NOMIRROR | G_TX_WRAP, // cmt
@@ -1524,7 +1524,7 @@ void fontCreateDisplayList(Gfx *dList, Asset46 *asset, s32 width, s32 height) {
     } else {
         switch (asset->unk8) {
             case 0: // RGBA32
-                gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_32b, width,
+                gDPLoadTextureBlockS(dList++, OS_K0_TO_PHYSICAL(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_32b, width,
                                      height,
                                      0,                         // palette
                                      G_TX_NOMIRROR | G_TX_WRAP, // cms
@@ -1535,7 +1535,7 @@ void fontCreateDisplayList(Gfx *dList, Asset46 *asset, s32 width, s32 height) {
                                      G_TX_NOLOD);               // shiftt
                 break;
             case 1: // RGBA16
-                gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_16b, width,
+                gDPLoadTextureBlockS(dList++, OS_K0_TO_PHYSICAL(asset->unk0), G_IM_FMT_RGBA, G_IM_SIZ_16b, width,
                                      height,
                                      0,                         // palette
                                      G_TX_NOMIRROR | G_TX_WRAP, // cms
@@ -1546,7 +1546,7 @@ void fontCreateDisplayList(Gfx *dList, Asset46 *asset, s32 width, s32 height) {
                                      G_TX_NOLOD);               // shiftt
                 break;
             case 5: // IA8
-                gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_IA, G_IM_SIZ_8b, width, height,
+                gDPLoadTextureBlockS(dList++, OS_K0_TO_PHYSICAL(asset->unk0), G_IM_FMT_IA, G_IM_SIZ_8b, width, height,
                                      0,                         // palette
                                      G_TX_NOMIRROR | G_TX_WRAP, // cms
                                      G_TX_NOMIRROR | G_TX_WRAP, // cmt
@@ -1556,7 +1556,7 @@ void fontCreateDisplayList(Gfx *dList, Asset46 *asset, s32 width, s32 height) {
                                      G_TX_NOLOD);               // shiftt
                 break;
             case 6: // IA4
-                gDPLoadTextureBlock_4bS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_IA, width, height,
+                gDPLoadTextureBlock_4bS(dList++, OS_K0_TO_PHYSICAL(asset->unk0), G_IM_FMT_IA, width, height,
                                         0,                         // palette
                                         G_TX_NOMIRROR | G_TX_WRAP, // cms
                                         G_TX_NOMIRROR | G_TX_WRAP, // cmt
@@ -1566,7 +1566,7 @@ void fontCreateDisplayList(Gfx *dList, Asset46 *asset, s32 width, s32 height) {
                                         G_TX_NOLOD);               // shiftt
                 break;
             case 3: // I4
-                gDPLoadTextureBlock_4bS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_I, width, height,
+                gDPLoadTextureBlock_4bS(dList++, OS_K0_TO_PHYSICAL(asset->unk0), G_IM_FMT_I, width, height,
                                         0,                         // palette
                                         G_TX_NOMIRROR | G_TX_WRAP, // cms
                                         G_TX_NOMIRROR | G_TX_WRAP, // cmt
@@ -1576,7 +1576,7 @@ void fontCreateDisplayList(Gfx *dList, Asset46 *asset, s32 width, s32 height) {
                                         G_TX_NOLOD);               // shiftt
                 break;
             case 2: // I8
-                gDPLoadTextureBlockS(dList++, OS_PHYSICAL_TO_K0(asset->unk0), G_IM_FMT_I, G_IM_SIZ_8b, width, height,
+                gDPLoadTextureBlockS(dList++, OS_K0_TO_PHYSICAL(asset->unk0), G_IM_FMT_I, G_IM_SIZ_8b, width, height,
                                      0,                         // palette
                                      G_TX_NOMIRROR | G_TX_WRAP, // cms
                                      G_TX_NOMIRROR | G_TX_WRAP, // cmt

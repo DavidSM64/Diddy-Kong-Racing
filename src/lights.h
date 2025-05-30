@@ -78,9 +78,7 @@ typedef struct ObjectLight {
     s16 unk76;
     u16 unk78;
     u16 unk7A;
-    f32 unk7C; // Think this might be scale.
-    f32 unk80; // Ditto.
-    f32 unk84; // The evolved form of ditto.
+    Vec3f unk7C; // Think this might be scale.
 } ObjectLight;
 
 /* Size: 0x14 bytes */

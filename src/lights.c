@@ -273,7 +273,7 @@ void func_80032424(ObjectLight *light, s32 updateRate) {
         light->pos.x = light->homeX;
         light->pos.y = light->homeY;
         light->pos.z = light->homeZ;
-        f32_vec3_apply_object_rotation(&light->owner->segment.trans, (f32 *) &light->pos);
+        vec3f_rotate(&light->owner->segment.trans.rotation, &light->pos);
         light->pos.x += light->owner->segment.trans.x_position;
         light->pos.y += light->owner->segment.trans.y_position;
         light->pos.z += light->owner->segment.trans.z_position;
@@ -385,17 +385,17 @@ void func_80032424(ObjectLight *light, s32 updateRate) {
             light->unk5A = light->pos.z + light->radius;
         }
         if (light->unk1 == 2) {
-            light->unk84 = -1.0f;
+            light->unk7C.z = -1.0f;
             rotation.y_rotation = light->unk70;
             rotation.x_rotation = light->unk72;
             rotation.z_rotation = 0;
-            f32_vec3_apply_object_rotation3(&rotation, &light->unk7C);
+            vec3f_rotate_py(&rotation, &light->unk7C);
             if (light->owner != NULL) {
-                f32_vec3_apply_object_rotation(&light->owner->segment.trans, &light->unk7C);
+                vec3f_rotate(&light->owner->segment.trans.rotation, &light->unk7C);
             }
-            light->unk7C = -light->unk7C;
-            light->unk80 = -light->unk80;
-            light->unk84 = -light->unk84;
+            light->unk7C.x = -light->unk7C.x;
+            light->unk7C.y = -light->unk7C.y;
+            light->unk7C.z = -light->unk7C.z;
         }
         light->unk5 = 0;
     }
@@ -662,8 +662,8 @@ f32 light_direction_calc(ObjectLight *light) {
     distance = gLightDistance;
     if (distance > 0.0f) {
         mag = 1.0f / sqrtf(distance);
-        distance = (gLightDiffX * mag * light->unk7C) + (gLightDiffY * mag * light->unk80) +
-                   (gLightDiffZ * mag * light->unk84);
+        distance = (gLightDiffX * mag * light->unk7C.x) + (gLightDiffY * mag * light->unk7C.y) +
+                   (gLightDiffZ * mag * light->unk7C.z);
         if (distance < 0.0f) {
             distance = 0.0f;
         }

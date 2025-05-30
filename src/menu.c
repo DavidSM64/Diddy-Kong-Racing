@@ -50,7 +50,7 @@ s32 gNumberOfCheats;
 s32 gNameEntryStickX;
 Gfx *sMenuCurrDisplayList;
 s16 gCheatInputCurrentRow;
-MatrixS *sMenuCurrHudMat;
+Mtx *sMenuCurrHudMat;
 s16 gCheatInputCurrentColumn;
 Vertex *sMenuCurrHudVerts;
 s16 gCheatInputStringLength;
@@ -271,13 +271,13 @@ s32 gAdventureSaveGhost;
 // For some reason these BSS vars swapped places in different versions
 Gfx *sMenuCurrDisplayList;
 s32 gPreviousMenuID;
-MatrixS *sMenuCurrHudMat;
+Mtx *sMenuCurrHudMat;
 char **gTTSaveGhostPakErrorText;
 #else
 s32 gPreviousMenuID;
 Gfx *sMenuCurrDisplayList;
 char **gTTSaveGhostPakErrorText;
-MatrixS *sMenuCurrHudMat;
+Mtx *sMenuCurrHudMat;
 #endif
 Vertex *sMenuCurrHudVerts;
 Triangle *sMenuCurrHudTris;
@@ -2287,15 +2287,15 @@ void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s
         gSPDisplayList((*dList)++, &dMenuHudSettings);
         if (tex != NULL) {
             gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[1]), 2);
-            gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
             i = TRUE; // texEnabled
         } else {
             gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(&dMenuHudDrawModes[0]), 2);
             i = FALSE; // texEnabled
         }
         gDPPipeSync((*dList)++);
-        gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip]), 20, 0);
-        gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(gMenuGeometry[gWoodPanelCount].triangles[gMenuTrisFlip]), 10, i);
+        gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(gMenuGeometry[gWoodPanelCount].vertices[gMenuTrisFlip]), 20, 0);
+        gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(gMenuGeometry[gWoodPanelCount].triangles[gMenuTrisFlip]), 10, i);
         rendermode_reset(dList);
     } else {
         gMenuGeometry[gWoodPanelCount].unk18[gMenuTrisFlip] = 0;
@@ -2578,8 +2578,7 @@ void menu_init(u32 menuId) {
 /**
  * Runs every frame. Calls the loop function of the current menu id
  */
-s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, Triangle **currHudTris,
-              s32 updateRate) {
+s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, Vertex **currHudVerts, Triangle **currHudTris, s32 updateRate) {
     s32 ret;
 
     sMenuCurrDisplayList = *currDisplayList;
@@ -7059,7 +7058,7 @@ void charselect_assign_ai(s32 charSlot) {
 
     for (i = charSlot; i < 8; i++) {
         do {
-            gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[get_random_number_from_range(0, numCharacters)].voiceID;
+            gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[rand_range(0, numCharacters)].voiceID;
             for (j = 0, foundIt = FALSE; j < i; j++) {
                 if (gCharacterIdSlots[j] == gCharacterIdSlots[i]) {
                     foundIt = TRUE;
@@ -8569,7 +8568,7 @@ void menu_track_select_unload(void) {
 #endif
 }
 
-s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
+s32 func_8008F618(Gfx **dList, Mtx **mtx) {
     s32 sp7C;
     s32 yPos;
     s32 texU;
@@ -8664,8 +8663,8 @@ s32 func_8008F618(Gfx **dList, MatrixS **mtx) {
         }
 
         material_set(dList, bgTexture, flags, 0);
-        gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(tempVertices), 4, 0);
-        gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(tempTriangles), 2, hasTexture);
+        gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(tempVertices), 4, 0);
+        gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(tempTriangles), 2, hasTexture);
         prevIndex = gTrackSelectBgData[index];
         if (curIndex != prevIndex) {
             yPos -= (gTrackSelectViewportY >> 3);
@@ -9624,7 +9623,7 @@ void func_80092188(s32 updateRate) {
                         if (gTrackTTSoundMask != NULL) {
                             sndp_stop(gTrackTTSoundMask);
                         }
-                        if (get_random_number_from_range(0, 255) >= 128) {
+                        if (rand_range(0, 255) >= 128) {
                             sound_play(SOUND_VOICE_TT_INTRO, &D_80126848);
                         } else {
                             sound_play(SOUND_VOICE_TT_GO_FOR_IT, &D_80126848);
@@ -10809,7 +10808,7 @@ void postrace_message(SIDeviceStatus status) {
  * Handle the shrunken viewport when the race ends.
  * This includes the options and results of the race, depending on mode.
  */
-s32 menu_postrace(Gfx **dList, MatrixS **matrices, Vertex **vertices, s32 updateRate) {
+s32 menu_postrace(Gfx **dList, Mtx **matrices, Vertex **vertices, s32 updateRate) {
     s32 sp54;
     s32 sp50;
     s32 sp4C;
@@ -12987,7 +12986,7 @@ void menu_credits_init(void) {
             gCreditsArray[84] = gCreditsLastMessageArray[0]; // "THE END?"
         }
 
-        cheat = gCheatsInCreditsArray[get_random_number_from_range(0, NUMBER_CHEATS_IN_CREDITS - 1)];
+        cheat = gCheatsInCreditsArray[rand_range(0, NUMBER_CHEATS_IN_CREDITS - 1)];
         cheatIndex = -1;
         while (cheat != 0) {
             cheat >>= 1;
@@ -13801,9 +13800,9 @@ void menu_image_load(s32 imageID) {
     gMenuImages[imageID].trans.z_position = sMenuImageProperties[imageID].trans.z_position;
     gMenuImages[imageID].trans.scale = sMenuImageProperties[imageID].trans.scale;
     gMenuImages[imageID].spriteOffset = sMenuImageProperties[imageID].spriteOffset;
-    gMenuImages[imageID].unk1A = get_random_number_from_range(0, 0xFFFF);
-    gMenuImages[imageID].unk1B = get_random_number_from_range(0, 0xFFFF);
-    gMenuImages[imageID].unk1C = get_random_number_from_range(0, 0xFFFF);
+    gMenuImages[imageID].unk1A = rand_range(0, 0xFFFF);
+    gMenuImages[imageID].unk1B = rand_range(0, 0xFFFF);
+    gMenuImages[imageID].unk1C = rand_range(0, 0xFFFF);
     gMenuImages[imageID].unk1D = sMenuImageProperties[imageID].unk1D;
 }
 
@@ -13916,8 +13915,8 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
             }
             material_set(&sMenuCurrDisplayList, tex, flags, texOffset);
 
-            gSPVertexDKR(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
-            gSPPolygon(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), numTris, texEnabled);
+            gSPVertexDKR(sMenuCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), numVerts, 0);
+            gSPPolygon(sMenuCurrDisplayList++, OS_K0_TO_PHYSICAL(tris), numTris, texEnabled);
         }
     }
 }
@@ -14711,7 +14710,7 @@ void dialogue_close_stub(void) {
 /**
  * Renders ortho geometry if the current dialogue box has anything to draw.
  */
-f32 dialogue_ortho(UNUSED DialogueBoxBackground *textbox, Gfx **dList, MatrixS **mat, Vertex **verts) {
+f32 dialogue_ortho(UNUSED DialogueBoxBackground *textbox, Gfx **dList, Mtx **mat, Vertex **verts) {
     sMenuCurrDisplayList = *dList;
     sMenuCurrHudMat = *mat;
     sMenuCurrHudVerts = *verts;

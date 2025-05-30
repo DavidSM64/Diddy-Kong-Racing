@@ -64,7 +64,7 @@ const char D_800E91AC[] = "\n\nBlock may be specified using 'P' on water group n
 /************ .bss ************/
 
 Gfx *gWaveDL;
-MatrixS *gWaveMtx;
+Mtx *gWaveMtx;
 WaveControl gWaveController; // holds lots of control information used in this file
 s32 gWaveVertexFlip;         // either 1 or 0, toggled in waves_update, used to index vertices and triangles
 f32 gWaveLowerY;             // is set to lowest value of gWaveHeightTable
@@ -280,13 +280,13 @@ void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
         sineVar2 += sineStep2;
     };
     save_rng_seed();
-    set_rng_seed(0x57415646);
+    set_rng_seed('WAVF');
 
     var_s5 = 0;
     for (i_2 = 0; i_2 < gWaveController.tileCount; i_2++) {
         for (j_2 = 0; j_2 < gWaveController.tileCount; j_2++) {
-            gWaveHeightIndices[var_s5].s[0] = get_random_number_from_range(0, gWaveController.seedSize - 1);
-            gWaveHeightIndices[var_s5].s[1] = get_random_number_from_range(0, gWaveController.seedSize - 1);
+            gWaveHeightIndices[var_s5].s[0] = rand_range(0, gWaveController.seedSize - 1);
+            gWaveHeightIndices[var_s5].s[1] = rand_range(0, gWaveController.seedSize - 1);
             var_s5++;
         }
     }
@@ -945,15 +945,15 @@ void wave_load_material(TextureHeader *tex, s32 rtile) {
 
     // difference is G_IM_SIZ_32b vs G_IM_SIZ_16b
     if (TEX_FORMAT(tex->format) == TEX_FORMAT_RGBA32) {
-        gDPLoadMultiBlock(gWaveDL++, OS_PHYSICAL_TO_K0(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_32b, texWidth,
+        gDPLoadMultiBlock(gWaveDL++, OS_K0_TO_PHYSICAL(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_32b, texWidth,
                           texWidth, 0, 0, 0, txmask, txmask, 0, 0);
     } else {
-        gDPLoadMultiBlock(gWaveDL++, OS_PHYSICAL_TO_K0(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_16b, texWidth,
+        gDPLoadMultiBlock(gWaveDL++, OS_K0_TO_PHYSICAL(tex + 1), tmem, rtile, G_IM_FMT_RGBA, G_IM_SIZ_16b, texWidth,
                           texWidth, 0, 0, 0, txmask, txmask, 0, 0);
     }
 }
 
-void waves_render(Gfx **dList, MatrixS **mtx, s32 viewportID) {
+void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
     s32 sp11C;
     Vertex *vtx;
     Triangle *tri;

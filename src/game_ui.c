@@ -255,7 +255,7 @@ s16 *gAssetHudElementIds;
 HudElements *gAssetHudElements;
 s32 gAssetHudElementIdsCount;
 Gfx *gHudDL;
-MatrixS *gHudMtx;
+Mtx *gHudMtx;
 Vertex *gHudVtx;
 s32 gHudCurrentViewport;
 s32 gHUDNumPlayers;
@@ -426,7 +426,7 @@ void hud_init_element(void) {
     gHudPALScale = FALSE;
     gAdventurePlayerFinish = FALSE;
     D_80126D4C = -100;
-    D_80126D50 = get_random_number_from_range(120, 360);
+    D_80126D50 = rand_range(120, 360);
     D_8012718A = func_8000E158();
     gStopwatchErrorX = 55;
     gStopwatchErrorY = 179;
@@ -672,7 +672,7 @@ u8 race_starting(void) {
  * Root function for the HUD updating and rendering for individual players.
  * The player can toggle specific overrides and settings for displays based on their current game modes.
  */
-void hud_render_player(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s32 updateRate) {
+void hud_render_player(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj, s32 updateRate) {
     s32 countdown;
     Object_Racer *racer;
 
@@ -1612,9 +1612,9 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         if ((D_80126D4C == 0) && (!curRacer->raceFinished)) {
             D_80126D4C = -100;
             if (gHUDVoiceSoundMask == 0) {
-                soundID = get_random_number_from_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
+                soundID = rand_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
                 while (soundID == gHudTTSoundID) {
-                    soundID = get_random_number_from_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
+                    soundID = rand_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
                 }
                 gHudTTSoundID = soundID;
                 sound_play(soundID, &gHUDVoiceSoundMask);
@@ -1649,13 +1649,13 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
                 posZ = ttSWBodyObject->segment.trans.z_position - playerRacerObj->segment.trans.z_position;
                 if ((sqrtf((posX * posX) + (posY * posY) + (posZ * posZ)) < 600.0f) && (gHUDVoiceSoundMask == 0) &&
                     (D_80126D50 == 0)) {
-                    soundID = SOUND_VOICE_TT_GO_FOR_IT + get_random_number_from_range(0, 2);
+                    soundID = SOUND_VOICE_TT_GO_FOR_IT + rand_range(0, 2);
                     while (soundID == gHudTTSoundID) {
-                        soundID = SOUND_VOICE_TT_GO_FOR_IT + get_random_number_from_range(0, 2);
+                        soundID = SOUND_VOICE_TT_GO_FOR_IT + rand_range(0, 2);
                     }
                     gHudTTSoundID = soundID;
                     sound_play(soundID, &gHUDVoiceSoundMask);
-                    D_80126D50 = get_random_number_from_range(120, 1200);
+                    D_80126D50 = rand_range(120, 1200);
                 }
                 D_80126D50 -= updateRate;
                 if (D_80126D50 < 0) {
@@ -1915,16 +1915,15 @@ void hud_race_start(s32 countdown, s32 updateRate) {
                 Object_Racer *racer;
                 s32 numRacerObjects;
                 racerGroup = get_racer_objects(&numRacerObjects);
-                randomRacer = racerGroup[get_random_number_from_range(1, numRacerObjects) - 1];
+                randomRacer = racerGroup[rand_range(1, numRacerObjects) - 1];
                 racer = &randomRacer->unk64->racer;
                 if (racer->vehicleID == VEHICLE_CAR) {
-                    if (get_random_number_from_range(0, 100) >= 96) {
-                        frequency = 1.25 - ((get_random_number_from_range(0, 7) * 0.5) / 7.0);
+                    if (rand_range(0, 100) >= 96) {
+                        frequency = 1.25 - ((rand_range(0, 7) * 0.5) / 7.0);
                         audspat_play_sound_direct(
                             76, randomRacer->segment.trans.x_position, randomRacer->segment.trans.y_position,
                             randomRacer->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER,
-                            ((get_random_number_from_range(0, 7) * 63) / 7) + 24, frequency * 100.0f,
-                            &gRaceStartSoundMask);
+                            ((rand_range(0, 7) * 63) / 7) + 24, frequency * 100.0f, &gRaceStartSoundMask);
                     }
                 }
             }
@@ -2457,10 +2456,10 @@ void hud_wrong_way(Object_Racer *obj, s32 updateRate) {
         !is_game_paused()) {
         if ((gWrongWayNagPrefix || gWrongWayNagTimer == 0) && gHUDVoiceSoundMask == NULL) {
             // 20% chance that T.T decides not to precede his nagging with "No no no!"
-            if (gWrongWayNagPrefix || get_random_number_from_range(1, 10) >= 8) {
+            if (gWrongWayNagPrefix || rand_range(1, 10) >= 8) {
                 gWrongWayNagPrefix = FALSE;
                 sound_play(SOUND_VOICE_TT_WRONG_WAY, &gHUDVoiceSoundMask);
-                gWrongWayNagTimer = get_random_number_from_range(1, 480) + 120;
+                gWrongWayNagTimer = rand_range(1, 480) + 120;
             } else {
                 gWrongWayNagPrefix = TRUE;
                 sound_play(SOUND_VOICE_TT_NONONO, &gHUDVoiceSoundMask);
@@ -3316,7 +3315,7 @@ s8 hud_setting(void) {
  * Renders HUD elements concerning all players.
  * This includes the minimap and score counters for challenge modes.
  */
-void hud_render_general(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate) {
+void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
     Object_Racer *curRacerObj;
     LevelModel *lvlMdl;
     Sprite *minimap;
@@ -3811,7 +3810,7 @@ void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspec
  * Since hud elements can be all sorts of things, the function checks what asset type it is, before
  * deciding to draw a texture rectangle, ortho tris, or a 3D model entirely.
  */
-void hud_element_render(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement *hud) {
+void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hud) {
     TextureHeader **textureHeader3;
     TextureHeader *textureHeader2;
     TextureHeader *textureHeader;
@@ -4029,11 +4028,11 @@ void hud_draw_model(ObjectModel *objModel) {
                 texPtr = objModel->textures[texIndex].texture;
             }
             material_set_no_tex_offset(&gHudDL, texPtr, flags & ~RENDER_Z_COMPARE);
-            gSPVertexDKR(gHudDL++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
+            gSPVertexDKR(gHudDL++, OS_K0_TO_PHYSICAL(verts), numVerts, 0);
             if (texPtr == NULL) {
                 textureEnabled = TRIN_DISABLE_TEXTURE;
             }
-            gSPPolygon(gHudDL++, OS_PHYSICAL_TO_K0(tris), numTris, textureEnabled);
+            gSPPolygon(gHudDL++, OS_K0_TO_PHYSICAL(tris), numTris, textureEnabled);
             numBatches = objModel->numberOfBatches;
         }
     }
