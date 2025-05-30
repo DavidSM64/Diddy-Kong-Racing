@@ -72,7 +72,7 @@ leaf get_gIntDisFlag
 /* 70178 8006F578 9042D430 */   lbu       $v0, %lo(gIntDisFlag)($v0)
 .end get_gIntDisFlag
 
-leaf mtxs_to_mtx
+leaf mtx_to_mtxs
 /* 7017C 8006F57C 34080004 */  ori        $t0, $zero, 0x4
 /* 70180 8006F580 3C0FFFFF */  lui        $t7, (0xFFFF0000 >> 16)
 .L8006F584:
@@ -99,7 +99,7 @@ leaf mtxs_to_mtx
 /* 701D4 8006F5D4 00000000 */   nop
 /* 701D8 8006F5D8 03E00008 */  jr         $ra
 /* 701DC 8006F5DC 00000000 */   nop
-.end mtxs_to_mtx
+.end mtx_to_mtxs
 
 leaf mtxf_to_mtxs
 /* 701E0 8006F5E0 3C014780 */  lui        $at, (0x47800000 >> 16)
@@ -425,7 +425,7 @@ leaf vec3s_reflect
 /* 7063C 8006FA3C A48D000A */   sh        $t5, 0xA($a0)
 .end vec3s_reflect
 
-leaf mtx_to_mtxs
+leaf mtx_to_mtxs_2
 /* 70640 8006FA40 340A0010 */  ori        $t2, $zero, 0x10
 /* 70644 8006FA44 016B5826 */  xor        $t3, $t3, $t3
 .L8006FA48:
@@ -441,7 +441,7 @@ leaf mtx_to_mtxs
 /* 7066C 8006FA6C 00000000 */   nop
 /* 70670 8006FA70 03E00008 */  jr         $ra
 /* 70674 8006FA74 00000000 */   nop
-.end mtx_to_mtxs
+.end mtx_to_mtxs_2
 
 leaf mtxs_transform_point
 /* 70678 8006FA78 84A80000 */  lh         $t0, 0x0($a1)

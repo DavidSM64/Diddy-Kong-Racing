@@ -77,7 +77,7 @@ GLOBAL_ASM("asm/math_util/get_gIntDisFlag.s")
  * into a 4×4 matrix of 32-bit signed integers, where each element is in 16.16 fixed-point format.
  */
 #ifdef NON_MATCHING
-UNUSED void mtxs_to_mtx(Mtx *m, MatrixS *mi) {
+UNUSED void mtx_to_mtxs(Mtx *m, MatrixS *mi) {
     s32 i, j;
     s32 ei, ef;
     s32 *ai, *af;
@@ -95,7 +95,7 @@ UNUSED void mtxs_to_mtx(Mtx *m, MatrixS *mi) {
     }
 }
 #else
-GLOBAL_ASM("asm/math_util/mtxs_to_mtx.s")
+GLOBAL_ASM("asm/math_util/mtx_to_mtxs.s")
 #endif
 
 /**
@@ -268,7 +268,7 @@ GLOBAL_ASM("asm/math_util/vec3s_reflect.s")
  * Converts an Mtx matrix (used by the RSP) into a 4x4 fixed-point matrix,
  * where each element is in 16.16 fixed-point format.
  */
-UNUSED void mtx_to_mtxs(Mtx *m, MatrixS *mi) {
+UNUSED void mtx_to_mtxs_2(Mtx *m, MatrixS *mi) {
     s16 *ai;
     u16 *af;
     s32 *ptr;
@@ -283,7 +283,7 @@ UNUSED void mtx_to_mtxs(Mtx *m, MatrixS *mi) {
     }
 }
 #else
-GLOBAL_ASM("asm/math_util/mtx_to_mtxs.s")
+GLOBAL_ASM("asm/math_util/mtx_to_mtxs_2.s")
 #endif
 
 #ifdef NON_MATCHING
