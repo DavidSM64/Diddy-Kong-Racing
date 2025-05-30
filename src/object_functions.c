@@ -344,7 +344,7 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
     Object *laserBoltObj;
     f32 distance;
     ObjectTransform trans;
-    Matrix mtx;
+    MtxF mtx;
     Object *racerObj;
     f32 diffX;
     f32 diffZ;
@@ -1144,7 +1144,7 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
 void try_to_collect_egg(Object *obj, Object_CollectEgg *egg) {
     Object_64 *racer;
     Object *interactedObj;
-    Matrix mat;
+    MtxF mat;
     ObjectTransform transF;
 
     if (obj->interactObj->distance < 40) {
@@ -1892,8 +1892,8 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
     f32 posZ;
     Object *newObj;
     ObjectModel *wizShipModel;
-    Matrix shipMtx;
-    Matrix laserMtx;
+    MtxF shipMtx;
+    MtxF laserMtx;
     LevelObjectEntryCommon newObject;
     ObjectTransform trans;
 
@@ -4853,7 +4853,7 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     s32 numCheckpoints;
     Object_Racer *racer;
     s8 surface;
-    Matrix mtxf;
+    MtxF mtxf;
     ObjectTransform trans;
 
     obj->interactObj->flags |= INTERACT_FLAGS_UNK_0100;
@@ -6137,7 +6137,7 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     f32 oz;
     ObjectModel *objModel;
     UNUSED s32 pad;
-    Matrix mtx;
+    MtxF mtx;
     f32 sinYRot;
     f32 tempF3;
     f32 minX;

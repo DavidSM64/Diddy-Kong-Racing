@@ -66,7 +66,7 @@ ObjectTransform D_800DD2A0 = {
     { { { 0, 0, 0 } } }, { 0 }, 1.0f, 0.0f, 0.0f, 0.0f,
 };
 
-Matrix gOrthoMatrixF = {
+MtxF gOrthoMatrixF = {
     { 1.0f, 0.0f, 0.0f, 0.0f },
     { 0.0f, 1.0f, 0.0f, 0.0f },
     { 0.0f, 0.0f, 0.0f, 0.0f },
@@ -98,17 +98,17 @@ f32 gModelMatrixViewX[6];
 f32 gModelMatrixViewY[6];
 f32 gModelMatrixViewZ[5];
 u16 perspNorm;
-Matrix *gModelMatrixF[6];
+MtxF *gModelMatrixF[6];
 Mtx *gModelMatrix[6];
 f32 D_80120DA0[5 * 16];
-Matrix gPerspectiveMatrixF;
-Matrix gViewMatrixF;
-Matrix gCameraMatrixF;
-Matrix gProjectionMatrixF;
+MtxF gPerspectiveMatrixF;
+MtxF gViewMatrixF;
+MtxF gCameraMatrixF;
+MtxF gProjectionMatrixF;
 Mtx gProjectionMatrix;
 UNUSED Mtx gUnusedProjectionMatrix; // Copied to the same way as gProjectionMatrix, but not actually used.
-Matrix gCurrentModelMatrixF;
-Matrix gCurrentModelMatrixS;
+MtxF gCurrentModelMatrixF;
+MtxF gCurrentModelMatrixS;
 
 /******************************/
 
@@ -122,7 +122,7 @@ void cam_init(void) {
     u32 stat;
 
     // clang-format off
-    for (i = 0; i < 5; i++) { gModelMatrixF[i] = (Matrix*)&D_80120DA0[i << 4]; }
+    for (i = 0; i < 5; i++) { gModelMatrixF[i] = (MtxF*)&D_80120DA0[i << 4]; }
     // clang-format on
 
     for (j = 0; j < 8; j++) {
@@ -211,7 +211,7 @@ UNUSED void cam_reset_fov(void) {
 /**
  * Return the current fixed point model matrix.
  */
-UNUSED Matrix *matrix_get_model_s16(void) {
+UNUSED MtxF *matrix_get_model_s16(void) {
     return &gCurrentModelMatrixS;
 }
 
@@ -1156,8 +1156,8 @@ void render_ortho_triangle_image(Gfx **dList, Mtx **mtx, Vertex **vtx, ObjectSeg
     f32 scale;
     s32 index;
     Vertex *temp_v1;
-    Matrix aspectMtxF;
-    Matrix scaleMtxF;
+    MtxF aspectMtxF;
+    MtxF scaleMtxF;
 
     if (sprite != NULL) {
         temp_v1 = *vtx;
@@ -1235,7 +1235,7 @@ void apply_object_shear_matrix(Gfx **dList, Mtx **mtx, Object *arg2, Object *arg
     f32 arg3_xPos;
     f32 arg3_yPos;
     f32 arg3_zPos;
-    Matrix matrix_mult;
+    MtxF matrix_mult;
 
     cossf_x_arg2 = coss_f(arg2->segment.trans.rotation.x_rotation);
     sinsf_x_arg2 = sins_f(arg2->segment.trans.rotation.x_rotation);
@@ -1386,8 +1386,8 @@ void apply_head_turning_matrix(Gfx **dList, Mtx **mtx, Object_68 *objGfx, s16 he
     f32 offsetZ;
     f32 coss_unk1C;
     f32 sins_unk1C;
-    Matrix rotationMtxF;
-    Matrix headMtxF;
+    MtxF rotationMtxF;
+    MtxF headMtxF;
 
     offsetX = (f32) objGfx->offsetX;
     offsetY = (f32) objGfx->offsetY;
@@ -1521,7 +1521,7 @@ Camera *get_cutscene_camera_segment(void) {
 /**
  * Return the current floating point projection matrix.
  */
-Matrix *get_projection_matrix_f32(void) {
+MtxF *get_projection_matrix_f32(void) {
     return &gProjectionMatrixF;
 }
 
@@ -1535,7 +1535,7 @@ Mtx *get_projection_matrix_s16(void) {
 /**
  * Return the current camera matrix.
  */
-Matrix *get_camera_matrix(void) {
+MtxF *get_camera_matrix(void) {
     return &gCameraMatrixF;
 }
 

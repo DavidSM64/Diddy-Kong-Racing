@@ -77,7 +77,7 @@ GLOBAL_ASM("asm/math_util/get_gIntDisFlag.s")
  * into a 4×4 matrix of 32-bit signed integers, where each element is in 16.16 fixed-point format.
  */
 #ifdef NON_MATCHING
-UNUSED void mtx_to_mtxs(Mtx *m, MatrixS *mi) {
+UNUSED void mtx_to_mtxs(Mtx *m, MtxS *mi) {
     s32 i, j;
     s32 ei, ef;
     s32 *ai, *af;
@@ -103,7 +103,7 @@ GLOBAL_ASM("asm/math_util/mtx_to_mtxs.s")
  * of 32-bit signed fixed-point values in 16.16 format.
  */
 #ifdef NON_MATCHING
-void mtxf_to_mtxs(Matrix *mf, MatrixS *mi) {
+void mtxf_to_mtxs(MtxF *mf, MtxS *mi) {
     s32 i, j;
 
     for (i = 0; i < 4; i++) {
@@ -121,7 +121,7 @@ GLOBAL_ASM("asm/math_util/mtxf_to_mtxs.s")
  * Transforms a 3D vector using a 4×4 transformation matrix.
  */
 /* Official name: mathMtxXFMF */
-void mtxf_transform_point(Matrix *mf, float x, float y, float z, float *ox, float *oy, float *oz) {
+void mtxf_transform_point(MtxF *mf, float x, float y, float z, float *ox, float *oy, float *oz) {
     *ox = (*mf)[0][0] * x + (*mf)[1][0] * y + (*mf)[2][0] * z + (*mf)[3][0];
     *oy = (*mf)[0][1] * x + (*mf)[1][1] * y + (*mf)[2][1] * z + (*mf)[3][1];
     *oz = (*mf)[0][2] * x + (*mf)[1][2] * y + (*mf)[2][2] * z + (*mf)[3][2];
@@ -138,7 +138,7 @@ GLOBAL_ASM("asm/math_util/mtxf_transform_point.s")
  * rather than points.
  */
 /* Official name: mathMtxFastXFMF */
-void mtxf_transform_dir(Matrix *mf, Vec3f *in, Vec3f *out) {
+void mtxf_transform_dir(MtxF *mf, Vec3f *in, Vec3f *out) {
     out->f[0] = (in->f[0] * mf[0][0]) + (in->f[1] * mf[1][0]) + (in->f[2] * mf[2][0]);
     out->f[1] = (in->f[0] * mf[0][1]) + (in->f[1] * mf[1][1]) + (in->f[2] * mf[2][1]);
     out->f[2] = (in->f[0] * mf[0][2]) + (in->f[1] * mf[1][2]) + (in->f[2] * mf[2][2]);
@@ -152,7 +152,7 @@ GLOBAL_ASM("asm/math_util/mtxf_transform_dir.s")
  * Multiplies two 4×4 matrices.
  */
 /* Official name: mathMtxCatF */
-void mtxf_mul(Matrix *mat1, Matrix *mat2, Matrix *output) {
+void mtxf_mul(MtxF *mat1, MtxF *mat2, MtxF *output) {
     s32 i, j, k;
 
     for (i = 0; i < 4; i++) {
@@ -178,7 +178,7 @@ GLOBAL_ASM("asm/math_util/mtxf_mul.s")
  * Converts a floating-point 4×4 matrix to a Mtx fixed-point matrix.
  */
 /* Official name: mathMtxF2L */
-void mtxf_to_mtx(Matrix *mf, Mtx *m) {
+void mtxf_to_mtx(MtxF *mf, Mtx *m) {
     s32 i, j;
     s32 e1, e2;
     s32 *ai, *af;
@@ -268,7 +268,7 @@ GLOBAL_ASM("asm/math_util/vec3s_reflect.s")
  * Converts an Mtx matrix (used by the RSP) into a 4x4 fixed-point matrix,
  * where each element is in 16.16 fixed-point format.
  */
-UNUSED void mtx_to_mtxs_2(Mtx *m, MatrixS *mi) {
+UNUSED void mtx_to_mtxs_2(Mtx *m, MtxS *mi) {
     s16 *ai;
     u16 *af;
     s32 *ptr;
@@ -291,7 +291,7 @@ GLOBAL_ASM("asm/math_util/mtx_to_mtxs_2.s")
  * Transforms a 3D short vector using a 4×4 fixed-point (16.16) matrix.
  * The result is written back into the input vector.
  */
-UNUSED void mtxs_transform_point(MatrixS *mi, Vec3s *vec) {
+UNUSED void mtxs_transform_point(MtxS *mi, Vec3s *vec) {
     s16 x = vec->x;
     s16 y = vec->y;
     s16 z = vec->z;
@@ -309,7 +309,7 @@ GLOBAL_ASM("asm/math_util/mtxs_transform_point.s")
  * Transforms a direction vector in 3D space using a 4×4 fixed-point (16.16) matrix.
  * The result is written back into the input vector.
  */
-void mtxs_transform_dir(MatrixS *mi, Vec3s *vec) {
+void mtxs_transform_dir(MtxS *mi, Vec3s *vec) {
     s16 x = vec->x;
     s16 y = vec->y;
     s16 z = vec->z;
@@ -332,7 +332,7 @@ GLOBAL_ASM("asm/math_util/mtxs_transform_dir.s")
  * 4. Rotation around Y axis (yaw)
  * 5. Translation
  */
-void mtxf_from_transform(Matrix *mtx, ObjectTransform *trans) {
+void mtxf_from_transform(MtxF *mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
     f32 xRotSine;
@@ -377,7 +377,7 @@ GLOBAL_ASM("asm/math_util/mtxf_from_transform.s")
  * the model along its local Y axis.
  /
 /* Official name: mathSquashY */
-void mtxf_scale_y(Matrix *input, f32 scale) {
+void mtxf_scale_y(MtxF *input, f32 scale) {
     (*input)[1][0] *= scale;
     (*input)[1][1] *= scale;
     (*input)[1][2] *= scale;
@@ -393,7 +393,7 @@ GLOBAL_ASM("asm/math_util/mtxf_scale_y.s")
  * along its local Y axis in model space.
  */
 /* Official name: mathTransY */
-void mtxf_translate_y(Matrix *input, f32 offset) {
+void mtxf_translate_y(MtxF *input, f32 offset) {
     (*input)[3][0] += (*input)[1][0] * offset;
     (*input)[3][1] += (*input)[1][1] * offset;
     (*input)[3][2] += (*input)[1][2] * offset;
@@ -418,7 +418,7 @@ GLOBAL_ASM("asm/math_util/mtxf_translate_y.s")
  *   4. Rotate Z (negative roll)
  */
 /* Official Name: mathRpyXyzMtx */
-void mtxf_from_inverse_transform(Matrix *mtx, ObjectTransform *trans) {
+void mtxf_from_inverse_transform(MtxF *mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
     f32 xRotSine;
@@ -469,7 +469,7 @@ GLOBAL_ASM("asm/math_util/func_80070058.s")
  * This is commonly used to render flat sprites that rotate to face the camera
  * while preserving their upright orientation.
  */
-void mtxf_billboard(Matrix *mtx, s32 angle, f32 scale, f32 scaleY) {
+void mtxf_billboard(MtxF *mtx, s32 angle, f32 scale, f32 scaleY) {
     f32 cosine, sine;
 
     sine = sins_s16(angle) * (1.0f / 0x10000);
@@ -686,7 +686,7 @@ GLOBAL_ASM("asm/math_util/tri2d_xz_contains_point.s")
  * Creates a translation matrix that moves points by the specified (x, y, z) offset.
  */
 /* Official Name: mathTranslateMtx */
-void mtxf_from_translation(Matrix *mtx, f32 x, f32 y, f32 z) {
+void mtxf_from_translation(MtxF *mtx, f32 x, f32 y, f32 z) {
     s32 i, j;
 
     // Clear matrix
@@ -712,7 +712,7 @@ GLOBAL_ASM("asm/math_util/mtxf_from_translation.s")
  * Creates a scaling matrix with the specified scale factors along the X, Y, and Z axes.
  */
 /* Official Name: mathScaleMtx */
-void mtxf_from_scale(Matrix *mtx, f32 scaleX, f32 scaleY, f32 scaleZ) {
+void mtxf_from_scale(MtxF *mtx, f32 scaleX, f32 scaleY, f32 scaleZ) {
     s32 i, j;
 
     // Clear matrix

@@ -916,8 +916,8 @@ typedef struct ShadeProperties {
 typedef f32 FakeHalfMatrix[2][4];
 typedef struct Object_5C {
     union {
-  /* 0x0000 */ Matrix matrices[4];
-  /* 0x0000 */ FakeHalfMatrix _matrices[8]; // This is a hack. The Matrix[4] is the real one.
+  /* 0x0000 */ MtxF matrices[4];
+  /* 0x0000 */ FakeHalfMatrix _matrices[8]; // This is a hack. The MtxF[4] is the real one.
  };
   /* 0x0100 */ void *unk100;
   /* 0x0104 */ u8 unk104;

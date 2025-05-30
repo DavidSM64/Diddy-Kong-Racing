@@ -2198,7 +2198,7 @@ void func_8002A31C(void) {
     f32 ox3;
     f32 oy3;
     f32 oz3;
-    Matrix *cameraMatrix;
+    MtxF *cameraMatrix;
     f32 inverseMagnitude;
     f32 x;
     f32 y;
@@ -4473,7 +4473,7 @@ UNUSED void update_perspective_and_envmap(void) {
  * Take the current camera position and calculate the perspective position, for envmapping.
  */
 void compute_scene_camera_transform_matrix(void) {
-    Matrix mtx;
+    MtxF mtx;
     ObjectTransform trans;
 
     f32 x = 0.0f;

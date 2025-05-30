@@ -136,7 +136,7 @@ Mtx *gCurrWeatherMatrix;
 Vertex *gCurrWeatherVertexList;
 Triangle *gCurrWeatherTriList;
 Camera *gWeatherCamera;
-Matrix *gWeatherCameraMatrix;
+MtxF *gWeatherCameraMatrix;
 LensFlareData *gLensFlareSet1;
 LensFlareData *gLensFlareSet2;
 LensFlareData *gLensFlareLarge;

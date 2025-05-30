@@ -928,7 +928,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s8 wave_properties;
     s8 wheelsOnStone;
     UNUSED s32 pad3;
-    Matrix transformedMtx;
+    MtxF transformedMtx;
     s8 playerObjectHasMoved;
     f32 var_f6;
 
@@ -1812,7 +1812,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
  * When on water, apply a rotation effect based on the movement of the waves and turning direction.
  */
 f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
-    Matrix mtxF;
+    MtxF mtxF;
     f32 velocity;
     s32 angle;
     s32 angleVel;
@@ -2174,7 +2174,7 @@ void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
     f32 deltaX;
     f32 deltaY;
     f32 deltaZ;
-    Matrix mtx;
+    MtxF mtx;
     s32 angleDiff;
 
     UpdateRate = (s32) updateRateF;
@@ -2971,7 +2971,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
     f32 spA8;
     f32 spA4;
     f32 spA0;
-    Matrix sp60;
+    MtxF sp60;
     LevelHeader *currentLevelHeader;
     Object_Boost *asset20;
     s32 var_v1;
@@ -4320,7 +4320,7 @@ void handle_car_steering(Object_Racer *racer) {
 }
 
 void func_800535C4(Object *obj, Object_Racer *racer) {
-    Matrix mf;
+    MtxF mf;
 
     gCurrentRacerTransform.rotation.y_rotation = -racer->steerVisualRotation;
     gCurrentRacerTransform.rotation.x_rotation = -obj->segment.trans.rotation.x_rotation;
@@ -4567,7 +4567,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
     f32 xTemp;
     f32 yTemp;
     f32 zTemp;
-    Matrix mtx;
+    MtxF mtx;
     LevelHeader *header;
     s32 angle;
     s32 steerVel;
@@ -4887,8 +4887,8 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     f32 sp108[5];
     f32 spF4[5];
     f32 spE0[5];
-    Matrix spA0;
-    Matrix sp60;
+    MtxF spA0;
+    MtxF sp60;
     s8 sp5C;
     s8 sp58[4];
 
@@ -5815,7 +5815,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
 }
 
 void func_800575EC(Object *obj, Object_Racer *racer) {
-    Matrix mtxF;
+    MtxF mtxF;
 
     gCurrentRacerTransform.rotation.y_rotation = obj->segment.trans.rotation.y_rotation;
     gCurrentRacerTransform.rotation.x_rotation = obj->segment.trans.rotation.x_rotation;

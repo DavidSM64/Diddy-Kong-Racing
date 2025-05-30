@@ -4266,9 +4266,9 @@ void func_80016748(Object *obj0, Object *obj1) {
     f32 temp;
 
 #ifdef AVOID_UB
-    Matrix obj1TransformMtx;
+    MtxF obj1TransformMtx;
 #else
-    // THIS IS A HACK! Supposed to be a Matrix, but the stack ended up being too big.
+    // THIS IS A HACK! Supposed to be a MtxF, but the stack ended up being too big.
     f32 pad[2];
     f32 obj1TransformMtx[4][3];
 #endif
@@ -4292,12 +4292,12 @@ void func_80016748(Object *obj0, Object *obj1) {
         if (!((objModel->unk3C + 50.0) < sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)))) {
             obj0Interact = obj0->interactObj;
             obj1Interact = obj1->interactObj;
-            mtxf_from_transform((Matrix *) obj1TransformMtx, &obj1->segment.trans);
+            mtxf_from_transform((MtxF *) obj1TransformMtx, &obj1->segment.trans);
             for (i = 0; i < objModel->unk20; i += 2) {
                 xDiff = obj1->curVertData[objModel->unk1C[i]].x;
                 yDiff = obj1->curVertData[objModel->unk1C[i]].y;
                 zDiff = obj1->curVertData[objModel->unk1C[i]].z;
-                mtxf_transform_point((Matrix *) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                mtxf_transform_point((MtxF *) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
                 temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->segment.trans.scale) * 50.0;
                 xDiff -= obj0->segment.trans.x_position;
                 yDiff -= obj0->segment.trans.y_position;
@@ -4450,13 +4450,13 @@ void func_8001709C(Object *obj) {
     ObjectTransform sp78;
     s32 i;
     f32 inverseScale;
-    Matrix *sp6C;
-    Matrix sp2C;
+    MtxF *sp6C;
+    MtxF sp2C;
     Object_5C *obj5C;
 
     obj5C = obj->unk5C;
     obj5C->unk104 = (obj5C->unk104 + 1) & 1;
-    sp6C = (Matrix *) &obj5C->_matrices[obj5C->unk104 << 1];
+    sp6C = (MtxF *) &obj5C->_matrices[obj5C->unk104 << 1];
     sp78.rotation.y_rotation = -obj->segment.trans.rotation.y_rotation;
     sp78.rotation.x_rotation = -obj->segment.trans.rotation.x_rotation;
     sp78.rotation.z_rotation = -obj->segment.trans.rotation.z_rotation;
@@ -4568,7 +4568,7 @@ void func_80017E98(void) {
     Object *obj;
     CheckpointNode *checkpoint;
     LevelObjectEntry_Checkpoint *checkpointEntry;
-    Matrix mtx;
+    MtxF mtx;
     ObjectTransform transform;
     s32 var_t2;
 
@@ -6101,7 +6101,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     vec3f_rotate_ypr(&sp94, &sp5C.f);
 
     if (object->segment.header->unk3D != 0 && arg2) {
-        mtxf_transform_dir(get_projection_matrix_f32(), (Matrix *) &sp5C, (Matrix *) &sp5C);
+        mtxf_transform_dir(get_projection_matrix_f32(), &sp5C, &sp5C);
     }
 
     x1 = -sp5C.x;
@@ -6113,7 +6113,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     sp5C.z = object->shading->unk20 << 2;
 
     if (arg2) {
-        mtxf_transform_dir(get_projection_matrix_f32(), (Matrix *) &sp5C, (Matrix *) &sp5C);
+        mtxf_transform_dir(get_projection_matrix_f32(), &sp5C, &sp5C);
     }
     vec3f_rotate_ypr(&sp94, &sp5C.f);
 
@@ -6161,8 +6161,8 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
 }
 
 void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRot) {
-    MatrixS objRotMtxS32;
-    Matrix objRotMtxF32;
+    MtxS objRotMtxS32;
+    MtxF objRotMtxF32;
     ObjectTransform objTrans;
     s16 k;
     s16 count;
