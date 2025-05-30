@@ -51,7 +51,7 @@ s32 D_800DC920 = -1;
 // T.T.カメラ  -  T.T. Camera
 char gJpnTTCam[] = { 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x2D, 0x80, 0x3C, 0x80, 0x55, 0x80, 0x71, 0x80, 0x76 };
 #endif
-u8 *D_800DC924 = NULL;
+u8 *gVoidData = NULL;
 s32 D_800DC928 = 0; // Currently unknown, might be a different type.
 
 u8 D_800DC92C[24] = {
@@ -154,14 +154,14 @@ UNUSED f32 gCurrBBoxDistanceToCamera; // Used in a comparison check, but functio
 u32 gWaveBlockCount;
 FogData gFogData[4];
 Vec3i gScenePerspectivePos;
-unk8011D474 *D_8011D474; // 0x10 bytes struct?
+VoidMesh *gVoidMesh; // 0x10 bytes struct?
 unk8011D478 *D_8011D478; // 0xC bytes struct?
 s8 *D_8011D47C;
-Vertex *D_8011D480[2];
-Vertex *gVoidVerts;
+Vertex *gVoidVerts[2];
+Vertex *gVoidCurrVerts;
 s32 D_8011D48C;
-Triangle *D_8011D490[2];
-Triangle *gVoidTris;
+Triangle *gVoidTris[2];
+Triangle *gVoidCurrTris;
 s16 D_8011D49C;
 s16 D_8011D49E;
 f32 D_8011D4A0; // something x coordinate related
@@ -169,19 +169,11 @@ f32 D_8011D4A4; // something z coordinate related
 f32 D_8011D4A8;
 f32 D_8011D4AC; // something x coordinate related
 f32 D_8011D4B0; // something z coordinate related
-s8 D_8011D4B4;
-typedef struct Unk8011D4B6 {
-    union {
-        struct {
-            u8 one, two;
-        };
-        s16 vertCount;
-    };
-} Unk8011D4B6;
-Unk8011D4B6 gVoidMesh;
-s16 D_8011D4B8;
+s8 gVoidVertexFlip;
+s16 gVoidVertCount;
+s16 gVoidPrimCount;
 s16 D_8011D4BA;
-s16 D_8011D4BC;
+s16 gVoidPrimLimit;
 
 /******************************/
 
@@ -467,21 +459,21 @@ void void_init(s32 viewportCount) {
     u8 *ptr;
 
     D_8011D4BA = 175;
-    D_8011D4BC = 45;
-    // Halve the 
+    gVoidPrimLimit = 45;
+    // Halve the primitive limit for multiplayer.
     if (viewportCount >= 2) {
-        D_8011D4BC >>= 1;
+        gVoidPrimLimit >>= 1;
     }
 
     sp30 = (D_8011D4BA + 6) * sizeof(unk8011D478);
     sp2C = D_8011D4BA + 5;
-    vtxLimit = (D_8011D4BC + 5) * 4 * sizeof(Vertex);
-    triLimit = (D_8011D4BC + 5) * 2 * sizeof(Triangle);
+    vtxLimit = (gVoidPrimLimit + 5) * 4 * sizeof(Vertex);
+    triLimit = (gVoidPrimLimit + 5) * 2 * sizeof(Triangle);
 
-    D_8011D474 = mempool_alloc_safe(viewportCount * sizeof(unk8011D474), COLOUR_TAG_CYAN);
-    D_800DC924 = mempool_alloc_safe(sp30 + sp2C + (vtxLimit + triLimit) * 2 * viewportCount, COLOUR_TAG_CYAN);
+    gVoidMesh = mempool_alloc_safe(viewportCount * sizeof(VoidMesh), COLOUR_TAG_CYAN);
+    gVoidData = mempool_alloc_safe(sp30 + sp2C + (vtxLimit + triLimit) * 2 * viewportCount, COLOUR_TAG_CYAN);
 
-    ptr = D_800DC924;
+    ptr = gVoidData;
 
     if (ptr != NULL) {
         D_8011D478 = (unk8011D478 *) ptr;
@@ -492,27 +484,30 @@ void void_init(s32 viewportCount) {
         ptr = (u8 *) ((s32) (ptr + sp2C + 8) & ~7);
 
         for (i = 0; i < viewportCount; i++) {
-            D_8011D474[i].unk0 = (Triangle *) ptr;
+            gVoidMesh[i].tris[0] = (Triangle *) ptr;
             ptr += triLimit;
 
-            D_8011D474[i].unk4 = (Triangle *) ptr;
+            gVoidMesh[i].tris[1] = (Triangle *) ptr;
             ptr += triLimit;
 
-            D_8011D474[i].unk8 = (Vertex *) ptr;
+            gVoidMesh[i].verts[0] = (Vertex *) ptr;
             ptr += vtxLimit;
 
-            D_8011D474[i].unkC = (Vertex *) ptr;
+            gVoidMesh[i].verts[1] = (Vertex *) ptr;
             ptr += vtxLimit;
         }
     }
-    D_8011D4B4 = 0;
+    gVoidVertexFlip = 0;
 }
 
-void func_800257D0(void) {
-    if (D_800DC924 != NULL) {
-        mempool_free(D_8011D474);
-        mempool_free(D_800DC924);
-        D_800DC924 = NULL;
+/**
+ * Free the void mesh and control data if it exists.
+*/
+void void_free(void) {
+    if (gVoidData != NULL) {
+        mempool_free(gVoidMesh);
+        mempool_free(gVoidData);
+        gVoidData = NULL;
     }
 }
 
@@ -535,10 +530,10 @@ void void_check(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     s8 sp7C[24]; // possible UB here, real size is unknown
     s32 pad;
 
-    D_8011D490[0] = D_8011D474[viewportIndex].unk0;
-    D_8011D490[1] = D_8011D474[viewportIndex].unk4;
-    D_8011D480[0] = D_8011D474[viewportIndex].unk8;
-    D_8011D480[1] = D_8011D474[viewportIndex].unkC;
+    gVoidTris[0] = gVoidMesh[viewportIndex].tris[0];
+    gVoidTris[1] = gVoidMesh[viewportIndex].tris[1];
+    gVoidVerts[0] = gVoidMesh[viewportIndex].verts[0];
+    gVoidVerts[1] = gVoidMesh[viewportIndex].verts[1];
     material_set_no_tex_offset(&gSceneCurrDisplayList, NULL, RENDER_ANTI_ALIASING | RENDER_Z_COMPARE);
     D_8011D49C = 0;
     D_8011D49E = 0;
@@ -615,14 +610,14 @@ void void_check(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
 
     spAC = gSceneCurrVertexList;
     spA8 = gSceneCurrTriList;
-    gSceneCurrVertexList = D_8011D480[D_8011D4B4];
-    gSceneCurrTriList = D_8011D490[D_8011D4B4];
+    gSceneCurrVertexList = gVoidVerts[gVoidVertexFlip];
+    gSceneCurrTriList = gVoidTris[gVoidVertexFlip];
 
-    D_8011D4B4 = 1 - D_8011D4B4;
-    gVoidVerts = gSceneCurrVertexList;
-    gVoidTris = gSceneCurrTriList;
-    gVoidMesh.vertCount = 0;
-    D_8011D4B8 = 0;
+    gVoidVertexFlip = 1 - gVoidVertexFlip;
+    gVoidCurrVerts = gSceneCurrVertexList;
+    gVoidCurrTris = gSceneCurrTriList;
+    gVoidVertCount = 0;
+    gVoidPrimCount = 0;
 
     i = 0;
     while (i < D_8011D49E) {
@@ -651,9 +646,9 @@ void void_check(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
             }
         }
     }
-    if (gVoidMesh.vertCount != 0) {
-        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidVerts), gVoidMesh.vertCount, 0);
-        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidTris), gVoidMesh.vertCount >> 1, TRIN_DISABLE_TEXTURE);
+    if (gVoidVertCount != 0) {
+        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidCurrVerts), gVoidVertCount, 0);
+        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidCurrTris), gVoidVertCount >> 1, TRIN_DISABLE_TEXTURE);
     }
     gSceneCurrVertexList = spAC;
     gSceneCurrTriList = spA8;
@@ -962,12 +957,12 @@ void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
         if (temp0 && !temp1) {
             temp3 = (sp60[i] * 2);
             temp4 = (sp60[i + 1] * 2);
-            func_80027184(&sp94[temp3], &sp94[temp4], arg3, arg2);
+            void_generate_primitive(&sp94[temp3], &sp94[temp4], arg3, arg2);
         }
     }
 }
 
-s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
+s32 void_generate_primitive(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     Vertex *verts;
     Triangle *tris;
     s32 triIndex;
@@ -980,17 +975,17 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     u8 colour_b;
     u8 colour_a;
 
-    if (D_8011D4B8 >= D_8011D4BC) {
+    if (gVoidPrimCount >= gVoidPrimLimit) {
         return NULL;
     }
 
-    if (gVoidMesh.vertCount == 24) {
-        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidVerts), gVoidMesh.vertCount, 0);
-        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidTris), (gVoidMesh.vertCount >> 1),
+    if (gVoidVertCount == 24) {
+        gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidCurrVerts), gVoidVertCount, 0);
+        gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(gVoidCurrTris), (gVoidVertCount >> 1),
                    TRIN_DISABLE_TEXTURE);
-        gVoidVerts = gSceneCurrVertexList;
-        gVoidMesh.vertCount = 0;
-        gVoidTris = gSceneCurrTriList;
+        gVoidCurrVerts = gSceneCurrVertexList;
+        gVoidVertCount = 0;
+        gVoidCurrTris = gSceneCurrTriList;
     }
 
     vertX1 = arg2 * D_8011D4A0 + D_8011D4AC;
@@ -1041,7 +1036,7 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     gSceneCurrVertexList = verts;
 
     tris = gSceneCurrTriList;
-    triIndex = gVoidMesh.two;
+    triIndex = (u8) gVoidVertCount;
 
     // @fake, using index 0 directly doesn't match
     vertX2 = 0;
@@ -1049,9 +1044,9 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     tris[vertX2].vi0 = triIndex + 2;
     tris[vertX2].vi1 = triIndex + 1;
     tris[vertX2].vi2 = triIndex;
-    tris[vertX2].uv0.u = 0x3E0;
-    tris[vertX2].uv0.v = 0x3E0;
-    tris[vertX2].uv1.u = 0x3E0;
+    tris[vertX2].uv0.u = 1024 - 32;
+    tris[vertX2].uv0.v = 1024 - 32;
+    tris[vertX2].uv1.u = 1024 - 32;
     tris[vertX2].uv1.v = 0;
     tris[vertX2].uv2.u = 1;
     tris[vertX2].uv2.v = 0;
@@ -1061,16 +1056,16 @@ s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     tris[1].vi1 = triIndex + 1;
     tris[1].vi2 = triIndex + 2;
     tris[1].uv0.u = 1;
-    tris[1].uv0.v = 0x3E0;
-    tris[1].uv1.u = 0x3E0;
-    tris[1].uv1.v = 0x3E0;
+    tris[1].uv0.v = 1024 - 32;
+    tris[1].uv1.u = 1024 - 32;
+    tris[1].uv1.v = 1024 - 32;
     tris[1].uv2.u = 1;
     tris[1].uv2.v = 0;
     tris += 2;
     gSceneCurrTriList = tris;
 
-    gVoidMesh.vertCount += 4;
-    D_8011D4B8++;
+    gVoidVertCount += 4;
+    gVoidPrimCount++;
     return NULL;
 }
 
@@ -1466,9 +1461,9 @@ void func_80028050(void) {
     var_t2 = *gCurrentLevelHeader2->unk74;
     var_a2 = -1;
 
-    if ((u32) var_t2 != -1) {
+    if ((s32) var_t2 != -1) {
         levelHeader = gCurrentLevelHeader2->unk74[1];
-        if ((u32) levelHeader == -1) {
+        if ((s32) levelHeader == -1) {
             levelHeader = var_t2;
         }
     } else {
@@ -1872,7 +1867,7 @@ void render_level_geometry_and_objects(void) {
         }
     }
 
-    if (D_800DC924 != NULL && func_80027568()) {
+    if (gVoidData != NULL && func_80027568()) {
         void_check(segmentIds, numberOfSegments, get_current_viewport());
     }
     gAntiAliasing = FALSE;
@@ -2975,7 +2970,7 @@ void free_track(void) {
         mempool_free(gShadowHeapTris[i]);
         mempool_free(gShadowHeapVerts[i]);
     }
-    func_800257D0();
+    void_free();
     if (gSkydomeSegment != NULL) {
         free_object(gSkydomeSegment);
         gParticlePtrList_flush();

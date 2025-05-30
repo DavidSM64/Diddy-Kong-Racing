@@ -46,12 +46,10 @@ typedef struct unk8011B330 {
 } unk8011B330;
 
 /* Size: 0x10 bytes */
-typedef struct unk8011D474 {
-    Triangle *unk0;
-    Triangle *unk4;
-    Vertex *unk8;
-    Vertex *unkC;
-} unk8011D474;
+typedef struct VoidMesh {
+    Triangle *tris[2];
+    Vertex *verts[2];
+} VoidMesh;
 
 typedef struct unk8011C238 {
   u8 unk0;
@@ -123,7 +121,7 @@ enum WaveTypes {
 };
 
 s32 set_scene_viewport_num(s32 numPorts);
-void func_800257D0(void);
+void void_free(void);
 void spawn_skydome(s32 objectID);
 void set_skydome_visbility(s32 renderSky);
 void render_skydome(void);
@@ -193,7 +191,7 @@ void waves_init(LevelModel *, LevelHeader *, s32);
 void void_init(s32);
 void func_8002C0C4(s32 modelId);
 void func_800304C8(unk8011C8B8 *arg0);
-s32 func_80027184(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
+s32 void_generate_primitive(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
 s32 func_8002FF6C(s32, unk8011C8B8 *, s32, Vec2f *);
 s32 func_800BDC80(s32, unk8011C3B8 *, unk8011C8B8 *, f32, f32, f32, f32);
 
