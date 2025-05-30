@@ -8,14 +8,14 @@
 #include "string.h"
 #include "PR/os_internal_reg.h"
 
-extern s32 gIntDisFlag;
+extern u8 gIntDisFlag;
 extern s32 gCurrentRNGSeed; // Official Name: rngSeed
 extern s32 gPrevRNGSeed;
 extern s16 gSineTable[];
 extern s16 gArcTanTable[];
 
 /**
- * Most files below are handwritten assembly. Because of this, matching C code is impossible.
+ * All of the functions below are handwritten assembly. Because of this, matching C code is impossible.
  * Nonmatching is not, so functionally equivalent C code can be here to replace these handwritten functions in
  * nonmatching builds. Variables cannot be declared here because of the way they're aligned, so they have to stay in an
  * assembly file.
@@ -29,7 +29,8 @@ extern s16 gArcTanTable[];
  * from being interrupted by others, letting you safely
  * work with delicate areas in memory. Kind of like a mutex.
  * Returns what the interrupt mask wask before.
- * Official Name: disableInterrupts */
+ * Official Name: disableInterrupts
+ */
 u32 interrupts_disable(void) {
     if (gIntDisFlag) {
         return __osDisableInt();
@@ -44,7 +45,8 @@ GLOBAL_ASM("asm/math_util/disable_interrupts.s")
  * Set the interrupt mask to whichever flags were given.
  * Required after zeroing them out, otherwise system
  * operation won't work as normal.
- * Official Name: enableInterrupts */
+ * Official Name: enableInterrupts
+ */
 void interrupts_enable(u32 flags) {
     if (gIntDisFlag) {
         __osRestoreInt(flags);
@@ -55,8 +57,11 @@ GLOBAL_ASM("asm/math_util/enable_interrupts.s")
 #endif
 
 #ifdef NON_MATCHING
-/* Official Name: setIntDisFlag */
-void set_gIntDisFlag(s8 setting) {
+/**
+ * Sets the global interrupt disable flag to allow enabling or disabling hardware interrupts for debugging.
+ * Official Name: setIntDisFlag
+ */
+void set_gIntDisFlag(u8 setting) {
     gIntDisFlag = setting;
 }
 #else
@@ -64,19 +69,22 @@ GLOBAL_ASM("asm/math_util/set_gIntDisFlag.s")
 #endif
 
 #ifdef NON_MATCHING
-/* Official Name: getIntDisFlag */
-s8 get_gIntDisFlag(void) {
+/**
+ * Gets the global interrupt disable flag, which indicates whether hardware interrupts are enabled or disabled.
+ * Official Name: getIntDisFlag
+ */
+u8 get_gIntDisFlag(void) {
     return gIntDisFlag;
 }
 #else
 GLOBAL_ASM("asm/math_util/get_gIntDisFlag.s")
 #endif
 
+#ifdef NON_MATCHING
 /**
  * Converts a Mtx (fixed-point matrix with split integer and fractional parts)
  * into a 4×4 matrix of 32-bit signed integers, where each element is in 16.16 fixed-point format.
  */
-#ifdef NON_MATCHING
 UNUSED void mtx_to_mtxs(Mtx *m, MtxS *mi) {
     s32 i, j;
     s32 ei, ef;
@@ -98,11 +106,11 @@ UNUSED void mtx_to_mtxs(Mtx *m, MtxS *mi) {
 GLOBAL_ASM("asm/math_util/mtx_to_mtxs.s")
 #endif
 
+#ifdef NON_MATCHING
 /**
  * Converts a 4×4 matrix of 32-bit floating-point values into a 4×4 matrix
  * of 32-bit signed fixed-point values in 16.16 format.
  */
-#ifdef NON_MATCHING
 void mtxf_to_mtxs(MtxF *mf, MtxS *mi) {
     s32 i, j;
 
@@ -119,8 +127,8 @@ GLOBAL_ASM("asm/math_util/mtxf_to_mtxs.s")
 #ifdef NON_MATCHING
 /**
  * Transforms a 3D vector using a 4×4 transformation matrix.
+ * Official name: mathMtxXFMF
  */
-/* Official name: mathMtxXFMF */
 void mtxf_transform_point(MtxF *mf, float x, float y, float z, float *ox, float *oy, float *oz) {
     *ox = (*mf)[0][0] * x + (*mf)[1][0] * y + (*mf)[2][0] * z + (*mf)[3][0];
     *oy = (*mf)[0][1] * x + (*mf)[1][1] * y + (*mf)[2][1] * z + (*mf)[3][1];
@@ -136,8 +144,8 @@ GLOBAL_ASM("asm/math_util/mtxf_transform_point.s")
  * This function multiplies the input vector by the upper-left 3×3 portion of the matrix mf,
  * ignoring the translation component. It is used for transforming directions, such as normals,
  * rather than points.
+ * Official name: mathMtxFastXFMF
  */
-/* Official name: mathMtxFastXFMF */
 void mtxf_transform_dir(MtxF *mf, Vec3f *in, Vec3f *out) {
     out->f[0] = (in->f[0] * mf[0][0]) + (in->f[1] * mf[1][0]) + (in->f[2] * mf[2][0]);
     out->f[1] = (in->f[0] * mf[0][1]) + (in->f[1] * mf[1][1]) + (in->f[2] * mf[2][1]);
@@ -150,8 +158,8 @@ GLOBAL_ASM("asm/math_util/mtxf_transform_dir.s")
 #ifdef NON_MATCHING
 /**
  * Multiplies two 4×4 matrices.
+ * Official name: mathMtxCatF
  */
-/* Official name: mathMtxCatF */
 void mtxf_mul(MtxF *mat1, MtxF *mat2, MtxF *output) {
     s32 i, j, k;
 
@@ -176,8 +184,8 @@ GLOBAL_ASM("asm/math_util/mtxf_mul.s")
 #ifdef NON_MATCHING
 /**
  * Converts a floating-point 4×4 matrix to a Mtx fixed-point matrix.
+ * Official name: mathMtxF2L
  */
-/* Official name: mathMtxF2L */
 void mtxf_to_mtx(MtxF *mf, Mtx *m) {
     s32 i, j;
     s32 e1, e2;
@@ -186,13 +194,14 @@ void mtxf_to_mtx(MtxF *mf, Mtx *m) {
     ai = &m->m[0][0];
     af = &m->m[2][0];
 
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++) {
         for (j = 0; j < 4; j += 2) {
             e1 = FTOFIX32((*mf)[i][j]);
             e2 = FTOFIX32((*mf)[i][j + 1]);
             *ai++ = (e1 & 0xFFFF0000) | ((e2 >> 16) & 0xFFFF);
             *af++ = ((e1 << 16) & 0xFFFF0000) | (e2 & 0xFFFF);
         }
+    }
 }
 }
 #else
@@ -227,8 +236,8 @@ s32 get_rng_seed(void) {
 #ifdef NON_MATCHING
 /**
  * Generates a random integer within the inclusive range [min, max].
+ * Official Name: mathRnd
  */
-/* Official Name: mathRnd */
 s32 rand_range(s32 min, s32 max) {
     s64 temp = gCurrentRNGSeed;
 
@@ -249,9 +258,8 @@ GLOBAL_ASM("asm/math_util/rng.s")
  *
  * The normal vector must be normalized and represented in 3.13 fixed-point format (signed 16-bit,
  * with 13 fractional bits).
- *
+ * Official name: fastShortReflection
  */
-/* Official name: fastShortReflection */
 void vec3s_reflect(Vec3s *vec, Vec3s *n) {
     s32 proj_x2 = (vec->x * n->x + vec->y * n->y + vec->z * n->z) >> 12;
 
@@ -391,8 +399,8 @@ GLOBAL_ASM("asm/math_util/mtxf_scale_y.s")
  * Modifies the matrix by translating its position along the local Y axis.
  * If this is a model matrix, the operation is equivalent to moving the model
  * along its local Y axis in model space.
+ * Official name: mathTransY
  */
-/* Official name: mathTransY */
 void mtxf_translate_y(MtxF *input, f32 offset) {
     (*input)[3][0] += (*input)[1][0] * offset;
     (*input)[3][1] += (*input)[1][1] * offset;
@@ -416,8 +424,9 @@ GLOBAL_ASM("asm/math_util/mtxf_translate_y.s")
  *   2. Rotate Y (negative yaw)
  *   3. Rotate X (negative pitch)
  *   4. Rotate Z (negative roll)
+ *
+ * Official Name: mathRpyXyzMtx
  */
-/* Official Name: mathRpyXyzMtx */
 void mtxf_from_inverse_transform(MtxF *mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
@@ -540,8 +549,8 @@ GLOBAL_ASM("asm/math_util/vec3s_rotate_rpy.s")
 /**
  * Rotates the given vector according to the specified rotation angles.
  * The result is written back into the same vector.
+ * Official Name: mathOneFloatRPY
  */
-/* Official Name: mathOneFloatRPY */
 void vec3f_rotate(Vec3s *rotation, Vec3f *vec) {
     f32 sine;
     f32 cosine;
@@ -584,8 +593,8 @@ GLOBAL_ASM("asm/math_util/vec3f_rotate.s")
  * Unlike the standard roll-pitch-yaw (Z-X-Y) order, this applies the angles in yaw-pitch-roll (Y-X-Z) order.
  * To fully reverse the effect of vec3f_rotate, the input angles must also be negated.
  * The result is written back into the same vector.
+ * Official Name: mathOneFloatYPR
  */
-/* Official Name: mathOneFloatYPR */
 void vec3f_rotate_ypr(Vec3s *rotation, Vec3f *vec) {
     f32 sine;
     f32 cosine;
@@ -629,8 +638,8 @@ GLOBAL_ASM("asm/math_util/vec3f_rotate_ypr.s")
  * The roll angle is also ignored, as it has no effect on directional vectors.
  * This is typically used to compute a direction vector from pitch and yaw angles.
  * The result is written back into the same vector.
+ * Official Name: mathOneFloatPY
  */
-/* Official Name: mathOneFloatPY */
 void vec3f_rotate_py(Vec3s *rotation, Vec3f *vec) {
     f32 sinX;
     f32 cosX;
@@ -657,8 +666,8 @@ GLOBAL_ASM("asm/math_util/vec3f_rotate_py.s")
 /**
  * Determines whether a point lies inside a triangle, projected onto the XZ plane.
  * Points lying exactly on the triangle's edges are not considered inside.
+ * Official Name: mathXZInTri
  */
-/* Official Name: mathXZInTri */
 s32 tri2d_xz_contains_point(s32 x, s32 z, Vec3s *pointA, Vec3s *pointB, Vec3s *pointC) {
     s32 aX, aZ, bX, bZ, cX, cZ;
     s32 var_a1;
@@ -684,8 +693,8 @@ GLOBAL_ASM("asm/math_util/tri2d_xz_contains_point.s")
 #ifdef NON_MATCHING
 /**
  * Creates a translation matrix that moves points by the specified (x, y, z) offset.
+ * Official Name: mathTranslateMtx
  */
-/* Official Name: mathTranslateMtx */
 void mtxf_from_translation(MtxF *mtx, f32 x, f32 y, f32 z) {
     s32 i, j;
 
@@ -710,8 +719,8 @@ GLOBAL_ASM("asm/math_util/mtxf_from_translation.s")
 #ifdef NON_MATCHING
 /**
  * Creates a scaling matrix with the specified scale factors along the X, Y, and Z axes.
+ * Official Name: mathScaleMtx
  */
-/* Official Name: mathScaleMtx */
 void mtxf_from_scale(MtxF *mtx, f32 scaleX, f32 scaleY, f32 scaleZ) {
     s32 i, j;
 

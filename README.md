@@ -7,7 +7,7 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of May 30, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 88.84%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 89.02%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 58.62%
 <!-- README_SCORE_SUMMARY_END -->
@@ -121,16 +121,16 @@ As of May 30, 2025, this is our current score:
 ```
  ===================================================================
                ADVENTURE ONE (ASM -> C Decompilation)
- -------------- 88.84% Complete (89.81% NON_MATCHING) --------------
-                    # Decompiled functions: 1905
-                     # GLOBAL_ASM remaining: 46
-                     # NON_MATCHING functions: 5
+ -------------- 89.02% Complete (90.35% NON_MATCHING) --------------
+                    # Decompiled functions: 1906
+                     # GLOBAL_ASM remaining: 45
+                     # NON_MATCHING functions: 6
                  # NON_EQUIVALENT WIP functions: 16
  --------------------------- Game Status ---------------------------
               Balloons: 41/47, Keys: 4/4, Trophies: 4/5
                T.T. Amulets: 4/4, Wizpig Amulets: 4/4
  -------------------------------------------------------------------
-             We are racing in Spaceport Alpha. (Lap 2/3)
+             We are racing in Spaceport Alpha. (Lap 3/3)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
  ------------------------- 58.62% Complete -------------------------

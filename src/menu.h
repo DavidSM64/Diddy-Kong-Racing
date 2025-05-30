@@ -679,7 +679,7 @@ s32 menu_title_screen_loop(s32 updateRate);
 s32 menu_magic_codes_loop(s32 updateRate);
 s32 menu_credits_loop(s32 updateRate);
 void func_8007FFEC(s32 arg0);
-void set_gIntDisFlag(s8 setting);
+void set_gIntDisFlag(u8 setting);
 void init_save_data(void);
 void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,
                    s32 colour, TextureHeader *tex);
