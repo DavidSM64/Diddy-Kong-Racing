@@ -213,21 +213,12 @@ void set_rng_seed(s32 num) {
     gCurrentRNGSeed = num;
 }
 
-#ifdef NON_MATCHING
 void save_rng_seed(void) {
     gPrevRNGSeed = gCurrentRNGSeed;
 }
-#else
-GLOBAL_ASM("asm/math_util/save_rng_seed.s")
-#endif
-
-#ifdef NON_MATCHING
 void load_rng_seed(void) {
     gCurrentRNGSeed = gPrevRNGSeed;
 }
-#else
-GLOBAL_ASM("asm/math_util/load_rng_seed.s")
-#endif
 
 s32 get_rng_seed(void) {
     return gCurrentRNGSeed;

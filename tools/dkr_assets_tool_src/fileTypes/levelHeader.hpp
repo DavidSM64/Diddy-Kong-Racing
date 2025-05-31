@@ -61,24 +61,25 @@ struct LevelHeader {
     uint8_t unk53;
     be_uint16_t instruments;
     
-    uint8_t unk56;
+    uint8_t waveSubdivisions;
     uint8_t unk57;
-    uint8_t unk58;
-    uint8_t unk59;
-    be_int16_t unk5A;
-    uint8_t unk5C;
-    uint8_t unk5D;
-    be_int16_t unk5E;
-    be_int16_t unk60;
+    uint8_t waveSineStep0;
+    uint8_t waveSineBase0;
+    be_int16_t waveSineHeight0;
+    uint8_t waveSineStep1;
+    uint8_t waveSineBase1;
+    be_int16_t waveSineHeight1;
+    be_int16_t waveSeedSize;
     be_int16_t wavePower;
     be_int16_t unk64;
     be_int16_t unk66;
-    be_int16_t unk68;
-    uint8_t unk6A;
-    uint8_t unk6B;
-    int8_t unk6C;
-    int8_t unk6D;
-    be_int16_t unk6E;
+    be_int16_t waveTexID;
+    uint8_t waveUVScaleX;
+    uint8_t waveUVScaleY;
+    int8_t waveUVScrollX;
+    int8_t waveUVScrollY;
+    be_int16_t waveViewDist;
+    
     uint8_t unk70;
     uint8_t unk71;
     uint8_t unk72;
@@ -102,10 +103,8 @@ struct LevelHeader {
     be_int16_t unkB0;
     uint8_t unkB2;
     uint8_t unkB3;
-    uint8_t unkB4;
-    uint8_t unkB5;
-    uint8_t unkB6;
-    uint8_t unkB7;
+    uint8_t voidColour[3]; // R, G, B
+    uint8_t useVoid;
     int8_t bossRaceID;
     uint8_t unkB9;
     be_int16_t objectMap2;

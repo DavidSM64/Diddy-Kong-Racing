@@ -113,7 +113,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     }
     gfxData = *obj->unk68;
     model = gfxData->objModel;
-    diffX = (model->animations[obj->segment.object.animationID].unk4 * 16) - 17;
+    diffX = (model->animations[obj->segment.object.animationID].animLength * 16) - 17;
     obj->segment.object.animationID = ANIM_BUBBLER_MOVE;
     racer->animationSpeed += 2.0 * updateRateF;
     while (racer->animationSpeed < 0.0f) {

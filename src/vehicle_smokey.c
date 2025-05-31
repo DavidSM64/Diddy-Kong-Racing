@@ -128,7 +128,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
-    diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
+    diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
     animVelocity = (racer->velocity * updateRateF) * 0.45;
     if (animVelocity <= 0.0) {
         if (animVelocity > -2.0) {
@@ -201,7 +201,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         } else if (-0.1 < racer->velocity && racer->velocity < 0.1) {
             if (obj->segment.object.animationID == ANIM_SMOKEY_WALK) {
                 obj->segment.object.animationID = ANIM_SMOKEY_RUN;
-                racer->animationSpeed = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
+                racer->animationSpeed = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
             } else {
                 obj->segment.object.animationID = ANIM_SMOKEY_IDLE;
             }
@@ -212,7 +212,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             }
             if (obj->segment.object.animationID == ANIM_SMOKEY_FLY && racer->groundedWheels && racer->velocity > -6.0) {
                 obj->segment.object.animationID = ANIM_SMOKEY_LAND;
-                racer->animationSpeed = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
+                racer->animationSpeed = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
             }
         }
     }

@@ -227,27 +227,28 @@ void ExtractLevelHeader::extract(ExtractInfo &info) {
     
     jsonFile.set_int("/unknown/unk53", header->unk53);
     
-    jsonFile.set_int("/waves/unk56", header->unk56);
+    jsonFile.set_int("/waves/subdivisions", header->waveSubdivisions);
     jsonFile.set_int("/waves/unk57", header->unk57);
-    jsonFile.set_int("/waves/unk58", header->unk58);
-    jsonFile.set_int("/waves/unk59", header->unk59);
-    jsonFile.set_int("/waves/unk5A", header->unk5A);
-    jsonFile.set_int("/waves/unk5C", header->unk5C);
-    jsonFile.set_int("/waves/unk5D", header->unk5D);
-    jsonFile.set_int("/waves/unk5E", header->unk5E);
-    jsonFile.set_int("/waves/unk60", header->unk60);
+    jsonFile.set_int("/waves/sine-step-0", header->waveSineStep0);
+    jsonFile.set_int("/waves/sine-base-0", header->waveSineBase0);
+    jsonFile.set_int("/waves/sine-height-0", header->waveSineHeight0);
+    jsonFile.set_int("/waves/sine-step-1", header->waveSineStep1);
+    jsonFile.set_int("/waves/sine-base-1", header->waveSineBase1);
+    jsonFile.set_int("/waves/sine-height-1", header->waveSineHeight1);
+    jsonFile.set_int("/waves/seed-size", header->waveSeedSize);
     jsonFile.set_int("/waves/wave-power", header->wavePower);
     jsonFile.set_int("/waves/unk64", header->unk64);
     jsonFile.set_int("/waves/unk66", header->unk66);
-    jsonFile.set_int("/waves/unk68", header->unk68);
-    jsonFile.set_int("/waves/unk6A", header->unk6A);
-    jsonFile.set_int("/waves/unk6B", header->unk6B);
-    jsonFile.set_int("/waves/unk6C", header->unk6C);
-    jsonFile.set_int("/waves/unk6D", header->unk6D);
-    jsonFile.set_int("/waves/unk6E", header->unk6E);
+    std::string waveTexID = stats.get_build_id_from_file_index("ASSET_TEXTURES_2D", header->waveTexID);
+    jsonFile.set_string("/waves/texture-ID", waveTexID);
+    jsonFile.set_int("/waves/UV-Scale-X", header->waveUVScaleX);
+    jsonFile.set_int("/waves/UV-Scale-Y", header->waveUVScaleY);
+    jsonFile.set_int("/waves/UV-Scroll-X", header->waveUVScrollX);
+    jsonFile.set_int("/waves/UV-Scroll-Y", header->waveUVScrollY);
+    jsonFile.set_int("/waves/view-distance", header->waveViewDist);
+
     jsonFile.set_int("/waves/unk70", header->unk70);
     jsonFile.set_int("/waves/unk71", header->unk71);
-    
     jsonFile.set_int("/unknown/unk72", header->unk72);
     jsonFile.set_int("/unknown/unk73", header->unk73);
     
@@ -261,10 +262,12 @@ void ExtractLevelHeader::extract(ExtractInfo &info) {
     jsonFile.set_int("/unknown/unkB0", header->unkB0);
     jsonFile.set_int("/unknown/unkB2", header->unkB2);
     jsonFile.set_int("/unknown/unkB3", header->unkB3);
-    jsonFile.set_int("/unknown/unkB4", header->unkB4);
-    jsonFile.set_int("/unknown/unkB5", header->unkB5);
-    jsonFile.set_int("/unknown/unkB6", header->unkB6);
-    jsonFile.set_int("/unknown/unkB7", header->unkB7);
+    // Void
+    jsonFile.set_int("/void/colour/red", header->voidColour[0]);
+    jsonFile.set_int("/void/colour/green", header->voidColour[1]);
+    jsonFile.set_int("/void/colour/blue", header->voidColour[2]);
+    jsonFile.set_int("/void/enabled", header->useVoid);
+
     std::string bossRaceID = cContext.get_symbol_of_enum_int("BossSetupTypes", header->bossRaceID);
     jsonFile.set_string("/boss-race-id", bossRaceID);
     jsonFile.set_int("/unknown/unkB9", header->unkB9);

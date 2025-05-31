@@ -239,25 +239,27 @@ void BuildLevelHeader::build(BuildInfo &info) {
     }
     
     header->unk53 = jsonFile.get_int("/unknown/unk53");
-    
-    header->unk56 = jsonFile.get_int("/waves/unk56");
+    // Waves
+    header->waveSubdivisions = jsonFile.get_int("/waves/subdivisions");
     header->unk57 = jsonFile.get_int("/waves/unk57");
-    header->unk58 = jsonFile.get_int("/waves/unk58");
-    header->unk59 = jsonFile.get_int("/waves/unk59");
-    header->unk5A = jsonFile.get_int("/waves/unk5A");
-    header->unk5C = jsonFile.get_int("/waves/unk5C");
-    header->unk5D = jsonFile.get_int("/waves/unk5D");
-    header->unk5E = jsonFile.get_int("/waves/unk5E");
-    header->unk60 = jsonFile.get_int("/waves/unk60");
+    header->waveSineStep0 = jsonFile.get_int("/waves/sine-step-0");
+    header->waveSineBase0 = jsonFile.get_int("/waves/sine-base-0");
+    header->waveSineHeight0 = jsonFile.get_int("/waves/sine-height-0");
+    header->waveSineStep1 = jsonFile.get_int("/waves/sine-step-1");
+    header->waveSineBase1 = jsonFile.get_int("/waves/sine-base-1");
+    header->waveSineHeight1 = jsonFile.get_int("/waves/sine-height-1");
+    header->waveSeedSize = jsonFile.get_int("/waves/seed-size");
     header->wavePower = jsonFile.get_int("/waves/wave-power");
     header->unk64 = jsonFile.get_int("/waves/unk64");
     header->unk66 = jsonFile.get_int("/waves/unk66");
-    header->unk68 = jsonFile.get_int("/waves/unk68");
-    header->unk6A = jsonFile.get_int("/waves/unk6A");
-    header->unk6B = jsonFile.get_int("/waves/unk6B");
-    header->unk6C = jsonFile.get_int("/waves/unk6C");
-    header->unk6D = jsonFile.get_int("/waves/unk6D");
-    header->unk6E = jsonFile.get_int("/waves/unk6E");
+    std::string waveTexID = jsonFile.get_string("/waves/texture-ID");
+    header->waveTexID = AssetsHelper::get_asset_index("ASSET_TEXTURES_2D", waveTexID);
+    header->waveUVScaleX = jsonFile.get_int("/waves/UV-Scale-X");
+    header->waveUVScaleY = jsonFile.get_int("/waves/UV-Scale-Y");
+    header->waveUVScrollX = jsonFile.get_int("/waves/UV-Scroll-X");
+    header->waveUVScrollY = jsonFile.get_int("/waves/UV-Scroll-Y");
+    header->waveViewDist = jsonFile.get_int("/waves/view-distance");
+
     header->unk70 = jsonFile.get_int("/waves/unk70");
     header->unk71 = jsonFile.get_int("/waves/unk71");
     header->unk72 = jsonFile.get_int("/unknown/unk72");
@@ -273,10 +275,12 @@ void BuildLevelHeader::build(BuildInfo &info) {
     header->unkB0 = jsonFile.get_int("/unknown/unkB0");
     header->unkB2 = jsonFile.get_int("/unknown/unkB2");
     header->unkB3 = jsonFile.get_int("/unknown/unkB3");
-    header->unkB4 = jsonFile.get_int("/unknown/unkB4");
-    header->unkB5 = jsonFile.get_int("/unknown/unkB5");
-    header->unkB6 = jsonFile.get_int("/unknown/unkB6");
-    header->unkB7 = jsonFile.get_int("/unknown/unkB7");
+    // Void
+    header->voidColour[0] = jsonFile.get_int("/void/colour/red");
+    header->voidColour[1] = jsonFile.get_int("/void/colour/green");
+    header->voidColour[2] = jsonFile.get_int("/void/colour/blue");
+    header->useVoid = jsonFile.get_int("/void/enabled");
+
     std::string bossRaceID = jsonFile.get_string("/boss-race-id");
     header->bossRaceID = cContext.get_int_value_of_symbol(bossRaceID);
     header->unkB9 = jsonFile.get_int("/unknown/unkB9");

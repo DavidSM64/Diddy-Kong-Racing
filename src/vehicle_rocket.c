@@ -114,7 +114,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->animationSpeed += 2.0 * updateRateF;
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
-    diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
+    diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
     while (diffX <= racer->animationSpeed) {
         racer->animationSpeed -= diffX;
         gfxData->animationID = -1;

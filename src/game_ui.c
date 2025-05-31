@@ -797,7 +797,7 @@ void hud_render_player(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj,
                 }
                 gDPSetPrimColor(gHudDL++, 0, 0, 255, 255, 255, 255);
                 hud_magnet_reticle(obj);
-                set_ortho_matrix_view(&gHudDL, &gHudMtx);
+                mtx_ortho(&gHudDL, &gHudMtx);
                 gDPSetEnvColor(gHudDL++, 255, 255, 255, 0);
                 countdown = get_race_countdown() >> 1;
                 if (is_in_time_trial()) {
@@ -1505,13 +1505,13 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
 
     ttSWBodyObject->segment.object.animationID = gStopwatchAnimID;
     obj68 = ttSWBodyObject->unk68[0];
-    obj68->objModel->unk52 = updateRate;
+    obj68->objModel->texOffsetUpdateRate = updateRate;
     if (gStopwatchAnimID != 0xFF) {
         if (gStopwatchAnimID == 4 && (get_race_countdown() || !music_is_playing())) {
             ttSWBodyObject->segment.animFrame = 16;
         } else if (gStopwatchAnimID == 4) {
             animcationFraction = music_animation_fraction();
-            temp_t6 = (obj68->objModel->animations[gStopwatchAnimID].unk4 - 1) << 4;
+            temp_t6 = (obj68->objModel->animations[gStopwatchAnimID].animLength - 1) << 4;
             if (animcationFraction == -1.0) {
                 ttSWBodyObject->segment.animFrame = 0.0;
             } else if (animcationFraction > 0.5) {
@@ -1532,7 +1532,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
                 }
             } else {
                 ttSWBodyObject->segment.animFrame += (updateRate * D_80126D69);
-                temp_lo = (obj68->objModel->animations[gStopwatchAnimID].unk4 - 1) << 4;
+                temp_lo = (obj68->objModel->animations[gStopwatchAnimID].animLength - 1) << 4;
                 if (ttSWBodyObject->segment.animFrame >= temp_lo) {
                     if (D_80126D68 != 0) {
                         D_80126D69 = -D_80126D69;
@@ -3133,7 +3133,7 @@ void hud_magnet_reticle(Object *racerObj) {
         }
         gAssetHudElementStaleCounter[hud->spriteID] = 0;
         viewport_main(&gHudDL, &gHudMtx);
-        matrix_world_origin(&gHudDL, &gHudMtx);
+        mtx_world_origin(&gHudDL, &gHudMtx);
         render_sprite_billboard(&gHudDL, &gHudMtx, &gHudVtx, (Object *) hud, entry, RENDER_Z_UPDATE);
     }
 }
@@ -3437,7 +3437,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
         if (gNumActivePlayers == 2 && gHudToggleSettings[gHUDNumPlayers] == 0) {
             sprite_anim_off(TRUE);
             sprite_opaque(FALSE);
-            set_ortho_matrix_view(&gHudDL, &gHudMtx);
+            mtx_ortho(&gHudDL, &gHudMtx);
             func_800A1E48(0, updateRate);
             sprite_anim_off(FALSE);
             rendermode_reset(&gHudDL);
@@ -3456,7 +3456,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
                     spE4 = gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x;
                     spE0 = gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
                     sprite_opaque(FALSE);
-                    set_ortho_matrix_view(&gHudDL, &gHudMtx);
+                    mtx_ortho(&gHudDL, &gHudMtx);
                     sprite_anim_off(TRUE);
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x = 225.0f;
                     if (osTvType == OS_TV_TYPE_PAL) {
@@ -3600,7 +3600,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
     }
 
     rendermode_reset(&gHudDL);
-    set_ortho_matrix_view(&gHudDL, &gHudMtx);
+    mtx_ortho(&gHudDL, &gHudMtx);
     lvlMdl = get_current_level_model();
     if (lvlMdl == NULL) {
         return;
@@ -3971,11 +3971,11 @@ void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hu
         tempObject->segment.object.opacity = 0xFF;
         render_object(&gHudDL, &gHudMtx, &gHudVtx, tempObject);
     } else {
-        cam_push_model_mtx(&gHudDL, &gHudMtx, (ObjectTransform *) hud, 1.0f, 0.0f);
+        mtx_cam_push(&gHudDL, &gHudMtx, (ObjectTransform *) hud, 1.0f, 0.0f);
         if (0) {}
         textureHeader3 = gAssetHudElements->entry[hud->spriteID];
         hud_draw_model((ObjectModel *) *textureHeader3);
-        apply_matrix_from_stack(&gHudDL);
+        mtx_pop(&gHudDL);
     }
     spriteID = hud->spriteID;
     if (spriteID != 0x28) {
