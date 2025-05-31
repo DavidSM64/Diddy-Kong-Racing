@@ -767,7 +767,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
                 egg->status = EGG_IN_BASE;
                 racerObj = get_racer_object(egg->racerID);
                 if (racerObj != NULL) {
-                    racer = (Object_Racer *) racerObj->unk64;
+                    racer = &racerObj->unk64->racer;
                     racer->eggHudCounter += 1;
                 }
                 egg->hatchTimer = 600;
@@ -779,7 +779,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
             egg->hatchTimer -= updateRate;
             racerObj = get_racer_object(egg->racerID);
             if (racerObj != NULL) {
-                racer = (Object_Racer *) racerObj->unk64;
+                racer = &racerObj->unk64->racer;
             }
             if (egg->hatchTimer <= 0) {
                 if (racerObj != NULL) {
@@ -798,7 +798,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
         case EGG_HATCHED:
             racerObj = get_racer_object(egg->racerID);
             if (racerObj != NULL) {
-                racer = (Object_Racer *) racerObj->unk64;
+                racer = &racerObj->unk64->racer;
                 if (racer->lap >= 3) {
                     racer->raceFinished = TRUE;
                 }

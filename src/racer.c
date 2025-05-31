@@ -1043,8 +1043,312 @@ void func_80045128(Object **racerObjs) {
     }
 }
 
-// https://decomp.me/scratch/HSAE4
+#ifdef NON_EQUIVALENT
+void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
+    Object *curObj;
+    s32 var_s2_2;
+    Object_CollectEgg *egg;
+    s32 someBehaviour0;
+    Object **objList;
+    f32 distance;
+    f32 bestDist;
+    s32 targetBehaviourID;
+    s32 racerCount;
+    s32 someBehaviour1;
+    s32 objStart;
+    s32 objCount;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
+    Object *targetObj;
+    s32 angleDiffX;
+    s32 angleDiffY;
+    s8 *header;
+    s8 tickCount;
+    s8 flags;
+    s8 racerID;
+    s8 bestTick;
+    s32 i;
+
+    gCurrentButtonsPressed = 0;
+    gCurrentButtonsReleased = 0;
+    gCurrentRacerInput = A_BUTTON;
+    gCurrentStickX = 0;
+    gCurrentStickY = 0;
+    get_racer_objects(&racerCount);
+    if (racerCount == 4) {
+        header = get_current_level_header()->unk2A;
+        if (racer->groundedWheels) {
+            racer->unk1C6 += updateRate;
+            if (racer->unk1C6 > 60) {
+                racer->unk1C6 = 0;
+                racer->unk1CD = 0;
+                racer->unk1CE = 3;
+            }
+        } else {
+            racer->unk1C6 = 0;
+        }
+        while (racer->unk1CD == 0) {
+            racerID = PLAYER_COMPUTER;
+            targetBehaviourID = BHV_NONE;
+            flags = 0;
+            bestTick = 0;
+            for (i = 3; i >= 0; i--) {
+                flags = gEggChallengeFlags[i];
+                tickCount = (flags & 0xF) * 3;
+                if (flags & 0x40) {
+                    tickCount += 2;
+                } else if (flags & 0x80) {
+                    tickCount += 1;
+                }
+                if (bestTick < tickCount) {
+                    bestTick = tickCount;
+                    flags = i;
+                }
+            }
+            if (racer->unk1CE & 0x40) {
+                racerID = racer->unk1CE & 0xF;
+                racer->unk1CD = 8;
+                racer->unk1CE = 0;
+            }
+            if (racer->unk1CE & 0x80) {
+                if (roll_percent_chance(header[6])) {
+                    var_s2_2 = 2;
+                } else {
+                    var_s2_2 = 1;
+                    if (roll_percent_chance(header[2]) && cam_get_viewport_layout() == 0) {
+                        flags = 0;
+                    }
+                }
+                if (var_s2_2 == 2) {
+                    for (i = 0; i < 4; i++) {
+                        if (racer->racerIndex != i && gEggChallengeFlags[i] & 0x40) {
+                            racerID = i;
+                        }
+                    }
+                    if (racerID == PLAYER_COMPUTER) {
+                        var_s2_2 = 1;
+                    } else {
+                        racer->unk1CD = 7;
+                    }
+                }
+                if (var_s2_2 == 1) {
+                    if (racer->balloon_quantity != 0) {
+                        racer->unk1CD = 6;
+                        if (flags != racer->racerIndex) {
+                            racerID = flags;
+                        } else {
+                            racerID = (racer->racerIndex + 1) & 3;
+                        }
+                    } else {
+                        racer->unk1CD = 5;
+                    }
+                }
+                racer->unk1CE = 0;
+            }
+            if (racer->held_obj != NULL) {
+                racer->unk1CD = 2;
+            }
+            if (racer->unk1CE != 0) {
+                racer->unk1CD = racer->unk1CE;
+            }
+            racer->unk1CE = 0;
+            if (racer->unk1CD == 0) {
+                switch (obj->interactObj->pushForce) {
+                    case 1:
+                        racer->unk1CD = 1;
+                        break;
+                    case 2:
+                        racer->unk1CD = 1;
+                        break;
+                    case 3:
+                        racer->unk1CD = 1;
+                        break;
+                }
+            }
+            someBehaviour0 = 0;
+            if (racer->raceFinished) {
+                racer->unk1CD = 3;
+            }
+            switch (racer->unk1CD) {
+                case 1:
+                    targetBehaviourID = BHV_COLLECT_EGG;
+                    break;
+                case 2:
+                    targetBehaviourID = BHV_UNK_5C;
+                    break;
+                case 3: /* fall through */
+                case 7:
+                    targetBehaviourID = BHV_UNK_5C;
+                    someBehaviour0 = 2;
+                    break;
+                case 4:
+                    racerID = racer->racerIndex;
+                    targetBehaviourID = BHV_UNK_5C;
+                    someBehaviour0 = 2;
+                    break;
+                case 5:
+                    targetBehaviourID = BHV_WEAPON_BALLOON;
+                    break;
+                case 6:
+                    targetBehaviourID = BHV_RACER;
+                    break;
+                case 8:
+                    targetBehaviourID = BHV_COLLECT_EGG;
+                    someBehaviour0 = 1;
+                    break;
+            }
+            if (targetBehaviourID != BHV_NONE && targetBehaviourID != BHV_RACER) {
+                bestDist = 1000000.0f;
+                objList = objGetObjList(&objStart, &objCount);
+                targetObj = NULL;
+                for (objStart = 0; objStart < objCount; objStart++) {
+                    someBehaviour1 = FALSE;
+                    curObj = objList[objStart];
+                    if (!(curObj->segment.trans.flags & OBJ_FLAGS_PARTICLE) &&
+                        targetBehaviourID == curObj->behaviorId) {
+                        switch (targetBehaviourID) {
+                            case BHV_UNK_5C:
+                                if ((someBehaviour0 == curObj->segment.level_entry->bhv_unk_5C.unk8 &&
+                                     racerID == PLAYER_COMPUTER) ||
+                                    (racerID == curObj->segment.level_entry->bhv_unk_5C.unk9)) {
+                                    someBehaviour1 = TRUE;
+                                }
+                                break;
+                            case BHV_COLLECT_EGG:
+                                egg = &curObj->unk64->egg;
+                                if (someBehaviour0 == 0) {
+                                    if (egg->status == EGG_SPAWNED) {
+                                        someBehaviour1 = TRUE;
+                                    }
+                                } else if (egg->status == EGG_IN_BASE && racerID == egg->racerID) {
+                                    someBehaviour1 = TRUE;
+                                }
+                                break;
+                            default:
+                                someBehaviour1 = TRUE;
+                                break;
+                        }
+                    }
+                    if (someBehaviour1) {
+                        diffX = curObj->segment.trans.x_position - obj->segment.trans.x_position;
+                        diffY = curObj->segment.trans.y_position - obj->segment.trans.y_position;
+                        diffZ = curObj->segment.trans.z_position - obj->segment.trans.z_position;
+                        distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+                        if (distance < bestDist) {
+                            bestDist = distance;
+                            targetObj = curObj;
+                        }
+                    }
+                }
+            }
+            if (targetBehaviourID == BHV_RACER && racerID != PLAYER_COMPUTER) {
+                targetObj = get_racer_object(racerID);
+            }
+            racer->unk154 = targetObj;
+            if (targetObj == NULL) {
+                racer->unk1CE = 0x80;
+                racer->unk1CD = 0;
+            }
+        }
+        curObj = racer->unk154;
+        distance = 0.0f;
+        if (curObj != NULL) {
+            if (curObj->behaviorId == BHV_COLLECT_EGG) {
+                egg = &curObj->unk64->egg;
+                var_s2_2 = racer->unk1CD;
+                if (racer->unk1CD == 1 && egg->status != EGG_SPAWNED) {
+                    racer->unk154 = NULL;
+                }
+                if (var_s2_2 == 8 && egg->status != EGG_IN_BASE) {
+                    racer->unk154 = NULL;
+                }
+            }
+            diffX = curObj->segment.trans.x_position - obj->segment.trans.x_position;
+            diffY = curObj->segment.trans.z_position - obj->segment.trans.z_position;
+            diffZ = curObj->segment.trans.y_position - obj->segment.trans.y_position;
+            distance = sqrtf((diffX * diffX) + (diffZ * diffZ) + (diffY * diffY));
+            if (distance > 0.0) {
+                angleDiffX = (arctan2_f(diffX, diffY) - 0x8000) & 0xFFFF;
+                racerCount = angleDiffX; // Fakematch?
+                angleDiffX -= racer->steerVisualRotation & 0xFFFF;
+                if (angleDiffX > 0x8000) {
+                    angleDiffX -= 0xFFFF;
+                }
+                if (angleDiffX < -0x8000) {
+                    angleDiffX += 0xFFFF;
+                }
+                gCurrentStickX = -angleDiffX >> 5;
+                angleDiffY = (u16) arctan2_f(diffZ, sqrtf((diffX * diffX) + (diffY * diffY)));
+                if (angleDiffY > 0x8000) {
+                    angleDiffY -= 0xFFFF;
+                }
+                if (angleDiffY < -0x8000) {
+                    angleDiffY += 0xFFFF;
+                }
+                gCurrentStickY = -angleDiffY >> 7;
+            }
+            if (racer->aiSkill < 0) {
+                gCurrentStickX = 0;
+                gCurrentStickY = -35;
+                racer->aiSkill++;
+            } else if (gCurrentStickX > 60 || gCurrentStickX < -60) {
+                racer->aiSkill++;
+                if (racer->aiSkill > 110) {
+                    racer->aiSkill = -40;
+                }
+            } else {
+                racer->aiSkill = 0;
+            }
+        } else {
+            racer->unk1CD = 0;
+        }
+        switch (racer->unk1CD) {
+            case 1: /* fall through */
+            case 8:
+                if (racer->held_obj != NULL) {
+                    racer->unk1CD = 0;
+                    racer->unk1CE = 4;
+                }
+                break;
+            case 2:
+                if (distance < 100.0) {
+                    racer->unk1CD = 0;
+                    gCurrentButtonsPressed |= Z_TRIG;
+                }
+                break;
+            case 3: /* fall through */
+            case 4:
+                if (distance < 200.0) {
+                    racer->unk1CD = 0;
+                }
+                break;
+            case 5:
+                if (racer->balloon_quantity != 0) {
+                    racer->unk1CD = 0;
+                }
+                break;
+            case 6:
+                if (racer->balloon_quantity == 0) {
+                    racer->unk1CD = 0;
+                }
+                if (distance < 500.0) {
+                    gCurrentButtonsReleased |= Z_TRIG;
+                    racer->unk1CD = 0;
+                }
+                break;
+            case 7:
+                if (distance < 200.0 && curObj != NULL) {
+                    racer->unk1CD = 0;
+                    racer->unk1CE = (curObj->segment.level_entry->bhv_unk_5C.unk9 & 3) | 0x40;
+                }
+                break;
+        }
+    }
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/func_800452A0.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate) {
