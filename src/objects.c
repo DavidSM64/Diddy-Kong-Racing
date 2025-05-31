@@ -29,6 +29,7 @@
 #include "vehicle_misc.h"
 #include "PRinternal/viint.h"
 #include "printf.h"
+#include "weather.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -2013,7 +2014,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
     if (curObj->segment.header->numLightSources > 0) {
-        curObj->lightData = (Object_LightData **) address;
+        curObj->lightData = (ObjectLight **) address;
         sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->numLightSources * 4)) - (uintptr_t) curObj;
     }
     newObj = mempool_alloc_pool((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
@@ -2074,7 +2075,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     if (newObj->segment.header->numLightSources > 0) {
         newObj->lightData =
-            (Object_LightData **) (((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
+            (ObjectLight **) (((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
     }
     newObj->unk68 = (Object_68 **) ((uintptr_t) newObj + (uintptr_t) 0x80);
     if (arg1 & 1) {
@@ -2145,7 +2146,7 @@ void objFreeAssets(Object *obj, s32 count, s32 objType) {
 void light_setup_light_sources(Object *obj) {
     s32 i;
     for (i = 0; i < obj->segment.header->numLightSources; i++) {
-        obj->lightData[i] = (Object_LightData *) add_object_light(obj, &obj->segment.header->unk24[i]);
+        obj->lightData[i] = add_object_light(obj, &obj->segment.header->unk24[i]);
     }
 }
 
@@ -2427,8 +2428,224 @@ void gParticlePtrList_flush(void) {
     gFreeListCount = 0;
 }
 
-// https://decomp.me/scratch/bJM0P
+#ifdef NON_EQUIVALENT
+void func_800101AC(Object *obj, s32 arg1) {
+    Object *tempObj;
+    Object_Weapon *weapon;
+    Object_Racer *racer;
+    Object_Racer *snowball;
+    Object_Fireball_Octoweapon *fireball;
+    Object_Log *log;
+    Object_Butterfly *butterfly;
+    SoundHandle soundMask;
+    s32 numberOfModelIds;
+    s32 i;
+    s32 j;
+
+    if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
+        particle_deallocate((Particle *) obj);
+        gParticleCount--;
+        return;
+    }
+    if (obj->unk60 != NULL) {
+        for (i = 0; i < obj->unk60->unk0; i++) {
+            tempObj = obj->unk60->unk4[i];
+            numberOfModelIds = tempObj->segment.header->numberOfModelIds;
+            if (tempObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+                if (!gObjPtrList) {} // fake
+                for (j = 0; j < numberOfModelIds; j++) {
+                    free_3d_model(&tempObj->unk68[j]->objModel);
+                }
+            } else {
+                for (j = 0; j < numberOfModelIds; j++) {
+                    sprite_free(&tempObj->unk68[j]->sprite);
+                }
+            }
+            try_free_object_header(tempObj->segment.object.unk2C);
+            mempool_free(tempObj);
+        }
+    }
+    if (obj->lightData != NULL) {
+        for (i = 0; i < obj->segment.header->numLightSources; i++) {
+            func_80032BAC(obj->lightData[i]);
+        }
+    }
+    switch (obj->behaviorId) {
+        case BHV_RACER:
+        case BHV_ANIMATED_OBJECT_3:
+            for (i = 0; i < gObjectCount; i++) {
+                if (gObjPtrList[i]->behaviorId == BHV_BUTTERFLY) {
+                    butterfly = &gObjPtrList[i]->unk64->butterfly;
+                    if (obj == butterfly->unk100) {
+                        butterfly->unk100 = 0;
+                        butterfly->unkFD = 1;
+                    }
+                }
+            }
+            break;
+        case BHV_WEAPON:
+        case BHV_WEAPON_2:
+            weapon = &obj->unk64->weapon;
+            if (weapon->soundMask != NULL) {
+                audspat_point_stop(weapon->soundMask);
+                weapon->soundMask = NULL;
+                if (obj->behaviorId == BHV_WEAPON_2) {
+                    decrease_rocket_sound_timer();
+                }
+            }
+            break;
+        case BHV_FIREBALL_OCTOWEAPON_2:
+            fireball = &obj->unk64->fireball_octoweapon;
+            if (fireball->soundMask != NULL) {
+                audspat_point_stop(fireball->soundMask);
+            }
+            break;
+        case BHV_SNOWBALL:
+        case BHV_SNOWBALL_2:
+        case BHV_SNOWBALL_3:
+        case BHV_SNOWBALL_4:
+            // TODO: Get a Snowball struct?
+            snowball = &obj->unk64->racer;
+            if (snowball->unk20 != NULL) {
+                audspat_point_stop(snowball->unk20);
+            }
+            break;
+        case BHV_WAVE_GENERATOR:
+            wavegen_destroy(obj);
+            break;
+        case BHV_LIGHT_RGBA:
+            func_80032BAC((ObjectLight *) obj->unk64);
+            break;
+        case BHV_ANIMATION:
+            if (obj->unk64 != NULL && arg1 == 0) {
+                free_object(&obj->unk64->obj);
+            }
+            break;
+        case BHV_OVERRIDE_POS:
+            for (i = 0; i < D_8011AE00 && obj != D_8011ADD8[i]; i++) {}
+            if (i < D_8011AE00) {
+                D_8011AE00--;
+                for (; i < D_8011AE00; i++) {
+                    D_8011ADD8[i] = D_8011ADD8[i + 1];
+                }
+            }
+            break;
+        case BHV_BUOY_PIRATE_SHIP:
+        case BHV_LOG:
+            log = &obj->unk64->log;
+            if (log != NULL) {
+                mempool_free(log);
+            }
+            break;
+        case BHV_LENS_FLARE:
+            lensflare_remove(obj);
+            break;
+        case BHV_LENS_FLARE_SWITCH:
+            lensflare_override_remove(obj);
+            break;
+    }
+    switch (obj->behaviorId) {
+        case BHV_DINO_WHALE:
+        case BHV_ANIMATED_OBJECT:
+        case BHV_CAMERA_ANIMATION:
+        case BHV_CAR_ANIMATION:
+        case BHV_CHARACTER_SELECT:
+        case BHV_VEHICLE_ANIMATION:
+        case BHV_HIT_TESTER:
+        case BHV_HIT_TESTER_2:
+        case BHV_PARK_WARDEN_2:
+        case BHV_ANIMATED_OBJECT_2:
+        case BHV_WIZPIG_SHIP:
+        case BHV_ANIMATED_OBJECT_3:
+        case BHV_ANIMATED_OBJECT_4:
+        case BHV_SNOWBALL:
+        case BHV_SNOWBALL_2:
+        case BHV_SNOWBALL_3:
+        case BHV_SNOWBALL_4:
+        case BHV_HIT_TESTER_3:
+        case BHV_HIT_TESTER_4:
+        case BHV_DOOR_OPENER:
+        case BHV_PIG_ROCKETEER:
+        case BHV_WIZPIG_GHOSTS:
+            // Not sure if this is an animation yet...
+            soundMask = obj->unk64->animation.unk18;
+            if (soundMask != NULL) {
+                sndp_stop(soundMask);
+            }
+            break;
+    }
+    if (obj->behaviorId == BHV_RACER) {
+        racer = &obj->unk64->racer;
+        if (racer->unk18 != NULL) {
+            sndp_stop((SoundHandle) (s32) racer->unk18); // type cast required to match
+        }
+        if (racer->unk10 != NULL) {
+            sndp_stop((SoundHandle) (s32) racer->unk10); // type cast required to match
+        }
+        if (racer->unk14 != NULL) {
+            sndp_stop((SoundHandle) (s32) racer->unk14); // type cast required to match
+        }
+        if (racer->unk1C != NULL) {
+            sndp_stop((SoundHandle) (s32) racer->unk1C); // type cast required to match
+        }
+        if (racer->unk20 != NULL) {
+            sndp_stop((SoundHandle) (s32) racer->unk20); // type cast required to match
+        }
+        if (racer->soundMask != NULL) {
+            audspat_point_stop(racer->soundMask);
+        }
+        if (racer->shieldSoundMask != NULL) {
+            audspat_point_stop(racer->shieldSoundMask);
+        }
+        if (racer->magnetSoundMask != NULL) {
+            sndp_stop(racer->magnetSoundMask);
+        }
+        racer_sound_free(obj);
+        for (i = 0; i < gObjectCount; i++) {
+            if ((gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_PARTICLE) &&
+                (gObjPtrList[i]->segment.level_entry == obj->segment.level_entry)) {
+                gObjPtrList[i]->segment.level_entry = NULL;
+            }
+            if (gObjPtrList[i]->behaviorId == BHV_WEAPON_2 || gObjPtrList[i]->behaviorId == BHV_FLY_COIN ||
+                gObjPtrList[i]->behaviorId == BHV_WEAPON) {
+                free_object(gObjPtrList[i]);
+            }
+        }
+    }
+    if (obj->shadow != NULL && obj->shadow->texture != NULL) {
+        tex_free(obj->shadow->texture);
+    }
+    if (obj->waterEffect != NULL && obj->waterEffect->texture != NULL) {
+        tex_free(obj->waterEffect->texture);
+    }
+    numberOfModelIds = obj->segment.header->numberOfModelIds;
+    if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        for (i = 0; i < numberOfModelIds; i++) {
+            if (obj->unk68[i] != NULL) {
+                free_3d_model(&obj->unk68[i]->objModel);
+            }
+        }
+    } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_MISC) {
+        for (i = 0; i < numberOfModelIds; i++) {
+            tex_free(&obj->unk68[i]->texHeader);
+        }
+    } else {
+        for (i = 0; i < numberOfModelIds; i++) {
+            sprite_free(&obj->unk68[i]->sprite);
+        }
+    }
+    if (obj->segment.header->particleCount > 0) {
+        for (i = 0; i < obj->segment.header->particleCount; i++) {
+            emitter_cleanup(&obj->particleEmitter[i]);
+        }
+    }
+    try_free_object_header(obj->segment.object.unk2C);
+    mempool_free(obj);
+}
+#else
+// https://decomp.me/scratch/DW6EX
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800101AC.s")
+#endif
 
 void obj_update(s32 updateRate) {
     s32 i;
