@@ -200,7 +200,8 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             if (-0.1 < racer->velocity && racer->velocity < 0.1) {
                 if (obj->segment.object.animationID == ANIM_WIZPIG_RUN) {
                     obj->segment.object.animationID = ANIM_WIZPIG_WALK;
-                    racer->animationSpeed = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
+                    racer->animationSpeed =
+                        (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
                 } else {
                     obj->segment.object.animationID = ANIM_WIZPIG_IDLE;
                 }
@@ -211,7 +212,8 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                 }
                 if ((obj->segment.object.animationID == ANIM_WIZPIG_FLY) && nextCheckpoint == FALSE) {
                     obj->segment.object.animationID = ANIM_WIZPIG_JUMP;
-                    racer->animationSpeed = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
+                    racer->animationSpeed =
+                        (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
                 }
             }
         }

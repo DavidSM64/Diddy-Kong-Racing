@@ -462,7 +462,7 @@ s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 e
 void render_3d_misc(Object *obj);
 Object *spectate_nearest(Object *obj, s32 *cameraId);
 s32 init_object_shadow(Object *obj, ShadowData *shadow);
-s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
+s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 overrideVerts);
 void render_bubble_trap(ObjectTransform *trans, Sprite *gfxData, Object *obj, s32 flags);
 void gParticlePtrList_flush(void);
 s32 init_object_shading(Object *obj, ShadeProperties *shadeData);
@@ -523,7 +523,7 @@ s32 func_8001F460(Object*, s32, Object*);
 void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4);
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); 
-void func_80011134(Object *, s32);
+void obj_tex_animate(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);
 void func_8006017C(ObjectModel *);
 void func_80012F94(Object *);

@@ -166,14 +166,14 @@ void enable_pal_viewport_height_adjust(s8 setting) {
 
 /**
  * Disable camera shake.
-*/
+ */
 void cam_shake_off(void) {
     gNoCamShake = TRUE;
 }
 
 /**
  * Enable camera shake. Camera wiggles up and down with it enabled.
-*/
+ */
 void cam_shake_on(void) {
     gNoCamShake = FALSE;
 }
@@ -951,7 +951,7 @@ void mtx_ortho(Gfx **dList, Mtx **mtx) {
  * Sets the current matrix to represent a perspective view.
  * Necessary for setting up any 3D scene.
  * Official Name: camStandardPersp?
-*/
+ */
 void mtx_perspective(Gfx **dList, Mtx **mtx) {
     mtxf_from_inverse_transform(&gCurrentModelMatrixF, &D_800DD288);
     mtxf_mul(&gCurrentModelMatrixF, &gPerspectiveMatrixF, &gViewMatrixF);

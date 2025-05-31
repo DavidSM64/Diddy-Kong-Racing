@@ -201,7 +201,7 @@ s8 D_8011AD21;
 s8 D_8011AD22[2];
 s8 D_8011AD24[2];
 s8 D_8011AD26;
-f32 D_8011AD28;
+f32 gObjectModelScaleY;
 s32 D_8011AD2C;
 f32 gCurrentLightIntensity;
 Object *gGhostObjPlayer;
@@ -693,7 +693,7 @@ void racerfx_update(s32 updateRate) {
         }
     }
     if (gMagnetEffectObject != NULL) {
-        func_80011134(gMagnetEffectObject, updateRate);
+        obj_tex_animate(gMagnetEffectObject, updateRate);
     }
 }
 
@@ -2564,7 +2564,7 @@ void obj_update(s32 updateRate) {
     do {
     } while (0);
     if (D_8011AF00 == 1) {
-        if ((gEventCountdown == 0x50) && (gCutsceneID == 0)) {
+        if (gEventCountdown == 80 && gCutsceneID == CUTSCENE_NONE) {
             sp54 = 0;
             for (j = 0; j < MAXCONTROLLERS; j++) {
                 sp54 |= input_pressed(j);
@@ -2581,10 +2581,14 @@ void obj_update(s32 updateRate) {
     }
 }
 
-void func_80011134(Object *obj, s32 updateRate) {
+/**
+ * Handles texture animation for an object.
+ * Applies texture offset based on the update rate.
+ */
+void obj_tex_animate(Object *obj, s32 updateRate) {
     ObjectModel *model;
     TriangleBatchInfo *batch;
-    s32 sp5C;
+    s32 offset;
     TextureHeader *tex;
     s16 temp_s5;
     s32 batchNumber;
@@ -2598,10 +2602,10 @@ void func_80011134(Object *obj, s32 updateRate) {
         if (batch[batchNumber].flags & RENDER_TEX_ANIM) {
             if (batch[batchNumber].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 tex = model->textures[batch[batchNumber].textureIndex].texture;
-                sp5C = batch[batchNumber].texOffset;
-                sp5C <<= 6;
-                tex_animate_texture(tex, &batch[batchNumber].flags, &sp5C, updateRate);
-                batch[batchNumber].texOffset = (sp5C >> 6) & 0xFF;
+                offset = batch[batchNumber].texOffset;
+                offset <<= 6;
+                tex_animate_texture(tex, &batch[batchNumber].flags, &offset, updateRate);
+                batch[batchNumber].texOffset = (offset >> 6) & 0xFF;
             }
         }
     }
@@ -2609,7 +2613,7 @@ void func_80011134(Object *obj, s32 updateRate) {
 
 /**
  * Sets the texture offset on the door number based on the balloon requirement.
-*/
+ */
 void obj_door_number(ObjectModel *model, Object *obj) {
     Object_64 *obj64;
     s32 current;
@@ -3087,10 +3091,10 @@ void render_3d_model(Object *obj) {
             obj_door_number(objModel, obj);
         }
         if (objModel->texOffsetUpdateRate && objModel->unk50 > 0) {
-            func_80011134(obj, objModel->texOffsetUpdateRate);
+            obj_tex_animate(obj, objModel->texOffsetUpdateRate);
             obj68->objModel->texOffsetUpdateRate = 0;
         }
-        mtx_cam_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
+        mtx_cam_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, gObjectModelScaleY, 0.0f);
         vertOffset = FALSE;
         if (racerObj != NULL) {
             object_undo_player_tumble(obj);
@@ -3482,7 +3486,7 @@ void func_80012F94(Object *obj) {
             ret1 = obj->unk64->frog.scaleY;
         }
     }
-    D_8011AD28 = ret1;
+    gObjectModelScaleY = ret1;
     gCurrentLightIntensity = ret2;
 }
 #else
@@ -3549,8 +3553,8 @@ void func_800135B8(Object *boostObj) {
     asset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     asset = &asset[D_8011B058[racerIndex]];
     object_do_player_tumble(boostObj->properties.boost.obj);
-    mtx_cam_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, &boostObj->properties.boost.obj->segment.trans,
-                       1.0f, 0.0f);
+    mtx_cam_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, &boostObj->properties.boost.obj->segment.trans, 1.0f,
+                 0.0f);
     object_undo_player_tumble(boostObj->properties.boost.obj);
     objTransform.trans.x_position = boostData->position.x;
     objTransform.trans.y_position = boostData->position.y;

@@ -154,7 +154,7 @@ UNUSED f32 gCurrBBoxDistanceToCamera; // Used in a comparison check, but functio
 u32 gWaveBlockCount;
 FogData gFogData[4];
 Vec3i gScenePerspectivePos;
-VoidMesh *gVoidMesh; // 0x10 bytes struct?
+VoidMesh *gVoidMesh;     // 0x10 bytes struct?
 unk8011D478 *D_8011D478; // 0xC bytes struct?
 s8 *D_8011D47C;
 Vertex *gVoidVerts[2];
@@ -386,13 +386,12 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
         weather_clip_planes(-1, -512);
         // Show weather effects in single player.
         if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < 2) {
-            weather_update(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, &gTrackTriPtr,
-                           tempUpdateRate);
+            weather_update(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, &gTrackTriPtr, tempUpdateRate);
         }
         lensflare_override(cam_get_active_camera());
         lensflare_render(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, cam_get_active_camera());
-        hud_render_player(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr,
-                          get_racer_object_by_port(gSceneCurrentPlayerID), updateRate);
+        hud_render_player(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, get_racer_object_by_port(gSceneCurrentPlayerID),
+                          updateRate);
     }
     // Show TT Cam toggle for the fourth viewport when playing 3 player.
     if (numViewports == 3 && get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS &&
@@ -454,7 +453,7 @@ UNUSED const char gTrackHeightOverflowString[] = "TrackGetHeight() - Overflow!!!
  * Allocates control data and geometry for the void.
  * The void refers to the flat coloured background that's shaped in real time to prevent
  * being able to see through level geometry, breaking immersion.
-*/
+ */
 void void_init(s32 viewportCount) {
     s32 i;
     s32 sp30;
@@ -507,7 +506,7 @@ void void_init(s32 viewportCount) {
 
 /**
  * Free the void mesh and control data if it exists.
-*/
+ */
 void void_free(void) {
     if (gVoidData != NULL) {
         mempool_free(gVoidMesh);
@@ -986,8 +985,7 @@ s32 void_generate_primitive(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
 
     if (gVoidVertCount == 24) {
         gSPVertexDKR(gTrackDL++, OS_K0_TO_PHYSICAL(gVoidCurrVerts), gVoidVertCount, 0);
-        gSPPolygon(gTrackDL++, OS_K0_TO_PHYSICAL(gVoidCurrTris), (gVoidVertCount >> 1),
-                   TRIN_DISABLE_TEXTURE);
+        gSPPolygon(gTrackDL++, OS_K0_TO_PHYSICAL(gVoidCurrTris), (gVoidVertCount >> 1), TRIN_DISABLE_TEXTURE);
         gVoidCurrVerts = gTrackVtxPtr;
         gVoidVertCount = 0;
         gVoidCurrTris = gTrackTriPtr;

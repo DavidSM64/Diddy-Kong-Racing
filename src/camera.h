@@ -142,7 +142,7 @@ void viewport_scissor(Gfx **dList);
 void mtx_pop(Gfx **dList);
 void copy_viewports_to_stack(void);
 void mtx_head_push(Gfx **dList, Mtx **mtx, Object_68 *objGfx, s16 headAngle);
-void mtx_shear_push(Gfx **dList, Mtx **mtx, Object *arg2, Object *arg3, f32 shear);
+void mtx_shear_push(Gfx **dList, Mtx **mtx, Object *obj, Object *objBase, f32 shear);
 void cam_init(void);
 void viewport_main(Gfx **dlist, Mtx **mats);
 

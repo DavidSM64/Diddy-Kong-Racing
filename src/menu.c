@@ -7665,6 +7665,7 @@ void fileselect_render(UNUSED s32 updateRate) {
             if (!gSavefileInfo[i].isStarted) {
                 filename_trim(gFilenames[i], trimmedFilename);
             }
+            //!@Bug: Doesn't index the array, so always true.
             if (trimmedFilename) {
                 draw_text(&sMenuCurrDisplayList, gFileSelectButtons[i].x + gFileSelectElementPos[0],
                           gFileSelectButtons[i].y + gFileSelectElementPos[1] + yPos, trimmedFilename,
@@ -13859,7 +13860,7 @@ void menu_element_render(s32 elementID) {
                     };
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
                     mtx_cam_push(&sMenuCurrDisplayList, &sMenuCurrHudMat, &gMenuImages[elementID].trans,
-                                       gTrackSelectWoodFrameHeightScale, 0);
+                                 gTrackSelectWoodFrameHeightScale, 0);
                     model = ((ObjectModel **) gMenuAssets[gMenuImages[elementID].trans.spriteID]);
                     render_track_selection_viewport_border(*model);
                     mtx_pop(&sMenuCurrDisplayList);

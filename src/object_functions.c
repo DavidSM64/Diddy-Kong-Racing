@@ -5578,7 +5578,7 @@ void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s
  */
 void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateShip *entry, UNUSED s32 arg2) {
     obj->unk64 = (Object_64 *) obj_wave_init(obj->segment.object.segmentID, obj->segment.trans.x_position,
-                                              obj->segment.trans.z_position);
+                                             obj->segment.trans.z_position);
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 30;
@@ -5604,7 +5604,7 @@ void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
 void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     f32 radius;
     obj->unk64 = (Object_64 *) obj_wave_init(obj->segment.object.segmentID, obj->segment.trans.x_position,
-                                              obj->segment.trans.z_position);
+                                             obj->segment.trans.z_position);
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 30;
