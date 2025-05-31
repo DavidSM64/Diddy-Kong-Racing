@@ -65,7 +65,7 @@ u8 D_800DC92C[24] = {
 /************ .bss ************/
 
 Gfx *gTrackDL;
-Mtx *gSceneCurrMatrix;
+Mtx *gTrackMtxPtr;
 Vertex *gTrackVtxPtr;
 Triangle *gTrackTriPtr;
 
@@ -288,7 +288,7 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
     s32 j;
 
     gTrackDL = *dList;
-    gSceneCurrMatrix = *mtx;
+    gTrackMtxPtr = *mtx;
     gTrackVtxPtr = *vtx;
     gTrackTriPtr = *tris;
     gSceneRenderSkyDome = TRUE;
@@ -365,32 +365,32 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
         apply_fog(gSceneCurrentPlayerID);
         gDPPipeSync(gTrackDL++);
         set_active_camera(gSceneCurrentPlayerID);
-        viewport_main(&gTrackDL, &gSceneCurrMatrix);
+        viewport_main(&gTrackDL, &gTrackMtxPtr);
         func_8002A31C();
         // Show detailed skydome in single player.
         if (numViewports < 2) {
-            mtx_world_origin(&gTrackDL, &gSceneCurrMatrix);
+            mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
             if (gCurrentLevelHeader2->skyDome == -1) {
                 func_80028050();
             } else {
                 render_skydome();
             }
         } else {
-            mtx_perspective(&gTrackDL, &gSceneCurrMatrix);
+            mtx_perspective(&gTrackDL, &gTrackMtxPtr);
             draw_gradient_background();
-            func_80067D3C(&gTrackDL, &gSceneCurrMatrix);
-            mtx_world_origin(&gTrackDL, &gSceneCurrMatrix);
+            func_80067D3C(&gTrackDL, &gTrackMtxPtr);
+            mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
         }
         gDPPipeSync(gTrackDL++);
         initialise_player_viewport_vars(updateRate);
         weather_clip_planes(-1, -512);
         // Show weather effects in single player.
         if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < 2) {
-            weather_update(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, &gTrackTriPtr, tempUpdateRate);
+            weather_update(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, &gTrackTriPtr, tempUpdateRate);
         }
         lensflare_override(cam_get_active_camera());
-        lensflare_render(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, cam_get_active_camera());
-        hud_render_player(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, get_racer_object_by_port(gSceneCurrentPlayerID),
+        lensflare_render(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, cam_get_active_camera());
+        hud_render_player(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, get_racer_object_by_port(gSceneCurrentPlayerID),
                           updateRate);
     }
     // Show TT Cam toggle for the fourth viewport when playing 3 player.
@@ -406,17 +406,17 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
             set_active_camera(PLAYER_FOUR);
             disable_cutscene_camera();
             func_800278E8(updateRate);
-            viewport_main(&gTrackDL, &gSceneCurrMatrix);
+            viewport_main(&gTrackDL, &gTrackMtxPtr);
             func_8002A31C();
-            mtx_perspective(&gTrackDL, &gSceneCurrMatrix);
+            mtx_perspective(&gTrackDL, &gTrackMtxPtr);
             draw_gradient_background();
-            func_80067D3C(&gTrackDL, &gSceneCurrMatrix);
-            mtx_world_origin(&gTrackDL, &gSceneCurrMatrix);
+            func_80067D3C(&gTrackDL, &gTrackMtxPtr);
+            mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
             gDPPipeSync(gTrackDL++);
             initialise_player_viewport_vars(updateRate);
             weather_clip_planes(-1, -512);
             lensflare_override(cam_get_active_camera());
-            lensflare_render(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, cam_get_active_camera());
+            lensflare_render(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, cam_get_active_camera());
             set_text_font(FONT_COLOURFUL);
             if (osTvType == OS_TV_TYPE_PAL) {
                 posX = SCREEN_WIDTH_HALF + 6;
@@ -440,7 +440,7 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
     gDkrDisableBillboard(gTrackDL++);
     gShadowHeapFlip = 1 - gShadowHeapFlip;
     *dList = gTrackDL;
-    *mtx = gSceneCurrMatrix;
+    *mtx = gTrackMtxPtr;
     *vtx = gTrackVtxPtr;
     *tris = gTrackTriPtr;
 }
@@ -1459,7 +1459,7 @@ void func_80028050(void) {
     uCoords[8] = (s16) ((2.0f * xCos) - pos.z) + var_v0;
     vCoords[8] = (s16) ((2.0f * pos.x) + var_f16) + var_v1;
 
-    mtx_world_origin(&gTrackDL, &gSceneCurrMatrix);
+    mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
 
     var_t2 = *gCurrentLevelHeader2->unk74;
     var_a2 = -1;
@@ -1654,9 +1654,9 @@ void render_skydome(void) {
         gSkydomeSegment->segment.trans.z_position = cam->trans.z_position;
     }
 
-    mtx_world_origin(&gTrackDL, &gSceneCurrMatrix);
+    mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
     if (gSceneRenderSkyDome) {
-        render_object(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, gSkydomeSegment);
+        render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, gSkydomeSegment);
     }
 }
 
@@ -1783,12 +1783,12 @@ void render_level_geometry_and_objects(void) {
         if (obj != NULL && visible == 255 && check_if_in_draw_range(obj) &&
             (objectsVisible[obj->segment.object.segmentID + 1] || obj->segment.object.unk34 > 1000.0)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
-                render_object(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, obj);
+                render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
                 continue;
             } else if (obj->shadow != NULL) {
                 shadow_render(obj, obj->shadow);
             }
-            render_object(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, obj);
+            render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
             if (obj->waterEffect != NULL && obj->segment.header->flags & HEADER_FLAGS_WATER_EFFECT) {
                 watereffect_render(obj, obj->waterEffect);
             }
@@ -1806,12 +1806,12 @@ void render_level_geometry_and_objects(void) {
         if (obj != NULL && visible && objFlags & OBJ_FLAGS_UNK_0100 &&
             objectsVisible[obj->segment.object.segmentID + 1] && check_if_in_draw_range(obj)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
-                render_object(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, obj);
+                render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
                 continue;
             } else if (obj->shadow != NULL) {
                 shadow_render(obj, obj->shadow);
             }
-            render_object(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, obj);
+            render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
             if (obj->waterEffect != NULL && obj->segment.header->flags & HEADER_FLAGS_WATER_EFFECT) {
                 watereffect_render(obj, obj->waterEffect);
             }
@@ -1825,7 +1825,7 @@ void render_level_geometry_and_objects(void) {
     }
 
     if (gWaveBlockCount != 0) {
-        waves_render(&gTrackDL, &gSceneCurrMatrix, get_current_viewport());
+        waves_render(&gTrackDL, &gTrackMtxPtr, get_current_viewport());
     }
 
     rendermode_reset(&gTrackDL);
@@ -1852,20 +1852,20 @@ void render_level_geometry_and_objects(void) {
             check_if_in_draw_range(obj)) {
             if (visible > 0) {
                 if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
-                    render_object(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, obj);
+                    render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
                     goto skip;
                 } else if (obj->shadow != NULL) {
                     shadow_render(obj, obj->shadow);
                 }
-                render_object(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, obj);
+                render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
                 if ((obj->waterEffect != 0) && (obj->segment.header->flags & 0x10)) {
                     watereffect_render(obj, obj->waterEffect);
                 }
             }
         skip:
             if (obj->behaviorId == BHV_RACER) {
-                render_racer_shield(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, obj);
-                render_racer_magnet(&gTrackDL, &gSceneCurrMatrix, &gTrackVtxPtr, obj);
+                render_racer_shield(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
+                render_racer_magnet(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
             }
         }
     }

@@ -3829,7 +3829,7 @@ D_8011B080 = 0x8011B080;
 
 // tracks .bss
 gTrackDL = 0x8011B0A0;
-gSceneCurrMatrix = 0x8011B0A4;
+gTrackMtxPtr = 0x8011B0A4;
 gTrackVtxPtr = 0x8011B0A8;
 gTrackTriPtr = 0x8011B0AC;
 gSceneActiveCamera = 0x8011B0B0;
