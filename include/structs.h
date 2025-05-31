@@ -431,11 +431,8 @@ typedef struct LevelHeader {
   /* 0x0C */ u8 unkC[10];
   /* 0x16 */ u8 unk16[10];
   /* 0x20 */ s8 *AILevelTable;
-
   /* 0x24 */ u8 pad24[6];
-  /* 0x2A */ u8 unk2A;
-  /* 0x2B */ u8 pad2B[9];
-
+  /* 0x2A */ s8 unk2A[10];
   /* 0x34 */ s16 geometry;
   /* 0x36 */ s16 collectables; // Objects such as bananas, balloons, etc.
   /* 0x38 */ s16 skybox;
@@ -690,7 +687,10 @@ typedef struct LevelModelSegment {
 /* 0x0C */ TriangleBatchInfo *batches;
 /* 0x10 */ s16 *unk10;
 /* 0x14 */ CollisionNode *unk14;
+union {
 /* 0x18 */ f32 *unk18;
+/* 0x18 */ Vec4f *unk18_vec4f; // Used for objects, not levels.
+};
 /* 0x1C */ s16 numberOfVertices;
 /* 0x1E */ s16 numberOfTriangles;
 /* 0x20 */ s16 numberOfBatches;
