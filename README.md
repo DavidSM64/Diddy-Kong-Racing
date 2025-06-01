@@ -119,28 +119,6 @@ s32 is_drumstick_unlocked(void) {
 <!-- README_SCORE_BEGIN -->
 As of June 1, 2025, this is our current score:
 ```
- ===================================================================
-               ADVENTURE ONE (ASM -> C Decompilation)
- -------------- 89.17% Complete (90.50% NON_MATCHING) --------------
-                    # Decompiled functions: 1907
-                     # GLOBAL_ASM remaining: 44
-                     # NON_MATCHING functions: 6
-                 # NON_EQUIVALENT WIP functions: 15
- --------------------------- Game Status ---------------------------
-              Balloons: 41/47, Keys: 4/4, Trophies: 4/5
-               T.T. Amulets: 4/4, Wizpig Amulets: 4/4
- -------------------------------------------------------------------
-             We are racing in Spaceport Alpha. (Lap 3/3)
- ===================================================================
-                ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 58.62% Complete -------------------------
-                    # Documented functions: 1195
-                    # Undocumented remaining: 459
- --------------------------- Game Status ---------------------------
-              Balloons: 28/47, Keys: 3/4, Trophies: 2/5
-               T.T. Amulets: 3/4, Wizpig Amulets: 2/4
- -------------------------------------------------------------------
- We are collecting silver coins in Pirate Lagoon. (6/8 silver coins)
- ===================================================================
+Generating progress treemap, outputting file to progress-treemap.html
 ```
 <!-- README_SCORE_END -->
