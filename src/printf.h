@@ -56,7 +56,7 @@ s32 render_printf(const char *format, ...);
 void debug_text_bounds(void);
 void debug_text_origin(void);
 void debug_text_newline(void);
-s32 func_800B653C(Gfx**, char*);
+s32 debug_text_parse(Gfx**, char*);
 int vsprintf(char *s, const char *fmt, ...);
 
 #endif

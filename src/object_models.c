@@ -162,7 +162,7 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     objMdl->unkC = 0;
     objMdl->unk10 = 0;
     objMdl->unk32 = 0;
-    objMdl->unk52 = 0;
+    objMdl->texOffsetUpdateRate = 0;
     objMdl->unk40 = 0;
     objMdl->numberOfAnimations = 0;
     objMdl->animations = NULL;
@@ -647,7 +647,7 @@ s32 func_80060C58(Vertex *vertices, s32 i1, s32 i2, s32 i3, s32 i4) {
 
 #define NEARBY(a, b, x) (b->x - 4 < a->x && a->x < b->x + 4)
 
-    if (i1 == i3 && i2 == i4 || i1 == i4 && i2 == i3) {
+    if ((i1 == i3 && i2 == i4) || (i1 == i4 && i2 == i3)) {
         return 1;
     }
 
@@ -728,7 +728,7 @@ s32 func_80061A00(ObjectModel *model, s32 animTableIndex) {
         load_asset_to_address(ASSET_OBJECT_ANIMATIONS, animAddress, assetOffset, assetSize);
         gzip_inflate((u8 *) animAddress, (u8 *) model->animations[i].anim);
         temp = model->animations[i].anim;
-        model->animations[i].unk4 = *temp;
+        model->animations[i].animLength = *temp;
         model->animations[i].anim++;
         i++;
         start++;
@@ -760,7 +760,7 @@ void func_80061C0C(Object *obj) {
             obj->segment.object.animationID = mdl->numberOfAnimations - 1;
         }
         if (mdl->numberOfAnimations > 0) {
-            var_v1 = mdl->animations[obj->segment.object.animationID].unk4 - 2;
+            var_v1 = mdl->animations[obj->segment.object.animationID].animLength - 2;
         } else {
             var_v1 = 0;
         }

@@ -659,7 +659,7 @@ void lensflare_render(Gfx **dList, Mtx **mats, Vertex **verts, Camera *camera) {
             magnitude = ((gLensFlarePos.x * pos[1].x) + (gLensFlarePos.y * pos[1].y)) + (gLensFlarePos.z * pos[1].z);
             if (magnitude > 0.0f) {
                 viewport_main(dList, mats);
-                matrix_world_origin(dList, mats);
+                mtx_world_origin(dList, mats);
                 pos[0].x = (gLensFlarePos.x * 256.0f) + camera->trans.x_position;
                 pos[0].y = (gLensFlarePos.y * 256.0f) + camera->trans.y_position;
                 pos[0].z = (gLensFlarePos.z * 256.0f) + camera->trans.z_position;
@@ -893,7 +893,7 @@ void rain_update(s32 updateRate) {
         rain_render_splashes(updateRate);
         rain_lightning(updateRate);
         if (gLightningFrequency > 255) {
-            set_ortho_matrix_view(&gCurrWeatherDisplayList, &gCurrWeatherMatrix);
+            mtx_ortho(&gCurrWeatherDisplayList, &gCurrWeatherMatrix);
             for (i = 0; i < 2; i++) {
                 rain_render(&gRainGfx[i], updateRate);
             }
