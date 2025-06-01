@@ -2130,17 +2130,16 @@ void menu_button_free(void) {
     gWoodPanelAllocCount = 0;
 }
 
-#ifdef NON_EQUIVALENT
-void func_8007FFEC(s32 arg0) {
-    s32 sp28;
-    s32 sp24;
-    s32 sp20;
-    Triangle *alloc;
+// Allocate and initalize a certain number of wooden panels used for the UI.
+void func_8007FFEC(s32 numberOfPanels) {
     s32 triListIndex;
+    s32 triItemIndex;
     s32 IndicesIndex;
-    s32 triIndex;
+    s32 panelIndex;
     s32 i;
-    s32 j;
+    s32 triangleCount;
+    s32 vertexSize;
+    s32 menuGeometrySize;
 
     if (gMenuGeometry != NULL) {
         menu_button_free();
@@ -2148,56 +2147,57 @@ void func_8007FFEC(s32 arg0) {
 
     gWoodPanelTexScaleU = 32; // 32 = 1.0x scale
     gWoodPanelTexScaleV = 32; // 32 = 1.0x scale
-    sp20 = arg0 * 0xA * 0x10;
-    // sp28 = arg0 << 5;
-    // sp24 = arg0 * 0x64 * 2;
 
-    // This is mostly wrong. Need to fix!
-    alloc = mempool_alloc_safe(arg0 * 0x2F0, COLOUR_TAG_WHITE);
-    gWoodPanelTriangles[0] = alloc;
-    gWoodPanelTriangles[1] = gWoodPanelTriangles[0] + sp20;
-    gMenuGeometry = (unk80080BC8 *) gWoodPanelTriangles[1] + sp20;
-    gWoodPanelVertices[1] = (Vertex *) gMenuGeometry;
-    gWoodPanelVertices[1] = gWoodPanelVertices[0] + arg0;
+    menuGeometrySize = sizeof(unk80080BC8) * numberOfPanels;
+    vertexSize = sizeof(Vertex) * (20 * numberOfPanels);
+    triangleCount = sizeof(Triangle) * (10 * numberOfPanels);
 
-    // This loop isn't quite right.
-    for (i = 0; i < arg0; i++) {
-        gMenuGeometry[i].vertices[0] = (Vertex *) gWoodPanelVertices[0] + i;
-        gMenuGeometry[i].vertices[1] = (Vertex *) gWoodPanelVertices[1] + i;
-        gMenuGeometry[i].triangles[0] = (Triangle *) gWoodPanelTriangles[0] + i;
-        gMenuGeometry[i].triangles[1] = (Triangle *) gWoodPanelTriangles[1] + i;
+    gWoodPanelTriangles[0] = (Triangle *)mempool_alloc_safe(((vertexSize + triangleCount) * 2) + menuGeometrySize, COLOUR_TAG_WHITE);
+    gWoodPanelTriangles[1] = (Triangle *)((u32)gWoodPanelTriangles[0] + triangleCount);
+
+    gMenuGeometry = (unk80080BC8 *)((u32)gWoodPanelTriangles[1] + triangleCount);
+
+    gWoodPanelVertices[0] = (Vertex *)((u32)gMenuGeometry + menuGeometrySize);
+    gWoodPanelVertices[1] = (Vertex *)((u32)gWoodPanelVertices[0] + vertexSize);
+
+    panelIndex = 0;
+    triangleCount = 0;
+    for(i = 0; i < numberOfPanels; i++) {
+        gMenuGeometry[i].vertices[0] = &gWoodPanelVertices[0][panelIndex];
+        gMenuGeometry[i].vertices[1] = &gWoodPanelVertices[1][panelIndex];
+        gMenuGeometry[i].triangles[0] = &gWoodPanelTriangles[0][triangleCount];
+        gMenuGeometry[i].triangles[1] = &gWoodPanelTriangles[1][triangleCount];
         gMenuGeometry[i].texture[0] = 0;
         gMenuGeometry[i].texture[1] = 0;
         gMenuGeometry[i].unk18[0] = 0;
         gMenuGeometry[i].unk18[1] = 0;
+        panelIndex += 20;
+        triangleCount += 10;
     }
 
-    for (triIndex = 0; triIndex < arg0; triIndex++) {
-        for (IndicesIndex = 0; IndicesIndex < 10; IndicesIndex++) {    // Index into gWoodPanelsIndices
-            for (triListIndex = 0; triListIndex < 2; triListIndex++) { // Index into gWoodPanelTriangles?
-                (gWoodPanelTriangles[triListIndex] + triIndex)->verticesArray[0] = 0x40;
-                (gWoodPanelTriangles[triListIndex] + triIndex)->verticesArray[1] =
-                    gWoodPanelsIndices[IndicesIndex * 3 + 0];
-                (gWoodPanelTriangles[triListIndex] + triIndex)->verticesArray[2] =
-                    gWoodPanelsIndices[IndicesIndex * 3 + 1];
-                (gWoodPanelTriangles[triListIndex] + triIndex)->verticesArray[3] =
-                    gWoodPanelsIndices[IndicesIndex * 3 + 2];
-                (gWoodPanelTriangles[triListIndex] + triIndex)->uv0.u = 0;
-                (gWoodPanelTriangles[triListIndex] + triIndex)->uv0.v = 0;
-                (gWoodPanelTriangles[triListIndex] + triIndex)->uv1.u = 0;
-                (gWoodPanelTriangles[triListIndex] + triIndex)->uv1.v = 0;
-                (gWoodPanelTriangles[triListIndex] + triIndex)->uv2.u = 0;
-                (gWoodPanelTriangles[triListIndex] + triIndex)->uv2.v = 0;
+    triItemIndex = 0;
+    for(i = 0; i < numberOfPanels; i++) {
+        panelIndex = 0;
+        for(IndicesIndex = 0; IndicesIndex < 10; triItemIndex++, panelIndex += 3, IndicesIndex++) {
+            for(triListIndex = 0; triListIndex < 2; triListIndex++) {
+                gWoodPanelTriangles[triListIndex][triItemIndex].verticesArray[0] = BACKFACE_DRAW;
+                gWoodPanelTriangles[triListIndex][triItemIndex].verticesArray[1] = gWoodPanelsIndices[panelIndex];
+                gWoodPanelTriangles[triListIndex][triItemIndex].verticesArray[2] = gWoodPanelsIndices[panelIndex + 1];
+                gWoodPanelTriangles[triListIndex][triItemIndex].verticesArray[3] = gWoodPanelsIndices[panelIndex + 2];
+                gWoodPanelTriangles[triListIndex][triItemIndex].uv0.u = 0;
+                gWoodPanelTriangles[triListIndex][triItemIndex].uv0.v = 0;
+                gWoodPanelTriangles[triListIndex][triItemIndex].uv1.u = 0;
+                gWoodPanelTriangles[triListIndex][triItemIndex].uv1.v = 0;
+                gWoodPanelTriangles[triListIndex][triItemIndex].uv2.u = 0;
+                gWoodPanelTriangles[triListIndex][triItemIndex].uv2.v = 0;
             }
         }
     }
     gMenuTrisFlip = 0;
     gWoodPanelCount = 0;
-    gWoodPanelAllocCount = arg0;
+    gWoodPanelAllocCount = numberOfPanels;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/func_8007FFEC.s")
-#endif
+
 
 /**
  * Resize the UV's of the menu panels.
