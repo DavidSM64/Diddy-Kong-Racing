@@ -90,7 +90,7 @@ void sndp_init_player(audioMgrConfig *c) {
      * Link all sound states into a linked list.
      */
     gSoundStateLists.freeHead = (ALSoundState *) gSoundPlayerPtr->soundStatesArray;
-    for (i = 1; i < c->maxSounds; i++) {
+    for (i = 1; i < (u32) c->maxSounds; i++) {
         sounds = gSoundPlayerPtr->soundStatesArray;
         alLink((ALLink *) &sounds[i].next, (ALLink *) &(&sounds[i] - 1)->next);
     }

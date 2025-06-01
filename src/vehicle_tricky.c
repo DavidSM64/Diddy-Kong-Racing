@@ -132,7 +132,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
-    diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
+    diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
     if (obj->segment.object.animationID != ANIM_TRICKY_DAMAGE) {
         if (racer->velocity < -2.0) {
             obj->segment.object.animationID = ANIM_TRICKY_RUN;

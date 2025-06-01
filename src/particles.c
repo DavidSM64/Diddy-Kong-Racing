@@ -1170,7 +1170,7 @@ void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *e
     particle->trans.y_position = particle->localPos.y;
     particle->trans.z_position = particle->localPos.z;
     if (particle->movementType == PARTICLE_MOVEMENT_BASIC_PARENT) {
-        vec3f_rotate(&obj->segment.trans.rotation, &particle->trans.x_position);
+        vec3f_rotate(&obj->segment.trans.rotation, (Vec3f *) &particle->trans.x_position);
     }
 
     particle->trans.x_position += obj->segment.trans.x_position;
@@ -2268,7 +2268,7 @@ void move_particle_attached_to_parent(Particle *particle) {
     particle->trans.x_position = 0.0f;
     particle->trans.y_position = -particle->downOffset;
     particle->trans.z_position = 0.0f;
-    vec3f_rotate(&particle->trans.rotation, &particle->trans.x_position);
+    vec3f_rotate(&particle->trans.rotation, (Vec3f *) &particle->trans.x_position);
     particle->trans.x_position += particle->localPos.x;
     particle->trans.y_position += particle->localPos.y;
     particle->trans.z_position += particle->localPos.z;
@@ -2410,11 +2410,11 @@ void render_particle(Particle *particle, Gfx **dList, Mtx **mtx, Vertex **vtx, s
         } else {
             model = particle->model;
             if (model->texture) {
-                cam_push_model_mtx(dList, mtx, &particle->trans, 1.0f, 0.0f);
+                mtx_cam_push(dList, mtx, &particle->trans, 1.0f, 0.0f);
                 material_set(dList, model->texture, renderFlags, particle->textureFrame << 8);
                 gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(model->vertices), model->vertexCount, 0);
                 gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(model->triangles), model->triangleCount, TRIN_ENABLE_TEXTURE);
-                apply_matrix_from_stack(dList);
+                mtx_pop(dList);
             }
         }
         // Restore primitive and environment colour

@@ -458,6 +458,7 @@ typedef struct LevelHeader {
   /* 0x52 */ u8 music;
   /* 0x53 */ u8 unk53;
   /* 0x54 */ u16 instruments;
+  // Waves
   /* 0x56 */ u8 waveSubdivisons; // values between 2 and 8 (except 5 and 7), used to determine waves count?
   /* 0x57 */ u8 unk57; // possible values: 2,4,8,16,20, related to waves
   /* 0x58 */ u8 waveSineStep0; // possible values: 1,2,4
@@ -513,8 +514,8 @@ typedef struct LevelHeader {
   /* 0xB0 */ s16 unkB0;
   /* 0xB2 */ u8 unkB2;
   /* 0xB3 */ u8 voiceLimit;
-  /* 0xB4 */ ByteColour rgb;
-  /* 0xB7 */ u8 unkB7;
+  /* 0xB4 */ ByteColour voidColour;
+  /* 0xB7 */ u8 useVoid; // Disallow the player from looking through walls by drawing a blank screen behind walls.
   /* 0xB8 */ s8 bossRaceID;
   /* 0xB9 */ u8 unkB9;
   /* 0xBA */ s16 unkBA;
@@ -608,24 +609,15 @@ typedef struct Triangle {
 /* Size: 12 bytes */
 typedef struct TriangleBatchInfo {
 /* 0x00 */ u8  textureIndex; // 0xFF = No texture
-/* 0x01 */ s8  unk1;
+/* 0x01 */ s8  vertOverride; // If used, will end a draw this many verts in, so it can do something mid mesh.
 /* 0x02 */ s16 verticesOffset;
 /* 0x04 */ s16 facesOffset;
-/* 0x06 */ u8  unk6; // 0xFF = vertex colors, otherwise use dynamic lighting normals (Objects only)
-/* 0x07 */ u8  unk7;
-/* 0x08 */ u32 flags;
-    // 0x00000002 = ???
-    // 0x00000008 = ???
-    // 0x00000010 = Depth write
-    // 0x00000100 = Hidden/Invisible geometry
-    // 0x00000200 = ??? Used in func_80060AC8
-    // 0x00000800 = ???
-    // 0x00002000 = ???
-    // 0x00008000 = Environment mapping
-    // 0x00010000 = Texture is animated
-    // 0x00040000 = Has pulsating light data.
-    // 0x70000000 = bits 28, 29, & 30 are some kind of index. Not used in any levels.
+/* 0x06 */ u8  miscData; // 0xFF = vertex colors, otherwise use dynamic lighting normals (Objects only)
+/* 0x07 */ u8  texOffset;
+/* 0x08 */ u32 flags; // See RenderFlags in textures_sprites.c
 } TriangleBatchInfo;
+
+#define BATCH_VTX_COL 0xFF
 
 /* Size: 8 bytes */
 typedef struct ObjectModel_44 {
@@ -633,7 +625,7 @@ typedef struct ObjectModel_44 {
 /* 0x00 */ s32 *anim;
 /* 0x00 */ u8 *animData;
     };
-/* 0x04 */ s32 unk4; // Number of frames in animation?
+/* 0x04 */ s32 animLength; // Animation length is the result of 16-frame length keyframes.
 } ObjectModel_44;
 
 typedef struct ObjectModel_C {
@@ -676,7 +668,7 @@ typedef struct ObjectModel {
     /* 0x4A */ s16 unk4A;
     /* 0x4C */ s32 *unk4C;
     /* 0x50 */ s16 unk50;
-    /* 0x52 */ s16 unk52;
+    /* 0x52 */ s16 texOffsetUpdateRate; // Set to the current updaterate for the first model.
     /* 0x54 */ u8 pad[0x2C];
 } ObjectModel;      
 

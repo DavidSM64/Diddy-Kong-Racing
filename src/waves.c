@@ -985,7 +985,7 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
         if (gWaveController.xlu) {
             gSPClearGeometryMode(gWaveDL++, G_FOG);
             tex1 = set_animated_texture_header(gWaveTextureHeader, gWaveTexAnimFrame * (16 * 16));
-            tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 * (128 * 128));
+            tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->texOffset * (128 * 128));
             wave_load_material(tex1, 1);
             wave_load_material(tex2, 0);
             gDPSetCombineMode(gWaveDL++, DKR_CC_UNK14, DKR_CC_UNK15);
@@ -1004,7 +1004,7 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
             }
         } else {
             gSPSetGeometryMode(gWaveDL++, G_FOG);
-            tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->unk7 * (128 * 128));
+            tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->texOffset * (128 * 128));
             gDkrDmaDisplayList(gWaveDL++, OS_K0_TO_PHYSICAL(tex1->cmd), tex1->numberOfCommands);
             gDPSetCombineMode(gWaveDL++, DKR_CC_UNK16, DKR_CC_UNK8);
             gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);
@@ -1039,7 +1039,7 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
                 for (sp11C = 0; sp11C < 2; sp11C++) {
                     transform.x_position = spE0->originX;
                     for (var_fp = 0; var_fp < 2; var_fp++) {
-                        cam_push_model_mtx(&gWaveDL, &gWaveMtx, &transform, 1.0f, 0.0f);
+                        mtx_cam_push(&gWaveDL, &gWaveMtx, &transform, 1.0f, 0.0f);
                         if (sp104 & 0xFF) {
                             numTris = gWaveController.subdivisions << 1;
                             numVerts = gWaveController.subdivisions + 1;
@@ -1059,14 +1059,14 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
                             gSPPolygon(gWaveDL++, OS_K0_TO_PHYSICAL(&D_800E3090[gWaveVertexFlip << 1]), 2,
                                        TRIN_ENABLE_TEXTURE);
                         }
-                        apply_matrix_from_stack(&gWaveDL);
+                        mtx_pop(&gWaveDL);
                         sp104 >>= 8;
                         transform.x_position += gWaveBoundingBoxW * 0.5f;
                     }
                     transform.z_position += gWaveBoundingBoxH * 0.5f;
                 }
             } else {
-                cam_push_model_mtx(&gWaveDL, &gWaveMtx, &transform, 1.0f, 0.0f);
+                mtx_cam_push(&gWaveDL, &gWaveMtx, &transform, 1.0f, 0.0f);
                 numTris = gWaveController.subdivisions << 1;
                 numVerts = gWaveController.subdivisions + 1;
                 var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
@@ -1079,7 +1079,7 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
 
                     var_t0 += gWaveController.subdivisions + 1;
                 }
-                apply_matrix_from_stack(&gWaveDL);
+                mtx_pop(&gWaveDL);
             }
         }
         if (gWaveController.xlu) {

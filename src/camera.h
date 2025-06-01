@@ -95,11 +95,11 @@ typedef struct ScreenViewport {
 
 void cam_set_zoom(s32 cameraID, s32 zoomLevel);
 void enable_pal_viewport_height_adjust(s8 setting);
-void func_800660C0(void);
-void func_800660D0(void);
+void cam_shake_off(void);
+void cam_shake_on(void);
 UNUSED f32 cam_get_fov(void);
 void cam_set_fov(f32 camFieldOfView);
-MtxF *matrix_get_model_s16(void);
+MtxF *mtx_get_modelmtx_s16(void);
 s32 cam_get_viewport_layout(void);
 s32 get_current_viewport(void);
 void camera_init_tracks_menu(Gfx **dList, Mtx **mtxS);
@@ -119,11 +119,11 @@ s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1,
 void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void set_ortho_matrix_height(f32 value);
-void set_ortho_matrix_view(Gfx **dList, Mtx **mtx);
-void func_8006807C(Gfx **dList, Mtx **mtx);
+void mtx_ortho(Gfx **dList, Mtx **mtx);
+void mtx_perspective(Gfx **dList, Mtx **mtx);
 void viewport_rsp_set(Gfx **dList, s32 halfWidth, s32 halfHeight, s32 centerX, s32 centerY);
 void viewport_reset(Gfx **dList);
-void matrix_world_origin(Gfx **dList, Mtx **mtx);
+void mtx_world_origin(Gfx **dList, Mtx **mtx);
 void sprite_anim_off(s32 setting);
 Camera *cam_get_active_camera_no_cutscenes(void);
 Camera *cam_get_active_camera(void);
@@ -137,12 +137,12 @@ void set_camera_shake(f32 magnitude);
 void func_80067D3C(Gfx **dList, Mtx **mats);
 void render_ortho_triangle_image(Gfx **dList, Mtx **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags);
 s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj, Sprite *arg4, s32 flags);
-s32 cam_push_model_mtx(Gfx **dList, Mtx **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY);
+s32 mtx_cam_push(Gfx **dList, Mtx **mtx, ObjectTransform *trans, f32 scaleY, f32 offsetY);
 void viewport_scissor(Gfx **dList);
-void apply_matrix_from_stack(Gfx **dList);
+void mtx_pop(Gfx **dList);
 void copy_viewports_to_stack(void);
-void apply_head_turning_matrix(Gfx **dList, Mtx **mtx, Object_68 *objGfx, s16 headAngle);
-void apply_object_shear_matrix(Gfx **dList, Mtx **mtx, Object *arg2, Object *arg3, f32 shear);
+void mtx_head_push(Gfx **dList, Mtx **mtx, Object_68 *objGfx, s16 headAngle);
+void mtx_shear_push(Gfx **dList, Mtx **mtx, Object *obj, Object *objBase, f32 shear);
 void cam_init(void);
 void viewport_main(Gfx **dlist, Mtx **mats);
 
