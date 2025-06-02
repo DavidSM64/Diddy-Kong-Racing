@@ -1738,9 +1738,10 @@ UNUSED s32 func_8000E558(Object *arg0) {
     return TRUE;
 }
 
-// https://decomp.me/scratch/QHVHG
+// https://decomp.me/scratch/QHVHG - 43.07%
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000E5EC.s")
-// https://decomp.me/scratch/btRnW
+
+// https://decomp.me/scratch/btRnW - 95.87%
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000E79C.s")
 
 UNUSED u8 *func_8000E898(u8 *arg0, s32 arg1) {
