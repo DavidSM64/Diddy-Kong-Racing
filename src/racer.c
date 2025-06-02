@@ -2533,7 +2533,7 @@ f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3,
 
 #ifdef NON_EQUIVALENT
 // Plane physics, largest function in DKR.
-void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer) {
+void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     s32 pad5;
     s32 pad7;
     f32 spEC;
@@ -2567,43 +2567,43 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     s32 i;
     f32 racerVelocity;
     s32 var_t9;
-    Object* temp_v0_obj;
+    Object *temp_v0_obj;
     f32 var_f6;
     s32 racerTrickType;
     f32 segmentXVelocity;
-    f32 sp60[4]; // Not sure about the length
-    s8 sp5F;
+    f32 sp60[4]; // Should be MtxF, but produces a worse score.
+    s8 playerObjectMoved;
     f32 var_f14;
     s32 steerVisualRotationOffset;
-    Object_Boost* temp_16_v1sset;
+    Object_Boost *boostObj;
     s32 pad3;
     s32 pad4;
 
     if (func_8000E138()) {
         updateRateF *= 1.09;
     }
-    sp5F = 0;
+    playerObjectMoved = FALSE;
     if (racer->groundedWheels > 0) {
         racer->unk84 = 0.0f;
         racer->unk88 = 0.0f;
     }
-    if ((racer->unk1FE == 4) && (racer->spinout_timer == 0)) {
-        sound_play(0x240, NULL);
+    if (racer->unk1FE == 4 && racer->spinout_timer == 0) {
+        sound_play(SOUND_ZAP4, NULL);
         racer->spinout_timer = 20;
     }
-    
-    spA2 = 0;
-    if ((gCurrentPlayerIndex != -1) && (racer->vehicleIDPrev != 0xC) && (gRacerWaveCount != 0)) {
+
+    spA2 = FALSE;
+    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->vehicleIDPrev != VEHICLE_WIZPIG && gRacerWaveCount != 0) {
         // UNMATCHED
-        for (var_a0 = gRacerWaveCount - 1; var_a0 >= 0 && gRacerCurrentWave[var_a0]->waveHeight < obj->segment.trans.y_position + 5; var_a0--) {
-        }
-                    
+        for (var_a0 = gRacerWaveCount - 1;
+             var_a0 >= 0 && gRacerCurrentWave[var_a0]->waveHeight < obj->segment.trans.y_position + 5; var_a0--) {}
+
         if (var_a0 == gRacerWaveCount - 1) {
-            var_a0--; 
+            var_a0--;
         }
 
         var_f2 = gRacerCurrentWave[var_a0 + 1]->waveHeight;
-        var_f2 = (obj->segment.trans.y_position -  var_f2) - 10;
+        var_f2 = (obj->segment.trans.y_position - var_f2) - 10;
         if (var_f2 > 100.0f) {
             racer->drift_direction = 0;
         }
@@ -2612,19 +2612,19 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         if (racerVelocity < 0.0f) {
             racerVelocity = 0.0f;
         }
-        if ((var_f2 < 35) && (racerVelocity < 8.0)) {
-            spA2 = 1;
+        if (var_f2 < 35 && racerVelocity < 8.0) {
+            spA2 = TRUE;
         }
-        if ((racer->drift_direction == 0) && (var_f2 < 38) && (racerVelocity >= 8.0)) {
-            if ((!racerSteerAngle) && (!racerSteerAngle)) {}
+        if (racer->drift_direction == 0 && var_f2 < 38 && racerVelocity >= 8.0) {
+            if ((!racerSteerAngle)) {}
             racer->drift_direction = 1;
         }
-        if ((racer->trickType == 1) || (racer->trickType == -1) || (gRacerCurrentWave[var_a0 + 1]->rot.y < 0.4)) {
+        if (racer->trickType == 1 || racer->trickType == -1 || gRacerCurrentWave[var_a0 + 1]->rot.y < 0.4) {
             racer->drift_direction = 0;
-            spA2 = 0;
+            spA2 = FALSE;
         }
         if (racer->drift_direction != 0) {
-            if ((racerVelocity < 8.0) || (gCurrentStickY < -10)) {
+            if (racerVelocity < 8.0 || gCurrentStickY < -10) {
                 racer->drift_direction = 0.0f;
             }
             racerVelocity -= 8;
@@ -2634,21 +2634,21 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
             racerVelocity /= 4;
             obj->segment.trans.y_position += ((38 - var_f2) * updateRateF * racerVelocity) / 8;
             if (gCurrentStickY > 0) {
-                gCurrentStickY = gCurrentStickY >> 1 ;
+                gCurrentStickY >>= 1;
             }
         }
     }
     D_8011D550 = 0;
-    
-    #ifdef FAKEMATCH
+
+#ifdef FAKEMATCH
     // fake match for $f registers
     gCurrentCarSteerVel = (var_f0 > 0.0f) * 0;
-    #else
+#else
     gCurrentCarSteerVel = 0;
-    #endif
+#endif
 
     D_8011D558 = 0;
-    spE8 = obj->segment.trans.x_position ;
+    spE8 = obj->segment.trans.x_position;
     spE4 = obj->segment.trans.y_position;
     spE0 = obj->segment.trans.z_position;
     if (racer->trickType != 0) {
@@ -2656,9 +2656,9 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     } else {
         var_f2 = 8.0;
     }
-    
+
     var_v0 = gCurrentStickX - racer->steerAngle;
-    var_v1 = ((var_v0 * updateRateF) / var_f2);
+    var_v1 = var_v0 * updateRateF / var_f2;
     if (var_v0 != 0 && var_v1 == 0) {
         if (var_v0 > 0) {
             var_v1 = 1;
@@ -2668,12 +2668,12 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         }
     }
     racer->steerAngle += var_v1;
-    
+
     var_v0 = gCurrentStickY - racer->unk1E8;
     var_v1 = var_v0 * updateRateF * 0.0625;
     if (var_v0 != 0 && var_v1 == 0) {
         if (var_v0 > 0) {
-            var_v1 = 1; 
+            var_v1 = 1;
         }
         if (var_v0 < 0) {
             var_v1 = -1;
@@ -2684,70 +2684,68 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     handle_racer_items(obj, racer, updateRate);
     func_800535C4(obj, racer);
     racer_attack_handler_plane(obj, racer);
-    if (gCurrentPlayerIndex != -1) {
+    if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
         handle_racer_head_turning(obj, racer, updateRate);
     } else {
         slowly_reset_head_angle(racer);
     }
-    
+
     if (gCurrentRacerInput & A_BUTTON) {
-        racer->throttle += (updateRateF * 0.01);
+        racer->throttle += updateRateF * 0.01;
         if (racer->throttle > 1.0) {
             racer->throttle = 1;
         }
     } else {
-        racer->throttle -= (updateRateF * 0.01);
+        racer->throttle -= updateRateF * 0.01;
         if (racer->throttle < 0) {
             racer->throttle = 0.0f;
         }
     }
-    
+
     if (racer->exitObj) {
         racer->throttle = 0.5;
     }
-    
+
     racerThrottle = racer->throttle;
-    if ((gCurrentRacerInput & B_BUTTON) && ((gCurrentStickY < -0x28) || (racer->velocity < 0.0f))) {
-        racer->brake = (f32) (racer->brake + (updateRateF * 0.016));
+    if (gCurrentRacerInput & B_BUTTON && (gCurrentStickY < -40 || racer->velocity < 0.0f)) {
+        racer->brake += updateRateF * 0.016;
         if (racer->brake > 1.2) {
             racer->brake = 1.2f;
         }
-        if ((racer->velocity < -2.0) && (racer->groundedWheels >= 2)) {
-            rumble_set(racer->playerIndex, 3U);
+        if (racer->velocity < -2.0 && racer->groundedWheels >= 2) {
+            rumble_set(racer->playerIndex, RUMBLE_TYPE_3);
         }
     } else {
-        racer->brake = (f32) (racer->brake - (updateRateF * 0.016));
+        racer->brake -= updateRateF * 0.016;
         if (racer->brake < 0.0f) {
             racer->brake = 0.0f;
         }
     }
     racerBrake = racer->brake;
     gCurrentRacerTransform.rotation.y_rotation = obj->segment.trans.rotation.y_rotation;
-    gCurrentRacerTransform.rotation.x_rotation = obj->segment.trans.rotation.x_rotation; 
+    gCurrentRacerTransform.rotation.x_rotation = obj->segment.trans.rotation.x_rotation;
     gCurrentRacerTransform.rotation.z_rotation = 0;
     gCurrentRacerTransform.x_position = 0.0f;
     gCurrentRacerTransform.y_position = 0.0f;
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
-    mtxf_from_transform(&sp60, &gCurrentRacerTransform);
-    mtxf_transform_point(&sp60, 0.0f, 0.0f, 1.0f, &racer->ox1, &racer->oy1, &racer->oz1);
-    mtxf_transform_point(&sp60, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
-    mtxf_transform_point(&sp60, 0.0f, 1.0f, 0.0f, &racer->ox2, &racer->oy2, &racer->oz2);
+    mtxf_from_transform((MtxF *) &sp60, &gCurrentRacerTransform);
+    mtxf_transform_point((MtxF *) &sp60, 0.0f, 0.0f, 1.0f, &racer->ox1, &racer->oy1, &racer->oz1);
+    mtxf_transform_point((MtxF *) &sp60, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
+    mtxf_transform_point((MtxF *) &sp60, 0.0f, 1.0f, 0.0f, &racer->ox2, &racer->oy2, &racer->oz2);
     if (racer->approachTarget == NULL) {
         apply_plane_tilt_anim(updateRate, obj, racer);
     }
     var_v0 = racer->playerIndex;
-    if ((var_v0 == -1) && (gCurrentPlayerIndex != -1)) {
+    if ((var_v0 == PLAYER_COMPUTER) && (gCurrentPlayerIndex != PLAYER_COMPUTER)) {
         gCurrentRacerHandlingStat = 1.4f;
     }
-    var_f2 = sqrtf(
-        (obj->segment.x_velocity * obj->segment.x_velocity)
-        + (obj->segment.z_velocity * obj->segment.z_velocity)
-        + (obj->segment.y_velocity * obj->segment.y_velocity)
-    ) - 2.0;
-    var_f20 = var_f2;
-    if (racer->vehicleID >= 5) {
-        var_f20 = (f32)((var_f2 - 2.0) / 2.0);
+    var_f20 = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
+                   (obj->segment.z_velocity * obj->segment.z_velocity) +
+                   (obj->segment.y_velocity * obj->segment.y_velocity)) -
+             2.0;
+    if (racer->vehicleID >= VEHICLE_BOSSES) {
+        var_f20 = ((var_f20 - 2.0) / 2.0);
     }
     if (var_f20 < 0) {
         var_f20 = 0;
@@ -2755,12 +2753,12 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     if (var_f20 > 4.0) {
         var_f20 = 4;
     }
-    spA3 = 0;
+    spA3 = FALSE;
     // This line (or somewhere here about) seems to be culprit as it incorrectly uses $f12 instead of $f2
     // This may or may not cause $20 to be swapped with $f2
-    var_f20 =  (1.0 - (var_f20 / 4.0));
+    var_f20 = 1.0 - (var_f20 / 4.0);
     var_f2 = (gCurrentCourseHeight - 50.0) - obj->segment.trans.y_position;
-    if ((racer->trickType < 2) && (racer->trickType >= -1) && (var_f2 < 0)) {
+    if (racer->trickType < 2 && racer->trickType >= -1 && var_f2 < 0) {
         var_f20 += -var_f2 / 25.0;
         if (gCurrentStickY < -20) {
             gCurrentStickY = -20;
@@ -2768,27 +2766,28 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         if (var_f20 > 2.5) {
             var_f20 = 2.5;
         }
-        spA3 = 1;
+        spA3 = TRUE;
     }
     var_f14 = racer->velocity;
     if (var_f14 < 0) {
         var_f14 = -var_f14;
     }
-    
+
     var_f0 = racer->velocity;
     if (var_f0 < 0.0f) {
         var_f0 = -var_f0;
     }
-    if ((var_f0 + 4) < var_f14) {
+    if (var_f14 > (var_f0 + 4)) {
         var_f14 = var_f0 + 3;
     }
-    if (12.0f < var_f14) {
+    if (var_f14 > 12.0f) {
         var_f14 = 12.0f;
     }
-    racerMiscAssetIdx = var_f14; // racerMiscAssetIdx = Integer part of var_f14
-    var_f0 = var_f14 - (s32)var_f14; //var_f0 = fractional part of var_f14
+    racerMiscAssetIdx = var_f14;      // racerMiscAssetIdx = Integer part of var_f14
+    var_f0 = var_f14 - (s32) var_f14; // var_f0 = fractional part of var_f14
     // UNMATCHED
-    segmentZVelocity = (gCurrentRacerMiscAssetPtr[racerMiscAssetIdx + 1] * var_f0) + (gCurrentRacerMiscAssetPtr[racerMiscAssetIdx] * (1.0 - var_f0));
+    segmentZVelocity = (gCurrentRacerMiscAssetPtr[racerMiscAssetIdx + 1] * var_f0) +
+                       (gCurrentRacerMiscAssetPtr[racerMiscAssetIdx] * (1.0 - var_f0));
     var_f14 = segmentZVelocity;
     spD4 = 0.01;
     spD0 = 0.02;
@@ -2796,38 +2795,38 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     if (racer->groundedWheels != 0) {
         spD4 = 0.02;
         spD0 = 0.01f;
-        i = 0;
-        for(var_t0 = 0; var_t0 < 4; var_t0++) {
-            if ((racer->wheel_surfaces[var_t0] != 0xFF) && (i < racer->wheel_surfaces[var_t0])) {
+        i = SURFACE_DEFAULT;
+        for (var_t0 = 0; var_t0 < 4; var_t0++) {
+            if (racer->wheel_surfaces[var_t0] != SURFACE_NONE && i < racer->wheel_surfaces[var_t0]) {
                 i = racer->wheel_surfaces[var_t0];
             }
         }
-        if (i == 4) {
+        if (i == SURFACE_STONE) {
             racer->magnetTimer = 0;
         }
-        if ((racer->playerIndex == 0) && (i == 0xC) && (gCurrentButtonsPressed & Z_TRIG)) {
-            gTajInteractStatus = 2;
+        if (racer->playerIndex == PLAYER_ONE && i == SURFACE_TAJ_PAD && gCurrentButtonsPressed & Z_TRIG) {
+            gTajInteractStatus = TAJ_TELEPORT;
         }
-        if ((gCurrentRacerInput & B_BUTTON) && (gCurrentStickY >= -40) && (racer->velocity >= -0.5)) {
+        if (gCurrentRacerInput & B_BUTTON && gCurrentStickY >= -40 && racer->velocity >= -0.5) {
             spD8 *= 8;
         }
-        if ((racer->boostTimer == 0) && (i == 3)) {
-            racer->boostTimer = normalise_time(0x2D);
-            racer->boostType = 2;
+        if (racer->boostTimer == 0 && i == SURFACE_ZIP_PAD) {
+            racer->boostTimer = normalise_time(45);
+            racer->boostType = BOOST_LARGE;
             if (racer->throttleReleased != 0) {
-                racer->boostType |= 4;
+                racer->boostType |= EMPOWER_BOOST;
             }
-            racer_play_sound(obj, 0x107);
-            play_random_character_voice(obj, 0x162, 8, 0x82);
-            rumble_set(racer->playerIndex, 8);
+            racer_play_sound(obj, SOUND_ZIP_PAD_BOOST);
+            play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, SOUND_NUMBER_OF_RACERS, 0x80 | 0x2);
+            rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
         }
-        if ((racer->vehicleID >= 5) && (racer->velocity > -6.0)) {
+        if (racer->vehicleID >= VEHICLE_BOSSES && racer->velocity > -6.0) {
             racerThrottle *= 0.6;
             racerBrake *= 0.3;
         }
         racer->trickType = 0;
-        if ((gCurrentRacerInput & B_BUTTON) && (gNumViewports < 3)) {
-            obj->particleEmittersEnabled = 3;
+        if (gCurrentRacerInput & B_BUTTON && gNumViewports < 3) {
+            obj->particleEmittersEnabled = OBJ_EMIT_1 | OBJ_EMIT_2;
         }
         gCurrentStickY = (1.0 - var_f20) * ((f32) gCurrentStickY);
         if (gCurrentStickY > 0) {
@@ -2835,20 +2834,20 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         }
     }
     var_t0 = 0;
-    if (spA3 == 0) {
+    if (spA3 == FALSE) {
         var_t0 = (var_f20 * 4608);
     }
-    if (racer->vehicleID >= 6) {
+    if (racer->vehicleID > VEHICLE_BOSSES) {
         var_t0 = 0;
     }
-    if (racer->vehicleID == 0xA) {
+    if (racer->vehicleID == VEHICLE_CARPET) {
         var_f20 = 0.0;
         var_t0 = 0;
     }
     apply_vehicle_rotation_offset(racer, updateRate, 0, var_t0, 0);
     if (racer->unk1FE == 0) {
         var_f20 = 5.5;
-        obj->particleEmittersEnabled |= 0x100;
+        obj->particleEmittersEnabled |= OBJ_EMIT_9;
     }
     if (racer->unk1FE == 1) {
         var_f20 = 2;
@@ -2867,7 +2866,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     if (gRaceStartTimer != 0) {
         var_f20 = 1;
     }
-    if (racer->vehicleIDPrev == 0xC) {
+    if (racer->vehicleIDPrev == VEHICLE_WIZPIG) {
         if (obj->segment.object.animationID < 3) {
             var_f20 = 4.0f;
         } else {
@@ -2876,27 +2875,30 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     }
     var_f20 *= gCurrentRacerWeightStat;
     obj->segment.y_velocity -= var_f20;
-    if ((racer->zipperDirCorrection != 0) && (racer->spinout_timer == 0)) {
+    if (racer->zipperDirCorrection != 0 && racer->spinout_timer == 0) {
         racer->magnetTimer = 0;
         racer->spinout_timer = 0;
         racer->trickType = 0;
-        steerVisualRotationOffset = racer->zipperObj->segment.trans.rotation.y_rotation - (racer->steerVisualRotation & 0xFFFF);
-        if (steerVisualRotationOffset >= 0x8001) {
-            steerVisualRotationOffset += 0xFFFF0001;
+        steerVisualRotationOffset =
+            racer->zipperObj->segment.trans.rotation.y_rotation - (racer->steerVisualRotation & 0xFFFF);
+        if (steerVisualRotationOffset > 0x8000) {
+            steerVisualRotationOffset -= 0xFFFF;
         }
         if (steerVisualRotationOffset < -0x8000) {
             steerVisualRotationOffset += 0xFFFF;
         }
-        racer->steerVisualRotation += ((steerVisualRotationOffset * updateRate) >> 3); 
-        if (((steerVisualRotationOffset < 0x400) && (steerVisualRotationOffset >= -0x3FF)) || (racer->playerIndex == -1)) {
-            if (racer->playerIndex != -1) {
-                sound_play_spatial(0x107, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
-                play_random_character_voice(obj, 0x162, 8, 0x82);
+        racer->steerVisualRotation += (steerVisualRotationOffset * updateRate) >> 3;
+        if (((steerVisualRotationOffset < 0x400) && (steerVisualRotationOffset > -0x400)) ||
+            (racer->playerIndex == PLAYER_COMPUTER)) {
+            if (racer->playerIndex != PLAYER_COMPUTER) {
+                sound_play_spatial(SOUND_ZIP_PAD_BOOST, obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                   obj->segment.trans.z_position, NULL);
+                play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, SOUND_NUMBER_OF_RACERS, 0x80 | 0x2);
             }
-            racer->boostTimer = normalise_time(0x2D);
-            racer->boostType = 2;
+            racer->boostTimer = normalise_time(45);
+            racer->boostType = BOOST_LARGE;
             if (racer->throttleReleased != 0) {
-                racer->boostType |= 4;
+                racer->boostType |= EMPOWER_BOOST;
             }
             rumble_set(racer->playerIndex, 8);
             racer->zipperDirCorrection = 0;
@@ -2907,40 +2909,34 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         }
     }
     if (racer->spinout_timer != 0) {
-        xRotationOffset = racer->x_rotation_offset; 
+        xRotationOffset = racer->x_rotation_offset;
         if (racer->unk1F1 == 0) {
             racer->unk1F1 = 1;
         }
-        if ((racer->groundedWheels != 0) || (racer->unk1F1 == 2)) {
+        if (racer->groundedWheels != 0 || racer->unk1F1 == 2) {
             racer->unk1F1 = 2;
             // s0.162 = x_rot_offset
             // s0.164 = z_rot_offset
-            temp_t7 = updateRate << 0xB;
+            temp_t7 = updateRate << 11;
             racer->x_rotation_offset -= temp_t7;
             var_t0 = racer->z_rotation_offset;
-            if (((temp_t7 + var_t0) > 0) && (var_t0 <= 0)) {
+            if ((temp_t7 + var_t0) > 0 && var_t0 <= 0) {
                 racer->z_rotation_offset = 0;
             } else {
                 racer->z_rotation_offset += temp_t7;
             }
-            if ((racer->velocity > -2.0) && (racer->groundedWheels >= 3)) {
+            if (racer->velocity > -2.0 && racer->groundedWheels >= 3) {
                 racer->spinout_timer = 0;
             }
         } else {
-            racer->z_rotation_offset += updateRate << 0xB;
+            racer->z_rotation_offset += updateRate << 11;
         }
-        if (
-            (racer->groundedWheels != 0)
-            && (
-                ((xRotationOffset >= 0x6001) && (racer->x_rotation_offset < 0x6001)) 
-                || 
-                ((xRotationOffset >= -0x5FFF) && (racer->x_rotation_offset < -0x5FFF))
-                ||
-                ((xRotationOffset > 0) && (racer->x_rotation_offset <= 0))
-            )
-        ) {
-            racer_play_sound(obj, 0xC);
-            if (racer->playerIndex != -1) {
+        if (racer->groundedWheels != 0 && 
+            ((xRotationOffset > 0x6000 && racer->x_rotation_offset <= 0x6000) ||
+                                             (xRotationOffset > -0x6000 && racer->x_rotation_offset <= -0x6000) ||
+                                             (xRotationOffset > 0 && racer->x_rotation_offset <= 0))) {
+            racer_play_sound(obj, SOUND_CRASH);
+            if (racer->playerIndex != PLAYER_COMPUTER) {
                 gCameraObject->shakeMagnitude = 6.0f;
             }
         }
@@ -2961,9 +2957,9 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         }
         obj->segment.trans.rotation.x_rotation += (xRotationOffset * updateRate) >> 4;
     } else {
-        if ((racer->trickType == 1) || (racer->trickType == -1)) {
+        if (racer->trickType == 1 || racer->trickType == -1) {
             var_v1 = racer->x_rotation_vel;
-            racer->x_rotation_vel = ((0, var_v1)) + ((racer->trickType * 0x600) * updateRate);
+            racer->x_rotation_vel = (0, var_v1) + ((racer->trickType * 0x600) * updateRate);
             racerThrottle = 1.2f;
             if (racer->trickType == 1) {
                 if (var_v1 > 0) {
@@ -2982,11 +2978,12 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
                     racer->x_rotation_vel = 0;
                 }
             }
-        } else if ((racer->trickType == 2) || (racer->trickType == -2)) {
+        } else if (racer->trickType == 2 || racer->trickType == -2) {
             var_v1 = obj->segment.trans.rotation.x_rotation;
             var_t0 = var_v1;
             if (racer->unk1D5 == 0) {
-                obj->segment.trans.rotation.x_rotation = var_v1 + ((racer->trickType * (((0x180 & 0xFFFFFFFF) & 0xFFFFFFFF) & 0xFFFFFFFF)) * updateRate);
+                obj->segment.trans.rotation.x_rotation =
+                    var_v1 + ((racer->trickType * (((0x180 & 0xFFFFFFFF) & 0xFFFFFFFF) & 0xFFFFFFFF)) * updateRate);
             }
             if (!(gCurrentRacerInput & R_TRIG)) {
                 racer->unk1D5 = 0;
@@ -2999,7 +2996,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
             var_v1 = racer->x_rotation_vel;
             racer->x_rotation_vel = var_v1 - ((var_v1 * updateRate) >> 4);
             obj->segment.x_velocity = racer->velocity * racer->ox1;
-            obj->segment.y_velocity = racer->oy1 * racer->velocity; 
+            obj->segment.y_velocity = racer->oy1 * racer->velocity;
             obj->segment.z_velocity = racer->velocity * racer->oz1;
             if (racer->trickType == 2) {
                 if (var_t0 > 0) {
@@ -3011,15 +3008,15 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
                             racer->trickType = 0;
                             obj->segment.trans.rotation.x_rotation = 0;
                             racer->boostTimer = normalise_time(0xA);
-                            racer->boostType = 0;
+                            racer->boostType = BOOST_NONE;
                             if (racer->throttleReleased != 0) {
-                                racer->boostType |= 4;
+                                racer->boostType |= EMPOWER_BOOST;
                             }
                         }
                     }
                 }
-                if ((var_t0 >= 0x4001) && (obj->segment.trans.rotation.x_rotation < -0x4000) && (gCurrentRacerInput & R_TRIG)) {
-                    racer->unk1D5 = 0x3C;
+                if (var_t0 > 0x4000 && obj->segment.trans.rotation.x_rotation < -0x4000 && (gCurrentRacerInput & R_TRIG)) {
+                    racer->unk1D5 = 60;
                 }
             } else {
                 if (var_t0 < 0) {
@@ -3030,24 +3027,24 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
                         if (racer->unk1D4 != 0) {
                             racer->trickType = 0;
                             obj->segment.trans.rotation.x_rotation = 0;
-                            racer->boostTimer = normalise_time(0xA);
-                            racer->boostType = 0;
+                            racer->boostTimer = normalise_time(10);
+                            racer->boostType = BOOST_NONE;
                             if (racer->throttleReleased != 0) {
-                                racer->boostType |= 4;
+                                racer->boostType |= EMPOWER_BOOST;
                             }
                         }
                     }
                 }
-                if ((var_t0 < -0x4000) && (obj->segment.trans.rotation.x_rotation > 0x4000) && (gCurrentRacerInput & R_TRIG)) {
-                    racer->unk1D5 = 0x3C;
+                if (var_t0 < -0x4000 && obj->segment.trans.rotation.x_rotation > 0x4000 && (gCurrentRacerInput & R_TRIG)) {
+                    racer->unk1D5 = 60;
                 }
             }
         } else {
             racerSteerAngle = racer->steerAngle;
-            spA1 = 0;
+            spA1 = FALSE;
             if (racer->groundedWheels != 0) {
                 if (gCurrentRacerInput & R_TRIG) {
-                    spA1 = 1;
+                    spA1 = TRUE;
                 }
                 gCurrentRacerInput &= ~R_TRIG;
             }
@@ -3067,15 +3064,15 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
                     }
                     xRotationOffset = -xRotationOffset;
                 }
-                var_t0 = (var_t0 *  (f32) (1.0 - ((f32)xRotationOffset / 4096)));
+                var_t0 *= (f32) (1.0 - ((f32) xRotationOffset / 4096));
                 if (gCurrentRacerInput & R_TRIG) {
-                    obj->particleEmittersEnabled |= 0xC0;
-                    racer->x_rotation_vel -= (var_t0 * 0x10 * updateRate) >> 1;
+                    obj->particleEmittersEnabled |= OBJ_EMIT_7 | OBJ_EMIT_8;
+                    racer->x_rotation_vel -= (var_t0 * 16 * updateRate) >> 1;
                 }
                 racer->x_rotation_vel -= (var_t0 * updateRate * 20) >> 1;
-                racer->x_rotation_vel -= ((racer->x_rotation_vel * updateRate) >> 4);
+                racer->x_rotation_vel -= (racer->x_rotation_vel * updateRate) >> 4;
                 if (racer->zipperDirCorrection == 0) {
-                    if ((gCurrentPlayerIndex != -1) && (racer->raceFinished == 0)) {
+                    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->raceFinished == FALSE) {
                         var_t0 = -racer->x_rotation_vel >> 6;
                         if ((gCurrentRacerInput & R_TRIG) && (gCurrentRacerInput & B_BUTTON)) {
                             var_t0 *= 2;
@@ -3092,55 +3089,55 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
             } else {
                 var_v0 = -(racer->x_rotation_vel & 0xFFFF);
                 var_t0 = racerSteerAngle * 4;
-                if (var_v0 >= 0x8001) {
-                    var_v0 += 0xFFFF0001;
+                if (var_v0 > 0x8000) {
+                    var_v0 -= 0xFFFF;
                 }
                 if (var_v0 < -0x8000) {
                     var_v0 += 0xFFFF;
                 }
-                racer->x_rotation_vel += ((var_v0 * updateRate) >> 4);
+                racer->x_rotation_vel += (var_v0 * updateRate) >> 4;
                 if (gCurrentRacerInput & R_TRIG) {
                     var_t0 = racerSteerAngle * 6;
                 } else {
-                    var_t0 = racerSteerAngle * 4; 
+                    var_t0 = racerSteerAngle * 4;
                 }
                 var_v0 = var_t0 * updateRate;
                 racer->steerVisualRotation -= var_v0 & 0xFFFF;
             }
-            if (!(gCurrentRacerInput & R_TRIG) || (racer->groundedWheels == 0) || (racer->zipperDirCorrection != 0)) {
-                var_f20 = (f32) ((racer->velocity * ((f32) (var_t0))) * 0.00015);
+            if (!(gCurrentRacerInput & R_TRIG) || racer->groundedWheels == 0 || racer->zipperDirCorrection != 0) {
+                var_f20 = racer->velocity * var_t0 * 0.00015;
                 obj->segment.x_velocity -= racer->ox3 * var_f20;
                 obj->segment.y_velocity -= racer->oy3 * var_f20;
                 obj->segment.z_velocity -= racer->oz3 * var_f20;
             }
-            
+
             var_t0 = gCurrentStickY;
-            if ((gCurrentPlayerIndex != -1) && (racer->raceFinished == 0)) {
+            if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->raceFinished == FALSE) {
                 var_t0 = racer->unk1E8;
             }
-            
+
             var_f2 = -racer->velocity;
             if (var_f2 < 4.0) {
-                var_f2 = 4.0f;  
+                var_f2 = 4.0f;
             }
             if (var_f2 > 14.0) {
-                var_f2 = 14.0f; 
+                var_f2 = 14.0f;
             }
             var_f2 /= 7.0;
             var_t0 *= var_f2;
 
             // Note: The following if/else has messed up t registers
-            if ((gCurrentRacerInput & R_TRIG) == 0) {
-                obj->segment.trans.rotation.x_rotation -= ((obj->segment.trans.rotation.x_rotation * updateRate) >> 4);
-                obj->segment.trans.rotation.x_rotation -= ((var_t0 >> 1) * 19 * updateRate) >> 1 ;
+            if (!(gCurrentRacerInput & R_TRIG)) {
+                obj->segment.trans.rotation.x_rotation -= (obj->segment.trans.rotation.x_rotation * updateRate) >> 4;
+                obj->segment.trans.rotation.x_rotation -= ((var_t0 >> 1) * 19 * updateRate) >> 1;
             } else {
-                obj->segment.trans.rotation.x_rotation -= ((obj->segment.trans.rotation.x_rotation * updateRate) >> 4);
+                obj->segment.trans.rotation.x_rotation -= (obj->segment.trans.rotation.x_rotation * updateRate) >> 4;
                 obj->segment.trans.rotation.x_rotation -= ((var_t0 >> 1) * 30 * updateRate) >> 1;
             }
-            
-            if (racer->tappedR != 0) {
-                racer->tappedR = 0;
-                if ((racer->groundedWheels == 0) && (racer->velocity < -6.5) && (racer->waterTimer == 0)) {
+
+            if (racer->tappedR) {
+                racer->tappedR = FALSE;
+                if (racer->groundedWheels == 0 && racer->velocity < -6.5 && racer->waterTimer == 0) {
                     if (gCurrentStickX > 40) {
                         racer->trickType = -1;
                     }
@@ -3158,11 +3155,9 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
             }
         }
     }
-    if (gCurrentPlayerIndex != -1) {
-        if (racer->velocity < -4.0f) {
-            if ((obj->particleEmittersEnabled & 0xC0) != 0xC0) {
-                obj->particleEmittersEnabled |= 0xC;
-            }
+    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->velocity < -4.0f) {
+        if ((obj->particleEmittersEnabled & (OBJ_EMIT_7 | OBJ_EMIT_8)) != (OBJ_EMIT_7 | OBJ_EMIT_8)) {
+            obj->particleEmittersEnabled |= OBJ_EMIT_3 | OBJ_EMIT_4;
         }
     }
     // This line looks unmatched
@@ -3172,20 +3167,20 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
             racer->throttle = 1;
             var_f14 = 2.0f;
             racer->boostTimer -= updateRate;
-            obj->particleEmittersEnabled |= 0xC0;
+            obj->particleEmittersEnabled |= OBJ_EMIT_7 | OBJ_EMIT_8;
         }
     } else {
         racer->boostTimer = 0;
     }
-    if ((racer->zipperDirCorrection == 0) && (gRaceStartTimer == 0)) {
-        if ((racer->groundedWheels == 0) && (racerThrottle < 0.4) && (racer->vehicleID != 0xA)) {
+    if (racer->zipperDirCorrection == 0 && gRaceStartTimer == 0) {
+        if (racer->groundedWheels == 0 && racerThrottle < 0.4 && racer->vehicleID != VEHICLE_CARPET) {
             racerThrottle = 0.4f;
         }
         var_f0 = racerThrottle * var_f14;
         obj->segment.x_velocity -= racer->ox1 * var_f0;
         obj->segment.y_velocity -= racer->oy1 * var_f0;
         obj->segment.z_velocity -= racer->oz1 * var_f0;
-        if ((racer->groundedWheels >= 3) || (racer->velocity < 1.0) || (racer->vehicleID == 0xA)) {
+        if (racer->groundedWheels >= 3 || racer->velocity < 1.0 || racer->vehicleID == VEHICLE_CARPET) {
             if (racer->groundedWheels == 0) {
                 racerBrake /= 2;
             }
@@ -3198,7 +3193,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         if (racer->velocity < 0.0f) {
             spEC = -spEC;
         }
-        if ((spEC < 1.0f) && !(gCurrentRacerInput & A_BUTTON)) {
+        if (spEC < 1.0f && !(gCurrentRacerInput & A_BUTTON)) {
             var_f20 = racer->velocity * spD8 * 8.0f;
         } else {
             var_f20 = spEC * spD8;
@@ -3214,17 +3209,17 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         obj->segment.x_velocity -= racer->ox3 * var_f20;
         obj->segment.y_velocity -= racer->oy3 * var_f20;
         obj->segment.z_velocity -= racer->oz3 * var_f20;
-        if ((racer->trickType == 1) || (racer->trickType == -1)) {
-            spEC = (f32) (racer->velocity * 0.058823529411764705 * 1.5);
-            var_f20 = coss_f(racer->x_rotation_vel) * spEC * (f32) racer->trickType;
-            if ((racer->x_rotation_vel >= 0x4001) || (racer->x_rotation_vel < -0x4000)) {
+        if (racer->trickType == 1 || racer->trickType == -1) {
+            spEC = racer->velocity * 0.058823529411764705 * 1.5; 
+            var_f20 = coss_f(racer->x_rotation_vel) * spEC * racer->trickType;
+            if (racer->x_rotation_vel > 0x4000 || racer->x_rotation_vel < -0x4000) {
                 var_f20 *= 2;
             }
             obj->segment.x_velocity -= racer->ox3 * var_f20;
             obj->segment.y_velocity -= racer->oy3 * var_f20;
             obj->segment.z_velocity -= racer->oz3 * var_f20;
-            
-            var_f20 = (f32) ((sins_f(racer->x_rotation_vel) * spEC * (f32) racer->trickType) * 1.5);
+
+            var_f20 = sins_f(racer->x_rotation_vel) * spEC * racer->trickType * 1.5;
             obj->segment.x_velocity -= racer->ox2 * var_f20;
             obj->segment.y_velocity -= racer->oy2 * var_f20;
             obj->segment.z_velocity -= racer->oz2 * var_f20;
@@ -3241,29 +3236,29 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         racer->forwardVel -= (racer->forwardVel + (racer->velocity * 0.05)) * 0.125;
     }
     racer->unk10C = 0;
-    racer->y_rotation_vel += ((gCurrentCarSteerVel - racer->y_rotation_vel) >> 3);
-    obj->segment.trans.rotation.y_rotation = racer->steerVisualRotation + racer->y_rotation_vel; 
-    racer->z_rotation_vel += ((D_8011D558 - racer->z_rotation_vel) >> 3);
+    racer->y_rotation_vel += (gCurrentCarSteerVel - racer->y_rotation_vel) >> 3;
+    obj->segment.trans.rotation.y_rotation = racer->steerVisualRotation + racer->y_rotation_vel;
+    racer->z_rotation_vel += (D_8011D558 - racer->z_rotation_vel) >> 3;
     obj->segment.trans.rotation.z_rotation = racer->x_rotation_vel + racer->z_rotation_vel;
     if (racer->magnetTimer != 0) {
         obj->segment.x_velocity = gRacerMagnetVelX;
         obj->segment.z_velocity = gRacerMagnetVelZ;
     }
     if (racer->approachTarget == NULL) {
-        var_f20 = obj->segment.x_velocity; 
+        var_f20 = obj->segment.x_velocity;
         spEC = obj->segment.z_velocity;
         if (racer->unk1D2 != 0) {
-            var_f20 = (f32) (var_f20 + (racer->unk11C * 0.5));
-            spEC = (f32) (spEC + (racer->unk120 * 0.5));
+            var_f20 += racer->unk11C * 0.5;
+            spEC += racer->unk120 * 0.5;
         }
-        if (gRacerInputBlocked != 0) {
-            if ((var_f20 > 0.5) || (var_f20 < -0.5)) {
-                var_f20 = (var_f20 * 0.65);
+        if (gRacerInputBlocked) {
+            if (var_f20 > 0.5 || var_f20 < -0.5) {
+                var_f20 *= 0.65;
             } else {
                 var_f20 = 0.0f;
             }
-            if ((spEC > 0.5) || (spEC < -0.5)) {
-                spEC = (f32) (spEC * 0.65);
+            if (spEC > 0.5 || spEC < -0.5) {
+                spEC *= 0.65;
             } else {
                 spEC = 0.0f;
             }
@@ -3271,15 +3266,16 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
             var_f20 += racer->unk84;
             spEC += racer->unk88;
         }
-        if ((move_object(obj, var_f20 * updateRateF, obj->segment.y_velocity * updateRateF, spEC * updateRateF) != 0) && (gCurrentPlayerIndex != -1)) {
-            sp5F = 1;
+        if (move_object(obj, var_f20 * updateRateF, obj->segment.y_velocity * updateRateF, spEC * updateRateF) != FALSE &&
+            gCurrentPlayerIndex != PLAYER_COMPUTER) {
+            playerObjectMoved = TRUE;
         }
     } else {
         racer_approach_object(obj, racer, updateRateF);
     }
     var_t0 = racer->groundedWheels;
-    if (gCurrentPlayerIndex == -1) {
-        if ((racer->vehicleIDPrev != 0xD) || (gRaceStartTimer != 0)) {
+    if (gCurrentPlayerIndex == PLAYER_COMPUTER) {
+        if (racer->vehicleIDPrev != VEHICLE_ROCKET || gRaceStartTimer != 0) {
             onscreen_ai_racer_physics(obj, racer, updateRate);
         } else {
             racer->groundedWheels = 0;
@@ -3288,9 +3284,9 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     } else {
         func_80054FD0(obj, racer, updateRate);
     }
-    if ((var_t0 == 0) && (racer->groundedWheels != 0) && (racer->spinout_timer != 0)) {
-        racer_play_sound(obj, 0xC);
-        if (racer->playerIndex != -1) {
+    if (var_t0 == 0 && racer->groundedWheels != 0 && racer->spinout_timer != 0) {
+        racer_play_sound(obj, SOUND_CRASH);
+        if (racer->playerIndex != PLAYER_COMPUTER) {
             gCameraObject->shakeMagnitude = 6.0f;
         }
     }
@@ -3301,11 +3297,11 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         }
     } else {
         var_f0 = 1.0f / updateRateF;
-        var_f20 = ((obj->segment.trans.x_position - spE8) - D_8011D548) * var_f0;
+        var_f20 = (obj->segment.trans.x_position - spE8 - D_8011D548) * var_f0;
         obj->segment.y_velocity = (obj->segment.trans.y_position - spE4) * var_f0;
-        spEC = ((obj->segment.trans.z_position - spE0) - D_8011D54C) * var_f0;
+        spEC = (obj->segment.trans.z_position - spE0 - D_8011D54C) * var_f0;
     }
-    if (gRaceStartTimer == 0x64) {
+    if (gRaceStartTimer == 100) {
         obj->segment.y_velocity = -5.0f;
     }
     obj->segment.x_velocity = var_f20;
@@ -3313,13 +3309,14 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     gCurrentRacerTransform.rotation.y_rotation = -obj->segment.trans.rotation.y_rotation;
     gCurrentRacerTransform.rotation.x_rotation = -obj->segment.trans.rotation.x_rotation;
     gCurrentRacerTransform.rotation.z_rotation = 0;
-    gCurrentRacerTransform.x_position = 0.0f; 
+    gCurrentRacerTransform.x_position = 0.0f;
     gCurrentRacerTransform.y_position = 0.0f;
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
-    mtxf_from_inverse_transform((f32 (*)[4]) &sp60[0], &gCurrentRacerTransform);
-    mtxf_transform_point((f32 (*)[4]) &sp60[0], obj->segment.x_velocity, obj->segment.y_velocity, obj->segment.z_velocity, &racer->lateral_velocity, &racer->unk34, &racer->velocity);
-    if ((obj->unk60 != NULL) && (obj->unk60->unk0 >= 3)) {
+    mtxf_from_inverse_transform((MtxF *) &sp60, &gCurrentRacerTransform);
+    mtxf_transform_point((MtxF *) &sp60, obj->segment.x_velocity, obj->segment.y_velocity,
+                         obj->segment.z_velocity, &racer->lateral_velocity, &racer->unk34, &racer->velocity);
+    if (obj->unk60 != NULL && obj->unk60->unk0 >= 3) {
         temp_v0_obj = obj->unk60->unk4[2];
         temp_v0_obj->segment.trans.rotation.y_rotation = 0x4000;
         temp_v0_obj->segment.object.modelIndex += 1;
@@ -3327,16 +3324,16 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
             temp_v0_obj->segment.object.modelIndex = 0;
         }
     }
-    if ((obj->unk60 != NULL) && (obj->unk60->unk0 >= 3)) {
-        if ((racer->groundedWheels != 0) || (spA2 != 0)) {
+    if (obj->unk60 != NULL && obj->unk60->unk0 >= 3) {
+        if (racer->groundedWheels != 0 || spA2 != FALSE) {
             temp_v0_obj = obj->unk60->unk4[0];
             var_f0 = temp_v0_obj->segment.trans.y_position;
             if (var_f0 > 0.0f) {
                 temp_v0_obj->segment.trans.y_position = var_f0 - 2.0;
             } else {
                 temp_v0_obj->segment.trans.y_position = 0.0f;
-            } 
-            temp_v0_obj->segment.trans.flags &= ~0x4000;
+            }
+            temp_v0_obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
             temp_v0_obj = obj->unk60->unk4[1];
             var_f0 = temp_v0_obj->segment.trans.y_position;
             if (var_f0 > 0.0f) {
@@ -3344,54 +3341,54 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
             } else {
                 temp_v0_obj->segment.trans.y_position = 0.0f;
             }
-            temp_v0_obj->segment.trans.flags &= ~0x4000;
+            temp_v0_obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
         } else {
             temp_v0_obj = obj->unk60->unk4[0];
             var_f0 = temp_v0_obj->segment.trans.y_position;
             if (var_f0 < 20.0f) {
                 temp_v0_obj->segment.trans.y_position = var_f0 + 1.0f;
             } else {
-                temp_v0_obj->segment.trans.flags |= 0x4000;
+                temp_v0_obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
             }
             temp_v0_obj = obj->unk60->unk4[1];
             var_f0 = temp_v0_obj->segment.trans.y_position;
             if (var_f0 < 20.0f) {
                 temp_v0_obj->segment.trans.y_position = var_f0 + 1.0f;
             } else {
-                temp_v0_obj->segment.trans.flags |= 0x4000;
+                temp_v0_obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
             }
         }
     }
-    if ((gCurrentPlayerIndex != -1) && (racer->boostTimer == 0) && (gNumViewports < 2)) {
-        temp_16_v1sset = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
-        temp_16_v1sset = &temp_16_v1sset[racer->racerIndex];
-        var_t0 = ((racer->boostType & 4) >> 2) + 9; 
+    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->boostTimer == 0 && gNumViewports < 2) {
+        boostObj = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
+        boostObj = &boostObj[racer->racerIndex];
+        var_t0 = ((racer->boostType & EMPOWER_BOOST) >> 2) + 9;
         if (var_t0 >= 10) {
-            if ((temp_16_v1sset->unk70 > 0) || (temp_16_v1sset->unk74 > 0.0)) {
+            if (boostObj->unk70 > 0 || boostObj->unk74 > 0.0) {
                 obj->particleEmittersEnabled |= 1 << var_t0;
             }
         } else {
-            if ((temp_16_v1sset->unk70 == 2) && (temp_16_v1sset->unk74 < 0.5)) { 
+            if (boostObj->unk70 == 2 && boostObj->unk74 < 0.5) {
                 obj->particleEmittersEnabled |= 1 << var_t0;
-            } else if ((temp_16_v1sset->unk70 < 2) && (temp_16_v1sset->unk74 > 0.0f)) {
+            } else if (boostObj->unk70 < 2 && boostObj->unk74 > 0.0f) {
                 obj->particleEmittersEnabled |= 1 << var_t0;
             }
         }
     }
-    if (gCurrentPlayerIndex == -1) {
-        obj->particleEmittersEnabled = 0;
+    if (gCurrentPlayerIndex == PLAYER_COMPUTER) {
+        obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     }
     if (racer->unk201 == 0) {
-        obj->particleEmittersEnabled = 0;
+        obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     }
-    if (racer->vehicleIDPrev < 5) {
+    if (racer->vehicleIDPrev < VEHICLE_BOSSES) {
         update_vehicle_particles(obj, updateRate);
     }
-    if (spA1 != 0) {
+    if (spA1 != FALSE) {
         gCurrentRacerInput |= R_TRIG;
     }
     second_racer_camera_update(obj, racer, 1, updateRateF);
-    if (sp5F != 0) {
+    if (playerObjectMoved != FALSE) {
         func_800230D0(obj, racer);
     }
 }
