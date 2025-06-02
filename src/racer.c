@@ -1028,16 +1028,16 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
 #endif
 
 void func_80045128(Object **racerObjs) {
-    Object_Racer *obj;
+    Object_Racer *racer;
     s32 i;
 
     for (i = 0; i < 4; i++) {
-        obj = (Object_Racer *) racerObjs[i]->unk64;
-        gEggChallengeFlags[i] = obj->lap;
-        if (obj->eggHudCounter) {
+        racer = &racerObjs[i]->unk64->racer;
+        gEggChallengeFlags[i] = racer->lap;
+        if (racer->eggHudCounter != 0) {
             gEggChallengeFlags[i] |= 0x40;
         }
-        if (obj->held_obj != 0) {
+        if (racer->held_obj != NULL) {
             gEggChallengeFlags[i] |= 0x80;
         }
     }

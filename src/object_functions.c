@@ -720,7 +720,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
     s32 hasCollision;
     s8 surface;
 
-    egg = (Object_CollectEgg *) obj->unk64;
+    egg = &obj->unk64->egg;
     updateRateF = updateRate;
     if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
