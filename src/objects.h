@@ -501,6 +501,7 @@ void race_transition_adventure(s32 updateRate);
 void func_8001E4C4(void);
 void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles);
 s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
+s32 ainode_find_next(s32 nodeId, s32 nextNodeId, s32 direction);
 
 /**
  * Faster variant of the shading function for objects.
@@ -542,5 +543,6 @@ void obj_update(s32 updateRate);
 void func_800159C8(Object *, Object *);
 void obj_door_number(ObjectModel *, Object *);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
+f32 func_8001C6C4(Object_NPC *, Object *, f32, f32, s32);
 
 #endif

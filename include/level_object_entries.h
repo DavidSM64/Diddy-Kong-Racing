@@ -885,6 +885,12 @@ typedef struct LevelObjectEntry_Hud {
     s32 offsetY;
 } LevelObjectEntry_Hud;
 
+typedef struct LevelObjectEntry_BHV_UNK_5C {
+    LevelObjectEntryCommon common;
+    s8 unk8;
+    s8 unk9;
+} LevelObjectEntry_BHV_UNK_5C;
+
 typedef struct LevelObjectEntry {
     union {
         LevelObjectEntry_Racer racer;
@@ -978,6 +984,7 @@ typedef struct LevelObjectEntry {
         LevelObjectEntry_WavePower wavePower;
         LevelObjectEntry_CharacterSelect characterSelect;
         LevelObjectEntry_Hud hud;
+        LevelObjectEntry_BHV_UNK_5C bhv_unk_5C;
     };
 } LevelObjectEntry;
 

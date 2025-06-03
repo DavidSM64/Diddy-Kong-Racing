@@ -443,8 +443,6 @@ void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param)
 void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry);
 void obj_loop_butterfly(Object *butterflyObj, s32 updateRate);
 s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation);
-s32 ainode_find_next(s32, s32, s32);
-f32 func_8001C6C4(Object_64 *, Object *, f32, f32, s32);
 void func_8000CBF0(Object*, s32);
 void try_to_collect_egg(Object *, Object_CollectEgg*);
 
