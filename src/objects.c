@@ -845,14 +845,14 @@ void clear_object_pointers(void) {
     D_8011AE88 = 0;
     D_8011ADD4 = 0;
     gCutsceneID = 0;
-    D_8011AE7E = 1;
+    D_8011AE7E = TRUE;
     gFirstActiveObjectId = 0;
     gTransformTimer = 0;
     gIsTajChallenge = FALSE;
     gTajRaceInit = 0;
     D_8011AF60[0] = 0;
     D_8011AE00 = 0;
-    D_8011AE01 = 1;
+    D_8011AE01 = TRUE;
     D_8011AD53 = 0;
     gOverrideDoors = FALSE;
 }
@@ -7117,7 +7117,7 @@ void func_8001E45C(s32 cutsceneID) {
     if (cutsceneID != gCutsceneID) {
         gCutsceneID = cutsceneID;
         gPathUpdateOff = FALSE;
-        D_8011AE7E = 1;
+        D_8011AE7E = TRUE;
         if (get_game_mode() == GAMEMODE_MENU) {
             set_frame_blackout_timer();
         }
@@ -7227,8 +7227,8 @@ void func_8001E89C(void) {
     Object_8001E89C_64 *obj64;
 
     // some flag, flips to 1 when loading a new zone
-    if (D_8011AE01 != 0) {
-        D_8011AE01 = 0;
+    if (D_8011AE01 != FALSE) {
+        D_8011AE01 = FALSE;
         return;
     }
 
@@ -7245,8 +7245,130 @@ void func_8001E89C(void) {
     }
 }
 
-// https://decomp.me/scratch/G2ZOW
+#ifdef NON_EQUIVALENT
+void func_8001E93C(void) {
+    s32 pad[3];
+    LevelObjectEntry_OverridePos *overridePos;
+    Object *obj;
+    s32 numOfObjs;
+    s32 pad2;
+    s32 i;
+    s32 stopLooping;
+    s32 sp28;
+    s16 animActorIndex1;
+    s16 animActorIndex2;
+    s32 var_a0;
+    Object *animObj1;
+    Object *animObj2;
+    LevelObjectEntry_Animation *animation1; // Not 100% positive this is an animation yet.
+    LevelObjectEntry_Animation *animation2; // Not 100% positive this is an animation yet.
+
+    if (D_8011AE7E) {
+        for (numOfObjs = 0; numOfObjs < D_8011AE78; numOfObjs++) {
+            obj = D_8011AE74[numOfObjs];
+            animation1 = &obj->segment.level_entry->animation;
+            if (obj->unk64 != NULL && animation1->channel != 20) {
+                animObj1 = (Object *) obj->unk64;
+                free_object(animObj1);
+                obj->unk64 = NULL;
+            }
+        }
+    }
+    if (D_8011AD3E > 20) {
+        D_8011AD3E = 0;
+    }
+    func_8001E4C4();
+    numOfObjs = 0;
+    for (i = 0; i < gObjectCount; i++) {
+        if (gObjPtrList[i] != NULL) {
+            if (!(gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
+                if (gObjPtrList[i]->behaviorId == BHV_OVERRIDE_POS) {
+                    overridePos = &gObjPtrList[i]->segment.level_entry->overridePos;
+                    if (overridePos->cutsceneId == gCutsceneID ||
+                        overridePos->cutsceneId == (CUTSCENE_SHERBET_ISLAND_BOSS | CUTSCENE_ADVENTURE_TWO)) {
+                        D_8011ADD8[numOfObjs] = gObjPtrList[i];
+                        numOfObjs++;
+                    }
+                }
+            }
+        }
+    }
+    D_8011AE00 = numOfObjs;
+    D_8011AE01 = TRUE;
+
+    D_8011AE78 = 0;
+    numOfObjs = 0;
+    for (i = gObjectListStart; i < gObjectCount; i++) {
+        if (gObjPtrList[i] != NULL) {
+            if (!(gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
+                if (gObjPtrList[i]->behaviorId == BHV_ANIMATION) {
+                    D_8011AE74[numOfObjs] = gObjPtrList[i];
+                    numOfObjs++;
+                }
+            }
+        }
+    }
+
+    do {
+        stopLooping = TRUE;
+        for (i = 0; i < numOfObjs - 1; i++) {
+            animObj1 = D_8011AE74[i + 0];
+            animObj2 = D_8011AE74[i + 1];
+            animation1 = &animObj1->segment.level_entry->animation;
+            animation2 = &animObj2->segment.level_entry->animation;
+            animActorIndex1 = animation1->actorIndex;
+            animActorIndex2 = animation2->actorIndex;
+
+            if (animation1->channel == 20) {
+                animActorIndex1 -= 400;
+            }
+            if (animation2->channel == 20) {
+                animActorIndex2 -= 400;
+            }
+
+            if (!gCutsceneID && !gCutsceneID) {} // fake
+
+            if (animActorIndex2 < animActorIndex1) {
+                D_8011AE74[i] = animObj2;
+                D_8011AE74[i + 1] = animObj1;
+                stopLooping = FALSE;
+            } else if (animActorIndex1 == animActorIndex2) {
+                if (animation2->order < animation1->order) {
+                    D_8011AE74[i] = animObj2;
+                    D_8011AE74[i + 1] = animObj1;
+                    stopLooping = FALSE;
+                } else if (animation1->order == animation2->order && (animObj2->properties.animatedObj.action == 1 ||
+                                                                      animObj1->properties.animatedObj.action == 2)) {
+                    D_8011AE74[i] = animObj2;
+                    D_8011AE74[i + 1] = animObj1;
+                    stopLooping = FALSE;
+                }
+            }
+        }
+    } while (stopLooping == FALSE);
+
+    var_a0 = -101;
+    for (i = 0; i < numOfObjs; i++) {
+        animation1 = &D_8011AE74[i]->segment.level_entry->animation;
+        if (animation1->actorIndex != var_a0) {
+            var_a0 = animation1->actorIndex;
+            sp28 = 0;
+        }
+        animation1->order = sp28++; // It is possible that sp28 could not be initalized?
+        D_8011AE74[i]->properties.animatedObj.action = 0;
+        if (!i) {} // fake
+    }
+
+    D_8011AE78 = numOfObjs;
+    if (D_8011AE7E) {
+        func_8001EE74();
+    }
+    D_8011AE7E = FALSE;
+}
+#else
+// https://decomp.me/scratch/OKbBN
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001E93C.s")
+#endif
 
 void func_8001EE74(void) {
     LevelObjectEntry_Animation *animation;
