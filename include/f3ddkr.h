@@ -6,11 +6,13 @@
 
 // This file is an extension of PR/gbi.h
 
-// Color combiner values. These need better names!
+// Color combiner values.
+
 // cycle 1 modes
+
 #define	G_CC_ENVIRONMENT   0, 0, 0, ENVIRONMENT, 0, 0, 0, ENVIRONMENT
 // blend two textures, modulated by SHADE, alpha modulated between texture and 1 by PRIMITITIVE
-#define DKR_CC_BLENDTEX_MODULATEA_1_PRIM TEXEL1, TEXEL0, SHADE, TEXEL0, 1, TEXEL0, PRIMITIVE, TEXEL0
+#define G_CC_BLENDTEX_MODULATEA_1_PRIM TEXEL1, TEXEL0, SHADE, TEXEL0, 1, TEXEL0, PRIMITIVE, TEXEL0
 
 // The following several modes, where blending with ENVIRONMENT is modulated by ENV_ALPHA,
 // are likely used to create ambient lighting defined by EnvColor (color and intensity)
@@ -39,22 +41,22 @@
 #define G_CC_DECAL_SCALE TEXEL0, 0, SCALE, 0, 0, 0, 0, TEXEL0
 // ENVIRONMENT color, alpha from TEXEL0, used for text
 #define	G_CC_ENV_DECALA 0, 0, 0, ENVIRONMENT, 0, 0, 0, TEXEL0
-
 // blend two textures, modulated by PRIMITIVE
 // used for blinking lights
 #define G_CC_BLENDTEX_PRIM TEXEL1, TEXEL0, PRIMITIVE, TEXEL0, TEXEL1, TEXEL0, PRIMITIVE, TEXEL0
 
 // cycle 2 modes
+
 // Alpha = COMBINED * PRIM
-#define DKR_CC_MODULATEA_PRIM2 0, 0, 0, COMBINED, COMBINED, 0, PRIMITIVE, 0
+#define G_CC_MODULATEA_PRIM2 0, 0, 0, COMBINED, COMBINED, 0, PRIMITIVE, 0
 // Blend with ENV using ENV_ALPHA, alpha = COMBINED * PRIM
-#define DKR_CC_BLEND_ENV_ALPHA_MODULATEA_PRIM2 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, COMBINED, 0, PRIMITIVE, 0
+#define G_CC_BLEND_ENV_ALPHA_MODULATEA_PRIM2 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, COMBINED, 0, PRIMITIVE, 0
 // Blend with ENV using ENV_ALPHA, alpha unchanged
-#define DKR_CC_BLEND_ENV_ALPHA2 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, 0, 0, 0, COMBINED
+#define G_CC_BLEND_ENV_ALPHA2 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, 0, 0, 0, COMBINED
 // Blend with ENV using SHADE, alpha unchanged; used after G_CC_SHADEALPHA_BLEND
-#define DKR_CC_BLENDI_SHADE ENVIRONMENT, COMBINED, SHADE, COMBINED, 0, 0, 0, COMBINED
+#define G_CC_BLENDI_SHADE ENVIRONMENT, COMBINED, SHADE, COMBINED, 0, 0, 0, COMBINED
 // Blend with ENV using ENV_ALPHA, alpha = COMBINED * SHADE; used for water
-#define DKR_CC_BLENDI_ENV_ALPHA_MODULATEA2 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, COMBINED, 0, SHADE, 0
+#define G_CC_BLENDI_ENV_ALPHA_MODULATEA2 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, COMBINED, 0, SHADE, 0
 #define G_CC_MODULATEIDECALA2 COMBINED, 0, SHADE, 0, 0, 0, 0, COMBINED
 
 // Inside the RSP, when we change otherMode, it sends the new mode to the RDP with the lower 4 bits set to 1.
@@ -84,18 +86,16 @@
 // OtherMode_L values.
 #define DKR_OML_COMMON G_AC_NONE | G_ZS_PIXEL
 
-// Render mode values. These need better names!
-#define DKR_RM_UNKNOWN0   Z_UPD | GBL_c1(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_IN, G_BL_1MA)
-#define DKR_RM_UNKNOWN1   GBL_c1(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_IN, G_BL_1MA)
-#define DKR_RM_UNKNOWN2   AA_EN | IM_RD | CLR_ON_CVG | FORCE_BL | CVG_DST_WRAP | ZMODE_OPA
-#define DKR_RM_UNKNOWN2_1 DKR_RM_UNKNOWN2 | GBL_c1(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_1MA)
-#define DKR_RM_UNKNOWN2_2 DKR_RM_UNKNOWN2 | GBL_c2(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_1MA)
-#define DKR_RM_UNKNOWN3   AA_EN | Z_CMP | Z_UPD | IM_RD | CVG_X_ALPHA | ALPHA_CVG_SEL | CVG_DST_CLAMP | ZMODE_OPA
-#define DKR_RM_UNKNOWN3_1 DKR_RM_UNKNOWN3 | GBL_c1(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_A_MEM)
-#define DKR_RM_UNKNOWN3_2 DKR_RM_UNKNOWN3 | GBL_c2(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_A_MEM)
-#define DKR_RM_UNKNOWN4   AA_EN | Z_CMP | IM_RD | CVG_X_ALPHA | FORCE_BL | CVG_DST_CLAMP | ZMODE_XLU
-#define DKR_RM_UNKNOWN4_1 DKR_RM_UNKNOWN4 | GBL_c1(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_1MA)
-#define DKR_RM_UNKNOWN4_2 DKR_RM_UNKNOWN4 | GBL_c2(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_1MA)
+// modified version of RM_AA_ZB_XLU_LINE, with ALPHA_CVG_SEL disabled
+#define	RM_AA_ZB_XLU_LINE_MOD(clk) \
+    AA_EN | Z_CMP | IM_RD | CVG_X_ALPHA | \
+    FORCE_BL | CVG_DST_CLAMP | ZMODE_XLU | \
+    GBL_c##clk(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_1MA)
+
+#define DKR_RM_UNKNOWN0 G_RM_NOOP | Z_UPD
+
+#define G_RM_AA_ZB_XLU_LINE_MOD RM_AA_ZB_XLU_LINE_MOD(1)
+#define G_RM_AA_ZB_XLU_LINE_MOD2 RM_AA_ZB_XLU_LINE_MOD(2)
 
 // Temporary until all commands are properly defined.
 #define fast3d_cmd(pkt, word0, word1) \

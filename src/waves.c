@@ -988,7 +988,7 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
             tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->texOffset * (128 * 128));
             wave_load_material(tex1, 1);
             wave_load_material(tex2, 0);
-            gDPSetCombineMode(gWaveDL++, DKR_CC_BLENDTEX_MODULATEA_1_PRIM, DKR_CC_BLENDI_ENV_ALPHA_MODULATEA2);
+            gDPSetCombineMode(gWaveDL++, G_CC_BLENDTEX_MODULATEA_1_PRIM, G_CC_BLENDI_ENV_ALPHA_MODULATEA2);
             if (TEX_FORMAT(tex1->format) == TEX_FORMAT_RGBA32 &&
                 cam_get_viewport_layout() <= VIEWPORT_LAYOUT_1_PLAYER) {
                 gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_AA_ZB_XLU_INTER2);
