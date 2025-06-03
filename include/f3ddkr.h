@@ -7,28 +7,60 @@
 // This file is an extension of PR/gbi.h
 
 // Color combiner values. These need better names!
-#define DKR_CC_UNK0 0, 0, 0, COMBINED, COMBINED, 0, PRIMITIVE, 0
-#define DKR_CC_UNK1 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, COMBINED, 0, PRIMITIVE, 0
-#define DKR_CC_UNK2 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, 0, 0, 0, COMBINED
-#define DKR_CC_UNK3 ENVIRONMENT, SHADE, ENV_ALPHA, SHADE, 0, 0, 0, SHADE
-#define DKR_CC_UNK4 ENVIRONMENT, SHADE, ENV_ALPHA, SHADE, 0, 0, 0, PRIMITIVE
-#define DKR_CC_UNK5 TEXEL0, PRIMITIVE, SHADE_ALPHA, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0
-#define DKR_CC_UNK6 ENVIRONMENT, COMBINED, SHADE, COMBINED, 0, 0, 0, COMBINED
-#define DKR_CC_UNK7 TEXEL1, TEXEL0, PRIMITIVE, TEXEL0, TEXEL1, TEXEL0, PRIMITIVE, TEXEL0
-#define DKR_CC_UNK8 COMBINED, 0, SHADE, 0, 0, 0, 0, COMBINED
-#define DKR_CC_UNK9 PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0
-#define DKR_CC_UNK10 TEXEL0, 0, SCALE, 0, 0, 0, 0, TEXEL0
-#define DKR_CC_UNK11 ENVIRONMENT, TEXEL0, ENV_ALPHA, TEXEL0, TEXEL0, 0, PRIMITIVE, 0
-#define	DKR_CC_UNK12 0, 0, 0, ENVIRONMENT, 0, 0, 0, TEXEL0
-#define DKR_CC_UNK13 ENVIRONMENT, TEXEL0, ENV_ALPHA, TEXEL0, TEXEL1, 0, PRIMITIVE, 0
-#define DKR_CC_UNK14 TEXEL1, TEXEL0, SHADE, TEXEL0, 1, TEXEL0, PRIMITIVE, TEXEL0
-#define DKR_CC_UNK15 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, COMBINED, 0, SHADE, 0
-#define DKR_CC_UNK16 ENVIRONMENT, TEXEL0, ENV_ALPHA, TEXEL0, 0, 0, 0, PRIMITIVE
+// cycle 1 modes
+#define	G_CC_ENVIRONMENT   0, 0, 0, ENVIRONMENT, 0, 0, 0, ENVIRONMENT
+// blend two textures, modulated by SHADE, alpha modulated between texture and 1 by PRIMITITIVE
+#define DKR_CC_BLENDTEX_MODULATEA_1_PRIM TEXEL1, TEXEL0, SHADE, TEXEL0, 1, TEXEL0, PRIMITIVE, TEXEL0
 
-#define	DKR_CC_ENVIRONMENT   0, 0, 0, ENVIRONMENT, 0, 0, 0, ENVIRONMENT
-#define DKR_CC_DECALFADEPRIM 0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE, 0
+// The following several modes, where blending with ENVIRONMENT is modulated by ENV_ALPHA,
+// are likely used to create ambient lighting defined by EnvColor (color and intensity)
 
-// For some reason DKR has a value for G_MDSFT_BLENDMASK, despite the fact that it is unsupported.
+// Blend with ENVIRONMENT modulated by ENV_ALPHA, alpha unchanged
+#define G_CC_BLENDI_ENV_ALPHA ENVIRONMENT, SHADE, ENV_ALPHA, SHADE, 0, 0, 0, SHADE
+// Blend SHADE and ENVIRONMENT with ENV_ALPHA, alpha from PRIMITIVE
+#define G_CC_BLENDI_ENV_ALPHA_A_PRIM ENVIRONMENT, SHADE, ENV_ALPHA, SHADE, 0, 0, 0, PRIMITIVE
+
+// The following modes do not use vertex colors at all
+
+// Blend TEXEL0 and ENVIRONMENT with ENV_ALPHA, alpha from PRIMITIVE
+#define G_CC_BLENDT_ENV_ALPHA_A_PRIM ENVIRONMENT, TEXEL0, ENV_ALPHA, TEXEL0, 0, 0, 0, PRIMITIVE
+// Blend TEXEL0 and ENVIRONMENT with ENV_ALPHA, alpha = TEXEL0 * PRIMITIVE
+#define G_CC_BLENDT_ENV_ALPHA_A_TxP ENVIRONMENT, TEXEL0, ENV_ALPHA, TEXEL0, TEXEL0, 0, PRIMITIVE, 0
+// Like above, but alpha = TEXEL1 * PRIMITIVE
+#define G_CC_BLENDT_ENV_ALPHA_A_T1xP ENVIRONMENT, TEXEL0, ENV_ALPHA, TEXEL0, TEXEL1, 0, PRIMITIVE, 0
+
+// Decal with alpha modulated by PRIMITIVE
+#define G_CC_DECAL_A_PRIM 0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE, 0
+// PRIMITIVE and TEXEL0 blend using SHADE_ALPHA, alpha = TEXEL0 * PRIMITIVE, what's the point of it?
+#define G_CC_SHADEALPHA_BLEND TEXEL0, PRIMITIVE, SHADE_ALPHA, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0
+// PRIM and ENV blend, alpha = TEXEL0 * PRIM
+#define G_CC_BLENDPE_A_PRIM PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0
+// TEXEL0 * SCALE, used in G_CYC_COPY, unclear purpose
+#define G_CC_DECAL_SCALE TEXEL0, 0, SCALE, 0, 0, 0, 0, TEXEL0
+// ENVIRONMENT color, alpha from TEXEL0, used for text
+#define	G_CC_ENV_DECALA 0, 0, 0, ENVIRONMENT, 0, 0, 0, TEXEL0
+
+// blend two textures, modulated by PRIMITIVE
+// used for blinking lights
+#define G_CC_BLENDTEX_PRIM TEXEL1, TEXEL0, PRIMITIVE, TEXEL0, TEXEL1, TEXEL0, PRIMITIVE, TEXEL0
+
+// cycle 2 modes
+// Alpha = COMBINED * PRIM
+#define DKR_CC_MODULATEA_PRIM2 0, 0, 0, COMBINED, COMBINED, 0, PRIMITIVE, 0
+// Blend with ENV using ENV_ALPHA, alpha = COMBINED * PRIM
+#define DKR_CC_BLEND_ENV_ALPHA_MODULATEA_PRIM2 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, COMBINED, 0, PRIMITIVE, 0
+// Blend with ENV using ENV_ALPHA, alpha unchanged
+#define DKR_CC_BLEND_ENV_ALPHA2 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, 0, 0, 0, COMBINED
+// Blend with ENV using SHADE, alpha unchanged; used after G_CC_SHADEALPHA_BLEND
+#define DKR_CC_BLENDI_SHADE ENVIRONMENT, COMBINED, SHADE, COMBINED, 0, 0, 0, COMBINED
+// Blend with ENV using ENV_ALPHA, alpha = COMBINED * SHADE; used for water
+#define DKR_CC_BLENDI_ENV_ALPHA_MODULATEA2 ENVIRONMENT, COMBINED, ENV_ALPHA, COMBINED, COMBINED, 0, SHADE, 0
+#define G_CC_MODULATEIDECALA2 COMBINED, 0, SHADE, 0, 0, 0, 0, COMBINED
+
+// Inside the RSP, when we change otherMode, it sends the new mode to the RDP with the lower 4 bits set to 1.
+// If we use the standard g*SPSetOtherMode macros, this doesn't matter to us.
+// But in DKR, direct command transmission to the RDP is often used, bypassing processing in the RSP,
+// so in custom code we also need to set those 4 bits to 1.
 #define G_DKR_BLENDMASK 15
 
 // OtherMode_H values.

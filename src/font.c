@@ -18,16 +18,16 @@ Gfx dDialogueBoxBegin[] = {
 
 Gfx dDialogueBoxDrawModes[][2] = {
     {
-        gsDPSetCombineMode(DKR_CC_UNK11, DKR_CC_UNK11),
+        gsDPSetCombineMode(G_CC_BLENDT_ENV_ALPHA_A_TxP, G_CC_BLENDT_ENV_ALPHA_A_TxP),
         gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
     },
     {
-        gsDPSetCombineMode(DKR_CC_ENVIRONMENT, DKR_CC_ENVIRONMENT),
+        gsDPSetCombineMode(G_CC_ENVIRONMENT, G_CC_ENVIRONMENT),
         gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
     },
 #if REGION == REGION_JP
     {
-        gsDPSetCombineMode(DKR_CC_UNK13, G_CC_PASS2),
+        gsDPSetCombineMode(G_CC_BLENDT_ENV_ALPHA_A_T1xP, G_CC_PASS2),
         gsDPSetOtherMode(DKR_OMH_2CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_NOOP | G_RM_XLU_SURF2),
     },
 #endif
