@@ -704,7 +704,7 @@ void hud_render_player(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj,
                 }
             }
             if (gShowHUD == FALSE) {
-                racer = (Object_Racer *) obj->unk64;
+                racer = &obj->unk64->racer;
                 if (D_8012718A) {
                     gHudController = 1 - racer->playerIndex;
                 } else {
@@ -1251,7 +1251,7 @@ void hud_main_battle(s32 countdown, Object *obj, s32 updateRate) {
     s32 racersFinished;
     s32 i;
 
-    racer = (Object_Racer *) obj->unk64;
+    racer = &obj->unk64->racer;
     if (gNumActivePlayers != 1 || racer->raceFinished == FALSE) {
         sprite_anim_off(TRUE);
         hud_race_start(countdown, updateRate);
@@ -1395,7 +1395,7 @@ void hud_lives_render(Object_Racer *racer, UNUSED s32 updateRate) {
  */
 void hud_main_boss(s32 countdown, Object *obj, s32 updateRate) {
     LevelHeader *level;
-    Object_Racer *racer = (Object_Racer *) obj->unk64;
+    Object_Racer *racer = &obj->unk64->racer;
 
     sprite_anim_off(TRUE);
     hud_wrong_way(racer, updateRate);
@@ -1417,7 +1417,7 @@ void hud_main_boss(s32 countdown, Object *obj, s32 updateRate) {
  * When racing Taj in the overworld, render most of the basic race hud.
  */
 void hud_main_taj(s32 countdown, Object *obj, s32 updateRate) {
-    Object_Racer *racer = (Object_Racer *) obj->unk64;
+    Object_Racer *racer = &obj->unk64->racer;
 
     sprite_anim_off(TRUE);
     hud_wrong_way(racer, updateRate);
@@ -1438,7 +1438,7 @@ void hud_main_hub(Object *obj, s32 updateRate) {
     HudElement *portrait;
 
     if (cam_get_viewport_layout() == PLAYER_ONE) {
-        racer = (Object_Racer *) obj->unk64;
+        racer = &obj->unk64->racer;
         sprite_anim_off(TRUE);
         hud_balloons(racer);
         hud_speedometre(obj, updateRate);
@@ -1820,7 +1820,7 @@ void hud_speedometre(Object *obj, UNUSED s32 updateRate) {
 
     if (gNumActivePlayers == 1) {
         if (!check_if_showing_cutscene_camera()) {
-            racer = (Object_Racer *) obj->unk64;
+            racer = &obj->unk64->racer;
             if (racer->raceFinished == FALSE) {
                 if (racer->vehicleID == VEHICLE_PLANE) {
                     vel = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
@@ -3031,7 +3031,7 @@ void hud_weapon(Object *obj, s32 updateRate) {
     Object_Racer *racer;
     s32 temp_a0;
 
-    racer = (Object_Racer *) obj->unk64;
+    racer = &obj->unk64->racer;
     if (racer->raceFinished == FALSE) {
         enable_pal_viewport_height_adjust(TRUE);
         temp_a0 = (racer->balloon_type * 3) + (racer->balloon_level);
@@ -3526,7 +3526,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
             spBC = gCurrentHud->entry[HUD_TREASURE_METRE].pos.y;
             racerGroup = get_racer_objects(&racerCount);
             for (sp144 = 0; sp144 < racerCount; sp144++) {
-                someRacer = (Object_Racer *) racerGroup[sp144]->unk64;
+                someRacer = &racerGroup[sp144]->unk64->racer;
                 hud_treasure(someRacer);
                 if (osTvType == OS_TV_TYPE_PAL) {
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y += 66.0;
@@ -3586,7 +3586,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
 
     sp113 = TRUE;
     for (i = 0; i < objectCount; i++) {
-        someRacer = (Object_Racer *) objectGroup[i]->unk64;
+        someRacer = &objectGroup[i]->unk64->racer;
         if (someRacer != NULL && someRacer->playerIndex != PLAYER_COMPUTER && someRacer->raceFinished == FALSE) {
             sp113 = FALSE;
         }
@@ -3708,7 +3708,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
     // Non AI players get an arrow instead of a blob that rotates.
     for (i = objectCount - 1; i >= 0; i--) {
         temp_v0_8 = objectGroup[i];
-        someRacer = (Object_Racer *) objectGroup[i]->unk64;
+        someRacer = &objectGroup[i]->unk64->racer;
         if (someRacer != NULL) {
             minimap_marker_pos(objectGroup[i]->segment.trans.x_position, objectGroup[i]->segment.trans.z_position,
                                sp114, sp118, sp11C);
@@ -3811,7 +3811,7 @@ void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspec
  * deciding to draw a texture rectangle, ortho tris, or a 3D model entirely.
  */
 void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hud) {
-    TextureHeader **textureHeader3;
+    ObjectModel **objModels;
     TextureHeader *textureHeader2;
     TextureHeader *textureHeader;
     Camera *camera;
@@ -3949,7 +3949,7 @@ void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hu
             sp48.drawTexture.yOffset = 0;
             sp48.unk8 = 0;
             texrect_draw_scaled(&gHudDL, &sp48.drawTexture, hud->pos.x, hud->pos.y, hud->scale, hud->scale, gHudColour,
-                                1);
+                                TEXRECT_POINT);
             rendermode_reset(&gHudDL);
         }
     } else if (gAssetHudElementIds[spriteID] & ASSET_MASK_SPRITE) {
@@ -3973,14 +3973,15 @@ void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hu
     } else {
         mtx_cam_push(&gHudDL, &gHudMtx, (ObjectTransform *) hud, 1.0f, 0.0f);
         if (0) {}
-        textureHeader3 = gAssetHudElements->entry[hud->spriteID];
-        hud_draw_model((ObjectModel *) *textureHeader3);
+        objModels = gAssetHudElements->entry[hud->spriteID];
+        hud_draw_model(*objModels);
         mtx_pop(&gHudDL);
     }
     spriteID = hud->spriteID;
-    if (spriteID != 0x28) {
-        if ((spriteID != 0xE) && (spriteID != 0x1B) && ((spriteID < 0x2F) || (spriteID >= 0x36)) &&
-            (spriteID != 0x2E) && (gMinimapXlu & 1)) {
+    if (spriteID != HUD_SPRITE_PRO_AM) {
+        if (spriteID != HUD_SPRITE_MAP_DOT && spriteID != HUD_SPRITE_MAP_ARROW &&
+            (spriteID < HUD_ASSET_47 || spriteID >= HUD_ASSET_54) && spriteID != HUD_SPRITE_SPEEDOMETRE_ARROW &&
+            gMinimapXlu & 1) {
             hud->pos.y -= objEntry.offsetY;
         }
         hud->pos.x -= gHudOffsetX + gHudBounceX;

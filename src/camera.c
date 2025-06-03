@@ -106,10 +106,11 @@ MtxF gCurrentModelMatrixS;
 
 /******************************/
 
+extern s32 D_B0000578; // Used as a symbol for anti-piracy checks in the game.
+
 /**
  * Official Name: camInit
  */
-extern s32 D_B0000578;
 void cam_init(void) {
     s32 i;
     s32 j;

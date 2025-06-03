@@ -134,7 +134,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (*startTimer != 100) {
         someObj = racerfx_get_boost(BOOST_DEFAULT);
         if (someObj != NULL) {
-            rocket = (Object_WizpigRocket *) someObj->unk64;
+            rocket = &someObj->unk64->wizpigRocket;
             someObj->properties.racer.unk0 = 0;
             if (rocket != NULL) {
                 rocket->unk72 += updateRate;
@@ -145,7 +145,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
     firstRacerObj = get_racer_object(PLAYER_ONE);
-    racer = (Object_Racer *) firstRacerObj->unk64;
+    racer = &firstRacerObj->unk64->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
         obj->segment.object.animationID == ANIM_ROCKET_DAMAGE) {
         racer->attackType = ATTACK_SQUISHED;
