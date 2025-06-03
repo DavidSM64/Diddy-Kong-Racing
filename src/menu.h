@@ -662,6 +662,7 @@ void rankings_render_order(s32 updateRate);
 void results_render(UNUSED s32 updateRate, f32 opacity);
 void func_80092188(s32 updateRate);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection);
+void postrace_start(s32 finishState, s32 worldID);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
