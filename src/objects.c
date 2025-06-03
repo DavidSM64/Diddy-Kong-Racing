@@ -30,6 +30,7 @@
 #include "PRinternal/viint.h"
 #include "printf.h"
 #include "weather.h"
+#include "PRinternal/piint.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -1407,7 +1408,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             newRacerObj->segment.level_entry = NULL;
             newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
-            newRacerObj->interactObj->flags = 0;
+            newRacerObj->interactObj->flags = INTERACT_FLAGS_NONE;
             gGhostObjPlayer = newRacerObj;
             newRacerObj->unk64->racer.transparency = 0x60;
         }
@@ -1423,7 +1424,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             newRacerObj->segment.level_entry = NULL;
             newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
-            newRacerObj->interactObj->flags = 0;
+            newRacerObj->interactObj->flags = INTERACT_FLAGS_NONE;
             gGhostObjStaff = newRacerObj;
             newRacerObj->unk64->racer.transparency = 0x60;
         }
@@ -5020,381 +5021,399 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
     return TRUE;
 }
 
-#if 1
+#ifdef NON_EQUIVALENT
 extern s32 D_B0000574;
 
 // D_8011ADC0 = gNextRacerPlaceNumber?
-// Object_Racer->unk1AC = racerPlace?
 
 // This function seems to be part of the main gameplay loop that tracks the win conditions for each race mode.
-void func_80019808(s32 arg0) {
-  unsigned int new_var;
-  s16 numHumanRacers;
-  s16 numHumanRacersFinished;
-  Object_Racer *curRacer;
-  LevelHeader *currentLevelHeader;
-  Object_Racer *sp6C[4];
-  s8 sp5C[4];
-  s32 i;
-  s32 j;
-  Object_Racer *curRacer2;
-  Settings *settings;
-  s16 prevUnk1AA;
-  s16 sp6CIndex;
-  s32 newUnk1AA;
-  s16 var_a2_4;
-  s32 var_s0_2;
-  s16 numFinishedRacers;
-  s16 foundIndex;
-  s32 battleMusic;
-  s32 playerButtonPresses;
-  s8 raceType;
-  s8 someBool;
-  s32 newStartingPosition;
-  s32 shouldAwardBalloon;
-  s8 someBool2;
-  s32 antiPiracySkipTajBalloonCutscene;
+void func_80019808(s32 updateRate) {
+    u32 new_var;
+    s16 numHumanRacers;
+    s16 numHumanRacersFinished;
+    Object_Racer *curRacer;
+    LevelHeader *currentLevelHeader;
+    Object_Racer *racer[4]; // sp6C
+    s8 sp5C[4];
+    s32 i;
+    s32 j;
+    Object_Racer *curRacer2;
+    Settings *settings;
+    s16 prevUnk1AA;
+    s16 sp6CIndex;
+    s32 newUnk1AA;
+    s16 var_a2_4;
+    s32 var_s0_2;
+    s16 numFinishedRacers;
+    s16 foundIndex;
+    s32 battleMusic;
+    s32 playerButtonPresses;
+    s8 raceType;
+    s8 someBool;
+    s32 newStartingPosition;
+    s32 shouldAwardBalloon;
+    s8 someBool2;
 
-  currentLevelHeader = get_current_level_header();
-  settings = get_settings();
-  numHumanRacersFinished = 0;
-  numHumanRacers = 0;
-  raceType = currentLevelHeader->race_type;
-  numFinishedRacers = 0;
-  if (((raceType != RACETYPE_DEFAULT) && (raceType != RACETYPE_HORSESHOE_GULCH)) && (raceType != RACETYPE_BOSS)) {
-    if (raceType & RACETYPE_CHALLENGE) {
-      if (raceType == RACETYPE_CHALLENGE_EGGS) {
-        func_80045128(*gRacers);
-      }
-      if (D_8011ADB4 == 0) {
-        for (i = 0; i < gNumRacers; i++) {
-          sp6C[i] = &(*gRacers)[i]->unk64->racer;
-          if (((currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) && (sp6C[i]->bananas <= 0)) && (!sp6C[i]->raceFinished)) {
-            sp6C[i]->raceFinished = 1;
-            sp6C[i]->balloon_quantity = 0;
-            racer_sound_free((*gRacers)[i]);
-            (*gRacers)[i]->segment.trans.flags |= 0x4000;
-            (*gRacers)[i]->interactObj->flags = 0;
-            sp6C[i]->finishPosition = 5 - D_8011ADC0;
-            D_8011ADC0 += 1;
-          }
-          if (sp6C[i]->playerIndex != (-1)) {
-            if (sp6C[i]->raceFinished) {
-              numHumanRacersFinished += 1;
+#ifdef ANTI_TAMPER
+    s32 antiPiracySkipTajBalloonCutscene;
+    u32 stat;
+#endif
+
+    currentLevelHeader = get_current_level_header();
+    settings = get_settings();
+    numHumanRacersFinished = 0;
+    numHumanRacers = 0;
+    raceType = currentLevelHeader->race_type;
+    numFinishedRacers = 0;
+    if (raceType != RACETYPE_DEFAULT && raceType != RACETYPE_HORSESHOE_GULCH && raceType != RACETYPE_BOSS) {
+        if (raceType & RACETYPE_CHALLENGE) {
+            if (raceType == RACETYPE_CHALLENGE_EGGS) {
+                func_80045128(*gRacers);
             }
-            numHumanRacers += 1;
-          }
-          if (sp6C[i]->raceFinished) {
-            numFinishedRacers += 1;
-            if (sp6C[i]->finishPosition == 0) {
-              sp6C[i]->finishPosition = D_8011ADC0;
-              D_8011ADC0 += 1;
+            if (D_8011ADB4 == 0) {
+                for (i = 0; i < gNumRacers; i++) {
+                    racer[i] = &(*gRacers)[i]->unk64->racer;
+                    if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE && racer[i]->bananas <= 0 &&
+                        !racer[i]->raceFinished) {
+                        racer[i]->raceFinished = TRUE;
+                        racer[i]->balloon_quantity = 0;
+                        racer_sound_free((*gRacers)[i]);
+                        (*gRacers)[i]->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
+                        (*gRacers)[i]->interactObj->flags = INTERACT_FLAGS_NONE;
+                        racer[i]->finishPosition = 5 - D_8011ADC0;
+                        D_8011ADC0++;
+                    }
+                    if (racer[i]->playerIndex != PLAYER_COMPUTER) {
+                        if (racer[i]->raceFinished) {
+                            numHumanRacersFinished++;
+                        }
+                        numHumanRacers++;
+                    }
+                    if (racer[i]->raceFinished) {
+                        numFinishedRacers++;
+                        if (racer[i]->finishPosition == 0) {
+                            racer[i]->finishPosition = D_8011ADC0;
+                            D_8011ADC0++;
+                        }
+                    }
+                }
+
+                if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE || numFinishedRacers > 0 ||
+                    (!(((numHumanRacers == 1 && numHumanRacersFinished == 1) ||
+                        (numHumanRacers >= 2 && numHumanRacersFinished >= numHumanRacers)) ||
+                       numFinishedRacers < 3))) {
+                    for (i = 0; i < gNumRacers; i++) {
+                        if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
+                            sp5C[i] = 10 - racer[i]->bananas;
+                        } else {
+                            sp5C[i] = racer[i]->lap;
+                            if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_EGGS) {
+                                sp5C[i] *= 3;
+                                if (racer[i]->eggHudCounter != 0) {
+                                    sp5C[i] += 2;
+                                } else if (racer[i]->held_obj != NULL) {
+                                    sp5C[i] += 1;
+                                }
+                            }
+                        }
+                        if (sp5C[i] > 10) {
+                            sp5C[i] = 10;
+                        }
+                        if (sp5C[i] < 0) {
+                            sp5C[i] = 0;
+                        }
+                    }
+
+                    do {
+                        sp6CIndex = -1;
+                        foundIndex = -1;
+                        for (i = 0; i < gNumRacers; i++) {
+                            if (!racer[i]->raceFinished) {
+                                if (sp5C[i] >= foundIndex) {
+                                    foundIndex = sp5C[i];
+                                    sp6CIndex = i;
+                                }
+                            }
+                        }
+
+                        if (sp6CIndex != -1) {
+                            if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
+                                racer[sp6CIndex]->finishPosition = 5 - D_8011ADC0;
+                            } else {
+                                racer[sp6CIndex]->finishPosition = D_8011ADC0;
+                            }
+                            D_8011ADC0++;
+                            racer[sp6CIndex]->raceFinished = 1;
+                        }
+                    } while (sp6CIndex != -1);
+                    gSwapLeadPlayer = 0;
+                    if ((!is_in_tracks_mode() && racer[0]->finishPosition == 1) ||
+                        (is_in_two_player_adventure() && racer[1]->finishPosition == 1)) {
+                        if (!(settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED)) {
+                            settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED;
+                            var_s0_2 = settings->ttAmulet + 1;
+                            if (var_s0_2 > 4) {
+                                var_s0_2 = 4;
+                            }
+                            i = var_s0_2;
+                            settings->ttAmulet = i;
+                        }
+                    }
+                    for (i = 0; i < 8; i++) {
+                        settings->racers[i].starting_position = -1;
+                    }
+
+                    battleMusic = SEQUENCE_BATTLE_LOSE;
+                    for (i = 0; i < gNumRacers; i++) {
+                        if (racer[i]->playerIndex != PLAYER_COMPUTER && racer[i]->finishPosition == 1) {
+                            battleMusic = SEQUENCE_BATTLE_VICTORY;
+                        }
+                        settings->racers[i].starting_position = racer[i]->finishPosition - 1;
+                    }
+
+                    music_play(battleMusic);
+                    newStartingPosition = 4;
+                    for (i = 0; i < 8; i++) {
+                        if (settings->racers[i].starting_position == -1) {
+                            settings->racers[i].starting_position = newStartingPosition;
+                            newStartingPosition++;
+                        }
+                    }
+
+                    gSwapLeadPlayer = 0;
+                    if (is_in_two_player_adventure() && settings->racers[PLAYER_TWO].starting_position <
+                                                            settings->racers[PLAYER_ONE].starting_position) {
+                        gSwapLeadPlayer = 1;
+                    }
+                    if (i == 0) {
+                        if (is_in_two_player_adventure()) {
+                            if (gSwapLeadPlayer) {
+                                gSwapLeadPlayer = 0;
+                                swap_lead_player();
+                                if (D_800DC73C != 0) {
+                                    D_800DC748 = TRUE;
+                                }
+                            } else if (D_800DC73C != 0) {
+                                D_800DC748 = TRUE;
+                            }
+                        }
+                        postrace_start(0, 30);
+                    } else {
+                        push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
+                        push_level_property_stack(ASSET_LEVEL_TTAMULETSEQUENCE, 0, VEHICLE_NO_OVERRIDE,
+                                                  settings->ttAmulet - 1);
+                        race_finish_adventure(1);
+                    }
+                    D_8011ADB4 = 1;
+                }
             }
-          }
+        }
+        return;
+    }
+    for (i = 0; i < gNumRacers; i++) {
+        new_var = i;
+        newUnk1AA = 1;
+        curRacer = &(*gRacers)[new_var]->unk64->racer;
+        prevUnk1AA = curRacer->unk1AA;
+        for (j = 0; j < gNumRacers; j++) {
+            if (j != new_var) {
+                curRacer2 = &(*gRacers)[new_var]->unk64->racer;
+                if (curRacer->raceFinished == FALSE && curRacer2->raceFinished != FALSE) {
+                    newUnk1AA++;
+                } else if (curRacer->courseCheckpoint < curRacer2->courseCheckpoint) {
+                    newUnk1AA++;
+                } else if (curRacer2->courseCheckpoint == curRacer->courseCheckpoint) {
+                    if (curRacer2->unk1A8 < curRacer->unk1A8) {
+                        newUnk1AA++;
+                    }
+                    if (curRacer2->unk1A8 == curRacer->unk1A8 && i < j) {
+                        newUnk1AA++;
+                    }
+                }
+            }
         }
 
-        if (((currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) || (numFinishedRacers > 0)) || (!((((numHumanRacers == 1) && (numHumanRacersFinished == 1)) || ((numHumanRacers >= 2) && (numHumanRacersFinished >= numHumanRacers))) || (numFinishedRacers < 3)))) {
-          for (i = 0; i < gNumRacers; i++) {
-            if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
-              sp5C[i] = 10 - sp6C[i]->bananas;
+        curRacer->unk1AA = newUnk1AA;
+        if (curRacer->lap < currentLevelHeader->laps) {
+            if (prevUnk1AA == curRacer->unk1AA) {
+                if (curRacer->unk1B0 < 2) {
+                    if (curRacer->vehicleID != VEHICLE_LOOPDELOOP) {
+                        curRacer->unk1B0++;
+                    }
+                } else if (curRacer->racePosition != curRacer->unk1AA) {
+                    curRacer->unk1B2 = 10;
+                    curRacer->racePosition = curRacer->unk1AA;
+                }
             } else {
-              sp5C[i] = sp6C[i]->lap;
-              if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_EGGS) {
-                sp5C[i] *= 3;
-                if (sp6C[i]->eggHudCounter != 0) {
-                  sp5C[i] += 2;
-                } else if (sp6C[i]->held_obj != 0) {
-                  sp5C[i] += 1;
+                curRacer->unk1B0 = 0;
+            }
+        }
+    }
+
+    for (i = 0; i < gNumRacers; i++) {
+        curRacer = &(*gRacers)[i]->unk64->racer;
+        if (curRacer->lap >= currentLevelHeader->laps && curRacer->raceFinished == FALSE) {
+            if (get_game_mode() != GAMEMODE_UNUSED_4) {
+                curRacer->raceFinished = TRUE;
+                curRacer->finishPosition = D_8011ADC0;
+                if (D_8011ADC0 == 1 && curRacer->playerIndex == PLAYER_COMPUTER) {
+                    sound_play(SOUND_WHOOSH5, NULL);
                 }
-              }
+                D_8011ADC0++;
             }
-            if (sp5C[i] >= 11) {
-              sp5C[i] = 10;
+        }
+        if (curRacer->playerIndex != PLAYER_COMPUTER) {
+            numHumanRacers++;
+            if (curRacer->raceFinished) {
+                numHumanRacersFinished++;
+                numFinishedRacers++;
             }
-            if (sp5C[i] < 0) {
-              sp5C[i] = 0;
-            }
-          }
+        } else if (curRacer->raceFinished) {
+            numFinishedRacers++;
+        }
+    }
 
-          do {
-            sp6CIndex = -1;
-            foundIndex = -1;
-            for (i = 0; i < gNumRacers; i++) {
-              if (!sp6C[i]->raceFinished) {
-                if (sp5C[i] >= foundIndex) {
-                  foundIndex = sp5C[i];
-                  sp6CIndex = i;
+    for (i = 0; i < gNumRacers; i++) {
+        gRacersByPosition[i] = 0;
+    }
+
+    for (i = 0; i < gNumRacers; i++) {
+        curRacer = &(*gRacers)[i]->unk64->racer;
+        if (curRacer->raceFinished) {
+            var_a2_4 = curRacer->finishPosition;
+        } else {
+            var_a2_4 = curRacer->unk1AA;
+        }
+        gRacersByPosition[var_a2_4 - 1] =
+            (Object *) curRacer; // TODO: This should be a pointer to Object, not Object_Racer
+    }
+
+    for (i = 0; i < gNumRacers; i++) {
+        someBool = FALSE;
+        for (j = 0; j < gNumRacers; j++) {
+            if (gRacersByPosition[j] == (*gRacers)[i]) {
+                someBool = TRUE;
+                j = gNumRacers + 1;
+            }
+        }
+
+        if (!someBool) {
+            for (j = 0; j < gNumRacers; j++) {
+                if (gRacersByPosition[j] == 0) {
+                    gRacersByPosition[j] = (*gRacers)[i];
+                    j = gNumRacers + 1;
                 }
-              }
             }
-
-            if (sp6CIndex != (-1)) {
-              if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
-                sp6C[sp6CIndex]->finishPosition = 5 - D_8011ADC0;
-              } else {
-                sp6C[sp6CIndex]->finishPosition = D_8011ADC0;
-              }
-              D_8011ADC0++;
-              sp6C[sp6CIndex]->raceFinished = 1;
-            }
-          }
-          while (sp6CIndex != (-1));
-          gSwapLeadPlayer = 0;
-          if (((!is_in_tracks_mode()) && (sp6C[0]->finishPosition == 1)) || (is_in_two_player_adventure() && (sp6C[1]->finishPosition == 1))) {
-            if (!(settings->courseFlagsPtr[settings->courseId] & 2)) {
-              settings->courseFlagsPtr[settings->courseId] |= 2;
-              var_s0_2 = settings->ttAmulet + 1;
-              if (var_s0_2 >= 5) {
-                var_s0_2 = 4;
-              }
-              i = var_s0_2;
-              settings->ttAmulet = i;
-            }
-          }
-          for (i = 0; i < 8; i++) {
-            settings->racers[i].starting_position = -1;
-          }
-
-          battleMusic = SEQUENCE_BATTLE_LOSE;
-          for (i = 0; i < gNumRacers; i++) {
-            if ((sp6C[i]->playerIndex != (-1)) && (sp6C[i]->finishPosition == 1)) {
-              battleMusic = SEQUENCE_BATTLE_VICTORY;
-            }
-            settings->racers[i].starting_position = sp6C[i]->finishPosition - 1;
-          }
-
-          music_play(battleMusic);
-          newStartingPosition = 4;
-          for (i = 0; i < 8; i++) {
-            if (settings->racers[i].starting_position == (-1)) {
-              settings->racers[i].starting_position = newStartingPosition;
-              newStartingPosition += 1;
-            }
-          }
-
-          gSwapLeadPlayer = 0;
-          if (is_in_two_player_adventure() && (settings->racers[1].starting_position < settings->racers[0].starting_position)) {
-            gSwapLeadPlayer = 1;
-          }
-          if (i == 0) {
-            if (is_in_two_player_adventure()) {
-              if (gSwapLeadPlayer) {
-                gSwapLeadPlayer = 0;
-                swap_lead_player();
-                if (D_800DC73C) {
-                  D_800DC748 = 1;
-                }
-              } else if (D_800DC73C) {
-                D_800DC748 = 1;
-              }
-            }
-            postrace_start(0, 30);
-          } else {
-            push_level_property_stack(-1, 0, VEHICLE_CAR, 0);
-            push_level_property_stack(0x2C, 0, -1, settings->ttAmulet - 1);
-            race_finish_adventure(1);
-          }
-          D_8011ADB4 = (s32) 1;
         }
-      }
-    }
-    return;
-  }
-  for (i = 0; i < gNumRacers; i++) {
-    new_var = i;
-    newUnk1AA = 1;
-    curRacer = (Object_Racer *) (*gRacers)[new_var]->unk64;
-    prevUnk1AA = curRacer->unk1AA;
-    for (j = 0; j < gNumRacers; j++) {
-      if (j != new_var) {
-        curRacer2 = (Object_Racer *) (*gRacers)[new_var]->unk64;
-        if ((curRacer->raceFinished == 0) && curRacer2->raceFinished) {
-          newUnk1AA += 1;
-        } else if (curRacer->courseCheckpoint < curRacer2->courseCheckpoint) {
-          newUnk1AA += 1;
-        } else if (curRacer2->courseCheckpoint == curRacer->courseCheckpoint) {
-          if (curRacer2->unk1A8 < curRacer->unk1A8) {
-            newUnk1AA += 1;
-          }
-          if ((curRacer2->unk1A8 == curRacer->unk1A8) && (i < j)) {
-            newUnk1AA += 1;
-          }
-        }
-      }
     }
 
-    curRacer->unk1AA = newUnk1AA;
-    if (curRacer->lap < currentLevelHeader->laps) {
-      if (prevUnk1AA == curRacer->unk1AA) {
-        if (curRacer->unk1B0 < 2) {
-          if (curRacer->vehicleID != 4) {
-            curRacer->unk1B0++;
-          }
-        } else if (curRacer->racePosition != curRacer->unk1AA) {
-          curRacer->unk1B2 = 10;
-          curRacer->racePosition = curRacer->unk1AA;
-        }
-      } else {
-        curRacer->unk1B0 = 0;
-      }
-    }
-  }
-
-  for (i = 0; i < gNumRacers; i++) {
-    curRacer = (Object_Racer *) (*gRacers)[i]->unk64;
-    if ((curRacer->lap >= currentLevelHeader->laps) && (!curRacer->raceFinished)) {
-      if (get_game_mode() != GAMEMODE_UNUSED_4) {
-        curRacer->raceFinished = 1;
-        curRacer->finishPosition = D_8011ADC0;
-        if (D_8011ADC0 == 1) {
-          if (curRacer->playerIndex == (-1)) {
-            sound_play(SOUND_WHOOSH5, 0);
-          }
-        }
-        D_8011ADC0++;
-      }
-    }
-    if (curRacer->playerIndex != (-1)) {
-      numHumanRacers += 1;
-      if (curRacer->raceFinished) {
-        numHumanRacersFinished += 1;
-        numFinishedRacers += 1;
-      }
-    } else if (curRacer->raceFinished) {
-      numFinishedRacers += 1;
-    }
-  }
-
-  for (i = 0; i < gNumRacers; i++) {
-    gRacersByPosition[i] = 0;
-  }
-
-  for (i = 0; i < gNumRacers; i++) {
-    curRacer = (Object_Racer *) (*gRacers)[i]->unk64;
-    if (curRacer->raceFinished) {
-      var_a2_4 = curRacer->finishPosition;
-    } else {
-      var_a2_4 = curRacer->unk1AA;
-    }
-    gRacersByPosition[var_a2_4 - 1] = (Object *) curRacer;
-  }
-
-  for (i = 0; i < gNumRacers; i++) {
-    someBool = 0;
-    for (j = 0; j < gNumRacers; j++) {
-      if (gRacersByPosition[j] == (*gRacers)[i]) {
-        someBool = 1;
-        j = gNumRacers + 1;
-      }
+    playerButtonPresses = 0;
+    for (i = 0; i < MAXCONTROLLERS; i++) {
+        playerButtonPresses |= input_pressed(i);
     }
 
-    if (!someBool) {
-      for (j = 0; j < gNumRacers; j++) {
-        if (gRacersByPosition[j] == 0) {
-          gRacersByPosition[j] = (*gRacers)[i];
-          j = gNumRacers + 1;
-        }
-      }
-
-    }
-  }
-
-  playerButtonPresses = 0;
-  for (i = 0; i < 4; i++) {
-    playerButtonPresses |= input_pressed(i);
-  }
-
-  if (gIsTajChallenge && (numHumanRacersFinished != 0)) {
-    mode_end_taj_race(0);
-  } else if ((D_8011AD3C != 0) && (numFinishedRacers != 0)) {
-    curRacer2 = (Object_Racer *) gRacers[0][0]->unk64;
-    if (!curRacer2->raceFinished) {
-      curRacer2->raceFinished = 1;
-      curRacer2->finishPosition = D_8011ADC0;
-      D_8011ADC0 += 1;
-    }
-  } else if (D_8011ADB4 == 0) {
-    someBool2 = 0;
-    if ((is_in_two_player_adventure() && (numHumanRacersFinished > 0)) && ((get_trophy_race_world_id() == 0) && (set_course_finish_flags((unk8001A7D8_arg0 *) settings) != 0))) {
-      someBool2 = 1;
-    }
-    if (((numHumanRacersFinished == numHumanRacers) || ((numHumanRacers >= 2) && (numFinishedRacers >= (gNumRacers - 1)))) || someBool2) {
-      if (numHumanRacersFinished != numHumanRacers) {
-        for (i = 0; i < gNumRacers; i++) {
-          curRacer = (Object_Racer *) gRacersByPosition[i]->unk64;
-          if (curRacer->raceFinished == 0) {
-            if (curRacer->playerIndex >= 0) {
-              set_active_camera(curRacer->playerIndex);
-              cam_get_active_camera_no_cutscenes()->mode = 5;
-            }
-            curRacer->raceFinished = 1;
-            curRacer->finishPosition = D_8011ADC0;
+    if (gIsTajChallenge && numHumanRacersFinished != 0) {
+        mode_end_taj_race(CHALLENGE_END_FINISH);
+    } else if (D_8011AD3C != 0 && numFinishedRacers != 0) {
+        curRacer2 = &(*gRacers)[0]->unk64->racer;
+        if (!curRacer2->raceFinished) {
+            curRacer2->raceFinished = 1;
+            curRacer2->finishPosition = D_8011ADC0;
             D_8011ADC0 += 1;
-          }
         }
-
-      }
-      antiPiracySkipTajBalloonCutscene = 0;
-      while (IO_READ(PI_STATUS_REG) & PI_STATUS_ERROR) {
-     }
-
-      if ((D_B0000574 & 0xFFFF) != 0x6C07) {
-        antiPiracySkipTajBalloonCutscene = 1;
-      }
-      if (!gIsTimeTrial) {
-        for (i = 0; i < gNumRacers; i++) {
-          curRacer = (Object_Racer *) gRacersByPosition[i]->unk64;
-          settings->racers[curRacer->characterId].starting_position = i;
+    } else if (D_8011ADB4 == 0) {
+        someBool2 = FALSE;
+        if (is_in_two_player_adventure() && numHumanRacersFinished > 0 && get_trophy_race_world_id() == 0 &&
+            set_course_finish_flags(settings) != 0) {
+            someBool2 = TRUE;
         }
-
-      }
-      gSwapLeadPlayer = 0;
-      if (is_in_two_player_adventure() && (settings->racers[1].starting_position < settings->racers[0].starting_position)) {
-        gSwapLeadPlayer = 1;
-      }
-      curRacer2 = (Object_Racer *) (*gRacersByPosition)->unk64;
-      gFirstTimeFinish = 0;
-      if (((((settings->gNumRacers == 1) || is_in_two_player_adventure()) && (curRacer2->playerIndex != (-1))) && (!is_in_tracks_mode())) && (get_trophy_race_world_id() == 0)) {
-        gFirstTimeFinish = 1;
-      }
-      shouldAwardBalloon = 0;
-      if (gFirstTimeFinish && (!someBool2)) {
-        shouldAwardBalloon = set_course_finish_flags((unk8001A7D8_arg0 *) settings);
-      }
-      if (someBool2) {
-        gFirstTimeFinish = 1;
-        shouldAwardBalloon = 1;
-      }
-      if (antiPiracySkipTajBalloonCutscene) {
-        shouldAwardBalloon = 0;
-        gFirstTimeFinish = 0;
-      }
-      if (!shouldAwardBalloon) {
-        if (is_in_two_player_adventure()) {
-          if (gSwapLeadPlayer) {
-            gSwapLeadPlayer = 0;
-            swap_lead_player();
-            if (D_800DC73C) {
-              D_800DC748 = 1;
+        if ((numHumanRacersFinished == numHumanRacers ||
+             (numHumanRacers >= 2 && numFinishedRacers >= (gNumRacers - 1))) ||
+            someBool2) {
+            if (numHumanRacersFinished != numHumanRacers) {
+                for (i = 0; i < gNumRacers; i++) {
+                    curRacer = &gRacersByPosition[i]->unk64->racer;
+                    if (curRacer->raceFinished == FALSE) {
+                        if (curRacer->playerIndex >= 0) {
+                            set_active_camera(curRacer->playerIndex);
+                            cam_get_active_camera_no_cutscenes()->mode = CAMERA_FINISH_CHALLENGE;
+                        }
+                        curRacer->raceFinished = TRUE;
+                        curRacer->finishPosition = D_8011ADC0;
+                        D_8011ADC0++;
+                    }
+                }
             }
-          } else if (D_800DC73C) {
-            D_800DC748 = 1;
-          }
+
+#ifdef ANTI_TAMPER
+            antiPiracySkipTajBalloonCutscene = FALSE;
+            // Anti-Piracy check
+            WAIT_ON_IOBUSY(stat);
+            // D_B0000574 is a direct read from the ROM as opposed to RAM
+            if (((D_B0000574 & 0xFFFF) & 0xFFFF) != 0x6C07) {
+                antiPiracySkipTajBalloonCutscene = TRUE;
+            }
+#endif
+
+            if (!gIsTimeTrial) {
+                for (i = 0; i < gNumRacers; i++) {
+                    curRacer = &gRacersByPosition[i]->unk64->racer;
+                    settings->racers[curRacer->characterId].starting_position = i;
+                }
+            }
+            gSwapLeadPlayer = FALSE;
+            if (is_in_two_player_adventure() &&
+                (settings->racers[PLAYER_TWO].starting_position < settings->racers[PLAYER_ONE].starting_position)) {
+                gSwapLeadPlayer = TRUE;
+            }
+            curRacer2 = &(*gRacersByPosition)->unk64->racer;
+            gFirstTimeFinish = FALSE;
+            if ((settings->gNumRacers == 1 || is_in_two_player_adventure()) &&
+                curRacer2->playerIndex != PLAYER_COMPUTER && !is_in_tracks_mode() && get_trophy_race_world_id() == 0) {
+                gFirstTimeFinish = TRUE;
+            }
+            shouldAwardBalloon = FALSE;
+            if (gFirstTimeFinish && !someBool2) {
+                shouldAwardBalloon = set_course_finish_flags(settings);
+            }
+            if (someBool2) {
+                gFirstTimeFinish = TRUE;
+                shouldAwardBalloon = TRUE;
+            }
+
+#ifdef ANTI_TAMPER
+            if (antiPiracySkipTajBalloonCutscene) {
+                shouldAwardBalloon = FALSE;
+                gFirstTimeFinish = FALSE;
+            }
+#endif
+
+            if (!shouldAwardBalloon) {
+                if (is_in_two_player_adventure()) {
+                    if (gSwapLeadPlayer) {
+                        gSwapLeadPlayer = FALSE;
+                        swap_lead_player();
+                        if (D_800DC73C) {
+                            D_800DC748 = TRUE;
+                        }
+                    } else if (D_800DC73C) {
+                        D_800DC748 = TRUE;
+                    }
+                }
+                postrace_start(gFirstTimeFinish, 30);
+            } else {
+                settings->balloonsPtr[settings->worldId]++;
+                if (settings->worldId != 0) {
+                    settings->balloonsPtr[0]++;
+                }
+                race_finish_adventure(1);
+            }
+            D_8011ADB4 = -1;
+            if (get_number_of_active_players() == 1) {
+                race_finish_time_trial();
+            }
         }
-        postrace_start(gFirstTimeFinish, 30);
-      } else {
-        settings->balloonsPtr[settings->worldId]++;
-        if (settings->worldId != 0) {
-          settings->balloonsPtr[0]++;
-        }
-        race_finish_adventure(1);
-      }
-      D_8011ADB4 = -1;
-      if (get_number_of_active_players() == 1) {
-        race_finish_time_trial();
-      }
     }
-  }
 }
 #else
 // https://decomp.me/scratch/QupaR
