@@ -5039,11 +5039,9 @@ void func_80019808(s32 updateRate) {
     s32 j;
     Object_Racer *curRacer2;
     Settings *settings;
-    s16 prevUnk1AA;
-    s16 sp6CIndex;
+    s32 prevUnk1AA;
+    s16 racerIndex;
     s32 newUnk1AA;
-    s16 var_a2_4;
-    s32 var_s0_2;
     s16 numFinishedRacers;
     s16 foundIndex;
     s32 battleMusic;
@@ -5125,37 +5123,36 @@ void func_80019808(s32 updateRate) {
                     }
 
                     do {
-                        sp6CIndex = -1;
+                        racerIndex = -1;
                         foundIndex = -1;
                         for (i = 0; i < gNumRacers; i++) {
-                            if (!racer[i]->raceFinished) {
-                                if (sp5C[i] >= foundIndex) {
-                                    foundIndex = sp5C[i];
-                                    sp6CIndex = i;
-                                }
+                            if (!racer[i]->raceFinished && sp5C[i] >= foundIndex) {
+                                foundIndex = sp5C[i];
+                                racerIndex = i;
                             }
                         }
 
-                        if (sp6CIndex != -1) {
+                        if (racerIndex != -1) {
                             if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
-                                racer[sp6CIndex]->finishPosition = 5 - D_8011ADC0;
+                                racer[racerIndex]->finishPosition = 5 - D_8011ADC0;
                             } else {
-                                racer[sp6CIndex]->finishPosition = D_8011ADC0;
+                                racer[racerIndex]->finishPosition = D_8011ADC0;
                             }
                             D_8011ADC0++;
-                            racer[sp6CIndex]->raceFinished = 1;
+                            racer[racerIndex]->raceFinished = TRUE;
                         }
-                    } while (sp6CIndex != -1);
-                    gSwapLeadPlayer = 0;
+                    } while (racerIndex != -1);
+
+                    gSwapLeadPlayer = FALSE;
+
                     if ((!is_in_tracks_mode() && racer[0]->finishPosition == 1) ||
                         (is_in_two_player_adventure() && racer[1]->finishPosition == 1)) {
                         if (!(settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED)) {
                             settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED;
-                            var_s0_2 = settings->ttAmulet + 1;
-                            if (var_s0_2 > 4) {
-                                var_s0_2 = 4;
+                            i = settings->ttAmulet + 1;
+                            if (i > 4) {
+                                i = 4;
                             }
-                            i = var_s0_2;
                             settings->ttAmulet = i;
                         }
                     }
@@ -5213,10 +5210,10 @@ void func_80019808(s32 updateRate) {
     for (i = 0; i < gNumRacers; i++) {
         new_var = i;
         newUnk1AA = 1;
-        curRacer = &(*gRacers)[new_var]->unk64->racer;
+        curRacer = &(*gRacers)[i]->unk64->racer;
         prevUnk1AA = curRacer->unk1AA;
         for (j = 0; j < gNumRacers; j++) {
-            if (j != new_var) {
+            if (j != i) {
                 curRacer2 = &(*gRacers)[new_var]->unk64->racer;
                 if (curRacer->raceFinished == FALSE && curRacer2->raceFinished != FALSE) {
                     newUnk1AA++;
@@ -5280,12 +5277,11 @@ void func_80019808(s32 updateRate) {
     for (i = 0; i < gNumRacers; i++) {
         curRacer = &(*gRacers)[i]->unk64->racer;
         if (curRacer->raceFinished) {
-            var_a2_4 = curRacer->finishPosition;
+            j = curRacer->finishPosition;
         } else {
-            var_a2_4 = curRacer->unk1AA;
+            j = curRacer->unk1AA;
         }
-        gRacersByPosition[var_a2_4 - 1] =
-            (Object *) curRacer; // TODO: This should be a pointer to Object, not Object_Racer
+        gRacersByPosition[j - 1] = (Object *) curRacer; // TODO: This should be a pointer to Object, not Object_Racer
     }
 
     for (i = 0; i < gNumRacers; i++) {
@@ -5317,7 +5313,7 @@ void func_80019808(s32 updateRate) {
     } else if (D_8011AD3C != 0 && numFinishedRacers != 0) {
         curRacer2 = &(*gRacers)[0]->unk64->racer;
         if (!curRacer2->raceFinished) {
-            curRacer2->raceFinished = 1;
+            curRacer2->raceFinished = TRUE;
             curRacer2->finishPosition = D_8011ADC0;
             D_8011ADC0 += 1;
         }
@@ -5332,14 +5328,14 @@ void func_80019808(s32 updateRate) {
             someBool2) {
             if (numHumanRacersFinished != numHumanRacers) {
                 for (i = 0; i < gNumRacers; i++) {
-                    curRacer = &gRacersByPosition[i]->unk64->racer;
-                    if (curRacer->raceFinished == FALSE) {
-                        if (curRacer->playerIndex >= 0) {
-                            set_active_camera(curRacer->playerIndex);
+                    curRacer2 = &gRacersByPosition[i]->unk64->racer;
+                    if (curRacer2->raceFinished == FALSE) {
+                        if (curRacer2->playerIndex >= 0) {
+                            set_active_camera(curRacer2->playerIndex);
                             cam_get_active_camera_no_cutscenes()->mode = CAMERA_FINISH_CHALLENGE;
                         }
-                        curRacer->raceFinished = TRUE;
-                        curRacer->finishPosition = D_8011ADC0;
+                        curRacer2->raceFinished = TRUE;
+                        curRacer2->finishPosition = D_8011ADC0;
                         D_8011ADC0++;
                     }
                 }
