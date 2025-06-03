@@ -2737,7 +2737,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         apply_plane_tilt_anim(updateRate, obj, racer);
     }
     var_v0 = racer->playerIndex;
-    if ((var_v0 == PLAYER_COMPUTER) && (gCurrentPlayerIndex != PLAYER_COMPUTER)) {
+    if (var_v0 == PLAYER_COMPUTER && gCurrentPlayerIndex != PLAYER_COMPUTER) {
         gCurrentRacerHandlingStat = 1.4f;
     }
     var_f20 = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
@@ -3089,7 +3089,6 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                 }
             } else {
                 var_v0 = -(racer->x_rotation_vel & 0xFFFF);
-                var_t0 = racerSteerAngle * 4;
                 if (var_v0 > 0x8000) {
                     var_v0 -= 0xFFFF;
                 }
@@ -3102,8 +3101,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                 } else {
                     var_t0 = racerSteerAngle * 4;
                 }
-                var_v0 = var_t0 * updateRate;
-                racer->steerVisualRotation -= var_v0 & 0xFFFF;
+                racer->steerVisualRotation -= (var_t0 * updateRate) & 0xFFFF;
             }
             if (!(gCurrentRacerInput & R_TRIG) || racer->groundedWheels == 0 || racer->zipperDirCorrection != 0) {
                 var_f20 = racer->velocity * var_t0 * 0.00015;
@@ -3225,14 +3223,14 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             obj->segment.y_velocity -= racer->oy2 * var_f20;
             obj->segment.z_velocity -= racer->oz2 * var_f20;
         }
-        var_f2 = racer->unk34 * racer->unk34 * spD0;
+        var_f20 = racer->unk34 * racer->unk34 * spD0;
         if (racer->unk34 < 0.0f) {
-            var_f2 = -var_f2;
+            var_f20 = -var_f20;
         }
-        var_f2 += 4.0f * (racer->unk34 * spD0);
-        obj->segment.x_velocity -= racer->ox2 * var_f2;
-        obj->segment.y_velocity -= racer->oy2 * var_f2;
-        obj->segment.z_velocity -= racer->oz2 * var_f2;
+        var_f20 += 4.0f * (racer->unk34 * spD0);
+        obj->segment.x_velocity -= racer->ox2 * var_f20;
+        obj->segment.y_velocity -= racer->oy2 * var_f20;
+        obj->segment.z_velocity -= racer->oz2 * var_f20;
 
         racer->forwardVel -= (racer->forwardVel + (racer->velocity * 0.05)) * 0.125;
     }
@@ -3321,40 +3319,36 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         temp_v0_obj = obj->unk60->unk4[2];
         temp_v0_obj->segment.trans.rotation.y_rotation = 0x4000;
         temp_v0_obj->segment.object.modelIndex += 1;
-        if (temp_v0_obj->segment.header->numberOfModelIds == temp_v0_obj->segment.object.modelIndex) {
+        if (temp_v0_obj->segment.object.modelIndex == temp_v0_obj->segment.header->numberOfModelIds) {
             temp_v0_obj->segment.object.modelIndex = 0;
         }
     }
     if (obj->unk60 != NULL && obj->unk60->unk0 >= 3) {
         if (racer->groundedWheels != 0 || spA2 != FALSE) {
             temp_v0_obj = obj->unk60->unk4[0];
-            var_f0 = temp_v0_obj->segment.trans.y_position;
-            if (var_f0 > 0.0f) {
-                temp_v0_obj->segment.trans.y_position = var_f0 - 2.0;
+            if (temp_v0_obj->segment.trans.y_position > 0.0f) {
+                temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position - 2.0;
             } else {
                 temp_v0_obj->segment.trans.y_position = 0.0f;
             }
             temp_v0_obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
             temp_v0_obj = obj->unk60->unk4[1];
-            var_f0 = temp_v0_obj->segment.trans.y_position;
-            if (var_f0 > 0.0f) {
-                temp_v0_obj->segment.trans.y_position = var_f0 - 2.0;
+            if (temp_v0_obj->segment.trans.y_position > 0.0f) {
+                temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position - 2.0;
             } else {
                 temp_v0_obj->segment.trans.y_position = 0.0f;
             }
             temp_v0_obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
         } else {
             temp_v0_obj = obj->unk60->unk4[0];
-            var_f0 = temp_v0_obj->segment.trans.y_position;
-            if (var_f0 < 20.0f) {
-                temp_v0_obj->segment.trans.y_position = var_f0 + 1.0f;
+            if (temp_v0_obj->segment.trans.y_position < 20.0f) {
+                temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position + 1.0f;
             } else {
                 temp_v0_obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
             }
             temp_v0_obj = obj->unk60->unk4[1];
-            var_f0 = temp_v0_obj->segment.trans.y_position;
-            if (var_f0 < 20.0f) {
-                temp_v0_obj->segment.trans.y_position = var_f0 + 1.0f;
+            if (temp_v0_obj->segment.trans.y_position < 20.0f) {
+                temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position + 1.0f;
             } else {
                 temp_v0_obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
             }
@@ -3394,7 +3388,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
 }
 #else
-// https://decomp.me/scratch/Pfb7d
+// https://decomp.me/scratch/SlvtN
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80049794.s")
 #endif
 
