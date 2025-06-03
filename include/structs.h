@@ -1537,12 +1537,17 @@ typedef struct Object_FogChanger {
 typedef struct Object_NPC {
    /* 0x00 */ f32 unk0;
    /* 0x04 */ f32 animFrameF;
-   /* 0x08 */ s32 unk8;
-   /* 0x0C */ s8 nodeBack1; // One node backwards
-   /* 0x0D */ u8 nodeCurrent; // Intended target node
-   /* 0x0E */ u8 nodeBack2; // Two nodes backward
-   /* 0x0F */ u8 nodeForward1; // One node forward
-   /* 0x10 */ u8 nodeForward2; // Two nodes forward
+   /* 0x08 */ f32 unk8;
+   union {
+    /* 0x0C */ u8 nodeData[5];
+    struct {
+        /* 0x0C */ s8 nodeBack1; // One node backwards
+        /* 0x0D */ u8 nodeCurrent; // Intended target node
+        /* 0x0E */ u8 nodeBack2; // Two nodes backward
+        /* 0x0F */ u8 nodeForward1; // One node forward
+        /* 0x10 */ u8 nodeForward2; // Two nodes forward
+    };
+   };
    /* 0x11 */ u8 fogR;
    /* 0x12 */ u8 fogG;
    /* 0x13 */ u8 fogB;

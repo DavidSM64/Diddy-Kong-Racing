@@ -1380,7 +1380,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
                     tt->nodeBack1 = tt->nodeCurrent;
                 }
             } else {
-                diffZ = func_8001C6C4((Object_64 *) tt, obj, updateRateF, 1.0f, 0);
+                diffZ = func_8001C6C4(tt, obj, updateRateF, 1.0f, 0);
                 tt->animFrameF += diffZ * 1.5;
             }
             break;
@@ -2572,7 +2572,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
-    taj = (Object_NPC *) obj->unk64;
+    taj = &obj->unk64->npc;
     levelHeader = get_current_level_header();
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     if (obj->segment.animFrame == 0 && taj->animFrameF > 1.0) {
@@ -3019,7 +3019,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                     taj->unk1C = 0;
                 }
                 if (taj->unk1C < 120) {
-                    taj->animFrameF += func_8001C6C4((Object_64 *) taj, obj, updateRateF, 1.0f, 0);
+                    taj->animFrameF += func_8001C6C4(taj, obj, updateRateF, 1.0f, 0);
                 } else {
                     var_a2 = taj->unk1E - (obj->segment.trans.rotation.y_rotation & 0xFFFF);
                     if (var_a2 > 0x8000) {
@@ -3396,7 +3396,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
     LevelObjectEntry *levelEntry;
     ObjectInteraction *interactObj;
     Object_Racer *racer;
-    Object_NPC *obj64;
+    Object_NPC *npc;
     Settings *settings;
     s32 flag;
     s32 doubleSpeed;
@@ -3439,7 +3439,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                 obj->segment.object.opacity = 255;
             }
             interactObj = obj->interactObj;
-            if ((interactObj->distance < 45) && (isPirated == FALSE)) {
+            if (interactObj->distance < 45 && isPirated == FALSE) {
                 racerObj = interactObj->obj;
                 if ((racerObj && (racerObj->segment.header->behaviorId == 1))) {
                     racer = &racerObj->unk64->racer;
@@ -3460,21 +3460,21 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                     }
                 }
             }
-            obj64 = &obj->unk64->npc;
+            npc = &obj->unk64->npc;
             obj->segment.object.animationID = 0;
-            obj64->forwardVel = 0.0f;
+            npc->forwardVel = 0.0f;
             speedf = (obj->segment.object.opacity < 255) ? 0 : 1;
-            if (obj64->nodeCurrent == 255) {
-                obj64->nodeCurrent = ainode_find_nearest(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                                         obj->segment.trans.z_position, FALSE);
-                if (obj64->nodeCurrent != 255) {
-                    obj64->nodeBack2 = ainode_find_next(obj64->nodeCurrent, -1, 0);
-                    obj64->nodeForward1 = ainode_find_next(obj64->nodeBack2, obj64->nodeCurrent, 0);
-                    obj64->nodeForward2 = ainode_find_next(obj64->nodeForward1, obj64->nodeBack2, 0);
-                    obj64->nodeBack1 = obj64->nodeCurrent;
+            if (npc->nodeCurrent == 255) {
+                npc->nodeCurrent = ainode_find_nearest(obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                                       obj->segment.trans.z_position, FALSE);
+                if (npc->nodeCurrent != 255) {
+                    npc->nodeBack2 = ainode_find_next(npc->nodeCurrent, -1, 0);
+                    npc->nodeForward1 = ainode_find_next(npc->nodeBack2, npc->nodeCurrent, 0);
+                    npc->nodeForward2 = ainode_find_next(npc->nodeForward1, npc->nodeBack2, 0);
+                    npc->nodeBack1 = npc->nodeCurrent;
                 }
             } else {
-                func_8001C6C4((Object_64 *) obj64, obj, updateRateF, speedf, 0);
+                func_8001C6C4(npc, obj, updateRateF, speedf, 0);
             }
         }
     }

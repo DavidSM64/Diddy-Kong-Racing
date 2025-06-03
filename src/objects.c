@@ -6365,10 +6365,142 @@ s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
     return result;
 }
 
+#ifdef NON_EQUIVALENT
+f32 func_8001C6C4(Object_NPC *npc, Object *npcParentObj, f32 updateRateF, f32 speedF, s32 direction) {
+    Object *aiNode;
+    f32 var_f20_2;
+    f32 xPosData[5];
+    f32 yPosData[5];
+    f32 zPosData[5];
+    f32 xDiff2;
+    f32 yDiff2;
+    f32 zDiff2;
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
+    f32 dist;
+    f32 dist2;
+    f32 mag;
+    s32 i;
+    s32 var_s0;
+    s32 var_s1;
+    u8 nodeForward1;
+    u8 nodeForward2;
+
+    if (osTvType == OS_TV_TYPE_PAL) {
+        updateRateF *= 1.2;
+    }
+    i = 0;
+    while (1) {
+        if (npc->nodeData[i] == 0xFF) {
+            return 0.0f;
+        }
+        aiNode = ainode_get(npc->nodeData[i]);
+        if (aiNode == NULL) {
+            return 0.0f;
+        }
+        xPosData[i] = aiNode->segment.trans.x_position;
+        yPosData[i] = aiNode->segment.trans.y_position;
+        zPosData[i] = aiNode->segment.trans.z_position;
+        i++;
+        if (i != 5) {
+            continue;
+        }
+        // This puts xPosData into yDiff2, and yPosData into xDiff2. Bug?
+        yDiff2 = catmull_rom_interpolation(xPosData, 0, npc->unk0);
+        xDiff2 = catmull_rom_interpolation(yPosData, 0, npc->unk0);
+        zDiff2 = catmull_rom_interpolation(zPosData, 0, npc->unk0);
+        if (npc->unk8 == 0.0f) {
+            npc->unk8 = 0.01f;
+        }
+
+        var_s1 = 0;
+        for (var_s0 = 0; var_s0 != 2; var_s0++) {
+            var_f20_2 = npc->unk0 + (npc->unk8 * updateRateF);
+            if (var_f20_2 >= 1.0) {
+                var_f20_2 -= 1.0;
+                var_s1 = 1;
+            }
+            xDiff = catmull_rom_interpolation(xPosData, var_s1, var_f20_2);
+            yDiff = catmull_rom_interpolation(yPosData, var_s1, var_f20_2);
+            zDiff = catmull_rom_interpolation(zPosData, var_s1, var_f20_2);
+
+            // This puts mixes up y and x diffs like above.
+            xDiff -= yDiff2;
+            yDiff -= xDiff2;
+            zDiff -= zDiff2;
+            if (var_s0 == 0) {
+                var_s1 = 0;
+                dist = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) / updateRateF;
+                if (dist != 0.0f) {
+                    npc->unk8 *= (speedF / dist);
+                }
+            }
+        }
+        npc->unk0 = var_f20_2;
+        xDiff2 += xDiff;
+        yDiff2 += yDiff;
+        zDiff2 += zDiff;
+        xDiff = xDiff2 - npcParentObj->segment.trans.x_position;
+        yDiff = yDiff2 - npcParentObj->segment.trans.y_position;
+        if (0) {}
+        zDiff = zDiff2 - npcParentObj->segment.trans.z_position;
+        xDiff2 = xDiff;
+        yDiff2 = yDiff;
+        zDiff2 = zDiff;
+        dist = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
+        if (dist != 0.0f) {
+            mag = 255.0 / dist;
+            xDiff *= mag;
+            yDiff *= mag;
+            zDiff *= mag;
+        }
+        dist2 = sqrtf((xDiff2 * xDiff2) + (yDiff2 * yDiff2) + (zDiff2 * zDiff2)) / 16;
+        if (speedF < dist2) {
+            dist2 = speedF;
+        }
+        if (dist2 >= 1.0) {
+            var_s0 = (arctan2_f(xDiff, zDiff) - (npcParentObj->segment.trans.rotation.y_rotation & 0xFFFF)) - 0x8000;
+            if (var_s0 > 0x8000) {
+                var_s0 -= 0xFFFF;
+            }
+            if (var_s0 < -0x8000) {
+                var_s0 += 0xFFFF;
+            }
+            npcParentObj->segment.trans.rotation.y_rotation += (var_s0 * (s32) updateRateF) >> 4;
+            var_s0 = arctan2_f(yDiff, 255.0f) - (npcParentObj->segment.trans.rotation.x_rotation & 0xFFFF);
+            if (var_s0 > 0x8000) {
+                var_s0 -= 0xFFFF;
+            }
+            if (var_s0 < -0x8000) {
+                var_s0 += 0xFFFF;
+            }
+            npcParentObj->segment.trans.rotation.x_rotation += ((var_s0 * (s32) updateRateF) >> 4);
+        }
+        npcParentObj->segment.trans.rotation.z_rotation = 0;
+        xDiff = sins_f(npcParentObj->segment.trans.rotation.y_rotation + 0x8000) * dist2;
+        move_object(npcParentObj, xDiff * updateRateF, 0.0f,
+                    coss_f(npcParentObj->segment.trans.rotation.y_rotation + 0x8000) * dist2 * updateRateF);
+        npcParentObj->segment.trans.y_position = yDiff2;
+        dist2 = dist2 * updateRateF * 2;
+        if (var_s1 != 0) {
+            nodeForward1 = npc->nodeData[3];
+            nodeForward2 = npc->nodeData[4];
+            npc->nodeData[0] = npc->nodeData[1];
+            npc->nodeData[1] = npc->nodeData[2];
+            npc->nodeData[2] = npc->nodeData[3];
+            npc->nodeData[3] = npc->nodeData[4];
+            npc->nodeData[4] = ainode_find_next(nodeForward2 & 0xFF, nodeForward1 & 0xFF, direction);
+        }
+        return dist2;
+    }
+}
+#else
 // https://decomp.me/scratch/cfVAM
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001C6C4.s")
+#endif
 
-s32 ainode_find_next(s32 nodeId, s32 arg1, s32 direction) {
+s32 ainode_find_next(s32 nodeId, s32 nextNodeId, s32 direction) {
     Object *aiNodeObj;
     LevelObjectEntry_AiNode *entry;
     Object_AiNode *aiNode;
@@ -6391,7 +6523,7 @@ s32 ainode_find_next(s32 nodeId, s32 arg1, s32 direction) {
     nextIndex = (aiNode->directions[direction] + 1) & 3;
 
     for (i = 0; i < 4; i++) {
-        if (entry->adjacent[nextIndex] != NODE_NONE && arg1 != entry->adjacent[nextIndex]) {
+        if (entry->adjacent[nextIndex] != NODE_NONE && entry->adjacent[nextIndex] != nextNodeId) {
             aiNode->directions[direction] = nextIndex;
             i = 4; // break
             someCount++;

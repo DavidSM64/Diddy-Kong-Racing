@@ -3209,7 +3209,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->segment.y_velocity -= racer->oy3 * var_f20;
         obj->segment.z_velocity -= racer->oz3 * var_f20;
         if (racer->trickType == 1 || racer->trickType == -1) {
-            spEC = racer->velocity * 0.058823529411764705 * 1.5;
+            spEC = racer->velocity * 0.0588235 * 1.5;
             var_f20 = coss_f(racer->x_rotation_vel) * spEC * racer->trickType;
             if (racer->x_rotation_vel > 0x4000 || racer->x_rotation_vel < -0x4000) {
                 var_f20 *= 2;
