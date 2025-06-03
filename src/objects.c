@@ -2834,7 +2834,7 @@ void obj_tex_animate(Object *obj, s32 updateRate) {
  * Sets the texture offset on the door number based on the balloon requirement.
  */
 void obj_door_number(ObjectModel *model, Object *obj) {
-    Object_64 *obj64;
+    Object_Door *door;
     s32 current;
     s32 remaining;
     s32 i;
@@ -2844,8 +2844,8 @@ void obj_door_number(ObjectModel *model, Object *obj) {
         return;
     }
 
-    obj64 = obj->unk64;
-    remaining = obj64->door.balloonCount;
+    door = &obj->unk64->door;
+    remaining = door->balloonCount;
     current = ((remaining / 10) - 1) << 2;
     remaining = (remaining % 10) << 2;
     i = 0;
@@ -3586,7 +3586,7 @@ void func_80012F94(Object *obj) {
     ret2 = 1.0f;
     if (!(obj->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
         if (obj->segment.header->behaviorId == BHV_RACER) {
-            objRacer = (Object_Racer *) obj->unk64;
+            objRacer = &obj->unk64->racer;
             objRacer->unk201 = 30;
             if (objRacer->unk206 > 0) {
                 ret2 = 1.0f - (objRacer->unk206 * 0.05f);
@@ -7477,9 +7477,8 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
         obj->unk64 = NULL;
         newObj = NULL;
     }
-    camera = (Object_AnimCamera *) newObj;
-    if (camera != NULL) {
-        camera->unk3C = 0;
+    if (newObj != NULL) {
+        newObj->segment.level_entry = NULL;
         obj_init_animcamera(obj, newObj);
         if (newObj->segment.header->behaviorId == BHV_CAMERA_ANIMATION) {
             camera = &newObj->unk64->anim_camera;

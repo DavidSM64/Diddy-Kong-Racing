@@ -4063,7 +4063,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     s32 i;
 
     unused_8011D53C = 0;
-    tempRacer = (struct Object_Racer *) obj->unk64;
+    tempRacer = &obj->unk64->racer;
     obj->segment.trans.rotation.y_rotation = racer->angleY;
     obj->segment.trans.rotation.x_rotation = racer->angleX;
     obj->segment.trans.rotation.z_rotation = racer->angleZ;
@@ -4189,7 +4189,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     gCurrentSurfaceType = SURFACE_DEFAULT;
     gRaceStartTimer = get_race_countdown();
     updateRateF = updateRate;
-    tempRacer = (Object_Racer *) obj->unk64;
+    tempRacer = &obj->unk64->racer;
     // Cap all of the velocities on the different axes.
     // Unfortunately, Rareware didn't appear to use a clamp macro here, which would've saved a lot of real estate.
     if (obj->segment.x_velocity > 50.0) {
@@ -5702,10 +5702,10 @@ s32 turn_head_towards_object(Object *obj, Object_Racer *racer, Object *targetObj
         WRAP(intendedAngle, -0x8000, 0x8000);
         CLAMP(intendedAngle, -0x3000, 0x3000);
         racer->headAngleTarget = intendedAngle;
-        if ((racer->miscAnimCounter & 0x3F) < 0x1F) {
+        if ((racer->miscAnimCounter & 0x3F) <= 30) {
             racer->headAngleTarget = 0;
         }
-        racer = (struct Object_Racer *) targetObj->unk64;
+        racer = &targetObj->unk64->racer;
         intendedAngle = arctan2_f(diffX, diffZ) - (obj->segment.trans.rotation.y_rotation & 0xFFFF);
         WRAP(intendedAngle, -0x8000, 0x8000);
         CLAMP(intendedAngle, -0x3000, 0x3000);
@@ -6981,10 +6981,10 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
     s32 objID;
     Object *heldObj;
     Object *intendedTarget;
-    Object_64 *magnetTarget;
+    Object_Racer *magnetTarget;
     f32 objDist;
     ObjectModel *model;
-    Object_64 *objData;
+    Object_Weapon *weapon;
     f32 velocity;
     f32 distance;
     f32 scaleY;
@@ -7082,7 +7082,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         }
                         if (objDist < distance) {
                             if (weaponID == WEAPON_MAGNET_LEVEL_3 && intendedTarget != NULL) {
-                                magnetTarget = intendedTarget->unk64;
+                                magnetTarget = &intendedTarget->unk64->racer;
                             }
                             racer->magnetTargetObj = intendedTarget;
                         } else {
@@ -7182,10 +7182,10 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         racer->magnetTargetObj = NULL;
                         if (racer->playerIndex != PLAYER_COMPUTER) {
                             if (magnetTarget != NULL) {
-                                magnetTarget->racer.magnetLevel3 = TRUE;
-                                magnetTarget->racer.magnetTimer = 120;
-                                magnetTarget->racer.magnetTargetObj = obj;
-                                magnetTarget->racer.magnetModelID = MAGNET_LEVEL3;
+                                magnetTarget->magnetLevel3 = TRUE;
+                                magnetTarget->magnetTimer = 120;
+                                magnetTarget->magnetTargetObj = obj;
+                                magnetTarget->magnetModelID = MAGNET_LEVEL3;
                             }
                             if (racer->raceFinished == FALSE) {
                                 rumble_set(racer->playerIndex, RUMBLE_TYPE_15);
@@ -7231,13 +7231,13 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                             spawnedObj->segment.trans.rotation.x_rotation = 0;
                         }
                     }
-                    objData = spawnedObj->unk64;
-                    objData->weapon.owner = obj;
-                    objData->weapon.target = intendedTarget;
-                    objData->weapon.checkpoint = racer->checkpoint;
-                    objData->weapon.forwardVel = (racer->velocity - velocity);
-                    objData->weapon.weaponID = weaponID;
-                    switch (objData->weapon.weaponID) {
+                    weapon = &spawnedObj->unk64->weapon;
+                    weapon->owner = obj;
+                    weapon->target = intendedTarget;
+                    weapon->checkpoint = racer->checkpoint;
+                    weapon->forwardVel = (racer->velocity - velocity);
+                    weapon->weaponID = weaponID;
+                    switch (weapon->weaponID) {
                         case WEAPON_ROCKET_HOMING:
                             soundID = SOUND_NYOOM2;
                             break;
@@ -7381,7 +7381,7 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
     f32 diffX;
     f32 diffZ;
     f32 vel;
-    Object_64 *magnetTarget;
+    Object_Racer *magnetTarget;
 
     racer->magnetTimer -= updateRate;
     if (racer->magnetTimer < 0) {
@@ -7412,8 +7412,8 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
     diffX /= vel;
     diffZ /= vel;
-    magnetTarget = racer->magnetTargetObj->unk64;
-    vel = -magnetTarget->racer.velocity;
+    magnetTarget = &racer->magnetTargetObj->unk64->racer;
+    vel = -magnetTarget->velocity;
     if (vel < 8.0 && racer->magnetLevel3 == FALSE) {
         vel = 8.0f;
     }
@@ -7422,7 +7422,7 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
     gRacerMagnetVelX = (vel + 5.0f) * diffX;
     gRacerMagnetVelZ = (vel + 5.0f) * diffZ;
-    if (magnetTarget->racer.shieldTimer && racer->magnetLevel3 == FALSE) {
+    if (magnetTarget->shieldTimer && racer->magnetLevel3 == FALSE) {
         racer->magnetTimer = 0;
     }
 }
@@ -7459,7 +7459,7 @@ void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 flags)
     s32 soundIndex;
     Object_Racer *tempRacer;
 
-    tempRacer = (Object_Racer *) obj->unk64;
+    tempRacer = &obj->unk64->racer;
     if (tempRacer->exitObj == 0 && (!(flags & 0x80) || gCurrentPlayerIndex != PLAYER_COMPUTER)) {
         if (flags == 2) {
             if (tempRacer->soundMask != NULL && soundID != tempRacer->unk2A) {
@@ -7653,7 +7653,7 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
                     bananaObj = spawn_object(&newObject, 1);
                     if (bananaObj != NULL) {
                         bananaObj->segment.level_entry = NULL;
-                        banana = (Object_Banana *) bananaObj->unk64;
+                        banana = &bananaObj->unk64->banana;
                         banana->droppedVehicleID = racer->vehicleID;
                         bananaObj->segment.x_velocity = racer->ox1 * 2;
                         bananaObj->segment.y_velocity = (0.0f - racer->oy1) + 5.0;
@@ -8657,11 +8657,11 @@ void drm_checksum_balloon(void) {
  * After a timer hits 0, execute the transition.
  */
 void racer_enter_door(Object_Racer *racer, s32 updateRate) {
-    struct Object_Exit *exit;
+    Object_Exit *exit;
     f32 updateRateF;
     s32 angle;
 
-    exit = (struct Object_Exit *) racer->exitObj->unk64;
+    exit = &racer->exitObj->unk64->exit;
     racer->playerIndex = PLAYER_COMPUTER;
     angle = (u16) arctan2_f(exit->directionX, exit->directionZ) - (racer->steerVisualRotation & 0xFFFF);
     WRAP(angle, -0x8000, 0x8000);
