@@ -250,13 +250,13 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         }
     }
     obj->segment.animFrame += updateRate * 10;
-    weapon = (Object_Fireball_Octoweapon *) obj->unk64;
+    weapon = &obj->unk64->fireball_octoweapon;
     interactObj = obj->interactObj;
     if ((interactObj->obj)) {
         if ((interactObj->distance < 60)) {
             someObj = interactObj->obj;
             if (someObj->segment.header->behaviorId == BHV_RACER) {
-                racer = (Object_Racer *) someObj->unk64;
+                racer = &someObj->unk64->racer;
                 if (racer->playerIndex != PLAYER_COMPUTER) {
                     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON) {
                         racer->attackType = ATTACK_EXPLOSION;

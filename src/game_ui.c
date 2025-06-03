@@ -3978,9 +3978,10 @@ void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hu
         mtx_pop(&gHudDL);
     }
     spriteID = hud->spriteID;
-    if (spriteID != 0x28) {
-        if ((spriteID != 0xE) && (spriteID != 0x1B) && ((spriteID < 0x2F) || (spriteID >= 0x36)) &&
-            (spriteID != 0x2E) && (gMinimapXlu & 1)) {
+    if (spriteID != HUD_SPRITE_PRO_AM) {
+        if (spriteID != HUD_SPRITE_MAP_DOT && spriteID != HUD_SPRITE_MAP_ARROW &&
+            (spriteID < HUD_ASSET_47 || spriteID >= HUD_ASSET_54) && spriteID != HUD_SPRITE_SPEEDOMETRE_ARROW &&
+            gMinimapXlu & 1) {
             hud->pos.y -= objEntry.offsetY;
         }
         hud->pos.x -= gHudOffsetX + gHudBounceX;
