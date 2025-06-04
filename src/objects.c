@@ -2430,6 +2430,7 @@ void gParticlePtrList_flush(void) {
     gFreeListCount = 0;
 }
 
+// https://decomp.me/scratch/DW6EX
 #ifdef NON_EQUIVALENT
 void func_800101AC(Object *obj, s32 arg1) {
     Object *tempObj;
@@ -2645,7 +2646,6 @@ void func_800101AC(Object *obj, s32 arg1) {
     mempool_free(obj);
 }
 #else
-// https://decomp.me/scratch/DW6EX
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800101AC.s")
 #endif
 
@@ -5021,6 +5021,7 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
     return TRUE;
 }
 
+// https://decomp.me/scratch/QupaR
 #ifdef NON_EQUIVALENT
 extern s32 D_B0000574;
 
@@ -5412,7 +5413,6 @@ void func_80019808(s32 updateRate) {
     }
 }
 #else
-// https://decomp.me/scratch/QupaR
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80019808.s")
 #endif
 
@@ -6365,6 +6365,7 @@ s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
     return result;
 }
 
+// https://decomp.me/scratch/cfVAM
 #ifdef NON_EQUIVALENT
 f32 func_8001C6C4(Object_NPC *npc, Object *npcParentObj, f32 updateRateF, f32 speedF, s32 direction) {
     Object *aiNode;
@@ -6496,7 +6497,6 @@ f32 func_8001C6C4(Object_NPC *npc, Object *npcParentObj, f32 updateRateF, f32 sp
     }
 }
 #else
-// https://decomp.me/scratch/cfVAM
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001C6C4.s")
 #endif
 
@@ -7245,6 +7245,7 @@ void func_8001E89C(void) {
     }
 }
 
+// https://decomp.me/scratch/OKbBN
 #ifdef NON_EQUIVALENT
 void func_8001E93C(void) {
     s32 pad[3];
@@ -7366,7 +7367,6 @@ void func_8001E93C(void) {
     D_8011AE7E = FALSE;
 }
 #else
-// https://decomp.me/scratch/OKbBN
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001E93C.s")
 #endif
 
