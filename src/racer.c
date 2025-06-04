@@ -2531,6 +2531,7 @@ f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3,
     return velocity;
 }
 
+// https://decomp.me/scratch/SlvtN
 #ifdef NON_EQUIVALENT
 // Plane physics, largest function in DKR.
 void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
@@ -3388,7 +3389,6 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
 }
 #else
-// https://decomp.me/scratch/SlvtN
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80049794.s")
 #endif
 
@@ -3691,6 +3691,7 @@ void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/update_camera_plane.s")
 #endif
 
+// https://decomp.me/scratch/yfGqf - 97.27%
 #ifdef NON_EQUIVALENT
 // Handles loop de loops
 void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Racer *racer) {
@@ -3942,7 +3943,6 @@ void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
     }
 }
 #else
-// https://decomp.me/scratch/yfGqf - 97.27%
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004CC20.s")
 #endif
 

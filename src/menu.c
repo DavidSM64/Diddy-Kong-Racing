@@ -4328,8 +4328,8 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
         draw_text(&sMenuCurrDisplayList, x + (79 + SAVE_MENU_TEXT_OFFSET_2), y + 47, text2, ALIGN_TOP_CENTER);
     }
 }
-#else
 // No match JPN savemenu_render_element
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/savemenu_render_element.s")
 #endif
 
@@ -11391,8 +11391,8 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         open_dialogue_box(7);
     }
 }
-#else
 // No match JPN results_render
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/results_render.s")
 #endif
 
