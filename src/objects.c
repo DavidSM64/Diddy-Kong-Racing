@@ -6810,12 +6810,10 @@ void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity
     if (dynamicLightingEnabled) {
         // Calculates dynamic lighting for the object
         if (object->segment.header->directionalPointLighting) {
-            // Dynamic lighting for some objects? (Intro diddy, Taj, T.T., Bosses)
-            // shading + lighting
+            // Dynamic directional lighting for some objects (Intro diddy, Taj, T.T., Bosses)
             calc_dynamic_lighting_for_object_1(object, model, arg2, object, intensity, 1.0f);
         } else {
-            // Dynamic lighting for other objects? (Racers, Rare logo, Wizpig face, etc.)
-            // only shading
+            // Dynamic ambient lighting for other objects (Racers, Rare logo, Wizpig face, etc.)
             calc_dynamic_lighting_for_object_2(object, model, arg2, intensity);
         }
     }
