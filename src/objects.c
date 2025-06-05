@@ -2165,22 +2165,22 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
                                    obj->segment.header->shadeAmbient, 0, obj->segment.header->shadeAngleY,
                                    obj->segment.header->shadeAngleZ);
             if (obj->segment.header->unk3D != 0) {
-                obj->shading->unk4 = obj->segment.header->unk3A;
-                obj->shading->unk5 = obj->segment.header->unk3B;
-                obj->shading->unk6 = obj->segment.header->unk3C;
-                obj->shading->unk7 = obj->segment.header->unk3D;
-                obj->shading->unk8 = -(obj->shading->unk1C >> 1);
-                obj->shading->unkA = -(obj->shading->unk1E >> 1);
-                obj->shading->unkC = -(obj->shading->unk20 >> 1);
+                obj->shading->lightR = obj->segment.header->unk3A;
+                obj->shading->lightG = obj->segment.header->unk3B;
+                obj->shading->lightB = obj->segment.header->unk3C;
+                obj->shading->lightIntensity = obj->segment.header->unk3D;
+                obj->shading->lightDirX = -(obj->shading->shadowDirX >> 1);
+                obj->shading->lightDirY = -(obj->shading->shadowDirY >> 1);
+                obj->shading->lightDirZ = -(obj->shading->shadowDirZ >> 1);
             }
             returnSize = sizeof(ShadeProperties);
         }
     } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
         obj->shading->unk0 = 1.0f;
-        shadeData->unk4 = 0xFF;
-        shadeData->unk5 = 0xFF;
-        shadeData->unk6 = 0xFF;
-        shadeData->unk7 = 0;
+        shadeData->lightR = 255;
+        shadeData->lightG = 255;
+        shadeData->lightB = 255;
+        shadeData->lightIntensity = 0;
         returnSize = 8;
     }
     if (returnSize == 0) {
@@ -2962,8 +2962,8 @@ void render_3d_billboard(Object *obj) {
         gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     }
     if (hasEnvCol) {
-        gDPSetEnvColor(gObjectCurrDisplayList++, obj->shading->unk4, obj->shading->unk5, obj->shading->unk6,
-                       obj->shading->unk7);
+        gDPSetEnvColor(gObjectCurrDisplayList++, obj->shading->lightR, obj->shading->lightG, obj->shading->lightB,
+                       obj->shading->lightIntensity);
     } else if (obj->behaviorId == BHV_LAVA_SPURT) {
         hasEnvCol = TRUE;
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 0, 255);
@@ -3019,11 +3019,11 @@ void render_3d_billboard(Object *obj) {
 void render_3d_model(Object *obj) {
     s32 i;
     s32 intensity;
-    s32 alpha;
+    s32 opacity;
     s32 vertOffset;
     s32 obj60_unk0;
     s32 hasOpacity;
-    s32 hasEnvCol;
+    s32 hasEnvColor;
     s32 flags;
     s32 meshBatch;
     s32 cicFailed;
@@ -3042,12 +3042,12 @@ void render_3d_model(Object *obj) {
     if (obj68 != NULL) {
         objModel = obj68->objModel;
         hasOpacity = FALSE;
-        hasEnvCol = FALSE;
+        hasEnvColor = FALSE;
         intensity = 255;
         if (obj->shading != NULL) {
             intensity = (s32) (obj->shading->unk0 * 255.0f * gCurrentLightIntensity);
             hasOpacity = TRUE;
-            hasEnvCol = TRUE;
+            hasEnvColor = TRUE;
         }
         if (obj->behaviorId == BHV_RACER) {
             racerObj = &obj->unk64->racer;
@@ -3105,40 +3105,40 @@ void render_3d_model(Object *obj) {
                 racerObj->headAngle = 0;
             }
         }
-        alpha = obj->segment.object.opacity;
-        if (alpha > 255) {
-            alpha = 255;
+        opacity = obj->segment.object.opacity;
+        if (opacity > 255) {
+            opacity = 255;
         }
         // If the behavior is a water zipper, then halve it's transparency.
         if (obj->behaviorId == BHV_ZIPPER_WATER) {
-            alpha >>= 1;
+            opacity >>= 1;
         }
-        if (alpha < 255) {
+        if (opacity < 255) {
             hasOpacity = TRUE;
         }
-        if (hasEnvCol) {
-            gDPSetEnvColor(gObjectCurrDisplayList++, obj->shading->unk4, obj->shading->unk5, obj->shading->unk6,
-                           obj->shading->unk7);
+        if (hasEnvColor) {
+            gDPSetEnvColor(gObjectCurrDisplayList++, obj->shading->lightR, obj->shading->lightG, obj->shading->lightB,
+                           obj->shading->lightIntensity);
         } else {
             gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         }
-        if (obj->segment.header->unk71) {
-            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->unk18, obj->shading->unk19,
-                            obj->shading->unk1A, alpha);
+        if (obj->segment.header->lightingEnabled) {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->shadowR, obj->shading->shadowG,
+                            obj->shading->shadowB, opacity);
             tex_primcolour_on();
         } else if (hasOpacity) {
-            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, opacity);
         } else {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
-        if (alpha < 255) {
+        if (opacity < 255) {
             meshBatch = render_mesh(objModel, obj, 0, RENDER_SEMI_TRANSPARENT, vertOffset);
         } else {
             meshBatch = render_mesh(objModel, obj, 0, RENDER_NONE, vertOffset);
         }
-        if (obj->segment.header->unk71) {
+        if (obj->segment.header->lightingEnabled) {
             if (hasOpacity) {
-                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
+                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, opacity);
             } else {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
@@ -3166,7 +3166,7 @@ void render_3d_model(Object *obj) {
                         } else {
                             flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE | RENDER_ANTI_ALIASING);
                         }
-                        if (alpha < 255) {
+                        if (opacity < 255) {
                             flags |= RENDER_SEMI_TRANSPARENT;
                         }
 #ifdef ANTI_TAMPER
@@ -3186,7 +3186,7 @@ void render_3d_model(Object *obj) {
                             if (var_v0_2) {
                                 func_80012C98(&gObjectCurrDisplayList);
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
-                                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
+                                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, opacity);
                             }
                             loopObj->properties.common.unk0 =
                                 render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix,
@@ -3225,20 +3225,20 @@ void render_3d_model(Object *obj) {
             }
         }
         if (meshBatch != -1) {
-            if (obj->segment.header->unk71) {
-                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->unk18, obj->shading->unk19,
-                                obj->shading->unk1A, alpha);
+            if (obj->segment.header->lightingEnabled) {
+                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->shadowR, obj->shading->shadowG,
+                                obj->shading->shadowB, opacity);
                 tex_primcolour_on();
             }
             render_mesh(objModel, obj, meshBatch, RENDER_SEMI_TRANSPARENT, vertOffset);
-            if (obj->segment.header->unk71) {
+            if (obj->segment.header->lightingEnabled) {
                 tex_primcolour_off();
             }
         }
-        if (hasOpacity || obj->segment.header->unk71) {
+        if (hasOpacity || obj->segment.header->lightingEnabled) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
-        if (hasEnvCol) {
+        if (hasEnvColor) {
             gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         }
         mtx_pop(&gObjectCurrDisplayList);
@@ -5989,13 +5989,13 @@ UNUSED void add_shading_properties(Object *obj, f32 brightnessChange, f32 ambien
                                (obj->shading->unk22 + angleX), (obj->shading->unk24 + angleY),
                                (obj->shading->unk26 + angleZ));
         if (obj->segment.header->unk3D != 0) {
-            obj->shading->unk4 = obj->segment.header->unk3A;
-            obj->shading->unk5 = obj->segment.header->unk3B;
-            obj->shading->unk6 = obj->segment.header->unk3C;
-            obj->shading->unk7 = obj->segment.header->unk3D;
-            obj->shading->unk8 = -(obj->shading->unk1C >> 1);
-            obj->shading->unkA = -(obj->shading->unk1E >> 1);
-            obj->shading->unkC = -(obj->shading->unk20 >> 1);
+            obj->shading->lightR = obj->segment.header->unk3A;
+            obj->shading->lightG = obj->segment.header->unk3B;
+            obj->shading->lightB = obj->segment.header->unk3C;
+            obj->shading->lightIntensity = obj->segment.header->unk3D;
+            obj->shading->lightDirX = -(obj->shading->shadowDirX >> 1);
+            obj->shading->lightDirY = -(obj->shading->shadowDirY >> 1);
+            obj->shading->lightDirZ = -(obj->shading->shadowDirZ >> 1);
         }
     }
 }
@@ -6017,12 +6017,12 @@ void set_shading_properties(ShadeProperties *arg0, f32 brightness, f32 ambient, 
     velocityPos.x = 0.0f;
     velocityPos.y = 0.0f;
     vec3f_rotate(&angle, &velocityPos);
-    arg0->unk1C = -velocityPos.x;
-    arg0->unk1E = -velocityPos.y;
-    arg0->unk20 = -velocityPos.z;
-    arg0->unk18 = 0;
-    arg0->unk19 = 0;
-    arg0->unk1A = 0;
+    arg0->shadowDirX = -velocityPos.x;
+    arg0->shadowDirY = -velocityPos.y;
+    arg0->shadowDirZ = -velocityPos.z;
+    arg0->shadowR = 0;
+    arg0->shadowG = 0;
+    arg0->shadowB = 0;
 }
 
 /**
@@ -6066,11 +6066,13 @@ void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity
 
     if (dynamicLightingEnabled) {
         // Calculates dynamic lighting for the object
-        if (object->segment.header->unk71) {
+        if (object->segment.header->lightingEnabled) {
             // Dynamic lighting for some objects? (Intro diddy, Taj, T.T., Bosses)
+            // shading + lighting
             calc_dynamic_lighting_for_object_1(object, model, arg2, object, intensity, 1.0f);
         } else {
             // Dynamic lighting for other objects? (Racers, Rare logo, Wizpig face, etc.)
+            // only shading
             calc_dynamic_lighting_for_object_2(object, model, arg2, intensity);
         }
     }
@@ -6085,57 +6087,58 @@ void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity
 
 void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 arg2, Object *anotherObject,
                                         f32 intensity, f32 arg5) {
-    s16 sp9E;
+    s16 normIdx;
     s16 j;
     s16 i;
-    Vec3s sp94;
+    Vec3s objRot;
     s32 s6;
-    s32 x1, y1, z1;
-    s32 x2, y2, z2;
+    s32 lightDirX, lightDirY, lightDirZ;
+    s32 shadowDirX, shadowDirY, shadowDirZ;
     s32 ambientTemp;
     s32 brightnessTemp;
-    s32 t8;
-    s32 v1;
-    Vec3f sp5C;
+    s32 lightIntensity;
+    s32 shadeStrength;
+    Vec3f direction;
     Vertex *vertices;
-    Vec3s *model40Entries;
+    Vec3s *normals;
 
     if (object->shading == NULL) {
         return;
     }
 
     vertices = object->curVertData;
-    model40Entries = model->unk40;
-    sp9E = 0;
+    normals = model->unk40;
+    normIdx = 0;
 
-    sp5C.x = -(object->shading->unk8 << 3);
-    sp5C.y = -(object->shading->unkA << 3);
-    sp5C.z = -(object->shading->unkC << 3);
-    sp94.y_rotation = -object->segment.trans.rotation.y_rotation;
-    sp94.x_rotation = -object->segment.trans.rotation.x_rotation;
-    sp94.z_rotation = -object->segment.trans.rotation.z_rotation;
-    vec3f_rotate_ypr(&sp94, &sp5C);
+    direction.x = -(object->shading->lightDirX << 3);
+    direction.y = -(object->shading->lightDirY << 3);
+    direction.z = -(object->shading->lightDirZ << 3);
+    objRot.y_rotation = -object->segment.trans.rotation.y_rotation;
+    objRot.x_rotation = -object->segment.trans.rotation.x_rotation;
+    objRot.z_rotation = -object->segment.trans.rotation.z_rotation;
+    vec3f_rotate_ypr(&objRot, &direction);
 
     if (object->segment.header->unk3D != 0 && arg2) {
-        mtxf_transform_dir(get_projection_matrix_f32(), &sp5C, &sp5C);
+        mtxf_transform_dir(get_projection_matrix_f32(), &direction, &direction);
     }
 
-    x1 = -sp5C.x;
-    y1 = -sp5C.y;
-    z1 = -sp5C.z;
-    s6 = object->shading->unk7;
-    sp5C.x = object->shading->unk1C << 2;
-    sp5C.y = object->shading->unk1E << 2;
-    sp5C.z = object->shading->unk20 << 2;
+    lightDirX = -direction.x;
+    lightDirY = -direction.y;
+    lightDirZ = -direction.z;
+    s6 = object->shading->lightIntensity;
+
+    direction.x = object->shading->shadowDirX << 2;
+    direction.y = object->shading->shadowDirY << 2;
+    direction.z = object->shading->shadowDirZ << 2;
 
     if (arg2) {
-        mtxf_transform_dir(get_projection_matrix_f32(), &sp5C, &sp5C);
+        mtxf_transform_dir(get_projection_matrix_f32(), &direction, &direction);
     }
-    vec3f_rotate_ypr(&sp94, &sp5C);
+    vec3f_rotate_ypr(&objRot, &direction);
 
-    x2 = sp5C.x;
-    y2 = sp5C.y;
-    z2 = sp5C.z;
+    shadowDirX = direction.x;
+    shadowDirY = direction.y;
+    shadowDirZ = direction.z;
 
     brightnessTemp = object->shading->brightness * object->shading->unk0 * 255.0f * intensity;
     ambientTemp = object->shading->ambient * object->shading->unk0 * 255.0f * intensity;
@@ -6143,35 +6146,37 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     for (i = 0; i < model->numberOfBatches; i++) {
         if (model->batches[i].miscData != BATCH_VTX_COL) { // 0xFF means use vertex colors
             for (j = model->batches[i].verticesOffset; j < model->batches[i + 1].verticesOffset; j++) {
-                t8 = (model40Entries[sp9E].x * x1 + model40Entries[sp9E].y * y1 + model40Entries[sp9E].z * z1) >> 13;
-                if (t8 > 0) {
-                    t8 = (t8 * s6) >> 16;
-                    if (t8 > 255) {
-                        t8 = 255;
+                // calculate lighting
+                lightIntensity = (normals[normIdx].x * lightDirX + normals[normIdx].y * lightDirY + normals[normIdx].z * lightDirZ) >> 13;
+                if (lightIntensity > 0) {
+                    lightIntensity = (lightIntensity * s6) >> 16;
+                    if (lightIntensity > 255) {
+                        lightIntensity = 255;
                     }
                 } else {
-                    t8 = 0;
+                    lightIntensity = 0;
                 }
-
-                v1 = (model40Entries[sp9E].x * x2 + model40Entries[sp9E].y * y2 + model40Entries[sp9E].z * z2) >> 13;
-                if (v1 > 0) {
-                    v1 = (v1 * ambientTemp) >> 16;
-                    v1 += brightnessTemp;
-                    if (v1 > 255) {
-                        v1 = 255;
+                
+                // calculate shading
+                shadeStrength = (normals[normIdx].x * shadowDirX + normals[normIdx].y * shadowDirY + normals[normIdx].z * shadowDirZ) >> 13;
+                if (shadeStrength > 0) {
+                    shadeStrength = (shadeStrength * ambientTemp) >> 16;
+                    shadeStrength += brightnessTemp;
+                    if (shadeStrength > 255) {
+                        shadeStrength = 255;
                     }
                 } else {
-                    v1 = brightnessTemp;
+                    shadeStrength = brightnessTemp;
                 }
 
-                vertices[j].r = t8;
-                vertices[j].g = t8;
-                vertices[j].b = t8;
-                vertices[j].a = v1;
-                sp9E++;
+                vertices[j].r = lightIntensity;
+                vertices[j].g = lightIntensity;
+                vertices[j].b = lightIntensity;
+                vertices[j].a = shadeStrength;
+                normIdx++;
             }
         } else if (model->batches[i].flags & RENDER_ENVMAP) {
-            sp9E += model->batches[i + 1].verticesOffset - model->batches[i].verticesOffset;
+            normIdx += model->batches[i + 1].verticesOffset - model->batches[i].verticesOffset;
         }
     }
 }

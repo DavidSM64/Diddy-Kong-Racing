@@ -2252,7 +2252,7 @@ D_800DC954 = 0x800DC954;
 gMaxLights = 0x800DC958;
 gNumActiveLights = 0x800DC95C;
 D_800DC960 = 0x800DC960;
-D_800DC964 = 0x800DC964;
+gLightDirs = 0x800DC964;
 D_800DC968 = 0x800DC968;
 
 // object_functions.c .data

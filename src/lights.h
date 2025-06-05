@@ -41,10 +41,10 @@ typedef struct ObjectLight {
     s16 homeZ;
     Object *owner;
     Vec3f pos;
-    s32 unk1C;
-    s32 unk20;
-    s32 unk24;
-    s32 unk28;
+    s32 colourR;
+    s32 colourG;
+    s32 colourB;
+    s32 intensity;
     s32 unk2C;
     s32 unk30;
     s32 unk34;
@@ -78,16 +78,16 @@ typedef struct ObjectLight {
     s16 unk76;
     u16 unk78;
     u16 unk7A;
-    Vec3f unk7C; // Think this might be scale.
+    Vec3f direction; // Think this might be scale.
 } ObjectLight;
 
 /* Size: 0x14 bytes */
 typedef struct unk800DC960 {
-    ObjectLight* unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
+    ObjectLight* lightObj;
+    s32 colourR;
+    s32 colourG;
+    s32 colourB;
+    s32 intensity;
 } unk800DC960;
 
 void free_lights(void);
