@@ -3241,7 +3241,7 @@ void render_3d_model(Object *obj) {
     s32 vertOffset;
     s32 obj60_unk0;
     s32 hasOpacity;
-    s32 hasEnvColor;
+    s32 hasLighting;
     s32 flags;
     s32 meshBatch;
     s32 cicFailed;
@@ -3260,12 +3260,12 @@ void render_3d_model(Object *obj) {
     if (obj68 != NULL) {
         objModel = obj68->objModel;
         hasOpacity = FALSE;
-        hasEnvColor = FALSE;
+        hasLighting = FALSE;
         intensity = 255;
         if (obj->shading != NULL) {
             intensity = (s32) (obj->shading->unk0 * 255.0f * gCurrentLightIntensity);
             hasOpacity = TRUE;
-            hasEnvColor = TRUE;
+            hasLighting = TRUE;
         }
         if (obj->behaviorId == BHV_RACER) {
             racerObj = &obj->unk64->racer;
@@ -3334,7 +3334,7 @@ void render_3d_model(Object *obj) {
         if (opacity < 255) {
             hasOpacity = TRUE;
         }
-        if (hasEnvColor) {
+        if (hasLighting) {
             gDPSetEnvColor(gObjectCurrDisplayList++, obj->shading->lightR, obj->shading->lightG, obj->shading->lightB,
                            obj->shading->lightIntensity);
         } else {
@@ -3457,7 +3457,7 @@ void render_3d_model(Object *obj) {
         if (hasOpacity || obj->segment.header->directionalPointLighting) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
-        if (hasEnvColor) {
+        if (hasLighting) {
             gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         }
         mtx_pop(&gObjectCurrDisplayList);
