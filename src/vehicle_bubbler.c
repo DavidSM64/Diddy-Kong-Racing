@@ -167,7 +167,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
             racer->headAngleTarget >>= 1;
         }
     }
-    racer = (Object_Racer *) firstRacerObj->unk64;
+    racer = &firstRacerObj->unk64->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
         obj->segment.object.animationID == ANIM_BUBBLER_MOVE) {
         racer->attackType = ATTACK_SQUISHED;

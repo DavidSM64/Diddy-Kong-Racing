@@ -662,6 +662,7 @@ void rankings_render_order(s32 updateRate);
 void results_render(UNUSED s32 updateRate, f32 opacity);
 void func_80092188(s32 updateRate);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 xAxisDirection);
+void postrace_start(s32 finishState, s32 worldID);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -678,7 +679,7 @@ void dialogue_tt_gamestatus(void);
 s32 menu_title_screen_loop(s32 updateRate);
 s32 menu_magic_codes_loop(s32 updateRate);
 s32 menu_credits_loop(s32 updateRate);
-void func_8007FFEC(s32 arg0);
+void func_8007FFEC(s32 numberOfPanels);
 void set_gIntDisFlag(u8 setting);
 void init_save_data(void);
 void func_80080580(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight,

@@ -205,7 +205,7 @@ def main():
     parser.add_argument("-t", "--top", help="(Optional) Shows the top N files remaining.")
     parser.add_argument("-a", "--adventure", help="(Optional) Only shows adventure 1 or 2 based on passed in value.", choices=['1', '2'])
     parser.add_argument("-s", "--summary", help="(Optional) Only prints the percentages for adventure 1 and 2", action='store_true')
-    parser.add_argument("--treemap", help="(Optional) Generates a treemap .html file", default="progress-treemap.html", metavar="path/to/treemap-file.html")
+    parser.add_argument("--treemap", help="(Optional) Generates a treemap .html file", metavar="path/to/treemap-file.html")
     args = parser.parse_args()
     adventureSelect = 3 # Show both adventures by default
     if args.adventure != None:

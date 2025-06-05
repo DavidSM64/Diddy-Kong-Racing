@@ -2369,7 +2369,7 @@ s32 check_if_in_draw_range(Object *obj) {
             case BHV_HIT_TESTER_2:      // animated objects?
             case BHV_ANIMATED_OBJECT_2: // space ships
                 obj64 = obj->unk64;
-                obj->segment.object.opacity = obj64->wizpig2.pad0[0x42];
+                obj->segment.object.opacity = obj64->animation.unk42;
                 break;
             case BHV_PARK_WARDEN:
             case BHV_GOLDEN_BALLOON:

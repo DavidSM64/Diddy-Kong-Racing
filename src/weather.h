@@ -124,6 +124,7 @@ void weather_init(void);
 void snow_vertices(void);
 void lensflare_init(Object *);
 void lensflare_render(Gfx**, Mtx**, Vertex**, Camera*);
+void lensflare_override_remove(Object *obj);
 void weather_reset(s32 weatherType, s32 density, s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity);
 
 #endif

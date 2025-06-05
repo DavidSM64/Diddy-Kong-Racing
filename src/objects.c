@@ -29,6 +29,8 @@
 #include "vehicle_misc.h"
 #include "PRinternal/viint.h"
 #include "printf.h"
+#include "weather.h"
+#include "PRinternal/piint.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -843,14 +845,14 @@ void clear_object_pointers(void) {
     D_8011AE88 = 0;
     D_8011ADD4 = 0;
     gCutsceneID = 0;
-    D_8011AE7E = 1;
+    D_8011AE7E = TRUE;
     gFirstActiveObjectId = 0;
     gTransformTimer = 0;
     gIsTajChallenge = FALSE;
     gTajRaceInit = 0;
     D_8011AF60[0] = 0;
     D_8011AE00 = 0;
-    D_8011AE01 = 1;
+    D_8011AE01 = TRUE;
     D_8011AD53 = 0;
     gOverrideDoors = FALSE;
 }
@@ -1406,7 +1408,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             newRacerObj->segment.level_entry = NULL;
             newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
-            newRacerObj->interactObj->flags = 0;
+            newRacerObj->interactObj->flags = INTERACT_FLAGS_NONE;
             gGhostObjPlayer = newRacerObj;
             newRacerObj->unk64->racer.transparency = 0x60;
         }
@@ -1422,7 +1424,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             newRacerObj->segment.level_entry = NULL;
             newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
-            newRacerObj->interactObj->flags = 0;
+            newRacerObj->interactObj->flags = INTERACT_FLAGS_NONE;
             gGhostObjStaff = newRacerObj;
             newRacerObj->unk64->racer.transparency = 0x60;
         }
@@ -1737,9 +1739,10 @@ UNUSED s32 func_8000E558(Object *arg0) {
     return TRUE;
 }
 
-// https://decomp.me/scratch/QHVHG
+// https://decomp.me/scratch/QHVHG - 43.07%
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000E5EC.s")
-// https://decomp.me/scratch/btRnW
+
+// https://decomp.me/scratch/btRnW - 95.87%
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000E79C.s")
 
 UNUSED u8 *func_8000E898(u8 *arg0, s32 arg1) {
@@ -2013,7 +2016,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
     if (curObj->segment.header->numLightSources > 0) {
-        curObj->lightData = (Object_LightData **) address;
+        curObj->lightData = (ObjectLight **) address;
         sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->numLightSources * 4)) - (uintptr_t) curObj;
     }
     newObj = mempool_alloc_pool((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
@@ -2074,7 +2077,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     if (newObj->segment.header->numLightSources > 0) {
         newObj->lightData =
-            (Object_LightData **) (((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
+            (ObjectLight **) (((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
     }
     newObj->unk68 = (Object_68 **) ((uintptr_t) newObj + (uintptr_t) 0x80);
     if (arg1 & 1) {
@@ -2145,7 +2148,7 @@ void objFreeAssets(Object *obj, s32 count, s32 objType) {
 void light_setup_light_sources(Object *obj) {
     s32 i;
     for (i = 0; i < obj->segment.header->numLightSources; i++) {
-        obj->lightData[i] = (Object_LightData *) add_object_light(obj, &obj->segment.header->unk24[i]);
+        obj->lightData[i] = add_object_light(obj, &obj->segment.header->unk24[i]);
     }
 }
 
@@ -2427,8 +2430,224 @@ void gParticlePtrList_flush(void) {
     gFreeListCount = 0;
 }
 
-// https://decomp.me/scratch/bJM0P
+// https://decomp.me/scratch/DW6EX
+#ifdef NON_EQUIVALENT
+void func_800101AC(Object *obj, s32 arg1) {
+    Object *tempObj;
+    Object_Weapon *weapon;
+    Object_Racer *racer;
+    Object_Racer *snowball;
+    Object_Fireball_Octoweapon *fireball;
+    Object_Log *log;
+    Object_Butterfly *butterfly;
+    SoundHandle soundMask;
+    s32 numberOfModelIds;
+    s32 i;
+    s32 j;
+
+    if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
+        particle_deallocate((Particle *) obj);
+        gParticleCount--;
+        return;
+    }
+    if (obj->unk60 != NULL) {
+        for (i = 0; i < obj->unk60->unk0; i++) {
+            tempObj = obj->unk60->unk4[i];
+            numberOfModelIds = tempObj->segment.header->numberOfModelIds;
+            if (tempObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+                if (!gObjPtrList) {} // fake
+                for (j = 0; j < numberOfModelIds; j++) {
+                    free_3d_model(&tempObj->unk68[j]->objModel);
+                }
+            } else {
+                for (j = 0; j < numberOfModelIds; j++) {
+                    sprite_free(&tempObj->unk68[j]->sprite);
+                }
+            }
+            try_free_object_header(tempObj->segment.object.unk2C);
+            mempool_free(tempObj);
+        }
+    }
+    if (obj->lightData != NULL) {
+        for (i = 0; i < obj->segment.header->numLightSources; i++) {
+            func_80032BAC(obj->lightData[i]);
+        }
+    }
+    switch (obj->behaviorId) {
+        case BHV_RACER:
+        case BHV_ANIMATED_OBJECT_3:
+            for (i = 0; i < gObjectCount; i++) {
+                if (gObjPtrList[i]->behaviorId == BHV_BUTTERFLY) {
+                    butterfly = &gObjPtrList[i]->unk64->butterfly;
+                    if (obj == butterfly->unk100) {
+                        butterfly->unk100 = 0;
+                        butterfly->unkFD = 1;
+                    }
+                }
+            }
+            break;
+        case BHV_WEAPON:
+        case BHV_WEAPON_2:
+            weapon = &obj->unk64->weapon;
+            if (weapon->soundMask != NULL) {
+                audspat_point_stop(weapon->soundMask);
+                weapon->soundMask = NULL;
+                if (obj->behaviorId == BHV_WEAPON_2) {
+                    decrease_rocket_sound_timer();
+                }
+            }
+            break;
+        case BHV_FIREBALL_OCTOWEAPON_2:
+            fireball = &obj->unk64->fireball_octoweapon;
+            if (fireball->soundMask != NULL) {
+                audspat_point_stop(fireball->soundMask);
+            }
+            break;
+        case BHV_SNOWBALL:
+        case BHV_SNOWBALL_2:
+        case BHV_SNOWBALL_3:
+        case BHV_SNOWBALL_4:
+            // TODO: Get a Snowball struct?
+            snowball = &obj->unk64->racer;
+            if (snowball->unk20 != NULL) {
+                audspat_point_stop(snowball->unk20);
+            }
+            break;
+        case BHV_WAVE_GENERATOR:
+            wavegen_destroy(obj);
+            break;
+        case BHV_LIGHT_RGBA:
+            func_80032BAC((ObjectLight *) obj->unk64);
+            break;
+        case BHV_ANIMATION:
+            if (obj->unk64 != NULL && arg1 == 0) {
+                free_object(&obj->unk64->obj);
+            }
+            break;
+        case BHV_OVERRIDE_POS:
+            for (i = 0; i < D_8011AE00 && obj != D_8011ADD8[i]; i++) {}
+            if (i < D_8011AE00) {
+                D_8011AE00--;
+                for (; i < D_8011AE00; i++) {
+                    D_8011ADD8[i] = D_8011ADD8[i + 1];
+                }
+            }
+            break;
+        case BHV_BUOY_PIRATE_SHIP:
+        case BHV_LOG:
+            log = &obj->unk64->log;
+            if (log != NULL) {
+                mempool_free(log);
+            }
+            break;
+        case BHV_LENS_FLARE:
+            lensflare_remove(obj);
+            break;
+        case BHV_LENS_FLARE_SWITCH:
+            lensflare_override_remove(obj);
+            break;
+    }
+    switch (obj->behaviorId) {
+        case BHV_DINO_WHALE:
+        case BHV_ANIMATED_OBJECT:
+        case BHV_CAMERA_ANIMATION:
+        case BHV_CAR_ANIMATION:
+        case BHV_CHARACTER_SELECT:
+        case BHV_VEHICLE_ANIMATION:
+        case BHV_HIT_TESTER:
+        case BHV_HIT_TESTER_2:
+        case BHV_PARK_WARDEN_2:
+        case BHV_ANIMATED_OBJECT_2:
+        case BHV_WIZPIG_SHIP:
+        case BHV_ANIMATED_OBJECT_3:
+        case BHV_ANIMATED_OBJECT_4:
+        case BHV_SNOWBALL:
+        case BHV_SNOWBALL_2:
+        case BHV_SNOWBALL_3:
+        case BHV_SNOWBALL_4:
+        case BHV_HIT_TESTER_3:
+        case BHV_HIT_TESTER_4:
+        case BHV_DOOR_OPENER:
+        case BHV_PIG_ROCKETEER:
+        case BHV_WIZPIG_GHOSTS:
+            // Not sure if this is an animation yet...
+            soundMask = obj->unk64->animation.unk18;
+            if (soundMask != NULL) {
+                sndp_stop(soundMask);
+            }
+            break;
+    }
+    if (obj->behaviorId == BHV_RACER) {
+        racer = &obj->unk64->racer;
+        if (racer->unk18 != NULL) {
+            sndp_stop((SoundHandle) (s32) racer->unk18); // type cast required to match
+        }
+        if (racer->unk10 != NULL) {
+            sndp_stop((SoundHandle) (s32) racer->unk10); // type cast required to match
+        }
+        if (racer->unk14 != NULL) {
+            sndp_stop((SoundHandle) (s32) racer->unk14); // type cast required to match
+        }
+        if (racer->unk1C != NULL) {
+            sndp_stop((SoundHandle) (s32) racer->unk1C); // type cast required to match
+        }
+        if (racer->unk20 != NULL) {
+            sndp_stop((SoundHandle) (s32) racer->unk20); // type cast required to match
+        }
+        if (racer->soundMask != NULL) {
+            audspat_point_stop(racer->soundMask);
+        }
+        if (racer->shieldSoundMask != NULL) {
+            audspat_point_stop(racer->shieldSoundMask);
+        }
+        if (racer->magnetSoundMask != NULL) {
+            sndp_stop(racer->magnetSoundMask);
+        }
+        racer_sound_free(obj);
+        for (i = 0; i < gObjectCount; i++) {
+            if ((gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_PARTICLE) &&
+                (gObjPtrList[i]->segment.level_entry == obj->segment.level_entry)) {
+                gObjPtrList[i]->segment.level_entry = NULL;
+            }
+            if (gObjPtrList[i]->behaviorId == BHV_WEAPON_2 || gObjPtrList[i]->behaviorId == BHV_FLY_COIN ||
+                gObjPtrList[i]->behaviorId == BHV_WEAPON) {
+                free_object(gObjPtrList[i]);
+            }
+        }
+    }
+    if (obj->shadow != NULL && obj->shadow->texture != NULL) {
+        tex_free(obj->shadow->texture);
+    }
+    if (obj->waterEffect != NULL && obj->waterEffect->texture != NULL) {
+        tex_free(obj->waterEffect->texture);
+    }
+    numberOfModelIds = obj->segment.header->numberOfModelIds;
+    if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        for (i = 0; i < numberOfModelIds; i++) {
+            if (obj->unk68[i] != NULL) {
+                free_3d_model(&obj->unk68[i]->objModel);
+            }
+        }
+    } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_MISC) {
+        for (i = 0; i < numberOfModelIds; i++) {
+            tex_free(&obj->unk68[i]->texHeader);
+        }
+    } else {
+        for (i = 0; i < numberOfModelIds; i++) {
+            sprite_free(&obj->unk68[i]->sprite);
+        }
+    }
+    if (obj->segment.header->particleCount > 0) {
+        for (i = 0; i < obj->segment.header->particleCount; i++) {
+            emitter_cleanup(&obj->particleEmitter[i]);
+        }
+    }
+    try_free_object_header(obj->segment.object.unk2C);
+    mempool_free(obj);
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800101AC.s")
+#endif
 
 void obj_update(s32 updateRate) {
     s32 i;
@@ -2615,7 +2834,7 @@ void obj_tex_animate(Object *obj, s32 updateRate) {
  * Sets the texture offset on the door number based on the balloon requirement.
  */
 void obj_door_number(ObjectModel *model, Object *obj) {
-    Object_64 *obj64;
+    Object_Door *door;
     s32 current;
     s32 remaining;
     s32 i;
@@ -2625,8 +2844,8 @@ void obj_door_number(ObjectModel *model, Object *obj) {
         return;
     }
 
-    obj64 = obj->unk64;
-    remaining = obj64->door.balloonCount;
+    door = &obj->unk64->door;
+    remaining = door->balloonCount;
     current = ((remaining / 10) - 1) << 2;
     remaining = (remaining % 10) << 2;
     i = 0;
@@ -3367,7 +3586,7 @@ void func_80012F94(Object *obj) {
     ret2 = 1.0f;
     if (!(obj->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
         if (obj->segment.header->behaviorId == BHV_RACER) {
-            objRacer = (Object_Racer *) obj->unk64;
+            objRacer = &obj->unk64->racer;
             objRacer->unk201 = 30;
             if (objRacer->unk206 > 0) {
                 ret2 = 1.0f - (objRacer->unk206 * 0.05f);
@@ -4803,7 +5022,399 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
 }
 
 // https://decomp.me/scratch/QupaR
+#ifdef NON_EQUIVALENT
+extern s32 D_B0000574;
+
+// D_8011ADC0 = gNextRacerPlaceNumber?
+
+// This function seems to be part of the main gameplay loop that tracks the win conditions for each race mode.
+void func_80019808(s32 updateRate) {
+    u32 new_var;
+    s16 numHumanRacers;
+    s16 numHumanRacersFinished;
+    Object_Racer *curRacer;
+    LevelHeader *currentLevelHeader;
+    Object_Racer *racer[4]; // sp6C
+    s8 sp5C[4];
+    s32 i;
+    s32 j;
+    Object_Racer *curRacer2;
+    Settings *settings;
+    s32 prevUnk1AA;
+    s16 racerIndex;
+    s32 newUnk1AA;
+    s16 numFinishedRacers;
+    s16 foundIndex;
+    s32 battleMusic;
+    s32 playerButtonPresses;
+    s8 raceType;
+    s8 someBool;
+    s32 newStartingPosition;
+    s32 shouldAwardBalloon;
+    s8 someBool2;
+
+#ifdef ANTI_TAMPER
+    s32 antiPiracySkipTajBalloonCutscene;
+    u32 stat;
+#endif
+
+    currentLevelHeader = get_current_level_header();
+    settings = get_settings();
+    numHumanRacersFinished = 0;
+    numHumanRacers = 0;
+    raceType = currentLevelHeader->race_type;
+    numFinishedRacers = 0;
+    if (raceType != RACETYPE_DEFAULT && raceType != RACETYPE_HORSESHOE_GULCH && raceType != RACETYPE_BOSS) {
+        if (raceType & RACETYPE_CHALLENGE) {
+            if (raceType == RACETYPE_CHALLENGE_EGGS) {
+                func_80045128(*gRacers);
+            }
+            if (D_8011ADB4 == 0) {
+                for (i = 0; i < gNumRacers; i++) {
+                    racer[i] = &(*gRacers)[i]->unk64->racer;
+                    if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE && racer[i]->bananas <= 0 &&
+                        !racer[i]->raceFinished) {
+                        racer[i]->raceFinished = TRUE;
+                        racer[i]->balloon_quantity = 0;
+                        racer_sound_free((*gRacers)[i]);
+                        (*gRacers)[i]->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
+                        (*gRacers)[i]->interactObj->flags = INTERACT_FLAGS_NONE;
+                        racer[i]->finishPosition = 5 - D_8011ADC0;
+                        D_8011ADC0++;
+                    }
+                    if (racer[i]->playerIndex != PLAYER_COMPUTER) {
+                        if (racer[i]->raceFinished) {
+                            numHumanRacersFinished++;
+                        }
+                        numHumanRacers++;
+                    }
+                    if (racer[i]->raceFinished) {
+                        numFinishedRacers++;
+                        if (racer[i]->finishPosition == 0) {
+                            racer[i]->finishPosition = D_8011ADC0;
+                            D_8011ADC0++;
+                        }
+                    }
+                }
+
+                if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE || numFinishedRacers > 0 ||
+                    (!(((numHumanRacers == 1 && numHumanRacersFinished == 1) ||
+                        (numHumanRacers >= 2 && numHumanRacersFinished >= numHumanRacers)) ||
+                       numFinishedRacers < 3))) {
+                    for (i = 0; i < gNumRacers; i++) {
+                        if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
+                            sp5C[i] = 10 - racer[i]->bananas;
+                        } else {
+                            sp5C[i] = racer[i]->lap;
+                            if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_EGGS) {
+                                sp5C[i] *= 3;
+                                if (racer[i]->eggHudCounter != 0) {
+                                    sp5C[i] += 2;
+                                } else if (racer[i]->held_obj != NULL) {
+                                    sp5C[i] += 1;
+                                }
+                            }
+                        }
+                        if (sp5C[i] > 10) {
+                            sp5C[i] = 10;
+                        }
+                        if (sp5C[i] < 0) {
+                            sp5C[i] = 0;
+                        }
+                    }
+
+                    do {
+                        racerIndex = -1;
+                        foundIndex = -1;
+                        for (i = 0; i < gNumRacers; i++) {
+                            if (!racer[i]->raceFinished && sp5C[i] >= foundIndex) {
+                                foundIndex = sp5C[i];
+                                racerIndex = i;
+                            }
+                        }
+
+                        if (racerIndex != -1) {
+                            if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
+                                racer[racerIndex]->finishPosition = 5 - D_8011ADC0;
+                            } else {
+                                racer[racerIndex]->finishPosition = D_8011ADC0;
+                            }
+                            D_8011ADC0++;
+                            racer[racerIndex]->raceFinished = TRUE;
+                        }
+                    } while (racerIndex != -1);
+
+                    gSwapLeadPlayer = FALSE;
+
+                    if ((!is_in_tracks_mode() && racer[0]->finishPosition == 1) ||
+                        (is_in_two_player_adventure() && racer[1]->finishPosition == 1)) {
+                        if (!(settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED)) {
+                            settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED;
+                            i = settings->ttAmulet + 1;
+                            if (i > 4) {
+                                i = 4;
+                            }
+                            settings->ttAmulet = i;
+                        }
+                    }
+                    for (i = 0; i < 8; i++) {
+                        settings->racers[i].starting_position = -1;
+                    }
+
+                    battleMusic = SEQUENCE_BATTLE_LOSE;
+                    for (i = 0; i < gNumRacers; i++) {
+                        if (racer[i]->playerIndex != PLAYER_COMPUTER && racer[i]->finishPosition == 1) {
+                            battleMusic = SEQUENCE_BATTLE_VICTORY;
+                        }
+                        settings->racers[i].starting_position = racer[i]->finishPosition - 1;
+                    }
+
+                    music_play(battleMusic);
+                    newStartingPosition = 4;
+                    for (i = 0; i < 8; i++) {
+                        if (settings->racers[i].starting_position == -1) {
+                            settings->racers[i].starting_position = newStartingPosition;
+                            newStartingPosition++;
+                        }
+                    }
+
+                    gSwapLeadPlayer = 0;
+                    if (is_in_two_player_adventure() && settings->racers[PLAYER_TWO].starting_position <
+                                                            settings->racers[PLAYER_ONE].starting_position) {
+                        gSwapLeadPlayer = 1;
+                    }
+                    if (i == 0) {
+                        if (is_in_two_player_adventure()) {
+                            if (gSwapLeadPlayer) {
+                                gSwapLeadPlayer = 0;
+                                swap_lead_player();
+                                if (D_800DC73C != 0) {
+                                    D_800DC748 = TRUE;
+                                }
+                            } else if (D_800DC73C != 0) {
+                                D_800DC748 = TRUE;
+                            }
+                        }
+                        postrace_start(0, 30);
+                    } else {
+                        push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
+                        push_level_property_stack(ASSET_LEVEL_TTAMULETSEQUENCE, 0, VEHICLE_NO_OVERRIDE,
+                                                  settings->ttAmulet - 1);
+                        race_finish_adventure(1);
+                    }
+                    D_8011ADB4 = 1;
+                }
+            }
+        }
+        return;
+    }
+    for (i = 0; i < gNumRacers; i++) {
+        new_var = i;
+        newUnk1AA = 1;
+        curRacer = &(*gRacers)[i]->unk64->racer;
+        prevUnk1AA = curRacer->unk1AA;
+        for (j = 0; j < gNumRacers; j++) {
+            if (j != i) {
+                curRacer2 = &(*gRacers)[new_var]->unk64->racer;
+                if (curRacer->raceFinished == FALSE && curRacer2->raceFinished != FALSE) {
+                    newUnk1AA++;
+                } else if (curRacer->courseCheckpoint < curRacer2->courseCheckpoint) {
+                    newUnk1AA++;
+                } else if (curRacer2->courseCheckpoint == curRacer->courseCheckpoint) {
+                    if (curRacer2->unk1A8 < curRacer->unk1A8) {
+                        newUnk1AA++;
+                    }
+                    if (curRacer2->unk1A8 == curRacer->unk1A8 && i < j) {
+                        newUnk1AA++;
+                    }
+                }
+            }
+        }
+
+        curRacer->unk1AA = newUnk1AA;
+        if (curRacer->lap < currentLevelHeader->laps) {
+            if (prevUnk1AA == curRacer->unk1AA) {
+                if (curRacer->unk1B0 < 2) {
+                    if (curRacer->vehicleID != VEHICLE_LOOPDELOOP) {
+                        curRacer->unk1B0++;
+                    }
+                } else if (curRacer->racePosition != curRacer->unk1AA) {
+                    curRacer->unk1B2 = 10;
+                    curRacer->racePosition = curRacer->unk1AA;
+                }
+            } else {
+                curRacer->unk1B0 = 0;
+            }
+        }
+    }
+
+    for (i = 0; i < gNumRacers; i++) {
+        curRacer = &(*gRacers)[i]->unk64->racer;
+        if (curRacer->lap >= currentLevelHeader->laps && curRacer->raceFinished == FALSE) {
+            if (get_game_mode() != GAMEMODE_UNUSED_4) {
+                curRacer->raceFinished = TRUE;
+                curRacer->finishPosition = D_8011ADC0;
+                if (D_8011ADC0 == 1 && curRacer->playerIndex == PLAYER_COMPUTER) {
+                    sound_play(SOUND_WHOOSH5, NULL);
+                }
+                D_8011ADC0++;
+            }
+        }
+        if (curRacer->playerIndex != PLAYER_COMPUTER) {
+            numHumanRacers++;
+            if (curRacer->raceFinished) {
+                numHumanRacersFinished++;
+                numFinishedRacers++;
+            }
+        } else if (curRacer->raceFinished) {
+            numFinishedRacers++;
+        }
+    }
+
+    for (i = 0; i < gNumRacers; i++) {
+        gRacersByPosition[i] = 0;
+    }
+
+    for (i = 0; i < gNumRacers; i++) {
+        curRacer = &(*gRacers)[i]->unk64->racer;
+        if (curRacer->raceFinished) {
+            j = curRacer->finishPosition;
+        } else {
+            j = curRacer->unk1AA;
+        }
+        gRacersByPosition[j - 1] = (Object *) curRacer; // TODO: This should be a pointer to Object, not Object_Racer
+    }
+
+    for (i = 0; i < gNumRacers; i++) {
+        someBool = FALSE;
+        for (j = 0; j < gNumRacers; j++) {
+            if (gRacersByPosition[j] == (*gRacers)[i]) {
+                someBool = TRUE;
+                j = gNumRacers + 1;
+            }
+        }
+
+        if (!someBool) {
+            for (j = 0; j < gNumRacers; j++) {
+                if (gRacersByPosition[j] == 0) {
+                    gRacersByPosition[j] = (*gRacers)[i];
+                    j = gNumRacers + 1;
+                }
+            }
+        }
+    }
+
+    playerButtonPresses = 0;
+    for (i = 0; i < MAXCONTROLLERS; i++) {
+        playerButtonPresses |= input_pressed(i);
+    }
+
+    if (gIsTajChallenge && numHumanRacersFinished != 0) {
+        mode_end_taj_race(CHALLENGE_END_FINISH);
+    } else if (D_8011AD3C != 0 && numFinishedRacers != 0) {
+        curRacer2 = &(*gRacers)[0]->unk64->racer;
+        if (!curRacer2->raceFinished) {
+            curRacer2->raceFinished = TRUE;
+            curRacer2->finishPosition = D_8011ADC0;
+            D_8011ADC0 += 1;
+        }
+    } else if (D_8011ADB4 == 0) {
+        someBool2 = FALSE;
+        if (is_in_two_player_adventure() && numHumanRacersFinished > 0 && get_trophy_race_world_id() == 0 &&
+            set_course_finish_flags(settings) != 0) {
+            someBool2 = TRUE;
+        }
+        if ((numHumanRacersFinished == numHumanRacers ||
+             (numHumanRacers >= 2 && numFinishedRacers >= (gNumRacers - 1))) ||
+            someBool2) {
+            if (numHumanRacersFinished != numHumanRacers) {
+                for (i = 0; i < gNumRacers; i++) {
+                    curRacer2 = &gRacersByPosition[i]->unk64->racer;
+                    if (curRacer2->raceFinished == FALSE) {
+                        if (curRacer2->playerIndex >= 0) {
+                            set_active_camera(curRacer2->playerIndex);
+                            cam_get_active_camera_no_cutscenes()->mode = CAMERA_FINISH_CHALLENGE;
+                        }
+                        curRacer2->raceFinished = TRUE;
+                        curRacer2->finishPosition = D_8011ADC0;
+                        D_8011ADC0++;
+                    }
+                }
+            }
+
+#ifdef ANTI_TAMPER
+            antiPiracySkipTajBalloonCutscene = FALSE;
+            // Anti-Piracy check
+            WAIT_ON_IOBUSY(stat);
+            // D_B0000574 is a direct read from the ROM as opposed to RAM
+            if (((D_B0000574 & 0xFFFF) & 0xFFFF) != 0x6C07) {
+                antiPiracySkipTajBalloonCutscene = TRUE;
+            }
+#endif
+
+            if (!gIsTimeTrial) {
+                for (i = 0; i < gNumRacers; i++) {
+                    curRacer = &gRacersByPosition[i]->unk64->racer;
+                    settings->racers[curRacer->characterId].starting_position = i;
+                }
+            }
+            gSwapLeadPlayer = FALSE;
+            if (is_in_two_player_adventure() &&
+                (settings->racers[PLAYER_TWO].starting_position < settings->racers[PLAYER_ONE].starting_position)) {
+                gSwapLeadPlayer = TRUE;
+            }
+            curRacer2 = &(*gRacersByPosition)->unk64->racer;
+            gFirstTimeFinish = FALSE;
+            if ((settings->gNumRacers == 1 || is_in_two_player_adventure()) &&
+                curRacer2->playerIndex != PLAYER_COMPUTER && !is_in_tracks_mode() && get_trophy_race_world_id() == 0) {
+                gFirstTimeFinish = TRUE;
+            }
+            shouldAwardBalloon = FALSE;
+            if (gFirstTimeFinish && !someBool2) {
+                shouldAwardBalloon = set_course_finish_flags(settings);
+            }
+            if (someBool2) {
+                gFirstTimeFinish = TRUE;
+                shouldAwardBalloon = TRUE;
+            }
+
+#ifdef ANTI_TAMPER
+            if (antiPiracySkipTajBalloonCutscene) {
+                shouldAwardBalloon = FALSE;
+                gFirstTimeFinish = FALSE;
+            }
+#endif
+
+            if (!shouldAwardBalloon) {
+                if (is_in_two_player_adventure()) {
+                    if (gSwapLeadPlayer) {
+                        gSwapLeadPlayer = FALSE;
+                        swap_lead_player();
+                        if (D_800DC73C) {
+                            D_800DC748 = TRUE;
+                        }
+                    } else if (D_800DC73C) {
+                        D_800DC748 = TRUE;
+                    }
+                }
+                postrace_start(gFirstTimeFinish, 30);
+            } else {
+                settings->balloonsPtr[settings->worldId]++;
+                if (settings->worldId != 0) {
+                    settings->balloonsPtr[0]++;
+                }
+                race_finish_adventure(1);
+            }
+            D_8011ADB4 = -1;
+            if (get_number_of_active_players() == 1) {
+                race_finish_time_trial();
+            }
+        }
+    }
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80019808.s")
+#endif
 
 /**
  * Mark the course as finished for the appropriate mode.
@@ -5755,9 +6366,141 @@ s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
 }
 
 // https://decomp.me/scratch/cfVAM
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001C6C4.s")
+#ifdef NON_EQUIVALENT
+f32 func_8001C6C4(Object_NPC *npc, Object *npcParentObj, f32 updateRateF, f32 speedF, s32 direction) {
+    Object *aiNode;
+    f32 var_f20_2;
+    f32 xPosData[5];
+    f32 yPosData[5];
+    f32 zPosData[5];
+    f32 xDiff2;
+    f32 yDiff2;
+    f32 zDiff2;
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
+    f32 dist;
+    f32 dist2;
+    f32 mag;
+    s32 i;
+    s32 var_s0;
+    s32 var_s1;
+    u8 nodeForward1;
+    u8 nodeForward2;
 
-s32 ainode_find_next(s32 nodeId, s32 arg1, s32 direction) {
+    if (osTvType == OS_TV_TYPE_PAL) {
+        updateRateF *= 1.2;
+    }
+    i = 0;
+    while (1) {
+        if (npc->nodeData[i] == 0xFF) {
+            return 0.0f;
+        }
+        aiNode = ainode_get(npc->nodeData[i]);
+        if (aiNode == NULL) {
+            return 0.0f;
+        }
+        xPosData[i] = aiNode->segment.trans.x_position;
+        yPosData[i] = aiNode->segment.trans.y_position;
+        zPosData[i] = aiNode->segment.trans.z_position;
+        i++;
+        if (i != 5) {
+            continue;
+        }
+        // This puts xPosData into yDiff2, and yPosData into xDiff2. Bug?
+        yDiff2 = catmull_rom_interpolation(xPosData, 0, npc->unk0);
+        xDiff2 = catmull_rom_interpolation(yPosData, 0, npc->unk0);
+        zDiff2 = catmull_rom_interpolation(zPosData, 0, npc->unk0);
+        if (npc->unk8 == 0.0f) {
+            npc->unk8 = 0.01f;
+        }
+
+        var_s1 = 0;
+        for (var_s0 = 0; var_s0 != 2; var_s0++) {
+            var_f20_2 = npc->unk0 + (npc->unk8 * updateRateF);
+            if (var_f20_2 >= 1.0) {
+                var_f20_2 -= 1.0;
+                var_s1 = 1;
+            }
+            xDiff = catmull_rom_interpolation(xPosData, var_s1, var_f20_2);
+            yDiff = catmull_rom_interpolation(yPosData, var_s1, var_f20_2);
+            zDiff = catmull_rom_interpolation(zPosData, var_s1, var_f20_2);
+
+            // This puts mixes up y and x diffs like above.
+            xDiff -= yDiff2;
+            yDiff -= xDiff2;
+            zDiff -= zDiff2;
+            if (var_s0 == 0) {
+                var_s1 = 0;
+                dist = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) / updateRateF;
+                if (dist != 0.0f) {
+                    npc->unk8 *= (speedF / dist);
+                }
+            }
+        }
+        npc->unk0 = var_f20_2;
+        xDiff2 += xDiff;
+        yDiff2 += yDiff;
+        zDiff2 += zDiff;
+        xDiff = xDiff2 - npcParentObj->segment.trans.x_position;
+        yDiff = yDiff2 - npcParentObj->segment.trans.y_position;
+        if (0) {}
+        zDiff = zDiff2 - npcParentObj->segment.trans.z_position;
+        xDiff2 = xDiff;
+        yDiff2 = yDiff;
+        zDiff2 = zDiff;
+        dist = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
+        if (dist != 0.0f) {
+            mag = 255.0 / dist;
+            xDiff *= mag;
+            yDiff *= mag;
+            zDiff *= mag;
+        }
+        dist2 = sqrtf((xDiff2 * xDiff2) + (yDiff2 * yDiff2) + (zDiff2 * zDiff2)) / 16;
+        if (speedF < dist2) {
+            dist2 = speedF;
+        }
+        if (dist2 >= 1.0) {
+            var_s0 = (arctan2_f(xDiff, zDiff) - (npcParentObj->segment.trans.rotation.y_rotation & 0xFFFF)) - 0x8000;
+            if (var_s0 > 0x8000) {
+                var_s0 -= 0xFFFF;
+            }
+            if (var_s0 < -0x8000) {
+                var_s0 += 0xFFFF;
+            }
+            npcParentObj->segment.trans.rotation.y_rotation += (var_s0 * (s32) updateRateF) >> 4;
+            var_s0 = arctan2_f(yDiff, 255.0f) - (npcParentObj->segment.trans.rotation.x_rotation & 0xFFFF);
+            if (var_s0 > 0x8000) {
+                var_s0 -= 0xFFFF;
+            }
+            if (var_s0 < -0x8000) {
+                var_s0 += 0xFFFF;
+            }
+            npcParentObj->segment.trans.rotation.x_rotation += ((var_s0 * (s32) updateRateF) >> 4);
+        }
+        npcParentObj->segment.trans.rotation.z_rotation = 0;
+        xDiff = sins_f(npcParentObj->segment.trans.rotation.y_rotation + 0x8000) * dist2;
+        move_object(npcParentObj, xDiff * updateRateF, 0.0f,
+                    coss_f(npcParentObj->segment.trans.rotation.y_rotation + 0x8000) * dist2 * updateRateF);
+        npcParentObj->segment.trans.y_position = yDiff2;
+        dist2 = dist2 * updateRateF * 2;
+        if (var_s1 != 0) {
+            nodeForward1 = npc->nodeData[3];
+            nodeForward2 = npc->nodeData[4];
+            npc->nodeData[0] = npc->nodeData[1];
+            npc->nodeData[1] = npc->nodeData[2];
+            npc->nodeData[2] = npc->nodeData[3];
+            npc->nodeData[3] = npc->nodeData[4];
+            npc->nodeData[4] = ainode_find_next(nodeForward2 & 0xFF, nodeForward1 & 0xFF, direction);
+        }
+        return dist2;
+    }
+}
+#else
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001C6C4.s")
+#endif
+
+s32 ainode_find_next(s32 nodeId, s32 nextNodeId, s32 direction) {
     Object *aiNodeObj;
     LevelObjectEntry_AiNode *entry;
     Object_AiNode *aiNode;
@@ -5780,7 +6523,7 @@ s32 ainode_find_next(s32 nodeId, s32 arg1, s32 direction) {
     nextIndex = (aiNode->directions[direction] + 1) & 3;
 
     for (i = 0; i < 4; i++) {
-        if (entry->adjacent[nextIndex] != NODE_NONE && arg1 != entry->adjacent[nextIndex]) {
+        if (entry->adjacent[nextIndex] != NODE_NONE && entry->adjacent[nextIndex] != nextNodeId) {
             aiNode->directions[direction] = nextIndex;
             i = 4; // break
             someCount++;
@@ -6379,7 +7122,7 @@ void func_8001E45C(s32 cutsceneID) {
     if (cutsceneID != gCutsceneID) {
         gCutsceneID = cutsceneID;
         gPathUpdateOff = FALSE;
-        D_8011AE7E = 1;
+        D_8011AE7E = TRUE;
         if (get_game_mode() == GAMEMODE_MENU) {
             set_frame_blackout_timer();
         }
@@ -6489,8 +7232,8 @@ void func_8001E89C(void) {
     Object_8001E89C_64 *obj64;
 
     // some flag, flips to 1 when loading a new zone
-    if (D_8011AE01 != 0) {
-        D_8011AE01 = 0;
+    if (D_8011AE01 != FALSE) {
+        D_8011AE01 = FALSE;
         return;
     }
 
@@ -6507,8 +7250,130 @@ void func_8001E89C(void) {
     }
 }
 
-// https://decomp.me/scratch/G2ZOW
+// https://decomp.me/scratch/OKbBN
+#ifdef NON_EQUIVALENT
+void func_8001E93C(void) {
+    s32 pad[3];
+    LevelObjectEntry_OverridePos *overridePos;
+    Object *obj;
+    s32 numOfObjs;
+    s32 pad2;
+    s32 i;
+    s32 stopLooping;
+    s32 sp28;
+    s16 animActorIndex1;
+    s16 animActorIndex2;
+    s32 var_a0;
+    Object *animObj1;
+    Object *animObj2;
+    LevelObjectEntry_Animation *animation1; // Not 100% positive this is an animation yet.
+    LevelObjectEntry_Animation *animation2; // Not 100% positive this is an animation yet.
+
+    if (D_8011AE7E) {
+        for (numOfObjs = 0; numOfObjs < D_8011AE78; numOfObjs++) {
+            obj = D_8011AE74[numOfObjs];
+            animation1 = &obj->segment.level_entry->animation;
+            if (obj->unk64 != NULL && animation1->channel != 20) {
+                animObj1 = (Object *) obj->unk64;
+                free_object(animObj1);
+                obj->unk64 = NULL;
+            }
+        }
+    }
+    if (D_8011AD3E > 20) {
+        D_8011AD3E = 0;
+    }
+    func_8001E4C4();
+    numOfObjs = 0;
+    for (i = 0; i < gObjectCount; i++) {
+        if (gObjPtrList[i] != NULL) {
+            if (!(gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
+                if (gObjPtrList[i]->behaviorId == BHV_OVERRIDE_POS) {
+                    overridePos = &gObjPtrList[i]->segment.level_entry->overridePos;
+                    if (overridePos->cutsceneId == gCutsceneID ||
+                        overridePos->cutsceneId == (CUTSCENE_SHERBET_ISLAND_BOSS | CUTSCENE_ADVENTURE_TWO)) {
+                        D_8011ADD8[numOfObjs] = gObjPtrList[i];
+                        numOfObjs++;
+                    }
+                }
+            }
+        }
+    }
+    D_8011AE00 = numOfObjs;
+    D_8011AE01 = TRUE;
+
+    D_8011AE78 = 0;
+    numOfObjs = 0;
+    for (i = gObjectListStart; i < gObjectCount; i++) {
+        if (gObjPtrList[i] != NULL) {
+            if (!(gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
+                if (gObjPtrList[i]->behaviorId == BHV_ANIMATION) {
+                    D_8011AE74[numOfObjs] = gObjPtrList[i];
+                    numOfObjs++;
+                }
+            }
+        }
+    }
+
+    do {
+        stopLooping = TRUE;
+        for (i = 0; i < numOfObjs - 1; i++) {
+            animObj1 = D_8011AE74[i + 0];
+            animObj2 = D_8011AE74[i + 1];
+            animation1 = &animObj1->segment.level_entry->animation;
+            animation2 = &animObj2->segment.level_entry->animation;
+            animActorIndex1 = animation1->actorIndex;
+            animActorIndex2 = animation2->actorIndex;
+
+            if (animation1->channel == 20) {
+                animActorIndex1 -= 400;
+            }
+            if (animation2->channel == 20) {
+                animActorIndex2 -= 400;
+            }
+
+            if (!gCutsceneID && !gCutsceneID) {} // fake
+
+            if (animActorIndex2 < animActorIndex1) {
+                D_8011AE74[i] = animObj2;
+                D_8011AE74[i + 1] = animObj1;
+                stopLooping = FALSE;
+            } else if (animActorIndex1 == animActorIndex2) {
+                if (animation2->order < animation1->order) {
+                    D_8011AE74[i] = animObj2;
+                    D_8011AE74[i + 1] = animObj1;
+                    stopLooping = FALSE;
+                } else if (animation1->order == animation2->order && (animObj2->properties.animatedObj.action == 1 ||
+                                                                      animObj1->properties.animatedObj.action == 2)) {
+                    D_8011AE74[i] = animObj2;
+                    D_8011AE74[i + 1] = animObj1;
+                    stopLooping = FALSE;
+                }
+            }
+        }
+    } while (stopLooping == FALSE);
+
+    var_a0 = -101;
+    for (i = 0; i < numOfObjs; i++) {
+        animation1 = &D_8011AE74[i]->segment.level_entry->animation;
+        if (animation1->actorIndex != var_a0) {
+            var_a0 = animation1->actorIndex;
+            sp28 = 0;
+        }
+        animation1->order = sp28++; // It is possible that sp28 could not be initalized?
+        D_8011AE74[i]->properties.animatedObj.action = 0;
+        if (!i) {} // fake
+    }
+
+    D_8011AE78 = numOfObjs;
+    if (D_8011AE7E) {
+        func_8001EE74();
+    }
+    D_8011AE7E = FALSE;
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001E93C.s")
+#endif
 
 void func_8001EE74(void) {
     LevelObjectEntry_Animation *animation;
@@ -6617,9 +7482,8 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
         obj->unk64 = NULL;
         newObj = NULL;
     }
-    camera = (Object_AnimCamera *) newObj;
-    if (camera != NULL) {
-        camera->unk3C = 0;
+    if (newObj != NULL) {
+        newObj->segment.level_entry = NULL;
         obj_init_animcamera(obj, newObj);
         if (newObj->segment.header->behaviorId == BHV_CAMERA_ANIMATION) {
             camera = &newObj->unk64->anim_camera;
