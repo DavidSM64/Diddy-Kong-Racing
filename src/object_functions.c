@@ -622,8 +622,8 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
             }
         }
     }
-    obj->shading->ambient = 0.612f;
-    obj->shading->brightness = 0.0f;
+    obj->shading->diffuse = 0.612f;
+    obj->shading->ambient = 0.0f;
     tempObj = get_racer_object(PLAYER_ONE);
     if (tempObj != NULL) {
         diffX = obj->segment.trans.x_position - tempObj->segment.trans.x_position;
@@ -690,7 +690,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         }
         obj->unk5C->unk100 = NULL;
         if (worldBalloons) {
-            obj->shading->brightness = 0.552f;
+            obj->shading->ambient = 0.552f;
         }
     }
 }

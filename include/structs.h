@@ -799,8 +799,8 @@ typedef struct ObjectHeader {
   /* 0x1C */ ObjHeaderParticleEntry *objectParticles;
              s32 pad20;
   /* 0x24 */ ObjectHeader24 *unk24;
-  /* 0x28 */ f32 shadeBrightness;
-  /* 0x2C */ f32 shadeAmbient;
+  /* 0x28 */ f32 shadeAmbient;
+  /* 0x2C */ f32 shadeDiffuse;
   /* 0x30 */ u16 flags;
   /* 0x32 */ s16 shadowGroup;
   /* 0x34 */ s16 unk34;
@@ -835,7 +835,7 @@ typedef struct ObjectHeader {
   /* 0x5E */ u8 pad5E[0x2];
   /* 0x60 */ char internalName[16];
   /* 0x70 */ u8 unk70;
-  /* 0x71 */ u8 lightingEnabled;
+  /* 0x71 */ u8 directionalPointLighting; // If enabled, the model is lit from the direction of the light source; if disabled, lighting is applied evenly from all sides
   /* 0x72 */ u8 unk72;
              u8 pad73[0x5];
 } ObjectHeader;
@@ -901,8 +901,8 @@ typedef struct ShadeProperties {
     /* 0x22 */ s16 unk22;
     /* 0x24 */ s16 unk24;
     /* 0x26 */ s16 unk26;
-    /* 0x28 */ f32 brightness;
-    /* 0x2C */ f32 ambient;
+    /* 0x28 */ f32 ambient;
+    /* 0x2C */ f32 diffuse;
 } ShadeProperties;
 
 typedef f32 FakeHalfMatrix[2][4];

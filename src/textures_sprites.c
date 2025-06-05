@@ -239,23 +239,26 @@ Gfx dRenderSettingsPrimOverlay[][2] = {
 /**
  * Color combiner behavior:
  * 
- * RGB: First, PrimColor and the texture color are blended using the vertex alpha as the blend factor
+ * RGB: First, `PrimColor` and the texture color are blended using the vertex alpha as the blend factor  
  *      (0 = fully shaded color, 1 = pure texture).  
- *      Then, the result is blended with EnvColor, modulated by the vertex color (same RGB components).
+ *      The result is then blended with `EnvColor`, modulated by the vertex RGB color  
+ *      (all RGB components are expected to be equal, representing lighting intensity).
  * 
- * Alpha: The texture alpha is multiplied by the alpha value of PrimColor.
+ * Alpha: The texture's alpha is multiplied by the alpha value of `PrimColor`.
  * 
- * This setup allows implementing Lambertian shading:
- * - `EnvColor` represents the light color,
- * - `PrimColor` represents the shadow color,
- * - Vertex alpha is the **inverted shadow strength**  
- *   at alpha = 1, we get pure texture (fully lit),  
- *   at alpha = 0, we get flat shading with the shadow color.
- * - The vertex RGB intensity (all components equal) acts as the lighting intensity.
+ * This setup enables more advanced lighting by combining directional shadowing (e.g. from the sky)  
+ * with directional lighting (e.g. from a colored point light).
  * 
- * TODO: Confirm that vertex alpha is indeed the inverted shadow strength.
+ * This differs from simpler lighting models where illumination is uniform and non-directional.
+ * 
+ * - `EnvColor` represents the light color.  
+ * - `PrimColor` represents the shadow (shaded) color.  
+ * - The vertex alpha is the **inverted shadow strength**:  
+ *     - alpha = 1 → fully lit (pure texture),  
+ *     - alpha = 0 → fully shaded (flat `PrimColor`).  
+ * - The vertex RGB intensity acts as the **lighting intensity**.
  */
-Gfx dRenderSettingsPrimCol[][2] = {
+Gfx dRenderSettingsDirectionalLighting[][2] = {
     // Opaque Surface
     DRAW_TABLE_GROUP(G_CC_BLEND_SHADEALPHA, G_CC_BLENDI_SHADE, DKR_OMH_2CYC_BILERP, G_RM_NOOP, G_RM_OPA_SURF2,
                      G_RM_NOOP, G_RM_AA_OPA_SURF2, G_RM_NOOP, G_RM_ZB_OPA_SURF2, G_RM_NOOP, G_RM_AA_ZB_OPA_SURF2),
@@ -377,7 +380,7 @@ s32 gBlockedRenderFlags;
 TextureHeader *gCurrentTextureHeader;
 s16 gUsingTexture;
 s16 gForceFlags;
-s16 gUsePrimColour;
+s16 gUseDirectionalLighting;
 
 /******************************/
 
@@ -643,7 +646,7 @@ void rendermode_reset(Gfx **dList) {
     gUsingTexture = FALSE;
     gForceFlags = TRUE;
     gBlockedRenderFlags = RENDER_NONE;
-    gUsePrimColour = FALSE;
+    gUseDirectionalLighting = FALSE;
     gDPPipeSync((*dList)++);
     gSPSetGeometryMode((*dList)++, G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER);
 }
@@ -651,16 +654,16 @@ void rendermode_reset(Gfx **dList) {
 /**
  * Enables usage of combiners utilising the individual primitive colours.
  */
-void tex_primcolour_on(void) {
-    gUsePrimColour = TRUE;
+void directional_lighting_on(void) {
+    gUseDirectionalLighting = TRUE;
     gForceFlags = TRUE;
 }
 
 /**
  * Disables usage of combiners utilising the individual primitive colours.
  */
-void tex_primcolour_off(void) {
-    gUsePrimColour = FALSE;
+void directional_lighting_off(void) {
+    gUseDirectionalLighting = FALSE;
     gForceFlags = TRUE;
 }
 
@@ -721,7 +724,7 @@ void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset)
         gUsingTexture = FALSE;
     }
 
-    flags = (gUsePrimColour)
+    flags = (gUseDirectionalLighting)
                 ? (flags & (RENDER_DECAL | RENDER_COLOUR_INDEX | RENDER_ANTI_ALIASING | RENDER_Z_COMPARE |
                             RENDER_SEMI_TRANSPARENT))
                 : (flags & (RENDER_VTX_ALPHA | RENDER_DECAL | RENDER_Z_UPDATE | RENDER_COLOUR_INDEX | RENDER_CUTOUT |
@@ -735,7 +738,7 @@ void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset)
         }
 
         if ((flags & RENDER_VTX_ALPHA) != (gCurrentRenderFlags & RENDER_VTX_ALPHA) || gForceFlags) {
-            if (flags & RENDER_VTX_ALPHA || gUsePrimColour) {
+            if (flags & RENDER_VTX_ALPHA || gUseDirectionalLighting) {
                 gSPClearGeometryMode((*dList)++, G_FOG);
             } else {
                 gSPSetGeometryMode((*dList)++, G_FOG);
@@ -769,7 +772,7 @@ void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset)
             return;
         }
 
-        if (gUsePrimColour) {
+        if (gUseDirectionalLighting) {
             if ((flags & RENDER_DECAL) && (flags & RENDER_Z_COMPARE)) {
                 dlIndex = 0;
                 if (flags & RENDER_ANTI_ALIASING) {
@@ -781,6 +784,8 @@ void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset)
                 if (flags & RENDER_COLOUR_INDEX) {
                     dlIndex |= 4; // Colour Index
                 }
+                // In this mode, the decal is rendered without any shading or lighting whatsoever.
+                // It's unclear what this mode has in common with the complex lighting mode set below.
                 gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsPrimOverlay[dlIndex]),
                                    numberOfGfxCommands(dRenderSettingsPrimOverlay[0]));
                 return;
@@ -789,8 +794,8 @@ void material_set(Gfx **dList, TextureHeader *texhead, s32 flags, s32 texOffset)
                 // set flag 8 if color indexed
                 flags = (flags ^ RENDER_COLOUR_INDEX) | 8;
             }
-            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsPrimCol[flags]),
-                               numberOfGfxCommands(dRenderSettingsPrimCol[0]));
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dRenderSettingsDirectionalLighting[flags]),
+                               numberOfGfxCommands(dRenderSettingsDirectionalLighting[0]));
             return;
         }
 

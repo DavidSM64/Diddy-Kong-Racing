@@ -495,7 +495,7 @@ void func_80032C7C(Object *object) {
                         if (intensity > 0.0f) {
                             intensity *= light_distance_calc(light);
                             if (intensity > 0.0f) {
-                                if (object->segment.header->lightingEnabled) {
+                                if (object->segment.header->directionalPointLighting) {
                                     if (gLightDistance > 0.0f) {
                                         f32 temp = 1.0f / sqrtf(gLightDistance);
                                         gLightDiffX *= temp;
@@ -523,7 +523,7 @@ void func_80032C7C(Object *object) {
             }
         }
 
-        if (object->segment.header->lightingEnabled) {
+        if (object->segment.header->directionalPointLighting) {
             // find two brightest light sources
             if (numLights == 0) {
                 object->shading->lightIntensity = 0;

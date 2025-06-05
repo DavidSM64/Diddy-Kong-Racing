@@ -2161,8 +2161,8 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
     if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
         for (i = 0; obj->unk68[i] == NULL; i++) {}
         if (obj->unk68[i] != NULL && obj->unk68[i]->objModel->unk40 != NULL) {
-            set_shading_properties(obj->shading, obj->segment.header->shadeBrightness,
-                                   obj->segment.header->shadeAmbient, 0, obj->segment.header->shadeAngleY,
+            set_shading_properties(obj->shading, obj->segment.header->shadeAmbient,
+                                   obj->segment.header->shadeDiffuse, 0, obj->segment.header->shadeAngleY,
                                    obj->segment.header->shadeAngleZ);
             if (obj->segment.header->unk3D != 0) {
                 obj->shading->lightR = obj->segment.header->unk3A;
@@ -3122,10 +3122,10 @@ void render_3d_model(Object *obj) {
         } else {
             gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         }
-        if (obj->segment.header->lightingEnabled) {
+        if (obj->segment.header->directionalPointLighting) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->shadowR, obj->shading->shadowG,
                             obj->shading->shadowB, opacity);
-            tex_primcolour_on();
+            directional_lighting_on();
         } else if (hasOpacity) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, opacity);
         } else {
@@ -3136,13 +3136,13 @@ void render_3d_model(Object *obj) {
         } else {
             meshBatch = render_mesh(objModel, obj, 0, RENDER_NONE, vertOffset);
         }
-        if (obj->segment.header->lightingEnabled) {
+        if (obj->segment.header->directionalPointLighting) {
             if (hasOpacity) {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, opacity);
             } else {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
-            tex_primcolour_off();
+            directional_lighting_off();
         }
         if (obj->unk60 != NULL) {
             obj60_unk0 = obj->unk60->unk0;
@@ -3225,17 +3225,17 @@ void render_3d_model(Object *obj) {
             }
         }
         if (meshBatch != -1) {
-            if (obj->segment.header->lightingEnabled) {
+            if (obj->segment.header->directionalPointLighting) {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->shadowR, obj->shading->shadowG,
                                 obj->shading->shadowB, opacity);
-                tex_primcolour_on();
+                directional_lighting_on();
             }
             render_mesh(objModel, obj, meshBatch, RENDER_SEMI_TRANSPARENT, vertOffset);
-            if (obj->segment.header->lightingEnabled) {
-                tex_primcolour_off();
+            if (obj->segment.header->directionalPointLighting) {
+                directional_lighting_off();
             }
         }
-        if (hasOpacity || obj->segment.header->lightingEnabled) {
+        if (hasOpacity || obj->segment.header->directionalPointLighting) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
         if (hasEnvColor) {
@@ -5961,31 +5961,31 @@ UNUSED void func_8001D248(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
  * Applies shading properties to a global variable.
  * Presumably intended for level geometry, which supports shading, but never uses it.
  */
-void set_world_shading(f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ) {
-    set_shading_properties((ShadeProperties *) &gWorldShading, brightness, ambient, angleX, angleY, angleZ);
+void set_world_shading(f32 ambient, f32 diffuse, s16 angleX, s16 angleY, s16 angleZ) {
+    set_shading_properties((ShadeProperties *) &gWorldShading, ambient, diffuse, angleX, angleY, angleZ);
 }
 
 /**
  * Add values onto the existing properties of an objects shading.
  * Resets the shading based off the new values.
  */
-UNUSED void add_shading_properties(Object *obj, f32 brightnessChange, f32 ambientChange, s16 angleX, s16 angleY,
+UNUSED void add_shading_properties(Object *obj, f32 ambientChange, f32 diffuseChange, s16 angleX, s16 angleY,
                                    s16 angleZ) {
     if (obj->shading != NULL) {
-        obj->shading->brightness += brightnessChange;
-        if (obj->shading->brightness < 0.0f) {
-            obj->shading->brightness = 0.0f;
-        } else if (obj->shading->brightness > 1.0f) {
-            obj->shading->brightness = 1.0f;
-        }
         obj->shading->ambient += ambientChange;
         if (obj->shading->ambient < 0.0f) {
             obj->shading->ambient = 0.0f;
+        } else if (obj->shading->ambient > 1.0f) {
+            obj->shading->ambient = 1.0f;
         }
-        if (obj->shading->ambient >= 2.0f) {
-            obj->shading->ambient = 1.99f;
+        obj->shading->diffuse += diffuseChange;
+        if (obj->shading->diffuse < 0.0f) {
+            obj->shading->diffuse = 0.0f;
         }
-        set_shading_properties(obj->shading, obj->shading->brightness, obj->shading->ambient,
+        if (obj->shading->diffuse >= 2.0f) {
+            obj->shading->diffuse = 1.99f;
+        }
+        set_shading_properties(obj->shading, obj->shading->ambient, obj->shading->diffuse,
                                (obj->shading->unk22 + angleX), (obj->shading->unk24 + angleY),
                                (obj->shading->unk26 + angleZ));
         if (obj->segment.header->unk3D != 0) {
@@ -6000,13 +6000,13 @@ UNUSED void add_shading_properties(Object *obj, f32 brightnessChange, f32 ambien
     }
 }
 
-void set_shading_properties(ShadeProperties *arg0, f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ) {
+void set_shading_properties(ShadeProperties *arg0, f32 ambient, f32 diffuse, s16 angleX, s16 angleY, s16 angleZ) {
     Vec3s angle;
     Vec3f velocityPos;
 
     arg0->unk22 = angleX;
-    arg0->brightness = brightness;
     arg0->ambient = ambient;
+    arg0->diffuse = diffuse;
     arg0->unk0 = 1.0f;
     arg0->unk24 = angleY;
     arg0->unk26 = angleZ;
@@ -6066,7 +6066,7 @@ void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity
 
     if (dynamicLightingEnabled) {
         // Calculates dynamic lighting for the object
-        if (object->segment.header->lightingEnabled) {
+        if (object->segment.header->directionalPointLighting) {
             // Dynamic lighting for some objects? (Intro diddy, Taj, T.T., Bosses)
             // shading + lighting
             calc_dynamic_lighting_for_object_1(object, model, arg2, object, intensity, 1.0f);
@@ -6092,10 +6092,10 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     s16 i;
     Vec3s objRot;
     s32 s6;
-    s32 lightDirX, lightDirY, lightDirZ;
-    s32 shadowDirX, shadowDirY, shadowDirZ;
-    s32 ambientTemp;
-    s32 brightnessTemp;
+    s32 lightDirX, lightDirY, lightDirZ; // 16.16 fixed point, normalized
+    s32 shadowDirX, shadowDirY, shadowDirZ; // 16.16 fixed point, normalized
+    s32 diffuseFactor;
+    s32 ambientFactor;
     s32 lightIntensity;
     s32 shadeStrength;
     Vec3f direction;
@@ -6140,8 +6140,8 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     shadowDirY = direction.y;
     shadowDirZ = direction.z;
 
-    brightnessTemp = object->shading->brightness * object->shading->unk0 * 255.0f * intensity;
-    ambientTemp = object->shading->ambient * object->shading->unk0 * 255.0f * intensity;
+    ambientFactor = object->shading->ambient * object->shading->unk0 * 255.0f * intensity;
+    diffuseFactor = object->shading->diffuse * object->shading->unk0 * 255.0f * intensity;
 
     for (i = 0; i < model->numberOfBatches; i++) {
         if (model->batches[i].miscData != BATCH_VTX_COL) { // 0xFF means use vertex colors
@@ -6160,13 +6160,13 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
                 // calculate shading
                 shadeStrength = (normals[normIdx].x * shadowDirX + normals[normIdx].y * shadowDirY + normals[normIdx].z * shadowDirZ) >> 13;
                 if (shadeStrength > 0) {
-                    shadeStrength = (shadeStrength * ambientTemp) >> 16;
-                    shadeStrength += brightnessTemp;
+                    shadeStrength = (shadeStrength * diffuseFactor) >> 16;
+                    shadeStrength += ambientFactor;
                     if (shadeStrength > 255) {
                         shadeStrength = 255;
                     }
                 } else {
-                    shadeStrength = brightnessTemp;
+                    shadeStrength = ambientFactor;
                 }
 
                 vertices[j].r = lightIntensity;
