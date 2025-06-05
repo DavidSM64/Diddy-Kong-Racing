@@ -6173,7 +6173,7 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     midiFade->unkC = oy;
     midiFade->unk10 = oz;
     midiFade->unk14 = -((obj->segment.trans.x_position * ox) + (obj->segment.trans.y_position * oy) +
-                               (obj->segment.trans.z_position * oz));
+                        (obj->segment.trans.z_position * oz));
     midiFade->unk2 = entry->unk1A;
     midiFade->unk40 = entry->unk1B;
 

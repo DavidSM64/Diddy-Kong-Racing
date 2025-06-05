@@ -2164,9 +2164,8 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
     if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
         for (i = 0; obj->unk68[i] == NULL; i++) {}
         if (obj->unk68[i] != NULL && obj->unk68[i]->objModel->unk40 != NULL) {
-            set_shading_properties(obj->shading, obj->segment.header->shadeAmbient,
-                                   obj->segment.header->shadeDiffuse, 0, obj->segment.header->shadeAngleY,
-                                   obj->segment.header->shadeAngleZ);
+            set_shading_properties(obj->shading, obj->segment.header->shadeAmbient, obj->segment.header->shadeDiffuse,
+                                   0, obj->segment.header->shadeAngleY, obj->segment.header->shadeAngleZ);
             if (obj->segment.header->unk3D != 0) {
                 obj->shading->lightR = obj->segment.header->unk3A;
                 obj->shading->lightG = obj->segment.header->unk3B;
@@ -3405,7 +3404,8 @@ void render_3d_model(Object *obj) {
                             if (var_v0_2) {
                                 func_80012C98(&gObjectCurrDisplayList);
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
-                                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, opacity);
+                                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity,
+                                                opacity);
                             }
                             loopObj->properties.common.unk0 =
                                 render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix,
@@ -6835,7 +6835,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     s16 i;
     Vec3s objRot;
     s32 s6;
-    s32 lightDirX, lightDirY, lightDirZ; // 16.16 fixed point, normalized
+    s32 lightDirX, lightDirY, lightDirZ;    // 16.16 fixed point, normalized
     s32 shadowDirX, shadowDirY, shadowDirZ; // 16.16 fixed point, normalized
     s32 diffuseFactor;
     s32 ambientFactor;
@@ -6890,7 +6890,9 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
         if (model->batches[i].miscData != BATCH_VTX_COL) { // 0xFF means use vertex colors
             for (j = model->batches[i].verticesOffset; j < model->batches[i + 1].verticesOffset; j++) {
                 // calculate lighting
-                lightIntensity = (normals[normIdx].x * lightDirX + normals[normIdx].y * lightDirY + normals[normIdx].z * lightDirZ) >> 13;
+                lightIntensity = (normals[normIdx].x * lightDirX + normals[normIdx].y * lightDirY +
+                                  normals[normIdx].z * lightDirZ) >>
+                                 13;
                 if (lightIntensity > 0) {
                     lightIntensity = (lightIntensity * s6) >> 16;
                     if (lightIntensity > 255) {
@@ -6899,9 +6901,11 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
                 } else {
                     lightIntensity = 0;
                 }
-                
+
                 // calculate shading
-                shadeStrength = (normals[normIdx].x * shadowDirX + normals[normIdx].y * shadowDirY + normals[normIdx].z * shadowDirZ) >> 13;
+                shadeStrength = (normals[normIdx].x * shadowDirX + normals[normIdx].y * shadowDirY +
+                                 normals[normIdx].z * shadowDirZ) >>
+                                13;
                 if (shadeStrength > 0) {
                     shadeStrength = (shadeStrength * diffuseFactor) >> 16;
                     shadeStrength += ambientFactor;

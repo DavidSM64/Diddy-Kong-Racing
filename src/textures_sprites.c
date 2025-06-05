@@ -24,14 +24,15 @@ s32 gSpriteOpaque = TRUE;
  * Description of how these rendering modes work.
  *
  * First, the color combiner:
- * Color – the texture color is modulated by vertex shading. In the second cycle, the result is blended with the environmental lighting color.
- * Alpha – the texture alpha is multiplied by the vertex alpha (!) and then by the alpha of PrimColor, which controls the overall transparency of the model.
+ * Color – the texture color is modulated by vertex shading. In the second cycle, the result is blended with the
+ * environmental lighting color. Alpha – the texture alpha is multiplied by the vertex alpha (!) and then by the alpha
+ * of PrimColor, which controls the overall transparency of the model.
  *
- * Now regarding the rendering modes: the base mode is XLU_SURF. However, in the first group, every mode has Z buffer updates enabled.
- * Presumably, this speeds up rendering of overlapping translucent primitives by allowing Z-based rejection,
- * but the visual result depends on draw order.
- * For example: if you draw the far primitive first, then the near one, both will be visible.
- * But if drawn in the reverse order, only the near one will appear — the far one won't render at all, even though the background behind the near primitive will remain visible.
+ * Now regarding the rendering modes: the base mode is XLU_SURF. However, in the first group, every mode has Z buffer
+ * updates enabled. Presumably, this speeds up rendering of overlapping translucent primitives by allowing Z-based
+ * rejection, but the visual result depends on draw order. For example: if you draw the far primitive first, then the
+ * near one, both will be visible. But if drawn in the reverse order, only the near one will appear — the far one won't
+ * render at all, even though the background behind the near primitive will remain visible.
  *
  * It’s also unclear why G_RM_NOOP is used in the first cycle instead of G_RM_PASS, but the effect should be the same:
  * the pixel color is passed unchanged to the second cycle.
@@ -238,24 +239,24 @@ Gfx dRenderSettingsPrimOverlay[][2] = {
 
 /**
  * Color combiner behavior:
- * 
- * RGB: First, `PrimColor` and the texture color are blended using the vertex alpha as the blend factor  
- *      (0 = fully shaded color, 1 = pure texture).  
- *      The result is then blended with `EnvColor`, modulated by the vertex RGB color  
+ *
+ * RGB: First, `PrimColor` and the texture color are blended using the vertex alpha as the blend factor
+ *      (0 = fully shaded color, 1 = pure texture).
+ *      The result is then blended with `EnvColor`, modulated by the vertex RGB color
  *      (all RGB components are expected to be equal, representing lighting intensity).
- * 
+ *
  * Alpha: The texture's alpha is multiplied by the alpha value of `PrimColor`.
- * 
- * This setup enables more advanced lighting by combining directional shadowing (e.g. from the sky)  
+ *
+ * This setup enables more advanced lighting by combining directional shadowing (e.g. from the sky)
  * with directional lighting (e.g. from a colored point light).
- * 
+ *
  * This differs from simpler lighting models where illumination is uniform and non-directional.
- * 
- * - `EnvColor` represents the light color.  
- * - `PrimColor` represents the shadow (shaded) color.  
- * - The vertex alpha is the **inverted shadow strength**:  
- *     - alpha = 1 → fully lit (pure texture),  
- *     - alpha = 0 → fully shaded (flat `PrimColor`).  
+ *
+ * - `EnvColor` represents the light color.
+ * - `PrimColor` represents the shadow (shaded) color.
+ * - The vertex alpha is the **inverted shadow strength**:
+ *     - alpha = 1 → fully lit (pure texture),
+ *     - alpha = 0 → fully shaded (flat `PrimColor`).
  * - The vertex RGB intensity acts as the **lighting intensity**.
  */
 Gfx dRenderSettingsDirectionalLighting[][2] = {
