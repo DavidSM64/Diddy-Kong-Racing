@@ -773,7 +773,7 @@ s32 func_80060EA8(ObjectModel *arg0) {
     for (var_s1 = 0; var_s1 < temp_v1; var_s1++) {
         if (temp_ra[var_s1].miscData != BATCH_VTX_COL || (temp_ra[var_s1].flags & RENDER_ENVMAP)) {
             var_a3 = (var_a3 + (temp_ra[var_s1 + 1]).verticesOffset) - temp_ra[var_s1].verticesOffset;
-        }        
+        }
     }
     if (var_a3 > 0) {
         temp_s3 = arg0->vertices;
@@ -791,10 +791,10 @@ s32 func_80060EA8(ObjectModel *arg0) {
             mempool_free(spAC);
             return 1;
         }
-        
+
         var_v1 = arg0->numberOfBatches;
         for (var_s1_2 = 0; var_s1_2 < var_v1; var_s1_2++) {
-            temp_v0_4 = &var_ra[var_s1_2];            
+            temp_v0_4 = &var_ra[var_s1_2];
             temp_s4 = temp_v0_4->verticesOffset;
             for (var_s5 = temp_v0_4->facesOffset; var_s5 < (temp_v0_4 + 1)->facesOffset; var_s5 += 1) {
                 for (var_a3_2 = 0; var_a3_2 < 3; var_a3_2++) {
@@ -833,15 +833,21 @@ s32 func_80060EA8(ObjectModel *arg0) {
                     temp_v1_3 = &temp_s3[var_t3];
                     for (var_a1 = 0; batchNum >= var_a1 && var_a2 < 0; var_a1++) {
                         temp_a3 = &var_ra[var_a1];
-                        if ((sp50->miscData == temp_a3->miscData) && (((var_a0 = temp_a3->verticesOffset, (var_a1 == batchNum)) && (var_a0 < var_t3)) || ((var_a1 != batchNum) && (var_a0 < (temp_a3 + 1)->verticesOffset))) && (var_a2 < 0)) {
-loop_36:
+                        if ((sp50->miscData == temp_a3->miscData) &&
+                            (((var_a0 = temp_a3->verticesOffset, (var_a1 == batchNum)) && (var_a0 < var_t3)) ||
+                             ((var_a1 != batchNum) && (var_a0 < (temp_a3 + 1)->verticesOffset))) &&
+                            (var_a2 < 0)) {
+                        loop_36:
                             temp_v1_4 = &temp_s3[var_a0];
-                            if ((temp_v1_3->x == temp_v1_4->x) && (temp_v1_3->y == temp_v1_4->y) && (temp_v1_3->z == temp_v1_4->z)) {
+                            if ((temp_v1_3->x == temp_v1_4->x) && (temp_v1_3->y == temp_v1_4->y) &&
+                                (temp_v1_3->z == temp_v1_4->z)) {
                                 var_a2 = *(temp_v0_5 + (var_a0 * 2));
                             }
                             temp_t8_3 = var_a0 + 1;
                             var_a0 = temp_t8_3;
-                            if ((((var_a1 == batchNum) && (temp_t8_3 < var_t3)) || ((var_a1 != batchNum) && (var_a0 < (temp_a3 + 1)->verticesOffset))) && (var_a2 < 0)) {
+                            if ((((var_a1 == batchNum) && (temp_t8_3 < var_t3)) ||
+                                 ((var_a1 != batchNum) && (var_a0 < (temp_a3 + 1)->verticesOffset))) &&
+                                (var_a2 < 0)) {
                                 goto loop_36;
                             }
                         }
@@ -857,20 +863,26 @@ loop_36:
                     var_s6 += 1;
                 } else if (sp50->flags & RENDER_ENVMAP) {
                     var_a2_2 = -1;
-                    temp_v1_5 = &temp_s3[var_t3];                    
+                    temp_v1_5 = &temp_s3[var_t3];
                     for (var_a1_2 = 0; batchNum >= var_a1_2 && var_a2_2 < 0; var_a1_2++) {
                         temp_a3_2 = &var_ra[var_a1_2];
-                        if ((temp_a3_2->flags & RENDER_ENVMAP) && (((var_a0_2 = temp_a3_2->verticesOffset, (var_a1_2 == batchNum)) && (var_a0_2 < var_t3)) || ((var_a1_2 != batchNum) && (var_a0_2 < (temp_a3_2 + 1)->facesOffset))) && (var_a2_2 < 0)) {
-loop_60:
+                        if ((temp_a3_2->flags & RENDER_ENVMAP) &&
+                            (((var_a0_2 = temp_a3_2->verticesOffset, (var_a1_2 == batchNum)) && (var_a0_2 < var_t3)) ||
+                             ((var_a1_2 != batchNum) && (var_a0_2 < (temp_a3_2 + 1)->facesOffset))) &&
+                            (var_a2_2 < 0)) {
+                        loop_60:
                             temp_v1_6 = &temp_s3[var_a0_2];
-                            if ((temp_v1_5->x == temp_v1_6->x) && (temp_v1_5->y == temp_v1_6->y) && (temp_v1_5->z == temp_v1_6->z)) {
+                            if ((temp_v1_5->x == temp_v1_6->x) && (temp_v1_5->y == temp_v1_6->y) &&
+                                (temp_v1_5->z == temp_v1_6->z)) {
                                 var_a2_2 = *(temp_v0_5 + (var_a0_2 * 2));
                             }
                             var_a0_2++;
-                            if ((((var_a1_2 == batchNum) && (var_a0_2 < var_t3)) || ((var_a1_2 != batchNum) && (var_a0_2 < (temp_a3_2 + 1)->facesOffset))) && (var_a2_2 < 0)) {
+                            if ((((var_a1_2 == batchNum) && (var_a0_2 < var_t3)) ||
+                                 ((var_a1_2 != batchNum) && (var_a0_2 < (temp_a3_2 + 1)->facesOffset))) &&
+                                (var_a2_2 < 0)) {
                                 goto loop_60;
                             }
-                        }                        
+                        }
                     }
                     if (var_a2_2 < 0) {
                         *(temp_v0_5 + (var_t3 * 2)) = var_s6;
@@ -904,7 +916,8 @@ loop_60:
         while (var_s1_4 < var_v1_3) {
             temp_s1_2 = var_s1_4 + 1;
             temp_t0 = &var_ra[var_s1_4];
-            if ((temp_t0->miscData != BATCH_VTX_COL) || (var_t8_2 = temp_s1_2 << 0x10, ((temp_t0->flags & RENDER_ENVMAP) != 0))) {
+            if ((temp_t0->miscData != BATCH_VTX_COL) ||
+                (var_t8_2 = temp_s1_2 << 0x10, ((temp_t0->flags & RENDER_ENVMAP) != 0))) {
                 var_t8_2 = temp_s1_2 << 0x10;
                 for (var_s5_2 = temp_t0->facesOffset; var_s5_2 < temp_t0[1].facesOffset; var_s5_2++) {
                     var_t7 = var_s5_2 * 0x10;
@@ -920,7 +933,7 @@ loop_60:
                             temp_v1_8[2] += temp_s0_2[2];
                         }
                     }
-                } 
+                }
                 var_v1_3 = arg0->numberOfBatches;
             }
             var_s1_4 = var_t8_2 >> 0x10;
@@ -948,7 +961,7 @@ loop_60:
             var_t9_2 = temp_a3_3 << 0x10;
             if (temp_a2_2 >= 0) {
                 spA0[var_a0_3].x = temp_v0_6[temp_a2_2].x;
-                spA0[var_a0_3].y= temp_v0_6[temp_a2_2].y;
+                spA0[var_a0_3].y = temp_v0_6[temp_a2_2].y;
                 spA0[var_a0_3].z = temp_v0_6[temp_a2_2].z;
                 var_t9_2 = temp_a3_3 << 0x10;
                 var_a0_3++;
