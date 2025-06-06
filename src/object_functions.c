@@ -622,8 +622,8 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
             }
         }
     }
-    obj->shading->ambient = 0.612f;
-    obj->shading->brightness = 0.0f;
+    obj->shading->diffuse = 0.612f;
+    obj->shading->ambient = 0.0f;
     tempObj = get_racer_object(PLAYER_ONE);
     if (tempObj != NULL) {
         diffX = obj->segment.trans.x_position - tempObj->segment.trans.x_position;
@@ -690,7 +690,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         }
         obj->unk5C->unk100 = NULL;
         if (worldBalloons) {
-            obj->shading->brightness = 0.552f;
+            obj->shading->ambient = 0.552f;
         }
     }
 }
@@ -6173,7 +6173,7 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     midiFade->unkC = oy;
     midiFade->unk10 = oz;
     midiFade->unk14 = -((obj->segment.trans.x_position * ox) + (obj->segment.trans.y_position * oy) +
-                               (obj->segment.trans.z_position * oz));
+                        (obj->segment.trans.z_position * oz));
     midiFade->unk2 = entry->unk1A;
     midiFade->unk40 = entry->unk1B;
 

@@ -1558,7 +1558,7 @@ void draw_gradient_background(void) {
     headerGreen1 = gCurrentLevelHeader2->BGColourBottomG;
     headerBlue1 = gCurrentLevelHeader2->BGColourBottomB;
     rendermode_reset(&gTrackDL);
-    material_set_no_tex_offset(&gTrackDL, 0, RENDER_FOG_ACTIVE);
+    material_set_no_tex_offset(&gTrackDL, NULL, RENDER_FOG_ACTIVE);
     gSPVertexDKR(gTrackDL++, OS_K0_TO_PHYSICAL(verts), 4, 0);
     gSPPolygon(gTrackDL++, OS_K0_TO_PHYSICAL(tris), 2, 0);
 
@@ -1829,7 +1829,7 @@ void render_level_geometry_and_objects(void) {
     }
 
     rendermode_reset(&gTrackDL);
-    material_set_no_tex_offset(&gTrackDL, 0, RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
+    material_set_no_tex_offset(&gTrackDL, NULL, RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
     func_80012C3C(&gTrackDL);
 
     // Particles and FX

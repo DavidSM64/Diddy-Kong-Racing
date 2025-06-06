@@ -988,7 +988,7 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
             tex2 = set_animated_texture_header(gWaveTexture, gWaveBatch->texOffset * (128 * 128));
             wave_load_material(tex1, 1);
             wave_load_material(tex2, 0);
-            gDPSetCombineMode(gWaveDL++, DKR_CC_UNK14, DKR_CC_UNK15);
+            gDPSetCombineMode(gWaveDL++, G_CC_BLENDTEX_MODULATEA_1_PRIM, G_CC_BLENDI_ENV_ALPHA_MODULATEA2);
             if (TEX_FORMAT(tex1->format) == TEX_FORMAT_RGBA32 &&
                 cam_get_viewport_layout() <= VIEWPORT_LAYOUT_1_PLAYER) {
                 gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_AA_ZB_XLU_INTER2);
@@ -1006,7 +1006,7 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
             gSPSetGeometryMode(gWaveDL++, G_FOG);
             tex1 = set_animated_texture_header(gWaveTexture, gWaveBatch->texOffset * (128 * 128));
             gDkrDmaDisplayList(gWaveDL++, OS_K0_TO_PHYSICAL(tex1->cmd), tex1->numberOfCommands);
-            gDPSetCombineMode(gWaveDL++, DKR_CC_UNK16, DKR_CC_UNK8);
+            gDPSetCombineMode(gWaveDL++, G_CC_BLENDT_ENV_ALPHA_A_PRIM, G_CC_MODULATEIDECALA2);
             gDPSetOtherMode(gWaveDL++, DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_ZB_OPA_SURF2);
             gDPSetPrimColor(gWaveDL++, 0, 0, 255, 255, 255, 255);
             if (D_800E3180 != NULL) {
