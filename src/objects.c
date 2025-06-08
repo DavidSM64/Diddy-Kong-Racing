@@ -2460,7 +2460,7 @@ void func_800101AC(Object *obj, s32 arg1) {
                 }
             } else {
                 for (j = 0; j < numberOfModelIds; j++) {
-                    sprite_free(&tempObj->unk68[j]->sprite);
+                    sprite_free(tempObj->unk68[j]->sprite);
                 }
             }
             try_free_object_header(tempObj->segment.object.unk2C);
@@ -2509,7 +2509,7 @@ void func_800101AC(Object *obj, s32 arg1) {
             // TODO: Get a Snowball struct?
             snowball = &obj->unk64->racer;
             if (snowball->unk20 != NULL) {
-                audspat_point_stop(snowball->unk20);
+                audspat_point_stop((AudioPoint *) snowball->unk20);
             }
             break;
         case BHV_WAVE_GENERATOR:
@@ -2520,7 +2520,7 @@ void func_800101AC(Object *obj, s32 arg1) {
             break;
         case BHV_ANIMATION:
             if (obj->unk64 != NULL && arg1 == 0) {
-                free_object(&obj->unk64->obj);
+                free_object(obj->unk64->obj);
             }
             break;
         case BHV_OVERRIDE_POS:
@@ -2610,7 +2610,7 @@ void func_800101AC(Object *obj, s32 arg1) {
             }
             if (gObjPtrList[i]->behaviorId == BHV_WEAPON_2 || gObjPtrList[i]->behaviorId == BHV_FLY_COIN ||
                 gObjPtrList[i]->behaviorId == BHV_WEAPON) {
-                free_object(gObjPtrList[i]);
+                free_object((Object *) gObjPtrList[i]);
             }
         }
     }
@@ -2629,11 +2629,11 @@ void func_800101AC(Object *obj, s32 arg1) {
         }
     } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_MISC) {
         for (i = 0; i < numberOfModelIds; i++) {
-            tex_free(&obj->unk68[i]->texHeader);
+            tex_free(obj->unk68[i]->texHeader);
         }
     } else {
         for (i = 0; i < numberOfModelIds; i++) {
-            sprite_free(&obj->unk68[i]->sprite);
+            sprite_free(obj->unk68[i]->sprite);
         }
     }
     if (obj->segment.header->particleCount > 0) {
