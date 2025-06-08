@@ -121,11 +121,11 @@ As of June 8, 2025, this is our current score:
 ```
  ====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- -------------- 89.54% Complete (90.88% NON_MATCHING) ---------------
+ -------------- 89.54% Complete (91.16% NON_MATCHING) ---------------
                      # Decompiled functions: 1909
                       # GLOBAL_ASM remaining: 42
-                     # NON_MATCHING functions: 6
-                  # NON_EQUIVALENT WIP functions: 21
+                     # NON_MATCHING functions: 7
+                  # NON_EQUIVALENT WIP functions: 20
  --------------------------- Game Status ----------------------------
               Balloons: 42/47, Keys: 4/4, Trophies: 4/5
                 T.T. Amulets: 4/4, Wizpig Amulets: 4/4
