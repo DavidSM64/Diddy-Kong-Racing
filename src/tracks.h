@@ -18,31 +18,36 @@ enum ShadowUpdate {
 
 /* Size: 0x10 bytes */
 typedef struct unk8011C8B8 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    s16 unkC;
-    s16 unkE;
+    /* 0x00 */ f32 x;
+    /* 0x04 */ f32 y;
+    /* 0x08 */ f32 z;
+    union {
+        /* 0x0C */ f32 w;
+        struct {
+            /* 0x0C */ s16 unkC;
+            /* 0x0E */ s16 unkE;
+        } s;
+    } unkC_union;
 } unk8011C8B8;
 
 /* Size: 0x10 bytes */
 typedef struct unk8011B120 {
-    f32 x;
-    f32 y;
-    f32 z;
-    unk8011C8B8 *unkC;
+    /* 0x00 */ f32 x;
+    /* 0x04 */ f32 y;
+    /* 0x08 */ f32 z;
+    /* 0x0C */ unk8011C8B8 *unkC;
 } unk8011B120;
 
 /* Size: 0x20 bytes */
 typedef struct unk8011B330 {
-    f32 x;
-    f32 y;
-    f32 z;
-    unk8011C8B8 *unkC;
-    f32 unk10;
-    f32 unk14;
-    f32 unk18;
-    f32 unk1C;
+    /* 0x00 */ f32 x;
+    /* 0x04 */ f32 y;
+    /* 0x08 */ f32 z;
+    /* 0x0C */ unk8011C8B8 *unkC;
+    /* 0x10 */ f32 unk10;
+    /* 0x14 */ f32 unk14;
+    /* 0x18 */ f32 unk18;
+    /* 0x1C */ f32 unk1C;
 } unk8011B330;
 
 /* Size: 0x10 bytes */
@@ -69,16 +74,16 @@ typedef struct unk8011D478 {
 
 /* Size: 0x14 bytes */
 typedef struct unk8011C3B8 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-    s16 unk10;
-    s16 unk12;
+ /* 0x00 */ s16 x1;
+ /* 0x02 */ s16 y1;
+ /* 0x04 */ s16 z1;
+ /* 0x06 */ s16 x2;
+ /* 0x08 */ s16 y2;
+ /* 0x0A */ s16 z2;
+ /* 0x0C */ s16 x3;
+ /* 0x0E */ s16 y3;
+ /* 0x10 */ s16 z3;
+ /* 0x12 */ s16 unk12;
 } unk8011C3B8;
 
 // In this struct, data is rightshifted 16 bytes, so make the smooth transition more precise.
