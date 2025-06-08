@@ -676,7 +676,6 @@ s32 func_80060EA8(ObjectModel *model) {
     Triangle *spB0;
     Vec3f *spAC;
     Vec3s *spA0;
-    s16 sp98;
     TriangleBatchInfo *sp50;
     f32 *sp58;
     f32 sp5C;
@@ -703,10 +702,7 @@ s32 func_80060EA8(ObjectModel *model) {
     f32 *temp_t7;
     f32 *temp_t8;
     f32 temp_f0_2;
-    f32 temp_f0_3;
     f32 temp_f0_4;
-    f32 temp_f14_2;
-    f32 temp_f2_2;
     s16 temp_a2;
     s16 temp_a2_2;
     s16 temp_s4;
@@ -721,8 +717,7 @@ s32 func_80060EA8(ObjectModel *model) {
     s16 var_a3_5;
     s16 var_s1_2;
     s16 batchNum;
-    s16 var_s5;
-    s16 var_s5_2;
+    s16 face;
     s16 var_s6;
     s16 var_t3;
     s16 var_v1_3;
@@ -733,15 +728,9 @@ s32 func_80060EA8(ObjectModel *model) {
     s32 var_s1_4;
     s32 var_t7;
     s32 var_t8_2;
-    s32 var_t9;
     s32 var_t9_2;
     u8 *temp_a0;
-    u8 *var_t6;
     Vec3f *temp_s0;
-    f32 *temp_s0_2;
-    f32 *temp_s0_3;
-    Vec3f *temp_v1_7;
-    f32 *temp_v1_8;
 
     temp_v1 = model->numberOfBatches;
     temp_ra = model->batches;
@@ -756,7 +745,6 @@ s32 func_80060EA8(ObjectModel *model) {
     if (var_a3 > 0) {
         verts = model->vertices;
         spB0 = model->triangles;
-        sp98 = var_a3;
         temp_v0_2 = mempool_alloc(model->numberOfTriangles * 0xCU, COLOUR_TAG_ORANGE);
         spAC = temp_v0_2;
         if (temp_v0_2 == NULL) {
@@ -773,16 +761,16 @@ s32 func_80060EA8(ObjectModel *model) {
         for (var_s1_2 = 0; var_s1_2 < model->numberOfBatches; var_s1_2++) {
             temp_v0_4 = &var_ra[var_s1_2];
             temp_s4 = temp_v0_4->verticesOffset;
-            for (var_s5 = temp_v0_4->facesOffset; var_s5 < (temp_v0_4 + 1)->facesOffset; var_s5 += 1) {
+            for (face = temp_v0_4->facesOffset; face < (temp_v0_4 + 1)->facesOffset; face += 1) {
                 for (var_a3_2 = 0; var_a3_2 < 3; var_a3_2++) {
-                    temp_v1_2 = &verts[(s16) (spB0[var_s5].verticesArray[var_a3_2 + 1] + temp_s4)];
+                    temp_v1_2 = &verts[(s16) (spB0[face].verticesArray[var_a3_2 + 1] + temp_s4)];
                     temp_t7 = &(&sp64[0])[var_a3_2];
                     temp_t8 = &(&sp58[0])[var_a3_2];
                     (&sp70[0])[var_a3_2] = temp_v1_2->x;
                     *temp_t7 = temp_v1_2->y;
                     *temp_t8 = temp_v1_2->z;
                 }
-                temp_s0 = &spAC[var_s5];
+                temp_s0 = &spAC[face];
                 temp_s0->x = (((sp58[0] - sp60) * (sp64[0] - sp68)) - ((sp58[0] - sp5C) * (sp64[0] - sp6C)));
                 temp_s0->y = (((sp58[0] - sp5C) * (sp70[0] - sp78)) - ((sp58[0] - sp60) * (sp70[0] - sp74)));
                 temp_s0->z = (((sp70[0] - sp74) * (sp64[0] - sp6C)) - ((sp64[0] - sp68) * (sp70[0] - sp78)));
@@ -816,8 +804,7 @@ s32 func_80060EA8(ObjectModel *model) {
                                  var_a2 < 0;
                                  var_a0++) {
                                 vert2 = &verts[var_a0];
-                                if (vert1->x == vert2->x && vert1->y == vert2->y &&
-                                    vert1->z == vert2->z) {
+                                if (vert1->x == vert2->x && vert1->y == vert2->y && vert1->z == vert2->z) {
                                     var_a2 = temp_v0_5[var_a0];
                                 }
                             }
@@ -844,8 +831,7 @@ s32 func_80060EA8(ObjectModel *model) {
                                  var_a2 < 0;
                                  var_a0++) {
                                 vert2 = &verts[var_a0];
-                                if (vert1->x == vert2->x && vert1->y == vert2->y &&
-                                    vert1->z == vert2->z) {
+                                if (vert1->x == vert2->x && vert1->y == vert2->y && vert1->z == vert2->z) {
                                     var_a2 = temp_v0_5[var_a0];
                                 }
                             }
@@ -869,8 +855,8 @@ s32 func_80060EA8(ObjectModel *model) {
             mempool_free(temp_v0_5);
             return 1;
         }
-        
-        for (var_a3_3 = 0; var_a3_3 < var_s6; ) {
+
+        for (var_a3_3 = 0; var_a3_3 < var_s6;) {
             temp_lo = var_a3_3++;
             temp_v0_6[temp_lo].x = 0.0f;
             temp_v0_6[temp_lo].y = 0.0f;
@@ -884,18 +870,15 @@ s32 func_80060EA8(ObjectModel *model) {
             if ((temp_t0->miscData != BATCH_VTX_COL) ||
                 (var_t8_2 = temp_s1_2 << 0x10, ((temp_t0->flags & RENDER_ENVMAP) != 0))) {
                 var_t8_2 = temp_s1_2 << 0x10;
-                for (var_s5_2 = temp_t0->facesOffset; var_s5_2 < temp_t0[1].facesOffset; var_s5_2++) {
-                    var_t7 = var_s5_2 * 0x10;
+                for (face = temp_t0->facesOffset; face < temp_t0[1].facesOffset; face++) {
+                    var_t7 = face * 0x10;
                     temp_a0 = &spB0->verticesArray[var_t7];
                     for (var_a3_4 = 0; var_a3_4 < 3; var_a3_4++) {
-                        var_t6 = &temp_a0[var_a3_4];
-                        temp_a2 = temp_v0_5[((s16) (var_t6[1] + temp_t0->verticesOffset))];
+                        temp_a2 = temp_v0_5[((s16) (temp_a0[var_a3_4 + 1] + temp_t0->verticesOffset))];
                         if (temp_a2 >= 0) {
-                            temp_v1_8 = &temp_v0_6[temp_a2];
-                            temp_s0_2 = &spAC[var_s5_2];
-                            temp_v1_8[0] += temp_s0_2[0];
-                            temp_v1_8[1] += temp_s0_2[1];
-                            temp_v1_8[2] += temp_s0_2[2];
+                            temp_v0_6[temp_a2].x += spAC[face].x;
+                            temp_v0_6[temp_a2].y += spAC[face].y;
+                            temp_v0_6[temp_a2].z += spAC[face].z;
                         }
                     }
                 }
@@ -904,24 +887,20 @@ s32 func_80060EA8(ObjectModel *model) {
             var_s1_4 = var_t8_2 >> 0x10;
         }
         for (var_a3_5 = 0; var_a3_5 < var_s6; var_a3_5++) {
-            temp_s0_3 = &temp_v0_6[var_a3_5];
-            temp_f2_2 = temp_s0_3[0];
-            temp_f14_2 = temp_s0_3[1];
-            temp_f0_3 = temp_s0_3[2];
-            sp98 = var_a3_5;
-            temp_f0_4 = sqrtf((temp_f0_3 * temp_f0_3) + ((temp_f2_2 * temp_f2_2) + (temp_f14_2 * temp_f14_2)));
+            temp_f0_4 = sqrtf((temp_v0_6[var_a3_5].x * temp_v0_6[var_a3_5].x) +
+                              (temp_v0_6[var_a3_5].y * temp_v0_6[var_a3_5].y) +
+                              (temp_v0_6[var_a3_5].z * temp_v0_6[var_a3_5].z));
             if (temp_f0_4 != 0.0f) {
                 temp_f0_4 *= 0.00012207031f;
-                temp_s0_3[0] /= temp_f0_4;
-                temp_s0_3[1] /= temp_f0_4;
-                temp_s0_3[2] /= temp_f0_4;
+                temp_v0_6[var_a3_5].x /= temp_f0_4;
+                temp_v0_6[var_a3_5].y /= temp_f0_4;
+                temp_v0_6[var_a3_5].z /= temp_f0_4;
             }
         }
         var_a3_5 = 0;
         var_a0 = 0;
-        var_t9 = 0 * 2;
         while (var_a3_5 < model->numberOfVertices) {
-            temp_a2_2 = temp_v0_5[var_t9];
+            temp_a2_2 = temp_v0_5[var_a3_5];
             temp_a3_3 = var_a3_5 + 1;
             var_t9_2 = temp_a3_3 << 0x10;
             if (temp_a2_2 >= 0) {
@@ -932,7 +911,6 @@ s32 func_80060EA8(ObjectModel *model) {
                 var_a0++;
             }
             var_a3_5 = (s16) (var_t9_2 >> 0x10);
-            var_t9 = var_a3_5 * 2;
         }
         model->unk40 = spA0;
         mempool_free(temp_v0_5);
