@@ -2,7 +2,7 @@
 
 // Render settings for the screens
 Gfx gRdpSetModeScreenAsset[] = {
-    gsDPSetCombineMode(DKR_CC_UNK10, DKR_CC_UNK10),
+    gsDPSetCombineMode(G_CC_DECAL_SCALE, G_CC_DECAL_SCALE),
     gsDPSetOtherMode(DKR_OMH_COPY_POINT_NOPERSP, DKR_OML_COMMON | G_RM_NOOP | G_RM_NOOP2),
 };
 

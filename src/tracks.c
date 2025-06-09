@@ -1558,7 +1558,7 @@ void draw_gradient_background(void) {
     headerGreen1 = gCurrentLevelHeader2->BGColourBottomG;
     headerBlue1 = gCurrentLevelHeader2->BGColourBottomB;
     rendermode_reset(&gTrackDL);
-    material_set_no_tex_offset(&gTrackDL, 0, RENDER_FOG_ACTIVE);
+    material_set_no_tex_offset(&gTrackDL, NULL, RENDER_FOG_ACTIVE);
     gSPVertexDKR(gTrackDL++, OS_K0_TO_PHYSICAL(verts), 4, 0);
     gSPPolygon(gTrackDL++, OS_K0_TO_PHYSICAL(tris), 2, 0);
 
@@ -1829,7 +1829,7 @@ void render_level_geometry_and_objects(void) {
     }
 
     rendermode_reset(&gTrackDL);
-    material_set_no_tex_offset(&gTrackDL, 0, RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
+    material_set_no_tex_offset(&gTrackDL, NULL, RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
     func_80012C3C(&gTrackDL);
 
     // Particles and FX
@@ -3775,11 +3775,11 @@ void func_8002E904(LevelModelSegment *arg0, s32 arg1, s32 arg2) {
                     if (gNewShadowY2 >= minY) {
                         if (maxY >= gNewShadowY1) {
                             for (i = 0; i < 3; i++) {
-                                sp100[i].unk0 = vertices[triangles->verticesArray[i + 1]].x;
-                                sp100[i].unk8 = vertices[triangles->verticesArray[i + 1]].z;
-                                sp100[i].unkE = -1;
+                                sp100[i].x = vertices[triangles->verticesArray[i + 1]].x;
+                                sp100[i].z = vertices[triangles->verticesArray[i + 1]].z;
+                                sp100[i].unkC_union.s.unkE = -1;
                             }
-                            // @note while the cast to Vec4f is incorrect, func_8002FD74 only uses unk0 and unk8 which
+                            // @note while the cast to Vec4f is incorrect, func_8002FD74 x uses unk0 and z which
                             // are both floats so this is fine as the size is the same
                             if (func_8002FD74(spD0[2].x, spD0[2].y, spD0[0].x, spD0[0].y, 3, (Vec4f *) sp100) != 0) {
                                 temp_t6 = arg0->unk14[curFacesOffset].triangleIndex * 4;
@@ -3792,26 +3792,26 @@ void func_8002E904(LevelModelSegment *arg0, s32 arg1, s32 arg2) {
                                     if (someCount >= 3) {
                                         D_8011C238[D_8011C230].unk1 = 0;
                                         for (i2 = 0; i2 < someCount; i2++) {
-                                            if (sp100[i2].unkE < 0) {
+                                            if (sp100[i2].unkC_union.s.unkE < 0) {
                                                 foundIndex = -1;
                                                 i = 0;
                                                 while ((i < D_8011B118) && (foundIndex == -1)) {
-                                                    if ((D_8011B120[i].x == sp100[i2].unk0) &&
-                                                        (D_8011B120[i].z == sp100[i2].unk8)) {
+                                                    if ((D_8011B120[i].x == sp100[i2].x) &&
+                                                        (D_8011B120[i].z == sp100[i2].z)) {
                                                         foundIndex = i;
                                                     }
                                                     i++;
                                                 }
                                                 if (foundIndex == -1) {
-                                                    D_8011B120[D_8011B118].x = sp100[i2].unk0;
+                                                    D_8011B120[D_8011B118].x = sp100[i2].x;
                                                     D_8011B120[D_8011B118].unkC = D_8011D0BC;
-                                                    D_8011B120[D_8011B118].z = sp100[i2].unk8;
+                                                    D_8011B120[D_8011B118].z = sp100[i2].z;
                                                     D_8011C238[D_8011C230].unk2[i2] = D_8011B118++;
                                                 } else {
                                                     D_8011C238[D_8011C230].unk2[i2] = foundIndex;
                                                 }
                                             } else {
-                                                D_8011C238[D_8011C230].unk2[i2] = sp100[i2].unkE;
+                                                D_8011C238[D_8011C230].unk2[i2] = sp100[i2].unkC_union.s.unkE;
                                                 D_8011C238[D_8011C230].unk1 |= 1 << i2;
                                             }
                                         }
@@ -3833,6 +3833,7 @@ void func_8002E904(LevelModelSegment *arg0, s32 arg1, s32 arg2) {
     }
 }
 
+// Handles water shadow generation?
 void func_8002EEEC(s32 arg0) {
     unk8011C8B8 spA8[8];
     Vec2f sp88[4];
@@ -3863,29 +3864,29 @@ void func_8002EEEC(s32 arg0) {
     // clang-format on
 
     for (var_s4 = 0; var_s4 < temp_v0; var_s4++) {
-        var_a0 = D_8011C3B8[var_s4].unk2;
-        var_a1 = D_8011C3B8[var_s4].unk2;
-        if (D_8011C3B8[var_s4].unk8 < var_a1) {
-            var_a0 = D_8011C3B8[var_s4].unk8;
-        } else if (var_a1 < D_8011C3B8[var_s4].unk8) {
-            var_a1 = D_8011C3B8[var_s4].unk8;
+        var_a0 = D_8011C3B8[var_s4].y1;
+        var_a1 = D_8011C3B8[var_s4].y1;
+        if (D_8011C3B8[var_s4].y2 < var_a0) {
+            var_a0 = D_8011C3B8[var_s4].y2;
+        } else if (var_a1 < D_8011C3B8[var_s4].y2) {
+            var_a1 = D_8011C3B8[var_s4].y2;
         }
-        if (D_8011C3B8[var_s4].unkE < var_a0) {
-            var_a0 = D_8011C3B8[var_s4].unkE;
-        } else if (var_a1 < D_8011C3B8[var_s4].unkE) {
-            var_a1 = D_8011C3B8[var_s4].unkE;
+        if (D_8011C3B8[var_s4].y3 < var_a0) {
+            var_a0 = D_8011C3B8[var_s4].y3;
+        } else if (var_a1 < D_8011C3B8[var_s4].y3) {
+            var_a1 = D_8011C3B8[var_s4].y3;
         }
         if (gNewShadowY2 >= var_a0) {
             if (var_a1 >= gNewShadowY1) {
-                spA8[0].unk0 = D_8011C3B8[var_s4].unk0;
-                spA8[0].unk8 = D_8011C3B8[var_s4].unk4;
-                spA8[1].unk0 = D_8011C3B8[var_s4].unk6;
-                spA8[1].unk8 = D_8011C3B8[var_s4].unkA;
-                spA8[2].unk0 = D_8011C3B8[var_s4].unkC;
-                spA8[2].unk8 = D_8011C3B8[var_s4].unk10;
+                spA8[0].x = D_8011C3B8[var_s4].x1;
+                spA8[0].z = D_8011C3B8[var_s4].z1;
+                spA8[1].x = D_8011C3B8[var_s4].x2;
+                spA8[1].z = D_8011C3B8[var_s4].z2;
+                spA8[2].x = D_8011C3B8[var_s4].x3;
+                spA8[2].z = D_8011C3B8[var_s4].z3;
 
                 for (var_v0 = 0; var_v0 != 3; var_v0++) {
-                    spA8[var_v0].unkE = -1;
+                    spA8[var_v0].unkC_union.s.unkE = -1;
                 }
 
                 D_8011D0BC = &D_8011C8B8[D_8011D0B8 + var_s4];
@@ -3894,26 +3895,26 @@ void func_8002EEEC(s32 arg0) {
                     tempIdx = D_8011C230;
                     D_8011C238[tempIdx].unk1 = 0;
                     for (var_t1 = 0; var_t1 < temp_v0_3; var_t1++) {
-                        if (spA8[var_t1].unkE < 0) {
+                        if (spA8[var_t1].unkC_union.s.unkE < 0) {
                             var_a1 = -1;
                             var_v1 = 0;
                             while (var_v1 < D_8011B118 && var_a1 == -1) {
-                                if ((D_8011B120[var_v1].x == spA8[var_t1].unk0) &&
-                                    (D_8011B120[var_v1].z == spA8[var_t1].unk8)) {
+                                if ((D_8011B120[var_v1].x == spA8[var_t1].x) &&
+                                    (D_8011B120[var_v1].z == spA8[var_t1].z)) {
                                     var_a1 = var_v1;
                                 }
                                 var_v1++;
                             }
                             if (var_a1 == -1) {
-                                D_8011B120[D_8011B118].x = spA8[var_t1].unk0;
+                                D_8011B120[D_8011B118].x = spA8[var_t1].x;
                                 D_8011B120[D_8011B118].unkC = D_8011D0BC;
-                                D_8011B120[D_8011B118].z = spA8[var_t1].unk8;
+                                D_8011B120[D_8011B118].z = spA8[var_t1].z;
                                 D_8011C238[tempIdx].unk2[var_t1] = D_8011B118++;
                             } else {
                                 D_8011C238[tempIdx].unk2[var_t1] = var_a1;
                             }
                         } else {
-                            D_8011C238[tempIdx].unk2[var_t1] = spA8[var_t1].unkE;
+                            D_8011C238[tempIdx].unk2[var_t1] = spA8[var_t1].unkC_union.s.unkE;
                             D_8011C238[tempIdx].unk1 |= 1 << var_t1;
                         }
                     }
@@ -3927,32 +3928,29 @@ void func_8002EEEC(s32 arg0) {
     D_8011D0B8 += temp_v0;
 }
 
-#ifdef NON_EQUIVALENT
 void func_8002F2AC(void) {
     f32 temp_f12;
     f32 temp_f16;
     unk8011C8B8 *var_v0;
-    s32 i, j;
+    s32 i, j, k;
+    unk8011B330 *curr;
 
     for (i = 0; i < D_8011B118; i++) {
         var_v0 = D_8011B120[i].unkC;
-        temp_f16 = D_8011B120[i].x * var_v0->unk0;
-        temp_f12 = D_8011B120[i].z * var_v0->unk8;
-        D_8011B120[i].y = (f32) (-(temp_f16 + temp_f12 + var_v0->unkC) / var_v0->unk4);
+        temp_f16 = D_8011B120[i].x * var_v0->x;
+        temp_f12 = D_8011B120[i].z * var_v0->z;
+        D_8011B120[i].y = (f32) (-(temp_f16 + temp_f12 + var_v0->unkC_union.w) / var_v0->y);
     }
 
     for (i = 0; i < ARRAY_COUNT(D_8011B320); i++) {
-        for (j = 0; j < D_8011B320[i]; j++) {
-            var_v0 = D_8011B330[j + i].unkC;
-            temp_f16 = D_8011B330[j + i].x * var_v0->unk0;
-            temp_f12 = D_8011B330[j + i].z * var_v0->unk8;
-            D_8011B330[j + i].y = (f32) (-(temp_f16 + temp_f12 + var_v0->unkC) / var_v0->unk4);
+        for (j = 0, k = i * sizeof(unk8011B330); j < D_8011B320[i]; j++, k++) {
+            var_v0 = D_8011B330[k].unkC;
+            temp_f16 = D_8011B330[k].x * var_v0->x;
+            temp_f12 = D_8011B330[k].z * var_v0->z;
+            D_8011B330[k].y = (f32) (-(temp_f16 + temp_f12 + var_v0->unkC_union.w) / var_v0->y);
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002F2AC.s")
-#endif
 
 void func_8002F440(void) {
     s32 spAC;
@@ -4185,58 +4183,56 @@ s32 func_8002FF6C(s32 arg0, unk8011C8B8 *arg1, s32 arg2, Vec2f *arg3) {
             if (var_v1 >= var_s2) {
                 var_v1 = 0;
             }
-            temp_f16 = (temp_f12 * var_s3[var_t1].unk0) + (var_s3[var_t1].unk8 * temp_f14) + var_f2;
-            temp_f22 = (temp_f12 * var_s3[var_v1].unk0) + (var_s3[var_v1].unk8 * temp_f14) + var_f2;
+            temp_f16 = (temp_f12 * var_s3[var_t1].x) + (var_s3[var_t1].z * temp_f14) + var_f2;
+            temp_f22 = (temp_f12 * var_s3[var_v1].x) + (var_s3[var_v1].z * temp_f14) + var_f2;
             if ((temp_f16 >= 0.0f && temp_f22 < 0.0f) || (temp_f16 < 0.0f && temp_f22 >= 0.0f)) {
                 var_a0 = D_8011B320[var_v0];
                 var_a1 = -1;
                 var_v1_3 = var_v0 << 5;
                 while (var_a0 > 0 && var_a1 < 0) {
-                    if ((D_8011B330[var_v1_3].unk10 == var_s3[var_t1].unk0) &&
-                        (D_8011B330[var_v1_3].unk14 == var_s3[var_t1].unk8) &&
-                        (D_8011B330[var_v1_3].unk18 == var_s3[var_v1].unk0) &&
-                        (D_8011B330[var_v1_3].unk1C == var_s3[var_v1].unk8)) {
+                    if ((D_8011B330[var_v1_3].unk10 == var_s3[var_t1].x) &&
+                        (D_8011B330[var_v1_3].unk14 == var_s3[var_t1].z) &&
+                        (D_8011B330[var_v1_3].unk18 == var_s3[var_v1].x) &&
+                        (D_8011B330[var_v1_3].unk1C == var_s3[var_v1].z)) {
                         var_a1 = var_v1_3;
-                    } else if ((D_8011B330[var_v1_3].unk10 == var_s3[var_v1].unk0) &&
-                               (D_8011B330[var_v1_3].unk14 == var_s3[var_v1].unk8) &&
-                               (D_8011B330[var_v1_3].unk18 == var_s3[var_t1].unk0) &&
-                               (D_8011B330[var_v1_3].unk1C == var_s3[var_t1].unk8)) {
+                    } else if ((D_8011B330[var_v1_3].unk10 == var_s3[var_v1].x) &&
+                               (D_8011B330[var_v1_3].unk14 == var_s3[var_v1].z) &&
+                               (D_8011B330[var_v1_3].unk18 == var_s3[var_t1].x) &&
+                               (D_8011B330[var_v1_3].unk1C == var_s3[var_t1].z)) {
                         var_a1 = var_v1_3;
                     }
                     var_a0 -= 1;
                     var_v1_3++;
                 }
                 if (var_a1 >= 0) {
-                    var_s0[var_t2].unkE = var_a1;
-                    var_s0[var_t2].unk0 = D_8011B330[var_a1].x;
-                    var_s0[var_t2].unk8 = D_8011B330[var_a1].z;
+                    var_s0[var_t2].unkC_union.s.unkE = var_a1;
+                    var_s0[var_t2].x = D_8011B330[var_a1].x;
+                    var_s0[var_t2].z = D_8011B330[var_a1].z;
                     var_t2++;
                 } else {
                     temp_f24 = temp_f16 / (temp_f16 - temp_f22);
-                    var_s0[var_t2].unk0 =
-                        var_s3[var_t1].unk0 + ((var_s3[var_v1].unk0 - var_s3[var_t1].unk0) * temp_f24);
-                    var_s0[var_t2].unk8 =
-                        var_s3[var_t1].unk8 + ((var_s3[var_v1].unk8 - var_s3[var_t1].unk8) * temp_f24);
+                    var_s0[var_t2].x = var_s3[var_t1].x + ((var_s3[var_v1].x - var_s3[var_t1].x) * temp_f24);
+                    var_s0[var_t2].z = var_s3[var_t1].z + ((var_s3[var_v1].z - var_s3[var_t1].z) * temp_f24);
                     if (D_8011B320[var_v0] > 0x1F) {
                         D_8011B320[var_v0] = 0x1F;
                     }
                     var_v1_3 = D_8011B320[var_v0] + (var_v0 << 5);
-                    D_8011B330[var_v1_3].unk10 = var_s3[var_t1].unk0;
-                    D_8011B330[var_v1_3].unk14 = var_s3[var_t1].unk8;
-                    D_8011B330[var_v1_3].unk18 = var_s3[var_v1].unk0;
-                    D_8011B330[var_v1_3].unk1C = var_s3[var_v1].unk8;
-                    D_8011B330[var_v1_3].x = var_s0[var_t2].unk0;
-                    D_8011B330[var_v1_3].z = var_s0[var_t2].unk8;
+                    D_8011B330[var_v1_3].unk10 = var_s3[var_t1].x;
+                    D_8011B330[var_v1_3].unk14 = var_s3[var_t1].z;
+                    D_8011B330[var_v1_3].unk18 = var_s3[var_v1].x;
+                    D_8011B330[var_v1_3].unk1C = var_s3[var_v1].z;
+                    D_8011B330[var_v1_3].x = var_s0[var_t2].x;
+                    D_8011B330[var_v1_3].z = var_s0[var_t2].z;
                     D_8011B330[var_v1_3].unkC = D_8011D0BC;
                     D_8011B320[var_v0]++;
-                    var_s0[var_t2].unkE = var_v1_3;
+                    var_s0[var_t2].unkC_union.s.unkE = var_v1_3;
                     var_t2++;
                 }
             }
             if (temp_f22 <= 0.0f) {
-                var_s0[var_t2].unkE = var_s3[var_v1].unkE;
-                var_s0[var_t2].unk0 = var_s3[var_v1].unk0;
-                var_s0[var_t2].unk8 = var_s3[var_v1].unk8;
+                var_s0[var_t2].unkC_union.s.unkE = var_s3[var_v1].unkC_union.s.unkE;
+                var_s0[var_t2].x = var_s3[var_v1].x;
+                var_s0[var_t2].z = var_s3[var_v1].z;
                 var_t2++;
             }
         }
@@ -4251,9 +4247,9 @@ s32 func_8002FF6C(s32 arg0, unk8011C8B8 *arg1, s32 arg2, Vec2f *arg3) {
     if (var_s2 >= 3) {
         if (var_s3 != arg1) {
             for (var_t1 = 0; var_t1 < var_s2; var_t1++) {
-                arg1[var_t1].unk0 = var_s3[var_t1].unk0;
-                arg1[var_t1].unk8 = var_s3[var_t1].unk8;
-                arg1[var_t1].unkE = var_s3[var_t1].unkE;
+                arg1[var_t1].x = var_s3[var_t1].x;
+                arg1[var_t1].z = var_s3[var_t1].z;
+                arg1[var_t1].unkC_union.s.unkE = var_s3[var_t1].unkC_union.s.unkE;
             }
         }
     } else {
