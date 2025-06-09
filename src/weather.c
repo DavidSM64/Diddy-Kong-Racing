@@ -1067,7 +1067,7 @@ void rain_sound(UNUSED s32 updateRate) {
     if (gWeatherSoundMask) {
         audspat_point_set_position(gWeatherSoundMask, xPos, yPos, zPos);
     } else {
-        audspat_play_sound_at_position(SOUND_RAIN, xPos, yPos, zPos, 1, &gWeatherSoundMask);
+        audspat_play_sound_at_position(SOUND_RAIN, xPos, yPos, zPos, AUDIO_POINT_FLAG_1, &gWeatherSoundMask);
     }
 }
 
