@@ -167,7 +167,7 @@ void func_8007F1E8(LevelHeader_70 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
 TextureHeader *set_animated_texture_header(TextureHeader *texHead, s32 offset);
-TextureHeader *load_texture(s32 arg0);
+TextureHeader *load_texture(s32 id);
 s32 tex_asset_size(s32 id); 
 s32 tex_cache_asset_id(s32 cacheID);
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut,

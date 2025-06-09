@@ -175,13 +175,13 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     }
     if (!sp3F) {
         for (i = 0; i < objMdl->numberOfBatches; i++) {
-            if ((objMdl->batches[i].textureIndex != 0xFF) &&
-                (objMdl->batches[i].textureIndex >= objMdl->numberOfTextures)) {
+            if (objMdl->batches[i].textureIndex != 0xFF &&
+                objMdl->batches[i].textureIndex >= objMdl->numberOfTextures) {
                 stubbed_printf(D_800E6B4C);
                 goto block_30;
             }
         }
-        if ((func_80060EA8(objMdl) == 0) && (func_80061A00(objMdl, modelID) == 0)) {
+        if (func_80060EA8(objMdl) == 0 && func_80061A00(objMdl, modelID) == 0) {
             ret = model_init_type(objMdl, flags);
             if (ret != NULL) {
                 gModelCache[ASSETCACHE_ID(cacheIndex)] = modelID;
@@ -204,7 +204,7 @@ block_30:
         D_8011D634++;
     }
 #endif
-    free_model_data((ObjectModel *) objMdl);
+    free_model_data(objMdl);
     return NULL;
 }
 
@@ -671,19 +671,20 @@ s32 func_80060C58(Vertex *vertices, s32 i1, s32 i2, s32 i3, s32 i4) {
 #undef NEARBY
 }
 
+// Returns 0 if successful, or 1 if an error occured.
 s32 func_80060EA8(ObjectModel *model) {
-    Vertex *vertices;           // s3
-    Triangle *triangles;        // spB0
-    Vec3f *spAC;                // spAC
-    s16 i;                      // s1
-    TriangleBatchInfo *batches; // spA4
-    Vec3s *spA0;                // spA0
+    Vertex *vertices;
+    Triangle *triangles;
+    Vec3f *spAC;
+    s16 i;
+    TriangleBatchInfo *batches;
+    Vec3s *spA0;
     s16 s6;
     s16 l;
     s16 q;
-    s16 k; // sp98;
+    s16 k;
     s16 a2;
-    s16 j; // s5
+    s16 j;
     s16 a0;
     s16 vertOffset;
     f32 length;
