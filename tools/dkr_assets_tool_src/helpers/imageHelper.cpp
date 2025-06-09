@@ -19,19 +19,64 @@ using namespace DkrAssetsTool;
 N64Image::N64Image(fs::path filepath, std::string format, bool alignData) : _format(format) {
     bool isColourImage = (format == "RGBA16") || (format == "RGBA32") || (format == "CI4") || (format == "CI8");
     
-    DebugHelper::assert(StringHelper::ends_with(filepath, ".png"), 
+    DebugHelper::assert_(StringHelper::ends_with(filepath, ".png"), 
         "Only .png images are supported! Invalid image path: ", filepath);
 
     void *imgData; // Can be either rgba* or ia* n64graphics types.
+    int width, height;
     
     // Load image from a .png file, getting the width and height as well.
     if(isColourImage) {
-        imgData = (void *)png2rgba(filepath.c_str(), &_width, &_height);
+        imgData = (void *)png2rgba(filepath.c_str(), &width, &height);
     } else {
-        imgData = (void *)png2ia(filepath.c_str(), &_width, &_height);
+        imgData = (void *)png2ia(filepath.c_str(), &width, &height);
     }
     
-    DebugHelper::assert(imgData != nullptr, "(N64Image::N64Image) Could not load image: ", filepath);
+    DebugHelper::assert_(imgData != nullptr, 
+        "(N64Image::N64Image) Could not load image: ", filepath);
+    
+    _complete_load_init(imgData, width, height, format, alignData, isColourImage);
+    
+    free(imgData);
+}
+
+N64Image::N64Image(uint8_t *data, size_t dataLength, std::string mimeType, std::string format, bool alignData) {
+    bool isColourImage = (format == "RGBA16") || (format == "RGBA32") || (format == "CI4") || (format == "CI8");
+    
+    DebugHelper::assert_(mimeType == "image/png",
+        "Only .png embedded images are supported!");
+
+    void *imgData; // Can be either rgba* or ia* n64graphics types.
+    int width, height;
+    
+    // Load image from .png data, getting the width and height as well.
+    if(isColourImage) {
+        imgData = (void *)pngdata2rgba(data, (int)dataLength, &width, &height);
+    } else {
+        imgData = (void *)pngdata2ia(data, (int)dataLength, &width, &height);
+    }
+    
+    DebugHelper::assert_(imgData != nullptr, 
+        "(N64Image::N64Image) Could not load image from \"", mimeType, "\" data.");
+    
+    _complete_load_init(imgData, width, height, format, alignData, isColourImage);
+    
+    free(imgData);
+}
+
+N64Image::N64Image(void *imgData, size_t width, size_t height, std::string format, bool alignData) {
+    DebugHelper::assert_(imgData != nullptr, 
+        "(N64Image::N64Image) Passed in null image data");
+        
+    bool isColourImage = (format == "RGBA16") || (format == "RGBA32") || (format == "CI4") || (format == "CI8");
+        
+    _complete_load_init(imgData, width, height, format, alignData, isColourImage);
+}
+
+void N64Image::_complete_load_init(void *imgData, int width, int height, std::string format, bool alignData, bool isColourImage) {
+    _width = width;
+    _height = height;
+    _format = format;
     
     size_t size = ImageHelper::image_size(_width, _height, _format);
     
@@ -50,7 +95,6 @@ N64Image::N64Image(fs::path filepath, std::string format, bool alignData) : _for
     } else {
         ia2raw(&_data[0], (ia*)imgData, _width, _height, get_bit_depth());
     }
-    
 }
 
 N64Image::N64Image(int width, int height, std::string format, bool alignData) : _width(width), _height(height), _format(format) {
@@ -367,14 +411,14 @@ void N64Image::save(fs::path finalFilepath) {
         imgData = get_img_as_rgba32();
         
         int result = rgba2png(finalFilepath.c_str(), reinterpret_cast<rgba*>(imgData), _width, _height); // Save RGBA data as a .png file.
-        DebugHelper::assert(result == 1, "(N64Image::save) stbi_write_png returned ", result, ". Could not save image ", finalFilepath);
-        DebugHelper::assert(FileHelper::path_exists(finalFilepath), "(N64Image::save) Image ", finalFilepath, " could not be saved.");
+        DebugHelper::assert_(result == 1, "(N64Image::save) stbi_write_png returned ", result, ". Could not save image ", finalFilepath);
+        DebugHelper::assert_(FileHelper::path_exists(finalFilepath), "(N64Image::save) Image ", finalFilepath, " could not be saved.");
     } else {
         // Save IA image.
         imgData = get_img_as_ia16();
         int result = ia2png(finalFilepath.c_str(), reinterpret_cast<ia*>(imgData), _width, _height); // Save IA data as a .png file.
-        DebugHelper::assert(result == 1, "(N64Image::save) stbi_write_png returned ", result, ". Could not save image ", finalFilepath);
-        DebugHelper::assert(FileHelper::path_exists(finalFilepath), "(N64Image::save) Image ", finalFilepath, " could not be saved.");
+        DebugHelper::assert_(result == 1, "(N64Image::save) stbi_write_png returned ", result, ". Could not save image ", finalFilepath);
+        DebugHelper::assert_(FileHelper::path_exists(finalFilepath), "(N64Image::save) Image ", finalFilepath, " could not be saved.");
     }
     delete[] imgData;
 }
@@ -548,8 +592,24 @@ void ImageHelper::guess_texture_format_and_render_mode(fs::path filepath, std::s
     // Load the image and take a guess from the pixels.
     
     int imgWidth, imgHeight;
-    
     rgba *data = (rgba*)png2rgba(filepath.c_str(), &imgWidth, &imgHeight);
+    std::string guessFormat, guessRenderMode;
+    
+    guess_texture_format_and_render_mode(data, imgWidth, imgHeight, guessFormat, guessRenderMode, ignoreTextureSize);
+    
+    if(outFormat.empty()) {
+        outFormat = guessFormat;
+    }
+    if(outRenderMode.empty()) {
+        outRenderMode = guessRenderMode;
+    }
+}
+    
+void ImageHelper::guess_texture_format_and_render_mode(rgba *data, int imgWidth, int imgHeight, std::string &outFormat, std::string &outRenderMode, bool ignoreTextureSize) {
+    outFormat = "";
+    outRenderMode = "";
+
+    // Take a guess from the pixels.
     
     int numberOfPixels = imgWidth * imgHeight;
     
@@ -568,44 +628,41 @@ void ImageHelper::guess_texture_format_and_render_mode(fs::path filepath, std::s
         }
     }
     
-    if(outFormat.empty()) {
-        if(hasColor) {
-            // Color image (RGBA16, RGBA32)
-            if(!ignoreTextureSize && (numberOfPixels > 32*32)) {
-                // Can't use 32-bit formats at this point
-                if(numberOfPixels > 64*32) {
-                    DebugHelper::error("(ImageHelper::guess_texture_format_and_render_mode) ", 
-                        filepath.filename(), " is too large for a colored image!");
-                } else {
-                    outFormat = "RGBA16";
-                }
+    if(hasColor) {
+        // Color image (RGBA16, RGBA32)
+        if(!ignoreTextureSize && (numberOfPixels > 32*32)) {
+            // Can't use 32-bit formats at this point
+            if(numberOfPixels > 64*32) {
+                DebugHelper::error("(ImageHelper::guess_texture_format_and_render_mode) Image was too large for a colored image! Size was ",
+                    imgWidth, " by ", imgHeight, ". Cannot have more than 64*32 pixels!");
             } else {
-                outFormat = (isSemiTransparent ? "RGBA32" : "RGBA16");
+                outFormat = "RGBA16";
             }
         } else {
-            // Grayscale image (I4, IA4, I8, IA8, IA16)
-            if(!ignoreTextureSize && (numberOfPixels > 64*32)) {
-                // Can't use 16-bit formats at this point
-                if(numberOfPixels > 64*64) {
-                    // Can't use 8-bit formats at this point.
-                    if(numberOfPixels > 128*64) {
-                        DebugHelper::error("(ImageHelper::guess_texture_format_and_render_mode) ", 
-                            filepath.filename(), " is too large for a grayscale image!");
-                    } else {
-                        outFormat = (isTransparent ? "IA4" : "I4");
-                    }
+            outFormat = (isSemiTransparent ? "RGBA32" : "RGBA16");
+        }
+    } else {
+        // Grayscale image (I4, IA4, I8, IA8, IA16)
+        if(!ignoreTextureSize && (numberOfPixels > 64*32)) {
+            // Can't use 16-bit formats at this point
+            if(numberOfPixels > 64*64) {
+                // Can't use 8-bit formats at this point.
+                if(numberOfPixels > 128*64) {
+                    DebugHelper::error("(ImageHelper::guess_texture_format_and_render_mode) Image was too large for a grayscale image! Size was ",
+                        imgWidth, " by ", imgHeight, ". Cannot have more than 128*64 pixels!");
                 } else {
-                    outFormat = (isTransparent ? "IA8" : "I8");
+                    outFormat = (isTransparent ? "IA4" : "I4");
                 }
             } else {
-                outFormat = (isTransparent ? "IA16" : "I8");
+                outFormat = (isTransparent ? "IA8" : "I8");
             }
+        } else {
+            outFormat = (isTransparent ? "IA16" : "I8");
         }
     }
+
+    outRenderMode = (isTransparent ? "TRANSPARENT" : "OPAQUE");
     
-    if(outRenderMode.empty()) {
-        outRenderMode = (isTransparent ? "TRANSPARENT" : "OPAQUE");
-    }
 }
 
 bool ImageHelper::guess_if_texture_is_animated(fs::path imgFilepath) {

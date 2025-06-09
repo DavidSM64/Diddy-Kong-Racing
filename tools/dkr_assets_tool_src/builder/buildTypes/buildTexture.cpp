@@ -1,6 +1,7 @@
 #include "buildTexture.h"
 
-#include <cmath> // for std::round
+#include <cmath>
+#include <mutex>
 
 #include "helpers/assetsHelper.h"
 #include "helpers/dataHelper.h"
@@ -13,6 +14,7 @@
 #include "libs/bytes_view.hpp"
 
 #include "builder/buildInfoCollection.h"
+
 
 using namespace DkrAssetsTool;
 
@@ -130,7 +132,7 @@ void BuildTexture::build(BuildInfo &info) {
     if(is3dTexture) {
         // Calculate sha1 of texture data, then add it to the texture cache. Need this so that we can reuse existing textures.
         std::string textureSha1 = DataHelper::make_sha1_hash_of_bytes(BytesView(info.out));
-        textureCache.add_texture_to_sha1_cache(textureSha1, info.get_build_id());
+        textureCache.add_texture_to_sha1_cache(textureSha1, info.get_file_index());
     }
     
     bool debugKeepUncompressed = GlobalSettings::get_value<bool>("/debug/keep-uncompressed", false);
@@ -162,44 +164,17 @@ void BuildTexture::build(BuildInfo &info) {
     }
 }
 
-size_t BuildTexture::build_deferred(BuildInfo &baseInfo, fs::path pathToImage) {
-    std::string format, renderMode;
-    ImageHelper::guess_texture_format_and_render_mode(pathToImage, format, renderMode);
+std::mutex buildDeferredTexMutex;
+
+size_t build_deferred_common(BuildInfo &baseInfo, std::vector<N64Image> &images, BuildTexture::DeferredTextureInfo &textureInfo) {
+    std::vector<uint8_t> out(textureInfo.totalSize);
     
-    std::vector<fs::path> texturePaths = ImageHelper::get_multiple_textures_from_one(pathToImage);
     
-    DebugHelper::assert_(texturePaths.size() > 0, 
-        "(BuildTexture::build_deferred) ImageHelper::get_multiple_textures_from_one() failed for ", pathToImage.filename());
-    
-    size_t totalSize = 0;
-    
-    for(auto &path : texturePaths) {
-        int width, height;
-        ImageHelper::get_width_and_height(path, width, height);
-        totalSize += DataHelper::align16(sizeof(TextureHeader) + ImageHelper::image_size(width, height, format));
-    }
-    
-    DebugHelper::assert_(totalSize > 0, 
-        "(BuildTexture::build_deferred) Could not calculate texture size for ", pathToImage.filename());
-    
-    int frameAdvanceDelay = 0;
-    
-    if(texturePaths.size() > 1) {
-        float animTexTiming = ImageHelper::guess_animated_texture_timing(pathToImage);
-        frameAdvanceDelay = std::round(animTexTiming * TEXTURE_FPS);
-    }
-    
-    std::string wrapS, wrapT;
-    ImageHelper::guess_texture_wrap_mode(pathToImage, wrapS, wrapT);
-    bool wrapSClamped = wrapS == "clamp";
-    bool wrapTClamped = wrapT == "clamp";
-    
-    std::vector<uint8_t> out(totalSize);
+    bool wrapSClamped = textureInfo.wrapS == "clamp";
+    bool wrapTClamped = textureInfo.wrapT == "clamp";
     
     size_t offset = 0;
-    for(auto &path : texturePaths) {
-        N64Image img(path, format);
-        
+    for(N64Image &img : images) {
         int imgWidth = img.get_width();
         int imgHeight = img.get_height();
         
@@ -207,18 +182,18 @@ size_t BuildTexture::build_deferred(BuildInfo &baseInfo, fs::path pathToImage) {
         offset += sizeof(TextureHeader);
         uint8_t *textureData = &out[offset];
         
-        uint8_t formatVal = DataHelper::vector_index_of<std::string>(TEXTURE_FORMAT_INT_TO_STRING, format);
-        uint8_t renderModeVal = DataHelper::vector_index_of<std::string>(TEXTURE_RENDER_MODES, renderMode);
+        uint8_t formatVal = DataHelper::vector_index_of<std::string>(TEXTURE_FORMAT_INT_TO_STRING, textureInfo.format);
+        uint8_t renderModeVal = DataHelper::vector_index_of<std::string>(TEXTURE_RENDER_MODES, textureInfo.renderMode);
         
         header->width = imgWidth;
         header->height = imgHeight;
         header->format = (renderModeVal << 4) | formatVal;
         header->numberOfInstances = 1;
-        header->numOfTextures = texturePaths.size();
+        header->numOfTextures = images.size();
         header->textureSize = DataHelper::align16(img.size() + sizeof(TextureHeader));
         
         if(header->numOfTextures > 1) {
-            header->frameAdvanceDelay = frameAdvanceDelay;
+            header->frameAdvanceDelay = textureInfo.frameAdvanceDelay;
         }
         
         int16_t flags = 0;
@@ -231,7 +206,9 @@ size_t BuildTexture::build_deferred(BuildInfo &baseInfo, fs::path pathToImage) {
             flags |= (1 << 7);
         }
         
-        img.flip_vertically();
+        if(textureInfo.shouldFlip) {
+            img.flip_vertically();
+        }
         
         if(!DataHelper::is_power_of_two(imgWidth)) {
             flags |= (1 << 10);
@@ -244,34 +221,109 @@ size_t BuildTexture::build_deferred(BuildInfo &baseInfo, fs::path pathToImage) {
         offset += img.size();
     }
     
-    
     // Need to check the texture cache to see if the texture already exists or not. 
     // Avoiding duplicate textures saves a lot of space in the ROM file.
+    
     BuildTextureCache &textureCache = baseInfo.get_texture_cache();
     std::string textureSha1 = DataHelper::make_sha1_hash_of_bytes(BytesView(out));
-    std::optional<std::string> foundTexBuildId = textureCache.get_build_id_of_texture_hash(textureSha1);
-    if(foundTexBuildId.has_value()) {
-        DebugHelper::info_verbose("Found existing texture for ", pathToImage.filename(), ". Will use ID \"", foundTexBuildId.value(), "\".");
-        return AssetsHelper::get_asset_index("ASSET_TEXTURES_3D", foundTexBuildId.value());
+    std::optional<int> foundTexIndex = textureCache.get_index_of_texture_hash(textureSha1);
+    if(foundTexIndex.has_value()) {
+        return foundTexIndex.value();
     }
-    
-    // Add the new texture to the cache.
-    std::string buildId = baseInfo.get_build_id() + "_" + pathToImage.stem().generic_string();
-    DebugHelper::info_verbose("Created new texture: ", pathToImage.filename(), ", ID: ", buildId);
-    textureCache.add_texture_to_sha1_cache(textureSha1, buildId);
-    
-    BuildInfoCollection &collection = baseInfo.get_collection();
-    
-    StringHelper::make_uppercase(buildId);
     
     bool debugKeepUncompressed = GlobalSettings::get_value<bool>("/debug/keep-uncompressed", false);
     
     if(debugKeepUncompressed) {
         fs::path outUncompressedPath = GlobalSettings::get_decomp_path("build_subpath", "build/");
         outUncompressedPath /= "debug/custom-textures";
-        outUncompressedPath /= buildId + ".bin";
+        outUncompressedPath /= textureInfo.buildId + ".bin";
         FileHelper::write_binary_file(out, outUncompressedPath, true);
     }
     
-    return collection.add_deferred_build_info("ASSET_TEXTURES_3D", buildId, out, baseInfo.get_path_to_directory(), baseInfo.get_info_context());
+    size_t outIndex = baseInfo.get_collection().add_deferred_build_info("ASSET_TEXTURES_3D", textureInfo.buildId, baseInfo.get_build_id(), baseInfo.get_section_build_id(), out, 
+        baseInfo.get_path_to_directory(), baseInfo.get_info_context());
+        
+    // Add the new texture to the cache.
+    textureCache.add_texture_to_sha1_cache(textureSha1, outIndex);
+    
+    return outIndex;
+}
+
+size_t BuildTexture::build_deferred(BuildInfo &baseInfo, fs::path pathToImage, DeferredTextureInfo textureInfo) {
+    if(textureInfo.format.empty() || textureInfo.renderMode.empty()) {
+        ImageHelper::guess_texture_format_and_render_mode(pathToImage, textureInfo.format, textureInfo.renderMode);
+    }
+    
+    std::vector<fs::path> texturePaths = ImageHelper::get_multiple_textures_from_one(pathToImage);
+    
+    DebugHelper::assert_(texturePaths.size() > 0, 
+        "(BuildTexture::build_deferred) ImageHelper::get_multiple_textures_from_one() failed for ", pathToImage.filename());
+    
+    std::vector<N64Image> images;
+    images.reserve(texturePaths.size());
+    
+    for(auto &path : texturePaths) {
+        int width, height;
+        ImageHelper::get_width_and_height(path, width, height);
+        textureInfo.totalSize += DataHelper::align16(sizeof(TextureHeader) + ImageHelper::image_size(width, height, textureInfo.format));
+        images.emplace_back(path, textureInfo.format, true);
+    }
+    
+    DebugHelper::assert_(textureInfo.totalSize > 0, 
+        "(BuildTexture::build_deferred) Could not calculate texture size for ", pathToImage.filename());
+    
+    if(texturePaths.size() > 1) {
+        float animTexTiming = ImageHelper::guess_animated_texture_timing(pathToImage);
+        textureInfo.frameAdvanceDelay = std::round(animTexTiming * TEXTURE_FPS);
+    }
+    
+    if(textureInfo.wrapS.empty() || textureInfo.wrapT.empty()) {
+        ImageHelper::guess_texture_wrap_mode(pathToImage, textureInfo.wrapS, textureInfo.wrapT);
+    }
+    
+    textureInfo.buildId = baseInfo.get_build_id() + "_" + pathToImage.stem().generic_string();
+    StringHelper::make_uppercase(textureInfo.buildId);
+    
+    return build_deferred_common(baseInfo, images, textureInfo);
+}
+
+size_t BuildTexture::build_deferred(BuildInfo &baseInfo, uint8_t *imgData, size_t imgDataLength, std::string mimeType, 
+  std::string imgName, DeferredTextureInfo textureInfo) {
+    DebugHelper::assert_(mimeType == "image/png", 
+        "(BuildTexture::build_deferred) Only embedded .png files are supported! mimeType was \"", mimeType, "\"");
+    
+    int width, height;
+    void *data = pngdata2rgba(imgData, (int)imgDataLength, &width, &height);
+    
+    DebugHelper::assert_(data != NULL, 
+        "(BuildTexture::build_deferred) Failed to load color PNG data from ", imgName);
+    
+    if(textureInfo.format.empty() || textureInfo.renderMode.empty()) {
+        ImageHelper::guess_texture_format_and_render_mode((rgba*)data, width, height, textureInfo.format, textureInfo.renderMode);
+    }
+    
+    bool isColourImage = (textureInfo.format == "RGBA16") || (textureInfo.format == "RGBA32") || (textureInfo.format == "CI4") || (textureInfo.format == "CI8");
+    
+    if(!isColourImage) {
+        // Free colour data, then load it as grayscale data instead.
+        free(data); 
+        data = pngdata2ia(imgData, (int)imgDataLength, &width, &height);
+        DebugHelper::assert_(data != NULL, 
+            "(BuildTexture::build_deferred) Failed to load grayscale PNG data from ", imgName);
+    }
+    
+    // Embedded images are (currently) assumed to not be animated.
+    std::vector<N64Image> images;
+    images.reserve(1);
+    
+    textureInfo.totalSize = DataHelper::align16(sizeof(TextureHeader) + ImageHelper::image_size(width, height, textureInfo.format));
+    
+    images.emplace_back(data, width, height, textureInfo.format, true);
+    
+    free(data);
+    
+    textureInfo.buildId = baseInfo.get_build_id() + "_" + imgName;
+    StringHelper::make_uppercase(textureInfo.buildId);
+    
+    return build_deferred_common(baseInfo, images, textureInfo);
 }

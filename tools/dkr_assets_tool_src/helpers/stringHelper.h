@@ -14,6 +14,9 @@ namespace StringHelper {
     void make_lowercase(std::string &input);
     void make_uppercase(std::string &input);
     
+    std::string lowercase(std::string input);
+    std::string uppercase(std::string input);
+    
     bool starts_with(const std::string &input, const std::string &sub);
     bool ends_with(const std::string &input, const std::string &sub);
 
@@ -39,6 +42,9 @@ namespace StringHelper {
     
     // Returns the index of the closing brace of the first opening brace encountered. Or -1 if none was encountered.
     int find_closing_brace(const std::string &input, int inputOffset=0);
+    
+    // Removes all single-line (//) and multi-line comments (/**/) from a block of C code.
+    std::string remove_comments_from_c_code(std::string code);
     
     // Converts `FOO_BAR` to `FooBar`.
     std::string upper_snake_case_to_pascal_case(const std::string &input);

@@ -212,7 +212,9 @@ void AssetBuilder::build_all(const fs::path &dstPath) {
     BuildInfoContext infoContext(cContext, textureCache, collection);
     
     fs::path includeFolder = GlobalSettings::get_decomp_path("include_subpath", "include/");
+    fs::path srcFolder = GlobalSettings::get_decomp_path("src_subpath", "src/");
     CEnumsHelper::load_enums_from_file(cContext, includeFolder / "enums.h");
+    CEnumsHelper::load_enums_from_file(cContext, srcFolder / "textures_sprites.h"); // For RenderFlags enum.
     
     // Need to do this here for Object Maps to get built correctly.
     CEnumsHelper::load_enums_from_file(cContext, includeFolder / "object_behaviors.h");
@@ -250,12 +252,18 @@ void AssetBuilder::build_all(const fs::path &dstPath) {
             collection.add_build_info(sectionBuildId, fileBuildId, assetJson, assetJson.get_filepath().parent_path(), infoContext);
         }
     }
-    
+   
     // Build all the assets
     collection.run_builds([](BuildInfo &info) {
-        std::string type = info.get_type();
-        builderMap[type](info);
+        if(DebugHelper::get().has_error_occured()) {
+            return; // Do NOT process any more if an error occured.
+        }
+        builderMap[info.get_type()](info);
     }, sectionIds);
+    
+    if(DebugHelper::get().has_error_occured()) {
+        throw 1; // End the program if one of the threads had an error.
+    }
     
     // Second loop to create the tables for the asset sections.
     for(size_t sectionIndex = 0; sectionIndex < numberOfAssetSections; sectionIndex++) {
@@ -295,12 +303,24 @@ void AssetBuilder::build_all(const fs::path &dstPath) {
                 table.add_entry(info.out.size(), highestBitSet);
             } else { 
                 // ObjectAnimationIdsTable
-                const JsonFile &infoJson = info.get_src_json_file();
-                std::string modelBuildId = infoJson.get_string("/for-model");
-                int modelIndex = AssetsHelper::get_asset_index("ASSET_OBJECT_MODELS", modelBuildId);
-                DebugHelper::assert_(modelIndex >= 0, 
-                    "(AssetBuilder::build_all) Could not find object model \"", modelBuildId, "\" in ASSETS_OBJECT_MODELS section.");
-                table.add_object_animation_ids_entry(modelIndex);
+                if(info.is_deferred()) {
+                   std::string deferredSectionId = info.get_deferred_from_section_build_id();
+                   if(deferredSectionId != "ASSET_OBJECT_MODELS") {
+                       return; // Skip if not an object model. (Should never be the case?)
+                   }
+                   std::string modelBuildId = info.get_deferred_from_build_id();
+                   int modelIndex = AssetsHelper::get_asset_index("ASSET_OBJECT_MODELS", modelBuildId);
+                   DebugHelper::assert_(modelIndex >= 0,
+                        "(AssetBuilder::build_all) Could not find object model \"", modelBuildId, "\" in ASSETS_OBJECT_MODELS section.");
+                   table.add_object_animation_ids_entry(modelIndex);
+                } else {
+                    const JsonFile &infoJson = info.get_src_json_file();
+                    std::string modelBuildId = infoJson.get_string("/for-model");
+                    int modelIndex = AssetsHelper::get_asset_index("ASSET_OBJECT_MODELS", modelBuildId);
+                    DebugHelper::assert_(modelIndex >= 0,
+                        "(AssetBuilder::build_all) Could not find object model \"", modelBuildId, "\" in ASSETS_OBJECT_MODELS section.");
+                    table.add_object_animation_ids_entry(modelIndex);
+                }
             }
         });
         
@@ -308,7 +328,7 @@ void AssetBuilder::build_all(const fs::path &dstPath) {
         
         const std::vector<uint8_t> &tableData = tableView.data_vector();
         
-        collection.add_deferred_build_info(sectionBuildId, sectionBuildId, tableData, "", infoContext);
+        collection.add_deferred_build_info(sectionBuildId, sectionBuildId, "", "", tableData, "", infoContext);
     }
     
     //collection.print_section_counts();

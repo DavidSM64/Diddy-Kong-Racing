@@ -89,8 +89,8 @@ void build_level_name(BuildInfo &info, const JsonFile &jsonFile) {
         BuildInfoCollection &collection = info.get_collection();
         std::string buildId = info.get_build_id() + deferInfo.idPostfix;
         
-        collection.add_deferred_build_info(levelNamesSectionBuildId, buildId, info.get_file_index(), 
-            out, info.get_dst_folder() / deferInfo.outputPath, info.get_info_context());
+        collection.add_deferred_build_info(levelNamesSectionBuildId, buildId, info.get_build_id(), info.get_section_build_id(),
+            info.get_file_index(), out, info.get_dst_folder() / deferInfo.outputPath, info.get_info_context());
     }
 }
 
