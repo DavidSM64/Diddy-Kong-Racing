@@ -1404,7 +1404,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             entry->common.y = spD4[0];
             entry->common.z = spB4[0];
             entry->unkC = sp94[0];
-            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, 1);
+            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
             newRacerObj->segment.level_entry = NULL;
             newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
@@ -1420,7 +1420,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             entry->common.y = spD4[0];
             entry->common.z = spB4[0];
             entry->unkC = sp94[0];
-            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, 1);
+            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
             newRacerObj->segment.level_entry = NULL;
             newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
@@ -1477,7 +1477,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 entry->common.x = 0;
                 entry->common.y = 0;
                 entry->common.z = 0;
-                newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, 1);
+                newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
                 newRacerObj->properties.common.unk0 = i2;
                 newRacerObj->segment.level_entry = NULL;
             }
@@ -1654,7 +1654,7 @@ void transform_player_vehicle(void) {
     spawnObj.common.z = gTransformPosZ;
     spawnObj.unkC = gTransformAngleY;
     set_taj_status(TAJ_DIALOGUE);
-    player = spawn_object(&spawnObj.common, 0x10 | 0x1);
+    player = spawn_object(&spawnObj.common, OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK01);
     gNumRacers = 1;
     (*gRacers)[PLAYER_ONE] = player;
     gRacersByPort[PLAYER_ONE] = player;
@@ -2708,7 +2708,7 @@ void obj_update(s32 updateRate) {
                         }
                     }
                     if (obj->segment.header->unk72 != 0xFF) {
-                        func_80014090(obj, updateRate, obj->segment.header);
+                        func_80014090(obj, updateRate);
                     }
                 }
             }
@@ -7488,7 +7488,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
                 viewportCount = VIEWPORT_LAYOUT_2_PLAYERS;
             }
             for (i = 0; i < viewportCount;) {
-                newObj = spawn_object(&newObjEntry, 1);
+                newObj = spawn_object(&newObjEntry, OBJECT_SPAWN_UNK01);
                 if (newObj != NULL) {
                     newObj->segment.level_entry = NULL;
                     obj_init_animcamera(obj, newObj);
@@ -7814,7 +7814,7 @@ void mode_init_taj_race(void) {
         newRacerEntry.playerIndex = 4;
         newRacerEntry.common.objectID = ASSET_OBJECT_ID_FLYINGCARPET;
         func_800619F4(0);
-        racerObj = spawn_object(&newRacerEntry.common, 1);
+        racerObj = spawn_object(&newRacerEntry.common, OBJECT_SPAWN_UNK01);
         (*gRacers)[1] = racerObj;
         gRacersByPosition[1] = racerObj;
         gRacersByPort[1] = racerObj;

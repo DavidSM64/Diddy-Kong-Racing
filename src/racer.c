@@ -4544,7 +4544,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                         newObject.z = 0;
                         newObject.objectID = ASSET_OBJECT_ID_CHECKARROW;
                         newObject.size = sizeof(LevelObjectEntryCommon);
-                        tempRacer->challengeMarker = spawn_object(&newObject, 1);
+                        tempRacer->challengeMarker = spawn_object(&newObject, OBJECT_SPAWN_UNK01);
                         if (tempRacer->challengeMarker) {
                             tempRacer->challengeMarker->segment.level_entry = NULL;
                             tempRacer->challengeMarker->segment.object.opacity = 128;
@@ -7217,7 +7217,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                 newObject.z = obj->segment.trans.z_position + (racer->oz1 * objDist);
                 newObject.size = sizeof(LevelObjectEntryCommon);
                 newObject.objectID = objID;
-                spawnedObj = spawn_object(&newObject, 1);
+                spawnedObj = spawn_object(&newObject, OBJECT_SPAWN_UNK01);
                 if (spawnedObj != NULL) {
                     spawnedObj->segment.level_entry = NULL;
                     spawnedObj->segment.x_velocity = obj->segment.x_velocity - (racer->ox1 * velocity);
@@ -7650,7 +7650,7 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
             i = number;
             do {
                 if (get_current_level_race_type() != RACETYPE_CHALLENGE) {
-                    bananaObj = spawn_object(&newObject, 1);
+                    bananaObj = spawn_object(&newObject, OBJECT_SPAWN_UNK01);
                     if (bananaObj != NULL) {
                         bananaObj->segment.level_entry = NULL;
                         banana = &bananaObj->unk64->banana;

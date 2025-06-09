@@ -1334,7 +1334,7 @@ void spawn_skydome(s32 objectID) {
     spawnObject.z = 0;
     spawnObject.size = sizeof(LevelObjectEntryCommon);
     spawnObject.objectID = objectID;
-    gSkydomeSegment = spawn_object(&spawnObject, 2);
+    gSkydomeSegment = spawn_object(&spawnObject, OBJECT_SPAWN_SHADOW);
     if (gSkydomeSegment != NULL) {
         gSkydomeSegment->segment.level_entry = NULL;
         gSkydomeSegment->objectID = -1;

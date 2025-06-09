@@ -215,7 +215,7 @@ Object_68 *model_init_type(ObjectModel *model, s32 flags) {
     Vertex *vertex;
     Vertex *mdlVertex;
 
-    if ((model->numberOfAnimations != 0) && (flags & OBJECT_SPAWN_ANIMATION)) {
+    if (model->numberOfAnimations != 0 && (flags & OBJECT_SPAWN_ANIMATION)) {
         temp = ((model->numberOfVertices * 2) * sizeof(Vertex)) + 36;
         result = (Object_68 *) mempool_alloc((model->unk4A * 6) + temp, COLOUR_TAG_BLUE);
         if (result == NULL) {
@@ -225,7 +225,7 @@ Object_68 *model_init_type(ObjectModel *model, s32 flags) {
         result->vertices[1] = (Vertex *) ((u8 *) result + (model->numberOfVertices * sizeof(Vertex)) + 36);
         result->vertices[2] = (Vertex *) ((u8 *) result + temp);
         result->modelType = MODELTYPE_ANIMATED;
-    } else if ((model->unk40 != NULL) && (flags & OBJECT_SPAWN_UNK01)) {
+    } else if (model->unk40 != NULL && (flags & OBJECT_SPAWN_UNK01)) {
         temp = (model->numberOfVertices * sizeof(Vertex)) + 36;
         result = (Object_68 *) mempool_alloc(temp, COLOUR_TAG_BLUE);
         if (result == NULL) {
