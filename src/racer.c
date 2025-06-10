@@ -192,8 +192,8 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     s32 numRacers;
     f32 *miscAsset3;
     Object **racerGroup;
-    Object_64 *sp5C;
-    Object_64 *sp58;
+    Object_Racer *sp5C;
+    Object_Racer *sp58;
     AIBehaviourTable *sp54;
     LevelHeader *header;
     s32 pad_sp4C;
@@ -231,13 +231,13 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     var_t0 = 0;
     var_t4 = PLAYER_COMPUTER;
     for (someFlag = TRUE; index < numRacers; index++) {
-        sp5C = racerGroup[index]->unk64;
-        if ((Object_Racer *) sp5C == racer) {
+        sp5C = &racerGroup[index]->unk64->racer;
+        if (sp5C == racer) {
             someFlag = FALSE;
             racerID = index;
         }
 
-        if (sp5C->racer.playerIndex == PLAYER_COMPUTER) {
+        if (sp5C->playerIndex == PLAYER_COMPUTER) {
             var_t0++;
             if (someFlag) {
                 var_t5++;
@@ -256,32 +256,30 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
 
     temp_v0 = func_80023568();
-    if (gRaceStartTimer == 0) {
-        if (racer->vehicleID != VEHICLE_LOOPDELOOP) {
-            index = racerID - 1;
-            if (racer->unk20B < racerID && index >= 0 && index < numRacers) {
-                sp5C = racerGroup[index]->unk64;
-                if (sp5C->racer.playerIndex != PLAYER_COMPUTER) {
-                    if (temp_v0 == 0) {
-                        play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 3);
-                    } else {
-                        racer_boss_sound_spatial(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                                 obj->segment.trans.z_position, 5);
-                    }
-                    play_random_character_voice(racerGroup[index], SOUND_VOICE_CHARACTER_POSITIVE, 8, 2);
+    if (gRaceStartTimer == 0 && racer->vehicleID != VEHICLE_LOOPDELOOP) {
+        index = racerID - 1;
+        if (racer->unk20B < racerID && index >= 0 && index < numRacers) {
+            sp5C = &racerGroup[index]->unk64->racer;
+            if (sp5C->playerIndex != PLAYER_COMPUTER) {
+                if (temp_v0 == 0) {
+                    play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 3);
+                } else {
+                    racer_boss_sound_spatial(obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                             obj->segment.trans.z_position, 5);
                 }
+                play_random_character_voice(racerGroup[index], SOUND_VOICE_CHARACTER_POSITIVE, 8, 2);
             }
-            tempRacerIndex = racerID + 1;
-            if (racerID < racer->unk20B && tempRacerIndex >= 0 && tempRacerIndex < numRacers) {
-                sp5C = racerGroup[tempRacerIndex]->unk64;
-                if (sp5C->racer.playerIndex != PLAYER_COMPUTER) {
-                    play_random_character_voice(racerGroup[(racerID + 1)], SOUND_VOICE_KRUNCH_NEGATIVE1, 8, 2);
-                    if (temp_v0 == 0) {
-                        play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 3);
-                    } else {
-                        racer_boss_sound_spatial(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                                 obj->segment.trans.z_position, 3);
-                    }
+        }
+        tempRacerIndex = racerID + 1;
+        if (racerID < racer->unk20B && tempRacerIndex >= 0 && tempRacerIndex < numRacers) {
+            sp5C = &racerGroup[tempRacerIndex]->unk64->racer;
+            if (sp5C->playerIndex != PLAYER_COMPUTER) {
+                play_random_character_voice(racerGroup[(racerID + 1)], SOUND_VOICE_KRUNCH_NEGATIVE1, 8, 2);
+                if (temp_v0 == 0) {
+                    play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 3);
+                } else {
+                    racer_boss_sound_spatial(obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                             obj->segment.trans.z_position, 3);
                 }
             }
         }
@@ -292,33 +290,33 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     sp5C = NULL;
     obj = func_8001B7A8(racer, 1, &sp94);
     if (obj != NULL) {
-        sp5C = obj->unk64;
+        sp5C = &obj->unk64->racer;
     }
     sp58 = NULL;
     obj = func_8001B7A8(racer, -1, &sp90);
     if (obj != NULL) {
-        sp58 = obj->unk64;
+        sp58 = &obj->unk64->racer;
     }
     racerCharacterId = racer->characterId;
     if (sp5C != NULL) {
-        sp3F = sp5C->racer.characterId;
+        sp3F = sp5C->characterId;
     }
-    if (var_t0 < 7 && get_trophy_race_world_id() == 0 && func_80023568() == 0 && is_taj_challenge() == 0) {
+
+    if (var_t0 < 7 && get_trophy_race_world_id() == 0 && func_80023568() == 0 && !is_taj_challenge()) {
         if (gRaceStartTimer == 100) {
             racer->aiSkill = rand_range(AI_MASTER, AI_HARD);
         }
+    } else if (get_trophy_race_world_id() != 0) {
+        racer->aiSkill = header->unk16[racerCharacterId];
     } else {
-        if (get_trophy_race_world_id() != 0) {
-            racer->aiSkill = header->unk16[racerCharacterId];
-        } else {
-            racer->aiSkill = header->unkC[racerCharacterId];
-        }
+        racer->aiSkill = header->unkC[racerCharacterId];
     }
+
     if (D_8011D544 != 0.0f) {
         racer->unk1CA = D_800DCDA0[racer->racePosition];
     }
     index = racer->aiSkill - 2;
-    index = (index) << 2;
+    index <<= 2;
     if (index <= 300.0f - D_8011D544) {
         gCurrentRacerInput |= A_BUTTON;
     }
@@ -354,7 +352,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
         }
         if (racer->balloon_quantity != 0) {
             if (gRacerAIBalloonActionTable[balloonType] == 1) {
-                if (sp5C != NULL && sp5C->racer.playerIndex == PLAYER_COMPUTER) {
+                if (sp5C != NULL && sp5C->playerIndex == PLAYER_COMPUTER) {
                     if (var_t4 < 4) {
                         racer->unk1C6 = miscAsset2[racerCharacterId] * 60;
                         racer->unk1C9 = 4;
@@ -365,7 +363,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
                 }
             }
             if (gRacerAIBalloonActionTable[balloonType] == 2) {
-                if (sp58 != NULL && sp58->racer.playerIndex == PLAYER_COMPUTER) {
+                if (sp58 != NULL && sp58->playerIndex == PLAYER_COMPUTER) {
                     if (var_t4 < 4) {
                         racer->unk1C6 = miscAsset2[racerCharacterId] * 60;
                         racer->unk1C9 = 5;
@@ -402,7 +400,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
             gCurrentButtonsReleased |= Z_TRIG;
         }
         racer->unk1C9 = 0;
-        if (sp58 != NULL && sp58->racer.playerIndex != PLAYER_COMPUTER && sp90 < 200.0f && var_t5 != 0 && var_t4 < 3 &&
+        if (sp58 != NULL && sp58->playerIndex != PLAYER_COMPUTER && sp90 < 200.0f && var_t5 != 0 && var_t4 < 3 &&
             miscAsset1[(racerCharacterId * 10) + sp3F] < 5) {
             racer->unk1C9 = 5;
         }
@@ -442,8 +440,8 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
     switch (racer->unk1C9) {
         case 0:
-            if (sp5C != NULL && sp5C->racer.playerIndex == PLAYER_COMPUTER && sp5C->racer.unk1C9 == 0) {
-                if (sp5C->racer.unk1CA == racer->unk1CA && 100.0 > sp94) {
+            if (sp5C != NULL && sp5C->playerIndex == PLAYER_COMPUTER && sp5C->unk1C9 == 0) {
+                if (sp5C->unk1CA == racer->unk1CA && 100.0 > sp94) {
                     racer->unk1CA++;
                     if (racer->unk1CA > 3) {
                         racer->unk1CA = 3;
@@ -453,12 +451,12 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
             break;
         case 4:
             if (sp5C != NULL) {
-                racer->unk1BA = sp5C->racer.unk1BA;
+                racer->unk1BA = sp5C->unk1BA;
             }
             break;
         case 5:
             if (sp58 != NULL) {
-                racer->unk1BA = sp58->racer.unk1BA;
+                racer->unk1BA = sp58->unk1BA;
             }
             break;
     }
@@ -1106,7 +1104,10 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
             racer->unk1CE = 3;
         }
     } else {
-        if (1) { } if (1) { } if (1) { } if (1) { } // Fake
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {} // Fake
         racer->unk1C6 = 0;
     }
 

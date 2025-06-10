@@ -171,6 +171,7 @@ void sound_volume_reset(u8 skipReset) {
         if (gSkipResetChannels == FALSE) {
             gGlobalMusicVolume = 256;
             music_volume_set(gMusicBaseVolume);
+            // Effectively sets all volumes to the max (AL_SNDP_GROUP_VOLUME_MAX)
             sndp_set_group_volume(0, gGlobalMusicVolume * 128 - 1);
             sndp_set_group_volume(1, gGlobalMusicVolume * 128 - 1);
             sndp_set_group_volume(2, gGlobalMusicVolume * 128 - 1);
@@ -186,7 +187,7 @@ void sound_volume_change(s32 behaviour) {
     switch (behaviour) {
         case VOLUME_LOWER: // Mute most sound effects and half the volume of music.
             sndp_set_group_volume(0, 0);
-            sndp_set_group_volume(1, 32767);
+            sndp_set_group_volume(1, AL_SNDP_GROUP_VOLUME_MAX);
             sndp_set_group_volume(2, 0);
             sndp_set_group_volume(4, 0);
             alCSPSetVol(gMusicPlayer, (s16) (gMusicBaseVolume * gMusicSliderVolume >> 2));
@@ -194,21 +195,21 @@ void sound_volume_change(s32 behaviour) {
             break;
         case VOLUME_LOWER_AMBIENT: // Mute the ambient channel, making course elements stop making noise.
             sndp_set_group_volume(0, 0);
-            sndp_set_group_volume(1, 32767);
-            sndp_set_group_volume(2, 32767);
-            sndp_set_group_volume(4, 32767);
+            sndp_set_group_volume(1, AL_SNDP_GROUP_VOLUME_MAX);
+            sndp_set_group_volume(2, AL_SNDP_GROUP_VOLUME_MAX);
+            sndp_set_group_volume(4, AL_SNDP_GROUP_VOLUME_MAX);
             break;
         case VOLUME_UNK03:
             sndp_set_group_volume(0, 0);
-            sndp_set_group_volume(1, 32767);
+            sndp_set_group_volume(1, AL_SNDP_GROUP_VOLUME_MAX);
             sndp_set_group_volume(2, 0);
             sndp_set_group_volume(4, 0);
             break;
         default: // Restore sound back to normal.
-            sndp_set_group_volume(0, 32767);
-            sndp_set_group_volume(1, 32767);
-            sndp_set_group_volume(2, 32767);
-            sndp_set_group_volume(4, 32767);
+            sndp_set_group_volume(0, AL_SNDP_GROUP_VOLUME_MAX);
+            sndp_set_group_volume(1, AL_SNDP_GROUP_VOLUME_MAX);
+            sndp_set_group_volume(2, AL_SNDP_GROUP_VOLUME_MAX);
+            sndp_set_group_volume(4, AL_SNDP_GROUP_VOLUME_MAX);
             alCSPSetVol(gMusicPlayer, (s16) (gMusicBaseVolume * gMusicSliderVolume));
             alCSPSetVol(gJinglePlayer, (s16) (sndp_get_global_volume() * sfxRelativeVolume));
             break;
