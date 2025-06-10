@@ -1834,6 +1834,7 @@ void func_800BCC70(LevelModel *model) {
     mempool_free(spA0);
 }
 
+// https://decomp.me/scratch/1AO88
 #ifdef NON_EQUIVALENT
 s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNegPosition, f32 shadowZNegPosition,
                   f32 shadowXPosition, f32 shadowZPosition) {
