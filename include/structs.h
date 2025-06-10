@@ -112,8 +112,8 @@ typedef struct TextureHeader {
       // 6 = IA4
       // 7 = CI4 (16 colors)
       // 8 = CI8 (64 colors)
-  /* 0x03 */ s8 unk3;
-  /* 0x04 */ s8 unk4;
+  /* 0x03 */ s8 posX; // X coordinate of the texture in the sprite's 2D space
+  /* 0x04 */ s8 posY; // Y coordinate of the texture in the sprite's 2D space
   /* 0x05 */ u8 numberOfInstances; // Always 1 in the ROM.
   /* 0x06 */ s16 flags;
       // 0x04 = Interlaced texture
@@ -151,19 +151,21 @@ typedef struct ShadowHeapProperties {
   s16 vtxCount; // Offset from the center of the screen.
 } ShadowHeapProperties;
 
+typedef struct SpriteAsset {
+    /* 0x00 */ s16 baseTextureId;
+    /* 0x02 */ s16 numberOfFrames; // 1 means static texture
+    /* 0x04 */ Vec2s anchor;  // 2D coordinates on the sprite used as the anchor point for positioning in 3D space
+    /* 0x08 */ s32 unused_field;
+    /* 0x0C */ u8 frameTexOffsets[1]; // actual size is numberOfFrames + 1
+} SpriteAsset;
+
 typedef struct Sprite {
-  /* 0x00 */ s16 baseTextureId;
-  /* 0x02 */ s16 numberOfFrames; // 1 means static texture
-  /* 0x04 */ s16 numberOfInstances;
-  /* 0x06 */ s16 drawFlags;
-  union {
-    /* 0x08 */ TextureHeader **frames;
-    /* 0x08 */ Gfx *gfx[1];
-  };
-  union {
-    /* 0x0C */ u8 val[1]; // Actual size varies.
-    /* 0x0C */ u8 *ptr[1]; // Display list?
-  } unkC;
+    /* 0x00 */ s16 numberOfFrames; // 1 means static texture
+    /* 0x02 */ s16 numberOfTextures;
+    /* 0x04 */ s16 numberOfInstances;
+    /* 0x06 */ s16 drawFlags;
+    /* 0x08 */ TextureHeader **textures;
+    /* 0x0C */ Gfx *frames[1]; // Actual size varies.
 } Sprite;
 
 /* Size: 0x20 bytes */

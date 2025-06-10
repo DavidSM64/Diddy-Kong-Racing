@@ -127,7 +127,7 @@ void mtx_world_origin(Gfx **dList, Mtx **mtx);
 void sprite_anim_off(s32 setting);
 Camera *cam_get_active_camera_no_cutscenes(void);
 Camera *cam_get_active_camera(void);
-Camera *get_cutscene_camera_segment(void);
+Camera *cam_get_cameras(void);
 MtxF *get_projection_matrix_f32(void);
 Mtx *get_projection_matrix_s16(void);
 MtxF *get_camera_matrix(void);

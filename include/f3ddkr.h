@@ -112,6 +112,7 @@
 #define G_MTX_DKR_INDEX_2 2
 #define G_MW_BILLBOARD 0x02 //0x01 = billboarding enabled, 0x00 = disabled
 #define G_MW_MVPMATRIX 0x0A  //Specifies the index of the mvp matrix. 
+#define G_VTX_APPEND 1
 
 #define gDkrEnableBillboard(pkt)            \
 	gMoveWd(pkt, G_MW_BILLBOARD, 0, 1)  

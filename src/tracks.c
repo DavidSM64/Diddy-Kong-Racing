@@ -4452,7 +4452,7 @@ void obj_loop_fogchanger(Object *obj) {
     camera = NULL;
 
     if (check_if_showing_cutscene_camera()) {
-        camera = get_cutscene_camera_segment();
+        camera = cam_get_cameras();
         views = cam_get_viewport_layout() + 1;
     } else {
         racers = get_racer_objects(&views);
