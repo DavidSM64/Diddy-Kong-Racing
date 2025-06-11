@@ -6,9 +6,8 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of June 11, 2025, this is our current score:
-As of June 11, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 90.89%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 90.87%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 59.40%
 <!-- README_SCORE_SUMMARY_END -->
@@ -122,11 +121,11 @@ As of June 11, 2025, this is our current score:
 ```
  ====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- -------------- 90.89% Complete (91.67% NON_MATCHING) ---------------
+ -------------- 90.87% Complete (91.65% NON_MATCHING) ---------------
                      # Decompiled functions: 1913
-                      # GLOBAL_ASM remaining: 38
+                      # GLOBAL_ASM remaining: 37
                      # NON_MATCHING functions: 4
-                  # NON_EQUIVALENT WIP functions: 19
+                  # NON_EQUIVALENT WIP functions: 29
  --------------------------- Game Status ----------------------------
               Balloons: 42/47, Keys: 4/4, Trophies: 4/5
                 T.T. Amulets: 4/4, Wizpig Amulets: 4/4
@@ -136,7 +135,7 @@ As of June 11, 2025, this is our current score:
                 ADVENTURE TWO (Cleanup & Documentation)
  ------------------------- 59.40% Complete --------------------------
                      # Documented functions: 1208
-                    # Undocumented remaining: 446
+                    # Undocumented remaining: 445
  --------------------------- Game Status ----------------------------
               Balloons: 29/47, Keys: 3/4, Trophies: 2/5
                 T.T. Amulets: 3/4, Wizpig Amulets: 2/4
