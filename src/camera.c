@@ -1038,12 +1038,12 @@ void cam_set_sprite_anim_mode(s32 setting) {
 
 /**
  * Renders a sprite in 3D space as a billboard.
- * 
+ *
  * If the sprite represents a vehicle part (e.g., wheel, propeller, fan),
  * the function calculates the appropriate animation frame based on the object's
  * orientation relative to the camera, ensuring the sprite correctly matches
  * the viewing angle. It also orients the sprite properly in 3D space with tilt.
- * 
+ *
  * For regular sprites, it sets up a standard billboard that always faces the camera.
  */
 s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vtx, Object *obj, Sprite *sprite, s32 flags) {
@@ -1086,17 +1086,17 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vtx, Object *obj, S
         temp = (diffX * cosY) + (diffZ * sineY);
         diffZ = (diffZ * cosY) - (diffX * sineY);
         diffX = temp;
-        
+
         // Calculate the angle between the camera direction and the vertical plane of the vehicle
         tanY = arctan2_f(diffX, sqrtf((diffY * diffY) + (diffZ * diffZ)));
-        
+
         tanX = -sins_s16(arctan2_f(diffX, diffZ)) >> 8;
         if (diffZ < 0.0f) {
             diffZ = -diffZ;
             tanX = 1 - tanX;
             tanY = -tanY;
         }
-        
+
         tiltAngle = arctan2_f(diffY, diffZ);
         if (tiltAngle > 0x8000) {
             tiltAngle -= 0x10000;
@@ -1109,8 +1109,8 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vtx, Object *obj, S
             tiltAngle += 0x8000;
             result = FALSE;
         }
-        frameID *= 2;        
-        
+        frameID *= 2;
+
         // Construct the model matrix for the sprite,
         // orienting it perpendicular to the camera and applying the calculated tilt angle.
         diffX = gCameraRelPosStackX[gCameraMatrixPos] - obj->segment.trans.x_position;
@@ -1182,7 +1182,7 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vtx, Object *obj, S
 
     // Load material and set render flags including fog, transparency, z-compare, and anti-aliasing
     material_load_simple(dList, sprite->drawFlags | (flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT |
-                                                            RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)));
+                                                              RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)));
 
     if (!(flags & RENDER_Z_UPDATE)) {
         gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
@@ -1200,7 +1200,7 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vtx, Object *obj, S
 
     // Disable billboard mode
     gDkrDisableBillboard((*dList)++);
-    
+
     return result;
 }
 
@@ -1229,7 +1229,7 @@ void render_ortho_triangle_image(Gfx **dList, Mtx **mtx, Vertex **vtx, ObjectSeg
     vertex->g = 255;
     vertex->b = 255;
     vertex->a = 255;
-    
+
     gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(*vtx), 1, 0);
     (*vtx)++; // Can't be done in the macro?
     index = segment->animFrame;

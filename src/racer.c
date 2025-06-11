@@ -1106,7 +1106,10 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
             racer->unk1CE = 3;
         }
     } else {
-        if (1) { } if (1) { } if (1) { } if (1) { } // Fake
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {} // Fake
         racer->unk1C6 = 0;
     }
 

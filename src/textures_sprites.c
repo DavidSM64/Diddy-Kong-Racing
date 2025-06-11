@@ -1005,9 +1005,10 @@ Sprite *tex_load_sprite(s32 spriteID, s32 arg1) {
     }
 
     gSpriteTriangles = (Triangle *) ((s32) sprite + (s32) align16((u8 *) sizeof(Sprite)) +
-                               (s32) align16((u8 *) (spriteAsset->numberOfFrames * 4)));
-    gSpriteDLists = (Gfx *) ((s32)gSpriteTriangles + numTextures * 0x20); // 0x20 = sizeof(Triangle) * 2
-    gSpriteVertices = (Vertex *) ((s32)gSpriteDLists + numTextures * 0x20 + spriteAsset->numberOfFrames * sizeof(Gfx)); // 0x20 = sizeof(Gfx) * 4
+                                     (s32) align16((u8 *) (spriteAsset->numberOfFrames * 4)));
+    gSpriteDLists = (Gfx *) ((s32) gSpriteTriangles + numTextures * 0x20); // 0x20 = sizeof(Triangle) * 2
+    gSpriteVertices = (Vertex *) ((s32) gSpriteDLists + numTextures * 0x20 +
+                                  spriteAsset->numberOfFrames * sizeof(Gfx)); // 0x20 = sizeof(Gfx) * 4
     sprite->textures = (TextureHeader **) ((s32) gSpriteVertices + numTextures * sizeof(Vertex) * 4);
 
     allocFailed = FALSE;
@@ -1332,7 +1333,8 @@ void sprite_init_frame(SpriteAsset *spriteAsset, Sprite *sprite, s32 frameId) {
     // Extract draw flags from the first tile's texture
     if (tileIndex < tileEnd) {
         tex = sprite->textures[tileIndex];
-        sprite->drawFlags = ((tex->flags & 0xFFFF) & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_CUTOUT | RENDER_COLOUR_INDEX));
+        sprite->drawFlags = ((tex->flags & 0xFFFF) & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_FOG_ACTIVE |
+                                                      RENDER_CUTOUT | RENDER_COLOUR_INDEX));
     }
 
     curVertIndex = 0;
@@ -1383,7 +1385,7 @@ void sprite_init_frame(SpriteAsset *spriteAsset, Sprite *sprite, s32 frameId) {
         vertex->b = 255;
         vertex->a = 255;
         vertex++;
-        
+
         // Upload display list commands for the current tile
         gDkrDmaDisplayList(dlptr++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
 
@@ -1424,7 +1426,7 @@ void sprite_init_frame(SpriteAsset *spriteAsset, Sprite *sprite, s32 frameId) {
         triangle++;
 
         curVertIndex += 4;
-        
+
         numQuads++;
         tileIndex++;
         if (numQuads >= 5) {
