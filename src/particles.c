@@ -283,6 +283,8 @@ void init_particle_assets(void) {
 }
 
 /**
+ * https://decomp.me/scratch/z60XZ
+ *
  * Allocate buffers for particle objects.
  * Generate particle shapes.
  * Load sprites from asset 47.

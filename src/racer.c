@@ -676,34 +676,28 @@ s32 roll_percent_chance(s32 chance) {
     return rand_range(0, 99) < chance;
 }
 
-#ifdef NON_MATCHING
-#define FAKEMATCH
 // Handles the opponent A.I. for battle & banana challenges.
 void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
     Object *sp74;
     Object_64 *tempRacer;
     LevelObjectEntry *sp6C;
-    s32 var_v1;
-    f32 xDiff; // sp64
-    f32 zDiff; // sp60
-    f32 dist;  // sp5C
-    s32 temp;  // sp58
-    s32 someBool;
-    s16 i;     // sp52
-    s16 index; // sp50
+    LevelObjectEntry *newvar;
+    f32 xDiff;
+    f32 zDiff;
+    f32 dist;
+    s32 temp;
+    LevelHeader *levelHeader;
+    s16 i;
+    s16 index;
     s16 sp4E;
     s16 sp4C;
     s16 sp4A;
     s16 sp48;
     s16 sp46;
-    LevelHeader *levelHeader;
+    s32 var_v1;
     s8 raceType;
     s8 *sp38;
     Object *tempRacerObj;
-
-#ifdef FAKEMATCH
-    if ((!tempRacerObj->unk64) && (!tempRacerObj->unk64)) {} // Fake
-#endif
 
     gCurrentButtonsPressed = 0;
     gCurrentButtonsReleased = 0;
@@ -800,9 +794,6 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
                         tempRacer = tempRacerObj->unk64;
                         if (sp46 == 0) {
                             if (sp48 < tempRacer->racer.bananas) {
-#ifdef FAKEMATCH
-                                if (tempRacerObj->segment.trans.y_position) {} // Fake
-#endif
                                 sp48 = tempRacer->racer.bananas;
                                 sp4A = index;
                             }
@@ -875,21 +866,17 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
                 sp4E = aiRacer->elevation;
                 tempRacerObj =
                     ainode_get(aiRacer->unk1CE); // I'm assuming this is a Ai Node (Take with a grain of salt!)
-                raceType = tempRacerObj->segment.level_entry->aiNode.elevation;
-                someBool = FALSE;
-                if (sp6C->aiNode.elevation < raceType) {
-                    if ((raceType < sp4E) || (sp4E < sp6C->aiNode.elevation)) {
-                        someBool = TRUE;
+                newvar = tempRacerObj->segment.level_entry;
+                sp46 = FALSE;
+                if (sp6C->aiNode.elevation < newvar->aiNode.elevation) {
+                    if (1) {} // FAKE
+                    if (newvar->aiNode.elevation < sp4E || sp4E < sp6C->aiNode.elevation) {
+                        sp46 = TRUE;
                     }
-                } else {
-#ifdef FAKEMATCH
-                    if (!(&sp74->segment)) {} // Fake
-#endif
-                    if ((sp6C->aiNode.elevation < sp4E) || (sp4E < raceType)) {
-                        someBool = TRUE;
-                    }
+                } else if (sp6C->aiNode.elevation < sp4E || sp4E < newvar->aiNode.elevation) {
+                    sp46 = TRUE;
                 }
-                if (someBool) {
+                if (sp46) {
                     if (aiRacer->unk1CD == 4) {
                         D_8011D58C[aiRacer->eggHudCounter] = 0;
                     }
@@ -910,9 +897,11 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
                     gCurrentRacerInput = A_BUTTON;
                 }
             }
-            if (aiRacer->nodeCurrent != NULL) {
-                xDiff = aiRacer->nodeCurrent->segment.trans.x_position - sp74->segment.trans.x_position;
-                zDiff = aiRacer->nodeCurrent->segment.trans.z_position - sp74->segment.trans.z_position;
+
+            tempRacerObj = aiRacer->nodeCurrent;
+            if (tempRacerObj != NULL) {
+                xDiff = tempRacerObj->segment.trans.x_position - sp74->segment.trans.x_position;
+                zDiff = tempRacerObj->segment.trans.z_position - sp74->segment.trans.z_position;
                 if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) > 0.0) {
                     temp = (arctan2_f(xDiff, zDiff) - 0x8000) & 0xFFFF;
                     var_v1 = temp - (aiRacer->steerVisualRotation & 0xFFFF);
@@ -940,15 +929,11 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
                         case 4:
                             tempRacerObj = get_racer_object(aiRacer->eggHudCounter);
                             tempRacer = tempRacerObj->unk64;
-#ifdef FAKEMATCH
-                            if (tempRacerObj->unk64->racer.playerIndex == -1) {
-#else
                             if (tempRacer->racer.playerIndex == -1) {
-#endif
-                                temp = func_8001CD28(
-                                    sp6C->animation.x_rotation,
-                                    tempRacer->racer.unk154->segment.level_entry->animation.x_rotation | 0x100,
-                                    aiRacer->unk1CE, aiRacer->racerIndex);
+                                tempRacerObj = tempRacer->racer.unk154;
+                                newvar = tempRacerObj->segment.level_entry;
+                                temp = func_8001CD28(sp6C->animation.x_rotation, newvar->animation.x_rotation | 0x100,
+                                                     aiRacer->unk1CE, aiRacer->racerIndex);
                             } else {
                                 temp = ainode_find_nearest(tempRacerObj->segment.trans.x_position,
                                                            tempRacerObj->segment.trans.y_position,
@@ -965,12 +950,7 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
                                                  aiRacer->racerIndex);
                             break;
                         default:
-#ifdef FAKEMATCH
-                            temp = ainode_find_next(sp6C->animation.x_rotation, aiRacer->unk1CE,
-                                                    aiRacer->racerIndex & 0xFFFFFFFFFFFFFFFFu); // Fake
-#else
                             temp = ainode_find_next(sp6C->animation.x_rotation, aiRacer->unk1CE, aiRacer->racerIndex);
-#endif
                             break;
                     }
 
@@ -1008,16 +988,10 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
     for (i = 0; i < 4; i++) {
         if (i != aiRacer->racerIndex) {
             tempRacerObj = get_racer_object(i);
-#ifdef FAKEMATCH
-            if (tempRacerObj->unk64->racer.playerIndex != -1) {
-                D_8011D5B4[i] = tempRacerObj->unk64->racer.elevation;
-            }
-#else
             tempRacer = tempRacerObj->unk64;
             if (tempRacer->racer.playerIndex != -1) {
                 D_8011D5B4[i] = tempRacer->racer.elevation;
             }
-#endif
             if (D_8011D5B4[aiRacer->racerIndex] == D_8011D5B4[i]) {
                 xDiff = aiRacerObj->segment.trans.x_position - tempRacerObj->segment.trans.x_position;
                 zDiff = aiRacerObj->segment.trans.z_position - tempRacerObj->segment.trans.z_position;
@@ -1043,9 +1017,6 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004447C.s")
-#endif
 
 void func_80045128(Object **racerObjs) {
     Object_Racer *racer;
@@ -1372,6 +1343,7 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
 }
 
+// https://decomp.me/scratch/O7Ton
 #ifdef NON_EQUIVALENT
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate) {
     s32 overrideMagnitude;
@@ -3506,6 +3478,7 @@ void racer_attack_handler_plane(Object *obj, Object_Racer *racer) {
     }
 }
 
+// https://decomp.me/scratch/CQwF9
 #ifdef NON_EQUIVALENT
 void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
     s32 segmentIndex;
@@ -3713,7 +3686,7 @@ void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/update_camera_plane.s")
 #endif
 
-// https://decomp.me/scratch/yfGqf - 97.27%
+// https://decomp.me/scratch/nVftv
 #ifdef NON_EQUIVALENT
 // Handles loop de loops
 void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Racer *racer) {
@@ -7864,6 +7837,7 @@ void second_racer_camera_update(Object *obj, Object_Racer *racer, s32 mode, f32 
     }
 }
 
+// https://decomp.me/scratch/NYLzW
 #ifdef NON_EQUIVALENT
 void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     s64 pad;
@@ -8205,6 +8179,7 @@ void set_position_goal_from_path(UNUSED Object *obj, Object_Racer *racer, f32 *x
     *z = catmull_rom_interpolation(splineZ, destReached, magnitude);
 }
 
+// https://decomp.me/scratch/6WBdX
 #ifdef NON_MATCHING
 void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     UNUSED s32 pad[2];
@@ -8511,6 +8486,7 @@ s16 timetrial_ghost_full(void) {
     return gGhostNodeFull[gCurrentGhostIndex];
 }
 
+// https://decomp.me/scratch/yMObT
 #ifdef NON_EQUIVALENT
 // timetrial_ghost_read
 s32 set_ghost_position_and_rotation(Object *obj) {
