@@ -5260,7 +5260,7 @@ void func_8001709C(Object *obj) {
 
 // https://decomp.me/scratch/Lxwa8
 #ifdef NON_EQUIVALENT
-s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 *arg5, s8 *arg6) {
+s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 *arg5, s8 *surface) {
     s32 sp170;
     s32 sp16C;
     s32 sp168;
@@ -5473,7 +5473,7 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
             }
             *arg2 = 0;
             sp16C = var_t0;
-            temp_v0_4 = func_80017A18(objModel, arg1, arg2, &sp13C, &sp12C, &sp11C, sp100, spF0, spE0, arg5, arg6,
+            temp_v0_4 = func_80017A18(objModel, arg1, arg2, &sp13C, &sp12C, &sp11C, sp100, spF0, spE0, arg5, surface,
                                       (f32) (1.0 / (f64) otherObj->segment.trans.scale));
             var_t0_2 = sp16C;
             if (temp_v0_4 != 0) {
@@ -5579,7 +5579,7 @@ u32 func_800179D0(void) {
 // https://decomp.me/scratch/dzU8Y
 #ifdef NON_EQUIVALENT
 s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, f32 *arg5, f32 *arg6, f32 *arg7,
-                  f32 *arg8, f32 *arg9, s8 *argA, f32 argB) {
+                  f32 *arg8, f32 *arg9, s8 *surface, f32 argB) {
     s32 pad[4];
     s32 var_a2;
     s32 var_s6;
@@ -5679,7 +5679,7 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                                 spBC = spA4;
                                 spB4 = sp9C;
                             }
-                            argA[i] = 0;
+                            surface[i] = 0;
                             arg6[i] = spBC;
                             arg7[i] = var_f30;
                             arg8[i] = spB4;
@@ -5877,7 +5877,7 @@ void func_80017E98(void) {
 
 // https://decomp.me/scratch/xQbet
 #ifdef NON_EQUIVALENT
-s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *arg5, u8 *arg6) {
+s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance, u8 *arg6) {
     s32 sp70;
     f32 xDiff; // sp6C
     f32 yDiff;
@@ -5997,7 +5997,7 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
     } else {
         var_f0 = 0.0f;
     }
-    *arg5 = var_f0;
+    *checkpointDistance = var_f0;
     if ((obj->behaviorId == BHV_RACER) && (obj->unk64->racer.playerIndex == PLAYER_COMPUTER)) {
         if (var_f0 < -0.3) {
             return -100;
@@ -6059,10 +6059,10 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
             } else {
                 var_f0 = 0.0f;
             }
-            *arg5 = var_f0;
+            *checkpointDistance = var_f0;
             return 0;
         }
-        *arg5 = 0.0f;
+        *checkpointDistance = 0.0f;
         return 0;
     }
     var_v1 = var_f0 * 100.0f;

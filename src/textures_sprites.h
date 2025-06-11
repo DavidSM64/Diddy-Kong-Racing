@@ -178,7 +178,7 @@ Sprite *tex_load_sprite(s32 spriteID, s32 arg1);
 void tex_init_textures(void);
 void material_set_blinking_lights(Gfx **dList, TextureHeader *texture_list, u32 flags,
                                   s32 texture_index);       
-void material_init(TextureHeader *tex, Gfx *_dList);  
-void sprite_init_frame(SpriteAsset *sprite1, Sprite *sprite2, s32 arg2);
+void material_init(TextureHeader *tex, Gfx *_dList);
+void sprite_init_frame(SpriteAsset *spriteAsset, Sprite *sprite, s32 frameId);
 
 #endif
