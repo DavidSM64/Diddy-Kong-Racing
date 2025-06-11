@@ -4,6 +4,7 @@
 #include "types.h"
 #include "structs.h"
 #include "macros.h"
+#include "stdarg.h"
 #include <PR/gu.h>
 
 typedef struct TexFontCoords {
@@ -57,6 +58,6 @@ void debug_text_bounds(void);
 void debug_text_origin(void);
 void debug_text_newline(void);
 s32 debug_text_parse(Gfx**, char*);
-int vsprintf(char *s, const char *fmt, ...);
+int vsprintf(char *s, const char *fmt, va_list args);
 
 #endif
