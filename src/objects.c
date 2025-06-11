@@ -1104,7 +1104,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     }
     cutsceneID = -1;
     if (is_time_trial_enabled() && raceType == RACETYPE_DEFAULT) {
-        cutsceneCameraSegment = get_cutscene_camera_segment();
+        cutsceneCameraSegment = cam_get_cameras();
         cutsceneID = (u8) cutsceneCameraSegment->zoom;
         cutsceneCameraSegment->zoom = 1;
     }

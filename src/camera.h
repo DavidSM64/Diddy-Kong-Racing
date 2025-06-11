@@ -37,6 +37,11 @@
 
 #define VIEWPORT_AUTO 0x8000
 
+enum SpriteAnimMode {
+    SPRITE_ANIM_NORMALIZED,     // animFrame is a normalized value from 0 to 255 mapped across frames
+    SPRITE_ANIM_FRAME_INDEX     // animFrame is treated as the exact frame ID (e.g., 0, 1, 2...)    
+};
+
 enum ViewportCount {
     VIEWPORT_LAYOUT_1_PLAYER,
     VIEWPORT_LAYOUT_2_PLAYERS,
@@ -124,10 +129,10 @@ void mtx_perspective(Gfx **dList, Mtx **mtx);
 void viewport_rsp_set(Gfx **dList, s32 halfWidth, s32 halfHeight, s32 centerX, s32 centerY);
 void viewport_reset(Gfx **dList);
 void mtx_world_origin(Gfx **dList, Mtx **mtx);
-void sprite_anim_off(s32 setting);
+void cam_set_sprite_anim_mode(s32 setting);
 Camera *cam_get_active_camera_no_cutscenes(void);
 Camera *cam_get_active_camera(void);
-Camera *get_cutscene_camera_segment(void);
+Camera *cam_get_cameras(void);
 MtxF *get_projection_matrix_f32(void);
 Mtx *get_projection_matrix_s16(void);
 MtxF *get_camera_matrix(void);

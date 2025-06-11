@@ -194,7 +194,7 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
     jingleVolume = 0;
     viewportLayout = cam_get_viewport_layout();
     numCameras = cam_set_layout(viewportLayout);
-    cameras = get_cutscene_camera_segment();
+    cameras = cam_get_cameras();
 
     // Update audio points
     for (i = 0; i < gNumAudioPoints; i++) {
