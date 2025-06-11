@@ -370,8 +370,8 @@ void hud_init(UNUSED s32 viewportCount) {
     gMinimapXlu = 0;
     D_80127194 = (LevelHeader_70 *) get_misc_asset(ASSET_MISC_58);
     func_8007F1E8(D_80127194);
-    sndp_set_group_volume(0, 32767);
-    sndp_set_group_volume(2, 32767);
+    sndp_set_group_volume(0, AL_SNDP_GROUP_VOLUME_MAX);
+    sndp_set_group_volume(2, AL_SNDP_GROUP_VOLUME_MAX);
     for (i = 0; i < 2; i++) {
         gHudAudioData[i].volume = 0;
         gHudAudioData[i].volumeRamp = 0;
@@ -1887,7 +1887,6 @@ void hud_speedometre(Object *obj, UNUSED s32 updateRate) {
  * This function will also call to begin the background music for 1 and 2 player. 3 and 4 are treated with silence.
  */
 void hud_race_start(s32 countdown, s32 updateRate) {
-
     if (!is_game_paused()) {
         if (countdown == 0 && gHudAudioData[0].playerIndex == PLAYER_COMPUTER) {
             gHudAudioData[0].volumeRamp = -1;

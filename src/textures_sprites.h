@@ -167,7 +167,7 @@ void func_8007F1E8(LevelHeader_70 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
 TextureHeader *set_animated_texture_header(TextureHeader *texHead, s32 offset);
-TextureHeader *load_texture(s32 arg0);
+TextureHeader *load_texture(s32 id);
 s32 tex_asset_size(s32 id); 
 s32 tex_cache_asset_id(s32 cacheID);
 s32 load_sprite_info(s32 spriteIndex, s32 *anchorXOut, s32 *anchorYOut, s32 *numFramesOut, s32 *formatOut,
@@ -178,7 +178,7 @@ Sprite *tex_load_sprite(s32 spriteID, s32 arg1);
 void tex_init_textures(void);
 void material_set_blinking_lights(Gfx **dList, TextureHeader *texture_list, u32 flags,
                                   s32 texture_index);       
-void material_init(TextureHeader *tex, Gfx *_dList);  
-void sprite_init_frame(SpriteAsset *sprite1, Sprite *sprite2, s32 arg2);
+void material_init(TextureHeader *tex, Gfx *_dList);
+void sprite_init_frame(SpriteAsset *spriteAsset, Sprite *sprite, s32 frameId);
 
 #endif

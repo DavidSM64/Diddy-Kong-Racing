@@ -542,7 +542,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
 void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4);
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
-s32 func_800185E4(s32, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); 
+s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance, u8 *arg6);
 void obj_tex_animate(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);
 void func_8006017C(ObjectModel *);
@@ -563,5 +563,5 @@ void func_800159C8(Object *, Object *);
 void obj_door_number(ObjectModel *, Object *);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 f32 func_8001C6C4(Object_NPC *, Object *, f32, f32, s32);
-s32 func_80017A18(ObjectModel *, s32, s32*, f32*, f32*, f32*, f32*, f32*, f32*, f32*, s8*, f32); // NON EQUIVALENT
+s32 func_80017A18(ObjectModel *, s32, s32*, f32*, f32*, f32*, f32*, f32*, f32*, f32*, s8 *surface, f32); // NON EQUIVALENT
 #endif
