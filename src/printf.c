@@ -209,7 +209,10 @@ UNUSED int sprintf(char *s, const char *format, ...) {
     return ret;
 }
 
-// https://decomp.me/scratch/ygrLR
+/**
+ * https://decomp.me/scratch/xoBfs
+ * Official name: vsprintf
+ */
 #pragma GLOBAL_ASM("asm/nonmatchings/printf/vsprintf.s")
 
 /**
