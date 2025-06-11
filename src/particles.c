@@ -1555,7 +1555,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
     if (particle->kind == PARTICLE_KIND_SPRITE) {
         particle->sprite = (Sprite *) tex_load_sprite(descriptor->textureID, 0);
         if (particle->sprite != NULL) {
-            if (particle->sprite->frames[0]->flags & 4) {
+            if (particle->sprite->textures[0]->flags & 4) {
                 if (particle->descFlags & PARTICLE_DESC_FLAG_1000) {
                     particle->trans.flags |= OBJ_FLAGS_UNK_0100;
                 } else {
@@ -1563,7 +1563,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
                 }
             }
             if (behaviour->flags & PARTICLE_RANDOM_TEXTURE_FRAME) {
-                particle->textureFrame = rand_range(0, particle->sprite->baseTextureId - 1) << 8;
+                particle->textureFrame = rand_range(0, particle->sprite->numberOfFrames - 1) << 8;
                 if ((particle->descFlags &
                      (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) ==
                     PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED) {
@@ -1572,7 +1572,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
             } else if ((particle->descFlags &
                         (PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED | PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED)) ==
                        PARTICLE_TEXTURE_ANIM_BACKWARD_ENABLED) {
-                particle->textureFrame = (particle->sprite->baseTextureId << 8) - 1;
+                particle->textureFrame = (particle->sprite->numberOfFrames << 8) - 1;
             } else {
                 particle->textureFrame = 0;
             }
@@ -2173,7 +2173,7 @@ void update_particle_texture_frame(Particle *particle) {
 
     keepGoing = -1;
     i = 0; // required to match
-    textureCount = particle->kind == PARTICLE_KIND_SPRITE ? particle->sprite->baseTextureId * 256
+    textureCount = particle->kind == PARTICLE_KIND_SPRITE ? particle->sprite->numberOfFrames * 256
                                                           : particle->model->texture->numOfTextures;
 
     forwardEnabled = particle->descFlags & PARTICLE_TEXTURE_ANIM_FORWARD_ENABLED;
@@ -2406,7 +2406,7 @@ void render_particle(Particle *particle, Gfx **dList, Mtx **mtx, Vertex **vtx, s
         if (particle->kind == PARTICLE_KIND_SPRITE) {
             temp = particle->textureFrame;
             particle->textureFrame >>= 8;
-            particle->textureFrame = (particle->textureFrame * 255) / (particle->sprite->baseTextureId);
+            particle->textureFrame = (particle->textureFrame * 255) / (particle->sprite->numberOfFrames);
             render_sprite_billboard(dList, mtx, vtx, (Object *) particle, particle->sprite, renderFlags);
             particle->textureFrame = temp;
         } else {

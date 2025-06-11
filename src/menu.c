@@ -2692,7 +2692,7 @@ void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green,
         xOffset3 = 5;
     }
     get_timestamp_from_frames(frameCount, &minutes, &seconds, &hundredths);
-    sprite_anim_off(TRUE);
+    cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
     sprite_opaque(FALSE);
 
     gMenuImages[imageIndex].spriteOffset = minutes / 10;
@@ -2732,7 +2732,7 @@ void menu_timestamp_render(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green,
     gMenuImages[imageIndex].trans.x_position = xPos;
     menu_element_render(imageIndex);
 
-    sprite_anim_off(FALSE);
+    cam_set_sprite_anim_mode(SPRITE_ANIM_NORMALIZED);
     sprite_opaque(TRUE);
     sMenuGuiColourR = 255;
     sMenuGuiColourG = 255;
@@ -2786,7 +2786,7 @@ void menu_number_render(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UN
     sMenuGuiColourB = b;
     sMenuGuiOpacity = a;
     sprite_opaque(0);
-    sprite_anim_off(TRUE);
+    cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
     if (powerOfTen && number) {} // Fakematch
     gMenuImages[0].trans.y_position = y;
     for (i = 0; i < strLen; i++) {
@@ -2796,7 +2796,7 @@ void menu_number_render(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UN
         x += 12;
     }
     sprite_opaque(1);
-    sprite_anim_off(FALSE);
+    cam_set_sprite_anim_mode(SPRITE_ANIM_NORMALIZED);
     sMenuGuiColourR = 255;
     sMenuGuiColourG = 255;
     sMenuGuiColourB = 255;
@@ -2976,7 +2976,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                         shouldResetRenderSettings = FALSE;
                         rendermode_reset(&sMenuCurrDisplayList);
                     }
-                    sprite_anim_off(TRUE);
+                    cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
                     sprite_opaque(FALSE);
                     gMenuImages[elems->t.assetID].trans.x_position = xPos - SCREEN_WIDTH_HALF;
                     gMenuImages[elems->t.assetID].trans.y_position =
@@ -2992,7 +2992,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
                     sMenuGuiColourBlendFactor = elems->filterBlendFactor;
                     sMenuGuiOpacity = elems->opacity;
                     menu_element_render(elems->t.assetID);
-                    sprite_anim_off(FALSE);
+                    cam_set_sprite_anim_mode(SPRITE_ANIM_NORMALIZED);
                     sprite_opaque(TRUE);
                     break;
                 case 6:
@@ -3377,7 +3377,7 @@ void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
         mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         scale = (f32) gTitleRevealTimer * (1.0f / 32.0f);
         sMenuGuiOpacity = (gTitleRevealTimer * 8) - 1;
-        sprite_anim_off(FALSE);
+        cam_set_sprite_anim_mode(SPRITE_ANIM_NORMALIZED);
         if (scale != 1.0f) {
             texrect_draw_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF, 52.0f, scale,
                                 scale, COLOUR_RGBA32(255, 255, 255, 254), TEXRECT_POINT);
@@ -4294,7 +4294,7 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
         } else {
             i = 120;
         }
-        sprite_anim_off(TRUE);
+        cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
         offsetY = (i - y);
         gMenuImages[2].trans.y_position = offsetY - 49;
         gMenuImages[spriteID].trans.y_position = offsetY - 24;
@@ -4308,7 +4308,7 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
         sprite_opaque(1);
         gMenuImages[spriteID].trans.x_position = x - (128 - SAVE_MENU_SPRITE_OFFSET);
         menu_element_render(spriteID);
-        sprite_anim_off(FALSE);
+        cam_set_sprite_anim_mode(SPRITE_ANIM_NORMALIZED);
     }
     if (drawTexture != NULL) {
         texrect_draw(&sMenuCurrDisplayList, drawTexture, x + (60 + SAVE_MENU_TEXT_OFFSET_1), y + 6, 255, 255, 255, 255);
@@ -7609,14 +7609,14 @@ void fileselect_render(UNUSED s32 updateRate) {
                 }
                 fileselect_render_element(var_s2, gFileSelectButtons[i].x + gFileSelectElementPos[2],
                                           gFileSelectButtons[i].y + gFileSelectElementPos[3], 0, 0, 0, 128);
-                sprite_anim_off(TRUE);
+                cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
                 gMenuImages->spriteOffset = gSavefileInfo[i].balloonCount / 10;
                 fileselect_render_element(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] - 6,
                                           gFileSelectButtons[i].y + gFileSelectElementPos[7], 0, 0, 0, 128);
                 gMenuImages->spriteOffset = gSavefileInfo[i].balloonCount % 10;
                 fileselect_render_element(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] + 6,
                                           gFileSelectButtons[i].y + gFileSelectElementPos[7], 0, 0, 0, 128);
-                sprite_anim_off(FALSE);
+                cam_set_sprite_anim_mode(SPRITE_ANIM_NORMALIZED);
                 sMenuGuiColourG = 64;
                 sMenuGuiColourB = 64;
                 fileselect_render_element(10, gFileSelectButtons[i].x + gFileSelectElementPos[8],
@@ -9365,7 +9365,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
                               (gTwoPlayerRacerCountMenu.textPos[0] + gTwoPlayerRacerCountMenu.x) - 1,
                               (gTwoPlayerRacerCountMenu.textPos[1] + gTwoPlayerRacerCountMenu.y + regionOffset) - 1,
                               gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], ALIGN_MIDDLE_CENTER);
-                    sprite_anim_off(TRUE);
+                    cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
                     sprite_opaque(FALSE);
 
                     for (temp2 = 0; temp2 < 3; temp2++) {
@@ -9389,7 +9389,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
                         sMenuGuiColourB = 255;
                     }
                     sprite_opaque(TRUE);
-                    sprite_anim_off(FALSE);
+                    cam_set_sprite_anim_mode(SPRITE_ANIM_NORMALIZED);
                 }
             }
         }
@@ -11298,7 +11298,7 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         draw_text(&sMenuCurrDisplayList, time - 34, y2 + offsetY + 2, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER);
 #endif
         rendermode_reset(&sMenuCurrDisplayList);
-        sprite_anim_off(TRUE);
+        cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
         sprite_opaque(FALSE);
         sMenuGuiColourR = 255;
         sMenuGuiColourG = 255 - 64 * spA0;
@@ -11342,7 +11342,7 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
             menu_element_render(0);
         }
         y2 += 17;
-        sprite_anim_off(FALSE);
+        cam_set_sprite_anim_mode(SPRITE_ANIM_NORMALIZED);
         sprite_opaque(TRUE);
         sMenuGuiColourG = 255;
         sMenuGuiColourBlendFactor = 0;
@@ -14579,7 +14579,7 @@ void dialogue_tt_gamestatus(void) {
         return;
     }
     settings = get_settings();
-    sprite_anim_off(TRUE);
+    cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
     if (osTvType == OS_TV_TYPE_PAL) {
         y = 10;
     } else {
@@ -14657,7 +14657,7 @@ void dialogue_tt_gamestatus(void) {
         }
         menu_element_render(14);
     }
-    sprite_anim_off(FALSE);
+    cam_set_sprite_anim_mode(SPRITE_ANIM_NORMALIZED);
 }
 
 /**

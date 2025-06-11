@@ -170,7 +170,7 @@ TextureHeader *set_animated_texture_header(TextureHeader *texHead, s32 offset);
 TextureHeader *load_texture(s32 arg0);
 s32 tex_asset_size(s32 id); 
 s32 tex_cache_asset_id(s32 cacheID);
-s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut,
+s32 load_sprite_info(s32 spriteIndex, s32 *anchorXOut, s32 *anchorYOut, s32 *numFramesOut, s32 *formatOut,
                      s32 *sizeOut);
 void gfx_init_basic_xlu(Gfx **dList, u32 index, u32 primitiveColor, u32 environmentColor);
 void func_8007CA68(s32 arg0, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4);
@@ -179,6 +179,6 @@ void tex_init_textures(void);
 void material_set_blinking_lights(Gfx **dList, TextureHeader *texture_list, u32 flags,
                                   s32 texture_index);       
 void material_init(TextureHeader *tex, Gfx *_dList);  
-void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2);
+void sprite_init_frame(SpriteAsset *sprite1, Sprite *sprite2, s32 arg2);
 
 #endif

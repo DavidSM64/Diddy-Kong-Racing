@@ -6,6 +6,44 @@
 
 // This file is an extension of PR/gbi.h
 
+/**
+ * This section explains how billboarding works from a 3D geometry perspective.
+ * Several modifications were made to the RSP to implement billboarding:
+ * 
+ * 1) For the gSPVertexDKR command, the last parameter is either 0 or 1 (G_VTX_APPEND):
+ *    - If 0: Vertices are always written to the beginning of RSP's internal vertex array, and their count is stored.
+ *    - If 1: Vertices are appended after those written with flag 0.
+ * 
+ * 2) The commands gDkrEnableBillboard and gDkrDisableBillboard control billboarding:
+ *    - When gDkrEnableBillboard is active, vertices processed by gSPVertexDKR have their coordinates added to
+ *      the coordinates of vertex 0 in RSP's vertex array.
+ *    - This addition occurs after MVP matrix transformation but before perspective division (normalization of (x,y,z,w) to (x/w,y/w,z/w,1)).
+ * 
+ * Implementation Steps:
+ * 1) First, push an anchor vertex using gSPVertexDKR. This vertex should have a standard MVP matrix applied
+ *    (with normal perspective and camera setup like other 3D objects). Inside RSP, this vertex gets transformed
+ *    to clip coordinates (x,y,z,w). Note: with standard perspective, w represents the vertex's distance from the camera.
+ * 
+ * 2) Create a billboard matrix (simplest case: identity matrix) and store it in slot G_MTX_DKR_INDEX_2.
+ *    More complex versions can tilt the sprite or scale it along two axes. This matrix will be used for subsequent
+ *    billboard vertices (without camera or projection transformations).
+ * 
+ * 3) Enable billboarding with gDkrEnableBillboard. All subsequent billboard vertices will be added to the anchor vertex.
+ * 
+ * 4) Push billboard vertices using gSPVertexDKR and render primitives with gSPPolygon. These vertices use sprite-space coordinates.
+ *    Example: For a 32×64 sprite, vertices would be (0,0,0), (32,0,0), (32,64,0), (0,64,0).
+ * 
+ * How Coordinate Addition Works (Perspective Explanation):
+ * Let the anchor vertex have coordinates (x,y,z,w) and our sprite be 32×64 as above. After normalization:
+ * anchor becomes (x/w,y/w,z/w,1). A billboard vertex would have (x+32,y,z,w) → ((x+32)/w,y/w,z/w,1).
+ * 
+ * Screen-space implications (assuming 320px viewport width):
+ * The sprite's on-screen width becomes (32/w)*160 pixels. Since w equals distance from camera, sprites
+ * farther away appear smaller (creating perspective). However, additional scaling is needed because
+ * without accounting for field of view and aspect ratio, a 32×64 sprite wouldn't match the size of
+ * a 32×64 3D object at the same location.
+ */
+
 // Color combiner values.
 
 // cycle 1 modes
@@ -112,6 +150,7 @@
 #define G_MTX_DKR_INDEX_2 2
 #define G_MW_BILLBOARD 0x02 //0x01 = billboarding enabled, 0x00 = disabled
 #define G_MW_MVPMATRIX 0x0A  //Specifies the index of the mvp matrix. 
+#define G_VTX_APPEND 1
 
 #define gDkrEnableBillboard(pkt)            \
 	gMoveWd(pkt, G_MW_BILLBOARD, 0, 1)  
