@@ -6091,8 +6091,276 @@ Object *find_taj_object(void) {
     return NULL;
 }
 
-// https://decomp.me/scratch/w4Ole
+// https://decomp.me/scratch/hcneX
 #ifdef NON_EQUIVALENT
+// Handles MidiFadePoint, MidiFade, and MidiSetChannel objects?
+void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate) {
+    s32 spF4;
+    f32 spC0;
+    void *spBC;
+    s32 sp98;
+    f32 sp78;
+    f32 sp74;
+    f32 sp70;
+    f32 temp_f0;
+    f32 temp_f0_2;
+    f32 temp_f0_3;
+    f32 temp_f0_4;
+    f32 temp_f0_5;
+    f32 temp_f0_6;
+    f32 temp_f0_7;
+    f32 temp_f12;
+    f32 temp_f12_2;
+    f32 temp_f14;
+    f32 temp_f14_2;
+    f32 temp_f14_3;
+    f32 temp_f14_4;
+    f32 temp_f16;
+    f32 temp_f18;
+    f32 temp_f20;
+    f32 temp_f22;
+    f32 temp_f24;
+    f32 temp_f26;
+    f32 temp_f28;
+    f32 temp_f2;
+    f32 temp_f2_2;
+    f32 temp_f2_3;
+    f32 temp_f2_4;
+    f32 temp_f2_5;
+    f32 temp_f30;
+    f32 var_f12;
+    // f32 var_f6;
+    f32 var_f8;
+    s16 behaviorId;
+    s32 temp_f10;
+    s32 temp_s0_2;
+    s32 temp_s0_3;
+    s32 temp_s0_4;
+    s32 temp_s0_5;
+    s32 temp_s0_6;
+    s32 temp_t3;
+    s32 temp_t3_2;
+    s32 temp_t4;
+    s32 temp_t8;
+    Object_MidiFade *temp_v1_2;
+    Object_MidiFade *temp_v1_3;
+    s32 var_s1;
+    s32 var_s1_2;
+    s32 var_s2;
+    s8 temp_t2_2;
+    s8 var_v0_2;
+    s8 var_v1;
+    u16 temp_t2;
+    u16 temp_v0_2;
+    s32 var_v0;
+    u8 temp_v0_3;
+    u8 temp_v0_5;
+    u8 temp_v0_6;
+    Object *obj;
+    Object_MidiFade *midiFade;
+    Object_MidiFadePoint *midiFadePoint;
+    Object_MidiFadePoint *midiFadePoint2;
+    Object_MidiChannelSet *midiChannelSet;
+
+    if (racerObj->unk64->racer.playerIndex == 0) {
+        if (cam_get_viewport_layout() == 0) {
+            spF4 = gObjectListStart;
+            if (gObjectListStart < gObjectCount) {
+                sp98 = gObjectListStart * 4;
+                do {
+                    obj = *(gObjPtrList + sp98);
+                    if (!(obj->segment.trans.flags & 0x8000)) {
+                        behaviorId = obj->behaviorId;
+                        if (behaviorId == BHV_MIDI_FADE_POINT) {
+                            temp_f0 = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                            temp_f2 = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                            temp_f14 = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                            temp_f0_2 = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
+                            midiFadePoint = &obj->unk64->midi_fade_point;
+                            temp_f2_2 = temp_f0_2;
+                            temp_t2 = midiFadePoint->unk2;
+                            var_f8 = (f32) temp_t2;
+                            if ((s32) temp_t2 < 0) {
+                                var_f8 += 4294967296.0f;
+                            }
+                            if (temp_f0_2 < var_f8) {
+                                spBC = midiFadePoint;
+                                spC0 = temp_f2_2;
+                                var_s1 = 0;
+                                midiFadePoint2 = midiFadePoint;
+                                if (midiFadePoint->unk1C == music_current_sequence()) {
+                                    temp_v0_2 = midiFadePoint->unk0;
+                                    var_f12 = (f32) temp_v0_2;
+                                    if ((s32) temp_v0_2 < 0) {
+                                        var_f12 += 4294967296.0f;
+                                    }
+                                    if (temp_f2_2 <= var_f12) {
+                                        var_s2 = 0;
+                                    } else {
+                                        var_s2 = (s32) ((127.0f * (temp_f2_2 - var_f12)) /
+                                                        (f32) (midiFadePoint->unk2 - temp_v0_2));
+                                    }
+                                    do {
+                                        temp_v0_3 = midiFadePoint2->unkC;
+                                        if (temp_v0_3 != 1) {
+                                            temp_s0_2 = var_s1 & 0xFF;
+                                            if (temp_v0_3 != 2) {
+
+                                            } else if ((music_channel_fade(temp_s0_2 & 0xFF) > 0) &&
+                                                       (music_channel_active(var_s1) == 0)) {
+                                                music_channel_fade_set(temp_s0_2 & 0xFF, var_s2 & 0xFF);
+                                            }
+                                        } else {
+                                            temp_s0_3 = var_s1 & 0xFF;
+                                            if (var_s2 >= 0x7B) {
+                                                music_channel_off(var_s1 & 0xFF);
+                                            } else {
+                                                music_channel_fade_set(temp_s0_3 & 0xFF, (0x7F - var_s2) & 0xFF);
+                                                music_channel_on(temp_s0_3 & 0xFF);
+                                            }
+                                        }
+                                        var_s1 += 1;
+                                        midiFadePoint2 += 1;
+                                    } while (var_s1 != 0x10);
+                                }
+                            }
+                        } else if (behaviorId == BHV_MIDI_FADE) {
+                            midiFade = &obj->unk64->midi_fade;
+                            temp_f16 = midiFade->unkC;
+                            temp_f30 = temp_f16 * yPos;
+                            temp_f18 = midiFade->unk10;
+                            temp_f12 = midiFade->unk8;
+                            temp_f14_2 = temp_f18 * zPos;
+                            temp_f24 = racerObj->segment.trans.x_position;
+                            temp_f26 = racerObj->segment.trans.y_position;
+                            temp_f20 = midiFade->unk14;
+                            temp_f28 = racerObj->segment.trans.z_position;
+                            sp78 = temp_f14_2;
+                            temp_f0_3 = (temp_f12 * xPos) + temp_f30 + temp_f14_2 + temp_f20;
+                            temp_f2_3 =
+                                (temp_f12 * temp_f24) + (temp_f16 * temp_f26) + (temp_f18 * temp_f28) + temp_f20;
+                            if ((temp_f0_3 > 0.0f) && (temp_f2_3 <= 0.0f)) {
+                                var_v1 = 1;
+                            } else {
+                                var_v1 = 0;
+                                if ((temp_f2_3 > 0.0f) && (temp_f0_3 <= 0.0f)) {
+                                    var_v1 = -1;
+                                }
+                            }
+                            if (var_v1 != 0) {
+                                sp70 = yPos;
+                                temp_f2_4 = temp_f26 - yPos;
+                                sp74 = zPos;
+                                temp_f0_4 = temp_f24 - xPos;
+                                temp_f14_3 = temp_f28 - zPos;
+                                temp_f22 = ((((-temp_f12 * xPos) - temp_f30) - sp78) - temp_f20) /
+                                           ((temp_f12 * temp_f0_4) + (temp_f16 * temp_f2_4) + (temp_f18 * temp_f14_3));
+                                temp_f12_2 = (temp_f22 * temp_f0_4) + xPos;
+                                if ((midiFade->unk18 <= temp_f12_2) && (temp_f12_2 <= midiFade->unk24)) {
+                                    temp_f0_5 = (temp_f22 * temp_f2_4) + sp70;
+                                    if (((f32) midiFade->unk1C <= temp_f0_5) && (temp_f0_5 <= midiFade->unk28)) {
+                                        temp_f0_6 = (temp_f22 * temp_f14_3) + sp74;
+                                        if ((midiFade->unk20 <= temp_f0_6) && (temp_f0_6 <= midiFade->unk2C)) {
+                                            midiFade->unk0 = var_v1;
+                                            midiFade->unk1 = 0;
+                                            midiFade->unk4 = 0;
+                                            D_8011AF60[0] = (s32) midiFade;
+                                        }
+                                    }
+                                }
+                            }
+                        } else if (behaviorId == BHV_MIDI_CHANNEL_SET) {
+                            temp_f0_7 = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                            temp_f2_5 = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                            temp_f14_4 = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                            midiChannelSet = &obj->unk64->midi_channel_set;
+                            if ((sqrtf((temp_f0_7 * temp_f0_7) + (temp_f2_5 * temp_f2_5) + (temp_f14_4 * temp_f14_4)) <
+                                 (f32) (midiChannelSet->unk2 * 4)) &&
+                                (midiChannelSet->unk0 != music_channel_get_mask()) &&
+                                (midiChannelSet->unk3 == music_current_sequence())) {
+                                music_dynamic_set(midiChannelSet->unk0);
+                            }
+                        }
+                    }
+                    temp_t3 = spF4 + 1;
+                    sp98 += 4;
+                    spF4 = temp_t3;
+                } while (temp_t3 < gObjectCount);
+            }
+            if (D_8011AF60[0] != 0) {
+                temp_v1_2 = D_8011AF60[0];
+                var_s1_2 = 0;
+                if (temp_v1_2->unk40 == music_current_sequence()) {
+                    temp_v1_2->unk4 += updateRate;
+                    var_v0 = D_8011AF60[0]->unk4;
+                    temp_t4 = (D_8011AF60[0]->unk2 * gVideoRefreshRate) & 0xFFFF;
+                    if (temp_t4 < (s32) var_v0) {
+                        D_8011AF60[0]->unk4 = (u16) temp_t4;
+                        var_v0 = D_8011AF60[0]->unk4;
+                    }
+                    /*
+                    var_f6 = (f32) temp_t4;
+                    if (temp_t4 < 0) {
+                        var_f6 += 4294967296.0f;
+                    }
+                    */
+                    temp_f10 = (s32) (((f32) var_v0 * 254.0f) / temp_t4);
+                    if (temp_f10 < 0xFE) {
+                        D_8011AF60[0]->unk1 = (s8) temp_f10;
+                    } else {
+                        D_8011AF60[0]->unk1 = 0xFE;
+                    }
+                    temp_v1_3 = D_8011AF60[0];
+                    do {
+                        var_v0_2 = temp_v1_3->unk2F[var_s1_2 + 1];
+                        if (temp_v1_3->unk0 == -1) {
+                            var_v0_2 = (s8) (var_v0_2 >> 2);
+                        }
+                        temp_t2_2 = var_v0_2 & 3;
+                        if (temp_t2_2 != 0) {
+                            temp_s0_4 = var_s1_2 & 0xFF;
+                            switch (temp_t2_2) { /* irregular */
+                                case 1:
+                                    music_channel_on(temp_s0_4 & 0xFF);
+                                    music_channel_fade_set(temp_s0_4 & 0xFF, 0x7FU);
+                                    break;
+                                case 3:
+                                    temp_v0_5 = temp_v1_3->unk1;
+                                    temp_s0_5 = var_s1_2 & 0xFF;
+                                    if ((s32) temp_v0_5 >= 0x80) {
+                                        temp_t3_2 = (temp_v0_5 - 0x7F) & 0xFF;
+                                        music_channel_on(temp_s0_5 & 0xFF);
+                                        if (music_channel_fade(temp_s0_5 & 0xFF) < temp_t3_2) {
+                                            music_channel_fade_set(temp_s0_5 & 0xFF, temp_t3_2 & 0xFF);
+                                        }
+                                    }
+                                    break;
+                                case 2:
+                                    temp_v0_6 = temp_v1_3->unk1;
+                                    temp_s0_6 = var_s1_2 & 0xFF;
+                                    if ((s32) temp_v0_6 < 0x7F) {
+                                        temp_t8 = (0x7F - temp_v0_6) & 0xFF;
+                                        if (temp_t8 < music_channel_fade(temp_s0_6 & 0xFF)) {
+                                            music_channel_fade_set(temp_s0_6 & 0xFF, temp_t8 & 0xFF);
+                                        }
+                                    } else {
+                                        music_channel_off(var_s1_2 & 0xFF);
+                                    }
+                                    break;
+                            }
+                        } else {
+                            music_channel_off(var_s1_2 & 0xFF);
+                        }
+                        var_s1_2 += 1;
+                    } while (var_s1_2 != 0x10);
+                }
+                if ((temp_v1_2->unk1 == 0xFE) && (D_8011AF60[0]->unk40 == music_current_sequence())) {
+                    D_8011AF60[0] = 0;
+                }
+            }
+        }
+    }
+}
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80018CE0.s")
 #endif

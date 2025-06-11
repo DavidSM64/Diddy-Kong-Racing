@@ -541,7 +541,7 @@ s32 get_first_active_object(s32 *);
 Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
 void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4);
-void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
+void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
 s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance, u8 *arg6);
 void obj_tex_animate(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);

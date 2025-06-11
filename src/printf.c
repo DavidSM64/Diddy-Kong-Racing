@@ -210,11 +210,6 @@ UNUSED int sprintf(char *s, const char *format, ...) {
     return ret;
 }
 
-/**
- * https://decomp.me/scratch/xoBfs
- * Official name: vsprintf
- */
-#ifdef NON_EQUIVALENT
 #define outchar(x)  \
     do {            \
         done++;     \
@@ -241,6 +236,11 @@ UNUSED int sprintf(char *s, const char *format, ...) {
 
 #define isdigit(c) ((c >= '0') && (c <= '9'))
 
+/**
+ * https://decomp.me/scratch/xoBfs
+ * Official name: vsprintf
+ */
+#ifdef NON_EQUIVALENT
 // Returns the total number of characters written.
 int vsprintf(char *s, const char *fmt, va_list args) {
     /* The string describing the size of groups of digits.  */
