@@ -676,6 +676,7 @@ s32 roll_percent_chance(s32 chance) {
     return rand_range(0, 99) < chance;
 }
 
+// https://decomp.me/scratch/jtFDz
 #ifdef NON_MATCHING
 #define FAKEMATCH
 // Handles the opponent A.I. for battle & banana challenges.
@@ -1106,7 +1107,10 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
             racer->unk1CE = 3;
         }
     } else {
-        if (1) { } if (1) { } if (1) { } if (1) { } // Fake
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {} // Fake
         racer->unk1C6 = 0;
     }
 
@@ -1369,6 +1373,7 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
 }
 
+// https://decomp.me/scratch/O7Ton
 #ifdef NON_EQUIVALENT
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate) {
     s32 overrideMagnitude;
@@ -3503,6 +3508,7 @@ void racer_attack_handler_plane(Object *obj, Object_Racer *racer) {
     }
 }
 
+// https://decomp.me/scratch/CQwF9
 #ifdef NON_EQUIVALENT
 void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
     s32 segmentIndex;
@@ -3710,7 +3716,7 @@ void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/update_camera_plane.s")
 #endif
 
-// https://decomp.me/scratch/yfGqf - 97.27%
+// https://decomp.me/scratch/nVftv
 #ifdef NON_EQUIVALENT
 // Handles loop de loops
 void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Racer *racer) {
@@ -7861,6 +7867,7 @@ void second_racer_camera_update(Object *obj, Object_Racer *racer, s32 mode, f32 
     }
 }
 
+// https://decomp.me/scratch/NYLzW
 #ifdef NON_EQUIVALENT
 void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     s64 pad;
@@ -8202,6 +8209,7 @@ void set_position_goal_from_path(UNUSED Object *obj, Object_Racer *racer, f32 *x
     *z = catmull_rom_interpolation(splineZ, destReached, magnitude);
 }
 
+// https://decomp.me/scratch/6WBdX
 #ifdef NON_MATCHING
 void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     UNUSED s32 pad[2];
@@ -8508,6 +8516,7 @@ s16 timetrial_ghost_full(void) {
     return gGhostNodeFull[gCurrentGhostIndex];
 }
 
+// https://decomp.me/scratch/yMObT
 #ifdef NON_EQUIVALENT
 // timetrial_ghost_read
 s32 set_ghost_position_and_rotation(Object *obj) {

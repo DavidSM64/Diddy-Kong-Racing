@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of June 9, 2025, this is our current score:
+As of June 10, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 90.34%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 90.32%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 59.17%
 <!-- README_SCORE_SUMMARY_END -->
@@ -117,15 +117,15 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of June 9, 2025, this is our current score:
+As of June 10, 2025, this is our current score:
 ```
  ====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- -------------- 90.34% Complete (91.67% NON_MATCHING) ---------------
+ -------------- 90.32% Complete (91.65% NON_MATCHING) ---------------
                      # Decompiled functions: 1911
-                      # GLOBAL_ASM remaining: 40
+                      # GLOBAL_ASM remaining: 39
                      # NON_MATCHING functions: 6
-                  # NON_EQUIVALENT WIP functions: 19
+                  # NON_EQUIVALENT WIP functions: 29
  --------------------------- Game Status ----------------------------
               Balloons: 42/47, Keys: 4/4, Trophies: 4/5
                 T.T. Amulets: 4/4, Wizpig Amulets: 4/4
@@ -135,7 +135,7 @@ As of June 9, 2025, this is our current score:
                 ADVENTURE TWO (Cleanup & Documentation)
  ------------------------- 59.17% Complete --------------------------
                      # Documented functions: 1206
-                    # Undocumented remaining: 448
+                    # Undocumented remaining: 447
  --------------------------- Game Status ----------------------------
               Balloons: 29/47, Keys: 3/4, Trophies: 2/5
                 T.T. Amulets: 3/4, Wizpig Amulets: 2/4
