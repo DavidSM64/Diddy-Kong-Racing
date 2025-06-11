@@ -4112,31 +4112,32 @@ void render_racer_magnet(Gfx **dList, Mtx **mtx, Vertex **vtxList, Object *obj) 
     }
 }
 
-// https://decomp.me/scratch/sCEnz
-#ifdef NON_EQUIVALENT
 void func_80014090(Object *obj, s32 arg1) {
     ObjectHeader *objHeader;
     s16 width;
     s16 height;
-    s16 prevU;
-    s16 prevV;
     s32 i;
     s32 j;
     s32 k;
     s32 end;
-    u8 objHeader72;
-    u8 objHeader73;
+    s16 objHeader72;
+    s16 objHeader73;
     ObjectModel *objMdl;
+    Object_68 *obj68;
     TextureInfo *texInfo;
     Triangle *tri;
     s16 temp;
     s16 temp2;
+    s16 newU1;
+    s16 newU2;
+    s16 newV1;
+    s16 newV2;
 
     objHeader = obj->segment.header;
     objHeader73 = objHeader->unk73;
     objHeader72 = objHeader->unk72;
-    temp = objHeader->unk74 * arg1;
-    temp2 = objHeader->unk75 * arg1;
+    temp = (s16) (objHeader->unk74 * arg1);
+    temp2 = (s16) (objHeader->unk75 * arg1);
     if ((objHeader73 == 0xFF) || (objHeader73 < objHeader->numberOfModelIds)) {
         if (objHeader73 == 0xFF) {
             end = objHeader->numberOfModelIds;
@@ -4145,24 +4146,26 @@ void func_80014090(Object *obj, s32 arg1) {
             end = objHeader73 + 1;
         }
         for (i = objHeader73; i < end; i++) {
-            objMdl = obj->unk68[i]->objModel;
+            obj68 = obj->unk68[i];
+            objMdl = obj68->objModel;
             if (objHeader72 < objMdl->numberOfTextures) {
-                texInfo = &objMdl->textures[objHeader72];
-                width = texInfo->texture->width << 5;
-                height = texInfo->texture->height << 5;
+                width = objMdl->textures[objHeader72].texture->width << 5;
+                height = objMdl->textures[objHeader72].texture->height << 5;
                 for (j = 0; j < objMdl->numberOfBatches; j++) {
                     if (objHeader72 == objMdl->batches[j].textureIndex) {
                         for (k = objMdl->batches[j].facesOffset; k < objMdl->batches[j + 1].facesOffset; k++) {
                             tri = &objMdl->triangles[k];
-                            prevU = tri->uv0.u;
-                            prevV = tri->uv0.v;
+                            newU1 = (tri->uv1.u - tri->uv0.u);
+                            newV1 = (tri->uv1.v - tri->uv0.v);
+                            newU2 = (tri->uv2.u - tri->uv0.u);
+                            newV2 = (tri->uv2.v - tri->uv0.v);
                             // s16 casts required
-                            tri->uv0.u = (prevU + temp) & (s16) (width - 1);
-                            tri->uv0.v = (prevV + temp2) & (s16) (height - 1);
-                            tri->uv1.u = tri->uv0.u + (tri->uv1.u - prevU);
-                            tri->uv1.v = tri->uv0.v + (tri->uv1.v - prevV);
-                            tri->uv2.u = tri->uv0.u + (tri->uv2.u - prevU);
-                            tri->uv2.v = tri->uv0.v + (tri->uv2.v - prevV);
+                            tri->uv0.u = (tri->uv0.u + temp) & (s16) (width - 1);
+                            tri->uv0.v = (tri->uv0.v + temp2) & (s16) (height - 1);
+                            tri->uv1.u = tri->uv0.u + newU1;
+                            tri->uv1.v = tri->uv0.v + newV1;
+                            tri->uv2.u = tri->uv0.u + newU2;
+                            tri->uv2.v = tri->uv0.v + newV2;
                         }
                     }
                 }
@@ -4170,9 +4173,6 @@ void func_80014090(Object *obj, s32 arg1) {
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80014090.s")
-#endif
 
 /**
  * Loop through every object.
