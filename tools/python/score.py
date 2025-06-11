@@ -152,7 +152,8 @@ class ScoreFile:
             self.nonEquivalents = re.findall(NON_EQUVIALENT_REGEX, self.text)
             self.nonEquivalentsSizes = 0
             for nonEquivalent in self.nonEquivalents:
-                self.nonEquivalentsSizes += MAP_FILE.functionSizes[nonEquivalent]
+                if (nonEquivalent not in NOT_FUNCTION_NAMES):
+                    self.nonEquivalentsSizes += MAP_FILE.functionSizes[nonEquivalent]
             self.numNonEquivalents = len(self.nonEquivalents)
             
             self.text = re.sub(WIP_REGEX, r"GLOBAL_ASM(\1)", self.text)

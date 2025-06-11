@@ -806,7 +806,8 @@ UNUSED s32 fix32_sqrt(s32 x) {
 GLOBAL_ASM("asm/math_util/fix32_sqrt.s")
 #endif
 
-#ifdef NON_EQUIVALENT // Untested
+// Untested
+#ifdef NON_EQUIVALENT
 UNUSED s32 bad_int_sqrt(s32 arg0) {
     return (s32) (sqrtf((f32) arg0 / 65536.0f) * 65536.0f);
 }
@@ -818,8 +819,9 @@ GLOBAL_ASM("asm/math_util/sins_f.s")
 GLOBAL_ASM("asm/math_util/coss_f.s")
 GLOBAL_ASM("asm/math_util/coss.s")
 GLOBAL_ASM("asm/math_util/sins_2.s")
-
-#ifdef NON_EQUIVALENT // Untested
+ 
+// Untested
+#ifdef NON_EQUIVALENT
 UNUSED s32 calc_dyn_lighting_for_level_segment(LevelModelSegment *segment, s32 *vec3_ints) {
     s32 dotProduct;
     s32 numVertsInBatch;
