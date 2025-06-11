@@ -3520,8 +3520,7 @@ void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
             angle += 0xFFFF;
         }
         if (racer->camera_zoom < 0.4) {
-            // This is 1 / 180
-            racer->camera_zoom += 0.00555555555555555577;
+            racer->camera_zoom += 1 / 180.0;
         } else {
             racer->camera_zoom = 0.4f;
         }
