@@ -333,6 +333,21 @@ typedef struct RacerFXData {
     u8 unk3;
 } RacerFXData;
 
+typedef struct unk80017A18_10 {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+} unk80017A18_10;
+
+typedef struct unk80017A18 {
+    u8 pad0[0xC];
+    u16 *unkC;
+    unk80017A18_10 *unk10;
+    u8 pad14[0x1E];
+    s16 unk32;
+} unk80017A18;
+
 extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
 
 Object *racerfx_get_boost(s32 boostID);
@@ -502,6 +517,10 @@ void func_8001E4C4(void);
 void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles);
 s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
 s32 ainode_find_next(s32 nodeId, s32 nextNodeId, s32 direction);
+unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1);
+unk800179D0 *func_80017978(s32 arg0, s32 arg1);
+s8 func_800214E4(Object *obj, s32 updateRate);
+f32 lerp_and_get_derivative(f32 *data, u32 index, f32 t, f32 *derivative);
 
 /**
  * Faster variant of the shading function for objects.
@@ -523,7 +542,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
 void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4);
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
-s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); 
+s32 func_800185E4(s32, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); 
 void obj_tex_animate(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);
 void func_8006017C(ObjectModel *);
@@ -544,5 +563,5 @@ void func_800159C8(Object *, Object *);
 void obj_door_number(ObjectModel *, Object *);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 f32 func_8001C6C4(Object_NPC *, Object *, f32, f32, s32);
-
+s32 func_80017A18(ObjectModel *, s32, s32*, f32*, f32*, f32*, f32*, f32*, f32*, f32*, s8*, f32); // NON EQUIVALENT
 #endif

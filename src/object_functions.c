@@ -3044,7 +3044,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 if (var_f2 < 1000.0f) {
                     var_f2 = 1000.0f - var_f2;
                     sp3C = (127.0f * var_f2) / 1000.0f;
-                    temp_v0_22 = get_cutscene_camera_segment();
+                    temp_v0_22 = cam_get_cameras();
                     xPosDiff = obj->segment.trans.x_position - temp_v0_22->trans.x_position;
                     zPosDiff = obj->segment.trans.z_position - temp_v0_22->trans.z_position;
                     arctan = audspat_calculate_spatial_pan(xPosDiff, zPosDiff, temp_v0_22->trans.rotation.y_rotation);

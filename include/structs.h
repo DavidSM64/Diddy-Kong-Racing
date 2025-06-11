@@ -112,8 +112,8 @@ typedef struct TextureHeader {
       // 6 = IA4
       // 7 = CI4 (16 colors)
       // 8 = CI8 (64 colors)
-  /* 0x03 */ s8 unk3;
-  /* 0x04 */ s8 unk4;
+  /* 0x03 */ s8 posX; // X coordinate of the texture in the sprite's 2D space
+  /* 0x04 */ s8 posY; // Y coordinate of the texture in the sprite's 2D space
   /* 0x05 */ u8 numberOfInstances; // Always 1 in the ROM.
   /* 0x06 */ s16 flags;
       // 0x04 = Interlaced texture
@@ -151,19 +151,21 @@ typedef struct ShadowHeapProperties {
   s16 vtxCount; // Offset from the center of the screen.
 } ShadowHeapProperties;
 
+typedef struct SpriteAsset {
+    /* 0x00 */ s16 baseTextureId;
+    /* 0x02 */ s16 numberOfFrames; // 1 means static texture
+    /* 0x04 */ Vec2s anchor;  // 2D coordinates on the sprite used as the anchor point for positioning in 3D space
+    /* 0x08 */ s32 unused_field;
+    /* 0x0C */ u8 frameTexOffsets[1]; // actual size is numberOfFrames + 1
+} SpriteAsset;
+
 typedef struct Sprite {
-  /* 0x00 */ s16 baseTextureId;
-  /* 0x02 */ s16 numberOfFrames; // 1 means static texture
-  /* 0x04 */ s16 numberOfInstances;
-  /* 0x06 */ s16 drawFlags;
-  union {
-    /* 0x08 */ TextureHeader **frames;
-    /* 0x08 */ Gfx *gfx[1];
-  };
-  union {
-    /* 0x0C */ u8 val[1]; // Actual size varies.
-    /* 0x0C */ u8 *ptr[1]; // Display list?
-  } unkC;
+    /* 0x00 */ s16 numberOfFrames; // 1 means static texture
+    /* 0x02 */ s16 numberOfTextures;
+    /* 0x04 */ s16 numberOfInstances;
+    /* 0x06 */ s16 drawFlags;
+    /* 0x08 */ TextureHeader **textures;
+    /* 0x0C */ Gfx *frames[1]; // Actual size varies.
 } Sprite;
 
 /* Size: 0x20 bytes */
@@ -837,7 +839,11 @@ typedef struct ObjectHeader {
   /* 0x70 */ u8 unk70;
   /* 0x71 */ u8 directionalPointLighting; // If enabled, the model is lit from the direction of the light source; if disabled, lighting is applied evenly from all sides
   /* 0x72 */ u8 unk72;
-             u8 pad73[0x5];
+  /* 0x73 */ u8 unk73;
+  /* 0x74 */ s8 unk74;
+  /* 0x75 */ s8 unk75;
+  /* 0x76 */ u8 unk76;
+  /* 0x77 */ u8 unk77;
 } ObjectHeader;
 
 typedef struct ObjectInteraction {
@@ -1517,6 +1523,12 @@ typedef struct Object_MidiFadePoint {
   /* 0x1C */ u8 unk1C;
 } Object_MidiFadePoint;
 
+typedef struct Object_MidiChannelSet {
+    s16 unk0;
+    u8 unk2;
+    u8 unk3;
+} Object_MidiChannelSet;
+
 typedef struct Object_PosArrow {
   /* 0x000 */ s16 unk0;
   /* 0x004 */ u8 pad4[0x14E];
@@ -1699,6 +1711,7 @@ typedef struct Object_64 {
         Object_Audio audio;
         Object_MidiFade midi_fade;
         Object_MidiFadePoint midi_fade_point;
+        Object_MidiChannelSet midi_channel_set;
         Object_PosArrow pos_arrow;
         Object_Banana banana;
         Object_FogChanger fog_changer;

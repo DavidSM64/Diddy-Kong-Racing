@@ -194,7 +194,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut);
 void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6);
 void waves_init(LevelModel *, LevelHeader *, s32);
 void void_init(s32);
-void func_8002C0C4(s32 modelId);
+void generate_track(s32 modelId);
 void func_800304C8(unk8011C8B8 *arg0);
 s32 void_generate_primitive(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
 s32 func_8002FF6C(s32, unk8011C8B8 *, s32, Vec2f *);

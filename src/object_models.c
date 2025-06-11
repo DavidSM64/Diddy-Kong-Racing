@@ -376,8 +376,8 @@ void free_model_data(ObjectModel *mdl) {
     mempool_free(mdl);
 }
 
+// https://decomp.me/scratch/VJ34p
 #ifdef NON_EQUIVALENT
-// url: https://decomp.me/scratch/VJ34p
 void func_8006017C(ObjectModel *arg0) {
     s32 facesOffset;     // v1
     s32 verticesOffset;  // s5
@@ -543,7 +543,6 @@ void func_8006017C(ObjectModel *arg0) {
         }
     }
 }
-
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_8006017C.s")
 #endif
