@@ -135,7 +135,7 @@ As of June 11, 2025, this is our current score:
                 ADVENTURE TWO (Cleanup & Documentation)
  ------------------------- 59.17% Complete --------------------------
                      # Documented functions: 1206
-                    # Undocumented remaining: 448
+                    # Undocumented remaining: 447
  --------------------------- Game Status ----------------------------
               Balloons: 29/47, Keys: 3/4, Trophies: 2/5
                 T.T. Amulets: 3/4, Wizpig Amulets: 2/4
