@@ -837,7 +837,11 @@ typedef struct ObjectHeader {
   /* 0x70 */ u8 unk70;
   /* 0x71 */ u8 directionalPointLighting; // If enabled, the model is lit from the direction of the light source; if disabled, lighting is applied evenly from all sides
   /* 0x72 */ u8 unk72;
-             u8 pad73[0x5];
+  /* 0x73 */ u8 unk73;
+  /* 0x74 */ s8 unk74;
+  /* 0x75 */ s8 unk75;
+  /* 0x76 */ u8 unk76;
+  /* 0x77 */ u8 unk77;
 } ObjectHeader;
 
 typedef struct ObjectInteraction {
@@ -1517,6 +1521,12 @@ typedef struct Object_MidiFadePoint {
   /* 0x1C */ u8 unk1C;
 } Object_MidiFadePoint;
 
+typedef struct Object_MidiChannelSet {
+    s16 unk0;
+    u8 unk2;
+    u8 unk3;
+} Object_MidiChannelSet;
+
 typedef struct Object_PosArrow {
   /* 0x000 */ s16 unk0;
   /* 0x004 */ u8 pad4[0x14E];
@@ -1699,6 +1709,7 @@ typedef struct Object_64 {
         Object_Audio audio;
         Object_MidiFade midi_fade;
         Object_MidiFadePoint midi_fade_point;
+        Object_MidiChannelSet midi_channel_set;
         Object_PosArrow pos_arrow;
         Object_Banana banana;
         Object_FogChanger fog_changer;

@@ -1083,6 +1083,7 @@ typedef struct Unk80027568_1 {
     Vec4f *unk18;
 } Unk80027568_1;
 
+// https://decomp.me/scratch/duMgr
 s32 func_80027568(void) {
     f32 projectedRacerPos;
     f32 projectedCamPos;
@@ -1349,10 +1350,10 @@ void set_skydome_visbility(s32 renderSky) {
     gSceneRenderSkyDome = renderSky;
 }
 
+// https://decomp.me/scratch/E1DFy
 #ifdef NON_MATCHING
 // This function creates the flashy sky effect in the wizpig 2 race.
 // init_skydome
-// https://decomp.me/scratch/E1DFy
 void func_80028050(void) {
     Triangle *tris;
     Vertex *verts;
@@ -2481,6 +2482,7 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     return gTrackWaves[index]->type;
 }
 
+// https://decomp.me/scratch/X1SBi
 #ifdef NON_EQUIVALENT
 s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***arg3) {
     LevelModelSegment *currentSegment;
@@ -2684,6 +2686,7 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3) {
     }
 }
 
+// https://decomp.me/scratch/Y39p2
 #ifdef NON_MATCHING
 // Collision: Returns the Y Values in yOut, and the number of values in the array as the return.
 // Get's the Y Offset acrross a surface.
@@ -2823,6 +2826,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002BAB0.s")
 #endif
 
+// https://decomp.me/scratch/tdASx
 #ifdef NON_MATCHING
 // generate_track
 // Loads a level track from the index in the models table.
@@ -3069,6 +3073,7 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
     }
 }
 
+// https://decomp.me/scratch/0JT8R
 #ifdef NON_EQUIVALENT
 s32 func_8002CC30(LevelModelSegment *segment) {
     s32 spF4;
@@ -4258,7 +4263,8 @@ s32 func_8002FF6C(s32 arg0, unk8011C8B8 *arg1, s32 arg2, Vec2f *arg3) {
     return var_s2;
 }
 
-#ifdef NON_EQUIUVALENT
+// https://decomp.me/scratch/QF6FF
+#ifdef NON_EQUIVALENT
 void func_800304C8(unk8011C8B8 *arg0) {
     s16 found1;
     s16 found2;
@@ -4294,7 +4300,7 @@ void func_800304C8(unk8011C8B8 *arg0) {
         if (found2 == found3) {
             f32 test = (-(((D_8011D0BC->x * gNewShadowObj->segment.trans.x_position) +
                            (D_8011D0BC->z * gNewShadowObj->segment.trans.z_position)) +
-                          D_8011D0BC->w)) /
+                          D_8011D0BC->unkC_union.w)) /
                        D_8011D0BC->y;
             if (D_8011D0D0 < test) {
                 D_8011D0D0 = test;
