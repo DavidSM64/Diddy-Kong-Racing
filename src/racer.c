@@ -873,10 +873,8 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
                     if (newvar->aiNode.elevation < sp4E || sp4E < sp6C->aiNode.elevation) {
                         sp46 = TRUE;
                     }
-                } else {
-                    if (sp6C->aiNode.elevation < sp4E || sp4E < newvar->aiNode.elevation) {
-                        sp46 = TRUE;
-                    }
+                } else if (sp6C->aiNode.elevation < sp4E || sp4E < newvar->aiNode.elevation) {
+                    sp46 = TRUE;
                 }
                 if (sp46) {
                     if (aiRacer->unk1CD == 4) {
