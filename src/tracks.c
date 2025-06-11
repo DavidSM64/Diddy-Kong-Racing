@@ -2823,15 +2823,11 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002BAB0.s")
 #endif
 
-#ifdef NON_MATCHING
-// generate_track
-// Loads a level track from the index in the models table.
-// Has regalloc issues.
 void func_8002C0C4(s32 modelId) {
     s32 i, j, k;
     s32 temp_s4;
     s32 temp;
-    LevelModel *mdl;
+    s32 mdl;
 
     set_texture_colour_tag(COLOUR_TAG_GREEN);
     gTrackModelHeap = mempool_alloc_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
@@ -2847,19 +2843,18 @@ void func_8002C0C4(s32 modelId) {
         modelId = 0;
     }
 
-    // offset = gLevelModelTable[modelId];
-    temp_s4 = gLevelModelTable[modelId + 1] - gLevelModelTable[modelId];
+    mdl = gLevelModelTable[modelId];
+    temp_s4 = gLevelModelTable[modelId + 1] - mdl;
 
-    // temp = compressedRamAddr
     temp = (s32) gCurrentLevelModel;
     temp += (LEVEL_MODEL_MAX_SIZE - temp_s4);
     temp -= ((s32) temp % 16); // Align to 16-byte boundary.
 
-    load_asset_to_address(ASSET_LEVEL_MODELS, temp, gLevelModelTable[modelId], temp_s4);
+    load_asset_to_address(ASSET_LEVEL_MODELS, temp, mdl, temp_s4);
     gzip_inflate((u8 *) temp, (u8 *) gCurrentLevelModel);
     mempool_free(gLevelModelTable); // Done with the level models table, so free it.
 
-    mdl = gCurrentLevelModel;
+    mdl = (s32) gCurrentLevelModel;
 
     LOCAL_OFFSET_TO_RAM_ADDRESS(TextureInfo *, gCurrentLevelModel->textures);
     LOCAL_OFFSET_TO_RAM_ADDRESS(LevelModelSegment *, gCurrentLevelModel->segments);
@@ -2867,13 +2862,6 @@ void func_8002C0C4(s32 modelId) {
     LOCAL_OFFSET_TO_RAM_ADDRESS(u8 *, gCurrentLevelModel->unkC);
     LOCAL_OFFSET_TO_RAM_ADDRESS(u8 *, gCurrentLevelModel->segmentsBitfields);
     LOCAL_OFFSET_TO_RAM_ADDRESS(BspTreeNode *, gCurrentLevelModel->segmentsBspTree);
-
-    if (1) {}
-    if (1) {}
-    if (1) {}
-    if (1) {}
-    if (1) {}
-    if (1) {} // Fakematch
 
     for (k = 0; k < gCurrentLevelModel->numberOfSegments; k++) {
         LOCAL_OFFSET_TO_RAM_ADDRESS(Vertex *, gCurrentLevelModel->segments[k].vertices);
@@ -2925,9 +2913,6 @@ void func_8002C0C4(s32 modelId) {
     }
     set_texture_colour_tag(COLOUR_TAG_MAGENTA);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002C0C4.s")
-#endif
 
 void func_8002C71C(LevelModelSegment *segment) {
     s32 curVertY;
