@@ -92,7 +92,7 @@ void StringHelper::replace(std::string &input, std::string oldPattern, std::stri
     }
 }
 
-void StringHelper::split(std::string &input, const char delim, std::vector<std::string> &out) {
+void StringHelper::split(const std::string &input, const char delim, std::vector<std::string> &out) {
     std::stringstream ss(input);
     std::string s;
     while (std::getline(ss, s, delim)) {
@@ -100,12 +100,50 @@ void StringHelper::split(std::string &input, const char delim, std::vector<std::
     }
 }
 
-void StringHelper::split_and_trim(std::string &input, const char delim, std::vector<std::string> &out) {
+void StringHelper::split_and_trim(const std::string &input, const char delim, std::vector<std::string> &out) {
     std::stringstream ss(input);
     std::string s;
     while (std::getline(ss, s, delim)) {
         trim(s);
         out.push_back(s);
+    }
+}
+
+void StringHelper::split(const std::string &input, const std::vector<char> delims, std::vector<std::string> &out) {
+    if(delims.empty()) {
+        return;
+    }
+    
+    size_t startIndex = 0;
+    for(size_t i = 0; i < input.size(); i++) {
+        for(char delim : delims) {
+            if(input[i] == delim) {
+                // Output string.
+                out.emplace_back(input.substr(startIndex, i - startIndex));
+                startIndex = i + 1;
+                break;
+            }
+        }
+    }
+}
+
+void StringHelper::split_and_trim(const std::string &input, const std::vector<char> delims, std::vector<std::string> &out) {
+    if(delims.empty()) {
+        return;
+    }
+    
+    size_t startIndex = 0;
+    for(size_t i = 0; i < input.size(); i++) {
+        for(char delim : delims) {
+            if(input[i] == delim) {
+                // Output string.
+                std::string outEntry = input.substr(startIndex, i - startIndex);
+                trim(outEntry);
+                out.emplace_back(outEntry);
+                startIndex = i + 1;
+                break;
+            }
+        }
     }
 }
 

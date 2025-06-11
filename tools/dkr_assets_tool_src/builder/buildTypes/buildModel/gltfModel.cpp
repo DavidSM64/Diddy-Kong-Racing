@@ -330,7 +330,7 @@ uint32_t GltfBuildModel::_get_render_flags_from_extras(tinygltf::Value& extras, 
         case tinygltf::STRING_TYPE:
         {
             std::string flagsString = GltfHelper::get_extra<std::string>(extras, "/flags", "");
-            StringHelper::split_and_trim(flagsString, ',', flags);
+            StringHelper::split_and_trim(flagsString, {',','|'}, flags); // Flags are separated by either commas or vertical pipes.
             break;
         }
         default:

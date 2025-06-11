@@ -34,9 +34,13 @@ namespace StringHelper {
     // Returns a string that is made lowercase, whitespace removed, and all dashes `-` and underscores `_` removed.
     std::string simplify(const std::string& input);
     
-    // Splits the input string by a single character into out, so "A,B,C" would be put into [A,B,C]. input is NOT modified!
-    void split(std::string &input, const char delim, std::vector<std::string> &out);
-    void split_and_trim(std::string &input, const char delim, std::vector<std::string> &out);
+    // Splits the input string by a single character into out, so "A,B,C" would be put into [A,B,C].
+    void split(const std::string &input, const char delim, std::vector<std::string> &out);
+    void split_and_trim(const std::string &input, const char delim, std::vector<std::string> &out);
+    
+    // Splits input based on multiple delimater characters. So you can have a string based on `,` OR `;` OR `|`, etc.
+    void split(const std::string &input, const std::vector<char> delims, std::vector<std::string> &out);
+    void split_and_trim(const std::string &input, const std::vector<char> delims, std::vector<std::string> &out);
     
     std::string join(const std::vector<std::string> &input, std::string delim, size_t startIndex = 0);
     
