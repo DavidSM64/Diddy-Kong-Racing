@@ -6093,11 +6093,11 @@ Object *find_taj_object(void) {
 
 // https://decomp.me/scratch/hcneX
 #ifdef NON_EQUIVALENT
- // Handles MidiFadePoint, MidiFade, and MidiSetChannel objects?
-void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate) {
+// Handles MidiFadePoint, MidiFade, and MidiSetChannel objects?
+void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate) {
     s32 spF4;
     f32 spC0;
-    void* spBC;
+    void *spBC;
     s32 sp98;
     f32 sp78;
     f32 sp74;
@@ -6129,7 +6129,7 @@ void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
     f32 temp_f2_5;
     f32 temp_f30;
     f32 var_f12;
-    //f32 var_f6;
+    // f32 var_f6;
     f32 var_f8;
     s16 behaviorId;
     s32 temp_f10;
@@ -6142,8 +6142,8 @@ void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
     s32 temp_t3_2;
     s32 temp_t4;
     s32 temp_t8;
-    Object_MidiFade* temp_v1_2;
-    Object_MidiFade* temp_v1_3;
+    Object_MidiFade *temp_v1_2;
+    Object_MidiFade *temp_v1_3;
     s32 var_s1;
     s32 var_s1_2;
     s32 var_s2;
@@ -6156,10 +6156,10 @@ void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
     u8 temp_v0_3;
     u8 temp_v0_5;
     u8 temp_v0_6;
-    Object* obj;
+    Object *obj;
     Object_MidiFade *midiFade;
-    Object_MidiFadePoint* midiFadePoint;
-    Object_MidiFadePoint* midiFadePoint2;
+    Object_MidiFadePoint *midiFadePoint;
+    Object_MidiFadePoint *midiFadePoint2;
     Object_MidiChannelSet *midiChannelSet;
 
     if (racerObj->unk64->racer.playerIndex == 0) {
@@ -6197,7 +6197,8 @@ void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
                                     if (temp_f2_2 <= var_f12) {
                                         var_s2 = 0;
                                     } else {
-                                        var_s2 = (s32) ((127.0f * (temp_f2_2 - var_f12)) / (f32) (midiFadePoint->unk2 - temp_v0_2));
+                                        var_s2 = (s32) ((127.0f * (temp_f2_2 - var_f12)) /
+                                                        (f32) (midiFadePoint->unk2 - temp_v0_2));
                                     }
                                     do {
                                         temp_v0_3 = midiFadePoint2->unkC;
@@ -6205,7 +6206,8 @@ void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
                                             temp_s0_2 = var_s1 & 0xFF;
                                             if (temp_v0_3 != 2) {
 
-                                            } else if ((music_channel_fade(temp_s0_2 & 0xFF) > 0) && (music_channel_active(var_s1) == 0)) {
+                                            } else if ((music_channel_fade(temp_s0_2 & 0xFF) > 0) &&
+                                                       (music_channel_active(var_s1) == 0)) {
                                                 music_channel_fade_set(temp_s0_2 & 0xFF, var_s2 & 0xFF);
                                             }
                                         } else {
@@ -6235,7 +6237,8 @@ void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
                             temp_f28 = racerObj->segment.trans.z_position;
                             sp78 = temp_f14_2;
                             temp_f0_3 = (temp_f12 * xPos) + temp_f30 + temp_f14_2 + temp_f20;
-                            temp_f2_3 = (temp_f12 * temp_f24) + (temp_f16 * temp_f26) + (temp_f18 * temp_f28) + temp_f20;
+                            temp_f2_3 =
+                                (temp_f12 * temp_f24) + (temp_f16 * temp_f26) + (temp_f18 * temp_f28) + temp_f20;
                             if ((temp_f0_3 > 0.0f) && (temp_f2_3 <= 0.0f)) {
                                 var_v1 = 1;
                             } else {
@@ -6250,7 +6253,8 @@ void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
                                 sp74 = zPos;
                                 temp_f0_4 = temp_f24 - xPos;
                                 temp_f14_3 = temp_f28 - zPos;
-                                temp_f22 = ((((-temp_f12 * xPos) - temp_f30) - sp78) - temp_f20) / ((temp_f12 * temp_f0_4) + (temp_f16 * temp_f2_4) + (temp_f18 * temp_f14_3));
+                                temp_f22 = ((((-temp_f12 * xPos) - temp_f30) - sp78) - temp_f20) /
+                                           ((temp_f12 * temp_f0_4) + (temp_f16 * temp_f2_4) + (temp_f18 * temp_f14_3));
                                 temp_f12_2 = (temp_f22 * temp_f0_4) + xPos;
                                 if ((midiFade->unk18 <= temp_f12_2) && (temp_f12_2 <= midiFade->unk24)) {
                                     temp_f0_5 = (temp_f22 * temp_f2_4) + sp70;
@@ -6265,12 +6269,15 @@ void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
                                     }
                                 }
                             }
-                        } else if (behaviorId == BHV_MIDI_CHANNEL_SET) { 
+                        } else if (behaviorId == BHV_MIDI_CHANNEL_SET) {
                             temp_f0_7 = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                             temp_f2_5 = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                             temp_f14_4 = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
                             midiChannelSet = &obj->unk64->midi_channel_set;
-                            if ((sqrtf((temp_f0_7 * temp_f0_7) + (temp_f2_5 * temp_f2_5) + (temp_f14_4 * temp_f14_4)) < (f32) (midiChannelSet->unk2 * 4)) && (midiChannelSet->unk0 != music_channel_get_mask()) && (midiChannelSet->unk3 == music_current_sequence())) {
+                            if ((sqrtf((temp_f0_7 * temp_f0_7) + (temp_f2_5 * temp_f2_5) + (temp_f14_4 * temp_f14_4)) <
+                                 (f32) (midiChannelSet->unk2 * 4)) &&
+                                (midiChannelSet->unk0 != music_channel_get_mask()) &&
+                                (midiChannelSet->unk3 == music_current_sequence())) {
                                 music_dynamic_set(midiChannelSet->unk0);
                             }
                         }
@@ -6284,7 +6291,7 @@ void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
                 temp_v1_2 = D_8011AF60[0];
                 var_s1_2 = 0;
                 if (temp_v1_2->unk40 == music_current_sequence()) {
-                    temp_v1_2->unk4 += updateRate; 
+                    temp_v1_2->unk4 += updateRate;
                     var_v0 = D_8011AF60[0]->unk4;
                     temp_t4 = (D_8011AF60[0]->unk2 * gVideoRefreshRate) & 0xFFFF;
                     if (temp_t4 < (s32) var_v0) {
@@ -6312,7 +6319,7 @@ void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
                         temp_t2_2 = var_v0_2 & 3;
                         if (temp_t2_2 != 0) {
                             temp_s0_4 = var_s1_2 & 0xFF;
-                            switch (temp_t2_2) {    /* irregular */
+                            switch (temp_t2_2) { /* irregular */
                                 case 1:
                                     music_channel_on(temp_s0_4 & 0xFF);
                                     music_channel_fade_set(temp_s0_4 & 0xFF, 0x7FU);
