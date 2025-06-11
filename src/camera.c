@@ -82,7 +82,7 @@ s32 gNumCameras;
 UNUSED s32 D_80120CEC;
 ObjectTransform gCameraTransform;
 s32 gMtxOriginID;
-s32 gSpriteAnimOff;
+s32 gSpriteAnimMode;
 f32 gCurCamFOV;
 s8 gCutsceneCameraActive;
 s8 gAdjustViewportHeight;
@@ -132,7 +132,7 @@ void cam_init(void) {
     gModelMatrixStackPos = 0;
     gCameraMatrixPos = 0;
     gViewportLayout = 0;
-    gSpriteAnimOff = FALSE;
+    gSpriteAnimMode = SPRITE_ANIM_NORMALIZED;
     gNoCamShake = FALSE;
     gAdjustViewportHeight = FALSE;
     gAntiPiracyViewport = FALSE;
@@ -1028,30 +1028,38 @@ void mtx_world_origin(Gfx **dList, Mtx **mtx) {
 }
 
 /**
- * If set to true, disables animated sprite frames.
- * Used when the sprite frame is already established before calling to draw.
+ * Sets the sprite animation mode.
+ * This determines how the animation frame is interpreted: either as a frame index,
+ * or as a normalized progress value from 0 to 255.
  */
-void sprite_anim_off(s32 setting) {
-    gSpriteAnimOff = setting;
+void cam_set_sprite_anim_mode(s32 setting) {
+    gSpriteAnimMode = setting;
 }
 
 /**
- * Calculates angle from object to camera, then renders the sprite as a billboard, facing the camera.
+ * Renders a sprite in 3D space as a billboard.
+ * 
+ * If the sprite represents a vehicle part (e.g., wheel, propeller, fan),
+ * the function calculates the appropriate animation frame based on the object's
+ * orientation relative to the camera, ensuring the sprite correctly matches
+ * the viewing angle. It also orients the sprite properly in 3D space with tilt.
+ * 
+ * For regular sprites, it sets up a standard billboard that always faces the camera.
  */
-s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj, Sprite *arg4, s32 flags) {
+s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vtx, Object *obj, Sprite *sprite, s32 flags) {
     f32 diffX;
     f32 diffY;
     Vertex *v;
     f32 lateralDist;
     f32 sineY;
     f32 cosY;
-    f32 sp44;
+    f32 temp;
     f32 diffZ;
     s32 tanX;
     s32 tanY;
-    s32 angleDiff;
+    s32 tiltAngle;
     s32 result;
-    s32 textureFrame;
+    s32 frameID;
 
     if (obj == NULL) {
         stubbed_printf("\nCam do 2D sprite called with NULL pointer!");
@@ -1059,40 +1067,59 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object 
 
     result = TRUE;
     if (flags & RENDER_VEHICLE_PART) {
+        // Vehicle parts like wheels, propellers, and fans are implemented as sprites,
+        // each with 16 frames representing different orientations.
+        // This requires calculating the correct frame based on the relative orientation
+        // between the object and the camera, as well as properly orienting the sprite in 3D space.
+
+        // Calculate camera position relative to the object's position
         diffX = gCameraRelPosStackX[gCameraMatrixPos] - obj->segment.trans.x_position;
         diffY = gCameraRelPosStackY[gCameraMatrixPos] - obj->segment.trans.y_position;
         diffZ = gCameraRelPosStackZ[gCameraMatrixPos] - obj->segment.trans.z_position;
+
+        // Rotate camera coordinates by the object's yaw rotation
+        // to get the camera orientation relative to the vehicle,
+        // e.g., to determine if we view the wheel from the side.
         sineY = sins_f(obj->segment.trans.rotation.y_rotation);
         cosY = coss_f(obj->segment.trans.rotation.y_rotation);
-        sp44 = (diffX * cosY) + (diffZ * sineY);
+
+        temp = (diffX * cosY) + (diffZ * sineY);
         diffZ = (diffZ * cosY) - (diffX * sineY);
-        tanY = arctan2_f(sp44, sqrtf((diffY * diffY) + (diffZ * diffZ)));
-        tanX = -sins_s16(arctan2_f(sp44, diffZ)) >> 8;
+        diffX = temp;
+        
+        // Calculate the angle between the camera direction and the vertical plane of the vehicle
+        tanY = arctan2_f(diffX, sqrtf((diffY * diffY) + (diffZ * diffZ)));
+        
+        tanX = -sins_s16(arctan2_f(diffX, diffZ)) >> 8;
         if (diffZ < 0.0f) {
             diffZ = -diffZ;
             tanX = 1 - tanX;
             tanY = -tanY;
         }
-        angleDiff = arctan2_f(diffY, diffZ);
-        if (angleDiff > 0x8000) {
-            angleDiff -= 0x10000;
+        
+        tiltAngle = arctan2_f(diffY, diffZ);
+        if (tiltAngle > 0x8000) {
+            tiltAngle -= 0x10000;
         }
-        angleDiff = (angleDiff * tanX) >> 8;
-        textureFrame = (tanY >> 7) & 0xFF;
-        if (textureFrame > 127) {
+        tiltAngle = (tiltAngle * tanX) >> 8;
+        frameID = (tanY >> 7) & 0xFF;
+        if (frameID > 127) {
             stubbed_printf("CamDo2DSprite FrameNo Overflow !!!\n");
-            textureFrame = 255 - textureFrame;
-            angleDiff += 0x8000;
+            frameID = 255 - frameID;
+            tiltAngle += 0x8000;
             result = FALSE;
         }
-        textureFrame *= 2;
+        frameID *= 2;        
+        
+        // Construct the model matrix for the sprite,
+        // orienting it perpendicular to the camera and applying the calculated tilt angle.
         diffX = gCameraRelPosStackX[gCameraMatrixPos] - obj->segment.trans.x_position;
         diffY = gCameraRelPosStackY[gCameraMatrixPos] - obj->segment.trans.y_position;
         diffZ = gCameraRelPosStackZ[gCameraMatrixPos] - obj->segment.trans.z_position;
         lateralDist = sqrtf((diffX * diffX) + (diffZ * diffZ));
         gCameraTransform.rotation.y_rotation = arctan2_f(diffX, diffZ);
         gCameraTransform.rotation.x_rotation = -arctan2_f(diffY, lateralDist);
-        gCameraTransform.rotation.z_rotation = angleDiff;
+        gCameraTransform.rotation.z_rotation = tiltAngle;
         gCameraTransform.scale = obj->segment.trans.scale;
         gCameraTransform.x_position = obj->segment.trans.x_position;
         gCameraTransform.y_position = obj->segment.trans.y_position;
@@ -1104,9 +1131,14 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object 
         mtxf_to_mtx(&gCurrentModelMatrixF, *mtx);
         gModelMatrix[gModelMatrixStackPos] = *mtx;
         gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
+        // Push an empty vertex because sprite vertices are hardcoded to start from index 1,
+        // and billboard mode is not enabled for vehicle parts.
         gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(&gVehiclePartVertex), 1, 0);
     } else {
-        v = *vertexList;
+        // For non-vehicle parts, set up a standard billboard.
+
+        // Push the anchor vertex at the object's position
+        v = *vtx;
         v->x = obj->segment.trans.x_position;
         v->y = obj->segment.trans.y_position;
         v->z = obj->segment.trans.z_position;
@@ -1114,43 +1146,61 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object 
         v->g = 255;
         v->b = 255;
         v->a = 255;
-        gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(*vertexList), 1, 0);
-        (*vertexList)++;
+        gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(*vtx), 1, 0);
+        (*vtx)++;
+
+        // Create a billboard matrix that compensates for camera tilt,
+        // so the sprite tilts consistently with other objects relative to the camera.
+        // Aspect ratio compensation is applied to maintain proper sprite proportions on screen.
         if (!gCutsceneCameraActive) {
-            angleDiff = gCameras[gActiveCameraID].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
+            tiltAngle = gCameras[gActiveCameraID].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
         } else {
-            angleDiff =
+            tiltAngle =
                 gCameras[gActiveCameraID + 4].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
         }
-        textureFrame = obj->segment.animFrame;
+        frameID = obj->segment.animFrame;
         gModelMatrixStackPos++;
-        mtxf_billboard(gModelMatrixF[gModelMatrixStackPos], angleDiff, obj->segment.trans.scale, gVideoAspectRatio);
+        mtxf_billboard(gModelMatrixF[gModelMatrixStackPos], tiltAngle, obj->segment.trans.scale, gVideoAspectRatio);
         mtxf_to_mtx(gModelMatrixF[gModelMatrixStackPos], *mtx);
         gModelMatrix[gModelMatrixStackPos] = *mtx;
         gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
+        // Enable billboard mode; subsequent vertices will be rendered relative to the anchor point
         gDkrEnableBillboard((*dList)++);
     }
-    if (gSpriteAnimOff == FALSE) {
-        textureFrame = ((textureFrame & 0xFF) * arg4->numberOfFrames) >> 8;
+    // Calculate the correct animation frame based on the current animation mode.
+    if (gSpriteAnimMode == SPRITE_ANIM_NORMALIZED) {
+        frameID = ((frameID & 0xFF) * sprite->numberOfFrames) >> 8;
     }
+
+    // The RENDER_ANTI_ALIASING flag shares the same value as RENDER_VEHICLE_PART,
+    // so we must clear RENDER_VEHICLE_PART from flags to avoid conflicts.
+    // Anti-aliasing is automatically enabled for semi-transparent sprites.
     flags &= ~RENDER_VEHICLE_PART;
     if (flags & RENDER_SEMI_TRANSPARENT) {
         flags |= RENDER_ANTI_ALIASING;
     }
-    material_load_simple(dList, arg4->drawFlags | (flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT |
+
+    // Load material and set render flags including fog, transparency, z-compare, and anti-aliasing
+    material_load_simple(dList, sprite->drawFlags | (flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT |
                                                             RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)));
+
     if (!(flags & RENDER_Z_UPDATE)) {
         gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
     }
-    gSPDisplayList((*dList)++, arg4->frames[textureFrame]);
+    gSPDisplayList((*dList)++, sprite->frames[frameID]);
+
+    // Pop the model matrix stack and select the appropriate matrix index for rendering
     gModelMatrixStackPos--;
     if (gModelMatrixStackPos == 0) {
-        textureFrame = G_MTX_DKR_INDEX_0;
+        frameID = G_MTX_DKR_INDEX_0;
     } else {
-        textureFrame = G_MTX_DKR_INDEX_1;
+        frameID = G_MTX_DKR_INDEX_1;
     }
-    gSPSelectMatrixDKR((*dList)++, textureFrame);
+    gSPSelectMatrixDKR((*dList)++, frameID);
+
+    // Disable billboard mode
     gDkrDisableBillboard((*dList)++);
+    
     return result;
 }
 
@@ -1207,7 +1257,7 @@ void render_ortho_triangle_image(Gfx **dList, Mtx **mtx, Vertex **vtx, ObjectSeg
     gModelMatrix[gModelMatrixStackPos] = *mtx;
     gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
     gDkrEnableBillboard((*dList)++);
-    if (gSpriteAnimOff == FALSE) {
+    if (gSpriteAnimMode == SPRITE_ANIM_NORMALIZED) {
         index = (((u8) index) * sprite->numberOfFrames) >> 8;
     }
     material_load_simple(dList, sprite->drawFlags | flags);
@@ -1535,14 +1585,14 @@ UNUSED void cam_rotate(s32 angleX, s32 angleY, s32 angleZ) {
 }
 
 /**
- * Returns the segment data of the active camera, but won't apply the offset for cutscenes.
+ * Returns the active camera, but won't apply the offset for cutscenes.
  */
 Camera *cam_get_active_camera_no_cutscenes(void) {
     return &gCameras[gActiveCameraID];
 }
 
 /**
- * Returns the segment data of the active camera.
+ * Returns the active camera.
  */
 Camera *cam_get_active_camera(void) {
     if (gCutsceneCameraActive) {

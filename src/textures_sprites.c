@@ -1106,26 +1106,26 @@ s32 tex_asset_size(s32 id) {
 }
 
 UNUSED u8 func_8007C660(s32 texID) {
-    SpriteAsset *temp_s1;
+    SpriteAsset *spriteAsset;
     s32 j;
     s32 i;
-    s32 temp_v1;
+    s32 numTextures;
 
     if (texID & ASSET_MASK_TEX3D) {
         return 0;
     }
-    if (D_80126370 == 0) {
+    if (D_80126370 == NULL) {
         D_80126370 = (u8 *) mempool_alloc_safe(gTextureTableSize[TEX_TABLE_2D], COLOUR_TAG_MAGENTA);
         for (i = 0; i < gTextureTableSize[TEX_TABLE_2D]; i++) {
-            D_80126370[i] = 0;
+            D_80126370[i] = FALSE;
         }
         for (i = 0; i < gSpriteTableSize; i++) {
-            temp_s1 = gCurrentSpriteAsset;
-            load_asset_to_address(ASSET_SPRITES, (u32) temp_s1, gSpriteOffsetTable[i],
+            spriteAsset = gCurrentSpriteAsset;
+            load_asset_to_address(ASSET_SPRITES, (u32) spriteAsset, gSpriteOffsetTable[i],
                                   gSpriteOffsetTable[i + 1] - gSpriteOffsetTable[i]);
-            temp_v1 = temp_s1->frameTexOffsets[temp_s1->numberOfFrames];
-            for (j = 0; j < temp_v1; j++) {
-                D_80126370[temp_s1->baseTextureId + j] = 1;
+            numTextures = spriteAsset->frameTexOffsets[spriteAsset->numberOfFrames];
+            for (j = 0; j < numTextures; j++) {
+                D_80126370[spriteAsset->baseTextureId + j] = TRUE;
             }
         }
     }
