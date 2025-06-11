@@ -1405,7 +1405,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             entry->common.y = spD4[0];
             entry->common.z = spB4[0];
             entry->unkC = sp94[0];
-            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, 1);
+            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
             newRacerObj->segment.level_entry = NULL;
             newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
@@ -1421,7 +1421,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             entry->common.y = spD4[0];
             entry->common.z = spB4[0];
             entry->unkC = sp94[0];
-            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, 1);
+            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
             newRacerObj->segment.level_entry = NULL;
             newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
@@ -1478,7 +1478,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 entry->common.x = 0;
                 entry->common.y = 0;
                 entry->common.z = 0;
-                newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, 1);
+                newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
                 newRacerObj->properties.common.unk0 = i2;
                 newRacerObj->segment.level_entry = NULL;
             }
@@ -1655,7 +1655,7 @@ void transform_player_vehicle(void) {
     spawnObj.common.z = gTransformPosZ;
     spawnObj.unkC = gTransformAngleY;
     set_taj_status(TAJ_DIALOGUE);
-    player = spawn_object(&spawnObj.common, 0x10 | 0x1);
+    player = spawn_object(&spawnObj.common, OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK01);
     gNumRacers = 1;
     (*gRacers)[PLAYER_ONE] = player;
     gRacersByPort[PLAYER_ONE] = player;
@@ -3084,7 +3084,7 @@ s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 e
                     soundId = evenSoundId; // Always set to SOUND_STOMP3
                 }
                 audspat_play_sound_at_position(soundId, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                               obj->segment.trans.z_position, 4, NULL);
+                                               obj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
                 ret = i + 1;
                 i = asset0; // Come on, just use break!
             }
@@ -5260,7 +5260,7 @@ void func_8001709C(Object *obj) {
 
 // https://decomp.me/scratch/Lxwa8
 #ifdef NON_EQUIVALENT
-s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 *arg5, s8 *arg6) {
+s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 *arg5, s8 *surface) {
     s32 sp170;
     s32 sp16C;
     s32 sp168;
@@ -5473,7 +5473,7 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
             }
             *arg2 = 0;
             sp16C = var_t0;
-            temp_v0_4 = func_80017A18(objModel, arg1, arg2, &sp13C, &sp12C, &sp11C, sp100, spF0, spE0, arg5, arg6,
+            temp_v0_4 = func_80017A18(objModel, arg1, arg2, &sp13C, &sp12C, &sp11C, sp100, spF0, spE0, arg5, surface,
                                       (f32) (1.0 / (f64) otherObj->segment.trans.scale));
             var_t0_2 = sp16C;
             if (temp_v0_4 != 0) {
@@ -5579,7 +5579,7 @@ u32 func_800179D0(void) {
 // https://decomp.me/scratch/dzU8Y
 #ifdef NON_EQUIVALENT
 s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, f32 *arg5, f32 *arg6, f32 *arg7,
-                  f32 *arg8, f32 *arg9, s8 *argA, f32 argB) {
+                  f32 *arg8, f32 *arg9, s8 *surface, f32 argB) {
     s32 pad[4];
     s32 var_a2;
     s32 var_s6;
@@ -5679,7 +5679,7 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                                 spBC = spA4;
                                 spB4 = sp9C;
                             }
-                            argA[i] = 0;
+                            surface[i] = 0;
                             arg6[i] = spBC;
                             arg7[i] = var_f30;
                             arg8[i] = spB4;
@@ -5877,7 +5877,7 @@ void func_80017E98(void) {
 
 // https://decomp.me/scratch/xQbet
 #ifdef NON_EQUIVALENT
-s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *arg5, u8 *arg6) {
+s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance, u8 *arg6) {
     s32 sp70;
     f32 xDiff; // sp6C
     f32 yDiff;
@@ -5997,7 +5997,7 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
     } else {
         var_f0 = 0.0f;
     }
-    *arg5 = var_f0;
+    *checkpointDistance = var_f0;
     if ((obj->behaviorId == BHV_RACER) && (obj->unk64->racer.playerIndex == PLAYER_COMPUTER)) {
         if (var_f0 < -0.3) {
             return -100;
@@ -6059,10 +6059,10 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
             } else {
                 var_f0 = 0.0f;
             }
-            *arg5 = var_f0;
+            *checkpointDistance = var_f0;
             return 0;
         }
-        *arg5 = 0.0f;
+        *checkpointDistance = 0.0f;
         return 0;
     }
     var_v1 = var_f0 * 100.0f;
@@ -8630,7 +8630,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
                 viewportCount = VIEWPORT_LAYOUT_2_PLAYERS;
             }
             for (i = 0; i < viewportCount;) {
-                newObj = spawn_object(&newObjEntry, 1);
+                newObj = spawn_object(&newObjEntry, OBJECT_SPAWN_UNK01);
                 if (newObj != NULL) {
                     newObj->segment.level_entry = NULL;
                     obj_init_animcamera(obj, newObj);
@@ -10293,7 +10293,7 @@ void mode_init_taj_race(void) {
         newRacerEntry.playerIndex = 4;
         newRacerEntry.common.objectID = ASSET_OBJECT_ID_FLYINGCARPET;
         func_800619F4(0);
-        racerObj = spawn_object(&newRacerEntry.common, 1);
+        racerObj = spawn_object(&newRacerEntry.common, OBJECT_SPAWN_UNK01);
         (*gRacers)[1] = racerObj;
         gRacersByPosition[1] = racerObj;
         gRacersByPort[1] = racerObj;

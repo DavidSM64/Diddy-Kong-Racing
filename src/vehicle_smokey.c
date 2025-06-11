@@ -228,7 +228,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         if (animFrame == stepFrame && stepFrame + 1 == obj->segment.animFrame >> 4) {
             audspat_play_sound_at_position(SOUND_UNK_223, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                           obj->segment.trans.z_position, 4, NULL);
+                                           obj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
         }
     }
     if (racer->vehicleIDPrev == VEHICLE_SMOKEY && racer->playerIndex == PLAYER_COMPUTER && func_80023568()) {
@@ -307,9 +307,9 @@ void spawn_boss_hazard(Object *obj, Object_Racer *racer, f32 offset, s32 objectI
                 diffZ = tempObj->segment.trans.z_position - obj->segment.trans.z_position;
                 if (sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) <
                     (f32) ((s8) entry->animation.x_rotation & 0xFF) * 4.0) {
-                    if (tempObj->properties.racer.unk0 == 0) {
-                        tempObj->properties.racer.unk0 = (Object *) 1; // ???
-                        newObj = spawn_object(&spawnObj, 1);
+                    if (tempObj->properties.common.unk0 == 0) {
+                        tempObj->properties.common.unk0 = 1;
+                        newObj = spawn_object(&spawnObj, OBJECT_SPAWN_UNK01);
                         if (newObj != NULL) {
                             newObj->segment.level_entry = NULL;
                             newObj->segment.x_velocity = obj->segment.x_velocity;
@@ -318,13 +318,13 @@ void spawn_boss_hazard(Object *obj, Object_Racer *racer, f32 offset, s32 objectI
                             newObj->properties.racer.unk0 = tempObj;
                             newObj->properties.racer.unk4 = (s8) entry->animation.y_rotation * 60;
                             newObj->segment.animFrame = rand_range(0, 255);
-                            audspat_play_sound_at_position(soundID, newObj->segment.trans.x_position,
-                                                           newObj->segment.trans.y_position,
-                                                           newObj->segment.trans.z_position, 4, NULL);
+                            audspat_play_sound_at_position(
+                                soundID, newObj->segment.trans.x_position, newObj->segment.trans.y_position,
+                                newObj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
                         }
                     }
                 } else {
-                    tempObj->properties.racer.unk0 = 0;
+                    tempObj->properties.common.unk0 = 0;
                 }
             }
         }
