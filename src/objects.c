@@ -4112,31 +4112,32 @@ void render_racer_magnet(Gfx **dList, Mtx **mtx, Vertex **vtxList, Object *obj) 
     }
 }
 
-// https://decomp.me/scratch/sCEnz
-#ifdef NON_EQUIVALENT
 void func_80014090(Object *obj, s32 arg1) {
     ObjectHeader *objHeader;
     s16 width;
     s16 height;
-    s16 prevU;
-    s16 prevV;
     s32 i;
     s32 j;
     s32 k;
     s32 end;
-    u8 objHeader72;
-    u8 objHeader73;
+    s16 objHeader72;
+    s16 objHeader73;
     ObjectModel *objMdl;
+    Object_68 *obj68;
     TextureInfo *texInfo;
     Triangle *tri;
     s16 temp;
     s16 temp2;
+    s16 newU1;
+    s16 newU2;
+    s16 newV1;
+    s16 newV2;
 
     objHeader = obj->segment.header;
     objHeader73 = objHeader->unk73;
     objHeader72 = objHeader->unk72;
-    temp = objHeader->unk74 * arg1;
-    temp2 = objHeader->unk75 * arg1;
+    temp = (s16) (objHeader->unk74 * arg1);
+    temp2 = (s16) (objHeader->unk75 * arg1);
     if ((objHeader73 == 0xFF) || (objHeader73 < objHeader->numberOfModelIds)) {
         if (objHeader73 == 0xFF) {
             end = objHeader->numberOfModelIds;
@@ -4145,24 +4146,26 @@ void func_80014090(Object *obj, s32 arg1) {
             end = objHeader73 + 1;
         }
         for (i = objHeader73; i < end; i++) {
-            objMdl = obj->unk68[i]->objModel;
+            obj68 = obj->unk68[i];
+            objMdl = obj68->objModel;
             if (objHeader72 < objMdl->numberOfTextures) {
-                texInfo = &objMdl->textures[objHeader72];
-                width = texInfo->texture->width << 5;
-                height = texInfo->texture->height << 5;
+                width = objMdl->textures[objHeader72].texture->width << 5;
+                height = objMdl->textures[objHeader72].texture->height << 5;
                 for (j = 0; j < objMdl->numberOfBatches; j++) {
                     if (objHeader72 == objMdl->batches[j].textureIndex) {
                         for (k = objMdl->batches[j].facesOffset; k < objMdl->batches[j + 1].facesOffset; k++) {
                             tri = &objMdl->triangles[k];
-                            prevU = tri->uv0.u;
-                            prevV = tri->uv0.v;
+                            newU1 = (tri->uv1.u - tri->uv0.u);
+                            newV1 = (tri->uv1.v - tri->uv0.v);
+                            newU2 = (tri->uv2.u - tri->uv0.u);
+                            newV2 = (tri->uv2.v - tri->uv0.v);
                             // s16 casts required
-                            tri->uv0.u = (prevU + temp) & (s16) (width - 1);
-                            tri->uv0.v = (prevV + temp2) & (s16) (height - 1);
-                            tri->uv1.u = tri->uv0.u + (tri->uv1.u - prevU);
-                            tri->uv1.v = tri->uv0.v + (tri->uv1.v - prevV);
-                            tri->uv2.u = tri->uv0.u + (tri->uv2.u - prevU);
-                            tri->uv2.v = tri->uv0.v + (tri->uv2.v - prevV);
+                            tri->uv0.u = (tri->uv0.u + temp) & (s16) (width - 1);
+                            tri->uv0.v = (tri->uv0.v + temp2) & (s16) (height - 1);
+                            tri->uv1.u = tri->uv0.u + newU1;
+                            tri->uv1.v = tri->uv0.v + newV1;
+                            tri->uv2.u = tri->uv0.u + newU2;
+                            tri->uv2.v = tri->uv0.v + newV2;
                         }
                     }
                 }
@@ -4170,9 +4173,6 @@ void func_80014090(Object *obj, s32 arg1) {
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80014090.s")
-#endif
 
 /**
  * Loop through every object.
@@ -6091,8 +6091,276 @@ Object *find_taj_object(void) {
     return NULL;
 }
 
-// https://decomp.me/scratch/w4Ole
+// https://decomp.me/scratch/hcneX
 #ifdef NON_EQUIVALENT
+// Handles MidiFadePoint, MidiFade, and MidiSetChannel objects?
+void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate) {
+    s32 spF4;
+    f32 spC0;
+    void *spBC;
+    s32 sp98;
+    f32 sp78;
+    f32 sp74;
+    f32 sp70;
+    f32 temp_f0;
+    f32 temp_f0_2;
+    f32 temp_f0_3;
+    f32 temp_f0_4;
+    f32 temp_f0_5;
+    f32 temp_f0_6;
+    f32 temp_f0_7;
+    f32 temp_f12;
+    f32 temp_f12_2;
+    f32 temp_f14;
+    f32 temp_f14_2;
+    f32 temp_f14_3;
+    f32 temp_f14_4;
+    f32 temp_f16;
+    f32 temp_f18;
+    f32 temp_f20;
+    f32 temp_f22;
+    f32 temp_f24;
+    f32 temp_f26;
+    f32 temp_f28;
+    f32 temp_f2;
+    f32 temp_f2_2;
+    f32 temp_f2_3;
+    f32 temp_f2_4;
+    f32 temp_f2_5;
+    f32 temp_f30;
+    f32 var_f12;
+    // f32 var_f6;
+    f32 var_f8;
+    s16 behaviorId;
+    s32 temp_f10;
+    s32 temp_s0_2;
+    s32 temp_s0_3;
+    s32 temp_s0_4;
+    s32 temp_s0_5;
+    s32 temp_s0_6;
+    s32 temp_t3;
+    s32 temp_t3_2;
+    s32 temp_t4;
+    s32 temp_t8;
+    Object_MidiFade *temp_v1_2;
+    Object_MidiFade *temp_v1_3;
+    s32 var_s1;
+    s32 var_s1_2;
+    s32 var_s2;
+    s8 temp_t2_2;
+    s8 var_v0_2;
+    s8 var_v1;
+    u16 temp_t2;
+    u16 temp_v0_2;
+    s32 var_v0;
+    u8 temp_v0_3;
+    u8 temp_v0_5;
+    u8 temp_v0_6;
+    Object *obj;
+    Object_MidiFade *midiFade;
+    Object_MidiFadePoint *midiFadePoint;
+    Object_MidiFadePoint *midiFadePoint2;
+    Object_MidiChannelSet *midiChannelSet;
+
+    if (racerObj->unk64->racer.playerIndex == 0) {
+        if (cam_get_viewport_layout() == 0) {
+            spF4 = gObjectListStart;
+            if (gObjectListStart < gObjectCount) {
+                sp98 = gObjectListStart * 4;
+                do {
+                    obj = *(gObjPtrList + sp98);
+                    if (!(obj->segment.trans.flags & 0x8000)) {
+                        behaviorId = obj->behaviorId;
+                        if (behaviorId == BHV_MIDI_FADE_POINT) {
+                            temp_f0 = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                            temp_f2 = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                            temp_f14 = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                            temp_f0_2 = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
+                            midiFadePoint = &obj->unk64->midi_fade_point;
+                            temp_f2_2 = temp_f0_2;
+                            temp_t2 = midiFadePoint->unk2;
+                            var_f8 = (f32) temp_t2;
+                            if ((s32) temp_t2 < 0) {
+                                var_f8 += 4294967296.0f;
+                            }
+                            if (temp_f0_2 < var_f8) {
+                                spBC = midiFadePoint;
+                                spC0 = temp_f2_2;
+                                var_s1 = 0;
+                                midiFadePoint2 = midiFadePoint;
+                                if (midiFadePoint->unk1C == music_current_sequence()) {
+                                    temp_v0_2 = midiFadePoint->unk0;
+                                    var_f12 = (f32) temp_v0_2;
+                                    if ((s32) temp_v0_2 < 0) {
+                                        var_f12 += 4294967296.0f;
+                                    }
+                                    if (temp_f2_2 <= var_f12) {
+                                        var_s2 = 0;
+                                    } else {
+                                        var_s2 = (s32) ((127.0f * (temp_f2_2 - var_f12)) /
+                                                        (f32) (midiFadePoint->unk2 - temp_v0_2));
+                                    }
+                                    do {
+                                        temp_v0_3 = midiFadePoint2->unkC;
+                                        if (temp_v0_3 != 1) {
+                                            temp_s0_2 = var_s1 & 0xFF;
+                                            if (temp_v0_3 != 2) {
+
+                                            } else if ((music_channel_fade(temp_s0_2 & 0xFF) > 0) &&
+                                                       (music_channel_active(var_s1) == 0)) {
+                                                music_channel_fade_set(temp_s0_2 & 0xFF, var_s2 & 0xFF);
+                                            }
+                                        } else {
+                                            temp_s0_3 = var_s1 & 0xFF;
+                                            if (var_s2 >= 0x7B) {
+                                                music_channel_off(var_s1 & 0xFF);
+                                            } else {
+                                                music_channel_fade_set(temp_s0_3 & 0xFF, (0x7F - var_s2) & 0xFF);
+                                                music_channel_on(temp_s0_3 & 0xFF);
+                                            }
+                                        }
+                                        var_s1 += 1;
+                                        midiFadePoint2 += 1;
+                                    } while (var_s1 != 0x10);
+                                }
+                            }
+                        } else if (behaviorId == BHV_MIDI_FADE) {
+                            midiFade = &obj->unk64->midi_fade;
+                            temp_f16 = midiFade->unkC;
+                            temp_f30 = temp_f16 * yPos;
+                            temp_f18 = midiFade->unk10;
+                            temp_f12 = midiFade->unk8;
+                            temp_f14_2 = temp_f18 * zPos;
+                            temp_f24 = racerObj->segment.trans.x_position;
+                            temp_f26 = racerObj->segment.trans.y_position;
+                            temp_f20 = midiFade->unk14;
+                            temp_f28 = racerObj->segment.trans.z_position;
+                            sp78 = temp_f14_2;
+                            temp_f0_3 = (temp_f12 * xPos) + temp_f30 + temp_f14_2 + temp_f20;
+                            temp_f2_3 =
+                                (temp_f12 * temp_f24) + (temp_f16 * temp_f26) + (temp_f18 * temp_f28) + temp_f20;
+                            if ((temp_f0_3 > 0.0f) && (temp_f2_3 <= 0.0f)) {
+                                var_v1 = 1;
+                            } else {
+                                var_v1 = 0;
+                                if ((temp_f2_3 > 0.0f) && (temp_f0_3 <= 0.0f)) {
+                                    var_v1 = -1;
+                                }
+                            }
+                            if (var_v1 != 0) {
+                                sp70 = yPos;
+                                temp_f2_4 = temp_f26 - yPos;
+                                sp74 = zPos;
+                                temp_f0_4 = temp_f24 - xPos;
+                                temp_f14_3 = temp_f28 - zPos;
+                                temp_f22 = ((((-temp_f12 * xPos) - temp_f30) - sp78) - temp_f20) /
+                                           ((temp_f12 * temp_f0_4) + (temp_f16 * temp_f2_4) + (temp_f18 * temp_f14_3));
+                                temp_f12_2 = (temp_f22 * temp_f0_4) + xPos;
+                                if ((midiFade->unk18 <= temp_f12_2) && (temp_f12_2 <= midiFade->unk24)) {
+                                    temp_f0_5 = (temp_f22 * temp_f2_4) + sp70;
+                                    if (((f32) midiFade->unk1C <= temp_f0_5) && (temp_f0_5 <= midiFade->unk28)) {
+                                        temp_f0_6 = (temp_f22 * temp_f14_3) + sp74;
+                                        if ((midiFade->unk20 <= temp_f0_6) && (temp_f0_6 <= midiFade->unk2C)) {
+                                            midiFade->unk0 = var_v1;
+                                            midiFade->unk1 = 0;
+                                            midiFade->unk4 = 0;
+                                            D_8011AF60[0] = (s32) midiFade;
+                                        }
+                                    }
+                                }
+                            }
+                        } else if (behaviorId == BHV_MIDI_CHANNEL_SET) {
+                            temp_f0_7 = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                            temp_f2_5 = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                            temp_f14_4 = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                            midiChannelSet = &obj->unk64->midi_channel_set;
+                            if ((sqrtf((temp_f0_7 * temp_f0_7) + (temp_f2_5 * temp_f2_5) + (temp_f14_4 * temp_f14_4)) <
+                                 (f32) (midiChannelSet->unk2 * 4)) &&
+                                (midiChannelSet->unk0 != music_channel_get_mask()) &&
+                                (midiChannelSet->unk3 == music_current_sequence())) {
+                                music_dynamic_set(midiChannelSet->unk0);
+                            }
+                        }
+                    }
+                    temp_t3 = spF4 + 1;
+                    sp98 += 4;
+                    spF4 = temp_t3;
+                } while (temp_t3 < gObjectCount);
+            }
+            if (D_8011AF60[0] != 0) {
+                temp_v1_2 = D_8011AF60[0];
+                var_s1_2 = 0;
+                if (temp_v1_2->unk40 == music_current_sequence()) {
+                    temp_v1_2->unk4 += updateRate;
+                    var_v0 = D_8011AF60[0]->unk4;
+                    temp_t4 = (D_8011AF60[0]->unk2 * gVideoRefreshRate) & 0xFFFF;
+                    if (temp_t4 < (s32) var_v0) {
+                        D_8011AF60[0]->unk4 = (u16) temp_t4;
+                        var_v0 = D_8011AF60[0]->unk4;
+                    }
+                    /*
+                    var_f6 = (f32) temp_t4;
+                    if (temp_t4 < 0) {
+                        var_f6 += 4294967296.0f;
+                    }
+                    */
+                    temp_f10 = (s32) (((f32) var_v0 * 254.0f) / temp_t4);
+                    if (temp_f10 < 0xFE) {
+                        D_8011AF60[0]->unk1 = (s8) temp_f10;
+                    } else {
+                        D_8011AF60[0]->unk1 = 0xFE;
+                    }
+                    temp_v1_3 = D_8011AF60[0];
+                    do {
+                        var_v0_2 = temp_v1_3->unk2F[var_s1_2 + 1];
+                        if (temp_v1_3->unk0 == -1) {
+                            var_v0_2 = (s8) (var_v0_2 >> 2);
+                        }
+                        temp_t2_2 = var_v0_2 & 3;
+                        if (temp_t2_2 != 0) {
+                            temp_s0_4 = var_s1_2 & 0xFF;
+                            switch (temp_t2_2) { /* irregular */
+                                case 1:
+                                    music_channel_on(temp_s0_4 & 0xFF);
+                                    music_channel_fade_set(temp_s0_4 & 0xFF, 0x7FU);
+                                    break;
+                                case 3:
+                                    temp_v0_5 = temp_v1_3->unk1;
+                                    temp_s0_5 = var_s1_2 & 0xFF;
+                                    if ((s32) temp_v0_5 >= 0x80) {
+                                        temp_t3_2 = (temp_v0_5 - 0x7F) & 0xFF;
+                                        music_channel_on(temp_s0_5 & 0xFF);
+                                        if (music_channel_fade(temp_s0_5 & 0xFF) < temp_t3_2) {
+                                            music_channel_fade_set(temp_s0_5 & 0xFF, temp_t3_2 & 0xFF);
+                                        }
+                                    }
+                                    break;
+                                case 2:
+                                    temp_v0_6 = temp_v1_3->unk1;
+                                    temp_s0_6 = var_s1_2 & 0xFF;
+                                    if ((s32) temp_v0_6 < 0x7F) {
+                                        temp_t8 = (0x7F - temp_v0_6) & 0xFF;
+                                        if (temp_t8 < music_channel_fade(temp_s0_6 & 0xFF)) {
+                                            music_channel_fade_set(temp_s0_6 & 0xFF, temp_t8 & 0xFF);
+                                        }
+                                    } else {
+                                        music_channel_off(var_s1_2 & 0xFF);
+                                    }
+                                    break;
+                            }
+                        } else {
+                            music_channel_off(var_s1_2 & 0xFF);
+                        }
+                        var_s1_2 += 1;
+                    } while (var_s1_2 != 0x10);
+                }
+                if ((temp_v1_2->unk1 == 0xFE) && (D_8011AF60[0]->unk40 == music_current_sequence())) {
+                    D_8011AF60[0] = 0;
+                }
+            }
+        }
+    }
+}
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80018CE0.s")
 #endif
@@ -6156,52 +6424,43 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
     return TRUE;
 }
 
-// https://decomp.me/scratch/eOKrI
-#ifdef NON_EQUIVALENT
+// D_B0000574 is a direct read from the ROM as opposed to RAM
 extern s32 D_B0000574;
 
-// D_8011ADC0 = gNextRacerPlaceNumber?
-
-// This function seems to be part of the main gameplay loop that tracks the win conditions for each race mode.
 void func_80019808(s32 updateRate) {
-    u32 new_var;
-    s16 numHumanRacers;
-    s16 numHumanRacersFinished;
-    Object_Racer *curRacer;
-    LevelHeader *currentLevelHeader;
-    Object_Racer *racer[4]; // sp6C
-    s8 sp5C[4];
-    s32 i;
-    s32 j;
-    Object_Racer *curRacer2;
-    Settings *settings;
     s32 prevUnk1AA;
-    s16 racerIndex;
+    s32 i;
+    s32 j; // sp94
     s32 newUnk1AA;
+    Settings *settings;
+    s16 numHumanRacers;         // sp8A
+    s16 numHumanRacersFinished; // sp88
+    Object_Racer *curRacer2;
+    Object_Racer *curRacer; // sp80
     s16 numFinishedRacers;
     s16 foundIndex;
-    s32 battleMusic;
-    s32 playerButtonPresses;
+    Object_Racer *racer[4]; // sp6C
+    s16 racerIndex;
     s8 raceType;
     s8 someBool;
+    LevelHeader *currentLevelHeader; // sp64
     s32 newStartingPosition;
-    s32 shouldAwardBalloon;
-    s8 someBool2;
-
+    s8 sp5C[4];
+    s8 someBool2; // sp5B
 #ifdef ANTI_TAMPER
-    s32 antiPiracySkipTajBalloonCutscene;
-    u32 stat;
+    s8 flags[3];
 #endif
+    s32 camera;
 
     currentLevelHeader = get_current_level_header();
     settings = get_settings();
     numHumanRacersFinished = 0;
     numHumanRacers = 0;
-    raceType = currentLevelHeader->race_type;
+    someBool2 = currentLevelHeader->race_type;
     numFinishedRacers = 0;
-    if (raceType != RACETYPE_DEFAULT && raceType != RACETYPE_HORSESHOE_GULCH && raceType != RACETYPE_BOSS) {
-        if (raceType & RACETYPE_CHALLENGE) {
-            if (raceType == RACETYPE_CHALLENGE_EGGS) {
+    if (someBool2 != RACETYPE_DEFAULT && someBool2 != RACETYPE_HORSESHOE_GULCH && someBool2 != RACETYPE_BOSS) {
+        if (someBool2 & RACETYPE_CHALLENGE) {
+            if (someBool2 == RACETYPE_CHALLENGE_EGGS) {
                 func_80045128(*gRacers);
             }
             if (D_8011ADB4 == 0) {
@@ -6231,11 +6490,10 @@ void func_80019808(s32 updateRate) {
                         }
                     }
                 }
-
-                if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE || numFinishedRacers > 0 ||
-                    (!(((numHumanRacers == 1 && numHumanRacersFinished == 1) ||
-                        (numHumanRacers >= 2 && numHumanRacersFinished >= numHumanRacers)) ||
-                       numFinishedRacers < 3))) {
+                if ((currentLevelHeader->race_type != RACETYPE_CHALLENGE_BATTLE && numFinishedRacers > 0) ||
+                    ((((numHumanRacers == 1 && numHumanRacersFinished == 1) ||
+                       (numHumanRacers >= 2 && numHumanRacersFinished >= numHumanRacers)) ||
+                      numFinishedRacers >= 3))) {
                     for (i = 0; i < gNumRacers; i++) {
                         if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
                             sp5C[i] = 10 - racer[i]->bananas;
@@ -6258,6 +6516,7 @@ void func_80019808(s32 updateRate) {
                         }
                     }
 
+                    i = 0;
                     do {
                         racerIndex = -1;
                         foundIndex = -1;
@@ -6277,38 +6536,38 @@ void func_80019808(s32 updateRate) {
                             D_8011ADC0++;
                             racer[racerIndex]->raceFinished = TRUE;
                         }
+                        i = 0;
                     } while (racerIndex != -1);
 
                     gSwapLeadPlayer = FALSE;
-
-                    if ((!is_in_tracks_mode() && racer[0]->finishPosition == 1) ||
-                        (is_in_two_player_adventure() && racer[1]->finishPosition == 1)) {
-                        if (!(settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED)) {
-                            settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED;
-                            i = settings->ttAmulet + 1;
-                            if (i > 4) {
-                                i = 4;
-                            }
-                            settings->ttAmulet = i;
+                    if (!is_in_tracks_mode() &&
+                        (racer[0]->finishPosition == 1 ||
+                         is_in_two_player_adventure() && racer[1]->finishPosition == 1) &&
+                        (!(settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED))) {
+                        settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED;
+                        i = settings->ttAmulet + 1;
+                        if (i > 4) {
+                            i = 4;
                         }
+                        settings->ttAmulet = i;
                     }
-                    for (i = 0; i < 8; i++) {
-                        settings->racers[i].starting_position = -1;
+                    for (newUnk1AA = 0; newUnk1AA < 8;) {
+                        settings->racers[newUnk1AA++].starting_position = -1;
                     }
 
-                    battleMusic = SEQUENCE_BATTLE_LOSE;
-                    for (i = 0; i < gNumRacers; i++) {
-                        if (racer[i]->playerIndex != PLAYER_COMPUTER && racer[i]->finishPosition == 1) {
-                            battleMusic = SEQUENCE_BATTLE_VICTORY;
+                    newStartingPosition = SEQUENCE_BATTLE_LOSE;
+                    for (newUnk1AA = 0; newUnk1AA < gNumRacers; newUnk1AA++) {
+                        if (racer[newUnk1AA]->playerIndex != PLAYER_COMPUTER && racer[newUnk1AA]->finishPosition == 1) {
+                            newStartingPosition = SEQUENCE_BATTLE_VICTORY;
                         }
-                        settings->racers[i].starting_position = racer[i]->finishPosition - 1;
+                        settings->racers[newUnk1AA].starting_position = racer[newUnk1AA]->finishPosition - 1;
                     }
 
-                    music_play(battleMusic);
+                    music_play(newStartingPosition);
                     newStartingPosition = 4;
-                    for (i = 0; i < 8; i++) {
-                        if (settings->racers[i].starting_position == -1) {
-                            settings->racers[i].starting_position = newStartingPosition;
+                    for (prevUnk1AA = 0; prevUnk1AA < 8; prevUnk1AA++) {
+                        if (settings->racers[prevUnk1AA].starting_position == -1) {
+                            settings->racers[prevUnk1AA].starting_position = newStartingPosition;
                             newStartingPosition++;
                         }
                     }
@@ -6343,28 +6602,31 @@ void func_80019808(s32 updateRate) {
         }
         return;
     }
-    for (i = 0; i < gNumRacers; i++) {
-        new_var = i;
+
+    i = 0;
+    do {
         newUnk1AA = 1;
         curRacer = &(*gRacers)[i]->unk64->racer;
         prevUnk1AA = curRacer->unk1AA;
-        for (j = 0; j < gNumRacers; j++) {
+        j = 0;
+        do {
             if (j != i) {
-                curRacer2 = &(*gRacers)[new_var]->unk64->racer;
+                curRacer2 = &(*gRacers)[j]->unk64->racer;
                 if (curRacer->raceFinished == FALSE && curRacer2->raceFinished != FALSE) {
                     newUnk1AA++;
                 } else if (curRacer->courseCheckpoint < curRacer2->courseCheckpoint) {
                     newUnk1AA++;
-                } else if (curRacer2->courseCheckpoint == curRacer->courseCheckpoint) {
+                } else if (curRacer->courseCheckpoint == curRacer2->courseCheckpoint) {
                     if (curRacer2->unk1A8 < curRacer->unk1A8) {
                         newUnk1AA++;
                     }
-                    if (curRacer2->unk1A8 == curRacer->unk1A8 && i < j) {
+                    if (curRacer->unk1A8 == curRacer2->unk1A8 && i < j) {
                         newUnk1AA++;
                     }
                 }
             }
-        }
+            j++;
+        } while (j < gNumRacers);
 
         curRacer->unk1AA = newUnk1AA;
         if (curRacer->lap < currentLevelHeader->laps) {
@@ -6373,7 +6635,7 @@ void func_80019808(s32 updateRate) {
                     if (curRacer->vehicleID != VEHICLE_LOOPDELOOP) {
                         curRacer->unk1B0++;
                     }
-                } else if (curRacer->racePosition != curRacer->unk1AA) {
+                } else if (curRacer->unk1AA != curRacer->racePosition) {
                     curRacer->unk1B2 = 10;
                     curRacer->racePosition = curRacer->unk1AA;
                 }
@@ -6381,9 +6643,11 @@ void func_80019808(s32 updateRate) {
                 curRacer->unk1B0 = 0;
             }
         }
-    }
+        i++;
+    } while (i < gNumRacers);
 
-    for (i = 0; i < gNumRacers; i++) {
+    i = 0;
+    do {
         curRacer = &(*gRacers)[i]->unk64->racer;
         if (curRacer->lap >= currentLevelHeader->laps && curRacer->raceFinished == FALSE) {
             if (get_game_mode() != GAMEMODE_UNUSED_4) {
@@ -6398,59 +6662,81 @@ void func_80019808(s32 updateRate) {
         if (curRacer->playerIndex != PLAYER_COMPUTER) {
             numHumanRacers++;
             if (curRacer->raceFinished) {
-                numHumanRacersFinished++;
+                // clang-format off
+                numHumanRacersFinished++;\
                 numFinishedRacers++;
+                // clang-format on
             }
         } else if (curRacer->raceFinished) {
             numFinishedRacers++;
         }
-    }
+        i++;
+    } while (i < gNumRacers);
 
-    for (i = 0; i < gNumRacers; i++) {
+    i = 0;
+    do {
         gRacersByPosition[i] = 0;
-    }
+        i++;
+    } while (i < gNumRacers);
 
-    for (i = 0; i < gNumRacers; i++) {
+    i = 0;
+    do {
         curRacer = &(*gRacers)[i]->unk64->racer;
         if (curRacer->raceFinished) {
-            j = curRacer->finishPosition;
+            newUnk1AA = curRacer->finishPosition - 1;
         } else {
-            j = curRacer->unk1AA;
+            newUnk1AA = curRacer->unk1AA - 1;
         }
-        gRacersByPosition[j - 1] = (Object *) curRacer; // TODO: This should be a pointer to Object, not Object_Racer
-    }
+        gRacersByPosition[newUnk1AA] = (*gRacers)[i];
+        i++;
+    } while (i < gNumRacers);
 
-    for (i = 0; i < gNumRacers; i++) {
+    i = 0;
+    j = 0;
+    do {
+        // @fake
+        if (1) {}
+
         someBool = FALSE;
-        for (j = 0; j < gNumRacers; j++) {
+
+        for (; j < gNumRacers; j++) {
             if (gRacersByPosition[j] == (*gRacers)[i]) {
                 someBool = TRUE;
-                j = gNumRacers + 1;
+                if (!curRacer) {}
+                j = gNumRacers;
             }
         }
 
-        if (!someBool) {
-            for (j = 0; j < gNumRacers; j++) {
+        j = 0;
+        if (someBool == FALSE) {
+            for (; j < gNumRacers; j++) {
                 if (gRacersByPosition[j] == 0) {
                     gRacersByPosition[j] = (*gRacers)[i];
-                    j = gNumRacers + 1;
+                    j = gNumRacers;
                 }
             }
         }
-    }
+        j = 0;
+        i++;
+    } while (i < gNumRacers);
 
-    playerButtonPresses = 0;
+    j = 0;
     for (i = 0; i < MAXCONTROLLERS; i++) {
-        playerButtonPresses |= input_pressed(i);
+        // @fake
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        j |= input_pressed(i);
     }
 
     if (gIsTajChallenge && numHumanRacersFinished != 0) {
         mode_end_taj_race(CHALLENGE_END_FINISH);
     } else if (D_8011AD3C != 0 && numFinishedRacers != 0) {
-        curRacer2 = &(*gRacers)[0]->unk64->racer;
-        if (!curRacer2->raceFinished) {
-            curRacer2->raceFinished = TRUE;
-            curRacer2->finishPosition = D_8011ADC0;
+        curRacer = &(*gRacers)[0]->unk64->racer;
+        if (!curRacer->raceFinished) {
+            curRacer->raceFinished = TRUE;
+            curRacer->finishPosition = D_8011ADC0;
             D_8011ADC0 += 1;
         }
     } else if (D_8011ADB4 == 0) {
@@ -6463,64 +6749,75 @@ void func_80019808(s32 updateRate) {
              (numHumanRacers >= 2 && numFinishedRacers >= (gNumRacers - 1))) ||
             someBool2) {
             if (numHumanRacersFinished != numHumanRacers) {
-                for (i = 0; i < gNumRacers; i++) {
-                    curRacer2 = &gRacersByPosition[i]->unk64->racer;
-                    if (curRacer2->raceFinished == FALSE) {
-                        if (curRacer2->playerIndex >= 0) {
-                            set_active_camera(curRacer2->playerIndex);
-                            cam_get_active_camera_no_cutscenes()->mode = CAMERA_FINISH_CHALLENGE;
+                i = 0;
+                do {
+                    curRacer = &gRacersByPosition[i]->unk64->racer;
+                    if (curRacer->raceFinished == FALSE) {
+                        if (curRacer->playerIndex >= 0) {
+                            set_active_camera(curRacer->playerIndex);
+                            camera = cam_get_active_camera_no_cutscenes();
+                            // we need the camera to be a s32 for the WAIT_ON_IOBUSY anti tamper call to work
+                            // but we *know* that cam_get_active_camera_no_cutscenes returns a Camera pointer so this
+                            // should be safe
+                            ((Camera *) camera)->mode = CAMERA_FINISH_CHALLENGE;
                         }
-                        curRacer2->raceFinished = TRUE;
-                        curRacer2->finishPosition = D_8011ADC0;
+                        curRacer->raceFinished = TRUE;
+                        curRacer->finishPosition = D_8011ADC0;
                         D_8011ADC0++;
                     }
-                }
+                    i++;
+                } while (i < gNumRacers);
             }
 
 #ifdef ANTI_TAMPER
-            antiPiracySkipTajBalloonCutscene = FALSE;
+            raceType = FALSE;
             // Anti-Piracy check
-            WAIT_ON_IOBUSY(stat);
+            // passing in camera here is probably a fake
+            WAIT_ON_IOBUSY(camera);
             // D_B0000574 is a direct read from the ROM as opposed to RAM
             if (((D_B0000574 & 0xFFFF) & 0xFFFF) != 0x6C07) {
-                antiPiracySkipTajBalloonCutscene = TRUE;
+                raceType = TRUE;
             }
 #endif
 
             if (!gIsTimeTrial) {
-                for (i = 0; i < gNumRacers; i++) {
+                i = 0;
+                do {
                     curRacer = &gRacersByPosition[i]->unk64->racer;
-                    settings->racers[curRacer->characterId].starting_position = i;
-                }
+                    newUnk1AA = curRacer->racerIndex;
+                    settings->racers[newUnk1AA].starting_position = i;
+                    i++;
+                } while (i < gNumRacers);
             }
             gSwapLeadPlayer = FALSE;
+            flags[2] = raceType;
             if (is_in_two_player_adventure() &&
                 (settings->racers[PLAYER_TWO].starting_position < settings->racers[PLAYER_ONE].starting_position)) {
                 gSwapLeadPlayer = TRUE;
             }
-            curRacer2 = &(*gRacersByPosition)->unk64->racer;
+            curRacer = &(*gRacersByPosition)->unk64->racer;
             gFirstTimeFinish = FALSE;
             if ((settings->gNumRacers == 1 || is_in_two_player_adventure()) &&
-                curRacer2->playerIndex != PLAYER_COMPUTER && !is_in_tracks_mode() && get_trophy_race_world_id() == 0) {
+                curRacer->playerIndex != PLAYER_COMPUTER && !is_in_tracks_mode() && get_trophy_race_world_id() == 0) {
                 gFirstTimeFinish = TRUE;
             }
-            shouldAwardBalloon = FALSE;
+            i = FALSE;
             if (gFirstTimeFinish && !someBool2) {
-                shouldAwardBalloon = set_course_finish_flags(settings);
+                i = set_course_finish_flags(settings);
             }
             if (someBool2) {
                 gFirstTimeFinish = TRUE;
-                shouldAwardBalloon = TRUE;
+                i = TRUE;
             }
 
 #ifdef ANTI_TAMPER
-            if (antiPiracySkipTajBalloonCutscene) {
-                shouldAwardBalloon = FALSE;
+            if (flags[2]) {
+                i = FALSE;
                 gFirstTimeFinish = FALSE;
             }
 #endif
 
-            if (!shouldAwardBalloon) {
+            if (!i) {
                 if (is_in_two_player_adventure()) {
                     if (gSwapLeadPlayer) {
                         gSwapLeadPlayer = FALSE;
@@ -6547,9 +6844,6 @@ void func_80019808(s32 updateRate) {
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80019808.s")
-#endif
 
 /**
  * Mark the course as finished for the appropriate mode.

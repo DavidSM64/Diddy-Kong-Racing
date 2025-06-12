@@ -117,7 +117,7 @@ MAP_FILE = DkrMapFile()
 NOT_FUNCTION_NAMES = ['if', 'else', 'switch', 'while', 'for', 'dmacopy_internal', 'func_80082BC8_837C8', 'rumble_enable',
     'func_800C6464_C7064', 'func_800C663C_C723C', 'func_800C67F4_C73F4', 'func_800C6870_C7470',
     'func_800C68CC_C74CC', 'fontCreateDisplayList', 'func_800C7744_C8344', 'func_800C7804_C8404',
-    'fontConvertString', 'func_800C78E0_C84E0']
+    'fontConvertString', 'func_800C78E0_C84E0', 'menu_credits_loop', 'savemenu_render_element', 'results_render']
 
 class ScoreFileMatch:
     def __init__(self, comment, functionName):
@@ -148,6 +148,7 @@ class ScoreFile:
             for nonMatching in self.nonMatchings:
                 self.nonMatchingsSizes += MAP_FILE.functionSizes[nonMatching]
             self.numNonMatchings = len(self.nonMatchings)
+<<<<<<< HEAD
 
             self.nonEquivalents = re.findall(NON_EQUVIALENT_REGEX, self.text)
             self.nonEquivalentsSizes = 0
@@ -156,15 +157,29 @@ class ScoreFile:
                     self.nonEquivalentsSizes += MAP_FILE.functionSizes[nonEquivalent]
             self.numNonEquivalents = len(self.nonEquivalents)
             
+=======
+            all_nonEquivalents = re.findall(NON_EQUVIALENT_REGEX, self.text)
+            # Filter out the ones that are in NOT_FUNCTION_NAMES
+            self.nonEquivalents = [ne for ne in all_nonEquivalents if ne not in NOT_FUNCTION_NAMES]
+
+            self.nonEquivalentsSizes = 0
+            for nonEquivalent in self.nonEquivalents:
+                self.nonEquivalentsSizes += MAP_FILE.functionSizes[nonEquivalent]
+            self.numNonEquivalents = len(self.nonEquivalents)
+>>>>>>> master
             self.text = re.sub(WIP_REGEX, r"GLOBAL_ASM(\1)", self.text)
             
     def get_matches(self):
         matches = re.finditer(FUNCTION_REGEX, self.text, re.MULTILINE)
+        # Filter out the ones that are in NOT_FUNCTION_NAMES
+        matches = [match for match in matches if match.groups()[2] not in NOT_FUNCTION_NAMES]
         for matchNum, match in enumerate(matches, start=1):
             groups = match.groups()
             if groups[2] not in NOT_FUNCTION_NAMES:
                 self.functions.append(ScoreFileMatch(groups[0], groups[2]))
         matches = re.finditer(GLOBAL_ASM_REGEX, self.text, re.MULTILINE)
+        # Filter out the ones that are in NOT_FUNCTION_NAMES
+        matches = [match for match in matches if match.groups()[0] not in NOT_FUNCTION_NAMES]
         for matchNum, match in enumerate(matches, start=1):
             groups = match.groups()
             self.numGlobalAsms += 1

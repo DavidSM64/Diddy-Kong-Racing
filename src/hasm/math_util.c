@@ -819,7 +819,7 @@ GLOBAL_ASM("asm/math_util/sins_f.s")
 GLOBAL_ASM("asm/math_util/coss_f.s")
 GLOBAL_ASM("asm/math_util/coss.s")
 GLOBAL_ASM("asm/math_util/sins_2.s")
- 
+
 // Untested
 #ifdef NON_EQUIVALENT
 UNUSED s32 calc_dyn_lighting_for_level_segment(LevelModelSegment *segment, s32 *vec3_ints) {
