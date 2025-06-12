@@ -3667,6 +3667,7 @@ void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
     racer->cameraYaw = gCameraObject->trans.rotation.y_rotation;
 }
 
+// Handles loop de loops
 void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Racer *racer) {
     s32 animFrame;
     s32 moveObjResult;
