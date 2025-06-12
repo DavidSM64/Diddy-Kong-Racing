@@ -121,8 +121,8 @@ void build_v77_beta_font(BuildInfo &info, const JsonFile &jsonFile) {
     //outJpFontTableView.print(0, outJpFontTable.size());
     
     // Add jp font table to build collection.
-    collection.add_deferred_build_info("ASSET_JAPANESE_FONTS_TABLE", "ASSET_JAPANESE_FONTS_TABLE", outJpFontTable,
-        info.get_dst_folder() / deferInfo.outputPath, info.get_info_context());
+    collection.add_deferred_build_info("ASSET_JAPANESE_FONTS_TABLE", "ASSET_JAPANESE_FONTS_TABLE", info.get_build_id(), 
+        info.get_section_build_id(), outJpFontTable,info.get_dst_folder() / deferInfo.outputPath, info.get_info_context());
     
 }
 
@@ -282,8 +282,8 @@ void build_v79_jp_fonts(BuildInfo &info, const JsonFile &jsonFile) {
     }
     
     // Add jp font table to build collection.
-    collection.add_deferred_build_info("ASSET_JAPANESE_FONTS_TABLE", "ASSET_JAPANESE_FONTS_TABLE", outJpFontTable,
-        info.get_dst_folder() / deferInfo.outputPath, info.get_info_context());
+    collection.add_deferred_build_info("ASSET_JAPANESE_FONTS_TABLE", "ASSET_JAPANESE_FONTS_TABLE", info.get_build_id(), 
+        info.get_section_build_id(), outJpFontTable,info.get_dst_folder() / deferInfo.outputPath, info.get_info_context());
 }
 
 void BuildJPFonts::build(BuildInfo &info) {

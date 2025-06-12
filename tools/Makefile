@@ -1,5 +1,11 @@
 # Make `OPT` -g for better debugging info.
 OPT := -O2
+
+# If -g option was set, then add some debugging flags for the stack tracer.
+ifneq (,$(findstring -g,$(OPT)))
+    OPT += -rdynamic -ldl -lelf -ldwarf -DDEBUG -I/usr/include/libdwarf
+endif
+
 CC := gcc
 CXX := g++
 CFLAGS := -I . -Wall -Wextra -Wno-unused-parameter -pedantic -std=c99 $(OPT) -s

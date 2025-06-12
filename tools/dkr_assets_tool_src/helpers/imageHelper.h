@@ -1,6 +1,7 @@
 #pragma once
 
 #include "helpers/fileHelper.h"
+#include "libs/n64graphics/n64graphics.h"
 
 #include <vector>
 #include <cstdint>
@@ -15,8 +16,15 @@ public:
         int x0, y0, x1, y1;
     };
 
-    N64Image(fs::path filepath, std::string format, bool alignData=false); // Load image from filepath (Currently only .png is supported)
-    N64Image(int width=0, int height=0, std::string format="I4", bool alignData=false); // Create new image
+    // Load image from filepath (Currently only .png is supported)
+    N64Image(fs::path filepath, std::string format, bool alignData=false); 
+    // Load image from memory (Currently only mimeType "image/png" is supported)
+    N64Image(uint8_t *data, size_t dataLength, std::string mimeType, std::string format, bool alignData=false); 
+    // Load image from memory (n64graphics rgba/ia data type)
+    N64Image(void *imgData, size_t width, size_t height, std::string format, bool alignData=false); 
+    
+    // Create new image
+    N64Image(int width=0, int height=0, std::string format="I4", bool alignData=false); 
     ~N64Image();
     
     void write_from(const uint8_t *inData, size_t dataLength);
@@ -48,6 +56,7 @@ private:
     
     std::vector<uint8_t> _data;
     
+    void _complete_load_init(void *imgData, int width, int height, std::string format, bool alignData, bool isColourImage);
     void _prep_region_copy(size_t &srcWidth, size_t &bytesToCopyPerLine, size_t &imgWidthInBytes, size_t &xOffsetInBytes, N64Image::Region &region);
 };
 
@@ -62,8 +71,12 @@ namespace ImageHelper {
     void get_width_and_height(fs::path filepath, int &outWidth, int &outHeight); // Get width and height of a .png image
     
     std::optional<fs::path> guess_associated_json_file(fs::path imgFilepath);
+    
     void guess_texture_wrap_mode(fs::path filepath, std::string &outWrapS, std::string &outWrapT);
-    void guess_texture_format_and_render_mode(fs::path filepath, std::string &outFormat, std::string &outRenderMode, bool ignoreTextureSize=false);
+    void guess_texture_format_and_render_mode(fs::path filepath, std::string &outFormat, std::string &outRenderMode, 
+        bool ignoreTextureSize=false);
+    void guess_texture_format_and_render_mode(rgba *data, int imgWidth, int imgHeight, std::string &outFormat, 
+        std::string &outRenderMode, bool ignoreTextureSize=false);
     bool guess_if_texture_is_animated(fs::path imgFilepath);
     bool guess_if_texture_double_sided(fs::path filepath);
     float guess_animated_texture_timing(fs::path imgFilepath); // Returns time to advance texture in seconds.

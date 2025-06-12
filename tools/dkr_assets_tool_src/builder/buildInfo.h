@@ -27,7 +27,8 @@ public:
     //BuildInfo(std::string buildId, JsonFile *src, const fs::path &dst, const fs::path &dir); // BUILD_TO_FILE, TODO
     //BuildInfo(std::string buildId, JsonFile *src, const fs::path &dir); // BUILD_TO_BINARY
     BuildInfo(std::string buildId, std::string buildSectionId, const JsonFile &src, size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext); 
-    BuildInfo(std::string buildId, std::string buildSectionId, const std::vector<uint8_t> &outData, size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext);
+    BuildInfo(std::string buildId, std::string buildSectionId, std::string deferredFromBuildId, std::string deferredFromSectionId, const std::vector<uint8_t> &outData, 
+        size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext);
     ~BuildInfo();
     
     std::vector<uint8_t> out;
@@ -56,7 +57,11 @@ public:
     std::string get_type() const;
     std::string get_build_id() const;
     std::string get_section_build_id() const;
+    std::string get_deferred_from_build_id() const;
+    std::string get_deferred_from_section_build_id() const;
     size_t get_file_index() const;
+    
+    bool is_deferred() const; // Returns true if this asset was deferred from another section.
     
     bool is_complete() const;
     void done();
@@ -75,6 +80,8 @@ private:
     
     std::string _buildId;
     std::string _buildSectionId;
+    std::string _deferredFromBuildId;
+    std::string _deferredFromSectionId;
     std::string _type;
     size_t _fileIndex;
     BuildInfoType _buildType;

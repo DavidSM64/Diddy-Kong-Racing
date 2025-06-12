@@ -87,8 +87,14 @@ int ia2png(const char *png_filename, const ia *img, int width, int height);
 // PNG file -> intermediate RGBA
 rgba *png2rgba(const char *png_filename, int *width, int *height);
 
+// PNG data -> intermediate RGBA
+rgba *pngdata2rgba(uint8_t *png_data, int data_size, int *width, int *height);
+
 // PNG file -> intermediate IA
 ia *png2ia(const char *png_filename, int *width, int *height);
+
+// PNG data -> intermediate IA
+ia *pngdata2ia(uint8_t *png_data, int data_size, int *width, int *height);
 
 
 //---------------------------------------------------------

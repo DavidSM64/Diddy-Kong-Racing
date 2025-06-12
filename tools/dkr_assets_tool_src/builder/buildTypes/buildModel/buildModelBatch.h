@@ -37,7 +37,9 @@ public:
     size_t number_of_vertices();
     
     void write_batch(const std::map<std::string, int> &materialIds, std::vector<BuildModelMaterial> &materials, 
-        DkrBatch* outBatch, DkrVertex*& outVertices, DkrTriangle*& outTriangles);
+        DkrBatch* outBatch, DkrVertex*& outVertices, DkrTriangle*& outTriangles, float modelScale);
+        
+    void process_vertices(std::function<void(BuildModelVertex &vertex)> callbackFunction);
     
 private:
     std::vector<BuildModelTriangle> _triangles;

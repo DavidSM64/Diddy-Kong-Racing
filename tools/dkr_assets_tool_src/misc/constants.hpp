@@ -7,7 +7,7 @@ namespace DkrAssetsTool {
 const std::string DKRAT_NAME = "DKR Assets Tool";
 const int DKRAT_VERSION_RELEASE = 0;
 const int DKRAT_VERSION_MAJOR = 5;
-const int DKRAT_VERSION_MINOR = 1;
+const int DKRAT_VERSION_MINOR = 2;
 const std::string DKRAT_VERSION = "Version " + std::to_string(DKRAT_VERSION_RELEASE) + "."
                                              + std::to_string(DKRAT_VERSION_MAJOR) + "."
                                              + std::to_string(DKRAT_VERSION_MINOR);

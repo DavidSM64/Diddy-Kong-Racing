@@ -17,6 +17,18 @@ bool DebugHelper::using_asserts() {
     return _assertsEnabled;
 }
 
+void DebugHelper::set_error_occured() {
+    _mutex.lock();
+    _errorOccured = true;
+    _mutex.unlock();
+}
+bool DebugHelper::has_error_occured() {
+    _mutex.lock();
+    bool result = _errorOccured;
+    _mutex.unlock();
+    return result;
+}
+
 DebugHelper::DebugTimer::DebugTimer() :
     m_beg(clock_::now()) {
 }

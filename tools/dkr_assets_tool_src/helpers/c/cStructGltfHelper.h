@@ -11,6 +11,6 @@ namespace CStructGltfHelper {
         int gltfNode, uint8_t *bytes);
     
     // gltf node extra -> struct entry
-    void put_gltf_node_extra_into_struct_entry(CStructEntry *structMember, GltfFileNode *objNode, uint8_t *bytes);
+    void put_gltf_node_extra_into_struct_entry(CStructEntry *structMember, tinygltf::Node &objNode, uint8_t *bytes);
 }
 }

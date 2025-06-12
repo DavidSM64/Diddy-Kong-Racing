@@ -47,13 +47,16 @@ size_t BuildModelBatch::number_of_vertices() {
 }
 
 void BuildModelBatch::write_batch(const std::map<std::string, int> &materialIds, std::vector<BuildModelMaterial> &materials, 
-  DkrBatch* outBatch, DkrVertex*& outVertices, DkrTriangle*& outTriangles) {
-    uint32_t flags = 0x00000003;
+  DkrBatch* outBatch, DkrVertex*& outVertices, DkrTriangle*& outTriangles, float modelScale) {
+    uint32_t flags = 0x03; // Default is (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE)
     bool materialDoubleSided = false;
     
     if(_materialId.has_value()) {
         outBatch->textureIndex = materialIds.at(_materialId.value());
         BuildModelMaterial &material = materials[outBatch->textureIndex];
+        if(material.has_render_flags()) {
+            flags = material.get_render_flags();
+        }
         if(material.is_texture_animated()) {
             flags |= 0x10000; // RENDER_TEX_ANIM
         }
@@ -65,8 +68,8 @@ void BuildModelBatch::write_batch(const std::map<std::string, int> &materialIds,
     outBatch->flags = flags;
     
     bool useVertexColors = false;
-    for(auto &vertex : _vertices) {
-        vertex.write_to(outVertices);
+    for(BuildModelVertex &vertex : _vertices) {
+        vertex.write_to(outVertices, modelScale);
         outVertices++; // Next out vertex.
         if(!vertex.is_color_white()) {
             useVertexColors = true;
@@ -77,7 +80,7 @@ void BuildModelBatch::write_batch(const std::map<std::string, int> &materialIds,
     
     uint8_t triFlags = materialDoubleSided ? 0x40 : 0x00;
     
-    for(auto &tri : _triangles) {
+    for(BuildModelTriangle &tri : _triangles) {
         outTriangles->flags = triFlags; 
         outTriangles->vi0 = tri.a;
         outTriangles->vi1 = tri.b;
@@ -89,6 +92,12 @@ void BuildModelBatch::write_batch(const std::map<std::string, int> &materialIds,
         outTriangles->uv2.u = tri.uv2.u;
         outTriangles->uv2.v = tri.uv2.v;
         outTriangles++; // next out triangle.
+    }
+}
+
+void BuildModelBatch::process_vertices(std::function<void(BuildModelVertex &vertex)> callbackFunction) {
+    for(BuildModelVertex &vertex : _vertices) {
+        callbackFunction(vertex);
     }
 }
 

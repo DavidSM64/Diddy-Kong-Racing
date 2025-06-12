@@ -6490,12 +6490,10 @@ void func_80019808(s32 updateRate) {
                         }
                     }
                 }
-
                 if ((currentLevelHeader->race_type != RACETYPE_CHALLENGE_BATTLE && numFinishedRacers > 0) ||
                     ((((numHumanRacers == 1 && numHumanRacersFinished == 1) ||
                        (numHumanRacers >= 2 && numHumanRacersFinished >= numHumanRacers)) ||
                       numFinishedRacers >= 3))) {
-
                     for (i = 0; i < gNumRacers; i++) {
                         if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
                             sp5C[i] = 10 - racer[i]->bananas;
@@ -6542,7 +6540,6 @@ void func_80019808(s32 updateRate) {
                     } while (racerIndex != -1);
 
                     gSwapLeadPlayer = FALSE;
-
                     if (!is_in_tracks_mode() &&
                         (racer[0]->finishPosition == 1 ||
                          is_in_two_player_adventure() && racer[1]->finishPosition == 1) &&

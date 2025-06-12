@@ -1,0 +1,8 @@
+{
+    "model": "animatedBox.gltf",
+    "type": "ObjectModel",
+    "scale": 10.0,
+    "animation": {
+        "seconds-per-keyframe": 0.25
+    }
+}

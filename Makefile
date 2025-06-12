@@ -410,7 +410,7 @@ endif
 
 build_assets:
 	$(info Building Assets...)
-	@$(TOOLS_DIR)/dkr_assets_tool build -o $(ASSETS_OUTPUT) -dkrv $(REGION).$(VERSION) $(MODDED_ARG) >&2 || echo FAIL
+	@$(TOOLS_DIR)/dkr_assets_tool build -o $(ASSETS_OUTPUT) -dkrv $(REGION).$(VERSION) $(MODDED_ARG) >&2 || exit 1
 
 ###############################
 

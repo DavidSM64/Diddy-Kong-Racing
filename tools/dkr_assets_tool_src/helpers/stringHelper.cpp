@@ -28,6 +28,16 @@ void StringHelper::make_uppercase(std::string& input) {
         character = std::toupper(character);
     }
 }
+    
+std::string StringHelper::lowercase(std::string input) {
+    make_lowercase(input);
+    return input;
+}
+
+std::string StringHelper::uppercase(std::string input) {
+    make_uppercase(input);
+    return input;
+}
 
 bool StringHelper::starts_with(const std::string &input, const std::string &sub) {
     return input.rfind(sub, 0) == 0;
@@ -82,7 +92,7 @@ void StringHelper::replace(std::string &input, std::string oldPattern, std::stri
     }
 }
 
-void StringHelper::split(std::string &input, const char delim, std::vector<std::string> &out) {
+void StringHelper::split(const std::string &input, const char delim, std::vector<std::string> &out) {
     std::stringstream ss(input);
     std::string s;
     while (std::getline(ss, s, delim)) {
@@ -90,12 +100,50 @@ void StringHelper::split(std::string &input, const char delim, std::vector<std::
     }
 }
 
-void StringHelper::split_and_trim(std::string &input, const char delim, std::vector<std::string> &out) {
+void StringHelper::split_and_trim(const std::string &input, const char delim, std::vector<std::string> &out) {
     std::stringstream ss(input);
     std::string s;
     while (std::getline(ss, s, delim)) {
         trim(s);
         out.push_back(s);
+    }
+}
+
+void StringHelper::split(const std::string &input, const std::vector<char> delims, std::vector<std::string> &out) {
+    if(delims.empty()) {
+        return;
+    }
+    
+    size_t startIndex = 0;
+    for(size_t i = 0; i < input.size(); i++) {
+        for(char delim : delims) {
+            if(input[i] == delim) {
+                // Output string.
+                out.emplace_back(input.substr(startIndex, i - startIndex));
+                startIndex = i + 1;
+                break;
+            }
+        }
+    }
+}
+
+void StringHelper::split_and_trim(const std::string &input, const std::vector<char> delims, std::vector<std::string> &out) {
+    if(delims.empty()) {
+        return;
+    }
+    
+    size_t startIndex = 0;
+    for(size_t i = 0; i < input.size(); i++) {
+        for(char delim : delims) {
+            if(input[i] == delim) {
+                // Output string.
+                std::string outEntry = input.substr(startIndex, i - startIndex);
+                trim(outEntry);
+                out.emplace_back(outEntry);
+                startIndex = i + 1;
+                break;
+            }
+        }
     }
 }
 
@@ -136,6 +184,71 @@ int StringHelper::find_closing_brace(const std::string &input, int inputOffset) 
     
     // Could not find a closing brace!
     return -1;
+}
+
+std::string StringHelper::remove_comments_from_c_code(std::string code) {
+    std::stringstream ss; // Use stringstream to build the result
+    bool inMultilineComment = false;
+    bool inSinglelineComment = false;
+    bool inString = false; // To handle comments inside string literals
+
+    for (size_t i = 0; i < code.length(); ++i) {
+        // Check for beginning of string literal
+        if (!inMultilineComment && !inSinglelineComment && code[i] == '"') {
+            inString = !inString;
+            ss << code[i]; // Append to stringstream
+            continue;
+        }
+
+        // If we are inside a string, just append the character
+        if (inString) {
+            ss << code[i]; // Append to stringstream
+            // Handle escaped quotes inside string
+            if (code[i] == '\\' && i + 1 < code.length() && code[i + 1] == '"') {
+                ss << code[i + 1];
+                i++;
+            }
+            continue;
+        }
+
+        // Check for start of multi-line comment /*
+        if (!inSinglelineComment && i + 1 < code.length() &&
+            code[i] == '/' && code[i + 1] == '*') {
+            inMultilineComment = true;
+            i++; // Skip the '*'
+            continue;
+        }
+
+        // Check for end of multi-line comment */
+        if (inMultilineComment && i + 1 < code.length() &&
+            code[i] == '*' && code[i + 1] == '/') {
+            inMultilineComment = false;
+            i++; // Skip the '/'
+            continue;
+        }
+
+        // Check for start of single-line comment //
+        if (!inMultilineComment && i + 1 < code.length() &&
+            code[i] == '/' && code[i + 1] == '/') {
+            inSinglelineComment = true;
+            i++; // Skip the second '/'
+            continue;
+        }
+
+        // Check for end of single-line comment (newline)
+        if (inSinglelineComment && code[i] == '\n') {
+            inSinglelineComment = false;
+            ss << code[i]; // Keep the newline character, append to stringstream
+            continue;
+        }
+
+        // If not in any comment, append the character to the result
+        if (!inMultilineComment && !inSinglelineComment) {
+            ss << code[i];
+        }
+    }
+    
+    return ss.str();
 }
 
 std::string StringHelper::upper_snake_case_to_pascal_case(const std::string &input) {
