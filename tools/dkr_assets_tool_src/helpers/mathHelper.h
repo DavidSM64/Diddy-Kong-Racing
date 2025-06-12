@@ -5,7 +5,9 @@
 #include <limits>
 
 namespace DkrAssetsTool {
-    
+
+// TODO: Make a generic Vecf class, and then define Vec2f,Vec3f,Vec4f off of that.
+
 struct Vec2f {
     union {
         struct {
@@ -23,6 +25,7 @@ struct Vec2f {
     Vec2f(float s);
     Vec2f(float x, float y);
     Vec2f(std::vector<float> &floats, size_t offset = 0);
+    Vec2f(std::vector<double> &doubles, size_t offset = 0);
 
     float operator[](int index) const;
     float& operator[](int index);
@@ -74,17 +77,19 @@ struct Vec3f {
     Vec3f(float s);
     Vec3f(float x, float y, float z);
     Vec3f(std::vector<float> &floats, size_t offset = 0);
+    Vec3f(std::vector<double> &doubles, size_t offset = 0);
 
     float operator[](int index) const;
     float& operator[](int index);
     bool operator==(const Vec3f& other) const;
     bool operator!=(const Vec3f& other) const;
-    Vec3f operator+(const Vec3f& other);
-    Vec3f operator-(const Vec3f& other);
-    Vec3f operator*(const Vec3f& other);
-    Vec3f operator*(const float other);
-    Vec3f operator/(const Vec3f& other);
-    Vec3f operator/(const float other);
+    Vec3f operator+(const Vec3f& other) const;
+    Vec3f &operator+=(const Vec3f& other);
+    Vec3f operator-(const Vec3f& other) const;
+    Vec3f operator*(const Vec3f& other) const;
+    Vec3f operator*(const float other) const;
+    Vec3f operator/(const Vec3f& other) const;
+    Vec3f operator/(const float other) const;
     friend std::ostream& operator<<(std::ostream& os, const Vec3f& vec);
 
     Vec3f min(const Vec3f& other) const; // Returns the minimum XYZ values of both vectors
@@ -132,6 +137,7 @@ struct Vec4f {
     Vec4f(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
     Vec4f(uint32_t rgba);
     Vec4f(std::vector<float> &floats, size_t offset = 0);
+    Vec4f(std::vector<double> &doubles, size_t offset = 0);
     Vec4f(std::vector<uint8_t> &bytes, size_t offset = 0);
 
     float operator[](int index) const;
@@ -171,6 +177,37 @@ struct Vec4f {
     static Vec4f max_value() {
         return Vec4f(std::numeric_limits<float>::max());
     }
+};
+
+struct Mat4x4f {
+    union {
+        Vec4f rows[4];
+        float values[16];
+    };
+    
+    Mat4x4f(); // Identity matrix
+    Mat4x4f(const std::vector<float> &src, size_t offset = 0);
+    Mat4x4f(const std::vector<double> &src, size_t offset = 0);
+    Mat4x4f(const Vec3f &translation, const Vec3f &rotEuler, const Vec3f &scale);
+    Mat4x4f(const Vec3f &translation, const Vec4f &rotQuaternion, const Vec3f &scale);
+    
+    Mat4x4f operator*(const Mat4x4f& other) const;
+    
+    static Mat4x4f identity() {
+        return Mat4x4f(std::vector<float>{
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 0
+        });
+    }
+    
+    Vec3f get_translation() const;
+    
+    Vec3f get_rotation_euler() const;
+    Vec4f get_rotation_quaternion() const;
+    
+    Vec3f get_scale() const;
 };
    
 }

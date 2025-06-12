@@ -56,7 +56,7 @@ int get_value_from_hint_enum(CStructEntry *structMember, std::string &enumValue)
     
     DebugHelper::assert_(hintEnum->get_value_of_member(enumValue, value), 
         "(get_value_from_hint_enum) Enum ", enumName, 
-        " does not have a value for the symbol ", enumValue);
+        " does not have a value for the symbol \"", enumValue, "\"");
         
     return value;
 }
@@ -306,7 +306,7 @@ void CStructGltfHelper::put_struct_entry_into_gltf_node_extra(CStructEntry *stru
     }
 }
 
-void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(CStructEntry *structMember, GltfFileNode *objNode, uint8_t *bytes) {
+void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(CStructEntry *structMember, tinygltf::Node &objNode, uint8_t *bytes) {
     CStructEntry::InternalType internalType = structMember->get_internal_type();
     StructHintType hintType = StructHintType::NO_HINT;
     
@@ -314,23 +314,25 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(CStructEntry *stru
         hintType = hintTypes[structMember->get_hint_type()];
     }
     
+    std::string structMemberNamePtr = "/" + structMember->name;
+    
     switch(internalType) {
         case CStructEntry::InternalType::INTEGER:
         {
             int value = 0;
             switch(hintType) {
                 case StructHintType::NO_HINT:
-                    value = objNode->get_extra<int>(structMember->name, 0);
+                    value = GltfHelper::get_extra<int>(objNode.extras, structMemberNamePtr, 0);
                     break;
                 case StructHintType::ENUM:
                 {
-                    std::string enumValue = objNode->get_extra<std::string>(structMember->name, "");
+                    std::string enumValue = GltfHelper::get_extra<std::string>(objNode.extras, structMemberNamePtr, "");
                     value = get_value_from_hint_enum(structMember, enumValue);
                     break;
                 }
                 case StructHintType::ASSET_ID:
                 {
-                    std::string buildId = objNode->get_extra<std::string>(structMember->name, "");
+                    std::string buildId = GltfHelper::get_extra<std::string>(objNode.extras, structMemberNamePtr, "");
                     if(buildId.empty()) {
                         value = -1;
                     } else {
@@ -340,19 +342,19 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(CStructEntry *stru
                 }
                 case StructHintType::ANGLE:
                 {
-                    double angle = objNode->get_extra<double>(structMember->name, 0.0);
+                    double angle = GltfHelper::get_extra<double>(objNode.extras, structMemberNamePtr, 0.0);
                     value = get_value_from_hint_angle(structMember, angle);
                     break;
                 }
                 case StructHintType::SCALE:
                 {
-                    double scale = objNode->get_extra<double>(structMember->name, 0.0);
+                    double scale = GltfHelper::get_extra<double>(objNode.extras, structMemberNamePtr, 0.0);
                     value = get_value_from_hint_scale(structMember, scale);
                     break;
                 }
                 case StructHintType::OBJECT:
                 {
-                    std::string buildId = objNode->get_extra<std::string>(structMember->name, "");
+                    std::string buildId = GltfHelper::get_extra<std::string>(objNode.extras, structMemberNamePtr, "");
                     if(buildId.empty()) {
                         value = -1;
                     } else {
@@ -362,7 +364,7 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(CStructEntry *stru
                 }
                 case StructHintType::TIME:
                 {
-                    double timeSeconds = objNode->get_extra<double>(structMember->name, -1.0);
+                    double timeSeconds = GltfHelper::get_extra<double>(objNode.extras, structMemberNamePtr, -1.0);
                     if(timeSeconds == -1.0) {
                         value = -1;
                         break;
@@ -379,7 +381,7 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(CStructEntry *stru
         }
         case CStructEntry::InternalType::ARRAY_INTEGER:
         {
-            tinygltf::Value::Array arrayOfValues = objNode->get_extra<tinygltf::Value::Array>(structMember->name, {});
+            tinygltf::Value::Array arrayOfValues = GltfHelper::get_extra<tinygltf::Value::Array>(objNode.extras, structMemberNamePtr, {});
             std::vector<int64_t> values;
             for(tinygltf::Value &val : arrayOfValues) {
                 switch(hintType) {

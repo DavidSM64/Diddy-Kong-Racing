@@ -440,6 +440,69 @@ rgba *png2rgba(const char *png_filename, int *width, int *height)
    return img;
 }
 
+rgba *pngdata2rgba(uint8_t *png_data, int data_size, int *width, int *height)
+{
+   rgba *img = NULL;
+   int w = 0;
+   int h = 0;
+   int channels = 0;
+   int img_size;
+
+   stbi_uc *data = stbi_load_from_memory(png_data, data_size, &w, &h, &channels, STBI_default);
+   if (!data || w <= 0 || h <= 0) {
+      ERROR("Error loading png data\n");
+      return NULL;
+   }
+
+   img_size = w * h * sizeof(*img);
+   img = (rgba *)malloc(img_size);
+   if (!img) {
+      ERROR("Error allocating %u bytes\n", img_size);
+      return NULL;
+   }
+
+   switch (channels) {
+      case 3: // red, green, blue
+      case 4: // red, green, blue, alpha
+         for (int j = 0; j < h; j++) {
+            for (int i = 0; i < w; i++) {
+               int idx = j*w + i;
+               img[idx].red   = data[channels*idx];
+               img[idx].green = data[channels*idx + 1];
+               img[idx].blue  = data[channels*idx + 2];
+               if (channels == 4) {
+                  img[idx].alpha = data[channels*idx + 3];
+               } else {
+                  img[idx].alpha = 0xFF;
+               }
+            }
+         }
+         break;
+      case 2: // grey, alpha
+         for (int j = 0; j < h; j++) {
+            for (int i = 0; i < w; i++) {
+               int idx = j*w + i;
+               img[idx].red   = data[2*idx];
+               img[idx].green = data[2*idx];
+               img[idx].blue  = data[2*idx];
+               img[idx].alpha = data[2*idx + 1];
+            }
+         }
+         break;
+      default:
+         ERROR("Don't know how to read channels: %d\n", channels);
+         free(img);
+         img = NULL;
+   }
+
+   // cleanup
+   stbi_image_free(data);
+
+   *width = w;
+   *height = h;
+   return img;
+}
+
 ia *png2ia(const char *png_filename, int *width, int *height)
 {
    ia *img = NULL;
@@ -464,7 +527,67 @@ ia *png2ia(const char *png_filename, int *width, int *height)
    switch (channels) {
       case 3: // red, green, blue
       case 4: // red, green, blue, alpha
-         ERROR("Warning: averaging RGB PNG to create IA\n");
+         //ERROR("Warning: averaging RGB PNG to create IA\n");
+         for (int j = 0; j < h; j++) {
+            for (int i = 0; i < w; i++) {
+               int idx = j*w + i;
+               int sum = data[channels*idx] + data[channels*idx + 1] + data[channels*idx + 2];
+               img[idx].intensity = (sum + 1) / 3; // add 1 to round up where appropriate
+               if (channels == 4) {
+                  img[idx].alpha = data[channels*idx + 3];
+               } else {
+                  img[idx].alpha = 0xFF;
+               }
+            }
+         }
+         break;
+      case 2: // grey, alpha
+         for (int j = 0; j < h; j++) {
+            for (int i = 0; i < w; i++) {
+               int idx = j*w + i;
+               img[idx].intensity = data[2*idx];
+               img[idx].alpha     = data[2*idx + 1];
+            }
+         }
+         break;
+      default:
+         ERROR("Don't know how to read channels: %d\n", channels);
+         free(img);
+         img = NULL;
+   }
+
+   // cleanup
+   stbi_image_free(data);
+
+   *width = w;
+   *height = h;
+   return img;
+}
+
+ia *pngdata2ia(uint8_t *png_data, int data_size, int *width, int *height)
+{
+   ia *img = NULL;
+   int w = 0, h = 0;
+   int channels = 0;
+   int img_size;
+
+   stbi_uc *data = stbi_load_from_memory(png_data, data_size, &w, &h, &channels, STBI_default);
+   if (!data || w <= 0 || h <= 0) {
+      ERROR("Error loading png data\n");
+      return NULL;
+   }
+
+   img_size = w * h * sizeof(*img);
+   img = (ia *)malloc(img_size);
+   if (!img) {
+      ERROR("Error allocating %d bytes\n", img_size);
+      return NULL;
+   }
+
+   switch (channels) {
+      case 3: // red, green, blue
+      case 4: // red, green, blue, alpha
+         //ERROR("Warning: averaging RGB PNG to create IA\n");
          for (int j = 0; j < h; j++) {
             for (int i = 0; i < w; i++) {
                int idx = j*w + i;

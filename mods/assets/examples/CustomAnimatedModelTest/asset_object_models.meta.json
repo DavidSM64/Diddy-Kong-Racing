@@ -1,0 +1,12 @@
+{
+    "files": {
+        "order": [
+            "ASSET_CUSTOM_ANIMATED_TESTCUBE"
+        ],
+        "sections": {
+            "ASSET_CUSTOM_ANIMATED_TESTCUBE": {
+                "filename": "animatedBox.json"
+            }
+        }
+    }
+}

@@ -53,9 +53,11 @@ int CEnum::_evaluate_enum(std::string enumValue) {
 int CEnum::_parse_enum_value(std::string &enumValue) {
     try {
         // Should work for most basic cases.
-        return std::stoi(enumValue, 0, 0);
+        return std::stoll(enumValue, 0, 0);
     } catch (const std::invalid_argument& ia) {
         // Not a simple conversion, continue.
+    } catch (const std::out_of_range& err) {
+        DebugHelper::error(err.what());
     }
     return _evaluate_enum(enumValue);
 }
@@ -276,6 +278,9 @@ void CEnumsHelper::get_enums_from_code(CContext &context, const std::string &cod
     for(RegexMatch &match : matches) {
         // Get the C code for this enum.
         std::string enumCode = match.get_group(0).get_text();
+        
+        enumCode = StringHelper::remove_comments_from_c_code(enumCode);
+        
         // Output new CEnum
         out.push_back(new CEnum(context, enumCode));
     }

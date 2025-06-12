@@ -28,11 +28,19 @@ public:
     
     bool is_color_white() const;
     
-    void write_to(DkrVertex *outVertex);
+    void write_to(DkrVertex *outVertex, float modelScale);
+    
+    void add_morph_target(Vec3f newTarget);
+    bool has_targets() const;
+    bool is_animated() const; // Different from has_targets(), because it is possible that the targets don't move.
+    
+    Vec3f animated_position(const std::vector<float> &weights) const;
     
 private:
     Vec3f _position;
     Vec4f _color;
+    
+    std::optional<std::vector<Vec3f>> _targetPositions = std::nullopt;
 };
 
 }

@@ -29,8 +29,9 @@ BuildInfo::BuildInfo(std::string buildId, std::string buildSectionId, const Json
     _type = jsonFile.get_string("/type", "NoType");
 }
 
-BuildInfo::BuildInfo(std::string buildId, std::string buildSectionId, const std::vector<uint8_t> &outData, size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext) 
-    : out(outData), _dstPath(""), _localDirectory(dir), _jsonFile(std::nullopt), _infoContext(infoContext), _buildId(buildId), _buildSectionId(buildSectionId), _type("Binary"), _fileIndex(fileIndex) {
+BuildInfo::BuildInfo(std::string buildId, std::string buildSectionId, std::string deferredFromBuildId, std::string deferredFromSectionId, const std::vector<uint8_t> &outData, 
+    size_t fileIndex, const fs::path &dir, const BuildInfoContext &infoContext) : out(outData), _dstPath(""), _localDirectory(dir), _jsonFile(std::nullopt), _infoContext(infoContext), 
+    _buildId(buildId), _buildSectionId(buildSectionId), _deferredFromBuildId(deferredFromBuildId), _deferredFromSectionId(deferredFromSectionId), _type("Binary"), _fileIndex(fileIndex) {
     _buildType = BUILD_TO_BINARY;
 }
 
@@ -116,8 +117,20 @@ std::string BuildInfo::get_section_build_id() const {
     return _buildSectionId;
 }
 
+std::string BuildInfo::get_deferred_from_build_id() const {
+    return _deferredFromBuildId;
+}
+
+std::string BuildInfo::get_deferred_from_section_build_id() const {
+    return _deferredFromSectionId;
+}
+
 size_t BuildInfo::get_file_index() const {
     return _fileIndex;
+}
+
+bool BuildInfo::is_deferred() const {
+    return !_deferredFromSectionId.empty();
 }
 
 bool BuildInfo::is_complete() const {

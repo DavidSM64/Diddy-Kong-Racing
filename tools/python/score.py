@@ -148,6 +148,16 @@ class ScoreFile:
             for nonMatching in self.nonMatchings:
                 self.nonMatchingsSizes += MAP_FILE.functionSizes[nonMatching]
             self.numNonMatchings = len(self.nonMatchings)
+<<<<<<< HEAD
+
+            self.nonEquivalents = re.findall(NON_EQUVIALENT_REGEX, self.text)
+            self.nonEquivalentsSizes = 0
+            for nonEquivalent in self.nonEquivalents:
+                if (nonEquivalent not in NOT_FUNCTION_NAMES):
+                    self.nonEquivalentsSizes += MAP_FILE.functionSizes[nonEquivalent]
+            self.numNonEquivalents = len(self.nonEquivalents)
+            
+=======
             all_nonEquivalents = re.findall(NON_EQUVIALENT_REGEX, self.text)
             # Filter out the ones that are in NOT_FUNCTION_NAMES
             self.nonEquivalents = [ne for ne in all_nonEquivalents if ne not in NOT_FUNCTION_NAMES]
@@ -156,6 +166,7 @@ class ScoreFile:
             for nonEquivalent in self.nonEquivalents:
                 self.nonEquivalentsSizes += MAP_FILE.functionSizes[nonEquivalent]
             self.numNonEquivalents = len(self.nonEquivalents)
+>>>>>>> master
             self.text = re.sub(WIP_REGEX, r"GLOBAL_ASM(\1)", self.text)
             
     def get_matches(self):

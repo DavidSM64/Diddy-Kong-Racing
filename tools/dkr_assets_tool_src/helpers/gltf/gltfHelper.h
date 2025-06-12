@@ -1,103 +1,139 @@
 #pragma once
 
-#include "helpers/debugHelper.h"
-#include "helpers/fileHelper.h"
-#include <string>
-#include "libs/tiny_gltf.h"
+#include <cstdint>
+#include <optional>
+
+#include "gltfFile.h"
+
+#include "helpers/mathHelper.h"
+#include "libs/bytes_view.hpp"
 
 namespace DkrAssetsTool {
 
-class GltfFile;
+namespace GltfHelper {
+    // These functions are simple enough that they can be inlined.
+    inline float    normalized_byte_to_float(int8_t value);
+    inline float    normalized_ubyte_to_float(uint8_t value);
+    inline float    normalized_short_to_float(int16_t value);
+    inline float    normalized_ushort_to_float(uint16_t value);
+    inline int8_t   float_to_normalized_byte(float value);
+    inline uint8_t  float_to_normalized_ubyte(float value);
+    inline int16_t  float_to_normalized_short(float value);
+    inline uint16_t float_to_normalized_ushort(float value);
+    inline uint8_t  normalized_byte_to_normalized_ubyte(int8_t value);
+    inline uint8_t  normalized_short_to_normalized_ubyte(int16_t value);
+    inline uint8_t  normalized_ushort_to_normalized_ubyte(uint16_t value);
+    
+    Vec3f get_node_position(tinygltf::Node &objNode);
 
-// Represents a node in the gltf file.
-class GltfFileNode {
-public:
-    GltfFileNode(GltfFile *file, tinygltf::Node *node);
-    ~GltfFileNode();
-    
-    size_t get_child_count();
-    GltfFileNode *get_child_node_by_index(int nodeIndex);
-    
-    void get_position(double &outX, double &outY, double &outZ);
-    std::string get_name();
-    
-    template <typename T>
-    T get_extra(std::string key, T defaultValue) {
-        if(!_node->extras.IsObject()) {
-            // This node does not have any extras, just return the default value.
-            return defaultValue;
-        }
-        
-        if(!_node->extras.Has(key)) {
-            // Return default value if the key is not in the map.
-            return defaultValue;
-        }
-        
-        tinygltf::Value val = _node->extras.Get(key);
-        
-        return val.Get<T>();
+    template<typename T>
+    T* get_buffer_pointer(tinygltf::BufferView& bufferView, tinygltf::Buffer& buffer, size_t offset) {
+        return reinterpret_cast<T*>(&buffer.data[bufferView.byteOffset + offset]);
     }
-private:
-    GltfFile *_file;
-    tinygltf::Node *_node;
-};
-
-// Read-Only .gltf file
-class GltfFile {
-public:
-    GltfFile(const fs::path &filepath); 
-    ~GltfFile();
     
-    size_t get_node_count();
-    GltfFileNode *get_node(int nodeIndex);
-    bool search_for_node_by_name(const std::string nodeName, int &outIndex);
+    template<typename T>
+    std::vector<T> get_data_from_bufferview(GltfFile& gltf, int bufferViewIndex) {
+        tinygltf::BufferView &bufferView = gltf.get_bufferview(bufferViewIndex);
+        tinygltf::Buffer &buffer = gltf.get_buffer(bufferView.buffer);
+        
+        T *start = reinterpret_cast<T*>(&buffer.data[bufferView.byteOffset]);
+        T *end = reinterpret_cast<T*>(&buffer.data[bufferView.byteOffset + bufferView.byteLength]);
+        
+        return std::vector<T>(start, end);
+    }
     
-private:
-    tinygltf::Model _model;
-    tinygltf::TinyGLTF _tinygltf;
-    std::unordered_map<tinygltf::Node *, GltfFileNode *> _nodeCache;
+    // Returns 0 if the accessorIndex was invalid.
+    size_t get_accessor_count(GltfFile& gltf, int accessorIndex);
     
-};
-
-// Write-Only .gltf file
-class WriteableGltfFile {
-public:
-    WriteableGltfFile(std::string rootNode);
-    ~WriteableGltfFile();
+    template<typename T, typename T2>
+    static void _write_modified_sparse_data(std::vector<T> &dst, const std::vector<T> &src, GltfFile& gltf, tinygltf::Accessor &accessor) {
+        size_t elementStride = tinygltf::GetNumComponentsInType(accessor.type);
+        std::vector<T2> indices = get_data_from_bufferview<T2>(gltf, accessor.sparse.indices.bufferView);
+        for(size_t i = 0; i < accessor.sparse.count; i++) {
+            auto srcStart = src.begin() + (i * elementStride), srcEnd = srcStart + elementStride;
+            auto dstStart = dst.begin() + (indices[i] * elementStride);
+            std::copy(srcStart, srcEnd, dstStart);
+        }
+    }
     
-    // Node stuff
-    static const int ROOT_NODE = 0;
-    
-    // returns index of the new node.
-    int new_node(const std::string nodeName, int parentNode = ROOT_NODE);
-    
-    void set_node_position(int node, double x, double y, double z);
-    void set_node_scale(int node, double x, double y, double z);
-    void set_node_rotation(int node, double x, double y, double z, double w);
-    void set_node_rotation_y(int node, double y);
-    
-    template <typename T>
-    void set_node_extra(int node, std::string key, T value) {
-        if((int)_model.nodes[node].extras.Type() == 0) {
-            tinygltf::Value::Object initObj;
-            _model.nodes[node].extras = tinygltf::Value(initObj);
+    template<typename T>
+    static void modify_data_using_sparse_accessor(std::vector<T> &data, GltfFile& gltf, tinygltf::Accessor &accessor) {
+        if(!accessor.sparse.isSparse) {
+            return; // If the accessor doesn't have any sparse data, then just exit.
         }
         
-        tinygltf::Value::Object &obj = _model.nodes[node].extras.Get<tinygltf::Value::Object>();
+        std::vector<T> values = get_data_from_bufferview<T>(gltf, accessor.sparse.values.bufferView);
+        
+        switch(accessor.sparse.indices.componentType) {
+        case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
+            _write_modified_sparse_data<T, uint8_t>(data, values, gltf, accessor);
+            break;
+        case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
+            _write_modified_sparse_data<T, uint16_t>(data, values, gltf, accessor);
+            break;
+        case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
+            _write_modified_sparse_data<T, uint32_t>(data, values, gltf, accessor);
+            break;
+        default:
+            DebugHelper::error("(GltfHelper::modify_data_using_sparse_accessor) Invalid component type for indices: ", 
+                accessor.sparse.indices.componentType);
+            break;
+        }
+    }
+    
+    // Cannot return a reference, because the accessor could have no bufferView or be modified from a sparse accessor.
+    template <typename T>
+    static std::vector<T> get_data_from_accessor(GltfFile& gltf, int accessorIndex) {
+        tinygltf::Accessor &accessor = gltf.get_accessor(accessorIndex);
+        
+        if(accessor.bufferView == -1) {
+            std::vector<T> out(accessor.count * tinygltf::GetNumComponentsInType(accessor.type)); // Empty array filled with zeroes.
+            modify_data_using_sparse_accessor(out, gltf, accessor);
+            return out;
+        }
+        
+        std::vector<T> out = get_data_from_bufferview<T>(gltf, accessor.bufferView);
+        modify_data_using_sparse_accessor(out, gltf, accessor);
+        return out;
+    }
 
-        obj[key] = tinygltf::Value(value);
-    };
+    std::optional<std::vector<uint8_t>> get_indices_from_primitive(GltfFile& gltf, tinygltf::Primitive& gltfPrimitive);
+    std::optional<std::vector<float>> get_positions_from_primitive(GltfFile& gltf, tinygltf::Primitive& gltfPrimitive);
+    std::optional<std::vector<uint8_t>> get_colors_from_primitive(GltfFile& gltf, tinygltf::Primitive& gltfPrimitive);
+    std::optional<std::vector<float>> get_uvs_from_primitive(GltfFile& gltf, tinygltf::Primitive& gltfPrimitive);
     
-    void save(const std::string filepath);
+    std::optional<std::vector<float>> get_morph_targets_from_primitive(GltfFile& gltf, tinygltf::Primitive& gltfPrimitive);
     
-private:
-    tinygltf::Model _model;
-    tinygltf::TinyGLTF _tinygltf;
-};
+    // Weights can be in multiple formats, not just floats, so this is necessary.
+    std::optional<std::vector<float>> get_weights_from_accessor(GltfFile& gltf, int accessorIndex);
+    
+    // Generic version for non-standard gltf data.
+    template <typename T>
+    std::vector<T> get_data_from_accessor(GltfFile& gltf, int accessorIndex);
+    
+    Mat4x4f calculate_node_matrix(tinygltf::Node &node, const Mat4x4f &parentMatrix);
 
-class GltfHelper {
-public:
-    
+    template <typename T>
+    void set_extra(tinygltf::Value& extras, std::string jsonPointer, T value);
+
+    template <typename T>
+    void set_extra(tinygltf::Value& extras, std::string jsonPointer, std::vector<T>& values);
+
+    template <typename T>
+    T get_extra(tinygltf::Value& extras, std::string jsonPointer, T defaultValue);
+
+    bool has_extra(tinygltf::Value& extras, std::string jsonPointer);
+
+    int get_extra_type(tinygltf::Value& extras, std::string jsonPointer);
+
+    template <typename T>
+    void get_extra_array(tinygltf::Value& extras, std::string jsonPointer, std::vector<T>& outValues);
+
+    // Returns nullopt if jsonPointer doesn't exist, is the wrong type, or the object has no keys.
+    std::optional<std::vector<std::string>> get_extra_keys(tinygltf::Value& extras, std::string jsonPointer);
+
+    template <typename T>
+    void set_extension_value(tinygltf::ExtensionMap &extensions, std::string jsonPointer, T value);
 };
 
 }
