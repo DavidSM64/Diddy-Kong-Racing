@@ -6447,9 +6447,7 @@ void func_80019808(s32 updateRate) {
     s32 newStartingPosition;
     s8 sp5C[4];
     s8 someBool2; // sp5B
-#ifdef ANTI_TAMPER
     s8 flags[3];
-#endif
     s32 camera;
 
     currentLevelHeader = get_current_level_header();
