@@ -237,6 +237,7 @@ ASM_PROCESSOR      = $(PYTHON) $(ASM_PROCESSOR_DIR)/build.py
 ### Optimisation Overrides
 ####################### LIBULTRA #########################
 
+ifeq ($(COMPILER),ido)
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/audio/%.c.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/audio/mips1/%.c.o: OPT_FLAGS := -O2
@@ -267,7 +268,6 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/audio/env.c.o: MIPSISET := -mips1
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_WARNINGS := -w
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_CHECK := :
 
-ifeq ($(COMPILER),ido)
 # Allow dollar sign to be used in var names for this file alone
 # It allows us to return the current stack pointer
 $(BUILD_DIR)/$(SRC_DIR)/get_stack_pointer.c.o: OPT_FLAGS += -dollar
@@ -283,7 +283,8 @@ endif
 $(GCC_SAFE_FILES): CC := $(CROSS)gcc
 $(GCC_SAFE_FILES): CC_WARNINGS := 
 $(GCC_SAFE_FILES): MIPSISET := -mips3
-$(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING -O2 $(INCLUDE_CFLAGS) $(C_DEFINES) \
+$(GCC_SAFE_FILES): OPT_FLAGS := -Os
+$(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING $(INCLUDE_CFLAGS) $(C_DEFINES) \
 	-EB \
 	-march=vr4300 \
 	-mabi=32 \
