@@ -288,8 +288,6 @@ $(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING $(INCLUDE_CFLAGS
 	-EB \
 	-march=vr4300 \
 	-mabi=32 \
-	-Wno-int-conversion \
-	-Wno-incompatible-pointer-types \
 	-mno-check-zero-division \
 	-mno-abicalls \
 	-mgp32 \
