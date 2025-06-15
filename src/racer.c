@@ -610,10 +610,10 @@ void racer_AI_pathing_inputs(Object *obj, Object_Racer *racer, s32 updateRate) {
     switch (raceType) {
         case RACETYPE_CHALLENGE_BATTLE:
         case RACETYPE_CHALLENGE_BANANAS:
-            func_8004447C(obj, racer, updateRate);
+            racer_ai_challenge(obj, racer, updateRate);
             break;
         case RACETYPE_CHALLENGE_EGGS:
-            func_800452A0(obj, racer, updateRate);
+            racer_ai_eggs(obj, racer, updateRate);
             break;
         default:
             func_80045C48(obj, racer, updateRate);
@@ -675,7 +675,7 @@ s32 roll_percent_chance(s32 chance) {
 }
 
 // Handles the opponent A.I. for battle & banana challenges.
-void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
+void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
     Object *sp74;
     Object_64 *tempRacer;
     LevelObjectEntry *sp6C;
@@ -1036,7 +1036,16 @@ void racer_update_eggs(Object **racerObjs) {
     }
 }
 
-void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
+/**
+ * A custom AI handler for the egg challenge.
+ * As a result of the open area design of Fire Mountain, the AI does not use pathing nodes.
+ * Instead, they use a simple positional targeting system that takes their current priority,
+ * then moves towards it until that objective is complete.#
+ * They will first search for any eggs in the centre of the arena, then failing that, find one
+ * from another players nest to steal.
+ * If they're holding an egg, they'll attempt to take it to their nest.
+*/
+void racer_ai_eggs(Object *obj, Object_Racer *racer, s32 updateRate) {
     f32 diffX;
     f32 diffY;
     f32 diffZ;
