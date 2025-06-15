@@ -344,9 +344,7 @@ SavefileInfo gSavefileInfo[4];
 s32 gCpakGhostData;
 s32 gGhostMenuTotal;
 s8 gDialogueSubmenu;
-u8 gGhostLevelIDsPak[4];
-UNUSED s8 D_801264E0;
-UNUSED s8 D_801264E1;
+u8 gGhostLevelIDsPak[6];
 s8 sCurrentMenuID;
 u8 gGhostCharacterIDsPak[4];
 UNUSED s32 D_801264E8;
@@ -1433,8 +1431,11 @@ s16 gTrophyRaceImageIndices[3] = { 0, 1, -1 };
 MenuElement gTrophyRankingsTitle[] = {
     { 320 + 160 + 1, 35, SCREEN_WIDTH_HALF + 1, 35, -159, 35, 0, 0, 0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { 0 }, { { 0, 0, 0, 0 } } },
     { 320 + 160, 32, SCREEN_WIDTH_HALF, 32, -160, 32, 255, 255, 255, 0, 255, ASSET_FONTS_BIGFONT, 12, 0, { 0 }, { { 0, 0, 0, 0 } } },
+// Not the most glamourous approach, but the least worst one without a proper rematching solution.
+#ifndef AVOID_UB
 };
 MenuElement gTrophyRankingsRacers[] = {
+#endif
     { 64, -192, 64, 48, 64, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, { { 0, 0, 0, 0 } } },
     { 32, -192, 32, 48, 32, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFirstPlace }, { { 0, 0, 0, 0 } } },
     { 130, -172, 130, 68, 130, 308, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[0] }, { { 0, 0, 0, 0 } } },
@@ -12242,9 +12243,15 @@ void rankings_render_order(s32 updateRate) {
                                            (gMenuStage != POSTRACE_ENTER && gRankingsPlayers[i]))) {
             fade = (highlight >> 1) + 128;
         }
+#ifdef AVOID_UB
+        gTrophyRankingsTitle[2 + (i * 3)].filterRed = fade;
+        gTrophyRankingsTitle[2 + (i * 3)].filterGreen = fade;
+        gTrophyRankingsTitle[2 + (i * 3)].filterBlue = fade;
+#else
         gTrophyRankingsRacers[i * 3].filterRed = fade;
         gTrophyRankingsRacers[i * 3].filterGreen = fade;
         gTrophyRankingsRacers[i * 3].filterBlue = fade;
+#endif
     }
     stage = gMenuStage;
     if (stage == RANKINGS_ORDER || stage == RANKINGS_EXIT) {
