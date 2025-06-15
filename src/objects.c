@@ -238,10 +238,10 @@ s16 D_8011ADA4;
 f32 gObjectUpdateRateF;
 s32 gPathUpdateOff;
 s32 gEventCountdown;
-s32 D_8011ADB4;
+s32 gRaceFinishTriggered;
 s32 gEventStartTimer;
 s32 D_8011ADBC;
-s32 D_8011ADC0;
+s32 gNumFinishedRacers;
 s8 gFirstTimeFinish;
 s8 D_8011ADC5;
 u32 gBalloonCutsceneTimer;
@@ -1005,7 +1005,7 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
         }
         D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
         D_8011AE70 = 0;
-        D_8011ADC0 = 1;
+        gNumFinishedRacers = 1;
         if (gPathUpdateOff == FALSE) {
             gParticlePtrList_flush();
             func_80017E98();
@@ -1485,7 +1485,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         }
     }
     gRaceEndTimer = 0;
-    D_8011ADB4 = 0;
+    gRaceFinishTriggered = 0;
     set_next_taj_challenge_menu(0);
     if (settings->worldId == WORLD_CENTRAL_AREA) {
         if (!is_in_tracks_mode()) {
@@ -2898,7 +2898,7 @@ void obj_update(s32 updateRate) {
     }
     if (gNumRacers != 0) {
         if (gRaceEndTimer == 0) {
-            func_80019808(updateRate);
+            race_check_finish(updateRate);
         } else {
             race_transition_adventure(updateRate);
         }
@@ -6427,26 +6427,32 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
 // D_B0000574 is a direct read from the ROM as opposed to RAM
 extern s32 D_B0000574;
 
-void func_80019808(s32 updateRate) {
-    s32 prevUnk1AA;
+/**
+ * Check the win conditions of the current race.
+ * This varies based on the race type, so this does a multitude of different possible things.
+ * When the race is finished, it will then for the most part trigger the next menu,
+ * but adventure mode will start the balloon cutscene if it has not yet been awarded.
+*/
+void race_check_finish(s32 updateRate) {
+    s32 prevRacerPos;
     s32 i;
-    s32 j; // sp94
-    s32 newUnk1AA;
+    s32 j;
+    s32 racerPos;
     Settings *settings;
-    s16 numHumanRacers;         // sp8A
-    s16 numHumanRacersFinished; // sp88
+    s16 numHumanRacers;
+    s16 numHumanRacersFinished;
     Object_Racer *curRacer2;
-    Object_Racer *curRacer; // sp80
+    Object_Racer *curRacer;
     s16 numFinishedRacers;
     s16 foundIndex;
-    Object_Racer *racer[4]; // sp6C
+    Object_Racer *racer[4];
     s16 racerIndex;
     s8 raceType;
     s8 someBool;
-    LevelHeader *currentLevelHeader; // sp64
+    LevelHeader *currentLevelHeader;
     s32 newStartingPosition;
     s8 sp5C[4];
-    s8 someBool2; // sp5B
+    s8 someBool2;
     s8 flags[3];
     s32 camera;
 
@@ -6459,11 +6465,12 @@ void func_80019808(s32 updateRate) {
     if (someBool2 != RACETYPE_DEFAULT && someBool2 != RACETYPE_HORSESHOE_GULCH && someBool2 != RACETYPE_BOSS) {
         if (someBool2 & RACETYPE_CHALLENGE) {
             if (someBool2 == RACETYPE_CHALLENGE_EGGS) {
-                func_80045128(*gRacers);
+                racer_update_eggs(*gRacers);
             }
-            if (D_8011ADB4 == 0) {
+            if (gRaceFinishTriggered == FALSE) {
                 for (i = 0; i < gNumRacers; i++) {
                     racer[i] = &(*gRacers)[i]->unk64->racer;
+                    // Manage eliminated racers in deathmatch.
                     if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE && racer[i]->bananas <= 0 &&
                         !racer[i]->raceFinished) {
                         racer[i]->raceFinished = TRUE;
@@ -6471,8 +6478,8 @@ void func_80019808(s32 updateRate) {
                         racer_sound_free((*gRacers)[i]);
                         (*gRacers)[i]->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
                         (*gRacers)[i]->interactObj->flags = INTERACT_FLAGS_NONE;
-                        racer[i]->finishPosition = 5 - D_8011ADC0;
-                        D_8011ADC0++;
+                        racer[i]->finishPosition = 5 - gNumFinishedRacers;
+                        gNumFinishedRacers++;
                     }
                     if (racer[i]->playerIndex != PLAYER_COMPUTER) {
                         if (racer[i]->raceFinished) {
@@ -6483,8 +6490,8 @@ void func_80019808(s32 updateRate) {
                     if (racer[i]->raceFinished) {
                         numFinishedRacers++;
                         if (racer[i]->finishPosition == 0) {
-                            racer[i]->finishPosition = D_8011ADC0;
-                            D_8011ADC0++;
+                            racer[i]->finishPosition = gNumFinishedRacers;
+                            gNumFinishedRacers++;
                         }
                     }
                 }
@@ -6526,21 +6533,23 @@ void func_80019808(s32 updateRate) {
                         }
 
                         if (racerIndex != -1) {
+                            // In battle mode, last to finish wins, so flip the finish order.
                             if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
-                                racer[racerIndex]->finishPosition = 5 - D_8011ADC0;
+                                racer[racerIndex]->finishPosition = 5 - gNumFinishedRacers;
                             } else {
-                                racer[racerIndex]->finishPosition = D_8011ADC0;
+                                racer[racerIndex]->finishPosition = gNumFinishedRacers;
                             }
-                            D_8011ADC0++;
+                            gNumFinishedRacers++;
                             racer[racerIndex]->raceFinished = TRUE;
                         }
                         i = 0;
                     } while (racerIndex != -1);
 
                     gSwapLeadPlayer = FALSE;
+                    // Award the winner a TT amulet if not in tracks mode.
                     if (!is_in_tracks_mode() &&
                         (racer[0]->finishPosition == 1 ||
-                         is_in_two_player_adventure() && racer[1]->finishPosition == 1) &&
+                         (is_in_two_player_adventure() && racer[1]->finishPosition == 1)) &&
                         (!(settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED))) {
                         settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED;
                         i = settings->ttAmulet + 1;
@@ -6549,36 +6558,37 @@ void func_80019808(s32 updateRate) {
                         }
                         settings->ttAmulet = i;
                     }
-                    for (newUnk1AA = 0; newUnk1AA < 8;) {
-                        settings->racers[newUnk1AA++].starting_position = -1;
+                    for (racerPos = 0; racerPos < 8;) {
+                        settings->racers[racerPos++].starting_position = -1;
                     }
 
                     newStartingPosition = SEQUENCE_BATTLE_LOSE;
-                    for (newUnk1AA = 0; newUnk1AA < gNumRacers; newUnk1AA++) {
-                        if (racer[newUnk1AA]->playerIndex != PLAYER_COMPUTER && racer[newUnk1AA]->finishPosition == 1) {
+                    for (racerPos = 0; racerPos < gNumRacers; racerPos++) {
+                        if (racer[racerPos]->playerIndex != PLAYER_COMPUTER && racer[racerPos]->finishPosition == 1) {
                             newStartingPosition = SEQUENCE_BATTLE_VICTORY;
                         }
-                        settings->racers[newUnk1AA].starting_position = racer[newUnk1AA]->finishPosition - 1;
+                        settings->racers[racerPos].starting_position = racer[racerPos]->finishPosition - 1;
                     }
 
                     music_play(newStartingPosition);
                     newStartingPosition = 4;
-                    for (prevUnk1AA = 0; prevUnk1AA < 8; prevUnk1AA++) {
-                        if (settings->racers[prevUnk1AA].starting_position == -1) {
-                            settings->racers[prevUnk1AA].starting_position = newStartingPosition;
+                    for (prevRacerPos = 0; prevRacerPos < 8; prevRacerPos++) {
+                        if (settings->racers[prevRacerPos].starting_position == -1) {
+                            settings->racers[prevRacerPos].starting_position = newStartingPosition;
                             newStartingPosition++;
                         }
                     }
 
-                    gSwapLeadPlayer = 0;
+                    gSwapLeadPlayer = FALSE;
                     if (is_in_two_player_adventure() && settings->racers[PLAYER_TWO].starting_position <
                                                             settings->racers[PLAYER_ONE].starting_position) {
-                        gSwapLeadPlayer = 1;
+                        gSwapLeadPlayer = TRUE;
                     }
+                    // i will be nonzero if any adventure mode award triggers happened.
                     if (i == 0) {
                         if (is_in_two_player_adventure()) {
                             if (gSwapLeadPlayer) {
-                                gSwapLeadPlayer = 0;
+                                gSwapLeadPlayer = FALSE;
                                 swap_lead_player();
                                 if (D_800DC73C != 0) {
                                     D_800DC748 = TRUE;
@@ -6592,9 +6602,9 @@ void func_80019808(s32 updateRate) {
                         push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
                         push_level_property_stack(ASSET_LEVEL_TTAMULETSEQUENCE, 0, VEHICLE_NO_OVERRIDE,
                                                   settings->ttAmulet - 1);
-                        race_finish_adventure(1);
+                        race_finish_adventure(TRUE);
                     }
-                    D_8011ADB4 = 1;
+                    gRaceFinishTriggered = TRUE;
                 }
             }
         }
@@ -6603,39 +6613,39 @@ void func_80019808(s32 updateRate) {
 
     i = 0;
     do {
-        newUnk1AA = 1;
+        racerPos = 1;
         curRacer = &(*gRacers)[i]->unk64->racer;
-        prevUnk1AA = curRacer->unk1AA;
+        prevRacerPos = curRacer->racerOrder;
         j = 0;
         do {
             if (j != i) {
                 curRacer2 = &(*gRacers)[j]->unk64->racer;
                 if (curRacer->raceFinished == FALSE && curRacer2->raceFinished != FALSE) {
-                    newUnk1AA++;
+                    racerPos++;
                 } else if (curRacer->courseCheckpoint < curRacer2->courseCheckpoint) {
-                    newUnk1AA++;
+                    racerPos++;
                 } else if (curRacer->courseCheckpoint == curRacer2->courseCheckpoint) {
                     if (curRacer2->unk1A8 < curRacer->unk1A8) {
-                        newUnk1AA++;
+                        racerPos++;
                     }
                     if (curRacer->unk1A8 == curRacer2->unk1A8 && i < j) {
-                        newUnk1AA++;
+                        racerPos++;
                     }
                 }
             }
             j++;
         } while (j < gNumRacers);
 
-        curRacer->unk1AA = newUnk1AA;
+        curRacer->racerOrder = racerPos;
         if (curRacer->lap < currentLevelHeader->laps) {
-            if (prevUnk1AA == curRacer->unk1AA) {
+            if (prevRacerPos == curRacer->racerOrder) {
                 if (curRacer->unk1B0 < 2) {
                     if (curRacer->vehicleID != VEHICLE_LOOPDELOOP) {
                         curRacer->unk1B0++;
                     }
-                } else if (curRacer->unk1AA != curRacer->racePosition) {
+                } else if (curRacer->racerOrder != curRacer->racePosition) {
                     curRacer->unk1B2 = 10;
-                    curRacer->racePosition = curRacer->unk1AA;
+                    curRacer->racePosition = curRacer->racerOrder;
                 }
             } else {
                 curRacer->unk1B0 = 0;
@@ -6650,11 +6660,11 @@ void func_80019808(s32 updateRate) {
         if (curRacer->lap >= currentLevelHeader->laps && curRacer->raceFinished == FALSE) {
             if (get_game_mode() != GAMEMODE_UNUSED_4) {
                 curRacer->raceFinished = TRUE;
-                curRacer->finishPosition = D_8011ADC0;
-                if (D_8011ADC0 == 1 && curRacer->playerIndex == PLAYER_COMPUTER) {
+                curRacer->finishPosition = gNumFinishedRacers;
+                if (gNumFinishedRacers == 1 && curRacer->playerIndex == PLAYER_COMPUTER) {
                     sound_play(SOUND_WHOOSH5, NULL);
                 }
-                D_8011ADC0++;
+                gNumFinishedRacers++;
             }
         }
         if (curRacer->playerIndex != PLAYER_COMPUTER) {
@@ -6681,11 +6691,11 @@ void func_80019808(s32 updateRate) {
     do {
         curRacer = &(*gRacers)[i]->unk64->racer;
         if (curRacer->raceFinished) {
-            newUnk1AA = curRacer->finishPosition - 1;
+            racerPos = curRacer->finishPosition - 1;
         } else {
-            newUnk1AA = curRacer->unk1AA - 1;
+            racerPos = curRacer->racerOrder - 1;
         }
-        gRacersByPosition[newUnk1AA] = (*gRacers)[i];
+        gRacersByPosition[racerPos] = (*gRacers)[i];
         i++;
     } while (i < gNumRacers);
 
@@ -6734,10 +6744,10 @@ void func_80019808(s32 updateRate) {
         curRacer = &(*gRacers)[0]->unk64->racer;
         if (!curRacer->raceFinished) {
             curRacer->raceFinished = TRUE;
-            curRacer->finishPosition = D_8011ADC0;
-            D_8011ADC0 += 1;
+            curRacer->finishPosition = gNumFinishedRacers;
+            gNumFinishedRacers++;
         }
-    } else if (D_8011ADB4 == 0) {
+    } else if (gRaceFinishTriggered == FALSE) {
         someBool2 = FALSE;
         if (is_in_two_player_adventure() && numHumanRacersFinished > 0 && get_trophy_race_world_id() == 0 &&
             set_course_finish_flags(settings) != 0) {
@@ -6760,8 +6770,8 @@ void func_80019808(s32 updateRate) {
                             ((Camera *) camera)->mode = CAMERA_FINISH_CHALLENGE;
                         }
                         curRacer->raceFinished = TRUE;
-                        curRacer->finishPosition = D_8011ADC0;
-                        D_8011ADC0++;
+                        curRacer->finishPosition = gNumFinishedRacers;
+                        gNumFinishedRacers++;
                     }
                     i++;
                 } while (i < gNumRacers);
@@ -6782,8 +6792,8 @@ void func_80019808(s32 updateRate) {
                 i = 0;
                 do {
                     curRacer = &gRacersByPosition[i]->unk64->racer;
-                    newUnk1AA = curRacer->racerIndex;
-                    settings->racers[newUnk1AA].starting_position = i;
+                    racerPos = curRacer->racerIndex;
+                    settings->racers[racerPos].starting_position = i;
                     i++;
                 } while (i < gNumRacers);
             }
@@ -6833,9 +6843,9 @@ void func_80019808(s32 updateRate) {
                 if (settings->worldId != 0) {
                     settings->balloonsPtr[0]++;
                 }
-                race_finish_adventure(1);
+                race_finish_adventure(TRUE);
             }
-            D_8011ADB4 = -1;
+            gRaceFinishTriggered = -1; // -1 doesn't do anything different.
             if (get_number_of_active_players() == 1) {
                 race_finish_time_trial();
             }
@@ -7324,7 +7334,7 @@ void set_ghost_none(void) {
 Object *func_8001B7A8(Object_Racer *racer, s32 position, f32 *distance) {
     UNUSED s32 pad;
     Object *tempRacerObj;
-    position = (racer->unk1AA - position) - 1;
+    position = (racer->racerOrder - position) - 1;
     if (position < 0 || position >= gNumRacers) {
         return NULL;
     }
@@ -10564,8 +10574,8 @@ void mode_init_taj_race(void) {
         racer->unk1BA = 0;
         settings = get_settings();
         gEventCountdown = 80;
-        D_8011ADB4 = 0;
-        D_8011ADC0 = 1;
+        gRaceFinishTriggered = FALSE;
+        gNumFinishedRacers = 1;
         levelHeader->laps = 3;
         levelHeader->race_type = RACETYPE_DEFAULT;
         hud_init_element();

@@ -1363,9 +1363,9 @@ typedef struct Object_Racer {
   /* 0x1A4 */ s16 x_rotation_vel;
   /* 0x1A6 */ s16 z_rotation_vel;
   /* 0x1A8 */ s16 unk1A8;
-  /* 0x1AA */ s16 unk1AA;
+  /* 0x1AA */ s16 racerOrder; // Current racer index order, but doesn't necessarily mean their exact race place.
   /* 0x1AC */ s16 finishPosition;
-  /* 0x1AE */ s16 racePosition;
+  /* 0x1AE */ s16 racePosition; // Current decided race position.
   /* 0x1B0 */ s16 unk1B0;
   /* 0x1B2 */ s16 unk1B2;
   /* 0x1B4 */ s32 unk1B4;

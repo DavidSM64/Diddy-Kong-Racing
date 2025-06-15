@@ -162,7 +162,7 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
 #ifdef ANTI_TAMPER
     // Antipiracy measure
     gAntiPiracyCRCStart = DMA_BUFFER_LENGTH;
-    checksum = (s32) &func_80019808 - gAntiPiracyCRCStart;
+    checksum = (s32) &race_check_finish - gAntiPiracyCRCStart;
     crc_region_start = (u8 *) checksum;
     crc_region = &crc_region_start[gAntiPiracyCRCStart];
     gAntiPiracyAudioFreq = FALSE;

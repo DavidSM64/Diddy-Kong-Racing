@@ -126,6 +126,13 @@ typedef enum TajInteraction {
     TAJ_TELEPORT,
 } TajInteraction;
 
+typedef enum RacerEggFlags {
+    RACER_EGG_NONE,
+    RACER_EGG_MASK = 0xF,   // Bitmask used for the egg HUD fade counting.
+    RACER_EGG_HATCHING = (1 << 6), // Egg has hatch progress
+    RACER_EGG_HELD = (1 << 7) // Egg is held by a racer.
+} RacerEggFlags;
+
 #define AI_MIN 0
 #define AI_MAX 1
 #define AI_MIN_STEP 2
@@ -214,7 +221,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate);
 void handle_racer_items(Object *obj, Object_Racer *racer, s32 updateRate);
 void drop_bananas(Object *obj, Object_Racer *racer, s32 number);
 void update_player_racer(Object *obj, s32 updateRate);
-void func_80045128(Object **racerObjs);
+void racer_update_eggs(Object **racerObjs);
 void timetrial_ghost_write(Object *obj, s32 updateRate);
 void func_80046524(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);
 void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF);

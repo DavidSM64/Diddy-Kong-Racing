@@ -281,7 +281,7 @@ typedef struct PointParticle {
 
 void reset_particles(void);
 void reset_particles_with_assets(void);
-void free_unknown_particle_sprites(void);
+void particle_free_dummy(void);
 void free_particle_buffers(void);
 void free_particle_vertices_triangles(void);
 void free_particle_assets(void);

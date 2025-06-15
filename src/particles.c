@@ -96,8 +96,8 @@ s32 gMaxRectangleParticles = 0;
 s32 gMaxSpriteParticles = 0;
 s32 gMaxLineParticles = 0;
 s32 gMaxPointParticles = 0;
-Sprite **D_800E2E60 = NULL; // Sprites loaded from asset 47; appears to be unused
-s32 D_800E2E64 = 0;         // Number of sprites in D_800E2E60
+Sprite **gParticleDummys = NULL; // Sprites loaded from asset 47; appears to be unused
+s32 gParticleDummyCount = 0;         // Number of sprites in gParticleDummys
 
 Vec2s gParticleCoordListTri[3] = {
     { { { 0, 8 } } },
@@ -157,7 +157,7 @@ s16 gHovercraftParticleOpacities[8];
 void reset_particles(void) {
     free_particle_buffers();
     free_particle_vertices_triangles();
-    free_unknown_particle_sprites();
+    particle_free_dummy();
 }
 
 /**
@@ -167,21 +167,21 @@ void reset_particles_with_assets(void) {
     free_particle_buffers();
     free_particle_vertices_triangles();
     free_particle_assets();
-    free_unknown_particle_sprites();
+    particle_free_dummy();
 }
 
 /**
- * Deallocate buffers used for sprites from asset 47.
+ * Free dummy particles from RAM.
  */
-void free_unknown_particle_sprites(void) {
+void particle_free_dummy(void) {
     s32 i;
 
-    if (D_800E2E60 != NULL) {
-        for (i = 0; i < D_800E2E64; i++) {
-            sprite_free(D_800E2E60[i]);
+    if (gParticleDummys != NULL) {
+        for (i = 0; i < gParticleDummyCount; i++) {
+            sprite_free(gParticleDummys[i]);
         }
-        mempool_free(D_800E2E60);
-        D_800E2E60 = 0;
+        mempool_free(gParticleDummys);
+        gParticleDummys = NULL;
     }
 }
 
@@ -412,16 +412,16 @@ void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, 
         gPointParticleBuffer[i].base.kind = PARTICLE_KIND_NONE;
     }
 
-    if (D_800E2E60 == NULL) {
+    if (gParticleDummys == NULL) {
         asset2F = (s16 *) load_asset_section_from_rom(ASSET_BINARY_47);
-        D_800E2E64 = 0;
-        while (asset2F[D_800E2E64] != -1) {
-            D_800E2E64++;
+        gParticleDummyCount = 0;
+        while (asset2F[gParticleDummyCount] != -1) {
+            gParticleDummyCount++;
         }
 
-        D_800E2E60 = mempool_alloc_safe(D_800E2E64 * 4, COLOUR_TAG_BLUE);
-        for (i = 0; i < D_800E2E64; i++) {
-            D_800E2E60[i] = (Sprite *) tex_load_sprite(asset2F[i] & 0x3FFF, 1);
+        gParticleDummys = mempool_alloc_safe(gParticleDummyCount * 4, COLOUR_TAG_BLUE);
+        for (i = 0; i < gParticleDummyCount; i++) {
+            gParticleDummys[i] = (Sprite *) tex_load_sprite(asset2F[i] & 0x3FFF, 1);
         }
 
         mempool_free(asset2F);

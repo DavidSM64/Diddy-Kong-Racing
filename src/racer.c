@@ -1016,7 +1016,11 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
     }
 }
 
-void func_80045128(Object **racerObjs) {
+/**
+ * Manage the global flags for the egg challenge.
+ * Includes hatch progress, being held by a player, and number of hatched eggs.
+*/
+void racer_update_eggs(Object **racerObjs) {
     Object_Racer *racer;
     s32 i;
 
@@ -1024,10 +1028,10 @@ void func_80045128(Object **racerObjs) {
         racer = &racerObjs[i]->unk64->racer;
         gEggChallengeFlags[i] = racer->lap;
         if (racer->eggHudCounter != 0) {
-            gEggChallengeFlags[i] |= 0x40;
+            gEggChallengeFlags[i] |= RACER_EGG_HATCHING;
         }
         if (racer->held_obj != NULL) {
-            gEggChallengeFlags[i] |= 0x80;
+            gEggChallengeFlags[i] |= RACER_EGG_HELD;
         }
     }
 }
@@ -1087,10 +1091,10 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
         flags = 0;
         bestTick = 0;
         for (i = 3; i >= 0; i--) {
-            tickCount = (gEggChallengeFlags[i] & 0xF) * 3;
-            if (gEggChallengeFlags[i] & 0x40) {
+            tickCount = (gEggChallengeFlags[i] & RACER_EGG_MASK) * 3;
+            if (gEggChallengeFlags[i] & RACER_EGG_HATCHING) {
                 tickCount += 2;
-            } else if (gEggChallengeFlags[i] & 0x80) {
+            } else if (gEggChallengeFlags[i] & RACER_EGG_HELD) {
                 tickCount += 1;
             }
             if (bestTick < tickCount) {
@@ -1114,7 +1118,7 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
             }
             if (bestTick == 2) {
                 for (i = 0; i < 4; i++) {
-                    if (racer->racerIndex != i && gEggChallengeFlags[i] & 0x40) {
+                    if (racer->racerIndex != i && gEggChallengeFlags[i] & RACER_EGG_HATCHING) {
                         racerID = i;
                     }
                 }
@@ -4076,7 +4080,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     obj->interactObj->y_position = obj->segment.trans.y_position;
     obj->interactObj->z_position = obj->segment.trans.z_position;
     tempRacer->groundedWheels = 3;
-    tempRacer->unk1AA = 1;
+    tempRacer->racerOrder = 1;
     tempRacer->racePosition = 1;
     tempRacer->miscAnimCounter = tempRacer->playerIndex * 5;
     tempRacer->checkpoint_distance = 1.0f;
