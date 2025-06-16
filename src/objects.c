@@ -3694,7 +3694,7 @@ void object_undo_player_tumble(Object *obj) {
     }
 }
 
-void func_80012F94(Object *obj) {
+void set_temp_model_transforms(Object *obj) {
     s32 batchNum;
     ObjectModel *objModel;
     s32 var_v1;
@@ -3848,7 +3848,7 @@ void func_80012F94(Object *obj) {
  * Afterwards, undo that.
  */
 void render_object_parts(Object *obj) {
-    func_80012F94(obj);
+    set_temp_model_transforms(obj);
     if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
         render_particle((Particle *) obj, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
                         PARTICLE_UNK_FLAG_8000);
