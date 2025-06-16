@@ -3694,27 +3694,21 @@ void object_undo_player_tumble(Object *obj) {
     }
 }
 
-// https://decomp.me/scratch/TZSwt
-#ifdef NON_EQUIVALENT
-// set_temp_model_transforms
-void func_80012F94(Object *obj) {
-    u8 *bossAsset;
-    ObjectModel *temp_a1_3;
-    Object_Racer *objRacer;
-    Object_68 **var_v0;
-    Object_68 *new_var;
-    f32 ret1;
-    f32 var_f0_2;
-    f32 ret2;
-    u8 *var_a1;
-    s32 temp_f6;
-    s32 temp_v1;
-    s32 bossVehicleId;
-    s32 racerLightTimer;
+void set_temp_model_transforms(Object *obj) {
     s32 batchNum;
+    ObjectModel *objModel;
     s32 var_v1;
+    Object_68 **obj68List;
+    Object_68 *obj68;
+    u8 *bossAsset;
+    f32 var_f0;
+    u8 *var_a1;
+    f32 ret2;
+    UNUSED s32 pad;
+    Object_Racer *objRacer;
+    f32 ret1;
     s32 firstNonEmptyUnk68ObjectIndex;
-    s32 var_t0;
+    s32 modelIndex;
     s32 numberOfModels;
 
     ret1 = 1.0f;
@@ -3730,106 +3724,110 @@ void func_80012F94(Object *obj) {
                 }
             }
             if (objRacer->playerIndex != PLAYER_COMPUTER && objRacer->raceFinished) {
-                var_t0 = 0;
+                modelIndex = 0;
                 batchNum = 0;
             } else {
                 if (obj->behaviorId == BHV_TIMETRIAL_GHOST) { // Ghost Object?
-                    var_t0 = 1;
+                    modelIndex = 1;
                     batchNum = 0;
                 } else {
                     // Loads vehicles between VEHICLE_TRICKY and VEHICLE_SMOKEY. So all boss vehicles except wizpig.
-                    var_t0 = objRacer->vehicleID + VEHICLE_BOSSES;
+                    batchNum = objRacer->vehicleID;
                     if (objRacer->vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
-                        var_t0 = VEHICLE_BOSSES;
+                        batchNum = 0;
                     }
+                    bossAsset = (u8 *) get_misc_asset(batchNum + VEHICLE_BOSSES); // 40 bytes of data u8[8][5]?
                     batchNum = 0;
-                    bossAsset = (u8 *) get_misc_asset(var_t0); // 40 bytes of data u8[8][5]?
-                    bossAsset = &bossAsset[(cam_get_viewport_layout() * 10)];
-                    var_a1 = bossAsset;
+                    bossAsset += cam_get_viewport_layout() * 10;
                     if (get_current_viewport() != objRacer->playerIndex) {
-                        var_a1 += 5;
+                        bossAsset += 5;
                     }
-                    var_f0_2 = obj->segment.object.distanceToCamera;
-                    temp_v1 = (s32) var_f0_2 >> 3;
+                    var_f0 = obj->segment.object.distanceToCamera;
+                    var_v1 = (s32) var_f0 >> 3;
                     if (obj->segment.object.distanceToCamera < 0.0f) {
-                        var_f0_2 = 0.0f;
-                    } else if (var_f0_2 > 3500.0f) {
-                        var_f0_2 = 3500.0f;
+                        var_f0 = 0.0f;
+                    } else if (var_f0 > 3500.0f) {
+                        var_f0 = 3500.0f;
                     }
-                    obj->segment.trans.scale *= (var_f0_2 / 2700.0f) + 1.0f;
-                    temp_f6 = (s32) ((f32) temp_v1 * *((f32 *) get_misc_asset(ASSET_MISC_4)[objRacer->characterId]));
+                    var_f0 /= 2700.0f;
+                    var_f0 += 1.0f;
+                    obj->segment.trans.scale *= var_f0;
+                    var_v1 *= ((f32 *) get_misc_asset(ASSET_MISC_4))[objRacer->characterId];
                     // ASSET_MISC_4 is just 10 floats of 1.0f. One for each playable character.
-                    if (temp_f6 < -50) {
-                        var_t0 = 5;
+                    if (var_v1 < -50) {
+                        modelIndex = 5;
                     } else {
-                        racerLightTimer = MIN(temp_f6 >> 1, 0);
-                        var_v1 = racerLightTimer;
-                        if (var_v1 < var_a1[0]) {
-                            var_t0 = 0;
-                        } else if (var_v1 < var_a1[1]) {
-                            var_t0 = 1;
-                        } else if (var_v1 < var_a1[2]) {
-                            var_t0 = 2;
-                        } else if (var_v1 < var_a1[3]) {
-                            var_t0 = 3;
-                        } else if (var_v1 < var_a1[4]) {
-                            var_t0 = 4;
+                        var_v1 >>= 1;
+                        if (var_v1 < 0) {
+                            var_v1 = 0;
+                        }
+
+                        if (var_v1 < bossAsset[0]) {
+                            modelIndex = 0;
+                        } else if (var_v1 < bossAsset[1]) {
+                            modelIndex = 1;
+                        } else if (var_v1 < bossAsset[2]) {
+                            modelIndex = 2;
+                        } else if (var_v1 < bossAsset[3]) {
+                            modelIndex = 3;
+                        } else if (var_v1 < bossAsset[4]) {
+                            modelIndex = 4;
                         } else {
-                            var_t0 = 5;
+                            modelIndex = 5;
                         }
                     }
                 }
             }
 
             firstNonEmptyUnk68ObjectIndex = 0;
-            var_v0 = &obj->unk68[firstNonEmptyUnk68ObjectIndex];
+            obj68List = &obj->unk68[firstNonEmptyUnk68ObjectIndex];
 
-            while (*var_v0 == NULL) {
+            while (*obj68List == NULL) {
                 firstNonEmptyUnk68ObjectIndex++;
-                var_v0++;
+                obj68List++;
             }
 
             numberOfModels = obj->segment.header->numberOfModelIds - 1;
-            var_v0 = &obj->unk68[numberOfModels];
+            obj68List = &obj->unk68[numberOfModels];
 
-            while (*var_v0 == NULL) {
+            while (*obj68List == NULL) {
                 numberOfModels--;
-                var_v0--;
+                obj68List--;
             }
 
-            if (var_t0 < firstNonEmptyUnk68ObjectIndex) {
-                var_t0 = firstNonEmptyUnk68ObjectIndex;
+            if (modelIndex < firstNonEmptyUnk68ObjectIndex) {
+                modelIndex = firstNonEmptyUnk68ObjectIndex;
             }
-            if (numberOfModels < var_t0) {
-                var_t0 = numberOfModels;
+            if (numberOfModels < modelIndex) {
+                modelIndex = numberOfModels;
             }
-            obj->segment.object.modelIndex = var_t0;
+            obj->segment.object.modelIndex = modelIndex;
             if ((obj->shading != NULL) && (obj->shading->unk0 < 0.6f)) {
                 objRacer->lightFlags |= RACER_LIGHT_NIGHT;
             } else {
                 objRacer->lightFlags &= ~RACER_LIGHT_NIGHT;
             }
-            racerLightTimer = objRacer->lightFlags & RACER_LIGHT_TIMER;
-            new_var = obj->unk68[obj->segment.object.modelIndex];
-            temp_a1_3 = new_var->objModel;
-            if (racerLightTimer != 0) {
-                racerLightTimer--;
+            modelIndex = objRacer->lightFlags & RACER_LIGHT_TIMER;
+            obj68 = obj->unk68[obj->segment.object.modelIndex];
+            objModel = obj68->objModel;
+            if (modelIndex != 0) {
+                modelIndex--;
                 if (objRacer->lightFlags & RACER_LIGHT_BRAKE) {
-                    racerLightTimer += 1;
+                    modelIndex += 1;
                     objRacer->lightFlags = (objRacer->lightFlags & ~RACER_LIGHT_UNK10) | RACER_LIGHT_UNK20;
                 } else if (objRacer->lightFlags & RACER_LIGHT_NIGHT) {
-                    racerLightTimer += 3;
+                    modelIndex += 3;
                     objRacer->lightFlags = (objRacer->lightFlags & ~RACER_LIGHT_UNK20) | RACER_LIGHT_UNK10;
                 } else if (objRacer->lightFlags & RACER_LIGHT_UNK20) {
-                    racerLightTimer += 1;
+                    modelIndex += 1;
                 } else {
-                    racerLightTimer += 3;
+                    modelIndex += 3;
                 }
             }
-            racerLightTimer *= 4;
-            for (batchNum = 0; batchNum < temp_a1_3->numberOfBatches; batchNum++) {
-                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == RENDER_TEX_ANIM) {
-                    temp_a1_3->batches[batchNum].texOffset = racerLightTimer;
+            modelIndex *= 4;
+            for (batchNum = 0; batchNum < objModel->numberOfBatches; batchNum++) {
+                if ((objModel->batches[batchNum].flags & 0x810000) == RENDER_TEX_ANIM) {
+                    objModel->batches[batchNum].texOffset = modelIndex;
                 }
             }
             obj->segment.trans.x_position += objRacer->carBobX;
@@ -3843,9 +3841,6 @@ void func_80012F94(Object *obj) {
     gObjectModelScaleY = ret1;
     gCurrentLightIntensity = ret2;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80012F94.s")
-#endif
 
 /**
  * Determine which model type the object is using, then call the related function to render it.
@@ -3853,7 +3848,7 @@ void func_80012F94(Object *obj) {
  * Afterwards, undo that.
  */
 void render_object_parts(Object *obj) {
-    func_80012F94(obj);
+    set_temp_model_transforms(obj);
     if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
         render_particle((Particle *) obj, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
                         PARTICLE_UNK_FLAG_8000);

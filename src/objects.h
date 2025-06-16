@@ -546,7 +546,7 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
 void obj_tex_animate(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);
 void func_8006017C(ObjectModel *);
-void func_80012F94(Object *);
+void set_temp_model_transforms(Object *);
 void func_800101AC(Object *, s32);
 void func_800135B8(Object *);
 void func_8000CC7C(Vehicle, u32, s32);
