@@ -7,7 +7,7 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of June 16, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 91.31%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 91.59%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 59.08%
 <!-- README_SCORE_SUMMARY_END -->
@@ -121,16 +121,16 @@ As of June 16, 2025, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- --------------- 91.31% Complete (92.09% NON_MATCHING) ---------------
-                     # Decompiled functions: 1918
-                      # GLOBAL_ASM remaining: 29
+ --------------- 91.59% Complete (92.37% NON_MATCHING) ---------------
+                     # Decompiled functions: 1919
+                      # GLOBAL_ASM remaining: 28
                       # NON_MATCHING functions: 4
-                  # NON_EQUIVALENT WIP functions: 25
+                  # NON_EQUIVALENT WIP functions: 24
  ---------------------------- Game Status ----------------------------
                Balloons: 43/47, Keys: 4/4, Trophies: 4/5
                 T.T. Amulets: 4/4, Wizpig Amulets: 4/4
  ---------------------------------------------------------------------
- We are collecting silver coins in Spacedust Alley. (2/8 silver coins)
+ We are collecting silver coins in Spacedust Alley. (4/8 silver coins)
  =====================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
  -------------------------- 59.08% Complete --------------------------
