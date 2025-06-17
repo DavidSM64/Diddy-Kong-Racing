@@ -3058,241 +3058,166 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
     }
 }
 
-// https://decomp.me/scratch/0JT8R
-#ifdef NON_EQUIVALENT
-s32 func_8002CC30(LevelModelSegment *segment) {
-    s32 spF4;
-    s32 spEC;
-    s32 spD0;
-    f32 tri1z;
-    f32 spA0;
-    f32 sp9C;
-    f32 sp98;
-    s32 sp78;
+s32 func_8002CC30(LevelModelSegment *arg0) {
+    s32 facesOffset;
+    s32 verticesOffset;
+    s32 nextFacesOffset;
+    Vertex *v;
+    s32 batchIndex;
+    s32 triIndex;
     s32 i;
-    Triangle *temp_v1_4;
-    Vertex *temp_a0;
-    Vertex *temp_a0_2;
-    f32 tri3z;
-    f32 temp_f0_2;
-    f32 temp_f0_3;
-    f32 temp_f0_4;
-    f32 tri2y;
-    f32 temp_f12_2;
-    f32 tri2z;
-    f32 temp_f14_2;
-    f32 tri3x;
-    f32 temp_f16_2;
-    f32 tri3y;
-    f32 temp_f18_2;
-    f32 temp_f20;
-    f32 temp_f22;
-    f32 temp_f24;
-    f32 temp_f24_2;
-    f32 tri1x;
-    f32 temp_f28_2;
-    f32 tri2x;
-    f32 temp_f2_2;
-    f32 tri1y;
-    f32 temp_f30_2;
-    f32 temp_f4;
-    f32 var_f20;
-    f32 var_f22;
-    f32 var_f26;
-    s16 vertsOffset;
-    s16 temp_fp_2;
-    s16 temp_t7_2;
-    s16 endTri;
-    s16 startTri;
-    s16 var_a1;
-    s16 var_s7;
-    s16 var_v1;
-    s32 temp_s6;
-    s32 temp_t2;
-    s32 temp_t4;
-    s32 temp_t7;
-    s32 temp_t9;
-    s32 var_a0;
-    s32 var_a1_2;
-    s32 var_at;
-    s32 var_s0;
-    s32 var_s4;
-    s32 var_s5;
-    s32 var_t1;
-    s32 var_v0;
-    s32 var_v0_2;
-    u16 temp_s0;
-    u16 temp_s1;
-    u16 temp_t3;
-    u8 *temp_v1_2;
-    Vertex *temp_v0_2;
-    Vertex *temp_v0_3;
-    Vertex *temp_v0_4;
-    TriangleBatchInfo *temp_v0_5;
-    Vertex *temp_v0_6;
-    Vertex *temp_v0_7;
-    f32 *temp_v1_3;
-    f32 *temp_v1_5;
-    CollisionNode *temp_v1_6;
+    f32 mag;
+    s32 s4;
+    s32 s1;
+    s32 s0;
+    s32 t1;
+    s32 v1, v2;
+    f32 x1, y1, z1;
+    f32 x2, y2, z2;
+    f32 x3, y3, z3;
+    f32 nx, ny, nz;
+    f32 x5, y5, z5;
+    s32 j;
 
-    spEC = 0;
-    var_s4 = 0;
-    for (i = 0; i < segment->numberOfBatches; i++) {
-        startTri = segment->batches[i].facesOffset;
-        endTri = segment->batches[i + 1].facesOffset;
-        vertsOffset = segment->batches[i].verticesOffset;
-        if (startTri < endTri) {
-            var_a1_2 = startTri * sizeof(Triangle);
-            do {
-                temp_v1_2 = &segment->triangles->verticesArray[var_a1_2];
-                if (!(temp_v1_2[0] & 0x80)) {
-                    temp_a0 = segment->vertices;
-                    temp_v0_2 = &temp_a0[temp_v1_2[1] + vertsOffset]; //((temp_v1_2[1] + temp_fp) * 0xA) + temp_a0;
-                    tri1x = temp_v0_2->x;
-                    tri1y = temp_v0_2->y;
-                    tri1z = temp_v0_2->z;
-                    temp_v0_3 =
-                        &temp_a0[temp_v1_2[2] + vertsOffset]; //((temp_v1_2[2] + curVertOffset) * 0xA) + temp_a0;
-                    tri2x = temp_v0_3->x;
-                    tri2y = temp_v0_3->y;
-                    tri2z = temp_v0_3->z;
-                    temp_v0_4 =
-                        &temp_a0[temp_v1_2[3] + vertsOffset]; //((temp_v1_2[3] + curVertOffset) * 0xA) + temp_a0;
-                    tri3x = temp_v0_4->x;
-                    tri3y = temp_v0_4->y;
-                    tri3z = temp_v0_4->z;
-                    temp_f20 = ((tri2z - tri3z) * tri1y) + (tri2y * (tri3z - tri1z)) + (tri3y * (tri1z - tri2z));
-                    temp_f22 = ((tri2x - tri3x) * tri1z) + (tri2z * (tri3x - tri1x)) + (tri3z * (tri1x - tri2x));
-                    temp_f24 = ((tri2y - tri3y) * tri1x) + (tri2x * (tri3y - tri1y)) + (tri3x * (tri1y - tri2y));
-                    temp_f0_2 = sqrtf((temp_f20 * temp_f20) + (temp_f22 * temp_f22) + (temp_f24 * temp_f24));
-                    if (temp_f0_2 > 0.0) {
-                        temp_f20 /= temp_f0_2;
-                        temp_f22 /= temp_f0_2;
-                        temp_f24 /= temp_f0_2;
+    s4 = 0;
+
+    for (batchIndex = 0; batchIndex < arg0->numberOfBatches; batchIndex++) {
+        facesOffset = arg0->batches[batchIndex].facesOffset;
+        verticesOffset = arg0->batches[batchIndex].verticesOffset;
+        nextFacesOffset = arg0->batches[batchIndex + 1].facesOffset;
+
+        for (triIndex = facesOffset; triIndex < nextFacesOffset; triIndex++) {
+            if (arg0->triangles[triIndex].flags & TRI_FLAG_80) {
+                continue;
+            }
+
+            v = &arg0->vertices[arg0->triangles[triIndex].vi0 + verticesOffset];
+            x1 = v->x;
+            y1 = v->y;
+            z1 = v->z;
+
+            v = &arg0->vertices[arg0->triangles[triIndex].vi1 + verticesOffset];
+            x2 = v->x;
+            y2 = v->y;
+            z2 = v->z;
+
+            v = &arg0->vertices[arg0->triangles[triIndex].vi2 + verticesOffset];
+            x3 = v->x;
+            y3 = v->y;
+            z3 = v->z;
+
+            nx = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
+            ny = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
+            nz = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
+
+            mag = sqrtf(nx * nx + ny * ny + nz * nz);
+            if (mag > 0.0) {
+                nx /= mag;
+                ny /= mag;
+                nz /= mag;
+            }
+
+            // looks like a macro
+            {
+                s32 temp = s4++;
+                arg0->unk18[4 * temp + 0] = nx;
+                arg0->unk18[4 * temp + 1] = ny;
+                arg0->unk18[4 * temp + 2] = nz;
+                arg0->unk18[4 * temp + 3] = -(x1 * nx + y1 * ny + z1 * nz);
+            }
+        }
+    }
+
+    t1 = s4;
+
+    if (D_8011B0F8) {
+        return s4 * 0x10;
+    }
+
+    for (batchIndex = 0; batchIndex < arg0->numberOfBatches; batchIndex++) {
+        facesOffset = arg0->batches[batchIndex].facesOffset;
+        verticesOffset = arg0->batches[batchIndex].verticesOffset;
+        nextFacesOffset = arg0->batches[batchIndex + 1].facesOffset;
+        if (arg0->batches[batchIndex].flags & RENDER_UNK_200) {
+            facesOffset = nextFacesOffset;
+        }
+
+        for (triIndex = facesOffset; triIndex < nextFacesOffset; triIndex++) {
+            if (arg0->triangles[triIndex].flags & TRI_FLAG_80) {
+                continue;
+            }
+
+            s1 = arg0->unk14[triIndex].triangleIndex;
+            nx = arg0->unk18[4 * s1 + 0];
+            ny = arg0->unk18[4 * s1 + 1];
+            nz = arg0->unk18[4 * s1 + 2];
+
+            for (i = 0; i < 3; i++) {
+                s0 = i + 1;
+                if (s0 > 2) {
+                    s0 = 0;
+                }
+
+                v1 = arg0->triangles[triIndex].verticesArray[1 + i] + verticesOffset;
+                v2 = arg0->triangles[triIndex].verticesArray[1 + s0] + verticesOffset;
+                s0 = arg0->unk14[triIndex].closestTri[i];
+
+                if (s0 < t1) {
+                    {
+                        s32 temp = s0;
+                        x5 = nx + arg0->unk18[4 * temp + 0];
+                        y5 = ny + arg0->unk18[4 * temp + 1];
+                        z5 = nz + arg0->unk18[4 * temp + 2];
                     }
-                    segment->unk18[var_s4 + 0] = temp_f20;
-                    segment->unk18[var_s4 + 1] = temp_f22;
-                    segment->unk18[var_s4 + 2] = temp_f24;
-                    segment->unk18[var_s4 + 3] = -((tri1x * temp_f20) + (tri1y * temp_f22) + (tri1z * temp_f24));
-                    var_s4++;
-                }
-                var_a1_2 += sizeof(Triangle);
-            } while (var_a1_2 < (endTri * 0x10));
-        }
-    }
-    var_t1 = var_s4;
-    if (D_8011B0F8 == 0) {
-        spEC = 0;
-        if (var_a1 > 0) {
-            i = 0;
-            do {
-                temp_v0_5 = segment->batches + i;
-                temp_t7_2 = temp_v0_5[1].verticesOffset;
-                var_v1 = temp_v0_5->facesOffset;
-                temp_fp_2 = temp_v0_5->verticesOffset;
-                spF4 = (s32) temp_t7_2;
-                var_at = var_v1 < spF4;
-                if (temp_v0_5->flags & 0x200) {
-                    var_v1 = temp_t7_2;
-                    var_at = var_v1 < spF4;
-                }
-                var_s7 = var_v1;
-                if (var_at != 0) {
-                    var_a0 = var_v1 * 0x10;
-                    do {
-                        if (!(segment->triangles->verticesArray[var_a0] & 0x80)) {
-                            temp_s1 = segment->unk14[var_s7].triangleIndex;
-                            temp_v1_3 = segment->unk18 + (temp_s1 * 0x10);
-                            var_v0 = 0;
-                            spA0 = temp_v1_3[0];
-                            var_s5 = 0;
-                            sp9C = temp_v1_3[1];
-                            sp78 = var_a0;
-                            temp_f24 = temp_v1_3[2];
-                            do {
-                                temp_s6 = var_v0 + 1;
-                                temp_v1_4 = &segment->triangles[var_s7];
-                                var_s0 = temp_s6;
-                                if (temp_s6 >= 3) {
-                                    var_s0 = 0;
-                                }
-                                temp_s0 = (&segment->unk14[var_s7] + var_s5)->closestTri01;
-                                if ((s32) temp_s0 < var_t1) {
-                                    temp_v1_5 = segment->unk18 + (temp_s0 * 0x10);
-                                    temp_a0_2 = segment->vertices;
-                                    temp_v0_6 = temp_a0_2 +
-                                                ((temp_v1_4->verticesArray[var_v0 + 1] + temp_fp_2) *
-                                                 0xA); //((temp_v1_4->verticesArray[var_v0].unk1 + temp_fp_2) * 0xA);
-                                    temp_f4 = (f32) temp_v0_6->z;
-                                    tri1z = temp_f4;
-                                    temp_v0_7 = temp_a0_2 + ((temp_v1_4->verticesArray[var_s0 + 1] + temp_fp_2) * 0xA);
-                                    temp_f28_2 = (f32) temp_v0_6->x;
-                                    spD0 = var_t1;
-                                    temp_f30_2 = (f32) temp_v0_6->y;
-                                    temp_f2_2 = (f32) temp_v0_7->x;
-                                    temp_f16_2 = ((temp_v1_5[0] + spA0) * 10.0f) + temp_f28_2;
-                                    temp_f12_2 = (f32) temp_v0_7->y;
-                                    temp_f14_2 = (f32) temp_v0_7->z;
-                                    temp_f18_2 = ((temp_v1_5[1] + sp9C) * 10.0f) + temp_f30_2;
-                                    temp_f0_3 = ((temp_v1_5[2] + temp_f24) * 10.0f) + temp_f4;
-                                    var_f20 = ((temp_f14_2 - temp_f0_3) * temp_f30_2) +
-                                              (temp_f12_2 * (temp_f0_3 - temp_f4)) +
-                                              (temp_f18_2 * (temp_f4 - temp_f14_2));
-                                    var_f22 = ((temp_f2_2 - temp_f16_2) * temp_f4) +
-                                              (temp_f14_2 * (temp_f16_2 - temp_f28_2)) +
-                                              (temp_f0_3 * (temp_f28_2 - temp_f2_2));
-                                    temp_f24_2 = ((temp_f12_2 - temp_f18_2) * temp_f28_2) +
-                                                 (temp_f2_2 * (temp_f18_2 - temp_f30_2)) +
-                                                 (temp_f16_2 * (temp_f30_2 - temp_f12_2));
-                                    var_f26 = temp_f24_2;
-                                    temp_f0_4 =
-                                        sqrtf((var_f20 * var_f20) + (var_f22 * var_f22) + (temp_f24_2 * temp_f24_2));
-                                    if ((f64) temp_f0_4 > 0.0) {
-                                        var_f20 /= temp_f0_4;
-                                        var_f22 /= temp_f0_4;
-                                        var_f26 = temp_f24_2 / temp_f0_4;
-                                    }
-                                    if (temp_s0 != temp_s1) {
-                                        var_v0_2 = 0;
-                                        do {
-                                            temp_v1_6 = &segment->unk14[temp_s0] + var_v0_2;
-                                            temp_t3 = temp_v1_6->closestTri01;
-                                            var_v0_2 += 2;
-                                            if (temp_s1 == temp_t3) {
-                                                temp_v1_6->closestTri01 = (s16) (var_s4 | 0x8000);
-                                            }
-                                        } while (var_v0_2 != 6);
-                                    }
-                                    (&segment->unk14[var_s7] + var_s5)->closestTri01 = (s16) var_s4;
-                                    temp_t2 = var_s4 * 0x10;
-                                    (segment->unk18[temp_t2]) = var_f20;
-                                    (segment->unk18[temp_t2 + 1]) = var_f22;
-                                    (segment->unk18[temp_t2 + 2]) = var_f26;
-                                    var_s4 += 1;
-                                    segment->unk18[temp_t2 + 3] =
-                                        (f32) - ((temp_f28_2 * var_f20) + (temp_f30_2 * var_f22) + (tri1z * var_f26));
-                                }
-                                var_v0 = temp_s6;
-                                var_s5 += 2;
-                            } while (temp_s6 != 3);
-                            var_a0 = sp78;
+
+                    v = &arg0->vertices[v1];
+                    x1 = v->x;
+                    y1 = v->y;
+                    z1 = v->z;
+
+                    v = &arg0->vertices[v2];
+                    x2 = v->x;
+                    y2 = v->y;
+                    z2 = v->z;
+
+                    x3 = x5 * 10.0f + x1;
+                    y3 = y5 * 10.0f + y1;
+                    z3 = z5 * 10.0f + z1;
+
+                    x5 = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
+                    y5 = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
+                    z5 = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
+
+                    mag = sqrtf(x5 * x5 + y5 * y5 + z5 * z5);
+                    if (mag > 0.0) {
+                        x5 /= mag;
+                        y5 /= mag;
+                        z5 /= mag;
+                    }
+
+                    if (s0 != s1) {
+                        for (j = 0; j < 3; j++) {
+                            if (s1 == arg0->unk14[s0].closestTri[j]) {
+                                arg0->unk14[s0].closestTri[j] = s4 | 0x8000;
+                            }
                         }
-                        var_s7 += 1;
-                        var_a0 += 0x10;
-                    } while (var_s7 != spF4);
-                    var_a1 = segment->numberOfBatches;
+                    }
+
+                    arg0->unk14[triIndex].closestTri[i] = s4;
+
+                    {
+                        s32 temp = s4++;
+                        arg0->unk18[4 * temp + 0] = x5;
+                        arg0->unk18[4 * temp + 1] = y5;
+                        arg0->unk18[4 * temp + 2] = z5;
+                        arg0->unk18[4 * temp + 3] = -(x1 * x5 + y1 * y5 + z1 * z5);
+                    }
                 }
-                temp_t4 = spEC + 1;
-                i += 0xC;
-                spEC = temp_t4;
-            } while (temp_t4 < var_a1);
+            }
         }
     }
-    return var_s4 * 0x10;
+    return s4 * 0x10;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002CC30.s")
-#endif
 
 typedef struct unk8002D30C_a0 {
     u8 pad00[0x04];

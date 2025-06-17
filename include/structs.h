@@ -588,6 +588,7 @@ typedef struct TexCoords {
 
 #define BACKFACE_CULL 0x00
 #define BACKFACE_DRAW 0x40
+#define TRI_FLAG_80   0x80
 
 #define DKR_TRIANGLE(flags, ind0, ind1, ind2) (((flags) << 24) | ((ind0) << 16) | ((ind1) << 8) | ((ind2) << 0))
 
@@ -676,9 +677,7 @@ typedef struct ObjectModel {
 
 typedef struct CollisionNode {
     u16 triangleIndex; // This triangle index
-    u16 closestTri01;  // The closest triangle index to the line made from indices 0 & 1.
-    u16 closestTri12;  // The closest triangle index to the line made from indices 1 & 2.
-    u16 closestTri20;  // The closest triangle index to the line made from indices 2 & 0.
+    u16 closestTri[3];
 } CollisionNode;
 
 /* Size: 0x44 bytes */

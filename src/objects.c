@@ -1740,95 +1740,48 @@ UNUSED s32 func_8000E558(Object *arg0) {
     return TRUE;
 }
 
-// https://decomp.me/scratch/AHh73
-#ifdef NON_EQUIVALENT
-// This one is confusing. Thankfully it is unused?
-void func_8000E5EC(u8 *arg0) {
-    u8 *sp30;
-    u8 *sp2C;
-    s32 sp1C;
-    u8 *temp_t1;
-    s32 temp_t6;
-    s32 temp_t9;
+void func_8000E5EC(LevelObjectEntryCommon *arg0) {
+    u8 *src;
+    u8 *dst;
+    s32 end;
+    s32 sp30[2];
+    s32 size;
     s32 i;
-    s32 j;
-    s32 var_t0;
-    s32 *temp_v1;
-    u8 *temp_a3;
-    u8 temp_t4;
-    u8 temp_t5;
-    u8 *temp_a2;
-    u8 *temp_t8;
-    s32 var_a1;
-    s32 var_v1;
-    Object *obj;
-    u8 swap;
+    s32 pad;
+    s32 sp1C;
 
-    temp_t6 = arg0[1] & 0x3F;
-    temp_t8 = &D_8011AE98[0][D_8011AEA0[0]];
-    sp2C = temp_t8;
-    sp30 = D_8011AEA0[1] + D_8011AE98[1];
-    if ((arg0 >= D_8011AE98[0]) && (arg0 < temp_t8)) {
+    size = arg0->size & 0x3F;
+
+    sp30[0] = (s32) D_8011AE98[0] + D_8011AEA0[0];
+    sp30[1] = (s32) D_8011AE98[1] + D_8011AEA0[1];
+
+    if ((s32) arg0 >= (s32) D_8011AE98[0] && (s32) arg0 < sp30[0]) {
         sp1C = 0;
-    } else if ((arg0 >= D_8011AE98[1]) && (arg0 < sp30)) {
+    } else if ((s32) arg0 >= (s32) D_8011AE98[1] && (s32) arg0 < sp30[1]) {
         sp1C = 1;
     }
-    temp_a2 = arg0 + temp_t6;
-    temp_a3 = sp2C + (sp1C * 4);
-    var_v1 = arg0;
-    var_a1 = temp_a2;
 
-    for (i = var_v1; i < var_a1; i++) {
-        for (j = 0; j < i; j++) {
-            arg0[j] = temp_a2[j];
-        }
+    dst = (u8 *) arg0;
+    src = (u8 *) ((s32) arg0 + size);
+    end = sp30[sp1C];
+    if ((u32) src < end) {
+        do {
+            *dst++ = *src++;
+        } while ((u32) src != end);
     }
-    /*
-    if ((u32) temp_a2 < temp_a3) {
-        temp_t9 = (temp_a3 - temp_a2) & 3;
-        if (temp_t9 != 0) {
-            do {
-                temp_t4 = *var_a1;
-                var_a1 += 1;
-                var_v1 += 1;
-                var_v1->unk-1 = temp_t4;
-            } while ((temp_t9 + temp_a2) != var_a1);
-            if (var_a1 != temp_a3) {
-                goto loop_12;
-            }
-        } else {
-            do {
-loop_12:
-                temp_t5 = *var_a1;
-                var_a1 += 4;
-                *var_v1 = temp_t5;
-                var_v1 += 4;
-                var_v1->unk-3 = (u8) var_a1->unk-3;
-                var_v1->unk-2 = (u8) var_a1->unk-2;
-                var_v1->unk-1 = (u8) var_a1->unk-1;
-            } while (var_a1 != temp_a3);
-        }
-    }
-    */
-    D_8011AEA0[sp1C] -= temp_t6;
-    var_t0 = 0;
+    D_8011AEA0[sp1C] -= size;
+
     for (i = 0; i < gObjectCount; i++) {
-        obj = gObjPtrList[var_t0];
-        if (obj != NULL) {
-            temp_t1 = (u8 *) obj->segment.level_entry;
-            if (temp_t1 != NULL) {
-                if (((s32) arg0 < (s32) temp_t1) && ((s32) temp_t1 < (s32) temp_a3)) {
-                    obj->segment.level_entry = (LevelObjectEntry *) (temp_t1 - temp_t6);
-                } else if ((s32) arg0 == (s32) temp_t1) {
-                    obj->segment.level_entry = NULL;
-                }
+        Object *obj = gObjPtrList[i];
+        if (obj != NULL && obj->segment.level_entry != NULL) {
+            if ((s32) arg0 < (s32) obj->segment.level_entry && (s32) obj->segment.level_entry < end) {
+                obj->segment.level_entry = (LevelObjectEntry *) ((s32) obj->segment.level_entry - size);
+            } else if ((s32) arg0 == (s32) obj->segment.level_entry) {
+                obj->segment.level_entry = NULL;
             }
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000E5EC.s")
-#endif
 
 void func_8000E79C(u8 *arg0, u8 *arg1) {
     s32 arg0Value;
@@ -3694,27 +3647,21 @@ void object_undo_player_tumble(Object *obj) {
     }
 }
 
-// https://decomp.me/scratch/TZSwt
-#ifdef NON_EQUIVALENT
-// set_temp_model_transforms
-void func_80012F94(Object *obj) {
-    u8 *bossAsset;
-    ObjectModel *temp_a1_3;
-    Object_Racer *objRacer;
-    Object_68 **var_v0;
-    Object_68 *new_var;
-    f32 ret1;
-    f32 var_f0_2;
-    f32 ret2;
-    u8 *var_a1;
-    s32 temp_f6;
-    s32 temp_v1;
-    s32 bossVehicleId;
-    s32 racerLightTimer;
+void set_temp_model_transforms(Object *obj) {
     s32 batchNum;
+    ObjectModel *objModel;
     s32 var_v1;
+    Object_68 **obj68List;
+    Object_68 *obj68;
+    u8 *bossAsset;
+    f32 var_f0;
+    u8 *var_a1;
+    f32 ret2;
+    UNUSED s32 pad;
+    Object_Racer *objRacer;
+    f32 ret1;
     s32 firstNonEmptyUnk68ObjectIndex;
-    s32 var_t0;
+    s32 modelIndex;
     s32 numberOfModels;
 
     ret1 = 1.0f;
@@ -3730,106 +3677,110 @@ void func_80012F94(Object *obj) {
                 }
             }
             if (objRacer->playerIndex != PLAYER_COMPUTER && objRacer->raceFinished) {
-                var_t0 = 0;
+                modelIndex = 0;
                 batchNum = 0;
             } else {
                 if (obj->behaviorId == BHV_TIMETRIAL_GHOST) { // Ghost Object?
-                    var_t0 = 1;
+                    modelIndex = 1;
                     batchNum = 0;
                 } else {
                     // Loads vehicles between VEHICLE_TRICKY and VEHICLE_SMOKEY. So all boss vehicles except wizpig.
-                    var_t0 = objRacer->vehicleID + VEHICLE_BOSSES;
+                    batchNum = objRacer->vehicleID;
                     if (objRacer->vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
-                        var_t0 = VEHICLE_BOSSES;
+                        batchNum = 0;
                     }
+                    bossAsset = (u8 *) get_misc_asset(batchNum + VEHICLE_BOSSES); // 40 bytes of data u8[8][5]?
                     batchNum = 0;
-                    bossAsset = (u8 *) get_misc_asset(var_t0); // 40 bytes of data u8[8][5]?
-                    bossAsset = &bossAsset[(cam_get_viewport_layout() * 10)];
-                    var_a1 = bossAsset;
+                    bossAsset += cam_get_viewport_layout() * 10;
                     if (get_current_viewport() != objRacer->playerIndex) {
-                        var_a1 += 5;
+                        bossAsset += 5;
                     }
-                    var_f0_2 = obj->segment.object.distanceToCamera;
-                    temp_v1 = (s32) var_f0_2 >> 3;
+                    var_f0 = obj->segment.object.distanceToCamera;
+                    var_v1 = (s32) var_f0 >> 3;
                     if (obj->segment.object.distanceToCamera < 0.0f) {
-                        var_f0_2 = 0.0f;
-                    } else if (var_f0_2 > 3500.0f) {
-                        var_f0_2 = 3500.0f;
+                        var_f0 = 0.0f;
+                    } else if (var_f0 > 3500.0f) {
+                        var_f0 = 3500.0f;
                     }
-                    obj->segment.trans.scale *= (var_f0_2 / 2700.0f) + 1.0f;
-                    temp_f6 = (s32) ((f32) temp_v1 * *((f32 *) get_misc_asset(ASSET_MISC_4)[objRacer->characterId]));
+                    var_f0 /= 2700.0f;
+                    var_f0 += 1.0f;
+                    obj->segment.trans.scale *= var_f0;
+                    var_v1 *= ((f32 *) get_misc_asset(ASSET_MISC_4))[objRacer->characterId];
                     // ASSET_MISC_4 is just 10 floats of 1.0f. One for each playable character.
-                    if (temp_f6 < -50) {
-                        var_t0 = 5;
+                    if (var_v1 < -50) {
+                        modelIndex = 5;
                     } else {
-                        racerLightTimer = MIN(temp_f6 >> 1, 0);
-                        var_v1 = racerLightTimer;
-                        if (var_v1 < var_a1[0]) {
-                            var_t0 = 0;
-                        } else if (var_v1 < var_a1[1]) {
-                            var_t0 = 1;
-                        } else if (var_v1 < var_a1[2]) {
-                            var_t0 = 2;
-                        } else if (var_v1 < var_a1[3]) {
-                            var_t0 = 3;
-                        } else if (var_v1 < var_a1[4]) {
-                            var_t0 = 4;
+                        var_v1 >>= 1;
+                        if (var_v1 < 0) {
+                            var_v1 = 0;
+                        }
+
+                        if (var_v1 < bossAsset[0]) {
+                            modelIndex = 0;
+                        } else if (var_v1 < bossAsset[1]) {
+                            modelIndex = 1;
+                        } else if (var_v1 < bossAsset[2]) {
+                            modelIndex = 2;
+                        } else if (var_v1 < bossAsset[3]) {
+                            modelIndex = 3;
+                        } else if (var_v1 < bossAsset[4]) {
+                            modelIndex = 4;
                         } else {
-                            var_t0 = 5;
+                            modelIndex = 5;
                         }
                     }
                 }
             }
 
             firstNonEmptyUnk68ObjectIndex = 0;
-            var_v0 = &obj->unk68[firstNonEmptyUnk68ObjectIndex];
+            obj68List = &obj->unk68[firstNonEmptyUnk68ObjectIndex];
 
-            while (*var_v0 == NULL) {
+            while (*obj68List == NULL) {
                 firstNonEmptyUnk68ObjectIndex++;
-                var_v0++;
+                obj68List++;
             }
 
             numberOfModels = obj->segment.header->numberOfModelIds - 1;
-            var_v0 = &obj->unk68[numberOfModels];
+            obj68List = &obj->unk68[numberOfModels];
 
-            while (*var_v0 == NULL) {
+            while (*obj68List == NULL) {
                 numberOfModels--;
-                var_v0--;
+                obj68List--;
             }
 
-            if (var_t0 < firstNonEmptyUnk68ObjectIndex) {
-                var_t0 = firstNonEmptyUnk68ObjectIndex;
+            if (modelIndex < firstNonEmptyUnk68ObjectIndex) {
+                modelIndex = firstNonEmptyUnk68ObjectIndex;
             }
-            if (numberOfModels < var_t0) {
-                var_t0 = numberOfModels;
+            if (numberOfModels < modelIndex) {
+                modelIndex = numberOfModels;
             }
-            obj->segment.object.modelIndex = var_t0;
+            obj->segment.object.modelIndex = modelIndex;
             if ((obj->shading != NULL) && (obj->shading->unk0 < 0.6f)) {
                 objRacer->lightFlags |= RACER_LIGHT_NIGHT;
             } else {
                 objRacer->lightFlags &= ~RACER_LIGHT_NIGHT;
             }
-            racerLightTimer = objRacer->lightFlags & RACER_LIGHT_TIMER;
-            new_var = obj->unk68[obj->segment.object.modelIndex];
-            temp_a1_3 = new_var->objModel;
-            if (racerLightTimer != 0) {
-                racerLightTimer--;
+            modelIndex = objRacer->lightFlags & RACER_LIGHT_TIMER;
+            obj68 = obj->unk68[obj->segment.object.modelIndex];
+            objModel = obj68->objModel;
+            if (modelIndex != 0) {
+                modelIndex--;
                 if (objRacer->lightFlags & RACER_LIGHT_BRAKE) {
-                    racerLightTimer += 1;
+                    modelIndex += 1;
                     objRacer->lightFlags = (objRacer->lightFlags & ~RACER_LIGHT_UNK10) | RACER_LIGHT_UNK20;
                 } else if (objRacer->lightFlags & RACER_LIGHT_NIGHT) {
-                    racerLightTimer += 3;
+                    modelIndex += 3;
                     objRacer->lightFlags = (objRacer->lightFlags & ~RACER_LIGHT_UNK20) | RACER_LIGHT_UNK10;
                 } else if (objRacer->lightFlags & RACER_LIGHT_UNK20) {
-                    racerLightTimer += 1;
+                    modelIndex += 1;
                 } else {
-                    racerLightTimer += 3;
+                    modelIndex += 3;
                 }
             }
-            racerLightTimer *= 4;
-            for (batchNum = 0; batchNum < temp_a1_3->numberOfBatches; batchNum++) {
-                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == RENDER_TEX_ANIM) {
-                    temp_a1_3->batches[batchNum].texOffset = racerLightTimer;
+            modelIndex *= 4;
+            for (batchNum = 0; batchNum < objModel->numberOfBatches; batchNum++) {
+                if ((objModel->batches[batchNum].flags & 0x810000) == RENDER_TEX_ANIM) {
+                    objModel->batches[batchNum].texOffset = modelIndex;
                 }
             }
             obj->segment.trans.x_position += objRacer->carBobX;
@@ -3843,9 +3794,6 @@ void func_80012F94(Object *obj) {
     gObjectModelScaleY = ret1;
     gCurrentLightIntensity = ret2;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80012F94.s")
-#endif
 
 /**
  * Determine which model type the object is using, then call the related function to render it.
@@ -3853,7 +3801,7 @@ void func_80012F94(Object *obj) {
  * Afterwards, undo that.
  */
 void render_object_parts(Object *obj) {
-    func_80012F94(obj);
+    set_temp_model_transforms(obj);
     if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
         render_particle((Particle *) obj, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList,
                         PARTICLE_UNK_FLAG_8000);
@@ -7802,140 +7750,132 @@ s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
     return result;
 }
 
-// https://decomp.me/scratch/cfVAM
-#ifdef NON_EQUIVALENT
+// Updated Object_NPC
 f32 func_8001C6C4(Object_NPC *npc, Object *npcParentObj, f32 updateRateF, f32 speedF, s32 direction) {
-    Object *aiNode;
-    f32 var_f20_2;
-    f32 xPosData[5];
-    f32 yPosData[5];
-    f32 zPosData[5];
+    f32 xPositions[5];
+    f32 yPositions[5];
+    f32 zPositions[5];
     f32 xDiff2;
     f32 yDiff2;
     f32 zDiff2;
+    Object *aiNode;
+    f32 dist;
     f32 xDiff;
     f32 yDiff;
     f32 zDiff;
-    f32 dist;
-    f32 dist2;
-    f32 mag;
+    f32 tempYDiff;
+    UNUSED s32 pad_sp84;
     s32 i;
+    f32 var_f20_2;
     s32 var_s0;
-    s32 var_s1;
-    u8 nodeForward1;
-    u8 nodeForward2;
+    s32 someBool;
 
     if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
-    i = 0;
-    while (1) {
+
+    for (i = 0; i < 5; i++) {
         if (npc->nodeData[i] == 0xFF) {
             return 0.0f;
         }
+
         aiNode = ainode_get(npc->nodeData[i]);
         if (aiNode == NULL) {
             return 0.0f;
         }
-        xPosData[i] = aiNode->segment.trans.x_position;
-        yPosData[i] = aiNode->segment.trans.y_position;
-        zPosData[i] = aiNode->segment.trans.z_position;
-        i++;
-        if (i != 5) {
-            continue;
-        }
-        // This puts xPosData into yDiff2, and yPosData into xDiff2. Bug?
-        yDiff2 = catmull_rom_interpolation(xPosData, 0, npc->unk0);
-        xDiff2 = catmull_rom_interpolation(yPosData, 0, npc->unk0);
-        zDiff2 = catmull_rom_interpolation(zPosData, 0, npc->unk0);
-        if (npc->unk8 == 0.0f) {
-            npc->unk8 = 0.01f;
-        }
 
-        var_s1 = 0;
-        for (var_s0 = 0; var_s0 != 2; var_s0++) {
-            var_f20_2 = npc->unk0 + (npc->unk8 * updateRateF);
-            if (var_f20_2 >= 1.0) {
-                var_f20_2 -= 1.0;
-                var_s1 = 1;
-            }
-            xDiff = catmull_rom_interpolation(xPosData, var_s1, var_f20_2);
-            yDiff = catmull_rom_interpolation(yPosData, var_s1, var_f20_2);
-            zDiff = catmull_rom_interpolation(zPosData, var_s1, var_f20_2);
-
-            // This puts mixes up y and x diffs like above.
-            xDiff -= yDiff2;
-            yDiff -= xDiff2;
-            zDiff -= zDiff2;
-            if (var_s0 == 0) {
-                var_s1 = 0;
-                dist = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) / updateRateF;
-                if (dist != 0.0f) {
-                    npc->unk8 *= (speedF / dist);
-                }
-            }
-        }
-        npc->unk0 = var_f20_2;
-        xDiff2 += xDiff;
-        yDiff2 += yDiff;
-        zDiff2 += zDiff;
-        xDiff = xDiff2 - npcParentObj->segment.trans.x_position;
-        yDiff = yDiff2 - npcParentObj->segment.trans.y_position;
-        if (0) {}
-        zDiff = zDiff2 - npcParentObj->segment.trans.z_position;
-        xDiff2 = xDiff;
-        yDiff2 = yDiff;
-        zDiff2 = zDiff;
-        dist = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
-        if (dist != 0.0f) {
-            mag = 255.0 / dist;
-            xDiff *= mag;
-            yDiff *= mag;
-            zDiff *= mag;
-        }
-        dist2 = sqrtf((xDiff2 * xDiff2) + (yDiff2 * yDiff2) + (zDiff2 * zDiff2)) / 16;
-        if (speedF < dist2) {
-            dist2 = speedF;
-        }
-        if (dist2 >= 1.0) {
-            var_s0 = (arctan2_f(xDiff, zDiff) - (npcParentObj->segment.trans.rotation.y_rotation & 0xFFFF)) - 0x8000;
-            if (var_s0 > 0x8000) {
-                var_s0 -= 0xFFFF;
-            }
-            if (var_s0 < -0x8000) {
-                var_s0 += 0xFFFF;
-            }
-            npcParentObj->segment.trans.rotation.y_rotation += (var_s0 * (s32) updateRateF) >> 4;
-            var_s0 = arctan2_f(yDiff, 255.0f) - (npcParentObj->segment.trans.rotation.x_rotation & 0xFFFF);
-            if (var_s0 > 0x8000) {
-                var_s0 -= 0xFFFF;
-            }
-            if (var_s0 < -0x8000) {
-                var_s0 += 0xFFFF;
-            }
-            npcParentObj->segment.trans.rotation.x_rotation += ((var_s0 * (s32) updateRateF) >> 4);
-        }
-        npcParentObj->segment.trans.rotation.z_rotation = 0;
-        xDiff = sins_f(npcParentObj->segment.trans.rotation.y_rotation + 0x8000) * dist2;
-        move_object(npcParentObj, xDiff * updateRateF, 0.0f,
-                    coss_f(npcParentObj->segment.trans.rotation.y_rotation + 0x8000) * dist2 * updateRateF);
-        npcParentObj->segment.trans.y_position = yDiff2;
-        dist2 = dist2 * updateRateF * 2;
-        if (var_s1 != 0) {
-            nodeForward1 = npc->nodeData[3];
-            nodeForward2 = npc->nodeData[4];
-            npc->nodeData[0] = npc->nodeData[1];
-            npc->nodeData[1] = npc->nodeData[2];
-            npc->nodeData[2] = npc->nodeData[3];
-            npc->nodeData[3] = npc->nodeData[4];
-            npc->nodeData[4] = ainode_find_next(nodeForward2 & 0xFF, nodeForward1 & 0xFF, direction);
-        }
-        return dist2;
+        xPositions[i] = aiNode->segment.trans.x_position;
+        yPositions[i] = aiNode->segment.trans.y_position;
+        zPositions[i] = aiNode->segment.trans.z_position;
     }
+
+    xDiff2 = catmull_rom_interpolation(xPositions, 0, npc->unk0);
+    yDiff2 = catmull_rom_interpolation(yPositions, 0, npc->unk0);
+    zDiff2 = catmull_rom_interpolation(zPositions, 0, npc->unk0);
+    someBool = FALSE;
+    if (npc->unk8 == 0.0f) {
+        npc->unk8 = 0.01f;
+    }
+
+    for (var_s0 = 0; var_s0 != 2; var_s0++) {
+        var_f20_2 = npc->unk0 + (npc->unk8 * updateRateF);
+        if (var_f20_2 >= 1.0) {
+            someBool = TRUE;
+            var_f20_2 -= 1.0;
+        }
+        xDiff = catmull_rom_interpolation(xPositions, someBool, var_f20_2);
+        yDiff = catmull_rom_interpolation(yPositions, someBool, var_f20_2);
+        zDiff = catmull_rom_interpolation(zPositions, someBool, var_f20_2);
+        xDiff -= xDiff2;
+        yDiff -= yDiff2;
+        zDiff -= zDiff2;
+        if (var_s0 == 0) {
+            someBool = FALSE;
+            dist = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) / updateRateF;
+            if (dist != 0.0f) {
+                npc->unk8 *= (speedF / dist);
+            }
+        }
+    }
+    npc->unk0 = var_f20_2;
+    xDiff2 = xDiff + xDiff2;
+    tempYDiff = yDiff2 = yDiff + yDiff2;
+    zDiff2 = zDiff + zDiff2;
+
+    xDiff = xDiff2 - npcParentObj->segment.trans.x_position;
+    yDiff = yDiff2 - npcParentObj->segment.trans.y_position;
+    zDiff = zDiff2 - npcParentObj->segment.trans.z_position;
+
+    xDiff2 = xDiff;
+    yDiff2 = yDiff;
+    zDiff2 = zDiff;
+
+    dist = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
+    if (dist != 0.0f) {
+        dist = 255.0 / dist;
+        xDiff *= dist;
+        yDiff *= dist;
+        zDiff *= dist;
+    }
+    dist = sqrtf((xDiff2 * xDiff2) + (yDiff2 * yDiff2) + (zDiff2 * zDiff2)) / 16;
+    if (speedF < dist) {
+        dist = speedF;
+    }
+    if (dist >= 1.0) {
+        var_s0 = (arctan2_f(xDiff, zDiff) - (npcParentObj->segment.trans.rotation.y_rotation & 0xFFFF)) - 0x8000;
+        if (var_s0 > 0x8000) {
+            var_s0 -= 0xFFFF;
+        }
+        if (var_s0 < -0x8000) {
+            var_s0 += 0xFFFF;
+        }
+        npcParentObj->segment.trans.rotation.y_rotation += ((var_s0 * (s32) updateRateF)) >> 4;
+        var_s0 = arctan2_f(yDiff, 255.0f) - (npcParentObj->segment.trans.rotation.x_rotation & 0xFFFF);
+        if (var_s0 > 0x8000) {
+            var_s0 -= 0xFFFF;
+        }
+        if (var_s0 < -0x8000) {
+            var_s0 += 0xFFFF;
+        }
+        npcParentObj->segment.trans.rotation.x_rotation += ((var_s0 * (s32) updateRateF)) >> 4;
+    }
+
+    npcParentObj->segment.trans.rotation.z_rotation = 0;
+    xDiff = sins_f((s16) (npcParentObj->segment.trans.rotation.y_rotation + 0x8000)) * dist;
+    move_object(npcParentObj, xDiff * updateRateF, 0.0f,
+                coss_f((npcParentObj->segment.trans.rotation.y_rotation + 0x8000)) * dist * updateRateF);
+    npcParentObj->segment.trans.y_position = tempYDiff;
+    dist = dist * updateRateF * 2;
+    if (someBool != 0) {
+        npc->nodeData[0] = npc->nodeData[1];
+        npc->nodeData[1] = npc->nodeData[2];
+        npc->nodeData[2] = npc->nodeData[3];
+        npc->nodeData[3] = npc->nodeData[4];
+        npc->nodeData[4] = ainode_find_next(npc->nodeData[3], npc->nodeData[2], direction);
+    }
+
+    return dist;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001C6C4.s")
-#endif
 
 s32 ainode_find_next(s32 nodeId, s32 nextNodeId, s32 direction) {
     Object *aiNodeObj;
