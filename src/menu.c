@@ -11202,8 +11202,6 @@ void menu_results_init(void) {
  * Draw the portraits of the four player onscreen, then draw the scoreboard below.
  * After, draw the text options at the bottom.
  */
-#if REGION != REGION_JP
-// NON_EQUIVALENT IN JP - Too lazy to fix it right now, there's so many others to worry about.
 void results_render(UNUSED s32 updateRate, f32 opacity) {
     s32 x2;
     s32 y2;
@@ -11283,6 +11281,7 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
     for (spA0 = 0; spA0 < 4; spA0++) {
 #endif
         time = offsetX;
+        x2 = offsetX;
 #if REGION == REGION_JP
         func_80082BC8_837C8(-1, time - 40, y2 + offsetY + 2, 2, 2, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER,
                             COLOUR_RGBA32(255, 255, 255, 255), 0);
@@ -11299,7 +11298,6 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         sMenuGuiColourG = 255 - 64 * spA0;
         sMenuGuiColourB = 255;
         sMenuGuiColourBlendFactor = 255;
-        x2 = offsetX;
 #if VERSION >= VERSION_79
         for (i = 0; i < gNumberOfActivePlayers; i++, x2 += offsetX2) {
 #else
@@ -11387,10 +11385,6 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         open_dialogue_box(7);
     }
 }
-// No match JPN results_render
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/results_render.s")
-#endif
 
 /**
  * When someone presses A, decide whether to play the stage again,
