@@ -5571,6 +5571,7 @@ void bootscreen_init_cpak(void) {
 #else
 #define PAKMENU_JP_OFFSET 0
 #endif
+
 /**
  * Render the controller pak menu.
  * Lists the pak index, as well as remaining pages, then displays all known files.
