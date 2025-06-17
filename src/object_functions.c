@@ -269,7 +269,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                         racer->bubbleTrapTimer = 60;
                         obj->properties.fireball.timer = -60;
                         obj->properties.fireball.obj = someObj;
-                        sound_play(SOUND_BUBBLE_RISE, &weapon->soundMask);
+                        sound_play(SOUND_BUBBLE_RISE, (SoundHandle *) &weapon->soundMask);
                     }
                 }
             }
@@ -304,7 +304,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
             }
         }
         if (obj->properties.fireball.timer == 0) {
-            soundMask = weapon->soundMask;
+            soundMask = (SoundHandle) weapon->soundMask;
             if (soundMask != NULL) {
                 sndp_stop(soundMask);
             }

@@ -10418,7 +10418,9 @@ void menu_racer_portraits(void) {
 }
 
 /**
- *
+ * Initialises the post race variables.
+ * Sets different defaults based on being in adventure mode, tracks mode, or multiplayer.
+ * Loads the menu assets for the postrace too.
  */
 void postrace_start(s32 finishState, s32 worldID) {
     s16 *var_v1;
@@ -10584,8 +10586,11 @@ void postrace_music_fade(s32 updateRate) {
     }
 }
 
-// postrace_render
-void func_80094D28(UNUSED s32 updateRate) {
+/**
+ * Resizes the viewport when shrinking it down.
+ * Renders race order, lap times and text options beneath.
+ */
+void postrace_viewport(UNUSED s32 updateRate) {
     s32 temp;
     s32 var_s3;
     Settings *settings;
@@ -10854,7 +10859,7 @@ s32 menu_postrace(Gfx **dList, Mtx **matrices, Vertex **vertices, s32 updateRate
     postrace_music_fade(updateRate);
     if (gMenuDelay < 20 && gPostraceFinishState == 0) {
         if (gPostRace.unk0_s32 < 0) {
-            func_80094D28(updateRate);
+            postrace_viewport(updateRate);
         }
     } else {
         bgdraw_texture_init(NULL, NULL, 0);

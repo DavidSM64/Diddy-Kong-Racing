@@ -6763,7 +6763,7 @@ void race_check_finish(s32 updateRate) {
                     if (curRacer->raceFinished == FALSE) {
                         if (curRacer->playerIndex >= 0) {
                             set_active_camera(curRacer->playerIndex);
-                            camera = cam_get_active_camera_no_cutscenes();
+                            camera = (s32) cam_get_active_camera_no_cutscenes();
                             // we need the camera to be a s32 for the WAIT_ON_IOBUSY anti tamper call to work
                             // but we *know* that cam_get_active_camera_no_cutscenes returns a Camera pointer so this
                             // should be safe
