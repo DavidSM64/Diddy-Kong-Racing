@@ -8,7 +8,7 @@
     "build-subpath" : "build/",
     "data-subpath" : "data/",
     "model-scale": 0.001,
-    "threads" : 0,
+    "threads" : 1,
     "debug": {
         "keep-uncompressed": true,
         "write-assets-map": false

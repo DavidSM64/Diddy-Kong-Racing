@@ -8,6 +8,10 @@
 
 using namespace DkrAssetsTool;
 
+#include <mutex>
+
+std::mutex mut;
+
 void BuildObjectModel::build(BuildInfo &info) {
     const JsonFile &jsonFile = info.get_src_json_file();
     
@@ -43,8 +47,12 @@ void BuildObjectModel::build(BuildInfo &info) {
     if(modelExtension == ".obj") {
         ObjBuildModel objModel(modelPath);
         objModel.generate_object_model(info);
-    } else if(modelExtension == ".gltf") {
-        DebugHelper::error("(BuildObjectModel::build) TODO: GLTF support");
+    } else if(modelExtension == ".gltf" || modelExtension == ".glb") {
+        CContext &cContext = info.get_c_context();
+        // `gltf` needs to be here! If it's in the GltfBuildModel constructor, then the gltf data will be deallocated by the time it gets to generate_object_model().
+        GltfFile gltf(modelPath); 
+        GltfBuildModel gltfModel(gltf, cContext, true);
+        gltfModel.generate_object_model(info);
     } else {
         DebugHelper::error("(BuildObjectModel::build) Unsupported model type: \"", modelExtension, "\"");
     }

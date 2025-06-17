@@ -46,7 +46,8 @@ void BuildInfoCollection::add_build_info(std::string sectionBuildId, std::string
     _buildInfoMutex.unlock();
 }
 
-size_t BuildInfoCollection::add_deferred_build_info(std::string sectionBuildId, std::string buildId, const std::vector<uint8_t> &out, const fs::path &dir, const BuildInfoContext &infoContext) {
+size_t BuildInfoCollection::add_deferred_build_info(std::string sectionBuildId, std::string buildId, std::string deferredFromBuildId, std::string deferredFromSectionId, 
+    const std::vector<uint8_t> &out, const fs::path &dir, const BuildInfoContext &infoContext) {
     _buildInfoMutex.lock();
     
     if(_buildInfoSections.find(sectionBuildId) == _buildInfoSections.end()) {
@@ -59,7 +60,7 @@ size_t BuildInfoCollection::add_deferred_build_info(std::string sectionBuildId, 
         "(BuildInfoCollection::add_build_info) Max number of assets reached! Limit was ", MAX_NUMBER_OF_BUILD_INFOS);
         
     size_t fileIndex = _buildInfoSections[sectionBuildId].size();
-    _buildInfos.emplace_back(buildId, sectionBuildId, out, fileIndex, dir, infoContext);
+    _buildInfos.emplace_back(buildId, sectionBuildId, deferredFromBuildId, deferredFromSectionId, out, fileIndex, dir, infoContext);
     
     // Do not process deferred assets.
     _buildInfos.back().done();
@@ -72,8 +73,8 @@ size_t BuildInfoCollection::add_deferred_build_info(std::string sectionBuildId, 
     return fileIndex;
 }
 
-void BuildInfoCollection::add_deferred_build_info(std::string sectionBuildId, std::string buildId, size_t fileIndex, const std::vector<uint8_t> &out, 
-    const fs::path &dir, const BuildInfoContext &infoContext) {
+void BuildInfoCollection::add_deferred_build_info(std::string sectionBuildId, std::string buildId, std::string deferredFromBuildId, std::string deferredFromSectionId, 
+    size_t fileIndex, const std::vector<uint8_t> &out, const fs::path &dir, const BuildInfoContext &infoContext) {
     _buildInfoMutex.lock();
     
     if(_buildInfoSections.find(sectionBuildId) == _buildInfoSections.end()) {
@@ -89,7 +90,7 @@ void BuildInfoCollection::add_deferred_build_info(std::string sectionBuildId, st
     DebugHelper::assert_(index < MAX_NUMBER_OF_BUILD_INFOS,
         "(BuildInfoCollection::add_build_info) Max number of assets reached! Limit was ", MAX_NUMBER_OF_BUILD_INFOS);
         
-    _buildInfos.emplace_back(buildId, sectionBuildId, out, fileIndex, dir, infoContext);
+    _buildInfos.emplace_back(buildId, sectionBuildId, deferredFromBuildId, deferredFromSectionId, out, fileIndex, dir, infoContext);
     
     // Do not process deferred assets.
     _buildInfos.back().done();

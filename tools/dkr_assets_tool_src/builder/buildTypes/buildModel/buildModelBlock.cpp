@@ -62,11 +62,11 @@ size_t BuildModelBlock::number_of_batches_to_allocate() {
 }
 
 void BuildModelBlock::write_batches(const std::map<std::string, int> &materialIds, std::vector<BuildModelMaterial> &materials, 
-  DkrBatch*& outBatches, DkrVertex*& outVertices, DkrTriangle*& outTriangles) {
+  DkrBatch*& outBatches, DkrVertex*& outVertices, DkrTriangle*& outTriangles, float modelScale) {
     size_t vertexCount = 0;
     size_t triCount = 0;
-    for(auto &batch : _batches) {
-        batch.write_batch(materialIds, materials, outBatches, outVertices, outTriangles);
+    for(BuildModelBatch &batch : _batches) {
+        batch.write_batch(materialIds, materials, outBatches, outVertices, outTriangles, modelScale);
         outBatches->verticesOffset = vertexCount;
         outBatches->trianglesOffset = triCount;
         outBatches->unk1 = (int8_t)batch.number_of_vertices();
@@ -77,4 +77,10 @@ void BuildModelBlock::write_batches(const std::map<std::string, int> &materialId
     // One extra batch for that extra entry.
     outBatches->verticesOffset = vertexCount;
     outBatches->trianglesOffset = triCount;
+}
+
+void BuildModelBlock::process_vertices(std::function<void(BuildModelVertex &vertex)> callbackFunction) {
+    for(BuildModelBatch &batch : _batches) {
+        batch.process_vertices(callbackFunction);
+    }
 }
