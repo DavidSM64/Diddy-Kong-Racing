@@ -4130,7 +4130,6 @@ void menu_save_options_init(void) {
  * This has the file name, and then a background and icon based on kind of file it is.
  * DKR save files will display the balloon count and adventure type.
  */
-#if REGION != REGION_JP
 void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
     s32 i;
     s32 firstDigit;
@@ -4185,7 +4184,7 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
             buffer[i + 3] = file->saveFileExt[0];
             buffer[i + 4] = ')';
             buffer[i + 5] = '\0';
-            text = gMenuText[86 + file->controllerIndex];
+            text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + file->controllerIndex];
             firstDigit = file->balloonCount / 10;
             secondDigit = file->balloonCount % 10;
             if (file->adventureTwo) {
@@ -4195,24 +4194,24 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
         case SAVE_FILE_TYPE_CPAK_TIMES:
 #if REGION == REGION_JP
             drawTexture = gDrawTexTTIcon;
-            text2 = gMenuText[ASSET_MENU_TEXT_TIMES];
             texture = gMenuAssets[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[file->controllerIndex];
-            for (i = 0; (text2[i] & 0xFF) != 0; i++) {
-                firstDigit = text2[ASSET_MENU_TEXT_TIMES + i];
-                buffer[i] = firstDigit;
+            for (i = 0; gMenuText[ASSET_MENU_TEXT_TIMES][i] != '\0'; i++) {
+                buffer[i] = gMenuText[ASSET_MENU_TEXT_TIMES][i];
             }
-            for (i = 0; file->saveFileExt[i] != 0 && file->saveFileExt[i] != 0x2E; i++) {}
-            buffer[i] = '.';
-            if (file->saveFileExt[i] != '\n') {
-                buffer[i - 1] = file->saveFileExt[i + 1];
+            firstDigit = 0;
+            while (file->saveFileExt[firstDigit] != '\0' && file->saveFileExt[firstDigit] != '.') {
+                firstDigit++;
+            }
+            buffer[i++] = '.';
+            if (file->saveFileExt[firstDigit] != '\0') {
+                buffer[i++] = file->saveFileExt[firstDigit + 1];
             } else {
-                buffer[i] = 'A';
+                buffer[i++] = 'A';
             }
-            buffer[i + 1] = '\n';
+            buffer[i++] = '\0';
             text2 = buffer;
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + file->controllerIndex];
-            firstDigit = i;
 #else
             drawTexture = gDrawTexTTIcon;
             texture = gMenuAssets[TEXTURE_UNK_44];
@@ -4264,7 +4263,7 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
             text = NULL;
             break;
     }
-#if VERSION == VERSION_79
+#if REGION == REGION_JP
 #define SAVE_MENU_TEXT_FONT ASSET_FONTS_SUBTITLEFONT
 #define SAVE_MENU_TEXT_WIDTH 208
 #define SAVE_MENU_SPRITE_OFFSET 8
@@ -4328,10 +4327,6 @@ void savemenu_render_element(SaveFileData *file, s32 x, s32 y) {
         draw_text(&sMenuCurrDisplayList, x + (79 + SAVE_MENU_TEXT_OFFSET_2), y + 47, text2, ALIGN_TOP_CENTER);
     }
 }
-// No match JPN savemenu_render_element
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/savemenu_render_element.s")
-#endif
 
 /**
  * Render all of the save option elements onscreen.
