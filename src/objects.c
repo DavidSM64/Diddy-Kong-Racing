@@ -1740,95 +1740,48 @@ UNUSED s32 func_8000E558(Object *arg0) {
     return TRUE;
 }
 
-// https://decomp.me/scratch/AHh73
-#ifdef NON_EQUIVALENT
-// This one is confusing. Thankfully it is unused?
-void func_8000E5EC(u8 *arg0) {
-    u8 *sp30;
-    u8 *sp2C;
-    s32 sp1C;
-    u8 *temp_t1;
-    s32 temp_t6;
-    s32 temp_t9;
+void func_8000E5EC(LevelObjectEntryCommon *arg0) {
+    u8 *src;
+    u8 *dst;
+    s32 end;
+    s32 sp30[2];
+    s32 size;
     s32 i;
-    s32 j;
-    s32 var_t0;
-    s32 *temp_v1;
-    u8 *temp_a3;
-    u8 temp_t4;
-    u8 temp_t5;
-    u8 *temp_a2;
-    u8 *temp_t8;
-    s32 var_a1;
-    s32 var_v1;
-    Object *obj;
-    u8 swap;
+    s32 pad;
+    s32 sp1C;
 
-    temp_t6 = arg0[1] & 0x3F;
-    temp_t8 = &D_8011AE98[0][D_8011AEA0[0]];
-    sp2C = temp_t8;
-    sp30 = D_8011AEA0[1] + D_8011AE98[1];
-    if ((arg0 >= D_8011AE98[0]) && (arg0 < temp_t8)) {
+    size = arg0->size & 0x3F;
+
+    sp30[0] = (s32) D_8011AE98[0] + D_8011AEA0[0];
+    sp30[1] = (s32) D_8011AE98[1] + D_8011AEA0[1];
+
+    if ((s32) arg0 >= (s32) D_8011AE98[0] && (s32) arg0 < sp30[0]) {
         sp1C = 0;
-    } else if ((arg0 >= D_8011AE98[1]) && (arg0 < sp30)) {
+    } else if ((s32) arg0 >= (s32) D_8011AE98[1] && (s32) arg0 < sp30[1]) {
         sp1C = 1;
     }
-    temp_a2 = arg0 + temp_t6;
-    temp_a3 = sp2C + (sp1C * 4);
-    var_v1 = arg0;
-    var_a1 = temp_a2;
 
-    for (i = var_v1; i < var_a1; i++) {
-        for (j = 0; j < i; j++) {
-            arg0[j] = temp_a2[j];
-        }
+    dst = (u8 *) arg0;
+    src = (u8 *) ((s32) arg0 + size);
+    end = sp30[sp1C];
+    if ((u32) src < end) {
+        do {
+            *dst++ = *src++;
+        } while ((u32) src != end);
     }
-    /*
-    if ((u32) temp_a2 < temp_a3) {
-        temp_t9 = (temp_a3 - temp_a2) & 3;
-        if (temp_t9 != 0) {
-            do {
-                temp_t4 = *var_a1;
-                var_a1 += 1;
-                var_v1 += 1;
-                var_v1->unk-1 = temp_t4;
-            } while ((temp_t9 + temp_a2) != var_a1);
-            if (var_a1 != temp_a3) {
-                goto loop_12;
-            }
-        } else {
-            do {
-loop_12:
-                temp_t5 = *var_a1;
-                var_a1 += 4;
-                *var_v1 = temp_t5;
-                var_v1 += 4;
-                var_v1->unk-3 = (u8) var_a1->unk-3;
-                var_v1->unk-2 = (u8) var_a1->unk-2;
-                var_v1->unk-1 = (u8) var_a1->unk-1;
-            } while (var_a1 != temp_a3);
-        }
-    }
-    */
-    D_8011AEA0[sp1C] -= temp_t6;
-    var_t0 = 0;
+    D_8011AEA0[sp1C] -= size;
+
     for (i = 0; i < gObjectCount; i++) {
-        obj = gObjPtrList[var_t0];
-        if (obj != NULL) {
-            temp_t1 = (u8 *) obj->segment.level_entry;
-            if (temp_t1 != NULL) {
-                if (((s32) arg0 < (s32) temp_t1) && ((s32) temp_t1 < (s32) temp_a3)) {
-                    obj->segment.level_entry = (LevelObjectEntry *) (temp_t1 - temp_t6);
-                } else if ((s32) arg0 == (s32) temp_t1) {
-                    obj->segment.level_entry = NULL;
-                }
+        Object *obj = gObjPtrList[i];
+        if (obj != NULL && obj->segment.level_entry != NULL) {
+            if ((s32) arg0 < (s32) obj->segment.level_entry && (s32) obj->segment.level_entry < end) {
+                obj->segment.level_entry = (LevelObjectEntry *) ((s32) obj->segment.level_entry - size);
+            } else if ((s32) arg0 == (s32) obj->segment.level_entry) {
+                obj->segment.level_entry = NULL;
             }
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000E5EC.s")
-#endif
 
 void func_8000E79C(u8 *arg0, u8 *arg1) {
     s32 arg0Value;
