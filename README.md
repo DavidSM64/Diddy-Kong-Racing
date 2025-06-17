@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of June 16, 2025, this is our current score:
+As of June 17, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 91.75%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 91.95%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 59.08%
 <!-- README_SCORE_SUMMARY_END -->
@@ -117,20 +117,20 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of June 16, 2025, this is our current score:
+As of June 17, 2025, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- --------------- 91.75% Complete (92.53% NON_MATCHING) ---------------
-                     # Decompiled functions: 1920
-                      # GLOBAL_ASM remaining: 27
+ --------------- 91.95% Complete (92.73% NON_MATCHING) ---------------
+                     # Decompiled functions: 1921
+                      # GLOBAL_ASM remaining: 26
                       # NON_MATCHING functions: 4
-                  # NON_EQUIVALENT WIP functions: 23
+                  # NON_EQUIVALENT WIP functions: 22
  ---------------------------- Game Status ----------------------------
                Balloons: 43/47, Keys: 4/4, Trophies: 4/5
                 T.T. Amulets: 4/4, Wizpig Amulets: 4/4
  ---------------------------------------------------------------------
- We are collecting silver coins in Spacedust Alley. (4/8 silver coins)
+ We are collecting silver coins in Spacedust Alley. (6/8 silver coins)
  =====================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
  -------------------------- 59.08% Complete --------------------------
