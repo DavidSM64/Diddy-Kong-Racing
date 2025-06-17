@@ -13028,7 +13028,6 @@ void credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
     rendermode_reset(&sMenuCurrDisplayList);
 }
 
-#if 1
 /**
  * Handles the credits for the game
  */
@@ -13128,13 +13127,15 @@ s32 menu_credits_loop(s32 updateRate) {
                     var_s5 = FONT_COLOURFUL;
                     textLineHeight = 20;
                     controlDataLength = gCreditsControlDataIndex - nextIndex;
+#if REGION == REGION_JP
+                    if (1) {}
+#endif
                     // only one thing to show for example "CREDITS"
                     if (controlDataLength == 1) {
                         textPos -= 14;
                         var_s5 = FONT_LARGE;
                     } else if (isShowingBestRaceTimes) {
                         textPos -= (controlDataLength * 16) - 3;
-                        if (1){}
                         textLineHeight = 32;
                     } else {
                         // we're showing multiple things
@@ -13175,16 +13176,18 @@ s32 menu_credits_loop(s32 updateRate) {
                                 gCreditsMenuElements[creditsMenuElementIndex].filterGreen = 255;
                                 gCreditsMenuElements[creditsMenuElementIndex].filterBlendFactor = 0;
                             }
+#if REGION == REGION_JP
                             if (creditsMenuElementIndex == 0) {
                                 if (gCreditsControlData[var_s4] == 0x55) {
                                     gCreditsMenuElements[creditsMenuElementIndex].filterBlendFactor = 144;
-                                } else {                                    
+                                } else {
                                     gCreditsMenuElements[creditsMenuElementIndex].filterBlendFactor = 48;
                                 }
                             }
                             if (gCreditsControlData[var_s4] == 0x56) {
                                 var_s5 = FONT_COLOURFUL;
                             }
+#endif
                             gCreditsMenuElements[creditsMenuElementIndex].textFont = var_s5;
                             gCreditsMenuElements[creditsMenuElementIndex].t.asciiText =
                                 gCreditsArray[gCreditsControlData[var_s4]];
@@ -13198,7 +13201,9 @@ s32 menu_credits_loop(s32 updateRate) {
                         textPos += textLineHeight;
                         // Since every element now uses large font increase the text line height
                         textLineHeight = 32;
-                        if (nextIndex){}
+#if REGION == REGION_JP
+                        if (nextIndex) {}
+#endif
                     }
 
                     gCreditsMenuElements[creditsMenuElementIndex].t.element = NULL;
@@ -13337,9 +13342,6 @@ s32 menu_credits_loop(s32 updateRate) {
     }
     return 0;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/menu_credits_loop.s")
-#endif
 
 /**
  * Unload associated assets with the credits scene.

@@ -334,10 +334,6 @@ no_verify: $(TARGET).z64
 extract:
 	$(SPLAT) ver/splat/$(BASENAME).$(REGION).$(VERSION).yaml
 	$(TOOLS_DIR)/dkr_assets_tool extract -dkrv $(REGION).$(VERSION) >&2 || echo FAIL
-#This is only jpn region function that matches in other version, but not for this region. As a temp hack for progress script reasons, just delete this for other regions.
-ifneq ($(REGION),jpn)
-	@$(RM) asm/nonmatchings/menu/menu_credits_loop.s
-endif
 
 extractall:
 	$(SPLAT) ver/splat/$(BASENAME).us.v77.yaml
