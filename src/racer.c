@@ -8486,7 +8486,7 @@ s32 set_ghost_position_and_rotation(Object *obj) {
 
     ghostNodeCount = gGhostNodeCount[ghostDataIndex];
     if (commonUnk0s32 >= (ghostNodeCount - 2)) {
-#if REGION == REGION_JP
+#if VERSION >= VERSION_79
         obj64 = obj->unk64;
         if (obj64->racer.transparency > 0) {
             obj64->racer.transparency -= 1;

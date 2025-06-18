@@ -43,11 +43,11 @@ As of June 18, 2025, this is our current score:
 To build other versions of the ROM, just specifcy the region and version in the make command. All examples are below:
 Baserom|REGION|VERSION|Command
 ---|--|---|-
-US 1.0 | US | v77 | `make REGION=US VERSION=v77`
-PAL 1.0 | PAL | v77 | `make REGION=PAL VERSION=v77`
-JPN 1.0 | JPN | v79 | `make REGION=JPN VERSION=v79`
-US 1.1 | US | v80 | `make REGION=US VERSION=v80`
-PAL 1.1 | PAL | v80 | `make REGION=PAL VERSION=v80`  
+US 1.0 | US | v77 | `make REGION=us VERSION=v77`
+PAL 1.0 | PAL | v77 | `make REGION=pal VERSION=v77`
+JPN 1.0 | JPN | v79 | `make REGION=jpn VERSION=v79`
+US 1.1 | US | v80 | `make REGION=us VERSION=v80`
+PAL 1.1 | PAL | v80 | `make REGION=pal VERSION=v80`
 
 ## Modding
 If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.  
