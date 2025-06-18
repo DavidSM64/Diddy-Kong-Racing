@@ -3454,8 +3454,8 @@ D_800E8B10 = 0x800EA5C0;
 D_800E8B44 = 0x800EA5F4;
 
 // printf.c .rodata size:0x270
-gLowerCase = 0x800EA6B0; // type:asciz force_not_migration:true defined:true
-gUpperCase = 0x800EA6D8; // type:asciz force_not_migration:true defined:true
+_itoa_lower_digits = 0x800EA6B0; // type:asciz force_not_migration:true defined:true
+_itoa_upper_digits = 0x800EA6D8; // type:asciz force_not_migration:true defined:true
 D_800E8C50 = 0x800EA700; // type:asciz force_not_migration:true defined:true
 D_800E8C54 = 0x800EA704; // type:asciz force_not_migration:true defined:true
 D_800E8C5C = 0x800EA70C; // type:asciz force_not_migration:true defined:true
