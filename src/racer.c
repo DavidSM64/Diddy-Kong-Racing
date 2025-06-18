@@ -8457,7 +8457,7 @@ s16 timetrial_ghost_full(void) {
 
 s32 set_ghost_position_and_rotation(Object *obj) {
     f32 catmullX;
-    s32 pad_sp90;
+    s32 temp;
     f32 vectorX[3];
     s32 rotDiff;
     f32 vectorY[3];
@@ -8556,11 +8556,11 @@ s32 set_ghost_position_and_rotation(Object *obj) {
     }
     obj->segment.trans.rotation.z_rotation = curGhostNode->zRotation + (s16) (rotDiff * catmullX);
 
-    obj->particleEmittersEnabled = 0;
+    obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     obj->segment.object.segmentID = get_level_segment_index_from_position(
         obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
-    pad_sp90 = commonUnk0s32 + 3;
-    if (ghostNodeCount == pad_sp90) {
+    temp = commonUnk0s32 + 3;
+    if (ghostNodeCount == temp) {
         racer = &obj->unk64->racer;
         if (catmullX >= 0.8) {
             racer->transparency = 0;
