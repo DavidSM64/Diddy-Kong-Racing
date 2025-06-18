@@ -8455,7 +8455,6 @@ s16 timetrial_ghost_full(void) {
     return gGhostNodeFull[gCurrentGhostIndex];
 }
 
-// https://decomp.me/scratch/yMObT
 s32 set_ghost_position_and_rotation(Object *obj) {
     f32 catmullX;
     s32 pad_sp90;
@@ -8471,22 +8470,28 @@ s32 set_ghost_position_and_rotation(Object *obj) {
     GhostNode *nextGhostNode;
     s32 ghostNodeCount;
     GhostNode *curGhostNode;
-    s32 pad_sp44;
+    Object_64 *obj64;
     s32 i;
 
     ghostDataIndex = (gCurrentGhostIndex + 1) & 1;
     if (timetrial_staff_ghost_check(obj)) {
         ghostDataIndex = 2;
     }
-    
+
     catmullX = (f32) obj->properties.common.unk0 / 30.0f;
     if (osTvType == OS_TV_TYPE_PAL && ghostDataIndex == 2) {
         catmullX = ((f32) obj->properties.common.unk0 * 1.2) / 30.0f;
     }
-    commonUnk0s32 = catmullX; //Truncate the float to an integer?
+    commonUnk0s32 = catmullX; // Truncate the float to an integer?
 
     ghostNodeCount = gGhostNodeCount[ghostDataIndex];
     if (commonUnk0s32 >= (ghostNodeCount - 2)) {
+#if REGION == REGION_JP
+        obj64 = obj->unk64;
+        if (obj64->racer.transparency > 0) {
+            obj64->racer.transparency -= 1;
+        }
+#endif
         return FALSE;
     }
     if (ghostDataIndex != 2 && get_current_map_id() != gGhostMapID) {
@@ -8512,7 +8517,7 @@ s32 set_ghost_position_and_rotation(Object *obj) {
         }
         nodeIndex++;
     }
-    
+
     curGhostNode = &gGhostData[ghostDataIndex][commonUnk0s32];
     catmullX -= commonUnk0s32;
     nextGhostNode = curGhostNode + 1;
@@ -8520,8 +8525,7 @@ s32 set_ghost_position_and_rotation(Object *obj) {
     obj->segment.trans.y_position = catmull_rom_interpolation(vectorY, 0, catmullX);
     obj->segment.trans.z_position = catmull_rom_interpolation(vectorZ, 0, catmullX);
 
-
-    //Y Rotation
+    // Y Rotation
     rotDiff = nextGhostNode->yRotation - (curGhostNode->yRotation & 0xFFFF);
     if (rotDiff > 0x8000) {
         rotDiff -= 0xFFFF;
@@ -8531,8 +8535,8 @@ s32 set_ghost_position_and_rotation(Object *obj) {
     }
 
     obj->segment.trans.rotation.y_rotation = curGhostNode->yRotation + (s16) (rotDiff * catmullX);
-    
-    //X Rotation
+
+    // X Rotation
     rotDiff = nextGhostNode->xRotation - (curGhostNode->xRotation & 0xFFFF);
     if (rotDiff > 0x8000) {
         rotDiff -= 0xFFFF;
@@ -8541,8 +8545,8 @@ s32 set_ghost_position_and_rotation(Object *obj) {
         rotDiff += 0xFFFF;
     }
     obj->segment.trans.rotation.x_rotation = curGhostNode->xRotation + (s16) (rotDiff * catmullX);
-    
-    //Z Rotation
+
+    // Z Rotation
     rotDiff = nextGhostNode->zRotation - (curGhostNode->zRotation & 0xFFFF);
     if (rotDiff > 0x8000) {
         rotDiff -= 0xFFFF;
@@ -8551,9 +8555,10 @@ s32 set_ghost_position_and_rotation(Object *obj) {
         rotDiff += 0xFFFF;
     }
     obj->segment.trans.rotation.z_rotation = curGhostNode->zRotation + (s16) (rotDiff * catmullX);
-    
+
     obj->particleEmittersEnabled = 0;
-    obj->segment.object.segmentID = get_level_segment_index_from_position(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+    obj->segment.object.segmentID = get_level_segment_index_from_position(
+        obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
     pad_sp90 = commonUnk0s32 + 3;
     if (ghostNodeCount == pad_sp90) {
         racer = &obj->unk64->racer;

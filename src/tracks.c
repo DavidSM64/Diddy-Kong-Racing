@@ -1088,7 +1088,7 @@ s32 func_80027568(void) {
     f32 projectedCamPos;
     f32 scalingFactor;
     f32 var_f14;
-    s32 numRacers;// spC4
+    s32 numRacers; // spC4
     s32 curViewport;
     s32 isNegative;
     s32 i;
@@ -1105,19 +1105,20 @@ s32 func_80027568(void) {
     Object_64 *obj64;
     f32 camXPos;
     f32 camYPos;
-    Object **racerGroup; // sp80
+    Object **racerGroup;     // sp80
     Object *currentObjRacer; // sp7C
 
     racerGroup = get_racer_objects(&numRacers);
     if (numRacers == 0) {
         return FALSE;
     }
-    if ((check_if_showing_cutscene_camera() != 0) || (gSceneActiveCamera->mode >= 5) || (gSceneActiveCamera->mode == 3)) {
+    if ((check_if_showing_cutscene_camera() != 0) || (gSceneActiveCamera->mode >= 5) ||
+        (gSceneActiveCamera->mode == 3)) {
         return FALSE;
     }
     curViewport = get_current_viewport();
-    currentObjRacer = NULL;    
-    for  (i = 0; i < numRacers; i++) {
+    currentObjRacer = NULL;
+    for (i = 0; i < numRacers; i++) {
         obj64 = racerGroup[i]->unk64;
         if (curViewport == obj64->racer.playerIndex) {
             currentObjRacer = racerGroup[i];
@@ -1131,7 +1132,7 @@ s32 func_80027568(void) {
     ret = FALSE;
     // bug? var_ra can be undefined?
     for (var_t4 = 0; var_t4 < D_8011D378 && ret == FALSE; var_t4++) {
-        if ((s32)D_8011D370[var_t4] > 0) {
+        if ((s32) D_8011D370[var_t4] > 0) {
             var_ra = (Unk80027568_1 *) PHYS_TO_K0(D_8011D370[var_t4]);
         } else {
             var_t2 = D_8011D370[var_t4];
@@ -1141,10 +1142,14 @@ s32 func_80027568(void) {
 
             camXPos = gSceneActiveCamera->trans.x_position;
             camYPos = gSceneActiveCamera->trans.y_position;
-            
-            projectedCamPos = (((camXPos * new_var) + (vector->y * camYPos) + (vector->z * gSceneActiveCamera->trans.z_position) + vector->w) - 14.0);
+
+            projectedCamPos = (((camXPos * new_var) + (vector->y * camYPos) +
+                                (vector->z * gSceneActiveCamera->trans.z_position) + vector->w) -
+                               14.0);
             if (projectedCamPos < -0.1) {
-                projectedRacerPos = (currentObjRacer->segment.trans.x_position * new_var) + (vector->y * currentObjRacer->segment.trans.y_position) + (vector->z * currentObjRacer->segment.trans.z_position) + vector->w;
+                projectedRacerPos = (currentObjRacer->segment.trans.x_position * new_var) +
+                                    (vector->y * currentObjRacer->segment.trans.y_position) +
+                                    (vector->z * currentObjRacer->segment.trans.z_position) + vector->w;
                 if (projectedRacerPos >= -0.1) {
                     var_f20 = (camXPos - currentObjRacer->segment.trans.x_position);
                     var_f22 = (camYPos - currentObjRacer->segment.trans.y_position);
@@ -1172,11 +1177,7 @@ s32 func_80027568(void) {
                         temp2 = vector->y;
                         temp3 = vector->z;
                         var_f14 = vector->w;
-                        var_f18 = 
-                            (temp * var_f20) +
-                            (temp2 * var_f22) +
-                            (temp3 * var_f24) +
-                            var_f14;
+                        var_f18 = (temp * var_f20) + (temp2 * var_f22) + (temp3 * var_f24) + var_f14;
                         if (isNegative) {
                             var_f18 = -var_f18;
                         }
