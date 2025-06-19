@@ -229,7 +229,7 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate);
 void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* racerObj, Object_Racer* racer);  /* extern */
 
 //Non Matching
-s32 set_ghost_position_and_rotation(Object *obj);
+s32 timetrial_ghost_read(Object *obj);
 void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32, f32);
 s32 func_80017248(Object *obj, s32, s32 *, Vec3f *, f32 *, f32 *, s8 *surface);
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
