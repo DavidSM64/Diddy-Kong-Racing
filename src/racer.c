@@ -8455,7 +8455,7 @@ s16 timetrial_ghost_full(void) {
     return gGhostNodeFull[gCurrentGhostIndex];
 }
 
-s32 set_ghost_position_and_rotation(Object *obj) {
+s32 timetrial_ghost_read(Object *obj) {
     f32 catmullX;
     s32 temp;
     f32 vectorX[3];
