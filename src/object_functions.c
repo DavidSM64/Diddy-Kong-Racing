@@ -1064,7 +1064,7 @@ void obj_loop_timetrialghost(Object *obj, s32 updateRate) {
     if (get_race_countdown() == 0) {
         obj->properties.timeTrial.timestamp += updateRate;
     }
-    set_ghost_position_and_rotation(obj);
+    timetrial_ghost_read(obj);
     obj_spawn_particle(obj, updateRate);
     someOtherObj = get_racer_object(PLAYER_ONE);
     someOtherObj64 = &someOtherObj->unk64->unkid58;
