@@ -111,7 +111,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
         racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
     }
-    modInst = obj->modInst[0];
+    modInst = obj->modelInstances[0];
     model = modInst->objModel;
     diffX = (model->animations[obj->segment.object.animationID].animLength * 16) - 17;
     obj->segment.object.animationID = ANIM_BUBBLER_MOVE;

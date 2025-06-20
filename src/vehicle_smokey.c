@@ -126,7 +126,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             obj->segment.z_velocity = 0.0f;
         }
     }
-    modInst = obj->modInst[0];
+    modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
     animVelocity = (racer->velocity * updateRateF) * 0.45;

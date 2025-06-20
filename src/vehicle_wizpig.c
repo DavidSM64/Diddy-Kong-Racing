@@ -123,7 +123,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         nextCheckpoint = TRUE;
     }
     racer->x_rotation_offset = -obj->segment.trans.rotation.x_rotation;
-    modInst = obj->modInst[0];
+    modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
     animVelocity = (racer->velocity * updateRateF) * 0.45;

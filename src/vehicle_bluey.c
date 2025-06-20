@@ -151,7 +151,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     } else {
         racer->animationSpeed += updateRateF * 1.0;
     }
-    modInst = obj->modInst[0];
+    modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
     while (racer->animationSpeed < 0.0f) {

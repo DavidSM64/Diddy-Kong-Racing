@@ -1440,18 +1440,18 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         if (curRacer->playerIndex == PLAYER_COMPUTER) {
             var_s4 = (var_s4 + 1) & 1;
             for (i2 = 0; i2 < curRacerObj->segment.header->numberOfModelIds; i2++) {
-                if (curRacerObj->modInst[i2] != NULL) {
-                    if (curRacerObj->modInst[i2]->animUpdateTimer != 0) {
-                        curRacerObj->modInst[i2]->animUpdateTimer = (var_s4 * 2);
+                if (curRacerObj->modelInstances[i2] != NULL) {
+                    if (curRacerObj->modelInstances[i2]->animUpdateTimer != 0) {
+                        curRacerObj->modelInstances[i2]->animUpdateTimer = (var_s4 * 2);
                     }
                 }
             }
         } else {
             // curRacer is a human racer.
             for (i2 = 0; i2 < curRacerObj->segment.header->numberOfModelIds; i2++) {
-                if (curRacerObj->modInst[i2] != NULL) {
-                    if (curRacerObj->modInst[i2]->animUpdateTimer != 0) {
-                        curRacerObj->modInst[i2]->animUpdateTimer = 0;
+                if (curRacerObj->modelInstances[i2] != NULL) {
+                    if (curRacerObj->modelInstances[i2]->animUpdateTimer != 0) {
+                        curRacerObj->modelInstances[i2]->animUpdateTimer = 0;
                     }
                 }
             }
@@ -1955,7 +1955,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     curObj->segment.header->unk52++;
     assetCount = curObj->segment.header->numberOfModelIds;
     objType = curObj->segment.header->modelType;
-    curObj->modInst = (ModelInstance **) &curObj->unk80;
+    curObj->modelInstances = (ModelInstance **) &curObj->unk80;
     if (arg1 & 0x10) {
         assetCount = 1;
     }
@@ -2029,12 +2029,12 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         for (; var_a2 < assetCount; var_a2++) {
             if (assetCount) {} // FAKEMATCH?
             if (var_a2 == 0 && arg1 & 4) {
-                curObj->modInst[var_a2] = NULL;
+                curObj->modelInstances[var_a2] = NULL;
             } else if (var_a2 == 1 && arg1 & 8) {
-                curObj->modInst[var_a2] = NULL;
+                curObj->modelInstances[var_a2] = NULL;
             } else {
-                curObj->modInst[var_a2] = object_model_init(curObj->segment.header->modelIds[var_a2], sp50);
-                if (curObj->modInst[var_a2] == NULL) {
+                curObj->modelInstances[var_a2] = object_model_init(curObj->segment.header->modelIds[var_a2], sp50);
+                if (curObj->modelInstances[var_a2] == NULL) {
                     var_v1 = TRUE;
                 }
             }
@@ -2059,7 +2059,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         try_free_object_header(var_a0);
         return NULL;
     }
-    address = (u32 *) &curObj->modInst[curObj->segment.header->numberOfModelIds];
+    address = (u32 *) &curObj->modelInstances[curObj->segment.header->numberOfModelIds];
     sizeOfobj = get_object_property_size(curObj, (Object_64 *) address);
     address = (u32 *) ((uintptr_t) address + sizeOfobj);
     D_8011AE50 = NULL;
@@ -2166,7 +2166,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         newObj->lightData =
             (ObjectLight **) (((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
     }
-    newObj->modInst = (ModelInstance **) ((uintptr_t) newObj + (uintptr_t) 0x80);
+    newObj->modelInstances = (ModelInstance **) ((uintptr_t) newObj + (uintptr_t) 0x80);
     if (arg1 & 1) {
         gObjPtrList[gObjectCount] = newObj;
         gObjectCount++;
@@ -2211,8 +2211,8 @@ void objFreeAssets(Object *obj, s32 count, s32 objType) {
     s32 i;
     if (objType == OBJECT_MODEL_TYPE_3D_MODEL) { // 3D model
         for (i = 0; i < count; i++) {
-            if (obj->modInst[i] != NULL) {
-                free_3d_model((ModelInstance*)(s32)obj->modInst[i]);
+            if (obj->modelInstances[i] != NULL) {
+                free_3d_model((ModelInstance*)(s32)obj->modelInstances[i]);
             }
         }
     } else if (objType == OBJECT_MODEL_TYPE_MISC) {
@@ -2249,8 +2249,8 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
     obj->shading = shadeData;
     returnSize = 0;
     if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
-        for (i = 0; obj->modInst[i] == NULL; i++) {}
-        if (obj->modInst[i] != NULL && obj->modInst[i]->objModel->unk40 != NULL) {
+        for (i = 0; obj->modelInstances[i] == NULL; i++) {}
+        if (obj->modelInstances[i] != NULL && obj->modelInstances[i]->objModel->unk40 != NULL) {
             set_shading_properties(obj->shading, obj->segment.header->shadeAmbient, obj->segment.header->shadeDiffuse,
                                    0, obj->segment.header->shadeAngleY, obj->segment.header->shadeAngleZ);
             if (obj->segment.header->unk3D != 0) {
@@ -2429,13 +2429,13 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     }
     numModelIds = object->segment.header->numberOfModelIds;
     modelType = object->segment.header->modelType;
-    object->modInst = (ModelInstance **) &object->unk80;
+    object->modelInstances = (ModelInstance **) &object->unk80;
 
     failedToLoadModel = FALSE;
     if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
         for (i = 0; i < numModelIds; i++) {
-            object->modInst[i] = object_model_init(object->segment.header->modelIds[i], 0);
-            if (object->modInst[i] == NULL) {
+            object->modelInstances[i] = object_model_init(object->segment.header->modelIds[i], 0);
+            if (object->modelInstances[i] == NULL) {
                 failedToLoadModel = TRUE;
             }
         }
@@ -2543,7 +2543,7 @@ void func_800101AC(Object *obj, s32 arg1) {
             if (tempObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
                 if (!gObjPtrList) {} // fake
                 for (j = 0; j < numberOfModelIds; j++) {
-                    free_3d_model(tempObj->modInst[j]);
+                    free_3d_model(tempObj->modelInstances[j]);
                 }
             } else {
                 for (j = 0; j < numberOfModelIds; j++) {
@@ -2710,8 +2710,8 @@ void func_800101AC(Object *obj, s32 arg1) {
     numberOfModelIds = obj->segment.header->numberOfModelIds;
     if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
         for (i = 0; i < numberOfModelIds; i++) {
-            if (obj->modInst[i] != NULL) {
-                free_3d_model(obj->modInst[i]);
+            if (obj->modelInstances[i] != NULL) {
+                free_3d_model(obj->modelInstances[i]);
             }
         }
     } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_MISC) {
@@ -2788,7 +2788,7 @@ void obj_update(s32 updateRate) {
                 }
                 if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
                     for (sp54 = 0; sp54 < obj->segment.header->numberOfModelIds; sp54++) {
-                        modInst = obj->modInst[sp54];
+                        modInst = obj->modelInstances[sp54];
                         if (modInst != NULL) {
                             modInst->objModel->texOffsetUpdateRate = updateRate;
                         }
@@ -2899,7 +2899,7 @@ void obj_tex_animate(Object *obj, s32 updateRate) {
     s32 batchNumber;
     ModelInstance *modInst;
 
-    modInst = obj->modInst[obj->segment.object.modelIndex];
+    modInst = obj->modelInstances[obj->segment.object.modelIndex];
     model = modInst->objModel;
     batches = model->batches;
     temp_s5 = model->unk50;
@@ -3343,7 +3343,7 @@ void render_3d_model(Object *obj) {
     ObjectModel *objModel;
     Sprite *something;
 
-    modInst = obj->modInst[obj->segment.object.modelIndex];
+    modInst = obj->modelInstances[obj->segment.object.modelIndex];
     if (modInst != NULL) {
         objModel = modInst->objModel;
         hasOpacity = FALSE;
@@ -3733,7 +3733,7 @@ void set_temp_model_transforms(Object *obj) {
             }
 
             firstNonEmptyModelIndex = 0;
-            modInstList = &obj->modInst[firstNonEmptyModelIndex];
+            modInstList = &obj->modelInstances[firstNonEmptyModelIndex];
 
             while (*modInstList == NULL) {
                 firstNonEmptyModelIndex++;
@@ -3741,7 +3741,7 @@ void set_temp_model_transforms(Object *obj) {
             }
 
             numberOfModels = obj->segment.header->numberOfModelIds - 1;
-            modInstList = &obj->modInst[numberOfModels];
+            modInstList = &obj->modelInstances[numberOfModels];
 
             while (*modInstList == NULL) {
                 numberOfModels--;
@@ -3761,7 +3761,7 @@ void set_temp_model_transforms(Object *obj) {
                 objRacer->lightFlags &= ~RACER_LIGHT_NIGHT;
             }
             modelIndex = objRacer->lightFlags & RACER_LIGHT_TIMER;
-            modInst = obj->modInst[obj->segment.object.modelIndex];
+            modInst = obj->modelInstances[obj->segment.object.modelIndex];
             objModel = modInst->objModel;
             if (modelIndex != 0) {
                 modelIndex--;
@@ -3976,7 +3976,7 @@ void render_racer_shield(Gfx **dList, Mtx **mtx, Vertex **vtxList, Object *obj) 
         scale = ((f32) shieldType * 0.1) + 1.0f;
         gShieldEffectObject->segment.trans.scale *= scale;
         shear *= scale;
-        modInst = gShieldEffectObject->modInst[shieldType];
+        modInst = gShieldEffectObject->modelInstances[shieldType];
         mdl = modInst->objModel;
         gShieldEffectObject->curVertData = modInst->vertices[modInst->animationTaskNum];
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
@@ -4040,7 +4040,7 @@ void render_racer_magnet(Gfx **dList, Mtx **mtx, Vertex **vtxList, Object *obj) 
             gMagnetEffectObject->segment.trans.rotation.y_rotation = gRacerFXData[racerIndex].unk2 * 0x1000;
             gMagnetEffectObject->segment.trans.rotation.x_rotation = 0;
             gMagnetEffectObject->segment.trans.rotation.z_rotation = 0;
-            modInst = gMagnetEffectObject->modInst[0];
+            modInst = gMagnetEffectObject->modelInstances[0];
             mdl = modInst->objModel;
             gMagnetEffectObject->curVertData = modInst->vertices[modInst->animationTaskNum];
             opacity = ((gRacerFXData[racerIndex].unk1 * 8) & 0x7F) + 0x80;
@@ -4094,7 +4094,7 @@ void func_80014090(Object *obj, s32 arg1) {
             end = objHeader73 + 1;
         }
         for (i = objHeader73; i < end; i++) {
-            modInst = obj->modInst[i];
+            modInst = obj->modelInstances[i];
             objMdl = modInst->objModel;
             if (objHeader72 < objMdl->numberOfTextures) {
                 width = objMdl->textures[objHeader72].texture->width << 5;
@@ -4138,7 +4138,7 @@ void obj_tick_anims(void) {
         if (!(currObj->segment.trans.flags & OBJ_FLAGS_PARTICLE) &&
             currObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
             for (j = 0; j < currObj->segment.header->numberOfModelIds; j++) {
-                modInst = currObj->modInst[j];
+                modInst = currObj->modelInstances[j];
                 if (modInst != NULL && modInst->animUpdateTimer > 0) {
                     modInst->animUpdateTimer &= 3;
                     modInst->animUpdateTimer--;
@@ -5003,7 +5003,7 @@ void func_80016748(Object *obj0, Object *obj1) {
     ModelInstance *modInst;
 
     if (obj1->curVertData != NULL) {
-        modInst = obj1->modInst[0];
+        modInst = obj1->modelInstances[0];
         objModel = modInst->objModel;
         xDiff = obj0->segment.trans.x_position - obj1->segment.trans.x_position;
         yDiff = obj0->segment.trans.y_position - obj1->segment.trans.y_position;
@@ -5070,8 +5070,8 @@ void func_80016BC4(Object *obj) {
     func_8001709C(obj);
     func_8001709C(obj);
     for (i = 0; i < obj->segment.header->numberOfModelIds; i++) {
-        if (obj->modInst[i] != NULL) {
-            func_8006017C(obj->modInst[i]->objModel);
+        if (obj->modelInstances[i] != NULL) {
+            func_8006017C(obj->modelInstances[i]->objModel);
         }
     }
 }
@@ -5283,7 +5283,7 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
         var_s2 = 0;
         do {
             temp_v0 = *(D_8011AE6C + var_s2);
-            objModel = temp_v0->modInst[temp_v0->segment.object.modelIndex]->objModel;
+            objModel = temp_v0->modelInstances[temp_v0->segment.object.modelIndex]->objModel;
             temp_f14 = temp_v0->segment.trans.x_position - obj->segment.trans.x_position;
             temp_f0 = temp_v0->segment.trans.y_position - obj->segment.trans.y_position;
             temp_f2 = temp_v0->segment.trans.z_position - obj->segment.trans.z_position;
@@ -5345,7 +5345,7 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
         do {
             temp_a1 = D_8011AE6C[*sp88];
             var_s1 = 0;
-            objModel = temp_a1->modInst[temp_a1->segment.object.modelIndex]->objModel;
+            objModel = temp_a1->modelInstances[temp_a1->segment.object.modelIndex]->objModel;
             temp_v0_2 = temp_a1->unk5C;
             var_fp_2 = 0;
             sp16C = 1;
@@ -9249,7 +9249,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
         if (temp_v0_7 != (s16) (s32) temp_s3->effect_box.unkE[2]) {
             temp_s3->effect_box.unkE[2] = (f32) temp_v0_7;
         }
-        temp_v1_4 = arg2->modInst[arg2->segment.object.modelIndex];
+        temp_v1_4 = arg2->modelInstances[arg2->segment.object.modelIndex];
         if (temp_v1_4 != NULL) {
             temp_v0_8 = arg2->segment.object.animationID;
             temp_a0_3 = temp_v1_4->objModel;

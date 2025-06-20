@@ -1850,7 +1850,7 @@ typedef struct Object {
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ union {
-                  ModelInstance **modInst;
+                  ModelInstance **modelInstances;
                   TextureHeader **textures;
                   Sprite **sprites;
                 };

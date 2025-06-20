@@ -941,7 +941,7 @@ void func_80061C0C(Object *obj) {
     if (var_v1 < obj->segment.object.modelIndex) {
         obj->segment.object.modelIndex = var_v1;
     }
-    modInst = obj->modInst[obj->segment.object.modelIndex];
+    modInst = obj->modelInstances[obj->segment.object.modelIndex];
     mdl = modInst->objModel;
     if (modInst->objModel->animations != NULL) {
         if (obj->segment.object.animationID < 0) {

@@ -1504,7 +1504,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     }
 
     ttSWBodyObject->segment.object.animationID = gStopwatchAnimID;
-    modInst = ttSWBodyObject->modInst[0];
+    modInst = ttSWBodyObject->modelInstances[0];
     modInst->objModel->texOffsetUpdateRate = updateRate;
     if (gStopwatchAnimID != 0xFF) {
         if (gStopwatchAnimID == 4 && (get_race_countdown() || !music_is_playing())) {
@@ -1773,7 +1773,7 @@ void hud_stopwatch_face(u8 arg0, u8 arg1, u8 animID, u8 arg3, u8 arg4) {
     if (is_in_time_trial()) {
         hud20 = gAssetHudElements->entry[HUD_ELEMENT_UNK_14];
         if (hud20 != NULL) {
-            modInst = hud20->modInst[0];
+            modInst = hud20->modelInstances[0];
             numberOfBatches = modInst->objModel->numberOfBatches;
 
             for (i = 0; i < numberOfBatches; i++) {

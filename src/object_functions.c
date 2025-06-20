@@ -1898,8 +1898,8 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
     ObjectTransform trans;
 
     func_8001F460(wizShipObj, updateRate, wizShipObj);
-    if (wizShipObj->modInst[0] != NULL) {
-        wizShipModel = wizShipObj->modInst[0]->objModel;
+    if (wizShipObj->modelInstances[0] != NULL) {
+        wizShipModel = wizShipObj->modelInstances[0]->objModel;
         if (wizShipObj->properties.fireball.timer > 0) {
             wizShipObj->properties.fireball.timer -= updateRate;
         } else {
@@ -2058,7 +2058,7 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
     charSelect = &charSelectObj->unk64->characterSelect;
     charSelectObj->particleEmittersEnabled = OBJ_EMIT_NONE;
     if (charSelect != NULL) {
-        modInst = charSelectObj->modInst[charSelectObj->segment.object.modelIndex];
+        modInst = charSelectObj->modelInstances[charSelectObj->segment.object.modelIndex];
         if (modInst != NULL) {
             objMdl = modInst->objModel;
             if (is_drumstick_unlocked()) {
@@ -6186,7 +6186,7 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
         midiFade->unk2F[i] = entry->unkA[i];
     }
 
-    modInst = obj->modInst[0];
+    modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
     vertex = &objModel->vertices[1];
     maxX = vertex->x;
@@ -6269,7 +6269,7 @@ void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) 
         obj64->unkC[i] = entry->unkC[i];
     }
 
-    modInst = obj->modInst[0];
+    modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
     vertex = objModel->vertices + 1;
     x = vertex->x;
