@@ -1481,7 +1481,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         ttSWBody.x = 0;
         ttSWBody.y = 0;
         ttSWBody.z = 0;
-        gAssetHudElements->entry[HUD_BALLOON_COUNT_X] = spawn_object(&ttSWBody, 0);
+        gAssetHudElements->entry[HUD_BALLOON_COUNT_X] = spawn_object(&ttSWBody, OBJECT_SPAWN_NONE);
         gCurrentHud->entry[HUD_STOPWATCH_HANDS].rotation.y_rotation = -0x8000;
         if (gAssetHudElements->entry[HUD_BALLOON_COUNT_X] != NULL) {
             ((Object *) gAssetHudElements->entry[HUD_BALLOON_COUNT_X])->segment.animFrame = 0;
@@ -1494,7 +1494,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         ttSWArms.x = 0;
         ttSWArms.y = 0;
         ttSWArms.z = 0;
-        gAssetHudElements->entry[HUD_STOPWATCH] = spawn_object(&ttSWArms, 0);
+        gAssetHudElements->entry[HUD_STOPWATCH] = spawn_object(&ttSWArms, OBJECT_SPAWN_NONE);
         gCurrentHud->entry[HUD_STOPWATCH].rotation.y_rotation = -0x8000;
     }
 
@@ -3848,7 +3848,7 @@ void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hu
             objEntry.common.x = 0;
             objEntry.common.y = 0;
             objEntry.common.z = 0;
-            gAssetHudElements->entry[hud->spriteID] = spawn_object((LevelObjectEntryCommon *) &objEntry, 0);
+            gAssetHudElements->entry[hud->spriteID] = spawn_object((LevelObjectEntryCommon *) &objEntry, OBJECT_SPAWN_NONE);
         } else {
             gAssetHudElements->entry[hud->spriteID] = object_model_init(spriteElementId, 0);
         }

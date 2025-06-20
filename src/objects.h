@@ -175,11 +175,20 @@ enum ObjectInteractionFlags {
 enum ObjectSpawnFlags {
     OBJECT_SPAWN_NONE,
     OBJECT_SPAWN_UNK01          = (1 << 0),
-    OBJECT_SPAWN_SHADOW         = (1 << 1),
+    OBJECT_SPAWN_UNK02          = (1 << 1),
     OBJECT_SPAWN_UNK04          = (1 << 2),
-    OBJECT_SPAWN_ANIMATION          = (1 << 3),
-    OBJECT_SPAWN_INTERACTIVE    = (1 << 4),
-    OBJECT_SPAWN_UNK20          = (1 << 5)
+    OBJECT_SPAWN_UNK08          = (1 << 3),
+    OBJECT_SPAWN_UNK10          = (1 << 4)
+};
+
+enum ObjectBehaviourFlags {
+    OBJECT_BEHAVIOUR_NONE,
+    OBJECT_BEHAVIOUR_UNK01          = (1 << 0),
+    OBJECT_BEHAVIOUR_SHADOW         = (1 << 1),
+    OBJECT_BEHAVIOUR_UNK04          = (1 << 2),
+    OBJECT_BEHAVIOUR_ANIMATION      = (1 << 3),
+    OBJECT_BEHAVIOUR_INTERACTIVE    = (1 << 4),
+    OBJECT_BEHAVIOUR_UNK20          = (1 << 5)
 };
 
 enum ContPakErrors {

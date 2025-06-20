@@ -34,7 +34,7 @@
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
-#define OBJECT_SPAWN_HEAP_SIZE 0x800
+#define OBJECT_BEHAVIOUR_HEAP_SIZE 0x800
 #define OBJECT_SLOT_COUNT 512
 #define AINODE_COUNT 128
 #define CAMCONTROL_COUNT 20
@@ -1000,7 +1000,7 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
         D_8011AEA0[arg1] = *mem;
         D_8011AEC0 = arg1;
         for (var_s0 = 0; var_s0 < D_8011AEA0[arg1]; var_s0 += temp_t3) {
-            spawn_object((LevelObjectEntryCommon *) D_8011AE98[arg1], 1);
+            spawn_object((LevelObjectEntryCommon *) D_8011AE98[arg1], OBJECT_SPAWN_UNK01);
             D_8011AE98[arg1] = &D_8011AE98[arg1][temp_t3 = D_8011AE98[arg1][1] & 0x3F];
         }
         D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
@@ -1257,7 +1257,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             entry->unkE = 4;
         }
         if (raceType != RACETYPE_HUBWORLD || entry->unkE != 4) {
-            spawnObjFlags = 1;
+            spawnObjFlags = OBJECT_SPAWN_UNK01;
             if (D_8011AD3C == 1) {
                 if (i6 == 0) {
                     vehicle = gBossVehicles[D_8011AD24[1]].playerVehicle;
@@ -1293,18 +1293,18 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 func_800619F4(1);
             }
             if (entry->unkE == 4) {
-                spawnObjFlags = 5;
+                spawnObjFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK04;
                 if (numPlayers >= 2) {
-                    spawnObjFlags |= 8;
+                    spawnObjFlags |= OBJECT_SPAWN_UNK08;
                 }
             }
             if (entry->unkE != 4) {
                 if (numPlayers == 1) {
-                    spawnObjFlags |= 0x10;
+                    spawnObjFlags |= OBJECT_SPAWN_UNK10;
                 }
             }
             if (vehicle >= VEHICLE_BOSSES) {
-                spawnObjFlags = 1;
+                spawnObjFlags = OBJECT_SPAWN_UNK01;
                 func_800619F4(0);
             }
             newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, spawnObjFlags);
@@ -1655,7 +1655,7 @@ void transform_player_vehicle(void) {
     spawnObj.common.z = gTransformPosZ;
     spawnObj.unkC = gTransformAngleY;
     set_taj_status(TAJ_DIALOGUE);
-    player = spawn_object(&spawnObj.common, OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK01);
+    player = spawn_object(&spawnObj.common, OBJECT_SPAWN_UNK10 | OBJECT_SPAWN_UNK01);
     gNumRacers = 1;
     (*gRacers)[PLAYER_ONE] = player;
     gRacersByPort[PLAYER_ONE] = player;
@@ -1893,13 +1893,13 @@ void add_particle_to_entity_list(Object *obj) {
     gParticleCount++;
 }
 
-Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
+Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     s32 objType;
     Settings *settings;
     s32 mdlIndex;
     s32 unused2;
     s32 unused;
-    s32 sp50;
+    s32 behaviourFlags;
     s16 headerType;
     u8 *address;
     s32 sizeOfobj;
@@ -1911,7 +1911,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     settings = get_settings();
     objType = entry->objectID | ((entry->size & 0x80) << 1);
     update_object_stack_trace(OBJECT_SPAWN, objType);
-    if (arg1 & 2) {
+    if (spawnFlags & OBJECT_SPAWN_UNK02) {
         headerType = objType;
     } else {
         headerType = gAssetsLvlObjTranslationTable[objType];
@@ -1930,7 +1930,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     if (curObj->segment.header == NULL) {
         return NULL;
     }
-    if (curObj->segment.header->flags & 0x80) {
+    if (curObj->segment.header->flags & HEADER_FLAGS_UNK_0080) {
         curObj->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
     }
     if (curObj->segment.header->behaviorId == BHV_ROCKET_SIGNPOST && (settings->cutsceneFlags & 1)) {
@@ -1950,15 +1950,15 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     func_800245B4(objType);
     curObj->segment.trans.scale = curObj->segment.header->scale;
     curObj->segment.object.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
-    curObj->segment.object.opacity = 0xFF;
-    sp50 = obj_init_property_flags(curObj->segment.header->behaviorId);
+    curObj->segment.object.opacity = 255;
+    behaviourFlags = obj_init_property_flags(curObj->segment.header->behaviorId);
     curObj->segment.header->unk52++;
 
     assetCount = curObj->segment.header->numberOfModelIds;
 
     objType = curObj->segment.header->modelType;
     curObj->modelInstances = (ModelInstance **) ((u8 *) curObj + 0x80);
-    if (arg1 & 0x10) {
+    if (spawnFlags & OBJECT_SPAWN_UNK10) {
         assetCount = 1;
     }
     mdlIndex = 0; // a2
@@ -2004,7 +2004,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
             curObj->segment.header->numberOfModelIds = 1;
             break;
     }
-    if (!(arg1 & 2)) {
+    if (!(spawnFlags & OBJECT_SPAWN_UNK02)) {
         switch (curObj->objectID) {
             case ASSET_OBJECT_ID_POLYGOLDBALOON:
                 assetCount = 1;
@@ -2028,12 +2028,12 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     failed = FALSE;
     if (objType == OBJECT_MODEL_TYPE_3D_MODEL) {
         while (mdlIndex < assetCount) {
-            if (mdlIndex == 0 && (arg1 & 4)) {
+            if (mdlIndex == 0 && (spawnFlags & OBJECT_SPAWN_UNK04)) {
                 curObj->modelInstances[mdlIndex] = NULL;
-            } else if (mdlIndex == 1 && arg1 & 8) {
+            } else if (mdlIndex == 1 && (spawnFlags & OBJECT_SPAWN_UNK08)) {
                 curObj->modelInstances[mdlIndex] = NULL;
             } else {
-                curObj->modelInstances[mdlIndex] = object_model_init(curObj->segment.header->modelIds[mdlIndex], sp50);
+                curObj->modelInstances[mdlIndex] = object_model_init(curObj->segment.header->modelIds[mdlIndex], behaviourFlags);
                 if (curObj->modelInstances[mdlIndex] == NULL) {
                     failed = TRUE;
                 }
@@ -2067,10 +2067,10 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     D_8011AE50 = NULL;
     D_8011AE54 = NULL;
 
-    if (sp50 & 1) {
+    if (behaviourFlags & OBJECT_BEHAVIOUR_UNK01) {
         address += init_object_shading(curObj, (ShadeProperties *) address);
     }
-    if (sp50 & 2) {
+    if (behaviourFlags & OBJECT_BEHAVIOUR_SHADOW) {
         sizeOfobj = init_object_shadow(curObj, (ShadowData *) address);
         address += sizeOfobj;
         if (sizeOfobj == 0) {
@@ -2079,7 +2079,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
             return NULL;
         }
     }
-    if (sp50 & 4) {
+    if (behaviourFlags & OBJECT_BEHAVIOUR_UNK04) {
         sizeOfobj = init_object_water_effect(curObj, (WaterEffect *) address);
         address += sizeOfobj;
         if (sizeOfobj == 0) {
@@ -2091,15 +2091,15 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
             return NULL;
         }
     }
-    if (sp50 & 0x10) {
+    if (behaviourFlags & OBJECT_BEHAVIOUR_INTERACTIVE) {
         address += init_object_interaction_data(curObj, (ObjectInteraction *) address);
     }
-    if (sp50 & 0x20) {
+    if (behaviourFlags & OBJECT_BEHAVIOUR_UNK20) {
         address += func_8000FD34(curObj, (Object_5C *) address);
     }
     if (curObj->segment.header->unk56 > 0 && curObj->segment.header->unk56 < 10) {
         curObj->unk60 = (Object_60 *) address;
-        address += 0x30;
+        address += sizeof(Object_60);
     }
     if (curObj->segment.header->particleCount > 0) {
         address += obj_init_emitter(curObj, (ParticleEmitter *) address);
@@ -2130,7 +2130,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         sizeOfobj = (sizeOfobj & ~0xF) + 0x10;
     }
 
-    sizeOfobj = (unused = sizeOfobj) >> 2;
+    sizeOfobj >>= 2;
     while (mdlIndex < sizeOfobj) {
         ((u32 *) curObj)[mdlIndex] = gSpawnObjectHeap[mdlIndex];
         mdlIndex++;
@@ -2171,7 +2171,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     curObj->modelInstances = (ModelInstance **) ((uintptr_t) curObj + (uintptr_t) 0x80);
 
-    if (arg1 & 1) {
+    if (spawnFlags & OBJECT_SPAWN_UNK01) {
         if (curObj && curObj) {} // Fakematch
         gObjPtrList[gObjectCount++] = curObj;
     }
@@ -2191,7 +2191,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         objFreeAssets(curObj, assetCount, objType);
         try_free_object_header(headerType);
         mempool_free(curObj);
-        if (arg1 & 1) {
+        if (spawnFlags & 1) {
             gObjectCount--;
         }
         return NULL;
@@ -2425,7 +2425,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     object->segment.object.unk2C = objectHeaderIndex;
     object->objectID = objectHeaderIndex;
     object->segment.trans.scale = objHeader->scale;
-    if (objHeader->flags & OBJ_FLAGS_UNK_0080) {
+    if (objHeader->flags & HEADER_FLAGS_UNK_0080) {
         object->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
     }
     numModelIds = object->segment.header->numberOfModelIds;
@@ -4257,7 +4257,7 @@ s32 get_first_active_object(s32 *retObjCount) {
         breakLoop = 0;
         while (i <= maxIndex && breakLoop == 0) {
             if (!(gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
-                if (gObjPtrList[i]->segment.header->flags & 1) {
+                if (gObjPtrList[i]->segment.header->flags & HEADER_FLAGS_UNK_0001) {
                     i++;
                 } else {
                     // Break the loop if neither OBJ_FLAGS_PARTICLE nor bit 1 in header->flags is set
@@ -4273,7 +4273,7 @@ s32 get_first_active_object(s32 *retObjCount) {
             if (gObjPtrList[j]->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
                 // Break the loop if OBJ_FLAGS_PARTICLE is set
                 breakLoop = -1;
-            } else if (!(gObjPtrList[j]->segment.header->flags & 1)) {
+            } else if (!(gObjPtrList[j]->segment.header->flags & HEADER_FLAGS_UNK_0001)) {
                 j--;
             } else {
                 // Break the loop if bit 1 in header->flags is set
@@ -4460,7 +4460,7 @@ void sort_objects_by_dist(s32 startIndex, s32 lastIndex) {
                 // get_distance_to_camera calculates the distance to the camera from a XYZ location.
                 obj->segment.object.distanceToCamera = -get_distance_to_camera(
                     obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
-            } else if (obj->segment.header->flags & OBJ_FLAGS_UNK_0080) {
+            } else if (obj->segment.header->flags & HEADER_FLAGS_UNK_0080) {
                 obj->segment.object.distanceToCamera += -16000.0f;
             } else {
                 obj->segment.object.distanceToCamera = -get_distance_to_camera(
@@ -8844,7 +8844,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
     NEW_OBJECT_ENTRY(newObjEntry, animEntry->objectIdToSpawn, 8, animEntry->common.x, animEntry->common.y,
                      animEntry->common.z);
 
-    obj->unk64 = (Object_64 *) spawn_object(&newObjEntry, 1);
+    obj->unk64 = (Object_64 *) spawn_object(&newObjEntry, OBJECT_SPAWN_UNK01);
     newObj = (Object *) obj->unk64;
     // (newObj->behaviorId == BHV_DINO_WHALE) is Dinosaur1, Dinosaur2, Dinosaur3, Whale, and Dinoisle
     if (obj->unk64 != NULL && newObj->behaviorId == BHV_DINO_WHALE && gTimeTrialEnabled) {
@@ -11217,74 +11217,74 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
  * This includes things like shadow data, interaction and visuals.
  */
 s32 obj_init_property_flags(s32 behaviorId) {
-    s32 flags = OBJECT_SPAWN_NONE;
+    s32 flags = OBJECT_BEHAVIOUR_NONE;
     switch (behaviorId) {
         case BHV_RACER:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_ANIMATION |
-                    OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_UNK04 | OBJECT_BEHAVIOUR_ANIMATION |
+                    OBJECT_BEHAVIOUR_INTERACTIVE;
             break;
         case BHV_SCENERY:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_INTERACTIVE;
             break;
         case BHV_WEAPON:
-            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_UNK04 | OBJECT_BEHAVIOUR_INTERACTIVE;
             break;
         case BHV_DINO_WHALE:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION | OBJECT_BEHAVIOUR_INTERACTIVE;
             break;
         case BHV_DOOR:
         case BHV_TT_DOOR:
-            flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
             break;
         case BHV_WEAPON_BALLOON:
         case BHV_GOLDEN_BALLOON:
-            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_INTERACTIVE;
             break;
         case BHV_HIT_TESTER:
         case BHV_HIT_TESTER_2:
         case BHV_SNOWBALL:
         case BHV_SNOWBALL_2:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE |
-                    OBJECT_SPAWN_UNK20;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION | OBJECT_BEHAVIOUR_INTERACTIVE |
+                    OBJECT_BEHAVIOUR_UNK20;
             break;
         case BHV_SNOWBALL_3:
         case BHV_SNOWBALL_4:
         case BHV_HIT_TESTER_3:
         case BHV_HIT_TESTER_4:
-            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION | OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
             break;
         case BHV_UNK_18:
-            flags = OBJECT_SPAWN_UNK04;
+            flags = OBJECT_BEHAVIOUR_UNK04;
             break;
         case BHV_STOPWATCH_MAN:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION | OBJECT_BEHAVIOUR_INTERACTIVE;
             break;
         case BHV_BANANA:
         case BHV_WORLD_KEY:
         case BHV_SILVER_COIN:
         case BHV_SILVER_COIN_2:
-            flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_SHADOW;
+            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_SHADOW;
             break;
         case BHV_LOG:
-            flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
             break;
         case BHV_BRIDGE_WHALE_RAMP:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_ANIMATION | OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
             break;
         case BHV_RAMP_SWITCH:
-            flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_SHADOW;
+            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_SHADOW;
             break;
         case BHV_SEA_MONSTER:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_ANIMATION;
             break;
         case BHV_COLLECT_EGG:
-            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_INTERACTIVE;
             break;
         case BHV_UNK_30:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_ANIMATION;
             break;
         case BHV_UNK_3F:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_ANIMATION;
             break;
         case BHV_ANIMATED_OBJECT:
         case BHV_VEHICLE_ANIMATION:
@@ -11292,22 +11292,22 @@ s32 obj_init_property_flags(s32 behaviorId) {
         case BHV_WIZPIG_SHIP:
         case BHV_ANIMATED_OBJECT_4:
         case BHV_PIG_ROCKETEER:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION;
             break;
         case BHV_CHARACTER_SELECT:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION;
             break;
         case BHV_TROPHY_CABINET:
         case BHV_DYNAMIC_LIGHT_OBJECT_2:
         case BHV_ROCKET_SIGNPOST:
         case BHV_ROCKET_SIGNPOST_2:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
             break;
         case BHV_UNK_5B:
-            flags = OBJECT_SPAWN_UNK01;
+            flags = OBJECT_BEHAVIOUR_UNK01;
             break;
         case BHV_ANIMATED_OBJECT_2:
-            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION;
             break;
         case BHV_EXIT:
         case BHV_CHECKPOINT:
@@ -11326,24 +11326,24 @@ s32 obj_init_property_flags(s32 behaviorId) {
         case BHV_TELEPORT:
         case BHV_FIREBALL_OCTOWEAPON:
         case BHV_FIREBALL_OCTOWEAPON_2:
-            flags = OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_BEHAVIOUR_INTERACTIVE;
             break;
         case BHV_ZIPPER_GROUND:
-            flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_INTERACTIVE;
             break;
         case BHV_ANIMATION:
         case BHV_CAMERA_ANIMATION:
         case BHV_BUTTERFLY:
-            flags = OBJECT_SPAWN_SHADOW;
+            flags = OBJECT_BEHAVIOUR_SHADOW;
             break;
         case BHV_PARK_WARDEN:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION | OBJECT_SPAWN_INTERACTIVE;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION | OBJECT_BEHAVIOUR_INTERACTIVE;
             break;
         case BHV_FROG:
-            flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_ANIMATION;
+            flags = OBJECT_BEHAVIOUR_UNK01 | OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION;
             break;
         case BHV_UNK_72:
-            flags = OBJECT_SPAWN_UNK01;
+            flags = OBJECT_BEHAVIOUR_UNK01;
             break;
     }
     return flags;

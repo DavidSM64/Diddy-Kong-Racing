@@ -13769,7 +13769,7 @@ void menu_asset_load(s32 assetID) {
             entry.x = 0;
             entry.y = 0;
             entry.z = 0;
-            gMenuAssets[assetID] = spawn_object(&entry, 0);
+            gMenuAssets[assetID] = spawn_object(&entry, OBJECT_SPAWN_NONE);
         } else {
             gMenuAssets[assetID] = object_model_init(i & 0x3FFF, 0);
         }
