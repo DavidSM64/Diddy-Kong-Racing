@@ -694,7 +694,7 @@ void lensflare_render(Gfx **dList, Mtx **mats, Vertex **verts, Camera *camera) {
                                             lensFlareData->colour.b,
                                             (s32) (lensFlareData->colour.a * magSquareSquared));
                             render_sprite_billboard(dList, mats, verts, (Object *) &trans,
-                                                    (Sprite *) gLensFlare->unk68[lensFlareData->count],
+                                                    gLensFlare->sprites[lensFlareData->count],
                                                     (RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE));
                             lensFlareData++;
                         }
