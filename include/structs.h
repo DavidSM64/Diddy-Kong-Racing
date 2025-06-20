@@ -675,12 +675,6 @@ typedef struct ObjectModel {
     /* 0x54 */ u8 pad[0x2C];
 } ObjectModel;
 
-// Size: 0xC
-typedef struct Object_68_38 {
- /* 0x00 */ u8 unk0[8];
- /* 0x08 */ s32 unk8;
-} Object_68_38;
-
 /* Size: 0x24 bytes */
 typedef struct ModelInstance {
     /* 0x00 */ ObjectModel *objModel;
