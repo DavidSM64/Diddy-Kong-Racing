@@ -1343,7 +1343,7 @@ void spawn_skydome(s32 objectID) {
     spawnObject.z = 0;
     spawnObject.size = sizeof(LevelObjectEntryCommon);
     spawnObject.objectID = objectID;
-    gSkydomeSegment = spawn_object(&spawnObject, OBJECT_SPAWN_SHADOW);
+    gSkydomeSegment = spawn_object(&spawnObject, OBJECT_SPAWN_UNK02);
     if (gSkydomeSegment != NULL) {
         gSkydomeSegment->segment.level_entry = NULL;
         gSkydomeSegment->objectID = -1;
@@ -1867,7 +1867,7 @@ void render_level_geometry_and_objects(void) {
                     shadow_render(obj, obj->shadow);
                 }
                 render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
-                if ((obj->waterEffect != 0) && (obj->segment.header->flags & 0x10)) {
+                if ((obj->waterEffect != 0) && (obj->segment.header->flags & HEADER_FLAGS_WATER_EFFECT)) {
                     watereffect_render(obj, obj->waterEffect);
                 }
             }

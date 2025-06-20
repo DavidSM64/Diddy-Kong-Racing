@@ -75,7 +75,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     f32 diffZ;
     ObjectModel *objModel;
     s32 tempStartTimer;
-    Object_68 *gfxData;
+    ModelInstance *modInst;
     s32 headAngleRange;
     UNUSED s32 pad;
     Object *firstRacerObj;
@@ -130,8 +130,8 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
         racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
     }
-    gfxData = *obj->unk68;
-    objModel = gfxData->objModel;
+    modInst = obj->modelInstances[0];
+    objModel = modInst->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
     if (obj->segment.object.animationID != ANIM_TRICKY_DAMAGE) {
         if (racer->velocity < -2.0) {
@@ -149,13 +149,13 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
-        gfxData->animationID = -1;
+        modInst->animationID = -1;
     }
     while (diffX < racer->animationSpeed) {
         racer->animationSpeed -= diffX;
-        gfxData->animationID = -1;
+        modInst->animationID = -1;
     }
-    if (gfxData->animationID == -1 && obj->segment.object.animationID == ANIM_TRICKY_DAMAGE) {
+    if (modInst->animationID == -1 && obj->segment.object.animationID == ANIM_TRICKY_DAMAGE) {
         obj->segment.object.animationID = racer->unk1CD;
     }
     animFrame = obj->segment.animFrame;
