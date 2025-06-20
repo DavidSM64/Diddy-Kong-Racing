@@ -689,8 +689,6 @@ typedef struct ModelInstance {
     /* 0x1E */ s8 modelType;
     /* 0x1F */ s8 animationTaskNum;
     /* 0x20 */ s8 animUpdateTimer;
-    /* 0x21 */ s8 unk21;
-    /* 0x22 */ s16 unk22;
 } ModelInstance;
 
 typedef struct CollisionNode {
