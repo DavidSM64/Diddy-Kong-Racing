@@ -222,7 +222,8 @@ ModelInstance *model_init_type(ObjectModel *model, s32 flags) {
             return NULL;
         }
         result->vertices[0] = (Vertex *) ((u8 *) result + sizeof(ModelInstance));
-        result->vertices[1] = (Vertex *) ((u8 *) result + (model->numberOfVertices * sizeof(Vertex)) + sizeof(ModelInstance));
+        result->vertices[1] =
+            (Vertex *) ((u8 *) result + (model->numberOfVertices * sizeof(Vertex)) + sizeof(ModelInstance));
         result->vertices[2] = (Vertex *) ((u8 *) result + temp);
         result->modelType = MODELTYPE_ANIMATED;
     } else if (model->unk40 != NULL && (flags & OBJECT_SPAWN_UNK01)) {

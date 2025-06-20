@@ -224,7 +224,7 @@ s8 gNumRacersSaved;
 UNUSED s8 unused_D_8011AD52;
 s8 D_8011AD53;
 s32 D_8011AD54;
-Object *(*gSpawnObjectHeap)[sizeof(Object)];
+s32 *gSpawnObjectHeap;
 s32 D_8011AD5C;
 s32 D_8011AD60;
 s32 *gAssetsObjectHeadersTable;
@@ -1893,58 +1893,58 @@ void add_particle_to_entity_list(Object *obj) {
     gParticleCount++;
 }
 
-// https://decomp.me/scratch/vPHTQ
-#ifdef NON_EQUIVALENT
 Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     s32 objType;
-    Object *newObj;
-    s32 var_a2;
-    s32 i;
-    s32 var_s0_5;
+    Settings *settings;
+    s32 mdlIndex;
+    s32 unused2;
+    s32 unused;
     s32 sp50;
-    s16 var_a0;
-    u32 *address;
+    s16 headerType;
+    u8 *address;
     s32 sizeOfobj;
     Object *curObj;
-    Object *new_var;
+    Object *prevObj;
     s32 assetCount;
-    s8 var_v1;
-    Settings *settings;
+    s8 failed;
 
     settings = get_settings();
     objType = entry->objectID | ((entry->size & 0x80) << 1);
     update_object_stack_trace(OBJECT_SPAWN, objType);
     if (arg1 & 2) {
-        var_a0 = objType;
+        headerType = objType;
     } else {
-        var_a0 = gAssetsLvlObjTranslationTable[objType];
+        headerType = gAssetsLvlObjTranslationTable[objType];
     }
-    if (var_a0 >= gAssetsObjectHeadersTableLength) {
-        var_a0 = 0;
+    if (headerType >= gAssetsObjectHeadersTableLength) {
+        headerType = 0;
     }
-    for (i = 0; i < 0x200; i++) {
-        (*gSpawnObjectHeap)[i] = NULL;
+
+    for (mdlIndex = 0; mdlIndex < 0x200; mdlIndex++) {
+        gSpawnObjectHeap[mdlIndex] = NULL;
     }
-    curObj = (Object *) &(*gSpawnObjectHeap)[0];
+
+    curObj = (Object *) gSpawnObjectHeap;
     curObj->segment.trans.flags = 2;
-    curObj->segment.header = load_object_header(var_a0);
+    curObj->segment.header = load_object_header(headerType);
     if (curObj->segment.header == NULL) {
         return NULL;
     }
-    sp50 = curObj->segment.header->flags & 0x80;
-    if (sp50) {
+    if (curObj->segment.header->flags & 0x80) {
         curObj->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
     }
-    if (curObj->segment.header->behaviorId == BHV_ROCKET_SIGNPOST && settings->cutsceneFlags & 1) {
+    if (curObj->segment.header->behaviorId == BHV_ROCKET_SIGNPOST && (settings->cutsceneFlags & 1)) {
         update_object_stack_trace(OBJECT_SPAWN, -1);
         return NULL;
     }
+
     curObj->segment.trans.x_position = entry->x;
     curObj->segment.trans.y_position = entry->y;
     curObj->segment.trans.z_position = entry->z;
     curObj->segment.object.segmentID = get_level_segment_index_from_position(
         curObj->segment.trans.x_position, curObj->segment.trans.y_position, curObj->segment.trans.z_position);
-    curObj->segment.object.unk2C = var_a0;
+
+    curObj->segment.object.unk2C = headerType;
     curObj->segment.level_entry = (LevelObjectEntry *) entry;
     curObj->objectID = objType;
     func_800245B4(objType);
@@ -1953,51 +1953,51 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     curObj->segment.object.opacity = 0xFF;
     sp50 = obj_init_property_flags(curObj->segment.header->behaviorId);
     curObj->segment.header->unk52++;
+
     assetCount = curObj->segment.header->numberOfModelIds;
+
     objType = curObj->segment.header->modelType;
-    curObj->modelInstances = (ModelInstance **) &curObj->unk80;
+    curObj->modelInstances = (ModelInstance **) ((u8 *) curObj + 0x80);
     if (arg1 & 0x10) {
         assetCount = 1;
     }
-    var_a2 = 0;
+    mdlIndex = 0; // a2
     switch (curObj->segment.header->behaviorId) {
         case BHV_PARK_WARDEN:
-            if ((entry->z && entry->z) && entry->z) {} // fakematch
             func_800619F4(7);
             break;
         case BHV_ANIMATED_OBJECT_4:
-            var_a2 = get_character_id_from_slot(PLAYER_ONE);
-            curObj->segment.object.modelIndex = var_a2;
-            assetCount = var_a2 + 1;
+            mdlIndex = get_character_id_from_slot(PLAYER_ONE);
+            curObj->segment.object.modelIndex = mdlIndex;
+            assetCount = mdlIndex + 1;
             break;
         case BHV_UNK_5B:
-            var_a2 = (settings->trophies >> (((settings->worldId - 1) ^ 0) * 2)) & 3; // fakematch
-            if (var_a2) {
-                var_a2--;
-                assetCount = var_a2 + 1;
-                curObj->segment.object.modelIndex = var_a2;
+            mdlIndex = (settings->trophies >> ((settings->worldId - 1) << 1));
+            mdlIndex = mdlIndex & 0x3;
+            if (mdlIndex) {
+                mdlIndex--;
+                assetCount = mdlIndex + 1;
+                curObj->segment.object.modelIndex = mdlIndex;
             }
             break;
         case BHV_DYNAMIC_LIGHT_OBJECT_2:
-            var_a2 = settings->wizpigAmulet;
-            assetCount = var_a2 + 1;
+            mdlIndex = settings->wizpigAmulet;
+            assetCount = mdlIndex + 1;
             curObj->segment.object.modelIndex = settings->wizpigAmulet;
             break;
         case BHV_ROCKET_SIGNPOST_2:
             objType = settings->trophies;
-            // Thanks, I hate it.
-            for (i = 0; i < 4; i = (i + 1) & 0xFFFFFFFF) {
+            for (assetCount = 0; assetCount < 4; assetCount++) {
                 if ((objType & 3) == 3) {
-                    var_a2++;
+                    mdlIndex++;
                 }
                 objType >>= 2;
             }
-            curObj->segment.object.modelIndex = var_a2;
-            assetCount = var_a2 + 1;
+            curObj->segment.object.modelIndex = mdlIndex;
+            assetCount = mdlIndex + 1;
             break;
         case BHV_GOLDEN_BALLOON:
             assetCount = 1;
-            var_a2 = 0;
             if (is_in_adventure_two()) {
                 curObj->segment.header->modelIds[0] = curObj->segment.header->modelIds[1];
             }
@@ -2005,203 +2005,204 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
             break;
     }
     if (!(arg1 & 2)) {
-        if (curObj->objectID != 0x19) {
-            if (curObj->objectID == 0xCB) {
+        switch (curObj->objectID) {
+            case ASSET_OBJECT_ID_POLYGOLDBALOON:
                 assetCount = 1;
                 if (is_in_adventure_two()) {
                     curObj->segment.header->modelIds[0] = curObj->segment.header->modelIds[1];
                 }
                 curObj->segment.header->numberOfModelIds = 1;
-            }
-        } else {
-            if (is_in_adventure_two()) {
-                for (var_a2 = 0; var_a2 < 5; var_a2++) {
-                    curObj->segment.header->modelIds[var_a2] = curObj->segment.header->modelIds[var_a2 + 5];
+                break;
+            case ASSET_OBJECT_ID_LEVELDOOR:
+                if (is_in_adventure_two()) {
+                    for (mdlIndex = 0; mdlIndex < 5; mdlIndex++) {
+                        curObj->segment.header->modelIds[mdlIndex] = curObj->segment.header->modelIds[mdlIndex + 5];
+                    }
                 }
-            }
-            assetCount = 5;
-            curObj->segment.header->numberOfModelIds = 5;
-            var_a2 = 0;
+                assetCount = 5;
+                curObj->segment.header->numberOfModelIds = 5;
+                mdlIndex = 0;
+                break;
         }
     }
-    var_v1 = FALSE;
-    if (objType == 0) {
-        for (; var_a2 < assetCount; var_a2++) {
-            if (assetCount) {} // FAKEMATCH?
-            if (var_a2 == 0 && arg1 & 4) {
-                curObj->modelInstances[var_a2] = NULL;
-            } else if (var_a2 == 1 && arg1 & 8) {
-                curObj->modelInstances[var_a2] = NULL;
+    failed = FALSE;
+    if (objType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        while (mdlIndex < assetCount) {
+            if (mdlIndex == 0 && (arg1 & 4)) {
+                curObj->modelInstances[mdlIndex] = NULL;
+            } else if (mdlIndex == 1 && arg1 & 8) {
+                curObj->modelInstances[mdlIndex] = NULL;
             } else {
-                curObj->modelInstances[var_a2] = object_model_init(curObj->segment.header->modelIds[var_a2], sp50);
-                if (curObj->modelInstances[var_a2] == NULL) {
-                    var_v1 = TRUE;
+                curObj->modelInstances[mdlIndex] = object_model_init(curObj->segment.header->modelIds[mdlIndex], sp50);
+                if (curObj->modelInstances[mdlIndex] == NULL) {
+                    failed = TRUE;
                 }
             }
+            mdlIndex++;
         }
-    } else if (objType == 4) {
-        for (; var_a2 < assetCount; var_a2++) {
-            curObj->textures[var_a2] = load_texture(curObj->segment.header->modelIds[var_a2]);
-            if (curObj->textures[var_a2] == NULL) {
-                var_v1 = TRUE;
+    } else if (objType == OBJECT_MODEL_TYPE_MISC) {
+        while (mdlIndex < assetCount) {
+            curObj->textures[mdlIndex] = load_texture(curObj->segment.header->modelIds[mdlIndex]);
+            if (curObj->textures[mdlIndex] == NULL) {
+                failed = TRUE;
             }
+            mdlIndex++;
         }
     } else {
-        for (; var_a2 < assetCount; var_a2++) {
-            curObj->sprites[var_a2] = tex_load_sprite(curObj->segment.header->modelIds[var_a2], 10);
-            if (curObj->sprites[var_a2] == NULL) {
-                var_v1 = TRUE;
+        while (mdlIndex < assetCount) {
+            curObj->sprites[mdlIndex] = tex_load_sprite(curObj->segment.header->modelIds[mdlIndex], 10);
+            if (curObj->sprites[mdlIndex] == NULL) {
+                failed = TRUE;
             }
+            mdlIndex++;
         }
     }
-    if (var_v1) {
+    if (failed) {
         objFreeAssets(curObj, assetCount, objType);
-        try_free_object_header(var_a0);
+        try_free_object_header(headerType);
         return NULL;
     }
-    address = (u32 *) &curObj->modelInstances[curObj->segment.header->numberOfModelIds];
-    sizeOfobj = get_object_property_size(curObj, (Object_64 *) address);
-    address = (u32 *) ((uintptr_t) address + sizeOfobj);
+    address = (u8 *) &curObj->modelInstances[curObj->segment.header->numberOfModelIds];
+    address += get_object_property_size(curObj, (Object_64 *) address);
     D_8011AE50 = NULL;
     D_8011AE54 = NULL;
+
     if (sp50 & 1) {
-        address = (u32 *) ((uintptr_t) address + init_object_shading(curObj, (ShadeProperties *) address));
+        address += init_object_shading(curObj, (ShadeProperties *) address);
     }
     if (sp50 & 2) {
         sizeOfobj = init_object_shadow(curObj, (ShadowData *) address);
-        address = (u32 *) ((uintptr_t) address + sizeOfobj);
+        address += sizeOfobj;
         if (sizeOfobj == 0) {
             objFreeAssets(curObj, assetCount, objType);
-            try_free_object_header(var_a0);
+            try_free_object_header(headerType);
             return NULL;
         }
     }
     if (sp50 & 4) {
         sizeOfobj = init_object_water_effect(curObj, (WaterEffect *) address);
-        address = (u32 *) ((uintptr_t) address + sizeOfobj);
+        address += sizeOfobj;
         if (sizeOfobj == 0) {
             if (D_8011AE50 != NULL) {
-                tex_free((TextureHeader *) D_8011AE50);
+                tex_free((TextureHeader *) (s32) D_8011AE50);
             }
             objFreeAssets(curObj, assetCount, objType);
-            try_free_object_header(var_a0);
+            try_free_object_header(headerType);
             return NULL;
         }
     }
     if (sp50 & 0x10) {
-        address = (u32 *) ((uintptr_t) address + init_object_interaction_data(curObj, (ObjectInteraction *) address));
+        address += init_object_interaction_data(curObj, (ObjectInteraction *) address);
     }
     if (sp50 & 0x20) {
-        address = (u32 *) ((uintptr_t) address + func_8000FD34(curObj, (Object_5C *) address));
+        address += func_8000FD34(curObj, (Object_5C *) address);
     }
-    if ((curObj->segment.header->unk56 > 0) && (curObj->segment.header->unk56 < 10)) {
+    if (curObj->segment.header->unk56 > 0 && curObj->segment.header->unk56 < 10) {
         curObj->unk60 = (Object_60 *) address;
-        address += 0xC;
+        address += 0x30;
     }
     if (curObj->segment.header->particleCount > 0) {
-        address = (u32 *) ((uintptr_t) address + obj_init_emitter(curObj, (ParticleEmitter *) address));
+        address += obj_init_emitter(curObj, (ParticleEmitter *) address);
     }
-    sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
+
     if (curObj->segment.header->numLightSources > 0) {
         curObj->lightData = (ObjectLight **) address;
-        sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->numLightSources * 4)) - (uintptr_t) curObj;
+        address += curObj->segment.header->numLightSources * 4;
     }
-    newObj = mempool_alloc_pool((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
-    if (newObj == NULL) {
+
+    sizeOfobj = (s32) address - (s32) curObj;
+    prevObj = curObj;
+    curObj = mempool_alloc_pool((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
+    if (curObj == NULL) {
         if (D_8011AE50 != NULL) {
-            tex_free((TextureHeader *) D_8011AE50);
+            tex_free((TextureHeader *) (s32) D_8011AE50);
         }
         if (D_8011AE54 != NULL) {
-            tex_free((TextureHeader *) D_8011AE54);
+            tex_free((TextureHeader *) (s32) D_8011AE54);
         }
-        objFreeAssets(curObj, assetCount, objType);
-        try_free_object_header(var_a0);
+        objFreeAssets(prevObj, assetCount, objType);
+        try_free_object_header(headerType);
         return NULL;
     }
+
+    mdlIndex = 0;
     if (sizeOfobj & 0xF) {
         sizeOfobj = (sizeOfobj & ~0xF) + 0x10;
     }
-    sizeOfobj >>= 2;
 
-    // for (var_s0_5 = 0; var_s0_5 < objSize; var_s0_5++) {
-    //     u32 *temp = &newObj[var_s0_5];
-    //     temp = (u32)&(*gSpawnObjectHeap)[var_s0_5];
-    // }
+    sizeOfobj = (unused = sizeOfobj) >> 2;
+    while (mdlIndex < sizeOfobj) {
+        ((u32 *) curObj)[mdlIndex] = gSpawnObjectHeap[mdlIndex];
+        mdlIndex++;
+    }
 
-    // WRONG WRONG WRONG - Is this really just trying to set up the first several values in a weird way?
-    for (var_s0_5 = 0; var_s0_5 < sizeOfobj; var_s0_5 += 4) {
-        newObj[var_s0_5].segment.trans.rotation.y_rotation =
-            (*gSpawnObjectHeap)[var_s0_5]->segment.trans.rotation.y_rotation;
+    if (curObj->waterEffect != NULL) {
+        curObj->waterEffect =
+            (WaterEffect *) (((uintptr_t) curObj + (uintptr_t) curObj->waterEffect) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->waterEffect != NULL) {
-        newObj->waterEffect =
-            (WaterEffect *) (((uintptr_t) newObj + (uintptr_t) newObj->waterEffect) - (uintptr_t) gSpawnObjectHeap);
+    if (curObj->shadow != NULL) {
+        curObj->shadow =
+            (ShadowData *) (((uintptr_t) curObj + (uintptr_t) curObj->shadow) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->shadow != NULL) {
-        newObj->shadow =
-            (ShadowData *) (((uintptr_t) newObj + (uintptr_t) newObj->shadow) - (uintptr_t) gSpawnObjectHeap);
+    if (curObj->shading != NULL) {
+        curObj->shading =
+            (ShadeProperties *) (((uintptr_t) curObj + (uintptr_t) curObj->shading) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->shading != NULL) {
-        newObj->shading =
-            (ShadeProperties *) (((uintptr_t) newObj + (uintptr_t) newObj->shading) - (uintptr_t) gSpawnObjectHeap);
+    if (curObj->unk64 != NULL) {
+        curObj->unk64 = (Object_64 *) (((uintptr_t) curObj + (uintptr_t) curObj->unk64) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->unk64 != NULL) {
-        newObj->unk64 = (Object_64 *) (((uintptr_t) newObj + (uintptr_t) newObj->unk64) - (uintptr_t) gSpawnObjectHeap);
-    }
-    if (newObj->interactObj != NULL) {
-        newObj->interactObj = (ObjectInteraction *) (((uintptr_t) newObj + (uintptr_t) newObj->interactObj) -
+    if (curObj->interactObj != NULL) {
+        curObj->interactObj = (ObjectInteraction *) (((uintptr_t) curObj + (uintptr_t) curObj->interactObj) -
                                                      (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->unk5C != NULL) {
-        newObj->unk5C = (Object_5C *) (((uintptr_t) newObj + (uintptr_t) newObj->unk5C) - (uintptr_t) gSpawnObjectHeap);
+    if (curObj->unk5C != NULL) {
+        curObj->unk5C = (Object_5C *) (((uintptr_t) curObj + (uintptr_t) curObj->unk5C) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->unk60 != NULL) {
-        newObj->unk60 = (Object_60 *) (((uintptr_t) newObj + (uintptr_t) newObj->unk60) - (uintptr_t) gSpawnObjectHeap);
+    if (curObj->unk60 != NULL) {
+        curObj->unk60 = (Object_60 *) (((uintptr_t) curObj + (uintptr_t) curObj->unk60) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->segment.header->particleCount > 0) {
-        newObj->particleEmitter = (ParticleEmitter *) (((uintptr_t) newObj + (uintptr_t) newObj->particleEmitter) -
+    if (curObj->segment.header->particleCount > 0) {
+        curObj->particleEmitter = (ParticleEmitter *) (((uintptr_t) curObj + (uintptr_t) curObj->particleEmitter) -
                                                        (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->segment.header->numLightSources > 0) {
-        newObj->lightData =
-            (ObjectLight **) (((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
+    if (curObj->segment.header->numLightSources > 0) {
+        curObj->lightData =
+            (ObjectLight **) (((uintptr_t) curObj + (uintptr_t) curObj->lightData) - (uintptr_t) gSpawnObjectHeap);
     }
-    newObj->modelInstances = (ModelInstance **) ((uintptr_t) newObj + (uintptr_t) 0x80);
+    curObj->modelInstances = (ModelInstance **) ((uintptr_t) curObj + (uintptr_t) 0x80);
+
     if (arg1 & 1) {
-        gObjPtrList[gObjectCount] = newObj;
-        gObjectCount++;
+        if (curObj && curObj) {} // Fakematch
+        gObjPtrList[gObjectCount++] = curObj;
     }
-    run_object_init_func(newObj, entry, 0);
-    if (newObj->interactObj != NULL) {
-        newObj->interactObj->x_position = newObj->segment.trans.x_position;
-        newObj->interactObj->y_position = newObj->segment.trans.y_position;
-        newObj->interactObj->z_position = newObj->segment.trans.z_position;
+    run_object_init_func(curObj, entry, 0);
+    if (curObj->interactObj != NULL) {
+        curObj->interactObj->x_position = curObj->segment.trans.x_position;
+        curObj->interactObj->y_position = curObj->segment.trans.y_position;
+        curObj->interactObj->z_position = curObj->segment.trans.z_position;
     }
-    if (newObj->segment.header->unk56 > 0 && newObj->segment.header->unk56 < 10 && func_8000F99C(newObj)) {
+    if (curObj->segment.header->unk56 > 0 && curObj->segment.header->unk56 < 10 && func_8000F99C(curObj)) {
         if (D_8011AE50 != NULL) {
-            tex_free(D_8011AE50);
+            tex_free((TextureHeader *) (s32) D_8011AE50);
         }
         if (D_8011AE54 != NULL) {
-            tex_free(D_8011AE54);
+            tex_free((TextureHeader *) (s32) D_8011AE54);
         }
-        objFreeAssets(newObj, assetCount, objType);
-        try_free_object_header(var_a0);
-        mempool_free(newObj);
+        objFreeAssets(curObj, assetCount, objType);
+        try_free_object_header(headerType);
+        mempool_free(curObj);
         if (arg1 & 1) {
             gObjectCount--;
         }
         return NULL;
     }
-    if (newObj->segment.header->numLightSources > 0) {
-        light_setup_light_sources(newObj);
+    if (curObj->segment.header->numLightSources > 0) {
+        light_setup_light_sources(curObj);
     }
     func_800619F4(0);
     update_object_stack_trace(OBJECT_SPAWN, -1);
-    return newObj;
+    return curObj;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/spawn_object.s")
-#endif
 
 /**
  * Run functions that will attempt to free the graphics data of the object
@@ -2212,19 +2213,19 @@ void objFreeAssets(Object *obj, s32 count, s32 objType) {
     if (objType == OBJECT_MODEL_TYPE_3D_MODEL) { // 3D model
         for (i = 0; i < count; i++) {
             if (obj->modelInstances[i] != NULL) {
-                free_3d_model((ModelInstance*)(s32)obj->modelInstances[i]);
+                free_3d_model((ModelInstance *) (s32) obj->modelInstances[i]);
             }
         }
     } else if (objType == OBJECT_MODEL_TYPE_MISC) {
         for (i = 0; i < count; i++) {
             if (obj->textures[i] != NULL) {
-                tex_free((TextureHeader*)(s32)obj->textures[i]);
+                tex_free((TextureHeader *) (s32) obj->textures[i]);
             }
         }
     } else { // Sprite
         for (i = 0; i < count; i++) {
             if (obj->sprites[i] != NULL) {
-                sprite_free((Sprite*)(s32)obj->sprites[i]);
+                sprite_free((Sprite *) (s32) obj->sprites[i]);
             }
         }
     }
