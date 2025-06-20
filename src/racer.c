@@ -6970,8 +6970,8 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
         if (gCurrentButtonsPressed & Z_TRIG || racer->raceFinished || racer->attackType) {
             scaleY = 0;
             scaleZ = 0;
-            if (obj->unk68[obj->segment.object.modelIndex] != NULL) {
-                model = obj->unk68[obj->segment.object.modelIndex]->objModel;
+            if (obj->modInst[obj->segment.object.modelIndex] != NULL) {
+                model = obj->modInst[obj->segment.object.modelIndex]->objModel;
                 if (obj->segment.header->unk58 > -1 && obj->segment.header->unk58 < model->unk18) {
                     if (obj->curVertData != NULL) {
                         heldObjData = obj->curVertData;

@@ -53,7 +53,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     s32 steerVel;
     s32 tempStartTimer;
     ObjectModel *objModel;
-    Object_68 *gfxData;
+    ModelInstance *modInst;
     s32 sp3C;
     UNUSED s32 pad;
     Object *firstRacerObj;
@@ -151,18 +151,18 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     } else {
         racer->animationSpeed += updateRateF * 1.0;
     }
-    gfxData = *obj->unk68;
-    objModel = gfxData->objModel;
+    modInst = obj->modInst[0];
+    objModel = modInst->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
-        gfxData->animationID = -1;
+        modInst->animationID = -1;
     }
     while (diffX < racer->animationSpeed) {
         racer->animationSpeed -= diffX;
-        gfxData->animationID = -1;
+        modInst->animationID = -1;
     }
-    if (gfxData->animationID == -1 && obj->segment.object.animationID == ANIM_BLUEY_DAMAGE) {
+    if (modInst->animationID == -1 && obj->segment.object.animationID == ANIM_BLUEY_DAMAGE) {
         obj->segment.object.animationID = racer->unk1CD;
     }
     animFrame = obj->segment.animFrame;

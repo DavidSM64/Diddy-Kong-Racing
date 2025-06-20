@@ -52,7 +52,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     s16 tempHeadAngle;
     s32 objectID;
     f32 diffZ;
-    Object_68 *gfxData;
+    ModelInstance *modInst;
     s32 timer;
     UNUSED s32 pad;
     s32 headAngleRange;
@@ -111,20 +111,20 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
         racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
     }
-    gfxData = *obj->unk68;
-    model = gfxData->objModel;
+    modInst = obj->modInst[0];
+    model = modInst->objModel;
     diffX = (model->animations[obj->segment.object.animationID].animLength * 16) - 17;
     obj->segment.object.animationID = ANIM_BUBBLER_MOVE;
     racer->animationSpeed += 2.0 * updateRateF;
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
-        gfxData->animationID = -1;
+        modInst->animationID = -1;
     }
     while (diffX < racer->animationSpeed) {
         racer->animationSpeed -= diffX;
-        gfxData->animationID = -1;
+        modInst->animationID = -1;
     }
-    if (gfxData->animationID == -1 && obj->segment.object.animationID == ANIM_BUBBLER_DAMAGE) {
+    if (modInst->animationID == -1 && obj->segment.object.animationID == ANIM_BUBBLER_DAMAGE) {
         obj->segment.object.animationID = ANIM_BUBBLER_MOVE;
         racer->animationSpeed = 0.0f;
     }

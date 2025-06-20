@@ -649,7 +649,7 @@ void hud_free(void) {
             } else if (gAssetHudElementIds[i] & ASSET_MASK_OBJECT) {
                 free_object((Object *) gAssetHudElements->entry[i]);
             } else {
-                free_3d_model((ObjectModel **) gAssetHudElements->entry[i]);
+                free_3d_model((ModelInstance *) gAssetHudElements->entry[i]);
             }
             gAssetHudElements->entry[i] = NULL;
         }
@@ -1461,7 +1461,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     s32 temp_lo;
     Object_Racer *curRacer;
     Object *ttSWBodyObject;
-    Object_68 *obj68;
+    ModelInstance *modInst;
     LevelObjectEntryCommon ttSWBody;
     LevelObjectEntryCommon ttSWArms;
     UNUSED s32 pad;
@@ -1504,14 +1504,14 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     }
 
     ttSWBodyObject->segment.object.animationID = gStopwatchAnimID;
-    obj68 = ttSWBodyObject->unk68[0];
-    obj68->objModel->texOffsetUpdateRate = updateRate;
+    modInst = ttSWBodyObject->modInst[0];
+    modInst->objModel->texOffsetUpdateRate = updateRate;
     if (gStopwatchAnimID != 0xFF) {
         if (gStopwatchAnimID == 4 && (get_race_countdown() || !music_is_playing())) {
             ttSWBodyObject->segment.animFrame = 16;
         } else if (gStopwatchAnimID == 4) {
             animcationFraction = music_animation_fraction();
-            temp_t6 = (obj68->objModel->animations[gStopwatchAnimID].animLength - 1) << 4;
+            temp_t6 = (modInst->objModel->animations[gStopwatchAnimID].animLength - 1) << 4;
             if (animcationFraction == -1.0) {
                 ttSWBodyObject->segment.animFrame = 0.0;
             } else if (animcationFraction > 0.5) {
@@ -1532,7 +1532,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
                 }
             } else {
                 ttSWBodyObject->segment.animFrame += (updateRate * D_80126D69);
-                temp_lo = (obj68->objModel->animations[gStopwatchAnimID].animLength - 1) << 4;
+                temp_lo = (modInst->objModel->animations[gStopwatchAnimID].animLength - 1) << 4;
                 if (ttSWBodyObject->segment.animFrame >= temp_lo) {
                     if (D_80126D68 != 0) {
                         D_80126D69 = -D_80126D69;
@@ -1575,7 +1575,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_STOPWATCH]);
     }
 
-    obj68->animUpdateTimer = 0;
+    modInst->animUpdateTimer = 0;
     cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
     hud_course_arrows(curRacer, updateRate);
     if (curRacer->raceFinished == FALSE) {
@@ -1765,32 +1765,31 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
 }
 
 void hud_stopwatch_face(u8 arg0, u8 arg1, u8 animID, u8 arg3, u8 arg4) {
-    s32 var_a3;
+    s32 numberOfBatches;
     s32 i;
-    UNUSED u8 *temp_v0_2;
-    Object_68 **unk68;
+    ModelInstance *modInst;
     Object *hud20;
 
     if (is_in_time_trial()) {
         hud20 = gAssetHudElements->entry[HUD_ELEMENT_UNK_14];
         if (hud20 != NULL) {
-            unk68 = (Object_68 **) hud20->unk68[0];
-            var_a3 = unk68[0]->unk28;
+            modInst = hud20->modInst[0];
+            numberOfBatches = modInst->objModel->numberOfBatches;
 
-            for (i = 0; i < var_a3; i++) {
-                if (D_80126D66 == unk68[0]->unk38[i].unk0[0]) {
-                    unk68[0]->unk38[i].unk0[0] = arg0;
+            for (i = 0; i < numberOfBatches; i++) {
+                if (D_80126D66 == modInst->objModel->batches[i].textureIndex) {
+                    modInst->objModel->batches[i].textureIndex = arg0;
                     if (arg0 == 4) {
-                        unk68[0]->unk38[i].unk8 |= (0x800000 | 0x10000);
-                        unk68[0]->unk50 = 1;
+                        modInst->objModel->batches[i].flags |= (RENDER_UNK_0800000 | RENDER_TEX_ANIM);
+                        modInst->objModel->unk50 = 1;
                     } else {
-                        unk68[0]->unk38[i].unk8 &= ~(0x800000 | 0x10000);
-                        unk68[0]->unk50 = 0;
+                        modInst->objModel->batches[i].flags &= ~(RENDER_UNK_0800000 | RENDER_TEX_ANIM);
+                        modInst->objModel->unk50 = 0;
                     }
-                    var_a3 = unk68[0]->unk28;
-                } else if (D_80126D65 == unk68[0]->unk38[i].unk0[0]) {
-                    unk68[0]->unk38[i].unk0[0] = arg1;
-                    var_a3 = unk68[0]->unk28;
+                    numberOfBatches = modInst->objModel->numberOfBatches;
+                } else if (D_80126D65 == modInst->objModel->batches[i].textureIndex) {
+                    modInst->objModel->batches[i].textureIndex = arg1;
+                    numberOfBatches = modInst->objModel->numberOfBatches;
                 }
             }
             D_80126D66 = arg0;
@@ -3382,7 +3381,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
                 } else if (gAssetHudElementIds[i] & ASSET_MASK_OBJECT) {
                     free_object((Object *) gAssetHudElements->entry[i]);
                 } else {
-                    free_3d_model((ObjectModel **) gAssetHudElements->entry[i]);
+                    free_3d_model((ModelInstance *) gAssetHudElements->entry[i]);
                 }
                 gAssetHudElements->entry[i] = 0;
             }
@@ -3810,7 +3809,7 @@ void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspec
  * deciding to draw a texture rectangle, ortho tris, or a 3D model entirely.
  */
 void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hud) {
-    ObjectModel **objModels;
+    ModelInstance *model;
     TextureHeader *textureHeader2;
     TextureHeader *textureHeader;
     Camera *camera;
@@ -3972,8 +3971,8 @@ void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hu
     } else {
         mtx_cam_push(&gHudDL, &gHudMtx, (ObjectTransform *) hud, 1.0f, 0.0f);
         if (0) {}
-        objModels = gAssetHudElements->entry[hud->spriteID];
-        hud_draw_model(*objModels);
+        model = gAssetHudElements->entry[hud->spriteID];
+        hud_draw_model(model->objModel);
         mtx_pop(&gHudDL);
     }
     spriteID = hud->spriteID;

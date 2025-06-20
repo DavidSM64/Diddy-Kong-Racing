@@ -1121,7 +1121,7 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
                 obj->properties.characterFlag.characterID = 0;
             }
             flag->vertices = gCharacterFlagVertices;
-            flag->texture = (TextureHeader *) &obj->unk68[obj->properties.characterFlag.characterID]->texHeader;
+            flag->texture = obj->textures[obj->properties.characterFlag.characterID];
             temp_t4 = (flag->texture->width - 1) << 21;
             temp_t5 = (flag->texture->height - 1) << 5;
             // 0x40 = Draw backface
@@ -1501,9 +1501,9 @@ void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param)
     }
     fishObj->segment.trans.scale = fishEntry->unkC * 0.01f;
     if (fishEntry->unkB < fishObj->segment.header->numberOfModelIds) {
-        fish->texture = (TextureHeader *) fishObj->unk68[fishEntry->unkB];
+        fish->texture = fishObj->textures[fishEntry->unkB];
     } else {
-        fish->texture = (TextureHeader *) fishObj->unk68[0];
+        fish->texture = fishObj->textures[0];
     }
     if (fish->texture != NULL) {
         uMask = (fish->texture->width - 1) << 5;
@@ -1898,8 +1898,8 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
     ObjectTransform trans;
 
     func_8001F460(wizShipObj, updateRate, wizShipObj);
-    if ((*wizShipObj->unk68) != NULL) {
-        wizShipModel = (*wizShipObj->unk68)->objModel;
+    if (wizShipObj->modInst[0] != NULL) {
+        wizShipModel = wizShipObj->modInst[0]->objModel;
         if (wizShipObj->properties.fireball.timer > 0) {
             wizShipObj->properties.fireball.timer -= updateRate;
         } else {
@@ -2048,7 +2048,7 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
     s32 charCount;
     s32 var_s0;
     s8 *status = NULL;
-    Object_68 *gfxData;
+    ModelInstance *modInst;
     u8 sp50[4];
     u8 sp4F;
     u8 *var_a2;
@@ -2058,9 +2058,9 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
     charSelect = &charSelectObj->unk64->characterSelect;
     charSelectObj->particleEmittersEnabled = OBJ_EMIT_NONE;
     if (charSelect != NULL) {
-        gfxData = charSelectObj->unk68[charSelectObj->segment.object.modelIndex];
-        if (gfxData != NULL) {
-            objMdl = gfxData->objModel;
+        modInst = charSelectObj->modInst[charSelectObj->segment.object.modelIndex];
+        if (modInst != NULL) {
+            objMdl = modInst->objModel;
             if (is_drumstick_unlocked()) {
                 if (is_tt_unlocked()) {
                     var_a2 = D_800DCA70;
@@ -5808,9 +5808,9 @@ void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butter
     }
     butterflyObj->segment.trans.scale = butterflyEntry->unkB * 0.01f;
     if (butterflyEntry->unkA < butterflyObj->segment.header->numberOfModelIds) {
-        butterfly->texture = (TextureHeader *) butterflyObj->unk68[butterflyEntry->unkA];
+        butterfly->texture = butterflyObj->textures[butterflyEntry->unkA];
     } else {
-        butterfly->texture = (TextureHeader *) butterflyObj->unk68[0];
+        butterfly->texture = butterflyObj->textures[0];
     }
     if (butterfly->texture != NULL) {
         uMask = (butterfly->texture->width - 1) << 5;
@@ -6135,7 +6135,7 @@ void obj_loop_butterfly(Object *butterflyObj, s32 updateRate) {
 
 void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     Object_MidiFade *midiFade;
-    Object_68 *obj68;
+    ModelInstance *modInst;
     ObjectTransform transform;
     f32 ox;
     f32 oy;
@@ -6186,8 +6186,8 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
         midiFade->unk2F[i] = entry->unkA[i];
     }
 
-    obj68 = *obj->unk68;
-    objModel = obj68->objModel;
+    modInst = obj->modInst[0];
+    objModel = modInst->objModel;
     vertex = &objModel->vertices[1];
     maxX = vertex->x;
     maxY = vertex->y;
@@ -6245,7 +6245,7 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
 
 void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) {
     Object_MidiFadePoint *obj64;
-    ObjectModel **models;
+    ModelInstance *modInst;
     ObjectModel *objModel;
     Vertex *vertex;
     s32 i;
@@ -6269,8 +6269,8 @@ void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) 
         obj64->unkC[i] = entry->unkC[i];
     }
 
-    models = *((ObjectModel ***) obj->unk68);
-    objModel = models[0];
+    modInst = obj->modInst[0];
+    objModel = modInst->objModel;
     vertex = objModel->vertices + 1;
     x = vertex->x;
     y = vertex->y;

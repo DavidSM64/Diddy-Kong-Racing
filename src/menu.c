@@ -13702,7 +13702,7 @@ void menu_asset_free(s32 assetID) {
                     if ((*gAssetsMenuElementIds)[assetID] & ASSET_MASK_OBJECT) {
                         free_object((Object *) (u32) gMenuAssets[assetID]);
                     } else {
-                        free_3d_model((ObjectModel **) (u32) gMenuAssets[assetID]);
+                        free_3d_model((ModelInstance *) (u32) gMenuAssets[assetID]);
                     }
                 }
             }
@@ -13826,7 +13826,7 @@ void menu_element_render(s32 elementID) {
     Object *object;
     MenuAsset *asset;
     Sprite *sprite;
-    ObjectModel **model;
+    ModelInstance *model;
 
     if (gMenuAssets[gMenuImages[elementID].trans.spriteID] != NULL) {
         if (((*gAssetsMenuElementIds)[gMenuImages[elementID].trans.spriteID] & ASSET_MASK_TEXTURE) !=
@@ -13866,8 +13866,8 @@ void menu_element_render(s32 elementID) {
                     gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
                     mtx_cam_push(&sMenuCurrDisplayList, &sMenuCurrHudMat, &gMenuImages[elementID].trans,
                                  gTrackSelectWoodFrameHeightScale, 0);
-                    model = ((ObjectModel **) gMenuAssets[gMenuImages[elementID].trans.spriteID]);
-                    render_track_selection_viewport_border(*model);
+                    model = gMenuAssets[gMenuImages[elementID].trans.spriteID];
+                    render_track_selection_viewport_border(model->objModel);
                     mtx_pop(&sMenuCurrDisplayList);
                     if (sMenuGuiOpacity < 255) {
                         gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);

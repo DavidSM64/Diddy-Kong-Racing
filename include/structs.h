@@ -673,7 +673,31 @@ typedef struct ObjectModel {
     /* 0x50 */ s16 unk50;
     /* 0x52 */ s16 texOffsetUpdateRate; // Set to the current updaterate for the first model.
     /* 0x54 */ u8 pad[0x2C];
-} ObjectModel;      
+} ObjectModel;
+
+// Size: 0xC
+typedef struct Object_68_38 {
+ /* 0x00 */ u8 unk0[8];
+ /* 0x08 */ s32 unk8;
+} Object_68_38;
+
+/* Size: 0x24 bytes */
+typedef struct ModelInstance {
+    /* 0x00 */ ObjectModel *objModel;
+    /* 0x04 */ Vertex *vertices[3];
+    /* 0x10 */ s16 animationID;
+    /* 0x12 */ s16 animationFrame;
+    /* 0x14 */ s16 animationFrameCount;
+    /* 0x16 */ s16 offsetX;
+    /* 0x18 */ s16 offsetY;
+    /* 0x1A */ s16 offsetZ;
+    /* 0x1C */ s16 headTilt;
+    /* 0x1E */ s8 modelType;
+    /* 0x1F */ s8 animationTaskNum;
+    /* 0x20 */ s8 animUpdateTimer;
+    /* 0x21 */ s8 unk21;
+    /* 0x22 */ s16 unk22;
+} ModelInstance;
 
 typedef struct CollisionNode {
     u16 triangleIndex; // This triangle index
@@ -1729,42 +1753,6 @@ typedef struct Object_64 {
         Object_OverridePos override_pos;
     };
 } Object_64;
-
-// Size: 0xC
-typedef struct Object_68_38 {
- /* 0x00 */ u8 unk0[8];
- /* 0x08 */ s32 unk8;
-} Object_68_38;
-
-typedef struct Object_68 {
-  /* 0x00 */ union {
-      ObjectModel *objModel;
-      Sprite *sprite;
-      TextureHeader *texHeader;
-  };
-  /* 0x04 */ Vertex *vertices[3];
-  /* 0x10 */ s16 animationID;
-  /* 0x12 */ s16 animationFrame;
-  /* 0x14 */ s16 animationFrameCount;
-  /* 0x16 */ s16 offsetX;
-  /* 0x18 */ s16 offsetY;
-  /* 0x1A */ s16 offsetZ;
-  /* 0x1C */ s16 headTilt;
-  /* 0x1E */ s8 modelType;
-  /* 0x1F */ s8 animationTaskNum;
-  /* 0x20 */ s8 animUpdateTimer;
-  /* 0x21 */ s8 unk21;
-  /* 0x22 */ s16 unk22;
-  /* 0x24 */ s32 unk24;
-  /* 0x28 */ s16 unk28;
-  /* 0x2A */ s16 unk2A;
-  /* 0x2C */ s32 unk2C;
-  /* 0x30 */ s32 unk30;
-  /* 0x34 */ u8 pad34[0x4];
-  /* 0x38 */ Object_68_38 *unk38; //Array Size unknown
-  /* 0x40 */ u8 pad40[0x14];
-  /* 0x50 */ s16 unk50;
- } Object_68;
  
 typedef struct unk800B2260_C {
     s32 unk0;
@@ -1861,7 +1849,11 @@ typedef struct Object {
   /* 0x005C */ Object_5C *unk5C;
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
-  /* 0x0068 */ Object_68 **unk68; //player + 0x80
+  /* 0x0068 */ union {
+                  ModelInstance **modInst;
+                  TextureHeader **textures;
+                  Sprite **sprites;
+                };
   /* 0x006C */ struct ParticleEmitter *particleEmitter; //player + 0x370
   /* 0x0070 */ struct ObjectLight **lightData;
   /* 0x0074 */ u32 particleEmittersEnabled;
