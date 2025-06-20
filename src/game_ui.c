@@ -3848,7 +3848,8 @@ void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hu
             objEntry.common.x = 0;
             objEntry.common.y = 0;
             objEntry.common.z = 0;
-            gAssetHudElements->entry[hud->spriteID] = spawn_object((LevelObjectEntryCommon *) &objEntry, OBJECT_SPAWN_NONE);
+            gAssetHudElements->entry[hud->spriteID] =
+                spawn_object((LevelObjectEntryCommon *) &objEntry, OBJECT_SPAWN_NONE);
         } else {
             gAssetHudElements->entry[hud->spriteID] = object_model_init(spriteElementId, 0);
         }

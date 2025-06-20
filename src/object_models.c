@@ -226,7 +226,7 @@ ModelInstance *model_init_type(ObjectModel *model, s32 flags) {
             (Vertex *) ((u8 *) result + (model->numberOfVertices * sizeof(Vertex)) + sizeof(ModelInstance));
         result->vertices[2] = (Vertex *) ((u8 *) result + temp);
         result->modelType = MODELTYPE_ANIMATED;
-    } else if (model->unk40 != NULL && (flags & OBJECT_BEHAVIOUR_UNK01)) {
+    } else if (model->unk40 != NULL && (flags & OBJECT_BEHAVIOUR_SHADED)) {
         temp = (model->numberOfVertices * sizeof(Vertex)) + sizeof(ModelInstance);
         result = (ModelInstance *) mempool_alloc(temp, COLOUR_TAG_BLUE);
         if (result == NULL) {

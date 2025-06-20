@@ -183,9 +183,9 @@ enum ObjectSpawnFlags {
 
 enum ObjectBehaviourFlags {
     OBJECT_BEHAVIOUR_NONE,
-    OBJECT_BEHAVIOUR_UNK01          = (1 << 0),
+    OBJECT_BEHAVIOUR_SHADED         = (1 << 0),
     OBJECT_BEHAVIOUR_SHADOW         = (1 << 1),
-    OBJECT_BEHAVIOUR_UNK04          = (1 << 2),
+    OBJECT_BEHAVIOUR_WATER_EFFECT   = (1 << 2),
     OBJECT_BEHAVIOUR_ANIMATION      = (1 << 3),
     OBJECT_BEHAVIOUR_INTERACTIVE    = (1 << 4),
     OBJECT_BEHAVIOUR_UNK20          = (1 << 5)

@@ -1850,13 +1850,6 @@ typedef struct Object {
   /* 0x0070 */ struct ObjectLight **lightData;
   /* 0x0074 */ u32 particleEmittersEnabled;
   /* 0x0078 */ ObjProperties properties;
-  /* 0x0080 */ void *unk80;
-  /* 0x0084 */ u32 unk84;
-  /* 0x0088 */ u32 unk88;
-  /* 0x008C */ u32 unk8C;
-  /* 0x0090 */ u32 unk90;
-  /* 0x0094 */ u32 unk94;
-  /* 0x0098 */ s32 unk98;
 } Object;
 
 // Unused
