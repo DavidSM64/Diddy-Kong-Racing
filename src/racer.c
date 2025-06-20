@@ -1341,225 +1341,212 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
 }
 
-// https://decomp.me/scratch/O7Ton
-#ifdef NON_EQUIVALENT
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate) {
-    s32 overrideMagnitude;
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 xDerivative;
-    f32 yDerivative;
-    f32 zDerivative;
-    CheckpointNode *checkpoint;
-    f32 splineX[5];
-    f32 splineY[5];
-    f32 splineZ[5];
-    f32 temp_f0;
-    f32 temp_f0_3;
-    f32 temp_f20_2;
-    f32 magnitude;
-    s16 temp_a1;
-    s16 temp_s0;
-    s16 temp_t5;
-    s16 temp_v0_3;
-    s16 temp_v0_5;
-    s32 temp_a0;
-    s32 temp_s0_2;
-    s32 splineEnd;
-    s32 var_a0;
-    s32 var_a0_2;
-    s32 splinePos;
+    s32 v0;
+    UNUSED s32 pad_spE0;
+    s32 s0;
     s32 i;
-    s32 var_v0;
-    s32 var_v1_2;
-    s32 var_v1_4;
+    UNUSED s32 pad_spD4;
+    UNUSED s32 pad_spD0;
+    s32 a0;
+    s32 v1;
+    s32 spC4;
+    CheckpointNode *checkpoint;
+    f32 splineX[4];
+    f32 splineY[4];
+    f32 splineZ[4];
+
+    f32 sp8C;
+    f32 sp88;
+    f32 sp84;
+
+    f32 sp74[4];
+    f32 sp64[4];
+
+    s32 a1;
+    f32 xDerivative;
+    f32 yDirevative;
+    f32 zDerivative;
+    f32 magnitude;
+    s32 v00;
+
+    spC4 = FALSE;
 
     gCurrentRacerInput = 0;
     gCurrentButtonsPressed = 0;
     gCurrentButtonsReleased = 0;
     gCurrentStickX = 0;
     gCurrentStickY = 0;
-    splineEnd = get_checkpoint_count();
-    if (splineEnd == 0) {
+
+    v0 = get_checkpoint_count();
+    if (v0 == 0) {
         gCurrentStickX = 25;
         return;
     }
-    overrideMagnitude = FALSE;
+
+    s0 = racer->checkpoint - 2;
     magnitude = 1.0 - racer->checkpoint_distance;
-    splinePos = racer->checkpoint - 2;
     if (magnitude < 0.0) {
         magnitude = 0.0f;
     }
     if (magnitude > 1.0) {
-        magnitude = 1.0f;
+        magnitude = 1;
     }
-    if (splinePos < 0) {
-        splinePos += splineEnd;
+    if (s0 < 0) {
+        s0 += v0;
     }
-    if (splinePos >= splineEnd) {
-        splinePos -= splineEnd;
+    if (s0 >= v0) {
+        s0 -= v0;
     }
-    for (i = 0; i < 5; i++) {
-        checkpoint = find_next_checkpoint_node(splinePos, racer->unk1C8);
+
+    for (i = 0; i < 4; i++) {
+        checkpoint = find_next_checkpoint_node(s0, racer->unk1C8);
         splineX[i] = checkpoint->x;
         splineY[i] = checkpoint->y;
         splineZ[i] = checkpoint->z;
-        splinePos++;
         if (racer->unk1C9 == 0) {
-            checkpoint[i + 1].unk24 = (f32) checkpoint->unk2E[racer->unk1CA];
-            checkpoint[i + 2].unk24 = (f32) checkpoint->unk32[racer->unk1CA];
-            //(sp + i)->unk74 = (f32) checkpoint->unk2E[racer->unk1CA];
-            //(sp + i)->unk64 = (f32) checkpoint->unk32[racer->unk1CA];
-            splineX[i] += checkpoint->scale * checkpoint->rotationZFrac * (f32) checkpoint->unk2E[racer->unk1CA];
-            splineY[i] += checkpoint->scale * (f32) checkpoint->unk32[racer->unk1CA];
-            splineZ[i] += checkpoint->scale * -checkpoint->rotationXFrac * (f32) checkpoint->unk2E[racer->unk1CA];
+            sp74[i] = checkpoint->unk2E[racer->unk1CA];
+            sp64[i] = checkpoint->unk32[racer->unk1CA];
+            splineX[i] += checkpoint->scale * checkpoint->rotationZFrac * checkpoint->unk2E[racer->unk1CA];
+            splineY[i] += checkpoint->scale * checkpoint->unk32[racer->unk1CA];
+            splineZ[i] += checkpoint->scale * -checkpoint->rotationXFrac * checkpoint->unk2E[racer->unk1CA];
         }
-        if (splinePos == splineEnd) {
-            splinePos = 0;
+
+        s0++;
+        if (s0 == v0) {
+            s0 = 0;
         }
     }
+
     if (racer->unk1C9 == 0) {
-        racer->unk1BA = magnitude; //(s16) (s32) (((sp7C - sp78) * var_f20) + sp78);
-        racer->unk1BC = magnitude; //(s16) (s32) (((sp6C - sp68) * var_f20) + sp68);
+        racer->unk1BA = sp74[1] + (sp74[2] - sp74[1]) * magnitude;
+        racer->unk1BC = sp64[1] + (sp64[2] - sp64[1]) * magnitude;
     }
+
     xDerivative = catmull_rom_derivative(splineX, 0, magnitude);
-    yDerivative = catmull_rom_derivative(splineY, 0, magnitude);
+    yDirevative = catmull_rom_derivative(splineY, 0, magnitude);
     zDerivative = catmull_rom_derivative(splineZ, 0, magnitude);
-    temp_f0 = sqrtf((xDerivative * xDerivative) + (yDerivative * yDerivative) + (zDerivative * zDerivative));
-    if (temp_f0 != 0.0f) {
-        temp_f0 = 100.0f / temp_f0;
-        xDerivative *= temp_f0;
-        yDerivative *= temp_f0;
-        zDerivative *= temp_f0;
+    magnitude = sqrtf(xDerivative * xDerivative + yDirevative * yDirevative + zDerivative * zDerivative);
+    if (magnitude != 0.0f) {
+        magnitude = 100.0f / magnitude;
+        xDerivative *= magnitude;
+        yDirevative *= magnitude;
+        zDerivative *= magnitude;
     }
-    temp_s0 = arctan2_f(xDerivative, zDerivative) - 0x8000;
-    temp_v0_3 = arctan2_f(yDerivative, 100.0f);
+
+    s0 = (u16) (arctan2_f(xDerivative, zDerivative) - 0x8000);
+    a1 = (u16) arctan2_f(yDirevative, 100.0f);
+
     racer->unk1C2 = racer->unk1BE;
-    temp_a1 = temp_v0_3 & 0xFFFF;
-    temp_t5 = racer->unk1C0;
-    racer->unk1BE = temp_s0;
-    racer->unk1C0 = temp_a1;
-    racer->unk1C4 = temp_t5;
-    var_a0 = temp_s0 - (racer->unk1C2 & 0xFFFF);
-    if (var_a0 > 0x8000) {
-        var_a0 -= 0xFFFF;
+    racer->unk1C4 = racer->unk1C0;
+
+    racer->unk1BE = s0;
+    racer->unk1C0 = a1;
+
+    a0 = s0 - (racer->unk1C2 & 0xFFFF);
+    WRAP(a0, -0x8000, 0x8000);
+    v1 = a1 - (racer->unk1C4 & 0xFFFF);
+    WRAP(v1, -0x8000, 0x8000);
+
+    gCurrentStickX = -(a0 >> 3);
+    gCurrentStickY = -(v1 >> 3);
+
+    a0 = s0 - (racer->steerVisualRotation & 0xFFFF);
+    WRAP(a0, -0x8000, 0x8000);
+    if (a0 > 0x3000 || a0 < -0x3000) {
+        spC4 = TRUE;
     }
-    if (var_a0 < -0x8000) {
-        var_a0 += 0xFFFF;
-    }
-    var_v1_2 = temp_a1 - (racer->unk1C4 & 0xFFFF);
-    if (var_v1_2 > 0x8000) {
-        var_v1_2 -= 0xFFFF;
-    }
-    if (var_v1_2 < -0x8000) {
-        var_v1_2 += 0xFFFF;
-    }
-    gCurrentStickX = -(var_a0 >> 3);
-    gCurrentStickY = -(var_v1_2 >> 3);
-    var_a0_2 = temp_s0 - (racer->steerVisualRotation & 0xFFFF);
-    if (var_a0_2 > 0x8000) {
-        var_a0_2 -= 0xFFFF;
-    }
-    if (var_a0_2 < -0x8000) {
-        var_a0_2 += 0xFFFF;
-    }
-    if (var_a0_2 > 0x3000 || var_a0_2 < -0x3000) {
-        overrideMagnitude = TRUE;
-    }
+
+    s0 = racer->checkpoint - 2;
     magnitude = 1.0 - racer->checkpoint_distance;
-    splinePos = racer->checkpoint - 2;
     if (magnitude < 0.0) {
-        magnitude = 0.0f;
+        magnitude = 0.0;
     }
     if (magnitude > 1.0) {
-        magnitude = 1.0f;
+        magnitude = 1.0;
     }
-    if (overrideMagnitude) {
-        magnitude = 1.0f;
+    if (spC4) {
+        magnitude = 1.0;
     }
+
     if (racer->unk1C9 != 0) {
-        if (splinePos < 0) {
-            splinePos += splineEnd;
+        if (s0 < 0) {
+            s0 += v0;
         }
-        if (splinePos >= splineEnd) {
-            splinePos -= splineEnd;
+        if (s0 >= v0) {
+            s0 -= v0;
         }
-        for (i = 0; i < 5; i++) {
-            checkpoint = find_next_checkpoint_node(splinePos, racer->unk1C8);
-            splineX[i] = (checkpoint->x + (checkpoint->scale * checkpoint->rotationZFrac * racer->unk1BA));
-            splineY[i] = (checkpoint->y + (checkpoint->scale * racer->unk1BC));
-            splineZ[i] = (checkpoint->z + (checkpoint->scale * -checkpoint->rotationXFrac * racer->unk1BA));
-            splinePos++;
-            if (splinePos == splineEnd) {
-                splinePos = 0;
+        for (i = 0; i < 4; i++) {
+            checkpoint = find_next_checkpoint_node(s0, racer->unk1C8);
+            splineX[i] = checkpoint->x + checkpoint->scale * checkpoint->rotationZFrac * racer->unk1BA;
+            splineY[i] = checkpoint->y + checkpoint->scale * racer->unk1BC;
+            splineZ[i] = checkpoint->z + checkpoint->scale * -checkpoint->rotationXFrac * racer->unk1BA;
+
+            s0++;
+            if (s0 == v0) {
+                s0 = 0;
             }
         }
     }
-    x = cubic_spline_interpolation(splineX, 0, magnitude, &xDerivative);
-    y = cubic_spline_interpolation(splineY, 0, magnitude, &yDerivative);
-    z = cubic_spline_interpolation(splineZ, 0, magnitude, &zDerivative);
-    temp_f0_3 = sqrtf((xDerivative * xDerivative) + (yDerivative * yDerivative) + (zDerivative * zDerivative));
-    if (temp_f0_3 != 0.0f) {
-        temp_f20_2 = 500.0f / temp_f0_3;
-        xDerivative *= temp_f20_2;
-        yDerivative *= temp_f20_2;
-        zDerivative *= temp_f20_2;
+
+    sp8C = cubic_spline_interpolation(splineX, 0, magnitude, &xDerivative);
+    sp88 = cubic_spline_interpolation(splineY, 0, magnitude, &yDirevative);
+    sp84 = cubic_spline_interpolation(splineZ, 0, magnitude, &zDerivative);
+    magnitude = sqrtf(xDerivative * xDerivative + yDirevative * yDirevative + zDerivative * zDerivative);
+    if (magnitude != 0.0f) {
+        magnitude = 500.0f / magnitude;
+        xDerivative *= magnitude;
+        yDirevative *= magnitude;
+        zDerivative *= magnitude;
     }
-    xDerivative = (x + xDerivative) - obj->segment.trans.x_position;
-    yDerivative = (y + yDerivative) - obj->segment.trans.y_position;
-    zDerivative = (z + zDerivative) - obj->segment.trans.z_position;
-    temp_s0_2 = (arctan2_f(xDerivative, zDerivative) - 0x8000) & 0xFFFF;
-    temp_v0_5 = arctan2_f(yDerivative, 500.0f);
-    temp_a0 = temp_s0_2 - (racer->steerVisualRotation & 0xFFFF);
-    if (temp_a0 > 0x8000) {
-        temp_a0 -= 0xFFFF;
-    }
-    if (temp_a0 < -0x8000) {
-        temp_a0 += 0xFFFF;
-    }
-    temp_a0 = -temp_a0;
-    var_v1_4 = (temp_v0_5 & 0xFFFF) - (obj->segment.trans.rotation.x_rotation & 0xFFFF);
-    if (var_v1_4 > 0x8000) {
-        var_v1_4 -= 0xFFFF;
-    }
-    var_v0 = 5;
-    if (var_v1_4 < -0x8000) {
-        var_v1_4 += 0xFFFF;
-    }
-    var_v1_4 = -var_v1_4;
+
+    xDerivative = sp8C + xDerivative - obj->segment.trans.x_position;
+    yDirevative = sp88 + yDirevative - obj->segment.trans.y_position;
+    zDerivative = sp84 + zDerivative - obj->segment.trans.z_position;
+
+    s0 = (u16) (arctan2_f(xDerivative, zDerivative) - 0x8000);
+    a1 = (u16) arctan2_f(yDirevative, 500.0f);
+
+    a0 = s0 - (u16) racer->steerVisualRotation;
+    WRAP(a0, -0x8000, 0x8000);
+    a0 = -a0;
+    v1 = a1 - (obj->segment.trans.rotation.x_rotation & 0xFFFF);
+    WRAP(v1, -0x8000, 0x8000);
+    v1 = -v1;
+
+    v00 = 5;
     if (racer->vehicleID == VEHICLE_PLANE) {
-        var_v0 = 6;
+        v00 = 6;
     }
-    if (racer->vehicleID == VEHICLE_HOVERCRAFT && racer->unk1D4 == 0) {
-        racer->steerVisualRotation = racer->steerVisualRotation - (temp_a0 >> 1);
+
+    if (racer->vehicleID == 1 && racer->unk1D4 == 0) {
+        racer->steerVisualRotation -= a0 >> 1;
     }
+
     switch (racer->vehicleID) {
         case VEHICLE_LOOPDELOOP:
             gCurrentStickY = 0;
             break;
         case VEHICLE_HOVERCRAFT:
             gCurrentStickY = 0;
-            gCurrentStickX += temp_a0 >> var_v0;
+            gCurrentStickX += a0 >> v00;
             break;
         case VEHICLE_TRICKY:
-            gCurrentStickX += temp_a0 >> (var_v0 + 0x1F);
+            gCurrentStickX += a0 >> (v00 + 31);
             gCurrentStickY = 0;
             break;
         case VEHICLE_SMOKEY:
-            gCurrentStickX += temp_a0 >> (var_v0 - 1);
-            gCurrentStickY += var_v1_4 >> (var_v0 - 1);
+            v00--;
+            gCurrentStickX += a0 >> v00;
+            gCurrentStickY += v1 >> v00;
             break;
         default:
-            gCurrentStickX += temp_a0 >> var_v0;
-            gCurrentStickY += var_v1_4 >> var_v0;
+            gCurrentStickX += a0 >> v00;
+            gCurrentStickY += v1 >> v00;
             break;
     }
     func_80042D20(obj, racer, updateRate);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80045C48.s")
-#endif
 
 void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     s32 objectMoved;
