@@ -83,13 +83,13 @@ void allocate_object_model_pools(void) {
  * Also loads textures and animations.
  * v79 and newer have a bugfix that revert the cache count if allocation fails.
  */
-Object_68 *object_model_init(s32 modelID, s32 flags) {
+ModelInstance *object_model_init(s32 modelID, s32 flags) {
     s32 i;
     s32 cacheIndex;
     ObjectModel *objMdl;
     s32 sp48;
     s32 temp_s0;
-    Object_68 *ret;
+    ModelInstance *instance;
     s8 sp3F;
 #if VERSION >= VERSION_79
     s8 var_a2;
@@ -107,11 +107,11 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     for (i = 0; i < gModelCacheCount; i++) {
         if (modelID == gModelCache[ASSETCACHE_ID(i)]) {
             objMdl = (ObjectModel *) gModelCache[ASSETCACHE_PTR(i)];
-            ret = model_init_type(objMdl, flags);
-            if (ret != NULL) {
+            instance = model_init_type(objMdl, flags);
+            if (instance != NULL) {
                 objMdl->references++;
             }
-            return ret;
+            return instance;
         }
     }
 
@@ -182,13 +182,13 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
             }
         }
         if (func_80060EA8(objMdl) == 0 && func_80061A00(objMdl, modelID) == 0) {
-            ret = model_init_type(objMdl, flags);
-            if (ret != NULL) {
+            instance = model_init_type(objMdl, flags);
+            if (instance != NULL) {
                 gModelCache[ASSETCACHE_ID(cacheIndex)] = modelID;
                 gModelCache[ASSETCACHE_PTR(cacheIndex)] = (s32) objMdl;
                 if (gModelCacheCount < MODEL_LOADED_MAX) {
-                    ret->animUpdateTimer = 0;
-                    return ret;
+                    instance->animUpdateTimer = 0;
+                    return instance;
                 } else {
                     stubbed_printf(D_800E6B64);
                 }
@@ -208,36 +208,37 @@ block_30:
     return NULL;
 }
 
-Object_68 *model_init_type(ObjectModel *model, s32 flags) {
+ModelInstance *model_init_type(ObjectModel *model, s32 flags) {
     s32 temp;
-    Object_68 *result;
+    ModelInstance *result;
     Vertex *var_v1;
     Vertex *vertex;
     Vertex *mdlVertex;
 
-    if (model->numberOfAnimations != 0 && (flags & OBJECT_SPAWN_ANIMATION)) {
-        temp = ((model->numberOfVertices * 2) * sizeof(Vertex)) + 36;
-        result = (Object_68 *) mempool_alloc((model->unk4A * 6) + temp, COLOUR_TAG_BLUE);
+    if (model->numberOfAnimations != 0 && (flags & OBJECT_BEHAVIOUR_ANIMATION)) {
+        temp = ((model->numberOfVertices * 2) * sizeof(Vertex)) + sizeof(ModelInstance);
+        result = (ModelInstance *) mempool_alloc((model->unk4A * 6) + temp, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
-        result->vertices[0] = (Vertex *) ((u8 *) result + 36);
-        result->vertices[1] = (Vertex *) ((u8 *) result + (model->numberOfVertices * sizeof(Vertex)) + 36);
+        result->vertices[0] = (Vertex *) ((u8 *) result + sizeof(ModelInstance));
+        result->vertices[1] =
+            (Vertex *) ((u8 *) result + (model->numberOfVertices * sizeof(Vertex)) + sizeof(ModelInstance));
         result->vertices[2] = (Vertex *) ((u8 *) result + temp);
         result->modelType = MODELTYPE_ANIMATED;
-    } else if (model->unk40 != NULL && (flags & OBJECT_SPAWN_UNK01)) {
-        temp = (model->numberOfVertices * sizeof(Vertex)) + 36;
-        result = (Object_68 *) mempool_alloc(temp, COLOUR_TAG_BLUE);
+    } else if (model->unk40 != NULL && (flags & OBJECT_BEHAVIOUR_SHADED)) {
+        temp = (model->numberOfVertices * sizeof(Vertex)) + sizeof(ModelInstance);
+        result = (ModelInstance *) mempool_alloc(temp, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
-        var_v1 = (Vertex *) ((u8 *) result + 36);
+        var_v1 = (Vertex *) ((u8 *) result + sizeof(ModelInstance));
         result->vertices[0] = var_v1;
         result->vertices[1] = var_v1;
         result->vertices[2] = NULL;
         result->modelType = MODELTYPE_SHADE;
     } else {
-        result = (Object_68 *) mempool_alloc(36, COLOUR_TAG_BLUE);
+        result = (ModelInstance *) mempool_alloc(sizeof(ModelInstance), COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
@@ -293,21 +294,21 @@ Object_68 *model_init_type(ObjectModel *model, s32 flags) {
 /**
  * Attempts to free the object model from RAM.
  */
-void free_3d_model(ObjectModel **modelPtr) {
+void free_3d_model(ModelInstance *modInst) {
     UNUSED s32 pad;
     s32 modelIndex;
     ObjectModel *model;
     s32 i;
 
-    if (modelPtr == 0) {
+    if (modInst == NULL) {
         stubbed_printf(D_800E6BC0);
         return;
     }
 
-    model = *modelPtr;
+    model = modInst->objModel;
     model->references--;
     if (model->references > 0) { // Model is still used, so free the reference and return.
-        mempool_free(modelPtr);
+        mempool_free(modInst);
         return;
     }
 
@@ -324,7 +325,7 @@ void free_3d_model(ObjectModel **modelPtr) {
         D_8011D634++;
         gModelCache[ASSETCACHE_ID(modelIndex)] = -1;
         gModelCache[ASSETCACHE_PTR(modelIndex)] = -1;
-        mempool_free(modelPtr);
+        mempool_free(modInst);
     }
 }
 
@@ -931,7 +932,7 @@ s32 func_80061A00(ObjectModel *model, s32 animTableIndex) {
 
 void func_80061C0C(Object *obj) {
     ObjectModel *mdl;
-    Object_68 *gfxData;
+    ModelInstance *modInst;
     s32 var_v1;
 
     if (obj->segment.object.modelIndex < 0) {
@@ -941,9 +942,9 @@ void func_80061C0C(Object *obj) {
     if (var_v1 < obj->segment.object.modelIndex) {
         obj->segment.object.modelIndex = var_v1;
     }
-    gfxData = obj->unk68[obj->segment.object.modelIndex];
-    mdl = gfxData->objModel;
-    if (gfxData->objModel->animations != NULL) {
+    modInst = obj->modelInstances[obj->segment.object.modelIndex];
+    mdl = modInst->objModel;
+    if (modInst->objModel->animations != NULL) {
         if (obj->segment.object.animationID < 0) {
             obj->segment.object.animationID = 0;
         }
@@ -960,7 +961,7 @@ void func_80061C0C(Object *obj) {
         }
         if (var_v1 < obj->segment.animFrame >> 4) {
             obj->segment.animFrame = 0;
-            gfxData->animationID = -1;
+            modInst->animationID = -1;
         }
     }
 }

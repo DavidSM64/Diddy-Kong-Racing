@@ -60,7 +60,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     f32 diffX;
     f32 diffZ;
     ObjectModel *objModel;
-    Object_68 *gfxData;
+    ModelInstance *modInst;
     s32 headAngleRange;
     f32 animVelocity;
     UNUSED s32 pad;
@@ -126,8 +126,8 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             obj->segment.z_velocity = 0.0f;
         }
     }
-    gfxData = *obj->unk68;
-    objModel = gfxData->objModel;
+    modInst = obj->modelInstances[0];
+    objModel = modInst->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
     animVelocity = (racer->velocity * updateRateF) * 0.45;
     if (animVelocity <= 0.0) {
@@ -172,17 +172,17 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     while (diffX <= racer->animationSpeed) {
         racer->animationSpeed -= diffX;
-        gfxData->animationID = -1;
+        modInst->animationID = -1;
     }
     while (racer->animationSpeed <= 0.0f) {
         racer->animationSpeed += diffX;
-        gfxData->animationID = -1;
+        modInst->animationID = -1;
     }
     if (obj->segment.object.animationID == ANIM_SMOKEY_WALK && racer->groundedWheels == 0 && racer->velocity < -6.5) {
         obj->segment.object.animationID = ANIM_SMOKEY_LAND;
         racer->animationSpeed = 0.0f;
     }
-    if (gfxData->animationID == -1 || obj->segment.object.animationID == ANIM_SMOKEY_IDLE) {
+    if (modInst->animationID == -1 || obj->segment.object.animationID == ANIM_SMOKEY_IDLE) {
         if (obj->segment.object.animationID == ANIM_SMOKEY_DAMAGE) {
             obj->segment.object.animationID = racer->unk1CD;
             racer->animationSpeed = 0.0f;

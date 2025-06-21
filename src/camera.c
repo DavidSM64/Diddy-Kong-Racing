@@ -1472,7 +1472,7 @@ s32 mtx_cam_push(Gfx **dList, Mtx **mtx, ObjectTransform *trans, f32 scaleY, f32
 /**
  * Calculate the rotation matrix for an actors head, then run it.
  */
-void mtx_head_push(Gfx **dList, Mtx **mtx, Object_68 *objGfx, s16 headAngle) {
+void mtx_head_push(Gfx **dList, Mtx **mtx, ModelInstance *modInst, s16 headAngle) {
     f32 coss_headAngle;
     f32 sins_headAngle;
     f32 offsetX;
@@ -1483,11 +1483,11 @@ void mtx_head_push(Gfx **dList, Mtx **mtx, Object_68 *objGfx, s16 headAngle) {
     MtxF rotationMtxF;
     MtxF headMtxF;
 
-    offsetX = (f32) objGfx->offsetX;
-    offsetY = (f32) objGfx->offsetY;
-    offsetZ = (f32) objGfx->offsetZ;
-    coss_unk1C = coss_f(objGfx->headTilt);
-    sins_unk1C = sins_f(objGfx->headTilt);
+    offsetX = (f32) modInst->offsetX;
+    offsetY = (f32) modInst->offsetY;
+    offsetZ = (f32) modInst->offsetZ;
+    coss_unk1C = coss_f(modInst->headTilt);
+    sins_unk1C = sins_f(modInst->headTilt);
     coss_headAngle = coss_f(headAngle);
     sins_headAngle = sins_f(headAngle);
     headMtxF[0][0] = (coss_headAngle * coss_unk1C);

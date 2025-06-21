@@ -52,7 +52,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s32 tempStartTimer;
     Object *firstRacerObj;
     ObjectModel *objModel;
-    Object_68 *gfxData;
+    ModelInstance *modInst;
 
     set_boss_voice_clip_offset((u16 *) gWizpigVoiceTable);
     racer->tappedR = 0;
@@ -123,8 +123,8 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         nextCheckpoint = TRUE;
     }
     racer->x_rotation_offset = -obj->segment.trans.rotation.x_rotation;
-    gfxData = *obj->unk68;
-    objModel = gfxData->objModel;
+    modInst = obj->modelInstances[0];
+    objModel = modInst->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
     animVelocity = (racer->velocity * updateRateF) * 0.45;
     if (animVelocity <= 0.0) {
@@ -170,17 +170,17 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
 
     while (diffX <= racer->animationSpeed) {
         racer->animationSpeed -= diffX;
-        gfxData->animationID = -1;
+        modInst->animationID = -1;
     }
     while (racer->animationSpeed <= 0.0f) {
         racer->animationSpeed += diffX;
-        gfxData->animationID = -1;
+        modInst->animationID = -1;
     }
     if (obj->segment.object.animationID == ANIM_WIZPIG_RUN && nextCheckpoint) {
         obj->segment.object.animationID = ANIM_WIZPIG_JUMP;
         racer->animationSpeed = 0.0f;
     }
-    if (gfxData->animationID == -1 || obj->segment.object.animationID == ANIM_WIZPIG_IDLE) {
+    if (modInst->animationID == -1 || obj->segment.object.animationID == ANIM_WIZPIG_IDLE) {
         if (obj->segment.object.animationID == ANIM_WIZPIG_DAMAGE) {
             obj->segment.object.animationID = racer->unk1CD;
             racer->animationSpeed = 0.0f;
