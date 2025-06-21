@@ -1511,10 +1511,11 @@ typedef struct Object_Audio {
 } Object_Audio;
 
 typedef struct Object_MidiFade {
-  /* 0x00 */ u8 unk0;
+  /* 0x00 */ s8 unk0;
   /* 0x01 */ u8 unk1;
   /* 0x02 */ u8 unk2;
-  /* 0x04 */ f32 unk4;
+  /* 0x04 */ u16 unk4;
+  /* 0x06 */ s16 unk6;
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 unkC;
   /* 0x10 */ f32 unk10;
@@ -1539,7 +1540,7 @@ typedef struct Object_MidiFadePoint {
 } Object_MidiFadePoint;
 
 typedef struct Object_MidiChannelSet {
-    s16 unk0;
+    u16 unk0;
     u8 unk2;
     u8 unk3;
 } Object_MidiChannelSet;
