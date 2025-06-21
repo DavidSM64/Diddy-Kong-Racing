@@ -7,7 +7,7 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of June 20, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 93.28%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 93.54%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 59.95%
 <!-- README_SCORE_SUMMARY_END -->
@@ -121,16 +121,16 @@ As of June 20, 2025, this is our current score:
 ```
  ======================================================================
                  ADVENTURE ONE (ASM -> C Decompilation)
- --------------- 93.28% Complete (94.16% NON_MATCHING) ----------------
-                      # Decompiled functions: 1927
-                       # GLOBAL_ASM remaining: 23
+ --------------- 93.54% Complete (94.42% NON_MATCHING) ----------------
+                      # Decompiled functions: 1928
+                       # GLOBAL_ASM remaining: 22
                       # NON_MATCHING functions: 5
-                   # NON_EQUIVALENT WIP functions: 18
+                   # NON_EQUIVALENT WIP functions: 17
  ---------------------------- Game Status -----------------------------
                Balloons: 44/47, Keys: 4/4, Trophies: 4/5
                  T.T. Amulets: 4/4, Wizpig Amulets: 4/4
  ----------------------------------------------------------------------
- We are collecting silver coins in Darkmoon Caverns. (5/8 silver coins)
+ We are collecting silver coins in Darkmoon Caverns. (6/8 silver coins)
  ======================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
  -------------------------- 59.95% Complete ---------------------------
