@@ -351,8 +351,8 @@ typedef struct HudElement {
     /* 0x06 */ s16 spriteID;
     /* 0x08 */ f32 scale;
     /* 0x0C */ Vec3f pos;
-    /* 0x14 */ s16 spriteOffset;
-    /* 0x16 */ union {
+    /* 0x18 */ s16 spriteOffset;
+    /* 0x1A */ union {
         u8 filler[4];   // Ensures this union is 6 bytes, since Rare never actually use more than four.
         HudElement_ChallengeEggs challengeEggs;
         HudElement_RaceStartGo raceStartGo;
