@@ -1532,7 +1532,7 @@ void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate) {
             gCurrentStickX += a0 >> v00;
             break;
         case VEHICLE_TRICKY:
-            gCurrentStickX += a0 >> (v00 + 31);
+            gCurrentStickX += a0 >> (v00 - 1);
             gCurrentStickY = 0;
             break;
         case VEHICLE_SMOKEY:
