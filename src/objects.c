@@ -2524,13 +2524,11 @@ void gParticlePtrList_flush(void) {
     gFreeListCount = 0;
 }
 
-// https://decomp.me/scratch/DW6EX
-#ifdef NON_EQUIVALENT
 void func_800101AC(Object *obj, s32 arg1) {
     Object *tempObj;
     Object_Weapon *weapon;
     Object_Racer *racer;
-    Object_Racer *snowball;
+    Object_Animation *snowball;
     Object_Fireball_Octoweapon *fireball;
     Object_Log *log;
     Object_Butterfly *butterfly;
@@ -2538,20 +2536,24 @@ void func_800101AC(Object *obj, s32 arg1) {
     s32 numberOfModelIds;
     s32 i;
     s32 j;
+    Object_64 *obj64;
+    ModelInstance *models;
+    s32 modelType;
 
     if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
         particle_deallocate((Particle *) obj);
         gParticleCount--;
         return;
     }
+
     if (obj->unk60 != NULL) {
         for (i = 0; i < obj->unk60->unk0; i++) {
             tempObj = obj->unk60->unk4[i];
             numberOfModelIds = tempObj->segment.header->numberOfModelIds;
-            if (tempObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
-                if (!gObjPtrList) {} // fake
+            modelType = tempObj->segment.header->modelType;
+            if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
                 for (j = 0; j < numberOfModelIds; j++) {
-                    free_3d_model(tempObj->modelInstances[j]);
+                    free_3d_model(&tempObj->modelInstances[j]->objModel);
                 }
             } else {
                 for (j = 0; j < numberOfModelIds; j++) {
@@ -2571,14 +2573,17 @@ void func_800101AC(Object *obj, s32 arg1) {
         case BHV_RACER:
         case BHV_ANIMATED_OBJECT_3:
             for (i = 0; i < gObjectCount; i++) {
-                if (gObjPtrList[i]->behaviorId == BHV_BUTTERFLY) {
-                    butterfly = &gObjPtrList[i]->unk64->butterfly;
+                tempObj = gObjPtrList[i];
+                if (tempObj->behaviorId == BHV_BUTTERFLY) {
+                    butterfly = &tempObj->unk64->butterfly;
                     if (obj == butterfly->unk100) {
                         butterfly->unk100 = 0;
                         butterfly->unkFD = 1;
                     }
                 }
             }
+
+            i = BHV_RACER;
             break;
         case BHV_WEAPON:
         case BHV_WEAPON_2:
@@ -2590,42 +2595,57 @@ void func_800101AC(Object *obj, s32 arg1) {
                     decrease_rocket_sound_timer();
                 }
             }
+
+            i = BHV_RACER;
             break;
         case BHV_FIREBALL_OCTOWEAPON_2:
-            fireball = &obj->unk64->fireball_octoweapon;
-            if (fireball->soundMask != NULL) {
-                audspat_point_stop(fireball->soundMask);
+            // This needs to be a weapon otherwise it doesn't match
+            weapon = (Object_Weapon *) &obj->unk64->fireball_octoweapon;
+            if (weapon->soundMask != NULL) {
+                audspat_point_stop(weapon->soundMask);
             }
+
+            i = BHV_RACER;
             break;
         case BHV_SNOWBALL:
         case BHV_SNOWBALL_2:
         case BHV_SNOWBALL_3:
         case BHV_SNOWBALL_4:
-            // TODO: Get a Snowball struct?
-            snowball = &obj->unk64->racer;
+            // This should probably be it's own struct instead of re-using animation
+            snowball = &obj->unk64->animation;
             if (snowball->unk20 != NULL) {
                 audspat_point_stop((AudioPoint *) snowball->unk20);
             }
+
+            i = BHV_RACER;
             break;
         case BHV_WAVE_GENERATOR:
             wavegen_destroy(obj);
+
+            i = BHV_RACER;
             break;
         case BHV_LIGHT_RGBA:
             func_80032BAC((ObjectLight *) obj->unk64);
+
+            i = BHV_RACER;
             break;
         case BHV_ANIMATION:
             if (obj->unk64 != NULL && arg1 == 0) {
-                free_object(obj->unk64->obj);
+                free_object((Object *) &obj->unk64->obj);
             }
+
+            i = BHV_RACER;
             break;
         case BHV_OVERRIDE_POS:
-            for (i = 0; i < D_8011AE00 && obj != D_8011ADD8[i]; i++) {}
-            if (i < D_8011AE00) {
+            for (j = 0; j < D_8011AE00 && obj != D_8011ADD8[j]; j++) {}
+            if (j < D_8011AE00) {
                 D_8011AE00--;
-                for (; i < D_8011AE00; i++) {
-                    D_8011ADD8[i] = D_8011ADD8[i + 1];
+                for (; j < D_8011AE00; j++) {
+                    D_8011ADD8[j] = D_8011ADD8[j + 1];
                 }
             }
+
+            i = BHV_RACER;
             break;
         case BHV_BUOY_PIRATE_SHIP:
         case BHV_LOG:
@@ -2633,12 +2653,22 @@ void func_800101AC(Object *obj, s32 arg1) {
             if (log != NULL) {
                 mempool_free(log);
             }
+
+            i = BHV_RACER;
             break;
         case BHV_LENS_FLARE:
             lensflare_remove(obj);
+
+            i = BHV_RACER;
             break;
         case BHV_LENS_FLARE_SWITCH:
             lensflare_override_remove(obj);
+
+            i = BHV_RACER;
+            break;
+        default:
+
+            i = BHV_RACER;
             break;
     }
     switch (obj->behaviorId) {
@@ -2664,14 +2694,14 @@ void func_800101AC(Object *obj, s32 arg1) {
         case BHV_DOOR_OPENER:
         case BHV_PIG_ROCKETEER:
         case BHV_WIZPIG_GHOSTS:
-            // Not sure if this is an animation yet...
-            soundMask = obj->unk64->animation.unk18;
+            obj64 = obj->unk64;
+            soundMask = obj64->animation.unk18;
             if (soundMask != NULL) {
                 sndp_stop(soundMask);
             }
             break;
     }
-    if (obj->behaviorId == BHV_RACER) {
+    if (obj->behaviorId == i) {
         racer = &obj->unk64->racer;
         if (racer->unk18 != NULL) {
             sndp_stop((SoundHandle) (s32) racer->unk18); // type cast required to match
@@ -2698,14 +2728,14 @@ void func_800101AC(Object *obj, s32 arg1) {
             sndp_stop(racer->magnetSoundMask);
         }
         racer_sound_free(obj);
-        for (i = 0; i < gObjectCount; i++) {
-            if ((gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_PARTICLE) &&
-                (gObjPtrList[i]->segment.level_entry == obj->segment.level_entry)) {
-                gObjPtrList[i]->segment.level_entry = NULL;
+        for (j = 0; j < gObjectCount; j++) {
+            if ((gObjPtrList[j]->segment.trans.flags & OBJ_FLAGS_PARTICLE) &&
+                ((s32) gObjPtrList[j]->segment.level_entry == (s32) obj)) {
+                gObjPtrList[j]->segment.level_entry = NULL;
             }
-            if (gObjPtrList[i]->behaviorId == BHV_WEAPON_2 || gObjPtrList[i]->behaviorId == BHV_FLY_COIN ||
-                gObjPtrList[i]->behaviorId == BHV_WEAPON) {
-                free_object((Object *) gObjPtrList[i]);
+            if (gObjPtrList[j]->behaviorId == BHV_WEAPON_2 || gObjPtrList[j]->behaviorId == BHV_FLY_COIN ||
+                gObjPtrList[j]->behaviorId == BHV_WEAPON) {
+                free_object(gObjPtrList[j]);
             }
         }
     }
@@ -2716,32 +2746,31 @@ void func_800101AC(Object *obj, s32 arg1) {
         tex_free(obj->waterEffect->texture);
     }
     numberOfModelIds = obj->segment.header->numberOfModelIds;
-    if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
-        for (i = 0; i < numberOfModelIds; i++) {
-            if (obj->modelInstances[i] != NULL) {
-                free_3d_model(obj->modelInstances[i]);
+    modelType = obj->segment.header->modelType;
+    if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        for (j = 0; j < numberOfModelIds; j++) {
+            if (obj->modelInstances[j] != NULL) {
+                models = obj->modelInstances[j];
+                free_3d_model(models);
             }
         }
-    } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_MISC) {
-        for (i = 0; i < numberOfModelIds; i++) {
-            tex_free(obj->textures[i]);
+    } else if (modelType == OBJECT_MODEL_TYPE_MISC) {
+        for (j = 0; j < numberOfModelIds; j++) {
+            tex_free(obj->textures[j]);
         }
     } else {
-        for (i = 0; i < numberOfModelIds; i++) {
-            sprite_free(obj->sprites[i]);
+        for (j = 0; j < numberOfModelIds; j++) {
+            sprite_free(obj->sprites[j]);
         }
     }
     if (obj->segment.header->particleCount > 0) {
-        for (i = 0; i < obj->segment.header->particleCount; i++) {
-            emitter_cleanup(&obj->particleEmitter[i]);
+        for (j = 0; j < obj->segment.header->particleCount; j++) {
+            emitter_cleanup(&obj->particleEmitter[j]);
         }
     }
     try_free_object_header(obj->segment.object.unk2C);
     mempool_free(obj);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800101AC.s")
-#endif
 
 void obj_update(s32 updateRate) {
     s32 i;
