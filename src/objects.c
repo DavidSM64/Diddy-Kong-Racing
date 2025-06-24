@@ -8599,8 +8599,6 @@ void func_8001E89C(void) {
     }
 }
 
-// https://decomp.me/scratch/OKbBN
-#ifdef NON_EQUIVALENT
 void func_8001E93C(void) {
     s32 pad[3];
     LevelObjectEntry_OverridePos *overridePos;
@@ -8614,9 +8612,8 @@ void func_8001E93C(void) {
     s16 animActorIndex2;
     s32 var_a0;
     Object *animObj1;
-    Object *animObj2;
-    LevelObjectEntry_Animation *animation1; // Not 100% positive this is an animation yet.
-    LevelObjectEntry_Animation *animation2; // Not 100% positive this is an animation yet.
+    LevelObjectEntry_Animation *animation1;
+    LevelObjectEntry_Animation *animation2;
 
     if (D_8011AE7E) {
         for (numOfObjs = 0; numOfObjs < D_8011AE78; numOfObjs++) {
@@ -8667,10 +8664,8 @@ void func_8001E93C(void) {
     do {
         stopLooping = TRUE;
         for (i = 0; i < numOfObjs - 1; i++) {
-            animObj1 = D_8011AE74[i + 0];
-            animObj2 = D_8011AE74[i + 1];
-            animation1 = &animObj1->segment.level_entry->animation;
-            animation2 = &animObj2->segment.level_entry->animation;
+            animation1 = &D_8011AE74[i]->segment.level_entry->animation;
+            animation2 = &D_8011AE74[i + 1]->segment.level_entry->animation;
             animActorIndex1 = animation1->actorIndex;
             animActorIndex2 = animation2->actorIndex;
 
@@ -8681,20 +8676,22 @@ void func_8001E93C(void) {
                 animActorIndex2 -= 400;
             }
 
-            if (!gCutsceneID && !gCutsceneID) {} // fake
-
             if (animActorIndex2 < animActorIndex1) {
-                D_8011AE74[i] = animObj2;
+                animObj1 = D_8011AE74[i];
+                D_8011AE74[i] = D_8011AE74[i + 1];
                 D_8011AE74[i + 1] = animObj1;
                 stopLooping = FALSE;
             } else if (animActorIndex1 == animActorIndex2) {
                 if (animation2->order < animation1->order) {
-                    D_8011AE74[i] = animObj2;
+                    animObj1 = D_8011AE74[i];
+                    D_8011AE74[i] = D_8011AE74[i + 1];
                     D_8011AE74[i + 1] = animObj1;
                     stopLooping = FALSE;
-                } else if (animation1->order == animation2->order && (animObj2->properties.animatedObj.action == 1 ||
-                                                                      animObj1->properties.animatedObj.action == 2)) {
-                    D_8011AE74[i] = animObj2;
+                } else if (animation1->order == animation2->order &&
+                           (D_8011AE74[i + 1]->properties.animatedObj.action == 1 ||
+                            D_8011AE74[i]->properties.animatedObj.action == 2)) {
+                    animObj1 = D_8011AE74[i];
+                    D_8011AE74[i] = D_8011AE74[i + 1];
                     D_8011AE74[i + 1] = animObj1;
                     stopLooping = FALSE;
                 }
@@ -8703,7 +8700,7 @@ void func_8001E93C(void) {
     } while (stopLooping == FALSE);
 
     var_a0 = -101;
-    for (i = 0; i < numOfObjs; i++) {
+    for (i = 0; i < numOfObjs; i += 1) {
         animation1 = &D_8011AE74[i]->segment.level_entry->animation;
         if (animation1->actorIndex != var_a0) {
             var_a0 = animation1->actorIndex;
@@ -8711,7 +8708,6 @@ void func_8001E93C(void) {
         }
         animation1->order = sp28++; // It is possible that sp28 could not be initalized?
         D_8011AE74[i]->properties.animatedObj.action = 0;
-        if (!i) {} // fake
     }
 
     D_8011AE78 = numOfObjs;
@@ -8720,9 +8716,6 @@ void func_8001E93C(void) {
     }
     D_8011AE7E = FALSE;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001E93C.s")
-#endif
 
 void func_8001EE74(void) {
     LevelObjectEntry_Animation *animation;
