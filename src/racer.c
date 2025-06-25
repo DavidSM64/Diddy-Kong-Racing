@@ -1040,7 +1040,7 @@ void racer_update_eggs(Object **racerObjs) {
  * A custom AI handler for the egg challenge.
  * As a result of the open area design of Fire Mountain, the AI does not use pathing nodes.
  * Instead, they use a simple positional targeting system that takes their current priority,
- * then moves towards it until that objective is complete.#
+ * then moves towards it until that objective is complete.
  * They will first search for any eggs in the centre of the arena, then failing that, find one
  * from another players nest to steal.
  * If they're holding an egg, they'll attempt to take it to their nest.
