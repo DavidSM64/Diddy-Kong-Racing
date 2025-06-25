@@ -1019,7 +1019,7 @@ void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRat
 /**
  * Manage the global flags for the egg challenge.
  * Includes hatch progress, being held by a player, and number of hatched eggs.
-*/
+ */
 void racer_update_eggs(Object **racerObjs) {
     Object_Racer *racer;
     s32 i;
@@ -1044,7 +1044,7 @@ void racer_update_eggs(Object **racerObjs) {
  * They will first search for any eggs in the centre of the arena, then failing that, find one
  * from another players nest to steal.
  * If they're holding an egg, they'll attempt to take it to their nest.
-*/
+ */
 void racer_ai_eggs(Object *obj, Object_Racer *racer, s32 updateRate) {
     f32 diffX;
     f32 diffY;

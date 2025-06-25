@@ -2166,7 +2166,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         curObj->unk5C = (Object_5C *) (((uintptr_t) curObj + (uintptr_t) curObj->unk5C) - (uintptr_t) gSpawnObjectHeap);
     }
     if (curObj->attachPoints != NULL) {
-        curObj->attachPoints = (AttachPoint *) (((uintptr_t) curObj + (uintptr_t) curObj->attachPoints) - (uintptr_t) gSpawnObjectHeap);
+        curObj->attachPoints =
+            (AttachPoint *) (((uintptr_t) curObj + (uintptr_t) curObj->attachPoints) - (uintptr_t) gSpawnObjectHeap);
     }
     if (curObj->segment.header->particleCount > 0) {
         curObj->particleEmitter = (ParticleEmitter *) (((uintptr_t) curObj + (uintptr_t) curObj->particleEmitter) -
@@ -2188,7 +2189,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         curObj->interactObj->y_position = curObj->segment.trans.y_position;
         curObj->interactObj->z_position = curObj->segment.trans.z_position;
     }
-    if (curObj->segment.header->attachPointCount > 0 && curObj->segment.header->attachPointCount < 10 && obj_init_attach_point(curObj)) {
+    if (curObj->segment.header->attachPointCount > 0 && curObj->segment.header->attachPointCount < 10 &&
+        obj_init_attach_point(curObj)) {
         if (D_8011AE50 != NULL) {
             tex_free((TextureHeader *) (s32) D_8011AE50);
         }
@@ -2306,7 +2308,8 @@ s32 obj_init_attach_point(Object *obj) {
         for (i = 0; i < attachPoint->count; i++) {
             attachObj = attachPoint->obj[i];
             if (attachObj != NULL) {
-                objFreeAssets(attachObj, attachObj->segment.header->numberOfModelIds, attachObj->segment.header->modelType);
+                objFreeAssets(attachObj, attachObj->segment.header->numberOfModelIds,
+                              attachObj->segment.header->modelType);
                 try_free_object_header(attachObj->segment.object.unk2C);
                 mempool_free(attachObj);
             }
@@ -2400,8 +2403,8 @@ s32 func_8000FD34(Object *obj, Object_5C *matrices) {
 /**
  * Attempts to spawn an attachment object.
  * Similar to the regular object spawning function, but cut down considerably.
- * 
-*/
+ *
+ */
 Object *obj_spawn_attachment(s32 objID) {
     s32 modelType;
     Object *object;
@@ -6365,7 +6368,7 @@ extern s32 D_B0000574;
  * This varies based on the race type, so this does a multitude of different possible things.
  * When the race is finished, it will then for the most part trigger the next menu,
  * but adventure mode will start the balloon cutscene if it has not yet been awarded.
-*/
+ */
 void race_check_finish(s32 updateRate) {
     s32 prevRacerPos;
     s32 i;

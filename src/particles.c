@@ -97,7 +97,7 @@ s32 gMaxSpriteParticles = 0;
 s32 gMaxLineParticles = 0;
 s32 gMaxPointParticles = 0;
 Sprite **gParticleDummys = NULL; // Sprites loaded from asset 47; appears to be unused
-s32 gParticleDummyCount = 0;         // Number of sprites in gParticleDummys
+s32 gParticleDummyCount = 0;     // Number of sprites in gParticleDummys
 
 Vec2s gParticleCoordListTri[3] = {
     { { { 0, 8 } } },

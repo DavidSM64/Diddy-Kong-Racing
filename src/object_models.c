@@ -362,7 +362,7 @@ void free_model_data(ObjectModel *mdl) {
     if (mdl->unk10 != NULL) {
         mempool_free(mdl->unk10);
     }
-    
+
     if (mdl->normals != NULL) {
         mempool_free(mdl->normals);
     }
@@ -722,7 +722,7 @@ s32 model_calc_normals(ObjectModel *model) {
             mempool_free(floatNorms);
             return 1;
         }
-    
+
         // Calculate vertex normals and store them as floating point.
         for (i = 0; i < model->numberOfBatches; i++) {
             vertOffset = batches[i].verticesOffset;
@@ -740,7 +740,8 @@ s32 model_calc_normals(ObjectModel *model) {
                 floatNorms[j].x = (sp58[0] - sp58[2]) * (sp64[0] - sp64[1]) - (sp64[0] - sp64[2]) * (sp58[0] - sp58[1]);
                 floatNorms[j].y = (sp58[0] - sp58[1]) * (sp70[0] - sp70[2]) - (sp70[0] - sp70[1]) * (sp58[0] - sp58[2]);
                 floatNorms[j].z = (sp70[0] - sp70[1]) * (sp64[0] - sp64[2]) - (sp70[0] - sp70[2]) * (sp64[0] - sp64[1]);
-                length = sqrtf(floatNorms[j].x * floatNorms[j].x + floatNorms[j].y * floatNorms[j].y + floatNorms[j].z * floatNorms[j].z);
+                length = sqrtf(floatNorms[j].x * floatNorms[j].x + floatNorms[j].y * floatNorms[j].y +
+                               floatNorms[j].z * floatNorms[j].z);
                 if (length != 0.0f) {
                     floatNorms[j].x /= length;
                     floatNorms[j].y /= length;
@@ -875,7 +876,7 @@ s32 model_calc_normals(ObjectModel *model) {
 /**
  * Sets the animation end offset for new models when loading.
  * This lets you choose to load more animations than the model normally would.
-*/
+ */
 void model_anim_offset(s32 offset) {
     gModelAnimOffsetID = offset;
 }
@@ -885,7 +886,7 @@ void model_anim_offset(s32 offset) {
  * Zero entries just set the anim count to zero and return early.
  * Otherwise, allocate space for animation data for each animation and loads each into each data slot.
  * Returns nonzero if something went wrong.
-*/
+ */
 s32 model_anim_init(ObjectModel *model, s32 modelID) {
     s32 j;
     s32 end;

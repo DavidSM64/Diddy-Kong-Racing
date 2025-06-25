@@ -2175,7 +2175,7 @@ UNUSED void obj_init_animcar(UNUSED Object *obj, UNUSED s32 arg1) {
  * Racer cutscene target loop behaviour.
  * Exists as a target point for racer objects to automatically move towards, for cutscenes.
  */
-void obj_loop_animcar(Object *obj, s32 updateRate) { 
+void obj_loop_animcar(Object *obj, s32 updateRate) {
     Object *racerObj;
     s32 racerID;
     racerID = obj->properties.common.unk0;

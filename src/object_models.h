@@ -21,10 +21,10 @@ extern s32 gTractionTableChecksum;
 extern s32 gTrackRenderFuncLength;
 
 void allocate_object_model_pools(void);
-void model_anim_offset(s32 arg0);
+void model_anim_offset(s32 offset);
 void func_80061C0C(Object* obj);
 void free_3d_model(ModelInstance *modInst);
-s32 model_anim_init(ObjectModel *model, s32 animTableIndex);
+s32 model_anim_init(ObjectModel *model, s32 modelID);
 s32 check_nearby_vertices(Vertex *vertices, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 ModelInstance *model_instance_init(ObjectModel *model, s32 flags);
 ModelInstance *object_model_init(s32 modelID, s32 flags);
