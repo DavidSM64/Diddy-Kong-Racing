@@ -1294,7 +1294,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             entry->common.z = spB4[i6];
             entry->unkC = sp94[i6];
             if (entry->unkE == 4) {
-                func_800619F4(1);
+                model_anim_offset(1);
             }
             if (entry->unkE == 4) {
                 spawnObjFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK04;
@@ -1309,7 +1309,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             }
             if (vehicle >= VEHICLE_BOSSES) {
                 spawnObjFlags = OBJECT_SPAWN_UNK01;
-                func_800619F4(0);
+                model_anim_offset(0);
             }
             newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, spawnObjFlags);
             newRacerObj->segment.trans.rotation.y_rotation = sp94[i6];
@@ -1969,7 +1969,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     i = 0; // a2
     switch (curObj->segment.header->behaviorId) {
         case BHV_PARK_WARDEN:
-            func_800619F4(7);
+            model_anim_offset(7);
             break;
         case BHV_ANIMATED_OBJECT_4:
             i = get_character_id_from_slot(PLAYER_ONE);
@@ -2206,7 +2206,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (curObj->segment.header->numLightSources > 0) {
         light_setup_light_sources(curObj);
     }
-    func_800619F4(0);
+    model_anim_offset(0);
     update_object_stack_trace(OBJECT_SPAWN, -1);
     return curObj;
 }
@@ -2258,7 +2258,7 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
     returnSize = 0;
     if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
         for (i = 0; obj->modelInstances[i] == NULL; i++) {}
-        if (obj->modelInstances[i] != NULL && obj->modelInstances[i]->objModel->unk40 != NULL) {
+        if (obj->modelInstances[i] != NULL && obj->modelInstances[i]->objModel->normals != NULL) {
             set_shading_properties(obj->shading, obj->segment.header->shadeAmbient, obj->segment.header->shadeDiffuse,
                                    0, obj->segment.header->shadeAngleY, obj->segment.header->shadeAngleZ);
             if (obj->segment.header->unk3D != 0) {
@@ -3402,7 +3402,7 @@ void render_3d_model(Object *obj) {
             if (modInst->modelType == MODELTYPE_ANIMATED) {
                 obj_animate(obj);
             }
-            if (modInst->modelType != MODELTYPE_BASIC && objModel->unk40 != NULL) {
+            if (modInst->modelType != MODELTYPE_BASIC && objModel->normals != NULL) {
                 flags = TRUE;
                 if (racerObj != NULL && racerObj->vehicleID < VEHICLE_BOSSES &&
                     racerObj->playerIndex == PLAYER_COMPUTER) {
@@ -8205,7 +8205,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     }
 
     vertices = object->curVertData;
-    normals = model->unk40;
+    normals = model->normals;
     normIdx = 0;
 
     direction.x = -(object->shading->lightDirX << 3);
@@ -8304,7 +8304,7 @@ void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRo
 
     count = 0;
     triangles = model->triangles;
-    model40Entries = model->unk40;
+    model40Entries = model->normals;
     objTrans.rotation.z_rotation = zRot;
     objTrans.rotation.x_rotation = xRot;
     objTrans.rotation.y_rotation = yRot;
@@ -10507,7 +10507,7 @@ void mode_init_taj_race(void) {
         newRacerEntry.angleZ = 0;
         newRacerEntry.playerIndex = 4;
         newRacerEntry.common.objectID = ASSET_OBJECT_ID_FLYINGCARPET;
-        func_800619F4(0);
+        model_anim_offset(0);
         racerObj = spawn_object(&newRacerEntry.common, OBJECT_SPAWN_UNK01);
         (*gRacers)[1] = racerObj;
         gRacersByPosition[1] = racerObj;

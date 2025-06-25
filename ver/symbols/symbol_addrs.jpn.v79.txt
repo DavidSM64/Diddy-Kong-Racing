@@ -784,16 +784,16 @@ update_rocket = 0x8005F340;
 // object_models.c .text
 allocate_object_model_pools = 0x8005F880;
 object_model_init = 0x8005F9CC;
-model_init_type = 0x8005FDA0;
+model_instance_init = 0x8005FDA0;
 free_3d_model = 0x80060010;
 free_model_data = 0x80060128;
 func_8006017C = 0x8006024C;
 func_80060910 = 0x800609E0;
 func_80060AC8 = 0x80060B98;
 func_80060C58 = 0x80060D28;
-func_80060EA8 = 0x80060F78;
-func_800619F4 = 0x80061AC4;
-func_80061A00 = 0x80061AD0;
+model_calc_normals = 0x80060F78;
+model_anim_offset = 0x80061AC4;
+model_anim_init = 0x80061AD0;
 func_80061C0C = 0x80061CDC;
 
 // obj_animate.c .text
@@ -3923,7 +3923,7 @@ gNumModelIDs = 0x8011F0A0;
 D_8011D634 = 0x8011F0A4;
 gAnimationTable = 0x8011F0A8;
 gObjectAnimationTable = 0x8011F0AC;
-D_8011D640 = 0x8011F0B0;
+gModelAnimOffsetID = 0x8011F0B0;
 D_8011D644 = 0x8011F0B4;
 
 // main .bss
