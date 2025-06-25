@@ -175,11 +175,20 @@ enum ObjectInteractionFlags {
 enum ObjectSpawnFlags {
     OBJECT_SPAWN_NONE,
     OBJECT_SPAWN_UNK01          = (1 << 0),
-    OBJECT_SPAWN_SHADOW         = (1 << 1),
+    OBJECT_SPAWN_UNK02          = (1 << 1),
     OBJECT_SPAWN_UNK04          = (1 << 2),
-    OBJECT_SPAWN_ANIMATION          = (1 << 3),
-    OBJECT_SPAWN_INTERACTIVE    = (1 << 4),
-    OBJECT_SPAWN_UNK20          = (1 << 5)
+    OBJECT_SPAWN_UNK08          = (1 << 3),
+    OBJECT_SPAWN_UNK10          = (1 << 4)
+};
+
+enum ObjectBehaviourFlags {
+    OBJECT_BEHAVIOUR_NONE,
+    OBJECT_BEHAVIOUR_SHADED         = (1 << 0),
+    OBJECT_BEHAVIOUR_SHADOW         = (1 << 1),
+    OBJECT_BEHAVIOUR_WATER_EFFECT   = (1 << 2),
+    OBJECT_BEHAVIOUR_ANIMATION      = (1 << 3),
+    OBJECT_BEHAVIOUR_INTERACTIVE    = (1 << 4),
+    OBJECT_BEHAVIOUR_UNK20          = (1 << 5)
 };
 
 enum ContPakErrors {
@@ -241,7 +250,7 @@ typedef struct CheckpointNode {
 /* 0x32 */ s8 unk32[4];
 /* 0x36 */ s8 unk36[4]; // Appear to be flags of some sort?
 /* 0x3A */ s8 altRouteID; // -1 if there's none to be found.
-/* 0x3B */ s8 unk3B;
+/* 0x3B */ u8 unk3B;
 } CheckpointNode;
 
 /* Size: 0x40 bytes */

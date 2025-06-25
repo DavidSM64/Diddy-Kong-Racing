@@ -1343,7 +1343,7 @@ void spawn_skydome(s32 objectID) {
     spawnObject.z = 0;
     spawnObject.size = sizeof(LevelObjectEntryCommon);
     spawnObject.objectID = objectID;
-    gSkydomeSegment = spawn_object(&spawnObject, OBJECT_SPAWN_SHADOW);
+    gSkydomeSegment = spawn_object(&spawnObject, OBJECT_SPAWN_UNK02);
     if (gSkydomeSegment != NULL) {
         gSkydomeSegment->segment.level_entry = NULL;
         gSkydomeSegment->objectID = -1;
@@ -1867,7 +1867,7 @@ void render_level_geometry_and_objects(void) {
                     shadow_render(obj, obj->shadow);
                 }
                 render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
-                if ((obj->waterEffect != 0) && (obj->segment.header->flags & 0x10)) {
+                if ((obj->waterEffect != 0) && (obj->segment.header->flags & HEADER_FLAGS_WATER_EFFECT)) {
                     watereffect_render(obj, obj->waterEffect);
                 }
             }
@@ -2694,8 +2694,6 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3) {
     }
 }
 
-// https://decomp.me/scratch/Y39p2
-#ifdef NON_MATCHING
 // Collision: Returns the Y Values in yOut, and the number of values in the array as the return.
 // Get's the Y Offset acrross a surface.
 // Basically it goes down, finds a triangle, then locates where the intersection is and returns the Y level of that.
@@ -2740,6 +2738,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     }
 
     vert = NULL; // fake?
+
     currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
     currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex];
     var_a1 = 1;
@@ -2774,39 +2773,37 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
 
     yOutCount = 0;
     for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
-        if (1) {}
-        currentBatch = &currentSegment->batches[batchNum];
-        currentFaceOffset = currentBatch->facesOffset;
-        nextFaceOffset = currentBatch[1].facesOffset;
-        currentVerticesOffset = currentBatch->verticesOffset;
+        do {
+        } while (0); // fakematch
+        currentFaceOffset = currentSegment->batches[batchNum].facesOffset;
+        nextFaceOffset = currentSegment->batches[batchNum + 1].facesOffset;
+        currentVerticesOffset = currentSegment->batches[batchNum].verticesOffset;
         for (faceNum = currentFaceOffset; faceNum < nextFaceOffset; faceNum++) {
             if (var_s1 == (currentSegment->unk10[faceNum] & var_s1)) {
                 tri = &currentSegment->triangles[faceNum];
+
                 vert = &currentSegment->vertices[tri->verticesArray[1] + currentVerticesOffset];
                 vert1X = vert->x;
                 vert1Z = vert->z;
+
                 vert = &currentSegment->vertices[tri->verticesArray[2] + currentVerticesOffset];
                 vert2X = vert->x;
                 vert2Z = vert->z;
+
                 vert = &currentSegment->vertices[tri->verticesArray[3] + currentVerticesOffset];
                 vert3X = vert->x;
                 vert3Z = vert->z;
-                temp_ra_1 = ((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0);
-                temp_ra_2 = ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0);
-                temp_ra_3 = ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
+
+                temp_ra_1 = (((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0;
+                temp_ra_2 = (((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0;
+                temp_ra_3 = (((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0;
                 var_v0 = faceNum; // fake?
                 if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
                     temp = currentSegment->unk14[faceNum].triangleIndex;
-                    temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
-                    tempVec4f.x = temp_v1_4[0];
-                    tempVec4f.y = temp_v1_4[1];
-                    tempVec4f.z = temp_v1_4[2];
-                    tempVec4f.w = temp_v1_4[3];
-                    // temp = currentSegment->unk14[faceNum].triangleIndex;
-                    // tempVec4f.x = currentSegment->unk18_vec4f[temp].x;
-                    // tempVec4f.y = currentSegment->unk18_vec4f[temp].y;
-                    // tempVec4f.z = currentSegment->unk18_vec4f[temp].z;
-                    // tempVec4f.w = currentSegment->unk18_vec4f[temp].w;
+                    tempVec4f.x = currentSegment->unk18[4 * temp + 0];
+                    tempVec4f.y = currentSegment->unk18[4 * temp + 1];
+                    tempVec4f.z = currentSegment->unk18[4 * temp + 2];
+                    tempVec4f.w = currentSegment->unk18[4 * temp + 3];
                     if (tempVec4f.y != 0.0) {
                         yOut[yOutCount] = -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
                         yOutCount++;
@@ -2830,9 +2827,6 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
 
     return yOutCount;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002BAB0.s")
-#endif
 
 // Loads a level track from the index in the models table.
 void generate_track(s32 modelId) {

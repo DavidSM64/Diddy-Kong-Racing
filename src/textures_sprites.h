@@ -112,10 +112,8 @@ typedef enum TransFlags {
 typedef enum HeaderFlags {
     HEADER_FLAGS_NONE,
     HEADER_FLAGS_UNK_0001 = (1 << 0),
-    HEADER_FLAGS_UNK_0002 = (1 << 1),
-    HEADER_FLAGS_UNK_0004 = (1 << 2),
-    HEADER_FLAGS_UNK_0008 = (1 << 3),
     HEADER_FLAGS_WATER_EFFECT = (1 << 4),
+    HEADER_FLAGS_UNK_0080 = (1 << 7),
 } HeaderFlags;
 
 typedef enum BasicRenderIDs {
