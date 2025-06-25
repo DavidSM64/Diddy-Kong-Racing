@@ -9901,472 +9901,257 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
     return 0;
 }
 
-// https://decomp.me/scratch/hYfN2
-#ifdef NON_EQUIVALENT
 s32 func_80021600(s32 arg0) {
-    s8 *sp15C;
-    Object_64 *sp154;
-    LevelObjectEntry *sp150;
+    Object_Animation *objAnim;
+    s32 i;
+    Object *sp154;
+    LevelObjectEntry_Animation *levelObjAnim;
+    s32 count;
+    s32 s0;
+    s32 j;
+    ObjectTransform *objTransform;
+    f32 f0;
     s32 sp138;
-    f32 sp124;
-    f32 sp110;
-    f32 spFC;
+    f32 xPositions[5];
+    f32 yPositions[5];
+    f32 zPositions[5];
     f32 spF8;
     f32 spF4;
     f32 spF0;
     f32 spEC;
-    f32 spE4;
-    f32 spD0;
-    f32 spC0;
-    f32 *spBC;
-    f32 spAC;
-    f32 *spA8;
-    f32 sp98;
-    f32 *sp94;
+    f32 delta;
+    s32 q;
+    f32 scales[5];
+    f32 yRotations[5];
+    f32 xRotations[5];
+    f32 zRotations[5];
     f32 sp90;
-    s32 sp7C;
-    s32 sp74;
-    f32 *sp5C;
-    s32 sp4C;
-    f32 *var_fp_2;
-    f32 *var_s6_2;
-    f32 *var_t1_2;
-    Object *var_v1_2;
-    Object **var_a0;
-    LevelObjectEntry *temp_a1;
-    Object *temp_v0;
-    Object *temp_v0_7;
-    Object *var_v1_3;
-    Object **temp_a0;
-    Object **temp_a3;
-    Object **temp_v0_4;
-    Object **temp_v0_6;
-    Object **var_a0_2;
-    Object_64 *temp_t4;
-    Object_64 *temp_v1;
-    f32 temp_f0;
-    f32 temp_f0_2;
-    f32 temp_f0_3;
-    f32 temp_f0_4;
-    f32 temp_f0_5;
-    f32 temp_f10;
-    f32 temp_f10_2;
-    f32 temp_f10_3;
-    f32 temp_f10_4;
-    f32 temp_f12;
-    f32 temp_f12_2;
-    f32 temp_f12_3;
-    f32 temp_f2;
-    f32 temp_f2_2;
-    f32 temp_f4;
-    f32 temp_f4_2;
-    f32 temp_f4_3;
-    f32 temp_f6;
-    f32 temp_f6_2;
-    f32 temp_f6_3;
-    f32 temp_f8;
-    f32 temp_f8_2;
-    f32 temp_f8_3;
-    f32 temp_f8_4;
-    f32 temp_f8_5;
-    f32 temp_f8_6;
-    f32 var_f0;
-    f32 var_f0_2;
-    f32 var_f0_3;
-    f32 var_f0_4;
-    f32 var_f6;
-    f32 *var_fp;
-    f32 *var_s1;
-    f32 *var_s2;
-    f32 *var_s3;
-    f32 *var_s4;
-    f32 *var_s6;
-    f32 *var_t1;
-    f32 *var_v0_2;
-    f32 *var_v0_3;
-    f32 *var_v0_4;
-    f32 *var_v0_5;
-    f32 *var_v0_6;
-    f32 *var_v0_7;
-    f64 temp_f2_3;
-    f64 temp_f2_4;
-    f64 temp_f2_5;
-    s32 temp_a2;
-    s32 temp_t6;
-    s32 temp_t7;
-    s32 temp_t8;
-    s32 temp_v0_5;
-    s32 var_a1;
-    s32 var_a1_2;
-    s32 var_s0;
-    s32 var_s0_2;
-    s32 var_s5;
-    s32 var_s7;
-    s32 var_v0;
-    s8 temp_v0_2;
-    s8 temp_v0_9;
-    s8 var_v1;
-    u8 temp_v0_8;
-    Object **temp_v0_3;
 
     if (gCutsceneID < 0) {
-        return 1;
+        return TRUE;
     }
-    var_s7 = 0;
-    if ((D_8011AE78 > 0) && (arg0 != (*D_8011AE74)->properties.common.unk4)) {
-    loop_4:
-        var_s7++;
-        if (var_s7 < D_8011AE78) {
-            if (arg0 != D_8011AE74[var_s7]->properties.common.unk4) {
-                goto loop_4;
-            }
+
+    for (i = 0; i < D_8011AE78 && arg0 != D_8011AE74[i]->properties.animatedObj.behaviourID; i++) {}
+    if (i >= D_8011AE78) {
+        return TRUE;
+    }
+
+    for (count = 1; i + count < D_8011AE78 && arg0 == D_8011AE74[i + count]->properties.animatedObj.behaviourID;
+         count++) {}
+    if (count < 2) {
+        return TRUE;
+    }
+
+    sp154 = (Object *) &D_8011AE74[i]->unk64->obj;
+    if (sp154 == NULL) {
+        return TRUE;
+    }
+
+    objAnim = &sp154->unk64->animation;
+    sp138 = -1;
+    sp90 = 1.0 / D_8011AE74[i]->segment.header->scale;
+
+    levelObjAnim = &D_8011AE74[i + count - 1]->segment.level_entry->animation;
+    if (count > 2) {
+        if (levelObjAnim->goToNode >= 0 && levelObjAnim->goToNode < count - 1) {
+            sp138 = levelObjAnim->goToNode;
         }
     }
-    if (var_s7 >= D_8011AE78) {
-        return 1;
-    }
-    var_s5 = 1;
-    if ((var_s7 + 1) < D_8011AE78) {
-        temp_a0 = &D_8011AE74[var_s7];
-        var_v0 = var_s7 + 1 + 1;
-        if (arg0 == temp_a0[1]->properties.common.unk4) {
-        loop_10:
-            var_s5++;
-            if (var_v0 < D_8011AE78) {
-                var_v0++;
-                if (arg0 == temp_a0[var_s5]->properties.common.unk4) {
-                    goto loop_10;
-                }
-            }
-        }
-    }
-    if (var_s5 < 2) {
-        return 1;
-    }
-    temp_a3 = D_8011AE74;
-    sp7C = var_s7 * 4;
-    temp_v0 = temp_a3[var_s7];
-    var_s2 = &sp124;
-    temp_t4 = temp_v0->unk64;
-    var_s3 = &sp110;
-    sp154 = temp_t4;
-    if (temp_t4 == NULL) {
-        return 1;
-    }
-    var_v1 = -1;
-    var_s4 = &spFC;
-    var_fp = &spBC[0];
-    var_s6 = &spA8[0];
-    var_t1 = &sp94[0];
-    var_s1 = &spD0;
-    sp90 = (f32) (1.0 / (f64) temp_v0->segment.header->scale);
-    if (var_s5 >= 3) {
-        temp_v0_2 = (&temp_a3[var_s7])[var_s5 - 1]->segment.level_entry->animation.goToNode;
-        if ((temp_v0_2 >= 0) && (temp_v0_2 < (var_s5 - 1))) {
-            var_v1 = temp_v0_2;
-        }
-    }
-    sp138 = (s32) var_v1;
-    var_s0 = sp154->effect_box.unkE[0x26 - 0xE] - 1;
-    do {
-        if (var_s0 == -1) {
+
+    s0 = objAnim->unk26 - 1;
+    for (j = 0; j < 5; j++, s0++) {
+        if (s0 == -1) {
             if (sp138 != 0) {
-                temp_v0_3 = temp_a3 + sp7C;
-                temp_f0 = temp_v0_3[0]->segment.trans.x_position;
-                *var_s2 = (temp_f0 - temp_v0_3[1]->segment.trans.x_position) + temp_f0;
-                temp_f2 = temp_v0_3[0]->segment.trans.y_position;
-                *var_s3 = (temp_f2 - temp_v0_3[1]->segment.trans.y_position) + temp_f2;
-                temp_f12 = temp_v0_3[0]->segment.trans.z_position;
-                *var_s4 = (temp_f12 - temp_v0_3[1]->segment.trans.z_position) + temp_f12;
-                *var_fp = (f32) temp_v0_3[0]->segment.trans.rotation.s[0];
-                *var_s6 = (f32) temp_v0_3[0]->segment.trans.rotation.s[1];
-                *var_t1 = (f32) temp_v0_3[0]->segment.trans.rotation.s[2];
-                var_f6 = temp_v0_3[0]->segment.trans.scale;
-                goto block_38;
+                xPositions[j] = D_8011AE74[i]->segment.trans.x_position +
+                           (D_8011AE74[i]->segment.trans.x_position - D_8011AE74[i + 1]->segment.trans.x_position);
+                yPositions[j] = D_8011AE74[i]->segment.trans.y_position +
+                           (D_8011AE74[i]->segment.trans.y_position - D_8011AE74[i + 1]->segment.trans.y_position);
+                zPositions[j] = D_8011AE74[i]->segment.trans.z_position +
+                          (D_8011AE74[i]->segment.trans.z_position - D_8011AE74[i + 1]->segment.trans.z_position);
+                yRotations[j] = D_8011AE74[i]->segment.trans.rotation.y_rotation;
+                xRotations[j] = D_8011AE74[i]->segment.trans.rotation.x_rotation;
+                zRotations[j] = D_8011AE74[i]->segment.trans.rotation.z_rotation;
+                scales[j] = D_8011AE74[i]->segment.trans.scale;
+            } else {
+                q = i + count - 1;
+                xPositions[j] = D_8011AE74[q]->segment.trans.x_position;
+                yPositions[j] = D_8011AE74[q]->segment.trans.y_position;
+                zPositions[j] = D_8011AE74[q]->segment.trans.z_position;
+                yRotations[j] = D_8011AE74[q]->segment.trans.rotation.y_rotation;
+                xRotations[j] = D_8011AE74[q]->segment.trans.rotation.x_rotation;
+                zRotations[j] = D_8011AE74[q]->segment.trans.rotation.z_rotation;
+                scales[j] = D_8011AE74[q]->segment.trans.scale;
             }
-            temp_v0_4 = &temp_a3[var_s7 + var_s5];
-            *var_s2 = temp_v0_4[-1]->segment.trans.x_position;
-            *var_s3 = temp_v0_4[-1]->segment.trans.y_position;
-            *var_s4 = temp_v0_4[-1]->segment.trans.z_position;
-            *var_fp = (f32) temp_v0_4[-1]->segment.trans.rotation.s[0];
-            *var_s6 = (f32) temp_v0_4[-1]->segment.trans.rotation.s[1];
-            *var_t1 = (f32) temp_v0_4[-1]->segment.trans.rotation.s[2];
-            *var_s1 = temp_v0_4[-1]->segment.trans.scale;
-        } else {
-            temp_a2 = var_s0 + var_s7;
-            if (var_s0 >= var_s5) {
-                temp_v0_5 = var_s5 + var_s7;
-                if (sp138 == -1) {
-                    var_s0 = var_s5 - 1;
-                    if (temp_a3[temp_v0_5 - 1]->segment.level_entry->animation.unk22 == 1) {
-                        sp5C = var_t1;
-                        sp4C = (temp_v0_5 * 4) - 4;
-                        set_active_camera((s32) sp15C[30]);
-                        var_v1_2 = (Object *) cam_get_active_camera_no_cutscenes();
-                        var_a0 = &D_8011AE74[temp_v0_5 - 1];
-                    } else {
-                        var_a0 = &temp_a3[temp_v0_5 - 1];
-                        var_v1_2 = *var_a0;
-                    }
-                    temp_f0_2 = var_v1_2->segment.trans.x_position;
-                    *var_s2 = (temp_f0_2 - var_a0[-1]->segment.trans.x_position) + temp_f0_2;
-                    temp_f2_2 = var_v1_2->segment.trans.y_position;
-                    *var_s3 = (temp_f2_2 - var_a0[-1]->segment.trans.y_position) + temp_f2_2;
-                    temp_f12_2 = var_v1_2->segment.trans.z_position;
-                    *var_s4 = (temp_f12_2 - var_a0[-1]->segment.trans.z_position) + temp_f12_2;
-                    *var_s6 = (f32) var_v1_2->segment.trans.rotation.s[1];
-                    *var_t1 = (f32) var_v1_2->segment.trans.rotation.s[2];
-                    *var_fp = (f32) var_a0[0]->segment.trans.rotation.s[0];
-                    *var_s1 = var_a0[0]->segment.trans.scale;
+        } else if (s0 >= count) {
+            if (sp138 == -1) {
+                s0 = count - 1;
+                q = s0 + i;
+                levelObjAnim = &D_8011AE74[q]->segment.level_entry->animation;
+                if (levelObjAnim->unk22 == 1) {
+                    set_active_camera(objAnim->cameraID);
+                    objTransform = &cam_get_active_camera_no_cutscenes()->trans;
                 } else {
-                    temp_v0_6 = &temp_a3[(var_s7 + sp138 + var_s0) - var_s5];
-                    *var_s2 = (*temp_v0_6)->segment.trans.x_position;
-                    *var_s3 = (*temp_v0_6)->segment.trans.y_position;
-                    *var_s4 = (*temp_v0_6)->segment.trans.z_position;
-                    *var_fp = (f32) (*temp_v0_6)->segment.trans.rotation.s[0];
-                    *var_s6 = (f32) (*temp_v0_6)->segment.trans.rotation.s[1];
-                    *var_t1 = (f32) (*temp_v0_6)->segment.trans.rotation.s[2];
-                    var_f6 = (*temp_v0_6)->segment.trans.scale;
-                    goto block_38;
+                    objTransform = &D_8011AE74[q]->segment.trans;
                 }
+
+                xPositions[j] = (objTransform->x_position - D_8011AE74[q - 1]->segment.trans.x_position) + objTransform->x_position;
+                yPositions[j] = (objTransform->y_position - D_8011AE74[q - 1]->segment.trans.y_position) + objTransform->y_position;
+                zPositions[j] = (objTransform->z_position - D_8011AE74[q - 1]->segment.trans.z_position) + objTransform->z_position;
+                xRotations[j] = objTransform->rotation.x_rotation;
+                zRotations[j] = objTransform->rotation.z_rotation;
+                objTransform = &D_8011AE74[q]->segment.trans;
+                yRotations[j] = objTransform->rotation.y_rotation;
+                scales[j] = D_8011AE74[q]->segment.trans.scale;
             } else {
-                var_a0_2 = &temp_a3[temp_a2];
-                temp_v0_7 = *var_a0_2;
-                temp_a1 = temp_v0_7->segment.level_entry;
-                var_v1_3 = temp_v0_7;
-                if (temp_a1->animation.unk22 == 1) {
-                    sp5C = var_t1;
-                    sp74 = temp_a2 * 4;
-                    sp150 = temp_a1;
-                    set_active_camera((s32) sp15C[0x30]);
-                    var_v1_3 = (Object *) cam_get_active_camera_no_cutscenes();
-                    var_a0_2 = D_8011AE74 + sp74;
-                }
-                *var_s2 = var_v1_3->segment.trans.x_position;
-                *var_s3 = var_v1_3->segment.trans.y_position;
-                *var_s4 = var_v1_3->segment.trans.z_position;
-                *var_s6 = (f32) var_v1_3->segment.trans.rotation.s[1];
-                *var_t1 = (f32) var_v1_3->segment.trans.rotation.s[2];
-                *var_fp = (f32) (*var_a0_2)->segment.trans.rotation.s[0];
-                if (temp_a1->animation.unk22 == 1) {
-                    *var_s6 = -*var_s6;
-                }
-                var_f6 = (*var_a0_2)->segment.trans.scale;
-            block_38:
-                *var_s1 = var_f6;
+                q = i + sp138 + s0 - count;
+                xPositions[j] = D_8011AE74[q]->segment.trans.x_position;
+                yPositions[j] = D_8011AE74[q]->segment.trans.y_position;
+                zPositions[j] = D_8011AE74[q]->segment.trans.z_position;
+                yRotations[j] = D_8011AE74[q]->segment.trans.rotation.y_rotation;
+                xRotations[j] = D_8011AE74[q]->segment.trans.rotation.x_rotation;
+                zRotations[j] = D_8011AE74[q]->segment.trans.rotation.z_rotation;
+                scales[j] = D_8011AE74[q]->segment.trans.scale;
             }
+        } else {
+            q = s0 + i;
+            if (1) {} // Fake
+            levelObjAnim = &D_8011AE74[q]->segment.level_entry->animation;
+            if (levelObjAnim->unk22 == 1) {
+                set_active_camera(objAnim->cameraID);
+                objTransform = &cam_get_active_camera_no_cutscenes()->trans;
+            } else {
+                objTransform = &D_8011AE74[q]->segment.trans;
+            }
+            xPositions[j] = objTransform->x_position;
+            yPositions[j] = objTransform->y_position;
+            zPositions[j] = objTransform->z_position;
+            xRotations[j] = objTransform->rotation.x_rotation;
+            zRotations[j] = objTransform->rotation.z_rotation;
+            objTransform = &D_8011AE74[q]->segment.trans;
+            yRotations[j] = objTransform->rotation.y_rotation;
+            if (levelObjAnim->unk22 == 1) {
+                xRotations[j] = -xRotations[j];
+            }
+            scales[j] = D_8011AE74[q]->segment.trans.scale;
         }
-        var_s1 += 4;
-        var_s2 += 4;
-        var_s3 += 4;
-        var_s4 += 4;
-        var_fp += 4;
-        var_s6 += 4;
-        var_t1 += 4;
-        var_s0++;
-    } while ((u32) var_s1 < (u32) &spE4);
-    temp_f0_3 = sp15C[0];
-    if (sp15C[0x3F] == 0) {
-        spEC = temp_f0_3;
-        spF8 = catmull_rom_interpolation(&sp124, 0, temp_f0_3);
-        spF4 = catmull_rom_interpolation(&sp110, 0, spEC);
-        var_f0 = catmull_rom_interpolation(&spFC, 0, spEC);
-    } else {
-        spEC = temp_f0_3;
-        spF8 = lerp(&sp124, 0U, temp_f0_3);
-        spF4 = lerp(&sp110, 0U, spEC);
-        var_f0 = lerp(&spFC, 0U, spEC);
     }
-    spF0 = var_f0;
-    temp_f10 = spF8 - sp154->racer.animationSpeed;
-    spF8 = temp_f10;
-    temp_f8 = spF4 - (f32) sp154->effect_box.unkE[2];
-    spF4 = temp_f8;
-    temp_f6 = spF0 - (f32) sp154->effect_box.unkE[6];
-    spF0 = temp_f6;
-    move_object((Object *) sp154, temp_f10, temp_f8, temp_f6);
-    sp154->racer.forwardVel =
-        catmull_rom_interpolation(&spD0, 0, spEC) * sp90 *
-        sp154->effect_box.unkE[2]; // index is wrong, also usage of effect_box is probably wrong, too
-    temp_v0_8 = sp15C[0x2E];
-    switch (temp_v0_8) { /* irregular */
-        default:
-            var_a1 = 1;
-            var_fp_2 = &spC0;
-            var_s6_2 = &spAC;
-            var_t1_2 = &sp98;
-            do {
-                temp_f6_2 = var_fp_2[0];
-                temp_f8_2 = var_fp_2[-1];
-                var_fp_2++;
-                temp_f2_3 = (f64) (temp_f6_2 - temp_f8_2);
-                var_f0_2 = 0.0f;
-                if (temp_f2_3 > 32768.0) {
-                    var_f0_2 = (f32) ((f64) 0.0f - 65536.0);
-                } else if (temp_f2_3 < -32768.0) {
-                    var_f0_2 = (f32) ((f64) 0.0f + 65536.0);
-                }
-                var_s0_2 = var_a1;
-                if (var_a1 < 5) {
-                    temp_t8 = (5 - var_a1) & 3;
-                    if (temp_t8 != 0) {
-                        var_v0_2 = &(&spBC[0])[var_s0_2];
-                        do {
-                            var_s0_2++;
-                            var_v0_2[0] += var_f0_2;
-                            var_v0_2++;
-                        } while ((temp_t8 + var_a1) != var_s0_2);
-                        if (var_s0_2 != 5) {
-                            goto block_71;
-                        }
-                    } else {
-                    block_71:
-                        var_v0_3 = &(&spBC[0])[var_s0_2];
-                        do {
-                            var_v0_3[1] += var_f0_2;
-                            var_v0_3[0] += var_f0_2;
-                            var_v0_3[2] += var_f0_2;
-                            var_v0_3[3] += var_f0_2;
-                            var_v0_3 += 4;
-                        } while (var_v0_3 != &spD0);
-                    }
-                    var_s0_2 = var_a1;
-                }
-                temp_f6_3 = var_s6_2[0];
-                temp_f8_4 = var_s6_2[-1];
-                var_s6_2++;
-                temp_f2_4 = (f64) (temp_f6_3 - temp_f8_4);
-                var_f0_3 = 0.0f;
-                if (temp_f2_4 > 32768.0) {
-                    var_f0_3 = (f32) ((f64) 0.0f - 65536.0);
-                } else if (temp_f2_4 < -32768.0) {
-                    var_f0_3 = (f32) ((f64) 0.0f + 65536.0);
-                }
-                if (var_a1 < 5) {
-                    temp_t6 = (5 - var_a1) & 3;
-                    if (temp_t6 != 0) {
-                        var_v0_4 = &(&spA8[0])[var_s0_2];
-                        do {
-                            var_s0_2++;
-                            var_v0_4[0] += var_f0_3;
-                            var_v0_4++;
-                        } while ((temp_t6 + var_a1) != var_s0_2);
-                        if (var_s0_2 != 5) {
-                            goto block_83;
-                        }
-                    } else {
-                    block_83:
-                        var_v0_5 = &(&spA8[0])[var_s0_2];
-                        do {
-                            var_v0_5[1] += var_f0_3;
-                            var_v0_5[0] += var_f0_3;
-                            var_v0_5[2] += var_f0_3;
-                            var_v0_5[3] += var_f0_3;
-                            var_v0_5 += 4;
-                        } while (var_v0_5 != &spBC[0]);
-                    }
-                    var_s0_2 = var_a1;
-                }
-                temp_f2_5 = (f64) (var_t1_2[0] - var_t1_2[-1]);
-                var_f0_4 = 0.0f;
-                if (temp_f2_5 > 32768.0) {
-                    var_f0_4 = (f32) ((f64) 0.0f - 65536.0);
-                } else if (temp_f2_5 < -32768.0) {
-                    var_f0_4 = (f32) ((f64) 0.0f + 65536.0);
-                }
-                temp_t7 = (5 - var_a1) & 3;
-                if (var_a1 < 5) {
-                    if (temp_t7 != 0) {
-                        var_v0_6 = &(&sp94[0])[var_s0_2];
-                        do {
-                            var_s0_2++;
-                            var_v0_6[0] += var_f0_4;
-                            var_v0_6++;
-                        } while ((temp_t7 + var_a1) != var_s0_2);
-                        if (var_s0_2 != 5) {
-                            goto block_95;
-                        }
-                    } else {
-                    block_95:
-                        var_v0_7 = &(&sp94[0])[var_s0_2];
-                        do {
-                            var_v0_7[1] += var_f0_4;
-                            var_v0_7[0] += var_f0_4;
-                            var_v0_7[2] += var_f0_4;
-                            var_v0_7[3] += var_f0_4;
-                            var_v0_7 += 4;
-                        } while (var_v0_7 != &spA8[0]);
-                    }
-                }
-                var_a1++;
-                var_t1_2 += 4;
-            } while (var_a1 != 5);
-            if (sp15C[0x3F] == 0) {
-                sp154->racer.playerIndex = (s16) (s32) catmull_rom_interpolation(&spBC[0], 0, spEC);
-                sp154->midi_fade_point.unk2 = (u16) (s32) catmull_rom_interpolation(&spA8[0], 0, spEC);
-                sp154->effect_box.unk4 = (s16) (s32) catmull_rom_interpolation(&sp94[0], 0, spEC);
-            } else {
-                sp154->racer.playerIndex = (s16) (s32) lerp(&spBC[0], 0U, spEC);
-                sp154->midi_fade_point.unk2 = (u16) (s32) lerp(&spA8[0], 0U, spEC);
-                sp154->effect_box.unk4 = (s16) (s32) lerp(&sp94[0], 0U, spEC);
-            }
+
+    spEC = objAnim->unk0;
+    if (objAnim->unk3F == 0) {
+        spF8 = catmull_rom_interpolation(xPositions, 0, spEC);
+        spF4 = catmull_rom_interpolation(yPositions, 0, spEC);
+        spF0 = catmull_rom_interpolation(zPositions, 0, spEC);
+    } else {
+        spF8 = lerp(xPositions, 0, spEC);
+        spF4 = lerp(yPositions, 0, spEC);
+        spF0 = lerp(zPositions, 0, spEC);
+    }
+
+    spF8 -= sp154->segment.trans.x_position;
+    spF4 -= sp154->segment.trans.y_position;
+    spF0 -= sp154->segment.trans.z_position;
+
+    move_object(sp154, spF8, spF4, spF0);
+    sp154->segment.trans.scale = catmull_rom_interpolation(scales, 0, spEC) * sp90 * sp154->segment.header->scale;
+
+    switch (objAnim->unk2E) {
         case 1:
             break;
         case 2:
-            if (sp15C[0x3F] == 0) {
-                cubic_spline_interpolation(&sp124, 0, spEC, &spF8);
-                cubic_spline_interpolation(&sp110, 0, spEC, &spF4);
-                cubic_spline_interpolation(&spFC, 0, spEC, &spF0);
+            if (objAnim->unk3F == 0) {
+                cubic_spline_interpolation(xPositions, 0, spEC, &spF8);
+                cubic_spline_interpolation(yPositions, 0, spEC, &spF4);
+                cubic_spline_interpolation(zPositions, 0, spEC, &spF0);
             } else {
-                lerp_and_get_derivative(&sp124, 0U, spEC, &spF8);
-                lerp_and_get_derivative(&sp110, 0U, spEC, &spF4);
-                lerp_and_get_derivative(&spFC, 0U, spEC, &spF0);
+                lerp_and_get_derivative(xPositions, 0, spEC, &spF8);
+                lerp_and_get_derivative(yPositions, 0, spEC, &spF4);
+                lerp_and_get_derivative(zPositions, 0, spEC, &spF0);
             }
-            temp_f0_4 = sqrtf((spF8 * spF8) + (spF4 * spF4) + (spF0 * spF0));
-            if (temp_f0_4 != 0.0f) {
-                temp_f12_3 = (f32) (100.0 / (f64) temp_f0_4);
-                spF8 *= temp_f12_3;
-                spF4 *= temp_f12_3;
-                spF0 *= temp_f12_3;
+
+            spEC = sqrtf(spF8 * spF8 + spF4 * spF4 + spF0 * spF0);
+            if (spEC != 0.0f) {
+                delta = spEC;
+                spEC = spF8;
+                delta = 100.0 / delta;
+
+                spF8 *= delta;
+                spF4 *= delta;
+                spF0 *= delta;
             }
-            sp154->racer.playerIndex = arctan2_f(spF8, spF0) - 0x8000;
-            sp154->midi_fade_point.unk2 = arctan2_f(spF4, 100.0f);
+
+            sp154->segment.trans.rotation.y_rotation = arctan2_f(spF8, spF0) - 0x8000;
+            sp154->segment.trans.rotation.x_rotation = arctan2_f(spF4, 100.0f);
             break;
         case 3:
-            var_a1_2 = 0;
-            if (D_8011AE78 > 0) {
-                temp_v0_9 = sp15C[0x3E];
-                if (temp_v0_9 != (*D_8011AE74)->properties.common.unk4) {
-                loop_55:
-                    var_a1_2++;
-                    if (var_a1_2 < D_8011AE78) {
-                        if (temp_v0_9 != D_8011AE74[var_a1_2]->properties.common.unk4) {
-                            goto loop_55;
-                        }
+            for (j = 0; j < D_8011AE78 && objAnim->unk3E != D_8011AE74[j]->properties.animatedObj.behaviourID; j++) {}
+
+            if (j != D_8011AE78) {
+                objTransform = &((Object *) &D_8011AE74[j]->unk64->obj)->segment.trans;
+                if (objTransform != NULL) {
+                    spF8 = objTransform->x_position - sp154->segment.trans.x_position;
+                    spF4 = objTransform->y_position - sp154->segment.trans.y_position;
+                    spF0 = objTransform->z_position - sp154->segment.trans.z_position;
+                    spEC = sqrtf(spF8 * spF8 + spF4 * spF4 + spF0 * spF0);
+                    if (spEC > 0.0f) {
+                        sp154->segment.trans.rotation.y_rotation = arctan2_f(spF8, spF0) - 0x8000;
+                        sp154->segment.trans.rotation.x_rotation = arctan2_f(spF4, spEC);
                     }
                 }
             }
-            if (var_a1_2 != D_8011AE78) {
-                temp_v1 = D_8011AE74[var_a1_2]->unk64;
-                if (temp_v1 != NULL) {
-                    spF8 = temp_v1->racer.animationSpeed - sp154->racer.animationSpeed;
-                    spF4 = (f32) temp_v1->effect_box.unkE[2] - (f32) sp154->effect_box.unkE[2];
-                    spF0 = (f32) temp_v1->effect_box.unkE[6] - (f32) sp154->effect_box.unkE[6];
-                    temp_f0_5 = sqrtf((spF8 * spF8) + (spF4 * spF4) + (spF0 * spF0));
-                    spEC = temp_f0_5;
-                    if (temp_f0_5 > 0.0f) {
-                        sp154->racer.playerIndex = arctan2_f(spF8, spF0) - 0x8000;
-                        sp154->midi_fade_point.unk2 = arctan2_f(spF4, spEC);
-                    }
+            break;
+        default:
+            for (j = 1; j < 5; j++) {
+                f0 = 0.0f;
+                delta = yRotations[j] - yRotations[j - 1];
+                if (delta > 32768.0) {
+                    f0 -= 65536.0;
+                } else if (delta < -32768.0) {
+                    f0 += 65536.0;
                 }
+
+                // clang-formatter off
+                for (s0 = j; s0 < 5; s0++) { yRotations[s0] += f0; }
+                // clang-formatter on
+
+                f0 = 0.0f;
+                delta = xRotations[j] - xRotations[j - 1];
+                if (delta > 32768.0) {
+                    f0 -= 65536.0;
+                } else if (delta < -32768.0) {
+                    f0 += 65536.0;
+                }
+
+                // clang-formatter off
+                for (s0 = j; s0 < 5; s0++) { xRotations[s0] += f0; }
+                // clang-formatter on
+
+                f0 = 0.0f;
+                delta = zRotations[j] - zRotations[j - 1];
+                if (delta > 32768.0) {
+                    f0 -= 65536.0;
+                } else if (delta < -32768.0) {
+                    f0 += 65536.0;
+                }
+
+                // clang-formatter off
+                for (s0 = j; s0 < 5; s0++) { zRotations[s0] += f0; }
+                // clang-formatter on
+            }
+
+            if (objAnim->unk3F == 0) {
+                sp154->segment.trans.rotation.y_rotation = catmull_rom_interpolation(yRotations, 0, spEC);
+                sp154->segment.trans.rotation.x_rotation = catmull_rom_interpolation(xRotations, 0, spEC);
+                sp154->segment.trans.rotation.z_rotation = catmull_rom_interpolation(zRotations, 0, spEC);
+            } else {
+                sp154->segment.trans.rotation.y_rotation = lerp(yRotations, 0, spEC);
+                sp154->segment.trans.rotation.x_rotation = lerp(xRotations, 0, spEC);
+                sp154->segment.trans.rotation.z_rotation = lerp(zRotations, 0, spEC);
             }
             break;
     }
-    return 0;
+
+    return FALSE;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80021600.s")
-#endif
 
 f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x) {
     f32 ret;

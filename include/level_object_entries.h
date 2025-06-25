@@ -386,7 +386,7 @@ typedef struct LevelObjectEntry_Animation {
     /* 0x1A */ s8 yawSpinSpeed;
     /* 0x1B */ s8 rollSpinSpeed;
     /* 0x1C */ s8 pitchSpinSpeed;
-    /* 0x1D */ u8 goToNode;
+    /* 0x1D */ s8 goToNode;
     /* 0x1E */ u8 unk1E;
     /* 0x1F */ s8 unk1F;
     /* 0x20 */ s8 unk20;
