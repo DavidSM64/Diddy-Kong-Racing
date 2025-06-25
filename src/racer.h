@@ -144,12 +144,6 @@ typedef struct AIBehaviourTable {
     s8 percentages[4][4];
 } AIBehaviourTable;
 
-typedef struct Unknown80046524 {
-    s16 unk0;
-    u8 pad2[0x38];
-    s8 unk3A;
-} Unknown80046524;
-
 typedef struct unk_AttachPoint {
     s32 count;
     ObjectTransform *transforms[1];
