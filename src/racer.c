@@ -6165,7 +6165,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
         if (racer->unk1FB != 0) {
             for (i = 0; i < 2; i++) {
                 someObj = objRacer->unk60->unk4[i];
-                if (someObj->properties.racer.unk0 != 0) {
+                if (someObj->properties.common.unk0 != 0) {
                     someObj->modelIndex--;
                     if (someObj->modelIndex < 0) {
                         someObj->modelIndex = (s8) (someObj->header->numberOfModelIds - 1);

@@ -236,25 +236,23 @@ typedef struct ObjPropertyBoost {
 typedef struct ObjProperties {
     union {
         ObjPropertyCommon common;
-        ObjPropertyDistance distance;           // BHV_FOG_CHANGER, BHV_WEATHER
-        ObjPropertyTorchMist torchMist;         // BHV_TORCH_MIST
-        ObjPropertyBanana banana;               // BHV_BANANA
-        ObjPropertyName levelName;              // BHV_LEVEL_NAME
-        ObjPropertyProjectile projectile;       // BHV_WEAPON_2
-        ObjPropertyLog log;                     // BHV_LOG
-        ObjPropertyScenery scenery;             // BHV_SCENERY
-        ObjPropertyFireball fireball;           // BHV_FIREBALL_OCTOWEAPON, BHV_FIREBALL_OCTOWEAPON_2
-        ObjPropertyLaserbolt laserbolt;         // BHV_LASER_BOLT
-        ObjPropertyTrophyCabinet trophyCabinet; // BHV_TROPHY_CABINET
-        ObjPropertyEggSpawner eggSpawner;       // BHV_EGG_CREATOR
-        ObjPropertyZipper zipper;               // BHV_ZIPPER_GROUND
-        ObjPropertyCharacterFlag characterFlag; // BHV_CHARACTER_FLAG
-        // merge these?
-        ObjPropertyGoldenBalloon goldenBalloon; // BHV_GOLDEN_BALLOON
-        ObjPropertySilverCoin silverCoin;       // BHV_SILVER_COIN_2, BHV_SILVER_COIN
-        ObjPropertyTT tt;                       // BHV_STOPWATCH_MAN
-        ObjPropertyTaj taj;                     // BHV_PARK_WARDEN
-
+        ObjPropertyDistance distance;               // BHV_FOG_CHANGER, BHV_WEATHER
+        ObjPropertyTorchMist torchMist;             // BHV_TORCH_MIST
+        ObjPropertyBanana banana;                   // BHV_BANANA
+        ObjPropertyName levelName;                  // BHV_LEVEL_NAME
+        ObjPropertyProjectile projectile;           // BHV_WEAPON_2
+        ObjPropertyLog log;                         // BHV_LOG
+        ObjPropertyScenery scenery;                 // BHV_SCENERY
+        ObjPropertyFireball fireball;               // BHV_FIREBALL_OCTOWEAPON, BHV_FIREBALL_OCTOWEAPON_2
+        ObjPropertyLaserbolt laserbolt;             // BHV_LASER_BOLT
+        ObjPropertyTrophyCabinet trophyCabinet;     // BHV_TROPHY_CABINET
+        ObjPropertyEggSpawner eggSpawner;           // BHV_EGG_CREATOR
+        ObjPropertyZipper zipper;                   // BHV_ZIPPER_GROUND
+        ObjPropertyCharacterFlag characterFlag;     // BHV_CHARACTER_FLAG
+        ObjPropertyGoldenBalloon goldenBalloon;     // BHV_GOLDEN_BALLOON
+        ObjPropertySilverCoin silverCoin;           // BHV_SILVER_COIN_2, BHV_SILVER_COIN
+        ObjPropertyTT tt;                           // BHV_STOPWATCH_MAN
+        ObjPropertyTaj taj;                         // BHV_PARK_WARDEN
         ObjPropertyLavaSpurt lavaSpurt;             // BHV_LAVA_SPURT
         ObjPropertyPosArrow posArrow;               // BHV_POS_ARROW
         ObjPropertyAnimation animation;             // BHV_ANIMATION
@@ -276,17 +274,15 @@ typedef struct ObjProperties {
         ObjPropertySkyControl skyControl;           // BHV_SKY_CONTROL
         ObjPropertyTreasureSucker treasureSucker;   // BHV_TREASURE_SUCKER
         ObjPropertyFlyCoin flyCoin;                 // BHV_FLY_COIN
-        ObjPropertyTreasureBanana treasureBanana;
-        ObjPropertyBananaSpawner bananaSpawner; // BHV_BANANA_SPAWNER
-        ObjPropertyWorldKey worldKey;           // BHV_WORLD_KEY
-        ObjPropertyWeaponBalloon weaponBalloon; // BHV_WEAPON_BALLOON
-        ObjPropertyRacer racer;
-        ObjPropertySetupPoint setupPoint; // BHV_SETUP_POINT
-        ObjPropertyWeapon weapon;         // BHV_WEAPON
-        ObjPropertyCamControl camControl; // BHV_CAMERA_CONTROL
-        ObjPropertyTimeTrial timeTrial;   // BHV_TIMETRIAL_GHOST
-        ObjPropertyDinoWhale dinoWhale;   // BHV_DINO_WHALE
-        ObjPropertyBubbler bubbler;       // BHV_BUBBLER
+        ObjPropertyBananaSpawner bananaSpawner;     // BHV_BANANA_SPAWNER
+        ObjPropertyWorldKey worldKey;               // BHV_WORLD_KEY
+        ObjPropertyWeaponBalloon weaponBalloon;     // BHV_WEAPON_BALLOON
+        ObjPropertySetupPoint setupPoint;           // BHV_SETUP_POINT
+        ObjPropertyWeapon weapon;                   // BHV_WEAPON
+        ObjPropertyCamControl camControl;           // BHV_CAMERA_CONTROL
+        ObjPropertyTimeTrial timeTrial;             // BHV_TIMETRIAL_GHOST
+        ObjPropertyDinoWhale dinoWhale;             // BHV_DINO_WHALE
+        ObjPropertyBubbler bubbler;                 // BHV_BUBBLER
         ObjPropertyBoost boost;
     };
 } ObjProperties;

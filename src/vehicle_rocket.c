@@ -135,7 +135,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         someObj = racerfx_get_boost(BOOST_DEFAULT);
         if (someObj != NULL) {
             rocket = &someObj->unk64->wizpigRocket;
-            someObj->properties.racer.unk0 = 0;
+            someObj->properties.common.unk0 = 0;
             if (rocket != NULL) {
                 rocket->unk72 += updateRate;
                 rocket->unk70 = 2;
