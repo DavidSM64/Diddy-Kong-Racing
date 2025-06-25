@@ -250,7 +250,7 @@ typedef struct CheckpointNode {
 /* 0x32 */ s8 unk32[4];
 /* 0x36 */ s8 unk36[4]; // Appear to be flags of some sort?
 /* 0x3A */ s8 altRouteID; // -1 if there's none to be found.
-/* 0x3B */ s8 unk3B;
+/* 0x3B */ u8 unk3B;
 } CheckpointNode;
 
 /* Size: 0x40 bytes */

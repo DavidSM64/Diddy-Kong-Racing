@@ -2524,13 +2524,11 @@ void gParticlePtrList_flush(void) {
     gFreeListCount = 0;
 }
 
-// https://decomp.me/scratch/DW6EX
-#ifdef NON_EQUIVALENT
 void func_800101AC(Object *obj, s32 arg1) {
     Object *tempObj;
     Object_Weapon *weapon;
     Object_Racer *racer;
-    Object_Racer *snowball;
+    Object_Animation *snowball;
     Object_Fireball_Octoweapon *fireball;
     Object_Log *log;
     Object_Butterfly *butterfly;
@@ -2538,20 +2536,24 @@ void func_800101AC(Object *obj, s32 arg1) {
     s32 numberOfModelIds;
     s32 i;
     s32 j;
+    Object_64 *obj64;
+    ModelInstance *models;
+    s32 modelType;
 
     if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
         particle_deallocate((Particle *) obj);
         gParticleCount--;
         return;
     }
+
     if (obj->unk60 != NULL) {
         for (i = 0; i < obj->unk60->unk0; i++) {
             tempObj = obj->unk60->unk4[i];
             numberOfModelIds = tempObj->segment.header->numberOfModelIds;
-            if (tempObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
-                if (!gObjPtrList) {} // fake
+            modelType = tempObj->segment.header->modelType;
+            if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
                 for (j = 0; j < numberOfModelIds; j++) {
-                    free_3d_model(tempObj->modelInstances[j]);
+                    free_3d_model(&tempObj->modelInstances[j]->objModel);
                 }
             } else {
                 for (j = 0; j < numberOfModelIds; j++) {
@@ -2571,14 +2573,17 @@ void func_800101AC(Object *obj, s32 arg1) {
         case BHV_RACER:
         case BHV_ANIMATED_OBJECT_3:
             for (i = 0; i < gObjectCount; i++) {
-                if (gObjPtrList[i]->behaviorId == BHV_BUTTERFLY) {
-                    butterfly = &gObjPtrList[i]->unk64->butterfly;
+                tempObj = gObjPtrList[i];
+                if (tempObj->behaviorId == BHV_BUTTERFLY) {
+                    butterfly = &tempObj->unk64->butterfly;
                     if (obj == butterfly->unk100) {
                         butterfly->unk100 = 0;
                         butterfly->unkFD = 1;
                     }
                 }
             }
+
+            i = BHV_RACER;
             break;
         case BHV_WEAPON:
         case BHV_WEAPON_2:
@@ -2590,42 +2595,57 @@ void func_800101AC(Object *obj, s32 arg1) {
                     decrease_rocket_sound_timer();
                 }
             }
+
+            i = BHV_RACER;
             break;
         case BHV_FIREBALL_OCTOWEAPON_2:
-            fireball = &obj->unk64->fireball_octoweapon;
-            if (fireball->soundMask != NULL) {
-                audspat_point_stop(fireball->soundMask);
+            // This needs to be a weapon otherwise it doesn't match
+            weapon = (Object_Weapon *) &obj->unk64->fireball_octoweapon;
+            if (weapon->soundMask != NULL) {
+                audspat_point_stop(weapon->soundMask);
             }
+
+            i = BHV_RACER;
             break;
         case BHV_SNOWBALL:
         case BHV_SNOWBALL_2:
         case BHV_SNOWBALL_3:
         case BHV_SNOWBALL_4:
-            // TODO: Get a Snowball struct?
-            snowball = &obj->unk64->racer;
+            // This should probably be it's own struct instead of re-using animation
+            snowball = &obj->unk64->animation;
             if (snowball->unk20 != NULL) {
                 audspat_point_stop((AudioPoint *) snowball->unk20);
             }
+
+            i = BHV_RACER;
             break;
         case BHV_WAVE_GENERATOR:
             wavegen_destroy(obj);
+
+            i = BHV_RACER;
             break;
         case BHV_LIGHT_RGBA:
             func_80032BAC((ObjectLight *) obj->unk64);
+
+            i = BHV_RACER;
             break;
         case BHV_ANIMATION:
             if (obj->unk64 != NULL && arg1 == 0) {
-                free_object(obj->unk64->obj);
+                free_object((Object *) &obj->unk64->obj);
             }
+
+            i = BHV_RACER;
             break;
         case BHV_OVERRIDE_POS:
-            for (i = 0; i < D_8011AE00 && obj != D_8011ADD8[i]; i++) {}
-            if (i < D_8011AE00) {
+            for (j = 0; j < D_8011AE00 && obj != D_8011ADD8[j]; j++) {}
+            if (j < D_8011AE00) {
                 D_8011AE00--;
-                for (; i < D_8011AE00; i++) {
-                    D_8011ADD8[i] = D_8011ADD8[i + 1];
+                for (; j < D_8011AE00; j++) {
+                    D_8011ADD8[j] = D_8011ADD8[j + 1];
                 }
             }
+
+            i = BHV_RACER;
             break;
         case BHV_BUOY_PIRATE_SHIP:
         case BHV_LOG:
@@ -2633,12 +2653,22 @@ void func_800101AC(Object *obj, s32 arg1) {
             if (log != NULL) {
                 mempool_free(log);
             }
+
+            i = BHV_RACER;
             break;
         case BHV_LENS_FLARE:
             lensflare_remove(obj);
+
+            i = BHV_RACER;
             break;
         case BHV_LENS_FLARE_SWITCH:
             lensflare_override_remove(obj);
+
+            i = BHV_RACER;
+            break;
+        default:
+
+            i = BHV_RACER;
             break;
     }
     switch (obj->behaviorId) {
@@ -2664,14 +2694,14 @@ void func_800101AC(Object *obj, s32 arg1) {
         case BHV_DOOR_OPENER:
         case BHV_PIG_ROCKETEER:
         case BHV_WIZPIG_GHOSTS:
-            // Not sure if this is an animation yet...
-            soundMask = obj->unk64->animation.unk18;
+            obj64 = obj->unk64;
+            soundMask = obj64->animation.unk18;
             if (soundMask != NULL) {
                 sndp_stop(soundMask);
             }
             break;
     }
-    if (obj->behaviorId == BHV_RACER) {
+    if (obj->behaviorId == i) {
         racer = &obj->unk64->racer;
         if (racer->unk18 != NULL) {
             sndp_stop((SoundHandle) (s32) racer->unk18); // type cast required to match
@@ -2698,14 +2728,14 @@ void func_800101AC(Object *obj, s32 arg1) {
             sndp_stop(racer->magnetSoundMask);
         }
         racer_sound_free(obj);
-        for (i = 0; i < gObjectCount; i++) {
-            if ((gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_PARTICLE) &&
-                (gObjPtrList[i]->segment.level_entry == obj->segment.level_entry)) {
-                gObjPtrList[i]->segment.level_entry = NULL;
+        for (j = 0; j < gObjectCount; j++) {
+            if ((gObjPtrList[j]->segment.trans.flags & OBJ_FLAGS_PARTICLE) &&
+                ((s32) gObjPtrList[j]->segment.level_entry == (s32) obj)) {
+                gObjPtrList[j]->segment.level_entry = NULL;
             }
-            if (gObjPtrList[i]->behaviorId == BHV_WEAPON_2 || gObjPtrList[i]->behaviorId == BHV_FLY_COIN ||
-                gObjPtrList[i]->behaviorId == BHV_WEAPON) {
-                free_object((Object *) gObjPtrList[i]);
+            if (gObjPtrList[j]->behaviorId == BHV_WEAPON_2 || gObjPtrList[j]->behaviorId == BHV_FLY_COIN ||
+                gObjPtrList[j]->behaviorId == BHV_WEAPON) {
+                free_object(gObjPtrList[j]);
             }
         }
     }
@@ -2716,32 +2746,31 @@ void func_800101AC(Object *obj, s32 arg1) {
         tex_free(obj->waterEffect->texture);
     }
     numberOfModelIds = obj->segment.header->numberOfModelIds;
-    if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
-        for (i = 0; i < numberOfModelIds; i++) {
-            if (obj->modelInstances[i] != NULL) {
-                free_3d_model(obj->modelInstances[i]);
+    modelType = obj->segment.header->modelType;
+    if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        for (j = 0; j < numberOfModelIds; j++) {
+            if (obj->modelInstances[j] != NULL) {
+                models = obj->modelInstances[j];
+                free_3d_model(models);
             }
         }
-    } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_MISC) {
-        for (i = 0; i < numberOfModelIds; i++) {
-            tex_free(obj->textures[i]);
+    } else if (modelType == OBJECT_MODEL_TYPE_MISC) {
+        for (j = 0; j < numberOfModelIds; j++) {
+            tex_free(obj->textures[j]);
         }
     } else {
-        for (i = 0; i < numberOfModelIds; i++) {
-            sprite_free(obj->sprites[i]);
+        for (j = 0; j < numberOfModelIds; j++) {
+            sprite_free(obj->sprites[j]);
         }
     }
     if (obj->segment.header->particleCount > 0) {
-        for (i = 0; i < obj->segment.header->particleCount; i++) {
-            emitter_cleanup(&obj->particleEmitter[i]);
+        for (j = 0; j < obj->segment.header->particleCount; j++) {
+            emitter_cleanup(&obj->particleEmitter[j]);
         }
     }
     try_free_object_header(obj->segment.object.unk2C);
     mempool_free(obj);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800101AC.s")
-#endif
 
 void obj_update(s32 updateRate) {
     s32 i;
@@ -5831,68 +5860,30 @@ void func_80017E98(void) {
     }
 }
 
-// https://decomp.me/scratch/xQbet
-#ifdef NON_EQUIVALENT
-s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance, u8 *arg6) {
+s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *arg5, u8 *arg6) {
+    s32 v1;
     s32 sp70;
-    f32 xDiff; // sp6C
-    f32 yDiff;
-    f32 zDiff; // sp64
+    f32 sp6C, sp68, sp64;
+    f32 length;
     f32 sp5C;
     f32 sp58;
+    Object_Racer *racer;
     f32 sp50;
     CheckpointNode *sp4C;
     CheckpointNode *sp48;
     CheckpointNode *sp44;
-    f32 sp3C;
-    s32 sp38;
-    f32 sp34;
-    f32 sp30;
-    f32 sp2C;
-    f32 sp28;
-    f32 sp24;
-    f32 sp20;
-    Object_64 *temp_v0_4;
-    f32 temp_f0_3;
-    f32 temp_f0_4;
-    f32 temp_f0_5;
-    f32 temp_f10;
-    f32 temp_f12;
-    f32 temp_f14;
-    f32 temp_f16;
-    f32 temp_f18;
-    f32 temp_f20_2;
-    f32 temp_f2_3;
-    f32 temp_f2_4;
-    f32 temp_f2_5;
-    f32 temp_f2_7;
-    f32 temp_f2_8;
-    f32 temp_f4;
-    f32 temp_f4_2;
-    f32 temp_f4_3;
-    f32 temp_f6;
-    f32 temp_f6_2;
-    f32 temp_f6_3;
-    f32 temp_f8;
-    f32 temp_f8_2;
-    f32 var_f0;
-    f64 temp_f2_6;
-    s32 temp_f8_3;
-    s32 var_t1;
-    s32 var_v1;
-    CheckpointNode *temp_a1;
 
     if (gNumberOfCheckpoints == 0) {
         return 1;
     }
-    sp38 = checkpointIndex;
-    sp70 = FALSE;
+
     sp4C = &gTrackCheckpoints[checkpointIndex];
     if (checkpointIndex != 0) {
         sp48 = &gTrackCheckpoints[checkpointIndex - 1];
     } else {
         sp48 = &gTrackCheckpoints[gNumberOfCheckpoints - 1];
     }
+
     if (*arg6) {
         if (sp4C->altRouteID != -1) {
             sp4C = &gTrackCheckpoints[sp4C->altRouteID];
@@ -5901,135 +5892,116 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
             sp48 = &gTrackCheckpoints[sp48->altRouteID];
         }
     }
-    if ((!*arg6) && (sp48->altRouteID == -1)) {
-        if (sp4C->altRouteID != -1) {
-            sp44 = &gTrackCheckpoints[sp4C->altRouteID];
-            xDiff = sp44->x - obj->segment.trans.x_position;
-            yDiff = sp44->y - obj->segment.trans.y_position;
-            zDiff = sp44->z - obj->segment.trans.z_position;
-            sp70 = FALSE;
-            if (sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < sp44->unk2C) {
-                sp4C = sp44;
-                sp70 = TRUE;
+
+    sp70 = FALSE;
+    if (!(*arg6) && sp48->altRouteID == -1 && sp4C->altRouteID != -1) {
+        sp44 = &gTrackCheckpoints[sp4C->altRouteID];
+        sp6C = sp44->x - obj->segment.trans.x_position;
+        sp68 = sp44->y - obj->segment.trans.y_position;
+        sp64 = sp44->z - obj->segment.trans.z_position;
+        if (sqrtf(sp6C * sp6C + sp68 * sp68 + sp64 * sp64) < sp44->unk2C) {
+            sp4C = sp44;
+            sp70 = TRUE;
+        }
+    }
+
+    sp6C = sp4C->x - sp48->x;
+    sp68 = sp4C->y - sp48->y;
+    sp64 = sp4C->z - sp48->z;
+    length = sqrtf(sp6C * sp6C + sp68 * sp68 + sp64 * sp64);
+    if (length > 0.0) {
+        sp6C *= 1.0f / length;
+        sp68 *= 1.0f / length;
+        sp64 *= 1.0f / length;
+    }
+
+    sp58 = sp4C->rotationXFrac * obj->segment.trans.x_position + sp4C->rotationYFrac * obj->segment.trans.y_position +
+           sp4C->rotationZFrac * obj->segment.trans.z_position + sp4C->unkC;
+
+    sp5C = sp4C->rotationXFrac * sp6C + sp4C->rotationYFrac * sp68 + sp4C->rotationZFrac * sp64;
+    sp5C = -sp58 / sp5C;
+
+    sp50 = sp48->rotationXFrac * obj->segment.trans.x_position + sp48->rotationYFrac * obj->segment.trans.y_position +
+           sp48->rotationZFrac * obj->segment.trans.z_position + sp48->unkC;
+
+    length = sp48->rotationXFrac * sp6C + sp48->rotationYFrac * sp68 + sp48->rotationZFrac * sp64;
+    length = sp50 / length;
+
+    if (sp5C + length != 0.0) {
+        length = sp5C / (sp5C + length);
+    } else {
+        length = 0.0f;
+    }
+    *arg5 = length;
+
+    if (obj->behaviorId == BHV_RACER) {
+        racer = &obj->unk64->racer;
+        if (racer->playerIndex == PLAYER_COMPUTER) {
+            if (length < -0.3) {
+                return -100;
+            }
+            if (length > 1.3) {
+                return -100;
             }
         }
     }
-    xDiff = sp4C->x - sp48->x;
-    yDiff = sp4C->y - sp48->y;
-    zDiff = sp4C->z - sp48->z;
-    temp_f0_3 = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
-    if (temp_f0_3 > 0.0) {
-        yDiff *= (1 / temp_f0_3);
-        xDiff *= (1 / temp_f0_3);
-        zDiff *= (1 / temp_f0_3);
-    }
-    temp_f14 = sp4C->rotationXFrac;
-    temp_f0_4 = obj->segment.trans.x_position;
-    temp_f16 = sp4C->rotationYFrac;
-    temp_f2_4 = obj->segment.trans.y_position;
-    temp_f18 = sp4C->rotationZFrac;
-    temp_f12 = obj->segment.trans.z_position;
-    temp_f6 = (temp_f14 * temp_f0_4) + (temp_f16 * temp_f2_4) + (temp_f18 * temp_f12) + sp4C->unkC;
-    sp58 = temp_f6;
-    sp20 = temp_f6;
-    temp_f8 = (temp_f14 * xDiff) + (temp_f16 * yDiff) + (temp_f18 * zDiff);
-    sp5C = temp_f8;
-    temp_f6_2 = -temp_f6 / temp_f8;
-    sp5C = temp_f6_2;
-    temp_f8_2 = sp48->rotationXFrac;
-    sp3C = temp_f8_2;
-    sp34 = sp48->rotationYFrac;
-    sp20 = xDiff;
-    sp30 = sp48->rotationZFrac;
-    sp24 = zDiff;
-    sp28 = temp_f6_2;
-    sp2C = temp_f8_2;
-    temp_f4 = (temp_f8_2 * temp_f0_4) + (sp34 * temp_f2_4) + (sp30 * temp_f12) + sp48->unkC;
-    sp2C = sp34;
-    sp50 = temp_f4;
-    temp_f2_5 = sp28 + (temp_f4 / ((temp_f8_2 * sp20) + (sp34 * yDiff) + (sp30 * zDiff)));
-    if (temp_f2_5 != 0.0) {
-        var_f0 = sp28 / temp_f2_5;
-    } else {
-        var_f0 = 0.0f;
-    }
-    *checkpointDistance = var_f0;
-    if ((obj->behaviorId == BHV_RACER) && (obj->unk64->racer.playerIndex == PLAYER_COMPUTER)) {
-        if (var_f0 < -0.3) {
-            return -100;
-        }
-        if (var_f0 > 1.3) {
-            return -100;
-        }
-    }
-    if (sp28 <= 0.0f) {
+
+    if (sp5C <= 0) {
         if (sp70) {
             *arg6 = TRUE;
         } else if (sp4C->altRouteID == -1) {
             *arg6 = FALSE;
         }
-        temp_f20_2 =
-            (sp4C->rotationXFrac * objX) + (sp4C->rotationYFrac * objY) + (sp4C->rotationZFrac * objZ) + sp4C->unkC;
 
-        if (temp_f20_2 > 0.0f) {
+        sp68 = sp4C->rotationXFrac * objX + sp4C->rotationYFrac * objY + sp4C->rotationZFrac * objZ + sp4C->unkC;
+        if (sp68 > 0) {
             if (obj->behaviorId == BHV_RACER) {
-                temp_v0_4 = obj->unk64;
+                Object_Racer *racer;
+                racer = &obj->unk64->racer;
                 if (sp4C->unk3B != 0) {
-                    temp_v0_4->racer.indicator_type = sp4C->unk3B;
-                    temp_v0_4->racer.indicator_timer = 120;
+                    racer->indicator_type = sp4C->unk3B;
+                    racer->indicator_timer = 120;
                 }
             }
-            var_t1 = sp38 + 60; // 60 = max number of checkpoints?
-            if ((checkpointIndex + 1) == gNumberOfCheckpoints) {
-                var_t1 = 0;
-            }
-            temp_f0_5 = obj->segment.trans.x_position;
-            temp_a1 = &gTrackCheckpoints[var_t1];
-            temp_f2_7 = obj->segment.trans.y_position;
-            temp_f12 = obj->segment.trans.z_position;
-            temp_f10 = (temp_a1->rotationXFrac * obj->segment.trans.x_position) +
-                       (temp_a1->rotationYFrac * obj->segment.trans.y_position) +
-                       (temp_a1->rotationZFrac * obj->segment.trans.z_position) + temp_a1->unkC;
 
-            sp58 = temp_f10;
-            sp2C = temp_f10;
-            sp5C = (temp_a1->rotationXFrac * xDiff) + (temp_a1->rotationYFrac * temp_f20_2) +
-                   (temp_a1->rotationZFrac * zDiff);
-            temp_f10 = -temp_f10 / sp5C;
-            sp5C = temp_f10;
-            temp_f4_3 = sp4C->rotationXFrac;
-            sp3C = temp_f4_3;
-            sp34 = sp4C->rotationYFrac;
-            sp2C = xDiff;
-            sp30 = sp4C->rotationZFrac;
-            sp28 = zDiff;
-            sp24 = temp_f10;
-            sp20 = temp_f4_3;
-            temp_f12 = sp24;
-            sp24 = sp34;
-            temp_f6_3 = (temp_f4_3 * temp_f0_5) + (sp34 * temp_f2_7) + (sp30 * temp_f12) + sp4C->unkC;
-            sp50 = temp_f6_3;
-            temp_f2_8 = temp_f12 + (temp_f6_3 / ((temp_f4_3 * sp2C) + (sp34 * temp_f20_2) + (sp30 * zDiff)));
-            if (temp_f2_8 != 0.0) {
-                var_f0 = temp_f12 / temp_f2_8;
-            } else {
-                var_f0 = 0.0f;
+            sp48 = sp4C;
+            checkpointIndex++;
+            if (checkpointIndex == gNumberOfCheckpoints) {
+                checkpointIndex = 0;
             }
-            *checkpointDistance = var_f0;
-            return 0;
+
+            sp4C = &gTrackCheckpoints[checkpointIndex];
+
+            sp58 = sp4C->rotationXFrac * obj->segment.trans.x_position +
+                   sp4C->rotationYFrac * obj->segment.trans.y_position +
+                   sp4C->rotationZFrac * obj->segment.trans.z_position + sp4C->unkC;
+            sp5C = sp4C->rotationXFrac * sp6C + sp4C->rotationYFrac * sp68 + sp4C->rotationZFrac * sp64;
+            sp5C = -sp58 / sp5C;
+
+            sp50 = sp48->rotationXFrac * obj->segment.trans.x_position +
+                   sp48->rotationYFrac * obj->segment.trans.y_position +
+                   sp48->rotationZFrac * obj->segment.trans.z_position + sp48->unkC;
+            length = sp48->rotationXFrac * sp6C + sp48->rotationYFrac * sp68 + sp48->rotationZFrac * sp64;
+            length = sp50 / length;
+
+            if (sp5C + length != 0.0) {
+                length = sp5C / (sp5C + length);
+            } else {
+                length = 0.0;
+            }
+            *arg5 = length;
+        } else {
+            *arg5 = 0.0;
         }
-        *checkpointDistance = 0.0f;
         return 0;
+    } else {
+        v1 = length * 100.0f;
+        if (v1 == 0) {
+            v1++;
+        }
+        return v1;
     }
-    var_v1 = var_f0 * 100.0f;
-    if (var_v1 == 0) {
-        var_v1++;
-    }
-    return var_v1;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800185E4.s")
-#endif
 
 /**
  * Search and return Taj's overworld object.
@@ -8627,8 +8599,6 @@ void func_8001E89C(void) {
     }
 }
 
-// https://decomp.me/scratch/OKbBN
-#ifdef NON_EQUIVALENT
 void func_8001E93C(void) {
     s32 pad[3];
     LevelObjectEntry_OverridePos *overridePos;
@@ -8642,9 +8612,8 @@ void func_8001E93C(void) {
     s16 animActorIndex2;
     s32 var_a0;
     Object *animObj1;
-    Object *animObj2;
-    LevelObjectEntry_Animation *animation1; // Not 100% positive this is an animation yet.
-    LevelObjectEntry_Animation *animation2; // Not 100% positive this is an animation yet.
+    LevelObjectEntry_Animation *animation1;
+    LevelObjectEntry_Animation *animation2;
 
     if (D_8011AE7E) {
         for (numOfObjs = 0; numOfObjs < D_8011AE78; numOfObjs++) {
@@ -8695,10 +8664,8 @@ void func_8001E93C(void) {
     do {
         stopLooping = TRUE;
         for (i = 0; i < numOfObjs - 1; i++) {
-            animObj1 = D_8011AE74[i + 0];
-            animObj2 = D_8011AE74[i + 1];
-            animation1 = &animObj1->segment.level_entry->animation;
-            animation2 = &animObj2->segment.level_entry->animation;
+            animation1 = &D_8011AE74[i]->segment.level_entry->animation;
+            animation2 = &D_8011AE74[i + 1]->segment.level_entry->animation;
             animActorIndex1 = animation1->actorIndex;
             animActorIndex2 = animation2->actorIndex;
 
@@ -8709,20 +8676,22 @@ void func_8001E93C(void) {
                 animActorIndex2 -= 400;
             }
 
-            if (!gCutsceneID && !gCutsceneID) {} // fake
-
             if (animActorIndex2 < animActorIndex1) {
-                D_8011AE74[i] = animObj2;
+                animObj1 = D_8011AE74[i];
+                D_8011AE74[i] = D_8011AE74[i + 1];
                 D_8011AE74[i + 1] = animObj1;
                 stopLooping = FALSE;
             } else if (animActorIndex1 == animActorIndex2) {
                 if (animation2->order < animation1->order) {
-                    D_8011AE74[i] = animObj2;
+                    animObj1 = D_8011AE74[i];
+                    D_8011AE74[i] = D_8011AE74[i + 1];
                     D_8011AE74[i + 1] = animObj1;
                     stopLooping = FALSE;
-                } else if (animation1->order == animation2->order && (animObj2->properties.animatedObj.action == 1 ||
-                                                                      animObj1->properties.animatedObj.action == 2)) {
-                    D_8011AE74[i] = animObj2;
+                } else if (animation1->order == animation2->order &&
+                           (D_8011AE74[i + 1]->properties.animatedObj.action == 1 ||
+                            D_8011AE74[i]->properties.animatedObj.action == 2)) {
+                    animObj1 = D_8011AE74[i];
+                    D_8011AE74[i] = D_8011AE74[i + 1];
                     D_8011AE74[i + 1] = animObj1;
                     stopLooping = FALSE;
                 }
@@ -8731,7 +8700,7 @@ void func_8001E93C(void) {
     } while (stopLooping == FALSE);
 
     var_a0 = -101;
-    for (i = 0; i < numOfObjs; i++) {
+    for (i = 0; i < numOfObjs; i += 1) {
         animation1 = &D_8011AE74[i]->segment.level_entry->animation;
         if (animation1->actorIndex != var_a0) {
             var_a0 = animation1->actorIndex;
@@ -8739,7 +8708,6 @@ void func_8001E93C(void) {
         }
         animation1->order = sp28++; // It is possible that sp28 could not be initalized?
         D_8011AE74[i]->properties.animatedObj.action = 0;
-        if (!i) {} // fake
     }
 
     D_8011AE78 = numOfObjs;
@@ -8748,9 +8716,6 @@ void func_8001E93C(void) {
     }
     D_8011AE7E = FALSE;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8001E93C.s")
-#endif
 
 void func_8001EE74(void) {
     LevelObjectEntry_Animation *animation;
