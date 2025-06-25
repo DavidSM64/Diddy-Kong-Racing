@@ -144,11 +144,6 @@ typedef struct AIBehaviourTable {
     s8 percentages[4][4];
 } AIBehaviourTable;
 
-typedef struct unk_AttachPoint {
-    s32 count;
-    ObjectTransform *transforms[1];
-} unk_AttachPoint;
-
 s32 roll_percent_chance(s32 chance);
 void apply_plane_tilt_anim(s32 updateRate, Object *obj, Object_Racer *racer);
 void racer_attack_handler_plane(Object *obj, Object_Racer *racer);

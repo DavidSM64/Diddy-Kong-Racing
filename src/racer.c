@@ -5112,7 +5112,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     f32 traction;
     f32 surfaceTraction;
     f32 *miscAsset;
-    ObjectTransform *temp_v0;
+    ObjectTransform *attachmentTrans;
     f32 topSpeed;
     UNUSED s32 pad1;
     UNUSED s32 pad2;
@@ -5132,12 +5132,12 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->carBobY = -racer->yaw * tempVel;
         racer->carBobZ = -racer->pitch * tempVel;
         if (obj->attachPoints != NULL) {
-            for (i = 0; i < ((unk_AttachPoint *) obj->attachPoints)->count; i++) {
+            for (i = 0; i < obj->attachPoints->count; i++) {
                 tempVel = 1.0f / obj->segment.trans.scale;
-                temp_v0 = ((unk_AttachPoint *) obj->attachPoints)->transforms[i];
-                temp_v0->x_position = (f32) (-racer->carBobX * tempVel);
-                temp_v0->y_position = (f32) (-racer->carBobY * tempVel);
-                temp_v0->z_position = (f32) (-racer->carBobZ * tempVel);
+                attachmentTrans = &obj->attachPoints->obj[i]->segment.trans;
+                attachmentTrans->x_position = (f32) (-racer->carBobX * tempVel);
+                attachmentTrans->y_position = (f32) (-racer->carBobY * tempVel);
+                attachmentTrans->z_position = (f32) (-racer->carBobZ * tempVel);
             }
         }
     } else {
