@@ -1964,15 +1964,15 @@ void obj_loop_vehicleanim(Object *obj, s32 updateRate) {
 
     func_8001F460(obj, updateRate, obj);
     attachPoint = obj->attachPoints;
-    if (attachPoint != NULL) {
-        if (attachPoint->count > 0) {
-            attachObj = attachPoint->count == 3 ? attachPoint->obj[2] : attachPoint->obj[0];
-            attachObj->segment.trans.rotation.y_rotation = 0x4000;
-            attachObj->segment.object.modelIndex++;
-            if (attachObj->segment.object.modelIndex == attachObj->segment.header->numberOfModelIds) {
-                attachObj->segment.object.modelIndex = 0;
-            }
-        }
+    if (attachPoint == NULL || attachPoint->count <= 0) {
+        return;
+    }
+    
+    attachObj = attachPoint->count == 3 ? attachPoint->obj[2] : attachPoint->obj[0];
+    attachObj->segment.trans.rotation.y_rotation = 0x4000;
+    attachObj->segment.object.modelIndex++;
+    if (attachObj->segment.object.modelIndex == attachObj->segment.header->numberOfModelIds) {
+        attachObj->segment.object.modelIndex = 0;
     }
 }
 
