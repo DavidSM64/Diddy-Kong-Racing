@@ -68,7 +68,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     Object *firstRacerObj;
 
     set_boss_voice_clip_offset(gSmokeyVoiceTable);
-    animID = obj->object.animationID;
+    animID = obj->animationID;
     animFrame = obj->animFrame;
     tempHeadAngle = racer->headAngle;
     if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
@@ -102,13 +102,13 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = headAngleRange;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     racer->headAngle = tempHeadAngle;
-    obj->object.animationID = animID;
+    obj->animationID = animID;
     obj->animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->object.animationID != ANIM_SMOKEY_DAMAGE) {
+    if (racer->attackType != ATTACK_NONE && obj->animationID != ANIM_SMOKEY_DAMAGE) {
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         sound_play(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
-        obj->object.animationID = ANIM_SMOKEY_DAMAGE;
+        obj->animationID = ANIM_SMOKEY_DAMAGE;
         obj->x_velocity *= 0.27;
         obj->z_velocity *= 0.27;
         racer->animationSpeed = 0.0f;
@@ -128,7 +128,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
-    diffX = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
+    diffX = (objModel->animations[obj->animationID].animLength * 16) - 17;
     animVelocity = (racer->velocity * updateRateF) * 0.45;
     if (animVelocity <= 0.0) {
         if (animVelocity > -2.0) {
@@ -137,7 +137,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     } else if (animVelocity < 2.0) {
         animVelocity = 2.0f;
     }
-    switch (obj->object.animationID) {
+    switch (obj->animationID) {
         case 0:
             racer->unk1CD = 0;
             racer->animationSpeed += 1.0 * updateRateF;
@@ -178,41 +178,41 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->animationSpeed += diffX;
         modInst->animationID = -1;
     }
-    if (obj->object.animationID == ANIM_SMOKEY_WALK && racer->groundedWheels == 0 && racer->velocity < -6.5) {
-        obj->object.animationID = ANIM_SMOKEY_LAND;
+    if (obj->animationID == ANIM_SMOKEY_WALK && racer->groundedWheels == 0 && racer->velocity < -6.5) {
+        obj->animationID = ANIM_SMOKEY_LAND;
         racer->animationSpeed = 0.0f;
     }
-    if (modInst->animationID == -1 || obj->object.animationID == ANIM_SMOKEY_IDLE) {
-        if (obj->object.animationID == ANIM_SMOKEY_DAMAGE) {
-            obj->object.animationID = racer->unk1CD;
+    if (modInst->animationID == -1 || obj->animationID == ANIM_SMOKEY_IDLE) {
+        if (obj->animationID == ANIM_SMOKEY_DAMAGE) {
+            obj->animationID = racer->unk1CD;
             racer->animationSpeed = 0.0f;
-        } else if (obj->object.animationID == ANIM_SMOKEY_RUN) {
+        } else if (obj->animationID == ANIM_SMOKEY_RUN) {
             if (racer->unk1CD == 0) {
-                obj->object.animationID = ANIM_SMOKEY_WALK;
+                obj->animationID = ANIM_SMOKEY_WALK;
             } else {
-                obj->object.animationID = ANIM_SMOKEY_IDLE;
+                obj->animationID = ANIM_SMOKEY_IDLE;
             }
-        } else if (obj->object.animationID == ANIM_SMOKEY_LAND) {
+        } else if (obj->animationID == ANIM_SMOKEY_LAND) {
             if (racer->unk1CD == 4) {
-                obj->object.animationID = ANIM_SMOKEY_WALK;
+                obj->animationID = ANIM_SMOKEY_WALK;
             } else {
-                obj->object.animationID = ANIM_SMOKEY_FLY;
+                obj->animationID = ANIM_SMOKEY_FLY;
             }
         } else if (-0.1 < racer->velocity && racer->velocity < 0.1) {
-            if (obj->object.animationID == ANIM_SMOKEY_WALK) {
-                obj->object.animationID = ANIM_SMOKEY_RUN;
-                racer->animationSpeed = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
+            if (obj->animationID == ANIM_SMOKEY_WALK) {
+                obj->animationID = ANIM_SMOKEY_RUN;
+                racer->animationSpeed = (objModel->animations[obj->animationID].animLength * 16) - 17;
             } else {
-                obj->object.animationID = ANIM_SMOKEY_IDLE;
+                obj->animationID = ANIM_SMOKEY_IDLE;
             }
         } else {
-            if (obj->object.animationID == ANIM_SMOKEY_IDLE) {
-                obj->object.animationID = ANIM_SMOKEY_RUN;
+            if (obj->animationID == ANIM_SMOKEY_IDLE) {
+                obj->animationID = ANIM_SMOKEY_RUN;
                 racer->animationSpeed = 0.0f;
             }
-            if (obj->object.animationID == ANIM_SMOKEY_FLY && racer->groundedWheels && racer->velocity > -6.0) {
-                obj->object.animationID = ANIM_SMOKEY_LAND;
-                racer->animationSpeed = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
+            if (obj->animationID == ANIM_SMOKEY_FLY && racer->groundedWheels && racer->velocity > -6.0) {
+                obj->animationID = ANIM_SMOKEY_LAND;
+                racer->animationSpeed = (objModel->animations[obj->animationID].animLength * 16) - 17;
             }
         }
     }
@@ -220,10 +220,10 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->animFrame = racer->animationSpeed;
     stepFrame = obj->animFrame >> 4;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
-    if (obj->object.animationID != ANIM_SMOKEY_RUN && obj->object.animationID != 2) {
+    if (obj->animationID != ANIM_SMOKEY_RUN && obj->animationID != 2) {
         animFrame >>= 4;
         stepFrame = 1;
-        if (obj->object.animationID == ANIM_SMOKEY_IDLE) {
+        if (obj->animationID == ANIM_SMOKEY_IDLE) {
             stepFrame = 3;
         }
         if (animFrame == stepFrame && stepFrame + 1 == obj->animFrame >> 4) {
@@ -255,14 +255,14 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         racer->headAngleTarget = headAngleRange;
     }
-    if (obj->object.animationID >= ANIM_SMOKEY_WALK) {
+    if (obj->animationID >= ANIM_SMOKEY_WALK) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
     racer = &firstRacerObj->unk64->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
-        obj->object.animationID == ANIM_SMOKEY_RUN) {
+        obj->animationID == ANIM_SMOKEY_RUN) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {

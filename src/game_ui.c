@@ -1503,7 +1503,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         return;
     }
 
-    ttSWBodyObject->object.animationID = gStopwatchAnimID;
+    ttSWBodyObject->animationID = gStopwatchAnimID;
     modInst = ttSWBodyObject->modelInstances[0];
     modInst->objModel->texOffsetUpdateRate = updateRate;
     if (gStopwatchAnimID != 0xFF) {
@@ -3669,7 +3669,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
             gCurrentHud->entry[HUD_MINIMAP_MARKER].spriteID = HUD_SPRITE_MAP_DOT;
             gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
             gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
-            tempVar1 = (opacity * (f32) temp_v0_8->object.opacity) * (1.0 / 128.0);
+            tempVar1 = (opacity * (f32) temp_v0_8->opacity) * (1.0 / 128.0);
             gDPSetPrimColor(gHudDL++, 0, 0, 60, 60, 60, tempVar1);
             hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_MINIMAP_MARKER]);
         }
@@ -3678,7 +3678,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
     if (temp_v0_8 != NULL) {
         minimap_marker_pos(temp_v0_8->trans.x_position, temp_v0_8->trans.z_position, sp114, sp118, sp11C);
         gCurrentHud->entry[HUD_MINIMAP_MARKER].rotation.z_rotation = 0;
-        tempVar1 = (opacity * (f32) temp_v0_8->object.opacity) * (1.0 / 128.0);
+        tempVar1 = (opacity * (f32) temp_v0_8->opacity) * (1.0 / 128.0);
         gDPSetPrimColor(gHudDL++, 0, 0, gHudMinimapColours[8].red, gHudMinimapColours[8].green,
                         gHudMinimapColours[8].blue, tempVar1);
         gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 1.0f;
@@ -3959,8 +3959,8 @@ void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hu
         tempObject->trans.y_position = hud->pos.y;
         tempObject->trans.z_position = hud->pos.z;
         tempObject->trans.scale = hud->scale;
-        tempObject->object.modelIndex = 0;
-        tempObject->object.opacity = 0xFF;
+        tempObject->modelIndex = 0;
+        tempObject->opacity = 0xFF;
         render_object(&gHudDL, &gHudMtx, &gHudVtx, tempObject);
     } else {
         mtx_cam_push(&gHudDL, &gHudMtx, (ObjectTransform *) hud, 1.0f, 0.0f);

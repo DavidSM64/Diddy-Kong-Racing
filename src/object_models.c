@@ -935,24 +935,24 @@ void func_80061C0C(Object *obj) {
     ModelInstance *modInst;
     s32 var_v1;
 
-    if (obj->object.modelIndex < 0) {
-        obj->object.modelIndex = 0;
+    if (obj->modelIndex < 0) {
+        obj->modelIndex = 0;
     }
     var_v1 = obj->header->numberOfModelIds - 1;
-    if (var_v1 < obj->object.modelIndex) {
-        obj->object.modelIndex = var_v1;
+    if (var_v1 < obj->modelIndex) {
+        obj->modelIndex = var_v1;
     }
-    modInst = obj->modelInstances[obj->object.modelIndex];
+    modInst = obj->modelInstances[obj->modelIndex];
     mdl = modInst->objModel;
     if (modInst->objModel->animations != NULL) {
-        if (obj->object.animationID < 0) {
-            obj->object.animationID = 0;
+        if (obj->animationID < 0) {
+            obj->animationID = 0;
         }
-        if (obj->object.animationID >= mdl->numberOfAnimations) {
-            obj->object.animationID = mdl->numberOfAnimations - 1;
+        if (obj->animationID >= mdl->numberOfAnimations) {
+            obj->animationID = mdl->numberOfAnimations - 1;
         }
         if (mdl->numberOfAnimations > 0) {
-            var_v1 = mdl->animations[obj->object.animationID].animLength - 2;
+            var_v1 = mdl->animations[obj->animationID].animLength - 2;
         } else {
             var_v1 = 0;
         }

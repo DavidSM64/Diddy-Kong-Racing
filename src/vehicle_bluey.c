@@ -61,7 +61,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     set_boss_voice_clip_offset(gBlueyVoiceTable);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
-    animID = obj->object.animationID;
+    animID = obj->animationID;
     animFrame = obj->animFrame;
     tempHeadAngle = racer->headAngle;
     if (racer->raceFinished == TRUE && func_80023568()) {
@@ -93,12 +93,12 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     *startTimer = tempStartTimer;
     racer->lateral_velocity = 0.0f;
     racer->headAngle = tempHeadAngle;
-    obj->object.animationID = animID;
+    obj->animationID = animID;
     obj->animFrame = animFrame;
     if (racer->attackType != ATTACK_NONE) {
-        if (obj->object.animationID != ANIM_BLUEY_DAMAGE) {
-            racer->unk1CD = obj->object.animationID;
-            obj->object.animationID = ANIM_BLUEY_DAMAGE;
+        if (obj->animationID != ANIM_BLUEY_DAMAGE) {
+            racer->unk1CD = obj->animationID;
+            obj->animationID = ANIM_BLUEY_DAMAGE;
             racer->animationSpeed = 0.0f;
             play_random_boss_sound(BOSS_SOUND_NEGATIVE);
             sound_play(SOUND_EXPLOSION, NULL);
@@ -117,13 +117,13 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     if ((find_next_checkpoint_node(racer->checkpoint, racer->unk1C8))->unk36[racer->unk1CA] == 1) {
         sp3C = TRUE;
     }
-    if (obj->object.animationID != ANIM_BLUEY_DAMAGE) {
+    if (obj->animationID != ANIM_BLUEY_DAMAGE) {
         if (racer->velocity < -2.0) {
             if (sp3C) {
                 if (racer->unk1CD != 3) {
                     racer->animationSpeed = 40.0f;
                 }
-                obj->object.animationID = ANIM_BLUEY_TURN;
+                obj->animationID = ANIM_BLUEY_TURN;
                 steerVel = racer->steerAngle * 2;
                 steerVel = 40 - steerVel;
                 if (steerVel < 0) {
@@ -136,16 +136,16 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
                 racer->animationSpeed += (steerVel - racer->animationSpeed) * 0.25;
             } else {
                 racer->unk1CD = 0;
-                obj->object.animationID = ANIM_BLUEY_RUN;
+                obj->animationID = ANIM_BLUEY_RUN;
                 racer->animationSpeed -= (racer->velocity * updateRateF) * 0.5;
             }
         } else if (racer->velocity < -0.1 || 0.1 < racer->velocity) {
             racer->unk1CD = 1;
-            obj->object.animationID = ANIM_BLUEY_WALK;
+            obj->animationID = ANIM_BLUEY_WALK;
             racer->animationSpeed -= racer->velocity * updateRateF * 2;
         } else {
             racer->unk1CD = 2;
-            obj->object.animationID = ANIM_BLUEY_IDLE;
+            obj->animationID = ANIM_BLUEY_IDLE;
             racer->animationSpeed += updateRateF * 1.0;
         }
     } else {
@@ -153,7 +153,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     }
     modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
-    diffX = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
+    diffX = (objModel->animations[obj->animationID].animLength * 16) - 17;
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
         modInst->animationID = -1;
@@ -162,13 +162,13 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
         racer->animationSpeed -= diffX;
         modInst->animationID = -1;
     }
-    if (modInst->animationID == -1 && obj->object.animationID == ANIM_BLUEY_DAMAGE) {
-        obj->object.animationID = racer->unk1CD;
+    if (modInst->animationID == -1 && obj->animationID == ANIM_BLUEY_DAMAGE) {
+        obj->animationID = racer->unk1CD;
     }
     animFrame = obj->animFrame;
     obj->animFrame = racer->animationSpeed;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
-    if (obj->object.animationID == ANIM_BLUEY_RUN) {
+    if (obj->animationID == ANIM_BLUEY_RUN) {
         play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
         obj->particleEmittersEnabled |= OBJ_EMIT_1 | OBJ_EMIT_2;
     }
@@ -183,17 +183,17 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
         CLAMP(tempStartTimer, -0xC00, 0xC00);
         racer->headAngleTarget = tempStartTimer;
     }
-    if (obj->object.animationID == ANIM_BLUEY_WALK) {
+    if (obj->animationID == ANIM_BLUEY_WALK) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
-    if (obj->object.animationID == ANIM_BLUEY_TURN) {
+    if (obj->animationID == ANIM_BLUEY_TURN) {
         racer->headAngleTarget = 0;
     }
     racer = &firstRacerObj->unk64->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
-        obj->object.animationID == ANIM_BLUEY_WALK) {
+        obj->animationID == ANIM_BLUEY_WALK) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {

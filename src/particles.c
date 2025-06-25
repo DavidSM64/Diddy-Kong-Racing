@@ -1199,7 +1199,7 @@ PointParticle *create_point_particle(Object *obj, ParticleEmitter *emitter) {
         return particle;
     }
 
-    particle->base.segmentID = obj->object.segmentID;
+    particle->base.segmentID = obj->segmentID;
     particle->base.trans.flags = OBJ_FLAGS_PARTICLE;
     particle->base.movementType = descriptor->movementType;
     particle->base.descFlags = descriptor->flags;
@@ -1330,7 +1330,7 @@ Particle *create_line_particle(Object *obj, ParticleEmitter *emitter) {
     if (particle == NULL) {
         return NULL;
     }
-    particle->segmentID = obj->object.segmentID;
+    particle->segmentID = obj->segmentID;
     particle->trans.flags = OBJ_FLAGS_PARTICLE;
     particle->movementType = descriptor->movementType;
     particle->descFlags = descriptor->flags;
@@ -1462,7 +1462,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
     if (particle == NULL) {
         return particle;
     }
-    particle->segmentID = obj->object.segmentID;
+    particle->segmentID = obj->segmentID;
     particle->trans.flags = OBJ_FLAGS_PARTICLE;
     particle->movementType = descriptor->movementType;
     particle->descFlags = descriptor->flags;

@@ -1846,7 +1846,14 @@ typedef struct Object {
     /* 0x0020 */ f32 y_velocity;
     /* 0x0024 */ f32 z_velocity;
     /* 0x0028 */ f32 unk28;
-    /* 0x002C */ SegmentPropertiesObject object;
+    /* 0x002C */ s16 unk2C;
+    /* 0x002E */ s16 segmentID;
+    /* 0x0030 */ f32 distanceToCamera;
+    /* 0x0034 */ f32 unk34;
+    /* 0x0038 */ s8 unk38;
+    /* 0x0039 */ u8 opacity;
+    /* 0x003A */ s8 modelIndex;
+    /* 0x003B */ s8 animationID;
     /* 0x003C */ LevelObjectEntry *level_entry;
     /* 0x0040 */ ObjectHeader *header;
     /* 0x0044 */ Vertex *curVertData;

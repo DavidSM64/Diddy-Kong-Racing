@@ -51,7 +51,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
 
     set_boss_voice_clip_offset((u16 *) gRocketVoiceTable);
     racer->tappedR = 0;
-    animID = obj->object.animationID;
+    animID = obj->animationID;
     animFrame = obj->animFrame;
     tempHeadAngle = racer->headAngle;
     if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
@@ -87,14 +87,14 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = tempStartTimer;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     racer->headAngle = tempHeadAngle;
-    obj->object.animationID = animID;
+    obj->animationID = animID;
     obj->animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->object.animationID != ANIM_ROCKET_DAMAGE) {
+    if (racer->attackType != ATTACK_NONE && obj->animationID != ANIM_ROCKET_DAMAGE) {
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         sound_play(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         obj->x_velocity *= 0.4;
-        obj->object.animationID = ANIM_ROCKET_DAMAGE;
+        obj->animationID = ANIM_ROCKET_DAMAGE;
         obj->z_velocity *= 0.4;
         racer->animationSpeed = 0.0f;
         obj->y_velocity += 4.0;
@@ -114,7 +114,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->animationSpeed += 2.0 * updateRateF;
     modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
-    diffX = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
+    diffX = (objModel->animations[obj->animationID].animLength * 16) - 17;
     while (diffX <= racer->animationSpeed) {
         racer->animationSpeed -= diffX;
         modInst->animationID = -1;
@@ -123,8 +123,8 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->animationSpeed += diffX;
         modInst->animationID = -1;
     }
-    if (obj->object.animationID == ANIM_ROCKET_DAMAGE && modInst->animationID == -1) {
-        obj->object.animationID = ANIM_ROCKET_IDLE;
+    if (obj->animationID == ANIM_ROCKET_DAMAGE && modInst->animationID == -1) {
+        obj->animationID = ANIM_ROCKET_IDLE;
         racer->animationSpeed = 0.0f;
     }
     obj->animFrame = racer->animationSpeed;
@@ -147,7 +147,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     firstRacerObj = get_racer_object(PLAYER_ONE);
     racer = &firstRacerObj->unk64->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
-        obj->object.animationID == ANIM_ROCKET_DAMAGE) {
+        obj->animationID == ANIM_ROCKET_DAMAGE) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != 0) {

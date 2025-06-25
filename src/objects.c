@@ -1890,7 +1890,7 @@ UNUSED s32 particle_count(void) {
 
 void add_particle_to_entity_list(Object *obj) {
     obj->trans.flags |= OBJ_FLAGS_PARTICLE;
-    func_800245B4(obj->object.unk2C | (OBJ_FLAGS_PARTICLE | OBJ_FLAGS_INVISIBLE));
+    func_800245B4(obj->unk2C | (OBJ_FLAGS_PARTICLE | OBJ_FLAGS_INVISIBLE));
     gObjPtrList[gObjectCount++] = obj;
     if (1) {} // Fakematch
     gParticleCount++;
@@ -1944,16 +1944,16 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     curObj->trans.x_position = entry->x;
     curObj->trans.y_position = entry->y;
     curObj->trans.z_position = entry->z;
-    curObj->object.segmentID = get_level_segment_index_from_position(curObj->trans.x_position, curObj->trans.y_position,
-                                                                     curObj->trans.z_position);
+    curObj->segmentID = get_level_segment_index_from_position(curObj->trans.x_position, curObj->trans.y_position,
+                                                              curObj->trans.z_position);
 
-    curObj->object.unk2C = headerType;
+    curObj->unk2C = headerType;
     curObj->level_entry = (LevelObjectEntry *) entry;
     curObj->objectID = objType;
     func_800245B4(objType);
     curObj->trans.scale = curObj->header->scale;
-    curObj->object.unk34 = curObj->header->unk50 * curObj->trans.scale;
-    curObj->object.opacity = 255;
+    curObj->unk34 = curObj->header->unk50 * curObj->trans.scale;
+    curObj->opacity = 255;
     behaviourFlags = obj_init_property_flags(curObj->header->behaviorId);
     curObj->header->unk52++;
 
@@ -1971,7 +1971,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
             break;
         case BHV_ANIMATED_OBJECT_4:
             i = get_character_id_from_slot(PLAYER_ONE);
-            curObj->object.modelIndex = i;
+            curObj->modelIndex = i;
             assetCount = i + 1;
             break;
         case BHV_UNK_5B:
@@ -1980,13 +1980,13 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
             if (i) {
                 i--;
                 assetCount = i + 1;
-                curObj->object.modelIndex = i;
+                curObj->modelIndex = i;
             }
             break;
         case BHV_DYNAMIC_LIGHT_OBJECT_2:
             i = settings->wizpigAmulet;
             assetCount = i + 1;
-            curObj->object.modelIndex = settings->wizpigAmulet;
+            curObj->modelIndex = settings->wizpigAmulet;
             break;
         case BHV_ROCKET_SIGNPOST_2:
             objType = settings->trophies;
@@ -1996,7 +1996,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
                 }
                 objType >>= 2;
             }
-            curObj->object.modelIndex = i;
+            curObj->modelIndex = i;
             assetCount = i + 1;
             break;
         case BHV_GOLDEN_BALLOON:
@@ -2305,7 +2305,7 @@ s32 func_8000F99C(Object *obj) {
             temp_v0 = obj60->unk4[i];
             if (temp_v0 != NULL) {
                 objFreeAssets(temp_v0, temp_v0->header->numberOfModelIds, temp_v0->header->modelType);
-                try_free_object_header(temp_v0->object.unk2C);
+                try_free_object_header(temp_v0->unk2C);
                 mempool_free(temp_v0);
             }
         }
@@ -2427,7 +2427,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
 
     object->trans.flags = OBJ_FLAGS_UNK_0002;
     object->header = objHeader;
-    object->object.unk2C = objectHeaderIndex;
+    object->unk2C = objectHeaderIndex;
     object->objectID = objectHeaderIndex;
     object->trans.scale = objHeader->scale;
     if (objHeader->flags & HEADER_FLAGS_UNK_0080) {
@@ -2558,7 +2558,7 @@ void func_800101AC(Object *obj, s32 arg1) {
                     sprite_free(tempObj->sprites[j]);
                 }
             }
-            try_free_object_header(tempObj->object.unk2C);
+            try_free_object_header(tempObj->unk2C);
             mempool_free(tempObj);
         }
     }
@@ -2766,7 +2766,7 @@ void func_800101AC(Object *obj, s32 arg1) {
             emitter_cleanup(&obj->particleEmitter[j]);
         }
     }
-    try_free_object_header(obj->object.unk2C);
+    try_free_object_header(obj->unk2C);
     mempool_free(obj);
 }
 
@@ -2934,7 +2934,7 @@ void obj_tex_animate(Object *obj, s32 updateRate) {
     s32 batchNumber;
     ModelInstance *modInst;
 
-    modInst = obj->modelInstances[obj->object.modelIndex];
+    modInst = obj->modelInstances[obj->modelIndex];
     model = modInst->objModel;
     batches = model->batches;
     temp_s5 = model->unk50;
@@ -3149,20 +3149,20 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
 
     gNoBoundsCheck = FALSE;
     if (outOfBounds) {
-        obj->object.segmentID = -1;
+        obj->segmentID = -1;
         return TRUE;
     }
 
     obj->trans.x_position = newXPos;
     obj->trans.y_position = newYPos;
     obj->trans.z_position = newZPos;
-    box = get_segment_bounding_box(obj->object.segmentID);
+    box = get_segment_bounding_box(obj->segmentID);
 
     // For some reason the XYZ positions are converted into integers for the next section
     intXPos = newXPos, intYPos = newYPos, intZPos = newZPos;
 
     if (box == NULL) {
-        obj->object.segmentID = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
+        obj->segmentID = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
         return FALSE;
     } else {
         outsideBBox = FALSE;
@@ -3178,7 +3178,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
         if (outsideBBox) {
             segmentID = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
             if (segmentID != -1) {
-                obj->object.segmentID = segmentID;
+                obj->segmentID = segmentID;
             }
         }
     }
@@ -3268,14 +3268,14 @@ void render_3d_billboard(Object *obj) {
 
     if (obj->behaviorId == BHV_BOMB_EXPLOSION) {
         //!@bug Never true, because the type is u8.
-        if (obj->object.opacity > 255) {
-            obj->object.opacity = obj->properties.bombExplosion.unk4 & 0xFF;
+        if (obj->opacity > 255) {
+            obj->opacity = obj->properties.bombExplosion.unk4 & 0xFF;
         } else {
-            obj->object.opacity = (obj->object.opacity * (obj->properties.bombExplosion.unk4 & 0xFF)) >> 8;
+            obj->opacity = (obj->opacity * (obj->properties.bombExplosion.unk4 & 0xFF)) >> 8;
         }
     }
 
-    alpha = obj->object.opacity;
+    alpha = obj->opacity;
     if (alpha > 255) {
         alpha = 255;
     }
@@ -3309,7 +3309,7 @@ void render_3d_billboard(Object *obj) {
     } else {
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     }
-    sprite = obj->sprites[obj->object.modelIndex];
+    sprite = obj->sprites[obj->modelIndex];
     bubbleTrap = NULL;
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2) {
         bubbleTrap = obj->properties.fireball.obj;
@@ -3377,7 +3377,7 @@ void render_3d_model(Object *obj) {
     ObjectModel *objModel;
     Sprite *something;
 
-    modInst = obj->modelInstances[obj->object.modelIndex];
+    modInst = obj->modelInstances[obj->modelIndex];
     if (modInst != NULL) {
         objModel = modInst->objModel;
         hasOpacity = FALSE;
@@ -3437,14 +3437,14 @@ void render_3d_model(Object *obj) {
         vertOffset = FALSE;
         if (racerObj != NULL) {
             object_undo_player_tumble(obj);
-            if (obj->object.animationID == 0 || racerObj->vehicleID >= VEHICLE_BOSSES) {
+            if (obj->animationID == 0 || racerObj->vehicleID >= VEHICLE_BOSSES) {
                 mtx_head_push(&gObjectCurrDisplayList, &gObjectCurrMatrix, modInst, racerObj->headAngle);
                 vertOffset = TRUE;
             } else {
                 racerObj->headAngle = 0;
             }
         }
-        opacity = obj->object.opacity;
+        opacity = obj->opacity;
         if (opacity > 255) {
             opacity = 255;
         }
@@ -3493,7 +3493,7 @@ void render_3d_model(Object *obj) {
                 if (!(loopObj->trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->unk60->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
-                        something = loopObj->sprites[loopObj->object.modelIndex];
+                        something = loopObj->sprites[loopObj->modelIndex];
                         vtxX = obj->curVertData[objModel->unk14[index]].x;
                         vtxY = obj->curVertData[objModel->unk14[index]].y;
                         vtxZ = obj->curVertData[objModel->unk14[index]].z;
@@ -3550,7 +3550,7 @@ void render_3d_model(Object *obj) {
                 index = obj->header->unk58;
                 if (index >= 0 && index < objModel->unk18) {
                     flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
-                    something = loopObj->sprites[loopObj->object.modelIndex];
+                    something = loopObj->sprites[loopObj->modelIndex];
                     vtxX = obj->curVertData[objModel->unk14[index]].x;
                     vtxY = obj->curVertData[objModel->unk14[index]].y;
                     vtxZ = obj->curVertData[objModel->unk14[index]].z;
@@ -3729,9 +3729,9 @@ void set_temp_model_transforms(Object *obj) {
                     if (get_current_viewport() != objRacer->playerIndex) {
                         bossAsset += 5;
                     }
-                    var_f0 = obj->object.distanceToCamera;
+                    var_f0 = obj->distanceToCamera;
                     var_v1 = (s32) var_f0 >> 3;
-                    if (obj->object.distanceToCamera < 0.0f) {
+                    if (obj->distanceToCamera < 0.0f) {
                         var_f0 = 0.0f;
                     } else if (var_f0 > 3500.0f) {
                         var_f0 = 3500.0f;
@@ -3788,14 +3788,14 @@ void set_temp_model_transforms(Object *obj) {
             if (numberOfModels < modelIndex) {
                 modelIndex = numberOfModels;
             }
-            obj->object.modelIndex = modelIndex;
+            obj->modelIndex = modelIndex;
             if ((obj->shading != NULL) && (obj->shading->unk0 < 0.6f)) {
                 objRacer->lightFlags |= RACER_LIGHT_NIGHT;
             } else {
                 objRacer->lightFlags &= ~RACER_LIGHT_NIGHT;
             }
             modelIndex = objRacer->lightFlags & RACER_LIGHT_TIMER;
-            modInst = obj->modelInstances[obj->object.modelIndex];
+            modInst = obj->modelInstances[obj->modelIndex];
             objModel = modInst->objModel;
             if (modelIndex != 0) {
                 modelIndex--;
@@ -4338,7 +4338,7 @@ UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3
     startVal = func_80014B50(arg2, endVal - 1, temp_f0, arg0->unk4 + 8);
 
     for (i = startVal; i < endVal; i++) {
-        gObjPtrList[i]->object.unk38 += arg6;
+        gObjPtrList[i]->unk38 += arg6;
     }
 
     *arg4 = startVal;
@@ -4356,12 +4356,10 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
     switch (arg3) {
         case 0:
             while (arg1 >= arg0) {
-                while ((var_a1 >= arg0) &&
-                       ((gObjPtrList[arg0]->trans.x_position - gObjPtrList[arg0]->object.unk34) < arg2)) {
+                while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->trans.x_position - gObjPtrList[arg0]->unk34) < arg2)) {
                     arg0++;
                 }
-                while ((arg1 >= var_a0) &&
-                       (arg2 <= (gObjPtrList[arg1]->trans.x_position - gObjPtrList[arg1]->object.unk34))) {
+                while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->trans.x_position - gObjPtrList[arg1]->unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -4375,12 +4373,10 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
             break;
         case 1:
             while (arg1 >= arg0) {
-                while ((var_a1 >= arg0) &&
-                       ((gObjPtrList[arg0]->trans.y_position - gObjPtrList[arg0]->object.unk34) < arg2)) {
+                while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->trans.y_position - gObjPtrList[arg0]->unk34) < arg2)) {
                     arg0++;
                 }
-                while ((arg1 >= var_a0) &&
-                       (arg2 <= (gObjPtrList[arg1]->trans.y_position - gObjPtrList[arg1]->object.unk34))) {
+                while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->trans.y_position - gObjPtrList[arg1]->unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -4394,12 +4390,10 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
             break;
         case 2:
             while (arg1 >= arg0) {
-                while ((var_a1 >= arg0) &&
-                       ((gObjPtrList[arg0]->trans.z_position - gObjPtrList[arg0]->object.unk34) < arg2)) {
+                while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->trans.z_position - gObjPtrList[arg0]->unk34) < arg2)) {
                     arg0++;
                 }
-                while ((arg1 >= var_a0) &&
-                       (arg2 <= (gObjPtrList[arg1]->trans.z_position - gObjPtrList[arg1]->object.unk34))) {
+                while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->trans.z_position - gObjPtrList[arg1]->unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -4413,12 +4407,10 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
             break;
         case 8:
             while (arg1 >= arg0) {
-                while ((var_a1 >= arg0) &&
-                       ((gObjPtrList[arg0]->trans.x_position + gObjPtrList[arg0]->object.unk34) < arg2)) {
+                while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->trans.x_position + gObjPtrList[arg0]->unk34) < arg2)) {
                     arg0++;
                 }
-                while ((arg1 >= var_a0) &&
-                       (arg2 <= (gObjPtrList[arg1]->trans.x_position + gObjPtrList[arg1]->object.unk34))) {
+                while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->trans.x_position + gObjPtrList[arg1]->unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -4432,12 +4424,10 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
             break;
         case 9:
             while (arg1 >= arg0) {
-                while ((var_a1 >= arg0) &&
-                       ((gObjPtrList[arg0]->trans.y_position + gObjPtrList[arg0]->object.unk34) < arg2)) {
+                while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->trans.y_position + gObjPtrList[arg0]->unk34) < arg2)) {
                     arg0++;
                 }
-                while ((arg1 >= var_a0) &&
-                       (arg2 <= (gObjPtrList[arg1]->trans.y_position + gObjPtrList[arg1]->object.unk34))) {
+                while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->trans.y_position + gObjPtrList[arg1]->unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -4451,12 +4441,10 @@ s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3) {
             break;
         case 10:
             while (arg1 >= arg0) {
-                while ((var_a1 >= arg0) &&
-                       ((gObjPtrList[arg0]->trans.z_position + gObjPtrList[arg0]->object.unk34) < arg2)) {
+                while ((var_a1 >= arg0) && ((gObjPtrList[arg0]->trans.z_position + gObjPtrList[arg0]->unk34) < arg2)) {
                     arg0++;
                 }
-                while ((arg1 >= var_a0) &&
-                       (arg2 <= (gObjPtrList[arg1]->trans.z_position + gObjPtrList[arg1]->object.unk34))) {
+                while ((arg1 >= var_a0) && (arg2 <= (gObjPtrList[arg1]->trans.z_position + gObjPtrList[arg1]->unk34))) {
                     arg1--;
                 }
                 if (arg0 < arg1) {
@@ -4489,18 +4477,18 @@ void sort_objects_by_dist(s32 startIndex, s32 lastIndex) {
         if (obj != NULL) {
             if (obj->trans.flags & OBJ_FLAGS_PARTICLE) {
                 // get_distance_to_camera calculates the distance to the camera from a XYZ location.
-                obj->object.distanceToCamera =
+                obj->distanceToCamera =
                     -get_distance_to_camera(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
             } else if (obj->header->flags & HEADER_FLAGS_UNK_0080) {
-                obj->object.distanceToCamera += -16000.0f;
+                obj->distanceToCamera += -16000.0f;
             } else {
-                obj->object.distanceToCamera =
+                obj->distanceToCamera =
                     -get_distance_to_camera(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
             }
         } else {
             //!@bug obj is NULL here, so it would probably cause a crash. Thankfully, gObjPtrList shouldn't have NULL
             //! objects in it.
-            obj->object.distanceToCamera = 0.0f;
+            obj->distanceToCamera = 0.0f;
         }
     }
 
@@ -4508,7 +4496,7 @@ void sort_objects_by_dist(s32 startIndex, s32 lastIndex) {
     do {
         didNotSwap = TRUE;
         for (i = startIndex; i < lastIndex; i++) {
-            if (gObjPtrList[i]->object.distanceToCamera < gObjPtrList[i + 1]->object.distanceToCamera) {
+            if (gObjPtrList[i]->distanceToCamera < gObjPtrList[i + 1]->distanceToCamera) {
                 obj = gObjPtrList[i];
                 gObjPtrList[i] = gObjPtrList[i + 1];
                 gObjPtrList[i + 1] = obj;
@@ -5313,7 +5301,7 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
         var_s2 = 0;
         do {
             temp_v0 = *(D_8011AE6C + var_s2);
-            objModel = temp_v0->modelInstances[temp_v0->object.modelIndex]->objModel;
+            objModel = temp_v0->modelInstances[temp_v0->modelIndex]->objModel;
             temp_f14 = temp_v0->trans.x_position - obj->trans.x_position;
             temp_f0 = temp_v0->trans.y_position - obj->trans.y_position;
             temp_f2 = temp_v0->trans.z_position - obj->trans.z_position;
@@ -5375,7 +5363,7 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
         do {
             temp_a1 = D_8011AE6C[*sp88];
             var_s1 = 0;
-            objModel = temp_a1->modelInstances[temp_a1->object.modelIndex]->objModel;
+            objModel = temp_a1->modelInstances[temp_a1->modelIndex]->objModel;
             temp_v0_2 = temp_a1->unk5C;
             var_fp_2 = 0;
             sp16C = 1;
@@ -8757,7 +8745,7 @@ void obj_init_animcamera(Object *arg0, Object *animObj) {
     anim->unk28 = animEntry->actorIndex;
     anim->unk8 = (f32) animEntry->nodeSpeed * 0.1;
     anim->startDelay = normalise_time(animEntry->animationStartDelay);
-    animObj->object.animationID = animEntry->objAnimIndex;
+    animObj->animationID = animEntry->objAnimIndex;
     animObj->animFrame = animEntry->unk16;
     anim->z = animEntry->objAnimSpeed;
     anim->y = 0;
@@ -9205,14 +9193,14 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
     if ((arg2 != NULL) && (arg2->header->modelType == 0)) {
         // usage of temp_s3 is definetely incorrect here. unkE[2] is probably a f32, unkE[6] as well, possibly xy
         // coordinates
-        arg2->object.animationID = arg0->object.animationID;
+        arg2->animationID = arg0->animationID;
         temp_v0_7 = arg2->animFrame;
         if (temp_v0_7 != (s16) (s32) temp_s3->effect_box.unkE[2]) {
             temp_s3->effect_box.unkE[2] = (f32) temp_v0_7;
         }
-        temp_v1_4 = arg2->modelInstances[arg2->object.modelIndex];
+        temp_v1_4 = arg2->modelInstances[arg2->modelIndex];
         if (temp_v1_4 != NULL) {
-            temp_v0_8 = arg2->object.animationID;
+            temp_v0_8 = arg2->animationID;
             temp_a0_3 = temp_v1_4->objModel;
             if ((temp_v0_8 >= 0) && (temp_v0_8 < temp_a0_3->numberOfAnimations)) {
                 temp_v1_5 = (u8) temp_s3->effect_box.unkE[0x1E];
@@ -9783,10 +9771,10 @@ void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entr
 
     initialAnimFrame = entry->unk12;
     if (initialAnimFrame >= 0) {
-        if (initialAnimFrame != charSelectObj->object.animationID) {
+        if (initialAnimFrame != charSelectObj->animationID) {
             charSelectObj->animFrame = entry->unk16;
         }
-        charSelectObj->object.animationID = entry->unk12;
+        charSelectObj->animationID = entry->unk12;
         charSelect->unk14 = entry->unk17;
         charSelect->unk2C = entry->unk18;
     }
@@ -10524,9 +10512,9 @@ void obj_taj_create_balloon(s32 blockID, f32 x, f32 y, f32 z) {
                 obj->trans.x_position = x;
                 obj->trans.y_position = y + 10.0;
                 obj->trans.z_position = z;
-                obj->object.segmentID = blockID;
+                obj->segmentID = blockID;
                 obj->properties.common.unk0 = 0;
-                obj->object.opacity = 0;
+                obj->opacity = 0;
             }
         }
     }
@@ -10627,7 +10615,7 @@ CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
                     obj->trans.x_position = ptrList->trans.x_position;
                     obj->trans.y_position = ptrList->trans.y_position;
                     obj->trans.z_position = ptrList->trans.z_position;
-                    obj->object.segmentID = ptrList->object.segmentID;
+                    obj->segmentID = ptrList->segmentID;
                     i = gObjectCount;
                 }
             }
@@ -10637,10 +10625,10 @@ CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
         obj->trans.x_position = lastCheckpointNode->x - (lastCheckpointNode->rotationZFrac * 35.0f);
         obj->trans.y_position = lastCheckpointNode->y;
         obj->trans.z_position = lastCheckpointNode->z + (lastCheckpointNode->rotationXFrac * 35.0f);
-        obj->object.segmentID =
+        obj->segmentID =
             get_level_segment_index_from_position(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
     }
-    yOutCount = func_8002BAB0(obj->object.segmentID, obj->trans.x_position, obj->trans.z_position, yOut);
+    yOutCount = func_8002BAB0(obj->segmentID, obj->trans.x_position, obj->trans.z_position, yOut);
     if (yOutCount != 0) {
         obj->trans.y_position = yOut[yOutCount - 1];
     }

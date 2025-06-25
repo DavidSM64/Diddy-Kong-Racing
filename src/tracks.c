@@ -1784,13 +1784,13 @@ void render_level_geometry_and_objects(void) {
         if (objFlags & OBJ_FLAGS_UNK_0080) {
             visible = 0;
         } else if (!(objFlags & OBJ_FLAGS_PARTICLE)) {
-            visible = obj->object.opacity;
+            visible = obj->opacity;
         }
         if (objFlags & visibleFlags) {
             visible = 0;
         }
         if (obj != NULL && visible == 255 && check_if_in_draw_range(obj) &&
-            (objectsVisible[obj->object.segmentID + 1] || obj->object.unk34 > 1000.0)) {
+            (objectsVisible[obj->segmentID + 1] || obj->unk34 > 1000.0)) {
             if (obj->trans.flags & OBJ_FLAGS_PARTICLE) {
                 render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
                 continue;
@@ -1812,7 +1812,7 @@ void render_level_geometry_and_objects(void) {
         } else {
             visible = TRUE;
         }
-        if (obj != NULL && visible && objFlags & OBJ_FLAGS_UNK_0100 && objectsVisible[obj->object.segmentID + 1] &&
+        if (obj != NULL && visible && objFlags & OBJ_FLAGS_UNK_0100 && objectsVisible[obj->segmentID + 1] &&
             check_if_in_draw_range(obj)) {
             if (obj->trans.flags & OBJ_FLAGS_PARTICLE) {
                 render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
@@ -1849,7 +1849,7 @@ void render_level_geometry_and_objects(void) {
         if (objFlags & OBJ_FLAGS_UNK_0080) {
             visible = 1;
         } else if (!(objFlags & OBJ_FLAGS_PARTICLE)) {
-            visible = obj->object.opacity;
+            visible = obj->opacity;
         }
         if (objFlags & visibleFlags) {
             visible = 0;
@@ -1857,7 +1857,7 @@ void render_level_geometry_and_objects(void) {
         if (obj->behaviorId == BHV_RACER && visible >= 255) {
             visible = 0;
         }
-        if (obj != NULL && visible < 255 && objectsVisible[obj->object.segmentID + 1] && check_if_in_draw_range(obj)) {
+        if (obj != NULL && visible < 255 && objectsVisible[obj->segmentID + 1] && check_if_in_draw_range(obj)) {
             if (visible > 0) {
                 if (obj->trans.flags & OBJ_FLAGS_PARTICLE) {
                     render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
@@ -2361,11 +2361,11 @@ s32 check_if_in_draw_range(Object *obj) {
         switch (obj->behaviorId) {
             case BHV_RACER:
                 obj64 = obj->unk64;
-                obj->object.opacity = ((obj64->racer.transparency + 1) * alpha) >> 8;
+                obj->opacity = ((obj64->racer.transparency + 1) * alpha) >> 8;
                 break;
             case BHV_TIMETRIAL_GHOST: // Ghost Object?
                 obj64 = obj->unk64;
-                obj->object.opacity = obj64->racer.transparency;
+                obj->opacity = obj64->racer.transparency;
                 break;
             case BHV_ANIMATED_OBJECT: // Cutscene object?
             case BHV_CAMERA_ANIMATION:
@@ -2376,14 +2376,14 @@ s32 check_if_in_draw_range(Object *obj) {
             case BHV_HIT_TESTER_2:      // animated objects?
             case BHV_ANIMATED_OBJECT_2: // space ships
                 obj64 = obj->unk64;
-                obj->object.opacity = obj64->animation.unk42;
+                obj->opacity = obj64->animation.unk42;
                 break;
             case BHV_PARK_WARDEN:
             case BHV_GOLDEN_BALLOON:
             case BHV_PARK_WARDEN_2: // GBParkwarden
                 break;
             default:
-                obj->object.opacity = alpha;
+                obj->opacity = alpha;
                 break;
         }
         for (i = 0; i < 3; i++) {
@@ -2392,7 +2392,7 @@ s32 check_if_in_draw_range(Object *obj) {
             w = D_8011D0F8[i].w;
             y = D_8011D0F8[i].y;
             accum = (x * obj->trans.x_position) + (y * obj->trans.y_position) + (z * obj->trans.z_position) + w +
-                    obj->object.unk34;
+                    obj->unk34;
             if (accum < 0.0f) {
                 return FALSE;
             }
@@ -2677,12 +2677,12 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3) {
         arg2->z = 0.0f;
         arg2->y = 1.0f;
     }
-    if ((obj->object.segmentID < 0) || (obj->object.segmentID >= gCurrentLevelModel->numberOfSegments)) {
+    if ((obj->segmentID < 0) || (obj->segmentID >= gCurrentLevelModel->numberOfSegments)) {
         return FALSE;
     }
-    seg = &gCurrentLevelModel->segments[obj->object.segmentID];
+    seg = &gCurrentLevelModel->segments[obj->segmentID];
     if ((seg->hasWaves != 0) && (gWaveBlockCount != 0) && (arg3 == 1)) {
-        *arg1 = func_800BB2F4(obj->object.segmentID, obj->trans.x_position, obj->trans.z_position, arg2);
+        *arg1 = func_800BB2F4(obj->segmentID, obj->trans.x_position, obj->trans.z_position, arg2);
         return TRUE;
     } else {
         *arg1 = seg->unk38;
@@ -3269,11 +3269,11 @@ void shadow_render(Object *obj, ShadowData *shadow) {
             gCurrShadowVerts = gShadowHeapVerts[gShadowIndex];
             alpha = gCurrShadowVerts[gCurrShadowHeapData[i].vtxCount].a;
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
-            if (alpha == 0 || obj->object.opacity == 0) {
+            if (alpha == 0 || obj->opacity == 0) {
                 i = shadow->meshEnd; // It'd be easier to just return...
-            } else if (alpha != 255 || obj->object.opacity != 255) {
+            } else if (alpha != 255 || obj->opacity != 255) {
                 flags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE;
-                alpha = (obj->object.opacity * alpha) >> 8;
+                alpha = (obj->opacity * alpha) >> 8;
                 gDPSetPrimColor(gTrackDL++, 0, 0, 255, 255, 255, alpha);
             }
             while (i < shadow->meshEnd) {
@@ -3481,7 +3481,7 @@ void func_8002DE30(Object *obj) {
 
     sp94 = (s32) obj->trans.y_position + obj->header->unk44;
     sp90 = (s32) obj->trans.y_position + obj->header->unk42;
-    blockId = obj->object.segmentID;
+    blockId = obj->segmentID;
     foundResult = FALSE;
     if (blockId != -1) {
         var_t3 =
@@ -3573,7 +3573,7 @@ void shadow_generate(Object *obj, s32 isWater) {
         gNewShadowY2 = obj->header->unk44 + yPos;
         gNewShadowY1 = obj->header->unk42 + yPos;
         if (obj->behaviorId != BHV_RACER) {
-            dist = obj->object.distanceToCamera;
+            dist = obj->distanceToCamera;
             if (dist < 0.0) {
                 dist = -dist;
             }

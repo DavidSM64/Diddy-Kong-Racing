@@ -83,7 +83,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     set_boss_voice_clip_offset(gTrickyVoiceTable);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
-    animID = obj->object.animationID;
+    animID = obj->animationID;
     animFrame = obj->animFrame;
     tempHeadAngle = racer->headAngle;
     if (racer->raceFinished == TRUE) {
@@ -112,11 +112,11 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = tempStartTimer;
     racer->lateral_velocity = 0.0f;
     racer->headAngle = tempHeadAngle;
-    obj->object.animationID = animID;
+    obj->animationID = animID;
     obj->animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->object.animationID != ANIM_TRICKY_DAMAGE) {
-        racer->unk1CD = obj->object.animationID;
-        obj->object.animationID = ANIM_TRICKY_DAMAGE;
+    if (racer->attackType != ATTACK_NONE && obj->animationID != ANIM_TRICKY_DAMAGE) {
+        racer->unk1CD = obj->animationID;
+        obj->animationID = ANIM_TRICKY_DAMAGE;
         obj->y_velocity += 7.5;
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         sound_play(SOUND_EXPLOSION, NULL);
@@ -132,16 +132,16 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
-    diffX = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
-    if (obj->object.animationID != ANIM_TRICKY_DAMAGE) {
+    diffX = (objModel->animations[obj->animationID].animLength * 16) - 17;
+    if (obj->animationID != ANIM_TRICKY_DAMAGE) {
         if (racer->velocity < -2.0) {
-            obj->object.animationID = ANIM_TRICKY_RUN;
+            obj->animationID = ANIM_TRICKY_RUN;
             racer->animationSpeed -= (racer->velocity * updateRateF) * 0.5;
         } else if (racer->velocity < -0.1 || racer->velocity > 0.1) {
-            obj->object.animationID = ANIM_TRICKY_WALK;
+            obj->animationID = ANIM_TRICKY_WALK;
             racer->animationSpeed -= (racer->velocity * updateRateF) * 2;
         } else {
-            obj->object.animationID = ANIM_TRICKY_IDLE;
+            obj->animationID = ANIM_TRICKY_IDLE;
             racer->animationSpeed += 1.0 * updateRateF;
         }
     } else {
@@ -155,19 +155,19 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->animationSpeed -= diffX;
         modInst->animationID = -1;
     }
-    if (modInst->animationID == -1 && obj->object.animationID == ANIM_TRICKY_DAMAGE) {
-        obj->object.animationID = racer->unk1CD;
+    if (modInst->animationID == -1 && obj->animationID == ANIM_TRICKY_DAMAGE) {
+        obj->animationID = racer->unk1CD;
     }
     animFrame = obj->animFrame;
     obj->animFrame = racer->animationSpeed;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
-    if (obj->object.animationID == ANIM_TRICKY_RUN) {
+    if (obj->animationID == ANIM_TRICKY_RUN) {
         play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
         obj->particleEmittersEnabled |= OBJ_EMIT_1 | OBJ_EMIT_2;
     }
     obj_spawn_particle(obj, updateRate);
     fade_when_near_camera(obj, racer, 120);
-    switch (obj->object.animationID) {
+    switch (obj->animationID) {
         case ANIM_TRICKY_RUN:
             headAngleRange = 0x2500;
             break;
@@ -187,7 +187,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         CLAMP(tempStartTimer, -headAngleRange, headAngleRange);
         racer->headAngleTarget = tempStartTimer;
     }
-    if (obj->object.animationID == ANIM_TRICKY_RUN) {
+    if (obj->animationID == ANIM_TRICKY_RUN) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
@@ -204,7 +204,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         level_transition_begin(1);
     }
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
-        obj->object.animationID == ANIM_TRICKY_RUN) {
+        obj->animationID == ANIM_TRICKY_RUN) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {
@@ -392,7 +392,7 @@ void fade_when_near_camera(Object *object, Object_Racer *racer, s32 distance) {
     Object *player = get_racer_object(PLAYER_ONE);
     racer->transparency = 255;
     if (!get_race_countdown()) {
-        if ((object->object.distanceToCamera + distance) < player->object.distanceToCamera) {
+        if ((object->distanceToCamera + distance) < player->distanceToCamera) {
             racer->transparency = 64;
         }
     }

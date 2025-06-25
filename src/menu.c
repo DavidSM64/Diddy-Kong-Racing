@@ -13844,9 +13844,9 @@ void menu_element_render(s32 elementID) {
                 object->trans.scale = asset->trans.scale;
                 if (gMenuDisableObjAnim == FALSE) {
                     object->animFrame = asset->unk1D;
-                    object->object.modelIndex = asset->spriteOffset;
+                    object->modelIndex = asset->spriteOffset;
                 }
-                object->object.opacity = sMenuGuiOpacity;
+                object->opacity = sMenuGuiOpacity;
                 render_object(&sMenuCurrDisplayList, &sMenuCurrHudMat, &sMenuCurrHudVerts, object);
             } else {
                 if ((*gAssetsMenuElementIds)[gMenuImages[elementID].trans.spriteID] & ASSET_MASK_SPRITE) {
