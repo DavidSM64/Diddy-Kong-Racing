@@ -491,7 +491,7 @@ void render_bubble_trap(ObjectTransform *trans, Sprite *gfxData, Object *obj, s3
 void gParticlePtrList_flush(void);
 s32 init_object_shading(Object *obj, ShadeProperties *shadeData);
 ObjectHeader *load_object_header(s32 index);
-s32 obj_init_attach_point(Object *);
+s32 obj_init_attachpoint(Object *);
 void try_free_object_header(s32 index);
 s32 get_object_property_size(Object *obj, Object_64 *obj64);
 void light_setup_light_sources(Object *obj);

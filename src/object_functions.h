@@ -135,14 +135,6 @@ typedef struct unk80037D08_arg0 {
     unk80037D08_arg0_64 *unk64;
 } unk80037D08_arg0;
 
-// Not sure if AttachPoint differs between objects yet.
-typedef struct AttachPoint_800380F8 {
-    s32 unk0;
-    Object *unk4;
-    s32 pad8;
-    Object *unkC;
-} AttachPoint_800380F8;
-
 typedef struct unk80038B74 {
     u8 pad0[8];
     s8 unk8;

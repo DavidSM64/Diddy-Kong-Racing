@@ -2190,7 +2190,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         curObj->interactObj->z_position = curObj->segment.trans.z_position;
     }
     if (curObj->segment.header->attachPointCount > 0 && curObj->segment.header->attachPointCount < 10 &&
-        obj_init_attach_point(curObj)) {
+        obj_init_attachpoint(curObj)) {
         if (D_8011AE50 != NULL) {
             tex_free((TextureHeader *) (s32) D_8011AE50);
         }
@@ -2288,7 +2288,7 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
     return (returnSize & ~3) + 4;
 }
 
-s32 obj_init_attach_point(Object *obj) {
+s32 obj_init_attachpoint(Object *obj) {
     Object *attachObj;
     AttachPoint *attachPoint;
     s32 i;

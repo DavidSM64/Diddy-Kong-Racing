@@ -1954,19 +1954,23 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
     }
 }
 
+/**
+ * Cutscene Vehicle loop behaviour.
+ * Performs its set behaviour while having its own handler for the attached vehicle parts.
+*/
 void obj_loop_vehicleanim(Object *obj, s32 updateRate) {
-    AttachPoint_800380F8 *obj60;
-    Object *someObj;
+    AttachPoint *attachPoint;
+    Object *attachObj;
 
     func_8001F460(obj, updateRate, obj);
-    obj60 = (AttachPoint_800380F8 *) obj->attachPoints;
-    if (obj60 != NULL) {
-        if (obj60->unk0 > 0) {
-            someObj = obj60->unk0 == 3 ? obj60->unkC : obj60->unk4;
-            someObj->segment.trans.rotation.y_rotation = 0x4000;
-            someObj->segment.object.modelIndex++;
-            if (someObj->segment.object.modelIndex == someObj->segment.header->numberOfModelIds) {
-                someObj->segment.object.modelIndex = 0;
+    attachPoint = obj->attachPoints;
+    if (attachPoint != NULL) {
+        if (attachPoint->count > 0) {
+            attachObj = attachPoint->count == 3 ? attachPoint->obj[2] : attachPoint->obj[0];
+            attachObj->segment.trans.rotation.y_rotation = 0x4000;
+            attachObj->segment.object.modelIndex++;
+            if (attachObj->segment.object.modelIndex == attachObj->segment.header->numberOfModelIds) {
+                attachObj->segment.object.modelIndex = 0;
             }
         }
     }
