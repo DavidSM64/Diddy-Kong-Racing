@@ -1008,8 +1008,8 @@ typedef struct Object_Animation {
   /* 0x3V */ u8 unk3B;
   /* 0x3C */ u8 unk3C;
   /* 0x3D */ u8 unk3D;
-  /* 0x3E */ u8 unk3E;
-  /* 0x3F */ u8 unk3F;
+  /* 0x3E */ s8 unk3E;
+  /* 0x3F */ s8 unk3F;
   /* 0x40 */ u8 unk40;
   /* 0x41 */ u8 unk41;
   /* 0x42 */ u8 unk42;
