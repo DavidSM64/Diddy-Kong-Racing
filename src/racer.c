@@ -1587,7 +1587,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s32 iTemp; // Seems to be reused for some reason
     s32 var_a3;
     s32 var_v1;
-    Unknown80046524 *temp_v0_16;
+    Object *vehiclePart;
     s32 var_t0;
     Object_Boost *asset20;
     s8 lastWheelSurface;
@@ -2263,11 +2263,11 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (waterHeight > 40.0f) {
         racer->unkC4 = 0.11f;
     }
-    if (obj->unk60->unk0 == 1) {
-        temp_v0_16 = (Unknown80046524 *) obj->unk60->unk4[0];
-        temp_v0_16->unk0 = (gCurrentStickX * 20) + 0x4000;
-        temp_v0_16->unk3A++;
-        temp_v0_16->unk3A &= 1;
+    if (obj->attachPoints->count == 1) {
+        vehiclePart = obj->attachPoints->obj[0];
+        vehiclePart->segment.trans.rotation.y_rotation = (gCurrentStickX * 20) + 0x4000;
+        vehiclePart->segment.object.modelIndex++;
+        vehiclePart->segment.object.modelIndex &= 1;
     }
     second_racer_camera_update(obj, racer, CAMERA_HOVERCRAFT, updateRateF);
     if (playerObjectHasMoved) {
@@ -3308,24 +3308,24 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     mtxf_from_inverse_transform((MtxF *) &sp60, &gCurrentRacerTransform);
     mtxf_transform_point((MtxF *) &sp60, obj->segment.x_velocity, obj->segment.y_velocity, obj->segment.z_velocity,
                          &racer->lateral_velocity, &racer->unk34, &racer->velocity);
-    if (obj->unk60 != NULL && obj->unk60->unk0 >= 3) {
-        temp_v0_obj = obj->unk60->unk4[2];
+    if (obj->attachPoints != NULL && obj->attachPoints->count >= 3) {
+        temp_v0_obj = obj->attachPoints->obj[2];
         temp_v0_obj->segment.trans.rotation.y_rotation = 0x4000;
         temp_v0_obj->segment.object.modelIndex += 1;
         if (temp_v0_obj->segment.object.modelIndex == temp_v0_obj->segment.header->numberOfModelIds) {
             temp_v0_obj->segment.object.modelIndex = 0;
         }
     }
-    if (obj->unk60 != NULL && obj->unk60->unk0 >= 3) {
+    if (obj->attachPoints != NULL && obj->attachPoints->count >= 3) {
         if (racer->groundedWheels != 0 || spA2 != FALSE) {
-            temp_v0_obj = obj->unk60->unk4[0];
+            temp_v0_obj = obj->attachPoints->obj[0];
             if (temp_v0_obj->segment.trans.y_position > 0.0f) {
                 temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position - 2.0;
             } else {
                 temp_v0_obj->segment.trans.y_position = 0.0f;
             }
             temp_v0_obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
-            temp_v0_obj = obj->unk60->unk4[1];
+            temp_v0_obj = obj->attachPoints->obj[1];
             if (temp_v0_obj->segment.trans.y_position > 0.0f) {
                 temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position - 2.0;
             } else {
@@ -3333,13 +3333,13 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             }
             temp_v0_obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
         } else {
-            temp_v0_obj = obj->unk60->unk4[0];
+            temp_v0_obj = obj->attachPoints->obj[0];
             if (temp_v0_obj->segment.trans.y_position < 20.0f) {
                 temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position + 1.0f;
             } else {
                 temp_v0_obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
             }
-            temp_v0_obj = obj->unk60->unk4[1];
+            temp_v0_obj = obj->attachPoints->obj[1];
             if (temp_v0_obj->segment.trans.y_position < 20.0f) {
                 temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position + 1.0f;
             } else {
@@ -3905,10 +3905,10 @@ void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
     mtxf_transform_point(&mtx, racerObj->segment.x_velocity, racerObj->segment.y_velocity, racerObj->segment.z_velocity,
                          &racer->lateral_velocity, &racer->unk34, &racer->velocity);
     second_racer_camera_update(racerObj, racer, CAMERA_LOOP, updateRateF);
-    if (racerObj->unk60 != NULL && racer->vehicleIDPrev == VEHICLE_CAR && racerObj->unk60->unk0 >= 4) {
-        obj = racerObj->unk60->unk4[2];
+    if (racerObj->attachPoints != NULL && racer->vehicleIDPrev == VEHICLE_CAR && racerObj->attachPoints->count >= 4) {
+        obj = racerObj->attachPoints->obj[2];
         obj->segment.trans.rotation.y_rotation = 0;
-        obj = racerObj->unk60->unk4[3];
+        obj = racerObj->attachPoints->obj[3];
         obj->segment.trans.rotation.y_rotation = 0;
     }
     if (objectMoved) {
@@ -5131,10 +5131,10 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->carBobX = -racer->roll * tempVel;
         racer->carBobY = -racer->yaw * tempVel;
         racer->carBobZ = -racer->pitch * tempVel;
-        if (obj->unk60 != NULL) {
-            for (i = 0; i < ((unk_Object_60 *) obj->unk60)->count; i++) {
+        if (obj->attachPoints != NULL) {
+            for (i = 0; i < ((unk_AttachPoint *) obj->attachPoints)->count; i++) {
                 tempVel = 1.0f / obj->segment.trans.scale;
-                temp_v0 = ((unk_Object_60 *) obj->unk60)->transforms[i];
+                temp_v0 = ((unk_AttachPoint *) obj->attachPoints)->transforms[i];
                 temp_v0->x_position = (f32) (-racer->carBobX * tempVel);
                 temp_v0->y_position = (f32) (-racer->carBobY * tempVel);
                 temp_v0->z_position = (f32) (-racer->carBobZ * tempVel);
@@ -6124,14 +6124,14 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
     s32 isNotHardBraking;
     s32 i;
 
-    if (objRacer->unk60 == NULL) {
+    if (objRacer->attachPoints == NULL) {
         return;
     }
-    temp_v1 = objRacer->unk60->unk0;
+    temp_v1 = objRacer->attachPoints->count;
     if (temp_v1 == 2) {
-        someObj = objRacer->unk60->unk4[0];
+        someObj = objRacer->attachPoints->obj[0];
         someObj->segment.trans.rotation.y_rotation = 0x4000;
-        someObj = objRacer->unk60->unk4[1];
+        someObj = objRacer->attachPoints->obj[1];
         someObj->segment.trans.rotation.y_rotation = 0x4000;
     }
     if (temp_v1 >= 4) {
@@ -6154,7 +6154,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
             racer->unkB0 -= 5.0;
             for (i = 0; i < 4; i++) {
                 if (i < 2 || isNotHardBraking) {
-                    someObj = objRacer->unk60->unk4[i];
+                    someObj = objRacer->attachPoints->obj[i];
                     if ((racer->unk1FB != 0 && i >= 3) || racer->unk1FB == 0) {
                         if (someObj->properties.common.unk0 != 0) {
                             someObj->segment.object.modelIndex--;
@@ -6175,7 +6175,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
             racer->unkB0 += 5.0;
             for (i = 0; i < 4; i++) {
                 if (i < 2 || isNotHardBraking) {
-                    someObj = objRacer->unk60->unk4[i];
+                    someObj = objRacer->attachPoints->obj[i];
                     if ((racer->unk1FB != 0 && i >= 3) || racer->unk1FB == 0) {
                         if (someObj->properties.common.unk0 == 0) {
                             someObj->segment.object.modelIndex--;
@@ -6195,7 +6195,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
         flags = 1;
         if (racer->unk1FB != 0) {
             for (i = 0; i < 2; i++) {
-                someObj = objRacer->unk60->unk4[i];
+                someObj = objRacer->attachPoints->obj[i];
                 if (someObj->properties.racer.unk0 != 0) {
                     someObj->segment.object.modelIndex--;
                     if (someObj->segment.object.modelIndex < 0) {
@@ -6212,7 +6212,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
         }
         temp_f0 = someObj->segment.trans.y_position; // Fake
         for (i = 0; i < 4; i++) {
-            someObj = objRacer->unk60->unk4[i];
+            someObj = objRacer->attachPoints->obj[i];
             if (!(racer->unk1E3 & flags)) {
                 someObj->segment.trans.y_position += ((-10.0f - someObj->segment.trans.y_position) * 0.125);
                 if (racer->waterTimer != 0) {
@@ -6226,9 +6226,9 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
             }
             flags <<= 1;
         }
-        someObj = objRacer->unk60->unk4[2];
+        someObj = objRacer->attachPoints->obj[2];
         someObj->segment.trans.rotation.y_rotation = gCurrentStickX * 100;
-        someObj = objRacer->unk60->unk4[3];
+        someObj = objRacer->attachPoints->obj[3];
         someObj->segment.trans.rotation.y_rotation = gCurrentStickX * 100;
     }
 }

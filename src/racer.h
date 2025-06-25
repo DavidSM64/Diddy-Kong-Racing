@@ -150,10 +150,10 @@ typedef struct Unknown80046524 {
     s8 unk3A;
 } Unknown80046524;
 
-typedef struct unk_Object_60 {
+typedef struct unk_AttachPoint {
     s32 count;
     ObjectTransform *transforms[1];
-} unk_Object_60;
+} unk_AttachPoint;
 
 s32 roll_percent_chance(s32 chance);
 void apply_plane_tilt_anim(s32 updateRate, Object *obj, Object_Racer *racer);

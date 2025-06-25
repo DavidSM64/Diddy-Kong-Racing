@@ -1768,10 +1768,10 @@ void func_8000E5EC(LevelObjectEntryCommon *arg0) {
     dst = (u8 *) arg0;
     src = (u8 *) ((s32) arg0 + size);
     end = sp30[sp1C];
-    if ((u32) src < end) {
+    if ((u32) src < (u32) end) {
         do {
             *dst++ = *src++;
-        } while ((u32) src != end);
+        } while ((u32) src != (u32) end);
     }
     D_8011AEA0[sp1C] -= size;
 
@@ -1810,7 +1810,7 @@ void func_8000E79C(u8 *arg0, u8 *arg1) {
         var_a2 = arg0 + arg1Value;
         var_t0 = arg0 + arg0Value2;
         k = (u32) var_a3;
-        while (((u32) var_t0) < k) {
+        while (((u32) var_t0) < (u32) k) {
             *var_a2 = *var_t0;
             var_a2++;
             var_t0++;
@@ -1820,7 +1820,7 @@ void func_8000E79C(u8 *arg0, u8 *arg1) {
         var_a2 -= arg0Value2;
         var_t0 = var_a3;
         k = (u32) (arg0 + arg1Value);
-        while (k < ((u32) var_a2)) {
+        while ((u32) k < ((u32) var_a2)) {
             var_a2--;
             var_t0--;
             *var_a2 = *var_t0;
@@ -2104,9 +2104,9 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (behaviourFlags & OBJECT_BEHAVIOUR_UNK20) {
         address += func_8000FD34(curObj, (Object_5C *) address);
     }
-    if (curObj->segment.header->unk56 > 0 && curObj->segment.header->unk56 < 10) {
-        curObj->unk60 = (Object_60 *) address;
-        address += sizeof(Object_60);
+    if (curObj->segment.header->attachPointCount > 0 && curObj->segment.header->attachPointCount < 10) {
+        curObj->attachPoints = (AttachPoint *) address;
+        address += sizeof(AttachPoint);
     }
     if (curObj->segment.header->particleCount > 0) {
         address += obj_init_emitter(curObj, (ParticleEmitter *) address);
@@ -2165,8 +2165,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (curObj->unk5C != NULL) {
         curObj->unk5C = (Object_5C *) (((uintptr_t) curObj + (uintptr_t) curObj->unk5C) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (curObj->unk60 != NULL) {
-        curObj->unk60 = (Object_60 *) (((uintptr_t) curObj + (uintptr_t) curObj->unk60) - (uintptr_t) gSpawnObjectHeap);
+    if (curObj->attachPoints != NULL) {
+        curObj->attachPoints = (AttachPoint *) (((uintptr_t) curObj + (uintptr_t) curObj->attachPoints) - (uintptr_t) gSpawnObjectHeap);
     }
     if (curObj->segment.header->particleCount > 0) {
         curObj->particleEmitter = (ParticleEmitter *) (((uintptr_t) curObj + (uintptr_t) curObj->particleEmitter) -
@@ -2188,7 +2188,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         curObj->interactObj->y_position = curObj->segment.trans.y_position;
         curObj->interactObj->z_position = curObj->segment.trans.z_position;
     }
-    if (curObj->segment.header->unk56 > 0 && curObj->segment.header->unk56 < 10 && func_8000F99C(curObj)) {
+    if (curObj->segment.header->attachPointCount > 0 && curObj->segment.header->attachPointCount < 10 && obj_init_attach_point(curObj)) {
         if (D_8011AE50 != NULL) {
             tex_free((TextureHeader *) (s32) D_8011AE50);
         }
@@ -2286,34 +2286,34 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
     return (returnSize & ~3) + 4;
 }
 
-s32 func_8000F99C(Object *obj) {
-    Object *temp_v0;
-    Object_60 *obj60;
+s32 obj_init_attach_point(Object *obj) {
+    Object *attachObj;
+    AttachPoint *attachPoint;
     s32 i;
-    s32 var_s4;
+    s32 failed;
 
-    obj60 = obj->unk60;
-    obj60->unk0 = obj->segment.header->unk56;
-    obj60->unk0 = obj60->unk0; // Fakematch?
-    var_s4 = FALSE;
-    for (i = 0; i < obj60->unk0; i++) {
-        obj60->unk4[i] = func_8000FD54(obj->segment.header->vehiclePartIds[i ^ 0]); // i ^ 0 fakematch
-        if (obj60->unk4[i] == NULL) {
-            var_s4 = TRUE;
+    attachPoint = obj->attachPoints;
+    attachPoint->count = obj->segment.header->attachPointCount;
+    attachPoint->count = attachPoint->count; // Fakematch?
+    failed = FALSE;
+    for (i = 0; i < attachPoint->count; i++) {
+        attachPoint->obj[i] = obj_spawn_attachment(obj->segment.header->vehiclePartIds[i ^ 0]); // i ^ 0 fakematch
+        if (attachPoint->obj[i] == NULL) {
+            failed = TRUE;
         }
     }
-    if (var_s4) {
-        for (i = 0; i < obj60->unk0; i++) {
-            temp_v0 = obj60->unk4[i];
-            if (temp_v0 != NULL) {
-                objFreeAssets(temp_v0, temp_v0->segment.header->numberOfModelIds, temp_v0->segment.header->modelType);
-                try_free_object_header(temp_v0->segment.object.unk2C);
-                mempool_free(temp_v0);
+    if (failed) {
+        for (i = 0; i < attachPoint->count; i++) {
+            attachObj = attachPoint->obj[i];
+            if (attachObj != NULL) {
+                objFreeAssets(attachObj, attachObj->segment.header->numberOfModelIds, attachObj->segment.header->modelType);
+                try_free_object_header(attachObj->segment.object.unk2C);
+                mempool_free(attachObj);
             }
         }
         return TRUE;
     }
-    obj60->unk2C = obj->segment.header->vehiclePartIndices;
+    attachPoint->unk2C = obj->segment.header->vehiclePartIndices;
     return FALSE;
 }
 
@@ -2397,8 +2397,12 @@ s32 func_8000FD34(Object *obj, Object_5C *matrices) {
     return sizeof(Object_5C);
 }
 
-// Loads an object from object header index
-Object *func_8000FD54(s32 objectHeaderIndex) {
+/**
+ * Attempts to spawn an attachment object.
+ * Similar to the regular object spawning function, but cut down considerably.
+ * 
+*/
+Object *obj_spawn_attachment(s32 objID) {
     s32 modelType;
     Object *object;
     ObjectHeader *objHeader;
@@ -2408,17 +2412,17 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     s8 numModelIds;
     u8 *objectAsRawBytes;
 
-    if (objectHeaderIndex >= gAssetsObjectHeadersTableLength) {
-        objectHeaderIndex = 0;
+    if (objID >= gAssetsObjectHeadersTableLength) {
+        objID = 0;
     }
-    objHeader = load_object_header(objectHeaderIndex);
+    objHeader = load_object_header(objID);
     if (objHeader == NULL) {
         return NULL;
     }
     objSize = (objHeader->numberOfModelIds * 4) + 0x80;
     object = (Object *) mempool_alloc(objSize, COLOUR_TAG_BLUE);
     if (object == NULL) {
-        try_free_object_header(objectHeaderIndex);
+        try_free_object_header(objID);
         return NULL;
     }
 
@@ -2429,8 +2433,8 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
 
     object->segment.trans.flags = OBJ_FLAGS_UNK_0002;
     object->segment.header = objHeader;
-    object->segment.object.unk2C = objectHeaderIndex;
-    object->objectID = objectHeaderIndex;
+    object->segment.object.unk2C = objID;
+    object->objectID = objID;
     object->segment.trans.scale = objHeader->scale;
     if (objHeader->flags & HEADER_FLAGS_UNK_0080) {
         object->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
@@ -2457,7 +2461,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     }
     if (failedToLoadModel) {
         objFreeAssets(object, numModelIds, modelType);
-        try_free_object_header(objectHeaderIndex);
+        try_free_object_header(objID);
         mempool_free(object);
         return NULL;
     }
@@ -2546,14 +2550,14 @@ void func_800101AC(Object *obj, s32 arg1) {
         return;
     }
 
-    if (obj->unk60 != NULL) {
-        for (i = 0; i < obj->unk60->unk0; i++) {
-            tempObj = obj->unk60->unk4[i];
+    if (obj->attachPoints != NULL) {
+        for (i = 0; i < obj->attachPoints->count; i++) {
+            tempObj = obj->attachPoints->obj[i];
             numberOfModelIds = tempObj->segment.header->numberOfModelIds;
             modelType = tempObj->segment.header->modelType;
             if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
                 for (j = 0; j < numberOfModelIds; j++) {
-                    free_3d_model(&tempObj->modelInstances[j]->objModel);
+                    free_3d_model((ModelInstance *) &tempObj->modelInstances[j]->objModel);
                 }
             } else {
                 for (j = 0; j < numberOfModelIds; j++) {
@@ -3363,7 +3367,7 @@ void render_3d_model(Object *obj) {
     s32 intensity;
     s32 opacity;
     s32 vertOffset;
-    s32 obj60_unk0;
+    s32 attachPointCount;
     s32 hasOpacity;
     s32 hasLighting;
     s32 flags;
@@ -3373,7 +3377,7 @@ void render_3d_model(Object *obj) {
     f32 vtxY;
     f32 vtxZ;
     s8 index;
-    s8 var_v0_2;
+    s8 isCargo;
     Object *loopObj;
     ModelInstance *modInst;
     Object_Racer *racerObj;
@@ -3486,15 +3490,15 @@ void render_3d_model(Object *obj) {
             }
             directional_lighting_off();
         }
-        if (obj->unk60 != NULL) {
-            obj60_unk0 = obj->unk60->unk0;
+        if (obj->attachPoints != NULL) {
+            attachPointCount = obj->attachPoints->count;
             if (racerObj != NULL && racerObj->vehicleID == VEHICLE_FLYING_CAR) {
-                obj60_unk0 = 0;
+                attachPointCount = 0;
             }
-            for (i = 0; i < obj60_unk0; i++) {
-                loopObj = obj->unk60->unk4[i];
+            for (i = 0; i < attachPointCount; i++) {
+                loopObj = obj->attachPoints->obj[i];
                 if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
-                    index = obj->unk60->unk2C[i];
+                    index = obj->attachPoints->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
                         something = loopObj->sprites[loopObj->segment.object.modelIndex];
                         vtxX = obj->curVertData[objModel->unk14[index]].x;
@@ -3521,11 +3525,12 @@ void render_3d_model(Object *obj) {
 #else
                         if (1) {
 #endif
-                            var_v0_2 = (loopObj->segment.trans.flags & OBJ_FLAGS_UNK_0080 && obj60_unk0 == 3);
+                            // In this instance, cargo refers to the eggs in the fire mountain challenge.
+                            isCargo = (loopObj->segment.trans.flags & OBJ_FLAGS_UNK_0080 && attachPointCount == 3);
                             if (racerObj != NULL && racerObj->transparency < 255) {
-                                var_v0_2 = FALSE;
+                                isCargo = FALSE;
                             }
-                            if (var_v0_2) {
+                            if (isCargo) {
                                 func_80012C98(&gObjectCurrDisplayList);
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
                                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity,
@@ -3534,7 +3539,7 @@ void render_3d_model(Object *obj) {
                             loopObj->properties.common.unk0 =
                                 render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix,
                                                         &gObjectCurrVertexList, loopObj, something, flags);
-                            if (var_v0_2) {
+                            if (isCargo) {
                                 gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
                                 func_80012CE8(&gObjectCurrDisplayList);
                             }
@@ -6192,7 +6197,7 @@ void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
                                             midiFade->unk0 = var_v1;
                                             midiFade->unk1 = 0;
                                             midiFade->unk4 = 0;
-                                            D_8011AF60[0] = (s32) midiFade;
+                                            D_8011AF60[0] = (Object_MidiFade *) midiFade;
                                         }
                                     }
                                 }
@@ -9099,7 +9104,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
         temp_s3->racer.unk2A = temp_v0_3 - arg1;
         if ((s16) temp_s3->racer.unk2A <= 0) {
             temp_s3->effect_box.unkE[0x37] = 1;
-            temp_s1 = temp_s3->racer.unk1C->pan;
+            temp_s1 = (LevelObjectEntry_Animation *) temp_s3->racer.unk1C->pan;
             func_80021104(arg0, &temp_s3->animation, temp_s1);
             temp_s3->racer.unk2A = 0;
             func_8002125C(arg0, (LevelObjectEntry_CharacterSelect *) temp_s1, (Object_CharacterSelect *) temp_s3, -1);
