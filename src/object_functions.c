@@ -1842,11 +1842,11 @@ void obj_loop_animobject(Object *obj, s32 updateRate) {
 
 void obj_loop_dooropener(Object *obj, s32 updateRate) {
     s32 openDoors;
-    unk80037D08_arg0_64 *doorOpener;
+    Object_AnimatedObject *doorOpener;
 
-    doorOpener = (unk80037D08_arg0_64 *) obj->unk64;
+    doorOpener = &obj->unk64->animatedObject;
     openDoors = 1 - func_8001F460(obj, updateRate, obj);
-    if (doorOpener->unk2A > 0) {
+    if (doorOpener->startDelay > 0) {
         openDoors = FALSE;
     }
     obj_door_open(openDoors);

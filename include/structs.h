@@ -1614,7 +1614,7 @@ typedef struct Object_AnimatedObject {
     /* 0x24 */ s16 currentSound;
     /* 0x26 */ s16 unk26;
     /* 0x28 */ s16 unk28;
-    /* 0x2A */ u16 startDelay;
+    /* 0x2A */ s16 startDelay;
     /* 0x2C */ u8 unk2C;
     /* 0x2D */ u8 unk2D;
     /* 0x2E */ u8 unk2E;
