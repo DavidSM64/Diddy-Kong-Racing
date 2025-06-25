@@ -56,7 +56,7 @@ void racer_special_init(Object *object, Object_Racer *racer) {
     object->interactObj->hitboxRadius = 30;
     object->interactObj->pushForce = 0;
     racer->animationSpeed = 0.0f;
-    gTrickyRacerPeakHeight = object->segment.trans.y_position;
+    gTrickyRacerPeakHeight = object->trans.y_position;
     if (racer->vehicleSound) {
         racer_sound_free(object);
     }
@@ -83,8 +83,8 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     set_boss_voice_clip_offset(gTrickyVoiceTable);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
-    animID = obj->segment.object.animationID;
-    animFrame = obj->segment.animFrame;
+    animID = obj->object.animationID;
+    animFrame = obj->animFrame;
     tempHeadAngle = racer->headAngle;
     if (racer->raceFinished == TRUE) {
         func_80021400(130);
@@ -112,12 +112,12 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = tempStartTimer;
     racer->lateral_velocity = 0.0f;
     racer->headAngle = tempHeadAngle;
-    obj->segment.object.animationID = animID;
-    obj->segment.animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_TRICKY_DAMAGE) {
-        racer->unk1CD = obj->segment.object.animationID;
-        obj->segment.object.animationID = ANIM_TRICKY_DAMAGE;
-        obj->segment.y_velocity += 7.5;
+    obj->object.animationID = animID;
+    obj->animFrame = animFrame;
+    if (racer->attackType != ATTACK_NONE && obj->object.animationID != ANIM_TRICKY_DAMAGE) {
+        racer->unk1CD = obj->object.animationID;
+        obj->object.animationID = ANIM_TRICKY_DAMAGE;
+        obj->y_velocity += 7.5;
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         sound_play(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
@@ -126,22 +126,22 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     racer->attackType = ATTACK_NONE;
     if (racer->approachTarget != NULL) {
-        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
-        diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
+        diffX = obj->x_velocity * obj->x_velocity;
+        diffZ = obj->z_velocity * obj->z_velocity;
         racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
     }
     modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
-    diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
-    if (obj->segment.object.animationID != ANIM_TRICKY_DAMAGE) {
+    diffX = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
+    if (obj->object.animationID != ANIM_TRICKY_DAMAGE) {
         if (racer->velocity < -2.0) {
-            obj->segment.object.animationID = ANIM_TRICKY_RUN;
+            obj->object.animationID = ANIM_TRICKY_RUN;
             racer->animationSpeed -= (racer->velocity * updateRateF) * 0.5;
         } else if (racer->velocity < -0.1 || racer->velocity > 0.1) {
-            obj->segment.object.animationID = ANIM_TRICKY_WALK;
+            obj->object.animationID = ANIM_TRICKY_WALK;
             racer->animationSpeed -= (racer->velocity * updateRateF) * 2;
         } else {
-            obj->segment.object.animationID = ANIM_TRICKY_IDLE;
+            obj->object.animationID = ANIM_TRICKY_IDLE;
             racer->animationSpeed += 1.0 * updateRateF;
         }
     } else {
@@ -155,19 +155,19 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->animationSpeed -= diffX;
         modInst->animationID = -1;
     }
-    if (modInst->animationID == -1 && obj->segment.object.animationID == ANIM_TRICKY_DAMAGE) {
-        obj->segment.object.animationID = racer->unk1CD;
+    if (modInst->animationID == -1 && obj->object.animationID == ANIM_TRICKY_DAMAGE) {
+        obj->object.animationID = racer->unk1CD;
     }
-    animFrame = obj->segment.animFrame;
-    obj->segment.animFrame = racer->animationSpeed;
+    animFrame = obj->animFrame;
+    obj->animFrame = racer->animationSpeed;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
-    if (obj->segment.object.animationID == ANIM_TRICKY_RUN) {
+    if (obj->object.animationID == ANIM_TRICKY_RUN) {
         play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
         obj->particleEmittersEnabled |= OBJ_EMIT_1 | OBJ_EMIT_2;
     }
     obj_spawn_particle(obj, updateRate);
     fade_when_near_camera(obj, racer, 120);
-    switch (obj->segment.object.animationID) {
+    switch (obj->object.animationID) {
         case ANIM_TRICKY_RUN:
             headAngleRange = 0x2500;
             break;
@@ -179,32 +179,32 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             break;
     }
     firstRacerObj = get_racer_object(PLAYER_ONE);
-    diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
-    diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+    diffX = firstRacerObj->trans.x_position - obj->trans.x_position;
+    diffZ = firstRacerObj->trans.z_position - obj->trans.z_position;
     if (sqrtf((diffX * diffX) + (diffZ * diffZ)) < 700.0) {
-        tempStartTimer = (arctan2_f(diffX, diffZ) - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
+        tempStartTimer = (arctan2_f(diffX, diffZ) - (obj->trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(tempStartTimer, -0x8000, 0x8000);
         CLAMP(tempStartTimer, -headAngleRange, headAngleRange);
         racer->headAngleTarget = tempStartTimer;
     }
-    if (obj->segment.object.animationID == ANIM_TRICKY_RUN) {
+    if (obj->object.animationID == ANIM_TRICKY_RUN) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
     // Record the players height record. Falling 400 units below that will trigger a warp.
     racer = &firstRacerObj->unk64->racer;
-    if (gTrickyRacerPeakHeight < firstRacerObj->segment.trans.y_position) {
-        gTrickyRacerPeakHeight = firstRacerObj->segment.trans.y_position;
+    if (gTrickyRacerPeakHeight < firstRacerObj->trans.y_position) {
+        gTrickyRacerPeakHeight = firstRacerObj->trans.y_position;
     }
-    if (firstRacerObj->segment.trans.y_position + 400.0 < gTrickyRacerPeakHeight) {
+    if (firstRacerObj->trans.y_position + 400.0 < gTrickyRacerPeakHeight) {
         if (check_fadeout_transition() == 0 && is_in_two_player_adventure()) {
             swap_lead_player();
         }
         level_transition_begin(1);
     }
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
-        obj->segment.object.animationID == ANIM_TRICKY_RUN) {
+        obj->object.animationID == ANIM_TRICKY_RUN) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {
@@ -392,7 +392,7 @@ void fade_when_near_camera(Object *object, Object_Racer *racer, s32 distance) {
     Object *player = get_racer_object(PLAYER_ONE);
     racer->transparency = 255;
     if (!get_race_countdown()) {
-        if ((object->segment.object.distanceToCamera + distance) < player->segment.object.distanceToCamera) {
+        if ((object->object.distanceToCamera + distance) < player->object.distanceToCamera) {
             racer->transparency = 64;
         }
     }

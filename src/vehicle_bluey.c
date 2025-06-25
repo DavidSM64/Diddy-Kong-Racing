@@ -61,8 +61,8 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     set_boss_voice_clip_offset(gBlueyVoiceTable);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
-    animID = obj->segment.object.animationID;
-    animFrame = obj->segment.animFrame;
+    animID = obj->object.animationID;
+    animFrame = obj->animFrame;
     tempHeadAngle = racer->headAngle;
     if (racer->raceFinished == TRUE && func_80023568()) {
         func_80021400(130);
@@ -93,37 +93,37 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     *startTimer = tempStartTimer;
     racer->lateral_velocity = 0.0f;
     racer->headAngle = tempHeadAngle;
-    obj->segment.object.animationID = animID;
-    obj->segment.animFrame = animFrame;
+    obj->object.animationID = animID;
+    obj->animFrame = animFrame;
     if (racer->attackType != ATTACK_NONE) {
-        if (obj->segment.object.animationID != ANIM_BLUEY_DAMAGE) {
-            racer->unk1CD = obj->segment.object.animationID;
-            obj->segment.object.animationID = ANIM_BLUEY_DAMAGE;
+        if (obj->object.animationID != ANIM_BLUEY_DAMAGE) {
+            racer->unk1CD = obj->object.animationID;
+            obj->object.animationID = ANIM_BLUEY_DAMAGE;
             racer->animationSpeed = 0.0f;
             play_random_boss_sound(BOSS_SOUND_NEGATIVE);
             sound_play(SOUND_EXPLOSION, NULL);
             set_camera_shake(12.0f);
             racer->attackType = ATTACK_NONE;
             racer->velocity *= 0.3;
-            obj->segment.y_velocity += 7.5;
+            obj->y_velocity += 7.5;
         }
     }
     if (racer->approachTarget != NULL) {
-        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
-        diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
+        diffX = obj->x_velocity * obj->x_velocity;
+        diffZ = obj->z_velocity * obj->z_velocity;
         racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
     }
     sp3C = FALSE;
     if ((find_next_checkpoint_node(racer->checkpoint, racer->unk1C8))->unk36[racer->unk1CA] == 1) {
         sp3C = TRUE;
     }
-    if (obj->segment.object.animationID != ANIM_BLUEY_DAMAGE) {
+    if (obj->object.animationID != ANIM_BLUEY_DAMAGE) {
         if (racer->velocity < -2.0) {
             if (sp3C) {
                 if (racer->unk1CD != 3) {
                     racer->animationSpeed = 40.0f;
                 }
-                obj->segment.object.animationID = ANIM_BLUEY_TURN;
+                obj->object.animationID = ANIM_BLUEY_TURN;
                 steerVel = racer->steerAngle * 2;
                 steerVel = 40 - steerVel;
                 if (steerVel < 0) {
@@ -136,16 +136,16 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
                 racer->animationSpeed += (steerVel - racer->animationSpeed) * 0.25;
             } else {
                 racer->unk1CD = 0;
-                obj->segment.object.animationID = ANIM_BLUEY_RUN;
+                obj->object.animationID = ANIM_BLUEY_RUN;
                 racer->animationSpeed -= (racer->velocity * updateRateF) * 0.5;
             }
         } else if (racer->velocity < -0.1 || 0.1 < racer->velocity) {
             racer->unk1CD = 1;
-            obj->segment.object.animationID = ANIM_BLUEY_WALK;
+            obj->object.animationID = ANIM_BLUEY_WALK;
             racer->animationSpeed -= racer->velocity * updateRateF * 2;
         } else {
             racer->unk1CD = 2;
-            obj->segment.object.animationID = ANIM_BLUEY_IDLE;
+            obj->object.animationID = ANIM_BLUEY_IDLE;
             racer->animationSpeed += updateRateF * 1.0;
         }
     } else {
@@ -153,7 +153,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     }
     modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
-    diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
+    diffX = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
         modInst->animationID = -1;
@@ -162,38 +162,38 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
         racer->animationSpeed -= diffX;
         modInst->animationID = -1;
     }
-    if (modInst->animationID == -1 && obj->segment.object.animationID == ANIM_BLUEY_DAMAGE) {
-        obj->segment.object.animationID = racer->unk1CD;
+    if (modInst->animationID == -1 && obj->object.animationID == ANIM_BLUEY_DAMAGE) {
+        obj->object.animationID = racer->unk1CD;
     }
-    animFrame = obj->segment.animFrame;
-    obj->segment.animFrame = racer->animationSpeed;
+    animFrame = obj->animFrame;
+    obj->animFrame = racer->animationSpeed;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
-    if (obj->segment.object.animationID == ANIM_BLUEY_RUN) {
+    if (obj->object.animationID == ANIM_BLUEY_RUN) {
         play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
         obj->particleEmittersEnabled |= OBJ_EMIT_1 | OBJ_EMIT_2;
     }
     obj_spawn_particle(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
     firstRacerObj = get_racer_object(PLAYER_ONE);
-    diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
-    diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+    diffX = firstRacerObj->trans.x_position - obj->trans.x_position;
+    diffZ = firstRacerObj->trans.z_position - obj->trans.z_position;
     if (sqrtf((diffX * diffX) + (diffZ * diffZ)) < 700.0) {
-        tempStartTimer = (arctan2_f(diffX, diffZ) - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
+        tempStartTimer = (arctan2_f(diffX, diffZ) - (obj->trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(tempStartTimer, -0x8000, 0x8000);
         CLAMP(tempStartTimer, -0xC00, 0xC00);
         racer->headAngleTarget = tempStartTimer;
     }
-    if (obj->segment.object.animationID == ANIM_BLUEY_WALK) {
+    if (obj->object.animationID == ANIM_BLUEY_WALK) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
-    if (obj->segment.object.animationID == ANIM_BLUEY_TURN) {
+    if (obj->object.animationID == ANIM_BLUEY_TURN) {
         racer->headAngleTarget = 0;
     }
     racer = &firstRacerObj->unk64->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
-        obj->segment.object.animationID == ANIM_BLUEY_WALK) {
+        obj->object.animationID == ANIM_BLUEY_WALK) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {

@@ -68,8 +68,8 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     Object *firstRacerObj;
 
     set_boss_voice_clip_offset(gSmokeyVoiceTable);
-    animID = obj->segment.object.animationID;
-    animFrame = obj->segment.animFrame;
+    animID = obj->object.animationID;
+    animFrame = obj->animFrame;
     tempHeadAngle = racer->headAngle;
     if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
         *stickMag = 0;
@@ -102,33 +102,33 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = headAngleRange;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     racer->headAngle = tempHeadAngle;
-    obj->segment.object.animationID = animID;
-    obj->segment.animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_SMOKEY_DAMAGE) {
+    obj->object.animationID = animID;
+    obj->animFrame = animFrame;
+    if (racer->attackType != ATTACK_NONE && obj->object.animationID != ANIM_SMOKEY_DAMAGE) {
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         sound_play(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
-        obj->segment.object.animationID = ANIM_SMOKEY_DAMAGE;
-        obj->segment.x_velocity *= 0.27;
-        obj->segment.z_velocity *= 0.27;
+        obj->object.animationID = ANIM_SMOKEY_DAMAGE;
+        obj->x_velocity *= 0.27;
+        obj->z_velocity *= 0.27;
         racer->animationSpeed = 0.0f;
-        obj->segment.y_velocity += 4.0;
+        obj->y_velocity += 4.0;
     }
     racer->attackType = ATTACK_NONE;
     if (racer->approachTarget != 0) {
-        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
-        diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
+        diffX = obj->x_velocity * obj->x_velocity;
+        diffZ = obj->z_velocity * obj->z_velocity;
         racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
         if (racer->velocity > -0.5) {
             racer->velocity = 0.0f;
-            obj->segment.x_velocity = 0.0f;
-            obj->segment.y_velocity = 0.0f;
-            obj->segment.z_velocity = 0.0f;
+            obj->x_velocity = 0.0f;
+            obj->y_velocity = 0.0f;
+            obj->z_velocity = 0.0f;
         }
     }
     modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
-    diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
+    diffX = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
     animVelocity = (racer->velocity * updateRateF) * 0.45;
     if (animVelocity <= 0.0) {
         if (animVelocity > -2.0) {
@@ -137,7 +137,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     } else if (animVelocity < 2.0) {
         animVelocity = 2.0f;
     }
-    switch (obj->segment.object.animationID) {
+    switch (obj->object.animationID) {
         case 0:
             racer->unk1CD = 0;
             racer->animationSpeed += 1.0 * updateRateF;
@@ -178,57 +178,57 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->animationSpeed += diffX;
         modInst->animationID = -1;
     }
-    if (obj->segment.object.animationID == ANIM_SMOKEY_WALK && racer->groundedWheels == 0 && racer->velocity < -6.5) {
-        obj->segment.object.animationID = ANIM_SMOKEY_LAND;
+    if (obj->object.animationID == ANIM_SMOKEY_WALK && racer->groundedWheels == 0 && racer->velocity < -6.5) {
+        obj->object.animationID = ANIM_SMOKEY_LAND;
         racer->animationSpeed = 0.0f;
     }
-    if (modInst->animationID == -1 || obj->segment.object.animationID == ANIM_SMOKEY_IDLE) {
-        if (obj->segment.object.animationID == ANIM_SMOKEY_DAMAGE) {
-            obj->segment.object.animationID = racer->unk1CD;
+    if (modInst->animationID == -1 || obj->object.animationID == ANIM_SMOKEY_IDLE) {
+        if (obj->object.animationID == ANIM_SMOKEY_DAMAGE) {
+            obj->object.animationID = racer->unk1CD;
             racer->animationSpeed = 0.0f;
-        } else if (obj->segment.object.animationID == ANIM_SMOKEY_RUN) {
+        } else if (obj->object.animationID == ANIM_SMOKEY_RUN) {
             if (racer->unk1CD == 0) {
-                obj->segment.object.animationID = ANIM_SMOKEY_WALK;
+                obj->object.animationID = ANIM_SMOKEY_WALK;
             } else {
-                obj->segment.object.animationID = ANIM_SMOKEY_IDLE;
+                obj->object.animationID = ANIM_SMOKEY_IDLE;
             }
-        } else if (obj->segment.object.animationID == ANIM_SMOKEY_LAND) {
+        } else if (obj->object.animationID == ANIM_SMOKEY_LAND) {
             if (racer->unk1CD == 4) {
-                obj->segment.object.animationID = ANIM_SMOKEY_WALK;
+                obj->object.animationID = ANIM_SMOKEY_WALK;
             } else {
-                obj->segment.object.animationID = ANIM_SMOKEY_FLY;
+                obj->object.animationID = ANIM_SMOKEY_FLY;
             }
         } else if (-0.1 < racer->velocity && racer->velocity < 0.1) {
-            if (obj->segment.object.animationID == ANIM_SMOKEY_WALK) {
-                obj->segment.object.animationID = ANIM_SMOKEY_RUN;
-                racer->animationSpeed = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
+            if (obj->object.animationID == ANIM_SMOKEY_WALK) {
+                obj->object.animationID = ANIM_SMOKEY_RUN;
+                racer->animationSpeed = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
             } else {
-                obj->segment.object.animationID = ANIM_SMOKEY_IDLE;
+                obj->object.animationID = ANIM_SMOKEY_IDLE;
             }
         } else {
-            if (obj->segment.object.animationID == ANIM_SMOKEY_IDLE) {
-                obj->segment.object.animationID = ANIM_SMOKEY_RUN;
+            if (obj->object.animationID == ANIM_SMOKEY_IDLE) {
+                obj->object.animationID = ANIM_SMOKEY_RUN;
                 racer->animationSpeed = 0.0f;
             }
-            if (obj->segment.object.animationID == ANIM_SMOKEY_FLY && racer->groundedWheels && racer->velocity > -6.0) {
-                obj->segment.object.animationID = ANIM_SMOKEY_LAND;
-                racer->animationSpeed = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
+            if (obj->object.animationID == ANIM_SMOKEY_FLY && racer->groundedWheels && racer->velocity > -6.0) {
+                obj->object.animationID = ANIM_SMOKEY_LAND;
+                racer->animationSpeed = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
             }
         }
     }
-    animFrame = obj->segment.animFrame;
-    obj->segment.animFrame = racer->animationSpeed;
-    stepFrame = obj->segment.animFrame >> 4;
+    animFrame = obj->animFrame;
+    obj->animFrame = racer->animationSpeed;
+    stepFrame = obj->animFrame >> 4;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
-    if (obj->segment.object.animationID != ANIM_SMOKEY_RUN && obj->segment.object.animationID != 2) {
+    if (obj->object.animationID != ANIM_SMOKEY_RUN && obj->object.animationID != 2) {
         animFrame >>= 4;
         stepFrame = 1;
-        if (obj->segment.object.animationID == ANIM_SMOKEY_IDLE) {
+        if (obj->object.animationID == ANIM_SMOKEY_IDLE) {
             stepFrame = 3;
         }
-        if (animFrame == stepFrame && stepFrame + 1 == obj->segment.animFrame >> 4) {
-            audspat_play_sound_at_position(SOUND_UNK_223, obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                           obj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
+        if (animFrame == stepFrame && stepFrame + 1 == obj->animFrame >> 4) {
+            audspat_play_sound_at_position(SOUND_UNK_223, obj->trans.x_position, obj->trans.y_position,
+                                           obj->trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
         }
     }
     if (racer->vehicleIDPrev == VEHICLE_SMOKEY && racer->playerIndex == PLAYER_COMPUTER && func_80023568()) {
@@ -237,10 +237,10 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj_spawn_particle(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
     firstRacerObj = get_racer_object(PLAYER_ONE);
-    diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
-    diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+    diffX = firstRacerObj->trans.x_position - obj->trans.x_position;
+    diffZ = firstRacerObj->trans.z_position - obj->trans.z_position;
     if (sqrtf((diffX * diffX) + (diffZ * diffZ)) < 700.0) {
-        headAngleRange = (arctan2_f(diffX, diffZ) - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
+        headAngleRange = (arctan2_f(diffX, diffZ) - (obj->trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
         if (headAngleRange > 0x8000) {
             headAngleRange -= 0xFFFF;
         }
@@ -255,14 +255,14 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         racer->headAngleTarget = headAngleRange;
     }
-    if (obj->segment.object.animationID >= ANIM_SMOKEY_WALK) {
+    if (obj->object.animationID >= ANIM_SMOKEY_WALK) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
     racer = &firstRacerObj->unk64->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
-        obj->segment.object.animationID == ANIM_SMOKEY_RUN) {
+        obj->object.animationID == ANIM_SMOKEY_RUN) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {
@@ -293,34 +293,34 @@ void spawn_boss_hazard(Object *obj, Object_Racer *racer, f32 offset, s32 objectI
     objList = objGetObjList(&objListID, &objListCount);
     spawnObj.objectID = objectID;
     spawnObj.size = (((objectID & 0x100) & 0xFFFF) >> 1) | 8;
-    spawnObj.x = obj->segment.trans.x_position - (racer->ox1 * offset);
-    spawnObj.y = obj->segment.trans.y_position - (racer->oy1 * offset);
-    spawnObj.z = obj->segment.trans.z_position - (racer->oz1 * offset);
+    spawnObj.x = obj->trans.x_position - (racer->ox1 * offset);
+    spawnObj.y = obj->trans.y_position - (racer->oy1 * offset);
+    spawnObj.z = obj->trans.z_position - (racer->oz1 * offset);
 
     for (i = 0; i < objListCount; i++) {
         tempObj = objList[i];
         if (tempObj->behaviorId == BHV_BOSS_HAZARD_TRIGGER) {
-            entry = tempObj->segment.level_entry;
+            entry = tempObj->level_entry;
             if ((s8) entry->animation.z_rotation == racer->lap + 1 || (s8) entry->animation.z_rotation == 0) {
-                diffX = tempObj->segment.trans.x_position - obj->segment.trans.x_position;
-                diffY = tempObj->segment.trans.y_position - obj->segment.trans.y_position;
-                diffZ = tempObj->segment.trans.z_position - obj->segment.trans.z_position;
+                diffX = tempObj->trans.x_position - obj->trans.x_position;
+                diffY = tempObj->trans.y_position - obj->trans.y_position;
+                diffZ = tempObj->trans.z_position - obj->trans.z_position;
                 if (sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) <
                     (f32) ((s8) entry->animation.x_rotation & 0xFF) * 4.0) {
                     if (tempObj->properties.common.unk0 == 0) {
                         tempObj->properties.common.unk0 = 1;
                         newObj = spawn_object(&spawnObj, OBJECT_SPAWN_UNK01);
                         if (newObj != NULL) {
-                            newObj->segment.level_entry = NULL;
-                            newObj->segment.x_velocity = obj->segment.x_velocity;
-                            newObj->segment.y_velocity = obj->segment.y_velocity;
-                            newObj->segment.z_velocity = obj->segment.z_velocity;
+                            newObj->level_entry = NULL;
+                            newObj->x_velocity = obj->x_velocity;
+                            newObj->y_velocity = obj->y_velocity;
+                            newObj->z_velocity = obj->z_velocity;
                             newObj->properties.racer.unk0 = tempObj;
                             newObj->properties.racer.unk4 = (s8) entry->animation.y_rotation * 60;
-                            newObj->segment.animFrame = rand_range(0, 255);
-                            audspat_play_sound_at_position(
-                                soundID, newObj->segment.trans.x_position, newObj->segment.trans.y_position,
-                                newObj->segment.trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER, NULL);
+                            newObj->animFrame = rand_range(0, 255);
+                            audspat_play_sound_at_position(soundID, newObj->trans.x_position, newObj->trans.y_position,
+                                                           newObj->trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER,
+                                                           NULL);
                         }
                     }
                 } else {

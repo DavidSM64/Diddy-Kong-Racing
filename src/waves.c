@@ -2410,7 +2410,7 @@ void wavegen_add(Object *obj) {
     LevelObjectEntry_WaveGenerator *temp_v0;
     s32 flags;
 
-    temp_v0 = &obj->segment.level_entry->waveGenerator;
+    temp_v0 = &obj->level_entry->waveGenerator;
     flags = 0;
     if (temp_v0->unk10 != 0) {
         flags = 1;
@@ -2420,9 +2420,8 @@ void wavegen_add(Object *obj) {
         flags |= 2;
     }
 
-    wavegen_register(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32) temp_v0->waveSize,
-                     temp_v0->unk9 << 8, (f32) temp_v0->unk8 / 16.0, (f32) temp_v0->unkE, (f32) temp_v0->unkC / 16.0,
-                     flags);
+    wavegen_register(obj, obj->trans.x_position, obj->trans.z_position, (f32) temp_v0->waveSize, temp_v0->unk9 << 8,
+                     (f32) temp_v0->unk8 / 16.0, (f32) temp_v0->unkE, (f32) temp_v0->unkC / 16.0, flags);
 }
 
 const char D_800E9228[] = "\nError :: more than eight swells overlap on column %d.";
@@ -2665,12 +2664,12 @@ void obj_loop_wavepower(Object *obj) {
         return;
     }
 
-    entry = &obj->segment.level_entry->wavePower;
+    entry = &obj->level_entry->wavePower;
     distance = entry->radius;
     distance *= distance;
-    diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
-    diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
-    diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+    diffX = racerObj->trans.x_position - obj->trans.x_position;
+    diffY = racerObj->trans.y_position - obj->trans.y_position;
+    diffZ = racerObj->trans.z_position - obj->trans.z_position;
     if ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ) < distance) {
         gWavePowerBase = entry->power / 256.0f;
         gWaveMagnitude = (gWavePowerBase - gWaveController.magnitude) / (f32) entry->divisor;

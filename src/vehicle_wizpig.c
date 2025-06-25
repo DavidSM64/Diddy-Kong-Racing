@@ -56,8 +56,8 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
 
     set_boss_voice_clip_offset((u16 *) gWizpigVoiceTable);
     racer->tappedR = 0;
-    animID = obj->segment.object.animationID;
-    animFrame = obj->segment.animFrame;
+    animID = obj->object.animationID;
+    animFrame = obj->animFrame;
     tempHeadAngle = racer->headAngle;
     if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
         *buttonsPressed = 0;
@@ -93,39 +93,39 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = tempStartTimer;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     racer->headAngle = tempHeadAngle;
-    obj->segment.object.animationID = animID;
-    obj->segment.animFrame = animFrame;
+    obj->object.animationID = animID;
+    obj->animFrame = animFrame;
     // Unused, since there are no weapon balloons in Wizpig 1.
-    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_WIZPIG_DAMAGE) {
+    if (racer->attackType != ATTACK_NONE && obj->object.animationID != ANIM_WIZPIG_DAMAGE) {
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         sound_play(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
-        obj->segment.object.animationID = ANIM_WIZPIG_DAMAGE;
-        obj->segment.x_velocity *= 0.4;
-        obj->segment.z_velocity *= 0.4;
+        obj->object.animationID = ANIM_WIZPIG_DAMAGE;
+        obj->x_velocity *= 0.4;
+        obj->z_velocity *= 0.4;
         racer->animationSpeed = 0.0f;
-        obj->segment.y_velocity += 4.0;
+        obj->y_velocity += 4.0;
     }
     racer->attackType = ATTACK_NONE;
     if (racer->approachTarget != NULL) {
-        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
-        diffZ = (obj->segment.z_velocity * obj->segment.z_velocity);
+        diffX = obj->x_velocity * obj->x_velocity;
+        diffZ = (obj->z_velocity * obj->z_velocity);
         racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
         if (racer->velocity > -0.5) {
             racer->velocity = 0.0f;
-            obj->segment.x_velocity = 0.0f;
-            obj->segment.y_velocity = 0.0f;
-            obj->segment.z_velocity = 0.0f;
+            obj->x_velocity = 0.0f;
+            obj->y_velocity = 0.0f;
+            obj->z_velocity = 0.0f;
         }
     }
     nextCheckpoint = FALSE;
     if (find_next_checkpoint_node(racer->checkpoint, racer->unk1C8)->unk36[racer->unk1CA] == 1) {
         nextCheckpoint = TRUE;
     }
-    racer->x_rotation_offset = -obj->segment.trans.rotation.x_rotation;
+    racer->x_rotation_offset = -obj->trans.rotation.x_rotation;
     modInst = obj->modelInstances[0];
     objModel = modInst->objModel;
-    diffX = (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
+    diffX = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
     animVelocity = (racer->velocity * updateRateF) * 0.45;
     if (animVelocity <= 0.0) {
         if (animVelocity > -2.0) {
@@ -134,7 +134,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     } else if (animVelocity < 2.0) {
         animVelocity = 2.0f;
     }
-    switch (obj->segment.object.animationID) {
+    switch (obj->object.animationID) {
         case ANIM_WIZPIG_IDLE:
             racer->unk1CD = 0;
             racer->animationSpeed += 1.0 * updateRateF;
@@ -176,52 +176,50 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->animationSpeed += diffX;
         modInst->animationID = -1;
     }
-    if (obj->segment.object.animationID == ANIM_WIZPIG_RUN && nextCheckpoint) {
-        obj->segment.object.animationID = ANIM_WIZPIG_JUMP;
+    if (obj->object.animationID == ANIM_WIZPIG_RUN && nextCheckpoint) {
+        obj->object.animationID = ANIM_WIZPIG_JUMP;
         racer->animationSpeed = 0.0f;
     }
-    if (modInst->animationID == -1 || obj->segment.object.animationID == ANIM_WIZPIG_IDLE) {
-        if (obj->segment.object.animationID == ANIM_WIZPIG_DAMAGE) {
-            obj->segment.object.animationID = racer->unk1CD;
+    if (modInst->animationID == -1 || obj->object.animationID == ANIM_WIZPIG_IDLE) {
+        if (obj->object.animationID == ANIM_WIZPIG_DAMAGE) {
+            obj->object.animationID = racer->unk1CD;
             racer->animationSpeed = 0.0f;
-        } else if (obj->segment.object.animationID == ANIM_WIZPIG_WALK) {
+        } else if (obj->object.animationID == ANIM_WIZPIG_WALK) {
             if (racer->unk1CD == 0) {
-                obj->segment.object.animationID = ANIM_WIZPIG_RUN;
+                obj->object.animationID = ANIM_WIZPIG_RUN;
             } else {
-                obj->segment.object.animationID = ANIM_WIZPIG_IDLE;
+                obj->object.animationID = ANIM_WIZPIG_IDLE;
             }
-        } else if (obj->segment.object.animationID == ANIM_WIZPIG_JUMP) {
+        } else if (obj->object.animationID == ANIM_WIZPIG_JUMP) {
             if (racer->unk1CD == 4) {
-                obj->segment.object.animationID = ANIM_WIZPIG_RUN;
+                obj->object.animationID = ANIM_WIZPIG_RUN;
             } else {
-                obj->segment.object.animationID = ANIM_WIZPIG_FLY;
+                obj->object.animationID = ANIM_WIZPIG_FLY;
             }
         } else {
             if (-0.1 < racer->velocity && racer->velocity < 0.1) {
-                if (obj->segment.object.animationID == ANIM_WIZPIG_RUN) {
-                    obj->segment.object.animationID = ANIM_WIZPIG_WALK;
-                    racer->animationSpeed =
-                        (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
+                if (obj->object.animationID == ANIM_WIZPIG_RUN) {
+                    obj->object.animationID = ANIM_WIZPIG_WALK;
+                    racer->animationSpeed = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
                 } else {
-                    obj->segment.object.animationID = ANIM_WIZPIG_IDLE;
+                    obj->object.animationID = ANIM_WIZPIG_IDLE;
                 }
             } else {
-                if (obj->segment.object.animationID == ANIM_WIZPIG_IDLE) {
-                    obj->segment.object.animationID = ANIM_WIZPIG_WALK;
+                if (obj->object.animationID == ANIM_WIZPIG_IDLE) {
+                    obj->object.animationID = ANIM_WIZPIG_WALK;
                     racer->animationSpeed = 0.0f;
                 }
-                if ((obj->segment.object.animationID == ANIM_WIZPIG_FLY) && nextCheckpoint == FALSE) {
-                    obj->segment.object.animationID = ANIM_WIZPIG_JUMP;
-                    racer->animationSpeed =
-                        (objModel->animations[obj->segment.object.animationID].animLength * 16) - 17;
+                if ((obj->object.animationID == ANIM_WIZPIG_FLY) && nextCheckpoint == FALSE) {
+                    obj->object.animationID = ANIM_WIZPIG_JUMP;
+                    racer->animationSpeed = (objModel->animations[obj->object.animationID].animLength * 16) - 17;
                 }
             }
         }
     }
-    animFrame = obj->segment.animFrame;
-    obj->segment.animFrame = racer->animationSpeed;
+    animFrame = obj->animFrame;
+    obj->animFrame = racer->animationSpeed;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
-    if (obj->segment.object.animationID == ANIM_WIZPIG_RUN) {
+    if (obj->object.animationID == ANIM_WIZPIG_RUN) {
         play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
     }
     if (racer->playerIndex == PLAYER_COMPUTER) {
@@ -234,7 +232,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     firstRacerObj = get_racer_object(PLAYER_ONE);
     racer = &firstRacerObj->unk64->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
-        obj->segment.object.animationID == ANIM_WIZPIG_WALK) {
+        obj->object.animationID == ANIM_WIZPIG_WALK) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {

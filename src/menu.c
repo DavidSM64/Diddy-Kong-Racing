@@ -13835,18 +13835,18 @@ void menu_element_render(s32 elementID) {
                 if (0) {} // Fakematch
                 object = (Object *) gMenuAssets[gMenuImages[elementID].trans.spriteID];
                 asset = (MenuAsset *) &gMenuImages[elementID];
-                object->segment.trans.rotation.y_rotation = asset->trans.rotation.y_rotation;
-                object->segment.trans.rotation.x_rotation = asset->trans.rotation.x_rotation;
-                object->segment.trans.rotation.z_rotation = asset->trans.rotation.z_rotation;
-                object->segment.trans.x_position = asset->trans.x_position;
-                object->segment.trans.y_position = asset->trans.y_position;
-                object->segment.trans.z_position = asset->trans.z_position;
-                object->segment.trans.scale = asset->trans.scale;
+                object->trans.rotation.y_rotation = asset->trans.rotation.y_rotation;
+                object->trans.rotation.x_rotation = asset->trans.rotation.x_rotation;
+                object->trans.rotation.z_rotation = asset->trans.rotation.z_rotation;
+                object->trans.x_position = asset->trans.x_position;
+                object->trans.y_position = asset->trans.y_position;
+                object->trans.z_position = asset->trans.z_position;
+                object->trans.scale = asset->trans.scale;
                 if (gMenuDisableObjAnim == FALSE) {
-                    object->segment.animFrame = asset->unk1D;
-                    object->segment.object.modelIndex = asset->spriteOffset;
+                    object->animFrame = asset->unk1D;
+                    object->object.modelIndex = asset->spriteOffset;
                 }
-                object->segment.object.opacity = sMenuGuiOpacity;
+                object->object.opacity = sMenuGuiOpacity;
                 render_object(&sMenuCurrDisplayList, &sMenuCurrHudMat, &sMenuCurrHudVerts, object);
             } else {
                 if ((*gAssetsMenuElementIds)[gMenuImages[elementID].trans.spriteID] & ASSET_MASK_SPRITE) {

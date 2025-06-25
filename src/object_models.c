@@ -935,32 +935,32 @@ void func_80061C0C(Object *obj) {
     ModelInstance *modInst;
     s32 var_v1;
 
-    if (obj->segment.object.modelIndex < 0) {
-        obj->segment.object.modelIndex = 0;
+    if (obj->object.modelIndex < 0) {
+        obj->object.modelIndex = 0;
     }
-    var_v1 = obj->segment.header->numberOfModelIds - 1;
-    if (var_v1 < obj->segment.object.modelIndex) {
-        obj->segment.object.modelIndex = var_v1;
+    var_v1 = obj->header->numberOfModelIds - 1;
+    if (var_v1 < obj->object.modelIndex) {
+        obj->object.modelIndex = var_v1;
     }
-    modInst = obj->modelInstances[obj->segment.object.modelIndex];
+    modInst = obj->modelInstances[obj->object.modelIndex];
     mdl = modInst->objModel;
     if (modInst->objModel->animations != NULL) {
-        if (obj->segment.object.animationID < 0) {
-            obj->segment.object.animationID = 0;
+        if (obj->object.animationID < 0) {
+            obj->object.animationID = 0;
         }
-        if (obj->segment.object.animationID >= mdl->numberOfAnimations) {
-            obj->segment.object.animationID = mdl->numberOfAnimations - 1;
+        if (obj->object.animationID >= mdl->numberOfAnimations) {
+            obj->object.animationID = mdl->numberOfAnimations - 1;
         }
         if (mdl->numberOfAnimations > 0) {
-            var_v1 = mdl->animations[obj->segment.object.animationID].animLength - 2;
+            var_v1 = mdl->animations[obj->object.animationID].animLength - 2;
         } else {
             var_v1 = 0;
         }
-        if (obj->segment.animFrame >> 4 < 0) {
-            obj->segment.animFrame = var_v1;
+        if (obj->animFrame >> 4 < 0) {
+            obj->animFrame = var_v1;
         }
-        if (var_v1 < obj->segment.animFrame >> 4) {
-            obj->segment.animFrame = 0;
+        if (var_v1 < obj->animFrame >> 4) {
+            obj->animFrame = 0;
             modInst->animationID = -1;
         }
     }

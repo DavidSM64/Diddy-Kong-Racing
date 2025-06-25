@@ -64,8 +64,8 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     set_boss_voice_clip_offset(gBubblerVoiceTable);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
-    animID = obj->segment.object.animationID;
-    animFrame = obj->segment.animFrame;
+    animID = obj->object.animationID;
+    animFrame = obj->animFrame;
     tempHeadAngle = racer->headAngle;
     if (racer->raceFinished == TRUE) {
         func_80021400(130);
@@ -93,12 +93,12 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     *startTimer = timer;
     racer->lateral_velocity = 0.0f;
     racer->headAngle = tempHeadAngle;
-    obj->segment.object.animationID = animID;
-    obj->segment.animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_BUBBLER_DAMAGE) {
-        racer->unk1CD = obj->segment.object.animationID;
-        obj->segment.object.animationID = ANIM_BUBBLER_DAMAGE;
-        obj->segment.y_velocity += 7.5;
+    obj->object.animationID = animID;
+    obj->animFrame = animFrame;
+    if (racer->attackType != ATTACK_NONE && obj->object.animationID != ANIM_BUBBLER_DAMAGE) {
+        racer->unk1CD = obj->object.animationID;
+        obj->object.animationID = ANIM_BUBBLER_DAMAGE;
+        obj->y_velocity += 7.5;
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         sound_play(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
@@ -107,14 +107,14 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     }
     racer->attackType = ATTACK_NONE;
     if (racer->approachTarget != 0) {
-        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
-        diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
+        diffX = obj->x_velocity * obj->x_velocity;
+        diffZ = obj->z_velocity * obj->z_velocity;
         racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
     }
     modInst = obj->modelInstances[0];
     model = modInst->objModel;
-    diffX = (model->animations[obj->segment.object.animationID].animLength * 16) - 17;
-    obj->segment.object.animationID = ANIM_BUBBLER_MOVE;
+    diffX = (model->animations[obj->object.animationID].animLength * 16) - 17;
+    obj->object.animationID = ANIM_BUBBLER_MOVE;
     racer->animationSpeed += 2.0 * updateRateF;
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
@@ -124,11 +124,11 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         racer->animationSpeed -= diffX;
         modInst->animationID = -1;
     }
-    if (modInst->animationID == -1 && obj->segment.object.animationID == ANIM_BUBBLER_DAMAGE) {
-        obj->segment.object.animationID = ANIM_BUBBLER_MOVE;
+    if (modInst->animationID == -1 && obj->object.animationID == ANIM_BUBBLER_DAMAGE) {
+        obj->object.animationID = ANIM_BUBBLER_MOVE;
         racer->animationSpeed = 0.0f;
     }
-    obj->segment.animFrame = racer->animationSpeed;
+    obj->animFrame = racer->animationSpeed;
     if (racer->playerIndex == PLAYER_COMPUTER) {
         temp2 = func_80023568();
         if (temp2 != 0) {
@@ -142,7 +142,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     obj_spawn_particle(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
-    switch (obj->segment.object.animationID) {
+    switch (obj->object.animationID) {
         case ANIM_BUBBLER_MOVE:
             headAngleRange = 0x2500;
             break;
@@ -154,22 +154,22 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
             break;
     }
     firstRacerObj = get_racer_object(PLAYER_ONE);
-    diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
-    diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+    diffX = firstRacerObj->trans.x_position - obj->trans.x_position;
+    diffZ = firstRacerObj->trans.z_position - obj->trans.z_position;
     if (sqrtf((diffX * diffX) + (diffZ * diffZ)) < 700.0) {
-        timer = (arctan2_f(diffX, diffZ) - (obj->segment.trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
+        timer = (arctan2_f(diffX, diffZ) - (obj->trans.rotation.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(timer, -0x8000, 0x8000);
         CLAMP(timer, -headAngleRange, headAngleRange);
         racer->headAngleTarget = timer;
     }
-    if (obj->segment.object.animationID == ANIM_BUBBLER_MOVE) {
+    if (obj->object.animationID == ANIM_BUBBLER_MOVE) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
     racer = &firstRacerObj->unk64->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
-        obj->segment.object.animationID == ANIM_BUBBLER_MOVE) {
+        obj->object.animationID == ANIM_BUBBLER_MOVE) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {

@@ -87,9 +87,9 @@ ObjectLight *func_80031CAC(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) 
         light->homeY = 0;
         light->homeZ = 0;
         if (obj != NULL) {
-            light->pos.x = obj->segment.trans.x_position;
-            light->pos.y = obj->segment.trans.y_position;
-            light->pos.z = obj->segment.trans.z_position;
+            light->pos.x = obj->trans.x_position;
+            light->pos.y = obj->trans.y_position;
+            light->pos.z = obj->trans.z_position;
         } else {
             light->pos.x = lightEntry->common.x;
             light->pos.y = lightEntry->common.y;
@@ -273,10 +273,10 @@ void func_80032424(ObjectLight *light, s32 updateRate) {
         light->pos.x = light->homeX;
         light->pos.y = light->homeY;
         light->pos.z = light->homeZ;
-        vec3f_rotate(&light->owner->segment.trans.rotation, &light->pos);
-        light->pos.x += light->owner->segment.trans.x_position;
-        light->pos.y += light->owner->segment.trans.y_position;
-        light->pos.z += light->owner->segment.trans.z_position;
+        vec3f_rotate(&light->owner->trans.rotation, &light->pos);
+        light->pos.x += light->owner->trans.x_position;
+        light->pos.y += light->owner->trans.y_position;
+        light->pos.z += light->owner->trans.z_position;
         light->unk5 = 1;
     }
     if (light->unk44 != NULL) {
@@ -391,7 +391,7 @@ void func_80032424(ObjectLight *light, s32 updateRate) {
             rotation.z_rotation = 0;
             vec3f_rotate_py(&rotation, &light->direction);
             if (light->owner != NULL) {
-                vec3f_rotate(&light->owner->segment.trans.rotation, &light->direction);
+                vec3f_rotate(&light->owner->trans.rotation, &light->direction);
             }
             light->direction.x = -light->direction.x;
             light->direction.y = -light->direction.y;
@@ -439,8 +439,8 @@ void func_80032C7C(Object *object) {
     u8 sp64;
     s32 i;
 
-    if (object->segment.header->unk3D == 0) {
-        switch (object->segment.header->modelType) {
+    if (object->header->unk3D == 0) {
+        switch (object->header->modelType) {
             case OBJECT_MODEL_TYPE_3D_MODEL:
                 sp64 = 2;
                 break;
@@ -458,9 +458,9 @@ void func_80032C7C(Object *object) {
                 break;
         }
 
-        objX = object->segment.trans.x_position;
-        objY = object->segment.trans.y_position;
-        objZ = object->segment.trans.z_position;
+        objX = object->trans.x_position;
+        objY = object->trans.y_position;
+        objZ = object->trans.z_position;
 
         numLights = 0;
 
@@ -478,9 +478,9 @@ void func_80032C7C(Object *object) {
                         numLights++;
                     }
                 } else {
-                    gLightDiffX = light->pos.x - object->segment.trans.x_position;
-                    gLightDiffY = light->pos.y - object->segment.trans.y_position;
-                    gLightDiffZ = light->pos.z - object->segment.trans.z_position;
+                    gLightDiffX = light->pos.x - object->trans.x_position;
+                    gLightDiffY = light->pos.y - object->trans.y_position;
+                    gLightDiffZ = light->pos.z - object->trans.z_position;
                     if (light->unk0 == 2) {
                         gLightDiffY = 0.0f;
                     }
@@ -495,7 +495,7 @@ void func_80032C7C(Object *object) {
                         if (intensity > 0.0f) {
                             intensity *= light_distance_calc(light);
                             if (intensity > 0.0f) {
-                                if (object->segment.header->directionalPointLighting) {
+                                if (object->header->directionalPointLighting) {
                                     if (gLightDistance > 0.0f) {
                                         f32 temp = 1.0f / sqrtf(gLightDistance);
                                         gLightDiffX *= temp;
@@ -523,7 +523,7 @@ void func_80032C7C(Object *object) {
             }
         }
 
-        if (object->segment.header->directionalPointLighting) {
+        if (object->header->directionalPointLighting) {
             // find two brightest light sources
             if (numLights == 0) {
                 object->shading->lightIntensity = 0;

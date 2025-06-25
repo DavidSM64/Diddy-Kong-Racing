@@ -157,9 +157,9 @@ void racer_sound_update(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 ti
                 gRacerSound->racerPos.y = -32000.0f;
                 gRacerSound->racerPos.z = -32000.0f;
             } else {
-                gRacerSound->racerPos.x = obj->segment.trans.x_position;
-                gRacerSound->racerPos.y = obj->segment.trans.y_position;
-                gRacerSound->racerPos.z = obj->segment.trans.z_position;
+                gRacerSound->racerPos.x = obj->trans.x_position;
+                gRacerSound->racerPos.y = obj->trans.y_position;
+                gRacerSound->racerPos.z = obj->trans.z_position;
                 switch (gSoundRacerObj->vehicleIDPrev) {
                     case VEHICLE_HOVERCRAFT:
                         racer_sound_hovercraft(obj, buttonsPressed, buttonsHeld, ticksDelta);
@@ -357,8 +357,8 @@ void racer_sound_car(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 ticks
             sndp_set_param(gRacerSound->brakeSound, AL_SNDP_VOL_EVT, 0);
         } else {
             sndp_set_param(gRacerSound->brakeSound, AL_SNDP_VOL_EVT, gRacerSound->brakeSoundVolume << 8);
-            audspat_calculate_echo(gRacerSound->brakeSound, obj->segment.trans.x_position,
-                                   obj->segment.trans.y_position, obj->segment.trans.z_position);
+            audspat_calculate_echo(gRacerSound->brakeSound, obj->trans.x_position, obj->trans.y_position,
+                                   obj->trans.z_position);
         }
     }
 
@@ -389,8 +389,7 @@ void racer_sound_hovercraft(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsH
     u8 i;
 
     if (get_race_countdown() == 0) {
-        speed = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
-                      (obj->segment.z_velocity * obj->segment.z_velocity));
+        speed = sqrtf((obj->x_velocity * obj->x_velocity) + (obj->z_velocity * obj->z_velocity));
     } else {
         speed = 0.0f;
     }
@@ -507,9 +506,8 @@ void racer_sound_plane(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, 
     f32 temp2;
 
     if (get_race_countdown() == 0) {
-        speed = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
-                      (obj->segment.z_velocity * obj->segment.z_velocity) +
-                      (obj->segment.y_velocity * obj->segment.y_velocity));
+        speed = sqrtf((obj->x_velocity * obj->x_velocity) + (obj->z_velocity * obj->z_velocity) +
+                      (obj->y_velocity * obj->y_velocity));
     } else {
         speed = 0.0f;
     }
@@ -557,8 +555,8 @@ void racer_sound_plane(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, 
     targetPitch += gRacerSound->thrustPitch;
 
     // Add pitch modifiers based on pitch and roll angles of the plane.
-    xSine = sins_f(obj->segment.trans.rotation.x_rotation);
-    zSine = sins_f(obj->segment.trans.rotation.z_rotation);
+    xSine = sins_f(obj->trans.rotation.x_rotation);
+    zSine = sins_f(obj->trans.rotation.z_rotation);
     temp = gRacerSound->pitchAnglePitchScale * xSine;
     temp2 = gRacerSound->rollAnglePitchScale * zSine;
     temp2 = ABSF(temp2);
@@ -695,9 +693,9 @@ void racer_sound_doppler_effect(Object *observerObj, Camera *camera, Object *sou
         } else {
             // If the observer is a player, things get unnecessarily complex.
             // First, fetch the observer's position.
-            xObs = observerObj->segment.trans.x_position;
-            yObs = observerObj->segment.trans.y_position;
-            zObs = observerObj->segment.trans.z_position;
+            xObs = observerObj->trans.x_position;
+            yObs = observerObj->trans.y_position;
+            zObs = observerObj->trans.z_position;
 
             // Then compute the observer's speed.
             switch (observerRacer->vehicleID) {
@@ -711,14 +709,14 @@ void racer_sound_doppler_effect(Object *observerObj, Camera *camera, Object *sou
                     break;
                 case VEHICLE_HOVERCRAFT:
                     // 2D ground speed
-                    obsSpeed = sqrtf(observerObj->segment.x_velocity * observerObj->segment.x_velocity +
-                                     observerObj->segment.z_velocity * observerObj->segment.z_velocity);
+                    obsSpeed = sqrtf(observerObj->x_velocity * observerObj->x_velocity +
+                                     observerObj->z_velocity * observerObj->z_velocity);
                     break;
                 default:
                     // Full 3D velocity
-                    obsSpeed = sqrtf(observerObj->segment.x_velocity * observerObj->segment.x_velocity +
-                                     observerObj->segment.z_velocity * observerObj->segment.z_velocity +
-                                     observerObj->segment.y_velocity * observerObj->segment.y_velocity);
+                    obsSpeed = sqrtf(observerObj->x_velocity * observerObj->x_velocity +
+                                     observerObj->z_velocity * observerObj->z_velocity +
+                                     observerObj->y_velocity * observerObj->y_velocity);
                     break;
             }
             // For some reason, speed is capped at 15, and a velocity factor is derived from that.
@@ -730,9 +728,9 @@ void racer_sound_doppler_effect(Object *observerObj, Camera *camera, Object *sou
         }
 
         // Calculate the distance between source and observer
-        deltaX = sourceObj->segment.trans.x_position - xObs;
-        deltaY = sourceObj->segment.trans.y_position - yObs;
-        deltaZ = sourceObj->segment.trans.z_position - zObs;
+        deltaX = sourceObj->trans.x_position - xObs;
+        deltaY = sourceObj->trans.y_position - yObs;
+        deltaZ = sourceObj->trans.z_position - zObs;
         distance = sqrtf(((deltaX * deltaX) + (deltaY * deltaY)) + (deltaZ * deltaZ));
 
         // Compute relative velocity — this is actually all that's needed for the Doppler effect!
@@ -806,9 +804,9 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
             if (racer->raceFinished || check_if_showing_cutscene_camera()) {
                 // If the race is finished or a cutscene is playing, the vehicle is considered to move relative to the
                 // camera, so we calculate the engine sound's pitch, volume, and stereo pan accordingly.
-                deltaX = racerObjs[i]->segment.trans.x_position - cameras[i].trans.x_position;
-                deltaY = racerObjs[i]->segment.trans.y_position - cameras[i].trans.y_position;
-                deltaZ = racerObjs[i]->segment.trans.z_position - cameras[i].trans.z_position;
+                deltaX = racerObjs[i]->trans.x_position - cameras[i].trans.x_position;
+                deltaY = racerObjs[i]->trans.y_position - cameras[i].trans.y_position;
+                deltaZ = racerObjs[i]->trans.z_position - cameras[i].trans.z_position;
                 racer_sound_doppler_effect(racerObjs[i], cameras, racerObjs[i], tickDelta);
                 gRacerSound->distToCamera = sqrtf((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ));
 
@@ -851,9 +849,8 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
                                                                         gRacerSound->engineIdleMaxPitch / 100.0f) *
                                                                            idle_intensity;
                     if (gRacerSound->engineIdleSoundHandle != NULL) {
-                        audspat_calculate_echo(
-                            gRacerSound->engineIdleSoundHandle, racerObjs[i]->segment.trans.x_position,
-                            racerObjs[i]->segment.trans.y_position, racerObjs[i]->segment.trans.z_position);
+                        audspat_calculate_echo(gRacerSound->engineIdleSoundHandle, racerObjs[i]->trans.x_position,
+                                               racerObjs[i]->trans.y_position, racerObjs[i]->trans.z_position);
                         sndp_set_param(gRacerSound->engineIdleSoundHandle, AL_SNDP_VOL_EVT, volume << 8);
                         sndp_set_param(gRacerSound->engineIdleSoundHandle, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
                         sndp_set_priority(gRacerSound->engineIdleSoundHandle, 80);
@@ -897,9 +894,8 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
                             func_80001F14(gRacerSound->soundId[j], &gRacerSound->soundHandle[j]);
                         }
                         if (gRacerSound->soundHandle[j] != NULL) {
-                            audspat_calculate_echo(gRacerSound->soundHandle[j], racerObjs[i]->segment.trans.x_position,
-                                                   racerObjs[i]->segment.trans.y_position,
-                                                   racerObjs[i]->segment.trans.z_position);
+                            audspat_calculate_echo(gRacerSound->soundHandle[j], racerObjs[i]->trans.x_position,
+                                                   racerObjs[i]->trans.y_position, racerObjs[i]->trans.z_position);
                             sndp_set_param(gRacerSound->soundHandle[j], AL_SNDP_VOL_EVT, volume << 8);
                             sndp_set_param(gRacerSound->soundHandle[j], AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
                             sndp_set_priority(gRacerSound->soundHandle[j], 80);
@@ -946,13 +942,13 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
                 gRacerSound = racerObjs[j]->unk64->racer.vehicleSound;
                 if (gRacerSound != NULL) {
                     if (racer->raceFinished) {
-                        deltaX = racerObjs[j]->segment.trans.x_position - cameras[i].trans.x_position;
-                        deltaY = racerObjs[j]->segment.trans.y_position - cameras[i].trans.y_position;
-                        deltaZ = racerObjs[j]->segment.trans.z_position - cameras[i].trans.z_position;
+                        deltaX = racerObjs[j]->trans.x_position - cameras[i].trans.x_position;
+                        deltaY = racerObjs[j]->trans.y_position - cameras[i].trans.y_position;
+                        deltaZ = racerObjs[j]->trans.z_position - cameras[i].trans.z_position;
                     } else {
-                        deltaX = racerObjs[j]->segment.trans.x_position - racerObjs[i]->segment.trans.x_position;
-                        deltaY = racerObjs[j]->segment.trans.y_position - racerObjs[i]->segment.trans.y_position;
-                        deltaZ = racerObjs[j]->segment.trans.z_position - racerObjs[i]->segment.trans.z_position;
+                        deltaX = racerObjs[j]->trans.x_position - racerObjs[i]->trans.x_position;
+                        deltaY = racerObjs[j]->trans.y_position - racerObjs[i]->trans.y_position;
+                        deltaZ = racerObjs[j]->trans.z_position - racerObjs[i]->trans.z_position;
                     }
                     gRacerSound->distToCamera = sqrtf((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ));
                     if (gRacerSound->distToCamera < 1500.0f) {
