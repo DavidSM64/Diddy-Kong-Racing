@@ -665,7 +665,7 @@ typedef struct ObjectModel {
     /* 0x34 */ u8 pad34[4];
     /* 0x38 */ TriangleBatchInfo* batches;
     /* 0x3C */ f32 unk3C;
-    /* 0x40 */ Vec3s* unk40;
+    /* 0x40 */ Vec3s* normals;
     /* 0x44 */ ObjectModel_44* animations;
     /* 0x48 */ s16 numberOfAnimations;
     /* 0x4A */ s16 unk4A;
@@ -841,7 +841,7 @@ typedef struct ObjectHeader {
   /* 0x53 */ s8 modelType;
   /* 0x54 */ s8 behaviorId;
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
-  /* 0x56 */ s8 unk56;
+  /* 0x56 */ s8 attachPointCount;
   /* 0x57 */ s8 particleCount; // Number of different particle types that are attached
   /* 0x58 */ s8 unk58;
   /* 0x59 */ u8 pad59;
@@ -940,11 +940,11 @@ typedef struct Object_5C {
   /* 0x0108 */ s32 unk108;
 } Object_5C;
 
-typedef struct Object_60 {
-    s32 unk0;
-    struct Object *unk4[10];
-    s8 *unk2C;
-} Object_60;
+typedef struct AttachPoint {
+    s32 count;  // Number of active attach points.
+    struct Object *obj[10]; // Object Ptr List for attachments.
+    s8 *unk2C;  // Attachment indices.
+} AttachPoint;
 
 typedef struct Object_LaserGun {
   /* 0x00 */ s32 unk0;
@@ -1378,9 +1378,9 @@ typedef struct Object_Racer {
   /* 0x1A4 */ s16 x_rotation_vel;
   /* 0x1A6 */ s16 z_rotation_vel;
   /* 0x1A8 */ s16 unk1A8;
-  /* 0x1AA */ s16 unk1AA;
+  /* 0x1AA */ s16 racerOrder; // Current racer index order, but doesn't necessarily mean their exact race place.
   /* 0x1AC */ s16 finishPosition;
-  /* 0x1AE */ s16 racePosition;
+  /* 0x1AE */ s16 racePosition; // Current decided race position.
   /* 0x1B0 */ s16 unk1B0;
   /* 0x1B2 */ s16 unk1B2;
   /* 0x1B4 */ s32 unk1B4;
@@ -1840,7 +1840,7 @@ typedef struct Object {
   /* 0x0054 */ ShadeProperties *shading; //player + 0x2C0
   /* 0x0058 */ WaterEffect *waterEffect; //player + 0x304
   /* 0x005C */ Object_5C *unk5C;
-  /* 0x0060 */ Object_60 *unk60; //player + 0x340
+  /* 0x0060 */ AttachPoint *attachPoints; // Object attachments. This includes vehicle parts.
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ union {
                   ModelInstance **modelInstances;

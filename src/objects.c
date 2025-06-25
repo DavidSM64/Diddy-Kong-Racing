@@ -242,10 +242,10 @@ s16 D_8011ADA4;
 f32 gObjectUpdateRateF;
 s32 gPathUpdateOff;
 s32 gEventCountdown;
-s32 D_8011ADB4;
+s32 gRaceFinishTriggered;
 s32 gEventStartTimer;
 s32 D_8011ADBC;
-s32 D_8011ADC0;
+s32 gNumFinishedRacers;
 s8 gFirstTimeFinish;
 s8 D_8011ADC5;
 u32 gBalloonCutsceneTimer;
@@ -1009,7 +1009,7 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
         }
         D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
         D_8011AE70 = 0;
-        D_8011ADC0 = 1;
+        gNumFinishedRacers = 1;
         if (gPathUpdateOff == FALSE) {
             gParticlePtrList_flush();
             func_80017E98();
@@ -1294,7 +1294,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             entry->common.z = spB4[i6];
             entry->unkC = sp94[i6];
             if (entry->unkE == 4) {
-                func_800619F4(1);
+                model_anim_offset(1);
             }
             if (entry->unkE == 4) {
                 spawnObjFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK04;
@@ -1309,7 +1309,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             }
             if (vehicle >= VEHICLE_BOSSES) {
                 spawnObjFlags = OBJECT_SPAWN_UNK01;
-                func_800619F4(0);
+                model_anim_offset(0);
             }
             newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, spawnObjFlags);
             newRacerObj->segment.trans.rotation.y_rotation = sp94[i6];
@@ -1489,7 +1489,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         }
     }
     gRaceEndTimer = 0;
-    D_8011ADB4 = 0;
+    gRaceFinishTriggered = 0;
     set_next_taj_challenge_menu(0);
     if (settings->worldId == WORLD_CENTRAL_AREA) {
         if (!is_in_tracks_mode()) {
@@ -1768,10 +1768,10 @@ void func_8000E5EC(LevelObjectEntryCommon *arg0) {
     dst = (u8 *) arg0;
     src = (u8 *) ((s32) arg0 + size);
     end = sp30[sp1C];
-    if ((u32) src < end) {
+    if ((u32) src < (u32) end) {
         do {
             *dst++ = *src++;
-        } while ((u32) src != end);
+        } while ((u32) src != (u32) end);
     }
     D_8011AEA0[sp1C] -= size;
 
@@ -1810,7 +1810,7 @@ void func_8000E79C(u8 *arg0, u8 *arg1) {
         var_a2 = arg0 + arg1Value;
         var_t0 = arg0 + arg0Value2;
         k = (u32) var_a3;
-        while (((u32) var_t0) < k) {
+        while (((u32) var_t0) < (u32) k) {
             *var_a2 = *var_t0;
             var_a2++;
             var_t0++;
@@ -1820,7 +1820,7 @@ void func_8000E79C(u8 *arg0, u8 *arg1) {
         var_a2 -= arg0Value2;
         var_t0 = var_a3;
         k = (u32) (arg0 + arg1Value);
-        while (k < ((u32) var_a2)) {
+        while ((u32) k < ((u32) var_a2)) {
             var_a2--;
             var_t0--;
             *var_a2 = *var_t0;
@@ -1969,7 +1969,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     i = 0; // a2
     switch (curObj->segment.header->behaviorId) {
         case BHV_PARK_WARDEN:
-            func_800619F4(7);
+            model_anim_offset(7);
             break;
         case BHV_ANIMATED_OBJECT_4:
             i = get_character_id_from_slot(PLAYER_ONE);
@@ -2104,9 +2104,9 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (behaviourFlags & OBJECT_BEHAVIOUR_UNK20) {
         address += func_8000FD34(curObj, (Object_5C *) address);
     }
-    if (curObj->segment.header->unk56 > 0 && curObj->segment.header->unk56 < 10) {
-        curObj->unk60 = (Object_60 *) address;
-        address += sizeof(Object_60);
+    if (curObj->segment.header->attachPointCount > 0 && curObj->segment.header->attachPointCount < 10) {
+        curObj->attachPoints = (AttachPoint *) address;
+        address += sizeof(AttachPoint);
     }
     if (curObj->segment.header->particleCount > 0) {
         address += obj_init_emitter(curObj, (ParticleEmitter *) address);
@@ -2165,8 +2165,9 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (curObj->unk5C != NULL) {
         curObj->unk5C = (Object_5C *) (((uintptr_t) curObj + (uintptr_t) curObj->unk5C) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (curObj->unk60 != NULL) {
-        curObj->unk60 = (Object_60 *) (((uintptr_t) curObj + (uintptr_t) curObj->unk60) - (uintptr_t) gSpawnObjectHeap);
+    if (curObj->attachPoints != NULL) {
+        curObj->attachPoints =
+            (AttachPoint *) (((uintptr_t) curObj + (uintptr_t) curObj->attachPoints) - (uintptr_t) gSpawnObjectHeap);
     }
     if (curObj->segment.header->particleCount > 0) {
         curObj->particleEmitter = (ParticleEmitter *) (((uintptr_t) curObj + (uintptr_t) curObj->particleEmitter) -
@@ -2188,7 +2189,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         curObj->interactObj->y_position = curObj->segment.trans.y_position;
         curObj->interactObj->z_position = curObj->segment.trans.z_position;
     }
-    if (curObj->segment.header->unk56 > 0 && curObj->segment.header->unk56 < 10 && func_8000F99C(curObj)) {
+    if (curObj->segment.header->attachPointCount > 0 && curObj->segment.header->attachPointCount < 10 &&
+        obj_init_attachpoint(curObj)) {
         if (D_8011AE50 != NULL) {
             tex_free((TextureHeader *) (s32) D_8011AE50);
         }
@@ -2206,7 +2208,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (curObj->segment.header->numLightSources > 0) {
         light_setup_light_sources(curObj);
     }
-    func_800619F4(0);
+    model_anim_offset(0);
     update_object_stack_trace(OBJECT_SPAWN, -1);
     return curObj;
 }
@@ -2258,7 +2260,7 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
     returnSize = 0;
     if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
         for (i = 0; obj->modelInstances[i] == NULL; i++) {}
-        if (obj->modelInstances[i] != NULL && obj->modelInstances[i]->objModel->unk40 != NULL) {
+        if (obj->modelInstances[i] != NULL && obj->modelInstances[i]->objModel->normals != NULL) {
             set_shading_properties(obj->shading, obj->segment.header->shadeAmbient, obj->segment.header->shadeDiffuse,
                                    0, obj->segment.header->shadeAngleY, obj->segment.header->shadeAngleZ);
             if (obj->segment.header->unk3D != 0) {
@@ -2286,34 +2288,35 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
     return (returnSize & ~3) + 4;
 }
 
-s32 func_8000F99C(Object *obj) {
-    Object *temp_v0;
-    Object_60 *obj60;
+s32 obj_init_attachpoint(Object *obj) {
+    Object *attachObj;
+    AttachPoint *attachPoint;
     s32 i;
-    s32 var_s4;
+    s32 failed;
 
-    obj60 = obj->unk60;
-    obj60->unk0 = obj->segment.header->unk56;
-    obj60->unk0 = obj60->unk0; // Fakematch?
-    var_s4 = FALSE;
-    for (i = 0; i < obj60->unk0; i++) {
-        obj60->unk4[i] = func_8000FD54(obj->segment.header->vehiclePartIds[i ^ 0]); // i ^ 0 fakematch
-        if (obj60->unk4[i] == NULL) {
-            var_s4 = TRUE;
+    attachPoint = obj->attachPoints;
+    attachPoint->count = obj->segment.header->attachPointCount;
+    attachPoint->count = attachPoint->count; // Fakematch?
+    failed = FALSE;
+    for (i = 0; i < attachPoint->count; i++) {
+        attachPoint->obj[i] = obj_spawn_attachment(obj->segment.header->vehiclePartIds[i ^ 0]); // i ^ 0 fakematch
+        if (attachPoint->obj[i] == NULL) {
+            failed = TRUE;
         }
     }
-    if (var_s4) {
-        for (i = 0; i < obj60->unk0; i++) {
-            temp_v0 = obj60->unk4[i];
-            if (temp_v0 != NULL) {
-                objFreeAssets(temp_v0, temp_v0->segment.header->numberOfModelIds, temp_v0->segment.header->modelType);
-                try_free_object_header(temp_v0->segment.object.unk2C);
-                mempool_free(temp_v0);
+    if (failed) {
+        for (i = 0; i < attachPoint->count; i++) {
+            attachObj = attachPoint->obj[i];
+            if (attachObj != NULL) {
+                objFreeAssets(attachObj, attachObj->segment.header->numberOfModelIds,
+                              attachObj->segment.header->modelType);
+                try_free_object_header(attachObj->segment.object.unk2C);
+                mempool_free(attachObj);
             }
         }
         return TRUE;
     }
-    obj60->unk2C = obj->segment.header->vehiclePartIndices;
+    attachPoint->unk2C = obj->segment.header->vehiclePartIndices;
     return FALSE;
 }
 
@@ -2397,8 +2400,11 @@ s32 func_8000FD34(Object *obj, Object_5C *matrices) {
     return sizeof(Object_5C);
 }
 
-// Loads an object from object header index
-Object *func_8000FD54(s32 objectHeaderIndex) {
+/**
+ * Attempts to spawn an attachment object.
+ * Similar to the regular object spawning function, but cut down considerably.
+ */
+Object *obj_spawn_attachment(s32 objID) {
     s32 modelType;
     Object *object;
     ObjectHeader *objHeader;
@@ -2408,17 +2414,17 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     s8 numModelIds;
     u8 *objectAsRawBytes;
 
-    if (objectHeaderIndex >= gAssetsObjectHeadersTableLength) {
-        objectHeaderIndex = 0;
+    if (objID >= gAssetsObjectHeadersTableLength) {
+        objID = 0;
     }
-    objHeader = load_object_header(objectHeaderIndex);
+    objHeader = load_object_header(objID);
     if (objHeader == NULL) {
         return NULL;
     }
     objSize = (objHeader->numberOfModelIds * 4) + 0x80;
     object = (Object *) mempool_alloc(objSize, COLOUR_TAG_BLUE);
     if (object == NULL) {
-        try_free_object_header(objectHeaderIndex);
+        try_free_object_header(objID);
         return NULL;
     }
 
@@ -2429,8 +2435,8 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
 
     object->segment.trans.flags = OBJ_FLAGS_UNK_0002;
     object->segment.header = objHeader;
-    object->segment.object.unk2C = objectHeaderIndex;
-    object->objectID = objectHeaderIndex;
+    object->segment.object.unk2C = objID;
+    object->objectID = objID;
     object->segment.trans.scale = objHeader->scale;
     if (objHeader->flags & HEADER_FLAGS_UNK_0080) {
         object->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
@@ -2457,7 +2463,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     }
     if (failedToLoadModel) {
         objFreeAssets(object, numModelIds, modelType);
-        try_free_object_header(objectHeaderIndex);
+        try_free_object_header(objID);
         mempool_free(object);
         return NULL;
     }
@@ -2546,14 +2552,14 @@ void func_800101AC(Object *obj, s32 arg1) {
         return;
     }
 
-    if (obj->unk60 != NULL) {
-        for (i = 0; i < obj->unk60->unk0; i++) {
-            tempObj = obj->unk60->unk4[i];
+    if (obj->attachPoints != NULL) {
+        for (i = 0; i < obj->attachPoints->count; i++) {
+            tempObj = obj->attachPoints->obj[i];
             numberOfModelIds = tempObj->segment.header->numberOfModelIds;
             modelType = tempObj->segment.header->modelType;
             if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
                 for (j = 0; j < numberOfModelIds; j++) {
-                    free_3d_model(&tempObj->modelInstances[j]->objModel);
+                    free_3d_model((ModelInstance *) &tempObj->modelInstances[j]->objModel);
                 }
             } else {
                 for (j = 0; j < numberOfModelIds; j++) {
@@ -2888,7 +2894,7 @@ void obj_update(s32 updateRate) {
     }
     if (gNumRacers != 0) {
         if (gRaceEndTimer == 0) {
-            func_80019808(updateRate);
+            race_check_finish(updateRate);
         } else {
             race_transition_adventure(updateRate);
         }
@@ -3363,7 +3369,7 @@ void render_3d_model(Object *obj) {
     s32 intensity;
     s32 opacity;
     s32 vertOffset;
-    s32 obj60_unk0;
+    s32 attachPointCount;
     s32 hasOpacity;
     s32 hasLighting;
     s32 flags;
@@ -3373,7 +3379,7 @@ void render_3d_model(Object *obj) {
     f32 vtxY;
     f32 vtxZ;
     s8 index;
-    s8 var_v0_2;
+    s8 isCargo;
     Object *loopObj;
     ModelInstance *modInst;
     Object_Racer *racerObj;
@@ -3402,7 +3408,7 @@ void render_3d_model(Object *obj) {
             if (modInst->modelType == MODELTYPE_ANIMATED) {
                 obj_animate(obj);
             }
-            if (modInst->modelType != MODELTYPE_BASIC && objModel->unk40 != NULL) {
+            if (modInst->modelType != MODELTYPE_BASIC && objModel->normals != NULL) {
                 flags = TRUE;
                 if (racerObj != NULL && racerObj->vehicleID < VEHICLE_BOSSES &&
                     racerObj->playerIndex == PLAYER_COMPUTER) {
@@ -3486,15 +3492,15 @@ void render_3d_model(Object *obj) {
             }
             directional_lighting_off();
         }
-        if (obj->unk60 != NULL) {
-            obj60_unk0 = obj->unk60->unk0;
+        if (obj->attachPoints != NULL) {
+            attachPointCount = obj->attachPoints->count;
             if (racerObj != NULL && racerObj->vehicleID == VEHICLE_FLYING_CAR) {
-                obj60_unk0 = 0;
+                attachPointCount = 0;
             }
-            for (i = 0; i < obj60_unk0; i++) {
-                loopObj = obj->unk60->unk4[i];
+            for (i = 0; i < attachPointCount; i++) {
+                loopObj = obj->attachPoints->obj[i];
                 if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
-                    index = obj->unk60->unk2C[i];
+                    index = obj->attachPoints->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
                         something = loopObj->sprites[loopObj->segment.object.modelIndex];
                         vtxX = obj->curVertData[objModel->unk14[index]].x;
@@ -3521,11 +3527,12 @@ void render_3d_model(Object *obj) {
 #else
                         if (1) {
 #endif
-                            var_v0_2 = (loopObj->segment.trans.flags & OBJ_FLAGS_UNK_0080 && obj60_unk0 == 3);
+                            // In this instance, cargo refers to the eggs in the fire mountain challenge.
+                            isCargo = (loopObj->segment.trans.flags & OBJ_FLAGS_UNK_0080 && attachPointCount == 3);
                             if (racerObj != NULL && racerObj->transparency < 255) {
-                                var_v0_2 = FALSE;
+                                isCargo = FALSE;
                             }
-                            if (var_v0_2) {
+                            if (isCargo) {
                                 func_80012C98(&gObjectCurrDisplayList);
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
                                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity,
@@ -3534,7 +3541,7 @@ void render_3d_model(Object *obj) {
                             loopObj->properties.common.unk0 =
                                 render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix,
                                                         &gObjectCurrVertexList, loopObj, something, flags);
-                            if (var_v0_2) {
+                            if (isCargo) {
                                 gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
                                 func_80012CE8(&gObjectCurrDisplayList);
                             }
@@ -6192,7 +6199,7 @@ void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
                                             midiFade->unk0 = var_v1;
                                             midiFade->unk1 = 0;
                                             midiFade->unk4 = 0;
-                                            D_8011AF60[0] = (s32) midiFade;
+                                            D_8011AF60[0] = (Object_MidiFade *) midiFade;
                                         }
                                     }
                                 }
@@ -6355,26 +6362,32 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
 // D_B0000574 is a direct read from the ROM as opposed to RAM
 extern s32 D_B0000574;
 
-void func_80019808(s32 updateRate) {
-    s32 prevUnk1AA;
+/**
+ * Check the win conditions of the current race.
+ * This varies based on the race type, so this does a multitude of different possible things.
+ * When the race is finished, it will then for the most part trigger the next menu,
+ * but adventure mode will start the balloon cutscene if it has not yet been awarded.
+ */
+void race_check_finish(s32 updateRate) {
+    s32 prevRacerPos;
     s32 i;
-    s32 j; // sp94
-    s32 newUnk1AA;
+    s32 j;
+    s32 racerPos;
     Settings *settings;
-    s16 numHumanRacers;         // sp8A
-    s16 numHumanRacersFinished; // sp88
+    s16 numHumanRacers;
+    s16 numHumanRacersFinished;
     Object_Racer *curRacer2;
-    Object_Racer *curRacer; // sp80
+    Object_Racer *curRacer;
     s16 numFinishedRacers;
     s16 foundIndex;
-    Object_Racer *racer[4]; // sp6C
+    Object_Racer *racer[4];
     s16 racerIndex;
     s8 raceType;
     s8 someBool;
-    LevelHeader *currentLevelHeader; // sp64
+    LevelHeader *currentLevelHeader;
     s32 newStartingPosition;
     s8 sp5C[4];
-    s8 someBool2; // sp5B
+    s8 someBool2;
     s8 flags[3];
     s32 camera;
 
@@ -6387,11 +6400,12 @@ void func_80019808(s32 updateRate) {
     if (someBool2 != RACETYPE_DEFAULT && someBool2 != RACETYPE_HORSESHOE_GULCH && someBool2 != RACETYPE_BOSS) {
         if (someBool2 & RACETYPE_CHALLENGE) {
             if (someBool2 == RACETYPE_CHALLENGE_EGGS) {
-                func_80045128(*gRacers);
+                racer_update_eggs(*gRacers);
             }
-            if (D_8011ADB4 == 0) {
+            if (gRaceFinishTriggered == FALSE) {
                 for (i = 0; i < gNumRacers; i++) {
                     racer[i] = &(*gRacers)[i]->unk64->racer;
+                    // Manage eliminated racers in deathmatch.
                     if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE && racer[i]->bananas <= 0 &&
                         !racer[i]->raceFinished) {
                         racer[i]->raceFinished = TRUE;
@@ -6399,8 +6413,8 @@ void func_80019808(s32 updateRate) {
                         racer_sound_free((*gRacers)[i]);
                         (*gRacers)[i]->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
                         (*gRacers)[i]->interactObj->flags = INTERACT_FLAGS_NONE;
-                        racer[i]->finishPosition = 5 - D_8011ADC0;
-                        D_8011ADC0++;
+                        racer[i]->finishPosition = 5 - gNumFinishedRacers;
+                        gNumFinishedRacers++;
                     }
                     if (racer[i]->playerIndex != PLAYER_COMPUTER) {
                         if (racer[i]->raceFinished) {
@@ -6411,8 +6425,8 @@ void func_80019808(s32 updateRate) {
                     if (racer[i]->raceFinished) {
                         numFinishedRacers++;
                         if (racer[i]->finishPosition == 0) {
-                            racer[i]->finishPosition = D_8011ADC0;
-                            D_8011ADC0++;
+                            racer[i]->finishPosition = gNumFinishedRacers;
+                            gNumFinishedRacers++;
                         }
                     }
                 }
@@ -6454,21 +6468,23 @@ void func_80019808(s32 updateRate) {
                         }
 
                         if (racerIndex != -1) {
+                            // In battle mode, last to finish wins, so flip the finish order.
                             if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
-                                racer[racerIndex]->finishPosition = 5 - D_8011ADC0;
+                                racer[racerIndex]->finishPosition = 5 - gNumFinishedRacers;
                             } else {
-                                racer[racerIndex]->finishPosition = D_8011ADC0;
+                                racer[racerIndex]->finishPosition = gNumFinishedRacers;
                             }
-                            D_8011ADC0++;
+                            gNumFinishedRacers++;
                             racer[racerIndex]->raceFinished = TRUE;
                         }
                         i = 0;
                     } while (racerIndex != -1);
 
                     gSwapLeadPlayer = FALSE;
+                    // Award the winner a TT amulet if not in tracks mode.
                     if (!is_in_tracks_mode() &&
                         (racer[0]->finishPosition == 1 ||
-                         is_in_two_player_adventure() && racer[1]->finishPosition == 1) &&
+                         (is_in_two_player_adventure() && racer[1]->finishPosition == 1)) &&
                         (!(settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED))) {
                         settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED;
                         i = settings->ttAmulet + 1;
@@ -6477,36 +6493,37 @@ void func_80019808(s32 updateRate) {
                         }
                         settings->ttAmulet = i;
                     }
-                    for (newUnk1AA = 0; newUnk1AA < 8;) {
-                        settings->racers[newUnk1AA++].starting_position = -1;
+                    for (racerPos = 0; racerPos < 8;) {
+                        settings->racers[racerPos++].starting_position = -1;
                     }
 
                     newStartingPosition = SEQUENCE_BATTLE_LOSE;
-                    for (newUnk1AA = 0; newUnk1AA < gNumRacers; newUnk1AA++) {
-                        if (racer[newUnk1AA]->playerIndex != PLAYER_COMPUTER && racer[newUnk1AA]->finishPosition == 1) {
+                    for (racerPos = 0; racerPos < gNumRacers; racerPos++) {
+                        if (racer[racerPos]->playerIndex != PLAYER_COMPUTER && racer[racerPos]->finishPosition == 1) {
                             newStartingPosition = SEQUENCE_BATTLE_VICTORY;
                         }
-                        settings->racers[newUnk1AA].starting_position = racer[newUnk1AA]->finishPosition - 1;
+                        settings->racers[racerPos].starting_position = racer[racerPos]->finishPosition - 1;
                     }
 
                     music_play(newStartingPosition);
                     newStartingPosition = 4;
-                    for (prevUnk1AA = 0; prevUnk1AA < 8; prevUnk1AA++) {
-                        if (settings->racers[prevUnk1AA].starting_position == -1) {
-                            settings->racers[prevUnk1AA].starting_position = newStartingPosition;
+                    for (prevRacerPos = 0; prevRacerPos < 8; prevRacerPos++) {
+                        if (settings->racers[prevRacerPos].starting_position == -1) {
+                            settings->racers[prevRacerPos].starting_position = newStartingPosition;
                             newStartingPosition++;
                         }
                     }
 
-                    gSwapLeadPlayer = 0;
+                    gSwapLeadPlayer = FALSE;
                     if (is_in_two_player_adventure() && settings->racers[PLAYER_TWO].starting_position <
                                                             settings->racers[PLAYER_ONE].starting_position) {
-                        gSwapLeadPlayer = 1;
+                        gSwapLeadPlayer = TRUE;
                     }
+                    // i will be nonzero if any adventure mode award triggers happened.
                     if (i == 0) {
                         if (is_in_two_player_adventure()) {
                             if (gSwapLeadPlayer) {
-                                gSwapLeadPlayer = 0;
+                                gSwapLeadPlayer = FALSE;
                                 swap_lead_player();
                                 if (D_800DC73C != 0) {
                                     D_800DC748 = TRUE;
@@ -6520,9 +6537,9 @@ void func_80019808(s32 updateRate) {
                         push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
                         push_level_property_stack(ASSET_LEVEL_TTAMULETSEQUENCE, 0, VEHICLE_NO_OVERRIDE,
                                                   settings->ttAmulet - 1);
-                        race_finish_adventure(1);
+                        race_finish_adventure(TRUE);
                     }
-                    D_8011ADB4 = 1;
+                    gRaceFinishTriggered = TRUE;
                 }
             }
         }
@@ -6531,39 +6548,39 @@ void func_80019808(s32 updateRate) {
 
     i = 0;
     do {
-        newUnk1AA = 1;
+        racerPos = 1;
         curRacer = &(*gRacers)[i]->unk64->racer;
-        prevUnk1AA = curRacer->unk1AA;
+        prevRacerPos = curRacer->racerOrder;
         j = 0;
         do {
             if (j != i) {
                 curRacer2 = &(*gRacers)[j]->unk64->racer;
                 if (curRacer->raceFinished == FALSE && curRacer2->raceFinished != FALSE) {
-                    newUnk1AA++;
+                    racerPos++;
                 } else if (curRacer->courseCheckpoint < curRacer2->courseCheckpoint) {
-                    newUnk1AA++;
+                    racerPos++;
                 } else if (curRacer->courseCheckpoint == curRacer2->courseCheckpoint) {
                     if (curRacer2->unk1A8 < curRacer->unk1A8) {
-                        newUnk1AA++;
+                        racerPos++;
                     }
                     if (curRacer->unk1A8 == curRacer2->unk1A8 && i < j) {
-                        newUnk1AA++;
+                        racerPos++;
                     }
                 }
             }
             j++;
         } while (j < gNumRacers);
 
-        curRacer->unk1AA = newUnk1AA;
+        curRacer->racerOrder = racerPos;
         if (curRacer->lap < currentLevelHeader->laps) {
-            if (prevUnk1AA == curRacer->unk1AA) {
+            if (prevRacerPos == curRacer->racerOrder) {
                 if (curRacer->unk1B0 < 2) {
                     if (curRacer->vehicleID != VEHICLE_LOOPDELOOP) {
                         curRacer->unk1B0++;
                     }
-                } else if (curRacer->unk1AA != curRacer->racePosition) {
+                } else if (curRacer->racerOrder != curRacer->racePosition) {
                     curRacer->unk1B2 = 10;
-                    curRacer->racePosition = curRacer->unk1AA;
+                    curRacer->racePosition = curRacer->racerOrder;
                 }
             } else {
                 curRacer->unk1B0 = 0;
@@ -6578,11 +6595,11 @@ void func_80019808(s32 updateRate) {
         if (curRacer->lap >= currentLevelHeader->laps && curRacer->raceFinished == FALSE) {
             if (get_game_mode() != GAMEMODE_UNUSED_4) {
                 curRacer->raceFinished = TRUE;
-                curRacer->finishPosition = D_8011ADC0;
-                if (D_8011ADC0 == 1 && curRacer->playerIndex == PLAYER_COMPUTER) {
+                curRacer->finishPosition = gNumFinishedRacers;
+                if (gNumFinishedRacers == 1 && curRacer->playerIndex == PLAYER_COMPUTER) {
                     sound_play(SOUND_WHOOSH5, NULL);
                 }
-                D_8011ADC0++;
+                gNumFinishedRacers++;
             }
         }
         if (curRacer->playerIndex != PLAYER_COMPUTER) {
@@ -6609,11 +6626,11 @@ void func_80019808(s32 updateRate) {
     do {
         curRacer = &(*gRacers)[i]->unk64->racer;
         if (curRacer->raceFinished) {
-            newUnk1AA = curRacer->finishPosition - 1;
+            racerPos = curRacer->finishPosition - 1;
         } else {
-            newUnk1AA = curRacer->unk1AA - 1;
+            racerPos = curRacer->racerOrder - 1;
         }
-        gRacersByPosition[newUnk1AA] = (*gRacers)[i];
+        gRacersByPosition[racerPos] = (*gRacers)[i];
         i++;
     } while (i < gNumRacers);
 
@@ -6662,10 +6679,10 @@ void func_80019808(s32 updateRate) {
         curRacer = &(*gRacers)[0]->unk64->racer;
         if (!curRacer->raceFinished) {
             curRacer->raceFinished = TRUE;
-            curRacer->finishPosition = D_8011ADC0;
-            D_8011ADC0 += 1;
+            curRacer->finishPosition = gNumFinishedRacers;
+            gNumFinishedRacers++;
         }
-    } else if (D_8011ADB4 == 0) {
+    } else if (gRaceFinishTriggered == FALSE) {
         someBool2 = FALSE;
         if (is_in_two_player_adventure() && numHumanRacersFinished > 0 && get_trophy_race_world_id() == 0 &&
             set_course_finish_flags(settings) != 0) {
@@ -6681,15 +6698,15 @@ void func_80019808(s32 updateRate) {
                     if (curRacer->raceFinished == FALSE) {
                         if (curRacer->playerIndex >= 0) {
                             set_active_camera(curRacer->playerIndex);
-                            camera = cam_get_active_camera_no_cutscenes();
+                            camera = (s32) cam_get_active_camera_no_cutscenes();
                             // we need the camera to be a s32 for the WAIT_ON_IOBUSY anti tamper call to work
                             // but we *know* that cam_get_active_camera_no_cutscenes returns a Camera pointer so this
                             // should be safe
                             ((Camera *) camera)->mode = CAMERA_FINISH_CHALLENGE;
                         }
                         curRacer->raceFinished = TRUE;
-                        curRacer->finishPosition = D_8011ADC0;
-                        D_8011ADC0++;
+                        curRacer->finishPosition = gNumFinishedRacers;
+                        gNumFinishedRacers++;
                     }
                     i++;
                 } while (i < gNumRacers);
@@ -6710,8 +6727,8 @@ void func_80019808(s32 updateRate) {
                 i = 0;
                 do {
                     curRacer = &gRacersByPosition[i]->unk64->racer;
-                    newUnk1AA = curRacer->racerIndex;
-                    settings->racers[newUnk1AA].starting_position = i;
+                    racerPos = curRacer->racerIndex;
+                    settings->racers[racerPos].starting_position = i;
                     i++;
                 } while (i < gNumRacers);
             }
@@ -6761,9 +6778,9 @@ void func_80019808(s32 updateRate) {
                 if (settings->worldId != 0) {
                     settings->balloonsPtr[0]++;
                 }
-                race_finish_adventure(1);
+                race_finish_adventure(TRUE);
             }
-            D_8011ADB4 = -1;
+            gRaceFinishTriggered = -1; // -1 doesn't do anything different.
             if (get_number_of_active_players() == 1) {
                 race_finish_time_trial();
             }
@@ -7252,7 +7269,7 @@ void set_ghost_none(void) {
 Object *func_8001B7A8(Object_Racer *racer, s32 position, f32 *distance) {
     UNUSED s32 pad;
     Object *tempRacerObj;
-    position = (racer->unk1AA - position) - 1;
+    position = (racer->racerOrder - position) - 1;
     if (position < 0 || position >= gNumRacers) {
         return NULL;
     }
@@ -8195,7 +8212,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     }
 
     vertices = object->curVertData;
-    normals = model->unk40;
+    normals = model->normals;
     normIdx = 0;
 
     direction.x = -(object->shading->lightDirX << 3);
@@ -8294,7 +8311,7 @@ void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRo
 
     count = 0;
     triangles = model->triangles;
-    model40Entries = model->unk40;
+    model40Entries = model->normals;
     objTrans.rotation.z_rotation = zRot;
     objTrans.rotation.x_rotation = xRot;
     objTrans.rotation.y_rotation = yRot;
@@ -9089,7 +9106,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
         temp_s3->racer.unk2A = temp_v0_3 - arg1;
         if ((s16) temp_s3->racer.unk2A <= 0) {
             temp_s3->effect_box.unkE[0x37] = 1;
-            temp_s1 = temp_s3->racer.unk1C->pan;
+            temp_s1 = (LevelObjectEntry_Animation *) temp_s3->racer.unk1C->pan;
             func_80021104(arg0, &temp_s3->animation, temp_s1);
             temp_s3->racer.unk2A = 0;
             func_8002125C(arg0, (LevelObjectEntry_CharacterSelect *) temp_s1, (Object_CharacterSelect *) temp_s3, -1);
@@ -10477,8 +10494,8 @@ void mode_init_taj_race(void) {
         racer->unk1BA = 0;
         settings = get_settings();
         gEventCountdown = 80;
-        D_8011ADB4 = 0;
-        D_8011ADC0 = 1;
+        gRaceFinishTriggered = FALSE;
+        gNumFinishedRacers = 1;
         levelHeader->laps = 3;
         levelHeader->race_type = RACETYPE_DEFAULT;
         hud_init_element();
@@ -10497,7 +10514,7 @@ void mode_init_taj_race(void) {
         newRacerEntry.angleZ = 0;
         newRacerEntry.playerIndex = 4;
         newRacerEntry.common.objectID = ASSET_OBJECT_ID_FLYINGCARPET;
-        func_800619F4(0);
+        model_anim_offset(0);
         racerObj = spawn_object(&newRacerEntry.common, OBJECT_SPAWN_UNK01);
         (*gRacers)[1] = racerObj;
         gRacersByPosition[1] = racerObj;

@@ -135,11 +135,10 @@ UNUSED s32 D_80127FE4_EE794;
 SavefileInfo gSavefileInfo[4];
 s32 gCpakGhostData;
 s32 gGhostMenuTotal;
-u8 gGhostLevelIDsPak[4];
-UNUSED s32 D_80128024_EE7D4;
-u8 gGhostCharacterIDsPak[4];
+u8 gGhostLevelIDsPak[6];
+u8 gGhostCharacterIDsPak[6];
 void *gMenuAssets[128]; // lookup table? Contains Textures, Objects, and Sprites. Need to change name and type.
-u8 gGhostVehicleIDsPak[4];
+u8 gGhostVehicleIDsPak[6];
 u8 gMenuAssetActive[128];
 u16 gGhostChecksumIDsPak[6];
 u8 gGhostLevelIDsMenu[6];
@@ -344,14 +343,10 @@ SavefileInfo gSavefileInfo[4];
 s32 gCpakGhostData;
 s32 gGhostMenuTotal;
 s8 gDialogueSubmenu;
-u8 gGhostLevelIDsPak[4];
-UNUSED s8 D_801264E0;
-UNUSED s8 D_801264E1;
+u8 gGhostLevelIDsPak[6];
 s8 sCurrentMenuID;
-u8 gGhostCharacterIDsPak[4];
-UNUSED s32 D_801264E8;
-u8 gGhostVehicleIDsPak[4];
-UNUSED s32 D_801264F0[2];
+u8 gGhostCharacterIDsPak[6];
+u8 gGhostVehicleIDsPak[6];
 u16 gGhostChecksumIDsPak[6];
 s8 sDialogueOptionMax;
 u8 gGhostLevelIDsMenu[6];
@@ -1433,8 +1428,11 @@ s16 gTrophyRaceImageIndices[3] = { 0, 1, -1 };
 MenuElement gTrophyRankingsTitle[] = {
     { 320 + 160 + 1, 35, SCREEN_WIDTH_HALF + 1, 35, -159, 35, 0, 0, 0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { 0 }, { { 0, 0, 0, 0 } } },
     { 320 + 160, 32, SCREEN_WIDTH_HALF, 32, -160, 32, 255, 255, 255, 0, 255, ASSET_FONTS_BIGFONT, 12, 0, { 0 }, { { 0, 0, 0, 0 } } },
+// Not the most glamourous approach, but the least worst one without a proper rematching solution.
+#ifndef AVOID_UB
 };
 MenuElement gTrophyRankingsRacers[] = {
+#endif
     { 64, -192, 64, 48, 64, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, { { 0, 0, 0, 0 } } },
     { 32, -192, 32, 48, 32, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFirstPlace }, { { 0, 0, 0, 0 } } },
     { 130, -172, 130, 68, 130, 308, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[0] }, { { 0, 0, 0, 0 } } },
@@ -10416,7 +10414,9 @@ void menu_racer_portraits(void) {
 }
 
 /**
- *
+ * Initialises the post race variables.
+ * Sets different defaults based on being in adventure mode, tracks mode, or multiplayer.
+ * Loads the menu assets for the postrace too.
  */
 void postrace_start(s32 finishState, s32 worldID) {
     s16 *var_v1;
@@ -10582,8 +10582,11 @@ void postrace_music_fade(s32 updateRate) {
     }
 }
 
-// postrace_render
-void func_80094D28(UNUSED s32 updateRate) {
+/**
+ * Resizes the viewport when shrinking it down.
+ * Renders race order, lap times and text options beneath.
+ */
+void postrace_viewport(UNUSED s32 updateRate) {
     s32 temp;
     s32 var_s3;
     Settings *settings;
@@ -10852,7 +10855,7 @@ s32 menu_postrace(Gfx **dList, Mtx **matrices, Vertex **vertices, s32 updateRate
     postrace_music_fade(updateRate);
     if (gMenuDelay < 20 && gPostraceFinishState == 0) {
         if (gPostRace.unk0_s32 < 0) {
-            func_80094D28(updateRate);
+            postrace_viewport(updateRate);
         }
     } else {
         bgdraw_texture_init(NULL, NULL, 0);
@@ -12232,9 +12235,15 @@ void rankings_render_order(s32 updateRate) {
                                            (gMenuStage != POSTRACE_ENTER && gRankingsPlayers[i]))) {
             fade = (highlight >> 1) + 128;
         }
+#ifdef AVOID_UB
+        gTrophyRankingsTitle[2 + (i * 3)].filterRed = fade;
+        gTrophyRankingsTitle[2 + (i * 3)].filterGreen = fade;
+        gTrophyRankingsTitle[2 + (i * 3)].filterBlue = fade;
+#else
         gTrophyRankingsRacers[i * 3].filterRed = fade;
         gTrophyRankingsRacers[i * 3].filterGreen = fade;
         gTrophyRankingsRacers[i * 3].filterBlue = fade;
+#endif
     }
     stage = gMenuStage;
     if (stage == RANKINGS_ORDER || stage == RANKINGS_EXIT) {
