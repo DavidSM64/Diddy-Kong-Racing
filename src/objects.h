@@ -8,14 +8,14 @@
 #include "camera.h"
 #include "particles.h"
 
-
-#define NEW_OBJECT_ENTRY(entryVar, entryId, entrySize, xPos, yPos, zPos) { \
-    entryVar.x = (xPos);                                                   \
-    entryVar.y = (yPos);                                                   \
-    entryVar.z = (zPos);                                                   \
-    entryVar.size = ((((entryId) >> 1) & 0x80) | (entrySize));             \
-    entryVar.objectID = (s8)(entryId);                                     \
-}
+#define NEW_OBJECT_ENTRY(entryVar, entryId, entrySize, xPos, yPos, zPos) \
+    {                                                                    \
+        entryVar.x = (xPos);                                             \
+        entryVar.y = (yPos);                                             \
+        entryVar.z = (zPos);                                             \
+        entryVar.size = ((((entryId) >> 1) & 0x80) | (entrySize));       \
+        entryVar.objectID = (s8) (entryId);                              \
+    }
 
 #define NODE_NONE 255
 
@@ -174,27 +174,27 @@ enum ObjectInteractionFlags {
 
 enum ObjectSpawnFlags {
     OBJECT_SPAWN_NONE,
-    OBJECT_SPAWN_UNK01          = (1 << 0),
-    OBJECT_SPAWN_UNK02          = (1 << 1),
-    OBJECT_SPAWN_UNK04          = (1 << 2),
-    OBJECT_SPAWN_UNK08          = (1 << 3),
-    OBJECT_SPAWN_UNK10          = (1 << 4)
+    OBJECT_SPAWN_UNK01 = (1 << 0),
+    OBJECT_SPAWN_UNK02 = (1 << 1),
+    OBJECT_SPAWN_UNK04 = (1 << 2),
+    OBJECT_SPAWN_UNK08 = (1 << 3),
+    OBJECT_SPAWN_UNK10 = (1 << 4)
 };
 
 enum ObjectBehaviourFlags {
     OBJECT_BEHAVIOUR_NONE,
-    OBJECT_BEHAVIOUR_SHADED         = (1 << 0),
-    OBJECT_BEHAVIOUR_SHADOW         = (1 << 1),
-    OBJECT_BEHAVIOUR_WATER_EFFECT   = (1 << 2),
-    OBJECT_BEHAVIOUR_ANIMATION      = (1 << 3),
-    OBJECT_BEHAVIOUR_INTERACTIVE    = (1 << 4),
-    OBJECT_BEHAVIOUR_UNK20          = (1 << 5)
+    OBJECT_BEHAVIOUR_SHADED = (1 << 0),
+    OBJECT_BEHAVIOUR_SHADOW = (1 << 1),
+    OBJECT_BEHAVIOUR_WATER_EFFECT = (1 << 2),
+    OBJECT_BEHAVIOUR_ANIMATION = (1 << 3),
+    OBJECT_BEHAVIOUR_INTERACTIVE = (1 << 4),
+    OBJECT_BEHAVIOUR_UNK20 = (1 << 5)
 };
 
 enum ContPakErrors {
     CONTPAK_ERROR_MISSING = -1,
     CONTPAK_ERROR_NONE,
-    CONTPAK_ERROR_UNKNOWN, //Time trial ghost has reached its size limit?
+    CONTPAK_ERROR_UNKNOWN, // Time trial ghost has reached its size limit?
     CONTPAK_ERROR_FULL,
     CONTPAK_ERROR_DAMAGED
 };
@@ -219,38 +219,25 @@ typedef struct BossRaceVehicles {
     s8 bossVehicle;
 } BossRaceVehicles;
 
-typedef struct AssetObjectHeaders {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s32 unk24;
-} AssetObjectHeaders;
-
 /* Size: 0x3C bytes */
 typedef struct CheckpointNode {
-/* 0x00 */ f32 rotationXFrac;
-/* 0x04 */ f32 rotationYFrac;
-/* 0x08 */ f32 rotationZFrac;
-/* 0x0C */ f32 unkC;
-/* 0x10 */ f32 x;
-/* 0x14 */ f32 y;
-/* 0x18 */ f32 z;
-/* 0x1C */ f32 scale;
-/* 0x20 */ f32 distance;
-/* 0x24 */ f32 unk24; // Appears to be exactly the same as distance?
-/* 0x28 */ Object *obj;
-/* 0x2C */ s16 unk2C;
-/* 0x2E */ s8 unk2E[4];
-/* 0x32 */ s8 unk32[4];
-/* 0x36 */ s8 unk36[4]; // Appear to be flags of some sort?
-/* 0x3A */ s8 altRouteID; // -1 if there's none to be found.
-/* 0x3B */ u8 unk3B;
+    /* 0x00 */ f32 rotationXFrac;
+    /* 0x04 */ f32 rotationYFrac;
+    /* 0x08 */ f32 rotationZFrac;
+    /* 0x0C */ f32 unkC;
+    /* 0x10 */ f32 x;
+    /* 0x14 */ f32 y;
+    /* 0x18 */ f32 z;
+    /* 0x1C */ f32 scale;
+    /* 0x20 */ f32 distance;
+    /* 0x24 */ f32 unk24; // Appears to be exactly the same as distance?
+    /* 0x28 */ Object *obj;
+    /* 0x2C */ s16 unk2C;
+    /* 0x2E */ s8 unk2E[4];
+    /* 0x32 */ s8 unk32[4];
+    /* 0x36 */ s8 unk36[4];   // Appear to be flags of some sort?
+    /* 0x3A */ s8 altRouteID; // -1 if there's none to be found.
+    /* 0x3B */ u8 unk3B;
 } CheckpointNode;
 
 /* Size: 0x40 bytes */
@@ -261,25 +248,6 @@ typedef struct unk800179D0 {
     f32 unk0C[12];
     u32 unk3C;
 } unk800179D0;
-
-typedef struct struct_8000FC6C {
-    f32 unk0;
-    TextureHeader *unk4;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-} struct_8000FC6C;
-
-typedef struct struct_8000FC6C_2 {
-    s32 unk0;
-    s32 unk4;
-    f32 unk8;
-    s32 unkC;
-    u8 unk10[0x26];
-    s16 unk36;
-    s16 unk38;
-} struct_8000FC6C_2;
 
 typedef struct TTGhostTable {
     u8 mapId;
@@ -293,40 +261,11 @@ typedef struct ObjectTransformExt {
     s16 unk1A;
 } ObjectTransformExt;
 
-typedef struct unk80022CFC_2 {
-    u8 pad[0xA];
-    s8 unkA;
-} unk80022CFC_2;
-
-typedef struct unk80022CFC_1 {
-    u8 pad[0xC];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    u8 pad18[0x16];
-    s16 unk2E;
-    u8 pad30[0x9];
-    s8 unk39;
-    u8 pad3A[0x2];
-    unk80022CFC_2* unk3C;
-    s32 pad40[2];
-    s16 unk48;
-    u16 pad4A[0x16];
-    s32 unk78;
-} unk80022CFC_1;
-
 /* Size: 0x1A bytes */
 typedef struct ObjectTransform_800135B8 {
     ObjectTransform trans;
     s16 unk18;
 } ObjectTransform_800135B8;
-
-typedef struct unk8001A7D8_arg0 {
-    u8 pad0[4];
-    s32 *unk4;
-    u8 pad8[0x41];
-    u8 unk49;
-} unk8001A7D8_arg0;
 
 typedef struct unk800149C0 {
     u8 pad0[4];
@@ -341,21 +280,6 @@ typedef struct RacerFXData {
     u8 unk2;
     u8 unk3;
 } RacerFXData;
-
-typedef struct unk80017A18_10 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-} unk80017A18_10;
-
-typedef struct unk80017A18 {
-    u8 pad0[0xC];
-    u16 *unkC;
-    unk80017A18_10 *unk10;
-    u8 pad14[0x1E];
-    s16 unk32;
-} unk80017A18;
 
 extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
 
@@ -410,7 +334,7 @@ s16 race_finish_timer(void);
 u32 get_balloon_cutscene_timer(void);
 s32 timetrial_valid_player_ghost(void);
 Object *timetrial_player_ghost(void);
-s32 timetrial_staff_ghost_check(Object* obj);
+s32 timetrial_staff_ghost_check(Object *obj);
 Object *timetrial_ghost_staff(void);
 s32 timetrial_staff_unbeaten(void);
 SIDeviceStatus timetrial_save_player_ghost(s32 controllerIndex);
@@ -424,7 +348,7 @@ Object **get_racer_objects(s32 *numRacers);
 Object **get_racer_objects_by_port(s32 *numRacers);
 Object **get_racer_objects_by_position(s32 *numRacers);
 Object *get_racer_object(s32 index);
-void debug_render_checkpoint_node(s32 checkpointID, s32 pathID, Gfx** dList, Mtx **mtx, Vertex **vtx);
+void debug_render_checkpoint_node(s32 checkpointID, s32 pathID, Gfx **dList, Mtx **mtx, Vertex **vtx);
 Object *spectate_object(s32 cameraIndex);
 void ainode_enable(void);
 void ainode_tail_set(s32 nodeID);
@@ -501,9 +425,11 @@ s32 obj_init_property_flags(s32 behaviorId);
 void tt_ghost_beaten(s32 arg0, s16 *playerId);
 void obj_init_animcamera(Object *, Object *);
 Object *obj_butterfly_node(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis);
-void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_CharacterSelect *charSelect, UNUSED s32 index);
+void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_CharacterSelect *charSelect,
+                   UNUSED s32 index);
 void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry);
-s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY, f32 *outZ);
+s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,
+                  f32 *outZ);
 void func_80016500(Object *obj, Object_Racer *racer);
 void func_8000C8F8(s32, s32);
 u8 timetrial_init_staff_ghost(s32 trackId);
@@ -534,23 +460,23 @@ f32 lerp_and_get_derivative(f32 *data, u32 index, f32 t, f32 *derivative);
 /**
  * Faster variant of the shading function for objects.
  * Unlike the fancy option, does not calculate envmaps.
-*/
-void obj_shade_fast(ObjectModel *model, Object * obj, f32 intensity);
+ */
+void obj_shade_fast(ObjectModel *model, Object *obj, f32 intensity);
 
 /**
  * Animation function for objects. Does per-vertex transformation.
-*/
+ */
 s32 obj_animate(Object *obj);
 
-//Non Matching
+// Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void decrypt_magic_codes(s32 *data, s32 length);
 s32 get_first_active_object(s32 *);
 Object *spawn_object(LevelObjectEntryCommon *entry, s32);
-s32 func_8001F460(Object*, s32, Object*);
+s32 func_8001F460(Object *, s32, Object *);
 void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4);
-void func_80018CE0(Object* racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
+void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
 s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance, u8 *arg6);
 void obj_tex_animate(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);
@@ -563,14 +489,15 @@ void func_80017E98(void);
 void spectate_update(void);
 void func_8001E93C(void);
 void func_80019808(s32 updateRate);
-void func_80014090(Object*, s32);
-void audspat_update_all(Object**, s32, s32);
+void func_80014090(Object *, s32);
+void audspat_update_all(Object **, s32, s32);
 void func_8001E89C(void);
-CheckpointNode *func_800230D0(Object*, Object_Racer*);
+CheckpointNode *func_800230D0(Object *, Object_Racer *);
 void obj_update(s32 updateRate);
 void func_800159C8(Object *, Object *);
 void obj_door_number(ObjectModel *, Object *);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 f32 func_8001C6C4(Object_NPC *, Object *, f32, f32, s32);
-s32 func_80017A18(ObjectModel *, s32, s32*, f32*, f32*, f32*, f32*, f32*, f32*, f32*, s8 *surface, f32); // NON EQUIVALENT
+s32 func_80017A18(ObjectModel *, s32, s32 *, f32 *, f32 *, f32 *, f32 *, f32 *, f32 *, f32 *, s8 *surface,
+                  f32); // NON EQUIVALENT
 #endif
