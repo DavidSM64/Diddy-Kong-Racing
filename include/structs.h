@@ -963,16 +963,10 @@ typedef struct Object_LaserGun {
     /* 0x11 */ u8 radius;
 } Object_LaserGun;
 
-typedef struct Object_Laser {
-    /* 0x000 */ s16 unk0;
-    /* 0x004 */ u8 unk4[0x185];
-    /* 0x187 */ s8 unk187;
-} Object_Laser;
-
-typedef struct Object_TrophyCabinet {
-    /* 0x0 */ s32 unk0;
-    /* 0x4 */ s16 unk4;
-} Object_TrophyCabinet;
+typedef struct JingleState {
+    /* 0x0 */ s32 timer;
+    /* 0x4 */ s16 cooldown;
+} JingleState;
 
 typedef struct Object_Animator {
     /* 0x00 */ s16 segmentId;
@@ -983,6 +977,7 @@ typedef struct Object_Animator {
     /* 0x0A */ s16 ySpeed;
 } Object_Animator;
 
+// TODO: remove this struct
 typedef struct Object_Animation {
     /* 0x00 */ f32 unk0;
     /* 0x04 */ f32 unk4;
@@ -1119,7 +1114,8 @@ typedef struct Object_Boost {
     /* 0x7C */ TextureHeader *tex;
 } Object_Boost;
 
-typedef struct Object_EffectBox {
+// TODO: remove this struct
+typedef struct Object_UnusedBehaviour1 {
     s16 unk0;
     u8 unk2;
     u8 unk3;
@@ -1131,12 +1127,7 @@ typedef struct Object_EffectBox {
     s8 unkE[0x1FE - 0xE];
     u8 unk1FE;
     u8 unk1FF;
-} Object_EffectBox;
-
-typedef struct Object_EggCreator {
-    /* 0x0 */ u8 pad0[4];
-    /* 0x4 */ struct Object *currentEgg;
-} Object_EggCreator;
+} Object_UnusedBehaviour1;
 
 typedef struct Object_CollectEgg {
     /* 0x0 */ u8 pad0[4];
@@ -1146,16 +1137,11 @@ typedef struct Object_CollectEgg {
     /* 0xB */ s8 status;
 } Object_CollectEgg;
 
-typedef struct Object_UnkId58 {
-    /* 0x000 */ u8 pad0[0x1D6];
-    /* 0x1D6 */ s8 vehicleID;
-} Object_UnkId58;
-
-typedef struct Object_CharacterFlag {
+typedef struct CharacterFlagModel {
     /* 0x00 */ Triangle triangles[2];
     /* 0x20 */ Vertex *vertices;
     /* 0x24 */ TextureHeader *texture;
-} Object_CharacterFlag;
+} CharacterFlagModel;
 
 typedef struct Object_AnimCamera {
     /* 0x00 */ u8 pad0[0x30];
@@ -1169,14 +1155,6 @@ typedef struct Object_AnimCamera {
     /* 0x4C */ u8 pad4C[8];
     /* 0x54 */ s8 unk54;
 } Object_AnimCamera;
-
-typedef struct Object_InfoPoint {
-    /* 0x0 */ s16 unk0;
-} Object_InfoPoint;
-
-typedef struct Object_WorldKey {
-    /* 0x0 */ s16 unk0;
-} Object_WorldKey;
 
 typedef struct Object_AudioLine {
     /* 0x00 */ u8 unk0;
@@ -1483,7 +1461,7 @@ typedef struct Object_Door {
     /* 0x00 */ f32 homeY;
     /* 0x04 */ struct AudioPoint *soundMask;
     /* 0x08 */ s32 jingleTimer;
-    /* 0x0A */ s16 jingleCooldown;
+    /* 0x0C */ s16 jingleCooldown;
     /* 0x0E */ s8 doorID;
     /* 0x0F */ u8 doorType;
     /* 0x10 */ u8 balloonCount;
@@ -1553,12 +1531,6 @@ typedef struct Object_MidiChannelSet {
     u8 unk3;
 } Object_MidiChannelSet;
 
-typedef struct Object_PosArrow {
-    /* 0x000 */ s16 unk0;
-    /* 0x004 */ u8 pad4[0x14E];
-    /* 0x150 */ struct Object *unk150;
-} Object_PosArrow;
-
 typedef struct Object_Banana {
     /* 0x0 */ s32 unk0;
     /* 0x4 */ struct Object *spawner;
@@ -1602,12 +1574,6 @@ typedef struct Object_NPC {
     /* 0x36 */ s8 unk36;
 } Object_NPC;
 
-typedef struct Object_TT {
-    /* 0x0 */ f32 unk0;
-    /* 0x4 */ u8 pad4[0x9];
-    /* 0xD */ u8 unkD;
-} Object_TT;
-
 typedef struct Object_Bridge_WhaleRamp {
     /* 0x0 */ f32 homeY;
     /* 0x4 */ struct AudioPoint *soundMask;
@@ -1635,24 +1601,45 @@ typedef struct Object_Log {
     /* 0x0E */ s8 unkE[2];
 } Object_Log;
 
-typedef struct Object_Fireball_Octoweapon {
-    u8 pad0[0x1C];
-    struct AudioPoint *soundMask;
-} Object_Fireball_Octoweapon;
-
 typedef struct Object_AnimatedObject {
-    u8 pad0[0x20];
+    /* 0x00 */ f32 unk0;
+    /* 0x04 */ f32 unk4;
+    /* 0x08 */ f32 unk8;
+    /* 0x0C */ f32 x;
+    /* 0x10 */ f32 y;
+    /* 0x14 */ f32 z;
+    /* 0x18 */ SoundHandle unk18;
+    /* 0x1C */ struct Object *unk1C;
     /* 0x20 */ u32 soundMask;
     /* 0x24 */ s16 currentSound;
     /* 0x26 */ s16 unk26;
-    s16 unk28;
-    u8 pad2A[0xC];
-    s16 unk36;
-    s8 soundID;
-    s8 unk39;
-    s8 unk3A;
-    s8 unk3B;
-    s8 pad3C[0xC];
+    /* 0x28 */ s16 unk28;
+    /* 0x2A */ u16 startDelay;
+    /* 0x2C */ u8 unk2C;
+    /* 0x2D */ u8 unk2D;
+    /* 0x2E */ u8 unk2E;
+    /* 0x2F */ u8 unk2F;
+    /* 0x30 */ s8 cameraID;
+    /* 0x31 */ u8 unk31;
+    /* 0x32 */ u8 unk32;
+    /* 0x33 */ u8 unk33;
+    /* 0x34 */ u8 unk34;
+    /* 0x35 */ u8 unk35;
+    /* 0x36 */ s16 pauseCounter;
+    /* 0x38 */ s8 soundID;
+    /* 0x39 */ u8 unk39;
+    /* 0x3A */ s8 unk3A;
+    /* 0x3B */ u8 unk3B;
+    /* 0x3C */ u8 unk3C;
+    /* 0x3D */ u8 unk3D;
+    /* 0x3E */ u8 unk3E;
+    /* 0x3F */ u8 unk3F;
+    /* 0x40 */ u8 unk40;
+    /* 0x41 */ u8 unk41;
+    /* 0x42 */ u8 unk42;
+    /* 0x43 */ u8 unk43;
+    /* 0x44 */ u8 unk44;
+    /* 0x45 */ u8 unk45;
 } Object_AnimatedObject;
 
 typedef struct Object_WizpigRocket {
@@ -1678,80 +1665,114 @@ typedef struct Object_8001E89C_64 {
     /* 0x0C */ Object_8001E89C_64_C *unkC;
 } Object_8001E89C_64;
 
-typedef struct Object_CharacterSelect {
-    u8 pad0[0x14];
-    f32 unk14;
-    u8 pad18[0x10];
-    s16 unk28;
-    u8 unk2A[2];
-    u8 unk2C;
-    u8 pad2D[2];
-    u8 unk2F;
-    u8 pad30[6];
-    s16 unk36;
-    u8 unk38;
-    u8 unk39;
-    s8 unk3A;
-    s8 unk3B;
-    s8 unk3C;
-    s8 pad3D[2];
-    s8 unk3F;
-    s8 unk40;
-    s8 unk41;
-    s8 pad42;
-    s8 unk43;
-} Object_CharacterSelect;
+/* Size: 0x018 bytes */
+typedef struct ObjectTransform {
+    /* 0x0000 */ Vec3s rotation;
+    union {
+        /* 0x0006 */ s16 flags;
+        /* 0x0006 */ s16 spriteID;
+    };
+    /* 0x0008 */ f32 scale;
+    /* 0x000C */ f32 x_position;
+    /* 0x0010 */ f32 y_position;
+    /* 0x0014 */ f32 z_position;
+} ObjectTransform;
+
+/* Size: 0x0630 bytes */
+typedef struct Object {
+    /* 0x0000 */ ObjectTransform trans;
+    /* 0x0018 */ s16 animFrame;
+    /* 0x001A */ s16 numActiveEmitters;
+    /* 0x001C */ f32 x_velocity;
+    /* 0x0020 */ f32 y_velocity;
+    /* 0x0024 */ f32 z_velocity;
+    /* 0x0028 */ f32 unk28;
+    /* 0x002C */ s16 headerType;
+    /* 0x002E */ s16 segmentID;
+    /* 0x0030 */ f32 distanceToCamera;
+    /* 0x0034 */ f32 unk34;
+    /* 0x0038 */ s8 unk38;
+    /* 0x0039 */ u8 opacity;
+    /* 0x003A */ s8 modelIndex;
+    /* 0x003B */ s8 animationID;
+    /* 0x003C */ LevelObjectEntry *level_entry;
+    /* 0x0040 */ ObjectHeader *header;
+    /* 0x0044 */ Vertex *curVertData;
+    /* 0x0048 */ s16 behaviorId;
+    /* 0x004A */ s16 objectID;                   // First 9 bits are object ID, last 7 bits are header size
+    /* 0x004C */ ObjectInteraction *interactObj; // player + 0x318
+    /* 0x0050 */ ShadowData *shadow;             // player + 0x2F4
+    /* 0x0054 */ ShadeProperties *shading;       // player + 0x2C0
+    /* 0x0058 */ WaterEffect *waterEffect;       // player + 0x304
+    /* 0x005C */ Object_5C *unk5C;
+    /* 0x0060 */ Object_60 *unk60; // player + 0x340
+    /* 0x0064 */ union {
+        struct Object_64 *unk64;    // player + 0x98
+        struct Object *animTarget;  // BHV_ANIMATION
+        struct ObjectLight *light;  // BHV_LIGHT_RGBA
+        struct Object_Log *log;     // BHV_BUOY_PIRATE_SHIP, BHV_LOG
+        struct Object_Boost *boost; // BHV_BOOST
+    };
+    /* 0x0068 */ union {
+        ModelInstance **modelInstances;
+        TextureHeader **textures;
+        Sprite **sprites;
+    };
+    /* 0x006C */ struct ParticleEmitter *particleEmitter; // player + 0x370
+    /* 0x0070 */ struct ObjectLight **lightData;
+    /* 0x0074 */ u32 particleEmittersEnabled;
+    /* 0x0078 */ ObjProperties properties;
+} Object;
 
 typedef struct Object_64 {
     union {
         struct Object *obj;
-        Object_Laser laser;
-        Object_TrophyCabinet trophy_cabinet;
-        Object_Animator animator;
+        JingleState jingle_state; // BHV_TROPHY_CABINET
+        Object_Animator animator; // BHV_ANIMATOR
         Object_Animation animation;
         Object_Animation2 animation2;
-        Object_WeaponBalloon weapon_balloon;
-        Object_Weapon weapon;
-        Object_Butterfly butterfly;
-        Object_Fish fish;
+        Object_WeaponBalloon weapon_balloon; // BHV_WEAPON_BALLOON
+        Object_Weapon weapon;                // BHV_FIREBALL_OCTOWEAPON_2, BHV_WEAPON, BHV_WEAPON_2
+        Object_Butterfly butterfly;          // BHV_BUTTERFLY
+        Object_Fish fish;                    // BHV_FISH
         Object_Boost boost;
-        Object_EffectBox effect_box;
-        Object_EggCreator egg_creator;
-        Object_CollectEgg egg;
-        Object_UnkId58 unkid58;
-        Object_CharacterFlag character_flag;
+        Object_CollectEgg egg;                 // BHV_COLLECT_EGG
+        CharacterFlagModel characterFlagModel; // BHV_CHARACTER_FLAG
         Object_AnimCamera anim_camera;
-        Object_InfoPoint info_point;
-        Object_WorldKey world_key;
-        Object_AudioLine audio_line;
-        Object_AudioReverb audio_reverb;
-        Object_TexScroll tex_scroll;
-        Object_Frog frog;
+        Object_AudioLine audio_line;     // BHV_AUDIO_LINE
+        Object_AudioReverb audio_reverb; // BHV_AUDIO_REVERB
+        Object_TexScroll tex_scroll;     // BHV_TEXTURE_SCROLL
+        Object_Frog frog;                // BHV_FROG
         Object_Wizpig2 wizpig2;
-        Object_Exit exit;
+        Object_Exit exit; // BHV_EXIT
         Object_Racer racer;
-        Object_Door door;
-        Object_Trigger trigger;
-        Object_Audio audio;
-        Object_MidiFade midi_fade;
+        Object_Door door;          // BHV_DOOR, BHV_TT_DOOR
+        Object_Trigger trigger;    // BHV_MODECHANGE, BHV_BONUS, BHV_TRIGGER
+        Object_Audio audio;        // BHV_AUDIO
+        Object_MidiFade midi_fade; // BHV_MIDI_FADE
         Object_MidiFadePoint midi_fade_point;
         Object_MidiChannelSet midi_channel_set;
-        Object_PosArrow pos_arrow;
-        Object_Banana banana;
+        Object_Banana banana; // BHV_BANANA
         Object_FogChanger fog_changer;
-        Object_NPC npc;
-        Object_TT tt;
-        Object_Bridge_WhaleRamp bridge_whale_ramp;
+        Object_NPC npc;                            // BHV_STOPWATCH_MAN, BHV_PARK_WARDEN, BHV_GOLDEN_BALLOON
+        Object_Bridge_WhaleRamp bridge_whale_ramp; // BHV_BRIDGE_WHALE_RAMP
         Object_80021400_64 obj80021400_64;
         Object_Log log;
-        Object_Fireball_Octoweapon fireball_octoweapon;
-        Object_LaserGun lasergun;
-        Object_AnimatedObject animatedObject;
+        Object_LaserGun lasergun;             // BHV_LASER_GUN
+        Object_AnimatedObject animatedObject; // BHV_DINO_WHALE, BHV_ANIMATED_OBJECT, BHV_CAMERA_ANIMATION
+                                              // BHV_CAR_ANIMATION, BHV_CHARACTER_SELECT, BHV_VEHICLE_ANIMATION
+                                              // BHV_HIT_TESTER, BHV_HIT_TESTER_2, BHV_PARK_WARDEN_2
+                                              // BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP, BHV_ANIMATED_OBJECT_3
+                                              // BHV_ANIMATED_OBJECT_4, BHV_SNOWBALL, BHV_SNOWBALL_2
+                                              // BHV_SNOWBALL_3, BHV_SNOWBALL_4, BHV_HIT_TESTER_3
+                                              // BHV_HIT_TESTER_4, BHV_DOOR_OPENER, BHV_PIG_ROCKETEER
+                                              // BHV_WIZPIG_GHOSTS
         Object_WizpigRocket wizpigRocket;
         Object_8001E89C_64 obj8001E89C_64;
-        Object_CharacterSelect characterSelect;
-        Object_AiNode ai_node;
+        Object_AiNode ai_node; // BHV_AINODE
         Object_OverridePos override_pos;
+        // TODO: remove this
+        Object_UnusedBehaviour1 unkObjBehavior1;
     };
 } Object_64;
 
@@ -1768,19 +1789,6 @@ typedef struct unk800B2260_C {
     void *unk70;
     u8 unk74;
 } unk800B2260_C;
-
-/* Size: 0x018 bytes */
-typedef struct ObjectTransform {
-    /* 0x0000 */ Vec3s rotation;
-    union {
-        /* 0x0006 */ s16 flags;
-        /* 0x0006 */ s16 spriteID;
-    };
-    /* 0x0008 */ f32 scale;
-    /* 0x000C */ f32 x_position;
-    /* 0x0010 */ f32 y_position;
-    /* 0x0014 */ f32 z_position;
-} ObjectTransform;
 
 typedef struct SegmentPropertiesObject {
     /* 0x002C */ s16 unk2C;
@@ -1836,46 +1844,6 @@ typedef struct Object_LightData {
     /* 0x07 */ u8 pad7[5];
     /* 0x0C */ Object_LightData_UnkC **unkC;
 } Object_LightData;
-
-/* Size: 0x0630 bytes */
-typedef struct Object {
-    /* 0x0000 */ ObjectTransform trans;
-    /* 0x0018 */ s16 animFrame;
-    /* 0x001A */ s16 numActiveEmitters;
-    /* 0x001C */ f32 x_velocity;
-    /* 0x0020 */ f32 y_velocity;
-    /* 0x0024 */ f32 z_velocity;
-    /* 0x0028 */ f32 unk28;
-    /* 0x002C */ s16 unk2C;
-    /* 0x002E */ s16 segmentID;
-    /* 0x0030 */ f32 distanceToCamera;
-    /* 0x0034 */ f32 unk34;
-    /* 0x0038 */ s8 unk38;
-    /* 0x0039 */ u8 opacity;
-    /* 0x003A */ s8 modelIndex;
-    /* 0x003B */ s8 animationID;
-    /* 0x003C */ LevelObjectEntry *level_entry;
-    /* 0x0040 */ ObjectHeader *header;
-    /* 0x0044 */ Vertex *curVertData;
-    /* 0x0048 */ s16 behaviorId;
-    /* 0x004A */ s16 objectID;                   // First 9 bits are object ID, last 7 bits are header size
-    /* 0x004C */ ObjectInteraction *interactObj; // player + 0x318
-    /* 0x0050 */ ShadowData *shadow;             // player + 0x2F4
-    /* 0x0054 */ ShadeProperties *shading;       // player + 0x2C0
-    /* 0x0058 */ WaterEffect *waterEffect;       // player + 0x304
-    /* 0x005C */ Object_5C *unk5C;
-    /* 0x0060 */ Object_60 *unk60; // player + 0x340
-    /* 0x0064 */ Object_64 *unk64; // player + 0x98
-    /* 0x0068 */ union {
-        ModelInstance **modelInstances;
-        TextureHeader **textures;
-        Sprite **sprites;
-    };
-    /* 0x006C */ struct ParticleEmitter *particleEmitter; // player + 0x370
-    /* 0x0070 */ struct ObjectLight **lightData;
-    /* 0x0074 */ u32 particleEmittersEnabled;
-    /* 0x0078 */ ObjProperties properties;
-} Object;
 
 // Unused
 typedef struct GhostHeaderUnk0 {

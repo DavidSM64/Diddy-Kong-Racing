@@ -1890,7 +1890,7 @@ UNUSED s32 particle_count(void) {
 
 void add_particle_to_entity_list(Object *obj) {
     obj->trans.flags |= OBJ_FLAGS_PARTICLE;
-    func_800245B4(obj->unk2C | (OBJ_FLAGS_PARTICLE | OBJ_FLAGS_INVISIBLE));
+    func_800245B4(obj->headerType | (OBJ_FLAGS_PARTICLE | OBJ_FLAGS_INVISIBLE));
     gObjPtrList[gObjectCount++] = obj;
     if (1) {} // Fakematch
     gParticleCount++;
@@ -1947,7 +1947,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     curObj->segmentID = get_level_segment_index_from_position(curObj->trans.x_position, curObj->trans.y_position,
                                                               curObj->trans.z_position);
 
-    curObj->unk2C = headerType;
+    curObj->headerType = headerType;
     curObj->level_entry = (LevelObjectEntry *) entry;
     curObj->objectID = objType;
     func_800245B4(objType);
@@ -2305,7 +2305,7 @@ s32 func_8000F99C(Object *obj) {
             temp_v0 = obj60->unk4[i];
             if (temp_v0 != NULL) {
                 objFreeAssets(temp_v0, temp_v0->header->numberOfModelIds, temp_v0->header->modelType);
-                try_free_object_header(temp_v0->unk2C);
+                try_free_object_header(temp_v0->headerType);
                 mempool_free(temp_v0);
             }
         }
@@ -2427,7 +2427,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
 
     object->trans.flags = OBJ_FLAGS_UNK_0002;
     object->header = objHeader;
-    object->unk2C = objectHeaderIndex;
+    object->headerType = objectHeaderIndex;
     object->objectID = objectHeaderIndex;
     object->trans.scale = objHeader->scale;
     if (objHeader->flags & HEADER_FLAGS_UNK_0080) {
@@ -2526,8 +2526,8 @@ void func_800101AC(Object *obj, s32 arg1) {
     Object *tempObj;
     Object_Weapon *weapon;
     Object_Racer *racer;
-    Object_Animation *snowball;
-    Object_Fireball_Octoweapon *fireball;
+    Object_AnimatedObject *snowball;
+    Object_Weapon *fireball;
     Object_Log *log;
     Object_Butterfly *butterfly;
     SoundHandle soundMask;
@@ -2558,7 +2558,7 @@ void func_800101AC(Object *obj, s32 arg1) {
                     sprite_free(tempObj->sprites[j]);
                 }
             }
-            try_free_object_header(tempObj->unk2C);
+            try_free_object_header(tempObj->headerType);
             mempool_free(tempObj);
         }
     }
@@ -2598,7 +2598,7 @@ void func_800101AC(Object *obj, s32 arg1) {
             break;
         case BHV_FIREBALL_OCTOWEAPON_2:
             // This needs to be a weapon otherwise it doesn't match
-            weapon = (Object_Weapon *) &obj->unk64->fireball_octoweapon;
+            weapon = &obj->unk64->weapon;
             if (weapon->soundMask != NULL) {
                 audspat_point_stop(weapon->soundMask);
             }
@@ -2609,10 +2609,9 @@ void func_800101AC(Object *obj, s32 arg1) {
         case BHV_SNOWBALL_2:
         case BHV_SNOWBALL_3:
         case BHV_SNOWBALL_4:
-            // This should probably be it's own struct instead of re-using animation
-            snowball = &obj->unk64->animation;
-            if (snowball->unk20 != NULL) {
-                audspat_point_stop((AudioPoint *) snowball->unk20);
+            snowball = &obj->unk64->animatedObject;
+            if (snowball->soundMask != NULL) {
+                audspat_point_stop((AudioPoint *) snowball->soundMask);
             }
 
             i = BHV_RACER;
@@ -2623,13 +2622,13 @@ void func_800101AC(Object *obj, s32 arg1) {
             i = BHV_RACER;
             break;
         case BHV_LIGHT_RGBA:
-            func_80032BAC((ObjectLight *) obj->unk64);
+            func_80032BAC(obj->light);
 
             i = BHV_RACER;
             break;
         case BHV_ANIMATION:
-            if (obj->unk64 != NULL && arg1 == 0) {
-                free_object((Object *) &obj->unk64->obj);
+            if (obj->animTarget != NULL && arg1 == 0) {
+                free_object(obj->animTarget);
             }
 
             i = BHV_RACER;
@@ -2693,7 +2692,7 @@ void func_800101AC(Object *obj, s32 arg1) {
         case BHV_PIG_ROCKETEER:
         case BHV_WIZPIG_GHOSTS:
             obj64 = obj->unk64;
-            soundMask = obj64->animation.unk18;
+            soundMask = obj64->animatedObject.unk18;
             if (soundMask != NULL) {
                 sndp_stop(soundMask);
             }
@@ -2766,7 +2765,7 @@ void func_800101AC(Object *obj, s32 arg1) {
             emitter_cleanup(&obj->particleEmitter[j]);
         }
     }
-    try_free_object_header(obj->unk2C);
+    try_free_object_header(obj->headerType);
     mempool_free(obj);
 }
 
@@ -3215,8 +3214,8 @@ void render_3d_misc(Object *obj) {
         case BHV_CHARACTER_FLAG:
             if (obj->properties.characterFlag.characterID >= 0) {
                 objData = obj->unk64;
-                render_misc_model(obj, objData->character_flag.vertices, 4, objData->character_flag.triangles, 2,
-                                  objData->character_flag.texture,
+                render_misc_model(obj, objData->characterFlagModel.vertices, 4, objData->characterFlagModel.triangles,
+                                  2, objData->characterFlagModel.texture,
                                   RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_FOG_ACTIVE, 0, 1.0f);
             }
             break;
@@ -8528,8 +8527,8 @@ void func_8001E6EC(s8 arg0) {
         overridePosEntry = &overridePosObj->level_entry->overridePos;
         overridePos = &overridePosObj->unk64->override_pos;
         if ((overridePosEntry->cutsceneId == gCutsceneID) || ((overridePosEntry->cutsceneId == 20))) {
-            for (j = 0; (j < D_8011AE78) &&
-                        (overridePosEntry->behaviorId != D_8011AE74[j]->properties.animatedObj.behaviourID);
+            for (j = 0;
+                 (j < D_8011AE78) && (overridePosEntry->behaviorId != D_8011AE74[j]->properties.animation.behaviourID);
                  j++) {}
             if (j != D_8011AE78 && D_8011AE74[j]->unk64 != NULL) {
                 someBool = (D_8011AE74[j]->unk64->animation.unk5C) ? FALSE : TRUE;
@@ -8664,8 +8663,8 @@ void func_8001E93C(void) {
                     D_8011AE74[i + 1] = animObj1;
                     stopLooping = FALSE;
                 } else if (animation1->order == animation2->order &&
-                           (D_8011AE74[i + 1]->properties.animatedObj.action == 1 ||
-                            D_8011AE74[i]->properties.animatedObj.action == 2)) {
+                           (D_8011AE74[i + 1]->properties.animation.action == 1 ||
+                            D_8011AE74[i]->properties.animation.action == 2)) {
                     animObj1 = D_8011AE74[i];
                     D_8011AE74[i] = D_8011AE74[i + 1];
                     D_8011AE74[i + 1] = animObj1;
@@ -8683,7 +8682,7 @@ void func_8001E93C(void) {
             sp28 = 0;
         }
         animation1->order = sp28++; // It is possible that sp28 could not be initalized?
-        D_8011AE74[i]->properties.animatedObj.action = 0;
+        D_8011AE74[i]->properties.animation.action = 0;
     }
 
     D_8011AE78 = numOfObjs;
@@ -8706,47 +8705,47 @@ void func_8001EE74(void) {
         }
         if (D_8011AD26 || animation->channel != 20) {
             if (obj->unk64 != NULL) {
-                obj_init_animcamera(obj, (Object *) obj->unk64);
+                obj_init_animobject(obj, (Object *) obj->unk64);
             }
         }
     }
     D_8011AD26 = FALSE;
 }
 
-void obj_init_animcamera(Object *arg0, Object *animObj) {
+void obj_init_animobject(Object *animationObj, Object *animatedObj) {
     LevelObjectEntry_Animation *animEntry;
-    Object_Animation *anim;
+    Object_AnimatedObject *anim;
     f32 scale;
 
-    animEntry = &arg0->level_entry->animation;
-    anim = &animObj->unk64->animation;
+    animEntry = &animationObj->level_entry->animation;
+    anim = &animatedObj->unk64->animatedObject;
     scale = animEntry->scale & 0xFF;
     if (scale < 1.0f) {
         scale = 1.0f;
     }
     scale /= 64;
-    animObj->trans.scale = animObj->header->scale * scale;
-    animObj->properties.common.unk0 = 0;
-    animObj->properties.common.unk4 = 0;
+    animatedObj->trans.scale = animatedObj->header->scale * scale;
+    animatedObj->properties.animatedObj.unk0 = 0;
+    animatedObj->properties.animatedObj.unk4 = 0;
     if (animEntry->unk22 >= 2 && animEntry->unk22 < 10) {
-        animObj->properties.common.unk0 = animEntry->unk22 - 1;
+        animatedObj->properties.animatedObj.unk0 = animEntry->unk22 - 1;
     }
     if (animEntry->unk22 >= 10 && animEntry->unk22 < 18) {
-        animObj->properties.common.unk0 = animEntry->unk22 - 9;
+        animatedObj->properties.animatedObj.unk0 = animEntry->unk22 - 9;
     }
-    animObj->trans.x_position = arg0->trans.x_position;
-    animObj->trans.y_position = arg0->trans.y_position;
-    animObj->trans.z_position = arg0->trans.z_position;
-    animObj->trans.rotation.y_rotation = arg0->trans.rotation.y_rotation;
-    animObj->trans.rotation.z_rotation = arg0->trans.rotation.z_rotation;
-    animObj->trans.rotation.x_rotation = arg0->trans.rotation.x_rotation;
+    animatedObj->trans.x_position = animationObj->trans.x_position;
+    animatedObj->trans.y_position = animationObj->trans.y_position;
+    animatedObj->trans.z_position = animationObj->trans.z_position;
+    animatedObj->trans.rotation.y_rotation = animationObj->trans.rotation.y_rotation;
+    animatedObj->trans.rotation.z_rotation = animationObj->trans.rotation.z_rotation;
+    animatedObj->trans.rotation.x_rotation = animationObj->trans.rotation.x_rotation;
     anim->unk26 = 0;
     anim->unk3D = animEntry->channel;
     anim->unk28 = animEntry->actorIndex;
     anim->unk8 = (f32) animEntry->nodeSpeed * 0.1;
     anim->startDelay = normalise_time(animEntry->animationStartDelay);
-    animObj->animationID = animEntry->objAnimIndex;
-    animObj->animFrame = animEntry->unk16;
+    animatedObj->animationID = animEntry->objAnimIndex;
+    animatedObj->animFrame = animEntry->unk16;
     anim->z = animEntry->objAnimSpeed;
     anim->y = 0;
     anim->unk2C = animEntry->objAnimLoopType;
@@ -8760,14 +8759,14 @@ void obj_init_animcamera(Object *arg0, Object *animObj) {
     anim->unk2D = 0;
     anim->unk4 = 0;
     anim->unk0 = 0;
-    arg0->particleEmitter = NULL;
+    animationObj->particleEmitter = NULL;
     anim->pauseCounter = normalise_time(animEntry->pauseFrameCount);
     anim->unk3A = animEntry->specialHide;
     if (animEntry->unk13 >= 0) {
         anim->unk2F = animEntry->unk13;
     }
     anim->unk39 = animEntry->unk1F;
-    anim->unk38 = animEntry->unk1E;
+    anim->soundID = animEntry->unk1E;
     anim->unk3B = animEntry->unk29;
     anim->unk40 = animEntry->soundEffect;
     anim->unk41 = animEntry->fadeOptions;
@@ -8778,7 +8777,7 @@ void obj_init_animcamera(Object *arg0, Object *animObj) {
     }
     anim->unk18 = NULL;
     anim->unk43 = animEntry->unk30;
-    anim->unk1C = arg0;
+    anim->unk1C = animationObj;
     anim->unk45 = 0;
 }
 
@@ -8792,8 +8791,8 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
     NEW_OBJECT_ENTRY(newObjEntry, animEntry->objectIdToSpawn, 8, animEntry->common.x, animEntry->common.y,
                      animEntry->common.z);
 
-    obj->unk64 = (Object_64 *) spawn_object(&newObjEntry, OBJECT_SPAWN_UNK01);
-    newObj = (Object *) obj->unk64;
+    obj->animTarget = spawn_object(&newObjEntry, OBJECT_SPAWN_UNK01);
+    newObj = obj->animTarget;
     // (newObj->behaviorId == BHV_DINO_WHALE) is Dinosaur1, Dinosaur2, Dinosaur3, Whale, and Dinoisle
     if (obj->unk64 != NULL && newObj->behaviorId == BHV_DINO_WHALE && gTimeTrialEnabled) {
         free_object(newObj);
@@ -8802,7 +8801,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
     }
     if (newObj != NULL) {
         newObj->level_entry = NULL;
-        obj_init_animcamera(obj, newObj);
+        obj_init_animobject(obj, newObj);
         if (newObj->header->behaviorId == BHV_CAMERA_ANIMATION) {
             camera = &newObj->unk64->anim_camera;
             camera->unk44 = D_8011AD3E;
@@ -8814,7 +8813,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
                 newObj = spawn_object(&newObjEntry, OBJECT_SPAWN_UNK01);
                 if (newObj != NULL) {
                     newObj->level_entry = NULL;
-                    obj_init_animcamera(obj, newObj);
+                    obj_init_animobject(obj, newObj);
                     camera = &newObj->unk64->anim_camera;
                     i++;
                     camera->cameraID = i;
@@ -9039,7 +9038,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
         sp114 = (f32) ((f64) temp_f0 * 1.2);
     }
     if ((s16) temp_s3->racer.unk2A < 0) {
-        temp_v0 = (u8) temp_s3->effect_box.unkE[0x26];
+        temp_v0 = (u8) temp_s3->unkObjBehavior1.unkE[0x26];
         var_t0 = 0;
         if (temp_v0 & 1) {
             var_t0 = 0x8000;
@@ -9061,39 +9060,39 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
         }
     }
     temp_v0_3 = (s16) temp_s3->racer.unk2A;
-    if ((temp_v0_3 >= 0) && (temp_s3->effect_box.unkE[0x37] == 0)) {
+    if ((temp_v0_3 >= 0) && (temp_s3->unkObjBehavior1.unkE[0x37] == 0)) {
         temp_s3->racer.unk2A = temp_v0_3 - arg1;
         if ((s16) temp_s3->racer.unk2A <= 0) {
-            temp_s3->effect_box.unkE[0x37] = 1;
+            temp_s3->unkObjBehavior1.unkE[0x37] = 1;
             temp_s1 = temp_s3->racer.unk1C->pan;
             func_80021104(arg0, &temp_s3->animation, temp_s1);
             temp_s3->racer.unk2A = 0;
-            func_8002125C(arg0, (LevelObjectEntry_CharacterSelect *) temp_s1, (Object_CharacterSelect *) temp_s3, -1);
+            func_8002125C(arg0, (LevelObjectEntry_CharacterSelect *) temp_s1, (Object_AnimatedObject *) temp_s3, -1);
         }
     }
     if ((s16) temp_s3->racer.unk2A != 0) {
-        if (temp_s3->effect_box.unkE[0x2C] != 0) {
+        if (temp_s3->unkObjBehavior1.unkE[0x2C] != 0) {
             arg0->trans.flags |= 0x4000;
-            temp_s3->effect_box.unkE[0x34] = 0;
+            temp_s3->unkObjBehavior1.unkE[0x34] = 0;
             return 1;
         }
         goto block_247;
     }
     arg0->trans.flags &= 0xBFFF;
-    temp_v1 = temp_s3->effect_box.unkE[0x2B];
+    temp_v1 = temp_s3->unkObjBehavior1.unkE[0x2B];
     if (temp_v1 > 0) {
-        temp_v1_2 = temp_s3->effect_box.unkE[0x2B];
+        temp_v1_2 = temp_s3->unkObjBehavior1.unkE[0x2B];
         if (temp_v1_2 != music_current_sequence()) {
             music_play(temp_v1_2 & 0xFF);
             music_change_off();
         }
-        temp_s3->effect_box.unkE[0x2B] = -2;
+        temp_s3->unkObjBehavior1.unkE[0x2B] = -2;
         music_volume_reset();
     } else if (temp_v1 == -2) {
         music_change_on();
-        temp_s3->effect_box.unkE[0x2B] = -1;
+        temp_s3->unkObjBehavior1.unkE[0x2B] = -1;
     }
-    temp_v1_3 = temp_s3->effect_box.unkE[0x2A];
+    temp_v1_3 = temp_s3->unkObjBehavior1.unkE[0x2A];
     if (temp_v1_3 != 0) {
         var_v0 = temp_v1_3 & 0xFF;
         if (temp_s3->fish.triangles[2].uv0.u == 0) {
@@ -9106,20 +9105,20 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
                 temp_a0_2 = temp_s3->racer.unk18;
                 if (temp_a0_2 != NULL) {
                     sndp_stop(temp_a0_2);
-                    var_v0 = temp_s3->effect_box.unkE[0x2A] & 0xFF;
+                    var_v0 = temp_s3->unkObjBehavior1.unkE[0x2A] & 0xFF;
                 }
                 sound_play(var_v0 & 0xFFFF, &temp_s3->racer.unk18);
             }
-            temp_s3->effect_box.unkE[0x2A] = 0;
+            temp_s3->unkObjBehavior1.unkE[0x2A] = 0;
         }
     }
-    temp_v0_4 = temp_s3->effect_box.unkE[0x35];
+    temp_v0_4 = temp_s3->unkObjBehavior1.unkE[0x35];
     if (temp_v0_4 != 0) {
         music_fade(temp_v0_4 << 8);
-        temp_s3->effect_box.unkE[0x35] = 0;
+        temp_s3->unkObjBehavior1.unkE[0x35] = 0;
     }
-    temp_v0_5 = temp_s3->effect_box.unkE[0x33];
-    var_t0_2 = (u8) temp_s3->effect_box.unkE[0x34];
+    temp_v0_5 = temp_s3->unkObjBehavior1.unkE[0x33];
+    var_t0_2 = (u8) temp_s3->unkObjBehavior1.unkE[0x34];
     if (temp_v0_5 & 1) {
         temp_t7 = arg1 * 8;
         if (temp_v0_5 & 2) {
@@ -9141,9 +9140,9 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
         }
         arg0->trans.flags &= ~0x4000;
     }
-    temp_v0_6 = (u8) temp_s3->effect_box.unkE[0x2D];
+    temp_v0_6 = (u8) temp_s3->unkObjBehavior1.unkE[0x2D];
     temp_s2 = temp_v0_6 & 0x7F;
-    temp_s3->effect_box.unkE[0x34] = var_t0_3;
+    temp_s3->unkObjBehavior1.unkE[0x34] = var_t0_3;
     if (temp_s2 != 0x7F) {
         if (temp_s2 >= 8) {
             temp_s1_2 = (s8 *) (get_misc_asset(0xD) + (temp_s2 * 5)) - 0x28;
@@ -9151,7 +9150,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
             temp_s0 = (temp_s1_2[1] & 0xFF) + 0x384;
             sp174 = temp_t0;
             slowly_change_fog(0, temp_s1_2[2] & 0xFF, temp_s1_2[3] & 0xFF, temp_s1_2[4] & 0xFF, temp_t0, temp_s0,
-                              normalise_time(6) * (u8) temp_s3->effect_box.unkE[0x2E]);
+                              normalise_time(6) * (u8) temp_s3->unkObjBehavior1.unkE[0x2E]);
         } else if (temp_s2 >= 6) {
             spA4 = 0x40;
             if (temp_s2 == 7) {
@@ -9168,100 +9167,100 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
             transition_begin((FadeTransition *) &spA4);
         } else {
             spA4 = temp_v0_6;
-            temp_s1_3 = (s8 *) get_misc_asset(0xE) + (temp_s3->effect_box.unkE[0x32] * 3);
+            temp_s1_3 = (s8 *) get_misc_asset(0xE) + (temp_s3->unkObjBehavior1.unkE[0x32] * 3);
             spA5 = temp_s1_3[0];
             spA6 = temp_s1_3[1];
             spA7 = temp_s1_3[2];
-            if ((u8) temp_s3->effect_box.unkE[0x2D] & 0x80) {
+            if ((u8) temp_s3->unkObjBehavior1.unkE[0x2D] & 0x80) {
                 spAA = 0;
             } else {
                 spAA = 0xFFFF;
             }
-            spA8 = normalise_time(6) * (u8) temp_s3->effect_box.unkE[0x2E];
+            spA8 = normalise_time(6) * (u8) temp_s3->unkObjBehavior1.unkE[0x2E];
             if ((check_fadeout_transition() == 0) || (spA4 & 0x80)) {
                 transition_begin((FadeTransition *) &spA4);
             }
         }
-        temp_s3->effect_box.unkE[0x2D] = -1;
+        temp_s3->unkObjBehavior1.unkE[0x2D] = -1;
     }
-    if ((u8) temp_s3->effect_box.unkE[0x20] == 1) {
+    if ((u8) temp_s3->unkObjBehavior1.unkE[0x20] == 1) {
         temp_f0_2 = (f32) ((f64) sp114 * 8.0);
-        arg0->trans.rotation.s[0] += (s32) ((f32) temp_s3->effect_box.unkE[0x23] * temp_f0_2);
-        arg0->trans.rotation.s[1] += (s32) ((f32) temp_s3->effect_box.unkE[0x24] * temp_f0_2);
-        arg0->trans.rotation.s[2] += (s32) ((f32) temp_s3->effect_box.unkE[0x25] * temp_f0_2);
+        arg0->trans.rotation.s[0] += (s32) ((f32) temp_s3->unkObjBehavior1.unkE[0x23] * temp_f0_2);
+        arg0->trans.rotation.s[1] += (s32) ((f32) temp_s3->unkObjBehavior1.unkE[0x24] * temp_f0_2);
+        arg0->trans.rotation.s[2] += (s32) ((f32) temp_s3->unkObjBehavior1.unkE[0x25] * temp_f0_2);
     }
     if ((arg2 != NULL) && (arg2->header->modelType == 0)) {
         // usage of temp_s3 is definetely incorrect here. unkE[2] is probably a f32, unkE[6] as well, possibly xy
         // coordinates
         arg2->animationID = arg0->animationID;
         temp_v0_7 = arg2->animFrame;
-        if (temp_v0_7 != (s16) (s32) temp_s3->effect_box.unkE[2]) {
-            temp_s3->effect_box.unkE[2] = (f32) temp_v0_7;
+        if (temp_v0_7 != (s16) (s32) temp_s3->unkObjBehavior1.unkE[2]) {
+            temp_s3->unkObjBehavior1.unkE[2] = (f32) temp_v0_7;
         }
         temp_v1_4 = arg2->modelInstances[arg2->modelIndex];
         if (temp_v1_4 != NULL) {
             temp_v0_8 = arg2->animationID;
             temp_a0_3 = temp_v1_4->objModel;
             if ((temp_v0_8 >= 0) && (temp_v0_8 < temp_a0_3->numberOfAnimations)) {
-                temp_v1_5 = (u8) temp_s3->effect_box.unkE[0x1E];
+                temp_v1_5 = (u8) temp_s3->unkObjBehavior1.unkE[0x1E];
                 temp_t7_2 = (temp_a0_3->animations[temp_v0_8].animLength - 1) * 0x10;
                 switch (temp_v1_5) { /* irregular */
                     case 0:
                         temp_f0_3 = (f32) temp_t7_2;
-                        temp_s3->effect_box.unkE[2] =
-                            ((f32) temp_s3->effect_box.unkE[2] + ((f32) temp_s3->effect_box.unkE[6] * sp114));
-                        temp_f2 = temp_s3->effect_box.unkE[2];
+                        temp_s3->unkObjBehavior1.unkE[2] =
+                            ((f32) temp_s3->unkObjBehavior1.unkE[2] + ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
+                        temp_f2 = temp_s3->unkObjBehavior1.unkE[2];
                         if (temp_f0_3 <= (f32) temp_f2) {
-                            temp_s3->effect_box.unkE[2] = ((f32) temp_f2 - temp_f0_3);
+                            temp_s3->unkObjBehavior1.unkE[2] = ((f32) temp_f2 - temp_f0_3);
                         }
                         break;
                     case 2:
                         temp_f0_4 = (f32) temp_t7_2;
-                        temp_s3->effect_box.unkE[2] =
-                            ((f32) temp_s3->effect_box.unkE[2] + ((f32) temp_s3->effect_box.unkE[6] * sp114));
-                        if (temp_f0_4 <= (f32) temp_s3->effect_box.unkE[2]) {
-                            temp_s3->effect_box.unkE[2] = (temp_f0_4 - 1.0f);
+                        temp_s3->unkObjBehavior1.unkE[2] =
+                            ((f32) temp_s3->unkObjBehavior1.unkE[2] + ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
+                        if (temp_f0_4 <= (f32) temp_s3->unkObjBehavior1.unkE[2]) {
+                            temp_s3->unkObjBehavior1.unkE[2] = (temp_f0_4 - 1.0f);
                         }
                         break;
                     case 1:
-                        if ((u8) temp_s3->effect_box.unkE[0x1F] == 0) {
+                        if ((u8) temp_s3->unkObjBehavior1.unkE[0x1F] == 0) {
                             temp_f0_5 = (f32) temp_t7_2;
-                            temp_s3->effect_box.unkE[2] =
-                                ((f32) temp_s3->effect_box.unkE[2] + ((f32) temp_s3->effect_box.unkE[6] * sp114));
-                            if (temp_f0_5 <= (f32) temp_s3->effect_box.unkE[2]) {
-                                temp_s3->effect_box.unkE[0x1F] = 1;
-                                temp_s3->effect_box.unkE[2] = (temp_f0_5 - 1.0f);
+                            temp_s3->unkObjBehavior1.unkE[2] = ((f32) temp_s3->unkObjBehavior1.unkE[2] +
+                                                                ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
+                            if (temp_f0_5 <= (f32) temp_s3->unkObjBehavior1.unkE[2]) {
+                                temp_s3->unkObjBehavior1.unkE[0x1F] = 1;
+                                temp_s3->unkObjBehavior1.unkE[2] = (temp_f0_5 - 1.0f);
                             }
                         } else {
-                            temp_s3->effect_box.unkE[2] =
-                                ((f32) temp_s3->effect_box.unkE[2] - ((f32) temp_s3->effect_box.unkE[6] * sp114));
-                            if ((f32) temp_s3->effect_box.unkE[2] <= 0.0f) {
-                                temp_s3->effect_box.unkE[2] = NULL;
-                                temp_s3->effect_box.unkE[0x1F] = 0;
+                            temp_s3->unkObjBehavior1.unkE[2] = ((f32) temp_s3->unkObjBehavior1.unkE[2] -
+                                                                ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
+                            if ((f32) temp_s3->unkObjBehavior1.unkE[2] <= 0.0f) {
+                                temp_s3->unkObjBehavior1.unkE[2] = NULL;
+                                temp_s3->unkObjBehavior1.unkE[0x1F] = 0;
                             }
                         }
                         break;
                     case 3:
-                        if ((u8) temp_s3->effect_box.unkE[0x1F] == 0) {
+                        if ((u8) temp_s3->unkObjBehavior1.unkE[0x1F] == 0) {
                             temp_f0_6 = (f32) temp_t7_2;
-                            temp_s3->effect_box.unkE[2] =
-                                ((f32) temp_s3->effect_box.unkE[2] + ((f32) temp_s3->effect_box.unkE[6] * sp114));
-                            if (temp_f0_6 <= (f32) temp_s3->effect_box.unkE[2]) {
-                                temp_s3->effect_box.unkE[0x1F] = 1;
-                                temp_s3->effect_box.unkE[2] = (temp_f0_6 - 1.0f);
+                            temp_s3->unkObjBehavior1.unkE[2] = ((f32) temp_s3->unkObjBehavior1.unkE[2] +
+                                                                ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
+                            if (temp_f0_6 <= (f32) temp_s3->unkObjBehavior1.unkE[2]) {
+                                temp_s3->unkObjBehavior1.unkE[0x1F] = 1;
+                                temp_s3->unkObjBehavior1.unkE[2] = (temp_f0_6 - 1.0f);
                             }
                         } else {
-                            temp_s3->effect_box.unkE[2] =
-                                ((f32) temp_s3->effect_box.unkE[2] - ((f32) temp_s3->effect_box.unkE[6] * sp114));
-                            if ((f32) temp_s3->effect_box.unkE[2] <= 0.0f) {
-                                temp_s3->effect_box.unkE[2] = NULL;
+                            temp_s3->unkObjBehavior1.unkE[2] = ((f32) temp_s3->unkObjBehavior1.unkE[2] -
+                                                                ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
+                            if ((f32) temp_s3->unkObjBehavior1.unkE[2] <= 0.0f) {
+                                temp_s3->unkObjBehavior1.unkE[2] = NULL;
                             }
                         }
                         break;
                 }
             }
         }
-        arg2->animFrame = (s16) (s32) (f32) temp_s3->effect_box.unkE[2];
+        arg2->animFrame = (s16) (s32) (f32) temp_s3->unkObjBehavior1.unkE[2];
     }
     if ((f64) temp_s3->racer.forwardVel <= 0.0) {
         return func_800214E4(arg0, arg1);
@@ -9366,7 +9365,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
                             sp88 = var_t1;
                             sp68 = var_a3;
                             sp5C = (temp_v0_13 * 4) - 4;
-                            set_active_camera((s32) temp_s3->effect_box.unkE[0x22]);
+                            set_active_camera((s32) temp_s3->unkObjBehavior1.unkE[0x22]);
                             var_v1_2 = cam_get_active_camera_no_cutscenes();
                             var_a0 = &D_8011AE74[temp_v0_13 - 1];
                         } else {
@@ -9408,7 +9407,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
                         sp88 = var_t1;
                         sp68 = var_a3;
                         sp80 = temp_a1_2 * 4;
-                        set_active_camera((s32) temp_s3->effect_box.unkE[0x22]);
+                        set_active_camera((s32) temp_s3->unkObjBehavior1.unkE[0x22]);
                         var_v1_3 = (Object *) cam_get_active_camera_no_cutscenes();
                         var_a0_2 = D_8011AE74 + sp80;
                     }
@@ -9447,7 +9446,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
                 var_s2_2 = 1;
                 var_f20 = (f32) (temp_f0_9 - 1.0);
             }
-            if (temp_s3->effect_box.unkE[0x31] == 0) {
+            if (temp_s3->unkObjBehavior1.unkE[0x31] == 0) {
                 sp124 = catmull_rom_interpolation(&sp154, var_s2_2, var_f20);
                 sp120 = catmull_rom_interpolation(&sp140, var_s2_2, var_f20);
                 var_f0 = catmull_rom_interpolation(&sp12C, var_s2_2, var_f20);
@@ -9485,7 +9484,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
         arg0->y_velocity = sp120 / sp114;
         arg0->z_velocity = sp11C / sp114;
         move_object(arg0, sp124, sp120, sp11C);
-        temp_v1_6 = (u8) temp_s3->effect_box.unkE[0x20];
+        temp_v1_6 = (u8) temp_s3->unkObjBehavior1.unkE[0x20];
         if (temp_v1_6 != 1) {
             if (temp_v1_6 != 2) {
                 var_t0_4 = 1;
@@ -9601,7 +9600,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
                         var_t0_4 += 1;
                         var_ra_2 += 4;
                     } while (var_t0_4 != 5);
-                    if (temp_s3->effect_box.unkE[0x31] == 0) {
+                    if (temp_s3->unkObjBehavior1.unkE[0x31] == 0) {
                         arg0->trans.rotation.s[0] = (s16) (s32) catmull_rom_interpolation(&spE0[0], var_s2_2, var_f20);
                         arg0->trans.rotation.s[1] = (s16) (s32) catmull_rom_interpolation(&spCC[0], var_s2_2, var_f20);
                         arg0->trans.rotation.s[2] = (s16) (s32) catmull_rom_interpolation(&spB8[0], var_s2_2, var_f20);
@@ -9612,7 +9611,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
                     }
                 }
             } else {
-                if (temp_s3->effect_box.unkE[0x31] == 0) {
+                if (temp_s3->unkObjBehavior1.unkE[0x31] == 0) {
                     cubic_spline_interpolation(&sp154, var_s2_2, var_f20, &sp124);
                     cubic_spline_interpolation(&sp140, var_s2_2, var_f20, &sp120);
                     cubic_spline_interpolation(&sp12C, var_s2_2, var_f20, &sp11C);
@@ -9671,7 +9670,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
                 } else {
                     func_8002125C(arg0,
                                   (LevelObjectEntry_CharacterSelect *) (&D_8011AE74[temp_v0_18])[var_s4]->level_entry,
-                                  (Object_CharacterSelect *) temp_s3, var_s4);
+                                  (Object_AnimatedObject *) temp_s3, var_s4);
                 }
             } else {
                 if (var_s5 < temp_s3->fish.triangles[2].uv0.v) {
@@ -9682,13 +9681,13 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
                     var_s2_3 = (temp_s3->fish.triangles[2].uv0.v - var_s5) + sp168;
                 }
                 func_8002125C(arg0, (LevelObjectEntry_CharacterSelect *) D_8011AE74[var_s2_3 + var_s4]->level_entry,
-                              (Object_CharacterSelect *) temp_s3, var_s4);
+                              (Object_AnimatedObject *) temp_s3, var_s4);
             }
         }
-        if ((u8) temp_s3->effect_box.unkE[0x20] == 3) {
+        if ((u8) temp_s3->unkObjBehavior1.unkE[0x20] == 3) {
             var_t0_6 = 0;
             if (D_8011AE78 > 0) {
-                temp_v0_19 = temp_s3->effect_box.unkE[0x30];
+                temp_v0_19 = temp_s3->unkObjBehavior1.unkE[0x30];
                 if (temp_v0_19 != (*D_8011AE74)->properties.common.unk4) {
                 loop_240:
                     var_t0_6 += 1;
@@ -9705,8 +9704,8 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
                     // usage of temp_s3 is definetely incorrect here. unkE[2] is probably a f32, unkE[6] as well,
                     // possibly xy coordinates
                     sp124 = temp_v1_7->racer.animationSpeed - arg0->trans.x_position;
-                    sp120 = (f32) temp_s3->effect_box.unkE[2] - arg0->trans.y_position;
-                    sp11C = (f32) temp_s3->effect_box.unkE[6] - arg0->trans.z_position;
+                    sp120 = (f32) temp_s3->unkObjBehavior1.unkE[2] - arg0->trans.y_position;
+                    sp11C = (f32) temp_s3->unkObjBehavior1.unkE[6] - arg0->trans.z_position;
                     temp_f0_12 = sqrtf((sp124 * sp124) + (sp120 * sp120) + (sp11C * sp11C));
                     if (temp_f0_12 > 0.0f) {
                         arg0->trans.rotation.s[0] = arctan2_f(sp124, sp11C) - 0x8000;
@@ -9715,7 +9714,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
                 }
             }
         }
-        arg0->particleEmittersEnabled = (u32) temp_s3->effect_box.unkE[0x21];
+        arg0->particleEmittersEnabled = (u32) temp_s3->unkObjBehavior1.unkE[0x21];
         obj_spawn_particle(arg0, arg1);
     }
 block_247:
@@ -9765,7 +9764,7 @@ void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Anim
     }
 }
 
-void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_CharacterSelect *charSelect,
+void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_AnimatedObject *charSelect,
                    UNUSED s32 index) {
     s32 initialAnimFrame;
 
@@ -9775,18 +9774,18 @@ void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entr
             charSelectObj->animFrame = entry->unk16;
         }
         charSelectObj->animationID = entry->unk12;
-        charSelect->unk14 = entry->unk17;
+        charSelect->z = entry->unk17;
         charSelect->unk2C = entry->unk18;
     }
     if (entry->unk13 >= 0) {
         charSelect->unk2F = entry->unk13;
     }
-    charSelect->unk36 = normalise_time(entry->unk24);
+    charSelect->pauseCounter = normalise_time(entry->unk24);
     charSelect->unk3F = entry->unk2D;
     charSelect->unk3A = entry->unk26;
     charSelect->unk39 = entry->unk1F;
     charSelect->unk43 = entry->unk30;
-    charSelect->unk38 = entry->unk1E;
+    charSelect->soundID = entry->unk1E;
     charSelect->unk3B = entry->unk29;
     charSelect->unk40 = entry->unk2E;
     charSelect->unk41 = entry->unk2F;
@@ -9833,21 +9832,21 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
     if (animObj->unk3A != 0) {
         obj->trans.flags |= OBJ_FLAGS_INVISIBLE;
     }
-    if (animObj->unk36 == -1) {
+    if (animObj->pauseCounter == -1) {
         return animObj->unk3A;
     }
-    if (animObj->unk36 >= 0) {
-        animObj->unk36 -= updateRate;
+    if (animObj->pauseCounter >= 0) {
+        animObj->pauseCounter -= updateRate;
     }
-    if (animObj->unk36 == -1) {
-        animObj->unk36 = -2;
+    if (animObj->pauseCounter == -1) {
+        animObj->pauseCounter = -2;
     }
-    if (animObj->unk36 <= 0) {
+    if (animObj->pauseCounter <= 0) {
         obj->trans.flags |= OBJ_FLAGS_INVISIBLE;
         for (i = 0; (i < D_8011AE78 && animObj->unk28 != D_8011AE74[i]->properties.common.unk4); i++) {
             if (FALSE) {} // FAKEMATCH
         }
-        obj_init_animcamera(D_8011AE74[i], obj);
+        obj_init_animobject(D_8011AE74[i], obj);
         return 1;
     }
     return 0;
@@ -10019,7 +10018,7 @@ s32 func_80021600(s32 arg0) {
         }
     }
     sp138 = (s32) var_v1;
-    var_s0 = sp154->effect_box.unkE[0x26 - 0xE] - 1;
+    var_s0 = sp154->unkObjBehavior1.unkE[0x26 - 0xE] - 1;
     do {
         if (var_s0 == -1) {
             if (sp138 != 0) {
@@ -10132,14 +10131,14 @@ s32 func_80021600(s32 arg0) {
     spF0 = var_f0;
     temp_f10 = spF8 - sp154->racer.animationSpeed;
     spF8 = temp_f10;
-    temp_f8 = spF4 - (f32) sp154->effect_box.unkE[2];
+    temp_f8 = spF4 - (f32) sp154->unkObjBehavior1.unkE[2];
     spF4 = temp_f8;
-    temp_f6 = spF0 - (f32) sp154->effect_box.unkE[6];
+    temp_f6 = spF0 - (f32) sp154->unkObjBehavior1.unkE[6];
     spF0 = temp_f6;
     move_object((Object *) sp154, temp_f10, temp_f8, temp_f6);
     sp154->racer.forwardVel =
         catmull_rom_interpolation(&spD0, 0, spEC) * sp90 *
-        sp154->effect_box.unkE[2]; // index is wrong, also usage of effect_box is probably wrong, too
+        sp154->unkObjBehavior1.unkE[2]; // index is wrong, also usage of unkObjBehavior1 is probably wrong, too
     temp_v0_8 = sp15C[0x2E];
     switch (temp_v0_8) { /* irregular */
         default:
@@ -10256,11 +10255,11 @@ s32 func_80021600(s32 arg0) {
             if (sp15C[0x3F] == 0) {
                 sp154->racer.playerIndex = (s16) (s32) catmull_rom_interpolation(&spBC[0], 0, spEC);
                 sp154->midi_fade_point.unk2 = (u16) (s32) catmull_rom_interpolation(&spA8[0], 0, spEC);
-                sp154->effect_box.unk4 = (s16) (s32) catmull_rom_interpolation(&sp94[0], 0, spEC);
+                sp154->unkObjBehavior1.unk4 = (s16) (s32) catmull_rom_interpolation(&sp94[0], 0, spEC);
             } else {
                 sp154->racer.playerIndex = (s16) (s32) lerp(&spBC[0], 0U, spEC);
                 sp154->midi_fade_point.unk2 = (u16) (s32) lerp(&spA8[0], 0U, spEC);
-                sp154->effect_box.unk4 = (s16) (s32) lerp(&sp94[0], 0U, spEC);
+                sp154->unkObjBehavior1.unk4 = (s16) (s32) lerp(&sp94[0], 0U, spEC);
             }
         case 1:
             break;
@@ -10302,8 +10301,8 @@ s32 func_80021600(s32 arg0) {
                 temp_v1 = D_8011AE74[var_a1_2]->unk64;
                 if (temp_v1 != NULL) {
                     spF8 = temp_v1->racer.animationSpeed - sp154->racer.animationSpeed;
-                    spF4 = (f32) temp_v1->effect_box.unkE[2] - (f32) sp154->effect_box.unkE[2];
-                    spF0 = (f32) temp_v1->effect_box.unkE[6] - (f32) sp154->effect_box.unkE[6];
+                    spF4 = (f32) temp_v1->unkObjBehavior1.unkE[2] - (f32) sp154->unkObjBehavior1.unkE[2];
+                    spF0 = (f32) temp_v1->unkObjBehavior1.unkE[6] - (f32) sp154->unkObjBehavior1.unkE[6];
                     temp_f0_5 = sqrtf((spF8 * spF8) + (spF4 * spF4) + (spF0 * spF0));
                     spEC = temp_f0_5;
                     if (temp_f0_5 > 0.0f) {
@@ -10845,34 +10844,34 @@ s32 get_object_property_size(Object *obj, Object_64 *obj64) {
             ret = sizeof(Object_MidiFadePoint);
             break;
         case BHV_MIDI_CHANNEL_SET:
-            ret = 0x4;
+            ret = sizeof(Object_MidiChannelSet);
             break;
         case BHV_BUTTERFLY:
             temp_v0 = 0x10 - ((s32) obj64 & 0xF);
-            obj->unk64 = (Object_64 *) &obj64->butterfly.triangles[0].verticesArray[temp_v0];
+            obj->unk64 = (Object_64 *) ((s32) obj64 + temp_v0);
             ret = (temp_v0 + sizeof(Object_Butterfly));
             break;
         case BHV_FISH:
             temp_v0 = 0x10 - ((s32) obj64 & 0xF);
-            obj->unk64 = (Object_64 *) &obj64->fish.triangles[0].verticesArray[temp_v0];
+            obj->unk64 = (Object_64 *) ((s32) obj64 + temp_v0);
             ret = (temp_v0 + sizeof(Object_Fish));
             break;
         case BHV_CHARACTER_FLAG:
             temp_v0 = 0x10 - ((s32) obj64 & 0xF);
-            obj->unk64 = (Object_64 *) &obj64->character_flag.triangles[0].verticesArray[temp_v0];
-            ret = (temp_v0 + sizeof(Object_CharacterFlag));
+            obj->unk64 = (Object_64 *) ((s32) obj64 + temp_v0);
+            ret = (temp_v0 + sizeof(CharacterFlagModel));
             break;
         case BHV_UNK_5E:
             ret = 0x60;
             break;
         case BHV_TROPHY_CABINET:
-            ret = sizeof(Object_TrophyCabinet);
+            ret = sizeof(JingleState);
             break;
         case BHV_FROG:
             ret = sizeof(Object_Frog);
             break;
         case BHV_FIREBALL_OCTOWEAPON_2:
-            ret = sizeof(Object_Fireball_Octoweapon);
+            ret = sizeof(Object_Weapon);
             break;
         default:
             obj->unk64 = NULL;

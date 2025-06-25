@@ -423,9 +423,9 @@ s32 init_object_interaction_data(Object *obj, ObjectInteraction *interactObj);
 s32 obj_init_emitter(Object *obj, ParticleEmitter *emitter);
 s32 obj_init_property_flags(s32 behaviorId);
 void tt_ghost_beaten(s32 arg0, s16 *playerId);
-void obj_init_animcamera(Object *, Object *);
+void obj_init_animobject(Object *, Object *);
 Object *obj_butterfly_node(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis);
-void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_CharacterSelect *charSelect,
+void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_AnimatedObject *charSelect,
                    UNUSED s32 index);
 void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry);
 s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,
