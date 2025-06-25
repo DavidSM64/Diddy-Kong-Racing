@@ -2182,8 +2182,8 @@ audFrameCt = 0x800DE010;
 nextDMA = 0x800DE014;
 curAcmdList = 0x800DE018;
 gAntiPiracyAudioFreq = 0x800DE01C;
-gFunc80019808Checksum = 0x800DE020;
-gFunc80019808Length = 0x800DE024;
+gRaceCheckFinishChecksum = 0x800DE020;
+gRaceCheckFinishFuncLength = 0x800DE024;
 
 // audiosfx.c .data
 gSoundStateLists = 0x800DE040; // size:0xC
@@ -2318,8 +2318,8 @@ gWizpigVoiceTable = 0x800DE800;
 gRocketVoiceTable = 0x800DE820;
 
 // object_models.c .data
-gTractionTableChecksum = 0x800DE840;
-gTrackRenderFuncLength = 0x800DE844;
+gRenderSceneChecksum = 0x800DE840;
+gRenderSceneFuncLength = 0x800DE844;
 
 // al/reverb.c .data
 alFXEnabled = 0x800DE850;

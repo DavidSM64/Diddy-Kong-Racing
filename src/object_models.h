@@ -17,8 +17,8 @@ typedef struct unk8011D624 {
     ObjectModel *model;
 } unk8011D624;
 
-extern s32 gTractionTableChecksum;
-extern s32 gTrackRenderFuncLength;
+extern s32 gRenderSceneChecksum;
+extern s32 gRenderSceneFuncLength;
 
 void allocate_object_model_pools(void);
 void model_anim_offset(s32 offset);

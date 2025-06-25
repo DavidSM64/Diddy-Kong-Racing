@@ -13,8 +13,8 @@
 
 /************ .data ************/
 
-s32 gTractionTableChecksum = TractionTableChecksum;
-s32 gTrackRenderFuncLength = 1980;
+s32 gRenderSceneChecksum = TractionTableChecksum;
+s32 gRenderSceneFuncLength = 1980;
 
 /*******************************/
 
@@ -69,10 +69,10 @@ void allocate_object_model_pools(void) {
 #ifdef ANTI_TAMPER
     // Antipiracy measure
     checksum = 0;
-    for (i = 0; i < gTrackRenderFuncLength; i++) {
+    for (i = 0; i < gRenderSceneFuncLength; i++) {
         checksum += *(u8 *) (((s32) &render_scene) + i);
     }
-    if (checksum != gTractionTableChecksum) {
+    if (checksum != gRenderSceneChecksum) {
         drm_vehicle_traction();
     }
 #endif
