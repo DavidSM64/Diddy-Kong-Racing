@@ -2403,7 +2403,6 @@ s32 func_8000FD34(Object *obj, Object_5C *matrices) {
 /**
  * Attempts to spawn an attachment object.
  * Similar to the regular object spawning function, but cut down considerably.
- *
  */
 Object *obj_spawn_attachment(s32 objID) {
     s32 modelType;
