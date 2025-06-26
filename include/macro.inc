@@ -29,3 +29,10 @@
     \label:
     .ent    \label
 .endm
+
+# Used for alternative entries for Sin functions
+.macro altleaf label
+    .global \label
+    \label:
+    .aent    \label
+.endm
