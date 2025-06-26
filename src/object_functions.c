@@ -1065,9 +1065,9 @@ void obj_loop_timetrialghost(Object *obj, s32 updateRate) {
         vehicleID = racer->vehicleID;
         if (vehicleID == VEHICLE_HOVERCRAFT || vehicleID == VEHICLE_PLANE) {
             someObj = attachPoint->obj[0];
-            someObj->segment.trans.rotation.y_rotation = 0x4000;
-            someObj->segment.object.modelIndex++;
-            someObj->segment.object.modelIndex &= 1;
+            someObj->trans.rotation.y_rotation = 0x4000;
+            someObj->modelIndex++;
+            someObj->modelIndex &= 1;
         }
     }
 }
@@ -1951,10 +1951,10 @@ void obj_loop_vehicleanim(Object *obj, s32 updateRate) {
     }
 
     attachObj = attachPoint->count == 3 ? attachPoint->obj[2] : attachPoint->obj[0];
-    attachObj->segment.trans.rotation.y_rotation = 0x4000;
-    attachObj->segment.object.modelIndex++;
-    if (attachObj->segment.object.modelIndex == attachObj->segment.header->numberOfModelIds) {
-        attachObj->segment.object.modelIndex = 0;
+    attachObj->trans.rotation.y_rotation = 0x4000;
+    attachObj->modelIndex++;
+    if (attachObj->modelIndex == attachObj->header->numberOfModelIds) {
+        attachObj->modelIndex = 0;
     }
 }
 

@@ -1699,13 +1699,13 @@ typedef struct Object {
     /* 0x0040 */ ObjectHeader *header;
     /* 0x0044 */ Vertex *curVertData;
     /* 0x0048 */ s16 behaviorId;
-    /* 0x004A */ s16 objectID;                   // First 9 bits are object ID, last 7 bits are header size
-    /* 0x004C */ ObjectInteraction *interactObj; // player + 0x318
-    /* 0x0050 */ ShadowData *shadow;             // player + 0x2F4
-    /* 0x0054 */ ShadeProperties *shading;       // player + 0x2C0
-    /* 0x0058 */ WaterEffect *waterEffect;       // player + 0x304
+    /* 0x004A */ s16 objectID; // First 9 bits are object ID, last 7 bits are header size
+    /* 0x004C */ ObjectInteraction *interactObj;
+    /* 0x0050 */ ShadowData *shadow;
+    /* 0x0054 */ ShadeProperties *shading;
+    /* 0x0058 */ WaterEffect *waterEffect;
     /* 0x005C */ Object_5C *unk5C;
-    /* 0x0060 */ Object_60 *unk60; // player + 0x340
+    /* 0x0060 */ AttachPoint *attachPoints;
     /* 0x0064 */ union {
         struct Object_64 *unk64;    // player + 0x98
         struct Object *animTarget;  // BHV_ANIMATION
@@ -1844,30 +1844,6 @@ typedef struct Object_LightData {
     /* 0x07 */ u8 pad7[5];
     /* 0x0C */ Object_LightData_UnkC **unkC;
 } Object_LightData;
-
-/* Size: 0x0630 bytes */
-typedef struct Object {
-    /* 0x0000 */ ObjectSegment segment;
-    /* 0x0044 */ Vertex *curVertData;
-    /* 0x0048 */ s16 behaviorId;
-    /* 0x004A */ s16 objectID;                   // First 9 bits are object ID, last 7 bits are header size
-    /* 0x004C */ ObjectInteraction *interactObj; // player + 0x318
-    /* 0x0050 */ ShadowData *shadow;             // player + 0x2F4
-    /* 0x0054 */ ShadeProperties *shading;       // player + 0x2C0
-    /* 0x0058 */ WaterEffect *waterEffect;       // player + 0x304
-    /* 0x005C */ Object_5C *unk5C;
-    /* 0x0060 */ AttachPoint *attachPoints; // Object attachments. This includes vehicle parts.
-    /* 0x0064 */ Object_64 *unk64;          // player + 0x98
-    /* 0x0068 */ union {
-        ModelInstance **modelInstances;
-        TextureHeader **textures;
-        Sprite **sprites;
-    };
-    /* 0x006C */ struct ParticleEmitter *particleEmitter; // player + 0x370
-    /* 0x0070 */ struct ObjectLight **lightData;
-    /* 0x0074 */ u32 particleEmittersEnabled;
-    /* 0x0078 */ ObjProperties properties;
-} Object;
 
 // Unused
 typedef struct GhostHeaderUnk0 {

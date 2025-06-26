@@ -456,6 +456,7 @@ unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1);
 unk800179D0 *func_80017978(s32 arg0, s32 arg1);
 s8 func_800214E4(Object *obj, s32 updateRate);
 f32 lerp_and_get_derivative(f32 *data, u32 index, f32 t, f32 *derivative);
+void race_check_finish(s32 updateRate);
 
 /**
  * Faster variant of the shading function for objects.

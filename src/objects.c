@@ -2102,7 +2102,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (behaviourFlags & OBJECT_BEHAVIOUR_UNK20) {
         address += func_8000FD34(curObj, (Object_5C *) address);
     }
-    if (curObj->segment.header->attachPointCount > 0 && curObj->segment.header->attachPointCount < 10) {
+    if (curObj->header->attachPointCount > 0 && curObj->header->attachPointCount < 10) {
         curObj->attachPoints = (AttachPoint *) address;
         address += sizeof(AttachPoint);
     }
@@ -2187,8 +2187,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         curObj->interactObj->y_position = curObj->trans.y_position;
         curObj->interactObj->z_position = curObj->trans.z_position;
     }
-    if (curObj->segment.header->attachPointCount > 0 && curObj->segment.header->attachPointCount < 10 &&
-        obj_init_attachpoint(curObj)) {
+    if (curObj->header->attachPointCount > 0 && curObj->header->attachPointCount < 10 && obj_init_attachpoint(curObj)) {
         if (D_8011AE50 != NULL) {
             tex_free((TextureHeader *) (s32) D_8011AE50);
         }
@@ -2259,13 +2258,13 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
     if (obj->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
         for (i = 0; obj->modelInstances[i] == NULL; i++) {}
         if (obj->modelInstances[i] != NULL && obj->modelInstances[i]->objModel->normals != NULL) {
-            set_shading_properties(obj->shading, obj->segment.header->shadeAmbient, obj->segment.header->shadeDiffuse,
-                                   0, obj->segment.header->shadeAngleY, obj->segment.header->shadeAngleZ);
-            if (obj->segment.header->unk3D != 0) {
-                obj->shading->lightR = obj->segment.header->unk3A;
-                obj->shading->lightG = obj->segment.header->unk3B;
-                obj->shading->lightB = obj->segment.header->unk3C;
-                obj->shading->lightIntensity = obj->segment.header->unk3D;
+            set_shading_properties(obj->shading, obj->header->shadeAmbient, obj->header->shadeDiffuse, 0,
+                                   obj->header->shadeAngleY, obj->header->shadeAngleZ);
+            if (obj->header->unk3D != 0) {
+                obj->shading->lightR = obj->header->unk3A;
+                obj->shading->lightG = obj->header->unk3B;
+                obj->shading->lightB = obj->header->unk3C;
+                obj->shading->lightIntensity = obj->header->unk3D;
                 obj->shading->lightDirX = -(obj->shading->shadowDirX >> 1);
                 obj->shading->lightDirY = -(obj->shading->shadowDirY >> 1);
                 obj->shading->lightDirZ = -(obj->shading->shadowDirZ >> 1);
@@ -2293,11 +2292,11 @@ s32 obj_init_attachpoint(Object *obj) {
     s32 failed;
 
     attachPoint = obj->attachPoints;
-    attachPoint->count = obj->segment.header->attachPointCount;
+    attachPoint->count = obj->header->attachPointCount;
     attachPoint->count = attachPoint->count; // Fakematch?
     failed = FALSE;
     for (i = 0; i < attachPoint->count; i++) {
-        attachPoint->obj[i] = obj_spawn_attachment(obj->segment.header->vehiclePartIds[i ^ 0]); // i ^ 0 fakematch
+        attachPoint->obj[i] = obj_spawn_attachment(obj->header->vehiclePartIds[i ^ 0]); // i ^ 0 fakematch
         if (attachPoint->obj[i] == NULL) {
             failed = TRUE;
         }
@@ -2306,15 +2305,14 @@ s32 obj_init_attachpoint(Object *obj) {
         for (i = 0; i < attachPoint->count; i++) {
             attachObj = attachPoint->obj[i];
             if (attachObj != NULL) {
-                objFreeAssets(attachObj, attachObj->segment.header->numberOfModelIds,
-                              attachObj->segment.header->modelType);
-                try_free_object_header(attachObj->segment.object.unk2C);
+                objFreeAssets(attachObj, attachObj->header->numberOfModelIds, attachObj->header->modelType);
+                try_free_object_header(attachObj->headerType);
                 mempool_free(attachObj);
             }
         }
         return TRUE;
     }
-    attachPoint->unk2C = obj->segment.header->vehiclePartIndices;
+    attachPoint->unk2C = obj->header->vehiclePartIndices;
     return FALSE;
 }
 
@@ -2431,11 +2429,11 @@ Object *obj_spawn_attachment(s32 objID) {
     for (i = 0; i < objSize; i++) { objectAsRawBytes[i] = 0; } // Must be one line! (Why not use bzero?)
     // clang-format on
 
-    object->segment.trans.flags = OBJ_FLAGS_UNK_0002;
-    object->segment.header = objHeader;
-    object->segment.object.unk2C = objID;
+    object->trans.flags = OBJ_FLAGS_UNK_0002;
+    object->header = objHeader;
+    object->headerType = objID;
     object->objectID = objID;
-    object->segment.trans.scale = objHeader->scale;
+    object->trans.scale = objHeader->scale;
     if (objHeader->flags & HEADER_FLAGS_UNK_0080) {
         object->trans.flags |= OBJ_FLAGS_UNK_0080;
     }
@@ -2553,8 +2551,8 @@ void func_800101AC(Object *obj, s32 arg1) {
     if (obj->attachPoints != NULL) {
         for (i = 0; i < obj->attachPoints->count; i++) {
             tempObj = obj->attachPoints->obj[i];
-            numberOfModelIds = tempObj->segment.header->numberOfModelIds;
-            modelType = tempObj->segment.header->modelType;
+            numberOfModelIds = tempObj->header->numberOfModelIds;
+            modelType = tempObj->header->modelType;
             if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
                 for (j = 0; j < numberOfModelIds; j++) {
                     free_3d_model((ModelInstance *) &tempObj->modelInstances[j]->objModel);
@@ -3495,7 +3493,7 @@ void render_3d_model(Object *obj) {
             }
             for (i = 0; i < attachPointCount; i++) {
                 loopObj = obj->attachPoints->obj[i];
-                if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
+                if (!(loopObj->trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->attachPoints->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
                         something = loopObj->sprites[loopObj->modelIndex];
@@ -3524,7 +3522,7 @@ void render_3d_model(Object *obj) {
                         if (1) {
 #endif
                             // In this instance, cargo refers to the eggs in the fire mountain challenge.
-                            isCargo = (loopObj->segment.trans.flags & OBJ_FLAGS_UNK_0080 && attachPointCount == 3);
+                            isCargo = (loopObj->trans.flags & OBJ_FLAGS_UNK_0080 && attachPointCount == 3);
                             if (racerObj != NULL && racerObj->transparency < 255) {
                                 isCargo = FALSE;
                             }
@@ -8862,7 +8860,7 @@ s32 func_8001F3EC(s32 arg0) {
 
     count = 0;
     for (i = 0; i < D_8011AE78; i++) {
-        if (D_8011AE74[i]->properties.common.unk4 == arg0) {
+        if (D_8011AE74[i]->properties.animation.behaviourID == arg0) {
             count++;
         }
     }
@@ -9080,7 +9078,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
     if ((temp_v0_3 >= 0) && (temp_s3->unkObjBehavior1.unkE[0x37] == 0)) {
         temp_s3->racer.unk2A = temp_v0_3 - arg1;
         if ((s16) temp_s3->racer.unk2A <= 0) {
-            temp_s3->effect_box.unkE[0x37] = 1;
+            temp_s3->unkObjBehavior1.unkE[0x37] = 1;
             temp_s1 = (LevelObjectEntry_Animation *) temp_s3->racer.unk1C->pan;
             func_80021104(arg0, &temp_s3->animation, temp_s1);
             temp_s3->racer.unk2A = 0;
@@ -9826,7 +9824,7 @@ void func_80021400(s32 arg0) {
     s32 i;
     arg0 &= 0xFF; //?
 
-    for (i = 0; i < D_8011AE78 && (arg0 != (D_8011AE74[i]->properties.common.unk4 & 0xFF)); i++) {}
+    for (i = 0; i < D_8011AE78 && (arg0 != (D_8011AE74[i]->properties.animation.behaviourID & 0xFF)); i++) {}
 
     if (i < D_8011AE78) {
         if (D_8011AE74[i]->unk64 != NULL) {
@@ -9860,7 +9858,7 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
     }
     if (animObj->pauseCounter <= 0) {
         obj->trans.flags |= OBJ_FLAGS_INVISIBLE;
-        for (i = 0; (i < D_8011AE78 && animObj->unk28 != D_8011AE74[i]->properties.common.unk4); i++) {
+        for (i = 0; (i < D_8011AE78 && animObj->unk28 != D_8011AE74[i]->properties.animation.behaviourID); i++) {
             if (FALSE) {} // FAKEMATCH
         }
         obj_init_animobject(D_8011AE74[i], obj);
@@ -9899,12 +9897,12 @@ s32 func_80021600(s32 arg0) {
         return TRUE;
     }
 
-    for (i = 0; i < D_8011AE78 && arg0 != D_8011AE74[i]->properties.animatedObj.behaviourID; i++) {}
+    for (i = 0; i < D_8011AE78 && arg0 != D_8011AE74[i]->properties.animation.behaviourID; i++) {}
     if (i >= D_8011AE78) {
         return TRUE;
     }
 
-    for (count = 1; i + count < D_8011AE78 && arg0 == D_8011AE74[i + count]->properties.animatedObj.behaviourID;
+    for (count = 1; i + count < D_8011AE78 && arg0 == D_8011AE74[i + count]->properties.animation.behaviourID;
          count++) {}
     if (count < 2) {
         return TRUE;
@@ -9917,9 +9915,9 @@ s32 func_80021600(s32 arg0) {
 
     objAnim = &sp154->unk64->animation;
     sp138 = -1;
-    sp90 = 1.0 / D_8011AE74[i]->segment.header->scale;
+    sp90 = 1.0 / D_8011AE74[i]->header->scale;
 
-    levelObjAnim = &D_8011AE74[i + count - 1]->segment.level_entry->animation;
+    levelObjAnim = &D_8011AE74[i + count - 1]->level_entry->animation;
     if (count > 2) {
         if (levelObjAnim->goToNode >= 0 && levelObjAnim->goToNode < count - 1) {
             sp138 = levelObjAnim->goToNode;
@@ -9930,80 +9928,80 @@ s32 func_80021600(s32 arg0) {
     for (j = 0; j < 5; j++, s0++) {
         if (s0 == -1) {
             if (sp138 != 0) {
-                xPositions[j] = D_8011AE74[i]->segment.trans.x_position +
-                                (D_8011AE74[i]->segment.trans.x_position - D_8011AE74[i + 1]->segment.trans.x_position);
-                yPositions[j] = D_8011AE74[i]->segment.trans.y_position +
-                                (D_8011AE74[i]->segment.trans.y_position - D_8011AE74[i + 1]->segment.trans.y_position);
-                zPositions[j] = D_8011AE74[i]->segment.trans.z_position +
-                                (D_8011AE74[i]->segment.trans.z_position - D_8011AE74[i + 1]->segment.trans.z_position);
-                yRotations[j] = D_8011AE74[i]->segment.trans.rotation.y_rotation;
-                xRotations[j] = D_8011AE74[i]->segment.trans.rotation.x_rotation;
-                zRotations[j] = D_8011AE74[i]->segment.trans.rotation.z_rotation;
-                scales[j] = D_8011AE74[i]->segment.trans.scale;
+                xPositions[j] = D_8011AE74[i]->trans.x_position +
+                                (D_8011AE74[i]->trans.x_position - D_8011AE74[i + 1]->trans.x_position);
+                yPositions[j] = D_8011AE74[i]->trans.y_position +
+                                (D_8011AE74[i]->trans.y_position - D_8011AE74[i + 1]->trans.y_position);
+                zPositions[j] = D_8011AE74[i]->trans.z_position +
+                                (D_8011AE74[i]->trans.z_position - D_8011AE74[i + 1]->trans.z_position);
+                yRotations[j] = D_8011AE74[i]->trans.rotation.y_rotation;
+                xRotations[j] = D_8011AE74[i]->trans.rotation.x_rotation;
+                zRotations[j] = D_8011AE74[i]->trans.rotation.z_rotation;
+                scales[j] = D_8011AE74[i]->trans.scale;
             } else {
                 q = i + count - 1;
-                xPositions[j] = D_8011AE74[q]->segment.trans.x_position;
-                yPositions[j] = D_8011AE74[q]->segment.trans.y_position;
-                zPositions[j] = D_8011AE74[q]->segment.trans.z_position;
-                yRotations[j] = D_8011AE74[q]->segment.trans.rotation.y_rotation;
-                xRotations[j] = D_8011AE74[q]->segment.trans.rotation.x_rotation;
-                zRotations[j] = D_8011AE74[q]->segment.trans.rotation.z_rotation;
-                scales[j] = D_8011AE74[q]->segment.trans.scale;
+                xPositions[j] = D_8011AE74[q]->trans.x_position;
+                yPositions[j] = D_8011AE74[q]->trans.y_position;
+                zPositions[j] = D_8011AE74[q]->trans.z_position;
+                yRotations[j] = D_8011AE74[q]->trans.rotation.y_rotation;
+                xRotations[j] = D_8011AE74[q]->trans.rotation.x_rotation;
+                zRotations[j] = D_8011AE74[q]->trans.rotation.z_rotation;
+                scales[j] = D_8011AE74[q]->trans.scale;
             }
         } else if (s0 >= count) {
             if (sp138 == -1) {
                 s0 = count - 1;
                 q = s0 + i;
-                levelObjAnim = &D_8011AE74[q]->segment.level_entry->animation;
+                levelObjAnim = &D_8011AE74[q]->level_entry->animation;
                 if (levelObjAnim->unk22 == 1) {
                     set_active_camera(objAnim->cameraID);
                     objTransform = &cam_get_active_camera_no_cutscenes()->trans;
                 } else {
-                    objTransform = &D_8011AE74[q]->segment.trans;
+                    objTransform = &D_8011AE74[q]->trans;
                 }
 
                 xPositions[j] =
-                    (objTransform->x_position - D_8011AE74[q - 1]->segment.trans.x_position) + objTransform->x_position;
+                    (objTransform->x_position - D_8011AE74[q - 1]->trans.x_position) + objTransform->x_position;
                 yPositions[j] =
-                    (objTransform->y_position - D_8011AE74[q - 1]->segment.trans.y_position) + objTransform->y_position;
+                    (objTransform->y_position - D_8011AE74[q - 1]->trans.y_position) + objTransform->y_position;
                 zPositions[j] =
-                    (objTransform->z_position - D_8011AE74[q - 1]->segment.trans.z_position) + objTransform->z_position;
+                    (objTransform->z_position - D_8011AE74[q - 1]->trans.z_position) + objTransform->z_position;
                 xRotations[j] = objTransform->rotation.x_rotation;
                 zRotations[j] = objTransform->rotation.z_rotation;
-                objTransform = &D_8011AE74[q]->segment.trans;
+                objTransform = &D_8011AE74[q]->trans;
                 yRotations[j] = objTransform->rotation.y_rotation;
-                scales[j] = D_8011AE74[q]->segment.trans.scale;
+                scales[j] = D_8011AE74[q]->trans.scale;
             } else {
                 q = i + sp138 + s0 - count;
-                xPositions[j] = D_8011AE74[q]->segment.trans.x_position;
-                yPositions[j] = D_8011AE74[q]->segment.trans.y_position;
-                zPositions[j] = D_8011AE74[q]->segment.trans.z_position;
-                yRotations[j] = D_8011AE74[q]->segment.trans.rotation.y_rotation;
-                xRotations[j] = D_8011AE74[q]->segment.trans.rotation.x_rotation;
-                zRotations[j] = D_8011AE74[q]->segment.trans.rotation.z_rotation;
-                scales[j] = D_8011AE74[q]->segment.trans.scale;
+                xPositions[j] = D_8011AE74[q]->trans.x_position;
+                yPositions[j] = D_8011AE74[q]->trans.y_position;
+                zPositions[j] = D_8011AE74[q]->trans.z_position;
+                yRotations[j] = D_8011AE74[q]->trans.rotation.y_rotation;
+                xRotations[j] = D_8011AE74[q]->trans.rotation.x_rotation;
+                zRotations[j] = D_8011AE74[q]->trans.rotation.z_rotation;
+                scales[j] = D_8011AE74[q]->trans.scale;
             }
         } else {
             q = s0 + i;
             if (1) {} // Fake
-            levelObjAnim = &D_8011AE74[q]->segment.level_entry->animation;
+            levelObjAnim = &D_8011AE74[q]->level_entry->animation;
             if (levelObjAnim->unk22 == 1) {
                 set_active_camera(objAnim->cameraID);
                 objTransform = &cam_get_active_camera_no_cutscenes()->trans;
             } else {
-                objTransform = &D_8011AE74[q]->segment.trans;
+                objTransform = &D_8011AE74[q]->trans;
             }
             xPositions[j] = objTransform->x_position;
             yPositions[j] = objTransform->y_position;
             zPositions[j] = objTransform->z_position;
             xRotations[j] = objTransform->rotation.x_rotation;
             zRotations[j] = objTransform->rotation.z_rotation;
-            objTransform = &D_8011AE74[q]->segment.trans;
+            objTransform = &D_8011AE74[q]->trans;
             yRotations[j] = objTransform->rotation.y_rotation;
             if (levelObjAnim->unk22 == 1) {
                 xRotations[j] = -xRotations[j];
             }
-            scales[j] = D_8011AE74[q]->segment.trans.scale;
+            scales[j] = D_8011AE74[q]->trans.scale;
         }
     }
 
@@ -10018,12 +10016,12 @@ s32 func_80021600(s32 arg0) {
         spF0 = lerp(zPositions, 0, spEC);
     }
 
-    spF8 -= sp154->segment.trans.x_position;
-    spF4 -= sp154->segment.trans.y_position;
-    spF0 -= sp154->segment.trans.z_position;
+    spF8 -= sp154->trans.x_position;
+    spF4 -= sp154->trans.y_position;
+    spF0 -= sp154->trans.z_position;
 
     move_object(sp154, spF8, spF4, spF0);
-    sp154->segment.trans.scale = catmull_rom_interpolation(scales, 0, spEC) * sp90 * sp154->segment.header->scale;
+    sp154->trans.scale = catmull_rom_interpolation(scales, 0, spEC) * sp90 * sp154->header->scale;
 
     switch (objAnim->unk2E) {
         case 1:
@@ -10050,22 +10048,22 @@ s32 func_80021600(s32 arg0) {
                 spF0 *= delta;
             }
 
-            sp154->segment.trans.rotation.y_rotation = arctan2_f(spF8, spF0) - 0x8000;
-            sp154->segment.trans.rotation.x_rotation = arctan2_f(spF4, 100.0f);
+            sp154->trans.rotation.y_rotation = arctan2_f(spF8, spF0) - 0x8000;
+            sp154->trans.rotation.x_rotation = arctan2_f(spF4, 100.0f);
             break;
         case 3:
-            for (j = 0; j < D_8011AE78 && objAnim->unk3E != D_8011AE74[j]->properties.animatedObj.behaviourID; j++) {}
+            for (j = 0; j < D_8011AE78 && objAnim->unk3E != D_8011AE74[j]->properties.animation.behaviourID; j++) {}
 
             if (j != D_8011AE78) {
-                objTransform = &((Object *) &D_8011AE74[j]->unk64->obj)->segment.trans;
+                objTransform = &((Object *) &D_8011AE74[j]->unk64->obj)->trans;
                 if (objTransform != NULL) {
-                    spF8 = objTransform->x_position - sp154->segment.trans.x_position;
-                    spF4 = objTransform->y_position - sp154->segment.trans.y_position;
-                    spF0 = objTransform->z_position - sp154->segment.trans.z_position;
+                    spF8 = objTransform->x_position - sp154->trans.x_position;
+                    spF4 = objTransform->y_position - sp154->trans.y_position;
+                    spF0 = objTransform->z_position - sp154->trans.z_position;
                     spEC = sqrtf(spF8 * spF8 + spF4 * spF4 + spF0 * spF0);
                     if (spEC > 0.0f) {
-                        sp154->segment.trans.rotation.y_rotation = arctan2_f(spF8, spF0) - 0x8000;
-                        sp154->segment.trans.rotation.x_rotation = arctan2_f(spF4, spEC);
+                        sp154->trans.rotation.y_rotation = arctan2_f(spF8, spF0) - 0x8000;
+                        sp154->trans.rotation.x_rotation = arctan2_f(spF4, spEC);
                     }
                 }
             }
@@ -10080,11 +10078,9 @@ s32 func_80021600(s32 arg0) {
                     f0 += 65536.0;
                 }
 
-                // clang-formatter off
-                for (s0 = j; s0 < 5; s0++) {
-                    yRotations[s0] += f0;
-                }
-                // clang-formatter on
+                // clang-format off
+                for (s0 = j; s0 < 5; s0++) { yRotations[s0] += f0; }
+                // clang-format on
 
                 f0 = 0.0f;
                 delta = xRotations[j] - xRotations[j - 1];
@@ -10094,11 +10090,9 @@ s32 func_80021600(s32 arg0) {
                     f0 += 65536.0;
                 }
 
-                // clang-formatter off
-                for (s0 = j; s0 < 5; s0++) {
-                    xRotations[s0] += f0;
-                }
-                // clang-formatter on
+                // clang-format off
+                for (s0 = j; s0 < 5; s0++) { xRotations[s0] += f0; }
+                // clang-format on
 
                 f0 = 0.0f;
                 delta = zRotations[j] - zRotations[j - 1];
@@ -10108,21 +10102,19 @@ s32 func_80021600(s32 arg0) {
                     f0 += 65536.0;
                 }
 
-                // clang-formatter off
-                for (s0 = j; s0 < 5; s0++) {
-                    zRotations[s0] += f0;
-                }
-                // clang-formatter on
+                // clang-format off
+                for (s0 = j; s0 < 5; s0++) { zRotations[s0] += f0; }
+                // clang-format on
             }
 
             if (objAnim->unk3F == 0) {
-                sp154->segment.trans.rotation.y_rotation = catmull_rom_interpolation(yRotations, 0, spEC);
-                sp154->segment.trans.rotation.x_rotation = catmull_rom_interpolation(xRotations, 0, spEC);
-                sp154->segment.trans.rotation.z_rotation = catmull_rom_interpolation(zRotations, 0, spEC);
+                sp154->trans.rotation.y_rotation = catmull_rom_interpolation(yRotations, 0, spEC);
+                sp154->trans.rotation.x_rotation = catmull_rom_interpolation(xRotations, 0, spEC);
+                sp154->trans.rotation.z_rotation = catmull_rom_interpolation(zRotations, 0, spEC);
             } else {
-                sp154->segment.trans.rotation.y_rotation = lerp(yRotations, 0, spEC);
-                sp154->segment.trans.rotation.x_rotation = lerp(xRotations, 0, spEC);
-                sp154->segment.trans.rotation.z_rotation = lerp(zRotations, 0, spEC);
+                sp154->trans.rotation.y_rotation = lerp(yRotations, 0, spEC);
+                sp154->trans.rotation.x_rotation = lerp(xRotations, 0, spEC);
+                sp154->trans.rotation.z_rotation = lerp(zRotations, 0, spEC);
             }
             break;
     }
