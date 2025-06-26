@@ -269,7 +269,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                         racer->bubbleTrapTimer = 60;
                         obj->properties.fireball.timer = -60;
                         obj->properties.fireball.obj = someObj;
-                        sound_play(SOUND_BUBBLE_RISE, &weapon->soundMask);
+                        sound_play(SOUND_BUBBLE_RISE, (SoundHandle *) &weapon->soundMask);
                     }
                 }
             }
@@ -304,7 +304,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
             }
         }
         if (obj->properties.fireball.timer == 0) {
-            soundMask = weapon->soundMask;
+            soundMask = (SoundHandle) weapon->soundMask;
             if (soundMask != NULL) {
                 sndp_stop(soundMask);
             }
@@ -1056,7 +1056,7 @@ void obj_loop_timetrialghost(Object *obj, s32 updateRate) {
     Object *someObj;
     Object *someOtherObj;
     Object_UnkId58 *someOtherObj64;
-    Object_60 *obj60;
+    AttachPoint *attachPoint;
     s8 vehicleID;
 
     obj->segment.object.animationID = 0;
@@ -1068,11 +1068,11 @@ void obj_loop_timetrialghost(Object *obj, s32 updateRate) {
     obj_spawn_particle(obj, updateRate);
     someOtherObj = get_racer_object(PLAYER_ONE);
     someOtherObj64 = &someOtherObj->unk64->unkid58;
-    obj60 = obj->unk60;
-    if (obj60->unk0 == 1) {
+    attachPoint = obj->attachPoints;
+    if (attachPoint->count == 1) {
         vehicleID = someOtherObj64->vehicleID;
         if (vehicleID == VEHICLE_HOVERCRAFT || vehicleID == VEHICLE_PLANE) {
-            someObj = (Object *) obj60->unk4[0];
+            someObj = (Object *) attachPoint->obj[0];
             someObj->segment.trans.rotation.y_rotation = 0x4000;
             someObj->segment.object.modelIndex++;
             someObj->segment.object.modelIndex &= 1;
@@ -1905,7 +1905,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
         } else {
             wizShipObj->properties.fireball.timer = 0;
         }
-        if ((wizShipObj->unk60 != NULL) && (wizShipObj->properties.fireball.timer == 0)) {
+        if (wizShipObj->attachPoints != NULL && wizShipObj->properties.fireball.timer == 0) {
             if (wizShipObj->particleEmittersEnabled & OBJ_EMIT_1) {
                 wizShipObj->properties.fireball.timer = 20;
                 mtxf_from_transform(&shipMtx, &wizShipObj->segment.trans);
@@ -1918,8 +1918,8 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                 trans.rotation.z_rotation = 0;
                 mtxf_from_transform(&laserMtx, &trans);
 
-                for (i = 0; i < wizShipObj->unk60->unk0; i++) {
-                    index = wizShipObj->unk60->unk2C[i];
+                for (i = 0; i < wizShipObj->attachPoints->count; i++) {
+                    index = wizShipObj->attachPoints->unk2C[i];
                     if ((index >= 0) && (index < wizShipModel->unk18)) {
                         if (wizShipObj->curVertData != NULL) {
                             posX = wizShipObj->curVertData[wizShipModel->unk14[index]].x;
@@ -1954,21 +1954,25 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
     }
 }
 
+/**
+ * Cutscene Vehicle loop behaviour.
+ * Performs its set behaviour while having its own handler for the attached vehicle parts.
+*/
 void obj_loop_vehicleanim(Object *obj, s32 updateRate) {
-    Object_60_800380F8 *obj60;
-    Object *someObj;
+    AttachPoint *attachPoint;
+    Object *attachObj;
 
     func_8001F460(obj, updateRate, obj);
-    obj60 = (Object_60_800380F8 *) obj->unk60;
-    if (obj60 != NULL) {
-        if (obj60->unk0 > 0) {
-            someObj = obj60->unk0 == 3 ? obj60->unkC : obj60->unk4;
-            someObj->segment.trans.rotation.y_rotation = 0x4000;
-            someObj->segment.object.modelIndex++;
-            if (someObj->segment.object.modelIndex == someObj->segment.header->numberOfModelIds) {
-                someObj->segment.object.modelIndex = 0;
-            }
-        }
+    attachPoint = obj->attachPoints;
+    if (attachPoint == NULL || attachPoint->count <= 0) {
+        return;
+    }
+    
+    attachObj = attachPoint->count == 3 ? attachPoint->obj[2] : attachPoint->obj[0];
+    attachObj->segment.trans.rotation.y_rotation = 0x4000;
+    attachObj->segment.object.modelIndex++;
+    if (attachObj->segment.object.modelIndex == attachObj->segment.header->numberOfModelIds) {
+        attachObj->segment.object.modelIndex = 0;
     }
 }
 
@@ -4963,8 +4967,8 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     }
 block_37:
     obj->properties.projectile.unk4 += updateRate;
-    if (obj->unk60 != NULL) {
-        temp_s1_2 = obj->unk60->unk4[0];
+    if (obj->attachPoints != NULL) {
+        temp_s1_2 = obj->attachPoints->obj[0];
         if (obj->properties.projectile.unk4 < 8) {
             temp_s1_2->segment.trans.scale = obj->properties.projectile.unk4 * 0.5f;
         } else if (obj->properties.projectile.unk4 < 16) {
