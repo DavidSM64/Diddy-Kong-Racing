@@ -1515,11 +1515,11 @@ typedef struct Object_AnimatedObject {
     /* 0x2C */ u8 unk2C;
     /* 0x2D */ u8 unk2D;
     /* 0x2E */ u8 unk2E;
-    /* 0x2F */ u8 unk2F;
+    /* 0x2F */ s8 unk2F;
     /* 0x30 */ s8 cameraID;
-    /* 0x31 */ u8 unk31;
-    /* 0x32 */ u8 unk32;
-    /* 0x33 */ u8 unk33;
+    /* 0x31 */ s8 unk31;
+    /* 0x32 */ s8 unk32;
+    /* 0x33 */ s8 unk33;
     /* 0x34 */ u8 unk34;
     /* 0x35 */ u8 unk35;
     /* 0x36 */ s16 pauseCounter;
@@ -1531,12 +1531,12 @@ typedef struct Object_AnimatedObject {
     /* 0x3D */ u8 unk3D;
     /* 0x3E */ s8 unk3E;
     /* 0x3F */ s8 unk3F;
-    /* 0x40 */ u8 unk40;
-    /* 0x41 */ u8 unk41;
+    /* 0x40 */ s8 unk40;
+    /* 0x41 */ s8 unk41;
     /* 0x42 */ u8 unk42;
-    /* 0x43 */ u8 unk43;
+    /* 0x43 */ s8 unk43;
     /* 0x44 */ u8 unk44;
-    /* 0x45 */ u8 unk45;
+    /* 0x45 */ s8 unk45;
 } Object_AnimatedObject;
 
 /* Size: 0x018 bytes */
