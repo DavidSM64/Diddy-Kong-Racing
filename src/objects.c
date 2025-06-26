@@ -3119,7 +3119,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     }
     outOfBounds = FALSE;
     x2 = (levelModel->upperXBounds + 1000.0);
-    //!@bug should've campared against "obj->trans.x_position"
+    //!@bug should've compared against "obj->trans.x_position"
     if (newXPos > x2) {
         outOfBounds = TRUE;
     }

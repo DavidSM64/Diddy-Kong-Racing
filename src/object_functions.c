@@ -723,7 +723,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
             try_to_collect_egg(obj, egg);
             break;
         case EGG_MOVING:
-            obj->trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
+            obj->trans.flags &= ~OBJ_FLAGS_INVISIBLE;
             dir[0] = obj->trans.x_position + (obj->x_velocity * updateRateF);
             dir[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
             dir[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
@@ -925,7 +925,7 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
     if (find_non_car_racers() == FALSE) {
         obj->trans.flags |= OBJ_FLAGS_INVISIBLE;
     } else {
-        obj->trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
+        obj->trans.flags &= ~OBJ_FLAGS_INVISIBLE;
     }
     if (obj->interactObj->distance < 100 && !(obj->trans.flags & OBJ_FLAGS_INVISIBLE)) {
         racerObjs = get_racer_objects(&numObjects);
@@ -3406,7 +3406,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
     } else {
         obj->trans.flags |= OBJ_FLAGS_INVISIBLE;
         if (obj->properties.goldenBalloon.action == 0) {
-            obj->trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
+            obj->trans.flags &= ~OBJ_FLAGS_INVISIBLE;
             doubleSpeed = updateRate * 2;
             if (obj->opacity < 255 - doubleSpeed) {
                 obj->opacity += doubleSpeed;
