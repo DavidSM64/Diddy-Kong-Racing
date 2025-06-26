@@ -9151,7 +9151,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
     }
 
     if (obj64->unk4 == 0) {
-        obj64->unk4 = 0.001;
+        obj64->unk4 = 0.01f;
     }
 
     for (var_s2 = 0, var_s0 = 0; var_s0 < 2; var_s0++) {
