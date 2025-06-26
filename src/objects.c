@@ -8788,7 +8788,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
     s32 var_s4;
     s32 var_s5;
     s32 q;
-    s32 var_t0; // sp174
+    s32 var_t0;
     ObjectTransform *trans;
     Object_AnimatedObject *obj64;
     s32 sp168;
