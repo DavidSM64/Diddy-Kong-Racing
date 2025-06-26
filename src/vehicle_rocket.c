@@ -45,7 +45,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s32 tempStartTimer;
     Object *someObj;
     Object *firstRacerObj;
-    Object_WizpigRocket *rocket;
+    Object_Boost *boost;
     ModelInstance *modInst;
     ObjectModel *objModel;
 
@@ -134,12 +134,12 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (*startTimer != 100) {
         someObj = racerfx_get_boost(BOOST_DEFAULT);
         if (someObj != NULL) {
-            rocket = &someObj->unk64->wizpigRocket;
+            boost = someObj->boost;
             someObj->properties.common.unk0 = 0;
-            if (rocket != NULL) {
-                rocket->unk72 += updateRate;
-                rocket->unk70 = 2;
-                rocket->unk74 = 1.0f;
+            if (boost != NULL) {
+                boost->unk72 += updateRate;
+                boost->unk70 = 2;
+                boost->unk74 = 1.0f;
                 func_8000B750(obj, -1, 2, 1, 1);
             }
         }

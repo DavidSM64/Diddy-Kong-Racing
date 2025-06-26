@@ -977,62 +977,11 @@ typedef struct Object_Animator {
     /* 0x0A */ s16 ySpeed;
 } Object_Animator;
 
-// TODO: remove this struct
-typedef struct Object_Animation {
-    /* 0x00 */ f32 unk0;
-    /* 0x04 */ f32 unk4;
-    /* 0x08 */ f32 unk8;
-    /* 0x0C */ f32 x;
-    /* 0x10 */ f32 y;
-    /* 0x14 */ f32 z;
-    /* 0x18 */ SoundHandle unk18;
-    /* 0x1C */ struct Object *unk1C;
-    /* 0x20 */ s32 unk20;
-    /* 0x24 */ s16 unk24;
-    /* 0x26 */ s16 unk26;
-    /* 0x28 */ u16 unk28;
-    /* 0x2A */ u16 startDelay;
-    /* 0x2C */ u8 unk2C;
-    /* 0x2D */ u8 unk2D;
-    /* 0x2E */ u8 unk2E;
-    /* 0x2F */ u8 unk2F;
-    /* 0x30 */ s8 cameraID;
-    /* 0x31 */ u8 unk31;
-    /* 0x32 */ u8 unk32;
-    /* 0x33 */ u8 unk33;
-    /* 0x34 */ u8 unk34;
-    /* 0x35 */ u8 unk35;
-    /* 0x36 */ s16 pauseCounter;
-    /* 0x38 */ u8 unk38;
-    /* 0x39 */ u8 unk39;
-    /* 0x3A */ u8 unk3A;
-    /* 0x3V */ u8 unk3B;
-    /* 0x3C */ u8 unk3C;
-    /* 0x3D */ u8 unk3D;
-    /* 0x3E */ s8 unk3E;
-    /* 0x3F */ s8 unk3F;
-    /* 0x40 */ u8 unk40;
-    /* 0x41 */ u8 unk41;
-    /* 0x42 */ u8 unk42;
-    /* 0x43 */ u8 unk43;
-    /* 0x44 */ u8 unk44;
-    /* 0x45 */ u8 unk45;
-    /* 0x46 */ u8 pad46[4];
-    /* 0x4A */ s16 unk4A;
-    /* 0x4C */ u8 pad4C[0x10];
-    /* 0x5C */ s32 unk5C;
-} Object_Animation;
-
-typedef struct Object_Animation2 {
-    /* 0x00 */ u8 pad0[6];
-    /* 0x06 */ s16 flags;
-} Object_Animation2;
-
 typedef struct Object_OverridePos {
     /* 0x00 */ f32 x;
     /* 0x04 */ f32 y;
     /* 0x08 */ f32 z;
-    /* 0x0C */ Object_Animation *anim;
+    /* 0x0C */ struct Object *anim;
 } Object_OverridePos;
 
 typedef struct Object_WeaponBalloon {
@@ -1114,21 +1063,6 @@ typedef struct Object_Boost {
     /* 0x7C */ TextureHeader *tex;
 } Object_Boost;
 
-// TODO: remove this struct
-typedef struct Object_UnusedBehaviour1 {
-    s16 unk0;
-    u8 unk2;
-    u8 unk3;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s8 unkE[0x1FE - 0xE];
-    u8 unk1FE;
-    u8 unk1FF;
-} Object_UnusedBehaviour1;
-
 typedef struct Object_CollectEgg {
     /* 0x0 */ u8 pad0[4];
     /* 0x4 */ struct Object *spawnerObj;
@@ -1142,19 +1076,6 @@ typedef struct CharacterFlagModel {
     /* 0x20 */ Vertex *vertices;
     /* 0x24 */ TextureHeader *texture;
 } CharacterFlagModel;
-
-typedef struct Object_AnimCamera {
-    /* 0x00 */ u8 pad0[0x30];
-    /* 0x30 */ s8 cameraID;
-    /* 0x31 */ u8 pad31[0xB];
-    /* 0x3C */ s32 unk3C;
-    /* 0x40 */ u8 pad40[4];
-    /* 0x44 */ u8 unk44;
-    /* 0x45 */ u8 pad45[5];
-    /* 0x4A */ s16 unk4A;
-    /* 0x4C */ u8 pad4C[8];
-    /* 0x54 */ s8 unk54;
-} Object_AnimCamera;
 
 typedef struct Object_AudioLine {
     /* 0x00 */ u8 unk0;
@@ -1215,15 +1136,6 @@ typedef struct Object_Frog {
     /* 0x2C */ f32 hopTargetZ;
     /* 0x30 */ f32 scaleY;
 } Object_Frog;
-
-typedef struct Object_Wizpig2 {
-    /* 0x00 */ u8 pad0[0x70];
-    /* 0x70 */ u8 unk70;
-    /* 0x71 */ u8 pad71;
-    /* 0x72 */ u8 unk72;
-    /* 0x73 */ u8 pad73;
-    /* 0x74 */ f32 unk74;
-} Object_Wizpig2;
 
 typedef struct Object_Exit {
     /* 0x00 */ f32 directionX;
@@ -1538,10 +1450,6 @@ typedef struct Object_Banana {
     /* 0x9 */ s8 droppedVehicleID;
 } Object_Banana;
 
-typedef struct Object_FogChanger {
-    /* 0x0 */ s16 unk0;
-} Object_FogChanger;
-
 typedef struct Object_NPC {
     /* 0x00 */ f32 unk0;
     /* 0x04 */ f32 animFrameF;
@@ -1583,11 +1491,6 @@ typedef struct Object_64_80021400 {
     /* 0x00 */ u8 pad[0x2A];
     /* 0x2A */ s16 unk2A;
 } Object_64_80021400;
-
-typedef struct Object_80021400_64 {
-    /* 0x000 */ u8 pad[0x64];
-    /* 0x064 */ struct Object_64_80021400 *obj64;
-} Object_80021400_64;
 
 typedef struct Object_Log {
     /* 0x00 */ s16 unk0;
@@ -1632,8 +1535,8 @@ typedef struct Object_AnimatedObject {
     /* 0x3B */ u8 unk3B;
     /* 0x3C */ u8 unk3C;
     /* 0x3D */ u8 unk3D;
-    /* 0x3E */ u8 unk3E;
-    /* 0x3F */ u8 unk3F;
+    /* 0x3E */ s8 unk3E;
+    /* 0x3F */ s8 unk3F;
     /* 0x40 */ u8 unk40;
     /* 0x41 */ u8 unk41;
     /* 0x42 */ u8 unk42;
@@ -1641,29 +1544,6 @@ typedef struct Object_AnimatedObject {
     /* 0x44 */ u8 unk44;
     /* 0x45 */ u8 unk45;
 } Object_AnimatedObject;
-
-typedef struct Object_WizpigRocket {
-    u8 pad0[0x70];
-    u8 unk70;
-    u8 unk71;
-    u8 unk72;
-    u8 unk73;
-    f32 unk74;
-} Object_WizpigRocket;
-
-typedef struct Object_8001E89C_64_C {
-    /* 0x00 */ u8 pad0[0xC];
-    /* 0x0C */ f32 unkC;
-    /* 0x10 */ f32 unk10;
-    /* 0x14 */ f32 unk14;
-} Object_8001E89C_64_C;
-
-typedef struct Object_8001E89C_64 {
-    /* 0x00 */ f32 unk0;
-    /* 0x04 */ f32 unk4;
-    /* 0x08 */ f32 unk8;
-    /* 0x0C */ Object_8001E89C_64_C *unkC;
-} Object_8001E89C_64;
 
 /* Size: 0x018 bytes */
 typedef struct ObjectTransform {
@@ -1727,52 +1607,40 @@ typedef struct Object {
 typedef struct Object_64 {
     union {
         struct Object *obj;
-        JingleState jingle_state; // BHV_TROPHY_CABINET
-        Object_Animator animator; // BHV_ANIMATOR
-        Object_Animation animation;
-        Object_Animation2 animation2;
-        Object_WeaponBalloon weapon_balloon; // BHV_WEAPON_BALLOON
-        Object_Weapon weapon;                // BHV_FIREBALL_OCTOWEAPON_2, BHV_WEAPON, BHV_WEAPON_2
-        Object_Butterfly butterfly;          // BHV_BUTTERFLY
-        Object_Fish fish;                    // BHV_FISH
-        Object_Boost boost;
-        Object_CollectEgg egg;                 // BHV_COLLECT_EGG
-        CharacterFlagModel characterFlagModel; // BHV_CHARACTER_FLAG
-        Object_AnimCamera anim_camera;
-        Object_AudioLine audio_line;     // BHV_AUDIO_LINE
-        Object_AudioReverb audio_reverb; // BHV_AUDIO_REVERB
-        Object_TexScroll tex_scroll;     // BHV_TEXTURE_SCROLL
-        Object_Frog frog;                // BHV_FROG
-        Object_Wizpig2 wizpig2;
-        Object_Exit exit; // BHV_EXIT
-        Object_Racer racer;
-        Object_Door door;          // BHV_DOOR, BHV_TT_DOOR
-        Object_Trigger trigger;    // BHV_MODECHANGE, BHV_BONUS, BHV_TRIGGER
-        Object_Audio audio;        // BHV_AUDIO
-        Object_MidiFade midi_fade; // BHV_MIDI_FADE
-        Object_MidiFadePoint midi_fade_point;
-        Object_MidiChannelSet midi_channel_set;
-        Object_Banana banana; // BHV_BANANA
-        Object_FogChanger fog_changer;
+        JingleState jingle_state;                  // BHV_TROPHY_CABINET
+        Object_Animator animator;                  // BHV_ANIMATOR
+        Object_WeaponBalloon weapon_balloon;       // BHV_WEAPON_BALLOON
+        Object_Weapon weapon;                      // BHV_FIREBALL_OCTOWEAPON_2, BHV_WEAPON, BHV_WEAPON_2
+        Object_Butterfly butterfly;                // BHV_BUTTERFLY
+        Object_Fish fish;                          // BHV_FISH
+        Object_CollectEgg egg;                     // BHV_COLLECT_EGG
+        CharacterFlagModel characterFlagModel;     // BHV_CHARACTER_FLAG
+        Object_AudioLine audio_line;               // BHV_AUDIO_LINE
+        Object_AudioReverb audio_reverb;           // BHV_AUDIO_REVERB
+        Object_TexScroll tex_scroll;               // BHV_TEXTURE_SCROLL
+        Object_Frog frog;                          // BHV_FROG
+        Object_Exit exit;                          // BHV_EXIT
+        Object_Racer racer;                        // BHV_RACER
+        Object_Door door;                          // BHV_DOOR, BHV_TT_DOOR
+        Object_Trigger trigger;                    // BHV_MODECHANGE, BHV_BONUS, BHV_TRIGGER
+        Object_Audio audio;                        // BHV_AUDIO
+        Object_MidiFade midi_fade;                 // BHV_MIDI_FADE
+        Object_MidiFadePoint midi_fade_point;      // BHV_MIDI_FADE_POINT
+        Object_MidiChannelSet midi_channel_set;    // BHV_MIDI_CHANNEL_SET
+        Object_Banana banana;                      // BHV_BANANA
         Object_NPC npc;                            // BHV_STOPWATCH_MAN, BHV_PARK_WARDEN, BHV_GOLDEN_BALLOON
         Object_Bridge_WhaleRamp bridge_whale_ramp; // BHV_BRIDGE_WHALE_RAMP
-        Object_80021400_64 obj80021400_64;
-        Object_Log log;
-        Object_LaserGun lasergun;             // BHV_LASER_GUN
-        Object_AnimatedObject animatedObject; // BHV_DINO_WHALE, BHV_ANIMATED_OBJECT, BHV_CAMERA_ANIMATION
-                                              // BHV_CAR_ANIMATION, BHV_CHARACTER_SELECT, BHV_VEHICLE_ANIMATION
-                                              // BHV_HIT_TESTER, BHV_HIT_TESTER_2, BHV_PARK_WARDEN_2
-                                              // BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP, BHV_ANIMATED_OBJECT_3
-                                              // BHV_ANIMATED_OBJECT_4, BHV_SNOWBALL, BHV_SNOWBALL_2
-                                              // BHV_SNOWBALL_3, BHV_SNOWBALL_4, BHV_HIT_TESTER_3
-                                              // BHV_HIT_TESTER_4, BHV_DOOR_OPENER, BHV_PIG_ROCKETEER
-                                              // BHV_WIZPIG_GHOSTS
-        Object_WizpigRocket wizpigRocket;
-        Object_8001E89C_64 obj8001E89C_64;
-        Object_AiNode ai_node; // BHV_AINODE
-        Object_OverridePos override_pos;
-        // TODO: remove this
-        Object_UnusedBehaviour1 unkObjBehavior1;
+        Object_LaserGun lasergun;                  // BHV_LASER_GUN
+        Object_AnimatedObject animatedObject;      // BHV_DINO_WHALE, BHV_ANIMATED_OBJECT, BHV_CAMERA_ANIMATION
+                                                   // BHV_CAR_ANIMATION, BHV_CHARACTER_SELECT, BHV_VEHICLE_ANIMATION
+                                                   // BHV_HIT_TESTER, BHV_HIT_TESTER_2, BHV_PARK_WARDEN_2
+                                                   // BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP, BHV_ANIMATED_OBJECT_3
+                                                   // BHV_ANIMATED_OBJECT_4, BHV_SNOWBALL, BHV_SNOWBALL_2
+                                                   // BHV_SNOWBALL_3, BHV_SNOWBALL_4, BHV_HIT_TESTER_3
+                                                   // BHV_HIT_TESTER_4, BHV_DOOR_OPENER, BHV_PIG_ROCKETEER
+                                                   // BHV_WIZPIG_GHOSTS
+        Object_AiNode ai_node;                     // BHV_AINODE
+        Object_OverridePos override_pos;           // BHV_OVERRIDE_POS
     };
 } Object_64;
 

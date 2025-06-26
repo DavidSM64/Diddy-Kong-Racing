@@ -2650,7 +2650,7 @@ void func_800101AC(Object *obj, s32 arg1) {
             break;
         case BHV_BUOY_PIRATE_SHIP:
         case BHV_LOG:
-            log = &obj->unk64->log;
+            log = obj->log;
             if (log != NULL) {
                 mempool_free(log);
             }
@@ -3237,7 +3237,7 @@ void render_3d_misc(Object *obj) {
                               objData->fish.texture, RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_CUTOUT, 0, scaleY);
             break;
         case BHV_BOOST:
-            if (obj->properties.common.unk0 && (obj->unk64->boost.unk70 > 0 || obj->unk64->boost.unk74 > 0.0f)) {
+            if (obj->properties.common.unk0 && (obj->boost->unk70 > 0 || obj->boost->unk74 > 0.0f)) {
                 func_800135B8(obj);
             }
             break;
@@ -3878,7 +3878,7 @@ void func_800135B8(Object *boostObj) {
     s32 racerIndex;
 
     racerIndex = (boostObj->properties.boost.racerIndex) & 0xF;
-    boost = &boostObj->unk64->boost;
+    boost = boostObj->boost;
     switch (D_8011B048[racerIndex]) {
         case VEHICLE_CAR:
             boostData = &boost->carBoostData;
@@ -8493,8 +8493,8 @@ void func_8001E4C4(void) {
             entryAnimation = &obj->level_entry->animation;
             if (entryAnimation->channel != gCutsceneID && entryAnimation->channel != 20) {
                 obj->trans.flags |= OBJ_FLAGS_UNK_2000;
-                if (obj->unk64 != NULL) {
-                    obj->unk64->animation2.flags |= OBJ_FLAGS_UNK_2000;
+                if (obj->animTarget != NULL) {
+                    obj->animTarget->trans.flags |= OBJ_FLAGS_UNK_2000;
                 }
             }
         }
@@ -8535,7 +8535,7 @@ void func_8001E6EC(s8 arg0) {
     s32 i;
     s32 j;
     s32 someBool;
-    Object_Animation *animation;
+    Object *animTarget;
 
     for (i = 0; i < D_8011AE00; i++) {
         overridePosObj = D_8011ADD8[i];
@@ -8545,17 +8545,17 @@ void func_8001E6EC(s8 arg0) {
             for (j = 0;
                  (j < D_8011AE78) && (overridePosEntry->behaviorId != D_8011AE74[j]->properties.animation.behaviourID);
                  j++) {}
-            if (j != D_8011AE78 && D_8011AE74[j]->unk64 != NULL) {
-                someBool = (D_8011AE74[j]->unk64->animation.unk5C) ? FALSE : TRUE;
+            if (j != D_8011AE78 && D_8011AE74[j]->animTarget != NULL) {
+                someBool = (D_8011AE74[j]->animTarget->unk5C != NULL) ? FALSE : TRUE;
                 if (arg0 != someBool) {
-                    animation = &D_8011AE74[j]->unk64->animation;
-                    overridePos->x = animation->x;
-                    overridePos->y = animation->y;
-                    overridePos->z = animation->z;
-                    overridePos->anim = animation;
-                    animation->x = overridePosObj->trans.x_position;
-                    animation->y = overridePosObj->trans.y_position;
-                    animation->z = overridePosObj->trans.z_position;
+                    animTarget = D_8011AE74[j]->animTarget;
+                    overridePos->x = animTarget->trans.x_position;
+                    overridePos->y = animTarget->trans.y_position;
+                    overridePos->z = animTarget->trans.z_position;
+                    overridePos->anim = animTarget;
+                    animTarget->trans.x_position = overridePosObj->trans.x_position;
+                    animTarget->trans.y_position = overridePosObj->trans.y_position;
+                    animTarget->trans.z_position = overridePosObj->trans.z_position;
                 }
             } else {
                 overridePos->anim = NULL;
@@ -8568,7 +8568,7 @@ void func_8001E6EC(s8 arg0) {
 void func_8001E89C(void) {
     s32 i;
     Object *obj;
-    Object_8001E89C_64 *obj64;
+    Object_OverridePos *obj64;
 
     // some flag, flips to 1 when loading a new zone
     if (D_8011AE01 != FALSE) {
@@ -8579,12 +8579,12 @@ void func_8001E89C(void) {
     // loading (boss) cutscene
     for (i = 0; i < D_8011AE00; i++) {
         obj = D_8011ADD8[i];
-        obj64 = &obj->unk64->obj8001E89C_64;
+        obj64 = &obj->unk64->override_pos;
 
-        if (obj64->unkC != NULL) {
-            obj64->unkC->unkC = obj64->unk0;
-            obj64->unkC->unk10 = obj64->unk4;
-            obj64->unkC->unk14 = obj64->unk8;
+        if (obj64->anim != NULL) {
+            obj64->anim->trans.x_position = obj64->x;
+            obj64->anim->trans.y_position = obj64->y;
+            obj64->anim->trans.z_position = obj64->z;
         }
     }
 }
@@ -8800,7 +8800,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
     s32 i;
     LevelObjectEntryCommon newObjEntry;
     Object *newObj;
-    Object_AnimCamera *camera;
+    Object_AnimatedObject *camera;
     s32 viewportCount;
 
     NEW_OBJECT_ENTRY(newObjEntry, animEntry->objectIdToSpawn, 8, animEntry->common.x, animEntry->common.y,
@@ -8818,7 +8818,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
         newObj->level_entry = NULL;
         obj_init_animobject(obj, newObj);
         if (newObj->header->behaviorId == BHV_CAMERA_ANIMATION) {
-            camera = &newObj->unk64->anim_camera;
+            camera = &newObj->unk64->animatedObject;
             camera->unk44 = D_8011AD3E;
             viewportCount = cam_get_viewport_layout();
             if (is_two_player_adventure_race()) {
@@ -8829,7 +8829,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
                 if (newObj != NULL) {
                     newObj->level_entry = NULL;
                     obj_init_animobject(obj, newObj);
-                    camera = &newObj->unk64->anim_camera;
+                    camera = &newObj->unk64->animatedObject;
                     i++;
                     camera->cameraID = i;
                     camera->unk44 = D_8011AD3E;
@@ -8875,168 +8875,43 @@ void func_8001F450(void) {
 // https://decomp.me/scratch/ExBnA
 #ifdef NON_EQUIVALENT
 s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
-    s32 sp174;
+    f32 var_f2;
+    f32 var_f4;
+    f32 var_f0;
+    f32 var_f20;
+    f32 var_f6;
+    s32 var_t0; // sp174
     s32 sp168;
-    f32 sp154;
-    f32 sp140;
-    f32 sp12C;
+    Camera *camera;
+    f32 sp154[5];
+    f32 sp140[5];
+    f32 sp12C[5];
+    Object **objectsList;
     f32 sp124;
     f32 sp120;
     f32 sp11C;
     f32 sp114;
-    f32 sp108; // guessed f32
-    f32 spF4;
-    f32 spE4;
-    f32 *spE0;
-    f32 spD0;
-    f32 *spCC;
-    f32 spBC;
-    f32 *spB8;
+    f32 spF4[5];
+    f32 spE0[5];
+    f32 spCC[5];
+    f32 spB8[5];
     f32 spB4;
-    s16 spAA;
-    s16 spA8;
-    s8 spA7;
-    s8 spA6;
-    s8 spA5;
-    u8 spA4;
-    f32 *sp88;
-    s32 sp80;
-    f32 *sp7C;
-    f32 *sp78;
-    f32 *sp74;
-    f32 *sp70;
-    f32 *sp6C;
-    f32 *sp68;
-    s32 sp5C;
-    f32 *var_ra_2;
-    f32 *var_t4_2;
-    f32 *var_t5_2;
-    ALSoundState *temp_a0;
-    ALSoundState *temp_a0_2;
-    f32 temp_f2;
-    Camera *var_v1_2;
-    Object **var_a0;
-    LevelObjectEntry *temp_s1_4;
     LevelObjectEntry_Animation *temp_s1;
-    Object *temp_v0_15;
     Object *var_v1_3;
-    Object **temp_a0_4;
     Object **temp_a2;
-    Object **temp_v0_11;
-    Object **temp_v0_12;
-    Object **temp_v0_14;
-    Object **var_a0_2;
     ObjectModel *temp_a0_3;
-    Object_64 *temp_s3;
-    Object_64 *temp_v1_7;
-    ModelInstance *temp_v1_4;
-    f32 temp_f0;
-    f32 temp_f0_10;
-    f32 temp_f0_11;
-    f32 temp_f0_12;
-    f32 temp_f0_2;
-    f32 temp_f0_3;
-    f32 temp_f0_4;
-    f32 temp_f0_5;
-    f32 temp_f0_6;
-    f32 temp_f0_7;
-    f32 temp_f0_8;
-    f32 temp_f10;
-    f32 temp_f10_2;
-    f32 temp_f10_3;
-    f32 temp_f10_4;
-    f32 temp_f12;
-    f32 temp_f12_2;
-    f32 temp_f12_3;
-    f32 temp_f2_2;
-    f32 temp_f2_3;
-    f32 temp_f2_4;
-    f32 temp_f4;
-    f32 temp_f4_2;
-    f32 temp_f6;
-    f32 temp_f6_2;
-    f32 temp_f6_3;
-    f32 temp_f6_4;
-    f32 temp_f6_5;
-    f32 temp_f6_6;
-    f32 temp_f8;
-    f32 temp_f8_2;
-    f32 temp_f8_3;
-    f32 temp_f8_4;
-    f32 var_f0;
-    f32 var_f0_2;
-    f32 var_f0_3;
-    f32 var_f0_4;
-    f32 var_f20;
-    f32 var_f6;
-    f32 *var_a3;
-    f32 *var_ra;
-    f32 *var_t1;
-    f32 *var_t2;
-    f32 *var_t3;
-    f32 *var_t4;
-    f32 *var_t5;
-    f32 *var_v0_3;
-    f32 *var_v0_4;
-    f32 *var_v0_5;
-    f32 *var_v0_6;
-    f32 *var_v0_7;
-    f32 *var_v0_8;
-    f32 temp_f0_9;
-    f32 temp_f2_5;
-    f32 temp_f2_6;
-    f32 temp_f2_7;
-    s16 temp_a1;
-    s16 temp_v0_10;
-    s16 temp_v0_18;
-    s16 temp_v0_3;
-    s16 temp_v0_7;
-    s16 var_s2_3;
-    s16 var_t0_5;
+    Object_AnimatedObject *obj64;
+    Object *otherObj64;
+    f32 var_f12;
     s32 temp_a1_2;
-    s32 temp_s0;
-    s32 temp_s2;
-    s32 temp_t0;
-    s32 temp_t6;
-    s32 temp_t7;
-    s32 temp_t7_2;
-    s32 temp_t7_3;
-    s32 temp_t7_4;
-    s32 temp_v0_13;
-    s32 temp_v0_16;
     s32 var_s0;
-    s32 var_s0_2;
-    s32 var_s0_3;
-    s32 var_s0_4;
-    s32 var_s0_5;
     s32 var_s2;
-    s32 var_s2_2;
     s32 var_s4;
     s32 var_s5;
-    s32 var_t0;
-    s32 var_t0_4;
-    s32 var_t0_6;
+    FadeTransition fadeTransition; // spA4
     s32 var_v0;
     s32 var_v0_2;
-    s8 temp_v0_17;
-    s8 temp_v0_19;
-    s8 temp_v0_4;
-    s8 temp_v0_5;
-    s8 temp_v0_8;
-    s8 temp_v0_9;
-    s8 temp_v1;
-    s8 temp_v1_2;
-    s8 temp_v1_3;
-    s8 var_t0_3;
-    s8 var_v1;
-    u32 temp_v0_2;
-    u8 temp_v0;
-    u8 temp_v0_6;
-    u8 temp_v1_5;
-    u8 temp_v1_6;
-    u8 var_t0_2;
     s8 *temp_s1_2;
-    s8 *temp_s1_3;
 
     if (gCutsceneID < 0) {
         return 1;
@@ -9045,694 +8920,547 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
     if (arg1 >= 9) {
         arg1 = 8;
     }
-    temp_f0 = (f32) arg1;
     var_s0 = 0;
-    sp114 = temp_f0;
-    temp_s3 = arg0->unk64;
+    sp114 = arg1;
+    obj64 = &arg0->unk64->animatedObject;
     if (osTvType == 0) {
-        sp114 = (f32) ((f64) temp_f0 * 1.2);
+        sp114 *= 1.2;
     }
-    if ((s16) temp_s3->racer.unk2A < 0) {
-        temp_v0 = (u8) temp_s3->unkObjBehavior1.unkE[0x26];
+    if (obj64->startDelay < 0) {
         var_t0 = 0;
-        if (temp_v0 & 1) {
+        if (obj64->unk34 & 1) {
             var_t0 = 0x8000;
         }
-        if (temp_v0 & 2) {
+        if (obj64->unk34 & 2) {
             var_t0 |= 0x4000;
         }
-        if (temp_v0 & 4) {
+        if (obj64->unk34 & 4) {
             var_t0 |= 0x1000;
         }
         do {
-            sp174 = var_t0;
-            temp_v0_2 = input_pressed(var_s0);
+            var_s2 |= input_pressed(var_s0);
             var_s0 += 1;
-            var_s2 |= temp_v0_2;
         } while (var_s0 != 4);
         if (var_s2 & var_t0) {
-            temp_s3->racer.unk2A = 1;
+            obj64->startDelay = 1;
         }
     }
-    temp_v0_3 = (s16) temp_s3->racer.unk2A;
-    if ((temp_v0_3 >= 0) && (temp_s3->unkObjBehavior1.unkE[0x37] == 0)) {
-        temp_s3->racer.unk2A = temp_v0_3 - arg1;
-        if ((s16) temp_s3->racer.unk2A <= 0) {
-            temp_s3->unkObjBehavior1.unkE[0x37] = 1;
-            temp_s1 = (LevelObjectEntry_Animation *) temp_s3->racer.unk1C->pan;
-            func_80021104(arg0, &temp_s3->animation, temp_s1);
-            temp_s3->racer.unk2A = 0;
-            func_8002125C(arg0, (LevelObjectEntry_CharacterSelect *) temp_s1, (Object_AnimatedObject *) temp_s3, -1);
+
+    if ((obj64->startDelay >= 0) && (obj64->unk45 == 0)) {
+        obj64->startDelay -= arg1;
+        if (obj64->startDelay <= 0) {
+            obj64->unk45 = 1;
+            temp_s1 = (LevelObjectEntry_Animation *) obj64->unk1C->level_entry;
+            func_80021104(arg0, obj64, temp_s1);
+            obj64->startDelay = 0;
+            func_8002125C(arg0, temp_s1, obj64, -1);
         }
     }
-    if ((s16) temp_s3->racer.unk2A != 0) {
-        if (temp_s3->unkObjBehavior1.unkE[0x2C] != 0) {
+    if (obj64->startDelay != 0) {
+        if (obj64->unk3A != 0) {
             arg0->trans.flags |= 0x4000;
-            temp_s3->unkObjBehavior1.unkE[0x34] = 0;
+            obj64->unk42 = 0;
             return 1;
         }
-        goto block_247;
+
+        return 0;
     }
+
     arg0->trans.flags &= 0xBFFF;
-    temp_v1 = temp_s3->unkObjBehavior1.unkE[0x2B];
-    if (temp_v1 > 0) {
-        temp_v1_2 = temp_s3->unkObjBehavior1.unkE[0x2B];
-        if (temp_v1_2 != music_current_sequence()) {
-            music_play(temp_v1_2 & 0xFF);
+    if (obj64->unk39 > 0) {
+        if (obj64->unk39 != music_current_sequence()) {
+            music_play(obj64->unk39);
             music_change_off();
         }
-        temp_s3->unkObjBehavior1.unkE[0x2B] = -2;
+        obj64->unk39 = -2;
         music_volume_reset();
-    } else if (temp_v1 == -2) {
+    } else if (obj64->unk39 == -2) {
         music_change_on();
-        temp_s3->unkObjBehavior1.unkE[0x2B] = -1;
+        obj64->unk39 = -1;
     }
-    temp_v1_3 = temp_s3->unkObjBehavior1.unkE[0x2A];
-    if (temp_v1_3 != 0) {
-        var_v0 = temp_v1_3 & 0xFF;
-        if (temp_s3->fish.triangles[2].uv0.u == 0) {
-            if (var_v0 == 0xFF) {
-                temp_a0 = temp_s3->racer.unk18;
-                if (temp_a0 != NULL) {
-                    sndp_stop(temp_a0);
+    if (obj64->soundID != 0) {
+        var_v0_2 = obj64->soundID & 0xFF;
+        if (obj64->currentSound == 0) {
+            if (var_v0_2 == 0xFF) {
+                if (obj64->unk18 != NULL) {
+                    sndp_stop(obj64->unk18);
                 }
             } else {
-                temp_a0_2 = temp_s3->racer.unk18;
-                if (temp_a0_2 != NULL) {
-                    sndp_stop(temp_a0_2);
-                    var_v0 = temp_s3->unkObjBehavior1.unkE[0x2A] & 0xFF;
+                if (obj64->unk18 != NULL) {
+                    sndp_stop(obj64->unk18);
+                    var_v0_2 = obj64->soundID & 0xFF;
                 }
-                sound_play(var_v0 & 0xFFFF, &temp_s3->racer.unk18);
+                sound_play(var_v0_2, &obj64->unk18);
             }
-            temp_s3->unkObjBehavior1.unkE[0x2A] = 0;
+            obj64->soundID = 0;
         }
     }
-    temp_v0_4 = temp_s3->unkObjBehavior1.unkE[0x35];
-    if (temp_v0_4 != 0) {
-        music_fade(temp_v0_4 << 8);
-        temp_s3->unkObjBehavior1.unkE[0x35] = 0;
+    var_v0_2 = obj64->unk43;
+    if (var_v0_2 != 0) {
+        music_fade(var_v0_2 << 8);
+        obj64->unk43 = 0;
     }
-    temp_v0_5 = temp_s3->unkObjBehavior1.unkE[0x33];
-    var_t0_2 = (u8) temp_s3->unkObjBehavior1.unkE[0x34];
-    if (temp_v0_5 & 1) {
-        temp_t7 = arg1 * 8;
-        if (temp_v0_5 & 2) {
-            var_t0_2 = 0;
+    var_v0_2 = obj64->unk41;
+    var_t0 = (u8) obj64->unk42;
+    if (var_v0_2 & 1) {
+        if (var_v0_2 & 2) {
+            var_t0 = 0;
         }
-        if (temp_t7 < (s32) var_t0_2) {
-            var_t0_3 = var_t0_2 - temp_t7;
+        if ((arg1 * 8) < var_t0) {
+            var_t0 -= (arg1 * 8);
         } else {
-            var_t0_3 = 0;
+            var_t0 = 0;
             arg0->trans.flags |= 0x4000;
         }
     } else {
-        if (temp_v0_5 & 2) {
-            var_t0_2 = 0xFF;
+        if (var_v0_2 & 2) {
+            var_t0 = 0xFF;
         }
-        var_t0_3 = var_t0_2 + (arg1 * 8);
-        if (var_t0_3 >= 0x100) {
-            var_t0_3 = -1;
+        var_t0 += arg1 * 8;
+        if (var_t0 >= 0x100) {
+            var_t0 = 0xFF;
         }
         arg0->trans.flags &= ~0x4000;
     }
-    temp_v0_6 = (u8) temp_s3->unkObjBehavior1.unkE[0x2D];
-    temp_s2 = temp_v0_6 & 0x7F;
-    temp_s3->unkObjBehavior1.unkE[0x34] = var_t0_3;
-    if (temp_s2 != 0x7F) {
-        if (temp_s2 >= 8) {
-            temp_s1_2 = (s8 *) (get_misc_asset(0xD) + (temp_s2 * 5)) - 0x28;
-            temp_t0 = (temp_s1_2[0] & 0xFF) + 0x384;
-            temp_s0 = (temp_s1_2[1] & 0xFF) + 0x384;
-            sp174 = temp_t0;
-            slowly_change_fog(0, temp_s1_2[2] & 0xFF, temp_s1_2[3] & 0xFF, temp_s1_2[4] & 0xFF, temp_t0, temp_s0,
-                              normalise_time(6) * (u8) temp_s3->unkObjBehavior1.unkE[0x2E]);
-        } else if (temp_s2 >= 6) {
-            spA4 = 0x40;
-            if (temp_s2 == 7) {
-                spA7 = -1;
-                spA6 = -0x38;
-                spA5 = -0x38;
+    var_v0_2 = obj64->unk3B;
+    var_s2 = var_v0_2 & 0x7F;
+    obj64->unk42 = var_t0;
+    if (var_s2 != 0x7F) {
+        if (var_s2 >= 8) {
+            temp_s1_2 = ((s8 *) get_misc_asset(0xD) + (var_s2 * 5));
+            temp_s1_2 -= 0x28;
+            var_t0 = (temp_s1_2[0] & 0xFF) + 0x384;
+            var_s0 = (temp_s1_2[1] & 0xFF) + 0x384;
+            slowly_change_fog(0, temp_s1_2[2] & 0xFF, temp_s1_2[3] & 0xFF, temp_s1_2[4] & 0xFF, var_t0, var_s0,
+                              normalise_time(6) * obj64->unk3C);
+        } else if (var_s2 >= 6) {
+            fadeTransition.type = 0x40;
+            // clang-format off
+            if (var_s2 == 7) {
+                fadeTransition.red = 0xC8;\
+                fadeTransition.green = 0xC8;\
+                fadeTransition.blue = 0xFF;\
             } else {
-                spA7 = -1;
-                spA6 = -1;
-                spA5 = -1;
+                fadeTransition.blue = 0xFF;\
+                fadeTransition.green = 0xFF;\
+                fadeTransition.red = 0xFF;\
             }
-            spA8 = 7;
-            spAA = 3;
-            transition_begin((FadeTransition *) &spA4);
+            // clang-format on
+            fadeTransition.duration = 7;
+            fadeTransition.endTimer = 3;
+            transition_begin(&fadeTransition);
         } else {
-            spA4 = temp_v0_6;
-            temp_s1_3 = (s8 *) get_misc_asset(0xE) + (temp_s3->unkObjBehavior1.unkE[0x32] * 3);
-            spA5 = temp_s1_3[0];
-            spA6 = temp_s1_3[1];
-            spA7 = temp_s1_3[2];
-            if ((u8) temp_s3->unkObjBehavior1.unkE[0x2D] & 0x80) {
-                spAA = 0;
+            fadeTransition.type = var_v0_2;
+            temp_s1_2 = (s8 *) get_misc_asset(0xE) + (obj64->unk40 * 3);
+            fadeTransition.red = temp_s1_2[0];
+            fadeTransition.green = temp_s1_2[1];
+            fadeTransition.blue = temp_s1_2[2];
+            if (obj64->unk3B & 0x80) {
+                fadeTransition.endTimer = 0;
             } else {
-                spAA = 0xFFFF;
+                fadeTransition.endTimer = 0xFFFF;
             }
-            spA8 = normalise_time(6) * (u8) temp_s3->unkObjBehavior1.unkE[0x2E];
-            if ((check_fadeout_transition() == 0) || (spA4 & 0x80)) {
-                transition_begin((FadeTransition *) &spA4);
+            fadeTransition.duration = normalise_time(6) * obj64->unk3C;
+            if ((check_fadeout_transition() == 0) || (fadeTransition.type & 0x80)) {
+                transition_begin(&fadeTransition);
             }
         }
-        temp_s3->unkObjBehavior1.unkE[0x2D] = -1;
+        obj64->unk3B = 0xFF;
     }
-    if ((u8) temp_s3->unkObjBehavior1.unkE[0x20] == 1) {
-        temp_f0_2 = (f32) ((f64) sp114 * 8.0);
-        arg0->trans.rotation.s[0] += (s32) ((f32) temp_s3->unkObjBehavior1.unkE[0x23] * temp_f0_2);
-        arg0->trans.rotation.s[1] += (s32) ((f32) temp_s3->unkObjBehavior1.unkE[0x24] * temp_f0_2);
-        arg0->trans.rotation.s[2] += (s32) ((f32) temp_s3->unkObjBehavior1.unkE[0x25] * temp_f0_2);
+    if (obj64->unk2E == 1) {
+        var_f0 = sp114 * 8.0;
+        arg0->trans.rotation.s[0] += (s16) (obj64->unk31 * var_f0);
+        arg0->trans.rotation.s[1] += (s16) (obj64->unk32 * var_f0);
+        arg0->trans.rotation.s[2] += (s16) (obj64->unk33 * var_f0);
     }
     if ((arg2 != NULL) && (arg2->header->modelType == 0)) {
-        // usage of temp_s3 is definetely incorrect here. unkE[2] is probably a f32, unkE[6] as well, possibly xy
-        // coordinates
         arg2->animationID = arg0->animationID;
-        temp_v0_7 = arg2->animFrame;
-        if (temp_v0_7 != (s16) (s32) temp_s3->unkObjBehavior1.unkE[2]) {
-            temp_s3->unkObjBehavior1.unkE[2] = (f32) temp_v0_7;
+        var_v0_2 = arg2->animFrame;
+        if (var_v0_2 != (s16) obj64->y) {
+            obj64->y = var_v0_2;
         }
-        temp_v1_4 = arg2->modelInstances[arg2->modelIndex];
-        if (temp_v1_4 != NULL) {
-            temp_v0_8 = arg2->animationID;
-            temp_a0_3 = temp_v1_4->objModel;
-            if ((temp_v0_8 >= 0) && (temp_v0_8 < temp_a0_3->numberOfAnimations)) {
-                temp_v1_5 = (u8) temp_s3->unkObjBehavior1.unkE[0x1E];
-                temp_t7_2 = (temp_a0_3->animations[temp_v0_8].animLength - 1) * 0x10;
-                switch (temp_v1_5) { /* irregular */
+        if (arg2->modelInstances[arg2->modelIndex] != NULL) {
+            var_v0_2 = arg2->animationID;
+            temp_a0_3 = arg2->modelInstances[arg2->modelIndex]->objModel;
+            if ((var_v0_2 >= 0) && (var_v0_2 < temp_a0_3->numberOfAnimations)) {
+                var_s5 = temp_a0_3->animations[var_v0_2].animLength;
+                var_s5--;
+                var_s5 <<= 4;
+                switch (obj64->unk2C) {
                     case 0:
-                        temp_f0_3 = (f32) temp_t7_2;
-                        temp_s3->unkObjBehavior1.unkE[2] =
-                            ((f32) temp_s3->unkObjBehavior1.unkE[2] + ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
-                        temp_f2 = temp_s3->unkObjBehavior1.unkE[2];
-                        if (temp_f0_3 <= (f32) temp_f2) {
-                            temp_s3->unkObjBehavior1.unkE[2] = ((f32) temp_f2 - temp_f0_3);
+                        obj64->y += obj64->z * sp114;
+                        if (var_s5 <= obj64->y) {
+                            obj64->y -= var_s5;
                         }
                         break;
                     case 2:
-                        temp_f0_4 = (f32) temp_t7_2;
-                        temp_s3->unkObjBehavior1.unkE[2] =
-                            ((f32) temp_s3->unkObjBehavior1.unkE[2] + ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
-                        if (temp_f0_4 <= (f32) temp_s3->unkObjBehavior1.unkE[2]) {
-                            temp_s3->unkObjBehavior1.unkE[2] = (temp_f0_4 - 1.0f);
+                        obj64->y += obj64->z * sp114;
+                        if (var_s5 <= obj64->y) {
+                            obj64->y = var_s5 - 1.0f;
                         }
                         break;
                     case 1:
-                        if ((u8) temp_s3->unkObjBehavior1.unkE[0x1F] == 0) {
-                            temp_f0_5 = (f32) temp_t7_2;
-                            temp_s3->unkObjBehavior1.unkE[2] = ((f32) temp_s3->unkObjBehavior1.unkE[2] +
-                                                                ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
-                            if (temp_f0_5 <= (f32) temp_s3->unkObjBehavior1.unkE[2]) {
-                                temp_s3->unkObjBehavior1.unkE[0x1F] = 1;
-                                temp_s3->unkObjBehavior1.unkE[2] = (temp_f0_5 - 1.0f);
+                        if (obj64->unk2D == 0) {
+                            obj64->y += obj64->z * sp114;
+                            if (var_s5 <= obj64->y) {
+                                obj64->unk2D = 1;
+                                obj64->y = var_s5 - 1.0f;
                             }
                         } else {
-                            temp_s3->unkObjBehavior1.unkE[2] = ((f32) temp_s3->unkObjBehavior1.unkE[2] -
-                                                                ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
-                            if ((f32) temp_s3->unkObjBehavior1.unkE[2] <= 0.0f) {
-                                temp_s3->unkObjBehavior1.unkE[2] = NULL;
-                                temp_s3->unkObjBehavior1.unkE[0x1F] = 0;
+                            obj64->y -= obj64->z * sp114;
+                            if (obj64->y <= 0) {
+                                obj64->y = 0;
+                                obj64->unk2D = 0;
                             }
                         }
                         break;
                     case 3:
-                        if ((u8) temp_s3->unkObjBehavior1.unkE[0x1F] == 0) {
-                            temp_f0_6 = (f32) temp_t7_2;
-                            temp_s3->unkObjBehavior1.unkE[2] = ((f32) temp_s3->unkObjBehavior1.unkE[2] +
-                                                                ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
-                            if (temp_f0_6 <= (f32) temp_s3->unkObjBehavior1.unkE[2]) {
-                                temp_s3->unkObjBehavior1.unkE[0x1F] = 1;
-                                temp_s3->unkObjBehavior1.unkE[2] = (temp_f0_6 - 1.0f);
+                        if (obj64->unk2D == 0) {
+                            obj64->y += obj64->z * sp114;
+                            if (var_s5 <= obj64->y) {
+                                obj64->unk2D = 1;
+                                obj64->y = var_s5 - 1.0f;
                             }
                         } else {
-                            temp_s3->unkObjBehavior1.unkE[2] = ((f32) temp_s3->unkObjBehavior1.unkE[2] -
-                                                                ((f32) temp_s3->unkObjBehavior1.unkE[6] * sp114));
-                            if ((f32) temp_s3->unkObjBehavior1.unkE[2] <= 0.0f) {
-                                temp_s3->unkObjBehavior1.unkE[2] = NULL;
+                            obj64->y -= obj64->z * sp114;
+                            if (obj64->y <= 0) {
+                                obj64->y = 0;
                             }
                         }
                         break;
                 }
             }
         }
-        arg2->animFrame = (s16) (s32) (f32) temp_s3->unkObjBehavior1.unkE[2];
+        arg2->animFrame = obj64->y;
     }
-    if ((f64) temp_s3->racer.forwardVel <= 0.0) {
+
+    if (obj64->unk8 <= 0.0) {
         return func_800214E4(arg0, arg1);
     }
-    temp_a1 = (s16) temp_s3->racer.lastSoundID;
-    var_s4 = 0;
-    if ((D_8011AE78 > 0) && (temp_a1 != (*D_8011AE74)->properties.common.unk4)) {
-    loop_104:
-        var_s4 += 1;
-        if (var_s4 < D_8011AE78) {
-            if (temp_a1 != D_8011AE74[var_s4]->properties.common.unk4) {
-                goto loop_104;
-            }
-        }
-    }
+
+    temp_a1_2 = obj64->unk28;
+    for (var_s4 = 0; var_s4 < D_8011AE78 && temp_a1_2 != D_8011AE74[var_s4]->properties.animation.behaviourID;
+         var_s4++) {}
     if (var_s4 >= D_8011AE78) {
         return func_800214E4(arg0, arg1);
     }
-    var_s5 = 1;
-    if ((var_s4 + 1) < D_8011AE78) {
-        temp_a0_4 = &D_8011AE74[var_s4];
-        var_v0_2 = var_s4 + 1 + 1;
-        if (temp_a1 == temp_a0_4[1]->properties.common.unk4) {
-        loop_110:
-            var_s5 += 1;
-            if (var_v0_2 < D_8011AE78) {
-                var_v0_2 += 1;
-                if (temp_a1 == temp_a0_4[var_s5]->properties.common.unk4) {
-                    goto loop_110;
-                }
-            }
-        }
-    }
+
+    for (var_s5 = 1;
+         (var_s4 + var_s5) < D_8011AE78 && temp_a1_2 == D_8011AE74[var_s4 + var_s5]->properties.animation.behaviourID;
+         var_s5++) {}
     if (var_s5 < 2) {
         return func_800214E4(arg0, arg1);
     }
     temp_a2 = D_8011AE74;
-    var_v1 = -1;
-    spB4 = (f32) (1.0 / (f64) (*temp_a2)->header->scale);
+    sp168 = -1;
+    spB4 = 1.0 / (*temp_a2)->header->scale;
     if (var_s5 >= 3) {
-        temp_v0_9 = (&temp_a2[var_s4])[var_s5 - 1]->level_entry->animation.goToNode;
-        if (temp_v0_9 >= 0) {
-            if (temp_v0_9 < (var_s5 - 1)) {
-                var_v1 = temp_v0_9;
+        // modified character select
+        var_v0_2 = temp_a2[var_s4 + var_s5 - 1]->level_entry->animation.goToNode;
+        if (var_v0_2 >= 0) {
+            if (var_v0_2 < (var_s5 - 1)) {
+                sp168 = var_v0_2;
             }
         }
     }
-    if ((var_v1 == -1) && (temp_s3->fish.triangles[2].uv0.v >= (var_s5 - 1))) {
+    if ((sp168 == -1) && (obj64->unk26 >= (var_s5 - 1))) {
         return func_800214E4(arg0, arg1);
     }
-    temp_v0_10 = temp_s3->fish.triangles[3].uv0.v;
-    sp168 = (s32) var_v1;
-    var_t1 = &sp154;
-    if (temp_v0_10 >= 0) {
+    if (obj64->pauseCounter >= 0) {
         if (D_8011AD53 == 0) {
-            temp_s3->fish.triangles[3].uv0.v = temp_v0_10 - arg1;
+            obj64->pauseCounter -= arg1;
         }
-    } else {
-        var_t2 = &sp140;
-        var_t3 = &sp12C;
-        var_t5 = &spE0[0];
-        var_t4 = &spCC[0];
-        var_ra = &spB8[0];
-        var_a3 = &spF4;
-        var_s0_2 = temp_s3->fish.triangles[2].uv0.v - 1;
-        do {
-            if (var_s0_2 == -1) {
-                if (sp168 != 0) {
-                    temp_v0_11 = &temp_a2[var_s4];
-                    temp_f0_7 = temp_v0_11[0]->trans.x_position;
-                    *var_t1 = (temp_f0_7 - temp_v0_11[1]->trans.x_position) + temp_f0_7;
-                    temp_f2_2 = temp_v0_11[0]->trans.y_position;
-                    *var_t2 = (temp_f2_2 - temp_v0_11[1]->trans.y_position) + temp_f2_2;
-                    temp_f12 = temp_v0_11[0]->trans.z_position;
-                    *var_t3 = (temp_f12 - temp_v0_11[1]->trans.z_position) + temp_f12;
-                    *var_t5 = (f32) temp_v0_11[0]->trans.rotation.s[0];
-                    *var_t4 = (f32) temp_v0_11[0]->trans.rotation.s[1];
-                    *var_ra = (f32) temp_v0_11[0]->trans.rotation.s[2];
-                    var_f6 = temp_v0_11[0]->trans.scale;
+        return 0;
+    }
+
+    var_s0 = obj64->unk26 - 1;
+    for (var_s2 = 0; var_s2 < 5; var_s2++) {
+        if (var_s0 == -1) {
+            if (sp168 != 0) {
+                objectsList = &temp_a2[var_s4];
+                var_f0 = objectsList[0]->trans.x_position;
+                sp154[var_s2] = (var_f0 - objectsList[1]->trans.x_position) + var_f0;
+                var_f2 = objectsList[0]->trans.y_position;
+                sp140[var_s2] = (var_f2 - objectsList[1]->trans.y_position) + var_f2;
+                var_f12 = objectsList[0]->trans.z_position;
+                sp12C[var_s2] = (var_f12 - objectsList[1]->trans.z_position) + var_f12;
+                spE0[var_s2] = objectsList[0]->trans.rotation.s[0];
+                spCC[var_s2] = objectsList[0]->trans.rotation.s[1];
+                spB8[var_s2] = objectsList[0]->trans.rotation.s[2];
+                var_f6 = objectsList[0]->trans.scale;
+                goto block_144;
+            }
+            objectsList = &temp_a2[var_s4 + var_s5];
+            sp154[var_s2] = objectsList[-1]->trans.x_position;
+            sp140[var_s2] = objectsList[-1]->trans.y_position;
+            sp12C[var_s2] = objectsList[-1]->trans.z_position;
+            spE0[var_s2] = objectsList[-1]->trans.rotation.s[0];
+            spCC[var_s2] = objectsList[-1]->trans.rotation.s[1];
+            spB8[var_s2] = objectsList[-1]->trans.rotation.s[2];
+            spF4[var_s2] = objectsList[-1]->trans.scale;
+        } else {
+            temp_a1_2 = var_s0 + var_s4;
+            if (var_s0 >= var_s5) {
+                if (sp168 == -1) {
+                    var_s0 = var_s5 - 1;
+                    var_v0_2 = var_s5 + var_s4;
+                    temp_s1 = temp_a2[var_v0_2 - 1]->level_entry;
+                    if (temp_s1->unk22 == 1) {
+                        set_active_camera(obj64->cameraID);
+                        camera = cam_get_active_camera_no_cutscenes();
+                        objectsList = &temp_a2[var_v0_2 - 1];
+                    } else {
+                        objectsList = &temp_a2[var_v0_2 - 1];
+                        camera = (Camera *) *objectsList;
+                    }
+                    var_f0 = camera->trans.x_position;
+                    sp154[var_s2] = (var_f0 - objectsList[-1]->trans.x_position) + var_f0;
+                    var_f2 = camera->trans.y_position;
+                    sp140[var_s2] = (var_f2 - objectsList[-1]->trans.y_position) + var_f2;
+                    var_f12 = camera->trans.z_position;
+                    sp12C[var_s2] = (var_f12 - objectsList[-1]->trans.z_position) + var_f12;
+                    spCC[var_s2] = camera->trans.rotation.s[1];
+                    spB8[var_s2] = camera->trans.rotation.s[2];
+                    spE0[var_s2] = objectsList[0]->trans.rotation.s[0];
+                    spF4[var_s2] = objectsList[0]->trans.scale;
+                } else {
+                    objectsList = &temp_a2[(var_s4 + sp168 + var_s0) - var_s5];
+                    sp154[var_s2] = objectsList[0]->trans.x_position;
+                    sp140[var_s2] = objectsList[0]->trans.y_position;
+                    sp12C[var_s2] = objectsList[0]->trans.z_position;
+                    spE0[var_s2] = objectsList[0]->trans.rotation.s[0];
+                    spCC[var_s2] = objectsList[0]->trans.rotation.s[1];
+                    spB8[var_s2] = objectsList[0]->trans.rotation.s[2];
+                    var_f6 = objectsList[0]->trans.scale;
                     goto block_144;
                 }
-                temp_v0_12 = &temp_a2[var_s4 + var_s5];
-                *var_t1 = temp_v0_12[-1]->trans.x_position;
-                *var_t2 = temp_v0_12[-1]->trans.y_position;
-                *var_t3 = temp_v0_12[-1]->trans.z_position;
-                *var_t5 = (f32) temp_v0_12[-1]->trans.rotation.s[0];
-                *var_t4 = (f32) temp_v0_12[-1]->trans.rotation.s[1];
-                *var_ra = (f32) temp_v0_12[-1]->trans.rotation.s[2];
-                *var_a3 = temp_v0_12[-1]->trans.scale;
             } else {
-                temp_a1_2 = var_s0_2 + var_s4;
-                if (var_s0_2 >= var_s5) {
-                    temp_v0_13 = var_s5 + var_s4;
-                    if (sp168 == -1) {
-                        var_s0_2 = var_s5 - 1;
-                        if (temp_a2[temp_v0_13 - 1]->level_entry->animation.unk22 == 1) {
-                            sp6C = var_ra;
-                            sp74 = var_t5;
-                            sp70 = var_t4;
-                            sp78 = var_t3;
-                            sp7C = var_t2;
-                            sp88 = var_t1;
-                            sp68 = var_a3;
-                            sp5C = (temp_v0_13 * 4) - 4;
-                            set_active_camera((s32) temp_s3->unkObjBehavior1.unkE[0x22]);
-                            var_v1_2 = cam_get_active_camera_no_cutscenes();
-                            var_a0 = &D_8011AE74[temp_v0_13 - 1];
-                        } else {
-                            var_a0 = &temp_a2[temp_v0_13 - 1];
-                            var_v1_2 = (Camera *) *var_a0;
-                        }
-                        temp_f0_8 = var_v1_2->trans.x_position;
-                        *var_t1 = (temp_f0_8 - var_a0[-1]->trans.x_position) + temp_f0_8;
-                        temp_f2_3 = var_v1_2->trans.y_position;
-                        *var_t2 = (temp_f2_3 - var_a0[-1]->trans.y_position) + temp_f2_3;
-                        temp_f12_2 = var_v1_2->trans.z_position;
-                        *var_t3 = (temp_f12_2 - var_a0[-1]->trans.z_position) + temp_f12_2;
-                        *var_t4 = (f32) var_v1_2->trans.rotation.s[1];
-                        *var_ra = (f32) var_v1_2->trans.rotation.s[2];
-                        *var_t5 = (f32) var_a0[0]->trans.rotation.s[0];
-                        *var_a3 = var_a0[0]->trans.scale;
-                    } else {
-                        temp_v0_14 = &temp_a2[(var_s4 + sp168 + var_s0_2) - var_s5];
-                        *var_t1 = (*temp_v0_14)->trans.x_position;
-                        *var_t2 = (*temp_v0_14)->trans.y_position;
-                        *var_t3 = (*temp_v0_14)->trans.z_position;
-                        *var_t5 = (f32) (*temp_v0_14)->trans.rotation.s[0];
-                        *var_t4 = (f32) (*temp_v0_14)->trans.rotation.s[1];
-                        *var_ra = (f32) (*temp_v0_14)->trans.rotation.s[2];
-                        var_f6 = (*temp_v0_14)->trans.scale;
-                        goto block_144;
-                    }
-                } else {
-                    var_a0_2 = &temp_a2[temp_a1_2];
-                    temp_v0_15 = *var_a0_2;
-                    temp_s1_4 = temp_v0_15->level_entry;
-                    var_v1_3 = temp_v0_15;
-                    if (temp_s1_4->animation.unk22 == 1) {
-                        sp6C = var_ra;
-                        sp74 = var_t5;
-                        sp70 = var_t4;
-                        sp78 = var_t3;
-                        sp7C = var_t2;
-                        sp88 = var_t1;
-                        sp68 = var_a3;
-                        sp80 = temp_a1_2 * 4;
-                        set_active_camera((s32) temp_s3->unkObjBehavior1.unkE[0x22]);
-                        var_v1_3 = (Object *) cam_get_active_camera_no_cutscenes();
-                        var_a0_2 = D_8011AE74 + sp80;
-                    }
-                    *var_t1 = var_v1_3->trans.x_position;
-                    *var_t2 = var_v1_3->trans.y_position;
-                    *var_t3 = var_v1_3->trans.z_position;
-                    *var_t4 = (f32) var_v1_3->trans.rotation.s[1];
-                    *var_ra = (f32) var_v1_3->trans.rotation.s[2];
-                    *var_t5 = (f32) (*var_a0_2)->trans.rotation.s[0];
-                    if (temp_s1_4->animation.unk22 == 1) {
-                        *var_t4 = -*var_t4;
-                    }
-                    var_f6 = (*var_a0_2)->trans.scale;
-                block_144:
-                    *var_a3 = var_f6;
+                objectsList = &temp_a2[temp_a1_2];
+                temp_s1 = objectsList[0]->level_entry;
+                var_v1_3 = objectsList[0];
+                if (temp_s1->unk22 == 1) {
+                    set_active_camera(obj64->cameraID);
+                    var_v1_3 = (Object *) cam_get_active_camera_no_cutscenes();
+                    objectsList = &D_8011AE74[temp_a1_2];
                 }
-            }
-            var_a3 += 4;
-            var_t1 += 4;
-            var_t2 += 4;
-            var_t3 += 4;
-            var_t5 += 4;
-            var_t4 += 4;
-            var_ra += 4;
-            var_s0_2 += 1;
-        } while (var_a3 != &sp108);
-        var_s2_2 = 0;
-        var_s0_3 = 0;
-        if ((f32) temp_s3->racer.unk4 == 0.0f) {
-            temp_s3->racer.unk4 = 0x3C23D70A;
-        }
-        do {
-            var_f20 = (f32) temp_s3->fish.triangles[0].vertices + ((f32) temp_s3->racer.unk4 * sp114);
-            temp_f0_9 = (f64) var_f20;
-            if (temp_f0_9 >= 1.0) {
-                var_s2_2 = 1;
-                var_f20 = (f32) (temp_f0_9 - 1.0);
-            }
-            if (temp_s3->unkObjBehavior1.unkE[0x31] == 0) {
-                sp124 = catmull_rom_interpolation(&sp154, var_s2_2, var_f20);
-                sp120 = catmull_rom_interpolation(&sp140, var_s2_2, var_f20);
-                var_f0 = catmull_rom_interpolation(&sp12C, var_s2_2, var_f20);
-            } else {
-                sp124 = lerp(&sp154, (u32) var_s2_2, var_f20);
-                sp120 = lerp(&sp140, (u32) var_s2_2, var_f20);
-                var_f0 = lerp(&sp12C, (u32) var_s2_2, var_f20);
-            }
-            sp11C = var_f0;
-            temp_f6 = sp124 - arg0->trans.x_position;
-            sp124 = temp_f6;
-            temp_f8 = sp120 - arg0->trans.y_position;
-            sp120 = temp_f8;
-            sp11C = var_f0 - arg0->trans.z_position;
-            if (var_s0_3 != 1) {
-                var_s2_2 = 0;
-                temp_f2_4 = sqrtf((temp_f6 * temp_f6) + (temp_f8 * temp_f8) + (sp11C * sp11C)) / sp114;
-                if (temp_f2_4 != 0.0f) {
-                    temp_s3->racer.unk4 = (s32) ((f32) temp_s3->racer.unk4 * (temp_s3->racer.forwardVel / temp_f2_4));
+                sp154[var_s2] = var_v1_3->trans.x_position;
+                sp140[var_s2] = var_v1_3->trans.y_position;
+                sp12C[var_s2] = var_v1_3->trans.z_position;
+                spCC[var_s2] = var_v1_3->trans.rotation.s[1];
+                spB8[var_s2] = var_v1_3->trans.rotation.s[2];
+                var_v1_3 = objectsList[0];
+                spE0[var_s2] = var_v1_3->trans.rotation.s[0];
+                if (temp_s1->unk22 == 1) {
+                    spCC[var_s2] = -spCC[var_s2];
                 }
-            }
-            var_s0_3 += 1;
-        } while (var_s0_3 != 2);
-        arg0->trans.scale = catmull_rom_interpolation(&spF4, var_s2_2, var_f20) * spB4 * arg0->header->scale;
-        if ((var_s2_2 != 0) && (sp168 == -1) && (var_s5 == (temp_s3->fish.triangles[2].uv0.v + 2))) {
-            sp124 = catmull_rom_interpolation(&sp154, 0, 1.0f);
-            sp120 = catmull_rom_interpolation(&sp140, 0, 1.0f);
-            temp_f0_10 = catmull_rom_interpolation(&sp12C, 0, 1.0f);
-            sp11C = temp_f0_10;
-            sp124 -= arg0->trans.x_position;
-            sp120 -= arg0->trans.y_position;
-            sp11C = temp_f0_10 - arg0->trans.z_position;
-        }
-        arg0->x_velocity = sp124 / sp114;
-        arg0->y_velocity = sp120 / sp114;
-        arg0->z_velocity = sp11C / sp114;
-        move_object(arg0, sp124, sp120, sp11C);
-        temp_v1_6 = (u8) temp_s3->unkObjBehavior1.unkE[0x20];
-        if (temp_v1_6 != 1) {
-            if (temp_v1_6 != 2) {
-                var_t0_4 = 1;
-                if (temp_v1_6 != 3) {
-                    var_t5_2 = &spE4;
-                    var_t4_2 = &spD0;
-                    var_ra_2 = &spBC;
-                    do {
-                        temp_f4 = var_t5_2[0];
-                        temp_f6_2 = var_t5_2[1];
-                        var_t5_2++;
-                        temp_f2_5 = (f64) (temp_f4 - temp_f6_2);
-                        var_f0_2 = 0.0f;
-                        if (temp_f2_5 > 32768.0) {
-                            var_f0_2 = (f32) ((f64) 0.0f - 65536.0);
-                        } else if (temp_f2_5 < -32768.0) {
-                            var_f0_2 = (f32) ((f64) 0.0f + 65536.0);
-                        }
-                        var_s0_4 = var_t0_4;
-                        if (var_t0_4 < 5) {
-                            temp_t7_3 = (5 - var_t0_4) & 3;
-                            if (temp_t7_3 != 0) {
-                                var_v0_3 = &(&spE0[0])[var_s0_4];
-                                do {
-                                    var_s0_4 += 1;
-                                    temp_f8_2 = *var_v0_3 + var_f0_2;
-                                    var_v0_3[0] = temp_f8_2;
-                                    var_v0_3++;
-                                } while ((temp_t7_3 + var_t0_4) != var_s0_4);
-                                if (var_s0_4 != 5) {
-                                    goto block_181;
-                                }
-                            } else {
-                            block_181:
-                                var_v0_4 = &(&spE0[0])[var_s0_4];
-                                do {
-                                    var_v0_4[1] += var_f0_2;
-                                    var_v0_4[0] += var_f0_2;
-                                    var_v0_4[2] += var_f0_2;
-                                    var_v0_4[3] += var_f0_2;
-                                    var_v0_4 += 4;
-                                } while (var_v0_4 != &spF4);
-                            }
-                            var_s0_4 = var_t0_4;
-                        }
-                        temp_f4_2 = var_t4_2[0];
-                        temp_f6_4 = var_t4_2[-1];
-                        var_t4_2++;
-                        temp_f2_6 = (f64) (temp_f4_2 - temp_f6_4);
-                        var_f0_3 = 0.0f;
-                        if (temp_f2_6 > 32768.0) {
-                            var_f0_3 = (f32) ((f64) 0.0f - 65536.0);
-                        } else if (temp_f2_6 < -32768.0) {
-                            var_f0_3 = (f32) ((f64) 0.0f + 65536.0);
-                        }
-                        if (var_t0_4 < 5) {
-                            temp_t6 = (5 - var_t0_4) & 3;
-                            if (temp_t6 != 0) {
-                                var_v0_5 = &(&spCC[0])[var_s0_4];
-                                do {
-                                    var_s0_4 += 1;
-                                    temp_f8_3 = *var_v0_5 + var_f0_3;
-                                    var_v0_5[0] = temp_f8_3;
-                                    var_v0_5 += 4;
-                                } while ((temp_t6 + var_t0_4) != var_s0_4);
-                                if (var_s0_4 != 5) {
-                                    goto block_193;
-                                }
-                            } else {
-                            block_193:
-                                var_v0_6 = &(&spCC[0])[var_s0_4];
-                                do {
-                                    var_v0_6[1] += var_f0_3;
-                                    var_v0_6[0] += var_f0_3;
-                                    var_v0_6[2] += var_f0_3;
-                                    var_v0_6[3] += var_f0_3;
-                                    var_v0_6 += 4;
-                                } while (var_v0_6 != &spE0[0]);
-                            }
-                            var_s0_4 = var_t0_4;
-                        }
-                        temp_f2_7 = (f64) (var_ra_2[0] - var_ra_2[-1]);
-                        var_f0_4 = 0.0f;
-                        if (temp_f2_7 > 32768.0) {
-                            var_f0_4 = (f32) ((f64) 0.0f - 65536.0);
-                        } else if (temp_f2_7 < -32768.0) {
-                            var_f0_4 = (f32) ((f64) 0.0f + 65536.0);
-                        }
-                        temp_t7_4 = (5 - var_t0_4) & 3;
-                        if (var_t0_4 < 5) {
-                            if (temp_t7_4 != 0) {
-                                var_v0_7 = &(&spB8[0])[var_s0_4];
-                                do {
-                                    var_s0_4 += 1;
-                                    var_v0_7[0] += var_f0_4;
-                                    var_v0_7++;
-                                } while ((temp_t7_4 + var_t0_4) != var_s0_4);
-                                if (var_s0_4 != 5) {
-                                    goto block_205;
-                                }
-                            } else {
-                            block_205:
-                                var_v0_8 = &(&spB8[0])[var_s0_4];
-                                do {
-                                    var_v0_6[1] += var_f0_4;
-                                    var_v0_6[0] += var_f0_4;
-                                    var_v0_6[2] += var_f0_4;
-                                    var_v0_6[3] += var_f0_4;
-                                    var_v0_6 += 4;
-                                } while (var_v0_8 != &spCC[0]);
-                            }
-                        }
-                        var_t0_4 += 1;
-                        var_ra_2 += 4;
-                    } while (var_t0_4 != 5);
-                    if (temp_s3->unkObjBehavior1.unkE[0x31] == 0) {
-                        arg0->trans.rotation.s[0] = (s16) (s32) catmull_rom_interpolation(&spE0[0], var_s2_2, var_f20);
-                        arg0->trans.rotation.s[1] = (s16) (s32) catmull_rom_interpolation(&spCC[0], var_s2_2, var_f20);
-                        arg0->trans.rotation.s[2] = (s16) (s32) catmull_rom_interpolation(&spB8[0], var_s2_2, var_f20);
-                    } else {
-                        arg0->trans.rotation.s[0] = (s16) (s32) lerp(&spE0[0], (u32) var_s2_2, var_f20);
-                        arg0->trans.rotation.s[1] = (s16) (s32) lerp(&spCC[0], (u32) var_s2_2, var_f20);
-                        arg0->trans.rotation.s[2] = (s16) (s32) lerp(&spB8[0], (u32) var_s2_2, var_f20);
-                    }
-                }
-            } else {
-                if (temp_s3->unkObjBehavior1.unkE[0x31] == 0) {
-                    cubic_spline_interpolation(&sp154, var_s2_2, var_f20, &sp124);
-                    cubic_spline_interpolation(&sp140, var_s2_2, var_f20, &sp120);
-                    cubic_spline_interpolation(&sp12C, var_s2_2, var_f20, &sp11C);
-                } else {
-                    lerp_and_get_derivative(&sp154, (u32) var_s2_2, var_f20, &sp124);
-                    lerp_and_get_derivative(&sp140, (u32) var_s2_2, var_f20, &sp120);
-                    lerp_and_get_derivative(&sp12C, (u32) var_s2_2, var_f20, &sp11C);
-                }
-                temp_f0_11 = sqrtf((sp124 * sp124) + (sp120 * sp120) + (sp11C * sp11C));
-                if (temp_f0_11 != 0.0f) {
-                    temp_f12_3 = (f32) (100.0 / (f64) temp_f0_11);
-                    sp124 *= temp_f12_3;
-                    sp120 *= temp_f12_3;
-                    sp11C *= temp_f12_3;
-                }
-                arg0->trans.rotation.s[0] = arctan2_f(sp124, sp11C) - 0x8000;
-                arg0->trans.rotation.s[1] = arctan2_f(sp120, 100.0f);
+                var_f6 = objectsList[0]->trans.scale;
+            block_144:
+                spF4[var_s2] = var_f6;
             }
         }
-        var_t0_5 = temp_s3->fish.triangles[2].uv0.v;
-        temp_s3->fish.triangles[0].vertices = (u32) var_f20;
-        if ((sp168 != -1) && (var_t0_5 >= var_s5)) {
-            var_t0_5 = (var_t0_5 - var_s5) + sp168;
-        }
-        temp_f10_4 = (f32) ((f64) (f32) (&D_8011AE74[var_s4])[var_t0_5]->level_entry->animation.nodeSpeed * 0.1);
-        sp124 = temp_f10_4;
-        if (temp_f10_4 < 0.0f) {
-            sp124 = temp_s3->racer.animationSpeed;
-        } else {
-            temp_s3->racer.animationSpeed = sp124;
-        }
-        if (sp124 >= 0.0f) {
-            temp_v0_16 = var_t0_5 + 1;
-            if (var_s2_2 == 0) {
-                var_s0_5 = temp_v0_16;
-                if ((sp168 != -1) && (temp_v0_16 >= var_s5)) {
-                    var_s0_5 = (temp_v0_16 - var_s5) + sp168;
-                }
-                if (var_s0_5 < var_s5) {
-                    temp_v0_17 = (&D_8011AE74[var_s4])[var_s0_5]->level_entry->animation.nodeSpeed;
-                    if (temp_v0_17 >= 0) {
-                        sp11C = (f32) ((f64) (f32) temp_v0_17 * 0.1);
-                    } else {
-                        sp11C = sp124;
-                    }
-                }
-                temp_s3->racer.forwardVel = ((sp11C - sp124) * var_f20) + sp124;
-            }
-        }
-        if (var_s2_2 != 0) {
-            temp_s3->fish.triangles[2].uv0.v += 1;
-            if (sp168 == -1) {
-                temp_v0_18 = temp_s3->fish.triangles[2].uv0.v;
-                if (temp_v0_18 >= var_s5) {
-                    temp_s3->fish.triangles[2].uv0.v = var_s5 - 1;
-                } else {
-                    func_8002125C(arg0,
-                                  (LevelObjectEntry_CharacterSelect *) (&D_8011AE74[temp_v0_18])[var_s4]->level_entry,
-                                  (Object_AnimatedObject *) temp_s3, var_s4);
-                }
-            } else {
-                if (var_s5 < temp_s3->fish.triangles[2].uv0.v) {
-                    temp_s3->fish.triangles[2].uv0.v = sp168 + 1;
-                }
-                var_s2_3 = temp_s3->fish.triangles[2].uv0.v;
-                if (temp_s3->fish.triangles[2].uv0.v >= var_s5) {
-                    var_s2_3 = (temp_s3->fish.triangles[2].uv0.v - var_s5) + sp168;
-                }
-                func_8002125C(arg0, (LevelObjectEntry_CharacterSelect *) D_8011AE74[var_s2_3 + var_s4]->level_entry,
-                              (Object_AnimatedObject *) temp_s3, var_s4);
-            }
-        }
-        if ((u8) temp_s3->unkObjBehavior1.unkE[0x20] == 3) {
-            var_t0_6 = 0;
-            if (D_8011AE78 > 0) {
-                temp_v0_19 = temp_s3->unkObjBehavior1.unkE[0x30];
-                if (temp_v0_19 != (*D_8011AE74)->properties.common.unk4) {
-                loop_240:
-                    var_t0_6 += 1;
-                    if (var_t0_6 < D_8011AE78) {
-                        if (temp_v0_19 != D_8011AE74[var_t0_6]->properties.common.unk4) {
-                            goto loop_240;
-                        }
-                    }
-                }
-            }
-            if (var_t0_6 != D_8011AE78) {
-                temp_v1_7 = D_8011AE74[var_t0_6]->unk64;
-                if (temp_v1_7 != NULL) {
-                    // usage of temp_s3 is definetely incorrect here. unkE[2] is probably a f32, unkE[6] as well,
-                    // possibly xy coordinates
-                    sp124 = temp_v1_7->racer.animationSpeed - arg0->trans.x_position;
-                    sp120 = (f32) temp_s3->unkObjBehavior1.unkE[2] - arg0->trans.y_position;
-                    sp11C = (f32) temp_s3->unkObjBehavior1.unkE[6] - arg0->trans.z_position;
-                    temp_f0_12 = sqrtf((sp124 * sp124) + (sp120 * sp120) + (sp11C * sp11C));
-                    if (temp_f0_12 > 0.0f) {
-                        arg0->trans.rotation.s[0] = arctan2_f(sp124, sp11C) - 0x8000;
-                        arg0->trans.rotation.s[1] = arctan2_f(sp120, temp_f0_12);
-                    }
-                }
-            }
-        }
-        arg0->particleEmittersEnabled = (u32) temp_s3->unkObjBehavior1.unkE[0x21];
-        obj_spawn_particle(arg0, arg1);
     }
-block_247:
+
+    if (obj64->unk4 == 0) {
+        obj64->unk4 = 0.001;
+    }
+
+    for (var_s0 = 0, var_s2 = 0; var_s0 < 2; var_s0++) {
+        var_f20 = obj64->unk0 + (obj64->unk4 * sp114);
+        if (var_f20 >= 1.0) {
+            var_s2 = 1;
+            var_f20 -= 1.0;
+        }
+        if (obj64->unk3F == 0) {
+            sp124 = catmull_rom_interpolation(sp154, var_s2, var_f20);
+            sp120 = catmull_rom_interpolation(sp140, var_s2, var_f20);
+            sp11C = catmull_rom_interpolation(sp12C, var_s2, var_f20);
+        } else {
+            sp124 = lerp(sp154, var_s2, var_f20);
+            sp120 = lerp(sp140, var_s2, var_f20);
+            sp11C = lerp(sp12C, var_s2, var_f20);
+        }
+        sp124 -= arg0->trans.x_position;
+        sp120 -= arg0->trans.y_position;
+        sp11C -= arg0->trans.z_position;
+        if (var_s0 != 1) {
+            var_s2 = 0;
+            var_f2 = sqrtf((sp124 * sp124) + (sp120 * sp120) + (sp11C * sp11C)) / sp114;
+            if (var_f2 != 0) {
+                // exit is probably not correct but we want unk4 to be a f32
+                obj64->unk4 *= obj64->unk8 / var_f2;
+            }
+        }
+    }
+
+    arg0->trans.scale = catmull_rom_interpolation(spF4, var_s2, var_f20) * spB4 * arg0->header->scale;
+    if ((var_s2 != 0) && (sp168 == -1) && (var_s5 == (obj64->unk26 + 2))) {
+        sp124 = catmull_rom_interpolation(sp154, 0, 1.0f);
+        sp120 = catmull_rom_interpolation(sp140, 0, 1.0f);
+        sp11C = catmull_rom_interpolation(sp12C, 0, 1.0f);
+        sp124 -= arg0->trans.x_position;
+        sp120 -= arg0->trans.y_position;
+        sp11C -= arg0->trans.z_position;
+    }
+    arg0->x_velocity = sp124 / sp114;
+    arg0->y_velocity = sp120 / sp114;
+    arg0->z_velocity = sp11C / sp114;
+    move_object(arg0, sp124, sp120, sp11C);
+    switch (obj64->unk2E) {
+        case 1:
+            break;
+        case 2:
+            if (obj64->unk3F == 0) {
+                cubic_spline_interpolation(sp154, var_s2, var_f20, &sp124);
+                cubic_spline_interpolation(sp140, var_s2, var_f20, &sp120);
+                cubic_spline_interpolation(sp12C, var_s2, var_f20, &sp11C);
+            } else {
+                lerp_and_get_derivative(sp154, var_s2, var_f20, &sp124);
+                lerp_and_get_derivative(sp140, var_s2, var_f20, &sp120);
+                lerp_and_get_derivative(sp12C, var_s2, var_f20, &sp11C);
+            }
+            var_f0 = sqrtf((sp124 * sp124) + (sp120 * sp120) + (sp11C * sp11C));
+            if (var_f0 != 0) {
+                var_f12 = 100.0 / var_f0;
+                sp124 *= var_f12;
+                sp120 *= var_f12;
+                sp11C *= var_f12;
+            }
+            arg0->trans.rotation.s[0] = arctan2_f(sp124, sp11C) - 0x8000;
+            arg0->trans.rotation.s[1] = arctan2_f(sp120, 100.0f);
+            break;
+        case 3:
+            break;
+        default:
+            for (var_t0 = 1; var_t0 < 5; var_t0++) {
+                var_f6 = spE0[var_t0];
+                var_f4 = spE0[var_t0 - 1];
+                var_f2 = (var_f4 - var_f6);
+                var_f0 = 0;
+                if (var_f2 > 32768.0) {
+                    var_f0 -= 65536.0;
+                } else if (var_f2 < -32768.0) {
+                    var_f0 += 65536.0;
+                }
+                for (var_s0 = var_t0; var_s0 < 5; var_s0++) {
+                    spE0[var_s0] += var_f0;
+                }
+                var_f4 = spCC[var_t0 - 1];
+                var_f6 = spCC[var_t0];
+                var_f2 = var_f4 - var_f6;
+                var_f0 = 0;
+                if (var_f2 > 32768.0) {
+                    var_f0 -= 65536.0;
+                } else if (var_f2 < -32768.0) {
+                    var_f0 += 65536.0;
+                }
+                for (var_s0 = var_t0; var_s0 < 5; var_s0++) {
+                    spCC[var_s0] += var_f0;
+                }
+                var_f2 = spB8[var_t0 - 1] - spB8[var_t0];
+                var_f0 = 0;
+                if (var_f2 > 32768.0) {
+                    var_f0 -= 65536.0;
+                } else if (var_f2 < -32768.0) {
+                    var_f0 += 65536.0;
+                }
+                for (var_s0 = var_t0; var_s0 < 5; var_s0++) {
+                    spB8[var_s0] += var_f0;
+                }
+            }
+            if (obj64->unk3F == 0) {
+                arg0->trans.rotation.s[0] = catmull_rom_interpolation(spE0, var_s2, var_f20);
+                arg0->trans.rotation.s[1] = catmull_rom_interpolation(spCC, var_s2, var_f20);
+                arg0->trans.rotation.s[2] = catmull_rom_interpolation(spB8, var_s2, var_f20);
+            } else {
+                arg0->trans.rotation.s[0] = lerp(spE0, var_s2, var_f20);
+                arg0->trans.rotation.s[1] = lerp(spCC, var_s2, var_f20);
+                arg0->trans.rotation.s[2] = lerp(spB8, var_s2, var_f20);
+            }
+            break;
+    }
+    var_t0 = obj64->unk26;
+    // we need unk0 to be f32 here
+    obj64->unk0 = var_f20;
+    if ((sp168 != -1) && (var_t0 >= var_s5)) {
+        var_t0 = (var_t0 - var_s5) + sp168;
+    }
+    temp_s1 = D_8011AE74[var_s4 + var_t0]->level_entry;
+    var_f0 = (f32) temp_s1->nodeSpeed * 0.1;
+    sp124 = (f32) temp_s1->nodeSpeed * 0.1;
+    if (sp124 < 0) {
+        sp124 = obj64->x;
+    } else {
+        obj64->x = sp124;
+    }
+    if (sp124 >= 0) {
+        var_v0_2 = var_t0 + 1;
+        if (var_s2 == 0) {
+            var_s0 = var_v0_2;
+            if ((sp168 != -1) && (var_v0_2 >= var_s5)) {
+                var_s0 = (var_v0_2 - var_s5) + sp168;
+            }
+            if (var_s0 < var_s5) {
+                temp_s1 = D_8011AE74[var_s4 + var_s0]->level_entry;
+                var_v0_2 = temp_s1->nodeSpeed;
+                if (var_v0_2 >= 0) {
+                    sp11C = (f32) var_v0_2 * 0.1;
+                } else {
+                    sp11C = sp124;
+                }
+            }
+            obj64->unk8 = ((sp11C - sp124) * var_f20) + sp124;
+        }
+    }
+    if (var_s2 != 0) {
+        obj64->unk26 += 1;
+        if (sp168 == -1) {
+            if (obj64->unk26 >= var_s5) {
+                obj64->unk26 = var_s5 - 1;
+            } else {
+                func_8002125C(arg0, &D_8011AE74[obj64->unk26 + var_s4]->level_entry->animation, obj64, var_s4);
+            }
+        } else {
+            if (var_s5 < obj64->unk26) {
+                obj64->unk26 = sp168 + 1;
+            }
+            var_s2 = obj64->unk26;
+            if (obj64->unk26 >= var_s5) {
+                var_s2 = (obj64->unk26 - var_s5) + sp168;
+            }
+            var_s2 += var_s4;
+            func_8002125C(arg0, &D_8011AE74[var_s2]->level_entry->animation, obj64, var_s4);
+        }
+    }
+    if (obj64->unk2E == 3) {
+        var_t0 = 0;
+        if (D_8011AE78 > 0) {
+            var_v0 = obj64->unk3E;
+            if (var_v0 != (*D_8011AE74)->properties.common.unk4) {
+            loop_240:
+                var_t0 += 1;
+                if (var_t0 < D_8011AE78) {
+                    if (var_v0 != D_8011AE74[var_t0]->properties.common.unk4) {
+                        goto loop_240;
+                    }
+                }
+            }
+        }
+        if (var_t0 != D_8011AE78) {
+            otherObj64 = D_8011AE74[var_t0]->animTarget;
+            if (otherObj64 != NULL) {
+                sp124 = otherObj64->trans.x_position - arg0->trans.x_position;
+                sp120 = otherObj64->trans.y_position - arg0->trans.y_position;
+                sp11C = otherObj64->trans.z_position - arg0->trans.z_position;
+                var_f0 = sqrtf((sp124 * sp124) + (sp120 * sp120) + (sp11C * sp11C));
+                if (var_f0 > 0) {
+                    arg0->trans.rotation.s[0] = arctan2_f(sp124, sp11C) - 0x8000;
+                    arg0->trans.rotation.s[1] = arctan2_f(sp120, var_f0);
+                }
+            }
+        }
+    }
+    arg0->particleEmittersEnabled = obj64->unk2F;
+    obj_spawn_particle(arg0, arg1);
     return 0;
 }
 #else
@@ -9747,7 +9475,7 @@ s32 func_800210CC(s8 arg0) {
     return FALSE;
 }
 
-void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry) {
+void func_80021104(Object *obj, Object_AnimatedObject *animObj, LevelObjectEntry_Animation *entry) {
     Camera *camera;
     ObjectTransform *animObjTrans;
 
@@ -9779,34 +9507,33 @@ void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Anim
     }
 }
 
-void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_AnimatedObject *charSelect,
-                   UNUSED s32 index) {
+void func_8002125C(Object *obj, LevelObjectEntry_Animation *entry, Object_AnimatedObject *animObj, UNUSED s32 index) {
     s32 initialAnimFrame;
 
-    initialAnimFrame = entry->unk12;
+    initialAnimFrame = entry->objAnimIndex;
     if (initialAnimFrame >= 0) {
-        if (initialAnimFrame != charSelectObj->animationID) {
-            charSelectObj->animFrame = entry->unk16;
+        if (initialAnimFrame != obj->animationID) {
+            obj->animFrame = entry->unk16;
         }
-        charSelectObj->animationID = entry->unk12;
-        charSelect->z = entry->unk17;
-        charSelect->unk2C = entry->unk18;
+        obj->animationID = entry->objAnimIndex;
+        animObj->z = entry->objAnimSpeed;
+        animObj->unk2C = entry->objAnimLoopType;
     }
     if (entry->unk13 >= 0) {
-        charSelect->unk2F = entry->unk13;
+        animObj->unk2F = entry->unk13;
     }
-    charSelect->pauseCounter = normalise_time(entry->unk24);
-    charSelect->unk3F = entry->unk2D;
-    charSelect->unk3A = entry->unk26;
-    charSelect->unk39 = entry->unk1F;
-    charSelect->unk43 = entry->unk30;
-    charSelect->soundID = entry->unk1E;
-    charSelect->unk3B = entry->unk29;
-    charSelect->unk40 = entry->unk2E;
-    charSelect->unk41 = entry->unk2F;
-    charSelect->unk3C = entry->unk2B;
-    if (entry->unk27 != 255) {
-        set_current_text(entry->unk27);
+    animObj->pauseCounter = normalise_time(entry->pauseFrameCount);
+    animObj->unk3F = entry->unk2D;
+    animObj->unk3A = entry->specialHide;
+    animObj->unk39 = entry->unk1F;
+    animObj->unk43 = entry->unk30;
+    animObj->soundID = entry->unk1E;
+    animObj->unk3B = entry->unk29;
+    animObj->unk40 = entry->soundEffect;
+    animObj->unk41 = entry->fadeOptions;
+    animObj->unk3C = entry->fadeAlpha;
+    if (entry->messageId != 255) {
+        set_current_text(entry->messageId);
     }
     if (entry->unk2A >= 0) {
         func_8001E45C(entry->unk2A);
@@ -9827,9 +9554,9 @@ void func_80021400(s32 arg0) {
     for (i = 0; i < D_8011AE78 && (arg0 != (D_8011AE74[i]->properties.animation.behaviourID & 0xFF)); i++) {}
 
     if (i < D_8011AE78) {
-        if (D_8011AE74[i]->unk64 != NULL) {
-            if (D_8011AE74[i]->unk64->obj80021400_64.obj64->unk2A < 0) {
-                D_8011AE74[i]->unk64->obj80021400_64.obj64->unk2A = 1;
+        if (D_8011AE74[i]->animTarget != NULL) {
+            if (D_8011AE74[i]->animTarget->unk64->animatedObject.startDelay < 0) {
+                D_8011AE74[i]->animTarget->unk64->animatedObject.startDelay = 1;
             }
         }
     }
@@ -9868,7 +9595,7 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
 }
 
 s32 func_80021600(s32 arg0) {
-    Object_Animation *objAnim;
+    Object_AnimatedObject *objAnim;
     s32 i;
     Object *sp154;
     LevelObjectEntry_Animation *levelObjAnim;
@@ -9908,12 +9635,12 @@ s32 func_80021600(s32 arg0) {
         return TRUE;
     }
 
-    sp154 = (Object *) &D_8011AE74[i]->unk64->obj;
+    sp154 = D_8011AE74[i]->animTarget;
     if (sp154 == NULL) {
         return TRUE;
     }
 
-    objAnim = &sp154->unk64->animation;
+    objAnim = &sp154->unk64->animatedObject;
     sp138 = -1;
     sp90 = 1.0 / D_8011AE74[i]->header->scale;
 
