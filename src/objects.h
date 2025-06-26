@@ -415,7 +415,7 @@ void render_bubble_trap(ObjectTransform *trans, Sprite *gfxData, Object *obj, s3
 void gParticlePtrList_flush(void);
 s32 init_object_shading(Object *obj, ShadeProperties *shadeData);
 ObjectHeader *load_object_header(s32 index);
-s32 func_8000F99C(Object *);
+s32 obj_init_attachpoint(Object *);
 void try_free_object_header(s32 index);
 s32 get_object_property_size(Object *obj, Object_64 *obj64);
 void light_setup_light_sources(Object *obj);
@@ -439,7 +439,7 @@ void render_3d_model(Object *obj);
 void mode_end_taj_race(s32 reason);
 void ainode_update(void);
 void func_8001E6EC(s8);
-Object *func_8000FD54(s32 objectHeaderIndex);
+Object *obj_spawn_attachment(s32 objID);
 void sort_objects_by_dist(s32 startIndex, s32 lastIndex);
 void func_80016748(Object *obj0, Object *obj1);
 void race_finish_time_trial(void);

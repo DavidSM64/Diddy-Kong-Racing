@@ -242,10 +242,10 @@ s16 D_8011ADA4;
 f32 gObjectUpdateRateF;
 s32 gPathUpdateOff;
 s32 gEventCountdown;
-s32 D_8011ADB4;
+s32 gRaceFinishTriggered;
 s32 gEventStartTimer;
 s32 D_8011ADBC;
-s32 D_8011ADC0;
+s32 gNumFinishedRacers;
 s8 gFirstTimeFinish;
 s8 D_8011ADC5;
 u32 gBalloonCutsceneTimer;
@@ -1008,7 +1008,7 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
         }
         D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
         D_8011AE70 = 0;
-        D_8011ADC0 = 1;
+        gNumFinishedRacers = 1;
         if (gPathUpdateOff == FALSE) {
             gParticlePtrList_flush();
             func_80017E98();
@@ -1293,7 +1293,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             entry->common.z = spB4[i6];
             entry->unkC = sp94[i6];
             if (entry->unkE == 4) {
-                func_800619F4(1);
+                model_anim_offset(1);
             }
             if (entry->unkE == 4) {
                 spawnObjFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK04;
@@ -1308,7 +1308,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             }
             if (vehicle >= VEHICLE_BOSSES) {
                 spawnObjFlags = OBJECT_SPAWN_UNK01;
-                func_800619F4(0);
+                model_anim_offset(0);
             }
             newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, spawnObjFlags);
             newRacerObj->trans.rotation.y_rotation = sp94[i6];
@@ -1488,7 +1488,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         }
     }
     gRaceEndTimer = 0;
-    D_8011ADB4 = 0;
+    gRaceFinishTriggered = 0;
     set_next_taj_challenge_menu(0);
     if (settings->worldId == WORLD_CENTRAL_AREA) {
         if (!is_in_tracks_mode()) {
@@ -1767,10 +1767,10 @@ void func_8000E5EC(LevelObjectEntryCommon *arg0) {
     dst = (u8 *) arg0;
     src = (u8 *) ((s32) arg0 + size);
     end = sp30[sp1C];
-    if ((u32) src < end) {
+    if ((u32) src < (u32) end) {
         do {
             *dst++ = *src++;
-        } while ((u32) src != end);
+        } while ((u32) src != (u32) end);
     }
     D_8011AEA0[sp1C] -= size;
 
@@ -1809,7 +1809,7 @@ void func_8000E79C(u8 *arg0, u8 *arg1) {
         var_a2 = arg0 + arg1Value;
         var_t0 = arg0 + arg0Value2;
         k = (u32) var_a3;
-        while (((u32) var_t0) < k) {
+        while (((u32) var_t0) < (u32) k) {
             *var_a2 = *var_t0;
             var_a2++;
             var_t0++;
@@ -1819,7 +1819,7 @@ void func_8000E79C(u8 *arg0, u8 *arg1) {
         var_a2 -= arg0Value2;
         var_t0 = var_a3;
         k = (u32) (arg0 + arg1Value);
-        while (k < ((u32) var_a2)) {
+        while ((u32) k < ((u32) var_a2)) {
             var_a2--;
             var_t0--;
             *var_a2 = *var_t0;
@@ -1967,7 +1967,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     i = 0; // a2
     switch (curObj->header->behaviorId) {
         case BHV_PARK_WARDEN:
-            func_800619F4(7);
+            model_anim_offset(7);
             break;
         case BHV_ANIMATED_OBJECT_4:
             i = get_character_id_from_slot(PLAYER_ONE);
@@ -2102,9 +2102,9 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (behaviourFlags & OBJECT_BEHAVIOUR_UNK20) {
         address += func_8000FD34(curObj, (Object_5C *) address);
     }
-    if (curObj->header->unk56 > 0 && curObj->header->unk56 < 10) {
-        curObj->unk60 = (Object_60 *) address;
-        address += sizeof(Object_60);
+    if (curObj->segment.header->attachPointCount > 0 && curObj->segment.header->attachPointCount < 10) {
+        curObj->attachPoints = (AttachPoint *) address;
+        address += sizeof(AttachPoint);
     }
     if (curObj->header->particleCount > 0) {
         address += obj_init_emitter(curObj, (ParticleEmitter *) address);
@@ -2163,8 +2163,9 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (curObj->unk5C != NULL) {
         curObj->unk5C = (Object_5C *) (((uintptr_t) curObj + (uintptr_t) curObj->unk5C) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (curObj->unk60 != NULL) {
-        curObj->unk60 = (Object_60 *) (((uintptr_t) curObj + (uintptr_t) curObj->unk60) - (uintptr_t) gSpawnObjectHeap);
+    if (curObj->attachPoints != NULL) {
+        curObj->attachPoints =
+            (AttachPoint *) (((uintptr_t) curObj + (uintptr_t) curObj->attachPoints) - (uintptr_t) gSpawnObjectHeap);
     }
     if (curObj->header->particleCount > 0) {
         curObj->particleEmitter = (ParticleEmitter *) (((uintptr_t) curObj + (uintptr_t) curObj->particleEmitter) -
@@ -2186,7 +2187,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         curObj->interactObj->y_position = curObj->trans.y_position;
         curObj->interactObj->z_position = curObj->trans.z_position;
     }
-    if (curObj->header->unk56 > 0 && curObj->header->unk56 < 10 && func_8000F99C(curObj)) {
+    if (curObj->segment.header->attachPointCount > 0 && curObj->segment.header->attachPointCount < 10 &&
+        obj_init_attachpoint(curObj)) {
         if (D_8011AE50 != NULL) {
             tex_free((TextureHeader *) (s32) D_8011AE50);
         }
@@ -2204,7 +2206,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (curObj->header->numLightSources > 0) {
         light_setup_light_sources(curObj);
     }
-    func_800619F4(0);
+    model_anim_offset(0);
     update_object_stack_trace(OBJECT_SPAWN, -1);
     return curObj;
 }
@@ -2256,14 +2258,14 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
     returnSize = 0;
     if (obj->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
         for (i = 0; obj->modelInstances[i] == NULL; i++) {}
-        if (obj->modelInstances[i] != NULL && obj->modelInstances[i]->objModel->unk40 != NULL) {
-            set_shading_properties(obj->shading, obj->header->shadeAmbient, obj->header->shadeDiffuse, 0,
-                                   obj->header->shadeAngleY, obj->header->shadeAngleZ);
-            if (obj->header->unk3D != 0) {
-                obj->shading->lightR = obj->header->unk3A;
-                obj->shading->lightG = obj->header->unk3B;
-                obj->shading->lightB = obj->header->unk3C;
-                obj->shading->lightIntensity = obj->header->unk3D;
+        if (obj->modelInstances[i] != NULL && obj->modelInstances[i]->objModel->normals != NULL) {
+            set_shading_properties(obj->shading, obj->segment.header->shadeAmbient, obj->segment.header->shadeDiffuse,
+                                   0, obj->segment.header->shadeAngleY, obj->segment.header->shadeAngleZ);
+            if (obj->segment.header->unk3D != 0) {
+                obj->shading->lightR = obj->segment.header->unk3A;
+                obj->shading->lightG = obj->segment.header->unk3B;
+                obj->shading->lightB = obj->segment.header->unk3C;
+                obj->shading->lightIntensity = obj->segment.header->unk3D;
                 obj->shading->lightDirX = -(obj->shading->shadowDirX >> 1);
                 obj->shading->lightDirY = -(obj->shading->shadowDirY >> 1);
                 obj->shading->lightDirZ = -(obj->shading->shadowDirZ >> 1);
@@ -2284,34 +2286,35 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
     return (returnSize & ~3) + 4;
 }
 
-s32 func_8000F99C(Object *obj) {
-    Object *temp_v0;
-    Object_60 *obj60;
+s32 obj_init_attachpoint(Object *obj) {
+    Object *attachObj;
+    AttachPoint *attachPoint;
     s32 i;
-    s32 var_s4;
+    s32 failed;
 
-    obj60 = obj->unk60;
-    obj60->unk0 = obj->header->unk56;
-    obj60->unk0 = obj60->unk0; // Fakematch?
-    var_s4 = FALSE;
-    for (i = 0; i < obj60->unk0; i++) {
-        obj60->unk4[i] = func_8000FD54(obj->header->vehiclePartIds[i ^ 0]); // i ^ 0 fakematch
-        if (obj60->unk4[i] == NULL) {
-            var_s4 = TRUE;
+    attachPoint = obj->attachPoints;
+    attachPoint->count = obj->segment.header->attachPointCount;
+    attachPoint->count = attachPoint->count; // Fakematch?
+    failed = FALSE;
+    for (i = 0; i < attachPoint->count; i++) {
+        attachPoint->obj[i] = obj_spawn_attachment(obj->segment.header->vehiclePartIds[i ^ 0]); // i ^ 0 fakematch
+        if (attachPoint->obj[i] == NULL) {
+            failed = TRUE;
         }
     }
-    if (var_s4) {
-        for (i = 0; i < obj60->unk0; i++) {
-            temp_v0 = obj60->unk4[i];
-            if (temp_v0 != NULL) {
-                objFreeAssets(temp_v0, temp_v0->header->numberOfModelIds, temp_v0->header->modelType);
-                try_free_object_header(temp_v0->headerType);
-                mempool_free(temp_v0);
+    if (failed) {
+        for (i = 0; i < attachPoint->count; i++) {
+            attachObj = attachPoint->obj[i];
+            if (attachObj != NULL) {
+                objFreeAssets(attachObj, attachObj->segment.header->numberOfModelIds,
+                              attachObj->segment.header->modelType);
+                try_free_object_header(attachObj->segment.object.unk2C);
+                mempool_free(attachObj);
             }
         }
         return TRUE;
     }
-    obj60->unk2C = obj->header->vehiclePartIndices;
+    attachPoint->unk2C = obj->segment.header->vehiclePartIndices;
     return FALSE;
 }
 
@@ -2395,8 +2398,11 @@ s32 func_8000FD34(Object *obj, Object_5C *matrices) {
     return sizeof(Object_5C);
 }
 
-// Loads an object from object header index
-Object *func_8000FD54(s32 objectHeaderIndex) {
+/**
+ * Attempts to spawn an attachment object.
+ * Similar to the regular object spawning function, but cut down considerably.
+ */
+Object *obj_spawn_attachment(s32 objID) {
     s32 modelType;
     Object *object;
     ObjectHeader *objHeader;
@@ -2406,17 +2412,17 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     s8 numModelIds;
     u8 *objectAsRawBytes;
 
-    if (objectHeaderIndex >= gAssetsObjectHeadersTableLength) {
-        objectHeaderIndex = 0;
+    if (objID >= gAssetsObjectHeadersTableLength) {
+        objID = 0;
     }
-    objHeader = load_object_header(objectHeaderIndex);
+    objHeader = load_object_header(objID);
     if (objHeader == NULL) {
         return NULL;
     }
     objSize = (objHeader->numberOfModelIds * 4) + 0x80;
     object = (Object *) mempool_alloc(objSize, COLOUR_TAG_BLUE);
     if (object == NULL) {
-        try_free_object_header(objectHeaderIndex);
+        try_free_object_header(objID);
         return NULL;
     }
 
@@ -2425,11 +2431,11 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     for (i = 0; i < objSize; i++) { objectAsRawBytes[i] = 0; } // Must be one line! (Why not use bzero?)
     // clang-format on
 
-    object->trans.flags = OBJ_FLAGS_UNK_0002;
-    object->header = objHeader;
-    object->headerType = objectHeaderIndex;
-    object->objectID = objectHeaderIndex;
-    object->trans.scale = objHeader->scale;
+    object->segment.trans.flags = OBJ_FLAGS_UNK_0002;
+    object->segment.header = objHeader;
+    object->segment.object.unk2C = objID;
+    object->objectID = objID;
+    object->segment.trans.scale = objHeader->scale;
     if (objHeader->flags & HEADER_FLAGS_UNK_0080) {
         object->trans.flags |= OBJ_FLAGS_UNK_0080;
     }
@@ -2455,7 +2461,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     }
     if (failedToLoadModel) {
         objFreeAssets(object, numModelIds, modelType);
-        try_free_object_header(objectHeaderIndex);
+        try_free_object_header(objID);
         mempool_free(object);
         return NULL;
     }
@@ -2544,14 +2550,14 @@ void func_800101AC(Object *obj, s32 arg1) {
         return;
     }
 
-    if (obj->unk60 != NULL) {
-        for (i = 0; i < obj->unk60->unk0; i++) {
-            tempObj = obj->unk60->unk4[i];
-            numberOfModelIds = tempObj->header->numberOfModelIds;
-            modelType = tempObj->header->modelType;
+    if (obj->attachPoints != NULL) {
+        for (i = 0; i < obj->attachPoints->count; i++) {
+            tempObj = obj->attachPoints->obj[i];
+            numberOfModelIds = tempObj->segment.header->numberOfModelIds;
+            modelType = tempObj->segment.header->modelType;
             if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
                 for (j = 0; j < numberOfModelIds; j++) {
-                    free_3d_model(&tempObj->modelInstances[j]->objModel);
+                    free_3d_model((ModelInstance *) &tempObj->modelInstances[j]->objModel);
                 }
             } else {
                 for (j = 0; j < numberOfModelIds; j++) {
@@ -2885,7 +2891,7 @@ void obj_update(s32 updateRate) {
     }
     if (gNumRacers != 0) {
         if (gRaceEndTimer == 0) {
-            func_80019808(updateRate);
+            race_check_finish(updateRate);
         } else {
             race_transition_adventure(updateRate);
         }
@@ -3359,7 +3365,7 @@ void render_3d_model(Object *obj) {
     s32 intensity;
     s32 opacity;
     s32 vertOffset;
-    s32 obj60_unk0;
+    s32 attachPointCount;
     s32 hasOpacity;
     s32 hasLighting;
     s32 flags;
@@ -3369,7 +3375,7 @@ void render_3d_model(Object *obj) {
     f32 vtxY;
     f32 vtxZ;
     s8 index;
-    s8 var_v0_2;
+    s8 isCargo;
     Object *loopObj;
     ModelInstance *modInst;
     Object_Racer *racerObj;
@@ -3398,7 +3404,7 @@ void render_3d_model(Object *obj) {
             if (modInst->modelType == MODELTYPE_ANIMATED) {
                 obj_animate(obj);
             }
-            if (modInst->modelType != MODELTYPE_BASIC && objModel->unk40 != NULL) {
+            if (modInst->modelType != MODELTYPE_BASIC && objModel->normals != NULL) {
                 flags = TRUE;
                 if (racerObj != NULL && racerObj->vehicleID < VEHICLE_BOSSES &&
                     racerObj->playerIndex == PLAYER_COMPUTER) {
@@ -3482,15 +3488,15 @@ void render_3d_model(Object *obj) {
             }
             directional_lighting_off();
         }
-        if (obj->unk60 != NULL) {
-            obj60_unk0 = obj->unk60->unk0;
+        if (obj->attachPoints != NULL) {
+            attachPointCount = obj->attachPoints->count;
             if (racerObj != NULL && racerObj->vehicleID == VEHICLE_FLYING_CAR) {
-                obj60_unk0 = 0;
+                attachPointCount = 0;
             }
-            for (i = 0; i < obj60_unk0; i++) {
-                loopObj = obj->unk60->unk4[i];
-                if (!(loopObj->trans.flags & OBJ_FLAGS_INVISIBLE)) {
-                    index = obj->unk60->unk2C[i];
+            for (i = 0; i < attachPointCount; i++) {
+                loopObj = obj->attachPoints->obj[i];
+                if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
+                    index = obj->attachPoints->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
                         something = loopObj->sprites[loopObj->modelIndex];
                         vtxX = obj->curVertData[objModel->unk14[index]].x;
@@ -3517,11 +3523,12 @@ void render_3d_model(Object *obj) {
 #else
                         if (1) {
 #endif
-                            var_v0_2 = (loopObj->trans.flags & OBJ_FLAGS_UNK_0080 && obj60_unk0 == 3);
+                            // In this instance, cargo refers to the eggs in the fire mountain challenge.
+                            isCargo = (loopObj->segment.trans.flags & OBJ_FLAGS_UNK_0080 && attachPointCount == 3);
                             if (racerObj != NULL && racerObj->transparency < 255) {
-                                var_v0_2 = FALSE;
+                                isCargo = FALSE;
                             }
-                            if (var_v0_2) {
+                            if (isCargo) {
                                 func_80012C98(&gObjectCurrDisplayList);
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
                                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity,
@@ -3530,7 +3537,7 @@ void render_3d_model(Object *obj) {
                             loopObj->properties.common.unk0 =
                                 render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix,
                                                         &gObjectCurrVertexList, loopObj, something, flags);
-                            if (var_v0_2) {
+                            if (isCargo) {
                                 gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
                                 func_80012CE8(&gObjectCurrDisplayList);
                             }
@@ -6170,7 +6177,7 @@ void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
                                             midiFade->unk0 = var_v1;
                                             midiFade->unk1 = 0;
                                             midiFade->unk4 = 0;
-                                            D_8011AF60[0] = (s32) midiFade;
+                                            D_8011AF60[0] = (Object_MidiFade *) midiFade;
                                         }
                                     }
                                 }
@@ -6333,26 +6340,32 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
 // D_B0000574 is a direct read from the ROM as opposed to RAM
 extern s32 D_B0000574;
 
-void func_80019808(s32 updateRate) {
-    s32 prevUnk1AA;
+/**
+ * Check the win conditions of the current race.
+ * This varies based on the race type, so this does a multitude of different possible things.
+ * When the race is finished, it will then for the most part trigger the next menu,
+ * but adventure mode will start the balloon cutscene if it has not yet been awarded.
+ */
+void race_check_finish(s32 updateRate) {
+    s32 prevRacerPos;
     s32 i;
-    s32 j; // sp94
-    s32 newUnk1AA;
+    s32 j;
+    s32 racerPos;
     Settings *settings;
-    s16 numHumanRacers;         // sp8A
-    s16 numHumanRacersFinished; // sp88
+    s16 numHumanRacers;
+    s16 numHumanRacersFinished;
     Object_Racer *curRacer2;
-    Object_Racer *curRacer; // sp80
+    Object_Racer *curRacer;
     s16 numFinishedRacers;
     s16 foundIndex;
-    Object_Racer *racer[4]; // sp6C
+    Object_Racer *racer[4];
     s16 racerIndex;
     s8 raceType;
     s8 someBool;
-    LevelHeader *currentLevelHeader; // sp64
+    LevelHeader *currentLevelHeader;
     s32 newStartingPosition;
     s8 sp5C[4];
-    s8 someBool2; // sp5B
+    s8 someBool2;
     s8 flags[3];
     s32 camera;
 
@@ -6365,11 +6378,12 @@ void func_80019808(s32 updateRate) {
     if (someBool2 != RACETYPE_DEFAULT && someBool2 != RACETYPE_HORSESHOE_GULCH && someBool2 != RACETYPE_BOSS) {
         if (someBool2 & RACETYPE_CHALLENGE) {
             if (someBool2 == RACETYPE_CHALLENGE_EGGS) {
-                func_80045128(*gRacers);
+                racer_update_eggs(*gRacers);
             }
-            if (D_8011ADB4 == 0) {
+            if (gRaceFinishTriggered == FALSE) {
                 for (i = 0; i < gNumRacers; i++) {
                     racer[i] = &(*gRacers)[i]->unk64->racer;
+                    // Manage eliminated racers in deathmatch.
                     if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE && racer[i]->bananas <= 0 &&
                         !racer[i]->raceFinished) {
                         racer[i]->raceFinished = TRUE;
@@ -6377,8 +6391,8 @@ void func_80019808(s32 updateRate) {
                         racer_sound_free((*gRacers)[i]);
                         (*gRacers)[i]->trans.flags |= OBJ_FLAGS_INVISIBLE;
                         (*gRacers)[i]->interactObj->flags = INTERACT_FLAGS_NONE;
-                        racer[i]->finishPosition = 5 - D_8011ADC0;
-                        D_8011ADC0++;
+                        racer[i]->finishPosition = 5 - gNumFinishedRacers;
+                        gNumFinishedRacers++;
                     }
                     if (racer[i]->playerIndex != PLAYER_COMPUTER) {
                         if (racer[i]->raceFinished) {
@@ -6389,8 +6403,8 @@ void func_80019808(s32 updateRate) {
                     if (racer[i]->raceFinished) {
                         numFinishedRacers++;
                         if (racer[i]->finishPosition == 0) {
-                            racer[i]->finishPosition = D_8011ADC0;
-                            D_8011ADC0++;
+                            racer[i]->finishPosition = gNumFinishedRacers;
+                            gNumFinishedRacers++;
                         }
                     }
                 }
@@ -6432,21 +6446,23 @@ void func_80019808(s32 updateRate) {
                         }
 
                         if (racerIndex != -1) {
+                            // In battle mode, last to finish wins, so flip the finish order.
                             if (currentLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
-                                racer[racerIndex]->finishPosition = 5 - D_8011ADC0;
+                                racer[racerIndex]->finishPosition = 5 - gNumFinishedRacers;
                             } else {
-                                racer[racerIndex]->finishPosition = D_8011ADC0;
+                                racer[racerIndex]->finishPosition = gNumFinishedRacers;
                             }
-                            D_8011ADC0++;
+                            gNumFinishedRacers++;
                             racer[racerIndex]->raceFinished = TRUE;
                         }
                         i = 0;
                     } while (racerIndex != -1);
 
                     gSwapLeadPlayer = FALSE;
+                    // Award the winner a TT amulet if not in tracks mode.
                     if (!is_in_tracks_mode() &&
                         (racer[0]->finishPosition == 1 ||
-                         is_in_two_player_adventure() && racer[1]->finishPosition == 1) &&
+                         (is_in_two_player_adventure() && racer[1]->finishPosition == 1)) &&
                         (!(settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED))) {
                         settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED;
                         i = settings->ttAmulet + 1;
@@ -6455,36 +6471,37 @@ void func_80019808(s32 updateRate) {
                         }
                         settings->ttAmulet = i;
                     }
-                    for (newUnk1AA = 0; newUnk1AA < 8;) {
-                        settings->racers[newUnk1AA++].starting_position = -1;
+                    for (racerPos = 0; racerPos < 8;) {
+                        settings->racers[racerPos++].starting_position = -1;
                     }
 
                     newStartingPosition = SEQUENCE_BATTLE_LOSE;
-                    for (newUnk1AA = 0; newUnk1AA < gNumRacers; newUnk1AA++) {
-                        if (racer[newUnk1AA]->playerIndex != PLAYER_COMPUTER && racer[newUnk1AA]->finishPosition == 1) {
+                    for (racerPos = 0; racerPos < gNumRacers; racerPos++) {
+                        if (racer[racerPos]->playerIndex != PLAYER_COMPUTER && racer[racerPos]->finishPosition == 1) {
                             newStartingPosition = SEQUENCE_BATTLE_VICTORY;
                         }
-                        settings->racers[newUnk1AA].starting_position = racer[newUnk1AA]->finishPosition - 1;
+                        settings->racers[racerPos].starting_position = racer[racerPos]->finishPosition - 1;
                     }
 
                     music_play(newStartingPosition);
                     newStartingPosition = 4;
-                    for (prevUnk1AA = 0; prevUnk1AA < 8; prevUnk1AA++) {
-                        if (settings->racers[prevUnk1AA].starting_position == -1) {
-                            settings->racers[prevUnk1AA].starting_position = newStartingPosition;
+                    for (prevRacerPos = 0; prevRacerPos < 8; prevRacerPos++) {
+                        if (settings->racers[prevRacerPos].starting_position == -1) {
+                            settings->racers[prevRacerPos].starting_position = newStartingPosition;
                             newStartingPosition++;
                         }
                     }
 
-                    gSwapLeadPlayer = 0;
+                    gSwapLeadPlayer = FALSE;
                     if (is_in_two_player_adventure() && settings->racers[PLAYER_TWO].starting_position <
                                                             settings->racers[PLAYER_ONE].starting_position) {
-                        gSwapLeadPlayer = 1;
+                        gSwapLeadPlayer = TRUE;
                     }
+                    // i will be nonzero if any adventure mode award triggers happened.
                     if (i == 0) {
                         if (is_in_two_player_adventure()) {
                             if (gSwapLeadPlayer) {
-                                gSwapLeadPlayer = 0;
+                                gSwapLeadPlayer = FALSE;
                                 swap_lead_player();
                                 if (D_800DC73C != 0) {
                                     D_800DC748 = TRUE;
@@ -6498,9 +6515,9 @@ void func_80019808(s32 updateRate) {
                         push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
                         push_level_property_stack(ASSET_LEVEL_TTAMULETSEQUENCE, 0, VEHICLE_NO_OVERRIDE,
                                                   settings->ttAmulet - 1);
-                        race_finish_adventure(1);
+                        race_finish_adventure(TRUE);
                     }
-                    D_8011ADB4 = 1;
+                    gRaceFinishTriggered = TRUE;
                 }
             }
         }
@@ -6509,39 +6526,39 @@ void func_80019808(s32 updateRate) {
 
     i = 0;
     do {
-        newUnk1AA = 1;
+        racerPos = 1;
         curRacer = &(*gRacers)[i]->unk64->racer;
-        prevUnk1AA = curRacer->unk1AA;
+        prevRacerPos = curRacer->racerOrder;
         j = 0;
         do {
             if (j != i) {
                 curRacer2 = &(*gRacers)[j]->unk64->racer;
                 if (curRacer->raceFinished == FALSE && curRacer2->raceFinished != FALSE) {
-                    newUnk1AA++;
+                    racerPos++;
                 } else if (curRacer->courseCheckpoint < curRacer2->courseCheckpoint) {
-                    newUnk1AA++;
+                    racerPos++;
                 } else if (curRacer->courseCheckpoint == curRacer2->courseCheckpoint) {
                     if (curRacer2->unk1A8 < curRacer->unk1A8) {
-                        newUnk1AA++;
+                        racerPos++;
                     }
                     if (curRacer->unk1A8 == curRacer2->unk1A8 && i < j) {
-                        newUnk1AA++;
+                        racerPos++;
                     }
                 }
             }
             j++;
         } while (j < gNumRacers);
 
-        curRacer->unk1AA = newUnk1AA;
+        curRacer->racerOrder = racerPos;
         if (curRacer->lap < currentLevelHeader->laps) {
-            if (prevUnk1AA == curRacer->unk1AA) {
+            if (prevRacerPos == curRacer->racerOrder) {
                 if (curRacer->unk1B0 < 2) {
                     if (curRacer->vehicleID != VEHICLE_LOOPDELOOP) {
                         curRacer->unk1B0++;
                     }
-                } else if (curRacer->unk1AA != curRacer->racePosition) {
+                } else if (curRacer->racerOrder != curRacer->racePosition) {
                     curRacer->unk1B2 = 10;
-                    curRacer->racePosition = curRacer->unk1AA;
+                    curRacer->racePosition = curRacer->racerOrder;
                 }
             } else {
                 curRacer->unk1B0 = 0;
@@ -6556,11 +6573,11 @@ void func_80019808(s32 updateRate) {
         if (curRacer->lap >= currentLevelHeader->laps && curRacer->raceFinished == FALSE) {
             if (get_game_mode() != GAMEMODE_UNUSED_4) {
                 curRacer->raceFinished = TRUE;
-                curRacer->finishPosition = D_8011ADC0;
-                if (D_8011ADC0 == 1 && curRacer->playerIndex == PLAYER_COMPUTER) {
+                curRacer->finishPosition = gNumFinishedRacers;
+                if (gNumFinishedRacers == 1 && curRacer->playerIndex == PLAYER_COMPUTER) {
                     sound_play(SOUND_WHOOSH5, NULL);
                 }
-                D_8011ADC0++;
+                gNumFinishedRacers++;
             }
         }
         if (curRacer->playerIndex != PLAYER_COMPUTER) {
@@ -6587,11 +6604,11 @@ void func_80019808(s32 updateRate) {
     do {
         curRacer = &(*gRacers)[i]->unk64->racer;
         if (curRacer->raceFinished) {
-            newUnk1AA = curRacer->finishPosition - 1;
+            racerPos = curRacer->finishPosition - 1;
         } else {
-            newUnk1AA = curRacer->unk1AA - 1;
+            racerPos = curRacer->racerOrder - 1;
         }
-        gRacersByPosition[newUnk1AA] = (*gRacers)[i];
+        gRacersByPosition[racerPos] = (*gRacers)[i];
         i++;
     } while (i < gNumRacers);
 
@@ -6640,10 +6657,10 @@ void func_80019808(s32 updateRate) {
         curRacer = &(*gRacers)[0]->unk64->racer;
         if (!curRacer->raceFinished) {
             curRacer->raceFinished = TRUE;
-            curRacer->finishPosition = D_8011ADC0;
-            D_8011ADC0 += 1;
+            curRacer->finishPosition = gNumFinishedRacers;
+            gNumFinishedRacers++;
         }
-    } else if (D_8011ADB4 == 0) {
+    } else if (gRaceFinishTriggered == FALSE) {
         someBool2 = FALSE;
         if (is_in_two_player_adventure() && numHumanRacersFinished > 0 && get_trophy_race_world_id() == 0 &&
             set_course_finish_flags(settings) != 0) {
@@ -6659,15 +6676,15 @@ void func_80019808(s32 updateRate) {
                     if (curRacer->raceFinished == FALSE) {
                         if (curRacer->playerIndex >= 0) {
                             set_active_camera(curRacer->playerIndex);
-                            camera = cam_get_active_camera_no_cutscenes();
+                            camera = (s32) cam_get_active_camera_no_cutscenes();
                             // we need the camera to be a s32 for the WAIT_ON_IOBUSY anti tamper call to work
                             // but we *know* that cam_get_active_camera_no_cutscenes returns a Camera pointer so this
                             // should be safe
                             ((Camera *) camera)->mode = CAMERA_FINISH_CHALLENGE;
                         }
                         curRacer->raceFinished = TRUE;
-                        curRacer->finishPosition = D_8011ADC0;
-                        D_8011ADC0++;
+                        curRacer->finishPosition = gNumFinishedRacers;
+                        gNumFinishedRacers++;
                     }
                     i++;
                 } while (i < gNumRacers);
@@ -6688,8 +6705,8 @@ void func_80019808(s32 updateRate) {
                 i = 0;
                 do {
                     curRacer = &gRacersByPosition[i]->unk64->racer;
-                    newUnk1AA = curRacer->racerIndex;
-                    settings->racers[newUnk1AA].starting_position = i;
+                    racerPos = curRacer->racerIndex;
+                    settings->racers[racerPos].starting_position = i;
                     i++;
                 } while (i < gNumRacers);
             }
@@ -6739,9 +6756,9 @@ void func_80019808(s32 updateRate) {
                 if (settings->worldId != 0) {
                     settings->balloonsPtr[0]++;
                 }
-                race_finish_adventure(1);
+                race_finish_adventure(TRUE);
             }
-            D_8011ADB4 = -1;
+            gRaceFinishTriggered = -1; // -1 doesn't do anything different.
             if (get_number_of_active_players() == 1) {
                 race_finish_time_trial();
             }
@@ -7230,7 +7247,7 @@ void set_ghost_none(void) {
 Object *func_8001B7A8(Object_Racer *racer, s32 position, f32 *distance) {
     UNUSED s32 pad;
     Object *tempRacerObj;
-    position = (racer->unk1AA - position) - 1;
+    position = (racer->racerOrder - position) - 1;
     if (position < 0 || position >= gNumRacers) {
         return NULL;
     }
@@ -8170,7 +8187,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     }
 
     vertices = object->curVertData;
-    normals = model->unk40;
+    normals = model->normals;
     normIdx = 0;
 
     direction.x = -(object->shading->lightDirX << 3);
@@ -8269,7 +8286,7 @@ void calc_env_mapping_for_object(ObjectModel *model, s16 zRot, s16 xRot, s16 yRo
 
     count = 0;
     triangles = model->triangles;
-    model40Entries = model->unk40;
+    model40Entries = model->normals;
     objTrans.rotation.z_rotation = zRot;
     objTrans.rotation.x_rotation = xRot;
     objTrans.rotation.y_rotation = yRot;
@@ -9063,8 +9080,8 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
     if ((temp_v0_3 >= 0) && (temp_s3->unkObjBehavior1.unkE[0x37] == 0)) {
         temp_s3->racer.unk2A = temp_v0_3 - arg1;
         if ((s16) temp_s3->racer.unk2A <= 0) {
-            temp_s3->unkObjBehavior1.unkE[0x37] = 1;
-            temp_s1 = temp_s3->racer.unk1C->pan;
+            temp_s3->effect_box.unkE[0x37] = 1;
+            temp_s1 = (LevelObjectEntry_Animation *) temp_s3->racer.unk1C->pan;
             func_80021104(arg0, &temp_s3->animation, temp_s1);
             temp_s3->racer.unk2A = 0;
             func_8002125C(arg0, (LevelObjectEntry_CharacterSelect *) temp_s1, (Object_AnimatedObject *) temp_s3, -1);
@@ -9852,472 +9869,266 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
     return 0;
 }
 
-// https://decomp.me/scratch/hYfN2
-#ifdef NON_EQUIVALENT
 s32 func_80021600(s32 arg0) {
-    s8 *sp15C;
-    Object_64 *sp154;
-    LevelObjectEntry *sp150;
+    Object_Animation *objAnim;
+    s32 i;
+    Object *sp154;
+    LevelObjectEntry_Animation *levelObjAnim;
+    s32 count;
+    s32 s0;
+    s32 j;
+    ObjectTransform *objTransform;
+    f32 f0;
     s32 sp138;
-    f32 sp124;
-    f32 sp110;
-    f32 spFC;
+    f32 xPositions[5];
+    f32 yPositions[5];
+    f32 zPositions[5];
     f32 spF8;
     f32 spF4;
     f32 spF0;
     f32 spEC;
-    f32 spE4;
-    f32 spD0;
-    f32 spC0;
-    f32 *spBC;
-    f32 spAC;
-    f32 *spA8;
-    f32 sp98;
-    f32 *sp94;
+    f32 delta;
+    s32 q;
+    f32 scales[5];
+    f32 yRotations[5];
+    f32 xRotations[5];
+    f32 zRotations[5];
     f32 sp90;
-    s32 sp7C;
-    s32 sp74;
-    f32 *sp5C;
-    s32 sp4C;
-    f32 *var_fp_2;
-    f32 *var_s6_2;
-    f32 *var_t1_2;
-    Object *var_v1_2;
-    Object **var_a0;
-    LevelObjectEntry *temp_a1;
-    Object *temp_v0;
-    Object *temp_v0_7;
-    Object *var_v1_3;
-    Object **temp_a0;
-    Object **temp_a3;
-    Object **temp_v0_4;
-    Object **temp_v0_6;
-    Object **var_a0_2;
-    Object_64 *temp_t4;
-    Object_64 *temp_v1;
-    f32 temp_f0;
-    f32 temp_f0_2;
-    f32 temp_f0_3;
-    f32 temp_f0_4;
-    f32 temp_f0_5;
-    f32 temp_f10;
-    f32 temp_f10_2;
-    f32 temp_f10_3;
-    f32 temp_f10_4;
-    f32 temp_f12;
-    f32 temp_f12_2;
-    f32 temp_f12_3;
-    f32 temp_f2;
-    f32 temp_f2_2;
-    f32 temp_f4;
-    f32 temp_f4_2;
-    f32 temp_f4_3;
-    f32 temp_f6;
-    f32 temp_f6_2;
-    f32 temp_f6_3;
-    f32 temp_f8;
-    f32 temp_f8_2;
-    f32 temp_f8_3;
-    f32 temp_f8_4;
-    f32 temp_f8_5;
-    f32 temp_f8_6;
-    f32 var_f0;
-    f32 var_f0_2;
-    f32 var_f0_3;
-    f32 var_f0_4;
-    f32 var_f6;
-    f32 *var_fp;
-    f32 *var_s1;
-    f32 *var_s2;
-    f32 *var_s3;
-    f32 *var_s4;
-    f32 *var_s6;
-    f32 *var_t1;
-    f32 *var_v0_2;
-    f32 *var_v0_3;
-    f32 *var_v0_4;
-    f32 *var_v0_5;
-    f32 *var_v0_6;
-    f32 *var_v0_7;
-    f64 temp_f2_3;
-    f64 temp_f2_4;
-    f64 temp_f2_5;
-    s32 temp_a2;
-    s32 temp_t6;
-    s32 temp_t7;
-    s32 temp_t8;
-    s32 temp_v0_5;
-    s32 var_a1;
-    s32 var_a1_2;
-    s32 var_s0;
-    s32 var_s0_2;
-    s32 var_s5;
-    s32 var_s7;
-    s32 var_v0;
-    s8 temp_v0_2;
-    s8 temp_v0_9;
-    s8 var_v1;
-    u8 temp_v0_8;
-    Object **temp_v0_3;
 
     if (gCutsceneID < 0) {
-        return 1;
+        return TRUE;
     }
-    var_s7 = 0;
-    if ((D_8011AE78 > 0) && (arg0 != (*D_8011AE74)->properties.common.unk4)) {
-    loop_4:
-        var_s7++;
-        if (var_s7 < D_8011AE78) {
-            if (arg0 != D_8011AE74[var_s7]->properties.common.unk4) {
-                goto loop_4;
-            }
+
+    for (i = 0; i < D_8011AE78 && arg0 != D_8011AE74[i]->properties.animatedObj.behaviourID; i++) {}
+    if (i >= D_8011AE78) {
+        return TRUE;
+    }
+
+    for (count = 1; i + count < D_8011AE78 && arg0 == D_8011AE74[i + count]->properties.animatedObj.behaviourID;
+         count++) {}
+    if (count < 2) {
+        return TRUE;
+    }
+
+    sp154 = (Object *) &D_8011AE74[i]->unk64->obj;
+    if (sp154 == NULL) {
+        return TRUE;
+    }
+
+    objAnim = &sp154->unk64->animation;
+    sp138 = -1;
+    sp90 = 1.0 / D_8011AE74[i]->segment.header->scale;
+
+    levelObjAnim = &D_8011AE74[i + count - 1]->segment.level_entry->animation;
+    if (count > 2) {
+        if (levelObjAnim->goToNode >= 0 && levelObjAnim->goToNode < count - 1) {
+            sp138 = levelObjAnim->goToNode;
         }
     }
-    if (var_s7 >= D_8011AE78) {
-        return 1;
-    }
-    var_s5 = 1;
-    if ((var_s7 + 1) < D_8011AE78) {
-        temp_a0 = &D_8011AE74[var_s7];
-        var_v0 = var_s7 + 1 + 1;
-        if (arg0 == temp_a0[1]->properties.common.unk4) {
-        loop_10:
-            var_s5++;
-            if (var_v0 < D_8011AE78) {
-                var_v0++;
-                if (arg0 == temp_a0[var_s5]->properties.common.unk4) {
-                    goto loop_10;
-                }
-            }
-        }
-    }
-    if (var_s5 < 2) {
-        return 1;
-    }
-    temp_a3 = D_8011AE74;
-    sp7C = var_s7 * 4;
-    temp_v0 = temp_a3[var_s7];
-    var_s2 = &sp124;
-    temp_t4 = temp_v0->unk64;
-    var_s3 = &sp110;
-    sp154 = temp_t4;
-    if (temp_t4 == NULL) {
-        return 1;
-    }
-    var_v1 = -1;
-    var_s4 = &spFC;
-    var_fp = &spBC[0];
-    var_s6 = &spA8[0];
-    var_t1 = &sp94[0];
-    var_s1 = &spD0;
-    sp90 = (f32) (1.0 / (f64) temp_v0->header->scale);
-    if (var_s5 >= 3) {
-        temp_v0_2 = (&temp_a3[var_s7])[var_s5 - 1]->level_entry->animation.goToNode;
-        if ((temp_v0_2 >= 0) && (temp_v0_2 < (var_s5 - 1))) {
-            var_v1 = temp_v0_2;
-        }
-    }
-    sp138 = (s32) var_v1;
-    var_s0 = sp154->unkObjBehavior1.unkE[0x26 - 0xE] - 1;
-    do {
-        if (var_s0 == -1) {
+
+    s0 = objAnim->unk26 - 1;
+    for (j = 0; j < 5; j++, s0++) {
+        if (s0 == -1) {
             if (sp138 != 0) {
-                temp_v0_3 = temp_a3 + sp7C;
-                temp_f0 = temp_v0_3[0]->trans.x_position;
-                *var_s2 = (temp_f0 - temp_v0_3[1]->trans.x_position) + temp_f0;
-                temp_f2 = temp_v0_3[0]->trans.y_position;
-                *var_s3 = (temp_f2 - temp_v0_3[1]->trans.y_position) + temp_f2;
-                temp_f12 = temp_v0_3[0]->trans.z_position;
-                *var_s4 = (temp_f12 - temp_v0_3[1]->trans.z_position) + temp_f12;
-                *var_fp = (f32) temp_v0_3[0]->trans.rotation.s[0];
-                *var_s6 = (f32) temp_v0_3[0]->trans.rotation.s[1];
-                *var_t1 = (f32) temp_v0_3[0]->trans.rotation.s[2];
-                var_f6 = temp_v0_3[0]->trans.scale;
-                goto block_38;
+                xPositions[j] = D_8011AE74[i]->segment.trans.x_position +
+                                (D_8011AE74[i]->segment.trans.x_position - D_8011AE74[i + 1]->segment.trans.x_position);
+                yPositions[j] = D_8011AE74[i]->segment.trans.y_position +
+                                (D_8011AE74[i]->segment.trans.y_position - D_8011AE74[i + 1]->segment.trans.y_position);
+                zPositions[j] = D_8011AE74[i]->segment.trans.z_position +
+                                (D_8011AE74[i]->segment.trans.z_position - D_8011AE74[i + 1]->segment.trans.z_position);
+                yRotations[j] = D_8011AE74[i]->segment.trans.rotation.y_rotation;
+                xRotations[j] = D_8011AE74[i]->segment.trans.rotation.x_rotation;
+                zRotations[j] = D_8011AE74[i]->segment.trans.rotation.z_rotation;
+                scales[j] = D_8011AE74[i]->segment.trans.scale;
+            } else {
+                q = i + count - 1;
+                xPositions[j] = D_8011AE74[q]->segment.trans.x_position;
+                yPositions[j] = D_8011AE74[q]->segment.trans.y_position;
+                zPositions[j] = D_8011AE74[q]->segment.trans.z_position;
+                yRotations[j] = D_8011AE74[q]->segment.trans.rotation.y_rotation;
+                xRotations[j] = D_8011AE74[q]->segment.trans.rotation.x_rotation;
+                zRotations[j] = D_8011AE74[q]->segment.trans.rotation.z_rotation;
+                scales[j] = D_8011AE74[q]->segment.trans.scale;
             }
-            temp_v0_4 = &temp_a3[var_s7 + var_s5];
-            *var_s2 = temp_v0_4[-1]->trans.x_position;
-            *var_s3 = temp_v0_4[-1]->trans.y_position;
-            *var_s4 = temp_v0_4[-1]->trans.z_position;
-            *var_fp = (f32) temp_v0_4[-1]->trans.rotation.s[0];
-            *var_s6 = (f32) temp_v0_4[-1]->trans.rotation.s[1];
-            *var_t1 = (f32) temp_v0_4[-1]->trans.rotation.s[2];
-            *var_s1 = temp_v0_4[-1]->trans.scale;
-        } else {
-            temp_a2 = var_s0 + var_s7;
-            if (var_s0 >= var_s5) {
-                temp_v0_5 = var_s5 + var_s7;
-                if (sp138 == -1) {
-                    var_s0 = var_s5 - 1;
-                    if (temp_a3[temp_v0_5 - 1]->level_entry->animation.unk22 == 1) {
-                        sp5C = var_t1;
-                        sp4C = (temp_v0_5 * 4) - 4;
-                        set_active_camera((s32) sp15C[30]);
-                        var_v1_2 = (Object *) cam_get_active_camera_no_cutscenes();
-                        var_a0 = &D_8011AE74[temp_v0_5 - 1];
-                    } else {
-                        var_a0 = &temp_a3[temp_v0_5 - 1];
-                        var_v1_2 = *var_a0;
-                    }
-                    temp_f0_2 = var_v1_2->trans.x_position;
-                    *var_s2 = (temp_f0_2 - var_a0[-1]->trans.x_position) + temp_f0_2;
-                    temp_f2_2 = var_v1_2->trans.y_position;
-                    *var_s3 = (temp_f2_2 - var_a0[-1]->trans.y_position) + temp_f2_2;
-                    temp_f12_2 = var_v1_2->trans.z_position;
-                    *var_s4 = (temp_f12_2 - var_a0[-1]->trans.z_position) + temp_f12_2;
-                    *var_s6 = (f32) var_v1_2->trans.rotation.s[1];
-                    *var_t1 = (f32) var_v1_2->trans.rotation.s[2];
-                    *var_fp = (f32) var_a0[0]->trans.rotation.s[0];
-                    *var_s1 = var_a0[0]->trans.scale;
+        } else if (s0 >= count) {
+            if (sp138 == -1) {
+                s0 = count - 1;
+                q = s0 + i;
+                levelObjAnim = &D_8011AE74[q]->segment.level_entry->animation;
+                if (levelObjAnim->unk22 == 1) {
+                    set_active_camera(objAnim->cameraID);
+                    objTransform = &cam_get_active_camera_no_cutscenes()->trans;
                 } else {
-                    temp_v0_6 = &temp_a3[(var_s7 + sp138 + var_s0) - var_s5];
-                    *var_s2 = (*temp_v0_6)->trans.x_position;
-                    *var_s3 = (*temp_v0_6)->trans.y_position;
-                    *var_s4 = (*temp_v0_6)->trans.z_position;
-                    *var_fp = (f32) (*temp_v0_6)->trans.rotation.s[0];
-                    *var_s6 = (f32) (*temp_v0_6)->trans.rotation.s[1];
-                    *var_t1 = (f32) (*temp_v0_6)->trans.rotation.s[2];
-                    var_f6 = (*temp_v0_6)->trans.scale;
-                    goto block_38;
+                    objTransform = &D_8011AE74[q]->segment.trans;
                 }
+
+                xPositions[j] =
+                    (objTransform->x_position - D_8011AE74[q - 1]->segment.trans.x_position) + objTransform->x_position;
+                yPositions[j] =
+                    (objTransform->y_position - D_8011AE74[q - 1]->segment.trans.y_position) + objTransform->y_position;
+                zPositions[j] =
+                    (objTransform->z_position - D_8011AE74[q - 1]->segment.trans.z_position) + objTransform->z_position;
+                xRotations[j] = objTransform->rotation.x_rotation;
+                zRotations[j] = objTransform->rotation.z_rotation;
+                objTransform = &D_8011AE74[q]->segment.trans;
+                yRotations[j] = objTransform->rotation.y_rotation;
+                scales[j] = D_8011AE74[q]->segment.trans.scale;
             } else {
-                var_a0_2 = &temp_a3[temp_a2];
-                temp_v0_7 = *var_a0_2;
-                temp_a1 = temp_v0_7->level_entry;
-                var_v1_3 = temp_v0_7;
-                if (temp_a1->animation.unk22 == 1) {
-                    sp5C = var_t1;
-                    sp74 = temp_a2 * 4;
-                    sp150 = temp_a1;
-                    set_active_camera((s32) sp15C[0x30]);
-                    var_v1_3 = (Object *) cam_get_active_camera_no_cutscenes();
-                    var_a0_2 = D_8011AE74 + sp74;
-                }
-                *var_s2 = var_v1_3->trans.x_position;
-                *var_s3 = var_v1_3->trans.y_position;
-                *var_s4 = var_v1_3->trans.z_position;
-                *var_s6 = (f32) var_v1_3->trans.rotation.s[1];
-                *var_t1 = (f32) var_v1_3->trans.rotation.s[2];
-                *var_fp = (f32) (*var_a0_2)->trans.rotation.s[0];
-                if (temp_a1->animation.unk22 == 1) {
-                    *var_s6 = -*var_s6;
-                }
-                var_f6 = (*var_a0_2)->trans.scale;
-            block_38:
-                *var_s1 = var_f6;
+                q = i + sp138 + s0 - count;
+                xPositions[j] = D_8011AE74[q]->segment.trans.x_position;
+                yPositions[j] = D_8011AE74[q]->segment.trans.y_position;
+                zPositions[j] = D_8011AE74[q]->segment.trans.z_position;
+                yRotations[j] = D_8011AE74[q]->segment.trans.rotation.y_rotation;
+                xRotations[j] = D_8011AE74[q]->segment.trans.rotation.x_rotation;
+                zRotations[j] = D_8011AE74[q]->segment.trans.rotation.z_rotation;
+                scales[j] = D_8011AE74[q]->segment.trans.scale;
             }
+        } else {
+            q = s0 + i;
+            if (1) {} // Fake
+            levelObjAnim = &D_8011AE74[q]->segment.level_entry->animation;
+            if (levelObjAnim->unk22 == 1) {
+                set_active_camera(objAnim->cameraID);
+                objTransform = &cam_get_active_camera_no_cutscenes()->trans;
+            } else {
+                objTransform = &D_8011AE74[q]->segment.trans;
+            }
+            xPositions[j] = objTransform->x_position;
+            yPositions[j] = objTransform->y_position;
+            zPositions[j] = objTransform->z_position;
+            xRotations[j] = objTransform->rotation.x_rotation;
+            zRotations[j] = objTransform->rotation.z_rotation;
+            objTransform = &D_8011AE74[q]->segment.trans;
+            yRotations[j] = objTransform->rotation.y_rotation;
+            if (levelObjAnim->unk22 == 1) {
+                xRotations[j] = -xRotations[j];
+            }
+            scales[j] = D_8011AE74[q]->segment.trans.scale;
         }
-        var_s1 += 4;
-        var_s2 += 4;
-        var_s3 += 4;
-        var_s4 += 4;
-        var_fp += 4;
-        var_s6 += 4;
-        var_t1 += 4;
-        var_s0++;
-    } while ((u32) var_s1 < (u32) &spE4);
-    temp_f0_3 = sp15C[0];
-    if (sp15C[0x3F] == 0) {
-        spEC = temp_f0_3;
-        spF8 = catmull_rom_interpolation(&sp124, 0, temp_f0_3);
-        spF4 = catmull_rom_interpolation(&sp110, 0, spEC);
-        var_f0 = catmull_rom_interpolation(&spFC, 0, spEC);
-    } else {
-        spEC = temp_f0_3;
-        spF8 = lerp(&sp124, 0U, temp_f0_3);
-        spF4 = lerp(&sp110, 0U, spEC);
-        var_f0 = lerp(&spFC, 0U, spEC);
     }
-    spF0 = var_f0;
-    temp_f10 = spF8 - sp154->racer.animationSpeed;
-    spF8 = temp_f10;
-    temp_f8 = spF4 - (f32) sp154->unkObjBehavior1.unkE[2];
-    spF4 = temp_f8;
-    temp_f6 = spF0 - (f32) sp154->unkObjBehavior1.unkE[6];
-    spF0 = temp_f6;
-    move_object((Object *) sp154, temp_f10, temp_f8, temp_f6);
-    sp154->racer.forwardVel =
-        catmull_rom_interpolation(&spD0, 0, spEC) * sp90 *
-        sp154->unkObjBehavior1.unkE[2]; // index is wrong, also usage of unkObjBehavior1 is probably wrong, too
-    temp_v0_8 = sp15C[0x2E];
-    switch (temp_v0_8) { /* irregular */
-        default:
-            var_a1 = 1;
-            var_fp_2 = &spC0;
-            var_s6_2 = &spAC;
-            var_t1_2 = &sp98;
-            do {
-                temp_f6_2 = var_fp_2[0];
-                temp_f8_2 = var_fp_2[-1];
-                var_fp_2++;
-                temp_f2_3 = (f64) (temp_f6_2 - temp_f8_2);
-                var_f0_2 = 0.0f;
-                if (temp_f2_3 > 32768.0) {
-                    var_f0_2 = (f32) ((f64) 0.0f - 65536.0);
-                } else if (temp_f2_3 < -32768.0) {
-                    var_f0_2 = (f32) ((f64) 0.0f + 65536.0);
-                }
-                var_s0_2 = var_a1;
-                if (var_a1 < 5) {
-                    temp_t8 = (5 - var_a1) & 3;
-                    if (temp_t8 != 0) {
-                        var_v0_2 = &(&spBC[0])[var_s0_2];
-                        do {
-                            var_s0_2++;
-                            var_v0_2[0] += var_f0_2;
-                            var_v0_2++;
-                        } while ((temp_t8 + var_a1) != var_s0_2);
-                        if (var_s0_2 != 5) {
-                            goto block_71;
-                        }
-                    } else {
-                    block_71:
-                        var_v0_3 = &(&spBC[0])[var_s0_2];
-                        do {
-                            var_v0_3[1] += var_f0_2;
-                            var_v0_3[0] += var_f0_2;
-                            var_v0_3[2] += var_f0_2;
-                            var_v0_3[3] += var_f0_2;
-                            var_v0_3 += 4;
-                        } while (var_v0_3 != &spD0);
-                    }
-                    var_s0_2 = var_a1;
-                }
-                temp_f6_3 = var_s6_2[0];
-                temp_f8_4 = var_s6_2[-1];
-                var_s6_2++;
-                temp_f2_4 = (f64) (temp_f6_3 - temp_f8_4);
-                var_f0_3 = 0.0f;
-                if (temp_f2_4 > 32768.0) {
-                    var_f0_3 = (f32) ((f64) 0.0f - 65536.0);
-                } else if (temp_f2_4 < -32768.0) {
-                    var_f0_3 = (f32) ((f64) 0.0f + 65536.0);
-                }
-                if (var_a1 < 5) {
-                    temp_t6 = (5 - var_a1) & 3;
-                    if (temp_t6 != 0) {
-                        var_v0_4 = &(&spA8[0])[var_s0_2];
-                        do {
-                            var_s0_2++;
-                            var_v0_4[0] += var_f0_3;
-                            var_v0_4++;
-                        } while ((temp_t6 + var_a1) != var_s0_2);
-                        if (var_s0_2 != 5) {
-                            goto block_83;
-                        }
-                    } else {
-                    block_83:
-                        var_v0_5 = &(&spA8[0])[var_s0_2];
-                        do {
-                            var_v0_5[1] += var_f0_3;
-                            var_v0_5[0] += var_f0_3;
-                            var_v0_5[2] += var_f0_3;
-                            var_v0_5[3] += var_f0_3;
-                            var_v0_5 += 4;
-                        } while (var_v0_5 != &spBC[0]);
-                    }
-                    var_s0_2 = var_a1;
-                }
-                temp_f2_5 = (f64) (var_t1_2[0] - var_t1_2[-1]);
-                var_f0_4 = 0.0f;
-                if (temp_f2_5 > 32768.0) {
-                    var_f0_4 = (f32) ((f64) 0.0f - 65536.0);
-                } else if (temp_f2_5 < -32768.0) {
-                    var_f0_4 = (f32) ((f64) 0.0f + 65536.0);
-                }
-                temp_t7 = (5 - var_a1) & 3;
-                if (var_a1 < 5) {
-                    if (temp_t7 != 0) {
-                        var_v0_6 = &(&sp94[0])[var_s0_2];
-                        do {
-                            var_s0_2++;
-                            var_v0_6[0] += var_f0_4;
-                            var_v0_6++;
-                        } while ((temp_t7 + var_a1) != var_s0_2);
-                        if (var_s0_2 != 5) {
-                            goto block_95;
-                        }
-                    } else {
-                    block_95:
-                        var_v0_7 = &(&sp94[0])[var_s0_2];
-                        do {
-                            var_v0_7[1] += var_f0_4;
-                            var_v0_7[0] += var_f0_4;
-                            var_v0_7[2] += var_f0_4;
-                            var_v0_7[3] += var_f0_4;
-                            var_v0_7 += 4;
-                        } while (var_v0_7 != &spA8[0]);
-                    }
-                }
-                var_a1++;
-                var_t1_2 += 4;
-            } while (var_a1 != 5);
-            if (sp15C[0x3F] == 0) {
-                sp154->racer.playerIndex = (s16) (s32) catmull_rom_interpolation(&spBC[0], 0, spEC);
-                sp154->midi_fade_point.unk2 = (u16) (s32) catmull_rom_interpolation(&spA8[0], 0, spEC);
-                sp154->unkObjBehavior1.unk4 = (s16) (s32) catmull_rom_interpolation(&sp94[0], 0, spEC);
-            } else {
-                sp154->racer.playerIndex = (s16) (s32) lerp(&spBC[0], 0U, spEC);
-                sp154->midi_fade_point.unk2 = (u16) (s32) lerp(&spA8[0], 0U, spEC);
-                sp154->unkObjBehavior1.unk4 = (s16) (s32) lerp(&sp94[0], 0U, spEC);
-            }
+
+    spEC = objAnim->unk0;
+    if (objAnim->unk3F == 0) {
+        spF8 = catmull_rom_interpolation(xPositions, 0, spEC);
+        spF4 = catmull_rom_interpolation(yPositions, 0, spEC);
+        spF0 = catmull_rom_interpolation(zPositions, 0, spEC);
+    } else {
+        spF8 = lerp(xPositions, 0, spEC);
+        spF4 = lerp(yPositions, 0, spEC);
+        spF0 = lerp(zPositions, 0, spEC);
+    }
+
+    spF8 -= sp154->segment.trans.x_position;
+    spF4 -= sp154->segment.trans.y_position;
+    spF0 -= sp154->segment.trans.z_position;
+
+    move_object(sp154, spF8, spF4, spF0);
+    sp154->segment.trans.scale = catmull_rom_interpolation(scales, 0, spEC) * sp90 * sp154->segment.header->scale;
+
+    switch (objAnim->unk2E) {
         case 1:
             break;
         case 2:
-            if (sp15C[0x3F] == 0) {
-                cubic_spline_interpolation(&sp124, 0, spEC, &spF8);
-                cubic_spline_interpolation(&sp110, 0, spEC, &spF4);
-                cubic_spline_interpolation(&spFC, 0, spEC, &spF0);
+            if (objAnim->unk3F == 0) {
+                cubic_spline_interpolation(xPositions, 0, spEC, &spF8);
+                cubic_spline_interpolation(yPositions, 0, spEC, &spF4);
+                cubic_spline_interpolation(zPositions, 0, spEC, &spF0);
             } else {
-                lerp_and_get_derivative(&sp124, 0U, spEC, &spF8);
-                lerp_and_get_derivative(&sp110, 0U, spEC, &spF4);
-                lerp_and_get_derivative(&spFC, 0U, spEC, &spF0);
+                lerp_and_get_derivative(xPositions, 0, spEC, &spF8);
+                lerp_and_get_derivative(yPositions, 0, spEC, &spF4);
+                lerp_and_get_derivative(zPositions, 0, spEC, &spF0);
             }
-            temp_f0_4 = sqrtf((spF8 * spF8) + (spF4 * spF4) + (spF0 * spF0));
-            if (temp_f0_4 != 0.0f) {
-                temp_f12_3 = (f32) (100.0 / (f64) temp_f0_4);
-                spF8 *= temp_f12_3;
-                spF4 *= temp_f12_3;
-                spF0 *= temp_f12_3;
+
+            spEC = sqrtf(spF8 * spF8 + spF4 * spF4 + spF0 * spF0);
+            if (spEC != 0.0f) {
+                delta = spEC;
+                spEC = spF8;
+                delta = 100.0 / delta;
+
+                spF8 *= delta;
+                spF4 *= delta;
+                spF0 *= delta;
             }
-            sp154->racer.playerIndex = arctan2_f(spF8, spF0) - 0x8000;
-            sp154->midi_fade_point.unk2 = arctan2_f(spF4, 100.0f);
+
+            sp154->segment.trans.rotation.y_rotation = arctan2_f(spF8, spF0) - 0x8000;
+            sp154->segment.trans.rotation.x_rotation = arctan2_f(spF4, 100.0f);
             break;
         case 3:
-            var_a1_2 = 0;
-            if (D_8011AE78 > 0) {
-                temp_v0_9 = sp15C[0x3E];
-                if (temp_v0_9 != (*D_8011AE74)->properties.common.unk4) {
-                loop_55:
-                    var_a1_2++;
-                    if (var_a1_2 < D_8011AE78) {
-                        if (temp_v0_9 != D_8011AE74[var_a1_2]->properties.common.unk4) {
-                            goto loop_55;
-                        }
+            for (j = 0; j < D_8011AE78 && objAnim->unk3E != D_8011AE74[j]->properties.animatedObj.behaviourID; j++) {}
+
+            if (j != D_8011AE78) {
+                objTransform = &((Object *) &D_8011AE74[j]->unk64->obj)->segment.trans;
+                if (objTransform != NULL) {
+                    spF8 = objTransform->x_position - sp154->segment.trans.x_position;
+                    spF4 = objTransform->y_position - sp154->segment.trans.y_position;
+                    spF0 = objTransform->z_position - sp154->segment.trans.z_position;
+                    spEC = sqrtf(spF8 * spF8 + spF4 * spF4 + spF0 * spF0);
+                    if (spEC > 0.0f) {
+                        sp154->segment.trans.rotation.y_rotation = arctan2_f(spF8, spF0) - 0x8000;
+                        sp154->segment.trans.rotation.x_rotation = arctan2_f(spF4, spEC);
                     }
                 }
             }
-            if (var_a1_2 != D_8011AE78) {
-                temp_v1 = D_8011AE74[var_a1_2]->unk64;
-                if (temp_v1 != NULL) {
-                    spF8 = temp_v1->racer.animationSpeed - sp154->racer.animationSpeed;
-                    spF4 = (f32) temp_v1->unkObjBehavior1.unkE[2] - (f32) sp154->unkObjBehavior1.unkE[2];
-                    spF0 = (f32) temp_v1->unkObjBehavior1.unkE[6] - (f32) sp154->unkObjBehavior1.unkE[6];
-                    temp_f0_5 = sqrtf((spF8 * spF8) + (spF4 * spF4) + (spF0 * spF0));
-                    spEC = temp_f0_5;
-                    if (temp_f0_5 > 0.0f) {
-                        sp154->racer.playerIndex = arctan2_f(spF8, spF0) - 0x8000;
-                        sp154->midi_fade_point.unk2 = arctan2_f(spF4, spEC);
-                    }
+            break;
+        default:
+            for (j = 1; j < 5; j++) {
+                f0 = 0.0f;
+                delta = yRotations[j] - yRotations[j - 1];
+                if (delta > 32768.0) {
+                    f0 -= 65536.0;
+                } else if (delta < -32768.0) {
+                    f0 += 65536.0;
                 }
+
+                // clang-formatter off
+                for (s0 = j; s0 < 5; s0++) {
+                    yRotations[s0] += f0;
+                }
+                // clang-formatter on
+
+                f0 = 0.0f;
+                delta = xRotations[j] - xRotations[j - 1];
+                if (delta > 32768.0) {
+                    f0 -= 65536.0;
+                } else if (delta < -32768.0) {
+                    f0 += 65536.0;
+                }
+
+                // clang-formatter off
+                for (s0 = j; s0 < 5; s0++) {
+                    xRotations[s0] += f0;
+                }
+                // clang-formatter on
+
+                f0 = 0.0f;
+                delta = zRotations[j] - zRotations[j - 1];
+                if (delta > 32768.0) {
+                    f0 -= 65536.0;
+                } else if (delta < -32768.0) {
+                    f0 += 65536.0;
+                }
+
+                // clang-formatter off
+                for (s0 = j; s0 < 5; s0++) {
+                    zRotations[s0] += f0;
+                }
+                // clang-formatter on
+            }
+
+            if (objAnim->unk3F == 0) {
+                sp154->segment.trans.rotation.y_rotation = catmull_rom_interpolation(yRotations, 0, spEC);
+                sp154->segment.trans.rotation.x_rotation = catmull_rom_interpolation(xRotations, 0, spEC);
+                sp154->segment.trans.rotation.z_rotation = catmull_rom_interpolation(zRotations, 0, spEC);
+            } else {
+                sp154->segment.trans.rotation.y_rotation = lerp(yRotations, 0, spEC);
+                sp154->segment.trans.rotation.x_rotation = lerp(xRotations, 0, spEC);
+                sp154->segment.trans.rotation.z_rotation = lerp(zRotations, 0, spEC);
             }
             break;
     }
-    return 0;
+
+    return FALSE;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80021600.s")
-#endif
 
 f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x) {
     f32 ret;
@@ -10445,8 +10256,8 @@ void mode_init_taj_race(void) {
         racer->unk1BA = 0;
         settings = get_settings();
         gEventCountdown = 80;
-        D_8011ADB4 = 0;
-        D_8011ADC0 = 1;
+        gRaceFinishTriggered = FALSE;
+        gNumFinishedRacers = 1;
         levelHeader->laps = 3;
         levelHeader->race_type = RACETYPE_DEFAULT;
         hud_init_element();
@@ -10465,7 +10276,7 @@ void mode_init_taj_race(void) {
         newRacerEntry.angleZ = 0;
         newRacerEntry.playerIndex = 4;
         newRacerEntry.common.objectID = ASSET_OBJECT_ID_FLYINGCARPET;
-        func_800619F4(0);
+        model_anim_offset(0);
         racerObj = spawn_object(&newRacerEntry.common, OBJECT_SPAWN_UNK01);
         (*gRacers)[1] = racerObj;
         gRacersByPosition[1] = racerObj;

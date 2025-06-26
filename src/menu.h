@@ -692,7 +692,7 @@ void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s
                    s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(s32 updateRate);
 void func_80098774(s32);
-void func_80094D28(UNUSED s32 updateRate);
+void postrace_viewport(UNUSED s32 updateRate);
 
 void func_80082BC8_837C8(s32 dialogueBoxID, s32 xPos1, s32 yPos1, s32 xPos2, 
     s32 yPos2, char *text, AlignmentFlags alignment, s32 textColour, s32 alpha);

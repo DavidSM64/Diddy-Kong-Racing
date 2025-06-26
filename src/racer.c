@@ -608,10 +608,10 @@ void racer_AI_pathing_inputs(Object *obj, Object_Racer *racer, s32 updateRate) {
     switch (raceType) {
         case RACETYPE_CHALLENGE_BATTLE:
         case RACETYPE_CHALLENGE_BANANAS:
-            func_8004447C(obj, racer, updateRate);
+            racer_ai_challenge(obj, racer, updateRate);
             break;
         case RACETYPE_CHALLENGE_EGGS:
-            func_800452A0(obj, racer, updateRate);
+            racer_ai_eggs(obj, racer, updateRate);
             break;
         default:
             func_80045C48(obj, racer, updateRate);
@@ -673,7 +673,7 @@ s32 roll_percent_chance(s32 chance) {
 }
 
 // Handles the opponent A.I. for battle & banana challenges.
-void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
+void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
     Object *sp74;
     Object_64 *tempRacer;
     LevelObjectEntry *sp6C;
@@ -1014,7 +1014,11 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
     }
 }
 
-void func_80045128(Object **racerObjs) {
+/**
+ * Manage the global flags for the egg challenge.
+ * Includes hatch progress, being held by a player, and number of hatched eggs.
+ */
+void racer_update_eggs(Object **racerObjs) {
     Object_Racer *racer;
     s32 i;
 
@@ -1022,15 +1026,24 @@ void func_80045128(Object **racerObjs) {
         racer = &racerObjs[i]->unk64->racer;
         gEggChallengeFlags[i] = racer->lap;
         if (racer->eggHudCounter != 0) {
-            gEggChallengeFlags[i] |= 0x40;
+            gEggChallengeFlags[i] |= RACER_EGG_HATCHING;
         }
         if (racer->held_obj != NULL) {
-            gEggChallengeFlags[i] |= 0x80;
+            gEggChallengeFlags[i] |= RACER_EGG_HELD;
         }
     }
 }
 
-void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
+/**
+ * A custom AI handler for the egg challenge.
+ * As a result of the open area design of Fire Mountain, the AI does not use pathing nodes.
+ * Instead, they use a simple positional targeting system that takes their current priority,
+ * then moves towards it until that objective is complete.
+ * They will first search for any eggs in the centre of the arena, then failing that, find one
+ * from another players nest to steal.
+ * If they're holding an egg, they'll attempt to take it to their nest.
+ */
+void racer_ai_eggs(Object *obj, Object_Racer *racer, s32 updateRate) {
     f32 diffX;
     f32 diffY;
     f32 diffZ;
@@ -1085,10 +1098,10 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
         flags = 0;
         bestTick = 0;
         for (i = 3; i >= 0; i--) {
-            tickCount = (gEggChallengeFlags[i] & 0xF) * 3;
-            if (gEggChallengeFlags[i] & 0x40) {
+            tickCount = (gEggChallengeFlags[i] & RACER_EGG_MASK) * 3;
+            if (gEggChallengeFlags[i] & RACER_EGG_HATCHING) {
                 tickCount += 2;
-            } else if (gEggChallengeFlags[i] & 0x80) {
+            } else if (gEggChallengeFlags[i] & RACER_EGG_HELD) {
                 tickCount += 1;
             }
             if (bestTick < tickCount) {
@@ -1112,7 +1125,7 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate) {
             }
             if (bestTick == 2) {
                 for (i = 0; i < 4; i++) {
-                    if (racer->racerIndex != i && gEggChallengeFlags[i] & 0x40) {
+                    if (racer->racerIndex != i && gEggChallengeFlags[i] & RACER_EGG_HATCHING) {
                         racerID = i;
                     }
                 }
@@ -1571,7 +1584,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s32 iTemp; // Seems to be reused for some reason
     s32 var_a3;
     s32 var_v1;
-    Unknown80046524 *temp_v0_16;
+    Object *vehiclePart;
     s32 var_t0;
     Object_Boost *asset20;
     s8 lastWheelSurface;
@@ -2245,11 +2258,11 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (waterHeight > 40.0f) {
         racer->unkC4 = 0.11f;
     }
-    if (obj->unk60->unk0 == 1) {
-        temp_v0_16 = (Unknown80046524 *) obj->unk60->unk4[0];
-        temp_v0_16->unk0 = (gCurrentStickX * 20) + 0x4000;
-        temp_v0_16->unk3A++;
-        temp_v0_16->unk3A &= 1;
+    if (obj->attachPoints->count == 1) {
+        vehiclePart = obj->attachPoints->obj[0];
+        vehiclePart->segment.trans.rotation.y_rotation = (gCurrentStickX * 20) + 0x4000;
+        vehiclePart->segment.object.modelIndex++;
+        vehiclePart->segment.object.modelIndex &= 1;
     }
     second_racer_camera_update(obj, racer, CAMERA_HOVERCRAFT, updateRateF);
     if (playerObjectHasMoved) {
@@ -3284,42 +3297,42 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
     mtxf_from_inverse_transform((MtxF *) &sp60, &gCurrentRacerTransform);
-    mtxf_transform_point((MtxF *) &sp60, obj->x_velocity, obj->y_velocity, obj->z_velocity, &racer->lateral_velocity,
-                         &racer->unk34, &racer->velocity);
-    if (obj->unk60 != NULL && obj->unk60->unk0 >= 3) {
-        temp_v0_obj = obj->unk60->unk4[2];
-        temp_v0_obj->trans.rotation.y_rotation = 0x4000;
-        temp_v0_obj->modelIndex += 1;
-        if (temp_v0_obj->modelIndex == temp_v0_obj->header->numberOfModelIds) {
-            temp_v0_obj->modelIndex = 0;
+    mtxf_transform_point((MtxF *) &sp60, obj->segment.x_velocity, obj->segment.y_velocity, obj->segment.z_velocity,
+                         &racer->lateral_velocity, &racer->unk34, &racer->velocity);
+    if (obj->attachPoints != NULL && obj->attachPoints->count >= 3) {
+        temp_v0_obj = obj->attachPoints->obj[2];
+        temp_v0_obj->segment.trans.rotation.y_rotation = 0x4000;
+        temp_v0_obj->segment.object.modelIndex += 1;
+        if (temp_v0_obj->segment.object.modelIndex == temp_v0_obj->segment.header->numberOfModelIds) {
+            temp_v0_obj->segment.object.modelIndex = 0;
         }
     }
-    if (obj->unk60 != NULL && obj->unk60->unk0 >= 3) {
+    if (obj->attachPoints != NULL && obj->attachPoints->count >= 3) {
         if (racer->groundedWheels != 0 || spA2 != FALSE) {
-            temp_v0_obj = obj->unk60->unk4[0];
-            if (temp_v0_obj->trans.y_position > 0.0f) {
-                temp_v0_obj->trans.y_position = temp_v0_obj->trans.y_position - 2.0;
+            temp_v0_obj = obj->attachPoints->obj[0];
+            if (temp_v0_obj->segment.trans.y_position > 0.0f) {
+                temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position - 2.0;
             } else {
                 temp_v0_obj->trans.y_position = 0.0f;
             }
-            temp_v0_obj->trans.flags &= ~OBJ_FLAGS_INVISIBLE;
-            temp_v0_obj = obj->unk60->unk4[1];
-            if (temp_v0_obj->trans.y_position > 0.0f) {
-                temp_v0_obj->trans.y_position = temp_v0_obj->trans.y_position - 2.0;
+            temp_v0_obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
+            temp_v0_obj = obj->attachPoints->obj[1];
+            if (temp_v0_obj->segment.trans.y_position > 0.0f) {
+                temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position - 2.0;
             } else {
                 temp_v0_obj->trans.y_position = 0.0f;
             }
             temp_v0_obj->trans.flags &= ~OBJ_FLAGS_INVISIBLE;
         } else {
-            temp_v0_obj = obj->unk60->unk4[0];
-            if (temp_v0_obj->trans.y_position < 20.0f) {
-                temp_v0_obj->trans.y_position = temp_v0_obj->trans.y_position + 1.0f;
+            temp_v0_obj = obj->attachPoints->obj[0];
+            if (temp_v0_obj->segment.trans.y_position < 20.0f) {
+                temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position + 1.0f;
             } else {
                 temp_v0_obj->trans.flags |= OBJ_FLAGS_INVISIBLE;
             }
-            temp_v0_obj = obj->unk60->unk4[1];
-            if (temp_v0_obj->trans.y_position < 20.0f) {
-                temp_v0_obj->trans.y_position = temp_v0_obj->trans.y_position + 1.0f;
+            temp_v0_obj = obj->attachPoints->obj[1];
+            if (temp_v0_obj->segment.trans.y_position < 20.0f) {
+                temp_v0_obj->segment.trans.y_position = temp_v0_obj->segment.trans.y_position + 1.0f;
             } else {
                 temp_v0_obj->trans.flags |= OBJ_FLAGS_INVISIBLE;
             }
@@ -3881,11 +3894,11 @@ void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
     mtxf_transform_point(&mtx, racerObj->x_velocity, racerObj->y_velocity, racerObj->z_velocity,
                          &racer->lateral_velocity, &racer->unk34, &racer->velocity);
     second_racer_camera_update(racerObj, racer, CAMERA_LOOP, updateRateF);
-    if (racerObj->unk60 != NULL && racer->vehicleIDPrev == VEHICLE_CAR && racerObj->unk60->unk0 >= 4) {
-        obj = racerObj->unk60->unk4[2];
-        obj->trans.rotation.y_rotation = 0;
-        obj = racerObj->unk60->unk4[3];
-        obj->trans.rotation.y_rotation = 0;
+    if (racerObj->attachPoints != NULL && racer->vehicleIDPrev == VEHICLE_CAR && racerObj->attachPoints->count >= 4) {
+        obj = racerObj->attachPoints->obj[2];
+        obj->segment.trans.rotation.y_rotation = 0;
+        obj = racerObj->attachPoints->obj[3];
+        obj->segment.trans.rotation.y_rotation = 0;
     }
     if (objectMoved) {
         racer->vehicleID = racer->vehicleIDPrev;
@@ -4052,7 +4065,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     obj->interactObj->y_position = obj->trans.y_position;
     obj->interactObj->z_position = obj->trans.z_position;
     tempRacer->groundedWheels = 3;
-    tempRacer->unk1AA = 1;
+    tempRacer->racerOrder = 1;
     tempRacer->racePosition = 1;
     tempRacer->miscAnimCounter = tempRacer->playerIndex * 5;
     tempRacer->checkpoint_distance = 1.0f;
@@ -5082,7 +5095,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     f32 traction;
     f32 surfaceTraction;
     f32 *miscAsset;
-    ObjectTransform *temp_v0;
+    ObjectTransform *attachmentTrans;
     f32 topSpeed;
     UNUSED s32 pad1;
     UNUSED s32 pad2;
@@ -5101,13 +5114,13 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->carBobX = -racer->roll * tempVel;
         racer->carBobY = -racer->yaw * tempVel;
         racer->carBobZ = -racer->pitch * tempVel;
-        if (obj->unk60 != NULL) {
-            for (i = 0; i < ((unk_Object_60 *) obj->unk60)->count; i++) {
-                tempVel = 1.0f / obj->trans.scale;
-                temp_v0 = ((unk_Object_60 *) obj->unk60)->transforms[i];
-                temp_v0->x_position = (f32) (-racer->carBobX * tempVel);
-                temp_v0->y_position = (f32) (-racer->carBobY * tempVel);
-                temp_v0->z_position = (f32) (-racer->carBobZ * tempVel);
+        if (obj->attachPoints != NULL) {
+            for (i = 0; i < obj->attachPoints->count; i++) {
+                tempVel = 1.0f / obj->segment.trans.scale;
+                attachmentTrans = &obj->attachPoints->obj[i]->segment.trans;
+                attachmentTrans->x_position = (f32) (-racer->carBobX * tempVel);
+                attachmentTrans->y_position = (f32) (-racer->carBobY * tempVel);
+                attachmentTrans->z_position = (f32) (-racer->carBobZ * tempVel);
             }
         }
     } else {
@@ -6093,15 +6106,15 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
     s32 isNotHardBraking;
     s32 i;
 
-    if (objRacer->unk60 == NULL) {
+    if (objRacer->attachPoints == NULL) {
         return;
     }
-    temp_v1 = objRacer->unk60->unk0;
+    temp_v1 = objRacer->attachPoints->count;
     if (temp_v1 == 2) {
-        someObj = objRacer->unk60->unk4[0];
-        someObj->trans.rotation.y_rotation = 0x4000;
-        someObj = objRacer->unk60->unk4[1];
-        someObj->trans.rotation.y_rotation = 0x4000;
+        someObj = objRacer->attachPoints->obj[0];
+        someObj->segment.trans.rotation.y_rotation = 0x4000;
+        someObj = objRacer->attachPoints->obj[1];
+        someObj->segment.trans.rotation.y_rotation = 0x4000;
     }
     if (temp_v1 >= 4) {
         velocity = racer->velocity;
@@ -6123,7 +6136,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
             racer->unkB0 -= 5.0;
             for (i = 0; i < 4; i++) {
                 if (i < 2 || isNotHardBraking) {
-                    someObj = objRacer->unk60->unk4[i];
+                    someObj = objRacer->attachPoints->obj[i];
                     if ((racer->unk1FB != 0 && i >= 3) || racer->unk1FB == 0) {
                         if (someObj->properties.common.unk0 != 0) {
                             someObj->modelIndex--;
@@ -6144,7 +6157,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
             racer->unkB0 += 5.0;
             for (i = 0; i < 4; i++) {
                 if (i < 2 || isNotHardBraking) {
-                    someObj = objRacer->unk60->unk4[i];
+                    someObj = objRacer->attachPoints->obj[i];
                     if ((racer->unk1FB != 0 && i >= 3) || racer->unk1FB == 0) {
                         if (someObj->properties.common.unk0 == 0) {
                             someObj->modelIndex--;
@@ -6164,11 +6177,11 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
         flags = 1;
         if (racer->unk1FB != 0) {
             for (i = 0; i < 2; i++) {
-                someObj = objRacer->unk60->unk4[i];
-                if (someObj->properties.common.unk0 != 0) {
-                    someObj->modelIndex--;
-                    if (someObj->modelIndex < 0) {
-                        someObj->modelIndex = (s8) (someObj->header->numberOfModelIds - 1);
+                someObj = objRacer->attachPoints->obj[i];
+                if (someObj->properties.racer.unk0 != 0) {
+                    someObj->segment.object.modelIndex--;
+                    if (someObj->segment.object.modelIndex < 0) {
+                        someObj->segment.object.modelIndex = (s8) (someObj->segment.header->numberOfModelIds - 1);
                     }
                 } else {
                     someObj->modelIndex++;
@@ -6181,7 +6194,7 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
         }
         temp_f0 = someObj->trans.y_position; // Fake
         for (i = 0; i < 4; i++) {
-            someObj = objRacer->unk60->unk4[i];
+            someObj = objRacer->attachPoints->obj[i];
             if (!(racer->unk1E3 & flags)) {
                 someObj->trans.y_position += ((-10.0f - someObj->trans.y_position) * 0.125);
                 if (racer->waterTimer != 0) {
@@ -6194,10 +6207,10 @@ void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF) {
             }
             flags <<= 1;
         }
-        someObj = objRacer->unk60->unk4[2];
-        someObj->trans.rotation.y_rotation = gCurrentStickX * 100;
-        someObj = objRacer->unk60->unk4[3];
-        someObj->trans.rotation.y_rotation = gCurrentStickX * 100;
+        someObj = objRacer->attachPoints->obj[2];
+        someObj->segment.trans.rotation.y_rotation = gCurrentStickX * 100;
+        someObj = objRacer->attachPoints->obj[3];
+        someObj->segment.trans.rotation.y_rotation = gCurrentStickX * 100;
     }
 }
 

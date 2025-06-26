@@ -126,6 +126,13 @@ typedef enum TajInteraction {
     TAJ_TELEPORT,
 } TajInteraction;
 
+typedef enum RacerEggFlags {
+    RACER_EGG_NONE,
+    RACER_EGG_MASK = 0xF,   // Bitmask used for the egg HUD fade counting.
+    RACER_EGG_HATCHING = (1 << 6), // Egg has hatch progress
+    RACER_EGG_HELD = (1 << 7) // Egg is held by a racer.
+} RacerEggFlags;
+
 #define AI_MIN 0
 #define AI_MAX 1
 #define AI_MIN_STEP 2
@@ -136,17 +143,6 @@ typedef struct AIBehaviourTable {
     f32 unk4;
     s8 percentages[4][4];
 } AIBehaviourTable;
-
-typedef struct Unknown80046524 {
-    s16 unk0;
-    u8 pad2[0x38];
-    s8 unk3A;
-} Unknown80046524;
-
-typedef struct unk_Object_60 {
-    s32 count;
-    ObjectTransform *transforms[1];
-} unk_Object_60;
 
 s32 roll_percent_chance(s32 chance);
 void apply_plane_tilt_anim(s32 updateRate, Object *obj, Object_Racer *racer);
@@ -214,7 +210,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate);
 void handle_racer_items(Object *obj, Object_Racer *racer, s32 updateRate);
 void drop_bananas(Object *obj, Object_Racer *racer, s32 number);
 void update_player_racer(Object *obj, s32 updateRate);
-void func_80045128(Object **racerObjs);
+void racer_update_eggs(Object **racerObjs);
 void timetrial_ghost_write(Object *obj, s32 updateRate);
 void func_80046524(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);
 void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF);
@@ -228,8 +224,8 @@ s32 func_80017248(Object *obj, s32, s32 *, Vec3f *, f32 *, f32 *, s8 *surface);
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
 void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
 void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Racer *racer); /* extern */
-void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate);
-void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
+void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate);
+void racer_ai_eggs(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
 void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate);
 Object *func_8005698C(Object *racerObj, Object_Racer *racer, f32 *outDistance);
