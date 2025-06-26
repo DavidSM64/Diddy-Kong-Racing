@@ -720,9 +720,9 @@ void obj_enable_emitter(Object *obj, s32 emitterIndex) {
     emitter->timeFromLastSpawn = 0;
 
     if (emitter->flags & PARTICLE_LINE) {
-        emitter->lineRefPoint.x = obj->segment.trans.x_position;
-        emitter->lineRefPoint.y = obj->segment.trans.y_position;
-        emitter->lineRefPoint.z = obj->segment.trans.z_position;
+        emitter->lineRefPoint.x = obj->trans.x_position;
+        emitter->lineRefPoint.y = obj->trans.y_position;
+        emitter->lineRefPoint.z = obj->trans.z_position;
     } else if (emitter->flags & PARTICLE_POINT) {
         emitter->point_opacity = gParticlesAssetTable[emitter->descriptorID]->colour.a << 8;
 
@@ -756,7 +756,7 @@ void obj_enable_emitter(Object *obj, s32 emitterIndex) {
     }
     emitter->flags &= ~PARTICLE_POINT_EMITTER_DISABLED;
     emitter->flags |= PARTICLE_EMITTER_ENABLED | PARTICLE_EMITTER_AWAITING_SPAWN;
-    obj->segment.numActiveEmitters++;
+    obj->numActiveEmitters++;
 }
 
 /**
@@ -768,7 +768,7 @@ void obj_disable_emitter(Object *obj, s32 emitterIndex) {
     emitter = &obj->particleEmitter[emitterIndex];
 
     emitter->flags &= ~PARTICLE_EMITTER_ENABLED;
-    obj->segment.numActiveEmitters--;
+    obj->numActiveEmitters--;
 }
 
 /**
@@ -790,12 +790,12 @@ void update_vehicle_particles(Object *racerObj, s32 updateRate) {
     u32 emittersEnabled;
     u8 *alphaPtr;
 
-    racer = &racerObj->unk64->racer;
+    racer = racerObj->racer;
     emittersEnabled = racerObj->particleEmittersEnabled;
     vehicleId = racer->vehicleID;
     i = 0;
     object_do_player_tumble(racerObj);
-    for (; i < racerObj->segment.header->particleCount; i++) {
+    for (; i < racerObj->header->particleCount; i++) {
         if (emittersEnabled & OBJ_EMIT_1) {
             someBool = TRUE;
             switch (vehicleId) {
@@ -938,7 +938,7 @@ void obj_spawn_particle(Object *obj, s32 updateRate) {
     u32 bits;
 
     bits = obj->particleEmittersEnabled;
-    for (i = 0; i < obj->segment.header->particleCount; i++) {
+    for (i = 0; i < obj->header->particleCount; i++) {
         if (bits & 1) {
             if (!(obj->particleEmitter[i].flags & PARTICLE_EMITTER_ENABLED)) {
                 obj_enable_emitter(obj, i);
@@ -1073,14 +1073,14 @@ void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *e
     switch (behaviour->flags & (PARTICLE_VELOCITY_RELATIVE_TO_PARENT | PARTICLE_VELOCITY_ABSOLUTE |
                                 PARTICLE_VELOCITY_SCALED_FROM_PARENT)) {
         case PARTICLE_VELOCITY_RELATIVE_TO_PARENT:
-            particle->velocity.x += obj->segment.x_velocity;
-            particle->velocity.y += obj->segment.y_velocity;
-            particle->velocity.z += obj->segment.z_velocity;
+            particle->velocity.x += obj->x_velocity;
+            particle->velocity.y += obj->y_velocity;
+            particle->velocity.z += obj->z_velocity;
             break;
         case PARTICLE_VELOCITY_SCALED_FROM_PARENT:
-            particle->velocity.x *= obj->segment.x_velocity;
-            particle->velocity.y *= obj->segment.y_velocity;
-            particle->velocity.z *= obj->segment.z_velocity;
+            particle->velocity.x *= obj->x_velocity;
+            particle->velocity.y *= obj->y_velocity;
+            particle->velocity.z *= obj->z_velocity;
             break;
     }
 
@@ -1110,7 +1110,7 @@ void setup_particle_velocity(Particle *particle, Object *obj, ParticleEmitter *e
         } else {
             vec3f_rotate_py(&emitter->emissionDirection, &sourceVel);
         }
-        vec3f_rotate(&particle->parentObj->segment.trans.rotation, &sourceVel);
+        vec3f_rotate(&particle->parentObj->trans.rotation, &sourceVel);
 
         particle->velocity.x += sourceVel.x;
         particle->velocity.y += sourceVel.y;
@@ -1166,18 +1166,18 @@ void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *e
         particle->localPos.z += sourcePos.z;
     }
     if (particle->movementType != PARTICLE_MOVEMENT_BASIC_PARENT) {
-        vec3f_rotate(&obj->segment.trans.rotation, &particle->localPos);
+        vec3f_rotate(&obj->trans.rotation, &particle->localPos);
     }
     particle->trans.x_position = particle->localPos.x;
     particle->trans.y_position = particle->localPos.y;
     particle->trans.z_position = particle->localPos.z;
     if (particle->movementType == PARTICLE_MOVEMENT_BASIC_PARENT) {
-        vec3f_rotate(&obj->segment.trans.rotation, (Vec3f *) &particle->trans.x_position);
+        vec3f_rotate(&obj->trans.rotation, (Vec3f *) &particle->trans.x_position);
     }
 
-    particle->trans.x_position += obj->segment.trans.x_position;
-    particle->trans.y_position += obj->segment.trans.y_position;
-    particle->trans.z_position += obj->segment.trans.z_position;
+    particle->trans.x_position += obj->trans.x_position;
+    particle->trans.y_position += obj->trans.y_position;
+    particle->trans.z_position += obj->trans.z_position;
 }
 
 /**
@@ -1199,7 +1199,7 @@ PointParticle *create_point_particle(Object *obj, ParticleEmitter *emitter) {
         return particle;
     }
 
-    particle->base.segmentID = obj->segment.object.segmentID;
+    particle->base.segmentID = obj->segmentID;
     particle->base.trans.flags = OBJ_FLAGS_PARTICLE;
     particle->base.movementType = descriptor->movementType;
     particle->base.descFlags = descriptor->flags;
@@ -1249,12 +1249,9 @@ PointParticle *create_point_particle(Object *obj, ParticleEmitter *emitter) {
         particle->base.trans.rotation.x_rotation = behaviour->rotation.x_rotation;
         particle->base.trans.rotation.z_rotation = behaviour->rotation.z_rotation;
     } else {
-        particle->base.trans.rotation.y_rotation =
-            obj->segment.trans.rotation.y_rotation + behaviour->rotation.y_rotation;
-        particle->base.trans.rotation.x_rotation =
-            obj->segment.trans.rotation.x_rotation + behaviour->rotation.x_rotation;
-        particle->base.trans.rotation.z_rotation =
-            obj->segment.trans.rotation.z_rotation + behaviour->rotation.z_rotation;
+        particle->base.trans.rotation.y_rotation = obj->trans.rotation.y_rotation + behaviour->rotation.y_rotation;
+        particle->base.trans.rotation.x_rotation = obj->trans.rotation.x_rotation + behaviour->rotation.x_rotation;
+        particle->base.trans.rotation.z_rotation = obj->trans.rotation.z_rotation + behaviour->rotation.z_rotation;
     }
     particle->base.angularVelocity.y_rotation = behaviour->angularVelocity.y_rotation;
     particle->base.angularVelocity.x_rotation = behaviour->angularVelocity.x_rotation;
@@ -1333,7 +1330,7 @@ Particle *create_line_particle(Object *obj, ParticleEmitter *emitter) {
     if (particle == NULL) {
         return NULL;
     }
-    particle->segmentID = obj->segment.object.segmentID;
+    particle->segmentID = obj->segmentID;
     particle->trans.flags = OBJ_FLAGS_PARTICLE;
     particle->movementType = descriptor->movementType;
     particle->descFlags = descriptor->flags;
@@ -1380,10 +1377,10 @@ Particle *create_line_particle(Object *obj, ParticleEmitter *emitter) {
     emitter->lineRefPoint.x = emitter->position.x;
     emitter->lineRefPoint.y = emitter->position.y;
     emitter->lineRefPoint.z = emitter->position.z;
-    vec3f_rotate(&obj->segment.trans.rotation, &emitter->lineRefPoint);
-    emitter->lineRefPoint.x += obj->segment.trans.x_position;
-    emitter->lineRefPoint.y += obj->segment.trans.y_position;
-    emitter->lineRefPoint.z += obj->segment.trans.z_position;
+    vec3f_rotate(&obj->trans.rotation, &emitter->lineRefPoint);
+    emitter->lineRefPoint.x += obj->trans.x_position;
+    emitter->lineRefPoint.y += obj->trans.y_position;
+    emitter->lineRefPoint.z += obj->trans.z_position;
 
     particle->lineCreationPhase = 0;
     particle->lineOrientation = 0;
@@ -1433,9 +1430,9 @@ Particle *create_line_particle(Object *obj, ParticleEmitter *emitter) {
     }
     particle->lineOrientation = descriptor->lineOrientation;
     particle->line_unused_6B = descriptor->line_unused_B;
-    particle->trans.x_position = obj->segment.trans.x_position;
-    particle->trans.y_position = obj->segment.trans.y_position;
-    particle->trans.z_position = obj->segment.trans.z_position;
+    particle->trans.x_position = obj->trans.x_position;
+    particle->trans.y_position = obj->trans.y_position;
+    particle->trans.z_position = obj->trans.z_position;
     emitter->line_unused = 0;
     return particle;
 }
@@ -1465,7 +1462,7 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
     if (particle == NULL) {
         return particle;
     }
-    particle->segmentID = obj->segment.object.segmentID;
+    particle->segmentID = obj->segmentID;
     particle->trans.flags = OBJ_FLAGS_PARTICLE;
     particle->movementType = descriptor->movementType;
     particle->descFlags = descriptor->flags;
@@ -1487,9 +1484,8 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
         scale += (f32) rand_range(-behaviour->scaleVelocityRange, behaviour->scaleVelocityRange) * 0.00001525878906;
     }
     if (behaviour->flags & PARTICLE_SCALE_VELOCITY_INHERITS_PARENT_SPEED) {
-        particle->scaleVelocity = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
-                                        (obj->segment.y_velocity * obj->segment.y_velocity) +
-                                        (obj->segment.z_velocity * obj->segment.z_velocity)) *
+        particle->scaleVelocity = sqrtf((obj->x_velocity * obj->x_velocity) + (obj->y_velocity * obj->y_velocity) +
+                                        (obj->z_velocity * obj->z_velocity)) *
                                   scale * 0.1f;
     } else {
         particle->scaleVelocity = descriptor->scale * scale;
@@ -1627,9 +1623,9 @@ Particle *create_general_particle(Object *obj, ParticleEmitter *emitter) {
         particle->trans.rotation.x_rotation = behaviour->rotation.x_rotation;
         particle->trans.rotation.z_rotation = behaviour->rotation.z_rotation;
     } else {
-        particle->trans.rotation.y_rotation = obj->segment.trans.rotation.y_rotation + behaviour->rotation.y_rotation;
-        particle->trans.rotation.x_rotation = obj->segment.trans.rotation.x_rotation + behaviour->rotation.x_rotation;
-        particle->trans.rotation.z_rotation = obj->segment.trans.rotation.z_rotation + behaviour->rotation.z_rotation;
+        particle->trans.rotation.y_rotation = obj->trans.rotation.y_rotation + behaviour->rotation.y_rotation;
+        particle->trans.rotation.x_rotation = obj->trans.rotation.x_rotation + behaviour->rotation.x_rotation;
+        particle->trans.rotation.z_rotation = obj->trans.rotation.z_rotation + behaviour->rotation.z_rotation;
     }
     randomizationFlags =
         behaviour->randomizationFlags & (PARTICLE_RANDOM_ROLL | PARTICLE_RANDOM_PITCH | PARTICLE_RANDOM_YAW);
@@ -2029,9 +2025,8 @@ void update_line_particle(Particle *particle) {
     if (particle->lineCreationPhase < 2 && obj != NULL) {
 
         if (emitter->behaviour->flags & PARTICLE_SCALE_VELOCITY_INHERITS_PARENT_SPEED) {
-            scale = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
-                          (obj->segment.y_velocity * obj->segment.y_velocity) +
-                          (obj->segment.z_velocity * obj->segment.z_velocity));
+            scale = sqrtf((obj->x_velocity * obj->x_velocity) + (obj->y_velocity * obj->y_velocity) +
+                          (obj->z_velocity * obj->z_velocity));
             scale = scale * particle->trans.scale * 0.1f;
         } else {
             scale = particle->trans.scale;
@@ -2051,11 +2046,11 @@ void update_line_particle(Particle *particle) {
                     vtxOffset.y = scale;
                     break;
             }
-            vec3f_rotate(&obj->segment.trans.rotation, &vtxOffset);
+            vec3f_rotate(&obj->trans.rotation, &vtxOffset);
         } else {
-            vtxOffset.x = obj->segment.x_velocity;
-            vtxOffset.y = obj->segment.y_velocity;
-            vtxOffset.z = obj->segment.z_velocity;
+            vtxOffset.x = obj->x_velocity;
+            vtxOffset.y = obj->y_velocity;
+            vtxOffset.z = obj->z_velocity;
             tempf = ((vtxOffset.x * vtxOffset.x) + (vtxOffset.y * vtxOffset.y)) + (vtxOffset.z * vtxOffset.f[2]);
             if (tempf < 0.01f) {
                 tempf = 1.0f;
@@ -2245,9 +2240,9 @@ void move_particle_basic_parent(Particle *particle) {
     particle->trans.z_position = particle->localPos.z;
     parent = particle->parentObj;
     if (parent) {
-        particle->trans.x_position += parent->segment.trans.x_position;
-        particle->trans.y_position += parent->segment.trans.y_position;
-        particle->trans.z_position += parent->segment.trans.z_position;
+        particle->trans.x_position += parent->trans.x_position;
+        particle->trans.y_position += parent->trans.y_position;
+        particle->trans.z_position += parent->trans.z_position;
     }
 }
 
@@ -2277,9 +2272,9 @@ void move_particle_attached_to_parent(Particle *particle) {
 
     parent = particle->parentObj;
     if (parent != NULL) {
-        particle->trans.x_position += parent->segment.trans.x_position;
-        particle->trans.y_position += parent->segment.trans.y_position;
-        particle->trans.z_position += parent->segment.trans.z_position;
+        particle->trans.x_position += parent->trans.x_position;
+        particle->trans.y_position += parent->trans.y_position;
+        particle->trans.z_position += parent->trans.z_position;
     }
 }
 

@@ -6,9 +6,9 @@
 #include "level_object_entries.h"
 
 /**
- * Objects have a union at offset 0x78, that's 8 bytes large. 
+ * Objects have a union at offset 0x78, that's 8 bytes large.
  * Here's a collection of unions to help improve readability for them.
-*/
+ */
 
 typedef struct ObjPropertyCommon {
     s32 unk0;
@@ -20,10 +20,9 @@ typedef struct ObjPropertyDistance {
     s32 unk4;
 } ObjPropertyDistance;
 
-typedef struct ObjPropertySpeed {
+typedef struct ObjPropertyTorchMist {
     s32 speed;
-    s32 unk4;
-} ObjPropertySpeed;
+} ObjPropertyTorchMist;
 
 typedef struct ObjPropertyBanana {
     s32 status;
@@ -48,110 +47,152 @@ typedef struct ObjPropertyLog {
 } ObjPropertyLog;
 
 typedef struct ObjPropertyScenery {
-	struct Object *interactObj;
-	s16 hitTimer;
-	s16 angleVel;
+    struct Object *interactObj;
+    s16 hitTimer;
+    s16 angleVel;
 } ObjPropertyScenery;
 
 typedef struct ObjPropertyFireball {
-	struct Object *obj;
-	s32 timer;
+    struct Object *obj;
+    s32 timer;
 } ObjPropertyFireball;
 
-typedef struct ObjPropertyLasergun {
-	s32 timer;
-	struct Object_LaserGun *obj;
-} ObjPropertyLasergun;
+typedef struct ObjPropertyWizPigShip {
+    s32 unk0;
+    s32 timer;
+} ObjPropertyWizPigShip;
+
+typedef struct ObjPropertyLaserbolt {
+    s32 timer;
+    struct Object_LaserGun *obj;
+} ObjPropertyLaserbolt;
 
 typedef struct ObjPropertyTrophyCabinet {
-	s32 action;
-	s32 trophy;
+    s32 action;
+    s32 trophy;
 } ObjPropertyTrophyCabinet;
 
 typedef struct ObjPropertyEggSpawner {
-	struct Object *egg;
+    struct Object *egg;
 } ObjPropertyEggSpawner;
 
 typedef struct ObjPropertyZipper {
-	s32 radius;
+    s32 radius;
 } ObjPropertyZipper;
 
 typedef struct ObjPropertyCharacterFlag {
-	s32 playerID;
-	s32 characterID;
+    s32 playerID;
+    s32 characterID;
 } ObjPropertyCharacterFlag;
 
-typedef struct ObjPropertyNPC {
-	s32 action;
-	s32 timer;
-} ObjPropertyNPC;
+typedef struct ObjPropertyGoldenBalloon {
+    s32 action;
+    s32 timer;
+} ObjPropertyGoldenBalloon;
+
+typedef struct ObjPropertySilverCoin {
+    s32 action;
+    s32 timer;
+} ObjPropertySilverCoin;
+
+typedef struct ObjPropertyTT {
+    s32 action;
+    s32 timer;
+} ObjPropertyTT;
+
+typedef struct ObjPropertyTaj {
+    s32 action;
+    s32 timer;
+} ObjPropertyTaj;
 
 typedef struct ObjPropertyLavaSpurt {
-	s32 actionTimer;
-	s32 delayTimer;
+    s32 actionTimer;
+    s32 delayTimer;
 } ObjPropertyLavaSpurt;
 
+typedef struct ObjPropertyPosArrow {
+    s32 playerID;
+} ObjPropertyPosArrow;
+
 typedef struct ObjPropertyAnimation {
-	s32 action;
-	s32 behaviourID;
+    s32 action;
+    s32 behaviourID;
 } ObjPropertyAnimation;
 
+typedef struct ObjPropertyAnimatedObject {
+    s32 unk0;
+    s32 unk4;
+} ObjPropertyAnimatedObject;
+
 typedef struct ObjPropertyInfoPoint {
-	s32 radius;
-	s32 visible;
+    s32 radius;
+    s32 visible;
 } ObjPropertyInfoPoint;
 
 typedef struct ObjPropertyBombExplosion {
-	s32 timer;
-	s32 unk4;
+    s32 timer;
+    s32 unk4;
 } ObjPropertyBombExplosion;
 
 typedef struct ObjPropertyLighthouse {
-	s32 active;
+    s32 active;
 } ObjPropertyLighthouse;
 
 typedef struct ObjPropertyDoor {
-	s32 closeAngle;
-	s32 openAngle;
+    s32 closeAngle;
+    s32 openAngle;
 } ObjPropertyDoor;
 
+typedef struct ObjPropertyBridgeWhaleRamp {
+    s32 unk0;
+} ObjPropertyBridgeWhaleRamp;
+
+typedef struct ObjPropertyRampSwitch {
+    s32 unk0;
+} ObjPropertyRampSwitch;
+
 typedef struct ObjPropertySkyControl {
-	s32 setting;
-	s32 radius;
+    s32 setting;
+    s32 radius;
 } ObjPropertySkyControl;
 
 typedef struct ObjPropertyTreasureSucker {
-	s32 playerID;
-	s32 spawnTimer;
+    s32 playerID;
+    s32 spawnTimer;
 } ObjPropertyTreasureSucker;
 
 typedef struct ObjPropertyTreasureBanana {
-	s32 diff;
-	struct Object_Racer *racer;
+    s32 diff;
+    struct Object_Racer *racer;
 } ObjPropertyTreasureBanana;
 
+typedef struct ObjPropertyFlyCoin {
+    s32 diff;
+    struct Object_Racer *racer;
+} ObjPropertyFlyCoin;
+
 typedef struct ObjPropertyBananaSpawner {
-	s32 timer;
-	s32 spawn;
+    s32 timer;
+    s32 spawn;
 } ObjPropertyBananaSpawner;
 
 typedef struct ObjPropertyWorldKey {
-	s32 keyID;
+    s32 keyID;
 } ObjPropertyWorldKey;
 
 typedef struct ObjPropertyWeaponBalloon {
-	s32 balloonID;
+    s32 balloonID;
     s32 particleTimer;
 } ObjPropertyWeaponBalloon;
 
 typedef struct ObjPropertyRacer {
-	struct Object *unk0;
+    struct Object *unk0;
     s32 unk4;
 } ObjPropertyRacer;
 
 typedef struct ObjPropertySetupPoint {
-    s32 racerIndex; 
-    s32 entranceID; 
+    s32 racerIndex;
+    s32 entranceID;
 } ObjPropertySetupPoint;
 
 typedef struct ObjPropertyWeapon {
@@ -162,24 +203,32 @@ typedef struct ObjPropertyWeapon {
 } ObjPropertyWeapon;
 
 typedef struct ObjPropertyCamControl {
-    s32 cameraID; 
+    s32 cameraID;
 } ObjPropertyCamControl;
 
 typedef struct ObjPropertyTimeTrial {
-    s32 timestamp; 
-    struct ObjectHeader *header; 
+    s32 timestamp;
+    struct ObjectHeader *header;
 } ObjPropertyTimeTrial;
+
+typedef struct ObjPropertyDinoWhale {
+    s32 unk0;
+} ObjPropertyDinoWhale;
+
+typedef struct ObjPropertyBubbler {
+    s32 unk0;
+} ObjPropertyBubbler;
 
 typedef struct ObjPropertyBoost {
     struct Object *obj;
     union {
-        s32 indexes;  // Keep this for compatibility
+        s32 indexes; // Keep this for compatibility
         // This is a bitfield definition for the bits in indexes.
         // It won't match when used, but it's useful for understanding the structure.
         struct {
-            s32 racerIndex : 4;   // bits 28-31  ((indexes >> 28) & 0xF)
-            s32 vertIndex  : 14;  // bits 14-27  ((indexes >> 14) & 0x3FFF)
-            s32 trisIndex  : 14;  // bits 0-13   (indexes & 0x3FFF)
+            s32 racerIndex : 4; // bits 28-31  ((indexes >> 28) & 0xF)
+            s32 vertIndex : 14; // bits 14-27  ((indexes >> 14) & 0x3FFF)
+            s32 trisIndex : 14; // bits 0-13   (indexes & 0x3FFF)
         };
     };
 } ObjPropertyBoost;
@@ -187,37 +236,53 @@ typedef struct ObjPropertyBoost {
 typedef struct ObjProperties {
     union {
         ObjPropertyCommon common;
-        ObjPropertyDistance distance;
-        ObjPropertySpeed speed;
-        ObjPropertyBanana banana;
-        ObjPropertyName levelName;
-        ObjPropertyProjectile projectile;
-        ObjPropertyLog log;
-        ObjPropertyScenery scenery;
-        ObjPropertyFireball fireball;
-        ObjPropertyLasergun lasergun;
-        ObjPropertyTrophyCabinet trophyCabinet;
-        ObjPropertyEggSpawner eggSpawner;
-        ObjPropertyZipper zipper;
-        ObjPropertyCharacterFlag characterFlag;
-        ObjPropertyNPC npc;
-        ObjPropertyLavaSpurt lavaSpurt;
-        ObjPropertyAnimation animatedObj;
-        ObjPropertyInfoPoint infoPoint;
-        ObjPropertyBombExplosion bombExplosion;
-        ObjPropertyLighthouse lighthouse;
-        ObjPropertyDoor door;
-        ObjPropertySkyControl skyControl;
-        ObjPropertyTreasureSucker treasureSucker;
-        ObjPropertyTreasureBanana treasureBanana;
-        ObjPropertyBananaSpawner bananaSpawner;
-        ObjPropertyWorldKey worldKey;
-        ObjPropertyWeaponBalloon weaponBalloon;
-        ObjPropertyRacer racer;
-        ObjPropertySetupPoint setupPoint;
-        ObjPropertyWeapon weapon;
-        ObjPropertyCamControl camControl;
-        ObjPropertyTimeTrial timeTrial;
+        ObjPropertyDistance distance;               // BHV_FOG_CHANGER, BHV_WEATHER
+        ObjPropertyTorchMist torchMist;             // BHV_TORCH_MIST
+        ObjPropertyBanana banana;                   // BHV_BANANA
+        ObjPropertyName levelName;                  // BHV_LEVEL_NAME
+        ObjPropertyProjectile projectile;           // BHV_WEAPON_2
+        ObjPropertyLog log;                         // BHV_LOG
+        ObjPropertyScenery scenery;                 // BHV_SCENERY
+        ObjPropertyFireball fireball;               // BHV_FIREBALL_OCTOWEAPON, BHV_FIREBALL_OCTOWEAPON_2
+        ObjPropertyLaserbolt laserbolt;             // BHV_LASER_BOLT
+        ObjPropertyTrophyCabinet trophyCabinet;     // BHV_TROPHY_CABINET
+        ObjPropertyEggSpawner eggSpawner;           // BHV_EGG_CREATOR
+        ObjPropertyZipper zipper;                   // BHV_ZIPPER_GROUND
+        ObjPropertyCharacterFlag characterFlag;     // BHV_CHARACTER_FLAG
+        ObjPropertyGoldenBalloon goldenBalloon;     // BHV_GOLDEN_BALLOON
+        ObjPropertySilverCoin silverCoin;           // BHV_SILVER_COIN_2, BHV_SILVER_COIN
+        ObjPropertyTT tt;                           // BHV_STOPWATCH_MAN
+        ObjPropertyTaj taj;                         // BHV_PARK_WARDEN
+        ObjPropertyLavaSpurt lavaSpurt;             // BHV_LAVA_SPURT
+        ObjPropertyPosArrow posArrow;               // BHV_POS_ARROW
+        ObjPropertyAnimation animation;             // BHV_ANIMATION
+        ObjPropertyWizPigShip wizpigship;           // BHV_WIZPIG_SHIP
+        ObjPropertyAnimatedObject animatedObj;      // BHV_DINO_WHALE, BHV_ANIMATED_OBJECT, BHV_CAMERA_ANIMATION
+                                                    // BHV_CAR_ANIMATION, BHV_CHARACTER_SELECT, BHV_VEHICLE_ANIMATION
+                                                    // BHV_HIT_TESTER, BHV_HIT_TESTER_2, BHV_PARK_WARDEN_2
+                                                    // BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP, BHV_ANIMATED_OBJECT_3
+                                                    // BHV_ANIMATED_OBJECT_4, BHV_SNOWBALL, BHV_SNOWBALL_2
+                                                    // BHV_SNOWBALL_3, BHV_SNOWBALL_4, BHV_HIT_TESTER_3
+                                                    // BHV_HIT_TESTER_4, BHV_DOOR_OPENER, BHV_PIG_ROCKETEER
+                                                    // BHV_WIZPIG_GHOSTS
+        ObjPropertyInfoPoint infoPoint;             // BHV_INFO_POINT
+        ObjPropertyBombExplosion bombExplosion;     // BHV_BOMB_EXPLOSION
+        ObjPropertyLighthouse lighthouse;           // BHV_TELEPORT
+        ObjPropertyDoor door;                       // BHV_DOOR, BHV_TT_DOOR
+        ObjPropertyBridgeWhaleRamp bridgeWhaleRamp; // BHV_BRIDGE_WHALE_RAMP
+        ObjPropertyRampSwitch rampSwitch;           // BHV_RAMP_SWITCH
+        ObjPropertySkyControl skyControl;           // BHV_SKY_CONTROL
+        ObjPropertyTreasureSucker treasureSucker;   // BHV_TREASURE_SUCKER
+        ObjPropertyFlyCoin flyCoin;                 // BHV_FLY_COIN
+        ObjPropertyBananaSpawner bananaSpawner;     // BHV_BANANA_SPAWNER
+        ObjPropertyWorldKey worldKey;               // BHV_WORLD_KEY
+        ObjPropertyWeaponBalloon weaponBalloon;     // BHV_WEAPON_BALLOON
+        ObjPropertySetupPoint setupPoint;           // BHV_SETUP_POINT
+        ObjPropertyWeapon weapon;                   // BHV_WEAPON
+        ObjPropertyCamControl camControl;           // BHV_CAMERA_CONTROL
+        ObjPropertyTimeTrial timeTrial;             // BHV_TIMETRIAL_GHOST
+        ObjPropertyDinoWhale dinoWhale;             // BHV_DINO_WHALE
+        ObjPropertyBubbler bubbler;                 // BHV_BUBBLER
         ObjPropertyBoost boost;
     };
 } ObjProperties;

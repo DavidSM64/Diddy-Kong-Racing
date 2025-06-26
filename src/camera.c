@@ -1073,15 +1073,15 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vtx, Object *obj, S
         // between the object and the camera, as well as properly orienting the sprite in 3D space.
 
         // Calculate camera position relative to the object's position
-        diffX = gCameraRelPosStackX[gCameraMatrixPos] - obj->segment.trans.x_position;
-        diffY = gCameraRelPosStackY[gCameraMatrixPos] - obj->segment.trans.y_position;
-        diffZ = gCameraRelPosStackZ[gCameraMatrixPos] - obj->segment.trans.z_position;
+        diffX = gCameraRelPosStackX[gCameraMatrixPos] - obj->trans.x_position;
+        diffY = gCameraRelPosStackY[gCameraMatrixPos] - obj->trans.y_position;
+        diffZ = gCameraRelPosStackZ[gCameraMatrixPos] - obj->trans.z_position;
 
         // Rotate camera coordinates by the object's yaw rotation
         // to get the camera orientation relative to the vehicle,
         // e.g., to determine if we view the wheel from the side.
-        sineY = sins_f(obj->segment.trans.rotation.y_rotation);
-        cosY = coss_f(obj->segment.trans.rotation.y_rotation);
+        sineY = sins_f(obj->trans.rotation.y_rotation);
+        cosY = coss_f(obj->trans.rotation.y_rotation);
 
         temp = (diffX * cosY) + (diffZ * sineY);
         diffZ = (diffZ * cosY) - (diffX * sineY);
@@ -1113,17 +1113,17 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vtx, Object *obj, S
 
         // Construct the model matrix for the sprite,
         // orienting it perpendicular to the camera and applying the calculated tilt angle.
-        diffX = gCameraRelPosStackX[gCameraMatrixPos] - obj->segment.trans.x_position;
-        diffY = gCameraRelPosStackY[gCameraMatrixPos] - obj->segment.trans.y_position;
-        diffZ = gCameraRelPosStackZ[gCameraMatrixPos] - obj->segment.trans.z_position;
+        diffX = gCameraRelPosStackX[gCameraMatrixPos] - obj->trans.x_position;
+        diffY = gCameraRelPosStackY[gCameraMatrixPos] - obj->trans.y_position;
+        diffZ = gCameraRelPosStackZ[gCameraMatrixPos] - obj->trans.z_position;
         lateralDist = sqrtf((diffX * diffX) + (diffZ * diffZ));
         gCameraTransform.rotation.y_rotation = arctan2_f(diffX, diffZ);
         gCameraTransform.rotation.x_rotation = -arctan2_f(diffY, lateralDist);
         gCameraTransform.rotation.z_rotation = tiltAngle;
-        gCameraTransform.scale = obj->segment.trans.scale;
-        gCameraTransform.x_position = obj->segment.trans.x_position;
-        gCameraTransform.y_position = obj->segment.trans.y_position;
-        gCameraTransform.z_position = obj->segment.trans.z_position;
+        gCameraTransform.scale = obj->trans.scale;
+        gCameraTransform.x_position = obj->trans.x_position;
+        gCameraTransform.y_position = obj->trans.y_position;
+        gCameraTransform.z_position = obj->trans.z_position;
         mtxf_from_transform(&gCurrentModelMatrixF, &gCameraTransform);
         gModelMatrixStackPos++;
         mtxf_mul(&gCurrentModelMatrixF, gModelMatrixF[gModelMatrixStackPos - 1], gModelMatrixF[gModelMatrixStackPos]);
@@ -1139,9 +1139,9 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vtx, Object *obj, S
 
         // Push the anchor vertex at the object's position
         v = *vtx;
-        v->x = obj->segment.trans.x_position;
-        v->y = obj->segment.trans.y_position;
-        v->z = obj->segment.trans.z_position;
+        v->x = obj->trans.x_position;
+        v->y = obj->trans.y_position;
+        v->z = obj->trans.z_position;
         v->r = 255; // These don't actually do anything since vertex colours are disabled anyway.
         v->g = 255;
         v->b = 255;
@@ -1153,14 +1153,13 @@ s32 render_sprite_billboard(Gfx **dList, Mtx **mtx, Vertex **vtx, Object *obj, S
         // so the sprite tilts consistently with other objects relative to the camera.
         // Aspect ratio compensation is applied to maintain proper sprite proportions on screen.
         if (!gCutsceneCameraActive) {
-            tiltAngle = gCameras[gActiveCameraID].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
+            tiltAngle = gCameras[gActiveCameraID].trans.rotation.z_rotation + obj->trans.rotation.z_rotation;
         } else {
-            tiltAngle =
-                gCameras[gActiveCameraID + 4].trans.rotation.z_rotation + obj->segment.trans.rotation.z_rotation;
+            tiltAngle = gCameras[gActiveCameraID + 4].trans.rotation.z_rotation + obj->trans.rotation.z_rotation;
         }
-        frameID = obj->segment.animFrame;
+        frameID = obj->animFrame;
         gModelMatrixStackPos++;
-        mtxf_billboard(gModelMatrixF[gModelMatrixStackPos], tiltAngle, obj->segment.trans.scale, gVideoAspectRatio);
+        mtxf_billboard(gModelMatrixF[gModelMatrixStackPos], tiltAngle, obj->trans.scale, gVideoAspectRatio);
         mtxf_to_mtx(gModelMatrixF[gModelMatrixStackPos], *mtx);
         gModelMatrix[gModelMatrixStackPos] = *mtx;
         gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_2);
@@ -1299,23 +1298,23 @@ void mtx_shear_push(Gfx **dList, Mtx **mtx, Object *obj, Object *objBase, f32 sh
     f32 arg3_zPos;
     MtxF matrix_mult;
 
-    cossf_x_arg2 = coss_f(obj->segment.trans.rotation.x_rotation);
-    sinsf_x_arg2 = sins_f(obj->segment.trans.rotation.x_rotation);
-    cossf_y_arg2 = coss_f(obj->segment.trans.rotation.y_rotation);
-    sinsf_y_arg2 = sins_f(obj->segment.trans.rotation.y_rotation);
-    arg2_xPos = obj->segment.trans.x_position;
-    arg2_yPos = obj->segment.trans.y_position;
-    arg2_zPos = obj->segment.trans.z_position;
-    cossf_z_arg3 = coss_f(objBase->segment.trans.rotation.z_rotation);
-    sinsf_z_arg3 = sins_f(objBase->segment.trans.rotation.z_rotation);
-    cossf_x_arg3 = coss_f(objBase->segment.trans.rotation.x_rotation);
-    sinsf_x_arg3 = sins_f(objBase->segment.trans.rotation.x_rotation);
-    cossf_y_arg3 = coss_f(objBase->segment.trans.rotation.y_rotation);
-    sinsf_y_arg3 = sins_f(objBase->segment.trans.rotation.y_rotation);
-    arg3_xPos = objBase->segment.trans.x_position;
-    arg3_yPos = objBase->segment.trans.y_position;
-    arg3_zPos = objBase->segment.trans.z_position;
-    arg2_scale = obj->segment.trans.scale;
+    cossf_x_arg2 = coss_f(obj->trans.rotation.x_rotation);
+    sinsf_x_arg2 = sins_f(obj->trans.rotation.x_rotation);
+    cossf_y_arg2 = coss_f(obj->trans.rotation.y_rotation);
+    sinsf_y_arg2 = sins_f(obj->trans.rotation.y_rotation);
+    arg2_xPos = obj->trans.x_position;
+    arg2_yPos = obj->trans.y_position;
+    arg2_zPos = obj->trans.z_position;
+    cossf_z_arg3 = coss_f(objBase->trans.rotation.z_rotation);
+    sinsf_z_arg3 = sins_f(objBase->trans.rotation.z_rotation);
+    cossf_x_arg3 = coss_f(objBase->trans.rotation.x_rotation);
+    sinsf_x_arg3 = sins_f(objBase->trans.rotation.x_rotation);
+    cossf_y_arg3 = coss_f(objBase->trans.rotation.y_rotation);
+    sinsf_y_arg3 = sins_f(objBase->trans.rotation.y_rotation);
+    arg3_xPos = objBase->trans.x_position;
+    arg3_yPos = objBase->trans.y_position;
+    arg3_zPos = objBase->trans.z_position;
+    arg2_scale = obj->trans.scale;
     shear *= arg2_scale;
     matrix_mult[0][0] =
         ((((cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3))) * cossf_y_arg2) +

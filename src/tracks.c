@@ -1102,7 +1102,7 @@ s32 func_80027568(void) {
     f32 var_f22;
     f32 var_f24;
     u16 *var_t2;
-    Object_64 *obj64;
+    Object_Racer *racer;
     f32 camXPos;
     f32 camYPos;
     Object **racerGroup;     // sp80
@@ -1119,8 +1119,8 @@ s32 func_80027568(void) {
     curViewport = get_current_viewport();
     currentObjRacer = NULL;
     for (i = 0; i < numRacers; i++) {
-        obj64 = racerGroup[i]->unk64;
-        if (curViewport == obj64->racer.playerIndex) {
+        racer = racerGroup[i]->racer;
+        if (curViewport == racer->playerIndex) {
             currentObjRacer = racerGroup[i];
             i = numRacers; // Come on! Just use break!
         }
@@ -1128,7 +1128,7 @@ s32 func_80027568(void) {
     if (currentObjRacer == NULL) {
         return FALSE;
     }
-    func_80031130(1, &currentObjRacer->segment.trans.x_position, &gSceneActiveCamera->trans.x_position, -1);
+    func_80031130(1, &currentObjRacer->trans.x_position, &gSceneActiveCamera->trans.x_position, -1);
     ret = FALSE;
     // bug? var_ra can be undefined?
     for (var_t4 = 0; var_t4 < D_8011D378 && ret == FALSE; var_t4++) {
@@ -1147,13 +1147,13 @@ s32 func_80027568(void) {
                                 (vector->z * gSceneActiveCamera->trans.z_position) + vector->w) -
                                14.0);
             if (projectedCamPos < -0.1) {
-                projectedRacerPos = (currentObjRacer->segment.trans.x_position * new_var) +
-                                    (vector->y * currentObjRacer->segment.trans.y_position) +
-                                    (vector->z * currentObjRacer->segment.trans.z_position) + vector->w;
+                projectedRacerPos = (currentObjRacer->trans.x_position * new_var) +
+                                    (vector->y * currentObjRacer->trans.y_position) +
+                                    (vector->z * currentObjRacer->trans.z_position) + vector->w;
                 if (projectedRacerPos >= -0.1) {
-                    var_f20 = (camXPos - currentObjRacer->segment.trans.x_position);
-                    var_f22 = (camYPos - currentObjRacer->segment.trans.y_position);
-                    var_f24 = (gSceneActiveCamera->trans.z_position - currentObjRacer->segment.trans.z_position);
+                    var_f20 = (camXPos - currentObjRacer->trans.x_position);
+                    var_f22 = (camYPos - currentObjRacer->trans.y_position);
+                    var_f24 = (gSceneActiveCamera->trans.z_position - currentObjRacer->trans.z_position);
 
                     if (projectedRacerPos != projectedCamPos) {
                         scalingFactor = projectedRacerPos / (projectedRacerPos - projectedCamPos);
@@ -1161,9 +1161,9 @@ s32 func_80027568(void) {
                         scalingFactor = 0.0f;
                     }
 
-                    var_f20 = currentObjRacer->segment.trans.x_position + (var_f20 * scalingFactor);
-                    var_f22 = currentObjRacer->segment.trans.y_position + (var_f22 * scalingFactor);
-                    var_f24 = currentObjRacer->segment.trans.z_position + (var_f24 * scalingFactor);
+                    var_f20 = currentObjRacer->trans.x_position + (var_f20 * scalingFactor);
+                    var_f22 = currentObjRacer->trans.y_position + (var_f22 * scalingFactor);
+                    var_f24 = currentObjRacer->trans.z_position + (var_f24 * scalingFactor);
 
                     for (j = 0, ret = TRUE; j < 3 && ret == TRUE; j++) {
                         isNegative = FALSE;
@@ -1219,7 +1219,7 @@ void func_800278E8(s32 updateRate) {
     for (i = 0; i < numRacers; i++) {
         if (1) {} // fake
         if (racerGroup[i] != NULL) {
-            currentRacer = &racerGroup[i]->unk64->racer;
+            currentRacer = racerGroup[i]->racer;
             cameraId = currentRacer->cameraIndex;
             spectate_nearest(racerGroup[i], &cameraId);
             currentRacer->cameraIndex = cameraId;
@@ -1253,12 +1253,12 @@ void func_800278E8(s32 updateRate) {
     }
     if (camObj != NULL) {
         camera = cam_get_active_camera_no_cutscenes();
-        camera->trans.x_position = camObj->segment.trans.x_position;
-        camera->trans.y_position = camObj->segment.trans.y_position;
-        camera->trans.z_position = camObj->segment.trans.z_position;
-        xDelta = camera->trans.x_position - thisObject->segment.trans.x_position;
-        yDelta = camera->trans.y_position - thisObject->segment.trans.y_position;
-        zDelta = camera->trans.z_position - thisObject->segment.trans.z_position;
+        camera->trans.x_position = camObj->trans.x_position;
+        camera->trans.y_position = camObj->trans.y_position;
+        camera->trans.z_position = camObj->trans.z_position;
+        xDelta = camera->trans.x_position - thisObject->trans.x_position;
+        yDelta = camera->trans.y_position - thisObject->trans.y_position;
+        zDelta = camera->trans.z_position - thisObject->trans.z_position;
         xzSqr = sqrtf((xDelta * xDelta) + (zDelta * zDelta));
         if (D_8011B108 != 0) {
             angleDiff = ((s32) (-atan2s(xDelta, zDelta) - camera->trans.rotation.y_rotation) + 0x8000);
@@ -1345,7 +1345,7 @@ void spawn_skydome(s32 objectID) {
     spawnObject.objectID = objectID;
     gSkydomeSegment = spawn_object(&spawnObject, OBJECT_SPAWN_UNK02);
     if (gSkydomeSegment != NULL) {
-        gSkydomeSegment->segment.level_entry = NULL;
+        gSkydomeSegment->level_entry = NULL;
         gSkydomeSegment->objectID = -1;
     }
 }
@@ -1658,9 +1658,9 @@ void render_skydome(void) {
 
     cam = cam_get_active_camera();
     if (gCurrentLevelHeader2->skyDome == 0) {
-        gSkydomeSegment->segment.trans.x_position = cam->trans.x_position;
-        gSkydomeSegment->segment.trans.y_position = cam->trans.y_position;
-        gSkydomeSegment->segment.trans.z_position = cam->trans.z_position;
+        gSkydomeSegment->trans.x_position = cam->trans.x_position;
+        gSkydomeSegment->trans.y_position = cam->trans.y_position;
+        gSkydomeSegment->trans.z_position = cam->trans.z_position;
     }
 
     mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
@@ -1702,10 +1702,10 @@ void initialise_player_viewport_vars(s32 updateRate) {
             i = -1;
             do {
                 i++;
-                racer = &racers[i]->unk64->racer;
+                racer = racers[i]->racer;
             } while (i < numRacers - 1 && viewportID != racer->playerIndex);
-            waves_visibility(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position,
-                             racers[i]->segment.trans.z_position, get_current_viewport(), updateRate);
+            waves_visibility(racers[i]->trans.x_position, racers[i]->trans.y_position, racers[i]->trans.z_position,
+                             get_current_viewport(), updateRate);
         } else {
             waves_visibility(gSceneActiveCamera->trans.x_position, gSceneActiveCamera->trans.y_position,
                              gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
@@ -1780,25 +1780,25 @@ void render_level_geometry_and_objects(void) {
     for (i = sp160; i < objCount; i++) {
         obj = get_object(i);
         visible = 255;
-        objFlags = obj->segment.trans.flags;
+        objFlags = obj->trans.flags;
         if (objFlags & OBJ_FLAGS_UNK_0080) {
             visible = 0;
         } else if (!(objFlags & OBJ_FLAGS_PARTICLE)) {
-            visible = obj->segment.object.opacity;
+            visible = obj->opacity;
         }
         if (objFlags & visibleFlags) {
             visible = 0;
         }
         if (obj != NULL && visible == 255 && check_if_in_draw_range(obj) &&
-            (objectsVisible[obj->segment.object.segmentID + 1] || obj->segment.object.unk34 > 1000.0)) {
-            if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
+            (objectsVisible[obj->segmentID + 1] || obj->unk34 > 1000.0)) {
+            if (obj->trans.flags & OBJ_FLAGS_PARTICLE) {
                 render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
                 continue;
             } else if (obj->shadow != NULL) {
                 shadow_render(obj, obj->shadow);
             }
             render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
-            if (obj->waterEffect != NULL && obj->segment.header->flags & HEADER_FLAGS_WATER_EFFECT) {
+            if (obj->waterEffect != NULL && obj->header->flags & HEADER_FLAGS_WATER_EFFECT) {
                 watereffect_render(obj, obj->waterEffect);
             }
         }
@@ -1806,22 +1806,22 @@ void render_level_geometry_and_objects(void) {
 
     for (i = objCount - 1; i >= sp160; i--) {
         obj = get_object(i);
-        objFlags = obj->segment.trans.flags;
+        objFlags = obj->trans.flags;
         if (objFlags & visibleFlags) {
             visible = FALSE;
         } else {
             visible = TRUE;
         }
-        if (obj != NULL && visible && objFlags & OBJ_FLAGS_UNK_0100 &&
-            objectsVisible[obj->segment.object.segmentID + 1] && check_if_in_draw_range(obj)) {
-            if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
+        if (obj != NULL && visible && objFlags & OBJ_FLAGS_UNK_0100 && objectsVisible[obj->segmentID + 1] &&
+            check_if_in_draw_range(obj)) {
+            if (obj->trans.flags & OBJ_FLAGS_PARTICLE) {
                 render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
                 continue;
             } else if (obj->shadow != NULL) {
                 shadow_render(obj, obj->shadow);
             }
             render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
-            if (obj->waterEffect != NULL && obj->segment.header->flags & HEADER_FLAGS_WATER_EFFECT) {
+            if (obj->waterEffect != NULL && obj->header->flags & HEADER_FLAGS_WATER_EFFECT) {
                 watereffect_render(obj, obj->waterEffect);
             }
         }
@@ -1845,11 +1845,11 @@ void render_level_geometry_and_objects(void) {
     for (i = objCount - 1; i >= sp160; i--) {
         obj = get_object(i);
         visible = 255;
-        objFlags = obj->segment.trans.flags;
+        objFlags = obj->trans.flags;
         if (objFlags & OBJ_FLAGS_UNK_0080) {
             visible = 1;
         } else if (!(objFlags & OBJ_FLAGS_PARTICLE)) {
-            visible = obj->segment.object.opacity;
+            visible = obj->opacity;
         }
         if (objFlags & visibleFlags) {
             visible = 0;
@@ -1857,17 +1857,16 @@ void render_level_geometry_and_objects(void) {
         if (obj->behaviorId == BHV_RACER && visible >= 255) {
             visible = 0;
         }
-        if (obj != NULL && visible < 255 && objectsVisible[obj->segment.object.segmentID + 1] &&
-            check_if_in_draw_range(obj)) {
+        if (obj != NULL && visible < 255 && objectsVisible[obj->segmentID + 1] && check_if_in_draw_range(obj)) {
             if (visible > 0) {
-                if (obj->segment.trans.flags & OBJ_FLAGS_PARTICLE) {
+                if (obj->trans.flags & OBJ_FLAGS_PARTICLE) {
                     render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
                     goto skip;
                 } else if (obj->shadow != NULL) {
                     shadow_render(obj, obj->shadow);
                 }
                 render_object(&gTrackDL, &gTrackMtxPtr, &gTrackVtxPtr, obj);
-                if ((obj->waterEffect != 0) && (obj->segment.header->flags & HEADER_FLAGS_WATER_EFFECT)) {
+                if ((obj->waterEffect != 0) && (obj->header->flags & HEADER_FLAGS_WATER_EFFECT)) {
                     watereffect_render(obj, obj->waterEffect);
                 }
             }
@@ -2070,9 +2069,9 @@ UNUSED s32 check_if_inside_segment(Object *obj, s32 segmentIndex) {
         return FALSE;
     }
     bb = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex];
-    x = obj->segment.trans.x_position;
-    y = obj->segment.trans.y_position;
-    z = obj->segment.trans.z_position;
+    x = obj->trans.x_position;
+    y = obj->trans.y_position;
+    z = obj->trans.z_position;
     if ((x < (bb->x2 + 25)) && ((bb->x1 - 25) < x) && (z < (bb->z2 + 25)) && ((bb->z1 - 25) < z) &&
         (y < (bb->y2 + 25)) && ((bb->y1 - 25) < y)) {
         return TRUE;
@@ -2328,21 +2327,21 @@ s32 check_if_in_draw_range(Object *obj) {
     s32 viewDistance;
     s32 alpha;
     s32 i;
-    Object_64 *obj64;
+    Object_AnimatedObject *animatedObj;
     f32 accum;
     s32 temp2;
     f32 dist;
+    Object_Racer *racer;
 
-    if (!(obj->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
+    if (!(obj->trans.flags & OBJ_FLAGS_PARTICLE)) {
         alpha = 255;
-        viewDistance = obj->segment.header->drawDistance;
-        if (obj->segment.header->drawDistance) {
+        viewDistance = obj->header->drawDistance;
+        if (obj->header->drawDistance) {
             if (gScenePlayerViewports == 3) {
                 viewDistance *= 0.5;
             }
 
-            dist = get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                                 obj->segment.trans.z_position);
+            dist = get_distance_to_active_camera(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
 
             if (viewDistance < dist) {
                 return FALSE;
@@ -2362,12 +2361,12 @@ s32 check_if_in_draw_range(Object *obj) {
         }
         switch (obj->behaviorId) {
             case BHV_RACER:
-                obj64 = obj->unk64;
-                obj->segment.object.opacity = ((obj64->racer.transparency + 1) * alpha) >> 8;
+                racer = obj->racer;
+                obj->opacity = ((racer->transparency + 1) * alpha) >> 8;
                 break;
             case BHV_TIMETRIAL_GHOST: // Ghost Object?
-                obj64 = obj->unk64;
-                obj->segment.object.opacity = obj64->racer.transparency;
+                racer = obj->racer;
+                obj->opacity = racer->transparency;
                 break;
             case BHV_ANIMATED_OBJECT: // Cutscene object?
             case BHV_CAMERA_ANIMATION:
@@ -2377,15 +2376,15 @@ s32 check_if_in_draw_range(Object *obj) {
             case BHV_HIT_TESTER:        // hittester
             case BHV_HIT_TESTER_2:      // animated objects?
             case BHV_ANIMATED_OBJECT_2: // space ships
-                obj64 = obj->unk64;
-                obj->segment.object.opacity = obj64->animation.unk42;
+                animatedObj = obj->animatedObject;
+                obj->opacity = animatedObj->unk42;
                 break;
             case BHV_PARK_WARDEN:
             case BHV_GOLDEN_BALLOON:
             case BHV_PARK_WARDEN_2: // GBParkwarden
                 break;
             default:
-                obj->segment.object.opacity = alpha;
+                obj->opacity = alpha;
                 break;
         }
         for (i = 0; i < 3; i++) {
@@ -2393,8 +2392,8 @@ s32 check_if_in_draw_range(Object *obj) {
             z = D_8011D0F8[i].z;
             w = D_8011D0F8[i].w;
             y = D_8011D0F8[i].y;
-            accum = (x * obj->segment.trans.x_position) + (y * obj->segment.trans.y_position) +
-                    (z * obj->segment.trans.z_position) + w + obj->segment.object.unk34;
+            accum = (x * obj->trans.x_position) + (y * obj->trans.y_position) + (z * obj->trans.z_position) + w +
+                    obj->unk34;
             if (accum < 0.0f) {
                 return FALSE;
             }
@@ -2679,14 +2678,12 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3) {
         arg2->z = 0.0f;
         arg2->y = 1.0f;
     }
-    if ((obj->segment.object.segmentID < 0) ||
-        (obj->segment.object.segmentID >= gCurrentLevelModel->numberOfSegments)) {
+    if ((obj->segmentID < 0) || (obj->segmentID >= gCurrentLevelModel->numberOfSegments)) {
         return FALSE;
     }
-    seg = &gCurrentLevelModel->segments[obj->segment.object.segmentID];
+    seg = &gCurrentLevelModel->segments[obj->segmentID];
     if ((seg->hasWaves != 0) && (gWaveBlockCount != 0) && (arg3 == 1)) {
-        *arg1 = func_800BB2F4(obj->segment.object.segmentID, obj->segment.trans.x_position,
-                              obj->segment.trans.z_position, arg2);
+        *arg1 = func_800BB2F4(obj->segmentID, obj->trans.x_position, obj->trans.z_position, arg2);
         return TRUE;
     } else {
         *arg1 = seg->unk38;
@@ -3261,10 +3258,10 @@ void shadow_render(Object *obj, ShadowData *shadow) {
     s32 triCount;
     s32 alpha;
 
-    if (obj->segment.header->shadowGroup) {
+    if (obj->header->shadowGroup) {
         if (shadow->meshStart != -1 && gDisableShadows == FALSE) {
             gShadowIndex = gShadowHeapFlip;
-            if (obj->segment.header->shadowGroup == SHADOW_SCENERY) {
+            if (obj->header->shadowGroup == SHADOW_SCENERY) {
                 gShadowIndex += 2;
             }
             i = shadow->meshStart;
@@ -3273,11 +3270,11 @@ void shadow_render(Object *obj, ShadowData *shadow) {
             gCurrShadowVerts = gShadowHeapVerts[gShadowIndex];
             alpha = gCurrShadowVerts[gCurrShadowHeapData[i].vtxCount].a;
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
-            if (alpha == 0 || obj->segment.object.opacity == 0) {
+            if (alpha == 0 || obj->opacity == 0) {
                 i = shadow->meshEnd; // It'd be easier to just return...
-            } else if (alpha != 255 || obj->segment.object.opacity != 255) {
+            } else if (alpha != 255 || obj->opacity != 255) {
                 flags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE;
-                alpha = (obj->segment.object.opacity * alpha) >> 8;
+                alpha = (obj->opacity * alpha) >> 8;
                 gDPSetPrimColor(gTrackDL++, 0, 0, 255, 255, 255, alpha);
             }
             while (i < shadow->meshEnd) {
@@ -3315,14 +3312,14 @@ void watereffect_render(Object *obj, WaterEffect *effect) {
     UNUSED s32 triCount;
     UNUSED s32 vtxCount;
 
-    if (obj->segment.header->waterEffectGroup) {
+    if (obj->header->waterEffectGroup) {
         if (effect->meshStart != -1 && gDisableShadows == FALSE) {
             gWaterEffectIndex = gShadowHeapFlip;
             i = effect->meshStart;
-            if (obj->segment.header->waterEffectGroup == SHADOW_SCENERY) {
+            if (obj->header->waterEffectGroup == SHADOW_SCENERY) {
                 gWaterEffectIndex += 2;
-                if (get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                                  obj->segment.trans.z_position) > 768.0f) {
+                if (get_distance_to_active_camera(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position) >
+                    768.0f) {
                     i = effect->meshEnd; // Just return.
                 }
             }
@@ -3380,23 +3377,22 @@ void shadow_update(s32 group, s32 waterGroup, s32 updateRate) {
     objects = objGetObjList(&objIndex, &objectCount);
     while (objIndex < objectCount) {
         obj = objects[objIndex];
-        objHeader = obj->segment.header;
+        objHeader = obj->header;
         waterEffect = obj->waterEffect;
         shadow = obj->shadow;
         objIndex += 1;
-        if ((obj->segment.trans.flags & OBJ_FLAGS_PARTICLE)) {
+        if ((obj->trans.flags & OBJ_FLAGS_PARTICLE)) {
             continue;
         }
         if (shadow != NULL && shadow->scale > 0.0f && group == objHeader->shadowGroup) {
             shadow->meshStart = -1;
         }
-        if (obj->segment.trans.flags & OBJ_FLAGS_INVISIBLE) {
+        if (obj->trans.flags & OBJ_FLAGS_INVISIBLE) {
             shadow = NULL;
         }
         if ((shadow != NULL && objHeader->shadowGroup == SHADOW_ACTORS) ||
             (waterEffect != NULL && objHeader->waterEffectGroup == SHADOW_ACTORS)) {
-            dist = get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                                 obj->segment.trans.z_position);
+            dist = get_distance_to_active_camera(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
         } else {
             dist = 0;
         }
@@ -3408,7 +3404,7 @@ void shadow_update(s32 group, s32 waterGroup, s32 updateRate) {
             if (objHeader->shadowGroup == SHADOW_ACTORS && numViewports >= TWO_PLAYERS &&
                 numViewports <= FOUR_PLAYERS) {
                 if (obj->behaviorId == BHV_RACER) {
-                    playerIndex = obj->unk64->racer.playerIndex;
+                    playerIndex = obj->racer->playerIndex;
                     if (playerIndex != PLAYER_COMPUTER) {
                         shadow_generate(obj, FALSE);
                         skipShading = TRUE;
@@ -3446,7 +3442,7 @@ void shadow_update(s32 group, s32 waterGroup, s32 updateRate) {
             if (objHeader->shadowGroup == SHADOW_ACTORS && numViewports >= TWO_PLAYERS &&
                 numViewports <= FOUR_PLAYERS) {
                 if (obj->behaviorId == BHV_RACER) {
-                    playerIndex = obj->unk64->racer.playerIndex;
+                    playerIndex = obj->racer->playerIndex;
                     if (playerIndex != PLAYER_COMPUTER) {
                         shadow_generate(obj, TRUE);
                     }
@@ -3484,14 +3480,14 @@ void func_8002DE30(Object *obj) {
     s32 maxYPos;
     s32 j;
 
-    sp94 = (s32) obj->segment.trans.y_position + obj->segment.header->unk44;
-    sp90 = (s32) obj->segment.trans.y_position + obj->segment.header->unk42;
-    blockId = obj->segment.object.segmentID;
+    sp94 = (s32) obj->trans.y_position + obj->header->unk44;
+    sp90 = (s32) obj->trans.y_position + obj->header->unk42;
+    blockId = obj->segmentID;
     foundResult = FALSE;
     if (blockId != -1) {
-        var_t3 = func_800314DC(&gCurrentLevelModel->segmentsBoundingBoxes[blockId],
-                               obj->segment.trans.x_position - 16.0f, obj->segment.trans.z_position - 16.0f,
-                               obj->segment.trans.x_position + 16.0f, obj->segment.trans.z_position + 16.0f);
+        var_t3 =
+            func_800314DC(&gCurrentLevelModel->segmentsBoundingBoxes[blockId], obj->trans.x_position - 16.0f,
+                          obj->trans.z_position - 16.0f, obj->trans.x_position + 16.0f, obj->trans.z_position + 16.0f);
         block = &gCurrentLevelModel->segments[blockId];
         for (i = 0; i < block->numberOfBatches && !foundResult; i++) {
             if (!(block->batches[i].flags & (RENDER_HIDDEN | RENDER_DECAL | RENDER_WATER | RENDER_NO_SHADOW))) {
@@ -3513,7 +3509,7 @@ void func_8002DE30(Object *obj) {
                             }
                         }
                         if (maxYPos >= sp90 && sp94 >= minYPos) {
-                            if (tri2d_xz_contains_point(obj->segment.trans.x_position, obj->segment.trans.z_position,
+                            if (tri2d_xz_contains_point(obj->trans.x_position, obj->trans.z_position,
                                                         (Vec3s *) &vertices[triangle->verticesArray[1]],
                                                         (Vec3s *) &vertices[triangle->verticesArray[2]],
                                                         (Vec3s *) &vertices[triangle->verticesArray[3]])) {
@@ -3545,7 +3541,7 @@ void shadow_generate(Object *obj, s32 isWater) {
     f32 character_scale;
     s32 test;
 
-    yPos = obj->segment.trans.y_position;
+    yPos = obj->trans.y_position;
     character_scale = 1.0f;
     if (obj->behaviorId == BHV_RACER) {
         cheats = get_filtered_cheats();
@@ -3563,8 +3559,8 @@ void shadow_generate(Object *obj, s32 isWater) {
         D_8011D0B8 = 0;
         obj->waterEffect->meshStart = gShadowTail;
         gNewShadowTexture = set_animated_texture_header(obj->waterEffect->texture, obj->waterEffect->textureFrame << 8);
-        gNewShadowY2 = obj->segment.header->shadowTop + yPos;
-        gNewShadowY1 = obj->segment.header->shadowBottom + yPos;
+        gNewShadowY2 = obj->header->shadowTop + yPos;
+        gNewShadowY1 = obj->header->shadowBottom + yPos;
         if (gWaveBlockCount == 0 || cam_get_viewport_layout() < VIEWPORT_LAYOUT_2_PLAYERS) {
             D_8011D0C8 = 0;
         }
@@ -3575,10 +3571,10 @@ void shadow_generate(Object *obj, s32 isWater) {
     } else {
         obj->shadow->meshStart = gShadowTail;
         gNewShadowTexture = obj->shadow->texture;
-        gNewShadowY2 = obj->segment.header->unk44 + yPos;
-        gNewShadowY1 = obj->segment.header->unk42 + yPos;
+        gNewShadowY2 = obj->header->unk44 + yPos;
+        gNewShadowY1 = obj->header->unk42 + yPos;
         if (obj->behaviorId != BHV_RACER) {
-            dist = obj->segment.object.distanceToCamera;
+            dist = obj->distanceToCamera;
             if (dist < 0.0) {
                 dist = -dist;
             }
@@ -3595,7 +3591,7 @@ void shadow_generate(Object *obj, s32 isWater) {
         gNewShadowWidth = gNewShadowScale * 10.0f;
         gNewShadowLength = gNewShadowScale * 10.0f;
         D_8011D0E4 = 4.0f * gNewShadowWidth * gNewShadowLength;
-        D_8011D0F0 = (obj->segment.header->unk42 * 0.125f);
+        D_8011D0F0 = (obj->header->unk42 * 0.125f);
         if (D_8011D0F0 < 0.0f) {
             D_8011D0F0 = -D_8011D0F0;
         }
@@ -3603,8 +3599,8 @@ void shadow_generate(Object *obj, s32 isWater) {
         D_8011D0D0 = -0x8000;
     }
     gNewShadowScale = 144.0f / gNewShadowScale;
-    xPos = gNewShadowObj->segment.trans.x_position;
-    zPos = gNewShadowObj->segment.trans.z_position;
+    xPos = gNewShadowObj->trans.x_position;
+    zPos = gNewShadowObj->trans.z_position;
     segs = get_inside_segment_count_xyz(inSegs, (xPos - gNewShadowWidth), gNewShadowY1, (zPos - gNewShadowLength),
                                         (xPos + gNewShadowWidth), gNewShadowY2, (zPos + gNewShadowLength));
     D_8011C230 = 0;
@@ -3620,10 +3616,10 @@ void shadow_generate(Object *obj, s32 isWater) {
                 func_8002EEEC(inSegs[i]);
             } else {
                 test = func_800314DC(&gCurrentLevelModel->segmentsBoundingBoxes[inSegs[i]],
-                                     (obj->segment.trans.x_position - gNewShadowWidth),  // x1
-                                     (obj->segment.trans.z_position - gNewShadowLength), // z1
-                                     (obj->segment.trans.x_position + gNewShadowWidth),  // x2
-                                     (obj->segment.trans.z_position + gNewShadowLength)  // z2
+                                     (obj->trans.x_position - gNewShadowWidth),  // x1
+                                     (obj->trans.z_position - gNewShadowLength), // z1
+                                     (obj->trans.x_position + gNewShadowWidth),  // x2
+                                     (obj->trans.z_position + gNewShadowLength)  // z2
                 );
                 func_8002E904(&gCurrentLevelModel->segments[inSegs[i]], test, isWater);
             }
@@ -3661,14 +3657,14 @@ void func_8002E904(LevelModelSegment *arg0, s32 arg1, s32 arg2) {
     s32 i;
     s32 curFacesOffset;
 
-    spD0[0].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
-    spD0[0].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
-    spD0[1].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
-    spD0[1].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
-    spD0[2].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
-    spD0[2].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
-    spD0[3].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
-    spD0[3].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    spD0[0].x = gNewShadowObj->trans.x_position + gNewShadowWidth;
+    spD0[0].y = gNewShadowObj->trans.z_position + gNewShadowLength;
+    spD0[1].x = gNewShadowObj->trans.x_position - gNewShadowWidth;
+    spD0[1].y = gNewShadowObj->trans.z_position + gNewShadowLength;
+    spD0[2].x = gNewShadowObj->trans.x_position - gNewShadowWidth;
+    spD0[2].y = gNewShadowObj->trans.z_position - gNewShadowLength;
+    spD0[3].x = gNewShadowObj->trans.x_position + gNewShadowWidth;
+    spD0[3].y = gNewShadowObj->trans.z_position - gNewShadowLength;
 
     for (spAC = 0; spAC < arg0->numberOfBatches; spAC++) {
         if ((arg2 && (arg0->batches[spAC].flags & RENDER_WATER)) ||
@@ -3764,14 +3760,14 @@ void func_8002EEEC(s32 arg0) {
     s32 var_v1;
     s32 tempIdx;
 
-    sp88[0].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
-    sp88[0].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
-    sp88[1].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
-    sp88[1].y = gNewShadowObj->segment.trans.z_position + gNewShadowLength;
-    sp88[2].x = gNewShadowObj->segment.trans.x_position - gNewShadowWidth;
-    sp88[2].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
-    sp88[3].x = gNewShadowObj->segment.trans.x_position + gNewShadowWidth;
-    sp88[3].y = gNewShadowObj->segment.trans.z_position - gNewShadowLength;
+    sp88[0].x = gNewShadowObj->trans.x_position + gNewShadowWidth;
+    sp88[0].y = gNewShadowObj->trans.z_position + gNewShadowLength;
+    sp88[1].x = gNewShadowObj->trans.x_position - gNewShadowWidth;
+    sp88[1].y = gNewShadowObj->trans.z_position + gNewShadowLength;
+    sp88[2].x = gNewShadowObj->trans.x_position - gNewShadowWidth;
+    sp88[2].y = gNewShadowObj->trans.z_position - gNewShadowLength;
+    sp88[3].x = gNewShadowObj->trans.x_position + gNewShadowWidth;
+    sp88[3].y = gNewShadowObj->trans.z_position - gNewShadowLength;
     // clang-format off
     temp_v0 = func_800BDC80(
         arg0, D_8011C3B8, &D_8011C8B8[D_8011D0B8],
@@ -3889,13 +3885,13 @@ void func_8002F440(void) {
     UNUSED s32 pad;
 
     alpha = 255;
-    yRotSin = sins_f(gNewShadowObj->segment.trans.rotation.y_rotation);
-    yRotCos = coss_f(gNewShadowObj->segment.trans.rotation.y_rotation);
+    yRotSin = sins_f(gNewShadowObj->trans.rotation.y_rotation);
+    yRotCos = coss_f(gNewShadowObj->trans.rotation.y_rotation);
     temp_f18 = gNewShadowTexture->width * 16;
     scale = ((gNewShadowTexture->width * 16) / gNewShadowWidth);
     scale *= 1.4142f;
     if (D_8011D0F0 > 0.0f) {
-        someY = gNewShadowObj->segment.trans.y_position - D_8011D0D0;
+        someY = gNewShadowObj->trans.y_position - D_8011D0D0;
         if (D_8011D0F0 < someY) {
             alpha = 255;
             alpha -= (s32) ((255 * (someY - D_8011D0F0)) / D_8011D0F4);
@@ -3924,16 +3920,16 @@ void func_8002F440(void) {
             gNewShadowVtxCount++;
             if (var_t0 & 1) {
                 vert->x = D_8011B330[D_8011C238[spAC].unk2[i]].x;
-                xDiff = D_8011B330[D_8011C238[spAC].unk2[i]].x - gNewShadowObj->segment.trans.x_position;
+                xDiff = D_8011B330[D_8011C238[spAC].unk2[i]].x - gNewShadowObj->trans.x_position;
                 vert->y = (D_8011B330[D_8011C238[spAC].unk2[i]].y + D_8011D0C8);
                 vert->z = D_8011B330[D_8011C238[spAC].unk2[i]].z;
-                zDiff = D_8011B330[D_8011C238[spAC].unk2[i]].z - gNewShadowObj->segment.trans.z_position;
+                zDiff = D_8011B330[D_8011C238[spAC].unk2[i]].z - gNewShadowObj->trans.z_position;
             } else {
                 vert->x = D_8011B120[D_8011C238[spAC].unk2[i]].x;
-                xDiff = D_8011B120[D_8011C238[spAC].unk2[i]].x - gNewShadowObj->segment.trans.x_position;
+                xDiff = D_8011B120[D_8011C238[spAC].unk2[i]].x - gNewShadowObj->trans.x_position;
                 vert->y = (D_8011B120[D_8011C238[spAC].unk2[i]].y + D_8011D0C8);
                 vert->z = D_8011B120[D_8011C238[spAC].unk2[i]].z;
-                zDiff = D_8011B120[D_8011C238[spAC].unk2[i]].z - gNewShadowObj->segment.trans.z_position;
+                zDiff = D_8011B120[D_8011C238[spAC].unk2[i]].z - gNewShadowObj->trans.z_position;
             }
             var_t0 >>= 1;
             vert->r = 255;
@@ -4192,26 +4188,26 @@ void func_800304C8(unk8011C8B8 *arg0) {
     temp = arg0[0].z;
     arg00z = temp;
     compare = 0.0f;
-    temp = (gNewShadowObj->segment.trans.z_position - arg0[1].z);
+    temp = (gNewShadowObj->trans.z_position - arg0[1].z);
 
-    if ((((gNewShadowObj->segment.trans.x_position - arg0[0].x) * (arg0[1].z - arg00z)) -
-         ((arg0[1].x - arg0[0].x) * (((0, gNewShadowObj->segment.trans.z_position)) - arg00z))) >= compare) {
+    if ((((gNewShadowObj->trans.x_position - arg0[0].x) * (arg0[1].z - arg00z)) -
+         ((arg0[1].x - arg0[0].x) * (((0, gNewShadowObj->trans.z_position)) - arg00z))) >= compare) {
         found1 = TRUE;
     }
-    if ((((gNewShadowObj->segment.trans.x_position - arg0[1].x) * (arg0[2].z - arg0[1].z)) -
+    if ((((gNewShadowObj->trans.x_position - arg0[1].x) * (arg0[2].z - arg0[1].z)) -
          (temp * (arg0[2].x - arg0[1].x))) >= compare) {
         found2 = TRUE;
     }
     arg02x = arg0[2].x;
     if (found1 == found2) {
         f32 zPosDiff = (arg00z - arg0[2].z);
-        if ((((gNewShadowObj->segment.trans.x_position - arg02x) * zPosDiff) -
-             ((arg0[0].x - arg02x) * (arg02x - arg0[2].z))) >= compare) {
+        if ((((gNewShadowObj->trans.x_position - arg02x) * zPosDiff) - ((arg0[0].x - arg02x) * (arg02x - arg0[2].z))) >=
+            compare) {
             found3 = TRUE;
         }
         if (found2 == found3) {
-            f32 test = (-(((D_8011D0BC->x * gNewShadowObj->segment.trans.x_position) +
-                           (D_8011D0BC->z * gNewShadowObj->segment.trans.z_position)) +
+            f32 test = (-(((D_8011D0BC->x * gNewShadowObj->trans.x_position) +
+                           (D_8011D0BC->z * gNewShadowObj->trans.z_position)) +
                           D_8011D0BC->unkC_union.w)) /
                        D_8011D0BC->y;
             if (D_8011D0D0 < test) {
@@ -4366,7 +4362,7 @@ void obj_loop_fogchanger(Object *obj) {
     Camera *camera;
 
     racers = NULL;
-    fogChanger = (LevelObjectEntry_FogChanger *) obj->segment.level_entry;
+    fogChanger = (LevelObjectEntry_FogChanger *) obj->level_entry;
     camera = NULL;
 
     if (check_if_showing_cutscene_camera()) {
@@ -4379,12 +4375,12 @@ void obj_loop_fogchanger(Object *obj) {
     for (i = 0; i < views; i++) {
         index = PLAYER_COMPUTER;
         if (racers != NULL) {
-            racer = &racers[i]->unk64->racer;
+            racer = racers[i]->racer;
             playerIndex = racer->playerIndex;
             if (playerIndex >= PLAYER_ONE && playerIndex <= PLAYER_FOUR && obj != gFogData[playerIndex].fogChanger) {
                 index = playerIndex;
-                x = racers[i]->segment.trans.x_position;
-                z = racers[i]->segment.trans.z_position;
+                x = racers[i]->trans.x_position;
+                z = racers[i]->trans.z_position;
             }
         } else if (i <= PLAYER_FOUR && obj != gFogData[i].fogChanger) {
             index = i;
@@ -4392,8 +4388,8 @@ void obj_loop_fogchanger(Object *obj) {
             z = camera[i].trans.z_position;
         }
         if (index != PLAYER_COMPUTER) {
-            x -= obj->segment.trans.x_position;
-            z -= obj->segment.trans.z_position;
+            x -= obj->trans.x_position;
+            z -= obj->trans.z_position;
             if (1) {} // Fakematch
             if ((x * x) + (z * z) < obj->properties.distance.radius) {
                 fogNear = fogChanger->near;

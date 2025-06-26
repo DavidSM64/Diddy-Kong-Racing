@@ -580,7 +580,7 @@ void lensflare_init(Object *obj) {
 
     gLensFlare = obj;
     gLensFlareOff = FALSE;
-    entry = &gLensFlare->segment.level_entry->lensFlare;
+    entry = &gLensFlare->level_entry->lensFlare;
 
     switch (entry->set1) {
         default:
@@ -651,7 +651,7 @@ void lensflare_render(Gfx **dList, Mtx **mats, Vertex **verts, Camera *camera) {
 
     if (gLensFlare != NULL && gLensFlareOff == 0) {
         if (cam_get_viewport_layout() == 0) {
-            lensFlareEntry = &gLensFlare->segment.level_entry->lensFlare;
+            lensFlareEntry = &gLensFlare->level_entry->lensFlare;
             pos[1].x = 0.0f;
             pos[1].y = 0.0f;
             pos[1].z = -1.0f;
@@ -777,10 +777,10 @@ void lensflare_override(Camera *cameraSegment) {
     if (gLensFlareOverrideObjs > 0 && gLensFlare != 0) {
         if (gLensFlareSwitches[0]) {} // Fakematch
         for (i = 0; i < gLensFlareOverrideObjs; i++) {
-            xDiff = cameraSegment->trans.x_position - gLensFlareSwitches[i]->segment.trans.x_position;
-            yDiff = cameraSegment->trans.y_position - gLensFlareSwitches[i]->segment.trans.y_position;
-            zDiff = cameraSegment->trans.z_position - gLensFlareSwitches[i]->segment.trans.z_position;
-            lensFlare = &gLensFlareSwitches[i]->segment.level_entry->lensFlareSwitch;
+            xDiff = cameraSegment->trans.x_position - gLensFlareSwitches[i]->trans.x_position;
+            yDiff = cameraSegment->trans.y_position - gLensFlareSwitches[i]->trans.y_position;
+            zDiff = cameraSegment->trans.z_position - gLensFlareSwitches[i]->trans.z_position;
+            lensFlare = &gLensFlareSwitches[i]->level_entry->lensFlareSwitch;
             if (sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < lensFlare->radius) {
                 gLensFlareOff = TRUE;
             }
@@ -941,30 +941,29 @@ void rain_render_splashes(s32 updateRate) {
                         }
                     }
                     if (firstIndexWithoutFlags >= 0) {
-                        randYRot = rand_range(-0x2000, 0x2000) + racer->segment.trans.rotation.y_rotation + 0x8000;
+                        randYRot = rand_range(-0x2000, 0x2000) + racer->trans.rotation.y_rotation + 0x8000;
                         randFloat = (f32) rand_range(50, 500);
-                        xPos = (sins_f(randYRot) * randFloat) + racer->segment.trans.x_position;
-                        zPos = (coss_f(randYRot) * randFloat) + racer->segment.trans.z_position;
-                        i = func_8002B0F4(
-                            get_level_segment_index_from_position(xPos, racer->segment.trans.y_position, zPos), xPos,
-                            zPos, &waterProps);
+                        xPos = (sins_f(randYRot) * randFloat) + racer->trans.x_position;
+                        zPos = (coss_f(randYRot) * randFloat) + racer->trans.z_position;
+                        i = func_8002B0F4(get_level_segment_index_from_position(xPos, racer->trans.y_position, zPos),
+                                          xPos, zPos, &waterProps);
                         if (i != 0) {
                             var_f2 = 1000.0f;
                             waveIndex = 0;
                             if (i >= 2) {
                                 while (waveIndex < (i - 1) &&
-                                       racer->segment.trans.y_position < waterProps[waveIndex]->waveHeight) {
+                                       racer->trans.y_position < waterProps[waveIndex]->waveHeight) {
                                     waveIndex++;
                                 }
                                 if (waveIndex > 0) {
-                                    var_f2 = racer->segment.trans.y_position - waterProps[waveIndex]->waveHeight;
+                                    var_f2 = racer->trans.y_position - waterProps[waveIndex]->waveHeight;
                                     if (var_f2 < 0.0f) {
                                         var_f2 = -var_f2;
                                     }
                                     waveIndex--;
                                 }
                             }
-                            var_f0 = racer->segment.trans.y_position - waterProps[waveIndex]->waveHeight;
+                            var_f0 = racer->trans.y_position - waterProps[waveIndex]->waveHeight;
                             if (var_f0 < 0.0f) {
                                 var_f0 = -var_f0;
                             }

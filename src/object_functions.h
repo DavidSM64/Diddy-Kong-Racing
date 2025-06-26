@@ -10,15 +10,11 @@
 #define WORLD_KEY_GRAB_CHECK_RADIUS 50
 
 #define TIME_JIFFIES_PER_SECOND 60
-#define TIME_SECONDS(sec) sec * TIME_JIFFIES_PER_SECOND
+#define TIME_SECONDS(sec) sec *TIME_JIFFIES_PER_SECOND
 #define U8_ANGLE_TO_U16(x) (x << 6 << 4)
 #define TEX_INDEX_NO_TEXTURE 0xFF
 
-enum BananaBehaviour {
-    BANANA_COLLECTED = -1,
-    BANANA_IDLE,
-    BANANA_DROPPED
-};
+enum BananaBehaviour { BANANA_COLLECTED = -1, BANANA_IDLE, BANANA_DROPPED };
 
 enum WeaponBehaviour {
     WEAPON_DROPPED,
@@ -29,11 +25,7 @@ enum WeaponBehaviour {
     WEAPON_STATUS_5
 };
 
-enum DoorStatus {
-    DOOR_CLOSING = -1,
-    DOOR_CLOSED,
-    DOOR_OPENING
-};
+enum DoorStatus { DOOR_CLOSING = -1, DOOR_CLOSED, DOOR_OPENING };
 
 enum BossRaceWarps {
     WARP_STANDARD = -1,
@@ -75,188 +67,14 @@ enum SilvereCoinBehaviours {
     SILVER_COIN_INACTIVE
 };
 
-enum EggPickupStatus {
-    EGG_SPAWNED,
-    EGG_COLLECTED,
-    EGG_MOVING,
-    EGG_IN_BASE,
-    EGG_HATCHED
-};
+enum EggPickupStatus { EGG_SPAWNED, EGG_COLLECTED, EGG_MOVING, EGG_IN_BASE, EGG_HATCHED };
 
-enum FrogActions {
-    FROG_IDLE,
-    FROG_HOP,
-    FROG_SQUISH,
-    FROG_FLAT,
-    FROG_UNSQUISH
-};
-
-typedef struct unk80034B4C {
-    u8 pad0[0x18];
-    s16 unk18;
-    u8 pad1A[0x5E];
-    s32 unk78;
-} unk80034B4C;
-
-typedef struct unk80035E20 {
-    u8 pad0[0x40];
-    s32 unk40;
-    u8 pad44[0x34];
-    s32 unk78;
-    s32 unk7C;
-} unk80035E20;
-
-typedef struct unk80037578 {
-    u8 pad0[0x78];
-    s32 unk78;
-    s32 unk7C;
-} unk80037578;
-
-typedef struct unk80037624 {
-    u8 pad0[6];
-    s16 unk6;
-} unk80037624;
-
-/* Size: 12 bytes */
-typedef struct LevelObjectEntry800376E0 {
-    LevelObjectEntryCommon common;
-    s8 unk8;
-    s8 unk9;
-    s8 unkA;
-} LevelObjectEntry800376E0;
-
-typedef struct unk80037D08_arg0_64 {
-    u8 pad0[0x2A];
-    s16 unk2A;
-} unk80037D08_arg0_64;
-
-typedef struct unk80037D08_arg0 {
-    u8 pad0[0x64];
-    unk80037D08_arg0_64 *unk64;
-} unk80037D08_arg0;
-
-typedef struct unk80038B74 {
-    u8 pad0[8];
-    s8 unk8;
-} unk80038B74;
-
-typedef struct unk80039160 {
-    u8 pad0[0x78];
-    s32 unk78;
-} unk80039160;
-
-typedef struct unk80039190 {
-    u16 unk0;
-    u8 pad2[0x76];
-    s32 unk78;
-    s32 unk7C;
-} unk80039190;
-
-typedef struct unk8003CF18 {
-    u8 pad1A[0x78];
-    f32 unk78;
-} unk8003CF18;
-
-typedef struct unk8003D038 {
-    u8 pad0[0x18];
-    s16 unk18;
-    u8 pad1A[0x5E];
-    s32 unk78;
-} unk8003D038;
-
-typedef struct unk8003D3EC {
-    u8 pad0[0x18];
-    u16 unk18;
-} unk8003D3EC;
-
-typedef struct unk8003FC44 {
-    s8 unk0;
-    s8 unk1;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s8 unk7;
-} unk8003FC44;
-
-typedef struct LevelObjectEntry8003FEF4 {
-    LevelObjectEntryCommon common;
-    u8 unk8;
-    u8 unk9;
-    u16 unkA;
-    u8 unkC;
-    u8 unkD;
-    u16 unkE;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-    u8 unk13;
-} LevelObjectEntry8003FEF4;
-
-typedef struct LevelObjectEntry8004001C {
-    LevelObjectEntryCommon common;
-    u8 unk8;
-    u8 unk9;
-    u8 unkA;
-} LevelObjectEntry8004001C;
-
-typedef struct unk80040800 {
-    u8 pad0[0x78];
-    f32 unk78;
-} unk80040800;
-
-typedef struct unk80042014_arg0_64 {
-    u16 unk0;
-    u8 unk2;
-    u8 unk3;
-} unk80042014_arg0_64;
-
-typedef struct unk80042014_arg0 {
-    u8 pad0[0x64];
-    unk80042014_arg0_64 *unk64;
-} unk80042014_arg0;
-
-typedef struct unk80042014_arg1 {
-    u8 pad0[8];
-    u16 unk8;
-    u8 unkA;
-    u8 unkB;
-} unk80042014_arg1;
-
-typedef struct unk8004210C {
-    u8 pad0[0x3C];
-    s32 unk3C;
-    u8 pad40[0x24];
-    s32 unk64;
-} unk8004210C;
-
-typedef struct unk80042A1C {
-    u8 pad0[0x78];
-    f32 unk78;
-    s16 unk7C;
-    s16 unk7E;
-} unk80042A1C;
-
-typedef struct unk80042CD0 {
-    u8 pad0[0x18];
-    s16 unk18;
-} unk80042CD0;
-
-//void rumble_set(s16 obj, u8 arg1);
-
-typedef struct unk80041A90_MidiFade {
-    s16 unk0; // Y rotation
-    s16 unk2; // X rotation
-    s16 unk4; // Z rotation
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-} unk80041A90_MidiFade;
+enum FrogActions { FROG_IDLE, FROG_HOP, FROG_SQUISH, FROG_FLAT, FROG_UNSQUISH };
 
 typedef struct VertexPosition {
-/* 0x00 */ s16 x;
-/* 0x02 */ s16 y;
-/* 0x04 */ s16 z;
+    /* 0x00 */ s16 x;
+    /* 0x02 */ s16 y;
+    /* 0x04 */ s16 z;
 } VertexPosition;
 
 extern Triangle D_800DCAA8[8];
@@ -371,7 +189,7 @@ void obj_init_levelname(Object *obj, LevelObjectEntry_LevelName *entry);
 void obj_loop_wizghosts(Object *obj, s32 updateRate);
 void obj_loop_ttdoor(Object *obj, s32 updateRate);
 void obj_loop_trophycab(Object *obj, s32 updateRate);
-void obj_loop_wizpigship(Object* wizShipObj, s32 updateRate);
+void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate);
 void obj_loop_silvercoin(Object *obj, s32 updateRate);
 void obj_loop_bombexplosion(Object *obj, s32 updateRate);
 void obj_loop_flycoin(Object *obj, s32 updateRate);
@@ -435,9 +253,8 @@ void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param)
 void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry);
 void obj_loop_butterfly(Object *butterflyObj, s32 updateRate);
 s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation);
-void func_8000CBF0(Object*, s32);
-void try_to_collect_egg(Object *, Object_CollectEgg*);
-
+void func_8000CBF0(Object *, s32);
+void try_to_collect_egg(Object *, Object_CollectEgg *);
 
 s32 func_8001F3EC(s32);
 s32 func_80021600(s32);
