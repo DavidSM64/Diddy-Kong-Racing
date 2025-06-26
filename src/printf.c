@@ -142,16 +142,6 @@ Gfx dDebugFontSettings[] = {
 
 /*******************************/
 
-/************ .rodata ************/
-
-const char gLowerCase[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-const char gUpperCase[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const char D_800E8C50[] = "";
-const char D_800E8C54[] = "(null)";
-const char D_800E8C5C[] = "(nil)";
-
-/*********************************/
-
 /************ .bss ************/
 
 TextureHeader *gTexture[3];
@@ -174,20 +164,24 @@ char *gDebugPrintBufferEnd;
 
 /******************************/
 
+const char _itoa_lower_digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+const char _itoa_upper_digits[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 /**
  * Standard C Library function that converts integers to strings.
+ * Exact match to glibc 1.09 version.
  */
-char *_itoa(u64 n, char *outBuffer, u32 radix, s32 useUpperCase) {
-    char *alphabet;
-    char *buffer;
+char *_itoa(unsigned long long int n, char *buflim, unsigned int base, int upper_case) {
+    /* Base-36 digits for numbers. */
+    const char *alphabet = upper_case ? _itoa_upper_digits : _itoa_lower_digits;
+    register char *bp = buflim;
 
-    alphabet = (useUpperCase) ? (char *) gUpperCase : (char *) gLowerCase;
-
-    for (buffer = outBuffer; n > 0; n /= radix) {
-        *(--buffer) = alphabet[n % radix];
+    while (n > 0) {
+        *(--bp) = alphabet[n % base];
+        n /= base;
     }
 
-    return buffer;
+    return bp;
 }
 
 /**
@@ -199,15 +193,18 @@ void sprintfSetSpacingCodes(s32 setting) {
 }
 
 /**
+ * Exact match to glibc 1.09 version.
  * Official name: sprintf
  */
 UNUSED int sprintf(char *s, const char *format, ...) {
-    s32 ret;
-    va_list args;
-    va_start(args, format);
-    ret = vsprintf(s, format, args);
-    va_end(args);
-    return ret;
+    va_list arg;
+    int done;
+
+    va_start(arg, format);
+    done = vsprintf(s, format, arg);
+    va_end(arg);
+
+    return done;
 }
 
 #define outchar(x)  \
@@ -934,6 +931,9 @@ int vsprintf(char *s, const char *fmt, va_list args) {
 }
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/printf/vsprintf.s")
+const char D_800E8C50[] = "";
+const char D_800E8C54[] = "(null)";
+const char D_800E8C5C[] = "(nil)";
 #endif
 
 /**
