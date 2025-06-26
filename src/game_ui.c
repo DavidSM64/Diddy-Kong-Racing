@@ -704,7 +704,7 @@ void hud_render_player(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj,
                 }
             }
             if (gShowHUD == FALSE) {
-                racer = &obj->unk64->racer;
+                racer = obj->racer;
                 if (D_8012718A) {
                     gHudController = 1 - racer->playerIndex;
                 } else {
@@ -947,7 +947,7 @@ void hud_audio_update(s32 updateRate) {
  * In a race, render all of the race related HUD.
  */
 void hud_main_race(s32 countdown, Object *obj, s32 updateRate) {
-    Object_Racer *racer = &obj->unk64->racer;
+    Object_Racer *racer = obj->racer;
 
     cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
     hud_course_arrows(racer, updateRate);
@@ -1078,14 +1078,14 @@ void hud_main_treasure(s32 countdown, Object *obj, s32 updateRate) {
     s32 numRacers;
     s32 i;
 
-    racer = &obj->unk64->racer;
+    racer = obj->racer;
     racers = get_racer_objects(&numRacers);
     cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
     hud_race_start(countdown, updateRate);
     switch (gNumActivePlayers) {
         case 1:
             for (i = 0; i < numRacers; i++) {
-                racer = &racers[i]->unk64->racer;
+                racer = racers[i]->racer;
                 hud_treasure(racer);
                 if (i == 1) {
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x += 55.0f;
@@ -1103,7 +1103,7 @@ void hud_main_treasure(s32 countdown, Object *obj, s32 updateRate) {
             hud_treasure(racer);
             break;
     }
-    racer = &obj->unk64->racer;
+    racer = obj->racer;
     rendermode_reset(&gHudDL);
     hud_bananas(racer, updateRate);
     hud_weapon(obj, updateRate);
@@ -1114,7 +1114,7 @@ void hud_main_treasure(s32 countdown, Object *obj, s32 updateRate) {
  * The Egg Collector challenge mode displays the icons of each player and their score.
  */
 void hud_main_eggs(s32 countdown, Object *obj, s32 updateRate) {
-    Object_Racer *racer = &obj->unk64->racer;
+    Object_Racer *racer = obj->racer;
     if (racer->raceFinished == FALSE) {
         cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
         hud_race_start(countdown, updateRate);
@@ -1152,7 +1152,7 @@ void hud_draw_eggs(Object *racerObj, s32 updateRate) {
     if (gNumActivePlayers == 2) {
         finishedPlayers = 0;
         for (i = 0; i < numRacers; i++) {
-            curRacer = &racers[i]->unk64->racer;
+            curRacer = racers[i]->racer;
             if (curRacer->playerIndex != PLAYER_COMPUTER && curRacer->raceFinished) {
                 finishedPlayers++;
             }
@@ -1162,9 +1162,9 @@ void hud_draw_eggs(Object *racerObj, s32 updateRate) {
         }
     }
     if (racerObj != NULL) {
-        racer = &racerObj->unk64->racer;
+        racer = racerObj->racer;
     } else {
-        racer = &racers[0]->unk64->racer;
+        racer = racers[0]->racer;
     }
     if (numRacers == MAXCONTROLLERS) {
         cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
@@ -1173,7 +1173,7 @@ void hud_draw_eggs(Object *racerObj, s32 updateRate) {
         diffX = (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].pos.x - portraitX);
         diffY = (gCurrentHud->entry[HUD_EGG_CHALLENGE_ICON].pos.y - portraitY);
         for (i = 0; i < MAXCONTROLLERS; i++) {
-            curRacer = &racers[i]->unk64->racer;
+            curRacer = racers[i]->racer;
             if (gNumActivePlayers < 3 || racer->playerIndex == curRacer->playerIndex) {
                 hud_eggs_portrait(curRacer, updateRate);
             }
@@ -1251,7 +1251,7 @@ void hud_main_battle(s32 countdown, Object *obj, s32 updateRate) {
     s32 racersFinished;
     s32 i;
 
-    racer = &obj->unk64->racer;
+    racer = obj->racer;
     if (gNumActivePlayers != 1 || racer->raceFinished == FALSE) {
         cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
         hud_race_start(countdown, updateRate);
@@ -1264,7 +1264,7 @@ void hud_main_battle(s32 countdown, Object *obj, s32 updateRate) {
             case 2:
                 racersFinished = 0;
                 for (i = 0; i < numRacers; i++) {
-                    racer = &racerObjs[i]->unk64->racer;
+                    racer = racerObjs[i]->racer;
                     if (racer->playerIndex != PLAYER_COMPUTER && racer->raceFinished) {
                         racersFinished++;
                     }
@@ -1297,9 +1297,9 @@ void func_800A1E48(Object *racerObj, s32 updateRate) {
 
     racers = get_racer_objects(&numRacers);
     if (racerObj != NULL) {
-        racer = &racerObj->unk64->racer;
+        racer = racerObj->racer;
     } else {
-        racer = &racers[PLAYER_ONE]->unk64->racer;
+        racer = racers[PLAYER_ONE]->racer;
     }
 
     cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
@@ -1309,7 +1309,7 @@ void func_800A1E48(Object *racerObj, s32 updateRate) {
         prevChallengerPortraitX = gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x;
         prevChallengerPortraitY = gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
         for (i = 0; i < 4; i++) {
-            curRacer = &racers[i]->unk64->racer;
+            curRacer = racers[i]->racer;
             tempX = (offsetX + prevChallengerPortraitX) - gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x;
             tempY = (offsetY + prevChallengerPortraitY) - gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y;
             gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.x += tempX;
@@ -1395,7 +1395,7 @@ void hud_lives_render(Object_Racer *racer, UNUSED s32 updateRate) {
  */
 void hud_main_boss(s32 countdown, Object *obj, s32 updateRate) {
     LevelHeader *level;
-    Object_Racer *racer = &obj->unk64->racer;
+    Object_Racer *racer = obj->racer;
 
     cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
     hud_wrong_way(racer, updateRate);
@@ -1417,7 +1417,7 @@ void hud_main_boss(s32 countdown, Object *obj, s32 updateRate) {
  * When racing Taj in the overworld, render most of the basic race hud.
  */
 void hud_main_taj(s32 countdown, Object *obj, s32 updateRate) {
-    Object_Racer *racer = &obj->unk64->racer;
+    Object_Racer *racer = obj->racer;
 
     cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
     hud_wrong_way(racer, updateRate);
@@ -1438,7 +1438,7 @@ void hud_main_hub(Object *obj, s32 updateRate) {
     HudElement *portrait;
 
     if (cam_get_viewport_layout() == PLAYER_ONE) {
-        racer = &obj->unk64->racer;
+        racer = obj->racer;
         cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
         hud_balloons(racer);
         hud_speedometre(obj, updateRate);
@@ -1473,7 +1473,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     f32 posZ;
     u16 soundID;
 
-    curRacer = &playerRacerObj->unk64->racer;
+    curRacer = playerRacerObj->racer;
     stopwatchTimer = 0;
     if (gAssetHudElements->entry[HUD_BALLOON_COUNT_X] == NULL) {
         ttSWBody.objectID = gAssetHudElementIds[HUD_BALLOON_COUNT_X] & 0xFFFF;
@@ -1819,7 +1819,7 @@ void hud_speedometre(Object *obj, UNUSED s32 updateRate) {
 
     if (gNumActivePlayers == 1) {
         if (!check_if_showing_cutscene_camera()) {
-            racer = &obj->unk64->racer;
+            racer = obj->racer;
             if (racer->raceFinished == FALSE) {
                 if (racer->vehicleID == VEHICLE_PLANE) {
                     vel = sqrtf((obj->x_velocity * obj->x_velocity) + (obj->y_velocity * obj->y_velocity) +
@@ -1912,7 +1912,7 @@ void hud_race_start(s32 countdown, s32 updateRate) {
                 s32 numRacerObjects;
                 racerGroup = get_racer_objects(&numRacerObjects);
                 randomRacer = racerGroup[rand_range(1, numRacerObjects) - 1];
-                racer = &randomRacer->unk64->racer;
+                racer = randomRacer->racer;
                 if (racer->vehicleID == VEHICLE_CAR) {
                     if (rand_range(0, 100) >= 96) {
                         frequency = 1.25 - ((rand_range(0, 7) * 0.5) / 7.0);
@@ -3027,7 +3027,7 @@ void hud_weapon(Object *obj, s32 updateRate) {
     Object_Racer *racer;
     s32 temp_a0;
 
-    racer = &obj->unk64->racer;
+    racer = obj->racer;
     if (racer->raceFinished == FALSE) {
         enable_pal_viewport_height_adjust(TRUE);
         temp_a0 = (racer->balloon_type * 3) + (racer->balloon_level);
@@ -3117,7 +3117,7 @@ void hud_magnet_reticle(Object *racerObj) {
     Object_Racer *racer;
 
     if (entry) {} // Fakematch
-    racer = &racerObj->unk64->racer;
+    racer = racerObj->racer;
     if (racer->magnetTargetObj != NULL && get_current_viewport() == racer->playerIndex) {
         hud = &gCurrentHud->entry[HUD_MAGNET_RETICLE];
         hud->pos.x = racer->magnetTargetObj->trans.x_position;
@@ -3400,8 +3400,8 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
             if (gNumActivePlayers == 3) {
                 tempVar4 = NULL;
                 for (tempVar2 = 0; tempVar2 < objectCount; tempVar2++) {
-                    if (objectGroup[tempVar2]->unk64->racer.playerIndex == PLAYER_COMPUTER) {
-                        tempVar4 = &objectGroup[tempVar2]->unk64->racer;
+                    if (objectGroup[tempVar2]->racer->playerIndex == PLAYER_COMPUTER) {
+                        tempVar4 = objectGroup[tempVar2]->racer;
                     }
                 }
                 if (tempVar4 != NULL) {
@@ -3443,8 +3443,8 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
             if (gNumActivePlayers == 3) {
                 curRacerObj = NULL;
                 for (tempVar2 = 0; tempVar2 < objectCount; tempVar2++) {
-                    if (objectGroup[tempVar2]->unk64->racer.playerIndex == PLAYER_COMPUTER) {
-                        curRacerObj = &objectGroup[tempVar2]->unk64->racer;
+                    if (objectGroup[tempVar2]->racer->playerIndex == PLAYER_COMPUTER) {
+                        curRacerObj = objectGroup[tempVar2]->racer;
                     }
                 }
                 if (curRacerObj != NULL) {
@@ -3522,7 +3522,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
             spBC = gCurrentHud->entry[HUD_TREASURE_METRE].pos.y;
             racerGroup = get_racer_objects(&racerCount);
             for (sp144 = 0; sp144 < racerCount; sp144++) {
-                someRacer = &racerGroup[sp144]->unk64->racer;
+                someRacer = racerGroup[sp144]->racer;
                 hud_treasure(someRacer);
                 if (osTvType == OS_TV_TYPE_PAL) {
                     gCurrentHud->entry[HUD_CHALLENGE_PORTRAIT].pos.y += 66.0;
@@ -3539,8 +3539,8 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
         } else if (gNumActivePlayers == 3) {
             tempVar4 = NULL;
             for (tempVar2 = 0; tempVar2 < objectCount; tempVar2++) {
-                if (objectGroup[tempVar2]->unk64->racer.playerIndex == PLAYER_COMPUTER) {
-                    tempVar4 = &objectGroup[tempVar2]->unk64->racer;
+                if (objectGroup[tempVar2]->racer->playerIndex == PLAYER_COMPUTER) {
+                    tempVar4 = objectGroup[tempVar2]->racer;
                 }
             }
             if (tempVar4 != NULL) {
@@ -3582,7 +3582,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
 
     sp113 = TRUE;
     for (i = 0; i < objectCount; i++) {
-        someRacer = &objectGroup[i]->unk64->racer;
+        someRacer = objectGroup[i]->racer;
         if (someRacer != NULL && someRacer->playerIndex != PLAYER_COMPUTER && someRacer->raceFinished == FALSE) {
             sp113 = FALSE;
         }
@@ -3701,7 +3701,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
     // Non AI players get an arrow instead of a blob that rotates.
     for (i = objectCount - 1; i >= 0; i--) {
         temp_v0_8 = objectGroup[i];
-        someRacer = &objectGroup[i]->unk64->racer;
+        someRacer = objectGroup[i]->racer;
         if (someRacer != NULL) {
             minimap_marker_pos(objectGroup[i]->trans.x_position, objectGroup[i]->trans.z_position, sp114, sp118, sp11C);
             if (someRacer->playerIndex != PLAYER_COMPUTER) {

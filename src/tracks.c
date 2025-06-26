@@ -1102,7 +1102,7 @@ s32 func_80027568(void) {
     f32 var_f22;
     f32 var_f24;
     u16 *var_t2;
-    Object_64 *obj64;
+    Object_Racer *racer;
     f32 camXPos;
     f32 camYPos;
     Object **racerGroup;     // sp80
@@ -1119,8 +1119,8 @@ s32 func_80027568(void) {
     curViewport = get_current_viewport();
     currentObjRacer = NULL;
     for (i = 0; i < numRacers; i++) {
-        obj64 = racerGroup[i]->unk64;
-        if (curViewport == obj64->racer.playerIndex) {
+        racer = racerGroup[i]->racer;
+        if (curViewport == racer->playerIndex) {
             currentObjRacer = racerGroup[i];
             i = numRacers; // Come on! Just use break!
         }
@@ -1219,7 +1219,7 @@ void func_800278E8(s32 updateRate) {
     for (i = 0; i < numRacers; i++) {
         if (1) {} // fake
         if (racerGroup[i] != NULL) {
-            currentRacer = &racerGroup[i]->unk64->racer;
+            currentRacer = racerGroup[i]->racer;
             cameraId = currentRacer->cameraIndex;
             spectate_nearest(racerGroup[i], &cameraId);
             currentRacer->cameraIndex = cameraId;
@@ -1702,7 +1702,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
             i = -1;
             do {
                 i++;
-                racer = &racers[i]->unk64->racer;
+                racer = racers[i]->racer;
             } while (i < numRacers - 1 && viewportID != racer->playerIndex);
             waves_visibility(racers[i]->trans.x_position, racers[i]->trans.y_position, racers[i]->trans.z_position,
                              get_current_viewport(), updateRate);
@@ -2327,10 +2327,11 @@ s32 check_if_in_draw_range(Object *obj) {
     s32 viewDistance;
     s32 alpha;
     s32 i;
-    Object_64 *obj64;
+    Object_AnimatedObject *animatedObj;
     f32 accum;
     s32 temp2;
     f32 dist;
+    Object_Racer *racer;
 
     if (!(obj->trans.flags & OBJ_FLAGS_PARTICLE)) {
         alpha = 255;
@@ -2360,12 +2361,12 @@ s32 check_if_in_draw_range(Object *obj) {
         }
         switch (obj->behaviorId) {
             case BHV_RACER:
-                obj64 = obj->unk64;
-                obj->opacity = ((obj64->racer.transparency + 1) * alpha) >> 8;
+                racer = obj->racer;
+                obj->opacity = ((racer->transparency + 1) * alpha) >> 8;
                 break;
             case BHV_TIMETRIAL_GHOST: // Ghost Object?
-                obj64 = obj->unk64;
-                obj->opacity = obj64->racer.transparency;
+                racer = obj->racer;
+                obj->opacity = racer->transparency;
                 break;
             case BHV_ANIMATED_OBJECT: // Cutscene object?
             case BHV_CAMERA_ANIMATION:
@@ -2375,8 +2376,8 @@ s32 check_if_in_draw_range(Object *obj) {
             case BHV_HIT_TESTER:        // hittester
             case BHV_HIT_TESTER_2:      // animated objects?
             case BHV_ANIMATED_OBJECT_2: // space ships
-                obj64 = obj->unk64;
-                obj->opacity = obj64->animatedObject.unk42;
+                animatedObj = obj->animatedObject;
+                obj->opacity = animatedObj->unk42;
                 break;
             case BHV_PARK_WARDEN:
             case BHV_GOLDEN_BALLOON:
@@ -3403,7 +3404,7 @@ void shadow_update(s32 group, s32 waterGroup, s32 updateRate) {
             if (objHeader->shadowGroup == SHADOW_ACTORS && numViewports >= TWO_PLAYERS &&
                 numViewports <= FOUR_PLAYERS) {
                 if (obj->behaviorId == BHV_RACER) {
-                    playerIndex = obj->unk64->racer.playerIndex;
+                    playerIndex = obj->racer->playerIndex;
                     if (playerIndex != PLAYER_COMPUTER) {
                         shadow_generate(obj, FALSE);
                         skipShading = TRUE;
@@ -3441,7 +3442,7 @@ void shadow_update(s32 group, s32 waterGroup, s32 updateRate) {
             if (objHeader->shadowGroup == SHADOW_ACTORS && numViewports >= TWO_PLAYERS &&
                 numViewports <= FOUR_PLAYERS) {
                 if (obj->behaviorId == BHV_RACER) {
-                    playerIndex = obj->unk64->racer.playerIndex;
+                    playerIndex = obj->racer->playerIndex;
                     if (playerIndex != PLAYER_COMPUTER) {
                         shadow_generate(obj, TRUE);
                     }
@@ -4374,7 +4375,7 @@ void obj_loop_fogchanger(Object *obj) {
     for (i = 0; i < views; i++) {
         index = PLAYER_COMPUTER;
         if (racers != NULL) {
-            racer = &racers[i]->unk64->racer;
+            racer = racers[i]->racer;
             playerIndex = racer->playerIndex;
             if (playerIndex >= PLAYER_ONE && playerIndex <= PLAYER_FOUR && obj != gFogData[playerIndex].fogChanger) {
                 index = playerIndex;

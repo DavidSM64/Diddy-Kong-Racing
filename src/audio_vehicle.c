@@ -143,7 +143,7 @@ VehicleSoundData *racer_sound_init(s32 characterId, s32 vehicleId) {
  */
 void racer_sound_update(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 ticksDelta) {
     if (gVehicleSounds) {
-        gSoundRacerObj = &obj->unk64->racer;
+        gSoundRacerObj = obj->racer;
         gRacerSound = gSoundRacerObj->vehicleSound;
         if (gRacerSound != NULL) {
             if (get_race_countdown() != 0) {
@@ -616,7 +616,7 @@ void racer_sound_plane(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, 
 void racer_sound_free(Object *obj) {
     s32 i;
 
-    gRacerSound = obj->unk64->racer.vehicleSound;
+    gRacerSound = obj->racer->vehicleSound;
     if (gRacerSound != NULL) {
         for (i = 0; i != 2; i++) {
             if (gRacerSound->soundHandle[i] != NULL) {
@@ -638,7 +638,7 @@ void racer_sound_free(Object *obj) {
             }
         }
         mempool_free(gRacerSound);
-        obj->unk64->racer.vehicleSound = NULL;
+        obj->racer->vehicleSound = NULL;
     }
 }
 
@@ -679,8 +679,8 @@ void racer_sound_doppler_effect(Object *observerObj, Camera *camera, Object *sou
         questionable logic deserves to be pointed out.
     */
 
-    observerRacer = &observerObj->unk64->racer;
-    sourceRacer = &sourceObj->unk64->racer;
+    observerRacer = observerObj->racer;
+    sourceRacer = sourceObj->racer;
     gRacerSound = sourceRacer->vehicleSound;
     if (gRacerSound != NULL) {
         if (camera != NULL) {
@@ -793,7 +793,7 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
 
     // First, calculate engine and idle sound parameters for each player.
     for (i = 0; i < numCameras; i++) {
-        racer = &racerObjs[i]->unk64->racer;
+        racer = racerObjs[i]->racer;
         if (racer != NULL) {
             gRacerSound = racer->vehicleSound;
         } else {
@@ -921,7 +921,7 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
 
     // First, reset background volume for each AI vehicle.
     for (j = numCameras; j < numRacers; j++) {
-        racer = &racerObjs[j]->unk64->racer;
+        racer = racerObjs[j]->racer;
         if (racer != NULL) {
             gRacerSound = racer->vehicleSound;
             if (gRacerSound != NULL) {
@@ -936,10 +936,10 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
     // Doppler effect is the only pitch modifier applied here.
 
     for (i = 0; i < numCameras; i++) {
-        racer = &racerObjs[i]->unk64->racer;
+        racer = racerObjs[i]->racer;
         for (j = numCameras; j < numRacers; j++) {
-            if (racerObjs[j]->unk64 != NULL) {
-                gRacerSound = racerObjs[j]->unk64->racer.vehicleSound;
+            if (racerObjs[j]->racer != NULL) {
+                gRacerSound = racerObjs[j]->racer->vehicleSound;
                 if (gRacerSound != NULL) {
                     if (racer->raceFinished) {
                         deltaX = racerObjs[j]->trans.x_position - cameras[i].trans.x_position;
@@ -1008,8 +1008,8 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
     // Replace background sounds based on volume priority.
     //!@bug: loop starts from 1 instead of numCameras — possibly unintended.
     for (j = 1; j < numRacers; j++) {
-        racer = &racerObjs[j]->unk64->racer;
-        if (racerObjs[j]->unk64 != NULL) {
+        racer = racerObjs[j]->racer;
+        if (racerObjs[j]->racer != NULL) {
             gRacerSound = racer->vehicleSound;
             if (gRacerSound != NULL) {
                 // If a sound is currently stopped, check whether it should be restarted and find a suitable slot.

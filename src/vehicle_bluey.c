@@ -191,7 +191,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     if (obj->animationID == ANIM_BLUEY_TURN) {
         racer->headAngleTarget = 0;
     }
-    racer = &firstRacerObj->unk64->racer;
+    racer = firstRacerObj->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
         obj->animationID == ANIM_BLUEY_WALK) {
         racer->attackType = ATTACK_SQUISHED;

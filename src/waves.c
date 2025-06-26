@@ -2654,7 +2654,7 @@ void obj_loop_wavepower(Object *obj) {
 
     racerObj = NULL;
     for (i = 0; i < numRacers && racerObj == NULL; i++) {
-        racer = &racers[i]->unk64->racer;
+        racer = racers[i]->racer;
         if (racer->playerIndex == PLAYER_ONE) {
             racerObj = racers[i];
         }

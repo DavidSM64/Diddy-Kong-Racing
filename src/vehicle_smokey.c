@@ -260,7 +260,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             racer->headAngleTarget >>= 1;
         }
     }
-    racer = &firstRacerObj->unk64->racer;
+    racer = firstRacerObj->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
         obj->animationID == ANIM_SMOKEY_RUN) {
         racer->attackType = ATTACK_SQUISHED;

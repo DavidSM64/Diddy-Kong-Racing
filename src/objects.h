@@ -417,7 +417,7 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData);
 ObjectHeader *load_object_header(s32 index);
 s32 obj_init_attachpoint(Object *);
 void try_free_object_header(s32 index);
-s32 get_object_property_size(Object *obj, Object_64 *obj64);
+s32 get_object_property_size(Object *obj, void *obj64);
 void light_setup_light_sources(Object *obj);
 s32 init_object_interaction_data(Object *obj, ObjectInteraction *interactObj);
 s32 obj_init_emitter(Object *obj, ParticleEmitter *emitter);

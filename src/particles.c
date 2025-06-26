@@ -790,7 +790,7 @@ void update_vehicle_particles(Object *racerObj, s32 updateRate) {
     u32 emittersEnabled;
     u8 *alphaPtr;
 
-    racer = &racerObj->unk64->racer;
+    racer = racerObj->racer;
     emittersEnabled = racerObj->particleEmittersEnabled;
     vehicleId = racer->vehicleID;
     i = 0;

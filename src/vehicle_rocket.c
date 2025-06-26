@@ -145,7 +145,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
     firstRacerObj = get_racer_object(PLAYER_ONE);
-    racer = &firstRacerObj->unk64->racer;
+    racer = firstRacerObj->racer;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
         obj->animationID == ANIM_ROCKET_DAMAGE) {
         racer->attackType = ATTACK_SQUISHED;

@@ -987,7 +987,6 @@ typedef struct Object_OverridePos {
 typedef struct Object_WeaponBalloon {
     /* 0x0 */ f32 scale;
     /* 0x4 */ s16 respawnTime;
-    /* 0x6 */ s8 unk6[0x2];
 } Object_WeaponBalloon;
 
 typedef struct Object_Weapon {
@@ -1357,8 +1356,8 @@ typedef struct Object_Racer {
     /* 0x20E */ u16 delaySoundID;
     /* 0x210 */ u8 delaySoundTimer;
     /* 0x211 */ s8 unk211;
-    /* 0x212 */ s8
-        elevation; // Some maps like Icicle Pyramid have elevation levels that are communicated on the minimap.
+    /* 0x212 */ s8 elevation; // Some maps like Icicle Pyramid have elevation levels
+                              // that are communicated on the minimap.
     /* 0x213 */ s8 unk213;
     /* 0x214 */ s8 unk214;
     /* 0x215 */ s8 unk215;
@@ -1487,11 +1486,6 @@ typedef struct Object_Bridge_WhaleRamp {
     /* 0x4 */ struct AudioPoint *soundMask;
 } Object_Bridge_WhaleRamp;
 
-typedef struct Object_64_80021400 {
-    /* 0x00 */ u8 pad[0x2A];
-    /* 0x2A */ s16 unk2A;
-} Object_64_80021400;
-
 typedef struct Object_Log {
     /* 0x00 */ s16 unk0;
     /* 0x02 */ u8 unk2;
@@ -1530,7 +1524,7 @@ typedef struct Object_AnimatedObject {
     /* 0x35 */ u8 unk35;
     /* 0x36 */ s16 pauseCounter;
     /* 0x38 */ s8 soundID;
-    /* 0x39 */ u8 unk39;
+    /* 0x39 */ s8 unk39;
     /* 0x3A */ s8 unk3A;
     /* 0x3B */ u8 unk3B;
     /* 0x3C */ u8 unk3C;
@@ -1587,62 +1581,56 @@ typedef struct Object {
     /* 0x005C */ Object_5C *unk5C;
     /* 0x0060 */ AttachPoint *attachPoints;
     /* 0x0064 */ union {
-        struct Object_64 *unk64;    // player + 0x98
-        struct Object *animTarget;  // BHV_ANIMATION
-        struct ObjectLight *light;  // BHV_LIGHT_RGBA
-        struct Object_Log *log;     // BHV_BUOY_PIRATE_SHIP, BHV_LOG
-        struct Object_Boost *boost; // BHV_BOOST
+        struct Object *animTarget;                  // BHV_ANIMATION
+        struct ObjectLight *light;                  // BHV_LIGHT_RGBA
+        Object_Log *log;                            // BHV_BUOY_PIRATE_SHIP, BHV_LOG
+        Object_Boost *boost;                        // BHV_BOOST
+        JingleState *jingle_state;                  // BHV_TROPHY_CABINET
+        Object_Animator *animator;                  // BHV_ANIMATOR
+        Object_WeaponBalloon *weapon_balloon;       // BHV_WEAPON_BALLOON
+        Object_Weapon *weapon;                      // BHV_FIREBALL_OCTOWEAPON_2, BHV_WEAPON, BHV_WEAPON_2
+        Object_Butterfly *butterfly;                // BHV_BUTTERFLY
+        Object_Fish *fish;                          // BHV_FISH
+        CharacterFlagModel *characterFlagModel;     // BHV_CHARACTER_FLAG
+        Object_CollectEgg *egg;                     // BHV_COLLECT_EGG
+        Object_AudioLine *audio_line;               // BHV_AUDIO_LINE
+        Object_AudioReverb *audio_reverb;           // BHV_AUDIO_REVERB
+        Object_TexScroll *tex_scroll;               // BHV_TEXTURE_SCROLL
+        Object_Frog *frog;                          // BHV_FROG
+        Object_Exit *exit;                          // BHV_EXIT
+        Object_Racer *racer;                        // BHV_RACER
+        Object_Door *door;                          // BHV_DOOR, BHV_TT_DOOR
+        Object_Trigger *trigger;                    // BHV_MODECHANGE, BHV_BONUS, BHV_TRIGGER
+        Object_Audio *audio;                        // BHV_AUDIO
+        Object_MidiFade *midi_fade;                 // BHV_MIDI_FADE
+        Object_MidiFadePoint *midi_fade_point;      // BHV_MIDI_FADE_POINT
+        Object_MidiChannelSet *midi_channel_set;    // BHV_MIDI_CHANNEL_SET
+        Object_Banana *banana;                      // BHV_BANANA
+        Object_NPC *npc;                            // BHV_STOPWATCH_MAN, BHV_PARK_WARDEN, BHV_GOLDEN_BALLOON
+        Object_Bridge_WhaleRamp *bridge_whale_ramp; // BHV_BRIDGE_WHALE_RAMP
+        Object_LaserGun *lasergun;                  // BHV_LASER_GUN
+        Object_AnimatedObject *animatedObject;      // BHV_DINO_WHALE, BHV_ANIMATED_OBJECT, BHV_CAMERA_ANIMATION
+                                                    // BHV_CAR_ANIMATION, BHV_CHARACTER_SELECT, BHV_VEHICLE_ANIMATION
+                                                    // BHV_HIT_TESTER, BHV_HIT_TESTER_2, BHV_PARK_WARDEN_2
+                                                    // BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP, BHV_ANIMATED_OBJECT_3
+                                                    // BHV_ANIMATED_OBJECT_4, BHV_SNOWBALL, BHV_SNOWBALL_2
+                                                    // BHV_SNOWBALL_3, BHV_SNOWBALL_4, BHV_HIT_TESTER_3
+                                                    // BHV_HIT_TESTER_4, BHV_DOOR_OPENER, BHV_PIG_ROCKETEER
+                                                    // BHV_WIZPIG_GHOSTS
+        Object_AiNode *ai_node;                     // BHV_AINODE
+        Object_OverridePos *override_pos;           // BHV_OVERRIDE_POS
+        void *anyBehaviorData;
     };
     /* 0x0068 */ union {
         ModelInstance **modelInstances;
         TextureHeader **textures;
         Sprite **sprites;
     };
-    /* 0x006C */ struct ParticleEmitter *particleEmitter; // player + 0x370
+    /* 0x006C */ struct ParticleEmitter *particleEmitter;
     /* 0x0070 */ struct ObjectLight **lightData;
     /* 0x0074 */ u32 particleEmittersEnabled;
     /* 0x0078 */ ObjProperties properties;
 } Object;
-
-typedef struct Object_64 {
-    union {
-        struct Object *obj;
-        JingleState jingle_state;                  // BHV_TROPHY_CABINET
-        Object_Animator animator;                  // BHV_ANIMATOR
-        Object_WeaponBalloon weapon_balloon;       // BHV_WEAPON_BALLOON
-        Object_Weapon weapon;                      // BHV_FIREBALL_OCTOWEAPON_2, BHV_WEAPON, BHV_WEAPON_2
-        Object_Butterfly butterfly;                // BHV_BUTTERFLY
-        Object_Fish fish;                          // BHV_FISH
-        Object_CollectEgg egg;                     // BHV_COLLECT_EGG
-        CharacterFlagModel characterFlagModel;     // BHV_CHARACTER_FLAG
-        Object_AudioLine audio_line;               // BHV_AUDIO_LINE
-        Object_AudioReverb audio_reverb;           // BHV_AUDIO_REVERB
-        Object_TexScroll tex_scroll;               // BHV_TEXTURE_SCROLL
-        Object_Frog frog;                          // BHV_FROG
-        Object_Exit exit;                          // BHV_EXIT
-        Object_Racer racer;                        // BHV_RACER
-        Object_Door door;                          // BHV_DOOR, BHV_TT_DOOR
-        Object_Trigger trigger;                    // BHV_MODECHANGE, BHV_BONUS, BHV_TRIGGER
-        Object_Audio audio;                        // BHV_AUDIO
-        Object_MidiFade midi_fade;                 // BHV_MIDI_FADE
-        Object_MidiFadePoint midi_fade_point;      // BHV_MIDI_FADE_POINT
-        Object_MidiChannelSet midi_channel_set;    // BHV_MIDI_CHANNEL_SET
-        Object_Banana banana;                      // BHV_BANANA
-        Object_NPC npc;                            // BHV_STOPWATCH_MAN, BHV_PARK_WARDEN, BHV_GOLDEN_BALLOON
-        Object_Bridge_WhaleRamp bridge_whale_ramp; // BHV_BRIDGE_WHALE_RAMP
-        Object_LaserGun lasergun;                  // BHV_LASER_GUN
-        Object_AnimatedObject animatedObject;      // BHV_DINO_WHALE, BHV_ANIMATED_OBJECT, BHV_CAMERA_ANIMATION
-                                                   // BHV_CAR_ANIMATION, BHV_CHARACTER_SELECT, BHV_VEHICLE_ANIMATION
-                                                   // BHV_HIT_TESTER, BHV_HIT_TESTER_2, BHV_PARK_WARDEN_2
-                                                   // BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP, BHV_ANIMATED_OBJECT_3
-                                                   // BHV_ANIMATED_OBJECT_4, BHV_SNOWBALL, BHV_SNOWBALL_2
-                                                   // BHV_SNOWBALL_3, BHV_SNOWBALL_4, BHV_HIT_TESTER_3
-                                                   // BHV_HIT_TESTER_4, BHV_DOOR_OPENER, BHV_PIG_ROCKETEER
-                                                   // BHV_WIZPIG_GHOSTS
-        Object_AiNode ai_node;                     // BHV_AINODE
-        Object_OverridePos override_pos;           // BHV_OVERRIDE_POS
-    };
-} Object_64;
 
 typedef struct unk800B2260_C {
     s32 unk0;

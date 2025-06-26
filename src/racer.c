@@ -231,7 +231,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     var_t0 = 0;
     var_t4 = PLAYER_COMPUTER;
     for (someFlag = TRUE; index < numRacers; index++) {
-        sp5C = &racerGroup[index]->unk64->racer;
+        sp5C = racerGroup[index]->racer;
         if (sp5C == racer) {
             someFlag = FALSE;
             racerID = index;
@@ -259,7 +259,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (gRaceStartTimer == 0 && racer->vehicleID != VEHICLE_LOOPDELOOP) {
         index = racerID - 1;
         if (racer->unk20B < racerID && index >= 0 && index < numRacers) {
-            sp5C = &racerGroup[index]->unk64->racer;
+            sp5C = racerGroup[index]->racer;
             if (sp5C->playerIndex != PLAYER_COMPUTER) {
                 if (temp_v0 == 0) {
                     play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 3);
@@ -271,7 +271,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
         }
         tempRacerIndex = racerID + 1;
         if (racerID < racer->unk20B && tempRacerIndex >= 0 && tempRacerIndex < numRacers) {
-            sp5C = &racerGroup[tempRacerIndex]->unk64->racer;
+            sp5C = racerGroup[tempRacerIndex]->racer;
             if (sp5C->playerIndex != PLAYER_COMPUTER) {
                 play_random_character_voice(racerGroup[(racerID + 1)], SOUND_VOICE_KRUNCH_NEGATIVE1, 8, 2);
                 if (temp_v0 == 0) {
@@ -288,12 +288,12 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     sp5C = NULL;
     obj = func_8001B7A8(racer, 1, &sp94);
     if (obj != NULL) {
-        sp5C = &obj->unk64->racer;
+        sp5C = obj->racer;
     }
     sp58 = NULL;
     obj = func_8001B7A8(racer, -1, &sp90);
     if (obj != NULL) {
-        sp58 = &obj->unk64->racer;
+        sp58 = obj->racer;
     }
     racerCharacterId = racer->characterId;
     if (sp5C != NULL) {
@@ -675,7 +675,7 @@ s32 roll_percent_chance(s32 chance) {
 // Handles the opponent A.I. for battle & banana challenges.
 void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
     Object *sp74;
-    Object_64 *tempRacer;
+    Object_Racer *tempRacer;
     LevelObjectEntry *sp6C;
     LevelObjectEntry *newvar;
     f32 xDiff;
@@ -787,15 +787,15 @@ void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRat
                     }
                     if ((D_8011D58C[index] == 0) && (index != aiRacer->racerIndex)) {
                         tempRacerObj = get_racer_object(index);
-                        tempRacer = tempRacerObj->unk64;
+                        tempRacer = tempRacerObj->racer;
                         if (sp46 == 0) {
-                            if (sp48 < tempRacer->racer.bananas) {
-                                sp48 = tempRacer->racer.bananas;
+                            if (sp48 < tempRacer->bananas) {
+                                sp48 = tempRacer->bananas;
                                 sp4A = index;
                             }
                         } else {
-                            if ((tempRacer->racer.bananas > 0) && (tempRacer->racer.bananas < sp48)) {
-                                sp48 = tempRacer->racer.bananas;
+                            if ((tempRacer->bananas > 0) && (tempRacer->bananas < sp48)) {
+                                sp48 = tempRacer->bananas;
                                 sp4A = index;
                             }
                         }
@@ -804,8 +804,8 @@ void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRat
                 if (roll_percent_chance(sp38[2]) != 0) {
                     if (cam_get_viewport_layout() == 0) {
                         tempRacerObj = get_racer_object(index);
-                        tempRacer = tempRacerObj->unk64;
-                        if (tempRacer->racer.bananas > 0) {
+                        tempRacer = tempRacerObj->racer;
+                        if (tempRacer->bananas > 0) {
                             sp4A = 0;
                         }
                     }
@@ -924,9 +924,9 @@ void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRat
                             break;
                         case 4:
                             tempRacerObj = get_racer_object(aiRacer->eggHudCounter);
-                            tempRacer = tempRacerObj->unk64;
-                            if (tempRacer->racer.playerIndex == -1) {
-                                tempRacerObj = tempRacer->racer.unk154;
+                            tempRacer = tempRacerObj->racer;
+                            if (tempRacer->playerIndex == -1) {
+                                tempRacerObj = tempRacer->unk154;
                                 newvar = tempRacerObj->level_entry;
                                 temp = func_8001CD28(sp6C->animation.x_rotation, newvar->animation.x_rotation | 0x100,
                                                      aiRacer->unk1CE, aiRacer->racerIndex);
@@ -984,9 +984,9 @@ void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRat
     for (i = 0; i < 4; i++) {
         if (i != aiRacer->racerIndex) {
             tempRacerObj = get_racer_object(i);
-            tempRacer = tempRacerObj->unk64;
-            if (tempRacer->racer.playerIndex != -1) {
-                D_8011D5B4[i] = tempRacer->racer.elevation;
+            tempRacer = tempRacerObj->racer;
+            if (tempRacer->playerIndex != -1) {
+                D_8011D5B4[i] = tempRacer->elevation;
             }
             if (D_8011D5B4[aiRacer->racerIndex] == D_8011D5B4[i]) {
                 xDiff = aiRacerObj->trans.x_position - tempRacerObj->trans.x_position;
@@ -1023,7 +1023,7 @@ void racer_update_eggs(Object **racerObjs) {
     s32 i;
 
     for (i = 0; i < 4; i++) {
-        racer = &racerObjs[i]->unk64->racer;
+        racer = racerObjs[i]->racer;
         gEggChallengeFlags[i] = racer->lap;
         if (racer->eggHudCounter != 0) {
             gEggChallengeFlags[i] |= RACER_EGG_HATCHING;
@@ -1218,7 +1218,7 @@ void racer_ai_eggs(Object *obj, Object_Racer *racer, s32 updateRate) {
                             }
                             break;
                         case BHV_COLLECT_EGG:
-                            egg = &curObj->unk64->egg;
+                            egg = curObj->egg;
                             if (bestTick == 0) {
                                 if (egg->status == EGG_SPAWNED) {
                                     tickCount = TRUE;
@@ -1257,7 +1257,7 @@ void racer_ai_eggs(Object *obj, Object_Racer *racer, s32 updateRate) {
     distance = 0.0f;
     if (curObj != NULL) {
         if (curObj->behaviorId == BHV_COLLECT_EGG) {
-            egg = &curObj->unk64->egg;
+            egg = curObj->egg;
             i = racer->unk1CD;
             if (i == 1 && egg->status != EGG_SPAWNED) {
                 racer->unk154 = NULL;
@@ -3767,7 +3767,7 @@ void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
             yDiff = obj->trans.y_position - racerObj->trans.y_position;
             zDiff = obj->trans.z_position - racerObj->trans.z_position;
             if (sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < 200.0) {
-                nodes = obj->unk64->ai_node.nodeObj;
+                nodes = obj->ai_node->nodeObj;
                 for (i = 0; i < 4; i++) {
                     if (nodes[i] != NULL && racer->challengeMarker != nodes[i]) {
                         racer->challengeMarker = obj;
@@ -4023,7 +4023,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     s32 i;
 
     unused_8011D53C = 0;
-    tempRacer = &obj->unk64->racer;
+    tempRacer = obj->racer;
     obj->trans.rotation.y_rotation = racer->angleY;
     obj->trans.rotation.x_rotation = racer->angleX;
     obj->trans.rotation.z_rotation = racer->angleZ;
@@ -4149,7 +4149,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     gCurrentSurfaceType = SURFACE_DEFAULT;
     gRaceStartTimer = get_race_countdown();
     updateRateF = updateRate;
-    tempRacer = &obj->unk64->racer;
+    tempRacer = obj->racer;
     // Cap all of the velocities on the different axes.
     // Unfortunately, Rareware didn't appear to use a clamp macro here, which would've saved a lot of real estate.
     if (obj->x_velocity > 50.0) {
@@ -5658,7 +5658,7 @@ s32 turn_head_towards_object(Object *obj, Object_Racer *racer, Object *targetObj
         if ((racer->miscAnimCounter & 0x3F) <= 30) {
             racer->headAngleTarget = 0;
         }
-        racer = &targetObj->unk64->racer;
+        racer = targetObj->racer;
         intendedAngle = arctan2_f(diffX, diffZ) - (obj->trans.rotation.y_rotation & 0xFFFF);
         WRAP(intendedAngle, -0x8000, 0x8000);
         CLAMP(intendedAngle, -0x3000, 0x3000);
@@ -6941,7 +6941,8 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
     f32 distance;
     f32 scaleY;
     f32 scaleZ;
-    UNUSED s32 pad[2];
+    UNUSED s32 pad;
+    Object_CollectEgg *egg;
     s8 *miscAsset;
     Vertex *heldObjData;
     u16 soundID = SOUND_NONE;
@@ -6971,8 +6972,8 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
             heldObj->x_velocity = obj->x_velocity * 0.7;
             heldObj->y_velocity = obj->y_velocity - 2.0;
             heldObj->z_velocity = obj->z_velocity * 0.7;
-            heldObjData = (Vertex *) &heldObj->unk64->egg;
-            ((Object_64 *) heldObjData)->egg.status = EGG_MOVING;
+            egg = heldObj->egg;
+            egg->status = EGG_MOVING;
             racer->held_obj = NULL;
             racer->unk211 = 1;
         }
@@ -7031,7 +7032,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         }
                         if (objDist < distance) {
                             if (weaponID == WEAPON_MAGNET_LEVEL_3 && intendedTarget != NULL) {
-                                magnetTarget = &intendedTarget->unk64->racer;
+                                magnetTarget = intendedTarget->racer;
                             }
                             racer->magnetTargetObj = intendedTarget;
                         } else {
@@ -7180,7 +7181,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                             spawnedObj->trans.rotation.x_rotation = 0;
                         }
                     }
-                    weapon = &spawnedObj->unk64->weapon;
+                    weapon = spawnedObj->weapon;
                     weapon->owner = obj;
                     weapon->target = intendedTarget;
                     weapon->checkpoint = racer->checkpoint;
@@ -7296,7 +7297,7 @@ Object *func_8005698C(Object *racerObj, Object_Racer *racer, f32 *outDistance) {
     for (i = 0; i < numRacers; i++) {
         if (racerObj != racerObjects[i]) {
             curRacerObj = racerObjects[i];
-            curRacer = &racerObjects[i]->unk64->racer;
+            curRacer = racerObjects[i]->racer;
             if ((!isChallengeRace || !curRacer->raceFinished) && curRacer->elevation == racer->elevation) {
                 curDistance =
                     -((racerOx1 * curRacerObj->trans.x_position) + (racerOy1 * curRacerObj->trans.y_position) +
@@ -7361,7 +7362,7 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
     diffX /= vel;
     diffZ /= vel;
-    magnetTarget = &racer->magnetTargetObj->unk64->racer;
+    magnetTarget = racer->magnetTargetObj->racer;
     vel = -magnetTarget->velocity;
     if (vel < 8.0 && racer->magnetLevel3 == FALSE) {
         vel = 8.0f;
@@ -7381,7 +7382,7 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
  * Only affects human players that aren't in the middle of going through an exit.
  */
 void racer_play_sound(Object *obj, s32 soundID) {
-    Object_Racer *racer = &obj->unk64->racer;
+    Object_Racer *racer = obj->racer;
     if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->exitObj == NULL) {
         sound_play_spatial(soundID, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, NULL);
     }
@@ -7392,7 +7393,7 @@ void racer_play_sound(Object *obj, s32 soundID) {
  * When that timer counts zero in the racer's update loop, it plays the sound passed through here.
  */
 void racer_play_sound_after_delay(Object *obj, s32 soundID, s32 delay) {
-    Object_Racer *racer = &obj->unk64->racer;
+    Object_Racer *racer = obj->racer;
     racer->delaySoundID = soundID;
     racer->delaySoundTimer = delay;
 }
@@ -7407,7 +7408,7 @@ void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 flags)
     s32 soundIndex;
     Object_Racer *tempRacer;
 
-    tempRacer = &obj->unk64->racer;
+    tempRacer = obj->racer;
     if (tempRacer->exitObj == 0 && (!(flags & 0x80) || gCurrentPlayerIndex != PLAYER_COMPUTER)) {
         if (flags == 2) {
             if (tempRacer->soundMask != NULL && soundID != tempRacer->unk2A) {
@@ -7602,7 +7603,7 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
                     bananaObj = spawn_object(&newObject, OBJECT_SPAWN_UNK01);
                     if (bananaObj != NULL) {
                         bananaObj->level_entry = NULL;
-                        banana = &bananaObj->unk64->banana;
+                        banana = bananaObj->banana;
                         banana->droppedVehicleID = racer->vehicleID;
                         bananaObj->x_velocity = racer->ox1 * 2;
                         bananaObj->y_velocity = (0.0f - racer->oy1) + 5.0;
@@ -8396,7 +8397,7 @@ void timetrial_ghost_write(Object *obj, s32 updateRate) {
     Object_Racer *racer;
     GhostNode *ghostNode;
 
-    racer = &obj->unk64->racer;
+    racer = obj->racer;
     yOffset = coss_f(racer->z_rotation_offset) * coss_f(racer->x_rotation_offset - racer->unk166);
     if (yOffset < 0) {
         yOffset *= 0.5;
@@ -8447,7 +8448,7 @@ s32 timetrial_ghost_read(Object *obj) {
     GhostNode *nextGhostNode;
     s32 ghostNodeCount;
     GhostNode *curGhostNode;
-    Object_64 *obj64;
+    Object_Racer *obj64;
     s32 i;
 
     ghostDataIndex = (gCurrentGhostIndex + 1) & 1;
@@ -8464,9 +8465,9 @@ s32 timetrial_ghost_read(Object *obj) {
     ghostNodeCount = gGhostNodeCount[ghostDataIndex];
     if (commonUnk0s32 >= (ghostNodeCount - 2)) {
 #if VERSION >= VERSION_79
-        obj64 = obj->unk64;
-        if (obj64->racer.transparency > 0) {
-            obj64->racer.transparency -= 1;
+        obj64 = obj->racer;
+        if (obj64->transparency > 0) {
+            obj64->transparency -= 1;
         }
 #endif
         return FALSE;
@@ -8538,7 +8539,7 @@ s32 timetrial_ghost_read(Object *obj) {
         get_level_segment_index_from_position(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
     temp = commonUnk0s32 + 3;
     if (ghostNodeCount == temp) {
-        racer = &obj->unk64->racer;
+        racer = obj->racer;
         if (catmullX >= 0.8) {
             racer->transparency = 0;
         } else {
@@ -8594,7 +8595,7 @@ void racer_enter_door(Object_Racer *racer, s32 updateRate) {
     f32 updateRateF;
     s32 angle;
 
-    exit = &racer->exitObj->unk64->exit;
+    exit = racer->exitObj->exit;
     racer->playerIndex = PLAYER_COMPUTER;
     angle = (u16) arctan2_f(exit->directionX, exit->directionZ) - (racer->steerVisualRotation & 0xFFFF);
     WRAP(angle, -0x8000, 0x8000);
@@ -8717,7 +8718,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         objects = get_racer_objects(&countOfObjects);
         playerOneObj = playerTwoObj = NULL;
         for (var_t2 = 0; var_t2 < countOfObjects; var_t2++) {
-            tempRacer = &objects[var_t2]->unk64->racer;
+            tempRacer = objects[var_t2]->racer;
             if (tempRacer->playerIndex == PLAYER_ONE) {
                 playerOneObj = objects[var_t2];
             }

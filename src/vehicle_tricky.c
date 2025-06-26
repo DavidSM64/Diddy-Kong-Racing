@@ -193,7 +193,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
     // Record the players height record. Falling 400 units below that will trigger a warp.
-    racer = &firstRacerObj->unk64->racer;
+    racer = firstRacerObj->racer;
     if (gTrickyRacerPeakHeight < firstRacerObj->trans.y_position) {
         gTrickyRacerPeakHeight = firstRacerObj->trans.y_position;
     }
