@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of June 25, 2025, this is our current score:
+As of June 26, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 94.73%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 94.75%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 61.34%
 <!-- README_SCORE_SUMMARY_END -->
@@ -117,12 +117,12 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of June 25, 2025, this is our current score:
+As of June 26, 2025, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- --------------- 94.73% Complete (95.43% NON_MATCHING) ---------------
-                     # Decompiled functions: 1933
+ --------------- 94.75% Complete (95.45% NON_MATCHING) ---------------
+                     # Decompiled functions: 1935
                       # GLOBAL_ASM remaining: 17
                       # NON_MATCHING functions: 4
                   # NON_EQUIVALENT WIP functions: 13
@@ -135,7 +135,7 @@ As of June 25, 2025, this is our current score:
                  ADVENTURE TWO (Cleanup & Documentation)
  -------------------------- 61.34% Complete --------------------------
                      # Documented functions: 1219
-                     # Undocumented remaining: 431
+                     # Undocumented remaining: 433
  ---------------------------- Game Status ----------------------------
                Balloons: 30/47, Keys: 3/4, Trophies: 2/5
                 T.T. Amulets: 3/4, Wizpig Amulets: 2/4
