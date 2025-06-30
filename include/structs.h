@@ -709,10 +709,7 @@ typedef struct LevelModelSegment {
     /* 0x0C */ TriangleBatchInfo *batches;
     /* 0x10 */ s16 *unk10;
     /* 0x14 */ CollisionNode *unk14;
-    union {
-        /* 0x18 */ f32 *unk18;
-        /* 0x18 */ Vec4f *unk18_vec4f; // Used for objects, not levels.
-    };
+    /* 0x18 */ f32 *normals;
     /* 0x1C */ s16 numberOfVertices;
     /* 0x1E */ s16 numberOfTriangles;
     /* 0x20 */ s16 numberOfBatches;

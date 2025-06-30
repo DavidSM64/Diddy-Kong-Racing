@@ -178,7 +178,7 @@ enum ObjectSpawnFlags {
     OBJECT_SPAWN_UNK02 = (1 << 1),
     OBJECT_SPAWN_UNK04 = (1 << 2),
     OBJECT_SPAWN_UNK08 = (1 << 3),
-    OBJECT_SPAWN_UNK10 = (1 << 4)
+    OBJECT_SPAWN_NO_LODS = (1 << 4) // Forces the object to have 1 model associate. Used to prevent LoD models of player model racers spawning.
 };
 
 enum ObjectBehaviourFlags {

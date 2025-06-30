@@ -1303,7 +1303,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             }
             if (entry->unkE != 4) {
                 if (numPlayers == 1) {
-                    spawnObjFlags |= OBJECT_SPAWN_UNK10;
+                    spawnObjFlags |= OBJECT_SPAWN_NO_LODS;
                 }
             }
             if (vehicle >= VEHICLE_BOSSES) {
@@ -1658,7 +1658,7 @@ void transform_player_vehicle(void) {
     spawnObj.common.z = gTransformPosZ;
     spawnObj.unkC = gTransformAngleY;
     set_taj_status(TAJ_DIALOGUE);
-    player = spawn_object(&spawnObj.common, OBJECT_SPAWN_UNK10 | OBJECT_SPAWN_UNK01);
+    player = spawn_object(&spawnObj.common, OBJECT_SPAWN_NO_LODS | OBJECT_SPAWN_UNK01);
     gNumRacers = 1;
     (*gRacers)[PLAYER_ONE] = player;
     gRacersByPort[PLAYER_ONE] = player;
@@ -1961,7 +1961,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
 
     objType = curObj->header->modelType;
     curObj->modelInstances = (ModelInstance **) &curObj[1];
-    if (spawnFlags & OBJECT_SPAWN_UNK10) {
+    if (spawnFlags & OBJECT_SPAWN_NO_LODS) {
         assetCount = 1;
     }
     i = 0; // a2

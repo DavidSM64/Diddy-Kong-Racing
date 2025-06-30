@@ -93,9 +93,9 @@ s32 D_8011B0F0;
 s32 D_8011B0F4;
 s32 D_8011B0F8; // gIsInCutscene?
 s32 gAntiAliasing;
-s32 D_8011B100;
-s32 D_8011B104;
-s32 D_8011B108;
+s32 gTTCamPlayerID;
+s32 gTTCamID;
+s32 gTTCamSmoothTimer;
 s32 D_8011B10C;
 s32 D_8011B110;
 u32 D_8011B114;
@@ -197,9 +197,9 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
 
     gCurrentLevelHeader2 = get_current_level_header();
     D_8011B0F8 = FALSE;
-    D_8011B100 = 0;
-    D_8011B104 = 0;
-    D_8011B108 = 0;
+    gTTCamPlayerID = 0;
+    gTTCamID = 0;
+    gTTCamSmoothTimer = 0;
     D_8011B10C = 0;
 
     if (gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_1 ||
@@ -232,7 +232,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     }
 
     cam_set_layout(numberOfPlayers);
-    spawn_skydome(skybox);
+    skydome_spawn(skybox);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
     path_enable();
@@ -350,7 +350,7 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
     update_fog(numViewports, tempUpdateRate);
     scroll_particle_textures(tempUpdateRate);
     if (gCurrentLevelModel->numberOfAnimatedTextures > 0) {
-        animate_level_textures(tempUpdateRate);
+        track_tex_anim(tempUpdateRate);
     }
     for (j = gSceneCurrentPlayerID = 0; j < numViewports; gSceneCurrentPlayerID++, j = gSceneCurrentPlayerID) {
         if (gCurrentLevelHeader2 && !gCurrentLevelHeader2 && !gCurrentLevelHeader2) {} // Fakematch
@@ -371,13 +371,13 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
         if (numViewports < 2) {
             mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
             if (gCurrentLevelHeader2->skyDome == -1) {
-                func_80028050();
+                trackbg_render_flashy();
             } else {
-                render_skydome();
+                skydome_render();
             }
         } else {
             mtx_perspective(&gTrackDL, &gTrackMtxPtr);
-            draw_gradient_background();
+            trackbg_render_gradient();
             func_80067D3C(&gTrackDL, &gTrackMtxPtr);
             mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
         }
@@ -405,11 +405,11 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
             gDPPipeSync(gTrackDL++);
             set_active_camera(PLAYER_FOUR);
             disable_cutscene_camera();
-            func_800278E8(updateRate);
+            ttcam_update(updateRate);
             viewport_main(&gTrackDL, &gTrackMtxPtr);
             func_8002A31C();
             mtx_perspective(&gTrackDL, &gTrackMtxPtr);
-            draw_gradient_background();
+            trackbg_render_gradient();
             func_80067D3C(&gTrackDL, &gTrackMtxPtr);
             mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
             gDPPipeSync(gTrackDL++);
@@ -432,7 +432,7 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
 #endif
         } else {
             set_active_camera(PLAYER_FOUR);
-            func_800278E8(updateRate);
+            ttcam_update(updateRate);
         }
     }
     viewport_reset(&gTrackDL);
@@ -841,12 +841,12 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
                 }
                 if (var_s0 != 0) {
                     var_t0 = (segment->unk14[j].triangleIndex << 2);
-                    temp = (spB0[0] + D_8011D4A0) * segment->unk18[var_t0];
-                    temp += spB8[0] * segment->unk18[var_t0 + 1];
-                    temp += (spA8[0] + D_8011D4A4) * segment->unk18[var_t0 + 2];
-                    temp += segment->unk18[var_t0 + 3];
+                    temp = (spB0[0] + D_8011D4A0) * segment->normals[var_t0];
+                    temp += spB8[0] * segment->normals[var_t0 + 1];
+                    temp += (spA8[0] + D_8011D4A4) * segment->normals[var_t0 + 2];
+                    temp += segment->normals[var_t0 + 3];
                     var_s0 = (temp > 0.0) << 2;
-                    if (segment->unk18[var_t0 + 1] < 0.0f) {
+                    if (segment->normals[var_t0 + 1] < 0.0f) {
                         var_s0 |= 1;
                     }
                     if (spC4[0] == spC4[1]) {
@@ -1195,7 +1195,12 @@ s32 func_80027568(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80027568.s")
 #endif
 
-void func_800278E8(s32 updateRate) {
+/**
+ * Sets up the camera placement for the 4th viewport when using T.T Cam in 3 player.
+ * It utilises spectate points then points at the race leader.
+ * Uses lookat smoothing when changing which player, otherwise, snaps if the camera itself changes.
+*/
+void ttcam_update(s32 updateRate) {
     s16 angleDiff;
     f32 xDelta;
     f32 yDelta;
@@ -1245,11 +1250,11 @@ void func_800278E8(s32 updateRate) {
         thisObject = objectFirstPlace;
     }
     camObj = spectate_object(currentRacer->cameraIndex);
-    if (D_8011B104 != currentRacer->cameraIndex) {
-        D_8011B108 = 0;
-    } else if (D_8011B100 != currentRacer->playerIndex) {
-        D_8011B108 = 180;
-        D_8011B100 = currentRacer->playerIndex;
+    if (gTTCamID != currentRacer->cameraIndex) {
+        gTTCamSmoothTimer = 0;
+    } else if (gTTCamPlayerID != currentRacer->playerIndex) {
+        gTTCamSmoothTimer = 180;
+        gTTCamPlayerID = currentRacer->playerIndex;
     }
     if (camObj != NULL) {
         camera = cam_get_active_camera_no_cutscenes();
@@ -1260,22 +1265,22 @@ void func_800278E8(s32 updateRate) {
         yDelta = camera->trans.y_position - thisObject->trans.y_position;
         zDelta = camera->trans.z_position - thisObject->trans.z_position;
         xzSqr = sqrtf((xDelta * xDelta) + (zDelta * zDelta));
-        if (D_8011B108 != 0) {
+        if (gTTCamSmoothTimer != 0) {
             angleDiff = ((s32) (-atan2s(xDelta, zDelta) - camera->trans.rotation.y_rotation) + 0x8000);
             //!@bug Never true, since angleDiff is signed. Should be >=.
             if (angleDiff > 0x8000) {
                 angleDiff = -(0xFFFF - angleDiff);
             }
-            camera->trans.rotation.y_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
+            camera->trans.rotation.y_rotation += ((s32) (angleDiff / (16.0f * (gTTCamSmoothTimer / 180.0f)))) & 0xFFFF;
             angleDiff = atan2s(yDelta, xzSqr) - camera->trans.rotation.x_rotation;
             //!@bug Never true, since angleDiff is signed. Should be >=.
             if (angleDiff > 0x8000) {
                 angleDiff = -(0xFFFF - angleDiff);
             }
-            camera->trans.rotation.x_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
-            D_8011B108 -= updateRate;
-            if (D_8011B108 < 0) {
-                D_8011B108 = 0;
+            camera->trans.rotation.x_rotation += ((s32) (angleDiff / (16.0f * (gTTCamSmoothTimer / 180.0f)))) & 0xFFFF;
+            gTTCamSmoothTimer -= updateRate;
+            if (gTTCamSmoothTimer < 0) {
+                gTTCamSmoothTimer = 0;
             }
         } else {
             camera->trans.rotation.y_rotation = 0x8000 - atan2s(xDelta, zDelta);
@@ -1284,14 +1289,14 @@ void func_800278E8(s32 updateRate) {
         camera->trans.rotation.z_rotation = 0;
         camera->cameraSegmentID = get_level_segment_index_from_position(camera->trans.x_position, currentRacer->oy1,
                                                                         camera->trans.z_position);
-        D_8011B104 = currentRacer->cameraIndex;
+        gTTCamID = currentRacer->cameraIndex;
     }
 }
 
 /**
  * Handle the flipbook effect for level geometry textures.
  */
-void animate_level_textures(s32 updateRate) {
+void track_tex_anim(s32 updateRate) {
     s32 segmentNumber, batchNumber;
     LevelModelSegment *segment;
     TextureHeader *texture;
@@ -1327,7 +1332,7 @@ void animate_level_textures(s32 updateRate) {
  * Skipped if the object ID doesn't exist.
  * Also compares a checksum which can potentially trigger anti-tamper measures.
  */
-void spawn_skydome(s32 objectID) {
+void skydome_spawn(s32 objectID) {
     LevelObjectEntryCommon spawnObject;
 
 #ifdef ANTI_TAMPER
@@ -1361,8 +1366,7 @@ void set_skydome_visbility(s32 renderSky) {
 // https://decomp.me/scratch/E1DFy
 #ifdef NON_MATCHING
 // This function creates the flashy sky effect in the wizpig 2 race.
-// init_skydome
-void func_80028050(void) {
+void trackbg_render_flashy(void) {
     Triangle *tris;
     Vertex *verts;
     s32 vCoordMask; // sp14C
@@ -1535,7 +1539,7 @@ void func_80028050(void) {
     gTrackTriPtr = tris;
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80028050.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/trackbg_render_flashy.s")
 #endif
 
 /**
@@ -1543,7 +1547,7 @@ void func_80028050(void) {
  * Using different colours set in the level header, the vertices are coloured and
  * it gives the background a gradient effect.
  */
-void draw_gradient_background(void) {
+void trackbg_render_gradient(void) {
     s16 z;
     UNUSED s16 pad;
     s16 y0;
@@ -1650,7 +1654,7 @@ void draw_gradient_background(void) {
 /**
  * Sets the position to the current camera's position then renders the skydome if set to be visible.
  */
-void render_skydome(void) {
+void skydome_render(void) {
     Camera *cam;
     if (gSkydomeSegment == NULL) {
         return;
@@ -2607,7 +2611,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
                         ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
                     if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
                         temp = currentSegment->unk14[faceNum].triangleIndex;
-                        temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
+                        temp_v1_4 = (f32 *) &currentSegment->normals[temp * 4];
                         tempVec4f.x = temp_v1_4[0];
                         tempVec4f.y = temp_v1_4[1];
                         tempVec4f.z = temp_v1_4[2];
@@ -2797,10 +2801,10 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
                 var_v0 = faceNum; // fake?
                 if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
                     temp = currentSegment->unk14[faceNum].triangleIndex;
-                    tempVec4f.x = currentSegment->unk18[4 * temp + 0];
-                    tempVec4f.y = currentSegment->unk18[4 * temp + 1];
-                    tempVec4f.z = currentSegment->unk18[4 * temp + 2];
-                    tempVec4f.w = currentSegment->unk18[4 * temp + 3];
+                    tempVec4f.x = currentSegment->normals[4 * temp + 0];
+                    tempVec4f.y = currentSegment->normals[4 * temp + 1];
+                    tempVec4f.z = currentSegment->normals[4 * temp + 2];
+                    tempVec4f.w = currentSegment->normals[4 * temp + 3];
                     if (tempVec4f.y != 0.0) {
                         yOut[yOutCount] = -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
                         yOutCount++;
@@ -2835,8 +2839,8 @@ void generate_track(s32 modelId) {
     set_texture_colour_tag(COLOUR_TAG_GREEN);
     gTrackModelHeap = mempool_alloc_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
     gCurrentLevelModel = gTrackModelHeap;
-    D_8011D370 = mempool_alloc_safe(0x7D0, COLOUR_TAG_YELLOW);
-    D_8011D374 = mempool_alloc_safe(0x1F4, COLOUR_TAG_YELLOW);
+    D_8011D370 = mempool_alloc_safe(2000, COLOUR_TAG_YELLOW);
+    D_8011D374 = mempool_alloc_safe(500, COLOUR_TAG_YELLOW);
     D_8011D378 = 0;
     gLevelModelTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
 
@@ -2880,8 +2884,8 @@ void generate_track(s32 modelId) {
     for (k = 0; k < gCurrentLevelModel->numberOfSegments; k++) {
         gCurrentLevelModel->segments[k].unk10 = (s16 *) j;
         j = (s32) align16(((u8 *) (gCurrentLevelModel->segments[k].numberOfTriangles * 2)) + j);
-        gCurrentLevelModel->segments[k].unk18 = (f32 *) j;
-        j = (s32) & ((u8 *) j)[func_8002CC30(&gCurrentLevelModel->segments[k])];
+        gCurrentLevelModel->segments[k].normals = (f32 *) j;
+        j = (s32) & ((u8 *) j)[track_calc_normals(&gCurrentLevelModel->segments[k])];
         func_8002C954(&gCurrentLevelModel->segments[k], &gCurrentLevelModel->segmentsBoundingBoxes[k], k);
         gCurrentLevelModel->segments[k].unk30 = 0;
         gCurrentLevelModel->segments[k].unk34 = (s16 *) j;
@@ -3057,7 +3061,7 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
     }
 }
 
-s32 func_8002CC30(LevelModelSegment *arg0) {
+s32 track_calc_normals(LevelModelSegment *block) {
     s32 facesOffset;
     s32 verticesOffset;
     s32 nextFacesOffset;
@@ -3080,27 +3084,27 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
 
     s4 = 0;
 
-    for (batchIndex = 0; batchIndex < arg0->numberOfBatches; batchIndex++) {
-        facesOffset = arg0->batches[batchIndex].facesOffset;
-        verticesOffset = arg0->batches[batchIndex].verticesOffset;
-        nextFacesOffset = arg0->batches[batchIndex + 1].facesOffset;
+    for (batchIndex = 0; batchIndex < block->numberOfBatches; batchIndex++) {
+        facesOffset = block->batches[batchIndex].facesOffset;
+        verticesOffset = block->batches[batchIndex].verticesOffset;
+        nextFacesOffset = block->batches[batchIndex + 1].facesOffset;
 
         for (triIndex = facesOffset; triIndex < nextFacesOffset; triIndex++) {
-            if (arg0->triangles[triIndex].flags & TRI_FLAG_80) {
+            if (block->triangles[triIndex].flags & TRI_FLAG_80) {
                 continue;
             }
 
-            v = &arg0->vertices[arg0->triangles[triIndex].vi0 + verticesOffset];
+            v = &block->vertices[block->triangles[triIndex].vi0 + verticesOffset];
             x1 = v->x;
             y1 = v->y;
             z1 = v->z;
 
-            v = &arg0->vertices[arg0->triangles[triIndex].vi1 + verticesOffset];
+            v = &block->vertices[block->triangles[triIndex].vi1 + verticesOffset];
             x2 = v->x;
             y2 = v->y;
             z2 = v->z;
 
-            v = &arg0->vertices[arg0->triangles[triIndex].vi2 + verticesOffset];
+            v = &block->vertices[block->triangles[triIndex].vi2 + verticesOffset];
             x3 = v->x;
             y3 = v->y;
             z3 = v->z;
@@ -3119,10 +3123,10 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
             // looks like a macro
             {
                 s32 temp = s4++;
-                arg0->unk18[4 * temp + 0] = nx;
-                arg0->unk18[4 * temp + 1] = ny;
-                arg0->unk18[4 * temp + 2] = nz;
-                arg0->unk18[4 * temp + 3] = -(x1 * nx + y1 * ny + z1 * nz);
+                block->normals[4 * temp + 0] = nx;
+                block->normals[4 * temp + 1] = ny;
+                block->normals[4 * temp + 2] = nz;
+                block->normals[4 * temp + 3] = -(x1 * nx + y1 * ny + z1 * nz);
             }
         }
     }
@@ -3133,23 +3137,23 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
         return s4 * 0x10;
     }
 
-    for (batchIndex = 0; batchIndex < arg0->numberOfBatches; batchIndex++) {
-        facesOffset = arg0->batches[batchIndex].facesOffset;
-        verticesOffset = arg0->batches[batchIndex].verticesOffset;
-        nextFacesOffset = arg0->batches[batchIndex + 1].facesOffset;
-        if (arg0->batches[batchIndex].flags & RENDER_UNK_200) {
+    for (batchIndex = 0; batchIndex < block->numberOfBatches; batchIndex++) {
+        facesOffset = block->batches[batchIndex].facesOffset;
+        verticesOffset = block->batches[batchIndex].verticesOffset;
+        nextFacesOffset = block->batches[batchIndex + 1].facesOffset;
+        if (block->batches[batchIndex].flags & RENDER_UNK_200) {
             facesOffset = nextFacesOffset;
         }
 
         for (triIndex = facesOffset; triIndex < nextFacesOffset; triIndex++) {
-            if (arg0->triangles[triIndex].flags & TRI_FLAG_80) {
+            if (block->triangles[triIndex].flags & TRI_FLAG_80) {
                 continue;
             }
 
-            s1 = arg0->unk14[triIndex].triangleIndex;
-            nx = arg0->unk18[4 * s1 + 0];
-            ny = arg0->unk18[4 * s1 + 1];
-            nz = arg0->unk18[4 * s1 + 2];
+            s1 = block->unk14[triIndex].triangleIndex;
+            nx = block->normals[4 * s1 + 0];
+            ny = block->normals[4 * s1 + 1];
+            nz = block->normals[4 * s1 + 2];
 
             for (i = 0; i < 3; i++) {
                 s0 = i + 1;
@@ -3157,24 +3161,24 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
                     s0 = 0;
                 }
 
-                v1 = arg0->triangles[triIndex].verticesArray[1 + i] + verticesOffset;
-                v2 = arg0->triangles[triIndex].verticesArray[1 + s0] + verticesOffset;
-                s0 = arg0->unk14[triIndex].closestTri[i];
+                v1 = block->triangles[triIndex].verticesArray[1 + i] + verticesOffset;
+                v2 = block->triangles[triIndex].verticesArray[1 + s0] + verticesOffset;
+                s0 = block->unk14[triIndex].closestTri[i];
 
                 if (s0 < t1) {
                     {
                         s32 temp = s0;
-                        x5 = nx + arg0->unk18[4 * temp + 0];
-                        y5 = ny + arg0->unk18[4 * temp + 1];
-                        z5 = nz + arg0->unk18[4 * temp + 2];
+                        x5 = nx + block->normals[4 * temp + 0];
+                        y5 = ny + block->normals[4 * temp + 1];
+                        z5 = nz + block->normals[4 * temp + 2];
                     }
 
-                    v = &arg0->vertices[v1];
+                    v = &block->vertices[v1];
                     x1 = v->x;
                     y1 = v->y;
                     z1 = v->z;
 
-                    v = &arg0->vertices[v2];
+                    v = &block->vertices[v2];
                     x2 = v->x;
                     y2 = v->y;
                     z2 = v->z;
@@ -3196,20 +3200,20 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
 
                     if (s0 != s1) {
                         for (j = 0; j < 3; j++) {
-                            if (s1 == arg0->unk14[s0].closestTri[j]) {
-                                arg0->unk14[s0].closestTri[j] = s4 | 0x8000;
+                            if (s1 == block->unk14[s0].closestTri[j]) {
+                                block->unk14[s0].closestTri[j] = s4 | 0x8000;
                             }
                         }
                     }
 
-                    arg0->unk14[triIndex].closestTri[i] = s4;
+                    block->unk14[triIndex].closestTri[i] = s4;
 
                     {
                         s32 temp = s4++;
-                        arg0->unk18[4 * temp + 0] = x5;
-                        arg0->unk18[4 * temp + 1] = y5;
-                        arg0->unk18[4 * temp + 2] = z5;
-                        arg0->unk18[4 * temp + 3] = -(x1 * x5 + y1 * y5 + z1 * z5);
+                        block->normals[4 * temp + 0] = x5;
+                        block->normals[4 * temp + 1] = y5;
+                        block->normals[4 * temp + 2] = z5;
+                        block->normals[4 * temp + 3] = -(x1 * x5 + y1 * y5 + z1 * z5);
                     }
                 }
             }
@@ -3696,8 +3700,8 @@ void func_8002E904(LevelModelSegment *arg0, s32 arg1, s32 arg2) {
                             // are both floats so this is fine as the size is the same
                             if (func_8002FD74(spD0[2].x, spD0[2].y, spD0[0].x, spD0[0].y, 3, (Vec4f *) sp100) != 0) {
                                 temp_t6 = arg0->unk14[curFacesOffset].triangleIndex * 4;
-                                D_8011D0BC = (unk8011C8B8 *) &(arg0->unk18)[temp_t6];
-                                if (arg0->unk18[temp_t6 + 1] != 0) {
+                                D_8011D0BC = (unk8011C8B8 *) &(arg0->normals)[temp_t6];
+                                if (arg0->normals[temp_t6 + 1] != 0) {
                                     if (D_8011D0F0 > 0.0f) {
                                         func_800304C8(sp100);
                                     }
