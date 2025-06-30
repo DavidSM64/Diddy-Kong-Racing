@@ -143,12 +143,12 @@ Vertex *gCurrShadowVerts;
 UNUSED s32 D_8011D34C;
 ShadowHeapProperties *gShadowHeapData[2 + 2]; // General data for shadows. Texture and geometry size.
 ShadowHeapProperties *gCurrShadowHeapData;
-s32 gShadowTail;        // Position in the heap the shadow data ends at.
-s32 gNewShadowTriCount; // xOffset?
-s32 gNewShadowVtxCount; // yOffset?
-u16 **D_8011D370;       // Allocated 0x7D0
-s32 *D_8011D374;
-s32 D_8011D378;
+s32 gShadowTail;            // Position in the heap the shadow data ends at.
+s32 gNewShadowTriCount;     // xOffset?
+s32 gNewShadowVtxCount;     // yOffset?
+u16 **gCollisionCandidates; // Allocated 0x7D0
+s32 *gCollisionSurfaces;
+s32 gNumCollisionCandidates;
 s32 gScenePlayerViewports;
 UNUSED f32 gCurrBBoxDistanceToCamera; // Used in a comparison check, but functionally unused.
 u32 gWaveBlockCount;
@@ -840,7 +840,7 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
                     var_s0 = 1;
                 }
                 if (var_s0 != 0) {
-                    var_t0 = (segment->unk14[j].triangleIndex << 2);
+                    var_t0 = (segment->unk14[j].colPlaneIndex << 2);
                     temp = (spB0[0] + D_8011D4A0) * segment->unk18[var_t0];
                     temp += spB8[0] * segment->unk18[var_t0 + 1];
                     temp += (spA8[0] + D_8011D4A4) * segment->unk18[var_t0 + 2];
@@ -1131,11 +1131,11 @@ s32 func_80027568(void) {
     func_80031130(1, &currentObjRacer->trans.x_position, &gSceneActiveCamera->trans.x_position, -1);
     ret = FALSE;
     // bug? var_ra can be undefined?
-    for (var_t4 = 0; var_t4 < D_8011D378 && ret == FALSE; var_t4++) {
-        if ((s32) D_8011D370[var_t4] > 0) {
-            var_ra = (Unk80027568_1 *) PHYS_TO_K0(D_8011D370[var_t4]);
+    for (var_t4 = 0; var_t4 < gNumCollisionCandidates && ret == FALSE; var_t4++) {
+        if ((s32) gCollisionCandidates[var_t4] > 0) {
+            var_ra = (Unk80027568_1 *) PHYS_TO_K0(gCollisionCandidates[var_t4]);
         } else {
-            var_t2 = D_8011D370[var_t4];
+            var_t2 = gCollisionCandidates[var_t4];
             vector = var_ra->unk18;
             vector += var_t2[0];
             new_var = vector->x;
@@ -2421,9 +2421,9 @@ UNUSED void func_8002AC00(s32 arg0, s32 arg1, s32 arg2) {
 
 // These types are probably wrong because the vars are likely still unidentified structs, but the code matches still.
 UNUSED void dayGetTrackFade(s32 *arg0, s32 *arg1, s32 *arg2) {
-    *arg0 = (unsigned) D_8011D378;
-    *arg1 = (unsigned) D_8011D370;
-    *arg2 = (unsigned) D_8011D374;
+    *arg0 = (unsigned) gNumCollisionCandidates;
+    *arg1 = (unsigned) gCollisionCandidates;
+    *arg2 = (unsigned) gCollisionSurfaces;
 }
 
 void func_8002ACC8(s32 arg0) {
@@ -2606,7 +2606,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
                     temp_ra_3 =
                         ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
                     if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
-                        temp = currentSegment->unk14[faceNum].triangleIndex;
+                        temp = currentSegment->unk14[faceNum].colPlaneIndex;
                         temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
                         tempVec4f.x = temp_v1_4[0];
                         tempVec4f.y = temp_v1_4[1];
@@ -2796,7 +2796,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
                 temp_ra_3 = (((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0;
                 var_v0 = faceNum; // fake?
                 if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
-                    temp = currentSegment->unk14[faceNum].triangleIndex;
+                    temp = currentSegment->unk14[faceNum].colPlaneIndex;
                     tempVec4f.x = currentSegment->unk18[4 * temp + 0];
                     tempVec4f.y = currentSegment->unk18[4 * temp + 1];
                     tempVec4f.z = currentSegment->unk18[4 * temp + 2];
@@ -2835,9 +2835,9 @@ void generate_track(s32 modelId) {
     set_texture_colour_tag(COLOUR_TAG_GREEN);
     gTrackModelHeap = mempool_alloc_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
     gCurrentLevelModel = gTrackModelHeap;
-    D_8011D370 = mempool_alloc_safe(0x7D0, COLOUR_TAG_YELLOW);
-    D_8011D374 = mempool_alloc_safe(0x1F4, COLOUR_TAG_YELLOW);
-    D_8011D378 = 0;
+    gCollisionCandidates = mempool_alloc_safe(0x7D0, COLOUR_TAG_YELLOW);
+    gCollisionSurfaces = mempool_alloc_safe(0x1F4, COLOUR_TAG_YELLOW);
+    gNumCollisionCandidates = 0;
     gLevelModelTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
 
     for (i = 0; gLevelModelTable[i] != -1; i++) {}
@@ -2958,8 +2958,8 @@ void free_track(void) {
         tex_free(gCurrentLevelModel->textures[i].texture);
     }
     mempool_free(gTrackModelHeap);
-    mempool_free(D_8011D370);
-    mempool_free(D_8011D374);
+    mempool_free(gCollisionCandidates);
+    mempool_free(gCollisionSurfaces);
     sprite_free((Sprite *) gCurrentLevelModel->minimapSpriteIndex);
     for (i = 0; i < ARRAY_COUNT(gShadowHeapData); i++) {
         mempool_free(gShadowHeapData[i]);
@@ -3001,7 +3001,7 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
         endTri = segment->batches[i + 1].facesOffset;
         vertsOffset = segment->batches[i].verticesOffset;
         for (j = startTri; j < endTri; j++) {
-            if (segment->triangles[j].flags & 0x80) {
+            if (segment->triangles[j].flags & TRI_FLAG_80) {
                 segment->unk10[j] = 0;
             } else {
                 maxX = -32000;
@@ -3066,11 +3066,11 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
     s32 triIndex;
     s32 i;
     f32 mag;
-    s32 s4;
-    s32 s1;
-    s32 s0;
-    s32 t1;
-    s32 v1, v2;
+    s32 counter;
+    s32 colPlaneIndex;
+    s32 next;
+    s32 numColPlanes;
+    s32 vertIndex, nextVertIndex;
     f32 x1, y1, z1;
     f32 x2, y2, z2;
     f32 x3, y3, z3;
@@ -3078,7 +3078,7 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
     f32 x5, y5, z5;
     s32 j;
 
-    s4 = 0;
+    counter = 0;
 
     for (batchIndex = 0; batchIndex < arg0->numberOfBatches; batchIndex++) {
         facesOffset = arg0->batches[batchIndex].facesOffset;
@@ -3090,6 +3090,7 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
                 continue;
             }
 
+            // get 3 vertex coordinates
             v = &arg0->vertices[arg0->triangles[triIndex].vi0 + verticesOffset];
             x1 = v->x;
             y1 = v->y;
@@ -3105,6 +3106,7 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
             y3 = v->y;
             z3 = v->z;
 
+            // calculate cross product
             nx = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
             ny = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
             nz = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
@@ -3118,7 +3120,7 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
 
             // looks like a macro
             {
-                s32 temp = s4++;
+                s32 temp = counter++;
                 arg0->unk18[4 * temp + 0] = nx;
                 arg0->unk18[4 * temp + 1] = ny;
                 arg0->unk18[4 * temp + 2] = nz;
@@ -3127,16 +3129,17 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
         }
     }
 
-    t1 = s4;
+    numColPlanes = counter;
 
     if (D_8011B0F8) {
-        return s4 * 0x10;
+        return counter * 0x10;
     }
 
     for (batchIndex = 0; batchIndex < arg0->numberOfBatches; batchIndex++) {
         facesOffset = arg0->batches[batchIndex].facesOffset;
         verticesOffset = arg0->batches[batchIndex].verticesOffset;
         nextFacesOffset = arg0->batches[batchIndex + 1].facesOffset;
+
         if (arg0->batches[batchIndex].flags & RENDER_UNK_200) {
             facesOffset = nextFacesOffset;
         }
@@ -3146,35 +3149,35 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
                 continue;
             }
 
-            s1 = arg0->unk14[triIndex].triangleIndex;
-            nx = arg0->unk18[4 * s1 + 0];
-            ny = arg0->unk18[4 * s1 + 1];
-            nz = arg0->unk18[4 * s1 + 2];
+            colPlaneIndex = arg0->unk14[triIndex].colPlaneIndex;
+            nx = arg0->unk18[4 * colPlaneIndex + 0];
+            ny = arg0->unk18[4 * colPlaneIndex + 1];
+            nz = arg0->unk18[4 * colPlaneIndex + 2];
 
             for (i = 0; i < 3; i++) {
-                s0 = i + 1;
-                if (s0 > 2) {
-                    s0 = 0;
+                next = i + 1;
+                if (next > 2) {
+                    next = 0;
                 }
 
-                v1 = arg0->triangles[triIndex].verticesArray[1 + i] + verticesOffset;
-                v2 = arg0->triangles[triIndex].verticesArray[1 + s0] + verticesOffset;
-                s0 = arg0->unk14[triIndex].closestTri[i];
+                vertIndex = arg0->triangles[triIndex].verticesArray[1 + i] + verticesOffset;
+                nextVertIndex = arg0->triangles[triIndex].verticesArray[1 + next] + verticesOffset;
 
-                if (s0 < t1) {
+                next = arg0->unk14[triIndex].closestTri[i];
+                if (next < numColPlanes) {
                     {
-                        s32 temp = s0;
+                        s32 temp = next;
                         x5 = nx + arg0->unk18[4 * temp + 0];
                         y5 = ny + arg0->unk18[4 * temp + 1];
                         z5 = nz + arg0->unk18[4 * temp + 2];
                     }
 
-                    v = &arg0->vertices[v1];
+                    v = &arg0->vertices[vertIndex];
                     x1 = v->x;
                     y1 = v->y;
                     z1 = v->z;
 
-                    v = &arg0->vertices[v2];
+                    v = &arg0->vertices[nextVertIndex];
                     x2 = v->x;
                     y2 = v->y;
                     z2 = v->z;
@@ -3194,18 +3197,18 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
                         z5 /= mag;
                     }
 
-                    if (s0 != s1) {
+                    if (next != colPlaneIndex) {
                         for (j = 0; j < 3; j++) {
-                            if (s1 == arg0->unk14[s0].closestTri[j]) {
-                                arg0->unk14[s0].closestTri[j] = s4 | 0x8000;
+                            if (colPlaneIndex == arg0->unk14[next].closestTri[j]) {
+                                arg0->unk14[next].closestTri[j] = counter | 0x8000;
                             }
                         }
                     }
 
-                    arg0->unk14[triIndex].closestTri[i] = s4;
+                    arg0->unk14[triIndex].closestTri[i] = counter;
 
                     {
-                        s32 temp = s4++;
+                        s32 temp = counter++;
                         arg0->unk18[4 * temp + 0] = x5;
                         arg0->unk18[4 * temp + 1] = y5;
                         arg0->unk18[4 * temp + 2] = z5;
@@ -3215,7 +3218,7 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
             }
         }
     }
-    return s4 * 0x10;
+    return counter * 0x10;
 }
 
 typedef struct unk8002D30C_a0 {
@@ -3695,7 +3698,7 @@ void func_8002E904(LevelModelSegment *arg0, s32 arg1, s32 arg2) {
                             // @note while the cast to Vec4f is incorrect, func_8002FD74 x uses unk0 and z which
                             // are both floats so this is fine as the size is the same
                             if (func_8002FD74(spD0[2].x, spD0[2].y, spD0[0].x, spD0[0].y, 3, (Vec4f *) sp100) != 0) {
-                                temp_t6 = arg0->unk14[curFacesOffset].triangleIndex * 4;
+                                temp_t6 = arg0->unk14[curFacesOffset].colPlaneIndex * 4;
                                 D_8011D0BC = (unk8011C8B8 *) &(arg0->unk18)[temp_t6];
                                 if (arg0->unk18[temp_t6 + 1] != 0) {
                                     if (D_8011D0F0 > 0.0f) {

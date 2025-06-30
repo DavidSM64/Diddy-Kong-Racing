@@ -442,7 +442,7 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
 
     func_80031130(1, &obj->trans.x_position, &dir.x, -1);
     hasCollision = FALSE;
-    func_80031600(&obj->trans.x_position, (f32 *) &dir, &radius, &surface, TRUE, &hasCollision);
+    func_80031600((Vec3f *) &obj->trans.x_position, &dir, &radius, &surface, 1, &hasCollision);
     if (hasCollision) {
         obj->x_velocity = (dir.x - obj->trans.x_position) / updateRateF;
         obj->y_velocity = (dir.y - obj->trans.y_position) / updateRateF;
@@ -707,7 +707,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
     Object_CollectEgg *egg;
     Object *racerObj;
     Object_Racer *racer;
-    f32 dir[3];
+    f32 targetPos[3];
     f32 radius;
     f32 updateRateF;
     s32 hasCollision;
@@ -724,20 +724,20 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
             break;
         case EGG_MOVING:
             obj->trans.flags &= ~OBJ_FLAGS_INVISIBLE;
-            dir[0] = obj->trans.x_position + (obj->x_velocity * updateRateF);
-            dir[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
-            dir[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
+            targetPos[0] = obj->trans.x_position + (obj->x_velocity * updateRateF);
+            targetPos[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
+            targetPos[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
             radius = 9.0f;
-            func_80031130(1, &obj->trans.x_position, dir, -1);
+            func_80031130(1, &obj->trans.x_position, targetPos, -1);
             hasCollision = FALSE;
             surface = SURFACE_DEFAULT;
-            func_80031600(&obj->trans.x_position, dir, &radius, &surface, TRUE, &hasCollision);
-            obj->x_velocity = (dir[0] - obj->trans.x_position) / updateRateF;
-            obj->y_velocity = (dir[1] - obj->trans.y_position) / updateRateF;
-            obj->z_velocity = (dir[2] - obj->trans.z_position) / updateRateF;
-            obj->trans.x_position = dir[0];
-            obj->trans.y_position = dir[1];
-            obj->trans.z_position = dir[2];
+            func_80031600((Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, &radius, &surface, 1, &hasCollision);
+            obj->x_velocity = (targetPos[0] - obj->trans.x_position) / updateRateF;
+            obj->y_velocity = (targetPos[1] - obj->trans.y_position) / updateRateF;
+            obj->z_velocity = (targetPos[2] - obj->trans.z_position) / updateRateF;
+            obj->trans.x_position = targetPos[0];
+            obj->trans.y_position = targetPos[1];
+            obj->trans.z_position = targetPos[2];
             obj->y_velocity -= 0.5;
             obj->x_velocity *= 0.98;
             obj->z_velocity *= 0.98;
@@ -4304,14 +4304,14 @@ void obj_init_banana(Object *obj, UNUSED LevelObjectEntry_Banana *entry) {
 void obj_loop_banana(Object *obj, s32 updateRate) {
     Object *racerObj;
     Object_Racer *racer;
-    f32 tempPos[3];
+    f32 targetPos[3];
     f32 radius;
     f32 updateRateF;
     f32 velX;
     f32 velZ;
-    s32 sp48;
+    s32 hasCollision;
     s32 hitDist;
-    s8 sp43;
+    s8 surface;
     Object_Banana *banana;
     ObjPropertyBanana *properties;
     AudioPoint *prevSoundMask;
@@ -4339,19 +4339,19 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             banana->unk0 = 0;
         }
         if (properties->status == BANANA_DROPPED) {
-            tempPos[0] = obj->trans.x_position + (obj->x_velocity * updateRateF);
-            tempPos[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
-            tempPos[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
+            targetPos[0] = obj->trans.x_position + (obj->x_velocity * updateRateF);
+            targetPos[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
+            targetPos[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
             radius = 8.0f;
-            func_80031130(1, &obj->trans.x_position, tempPos, -1);
-            sp48 = 0;
-            func_80031600(&obj->trans.x_position, tempPos, &radius, &sp43, TRUE, &sp48);
-            obj->x_velocity = (tempPos[0] - obj->trans.x_position) / updateRateF;
-            obj->y_velocity = (tempPos[1] - obj->trans.y_position) / updateRateF;
-            obj->z_velocity = (tempPos[2] - obj->trans.z_position) / updateRateF;
-            obj->trans.x_position = tempPos[0];
-            obj->trans.y_position = tempPos[1];
-            obj->trans.z_position = tempPos[2];
+            func_80031130(1, &obj->trans.x_position, targetPos, -1);
+            hasCollision = 0;
+            func_80031600((Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, &radius, &surface, 1, &hasCollision);
+            obj->x_velocity = (targetPos[0] - obj->trans.x_position) / updateRateF;
+            obj->y_velocity = (targetPos[1] - obj->trans.y_position) / updateRateF;
+            obj->z_velocity = (targetPos[2] - obj->trans.z_position) / updateRateF;
+            obj->trans.x_position = targetPos[0];
+            obj->trans.y_position = targetPos[1];
+            obj->trans.z_position = targetPos[2];
             // Bananas dropped by planes will not have gravity.
             if (banana->droppedVehicleID != VEHICLE_PLANE) {
                 obj->y_velocity -= 1.0;  //!@Delta
@@ -4370,7 +4370,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             if (velZ < 0.0) {
                 velZ = -velZ;
             }
-            if (sp48 > 0 && velX < 0.5 && velZ < 0.5) {
+            if (hasCollision > 0 && velX < 0.5 && velZ < 0.5) {
                 properties->status = BANANA_IDLE;
             }
             radius = -10000.0f;
@@ -4852,7 +4852,7 @@ void weapon_projectile(Object *obj, s32 updateRate) {
         func_80031130(1, &obj->trans.x_position, (f32 *) &offset, -1);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
-        func_80031600(&obj->trans.x_position, (f32 *) &offset, &radius, &surface, TRUE, &hasCollision);
+        func_80031600((Vec3f *) &obj->trans.x_position, &offset, &radius, &surface, 1, &hasCollision);
         if (hasCollision > 0) {
             if (func_8002ACD4(&diffX, &diffY, &diffZ)) {
                 obj->properties.projectile.timer = 0;
@@ -5155,8 +5155,8 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
         radius = 9.0f;
         func_80031130(1, &weaponObj->trans.x_position, &intendedPos.x, -1);
         hasCollision = FALSE;
-        surface = -1;
-        func_80031600(&weaponObj->trans.x_position, &intendedPos.x, &radius, &surface, 1, &hasCollision);
+        surface = SURFACE_NONE;
+        func_80031600((Vec3f *) &weaponObj->trans.x_position, &intendedPos, &radius, &surface, 1, &hasCollision);
         weaponObj->x_velocity = (intendedPos.x - weaponObj->trans.x_position) / updateRateF;
         weaponObj->y_velocity = (intendedPos.y - weaponObj->trans.y_position) / updateRateF;
         weaponObj->z_velocity = (intendedPos.z - weaponObj->trans.z_position) / updateRateF;
@@ -5500,7 +5500,7 @@ void obj_loop_texscroll(Object *obj, s32 updateRate) {
             if (curBatch[j].textureIndex == texScroll->textureIndex) {
                 for (tri = curBatch[j].facesOffset; tri < curBatch[j + 1].facesOffset; tri++) {
                     curTriangle = &curBlock[i].triangles[tri];
-                    if (!(curTriangle->flags & 0x80)) {
+                    if (!(curTriangle->flags & TRI_FLAG_80)) {
                         if (vShift < curTriangle->uv0.v) {
                             curTriangle->uv0.v -= vShift;
                             curTriangle->uv1.v -= vShift;

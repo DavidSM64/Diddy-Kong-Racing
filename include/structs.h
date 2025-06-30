@@ -697,7 +697,7 @@ typedef struct ModelInstance {
 } ModelInstance;
 
 typedef struct CollisionNode {
-    u16 triangleIndex; // This triangle index
+    u16 colPlaneIndex; // This triangle index
     u16 closestTri[3];
 } CollisionNode;
 
@@ -709,10 +709,7 @@ typedef struct LevelModelSegment {
     /* 0x0C */ TriangleBatchInfo *batches;
     /* 0x10 */ s16 *unk10;
     /* 0x14 */ CollisionNode *unk14;
-    union {
-        /* 0x18 */ f32 *unk18;
-        /* 0x18 */ Vec4f *unk18_vec4f; // Used for objects, not levels.
-    };
+    /* 0x18 */ f32 *unk18;
     /* 0x1C */ s16 numberOfVertices;
     /* 0x1E */ s16 numberOfTriangles;
     /* 0x20 */ s16 numberOfBatches;
@@ -1210,10 +1207,7 @@ typedef struct Object_Racer {
     /* 0x0CC */ f32 unkCC;
     /* 0x0D0 */ f32 unkD0;
     /* 0x0D4 */ f32 unkD4;
-    /* 0x0D8 */ Vec3f unkD8;
-    /* 0x0E4 */ Vec3f unkE4;
-    /* 0x0F0 */ Vec3f unkF0;
-    /* 0x0FC */ Vec3f unkFC;
+    /* 0x0D8 */ Vec3f unkD8[4];
     /* 0x108 */ struct Object *exitObj;
     /* 0x10C */ s32 unk10C;
     /* 0x110 */ s32 unk110;

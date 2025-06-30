@@ -172,12 +172,12 @@ leaf func_80031130
     /* 31F38 80031338 00009825 */   or        $s3, $zero, $zero
     /* 31F3C 8003133C 3C04800E */  lui        $a0, %hi(gCurrentLevelModel)
     /* 31F40 80031340 8C84C918 */  lw         $a0, %lo(gCurrentLevelModel)($a0)
-    /* 31F44 80031344 3C128012 */  lui        $s2, %hi(D_8011D370)
-    /* 31F48 80031348 3C198012 */  lui        $t9, %hi(D_8011D374)
+    /* 31F44 80031344 3C128012 */  lui        $s2, %hi(gCollisionCandidates)
+    /* 31F48 80031348 3C198012 */  lui        $t9, %hi(gCollisionSurfaces)
     /* 31F4C 8003134C 23B10034 */  addi       $s1, $sp, 0x34 /* handwritten instruction */
     /* 31F50 80031350 0018C040 */  sll        $t8, $t8, 1
-    /* 31F54 80031354 8E52D370 */  lw         $s2, %lo(D_8011D370)($s2)
-    /* 31F58 80031358 8F39D374 */  lw         $t9, %lo(D_8011D374)($t9)
+    /* 31F54 80031354 8E52D370 */  lw         $s2, %lo(gCollisionCandidates)($s2)
+    /* 31F58 80031358 8F39D374 */  lw         $t9, %lo(gCollisionSurfaces)($t9)
     /* 31F5C 8003135C 23B00048 */  addi       $s0, $sp, 0x48 /* handwritten instruction */
     /* 31F60 80031360 0238C020 */  add        $t8, $s1, $t8 /* handwritten instruction */
     /* 31F64 80031364 8C840000 */  lw         $a0, 0x0($a0)
@@ -274,8 +274,8 @@ leaf func_80031130
     /* 320A4 800314A4 26100004 */   addiu     $s0, $s0, 0x4
   .L800314A8:
     /* 320A8 800314A8 8FBF0030 */  lw         $ra, 0x30($sp)
-    /* 320AC 800314AC 3C018012 */  lui        $at, %hi(D_8011D378)
-    /* 320B0 800314B0 AC33D378 */  sw         $s3, %lo(D_8011D378)($at)
+    /* 320AC 800314AC 3C018012 */  lui        $at, %hi(gNumCollisionCandidates)
+    /* 320B0 800314B0 AC33D378 */  sw         $s3, %lo(gNumCollisionCandidates)($at)
     /* 320B4 800314B4 8FB6002C */  lw         $s6, 0x2C($sp)
     /* 320B8 800314B8 8FB50028 */  lw         $s5, 0x28($sp)
     /* 320BC 800314BC 8FB40024 */  lw         $s4, 0x24($sp)
@@ -382,8 +382,8 @@ leaf func_800314DC
 leaf func_80031600
     /* 32200 80031600 24080001 */  addiu      $t0, $zero, 0x1
     /* 32204 80031604 A3A80001 */  sb         $t0, 0x1($sp)
-    /* 32208 80031608 3C088012 */  lui        $t0, %hi(D_8011D378)
-    /* 3220C 8003160C 8D08D378 */  lw         $t0, %lo(D_8011D378)($t0)
+    /* 32208 80031608 3C088012 */  lui        $t0, %hi(gNumCollisionCandidates)
+    /* 3220C 8003160C 8D08D378 */  lw         $t0, %lo(gNumCollisionCandidates)($t0)
     /* 32210 80031610 3C018012 */  lui        $at, %hi(D_8011B0F0)
     /* 32214 80031614 A3A00000 */  sb         $zero, 0x0($sp)
     /* 32218 80031618 1100014C */  beqz       $t0, .L80031B4C
@@ -391,13 +391,13 @@ leaf func_80031600
   .L80031620:
     /* 32220 80031620 00007025 */  or         $t6, $zero, $zero
   .L80031624:
-    /* 32224 80031624 3C0D8012 */  lui        $t5, %hi(D_8011D374)
-    /* 32228 80031628 3C098012 */  lui        $t1, %hi(D_8011D370)
-    /* 3222C 8003162C 3C088012 */  lui        $t0, %hi(D_8011D378)
+    /* 32224 80031624 3C0D8012 */  lui        $t5, %hi(gCollisionSurfaces)
+    /* 32228 80031628 3C098012 */  lui        $t1, %hi(gCollisionCandidates)
+    /* 3222C 8003162C 3C088012 */  lui        $t0, %hi(gNumCollisionCandidates)
     /* 32230 80031630 00007825 */  or         $t7, $zero, $zero
-    /* 32234 80031634 8DADD374 */  lw         $t5, %lo(D_8011D374)($t5)
-    /* 32238 80031638 8D29D370 */  lw         $t1, %lo(D_8011D370)($t1)
-    /* 3223C 8003163C 8D08D378 */  lw         $t0, %lo(D_8011D378)($t0)
+    /* 32234 80031634 8DADD374 */  lw         $t5, %lo(gCollisionSurfaces)($t5)
+    /* 32238 80031638 8D29D370 */  lw         $t1, %lo(gCollisionCandidates)($t1)
+    /* 3223C 8003163C 8D08D378 */  lw         $t0, %lo(gNumCollisionCandidates)($t0)
   .L80031640:
     /* 32240 80031640 8D2A0000 */  lw         $t2, 0x0($t1)
     /* 32244 80031644 59400006 */  blezl      $t2, .L80031660
@@ -626,11 +626,11 @@ leaf func_80031600
     /* 32584 80031984 A3AA0001 */  sb         $t2, 0x1($sp)
     /* 32588 80031988 00007025 */  or         $t6, $zero, $zero
   .L8003198C:
-    /* 3258C 8003198C 3C098012 */  lui        $t1, %hi(D_8011D370)
-    /* 32590 80031990 3C088012 */  lui        $t0, %hi(D_8011D378)
+    /* 3258C 8003198C 3C098012 */  lui        $t1, %hi(gCollisionCandidates)
+    /* 32590 80031990 3C088012 */  lui        $t0, %hi(gNumCollisionCandidates)
     /* 32594 80031994 00007825 */  or         $t7, $zero, $zero
-    /* 32598 80031998 8D29D370 */  lw         $t1, %lo(D_8011D370)($t1)
-    /* 3259C 8003199C 8D08D378 */  lw         $t0, %lo(D_8011D378)($t0)
+    /* 32598 80031998 8D29D370 */  lw         $t1, %lo(gCollisionCandidates)($t1)
+    /* 3259C 8003199C 8D08D378 */  lw         $t0, %lo(gNumCollisionCandidates)($t0)
   .L800319A0:
     /* 325A0 800319A0 8D2A0000 */  lw         $t2, 0x0($t1)
     /* 325A4 800319A4 59400006 */  blezl      $t2, .L800319C0
