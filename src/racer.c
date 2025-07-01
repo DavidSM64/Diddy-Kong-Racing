@@ -6656,7 +6656,7 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     D_8011D54C = 0;
     flags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
-        flags = func_80017248(racerObj, 4, &numCollisions, racer->unkD8, sp134, spE0, sp58);
+        flags = func_80017248(racerObj, 4, &numCollisions, (Vec3f *) racer->unkD8, sp134, spE0, sp58);
     }
     if (flags & 0x80) {
         for (i = 0; i < 4; i++) {
@@ -6854,7 +6854,7 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     hasCollision = FALSE;
     flags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
-        flags = func_80017248(obj, 1, &hasCollision, racer->unkD8, &tempPos.x, &radius, &surface);
+        flags = func_80017248(obj, 1, &hasCollision, (Vec3f *) racer->unkD8, &tempPos.x, &radius, &surface);
     }
     if (flags & 0x80) {
         D_8011D548 = tempPos.x - obj->trans.x_position;
@@ -6867,7 +6867,7 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     }
     generate_collision_candidates(1, racer->unkD8, &tempPos.x, racer->vehicleID);
     hasCollision = FALSE;
-    racer->unk1E3 = resolve_collisions(racer->unkD8, &tempPos, &radius, &surface, 1, &hasCollision);
+    racer->unk1E3 = resolve_collisions((Vec3f *) racer->unkD8, &tempPos, &radius, &surface, 1, &hasCollision);
     racer->unk1E4 = flags;
     racer->unk1E3 |= flags;
     racer->groundedWheels = 0;

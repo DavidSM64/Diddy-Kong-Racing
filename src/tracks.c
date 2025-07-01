@@ -2420,7 +2420,7 @@ UNUSED void func_8002AC00(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 UNUSED void get_collision_candidate_data(s32 *numCollsionCandidates, s32 **collisionCandidates,
-                                         s32 *collisionSurfaces) {
+                                         s8 **collisionSurfaces) {
     *numCollsionCandidates = gNumCollisionCandidates;
     *collisionCandidates = gCollisionCandidates;
     *collisionSurfaces = gCollisionSurfaces;
