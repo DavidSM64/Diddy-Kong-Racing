@@ -6,8 +6,6 @@
 
 /*******************************/
 
-#define MAX_COLLISION_CANDIDATES 500
-
 extern LevelModel *gCurrentLevelModel;
 
 extern f32 gCollisionNormalX;

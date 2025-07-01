@@ -2836,8 +2836,8 @@ void generate_track(s32 modelId) {
     set_texture_colour_tag(COLOUR_TAG_GREEN);
     gTrackModelHeap = mempool_alloc_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
     gCurrentLevelModel = gTrackModelHeap;
-    gCollisionCandidates = mempool_alloc_safe(0x7D0, COLOUR_TAG_YELLOW);
-    gCollisionSurfaces = mempool_alloc_safe(0x1F4, COLOUR_TAG_YELLOW);
+    gCollisionCandidates = mempool_alloc_safe(MAX_COLLISION_CANDIDATES * 4, COLOUR_TAG_YELLOW);
+    gCollisionSurfaces = mempool_alloc_safe(MAX_COLLISION_CANDIDATES, COLOUR_TAG_YELLOW);
     gNumCollisionCandidates = 0;
     gLevelModelTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
 

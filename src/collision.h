@@ -4,6 +4,8 @@
 #include "types.h"
 #include "structs.h"
 
+#define MAX_COLLISION_CANDIDATES 500
+
 enum CollisionModes { COLLISION_MODE_DEFAULT, COLLISION_MODE_1, COLLISION_MODE_NO_WALLS };
 
 void generate_collision_candidates(s32, f32 *, f32 *, s32);
