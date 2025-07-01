@@ -2084,7 +2084,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     // clang-format off
     // the backslash here is relevant for the match
     wave_properties = get_wave_properties(obj->trans.y_position, &waterHeight, &water_rotation); \
-    if (wave_properties != 0) {
+    if (wave_properties != SURFACE_DEFAULT) {
         // clang-format on
         velocity = racer->velocity;
         if (velocity < 0.0f) {
@@ -2480,7 +2480,7 @@ f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3,
     f32 updateRateF;
 
     updateRateF = updateRate;
-    if (arg3 == 14) {
+    if (arg3 == SURFACE_WATER_WAVY) {
         velocity = racer->velocity;
         if (velocity < 0.0f) {
             velocity = -velocity;
@@ -3700,7 +3700,7 @@ void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
         racer->boostTimer = 4;
     }
     racer->boostType = BOOST_NONE;
-    func_8002ACC8(2);
+    set_collision_mode(COLLISION_MODE_NO_WALLS);
     D_8011D550 = 0;
     gCurrentCarSteerVel = 0;
     D_8011D558 = 0;
@@ -4046,18 +4046,18 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     tempRacer->unkC4 = 0.5f;
     if (1) {} // Fakematch
     tempRacer->cameraYaw = tempRacer->steerVisualRotation;
-    tempRacer->unkD8[0].x = obj->trans.x_position;
-    tempRacer->unkD8[0].y = obj->trans.y_position + 30.0f;
-    tempRacer->unkD8[0].z = obj->trans.z_position;
-    tempRacer->unkD8[1].x = obj->trans.x_position;
-    tempRacer->unkD8[1].y = obj->trans.y_position + 30.0f;
-    tempRacer->unkD8[1].z = obj->trans.z_position;
-    tempRacer->unkD8[2].x = obj->trans.x_position;
-    tempRacer->unkD8[2].y = obj->trans.y_position + 30.0f;
-    tempRacer->unkD8[2].z = obj->trans.z_position;
-    tempRacer->unkD8[3].x = obj->trans.x_position;
-    tempRacer->unkD8[3].y = obj->trans.y_position + 30.0f;
-    tempRacer->unkD8[3].z = obj->trans.z_position;
+    tempRacer->unkD8[0] = obj->trans.x_position;
+    tempRacer->unkD8[1] = obj->trans.y_position + 30.0f;
+    tempRacer->unkD8[2] = obj->trans.z_position;
+    tempRacer->unkD8[3] = obj->trans.x_position;
+    tempRacer->unkD8[4] = obj->trans.y_position + 30.0f;
+    tempRacer->unkD8[5] = obj->trans.z_position;
+    tempRacer->unkD8[6] = obj->trans.x_position;
+    tempRacer->unkD8[7] = obj->trans.y_position + 30.0f;
+    tempRacer->unkD8[8] = obj->trans.z_position;
+    tempRacer->unkD8[9] = obj->trans.x_position;
+    tempRacer->unkD8[10] = obj->trans.y_position + 30.0f;
+    tempRacer->unkD8[11] = obj->trans.z_position;
     tempRacer->prev_x_position = obj->trans.x_position;
     tempRacer->prev_y_position = obj->trans.y_position;
     tempRacer->prev_z_position = obj->trans.z_position;
@@ -4373,7 +4373,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             func_8002B0F4(obj->segmentID, obj->trans.x_position, obj->trans.z_position, &gRacerCurrentWave);
         if (gRacerWaveCount) {
             for (i = 0; i < gRacerWaveCount; i++) {
-                if (gRacerCurrentWave[i]->type == WATER_UNK_F) {
+                if (gRacerCurrentWave[i]->type == SURFACE_WATER_UNK_F) {
                     if (gRacerCurrentWave[i]->waveHeight < gCurrentCourseHeight) {
                         gCurrentCourseHeight = gRacerCurrentWave[i]->waveHeight;
                     }
@@ -4383,7 +4383,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         if (tempRacer->vehicleID != VEHICLE_HOVERCRAFT) {
             waterHeight = -10000.0f;
             gRacerWaveType = get_wave_properties(obj->trans.y_position, &waterHeight, &gCurrentRacerWaterPos);
-            if (gRacerWaveType) {
+            if (gRacerWaveType != SURFACE_DEFAULT) {
                 if (obj->trans.y_position - 5.0f < waterHeight) {
                     tempRacer->waterTimer = 5;
                     tempRacer->buoyancy = waterHeight - (obj->trans.y_position - 5.0f);
@@ -4403,7 +4403,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 obj->interactObj->flags &= ~INTERACT_FLAGS_UNK_0010;
             }
         }
-        func_8002ACC8(0);
+        set_collision_mode(COLLISION_MODE_DEFAULT);
         switch (tempRacer->vehicleID) {
             case VEHICLE_CAR:
                 func_8004F7F4(updateRate, updateRateF, obj, tempRacer);
@@ -6632,7 +6632,7 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
 
     if (gCurrentCourseHeight < racerObj->trans.y_position) {
         racerObj->trans.y_position = gCurrentCourseHeight;
-        func_8002ACC8(1);
+        set_collision_mode(COLLISION_MODE_1);
     }
     sp130 = FALSE;
     gCurrentRacerTransform.rotation.y_rotation = racerObj->trans.rotation.y_rotation;
@@ -6681,10 +6681,10 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
             sp5C = 1;
         }
     }
-    func_80031130(4, racer->unkD8, sp134, racer->vehicleID);
+    generate_collision_candidates(4, racer->unkD8, sp134, racer->vehicleID);
     numCollisions = 0;
-    racer->unk1E3 = func_80031600(&racer->unkD8, (Vec3f *) sp134, spE0, sp58, 4, &numCollisions);
-    sp184 = func_8002ACD4(&sp180, &sp178, &sp17C);
+    racer->unk1E3 = resolve_collisions((Vec3f *) racer->unkD8, (Vec3f *) sp134, spE0, sp58, 4, &numCollisions);
+    sp184 = get_collision_normal(&sp180, &sp178, &sp17C);
     if (sp184 != 0) {
         temp_s16 = (u16) arctan2_f(sp180 * 255.0f, sp17C * 255.0f);
         temp_s16 -= racerObj->trans.rotation.y_rotation;
@@ -6740,7 +6740,7 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     }
 
     for (i = 0; i < 12; i++) {
-        ((f32 *) &racer->unkD8)[i] = sp134[i];
+        racer->unkD8[i] = sp134[i];
     }
     for (i = 0; i < 4; i++) {
         racer->wheel_surfaces[i] = sp58[i];
@@ -6748,10 +6748,10 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     racerObj->trans.x_position = 0;
     racerObj->trans.y_position = 0;
     racerObj->trans.z_position = 0;
-    for (i = 0; i < 4; i++) {
-        racerObj->trans.x_position = racerObj->trans.x_position + racer->unkD8[i].x;
-        racerObj->trans.y_position = racerObj->trans.y_position + racer->unkD8[i].y;
-        racerObj->trans.z_position = racerObj->trans.z_position + racer->unkD8[i].z;
+    for (i = 0; i < 12; i += 3) {
+        racerObj->trans.x_position = racerObj->trans.x_position + racer->unkD8[i + 0];
+        racerObj->trans.y_position = racerObj->trans.y_position + racer->unkD8[i + 1];
+        racerObj->trans.z_position = racerObj->trans.z_position + racer->unkD8[i + 2];
     }
     racerObj->trans.x_position /= 4;
     racerObj->trans.y_position /= 4;
@@ -6766,8 +6766,8 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     gCurrentRacerTransform.z_position = -racerObj->trans.z_position;
     mtxf_from_inverse_transform(&sp60, &gCurrentRacerTransform);
     for (i = 0; i < 4; i++) {
-        mtxf_transform_point(&sp60, racer->unkD8[i].x, racer->unkD8[i].y, racer->unkD8[i].z, &sp11C[i], &sp108[i],
-                             &spF4[i]);
+        mtxf_transform_point(&sp60, racer->unkD8[3 * i], racer->unkD8[3 * i + 1], racer->unkD8[3 * i + 2], &sp11C[i],
+                             &sp108[i], &spF4[i]);
     }
     if (racer->vehicleID != VEHICLE_LOOPDELOOP) {
         sp180 = sp11C[0] + sp11C[1];
@@ -6865,9 +6865,9 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     if (flags && tempPos.y < obj->trans.y_position - 4.0) {
         shouldSquish = TRUE;
     }
-    func_80031130(1, racer->unkD8, &tempPos.x, racer->vehicleID);
+    generate_collision_candidates(1, racer->unkD8, &tempPos.x, racer->vehicleID);
     hasCollision = FALSE;
-    racer->unk1E3 = func_80031600(racer->unkD8, &tempPos.x, &radius, &surface, TRUE, &hasCollision);
+    racer->unk1E3 = resolve_collisions(racer->unkD8, &tempPos, &radius, &surface, 1, &hasCollision);
     racer->unk1E4 = flags;
     racer->unk1E3 |= flags;
     racer->groundedWheels = 0;
@@ -6883,18 +6883,18 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
         }
     }
     for (i = 0; i < 3; i++) {
-        racer->unkD8[0].f[i] = tempPos.f[i];
+        racer->unkD8[i] = tempPos.f[i];
     }
     i = 1; // Fakematch
     racer->wheel_surfaces[0] = surface;
     racer->wheel_surfaces[1] = surface;
     racer->wheel_surfaces[2] = surface;
     racer->wheel_surfaces[3] = surface;
-    obj->trans.x_position = racer->unkD8[0].x;
-    obj->trans.y_position = racer->unkD8[0].y;
-    obj->trans.z_position = racer->unkD8[0].z;
+    obj->trans.x_position = racer->unkD8[0];
+    obj->trans.y_position = racer->unkD8[1];
+    obj->trans.z_position = racer->unkD8[2];
     if (racer->groundedWheels) {
-        func_8002ACD4(&xTemp, &yTemp, &zTemp);
+        get_collision_normal(&xTemp, &yTemp, &zTemp);
         angleX = sins_f(-obj->trans.rotation.y_rotation);
         angleZ = coss_f(-obj->trans.rotation.y_rotation);
         distance = (xTemp * angleZ) + (zTemp * angleX);
@@ -8787,7 +8787,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
             gRacerWaveCount =
                 func_8002B0F4(obj->segmentID, obj->trans.x_position, obj->trans.z_position, &gRacerCurrentWave);
         }
-        func_8002ACC8(0);
+        set_collision_mode(COLLISION_MODE_DEFAULT);
         if (racer->approachTarget != NULL || gRaceStartTimer != 0 || racer->bubbleTrapTimer > 0) {
             gCurrentStickX = 0;
             gCurrentStickY = 0;
@@ -9212,18 +9212,18 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     racer->carBobY = 0.0f;
     racer->carBobZ = 0.0f;
     obj->y_velocity = 0.0f;
-    racer->unkD8[0].x = obj->trans.x_position;
-    racer->unkD8[0].y = obj->trans.y_position;
-    racer->unkD8[0].z = obj->trans.z_position;
-    racer->unkD8[1].x = obj->trans.x_position;
-    racer->unkD8[1].y = obj->trans.y_position;
-    racer->unkD8[1].z = obj->trans.z_position;
-    racer->unkD8[2].x = obj->trans.x_position;
-    racer->unkD8[2].y = obj->trans.y_position;
-    racer->unkD8[2].z = obj->trans.z_position;
-    racer->unkD8[3].x = obj->trans.x_position;
-    racer->unkD8[3].y = obj->trans.y_position;
-    racer->unkD8[3].z = obj->trans.z_position;
+    racer->unkD8[0] = obj->trans.x_position;
+    racer->unkD8[1] = obj->trans.y_position;
+    racer->unkD8[2] = obj->trans.z_position;
+    racer->unkD8[3] = obj->trans.x_position;
+    racer->unkD8[4] = obj->trans.y_position;
+    racer->unkD8[5] = obj->trans.z_position;
+    racer->unkD8[6] = obj->trans.x_position;
+    racer->unkD8[7] = obj->trans.y_position;
+    racer->unkD8[8] = obj->trans.z_position;
+    racer->unkD8[9] = obj->trans.x_position;
+    racer->unkD8[10] = obj->trans.y_position;
+    racer->unkD8[11] = obj->trans.z_position;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     update_vehicle_particles(obj, updateRate);
 }

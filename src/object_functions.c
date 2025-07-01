@@ -440,9 +440,9 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
     dir.z = obj->trans.z_position + (obj->z_velocity * updateRateF);
     radius = 9.0f;
 
-    func_80031130(1, &obj->trans.x_position, &dir.x, -1);
+    generate_collision_candidates(1, &obj->trans.x_position, &dir.x, -1);
     hasCollision = FALSE;
-    func_80031600((Vec3f *) &obj->trans.x_position, &dir, &radius, &surface, 1, &hasCollision);
+    resolve_collisions((Vec3f *) &obj->trans.x_position, &dir, &radius, &surface, 1, &hasCollision);
     if (hasCollision) {
         obj->x_velocity = (dir.x - obj->trans.x_position) / updateRateF;
         obj->y_velocity = (dir.y - obj->trans.y_position) / updateRateF;
@@ -728,10 +728,11 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
             targetPos[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
             targetPos[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
             radius = 9.0f;
-            func_80031130(1, &obj->trans.x_position, targetPos, -1);
+            generate_collision_candidates(1, &obj->trans.x_position, targetPos, -1);
             hasCollision = FALSE;
             surface = SURFACE_DEFAULT;
-            func_80031600((Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, &radius, &surface, 1, &hasCollision);
+            resolve_collisions((Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, &radius, &surface, 1,
+                               &hasCollision);
             obj->x_velocity = (targetPos[0] - obj->trans.x_position) / updateRateF;
             obj->y_velocity = (targetPos[1] - obj->trans.y_position) / updateRateF;
             obj->z_velocity = (targetPos[2] - obj->trans.z_position) / updateRateF;
@@ -1377,7 +1378,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     if (index != 0) {
         index--;
         while (index >= 0) {
-            if ((water[index]->type != WATER_CALM) && (water[index]->type != WATER_WAVY) &&
+            if ((water[index]->type != SURFACE_WATER_CALM) && (water[index]->type != SURFACE_WATER_WAVY) &&
                 (water[index]->rot.y > 0.0)) {
                 obj->trans.y_position = water[index]->waveHeight;
             }
@@ -3098,7 +3099,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     if (var_a2 != 0) {
         var_a2--;
         while (var_a2 >= 0) {
-            if ((water[var_a2]->type != WATER_CALM) && (water[var_a2]->type != WATER_WAVY) &&
+            if ((water[var_a2]->type != SURFACE_WATER_CALM) && (water[var_a2]->type != SURFACE_WATER_WAVY) &&
                 (water[var_a2]->rot.y > 0.0)) {
                 obj->trans.y_position = water[var_a2]->waveHeight;
             }
@@ -4343,9 +4344,10 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             targetPos[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
             targetPos[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
             radius = 8.0f;
-            func_80031130(1, &obj->trans.x_position, targetPos, -1);
+            generate_collision_candidates(1, &obj->trans.x_position, targetPos, -1);
             hasCollision = 0;
-            func_80031600((Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, &radius, &surface, 1, &hasCollision);
+            resolve_collisions((Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, &radius, &surface, 1,
+                               &hasCollision);
             obj->x_velocity = (targetPos[0] - obj->trans.x_position) / updateRateF;
             obj->y_velocity = (targetPos[1] - obj->trans.y_position) / updateRateF;
             obj->z_velocity = (targetPos[2] - obj->trans.z_position) / updateRateF;
@@ -4849,12 +4851,12 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     offset.z = obj->trans.z_position + (obj->z_velocity * updateRateF);
     if (weapon->weaponID != WEAPON_MAGNET_LEVEL_3) {
         radius = 16.0f;
-        func_80031130(1, &obj->trans.x_position, (f32 *) &offset, -1);
+        generate_collision_candidates(1, &obj->trans.x_position, (f32 *) &offset, -1);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
-        func_80031600((Vec3f *) &obj->trans.x_position, &offset, &radius, &surface, 1, &hasCollision);
+        resolve_collisions((Vec3f *) &obj->trans.x_position, &offset, &radius, &surface, 1, &hasCollision);
         if (hasCollision > 0) {
-            if (func_8002ACD4(&diffX, &diffY, &diffZ)) {
+            if (get_collision_normal(&diffX, &diffY, &diffZ)) {
                 obj->properties.projectile.timer = 0;
             }
         }
@@ -5153,10 +5155,10 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
         intendedPos.y = weaponObj->trans.y_position + (weaponObj->y_velocity * updateRateF);
         intendedPos.z = weaponObj->trans.z_position + (weaponObj->z_velocity * updateRateF);
         radius = 9.0f;
-        func_80031130(1, &weaponObj->trans.x_position, &intendedPos.x, -1);
+        generate_collision_candidates(1, &weaponObj->trans.x_position, &intendedPos.x, -1);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
-        func_80031600((Vec3f *) &weaponObj->trans.x_position, &intendedPos, &radius, &surface, 1, &hasCollision);
+        resolve_collisions((Vec3f *) &weaponObj->trans.x_position, &intendedPos, &radius, &surface, 1, &hasCollision);
         weaponObj->x_velocity = (intendedPos.x - weaponObj->trans.x_position) / updateRateF;
         weaponObj->y_velocity = (intendedPos.y - weaponObj->trans.y_position) / updateRateF;
         weaponObj->z_velocity = (intendedPos.z - weaponObj->trans.z_position) / updateRateF;
