@@ -4171,54 +4171,51 @@ s32 func_8002FF6C(s32 arg0, unk8011C8B8 *arg1, s32 arg2, Vec2f *arg3) {
     return var_s2;
 }
 
-// https://decomp.me/scratch/QF6FF
-#ifdef NON_EQUIVALENT
-void func_800304C8(unk8011C8B8 *arg0) {
-    s16 found1;
-    s16 found2;
-    s16 found3;
-    f32 temp;
-    f32 arg02x;
-    f32 arg00z;
-    f32 compare;
+void func_800304C8(unk8011C8B8 arg0[3]) {
+    f32 diff;
+    f32 shadowX;
+    f32 shadowZ;
+    f32 var_f6;
+    f32 var_f8;
+    f32 var_f10;
+    s32 found1;
+    s32 found2;
+    s32 found3;
 
     found1 = FALSE;
     found2 = FALSE;
     found3 = FALSE;
-    temp = arg0[0].z;
-    arg00z = temp;
-    compare = 0.0f;
-    temp = (gNewShadowObj->trans.z_position - arg0[1].z);
 
-    if ((((gNewShadowObj->trans.x_position - arg0[0].x) * (arg0[1].z - arg00z)) -
-         ((arg0[1].x - arg0[0].x) * (((0, gNewShadowObj->trans.z_position)) - arg00z))) >= compare) {
+    shadowX = gNewShadowObj->trans.x_position;
+    shadowZ = gNewShadowObj->trans.z_position;
+
+    diff = (shadowX - arg0[0].x) * (arg0[1].z - arg0[0].z) - (arg0[1].x - arg0[0].x) * (shadowZ - arg0[0].z);
+    if (diff >= 0.0f) {
         found1 = TRUE;
     }
-    if ((((gNewShadowObj->trans.x_position - arg0[1].x) * (arg0[2].z - arg0[1].z)) -
-         (temp * (arg0[2].x - arg0[1].x))) >= compare) {
+
+    diff = (shadowX - arg0[1].x) * (arg0[2].z - arg0[1].z) - (arg0[2].x - arg0[1].x) * (shadowZ - arg0[1].z);
+    if (diff >= 0.0f) {
         found2 = TRUE;
     }
-    arg02x = arg0[2].x;
-    if (found1 == found2) {
-        f32 zPosDiff = (arg00z - arg0[2].z);
-        if ((((gNewShadowObj->trans.x_position - arg02x) * zPosDiff) - ((arg0[0].x - arg02x) * (arg02x - arg0[2].z))) >=
-            compare) {
-            found3 = TRUE;
-        }
-        if (found2 == found3) {
-            f32 test = (-(((D_8011D0BC->x * gNewShadowObj->trans.x_position) +
-                           (D_8011D0BC->z * gNewShadowObj->trans.z_position)) +
-                          D_8011D0BC->unkC_union.w)) /
-                       D_8011D0BC->y;
-            if (D_8011D0D0 < test) {
-                D_8011D0D0 = test;
-            }
-        }
+
+    if (found1 != found2) {
+        return;
+    }
+
+    diff = (shadowX - arg0[2].x) * (arg0[0].z - arg0[2].z) - (arg0[0].x - arg0[2].x) * (shadowZ - arg0[2].z);
+    if (diff >= 0.0f) {
+        found3 = TRUE;
+    }
+    if (found2 != found3) {
+        return;
+    }
+
+    diff = -(D_8011D0BC->x * shadowX + D_8011D0BC->z * shadowZ + D_8011D0BC->unkC_union.w) / D_8011D0BC->y;
+    if (D_8011D0D0 < diff) {
+        D_8011D0D0 = diff;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_800304C8.s")
-#endif
 
 /**
  * Instantly update current fog properties.
