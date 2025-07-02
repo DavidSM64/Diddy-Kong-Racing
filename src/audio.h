@@ -2,6 +2,7 @@
 #define _AUDIO_H_
 
 #include "sched.h"
+#include "audiosfx.h"
 
 #define AUDIO_CHANNELS 16
 #define MUSIC_CHAN_MASK_NONE 0xFFFFFFFF
@@ -12,8 +13,6 @@ enum AudioVolumeBehaviour {
     VOLUME_LOWER_AMBIENT,
     VOLUME_UNK03,
 };
-
-typedef struct ALSoundState* SoundHandle;
 
 /* Size: 0x0A bytes */
 typedef struct SoundData {
@@ -42,10 +41,10 @@ typedef struct DelayedSound {
 } DelayedSound;
 
 // These are all functions in libultra that seem to have been created by Rare, so they're not in the standard headers.
-void set_voice_limit(ALCSPlayer *seqp, u8 voiceLimit); // seqplayer.c
-void alCSPSetFadeIn(ALCSPlayer *seqp, u8 chan, ALPan pan); // cspsetfadein.c
-void alFxReverbSet(u8 setting); // reverb.c
-u8 alCSPGetFadeIn(ALCSPlayer *seqp, u8 chan); // cspgetfadein.c
+extern void set_voice_limit(ALCSPlayer *seqp, u8 voiceLimit); // seqplayer.c
+extern void alCSPSetFadeIn(ALCSPlayer *seqp, u8 chan, ALPan pan); // cspsetfadein.c
+extern void alFxReverbSet(u8 setting); // reverb.c
+extern u8 alCSPGetFadeIn(ALCSPlayer *seqp, u8 chan); // cspgetfadein.c
 
 void audio_init(OSSched *sc);
 void sound_volume_reset(u8 skipReset);
