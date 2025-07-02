@@ -86,11 +86,11 @@ s8 gDrawLevelSegments;
 u8 gVoidColourR; // R of RGB
 u8 gVoidColourG; // G of RGB
 u8 gVoidColourB; // B of RGB
-f32 D_8011B0E4;
-f32 D_8011B0E8;
-f32 D_8011B0EC;
-s32 D_8011B0F0;
-s32 D_8011B0F4;
+f32 gCollisionNormalX;
+f32 gCollisionNormalY;
+f32 gCollisionNormalZ;
+s32 gHitWall;
+s32 gCollisionMode;
 s32 D_8011B0F8; // gIsInCutscene?
 s32 gAntiAliasing;
 s32 D_8011B100;
@@ -143,12 +143,12 @@ Vertex *gCurrShadowVerts;
 UNUSED s32 D_8011D34C;
 ShadowHeapProperties *gShadowHeapData[2 + 2]; // General data for shadows. Texture and geometry size.
 ShadowHeapProperties *gCurrShadowHeapData;
-s32 gShadowTail;        // Position in the heap the shadow data ends at.
-s32 gNewShadowTriCount; // xOffset?
-s32 gNewShadowVtxCount; // yOffset?
-u16 **D_8011D370;       // Allocated 0x7D0
-s32 *D_8011D374;
-s32 D_8011D378;
+s32 gShadowTail;           // Position in the heap the shadow data ends at.
+s32 gNewShadowTriCount;    // xOffset?
+s32 gNewShadowVtxCount;    // yOffset?
+s32 *gCollisionCandidates; // Allocated 0x7D0
+s8 *gCollisionSurfaces;
+s32 gNumCollisionCandidates;
 s32 gScenePlayerViewports;
 UNUSED f32 gCurrBBoxDistanceToCamera; // Used in a comparison check, but functionally unused.
 u32 gWaveBlockCount;
@@ -767,7 +767,7 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
         currFaceOffset = segment->batches[i].facesOffset;
         verticesOffset = segment->batches[i].verticesOffset;
         nextFaceOffset = segment->batches[i + 1].facesOffset;
-        if (segment->batches[i].flags & (RENDER_HIDDEN | RENDER_UNK_200)) {
+        if (segment->batches[i].flags & (RENDER_HIDDEN | RENDER_NO_COLLISION)) {
             currFaceOffset = nextFaceOffset;
         }
         for (j = currFaceOffset; j < nextFaceOffset; j++) {
@@ -840,13 +840,13 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3) {
                     var_s0 = 1;
                 }
                 if (var_s0 != 0) {
-                    var_t0 = (segment->unk14[j].triangleIndex << 2);
-                    temp = (spB0[0] + D_8011D4A0) * segment->unk18[var_t0];
-                    temp += spB8[0] * segment->unk18[var_t0 + 1];
-                    temp += (spA8[0] + D_8011D4A4) * segment->unk18[var_t0 + 2];
-                    temp += segment->unk18[var_t0 + 3];
+                    var_t0 = (segment->collisionFacets[j].basePlaneIndex << 2);
+                    temp = (spB0[0] + D_8011D4A0) * segment->collisionPlanes[var_t0];
+                    temp += spB8[0] * segment->collisionPlanes[var_t0 + 1];
+                    temp += (spA8[0] + D_8011D4A4) * segment->collisionPlanes[var_t0 + 2];
+                    temp += segment->collisionPlanes[var_t0 + 3];
                     var_s0 = (temp > 0.0) << 2;
-                    if (segment->unk18[var_t0 + 1] < 0.0f) {
+                    if (segment->collisionPlanes[var_t0 + 1] < 0.0f) {
                         var_s0 |= 1;
                     }
                     if (spC4[0] == spC4[1]) {
@@ -1128,14 +1128,14 @@ s32 func_80027568(void) {
     if (currentObjRacer == NULL) {
         return FALSE;
     }
-    func_80031130(1, &currentObjRacer->trans.x_position, &gSceneActiveCamera->trans.x_position, -1);
+    generate_collision_candidates(1, &currentObjRacer->trans.x_position, &gSceneActiveCamera->trans.x_position, -1);
     ret = FALSE;
     // bug? var_ra can be undefined?
-    for (var_t4 = 0; var_t4 < D_8011D378 && ret == FALSE; var_t4++) {
-        if ((s32) D_8011D370[var_t4] > 0) {
-            var_ra = (Unk80027568_1 *) PHYS_TO_K0(D_8011D370[var_t4]);
+    for (var_t4 = 0; var_t4 < gNumCollisionCandidates && ret == FALSE; var_t4++) {
+        if ((s32) gCollisionCandidates[var_t4] > 0) {
+            var_ra = (Unk80027568_1 *) PHYS_TO_K0(gCollisionCandidates[var_t4]);
         } else {
-            var_t2 = D_8011D370[var_t4];
+            var_t2 = gCollisionCandidates[var_t4];
             vector = var_ra->unk18;
             vector += var_t2[0];
             new_var = vector->x;
@@ -2419,22 +2419,22 @@ UNUSED void func_8002AC00(s32 arg0, s32 arg1, s32 arg2) {
     }
 }
 
-// These types are probably wrong because the vars are likely still unidentified structs, but the code matches still.
-UNUSED void dayGetTrackFade(s32 *arg0, s32 *arg1, s32 *arg2) {
-    *arg0 = (unsigned) D_8011D378;
-    *arg1 = (unsigned) D_8011D370;
-    *arg2 = (unsigned) D_8011D374;
+UNUSED void get_collision_candidate_data(s32 *numCollsionCandidates, s32 **collisionCandidates,
+                                         s8 **collisionSurfaces) {
+    *numCollsionCandidates = gNumCollisionCandidates;
+    *collisionCandidates = gCollisionCandidates;
+    *collisionSurfaces = gCollisionSurfaces;
 }
 
-void func_8002ACC8(s32 arg0) {
-    D_8011B0F4 = arg0;
+void set_collision_mode(s32 mode) {
+    gCollisionMode = mode;
 }
 
-s32 func_8002ACD4(f32 *arg0, f32 *arg1, f32 *arg2) {
-    *arg0 = D_8011B0E4;
-    *arg1 = D_8011B0E8;
-    *arg2 = D_8011B0EC;
-    return D_8011B0F0;
+s32 get_collision_normal(f32 *outX, f32 *outY, f32 *outZ) {
+    *outX = gCollisionNormalX;
+    *outY = gCollisionNormalY;
+    *outZ = gCollisionNormalZ;
+    return gHitWall;
 }
 
 /**
@@ -2458,18 +2458,18 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     }
     wave = gTrackWaves;
     for (var_a0 = i = 0; i < len; i++) {
-        if (wave[i]->type == WATER_CALM || wave[i]->type == WATER_WAVY) {
+        if (wave[i]->type == SURFACE_WATER_CALM || wave[i]->type == SURFACE_WATER_WAVY) {
             var_a0++;
         }
     }
     if (var_a0 == 0) {
-        return 0;
+        return SURFACE_DEFAULT;
     }
     wave = gTrackWaves;
     index = -1;
     for (i = 0; i < len; i++) {
         height = wave[i]->waveHeight;
-        if (wave[i]->type == WATER_CALM || wave[i]->type == WATER_WAVY) {
+        if (wave[i]->type == SURFACE_WATER_CALM || wave[i]->type == SURFACE_WATER_WAVY) {
             if (yPos < height + 25.0 && (wave[i]->rot.y > 0.5 || var_a0 == 1)) {
                 index = i;
             }
@@ -2478,7 +2478,7 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
         }
     }
     if (index < 0) {
-        return 0;
+        return SURFACE_DEFAULT;
     }
     *waterHeight = gTrackWaves[index]->waveHeight;
     if (rotation != NULL) {
@@ -2529,7 +2529,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
 
     s32 sp108;
     s32 spB0[8];
-    s32 temp_s2;
+    s32 surface;
     s32 var_fp;
 
     D_8011D308 = 0;
@@ -2578,12 +2578,13 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
 
         for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
             currentBatch = &currentSegment->batches[batchNum];
-            temp_s2 = gCurrentLevelModel->textures[currentBatch->textureIndex].unk7;
+            surface = gCurrentLevelModel->textures[currentBatch->textureIndex].surfaceType;
             currentFaceOffset = currentBatch->facesOffset;
             nextFaceOffset = currentBatch[1].facesOffset;
             currentVerticesOffset = currentBatch->verticesOffset;
 
-            if (temp_s2 != 11 && temp_s2 != 15 && (currentBatch->flags & (RENDER_HIDDEN | RENDER_UNK_200))) {
+            if (surface != SURFACE_WATER_CALM && surface != SURFACE_WATER_UNK_F &&
+                (currentBatch->flags & (RENDER_HIDDEN | RENDER_NO_COLLISION))) {
                 currentFaceOffset = nextFaceOffset;
             }
 
@@ -2606,14 +2607,14 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
                     temp_ra_3 =
                         ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
                     if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
-                        temp = currentSegment->unk14[faceNum].triangleIndex;
-                        temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
+                        temp = currentSegment->collisionFacets[faceNum].basePlaneIndex;
+                        temp_v1_4 = (f32 *) &currentSegment->collisionPlanes[temp * 4];
                         tempVec4f.x = temp_v1_4[0];
                         tempVec4f.y = temp_v1_4[1];
                         tempVec4f.z = temp_v1_4[2];
                         tempVec4f.w = temp_v1_4[3];
                         if (tempVec4f.y != 0.0) {
-                            D_8011D128[yOutCount].type = temp_s2;
+                            D_8011D128[yOutCount].type = surface;
                             D_8011D128[yOutCount].waveHeight =
                                 -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
                             D_8011D128[yOutCount].rot.x = tempVec4f.x;
@@ -2634,7 +2635,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
     }
 
     if (levelSegmentIndex >= 0 && levelSegmentIndex < gCurrentLevelModel->numberOfSegments) {
-        D_8011D128[yOutCount].type = WATER_WAVY;
+        D_8011D128[yOutCount].type = SURFACE_WATER_WAVY;
         if (gCurrentLevelModel->segments[levelSegmentIndex].hasWaves && gWaveBlockCount != 0) {
             D_8011D128[yOutCount].waveHeight = func_800BB2F4(levelSegmentIndex, xIn, zIn, &D_8011D128[yOutCount].rot);
         } else {
@@ -2796,11 +2797,11 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
                 temp_ra_3 = (((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0;
                 var_v0 = faceNum; // fake?
                 if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
-                    temp = currentSegment->unk14[faceNum].triangleIndex;
-                    tempVec4f.x = currentSegment->unk18[4 * temp + 0];
-                    tempVec4f.y = currentSegment->unk18[4 * temp + 1];
-                    tempVec4f.z = currentSegment->unk18[4 * temp + 2];
-                    tempVec4f.w = currentSegment->unk18[4 * temp + 3];
+                    temp = currentSegment->collisionFacets[faceNum].basePlaneIndex;
+                    tempVec4f.x = currentSegment->collisionPlanes[4 * temp + 0];
+                    tempVec4f.y = currentSegment->collisionPlanes[4 * temp + 1];
+                    tempVec4f.z = currentSegment->collisionPlanes[4 * temp + 2];
+                    tempVec4f.w = currentSegment->collisionPlanes[4 * temp + 3];
                     if (tempVec4f.y != 0.0) {
                         yOut[yOutCount] = -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
                         yOutCount++;
@@ -2835,9 +2836,9 @@ void generate_track(s32 modelId) {
     set_texture_colour_tag(COLOUR_TAG_GREEN);
     gTrackModelHeap = mempool_alloc_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
     gCurrentLevelModel = gTrackModelHeap;
-    D_8011D370 = mempool_alloc_safe(0x7D0, COLOUR_TAG_YELLOW);
-    D_8011D374 = mempool_alloc_safe(0x1F4, COLOUR_TAG_YELLOW);
-    D_8011D378 = 0;
+    gCollisionCandidates = mempool_alloc_safe(MAX_COLLISION_CANDIDATES * 4, COLOUR_TAG_YELLOW);
+    gCollisionSurfaces = mempool_alloc_safe(MAX_COLLISION_CANDIDATES, COLOUR_TAG_YELLOW);
+    gNumCollisionCandidates = 0;
     gLevelModelTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
 
     for (i = 0; gLevelModelTable[i] != -1; i++) {}
@@ -2870,7 +2871,7 @@ void generate_track(s32 modelId) {
         LOCAL_OFFSET_TO_RAM_ADDRESS(Vertex *, gCurrentLevelModel->segments[k].vertices);
         LOCAL_OFFSET_TO_RAM_ADDRESS(Triangle *, gCurrentLevelModel->segments[k].triangles);
         LOCAL_OFFSET_TO_RAM_ADDRESS(TriangleBatchInfo *, gCurrentLevelModel->segments[k].batches);
-        LOCAL_OFFSET_TO_RAM_ADDRESS(CollisionNode *, gCurrentLevelModel->segments[k].unk14);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(CollisionFacetPlanes *, gCurrentLevelModel->segments[k].collisionFacets);
     }
     for (k = 0; k < gCurrentLevelModel->numberOfTextures; k++) {
         gCurrentLevelModel->textures[k].texture =
@@ -2880,7 +2881,7 @@ void generate_track(s32 modelId) {
     for (k = 0; k < gCurrentLevelModel->numberOfSegments; k++) {
         gCurrentLevelModel->segments[k].unk10 = (s16 *) j;
         j = (s32) align16(((u8 *) (gCurrentLevelModel->segments[k].numberOfTriangles * 2)) + j);
-        gCurrentLevelModel->segments[k].unk18 = (f32 *) j;
+        gCurrentLevelModel->segments[k].collisionPlanes = (f32 *) j;
         j = (s32) & ((u8 *) j)[func_8002CC30(&gCurrentLevelModel->segments[k])];
         func_8002C954(&gCurrentLevelModel->segments[k], &gCurrentLevelModel->segmentsBoundingBoxes[k], k);
         gCurrentLevelModel->segments[k].unk30 = 0;
@@ -2958,8 +2959,8 @@ void free_track(void) {
         tex_free(gCurrentLevelModel->textures[i].texture);
     }
     mempool_free(gTrackModelHeap);
-    mempool_free(D_8011D370);
-    mempool_free(D_8011D374);
+    mempool_free(gCollisionCandidates);
+    mempool_free(gCollisionSurfaces);
     sprite_free((Sprite *) gCurrentLevelModel->minimapSpriteIndex);
     for (i = 0; i < ARRAY_COUNT(gShadowHeapData); i++) {
         mempool_free(gShadowHeapData[i]);
@@ -3001,7 +3002,7 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
         endTri = segment->batches[i + 1].facesOffset;
         vertsOffset = segment->batches[i].verticesOffset;
         for (j = startTri; j < endTri; j++) {
-            if (segment->triangles[j].flags & 0x80) {
+            if (segment->triangles[j].flags & TRI_FLAG_80) {
                 segment->unk10[j] = 0;
             } else {
                 maxX = -32000;
@@ -3066,11 +3067,11 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
     s32 triIndex;
     s32 i;
     f32 mag;
-    s32 s4;
-    s32 s1;
-    s32 s0;
-    s32 t1;
-    s32 v1, v2;
+    s32 counter;
+    s32 colPlaneIndex;
+    s32 next;
+    s32 numColPlanes;
+    s32 vertIndex, nextVertIndex;
     f32 x1, y1, z1;
     f32 x2, y2, z2;
     f32 x3, y3, z3;
@@ -3078,7 +3079,7 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
     f32 x5, y5, z5;
     s32 j;
 
-    s4 = 0;
+    counter = 0;
 
     for (batchIndex = 0; batchIndex < arg0->numberOfBatches; batchIndex++) {
         facesOffset = arg0->batches[batchIndex].facesOffset;
@@ -3118,26 +3119,27 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
 
             // looks like a macro
             {
-                s32 temp = s4++;
-                arg0->unk18[4 * temp + 0] = nx;
-                arg0->unk18[4 * temp + 1] = ny;
-                arg0->unk18[4 * temp + 2] = nz;
-                arg0->unk18[4 * temp + 3] = -(x1 * nx + y1 * ny + z1 * nz);
+                s32 temp = counter++;
+                arg0->collisionPlanes[4 * temp + 0] = nx;
+                arg0->collisionPlanes[4 * temp + 1] = ny;
+                arg0->collisionPlanes[4 * temp + 2] = nz;
+                arg0->collisionPlanes[4 * temp + 3] = -(x1 * nx + y1 * ny + z1 * nz);
             }
         }
     }
 
-    t1 = s4;
+    numColPlanes = counter;
 
     if (D_8011B0F8) {
-        return s4 * 0x10;
+        return counter * 0x10;
     }
 
     for (batchIndex = 0; batchIndex < arg0->numberOfBatches; batchIndex++) {
         facesOffset = arg0->batches[batchIndex].facesOffset;
         verticesOffset = arg0->batches[batchIndex].verticesOffset;
         nextFacesOffset = arg0->batches[batchIndex + 1].facesOffset;
-        if (arg0->batches[batchIndex].flags & RENDER_UNK_200) {
+
+        if (arg0->batches[batchIndex].flags & RENDER_NO_COLLISION) {
             facesOffset = nextFacesOffset;
         }
 
@@ -3146,35 +3148,35 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
                 continue;
             }
 
-            s1 = arg0->unk14[triIndex].triangleIndex;
-            nx = arg0->unk18[4 * s1 + 0];
-            ny = arg0->unk18[4 * s1 + 1];
-            nz = arg0->unk18[4 * s1 + 2];
+            colPlaneIndex = arg0->collisionFacets[triIndex].basePlaneIndex;
+            nx = arg0->collisionPlanes[4 * colPlaneIndex + 0];
+            ny = arg0->collisionPlanes[4 * colPlaneIndex + 1];
+            nz = arg0->collisionPlanes[4 * colPlaneIndex + 2];
 
             for (i = 0; i < 3; i++) {
-                s0 = i + 1;
-                if (s0 > 2) {
-                    s0 = 0;
+                next = i + 1;
+                if (next > 2) {
+                    next = 0;
                 }
 
-                v1 = arg0->triangles[triIndex].verticesArray[1 + i] + verticesOffset;
-                v2 = arg0->triangles[triIndex].verticesArray[1 + s0] + verticesOffset;
-                s0 = arg0->unk14[triIndex].closestTri[i];
+                vertIndex = arg0->triangles[triIndex].verticesArray[1 + i] + verticesOffset;
+                nextVertIndex = arg0->triangles[triIndex].verticesArray[1 + next] + verticesOffset;
 
-                if (s0 < t1) {
+                next = arg0->collisionFacets[triIndex].edgeBisectorPlane[i];
+                if (next < numColPlanes) {
                     {
-                        s32 temp = s0;
-                        x5 = nx + arg0->unk18[4 * temp + 0];
-                        y5 = ny + arg0->unk18[4 * temp + 1];
-                        z5 = nz + arg0->unk18[4 * temp + 2];
+                        s32 temp = next;
+                        x5 = nx + arg0->collisionPlanes[4 * temp + 0];
+                        y5 = ny + arg0->collisionPlanes[4 * temp + 1];
+                        z5 = nz + arg0->collisionPlanes[4 * temp + 2];
                     }
 
-                    v = &arg0->vertices[v1];
+                    v = &arg0->vertices[vertIndex];
                     x1 = v->x;
                     y1 = v->y;
                     z1 = v->z;
 
-                    v = &arg0->vertices[v2];
+                    v = &arg0->vertices[nextVertIndex];
                     x2 = v->x;
                     y2 = v->y;
                     z2 = v->z;
@@ -3194,28 +3196,28 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
                         z5 /= mag;
                     }
 
-                    if (s0 != s1) {
+                    if (next != colPlaneIndex) {
                         for (j = 0; j < 3; j++) {
-                            if (s1 == arg0->unk14[s0].closestTri[j]) {
-                                arg0->unk14[s0].closestTri[j] = s4 | 0x8000;
+                            if (colPlaneIndex == arg0->collisionFacets[next].edgeBisectorPlane[j]) {
+                                arg0->collisionFacets[next].edgeBisectorPlane[j] = counter | 0x8000;
                             }
                         }
                     }
 
-                    arg0->unk14[triIndex].closestTri[i] = s4;
+                    arg0->collisionFacets[triIndex].edgeBisectorPlane[i] = counter;
 
                     {
-                        s32 temp = s4++;
-                        arg0->unk18[4 * temp + 0] = x5;
-                        arg0->unk18[4 * temp + 1] = y5;
-                        arg0->unk18[4 * temp + 2] = z5;
-                        arg0->unk18[4 * temp + 3] = -(x1 * x5 + y1 * y5 + z1 * z5);
+                        s32 temp = counter++;
+                        arg0->collisionPlanes[4 * temp + 0] = x5;
+                        arg0->collisionPlanes[4 * temp + 1] = y5;
+                        arg0->collisionPlanes[4 * temp + 2] = z5;
+                        arg0->collisionPlanes[4 * temp + 3] = -(x1 * x5 + y1 * y5 + z1 * z5);
                     }
                 }
             }
         }
     }
-    return s4 * 0x10;
+    return counter * 0x10;
 }
 
 typedef struct unk8002D30C_a0 {
@@ -3485,14 +3487,13 @@ void func_8002DE30(Object *obj) {
     blockId = obj->segmentID;
     foundResult = FALSE;
     if (blockId != -1) {
-        var_t3 =
-            func_800314DC(&gCurrentLevelModel->segmentsBoundingBoxes[blockId], obj->trans.x_position - 16.0f,
-                          obj->trans.z_position - 16.0f, obj->trans.x_position + 16.0f, obj->trans.z_position + 16.0f);
+        var_t3 = compute_grid_overlap_mask(&gCurrentLevelModel->segmentsBoundingBoxes[blockId],
+                                           obj->trans.x_position - 16.0f, obj->trans.z_position - 16.0f,
+                                           obj->trans.x_position + 16.0f, obj->trans.z_position + 16.0f);
         block = &gCurrentLevelModel->segments[blockId];
         for (i = 0; i < block->numberOfBatches && !foundResult; i++) {
             if (!(block->batches[i].flags & (RENDER_HIDDEN | RENDER_DECAL | RENDER_WATER | RENDER_NO_SHADOW))) {
-                batchFlags = (block->batches[i].flags >> 19) &
-                             (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT);
+                batchFlags = (block->batches[i].flags >> 19) & 7;
                 vertices = &block->vertices[block->batches[i].verticesOffset];
                 for (j = block->batches[i].facesOffset; j < block->batches[i + 1].facesOffset && !foundResult; j++) {
                     blockId = block->unk10[j] & var_t3;
@@ -3615,11 +3616,11 @@ void shadow_generate(Object *obj, s32 isWater) {
             if (isWater && (gCurrentLevelModel->segments[inSegs[i]].hasWaves != 0) && (gWaveBlockCount != 0)) {
                 func_8002EEEC(inSegs[i]);
             } else {
-                test = func_800314DC(&gCurrentLevelModel->segmentsBoundingBoxes[inSegs[i]],
-                                     (obj->trans.x_position - gNewShadowWidth),  // x1
-                                     (obj->trans.z_position - gNewShadowLength), // z1
-                                     (obj->trans.x_position + gNewShadowWidth),  // x2
-                                     (obj->trans.z_position + gNewShadowLength)  // z2
+                test = compute_grid_overlap_mask(&gCurrentLevelModel->segmentsBoundingBoxes[inSegs[i]],
+                                                 (obj->trans.x_position - gNewShadowWidth),  // x1
+                                                 (obj->trans.z_position - gNewShadowLength), // z1
+                                                 (obj->trans.x_position + gNewShadowWidth),  // x2
+                                                 (obj->trans.z_position + gNewShadowLength)  // z2
                 );
                 func_8002E904(&gCurrentLevelModel->segments[inSegs[i]], test, isWater);
             }
@@ -3695,9 +3696,9 @@ void func_8002E904(LevelModelSegment *arg0, s32 arg1, s32 arg2) {
                             // @note while the cast to Vec4f is incorrect, func_8002FD74 x uses unk0 and z which
                             // are both floats so this is fine as the size is the same
                             if (func_8002FD74(spD0[2].x, spD0[2].y, spD0[0].x, spD0[0].y, 3, (Vec4f *) sp100) != 0) {
-                                temp_t6 = arg0->unk14[curFacesOffset].triangleIndex * 4;
-                                D_8011D0BC = (unk8011C8B8 *) &(arg0->unk18)[temp_t6];
-                                if (arg0->unk18[temp_t6 + 1] != 0) {
+                                temp_t6 = arg0->collisionFacets[curFacesOffset].basePlaneIndex * 4;
+                                D_8011D0BC = (unk8011C8B8 *) &(arg0->collisionPlanes)[temp_t6];
+                                if (arg0->collisionPlanes[temp_t6 + 1] != 0) {
                                     if (D_8011D0F0 > 0.0f) {
                                         func_800304C8(sp100);
                                     }
@@ -4171,54 +4172,51 @@ s32 func_8002FF6C(s32 arg0, unk8011C8B8 *arg1, s32 arg2, Vec2f *arg3) {
     return var_s2;
 }
 
-// https://decomp.me/scratch/QF6FF
-#ifdef NON_EQUIVALENT
-void func_800304C8(unk8011C8B8 *arg0) {
-    s16 found1;
-    s16 found2;
-    s16 found3;
-    f32 temp;
-    f32 arg02x;
-    f32 arg00z;
-    f32 compare;
+void func_800304C8(unk8011C8B8 arg0[3]) {
+    f32 diff;
+    f32 shadowX;
+    f32 shadowZ;
+    f32 var_f6;
+    f32 var_f8;
+    f32 var_f10;
+    s32 found1;
+    s32 found2;
+    s32 found3;
 
     found1 = FALSE;
     found2 = FALSE;
     found3 = FALSE;
-    temp = arg0[0].z;
-    arg00z = temp;
-    compare = 0.0f;
-    temp = (gNewShadowObj->trans.z_position - arg0[1].z);
 
-    if ((((gNewShadowObj->trans.x_position - arg0[0].x) * (arg0[1].z - arg00z)) -
-         ((arg0[1].x - arg0[0].x) * (((0, gNewShadowObj->trans.z_position)) - arg00z))) >= compare) {
+    shadowX = gNewShadowObj->trans.x_position;
+    shadowZ = gNewShadowObj->trans.z_position;
+
+    diff = (shadowX - arg0[0].x) * (arg0[1].z - arg0[0].z) - (arg0[1].x - arg0[0].x) * (shadowZ - arg0[0].z);
+    if (diff >= 0.0f) {
         found1 = TRUE;
     }
-    if ((((gNewShadowObj->trans.x_position - arg0[1].x) * (arg0[2].z - arg0[1].z)) -
-         (temp * (arg0[2].x - arg0[1].x))) >= compare) {
+
+    diff = (shadowX - arg0[1].x) * (arg0[2].z - arg0[1].z) - (arg0[2].x - arg0[1].x) * (shadowZ - arg0[1].z);
+    if (diff >= 0.0f) {
         found2 = TRUE;
     }
-    arg02x = arg0[2].x;
-    if (found1 == found2) {
-        f32 zPosDiff = (arg00z - arg0[2].z);
-        if ((((gNewShadowObj->trans.x_position - arg02x) * zPosDiff) - ((arg0[0].x - arg02x) * (arg02x - arg0[2].z))) >=
-            compare) {
-            found3 = TRUE;
-        }
-        if (found2 == found3) {
-            f32 test = (-(((D_8011D0BC->x * gNewShadowObj->trans.x_position) +
-                           (D_8011D0BC->z * gNewShadowObj->trans.z_position)) +
-                          D_8011D0BC->unkC_union.w)) /
-                       D_8011D0BC->y;
-            if (D_8011D0D0 < test) {
-                D_8011D0D0 = test;
-            }
-        }
+
+    if (found1 != found2) {
+        return;
+    }
+
+    diff = (shadowX - arg0[2].x) * (arg0[0].z - arg0[2].z) - (arg0[0].x - arg0[2].x) * (shadowZ - arg0[2].z);
+    if (diff >= 0.0f) {
+        found3 = TRUE;
+    }
+    if (found2 != found3) {
+        return;
+    }
+
+    diff = -(D_8011D0BC->x * shadowX + D_8011D0BC->z * shadowZ + D_8011D0BC->unkC_union.w) / D_8011D0BC->y;
+    if (D_8011D0D0 < diff) {
+        D_8011D0D0 = diff;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_800304C8.s")
-#endif
 
 /**
  * Instantly update current fog properties.
