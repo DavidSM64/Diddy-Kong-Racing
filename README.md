@@ -109,7 +109,7 @@ To make progress in Adventure 2, a function must be properly named (must not sta
 For example:
 ```c
 /**
- * Returns 1 if Drumstick is avaliable to use, or 0 if not.
+ * Returns 1 if Drumstick is available to use, or 0 if not.
  */
 s32 is_drumstick_unlocked(void) {
     return gActiveMagicCodes & 2;

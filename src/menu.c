@@ -14853,14 +14853,14 @@ s32 is_in_two_player_adventure(void) {
 }
 
 /**
- * Returns 1 if T.T. is avaliable to use, or 0 if not.
+ * Returns 1 if T.T. is available to use, or 0 if not.
  */
 s32 is_tt_unlocked(void) {
     return gActiveMagicCodes & CHEAT_CONTROL_TT;
 }
 
 /**
- * Returns 1 if Drumstick is avaliable to use, or 0 if not.
+ * Returns 1 if Drumstick is available to use, or 0 if not.
  */
 s32 is_drumstick_unlocked(void) {
     return gActiveMagicCodes & CHEAT_CONTROL_DRUMSTICK;
