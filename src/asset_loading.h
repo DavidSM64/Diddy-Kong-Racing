@@ -2,8 +2,6 @@
 #define _ASSET_LOADING_H_
 
 #include "types.h"
-#include "gzip.h"
-#include "memory.h"
 
 void init_PI_mesg_queue(void);
 u32 *load_asset_section_from_rom(u32 assetIndex);

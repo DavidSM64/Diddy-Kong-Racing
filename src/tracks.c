@@ -15,12 +15,11 @@
 #include "game_ui.h"
 #include "weather.h"
 #include "particles.h"
-#include "objects.h"
 #include "math_util.h"
-#include "printf.h"
 #include "collision.h"
 #include "PRinternal/viint.h"
 #include "common.h"
+#include "gzip.h"
 
 // Maximum size for a level model is 522.5 KiB
 #define LEVEL_MODEL_MAX_SIZE 0x82A00

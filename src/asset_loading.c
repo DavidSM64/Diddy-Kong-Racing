@@ -3,6 +3,8 @@
 #include "common.h"
 #include "macros.h"
 #include "ultra64.h"
+#include "gzip.h"
+#include "memory.h"
 
 /************ .bss ************/
 
