@@ -11,6 +11,8 @@
 #include "objects.h"
 #include "PRinternal/viint.h"
 #include "common.h"
+#include "video.h"
+#include "asset_loading.h"
 
 #define WEATHER_OVERRIDE_COUNT 16
 

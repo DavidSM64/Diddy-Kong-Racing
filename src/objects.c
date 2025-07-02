@@ -32,6 +32,8 @@
 #include "weather.h"
 #include "PRinternal/piint.h"
 #include "gzip.h"
+#include "video.h"
+#include "thread3_main.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800

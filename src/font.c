@@ -3,6 +3,8 @@
 #include "textures_sprites.h"
 #include "camera.h"
 #include "common.h"
+#include "video.h"
+#include "asset_loading.h"
 
 /************ .data ************/
 

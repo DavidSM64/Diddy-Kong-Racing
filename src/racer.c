@@ -27,6 +27,8 @@
 #include "particles.h"
 #include "PRinternal/viint.h"
 #include "common.h"
+#include "asset_loading.h"
+#include "thread3_main.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 

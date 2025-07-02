@@ -2,6 +2,8 @@
 #include "objects.h"
 #include "math_util.h"
 #include "tracks.h"
+#include "textures_sprites.h"
+#include "asset_loading.h"
 
 /************ .rodata ************/
 

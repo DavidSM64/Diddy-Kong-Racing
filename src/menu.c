@@ -30,6 +30,8 @@
 #include "math_util.h"
 #include "PRinternal/viint.h"
 #include "save_layout.h"
+#include "asset_loading.h"
+#include "thread3_main.h"
 
 /**
  * @file Contains all the code used for every menu in the game.

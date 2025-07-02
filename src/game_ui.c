@@ -20,6 +20,8 @@
 #include "audio_spatial.h"
 #include "joypad.h"
 #include "PRinternal/viint.h"
+#include "asset_loading.h"
+#include "thread3_main.h"
 
 /************ .data ************/
 

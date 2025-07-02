@@ -20,6 +20,9 @@
 #include "PRinternal/viint.h"
 #include "common.h"
 #include "gzip.h"
+#include "asset_loading.h"
+#include "video.h"
+#include "thread3_main.h"
 
 // Maximum size for a level model is 522.5 KiB
 #define LEVEL_MODEL_MAX_SIZE 0x82A00

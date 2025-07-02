@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "set_rsp_segment.h"
 #include "racer.h"
+#include "textures_sprites.h"
 
 /************ .data ************/
 
