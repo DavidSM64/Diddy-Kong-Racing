@@ -7,6 +7,7 @@
 #include "object_functions.h"
 #include "particles.h"
 #include "audio.h"
+#include "camera.h"
 
 /************ .data ************/
 

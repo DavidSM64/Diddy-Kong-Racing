@@ -10,6 +10,7 @@
 #include "PRinternal/piint.h"
 #include "PRinternal/viint.h"
 #include "textures_sprites.h"
+#include "menu.h"
 
 #define CAMERA_MODEL_STACK_SIZE 5
 

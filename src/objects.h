@@ -4,8 +4,8 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "object_functions.h"
-#include "camera.h"
 #include "particles.h"
+#include "save_data.h"
 
 #define NEW_OBJECT_ENTRY(entryVar, entryId, entrySize, xPos, yPos, zPos) \
     {                                                                    \

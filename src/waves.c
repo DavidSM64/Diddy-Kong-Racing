@@ -10,6 +10,7 @@
 #include "PRinternal/viint.h"
 #include "racer.h"
 #include "printf.h"
+#include "camera.h"
 
 /************ .data ************/
 

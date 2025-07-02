@@ -24,6 +24,7 @@
 #include "video.h"
 #include "thread3_main.h"
 #include "fade_transition.h"
+#include "menu.h"
 
 // Maximum size for a level model is 522.5 KiB
 #define LEVEL_MODEL_MAX_SIZE 0x82A00

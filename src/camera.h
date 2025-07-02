@@ -4,7 +4,6 @@
 #include "types.h"
 #include "structs.h"
 #include "f3ddkr.h"
-#include "menu.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240

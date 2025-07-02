@@ -8,6 +8,7 @@
 #include "particles.h"
 #include "printf.h"
 #include "audio.h"
+#include "camera.h"
 
 /************ .data ************/
 

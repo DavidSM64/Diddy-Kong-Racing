@@ -9,6 +9,7 @@
 #include "asset_loading.h"
 #include "thread3_main.h"
 #include "memory.h"
+#include "camera.h"
 
 /************ .data ************/
 

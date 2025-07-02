@@ -9,6 +9,7 @@
 #include "racer.h"
 #include "particles.h"
 #include "audio.h"
+#include "camera.h"
 
 /************ .data ************/
 
