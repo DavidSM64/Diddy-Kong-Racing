@@ -1,11 +1,8 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
-#include "types.h"
 #include "structs.h"
 #include "PR/gbi.h"
-#include "audio.h"
-#include "fade_transition.h"
 #include "font.h"
 #include "save_data.h"
 

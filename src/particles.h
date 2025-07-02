@@ -1,9 +1,7 @@
 #ifndef _PARTICLES_H_
 #define _PARTICLES_H_
 
-#include "types.h"
 #include "structs.h"
-#include <ultra64.h>
 
 enum ParticleKind {
     PARTICLE_KIND_NONE = 0,

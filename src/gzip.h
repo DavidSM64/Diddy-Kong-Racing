@@ -1,9 +1,7 @@
 #ifndef _GZIP_H_
 #define _GZIP_H_
 
-#include "memory.h"
 #include "types.h"
-#include "macros.h"
 
 typedef struct huft {
   u8 e;                /* number of extra bits or operation */

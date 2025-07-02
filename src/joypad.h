@@ -2,8 +2,6 @@
 #define _JOYPAD_H_
 
 #include "types.h"
-#include "macros.h"
-#include "structs.h"
 #include <ultra64.h>
 
 #define CONTROLLER_MISSING -1

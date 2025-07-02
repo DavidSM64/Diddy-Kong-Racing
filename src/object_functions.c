@@ -31,6 +31,7 @@
 #include "PRinternal/viint.h"
 #include "common.h"
 #include "thread3_main.h"
+#include "textures_sprites.h"
 
 /************ .data ************/
 

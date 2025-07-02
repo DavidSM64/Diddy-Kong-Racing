@@ -2,11 +2,6 @@
 #define _GAME_TEXT_H_
 
 #include "types.h"
-#include "macros.h"
-#include "f3ddkr.h"
-#include "asset_enums.h"
-#include "memory.h"
-#include "font.h"
 
 #define SET_TEXTBOX_BOUNDARY(leftVal, topVal, rightVal, bottomVal) \
     textBox.left = leftVal;                                        \

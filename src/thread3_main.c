@@ -45,6 +45,8 @@
 #include "PRinternal/viint.h"
 #include "font.h"
 #include "stacks.h"
+#include "save_layout.h"
+#include "game.h"
 
 /************ .rodata ************/
 

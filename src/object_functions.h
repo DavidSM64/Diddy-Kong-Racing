@@ -1,11 +1,9 @@
 #ifndef _OBJECT_FUNCTIONS_H_
 #define _OBJECT_FUNCTIONS_H_
 
-#include "macros.h"
 #include "types.h"
 #include "structs.h"
 #include "level_object_entries.h"
-#include "libc/math.h"
 
 #define WORLD_KEY_GRAB_CHECK_RADIUS 50
 

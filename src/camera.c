@@ -9,6 +9,7 @@
 #include "weather.h"
 #include "PRinternal/piint.h"
 #include "PRinternal/viint.h"
+#include "textures_sprites.h"
 
 #define CAMERA_MODEL_STACK_SIZE 5
 

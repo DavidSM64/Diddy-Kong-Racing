@@ -8,7 +8,7 @@
 #include "tracks.h"
 #include "math_util.h"
 #include "PRinternal/viint.h"
-
+#include "racer.h"
 #include "printf.h"
 
 /************ .data ************/

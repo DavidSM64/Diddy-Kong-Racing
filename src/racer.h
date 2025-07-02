@@ -1,7 +1,6 @@
 #ifndef _RACER_H_
 #define _RACER_H_
 
-#include "types.h"
 #include "structs.h"
 #include "level_object_entries.h"
 #include "save_data.h"

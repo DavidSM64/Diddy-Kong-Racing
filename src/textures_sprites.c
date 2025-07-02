@@ -5,6 +5,7 @@
 #include "math_util.h"
 #include "tracks.h"
 #include "game_ui.h"
+#include <ultra64.h>
 
 #define MAX_NUM_TEXTURES 700
 #define MAX_NUM_SPRITES 100

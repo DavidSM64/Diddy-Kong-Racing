@@ -1,13 +1,8 @@
 #ifndef _SAVE_DATA_H_
 #define _SAVE_DATA_H_
 
-#include "types.h"
 #include "structs.h"
-#include "save_layout.h"
 #include "PR/os_pfs.h"
-#include "PR/os_cont.h"
-#include "PR/os_libc.h"
-#include "libc/string.h"
 #include "common.h"
 
 #define GAMD 0x47414D44 // 'GAMD' ASCII - Game Data?

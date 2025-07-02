@@ -9,6 +9,7 @@
 #include "racer.h"
 #include "objects.h"
 #include "gzip.h"
+#include "libc/math.h"
 
 #define MODEL_LOADED_MAX 70
 

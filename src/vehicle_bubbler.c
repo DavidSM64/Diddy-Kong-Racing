@@ -7,6 +7,7 @@
 #include "objects.h"
 #include "particles.h"
 #include "printf.h"
+#include "audio.h"
 
 /************ .data ************/
 

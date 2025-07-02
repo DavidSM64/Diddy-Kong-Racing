@@ -4,6 +4,7 @@
 #include "tracks.h"
 #include "textures_sprites.h"
 #include "asset_loading.h"
+#include <ultra64.h>
 
 /************ .rodata ************/
 

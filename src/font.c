@@ -5,6 +5,7 @@
 #include "common.h"
 #include "video.h"
 #include "asset_loading.h"
+#include "memory.h"
 
 /************ .data ************/
 

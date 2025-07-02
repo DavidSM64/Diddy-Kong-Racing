@@ -4,7 +4,6 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
-#include "game.h"
 
 typedef enum GameMode {
     GAMEMODE_INTRO = -1,

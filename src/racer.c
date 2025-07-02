@@ -29,6 +29,8 @@
 #include "common.h"
 #include "asset_loading.h"
 #include "thread3_main.h"
+#include "textures_sprites.h"
+#include "fade_transition.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 

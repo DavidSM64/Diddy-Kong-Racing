@@ -1,10 +1,6 @@
 #ifndef _VIDEO_H_
 #define _VIDEO_H_
 
-#include "types.h"
-#include "macros.h"
-#include "memory.h"
-#include "PR/os_message.h"
 #include "PR/os_vi.h"
 #include "sched.h"
 
