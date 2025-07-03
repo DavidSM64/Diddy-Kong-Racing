@@ -235,71 +235,78 @@ UNUSED int sprintf(char *s, const char *format, ...) {
 #define isdigit(c) ((c >= '0') && (c <= '9'))
 
 /**
- * https://decomp.me/scratch/xoBfs
+ * https://decomp.me/scratch/zoSu7
  * Official name: vsprintf
  */
 #ifdef NON_EQUIVALENT
 // Returns the total number of characters written.
 int vsprintf(char *s, const char *fmt, va_list args) {
-    /* The string describing the size of groups of digits.  */
-    UNUSED char *grouping;
-
     /* Pointer into the format string.  */
-    register char *f;
+    char *f;
 
+    /* The string describing the size of groups of digits.  */
+    UNUSED char *grouping; 
+    
     /* Number of characters written.  */
-    register int done = 0;
+    int done = 0;
 
     f = fmt;
     while (*f != '\0') {
-        /* Type modifiers.  */
-        char is_short, is_long, is_long_double;
+          /* Type modifiers.  */
+          char is_short, is_long, is_long_double;
 
-#ifdef HAVE_LONGLONG
+#ifdef	HAVE_LONGLONG
         /* We use the `L' modifier for `long long int'.  */
-#define is_longlong is_long_double
+#define	is_longlong	is_long_double
 #else
-#define is_longlong 0
+#define	is_longlong	0
 #endif
-
+        
         /* Format spec modifiers.  */
         char space, showsign, left, alt;
-
+        
         /* Padding character: ' ' or '0'.  */
         char pad;
         /* Width of a field.  */
-        register int width;
+        int width;
+
         /* Precision of a field.  */
         int prec;
-
+        
         /* Decimal integer is negative.  */
         char is_neg;
-
+        
         /* Current character of the format.  */
         char fc;
-
+        
         /* Base of a number to be written.  */
         int base;
+
         /* Integral values to be written.  */
         u64 num;
         s64 signed_num;
-
+        
         /* String to be written.  */
         char *str;
+        
+        char work[BUFSIZ]; // sp17B
 
         s32 a1;
         s32 i;
         s32 unused2;
+        s32 v1;
+        s32 a0;
+        s32 digit;
 
         if (*f != '%') {
-            /*   This isn't a format spec, so write everything out until the
-                 next one.  To properly handle multibyte characters, we cannot
-                 just search for a '%'.  Since multibyte characters are hairy
-                 (and dealt with above), if we hit any byte above 127 (only
-                 those can start a multibyte character) we just punt back to
-                 that code.  */
+	        /*   This isn't a format spec, so write everything out until the
+	             next one.  To properly handle multibyte characters, we cannot
+	             just search for a '%'.  Since multibyte characters are hairy
+	             (and dealt with above), if we hit any byte above 127 (only
+	             those can start a multibyte character) we just punt back to
+	             that code.  */
             while (*f != '%' && *f != '\0') {
-                outchar(*f++);
+	            outchar (*f++);
             }
             continue;
         }
@@ -345,7 +352,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
             }
         }
         // end of while loop
-
+        
         if (left) {
             pad = ' ';
         }
@@ -381,7 +388,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     prec = -1;
                 }
                 ++f;
-            } else if (isdigit(*f)) {
+            } else if (isdigit (*f)) {
                 prec = 0;
                 while (isdigit(*f)) {
                     prec *= 10;
@@ -399,13 +406,13 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     is_short = 1;
                     break;
                 case 'l':
-#ifdef HAVE_LONGLONG
+#ifdef	HAVE_LONGLONG
                     if (is_long) {
                         /* A double `l' is equivalent to an `L'.  */
                         is_longlong = 1;
                     } else {
 #endif
-                        /* int's are long int's.  */
+                    /* int's are long int's.  */
                         is_long = 1;
                     }
                     break;
@@ -415,11 +422,11 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     break;
                 case 'Z':
                     /* int's are size_t's.  */
-#ifdef HAVE_LONGLONG
-                    // assert (sizeof(size_t) <= sizeof(unsigned long long int));
-                    // is_longlong = sizeof(size_t) > sizeof(unsigned long int);
+#ifdef	HAVE_LONGLONG
+                    //assert (sizeof(size_t) <= sizeof(unsigned long long int));
+                    //is_longlong = sizeof(size_t) > sizeof(unsigned long int);
 #endif
-                    is_long = TRUE; // sizeof(size_t) > sizeof(unsigned int);
+                    is_long = TRUE; //sizeof(size_t) > sizeof(unsigned int);
                     break;
                 case 'q':
                     is_longlong = 1;
@@ -443,9 +450,9 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 } else {
                     castarg(signed_num, int, short int);
                 }
-
+                    
                 is_neg = signed_num < 0;
-                num = is_neg ? (-signed_num) : signed_num;
+                num = is_neg ? (- signed_num) : signed_num;
                 goto number;
             case 'u':
                 /* Decimal unsigned integer.  */
@@ -470,9 +477,9 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 } else if (is_long) {
                     castarg(num, long int, unsigned long int);
                 } else if (!is_short) {
-                    castarg(num, int, unsigned int);
+	                castarg(num, int, unsigned int);
                 } else {
-                    castarg(num, int, unsigned short int);
+	                castarg(num, int, unsigned short int);
                 }
                 /* ANSI only specifies the `+' and
                    ` ' flags for signed conversions.  */
@@ -481,9 +488,8 @@ int vsprintf(char *s, const char *fmt, va_list args) {
             number:
                 /* Number of base BASE.  */
                 {
-                    char work[BUFSIZ];
-                    char *workend = &work[sizeof(work) - 1];
-                    register char *w;
+	                char *w;
+	                char *workend = &work[sizeof(work) - 1]; // spF8
 
                     if (gSprintfSpacingCode) {
                         outchar(0x84);
@@ -491,94 +497,90 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     if (prec >= 0) {
                         pad = ' ';
                     }
-                    /* Supply a default precision if none was given.  */
-                    if (prec == -1) {
-                        prec = 1;
+	                  /* Supply a default precision if none was given.  */
+	                if (prec == -1) {
+		                prec = 1;
                     }
 
-                    /* Put the number in WORK.  */
-                    w = _itoa(num, workend + 1, base, fc == 'X') - 1;
-                    width -= workend - w;
-                    prec -= workend - w;
+	                /* Put the number in WORK.  */
+	                w = _itoa(num, workend + 1, base, fc == 'X') - 1;
+                    v1 = workend - w;
+	                width -= v1;
+	                prec -= v1;
 
-                    if (alt && base == 8 && prec <= 0) {
-                        *w-- = '0';
-                        --width;
+	                if (alt && base == 8 && prec <= 0) {
+		                *w-- = '0';
+		                --width;
+		            }
+
+	                if (prec > 0) {
+		                width -= prec;
+		                while (prec-- > 0) {
+		                    *w-- = '0';
+                        }
+		            }
+
+	                if (alt && base == 16) {
+		                width -= 2;
                     }
 
-                    if (prec > 0) {
-                        width -= prec;
-                        while (prec-- > 0) {
-                            *w-- = '0';
+	                if (is_neg || showsign || space) {
+		                --width;
+                    }
+
+	                if (!left && pad == ' ') {
+		                while (width-- > 0) {
+		                    outchar(' ');
                         }
                     }
-
-                    if (alt && base == 16) {
-                        width -= 2;
-                    }
-
-                    if (is_neg || showsign || space) {
-                        --width;
-                    }
-
-                    if (!left && pad == ' ') {
-                        while (width-- > 0) {
-                            outchar(' ');
-                        }
-                    }
-
-                    if (is_neg) {
-                        outchar('-');
+                    
+	                if (is_neg) {
+		                outchar('-');
                     } else if (showsign) {
-                        outchar('+');
+		                outchar('+');
                     } else if (space) {
-                        outchar(' ');
+		                outchar(' ');
                     }
 
-                    if (alt && base == 16) {
-                        outchar('0');
-                        outchar(fc);
-                    }
+	                if (alt && base == 16) {
+		                outchar ('0');
+		                outchar (fc);
+		            }
 
-                    if (!left && pad == '0') {
-                        while (width-- > 0) {
-                            outchar('0');
+	                if (!left && pad == '0') {
+		                while (width-- > 0) {
+		                    outchar('0');
                         }
                     }
 
-                    /* Write the number.  */
-                    while (++w <= workend) {
-                        outchar(*w);
+	                /* Write the number.  */
+	                while (++w <= workend) {
+		                outchar(*w);
                     }
 
-                    if (left) {
-                        while (width-- > 0) {
-                            outchar(' ');
+	                if (left) {
+	                    while (width-- > 0) {
+		                    outchar(' ');
                         }
                     }
-                }
-                break;
+	            }
+	            break;
 
-            case 'e':
-            case 'E': {
-                s32 v1;
-                s32 a0;
-                s32 s4;
-
-                s32 digit;
-
-                f64 f16;
-                s32 v02;
+	        case 'e':
+	        case 'E':
+	        {
+                s32 dash; // a1 in this scope
                 s32 a05;
                 f64 f02;
+                f64 f16;
                 f64 f0;
-                // s32 i;
                 f64 spD0;
+                s32 pad2;
+                s32 s4; // spC8
 
-                v02 = FALSE;
-
+                dash = FALSE; // should probably use dash here instead
                 if (gSprintfSpacingCode) {
-                    outchar(0x84);
+                     outchar(0x84);
                 }
 
                 if (prec < 0) {
@@ -591,15 +593,15 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     nextarg(spD0, f64);
                 }
 
-                if (*((s8 *) &spD0) < 0) {
-                    v02 = TRUE;
+                if (*((s8*)&spD0) < 0) {
+                    dash = TRUE;
                     spD0 = -spD0;
                 }
 
                 if (spD0 == 0.0) {
                     s4 = 0;
                     f16 = 1.0;
-                } else if (spD0 < 1.0) {
+                } else if (spD0 < 1.0){
                     s4 = 0;
                     f16 = 1.0;
                     while (spD0 < f16) {
@@ -612,7 +614,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     s4 = 0;
                     f16 = 1.0;
                     f0 = 10.0;
-
+                    
                     while (f0 <= spD0) {
                         f16 = f0;
                         f0 *= 10.0;
@@ -621,7 +623,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 }
 
                 f02 = f16 * 0.5;
-
+                
                 for (i = prec; i > 0; i--) {
                     f02 /= 10.0;
                 }
@@ -632,8 +634,10 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     s4++;
                 }
 
-                a05 = (v02 || showsign || space);
-                a1 = a05 + prec + (prec > 0 || alt) + (s4 >= 100) + 5;
+                // @fake
+                digit = dash != 0;
+                a1 = (dash || showsign || space) + prec + (prec > 0 || alt) + (s4 >= 100);
+                a1 += 5;
 
                 if (!left && pad == ' ') {
                     while (width-- > a1) {
@@ -641,7 +645,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     }
                 }
 
-                if (v02) {
+                if (dash) {
                     outchar('-');
                 } else if (showsign) {
                     outchar('+');
@@ -667,9 +671,9 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     outchar('.');
                 }
 
-                if (prec) {
+                if (prec > 0) {
                     do {
-                        digit = '0';
+    		            digit = '0';
                         while (spD0 >= f16) {
                             spD0 -= f16;
                             digit++;
@@ -683,13 +687,13 @@ int vsprintf(char *s, const char *fmt, va_list args) {
 
                 if (s4 < 0) {
                     s4 = -s4;
+                    v1 = '0' + ((s4 / 10) % 10);
+                    a0 = '0' + (s4 % 10);
                     outchar('-');
-                    v1 = '0' + ((s4 / 10) % 10);
-                    a0 = '0' + (s4 % 10);
                 } else {
-                    outchar('+');
                     v1 = '0' + ((s4 / 10) % 10);
                     a0 = '0' + (s4 % 10);
+                    outchar('+');
                 }
 
                 if (s4 >= 100) {
@@ -698,7 +702,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
 
                 outchar(v1);
                 outchar(a0);
-
+                
                 if (left) {
                     while (width-- > a1) {
                         outchar(' ');
@@ -709,28 +713,29 @@ int vsprintf(char *s, const char *fmt, va_list args) {
             case 'G':
             case 'g':
                 break;
-            case 'f': {
+            case 'f':
+            {
                 f64 f12 = 1.0;
-                f64 f14 = 10.0;
+                f64 f14;
                 f64 f2;
-                // s32 i;
-                s32 digit;
-                s32 vara1;
+                s32 pad_spE4;
+                s32 dash;
                 s32 a05;
                 s32 v010;
                 f64 spD0;
 
-                vara1 = FALSE;
-
+                dash = FALSE;
+                f14 = 10.0;
+                
                 if (gSprintfSpacingCode) {
-                    outchar(0x84);
+                     outchar(0x84);
                 }
                 if (prec < 0) {
                     prec = 6;
                 }
-
-                for (i = 0; i < prec; i++) {
-                    f12 /= 10.0;
+                
+                for (v010 = 0; v010 < prec; v010++) {
+		            f12 /= 10.0;
                 }
 
                 if (is_short) {
@@ -740,27 +745,31 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 }
 
                 if (spD0 < 0.0) {
-                    vara1 = TRUE;
+                    dash = TRUE;
                     spD0 = -spD0;
                 }
 
                 spD0 += f12 * 0.5;
 
-                for (f2 = 1.0, v010 = 1; spD0 >= f2; v010++) {
-                    f2 = f14;
-                    f14 *= 10.0;
+                v010 = 1;
+                f2 = 1.0;
+                if (spD0 >= 10.0) {
+                    do {
+                        f2 = f14;
+                        f14 *= 10.0;
+                        v010++;
+                    } while (spD0 >= f14);
                 }
 
-                a05 = (vara1 || showsign || space);
-                a1 = (prec > 0 || alt) + a05 + v010 + prec;
-
+                a1 = (dash || showsign || space) + (prec > 0 || alt) + v010 + prec;
+                
                 if (!left && pad == ' ') {
                     while (width-- > a1) {
                         outchar(pad);
                     }
                 }
-
-                if (vara1) {
+                
+                if (dash) {
                     outchar('-');
                 } else if (showsign) {
                     outchar('+');
@@ -773,7 +782,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                         outchar(pad);
                     }
                 }
-
+                
                 do {
                     digit = '0';
                     while (spD0 >= f2) {
@@ -790,7 +799,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
 
                 if (prec > 0) {
                     do {
-                        digit = '0';
+    		            digit = '0';
                         while (spD0 >= f2) {
                             spD0 -= f2;
                             digit++;
@@ -807,125 +816,127 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 }
                 break;
             }
-            case 'c':
-                /* Character.  */
-                nextarg(num, int);
-                if (!left) {
-                    while (--width > 0) {
-                        outchar(pad);
+	        case 'c':
+	            /* Character.  */
+	            nextarg(num, int);
+	            if (!left) {
+	                while (--width > 0) {
+	                    outchar(pad);
                     }
                 }
-                outchar((unsigned char) num);
-                if (left) {
-                    while (--width > 0) {
-                        outchar(' ');
+	            outchar((unsigned char) num);
+	            if (left) {
+	                while (--width > 0) {
+	                    outchar(' ');
                     }
                 }
-                break;
+	            break;
 
-            case 's': {
-                static char null[] = "(null)";
-                s32 len;
+	        case 's':
+	        {
+	            static char null[] = "(null)";
+	            s32 len;
 
-                nextarg(str, char *);
-
-                if (str == NULL) {
-                    /* Write "(null)" if there's space.  */
-                    if (prec == -1 || prec >= (int) sizeof(null) - 1) {
-                        str = null;
-                        len = sizeof(null) - 1;
-                    } else {
-                        str = "";
-                        len = 0;
-                    }
+	            nextarg(str, char *);
+                    
+	            if (str == NULL) {
+		            /* Write "(null)" if there's space.  */
+		            if (prec == -1 || prec >= (int) sizeof(null) - 1) {
+		                str = null;
+		                a0 = sizeof(null) - 1;
+		            } else {
+		                str = "";
+		                a0 = 0;
+		            }
                 } else {
-                    len = strlen(str);
+		            a0 = strlen(str);
                 }
 
-                if (prec != -1 && prec < len) {
-                    len = prec;
+	            if (prec != -1 && prec < a0) {
+		            a0 = prec;
                 }
-                width -= len;
+	            width -= a0;
 
-                if (!left) {
-                    while (width-- > 0) {
+	            if (!left) {
+		            while (width-- > 0) {
                         outchar(' ');
                     }
                 }
-                while (len-- > 0) {
+                while (a0-- > 0) {
                     outchar(*str++);
                 }
-
-                if (left) {
-                    while (width-- > 0) {
+                    
+	            if (left) {
+		            while (width-- > 0) {
                         outchar(' ');
                     }
                 }
-            } break;
+	        }
+	        break;
 
-            case 'p':
-                /* Generic pointer.  */
-                {
-                    PTR ptr;
-                    nextarg(ptr, PTR);
-                    if (ptr != NULL) {
-                        /* If the pointer is not NULL, write it as a %#x spec.  */
-                        base = 16;
-                        fc = 'x';
-                        alt = 1;
-                        num = (u64) (unsigned long int) ptr;
-                        is_neg = 0;
-                        goto number;
-                    } else {
-                        /* Write "(nil)" for a nil pointer.  */
-                        static char nil[] = "(nil)";
-                        register char *p;
-
-                        width -= sizeof(nil) - 1;
-                        if (!left) {
-                            while (width-- > 0) {
-                                outchar(' ');
-                            }
-                        }
-                        for (p = nil; *p != '\0';) {
-                            outchar(*p++);
-                        }
-                        if (left) {
-                            while (width-- > 0) {
-                                outchar(' ');
-                            }
+	        case 'p':
+	            /* Generic pointer.  */
+	        {
+	            PTR ptr;
+	            nextarg(ptr, PTR);
+	            if (ptr != NULL) {
+		            /* If the pointer is not NULL, write it as a %#x spec.  */
+		            base = 16;
+		            fc = 'x';
+		            alt = 1;
+		            num = (u64) (unsigned long int) ptr;
+		            is_neg = 0;
+		            goto number;
+    		    } else {
+    		        /* Write "(nil)" for a nil pointer.  */
+    		        static char nil[] = "(nil)";
+    		        register char *p;
+    
+    		        width -= sizeof (nil) - 1;
+    		        if (!left) {
+        		        while (width-- > 0) {
+        		            outchar(' ');
                         }
                     }
-                }
-                break;
+    		        for (p = nil; *p != '\0';) {
+    		            outchar(*p++);
+                    }
+    		        if (left) {
+    		            while (width-- > 0) {
+    		                outchar(' ');
+                        }
+                    }
+    		    }
+    	    }
+    	    break;
 
-            case 'n':
-                /* Answer the count of characters written.  */
-                if (is_longlong) {
-                    s64 *p;
-                    nextarg(p, s64 *);
-                    *p = done;
-                } else if (is_long) {
-                    long int *p;
-                    nextarg(p, long int *);
-                    *p = done;
+	        case 'n':
+	            /* Answer the count of characters written.  */
+	            if (is_longlong) {
+	                s64 *p;
+	                nextarg(p, s64 *);
+		            *p = done;
+	            } else if (is_long) {
+	                long int *p;
+	                nextarg(p, long int *);
+	                *p = done;
                 } else if (!is_short) {
-                    int *p;
-                    nextarg(p, int *);
-                    *p = done;
-                } else {
-                    short int *p;
-                    nextarg(p, short int *);
-                    *p = done;
-                }
-                break;
-            default:
-                /* Unrecognized format specifier.  */
-                break;
-        }
+	                int *p;
+	                nextarg(p, int *);
+	                *p = done;
+	            } else {
+	                short int *p;
+	                nextarg(p, short int *);
+		            *p = done;
+	            }
+	            break;
+	        default:
+	            /* Unrecognized format specifier.  */
+	            break;
+	    }
         if (gSprintfSpacingCode) {
             outchar(0x83);
-        }
+        } 
     }
     *s = 0;
     return done;

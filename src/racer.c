@@ -2731,10 +2731,11 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         apply_plane_tilt_anim(updateRate, obj, racer);
     }
     var_v0 = racer->playerIndex;
-    if (var_v0 == PLAYER_COMPUTER && gCurrentPlayerIndex != PLAYER_COMPUTER) {
+    if ((var_v0 == PLAYER_COMPUTER) && (gCurrentPlayerIndex != PLAYER_COMPUTER)) {
         gCurrentRacerHandlingStat = 1.4f;
     }
-    var_f20 = sqrtf((obj->x_velocity * obj->x_velocity) + (obj->z_velocity * obj->z_velocity) +
+    var_f20 = sqrtf((obj->x_velocity * obj->x_velocity) +
+                    (obj->z_velocity * obj->z_velocity) +
                     (obj->y_velocity * obj->y_velocity)) -
               2.0;
     if (racer->vehicleID >= VEHICLE_BOSSES) {
@@ -3199,7 +3200,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->y_velocity -= racer->oy3 * var_f20;
         obj->z_velocity -= racer->oz3 * var_f20;
         if (racer->trickType == 1 || racer->trickType == -1) {
-            spEC = racer->velocity * 0.0588235 * 1.5;
+            spEC = racer->velocity * 0.058823529411764705 * 1.5;
             var_f20 = coss_f(racer->x_rotation_vel) * spEC * racer->trickType;
             if (racer->x_rotation_vel > 0x4000 || racer->x_rotation_vel < -0x4000) {
                 var_f20 *= 2;
@@ -3303,8 +3304,8 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
     mtxf_from_inverse_transform((MtxF *) &sp60, &gCurrentRacerTransform);
-    mtxf_transform_point((MtxF *) &sp60, obj->x_velocity, obj->y_velocity, obj->z_velocity, &racer->lateral_velocity,
-                         &racer->unk34, &racer->velocity);
+    mtxf_transform_point((MtxF *) &sp60, obj->x_velocity, obj->y_velocity, obj->z_velocity,
+                         &racer->lateral_velocity, &racer->unk34, &racer->velocity);
     if (obj->attachPoints != NULL && obj->attachPoints->count >= 3) {
         temp_v0_obj = obj->attachPoints->obj[2];
         temp_v0_obj->trans.rotation.y_rotation = 0x4000;
@@ -8132,16 +8133,17 @@ void set_position_goal_from_path(UNUSED Object *obj, Object_Racer *racer, f32 *x
     *z = catmull_rom_interpolation(splineZ, destReached, magnitude);
 }
 
-// https://decomp.me/scratch/6WBdX
+// https://decomp.me/scratch/uUmRq
 #ifdef NON_MATCHING
 void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
-    UNUSED s32 pad[2];
+    UNUSED f32 pad;
+    UNUSED f32 pad2;
     s32 temp_v0;
     CheckpointNode *temp_v0_4;
     f32 posX[5];
     f32 posY[5];
     f32 posZ[5];
-    UNUSED s32 pad2;
+    UNUSED f32 pad3;
     f32 tempX;
     s32 counter;
     f32 tempY;
@@ -8192,78 +8194,81 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
                 racer->unk1C8 = 0;
             }
         }
-    } else {
-        if (splinePos < 0.0f) {
-            splinePos = 0.0f;
-        }
-        temp_v0_4 = find_next_checkpoint_node(racer->checkpoint, racer->unk1C8);
-        scale = temp_v0_4->scale;
-        counter = racer->checkpoint - 1;
-        if (counter < 0) {
-            counter = temp_v0 - 1;
-        }
-        temp_v0_4 = get_checkpoint_node(counter);
-        distance = temp_v0_4->scale;
-        divisor = ((scale - temp_v0_4->scale) * splinePos) + distance;
-        counter = racer->checkpoint - 2;
-        if (counter < 0) {
-            counter += temp_v0;
-        }
-        for (i = 0; (i < 5) ^ 0; i++) {
-            temp_v0_4 = find_next_checkpoint_node(counter, racer->unk1C8);
-            posX[i] = temp_v0_4->x + ((temp_v0_4->scale * temp_v0_4->rotationZFrac) * racer->unk1BA);
-            posY[i] = temp_v0_4->y + (temp_v0_4->scale * racer->unk1BC);
-            posZ[i] = temp_v0_4->z + ((temp_v0_4->scale * (-temp_v0_4->rotationXFrac)) * racer->unk1BA);
-            counter++;
-            if (counter == temp_v0) {
-                counter = 0;
-            }
-        }
-        splineIndex = FALSE;
-        if (splinePos >= 1.0) {
-            splinePos -= 1.0;
-            splineIndex = TRUE;
-        }
-        tempX = cubic_spline_interpolation(posX, splineIndex, splinePos, &diffX);
-        tempY = cubic_spline_interpolation(posY, splineIndex, splinePos, &diffY);
-        tempZ = cubic_spline_interpolation(posZ, splineIndex, splinePos, &diffZ);
-        distance = sqrtf((diffX * diffX) + (diffZ * diffZ));
-        if (distance != 0.0f) {
-            scale = 1.0f / distance;
-            diffX *= scale;
-            diffZ *= scale;
-        }
-        angle = arctan2_f(diffX, diffZ) - (racer->steerVisualRotation & 0xFFFF) - 0x8000;
-        WRAP(angle, -0x8000, 0x8000);
-        if (angle > 0x4000 || angle < -0x4000) {
-            if (racer->wrongWayCounter < 200 && racer->velocity <= -1.0) {
-                racer->wrongWayCounter += updateRate;
-            }
-        } else {
-            racer->wrongWayCounter = 0;
-        }
-        diffY = diffX;
-        diffX = diffZ;
-        diffZ = -diffY;
-        splinePos = obj->trans.x_position;
-        distance = obj->trans.z_position;
-        diffX = -(((splinePos * diffX) + (diffZ * distance) - ((tempZ * diffZ) + (diffX * tempX))) / divisor);
-        if (diffX > 5.0f) {
-            diffX = 5.0f;
-        }
-        if (diffX < -5.0f) {
-            diffX = -5.0f;
-        }
-        racer->unk1BA += (s32) diffX;
-        diffY = (obj->trans.y_position - tempY) / divisor;
-        if (diffY > 100.0f) {
-            diffY = 100.0f;
-        }
-        if (diffY < -100.0f) {
-            diffY = -100.0f;
-        }
-        racer->unk1BC += (s32) diffY;
+        return;
     }
+    if (splinePos < 0.0f) {
+        splinePos = 0.0f;
+    }
+    temp_v0_4 = find_next_checkpoint_node(racer->checkpoint, racer->unk1C8);
+    scale = temp_v0_4->scale;
+    counter = racer->checkpoint - 1;
+    if (counter < 0) {
+        counter = temp_v0 - 1;
+    }
+    temp_v0_4 = get_checkpoint_node(counter);
+    distance = temp_v0_4->scale;
+    divisor = ((scale - temp_v0_4->scale) * splinePos) + distance;
+    counter = racer->checkpoint - 2;
+    if (counter < 0) {
+        counter += temp_v0;
+    }
+    for (i = 0; (i < 5) ^ 0; i++) {
+        temp_v0_4 = find_next_checkpoint_node(counter, racer->unk1C8);
+        posX[i] = temp_v0_4->x + ((temp_v0_4->scale * temp_v0_4->rotationZFrac) * racer->unk1BA);
+        posY[i] = temp_v0_4->y + (temp_v0_4->scale * racer->unk1BC);
+        posZ[i] = temp_v0_4->z + ((temp_v0_4->scale * (-temp_v0_4->rotationXFrac)) * racer->unk1BA);
+        counter++;
+        if (counter == temp_v0) {
+            counter = 0;
+        }
+    }
+    splineIndex = FALSE;
+    if (splinePos >= 1.0) {
+        splinePos -= 1.0;
+        splineIndex = TRUE;
+    }
+    tempX = cubic_spline_interpolation(posX, splineIndex, splinePos, &diffX);
+    tempY = cubic_spline_interpolation(posY, splineIndex, splinePos, &diffY);
+    tempZ = cubic_spline_interpolation(posZ, splineIndex, splinePos, &diffZ);
+    distance = sqrtf((diffX * diffX) + (diffZ * diffZ));
+    if (distance != 0.0f) {
+        scale = 1.0f / distance;
+        diffX *= scale;
+        diffZ *= scale;
+    }
+    angle = arctan2_f(diffX, diffZ) - (racer->steerVisualRotation & 0xFFFF) - 0x8000;
+    WRAP(angle, -0x8000, 0x8000);
+    if (angle > 0x4000 || angle < -0x4000) {
+        if (racer->wrongWayCounter < 200 && racer->velocity <= -1.0) {
+            racer->wrongWayCounter += updateRate;
+        }
+    } else {
+        racer->wrongWayCounter = 0;
+    }
+    diffY = diffX;
+    diffX = diffZ;
+    diffZ = -diffY;
+
+    splinePos = obj->trans.x_position;
+    distance = obj->trans.z_position;
+    pad = ((splinePos * diffX) + (diffZ * distance));
+    pad2 = -((tempZ * diffZ) + (diffX * tempX));
+    diffX = -((pad + pad2) / divisor);
+    if (diffX > 5.0f) {
+        diffX = 5.0f;
+    }
+    if (diffX < -5.0f) {
+        diffX = -5.0f;
+    }
+    racer->unk1BA += (s32) diffX;
+    diffY = (obj->trans.y_position - tempY) / divisor;
+    if (diffY > 100.0f) {
+        diffY = 100.0f;
+    }
+    if (diffY < -100.0f) {
+        diffY = -100.0f;
+    }
+    racer->unk1BC += (s32) diffY;
 }
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80059208.s")
