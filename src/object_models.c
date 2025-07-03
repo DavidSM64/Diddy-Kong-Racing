@@ -383,27 +383,26 @@ void free_model_data(ObjectModel *mdl) {
     mempool_free(mdl);
 }
 
-// https://decomp.me/scratch/VJ34p
-#ifdef NON_EQUIVALENT
 void func_8006017C(ObjectModel *arg0) {
-    s32 facesOffset;     // v1
-    s32 verticesOffset;  // s5
-    s32 nextFacesOffset; // spF4
+    s32 facesOffset;
+    s32 verticesOffset;
+    s32 nextFacesOffset;
     s32 s4;
-    s32 i; // spEC
-    s32 j; // s6
+    s32 i;
+    s32 j;
     Vertex *v;
     s32 v1, v2;
-    f32 x5, y5, z5; // f20, f24, f26
-    f32 x1, y1, z1; // spCC, spC8, spC4
-    f32 x2, y2, z2; // f14, f16, f18
-    f32 x3, y3, z3; // f22, spB0, f0
-    f32 nx, ny, nz; // spA8, spA4, spA0
+    f32 x5, y5, z5;
+    f32 x1, y1, z1;
+    f32 x2, y2, z2;
+    f32 x3, y3, z3;
+    f32 nx, ny, nz;
     f32 mag;
     s32 s3;
     s32 k;
     s32 l;
-    s32 temp1, temp2, temp3;
+    s32 index;
+    s32 temp1, temp2;
 
     if (arg0->unkC != NULL) {
         return;
@@ -413,19 +412,19 @@ void func_8006017C(ObjectModel *arg0) {
     for (i = 0; i < arg0->numberOfBatches; i++) {
         facesOffset = arg0->batches[i].facesOffset;
         nextFacesOffset = arg0->batches[i + 1].facesOffset;
-        if (arg0->batches[i].flags & RENDER_NO_COLLISION) {
+        if (arg0->batches[i].flags & 0x200) {
             continue;
         }
         s4 += nextFacesOffset - facesOffset;
     }
 
-    arg0->unkC = (ObjectModel_C *) mempool_alloc(s4 * sizeof(ObjectModel_C), COLOUR_TAG_RED);
-    if (v) {} // FAKE
+    arg0->unkC = (CollisionFacetPlanes *) mempool_alloc(s4 * sizeof(CollisionFacetPlanes), COLOUR_TAG_RED);
+
     if (arg0->unkC == NULL) {
         return;
     }
 
-    arg0->unk10 = (ObjectModel_10 *) mempool_alloc(s4 * 64, COLOUR_TAG_RED);
+    arg0->unk10 = (f32 *) mempool_alloc(s4 * 64, COLOUR_TAG_RED);
     if (arg0->unk10 == NULL) {
         mempool_free(arg0->unkC);
         arg0->unkC = NULL;
@@ -437,7 +436,7 @@ void func_8006017C(ObjectModel *arg0) {
         facesOffset = arg0->batches[i].facesOffset;
         verticesOffset = arg0->batches[i].verticesOffset;
         nextFacesOffset = arg0->batches[i + 1].facesOffset;
-        if (arg0->batches[i].flags & RENDER_NO_COLLISION) {
+        if (arg0->batches[i].flags & 0x200) {
             nextFacesOffset = facesOffset - 1;
         }
 
@@ -468,15 +467,16 @@ void func_8006017C(ObjectModel *arg0) {
                 nz /= mag;
             }
 
-            arg0->unk10[s4].A = nx;
-            arg0->unk10[s4].B = ny;
-            arg0->unk10[s4].C = nz;
-            arg0->unk10[s4].D = -(x1 * nx + y1 * ny + z1 * nz);
+            temp1 = s4 << 2;
+            *(arg0->unk10 + temp1 + 0) = nx;
+            *(arg0->unk10 + temp1 + 1) = ny;
+            *(arg0->unk10 + temp1 + 2) = nz;
+            *(arg0->unk10 + temp1 + 3) = -(x1 * nx + y1 * ny + z1 * nz);
 
-            arg0->unkC[s4].unk0[0] = s4;
-            arg0->unkC[s4].unk0[1] = s4;
-            arg0->unkC[s4].unk0[2] = s4;
-            arg0->unkC[s4].unk0[3] = s4;
+            arg0->unkC[s4].basePlaneIndex = s4;
+            arg0->unkC[s4].edgeBisectorPlane[0] = s4;
+            arg0->unkC[s4].edgeBisectorPlane[1] = s4;
+            arg0->unkC[s4].edgeBisectorPlane[2] = s4;
 
             s4++;
         }
@@ -491,14 +491,15 @@ void func_8006017C(ObjectModel *arg0) {
         facesOffset = arg0->batches[i].facesOffset;
         verticesOffset = arg0->batches[i].verticesOffset;
         nextFacesOffset = arg0->batches[i + 1].facesOffset;
-        if (arg0->batches[i].flags & RENDER_NO_COLLISION) {
+        if (arg0->batches[i].flags & 0x200) {
             nextFacesOffset = facesOffset - 1;
         }
 
-        for (j = facesOffset; j < nextFacesOffset; j++) {
-            nx = arg0->unk10[arg0->unkC[s3].unk0[0]].A;
-            ny = arg0->unk10[arg0->unkC[s3].unk0[0]].B;
-            nz = arg0->unk10[arg0->unkC[s3].unk0[0]].C;
+        for (j = facesOffset; j < nextFacesOffset; j++, s3++) {
+            index = arg0->unkC[s3].basePlaneIndex << 2;
+            nx = *(arg0->unk10 + index + 0);
+            ny = *(arg0->unk10 + index + 1);
+            nz = *(arg0->unk10 + index + 2);
 
             for (k = 0; k < 3; k++) {
                 l = k + 1;
@@ -506,19 +507,20 @@ void func_8006017C(ObjectModel *arg0) {
                     l = 0;
                 }
 
-                v1 = arg0->triangles[j].verticesArray[1 + k];
-                v2 = arg0->triangles[j].verticesArray[1 + l];
+                v1 = arg0->triangles[j].verticesArray[1 + k] + verticesOffset;
+                v2 = arg0->triangles[j].verticesArray[1 + l] + verticesOffset;
 
-                x5 = nx + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].A;
-                y5 = ny + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].B;
-                z5 = nz + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].C;
+                index = arg0->unkC[s3].edgeBisectorPlane[k] << 2;
+                x5 = nx + *(arg0->unk10 + index + 0);
+                y5 = ny + *(arg0->unk10 + index + 1);
+                z5 = nz + *(arg0->unk10 + index + 2);
 
-                v = &arg0->vertices[v1 + verticesOffset];
+                v = &arg0->vertices[v1];
                 x1 = v->x;
                 y1 = v->y;
                 z1 = v->z;
 
-                v = &arg0->vertices[v2 + verticesOffset];
+                v = &arg0->vertices[v2];
                 x2 = v->x;
                 y2 = v->y;
                 z2 = v->z;
@@ -538,21 +540,19 @@ void func_8006017C(ObjectModel *arg0) {
                     z5 /= mag;
                 }
 
-                arg0->unkC[s3].unk0[k + 1] = s4;
-                arg0->unk10[s4].A = x5;
-                arg0->unk10[s4].B = y5;
-                arg0->unk10[s4].C = z5;
-                arg0->unk10[s4].D = -(x1 * x5 + y1 * y5 + z1 * z5);
+                arg0->unkC[s3].edgeBisectorPlane[k] = s4;
+
+                temp2 = s4 << 2;
+                *(arg0->unk10 + temp2 + 0) = x5;
+                *(arg0->unk10 + temp2 + 1) = y5;
+                *(arg0->unk10 + temp2 + 2) = z5;
+                *(arg0->unk10 + temp2 + 3) = -(x1 * x5 + y1 * y5 + z1 * z5);
+
                 s4++;
             }
-
-            s3++;
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_8006017C.s")
-#endif
 
 void func_80060910(ObjectModel *mdl) {
     s32 count;
@@ -579,7 +579,7 @@ void func_80060910(ObjectModel *mdl) {
         }
 
         for (triIndex = startTri; triIndex < endTri; triIndex++, count++) {
-            mdl->unkC[count].unk0[0] = count;
+            mdl->unkC[count].basePlaneIndex = count;
 
             for (vertIndex = 0; vertIndex < 3; vertIndex++) {
                 nextVertIndex = vertIndex + 1;
@@ -592,9 +592,9 @@ void func_80060910(ObjectModel *mdl) {
 
                 result = func_80060AC8(mdl, triIndex, vertIndex0, vertIndex1, &sp5C, &sp60);
                 if (result != -1) {
-                    mdl->unkC[count].unk0[1 + vertIndex] = result;
+                    mdl->unkC[count].edgeBisectorPlane[vertIndex] = result;
                 } else {
-                    mdl->unkC[count].unk0[1 + vertIndex] = count;
+                    mdl->unkC[count].edgeBisectorPlane[vertIndex] = count;
                 }
             }
         }
