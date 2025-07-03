@@ -2557,7 +2557,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
         var_s1 = 0;
         XInInt = xIn;
         ZInInt = zIn;
-    
+
         temp_a2 = ((currentBoundingBox->x2 - currentBoundingBox->x1) >> 3) + 1;
         var_t0 = temp_a2 + currentBoundingBox->x1;
         var_t1 = currentBoundingBox->x1;
@@ -2569,7 +2569,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
             var_t1 += temp_a2;
             var_a1 *= 2;
         }
-    
+
         // Same as above, but for Z
         temp_a2 = ((currentBoundingBox->z2 - currentBoundingBox->z1) >> 3) + 1;
         // @fake for s3 vs s2
@@ -2584,7 +2584,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
             var_t1 += temp_a2;
             var_a1 *= 2;
         }
-    
+
         for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
             currentBatch = &currentSegment->batches[batchNum];
             surface = gCurrentLevelModel->textures[currentBatch->textureIndex].surfaceType;
@@ -2596,26 +2596,29 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
                 (currentBatch->flags & (RENDER_HIDDEN | RENDER_NO_COLLISION))) {
                 currentFaceOffset = nextFaceOffset;
             }
-            
+
             for (faceNum = currentFaceOffset; faceNum < nextFaceOffset; faceNum++) {
                 if (var_s1 == (currentSegment->unk10[faceNum] & var_s1)) {
                     tri = &currentSegment->triangles[faceNum];
-                    
+
                     vert = &currentSegment->vertices[tri->verticesArray[1] + currentVerticesOffset];
                     vert1X = vert->x;
                     vert1Z = vert->z;
-                    
+
                     vert = &currentSegment->vertices[tri->verticesArray[2] + currentVerticesOffset];
                     vert2X = vert->x;
                     vert2Z = vert->z;
-                    
+
                     vert = &currentSegment->vertices[tri->verticesArray[3] + currentVerticesOffset];
                     vert3X = vert->x;
                     vert3Z = vert->z;
-                    
-                    temp_ra_1 = (((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0;
-                    temp_ra_2 = (((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0;
-                    temp_ra_3 = (((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0;
+
+                    temp_ra_1 =
+                        (((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0;
+                    temp_ra_2 =
+                        (((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0;
+                    temp_ra_3 =
+                        (((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0;
                     if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
                         temp = currentSegment->collisionFacets[faceNum].basePlaneIndex;
                         tempVec4f.x = currentSegment->collisionPlanes[temp * 4 + 0];
@@ -2624,7 +2627,8 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
                         tempVec4f.w = currentSegment->collisionPlanes[temp * 4 + 3];
                         if (tempVec4f.y != 0.0) {
                             D_8011D128[yOutCount].type = surface;
-                            D_8011D128[yOutCount].waveHeight = -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
+                            D_8011D128[yOutCount].waveHeight =
+                                -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
                             D_8011D128[yOutCount].rot.x = tempVec4f.x;
                             D_8011D128[yOutCount].rot.y = tempVec4f.y;
                             D_8011D128[yOutCount].rot.z = tempVec4f.z;
@@ -2647,7 +2651,8 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
         currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
         D_8011D128[yOutCount].type = SURFACE_WATER_WAVY;
         if (currentSegment->hasWaves && gWaveBlockCount != 0) {
-            D_8011D128[yOutCount].waveHeight = func_800BB2F4(levelSegmentIndex, xIn, zIn, &(yOutCount + D_8011D128)->rot);
+            D_8011D128[yOutCount].waveHeight =
+                func_800BB2F4(levelSegmentIndex, xIn, zIn, &(yOutCount + D_8011D128)->rot);
         } else {
             D_8011D128[yOutCount].waveHeight = currentSegment->unk38;
             D_8011D128[yOutCount].rot.x = 0.0f;
@@ -2661,7 +2666,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
     for (var_v0 = 0; var_v0 < yOutCount; var_v0++) {\
         wave = &D_8011D128[var_v0];\
         gTrackWaves[var_v0] = wave;\
-    }\
+    }
     // clang-format on
 
     do {

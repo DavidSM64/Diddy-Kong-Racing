@@ -5851,27 +5851,26 @@ Object *find_taj_object(void) {
     return NULL;
 }
 
-// https://decomp.me/scratch/nWMak
-#ifdef NON_EQUIVALENT
 // Handles MidiFadePoint, MidiFade, and MidiSetChannel objects?
 void func_80018CE0(Object *racerObj, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
     f32 temp_f0;
-    f32 temp_f12;
+    s32 pad_spF8;
     s32 spF4;
-    f32 temp_f14;
+    s32 pad_spF0;
     f32 temp_f22;
-    f32 racerX; // f24
-    f32 racerY; // f26
-    f32 racerZ; // f28
+    s32 pad_spE8;
+    s32 pad_spE4;
+    s32 pad_spE0;
     f32 temp_f2;
-    f32 var_f4;
-    f32 var_f8;
+    s32 pad_spD8;
+    f32 tempF2;
     s32 temp_f10;
     s32 temp_t3_2;
     s32 i; // s1
     s32 var_s2;
     f32 spC0;
     Object_MidiFadePoint *midiFadePoint; // spBC
+    f32 tempF;
     u16 temp_t4;
     s8 var_v0_2;
     u8 var_v0_u;
@@ -5907,8 +5906,8 @@ void func_80018CE0(Object *racerObj, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
                             var_s2 = 0;
                         } else {
                             spC0 -= midiFadePoint->unk0;
-                            var_f4 = 127.0f * (spC0);
-                            var_s2 = var_f4 / (midiFadePoint->unk2 - midiFadePoint->unk0);
+                            temp_f0 = (midiFadePoint->unk2 - midiFadePoint->unk0);
+                            var_s2 = (127.0f * spC0) / temp_f0;
                         }
                         for (i = 0; i < 16; i++) {
                             switch (midiFadePoint->unkC[i]) {
@@ -5933,6 +5932,7 @@ void func_80018CE0(Object *racerObj, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
                 }
             } else if (obj->behaviorId == BHV_MIDI_FADE) {
                 midiFade = obj->midi_fade;
+
                 temp_f0 =
                     (midiFade->unk8 * arg1) + (midiFade->unkC * arg2) + (midiFade->unk10 * arg3) + midiFade->unk14;
                 temp_f2 = (midiFade->unk8 * racerObj->trans.x_position) +
@@ -5946,18 +5946,20 @@ void func_80018CE0(Object *racerObj, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
                     var_v1 = 0;
                 }
                 if (var_v1 != 0) {
-                    temp_f2 = -midiFade->unk8 * arg1 - midiFade->unkC * arg2 - midiFade->unk10 * arg3 - midiFade->unk14;
-                    temp_f0 = midiFade->unk8 * (racerObj->trans.x_position - arg1) +
-                              midiFade->unkC * (racerObj->trans.y_position - arg2) +
-                              midiFade->unk10 * (racerObj->trans.z_position - arg3);
+                    temp_f0 = racerObj->trans.x_position - arg1;
+                    temp_f2 = racerObj->trans.y_position - arg2;
 
-                    temp_f22 = temp_f2 / temp_f0;
-                    if ((midiFade->unk18 <= (temp_f22 * (racerObj->trans.x_position - arg1)) + arg1) &&
-                        ((temp_f22 * (racerObj->trans.x_position - arg1)) + arg1 <= midiFade->unk24)) {
-                        if ((midiFade->unk1C <= (temp_f22 * (racerObj->trans.y_position - arg2)) + arg2) &&
-                            ((temp_f22 * (racerObj->trans.y_position - arg2)) + arg2 <= midiFade->unk28)) {
-                            if ((midiFade->unk20 <= (temp_f22 * (racerObj->trans.z_position - arg3)) + arg3) &&
-                                ((temp_f22 * (racerObj->trans.z_position - arg3)) + arg3 <= midiFade->unk2C)) {
+                    temp_f22 =
+                        (-midiFade->unk8 * arg1 - midiFade->unkC * arg2 - midiFade->unk10 * arg3 - midiFade->unk14) /
+                        (midiFade->unk8 * temp_f0 + midiFade->unkC * temp_f2 +
+                         midiFade->unk10 * (racerObj->trans.z_position - arg3));
+                    tempF = temp_f22 * temp_f0;
+                    if ((midiFade->unk18 <= tempF + arg1) && (tempF + arg1 <= midiFade->unk24)) {
+                        tempF2 = racerObj->trans.z_position - arg3;
+                        if ((midiFade->unk1C <= (temp_f22 * temp_f2) + arg2) &&
+                            ((temp_f22 * temp_f2) + arg2 <= midiFade->unk28)) {
+                            if ((midiFade->unk20 <= (temp_f22 * (tempF2)) + arg3) &&
+                                ((temp_f22 * (tempF2)) + arg3 <= midiFade->unk2C)) {
                                 midiFade->unk0 = var_v1;
                                 midiFade->unk1 = 0;
                                 midiFade->unk4 = 0;
@@ -6000,7 +6002,7 @@ void func_80018CE0(Object *racerObj, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
             D_8011AF60->unk1 = 0xFE;
         }
         for (i = 0; i < 16; i++) {
-            var_v0_2 = D_8011AF60->unk2F[i + 1];
+            var_v0_2 = D_8011AF60->unk2F[i];
             if (D_8011AF60->unk0 == -1) {
                 var_v0_2 >>= 2;
             }
@@ -6041,9 +6043,6 @@ void func_80018CE0(Object *racerObj, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
         D_8011AF60 = 0;
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80018CE0.s")
-#endif
 
 // Rocket Path
 s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,

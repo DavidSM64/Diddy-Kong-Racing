@@ -2734,8 +2734,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if ((var_v0 == PLAYER_COMPUTER) && (gCurrentPlayerIndex != PLAYER_COMPUTER)) {
         gCurrentRacerHandlingStat = 1.4f;
     }
-    var_f20 = sqrtf((obj->x_velocity * obj->x_velocity) +
-                    (obj->z_velocity * obj->z_velocity) +
+    var_f20 = sqrtf((obj->x_velocity * obj->x_velocity) + (obj->z_velocity * obj->z_velocity) +
                     (obj->y_velocity * obj->y_velocity)) -
               2.0;
     if (racer->vehicleID >= VEHICLE_BOSSES) {
@@ -3304,8 +3303,8 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
     mtxf_from_inverse_transform((MtxF *) &sp60, &gCurrentRacerTransform);
-    mtxf_transform_point((MtxF *) &sp60, obj->x_velocity, obj->y_velocity, obj->z_velocity,
-                         &racer->lateral_velocity, &racer->unk34, &racer->velocity);
+    mtxf_transform_point((MtxF *) &sp60, obj->x_velocity, obj->y_velocity, obj->z_velocity, &racer->lateral_velocity,
+                         &racer->unk34, &racer->velocity);
     if (obj->attachPoints != NULL && obj->attachPoints->count >= 3) {
         temp_v0_obj = obj->attachPoints->obj[2];
         temp_v0_obj->trans.rotation.y_rotation = 0x4000;
