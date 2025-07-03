@@ -636,23 +636,17 @@ typedef struct ObjectModel_44 {
     /* 0x04 */ s32 animLength; // Animation length is the result of 16-frame length keyframes.
 } ObjectModel_44;
 
-typedef struct ObjectModel_C {
-    u16 unk0[4];
-} ObjectModel_C;
-
-typedef struct ObjectModel_10 {
-    f32 A;
-    f32 B;
-    f32 C;
-    f32 D;
-} ObjectModel_10;
+typedef struct CollisionFacetPlanes {
+    u16 basePlaneIndex;       // Index of the triangle's main collision plane
+    u16 edgeBisectorPlane[3]; // Indices of edge bisector planes for triangle edges
+} CollisionFacetPlanes;
 
 typedef struct ObjectModel {
     /* 0x00 */ TextureInfo *textures;
     /* 0x04 */ Vertex *vertices;
     /* 0x08 */ Triangle *triangles;
-    /* 0x0C */ ObjectModel_C *unkC;
-    /* 0x10 */ ObjectModel_10 *unk10;
+    /* 0x0C */ CollisionFacetPlanes *unkC;
+    /* 0x10 */ f32 *unk10;
     /* 0x14 */ s16 *unk14;
     /* 0x18 */ s16 unk18;
     /* 0x1A */ s16 unk1A;
@@ -695,11 +689,6 @@ typedef struct ModelInstance {
     /* 0x1F */ s8 animationTaskNum;
     /* 0x20 */ s8 animUpdateTimer;
 } ModelInstance;
-
-typedef struct CollisionFacetPlanes {
-    u16 basePlaneIndex;       // Index of the triangle's main collision plane
-    u16 edgeBisectorPlane[3]; // Indices of edge bisector planes for triangle edges
-} CollisionFacetPlanes;
 
 /* Size: 0x44 bytes */
 typedef struct LevelModelSegment {
