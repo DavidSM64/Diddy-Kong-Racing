@@ -5178,7 +5178,7 @@ void obj_collision_transform(Object *obj) {
 
 // https://decomp.me/scratch/Lxwa8
 #ifdef NON_EQUIVALENT
-s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 *arg5, s8 *surface) {
+s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 *arg5, s8 *surface) {
     s32 sp170;
     s32 sp16C;
     s32 sp168;
@@ -5447,7 +5447,7 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
     return var_a3;
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017248.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/collision_objectmodel.s")
 #endif
 
 unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
