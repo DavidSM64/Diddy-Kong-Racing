@@ -341,12 +341,6 @@ extern s16 gGhostMapID;
 
 /******************************/
 
-typedef struct LevelObjectEntry_unk8000B020 {
-    LevelObjectEntryCommon common;
-    s8 unk8;
-    s8 unk9;
-} LevelObjectEntry_unk8000B020;
-
 /**
  * Spawns control objects for racer boost visuals, as well as shield and magnet visuals.
  * Boost geometry is made in real time, and allocated here.
@@ -354,7 +348,7 @@ typedef struct LevelObjectEntry_unk8000B020 {
  */
 void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     Object_Boost *boostObj;
-    LevelObjectEntry_unk8000B020 objEntry;
+    LevelObjectEntry_Boost2 objEntry;
     s32 i;
 
     gBoostTris[0] = (Triangle *) mempool_alloc_safe(
@@ -371,11 +365,11 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     // Makes 10 boost objects, but only 8 racers can actually exist at once.
     for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
         objEntry.common.objectID = ASSET_OBJECT_ID_BOOST;
-        objEntry.common.size = sizeof(LevelObjectEntry_unk8000B020);
+        objEntry.common.size = sizeof(LevelObjectEntry_Boost2);
         objEntry.common.x = 0;
         objEntry.common.y = 0;
         objEntry.common.z = 0;
-        objEntry.unk8 = i;
+        objEntry.racerIndex = i;
         gBoostEffectObjects[i] = spawn_object(&objEntry.common, OBJECT_SPAWN_UNK01);
         if (gBoostEffectObjects[i] != NULL) {
             gBoostEffectObjects[i]->properties.common.unk0 = 0;
@@ -393,7 +387,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     }
     gBoostObjOverrideID = 9;
     objEntry.common.objectID = ASSET_OBJECT_ID_SHIELD;
-    objEntry.common.size = sizeof(LevelObjectEntry_unk8000B020);
+    objEntry.common.size = sizeof(LevelObjectEntry_Boost2);
     objEntry.common.x = 0;
     objEntry.common.y = 0;
     objEntry.common.z = 0;
@@ -405,7 +399,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
         gRacerFXData[i].unk3 = 0;
     }
     objEntry.common.objectID = ASSET_OBJECT_ID_AINODE;
-    objEntry.common.size = sizeof(LevelObjectEntry_unk8000B020) + 0x80; // Not sure where this 0x80 comes from.
+    objEntry.common.size = sizeof(LevelObjectEntry_Boost2) + 0x80; // Not sure where this 0x80 comes from.
     objEntry.common.x = 0;
     objEntry.common.y = 0;
     objEntry.common.z = 0;

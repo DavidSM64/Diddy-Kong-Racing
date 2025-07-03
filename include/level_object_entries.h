@@ -590,7 +590,7 @@ typedef struct LevelObjectEntry_Boost {
 // The object map file expects 8 bytes, but the in-game function expects something different?
 typedef struct LevelObjectEntry_Boost2 {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s8 unk8[1];
+    /* 0x08 */ s8 racerIndex;
 } LevelObjectEntry_Boost2;
 
 typedef struct LevelObjectEntry_WardenSmoke {

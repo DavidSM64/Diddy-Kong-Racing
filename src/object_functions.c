@@ -6268,7 +6268,7 @@ void obj_loop_bubbler(Object *obj, s32 updateRate) {
 
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost2 *entry) {
     Object_Boost *asset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
-    obj->boost = &asset20[entry->unk8[0]];
+    obj->boost = &asset20[entry->racerIndex];
     obj->level_entry = NULL;
 }
 
