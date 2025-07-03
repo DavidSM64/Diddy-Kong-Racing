@@ -93,9 +93,9 @@ s32 gHitWall;
 s32 gCollisionMode;
 s32 D_8011B0F8; // gIsInCutscene?
 s32 gAntiAliasing;
-s32 D_8011B100;
-s32 D_8011B104;
-s32 D_8011B108;
+s32 gTTCamPlayerID;
+s32 gTTCamID;
+s32 gTTCamSmoothTimer;
 s32 D_8011B10C;
 s32 D_8011B110;
 u32 D_8011B114;
@@ -197,9 +197,9 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
 
     gCurrentLevelHeader2 = get_current_level_header();
     D_8011B0F8 = FALSE;
-    D_8011B100 = 0;
-    D_8011B104 = 0;
-    D_8011B108 = 0;
+    gTTCamPlayerID = 0;
+    gTTCamID = 0;
+    gTTCamSmoothTimer = 0;
     D_8011B10C = 0;
 
     if (gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_1 ||
@@ -232,7 +232,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     }
 
     cam_set_layout(numberOfPlayers);
-    spawn_skydome(skybox);
+    skydome_spawn(skybox);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
     path_enable();
@@ -350,7 +350,7 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
     update_fog(numViewports, tempUpdateRate);
     scroll_particle_textures(tempUpdateRate);
     if (gCurrentLevelModel->numberOfAnimatedTextures > 0) {
-        animate_level_textures(tempUpdateRate);
+        track_tex_anim(tempUpdateRate);
     }
     for (j = gSceneCurrentPlayerID = 0; j < numViewports; gSceneCurrentPlayerID++, j = gSceneCurrentPlayerID) {
         if (gCurrentLevelHeader2 && !gCurrentLevelHeader2 && !gCurrentLevelHeader2) {} // Fakematch
@@ -371,13 +371,13 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
         if (numViewports < 2) {
             mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
             if (gCurrentLevelHeader2->skyDome == -1) {
-                func_80028050();
+                trackbg_render_flashy();
             } else {
-                render_skydome();
+                skydome_render();
             }
         } else {
             mtx_perspective(&gTrackDL, &gTrackMtxPtr);
-            draw_gradient_background();
+            trackbg_render_gradient();
             func_80067D3C(&gTrackDL, &gTrackMtxPtr);
             mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
         }
@@ -405,11 +405,11 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
             gDPPipeSync(gTrackDL++);
             set_active_camera(PLAYER_FOUR);
             disable_cutscene_camera();
-            func_800278E8(updateRate);
+            ttcam_update(updateRate);
             viewport_main(&gTrackDL, &gTrackMtxPtr);
             func_8002A31C();
             mtx_perspective(&gTrackDL, &gTrackMtxPtr);
-            draw_gradient_background();
+            trackbg_render_gradient();
             func_80067D3C(&gTrackDL, &gTrackMtxPtr);
             mtx_world_origin(&gTrackDL, &gTrackMtxPtr);
             gDPPipeSync(gTrackDL++);
@@ -432,7 +432,7 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
 #endif
         } else {
             set_active_camera(PLAYER_FOUR);
-            func_800278E8(updateRate);
+            ttcam_update(updateRate);
         }
     }
     viewport_reset(&gTrackDL);
@@ -1195,7 +1195,12 @@ s32 func_80027568(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80027568.s")
 #endif
 
-void func_800278E8(s32 updateRate) {
+/**
+ * Sets up the camera placement for the 4th viewport when using T.T Cam in 3 player.
+ * It utilises spectate points then points at the race leader.
+ * Uses lookat smoothing when changing which player, otherwise, snaps if the camera itself changes.
+ */
+void ttcam_update(s32 updateRate) {
     s16 angleDiff;
     f32 xDelta;
     f32 yDelta;
@@ -1245,11 +1250,11 @@ void func_800278E8(s32 updateRate) {
         thisObject = objectFirstPlace;
     }
     camObj = spectate_object(currentRacer->cameraIndex);
-    if (D_8011B104 != currentRacer->cameraIndex) {
-        D_8011B108 = 0;
-    } else if (D_8011B100 != currentRacer->playerIndex) {
-        D_8011B108 = 180;
-        D_8011B100 = currentRacer->playerIndex;
+    if (gTTCamID != currentRacer->cameraIndex) {
+        gTTCamSmoothTimer = 0;
+    } else if (gTTCamPlayerID != currentRacer->playerIndex) {
+        gTTCamSmoothTimer = 180;
+        gTTCamPlayerID = currentRacer->playerIndex;
     }
     if (camObj != NULL) {
         camera = cam_get_active_camera_no_cutscenes();
@@ -1260,22 +1265,22 @@ void func_800278E8(s32 updateRate) {
         yDelta = camera->trans.y_position - thisObject->trans.y_position;
         zDelta = camera->trans.z_position - thisObject->trans.z_position;
         xzSqr = sqrtf((xDelta * xDelta) + (zDelta * zDelta));
-        if (D_8011B108 != 0) {
+        if (gTTCamSmoothTimer != 0) {
             angleDiff = ((s32) (-atan2s(xDelta, zDelta) - camera->trans.rotation.y_rotation) + 0x8000);
             //!@bug Never true, since angleDiff is signed. Should be >=.
             if (angleDiff > 0x8000) {
                 angleDiff = -(0xFFFF - angleDiff);
             }
-            camera->trans.rotation.y_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
+            camera->trans.rotation.y_rotation += ((s32) (angleDiff / (16.0f * (gTTCamSmoothTimer / 180.0f)))) & 0xFFFF;
             angleDiff = atan2s(yDelta, xzSqr) - camera->trans.rotation.x_rotation;
             //!@bug Never true, since angleDiff is signed. Should be >=.
             if (angleDiff > 0x8000) {
                 angleDiff = -(0xFFFF - angleDiff);
             }
-            camera->trans.rotation.x_rotation += ((s32) (angleDiff / (16.0f * (D_8011B108 / 180.0f)))) & 0xFFFF;
-            D_8011B108 -= updateRate;
-            if (D_8011B108 < 0) {
-                D_8011B108 = 0;
+            camera->trans.rotation.x_rotation += ((s32) (angleDiff / (16.0f * (gTTCamSmoothTimer / 180.0f)))) & 0xFFFF;
+            gTTCamSmoothTimer -= updateRate;
+            if (gTTCamSmoothTimer < 0) {
+                gTTCamSmoothTimer = 0;
             }
         } else {
             camera->trans.rotation.y_rotation = 0x8000 - atan2s(xDelta, zDelta);
@@ -1284,14 +1289,14 @@ void func_800278E8(s32 updateRate) {
         camera->trans.rotation.z_rotation = 0;
         camera->cameraSegmentID = get_level_segment_index_from_position(camera->trans.x_position, currentRacer->oy1,
                                                                         camera->trans.z_position);
-        D_8011B104 = currentRacer->cameraIndex;
+        gTTCamID = currentRacer->cameraIndex;
     }
 }
 
 /**
  * Handle the flipbook effect for level geometry textures.
  */
-void animate_level_textures(s32 updateRate) {
+void track_tex_anim(s32 updateRate) {
     s32 segmentNumber, batchNumber;
     LevelModelSegment *segment;
     TextureHeader *texture;
@@ -1327,7 +1332,7 @@ void animate_level_textures(s32 updateRate) {
  * Skipped if the object ID doesn't exist.
  * Also compares a checksum which can potentially trigger anti-tamper measures.
  */
-void spawn_skydome(s32 objectID) {
+void skydome_spawn(s32 objectID) {
     LevelObjectEntryCommon spawnObject;
 
 #ifdef ANTI_TAMPER
@@ -1361,8 +1366,7 @@ void set_skydome_visbility(s32 renderSky) {
 // https://decomp.me/scratch/E1DFy
 #ifdef NON_MATCHING
 // This function creates the flashy sky effect in the wizpig 2 race.
-// init_skydome
-void func_80028050(void) {
+void trackbg_render_flashy(void) {
     Triangle *tris;
     Vertex *verts;
     s32 vCoordMask; // sp14C
@@ -1535,7 +1539,7 @@ void func_80028050(void) {
     gTrackTriPtr = tris;
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80028050.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/trackbg_render_flashy.s")
 #endif
 
 /**
@@ -1543,7 +1547,7 @@ void func_80028050(void) {
  * Using different colours set in the level header, the vertices are coloured and
  * it gives the background a gradient effect.
  */
-void draw_gradient_background(void) {
+void trackbg_render_gradient(void) {
     s16 z;
     UNUSED s16 pad;
     s16 y0;
@@ -1650,7 +1654,7 @@ void draw_gradient_background(void) {
 /**
  * Sets the position to the current camera's position then renders the skydome if set to be visible.
  */
-void render_skydome(void) {
+void skydome_render(void) {
     Camera *cam;
     if (gSkydomeSegment == NULL) {
         return;
@@ -2051,7 +2055,7 @@ void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segment
         } else {
             temp = 1;
         }
-        if (temp & 1 && should_segment_be_visible(&gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex])) {
+        if (temp & 1 && block_visible(&gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex])) {
             segmentsOrder[(*segmentsOrderIndex)++] = segmentIndex;
         }
     }
@@ -2175,9 +2179,9 @@ s32 get_inside_segment_count_xyz(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16
 }
 
 /**
- * Returns this segment data.
+ * Returns this block data.
  */
-LevelModelSegment *get_segment(s32 segmentID) {
+LevelModelSegment *block_get(s32 segmentID) {
     if (segmentID < 0 || gCurrentLevelModel->numberOfSegments < segmentID) {
         return NULL;
     }
@@ -2186,10 +2190,10 @@ LevelModelSegment *get_segment(s32 segmentID) {
 }
 
 /**
- * Returns the bounding box data of this segment.
+ * Returns the bounding box data of this block.
  * Official name: trackBlockDim
  */
-LevelModelSegmentBoundingBox *get_segment_bounding_box(s32 segmentID) {
+LevelModelSegmentBoundingBox *block_boundbox(s32 segmentID) {
     if (segmentID < 0 || gCurrentLevelModel->numberOfSegments < segmentID) {
         return NULL;
     }
@@ -2261,7 +2265,7 @@ void func_8002A31C(void) {
  * to a total figure to determine whether or not a segment should be visible.
  * There's a large unused portion at the bottom writing to two vars, that are never later read.
  */
-s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb) {
+s32 block_visible(LevelModelSegmentBoundingBox *bb) {
     UNUSED u8 unknown[0x28];
     s64 sp48;
     s32 i, j;
@@ -2419,6 +2423,9 @@ UNUSED void func_8002AC00(s32 arg0, s32 arg1, s32 arg2) {
     }
 }
 
+/**
+ * Writes back the track collision data pointers.
+ */
 UNUSED void get_collision_candidate_data(s32 *numCollsionCandidates, s32 **collisionCandidates,
                                          s8 **collisionSurfaces) {
     *numCollsionCandidates = gNumCollisionCandidates;
@@ -2426,10 +2433,17 @@ UNUSED void get_collision_candidate_data(s32 *numCollsionCandidates, s32 **colli
     *collisionSurfaces = gCollisionSurfaces;
 }
 
+/**
+ * Change the collision response method.
+ * For instance, can choose to ignore wall response.
+ */
 void set_collision_mode(s32 mode) {
     gCollisionMode = mode;
 }
 
+/**
+ * Returns the surface normals of the current collision point.
+ */
 s32 get_collision_normal(f32 *outX, f32 *outY, f32 *outZ) {
     *outX = gCollisionNormalX;
     *outY = gCollisionNormalY;
@@ -2692,10 +2706,11 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3) {
     }
 }
 
-// Collision: Returns the Y Values in yOut, and the number of values in the array as the return.
-// Get's the Y Offset acrross a surface.
-// Basically it goes down, finds a triangle, then locates where the intersection is and returns the Y level of that.
-s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
+/**
+ * Searches for intersecting surfaces, then returns the Y values of all the intersecting points, in order.
+ * There is no limit for surfaces returned, so not feeding a large enough yOut array could cause problems.
+ */
+s32 collision_get_y(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     LevelModelSegment *currentSegment;
     LevelModelSegmentBoundingBox *currentBoundingBox;
     Triangle *tri;
@@ -2882,7 +2897,7 @@ void generate_track(s32 modelId) {
         gCurrentLevelModel->segments[k].unk10 = (s16 *) j;
         j = (s32) align16(((u8 *) (gCurrentLevelModel->segments[k].numberOfTriangles * 2)) + j);
         gCurrentLevelModel->segments[k].collisionPlanes = (f32 *) j;
-        j = (s32) & ((u8 *) j)[func_8002CC30(&gCurrentLevelModel->segments[k])];
+        j = (s32) & ((u8 *) j)[track_init_collision(&gCurrentLevelModel->segments[k])];
         func_8002C954(&gCurrentLevelModel->segments[k], &gCurrentLevelModel->segmentsBoundingBoxes[k], k);
         gCurrentLevelModel->segments[k].unk30 = 0;
         gCurrentLevelModel->segments[k].unk34 = (s16 *) j;
@@ -3058,7 +3073,7 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
     }
 }
 
-s32 func_8002CC30(LevelModelSegment *arg0) {
+s32 track_init_collision(LevelModelSegment *block) {
     s32 facesOffset;
     s32 verticesOffset;
     s32 nextFacesOffset;
@@ -3081,27 +3096,27 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
 
     counter = 0;
 
-    for (batchIndex = 0; batchIndex < arg0->numberOfBatches; batchIndex++) {
-        facesOffset = arg0->batches[batchIndex].facesOffset;
-        verticesOffset = arg0->batches[batchIndex].verticesOffset;
-        nextFacesOffset = arg0->batches[batchIndex + 1].facesOffset;
+    for (batchIndex = 0; batchIndex < block->numberOfBatches; batchIndex++) {
+        facesOffset = block->batches[batchIndex].facesOffset;
+        verticesOffset = block->batches[batchIndex].verticesOffset;
+        nextFacesOffset = block->batches[batchIndex + 1].facesOffset;
 
         for (triIndex = facesOffset; triIndex < nextFacesOffset; triIndex++) {
-            if (arg0->triangles[triIndex].flags & TRI_FLAG_80) {
+            if (block->triangles[triIndex].flags & TRI_FLAG_80) {
                 continue;
             }
 
-            v = &arg0->vertices[arg0->triangles[triIndex].vi0 + verticesOffset];
+            v = &block->vertices[block->triangles[triIndex].vi0 + verticesOffset];
             x1 = v->x;
             y1 = v->y;
             z1 = v->z;
 
-            v = &arg0->vertices[arg0->triangles[triIndex].vi1 + verticesOffset];
+            v = &block->vertices[block->triangles[triIndex].vi1 + verticesOffset];
             x2 = v->x;
             y2 = v->y;
             z2 = v->z;
 
-            v = &arg0->vertices[arg0->triangles[triIndex].vi2 + verticesOffset];
+            v = &block->vertices[block->triangles[triIndex].vi2 + verticesOffset];
             x3 = v->x;
             y3 = v->y;
             z3 = v->z;
@@ -3120,10 +3135,10 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
             // looks like a macro
             {
                 s32 temp = counter++;
-                arg0->collisionPlanes[4 * temp + 0] = nx;
-                arg0->collisionPlanes[4 * temp + 1] = ny;
-                arg0->collisionPlanes[4 * temp + 2] = nz;
-                arg0->collisionPlanes[4 * temp + 3] = -(x1 * nx + y1 * ny + z1 * nz);
+                block->collisionPlanes[4 * temp + 0] = nx;
+                block->collisionPlanes[4 * temp + 1] = ny;
+                block->collisionPlanes[4 * temp + 2] = nz;
+                block->collisionPlanes[4 * temp + 3] = -(x1 * nx + y1 * ny + z1 * nz);
             }
         }
     }
@@ -3134,24 +3149,24 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
         return counter * 0x10;
     }
 
-    for (batchIndex = 0; batchIndex < arg0->numberOfBatches; batchIndex++) {
-        facesOffset = arg0->batches[batchIndex].facesOffset;
-        verticesOffset = arg0->batches[batchIndex].verticesOffset;
-        nextFacesOffset = arg0->batches[batchIndex + 1].facesOffset;
+    for (batchIndex = 0; batchIndex < block->numberOfBatches; batchIndex++) {
+        facesOffset = block->batches[batchIndex].facesOffset;
+        verticesOffset = block->batches[batchIndex].verticesOffset;
+        nextFacesOffset = block->batches[batchIndex + 1].facesOffset;
 
-        if (arg0->batches[batchIndex].flags & RENDER_NO_COLLISION) {
+        if (block->batches[batchIndex].flags & RENDER_NO_COLLISION) {
             facesOffset = nextFacesOffset;
         }
 
         for (triIndex = facesOffset; triIndex < nextFacesOffset; triIndex++) {
-            if (arg0->triangles[triIndex].flags & TRI_FLAG_80) {
+            if (block->triangles[triIndex].flags & TRI_FLAG_80) {
                 continue;
             }
 
-            colPlaneIndex = arg0->collisionFacets[triIndex].basePlaneIndex;
-            nx = arg0->collisionPlanes[4 * colPlaneIndex + 0];
-            ny = arg0->collisionPlanes[4 * colPlaneIndex + 1];
-            nz = arg0->collisionPlanes[4 * colPlaneIndex + 2];
+            colPlaneIndex = block->collisionFacets[triIndex].basePlaneIndex;
+            nx = block->collisionPlanes[4 * colPlaneIndex + 0];
+            ny = block->collisionPlanes[4 * colPlaneIndex + 1];
+            nz = block->collisionPlanes[4 * colPlaneIndex + 2];
 
             for (i = 0; i < 3; i++) {
                 next = i + 1;
@@ -3159,24 +3174,24 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
                     next = 0;
                 }
 
-                vertIndex = arg0->triangles[triIndex].verticesArray[1 + i] + verticesOffset;
-                nextVertIndex = arg0->triangles[triIndex].verticesArray[1 + next] + verticesOffset;
+                vertIndex = block->triangles[triIndex].verticesArray[1 + i] + verticesOffset;
+                nextVertIndex = block->triangles[triIndex].verticesArray[1 + next] + verticesOffset;
 
-                next = arg0->collisionFacets[triIndex].edgeBisectorPlane[i];
+                next = block->collisionFacets[triIndex].edgeBisectorPlane[i];
                 if (next < numColPlanes) {
                     {
                         s32 temp = next;
-                        x5 = nx + arg0->collisionPlanes[4 * temp + 0];
-                        y5 = ny + arg0->collisionPlanes[4 * temp + 1];
-                        z5 = nz + arg0->collisionPlanes[4 * temp + 2];
+                        x5 = nx + block->collisionPlanes[4 * temp + 0];
+                        y5 = ny + block->collisionPlanes[4 * temp + 1];
+                        z5 = nz + block->collisionPlanes[4 * temp + 2];
                     }
 
-                    v = &arg0->vertices[vertIndex];
+                    v = &block->vertices[vertIndex];
                     x1 = v->x;
                     y1 = v->y;
                     z1 = v->z;
 
-                    v = &arg0->vertices[nextVertIndex];
+                    v = &block->vertices[nextVertIndex];
                     x2 = v->x;
                     y2 = v->y;
                     z2 = v->z;
@@ -3198,20 +3213,20 @@ s32 func_8002CC30(LevelModelSegment *arg0) {
 
                     if (next != colPlaneIndex) {
                         for (j = 0; j < 3; j++) {
-                            if (colPlaneIndex == arg0->collisionFacets[next].edgeBisectorPlane[j]) {
-                                arg0->collisionFacets[next].edgeBisectorPlane[j] = counter | 0x8000;
+                            if (colPlaneIndex == block->collisionFacets[next].edgeBisectorPlane[j]) {
+                                block->collisionFacets[next].edgeBisectorPlane[j] = counter | 0x8000;
                             }
                         }
                     }
 
-                    arg0->collisionFacets[triIndex].edgeBisectorPlane[i] = counter;
+                    block->collisionFacets[triIndex].edgeBisectorPlane[i] = counter;
 
                     {
                         s32 temp = counter++;
-                        arg0->collisionPlanes[4 * temp + 0] = x5;
-                        arg0->collisionPlanes[4 * temp + 1] = y5;
-                        arg0->collisionPlanes[4 * temp + 2] = z5;
-                        arg0->collisionPlanes[4 * temp + 3] = -(x1 * x5 + y1 * y5 + z1 * z5);
+                        block->collisionPlanes[4 * temp + 0] = x5;
+                        block->collisionPlanes[4 * temp + 1] = y5;
+                        block->collisionPlanes[4 * temp + 2] = z5;
+                        block->collisionPlanes[4 * temp + 3] = -(x1 * x5 + y1 * y5 + z1 * z5);
                     }
                 }
             }

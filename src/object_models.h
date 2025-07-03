@@ -33,6 +33,6 @@ s32 func_80060C58(Vertex *vertices, s32 i1, s32 i2, s32 i3, s32 i4);
 void free_model_data(ObjectModel *mdl); // Non Matching
 void func_80060910(ObjectModel *);
 s32 func_80060AC8(ObjectModel *mdl, s32 arg1, s32 arg2, s32 arg3, s32 *outBatchIndex, s32 *outVertexIndex);
-s32 model_calc_normals(ObjectModel *);
+s32 model_init_normals(ObjectModel *);
 
 #endif

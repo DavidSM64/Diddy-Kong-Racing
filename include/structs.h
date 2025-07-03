@@ -645,8 +645,8 @@ typedef struct ObjectModel {
     /* 0x00 */ TextureInfo *textures;
     /* 0x04 */ Vertex *vertices;
     /* 0x08 */ Triangle *triangles;
-    /* 0x0C */ CollisionFacetPlanes *unkC;
-    /* 0x10 */ f32 *unk10;
+    /* 0x0C */ CollisionFacetPlanes *collisionFacets;
+    /* 0x10 */ f32 *collisionPlanes;
     /* 0x14 */ s16 *unk14;
     /* 0x18 */ s16 unk18;
     /* 0x1A */ s16 unk1A;
@@ -656,11 +656,9 @@ typedef struct ObjectModel {
     /* 0x24 */ s16 numberOfVertices;
     /* 0x26 */ s16 numberOfTriangles;
     /* 0x28 */ s16 numberOfBatches;
-    /* 0x2A */ u8 pad2A[4];
-    /* 0x2E */ u8 unk2E;
-    /* 0x2F */ char pad2F[1];
+    /* 0x2A */ u8 pad2A[6];
     /* 0x30 */ s16 references;
-    /* 0x32 */ s16 unk32;
+    /* 0x32 */ s16 collisionFacetCount;
     /* 0x34 */ u8 pad34[4];
     /* 0x38 */ TriangleBatchInfo *batches;
     /* 0x3C */ f32 unk3C;
@@ -919,18 +917,15 @@ typedef struct ShadeProperties {
 } ShadeProperties;
 
 typedef f32 FakeHalfMatrix[2][4];
-typedef struct Object_5C {
+typedef struct ObjectCollision {
     union {
         /* 0x0000 */ MtxF matrices[4];
         /* 0x0000 */ FakeHalfMatrix _matrices[8]; // This is a hack. The MtxF[4] is the real one.
     };
-    /* 0x0100 */ void *unk100;
-    /* 0x0104 */ u8 unk104;
-    /* 0x0105 */ u8 unk105;
-    /* 0x0106 */ u8 unk106;
-    /* 0x0107 */ u8 unk107;
-    /* 0x0108 */ s32 unk108;
-} Object_5C;
+    /* 0x0100 */ struct Object *collidedObj;
+    /* 0x0104 */ u8 mtxFlip;
+                 u8 pad[7];
+} ObjectCollision;
 
 typedef struct AttachPoint {
     s32 count;              // Number of active attach points.
@@ -1561,7 +1556,7 @@ typedef struct Object {
     /* 0x0050 */ ShadowData *shadow;
     /* 0x0054 */ ShadeProperties *shading;
     /* 0x0058 */ WaterEffect *waterEffect;
-    /* 0x005C */ Object_5C *unk5C;
+    /* 0x005C */ ObjectCollision *collisionData;
     /* 0x0060 */ AttachPoint *attachPoints;
     /* 0x0064 */ union {
         struct Object *animTarget;                  // BHV_ANIMATION

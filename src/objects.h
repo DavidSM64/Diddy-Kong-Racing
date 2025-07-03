@@ -178,7 +178,7 @@ enum ObjectSpawnFlags {
     OBJECT_SPAWN_UNK02 = (1 << 1),
     OBJECT_SPAWN_UNK04 = (1 << 2),
     OBJECT_SPAWN_UNK08 = (1 << 3),
-    OBJECT_SPAWN_UNK10 = (1 << 4)
+    OBJECT_SPAWN_NO_LODS = (1 << 4) // Forces the object to have 1 model associate. Used to prevent LoD models of player model racers spawning.
 };
 
 enum ObjectHeaderFlags {
@@ -199,7 +199,7 @@ enum ObjectBehaviourFlags {
     OBJECT_BEHAVIOUR_WATER_EFFECT = (1 << 2),
     OBJECT_BEHAVIOUR_ANIMATION = (1 << 3),
     OBJECT_BEHAVIOUR_INTERACTIVE = (1 << 4),
-    OBJECT_BEHAVIOUR_UNK20 = (1 << 5)
+    OBJECT_BEHAVIOUR_COLLIDABLE = (1 << 5)
 };
 
 enum ContPakErrors {
@@ -413,10 +413,10 @@ void func_80016BC4(Object *obj);
 s32 ainode_register(Object *obj);
 void obj_taj_create_balloon(s32 blockID, f32 x, f32 y, f32 z);
 Object *func_8001B7A8(Object_Racer *racer, s32 position, f32 *distance);
-s32 func_8000FD34(Object *obj, Object_5C *matrices);
+s32 obj_init_collision(Object *obj, ObjectCollision *colData);
 void func_8000E4E8(s32 index);
 void objFreeAssets(Object *obj, s32 count, s32 objType);
-void func_8001709C(Object *obj);
+void obj_collision_transform(Object *obj);
 s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoundId);
 void render_3d_misc(Object *obj);
 Object *spectate_nearest(Object *obj, s32 *cameraId);
@@ -491,7 +491,7 @@ void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
 s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *arg5, u8 *arg6);
 void obj_tex_animate(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);
-void func_8006017C(ObjectModel *);
+void model_init_collision(ObjectModel *);
 void set_temp_model_transforms(Object *);
 void func_800101AC(Object *, s32);
 void func_800135B8(Object *);

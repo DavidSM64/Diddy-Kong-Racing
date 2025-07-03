@@ -116,15 +116,15 @@ typedef struct WaterProperties {
 
 s32 set_scene_viewport_num(s32 numPorts);
 void void_free(void);
-void spawn_skydome(s32 objectID);
+void skydome_spawn(s32 objectID);
 void set_skydome_visbility(s32 renderSky);
-void render_skydome(void);
+void skydome_render(void);
 void set_anti_aliasing(s32 setting);
 void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segmentsOrder);
 s32 get_inside_segment_count_xz(s32 x, s32 z, s32 *arg2);
 s32 get_inside_segment_count_xyz(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16 xPos2, s16 yPos2, s16 zPos2);
-LevelModelSegment *get_segment(s32 segmentID);
-LevelModelSegmentBoundingBox *get_segment_bounding_box(s32 segmentID);
+LevelModelSegment *block_get(s32 segmentID);
+LevelModelSegmentBoundingBox *block_boundbox(s32 segmentID);
 void set_collision_mode(s32 mode);
 s32 get_collision_normal(f32 *outX, f32 *outY, f32 *outZ);
 s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3);
@@ -135,7 +135,7 @@ void reset_fog(s32 playerID);
 void update_fog(s32 viewportCount, s32 updateRate);
 void apply_fog(s32 playerID);
 void compute_scene_camera_transform_matrix(void);
-void animate_level_textures(s32 updateRate);
+void track_tex_anim(s32 updateRate);
 s32 check_if_inside_segment(Object *obj, s32 segmentIndex);
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos);
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder,
@@ -143,10 +143,10 @@ void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentInde
 void render_level_geometry_and_objects(void);
 void watereffect_render(Object *obj, WaterEffect *effect);
 void shadow_render(Object *obj, ShadowData *shadow);
-s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb);
+s32 block_visible(LevelModelSegmentBoundingBox *bb);
 s32 check_if_in_draw_range(Object *obj);
 void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbox, s32 arg2);
-void draw_gradient_background(void);
+void trackbg_render_gradient(void);
 void shadow_update(s32 group, s32 waterGroup, s32 updateRate);
 void obj_loop_fogchanger(Object *obj);
 void initialise_player_viewport_vars(s32 updateRate);
@@ -164,11 +164,11 @@ void func_80026430(LevelModelSegment *segment, f32 arg1, f32 arg2, f32 arg3);
 void free_track(void);
 void void_check(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex);
 s32 func_80027568(void);
-s32 func_8002CC30(LevelModelSegment *);
+s32 track_init_collision(LevelModelSegment *);
 s32 func_8002B0F4(s32, f32 xIn, f32 zIn,
                   WaterProperties ***); // Definitely not triple pointer, but easiest way to fix warns.
-void func_800278E8(s32);
-void func_80028050(void);
+void ttcam_update(s32);
+void trackbg_render_flashy(void);
 void initialise_player_viewport_vars(s32);
 void func_8002A31C(void);
 void update_colour_cycle(LevelHeader_70 *arg0, s32 updateRate);
@@ -181,7 +181,7 @@ void func_8002EEEC(s32 arg0);
 void func_8002F2AC(void);
 void func_8002F440(void);
 f32 func_8002FA64(void);
-s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut);
+s32 collision_get_y(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut);
 void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables,
                 u32 arg6);
 void waves_init(LevelModel *, LevelHeader *, s32);
