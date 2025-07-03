@@ -1076,43 +1076,34 @@ s32 void_generate_primitive(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     return NULL;
 }
 
+// https://decomp.me/scratch/7GUjD
 #ifdef NON_MATCHING
-typedef struct Unk80027568_1 {
-    u8 unk0[0x18];
-    Vec4f *unk18;
-} Unk80027568_1;
-
-// https://decomp.me/scratch/duMgr
 s32 func_80027568(void) {
-    Unk80027568_1 *var_ra; // spE4
-    f32 new_var;
+    LevelModelSegment *segment; // spE4
     s32 ret;
     s32 var_t4;
-    f32 projectedRacerPos;
-    f32 projectedCamPos;
+    f32 playerDist;
+    f32 camDist;
     f32 scalingFactor;
-    f32 var_f14;
+    u32 curViewport;
+    s32 flipSide;
     s32 numRacers; // spC4
-    s32 curViewport;
-    s32 isNegative;
     s32 i;
-    Vec4f *vector;
     s32 j;
     f32 var_f18;
-    f32 temp;
-    f32 temp2;
-    f32 temp3;
+    f32 A1, B1, C1, D1;
     f32 var_f20;
     f32 var_f22;
     f32 var_f24;
-    u16 *var_t2;
+    CollisionNode *colNode;
     Object_Racer *racer;
-    f32 camXPos;
-    f32 camYPos;
-    Object **racerGroup;     // sp80
-    Object *currentObjRacer; // sp7C
+    f32 A, B, C, D;
+    Object **racerObjects; // sp80
+    Object *racerObj;      // sp7C
+    s32 index;
+    u16 index2;
 
-    racerGroup = get_racer_objects(&numRacers);
+    racerObjects = get_racer_objects(&numRacers);
     if (numRacers == 0) {
         return FALSE;
     }
@@ -1121,68 +1112,65 @@ s32 func_80027568(void) {
         return FALSE;
     }
     curViewport = get_current_viewport();
-    currentObjRacer = NULL;
+    racerObj = NULL;
     for (i = 0; i < numRacers; i++) {
-        racer = racerGroup[i]->racer;
+        racer = racerObjects[i]->racer;
         if (curViewport == racer->playerIndex) {
-            currentObjRacer = racerGroup[i];
+            racerObj = racerObjects[i];
             i = numRacers; // Come on! Just use break!
         }
     }
-    if (currentObjRacer == NULL) {
+    if (racerObj == NULL) {
         return FALSE;
     }
-    generate_collision_candidates(1, &currentObjRacer->trans.x_position, &gSceneActiveCamera->trans.x_position, -1);
+    generate_collision_candidates(1, &racerObj->trans.x_position, &gSceneActiveCamera->trans.x_position, -1);
     ret = FALSE;
-    // bug? var_ra can be undefined?
     for (var_t4 = 0; var_t4 < gNumCollisionCandidates && ret == FALSE; var_t4++) {
-        if ((s32) gCollisionCandidates[var_t4] > 0) {
-            var_ra = (Unk80027568_1 *) PHYS_TO_K0(gCollisionCandidates[var_t4]);
+        if (gCollisionCandidates[var_t4] > 0) {
+            // this is segment Entry
+            segment = (LevelModelSegment *) (gCollisionCandidates[var_t4] | 0x80000000);
         } else {
-            var_t2 = gCollisionCandidates[var_t4];
-            vector = var_ra->unk18;
-            vector += var_t2[0];
-            new_var = vector->x;
+            colNode = (CollisionNode *) gCollisionCandidates[var_t4];
+            index = colNode->colPlaneIndex << 2;
+            A = segment->collisionPlanes[index + 0];
+            B = segment->collisionPlanes[index + 1];
+            C = segment->collisionPlanes[index + 2];
+            D = segment->collisionPlanes[index + 3];
 
-            camXPos = gSceneActiveCamera->trans.x_position;
-            camYPos = gSceneActiveCamera->trans.y_position;
+            camDist = A * gSceneActiveCamera->trans.x_position + B * gSceneActiveCamera->trans.y_position +
+                      C * gSceneActiveCamera->trans.z_position + D - 14.0;
+            if (camDist < -0.1) {
+                playerDist = A * racerObj->trans.x_position + B * racerObj->trans.y_position +
+                             C * racerObj->trans.z_position + D;
+                if (playerDist >= -0.1) {
+                    var_f20 = (gSceneActiveCamera->trans.x_position - racerObj->trans.x_position);
+                    var_f22 = (gSceneActiveCamera->trans.y_position - racerObj->trans.y_position);
+                    var_f24 = (gSceneActiveCamera->trans.z_position - racerObj->trans.z_position);
 
-            projectedCamPos = (((camXPos * new_var) + (vector->y * camYPos) +
-                                (vector->z * gSceneActiveCamera->trans.z_position) + vector->w) -
-                               14.0);
-            if (projectedCamPos < -0.1) {
-                projectedRacerPos = (currentObjRacer->trans.x_position * new_var) +
-                                    (vector->y * currentObjRacer->trans.y_position) +
-                                    (vector->z * currentObjRacer->trans.z_position) + vector->w;
-                if (projectedRacerPos >= -0.1) {
-                    var_f20 = (camXPos - currentObjRacer->trans.x_position);
-                    var_f22 = (camYPos - currentObjRacer->trans.y_position);
-                    var_f24 = (gSceneActiveCamera->trans.z_position - currentObjRacer->trans.z_position);
-
-                    if (projectedRacerPos != projectedCamPos) {
-                        scalingFactor = projectedRacerPos / (projectedRacerPos - projectedCamPos);
+                    if (playerDist != camDist) {
+                        scalingFactor = playerDist / (playerDist - camDist);
                     } else {
                         scalingFactor = 0.0f;
                     }
 
-                    var_f20 = currentObjRacer->trans.x_position + (var_f20 * scalingFactor);
-                    var_f22 = currentObjRacer->trans.y_position + (var_f22 * scalingFactor);
-                    var_f24 = currentObjRacer->trans.z_position + (var_f24 * scalingFactor);
+                    var_f20 = racerObj->trans.x_position + (var_f20 * scalingFactor);
+                    var_f22 = racerObj->trans.y_position + (var_f22 * scalingFactor);
+                    var_f24 = racerObj->trans.z_position + (var_f24 * scalingFactor);
 
                     for (j = 0, ret = TRUE; j < 3 && ret == TRUE; j++) {
-                        isNegative = FALSE;
-                        curViewport = var_t2[j + 1];
+                        flipSide = FALSE;
+                        curViewport = colNode->closestTri[j];
                         if (curViewport & 0x8000) {
                             curViewport &= 0x7FFF;
-                            isNegative = TRUE;
+                            flipSide = TRUE;
                         }
-                        vector = &var_ra->unk18[curViewport];
-                        temp = vector->x;
-                        temp2 = vector->y;
-                        temp3 = vector->z;
-                        var_f14 = vector->w;
-                        var_f18 = (temp * var_f20) + (temp2 * var_f22) + (temp3 * var_f24) + var_f14;
-                        if (isNegative) {
+                        curViewport = 4 * curViewport;
+                        A1 = segment->collisionPlanes[curViewport + 0];
+                        B1 = segment->collisionPlanes[curViewport + 1];
+                        C1 = segment->collisionPlanes[curViewport + 2];
+                        D1 = segment->collisionPlanes[curViewport + 3];
+                        var_f18 = A1 * var_f20 + B1 * var_f22 + C1 * var_f24 + D1;
+                        if (flipSide) {
                             var_f18 = -var_f18;
                         }
                         if (var_f18 > 4.0f) {
@@ -1481,9 +1469,9 @@ void trackbg_render_flashy(void) {
     var_t2 = *gCurrentLevelHeader2->unk74;
     var_a2 = -1;
 
-    if ((s32) var_t2 != -1) {
+    if ((u32) var_t2 != -1) {
         levelHeader = gCurrentLevelHeader2->unk74[1];
-        if ((s32) levelHeader == -1) {
+        if ((u32) levelHeader == -1) {
             levelHeader = var_t2;
         }
     } else {
@@ -2507,48 +2495,50 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     return gTrackWaves[index]->type;
 }
 
-// https://decomp.me/scratch/X1SBi
+// https://decomp.me/scratch/5Useu
 #ifdef NON_EQUIVALENT
 s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***arg3) {
     LevelModelSegment *currentSegment;
     LevelModelSegmentBoundingBox *currentBoundingBox;
     Triangle *tri;
     Vertex *vert;
-    f32 temp_f2_2;
+    s32 pad;
     s16 vert2X;
     s16 vert2Z;
     s16 temp_a2;
     s16 vert3X;
+    s32 sp108;
     s16 vert3Z;
-    s32 currentVerticesOffset;
-    s16 nextFaceOffset;
     s16 vert1X;
-    s16 currentFaceOffset;
+    s32 pad2;
+    s32 currentVerticesOffset;
+    s32 nextFaceOffset;
+    s32 currentFaceOffset;
     s16 vert1Z;
     s16 var_a1;
     s32 faceNum;
     s16 var_s1;
     s16 var_t0;
     s16 var_t1;
+    s8 surface;
     s32 XInInt;
     s32 ZInInt;
     s32 temp_ra_1;
     s32 temp_ra_2;
     s32 temp_ra_3;
+    s32 spB0[8];
     s32 yOutCount;
     s32 batchNum;
     s32 i;
     s32 var_v0;
     s32 stopSorting;
     TriangleBatchInfo *currentBatch;
-    f32 *temp_v1_4;
+    s32 pad3;
     Vec4f tempVec4f;
-    u16 temp;
-
-    s32 sp108;
-    s32 spB0[8];
-    s32 surface;
+    s32 temp;
     s32 var_fp;
+    WaterProperties *wave;
+    WaterProperties *wave2;
 
     D_8011D308 = 0;
     *arg3 = NULL;
@@ -2558,15 +2548,16 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
         return 0;
     }
 
-    XInInt = xIn;
-    ZInInt = zIn;
+    yOutCount = 0;
 
     for (var_fp = 0; var_fp < sp108; var_fp++) {
         currentSegment = &gCurrentLevelModel->segments[spB0[var_fp]];
         currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[spB0[var_fp]];
         var_a1 = 1;
         var_s1 = 0;
-
+        XInInt = xIn;
+        ZInInt = zIn;
+    
         temp_a2 = ((currentBoundingBox->x2 - currentBoundingBox->x1) >> 3) + 1;
         var_t0 = temp_a2 + currentBoundingBox->x1;
         var_t1 = currentBoundingBox->x1;
@@ -2578,9 +2569,11 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
             var_t1 += temp_a2;
             var_a1 *= 2;
         }
-
+    
         // Same as above, but for Z
         temp_a2 = ((currentBoundingBox->z2 - currentBoundingBox->z1) >> 3) + 1;
+        // @fake for s3 vs s2
+        if (1) {}
         var_t0 = temp_a2 + currentBoundingBox->z1;
         var_t1 = currentBoundingBox->z1;
         for (i = 0; i < 8; i++) {
@@ -2591,50 +2584,47 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
             var_t1 += temp_a2;
             var_a1 *= 2;
         }
-
-        yOutCount = 0;
-
+    
         for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
             currentBatch = &currentSegment->batches[batchNum];
             surface = gCurrentLevelModel->textures[currentBatch->textureIndex].surfaceType;
             currentFaceOffset = currentBatch->facesOffset;
-            nextFaceOffset = currentBatch[1].facesOffset;
             currentVerticesOffset = currentBatch->verticesOffset;
+            nextFaceOffset = currentBatch[1].facesOffset;
 
             if (surface != SURFACE_WATER_CALM && surface != SURFACE_WATER_UNK_F &&
                 (currentBatch->flags & (RENDER_HIDDEN | RENDER_NO_COLLISION))) {
                 currentFaceOffset = nextFaceOffset;
             }
-
+            
             for (faceNum = currentFaceOffset; faceNum < nextFaceOffset; faceNum++) {
                 if (var_s1 == (currentSegment->unk10[faceNum] & var_s1)) {
                     tri = &currentSegment->triangles[faceNum];
+                    
                     vert = &currentSegment->vertices[tri->verticesArray[1] + currentVerticesOffset];
                     vert1X = vert->x;
                     vert1Z = vert->z;
+                    
                     vert = &currentSegment->vertices[tri->verticesArray[2] + currentVerticesOffset];
                     vert2X = vert->x;
                     vert2Z = vert->z;
+                    
                     vert = &currentSegment->vertices[tri->verticesArray[3] + currentVerticesOffset];
                     vert3X = vert->x;
                     vert3Z = vert->z;
-                    temp_ra_1 =
-                        ((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0);
-                    temp_ra_2 =
-                        ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0);
-                    temp_ra_3 =
-                        ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                    
+                    temp_ra_1 = (((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0;
+                    temp_ra_2 = (((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0;
+                    temp_ra_3 = (((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0;
                     if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
                         temp = currentSegment->collisionFacets[faceNum].basePlaneIndex;
-                        temp_v1_4 = (f32 *) &currentSegment->collisionPlanes[temp * 4];
-                        tempVec4f.x = temp_v1_4[0];
-                        tempVec4f.y = temp_v1_4[1];
-                        tempVec4f.z = temp_v1_4[2];
-                        tempVec4f.w = temp_v1_4[3];
+                        tempVec4f.x = currentSegment->collisionPlanes[temp * 4 + 0];
+                        tempVec4f.y = currentSegment->collisionPlanes[temp * 4 + 1];
+                        tempVec4f.z = currentSegment->collisionPlanes[temp * 4 + 2];
+                        tempVec4f.w = currentSegment->collisionPlanes[temp * 4 + 3];
                         if (tempVec4f.y != 0.0) {
                             D_8011D128[yOutCount].type = surface;
-                            D_8011D128[yOutCount].waveHeight =
-                                -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
+                            D_8011D128[yOutCount].waveHeight = -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
                             D_8011D128[yOutCount].rot.x = tempVec4f.x;
                             D_8011D128[yOutCount].rot.y = tempVec4f.y;
                             D_8011D128[yOutCount].rot.z = tempVec4f.z;
@@ -2652,12 +2642,14 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
         }
     }
 
+    // @diff gCurrentLevelModel is stored in a0? Might be fixed if the bottom for and do-while is fixed
     if (levelSegmentIndex >= 0 && levelSegmentIndex < gCurrentLevelModel->numberOfSegments) {
+        currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
         D_8011D128[yOutCount].type = SURFACE_WATER_WAVY;
-        if (gCurrentLevelModel->segments[levelSegmentIndex].hasWaves && gWaveBlockCount != 0) {
-            D_8011D128[yOutCount].waveHeight = func_800BB2F4(levelSegmentIndex, xIn, zIn, &D_8011D128[yOutCount].rot);
+        if (currentSegment->hasWaves && gWaveBlockCount != 0) {
+            D_8011D128[yOutCount].waveHeight = func_800BB2F4(levelSegmentIndex, xIn, zIn, &(yOutCount + D_8011D128)->rot);
         } else {
-            D_8011D128[yOutCount].waveHeight = gCurrentLevelModel->segments[levelSegmentIndex].unk38;
+            D_8011D128[yOutCount].waveHeight = currentSegment->unk38;
             D_8011D128[yOutCount].rot.x = 0.0f;
             D_8011D128[yOutCount].rot.y = 1.0f;
             D_8011D128[yOutCount].rot.z = 0.0f;
@@ -2666,17 +2658,21 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
     }
 
     // clang-format off
-    for (i = 0; i < yOutCount; i++) { gTrackWaves[i] = &D_8011D128[i]; }
+    for (var_v0 = 0; var_v0 < yOutCount; var_v0++) {\
+        wave = &D_8011D128[var_v0];\
+        gTrackWaves[var_v0] = wave;\
+    }\
     // clang-format on
 
     do {
         stopSorting = TRUE;
-        for (i = 0; i < yOutCount - 1; i++) {
-            if (gTrackWaves[i]->waveHeight < gTrackWaves[i + 1]->waveHeight) {
-                WaterProperties *wave = gTrackWaves[i];
+        for (var_v0 = 0; var_v0 < yOutCount - 1; var_v0++) {
+            wave = gTrackWaves[var_v0 + 1]; // @fake?
+            if (gTrackWaves[var_v0]->waveHeight < gTrackWaves[var_v0 + 1]->waveHeight) {
                 stopSorting = FALSE;
-                gTrackWaves[i] = gTrackWaves[i + 1];
-                gTrackWaves[i + 1] = wave;
+                wave = gTrackWaves[var_v0];
+                gTrackWaves[var_v0] = gTrackWaves[var_v0 + 1];
+                gTrackWaves[var_v0 + 1] = wave;
             }
         }
     } while (!stopSorting);

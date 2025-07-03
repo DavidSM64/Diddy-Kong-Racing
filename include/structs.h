@@ -1717,4 +1717,9 @@ typedef struct GhostNode {
     /* 0x08 */ s16 xRotation;
     /* 0x0A */ s16 yRotation;
 } GhostNode;
+
+typedef struct CollisionNode {
+    u16 colPlaneIndex; // This triangle index
+    u16 closestTri[3];
+} CollisionNode;
 #endif
