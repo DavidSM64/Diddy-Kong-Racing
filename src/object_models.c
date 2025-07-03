@@ -354,11 +354,11 @@ void free_model_data(ObjectModel *mdl) {
             textureIndex++;
         } while (texturesFreed < numTextures);
     }
-    
+
     if (mdl->collisionFacets != NULL) {
         mempool_free(mdl->collisionFacets);
     }
-    
+
     if (mdl->collisionPlanes != NULL) {
         mempool_free(mdl->collisionPlanes);
     }

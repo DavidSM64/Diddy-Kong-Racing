@@ -1199,7 +1199,7 @@ s32 func_80027568(void) {
  * Sets up the camera placement for the 4th viewport when using T.T Cam in 3 player.
  * It utilises spectate points then points at the race leader.
  * Uses lookat smoothing when changing which player, otherwise, snaps if the camera itself changes.
-*/
+ */
 void ttcam_update(s32 updateRate) {
     s16 angleDiff;
     f32 xDelta;
@@ -2425,7 +2425,7 @@ UNUSED void func_8002AC00(s32 arg0, s32 arg1, s32 arg2) {
 
 /**
  * Writes back the track collision data pointers.
-*/
+ */
 UNUSED void get_collision_candidate_data(s32 *numCollsionCandidates, s32 **collisionCandidates,
                                          s8 **collisionSurfaces) {
     *numCollsionCandidates = gNumCollisionCandidates;
@@ -2436,14 +2436,14 @@ UNUSED void get_collision_candidate_data(s32 *numCollsionCandidates, s32 **colli
 /**
  * Change the collision response method.
  * For instance, can choose to ignore wall response.
-*/
+ */
 void set_collision_mode(s32 mode) {
     gCollisionMode = mode;
 }
 
 /**
-* Returns the surface normals of the current collision point.
-*/
+ * Returns the surface normals of the current collision point.
+ */
 s32 get_collision_normal(f32 *outX, f32 *outY, f32 *outZ) {
     *outX = gCollisionNormalX;
     *outY = gCollisionNormalY;
@@ -2709,7 +2709,7 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3) {
 /**
  * Searches for intersecting surfaces, then returns the Y values of all the intersecting points, in order.
  * There is no limit for surfaces returned, so not feeding a large enough yOut array could cause problems.
-*/
+ */
 s32 collision_get_y(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     LevelModelSegment *currentSegment;
     LevelModelSegmentBoundingBox *currentBoundingBox;

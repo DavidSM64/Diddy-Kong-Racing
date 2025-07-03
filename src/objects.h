@@ -199,7 +199,7 @@ enum ObjectBehaviourFlags {
     OBJECT_BEHAVIOUR_WATER_EFFECT = (1 << 2),
     OBJECT_BEHAVIOUR_ANIMATION = (1 << 3),
     OBJECT_BEHAVIOUR_INTERACTIVE = (1 << 4),
-    OBJECT_BEHAVIOUR_UNK20 = (1 << 5)
+    OBJECT_BEHAVIOUR_COLLIDABLE = (1 << 5)
 };
 
 enum ContPakErrors {
@@ -413,7 +413,7 @@ void func_80016BC4(Object *obj);
 s32 ainode_register(Object *obj);
 void obj_taj_create_balloon(s32 blockID, f32 x, f32 y, f32 z);
 Object *func_8001B7A8(Object_Racer *racer, s32 position, f32 *distance);
-s32 obj_init_collision(Object *obj, ObjectCollision *matrices);
+s32 obj_init_collision(Object *obj, ObjectCollision *colData);
 void func_8000E4E8(s32 index);
 void objFreeAssets(Object *obj, s32 count, s32 objType);
 void obj_collision_transform(Object *obj);

@@ -629,7 +629,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
             worldBalloons = ((1 << (settings->worldId + 6)) & bossFlags) != 0;
         }
         if (obj->properties.trophyCabinet.action == NULL && textbox_visible() == FALSE) {
-            if (obj->collisionData->unk100 != NULL) {
+            if (obj->collisionData->collidedObj != NULL) {
                 if (jingle_state->cooldown == 0) {
                     if (worldBalloons) {
                         obj->properties.trophyCabinet.action = 1;
@@ -657,7 +657,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                 music_jingle_voicelimit_set(6);
             }
         }
-        if (obj->collisionData->unk100 != NULL || textbox_visible()) {
+        if (obj->collisionData->collidedObj != NULL || textbox_visible()) {
             jingle_state->cooldown = 180;
         }
         if (jingle_state->cooldown > 0) {
@@ -681,7 +681,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
             }
             disable_racer_input();
         }
-        obj->collisionData->unk100 = NULL;
+        obj->collisionData->collidedObj = NULL;
         if (worldBalloons) {
             obj->shading->ambient = 0.552f;
         }
@@ -870,7 +870,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
         if (interactObj->distance < 200) {
             if (playerObj == interactObj->obj) {
                 // Detect if the player honks or slams into the signpost.
-                if ((input_pressed(PLAYER_ONE) & Z_TRIG) || playerObj == obj->collisionData->unk100) {
+                if ((input_pressed(PLAYER_ONE) & Z_TRIG) || playerObj == obj->collisionData->collidedObj) {
                     begin_lighthouse_rocket_cutscene();
                 }
             }
@@ -3542,7 +3542,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
             racerObj = racerObjInter->obj;
             if (racerObj != NULL && racerObj->header->behaviorId == BHV_RACER) {
                 racer = racerObj->racer;
-                if (racer->playerIndex != PLAYER_COMPUTER && racerObj == doorObj->collisionData->unk100) {
+                if (racer->playerIndex != PLAYER_COMPUTER && racerObj == doorObj->collisionData->collidedObj) {
                     if (door->textID != -1 && textbox_visible() == FALSE && door->jingleCooldown == 0) {
                         music_fade(-8);
                         door->jingleTimer = 140; // PAL users once again forsaken.
@@ -3708,7 +3708,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
     doorObj->interactObj->obj = NULL;
     racerObjInter = doorObj->interactObj;
     racerObjInter->flags &= ~INTERACT_FLAGS_PUSHING;
-    doorObj->collisionData->unk100 = NULL;
+    doorObj->collisionData->collidedObj = NULL;
 }
 
 /**
@@ -3768,7 +3768,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
         racerObj = obj->interactObj->obj;
         if (racerObj != NULL && racerObj->header->behaviorId == BHV_RACER) {
             racer = racerObj->racer;
-            if (racer->playerIndex != PLAYER_COMPUTER && racerObj == obj->collisionData->unk100) {
+            if (racer->playerIndex != PLAYER_COMPUTER && racerObj == obj->collisionData->collidedObj) {
                 if (ttDoor->textID != -1 && textbox_visible() == 0 && ttDoor->jingleCooldown == 0) {
                     music_fade(-8);
                     ttDoor->jingleTimer = 140;
@@ -3826,7 +3826,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     obj->interactObj->distance = 0xFF;
     obj->interactObj->obj = NULL;
     obj->interactObj->flags &= 0xFFF7;
-    obj->collisionData->unk100 = NULL;
+    obj->collisionData->collidedObj = NULL;
 }
 
 void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
@@ -5605,9 +5605,9 @@ void obj_loop_log(Object *obj, s32 updateRate) {
     } else {
         obj->trans.y_position = ((LevelObjectEntryCommon *) obj->level_entry)->y;
     }
-    if (obj->collisionData->unk100 != NULL) {
+    if (obj->collisionData->collidedObj != NULL) {
         obj->properties.log.velocityY++;
-        racerObj = obj->collisionData->unk100;
+        racerObj = obj->collisionData->collidedObj;
         if (racerObj->behaviorId == BHV_RACER) {
             racer = racerObj->racer;
             if (racer->velocity < -4.0 && racer->raceFinished == FALSE) {
@@ -5650,7 +5650,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
         }
     }
     obj->trans.rotation.y_rotation += obj->properties.log.angleVel * updateRate;
-    obj->collisionData->unk100 = NULL;
+    obj->collisionData->collidedObj = NULL;
 }
 
 /* Official name: weatherInit */

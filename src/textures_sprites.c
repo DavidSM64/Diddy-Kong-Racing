@@ -1292,7 +1292,6 @@ void sprite_free(Sprite *sprite) {
     } else {
         stubbed_printf("TEXSPR Error: Tryed to deallocate non-existent sprite!!\n");
     }
-    
 }
 
 /**

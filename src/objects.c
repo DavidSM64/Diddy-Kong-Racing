@@ -2106,7 +2106,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (behaviourFlags & OBJECT_BEHAVIOUR_INTERACTIVE) {
         address += init_object_interaction_data(curObj, (ObjectInteraction *) address);
     }
-    if (behaviourFlags & OBJECT_BEHAVIOUR_UNK20) {
+    if (behaviourFlags & OBJECT_BEHAVIOUR_COLLIDABLE) {
         address += obj_init_collision(curObj, (ObjectCollision *) address);
     }
     if (curObj->header->attachPointCount > 0 && curObj->header->attachPointCount < 10) {
@@ -2169,7 +2169,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
                                                      (uintptr_t) gSpawnObjectHeap);
     }
     if (curObj->collisionData != NULL) {
-        curObj->collisionData = (ObjectCollision *) (((uintptr_t) curObj + (uintptr_t) curObj->collisionData) - (uintptr_t) gSpawnObjectHeap);
+        curObj->collisionData = (ObjectCollision *) (((uintptr_t) curObj + (uintptr_t) curObj->collisionData) -
+                                                     (uintptr_t) gSpawnObjectHeap);
     }
     if (curObj->attachPoints != NULL) {
         curObj->attachPoints =
@@ -2399,7 +2400,7 @@ s32 init_object_interaction_data(Object *obj, ObjectInteraction *interactObj) {
 
 /**
  * Sets up collision surface data for the object model.
-*/
+ */
 s32 obj_init_collision(Object *obj, ObjectCollision *colData) {
     obj->collisionData = colData;
     func_80016BC4(obj);
@@ -5121,7 +5122,7 @@ void obj_collision_transform(Object *obj) {
     colData = obj->collisionData;
     colData->mtxFlip = (colData->mtxFlip + 1) & 1;
 #ifdef AVOID_UB
-    curMtx =  &colData->matrices[colData->mtxFlip];
+    curMtx = &colData->matrices[colData->mtxFlip];
 #else
 
     curMtx = (MtxF *) &colData->_matrices[colData->mtxFlip << 1];
@@ -5158,7 +5159,7 @@ void obj_collision_transform(Object *obj) {
 #else
     mtxf_from_transform((MtxF *) colData->_matrices[(colData->mtxFlip + 2) << 1], &trans);
 #endif
-    colData->unk100 = NULL;
+    colData->collidedObj = NULL;
 }
 
 // https://decomp.me/scratch/Lxwa8
@@ -5380,7 +5381,7 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
                                       (f32) (1.0 / (f64) otherObj->trans.scale));
             var_t0_2 = sp16C;
             if (temp_v0_4 != 0) {
-                otherObj->collisionData->unk100 = obj;
+                otherObj->collisionData->collidedObj = obj;
             }
             var_fp_3 = 0;
             if (*D_8011AD24 == 0) {
@@ -10607,7 +10608,7 @@ s32 obj_init_property_flags(s32 behaviorId) {
             break;
         case BHV_DOOR:
         case BHV_TT_DOOR:
-            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
+            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_WEAPON_BALLOON:
         case BHV_GOLDEN_BALLOON:
@@ -10618,14 +10619,14 @@ s32 obj_init_property_flags(s32 behaviorId) {
         case BHV_SNOWBALL:
         case BHV_SNOWBALL_2:
             flags = OBJECT_BEHAVIOUR_SHADED | OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION |
-                    OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
+                    OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_SNOWBALL_3:
         case BHV_SNOWBALL_4:
         case BHV_HIT_TESTER_3:
         case BHV_HIT_TESTER_4:
             flags = OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION | OBJECT_BEHAVIOUR_INTERACTIVE |
-                    OBJECT_BEHAVIOUR_UNK20;
+                    OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_UNK_18:
             flags = OBJECT_BEHAVIOUR_WATER_EFFECT;
@@ -10641,11 +10642,11 @@ s32 obj_init_property_flags(s32 behaviorId) {
             flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_SHADOW;
             break;
         case BHV_LOG:
-            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
+            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_BRIDGE_WHALE_RAMP:
             flags = OBJECT_BEHAVIOUR_SHADED | OBJECT_BEHAVIOUR_ANIMATION | OBJECT_BEHAVIOUR_INTERACTIVE |
-                    OBJECT_BEHAVIOUR_UNK20;
+                    OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_RAMP_SWITCH:
             flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_SHADOW;
@@ -10677,7 +10678,7 @@ s32 obj_init_property_flags(s32 behaviorId) {
         case BHV_DYNAMIC_LIGHT_OBJECT_2:
         case BHV_ROCKET_SIGNPOST:
         case BHV_ROCKET_SIGNPOST_2:
-            flags = OBJECT_BEHAVIOUR_SHADED | OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
+            flags = OBJECT_BEHAVIOUR_SHADED | OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_UNK_5B:
             flags = OBJECT_BEHAVIOUR_SHADED;

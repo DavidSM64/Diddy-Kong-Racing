@@ -922,7 +922,7 @@ typedef struct ObjectCollision {
         /* 0x0000 */ MtxF matrices[4];
         /* 0x0000 */ FakeHalfMatrix _matrices[8]; // This is a hack. The MtxF[4] is the real one.
     };
-    /* 0x0100 */ struct Object *unk100;
+    /* 0x0100 */ struct Object *collidedObj;
     /* 0x0104 */ u8 mtxFlip;
                  u8 pad[7];
 } ObjectCollision;
