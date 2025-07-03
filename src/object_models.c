@@ -412,7 +412,7 @@ void func_8006017C(ObjectModel *arg0) {
     for (i = 0; i < arg0->numberOfBatches; i++) {
         facesOffset = arg0->batches[i].facesOffset;
         nextFacesOffset = arg0->batches[i + 1].facesOffset;
-        if (arg0->batches[i].flags & 0x200) {
+        if (arg0->batches[i].flags & RENDER_NO_COLLISION) {
             continue;
         }
         s4 += nextFacesOffset - facesOffset;
@@ -436,7 +436,7 @@ void func_8006017C(ObjectModel *arg0) {
         facesOffset = arg0->batches[i].facesOffset;
         verticesOffset = arg0->batches[i].verticesOffset;
         nextFacesOffset = arg0->batches[i + 1].facesOffset;
-        if (arg0->batches[i].flags & 0x200) {
+        if (arg0->batches[i].flags & RENDER_NO_COLLISION) {
             nextFacesOffset = facesOffset - 1;
         }
 
@@ -491,7 +491,7 @@ void func_8006017C(ObjectModel *arg0) {
         facesOffset = arg0->batches[i].facesOffset;
         verticesOffset = arg0->batches[i].verticesOffset;
         nextFacesOffset = arg0->batches[i + 1].facesOffset;
-        if (arg0->batches[i].flags & 0x200) {
+        if (arg0->batches[i].flags & RENDER_NO_COLLISION) {
             nextFacesOffset = facesOffset - 1;
         }
 
