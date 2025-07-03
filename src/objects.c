@@ -36,6 +36,7 @@
 #define OBJECT_POOL_SIZE 0x15800
 #define OBJECT_BLUEPRINT_SIZE 0x800
 #define OBJECT_SLOT_COUNT 512
+#define OBJECT_COLLISION_COUNT 20
 #define AINODE_COUNT 128
 #define CAMCONTROL_COUNT 20
 #define BOOST_VERT_COUNT 9
@@ -269,8 +270,8 @@ s32 gObjectCount;
 s32 gObjectListStart;
 s32 gParticleCount;
 Object *gObjectMemoryPool;
-Object **D_8011AE6C;
-s32 D_8011AE70;
+Object **gCollisionObjects;
+s32 gCollisionObjectCount;
 Object **D_8011AE74; // Pointer to an array of Animation objects
 s16 D_8011AE78;      // Number of Animation objects in D_8011AE74
 s16 gCutsceneID;
@@ -727,7 +728,7 @@ void allocate_object_pools(void) {
     set_world_shading(0.67f, 0.33f, 0, -0x2000, 0);
     gObjectMemoryPool = (Object *) mempool_new_sub(OBJECT_POOL_SIZE, OBJECT_SLOT_COUNT);
     gParticlePtrList = mempool_alloc_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
-    D_8011AE6C = mempool_alloc_safe(sizeof(uintptr_t) * 20, COLOUR_TAG_BLUE);
+    gCollisionObjects = mempool_alloc_safe(sizeof(uintptr_t) * OBJECT_COLLISION_COUNT, COLOUR_TAG_BLUE);
     D_8011AE74 = mempool_alloc_safe(sizeof(uintptr_t) * 128, COLOUR_TAG_BLUE);
     gTrackCheckpoints = mempool_alloc_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
     gCameraObjList = mempool_alloc_safe(sizeof(uintptr_t *) * CAMCONTROL_COUNT, COLOUR_TAG_BLUE);
@@ -822,7 +823,7 @@ void clear_object_pointers(void) {
     D_8011AD5C = 0;
     D_8011AD60 = 0;
     gFreeListCount = 0;
-    D_8011AE70 = 0;
+    gCollisionObjectCount = 0;
     gNumberOfCheckpoints = 0;
     D_8011AED4 = 0;
     gNumRacers = 0;
@@ -1008,7 +1009,7 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
             D_8011AE98[arg1] = &D_8011AE98[arg1][temp_t3 = D_8011AE98[arg1][1] & 0x3F];
         }
         D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
-        D_8011AE70 = 0;
+        gCollisionObjectCount = 0;
         gNumFinishedRacers = 1;
         if (gPathUpdateOff == FALSE) {
             gParticlePtrList_flush();
@@ -2112,7 +2113,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         address += init_object_interaction_data(curObj, (ObjectInteraction *) address);
     }
     if (behaviourFlags & OBJECT_BEHAVIOUR_UNK20) {
-        address += func_8000FD34(curObj, (Object_5C *) address);
+        address += obj_init_collision(curObj, (ObjectCollision *) address);
     }
     if (curObj->header->attachPointCount > 0 && curObj->header->attachPointCount < 10) {
         curObj->attachPoints = (AttachPoint *) address;
@@ -2173,8 +2174,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         curObj->interactObj = (ObjectInteraction *) (((uintptr_t) curObj + (uintptr_t) curObj->interactObj) -
                                                      (uintptr_t) gSpawnObjectHeap);
     }
-    if (curObj->unk5C != NULL) {
-        curObj->unk5C = (Object_5C *) (((uintptr_t) curObj + (uintptr_t) curObj->unk5C) - (uintptr_t) gSpawnObjectHeap);
+    if (curObj->collisionData != NULL) {
+        curObj->collisionData = (ObjectCollision *) (((uintptr_t) curObj + (uintptr_t) curObj->collisionData) - (uintptr_t) gSpawnObjectHeap);
     }
     if (curObj->attachPoints != NULL) {
         curObj->attachPoints =
@@ -2402,11 +2403,13 @@ s32 init_object_interaction_data(Object *obj, ObjectInteraction *interactObj) {
     return sizeof(ObjectInteraction);
 }
 
-// Inits some matrix stuff for objects. It seems to be precomputing something, but not sure what.
-s32 func_8000FD34(Object *obj, Object_5C *matrices) {
-    obj->unk5C = matrices;
+/**
+ * Sets up collision surface data for the object model.
+*/
+s32 obj_init_collision(Object *obj, ObjectCollision *colData) {
+    obj->collisionData = colData;
     func_80016BC4(obj);
-    return sizeof(Object_5C);
+    return sizeof(ObjectCollision);
 }
 
 /**
@@ -2816,13 +2819,15 @@ void obj_update(s32 updateRate) {
     obj_tick_anims();
     process_object_interactions();
     func_8001E89C();
-    for (i = 0; i < D_8011AE70; i++) {
-        run_object_loop_func(D_8011AE6C[i], updateRate);
+    // Update collidable objects first.
+    for (i = 0; i < gCollisionObjectCount; i++) {
+        run_object_loop_func(gCollisionObjects[i], updateRate);
     }
-    func_8001E6EC(1);
-    for (i = 0; i < D_8011AE70; i++) {
-        func_8001709C(D_8011AE6C[i]);
+    func_8001E6EC(TRUE);
+    for (i = 0; i < gCollisionObjectCount; i++) {
+        obj_collision_transform(gCollisionObjects[i]);
     }
+    // Update nonspecific objects
     j = gObjectCount;
     for (i = gObjectListStart; i < j; i++) {
         obj = gObjPtrList[i];
@@ -2850,6 +2855,7 @@ void obj_update(s32 updateRate) {
             }
         }
     }
+    // Update racers
     for (i = 0; i < gNumRacers; i++) {
         update_player_racer((*gRacers)[i], updateRate);
     }
@@ -2870,16 +2876,17 @@ void obj_update(s32 updateRate) {
             run_object_loop_func(obj, updateRate);
         }
     }
+    // Update particles
     if (gParticleCount > 0) {
         for (i = gObjectListStart; i < j; i++) {
             obj = gObjPtrList[i];
             if (obj->trans.flags & OBJ_FLAGS_PARTICLE) {
-                // Why is this object being treated as a Particle?
                 particle_update((Particle *) obj, updateRate);
             }
         }
     }
 
+    // Update lights
     lightUpdateLights(updateRate);
     if (get_light_count() > 0) {
         for (i = gObjectListStart; i < gObjectCount; i++) {
@@ -2889,8 +2896,8 @@ void obj_update(s32 updateRate) {
             }
         }
     }
-    func_8001E6EC(0);
-    if (gTajRaceInit != 0) {
+    func_8001E6EC(FALSE);
+    if (gTajRaceInit) {
         mode_init_taj_race();
     }
     if (gPathUpdateOff == FALSE) {
@@ -4557,14 +4564,14 @@ void process_object_interactions(void) {
         }
     }
 
-    D_8011AE70 = 0;
+    gCollisionObjectCount = 0;
 
     for (i = 0; i < objsWithInteractives; i++) {
         obj = objList[i];
         objInteract = obj->interactObj;
-        if (objInteract->unk11 == 2 && D_8011AE70 < 20) {
-            D_8011AE6C[D_8011AE70] = obj;
-            D_8011AE70++;
+        if (objInteract->unk11 == 2 && gCollisionObjectCount < 20) {
+            gCollisionObjects[gCollisionObjectCount] = obj;
+            gCollisionObjectCount++;
         }
         if (objInteract->flags & INTERACT_FLAGS_UNK_0004) {
             for (j = 0; j < objsWithInteractives; j++) {
@@ -5007,12 +5014,12 @@ void func_80016748(Object *obj0, Object *obj1) {
 void func_80016BC4(Object *obj) {
     s32 i;
 
-    obj->unk5C->unk104 = 0;
-    func_8001709C(obj);
-    func_8001709C(obj);
+    obj->collisionData->mtxFlip = 0;
+    obj_collision_transform(obj);
+    obj_collision_transform(obj); // Not sure why they do this a second time.
     for (i = 0; i < obj->header->numberOfModelIds; i++) {
         if (obj->modelInstances[i] != NULL) {
-            func_8006017C(obj->modelInstances[i]->objModel);
+            model_init_collision(obj->modelInstances[i]->objModel);
         }
     }
 }
@@ -5106,45 +5113,58 @@ s32 obj_dist_racer(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **sort
     return result;
 }
 
-void func_8001709C(Object *obj) {
-    ObjectTransform sp78;
+/**
+ * Updates the object's collision transformation matrices.
+ */
+void obj_collision_transform(Object *obj) {
+    ObjectTransform trans;
     s32 i;
     f32 inverseScale;
-    MtxF *sp6C;
-    MtxF sp2C;
-    Object_5C *obj5C;
+    MtxF *curMtx;
+    MtxF inverseMtx;
+    ObjectCollision *colData;
 
-    obj5C = obj->unk5C;
-    obj5C->unk104 = (obj5C->unk104 + 1) & 1;
-    sp6C = (MtxF *) &obj5C->_matrices[obj5C->unk104 << 1];
-    sp78.rotation.y_rotation = -obj->trans.rotation.y_rotation;
-    sp78.rotation.x_rotation = -obj->trans.rotation.x_rotation;
-    sp78.rotation.z_rotation = -obj->trans.rotation.z_rotation;
-    sp78.scale = 1.0f;
-    sp78.x_position = -obj->trans.x_position;
-    sp78.y_position = -obj->trans.y_position;
-    sp78.z_position = -obj->trans.z_position;
-    mtxf_from_inverse_transform(sp6C, &sp78);
+    colData = obj->collisionData;
+    colData->mtxFlip = (colData->mtxFlip + 1) & 1;
+#ifdef AVOID_UB
+    curMtx =  &colData->matrices[colData->mtxFlip];
+#else
+
+    curMtx = (MtxF *) &colData->_matrices[colData->mtxFlip << 1];
+#endif
+    trans.rotation.y_rotation = -obj->trans.rotation.y_rotation;
+    trans.rotation.x_rotation = -obj->trans.rotation.x_rotation;
+    trans.rotation.z_rotation = -obj->trans.rotation.z_rotation;
+    trans.scale = 1.0f;
+    trans.x_position = -obj->trans.x_position;
+    trans.y_position = -obj->trans.y_position;
+    trans.z_position = -obj->trans.z_position;
+    mtxf_from_inverse_transform(curMtx, &trans);
     inverseScale = 1.0 / obj->trans.scale;
     i = 0;
+    // Zero out the matrix.
     while (i < 16) {
-        ((f32 *) sp2C)[i] = 0.0f;
+        ((f32 *) inverseMtx)[i] = 0.0f;
         i++;
     }
-    sp2C[0][0] = inverseScale;
-    sp2C[1][1] = inverseScale;
-    sp2C[2][2] = inverseScale;
-    sp2C[3][3] = 1.0f;
-    mtxf_mul(sp6C, &sp2C, sp6C);
-    sp78.rotation.y_rotation = obj->trans.rotation.y_rotation;
-    sp78.rotation.x_rotation = obj->trans.rotation.x_rotation;
-    sp78.rotation.z_rotation = obj->trans.rotation.z_rotation;
-    sp78.scale = 1.0 / inverseScale;
-    sp78.x_position = obj->trans.x_position;
-    sp78.y_position = obj->trans.y_position;
-    sp78.z_position = obj->trans.z_position;
-    mtxf_from_transform((MtxF *) obj5C->_matrices[(obj5C->unk104 + 2) << 1], &sp78);
-    obj5C->unk100 = NULL;
+    inverseMtx[0][0] = inverseScale;
+    inverseMtx[1][1] = inverseScale;
+    inverseMtx[2][2] = inverseScale;
+    inverseMtx[3][3] = 1.0f;
+    mtxf_mul(curMtx, &inverseMtx, curMtx);
+    trans.rotation.y_rotation = obj->trans.rotation.y_rotation;
+    trans.rotation.x_rotation = obj->trans.rotation.x_rotation;
+    trans.rotation.z_rotation = obj->trans.rotation.z_rotation;
+    trans.scale = 1.0 / inverseScale;
+    trans.x_position = obj->trans.x_position;
+    trans.y_position = obj->trans.y_position;
+    trans.z_position = obj->trans.z_position;
+#ifdef AVOID_UB
+    mtxf_from_transform(colData->matrices[(colData->mtxFlip + 2)], &trans);
+#else
+    mtxf_from_transform((MtxF *) colData->_matrices[(colData->mtxFlip + 2) << 1], &trans);
+#endif
+    colData->unk100 = NULL;
 }
 
 // https://decomp.me/scratch/Lxwa8
@@ -5171,8 +5191,8 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
     Object *temp_a1;
     Object *temp_v0;
     ObjectInteraction *temp_v1;
-    Object_5C *temp_v0_2;
-    Object_5C *temp_v0_5;
+    ObjectCollision *temp_v0_2;
+    ObjectCollision *temp_v0_5;
     Vec3f *var_s0_2;
     f32 temp_f0;
     f32 temp_f0_2;
@@ -5220,10 +5240,10 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
 
     sp160 = 0;
     sp170 = 0;
-    if (D_8011AE70 > 0) {
+    if (gCollisionObjectCount > 0) {
         var_s2 = 0;
         do {
-            temp_v0 = *(D_8011AE6C + var_s2);
+            temp_v0 = *(gCollisionObjects + var_s2);
             objModel = temp_v0->modelInstances[temp_v0->modelIndex]->objModel;
             temp_f14 = temp_v0->trans.x_position - obj->trans.x_position;
             temp_f0 = temp_v0->trans.y_position - obj->trans.y_position;
@@ -5276,7 +5296,7 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
             }
             temp_t2 = sp170 + 1;
             sp170 = temp_t2;
-        } while (temp_t2 < D_8011AE70);
+        } while (temp_t2 < gCollisionObjectCount);
         sp170 = 0;
     }
     var_a3 = 0;
@@ -5284,13 +5304,13 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
         sp88 = &spB4[0];
         sp168 = 0;
         do {
-            temp_a1 = D_8011AE6C[*sp88];
+            temp_a1 = gCollisionObjects[*sp88];
             var_s1 = 0;
             objModel = temp_a1->modelInstances[temp_a1->modelIndex]->objModel;
-            temp_v0_2 = temp_a1->unk5C;
+            temp_v0_2 = temp_a1->collisionData;
             var_fp_2 = 0;
             sp16C = 1;
-            spDC = &temp_a1->unk5C->matrices[(((temp_a1->unk5C->unk104 + 1) & 1) << 6)];
+            spDC = &temp_a1->collisionData->matrices[(((temp_a1->collisionData->mtxFlip + 1) & 1) << 6)];
             otherObj = temp_a1;
             temp_v0_3 = func_8001790C((u32 *) obj, (u32 *) temp_a1);
             var_t0 = 1;
@@ -5366,14 +5386,14 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
                                       (f32) (1.0 / (f64) otherObj->trans.scale));
             var_t0_2 = sp16C;
             if (temp_v0_4 != 0) {
-                otherObj->unk5C->unk100 = obj;
+                otherObj->collisionData->unk100 = obj;
             }
             var_fp_3 = 0;
             if (*D_8011AD24 == 0) {
                 sp14C = func_80017978((s32) obj, (s32) otherObj);
             }
-            temp_v0_5 = otherObj->unk5C;
-            spDC = &temp_a1->unk5C->matrices[(temp_a1->unk5C->unk104 + 2) << 6];
+            temp_v0_5 = otherObj->collisionData;
+            spDC = &temp_a1->collisionData->matrices[(temp_a1->collisionData->mtxFlip + 2) << 6];
             if (arg1 > 0) {
                 do {
                     if (sp14C != NULL) {
@@ -5505,7 +5525,7 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
     s32 pad1;
 
     spF8 = 0;
-    temp_t0 = arg0->unk10;
+    temp_t0 = arg0->collisionPlanes;
     var_s6 = 1;
     for (i = 0; i < arg1; i++) {
         spBC = arg6[i];
@@ -5518,8 +5538,8 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
         var_t4 = 0;
         do {
             redoLoop = FALSE;
-            for (j = 0; j < arg0->unk32; j++) {
-                temp_v0 = &temp_t0[arg0->unkC[j].basePlaneIndex];
+            for (j = 0; j < arg0->collisionFacetCount; j++) {
+                temp_v0 = &temp_t0[arg0->collisionFacets[j].basePlaneIndex];
                 temp_f26 = temp_v0[1];
                 sp74 = temp_v0[0];
                 temp_f12 = temp_v0[2];
@@ -5544,7 +5564,7 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                         }
 
                         for (k = 0; (k < 3) && (var_a2 == 1); k++) {
-                            temp_v0 = &temp_t0[arg0->unkC->edgeBisectorPlane[k]];
+                            temp_v0 = &temp_t0[arg0->collisionFacets->edgeBisectorPlane[k]];
                             if (((temp_v0[0] * (((spBC - sp60) * var_f2) + spA4)) +
                                  (temp_v0[1] * (((var_f30 - sp64) * var_f2) + spA0)) +
                                  (temp_v0[2] * (((spB4 - sp68) * var_f2) + sp9C)) + temp_v0[3]) > 4.0f) {
@@ -5572,7 +5592,7 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                             arg6[i] = spBC;
                             arg7[i] = var_f30;
                             arg8[i] = spB4;
-                            j = arg0->unk32;
+                            j = arg0->collisionFacetCount;
                         }
                     }
                 }
@@ -8465,7 +8485,7 @@ void func_8001E6EC(s8 arg0) {
                  (j < D_8011AE78) && (overridePosEntry->behaviorId != D_8011AE74[j]->properties.animation.behaviourID);
                  j++) {}
             if (j != D_8011AE78 && D_8011AE74[j]->animTarget != NULL) {
-                someBool = (D_8011AE74[j]->animTarget->unk5C != NULL) ? FALSE : TRUE;
+                someBool = (D_8011AE74[j]->animTarget->collisionData != NULL) ? FALSE : TRUE;
                 if (arg0 != someBool) {
                     animTarget = D_8011AE74[j]->animTarget;
                     overridePos->x = animTarget->trans.x_position;
