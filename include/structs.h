@@ -1274,7 +1274,7 @@ typedef struct Object_Racer {
     /* 0x1C8 */ u8 unk1C8;
     /* 0x1C9 */ u8 unk1C9;
     /* 0x1CA */ s8 unk1CA;
-    /* 0x1CB */ u8 unk1CB;
+    /* 0x1CB */ s8 unk1CB;
     /* 0x1CC */ s8 aiSkill;
     /* 0x1CD */ u8 unk1CD;
     /* 0x1CE */ u8 unk1CE;
