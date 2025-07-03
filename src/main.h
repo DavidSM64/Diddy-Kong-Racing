@@ -2,8 +2,6 @@
 #define _MAIN_H_
 
 #include "types.h"
-#include "macros.h"
-#include <ultra64.h>
 
 extern u8 *main_BSS_START[];
 

@@ -16,7 +16,6 @@
 #include "printf.h"
 #include "math_util.h"
 #include "tracks.h"
-#include "weather.h"
 #include "vehicle_misc.h"
 #include "audio_vehicle.h"
 #include "game_ui.h"
@@ -31,6 +30,9 @@
 #include "thread3_main.h"
 #include "textures_sprites.h"
 #include "fade_transition.h"
+#include "PR/os_system.h"
+#include "PR/os_cont.h"
+#include "PR/os_libc.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 

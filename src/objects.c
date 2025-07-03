@@ -36,6 +36,10 @@
 #include "thread3_main.h"
 #include "textures_sprites.h"
 #include "fade_transition.h"
+#include "PR/os_system.h"
+#include "PR/os_cont.h"
+#include "PR/os_convert.h"
+#include "PR/rcp.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -641,7 +645,7 @@ void racerfx_update(s32 updateRate) {
                 boostObj->unk74 += updateRateF * 0.25f;
                 updateRateF = 0.0f;
                 if (boostObj->unk74 > 2.4f) {
-                    boostObj->unk74 = (f32) (4.8f - boostObj->unk74);
+                    boostObj->unk74 = 4.8f - boostObj->unk74;
                     boostObj->unk70 = 1;
                 }
             }
@@ -1768,6 +1772,11 @@ void func_8000E5EC(LevelObjectEntryCommon *arg0) {
     } else if ((s32) arg0 >= (s32) D_8011AE98[1] && (s32) arg0 < sp30[1]) {
         sp1C = 1;
     }
+#ifdef AVOID_UB
+    else {
+        sp1C = 0;
+    }
+#endif
 
     dst = (u8 *) arg0;
     src = (u8 *) ((s32) arg0 + size);
@@ -5853,11 +5862,10 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
         sp68 = sp4C->rotationXFrac * objX + sp4C->rotationYFrac * objY + sp4C->rotationZFrac * objZ + sp4C->unkC;
         if (sp68 > 0) {
             if (obj->behaviorId == BHV_RACER) {
-                Object_Racer *racer;
-                racer = obj->racer;
+                Object_Racer *objRacer = obj->racer;
                 if (sp4C->unk3B != 0) {
-                    racer->indicator_type = sp4C->unk3B;
-                    racer->indicator_timer = 120;
+                    objRacer->indicator_type = sp4C->unk3B;
+                    objRacer->indicator_timer = 120;
                 }
             }
 
@@ -9228,39 +9236,39 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
             break;
         default:
             for (var_t0 = 1; var_t0 < 5; var_t0++) {
-                f32 var_f0 = 0;
+                f32 temp = 0;
                 f32 delta;
 
                 delta = spE0[var_t0] - spE0[var_t0 - 1];
                 if (delta > 32768.0) {
-                    var_f0 -= 65536.0;
+                    temp -= 65536.0;
                 } else if (delta < -32768.0) {
-                    var_f0 += 65536.0;
+                    temp += 65536.0;
                 }
                 // clang-format off
-                for (var_s0 = var_t0; var_s0 < 5; var_s0++) { spE0[var_s0] += var_f0; }
+                for (var_s0 = var_t0; var_s0 < 5; var_s0++) { spE0[var_s0] += temp; }
                 // clang-format on
 
-                var_f0 = 0;
+                temp = 0;
                 delta = spCC[var_t0] - spCC[var_t0 - 1];
                 if (delta > 32768.0) {
-                    var_f0 -= 65536.0;
+                    temp -= 65536.0;
                 } else if (delta < -32768.0) {
-                    var_f0 += 65536.0;
+                    temp += 65536.0;
                 }
                 // clang-format off
-                for (var_s0 = var_t0; var_s0 < 5; var_s0++) {spCC[var_s0] += var_f0; }
+                for (var_s0 = var_t0; var_s0 < 5; var_s0++) {spCC[var_s0] += temp; }
                 // clang-format on
 
-                var_f0 = 0;
+                temp = 0;
                 delta = spB8[var_t0] - spB8[var_t0 - 1];
                 if (delta > 32768.0) {
-                    var_f0 -= 65536.0;
+                    temp -= 65536.0;
                 } else if (delta < -32768.0) {
-                    var_f0 += 65536.0;
+                    temp += 65536.0;
                 }
                 // clang-format off
-                for (var_s0 = var_t0; var_s0 < 5; var_s0++) { spB8[var_s0] += var_f0; }
+                for (var_s0 = var_t0; var_s0 < 5; var_s0++) { spB8[var_s0] += temp; }
                 // clang-format on
             }
             if (obj64->unk3F == 0) {

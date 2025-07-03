@@ -1,7 +1,6 @@
 #ifndef _GAME_UI_H_
 #define _GAME_UI_H_
 
-#include "types.h"
 #include "structs.h"
 #include "PR/sptask.h"
 

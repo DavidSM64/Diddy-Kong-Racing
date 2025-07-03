@@ -32,6 +32,8 @@
 #include "save_layout.h"
 #include "asset_loading.h"
 #include "thread3_main.h"
+#include "PR/os_convert.h"
+#include "PR/os_system.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -2648,6 +2650,10 @@ s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, Vertex **currHudVerts, Tr
         case MENU_CAUTION:
             ret = menu_caution_loop(updateRate);
             break;
+#ifdef AVOID_UB
+        default:
+            ret = MENU_RESULT_CONTINUE;
+#endif
     }
     *currDisplayList = sMenuCurrDisplayList;
     *currHudMat = sMenuCurrHudMat;
@@ -4528,6 +4534,11 @@ SIDeviceStatus savemenu_load_sources(void) {
     u32 fileSizes[16];
     char *temp_D_80126A64;
 
+#ifdef AVOID_UB
+    // If gSaveMenuSourceState == 0, then result will be undefined.
+    result = CONTROLLER_PAK_GOOD;
+#endif
+
     settings = gSavefileData[3];
     gSaveMenuOptionCountUpper = 0;
     gSaveMenuOptionSource = 0;
@@ -4714,6 +4725,11 @@ SIDeviceStatus savemenu_write(void) {
     UNUSED s32 pad[2];
     char fileExt[PFS_FILE_EXT_LEN];
     Settings *settings;
+
+#ifdef AVOID_UB
+    // ret can be unset if certain conditions are met.
+    ret = CONTROLLER_PAK_GOOD;
+#endif
 
     settings = get_settings();
     switch (gSaveMenuFilesSource[gSaveMenuOptionSource].saveFileType) {
@@ -7995,6 +8011,11 @@ s32 menu_file_select_loop(s32 updateRate) {
     u32 buttonsPressed;
     Settings *settings;
 
+#ifdef AVOID_UB
+    // i can be undefined in certain cases, and it's used for the save file number.
+    i = 0;
+#endif;
+
     settings = get_settings();
     charselect_music_channels(updateRate);
     if (gOpacityDecayTimer) {
@@ -8632,6 +8653,13 @@ s32 func_8008F618(Gfx **dList, Mtx **mtx) {
             index++;
             texV = bgTexture->height << 5;
         }
+#ifdef AVOID_UB
+        else {
+            // texU and texV aren't set if bgTexture is NULL
+            texU = 0;
+            texV = 0;
+        }
+#endif
         triangles[0].uv0.u = texU;
         triangles[0].uv0.v = 0;
         triangles[0].uv1.u = texU;
@@ -12346,6 +12374,10 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                 if (gTrophyRaceRound < 4) {
                     menu_init(MENU_TROPHY_RACE_ROUND);
                 } else {
+#ifdef AVOID_UB
+                    // This value isn't set if certain conditions are met.
+                    sp34 = 0;
+#endif
                     for (temp6 = 0, i = 0; i < gRankingPlayerCount; i++) {
                         if (gRankingsPlayers[i] != 0) {
                             temp7 = settings->racers[gRankingsPlayerIDs[i]].character;
