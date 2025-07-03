@@ -61,7 +61,7 @@ s32 D_800DC70C = 0; // Currently unknown, might be a different type.
 s16 D_800DC710 = 1;
 s32 D_800DC714 = 0; // Currently unknown, might be a different type.
 Object *gGhostObjStaff = NULL;
-s8 D_800DC71C = 0;
+s8 gRollingDemo = FALSE;
 s32 gObjectTexAnim = FALSE;
 s16 gTimeTrialTime = 10800;
 s16 gTimeTrialVehicle = -1;
@@ -82,15 +82,16 @@ Object *gMagnetEffectObject = NULL;
 f32 D_800DC768[16] = { 0.0f, 1.0f,  0.70711f,  0.70711f,  1.0f,  0.0f, 0.70711f,  -0.70711f,
                        0.0f, -1.0f, -0.70711f, -0.70711f, -1.0f, 0.0f, -0.70711f, 0.70711f };
 
-u16 D_800DC7A8[] = {
+u16 gRacerObjectTable[] = {
     // Car
-    ASSET_OBJECT_ID_KREMCAR,  ASSET_OBJECT_ID_BADGERCAR, ASSET_OBJECT_ID_TORTCAR,    ASSET_OBJECT_ID_CONKACAR,
-    ASSET_OBJECT_ID_TIGERCAR, ASSET_OBJECT_ID_BANJOCAR,  ASSET_OBJECT_ID_CHICKENCAR, ASSET_OBJECT_ID_MOUSECAR,
-};
-
-s16 D_800DC7B8[] = {
-    // TODO: move these first two entries to the first var above. I'm thinking this is either all one big var, or the
-    // boss objects have their own table.
+    ASSET_OBJECT_ID_KREMCAR,
+    ASSET_OBJECT_ID_BADGERCAR,
+    ASSET_OBJECT_ID_TORTCAR,
+    ASSET_OBJECT_ID_CONKACAR,
+    ASSET_OBJECT_ID_TIGERCAR,
+    ASSET_OBJECT_ID_BANJOCAR,
+    ASSET_OBJECT_ID_CHICKENCAR,
+    ASSET_OBJECT_ID_MOUSECAR,
     ASSET_OBJECT_ID_SWCAR,
     ASSET_OBJECT_ID_DIDDYCAR,
     // Hover
@@ -868,10 +869,10 @@ void free_all_objects(void) {
     s32 i, len;
     timetrial_free_staff_ghost();
     D_800DC748 = FALSE;
-    if (D_800DC71C) {
+    if (gRollingDemo) {
         rumble_init(TRUE);
     }
-    D_800DC71C = 0;
+    gRollingDemo = FALSE;
     if (gSwapLeadPlayer && is_in_two_player_adventure()) {
         gSwapLeadPlayer = FALSE;
         swap_lead_player();
@@ -1054,108 +1055,107 @@ s32 func_8000CC20(Object *obj) {
     return NextFreeIndex;
 }
 
-// https://decomp.me/scratch/EXgPQ
-#ifdef NON_EQUIVALENT
-// track_init_racers
-void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
-    s32 numPlayers; // sp144
-    enum GameMode gameMode;
-    s32 cutsceneID; // sp130
-    s8 *miscAsset16;
-    s8 sp11C[8];
-    s8 sp114[8];
-    s32 spF4[8];
-    s32 spD4[8];
-    s32 spB4[8];
-    s32 sp94[8];
-    LevelHeader *levelHeader;
-    Camera *cutsceneCameraSegment; // sp74
-    s16 objectId;
-    s8 sp127;
-    u8 raceType;
-    s8 tempVehicle;
-    u8 var_a1;
-    s32 isChallengeMode; // sp64
-    s32 i6;              // sp54
-    LevelObjectEntry_Unk8000CC7C *entry;
+/**
+ * Takes the level header and decides which race type to activate.
+ * Sets up the racer spawning. Initialising vehicle types, racer count, then
+ * spawning them into the world in their assigned order.
+ */
+void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
+    LevelObjectEntry_Racer *racerEntry;
     Object *curObj;
-    Object *curRacerObj;
-    Object *newRacerObj;
+    s32 numPlayers;
+    Object *racerObj;
+    LevelObjectEntry *objEntry;
+    enum GameMode gameMode;
     Object_Racer *curRacer;
-    Settings *settings;
+    s32 cutsceneID;
     s32 spawnObjFlags;
-    s32 racerPos;
-    s32 i2;
+    s8 *miscAsset16;
+    s8 sp127;
+    u8 spawnedObjCount;
+    s16 objectID;
+    s8 racerActive[8];
+    s8 racerIDs[8];
+    s32 spawnX[8];
+    s32 spawnY[8];
+    s32 spawnZ[8];
+    s32 spawnAngle[8];
+    Settings *settings;
     s32 j;
     s32 var_s4;
-    s32 tajFlags;
+    s32 i;
+    s32 k;
+    u8 raceType;
+    LevelHeader *levelHeader;
+    Camera *cutsceneCameraSegment;
 
     D_8011AD20 = FALSE;
     gEventCountdown = 0;
-    gFirstTimeFinish = 0;
+    gFirstTimeFinish = FALSE;
     gNumRacers = 0;
     D_8011AF00 = 0;
-    set_taj_status(0);
+    set_taj_status(TAJ_WANDER);
     levelHeader = get_current_level_header();
     raceType = levelHeader->race_type;
     if (raceType == RACETYPE_CUTSCENE_1 || raceType == RACETYPE_CUTSCENE_2) {
         return;
     }
     if (raceType == RACETYPE_BOSS || raceType & RACETYPE_CHALLENGE) {
-        gIsTimeTrial = 0;
-        gTimeTrialEnabled = 0;
+        gIsTimeTrial = FALSE;
+        gTimeTrialEnabled = FALSE;
     }
     cutsceneID = -1;
     if (is_time_trial_enabled() && raceType == RACETYPE_DEFAULT) {
         cutsceneCameraSegment = cam_get_cameras();
-        cutsceneID = (u8) cutsceneCameraSegment->zoom;
+        cutsceneID = cutsceneCameraSegment->zoom;
         cutsceneCameraSegment->zoom = 1;
     }
     gameMode = get_game_mode();
     settings = get_settings();
-    miscAsset16 = (s8 *) get_misc_asset(3);
+    miscAsset16 = (s8 *) get_misc_asset(ASSET_MISC_3);
     gPrevTimeTrialVehicle = D_8011ADC5;
-    tajFlags = settings->courseFlagsPtr[settings->courseId];
-    if (!(tajFlags & 1)) { // Check if the player has not visited the course yet.
-        settings->courseFlagsPtr[settings->courseId] = tajFlags | 1;
+    if (!(settings->courseFlagsPtr[settings->courseId] &
+          RACE_VISITED)) { // Check if the player has not visited the course yet.
+        settings->courseFlagsPtr[settings->courseId] |= RACE_VISITED;
         D_8011AF00 = 2;
     }
     if (raceType != RACETYPE_DEFAULT) {
         D_8011AF00 = 2;
     }
-    for (i2 = 0; i2 < 8; i2++) {
-        spB4[i2] = 0;
-        spF4[i2] = 0;
-        spD4[i2] = 0;
+    for (j = 0; j < ARRAY_COUNT(spawnZ); j++) {
+        spawnX[j] = 0;
+        spawnY[j] = 0;
+        spawnZ[j] = 0;
     }
-    for (i2 = 0; i2 < gObjectCount; i2++) {
-        curObj = gObjPtrList[i2];
-        if (!(curObj->trans.flags & OBJ_FLAGS_PARTICLE)) {
-            if (curObj->behaviorId == BHV_SETUP_POINT) {
-                if (arg1 == (u32) curObj->properties.setupPoint.entranceID) {
-                    if (curObj->properties.setupPoint.racerIndex < 8) {
-                        spF4[curObj->properties.setupPoint.racerIndex] = curObj->trans.x_position;
-                        spD4[curObj->properties.setupPoint.racerIndex] = curObj->trans.y_position;
-                        spB4[curObj->properties.setupPoint.racerIndex] = curObj->trans.z_position;
-                        sp94[curObj->properties.setupPoint.racerIndex] = curObj->trans.rotation.y_rotation;
+    for (j = 0; j < gObjectCount; j++) {
+        racerObj = gObjPtrList[j];
+        if (!(racerObj->trans.flags & OBJ_FLAGS_PARTICLE)) {
+            if (racerObj->behaviorId == BHV_SETUP_POINT) {
+                if (entranceID == racerObj->properties.setupPoint.entranceID) {
+                    if (racerObj->properties.setupPoint.racerIndex < 8) {
+                        spawnX[racerObj->properties.setupPoint.racerIndex] = racerObj->trans.x_position;
+                        spawnY[racerObj->properties.setupPoint.racerIndex] = racerObj->trans.y_position;
+                        spawnZ[racerObj->properties.setupPoint.racerIndex] = racerObj->trans.z_position;
+                        spawnAngle[racerObj->properties.setupPoint.racerIndex] = racerObj->trans.rotation.y_rotation;
                     }
-                    tempVehicle = curObj->level_entry->setupPoint.vehicle;
-                    if (tempVehicle != -1) {
-                        vehicle = tempVehicle;
+
+                    objEntry = racerObj->level_entry;
+                    if (objEntry->setupPoint.vehicle != -1) {
+                        vehicle = objEntry->setupPoint.vehicle;
                     }
                 }
             }
         }
     }
-    D_8011ADC5 = vehicle;
+    D_8011ADC5 = vehicle; // UB if all setup points don't have an assigned vehicle ID.
     gPrevTimeTrialVehicle = D_8011ADC5;
-    numPlayers = arg2 + 1;
+    numPlayers = playerCount + 1;
     gNumRacers = 8;
     D_800DC740 = 0;
     if (is_two_player_adventure_race()) {
         numPlayers = 2;
         D_800DC740 = 1;
-        set_scene_viewport_num(1);
+        set_scene_viewport_num(VIEWPORT_LAYOUT_2_PLAYERS);
     }
     if (raceType == RACETYPE_HUBWORLD) {
         gTimeTrialEnabled = 0;
@@ -1165,18 +1165,17 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     if (gIsTimeTrial) {
         raceType = RACETYPE_HUBWORLD; // ???
     }
-    isChallengeMode = raceType & RACETYPE_CHALLENGE;
     if (raceType == RACETYPE_HUBWORLD || numPlayers >= 3) {
         gNumRacers = numPlayers;
         if (get_level_property_stack_pos() == 0 && D_800DC708 != 0) {
-            sp94[0] += D_800DC708;
+            spawnAngle[0] += D_800DC708;
             D_800DC708 = 0;
         }
     } else if (numPlayers == 2) {
         gNumRacers = get_multiplayer_racer_count();
     }
 
-    if (isChallengeMode != 0) {
+    if (raceType & RACETYPE_CHALLENGE) {
         gNumRacers = 4;
     }
     D_8011AD3C = 0;
@@ -1185,138 +1184,139 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         numPlayers = 1;
         D_8011AD3C = 1;
     }
-    D_800DC71C = 0;
+    gRollingDemo = FALSE;
     if (gameMode == GAMEMODE_MENU && raceType == RACETYPE_DEFAULT) {
         gNumRacers = 6;
-        D_800DC71C = 1;
+        gRollingDemo = TRUE;
         D_8011AD3C = 2;
     }
 
-    for (i2 = 0; i2 < gNumRacers; i2++) {
-        sp11C[i2] = 0;
+    for (i = 0; i < gNumRacers; i++) {
+        racerActive[i] = FALSE;
     }
 
-    var_a1 = 0;
-    for (i2 = 0; i2 < numPlayers; i2++) {
-        racerPos = settings->racers[i2].starting_position;
-        if (racerPos < gNumRacers) {
-            if (sp11C[racerPos] == 0) {
-                sp11C[racerPos] = 1;
+    spawnedObjCount = 0;
+    // Mark active for human players.
+    for (i = 0; i < numPlayers; i++) {
+        if (settings->racers[i].starting_position < gNumRacers) {
+            if (racerActive[settings->racers[i].starting_position] == FALSE) {
+                racerActive[settings->racers[i].starting_position] = TRUE;
                 continue;
             }
         }
-        sp114[var_a1++] = (u16) i2;
+        racerIDs[spawnedObjCount++] = i;
     }
 
-    for (i2 = numPlayers; i2 < gNumRacers; i2++) {
-        racerPos = settings->racers[i2].starting_position;
-        if (racerPos < gNumRacers) {
-            if (sp11C[racerPos] == 0) {
-                sp11C[racerPos] = 1;
+    // Mark active for computer players.
+    for (i = numPlayers; i < gNumRacers; i++) {
+        if (settings->racers[i].starting_position < gNumRacers) {
+            if (racerActive[settings->racers[i].starting_position] == FALSE) {
+                racerActive[settings->racers[i].starting_position] = TRUE;
                 continue;
             }
         }
-        sp114[var_a1++] = (u16) i2;
+        racerIDs[spawnedObjCount++] = i;
     }
 
-    for (i6 = 0; i6 < var_a1; i6++) {
+    // Assign spawn locations for active racers.
+    for (i = 0; i < spawnedObjCount; i++) {
         for (j = 0; j < gNumRacers; j++) {
-            if (sp11C[j] == 0) {
-                sp11C[j] = 1;
-                settings->racers[sp114[i6]].starting_position = j;
-                j = gNumRacers;
+            if (racerActive[j] == FALSE) {
+                racerActive[j] = TRUE;
+                settings->racers[racerIDs[i]].starting_position = j;
+                j = gNumRacers; // Break
             }
         }
     }
-    if (((!(curObj->trans.rotation.y_rotation)) && (!(curObj->trans.rotation.y_rotation))) &&
-        (!(curObj->trans.rotation.y_rotation))) {}
-    entry = mempool_alloc_safe(sizeof(LevelObjectEntry_Unk8000CC7C), COLOUR_TAG_YELLOW);
-    entry->unkC = 0;
-    entry->unkA = 0;
-    entry->unk8 = 0;
+    racerEntry = mempool_alloc_safe(sizeof(LevelObjectEntry_Racer), COLOUR_TAG_YELLOW);
+    racerEntry->angleY = 0;
+    racerEntry->angleX = 0;
+    racerEntry->angleZ = 0;
     if (levelHeader->vehicle == VEHICLE_CAR) {
         gIsNonCarRacers = FALSE;
     } else {
         gIsNonCarRacers = TRUE;
     }
-    sp127 = -1;
-    i2 = gNumRacers;
     D_8011AD24[1] = levelHeader->bossRaceID;
-    for (i6 = 0; i6 < gNumRacers; i6++) {
-        var_s4 = i6;
-        if (raceType != RACETYPE_HUBWORLD && isChallengeMode == 0 && D_8011AD3C == 0) {
-            var_s4 = 0;
-            // This might not be a for loop?
-            for (j = 0; j < gNumRacers; j++) {
-                if (i6 == settings->racers[j].starting_position) {
+    sp127 = -1;
+    for (i = 0; i < gNumRacers; i++) {
+        if (raceType != RACETYPE_HUBWORLD && !(raceType & RACETYPE_CHALLENGE) && D_8011AD3C == 0) {
+            j = 0;
+            var_s4 = j;
+            do {
+                if (i == settings->racers[j].starting_position) {
                     var_s4 = j;
-                    j = i2;
+                    j = gNumRacers;
                 }
-            }
-        }
-        if (var_s4 < numPlayers) {
-            entry->unkE = var_s4;
+                j++;
+            } while (j < gNumRacers);
         } else {
-            entry->unkE = 4;
+            var_s4 = i;
         }
-        if (raceType != RACETYPE_HUBWORLD || entry->unkE != 4) {
-            spawnObjFlags = OBJECT_SPAWN_UNK01;
+        racerEntry->playerIndex = var_s4 < numPlayers ? var_s4 : 4;
+        if (raceType != RACETYPE_HUBWORLD || racerEntry->playerIndex != 4) {
             if (D_8011AD3C == 1) {
-                if (i6 == 0) {
+                if (i == 0) {
                     vehicle = gBossVehicles[D_8011AD24[1]].playerVehicle;
                 } else {
-                    vehicle = gBossVehicles[D_8011AD24[1]].playerVehicle;
+                    vehicle = gBossVehicles[D_8011AD24[1]].bossVehicle;
                 }
             } else if (D_8011AD3C == 2) {
                 vehicle = levelHeader->vehicle;
             } else {
-                if (entry->unkE == 4 || is_two_player_adventure_race()) {
+                if (racerEntry->playerIndex == 4 || is_two_player_adventure_race()) {
                     vehicle = get_player_selected_vehicle(PLAYER_ONE);
                 } else if (numPlayers >= 2) {
-                    vehicle = get_player_selected_vehicle(entry->unkE);
+                    vehicle = get_player_selected_vehicle(racerEntry->playerIndex);
                 }
             }
 
             // Are these assignments correct? Seems weird.
             if (D_8011AD3C == 2) {
-                objectId = D_800DC7A8[D_800DC840[i6] + (vehicle * 10)];
+                objectID = gRacerObjectTable[D_800DC840[i] + (vehicle * NUM_CHARACTERS)];
             } else if (vehicle < 5) {
-                objectId = D_800DC7A8[(settings->racers[var_s4].character) + (vehicle * 10)];
+                objectID = gRacerObjectTable[(settings->racers[var_s4].character) + (vehicle * NUM_CHARACTERS)];
             } else {
-                objectId = D_800DC7B8[vehicle];
+                objectID = gRacerObjectTable[vehicle + 45];
             }
 
-            entry->common.objectID = objectId;
-            entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
-            entry->common.x = spF4[i6];
-            entry->common.y = spD4[i6];
-            entry->common.z = spB4[i6];
-            entry->unkC = sp94[i6];
-            if (entry->unkE == 4) {
+            racerEntry->common.objectID = objectID;
+            racerEntry->common.size = ((objectID & 0x100) >> 1) | 0x10;
+            racerEntry->common.x = spawnX[i];
+            racerEntry->common.y = spawnY[i];
+            racerEntry->common.z = spawnZ[i];
+            racerEntry->angleY = spawnAngle[i];
+            if (racerEntry->playerIndex == 4) {
                 model_anim_offset(1);
             }
-            if (entry->unkE == 4) {
-                spawnObjFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK04;
+
+            spawnObjFlags = OBJECT_BEHAVIOUR_SHADED;
+            if (racerEntry->playerIndex == 4) {
+                spawnObjFlags = OBJECT_BEHAVIOUR_SHADED | OBJECT_BEHAVIOUR_WATER_EFFECT;
+                // @fake but required for the | OBJECT_BEHAVIOUR_ANIMATION below to work
+                if (1) {
+                    spawnObjFlags |= 0;
+                }
                 if (numPlayers >= 2) {
-                    spawnObjFlags |= OBJECT_SPAWN_UNK08;
+                    spawnObjFlags |= OBJECT_BEHAVIOUR_ANIMATION;
                 }
             }
-            if (entry->unkE != 4) {
+            if (racerEntry->playerIndex != 4) {
                 if (numPlayers == 1) {
-                    spawnObjFlags |= OBJECT_SPAWN_UNK10;
+                    spawnObjFlags |= OBJECT_BEHAVIOUR_INTERACTIVE;
                 }
             }
             if (vehicle >= VEHICLE_BOSSES) {
-                spawnObjFlags = OBJECT_SPAWN_UNK01;
+                spawnObjFlags = OBJECT_BEHAVIOUR_SHADED;
                 model_anim_offset(0);
             }
-            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, spawnObjFlags);
-            newRacerObj->trans.rotation.y_rotation = sp94[i6];
-            (*gRacers)[i6] = newRacerObj;
-            gRacersByPosition[i6] = newRacerObj;
-            gRacersByPort[var_s4] = newRacerObj;
-            curRacer = newRacerObj->racer;
-            newRacerObj->level_entry = NULL;
+            racerObj = spawn_object((LevelObjectEntryCommon *) racerEntry, spawnObjFlags);
+            racerObj->trans.rotation.y_rotation = spawnAngle[i];
+            (*gRacers)[i] = racerObj;
+            gRacersByPosition[i] = racerObj;
+            gRacersByPort[var_s4] = racerObj;
+            curRacer = racerObj->racer;
+            racerObj->level_entry = NULL;
             curRacer->vehicleID = vehicle;
             curRacer->vehicleIDPrev = vehicle;
             if (sp127 != -1 && sp127 != (s32) vehicle) {
@@ -1328,14 +1328,13 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 gIsNonCarRacers = TRUE;
             }
             curRacer->unk1CB = vehicle;
-            tempVehicle = curRacer->unk1CB;
-            if (tempVehicle < VEHICLE_CAR || tempVehicle > VEHICLE_PLANE) {
+            if (curRacer->unk1CB < VEHICLE_CAR || curRacer->unk1CB > VEHICLE_PLANE) {
                 curRacer->unk1CB = 0;
             }
             curRacer->racerIndex = var_s4;
             curRacer->characterId = settings->racers[var_s4].character;
             if (D_8011AD3C == 2) {
-                curRacer->characterId = D_800DC840[i6];
+                curRacer->characterId = D_800DC840[i];
             } else {
                 curRacer->characterId = settings->racers[var_s4].character;
             }
@@ -1344,7 +1343,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             } else {
                 curRacer->bananas = 0;
             }
-            if (get_filtered_cheats() & CHEAT_START_WITH_10_BANANAS && !isChallengeMode) {
+            if (get_filtered_cheats() & CHEAT_START_WITH_10_BANANAS && !(raceType & RACETYPE_CHALLENGE)) {
                 if (curRacer->playerIndex != PLAYER_COMPUTER) {
                     curRacer->bananas = 10;
                 }
@@ -1355,7 +1354,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 curRacer->vehicleSound = NULL;
             }
 
-            newRacerObj->interactObj->pushForce = miscAsset16[curRacer->characterId] + 1;
+            racerObj->interactObj->pushForce = miscAsset16[curRacer->characterId] + 1;
             switch (curRacer->vehicleID) {
                 case VEHICLE_TRICKY:
                 case VEHICLE_BLUEY:
@@ -1365,7 +1364,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 case VEHICLE_BUBBLER:
                 case VEHICLE_WIZPIG:
                 case VEHICLE_ROCKET:
-                    racer_special_init(newRacerObj, curRacer);
+                    racer_special_init(racerObj, curRacer);
                     break;
                 default:
                     break;
@@ -1379,157 +1378,169 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     if (D_8011AD3C != 0) {
         D_8011AD20 = FALSE;
     }
+    // Remove unwanted objects depending on race type.
     if (get_game_mode() == GAMEMODE_INGAME) {
         for (j = 0; j < gObjectCount; j++) {
-            curObj = gObjPtrList[j];
-            tajFlags = curObj->header->flags;
-            if ((tajFlags & 0x20) && (gIsTimeTrial)) {
-                free_object(curObj);
-            } else if ((tajFlags & 0x40) && (numPlayers >= 2)) {
-                free_object(curObj);
+            racerObj = gObjPtrList[j];
+            i = racerObj->header->flags;
+            if (i & OBJECT_HEADER_NO_TIME_TRIAL && gIsTimeTrial) {
+                free_object(racerObj);
+            } else if (i & OBJECT_HEADER_NO_MULTIPLATER && numPlayers >= 2) {
+                free_object(racerObj);
             }
         }
     }
-    gGhostObjStaff = 0;
+    gGhostObjStaff = NULL;
     timetrial_free_staff_ghost();
     gTimeTrialContPak = -1;
-    if ((gIsTimeTrial) && (numPlayers == 1)) {
+    if (gIsTimeTrial && numPlayers == 1) {
         timetrial_reset_player_ghost();
-        gTimeTrialContPak = timetrial_init_player_ghost(0);
+        gTimeTrialContPak = timetrial_init_player_ghost(PLAYER_ONE);
         gHasGhostToSave = 0;
-        if (gTimeTrialVehicle >= 5) {
-            gTimeTrialVehicle = 0;
+        if (gTimeTrialVehicle >= VEHICLE_BOSSES) {
+            gTimeTrialVehicle = VEHICLE_CAR;
         }
-        if (timetrial_valid_player_ghost() != 0) {
-            objectId = D_800DC7A8[(gTimeTrialVehicle * 10) + gTimeTrialCharacter];
-            entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
-            entry->common.objectID = objectId;
-            entry->common.x = spF4[0];
-            entry->common.y = spD4[0];
-            entry->common.z = spB4[0];
-            entry->unkC = sp94[0];
-            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
-            newRacerObj->level_entry = NULL;
-            newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
-            newRacerObj->shadow->scale = 0.01f;
-            newRacerObj->interactObj->flags = INTERACT_FLAGS_NONE;
-            gGhostObjPlayer = newRacerObj;
-            newRacerObj->racer->transparency = 0x60;
+        // Spawn player ghost.
+        if (timetrial_valid_player_ghost()) {
+            objectID = gRacerObjectTable[gTimeTrialCharacter + (gTimeTrialVehicle * NUM_CHARACTERS)];
+            racerEntry->common.size = ((objectID & 0x100) >> 1) | 0x10;
+            racerEntry->common.objectID = objectID;
+            racerEntry->common.x = spawnX[0];
+            racerEntry->common.y = spawnY[0];
+            racerEntry->common.z = spawnZ[0];
+            racerEntry->angleY = spawnAngle[0];
+            curObj = spawn_object((LevelObjectEntryCommon *) racerEntry, 1);
+            curObj->level_entry = NULL;
+            curObj->behaviorId = BHV_TIMETRIAL_GHOST;
+            curObj->shadow->scale = 0.01f;
+            curObj->interactObj->flags = INTERACT_FLAGS_NONE;
+            gGhostObjPlayer = curObj;
+            curRacer = gGhostObjPlayer->racer;
+            curRacer->transparency = 96;
         }
-        if (timetrial_init_staff_ghost(get_current_map_id()) != 0) {
-            objectId = D_800DC7B8[gMapDefaultVehicle * 10];
-            entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
-            entry->common.objectID = objectId;
-            entry->common.x = spF4[0];
-            entry->common.y = spD4[0];
-            entry->common.z = spB4[0];
-            entry->unkC = sp94[0];
-            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
-            newRacerObj->level_entry = NULL;
-            newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
-            newRacerObj->shadow->scale = 0.01f;
-            newRacerObj->interactObj->flags = INTERACT_FLAGS_NONE;
-            gGhostObjStaff = newRacerObj;
-            newRacerObj->racer->transparency = 0x60;
+        // Spawn staff ghost
+        if (timetrial_init_staff_ghost(get_current_map_id())) {
+            objectID = gRacerObjectTable[(gMapDefaultVehicle * NUM_CHARACTERS) + 8];
+
+            racerEntry->common.size = ((objectID & 0x100) >> 1) | 0x10;
+            racerEntry->common.objectID = objectID;
+            racerEntry->common.x = spawnX[0];
+            racerEntry->common.y = spawnY[0];
+            racerEntry->common.z = spawnZ[0];
+            racerEntry->angleY = spawnAngle[0];
+            curObj = spawn_object((LevelObjectEntryCommon *) racerEntry, 1);
+            curObj->level_entry = NULL;
+            curObj->behaviorId = BHV_TIMETRIAL_GHOST;
+            curObj->shadow->scale = 0.01f;
+            curObj->interactObj->flags = INTERACT_FLAGS_NONE;
+            gGhostObjStaff = curObj;
+            curRacer = gGhostObjStaff->racer;
+            // ASSET_OBJECT_ID_CHARACTERFLAG is what this is. But it's not used.
+            objectID = 0x40;
+            objectID += 0x20;
+            curRacer->transparency = 96;
         }
     }
-    gEventCountdown = 100;
-    for (j = 0; j < gNumRacers; j++) {
-        curRacerObj = (*gRacers)[j];
-        curRacer = curRacerObj->racer;
-        for (i2 = 0; i2 < 10; i2++) {
-            update_player_racer(curRacerObj, LOGIC_30FPS); // Simulate 10 updates?
+
+    for (j = 0, gEventCountdown = 100; j < gNumRacers; j++) {
+        racerObj = (*gRacers)[j];
+        curRacer = racerObj->racer;
+        for (k = 0; k < 10; k++) {
+            update_player_racer(racerObj, LOGIC_30FPS); // Settle racers.
         }
         if (curRacer->playerIndex == PLAYER_COMPUTER) {
-            var_s4 = (var_s4 + 1) & 1;
-            for (i2 = 0; i2 < curRacerObj->header->numberOfModelIds; i2++) {
-                if (curRacerObj->modelInstances[i2] != NULL) {
-                    if (curRacerObj->modelInstances[i2]->animUpdateTimer != 0) {
-                        curRacerObj->modelInstances[i2]->animUpdateTimer = (var_s4 * 2);
+            var_s4++;
+            var_s4 &= 1;
+            for (k = 0; k < racerObj->header->numberOfModelIds; k++) {
+                if (racerObj->modelInstances[k] != NULL) {
+                    if (racerObj->modelInstances[k]->animUpdateTimer != 0) {
+                        racerObj->modelInstances[k]->animUpdateTimer = (var_s4 * 2);
                     }
                 }
             }
         } else {
             // curRacer is a human racer.
-            for (i2 = 0; i2 < curRacerObj->header->numberOfModelIds; i2++) {
-                if (curRacerObj->modelInstances[i2] != NULL) {
-                    if (curRacerObj->modelInstances[i2]->animUpdateTimer != 0) {
-                        curRacerObj->modelInstances[i2]->animUpdateTimer = 0;
+            for (k = 0; k < racerObj->header->numberOfModelIds; k++) {
+                if (racerObj->modelInstances[k] != NULL) {
+                    if (racerObj->modelInstances[k]->animUpdateTimer != 0) {
+                        racerObj->modelInstances[k]->animUpdateTimer = 0;
                     }
                 }
             }
         }
+        // Apply size cheats to racers.
         if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
-            curRacerObj->trans.scale *= 1.4f;
+            racerObj->trans.scale *= 1.4f;
         }
         if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
-            curRacerObj->trans.scale *= 0.714f;
+            racerObj->trans.scale *= 0.714f;
         }
         curRacer->stretch_height_cap = 1.0f;
         curRacer->stretch_height = 1.0f;
     }
-    if (raceType == RACETYPE_DEFAULT || isChallengeMode || gIsTimeTrial || D_8011AD3C) {
+    if (raceType == RACETYPE_DEFAULT || raceType & RACETYPE_CHALLENGE || gIsTimeTrial || D_8011AD3C != 0) {
         gEventCountdown = 80;
     } else {
         gEventCountdown = 0;
     }
-    if (raceType == RACETYPE_DEFAULT && numPlayers == 1 && !is_in_adventure_two()) {
-        if (is_two_player_adventure_race() == 0) {
-            for (i2 = 0; i2 < 3; i2++) {
-                entry->common.objectID = ASSET_OBJECT_ID_POSARROW;
-                entry->common.size = sizeof(LevelObjectEntryCommon);
-                entry->common.x = 0;
-                entry->common.y = 0;
-                entry->common.z = 0;
-                newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
-                newRacerObj->properties.common.unk0 = i2;
-                newRacerObj->level_entry = NULL;
+    if (raceType == RACETYPE_DEFAULT && (playerCount + 1) == 1 && is_in_adventure_two() == FALSE) {
+        if (is_two_player_adventure_race() == FALSE) {
+            for (j = 0; j < 3; j++) {
+                racerEntry->common.objectID = ASSET_OBJECT_ID_POSARROW;
+                racerEntry->common.size = sizeof(LevelObjectEntryCommon);
+                racerEntry->common.x = 0;
+                racerEntry->common.y = 0;
+                racerEntry->common.z = 0;
+                curObj = spawn_object((LevelObjectEntryCommon *) racerEntry, OBJECT_SPAWN_UNK01);
+                curObj->properties.common.unk0 = j;
+                curObj->level_entry = NULL;
             }
         }
     }
     gRaceEndTimer = 0;
-    gRaceFinishTriggered = 0;
+    gRaceFinishTriggered = FALSE;
     set_next_taj_challenge_menu(0);
     if (settings->worldId == WORLD_CENTRAL_AREA) {
-        if (!is_in_tracks_mode()) {
-            var_s4 = 0;
+        if (is_in_tracks_mode() == FALSE) {
             miscAsset16 = (s8 *) get_misc_asset(ASSET_MISC_16);
-            tajFlags = settings->tajFlags;
+            j = 0;
 
             // settings->balloonsPtr[0] is the total balloon count.
-            if (!(tajFlags & TAJ_FLAGS_CAR_CHAL_UNLOCKED) && (settings->balloonsPtr[0] >= miscAsset16[0])) {
-                var_s4 = 1;
-            } else if (!(tajFlags & TAJ_FLAGS_HOVER_CHAL_UNLOCKED) && (settings->balloonsPtr[0] >= miscAsset16[1])) {
-                var_s4 = 2;
-            } else if (!(tajFlags & TAJ_FLAGS_PLANE_CHAL_UNLOCKED) && (settings->balloonsPtr[0] >= miscAsset16[2])) {
-                var_s4 = 3;
+            if (!(settings->tajFlags & TAJ_FLAGS_CAR_CHAL_UNLOCKED) && (settings->balloonsPtr[0] >= miscAsset16[0])) {
+                j = 1;
+            } else if (!(settings->tajFlags & TAJ_FLAGS_HOVER_CHAL_UNLOCKED) &&
+                       (settings->balloonsPtr[0] >= miscAsset16[1])) {
+                j = 2;
+            } else if (!(settings->tajFlags & TAJ_FLAGS_PLANE_CHAL_UNLOCKED) &&
+                       (settings->balloonsPtr[0] >= miscAsset16[2])) {
+                j = 3;
             }
 
-            if (var_s4) {
+            // Taj will teleport straight to the player to initiate a challenge.
+            if (j) {
                 set_taj_voice_line(SOUND_VOICE_TAJ_CHALLENGE_RACE);
-                settings->tajFlags |= 1 << (var_s4 + 31);
-                set_taj_status(2);
-                set_next_taj_challenge_menu(var_s4);
+                settings->tajFlags |= 1 << (j + 31);
+                set_taj_status(TAJ_TELEPORT);
+                set_next_taj_challenge_menu(j);
                 safe_mark_write_save_file(get_save_file_index());
             }
         }
     }
-    *D_8011AD24 = 1;
+    D_8011AD24[0] = TRUE;
     if (cutsceneID >= 0) {
         cutsceneCameraSegment->zoom = cutsceneID;
     }
-    if (func_8000E148() != 0) {
+    // Menu demos will skip straight to the action.
+    if (racetype_demo()) {
         rumble_init(FALSE);
         gEventCountdown = 0;
         start_level_music(1.0f);
     }
+    //!@bug: Free timer is already 0 when loading levels.
     mempool_free_timer(0);
-    mempool_free(entry);
+    mempool_free(racerEntry);
     mempool_free_timer(2);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000CC7C.s")
-#endif
 
 /**
  * Return an error status for the controller pak.
@@ -1565,8 +1576,11 @@ s8 func_8000E138(void) {
     return D_8011AD20;
 }
 
-s8 func_8000E148(void) {
-    return D_800DC71C;
+/**
+ * Returns true if currently in a rolling demo.
+ */
+s8 racetype_demo(void) {
+    return gRollingDemo;
 }
 
 s8 func_8000E158(void) {
@@ -1644,9 +1658,10 @@ void transform_player_vehicle(void) {
     spawnObj.unkE = 0;
     spawnObj.common.size = 16;
     if (gOverworldVehicle < VEHICLE_BOSSES) {
-        objectID = ((s16 *) D_800DC7A8)[settings->racers[PLAYER_ONE].character + gOverworldVehicle * 10];
+        objectID =
+            ((s16 *) gRacerObjectTable)[settings->racers[PLAYER_ONE].character + gOverworldVehicle * NUM_CHARACTERS];
     } else {
-        objectID = D_800DC7B8[gOverworldVehicle + 37];
+        objectID = gRacerObjectTable[gOverworldVehicle + 45];
     }
     set_level_default_vehicle(gOverworldVehicle);
     spawnObj.common.size |= (objectID & 0x100) >> 1;
@@ -2897,7 +2912,7 @@ void obj_update(s32 updateRate) {
     audspat_update_all(gRacersByPort, gNumRacers, updateRate);
     gPathUpdateOff = TRUE;
     gObjectUpdateRateF = (f32) updateRate;
-    D_8011AD24[0] = 0;
+    D_8011AD24[0] = FALSE;
     D_8011AD53 = 0;
     transform_player_vehicle();
     dialogue_try_close();

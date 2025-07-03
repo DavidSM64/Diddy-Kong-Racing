@@ -239,7 +239,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     func_8000C8F8(arg6, 0);
     func_8000C8F8(collectables, 1);
     gScenePlayerViewports = numberOfPlayers;
-    func_8000CC7C(vehicle, entranceId, numberOfPlayers);
+    track_setup_racers(vehicle, entranceId, numberOfPlayers);
     racerfx_alloc(72, 64);
 
     if (geometry == 0 && entranceId == 0) {
