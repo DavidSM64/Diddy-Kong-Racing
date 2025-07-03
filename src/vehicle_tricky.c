@@ -16,6 +16,7 @@
 
 /************ .data ************/
 
+// The highest index that ever seems to be read from this table is 6.
 u16 gTrickyVoiceTable[16] = {
     SOUND_VOICE_BOSS_LAUGH,
     SOUND_VOICE_TRICKY_WOAH,
@@ -24,7 +25,7 @@ u16 gTrickyVoiceTable[16] = {
     SOUND_VOICE_WIZPIG_LAUGH_SHORT3,
     SOUND_VOICE_TRICKY_WOAH3,
     SOUND_VOICE_TRICKY_WOAH4,
-    SOUND_VOICE_TRICKY_LAUGH,
+    SOUND_VOICE_TRICKY_LAUGH, // Never read from this point?
     SOUND_VOICE_TRICKY_LAUGH2,
     SOUND_VOICE_TRICKY_OW,
     SOUND_VOICE_TRICKY_OW2,

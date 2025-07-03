@@ -47,11 +47,11 @@ s32 gMusicTempo;
 u32 *gSeqLengthTable;
 ALBankFile *gSequenceBank;
 ALBankFile *gSoundBank; // Official Name: sfxBankPtr
-SoundData *gSoundTable;
+SoundData *gSoundTable; // Official Name: sfxIndex
 MusicData *gSeqSoundTable;
-s32 gSoundCount;
+s32 gSoundCount; // Official Name: maxSound
 s32 gSeqSoundCount;
-u32 gSoundTableSize;
+u32 gSoundTableSize; // Official Name: sfxIndexSize
 u32 gSeqSoundTableSize;
 s16 sMusicTempo;
 f32 gMusicAnimationTick;
@@ -182,6 +182,7 @@ void sound_volume_reset(u8 skipReset) {
 
 /**
  * Changes the volume of each sound channel depending on what value is passed through.
+ * Official Name: amSetMuteMode
  */
 void sound_volume_change(s32 behaviour) {
     switch (behaviour) {
@@ -234,6 +235,7 @@ void music_change_on(void) {
 /**
  * Queue a new music sequence to play if not blocked.
  * Stops any playing existing music beforehand.
+ * Official Name: amTunePlay
  */
 void music_play(u8 seqID) {
     if (gBlockMusicChange == FALSE && gMusicSliderVolume != 0) {
@@ -251,6 +253,7 @@ void music_play(u8 seqID) {
 
 /**
  * Update the background music voice limit if not prevented from doing so.
+ * Official Name: amTuneVoiceLimit
  */
 void music_voicelimit_set(u8 voiceLimit) {
     if (gBlockVoiceLimitChange == FALSE) {
@@ -306,6 +309,7 @@ void music_volume_reset(void) {
  * Run every frame, this handles the transitions in and out of music sequences.
  * If there's something in the queue, then begin to play that.
  * Additionally, it also handles the delayed audio queue, counting down and playing any sounds.
+ * Official Name: amAudioTick
  */
 void sound_update_queue(u8 updateRate) {
     s32 i;
@@ -381,7 +385,6 @@ void sound_clear_delayed(void) {
 
 /**
  * Return the channel mask of the music player.
- * Official name: musicGetChanMask
  */
 u16 music_channel_get_mask(void) {
     return gMusicPlayer->chanMask;
@@ -389,6 +392,7 @@ u16 music_channel_get_mask(void) {
 
 /**
  * Sets the channels in the sequence on or off based on the channel mask given.
+ * Official Name: amTuneSetChlMask
  */
 void music_dynamic_set(u16 channelMask) {
     u32 i;
@@ -408,6 +412,7 @@ void music_dynamic_set(u16 channelMask) {
 
 /**
  * Mute the sequence channel, preventing it from playing any sound.
+ * Official Name: amTuneMuteChl
  */
 void music_channel_off(u8 channel) {
     if (channel < AUDIO_CHANNELS) {
@@ -417,7 +422,6 @@ void music_channel_off(u8 channel) {
 
 /**
  * Return true if the given channel is currently active.
- * Official name: musicGetChnlActive
  */
 s32 music_channel_active(s32 channel) {
     return (gMusicPlayer->chanMask & (1 << channel)) == 0;
@@ -425,6 +429,7 @@ s32 music_channel_active(s32 channel) {
 
 /**
  * Unmute the sequence channel so it can play sound.
+ * Official Name: amTuneUnmuteChl
  */
 void music_channel_on(u8 channel) {
     if (channel < AUDIO_CHANNELS) {
@@ -434,7 +439,6 @@ void music_channel_on(u8 channel) {
 
 /**
  * Set the panning level of the given channel for the music player.
- * Official name: musicSetChlPan
  */
 void music_channel_pan_set(u8 channel, ALPan pan) {
     if (channel < AUDIO_CHANNELS) {
@@ -444,7 +448,7 @@ void music_channel_pan_set(u8 channel, ALPan pan) {
 
 /**
  * Set the volume of the given channel for the music player.
- * Official name musicSetChlVol
+ * Official Name: amTuneSetChlVolume
  */
 void music_channel_volume_set(u8 channel, u8 volume) {
     if (channel < AUDIO_CHANNELS) {
@@ -454,7 +458,6 @@ void music_channel_volume_set(u8 channel, u8 volume) {
 
 /**
  * Return the volume of the given channel in the music player.
- * Official name: musicGetChlVol
  */
 UNUSED u8 music_channel_volume(u8 channel) {
     if (channel >= AUDIO_CHANNELS) {
@@ -486,6 +489,7 @@ u8 music_channel_fade(u8 channel) {
 /**
  * Resets all audio channels for the music player to the default state.
  * This is being enabled, centre panning and at normal volume.
+ * Official Name: amTuneResetChls
  */
 void music_channel_reset_all(void) {
     u32 channel;
@@ -535,6 +539,7 @@ UNUSED void func_80001440(u8 *arg0) {
  * Multiplies the current tempo of the background music.
  * Since it calls music_tempo and multiplies it by the result, calling this repeatedly can recursively change the
  * music's speed.
+ * Official Name: amTuneScaleTempo
  */
 void music_tempo_set_relative(f32 tempo) {
     music_tempo_set((s32) ((f32) (u32) (music_tempo() & 0xFF) * tempo));
@@ -542,7 +547,7 @@ void music_tempo_set_relative(f32 tempo) {
 
 /**
  * Set the tempo of the current playing background music.
- * Official name: musicSetTempo
+ * Official name: amTuneSetTempoBPM
  */
 void music_tempo_set(s32 tempo) {
     if (tempo != 0) {
@@ -554,7 +559,7 @@ void music_tempo_set(s32 tempo) {
 
 /**
  * Return the tempo of the current playing background music.
- * Official name: musicGetTempo
+ * Official name: amTuneGetTempoBPM
  */
 s16 music_tempo(void) {
     return sMusicTempo;
@@ -600,6 +605,7 @@ UNUSED void sound_get_properties(u8 poolID, u8 *tempo, u8 *volume, u8 *reverb) {
 
 /**
  * Play a jingle, but only if there isn't one playing already.
+ * Official NAme: amAmbientPlay
  */
 void music_jingle_play_safe(u8 jingleID) {
     if (music_jingle_playing() == SEQUENCE_NONE) {
@@ -610,6 +616,7 @@ void music_jingle_play_safe(u8 jingleID) {
 
 /**
  * Sets the tempo for the jingle player.
+ * Official Name: amAmbientSetTempoBPM
  */
 void sound_jingle_tempo_set(s32 tempo) {
     f32 inv_tempo = (1.0f / tempo);
@@ -618,6 +625,7 @@ void sound_jingle_tempo_set(s32 tempo) {
 
 /**
  * Stops the background music.
+ * Official Name: amTuneStop
  */
 void music_stop(void) {
     if (gBlockMusicChange == FALSE) {
@@ -660,6 +668,7 @@ void music_jingle_stop(void) {
 
 /**
  * Return the currently playing music.
+ * Official Name: amTuneGetSeqNo
  */
 u8 music_current_sequence(void) {
     if (gCurrentSequenceID != SEQUENCE_NONE && gMusicPlayer->state == AL_PLAYING) {
@@ -683,6 +692,7 @@ UNUSED u8 music_next(void) {
 
 /**
  * Return the currently playing jingle.
+ * Official Name: amAmbientGetSeqNo
  */
 u8 music_jingle_current(void) {
     return gCurrentJingleID;
@@ -691,6 +701,7 @@ u8 music_jingle_current(void) {
 /**
  * Set the volume of the music.
  * Update music volume with this new setting.
+ * Official Name: amTuneSetVolume
  */
 void music_volume_set(u8 volume) {
     f32 normalized_vol;
@@ -703,6 +714,7 @@ void music_volume_set(u8 volume) {
 /**
  * Set the user configured music volume.
  * Update music volume with this new setting.
+ * Official Name: amTuneSetGlobalVolume
  */
 void music_volume_config_set(u32 slider_val) {
     f32 normalized_vol;
@@ -715,6 +727,7 @@ void music_volume_config_set(u32 slider_val) {
 
 /**
  * Return the baseline music volume, unaffected by user config.
+ * Official Name: amTuneGetVolume
  */
 u8 music_volume(void) {
     return gMusicBaseVolume;
@@ -730,6 +743,7 @@ s32 music_volume_config(void) {
 /**
  * Set the volume for the jingle player.
  * The jingle player scales with sfx volume rather than music volume.
+ * Official Name: amAmbientSetVolume
  */
 void music_jingle_volume_set(u8 arg0) {
     sfxRelativeVolume = arg0;
@@ -738,6 +752,7 @@ void music_jingle_volume_set(u8 arg0) {
 
 /**
  * Set the panning level for every channel in the jingle player.
+ * Official Name: amAmbientSetPan
  */
 void music_jingle_pan_set(ALPan pan) {
     u32 iChan;
@@ -749,6 +764,7 @@ void music_jingle_pan_set(ALPan pan) {
 /**
  * Plays a sequence just once, allowing it to coexist with the music if necessary.
  * Examples include getting silver coins, challenge keys, or getting the locked message.
+ * Official Name: amDittyPlay
  */
 void music_jingle_play(u8 seqID) {
     gCanPlayJingle = TRUE;
@@ -792,6 +808,7 @@ u16 sound_distance(u16 soundId) {
 /**
  * Add the requested sound to the queue and update the mask to show that this sound is playing at that source.
  * If no soundmask is provided, then instead use the global mask.
+ * Official Name: amSndPlay
  */
 void sound_play(u16 soundID, SoundHandle *handlePtr) {
     f32 pitch;
@@ -845,7 +862,10 @@ void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, SoundHandle *handlePtr
     }
 }
 
-void func_80001F14(u16 soundID, SoundHandle *handlePtr) {
+/**
+ * Official Name: amSndPlayDirect
+ */
+void sound_play_direct(u16 soundID, SoundHandle *handlePtr) {
     if (soundID <= 0 || sound_count() < soundID) {
         stubbed_printf("amSndPlayDirect: Somebody tried to play illegal sound %d\n", soundID);
         if (handlePtr) {
@@ -862,6 +882,7 @@ void func_80001F14(u16 soundID, SoundHandle *handlePtr) {
 
 /**
  * Set the volume of the sound relative to the baseline volume of the sound ID.
+ * Official Name: amSndSetVol
  */
 void sound_volume_set_relative(u16 soundID, SoundHandle soundHandle, u8 volume) {
     s32 newVolume = ((s32) (gSoundTable[soundID].volume * (volume / 127.0f))) * 256;
@@ -907,6 +928,7 @@ u8 music_sequence_count(void) {
 
 /**
  * Writes the sound table address, size and element count into the arguments.
+ * Official Name: amGetSfxSettings
  */
 void sound_table_properties(SoundData **table, s32 *size, s32 *count) {
     if (table != NULL) {
@@ -935,7 +957,11 @@ UNUSED void music_table_properties(MusicData **table, s32 *size, s32 *count) {
     }
 }
 
-u8 gSoundBank_GetSoundDecayTime(u16 soundID) {
+/**
+ * Returns true if the given soundID is looped.
+ * Official Name: amSoundIsLooped
+ */
+u8 sound_is_looped(u16 soundID) {
     if (soundID <= 0 || gSoundBank->bankArray[0]->instArray[0]->soundCount < soundID) {
         return 0;
     }
@@ -1043,6 +1069,7 @@ void music_sequence_stop(ALCSPlayer *seqPlayer) {
 /**
  * Enable or disable special audio effects.
  * This includes reverb and echo.
+ * Official Name: amTuneSetReverbOnOff
  */
 void sound_reverb_set(u8 setting) {
     alFxReverbSet(setting);
