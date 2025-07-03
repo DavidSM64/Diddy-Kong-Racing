@@ -1,10 +1,7 @@
 #ifndef _MEMORY_H_
 #define _MEMORY_H_
 
-#include "structs.h"
 #include "types.h"
-#include "macros.h"
-#include "config.h"
 
 typedef enum MemoryPools {
     POOL_MAIN,

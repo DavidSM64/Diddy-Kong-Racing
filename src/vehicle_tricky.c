@@ -11,6 +11,8 @@
 #include "game.h"
 #include "particles.h"
 #include "math_util.h"
+#include "thread3_main.h"
+#include "fade_transition.h"
 
 /************ .data ************/
 

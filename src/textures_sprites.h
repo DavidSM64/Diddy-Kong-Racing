@@ -1,13 +1,9 @@
 #ifndef _TEXTURES_SPRITES_H_
 #define _TEXTURES_SPRITES_H_
 
-#include "asset_enums.h"
 #include "types.h"
 #include "f3ddkr.h"
 #include "structs.h"
-#include "macros.h"
-#include "memory.h"
-#include <ultra64.h>
 
 #define TEX_TABLE_2D 0
 #define TEX_TABLE_3D 1

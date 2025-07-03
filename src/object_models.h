@@ -1,8 +1,6 @@
 #ifndef _OBJECT_MODELS_H_
 #define _OBJECT_MODELS_H_
 
-#include "types.h"
-#include "PR/gbi.h"
 #include "structs.h"
 
 typedef enum AnimType {

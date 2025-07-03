@@ -7,7 +7,7 @@
 #include "level_object_entries.h"
 #include "object_properties.h"
 #include "gbi.h"
-#include "audio.h"
+#include "audiosfx.h"
 
 typedef struct Vec4f {
     union {

@@ -3,7 +3,6 @@
 
 #include "types.h"
 #include "structs.h"
-#include "libc/math.h"
 
 enum LightType {
     LIGHT_UNK0,

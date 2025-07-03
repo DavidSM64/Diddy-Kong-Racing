@@ -6,6 +6,7 @@
 #include "libc/string.h"
 #include "textures_sprites.h"
 #include "rcp_dkr.h"
+#include "video.h"
 
 /************ .data ************/
 

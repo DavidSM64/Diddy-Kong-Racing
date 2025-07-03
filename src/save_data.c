@@ -13,6 +13,9 @@
 #include "PRinternal/viint.h"
 #include "PR/os_motor.h"
 #include "save_layout.h"
+#include "libc/string.h"
+#include "save_layout.h"
+#include "menu.h"
 
 /************ .data ************/
 

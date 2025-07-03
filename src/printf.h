@@ -1,9 +1,6 @@
 #ifndef _PRINTF_H_
 #define _PRINTF_H_
 
-#include "types.h"
-#include "structs.h"
-#include "macros.h"
 #include "stdarg.h"
 #include <PR/gu.h>
 

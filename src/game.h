@@ -3,9 +3,7 @@
 
 #include "types.h"
 #include "structs.h"
-#include "fade_transition.h"
 #include "racer.h"
-#include "thread3_main.h"
 
 /* Size: 6 bytes */
 typedef struct LevelGlobalData {

@@ -1,9 +1,8 @@
 #ifndef _GAME_UI_H_
 #define _GAME_UI_H_
 
-#include "types.h"
 #include "structs.h"
-#include <ultra64.h>
+#include "PR/sptask.h"
 
 #define ASSET_MASK_MODEL       0x0000
 #define ASSET_MASK_OBJECT      0x4000

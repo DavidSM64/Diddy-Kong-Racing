@@ -23,6 +23,7 @@
 #include "racer.h"
 #include "joypad.h"
 #include "common.h"
+#include "thread3_main.h"
 
 /************ .data ************/
 

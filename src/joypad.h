@@ -2,9 +2,7 @@
 #define _JOYPAD_H_
 
 #include "types.h"
-#include "macros.h"
-#include "structs.h"
-#include <ultra64.h>
+#include "PR/os_message.h"
 
 #define CONTROLLER_MISSING -1
 #define CONTROLLER_EXISTS   0

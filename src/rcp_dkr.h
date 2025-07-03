@@ -1,14 +1,10 @@
 #ifndef _RCP_DKR_H_
 #define _RCP_DKR_H_
 
-#include "types.h"
-#include "structs.h"
-#include "f3ddkr.h"
-#include "sched.h"
 #include <ultra64.h>
-
+#include "structs.h"
+#include "sched.h"
 #include "game_ui.h"
-#include "video.h"
 
 // Recommended size is around 100KB, or 0x19000. This is unused though so it doesn't matter.
 #define OUTPUT_BUFFER_SIZE 0x1800

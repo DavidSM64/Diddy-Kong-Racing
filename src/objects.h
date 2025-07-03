@@ -1,12 +1,11 @@
 #ifndef _OBJECTS_H_
 #define _OBJECTS_H_
 
-#include "types.h"
 #include "structs.h"
 #include "f3ddkr.h"
 #include "object_functions.h"
-#include "camera.h"
 #include "particles.h"
+#include "save_data.h"
 
 #define NEW_OBJECT_ENTRY(entryVar, entryId, entrySize, xPos, yPos, zPos) \
     {                                                                    \

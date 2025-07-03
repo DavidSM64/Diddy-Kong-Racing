@@ -1,11 +1,8 @@
 #ifndef _TRACKS_H_
 #define _TRACKS_H_
 
-#include "types.h"
 #include "structs.h"
 #include "f3ddkr.h"
-#include "racer.h"
-#include "fade_transition.h"
 
 #define LOCAL_OFFSET_TO_RAM_ADDRESS(type, ptr) ptr = (type) ((s32) ((u8 *) ptr) + (s32) ((u8 *) mdl))
 

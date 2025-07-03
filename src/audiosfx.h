@@ -1,13 +1,8 @@
 #ifndef _AUDIOSFX_H_
 #define _AUDIOSFX_H_
 
-#include "types.h"
 #include "macros.h"
-#include "asset_enums.h"
-#include <ultra64.h>
-#include "sched.h"
-#include "structs.h"
-#include "audio.h"
+#include "PR/libaudio.h"
 
 #define AL_SNDP_PLAY_EVT (1 << 0)
 #define AL_SNDP_RELEASE_EVT (1 << 1)
@@ -61,6 +56,8 @@ typedef struct ALSoundState {
     /* 0x3F */ u8 state;
 } ALSoundState;
 
+typedef struct ALSoundState* SoundHandle;
+
 typedef struct ALSoundStateLists {
     /* 0x00 */ ALSoundState *allocHead;
     /* 0x04 */ ALSoundState *allocTail;
@@ -108,12 +105,6 @@ typedef struct audioMgrConfig_s{
     /* 0x0C */ ALHeap *heap;
     /* 0x10 */ u16  numGroups;
 } audioMgrConfig;
-
-extern void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size);
-extern void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount);
-extern ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt);
-extern void alSynAddPlayer(ALSynth *drvr, ALPlayer *client);
-extern void alEvtqPostEvent(ALEventQueue *evtq, ALEvent *evt, ALMicroTime delta);
 
 void sndp_set_global_volume(u32 volume);
 s32 sndp_get_global_volume(void);

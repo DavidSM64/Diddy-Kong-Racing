@@ -11,14 +11,23 @@
 /************ .data ************/
 
 // sSoundEffectsPool index values?
-s16 gRocketVoiceTable[14] = {
-    SOUND_VOICE_BOSS_LAUGH2,   SOUND_VOICE_TRICKY_HM,
-    SOUND_VOICE_TRICKY_HMMM,   SOUND_VOICE_WIZPIG_LAUGH4,
-    SOUND_VOICE_WIZPIG_LAUGH2, SOUND_VOICE_WIZPIG_GROAN,
-    SOUND_VOICE_WIZPIG_LAUGH3, SOUND_VOICE_SMOKEY_HAH,
-    SOUND_VOICE_SMOKEY_LAUGH,  SOUND_VOICE_SMOKEY_HM,
-    SOUND_VOICE_SMOKEY_HM2,    SOUND_VOICE_CONKER_YEHAHA,
-    SOUND_VOICE_TIMBER_WOW,    SOUND_WHOOSH2,
+u16 gRocketVoiceTable[16] = {
+    SOUND_VOICE_BOSS_LAUGH2,
+    SOUND_VOICE_TRICKY_HM,
+    SOUND_VOICE_TRICKY_HMMM,
+    SOUND_VOICE_WIZPIG_LAUGH4,
+    SOUND_VOICE_WIZPIG_LAUGH2,
+    SOUND_VOICE_WIZPIG_GROAN,
+    SOUND_VOICE_WIZPIG_LAUGH3,
+    SOUND_VOICE_SMOKEY_HAH,
+    SOUND_VOICE_SMOKEY_LAUGH,
+    SOUND_VOICE_SMOKEY_HM,
+    SOUND_VOICE_SMOKEY_HM2,
+    SOUND_VOICE_CONKER_YEHAHA,
+    SOUND_VOICE_TIMBER_WOW,
+    SOUND_WHOOSH2,
+    SOUND_NONE,
+    SOUND_NONE,
 };
 
 /*******************************/
@@ -49,7 +58,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     ModelInstance *modInst;
     ObjectModel *objModel;
 
-    set_boss_voice_clip_offset((u16 *) gRocketVoiceTable);
+    set_boss_voice_clip_offset(gRocketVoiceTable);
     racer->tappedR = 0;
     animID = obj->animationID;
     animFrame = obj->animFrame;

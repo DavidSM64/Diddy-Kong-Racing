@@ -1,5 +1,7 @@
 #include "video.h"
 #include "PRinternal/viint.h"
+#include "types.h"
+#include "memory.h"
 
 /************ .data ************/
 

@@ -203,7 +203,6 @@ void mtxf_to_mtx(MtxF *mf, Mtx *m) {
         }
     }
 }
-}
 #else
 GLOBAL_ASM("asm/math_util/mtxf_to_mtx.s")
 #endif

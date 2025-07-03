@@ -2,8 +2,6 @@
 #define _WEATHER_H_
 
 #include "types.h"
-#include "textures_sprites.h"
-#include "audio.h"
 #include "camera.h"
 
 typedef enum WeatherType {

@@ -2,7 +2,8 @@
 #define _FADE_TRANSITION_H_
 
 #include "types.h"
-#include "camera.h"
+#include "structs.h"
+#include "PR/gbi.h"
 
 #define FADE_FULLSCREEN          0
 #define FADE_BARNDOOR_HORIZONTAL 1

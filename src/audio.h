@@ -1,8 +1,8 @@
 #ifndef _AUDIO_H_
 #define _AUDIO_H_
 
-#include "types.h"
 #include "sched.h"
+#include "audiosfx.h"
 
 #define AUDIO_CHANNELS 16
 #define MUSIC_CHAN_MASK_NONE 0xFFFFFFFF
@@ -13,8 +13,6 @@ enum AudioVolumeBehaviour {
     VOLUME_LOWER_AMBIENT,
     VOLUME_UNK03,
 };
-
-typedef struct ALSoundState* SoundHandle;
 
 /* Size: 0x0A bytes */
 typedef struct SoundData {
@@ -27,7 +25,6 @@ typedef struct SoundData {
  u8 priority;
  u8 unk9;
 } SoundData;
-
 
 /* Size: 0x03 bytes */
 typedef struct MusicData {
@@ -43,23 +40,11 @@ typedef struct DelayedSound {
     /* 0x04 */ SoundHandle *handlePtr;
 } DelayedSound;
 
-void  alCSPNew(ALCSPlayer *seqp, ALSeqpConfig *config); //lib/src/al/csplayer.c
-void  alCSPSetBank(ALCSPlayer *seqp, ALBank *b); //lib/src/unknown_0C8660.c
-void set_voice_limit(ALCSPlayer *seqp, u8 voiceLimit); //lib/src/mips1/alseqplayer.c
-void    *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib/src/al/alHeapDBAlloc.c
-void alCSPSetChlPan(ALCSPlayer *seqp, u8 channel, ALPan pan); //lib/src/unknown_0C84E0.c
-void alCSPSetChlVol(ALCSPlayer *, u8 channel, u8 volume); //lib/src/unknown_0C84E0.c
-u8 alCSPGetChlVol(ALCSPlayer *seqp, u8 channel); //lib/src/al
-void alCSPSetFadeIn(ALCSPlayer *seqp, u8 channel, ALPan pan); //lib/src/unknown_0647A0.c
-u8 alCSPGetFadeIn(ALCSPlayer *seqp, u8 channel); //lib/src/mips1/al/unknown_064800.c
-u8 alSeqpGetChlFXMix(ALSeqPlayer *seqp, u8 channel); //lib/src/al/alSeqpGetChlFXMix.c
-void alFxReverbSet(u8 arg0); //lib/src/mips1/al/reverb.c
-u8 _alFxEnabled(); //lib/src/mips1/al/reverb.c
-void alHeapInit(ALHeap *hp, u8 *base, s32 len); //lib/src/al/alHeapInit.c
-void alBnkfNew(ALBankFile *ctl, u8 *tbl); //lib/src/al/global_asm.c
-void alCSPSetVol(ALCSPlayer *seqp, s16 volume); //lib/src/al/alCSPSetVol.c
-void alCSPStop(ALCSPlayer *seqp); //lib/src/al/unknown_0C91A0.c
-s32  alCSPGetState(ALCSPlayer *seqp); //lib/src/unknown_0C8650.c
+// These are all functions in libultra that seem to have been created by Rare, so they're not in the standard headers.
+extern void set_voice_limit(ALCSPlayer *seqp, u8 voiceLimit); // seqplayer.c
+extern void alCSPSetFadeIn(ALCSPlayer *seqp, u8 chan, ALPan pan); // cspsetfadein.c
+extern void alFxReverbSet(u8 setting); // reverb.c
+extern u8 alCSPGetFadeIn(ALCSPlayer *seqp, u8 chan); // cspgetfadein.c
 
 void audio_init(OSSched *sc);
 void sound_volume_reset(u8 skipReset);
@@ -116,11 +101,9 @@ ALCSPlayer *sound_seqplayer_init(s32 maxVoices, s32 maxEvents);
 void music_sequence_start(u8 seqID, ALCSPlayer *seqPlayer);
 void music_sequence_stop(ALCSPlayer *seqPlayer);
 void sound_reverb_set(u8 setting);
-void alSeqFileNew(ALSeqFile *file, u8 *base);
 void func_80063A90(ALCSPlayer *seqp, u8 channel);
 void sound_volume_set_relative(u16 soundID, SoundHandle soundHandle, u8 volume);
 void music_sequence_init(ALCSPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *seq);
-void sound_play(u16 soundID, SoundHandle* handlePtr);
 void sound_play(u16 soundID, SoundHandle* handlePtr);
 f32 music_animation_fraction(void);
 

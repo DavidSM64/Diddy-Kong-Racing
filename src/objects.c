@@ -31,6 +31,15 @@
 #include "printf.h"
 #include "weather.h"
 #include "PRinternal/piint.h"
+#include "gzip.h"
+#include "video.h"
+#include "thread3_main.h"
+#include "textures_sprites.h"
+#include "fade_transition.h"
+#include "PR/os_system.h"
+#include "PR/os_cont.h"
+#include "PR/os_convert.h"
+#include "PR/rcp.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -632,7 +641,7 @@ void racerfx_update(s32 updateRate) {
                 boostObj->unk74 += updateRateF * 0.25f;
                 updateRateF = 0.0f;
                 if (boostObj->unk74 > 2.4f) {
-                    boostObj->unk74 = (f32) (4.8f - boostObj->unk74);
+                    boostObj->unk74 = 4.8f - boostObj->unk74;
                     boostObj->unk70 = 1;
                 }
             }
@@ -1770,6 +1779,11 @@ void func_8000E5EC(LevelObjectEntryCommon *arg0) {
     } else if ((s32) arg0 >= (s32) D_8011AE98[1] && (s32) arg0 < sp30[1]) {
         sp1C = 1;
     }
+#ifdef AVOID_UB
+    else {
+        sp1C = 0;
+    }
+#endif
 
     dst = (u8 *) arg0;
     src = (u8 *) ((s32) arg0 + size);
@@ -5875,11 +5889,10 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
         sp68 = sp4C->rotationXFrac * objX + sp4C->rotationYFrac * objY + sp4C->rotationZFrac * objZ + sp4C->unkC;
         if (sp68 > 0) {
             if (obj->behaviorId == BHV_RACER) {
-                Object_Racer *racer;
-                racer = obj->racer;
+                Object_Racer *objRacer = obj->racer;
                 if (sp4C->unk3B != 0) {
-                    racer->indicator_type = sp4C->unk3B;
-                    racer->indicator_timer = 120;
+                    objRacer->indicator_type = sp4C->unk3B;
+                    objRacer->indicator_timer = 120;
                 }
             }
 
@@ -8839,7 +8852,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
     f32 spB4;
     s8 *miscAsset;
     s32 pad;
-    FadeTransition fadeTransition; // spA4
+    FadeTransition fadeTransition;
 
     if (gCutsceneID < 0) {
         return 1;
@@ -8858,20 +8871,20 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
     if (obj64->startDelay < 0) {
         var_t0 = 0;
         if (obj64->unk34 & 1) {
-            var_t0 = 0x8000;
+            var_t0 = A_BUTTON;
         }
         if (obj64->unk34 & 2) {
-            var_t0 |= 0x4000;
+            var_t0 |= B_BUTTON;
         }
         if (obj64->unk34 & 4) {
-            var_t0 |= 0x1000;
+            var_t0 |= CONT_START;
         }
 
         var_s2 = 0;
-        var_s0 = 0;
-        do {
-            var_s2 |= input_pressed(var_s0);
-        } while (++var_s0 < 4);
+
+        // clang-format off
+        for (var_s0 = 0; var_s0 < MAXCONTROLLERS; var_s0++) { var_s2 |= input_pressed(var_s0); }
+        // clang-format on
 
         if (var_s2 & var_t0) {
             obj64->startDelay = 1;
@@ -8882,7 +8895,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
         obj64->startDelay -= arg1;
         if (obj64->startDelay <= 0) {
             obj64->unk45 = 1;
-            temp_s1 = (LevelObjectEntry_Animation *) obj64->unk1C->level_entry;
+            temp_s1 = &obj64->unk1C->level_entry->animation;
             func_80021104(arg0, obj64, temp_s1);
             obj64->startDelay = 0;
             func_8002125C(arg0, temp_s1, obj64, -1);
@@ -8890,7 +8903,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
     }
     if (obj64->startDelay != 0) {
         if (obj64->unk3A != 0) {
-            arg0->trans.flags |= 0x4000;
+            arg0->trans.flags |= OBJ_FLAGS_INVISIBLE;
             obj64->unk42 = 0;
             return 1;
         } else {
@@ -8898,7 +8911,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
         }
     }
 
-    arg0->trans.flags &= ~0x4000;
+    arg0->trans.flags &= ~OBJ_FLAGS_INVISIBLE;
     if (obj64->unk39 > 0) {
         if (obj64->unk39 != music_current_sequence()) {
             music_play(obj64->unk39);
@@ -8942,31 +8955,31 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
             var_t0 -= (arg1 * 8);
         } else {
             var_t0 = 0;
-            arg0->trans.flags |= 0x4000;
+            arg0->trans.flags |= OBJ_FLAGS_INVISIBLE;
         }
     } else {
         if (obj64->unk41 & 2) {
             var_t0 = 0xFF;
         }
         var_t0 += arg1 * 8;
-        if (var_t0 >= 0x100) {
+        if (var_t0 > 0xFF) {
             var_t0 = 0xFF;
         }
-        arg0->trans.flags &= ~0x4000;
+        arg0->trans.flags &= ~OBJ_FLAGS_INVISIBLE;
     }
 
     var_s2 = obj64->unk3B & 0x7F;
     obj64->unk42 = var_t0;
     if (var_s2 != 0x7F) {
         if (var_s2 >= 8) {
-            miscAsset = ((s8 *) get_misc_asset(0xD) + (var_s2 * 5));
+            miscAsset = ((s8 *) get_misc_asset(ASSET_MISC_13) + (var_s2 * 5));
             miscAsset -= 0x28;
-            var_t0 = (miscAsset[0] & 0xFF) + 0x384;
-            var_s0 = (miscAsset[1] & 0xFF) + 0x384;
+            var_t0 = (miscAsset[0] & 0xFF) + 900;
+            var_s0 = (miscAsset[1] & 0xFF) + 900;
             slowly_change_fog(0, miscAsset[2] & 0xFF, miscAsset[3] & 0xFF, miscAsset[4] & 0xFF, var_t0, var_s0,
                               normalise_time(6) * obj64->unk3C);
         } else if (var_s2 >= 6) {
-            fadeTransition.type = 0x40;
+            fadeTransition.type = FADE_FLAG_INVERT;
             // clang-format off
             if (var_s2 == 7) {
                 fadeTransition.red = 200; fadeTransition.green = 200; fadeTransition.blue = 255; 
@@ -8979,7 +8992,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
             transition_begin(&fadeTransition);
         } else {
             fadeTransition.type = obj64->unk3B;
-            miscAsset = (s8 *) get_misc_asset(0xE) + (obj64->unk40 * 3);
+            miscAsset = (s8 *) get_misc_asset(ASSET_MISC_14) + (obj64->unk40 * 3);
             fadeTransition.red = miscAsset[0];
             fadeTransition.green = miscAsset[1];
             fadeTransition.blue = miscAsset[2];
@@ -9242,7 +9255,6 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
                 sp124 *= var_f2;
                 sp120 *= var_f2;
                 sp11C *= var_f2;
-                // sp11C *= (sp120 *= (sp124 *= (f32) (100.0 / var_f2))); // fake!!!
             }
             arg0->trans.rotation.y_rotation = arctan2_f(sp124, sp11C) - 0x8000;
             arg0->trans.rotation.x_rotation = arctan2_f(sp120, 100.0f);
@@ -9251,39 +9263,39 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
             break;
         default:
             for (var_t0 = 1; var_t0 < 5; var_t0++) {
-                f32 var_f0 = 0;
+                f32 temp = 0;
                 f32 delta;
 
                 delta = spE0[var_t0] - spE0[var_t0 - 1];
                 if (delta > 32768.0) {
-                    var_f0 -= 65536.0;
+                    temp -= 65536.0;
                 } else if (delta < -32768.0) {
-                    var_f0 += 65536.0;
+                    temp += 65536.0;
                 }
                 // clang-format off
-                for (var_s0 = var_t0; var_s0 < 5; var_s0++) { spE0[var_s0] += var_f0; }
+                for (var_s0 = var_t0; var_s0 < 5; var_s0++) { spE0[var_s0] += temp; }
                 // clang-format on
 
-                var_f0 = 0;
+                temp = 0;
                 delta = spCC[var_t0] - spCC[var_t0 - 1];
                 if (delta > 32768.0) {
-                    var_f0 -= 65536.0;
+                    temp -= 65536.0;
                 } else if (delta < -32768.0) {
-                    var_f0 += 65536.0;
+                    temp += 65536.0;
                 }
                 // clang-format off
-                for (var_s0 = var_t0; var_s0 < 5; var_s0++) {spCC[var_s0] += var_f0; }
+                for (var_s0 = var_t0; var_s0 < 5; var_s0++) {spCC[var_s0] += temp; }
                 // clang-format on
 
-                var_f0 = 0;
+                temp = 0;
                 delta = spB8[var_t0] - spB8[var_t0 - 1];
                 if (delta > 32768.0) {
-                    var_f0 -= 65536.0;
+                    temp -= 65536.0;
                 } else if (delta < -32768.0) {
-                    var_f0 += 65536.0;
+                    temp += 65536.0;
                 }
                 // clang-format off
-                for (var_s0 = var_t0; var_s0 < 5; var_s0++) { spB8[var_s0] += var_f0; }
+                for (var_s0 = var_t0; var_s0 < 5; var_s0++) { spB8[var_s0] += temp; }
                 // clang-format on
             }
             if (obj64->unk3F == 0) {
@@ -9300,7 +9312,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
 
     var_t0 = obj64->unk26;
     obj64->unk0 = var_f20;
-    if ((sp168 != -1) && (var_t0 >= var_s5)) {
+    if (sp168 != -1 && var_t0 >= var_s5) {
         var_t0 = (var_t0 - var_s5) + sp168;
     }
 

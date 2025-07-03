@@ -1,7 +1,6 @@
 #ifndef _WAVES_H_
 #define _WAVES_H_
 
-#include "types.h"
 #include "structs.h"
 
 /* Size: 4 bytes */

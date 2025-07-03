@@ -2,6 +2,8 @@
 #include "thread0_epc.h"
 #include "game.h"
 #include "stacks.h"
+#include "memory.h"
+#include "thread3_main.h"
 
 /************ .bss ************/
 

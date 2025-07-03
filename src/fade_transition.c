@@ -9,6 +9,8 @@
 #include "textures_sprites.h"
 #include "math_util.h"
 #include "PRinternal/viint.h"
+#include "camera.h"
+#include "video.h"
 
 /************ .data ************/
 

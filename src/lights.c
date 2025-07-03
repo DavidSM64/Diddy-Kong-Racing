@@ -6,6 +6,7 @@
 #include "objects.h"
 #include "game.h"
 #include "math_util.h"
+#include "libc/math.h"
 
 /************ .data ************/
 

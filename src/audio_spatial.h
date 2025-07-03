@@ -2,11 +2,8 @@
 #define _AUDIO_SPATIAL_H_
 
 #include "types.h"
-#include "libc/math.h"
 #include "structs.h"
 #include "PR/gbi.h"
-#include "PR/libaudio.h"
-#include "camera.h"
 
 #define AUDIO_LINE_TYPE_SOUND 0
 #define AUDIO_LINE_TYPE_JINGLE 1

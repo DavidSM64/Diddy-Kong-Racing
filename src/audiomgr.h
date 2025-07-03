@@ -6,6 +6,7 @@
 #include "asset_enums.h"
 #include <ultra64.h>
 #include "sched.h"
+#include "PR/libaudio.h"
 
 #define MAX_UPDATES             32
 #define MAX_EVENTS              32
@@ -38,13 +39,6 @@
                                        /* DMA's but you need more buffers.              */
 
 #define MAX_SEQ_LENGTH  20000
-
-extern Acmd *alAudioFrame(Acmd *cmdList, s32 *cmdLen, s16 *outBuf, s32 outLen);
-extern void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size);
-extern void alInit(ALGlobals *g, ALSynConfig *c);
-
-extern s8 rspF3DDKRBootStart[];
-extern s8 rspF3DDKRDramStart[];
 
 void audioStartThread(void);
 void audioStopThread(void);

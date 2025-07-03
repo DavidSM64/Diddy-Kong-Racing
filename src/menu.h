@@ -1,11 +1,8 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
-#include "types.h"
 #include "structs.h"
 #include "PR/gbi.h"
-#include "audio.h"
-#include "fade_transition.h"
 #include "font.h"
 #include "save_data.h"
 
@@ -251,6 +248,49 @@ typedef enum MENU_ID {
     MENU_UNUSED_27,
     MENU_CAUTION
 } MENU_ID;
+
+enum MenuResult {
+    MENU_RESULT_CONTINUE,
+    MENU_RESULT_RETURN_TO_GAME,
+    MENU_RESULT_UNK2,
+    MENU_RESULT_UNK3,
+    MENU_RESULT_UNK4,
+    MENU_RESULT_TRACKS_MODE,
+    MENU_RESULT_UNK6,
+    MENU_RESULT_UNK7,
+    MENU_RESULT_UNK8,
+    MENU_RESULT_UNK9,
+    MENU_RESULT_UNK10,
+    MENU_RESULT_UNK11,
+    MENU_RESULT_UNK12,
+    MENU_RESULT_UNK13,
+    MENU_RESULT_UNK14,
+    MENU_RESULT_UNK15,
+    MENU_RESULT_UNK16,
+    MENU_RESULT_UNK17,
+    MENU_RESULT_UNK18,
+};
+
+enum MenuResultFlags {
+    MENU_RESULT_FLAGS_0,
+    MENU_RESULT_FLAGS_1 = (1 << 0),
+    MENU_RESULT_FLAGS_2 = (1 << 1),
+    MENU_RESULT_FLAGS_4 = (1 << 2),
+    MENU_RESULT_FLAGS_8 = (1 << 3),
+    MENU_RESULT_FLAGS_10 = (1 << 4),
+    MENU_RESULT_FLAGS_20 = (1 << 5),
+    MENU_RESULT_FLAGS_40 = (1 << 6),
+    MENU_RESULT_FLAGS_80 = (1 << 7),
+    MENU_RESULT_FLAGS_100 = (1 << 8),
+    MENU_RESULT_FLAGS_200 = (1 << 9),
+};
+
+enum TrackFinishBits {
+    RACE_UNATTEMPTED,
+    RACE_VISITED = (1 << 0),
+    RACE_CLEARED = (1 << 1),
+    RACE_CLEARED_SILVER_COINS = (1 << 2),
+};
 
 typedef enum PakError {
     PAK_ERROR_NONE,

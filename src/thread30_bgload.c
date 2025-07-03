@@ -3,6 +3,7 @@
 #include <ultra64.h>
 #include "game.h"
 #include "stacks.h"
+#include "thread3_main.h"
 
 /************ .data ************/
 

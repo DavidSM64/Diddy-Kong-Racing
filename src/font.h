@@ -1,17 +1,8 @@
 #ifndef _FONT_H_
 #define _FONT_H_
 
-#include "memory.h"
-#include "video.h"
-
-#include "asset_loading.h"
 #include "structs.h"
 #include "types.h"
-#include "macros.h"
-#include "asset_enums.h"
-#include <ultra64.h>
-#include "f3ddkr.h"
-#include "textures_sprites.h"
 
 #define POS_CENTRED -0x8000
 
