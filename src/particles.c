@@ -1922,7 +1922,7 @@ void particle_update(Particle *particle, s32 updateRate) {
         }
     }
 
-    boundingBox = get_segment_bounding_box(particle->segmentID);
+    boundingBox = block_boundbox(particle->segmentID);
     if (boundingBox != NULL) {
         if (particle->trans.x_position < boundingBox->x1 || boundingBox->x2 < particle->trans.x_position ||
             particle->trans.y_position < boundingBox->y1 || boundingBox->y2 < particle->trans.y_position ||

@@ -3171,7 +3171,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     obj->trans.x_position = newXPos;
     obj->trans.y_position = newYPos;
     obj->trans.z_position = newZPos;
-    box = get_segment_bounding_box(obj->segmentID);
+    box = block_boundbox(obj->segmentID);
 
     // For some reason the XYZ positions are converted into integers for the next section
     intXPos = newXPos, intYPos = newYPos, intZPos = newZPos;
@@ -9880,7 +9880,7 @@ void mode_init_taj_race(void) {
         lvlSeg =
             get_level_segment_index_from_position(newRacerEntry.common.x, checkpointNode->y, newRacerEntry.common.z);
         newRacerEntry.common.y =
-            func_8002BAB0(lvlSeg, newRacerEntry.common.x, newRacerEntry.common.z, yOut) ? yOut[0] : checkpointNode->y;
+            collision_get_y(lvlSeg, newRacerEntry.common.x, newRacerEntry.common.z, yOut) ? yOut[0] : checkpointNode->y;
         newRacerEntry.common.size = 16;
         newRacerEntry.angleY = racer->steerVisualRotation;
         newRacerEntry.angleX = 0;
@@ -10049,7 +10049,7 @@ CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
         obj->segmentID =
             get_level_segment_index_from_position(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
     }
-    yOutCount = func_8002BAB0(obj->segmentID, obj->trans.x_position, obj->trans.z_position, yOut);
+    yOutCount = collision_get_y(obj->segmentID, obj->trans.x_position, obj->trans.z_position, yOut);
     if (yOutCount != 0) {
         obj->trans.y_position = yOut[yOutCount - 1];
     }

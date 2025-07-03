@@ -2055,7 +2055,7 @@ void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segment
         } else {
             temp = 1;
         }
-        if (temp & 1 && should_segment_be_visible(&gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex])) {
+        if (temp & 1 && block_visible(&gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex])) {
             segmentsOrder[(*segmentsOrderIndex)++] = segmentIndex;
         }
     }
@@ -2179,9 +2179,9 @@ s32 get_inside_segment_count_xyz(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16
 }
 
 /**
- * Returns this segment data.
+ * Returns this block data.
  */
-LevelModelSegment *get_segment(s32 segmentID) {
+LevelModelSegment *block_get(s32 segmentID) {
     if (segmentID < 0 || gCurrentLevelModel->numberOfSegments < segmentID) {
         return NULL;
     }
@@ -2190,10 +2190,10 @@ LevelModelSegment *get_segment(s32 segmentID) {
 }
 
 /**
- * Returns the bounding box data of this segment.
+ * Returns the bounding box data of this block.
  * Official name: trackBlockDim
  */
-LevelModelSegmentBoundingBox *get_segment_bounding_box(s32 segmentID) {
+LevelModelSegmentBoundingBox *block_boundbox(s32 segmentID) {
     if (segmentID < 0 || gCurrentLevelModel->numberOfSegments < segmentID) {
         return NULL;
     }
@@ -2265,7 +2265,7 @@ void func_8002A31C(void) {
  * to a total figure to determine whether or not a segment should be visible.
  * There's a large unused portion at the bottom writing to two vars, that are never later read.
  */
-s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb) {
+s32 block_visible(LevelModelSegmentBoundingBox *bb) {
     UNUSED u8 unknown[0x28];
     s64 sp48;
     s32 i, j;
@@ -2423,6 +2423,9 @@ UNUSED void func_8002AC00(s32 arg0, s32 arg1, s32 arg2) {
     }
 }
 
+/**
+ * Writes back the track collision data pointers.
+*/
 UNUSED void get_collision_candidate_data(s32 *numCollsionCandidates, s32 **collisionCandidates,
                                          s8 **collisionSurfaces) {
     *numCollsionCandidates = gNumCollisionCandidates;
@@ -2430,10 +2433,17 @@ UNUSED void get_collision_candidate_data(s32 *numCollsionCandidates, s32 **colli
     *collisionSurfaces = gCollisionSurfaces;
 }
 
+/**
+ * Change the collision response method.
+ * For instance, can choose to ignore wall response.
+*/
 void set_collision_mode(s32 mode) {
     gCollisionMode = mode;
 }
 
+/**
+* Returns the surface normals of the current collision point.
+*/
 s32 get_collision_normal(f32 *outX, f32 *outY, f32 *outZ) {
     *outX = gCollisionNormalX;
     *outY = gCollisionNormalY;
@@ -2696,10 +2706,11 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3) {
     }
 }
 
-// Collision: Returns the Y Values in yOut, and the number of values in the array as the return.
-// Get's the Y Offset acrross a surface.
-// Basically it goes down, finds a triangle, then locates where the intersection is and returns the Y level of that.
-s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
+/**
+ * Searches for intersecting surfaces, then returns the Y values of all the intersecting points, in order.
+ * There is no limit for surfaces returned, so not feeding a large enough yOut array could cause problems.
+*/
+s32 collision_get_y(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     LevelModelSegment *currentSegment;
     LevelModelSegmentBoundingBox *currentBoundingBox;
     Triangle *tri;
@@ -2886,7 +2897,7 @@ void generate_track(s32 modelId) {
         gCurrentLevelModel->segments[k].unk10 = (s16 *) j;
         j = (s32) align16(((u8 *) (gCurrentLevelModel->segments[k].numberOfTriangles * 2)) + j);
         gCurrentLevelModel->segments[k].collisionPlanes = (f32 *) j;
-        j = (s32) & ((u8 *) j)[track_calc_normals(&gCurrentLevelModel->segments[k])];
+        j = (s32) & ((u8 *) j)[track_init_collision(&gCurrentLevelModel->segments[k])];
         func_8002C954(&gCurrentLevelModel->segments[k], &gCurrentLevelModel->segmentsBoundingBoxes[k], k);
         gCurrentLevelModel->segments[k].unk30 = 0;
         gCurrentLevelModel->segments[k].unk34 = (s16 *) j;
@@ -3062,7 +3073,7 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
     }
 }
 
-s32 track_calc_normals(LevelModelSegment *block) {
+s32 track_init_collision(LevelModelSegment *block) {
     s32 facesOffset;
     s32 verticesOffset;
     s32 nextFacesOffset;
@@ -3124,10 +3135,10 @@ s32 track_calc_normals(LevelModelSegment *block) {
             // looks like a macro
             {
                 s32 temp = counter++;
-                arg0->collisionPlanes[4 * temp + 0] = nx;
-                arg0->collisionPlanes[4 * temp + 1] = ny;
-                arg0->collisionPlanes[4 * temp + 2] = nz;
-                arg0->collisionPlanes[4 * temp + 3] = -(x1 * nx + y1 * ny + z1 * nz);
+                block->collisionPlanes[4 * temp + 0] = nx;
+                block->collisionPlanes[4 * temp + 1] = ny;
+                block->collisionPlanes[4 * temp + 2] = nz;
+                block->collisionPlanes[4 * temp + 3] = -(x1 * nx + y1 * ny + z1 * nz);
             }
         }
     }
@@ -3138,12 +3149,12 @@ s32 track_calc_normals(LevelModelSegment *block) {
         return counter * 0x10;
     }
 
-    for (batchIndex = 0; batchIndex < arg0->numberOfBatches; batchIndex++) {
-        facesOffset = arg0->batches[batchIndex].facesOffset;
-        verticesOffset = arg0->batches[batchIndex].verticesOffset;
-        nextFacesOffset = arg0->batches[batchIndex + 1].facesOffset;
+    for (batchIndex = 0; batchIndex < block->numberOfBatches; batchIndex++) {
+        facesOffset = block->batches[batchIndex].facesOffset;
+        verticesOffset = block->batches[batchIndex].verticesOffset;
+        nextFacesOffset = block->batches[batchIndex + 1].facesOffset;
 
-        if (arg0->batches[batchIndex].flags & RENDER_NO_COLLISION) {
+        if (block->batches[batchIndex].flags & RENDER_NO_COLLISION) {
             facesOffset = nextFacesOffset;
         }
 
@@ -3152,10 +3163,10 @@ s32 track_calc_normals(LevelModelSegment *block) {
                 continue;
             }
 
-            colPlaneIndex = arg0->collisionFacets[triIndex].basePlaneIndex;
-            nx = arg0->collisionPlanes[4 * colPlaneIndex + 0];
-            ny = arg0->collisionPlanes[4 * colPlaneIndex + 1];
-            nz = arg0->collisionPlanes[4 * colPlaneIndex + 2];
+            colPlaneIndex = block->collisionFacets[triIndex].basePlaneIndex;
+            nx = block->collisionPlanes[4 * colPlaneIndex + 0];
+            ny = block->collisionPlanes[4 * colPlaneIndex + 1];
+            nz = block->collisionPlanes[4 * colPlaneIndex + 2];
 
             for (i = 0; i < 3; i++) {
                 next = i + 1;
@@ -3163,24 +3174,24 @@ s32 track_calc_normals(LevelModelSegment *block) {
                     next = 0;
                 }
 
-                vertIndex = arg0->triangles[triIndex].verticesArray[1 + i] + verticesOffset;
-                nextVertIndex = arg0->triangles[triIndex].verticesArray[1 + next] + verticesOffset;
+                vertIndex = block->triangles[triIndex].verticesArray[1 + i] + verticesOffset;
+                nextVertIndex = block->triangles[triIndex].verticesArray[1 + next] + verticesOffset;
 
-                next = arg0->collisionFacets[triIndex].edgeBisectorPlane[i];
+                next = block->collisionFacets[triIndex].edgeBisectorPlane[i];
                 if (next < numColPlanes) {
                     {
                         s32 temp = next;
-                        x5 = nx + arg0->collisionPlanes[4 * temp + 0];
-                        y5 = ny + arg0->collisionPlanes[4 * temp + 1];
-                        z5 = nz + arg0->collisionPlanes[4 * temp + 2];
+                        x5 = nx + block->collisionPlanes[4 * temp + 0];
+                        y5 = ny + block->collisionPlanes[4 * temp + 1];
+                        z5 = nz + block->collisionPlanes[4 * temp + 2];
                     }
 
-                    v = &arg0->vertices[vertIndex];
+                    v = &block->vertices[vertIndex];
                     x1 = v->x;
                     y1 = v->y;
                     z1 = v->z;
 
-                    v = &arg0->vertices[nextVertIndex];
+                    v = &block->vertices[nextVertIndex];
                     x2 = v->x;
                     y2 = v->y;
                     z2 = v->z;
@@ -3202,20 +3213,20 @@ s32 track_calc_normals(LevelModelSegment *block) {
 
                     if (next != colPlaneIndex) {
                         for (j = 0; j < 3; j++) {
-                            if (colPlaneIndex == arg0->collisionFacets[next].edgeBisectorPlane[j]) {
-                                arg0->collisionFacets[next].edgeBisectorPlane[j] = counter | 0x8000;
+                            if (colPlaneIndex == block->collisionFacets[next].edgeBisectorPlane[j]) {
+                                block->collisionFacets[next].edgeBisectorPlane[j] = counter | 0x8000;
                             }
                         }
                     }
 
-                    arg0->collisionFacets[triIndex].edgeBisectorPlane[i] = counter;
+                    block->collisionFacets[triIndex].edgeBisectorPlane[i] = counter;
 
                     {
                         s32 temp = counter++;
-                        arg0->collisionPlanes[4 * temp + 0] = x5;
-                        arg0->collisionPlanes[4 * temp + 1] = y5;
-                        arg0->collisionPlanes[4 * temp + 2] = z5;
-                        arg0->collisionPlanes[4 * temp + 3] = -(x1 * x5 + y1 * y5 + z1 * z5);
+                        block->collisionPlanes[4 * temp + 0] = x5;
+                        block->collisionPlanes[4 * temp + 1] = y5;
+                        block->collisionPlanes[4 * temp + 2] = z5;
+                        block->collisionPlanes[4 * temp + 3] = -(x1 * x5 + y1 * y5 + z1 * z5);
                     }
                 }
             }

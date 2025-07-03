@@ -1638,7 +1638,7 @@ void func_800BCC70(LevelModel *model) {
                 x = gWaveModel[i].originX;
                 for (k = 0; k <= subdivisions; k++) {
                     // var_v0 stores the length of spAC
-                    collisionCount = func_8002BAB0(i, spA8[k] + x, spA8[sp184] + z, colY);
+                    collisionCount = collision_get_y(i, spA8[k] + x, spA8[sp184] + z, colY);
                     if (collisionCount == 0) {
                         var_a2 = 255;
                     } else {

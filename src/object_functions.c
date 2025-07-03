@@ -6460,7 +6460,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
             obj->z_velocity = frog->hopTargetZ * cosine;
             ignore_bounds_check();
             move_object(obj, obj->x_velocity, 0.0f, obj->z_velocity);
-            if (func_8002BAB0(obj->segmentID, obj->trans.x_position, obj->trans.z_position, colY) != 0) {
+            if (collision_get_y(obj->segmentID, obj->trans.x_position, obj->trans.z_position, colY) != 0) {
                 obj->trans.y_position = 0.0f;
                 ignore_bounds_check();
                 move_object(obj, 0.0f, (f32) colY[0], 0.0f);
