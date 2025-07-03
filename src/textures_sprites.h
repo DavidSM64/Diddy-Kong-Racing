@@ -56,7 +56,7 @@ enum RenderFlags {
     RENDER_Z_UPDATE =           (1 << 8), // Updates the depth buffer when rendering.
     RENDER_HIDDEN =             (1 << 8), // Shares a spot with Z update, as that's generally a given with level geometry.
     RENDER_PRESERVE_COVERAGE =  (1 << 9), // Coverage is used to help smooth the image. This won't write over existing coverage values.
-    RENDER_UNK_200 =            (1 << 9), // Shares a slot with coverage, being normal geometry doesn't care about coverage.
+    RENDER_NO_COLLISION =       (1 << 9), // Shares a slot with coverage, being normal geometry doesn't care about coverage.
     RENDER_LINE_SWAP =          (1 << 10), // Texture has swapped lines, for speed. Makes the load process slightly different.
     RENDER_DECAL =              (1 << 11), // Projects a surface on existing geometry, taking precedent to not zfight.
     RENDER_UNK_0001000 =        (1 << 12),

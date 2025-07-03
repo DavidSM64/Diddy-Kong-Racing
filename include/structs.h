@@ -567,7 +567,7 @@ typedef struct TextureInfo {
     /* 0x04 */ u8 width;
     /* 0x05 */ u8 height;
     /* 0x06 */ u8 format;
-    /* 0x07 */ s8 unk7;
+    /* 0x07 */ s8 surfaceType;
 } TextureInfo;
 
 /* Size: 10 bytes */
@@ -696,10 +696,10 @@ typedef struct ModelInstance {
     /* 0x20 */ s8 animUpdateTimer;
 } ModelInstance;
 
-typedef struct CollisionNode {
-    u16 triangleIndex; // This triangle index
-    u16 closestTri[3];
-} CollisionNode;
+typedef struct CollisionFacetPlanes {
+    u16 basePlaneIndex;       // Index of the triangle's main collision plane
+    u16 edgeBisectorPlane[3]; // Indices of edge bisector planes for triangle edges
+} CollisionFacetPlanes;
 
 /* Size: 0x44 bytes */
 typedef struct LevelModelSegment {
@@ -708,8 +708,8 @@ typedef struct LevelModelSegment {
     /* 0x08 */ s32 unk8;
     /* 0x0C */ TriangleBatchInfo *batches;
     /* 0x10 */ s16 *unk10;
-    /* 0x14 */ CollisionNode *unk14;
-    /* 0x18 */ f32 *normals;
+    /* 0x14 */ CollisionFacetPlanes *collisionFacets;
+    /* 0x18 */ f32 *collisionPlanes; // Array of plane equations (A, B, C, D) used in collision checks
     /* 0x1C */ s16 numberOfVertices;
     /* 0x1E */ s16 numberOfTriangles;
     /* 0x20 */ s16 numberOfBatches;
@@ -1207,10 +1207,7 @@ typedef struct Object_Racer {
     /* 0x0CC */ f32 unkCC;
     /* 0x0D0 */ f32 unkD0;
     /* 0x0D4 */ f32 unkD4;
-    /* 0x0D8 */ Vec3f unkD8;
-    /* 0x0E4 */ Vec3f unkE4;
-    /* 0x0F0 */ Vec3f unkF0;
-    /* 0x0FC */ Vec3f unkFC;
+    /* 0x0D8 */ f32 unkD8[12];
     /* 0x108 */ struct Object *exitObj;
     /* 0x10C */ s32 unk10C;
     /* 0x110 */ s32 unk110;
@@ -1288,7 +1285,7 @@ typedef struct Object_Racer {
     /* 0x1C8 */ u8 unk1C8;
     /* 0x1C9 */ u8 unk1C9;
     /* 0x1CA */ s8 unk1CA;
-    /* 0x1CB */ u8 unk1CB;
+    /* 0x1CB */ s8 unk1CB;
     /* 0x1CC */ s8 aiSkill;
     /* 0x1CD */ u8 unk1CD;
     /* 0x1CE */ u8 unk1CE;

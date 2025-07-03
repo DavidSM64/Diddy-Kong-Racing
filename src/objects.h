@@ -181,6 +181,17 @@ enum ObjectSpawnFlags {
     OBJECT_SPAWN_NO_LODS = (1 << 4) // Forces the object to have 1 model associate. Used to prevent LoD models of player model racers spawning.
 };
 
+enum ObjectHeaderFlags {
+    OBJECT_HEADER_NONE,
+    OBJECT_HEADER_UNK01 = (1 << 0),
+    OBJECT_HEADER_UNK02 = (1 << 1),
+    OBJECT_HEADER_UNK04 = (1 << 2),
+    OBJECT_HEADER_UNK08 = (1 << 3),
+    OBJECT_HEADER_UNK10 = (1 << 4),
+    OBJECT_HEADER_NO_TIME_TRIAL = (1 << 5), // Disable object in time trial mode.
+    OBJECT_HEADER_NO_MULTIPLATER = (1 << 6) // Disable object in multiplayer.
+};
+
 enum ObjectBehaviourFlags {
     OBJECT_BEHAVIOUR_NONE,
     OBJECT_BEHAVIOUR_SHADED = (1 << 0),
@@ -293,7 +304,7 @@ s32 func_8000CC20(Object *obj);
 s32 get_contpak_error(void);
 void instShowBearBar(void);
 s8 func_8000E138(void);
-s8 func_8000E148(void);
+s8 racetype_demo(void);
 s8 func_8000E158(void);
 s8 func_8000E184(void);
 void func_8000E194(void);
@@ -425,7 +436,7 @@ s32 obj_init_property_flags(s32 behaviorId);
 void tt_ghost_beaten(s32 arg0, s16 *playerId);
 void obj_init_animobject(Object *, Object *);
 Object *obj_butterfly_node(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis);
-void func_8002125C(Object *obj, LevelObjectEntry_Animation *entry, Object_AnimatedObject *charSelect, UNUSED s32 index);
+void func_8002125C(Object *obj, LevelObjectEntry_Animation *entry, Object_AnimatedObject *animObj, UNUSED s32 index);
 void func_80021104(Object *obj, Object_AnimatedObject *animObj, LevelObjectEntry_Animation *entry);
 s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,
                   f32 *outZ);
@@ -477,14 +488,14 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object *, s32, Object *);
 void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4);
 void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
-s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance, u8 *arg6);
+s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *arg5, u8 *arg6);
 void obj_tex_animate(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);
 void func_8006017C(ObjectModel *);
 void set_temp_model_transforms(Object *);
 void func_800101AC(Object *, s32);
 void func_800135B8(Object *);
-void func_8000CC7C(Vehicle, u32, s32);
+void track_setup_racers(Vehicle, u32, s32);
 void func_80017E98(void);
 void spectate_update(void);
 void func_8001E93C(void);
