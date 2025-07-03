@@ -1435,9 +1435,6 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
             curObj->interactObj->flags = INTERACT_FLAGS_NONE;
             gGhostObjStaff = curObj;
             curRacer = gGhostObjStaff->racer;
-            // ASSET_OBJECT_ID_CHARACTERFLAG is what this is. But it's not used.
-            objectID = 0x40;
-            objectID += 0x20;
             curRacer->transparency = 96;
         }
     }
