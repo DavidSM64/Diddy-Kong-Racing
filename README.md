@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of July 1, 2025, this is our current score:
+As of July 3, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 95.62%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 96.43%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 61.34%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 62.43%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -117,30 +117,30 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of July 1, 2025, this is our current score:
+As of July 3, 2025, this is our current score:
 ```
- ===============================================================
-             ADVENTURE ONE (ASM -> C Decompilation)
- ------------ 95.62% Complete (96.32% NON_MATCHING) ------------
-                  # Decompiled functions: 1937
-                   # GLOBAL_ASM remaining: 15
-                   # NON_MATCHING functions: 4
-               # NON_EQUIVALENT WIP functions: 11
- ------------------------- Game Status -------------------------
-            Balloons: 46/47, Keys: 4/4, Trophies: 4/5
-             T.T. Amulets: 4/4, Wizpig Amulets: 4/4
- ---------------------------------------------------------------
- We are collecting silver coins in Star City. (0/8 silver coins)
- ===============================================================
-              ADVENTURE TWO (Cleanup & Documentation)
- ----------------------- 61.34% Complete -----------------------
-                  # Documented functions: 1219
-                  # Undocumented remaining: 433
- ------------------------- Game Status -------------------------
-            Balloons: 30/47, Keys: 3/4, Trophies: 2/5
-             T.T. Amulets: 3/4, Wizpig Amulets: 2/4
- ---------------------------------------------------------------
-     We are racing in the rematch against Bubbler. (Lap 2/3)
- ===============================================================
+ ======================================================================
+                 ADVENTURE ONE (ASM -> C Decompilation)
+ --------------- 96.43% Complete (97.13% NON_MATCHING) ----------------
+                      # Decompiled functions: 1939
+                       # GLOBAL_ASM remaining: 13
+                      # NON_MATCHING functions: 4
+                   # NON_EQUIVALENT WIP functions: 9
+ ---------------------------- Game Status -----------------------------
+               Balloons: 46/47, Keys: 4/4, Trophies: 4/5
+                 T.T. Amulets: 4/4, Wizpig Amulets: 4/4
+ ----------------------------------------------------------------------
+    We are collecting silver coins in Star City. (5/8 silver coins)
+ ======================================================================
+                 ADVENTURE TWO (Cleanup & Documentation)
+ -------------------------- 62.43% Complete ---------------------------
+                      # Documented functions: 1228
+                     # Undocumented remaining: 424
+ ---------------------------- Game Status -----------------------------
+               Balloons: 30/47, Keys: 3/4, Trophies: 2/5
+                 T.T. Amulets: 3/4, Wizpig Amulets: 3/4
+ ----------------------------------------------------------------------
+ We are participating in the Trophy Race of Sherbet Island. (Round One)
+ ======================================================================
 ```
 <!-- README_SCORE_END -->

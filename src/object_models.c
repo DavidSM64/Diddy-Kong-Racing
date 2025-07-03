@@ -20,17 +20,6 @@ s32 gRenderSceneFuncLength = 1980;
 
 /*******************************/
 
-/************ .rodata ************/
-
-UNUSED const char D_800E6B20[] = "Error: Model no. out of range on load. !!\n";
-UNUSED const char D_800E6B4C[] = "TEXTURE ERROR!!\n%d,%d\n";
-UNUSED const char D_800E6B64[] = "Error: Model table overflow!!\n";
-UNUSED const char D_800E6B84[] = "WARNING :: createModelInstance called with NULL pointer\n";
-UNUSED const char D_800E6BC0[] = "ModFreeModel : NULL mod_inst!!\n";
-UNUSED const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent model!!\n";
-
-/*********************************/
-
 /************ .bss ************/
 
 s32 *gObjectModelTable;
@@ -101,7 +90,7 @@ ModelInstance *object_model_init(s32 modelID, s32 flags) {
     s32 modelSize;
 
     if (modelID >= gNumModelIDs) {
-        stubbed_printf(D_800E6B20);
+        stubbed_printf("Error: Model no. out of range on load. !!\n");
         modelID = 0;
     }
 
@@ -161,9 +150,9 @@ ModelInstance *object_model_init(s32 modelID, s32 flags) {
     objMdl->unk1C = (s16 *) ((s32) objMdl->unk1C + (u8 *) objMdl);
     objMdl->unk4C = (s32 *) ((s32) objMdl->unk4C + (u8 *) objMdl);
     objMdl->references = 1;
-    objMdl->unkC = 0;
-    objMdl->unk10 = 0;
-    objMdl->unk32 = 0;
+    objMdl->collisionFacets = NULL;
+    objMdl->collisionPlanes = NULL;
+    objMdl->collisionFacetCount = 0;
     objMdl->texOffsetUpdateRate = 0;
     objMdl->normals = NULL;
     objMdl->numberOfAnimations = 0;
@@ -179,11 +168,11 @@ ModelInstance *object_model_init(s32 modelID, s32 flags) {
         for (i = 0; i < objMdl->numberOfBatches; i++) {
             if (objMdl->batches[i].textureIndex != 0xFF &&
                 objMdl->batches[i].textureIndex >= objMdl->numberOfTextures) {
-                stubbed_printf(D_800E6B4C);
+                stubbed_printf("TEXTURE ERROR!!\n%d,%d\n", objMdl->batches[i].textureIndex, objMdl->numberOfTextures);
                 goto block_30;
             }
         }
-        if (model_calc_normals(objMdl) == 0 && model_anim_init(objMdl, modelID) == 0) {
+        if (model_init_normals(objMdl) == 0 && model_anim_init(objMdl, modelID) == 0) {
             instance = model_instance_init(objMdl, flags);
             if (instance != NULL) {
                 gModelCache[ASSETCACHE_ID(cacheIndex)] = modelID;
@@ -192,7 +181,7 @@ ModelInstance *object_model_init(s32 modelID, s32 flags) {
                     instance->animUpdateTimer = 0;
                     return instance;
                 } else {
-                    stubbed_printf(D_800E6B64);
+                    stubbed_printf("Error: Model table overflow!!\n");
                 }
             }
         }
@@ -215,6 +204,7 @@ block_30:
  * Objects that do nothing special get a standard instance assigned,
  * otherwise, ones that utilise shading or animation will have their own copies of the vertex data.
  * Returns null if it failed.
+ * Official name: createModelInstance
  */
 ModelInstance *model_instance_init(ObjectModel *model, s32 flags) {
     s32 temp;
@@ -222,6 +212,10 @@ ModelInstance *model_instance_init(ObjectModel *model, s32 flags) {
     Vertex *var_v1;
     Vertex *vertex;
     Vertex *mdlVertex;
+
+    if (model == NULL) {
+        stubbed_printf("WARNING :: createModelInstance called with NULL pointer\n");
+    }
 
     if (model->numberOfAnimations != 0 && (flags & OBJECT_BEHAVIOUR_ANIMATION)) {
         temp = ((model->numberOfVertices * 2) * sizeof(Vertex)) + sizeof(ModelInstance);
@@ -301,6 +295,7 @@ ModelInstance *model_instance_init(ObjectModel *model, s32 flags) {
 
 /**
  * Attempts to free the object model from RAM.
+ * Official name: ModFreeModel
  */
 void free_3d_model(ModelInstance *modInst) {
     UNUSED s32 pad;
@@ -309,7 +304,7 @@ void free_3d_model(ModelInstance *modInst) {
     s32 i;
 
     if (modInst == NULL) {
-        stubbed_printf(D_800E6BC0);
+        stubbed_printf("ModFreeModel : NULL mod_inst!!\n");
         return;
     }
 
@@ -341,8 +336,13 @@ void free_3d_model(ModelInstance *modInst) {
  * Frees all associated meshes, textures and animations from the model.
  */
 void free_model_data(ObjectModel *mdl) {
-    // free the textures
-    s16 numTextures = mdl->numberOfTextures;
+    s16 numTextures;
+
+    if (mdl == NULL) {
+        stubbed_printf("MOD Error: Tryed to deallocate non-existent model!!\n");
+    }
+
+    numTextures = mdl->numberOfTextures;
     if (numTextures > 0) {
         s32 texturesFreed = 0;
         s32 textureIndex = 0;
@@ -356,13 +356,13 @@ void free_model_data(ObjectModel *mdl) {
             textureIndex++;
         } while (texturesFreed < numTextures);
     }
-    // ???
-    if (mdl->unkC != NULL) {
-        mempool_free(mdl->unkC);
+
+    if (mdl->collisionFacets != NULL) {
+        mempool_free(mdl->collisionFacets);
     }
-    // ???
-    if (mdl->unk10 != NULL) {
-        mempool_free(mdl->unk10);
+
+    if (mdl->collisionPlanes != NULL) {
+        mempool_free(mdl->collisionPlanes);
     }
 
     if (mdl->normals != NULL) {
@@ -385,76 +385,75 @@ void free_model_data(ObjectModel *mdl) {
     mempool_free(mdl);
 }
 
-// https://decomp.me/scratch/VJ34p
-#ifdef NON_EQUIVALENT
-void func_8006017C(ObjectModel *arg0) {
-    s32 facesOffset;     // v1
-    s32 verticesOffset;  // s5
-    s32 nextFacesOffset; // spF4
+void model_init_collision(ObjectModel *model) {
+    s32 facesOffset;
+    s32 verticesOffset;
+    s32 nextFacesOffset;
     s32 s4;
-    s32 i; // spEC
-    s32 j; // s6
+    s32 i;
+    s32 j;
     Vertex *v;
     s32 v1, v2;
-    f32 x5, y5, z5; // f20, f24, f26
-    f32 x1, y1, z1; // spCC, spC8, spC4
-    f32 x2, y2, z2; // f14, f16, f18
-    f32 x3, y3, z3; // f22, spB0, f0
-    f32 nx, ny, nz; // spA8, spA4, spA0
+    f32 x5, y5, z5;
+    f32 x1, y1, z1;
+    f32 x2, y2, z2;
+    f32 x3, y3, z3;
+    f32 nx, ny, nz;
     f32 mag;
     s32 s3;
     s32 k;
     s32 l;
-    s32 temp1, temp2, temp3;
+    s32 index;
+    s32 temp1, temp2;
 
-    if (arg0->unkC != NULL) {
+    if (model->collisionFacets != NULL) {
         return;
     }
 
     s4 = 0;
-    for (i = 0; i < arg0->numberOfBatches; i++) {
-        facesOffset = arg0->batches[i].facesOffset;
-        nextFacesOffset = arg0->batches[i + 1].facesOffset;
-        if (arg0->batches[i].flags & RENDER_NO_COLLISION) {
+    for (i = 0; i < model->numberOfBatches; i++) {
+        facesOffset = model->batches[i].facesOffset;
+        nextFacesOffset = model->batches[i + 1].facesOffset;
+        if (model->batches[i].flags & RENDER_NO_COLLISION) {
             continue;
         }
         s4 += nextFacesOffset - facesOffset;
     }
 
-    arg0->unkC = (ObjectModel_C *) mempool_alloc(s4 * sizeof(ObjectModel_C), COLOUR_TAG_RED);
-    if (v) {} // FAKE
-    if (arg0->unkC == NULL) {
+    model->collisionFacets = (CollisionFacetPlanes *) mempool_alloc(s4 * sizeof(CollisionFacetPlanes), COLOUR_TAG_RED);
+
+    if (model->collisionFacets == NULL) {
         return;
     }
 
-    arg0->unk10 = (ObjectModel_10 *) mempool_alloc(s4 * 64, COLOUR_TAG_RED);
-    if (arg0->unk10 == NULL) {
-        mempool_free(arg0->unkC);
-        arg0->unkC = NULL;
+    model->collisionPlanes = (f32 *) mempool_alloc(s4 * (sizeof(f32) * 16), COLOUR_TAG_RED);
+    if (model->collisionPlanes == NULL) {
+        mempool_free(model->collisionFacets);
+        model->collisionFacets = NULL;
         return;
     }
 
     s4 = 0;
-    for (i = 0; i < arg0->numberOfBatches; i++) {
-        facesOffset = arg0->batches[i].facesOffset;
-        verticesOffset = arg0->batches[i].verticesOffset;
-        nextFacesOffset = arg0->batches[i + 1].facesOffset;
-        if (arg0->batches[i].flags & RENDER_NO_COLLISION) {
+    for (i = 0; i < model->numberOfBatches; i++) {
+        facesOffset = model->batches[i].facesOffset;
+        verticesOffset = model->batches[i].verticesOffset;
+        nextFacesOffset = model->batches[i + 1].facesOffset;
+        if (model->batches[i].flags & RENDER_NO_COLLISION) {
             nextFacesOffset = facesOffset - 1;
         }
 
         for (j = facesOffset; j < nextFacesOffset; j++) {
-            v = &arg0->vertices[arg0->triangles[j].vi0 + verticesOffset];
+            v = &model->vertices[model->triangles[j].vi0 + verticesOffset];
             x1 = v->x;
             y1 = v->y;
             z1 = v->z;
 
-            v = &arg0->vertices[arg0->triangles[j].vi1 + verticesOffset];
+            v = &model->vertices[model->triangles[j].vi1 + verticesOffset];
             x2 = v->x;
             y2 = v->y;
             z2 = v->z;
 
-            v = &arg0->vertices[arg0->triangles[j].vi2 + verticesOffset];
+            v = &model->vertices[model->triangles[j].vi2 + verticesOffset];
             x3 = v->x;
             y3 = v->y;
             z3 = v->z;
@@ -470,37 +469,39 @@ void func_8006017C(ObjectModel *arg0) {
                 nz /= mag;
             }
 
-            arg0->unk10[s4].A = nx;
-            arg0->unk10[s4].B = ny;
-            arg0->unk10[s4].C = nz;
-            arg0->unk10[s4].D = -(x1 * nx + y1 * ny + z1 * nz);
+            temp1 = s4 << 2;
+            *(model->collisionPlanes + temp1 + 0) = nx;
+            *(model->collisionPlanes + temp1 + 1) = ny;
+            *(model->collisionPlanes + temp1 + 2) = nz;
+            *(model->collisionPlanes + temp1 + 3) = -(x1 * nx + y1 * ny + z1 * nz);
 
-            arg0->unkC[s4].unk0[0] = s4;
-            arg0->unkC[s4].unk0[1] = s4;
-            arg0->unkC[s4].unk0[2] = s4;
-            arg0->unkC[s4].unk0[3] = s4;
+            model->collisionFacets[s4].basePlaneIndex = s4;
+            model->collisionFacets[s4].edgeBisectorPlane[0] = s4;
+            model->collisionFacets[s4].edgeBisectorPlane[1] = s4;
+            model->collisionFacets[s4].edgeBisectorPlane[2] = s4;
 
             s4++;
         }
     }
 
-    arg0->unk32 = s4;
+    model->collisionFacetCount = s4;
 
-    func_80060910(arg0);
+    func_80060910(model);
 
     s3 = 0;
-    for (i = 0; i < arg0->numberOfBatches; i++) {
-        facesOffset = arg0->batches[i].facesOffset;
-        verticesOffset = arg0->batches[i].verticesOffset;
-        nextFacesOffset = arg0->batches[i + 1].facesOffset;
-        if (arg0->batches[i].flags & RENDER_NO_COLLISION) {
+    for (i = 0; i < model->numberOfBatches; i++) {
+        facesOffset = model->batches[i].facesOffset;
+        verticesOffset = model->batches[i].verticesOffset;
+        nextFacesOffset = model->batches[i + 1].facesOffset;
+        if (model->batches[i].flags & RENDER_NO_COLLISION) {
             nextFacesOffset = facesOffset - 1;
         }
 
-        for (j = facesOffset; j < nextFacesOffset; j++) {
-            nx = arg0->unk10[arg0->unkC[s3].unk0[0]].A;
-            ny = arg0->unk10[arg0->unkC[s3].unk0[0]].B;
-            nz = arg0->unk10[arg0->unkC[s3].unk0[0]].C;
+        for (j = facesOffset; j < nextFacesOffset; j++, s3++) {
+            index = model->collisionFacets[s3].basePlaneIndex << 2;
+            nx = *(model->collisionPlanes + index + 0);
+            ny = *(model->collisionPlanes + index + 1);
+            nz = *(model->collisionPlanes + index + 2);
 
             for (k = 0; k < 3; k++) {
                 l = k + 1;
@@ -508,19 +509,20 @@ void func_8006017C(ObjectModel *arg0) {
                     l = 0;
                 }
 
-                v1 = arg0->triangles[j].verticesArray[1 + k];
-                v2 = arg0->triangles[j].verticesArray[1 + l];
+                v1 = model->triangles[j].verticesArray[1 + k] + verticesOffset;
+                v2 = model->triangles[j].verticesArray[1 + l] + verticesOffset;
 
-                x5 = nx + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].A;
-                y5 = ny + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].B;
-                z5 = nz + arg0->unk10[arg0->unkC[s3].unk0[l + 1]].C;
+                index = model->collisionFacets[s3].edgeBisectorPlane[k] << 2;
+                x5 = nx + *(model->collisionPlanes + index + 0);
+                y5 = ny + *(model->collisionPlanes + index + 1);
+                z5 = nz + *(model->collisionPlanes + index + 2);
 
-                v = &arg0->vertices[v1 + verticesOffset];
+                v = &model->vertices[v1];
                 x1 = v->x;
                 y1 = v->y;
                 z1 = v->z;
 
-                v = &arg0->vertices[v2 + verticesOffset];
+                v = &model->vertices[v2];
                 x2 = v->x;
                 y2 = v->y;
                 z2 = v->z;
@@ -540,21 +542,19 @@ void func_8006017C(ObjectModel *arg0) {
                     z5 /= mag;
                 }
 
-                arg0->unkC[s3].unk0[k + 1] = s4;
-                arg0->unk10[s4].A = x5;
-                arg0->unk10[s4].B = y5;
-                arg0->unk10[s4].C = z5;
-                arg0->unk10[s4].D = -(x1 * x5 + y1 * y5 + z1 * z5);
+                model->collisionFacets[s3].edgeBisectorPlane[k] = s4;
+
+                temp2 = s4 << 2;
+                *(model->collisionPlanes + temp2 + 0) = x5;
+                *(model->collisionPlanes + temp2 + 1) = y5;
+                *(model->collisionPlanes + temp2 + 2) = z5;
+                *(model->collisionPlanes + temp2 + 3) = -(x1 * x5 + y1 * y5 + z1 * z5);
+
                 s4++;
             }
-
-            s3++;
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_8006017C.s")
-#endif
 
 void func_80060910(ObjectModel *mdl) {
     s32 count;
@@ -581,7 +581,7 @@ void func_80060910(ObjectModel *mdl) {
         }
 
         for (triIndex = startTri; triIndex < endTri; triIndex++, count++) {
-            mdl->unkC[count].unk0[0] = count;
+            mdl->collisionFacets[count].basePlaneIndex = count;
 
             for (vertIndex = 0; vertIndex < 3; vertIndex++) {
                 nextVertIndex = vertIndex + 1;
@@ -594,9 +594,9 @@ void func_80060910(ObjectModel *mdl) {
 
                 result = func_80060AC8(mdl, triIndex, vertIndex0, vertIndex1, &sp5C, &sp60);
                 if (result != -1) {
-                    mdl->unkC[count].unk0[1 + vertIndex] = result;
+                    mdl->collisionFacets[count].edgeBisectorPlane[vertIndex] = result;
                 } else {
-                    mdl->unkC[count].unk0[1 + vertIndex] = count;
+                    mdl->collisionFacets[count].edgeBisectorPlane[vertIndex] = count;
                 }
             }
         }
@@ -680,7 +680,7 @@ s32 func_80060C58(Vertex *vertices, s32 i1, s32 i2, s32 i3, s32 i4) {
 }
 
 // Returns 0 if successful, or 1 if an error occured.
-s32 model_calc_normals(ObjectModel *model) {
+s32 model_init_normals(ObjectModel *model) {
     Vertex *vertices;
     Triangle *triangles;
     Vec3f *floatNorms;

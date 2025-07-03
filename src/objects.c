@@ -45,6 +45,7 @@
 #define OBJECT_POOL_SIZE 0x15800
 #define OBJECT_BLUEPRINT_SIZE 0x800
 #define OBJECT_SLOT_COUNT 512
+#define OBJECT_COLLISION_COUNT 20
 #define AINODE_COUNT 128
 #define CAMCONTROL_COUNT 20
 #define BOOST_VERT_COUNT 9
@@ -70,7 +71,7 @@ s32 D_800DC70C = 0; // Currently unknown, might be a different type.
 s16 D_800DC710 = 1;
 s32 D_800DC714 = 0; // Currently unknown, might be a different type.
 Object *gGhostObjStaff = NULL;
-s8 D_800DC71C = 0;
+s8 gRollingDemo = FALSE;
 s32 gObjectTexAnim = FALSE;
 s16 gTimeTrialTime = 10800;
 s16 gTimeTrialVehicle = -1;
@@ -91,15 +92,16 @@ Object *gMagnetEffectObject = NULL;
 f32 D_800DC768[16] = { 0.0f, 1.0f,  0.70711f,  0.70711f,  1.0f,  0.0f, 0.70711f,  -0.70711f,
                        0.0f, -1.0f, -0.70711f, -0.70711f, -1.0f, 0.0f, -0.70711f, 0.70711f };
 
-u16 D_800DC7A8[] = {
+u16 gRacerObjectTable[] = {
     // Car
-    ASSET_OBJECT_ID_KREMCAR,  ASSET_OBJECT_ID_BADGERCAR, ASSET_OBJECT_ID_TORTCAR,    ASSET_OBJECT_ID_CONKACAR,
-    ASSET_OBJECT_ID_TIGERCAR, ASSET_OBJECT_ID_BANJOCAR,  ASSET_OBJECT_ID_CHICKENCAR, ASSET_OBJECT_ID_MOUSECAR,
-};
-
-s16 D_800DC7B8[] = {
-    // TODO: move these first two entries to the first var above. I'm thinking this is either all one big var, or the
-    // boss objects have their own table.
+    ASSET_OBJECT_ID_KREMCAR,
+    ASSET_OBJECT_ID_BADGERCAR,
+    ASSET_OBJECT_ID_TORTCAR,
+    ASSET_OBJECT_ID_CONKACAR,
+    ASSET_OBJECT_ID_TIGERCAR,
+    ASSET_OBJECT_ID_BANJOCAR,
+    ASSET_OBJECT_ID_CHICKENCAR,
+    ASSET_OBJECT_ID_MOUSECAR,
     ASSET_OBJECT_ID_SWCAR,
     ASSET_OBJECT_ID_DIDDYCAR,
     // Hover
@@ -277,8 +279,8 @@ s32 gObjectCount;
 s32 gObjectListStart;
 s32 gParticleCount;
 Object *gObjectMemoryPool;
-Object **D_8011AE6C;
-s32 D_8011AE70;
+Object **gCollisionObjects;
+s32 gCollisionObjectCount;
 Object **D_8011AE74; // Pointer to an array of Animation objects
 s16 D_8011AE78;      // Number of Animation objects in D_8011AE74
 s16 gCutsceneID;
@@ -348,12 +350,6 @@ extern s16 gGhostMapID;
 
 /******************************/
 
-typedef struct LevelObjectEntry_unk8000B020 {
-    LevelObjectEntryCommon common;
-    s8 unk8;
-    s8 unk9;
-} LevelObjectEntry_unk8000B020;
-
 /**
  * Spawns control objects for racer boost visuals, as well as shield and magnet visuals.
  * Boost geometry is made in real time, and allocated here.
@@ -361,7 +357,7 @@ typedef struct LevelObjectEntry_unk8000B020 {
  */
 void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     Object_Boost *boostObj;
-    LevelObjectEntry_unk8000B020 objEntry;
+    LevelObjectEntry_Boost2 objEntry;
     s32 i;
 
     gBoostTris[0] = (Triangle *) mempool_alloc_safe(
@@ -378,11 +374,11 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     // Makes 10 boost objects, but only 8 racers can actually exist at once.
     for (i = 0; i < NUMBER_OF_CHARACTERS; i++) {
         objEntry.common.objectID = ASSET_OBJECT_ID_BOOST;
-        objEntry.common.size = sizeof(LevelObjectEntry_unk8000B020);
+        objEntry.common.size = sizeof(LevelObjectEntry_Boost2);
         objEntry.common.x = 0;
         objEntry.common.y = 0;
         objEntry.common.z = 0;
-        objEntry.unk8 = i;
+        objEntry.racerIndex = i;
         gBoostEffectObjects[i] = spawn_object(&objEntry.common, OBJECT_SPAWN_UNK01);
         if (gBoostEffectObjects[i] != NULL) {
             gBoostEffectObjects[i]->properties.common.unk0 = 0;
@@ -400,7 +396,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
     }
     gBoostObjOverrideID = 9;
     objEntry.common.objectID = ASSET_OBJECT_ID_SHIELD;
-    objEntry.common.size = sizeof(LevelObjectEntry_unk8000B020);
+    objEntry.common.size = sizeof(LevelObjectEntry_Boost2);
     objEntry.common.x = 0;
     objEntry.common.y = 0;
     objEntry.common.z = 0;
@@ -412,7 +408,7 @@ void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles) {
         gRacerFXData[i].unk3 = 0;
     }
     objEntry.common.objectID = ASSET_OBJECT_ID_AINODE;
-    objEntry.common.size = sizeof(LevelObjectEntry_unk8000B020) + 0x80; // Not sure where this 0x80 comes from.
+    objEntry.common.size = sizeof(LevelObjectEntry_Boost2) + 0x80; // Not sure where this 0x80 comes from.
     objEntry.common.x = 0;
     objEntry.common.y = 0;
     objEntry.common.z = 0;
@@ -735,7 +731,7 @@ void allocate_object_pools(void) {
     set_world_shading(0.67f, 0.33f, 0, -0x2000, 0);
     gObjectMemoryPool = (Object *) mempool_new_sub(OBJECT_POOL_SIZE, OBJECT_SLOT_COUNT);
     gParticlePtrList = mempool_alloc_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
-    D_8011AE6C = mempool_alloc_safe(sizeof(uintptr_t) * 20, COLOUR_TAG_BLUE);
+    gCollisionObjects = mempool_alloc_safe(sizeof(uintptr_t) * OBJECT_COLLISION_COUNT, COLOUR_TAG_BLUE);
     D_8011AE74 = mempool_alloc_safe(sizeof(uintptr_t) * 128, COLOUR_TAG_BLUE);
     gTrackCheckpoints = mempool_alloc_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
     gCameraObjList = mempool_alloc_safe(sizeof(uintptr_t *) * CAMCONTROL_COUNT, COLOUR_TAG_BLUE);
@@ -830,7 +826,7 @@ void clear_object_pointers(void) {
     D_8011AD5C = 0;
     D_8011AD60 = 0;
     gFreeListCount = 0;
-    D_8011AE70 = 0;
+    gCollisionObjectCount = 0;
     gNumberOfCheckpoints = 0;
     D_8011AED4 = 0;
     gNumRacers = 0;
@@ -877,10 +873,10 @@ void free_all_objects(void) {
     s32 i, len;
     timetrial_free_staff_ghost();
     D_800DC748 = FALSE;
-    if (D_800DC71C) {
+    if (gRollingDemo) {
         rumble_init(TRUE);
     }
-    D_800DC71C = 0;
+    gRollingDemo = FALSE;
     if (gSwapLeadPlayer && is_in_two_player_adventure()) {
         gSwapLeadPlayer = FALSE;
         swap_lead_player();
@@ -1016,7 +1012,7 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
             D_8011AE98[arg1] = &D_8011AE98[arg1][temp_t3 = D_8011AE98[arg1][1] & 0x3F];
         }
         D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
-        D_8011AE70 = 0;
+        gCollisionObjectCount = 0;
         gNumFinishedRacers = 1;
         if (gPathUpdateOff == FALSE) {
             gParticlePtrList_flush();
@@ -1063,108 +1059,107 @@ s32 func_8000CC20(Object *obj) {
     return NextFreeIndex;
 }
 
-// https://decomp.me/scratch/EXgPQ
-#ifdef NON_EQUIVALENT
-// track_init_racers
-void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
-    s32 numPlayers; // sp144
-    enum GameMode gameMode;
-    s32 cutsceneID; // sp130
-    s8 *miscAsset16;
-    s8 sp11C[8];
-    s8 sp114[8];
-    s32 spF4[8];
-    s32 spD4[8];
-    s32 spB4[8];
-    s32 sp94[8];
-    LevelHeader *levelHeader;
-    Camera *cutsceneCameraSegment; // sp74
-    s16 objectId;
-    s8 sp127;
-    u8 raceType;
-    s8 tempVehicle;
-    u8 var_a1;
-    s32 isChallengeMode; // sp64
-    s32 i6;              // sp54
-    LevelObjectEntry_Unk8000CC7C *entry;
+/**
+ * Takes the level header and decides which race type to activate.
+ * Sets up the racer spawning. Initialising vehicle types, racer count, then
+ * spawning them into the world in their assigned order.
+ */
+void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
+    LevelObjectEntry_Racer *racerEntry;
     Object *curObj;
-    Object *curRacerObj;
-    Object *newRacerObj;
+    s32 numPlayers;
+    Object *racerObj;
+    LevelObjectEntry *objEntry;
+    enum GameMode gameMode;
     Object_Racer *curRacer;
-    Settings *settings;
+    s32 cutsceneID;
     s32 spawnObjFlags;
-    s32 racerPos;
-    s32 i2;
+    s8 *miscAsset16;
+    s8 sp127;
+    u8 spawnedObjCount;
+    s16 objectID;
+    s8 racerActive[8];
+    s8 racerIDs[8];
+    s32 spawnX[8];
+    s32 spawnY[8];
+    s32 spawnZ[8];
+    s32 spawnAngle[8];
+    Settings *settings;
     s32 j;
     s32 var_s4;
-    s32 tajFlags;
+    s32 i;
+    s32 k;
+    u8 raceType;
+    LevelHeader *levelHeader;
+    Camera *cutsceneCameraSegment;
 
     D_8011AD20 = FALSE;
     gEventCountdown = 0;
-    gFirstTimeFinish = 0;
+    gFirstTimeFinish = FALSE;
     gNumRacers = 0;
     D_8011AF00 = 0;
-    set_taj_status(0);
+    set_taj_status(TAJ_WANDER);
     levelHeader = get_current_level_header();
     raceType = levelHeader->race_type;
     if (raceType == RACETYPE_CUTSCENE_1 || raceType == RACETYPE_CUTSCENE_2) {
         return;
     }
     if (raceType == RACETYPE_BOSS || raceType & RACETYPE_CHALLENGE) {
-        gIsTimeTrial = 0;
-        gTimeTrialEnabled = 0;
+        gIsTimeTrial = FALSE;
+        gTimeTrialEnabled = FALSE;
     }
     cutsceneID = -1;
     if (is_time_trial_enabled() && raceType == RACETYPE_DEFAULT) {
         cutsceneCameraSegment = cam_get_cameras();
-        cutsceneID = (u8) cutsceneCameraSegment->zoom;
+        cutsceneID = cutsceneCameraSegment->zoom;
         cutsceneCameraSegment->zoom = 1;
     }
     gameMode = get_game_mode();
     settings = get_settings();
-    miscAsset16 = (s8 *) get_misc_asset(3);
+    miscAsset16 = (s8 *) get_misc_asset(ASSET_MISC_3);
     gPrevTimeTrialVehicle = D_8011ADC5;
-    tajFlags = settings->courseFlagsPtr[settings->courseId];
-    if (!(tajFlags & 1)) { // Check if the player has not visited the course yet.
-        settings->courseFlagsPtr[settings->courseId] = tajFlags | 1;
+    if (!(settings->courseFlagsPtr[settings->courseId] &
+          RACE_VISITED)) { // Check if the player has not visited the course yet.
+        settings->courseFlagsPtr[settings->courseId] |= RACE_VISITED;
         D_8011AF00 = 2;
     }
     if (raceType != RACETYPE_DEFAULT) {
         D_8011AF00 = 2;
     }
-    for (i2 = 0; i2 < 8; i2++) {
-        spB4[i2] = 0;
-        spF4[i2] = 0;
-        spD4[i2] = 0;
+    for (j = 0; j < ARRAY_COUNT(spawnZ); j++) {
+        spawnX[j] = 0;
+        spawnY[j] = 0;
+        spawnZ[j] = 0;
     }
-    for (i2 = 0; i2 < gObjectCount; i2++) {
-        curObj = gObjPtrList[i2];
-        if (!(curObj->trans.flags & OBJ_FLAGS_PARTICLE)) {
-            if (curObj->behaviorId == BHV_SETUP_POINT) {
-                if (arg1 == (u32) curObj->properties.setupPoint.entranceID) {
-                    if (curObj->properties.setupPoint.racerIndex < 8) {
-                        spF4[curObj->properties.setupPoint.racerIndex] = curObj->trans.x_position;
-                        spD4[curObj->properties.setupPoint.racerIndex] = curObj->trans.y_position;
-                        spB4[curObj->properties.setupPoint.racerIndex] = curObj->trans.z_position;
-                        sp94[curObj->properties.setupPoint.racerIndex] = curObj->trans.rotation.y_rotation;
+    for (j = 0; j < gObjectCount; j++) {
+        racerObj = gObjPtrList[j];
+        if (!(racerObj->trans.flags & OBJ_FLAGS_PARTICLE)) {
+            if (racerObj->behaviorId == BHV_SETUP_POINT) {
+                if (entranceID == racerObj->properties.setupPoint.entranceID) {
+                    if (racerObj->properties.setupPoint.racerIndex < 8) {
+                        spawnX[racerObj->properties.setupPoint.racerIndex] = racerObj->trans.x_position;
+                        spawnY[racerObj->properties.setupPoint.racerIndex] = racerObj->trans.y_position;
+                        spawnZ[racerObj->properties.setupPoint.racerIndex] = racerObj->trans.z_position;
+                        spawnAngle[racerObj->properties.setupPoint.racerIndex] = racerObj->trans.rotation.y_rotation;
                     }
-                    tempVehicle = curObj->level_entry->setupPoint.vehicle;
-                    if (tempVehicle != -1) {
-                        vehicle = tempVehicle;
+
+                    objEntry = racerObj->level_entry;
+                    if (objEntry->setupPoint.vehicle != -1) {
+                        vehicle = objEntry->setupPoint.vehicle;
                     }
                 }
             }
         }
     }
-    D_8011ADC5 = vehicle;
+    D_8011ADC5 = vehicle; // UB if all setup points don't have an assigned vehicle ID.
     gPrevTimeTrialVehicle = D_8011ADC5;
-    numPlayers = arg2 + 1;
+    numPlayers = playerCount + 1;
     gNumRacers = 8;
     D_800DC740 = 0;
     if (is_two_player_adventure_race()) {
         numPlayers = 2;
         D_800DC740 = 1;
-        set_scene_viewport_num(1);
+        set_scene_viewport_num(VIEWPORT_LAYOUT_2_PLAYERS);
     }
     if (raceType == RACETYPE_HUBWORLD) {
         gTimeTrialEnabled = 0;
@@ -1174,18 +1169,17 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     if (gIsTimeTrial) {
         raceType = RACETYPE_HUBWORLD; // ???
     }
-    isChallengeMode = raceType & RACETYPE_CHALLENGE;
     if (raceType == RACETYPE_HUBWORLD || numPlayers >= 3) {
         gNumRacers = numPlayers;
         if (get_level_property_stack_pos() == 0 && D_800DC708 != 0) {
-            sp94[0] += D_800DC708;
+            spawnAngle[0] += D_800DC708;
             D_800DC708 = 0;
         }
     } else if (numPlayers == 2) {
         gNumRacers = get_multiplayer_racer_count();
     }
 
-    if (isChallengeMode != 0) {
+    if (raceType & RACETYPE_CHALLENGE) {
         gNumRacers = 4;
     }
     D_8011AD3C = 0;
@@ -1194,138 +1188,139 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         numPlayers = 1;
         D_8011AD3C = 1;
     }
-    D_800DC71C = 0;
+    gRollingDemo = FALSE;
     if (gameMode == GAMEMODE_MENU && raceType == RACETYPE_DEFAULT) {
         gNumRacers = 6;
-        D_800DC71C = 1;
+        gRollingDemo = TRUE;
         D_8011AD3C = 2;
     }
 
-    for (i2 = 0; i2 < gNumRacers; i2++) {
-        sp11C[i2] = 0;
+    for (i = 0; i < gNumRacers; i++) {
+        racerActive[i] = FALSE;
     }
 
-    var_a1 = 0;
-    for (i2 = 0; i2 < numPlayers; i2++) {
-        racerPos = settings->racers[i2].starting_position;
-        if (racerPos < gNumRacers) {
-            if (sp11C[racerPos] == 0) {
-                sp11C[racerPos] = 1;
+    spawnedObjCount = 0;
+    // Mark active for human players.
+    for (i = 0; i < numPlayers; i++) {
+        if (settings->racers[i].starting_position < gNumRacers) {
+            if (racerActive[settings->racers[i].starting_position] == FALSE) {
+                racerActive[settings->racers[i].starting_position] = TRUE;
                 continue;
             }
         }
-        sp114[var_a1++] = (u16) i2;
+        racerIDs[spawnedObjCount++] = i;
     }
 
-    for (i2 = numPlayers; i2 < gNumRacers; i2++) {
-        racerPos = settings->racers[i2].starting_position;
-        if (racerPos < gNumRacers) {
-            if (sp11C[racerPos] == 0) {
-                sp11C[racerPos] = 1;
+    // Mark active for computer players.
+    for (i = numPlayers; i < gNumRacers; i++) {
+        if (settings->racers[i].starting_position < gNumRacers) {
+            if (racerActive[settings->racers[i].starting_position] == FALSE) {
+                racerActive[settings->racers[i].starting_position] = TRUE;
                 continue;
             }
         }
-        sp114[var_a1++] = (u16) i2;
+        racerIDs[spawnedObjCount++] = i;
     }
 
-    for (i6 = 0; i6 < var_a1; i6++) {
+    // Assign spawn locations for active racers.
+    for (i = 0; i < spawnedObjCount; i++) {
         for (j = 0; j < gNumRacers; j++) {
-            if (sp11C[j] == 0) {
-                sp11C[j] = 1;
-                settings->racers[sp114[i6]].starting_position = j;
-                j = gNumRacers;
+            if (racerActive[j] == FALSE) {
+                racerActive[j] = TRUE;
+                settings->racers[racerIDs[i]].starting_position = j;
+                j = gNumRacers; // Break
             }
         }
     }
-    if (((!(curObj->trans.rotation.y_rotation)) && (!(curObj->trans.rotation.y_rotation))) &&
-        (!(curObj->trans.rotation.y_rotation))) {}
-    entry = mempool_alloc_safe(sizeof(LevelObjectEntry_Unk8000CC7C), COLOUR_TAG_YELLOW);
-    entry->unkC = 0;
-    entry->unkA = 0;
-    entry->unk8 = 0;
+    racerEntry = mempool_alloc_safe(sizeof(LevelObjectEntry_Racer), COLOUR_TAG_YELLOW);
+    racerEntry->angleY = 0;
+    racerEntry->angleX = 0;
+    racerEntry->angleZ = 0;
     if (levelHeader->vehicle == VEHICLE_CAR) {
         gIsNonCarRacers = FALSE;
     } else {
         gIsNonCarRacers = TRUE;
     }
-    sp127 = -1;
-    i2 = gNumRacers;
     D_8011AD24[1] = levelHeader->bossRaceID;
-    for (i6 = 0; i6 < gNumRacers; i6++) {
-        var_s4 = i6;
-        if (raceType != RACETYPE_HUBWORLD && isChallengeMode == 0 && D_8011AD3C == 0) {
-            var_s4 = 0;
-            // This might not be a for loop?
-            for (j = 0; j < gNumRacers; j++) {
-                if (i6 == settings->racers[j].starting_position) {
+    sp127 = -1;
+    for (i = 0; i < gNumRacers; i++) {
+        if (raceType != RACETYPE_HUBWORLD && !(raceType & RACETYPE_CHALLENGE) && D_8011AD3C == 0) {
+            j = 0;
+            var_s4 = j;
+            do {
+                if (i == settings->racers[j].starting_position) {
                     var_s4 = j;
-                    j = i2;
+                    j = gNumRacers;
                 }
-            }
-        }
-        if (var_s4 < numPlayers) {
-            entry->unkE = var_s4;
+                j++;
+            } while (j < gNumRacers);
         } else {
-            entry->unkE = 4;
+            var_s4 = i;
         }
-        if (raceType != RACETYPE_HUBWORLD || entry->unkE != 4) {
-            spawnObjFlags = OBJECT_SPAWN_UNK01;
+        racerEntry->playerIndex = var_s4 < numPlayers ? var_s4 : 4;
+        if (raceType != RACETYPE_HUBWORLD || racerEntry->playerIndex != 4) {
             if (D_8011AD3C == 1) {
-                if (i6 == 0) {
+                if (i == 0) {
                     vehicle = gBossVehicles[D_8011AD24[1]].playerVehicle;
                 } else {
-                    vehicle = gBossVehicles[D_8011AD24[1]].playerVehicle;
+                    vehicle = gBossVehicles[D_8011AD24[1]].bossVehicle;
                 }
             } else if (D_8011AD3C == 2) {
                 vehicle = levelHeader->vehicle;
             } else {
-                if (entry->unkE == 4 || is_two_player_adventure_race()) {
+                if (racerEntry->playerIndex == 4 || is_two_player_adventure_race()) {
                     vehicle = get_player_selected_vehicle(PLAYER_ONE);
                 } else if (numPlayers >= 2) {
-                    vehicle = get_player_selected_vehicle(entry->unkE);
+                    vehicle = get_player_selected_vehicle(racerEntry->playerIndex);
                 }
             }
 
             // Are these assignments correct? Seems weird.
             if (D_8011AD3C == 2) {
-                objectId = D_800DC7A8[D_800DC840[i6] + (vehicle * 10)];
+                objectID = gRacerObjectTable[D_800DC840[i] + (vehicle * NUM_CHARACTERS)];
             } else if (vehicle < 5) {
-                objectId = D_800DC7A8[(settings->racers[var_s4].character) + (vehicle * 10)];
+                objectID = gRacerObjectTable[(settings->racers[var_s4].character) + (vehicle * NUM_CHARACTERS)];
             } else {
-                objectId = D_800DC7B8[vehicle];
+                objectID = gRacerObjectTable[vehicle + 45];
             }
 
-            entry->common.objectID = objectId;
-            entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
-            entry->common.x = spF4[i6];
-            entry->common.y = spD4[i6];
-            entry->common.z = spB4[i6];
-            entry->unkC = sp94[i6];
-            if (entry->unkE == 4) {
+            racerEntry->common.objectID = objectID;
+            racerEntry->common.size = ((objectID & 0x100) >> 1) | 0x10;
+            racerEntry->common.x = spawnX[i];
+            racerEntry->common.y = spawnY[i];
+            racerEntry->common.z = spawnZ[i];
+            racerEntry->angleY = spawnAngle[i];
+            if (racerEntry->playerIndex == 4) {
                 model_anim_offset(1);
             }
-            if (entry->unkE == 4) {
-                spawnObjFlags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK04;
+
+            spawnObjFlags = OBJECT_BEHAVIOUR_SHADED;
+            if (racerEntry->playerIndex == 4) {
+                spawnObjFlags = OBJECT_BEHAVIOUR_SHADED | OBJECT_BEHAVIOUR_WATER_EFFECT;
+                // @fake but required for the | OBJECT_BEHAVIOUR_ANIMATION below to work
+                if (1) {
+                    spawnObjFlags |= 0;
+                }
                 if (numPlayers >= 2) {
-                    spawnObjFlags |= OBJECT_SPAWN_UNK08;
+                    spawnObjFlags |= OBJECT_BEHAVIOUR_ANIMATION;
                 }
             }
-            if (entry->unkE != 4) {
+            if (racerEntry->playerIndex != 4) {
                 if (numPlayers == 1) {
-                    spawnObjFlags |= OBJECT_SPAWN_UNK10;
+                    spawnObjFlags |= OBJECT_BEHAVIOUR_INTERACTIVE;
                 }
             }
             if (vehicle >= VEHICLE_BOSSES) {
-                spawnObjFlags = OBJECT_SPAWN_UNK01;
+                spawnObjFlags = OBJECT_BEHAVIOUR_SHADED;
                 model_anim_offset(0);
             }
-            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, spawnObjFlags);
-            newRacerObj->trans.rotation.y_rotation = sp94[i6];
-            (*gRacers)[i6] = newRacerObj;
-            gRacersByPosition[i6] = newRacerObj;
-            gRacersByPort[var_s4] = newRacerObj;
-            curRacer = newRacerObj->racer;
-            newRacerObj->level_entry = NULL;
+            racerObj = spawn_object((LevelObjectEntryCommon *) racerEntry, spawnObjFlags);
+            racerObj->trans.rotation.y_rotation = spawnAngle[i];
+            (*gRacers)[i] = racerObj;
+            gRacersByPosition[i] = racerObj;
+            gRacersByPort[var_s4] = racerObj;
+            curRacer = racerObj->racer;
+            racerObj->level_entry = NULL;
             curRacer->vehicleID = vehicle;
             curRacer->vehicleIDPrev = vehicle;
             if (sp127 != -1 && sp127 != (s32) vehicle) {
@@ -1337,14 +1332,13 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 gIsNonCarRacers = TRUE;
             }
             curRacer->unk1CB = vehicle;
-            tempVehicle = curRacer->unk1CB;
-            if (tempVehicle < VEHICLE_CAR || tempVehicle > VEHICLE_PLANE) {
+            if (curRacer->unk1CB < VEHICLE_CAR || curRacer->unk1CB > VEHICLE_PLANE) {
                 curRacer->unk1CB = 0;
             }
             curRacer->racerIndex = var_s4;
             curRacer->characterId = settings->racers[var_s4].character;
             if (D_8011AD3C == 2) {
-                curRacer->characterId = D_800DC840[i6];
+                curRacer->characterId = D_800DC840[i];
             } else {
                 curRacer->characterId = settings->racers[var_s4].character;
             }
@@ -1353,7 +1347,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             } else {
                 curRacer->bananas = 0;
             }
-            if (get_filtered_cheats() & CHEAT_START_WITH_10_BANANAS && !isChallengeMode) {
+            if (get_filtered_cheats() & CHEAT_START_WITH_10_BANANAS && !(raceType & RACETYPE_CHALLENGE)) {
                 if (curRacer->playerIndex != PLAYER_COMPUTER) {
                     curRacer->bananas = 10;
                 }
@@ -1364,7 +1358,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 curRacer->vehicleSound = NULL;
             }
 
-            newRacerObj->interactObj->pushForce = miscAsset16[curRacer->characterId] + 1;
+            racerObj->interactObj->pushForce = miscAsset16[curRacer->characterId] + 1;
             switch (curRacer->vehicleID) {
                 case VEHICLE_TRICKY:
                 case VEHICLE_BLUEY:
@@ -1374,7 +1368,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 case VEHICLE_BUBBLER:
                 case VEHICLE_WIZPIG:
                 case VEHICLE_ROCKET:
-                    racer_special_init(newRacerObj, curRacer);
+                    racer_special_init(racerObj, curRacer);
                     break;
                 default:
                     break;
@@ -1388,157 +1382,166 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     if (D_8011AD3C != 0) {
         D_8011AD20 = FALSE;
     }
+    // Remove unwanted objects depending on race type.
     if (get_game_mode() == GAMEMODE_INGAME) {
         for (j = 0; j < gObjectCount; j++) {
-            curObj = gObjPtrList[j];
-            tajFlags = curObj->header->flags;
-            if ((tajFlags & 0x20) && (gIsTimeTrial)) {
-                free_object(curObj);
-            } else if ((tajFlags & 0x40) && (numPlayers >= 2)) {
-                free_object(curObj);
+            racerObj = gObjPtrList[j];
+            i = racerObj->header->flags;
+            if (i & OBJECT_HEADER_NO_TIME_TRIAL && gIsTimeTrial) {
+                free_object(racerObj);
+            } else if (i & OBJECT_HEADER_NO_MULTIPLATER && numPlayers >= 2) {
+                free_object(racerObj);
             }
         }
     }
-    gGhostObjStaff = 0;
+    gGhostObjStaff = NULL;
     timetrial_free_staff_ghost();
     gTimeTrialContPak = -1;
-    if ((gIsTimeTrial) && (numPlayers == 1)) {
+    if (gIsTimeTrial && numPlayers == 1) {
         timetrial_reset_player_ghost();
-        gTimeTrialContPak = timetrial_init_player_ghost(0);
+        gTimeTrialContPak = timetrial_init_player_ghost(PLAYER_ONE);
         gHasGhostToSave = 0;
-        if (gTimeTrialVehicle >= 5) {
-            gTimeTrialVehicle = 0;
+        if (gTimeTrialVehicle >= VEHICLE_BOSSES) {
+            gTimeTrialVehicle = VEHICLE_CAR;
         }
-        if (timetrial_valid_player_ghost() != 0) {
-            objectId = D_800DC7A8[(gTimeTrialVehicle * 10) + gTimeTrialCharacter];
-            entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
-            entry->common.objectID = objectId;
-            entry->common.x = spF4[0];
-            entry->common.y = spD4[0];
-            entry->common.z = spB4[0];
-            entry->unkC = sp94[0];
-            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
-            newRacerObj->level_entry = NULL;
-            newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
-            newRacerObj->shadow->scale = 0.01f;
-            newRacerObj->interactObj->flags = INTERACT_FLAGS_NONE;
-            gGhostObjPlayer = newRacerObj;
-            newRacerObj->racer->transparency = 0x60;
+        // Spawn player ghost.
+        if (timetrial_valid_player_ghost()) {
+            objectID = gRacerObjectTable[gTimeTrialCharacter + (gTimeTrialVehicle * NUM_CHARACTERS)];
+            racerEntry->common.size = ((objectID & 0x100) >> 1) | 0x10;
+            racerEntry->common.objectID = objectID;
+            racerEntry->common.x = spawnX[0];
+            racerEntry->common.y = spawnY[0];
+            racerEntry->common.z = spawnZ[0];
+            racerEntry->angleY = spawnAngle[0];
+            curObj = spawn_object((LevelObjectEntryCommon *) racerEntry, 1);
+            curObj->level_entry = NULL;
+            curObj->behaviorId = BHV_TIMETRIAL_GHOST;
+            curObj->shadow->scale = 0.01f;
+            curObj->interactObj->flags = INTERACT_FLAGS_NONE;
+            gGhostObjPlayer = curObj;
+            curRacer = gGhostObjPlayer->racer;
+            curRacer->transparency = 96;
         }
-        if (timetrial_init_staff_ghost(get_current_map_id()) != 0) {
-            objectId = D_800DC7B8[gMapDefaultVehicle * 10];
-            entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
-            entry->common.objectID = objectId;
-            entry->common.x = spF4[0];
-            entry->common.y = spD4[0];
-            entry->common.z = spB4[0];
-            entry->unkC = sp94[0];
-            newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
-            newRacerObj->level_entry = NULL;
-            newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
-            newRacerObj->shadow->scale = 0.01f;
-            newRacerObj->interactObj->flags = INTERACT_FLAGS_NONE;
-            gGhostObjStaff = newRacerObj;
-            newRacerObj->racer->transparency = 0x60;
+        // Spawn staff ghost
+        if (timetrial_init_staff_ghost(get_current_map_id())) {
+            objectID = gRacerObjectTable[(gMapDefaultVehicle * NUM_CHARACTERS) + 8];
+
+            racerEntry->common.size = ((objectID & 0x100) >> 1) | 0x10;
+            racerEntry->common.objectID = objectID;
+            racerEntry->common.x = spawnX[0];
+            racerEntry->common.y = spawnY[0];
+            racerEntry->common.z = spawnZ[0];
+            racerEntry->angleY = spawnAngle[0];
+            curObj = spawn_object((LevelObjectEntryCommon *) racerEntry, 1);
+            curObj->level_entry = NULL;
+            curObj->behaviorId = BHV_TIMETRIAL_GHOST;
+            curObj->shadow->scale = 0.01f;
+            curObj->interactObj->flags = INTERACT_FLAGS_NONE;
+            gGhostObjStaff = curObj;
+            curRacer = gGhostObjStaff->racer;
+            curRacer->transparency = 96;
         }
     }
-    gEventCountdown = 100;
-    for (j = 0; j < gNumRacers; j++) {
-        curRacerObj = (*gRacers)[j];
-        curRacer = curRacerObj->racer;
-        for (i2 = 0; i2 < 10; i2++) {
-            update_player_racer(curRacerObj, LOGIC_30FPS); // Simulate 10 updates?
+
+    for (j = 0, gEventCountdown = 100; j < gNumRacers; j++) {
+        racerObj = (*gRacers)[j];
+        curRacer = racerObj->racer;
+        for (k = 0; k < 10; k++) {
+            update_player_racer(racerObj, LOGIC_30FPS); // Settle racers.
         }
         if (curRacer->playerIndex == PLAYER_COMPUTER) {
-            var_s4 = (var_s4 + 1) & 1;
-            for (i2 = 0; i2 < curRacerObj->header->numberOfModelIds; i2++) {
-                if (curRacerObj->modelInstances[i2] != NULL) {
-                    if (curRacerObj->modelInstances[i2]->animUpdateTimer != 0) {
-                        curRacerObj->modelInstances[i2]->animUpdateTimer = (var_s4 * 2);
+            var_s4++;
+            var_s4 &= 1;
+            for (k = 0; k < racerObj->header->numberOfModelIds; k++) {
+                if (racerObj->modelInstances[k] != NULL) {
+                    if (racerObj->modelInstances[k]->animUpdateTimer != 0) {
+                        racerObj->modelInstances[k]->animUpdateTimer = (var_s4 * 2);
                     }
                 }
             }
         } else {
             // curRacer is a human racer.
-            for (i2 = 0; i2 < curRacerObj->header->numberOfModelIds; i2++) {
-                if (curRacerObj->modelInstances[i2] != NULL) {
-                    if (curRacerObj->modelInstances[i2]->animUpdateTimer != 0) {
-                        curRacerObj->modelInstances[i2]->animUpdateTimer = 0;
+            for (k = 0; k < racerObj->header->numberOfModelIds; k++) {
+                if (racerObj->modelInstances[k] != NULL) {
+                    if (racerObj->modelInstances[k]->animUpdateTimer != 0) {
+                        racerObj->modelInstances[k]->animUpdateTimer = 0;
                     }
                 }
             }
         }
+        // Apply size cheats to racers.
         if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
-            curRacerObj->trans.scale *= 1.4f;
+            racerObj->trans.scale *= 1.4f;
         }
         if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
-            curRacerObj->trans.scale *= 0.714f;
+            racerObj->trans.scale *= 0.714f;
         }
         curRacer->stretch_height_cap = 1.0f;
         curRacer->stretch_height = 1.0f;
     }
-    if (raceType == RACETYPE_DEFAULT || isChallengeMode || gIsTimeTrial || D_8011AD3C) {
+    if (raceType == RACETYPE_DEFAULT || raceType & RACETYPE_CHALLENGE || gIsTimeTrial || D_8011AD3C != 0) {
         gEventCountdown = 80;
     } else {
         gEventCountdown = 0;
     }
-    if (raceType == RACETYPE_DEFAULT && numPlayers == 1 && !is_in_adventure_two()) {
-        if (is_two_player_adventure_race() == 0) {
-            for (i2 = 0; i2 < 3; i2++) {
-                entry->common.objectID = ASSET_OBJECT_ID_POSARROW;
-                entry->common.size = sizeof(LevelObjectEntryCommon);
-                entry->common.x = 0;
-                entry->common.y = 0;
-                entry->common.z = 0;
-                newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, OBJECT_SPAWN_UNK01);
-                newRacerObj->properties.common.unk0 = i2;
-                newRacerObj->level_entry = NULL;
+    if (raceType == RACETYPE_DEFAULT && (playerCount + 1) == 1 && is_in_adventure_two() == FALSE) {
+        if (is_two_player_adventure_race() == FALSE) {
+            for (j = 0; j < 3; j++) {
+                racerEntry->common.objectID = ASSET_OBJECT_ID_POSARROW;
+                racerEntry->common.size = sizeof(LevelObjectEntryCommon);
+                racerEntry->common.x = 0;
+                racerEntry->common.y = 0;
+                racerEntry->common.z = 0;
+                curObj = spawn_object((LevelObjectEntryCommon *) racerEntry, OBJECT_SPAWN_UNK01);
+                curObj->properties.common.unk0 = j;
+                curObj->level_entry = NULL;
             }
         }
     }
     gRaceEndTimer = 0;
-    gRaceFinishTriggered = 0;
+    gRaceFinishTriggered = FALSE;
     set_next_taj_challenge_menu(0);
     if (settings->worldId == WORLD_CENTRAL_AREA) {
-        if (!is_in_tracks_mode()) {
-            var_s4 = 0;
+        if (is_in_tracks_mode() == FALSE) {
             miscAsset16 = (s8 *) get_misc_asset(ASSET_MISC_16);
-            tajFlags = settings->tajFlags;
+            j = 0;
 
             // settings->balloonsPtr[0] is the total balloon count.
-            if (!(tajFlags & TAJ_FLAGS_CAR_CHAL_UNLOCKED) && (settings->balloonsPtr[0] >= miscAsset16[0])) {
-                var_s4 = 1;
-            } else if (!(tajFlags & TAJ_FLAGS_HOVER_CHAL_UNLOCKED) && (settings->balloonsPtr[0] >= miscAsset16[1])) {
-                var_s4 = 2;
-            } else if (!(tajFlags & TAJ_FLAGS_PLANE_CHAL_UNLOCKED) && (settings->balloonsPtr[0] >= miscAsset16[2])) {
-                var_s4 = 3;
+            if (!(settings->tajFlags & TAJ_FLAGS_CAR_CHAL_UNLOCKED) && (settings->balloonsPtr[0] >= miscAsset16[0])) {
+                j = 1;
+            } else if (!(settings->tajFlags & TAJ_FLAGS_HOVER_CHAL_UNLOCKED) &&
+                       (settings->balloonsPtr[0] >= miscAsset16[1])) {
+                j = 2;
+            } else if (!(settings->tajFlags & TAJ_FLAGS_PLANE_CHAL_UNLOCKED) &&
+                       (settings->balloonsPtr[0] >= miscAsset16[2])) {
+                j = 3;
             }
 
-            if (var_s4) {
+            // Taj will teleport straight to the player to initiate a challenge.
+            if (j) {
                 set_taj_voice_line(SOUND_VOICE_TAJ_CHALLENGE_RACE);
-                settings->tajFlags |= 1 << (var_s4 + 31);
-                set_taj_status(2);
-                set_next_taj_challenge_menu(var_s4);
+                settings->tajFlags |= 1 << (j + 31);
+                set_taj_status(TAJ_TELEPORT);
+                set_next_taj_challenge_menu(j);
                 safe_mark_write_save_file(get_save_file_index());
             }
         }
     }
-    *D_8011AD24 = 1;
+    D_8011AD24[0] = TRUE;
     if (cutsceneID >= 0) {
         cutsceneCameraSegment->zoom = cutsceneID;
     }
-    if (func_8000E148() != 0) {
+    // Menu demos will skip straight to the action.
+    if (racetype_demo()) {
         rumble_init(FALSE);
         gEventCountdown = 0;
         start_level_music(1.0f);
     }
+    //!@bug: Free timer is already 0 when loading levels.
     mempool_free_timer(0);
-    mempool_free(entry);
+    mempool_free(racerEntry);
     mempool_free_timer(2);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_8000CC7C.s")
-#endif
 
 /**
  * Return an error status for the controller pak.
@@ -1574,8 +1577,11 @@ s8 func_8000E138(void) {
     return D_8011AD20;
 }
 
-s8 func_8000E148(void) {
-    return D_800DC71C;
+/**
+ * Returns true if currently in a rolling demo.
+ */
+s8 racetype_demo(void) {
+    return gRollingDemo;
 }
 
 s8 func_8000E158(void) {
@@ -1653,9 +1659,10 @@ void transform_player_vehicle(void) {
     spawnObj.unkE = 0;
     spawnObj.common.size = 16;
     if (gOverworldVehicle < VEHICLE_BOSSES) {
-        objectID = ((s16 *) D_800DC7A8)[settings->racers[PLAYER_ONE].character + gOverworldVehicle * 10];
+        objectID =
+            ((s16 *) gRacerObjectTable)[settings->racers[PLAYER_ONE].character + gOverworldVehicle * NUM_CHARACTERS];
     } else {
-        objectID = D_800DC7B8[gOverworldVehicle + 37];
+        objectID = gRacerObjectTable[gOverworldVehicle + 45];
     }
     set_level_default_vehicle(gOverworldVehicle);
     spawnObj.common.size |= (objectID & 0x100) >> 1;
@@ -1667,7 +1674,7 @@ void transform_player_vehicle(void) {
     spawnObj.common.z = gTransformPosZ;
     spawnObj.unkC = gTransformAngleY;
     set_taj_status(TAJ_DIALOGUE);
-    player = spawn_object(&spawnObj.common, OBJECT_SPAWN_UNK10 | OBJECT_SPAWN_UNK01);
+    player = spawn_object(&spawnObj.common, OBJECT_SPAWN_NO_LODS | OBJECT_SPAWN_UNK01);
     gNumRacers = 1;
     (*gRacers)[PLAYER_ONE] = player;
     gRacersByPort[PLAYER_ONE] = player;
@@ -1975,7 +1982,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
 
     objType = curObj->header->modelType;
     curObj->modelInstances = (ModelInstance **) &curObj[1];
-    if (spawnFlags & OBJECT_SPAWN_UNK10) {
+    if (spawnFlags & OBJECT_SPAWN_NO_LODS) {
         assetCount = 1;
     }
     i = 0; // a2
@@ -2113,8 +2120,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (behaviourFlags & OBJECT_BEHAVIOUR_INTERACTIVE) {
         address += init_object_interaction_data(curObj, (ObjectInteraction *) address);
     }
-    if (behaviourFlags & OBJECT_BEHAVIOUR_UNK20) {
-        address += func_8000FD34(curObj, (Object_5C *) address);
+    if (behaviourFlags & OBJECT_BEHAVIOUR_COLLIDABLE) {
+        address += obj_init_collision(curObj, (ObjectCollision *) address);
     }
     if (curObj->header->attachPointCount > 0 && curObj->header->attachPointCount < 10) {
         curObj->attachPoints = (AttachPoint *) address;
@@ -2175,8 +2182,9 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         curObj->interactObj = (ObjectInteraction *) (((uintptr_t) curObj + (uintptr_t) curObj->interactObj) -
                                                      (uintptr_t) gSpawnObjectHeap);
     }
-    if (curObj->unk5C != NULL) {
-        curObj->unk5C = (Object_5C *) (((uintptr_t) curObj + (uintptr_t) curObj->unk5C) - (uintptr_t) gSpawnObjectHeap);
+    if (curObj->collisionData != NULL) {
+        curObj->collisionData = (ObjectCollision *) (((uintptr_t) curObj + (uintptr_t) curObj->collisionData) -
+                                                     (uintptr_t) gSpawnObjectHeap);
     }
     if (curObj->attachPoints != NULL) {
         curObj->attachPoints =
@@ -2404,11 +2412,13 @@ s32 init_object_interaction_data(Object *obj, ObjectInteraction *interactObj) {
     return sizeof(ObjectInteraction);
 }
 
-// Inits some matrix stuff for objects. It seems to be precomputing something, but not sure what.
-s32 func_8000FD34(Object *obj, Object_5C *matrices) {
-    obj->unk5C = matrices;
+/**
+ * Sets up collision surface data for the object model.
+ */
+s32 obj_init_collision(Object *obj, ObjectCollision *colData) {
+    obj->collisionData = colData;
     func_80016BC4(obj);
-    return sizeof(Object_5C);
+    return sizeof(ObjectCollision);
 }
 
 /**
@@ -2818,13 +2828,15 @@ void obj_update(s32 updateRate) {
     obj_tick_anims();
     process_object_interactions();
     func_8001E89C();
-    for (i = 0; i < D_8011AE70; i++) {
-        run_object_loop_func(D_8011AE6C[i], updateRate);
+    // Update collidable objects first.
+    for (i = 0; i < gCollisionObjectCount; i++) {
+        run_object_loop_func(gCollisionObjects[i], updateRate);
     }
-    func_8001E6EC(1);
-    for (i = 0; i < D_8011AE70; i++) {
-        func_8001709C(D_8011AE6C[i]);
+    func_8001E6EC(TRUE);
+    for (i = 0; i < gCollisionObjectCount; i++) {
+        obj_collision_transform(gCollisionObjects[i]);
     }
+    // Update nonspecific objects
     j = gObjectCount;
     for (i = gObjectListStart; i < j; i++) {
         obj = gObjPtrList[i];
@@ -2852,6 +2864,7 @@ void obj_update(s32 updateRate) {
             }
         }
     }
+    // Update racers
     for (i = 0; i < gNumRacers; i++) {
         update_player_racer((*gRacers)[i], updateRate);
     }
@@ -2872,16 +2885,17 @@ void obj_update(s32 updateRate) {
             run_object_loop_func(obj, updateRate);
         }
     }
+    // Update particles
     if (gParticleCount > 0) {
         for (i = gObjectListStart; i < j; i++) {
             obj = gObjPtrList[i];
             if (obj->trans.flags & OBJ_FLAGS_PARTICLE) {
-                // Why is this object being treated as a Particle?
                 particle_update((Particle *) obj, updateRate);
             }
         }
     }
 
+    // Update lights
     lightUpdateLights(updateRate);
     if (get_light_count() > 0) {
         for (i = gObjectListStart; i < gObjectCount; i++) {
@@ -2891,8 +2905,8 @@ void obj_update(s32 updateRate) {
             }
         }
     }
-    func_8001E6EC(0);
-    if (gTajRaceInit != 0) {
+    func_8001E6EC(FALSE);
+    if (gTajRaceInit) {
         mode_init_taj_race();
     }
     if (gPathUpdateOff == FALSE) {
@@ -2911,7 +2925,7 @@ void obj_update(s32 updateRate) {
     audspat_update_all(gRacersByPort, gNumRacers, updateRate);
     gPathUpdateOff = TRUE;
     gObjectUpdateRateF = (f32) updateRate;
-    D_8011AD24[0] = 0;
+    D_8011AD24[0] = FALSE;
     D_8011AD53 = 0;
     transform_player_vehicle();
     dialogue_try_close();
@@ -3173,7 +3187,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     obj->trans.x_position = newXPos;
     obj->trans.y_position = newYPos;
     obj->trans.z_position = newZPos;
-    box = get_segment_bounding_box(obj->segmentID);
+    box = block_boundbox(obj->segmentID);
 
     // For some reason the XYZ positions are converted into integers for the next section
     intXPos = newXPos, intYPos = newYPos, intZPos = newZPos;
@@ -4559,14 +4573,14 @@ void process_object_interactions(void) {
         }
     }
 
-    D_8011AE70 = 0;
+    gCollisionObjectCount = 0;
 
     for (i = 0; i < objsWithInteractives; i++) {
         obj = objList[i];
         objInteract = obj->interactObj;
-        if (objInteract->unk11 == 2 && D_8011AE70 < 20) {
-            D_8011AE6C[D_8011AE70] = obj;
-            D_8011AE70++;
+        if (objInteract->unk11 == 2 && gCollisionObjectCount < 20) {
+            gCollisionObjects[gCollisionObjectCount] = obj;
+            gCollisionObjectCount++;
         }
         if (objInteract->flags & INTERACT_FLAGS_UNK_0004) {
             for (j = 0; j < objsWithInteractives; j++) {
@@ -5009,12 +5023,12 @@ void func_80016748(Object *obj0, Object *obj1) {
 void func_80016BC4(Object *obj) {
     s32 i;
 
-    obj->unk5C->unk104 = 0;
-    func_8001709C(obj);
-    func_8001709C(obj);
+    obj->collisionData->mtxFlip = 0;
+    obj_collision_transform(obj);
+    obj_collision_transform(obj); // Not sure why they do this a second time.
     for (i = 0; i < obj->header->numberOfModelIds; i++) {
         if (obj->modelInstances[i] != NULL) {
-            func_8006017C(obj->modelInstances[i]->objModel);
+            model_init_collision(obj->modelInstances[i]->objModel);
         }
     }
 }
@@ -5108,45 +5122,58 @@ s32 obj_dist_racer(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **sort
     return result;
 }
 
-void func_8001709C(Object *obj) {
-    ObjectTransform sp78;
+/**
+ * Updates the object's collision transformation matrices.
+ */
+void obj_collision_transform(Object *obj) {
+    ObjectTransform trans;
     s32 i;
     f32 inverseScale;
-    MtxF *sp6C;
-    MtxF sp2C;
-    Object_5C *obj5C;
+    MtxF *curMtx;
+    MtxF inverseMtx;
+    ObjectCollision *colData;
 
-    obj5C = obj->unk5C;
-    obj5C->unk104 = (obj5C->unk104 + 1) & 1;
-    sp6C = (MtxF *) &obj5C->_matrices[obj5C->unk104 << 1];
-    sp78.rotation.y_rotation = -obj->trans.rotation.y_rotation;
-    sp78.rotation.x_rotation = -obj->trans.rotation.x_rotation;
-    sp78.rotation.z_rotation = -obj->trans.rotation.z_rotation;
-    sp78.scale = 1.0f;
-    sp78.x_position = -obj->trans.x_position;
-    sp78.y_position = -obj->trans.y_position;
-    sp78.z_position = -obj->trans.z_position;
-    mtxf_from_inverse_transform(sp6C, &sp78);
+    colData = obj->collisionData;
+    colData->mtxFlip = (colData->mtxFlip + 1) & 1;
+#ifdef AVOID_UB
+    curMtx = &colData->matrices[colData->mtxFlip];
+#else
+
+    curMtx = (MtxF *) &colData->_matrices[colData->mtxFlip << 1];
+#endif
+    trans.rotation.y_rotation = -obj->trans.rotation.y_rotation;
+    trans.rotation.x_rotation = -obj->trans.rotation.x_rotation;
+    trans.rotation.z_rotation = -obj->trans.rotation.z_rotation;
+    trans.scale = 1.0f;
+    trans.x_position = -obj->trans.x_position;
+    trans.y_position = -obj->trans.y_position;
+    trans.z_position = -obj->trans.z_position;
+    mtxf_from_inverse_transform(curMtx, &trans);
     inverseScale = 1.0 / obj->trans.scale;
     i = 0;
+    // Zero out the matrix.
     while (i < 16) {
-        ((f32 *) sp2C)[i] = 0.0f;
+        ((f32 *) inverseMtx)[i] = 0.0f;
         i++;
     }
-    sp2C[0][0] = inverseScale;
-    sp2C[1][1] = inverseScale;
-    sp2C[2][2] = inverseScale;
-    sp2C[3][3] = 1.0f;
-    mtxf_mul(sp6C, &sp2C, sp6C);
-    sp78.rotation.y_rotation = obj->trans.rotation.y_rotation;
-    sp78.rotation.x_rotation = obj->trans.rotation.x_rotation;
-    sp78.rotation.z_rotation = obj->trans.rotation.z_rotation;
-    sp78.scale = 1.0 / inverseScale;
-    sp78.x_position = obj->trans.x_position;
-    sp78.y_position = obj->trans.y_position;
-    sp78.z_position = obj->trans.z_position;
-    mtxf_from_transform((MtxF *) obj5C->_matrices[(obj5C->unk104 + 2) << 1], &sp78);
-    obj5C->unk100 = NULL;
+    inverseMtx[0][0] = inverseScale;
+    inverseMtx[1][1] = inverseScale;
+    inverseMtx[2][2] = inverseScale;
+    inverseMtx[3][3] = 1.0f;
+    mtxf_mul(curMtx, &inverseMtx, curMtx);
+    trans.rotation.y_rotation = obj->trans.rotation.y_rotation;
+    trans.rotation.x_rotation = obj->trans.rotation.x_rotation;
+    trans.rotation.z_rotation = obj->trans.rotation.z_rotation;
+    trans.scale = 1.0 / inverseScale;
+    trans.x_position = obj->trans.x_position;
+    trans.y_position = obj->trans.y_position;
+    trans.z_position = obj->trans.z_position;
+#ifdef AVOID_UB
+    mtxf_from_transform(colData->matrices[(colData->mtxFlip + 2)], &trans);
+#else
+    mtxf_from_transform((MtxF *) colData->_matrices[(colData->mtxFlip + 2) << 1], &trans);
+#endif
+    colData->collidedObj = NULL;
 }
 
 // https://decomp.me/scratch/Lxwa8
@@ -5173,8 +5200,8 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
     Object *temp_a1;
     Object *temp_v0;
     ObjectInteraction *temp_v1;
-    Object_5C *temp_v0_2;
-    Object_5C *temp_v0_5;
+    ObjectCollision *temp_v0_2;
+    ObjectCollision *temp_v0_5;
     Vec3f *var_s0_2;
     f32 temp_f0;
     f32 temp_f0_2;
@@ -5222,10 +5249,10 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
 
     sp160 = 0;
     sp170 = 0;
-    if (D_8011AE70 > 0) {
+    if (gCollisionObjectCount > 0) {
         var_s2 = 0;
         do {
-            temp_v0 = *(D_8011AE6C + var_s2);
+            temp_v0 = *(gCollisionObjects + var_s2);
             objModel = temp_v0->modelInstances[temp_v0->modelIndex]->objModel;
             temp_f14 = temp_v0->trans.x_position - obj->trans.x_position;
             temp_f0 = temp_v0->trans.y_position - obj->trans.y_position;
@@ -5278,7 +5305,7 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
             }
             temp_t2 = sp170 + 1;
             sp170 = temp_t2;
-        } while (temp_t2 < D_8011AE70);
+        } while (temp_t2 < gCollisionObjectCount);
         sp170 = 0;
     }
     var_a3 = 0;
@@ -5286,13 +5313,13 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
         sp88 = &spB4[0];
         sp168 = 0;
         do {
-            temp_a1 = D_8011AE6C[*sp88];
+            temp_a1 = gCollisionObjects[*sp88];
             var_s1 = 0;
             objModel = temp_a1->modelInstances[temp_a1->modelIndex]->objModel;
-            temp_v0_2 = temp_a1->unk5C;
+            temp_v0_2 = temp_a1->collisionData;
             var_fp_2 = 0;
             sp16C = 1;
-            spDC = &temp_a1->unk5C->matrices[(((temp_a1->unk5C->unk104 + 1) & 1) << 6)];
+            spDC = &temp_a1->collisionData->matrices[(((temp_a1->collisionData->mtxFlip + 1) & 1) << 6)];
             otherObj = temp_a1;
             temp_v0_3 = func_8001790C((u32 *) obj, (u32 *) temp_a1);
             var_t0 = 1;
@@ -5368,14 +5395,14 @@ s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 
                                       (f32) (1.0 / (f64) otherObj->trans.scale));
             var_t0_2 = sp16C;
             if (temp_v0_4 != 0) {
-                otherObj->unk5C->unk100 = obj;
+                otherObj->collisionData->collidedObj = obj;
             }
             var_fp_3 = 0;
             if (*D_8011AD24 == 0) {
                 sp14C = func_80017978((s32) obj, (s32) otherObj);
             }
-            temp_v0_5 = otherObj->unk5C;
-            spDC = &temp_a1->unk5C->matrices[(temp_a1->unk5C->unk104 + 2) << 6];
+            temp_v0_5 = otherObj->collisionData;
+            spDC = &temp_a1->collisionData->matrices[(temp_a1->collisionData->mtxFlip + 2) << 6];
             if (arg1 > 0) {
                 do {
                     if (sp14C != NULL) {
@@ -5479,7 +5506,7 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
     s32 k;
     s32 spF8;
     s32 var_t4;
-    ObjectModel_10 *var_a0;
+    f32 *var_a0;
     f32 spE4;
     f32 spDC;
     f32 spD8;
@@ -5501,13 +5528,13 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
     f32 temp_f26;
     f32 var_f2;
     f32 var_f30;
-    ObjectModel_10 *temp_t0;
-    ObjectModel_10 *temp_v0;
+    f32 *temp_t0;
+    f32 *temp_v0;
     s32 redoLoop;
     s32 pad1;
 
     spF8 = 0;
-    temp_t0 = arg0->unk10;
+    temp_t0 = arg0->collisionPlanes;
     var_s6 = 1;
     for (i = 0; i < arg1; i++) {
         spBC = arg6[i];
@@ -5520,12 +5547,12 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
         var_t4 = 0;
         do {
             redoLoop = FALSE;
-            for (j = 0; j < arg0->unk32; j++) {
-                temp_v0 = &temp_t0[arg0->unkC->unk0[j]];
-                temp_f26 = temp_v0->B;
-                sp74 = temp_v0->A;
-                temp_f12 = temp_v0->C;
-                temp_f10 = temp_v0->D;
+            for (j = 0; j < arg0->collisionFacetCount; j++) {
+                temp_v0 = &temp_t0[arg0->collisionFacets[j].basePlaneIndex];
+                temp_f26 = temp_v0[1];
+                sp74 = temp_v0[0];
+                temp_f12 = temp_v0[2];
+                temp_f10 = temp_v0[3];
                 spE4 = sp74;
                 spDC = temp_f12;
                 sp64 = spA0;
@@ -5546,10 +5573,10 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                         }
 
                         for (k = 0; (k < 3) && (var_a2 == 1); k++) {
-                            temp_v0 = &temp_t0[arg0->unkC->unk0[k + 1]];
-                            if (((temp_v0->A * (((spBC - sp60) * var_f2) + spA4)) +
-                                 (temp_v0->B * (((var_f30 - sp64) * var_f2) + spA0)) +
-                                 (temp_v0->C * (((spB4 - sp68) * var_f2) + sp9C)) + temp_v0->D) > 4.0f) {
+                            temp_v0 = &temp_t0[arg0->collisionFacets->edgeBisectorPlane[k]];
+                            if (((temp_v0[0] * (((spBC - sp60) * var_f2) + spA4)) +
+                                 (temp_v0[1] * (((var_f30 - sp64) * var_f2) + spA0)) +
+                                 (temp_v0[2] * (((spB4 - sp68) * var_f2) + sp9C)) + temp_v0[3]) > 4.0f) {
                                 var_a2 = 0;
                             }
                         }
@@ -5574,7 +5601,7 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                             arg6[i] = spBC;
                             arg7[i] = var_f30;
                             arg8[i] = spB4;
-                            j = arg0->unk32;
+                            j = arg0->collisionFacetCount;
                         }
                     }
                 }
@@ -8466,7 +8493,7 @@ void func_8001E6EC(s8 arg0) {
                  (j < D_8011AE78) && (overridePosEntry->behaviorId != D_8011AE74[j]->properties.animation.behaviourID);
                  j++) {}
             if (j != D_8011AE78 && D_8011AE74[j]->animTarget != NULL) {
-                someBool = (D_8011AE74[j]->animTarget->unk5C != NULL) ? FALSE : TRUE;
+                someBool = (D_8011AE74[j]->animTarget->collisionData != NULL) ? FALSE : TRUE;
                 if (arg0 != someBool) {
                     animTarget = D_8011AE74[j]->animTarget;
                     overridePos->x = animTarget->trans.x_position;
@@ -9880,7 +9907,7 @@ void mode_init_taj_race(void) {
         lvlSeg =
             get_level_segment_index_from_position(newRacerEntry.common.x, checkpointNode->y, newRacerEntry.common.z);
         newRacerEntry.common.y =
-            func_8002BAB0(lvlSeg, newRacerEntry.common.x, newRacerEntry.common.z, yOut) ? yOut[0] : checkpointNode->y;
+            collision_get_y(lvlSeg, newRacerEntry.common.x, newRacerEntry.common.z, yOut) ? yOut[0] : checkpointNode->y;
         newRacerEntry.common.size = 16;
         newRacerEntry.angleY = racer->steerVisualRotation;
         newRacerEntry.angleX = 0;
@@ -10049,7 +10076,7 @@ CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
         obj->segmentID =
             get_level_segment_index_from_position(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
     }
-    yOutCount = func_8002BAB0(obj->segmentID, obj->trans.x_position, obj->trans.z_position, yOut);
+    yOutCount = collision_get_y(obj->segmentID, obj->trans.x_position, obj->trans.z_position, yOut);
     if (yOutCount != 0) {
         obj->trans.y_position = yOut[yOutCount - 1];
     }
@@ -10593,7 +10620,7 @@ s32 obj_init_property_flags(s32 behaviorId) {
             break;
         case BHV_DOOR:
         case BHV_TT_DOOR:
-            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
+            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_WEAPON_BALLOON:
         case BHV_GOLDEN_BALLOON:
@@ -10604,14 +10631,14 @@ s32 obj_init_property_flags(s32 behaviorId) {
         case BHV_SNOWBALL:
         case BHV_SNOWBALL_2:
             flags = OBJECT_BEHAVIOUR_SHADED | OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION |
-                    OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
+                    OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_SNOWBALL_3:
         case BHV_SNOWBALL_4:
         case BHV_HIT_TESTER_3:
         case BHV_HIT_TESTER_4:
             flags = OBJECT_BEHAVIOUR_SHADOW | OBJECT_BEHAVIOUR_ANIMATION | OBJECT_BEHAVIOUR_INTERACTIVE |
-                    OBJECT_BEHAVIOUR_UNK20;
+                    OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_UNK_18:
             flags = OBJECT_BEHAVIOUR_WATER_EFFECT;
@@ -10627,11 +10654,11 @@ s32 obj_init_property_flags(s32 behaviorId) {
             flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_SHADOW;
             break;
         case BHV_LOG:
-            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
+            flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_BRIDGE_WHALE_RAMP:
             flags = OBJECT_BEHAVIOUR_SHADED | OBJECT_BEHAVIOUR_ANIMATION | OBJECT_BEHAVIOUR_INTERACTIVE |
-                    OBJECT_BEHAVIOUR_UNK20;
+                    OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_RAMP_SWITCH:
             flags = OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_SHADOW;
@@ -10663,7 +10690,7 @@ s32 obj_init_property_flags(s32 behaviorId) {
         case BHV_DYNAMIC_LIGHT_OBJECT_2:
         case BHV_ROCKET_SIGNPOST:
         case BHV_ROCKET_SIGNPOST_2:
-            flags = OBJECT_BEHAVIOUR_SHADED | OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_UNK20;
+            flags = OBJECT_BEHAVIOUR_SHADED | OBJECT_BEHAVIOUR_INTERACTIVE | OBJECT_BEHAVIOUR_COLLIDABLE;
             break;
         case BHV_UNK_5B:
             flags = OBJECT_BEHAVIOUR_SHADED;

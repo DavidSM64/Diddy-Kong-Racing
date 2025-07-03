@@ -4464,7 +4464,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             playerIDF = -(f32) playerID;
             CLAMP(tempRacer->velocity, playerIDF, playerID);
         }
-        if (context != GAMEMODE_MENU || func_8000E148()) {
+        if (context != GAMEMODE_MENU || racetype_demo()) {
             racer_sound_update(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         lastCheckpointDist = tempRacer->checkpoint_distance;

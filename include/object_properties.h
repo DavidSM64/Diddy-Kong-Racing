@@ -192,7 +192,7 @@ typedef struct ObjPropertyRacer {
 
 typedef struct ObjPropertySetupPoint {
     s32 racerIndex;
-    s32 entranceID;
+    u32 entranceID;
 } ObjPropertySetupPoint;
 
 typedef struct ObjPropertyWeapon {

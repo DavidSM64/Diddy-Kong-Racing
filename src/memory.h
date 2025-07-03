@@ -25,7 +25,7 @@ typedef enum MempoolFlags {
 #define FREE_QUEUE_SIZE 256
 #define MEMSLOT_NONE -1
 
-// Animation related?
+// Model data. Mesh, collision, animation.
 #define COLOUR_TAG_RED 0xFF0000FF
 // Model headers
 #define COLOUR_TAG_GREEN 0x00FF00FF
@@ -44,7 +44,7 @@ typedef enum MempoolFlags {
 #define COLOUR_TAG_GREY 0x7F7F7FFF
 // Particles
 #define COLOUR_TAG_SEMITRANS_GREY 0x80808080
-// Model data
+// Model normals
 #define COLOUR_TAG_ORANGE 0xFF7F7FFF
 // Controller Pak
 #define COLOUR_TAG_BLACK 0x000000FF
