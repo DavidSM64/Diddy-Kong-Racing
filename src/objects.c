@@ -5477,7 +5477,7 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
     s32 k;
     s32 spF8;
     s32 var_t4;
-    ObjectModel_10 *var_a0;
+    f32 *var_a0;
     f32 spE4;
     f32 spDC;
     f32 spD8;
@@ -5499,8 +5499,8 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
     f32 temp_f26;
     f32 var_f2;
     f32 var_f30;
-    ObjectModel_10 *temp_t0;
-    ObjectModel_10 *temp_v0;
+    f32 *temp_t0;
+    f32 *temp_v0;
     s32 redoLoop;
     s32 pad1;
 
@@ -5519,11 +5519,11 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
         do {
             redoLoop = FALSE;
             for (j = 0; j < arg0->unk32; j++) {
-                temp_v0 = &temp_t0[arg0->unkC->unk0[j]];
-                temp_f26 = temp_v0->B;
-                sp74 = temp_v0->A;
-                temp_f12 = temp_v0->C;
-                temp_f10 = temp_v0->D;
+                temp_v0 = &temp_t0[arg0->unkC[j].basePlaneIndex];
+                temp_f26 = temp_v0[1];
+                sp74 = temp_v0[0];
+                temp_f12 = temp_v0[2];
+                temp_f10 = temp_v0[3];
                 spE4 = sp74;
                 spDC = temp_f12;
                 sp64 = spA0;
@@ -5544,10 +5544,10 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                         }
 
                         for (k = 0; (k < 3) && (var_a2 == 1); k++) {
-                            temp_v0 = &temp_t0[arg0->unkC->unk0[k + 1]];
-                            if (((temp_v0->A * (((spBC - sp60) * var_f2) + spA4)) +
-                                 (temp_v0->B * (((var_f30 - sp64) * var_f2) + spA0)) +
-                                 (temp_v0->C * (((spB4 - sp68) * var_f2) + sp9C)) + temp_v0->D) > 4.0f) {
+                            temp_v0 = &temp_t0[arg0->unkC->edgeBisectorPlane[k]];
+                            if (((temp_v0[0] * (((spBC - sp60) * var_f2) + spA4)) +
+                                 (temp_v0[1] * (((var_f30 - sp64) * var_f2) + spA0)) +
+                                 (temp_v0[2] * (((spB4 - sp68) * var_f2) + sp9C)) + temp_v0[3]) > 4.0f) {
                                 var_a2 = 0;
                             }
                         }
