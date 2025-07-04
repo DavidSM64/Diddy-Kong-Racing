@@ -18,6 +18,7 @@
 #include "object_functions.h"
 #include "object_models.h"
 #include "objects.h"
+#include "PR/os_cont.h"
 #include "PR/os_convert.h"
 #include "PR/os_system.h"
 #include "PRinternal/viint.h"
@@ -33,7 +34,6 @@
 #include "tracks.h"
 #include "types.h"
 #include "video.h"
-#include "PR/os_cont.h"
 
 /**
  * @file Contains all the code used for every menu in the game.

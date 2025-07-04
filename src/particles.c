@@ -4,8 +4,6 @@
 #include "libc/math.h"
 #include "math_util.h"
 #include "objects.h"
-#include "PR/os_convert.h"
-#include "PR/os_system.h"
 #include "textures_sprites.h"
 #include "tracks.h"
 #include <ultra64.h>
