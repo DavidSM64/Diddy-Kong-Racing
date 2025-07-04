@@ -343,6 +343,7 @@ s32 check_if_in_race(void) {
 /**
  * Loads and sets up the level header, then loads and sets of the level geometry.
  * Sets weather, fog and active cutscenes where applicable.
+ * Official Name: levelInit
  */
 void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     s8 *someAsset;

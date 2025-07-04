@@ -457,6 +457,7 @@ void __seqpStopOsc(ALSeqPlayer *seqp, ALVoiceState *vs)
 
 /**
  * The voice limit bytes seem to be unique to this game.
+ * Official Name: n_alCSPVoiceLimit
  */
 void set_voice_limit(ALCSPlayer *seqp, u8 voiceLimit) {
     seqp->voiceLimit = voiceLimit;

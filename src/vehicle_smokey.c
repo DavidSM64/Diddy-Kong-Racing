@@ -13,6 +13,7 @@
 
 /************ .data ************/
 
+// The highest index that ever seems to be read from this table is 6.
 u16 gSmokeyVoiceTable[16] = {
     SOUND_VOICE_BOSS_LAUGH2,
     SOUND_VOICE_TRICKY_HM,
@@ -21,7 +22,7 @@ u16 gSmokeyVoiceTable[16] = {
     SOUND_VOICE_WIZPIG_H2,
     SOUND_VOICE_SMOKEY_EH,
     SOUND_VOICE_SMOKEY_HEH,
-    SOUND_VOICE_SMOKEY_HAH,
+    SOUND_VOICE_SMOKEY_HAH, // Never read from this point?
     SOUND_VOICE_SMOKEY_LAUGH,
     SOUND_VOICE_SMOKEY_HM,
     SOUND_VOICE_SMOKEY_HM2,

@@ -9,7 +9,7 @@ As of July 4, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 96.67%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 62.43%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 62.47%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -133,9 +133,9 @@ As of July 4, 2025, this is our current score:
     We are collecting silver coins in Star City. (7/8 silver coins)
  ======================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
- -------------------------- 62.43% Complete ---------------------------
-                      # Documented functions: 1228
-                     # Undocumented remaining: 424
+ -------------------------- 62.47% Complete ---------------------------
+                      # Documented functions: 1230
+                     # Undocumented remaining: 422
  ---------------------------- Game Status -----------------------------
                Balloons: 30/47, Keys: 3/4, Trophies: 2/5
                  T.T. Amulets: 3/4, Wizpig Amulets: 3/4

@@ -5376,7 +5376,7 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     audio->unk5 = entry->unkD;
     audio->unkD = entry->unk10;
     audio->soundMask = NULL;
-    if (gSoundBank_GetSoundDecayTime(audio->soundId)) {
+    if (sound_is_looped(audio->soundId)) {
         audspat_point_create(audio->soundId, entry->common.x, entry->common.y, entry->common.z, 9, audio->unk5,
                              audio->unk4, audio->unk2, audio->unkC, audio->unk6, audio->unkD, &audio->soundMask);
     } else {

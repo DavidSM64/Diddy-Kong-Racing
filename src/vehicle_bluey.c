@@ -12,6 +12,7 @@
 
 /************ .data ************/
 
+// The highest index that ever seems to be read from this table is 6.
 u16 gBlueyVoiceTable[16] = {
     SOUND_VOICE_BLUEY_EH3,
     SOUND_VOICE_BLUEY_EH,
@@ -20,7 +21,7 @@ u16 gBlueyVoiceTable[16] = {
     SOUND_VOICE_BLUEY_HAHA2,
     SOUND_VOICE_BLUEY_EH2,
     SOUND_VOICE_BLUEY_OHNO2,
-    SOUND_VOICE_BLUEY_HAHA3,
+    SOUND_VOICE_BLUEY_HAHA3, // Never read from this point?
     SOUND_VOICE_BLUEY_HAHA4,
     SOUND_VOICE_BLUEY_AIEE,
     SOUND_VOICE_BLUEY_OHNO3,
