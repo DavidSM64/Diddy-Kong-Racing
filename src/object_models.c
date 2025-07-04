@@ -1,15 +1,15 @@
 #include "object_models.h"
-#include "common.h"
-#include "macros.h"
-#include "memory.h"
 #include "asset_enums.h"
-#include "tracks.h"
 #include "asset_loading.h"
-#include "textures_sprites.h"
-#include "racer.h"
-#include "objects.h"
+#include "common.h"
 #include "gzip.h"
 #include "libc/math.h"
+#include "macros.h"
+#include "memory.h"
+#include "objects.h"
+#include "racer.h"
+#include "textures_sprites.h"
+#include "tracks.h"
 
 #define MODEL_LOADED_MAX 70
 

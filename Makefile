@@ -46,7 +46,7 @@ endif
 
 # Common build print status function
 define print
-  @$(PRINT) "$(GREEN)$(1) $(YELLOW)$(2)$(GREEN) -> $(BLUE)$(3)$(NO_COL)\n"
+	@$(PRINT) "$(GREEN)$(1) $(YELLOW)$(2)$(GREEN) -> $(BLUE)$(3)$(NO_COL)\n"
 endef
 
 # Directories
@@ -56,7 +56,7 @@ SRC_DIR   = src
 LIBULTRA_DIR = libultra
 ASM_DIRS  = asm asm/data asm/assets asm/nonmatchings
 HASM_DIRS = $(SRC_DIR)/hasm $(LIBULTRA_DIR)/src/os $(LIBULTRA_DIR)/src/gu $(LIBULTRA_DIR)/src/libc
-LIBULTRA_SRC_DIRS  = $(LIBULTRA_DIR) $(LIBULTRA_DIR)/src $(LIBULTRA_DIR)/src/audio $(LIBULTRA_DIR)/src/audio/mips1 
+LIBULTRA_SRC_DIRS  = $(LIBULTRA_DIR) $(LIBULTRA_DIR)/src $(LIBULTRA_DIR)/src/audio $(LIBULTRA_DIR)/src/audio/mips1
 LIBULTRA_SRC_DIRS += $(LIBULTRA_DIR)/src/debug $(LIBULTRA_DIR)/src/gu $(LIBULTRA_DIR)/src/io
 LIBULTRA_SRC_DIRS += $(LIBULTRA_DIR)/src/libc $(LIBULTRA_DIR)/src/os $(LIBULTRA_DIR)/src/sc
 
@@ -105,17 +105,17 @@ find-command = $(shell which $(1) 2>/dev/null)
 # Tools
 
 ifeq ($(shell type mips-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
-  CROSS := mips-linux-gnu-
+	CROSS := mips-linux-gnu-
 else ifeq ($(shell type mips64-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
-  CROSS := mips64-linux-gnu-
+	CROSS := mips64-linux-gnu-
 else ifeq ($(shell type mips64-elf-ld >/dev/null 2>/dev/null; echo $$?), 0)
-  CROSS := mips64-elf-
+	CROSS := mips64-elf-
 else
 # No binutil packages were found, so we have to download the source & build it.
 ifeq ($(wildcard $(TOOLS_DIR)/binutils/.*),)
-  DUMMY != $(TOOLS_DIR)/get-binutils.sh >&2 || echo FAIL
-endif 
-  CROSS := $(TOOLS_DIR)/binutils/mips64-elf-
+	DUMMY != $(TOOLS_DIR)/get-binutils.sh >&2 || echo FAIL
+endif
+	CROSS := $(TOOLS_DIR)/binutils/mips64-elf-
 endif
 
 AS       = $(CROSS)as
@@ -149,7 +149,7 @@ ifeq ($(NON_MATCHING),1)
 	C_STANDARD := -std=gnu99
 else
 	MATCHDEFS += ANTI_TAMPER=1
-    # Override compiler choice on matching builds.
+	# Override compiler choice on matching builds.
 	COMPILER := ido
 	C_STANDARD := -std=gnu90
 endif
@@ -181,7 +181,7 @@ ASM_DEFINES += --defsym BOOT_$(BOOT_CIC)=1
 C_DEFINES += -DCIC_ID=$(BOOT_CIC)
 
 INCLUDE_CFLAGS  = -I . -I include -I include/libc  -I include/PR -I include/sys -I $(BIN_DIRS) -I $(SRC_DIR) -I $(LIBULTRA_DIR)
-INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/gu -I $(LIBULTRA_DIR)/src/libc -I $(LIBULTRA_DIR)/src/io  -I $(LIBULTRA_DIR)/src/sc 
+INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/gu -I $(LIBULTRA_DIR)/src/libc -I $(LIBULTRA_DIR)/src/io  -I $(LIBULTRA_DIR)/src/sc
 INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/audio -I $(LIBULTRA_DIR)/src/os
 
 ASFLAGS        = -march=vr4300 -32 -G0 $(ASM_DEFINES) $(INCLUDE_CFLAGS)
@@ -189,9 +189,9 @@ OBJCOPYFLAGS   = -O binary
 
 # Pad to 12MB if matching, otherwise build to a necessary minimum of 1.004MB
 ifeq ($(NON_MATCHING),1)
-  OBJCOPYFLAGS += --pad-to=0x101000 --gap-fill=0xFF
+	OBJCOPYFLAGS += --pad-to=0x101000 --gap-fill=0xFF
 else
-  OBJCOPYFLAGS += --pad-to=0xC00000 --gap-fill=0xFF
+	OBJCOPYFLAGS += --pad-to=0xC00000 --gap-fill=0xFF
 endif
 
 
@@ -281,7 +281,7 @@ ifeq ($(COMPILER),gcc)
 endif
 
 $(GCC_SAFE_FILES): CC := $(CROSS)gcc
-$(GCC_SAFE_FILES): CC_WARNINGS := 
+$(GCC_SAFE_FILES): CC_WARNINGS :=
 $(GCC_SAFE_FILES): MIPSISET := -mips3
 $(GCC_SAFE_FILES): OPT_FLAGS := -Os
 $(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING $(INCLUDE_CFLAGS) $(C_DEFINES) \
@@ -361,7 +361,7 @@ clean_src:
 clean_assets:
 	rm -rf $(ASM_DIRS)
 	rm -rf $(BIN_DIRS)
-	
+
 cleanall:
 	rm -rf $(BUILD_DIR)
 
@@ -442,7 +442,7 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | bu
 
 $(BUILD_DIR)/%.s.o: %.s | build_assets
 	$(call print,Assembling:,$<,$@)
-	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $< 
+	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $<
 
 # Specifically override the header file from what splat extracted to be replaced by what we have in the hasm folder
 $(BUILD_DIR)/asm/header.s.o: src/hasm/header.s | build_assets

@@ -1,10 +1,10 @@
 #include "audiosfx.h"
-#include "memory.h"
-#include "video.h"
-#include "math_util.h"
 #include "asset_loading.h"
+#include "math_util.h"
+#include "memory.h"
 #include "objects.h"
 #include "PR/libaudio.h"
+#include "video.h"
 
 #define SOUND_PARAM_DURATION(m) (m->velocityMax * 33333)
 #define SOUND_PARAM_NEXT_SOUND(m) (m->velocityMin + (m->keyMin & 0xC0) * 4)

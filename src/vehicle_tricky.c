@@ -1,18 +1,18 @@
 #include "vehicle_misc.h"
 
-#include "structs.h"
-#include "types.h"
-#include "macros.h"
 #include "audio.h"
-#include "objects.h"
-#include "audio_vehicle.h"
 #include "audio_spatial.h"
-#include "menu.h"
-#include "game.h"
-#include "particles.h"
-#include "math_util.h"
-#include "thread3_main.h"
+#include "audio_vehicle.h"
 #include "fade_transition.h"
+#include "game.h"
+#include "macros.h"
+#include "math_util.h"
+#include "menu.h"
+#include "objects.h"
+#include "particles.h"
+#include "structs.h"
+#include "thread3_main.h"
+#include "types.h"
 
 /************ .data ************/
 

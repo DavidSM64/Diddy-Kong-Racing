@@ -1,15 +1,15 @@
 #include "audio_spatial.h"
-#include "types.h"
-#include "macros.h"
-#include "audio_vehicle.h"
-#include "memory.h"
 #include "audio.h"
-#include "textures_sprites.h"
-#include "objects.h"
+#include "audio_vehicle.h"
 #include "audiosfx.h"
-#include "tracks.h"
+#include "macros.h"
 #include "math_util.h"
+#include "memory.h"
 #include "menu.h"
+#include "objects.h"
+#include "textures_sprites.h"
+#include "tracks.h"
+#include "types.h"
 
 #define MAX_AUDIO_POINTS 40
 #define MAX_AUDIO_LINES 7

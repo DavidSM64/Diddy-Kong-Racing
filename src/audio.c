@@ -1,14 +1,14 @@
 #include "audio.h"
 #include "memory.h"
 
-#include "types.h"
 #include "asset_enums.h"
 #include "asset_loading.h"
+#include "audio_spatial.h"
 #include "audiomgr.h"
 #include "audiosfx.h"
-#include "audio_spatial.h"
-#include "sched.h"
 #include "libultra/src/audio/seqchannel.h"
+#include "sched.h"
+#include "types.h"
 
 /************ .data ************/
 

@@ -1,5 +1,5 @@
-#include "types.h"
 #include "macros.h"
+#include "types.h"
 
 /**
  * Copy a string to a given location.

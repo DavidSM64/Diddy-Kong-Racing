@@ -1,14 +1,12 @@
 #include "particles.h"
-#include "objects.h"
-#include "math_util.h"
-#include "tracks.h"
-#include "textures_sprites.h"
 #include "asset_loading.h"
-#include <ultra64.h>
 #include "camera.h"
 #include "libc/math.h"
-#include "PR/os_system.h"
-#include "PR/os_convert.h"
+#include "math_util.h"
+#include "objects.h"
+#include "textures_sprites.h"
+#include "tracks.h"
+#include <ultra64.h>
 
 /************ .rodata ************/
 

@@ -1,16 +1,16 @@
 #include "waves.h"
-#include "types.h"
-#include "macros.h"
-#include <ultra64.h>
-#include "memory.h"
-#include "textures_sprites.h"
-#include "objects.h"
-#include "tracks.h"
-#include "math_util.h"
-#include "PRinternal/viint.h"
-#include "racer.h"
-#include "printf.h"
 #include "camera.h"
+#include "macros.h"
+#include "math_util.h"
+#include "memory.h"
+#include "objects.h"
+#include "PRinternal/viint.h"
+#include "printf.h"
+#include "racer.h"
+#include "textures_sprites.h"
+#include "tracks.h"
+#include "types.h"
+#include <ultra64.h>
 
 /************ .data ************/
 

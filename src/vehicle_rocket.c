@@ -1,12 +1,12 @@
 #include "vehicle_misc.h"
 
-#include "types.h"
-#include "macros.h"
-#include "racer.h"
-#include "objects.h"
 #include "audio.h"
 #include "camera.h"
+#include "macros.h"
+#include "objects.h"
 #include "particles.h"
+#include "racer.h"
+#include "types.h"
 
 /************ .data ************/
 
