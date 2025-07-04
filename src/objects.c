@@ -5852,7 +5852,7 @@ Object *find_taj_object(void) {
 }
 
 // Handles MidiFadePoint, MidiFade, and MidiSetChannel objects?
-void func_80018CE0(Object *racerObj, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
+void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate) {
     f32 temp_f0;
     s32 pad_spF8;
     s32 spF4;
@@ -5934,7 +5934,7 @@ void func_80018CE0(Object *racerObj, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
                 midiFade = obj->midi_fade;
 
                 temp_f0 =
-                    (midiFade->unk8 * arg1) + (midiFade->unkC * arg2) + (midiFade->unk10 * arg3) + midiFade->unk14;
+                    (midiFade->unk8 * xPos) + (midiFade->unkC * yPos) + (midiFade->unk10 * zPos) + midiFade->unk14;
                 temp_f2 = (midiFade->unk8 * racerObj->trans.x_position) +
                           (midiFade->unkC * racerObj->trans.y_position) +
                           (midiFade->unk10 * racerObj->trans.z_position) + midiFade->unk14;
@@ -5946,20 +5946,20 @@ void func_80018CE0(Object *racerObj, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
                     var_v1 = 0;
                 }
                 if (var_v1 != 0) {
-                    temp_f0 = racerObj->trans.x_position - arg1;
-                    temp_f2 = racerObj->trans.y_position - arg2;
+                    temp_f0 = racerObj->trans.x_position - xPos;
+                    temp_f2 = racerObj->trans.y_position - yPos;
 
                     temp_f22 =
-                        (-midiFade->unk8 * arg1 - midiFade->unkC * arg2 - midiFade->unk10 * arg3 - midiFade->unk14) /
+                        (-midiFade->unk8 * xPos - midiFade->unkC * yPos - midiFade->unk10 * zPos - midiFade->unk14) /
                         (midiFade->unk8 * temp_f0 + midiFade->unkC * temp_f2 +
-                         midiFade->unk10 * (racerObj->trans.z_position - arg3));
+                         midiFade->unk10 * (racerObj->trans.z_position - zPos));
                     tempF = temp_f22 * temp_f0;
-                    if ((midiFade->unk18 <= tempF + arg1) && (tempF + arg1 <= midiFade->unk24)) {
-                        tempF2 = racerObj->trans.z_position - arg3;
-                        if ((midiFade->unk1C <= (temp_f22 * temp_f2) + arg2) &&
-                            ((temp_f22 * temp_f2) + arg2 <= midiFade->unk28)) {
-                            if ((midiFade->unk20 <= (temp_f22 * (tempF2)) + arg3) &&
-                                ((temp_f22 * (tempF2)) + arg3 <= midiFade->unk2C)) {
+                    if ((midiFade->unk18 <= tempF + xPos) && (tempF + xPos <= midiFade->unk24)) {
+                        tempF2 = racerObj->trans.z_position - zPos;
+                        if ((midiFade->unk1C <= (temp_f22 * temp_f2) + yPos) &&
+                            ((temp_f22 * temp_f2) + yPos <= midiFade->unk28)) {
+                            if ((midiFade->unk20 <= (temp_f22 * (tempF2)) + zPos) &&
+                                ((temp_f22 * (tempF2)) + zPos <= midiFade->unk2C)) {
                                 midiFade->unk0 = var_v1;
                                 midiFade->unk1 = 0;
                                 midiFade->unk4 = 0;
@@ -5990,7 +5990,7 @@ void func_80018CE0(Object *racerObj, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
     }
 
     if (D_8011AF60->unk40 == music_current_sequence()) {
-        D_8011AF60->unk4 += arg4;
+        D_8011AF60->unk4 += updateRate;
         temp_t4 = D_8011AF60->unk2 * gVideoRefreshRate;
         if (temp_t4 < D_8011AF60->unk4) {
             D_8011AF60->unk4 = temp_t4;
