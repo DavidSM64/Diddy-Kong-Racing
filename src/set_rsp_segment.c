@@ -1,6 +1,6 @@
 #include "set_rsp_segment.h"
-#include "PR/mbi.h"
 #include "PR/gbi.h"
+#include "PR/mbi.h"
 #include "PR/R4300.h"
 
 /**

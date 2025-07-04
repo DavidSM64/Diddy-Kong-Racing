@@ -1,15 +1,14 @@
 #include "fade_transition.h"
 
-#include "types.h"
-#include "macros.h"
-#include "f3ddkr.h"
 #include "asset_enums.h"
-#include "memory.h"
-#include "video.h"
-#include "textures_sprites.h"
-#include "math_util.h"
-#include "PRinternal/viint.h"
 #include "camera.h"
+#include "f3ddkr.h"
+#include "macros.h"
+#include "math_util.h"
+#include "memory.h"
+#include "PRinternal/viint.h"
+#include "textures_sprites.h"
+#include "types.h"
 #include "video.h"
 
 /************ .data ************/

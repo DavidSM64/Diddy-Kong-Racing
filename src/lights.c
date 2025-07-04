@@ -1,12 +1,12 @@
 #include "lights.h"
 
-#include "memory.h"
-#include "types.h"
-#include "macros.h"
-#include "objects.h"
 #include "game.h"
-#include "math_util.h"
 #include "libc/math.h"
+#include "macros.h"
+#include "math_util.h"
+#include "memory.h"
+#include "objects.h"
+#include "types.h"
 
 /************ .data ************/
 

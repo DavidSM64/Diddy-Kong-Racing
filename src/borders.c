@@ -1,13 +1,13 @@
 #include "borders.h"
 
 #include "camera.h"
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
 #include "f3ddkr.h"
-#include "video.h"
 #include "game.h"
 #include "game_ui.h"
+#include "macros.h"
+#include "structs.h"
+#include "types.h"
+#include "video.h"
 
 /**
  * Renders the black borders that separate each viewport during multiplayer.

@@ -1,8 +1,8 @@
 #include "memory.h"
+#include "config.h"
+#include "math_util.h"
 #include "printf.h"
 #include "thread0_epc.h"
-#include "math_util.h"
-#include "config.h"
 
 /************ .bss ************/
 

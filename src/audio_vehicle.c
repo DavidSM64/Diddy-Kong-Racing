@@ -1,17 +1,17 @@
 #include "audio_vehicle.h"
 
-#include "types.h"
-#include "macros.h"
+#include "asset_loading.h"
 #include "audio_spatial.h"
 #include "audiosfx.h"
-#include "objects.h"
-#include "joypad.h"
-#include "racer.h"
-#include "PR/libaudio.h"
 #include "game_ui.h"
+#include "joypad.h"
+#include "macros.h"
 #include "math_util.h"
+#include "objects.h"
+#include "PR/libaudio.h"
 #include "printf.h"
-#include "asset_loading.h"
+#include "racer.h"
+#include "types.h"
 
 /************ .data ************/
 
