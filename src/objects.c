@@ -330,7 +330,7 @@ s32 D_8011AF2C;
 ShadeProperties *gWorldShading; // Effectively unused.
 s32 D_8011AF34;
 s32 D_8011AF38[10];
-Object_MidiFade *D_8011AF60[2];
+Object_MidiFade *D_8011AF60;
 TexCoords D_8011AF68[32];
 Vec3s gEnvmapPos[2];
 unk800179D0 *D_8011AFF4;
@@ -858,7 +858,7 @@ void clear_object_pointers(void) {
     gTransformTimer = 0;
     gIsTajChallenge = FALSE;
     gTajRaceInit = 0;
-    D_8011AF60[0] = 0;
+    D_8011AF60 = NULL;
     D_8011AE00 = 0;
     D_8011AE01 = TRUE;
     D_8011AD53 = 0;
@@ -4628,7 +4628,7 @@ void process_object_interactions(void) {
     }
 }
 
-// https://decomp.me/scratch/Hubco
+// https://decomp.me/scratch/Hg44X
 #ifdef NON_EQUIVALENT
 void func_800159C8(Object *arg0, Object *arg1) {
     f32 sp9C;
@@ -4652,9 +4652,6 @@ void func_800159C8(Object *arg0, Object *arg1) {
     ObjectInteraction *sp54;
     Object_Racer *sp50;
     Object_Racer *sp4C;
-    f32 sp48;
-    f32 sp44;
-    f32 sp40;
 
     sp68 = arg1->trans.x_position - arg0->trans.x_position;
     sp64 = arg1->trans.y_position - arg0->trans.y_position;
@@ -4682,9 +4679,11 @@ void func_800159C8(Object *arg0, Object *arg1) {
     if (sp58->flags & 0x20) {
         var_v0 >>= 3;
     }
+
     if (var_v0 > 255) {
         var_v0 = 255;
     }
+
     if (sp58->distance >= var_v0) {
         sp58->obj = arg1;
         sp58->distance = var_v0;
@@ -4694,185 +4693,192 @@ void func_800159C8(Object *arg0, Object *arg1) {
     if (sp54->flags & 0x20) {
         var_v0 >>= 3;
     }
+
     if (var_v0 > 255) {
         var_v0 = 255;
     }
+
     if (sp54->distance >= var_v0) {
         sp54->obj = arg0;
         sp54->distance = var_v0;
     }
 
-    if (sp54->flags & 1) {
-        sp98 = sp54->hitboxRadius + sp58->hitboxRadius;
+    if (!(sp54->flags & 1)) {
+        return;
+    }
 
-        sp7C = arg0->trans.x_position - sp58->x_position;
-        sp78 = arg0->trans.y_position - sp58->y_position;
-        sp74 = arg0->trans.z_position - sp58->z_position;
+    sp98 = sp54->hitboxRadius + sp58->hitboxRadius;
 
+    sp7C = arg0->trans.x_position - sp58->x_position;
+    sp78 = arg0->trans.y_position - sp58->y_position;
+    sp74 = arg0->trans.z_position - sp58->z_position;
+
+    if (sp54->unk11 == 1) {
+        sp78 = 0.0f;
+    }
+
+    temp_f10 = sp7C * sp7C + sp78 * sp78 + sp74 * sp74;
+    if (temp_f10 > 1.0) {
+        var_f2 =
+            ((arg1->trans.x_position - sp58->x_position) * sp7C + (arg1->trans.y_position - sp58->y_position) * sp78 +
+             (arg1->trans.z_position - sp58->z_position) * sp74) /
+            temp_f10;
+        if (var_f2 >= 0.0f && var_f2 <= 1.0) {
+            sp8C = sp58->x_position + var_f2 * sp7C;
+            sp88 = sp58->y_position + var_f2 * sp78;
+            sp84 = sp58->z_position + var_f2 * sp74;
+            sp9C = sqrtf((sp8C - arg1->trans.x_position) * (sp8C - arg1->trans.x_position) +
+                         (sp88 - arg1->trans.y_position) * (sp88 - arg1->trans.y_position) +
+                         (sp84 - arg1->trans.z_position) * (sp84 - arg1->trans.z_position));
+        }
+    }
+
+    if (sp9C < sp98 && sp9C > 0.0f) {
+        sp8C = sp54->x_position - sp58->x_position;
+        sp88 = sp54->y_position - sp58->y_position;
+        sp84 = sp54->z_position - sp58->z_position;
         if (sp54->unk11 == 1) {
-            sp78 = 0.0f;
+            sp88 = 0.0f;
         }
-        if (sp7C * sp7C + sp78 * sp78 + sp74 * sp74 > 1.0) {
-            sp48 = arg1->trans.x_position;
-            sp44 = arg1->trans.y_position;
-            sp40 = arg1->trans.z_position;
-            var_f2 = ((sp48 - sp58->x_position) * sp7C + (sp44 - sp58->y_position) * sp78 +
-                      (sp40 - sp58->z_position) * sp74) /
-                     (sp7C * sp7C + sp78 * sp78 + sp74 * sp74);
 
-            if (var_f2 >= 0.0f && var_f2 <= 1.0) {
-                sp8C = sp58->x_position + var_f2 * sp7C;
-                sp88 = sp58->y_position + var_f2 * sp78;
-                sp84 = sp58->z_position + var_f2 * sp74;
-                sp9C = sqrtf((sp8C - sp48) * (sp8C - sp48) + (sp88 - sp44) * (sp88 - sp44) +
-                             (sp84 - sp40) * (sp84 - sp40));
-            }
+        temp_f0_3 = sqrtf(sp8C * sp8C + sp88 * sp88 + sp84 * sp84);
+        if (temp_f0_3 > 0.0f) {
+            sp68 = sp8C / temp_f0_3;
+            sp64 = sp88 / temp_f0_3;
+            sp60 = sp84 / temp_f0_3;
+        } else {
+            sp68 /= sp9C;
+            sp64 /= sp9C;
+            sp60 /= sp9C;
         }
-        if (sp9C < sp98 && sp9C > 0.0f) {
-            sp8C = sp54->x_position - sp58->x_position;
-            sp88 = sp54->y_position - sp58->y_position;
-            sp84 = sp54->z_position - sp58->z_position;
-            if (sp54->unk11 == 1) {
-                sp88 = 0.0f;
+        sp9C = temp_f0_3 - sp9C;
+        if (sp9C < 0.0f) {
+            sp9C = -sp9C;
+        }
+
+        sp68 *= sp9C;
+        sp64 *= sp9C;
+        sp60 *= sp9C;
+        sp9C *= sp80;
+        sp58->flags |= 8;
+        sp54->flags |= 8;
+        if (sp54->pushForce == 0) {
+            arg0->trans.x_position -= sp68;
+            arg0->trans.y_position -= sp64;
+            arg0->trans.z_position -= sp60;
+
+            sp68 *= sp80;
+            sp60 *= sp80;
+            if (arg0->behaviorId != 1) {
+                return;
             }
 
-            temp_f0_3 = sqrtf(sp8C * sp8C + sp88 * sp88 + sp84 * sp84);
-            if (temp_f0_3 > 0.0f) {
-                sp68 = sp8C / temp_f0_3;
-                sp64 = sp88 / temp_f0_3;
-                sp60 = sp84 / temp_f0_3;
-            } else {
-                sp68 /= sp9C;
-                sp64 /= sp9C;
-                sp60 /= sp9C;
-            }
-            sp9C = temp_f0_3 - sp9C;
-            if (sp9C < 0.0f) {
-                sp9C = -sp9C;
-            }
-
-            sp68 *= sp9C;
-            sp64 *= sp9C;
-            sp60 *= sp9C;
-            sp9C *= sp80;
-            sp58->flags |= 8;
-            sp54->flags |= 8;
-            if (sp54->pushForce == 0) {
-                arg0->trans.x_position -= sp68;
-                arg0->trans.y_position -= sp64;
-                arg0->trans.z_position -= sp60;
-
-                sp68 *= sp80;
-                sp60 *= sp80;
-                if (arg0->behaviorId == 1) {
-                    sp50 = arg0->racer;
-                    var_v0 = FALSE;
-                    if (sp50->vehicleID == 1) {
-                        if (sp9C > 0.3) {
-                            if (sp9C > 1.0) {
-                                var_v0 = TRUE;
-                            }
-                            if (var_v0) {
-                                arg0->x_velocity *= 0.8;
-                                arg0->z_velocity *= 0.8;
-                            }
-                            if (var_v0) {
-                                sp54->flags |= 0x40;
-                                var_f2 = (arg0->trans.x_position * arg0->z_velocity -
-                                          arg0->trans.z_position * arg0->x_velocity);
-                                var_f2 = (arg1->trans.x_position * arg0->z_velocity -
-                                          arg1->trans.z_position * arg0->x_velocity) -
-                                         var_f2;
-                                sp50->unk1D2 = 7;
-                                if (var_f2 >= 0.0f) {
-                                    sp50->unk120 = arg0->x_velocity * 0.1;
-                                    sp50->unk11C = -arg0->z_velocity * 0.1;
-                                } else {
-                                    sp50->unk120 = -arg0->x_velocity * 0.1;
-                                    sp50->unk11C = arg0->z_velocity * 0.1;
-                                }
-                            }
-                        }
-                    } else {
-                        if (sp9C > 0.3) {
-                            if (sp9C > 1.0) {
-                                var_v0 = 1;
-                            }
-                            arg0->x_velocity -= sp68;
-                            arg0->z_velocity -= sp60;
-                            sp50->velocity = sp9C * 0.25;
-                            sp50->lateral_velocity = 0.0f;
-                        }
-                        if (var_v0) {
-                            sp54->flags |= 0x40;
-                            var_f2 =
-                                arg0->trans.x_position * arg0->z_velocity - arg0->trans.z_position * arg0->x_velocity;
-                            var_f2 = arg1->trans.x_position * arg0->z_velocity -
-                                     arg1->trans.z_position * arg0->x_velocity - var_f2;
-                            if (var_f2 >= 0.0f) {
-                                var_f2 = 2.0f;
-                            } else {
-                                var_f2 = -2.0f;
-                            }
-                            sp50->unk1D2 = 7;
-                            sp50->unk11C = sp50->ox3 * var_f2 * sp50->velocity;
-                            sp50->unk120 = sp50->oz3 * var_f2 * sp50->velocity;
-                        }
-                    }
-                    if (var_v0 && sp50->playerIndex != -1) {
-                        func_80016500(arg0, sp50);
-                    }
-                }
-            } else {
-                sp68 *= 0.5;
-                sp64 *= 0.5;
-                sp60 *= 0.5;
-                if (sp58->pushForce != 0) {
-                    arg0->trans.x_position -= sp68;
-                    arg0->trans.y_position -= sp64;
-                    arg0->trans.z_position -= sp60;
-                }
-                arg1->trans.x_position += sp68;
-                arg1->trans.y_position += sp64;
-                arg1->trans.z_position += sp60;
-
-                sp68 *= sp80;
-                sp60 *= sp80;
-                if (arg0->behaviorId == 1 && arg1->behaviorId == 1) {
-                    sp90 = 1.0f;
-                    sp90 += (f32) (sp58->pushForce - sp54->pushForce) * 0.3;
-
-                    sp50 = arg0->racer;
-                    sp4C = arg1->racer;
-
-                    if (sp50->shieldType != 0 && sp4C->shieldType == 0) {
-                        sp4C->spinout_timer = sp50->shieldType;
-                    }
-                    if (sp4C->shieldType != 0 && sp50->shieldType == 0) {
-                        sp50->spinout_timer = sp4C->shieldType;
-                    }
-
-                    var_v0 = FALSE;
-                    if (sp50->vehicleID == 1) {
+            sp50 = arg0->racer;
+            var_v0 = FALSE;
+            if (sp50->vehicleID == 1) {
+                if (sp9C > 0.3) {
+                    if (sp9C > 1.0) {
                         var_v0 = TRUE;
-                    } else if (sp9C > 0.1) {
-                        var_v0 = TRUE;
-                        sp68 *= 0.5;
-                        sp60 *= 0.5;
                     }
-
                     if (var_v0) {
-                        if (sp58->pushForce != 0) {
-                            temp_f0_3 = 2.0 - sp90;
-                            arg0->x_velocity -= sp68 * temp_f0_3;
-                            arg0->z_velocity -= sp60 * temp_f0_3;
-                            func_80016500(arg0, sp50);
+                        arg0->x_velocity *= 0.8;
+                        arg0->z_velocity *= 0.8;
+                    }
+                    if (var_v0) {
+                        sp54->flags |= 0x40;
+                        var_f2 =
+                            (arg0->trans.x_position * arg0->z_velocity - arg0->trans.z_position * arg0->x_velocity);
+                        var_f2 =
+                            (arg1->trans.x_position * arg0->z_velocity - arg1->trans.z_position * arg0->x_velocity) -
+                            var_f2;
+                        sp50->unk1D2 = 7;
+                        if (var_f2 >= 0.0f) {
+                            sp50->unk120 = arg0->x_velocity * 0.1;
+                            sp50->unk11C = -arg0->z_velocity * 0.1;
+                        } else {
+                            sp50->unk120 = -arg0->x_velocity * 0.1;
+                            sp50->unk11C = arg0->z_velocity * 0.1;
                         }
-                        arg1->x_velocity += sp68 * sp90;
-                        arg1->z_velocity += sp60 * sp90;
-                        func_80016500(arg1, sp4C);
                     }
                 }
+            } else {
+                if (sp9C > 0.3) {
+                    if (sp9C > 1.0) {
+                        var_v0 = 1;
+                    }
+                    arg0->x_velocity -= sp68;
+                    arg0->z_velocity -= sp60;
+                    sp50->velocity = sp9C * 0.25;
+                    sp50->lateral_velocity = 0.0f;
+                }
+                if (var_v0) {
+                    sp54->flags |= 0x40;
+                    var_f2 = arg0->trans.x_position * arg0->z_velocity - arg0->trans.z_position * arg0->x_velocity;
+                    var_f2 =
+                        arg1->trans.x_position * arg0->z_velocity - arg1->trans.z_position * arg0->x_velocity - var_f2;
+                    if (var_f2 >= 0.0f) {
+                        var_f2 = 2.0f;
+                    } else {
+                        var_f2 = -2.0f;
+                    }
+                    sp50->unk1D2 = 7;
+                    sp50->unk11C = sp50->ox3 * var_f2 * sp50->velocity;
+                    sp50->unk120 = sp50->oz3 * var_f2 * sp50->velocity;
+                }
+            }
+            if (var_v0 && sp50->playerIndex != -1) {
+                func_80016500(arg0, sp50);
+            }
+            return;
+        }
+
+        sp68 *= 0.5;
+        sp64 *= 0.5;
+        sp60 *= 0.5;
+        if (sp58->pushForce != 0) {
+            arg0->trans.x_position -= sp68;
+            arg0->trans.y_position -= sp64;
+            arg0->trans.z_position -= sp60;
+        }
+        arg1->trans.x_position += sp68;
+        arg1->trans.y_position += sp64;
+        arg1->trans.z_position += sp60;
+
+        sp68 *= sp80;
+        sp60 *= sp80;
+        if (arg0->behaviorId == 1 && arg1->behaviorId == 1) {
+            sp90 = 1.0f;
+            sp90 += (f32) (sp58->pushForce - sp54->pushForce) * 0.3;
+
+            sp50 = arg0->racer;
+            sp4C = arg1->racer;
+
+            if (sp50->shieldType != 0 && sp4C->shieldType == 0) {
+                sp4C->spinout_timer = sp50->shieldType;
+            }
+            if (sp4C->shieldType != 0 && sp50->shieldType == 0) {
+                sp50->spinout_timer = sp4C->shieldType;
+            }
+
+            var_v0 = FALSE;
+            if (sp50->vehicleID == 1) {
+                var_v0 = TRUE;
+            } else if (sp9C > 0.1) {
+                var_v0 = TRUE;
+                sp68 *= 0.5;
+                sp60 *= 0.5;
+            }
+
+            if (var_v0) {
+                if (sp58->pushForce != 0) {
+                    temp_f0_3 = 2.0 - sp90;
+                    arg0->x_velocity -= sp68 * temp_f0_3;
+                    arg0->z_velocity -= sp60 * temp_f0_3;
+                    func_80016500(arg0, sp50);
+                }
+                arg1->x_velocity += sp68 * sp90;
+                arg1->z_velocity += sp60 * sp90;
+                func_80016500(arg1, sp4C);
             }
         }
     }
@@ -5176,275 +5182,162 @@ void obj_collision_transform(Object *obj) {
     colData->collidedObj = NULL;
 }
 
-// https://decomp.me/scratch/Lxwa8
-#ifdef NON_EQUIVALENT
-s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 *arg5, s8 *surface) {
+// https://decomp.me/scratch/RBmJV
+#ifdef NON_MATCHING
+s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, f32 *arg5, s8 *surface) {
+    ModelInstance *modInst;
     s32 sp170;
     s32 sp16C;
     s32 sp168;
+    s32 j; // fp // sp164
     s32 sp160;
-    Object *otherObj;      // sp158
-    ObjectModel *objModel; // sp154
+    f32 dist; // sp15C
+    Object *sp158;
+    ObjectModel *sp154;
+    f32 temp;
     unk800179D0 *sp14C;
-    f32 sp13C;
-    f32 sp12C;
-    f32 sp11C;
-    f32 *sp100;
-    f32 *spF0;
-    f32 *spE0;
+    f32 sp13C[4];
+    f32 sp12C[4];
+    f32 sp11C[4];
+    s32 i;
+    ObjectCollision *collision;
+    s32 tempv0;
+    f32 sp100[4];
+    f32 spF0[4];
+    f32 spE0[4];
     MtxF *spDC;
-    s32 spB8;
-    s32 *spB4;
-    f32 *sp8C;
-    s32 *sp88;
-    Object *temp_a1;
-    Object *temp_v0;
-    ObjectInteraction *temp_v1;
-    ObjectCollision *temp_v0_2;
-    ObjectCollision *temp_v0_5;
-    Vec3f *var_s0_2;
-    f32 temp_f0;
-    f32 temp_f0_2;
-    f32 temp_f14;
-    f32 temp_f2;
-    f32 var_f0;
-    f32 var_f2;
-    f32 *temp_v1_2;
-    f32 *var_s1_2;
-    f32 *var_s1_3;
-    f32 *var_s2_2;
-    f32 *var_s2_3;
-    f32 *var_s3;
-    f32 *var_s3_2;
-    f32 *var_s4;
-    f32 *var_s4_2;
-    f32 *var_s5;
-    f32 *var_s5_2;
-    f32 *var_s6;
-    f32 *var_s6_2;
-    f32 *var_s7;
-    f32 *var_s7_2;
-    f32 *var_v1;
-    s32 temp_f16;
-    s32 temp_t0;
-    s32 temp_t2;
-    s32 temp_t2_2;
-    s32 temp_t6;
-    s32 temp_t7;
-    s32 temp_v0_4;
-    s32 temp_v0_6;
-    s32 temp_v0_7;
-    s32 var_a3;
-    s32 var_fp;
-    s32 var_fp_2;
-    s32 var_fp_3;
-    s32 var_s1;
-    s32 var_s2;
-    s32 var_t0;
-    s32 var_t0_2;
-    s32 *var_v0;
-    unk800179D0 *temp_v0_3;
-    unk800179D0 *var_s0;
-    unk800179D0 *temp_s0;
+    s32 spB4[10];
+    f32 sp8C[10];
 
     sp160 = 0;
+
+    for (sp170 = 0; sp170 < gCollisionObjectCount; sp170++) {
+        sp158 = gCollisionObjects[sp170];
+        modInst = sp158->modelInstances[sp158->modelIndex];
+        sp154 = modInst->objModel;
+
+        temp = sp158->trans.x_position - obj->trans.x_position;
+        dist = sqrtf(
+            (temp) * (temp) +
+            (sp158->trans.y_position - obj->trans.y_position) * (sp158->trans.y_position - obj->trans.y_position) +
+            (sp158->trans.z_position - obj->trans.z_position) * (sp158->trans.z_position - obj->trans.z_position));
+
+        j = dist;
+        if (sp158->interactObj->flags & 0x20) {
+            j >>= 3;
+        }
+        if (j > 255) {
+            j = 255;
+        }
+        if (sp158->interactObj->distance > j) {
+            sp158->interactObj->distance = j;
+            sp158->interactObj->obj = obj;
+        }
+
+        if (dist - 25.0f < sp154->unk3C * sp158->trans.scale) {
+            spB4[sp160] = sp170;
+            sp8C[sp160] = dist;
+
+            // clang-format off
+            for (i = sp160; i > 0 && sp8C[i - 1] < sp8C[i]; i--) {\
+                temp = sp8C[i];\
+                sp16C = spB4[i];\
+                sp8C[i] = sp8C[i - 1];\
+                spB4[i] = spB4[i - 1];\
+                sp8C[i - 1] = temp;
+                spB4[i - 1] = sp16C;
+            }
+            // clang-format on
+
+            sp160++;
+        }
+    }
+
+    sp168 = 0;
     sp170 = 0;
-    if (gCollisionObjectCount > 0) {
-        var_s2 = 0;
-        do {
-            temp_v0 = *(gCollisionObjects + var_s2);
-            objModel = temp_v0->modelInstances[temp_v0->modelIndex]->objModel;
-            temp_f14 = temp_v0->trans.x_position - obj->trans.x_position;
-            temp_f0 = temp_v0->trans.y_position - obj->trans.y_position;
-            temp_f2 = temp_v0->trans.z_position - obj->trans.z_position;
-            otherObj = temp_v0;
-            temp_f0_2 = sqrtf((temp_f14 * temp_f14) + (temp_f0 * temp_f0) + (temp_f2 * temp_f2));
-            temp_v1 = otherObj->interactObj;
-            temp_f16 = (s32) temp_f0_2;
-            var_fp = temp_f16;
-            if (temp_v1->flags & 0x20) {
-                var_fp = temp_f16 >> 3;
+    while (sp170 < sp160) {
+        sp158 = gCollisionObjects[spB4[sp170]];
+        modInst = sp158->modelInstances[sp158->modelIndex];
+        sp154 = modInst->objModel;
+        collision = sp158->collisionData;
+#ifdef AVOID_UB
+        spDC = &collision->matrices[((sp158->collisionData->mtxFlip + 1) & 1)];
+#else
+        spDC = (MtxF *) &collision->_matrices[((sp158->collisionData->mtxFlip + 1) & 1) << 1];
+#endif
+
+        sp14C = func_8001790C((u32 *) obj, (u32 *) sp158);
+        if (sp14C != NULL) {
+            for (i = 0, j = 0; j < arg1; j++, i += 3) {
+                sp13C[j] = sp14C->unk0C[i + 0];
+                sp12C[j] = sp14C->unk0C[i + 1];
+                sp11C[j] = sp14C->unk0C[i + 2];
+                mtxf_transform_point(spDC, arg4[i], arg4[i + 1], arg4[i + 2], &sp100[j], &spF0[j], &spE0[j]);
             }
-            var_s2 += 4;
-            if (var_fp >= 0x100) {
-                var_fp = 0xFF;
+        } else {
+            for (i = 0, j = 0; j < arg1; j++, i += 3) {
+                mtxf_transform_point(spDC, arg3[i], arg3[i + 1], arg3[i + 2], &sp13C[j], &sp12C[j], &sp11C[j]);
             }
-            if (var_fp < (s32) temp_v1->distance) {
-                temp_v1->distance = (u8) var_fp;
-                otherObj->interactObj->obj = obj;
+        }
+
+        for (i = 0, j = 0; j < arg1; j++, i += 3) {
+            mtxf_transform_point(spDC, arg4[i], arg4[i + 1], arg4[i + 2], &sp100[j], &spF0[j], &spE0[j]);
+        }
+
+        arg2[0] = 0;
+        tempv0 = func_80017A18(sp154, arg1, arg2, sp13C, sp12C, sp11C, sp100, spF0, spE0, arg5, surface,
+                               1.0 / sp158->trans.scale);
+        if (tempv0 != 0) {
+
+            // @fake
+            if (!j) {}
+
+            sp158->collisionData->collidedObj = obj;
+        }
+
+        if (D_8011AD24[0] == 0) {
+            sp14C = func_80017978(obj, sp158);
+        }
+
+#ifdef AVOID_UB
+        spDC = &sp158->collisionData->matrices[(sp158->collisionData->mtxFlip + 2)];
+#else
+        spDC = (MtxF *) &sp158->collisionData->_matrices[(sp158->collisionData->mtxFlip + 2) << 1];
+#endif
+
+        // @fake
+        if (sp158) {}
+
+        sp16C = 1;
+        for (i = 0, j = 0; j < arg1; j++, i += 3, sp16C <<= 1) {
+            if (sp14C != NULL) {
+                sp14C->unk0C[i + 0] = sp100[j];
+                sp14C->unk0C[i + 1] = spF0[j];
+                sp14C->unk0C[i + 2] = spE0[j];
             }
-            temp_v1_2 = &(&sp8C[0])[sp160];
-            if ((temp_f0_2 - 25.0f) < (objModel->unk3C * otherObj->trans.scale)) {
-                (&spB4[0])[sp160] = sp170;
-                temp_v1_2[0] = temp_f0_2;
-                if (sp160 > 0) {
-                    var_v1 = &(&sp8C[0])[sp160];
-                    if (temp_v1_2[-1] < temp_v1_2[0]) {
-                        var_f0 = var_v1[-1];
-                        var_f2 = var_v1[0];
-                        var_v0 = &(&spB4[0])[sp160];
-                    loop_12:
-                        temp_t0 = var_v0[0];
-                        temp_t7 = var_v0[-1];
-                        var_v0--;
-                        var_v1[0] = var_f0;
-                        var_v1[-1] = var_f2;
-                        var_v1--;
-                        var_v0[0] = temp_t0;
-                        var_v0[1] = temp_t7;
-                        if ((u32) var_v0 >= (u32) &spB8) {
-                            var_f0 = var_v1[-1];
-                            var_f2 = var_v1[0];
-                            if (var_f0 < var_f2) {
-                                goto loop_12;
-                            }
-                        }
-                    }
-                }
-                sp160 += 1;
+            if (tempv0 & sp16C) {
+                mtxf_transform_point(spDC, sp100[j], spF0[j], spE0[j], &arg4[i + 0], &arg4[i + 1], &arg4[i + 2]);
             }
-            temp_t2 = sp170 + 1;
-            sp170 = temp_t2;
-        } while (temp_t2 < gCollisionObjectCount);
-        sp170 = 0;
+        }
+
+        sp168 |= tempv0;
+        sp170++;
     }
-    var_a3 = 0;
-    if (sp160 > 0) {
-        sp88 = &spB4[0];
-        sp168 = 0;
-        do {
-            temp_a1 = gCollisionObjects[*sp88];
-            var_s1 = 0;
-            objModel = temp_a1->modelInstances[temp_a1->modelIndex]->objModel;
-            temp_v0_2 = temp_a1->collisionData;
-            var_fp_2 = 0;
-            sp16C = 1;
-            spDC = &temp_a1->collisionData->matrices[(((temp_a1->collisionData->mtxFlip + 1) & 1) << 6)];
-            otherObj = temp_a1;
-            temp_v0_3 = func_8001790C((u32 *) obj, (u32 *) temp_a1);
-            var_t0 = 1;
-            sp14C = temp_v0_3;
-            if (temp_v0_3 != NULL) {
-                var_s2_2 = &sp13C;
-                var_s0 = temp_v0_3;
-                if (arg1 > 0) {
-                    var_s1_2 = arg4;
-                    var_s3 = &sp12C;
-                    var_s4 = &sp11C;
-                    var_s5 = sp100;
-                    var_s6 = spF0;
-                    var_s7 = spE0;
-                    do {
-                        *var_s2_2 = var_s0->unk0C[0];
-                        *var_s3 = var_s0->unk0C[1];
-                        *var_s4 = var_s0->unk0C[2];
-                        sp16C = var_t0;
-                        mtxf_transform_point(spDC, var_s1_2[0], var_s1_2[1], var_s1_2[2], var_s5, var_s6, var_s7);
-                        var_fp_2 += 1;
-                        var_s2_2 += 4;
-                        var_s3 += 4;
-                        var_s4 += 4;
-                        var_s5 += 4;
-                        var_s6 += 4;
-                        var_s7 += 4;
-                        var_s0 += 0xC;
-                        var_s1_2 += 0xC;
-                    } while (var_fp_2 != arg1);
-                    var_s1 = 0;
-                    var_fp_2 = 0;
-                }
-            } else {
-                var_s2_3 = &sp13C;
-                var_s3_2 = &sp12C;
-                if (arg1 > 0) {
-                    var_s0_2 = arg3;
-                    var_s4_2 = &sp11C;
-                    do {
-                        sp16C = var_t0;
-                        mtxf_transform_point(spDC, var_s0_2->f[0], var_s0_2->f[1], var_s0_2->f[2], var_s2_3, var_s3_2,
-                                             var_s4_2);
-                        var_fp_2 += 1;
-                        var_s2_3 += 4;
-                        var_s3_2 += 4;
-                        var_s4_2 += 4;
-                        var_s0_2 += 0xC;
-                    } while (var_fp_2 != arg1);
-                    var_s1 = 0;
-                    var_fp_2 = 0;
-                }
-            }
-            var_s5_2 = sp100;
-            var_s6_2 = spF0;
-            if (arg1 > 0) {
-                var_s1_2 = arg4;
-                var_s7_2 = spE0;
-                do {
-                    sp16C = var_t0;
-                    mtxf_transform_point(spDC, var_s1_2[0], var_s1_2[1], var_s1_2[2], var_s5_2, var_s6_2, var_s7_2);
-                    var_fp_2 += 1;
-                    var_s5_2 += 4;
-                    var_s6_2 += 4;
-                    var_s7_2 += 4;
-                    var_s1_2 += 0xC;
-                } while (var_fp_2 != arg1);
-                var_s1 = 0;
-            }
-            *arg2 = 0;
-            sp16C = var_t0;
-            temp_v0_4 = func_80017A18(objModel, arg1, arg2, &sp13C, &sp12C, &sp11C, sp100, spF0, spE0, arg5, surface,
-                                      (f32) (1.0 / (f64) otherObj->trans.scale));
-            var_t0_2 = sp16C;
-            if (temp_v0_4 != 0) {
-                otherObj->collisionData->collidedObj = obj;
-            }
-            var_fp_3 = 0;
-            if (*D_8011AD24 == 0) {
-                sp14C = func_80017978((s32) obj, (s32) otherObj);
-            }
-            temp_v0_5 = otherObj->collisionData;
-            spDC = &temp_a1->collisionData->matrices[(temp_a1->collisionData->mtxFlip + 2) << 6];
-            if (arg1 > 0) {
-                do {
-                    if (sp14C != NULL) {
-                        temp_v0_6 = var_fp_3;
-                        temp_s0 = sp14C + (var_s1 * 4);
-                        sp14C->unk0C[var_s1] = sp100[temp_v0_6];
-                        temp_s0->unk0C[2] = (f32) spF0[temp_v0_6];
-                        temp_s0->unk0C[3] = (f32) spE0[temp_v0_6];
-                    }
-                    temp_v0_7 = var_fp_3 * 4;
-                    if (temp_v0_4 & var_t0_2) {
-                        sp16C = var_t0_2;
-                        mtxf_transform_point(spDC, sp100[temp_v0_7], spF0[temp_v0_7], spE0[temp_v0_7], &arg4[var_s1],
-                                             &arg4[var_s1 + 1], &arg4[var_s1 + 2]);
-                    }
-                    var_fp_3 += 1;
-                    var_t0_2 *= 2;
-                    var_s1 += 3;
-                } while (var_fp_3 != arg1);
-            }
-            temp_t6 = sp168 | temp_v0_4;
-            temp_t2_2 = sp170 + 1;
-            sp168 = temp_t6;
-            sp88 += 4;
-            sp170 = temp_t2_2;
-        } while (temp_t2_2 != sp160);
-        var_a3 = temp_t6;
+
+    arg2[0] = 0;
+    if (sp168 & 1) {
+        arg2[0]++;
     }
-    *arg2 = 0;
-    if (var_a3 & 1) {
-        *arg2 = 1;
+    if (sp168 & 2) {
+        arg2[0]++;
     }
-    if (var_a3 & 2) {
-        *arg2 += 1;
+    if (sp168 & 4) {
+        arg2[0]++;
     }
-    if (var_a3 & 4) {
-        *arg2 += 1;
+    if (sp168 & 8) {
+        arg2[0]++;
     }
-    if (var_a3 & 8) {
-        *arg2 += 1;
-    }
-    return var_a3;
+    return sp168;
 }
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017248.s")
@@ -5494,125 +5387,134 @@ u32 func_800179D0(void) {
 #endif
 }
 
-// https://decomp.me/scratch/dzU8Y
+// https://decomp.me/scratch/xNAlf
 #ifdef NON_EQUIVALENT
 s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, f32 *arg5, f32 *arg6, f32 *arg7,
-                  f32 *arg8, f32 *arg9, s8 *surface, f32 argB) {
-    s32 pad[4];
-    s32 var_a2;
+                  f32 *arg8, f32 *arg9, s8 *argA, f32 argB) {
+    f32 *planes;
+    s32 i, j, k;
+    f32 sum1, sum2;
+    f32 t;
+    u32 var_a2; // u32 required here to force loading 1 instead of a3 into it
+    s32 counter;
+    s32 spF8; // f8
     s32 var_s6;
-    s32 i; // s1
-    s32 j;
-    s32 k;
-    s32 spF8;
-    s32 var_t4;
-    f32 *var_a0;
-    f32 spE4;
-    f32 spDC;
-    f32 spD8;
-    f32 spC0;
-    f32 spBC;
-    f32 spB4;
-    f32 spA4;
-    f32 spA0;
-    f32 sp9C;
-    f32 sp74;
-    f32 sp70;
-    f32 sp68;
-    f32 sp64;
-    f32 sp60;
-    f32 temp_f0;
-    f32 temp_f10;
-    f32 temp_f12;
-    f32 temp_f22;
-    f32 temp_f26;
-    f32 var_f2;
-    f32 var_f30;
-    f32 *temp_t0;
-    f32 *temp_v0;
+    f32 A2, C2;
+    f32 A; // e4
+    f32 B; // e0
+    f32 C; // dc
+    f32 D; // d8
+    f32 A1, B1, C1, D1;
     s32 redoLoop;
-    s32 pad1;
+    f32 spC0; // c0
+    f32 x1;   // bc
+    f32 y1;
+    f32 z1; // b4
+    f32 x3, y3, z3;
+    f32 x2; // a4
+    f32 y2; // a0
+    f32 z2; // 9c
+    CollisionNode *node;
+    f32 dx, dy, dz;
+    s32 triIndex;
+    s32 closestTri;
 
     spF8 = 0;
-    temp_t0 = arg0->collisionPlanes;
+    planes = arg0->collisionPlanes;
     var_s6 = 1;
+
     for (i = 0; i < arg1; i++) {
-        spBC = arg6[i];
-        var_f30 = arg7[i];
-        spB4 = arg8[i];
-        spA4 = arg3[i];
-        spA0 = arg4[i];
-        sp9C = arg5[i];
+        x1 = arg6[i];
+        y1 = arg7[i];
+        z1 = arg8[i];
         spC0 = arg9[i] * argB;
-        var_t4 = 0;
+
+        counter = 0;
         do {
             redoLoop = FALSE;
+            x2 = arg3[i];
+            y2 = arg4[i];
+            z2 = arg5[i];
+
             for (j = 0; j < arg0->collisionFacetCount; j++) {
-                temp_v0 = &temp_t0[arg0->collisionFacets[j].basePlaneIndex];
-                temp_f26 = temp_v0[1];
-                sp74 = temp_v0[0];
-                temp_f12 = temp_v0[2];
-                temp_f10 = temp_v0[3];
-                spE4 = sp74;
-                spDC = temp_f12;
-                sp64 = spA0;
-                spD8 = temp_f10;
-                sp70 = spDC * spB4;
-                sp74 = sp74 * spBC;
-                temp_f0 = ((sp74 * spA4) + (temp_f26 * spA0) + (temp_f12 * sp9C) + temp_f10) - spC0;
-                sp60 = spA4;
-                sp68 = sp9C;
-                temp_f22 = (sp74 + (temp_f26 * var_f30) + sp70 + spD8) - spC0;
-                if (-0.10 <= temp_f0) {
-                    var_a2 = 1;
-                    if (temp_f22 < -0.1) {
-                        if (temp_f0 != temp_f22) {
-                            var_f2 = temp_f0 / (temp_f0 - temp_f22);
+                node = &arg0->collisionFacets[j];
+                triIndex = node->colPlaneIndex;
+
+                A = planes[4 * triIndex + 0];
+                B = planes[4 * triIndex + 1];
+                C = planes[4 * triIndex + 2];
+                D = planes[4 * triIndex + 3];
+
+                A2 = A * x2;
+                sum1 = A2;
+                sum1 += B * y2;
+                C2 = C * z2;
+                sum1 += C2;
+                sum1 = D + sum1;
+                sum1 -= spC0;
+
+                sum2 = planes[4 * triIndex + 0] * x1;
+                sum2 += planes[4 * triIndex + 1] * y1;
+                sum2 += planes[4 * triIndex + 2] * z1;
+                sum2 += D;
+                sum2 -= spC0;
+                if (sum1 >= -0.1 && sum2 < -0.1) {
+                    if (sum1 != sum2) {
+                        t = sum1 / (sum1 - sum2);
+                    } else {
+                        t = 0.0f;
+                    }
+                    x3 = (x1 - x2) * t + x2;
+                    y3 = (y1 - y2) * t + y2;
+                    z3 = (z1 - z2) * t + z2;
+                    var_a2 = TRUE;
+
+                    for (k = 0; k < 3 && var_a2 == TRUE; k++) {
+                        closestTri = node->closestTri[k];
+
+                        A1 = planes[4 * closestTri + 0] * x3;
+                        B1 = planes[4 * closestTri + 1] * y3;
+                        C1 = planes[4 * closestTri + 2] * z3;
+                        D1 = planes[4 * closestTri + 3];
+
+                        if (A1 + B1 + C1 + D1 > 4.0f) {
+                            var_a2 = FALSE;
+                        }
+                    }
+
+                    if (var_a2) {
+                        redoLoop = TRUE;
+                        if (B > 0.707) {
+                            y1 = (spC0 - (A2 + C2 + D)) / B;
                         } else {
-                            var_f2 = 0.0f;
+                            x1 -= sum2 * A;
+                            y1 -= sum2 * B;
+                            z1 -= sum2 * C;
                         }
-
-                        for (k = 0; (k < 3) && (var_a2 == 1); k++) {
-                            temp_v0 = &temp_t0[arg0->collisionFacets->edgeBisectorPlane[k]];
-                            if (((temp_v0[0] * (((spBC - sp60) * var_f2) + spA4)) +
-                                 (temp_v0[1] * (((var_f30 - sp64) * var_f2) + spA0)) +
-                                 (temp_v0[2] * (((spB4 - sp68) * var_f2) + sp9C)) + temp_v0[3]) > 4.0f) {
-                                var_a2 = 0;
-                            }
+                        counter++;
+                        if (counter > 10) {
+                            redoLoop = FALSE;
+                            x1 = x2;
+                            y1 = y2;
+                            z1 = z2;
                         }
-
-                        if (var_a2) {
-                            redoLoop = TRUE;
-                            if (temp_f26 > 0.707) {
-                                var_f30 = (spC0 - (sp74 + sp70 + spD8)) / temp_f26;
-                            } else {
-                                spBC -= temp_f22 * spE4;
-                                var_f30 -= temp_f22 * temp_f26;
-                                spB4 -= temp_f22 * spDC;
-                            }
-                            var_t4++;
-                            if (var_t4 >= 0xB) {
-                                var_f30 = spA0;
-                                redoLoop = 0;
-                                spBC = spA4;
-                                spB4 = sp9C;
-                            }
-                            surface[i] = 0;
-                            arg6[i] = spBC;
-                            arg7[i] = var_f30;
-                            arg8[i] = spB4;
-                            j = arg0->collisionFacetCount;
-                        }
+                        argA[i] = 0;
+                        arg6[i] = x1;
+                        arg7[i] = y1;
+                        arg8[i] = z1;
+                        j = arg0->collisionFacetCount; // break
                     }
                 }
             }
         } while (redoLoop);
-        if (var_t4 > 0) {
+
+        if (counter > 0) {
             arg2[0]++;
             spF8 |= var_s6;
         }
         var_s6 <<= 1;
     }
+
     return spF8;
 }
 #else
@@ -5949,279 +5851,198 @@ Object *find_taj_object(void) {
     return NULL;
 }
 
-// https://decomp.me/scratch/hcneX
-#ifdef NON_EQUIVALENT
 // Handles MidiFadePoint, MidiFade, and MidiSetChannel objects?
-void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate) {
-    s32 spF4;
-    f32 spC0;
-    void *spBC;
-    s32 sp98;
-    f32 sp78;
-    f32 sp74;
-    f32 sp70;
+void func_80018CE0(Object *racerObj, f32 arg1, f32 arg2, f32 arg3, s32 arg4) {
     f32 temp_f0;
-    f32 temp_f0_2;
-    f32 temp_f0_3;
-    f32 temp_f0_4;
-    f32 temp_f0_5;
-    f32 temp_f0_6;
-    f32 temp_f0_7;
-    f32 temp_f12;
-    f32 temp_f12_2;
-    f32 temp_f14;
-    f32 temp_f14_2;
-    f32 temp_f14_3;
-    f32 temp_f14_4;
-    f32 temp_f16;
-    f32 temp_f18;
-    f32 temp_f20;
+    s32 pad_spF8;
+    s32 spF4;
+    s32 pad_spF0;
     f32 temp_f22;
-    f32 temp_f24;
-    f32 temp_f26;
-    f32 temp_f28;
+    s32 pad_spE8;
+    s32 pad_spE4;
+    s32 pad_spE0;
     f32 temp_f2;
-    f32 temp_f2_2;
-    f32 temp_f2_3;
-    f32 temp_f2_4;
-    f32 temp_f2_5;
-    f32 temp_f30;
-    f32 var_f12;
-    // f32 var_f6;
-    f32 var_f8;
-    s16 behaviorId;
+    s32 pad_spD8;
+    f32 tempF2;
     s32 temp_f10;
-    s32 temp_s0_2;
-    s32 temp_s0_3;
-    s32 temp_s0_4;
-    s32 temp_s0_5;
-    s32 temp_s0_6;
-    s32 temp_t3;
     s32 temp_t3_2;
-    s32 temp_t4;
-    s32 temp_t8;
-    Object_MidiFade *temp_v1_2;
-    Object_MidiFade *temp_v1_3;
-    s32 var_s1;
-    s32 var_s1_2;
+    s32 i; // s1
     s32 var_s2;
-    s8 temp_t2_2;
+    f32 spC0;
+    Object_MidiFadePoint *midiFadePoint; // spBC
+    f32 tempF;
+    u16 temp_t4;
     s8 var_v0_2;
+    u8 var_v0_u;
     s8 var_v1;
-    u16 temp_t2;
-    u16 temp_v0_2;
-    s32 var_v0;
-    u8 temp_v0_3;
-    u8 temp_v0_5;
-    u8 temp_v0_6;
     Object *obj;
     Object_MidiFade *midiFade;
-    Object_MidiFadePoint *midiFadePoint;
-    Object_MidiFadePoint *midiFadePoint2;
     Object_MidiChannelSet *midiChannelSet;
+    Object_Racer *racer;
 
-    if (racerObj->racer->playerIndex == 0) {
-        if (cam_get_viewport_layout() == 0) {
-            spF4 = gObjectListStart;
-            if (gObjectListStart < gObjectCount) {
-                sp98 = gObjectListStart * 4;
-                do {
-                    obj = *(gObjPtrList + sp98);
-                    if (!(obj->trans.flags & 0x8000)) {
-                        behaviorId = obj->behaviorId;
-                        if (behaviorId == BHV_MIDI_FADE_POINT) {
-                            temp_f0 = racerObj->trans.x_position - obj->trans.x_position;
-                            temp_f2 = racerObj->trans.y_position - obj->trans.y_position;
-                            temp_f14 = racerObj->trans.z_position - obj->trans.z_position;
-                            temp_f0_2 = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
-                            midiFadePoint = obj->midi_fade_point;
-                            temp_f2_2 = temp_f0_2;
-                            temp_t2 = midiFadePoint->unk2;
-                            var_f8 = (f32) temp_t2;
-                            if ((s32) temp_t2 < 0) {
-                                var_f8 += 4294967296.0f;
-                            }
-                            if (temp_f0_2 < var_f8) {
-                                spBC = midiFadePoint;
-                                spC0 = temp_f2_2;
-                                var_s1 = 0;
-                                midiFadePoint2 = midiFadePoint;
-                                if (midiFadePoint->unk1C == music_current_sequence()) {
-                                    temp_v0_2 = midiFadePoint->unk0;
-                                    var_f12 = (f32) temp_v0_2;
-                                    if ((s32) temp_v0_2 < 0) {
-                                        var_f12 += 4294967296.0f;
-                                    }
-                                    if (temp_f2_2 <= var_f12) {
-                                        var_s2 = 0;
-                                    } else {
-                                        var_s2 = (s32) ((127.0f * (temp_f2_2 - var_f12)) /
-                                                        (f32) (midiFadePoint->unk2 - temp_v0_2));
-                                    }
-                                    do {
-                                        temp_v0_3 = midiFadePoint2->unkC;
-                                        if (temp_v0_3 != 1) {
-                                            temp_s0_2 = var_s1 & 0xFF;
-                                            if (temp_v0_3 != 2) {
+    racer = racerObj->racer;
+    if (racer->playerIndex != 0) {
+        return;
+    }
 
-                                            } else if ((music_channel_fade(temp_s0_2 & 0xFF) > 0) &&
-                                                       (music_channel_active(var_s1) == 0)) {
-                                                music_channel_fade_set(temp_s0_2 & 0xFF, var_s2 & 0xFF);
-                                            }
-                                        } else {
-                                            temp_s0_3 = var_s1 & 0xFF;
-                                            if (var_s2 >= 0x7B) {
-                                                music_channel_off(var_s1 & 0xFF);
-                                            } else {
-                                                music_channel_fade_set(temp_s0_3 & 0xFF, (0x7F - var_s2) & 0xFF);
-                                                music_channel_on(temp_s0_3 & 0xFF);
-                                            }
-                                        }
-                                        var_s1 += 1;
-                                        midiFadePoint2 += 1;
-                                    } while (var_s1 != 0x10);
-                                }
-                            }
-                        } else if (behaviorId == BHV_MIDI_FADE) {
-                            midiFade = obj->midi_fade;
-                            temp_f16 = midiFade->unkC;
-                            temp_f30 = temp_f16 * yPos;
-                            temp_f18 = midiFade->unk10;
-                            temp_f12 = midiFade->unk8;
-                            temp_f14_2 = temp_f18 * zPos;
-                            temp_f24 = racerObj->trans.x_position;
-                            temp_f26 = racerObj->trans.y_position;
-                            temp_f20 = midiFade->unk14;
-                            temp_f28 = racerObj->trans.z_position;
-                            sp78 = temp_f14_2;
-                            temp_f0_3 = (temp_f12 * xPos) + temp_f30 + temp_f14_2 + temp_f20;
-                            temp_f2_3 =
-                                (temp_f12 * temp_f24) + (temp_f16 * temp_f26) + (temp_f18 * temp_f28) + temp_f20;
-                            if ((temp_f0_3 > 0.0f) && (temp_f2_3 <= 0.0f)) {
-                                var_v1 = 1;
-                            } else {
-                                var_v1 = 0;
-                                if ((temp_f2_3 > 0.0f) && (temp_f0_3 <= 0.0f)) {
-                                    var_v1 = -1;
-                                }
-                            }
-                            if (var_v1 != 0) {
-                                sp70 = yPos;
-                                temp_f2_4 = temp_f26 - yPos;
-                                sp74 = zPos;
-                                temp_f0_4 = temp_f24 - xPos;
-                                temp_f14_3 = temp_f28 - zPos;
-                                temp_f22 = ((((-temp_f12 * xPos) - temp_f30) - sp78) - temp_f20) /
-                                           ((temp_f12 * temp_f0_4) + (temp_f16 * temp_f2_4) + (temp_f18 * temp_f14_3));
-                                temp_f12_2 = (temp_f22 * temp_f0_4) + xPos;
-                                if ((midiFade->unk18 <= temp_f12_2) && (temp_f12_2 <= midiFade->unk24)) {
-                                    temp_f0_5 = (temp_f22 * temp_f2_4) + sp70;
-                                    if (((f32) midiFade->unk1C <= temp_f0_5) && (temp_f0_5 <= midiFade->unk28)) {
-                                        temp_f0_6 = (temp_f22 * temp_f14_3) + sp74;
-                                        if ((midiFade->unk20 <= temp_f0_6) && (temp_f0_6 <= midiFade->unk2C)) {
-                                            midiFade->unk0 = var_v1;
-                                            midiFade->unk1 = 0;
-                                            midiFade->unk4 = 0;
-                                            D_8011AF60[0] = (Object_MidiFade *) midiFade;
-                                        }
-                                    }
-                                }
-                            }
-                        } else if (behaviorId == BHV_MIDI_CHANNEL_SET) {
-                            temp_f0_7 = racerObj->trans.x_position - obj->trans.x_position;
-                            temp_f2_5 = racerObj->trans.y_position - obj->trans.y_position;
-                            temp_f14_4 = racerObj->trans.z_position - obj->trans.z_position;
-                            midiChannelSet = obj->midi_channel_set;
-                            if ((sqrtf((temp_f0_7 * temp_f0_7) + (temp_f2_5 * temp_f2_5) + (temp_f14_4 * temp_f14_4)) <
-                                 (f32) (midiChannelSet->unk2 * 4)) &&
-                                (midiChannelSet->unk0 != music_channel_get_mask()) &&
-                                (midiChannelSet->unk3 == music_current_sequence())) {
-                                music_dynamic_set(midiChannelSet->unk0);
-                            }
+    if (cam_get_viewport_layout() != 0) {
+        return;
+    }
+
+    for (spF4 = gObjectListStart; spF4 < gObjectCount; spF4++) {
+        obj = gObjPtrList[spF4];
+        if (!(obj->trans.flags & 0x8000)) {
+            if (obj->behaviorId == BHV_MIDI_FADE_POINT) {
+                spC0 = sqrtf(((racerObj->trans.x_position - obj->trans.x_position) *
+                              (racerObj->trans.x_position - obj->trans.x_position)) +
+                             ((racerObj->trans.y_position - obj->trans.y_position) *
+                              (racerObj->trans.y_position - obj->trans.y_position)) +
+                             ((racerObj->trans.z_position - obj->trans.z_position) *
+                              (racerObj->trans.z_position - obj->trans.z_position)));
+                midiFadePoint = obj->midi_fade_point;
+                if (spC0 < midiFadePoint->unk2) {
+                    if (midiFadePoint->unk1C == music_current_sequence()) {
+                        if (spC0 <= midiFadePoint->unk0) {
+                            var_s2 = 0;
+                        } else {
+                            spC0 -= midiFadePoint->unk0;
+                            temp_f0 = (midiFadePoint->unk2 - midiFadePoint->unk0);
+                            var_s2 = (127.0f * spC0) / temp_f0;
                         }
-                    }
-                    temp_t3 = spF4 + 1;
-                    sp98 += 4;
-                    spF4 = temp_t3;
-                } while (temp_t3 < gObjectCount);
-            }
-            if (D_8011AF60[0] != 0) {
-                temp_v1_2 = D_8011AF60[0];
-                var_s1_2 = 0;
-                if (temp_v1_2->unk40 == music_current_sequence()) {
-                    temp_v1_2->unk4 += updateRate;
-                    var_v0 = D_8011AF60[0]->unk4;
-                    temp_t4 = (D_8011AF60[0]->unk2 * gVideoRefreshRate) & 0xFFFF;
-                    if (temp_t4 < (s32) var_v0) {
-                        D_8011AF60[0]->unk4 = (u16) temp_t4;
-                        var_v0 = D_8011AF60[0]->unk4;
-                    }
-                    /*
-                    var_f6 = (f32) temp_t4;
-                    if (temp_t4 < 0) {
-                        var_f6 += 4294967296.0f;
-                    }
-                    */
-                    temp_f10 = (s32) (((f32) var_v0 * 254.0f) / temp_t4);
-                    if (temp_f10 < 0xFE) {
-                        D_8011AF60[0]->unk1 = (s8) temp_f10;
-                    } else {
-                        D_8011AF60[0]->unk1 = 0xFE;
-                    }
-                    temp_v1_3 = D_8011AF60[0];
-                    do {
-                        var_v0_2 = temp_v1_3->unk2F[var_s1_2 + 1];
-                        if (temp_v1_3->unk0 == -1) {
-                            var_v0_2 = (s8) (var_v0_2 >> 2);
-                        }
-                        temp_t2_2 = var_v0_2 & 3;
-                        if (temp_t2_2 != 0) {
-                            temp_s0_4 = var_s1_2 & 0xFF;
-                            switch (temp_t2_2) { /* irregular */
+                        for (i = 0; i < 16; i++) {
+                            switch (midiFadePoint->unkC[i]) {
                                 case 1:
-                                    music_channel_on(temp_s0_4 & 0xFF);
-                                    music_channel_fade_set(temp_s0_4 & 0xFF, 0x7FU);
-                                    break;
-                                case 3:
-                                    temp_v0_5 = temp_v1_3->unk1;
-                                    temp_s0_5 = var_s1_2 & 0xFF;
-                                    if ((s32) temp_v0_5 >= 0x80) {
-                                        temp_t3_2 = (temp_v0_5 - 0x7F) & 0xFF;
-                                        music_channel_on(temp_s0_5 & 0xFF);
-                                        if (music_channel_fade(temp_s0_5 & 0xFF) < temp_t3_2) {
-                                            music_channel_fade_set(temp_s0_5 & 0xFF, temp_t3_2 & 0xFF);
-                                        }
+                                    if (var_s2 >= 0x7B) {
+                                        music_channel_off(i);
+                                    } else {
+                                        music_channel_fade_set(i, (0x7F - var_s2));
+                                        music_channel_on(i);
                                     }
                                     break;
                                 case 2:
-                                    temp_v0_6 = temp_v1_3->unk1;
-                                    temp_s0_6 = var_s1_2 & 0xFF;
-                                    if ((s32) temp_v0_6 < 0x7F) {
-                                        temp_t8 = (0x7F - temp_v0_6) & 0xFF;
-                                        if (temp_t8 < music_channel_fade(temp_s0_6 & 0xFF)) {
-                                            music_channel_fade_set(temp_s0_6 & 0xFF, temp_t8 & 0xFF);
-                                        }
-                                    } else {
-                                        music_channel_off(var_s1_2 & 0xFF);
+                                    if ((music_channel_fade(i) > 0) && (music_channel_active(i) == 0)) {
+                                        music_channel_fade_set(i, var_s2);
                                     }
                                     break;
+                                default:
+                                    break;
                             }
-                        } else {
-                            music_channel_off(var_s1_2 & 0xFF);
                         }
-                        var_s1_2 += 1;
-                    } while (var_s1_2 != 0x10);
+                    }
                 }
-                if ((temp_v1_2->unk1 == 0xFE) && (D_8011AF60[0]->unk40 == music_current_sequence())) {
-                    D_8011AF60[0] = 0;
+            } else if (obj->behaviorId == BHV_MIDI_FADE) {
+                midiFade = obj->midi_fade;
+
+                temp_f0 =
+                    (midiFade->unk8 * arg1) + (midiFade->unkC * arg2) + (midiFade->unk10 * arg3) + midiFade->unk14;
+                temp_f2 = (midiFade->unk8 * racerObj->trans.x_position) +
+                          (midiFade->unkC * racerObj->trans.y_position) +
+                          (midiFade->unk10 * racerObj->trans.z_position) + midiFade->unk14;
+                if (temp_f0 > 0.0f && temp_f2 <= 0.0f) {
+                    var_v1 = 1;
+                } else if (temp_f2 > 0.0f && temp_f0 <= 0.0f) {
+                    var_v1 = -1;
+                } else {
+                    var_v1 = 0;
+                }
+                if (var_v1 != 0) {
+                    temp_f0 = racerObj->trans.x_position - arg1;
+                    temp_f2 = racerObj->trans.y_position - arg2;
+
+                    temp_f22 =
+                        (-midiFade->unk8 * arg1 - midiFade->unkC * arg2 - midiFade->unk10 * arg3 - midiFade->unk14) /
+                        (midiFade->unk8 * temp_f0 + midiFade->unkC * temp_f2 +
+                         midiFade->unk10 * (racerObj->trans.z_position - arg3));
+                    tempF = temp_f22 * temp_f0;
+                    if ((midiFade->unk18 <= tempF + arg1) && (tempF + arg1 <= midiFade->unk24)) {
+                        tempF2 = racerObj->trans.z_position - arg3;
+                        if ((midiFade->unk1C <= (temp_f22 * temp_f2) + arg2) &&
+                            ((temp_f22 * temp_f2) + arg2 <= midiFade->unk28)) {
+                            if ((midiFade->unk20 <= (temp_f22 * (tempF2)) + arg3) &&
+                                ((temp_f22 * (tempF2)) + arg3 <= midiFade->unk2C)) {
+                                midiFade->unk0 = var_v1;
+                                midiFade->unk1 = 0;
+                                midiFade->unk4 = 0;
+                                D_8011AF60 = midiFade;
+                            }
+                        }
+                    }
+                }
+            } else if (obj->behaviorId == BHV_MIDI_CHANNEL_SET) {
+                midiChannelSet = obj->midi_channel_set;
+                temp_f0 = sqrtf(((racerObj->trans.x_position - obj->trans.x_position) *
+                                 (racerObj->trans.x_position - obj->trans.x_position)) +
+                                ((racerObj->trans.y_position - obj->trans.y_position) *
+                                 (racerObj->trans.y_position - obj->trans.y_position)) +
+                                ((racerObj->trans.z_position - obj->trans.z_position) *
+                                 (racerObj->trans.z_position - obj->trans.z_position)));
+                var_v0_u = midiChannelSet->unk2;
+                if ((temp_f0 < (var_v0_u * 4)) && (midiChannelSet->unk0 != music_channel_get_mask()) &&
+                    (midiChannelSet->unk3 == music_current_sequence())) {
+                    music_dynamic_set(midiChannelSet->unk0);
                 }
             }
         }
     }
+
+    if (D_8011AF60 == 0) {
+        return;
+    }
+
+    if (D_8011AF60->unk40 == music_current_sequence()) {
+        D_8011AF60->unk4 += arg4;
+        temp_t4 = D_8011AF60->unk2 * gVideoRefreshRate;
+        if (temp_t4 < D_8011AF60->unk4) {
+            D_8011AF60->unk4 = temp_t4;
+        }
+        temp_f10 = (D_8011AF60->unk4 * 254.0f) / temp_t4;
+        if (temp_f10 < 0xFE) {
+            D_8011AF60->unk1 = temp_f10;
+        } else {
+            D_8011AF60->unk1 = 0xFE;
+        }
+        for (i = 0; i < 16; i++) {
+            var_v0_2 = D_8011AF60->unk2F[i];
+            if (D_8011AF60->unk0 == -1) {
+                var_v0_2 >>= 2;
+            }
+            var_v0_2 &= 3;
+            switch (var_v0_2) {
+                case 1:
+                    music_channel_on(i);
+                    music_channel_fade_set(i, 0x7FU);
+                    break;
+                case 0:
+                    music_channel_off(i);
+                    break;
+                case 3:
+                    if (D_8011AF60->unk1 >= 0x80) {
+                        temp_t3_2 = (D_8011AF60->unk1 - 0x7F) & 0xFF;
+                        music_channel_on(i);
+                        if (music_channel_fade(i) < temp_t3_2) {
+                            music_channel_fade_set(i, temp_t3_2);
+                        }
+                    }
+                    break;
+                case 2:
+                    if (D_8011AF60->unk1 < 0x7F) {
+                        temp_t3_2 = (0x7F - D_8011AF60->unk1) & 0xFF;
+                        if (temp_t3_2 < music_channel_fade(i)) {
+                            music_channel_fade_set(i, temp_t3_2);
+                        }
+                    } else {
+                        music_channel_off(i);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    if ((D_8011AF60->unk1 == 0xFE) && (D_8011AF60->unk40 == music_current_sequence())) {
+        D_8011AF60 = 0;
+    }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80018CE0.s")
-#endif
 
 // Rocket Path
 s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,
