@@ -1,13 +1,13 @@
 #include "audiomgr.h"
-#include "memory.h"
-#include "video.h"
-#include "math_util.h"
 #include "asset_loading.h"
+#include "common.h"
+#include "math_util.h"
+#include "memory.h"
 #include "objects.h"
 #include "PR/abi.h"
-#include "common.h"
-#include "stacks.h"
 #include "rcp_dkr.h"
+#include "stacks.h"
+#include "video.h"
 
 /****  type define's for structures unique to audiomgr ****/
 typedef union {

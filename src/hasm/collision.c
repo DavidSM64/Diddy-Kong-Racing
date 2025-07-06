@@ -1,10 +1,9 @@
 #include "collision.h"
 
-#include "types.h"
 #include "macros.h"
 #include "textures_sprites.h"
 #include "PR/R4300.h"
-#include "src/printf.h"
+#include "types.h"
 
 /*******************************/
 

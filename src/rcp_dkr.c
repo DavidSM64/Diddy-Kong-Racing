@@ -1,13 +1,13 @@
 #include "rcp_dkr.h"
-#include "types.h"
-#include "structs.h"
-#include "macros.h"
-#include "video.h"
 #include "camera.h"
-#include "set_rsp_segment.h"
-#include "racer.h"
-#include "textures_sprites.h"
+#include "macros.h"
 #include "memory.h"
+#include "racer.h"
+#include "set_rsp_segment.h"
+#include "structs.h"
+#include "textures_sprites.h"
+#include "types.h"
+#include "video.h"
 
 /************ .data ************/
 

@@ -1,16 +1,16 @@
 #include "camera.h"
 #include "audio.h"
-#include "objects.h"
 #include "game.h"
-#include "tracks.h"
-#include "video.h"
 #include "libultra/src/libc/rmonPrintf.h"
 #include "math_util.h"
-#include "weather.h"
+#include "menu.h"
+#include "objects.h"
 #include "PRinternal/piint.h"
 #include "PRinternal/viint.h"
 #include "textures_sprites.h"
-#include "menu.h"
+#include "tracks.h"
+#include "video.h"
+#include "weather.h"
 
 #define CAMERA_MODEL_STACK_SIZE 5
 

@@ -61,8 +61,8 @@ LIB_SRC_DIRECTORY = './libultra/src'
 FUNCTION_REGEX = r'^(?<!static\s)(?:(\/[*][*!][*]*\n(?:[^\/]*\n)+?\s*[*]\/\n)(?:\s*)*?)?(?:\s*UNUSED\s+)?([^\s]+)\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
 GLOBAL_ASM_REGEX = r'\#pragma\sGLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
 WIP_REGEX = r'ifdef\s+(?:NON_MATCHING|NON_EQUIVALENT)(?:.|\n)*?\#else\s*(\#pragma\sGLOBAL_ASM[(][^)]*[)])(.|\n)*?'
-NON_MATCHING_REGEX = re.compile(r'^#ifdef[ ]+NON_MATCHING(?:.|\n)*?(?:\s*UNUSED\s+)?(?:[^\s]+)\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{', re.MULTILINE)
-NON_EQUVIALENT_REGEX = re.compile(r'^#ifdef[ ]+NON_EQUIVALENT(?:.|\n)*?(?:\s*UNUSED\s+)?(?:[^\s]+)\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{', re.MULTILINE)
+NON_MATCHING_REGEX = re.compile(r'^#ifdef +NON_MATCHING(?:.|\n)*?(?:\s*UNUSED\s+)?\S+\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{', re.MULTILINE)
+NON_EQUVIALENT_REGEX = re.compile(r'^#ifdef +NON_EQUIVALENT(?:.|\n)*?(?:\s*UNUSED\s+)?\S+\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{', re.MULTILINE)
 
 CODE_START = 0x80000400
 CODE_END = 0x800D75F4

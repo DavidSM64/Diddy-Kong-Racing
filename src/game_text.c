@@ -1,15 +1,15 @@
 #include "game_text.h"
+#include "asset_loading.h"
+#include "camera.h"
 #include "common.h"
-#include "menu.h"
-#include "objects.h"
-#include "racer.h"
 #include "game.h"
 #include "joypad.h"
-#include "PRinternal/viint.h"
-#include "asset_loading.h"
-#include "thread3_main.h"
 #include "memory.h"
-#include "camera.h"
+#include "menu.h"
+#include "objects.h"
+#include "PRinternal/viint.h"
+#include "racer.h"
+#include "thread3_main.h"
 
 /************ .data ************/
 

@@ -1,37 +1,37 @@
 #include "object_functions.h"
 
-#include "PR/os_cont.h"
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
-#include "video.h"
-#include "camera.h"
-#include "menu.h" // For cheats
-#include "weather.h"
-#include "racer.h"
-#include "game.h"
 #include "audio.h"
 #include "audio_spatial.h"
+#include "audio_vehicle.h"
+#include "audiosfx.h"
+#include "camera.h"
+#include "collision.h"
+#include "common.h"
+#include "fade_transition.h"
+#include "font.h"
+#include "game.h"
+#include "game_text.h"
+#include "game_ui.h"
+#include "joypad.h"
+#include "lights.h"
+#include "macros.h"
+#include "math_util.h"
+#include "menu.h" // For cheats
+#include "object_models.h"
 #include "objects.h"
 #include "particles.h"
-#include "tracks.h"
-#include "font.h"
-#include "lights.h"
-#include "game_ui.h"
-#include "waves.h"
-#include "audiosfx.h"
-#include "math_util.h"
-#include "game_text.h"
-#include "fade_transition.h"
-#include "audio_vehicle.h"
-#include "object_models.h"
-#include "collision.h"
-#include "joypad.h"
-#include "printf.h"
+#include "PR/os_cont.h"
 #include "PRinternal/viint.h"
-#include "common.h"
-#include "thread3_main.h"
+#include "printf.h"
+#include "racer.h"
+#include "structs.h"
 #include "textures_sprites.h"
+#include "thread3_main.h"
+#include "tracks.h"
+#include "types.h"
+#include "video.h"
+#include "waves.h"
+#include "weather.h"
 
 /************ .data ************/
 
@@ -5376,7 +5376,7 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     audio->unk5 = entry->unkD;
     audio->unkD = entry->unk10;
     audio->soundMask = NULL;
-    if (gSoundBank_GetSoundDecayTime(audio->soundId)) {
+    if (sound_is_looped(audio->soundId)) {
         audspat_point_create(audio->soundId, entry->common.x, entry->common.y, entry->common.z, 9, audio->unk5,
                              audio->unk4, audio->unk2, audio->unkC, audio->unk6, audio->unkD, &audio->soundMask);
     } else {

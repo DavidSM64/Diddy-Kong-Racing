@@ -1,15 +1,15 @@
 #include "audio_spatial.h"
-#include "types.h"
-#include "macros.h"
-#include "audio_vehicle.h"
-#include "memory.h"
 #include "audio.h"
-#include "textures_sprites.h"
-#include "objects.h"
+#include "audio_vehicle.h"
 #include "audiosfx.h"
-#include "tracks.h"
+#include "macros.h"
 #include "math_util.h"
+#include "memory.h"
 #include "menu.h"
+#include "objects.h"
+#include "textures_sprites.h"
+#include "tracks.h"
+#include "types.h"
 
 #define MAX_AUDIO_POINTS 40
 #define MAX_AUDIO_LINES 7
@@ -211,7 +211,7 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
                 if (distance < audioPoint->range && !audioPoint->inRange) {
                     if (audioPoint->soundHandle == NULL &&
                         (!audioPoint->triggeredOnce || !(audioPoint->flags & AUDIO_POINT_FLAG_ONE_TIME_TRIGGER))) {
-                        func_80001F14(audioPoint->soundBite, &audioPoint->soundHandle);
+                        sound_play_direct(audioPoint->soundBite, &audioPoint->soundHandle);
                         audioPoint->triggeredOnce = TRUE;
                     }
 
@@ -279,7 +279,7 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
             if (volume > MIN_VOLUME_THRESHOLD) {
                 if (audioPoint->soundHandle == NULL &&
                     (!audioPoint->triggeredOnce || !(audioPoint->flags & AUDIO_POINT_FLAG_ONE_TIME_TRIGGER))) {
-                    func_80001F14(audioPoint->soundBite, &audioPoint->soundHandle);
+                    sound_play_direct(audioPoint->soundBite, &audioPoint->soundHandle);
                     audioPoint->triggeredOnce = TRUE;
                 }
 
@@ -375,7 +375,7 @@ void audspat_update_all(Object **objList, s32 numObjects, s32 updateRate) {
                     pitch3 = line->unk176 / 100.0f;
 
                     if (line->soundHandle == NULL) {
-                        func_80001F14(line->soundBite, &line->soundHandle);
+                        sound_play_direct(line->soundBite, &line->soundHandle);
                     }
 
                     if (line->soundHandle != NULL) {

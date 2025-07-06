@@ -1,13 +1,12 @@
 #include "math_util.h"
 
-#include <math.h>
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
 #include "game.h"
-#include "string.h"
+#include "macros.h"
 #include "PR/os_internal_reg.h"
-#include "PR/gu.h"
+#include "string.h"
+#include "structs.h"
+#include "types.h"
+#include <math.h>
 
 extern u8 gIntDisFlag;
 extern s32 gCurrentRNGSeed; // Official Name: rngSeed

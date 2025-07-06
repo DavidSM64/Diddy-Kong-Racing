@@ -219,7 +219,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* racerObj, Object_Rac
 //Non Matching
 s32 timetrial_ghost_read(Object *obj);
 void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32, f32);
-s32 collision_objectmodel(Object *obj, s32, s32 *, Vec3f *, f32 *, f32 *, s8 *surface);
+s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, f32 *arg3, f32* arg4, f32* arg5, s8* surface);
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
 void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
 void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Racer *racer); /* extern */

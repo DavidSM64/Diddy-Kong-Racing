@@ -1,16 +1,16 @@
 #include "vehicle_misc.h"
 
-#include "types.h"
-#include "macros.h"
-#include "racer.h"
-#include "objects.h"
 #include "audio.h"
 #include "camera.h"
+#include "macros.h"
+#include "objects.h"
 #include "particles.h"
+#include "racer.h"
+#include "types.h"
 
 /************ .data ************/
 
-// sSoundEffectsPool index values?
+// The highest index that ever seems to be read from this table is 6.
 u16 gRocketVoiceTable[16] = {
     SOUND_VOICE_BOSS_LAUGH2,
     SOUND_VOICE_TRICKY_HM,
@@ -19,7 +19,7 @@ u16 gRocketVoiceTable[16] = {
     SOUND_VOICE_WIZPIG_LAUGH2,
     SOUND_VOICE_WIZPIG_GROAN,
     SOUND_VOICE_WIZPIG_LAUGH3,
-    SOUND_VOICE_SMOKEY_HAH,
+    SOUND_VOICE_SMOKEY_HAH, // Never read from this point?
     SOUND_VOICE_SMOKEY_LAUGH,
     SOUND_VOICE_SMOKEY_HM,
     SOUND_VOICE_SMOKEY_HM2,

@@ -1,11 +1,11 @@
 #include "font.h"
-#include "menu.h"
-#include "textures_sprites.h"
+#include "asset_loading.h"
 #include "camera.h"
 #include "common.h"
-#include "video.h"
-#include "asset_loading.h"
 #include "memory.h"
+#include "menu.h"
+#include "textures_sprites.h"
+#include "video.h"
 
 /************ .data ************/
 

@@ -1,10 +1,10 @@
 #include "asset_loading.h"
 
 #include "common.h"
-#include "macros.h"
-#include "ultra64.h"
 #include "gzip.h"
+#include "macros.h"
 #include "memory.h"
+#include "ultra64.h"
 
 /************ .bss ************/
 

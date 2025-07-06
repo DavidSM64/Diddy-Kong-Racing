@@ -1,15 +1,15 @@
 #include "thread0_epc.h"
 #include "common.h"
-#include "types.h"
+#include "joypad.h"
 #include "macros.h"
 #include "menu.h"
-#include "save_data.h"
-#include "printf.h"
 #include "objects.h"
-#include "joypad.h"
-#include "stacks.h"
 #include "PR/os_internal_thread.h"
 #include "PRinternal/rmonint.h"
+#include "printf.h"
+#include "save_data.h"
+#include "stacks.h"
+#include "types.h"
 
 /************ .data ************/
 
