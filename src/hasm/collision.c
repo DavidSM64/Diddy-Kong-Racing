@@ -21,10 +21,6 @@ extern s32 gNumCollisionCandidates;
 
 // All handwritten assembly, below.
 
-void bob(void) {
-    gCollisionSurfaces = 0;
-}
-
 #ifdef NON_MATCHING
 /**
  * Populates a list of triangle candidates that will be tested for collision in resolve_collisions.
