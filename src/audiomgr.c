@@ -179,7 +179,7 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
 #endif
 
     for (i = 0; i < NUM_ACMD_LISTS; i++) {
-        __am.ACMDList[i] = (Acmd *) alHeapAlloc(c->heap, 1, 0xA000); // sizeof(Acmd) * DMA_BUFFER_LENGTH * 5?
+        __am.ACMDList[i] = (Acmd *) alHeapAlloc(c->heap, 1, AUDBUF_SIZE);
     }
 
     asset = mempool_alloc_fixed((maxFrameSize * 12), (u8 *) ((RAM_END - 0x200) - (maxFrameSize * 12)), COLOUR_TAG_CYAN);

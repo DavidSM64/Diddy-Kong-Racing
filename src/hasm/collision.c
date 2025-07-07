@@ -1,6 +1,7 @@
 #include "collision.h"
 
 #include "macros.h"
+#include "PR/R4300.h"
 #include "textures_sprites.h"
 #include "types.h"
 
@@ -20,7 +21,7 @@ extern s32 gNumCollisionCandidates;
 
 // All handwritten assembly, below.
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 /**
  * Populates a list of triangle candidates that will be tested for collision in resolve_collisions.
  * Calculates a single bounding rectangle that contains all origin and target points.
@@ -28,7 +29,6 @@ extern s32 gNumCollisionCandidates;
  * Triangle batches are filtered based on visibility, surface type, and collision flags.
  */
 void generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets, s32 vehicleID) {
-    s32 i;
     s32 minX, maxX, minZ, maxZ;
     s32 counter;
     LevelModelSegment *segments[10];
@@ -110,6 +110,7 @@ void generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets
             grid_mask[counter] =
                 compute_grid_overlap_mask(&gCurrentLevelModel->segmentsBoundingBoxes[i], minX, minZ, maxX, maxZ);
             segments[counter] = &gCurrentLevelModel->segments[i];
+            counter++;
             if (counter == 10) {
                 break;
             }
@@ -122,7 +123,7 @@ void generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets
         LevelModelSegment *seg = segments[i];
 
         // Insert the segment pointer encoded with MSB = 0 to differentiate from collision facets
-        gCollisionCandidates[j] = (s32) seg & ~0x80000000;
+        gCollisionCandidates[j] = (s32) K0_TO_PHYS(seg);
         j++;
 
         for (batchIndex = 0; batchIndex < seg->numberOfBatches; batchIndex++) {
@@ -146,8 +147,8 @@ void generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets
             // - SURFACE_INVIS_WALL can be passed through only by planes.
             // - SURFACE_UNK12 is impassable only for cars, but passable by other vehicle types.
             surface = gCurrentLevelModel->textures[seg->batches[batchIndex].textureIndex].surfaceType;
-            if (surface == SURFACE_WATER_CALM || vehicleID == VEHICLE_PLANE && surface == SURFACE_INVIS_WALL ||
-                vehicleID != VEHICLE_CAR && surface == SURFACE_UNK12) {
+            if (surface == SURFACE_WATER_CALM || (vehicleID == VEHICLE_PLANE && surface == SURFACE_INVIS_WALL) ||
+                (vehicleID != VEHICLE_CAR && surface == SURFACE_UNK12)) {
                 continue;
             }
 
@@ -175,13 +176,12 @@ void generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets
 
 out:
     gNumCollisionCandidates = j;
-    return 0;
 }
 #else
 GLOBAL_ASM("asm/collision/generate_collision_candidates.s")
 #endif
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 /**
  * Computes the overlap between a rectangle and a segment's bounding box, returning a 16-bit grid mask.
  * The bounding box is divided into an 8x8 grid. The function determines which grid columns (X) and rows (Z)
@@ -197,7 +197,7 @@ s32 compute_grid_overlap_mask(LevelModelSegmentBoundingBox *bbox, s32 x1, s32 z1
     s32 cell_width;
     s32 cell_height;
     s32 cell_x, cell_z;
-    s32 bbox_x1, bbox_z1, bbox_x2, bbox_z2, t4;
+    s32 bbox_x1, bbox_z1, bbox_x2, bbox_z2;
 
     if (bbox == NULL) {
         return mask;
@@ -272,7 +272,7 @@ s32 compute_grid_overlap_mask(LevelModelSegmentBoundingBox *bbox, s32 x1, s32 z1
 GLOBAL_ASM("asm/collision/compute_grid_overlap_mask.s")
 #endif
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 /**
  * Resolves collisions for a list of moving objects against previously identified collision candidates.
  * For each object, the function checks whether the path from `origin` to `target` intersects any collision plane.
@@ -313,7 +313,7 @@ s32 resolve_collisions(Vec3f *origin, Vec3f *target, f32 *radius, s8 *surface, s
 
             for (i = 0; i < gNumCollisionCandidates; i++) {
                 if (gCollisionCandidates[i] >= 0) {
-                    collisionPlanes = ((LevelModelSegment *) (gCollisionCandidates[i] | 0x80000000))->collisionPlanes;
+                    collisionPlanes = ((LevelModelSegment *) (PHYS_TO_K0(gCollisionCandidates[i])))->collisionPlanes;
                 } else {
                     facet = (CollisionFacetPlanes *) gCollisionCandidates[i];
                     A = collisionPlanes[facet->basePlaneIndex * 4 + 0];
@@ -357,7 +357,7 @@ s32 resolve_collisions(Vec3f *origin, Vec3f *target, f32 *radius, s8 *surface, s
                             C1 = collisionPlanes[edgeBisectorPlane * 4 + 2];
                             D1 = collisionPlanes[edgeBisectorPlane * 4 + 3];
 
-                            dist = intersectionPointX * A1 + intersectionPointY * B1 + intersectionPointX * C1 + D1;
+                            dist = intersectionPointX * A1 + intersectionPointY * B1 + intersectionPointZ * C1 + D1;
                             if (flipSide) {
                                 dist = -dist;
                             }
@@ -368,7 +368,7 @@ s32 resolve_collisions(Vec3f *origin, Vec3f *target, f32 *radius, s8 *surface, s
                         }
 
                         if (insideTriangle) {
-                            if (B >= 0.707 && gCollisionSurfaces[i] != SURFACE_STONE &&
+                            if (B >= 0.707f && gCollisionSurfaces[i] != SURFACE_STONE &&
                                 gCollisionMode == COLLISION_MODE_DEFAULT) {
                                 // Push up vertically if slope is gentle and not stone
                                 outX = target->x;
@@ -433,7 +433,7 @@ s32 resolve_collisions(Vec3f *origin, Vec3f *target, f32 *radius, s8 *surface, s
 
             for (i = 0; i < gNumCollisionCandidates; i++) {
                 if (gCollisionCandidates[i] >= 0) {
-                    collisionPlanes = ((LevelModelSegment *) (gCollisionCandidates[i] | 0x80000000))->collisionPlanes;
+                    collisionPlanes = ((LevelModelSegment *) (PHYS_TO_K0(gCollisionCandidates[i])))->collisionPlanes;
                 } else {
                     facet = (CollisionFacetPlanes *) gCollisionCandidates[i];
                     A = collisionPlanes[facet->basePlaneIndex * 4 + 0];

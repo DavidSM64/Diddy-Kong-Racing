@@ -253,8 +253,8 @@ typedef struct CheckpointNode {
 /* Size: 0x40 bytes */
 typedef struct unk800179D0 {
     s32 unk0;
-    u32 *unk04;
-    u32 *unk08;
+    Object *unk04;
+    Object *unk08;
     f32 unk0C[12];
     u32 unk3C;
 } unk800179D0;
@@ -440,7 +440,7 @@ void func_80021104(Object *obj, Object_AnimatedObject *animObj, LevelObjectEntry
 s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,
                   f32 *outZ);
 void func_80016500(Object *obj, Object_Racer *racer);
-void func_8000C8F8(s32, s32);
+void track_spawn_objects(s32, s32);
 u8 timetrial_init_staff_ghost(s32 trackId);
 s8 set_course_finish_flags(Settings *settings);
 void process_object_interactions(void);
@@ -461,8 +461,8 @@ void func_8001E4C4(void);
 void racerfx_alloc(s32 numberOfVertices, s32 numberOfTriangles);
 s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
 s32 ainode_find_next(s32 nodeId, s32 nextNodeId, s32 direction);
-unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1);
-unk800179D0 *func_80017978(s32 arg0, s32 arg1);
+unk800179D0 *func_8001790C(Object *arg0, Object *arg1);
+unk800179D0 *func_80017978(Object *obj1, Object *obj2);
 s8 func_800214E4(Object *obj, s32 updateRate);
 f32 lerp_and_get_derivative(f32 *data, u32 index, f32 t, f32 *derivative);
 void race_check_finish(s32 updateRate);
@@ -492,7 +492,7 @@ void obj_tex_animate(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);
 void model_init_collision(ObjectModel *);
 void set_temp_model_transforms(Object *);
-void func_800101AC(Object *, s32);
+void obj_destroy(Object *, s32);
 void func_800135B8(Object *);
 void track_setup_racers(Vehicle, u32, s32);
 void func_80017E98(void);
@@ -508,6 +508,7 @@ void func_800159C8(Object *, Object *);
 void obj_door_number(ObjectModel *, Object *);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 f32 func_8001C6C4(Object_NPC *, Object *, f32, f32, s32);
-s32 func_80017A18(ObjectModel *, s32, s32 *, f32 *, f32 *, f32 *, f32 *, f32 *, f32 *, f32 *, s8 *surface,
+s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, Vec3f *arg3, f32* arg4, f32* arg5, s8* surface);
+s32 func_80017A18(ObjectModel *, s32, s32 *, f32 *, f32 *, f32 *, f32 *, f32 *, f32 *, f32 *, s8 *argA,
                   f32); // NON EQUIVALENT
 #endif
