@@ -318,8 +318,8 @@ void spawn_boss_hazard(Object *obj, Object_Racer *racer, f32 offset, s32 objectI
                             newObj->x_velocity = obj->x_velocity;
                             newObj->y_velocity = obj->y_velocity;
                             newObj->z_velocity = obj->z_velocity;
-                            newObj->properties.common.unk0 = tempObj;
-                            newObj->properties.common.unk4 = (s8) entry->animation.y_rotation * 60;
+                            newObj->properties.fireball.obj = tempObj;
+                            newObj->properties.fireball.timer = (s8) entry->animation.y_rotation * 60;
                             newObj->animFrame = rand_range(0, 255);
                             audspat_play_sound_at_position(soundID, newObj->trans.x_position, newObj->trans.y_position,
                                                            newObj->trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER,

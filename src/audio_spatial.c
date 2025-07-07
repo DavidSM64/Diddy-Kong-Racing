@@ -640,8 +640,6 @@ void audspat_reverb_add_vertex(f32 x, f32 y, f32 z, u8 reverbAmount, u8 lineID, 
     }
 }
 
-
-
 /**
  * Checks that all vertex coordinates are defined.
  */
@@ -663,7 +661,8 @@ s32 audspat_line_validate(u8 lineID) {
     for (i = 0; i < line->numSegments; i++) {
         //!@bug: should be *(coords + 0), *(coords + 1), *(coords + 2)
         if (*coords + 0 == -100000.0 || *coords + 1 == -100000.0 || *coords + 2 == -100000.0) {
-            stubbed_printf("Audio line definition error (line=%d, vertex=%d)\n", i, 1); // The 1 here is most likely the array index for the vertex coords.
+            stubbed_printf("Audio line definition error (line=%d, vertex=%d)\n", i,
+                           1); // The 1 here is most likely the array index for the vertex coords.
             ret = FALSE;
         }
         coords += 3;

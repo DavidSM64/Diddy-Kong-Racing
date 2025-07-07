@@ -41,6 +41,7 @@
 #include "waves.h"
 #include "weather.h"
 
+#define OBJECT_MAP_SIZE 0x3000
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
 #define OBJECT_BLUEPRINT_SIZE 0x800
@@ -195,18 +196,6 @@ FadeTransition gRaceEndTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_O
 UNUSED const char sObjectOutofMemString[] = "Objects out of ram(1) !!\n";
 UNUSED const char sDoorNumberErrorString[] = "Door numbering error %d!!\n";
 UNUSED const char sObjectScopeErrorString[] = "objGetScope: Unknown scope for object %d\n";
-UNUSED const char sObjectListDataOverflowString[] = "ObjList (Part) Overflow %d!!!\n";
-UNUSED const char sObjectSetupError1String[] = "ObjSetupObject(1) Memory fail!!\n";
-UNUSED const char sObjectSetupError2String[] = "ObjSetupObject(2) Memory fail!!\n";
-UNUSED const char sObjectSetupError5String[] = "ObjSetupObject(5) Memory fail!!\n";
-UNUSED const char sObjectSetupError6String[] = "ObjSetupObject(6) Memory fail!!\n";
-UNUSED const char sObjectSetupError3String[] = "ObjSetupObject(3) Memory fail!!\n";
-UNUSED const char sObjectListOverflowString[] = "ObjList Overflow %d!!!\n";
-UNUSED const char sObjectSetupError4String[] = "ObjSetupObject(4) Memory fail!!\n";
-UNUSED const char sDuplicateCheckpointString[] = "Error: Multiple checkpoint no: %d !!\n";
-UNUSED const char sErrorChannelString[] = "ERROR Channel %d\n";
-UNUSED const char sReadOutErrorString[] = "RO error %d!!\n";
-UNUSED const char sPureAnguishString[] = "ARGHHHHHHHHH\n";
 
 /*********************************/
 
@@ -293,13 +282,13 @@ s32 D_8011AE88;
 Gfx *gObjectCurrDisplayList;
 Mtx *gObjectCurrMatrix;
 Vertex *gObjectCurrVertexList;
-u8 *D_8011AE98[2];
-s32 D_8011AEA0[2];
-s32 D_8011AEA8[2];
-s32 *D_8011AEB0[2];
+u8 *gObjectMapSpawnList[2];
+s32 gObjectMapSize[2];
+s32 gObjectMapID[2];
+s32 *gObjectMap[2];
 s16 *gAssetsLvlObjTranslationTable;
 s32 gAssetsLvlObjTranslationTableLength;
-s32 D_8011AEC0;
+s32 gObjectMapIndex;
 Object **gParticlePtrList;
 s32 gFreeListCount;
 CheckpointNode *gTrackCheckpoints; // Array of structs, unknown number of members
@@ -884,14 +873,14 @@ void free_all_objects(void) {
     gParticlePtrList_flush();
     len = gObjectCount;
     for (i = 0; i < len; i++) {
-        func_800101AC(gObjPtrList[i], 1);
+        obj_destroy(gObjPtrList[i], 1);
     }
     gFreeListCount = 0;
     gObjectCount = 0;
     gObjectListStart = 0;
     clear_object_pointers();
-    mempool_free((void *) D_8011AEB0[0]);
-    mempool_free((void *) D_8011AEB0[1]);
+    mempool_free((void *) gObjectMap[0]);
+    mempool_free((void *) gObjectMap[1]);
 }
 
 /**
@@ -954,7 +943,11 @@ s32 normalise_time(s32 timer) {
     }
 }
 
-void func_8000C8F8(s32 arg0, s32 arg1) {
+/**
+ * Load the object map into RAM, then start spawning objects into the world.
+ * Also decides whether this race type should be for silver coins or not.
+ */
+void track_spawn_objects(s32 mapID, s32 index) {
     s32 assetSize;
     Settings *settings;
     s32 i;
@@ -968,33 +961,33 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
 
     settings = get_settings();
     assetOffset = settings->bosses | 0x820; // 0x820 = Wizpig 2 and some unknown 0x800 boss bit
-    gIsSilverCoinRace =
-        ((settings->courseFlagsPtr[settings->courseId] & 4) == 0) && (((1 << settings->worldId) & assetOffset) != 0);
+    gIsSilverCoinRace = ((settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED_SILVER_COINS) == FALSE) &&
+                        (((1 << settings->worldId) & assetOffset) != 0);
 
-    if (!(settings->courseFlagsPtr[settings->courseId] & 2)) {
-        gIsSilverCoinRace = 0;
+    if ((settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED) == FALSE) {
+        gIsSilverCoinRace = FALSE;
     }
     if (is_in_tracks_mode()) {
-        gIsSilverCoinRace = 0;
+        gIsSilverCoinRace = FALSE;
     }
     if (get_current_level_race_type()) {
-        gIsSilverCoinRace = 0;
+        gIsSilverCoinRace = FALSE;
     }
 
     D_8011AD3E = 0;
-    mem = mempool_alloc_safe(0x3000, COLOUR_TAG_BLUE);
-    D_8011AEB0[arg1] = mem;
-    D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
-    D_8011AEA0[arg1] = 0;
-    D_8011AEA8[arg1] = arg0;
+    mem = mempool_alloc_safe(OBJECT_MAP_SIZE, COLOUR_TAG_BLUE);
+    gObjectMap[index] = mem;
+    gObjectMapSpawnList[index] = (u8 *) (gObjectMap[index] + sizeof(uintptr_t));
+    gObjectMapSize[index] = NULL;
+    gObjectMapID[index] = mapID;
     objMapTable = (u32 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_MAPS_TABLE);
     for (i = 0; objMapTable[i] != 0xFFFFFFFF; i++) {}
     i--;
-    if (arg0 >= i) {
-        arg0 = 0;
+    if (mapID >= i) {
+        mapID = 0;
     }
-    assetOffset = objMapTable[arg0];
-    assetSize = objMapTable[arg0 + 1] - assetOffset;
+    assetOffset = objMapTable[mapID];
+    assetSize = objMapTable[mapID + 1] - assetOffset;
 
     if (assetSize != 0) {
         compressedAsset = (u8 *) mem;
@@ -1004,14 +997,14 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
         load_asset_to_address(ASSET_LEVEL_OBJECT_MAPS, (u32) compressedAsset, assetOffset, assetSize);
         gzip_inflate(compressedAsset, (u8 *) mem);
         mempool_free(objMapTable);
-        D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
-        D_8011AEA0[arg1] = *mem;
-        D_8011AEC0 = arg1;
-        for (var_s0 = 0; var_s0 < D_8011AEA0[arg1]; var_s0 += temp_t3) {
-            spawn_object((LevelObjectEntryCommon *) D_8011AE98[arg1], OBJECT_SPAWN_UNK01);
-            D_8011AE98[arg1] = &D_8011AE98[arg1][temp_t3 = D_8011AE98[arg1][1] & 0x3F];
+        gObjectMapSpawnList[index] = (u8 *) (gObjectMap[index] + sizeof(uintptr_t));
+        gObjectMapSize[index] = *mem;
+        gObjectMapIndex = index;
+        for (var_s0 = 0; var_s0 < gObjectMapSize[index]; var_s0 += temp_t3) {
+            spawn_object((LevelObjectEntryCommon *) gObjectMapSpawnList[index], OBJECT_SPAWN_UNK01);
+            gObjectMapSpawnList[index] = &gObjectMapSpawnList[index][temp_t3 = gObjectMapSpawnList[index][1] & 0x3F];
         }
-        D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
+        gObjectMapSpawnList[index] = (u8 *) (gObjectMap[index] + sizeof(uintptr_t));
         gCollisionObjectCount = 0;
         gNumFinishedRacers = 1;
         if (gPathUpdateOff == FALSE) {
@@ -1723,12 +1716,12 @@ UNUSED void func_8000E4E8(s32 index) {
     s32 i;
     u8 *temp_a1;
 
-    temp_v0 = D_8011AEB0[index];
-    temp_v0[0] = D_8011AEA0[index];
+    temp_v0 = gObjectMap[index];
+    temp_v0[0] = gObjectMapSize[index];
     temp_v0[3] = 0;
     temp_v0[2] = 0;
     temp_v0[1] = 0;
-    temp_a1 = &D_8011AE98[index][D_8011AEA0[index]];
+    temp_a1 = &gObjectMapSpawnList[index][gObjectMapSize[index]];
 
     // The backslash here is needed to match. And no, a for loop doesn't match.
     // clang-format off
@@ -1747,13 +1740,13 @@ UNUSED s32 func_8000E558(Object *arg0) {
         return TRUE;
     }
     temp_v0 = (s32) arg0->level_entry;
-    new_var2 = (s32) D_8011AE98[0];
-    if ((temp_v0 >= new_var2) && (((D_8011AEA0[0] * 8) + new_var2) >= temp_v0)) {
+    new_var2 = (s32) gObjectMapSpawnList[0];
+    if ((temp_v0 >= new_var2) && (((gObjectMapSize[0] * 8) + new_var2) >= temp_v0)) {
         return FALSE;
     }
-    new_var = (s32) D_8011AE98[1];
+    new_var = (s32) gObjectMapSpawnList[1];
     // Why even bother with this check?
-    if (temp_v0 >= new_var && temp_v0 <= ((D_8011AEA0[1] * 8) + new_var)) {
+    if (temp_v0 >= new_var && temp_v0 <= ((gObjectMapSize[1] * 8) + new_var)) {
         return TRUE;
     }
     return TRUE;
@@ -1771,12 +1764,12 @@ void func_8000E5EC(LevelObjectEntryCommon *arg0) {
 
     size = arg0->size & 0x3F;
 
-    sp30[0] = (s32) D_8011AE98[0] + D_8011AEA0[0];
-    sp30[1] = (s32) D_8011AE98[1] + D_8011AEA0[1];
+    sp30[0] = (s32) gObjectMapSpawnList[0] + gObjectMapSize[0];
+    sp30[1] = (s32) gObjectMapSpawnList[1] + gObjectMapSize[1];
 
-    if ((s32) arg0 >= (s32) D_8011AE98[0] && (s32) arg0 < sp30[0]) {
+    if ((s32) arg0 >= (s32) gObjectMapSpawnList[0] && (s32) arg0 < sp30[0]) {
         sp1C = 0;
-    } else if ((s32) arg0 >= (s32) D_8011AE98[1] && (s32) arg0 < sp30[1]) {
+    } else if ((s32) arg0 >= (s32) gObjectMapSpawnList[1] && (s32) arg0 < sp30[1]) {
         sp1C = 1;
     }
 #ifdef AVOID_UB
@@ -1793,7 +1786,7 @@ void func_8000E5EC(LevelObjectEntryCommon *arg0) {
             *dst++ = *src++;
         } while ((u32) src != (u32) end);
     }
-    D_8011AEA0[sp1C] -= size;
+    gObjectMapSize[sp1C] -= size;
 
     for (i = 0; i < gObjectCount; i++) {
         Object *obj = gObjPtrList[i];
@@ -1822,8 +1815,8 @@ void func_8000E79C(u8 *arg0, u8 *arg1) {
     arg0Value = arg0[1] & 0x3F;
     arg0Value2 = arg0Value;
     arg1Value = arg1[1] & 0x3F;
-    i = D_8011AEC0;
-    var_a3 = (u8 *) D_8011AEB0[i] + D_8011AEA0[i];
+    i = gObjectMapIndex;
+    var_a3 = (u8 *) gObjectMap[i] + gObjectMapSize[i];
     var_a3 += 16;
 
     if (arg1Value < arg0Value2) {
@@ -1853,7 +1846,7 @@ void func_8000E79C(u8 *arg0, u8 *arg1) {
         j++;
     } while (j < arg1Value);
 
-    D_8011AEA0[i] += arg1Value - arg0Value;
+    gObjectMapSize[i] += arg1Value - arg0Value;
 }
 
 UNUSED u8 *func_8000E898(u8 *arg0, s32 arg1) {
@@ -1865,10 +1858,10 @@ UNUSED u8 *func_8000E898(u8 *arg0, s32 arg1) {
 
     temp_t6 = arg0[1] & 0x3F;
     new_var = arg0;
-    new_var = &D_8011AE98[arg1][D_8011AEA0[arg1]];
+    new_var = &gObjectMapSpawnList[arg1][gObjectMapSize[arg1]];
     new_var2 = arg0;
     temp_v1 = new_var;
-    D_8011AEA0[arg1] += temp_t6;
+    gObjectMapSize[arg1] += temp_t6;
     for (i = 0; i < temp_t6; i++) {
         temp_v1[i] = new_var2[i];
     }
@@ -1881,6 +1874,7 @@ UNUSED u8 *func_8000E898(u8 *arg0, s32 arg1) {
  */
 Object *get_object(s32 index) {
     if (index < 0 || index >= gObjectCount) {
+        stubbed_printf("ObjList (Part) Overflow %d!!!\n");
         return 0;
     }
     return gObjPtrList[index];
@@ -1917,6 +1911,7 @@ void add_particle_to_entity_list(Object *obj) {
     gParticleCount++;
 }
 
+// Official Name: ObjSetupObject
 Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     s32 objType;
     Settings *settings;
@@ -1959,6 +1954,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     }
     if (curObj->header->behaviorId == BHV_ROCKET_SIGNPOST && (settings->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET)) {
         update_object_stack_trace(OBJECT_SPAWN, -1);
+        stubbed_printf("ObjSetupObject(1) Memory fail!!\n");
         return NULL;
     }
 
@@ -2085,6 +2081,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (failed) {
         objFreeAssets(curObj, assetCount, objType);
         try_free_object_header(headerType);
+        stubbed_printf("ObjSetupObject(2) Memory fail!!\n");
         return NULL;
     }
 
@@ -2102,6 +2099,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         if (sizeOfobj == 0) {
             objFreeAssets(curObj, assetCount, objType);
             try_free_object_header(headerType);
+            stubbed_printf("ObjSetupObject(5) Memory fail!!\n");
             return NULL;
         }
     }
@@ -2114,6 +2112,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
             }
             objFreeAssets(curObj, assetCount, objType);
             try_free_object_header(headerType);
+            stubbed_printf("ObjSetupObject(6) Memory fail!!\n");
             return NULL;
         }
     }
@@ -2148,6 +2147,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         }
         objFreeAssets(prevObj, assetCount, objType);
         try_free_object_header(headerType);
+        stubbed_printf("ObjSetupObject(3) Memory fail!!\n");
         return NULL;
     }
 
@@ -2203,6 +2203,9 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (spawnFlags & OBJECT_SPAWN_UNK01) {
         if (curObj && curObj) {} // Fakematch
         gObjPtrList[gObjectCount++] = curObj;
+        if (gObjectCount > OBJECT_SLOT_COUNT) {
+            stubbed_printf("ObjList Overflow %d!!!\n", gObjectCount);
+        }
     }
     run_object_init_func(curObj, entry, 0);
     if (curObj->interactObj != NULL) {
@@ -2223,6 +2226,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         if (spawnFlags & OBJECT_SPAWN_UNK01) {
             gObjectCount--;
         }
+        stubbed_printf("ObjSetupObject(4) Memory fail!!\n");
         return NULL;
     }
     if (curObj->header->numLightSources > 0) {
@@ -2546,12 +2550,12 @@ void gParticlePtrList_flush(void) {
                 gObjPtrList[j] = gObjPtrList[j + 1];
             }
         }
-        func_800101AC(searchObj, 0);
+        obj_destroy(searchObj, 0);
     }
     gFreeListCount = 0;
 }
 
-void func_800101AC(Object *obj, s32 arg1) {
+void obj_destroy(Object *obj, s32 arg1) {
     Object *tempObj;
     Object_Weapon *weapon;
     Object_Racer *racer;
@@ -5175,16 +5179,16 @@ void obj_collision_transform(Object *obj) {
     trans.y_position = obj->trans.y_position;
     trans.z_position = obj->trans.z_position;
 #ifdef AVOID_UB
-    mtxf_from_transform(colData->matrices[(colData->mtxFlip + 2)], &trans);
+    mtxf_from_transform((MtxF *) colData->matrices[(colData->mtxFlip + 2)], &trans);
 #else
     mtxf_from_transform((MtxF *) colData->_matrices[(colData->mtxFlip + 2) << 1], &trans);
 #endif
     colData->collidedObj = NULL;
 }
 
-// https://decomp.me/scratch/RBmJV
+// https://decomp.me/scratch/S3kHf
 #ifdef NON_MATCHING
-s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, f32 *arg5, s8 *surface) {
+s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, Vec3f *arg3, f32* arg4, f32* arg5, s8* surface) {    
     ModelInstance *modInst;
     s32 sp170;
     s32 sp16C;
@@ -5208,19 +5212,16 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4
     MtxF *spDC;
     s32 spB4[10];
     f32 sp8C[10];
-
+    
     sp160 = 0;
-
+    
     for (sp170 = 0; sp170 < gCollisionObjectCount; sp170++) {
         sp158 = gCollisionObjects[sp170];
         modInst = sp158->modelInstances[sp158->modelIndex];
         sp154 = modInst->objModel;
 
         temp = sp158->trans.x_position - obj->trans.x_position;
-        dist = sqrtf(
-            (temp) * (temp) +
-            (sp158->trans.y_position - obj->trans.y_position) * (sp158->trans.y_position - obj->trans.y_position) +
-            (sp158->trans.z_position - obj->trans.z_position) * (sp158->trans.z_position - obj->trans.z_position));
+        dist = sqrtf((temp) * (temp) + (sp158->trans.y_position - obj->trans.y_position) * (sp158->trans.y_position - obj->trans.y_position) + (sp158->trans.z_position - obj->trans.z_position) * (sp158->trans.z_position - obj->trans.z_position));
 
         j = dist;
         if (sp158->interactObj->flags & 0x20) {
@@ -5260,33 +5261,40 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4
         modInst = sp158->modelInstances[sp158->modelIndex];
         sp154 = modInst->objModel;
         collision = sp158->collisionData;
-#ifdef AVOID_UB
+        #ifdef AVOID_UB
         spDC = &collision->matrices[((sp158->collisionData->mtxFlip + 1) & 1)];
-#else
+        #else
         spDC = (MtxF *) &collision->_matrices[((sp158->collisionData->mtxFlip + 1) & 1) << 1];
-#endif
-
-        sp14C = func_8001790C((u32 *) obj, (u32 *) sp158);
+        #endif
+        
+        sp14C = func_8001790C(obj, sp158);
         if (sp14C != NULL) {
             for (i = 0, j = 0; j < arg1; j++, i += 3) {
                 sp13C[j] = sp14C->unk0C[i + 0];
                 sp12C[j] = sp14C->unk0C[i + 1];
                 sp11C[j] = sp14C->unk0C[i + 2];
-                mtxf_transform_point(spDC, arg4[i], arg4[i + 1], arg4[i + 2], &sp100[j], &spF0[j], &spE0[j]);
+                mtxf_transform_point(spDC,
+                    arg4[i], arg4[i + 1], arg4[i + 2],
+                    &sp100[j], &spF0[j], &spE0[j]);
             }
         } else {
-            for (i = 0, j = 0; j < arg1; j++, i += 3) {
-                mtxf_transform_point(spDC, arg3[i], arg3[i + 1], arg3[i + 2], &sp13C[j], &sp12C[j], &sp11C[j]);
+            for (i = 0, j = 0; j < arg1; j++, i++) {
+                mtxf_transform_point(spDC,
+                    arg3[i].x, arg3[i].y, arg3[i].z,
+                    &sp13C[j], &sp12C[j], &sp11C[j]);
             }
         }
 
-        for (i = 0, j = 0; j < arg1; j++, i += 3) {
-            mtxf_transform_point(spDC, arg4[i], arg4[i + 1], arg4[i + 2], &sp100[j], &spF0[j], &spE0[j]);
+        for (i = 0, j = 0; j < arg1; j++, i+= 3) {
+            mtxf_transform_point(spDC,
+                arg4[i], arg4[i + 1], arg4[i + 2],
+                &sp100[j], &spF0[j], &spE0[j]);
         }
 
         arg2[0] = 0;
-        tempv0 = func_80017A18(sp154, arg1, arg2, sp13C, sp12C, sp11C, sp100, spF0, spE0, arg5, surface,
-                               1.0 / sp158->trans.scale);
+        tempv0 = func_80017A18(sp154, arg1, arg2, 
+                sp13C, sp12C, sp11C, sp100, spF0, spE0,
+                arg5, surface, 1.0 / sp158->trans.scale);
         if (tempv0 != 0) {
 
             // @fake
@@ -5294,20 +5302,20 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4
 
             sp158->collisionData->collidedObj = obj;
         }
-
+        
         if (D_8011AD24[0] == 0) {
             sp14C = func_80017978(obj, sp158);
         }
 
-#ifdef AVOID_UB
+        #ifdef AVOID_UB
         spDC = &sp158->collisionData->matrices[(sp158->collisionData->mtxFlip + 2)];
-#else
+        #else
         spDC = (MtxF *) &sp158->collisionData->_matrices[(sp158->collisionData->mtxFlip + 2) << 1];
-#endif
-
+        #endif
+        
         // @fake
-        if (sp158) {}
-
+        if (sp158){}
+        
         sp16C = 1;
         for (i = 0, j = 0; j < arg1; j++, i += 3, sp16C <<= 1) {
             if (sp14C != NULL) {
@@ -5316,7 +5324,9 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4
                 sp14C->unk0C[i + 2] = spE0[j];
             }
             if (tempv0 & sp16C) {
-                mtxf_transform_point(spDC, sp100[j], spF0[j], spE0[j], &arg4[i + 0], &arg4[i + 1], &arg4[i + 2]);
+                mtxf_transform_point(spDC,
+                    sp100[j], spF0[j], spE0[j],
+                    &arg4[i + 0], &arg4[i + 1], &arg4[i + 2]);
             }
         }
 
@@ -5339,11 +5349,12 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4
     }
     return sp168;
 }
+
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/collision_objectmodel.s")
 #endif
 
-unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
+unk800179D0 *func_8001790C(Object *arg0, Object *arg1) {
     unk800179D0 *entry;
     s16 i;
 
@@ -5357,15 +5368,15 @@ unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
     return NULL;
 }
 
-unk800179D0 *func_80017978(s32 arg0, s32 arg1) {
+unk800179D0 *func_80017978(Object *obj1, Object *obj2) {
     unk800179D0 *entry;
     s16 i;
 
     for (i = 0; i < 16; i++) {
         entry = &D_8011AFF4[i];
         if (entry->unk0 == 0) {
-            entry->unk04 = (u32 *) arg0;
-            entry->unk08 = (u32 *) arg1;
+            entry->unk04 = obj1;
+            entry->unk08 = obj2;
             entry->unk0 = 2;
             return entry;
         }
@@ -5437,7 +5448,7 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
             z2 = arg5[i];
 
             for (j = 0; j < arg0->collisionFacetCount; j++) {
-                node = &arg0->collisionFacets[j];
+                node = (CollisionNode *) &arg0->collisionFacets[j];
                 triIndex = node->colPlaneIndex;
 
                 A = planes[4 * triIndex + 0];
@@ -5604,7 +5615,7 @@ void func_80017E98(void) {
     gNumberOfCheckpoints -= var_t2;
     if (duplicateCheckpoint) {
         set_render_printf_position(20, 220);
-        render_printf(sDuplicateCheckpointString /* "Error: Multiple checkpoint no: %d !!\n"; */, checkpointNum);
+        render_printf("Error: Multiple checkpoint no: %d !!\n", checkpointNum);
     }
     for (i = gNumberOfCheckpoints; i < D_8011AED4; i++) {
         temp_v1 = gTrackCheckpoints[i].unk2C - 255;
@@ -5925,6 +5936,7 @@ void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
                                     }
                                     break;
                                 default:
+                                    stubbed_printf("ERROR Channel %d\n", i);
                                     break;
                             }
                         }
@@ -10824,3 +10836,6 @@ void func_800245B4(s16 arg0) {
         D_800DC700 = 0;
     }
 }
+
+UNUSED const char sReadOutErrorString[] = "RO error %d!!\n";
+UNUSED const char sPureAnguishString[] = "ARGHHHHHHHHH\n";
