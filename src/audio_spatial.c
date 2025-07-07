@@ -22,21 +22,6 @@ u16 gNumAudioPoints = 0;
 
 /*******************************/
 
-/************ .rodata ************/
-
-UNUSED const char D_800E4D00[] = "OUT OF AUDIO POINTS\n";
-UNUSED const char D_800E4D18[] = "amAudioLineAddVertex: Exceeded maximum number of lines (%d)\n";
-UNUSED const char D_800E4D58[] = "amAudioLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
-UNUSED const char D_800E4DA0[] = "amReverbLineAddVertex: Exceeded maximum number of lines (%d)\n";
-UNUSED const char D_800E4DE0[] = "amReverbLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
-
-UNUSED const char D_800E4E28[] = "Audio line definition error (less than 2 vertices on line %d)\n";
-UNUSED const char D_800E4E68[] = "Audio line definition error (line=%d, vertex=%d)\n";
-UNUSED const char D_800E4E9C[] = "Reverb line definition error (less than 2 vertices on line %d)\n";
-UNUSED const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=%d)\n";
-
-/*********************************/
-
 /************ .bss ************/
 
 SoundData *gSpatialSoundTable;
@@ -565,6 +550,7 @@ void audspat_point_create(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 minVo
         func_800245B4(soundBite | 0xE000);
     }
     if (gNumAudioPoints == MAX_AUDIO_POINTS) {
+        stubbed_printf("OUT OF AUDIO POINTS\n");
         if (handlePtr != NULL) {
             *handlePtr = NULL;
         }
@@ -595,13 +581,18 @@ void audspat_point_create(u16 soundBite, f32 x, f32 y, f32 z, u8 flags, u8 minVo
  * Adds a vertex to the audio line.
  * An audio line is a sound source in the form of a polyline
  * The first vertex defines the sound ID and other properties.
+ * Official Name: amAudioLineAddVertex
  */
 void audspat_line_add_vertex(u8 type, u16 soundBite, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 priority,
                              u16 arg9, u8 argA, u8 lineID, u8 vertexIndex) {
     AudioLine *line;
     f32 *coords;
 
-    if (lineID < MAX_AUDIO_LINES && vertexIndex < 30) {
+    if (lineID >= MAX_AUDIO_LINES) {
+        stubbed_printf("amAudioLineAddVertex: Exceeded maximum number of lines (%d)\n", MAX_AUDIO_LINES);
+    } else if (vertexIndex >= 30) {
+        stubbed_printf("amAudioLineAddVertex: Exceeded maximum number of line vertices (%d)\n", 30);
+    } else {
         line = &gAudioLines[lineID];
         coords = &line->coords[vertexIndex * 3];
         coords[0] = x;
@@ -627,10 +618,15 @@ void audspat_line_add_vertex(u8 type, u16 soundBite, f32 x, f32 y, f32 z, u8 arg
  * Adds a vertex to a reverb line.
  * Reverb lines are used to calculate echo effects in the game.
  * The first vertex defines the reverb intensity.
+ * Official Name: amReverbLineAddVertex
  */
 void audspat_reverb_add_vertex(f32 x, f32 y, f32 z, u8 reverbAmount, u8 lineID, u8 vertexIndex) {
     ReverbLine *line;
-    if (lineID < ARRAY_COUNT(gReverbLines) && vertexIndex < 15) {
+    if (lineID >= MAX_AUDIO_LINES) {
+        stubbed_printf("amReverbLineAddVertex: Exceeded maximum number of lines (%d)\n", MAX_AUDIO_LINES);
+    } else if (vertexIndex >= 15) {
+        stubbed_printf("amReverbLineAddVertex: Exceeded maximum number of line vertices (%d)\n", 15);
+    } else {
         line = &gReverbLines[lineID];
         line->coords[3 * vertexIndex + 0] = x;
         line->coords[3 * vertexIndex + 1] = y;
@@ -643,6 +639,8 @@ void audspat_reverb_add_vertex(f32 x, f32 y, f32 z, u8 reverbAmount, u8 lineID, 
         }
     }
 }
+
+
 
 /**
  * Checks that all vertex coordinates are defined.
@@ -658,12 +656,14 @@ s32 audspat_line_validate(u8 lineID) {
     coords = line->coords;
 
     if (line->numSegments <= 0) {
+        stubbed_printf("Audio line definition error (less than 2 vertices on line %d)\n", line->numSegments);
         return FALSE;
     }
 
     for (i = 0; i < line->numSegments; i++) {
         //!@bug: should be *(coords + 0), *(coords + 1), *(coords + 2)
         if (*coords + 0 == -100000.0 || *coords + 1 == -100000.0 || *coords + 2 == -100000.0) {
+            stubbed_printf("Audio line definition error (line=%d, vertex=%d)\n", i, 1); // The 1 here is most likely the array index for the vertex coords.
             ret = FALSE;
         }
         coords += 3;
@@ -686,12 +686,14 @@ s32 audspat_reverb_validate(u8 reverbLineID) {
     coords = line->coords;
 
     if (line->numSegments <= 0) {
+        stubbed_printf("Reverb line definition error (less than 2 vertices on line %d)\n", line->numSegments);
         return FALSE;
     }
 
     for (i = 0; i < line->numSegments; i++) {
         //!@bug: should be *(coords + 0), *(coords + 1), *(coords + 2)
         if (*coords == -100000.0 || *coords + 1 == -100000.0 || *coords + 2 == -100000.0) {
+            stubbed_printf("Reverb line definition error (line=%d, vertex=%d)\n", i, 1); // Ditto
             ret = FALSE;
         }
         coords += 3;
