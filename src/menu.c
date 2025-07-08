@@ -2453,7 +2453,7 @@ void init_save_data(void) {
     s32 saveFileSize;
     s32 offset;
 
-    get_number_of_levels_and_worlds(&numLevels, &numWorlds);
+    level_count(&numLevels, &numWorlds);
     courseFlagsPtrSize = numLevels * sizeof(s32);
     saveFileSize = courseFlagsPtrSize;
     saveFileSize += numWorlds * sizeof(s16); // balloonsPtrSize;
@@ -3061,7 +3061,7 @@ void trackmenu_set_records(void) {
     Settings *settings;
 
     settings = get_settings();
-    get_number_of_levels_and_worlds(&numLevels, &numWorlds);
+    level_count(&numLevels, &numWorlds);
 
     for (i = 0; i < numLevels; i++) {
         settings->courseFlagsPtr[i] = RACE_UNATTEMPTED;
@@ -7519,7 +7519,7 @@ void menu_file_select_init(void) {
     UNUSED s32 numLevels;
     UNUSED s32 numWorlds;
 
-    get_number_of_levels_and_worlds(&numLevels, &numWorlds); // Unused
+    level_count(&numLevels, &numWorlds); // Unused
     menu_assetgroup_load(gFileSelectObjectIndices);
     menu_imagegroup_load(gFileSelectImageIndices);
     func_8007FFEC(6);
@@ -8245,7 +8245,7 @@ void menu_track_select_init(void) {
     load_font(ASSET_FONTS_BIGFONT);
 #endif
     settings = get_settings();
-    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    level_count(&levelCount, &worldCount);
     trackIds = (s8 *) get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
     if (gTitleScreenLoaded != FALSE) {
         gTrackSelectCursorX = 0;
@@ -8425,7 +8425,7 @@ void trackmenu_assets(s32 type) {
                 gTrackSelectTargetY = gTrackSelectY;
                 break;
             case TRACKMENU_TYPE_FREE:
-                vehicle = get_map_default_vehicle(gTrackIdForPreview);
+                vehicle = leveltable_vehicle_default(gTrackIdForPreview);
                 for (i = 0; i < gNumberOfActivePlayers; i++) {
                     gPlayerSelectConfirm[i] = 0;
                     gPlayerSelectVehicle[i] = vehicle;
@@ -8739,7 +8739,7 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
         opacity = 255;
     }
     if (hubName != gTrackMenuHubName) {
-        temp = (s32) get_level_name(get_hub_area_id(WORLD_SNOWFLAKE_MOUNTAIN));
+        temp = (s32) level_name(level_world_id(WORLD_SNOWFLAKE_MOUNTAIN));
         if ((s32) hubName == temp) {
             set_kerning(TRUE);
         }
@@ -8845,11 +8845,11 @@ void func_8008FF1C(UNUSED s32 updateRate) {
                     cur->visible = 0;
                 } else {
                     cur->visible = 1;
-                    hubName = get_level_name(get_hub_area_id(trackY + 1));
+                    hubName = level_name(level_world_id(trackY + 1));
                     temp4 = gTrackSelectIDs[trackY][trackX];
                     cur->hubName = hubName;
                     if ((temp4) != -1) {
-                        cur->trackName = get_level_name(trackMenuIds[(trackY * 6) + trackX]);
+                        cur->trackName = level_name(trackMenuIds[(trackY * 6) + trackX]);
                         if (trackX == 4) {
                             if (((settings->trophies >> (trackY * 2)) & 3) == 3) {
                                 cur->visible = 2;
@@ -8961,7 +8961,7 @@ void trackmenu_track_view(s32 updateRate) {
             gTrackmenuLoadedLevel = gTrackIdForPreview;
             gSelectedTrackX = gTrackSelectCursorX;
             gSelectedTrackY = gTrackSelectCursorY;
-            set_level_default_vehicle(get_map_default_vehicle(gTrackIdForPreview));
+            set_level_default_vehicle(leveltable_vehicle_default(gTrackIdForPreview));
         }
     }
     x1 = ((gSelectedTrackX * SCREEN_WIDTH) - gTrackSelectX) + SCREEN_WIDTH_FLOAT_HALF - 80.0f;
@@ -9164,7 +9164,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
         if (sMenuGuiOpacity < 0) {
             sMenuGuiOpacity = 0;
         }
-        availableVehicleFlags = get_map_available_vehicles(gTrackIdForPreview);
+        availableVehicleFlags = leveltable_vehicle_usable(gTrackIdForPreview);
 #if VERSION >= VERSION_79
         if (gNumberOfActivePlayers >= 2) {
             if (gTrackIdForPreview == ASSET_LEVEL_SPACEPORTALPHA) {
@@ -9175,7 +9175,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
             }
         }
 #endif
-        i = (s32) get_level_name(gTrackIdForPreview);
+        i = (s32) level_name(gTrackIdForPreview);
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_colour(192, 192, 255, 0, sMenuGuiOpacity);
         set_text_background_colour(0, 0, 0, 0);
@@ -9533,7 +9533,7 @@ void func_80092188(s32 updateRate) {
     }
     camEnableUserView(0, TRUE);
     if (menuDelay == 0) {
-        availableVehicles = get_map_available_vehicles(gTrackIdForPreview);
+        availableVehicles = leveltable_vehicle_usable(gTrackIdForPreview);
 #if VERSION >= VERSION_79
         if (gNumberOfActivePlayers >= 2) {
             if (gTrackIdForPreview == ASSET_LEVEL_SPACEPORTALPHA) {
@@ -9792,8 +9792,8 @@ void menu_adventure_track_init(void) {
     gOptionBlinkTimer = 0;
     gMenuDelay = 0;
     mapId = settings->unk4C->mapID;
-    gPlayerSelectVehicle[PLAYER_ONE] = get_map_default_vehicle(mapId);
-    raceType = get_map_race_type(mapId);
+    gPlayerSelectVehicle[PLAYER_ONE] = leveltable_vehicle_default(mapId);
+    raceType = leveltable_type(mapId);
     if (raceType == RACETYPE_HUBWORLD || raceType == RACETYPE_BOSS ||
         (!(raceType & RACETYPE_CHALLENGE) && (!(settings->courseFlagsPtr[mapId] & RACE_CLEARED)))) {
         ttVoiceLine = gTTVoiceLines[mapId];
@@ -9839,8 +9839,8 @@ void menu_adventure_track_init(void) {
         load_level_for_menu(mapId, -1, 1);
     }
     dialogue_clear(7);
-    if (get_map_race_type(mapId) & RACETYPE_CHALLENGE) {
-        set_current_text(get_map_world_id(mapId) + ASSET_GAME_TEXT_59);
+    if (leveltable_type(mapId) & RACETYPE_CHALLENGE) {
+        set_current_text(leveltable_world(mapId) + ASSET_GAME_TEXT_59);
     }
 }
 
@@ -9873,15 +9873,15 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
     mtx_ortho(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (gMenuDelay >= -20) {
         if (gMenuDelay <= 20) {
-            mask = get_map_available_vehicles(mapID);
-            levelName = get_level_name(mapID);
+            mask = leveltable_vehicle_usable(mapID);
+            levelName = level_name(mapID);
             set_text_font(FONT_LARGE);
             set_text_background_colour(0, 0, 0, 0);
             set_text_colour(0, 0, 0, 255, 128);
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 46, levelName, ALIGN_MIDDLE_CENTER);
             set_text_colour(255, 255, 255, 0, 255);
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 43, levelName, ALIGN_MIDDLE_CENTER);
-            if (!(get_map_race_type(mapID) & RACETYPE_CHALLENGE)) {
+            if (!(leveltable_type(mapID) & RACETYPE_CHALLENGE)) {
                 if (arg2 == 0) {
                     if (is_time_trial_enabled()) {
                         if (trackmenu_staff_beaten(mapID) >= 0) {
@@ -9950,7 +9950,7 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
                     savedY = y;
 
                     for (i = 0; i <= VEHICLE_PLANE; i++) {
-                        alpha = (arg1 < 2 && get_map_default_vehicle(mapID) != (Vehicle) i) ? 128 : 255;
+                        alpha = (arg1 < 2 && leveltable_vehicle_default(mapID) != (Vehicle) i) ? 128 : 255;
                         if ((1 << i) & mask) {
                             if (i == gPlayerSelectVehicle[0]) {
                                 texrect_draw(&sMenuCurrDisplayList, gRaceSelectionImages[i * 3 + 1], 104, y, 255, 255,
@@ -10043,7 +10043,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
     if (settings->courseFlagsPtr[mapId] & RACE_CLEARED_SILVER_COINS) {
         sp1C = 2;
     }
-    if (get_map_race_type(mapId) & RACETYPE_CHALLENGE) {
+    if (leveltable_type(mapId) & RACETYPE_CHALLENGE) {
         challenge = TRUE;
     }
     sp20 = FALSE;
@@ -10057,10 +10057,10 @@ s32 menu_adventure_track_loop(s32 updateRate) {
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     adventuretrack_render(updateRate, sp1C, sp20);
     if (sp1C < 2) {
-        gPlayerSelectVehicle[PLAYER_ONE] = get_map_default_vehicle(mapId);
+        gPlayerSelectVehicle[PLAYER_ONE] = leveltable_vehicle_default(mapId);
     }
     vehicle = gPlayerSelectVehicle[PLAYER_ONE];
-    vehicleFlags = get_map_available_vehicles(mapId);
+    vehicleFlags = leveltable_vehicle_usable(mapId);
     vehicle2 = vehicle;
     menu_input();
     if (gMenuDelay == 0) {
@@ -10167,7 +10167,7 @@ void menu_pause_init(void) {
     gMenuOptionText[0] = gMenuText[ASSET_MENU_TEXT_CONTINUE];
     gMenuOptionCap = 1;
     if (gTrophyRaceWorldId == 0) {
-        raceType = get_map_race_type(settings->courseId);
+        raceType = leveltable_type(settings->courseId);
         if (settings->worldId == WORLD_CENTRAL_AREA && is_taj_challenge()) {
             gMenuOptionText[1] = gMenuText[ASSET_MENU_TEXT_ABANDONCHALLENGE];
             gMenuOptionCap = 2;
@@ -10453,7 +10453,7 @@ void postrace_start(s32 finishState, s32 worldID) {
     LevelHeader *header;
 
     rumble_init(FALSE);
-    header = get_current_level_header();
+    header = level_header();
     gPostraceFinishState = finishState;
     if (is_in_two_player_adventure()) {
         set_scene_viewport_num(VIEWPORT_LAYOUT_1_PLAYER);
@@ -10911,7 +10911,7 @@ s32 menu_postrace(Gfx **dList, Mtx **matrices, Vertex **vertices, s32 updateRate
                 gMenuImages[4].trans.x_position = 0.0f;
                 gMenuImages[4].trans.y_position = 36.0f;
                 gMenuImages[4].trans.scale = sMenuImageProperties[4].trans.scale;
-                if (get_map_race_type(settings->courseId) & RACETYPE_CHALLENGE) {
+                if (leveltable_type(settings->courseId) & RACETYPE_CHALLENGE) {
                     gMenuStage = POSTRACE_STAGE_OPTIONS;
                 } else if (!settings->display_times) {
                     postrace_offsets(gRaceOrderMenuElements, 0.5f, 15.0f, 0.5f, textOffsetY, timeOffsetY);
@@ -11171,7 +11171,7 @@ void postrace_free(void) {
     s32 headerWorldTex;
     LevelHeader *header;
 
-    header = get_current_level_header();
+    header = level_header();
     menu_assetgroup_free(gRaceResultsObjectIndices);
     headerWorldTex = header->world - 1;
 
@@ -11955,10 +11955,10 @@ void menu_trophy_race_round_init(void) {
     } while (index == -1);
 
     for (i = 0; i < gNumberOfActivePlayers; i++) {
-        gPlayerSelectVehicle[i] = get_map_default_vehicle(index);
+        gPlayerSelectVehicle[i] = leveltable_vehicle_default(index);
     }
 
-    set_level_default_vehicle(get_map_default_vehicle(index));
+    set_level_default_vehicle(leveltable_vehicle_default(index));
     load_level_for_menu(index, -1, 1);
 
     gMenuDelay = 0;
@@ -11990,8 +11990,8 @@ void trophyround_render(UNUSED s32 updateRate) {
         yPos = 0;
     }
 
-    worldName = get_level_name(get_hub_area_id(gTrophyRaceWorldId));
-    levelName = get_level_name(levelIds[((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound]);
+    worldName = level_name(level_world_id(gTrophyRaceWorldId));
+    levelName = level_name(levelIds[((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound]);
     set_text_background_colour(0, 0, 0, 0);
     set_text_font(ASSET_FONTS_BIGFONT);
     // Text Shadows first
@@ -12405,7 +12405,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                         }
                     } else {
                         ret = MENU_RESULT_RETURN_TO_GAME;
-                        settings->courseId = get_hub_area_id(settings->worldId);
+                        settings->courseId = level_world_id(settings->worldId);
                         if (gInAdvModeTrophyRace) {
                             gInAdvModeTrophyRace = FALSE;
                             ret = settings->courseId | MENU_RESULT_FLAGS_200;
@@ -12632,11 +12632,11 @@ void ghostmenu_render(UNUSED s32 updateRate) {
     while (scroll < gGhostMenuTotal && numToDraw > 0) {
         if (gGhostDataElementPositions[0]) {} // Fakematch
 
-        currentWorldId = get_map_world_id(gGhostLevelIDsMenu[scroll]) - 1;
+        currentWorldId = leveltable_world(gGhostLevelIDsMenu[scroll]) - 1;
         if (currentWorldId < 0 || currentWorldId >= WORLD_FUTURE_FUN_LAND) {
             currentWorldId = 0;
         }
-        levelName = get_level_name(gGhostLevelIDsMenu[scroll]);
+        levelName = level_name(gGhostLevelIDsMenu[scroll]);
 #if REGION == REGION_JP
         for (i = 0; levelName[i] != '\0'; i += 2) {
             textBuffer[i] = levelName[i];
@@ -13203,7 +13203,7 @@ s32 menu_credits_loop(s32 updateRate) {
                             gCreditsMenuElements[creditsMenuElementIndex].filterGreen = 0;
                             gCreditsMenuElements[creditsMenuElementIndex].filterBlendFactor = 48;
                             gCreditsMenuElements[creditsMenuElementIndex].t.asciiText =
-                                get_level_name(mainTrackIds[gCreditsControlData[var_s4]]);
+                                level_name(mainTrackIds[gCreditsControlData[var_s4]]);
 
                             creditsMenuElementIndex++;
                             gCreditsMenuElements[creditsMenuElementIndex].top = textPos + 14;
@@ -13653,13 +13653,13 @@ s32 get_filtered_cheats(void) {
     if (!gIsInTracksMode || is_time_trial_enabled()) {
         cheats &= CHEATS_ALLOWED_IN_ADVENTURE_AND_TIME_TRIAL;
     }
-    if (!check_if_in_race()) {
+    if (!level_is_race()) {
         cheats &= ~CHEAT_MIRRORED_TRACKS; // Disable mirroring
     }
-    if (get_map_race_type(get_settings()->courseId) & RACETYPE_CHALLENGE) {
+    if (leveltable_type(get_settings()->courseId) & RACETYPE_CHALLENGE) {
         cheats &= CHEATS_ALLOWED_IN_CHALLENGES;
     }
-    if (gIsInAdventureTwo && check_if_in_race()) {
+    if (gIsInAdventureTwo && level_is_race()) {
         cheats |= CHEAT_MIRRORED_TRACKS; // Enable mirroring
     }
     return cheats;
@@ -13678,7 +13678,7 @@ s32 get_number_of_active_players(void) {
  * as it would otherwise return 1.
  */
 s32 get_active_player_count(void) {
-    LevelHeader *header = get_current_level_header();
+    LevelHeader *header = level_header();
     if (gIsInTwoPlayerAdventure && !gIsInTracksMode) {
         if (header->race_type == RACETYPE_DEFAULT || header->race_type & RACETYPE_CHALLENGE) {
             return 2;

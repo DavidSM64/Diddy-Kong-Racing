@@ -970,7 +970,7 @@ void track_spawn_objects(s32 mapID, s32 index) {
     if (is_in_tracks_mode()) {
         gIsSilverCoinRace = FALSE;
     }
-    if (get_current_level_race_type()) {
+    if (level_type()) {
         gIsSilverCoinRace = FALSE;
     }
 
@@ -1092,7 +1092,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
     gNumRacers = 0;
     D_8011AF00 = 0;
     set_taj_status(TAJ_WANDER);
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     raceType = levelHeader->race_type;
     if (raceType == RACETYPE_CUTSCENE_1 || raceType == RACETYPE_CUTSCENE_2) {
         return;
@@ -1149,7 +1149,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
     numPlayers = playerCount + 1;
     gNumRacers = 8;
     D_800DC740 = 0;
-    if (is_two_player_adventure_race()) {
+    if (race_is_adventure_2P()) {
         numPlayers = 2;
         D_800DC740 = 1;
         set_scene_viewport_num(VIEWPORT_LAYOUT_2_PLAYERS);
@@ -1164,7 +1164,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
     }
     if (raceType == RACETYPE_HUBWORLD || numPlayers >= 3) {
         gNumRacers = numPlayers;
-        if (get_level_property_stack_pos() == 0 && D_800DC708 != 0) {
+        if (level_properties_get() == 0 && D_800DC708 != 0) {
             spawnAngle[0] += D_800DC708;
             D_800DC708 = 0;
         }
@@ -1261,7 +1261,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
             } else if (D_8011AD3C == 2) {
                 vehicle = levelHeader->vehicle;
             } else {
-                if (racerEntry->playerIndex == 4 || is_two_player_adventure_race()) {
+                if (racerEntry->playerIndex == 4 || race_is_adventure_2P()) {
                     vehicle = get_player_selected_vehicle(PLAYER_ONE);
                 } else if (numPlayers >= 2) {
                     vehicle = get_player_selected_vehicle(racerEntry->playerIndex);
@@ -1416,7 +1416,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
             curRacer->transparency = 96;
         }
         // Spawn staff ghost
-        if (timetrial_init_staff_ghost(get_current_map_id())) {
+        if (timetrial_init_staff_ghost(level_id())) {
             objectID = gRacerObjectTable[(gMapDefaultVehicle * NUM_CHARACTERS) + 8];
 
             racerEntry->common.size = ((objectID & 0x100) >> 1) | 0x10;
@@ -1478,7 +1478,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
         gEventCountdown = 0;
     }
     if (raceType == RACETYPE_DEFAULT && (playerCount + 1) == 1 && is_in_adventure_two() == FALSE) {
-        if (is_two_player_adventure_race() == FALSE) {
+        if (race_is_adventure_2P() == FALSE) {
             for (j = 0; j < 3; j++) {
                 racerEntry->common.objectID = ASSET_OBJECT_ID_POSARROW;
                 racerEntry->common.size = sizeof(LevelObjectEntryCommon);
@@ -1528,7 +1528,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
     if (racetype_demo()) {
         rumble_init(FALSE);
         gEventCountdown = 0;
-        start_level_music(1.0f);
+        level_music_start(1.0f);
     }
     //!@bug: Free timer is already 0 when loading levels.
     mempool_free_timer(0);
@@ -2872,7 +2872,7 @@ void obj_update(s32 updateRate) {
     for (i = 0; i < gNumRacers; i++) {
         update_player_racer((*gRacers)[i], updateRate);
     }
-    if (get_current_level_race_type() == RACETYPE_DEFAULT) {
+    if (level_type() == RACETYPE_DEFAULT) {
         for (i = 0; i < gNumRacers; i++) {
             racer = gRacersByPosition[i]->racer;
             if (racer->playerIndex != -1) {
@@ -6147,7 +6147,7 @@ void race_check_finish(s32 updateRate) {
     s8 flags[3];
     s32 camera;
 
-    currentLevelHeader = get_current_level_header();
+    currentLevelHeader = level_header();
     settings = get_settings();
     numHumanRacersFinished = 0;
     numHumanRacers = 0;
@@ -6290,8 +6290,8 @@ void race_check_finish(s32 updateRate) {
                         }
                         postrace_start(0, 30);
                     } else {
-                        push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
-                        push_level_property_stack(ASSET_LEVEL_TTAMULETSEQUENCE, 0, VEHICLE_NO_OVERRIDE,
+                        level_properties_push(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
+                        level_properties_push(ASSET_LEVEL_TTAMULETSEQUENCE, 0, VEHICLE_NO_OVERRIDE,
                                                   settings->ttAmulet - 1);
                         race_finish_adventure(TRUE);
                     }
@@ -6680,7 +6680,7 @@ void race_transition_adventure(s32 updateRate) {
     if (gRaceEndStage == 4) {
         set_anti_aliasing(TRUE);
         disable_racer_input();
-        if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE)) {
+        if (!(level_type() & RACETYPE_CHALLENGE_BATTLE)) {
             if (osTvType == OS_TV_TYPE_PAL) {
                 cutsceneTimerLimit = 415;
             } else {
@@ -6741,7 +6741,7 @@ void race_finish_time_trial(void) {
     Settings *settings;
     LevelHeader *levelHeader;
 
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     settings = get_settings();
     settings->timeTrialRacer = 0;
     settings->unk115[1] = 0;
@@ -6801,12 +6801,12 @@ void race_finish_time_trial(void) {
         if (((!vehicleID) && (!vehicleID)) && (!vehicleID)) {} // Fakematch
         if (settings->timeTrialRacer == 0) {
             if (bestCourseTime < 10800 &&
-                (vehicleID != gTimeTrialVehicle || timetrial_map_id() != get_current_map_id() ||
+                (vehicleID != gTimeTrialVehicle || timetrial_map_id() != level_id() ||
                  bestCourseTime < gTimeTrialTime)) {
                 gTimeTrialTime = bestCourseTime;
                 gTimeTrialVehicle = gPrevTimeTrialVehicle;
                 gTimeTrialCharacter = settings->racers[0].character;
-                timetrial_swap_player_ghost(get_current_map_id());
+                timetrial_swap_player_ghost(level_id());
                 gHasGhostToSave = TRUE;
             }
             if (osTvType == OS_TV_TYPE_PAL) {
@@ -6814,7 +6814,7 @@ void race_finish_time_trial(void) {
             }
             if (bestCourseTime < gTTGhostTimeToBeat) {
                 if (gTimeTrialStaffGhost) {
-                    tt_ghost_beaten(get_current_map_id(), &bestRacer->playerIndex);
+                    tt_ghost_beaten(level_id(), &bestRacer->playerIndex);
                 } else {
                     hud_time_trial_message(&bestRacer->playerIndex);
                 }
@@ -6829,7 +6829,7 @@ void race_finish_time_trial(void) {
  * Returns true if the player ghost data is valid for playback.
  */
 s32 timetrial_valid_player_ghost(void) {
-    if (timetrial_map_id() != get_current_map_id()) {
+    if (timetrial_map_id() != level_id()) {
         return FALSE;
     } else {
         if (gTimeTrialVehicle != gPrevTimeTrialVehicle) {
@@ -6859,7 +6859,7 @@ s32 timetrial_load_staff_ghost(s32 mapId) {
     s32 ret;
     TTGhostTable *nextGhostTable;
 
-    gMapDefaultVehicle = get_map_default_vehicle(mapId);
+    gMapDefaultVehicle = leveltable_vehicle_default(mapId);
     ghostTable = (TTGhostTable *) load_asset_section_from_rom(ASSET_TTGHOSTS_TABLE);
 
     nextGhostTable = ghostTable;
@@ -6941,7 +6941,7 @@ u8 timetrial_init_staff_ghost(s32 trackId) {
     gBeatStaffGhost = FALSE;
     gTimeTrialStaffGhost = FALSE;
     settings = get_settings();
-    if (get_map_default_vehicle(trackId) == (Vehicle) gPrevTimeTrialVehicle) {
+    if (leveltable_vehicle_default(trackId) == (Vehicle) gPrevTimeTrialVehicle) {
         mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
         staffTime = (u16 *) get_misc_asset(ASSET_MISC_GHOST_UNLOCK_TIMES);
         for (i = 0; mainTrackIds[i] != -1 && trackId != mainTrackIds[i]; i++) {}
@@ -6985,9 +6985,9 @@ s32 timetrial_init_player_ghost(s32 playerID) {
     s32 ghostMapID;
 
     ghostMapID = timetrial_map_id();
-    if (get_current_map_id() != ghostMapID || gTimeTrialVehicle != gPrevTimeTrialVehicle) {
+    if (level_id() != ghostMapID || gTimeTrialVehicle != gPrevTimeTrialVehicle) {
         cpakStatus =
-            timetrial_load_player_ghost(playerID, get_current_map_id(), gPrevTimeTrialVehicle, &characterID, &time);
+            timetrial_load_player_ghost(playerID, level_id(), gPrevTimeTrialVehicle, &characterID, &time);
         if (cpakStatus == CONTROLLER_PAK_GOOD) {
             gTimeTrialVehicle = gPrevTimeTrialVehicle;
             gTimeTrialCharacter = characterID;
@@ -6995,7 +6995,7 @@ s32 timetrial_init_player_ghost(s32 playerID) {
         }
         return cpakStatus;
     }
-    return timetrial_load_player_ghost(playerID, get_current_map_id(), gPrevTimeTrialVehicle, NULL, NULL);
+    return timetrial_load_player_ghost(playerID, level_id(), gPrevTimeTrialVehicle, NULL, NULL);
 }
 
 /**
@@ -8601,7 +8601,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
             camera = newObj->animatedObject;
             camera->unk44 = D_8011AD3E;
             viewportCount = cam_get_viewport_layout();
-            if (is_two_player_adventure_race()) {
+            if (race_is_adventure_2P()) {
                 viewportCount = VIEWPORT_LAYOUT_2_PLAYERS;
             }
             for (i = 0; i < viewportCount;) {
@@ -9705,7 +9705,7 @@ void mode_init_taj_race(void) {
 
     gTajRaceInit -= 1;
     if (gTajRaceInit == 0) {
-        levelHeader = get_current_level_header();
+        levelHeader = level_header();
         gChallengePrevMusic = levelHeader->music;
         gChallengePrevInstruments = levelHeader->instruments;
         levelHeader->music = SEQUENCE_TAJS_RACES;
@@ -9814,7 +9814,7 @@ void mode_end_taj_race(s32 reason) {
     Object *obj;
     LevelHeader *levelHeader;
 
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     levelHeader->race_type = RACETYPE_HUBWORLD;
     levelHeader->music = gChallengePrevMusic;
     levelHeader->instruments = gChallengePrevInstruments;
@@ -9875,7 +9875,7 @@ void mode_end_taj_race(s32 reason) {
     }
     music_change_on();
     hud_audio_init();
-    start_level_music(1.0f);
+    level_music_start(1.0f);
     gIsTajChallenge = FALSE;
 }
 
@@ -10001,7 +10001,7 @@ Object *find_furthest_telepoint(f32 x, f32 z) {
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {
         return D_8011AD24[1] + 1;
-    } else if (get_current_level_race_type() == RACETYPE_BOSS) {
+    } else if (level_type() == RACETYPE_BOSS) {
         return D_8011AD24[1] + 1;
     }
     return 0;

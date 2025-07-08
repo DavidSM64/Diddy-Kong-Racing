@@ -598,7 +598,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
     s32 bossFlags;
 
     settings = get_settings();
-    header = get_current_level_header();
+    header = level_header();
     jingle_state = obj->jingle_state;
     if (obj->properties.trophyCabinet.trophy == FALSE) {
         if (header->race_type != RACETYPE_CUTSCENE_2 && header->race_type != RACETYPE_CUTSCENE_1) {
@@ -1216,7 +1216,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             tt->animFrameF = 0.0f;
         }
     }
-    header = get_current_level_header();
+    header = level_header();
     distance = 0.0f;
     obj->x_velocity = 0.0f;
     obj->z_velocity = 0.0f;
@@ -2559,7 +2559,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         updateRateF *= 1.2;
     }
     taj = obj->npc;
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     if (obj->animFrame == 0 && taj->animFrameF > 1.0) {
         taj->animFrameF = 0.0f;
@@ -3886,7 +3886,7 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     trigger = obj->trigger;
     settings = get_settings();
     courseFlags = settings->courseFlagsPtr[settings->courseId];
-    curRaceType = get_current_level_race_type();
+    curRaceType = level_type();
     if (triggerEntry->index >= 0) {
         flags = 0x10000 << triggerEntry->index;
         if (obj->interactObj->distance < trigger->radius) {
@@ -4394,7 +4394,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             properties->intangibleTimer = 0;
         }
         if (obj->interactObj->distance < 120) {
-            if (get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
+            if (level_type() == RACETYPE_CHALLENGE_BANANAS) {
                 racerObj = obj->interactObj->obj;
                 if (racerObj != NULL && racerObj->header->behaviorId == BHV_RACER) {
                     racer = racerObj->racer;
@@ -4408,7 +4408,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             racerObj = obj->interactObj->obj;
             if (racerObj != NULL && racerObj->header->behaviorId == BHV_RACER) {
                 racer = racerObj->racer;
-                if (get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS || racer->bananas < 2) {
+                if (level_type() != RACETYPE_CHALLENGE_BANANAS || racer->bananas < 2) {
                     prevSoundMask = racer->bananaSoundMask;
                     audspat_play_sound_at_position(SOUND_SELECT, racerObj->trans.x_position, racerObj->trans.y_position,
                                                    racerObj->trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER,
@@ -4498,7 +4498,7 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
     Object *racerObj;
     s32 twoPlayerAdv;
 
-    twoPlayerAdv = is_two_player_adventure_race();
+    twoPlayerAdv = race_is_adventure_2P();
     if ((twoPlayerAdv && obj->properties.silverCoin.action != SILVER_COIN_INACTIVE) ||
         (!twoPlayerAdv && obj->properties.silverCoin.action == SILVER_COIN_ACTIVE)) {
         interactObj = obj->interactObj;
@@ -4690,7 +4690,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                         racer->balloon_level = 0;
                     }
                     // Disallow level 3 balloons in challenge mode
-                    if (get_current_level_race_type() & RACETYPE_CHALLENGE) {
+                    if (level_type() & RACETYPE_CHALLENGE) {
                         if (racer->balloon_level > 1) {
                             racer->balloon_level = 1;
                         }
@@ -6583,7 +6583,7 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             }
         }
         if (properties->opacity > 0) {
-            levelName = get_level_name(properties->levelID);
+            levelName = level_name(properties->levelID);
             textWidth = (get_text_width(levelName, 0, 0) + 24) >> 1;
             x1 = SCREEN_WIDTH_HALF - textWidth;
             x2 = textWidth + SCREEN_WIDTH_HALF;
