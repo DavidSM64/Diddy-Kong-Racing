@@ -326,7 +326,7 @@ void hud_init(UNUSED s32 viewportCount) {
     gNumActivePlayers = cam_set_layout(gHUDNumPlayers);
     gHudSettings = get_settings();
     gHudSilverCoinRace = check_if_silver_coin_race();
-    gAssetHudElementIds = (s16 *) load_asset_section_from_rom(ASSET_HUD_ELEMENT_IDS);
+    gAssetHudElementIds = (s16 *) asset_table_load(ASSET_HUD_ELEMENT_IDS);
     gAssetHudElementIdsCount = 0;
 
     while (gAssetHudElementIds[gAssetHudElementIdsCount] != -1) {

@@ -1120,13 +1120,13 @@ string_to_font_codes = 0x80076C90;
 get_file_type = 0x80076D4C;
 
 // Entire asset_loading file seems quite different from v1
-init_PI_mesg_queue = 0x80076E00; // has a diff from v1
-load_asset_section_from_rom = 0x80076EE4; // has a diff from v1
-load_compressed_asset_from_rom = 0x80076FB0; // has a diff from v1
-load_asset_section_from_rom_to_address = 0x800770E8; // has a diff from v1
-load_asset_to_address = 0x80077190; // has a diff from v1
-get_rom_offset_of_asset = 0x80077240; // has a diff from v1
-get_size_of_asset_section = 0x800772DC; // has a diff from v1
+pi_init = 0x80076E00; // has a diff from v1
+asset_table_load = 0x80076EE4; // has a diff from v1
+asset_table_load_zipped = 0x80076FB0; // has a diff from v1
+asset_table_load_addr = 0x800770E8; // has a diff from v1
+asset_load = 0x80077190; // has a diff from v1
+asset_rom_offset = 0x80077240; // has a diff from v1
+asset_table_size = 0x800772DC; // has a diff from v1
 dmacopy = 0x80077370; // has a diff from v1
 dmacopy_v1 = 0x800773D4;// has a diff from v1 - NEW FUNC
 
@@ -3696,8 +3696,8 @@ gDmaMesg = 0x80124828;
 gDmaMesgQueue = 0x80124830;
 gPIMesgBuf = 0x80124848;
 gPIMesgQueue = 0x80124888;
-gAssetsLookupTableMesgBuf = 0x801248A0; // NEW BSS
-gDmaMesgQueueV2 = 0x801248A8; // NEW BSS
+gDmaMutexBuf = 0x801248A0; // NEW BSS
+gDmaMutex = 0x801248A8; // NEW BSS
 gAssetsLookupTable = 0x801248C0;
 gDramStack = 0x801248D0;
 gGfxTaskOutputBuffer = 0x80124CD0;

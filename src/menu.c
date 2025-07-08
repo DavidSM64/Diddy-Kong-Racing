@@ -1947,7 +1947,7 @@ void load_menu_text(s32 language) {
     char **fake;
 
     if (gMenuTextLangTable == NULL) {
-        gMenuTextLangTable = (s32 *) load_asset_section_from_rom(ASSET_MENU_TEXT_TABLE);
+        gMenuTextLangTable = (s32 *) asset_table_load(ASSET_MENU_TEXT_TABLE);
     }
 
     switch (language) {
@@ -1974,7 +1974,7 @@ void load_menu_text(s32 language) {
         return;
     }
 
-    load_asset_to_address(ASSET_MENU_TEXT, (u32) temp, langIndex, size);
+    asset_load(ASSET_MENU_TEXT, (u32) temp, langIndex, size);
 
     // TODO: Find a way to clean up the ugly hacks.
     // Fill up the lookup table with proper RAM addresses
@@ -13788,7 +13788,7 @@ void menu_asset_load(s32 assetID) {
     LevelObjectEntryCommon entry;
 
     if (*gAssetsMenuElementIds == NULL) {
-        *gAssetsMenuElementIds = (s16 *) load_asset_section_from_rom(ASSET_MENU_ELEMENT_IDS);
+        *gAssetsMenuElementIds = (s16 *) asset_table_load(ASSET_MENU_ELEMENT_IDS);
         for (gMenuElementIdCount = 0; (*gAssetsMenuElementIds)[gMenuElementIdCount] != -1; gMenuElementIdCount++) {}
         gMenuObjectsCount = 0;
         for (i = 0; i < gMenuElementIdCount; i++) {

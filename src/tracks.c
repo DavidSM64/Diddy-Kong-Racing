@@ -2859,7 +2859,7 @@ void generate_track(s32 modelId) {
     gCollisionCandidates = mempool_alloc_safe(MAX_COLLISION_CANDIDATES * 4, COLOUR_TAG_YELLOW);
     gCollisionSurfaces = mempool_alloc_safe(MAX_COLLISION_CANDIDATES, COLOUR_TAG_YELLOW);
     gNumCollisionCandidates = 0;
-    gLevelModelTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
+    gLevelModelTable = (s32 *) asset_table_load(ASSET_LEVEL_MODELS_TABLE);
 
     for (i = 0; gLevelModelTable[i] != -1; i++) {}
     i--;
@@ -2874,7 +2874,7 @@ void generate_track(s32 modelId) {
     temp += (LEVEL_MODEL_MAX_SIZE - temp_s4);
     temp -= ((s32) temp % 16); // Align to 16-byte boundary.
 
-    load_asset_to_address(ASSET_LEVEL_MODELS, temp, mdl, temp_s4);
+    asset_load(ASSET_LEVEL_MODELS, temp, mdl, temp_s4);
     gzip_inflate((u8 *) temp, (u8 *) gCurrentLevelModel);
     mempool_free(gLevelModelTable); // Done with the level models table, so free it.
 
