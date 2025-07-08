@@ -5160,7 +5160,8 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
         generate_collision_candidates(1, (Vec3f *) &weaponObj->trans.x_position, (Vec3f *) &intendedPos.x, -1);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
-        resolve_collisions((Vec3f *) &weaponObj->trans.x_position, (Vec3f *) &intendedPos, &radius, &surface, 1, &hasCollision);
+        resolve_collisions((Vec3f *) &weaponObj->trans.x_position, (Vec3f *) &intendedPos, &radius, &surface, 1,
+                           &hasCollision);
         weaponObj->x_velocity = (intendedPos.x - weaponObj->trans.x_position) / updateRateF;
         weaponObj->y_velocity = (intendedPos.y - weaponObj->trans.y_position) / updateRateF;
         weaponObj->z_velocity = (intendedPos.z - weaponObj->trans.z_position) / updateRateF;

@@ -398,8 +398,7 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
                           updateRate);
     }
     // Show TT Cam toggle for the fourth viewport when playing 3 player.
-    if (numViewports == 3 && level_type() != RACETYPE_CHALLENGE_EGGS &&
-        level_type() != RACETYPE_CHALLENGE_BATTLE &&
+    if (numViewports == 3 && level_type() != RACETYPE_CHALLENGE_EGGS && level_type() != RACETYPE_CHALLENGE_BATTLE &&
         level_type() != RACETYPE_CHALLENGE_BANANAS) {
         if (hud_setting() == 0) {
             if (flip) {

@@ -447,9 +447,9 @@ void mode_game(s32 updateRate) {
     if (!gIsPaused) {
         obj_update(updateRate);
         if (check_if_showing_cutscene_camera() == 0 || get_race_countdown()) {
-            if (buttonPressedInputs & START_BUTTON && level_properties_get() == 0 &&
-                gDrumstickSceneLoadTimer == 0 && gGameMode == GAMEMODE_INGAME && gPostRaceViewPort == FALSE &&
-                gLevelLoadTimer == 0 && gPauseLockTimer == 0) {
+            if (buttonPressedInputs & START_BUTTON && level_properties_get() == 0 && gDrumstickSceneLoadTimer == 0 &&
+                gGameMode == GAMEMODE_INGAME && gPostRaceViewPort == FALSE && gLevelLoadTimer == 0 &&
+                gPauseLockTimer == 0) {
                 buttonPressedInputs = 0;
                 gIsPaused = TRUE;
                 menu_pause_init();

@@ -1629,8 +1629,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     if ((curRacer->lap > 0) && (curRacer->lap < gHudLevelHeader->laps) && (curRacer->lap_times[curRacer->lap] < 20) &&
         (gHUDVoiceSoundMask == 0) && (curRacer->vehicleID <= VEHICLE_PLANE)) {
         gHudSettings = get_settings();
-        if (curRacer->lap_times[curRacer->lap - 1] <
-            gHudSettings->flapTimesPtr[curRacer->vehicleID][level_id()]) {
+        if (curRacer->lap_times[curRacer->lap - 1] < gHudSettings->flapTimesPtr[curRacer->vehicleID][level_id()]) {
             stopwatchTimer = curRacer->lap_times[curRacer->lap - 1];
             for (i = 0; i < curRacer->lap - 1; i++) {
                 if (stopwatchTimer >= curRacer->lap_times[i]) {
@@ -3613,8 +3612,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
             gMinimapScreenY = -gMinimapDotOffsetY / 2;
             break;
         case THREE_PLAYERS:
-            if (level_type() == RACETYPE_CHALLENGE_EGGS ||
-                level_type() == RACETYPE_CHALLENGE_BATTLE ||
+            if (level_type() == RACETYPE_CHALLENGE_EGGS || level_type() == RACETYPE_CHALLENGE_BATTLE ||
                 level_type() == RACETYPE_CHALLENGE_BANANAS) {
                 gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8;
                 gMinimapScreenY = -gMinimapDotOffsetY / 2;

@@ -6860,7 +6860,8 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     hasCollision = FALSE;
     flags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
-        flags = collision_objectmodel(obj, 1, &hasCollision, (Vec3f *) racer->unkD8, (f32 *) &tempPos, &radius, &surface);
+        flags =
+            collision_objectmodel(obj, 1, &hasCollision, (Vec3f *) racer->unkD8, (f32 *) &tempPos, &radius, &surface);
     }
     if (flags & 0x80) {
         D_8011D548 = tempPos.x - obj->trans.x_position;

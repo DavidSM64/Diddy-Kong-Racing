@@ -363,8 +363,7 @@ void racer_boss_finish(Object_Racer *racer, s8 *sceneTimer) {
                     }
                     if (worldBit != 0) {
                         level_properties_push(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                        level_properties_push(ASSET_LEVEL_WIZPIGAMULETSEQUENCE_NAME, 0, -1,
-                                                  settings->wizpigAmulet - 1);
+                        level_properties_push(ASSET_LEVEL_WIZPIGAMULETSEQUENCE_NAME, 0, -1, settings->wizpigAmulet - 1);
                         level_properties_push(i, 6, -1, 6);
                     } else {
                         level_properties_push(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);

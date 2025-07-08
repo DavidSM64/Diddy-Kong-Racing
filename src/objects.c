@@ -5188,7 +5188,7 @@ void obj_collision_transform(Object *obj) {
 
 // https://decomp.me/scratch/S3kHf
 #ifdef NON_MATCHING
-s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, Vec3f *arg3, f32* arg4, f32* arg5, s8* surface) {    
+s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 *arg5, s8 *surface) {
     ModelInstance *modInst;
     s32 sp170;
     s32 sp16C;
@@ -5212,16 +5212,19 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, Vec3f *arg3, f32* ar
     MtxF *spDC;
     s32 spB4[10];
     f32 sp8C[10];
-    
+
     sp160 = 0;
-    
+
     for (sp170 = 0; sp170 < gCollisionObjectCount; sp170++) {
         sp158 = gCollisionObjects[sp170];
         modInst = sp158->modelInstances[sp158->modelIndex];
         sp154 = modInst->objModel;
 
         temp = sp158->trans.x_position - obj->trans.x_position;
-        dist = sqrtf((temp) * (temp) + (sp158->trans.y_position - obj->trans.y_position) * (sp158->trans.y_position - obj->trans.y_position) + (sp158->trans.z_position - obj->trans.z_position) * (sp158->trans.z_position - obj->trans.z_position));
+        dist = sqrtf(
+            (temp) * (temp) +
+            (sp158->trans.y_position - obj->trans.y_position) * (sp158->trans.y_position - obj->trans.y_position) +
+            (sp158->trans.z_position - obj->trans.z_position) * (sp158->trans.z_position - obj->trans.z_position));
 
         j = dist;
         if (sp158->interactObj->flags & 0x20) {
@@ -5261,40 +5264,33 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, Vec3f *arg3, f32* ar
         modInst = sp158->modelInstances[sp158->modelIndex];
         sp154 = modInst->objModel;
         collision = sp158->collisionData;
-        #ifdef AVOID_UB
+#ifdef AVOID_UB
         spDC = &collision->matrices[((sp158->collisionData->mtxFlip + 1) & 1)];
-        #else
+#else
         spDC = (MtxF *) &collision->_matrices[((sp158->collisionData->mtxFlip + 1) & 1) << 1];
-        #endif
-        
+#endif
+
         sp14C = func_8001790C(obj, sp158);
         if (sp14C != NULL) {
             for (i = 0, j = 0; j < arg1; j++, i += 3) {
                 sp13C[j] = sp14C->unk0C[i + 0];
                 sp12C[j] = sp14C->unk0C[i + 1];
                 sp11C[j] = sp14C->unk0C[i + 2];
-                mtxf_transform_point(spDC,
-                    arg4[i], arg4[i + 1], arg4[i + 2],
-                    &sp100[j], &spF0[j], &spE0[j]);
+                mtxf_transform_point(spDC, arg4[i], arg4[i + 1], arg4[i + 2], &sp100[j], &spF0[j], &spE0[j]);
             }
         } else {
             for (i = 0, j = 0; j < arg1; j++, i++) {
-                mtxf_transform_point(spDC,
-                    arg3[i].x, arg3[i].y, arg3[i].z,
-                    &sp13C[j], &sp12C[j], &sp11C[j]);
+                mtxf_transform_point(spDC, arg3[i].x, arg3[i].y, arg3[i].z, &sp13C[j], &sp12C[j], &sp11C[j]);
             }
         }
 
-        for (i = 0, j = 0; j < arg1; j++, i+= 3) {
-            mtxf_transform_point(spDC,
-                arg4[i], arg4[i + 1], arg4[i + 2],
-                &sp100[j], &spF0[j], &spE0[j]);
+        for (i = 0, j = 0; j < arg1; j++, i += 3) {
+            mtxf_transform_point(spDC, arg4[i], arg4[i + 1], arg4[i + 2], &sp100[j], &spF0[j], &spE0[j]);
         }
 
         arg2[0] = 0;
-        tempv0 = func_80017A18(sp154, arg1, arg2, 
-                sp13C, sp12C, sp11C, sp100, spF0, spE0,
-                arg5, surface, 1.0 / sp158->trans.scale);
+        tempv0 = func_80017A18(sp154, arg1, arg2, sp13C, sp12C, sp11C, sp100, spF0, spE0, arg5, surface,
+                               1.0 / sp158->trans.scale);
         if (tempv0 != 0) {
 
             // @fake
@@ -5302,20 +5298,20 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, Vec3f *arg3, f32* ar
 
             sp158->collisionData->collidedObj = obj;
         }
-        
+
         if (D_8011AD24[0] == 0) {
             sp14C = func_80017978(obj, sp158);
         }
 
-        #ifdef AVOID_UB
+#ifdef AVOID_UB
         spDC = &sp158->collisionData->matrices[(sp158->collisionData->mtxFlip + 2)];
-        #else
+#else
         spDC = (MtxF *) &sp158->collisionData->_matrices[(sp158->collisionData->mtxFlip + 2) << 1];
-        #endif
-        
+#endif
+
         // @fake
-        if (sp158){}
-        
+        if (sp158) {}
+
         sp16C = 1;
         for (i = 0, j = 0; j < arg1; j++, i += 3, sp16C <<= 1) {
             if (sp14C != NULL) {
@@ -5324,9 +5320,7 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, Vec3f *arg3, f32* ar
                 sp14C->unk0C[i + 2] = spE0[j];
             }
             if (tempv0 & sp16C) {
-                mtxf_transform_point(spDC,
-                    sp100[j], spF0[j], spE0[j],
-                    &arg4[i + 0], &arg4[i + 1], &arg4[i + 2]);
+                mtxf_transform_point(spDC, sp100[j], spF0[j], spE0[j], &arg4[i + 0], &arg4[i + 1], &arg4[i + 2]);
             }
         }
 
@@ -6292,7 +6286,7 @@ void race_check_finish(s32 updateRate) {
                     } else {
                         level_properties_push(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
                         level_properties_push(ASSET_LEVEL_TTAMULETSEQUENCE, 0, VEHICLE_NO_OVERRIDE,
-                                                  settings->ttAmulet - 1);
+                                              settings->ttAmulet - 1);
                         race_finish_adventure(TRUE);
                     }
                     gRaceFinishTriggered = TRUE;
@@ -6800,9 +6794,8 @@ void race_finish_time_trial(void) {
         }
         if (((!vehicleID) && (!vehicleID)) && (!vehicleID)) {} // Fakematch
         if (settings->timeTrialRacer == 0) {
-            if (bestCourseTime < 10800 &&
-                (vehicleID != gTimeTrialVehicle || timetrial_map_id() != level_id() ||
-                 bestCourseTime < gTimeTrialTime)) {
+            if (bestCourseTime < 10800 && (vehicleID != gTimeTrialVehicle || timetrial_map_id() != level_id() ||
+                                           bestCourseTime < gTimeTrialTime)) {
                 gTimeTrialTime = bestCourseTime;
                 gTimeTrialVehicle = gPrevTimeTrialVehicle;
                 gTimeTrialCharacter = settings->racers[0].character;
@@ -6986,8 +6979,7 @@ s32 timetrial_init_player_ghost(s32 playerID) {
 
     ghostMapID = timetrial_map_id();
     if (level_id() != ghostMapID || gTimeTrialVehicle != gPrevTimeTrialVehicle) {
-        cpakStatus =
-            timetrial_load_player_ghost(playerID, level_id(), gPrevTimeTrialVehicle, &characterID, &time);
+        cpakStatus = timetrial_load_player_ghost(playerID, level_id(), gPrevTimeTrialVehicle, &characterID, &time);
         if (cpakStatus == CONTROLLER_PAK_GOOD) {
             gTimeTrialVehicle = gPrevTimeTrialVehicle;
             gTimeTrialCharacter = characterID;
