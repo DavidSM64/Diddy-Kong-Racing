@@ -66,7 +66,7 @@ u32 *asset_table_load(u32 assetIndex) {
 #endif
 
     if (gAssetsLookupTable[0] < assetIndex) {
-        return 0;
+        return NULL;
     }
     assetIndex++;
     index = assetIndex + gAssetsLookupTable;
@@ -74,7 +74,7 @@ u32 *asset_table_load(u32 assetIndex) {
     size = *(index + 1) - start;
     out = (u32 *) mempool_alloc_safe(size, COLOUR_TAG_GREY);
     if (out == 0) {
-        return 0;
+        return NULL;
     }
 
     dmacopy_internal((u32) (start + __ASSETS_LUT_END), (u32) out, size);
@@ -147,7 +147,7 @@ UNUSED s32 asset_table_load_addr(u32 assetIndex, u32 address) {
 #endif
 
     if (gAssetsLookupTable[0] < assetIndex) {
-        return 0;
+        return NULL;
     }
     assetIndex++;
     index = assetIndex + gAssetsLookupTable;
@@ -178,7 +178,7 @@ s32 asset_load(u32 assetIndex, u32 address, s32 assetOffset, s32 size) {
 #endif
 
     if (size == 0 || gAssetsLookupTable[0] < assetIndex) {
-        return 0;
+        return NULL;
     }
 
     assetIndex++;
@@ -235,7 +235,7 @@ s32 asset_table_size(u32 assetIndex) {
 #endif
 
     if (gAssetsLookupTable[0] < assetIndex) {
-        return 0;
+        return NULL;
     }
 
     assetIndex++;
