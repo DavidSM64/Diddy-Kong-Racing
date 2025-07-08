@@ -398,7 +398,7 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
                 if (lasergun->targeting == FALSE) {
                     diffX = 45.0f;
                 }
-                mtxf_transform_point(&mtx, 0.0f, 0.0f, diffX, &laserBoltObj->x_velocity, &laserBoltObj->y_velocity,
+                mtxf_transform_point(mtx, 0.0f, 0.0f, diffX, &laserBoltObj->x_velocity, &laserBoltObj->y_velocity,
                                      &laserBoltObj->z_velocity);
             }
         }
@@ -1158,7 +1158,7 @@ void try_to_collect_egg(Object *obj, Object_CollectEgg *egg) {
                 transF.y_position = -interactedObj->trans.y_position;
                 transF.z_position = -interactedObj->trans.z_position;
                 mtxf_from_inverse_transform(&mat, &transF);
-                mtxf_transform_point(&mat, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position,
+                mtxf_transform_point(mat, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position,
                                      &obj->trans.x_position, &obj->trans.y_position, &obj->trans.z_position);
                 obj->trans.x_position /= interactedObj->trans.scale;
                 obj->trans.y_position /= interactedObj->trans.scale;
@@ -1913,7 +1913,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                             posX = wizShipObj->curVertData[wizShipModel->unk14[index]].x;
                             posY = wizShipObj->curVertData[wizShipModel->unk14[index]].y;
                             posZ = wizShipObj->curVertData[wizShipModel->unk14[index]].z;
-                            mtxf_transform_point(&shipMtx, posX, posY, posZ, &posX, &posY, &posZ);
+                            mtxf_transform_point(shipMtx, posX, posY, posZ, &posX, &posY, &posZ);
                             newObject.x = posX;
                             newObject.y = posY;
                             newObject.z = posZ;
@@ -1925,7 +1925,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                                 newObj->trans.rotation.y_rotation = wizShipObj->trans.rotation.y_rotation + 0x8000;
                                 newObj->trans.rotation.x_rotation = -wizShipObj->trans.rotation.x_rotation;
                                 newObj->properties.laserbolt.timer = 60;
-                                mtxf_transform_point(&laserMtx, 0.0f, 0.0f, -30.0f, &newObj->x_velocity,
+                                mtxf_transform_point(laserMtx, 0.0f, 0.0f, -30.0f, &newObj->x_velocity,
                                                      &newObj->y_velocity, &newObj->z_velocity);
                                 audspat_play_sound_at_position(
                                     SOUND_LASER_GUN, wizShipObj->trans.x_position, wizShipObj->trans.y_position,
@@ -4843,7 +4843,7 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     trans.z_position = 0.0f;
     trans.scale = 1.0f;
     mtxf_from_transform(&mtxf, &trans);
-    mtxf_transform_point(&mtxf, 0.0f, 0.0f, weapon->forwardVel, &obj->x_velocity, &obj->y_velocity, &obj->z_velocity);
+    mtxf_transform_point(mtxf, 0.0f, 0.0f, weapon->forwardVel, &obj->x_velocity, &obj->y_velocity, &obj->z_velocity);
     updateRateF = updateRate;
     if (osTvType == OS_TV_TYPE_PAL) {
         updateRateF *= 1.2;
@@ -6132,7 +6132,7 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     transform.y_position = 0.0f;
     transform.z_position = 0.0f;
     mtxf_from_transform(&mtx, &transform);
-    mtxf_transform_point(&mtx, 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
+    mtxf_transform_point(mtx, 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
     midiFade->unk8 = ox;
     midiFade->unkC = oy;
     midiFade->unk10 = oz;

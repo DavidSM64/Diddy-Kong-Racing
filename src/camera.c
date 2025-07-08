@@ -1423,7 +1423,7 @@ s32 mtx_cam_push(Gfx **dList, Mtx **mtx, ObjectTransform *trans, f32 scaleY, f32
     gSPMatrixDKR((*dList)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_DKR_INDEX_1);
 
     // Compute world-space position of the model's origin (0, 0, 0)
-    mtxf_transform_point(gModelMatrixF[gModelMatrixStackPos], 0.0f, 0.0f, 0.0f, &camRelX, &camRelY, &camRelZ);
+    mtxf_transform_point(*gModelMatrixF[gModelMatrixStackPos], 0.0f, 0.0f, 0.0f, &camRelX, &camRelY, &camRelZ);
 
     index = gActiveCameraID;
     if (gCutsceneCameraActive) {
@@ -1446,7 +1446,7 @@ s32 mtx_cam_push(Gfx **dList, Mtx **mtx, ObjectTransform *trans, f32 scaleY, f32
     gCameraTransform.scale = 1.0f;
 
     mtxf_from_inverse_transform(&gCurrentModelMatrixF, &gCameraTransform);
-    mtxf_transform_point(&gCurrentModelMatrixF, camRelX, camRelY, camRelZ, &camRelX, &camRelY, &camRelZ);
+    mtxf_transform_point(gCurrentModelMatrixF, camRelX, camRelY, camRelZ, &camRelX, &camRelY, &camRelZ);
 
     // Adjust for model scale
     scaleFactor = 1.0f / trans->scale;
@@ -1640,7 +1640,7 @@ MtxF *get_camera_matrix(void) {
 f32 get_distance_to_camera(f32 x, f32 y, f32 z) {
     f32 ox, oy, oz;
 
-    mtxf_transform_point(&gViewMatrixF, x, y, z, &ox, &oy, &oz);
+    mtxf_transform_point(gViewMatrixF, x, y, z, &ox, &oy, &oz);
 
     return oz;
 }

@@ -8014,7 +8014,7 @@ s32 menu_file_select_loop(s32 updateRate) {
 #ifdef AVOID_UB
     // i can be undefined in certain cases, and it's used for the save file number.
     i = 0;
-#endif;
+#endif
 
     settings = get_settings();
     charselect_music_channels(updateRate);

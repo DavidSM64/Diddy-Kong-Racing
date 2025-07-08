@@ -4983,7 +4983,7 @@ void func_80016748(Object *obj0, Object *obj1) {
                 xDiff = obj1->curVertData[objModel->unk1C[i]].x;
                 yDiff = obj1->curVertData[objModel->unk1C[i]].y;
                 zDiff = obj1->curVertData[objModel->unk1C[i]].z;
-                mtxf_transform_point((MtxF *) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                mtxf_transform_point((float (*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
                 temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->trans.scale) * 50.0;
                 xDiff -= obj0->trans.x_position;
                 yDiff -= obj0->trans.y_position;
@@ -5273,20 +5273,20 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, Vec3f *arg3, f32* ar
                 sp13C[j] = sp14C->unk0C[i + 0];
                 sp12C[j] = sp14C->unk0C[i + 1];
                 sp11C[j] = sp14C->unk0C[i + 2];
-                mtxf_transform_point(spDC,
+                mtxf_transform_point(*spDC,
                     arg4[i], arg4[i + 1], arg4[i + 2],
                     &sp100[j], &spF0[j], &spE0[j]);
             }
         } else {
             for (i = 0, j = 0; j < arg1; j++, i++) {
-                mtxf_transform_point(spDC,
+                mtxf_transform_point(*spDC,
                     arg3[i].x, arg3[i].y, arg3[i].z,
                     &sp13C[j], &sp12C[j], &sp11C[j]);
             }
         }
 
         for (i = 0, j = 0; j < arg1; j++, i+= 3) {
-            mtxf_transform_point(spDC,
+            mtxf_transform_point(*spDC,
                 arg4[i], arg4[i + 1], arg4[i + 2],
                 &sp100[j], &spF0[j], &spE0[j]);
         }
@@ -5324,7 +5324,7 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, Vec3f *arg3, f32* ar
                 sp14C->unk0C[i + 2] = spE0[j];
             }
             if (tempv0 & sp16C) {
-                mtxf_transform_point(spDC,
+                mtxf_transform_point(*spDC,
                     sp100[j], spF0[j], spE0[j],
                     &arg4[i + 0], &arg4[i + 1], &arg4[i + 2]);
             }
@@ -5640,7 +5640,7 @@ void func_80017E98(void) {
         transform.y_position = 0.0f;
         transform.z_position = 0.0f;
         mtxf_from_transform(&mtx, &transform);
-        mtxf_transform_point(&mtx, 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
+        mtxf_transform_point(mtx, 0.0f, 0.0f, 1.0f, &ox, &oy, &oz);
         checkpoint->rotationXFrac = ox;
         checkpoint->rotationYFrac = oy;
         checkpoint->rotationZFrac = oz;
