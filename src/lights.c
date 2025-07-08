@@ -110,7 +110,7 @@ ObjectLight *func_80031CAC(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) 
         light->unk42 = 0;
         light->unk44 = NULL;
         if (lightEntry->unk1C < 7) {
-            levelHeader = get_current_level_header();
+            levelHeader = level_header();
             if (((s32) levelHeader->unk74[lightEntry->unk1C]) != -1) {
                 light->unk44_asset = (MiscAssetObjectHeader24 *) levelHeader->unk74[lightEntry->unk1C];
                 light->unk48 = light->unk44_asset->unk0;

@@ -399,7 +399,7 @@ void hud_init_element(void) {
     s32 k;
     s32 temp;
 
-    temp = get_current_level_race_type();
+    temp = level_type();
     if (temp == RACETYPE_UNK1 || temp == RACETYPE_HUBWORLD) {
         gHudOffsetX = 0;
         gHudRaceStart = TRUE;
@@ -573,7 +573,7 @@ void hud_init_element(void) {
             gCurrentHud->entry[HUD_LAP_COUNT_LABEL].pos.x += -58.0f;
             gCurrentHud->entry[HUD_LAP_COUNT_FLAG].pos.x += -58.0f;
         }
-        switch (get_current_level_race_type()) {
+        switch (level_type()) {
             case RACETYPE_BOSS:
                 gCurrentHud->entry[HUD_BANANA_COUNT_ICON_SPIN].pos.x += -120.0f;
                 gCurrentHud->entry[HUD_BANANA_COUNT_NUMBER_1].pos.x += -120.0f;
@@ -630,7 +630,7 @@ void hud_init_element(void) {
         gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_1].spriteID = 9;
         gCurrentHud->entry[HUD_BALLOON_COUNT_NUMBER_2].spriteID = 9;
     }
-    if (get_current_level_race_type() & RACETYPE_CHALLENGE) {
+    if (level_type() & RACETYPE_CHALLENGE) {
         gPrevToggleSetting = gHudToggleSettings[1];
         gHudToggleSettings[1] = 0;
     } else {
@@ -683,7 +683,7 @@ void hud_render_player(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj,
     if (D_8012718A) {
         obj = get_racer_object_by_port(1 - gHudCurrentViewport);
     }
-    gHudLevelHeader = get_current_level_header();
+    gHudLevelHeader = level_header();
     if (obj == NULL) {
         if (cutscene_id() == 10) {
             obj = get_racer_object_by_port(PLAYER_ONE);
@@ -759,7 +759,7 @@ void hud_render_player(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj,
                         music_play(SEQUENCE_RACE_START_FANFARE);
                         sndp_set_active_sound_limit(12);
                     } else {
-                        start_level_music(1.0f);
+                        level_music_start(1.0f);
                     }
                     gRaceStartShowHudStep += 1;
                 }
@@ -811,7 +811,7 @@ void hud_render_player(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj,
                         hud_balloons(racer);
                         cam_set_sprite_anim_mode(SPRITE_ANIM_NORMALIZED);
                     } else {
-                        switch (get_current_level_race_type()) {
+                        switch (level_type()) {
                             case RACETYPE_DEFAULT:
                             case RACETYPE_HORSESHOE_GULCH:
                                 if (is_taj_challenge()) {
@@ -844,7 +844,7 @@ void hud_render_player(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj,
                         hud_time_trial_finish(racer, updateRate);
                     } else if (cam_get_viewport_layout() == VIEWPORT_LAYOUT_1_PLAYER && racer->finishPosition == 1) {
                         if (is_in_two_player_adventure()) {
-                            if (get_current_level_race_type() == RACETYPE_BOSS) {
+                            if (level_type() == RACETYPE_BOSS) {
                                 goto showFinishRace;
                             }
                             goto block_95;
@@ -1406,7 +1406,7 @@ void hud_main_boss(s32 countdown, Object *obj, s32 updateRate) {
     hud_race_time(racer, updateRate);
     hud_weapon(obj, updateRate);
 
-    level = get_current_level_header();
+    level = level_header();
     if (level->laps > 1) {
         hud_lap_count(racer, updateRate);
     }
@@ -1629,8 +1629,7 @@ void hud_main_time_trial(s32 arg0, Object *playerRacerObj, s32 updateRate) {
     if ((curRacer->lap > 0) && (curRacer->lap < gHudLevelHeader->laps) && (curRacer->lap_times[curRacer->lap] < 20) &&
         (gHUDVoiceSoundMask == 0) && (curRacer->vehicleID <= VEHICLE_PLANE)) {
         gHudSettings = get_settings();
-        if (curRacer->lap_times[curRacer->lap - 1] <
-            gHudSettings->flapTimesPtr[curRacer->vehicleID][get_current_map_id()]) {
+        if (curRacer->lap_times[curRacer->lap - 1] < gHudSettings->flapTimesPtr[curRacer->vehicleID][level_id()]) {
             stopwatchTimer = curRacer->lap_times[curRacer->lap - 1];
             for (i = 0; i < curRacer->lap - 1; i++) {
                 if (stopwatchTimer >= curRacer->lap_times[i]) {
@@ -1937,7 +1936,7 @@ void hud_race_start(s32 countdown, s32 updateRate) {
                     if (cam_get_viewport_layout() > TWO_PLAYERS) {
                         music_play(SEQUENCE_NONE);
                     } else {
-                        start_level_music(1.0f);
+                        level_music_start(1.0f);
                     }
                     sound_play(SOUND_WHOOSH1, NULL);
                     gRaceStartShowHudStep++;
@@ -2192,7 +2191,7 @@ void hud_race_position(Object_Racer *racer, s32 updateRate) {
     }
     place = racer->racePosition;
     if (get_race_countdown()) {
-        if (get_current_level_race_type() == RACETYPE_BOSS || is_taj_challenge()) {
+        if (level_type() == RACETYPE_BOSS || is_taj_challenge()) {
             place = 2;
         } else {
             settings = get_settings();
@@ -2552,7 +2551,7 @@ void hud_finish_position(Object_Racer *racer) {
 
     hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1]);
     hud_element_render(&gHudDL, &gHudMtx, &gHudVtx, &gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_2]);
-    if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE) && is_in_two_player_adventure() == FALSE) {
+    if (!(level_type() & RACETYPE_CHALLENGE_BATTLE) && is_in_two_player_adventure() == FALSE) {
         get_racer_objects(&racerCount);
         if (gNumActivePlayers >= 2 &&
             (is_in_two_player_adventure() == FALSE || is_postrace_viewport_active() == FALSE)) {
@@ -2599,7 +2598,7 @@ void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate) {
     LevelHeader *curLevelHeader;
     s32 temp_v0_4;
 
-    raceType = get_current_level_race_type();
+    raceType = level_type();
     if (is_in_two_player_adventure() && is_postrace_viewport_active() && gAdventurePlayerFinish == FALSE) {
         if (func_8000E184()) {
             gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].pos.y -= 108.0f;
@@ -2717,7 +2716,7 @@ void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate) {
                     break;
             }
             if (gNumActivePlayers != 1) {
-                curLevelHeader = get_current_level_header();
+                curLevelHeader = level_header();
                 totalRaceTime = 0;
                 fastestLapTime = racer->lap_times[0];
                 temp_v0_4 = 0;
@@ -2849,7 +2848,7 @@ void hud_time_trial_message(s16 *playerID) {
 
     if (playerID != NULL) {
 #if VERSION >= VERSION_79
-        if (settings->racers[*playerID].best_times & 0x80 && (get_current_level_race_type() == RACETYPE_DEFAULT)) {
+        if (settings->racers[*playerID].best_times & 0x80 && (level_type() == RACETYPE_DEFAULT)) {
 #else
         if (settings->racers[*playerID].best_times & 0x80) {
 #endif
@@ -3389,7 +3388,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
         }
     }
 
-    gHudLevelHeader = get_current_level_header();
+    gHudLevelHeader = level_header();
     objectGroup = get_racer_objects_by_port(&objectCount);
     gHudDL = *dList;
     gHudMtx = *mtx;
@@ -3613,9 +3612,8 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
             gMinimapScreenY = -gMinimapDotOffsetY / 2;
             break;
         case THREE_PLAYERS:
-            if (get_current_level_race_type() == RACETYPE_CHALLENGE_EGGS ||
-                get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE ||
-                get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
+            if (level_type() == RACETYPE_CHALLENGE_EGGS || level_type() == RACETYPE_CHALLENGE_BATTLE ||
+                level_type() == RACETYPE_CHALLENGE_BANANAS) {
                 gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8;
                 gMinimapScreenY = -gMinimapDotOffsetY / 2;
             } else {
@@ -3729,11 +3727,11 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
                                 gHudMinimapColours[someRacer->characterId].green,
                                 gHudMinimapColours[someRacer->characterId].blue, opacity);
             }
-            if (!(get_current_level_race_type() & RACETYPE_CHALLENGE) || (!someRacer->raceFinished)) {
+            if (!(level_type() & RACETYPE_CHALLENGE) || (!someRacer->raceFinished)) {
                 if (osTvType == OS_TV_TYPE_PAL) {
                     gCurrentHud->entry[HUD_MINIMAP_MARKER].pos.x -= 4.0f;
                 }
-                if (get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE) {
+                if (level_type() == RACETYPE_CHALLENGE_BATTLE) {
                     switch (someRacer->elevation) {
                         case ELEVATION_LOW:
                             gCurrentHud->entry[HUD_MINIMAP_MARKER].scale = 0.8f;

@@ -219,9 +219,9 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     sp6E = racer->unk1CA;
     miscAsset1 = (s8 *) get_misc_asset(ASSET_MISC_1);
     miscAsset2 = (s8 *) get_misc_asset(ASSET_MISC_2);
-    header = get_current_level_header();
+    header = level_header();
     racerGroup = get_racer_objects_by_position(&numRacers);
-    sp54 = get_ai_behaviour_table();
+    sp54 = aitable_get();
     if (racer->unk1C6 > 0) {
         racer->unk1C6 -= updateRate;
     } else {
@@ -547,7 +547,7 @@ void increment_ai_behaviour_chances(Object *obj, Object_Racer *racer, s32 update
         sBalloonLevelAI = 0;
         return;
     }
-    aiTable = get_ai_behaviour_table();
+    aiTable = aitable_get();
     if (racer->boostTimer) {
         if (sAIStartedBoosting == FALSE) {
             aiTable->percentages[AI_BLUE_BALLOON][AI_MIN] += aiTable->percentages[AI_BLUE_BALLOON][AI_MIN_STEP];
@@ -609,7 +609,7 @@ void increment_ai_behaviour_chances(Object *obj, Object_Racer *racer, s32 update
 void racer_AI_pathing_inputs(Object *obj, Object_Racer *racer, s32 updateRate) {
     s32 raceType;
 
-    raceType = get_current_level_race_type();
+    raceType = level_type();
 
     switch (raceType) {
         case RACETYPE_CHALLENGE_BATTLE:
@@ -711,7 +711,7 @@ void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRat
         return;
     }
 
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     raceType = levelHeader->race_type;
     sp38 = levelHeader->unk2A;
     if (aiRacer->unk1CD == 0) {
@@ -1083,7 +1083,7 @@ void racer_ai_eggs(Object *obj, Object_Racer *racer, s32 updateRate) {
         return;
     }
 
-    header = get_current_level_header()->unk2A;
+    header = level_header()->unk2A;
     if (racer->groundedWheels) {
         racer->unk1C6 += updateRate;
         if (racer->unk1C6 > 60) {
@@ -4211,7 +4211,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     } else {
         tempRacer->unk201 = 0;
     }
-    header = get_current_level_header();
+    header = level_header();
     gCurrentCourseHeight = header->course_height;
     tempRacer->throttleReleased = FALSE;
     if (tempRacer->playerIndex == PLAYER_COMPUTER) {
@@ -4495,7 +4495,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                     }
                 }
                 if (tempRacer->playerIndex != PLAYER_COMPUTER && tempRacer->lap + 1 == header->laps && !D_8011D580 &&
-                    get_current_level_race_type() == RACETYPE_DEFAULT) {
+                    level_type() == RACETYPE_DEFAULT) {
                     music_tempo_set_relative(1.12f);
                     D_8011D580 = 1;
                 }
@@ -4814,7 +4814,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
             spB8 = racer->buoyancy - 10.0;
             racerObj->y_velocity += spB8 * 0.065 * updateRateF;
         }
-        currentLevelHeader = get_current_level_header();
+        currentLevelHeader = level_header();
         if ((racer->buoyancy != 0.0 && currentLevelHeader->unk2 != 0) || gCurrentSurfaceType == SURFACE_FROZEN_WATER) {
             if (racer->unk1F0 != 0) {
                 racer->checkpoint_distance -= 0.3;
@@ -6334,7 +6334,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
         update_car_velocity_offground(obj, racer, updateRate, updateRateF);
     }
     apply_vehicle_rotation_offset(racer, updateRate, 0, 0, 0);
-    header = get_current_level_header();
+    header = level_header();
     if ((racer->buoyancy != 0.0 && header->unk2) || gCurrentSurfaceType == SURFACE_FROZEN_WATER) {
         if (racer->unk1F0) {
             racer->checkpoint_distance -= 0.3;
@@ -6860,7 +6860,8 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     hasCollision = FALSE;
     flags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
-        flags = collision_objectmodel(obj, 1, &hasCollision, (Vec3f *) racer->unkD8, (f32 *) &tempPos, &radius, &surface);
+        flags =
+            collision_objectmodel(obj, 1, &hasCollision, (Vec3f *) racer->unkD8, (f32 *) &tempPos, &radius, &surface);
     }
     if (flags & 0x80) {
         D_8011D548 = tempPos.x - obj->trans.x_position;
@@ -7277,7 +7278,7 @@ Object *func_8005698C(Object *racerObj, Object_Racer *racer, f32 *outDistance) {
     s32 isChallengeRace;
     s32 raceType;
 
-    raceType = get_current_level_race_type();
+    raceType = level_type();
     isChallengeRace = raceType & RACETYPE_CHALLENGE;
     if (racer->playerIndex == PLAYER_COMPUTER && !isChallengeRace) {
         curDistance = 0.0f;
@@ -7605,7 +7606,7 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
             newObject.objectID = ASSET_OBJECT_ID_COIN;
             i = number;
             do {
-                if (get_current_level_race_type() != RACETYPE_CHALLENGE) {
+                if (level_type() != RACETYPE_CHALLENGE) {
                     bananaObj = spawn_object(&newObject, OBJECT_SPAWN_UNK01);
                     if (bananaObj != NULL) {
                         bananaObj->level_entry = NULL;
@@ -8162,7 +8163,7 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (temp_v0 == 0) {
         return;
     }
-    if ((get_current_map_id() == 0) && (racer->checkpoint >= temp_v0)) {
+    if ((level_id() == 0) && (racer->checkpoint >= temp_v0)) {
         racer->lap = 0;
         racer->checkpoint = 0;
         racer->courseCheckpoint = 0;
@@ -8482,7 +8483,7 @@ s32 timetrial_ghost_read(Object *obj) {
 #endif
         return FALSE;
     }
-    if (ghostDataIndex != 2 && get_current_map_id() != gGhostMapID) {
+    if (ghostDataIndex != 2 && level_id() != gGhostMapID) {
         return FALSE;
     }
     nodeIndex = commonUnk0s32 - 1;
@@ -8682,7 +8683,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
 
     gCurrentPlayerIndex = -1;
     gameMode = get_game_mode();
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     if (racer->unk1F6 > 0) {
         racer->unk1F6 -= updateRate;
     } else {
@@ -8998,7 +8999,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
 #endif
 
     gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACERACCELERATION_UNKNOWN0);
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     checkpointCount = get_checkpoint_count();
     if (checkpointCount == 0) {
         return;

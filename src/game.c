@@ -63,7 +63,7 @@ s16 gLevelPropertyStack[5 * 4]; // Stores level info for cutscenes. 5 sets of fo
  * Additionally loads other globally accessed information, like level names, then runs a checksum compare, for good
  * measure.
  */
-void init_level_globals(void) {
+void level_global_init(void) {
     s32 i;
     s32 size;
     UNUSED s32 pad;
@@ -244,10 +244,10 @@ UNUSED s32 search_level_properties_backwards(s32 levelID, s8 raceType, s8 worldI
 }
 
 /**
- * Return the number of tracks that fall under a certain race type.
+ * Return the number of tracks that aren't challenge maps.
  */
-UNUSED s32 get_race_type_count(s8 raceType) {
-    if (raceType >= 0 && raceType < 16) {
+UNUSED s32 leveltable_non_challenge_count(s8 raceType) {
+    if (raceType >= RACETYPE_DEFAULT && raceType < 16) {
         return gRaceTypeCountTable[raceType];
     }
     return 0;
@@ -256,7 +256,7 @@ UNUSED s32 get_race_type_count(s8 raceType) {
 /**
  * Returns the number of levels that belong to one hub world.
  */
-UNUSED s32 get_world_level_count(s8 worldID) {
+UNUSED s32 leveltable_world_level_count(s8 worldID) {
     s32 out, i;
     out = 0;
     for (i = 0; i < gNumberOfLevelHeaders; i++) {
@@ -270,7 +270,7 @@ UNUSED s32 get_world_level_count(s8 worldID) {
 /**
  * Returns the default vehicle from the set map ID.
  */
-Vehicle get_map_default_vehicle(s32 mapId) {
+Vehicle leveltable_vehicle_default(s32 mapId) {
     if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
         return gGlobalLevelTable[mapId].vehicles & 0xF;
     }
@@ -280,7 +280,7 @@ Vehicle get_map_default_vehicle(s32 mapId) {
 /**
  * Returns the available vehicles from the set map ID.
  */
-s32 get_map_available_vehicles(s32 mapId) {
+s32 leveltable_vehicle_usable(s32 mapId) {
     if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
         s32 temp = gGlobalLevelTable[mapId].vehicles;
         if (temp != 0) {
@@ -293,7 +293,7 @@ s32 get_map_available_vehicles(s32 mapId) {
 /**
  * Returns the race type from the set map ID.
  */
-s8 get_map_race_type(s32 mapId) {
+s8 leveltable_type(s32 mapId) {
     if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
         return gGlobalLevelTable[mapId].raceType;
     }
@@ -303,7 +303,7 @@ s8 get_map_race_type(s32 mapId) {
 /**
  * Returns the world ID from the set map ID.
  */
-s8 get_map_world_id(s32 mapId) {
+s8 leveltable_world(s32 mapId) {
     if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
         return gGlobalLevelTable[mapId].world;
     }
@@ -313,7 +313,7 @@ s8 get_map_world_id(s32 mapId) {
 /**
  * Returns the ID of the current hub world. Example: Dino Domain.
  */
-s32 get_hub_area_id(s32 worldId) {
+s32 level_world_id(s32 worldId) {
     s8 *hubAreaIds;
 
     if (worldId < 0 || worldId >= gNumberOfWorlds) {
@@ -327,7 +327,7 @@ s32 get_hub_area_id(s32 worldId) {
 /**
  * Writes the level and hub count to the two arguments passed through.
  */
-void get_number_of_levels_and_worlds(s32 *outLevelCount, s32 *outWorldCount) {
+void level_count(s32 *outLevelCount, s32 *outWorldCount) {
     *outLevelCount = gNumberOfLevelHeaders;
     *outWorldCount = gNumberOfWorlds;
 }
@@ -336,7 +336,7 @@ void get_number_of_levels_and_worlds(s32 *outLevelCount, s32 *outWorldCount) {
  * Returns true if the current event is a regular race or a boss race.
  * Returns false if it's a menu, challenge or hubworld.
  */
-s32 check_if_in_race(void) {
+s32 level_is_race(void) {
     return gIsInRace;
 }
 
@@ -345,7 +345,7 @@ s32 check_if_in_race(void) {
  * Sets weather, fog and active cutscenes where applicable.
  * Official Name: levelInit
  */
-void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
+void level_load(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     s8 *someAsset;
     s32 i;
     s32 size;
@@ -391,9 +391,9 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     D_800DD330 = 0;
     prevLevelID = levelId;
     if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
-        clear_level_property_stack();
+        level_properties_reset();
     }
-    if (get_level_property_stack_pos() == 0 && D_800DD32C == 0) {
+    if (level_properties_get() == 0 && D_800DD32C == 0) {
         if (gCurrentLevelHeader->race_type == RACETYPE_BOSS) {
             var_s0 = settings->courseFlagsPtr[levelId];
             wizpig = FALSE;
@@ -402,7 +402,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
                 wizpig = TRUE;
             }
             if (!(var_s0 & 1) || wizpig) {
-                push_level_property_stack(levelId, entranceId, vehicleId, cutsceneId);
+                level_properties_push(levelId, entranceId, vehicleId, cutsceneId);
                 if (settings->bosses & (1 << settings->worldId)) {
                     cutsceneId = CUTSCENE_ID_UNK_7;
                 } else {
@@ -429,7 +429,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
                 if (settings->keys & (1 << var_s0) &&
                     !(settings->cutsceneFlags & (CUTSCENE_DINO_DOMAIN_KEY << (var_s0 + 31)))) {
                     // Trigger World Key unlocking Challenge Door cutscene.
-                    push_level_property_stack(levelId, entranceId, vehicleId, cutsceneId);
+                    level_properties_push(levelId, entranceId, vehicleId, cutsceneId);
                     settings->cutsceneFlags |= CUTSCENE_DINO_DOMAIN_KEY << (var_s0 + 31);
                     someAsset = (s8 *) get_misc_asset(ASSET_MISC_68);
                     levelId = someAsset[var_s0 - 1];
@@ -441,7 +441,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD && gCurrentLevelHeader->world == WORLD_CENTRAL_AREA &&
             !(settings->cutsceneFlags & CUTSCENE_WIZPIG_FACE) && settings->wizpigAmulet >= 4) {
             // Trigger wizpig face cutscene
-            push_level_property_stack(levelId, entranceId, vehicleId, cutsceneId);
+            level_properties_push(levelId, entranceId, vehicleId, cutsceneId);
             entranceId = 0;
             cutsceneId = CUTSCENE_NONE;
             settings->cutsceneFlags |= CUTSCENE_WIZPIG_FACE;
@@ -457,7 +457,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         load_asset_to_address(ASSET_LEVEL_HEADERS, (u32) gCurrentLevelHeader, offset, size);
     }
     mempool_free(gTempAssetTable);
-    set_ai_level((s8 *) &gCurrentLevelHeader->AILevelTable);
+    aitable_init((s8 *) &gCurrentLevelHeader->AILevelTable);
     func_8000CBC0();
     gMapId = levelId;
     for (var_s0 = 0; var_s0 < 7; var_s0++) {
@@ -597,7 +597,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
 /**
  * If the level's music ID is nonzero, set the current background music.
  */
-void start_level_music(f32 tempo) {
+void level_music_start(f32 tempo) {
     if (gCurrentLevelHeader->music != SEQUENCE_NONE) {
         music_channel_reset_all();
         music_play(gCurrentLevelHeader->music);
@@ -609,7 +609,7 @@ void start_level_music(f32 tempo) {
 /**
  * Return the current map ID.
  */
-s32 get_current_map_id(void) {
+s32 level_id(void) {
     return gMapId;
 }
 
@@ -617,7 +617,7 @@ s32 get_current_map_id(void) {
  * Return the race type ID of the current level.
  * Official name: levelGetType
  */
-u8 get_current_level_race_type(void) {
+u8 level_type(void) {
     return gCurrentLevelHeader->race_type;
 }
 
@@ -625,21 +625,21 @@ u8 get_current_level_race_type(void) {
  * Return the header data of the current level.
  * Official Name: levelGetLevel
  */
-LevelHeader *get_current_level_header(void) {
+LevelHeader *level_header(void) {
     return gCurrentLevelHeader;
 }
 
 /**
  * Returns the amount of level headers there are in the game.
  */
-UNUSED u8 get_total_level_header_count(void) {
+UNUSED u8 level_header_count(void) {
     return gNumberOfLevelHeaders - 1;
 }
 
 /**
  * Returns the name of the level from the passed ID
  */
-char *get_level_name(s32 levelId) {
+char *level_name(s32 levelId) {
     char *levelName;
     u8 numberOfNullPointers = 0;
 
@@ -677,8 +677,8 @@ char *get_level_name(s32 levelId) {
 /**
  * Call multiple functions to stop and free audio, then free track, weather and wave data.
  */
-void clear_audio_and_track(void) {
-    free_ai_behaviour_table();
+void level_free(void) {
+    aitable_free();
     bgdraw_primcolour(0, 0, 0);
     mempool_free(gCurrentLevelHeader);
     sndp_stop_all_looped();
@@ -702,7 +702,7 @@ void clear_audio_and_track(void) {
  * Set the skill level of the AI.
  * Apply offsets based on game mode.
  */
-void set_ai_level(s8 *aiLevelTable) {
+void aitable_init(s8 *aiLevelTable) {
     s32 temp;
     UNUSED s32 temp2;
     s16 tableIndexCount;
@@ -755,21 +755,21 @@ void set_ai_level(s8 *aiLevelTable) {
 /**
  * Frees the AI behaviour table from memory.
  */
-void free_ai_behaviour_table(void) {
+void aitable_free(void) {
     mempool_free(gAIBehaviourTable);
 }
 
 /**
  * Return the behaviour value table for AI racers.
  */
-AIBehaviourTable *get_ai_behaviour_table(void) {
+AIBehaviourTable *aitable_get(void) {
     return gAIBehaviourTable;
 }
 
 /**
  * Return whether it is a standard race with two players in adventure mode.
  */
-s8 is_two_player_adventure_race(void) {
+s8 race_is_adventure_2P(void) {
     return gTwoPlayerAdvRace;
 }
 
@@ -777,7 +777,7 @@ s8 is_two_player_adventure_race(void) {
  * Pushes the current level data onto a stack.
  * Used for preserving certain properties when viewing cutscenes, where this information would otherwise be lost.
  */
-void push_level_property_stack(s32 levelId, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
+void level_properties_push(s32 levelId, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     gLevelPropertyStack[gLevelPropertyStackPos++] = levelId;
     gLevelPropertyStack[gLevelPropertyStackPos++] = entranceId;
     gLevelPropertyStack[gLevelPropertyStackPos++] = vehicleId;
@@ -788,7 +788,7 @@ void push_level_property_stack(s32 levelId, s32 entranceId, Vehicle vehicleId, s
  * Reads the level data from the stack, then pops it.
  * Used after cutscenes to properly restore the previous level status.
  */
-void pop_level_property_stack(s32 *levelId, s32 *entranceId, s32 *vehicleId, s32 *cutsceneId) {
+void level_properties_pop(s32 *levelId, s32 *entranceId, s32 *vehicleId, s32 *cutsceneId) {
     s32 tempVehicleID;
 
     gLevelPropertyStackPos--;
@@ -807,7 +807,7 @@ void pop_level_property_stack(s32 *levelId, s32 *entranceId, s32 *vehicleId, s32
 /**
  * Resets the position in the level propert stack, effectively clearing it.
  */
-void clear_level_property_stack(void) {
+void level_properties_reset(void) {
     gLevelPropertyStackPos = 0;
 }
 
@@ -815,7 +815,7 @@ void clear_level_property_stack(void) {
  * Returns the position of the level property stack.
  * Should always return a multiple of 4.
  */
-s16 get_level_property_stack_pos(void) {
+s16 level_properties_get(void) {
     return gLevelPropertyStackPos;
 }
 

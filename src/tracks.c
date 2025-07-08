@@ -199,7 +199,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
                 u32 arg6) {
     s32 i;
 
-    gCurrentLevelHeader2 = get_current_level_header();
+    gCurrentLevelHeader2 = level_header();
     D_8011B0F8 = FALSE;
     gTTCamPlayerID = 0;
     gTTCamID = 0;
@@ -398,9 +398,8 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
                           updateRate);
     }
     // Show TT Cam toggle for the fourth viewport when playing 3 player.
-    if (numViewports == 3 && get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS &&
-        get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE &&
-        get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) {
+    if (numViewports == 3 && level_type() != RACETYPE_CHALLENGE_EGGS && level_type() != RACETYPE_CHALLENGE_BATTLE &&
+        level_type() != RACETYPE_CHALLENGE_BANANAS) {
         if (hud_setting() == 0) {
             if (flip) {
                 gSPSetGeometryMode(gTrackDL++, G_CULL_FRONT);
@@ -1708,7 +1707,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
                              gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
         }
     }
-    get_current_level_header()->unk3 = 1;
+    level_header()->unk3 = 1;
     render_level_geometry_and_objects();
 }
 

@@ -302,22 +302,22 @@ void racer_boss_finish(Object_Racer *racer, s8 *sceneTimer) {
             }
             if (settings->worldId == WORLD_CENTRAL_AREA) {
                 if (finishPos == 1) {
-                    push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
-                    push_level_property_stack(miscAsset68Byte5, 0, -1, 0);
-                    push_level_property_stack(i, 0, -1, 1);
+                    level_properties_push(SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
+                    level_properties_push(miscAsset68Byte5, 0, -1, 0);
+                    level_properties_push(i, 0, -1, 1);
                 } else {
-                    push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
-                    push_level_property_stack(i, 0, -1, 2);
+                    level_properties_push(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
+                    level_properties_push(i, 0, -1, 2);
                 }
             } else if (finishPos == 1) {
                 set_eeprom_settings_value(1); // Set Adventure Two Unlocked
-                push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
-                push_level_property_stack(miscAsset68Byte7, 0, -1, 0);
-                push_level_property_stack(miscAsset68Byte6, 0, -1, 0);
-                push_level_property_stack(i, 0, -1, 1);
+                level_properties_push(SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
+                level_properties_push(miscAsset68Byte7, 0, -1, 0);
+                level_properties_push(miscAsset68Byte6, 0, -1, 0);
+                level_properties_push(i, 0, -1, 1);
             } else {
-                push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
-                push_level_property_stack(i, 0, -1, 2);
+                level_properties_push(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
+                level_properties_push(i, 0, -1, 2);
             }
             if (finishPos == 1) {
                 level_transition_begin(4);
@@ -346,8 +346,8 @@ void racer_boss_finish(Object_Racer *racer, s8 *sceneTimer) {
             settings->courseFlagsPtr[settings->courseId] |= 2;
             if (!(settings->bosses & worldBit)) {
                 settings->bosses |= worldBit;
-                push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                push_level_property_stack(i, 4, -1, 4);
+                level_properties_push(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
+                level_properties_push(i, 4, -1, 4);
             } else {
                 worldBit <<= 6;
                 if (!(settings->bosses & worldBit)) {
@@ -362,24 +362,23 @@ void racer_boss_finish(Object_Racer *racer, s8 *sceneTimer) {
                         settings->wizpigAmulet = worldBit;
                     }
                     if (worldBit != 0) {
-                        push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                        push_level_property_stack(ASSET_LEVEL_WIZPIGAMULETSEQUENCE_NAME, 0, -1,
-                                                  settings->wizpigAmulet - 1);
-                        push_level_property_stack(i, 6, -1, 6);
+                        level_properties_push(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
+                        level_properties_push(ASSET_LEVEL_WIZPIGAMULETSEQUENCE_NAME, 0, -1, settings->wizpigAmulet - 1);
+                        level_properties_push(i, 6, -1, 6);
                     } else {
-                        push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                        push_level_property_stack(i, 4, -1, 4);
+                        level_properties_push(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
+                        level_properties_push(i, 4, -1, 4);
                     }
                 } else {
-                    push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                    push_level_property_stack(i, 4, -1, 4);
+                    level_properties_push(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
+                    level_properties_push(i, 4, -1, 4);
                 }
             }
             level_transition_begin(4);
             instShowBearBar();
         } else {
-            push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
-            push_level_property_stack(i, 5, -1, 5);
+            level_properties_push(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
+            level_properties_push(i, 5, -1, 5);
             level_transition_begin(3);
         }
         arg1_ret++;

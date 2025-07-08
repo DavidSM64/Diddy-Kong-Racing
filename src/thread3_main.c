@@ -379,7 +379,7 @@ void load_next_ingame_level(s32 numPlayers, s32 trackID, Vehicle vehicle) {
 }
 
 /**
- * Calls load_level() with the same arguments except for the cutsceneId,
+ * Calls level_load() with the same arguments except for the cutsceneId,
  * which is the value at gGameCurrentCutscene. Also does some other stuff.
  * Used when ingame.
  */
@@ -388,7 +388,7 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     mempool_free_timer(0);
     cam_init();
     load_game_text_table();
-    load_level(levelId, numberOfPlayers, entranceId, vehicleId, gGameCurrentCutscene);
+    level_load(levelId, numberOfPlayers, entranceId, vehicleId, gGameCurrentCutscene);
     hud_init(cam_get_viewport_layout());
     init_particle_buffers(8, 16, 150, 100, 50, 0);
     ainode_update();
@@ -410,7 +410,7 @@ void unload_level_game(void) {
         }
         gSkipGfxTask = TRUE;
     }
-    clear_audio_and_track();
+    level_free();
     transition_begin(&D_800DD3F4);
     reset_particles();
     hud_free();
@@ -447,9 +447,9 @@ void mode_game(s32 updateRate) {
     if (!gIsPaused) {
         obj_update(updateRate);
         if (check_if_showing_cutscene_camera() == 0 || get_race_countdown()) {
-            if (buttonPressedInputs & START_BUTTON && get_level_property_stack_pos() == 0 &&
-                gDrumstickSceneLoadTimer == 0 && gGameMode == GAMEMODE_INGAME && gPostRaceViewPort == FALSE &&
-                gLevelLoadTimer == 0 && gPauseLockTimer == 0) {
+            if (buttonPressedInputs & START_BUTTON && level_properties_get() == 0 && gDrumstickSceneLoadTimer == 0 &&
+                gGameMode == GAMEMODE_INGAME && gPostRaceViewPort == FALSE && gLevelLoadTimer == 0 &&
+                gPauseLockTimer == 0) {
                 buttonPressedInputs = 0;
                 gIsPaused = TRUE;
                 menu_pause_init();
@@ -483,7 +483,7 @@ void mode_game(s32 updateRate) {
                 func_8006D8F0(-1);
                 break;
             case POSTRACE_OPT_4:
-                clear_level_property_stack();
+                level_properties_reset();
                 gDrumstickSceneLoadTimer = 0;
                 buttonHeldInputs |= (L_TRIG | R_TRIG);
                 break;
@@ -564,7 +564,7 @@ void mode_game(s32 updateRate) {
                 gDrumstickSceneLoadTimer = 0;
                 sound_clear_delayed();
                 reset_delayed_text();
-                clear_level_property_stack();
+                level_properties_reset();
                 buttonHeldInputs |= (L_TRIG | R_TRIG);
                 break;
         }
@@ -586,8 +586,8 @@ void mode_game(s32 updateRate) {
         gDrumstickSceneLoadTimer -= updateRate;
         if (gDrumstickSceneLoadTimer <= 0) {
             gDrumstickSceneLoadTimer = 0;
-            push_level_property_stack(ASSET_LEVEL_CENTRALAREAHUB, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
-            push_level_property_stack(ASSET_LEVEL_WIZPIGAMULETSEQUENCE, 0, -1, CUTSCENE_ID_UNK_A);
+            level_properties_push(ASSET_LEVEL_CENTRALAREAHUB, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
+            level_properties_push(ASSET_LEVEL_WIZPIGAMULETSEQUENCE, 0, -1, CUTSCENE_ID_UNK_A);
             sp3C = TRUE;
         }
     }
@@ -621,8 +621,8 @@ void mode_game(s32 updateRate) {
         }
     }
     if (sp3C) {
-        if (get_level_property_stack_pos() != 0) {
-            pop_level_property_stack(&gPlayableMapId, &gGameCurrentEntrance, &i, &gGameCurrentCutscene);
+        if (level_properties_get() != 0) {
+            level_properties_pop(&gPlayableMapId, &gGameCurrentEntrance, &i, &gGameCurrentCutscene);
             set_frame_blackout_timer();
             if (gPlayableMapId < 0) {
                 if (gPlayableMapId == SPECIAL_MAP_ID_NO_LEVEL || gPlayableMapId == SPECIAL_MAP_ID_UNK_NEG10) {
@@ -644,7 +644,7 @@ void mode_game(s32 updateRate) {
         }
     } else {
         sp3C = func_8006C300();
-        if (get_level_property_stack_pos()) {
+        if (level_properties_get()) {
             if (gLevelLoadTimer == 0) {
                 i = func_800214C4();
                 if ((i != 0) || ((buttonPressedInputs & A_BUTTON) && (sp3C != 0))) {
@@ -652,7 +652,7 @@ void mode_game(s32 updateRate) {
                         music_change_on();
                     }
                     set_frame_blackout_timer();
-                    pop_level_property_stack(&gPlayableMapId, &gGameCurrentEntrance, &i, &gGameCurrentCutscene);
+                    level_properties_pop(&gPlayableMapId, &gGameCurrentEntrance, &i, &gGameCurrentCutscene);
                     if (gPlayableMapId < 0) {
                         if (gPlayableMapId == -1 || gPlayableMapId == -10) {
                             if (gPlayableMapId == -10 && is_in_two_player_adventure()) {
@@ -731,7 +731,7 @@ void mode_game(s32 updateRate) {
                 gPlayableMapId = gLevelSettings[0];
                 gGameCurrentEntrance = gLevelSettings[15];
                 gGameCurrentCutscene = gLevelSettings[gLevelSettings[1] + 8];
-                gLevelDefaultVehicleID = get_map_default_vehicle(gPlayableMapId);
+                gLevelDefaultVehicleID = leveltable_vehicle_default(gPlayableMapId);
                 if (gGameCurrentCutscene < 0) {
                     gGameCurrentCutscene = CUTSCENE_ID_UNK_64;
                 }
@@ -872,14 +872,14 @@ Vehicle get_level_default_vehicle(void) {
 }
 
 /**
- * Calls load_level() with the same arguments, but also does some other stuff.
+ * Calls level_load() with the same arguments, but also does some other stuff.
  * Used for menus.
  */
 void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     mempool_free_timer(0);
     cam_init();
     load_game_text_table();
-    load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
+    level_load(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
     hud_init(cam_get_viewport_layout());
     init_particle_buffers(4, 4, 110, 48, 32, 0);
     ainode_update();
@@ -895,7 +895,7 @@ void unload_level_menu(void) {
     if (!gIsLoading) {
         gIsLoading = TRUE;
         mempool_free_timer(0);
-        clear_audio_and_track();
+        level_free();
         transition_begin(&D_800DD3F4);
         reset_particles();
         hud_free();
@@ -950,7 +950,7 @@ void mode_menu(s32 updateRate) {
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
         gPlayableMapId = menuLoopResult & 0x7F;
-        gLevelDefaultVehicleID = get_map_default_vehicle(gPlayableMapId);
+        gLevelDefaultVehicleID = leveltable_vehicle_default(gPlayableMapId);
         gGameCurrentEntrance = 0;
         gGameCurrentCutscene = CUTSCENE_ID_UNK_64;
         gGameMode = GAMEMODE_INGAME;
@@ -1001,7 +1001,7 @@ void mode_menu(s32 updateRate) {
                 gPlayableMapId = gLevelSettings[0];
                 gGameCurrentEntrance = gLevelSettings[15];
                 gGameCurrentCutscene = gLevelSettings[gLevelSettings[1] + 8];
-                gLevelDefaultVehicleID = get_map_default_vehicle(gPlayableMapId);
+                gLevelDefaultVehicleID = leveltable_vehicle_default(gPlayableMapId);
                 load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
                 break;
             default:
@@ -1077,9 +1077,9 @@ void calc_and_alloc_heap_for_settings(void) {
     u32 sizes[15];
     s32 numWorlds, numLevels;
 
-    init_level_globals();
+    level_global_init();
     reset_character_id_slots();
-    get_number_of_levels_and_worlds(&numLevels, &numWorlds);
+    level_count(&numLevels, &numWorlds);
     sizes[0] = sizeof(Settings);
     sizes[1] = sizes[0] + (numLevels * 4); // balloonsPtr
     sizes[2] = sizes[1] + (numWorlds * 2); // flapInitialsPtr[0]
@@ -1162,7 +1162,7 @@ void clear_lap_records(Settings *settings, s32 flags) {
     s32 index;
     u16 *temp_v0;
 
-    get_number_of_levels_and_worlds(&numLevels, &numWorlds);
+    level_count(&numLevels, &numWorlds);
     temp_v0 = (u16 *) get_misc_asset(ASSET_MISC_23);
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         for (j = 0; j < numLevels; j++) {
@@ -1187,7 +1187,7 @@ void clear_game_progress(Settings *settings) {
     s32 worldCount;
     s32 levelCount;
 
-    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    level_count(&levelCount, &worldCount);
     settings->newGame = TRUE;
 
     for (i = 0; i < worldCount; i++) {
