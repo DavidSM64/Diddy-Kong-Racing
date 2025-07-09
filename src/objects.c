@@ -992,8 +992,7 @@ void track_spawn_objects(s32 mapID, s32 index) {
     if (assetSize != 0) {
         compressedAsset = (u8 *) mem;
         compressedAsset =
-            ((compressedAsset + get_asset_uncompressed_size(ASSET_LEVEL_OBJECT_MAPS, assetOffset)) - (0, assetSize)) +
-            0x20;
+            ((compressedAsset + gzip_size_uncompressed(ASSET_LEVEL_OBJECT_MAPS, assetOffset)) - (0, assetSize)) + 0x20;
         asset_load(ASSET_LEVEL_OBJECT_MAPS, (u32) compressedAsset, assetOffset, assetSize);
         gzip_inflate(compressedAsset, (u8 *) mem);
         mempool_free(objMapTable);

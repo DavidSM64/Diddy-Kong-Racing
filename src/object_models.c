@@ -126,7 +126,7 @@ ModelInstance *object_model_init(s32 modelID, s32 flags) {
 
     temp_s0 = gObjectModelTable[modelID];
     sp48 = gObjectModelTable[modelID + 1] - temp_s0;
-    modelSize = get_asset_uncompressed_size(ASSET_OBJECT_MODELS, temp_s0) + sizeof(ObjectModel);
+    modelSize = gzip_size_uncompressed(ASSET_OBJECT_MODELS, temp_s0) + sizeof(ObjectModel);
     objMdl = (ObjectModel *) mempool_alloc(modelSize, COLOUR_TAG_RED);
     if (objMdl == NULL) {
 #if VERSION >= VERSION_79
@@ -925,7 +925,7 @@ s32 model_anim_init(ObjectModel *model, s32 modelID) {
         assetOffset = gObjectAnimationTable[start];
         animAddress = gObjectAnimationTable[start + 1] - assetOffset;
         assetSize = animAddress;
-        size = get_asset_uncompressed_size(ASSET_OBJECT_ANIMATIONS, assetOffset) + 0x80;
+        size = gzip_size_uncompressed(ASSET_OBJECT_ANIMATIONS, assetOffset) + 0x80;
         model->animations[i].animData = (u8 *) mempool_alloc(size, COLOUR_TAG_RED);
         if (model->animations[i].animData == NULL) {
             for (j = 0; j < i2; j++) {

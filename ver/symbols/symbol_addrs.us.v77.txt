@@ -1834,7 +1834,7 @@ osCreatePiManager = 0x800C6000;
 // gzip.c .text
 gzip_init = 0x800C6170;
 byteswap32 = 0x800C61AC;
-get_asset_uncompressed_size = 0x800C61DC;
+gzip_size_uncompressed = 0x800C61DC;
 gzip_inflate = 0x800C6218;
 gzip_huft_build = 0x800C6274;
 
