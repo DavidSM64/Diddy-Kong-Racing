@@ -1118,7 +1118,7 @@ UNUSED u8 func_8007C660(s32 texID) {
         for (i = 0; i < gSpriteTableSize; i++) {
             spriteAsset = gCurrentSpriteAsset;
             asset_load(ASSET_SPRITES, (u32) spriteAsset, gSpriteOffsetTable[i],
-                                  gSpriteOffsetTable[i + 1] - gSpriteOffsetTable[i]);
+                       gSpriteOffsetTable[i + 1] - gSpriteOffsetTable[i]);
             numTextures = spriteAsset->frameTexOffsets[spriteAsset->numberOfFrames];
             for (j = 0; j < numTextures; j++) {
                 D_80126370[spriteAsset->baseTextureId + j] = TRUE;

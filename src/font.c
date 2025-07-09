@@ -1360,7 +1360,7 @@ void func_800C6464_C7064(void) {
         jpFontHeader = &D_8012C2A4_EE5E4[i];
         for (charIndex = 0; charIndex < JP_FONT_ARRAY_SIZE; charIndex++) {
             asset_load(ASSET_JAPANESE_FONTS, (u32) jpFontData,
-                                  jpFontHeader->offsetToData + (charIndex * jpFontHeader->bytesPerCharacter), 0x40);
+                       jpFontHeader->offsetToData + (charIndex * jpFontHeader->bytesPerCharacter), 0x40);
             D_8012C2A8_EE5E8[i]->spacing[charIndex] = jpFontData->spacing;
         }
     }
@@ -1477,9 +1477,9 @@ s32 func_800C68CC_C74CC(u16 arg0) {
             }
             asset = &D_8012C2C0_EE600[curIndex];
             asset_load(ASSET_JAPANESE_FONTS, (u32) asset,
-                                  D_8012C2A4_EE5E4[fontInUse].offsetToData +
-                                      (D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter * arg0),
-                                  D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter);
+                       D_8012C2A4_EE5E4[fontInUse].offsetToData +
+                           (D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter * arg0),
+                       D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter);
             fontCreateDisplayList((*D_8012C2BC_EE5FC)[curIndex].dList, asset, D_8012C2A4_EE5E4[fontInUse].x,
                                   D_8012C2A4_EE5E4[fontInUse].y);
         }

@@ -89,8 +89,7 @@ void audio_init(OSSched *sc) {
 
     addrPtr = (s32 *) asset_table_load(ASSET_AUDIO_TABLE);
     gSoundBank = (ALBankFile *) mempool_alloc_safe(addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1], COLOUR_TAG_CYAN);
-    asset_load(ASSET_AUDIO, (u32) gSoundBank, addrPtr[ASSET_AUDIO_1],
-                          addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1]);
+    asset_load(ASSET_AUDIO, (u32) gSoundBank, addrPtr[ASSET_AUDIO_1], addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1]);
     alBnkfNew(gSoundBank, asset_rom_offset(ASSET_AUDIO, addrPtr[ASSET_AUDIO_2]));
 
     gSoundTableSize = addrPtr[ASSET_AUDIO_7] - addrPtr[ASSET_AUDIO_6];
@@ -1016,8 +1015,8 @@ void music_sequence_init(ALCSPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *se
 
     if ((alCSPGetState(seqp) == AL_STOPPED) && (*seqID != 0)) {
         asset_load(ASSET_AUDIO, (u32) sequence,
-                              gSequenceTable->seqArray[*seqID].offset - asset_rom_offset(ASSET_AUDIO, 0),
-                              (s32) gSeqLengthTable[*seqID]);
+                   gSequenceTable->seqArray[*seqID].offset - asset_rom_offset(ASSET_AUDIO, 0),
+                   (s32) gSeqLengthTable[*seqID]);
         alCSeqNew(seq, sequence);
         alCSPSetSeq(seqp, seq);
         alCSPPlay(seqp);
