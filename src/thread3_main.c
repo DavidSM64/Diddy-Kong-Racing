@@ -210,7 +210,7 @@ void init_game(void) {
     }
 #endif
     video_init(VIDEO_MODE_LOWRES_LPN, &gMainSched);
-    init_PI_mesg_queue();
+    pi_init();
     gfxtask_init(&gMainSched);
     audio_init(&gMainSched);
     audspat_init();

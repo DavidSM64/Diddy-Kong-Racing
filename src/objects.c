@@ -730,13 +730,13 @@ void allocate_object_pools(void) {
     gAINodes = mempool_alloc_safe(sizeof(uintptr_t) * AINODE_COUNT, COLOUR_TAG_BLUE);
     D_8011ADCC = mempool_alloc_safe(8, COLOUR_TAG_BLUE);
     D_8011AFF4 = mempool_alloc_safe(sizeof(unk800179D0) * 16, COLOUR_TAG_BLUE);
-    gAssetsLvlObjTranslationTable = (s16 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
-    gAssetsLvlObjTranslationTableLength = (get_size_of_asset_section(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
+    gAssetsLvlObjTranslationTable = (s16 *) asset_table_load(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
+    gAssetsLvlObjTranslationTableLength = (asset_table_size(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
     while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
         gAssetsLvlObjTranslationTableLength--;
     }
     gSpawnObjectHeap = mempool_alloc_safe(OBJECT_BLUEPRINT_SIZE, COLOUR_TAG_BLUE);
-    gAssetsObjectHeadersTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
+    gAssetsObjectHeadersTable = (s32 *) asset_table_load(ASSET_OBJECT_HEADERS_TABLE);
     gAssetsObjectHeadersTableLength = 0;
     while (-1 != gAssetsObjectHeadersTable[gAssetsObjectHeadersTableLength]) {
         gAssetsObjectHeadersTableLength++;
@@ -749,8 +749,8 @@ void allocate_object_pools(void) {
         (*gObjectHeaderReferences)[i] = 0;
     }
 
-    gAssetsMiscSection = (s32 *) load_asset_section_from_rom(ASSET_MISC);
-    gAssetsMiscTable = (s32 *) load_asset_section_from_rom(ASSET_MISC_TABLE);
+    gAssetsMiscSection = (s32 *) asset_table_load(ASSET_MISC);
+    gAssetsMiscTable = (s32 *) asset_table_load(ASSET_MISC_TABLE);
     gAssetsMiscTableLength = 0;
     while (-1 != gAssetsMiscTable[gAssetsMiscTableLength]) {
         gAssetsMiscTableLength++;
@@ -901,7 +901,7 @@ ObjectHeader *load_object_header(s32 index) {
     size = gAssetsObjectHeadersTable[index + 1] - assetOffset;
     address = mempool_alloc_pool((MemoryPoolSlot *) gObjectMemoryPool, size);
     if (address != NULL) {
-        load_asset_to_address(ASSET_OBJECTS, (u32) address, assetOffset, size);
+        asset_load(ASSET_OBJECTS, (u32) address, assetOffset, size);
         address->unk24 = (ObjectHeader24 *) ((uintptr_t) address + (uintptr_t) address->unk24);
         address->objectParticles =
             (ObjHeaderParticleEntry *) ((uintptr_t) address + (uintptr_t) address->objectParticles);
@@ -980,7 +980,7 @@ void track_spawn_objects(s32 mapID, s32 index) {
     gObjectMapSpawnList[index] = (u8 *) (gObjectMap[index] + sizeof(uintptr_t));
     gObjectMapSize[index] = NULL;
     gObjectMapID[index] = mapID;
-    objMapTable = (u32 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_MAPS_TABLE);
+    objMapTable = (u32 *) asset_table_load(ASSET_LEVEL_OBJECT_MAPS_TABLE);
     for (i = 0; objMapTable[i] != 0xFFFFFFFF; i++) {}
     i--;
     if (mapID >= i) {
@@ -992,9 +992,8 @@ void track_spawn_objects(s32 mapID, s32 index) {
     if (assetSize != 0) {
         compressedAsset = (u8 *) mem;
         compressedAsset =
-            ((compressedAsset + get_asset_uncompressed_size(ASSET_LEVEL_OBJECT_MAPS, assetOffset)) - (0, assetSize)) +
-            0x20;
-        load_asset_to_address(ASSET_LEVEL_OBJECT_MAPS, (u32) compressedAsset, assetOffset, assetSize);
+            ((compressedAsset + gzip_size_uncompressed(ASSET_LEVEL_OBJECT_MAPS, assetOffset)) - (0, assetSize)) + 0x20;
+        asset_load(ASSET_LEVEL_OBJECT_MAPS, (u32) compressedAsset, assetOffset, assetSize);
         gzip_inflate(compressedAsset, (u8 *) mem);
         mempool_free(objMapTable);
         gObjectMapSpawnList[index] = (u8 *) (gObjectMap[index] + sizeof(uintptr_t));
@@ -6853,7 +6852,7 @@ s32 timetrial_load_staff_ghost(s32 mapId) {
     TTGhostTable *nextGhostTable;
 
     gMapDefaultVehicle = leveltable_vehicle_default(mapId);
-    ghostTable = (TTGhostTable *) load_asset_section_from_rom(ASSET_TTGHOSTS_TABLE);
+    ghostTable = (TTGhostTable *) asset_table_load(ASSET_TTGHOSTS_TABLE);
 
     nextGhostTable = ghostTable;
     do {

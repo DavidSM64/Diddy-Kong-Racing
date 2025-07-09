@@ -8363,7 +8363,7 @@ s32 timetrial_load_player_ghost(s32 controllerID, s32 mapId, s16 arg2, s16 *char
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime) {
     GhostHeader *ghost = mempool_alloc_safe(size, COLOUR_TAG_RED);
     if (ghost != NULL) {
-        load_asset_to_address(ASSET_TTGHOSTS, (u32) ghost, ghostOffset, size);
+        asset_load(ASSET_TTGHOSTS, (u32) ghost, ghostOffset, size);
         if (gGhostData[GHOST_STAFF] != NULL) {
             mempool_free(gGhostData[GHOST_STAFF]);
         }

@@ -171,7 +171,7 @@ void weather_init(void) {
     gLensFlareOff = TRUE;
     gLensFlareOverrideObjs = 0;
     if (gWeatherAssetTable == NULL) {
-        gWeatherAssetTable = (s32 *) load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
+        gWeatherAssetTable = (s32 *) asset_table_load(ASSET_WEATHER_PARTICLES);
         gWeatherAssetTableLength = 0;
         while ((s32) gWeatherAssetTable[gWeatherAssetTableLength] != -1) {
             gWeatherAssetTableLength++;

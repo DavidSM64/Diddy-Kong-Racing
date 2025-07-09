@@ -1187,13 +1187,13 @@ string_to_font_codes = 0x80076A38;
 get_file_type = 0x80076AF4;
 
 // asset_loading.c .text
-init_PI_mesg_queue = 0x80076BA0;
-load_asset_section_from_rom = 0x80076C58;
-load_compressed_asset_from_rom = 0x80076CF0;
-load_asset_section_from_rom_to_address = 0x80076DFC;
-load_asset_to_address = 0x80076E68;
-get_rom_offset_of_asset = 0x80076EE8;
-get_size_of_asset_section = 0x80076F30;
+pi_init = 0x80076BA0;
+asset_table_load = 0x80076C58;
+asset_table_load_zipped = 0x80076CF0;
+asset_table_load_addr = 0x80076DFC;
+asset_load = 0x80076E68;
+asset_rom_offset = 0x80076EE8;
+asset_table_size = 0x80076F30;
 dmacopy = 0x80076F78;
 
 // borders.c .text
@@ -1834,7 +1834,7 @@ osCreatePiManager = 0x800C6000;
 // gzip.c .text
 gzip_init = 0x800C6170;
 byteswap32 = 0x800C61AC;
-get_asset_uncompressed_size = 0x800C61DC;
+gzip_size_uncompressed = 0x800C61DC;
 gzip_inflate = 0x800C6218;
 gzip_huft_build = 0x800C6274;
 

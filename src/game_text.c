@@ -247,7 +247,7 @@ void load_game_text_table(void) {
     gGameTextTableEntries[1] = &gGameTextTableEntries[0][960];
     D_8012A7A4 = 0;
     init_dialogue_text();
-    gTextTableEntries = (get_size_of_asset_section(ASSET_GAME_TEXT_TABLE) >> 2) - 2;
+    gTextTableEntries = (asset_table_size(ASSET_GAME_TEXT_TABLE) >> 2) - 2;
     gTextTableExists = TRUE;
 }
 
@@ -320,22 +320,21 @@ void set_current_text(s32 textID) {
                 break;
         }
 
-        load_asset_to_address(ASSET_GAME_TEXT_TABLE, (u32) (*gGameTextTable)->entries, (textID & (~1)) << 2, 16);
+        asset_load(ASSET_GAME_TEXT_TABLE, (u32) (*gGameTextTable)->entries, (textID & (~1)) << 2, 16);
 
         entries = (*gGameTextTable)->entries;
         temp = ((s32) entries[textID & 1]) & 0xFF000000;
         size = (((s32) entries[(textID & 1) + 1]) & 0xFFFFFF) - (((s32) entries[textID & 1]) & 0xFFFFFF);
 
         if (temp) {
-            load_asset_to_address(ASSET_GAME_TEXT, (u32) gCurrentMessageText[D_8012A7D4],
-                                  ((s32) entries[textID & 1]) ^ temp, size);
+            asset_load(ASSET_GAME_TEXT, (u32) gCurrentMessageText[D_8012A7D4], ((s32) entries[textID & 1]) ^ temp,
+                       size);
             gCurrentTextProperties = gCurrentMessageText[D_8012A7D4];
             find_next_subtitle();
             D_8012A7D4 = (D_8012A7D4 + 1) & 1;
             return;
         }
-        load_asset_to_address(ASSET_GAME_TEXT, (u32) gGameTextTableEntries[D_8012A7A4],
-                              ((s32) entries[textID & 1]) ^ temp, size);
+        asset_load(ASSET_GAME_TEXT, (u32) gGameTextTableEntries[D_8012A7A4], ((s32) entries[textID & 1]) ^ temp, size);
         D_8012A7A0 = gGameTextTableEntries[D_8012A7A4];
         D_8012A7A4 = (D_8012A7A4 + 1) & 1;
         D_8012A788 = 0;

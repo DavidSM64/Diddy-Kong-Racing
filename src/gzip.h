@@ -18,7 +18,7 @@ typedef struct huft {
 
 void gzip_init(void);
 s32 byteswap32(u8 *arg0);
-s32 get_asset_uncompressed_size(s32 assetIndex, s32 assetOffset);
+s32 gzip_size_uncompressed(s32 assetIndex, s32 assetOffset);
 u8 *gzip_inflate(u8 *compressedInput, u8 *decompressedOutput);
 void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m);
 s32 gzip_inflate_block(void);

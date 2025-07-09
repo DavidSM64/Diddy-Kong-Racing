@@ -14,8 +14,8 @@ OSMesgQueue gDmaMesgQueue;
 OSMesg gPIMesgBuf[16];
 OSMesgQueue gPIMesgQueue;
 #if VERSION >= VERSION_79
-OSMesg gAssetsLookupTableMesgBuf;
-OSMesgQueue gDmaMesgQueueV2;
+OSMesg gDmaMutexBuf;
+OSMesgQueue gDmaMutex;
 #define dmacopy_internal dmacopy_v1
 #else
 #define dmacopy_internal dmacopy
@@ -33,15 +33,15 @@ extern u8 __ASSETS_LUT_START[], __ASSETS_LUT_END[];
  * After, allocate space and load the asset table into RAM.
  * Official Name: piInit
  */
-void init_PI_mesg_queue(void) {
+void pi_init(void) {
     u32 assetTableSize;
     osCreateMesgQueue(&gPIMesgQueue, gPIMesgBuf, ARRAY_COUNT(gPIMesgBuf));
     osCreateMesgQueue(&gDmaMesgQueue, &gDmaMesg, 1);
     osCreatePiManager((OSPri) 150, &gPIMesgQueue, gPIMesgBuf, ARRAY_COUNT(gPIMesgBuf));
 
 #if VERSION >= VERSION_79
-    osCreateMesgQueue(&gDmaMesgQueueV2, &gAssetsLookupTableMesgBuf, 1);
-    osSendMesg(&gDmaMesgQueueV2, (OSMesg) 1, OS_MESG_NOBLOCK);
+    osCreateMesgQueue(&gDmaMutex, &gDmaMutexBuf, 1);
+    osSendMesg(&gDmaMutex, (OSMesg) 1, OS_MESG_NOBLOCK);
 #endif
 
     assetTableSize = __ASSETS_LUT_END - __ASSETS_LUT_START;
@@ -54,7 +54,7 @@ void init_PI_mesg_queue(void) {
  * Returns the memory address containing an asset section loaded from ROM.
  * Official Name: piRomLoad
  */
-u32 *load_asset_section_from_rom(u32 assetIndex) {
+u32 *asset_table_load(u32 assetIndex) {
     u32 *index;
     u32 *out;
     s32 size;
@@ -62,11 +62,11 @@ u32 *load_asset_section_from_rom(u32 assetIndex) {
 
 #if VERSION >= VERSION_79
     OSMesg msg = NULL;
-    osRecvMesg(&gDmaMesgQueueV2, &msg, OS_MESG_BLOCK);
+    osRecvMesg(&gDmaMutex, &msg, OS_MESG_BLOCK);
 #endif
 
     if (gAssetsLookupTable[0] < assetIndex) {
-        return 0;
+        return NULL;
     }
     assetIndex++;
     index = assetIndex + gAssetsLookupTable;
@@ -74,13 +74,13 @@ u32 *load_asset_section_from_rom(u32 assetIndex) {
     size = *(index + 1) - start;
     out = (u32 *) mempool_alloc_safe(size, COLOUR_TAG_GREY);
     if (out == 0) {
-        return 0;
+        return NULL;
     }
 
     dmacopy_internal((u32) (start + __ASSETS_LUT_END), (u32) out, size);
 
 #if VERSION >= VERSION_79
-    osSendMesg(&gDmaMesgQueueV2, (OSMesg) 1, OS_MESG_NOBLOCK);
+    osSendMesg(&gDmaMutex, (OSMesg) 1, OS_MESG_NOBLOCK);
 #endif
 
     return out;
@@ -91,7 +91,7 @@ u32 *load_asset_section_from_rom(u32 assetIndex) {
  * Returns a pointer to the decompressed data.
  * Official name: piRomLoadCompressed
  */
-UNUSED u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
+UNUSED u8 *asset_table_load_zipped(u32 assetIndex, s32 extraMemory) {
     s32 size;
     s32 start;
     s32 totalSpace;
@@ -100,7 +100,7 @@ UNUSED u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
 
 #if VERSION >= VERSION_79
     OSMesg msg = NULL;
-    osRecvMesg(&gDmaMesgQueueV2, &msg, OS_MESG_BLOCK);
+    osRecvMesg(&gDmaMutex, &msg, OS_MESG_BLOCK);
 #endif
 
     if (gAssetsLookupTable[0] < assetIndex) {
@@ -126,7 +126,7 @@ UNUSED u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
     gzip_inflate(gzipHeaderRamPos, out);
 
 #if VERSION >= VERSION_79
-    osSendMesg(&gDmaMesgQueueV2, (OSMesg) 1, OS_MESG_NOBLOCK);
+    osSendMesg(&gDmaMutex, (OSMesg) 1, OS_MESG_NOBLOCK);
 #endif
 
     return out;
@@ -136,18 +136,18 @@ UNUSED u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
  * Loads an asset section to a specific memory address.
  * Returns the size of asset section.
  */
-UNUSED s32 load_asset_section_from_rom_to_address(u32 assetIndex, u32 address) {
+UNUSED s32 asset_table_load_addr(u32 assetIndex, u32 address) {
     u32 start;
     s32 size;
     u32 *index;
 
 #if VERSION >= VERSION_79
     OSMesg msg = NULL;
-    osRecvMesg(&gDmaMesgQueueV2, &msg, OS_MESG_BLOCK);
+    osRecvMesg(&gDmaMutex, &msg, OS_MESG_BLOCK);
 #endif
 
     if (gAssetsLookupTable[0] < assetIndex) {
-        return 0;
+        return NULL;
     }
     assetIndex++;
     index = assetIndex + gAssetsLookupTable;
@@ -157,7 +157,7 @@ UNUSED s32 load_asset_section_from_rom_to_address(u32 assetIndex, u32 address) {
     dmacopy_internal((u32) (start + __ASSETS_LUT_END), address, size);
 
 #if VERSION >= VERSION_79
-    osSendMesg(&gDmaMesgQueueV2, (OSMesg) 1, OS_MESG_NOBLOCK);
+    osSendMesg(&gDmaMutex, (OSMesg) 1, OS_MESG_NOBLOCK);
 #endif
 
     return size;
@@ -168,17 +168,17 @@ UNUSED s32 load_asset_section_from_rom_to_address(u32 assetIndex, u32 address) {
  * Returns the size argument.
  * Official name: piRomLoadSection
  */
-s32 load_asset_to_address(u32 assetIndex, u32 address, s32 assetOffset, s32 size) {
+s32 asset_load(u32 assetIndex, u32 address, s32 assetOffset, s32 size) {
     u32 *index;
     s32 start;
 
 #if VERSION >= VERSION_79
     OSMesg msg = NULL;
-    osRecvMesg(&gDmaMesgQueueV2, &msg, OS_MESG_BLOCK);
+    osRecvMesg(&gDmaMutex, &msg, OS_MESG_BLOCK);
 #endif
 
     if (size == 0 || gAssetsLookupTable[0] < assetIndex) {
-        return 0;
+        return NULL;
     }
 
     assetIndex++;
@@ -188,7 +188,7 @@ s32 load_asset_to_address(u32 assetIndex, u32 address, s32 assetOffset, s32 size
     dmacopy_internal((u32) (start + __ASSETS_LUT_END), address, size);
 
 #if VERSION >= VERSION_79
-    osSendMesg(&gDmaMesgQueueV2, (OSMesg) 1, OS_MESG_NOBLOCK);
+    osSendMesg(&gDmaMutex, (OSMesg) 1, OS_MESG_NOBLOCK);
 #endif
 
     return size;
@@ -198,13 +198,13 @@ s32 load_asset_to_address(u32 assetIndex, u32 address, s32 assetOffset, s32 size
  * Returns a rom offset of an asset given its asset section and a local offset.
  * Official name: piRomGetSectionPtr
  */
-u8 *get_rom_offset_of_asset(u32 assetIndex, u32 assetOffset) {
+u8 *asset_rom_offset(u32 assetIndex, u32 assetOffset) {
     u32 *index;
     u32 start;
 
 #if VERSION >= VERSION_79
     OSMesg msg = NULL;
-    osRecvMesg(&gDmaMesgQueueV2, &msg, OS_MESG_BLOCK);
+    osRecvMesg(&gDmaMutex, &msg, OS_MESG_BLOCK);
 #endif
 
     if (gAssetsLookupTable[0] < assetIndex) {
@@ -216,7 +216,7 @@ u8 *get_rom_offset_of_asset(u32 assetIndex, u32 assetOffset) {
     start = *index + assetOffset;
 
 #if VERSION >= VERSION_79
-    osSendMesg(&gDmaMesgQueueV2, (OSMesg) 1, OS_MESG_NOBLOCK);
+    osSendMesg(&gDmaMutex, (OSMesg) 1, OS_MESG_NOBLOCK);
 #endif
 
     return start + __ASSETS_LUT_END;
@@ -226,23 +226,23 @@ u8 *get_rom_offset_of_asset(u32 assetIndex, u32 assetOffset) {
  * Returns the size of an asset section.
  * Official name: piRomGetFileSize
  */
-s32 get_size_of_asset_section(u32 assetIndex) {
+s32 asset_table_size(u32 assetIndex) {
     u32 *index;
 
 #if VERSION >= VERSION_79
     OSMesg msg = NULL;
-    osRecvMesg(&gDmaMesgQueueV2, &msg, OS_MESG_BLOCK);
+    osRecvMesg(&gDmaMutex, &msg, OS_MESG_BLOCK);
 #endif
 
     if (gAssetsLookupTable[0] < assetIndex) {
-        return 0;
+        return NULL;
     }
 
     assetIndex++;
     index = assetIndex + gAssetsLookupTable;
 
 #if VERSION >= VERSION_79
-    osSendMesg(&gDmaMesgQueueV2, (OSMesg) 1, OS_MESG_NOBLOCK);
+    osSendMesg(&gDmaMutex, (OSMesg) 1, OS_MESG_NOBLOCK);
 #endif
 
     return *(index + 1) - *index;
@@ -257,9 +257,9 @@ s32 get_size_of_asset_section(u32 assetIndex) {
 void dmacopy(u32 romOffset, u32 ramAddress, s32 numBytes) {
 #if VERSION >= VERSION_79
     OSMesg msg = NULL;
-    osRecvMesg(&gDmaMesgQueueV2, &msg, OS_MESG_BLOCK);
+    osRecvMesg(&gDmaMutex, &msg, OS_MESG_BLOCK);
     dmacopy_internal(romOffset, ramAddress, numBytes);
-    osSendMesg(&gDmaMesgQueueV2, (OSMesg) 1, OS_MESG_NOBLOCK);
+    osSendMesg(&gDmaMutex, (OSMesg) 1, OS_MESG_NOBLOCK);
 }
 
 // Looks like v2 ROMs made an alternate version of this function, and this is the original.

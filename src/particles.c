@@ -259,24 +259,24 @@ void init_particle_assets(void) {
     s32 i;
 
     free_particle_assets();
-    gParticlesAssetTable = (ParticleDescriptor **) load_asset_section_from_rom(ASSET_PARTICLES_TABLE);
+    gParticlesAssetTable = (ParticleDescriptor **) asset_table_load(ASSET_PARTICLES_TABLE);
     gParticlesAssetTableCount = -1;
     while (((s32) gParticlesAssetTable[gParticlesAssetTableCount + 1]) != -1) {
         gParticlesAssetTableCount++;
     }
 
-    gParticlesAssets = (s32 *) load_asset_section_from_rom(ASSET_PARTICLES);
+    gParticlesAssets = (s32 *) asset_table_load(ASSET_PARTICLES);
     for (i = 0; i < gParticlesAssetTableCount; i++) {
         gParticlesAssetTable[i] = (ParticleDescriptor *) (((u8 *) gParticlesAssets) + ((s32) gParticlesAssetTable[i]));
     }
 
-    gParticleBehavioursAssetTable = (ParticleBehaviour **) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
+    gParticleBehavioursAssetTable = (ParticleBehaviour **) asset_table_load(ASSET_PARTICLE_BEHAVIORS_TABLE);
     gParticleBehavioursAssetTableCount = -1;
     while (((s32) gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount + 1]) != -1) {
         gParticleBehavioursAssetTableCount++;
     }
 
-    gParticleBehavioursAssets = (s32 *) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS);
+    gParticleBehavioursAssets = (s32 *) asset_table_load(ASSET_PARTICLE_BEHAVIORS);
     for (i = 0; i < gParticleBehavioursAssetTableCount; i++) {
         gParticleBehavioursAssetTable[i] =
             (ParticleBehaviour *) (((u8 *) gParticleBehavioursAssets) + ((s32) gParticleBehavioursAssetTable[i]));
@@ -431,7 +431,7 @@ void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, 
     }
 
     if (gParticleDummys == NULL) {
-        asset2F = (s16 *) load_asset_section_from_rom(ASSET_DUMMY_PARTICLE_IDS);
+        asset2F = (s16 *) asset_table_load(ASSET_DUMMY_PARTICLE_IDS);
         gParticleDummyCount = 0;
         while (asset2F[gParticleDummyCount] != -1) {
             gParticleDummyCount++;
