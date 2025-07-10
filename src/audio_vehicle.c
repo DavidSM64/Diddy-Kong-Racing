@@ -1,17 +1,17 @@
 #include "audio_vehicle.h"
 
-#include "types.h"
-#include "macros.h"
+#include "asset_loading.h"
 #include "audio_spatial.h"
 #include "audiosfx.h"
-#include "objects.h"
-#include "joypad.h"
-#include "racer.h"
-#include "PR/libaudio.h"
 #include "game_ui.h"
+#include "joypad.h"
+#include "macros.h"
 #include "math_util.h"
+#include "objects.h"
+#include "PR/libaudio.h"
 #include "printf.h"
-#include "asset_loading.h"
+#include "racer.h"
+#include "types.h"
 
 /************ .data ************/
 
@@ -65,10 +65,10 @@ VehicleSoundData *racer_sound_init(s32 characterId, s32 vehicleId) {
     // There are 30 total assets (10 characters × 3 vehicle types: car, plane, hovercraft).
     // There is no type check for vehicleId, so passing an unsupported type (e.g. VEHICLE_LOOPDELOOP)
     // will cause out-of-bounds access and undefined behavior.
-    table = (s32 *) load_asset_section_from_rom(ASSET_AUDIO_TABLE);
+    table = (s32 *) asset_table_load(ASSET_AUDIO_TABLE);
     assetOffset = table[ASSET_AUDIO_7] + (vehicleId * 10 + characterId) * sizeof(VehicleSoundAsset);
     asset = (VehicleSoundAsset *) mempool_alloc_safe(sizeof(VehicleSoundAsset), COLOUR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, (u32) asset, assetOffset, sizeof(VehicleSoundAsset));
+    asset_load(ASSET_AUDIO, (u32) asset, assetOffset, sizeof(VehicleSoundAsset));
 
     soundData = (VehicleSoundData *) mempool_alloc_safe(sizeof(VehicleSoundData), COLOUR_TAG_CYAN);
 
@@ -337,7 +337,7 @@ void racer_sound_car(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 ticks
         if (absVelocity > 12.0f) {
             absVelocity = 12.0f;
         }
-        func_80001F14(25, &gRacerSound->brakeSound);
+        sound_play_direct(25, &gRacerSound->brakeSound);
         // Brake pitch depends on speed, ranges from 0.5 to 1.0
         brakePitch = absVelocity * 0.5 / 12.0 + 0.5;
         if (gRacerSound->brakeSound != NULL) {
@@ -844,7 +844,7 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
                 // If volume is above threshold, update idle sound parameters.
                 if (volume >= 16) {
                     if (gRacerSound->engineIdleSoundHandle == NULL) {
-                        func_80001F14(gRacerSound->engineIdleSound, &gRacerSound->engineIdleSoundHandle);
+                        sound_play_direct(gRacerSound->engineIdleSound, &gRacerSound->engineIdleSoundHandle);
                     }
                     pitch = gRacerSound->engineIdleMaxPitch / 100.0f + ((f32) gRacerSound->engineIdleMinPitch / 100.0f -
                                                                         gRacerSound->engineIdleMaxPitch / 100.0f) *
@@ -892,7 +892,7 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
                     } else {
                         // Otherwise, start or update the engine sound parameters.
                         if (gRacerSound->soundHandle[j] == NULL) {
-                            func_80001F14(gRacerSound->soundId[j], &gRacerSound->soundHandle[j]);
+                            sound_play_direct(gRacerSound->soundId[j], &gRacerSound->soundHandle[j]);
                         }
                         if (gRacerSound->soundHandle[j] != NULL) {
                             audspat_calculate_echo(gRacerSound->soundHandle[j], racerObjs[i]->trans.x_position,
@@ -1073,7 +1073,7 @@ void racer_sound_update_all(Object **racerObjs, s32 numRacers, Camera *cameras, 
                         soundData->backgroundState = VEHICLE_BACKGROUND_PLAYING;
                     } else {
                         if (soundData->soundHandle[0] == NULL) {
-                            func_80001F14(soundData->soundId[0], &soundData->soundHandle[0]);
+                            sound_play_direct(soundData->soundId[0], &soundData->soundHandle[0]);
                         }
                         if (soundData->soundHandle[0] != NULL) {
                             audspat_calculate_echo(soundData->soundHandle[0], soundData->racerPos.x,

@@ -1,11 +1,11 @@
 #include "font.h"
-#include "menu.h"
-#include "textures_sprites.h"
+#include "asset_loading.h"
 #include "camera.h"
 #include "common.h"
-#include "video.h"
-#include "asset_loading.h"
 #include "memory.h"
+#include "menu.h"
+#include "textures_sprites.h"
+#include "video.h"
 
 /************ .data ************/
 
@@ -140,7 +140,7 @@ void load_fonts(void) {
     u32 *fontAssetData;
     s32 i;
 
-    fontAssetData = load_asset_section_from_rom(ASSET_FONTS);
+    fontAssetData = asset_table_load(ASSET_FONTS);
 
     gFonts = (FontData *) (fontAssetData); // ???
     gNumberOfFonts = *(fontAssetData);
@@ -1347,7 +1347,7 @@ void func_800C6464_C7064(void) {
         }
     }
 
-    D_8012C2A4_EE5E4 = (FontData_JP *) load_asset_section_from_rom(ASSET_JAPANESE_FONTS_TABLE);
+    D_8012C2A4_EE5E4 = (FontData_JP *) asset_table_load(ASSET_JAPANESE_FONTS_TABLE);
 
     // Init the 4 pointers in D_8012C2A8_EE5E8 (table for spacing of each character in every font)
     D_8012C2A8_EE5E8[0] = mempool_alloc_safe(NUMBER_OF_JP_FONTS * JP_FONT_ARRAY_SIZE, COLOUR_TAG_RED);
@@ -1359,8 +1359,8 @@ void func_800C6464_C7064(void) {
     for (i = 0; i < 4; i++) {
         jpFontHeader = &D_8012C2A4_EE5E4[i];
         for (charIndex = 0; charIndex < JP_FONT_ARRAY_SIZE; charIndex++) {
-            load_asset_to_address(ASSET_JAPANESE_FONTS, (u32) jpFontData,
-                                  jpFontHeader->offsetToData + (charIndex * jpFontHeader->bytesPerCharacter), 0x40);
+            asset_load(ASSET_JAPANESE_FONTS, (u32) jpFontData,
+                       jpFontHeader->offsetToData + (charIndex * jpFontHeader->bytesPerCharacter), 0x40);
             D_8012C2A8_EE5E8[i]->spacing[charIndex] = jpFontData->spacing;
         }
     }
@@ -1476,10 +1476,10 @@ s32 func_800C68CC_C74CC(u16 arg0) {
                 }
             }
             asset = &D_8012C2C0_EE600[curIndex];
-            load_asset_to_address(ASSET_JAPANESE_FONTS, (u32) asset,
-                                  D_8012C2A4_EE5E4[fontInUse].offsetToData +
-                                      (D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter * arg0),
-                                  D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter);
+            asset_load(ASSET_JAPANESE_FONTS, (u32) asset,
+                       D_8012C2A4_EE5E4[fontInUse].offsetToData +
+                           (D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter * arg0),
+                       D_8012C2A4_EE5E4[fontInUse].bytesPerCharacter);
             fontCreateDisplayList((*D_8012C2BC_EE5FC)[curIndex].dList, asset, D_8012C2A4_EE5E4[fontInUse].x,
                                   D_8012C2A4_EE5E4[fontInUse].y);
         }

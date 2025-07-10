@@ -1,10 +1,10 @@
 #include "audiosfx.h"
-#include "memory.h"
-#include "video.h"
-#include "math_util.h"
 #include "asset_loading.h"
+#include "math_util.h"
+#include "memory.h"
 #include "objects.h"
 #include "PR/libaudio.h"
+#include "video.h"
 
 #define SOUND_PARAM_DURATION(m) (m->velocityMax * 33333)
 #define SOUND_PARAM_NEXT_SOUND(m) (m->velocityMin + (m->keyMin & 0xC0) * 4)
@@ -45,6 +45,7 @@ void sndp_set_global_volume(u32 volume) {
 
 /**
  * Returns the global volume level applied to all sounds.
+ * Official Name: gsSndpGetGlobalVolume
  */
 s32 sndp_get_global_volume(void) {
     return gSoundGlobalVolume;
@@ -52,6 +53,7 @@ s32 sndp_get_global_volume(void) {
 
 /**
  * Sets the number of active sound channels to either the passed number, or the maximum amount, whichever's lower.
+ * Official Name: gsSndpLimitVoices
  */
 void sndp_set_active_sound_limit(s32 numSounds) {
     if (gSoundPlayerPtr->maxSystemSoundChannels >= numSounds) {

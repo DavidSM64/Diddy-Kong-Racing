@@ -31,28 +31,28 @@ enum CutsceneIDs {
     CUTSCENE_ID_UNK_64 = 0x64
 };
 
-Vehicle get_map_default_vehicle(s32 mapId);
-s32 get_map_available_vehicles(s32 mapId);
-s8 get_map_race_type(s32 mapId);
-s8 get_map_world_id(s32 mapId);
-s32 get_hub_area_id(s32 worldId);
-void get_number_of_levels_and_worlds(s32 *outLevelCount, s32 *outWorldCount);
-s32 check_if_in_race(void);
-void start_level_music(f32 tempo);
-s32 get_current_map_id(void);
-u8 get_current_level_race_type(void);
-LevelHeader *get_current_level_header(void);
-u8 get_total_level_header_count(void);
-char *get_level_name(s32 levelId);
-void clear_audio_and_track(void);
-void set_ai_level(s8 *aiLevelTable);
-void free_ai_behaviour_table(void);
-AIBehaviourTable *get_ai_behaviour_table(void);
-s8 is_two_player_adventure_race(void);
-void push_level_property_stack(s32 levelId, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
-void pop_level_property_stack(s32 *levelId, s32 *entranceId, s32 *vehicleId, s32 *cutsceneId);
-void clear_level_property_stack(void);
-s16 get_level_property_stack_pos(void);
+Vehicle leveltable_vehicle_default(s32 mapId);
+s32 leveltable_vehicle_usable(s32 mapId);
+s8 leveltable_type(s32 mapId);
+s8 leveltable_world(s32 mapId);
+s32 level_world_id(s32 worldId);
+void level_count(s32 *outLevelCount, s32 *outWorldCount);
+s32 level_is_race(void);
+void level_music_start(f32 tempo);
+s32 level_id(void);
+u8 level_type(void);
+LevelHeader *level_header(void);
+u8 level_header_count(void);
+char *level_name(s32 levelId);
+void level_free(void);
+void aitable_init(s8 *aiLevelTable);
+void aitable_free(void);
+AIBehaviourTable *aitable_get(void);
+s8 race_is_adventure_2P(void);
+void level_properties_push(s32 levelId, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
+void level_properties_pop(s32 *levelId, s32 *entranceId, s32 *vehicleId, s32 *cutsceneId);
+void level_properties_reset(void);
+s16 level_properties_get(void);
 s32 func_8006C300(void);
 
 #endif

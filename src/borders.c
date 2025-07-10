@@ -1,13 +1,13 @@
 #include "borders.h"
 
 #include "camera.h"
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
 #include "f3ddkr.h"
-#include "video.h"
 #include "game.h"
 #include "game_ui.h"
+#include "macros.h"
+#include "structs.h"
+#include "types.h"
+#include "video.h"
 
 /**
  * Renders the black borders that separate each viewport during multiplayer.
@@ -34,7 +34,7 @@ void divider_draw(Gfx **dList) {
             gDPFillRectangle((*dList)++, height * 0, y, width, y + yOffset);
             break;
         case VIEWPORT_LAYOUT_3_PLAYERS:
-            levelHeader = get_current_level_header();
+            levelHeader = level_header();
             // Draw black square in the bottom-right corner.
             if (hud_setting() || (levelHeader->race_type & RACETYPE_CHALLENGE)) {
                 gDPFillRectangle((*dList)++, width >> 1, height >> 1, width, height);

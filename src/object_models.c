@@ -1,15 +1,15 @@
 #include "object_models.h"
-#include "common.h"
-#include "macros.h"
-#include "memory.h"
 #include "asset_enums.h"
-#include "tracks.h"
 #include "asset_loading.h"
-#include "textures_sprites.h"
-#include "racer.h"
-#include "objects.h"
+#include "common.h"
 #include "gzip.h"
 #include "libc/math.h"
+#include "macros.h"
+#include "memory.h"
+#include "objects.h"
+#include "racer.h"
+#include "textures_sprites.h"
+#include "tracks.h"
 
 #define MODEL_LOADED_MAX 70
 
@@ -46,14 +46,14 @@ void allocate_object_model_pools(void) {
     D_8011D628 = mempool_alloc_safe(100 * sizeof(uintptr_t), COLOUR_TAG_GREEN);
     gModelCacheCount = 0;
     D_8011D634 = 0;
-    gObjectModelTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_MODELS_TABLE);
+    gObjectModelTable = (s32 *) asset_table_load(ASSET_OBJECT_MODELS_TABLE);
     gNumModelIDs = 0;
     while (gObjectModelTable[gNumModelIDs] != -1) {
         gNumModelIDs++;
     }
     gNumModelIDs--;
-    gAnimationTable = (s16 *) load_asset_section_from_rom(ASSET_ANIMATION_IDS);
-    gObjectAnimationTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_ANIMATIONS_TABLE);
+    gAnimationTable = (s16 *) asset_table_load(ASSET_ANIMATION_IDS);
+    gObjectAnimationTable = (s32 *) asset_table_load(ASSET_OBJECT_ANIMATIONS_TABLE);
     D_8011D644 = (s32) mempool_alloc_safe(0xC00, COLOUR_TAG_GREEN);
     gModelAnimOffsetID = 0;
 
@@ -126,7 +126,7 @@ ModelInstance *object_model_init(s32 modelID, s32 flags) {
 
     temp_s0 = gObjectModelTable[modelID];
     sp48 = gObjectModelTable[modelID + 1] - temp_s0;
-    modelSize = get_asset_uncompressed_size(ASSET_OBJECT_MODELS, temp_s0) + sizeof(ObjectModel);
+    modelSize = gzip_size_uncompressed(ASSET_OBJECT_MODELS, temp_s0) + sizeof(ObjectModel);
     objMdl = (ObjectModel *) mempool_alloc(modelSize, COLOUR_TAG_RED);
     if (objMdl == NULL) {
 #if VERSION >= VERSION_79
@@ -140,7 +140,7 @@ ModelInstance *object_model_init(s32 modelID, s32 flags) {
         return NULL;
     }
     compressedData = (u32) ((u8 *) objMdl + modelSize) - sp48;
-    load_asset_to_address(ASSET_OBJECT_MODELS, compressedData, temp_s0, sp48);
+    asset_load(ASSET_OBJECT_MODELS, compressedData, temp_s0, sp48);
     gzip_inflate((u8 *) compressedData, (u8 *) objMdl);
     objMdl->textures = (TextureInfo *) ((s32) objMdl->textures + (u8 *) objMdl);
     objMdl->vertices = (Vertex *) ((s32) objMdl->vertices + (u8 *) objMdl);
@@ -925,7 +925,7 @@ s32 model_anim_init(ObjectModel *model, s32 modelID) {
         assetOffset = gObjectAnimationTable[start];
         animAddress = gObjectAnimationTable[start + 1] - assetOffset;
         assetSize = animAddress;
-        size = get_asset_uncompressed_size(ASSET_OBJECT_ANIMATIONS, assetOffset) + 0x80;
+        size = gzip_size_uncompressed(ASSET_OBJECT_ANIMATIONS, assetOffset) + 0x80;
         model->animations[i].animData = (u8 *) mempool_alloc(size, COLOUR_TAG_RED);
         if (model->animations[i].animData == NULL) {
             for (j = 0; j < i2; j++) {
@@ -936,7 +936,7 @@ s32 model_anim_init(ObjectModel *model, s32 modelID) {
             return 1;
         }
         animAddress = (u32) (model->animations[i].animData + size) - assetSize;
-        load_asset_to_address(ASSET_OBJECT_ANIMATIONS, animAddress, assetOffset, assetSize);
+        asset_load(ASSET_OBJECT_ANIMATIONS, animAddress, assetOffset, assetSize);
         gzip_inflate((u8 *) animAddress, (u8 *) model->animations[i].anim);
         temp = model->animations[i].anim;
         model->animations[i].animLength = *temp;

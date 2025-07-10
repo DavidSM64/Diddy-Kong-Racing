@@ -11,6 +11,7 @@
 #define MAX_UPDATES             32
 #define MAX_EVENTS              32
 #define AUDIO_HEAP_SIZE         0x29D88
+#define AUDBUF_SIZE             0xA000  /* Audio command buffer size */
 
 #define MAX_VOICES              22
 #define EXTRA_SAMPLES           96

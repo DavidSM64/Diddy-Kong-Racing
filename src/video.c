@@ -1,7 +1,7 @@
 #include "video.h"
+#include "memory.h"
 #include "PRinternal/viint.h"
 #include "types.h"
-#include "memory.h"
 
 /************ .data ************/
 

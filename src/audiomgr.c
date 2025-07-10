@@ -1,13 +1,13 @@
 #include "audiomgr.h"
-#include "memory.h"
-#include "video.h"
-#include "math_util.h"
 #include "asset_loading.h"
+#include "common.h"
+#include "math_util.h"
+#include "memory.h"
 #include "objects.h"
 #include "PR/abi.h"
-#include "common.h"
-#include "stacks.h"
 #include "rcp_dkr.h"
+#include "stacks.h"
+#include "video.h"
 
 /****  type define's for structures unique to audiomgr ****/
 typedef union {
@@ -139,10 +139,10 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     maxFrameSize = frameSize + EXTRA_SAMPLES + 16;
 
     if (c->fxType[0] == AL_FX_CUSTOM) {
-        assetAudioTable = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
+        assetAudioTable = asset_table_load(ASSET_AUDIO_TABLE);
         assetSize = assetAudioTable[ASSET_AUDIO_9] - assetAudioTable[ASSET_AUDIO_8];
         asset8 = mempool_alloc_safe(assetSize, COLOUR_TAG_CYAN);
-        load_asset_to_address(ASSET_AUDIO, (u32) asset8, assetAudioTable[ASSET_AUDIO_8], assetSize);
+        asset_load(ASSET_AUDIO, (u32) asset8, assetAudioTable[ASSET_AUDIO_8], assetSize);
         c->params = asset8;
         c[1].maxVVoices = 0;
         alInit(&__am.g, c);
@@ -179,7 +179,7 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
 #endif
 
     for (i = 0; i < NUM_ACMD_LISTS; i++) {
-        __am.ACMDList[i] = (Acmd *) alHeapAlloc(c->heap, 1, 0xA000); // sizeof(Acmd) * DMA_BUFFER_LENGTH * 5?
+        __am.ACMDList[i] = (Acmd *) alHeapAlloc(c->heap, 1, AUDBUF_SIZE);
     }
 
     asset = mempool_alloc_fixed((maxFrameSize * 12), (u8 *) ((RAM_END - 0x200) - (maxFrameSize * 12)), COLOUR_TAG_CYAN);

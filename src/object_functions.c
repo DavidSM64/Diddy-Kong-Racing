@@ -1,37 +1,37 @@
 #include "object_functions.h"
 
-#include "PR/os_cont.h"
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
-#include "video.h"
-#include "camera.h"
-#include "menu.h" // For cheats
-#include "weather.h"
-#include "racer.h"
-#include "game.h"
 #include "audio.h"
 #include "audio_spatial.h"
+#include "audio_vehicle.h"
+#include "audiosfx.h"
+#include "camera.h"
+#include "collision.h"
+#include "common.h"
+#include "fade_transition.h"
+#include "font.h"
+#include "game.h"
+#include "game_text.h"
+#include "game_ui.h"
+#include "joypad.h"
+#include "lights.h"
+#include "macros.h"
+#include "math_util.h"
+#include "menu.h" // For cheats
+#include "object_models.h"
 #include "objects.h"
 #include "particles.h"
-#include "tracks.h"
-#include "font.h"
-#include "lights.h"
-#include "game_ui.h"
-#include "waves.h"
-#include "audiosfx.h"
-#include "math_util.h"
-#include "game_text.h"
-#include "fade_transition.h"
-#include "audio_vehicle.h"
-#include "object_models.h"
-#include "collision.h"
-#include "joypad.h"
-#include "printf.h"
+#include "PR/os_cont.h"
 #include "PRinternal/viint.h"
-#include "common.h"
-#include "thread3_main.h"
+#include "printf.h"
+#include "racer.h"
+#include "structs.h"
 #include "textures_sprites.h"
+#include "thread3_main.h"
+#include "tracks.h"
+#include "types.h"
+#include "video.h"
+#include "waves.h"
+#include "weather.h"
 
 /************ .data ************/
 
@@ -442,7 +442,7 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
     dir.z = obj->trans.z_position + (obj->z_velocity * updateRateF);
     radius = 9.0f;
 
-    generate_collision_candidates(1, &obj->trans.x_position, &dir.x, -1);
+    generate_collision_candidates(1, (Vec3f *) &obj->trans.x_position, &dir, -1);
     hasCollision = FALSE;
     resolve_collisions((Vec3f *) &obj->trans.x_position, &dir, &radius, &surface, 1, &hasCollision);
     if (hasCollision) {
@@ -598,7 +598,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
     s32 bossFlags;
 
     settings = get_settings();
-    header = get_current_level_header();
+    header = level_header();
     jingle_state = obj->jingle_state;
     if (obj->properties.trophyCabinet.trophy == FALSE) {
         if (header->race_type != RACETYPE_CUTSCENE_2 && header->race_type != RACETYPE_CUTSCENE_1) {
@@ -730,7 +730,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
             targetPos[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
             targetPos[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
             radius = 9.0f;
-            generate_collision_candidates(1, &obj->trans.x_position, targetPos, -1);
+            generate_collision_candidates(1, (Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, -1);
             hasCollision = FALSE;
             surface = SURFACE_DEFAULT;
             resolve_collisions((Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, &radius, &surface, 1,
@@ -1216,7 +1216,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             tt->animFrameF = 0.0f;
         }
     }
-    header = get_current_level_header();
+    header = level_header();
     distance = 0.0f;
     obj->x_velocity = 0.0f;
     obj->z_velocity = 0.0f;
@@ -2559,7 +2559,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         updateRateF *= 1.2;
     }
     taj = obj->npc;
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     if (obj->animFrame == 0 && taj->animFrameF > 1.0) {
         taj->animFrameF = 0.0f;
@@ -3886,7 +3886,7 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     trigger = obj->trigger;
     settings = get_settings();
     courseFlags = settings->courseFlagsPtr[settings->courseId];
-    curRaceType = get_current_level_race_type();
+    curRaceType = level_type();
     if (triggerEntry->index >= 0) {
         flags = 0x10000 << triggerEntry->index;
         if (obj->interactObj->distance < trigger->radius) {
@@ -4346,7 +4346,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             targetPos[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
             targetPos[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
             radius = 8.0f;
-            generate_collision_candidates(1, &obj->trans.x_position, targetPos, -1);
+            generate_collision_candidates(1, (Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, -1);
             hasCollision = 0;
             resolve_collisions((Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, &radius, &surface, 1,
                                &hasCollision);
@@ -4394,7 +4394,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             properties->intangibleTimer = 0;
         }
         if (obj->interactObj->distance < 120) {
-            if (get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
+            if (level_type() == RACETYPE_CHALLENGE_BANANAS) {
                 racerObj = obj->interactObj->obj;
                 if (racerObj != NULL && racerObj->header->behaviorId == BHV_RACER) {
                     racer = racerObj->racer;
@@ -4408,7 +4408,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             racerObj = obj->interactObj->obj;
             if (racerObj != NULL && racerObj->header->behaviorId == BHV_RACER) {
                 racer = racerObj->racer;
-                if (get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS || racer->bananas < 2) {
+                if (level_type() != RACETYPE_CHALLENGE_BANANAS || racer->bananas < 2) {
                     prevSoundMask = racer->bananaSoundMask;
                     audspat_play_sound_at_position(SOUND_SELECT, racerObj->trans.x_position, racerObj->trans.y_position,
                                                    racerObj->trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER,
@@ -4498,7 +4498,7 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
     Object *racerObj;
     s32 twoPlayerAdv;
 
-    twoPlayerAdv = is_two_player_adventure_race();
+    twoPlayerAdv = race_is_adventure_2P();
     if ((twoPlayerAdv && obj->properties.silverCoin.action != SILVER_COIN_INACTIVE) ||
         (!twoPlayerAdv && obj->properties.silverCoin.action == SILVER_COIN_ACTIVE)) {
         interactObj = obj->interactObj;
@@ -4690,7 +4690,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                         racer->balloon_level = 0;
                     }
                     // Disallow level 3 balloons in challenge mode
-                    if (get_current_level_race_type() & RACETYPE_CHALLENGE) {
+                    if (level_type() & RACETYPE_CHALLENGE) {
                         if (racer->balloon_level > 1) {
                             racer->balloon_level = 1;
                         }
@@ -4853,7 +4853,7 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     offset.z = obj->trans.z_position + (obj->z_velocity * updateRateF);
     if (weapon->weaponID != WEAPON_MAGNET_LEVEL_3) {
         radius = 16.0f;
-        generate_collision_candidates(1, &obj->trans.x_position, (f32 *) &offset, -1);
+        generate_collision_candidates(1, (Vec3f *) &obj->trans.x_position, &offset, -1);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
         resolve_collisions((Vec3f *) &obj->trans.x_position, &offset, &radius, &surface, 1, &hasCollision);
@@ -5157,10 +5157,11 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
         intendedPos.y = weaponObj->trans.y_position + (weaponObj->y_velocity * updateRateF);
         intendedPos.z = weaponObj->trans.z_position + (weaponObj->z_velocity * updateRateF);
         radius = 9.0f;
-        generate_collision_candidates(1, &weaponObj->trans.x_position, &intendedPos.x, -1);
+        generate_collision_candidates(1, (Vec3f *) &weaponObj->trans.x_position, (Vec3f *) &intendedPos.x, -1);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
-        resolve_collisions((Vec3f *) &weaponObj->trans.x_position, &intendedPos, &radius, &surface, 1, &hasCollision);
+        resolve_collisions((Vec3f *) &weaponObj->trans.x_position, (Vec3f *) &intendedPos, &radius, &surface, 1,
+                           &hasCollision);
         weaponObj->x_velocity = (intendedPos.x - weaponObj->trans.x_position) / updateRateF;
         weaponObj->y_velocity = (intendedPos.y - weaponObj->trans.y_position) / updateRateF;
         weaponObj->z_velocity = (intendedPos.z - weaponObj->trans.z_position) / updateRateF;
@@ -5376,7 +5377,7 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     audio->unk5 = entry->unkD;
     audio->unkD = entry->unk10;
     audio->soundMask = NULL;
-    if (gSoundBank_GetSoundDecayTime(audio->soundId)) {
+    if (sound_is_looped(audio->soundId)) {
         audspat_point_create(audio->soundId, entry->common.x, entry->common.y, entry->common.z, 9, audio->unk5,
                              audio->unk4, audio->unk2, audio->unkC, audio->unk6, audio->unkD, &audio->soundMask);
     } else {
@@ -6583,7 +6584,7 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             }
         }
         if (properties->opacity > 0) {
-            levelName = get_level_name(properties->levelID);
+            levelName = level_name(properties->levelID);
             textWidth = (get_text_width(levelName, 0, 0) + 24) >> 1;
             x1 = SCREEN_WIDTH_HALF - textWidth;
             x2 = textWidth + SCREEN_WIDTH_HALF;

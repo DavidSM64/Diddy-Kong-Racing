@@ -1,12 +1,12 @@
 #include "math_util.h"
 
-#include <math.h>
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
 #include "game.h"
-#include "string.h"
+#include "macros.h"
 #include "PR/os_internal_reg.h"
+#include "string.h"
+#include "structs.h"
+#include "types.h"
+#include <math.h>
 
 extern u8 gIntDisFlag;
 extern s32 gCurrentRNGSeed; // Official Name: rngSeed
@@ -138,7 +138,7 @@ void mtxf_transform_point(MtxF *mf, float x, float y, float z, float *ox, float 
 GLOBAL_ASM("asm/math_util/mtxf_transform_point.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 /**
  * Transforms a direction vector in 3D space using the rotation part of a 4×4 matrix.
  * This function multiplies the input vector by the upper-left 3×3 portion of the matrix mf,
@@ -147,9 +147,9 @@ GLOBAL_ASM("asm/math_util/mtxf_transform_point.s")
  * Official name: mathMtxFastXFMF
  */
 void mtxf_transform_dir(MtxF *mf, Vec3f *in, Vec3f *out) {
-    out->f[0] = (in->f[0] * mf[0][0]) + (in->f[1] * mf[1][0]) + (in->f[2] * mf[2][0]);
-    out->f[1] = (in->f[0] * mf[0][1]) + (in->f[1] * mf[1][1]) + (in->f[2] * mf[2][1]);
-    out->f[2] = (in->f[0] * mf[0][2]) + (in->f[1] * mf[1][2]) + (in->f[2] * mf[2][2]);
+    out->f[0] = (in->f[0] * (*mf)[0][0]) + (in->f[1] * *mf[1][0]) + (in->f[2] * (*mf)[2][0]);
+    out->f[1] = (in->f[0] * (*mf)[0][1]) + (in->f[1] * *mf[1][1]) + (in->f[2] * (*mf)[2][1]);
+    out->f[2] = (in->f[0] * (*mf)[0][2]) + (in->f[1] * *mf[1][2]) + (in->f[2] * (*mf)[2][2]);
 }
 #else
 GLOBAL_ASM("asm/math_util/mtxf_transform_dir.s")
@@ -837,8 +837,8 @@ UNUSED s32 calc_dyn_lighting_for_level_segment(LevelModelSegment *segment, s32 *
     batches = segment->batches;
     vertCount = 0;
     for (i = 0; i < numBatches; i++) {
-        // batches[i].unk6 is 0xFF if vertex colors are used. Otherwise dynamic lighting is used.
-        if ((batches[i].unk6 - 0xFF) != 0) {
+        // batches[i].miscData is 0xFF if vertex colors are used. Otherwise dynamic lighting is used.
+        if ((batches[i].miscData - 0xFF) != 0) {
             verts = &segment->vertices[vertCount];
             verts2C = &segment->unk2C[vertCount];
             numVertsInBatch = batches[i + 1].verticesOffset - batches[i].verticesOffset;

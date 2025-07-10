@@ -1,5 +1,4 @@
 import re
-import os
 import sys
 
 from file_util import FileUtil

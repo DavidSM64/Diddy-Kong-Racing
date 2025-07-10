@@ -1,21 +1,20 @@
 #include "save_data.h"
-#include "common.h"
-#include "memory.h"
-#include "PR/os_pfs.h"
-#include "PR/os_cont.h"
-#include "macros.h"
-#include "structs.h"
 #include "camera.h"
-#include "objects.h"
+#include "common.h"
 #include "game.h"
-#include "thread3_main.h"
 #include "joypad.h"
-#include "PRinternal/viint.h"
-#include "PR/os_motor.h"
-#include "save_layout.h"
 #include "libc/string.h"
-#include "save_layout.h"
+#include "macros.h"
+#include "memory.h"
 #include "menu.h"
+#include "objects.h"
+#include "PR/os_cont.h"
+#include "PR/os_motor.h"
+#include "PR/os_pfs.h"
+#include "PRinternal/viint.h"
+#include "save_layout.h"
+#include "structs.h"
+#include "thread3_main.h"
 
 /************ .data ************/
 
@@ -368,7 +367,7 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
     u8 temp_v1;
 
     clear_game_progress(settings);
-    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    level_count(&levelCount, &worldCount);
     D_801241EC = saveData;
     D_801241F0 = D_801241F4 = 0;
     var_a0 = func_80072C54(16) - 5;
@@ -378,7 +377,7 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
     // clang-format on
     if (var_a0 == 0) {
         for (i = 0, var_s1 = 0; i < levelCount; i++) {
-            raceType = get_map_race_type(i);
+            raceType = leveltable_type(i);
             if ((raceType == RACETYPE_DEFAULT) || (raceType & RACETYPE_CHALLENGE) || (raceType == RACETYPE_BOSS)) {
                 temp_v1 = func_80072C54(2);
                 if (temp_v1 > 0) {
@@ -406,7 +405,7 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
         settings->ttAmulet = func_80072C54(3);
         settings->wizpigAmulet = func_80072C54(3);
         for (i = 0; i < worldCount; i++) {
-            settings->courseFlagsPtr[get_hub_area_id(i)] |= func_80072C54(16) << 16;
+            settings->courseFlagsPtr[level_world_id(i)] |= func_80072C54(16) << 16;
         }
         settings->keys = func_80072C54(8);
         settings->cutsceneFlags = func_80072C54(32);
@@ -425,13 +424,13 @@ void func_800732E8(Settings *settings, u8 *saveData) {
     s32 i;
     s32 var_s0;
 
-    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    level_count(&levelCount, &worldCount);
     D_801241EC = saveData;
     D_801241F0 = 0;
     D_801241F4 = 128;
     func_80072E28(16, 0);
     for (i = 0, var_s0 = 0; i < levelCount; i++) {
-        raceType = get_map_race_type(i);
+        raceType = leveltable_type(i);
         if ((raceType == RACETYPE_DEFAULT) || (raceType & RACETYPE_CHALLENGE) || (raceType == RACETYPE_BOSS)) {
             courseStatus = 0;
             // Map visited
@@ -460,7 +459,7 @@ void func_800732E8(Settings *settings, u8 *saveData) {
     func_80072E28(3, settings->ttAmulet);
     func_80072E28(3, settings->wizpigAmulet);
     for (i = 0; i < worldCount; i++) {
-        func_80072E28(16, (settings->courseFlagsPtr[get_hub_area_id(i)] >> 16) & 0xFFFF);
+        func_80072E28(16, (settings->courseFlagsPtr[level_world_id(i)] >> 16) & 0xFFFF);
     }
     func_80072E28(8, settings->keys);
     func_80072E28(32, settings->cutsceneFlags);
@@ -485,7 +484,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
     s16 sum;
 
     clear_lap_records(settings, arg2);
-    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    level_count(&levelCount, &worldCount);
 
     if (arg2 & 1) {
         D_801241EC = saveData;
@@ -497,8 +496,8 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         sum -= func_80072C54(16);
         if (sum == 0) {
             for (i = 0; i < levelCount; i++) {
-                if (get_map_race_type(i) == RACETYPE_DEFAULT) {
-                    availableVehicles = get_map_available_vehicles(i);
+                if (leveltable_type(i) == RACETYPE_DEFAULT) {
+                    availableVehicles = leveltable_vehicle_usable(i);
                     // Car Available
                     if (availableVehicles & (1 << VEHICLE_CAR)) {
                         settings->flapTimesPtr[0][i] = func_80072C54(16);
@@ -528,8 +527,8 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         sum -= func_80072C54(16);
         if (sum == 0) {
             for (i = 0; i < levelCount; i++) {
-                if (get_map_race_type(i) == RACETYPE_DEFAULT) {
-                    availableVehicles = get_map_available_vehicles(i);
+                if (leveltable_type(i) == RACETYPE_DEFAULT) {
+                    availableVehicles = leveltable_vehicle_usable(i);
                     // Car Available
                     if (availableVehicles & (1 << VEHICLE_CAR)) {
                         settings->courseTimesPtr[0][i] = func_80072C54(16);
@@ -559,14 +558,14 @@ void func_800738A4(Settings *settings, u8 *saveData) {
     s32 vehicleCount;
     s16 sum;
 
-    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    level_count(&levelCount, &worldCount);
     D_801241EC = saveData;
     D_801241F0 = 0;
     D_801241F4 = 128;
     func_80072E28(16, 0);
     for (vehicleCount = 0, i = 0; i < levelCount; i++) {
-        if (get_map_race_type(i) == RACETYPE_DEFAULT) {
-            availableVehicles = get_map_available_vehicles(i);
+        if (leveltable_type(i) == RACETYPE_DEFAULT) {
+            availableVehicles = leveltable_vehicle_usable(i);
             // Car Available
             if (availableVehicles & (1 << VEHICLE_CAR)) {
                 func_80072E28(16, settings->flapTimesPtr[0][i]);
@@ -606,8 +605,8 @@ void func_800738A4(Settings *settings, u8 *saveData) {
     D_801241F4 = 128;
     func_80072E28(16, 0);
     for (i = 0; i < levelCount; i++) {
-        if (get_map_race_type(i) == RACETYPE_DEFAULT) {
-            availableVehicles = get_map_available_vehicles(i);
+        if (leveltable_type(i) == RACETYPE_DEFAULT) {
+            availableVehicles = leveltable_vehicle_usable(i);
             // Car Available
             if (availableVehicles & (1 << VEHICLE_CAR)) {
                 func_80072E28(16, settings->courseTimesPtr[0][i]);
@@ -881,7 +880,7 @@ void erase_save_file(s32 saveFileNum, Settings *settings) {
     s32 i;
 
     if (osEepromProbe(si_mesg()) != 0) {
-        get_number_of_levels_and_worlds(&levelCount, &worldCount);
+        level_count(&levelCount, &worldCount);
         for (i = 0; i < levelCount; i++) {
             settings->courseFlagsPtr[i] = 0;
         }

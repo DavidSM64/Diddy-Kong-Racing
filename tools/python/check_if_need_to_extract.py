@@ -1,7 +1,6 @@
 import argparse
 import hashlib
 import subprocess
-import time
 from file_util import FileUtil
 
 parser = argparse.ArgumentParser(description="")

@@ -111,11 +111,6 @@ typedef struct WaterProperties {
     /* 0x10 */ s8 type;
 } WaterProperties;
 
-typedef struct CollisionNode {
-    u16 colPlaneIndex; // This triangle index
-    u16 closestTri[3];
-} CollisionNode;
-
 s32 set_scene_viewport_num(s32 numPorts);
 void void_free(void);
 void skydome_spawn(s32 objectID);
@@ -189,7 +184,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
 void waves_init(LevelModel *, LevelHeader *, s32);
 void void_init(s32);
 void generate_track(s32 modelId);
-void func_800304C8(unk8011C8B8 *arg0);
+void func_800304C8(unk8011C8B8 arg0[3]);
 s32 void_generate_primitive(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3);
 s32 func_8002FF6C(s32, unk8011C8B8 *, s32, Vec2f *);
 s32 func_800BDC80(s32, unk8011C3B8 *, unk8011C8B8 *, f32, f32, f32, f32);

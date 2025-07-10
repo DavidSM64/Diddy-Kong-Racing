@@ -1,8 +1,8 @@
 #include "main.h"
-#include "thread0_epc.h"
 #include "game.h"
-#include "stacks.h"
 #include "memory.h"
+#include "stacks.h"
+#include "thread0_epc.h"
 #include "thread3_main.h"
 
 /************ .bss ************/

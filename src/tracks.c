@@ -1,30 +1,30 @@
 #include "tracks.h"
 
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
-#include "f3ddkr.h"
-#include "PR/gu.h"
-#include "textures_sprites.h"
-#include "objects.h"
-#include "game.h"
-#include "memory.h"
-#include "racer.h"
-#include "camera.h"
-#include "waves.h"
-#include "game_ui.h"
-#include "weather.h"
-#include "particles.h"
-#include "math_util.h"
-#include "collision.h"
-#include "PRinternal/viint.h"
-#include "common.h"
-#include "gzip.h"
 #include "asset_loading.h"
-#include "video.h"
-#include "thread3_main.h"
+#include "camera.h"
+#include "collision.h"
+#include "common.h"
+#include "f3ddkr.h"
 #include "fade_transition.h"
+#include "game.h"
+#include "game_ui.h"
+#include "gzip.h"
+#include "macros.h"
+#include "math_util.h"
+#include "memory.h"
 #include "menu.h"
+#include "objects.h"
+#include "particles.h"
+#include "PR/gu.h"
+#include "PRinternal/viint.h"
+#include "racer.h"
+#include "structs.h"
+#include "textures_sprites.h"
+#include "thread3_main.h"
+#include "types.h"
+#include "video.h"
+#include "waves.h"
+#include "weather.h"
 
 // Maximum size for a level model is 522.5 KiB
 #define LEVEL_MODEL_MAX_SIZE 0x82A00
@@ -101,8 +101,8 @@ s32 gTTCamPlayerID;
 s32 gTTCamID;
 s32 gTTCamSmoothTimer;
 s32 D_8011B10C;
-s32 D_8011B110;
-u32 D_8011B114;
+s32 gTrackTexAnimOffset;
+u32 gTrackTexAnimFlags;
 s32 D_8011B118;
 s32 D_8011B11C;
 unk8011B120 D_8011B120[32]; // Struct sizeof(0x10) / sizeof(16)
@@ -199,7 +199,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
                 u32 arg6) {
     s32 i;
 
-    gCurrentLevelHeader2 = get_current_level_header();
+    gCurrentLevelHeader2 = level_header();
     D_8011B0F8 = FALSE;
     gTTCamPlayerID = 0;
     gTTCamID = 0;
@@ -237,11 +237,11 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
 
     cam_set_layout(numberOfPlayers);
     skydome_spawn(skybox);
-    D_8011B110 = 0;
-    D_8011B114 = 0x10000;
+    gTrackTexAnimOffset = 0;
+    gTrackTexAnimFlags = RENDER_TEX_ANIM;
     path_enable();
-    func_8000C8F8(arg6, 0);
-    func_8000C8F8(collectables, 1);
+    track_spawn_objects(arg6, 0);
+    track_spawn_objects(collectables, 1);
     gScenePlayerViewports = numberOfPlayers;
     track_setup_racers(vehicle, entranceId, numberOfPlayers);
     racerfx_alloc(72, 64);
@@ -332,7 +332,7 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
         i = (gCurrentLevelHeader2->unkA4->height << 9) - 1;
         gCurrentLevelHeader2->unkAA =
             (gCurrentLevelHeader2->unkAA + (gCurrentLevelHeader2->unkA3 * tempUpdateRate)) & i;
-        tex_animate_texture(gCurrentLevelHeader2->unkA4, &D_8011B114, &D_8011B110, tempUpdateRate);
+        tex_animate_texture(gCurrentLevelHeader2->unkA4, &gTrackTexAnimFlags, &gTrackTexAnimOffset, tempUpdateRate);
     }
     flip = FALSE;
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
@@ -398,9 +398,8 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
                           updateRate);
     }
     // Show TT Cam toggle for the fourth viewport when playing 3 player.
-    if (numViewports == 3 && get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS &&
-        get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE &&
-        get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) {
+    if (numViewports == 3 && level_type() != RACETYPE_CHALLENGE_EGGS && level_type() != RACETYPE_CHALLENGE_BATTLE &&
+        level_type() != RACETYPE_CHALLENGE_BANANAS) {
         if (hud_setting() == 0) {
             if (flip) {
                 gSPSetGeometryMode(gTrackDL++, G_CULL_FRONT);
@@ -1466,9 +1465,9 @@ void trackbg_render_flashy(void) {
     var_t2 = *gCurrentLevelHeader2->unk74;
     var_a2 = -1;
 
-    if ((s32) var_t2 != -1) {
+    if ((u32) var_t2 != -1U) {
         levelHeader = gCurrentLevelHeader2->unk74[1];
-        if ((s32) levelHeader == -1) {
+        if ((u32) levelHeader == -1U) {
             levelHeader = var_t2;
         }
     } else {
@@ -1483,7 +1482,7 @@ void trackbg_render_flashy(void) {
     }
 
     gfx_init_basic_xlu(&gTrackDL, 1, var_a2, var_a3);
-    texHeader = set_animated_texture_header(texHeader, D_8011B110 << 8);
+    texHeader = set_animated_texture_header(texHeader, gTrackTexAnimOffset << 8);
     gDkrDmaDisplayList(gTrackDL++, OS_K0_TO_PHYSICAL(texHeader->cmd), texHeader->numberOfCommands);
     gSPVertexDKR(gTrackDL++, OS_K0_TO_PHYSICAL(gTrackVtxPtr), 9, 0);
     gSPPolygon(gTrackDL++, OS_K0_TO_PHYSICAL(gTrackTriPtr), 8, 1);
@@ -1704,7 +1703,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
                              gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
         }
     }
-    get_current_level_header()->unk3 = 1;
+    level_header()->unk3 = 1;
     render_level_geometry_and_objects();
 }
 
@@ -2492,48 +2491,50 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     return gTrackWaves[index]->type;
 }
 
-// https://decomp.me/scratch/X1SBi
+// https://decomp.me/scratch/5Useu
 #ifdef NON_EQUIVALENT
 s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***arg3) {
     LevelModelSegment *currentSegment;
     LevelModelSegmentBoundingBox *currentBoundingBox;
     Triangle *tri;
     Vertex *vert;
-    f32 temp_f2_2;
+    s32 pad;
     s16 vert2X;
     s16 vert2Z;
     s16 temp_a2;
     s16 vert3X;
+    s32 sp108;
     s16 vert3Z;
-    s32 currentVerticesOffset;
-    s16 nextFaceOffset;
     s16 vert1X;
-    s16 currentFaceOffset;
+    s32 pad2;
+    s32 currentVerticesOffset;
+    s32 nextFaceOffset;
+    s32 currentFaceOffset;
     s16 vert1Z;
     s16 var_a1;
     s32 faceNum;
     s16 var_s1;
     s16 var_t0;
     s16 var_t1;
+    s8 surface;
     s32 XInInt;
     s32 ZInInt;
     s32 temp_ra_1;
     s32 temp_ra_2;
     s32 temp_ra_3;
+    s32 spB0[8];
     s32 yOutCount;
     s32 batchNum;
     s32 i;
     s32 var_v0;
     s32 stopSorting;
     TriangleBatchInfo *currentBatch;
-    f32 *temp_v1_4;
+    s32 pad3;
     Vec4f tempVec4f;
-    u16 temp;
-
-    s32 sp108;
-    s32 spB0[8];
-    s32 surface;
+    s32 temp;
     s32 var_fp;
+    WaterProperties *wave;
+    WaterProperties *wave2;
 
     D_8011D308 = 0;
     *arg3 = NULL;
@@ -2543,14 +2544,15 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
         return 0;
     }
 
-    XInInt = xIn;
-    ZInInt = zIn;
+    yOutCount = 0;
 
     for (var_fp = 0; var_fp < sp108; var_fp++) {
         currentSegment = &gCurrentLevelModel->segments[spB0[var_fp]];
         currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[spB0[var_fp]];
         var_a1 = 1;
         var_s1 = 0;
+        XInInt = xIn;
+        ZInInt = zIn;
 
         temp_a2 = ((currentBoundingBox->x2 - currentBoundingBox->x1) >> 3) + 1;
         var_t0 = temp_a2 + currentBoundingBox->x1;
@@ -2566,6 +2568,8 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
 
         // Same as above, but for Z
         temp_a2 = ((currentBoundingBox->z2 - currentBoundingBox->z1) >> 3) + 1;
+        // @fake for s3 vs s2
+        if (1) {}
         var_t0 = temp_a2 + currentBoundingBox->z1;
         var_t1 = currentBoundingBox->z1;
         for (i = 0; i < 8; i++) {
@@ -2577,14 +2581,12 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
             var_a1 *= 2;
         }
 
-        yOutCount = 0;
-
         for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
             currentBatch = &currentSegment->batches[batchNum];
             surface = gCurrentLevelModel->textures[currentBatch->textureIndex].surfaceType;
             currentFaceOffset = currentBatch->facesOffset;
-            nextFaceOffset = currentBatch[1].facesOffset;
             currentVerticesOffset = currentBatch->verticesOffset;
+            nextFaceOffset = currentBatch[1].facesOffset;
 
             if (surface != SURFACE_WATER_CALM && surface != SURFACE_WATER_UNK_F &&
                 (currentBatch->flags & (RENDER_HIDDEN | RENDER_NO_COLLISION))) {
@@ -2594,28 +2596,31 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
             for (faceNum = currentFaceOffset; faceNum < nextFaceOffset; faceNum++) {
                 if (var_s1 == (currentSegment->unk10[faceNum] & var_s1)) {
                     tri = &currentSegment->triangles[faceNum];
+
                     vert = &currentSegment->vertices[tri->verticesArray[1] + currentVerticesOffset];
                     vert1X = vert->x;
                     vert1Z = vert->z;
+
                     vert = &currentSegment->vertices[tri->verticesArray[2] + currentVerticesOffset];
                     vert2X = vert->x;
                     vert2Z = vert->z;
+
                     vert = &currentSegment->vertices[tri->verticesArray[3] + currentVerticesOffset];
                     vert3X = vert->x;
                     vert3Z = vert->z;
+
                     temp_ra_1 =
-                        ((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0);
+                        (((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0;
                     temp_ra_2 =
-                        ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                        (((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0;
                     temp_ra_3 =
-                        ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                        (((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0;
                     if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
                         temp = currentSegment->collisionFacets[faceNum].basePlaneIndex;
-                        temp_v1_4 = (f32 *) &currentSegment->collisionPlanes[temp * 4];
-                        tempVec4f.x = temp_v1_4[0];
-                        tempVec4f.y = temp_v1_4[1];
-                        tempVec4f.z = temp_v1_4[2];
-                        tempVec4f.w = temp_v1_4[3];
+                        tempVec4f.x = currentSegment->collisionPlanes[temp * 4 + 0];
+                        tempVec4f.y = currentSegment->collisionPlanes[temp * 4 + 1];
+                        tempVec4f.z = currentSegment->collisionPlanes[temp * 4 + 2];
+                        tempVec4f.w = currentSegment->collisionPlanes[temp * 4 + 3];
                         if (tempVec4f.y != 0.0) {
                             D_8011D128[yOutCount].type = surface;
                             D_8011D128[yOutCount].waveHeight =
@@ -2637,12 +2642,15 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
         }
     }
 
+    // @diff gCurrentLevelModel is stored in a0? Might be fixed if the bottom for and do-while is fixed
     if (levelSegmentIndex >= 0 && levelSegmentIndex < gCurrentLevelModel->numberOfSegments) {
+        currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
         D_8011D128[yOutCount].type = SURFACE_WATER_WAVY;
-        if (gCurrentLevelModel->segments[levelSegmentIndex].hasWaves && gWaveBlockCount != 0) {
-            D_8011D128[yOutCount].waveHeight = func_800BB2F4(levelSegmentIndex, xIn, zIn, &D_8011D128[yOutCount].rot);
+        if (currentSegment->hasWaves && gWaveBlockCount != 0) {
+            D_8011D128[yOutCount].waveHeight =
+                func_800BB2F4(levelSegmentIndex, xIn, zIn, &(yOutCount + D_8011D128)->rot);
         } else {
-            D_8011D128[yOutCount].waveHeight = gCurrentLevelModel->segments[levelSegmentIndex].unk38;
+            D_8011D128[yOutCount].waveHeight = currentSegment->unk38;
             D_8011D128[yOutCount].rot.x = 0.0f;
             D_8011D128[yOutCount].rot.y = 1.0f;
             D_8011D128[yOutCount].rot.z = 0.0f;
@@ -2651,17 +2659,21 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
     }
 
     // clang-format off
-    for (i = 0; i < yOutCount; i++) { gTrackWaves[i] = &D_8011D128[i]; }
+    for (var_v0 = 0; var_v0 < yOutCount; var_v0++) {\
+        wave = &D_8011D128[var_v0];\
+        gTrackWaves[var_v0] = wave;\
+    }
     // clang-format on
 
     do {
         stopSorting = TRUE;
-        for (i = 0; i < yOutCount - 1; i++) {
-            if (gTrackWaves[i]->waveHeight < gTrackWaves[i + 1]->waveHeight) {
-                WaterProperties *wave = gTrackWaves[i];
+        for (var_v0 = 0; var_v0 < yOutCount - 1; var_v0++) {
+            wave = gTrackWaves[var_v0 + 1]; // @fake?
+            if (gTrackWaves[var_v0]->waveHeight < gTrackWaves[var_v0 + 1]->waveHeight) {
                 stopSorting = FALSE;
-                gTrackWaves[i] = gTrackWaves[i + 1];
-                gTrackWaves[i + 1] = wave;
+                wave = gTrackWaves[var_v0];
+                gTrackWaves[var_v0] = gTrackWaves[var_v0 + 1];
+                gTrackWaves[var_v0 + 1] = wave;
             }
         }
     } while (!stopSorting);
@@ -2843,7 +2855,7 @@ void generate_track(s32 modelId) {
     gCollisionCandidates = mempool_alloc_safe(MAX_COLLISION_CANDIDATES * 4, COLOUR_TAG_YELLOW);
     gCollisionSurfaces = mempool_alloc_safe(MAX_COLLISION_CANDIDATES, COLOUR_TAG_YELLOW);
     gNumCollisionCandidates = 0;
-    gLevelModelTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
+    gLevelModelTable = (s32 *) asset_table_load(ASSET_LEVEL_MODELS_TABLE);
 
     for (i = 0; gLevelModelTable[i] != -1; i++) {}
     i--;
@@ -2858,7 +2870,7 @@ void generate_track(s32 modelId) {
     temp += (LEVEL_MODEL_MAX_SIZE - temp_s4);
     temp -= ((s32) temp % 16); // Align to 16-byte boundary.
 
-    load_asset_to_address(ASSET_LEVEL_MODELS, temp, mdl, temp_s4);
+    asset_load(ASSET_LEVEL_MODELS, temp, mdl, temp_s4);
     gzip_inflate((u8 *) temp, (u8 *) gCurrentLevelModel);
     mempool_free(gLevelModelTable); // Done with the level models table, so free it.
 

@@ -1,18 +1,19 @@
 #include "vehicle_misc.h"
 
-#include "types.h"
+#include "audio.h"
+#include "audio_spatial.h"
+#include "camera.h"
 #include "macros.h"
 #include "math_util.h"
-#include "objects.h"
 #include "object_functions.h"
-#include "audio_spatial.h"
-#include "racer.h"
+#include "objects.h"
 #include "particles.h"
-#include "audio.h"
-#include "camera.h"
+#include "racer.h"
+#include "types.h"
 
 /************ .data ************/
 
+// The highest index that ever seems to be read from this table is 6.
 u16 gSmokeyVoiceTable[16] = {
     SOUND_VOICE_BOSS_LAUGH2,
     SOUND_VOICE_TRICKY_HM,
@@ -21,7 +22,7 @@ u16 gSmokeyVoiceTable[16] = {
     SOUND_VOICE_WIZPIG_H2,
     SOUND_VOICE_SMOKEY_EH,
     SOUND_VOICE_SMOKEY_HEH,
-    SOUND_VOICE_SMOKEY_HAH,
+    SOUND_VOICE_SMOKEY_HAH, // Never read from this point?
     SOUND_VOICE_SMOKEY_LAUGH,
     SOUND_VOICE_SMOKEY_HM,
     SOUND_VOICE_SMOKEY_HM2,
@@ -317,8 +318,8 @@ void spawn_boss_hazard(Object *obj, Object_Racer *racer, f32 offset, s32 objectI
                             newObj->x_velocity = obj->x_velocity;
                             newObj->y_velocity = obj->y_velocity;
                             newObj->z_velocity = obj->z_velocity;
-                            newObj->properties.common.unk0 = tempObj;
-                            newObj->properties.common.unk4 = (s8) entry->animation.y_rotation * 60;
+                            newObj->properties.fireball.obj = tempObj;
+                            newObj->properties.fireball.timer = (s8) entry->animation.y_rotation * 60;
                             newObj->animFrame = rand_range(0, 255);
                             audspat_play_sound_at_position(soundID, newObj->trans.x_position, newObj->trans.y_position,
                                                            newObj->trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER,

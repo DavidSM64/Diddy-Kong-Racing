@@ -3,36 +3,36 @@
 #include "menu.h"
 #include "video.h"
 
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
 #include "asset_enums.h"
-#include "save_data.h"
-#include "audio_spatial.h"
-#include "objects.h"
+#include "asset_loading.h"
 #include "audio.h"
-#include "object_functions.h"
-#include "game.h"
-#include "printf.h"
-#include "math_util.h"
-#include "tracks.h"
-#include "vehicle_misc.h"
+#include "audio_spatial.h"
 #include "audio_vehicle.h"
-#include "game_ui.h"
-#include "object_models.h"
 #include "audiosfx.h"
 #include "collision.h"
-#include "joypad.h"
-#include "particles.h"
-#include "PRinternal/viint.h"
 #include "common.h"
-#include "asset_loading.h"
-#include "thread3_main.h"
-#include "textures_sprites.h"
 #include "fade_transition.h"
-#include "PR/os_system.h"
+#include "game.h"
+#include "game_ui.h"
+#include "joypad.h"
+#include "macros.h"
+#include "math_util.h"
+#include "object_functions.h"
+#include "object_models.h"
+#include "objects.h"
+#include "particles.h"
 #include "PR/os_cont.h"
 #include "PR/os_libc.h"
+#include "PR/os_system.h"
+#include "PRinternal/viint.h"
+#include "printf.h"
+#include "save_data.h"
+#include "structs.h"
+#include "textures_sprites.h"
+#include "thread3_main.h"
+#include "tracks.h"
+#include "types.h"
+#include "vehicle_misc.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -219,9 +219,9 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     sp6E = racer->unk1CA;
     miscAsset1 = (s8 *) get_misc_asset(ASSET_MISC_1);
     miscAsset2 = (s8 *) get_misc_asset(ASSET_MISC_2);
-    header = get_current_level_header();
+    header = level_header();
     racerGroup = get_racer_objects_by_position(&numRacers);
-    sp54 = get_ai_behaviour_table();
+    sp54 = aitable_get();
     if (racer->unk1C6 > 0) {
         racer->unk1C6 -= updateRate;
     } else {
@@ -547,7 +547,7 @@ void increment_ai_behaviour_chances(Object *obj, Object_Racer *racer, s32 update
         sBalloonLevelAI = 0;
         return;
     }
-    aiTable = get_ai_behaviour_table();
+    aiTable = aitable_get();
     if (racer->boostTimer) {
         if (sAIStartedBoosting == FALSE) {
             aiTable->percentages[AI_BLUE_BALLOON][AI_MIN] += aiTable->percentages[AI_BLUE_BALLOON][AI_MIN_STEP];
@@ -609,7 +609,7 @@ void increment_ai_behaviour_chances(Object *obj, Object_Racer *racer, s32 update
 void racer_AI_pathing_inputs(Object *obj, Object_Racer *racer, s32 updateRate) {
     s32 raceType;
 
-    raceType = get_current_level_race_type();
+    raceType = level_type();
 
     switch (raceType) {
         case RACETYPE_CHALLENGE_BATTLE:
@@ -711,7 +711,7 @@ void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRat
         return;
     }
 
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     raceType = levelHeader->race_type;
     sp38 = levelHeader->unk2A;
     if (aiRacer->unk1CD == 0) {
@@ -1083,7 +1083,7 @@ void racer_ai_eggs(Object *obj, Object_Racer *racer, s32 updateRate) {
         return;
     }
 
-    header = get_current_level_header()->unk2A;
+    header = level_header()->unk2A;
     if (racer->groundedWheels) {
         racer->unk1C6 += updateRate;
         if (racer->unk1C6 > 60) {
@@ -2731,7 +2731,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         apply_plane_tilt_anim(updateRate, obj, racer);
     }
     var_v0 = racer->playerIndex;
-    if (var_v0 == PLAYER_COMPUTER && gCurrentPlayerIndex != PLAYER_COMPUTER) {
+    if ((var_v0 == PLAYER_COMPUTER) && (gCurrentPlayerIndex != PLAYER_COMPUTER)) {
         gCurrentRacerHandlingStat = 1.4f;
     }
     var_f20 = sqrtf((obj->x_velocity * obj->x_velocity) + (obj->z_velocity * obj->z_velocity) +
@@ -3199,7 +3199,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->y_velocity -= racer->oy3 * var_f20;
         obj->z_velocity -= racer->oz3 * var_f20;
         if (racer->trickType == 1 || racer->trickType == -1) {
-            spEC = racer->velocity * 0.0588235 * 1.5;
+            spEC = racer->velocity * 0.058823529411764705 * 1.5;
             var_f20 = coss_f(racer->x_rotation_vel) * spEC * racer->trickType;
             if (racer->x_rotation_vel > 0x4000 || racer->x_rotation_vel < -0x4000) {
                 var_f20 *= 2;
@@ -4211,7 +4211,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     } else {
         tempRacer->unk201 = 0;
     }
-    header = get_current_level_header();
+    header = level_header();
     gCurrentCourseHeight = header->course_height;
     tempRacer->throttleReleased = FALSE;
     if (tempRacer->playerIndex == PLAYER_COMPUTER) {
@@ -4495,7 +4495,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                     }
                 }
                 if (tempRacer->playerIndex != PLAYER_COMPUTER && tempRacer->lap + 1 == header->laps && !D_8011D580 &&
-                    get_current_level_race_type() == RACETYPE_DEFAULT) {
+                    level_type() == RACETYPE_DEFAULT) {
                     music_tempo_set_relative(1.12f);
                     D_8011D580 = 1;
                 }
@@ -4814,7 +4814,7 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Rac
             spB8 = racer->buoyancy - 10.0;
             racerObj->y_velocity += spB8 * 0.065 * updateRateF;
         }
-        currentLevelHeader = get_current_level_header();
+        currentLevelHeader = level_header();
         if ((racer->buoyancy != 0.0 && currentLevelHeader->unk2 != 0) || gCurrentSurfaceType == SURFACE_FROZEN_WATER) {
             if (racer->unk1F0 != 0) {
                 racer->checkpoint_distance -= 0.3;
@@ -6334,7 +6334,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
         update_car_velocity_offground(obj, racer, updateRate, updateRateF);
     }
     apply_vehicle_rotation_offset(racer, updateRate, 0, 0, 0);
-    header = get_current_level_header();
+    header = level_header();
     if ((racer->buoyancy != 0.0 && header->unk2) || gCurrentSurfaceType == SURFACE_FROZEN_WATER) {
         if (racer->unk1F0) {
             racer->checkpoint_distance -= 0.3;
@@ -6662,7 +6662,7 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
     D_8011D54C = 0;
     flags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
-        flags = func_80017248(racerObj, 4, &numCollisions, (Vec3f *) racer->unkD8, sp134, spE0, sp58);
+        flags = collision_objectmodel(racerObj, 4, &numCollisions, (Vec3f *) racer->unkD8, sp134, spE0, sp58);
     }
     if (flags & 0x80) {
         for (i = 0; i < 4; i++) {
@@ -6687,7 +6687,7 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
             sp5C = 1;
         }
     }
-    generate_collision_candidates(4, racer->unkD8, sp134, racer->vehicleID);
+    generate_collision_candidates(4, (Vec3f *) racer->unkD8, (Vec3f *) sp134, racer->vehicleID);
     numCollisions = 0;
     racer->unk1E3 = resolve_collisions((Vec3f *) racer->unkD8, (Vec3f *) sp134, spE0, sp58, 4, &numCollisions);
     sp184 = get_collision_normal(&sp180, &sp178, &sp17C);
@@ -6860,7 +6860,8 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     hasCollision = FALSE;
     flags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_BOSSES) {
-        flags = func_80017248(obj, 1, &hasCollision, (Vec3f *) racer->unkD8, &tempPos.x, &radius, &surface);
+        flags =
+            collision_objectmodel(obj, 1, &hasCollision, (Vec3f *) racer->unkD8, (f32 *) &tempPos, &radius, &surface);
     }
     if (flags & 0x80) {
         D_8011D548 = tempPos.x - obj->trans.x_position;
@@ -6871,7 +6872,7 @@ void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 upda
     if (flags && tempPos.y < obj->trans.y_position - 4.0) {
         shouldSquish = TRUE;
     }
-    generate_collision_candidates(1, racer->unkD8, &tempPos.x, racer->vehicleID);
+    generate_collision_candidates(1, (Vec3f *) racer->unkD8, &tempPos, racer->vehicleID);
     hasCollision = FALSE;
     racer->unk1E3 = resolve_collisions((Vec3f *) racer->unkD8, &tempPos, &radius, &surface, 1, &hasCollision);
     racer->unk1E4 = flags;
@@ -7277,7 +7278,7 @@ Object *func_8005698C(Object *racerObj, Object_Racer *racer, f32 *outDistance) {
     s32 isChallengeRace;
     s32 raceType;
 
-    raceType = get_current_level_race_type();
+    raceType = level_type();
     isChallengeRace = raceType & RACETYPE_CHALLENGE;
     if (racer->playerIndex == PLAYER_COMPUTER && !isChallengeRace) {
         curDistance = 0.0f;
@@ -7605,7 +7606,7 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
             newObject.objectID = ASSET_OBJECT_ID_COIN;
             i = number;
             do {
-                if (get_current_level_race_type() != RACETYPE_CHALLENGE) {
+                if (level_type() != RACETYPE_CHALLENGE) {
                     bananaObj = spawn_object(&newObject, OBJECT_SPAWN_UNK01);
                     if (bananaObj != NULL) {
                         bananaObj->level_entry = NULL;
@@ -8132,16 +8133,17 @@ void set_position_goal_from_path(UNUSED Object *obj, Object_Racer *racer, f32 *x
     *z = catmull_rom_interpolation(splineZ, destReached, magnitude);
 }
 
-// https://decomp.me/scratch/6WBdX
+// https://decomp.me/scratch/uUmRq
 #ifdef NON_MATCHING
 void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
-    UNUSED s32 pad[2];
+    UNUSED f32 pad;
+    UNUSED f32 pad2;
     s32 temp_v0;
     CheckpointNode *temp_v0_4;
     f32 posX[5];
     f32 posY[5];
     f32 posZ[5];
-    UNUSED s32 pad2;
+    UNUSED f32 pad3;
     f32 tempX;
     s32 counter;
     f32 tempY;
@@ -8161,7 +8163,7 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (temp_v0 == 0) {
         return;
     }
-    if ((get_current_map_id() == 0) && (racer->checkpoint >= temp_v0)) {
+    if ((level_id() == 0) && (racer->checkpoint >= temp_v0)) {
         racer->lap = 0;
         racer->checkpoint = 0;
         racer->courseCheckpoint = 0;
@@ -8192,78 +8194,81 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
                 racer->unk1C8 = 0;
             }
         }
-    } else {
-        if (splinePos < 0.0f) {
-            splinePos = 0.0f;
-        }
-        temp_v0_4 = find_next_checkpoint_node(racer->checkpoint, racer->unk1C8);
-        scale = temp_v0_4->scale;
-        counter = racer->checkpoint - 1;
-        if (counter < 0) {
-            counter = temp_v0 - 1;
-        }
-        temp_v0_4 = get_checkpoint_node(counter);
-        distance = temp_v0_4->scale;
-        divisor = ((scale - temp_v0_4->scale) * splinePos) + distance;
-        counter = racer->checkpoint - 2;
-        if (counter < 0) {
-            counter += temp_v0;
-        }
-        for (i = 0; (i < 5) ^ 0; i++) {
-            temp_v0_4 = find_next_checkpoint_node(counter, racer->unk1C8);
-            posX[i] = temp_v0_4->x + ((temp_v0_4->scale * temp_v0_4->rotationZFrac) * racer->unk1BA);
-            posY[i] = temp_v0_4->y + (temp_v0_4->scale * racer->unk1BC);
-            posZ[i] = temp_v0_4->z + ((temp_v0_4->scale * (-temp_v0_4->rotationXFrac)) * racer->unk1BA);
-            counter++;
-            if (counter == temp_v0) {
-                counter = 0;
-            }
-        }
-        splineIndex = FALSE;
-        if (splinePos >= 1.0) {
-            splinePos -= 1.0;
-            splineIndex = TRUE;
-        }
-        tempX = cubic_spline_interpolation(posX, splineIndex, splinePos, &diffX);
-        tempY = cubic_spline_interpolation(posY, splineIndex, splinePos, &diffY);
-        tempZ = cubic_spline_interpolation(posZ, splineIndex, splinePos, &diffZ);
-        distance = sqrtf((diffX * diffX) + (diffZ * diffZ));
-        if (distance != 0.0f) {
-            scale = 1.0f / distance;
-            diffX *= scale;
-            diffZ *= scale;
-        }
-        angle = arctan2_f(diffX, diffZ) - (racer->steerVisualRotation & 0xFFFF) - 0x8000;
-        WRAP(angle, -0x8000, 0x8000);
-        if (angle > 0x4000 || angle < -0x4000) {
-            if (racer->wrongWayCounter < 200 && racer->velocity <= -1.0) {
-                racer->wrongWayCounter += updateRate;
-            }
-        } else {
-            racer->wrongWayCounter = 0;
-        }
-        diffY = diffX;
-        diffX = diffZ;
-        diffZ = -diffY;
-        splinePos = obj->trans.x_position;
-        distance = obj->trans.z_position;
-        diffX = -(((splinePos * diffX) + (diffZ * distance) - ((tempZ * diffZ) + (diffX * tempX))) / divisor);
-        if (diffX > 5.0f) {
-            diffX = 5.0f;
-        }
-        if (diffX < -5.0f) {
-            diffX = -5.0f;
-        }
-        racer->unk1BA += (s32) diffX;
-        diffY = (obj->trans.y_position - tempY) / divisor;
-        if (diffY > 100.0f) {
-            diffY = 100.0f;
-        }
-        if (diffY < -100.0f) {
-            diffY = -100.0f;
-        }
-        racer->unk1BC += (s32) diffY;
+        return;
     }
+    if (splinePos < 0.0f) {
+        splinePos = 0.0f;
+    }
+    temp_v0_4 = find_next_checkpoint_node(racer->checkpoint, racer->unk1C8);
+    scale = temp_v0_4->scale;
+    counter = racer->checkpoint - 1;
+    if (counter < 0) {
+        counter = temp_v0 - 1;
+    }
+    temp_v0_4 = get_checkpoint_node(counter);
+    distance = temp_v0_4->scale;
+    divisor = ((scale - temp_v0_4->scale) * splinePos) + distance;
+    counter = racer->checkpoint - 2;
+    if (counter < 0) {
+        counter += temp_v0;
+    }
+    for (i = 0; (i < 5) ^ 0; i++) {
+        temp_v0_4 = find_next_checkpoint_node(counter, racer->unk1C8);
+        posX[i] = temp_v0_4->x + ((temp_v0_4->scale * temp_v0_4->rotationZFrac) * racer->unk1BA);
+        posY[i] = temp_v0_4->y + (temp_v0_4->scale * racer->unk1BC);
+        posZ[i] = temp_v0_4->z + ((temp_v0_4->scale * (-temp_v0_4->rotationXFrac)) * racer->unk1BA);
+        counter++;
+        if (counter == temp_v0) {
+            counter = 0;
+        }
+    }
+    splineIndex = FALSE;
+    if (splinePos >= 1.0) {
+        splinePos -= 1.0;
+        splineIndex = TRUE;
+    }
+    tempX = cubic_spline_interpolation(posX, splineIndex, splinePos, &diffX);
+    tempY = cubic_spline_interpolation(posY, splineIndex, splinePos, &diffY);
+    tempZ = cubic_spline_interpolation(posZ, splineIndex, splinePos, &diffZ);
+    distance = sqrtf((diffX * diffX) + (diffZ * diffZ));
+    if (distance != 0.0f) {
+        scale = 1.0f / distance;
+        diffX *= scale;
+        diffZ *= scale;
+    }
+    angle = arctan2_f(diffX, diffZ) - (racer->steerVisualRotation & 0xFFFF) - 0x8000;
+    WRAP(angle, -0x8000, 0x8000);
+    if (angle > 0x4000 || angle < -0x4000) {
+        if (racer->wrongWayCounter < 200 && racer->velocity <= -1.0) {
+            racer->wrongWayCounter += updateRate;
+        }
+    } else {
+        racer->wrongWayCounter = 0;
+    }
+    diffY = diffX;
+    diffX = diffZ;
+    diffZ = -diffY;
+
+    splinePos = obj->trans.x_position;
+    distance = obj->trans.z_position;
+    pad = ((splinePos * diffX) + (diffZ * distance));
+    pad2 = -((tempZ * diffZ) + (diffX * tempX));
+    diffX = -((pad + pad2) / divisor);
+    if (diffX > 5.0f) {
+        diffX = 5.0f;
+    }
+    if (diffX < -5.0f) {
+        diffX = -5.0f;
+    }
+    racer->unk1BA += (s32) diffX;
+    diffY = (obj->trans.y_position - tempY) / divisor;
+    if (diffY > 100.0f) {
+        diffY = 100.0f;
+    }
+    if (diffY < -100.0f) {
+        diffY = -100.0f;
+    }
+    racer->unk1BC += (s32) diffY;
 }
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80059208.s")
@@ -8358,7 +8363,7 @@ s32 timetrial_load_player_ghost(s32 controllerID, s32 mapId, s16 arg2, s16 *char
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime) {
     GhostHeader *ghost = mempool_alloc_safe(size, COLOUR_TAG_RED);
     if (ghost != NULL) {
-        load_asset_to_address(ASSET_TTGHOSTS, (u32) ghost, ghostOffset, size);
+        asset_load(ASSET_TTGHOSTS, (u32) ghost, ghostOffset, size);
         if (gGhostData[GHOST_STAFF] != NULL) {
             mempool_free(gGhostData[GHOST_STAFF]);
         }
@@ -8478,7 +8483,7 @@ s32 timetrial_ghost_read(Object *obj) {
 #endif
         return FALSE;
     }
-    if (ghostDataIndex != 2 && get_current_map_id() != gGhostMapID) {
+    if (ghostDataIndex != 2 && level_id() != gGhostMapID) {
         return FALSE;
     }
     nodeIndex = commonUnk0s32 - 1;
@@ -8678,7 +8683,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
 
     gCurrentPlayerIndex = -1;
     gameMode = get_game_mode();
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     if (racer->unk1F6 > 0) {
         racer->unk1F6 -= updateRate;
     } else {
@@ -8994,7 +8999,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
 #endif
 
     gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACERACCELERATION_UNKNOWN0);
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     checkpointCount = get_checkpoint_count();
     if (checkpointCount == 0) {
         return;

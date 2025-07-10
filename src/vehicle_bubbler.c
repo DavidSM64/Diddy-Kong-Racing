@@ -1,17 +1,18 @@
 #include "vehicle_misc.h"
 
-#include "types.h"
+#include "audio.h"
+#include "camera.h"
 #include "macros.h"
-#include "racer.h"
 #include "math_util.h"
 #include "objects.h"
 #include "particles.h"
 #include "printf.h"
-#include "audio.h"
-#include "camera.h"
+#include "racer.h"
+#include "types.h"
 
 /************ .data ************/
 
+// The highest index that ever seems to be read from this table is 6.
 u16 gBubblerVoiceTable[16] = {
     SOUND_VOICE_BUBBLER_HOHO,
     SOUND_VOICE_BUBBLER_OW,
@@ -19,7 +20,7 @@ u16 gBubblerVoiceTable[16] = {
     SOUND_VOICE_BUBBLER_HOHO2,
     SOUND_VOICE_BUBBLER_AW,
     SOUND_VOICE_BUBBLER_OW2,
-    SOUND_VOICE_BUBBLER_AUGH2,
+    SOUND_VOICE_BUBBLER_AUGH2, // Never read from this point?
     SOUND_VOICE_TRICKY_LAUGH,
     SOUND_VOICE_TRICKY_LAUGH2,
     SOUND_VOICE_TRICKY_OW,

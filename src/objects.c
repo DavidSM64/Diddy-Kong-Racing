@@ -1,46 +1,47 @@
 #include "objects.h"
 #include "memory.h"
 
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
-#include "level_object_entries.h"
 #include "asset_enums.h"
 #include "asset_loading.h"
-#include "thread0_epc.h"
-#include "save_data.h"
-#include "menu.h"
-#include "game.h"
-#include "racer.h"
-#include "particles.h"
-#include "tracks.h"
-#include "math_util.h"
+#include "audio_spatial.h"
+#include "audio_vehicle.h"
+#include "audiosfx.h"
 #include "camera.h"
-#include "waves.h"
+#include "fade_transition.h"
+#include "game.h"
+#include "game_text.h"
+#include "game_ui.h"
+#include "gzip.h"
+#include "joypad.h"
+#include "level_object_entries.h"
+#include "lights.h"
+#include "macros.h"
+#include "math_util.h"
+#include "menu.h"
 #include "object_functions.h"
 #include "object_models.h"
-#include "lights.h"
-#include "game_ui.h"
-#include "audio_spatial.h"
-#include "joypad.h"
-#include "game_text.h"
-#include "audiosfx.h"
-#include "audio_vehicle.h"
-#include "vehicle_misc.h"
-#include "PRinternal/viint.h"
-#include "printf.h"
-#include "weather.h"
-#include "PRinternal/piint.h"
-#include "gzip.h"
-#include "video.h"
-#include "thread3_main.h"
-#include "textures_sprites.h"
-#include "fade_transition.h"
-#include "PR/os_system.h"
+#include "particles.h"
 #include "PR/os_cont.h"
 #include "PR/os_convert.h"
+#include "PR/os_system.h"
 #include "PR/rcp.h"
+#include "PRinternal/piint.h"
+#include "PRinternal/viint.h"
+#include "printf.h"
+#include "racer.h"
+#include "save_data.h"
+#include "structs.h"
+#include "textures_sprites.h"
+#include "thread0_epc.h"
+#include "thread3_main.h"
+#include "tracks.h"
+#include "types.h"
+#include "vehicle_misc.h"
+#include "video.h"
+#include "waves.h"
+#include "weather.h"
 
+#define OBJECT_MAP_SIZE 0x3000
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
 #define OBJECT_BLUEPRINT_SIZE 0x800
@@ -195,18 +196,6 @@ FadeTransition gRaceEndTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_O
 UNUSED const char sObjectOutofMemString[] = "Objects out of ram(1) !!\n";
 UNUSED const char sDoorNumberErrorString[] = "Door numbering error %d!!\n";
 UNUSED const char sObjectScopeErrorString[] = "objGetScope: Unknown scope for object %d\n";
-UNUSED const char sObjectListDataOverflowString[] = "ObjList (Part) Overflow %d!!!\n";
-UNUSED const char sObjectSetupError1String[] = "ObjSetupObject(1) Memory fail!!\n";
-UNUSED const char sObjectSetupError2String[] = "ObjSetupObject(2) Memory fail!!\n";
-UNUSED const char sObjectSetupError5String[] = "ObjSetupObject(5) Memory fail!!\n";
-UNUSED const char sObjectSetupError6String[] = "ObjSetupObject(6) Memory fail!!\n";
-UNUSED const char sObjectSetupError3String[] = "ObjSetupObject(3) Memory fail!!\n";
-UNUSED const char sObjectListOverflowString[] = "ObjList Overflow %d!!!\n";
-UNUSED const char sObjectSetupError4String[] = "ObjSetupObject(4) Memory fail!!\n";
-UNUSED const char sDuplicateCheckpointString[] = "Error: Multiple checkpoint no: %d !!\n";
-UNUSED const char sErrorChannelString[] = "ERROR Channel %d\n";
-UNUSED const char sReadOutErrorString[] = "RO error %d!!\n";
-UNUSED const char sPureAnguishString[] = "ARGHHHHHHHHH\n";
 
 /*********************************/
 
@@ -293,13 +282,13 @@ s32 D_8011AE88;
 Gfx *gObjectCurrDisplayList;
 Mtx *gObjectCurrMatrix;
 Vertex *gObjectCurrVertexList;
-u8 *D_8011AE98[2];
-s32 D_8011AEA0[2];
-s32 D_8011AEA8[2];
-s32 *D_8011AEB0[2];
+u8 *gObjectMapSpawnList[2];
+s32 gObjectMapSize[2];
+s32 gObjectMapID[2];
+s32 *gObjectMap[2];
 s16 *gAssetsLvlObjTranslationTable;
 s32 gAssetsLvlObjTranslationTableLength;
-s32 D_8011AEC0;
+s32 gObjectMapIndex;
 Object **gParticlePtrList;
 s32 gFreeListCount;
 CheckpointNode *gTrackCheckpoints; // Array of structs, unknown number of members
@@ -330,7 +319,7 @@ s32 D_8011AF2C;
 ShadeProperties *gWorldShading; // Effectively unused.
 s32 D_8011AF34;
 s32 D_8011AF38[10];
-Object_MidiFade *D_8011AF60[2];
+Object_MidiFade *D_8011AF60;
 TexCoords D_8011AF68[32];
 Vec3s gEnvmapPos[2];
 unk800179D0 *D_8011AFF4;
@@ -741,13 +730,13 @@ void allocate_object_pools(void) {
     gAINodes = mempool_alloc_safe(sizeof(uintptr_t) * AINODE_COUNT, COLOUR_TAG_BLUE);
     D_8011ADCC = mempool_alloc_safe(8, COLOUR_TAG_BLUE);
     D_8011AFF4 = mempool_alloc_safe(sizeof(unk800179D0) * 16, COLOUR_TAG_BLUE);
-    gAssetsLvlObjTranslationTable = (s16 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
-    gAssetsLvlObjTranslationTableLength = (get_size_of_asset_section(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
+    gAssetsLvlObjTranslationTable = (s16 *) asset_table_load(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
+    gAssetsLvlObjTranslationTableLength = (asset_table_size(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
     while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
         gAssetsLvlObjTranslationTableLength--;
     }
     gSpawnObjectHeap = mempool_alloc_safe(OBJECT_BLUEPRINT_SIZE, COLOUR_TAG_BLUE);
-    gAssetsObjectHeadersTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
+    gAssetsObjectHeadersTable = (s32 *) asset_table_load(ASSET_OBJECT_HEADERS_TABLE);
     gAssetsObjectHeadersTableLength = 0;
     while (-1 != gAssetsObjectHeadersTable[gAssetsObjectHeadersTableLength]) {
         gAssetsObjectHeadersTableLength++;
@@ -760,8 +749,8 @@ void allocate_object_pools(void) {
         (*gObjectHeaderReferences)[i] = 0;
     }
 
-    gAssetsMiscSection = (s32 *) load_asset_section_from_rom(ASSET_MISC);
-    gAssetsMiscTable = (s32 *) load_asset_section_from_rom(ASSET_MISC_TABLE);
+    gAssetsMiscSection = (s32 *) asset_table_load(ASSET_MISC);
+    gAssetsMiscTable = (s32 *) asset_table_load(ASSET_MISC_TABLE);
     gAssetsMiscTableLength = 0;
     while (-1 != gAssetsMiscTable[gAssetsMiscTableLength]) {
         gAssetsMiscTableLength++;
@@ -858,7 +847,7 @@ void clear_object_pointers(void) {
     gTransformTimer = 0;
     gIsTajChallenge = FALSE;
     gTajRaceInit = 0;
-    D_8011AF60[0] = 0;
+    D_8011AF60 = NULL;
     D_8011AE00 = 0;
     D_8011AE01 = TRUE;
     D_8011AD53 = 0;
@@ -884,14 +873,14 @@ void free_all_objects(void) {
     gParticlePtrList_flush();
     len = gObjectCount;
     for (i = 0; i < len; i++) {
-        func_800101AC(gObjPtrList[i], 1);
+        obj_destroy(gObjPtrList[i], 1);
     }
     gFreeListCount = 0;
     gObjectCount = 0;
     gObjectListStart = 0;
     clear_object_pointers();
-    mempool_free((void *) D_8011AEB0[0]);
-    mempool_free((void *) D_8011AEB0[1]);
+    mempool_free((void *) gObjectMap[0]);
+    mempool_free((void *) gObjectMap[1]);
 }
 
 /**
@@ -912,7 +901,7 @@ ObjectHeader *load_object_header(s32 index) {
     size = gAssetsObjectHeadersTable[index + 1] - assetOffset;
     address = mempool_alloc_pool((MemoryPoolSlot *) gObjectMemoryPool, size);
     if (address != NULL) {
-        load_asset_to_address(ASSET_OBJECTS, (u32) address, assetOffset, size);
+        asset_load(ASSET_OBJECTS, (u32) address, assetOffset, size);
         address->unk24 = (ObjectHeader24 *) ((uintptr_t) address + (uintptr_t) address->unk24);
         address->objectParticles =
             (ObjHeaderParticleEntry *) ((uintptr_t) address + (uintptr_t) address->objectParticles);
@@ -954,7 +943,11 @@ s32 normalise_time(s32 timer) {
     }
 }
 
-void func_8000C8F8(s32 arg0, s32 arg1) {
+/**
+ * Load the object map into RAM, then start spawning objects into the world.
+ * Also decides whether this race type should be for silver coins or not.
+ */
+void track_spawn_objects(s32 mapID, s32 index) {
     s32 assetSize;
     Settings *settings;
     s32 i;
@@ -968,50 +961,49 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
 
     settings = get_settings();
     assetOffset = settings->bosses | 0x820; // 0x820 = Wizpig 2 and some unknown 0x800 boss bit
-    gIsSilverCoinRace =
-        ((settings->courseFlagsPtr[settings->courseId] & 4) == 0) && (((1 << settings->worldId) & assetOffset) != 0);
+    gIsSilverCoinRace = ((settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED_SILVER_COINS) == FALSE) &&
+                        (((1 << settings->worldId) & assetOffset) != 0);
 
-    if (!(settings->courseFlagsPtr[settings->courseId] & 2)) {
-        gIsSilverCoinRace = 0;
+    if ((settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED) == FALSE) {
+        gIsSilverCoinRace = FALSE;
     }
     if (is_in_tracks_mode()) {
-        gIsSilverCoinRace = 0;
+        gIsSilverCoinRace = FALSE;
     }
-    if (get_current_level_race_type()) {
-        gIsSilverCoinRace = 0;
+    if (level_type()) {
+        gIsSilverCoinRace = FALSE;
     }
 
     D_8011AD3E = 0;
-    mem = mempool_alloc_safe(0x3000, COLOUR_TAG_BLUE);
-    D_8011AEB0[arg1] = mem;
-    D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
-    D_8011AEA0[arg1] = 0;
-    D_8011AEA8[arg1] = arg0;
-    objMapTable = (u32 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_MAPS_TABLE);
+    mem = mempool_alloc_safe(OBJECT_MAP_SIZE, COLOUR_TAG_BLUE);
+    gObjectMap[index] = mem;
+    gObjectMapSpawnList[index] = (u8 *) (gObjectMap[index] + sizeof(uintptr_t));
+    gObjectMapSize[index] = NULL;
+    gObjectMapID[index] = mapID;
+    objMapTable = (u32 *) asset_table_load(ASSET_LEVEL_OBJECT_MAPS_TABLE);
     for (i = 0; objMapTable[i] != 0xFFFFFFFF; i++) {}
     i--;
-    if (arg0 >= i) {
-        arg0 = 0;
+    if (mapID >= i) {
+        mapID = 0;
     }
-    assetOffset = objMapTable[arg0];
-    assetSize = objMapTable[arg0 + 1] - assetOffset;
+    assetOffset = objMapTable[mapID];
+    assetSize = objMapTable[mapID + 1] - assetOffset;
 
     if (assetSize != 0) {
         compressedAsset = (u8 *) mem;
         compressedAsset =
-            ((compressedAsset + get_asset_uncompressed_size(ASSET_LEVEL_OBJECT_MAPS, assetOffset)) - (0, assetSize)) +
-            0x20;
-        load_asset_to_address(ASSET_LEVEL_OBJECT_MAPS, (u32) compressedAsset, assetOffset, assetSize);
+            ((compressedAsset + gzip_size_uncompressed(ASSET_LEVEL_OBJECT_MAPS, assetOffset)) - (0, assetSize)) + 0x20;
+        asset_load(ASSET_LEVEL_OBJECT_MAPS, (u32) compressedAsset, assetOffset, assetSize);
         gzip_inflate(compressedAsset, (u8 *) mem);
         mempool_free(objMapTable);
-        D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
-        D_8011AEA0[arg1] = *mem;
-        D_8011AEC0 = arg1;
-        for (var_s0 = 0; var_s0 < D_8011AEA0[arg1]; var_s0 += temp_t3) {
-            spawn_object((LevelObjectEntryCommon *) D_8011AE98[arg1], OBJECT_SPAWN_UNK01);
-            D_8011AE98[arg1] = &D_8011AE98[arg1][temp_t3 = D_8011AE98[arg1][1] & 0x3F];
+        gObjectMapSpawnList[index] = (u8 *) (gObjectMap[index] + sizeof(uintptr_t));
+        gObjectMapSize[index] = *mem;
+        gObjectMapIndex = index;
+        for (var_s0 = 0; var_s0 < gObjectMapSize[index]; var_s0 += temp_t3) {
+            spawn_object((LevelObjectEntryCommon *) gObjectMapSpawnList[index], OBJECT_SPAWN_UNK01);
+            gObjectMapSpawnList[index] = &gObjectMapSpawnList[index][temp_t3 = gObjectMapSpawnList[index][1] & 0x3F];
         }
-        D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
+        gObjectMapSpawnList[index] = (u8 *) (gObjectMap[index] + sizeof(uintptr_t));
         gCollisionObjectCount = 0;
         gNumFinishedRacers = 1;
         if (gPathUpdateOff == FALSE) {
@@ -1099,7 +1091,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
     gNumRacers = 0;
     D_8011AF00 = 0;
     set_taj_status(TAJ_WANDER);
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     raceType = levelHeader->race_type;
     if (raceType == RACETYPE_CUTSCENE_1 || raceType == RACETYPE_CUTSCENE_2) {
         return;
@@ -1156,7 +1148,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
     numPlayers = playerCount + 1;
     gNumRacers = 8;
     D_800DC740 = 0;
-    if (is_two_player_adventure_race()) {
+    if (race_is_adventure_2P()) {
         numPlayers = 2;
         D_800DC740 = 1;
         set_scene_viewport_num(VIEWPORT_LAYOUT_2_PLAYERS);
@@ -1171,7 +1163,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
     }
     if (raceType == RACETYPE_HUBWORLD || numPlayers >= 3) {
         gNumRacers = numPlayers;
-        if (get_level_property_stack_pos() == 0 && D_800DC708 != 0) {
+        if (level_properties_get() == 0 && D_800DC708 != 0) {
             spawnAngle[0] += D_800DC708;
             D_800DC708 = 0;
         }
@@ -1268,7 +1260,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
             } else if (D_8011AD3C == 2) {
                 vehicle = levelHeader->vehicle;
             } else {
-                if (racerEntry->playerIndex == 4 || is_two_player_adventure_race()) {
+                if (racerEntry->playerIndex == 4 || race_is_adventure_2P()) {
                     vehicle = get_player_selected_vehicle(PLAYER_ONE);
                 } else if (numPlayers >= 2) {
                     vehicle = get_player_selected_vehicle(racerEntry->playerIndex);
@@ -1423,7 +1415,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
             curRacer->transparency = 96;
         }
         // Spawn staff ghost
-        if (timetrial_init_staff_ghost(get_current_map_id())) {
+        if (timetrial_init_staff_ghost(level_id())) {
             objectID = gRacerObjectTable[(gMapDefaultVehicle * NUM_CHARACTERS) + 8];
 
             racerEntry->common.size = ((objectID & 0x100) >> 1) | 0x10;
@@ -1485,7 +1477,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
         gEventCountdown = 0;
     }
     if (raceType == RACETYPE_DEFAULT && (playerCount + 1) == 1 && is_in_adventure_two() == FALSE) {
-        if (is_two_player_adventure_race() == FALSE) {
+        if (race_is_adventure_2P() == FALSE) {
             for (j = 0; j < 3; j++) {
                 racerEntry->common.objectID = ASSET_OBJECT_ID_POSARROW;
                 racerEntry->common.size = sizeof(LevelObjectEntryCommon);
@@ -1535,7 +1527,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
     if (racetype_demo()) {
         rumble_init(FALSE);
         gEventCountdown = 0;
-        start_level_music(1.0f);
+        level_music_start(1.0f);
     }
     //!@bug: Free timer is already 0 when loading levels.
     mempool_free_timer(0);
@@ -1723,12 +1715,12 @@ UNUSED void func_8000E4E8(s32 index) {
     s32 i;
     u8 *temp_a1;
 
-    temp_v0 = D_8011AEB0[index];
-    temp_v0[0] = D_8011AEA0[index];
+    temp_v0 = gObjectMap[index];
+    temp_v0[0] = gObjectMapSize[index];
     temp_v0[3] = 0;
     temp_v0[2] = 0;
     temp_v0[1] = 0;
-    temp_a1 = &D_8011AE98[index][D_8011AEA0[index]];
+    temp_a1 = &gObjectMapSpawnList[index][gObjectMapSize[index]];
 
     // The backslash here is needed to match. And no, a for loop doesn't match.
     // clang-format off
@@ -1747,13 +1739,13 @@ UNUSED s32 func_8000E558(Object *arg0) {
         return TRUE;
     }
     temp_v0 = (s32) arg0->level_entry;
-    new_var2 = (s32) D_8011AE98[0];
-    if ((temp_v0 >= new_var2) && (((D_8011AEA0[0] * 8) + new_var2) >= temp_v0)) {
+    new_var2 = (s32) gObjectMapSpawnList[0];
+    if ((temp_v0 >= new_var2) && (((gObjectMapSize[0] * 8) + new_var2) >= temp_v0)) {
         return FALSE;
     }
-    new_var = (s32) D_8011AE98[1];
+    new_var = (s32) gObjectMapSpawnList[1];
     // Why even bother with this check?
-    if (temp_v0 >= new_var && temp_v0 <= ((D_8011AEA0[1] * 8) + new_var)) {
+    if (temp_v0 >= new_var && temp_v0 <= ((gObjectMapSize[1] * 8) + new_var)) {
         return TRUE;
     }
     return TRUE;
@@ -1771,12 +1763,12 @@ void func_8000E5EC(LevelObjectEntryCommon *arg0) {
 
     size = arg0->size & 0x3F;
 
-    sp30[0] = (s32) D_8011AE98[0] + D_8011AEA0[0];
-    sp30[1] = (s32) D_8011AE98[1] + D_8011AEA0[1];
+    sp30[0] = (s32) gObjectMapSpawnList[0] + gObjectMapSize[0];
+    sp30[1] = (s32) gObjectMapSpawnList[1] + gObjectMapSize[1];
 
-    if ((s32) arg0 >= (s32) D_8011AE98[0] && (s32) arg0 < sp30[0]) {
+    if ((s32) arg0 >= (s32) gObjectMapSpawnList[0] && (s32) arg0 < sp30[0]) {
         sp1C = 0;
-    } else if ((s32) arg0 >= (s32) D_8011AE98[1] && (s32) arg0 < sp30[1]) {
+    } else if ((s32) arg0 >= (s32) gObjectMapSpawnList[1] && (s32) arg0 < sp30[1]) {
         sp1C = 1;
     }
 #ifdef AVOID_UB
@@ -1793,7 +1785,7 @@ void func_8000E5EC(LevelObjectEntryCommon *arg0) {
             *dst++ = *src++;
         } while ((u32) src != (u32) end);
     }
-    D_8011AEA0[sp1C] -= size;
+    gObjectMapSize[sp1C] -= size;
 
     for (i = 0; i < gObjectCount; i++) {
         Object *obj = gObjPtrList[i];
@@ -1822,8 +1814,8 @@ void func_8000E79C(u8 *arg0, u8 *arg1) {
     arg0Value = arg0[1] & 0x3F;
     arg0Value2 = arg0Value;
     arg1Value = arg1[1] & 0x3F;
-    i = D_8011AEC0;
-    var_a3 = (u8 *) D_8011AEB0[i] + D_8011AEA0[i];
+    i = gObjectMapIndex;
+    var_a3 = (u8 *) gObjectMap[i] + gObjectMapSize[i];
     var_a3 += 16;
 
     if (arg1Value < arg0Value2) {
@@ -1853,7 +1845,7 @@ void func_8000E79C(u8 *arg0, u8 *arg1) {
         j++;
     } while (j < arg1Value);
 
-    D_8011AEA0[i] += arg1Value - arg0Value;
+    gObjectMapSize[i] += arg1Value - arg0Value;
 }
 
 UNUSED u8 *func_8000E898(u8 *arg0, s32 arg1) {
@@ -1865,10 +1857,10 @@ UNUSED u8 *func_8000E898(u8 *arg0, s32 arg1) {
 
     temp_t6 = arg0[1] & 0x3F;
     new_var = arg0;
-    new_var = &D_8011AE98[arg1][D_8011AEA0[arg1]];
+    new_var = &gObjectMapSpawnList[arg1][gObjectMapSize[arg1]];
     new_var2 = arg0;
     temp_v1 = new_var;
-    D_8011AEA0[arg1] += temp_t6;
+    gObjectMapSize[arg1] += temp_t6;
     for (i = 0; i < temp_t6; i++) {
         temp_v1[i] = new_var2[i];
     }
@@ -1881,6 +1873,7 @@ UNUSED u8 *func_8000E898(u8 *arg0, s32 arg1) {
  */
 Object *get_object(s32 index) {
     if (index < 0 || index >= gObjectCount) {
+        stubbed_printf("ObjList (Part) Overflow %d!!!\n");
         return 0;
     }
     return gObjPtrList[index];
@@ -1917,6 +1910,7 @@ void add_particle_to_entity_list(Object *obj) {
     gParticleCount++;
 }
 
+// Official Name: ObjSetupObject
 Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     s32 objType;
     Settings *settings;
@@ -1959,6 +1953,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     }
     if (curObj->header->behaviorId == BHV_ROCKET_SIGNPOST && (settings->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET)) {
         update_object_stack_trace(OBJECT_SPAWN, -1);
+        stubbed_printf("ObjSetupObject(1) Memory fail!!\n");
         return NULL;
     }
 
@@ -2085,6 +2080,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (failed) {
         objFreeAssets(curObj, assetCount, objType);
         try_free_object_header(headerType);
+        stubbed_printf("ObjSetupObject(2) Memory fail!!\n");
         return NULL;
     }
 
@@ -2102,6 +2098,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         if (sizeOfobj == 0) {
             objFreeAssets(curObj, assetCount, objType);
             try_free_object_header(headerType);
+            stubbed_printf("ObjSetupObject(5) Memory fail!!\n");
             return NULL;
         }
     }
@@ -2114,6 +2111,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
             }
             objFreeAssets(curObj, assetCount, objType);
             try_free_object_header(headerType);
+            stubbed_printf("ObjSetupObject(6) Memory fail!!\n");
             return NULL;
         }
     }
@@ -2148,6 +2146,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         }
         objFreeAssets(prevObj, assetCount, objType);
         try_free_object_header(headerType);
+        stubbed_printf("ObjSetupObject(3) Memory fail!!\n");
         return NULL;
     }
 
@@ -2203,6 +2202,9 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
     if (spawnFlags & OBJECT_SPAWN_UNK01) {
         if (curObj && curObj) {} // Fakematch
         gObjPtrList[gObjectCount++] = curObj;
+        if (gObjectCount > OBJECT_SLOT_COUNT) {
+            stubbed_printf("ObjList Overflow %d!!!\n", gObjectCount);
+        }
     }
     run_object_init_func(curObj, entry, 0);
     if (curObj->interactObj != NULL) {
@@ -2223,6 +2225,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 spawnFlags) {
         if (spawnFlags & OBJECT_SPAWN_UNK01) {
             gObjectCount--;
         }
+        stubbed_printf("ObjSetupObject(4) Memory fail!!\n");
         return NULL;
     }
     if (curObj->header->numLightSources > 0) {
@@ -2546,12 +2549,12 @@ void gParticlePtrList_flush(void) {
                 gObjPtrList[j] = gObjPtrList[j + 1];
             }
         }
-        func_800101AC(searchObj, 0);
+        obj_destroy(searchObj, 0);
     }
     gFreeListCount = 0;
 }
 
-void func_800101AC(Object *obj, s32 arg1) {
+void obj_destroy(Object *obj, s32 arg1) {
     Object *tempObj;
     Object_Weapon *weapon;
     Object_Racer *racer;
@@ -2868,7 +2871,7 @@ void obj_update(s32 updateRate) {
     for (i = 0; i < gNumRacers; i++) {
         update_player_racer((*gRacers)[i], updateRate);
     }
-    if (get_current_level_race_type() == RACETYPE_DEFAULT) {
+    if (level_type() == RACETYPE_DEFAULT) {
         for (i = 0; i < gNumRacers; i++) {
             racer = gRacersByPosition[i]->racer;
             if (racer->playerIndex != -1) {
@@ -4628,7 +4631,7 @@ void process_object_interactions(void) {
     }
 }
 
-// https://decomp.me/scratch/Hubco
+// https://decomp.me/scratch/Hg44X
 #ifdef NON_EQUIVALENT
 void func_800159C8(Object *arg0, Object *arg1) {
     f32 sp9C;
@@ -4652,9 +4655,6 @@ void func_800159C8(Object *arg0, Object *arg1) {
     ObjectInteraction *sp54;
     Object_Racer *sp50;
     Object_Racer *sp4C;
-    f32 sp48;
-    f32 sp44;
-    f32 sp40;
 
     sp68 = arg1->trans.x_position - arg0->trans.x_position;
     sp64 = arg1->trans.y_position - arg0->trans.y_position;
@@ -4682,9 +4682,11 @@ void func_800159C8(Object *arg0, Object *arg1) {
     if (sp58->flags & 0x20) {
         var_v0 >>= 3;
     }
+
     if (var_v0 > 255) {
         var_v0 = 255;
     }
+
     if (sp58->distance >= var_v0) {
         sp58->obj = arg1;
         sp58->distance = var_v0;
@@ -4694,185 +4696,192 @@ void func_800159C8(Object *arg0, Object *arg1) {
     if (sp54->flags & 0x20) {
         var_v0 >>= 3;
     }
+
     if (var_v0 > 255) {
         var_v0 = 255;
     }
+
     if (sp54->distance >= var_v0) {
         sp54->obj = arg0;
         sp54->distance = var_v0;
     }
 
-    if (sp54->flags & 1) {
-        sp98 = sp54->hitboxRadius + sp58->hitboxRadius;
+    if (!(sp54->flags & 1)) {
+        return;
+    }
 
-        sp7C = arg0->trans.x_position - sp58->x_position;
-        sp78 = arg0->trans.y_position - sp58->y_position;
-        sp74 = arg0->trans.z_position - sp58->z_position;
+    sp98 = sp54->hitboxRadius + sp58->hitboxRadius;
 
+    sp7C = arg0->trans.x_position - sp58->x_position;
+    sp78 = arg0->trans.y_position - sp58->y_position;
+    sp74 = arg0->trans.z_position - sp58->z_position;
+
+    if (sp54->unk11 == 1) {
+        sp78 = 0.0f;
+    }
+
+    temp_f10 = sp7C * sp7C + sp78 * sp78 + sp74 * sp74;
+    if (temp_f10 > 1.0) {
+        var_f2 =
+            ((arg1->trans.x_position - sp58->x_position) * sp7C + (arg1->trans.y_position - sp58->y_position) * sp78 +
+             (arg1->trans.z_position - sp58->z_position) * sp74) /
+            temp_f10;
+        if (var_f2 >= 0.0f && var_f2 <= 1.0) {
+            sp8C = sp58->x_position + var_f2 * sp7C;
+            sp88 = sp58->y_position + var_f2 * sp78;
+            sp84 = sp58->z_position + var_f2 * sp74;
+            sp9C = sqrtf((sp8C - arg1->trans.x_position) * (sp8C - arg1->trans.x_position) +
+                         (sp88 - arg1->trans.y_position) * (sp88 - arg1->trans.y_position) +
+                         (sp84 - arg1->trans.z_position) * (sp84 - arg1->trans.z_position));
+        }
+    }
+
+    if (sp9C < sp98 && sp9C > 0.0f) {
+        sp8C = sp54->x_position - sp58->x_position;
+        sp88 = sp54->y_position - sp58->y_position;
+        sp84 = sp54->z_position - sp58->z_position;
         if (sp54->unk11 == 1) {
-            sp78 = 0.0f;
+            sp88 = 0.0f;
         }
-        if (sp7C * sp7C + sp78 * sp78 + sp74 * sp74 > 1.0) {
-            sp48 = arg1->trans.x_position;
-            sp44 = arg1->trans.y_position;
-            sp40 = arg1->trans.z_position;
-            var_f2 = ((sp48 - sp58->x_position) * sp7C + (sp44 - sp58->y_position) * sp78 +
-                      (sp40 - sp58->z_position) * sp74) /
-                     (sp7C * sp7C + sp78 * sp78 + sp74 * sp74);
 
-            if (var_f2 >= 0.0f && var_f2 <= 1.0) {
-                sp8C = sp58->x_position + var_f2 * sp7C;
-                sp88 = sp58->y_position + var_f2 * sp78;
-                sp84 = sp58->z_position + var_f2 * sp74;
-                sp9C = sqrtf((sp8C - sp48) * (sp8C - sp48) + (sp88 - sp44) * (sp88 - sp44) +
-                             (sp84 - sp40) * (sp84 - sp40));
-            }
+        temp_f0_3 = sqrtf(sp8C * sp8C + sp88 * sp88 + sp84 * sp84);
+        if (temp_f0_3 > 0.0f) {
+            sp68 = sp8C / temp_f0_3;
+            sp64 = sp88 / temp_f0_3;
+            sp60 = sp84 / temp_f0_3;
+        } else {
+            sp68 /= sp9C;
+            sp64 /= sp9C;
+            sp60 /= sp9C;
         }
-        if (sp9C < sp98 && sp9C > 0.0f) {
-            sp8C = sp54->x_position - sp58->x_position;
-            sp88 = sp54->y_position - sp58->y_position;
-            sp84 = sp54->z_position - sp58->z_position;
-            if (sp54->unk11 == 1) {
-                sp88 = 0.0f;
+        sp9C = temp_f0_3 - sp9C;
+        if (sp9C < 0.0f) {
+            sp9C = -sp9C;
+        }
+
+        sp68 *= sp9C;
+        sp64 *= sp9C;
+        sp60 *= sp9C;
+        sp9C *= sp80;
+        sp58->flags |= 8;
+        sp54->flags |= 8;
+        if (sp54->pushForce == 0) {
+            arg0->trans.x_position -= sp68;
+            arg0->trans.y_position -= sp64;
+            arg0->trans.z_position -= sp60;
+
+            sp68 *= sp80;
+            sp60 *= sp80;
+            if (arg0->behaviorId != 1) {
+                return;
             }
 
-            temp_f0_3 = sqrtf(sp8C * sp8C + sp88 * sp88 + sp84 * sp84);
-            if (temp_f0_3 > 0.0f) {
-                sp68 = sp8C / temp_f0_3;
-                sp64 = sp88 / temp_f0_3;
-                sp60 = sp84 / temp_f0_3;
-            } else {
-                sp68 /= sp9C;
-                sp64 /= sp9C;
-                sp60 /= sp9C;
-            }
-            sp9C = temp_f0_3 - sp9C;
-            if (sp9C < 0.0f) {
-                sp9C = -sp9C;
-            }
-
-            sp68 *= sp9C;
-            sp64 *= sp9C;
-            sp60 *= sp9C;
-            sp9C *= sp80;
-            sp58->flags |= 8;
-            sp54->flags |= 8;
-            if (sp54->pushForce == 0) {
-                arg0->trans.x_position -= sp68;
-                arg0->trans.y_position -= sp64;
-                arg0->trans.z_position -= sp60;
-
-                sp68 *= sp80;
-                sp60 *= sp80;
-                if (arg0->behaviorId == 1) {
-                    sp50 = arg0->racer;
-                    var_v0 = FALSE;
-                    if (sp50->vehicleID == 1) {
-                        if (sp9C > 0.3) {
-                            if (sp9C > 1.0) {
-                                var_v0 = TRUE;
-                            }
-                            if (var_v0) {
-                                arg0->x_velocity *= 0.8;
-                                arg0->z_velocity *= 0.8;
-                            }
-                            if (var_v0) {
-                                sp54->flags |= 0x40;
-                                var_f2 = (arg0->trans.x_position * arg0->z_velocity -
-                                          arg0->trans.z_position * arg0->x_velocity);
-                                var_f2 = (arg1->trans.x_position * arg0->z_velocity -
-                                          arg1->trans.z_position * arg0->x_velocity) -
-                                         var_f2;
-                                sp50->unk1D2 = 7;
-                                if (var_f2 >= 0.0f) {
-                                    sp50->unk120 = arg0->x_velocity * 0.1;
-                                    sp50->unk11C = -arg0->z_velocity * 0.1;
-                                } else {
-                                    sp50->unk120 = -arg0->x_velocity * 0.1;
-                                    sp50->unk11C = arg0->z_velocity * 0.1;
-                                }
-                            }
-                        }
-                    } else {
-                        if (sp9C > 0.3) {
-                            if (sp9C > 1.0) {
-                                var_v0 = 1;
-                            }
-                            arg0->x_velocity -= sp68;
-                            arg0->z_velocity -= sp60;
-                            sp50->velocity = sp9C * 0.25;
-                            sp50->lateral_velocity = 0.0f;
-                        }
-                        if (var_v0) {
-                            sp54->flags |= 0x40;
-                            var_f2 =
-                                arg0->trans.x_position * arg0->z_velocity - arg0->trans.z_position * arg0->x_velocity;
-                            var_f2 = arg1->trans.x_position * arg0->z_velocity -
-                                     arg1->trans.z_position * arg0->x_velocity - var_f2;
-                            if (var_f2 >= 0.0f) {
-                                var_f2 = 2.0f;
-                            } else {
-                                var_f2 = -2.0f;
-                            }
-                            sp50->unk1D2 = 7;
-                            sp50->unk11C = sp50->ox3 * var_f2 * sp50->velocity;
-                            sp50->unk120 = sp50->oz3 * var_f2 * sp50->velocity;
-                        }
-                    }
-                    if (var_v0 && sp50->playerIndex != -1) {
-                        func_80016500(arg0, sp50);
-                    }
-                }
-            } else {
-                sp68 *= 0.5;
-                sp64 *= 0.5;
-                sp60 *= 0.5;
-                if (sp58->pushForce != 0) {
-                    arg0->trans.x_position -= sp68;
-                    arg0->trans.y_position -= sp64;
-                    arg0->trans.z_position -= sp60;
-                }
-                arg1->trans.x_position += sp68;
-                arg1->trans.y_position += sp64;
-                arg1->trans.z_position += sp60;
-
-                sp68 *= sp80;
-                sp60 *= sp80;
-                if (arg0->behaviorId == 1 && arg1->behaviorId == 1) {
-                    sp90 = 1.0f;
-                    sp90 += (f32) (sp58->pushForce - sp54->pushForce) * 0.3;
-
-                    sp50 = arg0->racer;
-                    sp4C = arg1->racer;
-
-                    if (sp50->shieldType != 0 && sp4C->shieldType == 0) {
-                        sp4C->spinout_timer = sp50->shieldType;
-                    }
-                    if (sp4C->shieldType != 0 && sp50->shieldType == 0) {
-                        sp50->spinout_timer = sp4C->shieldType;
-                    }
-
-                    var_v0 = FALSE;
-                    if (sp50->vehicleID == 1) {
+            sp50 = arg0->racer;
+            var_v0 = FALSE;
+            if (sp50->vehicleID == 1) {
+                if (sp9C > 0.3) {
+                    if (sp9C > 1.0) {
                         var_v0 = TRUE;
-                    } else if (sp9C > 0.1) {
-                        var_v0 = TRUE;
-                        sp68 *= 0.5;
-                        sp60 *= 0.5;
                     }
-
                     if (var_v0) {
-                        if (sp58->pushForce != 0) {
-                            temp_f0_3 = 2.0 - sp90;
-                            arg0->x_velocity -= sp68 * temp_f0_3;
-                            arg0->z_velocity -= sp60 * temp_f0_3;
-                            func_80016500(arg0, sp50);
+                        arg0->x_velocity *= 0.8;
+                        arg0->z_velocity *= 0.8;
+                    }
+                    if (var_v0) {
+                        sp54->flags |= 0x40;
+                        var_f2 =
+                            (arg0->trans.x_position * arg0->z_velocity - arg0->trans.z_position * arg0->x_velocity);
+                        var_f2 =
+                            (arg1->trans.x_position * arg0->z_velocity - arg1->trans.z_position * arg0->x_velocity) -
+                            var_f2;
+                        sp50->unk1D2 = 7;
+                        if (var_f2 >= 0.0f) {
+                            sp50->unk120 = arg0->x_velocity * 0.1;
+                            sp50->unk11C = -arg0->z_velocity * 0.1;
+                        } else {
+                            sp50->unk120 = -arg0->x_velocity * 0.1;
+                            sp50->unk11C = arg0->z_velocity * 0.1;
                         }
-                        arg1->x_velocity += sp68 * sp90;
-                        arg1->z_velocity += sp60 * sp90;
-                        func_80016500(arg1, sp4C);
                     }
                 }
+            } else {
+                if (sp9C > 0.3) {
+                    if (sp9C > 1.0) {
+                        var_v0 = 1;
+                    }
+                    arg0->x_velocity -= sp68;
+                    arg0->z_velocity -= sp60;
+                    sp50->velocity = sp9C * 0.25;
+                    sp50->lateral_velocity = 0.0f;
+                }
+                if (var_v0) {
+                    sp54->flags |= 0x40;
+                    var_f2 = arg0->trans.x_position * arg0->z_velocity - arg0->trans.z_position * arg0->x_velocity;
+                    var_f2 =
+                        arg1->trans.x_position * arg0->z_velocity - arg1->trans.z_position * arg0->x_velocity - var_f2;
+                    if (var_f2 >= 0.0f) {
+                        var_f2 = 2.0f;
+                    } else {
+                        var_f2 = -2.0f;
+                    }
+                    sp50->unk1D2 = 7;
+                    sp50->unk11C = sp50->ox3 * var_f2 * sp50->velocity;
+                    sp50->unk120 = sp50->oz3 * var_f2 * sp50->velocity;
+                }
+            }
+            if (var_v0 && sp50->playerIndex != -1) {
+                func_80016500(arg0, sp50);
+            }
+            return;
+        }
+
+        sp68 *= 0.5;
+        sp64 *= 0.5;
+        sp60 *= 0.5;
+        if (sp58->pushForce != 0) {
+            arg0->trans.x_position -= sp68;
+            arg0->trans.y_position -= sp64;
+            arg0->trans.z_position -= sp60;
+        }
+        arg1->trans.x_position += sp68;
+        arg1->trans.y_position += sp64;
+        arg1->trans.z_position += sp60;
+
+        sp68 *= sp80;
+        sp60 *= sp80;
+        if (arg0->behaviorId == 1 && arg1->behaviorId == 1) {
+            sp90 = 1.0f;
+            sp90 += (f32) (sp58->pushForce - sp54->pushForce) * 0.3;
+
+            sp50 = arg0->racer;
+            sp4C = arg1->racer;
+
+            if (sp50->shieldType != 0 && sp4C->shieldType == 0) {
+                sp4C->spinout_timer = sp50->shieldType;
+            }
+            if (sp4C->shieldType != 0 && sp50->shieldType == 0) {
+                sp50->spinout_timer = sp4C->shieldType;
+            }
+
+            var_v0 = FALSE;
+            if (sp50->vehicleID == 1) {
+                var_v0 = TRUE;
+            } else if (sp9C > 0.1) {
+                var_v0 = TRUE;
+                sp68 *= 0.5;
+                sp60 *= 0.5;
+            }
+
+            if (var_v0) {
+                if (sp58->pushForce != 0) {
+                    temp_f0_3 = 2.0 - sp90;
+                    arg0->x_velocity -= sp68 * temp_f0_3;
+                    arg0->z_velocity -= sp60 * temp_f0_3;
+                    func_80016500(arg0, sp50);
+                }
+                arg1->x_velocity += sp68 * sp90;
+                arg1->z_velocity += sp60 * sp90;
+                func_80016500(arg1, sp4C);
             }
         }
     }
@@ -5169,288 +5178,176 @@ void obj_collision_transform(Object *obj) {
     trans.y_position = obj->trans.y_position;
     trans.z_position = obj->trans.z_position;
 #ifdef AVOID_UB
-    mtxf_from_transform(colData->matrices[(colData->mtxFlip + 2)], &trans);
+    mtxf_from_transform((MtxF *) colData->matrices[(colData->mtxFlip + 2)], &trans);
 #else
     mtxf_from_transform((MtxF *) colData->_matrices[(colData->mtxFlip + 2) << 1], &trans);
 #endif
     colData->collidedObj = NULL;
 }
 
-// https://decomp.me/scratch/Lxwa8
-#ifdef NON_EQUIVALENT
-s32 func_80017248(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 *arg5, s8 *surface) {
+// https://decomp.me/scratch/S3kHf
+#ifdef NON_MATCHING
+s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 *arg5, s8 *surface) {
+    ModelInstance *modInst;
     s32 sp170;
     s32 sp16C;
     s32 sp168;
+    s32 j; // fp // sp164
     s32 sp160;
-    Object *otherObj;      // sp158
-    ObjectModel *objModel; // sp154
+    f32 dist; // sp15C
+    Object *sp158;
+    ObjectModel *sp154;
+    f32 temp;
     unk800179D0 *sp14C;
-    f32 sp13C;
-    f32 sp12C;
-    f32 sp11C;
-    f32 *sp100;
-    f32 *spF0;
-    f32 *spE0;
+    f32 sp13C[4];
+    f32 sp12C[4];
+    f32 sp11C[4];
+    s32 i;
+    ObjectCollision *collision;
+    s32 tempv0;
+    f32 sp100[4];
+    f32 spF0[4];
+    f32 spE0[4];
     MtxF *spDC;
-    s32 spB8;
-    s32 *spB4;
-    f32 *sp8C;
-    s32 *sp88;
-    Object *temp_a1;
-    Object *temp_v0;
-    ObjectInteraction *temp_v1;
-    ObjectCollision *temp_v0_2;
-    ObjectCollision *temp_v0_5;
-    Vec3f *var_s0_2;
-    f32 temp_f0;
-    f32 temp_f0_2;
-    f32 temp_f14;
-    f32 temp_f2;
-    f32 var_f0;
-    f32 var_f2;
-    f32 *temp_v1_2;
-    f32 *var_s1_2;
-    f32 *var_s1_3;
-    f32 *var_s2_2;
-    f32 *var_s2_3;
-    f32 *var_s3;
-    f32 *var_s3_2;
-    f32 *var_s4;
-    f32 *var_s4_2;
-    f32 *var_s5;
-    f32 *var_s5_2;
-    f32 *var_s6;
-    f32 *var_s6_2;
-    f32 *var_s7;
-    f32 *var_s7_2;
-    f32 *var_v1;
-    s32 temp_f16;
-    s32 temp_t0;
-    s32 temp_t2;
-    s32 temp_t2_2;
-    s32 temp_t6;
-    s32 temp_t7;
-    s32 temp_v0_4;
-    s32 temp_v0_6;
-    s32 temp_v0_7;
-    s32 var_a3;
-    s32 var_fp;
-    s32 var_fp_2;
-    s32 var_fp_3;
-    s32 var_s1;
-    s32 var_s2;
-    s32 var_t0;
-    s32 var_t0_2;
-    s32 *var_v0;
-    unk800179D0 *temp_v0_3;
-    unk800179D0 *var_s0;
-    unk800179D0 *temp_s0;
+    s32 spB4[10];
+    f32 sp8C[10];
 
     sp160 = 0;
+
+    for (sp170 = 0; sp170 < gCollisionObjectCount; sp170++) {
+        sp158 = gCollisionObjects[sp170];
+        modInst = sp158->modelInstances[sp158->modelIndex];
+        sp154 = modInst->objModel;
+
+        temp = sp158->trans.x_position - obj->trans.x_position;
+        dist = sqrtf(
+            (temp) * (temp) +
+            (sp158->trans.y_position - obj->trans.y_position) * (sp158->trans.y_position - obj->trans.y_position) +
+            (sp158->trans.z_position - obj->trans.z_position) * (sp158->trans.z_position - obj->trans.z_position));
+
+        j = dist;
+        if (sp158->interactObj->flags & 0x20) {
+            j >>= 3;
+        }
+        if (j > 255) {
+            j = 255;
+        }
+        if (sp158->interactObj->distance > j) {
+            sp158->interactObj->distance = j;
+            sp158->interactObj->obj = obj;
+        }
+
+        if (dist - 25.0f < sp154->unk3C * sp158->trans.scale) {
+            spB4[sp160] = sp170;
+            sp8C[sp160] = dist;
+
+            // clang-format off
+            for (i = sp160; i > 0 && sp8C[i - 1] < sp8C[i]; i--) {\
+                temp = sp8C[i];\
+                sp16C = spB4[i];\
+                sp8C[i] = sp8C[i - 1];\
+                spB4[i] = spB4[i - 1];\
+                sp8C[i - 1] = temp;
+                spB4[i - 1] = sp16C;
+            }
+            // clang-format on
+
+            sp160++;
+        }
+    }
+
+    sp168 = 0;
     sp170 = 0;
-    if (gCollisionObjectCount > 0) {
-        var_s2 = 0;
-        do {
-            temp_v0 = *(gCollisionObjects + var_s2);
-            objModel = temp_v0->modelInstances[temp_v0->modelIndex]->objModel;
-            temp_f14 = temp_v0->trans.x_position - obj->trans.x_position;
-            temp_f0 = temp_v0->trans.y_position - obj->trans.y_position;
-            temp_f2 = temp_v0->trans.z_position - obj->trans.z_position;
-            otherObj = temp_v0;
-            temp_f0_2 = sqrtf((temp_f14 * temp_f14) + (temp_f0 * temp_f0) + (temp_f2 * temp_f2));
-            temp_v1 = otherObj->interactObj;
-            temp_f16 = (s32) temp_f0_2;
-            var_fp = temp_f16;
-            if (temp_v1->flags & 0x20) {
-                var_fp = temp_f16 >> 3;
-            }
-            var_s2 += 4;
-            if (var_fp >= 0x100) {
-                var_fp = 0xFF;
-            }
-            if (var_fp < (s32) temp_v1->distance) {
-                temp_v1->distance = (u8) var_fp;
-                otherObj->interactObj->obj = obj;
-            }
-            temp_v1_2 = &(&sp8C[0])[sp160];
-            if ((temp_f0_2 - 25.0f) < (objModel->unk3C * otherObj->trans.scale)) {
-                (&spB4[0])[sp160] = sp170;
-                temp_v1_2[0] = temp_f0_2;
-                if (sp160 > 0) {
-                    var_v1 = &(&sp8C[0])[sp160];
-                    if (temp_v1_2[-1] < temp_v1_2[0]) {
-                        var_f0 = var_v1[-1];
-                        var_f2 = var_v1[0];
-                        var_v0 = &(&spB4[0])[sp160];
-                    loop_12:
-                        temp_t0 = var_v0[0];
-                        temp_t7 = var_v0[-1];
-                        var_v0--;
-                        var_v1[0] = var_f0;
-                        var_v1[-1] = var_f2;
-                        var_v1--;
-                        var_v0[0] = temp_t0;
-                        var_v0[1] = temp_t7;
-                        if ((u32) var_v0 >= (u32) &spB8) {
-                            var_f0 = var_v1[-1];
-                            var_f2 = var_v1[0];
-                            if (var_f0 < var_f2) {
-                                goto loop_12;
-                            }
-                        }
-                    }
-                }
-                sp160 += 1;
-            }
-            temp_t2 = sp170 + 1;
-            sp170 = temp_t2;
-        } while (temp_t2 < gCollisionObjectCount);
-        sp170 = 0;
-    }
-    var_a3 = 0;
-    if (sp160 > 0) {
-        sp88 = &spB4[0];
-        sp168 = 0;
-        do {
-            temp_a1 = gCollisionObjects[*sp88];
-            var_s1 = 0;
-            objModel = temp_a1->modelInstances[temp_a1->modelIndex]->objModel;
-            temp_v0_2 = temp_a1->collisionData;
-            var_fp_2 = 0;
-            sp16C = 1;
-            spDC = &temp_a1->collisionData->matrices[(((temp_a1->collisionData->mtxFlip + 1) & 1) << 6)];
-            otherObj = temp_a1;
-            temp_v0_3 = func_8001790C((u32 *) obj, (u32 *) temp_a1);
-            var_t0 = 1;
-            sp14C = temp_v0_3;
-            if (temp_v0_3 != NULL) {
-                var_s2_2 = &sp13C;
-                var_s0 = temp_v0_3;
-                if (arg1 > 0) {
-                    var_s1_2 = arg4;
-                    var_s3 = &sp12C;
-                    var_s4 = &sp11C;
-                    var_s5 = sp100;
-                    var_s6 = spF0;
-                    var_s7 = spE0;
-                    do {
-                        *var_s2_2 = var_s0->unk0C[0];
-                        *var_s3 = var_s0->unk0C[1];
-                        *var_s4 = var_s0->unk0C[2];
-                        sp16C = var_t0;
-                        mtxf_transform_point(spDC, var_s1_2[0], var_s1_2[1], var_s1_2[2], var_s5, var_s6, var_s7);
-                        var_fp_2 += 1;
-                        var_s2_2 += 4;
-                        var_s3 += 4;
-                        var_s4 += 4;
-                        var_s5 += 4;
-                        var_s6 += 4;
-                        var_s7 += 4;
-                        var_s0 += 0xC;
-                        var_s1_2 += 0xC;
-                    } while (var_fp_2 != arg1);
-                    var_s1 = 0;
-                    var_fp_2 = 0;
-                }
-            } else {
-                var_s2_3 = &sp13C;
-                var_s3_2 = &sp12C;
-                if (arg1 > 0) {
-                    var_s0_2 = arg3;
-                    var_s4_2 = &sp11C;
-                    do {
-                        sp16C = var_t0;
-                        mtxf_transform_point(spDC, var_s0_2->f[0], var_s0_2->f[1], var_s0_2->f[2], var_s2_3, var_s3_2,
-                                             var_s4_2);
-                        var_fp_2 += 1;
-                        var_s2_3 += 4;
-                        var_s3_2 += 4;
-                        var_s4_2 += 4;
-                        var_s0_2 += 0xC;
-                    } while (var_fp_2 != arg1);
-                    var_s1 = 0;
-                    var_fp_2 = 0;
-                }
-            }
-            var_s5_2 = sp100;
-            var_s6_2 = spF0;
-            if (arg1 > 0) {
-                var_s1_2 = arg4;
-                var_s7_2 = spE0;
-                do {
-                    sp16C = var_t0;
-                    mtxf_transform_point(spDC, var_s1_2[0], var_s1_2[1], var_s1_2[2], var_s5_2, var_s6_2, var_s7_2);
-                    var_fp_2 += 1;
-                    var_s5_2 += 4;
-                    var_s6_2 += 4;
-                    var_s7_2 += 4;
-                    var_s1_2 += 0xC;
-                } while (var_fp_2 != arg1);
-                var_s1 = 0;
-            }
-            *arg2 = 0;
-            sp16C = var_t0;
-            temp_v0_4 = func_80017A18(objModel, arg1, arg2, &sp13C, &sp12C, &sp11C, sp100, spF0, spE0, arg5, surface,
-                                      (f32) (1.0 / (f64) otherObj->trans.scale));
-            var_t0_2 = sp16C;
-            if (temp_v0_4 != 0) {
-                otherObj->collisionData->collidedObj = obj;
-            }
-            var_fp_3 = 0;
-            if (*D_8011AD24 == 0) {
-                sp14C = func_80017978((s32) obj, (s32) otherObj);
-            }
-            temp_v0_5 = otherObj->collisionData;
-            spDC = &temp_a1->collisionData->matrices[(temp_a1->collisionData->mtxFlip + 2) << 6];
-            if (arg1 > 0) {
-                do {
-                    if (sp14C != NULL) {
-                        temp_v0_6 = var_fp_3;
-                        temp_s0 = sp14C + (var_s1 * 4);
-                        sp14C->unk0C[var_s1] = sp100[temp_v0_6];
-                        temp_s0->unk0C[2] = (f32) spF0[temp_v0_6];
-                        temp_s0->unk0C[3] = (f32) spE0[temp_v0_6];
-                    }
-                    temp_v0_7 = var_fp_3 * 4;
-                    if (temp_v0_4 & var_t0_2) {
-                        sp16C = var_t0_2;
-                        mtxf_transform_point(spDC, sp100[temp_v0_7], spF0[temp_v0_7], spE0[temp_v0_7], &arg4[var_s1],
-                                             &arg4[var_s1 + 1], &arg4[var_s1 + 2]);
-                    }
-                    var_fp_3 += 1;
-                    var_t0_2 *= 2;
-                    var_s1 += 3;
-                } while (var_fp_3 != arg1);
-            }
-            temp_t6 = sp168 | temp_v0_4;
-            temp_t2_2 = sp170 + 1;
-            sp168 = temp_t6;
-            sp88 += 4;
-            sp170 = temp_t2_2;
-        } while (temp_t2_2 != sp160);
-        var_a3 = temp_t6;
-    }
-    *arg2 = 0;
-    if (var_a3 & 1) {
-        *arg2 = 1;
-    }
-    if (var_a3 & 2) {
-        *arg2 += 1;
-    }
-    if (var_a3 & 4) {
-        *arg2 += 1;
-    }
-    if (var_a3 & 8) {
-        *arg2 += 1;
-    }
-    return var_a3;
-}
+    while (sp170 < sp160) {
+        sp158 = gCollisionObjects[spB4[sp170]];
+        modInst = sp158->modelInstances[sp158->modelIndex];
+        sp154 = modInst->objModel;
+        collision = sp158->collisionData;
+#ifdef AVOID_UB
+        spDC = &collision->matrices[((sp158->collisionData->mtxFlip + 1) & 1)];
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017248.s")
+        spDC = (MtxF *) &collision->_matrices[((sp158->collisionData->mtxFlip + 1) & 1) << 1];
 #endif
 
-unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
+        sp14C = func_8001790C(obj, sp158);
+        if (sp14C != NULL) {
+            for (i = 0, j = 0; j < arg1; j++, i += 3) {
+                sp13C[j] = sp14C->unk0C[i + 0];
+                sp12C[j] = sp14C->unk0C[i + 1];
+                sp11C[j] = sp14C->unk0C[i + 2];
+                mtxf_transform_point(spDC, arg4[i], arg4[i + 1], arg4[i + 2], &sp100[j], &spF0[j], &spE0[j]);
+            }
+        } else {
+            for (i = 0, j = 0; j < arg1; j++, i++) {
+                mtxf_transform_point(spDC, arg3[i].x, arg3[i].y, arg3[i].z, &sp13C[j], &sp12C[j], &sp11C[j]);
+            }
+        }
+
+        for (i = 0, j = 0; j < arg1; j++, i += 3) {
+            mtxf_transform_point(spDC, arg4[i], arg4[i + 1], arg4[i + 2], &sp100[j], &spF0[j], &spE0[j]);
+        }
+
+        arg2[0] = 0;
+        tempv0 = func_80017A18(sp154, arg1, arg2, sp13C, sp12C, sp11C, sp100, spF0, spE0, arg5, surface,
+                               1.0 / sp158->trans.scale);
+        if (tempv0 != 0) {
+
+            // @fake
+            if (!j) {}
+
+            sp158->collisionData->collidedObj = obj;
+        }
+
+        if (D_8011AD24[0] == 0) {
+            sp14C = func_80017978(obj, sp158);
+        }
+
+#ifdef AVOID_UB
+        spDC = &sp158->collisionData->matrices[(sp158->collisionData->mtxFlip + 2)];
+#else
+        spDC = (MtxF *) &sp158->collisionData->_matrices[(sp158->collisionData->mtxFlip + 2) << 1];
+#endif
+
+        // @fake
+        if (sp158) {}
+
+        sp16C = 1;
+        for (i = 0, j = 0; j < arg1; j++, i += 3, sp16C <<= 1) {
+            if (sp14C != NULL) {
+                sp14C->unk0C[i + 0] = sp100[j];
+                sp14C->unk0C[i + 1] = spF0[j];
+                sp14C->unk0C[i + 2] = spE0[j];
+            }
+            if (tempv0 & sp16C) {
+                mtxf_transform_point(spDC, sp100[j], spF0[j], spE0[j], &arg4[i + 0], &arg4[i + 1], &arg4[i + 2]);
+            }
+        }
+
+        sp168 |= tempv0;
+        sp170++;
+    }
+
+    arg2[0] = 0;
+    if (sp168 & 1) {
+        arg2[0]++;
+    }
+    if (sp168 & 2) {
+        arg2[0]++;
+    }
+    if (sp168 & 4) {
+        arg2[0]++;
+    }
+    if (sp168 & 8) {
+        arg2[0]++;
+    }
+    return sp168;
+}
+
+#else
+#pragma GLOBAL_ASM("asm/nonmatchings/objects/collision_objectmodel.s")
+#endif
+
+unk800179D0 *func_8001790C(Object *arg0, Object *arg1) {
     unk800179D0 *entry;
     s16 i;
 
@@ -5464,15 +5361,15 @@ unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
     return NULL;
 }
 
-unk800179D0 *func_80017978(s32 arg0, s32 arg1) {
+unk800179D0 *func_80017978(Object *obj1, Object *obj2) {
     unk800179D0 *entry;
     s16 i;
 
     for (i = 0; i < 16; i++) {
         entry = &D_8011AFF4[i];
         if (entry->unk0 == 0) {
-            entry->unk04 = (u32 *) arg0;
-            entry->unk08 = (u32 *) arg1;
+            entry->unk04 = obj1;
+            entry->unk08 = obj2;
             entry->unk0 = 2;
             return entry;
         }
@@ -5494,125 +5391,134 @@ u32 func_800179D0(void) {
 #endif
 }
 
-// https://decomp.me/scratch/dzU8Y
+// https://decomp.me/scratch/xNAlf
 #ifdef NON_EQUIVALENT
 s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, f32 *arg5, f32 *arg6, f32 *arg7,
-                  f32 *arg8, f32 *arg9, s8 *surface, f32 argB) {
-    s32 pad[4];
-    s32 var_a2;
+                  f32 *arg8, f32 *arg9, s8 *argA, f32 argB) {
+    f32 *planes;
+    s32 i, j, k;
+    f32 sum1, sum2;
+    f32 t;
+    u32 var_a2; // u32 required here to force loading 1 instead of a3 into it
+    s32 counter;
+    s32 spF8; // f8
     s32 var_s6;
-    s32 i; // s1
-    s32 j;
-    s32 k;
-    s32 spF8;
-    s32 var_t4;
-    f32 *var_a0;
-    f32 spE4;
-    f32 spDC;
-    f32 spD8;
-    f32 spC0;
-    f32 spBC;
-    f32 spB4;
-    f32 spA4;
-    f32 spA0;
-    f32 sp9C;
-    f32 sp74;
-    f32 sp70;
-    f32 sp68;
-    f32 sp64;
-    f32 sp60;
-    f32 temp_f0;
-    f32 temp_f10;
-    f32 temp_f12;
-    f32 temp_f22;
-    f32 temp_f26;
-    f32 var_f2;
-    f32 var_f30;
-    f32 *temp_t0;
-    f32 *temp_v0;
+    f32 A2, C2;
+    f32 A; // e4
+    f32 B; // e0
+    f32 C; // dc
+    f32 D; // d8
+    f32 A1, B1, C1, D1;
     s32 redoLoop;
-    s32 pad1;
+    f32 spC0; // c0
+    f32 x1;   // bc
+    f32 y1;
+    f32 z1; // b4
+    f32 x3, y3, z3;
+    f32 x2; // a4
+    f32 y2; // a0
+    f32 z2; // 9c
+    CollisionNode *node;
+    f32 dx, dy, dz;
+    s32 triIndex;
+    s32 closestTri;
 
     spF8 = 0;
-    temp_t0 = arg0->collisionPlanes;
+    planes = arg0->collisionPlanes;
     var_s6 = 1;
+
     for (i = 0; i < arg1; i++) {
-        spBC = arg6[i];
-        var_f30 = arg7[i];
-        spB4 = arg8[i];
-        spA4 = arg3[i];
-        spA0 = arg4[i];
-        sp9C = arg5[i];
+        x1 = arg6[i];
+        y1 = arg7[i];
+        z1 = arg8[i];
         spC0 = arg9[i] * argB;
-        var_t4 = 0;
+
+        counter = 0;
         do {
             redoLoop = FALSE;
+            x2 = arg3[i];
+            y2 = arg4[i];
+            z2 = arg5[i];
+
             for (j = 0; j < arg0->collisionFacetCount; j++) {
-                temp_v0 = &temp_t0[arg0->collisionFacets[j].basePlaneIndex];
-                temp_f26 = temp_v0[1];
-                sp74 = temp_v0[0];
-                temp_f12 = temp_v0[2];
-                temp_f10 = temp_v0[3];
-                spE4 = sp74;
-                spDC = temp_f12;
-                sp64 = spA0;
-                spD8 = temp_f10;
-                sp70 = spDC * spB4;
-                sp74 = sp74 * spBC;
-                temp_f0 = ((sp74 * spA4) + (temp_f26 * spA0) + (temp_f12 * sp9C) + temp_f10) - spC0;
-                sp60 = spA4;
-                sp68 = sp9C;
-                temp_f22 = (sp74 + (temp_f26 * var_f30) + sp70 + spD8) - spC0;
-                if (-0.10 <= temp_f0) {
-                    var_a2 = 1;
-                    if (temp_f22 < -0.1) {
-                        if (temp_f0 != temp_f22) {
-                            var_f2 = temp_f0 / (temp_f0 - temp_f22);
+                node = (CollisionNode *) &arg0->collisionFacets[j];
+                triIndex = node->colPlaneIndex;
+
+                A = planes[4 * triIndex + 0];
+                B = planes[4 * triIndex + 1];
+                C = planes[4 * triIndex + 2];
+                D = planes[4 * triIndex + 3];
+
+                A2 = A * x2;
+                sum1 = A2;
+                sum1 += B * y2;
+                C2 = C * z2;
+                sum1 += C2;
+                sum1 = D + sum1;
+                sum1 -= spC0;
+
+                sum2 = planes[4 * triIndex + 0] * x1;
+                sum2 += planes[4 * triIndex + 1] * y1;
+                sum2 += planes[4 * triIndex + 2] * z1;
+                sum2 += D;
+                sum2 -= spC0;
+                if (sum1 >= -0.1 && sum2 < -0.1) {
+                    if (sum1 != sum2) {
+                        t = sum1 / (sum1 - sum2);
+                    } else {
+                        t = 0.0f;
+                    }
+                    x3 = (x1 - x2) * t + x2;
+                    y3 = (y1 - y2) * t + y2;
+                    z3 = (z1 - z2) * t + z2;
+                    var_a2 = TRUE;
+
+                    for (k = 0; k < 3 && var_a2 == TRUE; k++) {
+                        closestTri = node->closestTri[k];
+
+                        A1 = planes[4 * closestTri + 0] * x3;
+                        B1 = planes[4 * closestTri + 1] * y3;
+                        C1 = planes[4 * closestTri + 2] * z3;
+                        D1 = planes[4 * closestTri + 3];
+
+                        if (A1 + B1 + C1 + D1 > 4.0f) {
+                            var_a2 = FALSE;
+                        }
+                    }
+
+                    if (var_a2) {
+                        redoLoop = TRUE;
+                        if (B > 0.707) {
+                            y1 = (spC0 - (A2 + C2 + D)) / B;
                         } else {
-                            var_f2 = 0.0f;
+                            x1 -= sum2 * A;
+                            y1 -= sum2 * B;
+                            z1 -= sum2 * C;
                         }
-
-                        for (k = 0; (k < 3) && (var_a2 == 1); k++) {
-                            temp_v0 = &temp_t0[arg0->collisionFacets->edgeBisectorPlane[k]];
-                            if (((temp_v0[0] * (((spBC - sp60) * var_f2) + spA4)) +
-                                 (temp_v0[1] * (((var_f30 - sp64) * var_f2) + spA0)) +
-                                 (temp_v0[2] * (((spB4 - sp68) * var_f2) + sp9C)) + temp_v0[3]) > 4.0f) {
-                                var_a2 = 0;
-                            }
+                        counter++;
+                        if (counter > 10) {
+                            redoLoop = FALSE;
+                            x1 = x2;
+                            y1 = y2;
+                            z1 = z2;
                         }
-
-                        if (var_a2) {
-                            redoLoop = TRUE;
-                            if (temp_f26 > 0.707) {
-                                var_f30 = (spC0 - (sp74 + sp70 + spD8)) / temp_f26;
-                            } else {
-                                spBC -= temp_f22 * spE4;
-                                var_f30 -= temp_f22 * temp_f26;
-                                spB4 -= temp_f22 * spDC;
-                            }
-                            var_t4++;
-                            if (var_t4 >= 0xB) {
-                                var_f30 = spA0;
-                                redoLoop = 0;
-                                spBC = spA4;
-                                spB4 = sp9C;
-                            }
-                            surface[i] = 0;
-                            arg6[i] = spBC;
-                            arg7[i] = var_f30;
-                            arg8[i] = spB4;
-                            j = arg0->collisionFacetCount;
-                        }
+                        argA[i] = 0;
+                        arg6[i] = x1;
+                        arg7[i] = y1;
+                        arg8[i] = z1;
+                        j = arg0->collisionFacetCount; // break
                     }
                 }
             }
         } while (redoLoop);
-        if (var_t4 > 0) {
+
+        if (counter > 0) {
             arg2[0]++;
             spF8 |= var_s6;
         }
         var_s6 <<= 1;
     }
+
     return spF8;
 }
 #else
@@ -5702,7 +5608,7 @@ void func_80017E98(void) {
     gNumberOfCheckpoints -= var_t2;
     if (duplicateCheckpoint) {
         set_render_printf_position(20, 220);
-        render_printf(sDuplicateCheckpointString /* "Error: Multiple checkpoint no: %d !!\n"; */, checkpointNum);
+        render_printf("Error: Multiple checkpoint no: %d !!\n", checkpointNum);
     }
     for (i = gNumberOfCheckpoints; i < D_8011AED4; i++) {
         temp_v1 = gTrackCheckpoints[i].unk2C - 255;
@@ -5949,279 +5855,199 @@ Object *find_taj_object(void) {
     return NULL;
 }
 
-// https://decomp.me/scratch/hcneX
-#ifdef NON_EQUIVALENT
 // Handles MidiFadePoint, MidiFade, and MidiSetChannel objects?
 void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate) {
-    s32 spF4;
-    f32 spC0;
-    void *spBC;
-    s32 sp98;
-    f32 sp78;
-    f32 sp74;
-    f32 sp70;
     f32 temp_f0;
-    f32 temp_f0_2;
-    f32 temp_f0_3;
-    f32 temp_f0_4;
-    f32 temp_f0_5;
-    f32 temp_f0_6;
-    f32 temp_f0_7;
-    f32 temp_f12;
-    f32 temp_f12_2;
-    f32 temp_f14;
-    f32 temp_f14_2;
-    f32 temp_f14_3;
-    f32 temp_f14_4;
-    f32 temp_f16;
-    f32 temp_f18;
-    f32 temp_f20;
+    s32 pad_spF8;
+    s32 spF4;
+    s32 pad_spF0;
     f32 temp_f22;
-    f32 temp_f24;
-    f32 temp_f26;
-    f32 temp_f28;
+    s32 pad_spE8;
+    s32 pad_spE4;
+    s32 pad_spE0;
     f32 temp_f2;
-    f32 temp_f2_2;
-    f32 temp_f2_3;
-    f32 temp_f2_4;
-    f32 temp_f2_5;
-    f32 temp_f30;
-    f32 var_f12;
-    // f32 var_f6;
-    f32 var_f8;
-    s16 behaviorId;
+    s32 pad_spD8;
+    f32 tempF2;
     s32 temp_f10;
-    s32 temp_s0_2;
-    s32 temp_s0_3;
-    s32 temp_s0_4;
-    s32 temp_s0_5;
-    s32 temp_s0_6;
-    s32 temp_t3;
     s32 temp_t3_2;
-    s32 temp_t4;
-    s32 temp_t8;
-    Object_MidiFade *temp_v1_2;
-    Object_MidiFade *temp_v1_3;
-    s32 var_s1;
-    s32 var_s1_2;
+    s32 i; // s1
     s32 var_s2;
-    s8 temp_t2_2;
+    f32 spC0;
+    Object_MidiFadePoint *midiFadePoint; // spBC
+    f32 tempF;
+    u16 temp_t4;
     s8 var_v0_2;
+    u8 var_v0_u;
     s8 var_v1;
-    u16 temp_t2;
-    u16 temp_v0_2;
-    s32 var_v0;
-    u8 temp_v0_3;
-    u8 temp_v0_5;
-    u8 temp_v0_6;
     Object *obj;
     Object_MidiFade *midiFade;
-    Object_MidiFadePoint *midiFadePoint;
-    Object_MidiFadePoint *midiFadePoint2;
     Object_MidiChannelSet *midiChannelSet;
+    Object_Racer *racer;
 
-    if (racerObj->racer->playerIndex == 0) {
-        if (cam_get_viewport_layout() == 0) {
-            spF4 = gObjectListStart;
-            if (gObjectListStart < gObjectCount) {
-                sp98 = gObjectListStart * 4;
-                do {
-                    obj = *(gObjPtrList + sp98);
-                    if (!(obj->trans.flags & 0x8000)) {
-                        behaviorId = obj->behaviorId;
-                        if (behaviorId == BHV_MIDI_FADE_POINT) {
-                            temp_f0 = racerObj->trans.x_position - obj->trans.x_position;
-                            temp_f2 = racerObj->trans.y_position - obj->trans.y_position;
-                            temp_f14 = racerObj->trans.z_position - obj->trans.z_position;
-                            temp_f0_2 = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
-                            midiFadePoint = obj->midi_fade_point;
-                            temp_f2_2 = temp_f0_2;
-                            temp_t2 = midiFadePoint->unk2;
-                            var_f8 = (f32) temp_t2;
-                            if ((s32) temp_t2 < 0) {
-                                var_f8 += 4294967296.0f;
-                            }
-                            if (temp_f0_2 < var_f8) {
-                                spBC = midiFadePoint;
-                                spC0 = temp_f2_2;
-                                var_s1 = 0;
-                                midiFadePoint2 = midiFadePoint;
-                                if (midiFadePoint->unk1C == music_current_sequence()) {
-                                    temp_v0_2 = midiFadePoint->unk0;
-                                    var_f12 = (f32) temp_v0_2;
-                                    if ((s32) temp_v0_2 < 0) {
-                                        var_f12 += 4294967296.0f;
-                                    }
-                                    if (temp_f2_2 <= var_f12) {
-                                        var_s2 = 0;
-                                    } else {
-                                        var_s2 = (s32) ((127.0f * (temp_f2_2 - var_f12)) /
-                                                        (f32) (midiFadePoint->unk2 - temp_v0_2));
-                                    }
-                                    do {
-                                        temp_v0_3 = midiFadePoint2->unkC;
-                                        if (temp_v0_3 != 1) {
-                                            temp_s0_2 = var_s1 & 0xFF;
-                                            if (temp_v0_3 != 2) {
+    racer = racerObj->racer;
+    if (racer->playerIndex != 0) {
+        return;
+    }
 
-                                            } else if ((music_channel_fade(temp_s0_2 & 0xFF) > 0) &&
-                                                       (music_channel_active(var_s1) == 0)) {
-                                                music_channel_fade_set(temp_s0_2 & 0xFF, var_s2 & 0xFF);
-                                            }
-                                        } else {
-                                            temp_s0_3 = var_s1 & 0xFF;
-                                            if (var_s2 >= 0x7B) {
-                                                music_channel_off(var_s1 & 0xFF);
-                                            } else {
-                                                music_channel_fade_set(temp_s0_3 & 0xFF, (0x7F - var_s2) & 0xFF);
-                                                music_channel_on(temp_s0_3 & 0xFF);
-                                            }
-                                        }
-                                        var_s1 += 1;
-                                        midiFadePoint2 += 1;
-                                    } while (var_s1 != 0x10);
-                                }
-                            }
-                        } else if (behaviorId == BHV_MIDI_FADE) {
-                            midiFade = obj->midi_fade;
-                            temp_f16 = midiFade->unkC;
-                            temp_f30 = temp_f16 * yPos;
-                            temp_f18 = midiFade->unk10;
-                            temp_f12 = midiFade->unk8;
-                            temp_f14_2 = temp_f18 * zPos;
-                            temp_f24 = racerObj->trans.x_position;
-                            temp_f26 = racerObj->trans.y_position;
-                            temp_f20 = midiFade->unk14;
-                            temp_f28 = racerObj->trans.z_position;
-                            sp78 = temp_f14_2;
-                            temp_f0_3 = (temp_f12 * xPos) + temp_f30 + temp_f14_2 + temp_f20;
-                            temp_f2_3 =
-                                (temp_f12 * temp_f24) + (temp_f16 * temp_f26) + (temp_f18 * temp_f28) + temp_f20;
-                            if ((temp_f0_3 > 0.0f) && (temp_f2_3 <= 0.0f)) {
-                                var_v1 = 1;
-                            } else {
-                                var_v1 = 0;
-                                if ((temp_f2_3 > 0.0f) && (temp_f0_3 <= 0.0f)) {
-                                    var_v1 = -1;
-                                }
-                            }
-                            if (var_v1 != 0) {
-                                sp70 = yPos;
-                                temp_f2_4 = temp_f26 - yPos;
-                                sp74 = zPos;
-                                temp_f0_4 = temp_f24 - xPos;
-                                temp_f14_3 = temp_f28 - zPos;
-                                temp_f22 = ((((-temp_f12 * xPos) - temp_f30) - sp78) - temp_f20) /
-                                           ((temp_f12 * temp_f0_4) + (temp_f16 * temp_f2_4) + (temp_f18 * temp_f14_3));
-                                temp_f12_2 = (temp_f22 * temp_f0_4) + xPos;
-                                if ((midiFade->unk18 <= temp_f12_2) && (temp_f12_2 <= midiFade->unk24)) {
-                                    temp_f0_5 = (temp_f22 * temp_f2_4) + sp70;
-                                    if (((f32) midiFade->unk1C <= temp_f0_5) && (temp_f0_5 <= midiFade->unk28)) {
-                                        temp_f0_6 = (temp_f22 * temp_f14_3) + sp74;
-                                        if ((midiFade->unk20 <= temp_f0_6) && (temp_f0_6 <= midiFade->unk2C)) {
-                                            midiFade->unk0 = var_v1;
-                                            midiFade->unk1 = 0;
-                                            midiFade->unk4 = 0;
-                                            D_8011AF60[0] = (Object_MidiFade *) midiFade;
-                                        }
-                                    }
-                                }
-                            }
-                        } else if (behaviorId == BHV_MIDI_CHANNEL_SET) {
-                            temp_f0_7 = racerObj->trans.x_position - obj->trans.x_position;
-                            temp_f2_5 = racerObj->trans.y_position - obj->trans.y_position;
-                            temp_f14_4 = racerObj->trans.z_position - obj->trans.z_position;
-                            midiChannelSet = obj->midi_channel_set;
-                            if ((sqrtf((temp_f0_7 * temp_f0_7) + (temp_f2_5 * temp_f2_5) + (temp_f14_4 * temp_f14_4)) <
-                                 (f32) (midiChannelSet->unk2 * 4)) &&
-                                (midiChannelSet->unk0 != music_channel_get_mask()) &&
-                                (midiChannelSet->unk3 == music_current_sequence())) {
-                                music_dynamic_set(midiChannelSet->unk0);
-                            }
+    if (cam_get_viewport_layout() != 0) {
+        return;
+    }
+
+    for (spF4 = gObjectListStart; spF4 < gObjectCount; spF4++) {
+        obj = gObjPtrList[spF4];
+        if (!(obj->trans.flags & 0x8000)) {
+            if (obj->behaviorId == BHV_MIDI_FADE_POINT) {
+                spC0 = sqrtf(((racerObj->trans.x_position - obj->trans.x_position) *
+                              (racerObj->trans.x_position - obj->trans.x_position)) +
+                             ((racerObj->trans.y_position - obj->trans.y_position) *
+                              (racerObj->trans.y_position - obj->trans.y_position)) +
+                             ((racerObj->trans.z_position - obj->trans.z_position) *
+                              (racerObj->trans.z_position - obj->trans.z_position)));
+                midiFadePoint = obj->midi_fade_point;
+                if (spC0 < midiFadePoint->unk2) {
+                    if (midiFadePoint->unk1C == music_current_sequence()) {
+                        if (spC0 <= midiFadePoint->unk0) {
+                            var_s2 = 0;
+                        } else {
+                            spC0 -= midiFadePoint->unk0;
+                            temp_f0 = (midiFadePoint->unk2 - midiFadePoint->unk0);
+                            var_s2 = (127.0f * spC0) / temp_f0;
                         }
-                    }
-                    temp_t3 = spF4 + 1;
-                    sp98 += 4;
-                    spF4 = temp_t3;
-                } while (temp_t3 < gObjectCount);
-            }
-            if (D_8011AF60[0] != 0) {
-                temp_v1_2 = D_8011AF60[0];
-                var_s1_2 = 0;
-                if (temp_v1_2->unk40 == music_current_sequence()) {
-                    temp_v1_2->unk4 += updateRate;
-                    var_v0 = D_8011AF60[0]->unk4;
-                    temp_t4 = (D_8011AF60[0]->unk2 * gVideoRefreshRate) & 0xFFFF;
-                    if (temp_t4 < (s32) var_v0) {
-                        D_8011AF60[0]->unk4 = (u16) temp_t4;
-                        var_v0 = D_8011AF60[0]->unk4;
-                    }
-                    /*
-                    var_f6 = (f32) temp_t4;
-                    if (temp_t4 < 0) {
-                        var_f6 += 4294967296.0f;
-                    }
-                    */
-                    temp_f10 = (s32) (((f32) var_v0 * 254.0f) / temp_t4);
-                    if (temp_f10 < 0xFE) {
-                        D_8011AF60[0]->unk1 = (s8) temp_f10;
-                    } else {
-                        D_8011AF60[0]->unk1 = 0xFE;
-                    }
-                    temp_v1_3 = D_8011AF60[0];
-                    do {
-                        var_v0_2 = temp_v1_3->unk2F[var_s1_2 + 1];
-                        if (temp_v1_3->unk0 == -1) {
-                            var_v0_2 = (s8) (var_v0_2 >> 2);
-                        }
-                        temp_t2_2 = var_v0_2 & 3;
-                        if (temp_t2_2 != 0) {
-                            temp_s0_4 = var_s1_2 & 0xFF;
-                            switch (temp_t2_2) { /* irregular */
+                        for (i = 0; i < 16; i++) {
+                            switch (midiFadePoint->unkC[i]) {
                                 case 1:
-                                    music_channel_on(temp_s0_4 & 0xFF);
-                                    music_channel_fade_set(temp_s0_4 & 0xFF, 0x7FU);
-                                    break;
-                                case 3:
-                                    temp_v0_5 = temp_v1_3->unk1;
-                                    temp_s0_5 = var_s1_2 & 0xFF;
-                                    if ((s32) temp_v0_5 >= 0x80) {
-                                        temp_t3_2 = (temp_v0_5 - 0x7F) & 0xFF;
-                                        music_channel_on(temp_s0_5 & 0xFF);
-                                        if (music_channel_fade(temp_s0_5 & 0xFF) < temp_t3_2) {
-                                            music_channel_fade_set(temp_s0_5 & 0xFF, temp_t3_2 & 0xFF);
-                                        }
+                                    if (var_s2 >= 0x7B) {
+                                        music_channel_off(i);
+                                    } else {
+                                        music_channel_fade_set(i, (0x7F - var_s2));
+                                        music_channel_on(i);
                                     }
                                     break;
                                 case 2:
-                                    temp_v0_6 = temp_v1_3->unk1;
-                                    temp_s0_6 = var_s1_2 & 0xFF;
-                                    if ((s32) temp_v0_6 < 0x7F) {
-                                        temp_t8 = (0x7F - temp_v0_6) & 0xFF;
-                                        if (temp_t8 < music_channel_fade(temp_s0_6 & 0xFF)) {
-                                            music_channel_fade_set(temp_s0_6 & 0xFF, temp_t8 & 0xFF);
-                                        }
-                                    } else {
-                                        music_channel_off(var_s1_2 & 0xFF);
+                                    if ((music_channel_fade(i) > 0) && (music_channel_active(i) == 0)) {
+                                        music_channel_fade_set(i, var_s2);
                                     }
                                     break;
+                                default:
+                                    stubbed_printf("ERROR Channel %d\n", i);
+                                    break;
                             }
-                        } else {
-                            music_channel_off(var_s1_2 & 0xFF);
                         }
-                        var_s1_2 += 1;
-                    } while (var_s1_2 != 0x10);
+                    }
                 }
-                if ((temp_v1_2->unk1 == 0xFE) && (D_8011AF60[0]->unk40 == music_current_sequence())) {
-                    D_8011AF60[0] = 0;
+            } else if (obj->behaviorId == BHV_MIDI_FADE) {
+                midiFade = obj->midi_fade;
+
+                temp_f0 =
+                    (midiFade->unk8 * xPos) + (midiFade->unkC * yPos) + (midiFade->unk10 * zPos) + midiFade->unk14;
+                temp_f2 = (midiFade->unk8 * racerObj->trans.x_position) +
+                          (midiFade->unkC * racerObj->trans.y_position) +
+                          (midiFade->unk10 * racerObj->trans.z_position) + midiFade->unk14;
+                if (temp_f0 > 0.0f && temp_f2 <= 0.0f) {
+                    var_v1 = 1;
+                } else if (temp_f2 > 0.0f && temp_f0 <= 0.0f) {
+                    var_v1 = -1;
+                } else {
+                    var_v1 = 0;
+                }
+                if (var_v1 != 0) {
+                    temp_f0 = racerObj->trans.x_position - xPos;
+                    temp_f2 = racerObj->trans.y_position - yPos;
+
+                    temp_f22 =
+                        (-midiFade->unk8 * xPos - midiFade->unkC * yPos - midiFade->unk10 * zPos - midiFade->unk14) /
+                        (midiFade->unk8 * temp_f0 + midiFade->unkC * temp_f2 +
+                         midiFade->unk10 * (racerObj->trans.z_position - zPos));
+                    tempF = temp_f22 * temp_f0;
+                    if ((midiFade->unk18 <= tempF + xPos) && (tempF + xPos <= midiFade->unk24)) {
+                        tempF2 = racerObj->trans.z_position - zPos;
+                        if ((midiFade->unk1C <= (temp_f22 * temp_f2) + yPos) &&
+                            ((temp_f22 * temp_f2) + yPos <= midiFade->unk28)) {
+                            if ((midiFade->unk20 <= (temp_f22 * (tempF2)) + zPos) &&
+                                ((temp_f22 * (tempF2)) + zPos <= midiFade->unk2C)) {
+                                midiFade->unk0 = var_v1;
+                                midiFade->unk1 = 0;
+                                midiFade->unk4 = 0;
+                                D_8011AF60 = midiFade;
+                            }
+                        }
+                    }
+                }
+            } else if (obj->behaviorId == BHV_MIDI_CHANNEL_SET) {
+                midiChannelSet = obj->midi_channel_set;
+                temp_f0 = sqrtf(((racerObj->trans.x_position - obj->trans.x_position) *
+                                 (racerObj->trans.x_position - obj->trans.x_position)) +
+                                ((racerObj->trans.y_position - obj->trans.y_position) *
+                                 (racerObj->trans.y_position - obj->trans.y_position)) +
+                                ((racerObj->trans.z_position - obj->trans.z_position) *
+                                 (racerObj->trans.z_position - obj->trans.z_position)));
+                var_v0_u = midiChannelSet->unk2;
+                if ((temp_f0 < (var_v0_u * 4)) && (midiChannelSet->unk0 != music_channel_get_mask()) &&
+                    (midiChannelSet->unk3 == music_current_sequence())) {
+                    music_dynamic_set(midiChannelSet->unk0);
                 }
             }
         }
     }
+
+    if (D_8011AF60 == 0) {
+        return;
+    }
+
+    if (D_8011AF60->unk40 == music_current_sequence()) {
+        D_8011AF60->unk4 += updateRate;
+        temp_t4 = D_8011AF60->unk2 * gVideoRefreshRate;
+        if (temp_t4 < D_8011AF60->unk4) {
+            D_8011AF60->unk4 = temp_t4;
+        }
+        temp_f10 = (D_8011AF60->unk4 * 254.0f) / temp_t4;
+        if (temp_f10 < 0xFE) {
+            D_8011AF60->unk1 = temp_f10;
+        } else {
+            D_8011AF60->unk1 = 0xFE;
+        }
+        for (i = 0; i < 16; i++) {
+            var_v0_2 = D_8011AF60->unk2F[i];
+            if (D_8011AF60->unk0 == -1) {
+                var_v0_2 >>= 2;
+            }
+            var_v0_2 &= 3;
+            switch (var_v0_2) {
+                case 1:
+                    music_channel_on(i);
+                    music_channel_fade_set(i, 0x7FU);
+                    break;
+                case 0:
+                    music_channel_off(i);
+                    break;
+                case 3:
+                    if (D_8011AF60->unk1 >= 0x80) {
+                        temp_t3_2 = (D_8011AF60->unk1 - 0x7F) & 0xFF;
+                        music_channel_on(i);
+                        if (music_channel_fade(i) < temp_t3_2) {
+                            music_channel_fade_set(i, temp_t3_2);
+                        }
+                    }
+                    break;
+                case 2:
+                    if (D_8011AF60->unk1 < 0x7F) {
+                        temp_t3_2 = (0x7F - D_8011AF60->unk1) & 0xFF;
+                        if (temp_t3_2 < music_channel_fade(i)) {
+                            music_channel_fade_set(i, temp_t3_2);
+                        }
+                    } else {
+                        music_channel_off(i);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    if ((D_8011AF60->unk1 == 0xFE) && (D_8011AF60->unk40 == music_current_sequence())) {
+        D_8011AF60 = 0;
+    }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80018CE0.s")
-#endif
 
 // Rocket Path
 s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,
@@ -6314,7 +6140,7 @@ void race_check_finish(s32 updateRate) {
     s8 flags[3];
     s32 camera;
 
-    currentLevelHeader = get_current_level_header();
+    currentLevelHeader = level_header();
     settings = get_settings();
     numHumanRacersFinished = 0;
     numHumanRacers = 0;
@@ -6457,9 +6283,9 @@ void race_check_finish(s32 updateRate) {
                         }
                         postrace_start(0, 30);
                     } else {
-                        push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
-                        push_level_property_stack(ASSET_LEVEL_TTAMULETSEQUENCE, 0, VEHICLE_NO_OVERRIDE,
-                                                  settings->ttAmulet - 1);
+                        level_properties_push(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
+                        level_properties_push(ASSET_LEVEL_TTAMULETSEQUENCE, 0, VEHICLE_NO_OVERRIDE,
+                                              settings->ttAmulet - 1);
                         race_finish_adventure(TRUE);
                     }
                     gRaceFinishTriggered = TRUE;
@@ -6847,7 +6673,7 @@ void race_transition_adventure(s32 updateRate) {
     if (gRaceEndStage == 4) {
         set_anti_aliasing(TRUE);
         disable_racer_input();
-        if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE)) {
+        if (!(level_type() & RACETYPE_CHALLENGE_BATTLE)) {
             if (osTvType == OS_TV_TYPE_PAL) {
                 cutsceneTimerLimit = 415;
             } else {
@@ -6908,7 +6734,7 @@ void race_finish_time_trial(void) {
     Settings *settings;
     LevelHeader *levelHeader;
 
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     settings = get_settings();
     settings->timeTrialRacer = 0;
     settings->unk115[1] = 0;
@@ -6967,13 +6793,12 @@ void race_finish_time_trial(void) {
         }
         if (((!vehicleID) && (!vehicleID)) && (!vehicleID)) {} // Fakematch
         if (settings->timeTrialRacer == 0) {
-            if (bestCourseTime < 10800 &&
-                (vehicleID != gTimeTrialVehicle || timetrial_map_id() != get_current_map_id() ||
-                 bestCourseTime < gTimeTrialTime)) {
+            if (bestCourseTime < 10800 && (vehicleID != gTimeTrialVehicle || timetrial_map_id() != level_id() ||
+                                           bestCourseTime < gTimeTrialTime)) {
                 gTimeTrialTime = bestCourseTime;
                 gTimeTrialVehicle = gPrevTimeTrialVehicle;
                 gTimeTrialCharacter = settings->racers[0].character;
-                timetrial_swap_player_ghost(get_current_map_id());
+                timetrial_swap_player_ghost(level_id());
                 gHasGhostToSave = TRUE;
             }
             if (osTvType == OS_TV_TYPE_PAL) {
@@ -6981,7 +6806,7 @@ void race_finish_time_trial(void) {
             }
             if (bestCourseTime < gTTGhostTimeToBeat) {
                 if (gTimeTrialStaffGhost) {
-                    tt_ghost_beaten(get_current_map_id(), &bestRacer->playerIndex);
+                    tt_ghost_beaten(level_id(), &bestRacer->playerIndex);
                 } else {
                     hud_time_trial_message(&bestRacer->playerIndex);
                 }
@@ -6996,7 +6821,7 @@ void race_finish_time_trial(void) {
  * Returns true if the player ghost data is valid for playback.
  */
 s32 timetrial_valid_player_ghost(void) {
-    if (timetrial_map_id() != get_current_map_id()) {
+    if (timetrial_map_id() != level_id()) {
         return FALSE;
     } else {
         if (gTimeTrialVehicle != gPrevTimeTrialVehicle) {
@@ -7026,8 +6851,8 @@ s32 timetrial_load_staff_ghost(s32 mapId) {
     s32 ret;
     TTGhostTable *nextGhostTable;
 
-    gMapDefaultVehicle = get_map_default_vehicle(mapId);
-    ghostTable = (TTGhostTable *) load_asset_section_from_rom(ASSET_TTGHOSTS_TABLE);
+    gMapDefaultVehicle = leveltable_vehicle_default(mapId);
+    ghostTable = (TTGhostTable *) asset_table_load(ASSET_TTGHOSTS_TABLE);
 
     nextGhostTable = ghostTable;
     do {
@@ -7108,7 +6933,7 @@ u8 timetrial_init_staff_ghost(s32 trackId) {
     gBeatStaffGhost = FALSE;
     gTimeTrialStaffGhost = FALSE;
     settings = get_settings();
-    if (get_map_default_vehicle(trackId) == (Vehicle) gPrevTimeTrialVehicle) {
+    if (leveltable_vehicle_default(trackId) == (Vehicle) gPrevTimeTrialVehicle) {
         mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
         staffTime = (u16 *) get_misc_asset(ASSET_MISC_GHOST_UNLOCK_TIMES);
         for (i = 0; mainTrackIds[i] != -1 && trackId != mainTrackIds[i]; i++) {}
@@ -7152,9 +6977,8 @@ s32 timetrial_init_player_ghost(s32 playerID) {
     s32 ghostMapID;
 
     ghostMapID = timetrial_map_id();
-    if (get_current_map_id() != ghostMapID || gTimeTrialVehicle != gPrevTimeTrialVehicle) {
-        cpakStatus =
-            timetrial_load_player_ghost(playerID, get_current_map_id(), gPrevTimeTrialVehicle, &characterID, &time);
+    if (level_id() != ghostMapID || gTimeTrialVehicle != gPrevTimeTrialVehicle) {
+        cpakStatus = timetrial_load_player_ghost(playerID, level_id(), gPrevTimeTrialVehicle, &characterID, &time);
         if (cpakStatus == CONTROLLER_PAK_GOOD) {
             gTimeTrialVehicle = gPrevTimeTrialVehicle;
             gTimeTrialCharacter = characterID;
@@ -7162,7 +6986,7 @@ s32 timetrial_init_player_ghost(s32 playerID) {
         }
         return cpakStatus;
     }
-    return timetrial_load_player_ghost(playerID, get_current_map_id(), gPrevTimeTrialVehicle, NULL, NULL);
+    return timetrial_load_player_ghost(playerID, level_id(), gPrevTimeTrialVehicle, NULL, NULL);
 }
 
 /**
@@ -8768,7 +8592,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
             camera = newObj->animatedObject;
             camera->unk44 = D_8011AD3E;
             viewportCount = cam_get_viewport_layout();
-            if (is_two_player_adventure_race()) {
+            if (race_is_adventure_2P()) {
                 viewportCount = VIEWPORT_LAYOUT_2_PLAYERS;
             }
             for (i = 0; i < viewportCount;) {
@@ -9872,7 +9696,7 @@ void mode_init_taj_race(void) {
 
     gTajRaceInit -= 1;
     if (gTajRaceInit == 0) {
-        levelHeader = get_current_level_header();
+        levelHeader = level_header();
         gChallengePrevMusic = levelHeader->music;
         gChallengePrevInstruments = levelHeader->instruments;
         levelHeader->music = SEQUENCE_TAJS_RACES;
@@ -9981,7 +9805,7 @@ void mode_end_taj_race(s32 reason) {
     Object *obj;
     LevelHeader *levelHeader;
 
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     levelHeader->race_type = RACETYPE_HUBWORLD;
     levelHeader->music = gChallengePrevMusic;
     levelHeader->instruments = gChallengePrevInstruments;
@@ -10042,7 +9866,7 @@ void mode_end_taj_race(s32 reason) {
     }
     music_change_on();
     hud_audio_init();
-    start_level_music(1.0f);
+    level_music_start(1.0f);
     gIsTajChallenge = FALSE;
 }
 
@@ -10168,7 +9992,7 @@ Object *find_furthest_telepoint(f32 x, f32 z) {
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {
         return D_8011AD24[1] + 1;
-    } else if (get_current_level_race_type() == RACETYPE_BOSS) {
+    } else if (level_type() == RACETYPE_BOSS) {
         return D_8011AD24[1] + 1;
     }
     return 0;
@@ -11003,3 +10827,6 @@ void func_800245B4(s16 arg0) {
         D_800DC700 = 0;
     }
 }
+
+UNUSED const char sReadOutErrorString[] = "RO error %d!!\n";
+UNUSED const char sPureAnguishString[] = "ARGHHHHHHHHH\n";

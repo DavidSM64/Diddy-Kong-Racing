@@ -1,20 +1,20 @@
 #include "weather.h"
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
-#include "f3ddkr.h"
-#include "camera.h"
-#include "tracks.h"
+#include "asset_loading.h"
+#include "audio.h"
 #include "audio_spatial.h"
-#include "textures_sprites.h"
+#include "camera.h"
+#include "common.h"
+#include "f3ddkr.h"
+#include "fade_transition.h"
+#include "macros.h"
 #include "math_util.h"
 #include "objects.h"
 #include "PRinternal/viint.h"
-#include "common.h"
+#include "structs.h"
+#include "textures_sprites.h"
+#include "tracks.h"
+#include "types.h"
 #include "video.h"
-#include "asset_loading.h"
-#include "audio.h"
-#include "fade_transition.h"
 
 #define WEATHER_OVERRIDE_COUNT 16
 
@@ -171,7 +171,7 @@ void weather_init(void) {
     gLensFlareOff = TRUE;
     gLensFlareOverrideObjs = 0;
     if (gWeatherAssetTable == NULL) {
-        gWeatherAssetTable = (s32 *) load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
+        gWeatherAssetTable = (s32 *) asset_table_load(ASSET_WEATHER_PARTICLES);
         gWeatherAssetTableLength = 0;
         while ((s32) gWeatherAssetTable[gWeatherAssetTableLength] != -1) {
             gWeatherAssetTableLength++;
