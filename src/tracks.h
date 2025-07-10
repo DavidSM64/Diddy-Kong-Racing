@@ -111,6 +111,11 @@ typedef struct WaterProperties {
     /* 0x10 */ s8 type;
 } WaterProperties;
 
+typedef struct CollisionNode {
+    u16 colPlaneIndex; // This triangle index
+    u16 closestTri[3];
+} CollisionNode;
+
 s32 set_scene_viewport_num(s32 numPorts);
 void void_free(void);
 void skydome_spawn(s32 objectID);

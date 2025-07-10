@@ -1076,43 +1076,31 @@ s32 void_generate_primitive(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     return NULL;
 }
 
-#ifdef NON_MATCHING
-typedef struct Unk80027568_1 {
-    u8 unk0[0x18];
-    Vec4f *unk18;
-} Unk80027568_1;
-
-// https://decomp.me/scratch/duMgr
 s32 func_80027568(void) {
-    Unk80027568_1 *var_ra; // spE4
-    f32 new_var;
+    LevelModelSegment *segment; // spE4
     s32 ret;
     s32 var_t4;
-    f32 projectedRacerPos;
-    f32 projectedCamPos;
+    f32 playerDist;
+    f32 camDist;
     f32 scalingFactor;
-    f32 var_f14;
-    s32 numRacers; // spC4
     s32 curViewport;
-    s32 isNegative;
+    s32 flipSide;
+    s32 numRacers; // spC4
     s32 i;
-    Vec4f *vector;
     s32 j;
     f32 var_f18;
-    f32 temp;
-    f32 temp2;
-    f32 temp3;
+    f32 A1, B1, C1, D1;
     f32 var_f20;
     f32 var_f22;
     f32 var_f24;
-    u16 *var_t2;
+    CollisionNode *colNode;
     Object_Racer *racer;
-    f32 camXPos;
-    f32 camYPos;
-    Object **racerGroup;     // sp80
-    Object *currentObjRacer; // sp7C
+    f32 A, B, C, D;
+    Object **racerObjects; // sp80
+    Object *racerObj;      // sp7C
+    f32 *panes;
 
-    racerGroup = get_racer_objects(&numRacers);
+    racerObjects = get_racer_objects(&numRacers);
     if (numRacers == 0) {
         return FALSE;
     }
@@ -1121,68 +1109,68 @@ s32 func_80027568(void) {
         return FALSE;
     }
     curViewport = get_current_viewport();
-    currentObjRacer = NULL;
+    racerObj = NULL;
     for (i = 0; i < numRacers; i++) {
-        racer = racerGroup[i]->racer;
+        racer = racerObjects[i]->racer;
         if (curViewport == racer->playerIndex) {
-            currentObjRacer = racerGroup[i];
+            racerObj = racerObjects[i];
             i = numRacers; // Come on! Just use break!
         }
     }
-    if (currentObjRacer == NULL) {
+    if (racerObj == NULL) {
         return FALSE;
     }
-    generate_collision_candidates(1, &currentObjRacer->trans.x_position, &gSceneActiveCamera->trans.x_position, -1);
+    generate_collision_candidates(1, &racerObj->trans.x_position, &gSceneActiveCamera->trans.x_position, -1);
     ret = FALSE;
-    // bug? var_ra can be undefined?
     for (var_t4 = 0; var_t4 < gNumCollisionCandidates && ret == FALSE; var_t4++) {
-        if ((s32) gCollisionCandidates[var_t4] > 0) {
-            var_ra = (Unk80027568_1 *) PHYS_TO_K0(gCollisionCandidates[var_t4]);
+        flipSide = gCollisionCandidates[var_t4];
+        if (flipSide > 0) {
+            // this is segment Entry
+            segment = (LevelModelSegment *) PHYS_TO_K0(flipSide);
         } else {
-            var_t2 = gCollisionCandidates[var_t4];
-            vector = var_ra->unk18;
-            vector += var_t2[0];
-            new_var = vector->x;
+            colNode = (CollisionNode *) flipSide;
+            curViewport = colNode->colPlaneIndex << 2;
+            panes= &segment->collisionPlanes[curViewport];
+            A = panes[0];
+            B = panes[1];
+            C = panes[2];
+            D = panes[3];
 
-            camXPos = gSceneActiveCamera->trans.x_position;
-            camYPos = gSceneActiveCamera->trans.y_position;
+            camDist = A * gSceneActiveCamera->trans.x_position + B * gSceneActiveCamera->trans.y_position +
+                      C * gSceneActiveCamera->trans.z_position + D - 14.0;
+            if (camDist < -0.1) {
+                playerDist = A * racerObj->trans.x_position + B * racerObj->trans.y_position +
+                             C * racerObj->trans.z_position + D;
+                if (playerDist >= -0.1) {
+                    var_f20 = (gSceneActiveCamera->trans.x_position - racerObj->trans.x_position);
+                    var_f22 = (gSceneActiveCamera->trans.y_position - racerObj->trans.y_position);
+                    var_f24 = (gSceneActiveCamera->trans.z_position - racerObj->trans.z_position);
 
-            projectedCamPos = (((camXPos * new_var) + (vector->y * camYPos) +
-                                (vector->z * gSceneActiveCamera->trans.z_position) + vector->w) -
-                               14.0);
-            if (projectedCamPos < -0.1) {
-                projectedRacerPos = (currentObjRacer->trans.x_position * new_var) +
-                                    (vector->y * currentObjRacer->trans.y_position) +
-                                    (vector->z * currentObjRacer->trans.z_position) + vector->w;
-                if (projectedRacerPos >= -0.1) {
-                    var_f20 = (camXPos - currentObjRacer->trans.x_position);
-                    var_f22 = (camYPos - currentObjRacer->trans.y_position);
-                    var_f24 = (gSceneActiveCamera->trans.z_position - currentObjRacer->trans.z_position);
-
-                    if (projectedRacerPos != projectedCamPos) {
-                        scalingFactor = projectedRacerPos / (projectedRacerPos - projectedCamPos);
+                    if (playerDist != camDist) {
+                        scalingFactor = playerDist / (playerDist - camDist);
                     } else {
                         scalingFactor = 0.0f;
                     }
 
-                    var_f20 = currentObjRacer->trans.x_position + (var_f20 * scalingFactor);
-                    var_f22 = currentObjRacer->trans.y_position + (var_f22 * scalingFactor);
-                    var_f24 = currentObjRacer->trans.z_position + (var_f24 * scalingFactor);
+                    var_f20 = racerObj->trans.x_position + (var_f20 * scalingFactor);
+                    var_f22 = racerObj->trans.y_position + (var_f22 * scalingFactor);
+                    var_f24 = racerObj->trans.z_position + (var_f24 * scalingFactor);
 
                     for (j = 0, ret = TRUE; j < 3 && ret == TRUE; j++) {
-                        isNegative = FALSE;
-                        curViewport = var_t2[j + 1];
+                        flipSide = FALSE;
+                        curViewport = colNode->closestTri[j];
                         if (curViewport & 0x8000) {
                             curViewport &= 0x7FFF;
-                            isNegative = TRUE;
+                            flipSide = TRUE;
                         }
-                        vector = &var_ra->unk18[curViewport];
-                        temp = vector->x;
-                        temp2 = vector->y;
-                        temp3 = vector->z;
-                        var_f14 = vector->w;
-                        var_f18 = (temp * var_f20) + (temp2 * var_f22) + (temp3 * var_f24) + var_f14;
-                        if (isNegative) {
+                        curViewport = curViewport << 2;
+                        panes= &segment->collisionPlanes[curViewport];
+                        A1 = panes[0];
+                        B1 = panes[1];
+                        C1 = panes[2];
+                        D1 = panes[3];
+                        var_f18 = A1 * var_f20 + B1 * var_f22 + C1 * var_f24 + D1;
+                        if (flipSide) {
                             var_f18 = -var_f18;
                         }
                         if (var_f18 > 4.0f) {
@@ -1195,9 +1183,6 @@ s32 func_80027568(void) {
     }
     return ret;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80027568.s")
-#endif
 
 /**
  * Sets up the camera placement for the 4th viewport when using T.T Cam in 3 player.
