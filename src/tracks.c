@@ -199,7 +199,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
                 u32 arg6) {
     s32 i;
 
-    gCurrentLevelHeader2 = get_current_level_header();
+    gCurrentLevelHeader2 = level_header();
     D_8011B0F8 = FALSE;
     gTTCamPlayerID = 0;
     gTTCamID = 0;
@@ -398,9 +398,8 @@ void render_scene(Gfx **dList, Mtx **mtx, Vertex **vtx, Triangle **tris, s32 upd
                           updateRate);
     }
     // Show TT Cam toggle for the fourth viewport when playing 3 player.
-    if (numViewports == 3 && get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS &&
-        get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE &&
-        get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) {
+    if (numViewports == 3 && level_type() != RACETYPE_CHALLENGE_EGGS && level_type() != RACETYPE_CHALLENGE_BATTLE &&
+        level_type() != RACETYPE_CHALLENGE_BANANAS) {
         if (hud_setting() == 0) {
             if (flip) {
                 gSPSetGeometryMode(gTrackDL++, G_CULL_FRONT);
@@ -1076,8 +1075,6 @@ s32 void_generate_primitive(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     return NULL;
 }
 
-// https://decomp.me/scratch/7GUjD
-#ifdef NON_MATCHING
 s32 func_80027568(void) {
     LevelModelSegment *segment; // spE4
     s32 ret;
@@ -1100,8 +1097,7 @@ s32 func_80027568(void) {
     f32 A, B, C, D;
     Object **racerObjects; // sp80
     Object *racerObj;      // sp7C
-    s32 index;
-    u16 index2;
+    f32 *planes;
 
     racerObjects = get_racer_objects(&numRacers);
     if (numRacers == 0) {
@@ -1123,20 +1119,21 @@ s32 func_80027568(void) {
     if (racerObj == NULL) {
         return FALSE;
     }
-    generate_collision_candidates(1, (Vec3f *) &racerObj->trans.x_position,
-                                  (Vec3f *) &gSceneActiveCamera->trans.x_position, -1);
+    generate_collision_candidates(1, &racerObj->trans.position, &gSceneActiveCamera->trans.position, -1);
     ret = FALSE;
     for (var_t4 = 0; var_t4 < gNumCollisionCandidates && ret == FALSE; var_t4++) {
-        if (gCollisionCandidates[var_t4] > 0) {
+        flipSide = gCollisionCandidates[var_t4];
+        if (flipSide > 0) {
             // this is segment Entry
-            segment = (LevelModelSegment *) (gCollisionCandidates[var_t4] | 0x80000000);
+            segment = (LevelModelSegment *) PHYS_TO_K0(flipSide);
         } else {
-            colNode = (CollisionNode *) gCollisionCandidates[var_t4];
-            index = colNode->colPlaneIndex << 2;
-            A = segment->collisionPlanes[index + 0];
-            B = segment->collisionPlanes[index + 1];
-            C = segment->collisionPlanes[index + 2];
-            D = segment->collisionPlanes[index + 3];
+            colNode = (CollisionNode *) flipSide;
+            curViewport = colNode->colPlaneIndex << 2;
+            planes = &segment->collisionPlanes[curViewport];
+            A = planes[0];
+            B = planes[1];
+            C = planes[2];
+            D = planes[3];
 
             camDist = A * gSceneActiveCamera->trans.x_position + B * gSceneActiveCamera->trans.y_position +
                       C * gSceneActiveCamera->trans.z_position + D - 14.0;
@@ -1165,11 +1162,12 @@ s32 func_80027568(void) {
                             curViewport &= 0x7FFF;
                             flipSide = TRUE;
                         }
-                        curViewport = 4 * curViewport;
-                        A1 = segment->collisionPlanes[curViewport + 0];
-                        B1 = segment->collisionPlanes[curViewport + 1];
-                        C1 = segment->collisionPlanes[curViewport + 2];
-                        D1 = segment->collisionPlanes[curViewport + 3];
+                        curViewport = curViewport << 2;
+                        planes = &segment->collisionPlanes[curViewport];
+                        A1 = planes[0];
+                        B1 = planes[1];
+                        C1 = planes[2];
+                        D1 = planes[3];
                         var_f18 = A1 * var_f20 + B1 * var_f22 + C1 * var_f24 + D1;
                         if (flipSide) {
                             var_f18 = -var_f18;
@@ -1184,9 +1182,6 @@ s32 func_80027568(void) {
     }
     return ret;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80027568.s")
-#endif
 
 /**
  * Sets up the camera placement for the 4th viewport when using T.T Cam in 3 player.
@@ -1708,7 +1703,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
                              gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
         }
     }
-    get_current_level_header()->unk3 = 1;
+    level_header()->unk3 = 1;
     render_level_geometry_and_objects();
 }
 
@@ -2860,7 +2855,7 @@ void generate_track(s32 modelId) {
     gCollisionCandidates = mempool_alloc_safe(MAX_COLLISION_CANDIDATES * 4, COLOUR_TAG_YELLOW);
     gCollisionSurfaces = mempool_alloc_safe(MAX_COLLISION_CANDIDATES, COLOUR_TAG_YELLOW);
     gNumCollisionCandidates = 0;
-    gLevelModelTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
+    gLevelModelTable = (s32 *) asset_table_load(ASSET_LEVEL_MODELS_TABLE);
 
     for (i = 0; gLevelModelTable[i] != -1; i++) {}
     i--;
@@ -2875,7 +2870,7 @@ void generate_track(s32 modelId) {
     temp += (LEVEL_MODEL_MAX_SIZE - temp_s4);
     temp -= ((s32) temp % 16); // Align to 16-byte boundary.
 
-    load_asset_to_address(ASSET_LEVEL_MODELS, temp, mdl, temp_s4);
+    asset_load(ASSET_LEVEL_MODELS, temp, mdl, temp_s4);
     gzip_inflate((u8 *) temp, (u8 *) gCurrentLevelModel);
     mempool_free(gLevelModelTable); // Done with the level models table, so free it.
 

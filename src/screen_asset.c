@@ -24,7 +24,7 @@ UNUSED u32 screenimage_load(s32 screenIndex) {
     s32 screenTableCount, start, size;
     u32 *screenTable;
 
-    screenTable = load_asset_section_from_rom(ASSET_SCREENS_TABLE);
+    screenTable = asset_table_load(ASSET_SCREENS_TABLE);
     screenTableCount = 0;
 
     while (screenTable[screenTableCount] != 0xFFFFFFFF) {
@@ -48,7 +48,7 @@ UNUSED u32 screenimage_load(s32 screenIndex) {
         size = screenTable[screenIndex + 1] - start;
         someAddr = (u32) mempool_alloc_safe(size, COLOUR_TAG_BLUE);
 
-        load_asset_to_address(ASSET_SCREENS, someAddr, start, size);
+        asset_load(ASSET_SCREENS, someAddr, start, size);
         mempool_free(screenTable);
 
         return someAddr;

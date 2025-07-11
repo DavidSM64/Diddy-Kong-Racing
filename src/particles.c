@@ -259,24 +259,24 @@ void init_particle_assets(void) {
     s32 i;
 
     free_particle_assets();
-    gParticlesAssetTable = (ParticleDescriptor **) load_asset_section_from_rom(ASSET_PARTICLES_TABLE);
+    gParticlesAssetTable = (ParticleDescriptor **) asset_table_load(ASSET_PARTICLES_TABLE);
     gParticlesAssetTableCount = -1;
     while (((s32) gParticlesAssetTable[gParticlesAssetTableCount + 1]) != -1) {
         gParticlesAssetTableCount++;
     }
 
-    gParticlesAssets = (s32 *) load_asset_section_from_rom(ASSET_PARTICLES);
+    gParticlesAssets = (s32 *) asset_table_load(ASSET_PARTICLES);
     for (i = 0; i < gParticlesAssetTableCount; i++) {
         gParticlesAssetTable[i] = (ParticleDescriptor *) (((u8 *) gParticlesAssets) + ((s32) gParticlesAssetTable[i]));
     }
 
-    gParticleBehavioursAssetTable = (ParticleBehaviour **) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
+    gParticleBehavioursAssetTable = (ParticleBehaviour **) asset_table_load(ASSET_PARTICLE_BEHAVIORS_TABLE);
     gParticleBehavioursAssetTableCount = -1;
     while (((s32) gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount + 1]) != -1) {
         gParticleBehavioursAssetTableCount++;
     }
 
-    gParticleBehavioursAssets = (s32 *) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS);
+    gParticleBehavioursAssets = (s32 *) asset_table_load(ASSET_PARTICLE_BEHAVIORS);
     for (i = 0; i < gParticleBehavioursAssetTableCount; i++) {
         gParticleBehavioursAssetTable[i] =
             (ParticleBehaviour *) (((u8 *) gParticleBehavioursAssets) + ((s32) gParticleBehavioursAssetTable[i]));
@@ -431,7 +431,7 @@ void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, 
     }
 
     if (gParticleDummys == NULL) {
-        asset2F = (s16 *) load_asset_section_from_rom(ASSET_DUMMY_PARTICLE_IDS);
+        asset2F = (s16 *) asset_table_load(ASSET_DUMMY_PARTICLE_IDS);
         gParticleDummyCount = 0;
         while (asset2F[gParticleDummyCount] != -1) {
             gParticleDummyCount++;
@@ -1190,7 +1190,7 @@ void setup_particle_position(Particle *particle, Object *obj, ParticleEmitter *e
     particle->trans.y_position = particle->localPos.y;
     particle->trans.z_position = particle->localPos.z;
     if (particle->movementType == PARTICLE_MOVEMENT_BASIC_PARENT) {
-        vec3f_rotate(&obj->trans.rotation, (Vec3f *) &particle->trans.x_position);
+        vec3f_rotate(&obj->trans.rotation, &particle->trans.position);
     }
 
     particle->trans.x_position += obj->trans.x_position;
@@ -2283,7 +2283,7 @@ void move_particle_attached_to_parent(Particle *particle) {
     particle->trans.x_position = 0.0f;
     particle->trans.y_position = -particle->downOffset;
     particle->trans.z_position = 0.0f;
-    vec3f_rotate(&particle->trans.rotation, (Vec3f *) &particle->trans.x_position);
+    vec3f_rotate(&particle->trans.rotation, &particle->trans.position);
     particle->trans.x_position += particle->localPos.x;
     particle->trans.y_position += particle->localPos.y;
     particle->trans.z_position += particle->localPos.z;

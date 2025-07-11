@@ -442,9 +442,9 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
     dir.z = obj->trans.z_position + (obj->z_velocity * updateRateF);
     radius = 9.0f;
 
-    generate_collision_candidates(1, (Vec3f *) &obj->trans.x_position, &dir, -1);
+    generate_collision_candidates(1, &obj->trans.position, &dir, -1);
     hasCollision = FALSE;
-    resolve_collisions((Vec3f *) &obj->trans.x_position, &dir, &radius, &surface, 1, &hasCollision);
+    resolve_collisions(&obj->trans.position, &dir, &radius, &surface, 1, &hasCollision);
     if (hasCollision) {
         obj->x_velocity = (dir.x - obj->trans.x_position) / updateRateF;
         obj->y_velocity = (dir.y - obj->trans.y_position) / updateRateF;
@@ -598,7 +598,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
     s32 bossFlags;
 
     settings = get_settings();
-    header = get_current_level_header();
+    header = level_header();
     jingle_state = obj->jingle_state;
     if (obj->properties.trophyCabinet.trophy == FALSE) {
         if (header->race_type != RACETYPE_CUTSCENE_2 && header->race_type != RACETYPE_CUTSCENE_1) {
@@ -709,7 +709,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
     Object_CollectEgg *egg;
     Object *racerObj;
     Object_Racer *racer;
-    f32 targetPos[3];
+    Vec3f targetPos;
     f32 radius;
     f32 updateRateF;
     s32 hasCollision;
@@ -726,21 +726,20 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
             break;
         case EGG_MOVING:
             obj->trans.flags &= ~OBJ_FLAGS_INVISIBLE;
-            targetPos[0] = obj->trans.x_position + (obj->x_velocity * updateRateF);
-            targetPos[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
-            targetPos[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
+            targetPos.f[0] = obj->trans.x_position + (obj->x_velocity * updateRateF);
+            targetPos.f[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
+            targetPos.f[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
             radius = 9.0f;
-            generate_collision_candidates(1, (Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, -1);
+            generate_collision_candidates(1, &obj->trans.position, &targetPos, -1);
             hasCollision = FALSE;
             surface = SURFACE_DEFAULT;
-            resolve_collisions((Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, &radius, &surface, 1,
-                               &hasCollision);
-            obj->x_velocity = (targetPos[0] - obj->trans.x_position) / updateRateF;
-            obj->y_velocity = (targetPos[1] - obj->trans.y_position) / updateRateF;
-            obj->z_velocity = (targetPos[2] - obj->trans.z_position) / updateRateF;
-            obj->trans.x_position = targetPos[0];
-            obj->trans.y_position = targetPos[1];
-            obj->trans.z_position = targetPos[2];
+            resolve_collisions(&obj->trans.position, &targetPos, &radius, &surface, 1, &hasCollision);
+            obj->x_velocity = (targetPos.f[0] - obj->trans.x_position) / updateRateF;
+            obj->y_velocity = (targetPos.f[1] - obj->trans.y_position) / updateRateF;
+            obj->z_velocity = (targetPos.f[2] - obj->trans.z_position) / updateRateF;
+            obj->trans.x_position = targetPos.f[0];
+            obj->trans.y_position = targetPos.f[1];
+            obj->trans.z_position = targetPos.f[2];
             obj->y_velocity -= 0.5;
             obj->x_velocity *= 0.98;
             obj->z_velocity *= 0.98;
@@ -1216,7 +1215,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             tt->animFrameF = 0.0f;
         }
     }
-    header = get_current_level_header();
+    header = level_header();
     distance = 0.0f;
     obj->x_velocity = 0.0f;
     obj->z_velocity = 0.0f;
@@ -2559,7 +2558,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         updateRateF *= 1.2;
     }
     taj = obj->npc;
-    levelHeader = get_current_level_header();
+    levelHeader = level_header();
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;
     if (obj->animFrame == 0 && taj->animFrameF > 1.0) {
         taj->animFrameF = 0.0f;
@@ -3886,7 +3885,7 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     trigger = obj->trigger;
     settings = get_settings();
     courseFlags = settings->courseFlagsPtr[settings->courseId];
-    curRaceType = get_current_level_race_type();
+    curRaceType = level_type();
     if (triggerEntry->index >= 0) {
         flags = 0x10000 << triggerEntry->index;
         if (obj->interactObj->distance < trigger->radius) {
@@ -4307,7 +4306,7 @@ void obj_init_banana(Object *obj, UNUSED LevelObjectEntry_Banana *entry) {
 void obj_loop_banana(Object *obj, s32 updateRate) {
     Object *racerObj;
     Object_Racer *racer;
-    f32 targetPos[3];
+    Vec3f targetPos;
     f32 radius;
     f32 updateRateF;
     f32 velX;
@@ -4342,20 +4341,19 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             banana->unk0 = 0;
         }
         if (properties->status == BANANA_DROPPED) {
-            targetPos[0] = obj->trans.x_position + (obj->x_velocity * updateRateF);
-            targetPos[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
-            targetPos[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
+            targetPos.f[0] = obj->trans.x_position + (obj->x_velocity * updateRateF);
+            targetPos.f[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
+            targetPos.f[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
             radius = 8.0f;
-            generate_collision_candidates(1, (Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, -1);
+            generate_collision_candidates(1, &obj->trans.position, &targetPos, -1);
             hasCollision = 0;
-            resolve_collisions((Vec3f *) &obj->trans.x_position, (Vec3f *) targetPos, &radius, &surface, 1,
-                               &hasCollision);
-            obj->x_velocity = (targetPos[0] - obj->trans.x_position) / updateRateF;
-            obj->y_velocity = (targetPos[1] - obj->trans.y_position) / updateRateF;
-            obj->z_velocity = (targetPos[2] - obj->trans.z_position) / updateRateF;
-            obj->trans.x_position = targetPos[0];
-            obj->trans.y_position = targetPos[1];
-            obj->trans.z_position = targetPos[2];
+            resolve_collisions(&obj->trans.position, &targetPos, &radius, &surface, 1, &hasCollision);
+            obj->x_velocity = (targetPos.f[0] - obj->trans.x_position) / updateRateF;
+            obj->y_velocity = (targetPos.f[1] - obj->trans.y_position) / updateRateF;
+            obj->z_velocity = (targetPos.f[2] - obj->trans.z_position) / updateRateF;
+            obj->trans.x_position = targetPos.f[0];
+            obj->trans.y_position = targetPos.f[1];
+            obj->trans.z_position = targetPos.f[2];
             // Bananas dropped by planes will not have gravity.
             if (banana->droppedVehicleID != VEHICLE_PLANE) {
                 obj->y_velocity -= 1.0;  //!@Delta
@@ -4394,7 +4392,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             properties->intangibleTimer = 0;
         }
         if (obj->interactObj->distance < 120) {
-            if (get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
+            if (level_type() == RACETYPE_CHALLENGE_BANANAS) {
                 racerObj = obj->interactObj->obj;
                 if (racerObj != NULL && racerObj->header->behaviorId == BHV_RACER) {
                     racer = racerObj->racer;
@@ -4408,7 +4406,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             racerObj = obj->interactObj->obj;
             if (racerObj != NULL && racerObj->header->behaviorId == BHV_RACER) {
                 racer = racerObj->racer;
-                if (get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS || racer->bananas < 2) {
+                if (level_type() != RACETYPE_CHALLENGE_BANANAS || racer->bananas < 2) {
                     prevSoundMask = racer->bananaSoundMask;
                     audspat_play_sound_at_position(SOUND_SELECT, racerObj->trans.x_position, racerObj->trans.y_position,
                                                    racerObj->trans.z_position, AUDIO_POINT_FLAG_ONE_TIME_TRIGGER,
@@ -4498,7 +4496,7 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
     Object *racerObj;
     s32 twoPlayerAdv;
 
-    twoPlayerAdv = is_two_player_adventure_race();
+    twoPlayerAdv = race_is_adventure_2P();
     if ((twoPlayerAdv && obj->properties.silverCoin.action != SILVER_COIN_INACTIVE) ||
         (!twoPlayerAdv && obj->properties.silverCoin.action == SILVER_COIN_ACTIVE)) {
         interactObj = obj->interactObj;
@@ -4690,7 +4688,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                         racer->balloon_level = 0;
                     }
                     // Disallow level 3 balloons in challenge mode
-                    if (get_current_level_race_type() & RACETYPE_CHALLENGE) {
+                    if (level_type() & RACETYPE_CHALLENGE) {
                         if (racer->balloon_level > 1) {
                             racer->balloon_level = 1;
                         }
@@ -4853,10 +4851,10 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     offset.z = obj->trans.z_position + (obj->z_velocity * updateRateF);
     if (weapon->weaponID != WEAPON_MAGNET_LEVEL_3) {
         radius = 16.0f;
-        generate_collision_candidates(1, (Vec3f *) &obj->trans.x_position, &offset, -1);
+        generate_collision_candidates(1, &obj->trans.position, &offset, -1);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
-        resolve_collisions((Vec3f *) &obj->trans.x_position, &offset, &radius, &surface, 1, &hasCollision);
+        resolve_collisions(&obj->trans.position, &offset, &radius, &surface, 1, &hasCollision);
         if (hasCollision > 0) {
             if (get_collision_normal(&diffX, &diffY, &diffZ)) {
                 obj->properties.projectile.timer = 0;
@@ -5157,11 +5155,10 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
         intendedPos.y = weaponObj->trans.y_position + (weaponObj->y_velocity * updateRateF);
         intendedPos.z = weaponObj->trans.z_position + (weaponObj->z_velocity * updateRateF);
         radius = 9.0f;
-        generate_collision_candidates(1, (Vec3f *) &weaponObj->trans.x_position, (Vec3f *) &intendedPos.x, -1);
+        generate_collision_candidates(1, &weaponObj->trans.position, &intendedPos, -1);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
-        resolve_collisions((Vec3f *) &weaponObj->trans.x_position, (Vec3f *) &intendedPos, &radius, &surface, 1,
-                           &hasCollision);
+        resolve_collisions(&weaponObj->trans.position, &intendedPos, &radius, &surface, 1, &hasCollision);
         weaponObj->x_velocity = (intendedPos.x - weaponObj->trans.x_position) / updateRateF;
         weaponObj->y_velocity = (intendedPos.y - weaponObj->trans.y_position) / updateRateF;
         weaponObj->z_velocity = (intendedPos.z - weaponObj->trans.z_position) / updateRateF;
@@ -6584,7 +6581,7 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             }
         }
         if (properties->opacity > 0) {
-            levelName = get_level_name(properties->levelID);
+            levelName = level_name(properties->levelID);
             textWidth = (get_text_width(levelName, 0, 0) + 24) >> 1;
             x1 = SCREEN_WIDTH_HALF - textWidth;
             x2 = textWidth + SCREEN_WIDTH_HALF;
