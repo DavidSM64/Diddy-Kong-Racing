@@ -1075,8 +1075,6 @@ s32 void_generate_primitive(f32 *arg0, f32 *arg1, f32 arg2, f32 arg3) {
     return NULL;
 }
 
-// https://decomp.me/scratch/7GUjD
-#ifdef NON_MATCHING
 s32 func_80027568(void) {
     LevelModelSegment *segment; // spE4
     s32 ret;
@@ -1099,8 +1097,7 @@ s32 func_80027568(void) {
     f32 A, B, C, D;
     Object **racerObjects; // sp80
     Object *racerObj;      // sp7C
-    s32 index;
-    u16 index2;
+    f32 *planes;
 
     racerObjects = get_racer_objects(&numRacers);
     if (numRacers == 0) {
@@ -1122,20 +1119,21 @@ s32 func_80027568(void) {
     if (racerObj == NULL) {
         return FALSE;
     }
-    generate_collision_candidates(1, (Vec3f *) &racerObj->trans.x_position,
-                                  (Vec3f *) &gSceneActiveCamera->trans.x_position, -1);
+    generate_collision_candidates(1, &racerObj->trans.position, &gSceneActiveCamera->trans.position, -1);
     ret = FALSE;
     for (var_t4 = 0; var_t4 < gNumCollisionCandidates && ret == FALSE; var_t4++) {
-        if (gCollisionCandidates[var_t4] > 0) {
+        flipSide = gCollisionCandidates[var_t4];
+        if (flipSide > 0) {
             // this is segment Entry
-            segment = (LevelModelSegment *) (gCollisionCandidates[var_t4] | 0x80000000);
+            segment = (LevelModelSegment *) PHYS_TO_K0(flipSide);
         } else {
-            colNode = (CollisionNode *) gCollisionCandidates[var_t4];
-            index = colNode->colPlaneIndex << 2;
-            A = segment->collisionPlanes[index + 0];
-            B = segment->collisionPlanes[index + 1];
-            C = segment->collisionPlanes[index + 2];
-            D = segment->collisionPlanes[index + 3];
+            colNode = (CollisionNode *) flipSide;
+            curViewport = colNode->colPlaneIndex << 2;
+            planes = &segment->collisionPlanes[curViewport];
+            A = planes[0];
+            B = planes[1];
+            C = planes[2];
+            D = planes[3];
 
             camDist = A * gSceneActiveCamera->trans.x_position + B * gSceneActiveCamera->trans.y_position +
                       C * gSceneActiveCamera->trans.z_position + D - 14.0;
@@ -1164,11 +1162,12 @@ s32 func_80027568(void) {
                             curViewport &= 0x7FFF;
                             flipSide = TRUE;
                         }
-                        curViewport = 4 * curViewport;
-                        A1 = segment->collisionPlanes[curViewport + 0];
-                        B1 = segment->collisionPlanes[curViewport + 1];
-                        C1 = segment->collisionPlanes[curViewport + 2];
-                        D1 = segment->collisionPlanes[curViewport + 3];
+                        curViewport = curViewport << 2;
+                        planes = &segment->collisionPlanes[curViewport];
+                        A1 = planes[0];
+                        B1 = planes[1];
+                        C1 = planes[2];
+                        D1 = planes[3];
                         var_f18 = A1 * var_f20 + B1 * var_f22 + C1 * var_f24 + D1;
                         if (flipSide) {
                             var_f18 = -var_f18;
@@ -1183,9 +1182,6 @@ s32 func_80027568(void) {
     }
     return ret;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_80027568.s")
-#endif
 
 /**
  * Sets up the camera placement for the 4th viewport when using T.T Cam in 3 player.
