@@ -1097,7 +1097,7 @@ s32 func_80027568(void) {
     f32 A, B, C, D;
     Object **racerObjects; // sp80
     Object *racerObj;      // sp7C
-    f32 *panes;
+    f32 *planes;
 
     racerObjects = get_racer_objects(&numRacers);
     if (numRacers == 0) {
@@ -1119,7 +1119,8 @@ s32 func_80027568(void) {
     if (racerObj == NULL) {
         return FALSE;
     }
-    generate_collision_candidates(1, &racerObj->trans.x_position, &gSceneActiveCamera->trans.x_position, -1);
+    generate_collision_candidates(1, (Vec3f *) &racerObj->trans.x_position,
+                                  (Vec3f *) &gSceneActiveCamera->trans.x_position, -1);
     ret = FALSE;
     for (var_t4 = 0; var_t4 < gNumCollisionCandidates && ret == FALSE; var_t4++) {
         flipSide = gCollisionCandidates[var_t4];
@@ -1129,11 +1130,11 @@ s32 func_80027568(void) {
         } else {
             colNode = (CollisionNode *) flipSide;
             curViewport = colNode->colPlaneIndex << 2;
-            panes= &segment->collisionPlanes[curViewport];
-            A = panes[0];
-            B = panes[1];
-            C = panes[2];
-            D = panes[3];
+            planes = &segment->collisionPlanes[curViewport];
+            A = planes[0];
+            B = planes[1];
+            C = planes[2];
+            D = planes[3];
 
             camDist = A * gSceneActiveCamera->trans.x_position + B * gSceneActiveCamera->trans.y_position +
                       C * gSceneActiveCamera->trans.z_position + D - 14.0;
@@ -1163,11 +1164,11 @@ s32 func_80027568(void) {
                             flipSide = TRUE;
                         }
                         curViewport = curViewport << 2;
-                        panes= &segment->collisionPlanes[curViewport];
-                        A1 = panes[0];
-                        B1 = panes[1];
-                        C1 = panes[2];
-                        D1 = panes[3];
+                        planes = &segment->collisionPlanes[curViewport];
+                        A1 = planes[0];
+                        B1 = planes[1];
+                        C1 = planes[2];
+                        D1 = planes[3];
                         var_f18 = A1 * var_f20 + B1 * var_f22 + C1 * var_f24 + D1;
                         if (flipSide) {
                             var_f18 = -var_f18;
