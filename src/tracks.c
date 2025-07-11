@@ -1119,8 +1119,7 @@ s32 func_80027568(void) {
     if (racerObj == NULL) {
         return FALSE;
     }
-    generate_collision_candidates(1, (Vec3f *) &racerObj->trans.x_position,
-                                  (Vec3f *) &gSceneActiveCamera->trans.x_position, -1);
+    generate_collision_candidates(1, &racerObj->trans.position, &gSceneActiveCamera->trans.position, -1);
     ret = FALSE;
     for (var_t4 = 0; var_t4 < gNumCollisionCandidates && ret == FALSE; var_t4++) {
         flipSide = gCollisionCandidates[var_t4];

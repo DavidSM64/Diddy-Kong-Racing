@@ -1525,9 +1525,14 @@ typedef struct ObjectTransform {
         /* 0x0006 */ s16 spriteID;
     };
     /* 0x0008 */ f32 scale;
-    /* 0x000C */ f32 x_position;
-    /* 0x0010 */ f32 y_position;
-    /* 0x0014 */ f32 z_position;
+    union {
+        /* 0x000C */ Vec3f position;
+        struct {
+            /* 0x000C */ f32 x_position;
+            /* 0x0010 */ f32 y_position;
+            /* 0x0014 */ f32 z_position;
+        };
+    };
 } ObjectTransform;
 
 /* Size: 0x0630 bytes */

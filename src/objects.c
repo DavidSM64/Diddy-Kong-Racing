@@ -3973,7 +3973,7 @@ void render_bubble_trap(ObjectTransform *trans, Sprite *gfxData, Object *obj, s3
     Camera *cameraSegment;
     f32 dist;
 
-    vec3f_rotate(&trans->rotation, (Vec3f *) &obj->trans.x_position);
+    vec3f_rotate(&trans->rotation, &obj->trans.position);
     obj->trans.x_position += trans->x_position;
     obj->trans.y_position += trans->y_position;
     obj->trans.z_position += trans->z_position;
