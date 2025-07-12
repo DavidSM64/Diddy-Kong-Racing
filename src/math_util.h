@@ -44,7 +44,7 @@ void load_rng_seed(void);
 s32 get_rng_seed(void);
 s32 rand_range(s32, s32);
 void mtxf_to_mtxs(MtxF *mf, MtxS *mi);
-void mtxf_transform_point(MtxF *mf, float x, float y, float z, float *ox, float *oy, float *oz);
+void mtxf_transform_point(float mf[4][4], float x, float y, float z, float *ox, float *oy, float *oz);
 void mtxf_transform_dir(MtxF *mf, Vec3f *in, Vec3f *out);
 void mtxf_mul(MtxF *mat1, MtxF *mat2, MtxF *output);
 void mtxf_to_mtx(MtxF *mf, Mtx *m);
