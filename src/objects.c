@@ -2286,11 +2286,11 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
         if (obj->modelInstances[i] != NULL && obj->modelInstances[i]->objModel->normals != NULL) {
             set_shading_properties(obj->shading, obj->header->shadeAmbient, obj->header->shadeDiffuse, 0,
                                    obj->header->shadeAngleY, obj->header->shadeAngleZ);
-            if (obj->header->unk3D != 0) {
+            if (obj->header->shadingIntensity != 0) {
                 obj->shading->lightR = obj->header->unk3A;
                 obj->shading->lightG = obj->header->unk3B;
                 obj->shading->lightB = obj->header->unk3C;
-                obj->shading->lightIntensity = obj->header->unk3D;
+                obj->shading->lightIntensity = obj->header->shadingIntensity;
                 obj->shading->lightDirX = -(obj->shading->shadowDirX >> 1);
                 obj->shading->lightDirY = -(obj->shading->shadowDirY >> 1);
                 obj->shading->lightDirZ = -(obj->shading->shadowDirZ >> 1);
@@ -2596,7 +2596,7 @@ void obj_destroy(Object *obj, s32 arg1) {
     }
     if (obj->lightData != NULL) {
         for (i = 0; i < obj->header->numLightSources; i++) {
-            func_80032BAC(obj->lightData[i]);
+            destroy_object_light(obj->lightData[i]);
         }
     }
     switch (obj->behaviorId) {
@@ -2653,7 +2653,7 @@ void obj_destroy(Object *obj, s32 arg1) {
             i = BHV_RACER;
             break;
         case BHV_LIGHT_RGBA:
-            func_80032BAC(obj->light);
+            destroy_object_light(obj->light);
 
             i = BHV_RACER;
             break;
@@ -2904,7 +2904,7 @@ void obj_update(s32 updateRate) {
         for (i = gObjectListStart; i < gObjectCount; i++) {
             obj = gObjPtrList[i];
             if (!(obj->trans.flags & OBJ_FLAGS_PARTICLE) && (obj->shading != NULL)) {
-                func_80032C7C(obj);
+                update_object_shading(obj);
             }
         }
     }
@@ -7840,11 +7840,11 @@ UNUSED void add_shading_properties(Object *obj, f32 ambientChange, f32 diffuseCh
         set_shading_properties(obj->shading, obj->shading->ambient, obj->shading->diffuse,
                                (obj->shading->unk22 + angleX), (obj->shading->unk24 + angleY),
                                (obj->shading->unk26 + angleZ));
-        if (obj->header->unk3D != 0) {
+        if (obj->header->shadingIntensity != 0) {
             obj->shading->lightR = obj->header->unk3A;
             obj->shading->lightG = obj->header->unk3B;
             obj->shading->lightB = obj->header->unk3C;
-            obj->shading->lightIntensity = obj->header->unk3D;
+            obj->shading->lightIntensity = obj->header->shadingIntensity;
             obj->shading->lightDirX = -(obj->shading->shadowDirX >> 1);
             obj->shading->lightDirY = -(obj->shading->shadowDirY >> 1);
             obj->shading->lightDirZ = -(obj->shading->shadowDirZ >> 1);
@@ -7967,7 +7967,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     objRot.z_rotation = -object->trans.rotation.z_rotation;
     vec3f_rotate_ypr(&objRot, &direction);
 
-    if (object->header->unk3D != 0 && arg2) {
+    if (object->header->shadingIntensity != 0 && arg2) {
         mtxf_transform_dir(get_projection_matrix_f32(), &direction, &direction);
     }
 

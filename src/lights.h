@@ -44,14 +44,14 @@ typedef struct ObjectLight {
     s32 colourG;
     s32 colourB;
     s32 intensity;
-    s32 unk2C;
-    s32 unk30;
-    s32 unk34;
-    s32 unk38;
-    u16 unk3C;
-    u16 unk3E;
-    u16 unk40;
-    u16 unk42;
+    s32 targetColourChangeRateR;
+    s32 targetColourChangeRateG;
+    s32 targetColourChangeRateB;
+    s32 targetIntensityChangeRate;
+    u16 targetColourDiffR;
+    u16 targetColourDiffG;
+    u16 targetColourDiffB;
+    u16 targetIntensityDiff;
     union {
         SubMiscAssetObjectHeader24 *unk44;
         MiscAssetObjectHeader24 *unk44_asset;
@@ -60,12 +60,12 @@ typedef struct ObjectLight {
     u16 unk4A;
     u16 unk4C;
     u16 unk4E;
-    s16 unk50;
-    s16 unk52;
-    s16 unk54;
-    s16 unk56;
-    s16 unk58;
-    s16 unk5A;
+    s16 minX;
+    s16 minY;
+    s16 minZ;
+    s16 maxX;
+    s16 maxY;
+    s16 maxZ;
     f32 radius;
     f32 unk60;
     f32 unk64;
@@ -81,27 +81,27 @@ typedef struct ObjectLight {
 } ObjectLight;
 
 /* Size: 0x14 bytes */
-typedef struct unk800DC960 {
+typedef struct ObjectLightShadeProperties {
     ObjectLight* lightObj;
     s32 colourR;
     s32 colourG;
     s32 colourB;
     s32 intensity;
-} unk800DC960;
+} ObjectLightShadeProperties;
 
 void free_lights(void);
 void lightUpdateLights(s32 updateRate);
-void func_80032BAC(ObjectLight *light);
+void destroy_object_light(ObjectLight *light);
 s32 get_light_count(void);
 f32 light_distance_calc(ObjectLight *light);
 f32 light_direction_calc(ObjectLight *light);
-ObjectLight *func_80031CAC(Object *obj, LevelObjectEntry_RgbaLight *lightEntry);
+ObjectLight *add_level_object_light(Object *obj, LevelObjectEntry_RgbaLight *lightEntry);
 ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1);
-void func_80032424(ObjectLight *light, s32 updateRate);
+void light_update(ObjectLight *light, s32 updateRate);
 
 //Non Matching
 void setup_lights(s32 count);
-void func_80032C7C(Object *object);
-void func_800337E4(void);
+void update_object_shading(Object *object);
+void update_ambient_light(void);
 
 #endif

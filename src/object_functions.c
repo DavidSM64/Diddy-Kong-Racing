@@ -5539,7 +5539,7 @@ void obj_loop_texscroll(Object *obj, s32 updateRate) {
 
 /* Official name: rgbalightInit */
 void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s32 arg2) {
-    obj->light = func_80031CAC(obj, entry);
+    obj->light = add_level_object_light(obj, entry);
 }
 
 /**
