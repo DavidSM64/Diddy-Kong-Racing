@@ -528,12 +528,9 @@ UNUSED u8 func_80001358(u8 chan1, u8 chan2, s32 arg2) {
  * Retrieves the FX mix levels of all audio channels.
  */
 UNUSED void music_get_fx_mix_all_channels(u8 *channelFXMix) {
-    s32 channelIdx = 0;
-    if (gMusicPlayer->maxChannels > 0) {
-        do {
-            channelFXMix[channelIdx] = alSeqpGetChlFXMix((ALSeqPlayer *) gMusicPlayer, channelIdx);
-            channelIdx++;
-        } while (channelIdx < gMusicPlayer->maxChannels);
+    s32 channelIdx;
+    for (channelIdx = 0; channelIdx < gMusicPlayer->maxChannels; channelIdx++) {
+        channelFXMix[channelIdx] = alSeqpGetChlFXMix((ALSeqPlayer *) gMusicPlayer, channelIdx);
     }
 }
 
