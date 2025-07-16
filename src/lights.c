@@ -99,16 +99,16 @@ ObjectLight *add_level_object_light(Object *obj, LevelObjectEntry_RgbaLight *lig
             light->pos.y = lightEntry->common.y;
             light->pos.z = lightEntry->common.z;
         }
-        light->colourR = lightEntry->unkA << 16;
+        light->colourR = lightEntry->colourR << 16;
         light->targetColourChangeRateR = 0;
         light->targetColourDiffR = 0;
-        light->colourG = lightEntry->unkB << 16;
+        light->colourG = lightEntry->colourG << 16;
         light->targetColourChangeRateG = 0;
         light->targetColourDiffG = 0;
-        light->colourB = lightEntry->unkC << 16;
+        light->colourB = lightEntry->colourB << 16;
         light->targetColourChangeRateB = 0;
         light->targetColourDiffB = 0;
-        light->intensity = lightEntry->unkD << 16;
+        light->intensity = lightEntry->intensity << 16;
         light->targetIntensityChangeRate = 0;
         light->targetIntensityDiff = 0;
         light->unk44 = NULL;
