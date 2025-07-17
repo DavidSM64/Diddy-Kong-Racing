@@ -236,7 +236,7 @@ UNUSED void toggle_object_light(ObjectLight *light) {
 }
 
 /**
- * Initializes a gradual change of colour for a light source.
+ * Initialises a gradual change of colour for a light source.
  */
 UNUSED void light_setup_colour_change(ObjectLight *light, s32 targetR, s32 diffR, s32 targetG, s32 diffG, s32 targetB, s32 diffB) {
     if (diffR > 0) {
@@ -254,7 +254,7 @@ UNUSED void light_setup_colour_change(ObjectLight *light, s32 targetR, s32 diffR
 }
 
 /**
- * Initializes a gradual change of intensity for a light source.
+ * Initialises a gradual change of intensity for a light source.
  */
 UNUSED void light_setup_intensity_change(ObjectLight *light, s32 target, s32 diff) {
     if (diff > 0) {
@@ -265,6 +265,7 @@ UNUSED void light_setup_intensity_change(ObjectLight *light, s32 target, s32 dif
 
 /**
  * Loops through all active lights and updates their properties.
+ * Official Name: lightUpdateLights
  */
 void light_update_all(s32 updateRate) {
     s32 i;
