@@ -685,7 +685,7 @@ void level_free(void) {
     music_stop();
     music_jingle_stop();
     music_channel_reset_all();
-    free_lights();
+    lights_free();
     free_track();
     audspat_reset();
     sound_volume_change(VOLUME_NORMAL);

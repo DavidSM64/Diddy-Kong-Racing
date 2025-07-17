@@ -89,19 +89,19 @@ typedef struct ObjectLightShadeProperties {
     s32 intensity;
 } ObjectLightShadeProperties;
 
-void free_lights(void);
+void lights_free(void);
 void light_update_all(s32 updateRate);
-void destroy_object_light(ObjectLight *light);
-s32 get_light_count(void);
+void light_remove(ObjectLight *light);
+s32 light_count(void);
 f32 light_distance_calc(ObjectLight *light);
 f32 light_direction_calc(ObjectLight *light);
-ObjectLight *add_level_object_light(Object *obj, LevelObjectEntry_RgbaLight *lightEntry);
-ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1);
+ObjectLight *light_add_from_level_object_entry(Object *obj, LevelObjectEntry_RgbaLight *lightEntry);
+ObjectLight *light_add_from_object_header(Object *obj, ObjectHeader24 *arg1);
 void light_update(ObjectLight *light, s32 updateRate);
 
 //Non Matching
 void setup_lights(s32 count);
-void update_object_shading(Object *object);
-void update_ambient_light(void);
+void light_update_shading(Object *object);
+void light_update_ambience(void);
 
 #endif

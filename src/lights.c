@@ -33,7 +33,7 @@ f32 gLightDiffZ;
  * Free all lights from RAM.
  * Official Name: freeLights
  */
-void free_lights(void) {
+void lights_free(void) {
     if (gActiveLights != NULL) {
         mempool_free(gActiveLights);
         gActiveLights = NULL;
@@ -46,6 +46,7 @@ void free_lights(void) {
 }
 
 /**
+ * Allocates RAM for all buffers containing light source properties.
  * Official Name: setupLights
  */
 void setup_lights(s32 count) {
@@ -53,7 +54,7 @@ void setup_lights(s32 count) {
     u8 *buffer;
     s32 temp;
 
-    free_lights();
+    lights_free();
     gMaxLights = count;
     buffer = (u8 *) mempool_alloc_safe(
         gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(ObjectLightShadeProperties) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
@@ -72,7 +73,7 @@ void setup_lights(s32 count) {
 /**
  * Adds a light source from a level object entry.
  */
-ObjectLight *add_level_object_light(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) {
+ObjectLight *light_add_from_level_object_entry(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) {
     s32 i;
     ObjectLight *light;
     LevelHeader *levelHeader;
@@ -147,7 +148,7 @@ ObjectLight *add_level_object_light(Object *obj, LevelObjectEntry_RgbaLight *lig
 /**
  * Official Name: addObjectLight
  */
-ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
+ObjectLight *light_add_from_object_header(Object *obj, ObjectHeader24 *arg1) {
     s32 i;
     ObjectLight *light;
 
@@ -212,7 +213,7 @@ ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
  * Disable this objects light data.
  * Official Name: turnLightOff?
  */
-UNUSED void disable_object_light(ObjectLight *light) {
+UNUSED void light_disable(ObjectLight *light) {
     light->enabled = FALSE;
 }
 
@@ -220,14 +221,14 @@ UNUSED void disable_object_light(ObjectLight *light) {
  * Enable this objects light data.
  * Official Name: turnLightOn?
  */
-UNUSED void enable_object_light(ObjectLight *light) {
+UNUSED void light_enable(ObjectLight *light) {
     light->enabled = TRUE;
 }
 
 /**
  * Toggle this objects light data on or off.
  */
-UNUSED void toggle_object_light(ObjectLight *light) {
+UNUSED void light_toggle(ObjectLight *light) {
     if (light->enabled == TRUE) {
         light->enabled = FALSE;
     } else {
@@ -418,7 +419,7 @@ void light_update(ObjectLight *light, s32 updateRate) {
 /**
  * Official Name: killLight?
  */
-void destroy_object_light(ObjectLight *light) {
+void light_remove(ObjectLight *light) {
     ObjectLight *entry = NULL;
     s32 i;
     for (i = 0; (i < gNumActiveLights) && (entry == NULL); i++) {
@@ -439,14 +440,14 @@ void destroy_object_light(ObjectLight *light) {
  * Return the number of active lights.
  * Official Name: lightGetLights?
  */
-s32 get_light_count(void) {
+s32 light_count(void) {
     return gNumActiveLights;
 }
 
 /**
  * Updates the shading on an object based on nearby high-intensity light sources.
  */
-void update_object_shading(Object *object) {
+void light_update_shading(Object *object) {
     ObjectLight *light;
     s16 primIndex, secIndex;
     f32 intensity;
@@ -456,7 +457,7 @@ void update_object_shading(Object *object) {
     u8 objTypeMask;
     s32 i;
 
-    if (object->header->shadingIntensity == 0) {
+    if (object->header->shadeIntensity == 0) {
         switch (object->header->modelType) {
             case OBJECT_MODEL_TYPE_3D_MODEL:
                 objTypeMask = 2;
@@ -592,7 +593,7 @@ void update_object_shading(Object *object) {
             // Ambient light shading
             if (numLights > 0) {
                 if (numLights >= 2) {
-                    update_ambient_light();
+                    light_update_ambience();
                 }
                 object->shading->lightR = gShadeBuffer[0].colourR;
                 object->shading->lightG = gShadeBuffer[0].colourG;
@@ -612,7 +613,7 @@ void update_object_shading(Object *object) {
  * In the case of ambient lighting for object shading, mix ambient light sources based on
  * their intensity into the first entry in the shading buffer.
  */
-void update_ambient_light(void) {
+void light_update_ambience(void) {
     s32 intensityRatio;
     s32 i;
 
