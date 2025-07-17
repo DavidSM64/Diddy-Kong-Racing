@@ -2286,11 +2286,11 @@ s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
         if (obj->modelInstances[i] != NULL && obj->modelInstances[i]->objModel->normals != NULL) {
             set_shading_properties(obj->shading, obj->header->shadeAmbient, obj->header->shadeDiffuse, 0,
                                    obj->header->shadeAngleY, obj->header->shadeAngleZ);
-            if (obj->header->shadeIntensity != 0) {
+            if (obj->header->shadeIntensityy != 0) {
                 obj->shading->lightR = obj->header->unk3A;
                 obj->shading->lightG = obj->header->unk3B;
                 obj->shading->lightB = obj->header->unk3C;
-                obj->shading->lightIntensity = obj->header->shadeIntensity;
+                obj->shading->lightIntensity = obj->header->shadeIntensityy;
                 obj->shading->lightDirX = -(obj->shading->shadowDirX >> 1);
                 obj->shading->lightDirY = -(obj->shading->shadowDirY >> 1);
                 obj->shading->lightDirZ = -(obj->shading->shadowDirZ >> 1);
@@ -7840,11 +7840,11 @@ UNUSED void add_shading_properties(Object *obj, f32 ambientChange, f32 diffuseCh
         set_shading_properties(obj->shading, obj->shading->ambient, obj->shading->diffuse,
                                (obj->shading->unk22 + angleX), (obj->shading->unk24 + angleY),
                                (obj->shading->unk26 + angleZ));
-        if (obj->header->shadeIntensity != 0) {
+        if (obj->header->shadeIntensityy != 0) {
             obj->shading->lightR = obj->header->unk3A;
             obj->shading->lightG = obj->header->unk3B;
             obj->shading->lightB = obj->header->unk3C;
-            obj->shading->lightIntensity = obj->header->shadeIntensity;
+            obj->shading->lightIntensity = obj->header->shadeIntensityy;
             obj->shading->lightDirX = -(obj->shading->shadowDirX >> 1);
             obj->shading->lightDirY = -(obj->shading->shadowDirY >> 1);
             obj->shading->lightDirZ = -(obj->shading->shadowDirZ >> 1);
@@ -7967,7 +7967,7 @@ void calc_dynamic_lighting_for_object_1(Object *object, ObjectModel *model, s16 
     objRot.z_rotation = -object->trans.rotation.z_rotation;
     vec3f_rotate_ypr(&objRot, &direction);
 
-    if (object->header->shadeIntensity != 0 && arg2) {
+    if (object->header->shadeIntensityy != 0 && arg2) {
         mtxf_transform_dir(get_projection_matrix_f32(), &direction, &direction);
     }
 

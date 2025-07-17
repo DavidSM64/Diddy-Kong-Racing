@@ -457,7 +457,7 @@ void light_update_shading(Object *object) {
     u8 objTypeMask;
     s32 i;
 
-    if (object->header->shadeIntensity == 0) {
+    if (object->header->shadeIntensityy == 0) {
         switch (object->header->modelType) {
             case OBJECT_MODEL_TYPE_3D_MODEL:
                 objTypeMask = 2;
