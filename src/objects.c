@@ -2899,7 +2899,7 @@ void obj_update(s32 updateRate) {
     }
 
     // Update lights
-    lightUpdateLights(updateRate);
+    light_update_all(updateRate);
     if (get_light_count() > 0) {
         for (i = gObjectListStart; i < gObjectCount; i++) {
             obj = gObjPtrList[i];

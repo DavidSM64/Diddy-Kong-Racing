@@ -266,7 +266,7 @@ UNUSED void light_setup_intensity_change(ObjectLight *light, s32 target, s32 dif
 /**
  * Loops through all active lights and updates their properties.
  */
-void lightUpdateLights(s32 updateRate) {
+void light_update_all(s32 updateRate) {
     s32 i;
     for (i = 0; i < gNumActiveLights; i++) {
         light_update(gActiveLights[i], updateRate);

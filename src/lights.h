@@ -90,7 +90,7 @@ typedef struct ObjectLightShadeProperties {
 } ObjectLightShadeProperties;
 
 void free_lights(void);
-void lightUpdateLights(s32 updateRate);
+void light_update_all(s32 updateRate);
 void destroy_object_light(ObjectLight *light);
 s32 get_light_count(void);
 f32 light_distance_calc(ObjectLight *light);
