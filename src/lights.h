@@ -13,6 +13,12 @@ enum LightType {
     LIGHT_UNK5,
 };
 
+enum LightMask {
+    LIGHT_MASK_NONE = 0,
+    LIGHT_MASK_UNK2 = 1 << 1,
+    LIGHT_MASK_UNK4 = 1 << 2,
+};
+
 typedef struct SubMiscAssetObjectHeader24 {
     u8 unk0;
     u8 unk1;

@@ -460,19 +460,19 @@ void light_update_shading(Object *object) {
     if (object->header->shadeIntensityy == 0) {
         switch (object->header->modelType) {
             case OBJECT_MODEL_TYPE_3D_MODEL:
-                objTypeMask = 2;
+                objTypeMask = LIGHT_MASK_UNK2;
                 break;
             case OBJECT_MODEL_TYPE_SPRITE_BILLBOARD:
-                objTypeMask = 4;
+                objTypeMask = LIGHT_MASK_UNK4;
                 break;
             case OBJECT_MODEL_TYPE_VEHICLE_PART:
-                objTypeMask = 4;
+                objTypeMask = LIGHT_MASK_UNK4;
                 break;
             case OBJECT_MODEL_TYPE_UNKNOWN3:
-                objTypeMask = 4;
+                objTypeMask = LIGHT_MASK_UNK4;
                 break;
             default:
-                objTypeMask = 0;
+                objTypeMask = LIGHT_MASK_NONE;
                 break;
         }
 
