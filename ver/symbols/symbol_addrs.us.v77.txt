@@ -480,7 +480,7 @@ resolve_collisions = 0x80031600;
 
 // lights.c .text
 lights_free = 0x80031B60;
-setup_lights = 0x80031BB8;
+lights_init = 0x80031BB8;
 light_add_from_level_object_entry = 0x80031CAC;
 light_add_from_object_header = 0x80031F88;
 light_disable = 0x80032210;

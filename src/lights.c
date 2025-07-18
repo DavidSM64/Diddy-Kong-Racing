@@ -49,7 +49,7 @@ void lights_free(void) {
  * Allocates RAM for all buffers containing light source properties.
  * Official Name: setupLights
  */
-void setup_lights(s32 count) {
+void lights_init(s32 count) {
     s32 i;
     u8 *buffer;
     s32 temp;

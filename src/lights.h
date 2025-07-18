@@ -106,7 +106,7 @@ ObjectLight *light_add_from_object_header(Object *obj, ObjectHeader24 *arg1);
 void light_update(ObjectLight *light, s32 updateRate);
 
 //Non Matching
-void setup_lights(s32 count);
+void lights_init(s32 count);
 void light_update_shading(Object *object);
 void light_update_ambience(void);
 
