@@ -6936,7 +6936,7 @@ void charselect_pick(void) {
     } else {
         // Character Deselected
         for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) {
-            if (gActivePlayersArray[i] && gCharselectStatus[i] != CHARSELECT_STATUS_UNCONFIRMED {
+            if (gActivePlayersArray[i] && gCharselectStatus[i] != CHARSELECT_STATUS_UNCONFIRMED) {
                 if (gMenuButtons[i] & B_BUTTON) {
                     gCharselectStatus[i] = CHARSELECT_STATUS_UNCONFIRMED;
                     gNumberOfReadyPlayers--;
