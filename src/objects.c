@@ -8584,14 +8584,14 @@ void obj_init_animobject(Object *animationObj, Object *animatedObj) {
     animatedObj->trans.rotation.x_rotation = animationObj->trans.rotation.x_rotation;
     anim->unk26 = 0;
     anim->unk3D = animEntry->channel;
-    anim->unk28 = animEntry->actorIndex;
+    anim->actorIndex = animEntry->actorIndex;
     anim->unk8 = (f32) animEntry->nodeSpeed * 0.1;
     anim->startDelay = normalise_time(animEntry->animationStartDelay);
     animatedObj->animationID = animEntry->objAnimIndex;
     animatedObj->animFrame = animEntry->unk16;
     anim->z = animEntry->objAnimSpeed;
     anim->y = 0;
-    anim->unk2C = animEntry->objAnimLoopType;
+    anim->loopType = animEntry->objAnimLoopType;
     anim->unk2E = animEntry->rotateType;
     anim->unk3E = animEntry->nextAnim;
     anim->unk3F = animEntry->unk2D;
@@ -8905,7 +8905,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
             temp_a0_3 = arg2->modelInstances[arg2->modelIndex]->objModel;
             if (arg2->animationID >= 0 && arg2->animationID < temp_a0_3->numberOfAnimations) {
                 var_s5 = (temp_a0_3->animations[arg2->animationID].animLength - 1) << 4;
-                switch (obj64->unk2C) {
+                switch (obj64->loopType) {
                     case 0:
                         obj64->y += obj64->z * sp114;
                         if (obj64->y >= var_s5) {
@@ -8957,7 +8957,7 @@ s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
         return func_800214E4(arg0, arg1);
     }
 
-    temp_a1_2 = obj64->unk28;
+    temp_a1_2 = obj64->actorIndex;
     for (var_s4 = 0; var_s4 < D_8011AE78 && temp_a1_2 != D_8011AE74[var_s4]->properties.animation.behaviourID;
          var_s4++) {}
     if (var_s4 >= D_8011AE78) {
@@ -9317,7 +9317,7 @@ void func_8002125C(Object *obj, LevelObjectEntry_Animation *entry, Object_Animat
         }
         obj->animationID = entry->objAnimIndex;
         animObj->z = entry->objAnimSpeed;
-        animObj->unk2C = entry->objAnimLoopType;
+        animObj->loopType = entry->objAnimLoopType;
     }
     if (entry->unk13 >= 0) {
         animObj->unk2F = entry->unk13;
@@ -9385,7 +9385,7 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
     }
     if (animObj->pauseCounter <= 0) {
         obj->trans.flags |= OBJ_FLAGS_INVISIBLE;
-        for (i = 0; (i < D_8011AE78 && animObj->unk28 != D_8011AE74[i]->properties.animation.behaviourID); i++) {
+        for (i = 0; (i < D_8011AE78 && animObj->actorIndex != D_8011AE74[i]->properties.animation.behaviourID); i++) {
             if (FALSE) {} // FAKEMATCH
         }
         obj_init_animobject(D_8011AE74[i], obj);
