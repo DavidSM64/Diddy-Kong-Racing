@@ -13597,7 +13597,7 @@ void set_player_selected_vehicle(s32 playerNum, s32 index) {
  * Returns the character select controller ID status.
  * 0 = choosing, 1 = chosen, and then set to 2.
  */
-s8 *charselect_status(void) {
+CharacterSelectStatus *charselect_status(void) {
     return gCharselectStatus;
 }
 
