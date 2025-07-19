@@ -2039,7 +2039,7 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
     Object_AnimatedObject *charSelect;
     s32 charCount;
     s32 playerIndex;
-    CharacterSelectStatus *status = NULL;
+    s8 *status = NULL;
     ModelInstance *modInst;
     u8 playerSelectIndices[4];
     u8 numCursors;

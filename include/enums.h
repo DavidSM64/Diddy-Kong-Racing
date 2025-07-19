@@ -31,12 +31,6 @@ typedef enum Character {
     NUMBER_OF_CHARACTERS
 } Character;
 
-typedef enum CharacterSelectStatus {
-    CHARSELECT_STATUS_UNCONFIRMED,
-    CHARSELECT_STATUS_CONFIRMED,
-    CHARSELECT_STATUS_READY,
-} CharacterSelectStatus;
-
 typedef enum Vehicle {
     VEHICLE_CAR,
     VEHICLE_HOVERCRAFT,

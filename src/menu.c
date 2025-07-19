@@ -295,7 +295,7 @@ CharacterSelectData (*gCurrCharacterSelectData)[10];
 s32 gTrackmenuLoadedLevel;              // Compared for equality to gTrackIdForPreview
 s8 gActivePlayersArray[MAXCONTROLLERS]; // Boolean value for each controller if it's active with a player.
 s32 gOpacityDecayTimer;
-CharacterSelectStatus gCharselectStatus[MAXCONTROLLERS];
+s8 gCharselectStatus[MAXCONTROLLERS];
 s32 gMenuStage;
 UNUSED s32 D_801263E4;
 s8 gPlayersCharacterArray[8]; // -1 = Non active player, or character id if >= 0
@@ -13597,7 +13597,7 @@ void set_player_selected_vehicle(s32 playerNum, s32 index) {
  * Returns the character select controller ID status.
  * 0 = choosing, 1 = chosen, and then set to 2.
  */
-CharacterSelectStatus *charselect_status(void) {
+s8 *charselect_status(void) {
     return gCharselectStatus;
 }
 
