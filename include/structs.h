@@ -815,7 +815,7 @@ typedef struct ObjectHeader {
     /* 0x3A */ u8 unk3A;
     /* 0x3B */ u8 unk3B;
     /* 0x3C */ u8 unk3C;
-    /* 0x3D */ u8 unk3D;
+    /* 0x3D */ u8 shadeIntensityy;
     /* 0x3E */ s16 shadeAngleY;
     /* 0x40 */ s16 shadeAngleZ;
     /* 0x42 */ s16 unk42;

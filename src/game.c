@@ -489,7 +489,7 @@ void level_load(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     }
     music_voicelimit_set(gCurrentLevelHeader->voiceLimit);
     music_volume_reset();
-    setup_lights(32);
+    lights_init(32);
     var_s0 = VEHICLE_CAR;
     if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_PLAYER_VEHICLES) {
         var_s0 = gCurrentLevelHeader->unk4F[vehicleId];
@@ -685,7 +685,7 @@ void level_free(void) {
     music_stop();
     music_jingle_stop();
     music_channel_reset_all();
-    free_lights();
+    lights_free();
     free_track();
     audspat_reset();
     sound_volume_change(VOLUME_NORMAL);

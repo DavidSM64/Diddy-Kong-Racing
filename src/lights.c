@@ -11,10 +11,10 @@
 /************ .data ************/
 
 ObjectLight **gActiveLights = NULL;
-ObjectLight *D_800DC954 = NULL;
+ObjectLight *gActiveLightAttrs = NULL;
 s32 gMaxLights = 0;
 s32 gNumActiveLights = 0;
-unk800DC960 *D_800DC960 = NULL;
+ObjectLightShadeProperties *gShadeBuffer = NULL;
 Vec3f *gLightDirs = NULL;
 s32 numLights = 0; // Currently unknown, might be a different type.
 
@@ -33,12 +33,12 @@ f32 gLightDiffZ;
  * Free all lights from RAM.
  * Official Name: freeLights
  */
-void free_lights(void) {
+void lights_free(void) {
     if (gActiveLights != NULL) {
         mempool_free(gActiveLights);
         gActiveLights = NULL;
-        D_800DC954 = NULL;
-        D_800DC960 = NULL;
+        gActiveLightAttrs = NULL;
+        gShadeBuffer = NULL;
         gLightDirs = NULL;
     }
     gNumActiveLights = 0;
@@ -46,30 +46,34 @@ void free_lights(void) {
 }
 
 /**
+ * Allocates RAM for all buffers containing light source properties.
  * Official Name: setupLights
  */
-void setup_lights(s32 count) {
+void lights_init(s32 count) {
     s32 i;
     u8 *buffer;
     s32 temp;
 
-    free_lights();
+    lights_free();
     gMaxLights = count;
     buffer = (u8 *) mempool_alloc_safe(
-        gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(unk800DC960) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
+        gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(ObjectLightShadeProperties) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
 
     temp = gMaxLights;
     gActiveLights = (ObjectLight **) buffer;
     buffer += temp * sizeof(ObjectLight *);
-    D_800DC954 = (ObjectLight *) buffer;
-    D_800DC960 = (unk800DC960 *) ((u32) D_800DC954 + temp * sizeof(ObjectLight));
-    gLightDirs = (Vec3f *) ((u32) D_800DC960 + temp * sizeof(unk800DC960));
+    gActiveLightAttrs = (ObjectLight *) buffer;
+    gShadeBuffer = (ObjectLightShadeProperties *) ((u32) gActiveLightAttrs + temp * sizeof(ObjectLight));
+    gLightDirs = (Vec3f *) ((u32) gShadeBuffer + temp * sizeof(ObjectLightShadeProperties));
     for (i = 0; i < gMaxLights; i++) {
-        gActiveLights[i] = &D_800DC954[i];
+        gActiveLights[i] = &gActiveLightAttrs[i];
     }
 }
 
-ObjectLight *func_80031CAC(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) {
+/**
+ * Adds a light source from a level object entry.
+ */
+ObjectLight *light_add_from_level_object_entry(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) {
     s32 i;
     ObjectLight *light;
     LevelHeader *levelHeader;
@@ -96,18 +100,18 @@ ObjectLight *func_80031CAC(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) 
             light->pos.y = lightEntry->common.y;
             light->pos.z = lightEntry->common.z;
         }
-        light->colourR = lightEntry->unkA << 16;
-        light->unk2C = 0;
-        light->unk3C = 0;
-        light->colourG = lightEntry->unkB << 16;
-        light->unk30 = 0;
-        light->unk3E = 0;
-        light->colourB = lightEntry->unkC << 16;
-        light->unk34 = 0;
-        light->unk40 = 0;
-        light->intensity = lightEntry->unkD << 16;
-        light->unk38 = 0;
-        light->unk42 = 0;
+        light->colourR = lightEntry->colourR << 16;
+        light->targetColourChangeRateR = 0;
+        light->targetColourDiffR = 0;
+        light->colourG = lightEntry->colourG << 16;
+        light->targetColourChangeRateG = 0;
+        light->targetColourDiffG = 0;
+        light->colourB = lightEntry->colourB << 16;
+        light->targetColourChangeRateB = 0;
+        light->targetColourDiffB = 0;
+        light->intensity = lightEntry->intensity << 16;
+        light->targetIntensityChangeRate = 0;
+        light->targetIntensityDiff = 0;
         light->unk44 = NULL;
         if (lightEntry->unk1C < 7) {
             levelHeader = level_header();
@@ -123,7 +127,7 @@ ObjectLight *func_80031CAC(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) 
                 // clang-format on
             }
         }
-        light->radius = lightEntry->unkE;
+        light->radius = lightEntry->radius;
         light->unk60 = lightEntry->unk10;
         light->unk64 = lightEntry->unk12;
         light->radiusSquare = light->radius * light->radius;
@@ -136,7 +140,7 @@ ObjectLight *func_80031CAC(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) 
         light->unk7A = (lightEntry->unk1A) ? 0xFFFF : 0;
         light->unk7A = 0;
         light->unk5 = 1;
-        func_80032424(light, 0);
+        light_update(light, 0);
     }
     return light;
 }
@@ -144,7 +148,7 @@ ObjectLight *func_80031CAC(Object *obj, LevelObjectEntry_RgbaLight *lightEntry) 
 /**
  * Official Name: addObjectLight
  */
-ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
+ObjectLight *light_add_from_object_header(Object *obj, ObjectHeader24 *arg1) {
     s32 i;
     ObjectLight *light;
 
@@ -164,17 +168,17 @@ ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
         light->pos.y = light->homeY;
         light->pos.z = light->homeZ;
         light->colourR = arg1->unk2 << 16;
-        light->unk2C = 0;
-        light->unk3C = 0;
+        light->targetColourChangeRateR = 0;
+        light->targetColourDiffR = 0;
         light->colourG = arg1->unk3 << 16;
-        light->unk30 = 0;
-        light->unk3E = 0;
+        light->targetColourChangeRateG = 0;
+        light->targetColourDiffG = 0;
         light->colourB = arg1->unk4 << 16;
-        light->unk34 = 0;
-        light->unk40 = 0;
+        light->targetColourChangeRateB = 0;
+        light->targetColourDiffB = 0;
         light->intensity = arg1->unk5 << 16;
-        light->unk38 = 0;
-        light->unk42 = 0;
+        light->targetIntensityChangeRate = 0;
+        light->targetIntensityDiff = 0;
         if (arg1->unk6 != 0xFFFF) {
             light->unk44_asset = (MiscAssetObjectHeader24 *) get_misc_asset(arg1->unk6);
             light->unk48 = light->unk44_asset->unk0;
@@ -200,7 +204,7 @@ ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
         light->unk76 = 0;
         light->unk7A = 0;
         light->unk5 = 1;
-        func_80032424(light, 0);
+        light_update(light, 0);
     }
     return light;
 }
@@ -209,7 +213,7 @@ ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
  * Disable this objects light data.
  * Official Name: turnLightOff?
  */
-UNUSED void disable_object_light(ObjectLight *light) {
+UNUSED void light_disable(ObjectLight *light) {
     light->enabled = FALSE;
 }
 
@@ -217,14 +221,14 @@ UNUSED void disable_object_light(ObjectLight *light) {
  * Enable this objects light data.
  * Official Name: turnLightOn?
  */
-UNUSED void enable_object_light(ObjectLight *light) {
+UNUSED void light_enable(ObjectLight *light) {
     light->enabled = TRUE;
 }
 
 /**
  * Toggle this objects light data on or off.
  */
-UNUSED void toggle_object_light(ObjectLight *light) {
+UNUSED void light_toggle(ObjectLight *light) {
     if (light->enabled == TRUE) {
         light->enabled = FALSE;
     } else {
@@ -232,39 +236,49 @@ UNUSED void toggle_object_light(ObjectLight *light) {
     }
 }
 
-UNUSED void func_80032248(ObjectLight *light, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
-    if (arg2 > 0) {
-        light->unk3C = arg2;
-        light->unk2C = ((arg1 << 0x10) - light->colourR) / arg2;
+/**
+ * Initialises a gradual change of colour for a light source.
+ */
+UNUSED void light_setup_colour_change(ObjectLight *light, s32 targetR, s32 diffR, s32 targetG, s32 diffG, s32 targetB, s32 diffB) {
+    if (diffR > 0) {
+        light->targetColourDiffR = diffR;
+        light->targetColourChangeRateR = ((targetR << 0x10) - light->colourR) / diffR;
     }
-    if (arg4 > 0) {
-        light->unk3E = arg4;
-        light->unk30 = ((arg3 << 0x10) - light->colourG) / arg4;
+    if (diffG > 0) {
+        light->targetColourDiffG = diffG;
+        light->targetColourChangeRateG = ((targetG << 0x10) - light->colourG) / diffG;
     }
-    if (arg6 > 0) {
-        light->unk34 = ((arg5 << 0x10) - light->colourB) / arg6;
-        light->unk40 = arg6;
+    if (diffB > 0) {
+        light->targetColourChangeRateB = ((targetB << 0x10) - light->colourB) / diffB;
+        light->targetColourDiffB = diffB;
     }
 }
 
-UNUSED void func_80032344(ObjectLight *light, s32 arg1, s32 arg2) {
-    if (arg2 > 0) {
-        light->unk42 = arg2;
-        light->unk38 = ((arg1 << 0x10) - light->intensity) / arg2;
+/**
+ * Initialises a gradual change of intensity for a light source.
+ */
+UNUSED void light_setup_intensity_change(ObjectLight *light, s32 target, s32 diff) {
+    if (diff > 0) {
+        light->targetIntensityDiff = diff;
+        light->targetIntensityChangeRate = ((target << 0x10) - light->intensity) / diff;
     }
 }
 
 /**
  * Loops through all active lights and updates their properties.
+ * Official Name: lightUpdateLights
  */
-void lightUpdateLights(s32 updateRate) {
+void light_update_all(s32 updateRate) {
     s32 i;
     for (i = 0; i < gNumActiveLights; i++) {
-        func_80032424(gActiveLights[i], updateRate);
+        light_update(gActiveLights[i], updateRate);
     }
 }
 
-void func_80032424(ObjectLight *light, s32 updateRate) {
+/**
+ * Updates an active light's properties.
+ */
+void light_update(ObjectLight *light, s32 updateRate) {
     Vec3s rotation;
     SubMiscAssetObjectHeader24 *var_a3;
     s32 temp_v0;
@@ -301,44 +315,44 @@ void func_80032424(ObjectLight *light, s32 updateRate) {
         light->colourB = ((var_a3->unk2 - temp_v1->unk2) * light->unk4C * temp_v0) + (temp_v1->unk2 << 0x10);
         light->intensity = ((var_a3->unk3 - temp_v1->unk3) * light->unk4C * temp_v0) + (temp_v1->unk3 << 0x10);
     } else {
-        if (light->unk3C != 0) {
-            temp_v0 = light->unk3C;
-            if (updateRate < light->unk3C) {
-                light->colourR += light->unk2C * updateRate;
-                light->unk3C -= updateRate;
+        if (light->targetColourDiffR != 0) {
+            temp_v0 = light->targetColourDiffR;
+            if (updateRate < light->targetColourDiffR) {
+                light->colourR += light->targetColourChangeRateR * updateRate;
+                light->targetColourDiffR -= updateRate;
             } else {
-                light->unk3C = 0;
-                light->colourR += light->unk2C * temp_v0;
+                light->targetColourDiffR = 0;
+                light->colourR += light->targetColourChangeRateR * temp_v0;
             }
         }
-        if (light->unk3E != 0) {
-            temp_v0 = light->unk3E;
-            if (updateRate < light->unk3E) {
-                light->colourG += light->unk30 * updateRate;
-                light->unk3E -= updateRate;
+        if (light->targetColourDiffG != 0) {
+            temp_v0 = light->targetColourDiffG;
+            if (updateRate < light->targetColourDiffG) {
+                light->colourG += light->targetColourChangeRateG * updateRate;
+                light->targetColourDiffG -= updateRate;
             } else {
-                light->unk3E = 0;
-                light->colourG += light->unk30 * temp_v0;
+                light->targetColourDiffG = 0;
+                light->colourG += light->targetColourChangeRateG * temp_v0;
             }
         }
-        if (light->unk40 != 0) {
-            temp_v0 = light->unk40;
-            if (updateRate < light->unk40) {
-                light->colourB += light->unk34 * updateRate;
-                light->unk40 -= updateRate;
+        if (light->targetColourDiffB != 0) {
+            temp_v0 = light->targetColourDiffB;
+            if (updateRate < light->targetColourDiffB) {
+                light->colourB += light->targetColourChangeRateB * updateRate;
+                light->targetColourDiffB -= updateRate;
             } else {
-                light->unk40 = 0;
-                light->colourB += light->unk34 * temp_v0;
+                light->targetColourDiffB = 0;
+                light->colourB += light->targetColourChangeRateB * temp_v0;
             }
         }
-        if (light->unk42 != 0) {
-            temp_v0 = light->unk42;
-            if (updateRate < light->unk42) {
-                light->intensity += light->unk38 * updateRate;
-                light->unk42 -= updateRate;
+        if (light->targetIntensityDiff != 0) {
+            temp_v0 = light->targetIntensityDiff;
+            if (updateRate < light->targetIntensityDiff) {
+                light->intensity += light->targetIntensityChangeRate * updateRate;
+                light->targetIntensityDiff -= updateRate;
             } else {
-                light->unk42 = 0;
-                light->intensity += light->unk38 * temp_v0;
+                light->targetIntensityDiff = 0;
+                light->intensity += light->targetIntensityChangeRate * temp_v0;
             }
         }
     }
@@ -369,21 +383,21 @@ void func_80032424(ObjectLight *light, s32 updateRate) {
         light->unk5 = 1;
     }
     if (light->unk5) {
-        light->unk50 = light->pos.x - light->radius;
-        light->unk56 = light->pos.x + light->radius;
+        light->minX = light->pos.x - light->radius;
+        light->maxX = light->pos.x + light->radius;
         if (light->unk0 == 1) {
-            light->unk52 = light->pos.y - light->radius;
-            light->unk58 = light->pos.y + light->radius;
+            light->minY = light->pos.y - light->radius;
+            light->maxY = light->pos.y + light->radius;
         } else {
-            light->unk52 = light->pos.y - light->unk60;
-            light->unk58 = light->pos.y + light->unk60;
+            light->minY = light->pos.y - light->unk60;
+            light->maxY = light->pos.y + light->unk60;
         }
         if (light->unk0 == 0) {
-            light->unk54 = light->pos.z - light->unk64;
-            light->unk5A = light->pos.z + light->unk64;
+            light->minZ = light->pos.z - light->unk64;
+            light->maxZ = light->pos.z + light->unk64;
         } else {
-            light->unk54 = light->pos.z - light->radius;
-            light->unk5A = light->pos.z + light->radius;
+            light->minZ = light->pos.z - light->radius;
+            light->maxZ = light->pos.z + light->radius;
         }
         if (light->unk1 == 2) {
             light->direction.z = -1.0f;
@@ -405,7 +419,7 @@ void func_80032424(ObjectLight *light, s32 updateRate) {
 /**
  * Official Name: killLight?
  */
-void func_80032BAC(ObjectLight *light) {
+void light_remove(ObjectLight *light) {
     ObjectLight *entry = NULL;
     s32 i;
     for (i = 0; (i < gNumActiveLights) && (entry == NULL); i++) {
@@ -426,36 +440,39 @@ void func_80032BAC(ObjectLight *light) {
  * Return the number of active lights.
  * Official Name: lightGetLights?
  */
-s32 get_light_count(void) {
+s32 light_count(void) {
     return gNumActiveLights;
 }
 
-void func_80032C7C(Object *object) {
+/**
+ * Updates the shading on an object based on nearby high-intensity light sources.
+ */
+void light_update_shading(Object *object) {
     ObjectLight *light;
     s16 primIndex, secIndex;
     f32 intensity;
     s16 objX;
     s16 objY;
     s16 objZ;
-    u8 sp64;
+    u8 objTypeMask;
     s32 i;
 
-    if (object->header->unk3D == 0) {
+    if (object->header->shadeIntensityy == 0) {
         switch (object->header->modelType) {
             case OBJECT_MODEL_TYPE_3D_MODEL:
-                sp64 = 2;
+                objTypeMask = LIGHT_MASK_UNK2;
                 break;
             case OBJECT_MODEL_TYPE_SPRITE_BILLBOARD:
-                sp64 = 4;
+                objTypeMask = LIGHT_MASK_UNK4;
                 break;
             case OBJECT_MODEL_TYPE_VEHICLE_PART:
-                sp64 = 4;
+                objTypeMask = LIGHT_MASK_UNK4;
                 break;
             case OBJECT_MODEL_TYPE_UNKNOWN3:
-                sp64 = 4;
+                objTypeMask = LIGHT_MASK_UNK4;
                 break;
             default:
-                sp64 = 0;
+                objTypeMask = LIGHT_MASK_NONE;
                 break;
         }
 
@@ -467,15 +484,15 @@ void func_80032C7C(Object *object) {
 
         for (i = 0; i < gNumActiveLights; i++) {
             light = gActiveLights[i];
-            if ((light->unk2 & sp64) && (light->enabled == TRUE) && (objX >= light->unk50) && (light->unk56 >= objX) &&
-                (objY >= light->unk52) && (light->unk58 >= objY) && (objZ >= light->unk54) && (light->unk5A >= objZ)) {
+            if ((light->unk2 & objTypeMask) && (light->enabled == TRUE) && (objX >= light->minX) && (light->maxX >= objX) &&
+                (objY >= light->minY) && (light->maxY >= objY) && (objZ >= light->minZ) && (light->maxZ >= objZ)) {
                 if (light->unk0 == 0) {
                     if (light->intensity >= 0x10000) {
-                        D_800DC960[numLights].lightObj = light;
-                        D_800DC960[numLights].colourR = light->colourR >> 0x10;
-                        D_800DC960[numLights].colourG = light->colourG >> 0x10;
-                        D_800DC960[numLights].colourB = light->colourB >> 0x10;
-                        D_800DC960[numLights].intensity = light->intensity >> 0x10;
+                        gShadeBuffer[numLights].lightObj = light;
+                        gShadeBuffer[numLights].colourR = light->colourR >> 0x10;
+                        gShadeBuffer[numLights].colourG = light->colourG >> 0x10;
+                        gShadeBuffer[numLights].colourB = light->colourB >> 0x10;
+                        gShadeBuffer[numLights].intensity = light->intensity >> 0x10;
                         numLights++;
                     }
                 } else {
@@ -511,11 +528,11 @@ void func_80032C7C(Object *object) {
                                     gLightDirs[numLights].y = gLightDiffY;
                                     gLightDirs[numLights].z = gLightDiffZ;
                                 }
-                                D_800DC960[numLights].lightObj = light;
-                                D_800DC960[numLights].colourR = light->colourR >> 0x10;
-                                D_800DC960[numLights].colourG = light->colourG >> 0x10;
-                                D_800DC960[numLights].colourB = light->colourB >> 0x10;
-                                D_800DC960[numLights].intensity = (u8) intensity;
+                                gShadeBuffer[numLights].lightObj = light;
+                                gShadeBuffer[numLights].colourR = light->colourR >> 0x10;
+                                gShadeBuffer[numLights].colourG = light->colourG >> 0x10;
+                                gShadeBuffer[numLights].colourB = light->colourB >> 0x10;
+                                gShadeBuffer[numLights].intensity = (u8) intensity;
                                 numLights++;
                             }
                         }
@@ -530,16 +547,16 @@ void func_80032C7C(Object *object) {
                 object->shading->lightIntensity = 0;
                 object->shading->secondaryLightIntensity = 0;
             } else if (numLights == 1) {
-                object->shading->lightR = D_800DC960[0].colourR;
-                object->shading->lightG = D_800DC960[0].colourG;
-                object->shading->lightB = D_800DC960[0].colourB;
-                object->shading->lightIntensity = D_800DC960[0].intensity;
+                object->shading->lightR = gShadeBuffer[0].colourR;
+                object->shading->lightG = gShadeBuffer[0].colourG;
+                object->shading->lightB = gShadeBuffer[0].colourB;
+                object->shading->lightIntensity = gShadeBuffer[0].intensity;
                 object->shading->secondaryLightIntensity = 0;
                 object->shading->lightDirX = gLightDirs[0].x * 8192.0f;
                 object->shading->lightDirY = gLightDirs[0].y * 8192.0f;
                 object->shading->lightDirZ = gLightDirs[0].z * 8192.0f;
             } else {
-                if (D_800DC960[1].intensity < D_800DC960[0].intensity) {
+                if (gShadeBuffer[1].intensity < gShadeBuffer[0].intensity) {
                     primIndex = 0;
                     secIndex = 1;
                 } else {
@@ -547,8 +564,8 @@ void func_80032C7C(Object *object) {
                     secIndex = 0;
                 }
                 for (i = 2; i < numLights; i++) {
-                    if (D_800DC960[secIndex].intensity < D_800DC960[i].intensity) {
-                        if (D_800DC960[primIndex].intensity < D_800DC960[i].intensity) {
+                    if (gShadeBuffer[secIndex].intensity < gShadeBuffer[i].intensity) {
+                        if (gShadeBuffer[primIndex].intensity < gShadeBuffer[i].intensity) {
                             secIndex = primIndex;
                             primIndex = i;
                         } else {
@@ -556,31 +573,32 @@ void func_80032C7C(Object *object) {
                         }
                     }
                 }
-                object->shading->lightR = D_800DC960[primIndex].colourR;
-                object->shading->lightG = D_800DC960[primIndex].colourG;
-                object->shading->lightB = D_800DC960[primIndex].colourB;
-                object->shading->lightIntensity = D_800DC960[primIndex].intensity;
+                object->shading->lightR = gShadeBuffer[primIndex].colourR;
+                object->shading->lightG = gShadeBuffer[primIndex].colourG;
+                object->shading->lightB = gShadeBuffer[primIndex].colourB;
+                object->shading->lightIntensity = gShadeBuffer[primIndex].intensity;
                 object->shading->lightDirX = gLightDirs[primIndex].x * 8192.0f;
                 object->shading->lightDirY = gLightDirs[primIndex].y * 8192.0f;
                 object->shading->lightDirZ = gLightDirs[primIndex].z * 8192.0f;
 
-                object->shading->secondaryLightR = D_800DC960[secIndex].colourR;
-                object->shading->secondaryLightG = D_800DC960[secIndex].colourG;
-                object->shading->secondaryLightB = D_800DC960[secIndex].colourB;
-                object->shading->secondaryLightIntensity = D_800DC960[secIndex].intensity;
+                object->shading->secondaryLightR = gShadeBuffer[secIndex].colourR;
+                object->shading->secondaryLightG = gShadeBuffer[secIndex].colourG;
+                object->shading->secondaryLightB = gShadeBuffer[secIndex].colourB;
+                object->shading->secondaryLightIntensity = gShadeBuffer[secIndex].intensity;
                 object->shading->secondaryLightDirX = gLightDirs[secIndex].x * 8192.0f;
                 object->shading->secondaryLightDirY = gLightDirs[secIndex].y * 8192.0f;
                 object->shading->secondaryLightDirZ = gLightDirs[secIndex].z * 8192.0f;
             }
         } else {
+            // Ambient light shading
             if (numLights > 0) {
                 if (numLights >= 2) {
-                    func_800337E4();
+                    light_update_ambience();
                 }
-                object->shading->lightR = D_800DC960[0].colourR;
-                object->shading->lightG = D_800DC960[0].colourG;
-                object->shading->lightB = D_800DC960[0].colourB;
-                object->shading->lightIntensity = D_800DC960[0].intensity;
+                object->shading->lightR = gShadeBuffer[0].colourR;
+                object->shading->lightG = gShadeBuffer[0].colourG;
+                object->shading->lightB = gShadeBuffer[0].colourB;
+                object->shading->lightIntensity = gShadeBuffer[0].intensity;
             } else {
                 object->shading->lightR = 255;
                 object->shading->lightG = 255;
@@ -591,32 +609,36 @@ void func_80032C7C(Object *object) {
     }
 }
 
-void func_800337E4(void) {
-    s32 temp_lo;
+/**
+ * In the case of ambient lighting for object shading, mix ambient light sources based on
+ * their intensity into the first entry in the shading buffer.
+ */
+void light_update_ambience(void) {
+    s32 intensityRatio;
     s32 i;
 
     for (i = 1; i < numLights; i++) {
-        if (D_800DC960[i].intensity >= 2) {
-            if (D_800DC960[0].intensity >= D_800DC960[i].intensity) {
-                temp_lo = (D_800DC960[i].intensity << 16) / D_800DC960[0].intensity;
-                D_800DC960[0].colourR += (D_800DC960[i].colourR * temp_lo) >> 16;
-                D_800DC960[0].colourG += (D_800DC960[i].colourG * temp_lo) >> 16;
-                D_800DC960[0].colourB += (D_800DC960[i].colourB * temp_lo) >> 16;
+        if (gShadeBuffer[i].intensity >= 2) {
+            if (gShadeBuffer[0].intensity >= gShadeBuffer[i].intensity) {
+                intensityRatio = (gShadeBuffer[i].intensity << 16) / gShadeBuffer[0].intensity;
+                gShadeBuffer[0].colourR += (gShadeBuffer[i].colourR * intensityRatio) >> 16;
+                gShadeBuffer[0].colourG += (gShadeBuffer[i].colourG * intensityRatio) >> 16;
+                gShadeBuffer[0].colourB += (gShadeBuffer[i].colourB * intensityRatio) >> 16;
             } else {
-                temp_lo = (D_800DC960[0].intensity << 16) / D_800DC960[i].intensity;
-                D_800DC960[0].colourR = ((D_800DC960[0].colourR * temp_lo) >> 16) + D_800DC960[i].colourR;
-                D_800DC960[0].colourG = ((D_800DC960[0].colourG * temp_lo) >> 16) + D_800DC960[i].colourG;
-                D_800DC960[0].colourB = ((D_800DC960[0].colourB * temp_lo) >> 16) + D_800DC960[i].colourB;
-                D_800DC960[0].intensity = D_800DC960[i].intensity;
+                intensityRatio = (gShadeBuffer[0].intensity << 16) / gShadeBuffer[i].intensity;
+                gShadeBuffer[0].colourR = ((gShadeBuffer[0].colourR * intensityRatio) >> 16) + gShadeBuffer[i].colourR;
+                gShadeBuffer[0].colourG = ((gShadeBuffer[0].colourG * intensityRatio) >> 16) + gShadeBuffer[i].colourG;
+                gShadeBuffer[0].colourB = ((gShadeBuffer[0].colourB * intensityRatio) >> 16) + gShadeBuffer[i].colourB;
+                gShadeBuffer[0].intensity = gShadeBuffer[i].intensity;
             }
-            if (D_800DC960[0].colourR >= 256) {
-                D_800DC960[0].colourR = 255;
+            if (gShadeBuffer[0].colourR >= 256) {
+                gShadeBuffer[0].colourR = 255;
             }
-            if (D_800DC960[0].colourG >= 256) {
-                D_800DC960[0].colourG = 255;
+            if (gShadeBuffer[0].colourG >= 256) {
+                gShadeBuffer[0].colourG = 255;
             }
-            if (D_800DC960[0].colourB >= 256) {
-                D_800DC960[0].colourB = 255;
+            if (gShadeBuffer[0].colourB >= 256) {
+                gShadeBuffer[0].colourB = 255;
             }
         }
     }
