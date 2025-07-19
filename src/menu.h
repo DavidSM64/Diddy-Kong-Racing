@@ -1,6 +1,7 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
+#include "enums.h"
 #include "structs.h"
 #include "PR/gbi.h"
 #include "font.h"
@@ -595,7 +596,7 @@ s8 get_character_id_from_slot(s32 slot);
 s8 get_character_id_from_slot_unused(s32 slot);
 s8 get_player_selected_vehicle(s32 playerNum);
 void set_player_selected_vehicle(s32 playerNum, s32 index);
-s8 *charselect_status(void);
+CharacterSelectStatus *charselect_status(void);
 s8 get_player_character(s32 controllerIndex);
 void enable_tracks_mode(s32 boolean);
 s32 is_in_tracks_mode(void);
