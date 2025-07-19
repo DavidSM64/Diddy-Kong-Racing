@@ -25,7 +25,7 @@ OSMesgQueue gEPCMesgQueue;
 OSMesg gEPCMesgBuf[8];
 OSMesg gEPCPIBuf[8];
 OSMesgQueue gEPCPIQueue;
-epcInfo gEpcInfo;
+OSThread gEpcInfo;
 u64 gEpcInfoStack1[STACKSIZE(STACK_EPCINFO1)];
 u64 gEpcInfoStack2[STACKSIZE(STACK_EPCINFO2)];
 s32 gObjectStackTrace[3];
@@ -137,7 +137,7 @@ void write_epc_data_to_cpak(void) {
         thread->context.fp0.f.f_odd = gObjectStackTrace[0];
         thread->context.fp0.f.f_even = gObjectStackTrace[1];
         thread->context.fp2.f.f_odd = gObjectStackTrace[2];
-        bcopy(thread, sp44, sizeof(epcInfo));
+        bcopy(thread, sp44, sizeof(OSThread));
         bcopy((void *) (u32) thread->context.sp, sp244, sizeof(sp244));
         zero = 0; // Why is this needed to match?
         v0 = func_80024594(&currentCount, &maxCount);
@@ -158,7 +158,7 @@ void write_epc_data_to_cpak(void) {
  * but only if CHEAT_EPC_LOCK_UP_DISPLAY is active.
  */
 void dump_memory_to_cpak(s32 epc, s32 size, u32 colourTag) {
-    epcInfo epcinfo;
+    OSThread epcinfo;
     s16 sp440[0x200];
     u8 sp240[0x200];
     u8 sp40[0x200];
@@ -169,15 +169,15 @@ void dump_memory_to_cpak(s32 epc, s32 size, u32 colourTag) {
 
     // This is checking if the EPC cheat is active
     if (get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY) {
-        bzero(&epcinfo, sizeof(epcInfo));
-        epcinfo.epc = epc & 0xFFFFFFFFFFFFFFFF; // fakematch
-        epcinfo.a0 = size;
-        epcinfo.a1 = colourTag;
-        epcinfo.cause = -1;
-        epcinfo.objectStackTrace[0] = gObjectStackTrace[0];
-        epcinfo.objectStackTrace[1] = gObjectStackTrace[1];
-        epcinfo.objectStackTrace[2] = gObjectStackTrace[2];
-        bcopy(&epcinfo, &sp40, sizeof(epcInfo));
+        bzero(&epcinfo, sizeof(OSThread));
+        epcinfo.context.pc = epc & 0xFFFFFFFFFFFFFFFF; // fakematch
+        epcinfo.context.a0 = size;
+        epcinfo.context.a1 = colourTag;
+        epcinfo.context.cause = -1;
+        epcinfo.context.fp0.f.f_odd = gObjectStackTrace[0];
+        epcinfo.context.fp0.f.f_even = gObjectStackTrace[1];
+        epcinfo.context.fp2.f.f_odd = gObjectStackTrace[2];
+        bcopy(&epcinfo, &sp40, sizeof(OSThread));
         bzero(&sp240, sizeof(sp240));
         v0 = func_80024594(&currentCount, &size);
         for (i = 0; i < size; i++) {
@@ -214,7 +214,7 @@ s32 get_lockup_status(void) {
     s32 fileNum;
     s32 controllerIndex = 0;
     struct {
-        u8 epcInfo[_ALIGN128(sizeof(epcInfo))];
+        u8 epcInfo[_ALIGN128(sizeof(OSThread))];
         u64 epcInfoStack1[STACKSIZE(STACK_EPCINFO1)];
         u64 epcInfoStack2[STACKSIZE(STACK_EPCINFO2)];
     } dataFromControllerPak;
@@ -228,7 +228,7 @@ s32 get_lockup_status(void) {
             (get_file_number(controllerIndex, "CORE", "", &fileNum) == CONTROLLER_PAK_GOOD) &&
             (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *) &dataFromControllerPak,
                                            sizeof(dataFromControllerPak)) == CONTROLLER_PAK_GOOD)) {
-            bcopy(&dataFromControllerPak.epcInfo, &gEpcInfo, sizeof(epcInfo));
+            bcopy(&dataFromControllerPak.epcInfo, &gEpcInfo, sizeof(OSThread));
             bcopy(&dataFromControllerPak.epcInfoStack1, &gEpcInfoStack1, sizeof(dataFromControllerPak.epcInfoStack1));
             bcopy(&dataFromControllerPak.epcInfoStack2, &gEpcInfoStack2, sizeof(dataFromControllerPak.epcInfoStack2));
             sLockupStatus = TRUE;
@@ -254,7 +254,7 @@ void mode_lockup(s32 updateRate) {
     }
 }
 
-#define GET_REG(reg) (s32) epcinfo->reg
+#define GET_REG(reg) (s32) epcinfo->context.reg
 
 /**
  * Draw onscreen the four pages of the crash screen.
@@ -263,7 +263,7 @@ void mode_lockup(s32 updateRate) {
  * Page 4 appears to show the data of the EPC stack itself?
  */
 void render_epc_lock_up_display(void) {
-    epcInfo *epcinfo;
+    OSThread *epcinfo;
     char *objStatusString[3] = { "setup", "control", "print" };
     s32 offset;
     s32 s3;
@@ -274,11 +274,11 @@ void render_epc_lock_up_display(void) {
     switch (sLockupPage) {
         case EPC_PAGE_REGISTER:
             epcinfo = &gEpcInfo;
-            gObjectStackTrace[OBJECT_SPAWN] = epcinfo->objectStackTrace[OBJECT_SPAWN];
-            gObjectStackTrace[OBJECT_UPDATE] = epcinfo->objectStackTrace[OBJECT_UPDATE];
-            gObjectStackTrace[OBJECT_DRAW] = epcinfo->objectStackTrace[OBJECT_DRAW];
-            if (epcinfo->cause == 0xFFFFFFFF) {
-                render_printf(" epc\t\t0x%08x\n", epcinfo->epc);
+            gObjectStackTrace[OBJECT_SPAWN] = epcinfo->context.fp0.f.f_odd;
+            gObjectStackTrace[OBJECT_UPDATE] = epcinfo->context.fp0.f.f_even;
+            gObjectStackTrace[OBJECT_DRAW] = epcinfo->context.fp2.f.f_odd;
+            if (epcinfo->context.cause == 0xFFFFFFFF) {
+                render_printf(" epc\t\t0x%08x\n", epcinfo->context.pc);
                 render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", GET_REG(a0), GET_REG(a1));
                 for (i = 0; i < ARRAY_COUNT(gObjectStackTrace); i++) {
                     if (gObjectStackTrace[i] != OBJECT_CLEAR) {
@@ -293,11 +293,11 @@ void render_epc_lock_up_display(void) {
                 render_printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             } else {
                 epcinfo = &gEpcInfo;
-                render_printf(" Fault in thread %d\n", epcinfo->thread[0]);
-                render_printf(" epc\t\t0x%08x\n", epcinfo->epc);
-                render_printf(" cause\t\t0x%08x\n", epcinfo->cause);
-                render_printf(" sr\t\t0x%08x\n", epcinfo->sr);
-                render_printf(" badvaddr\t0x%08x\n", epcinfo->badvaddr);
+                render_printf(" Fault in thread %d\n", epcinfo->id);
+                render_printf(" epc\t\t0x%08x\n", epcinfo->context.pc);
+                render_printf(" cause\t\t0x%08x\n", epcinfo->context.cause);
+                render_printf(" sr\t\t0x%08x\n", epcinfo->context.sr);
+                render_printf(" badvaddr\t0x%08x\n", epcinfo->context.badvaddr);
                 for (i = 0; i < ARRAY_COUNT(gObjectStackTrace); i++) {
                     if (gObjectStackTrace[i] != OBJECT_CLEAR) {
                         if (!s3) {
