@@ -9,7 +9,7 @@ As of July 20, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 96.77%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 63.41%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 63.57%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -133,7 +133,7 @@ As of July 20, 2025, this is our current score:
         We are collecting silver coins in Star City. (7/8 silver coins)
  =============================================================================
                      ADVENTURE TWO (Cleanup & Documentation)
- ------------------------------ 63.41% Complete ------------------------------
+ ------------------------------ 63.57% Complete ------------------------------
                          # Documented functions: 1241
                          # Undocumented remaining: 411
                         # Functions named `func_*`: 250
@@ -142,7 +142,7 @@ As of July 20, 2025, this is our current score:
                    Balloons: 30/47, Keys: 3/4, Trophies: 2/5
                     T.T. Amulets: 3/4, Wizpig Amulets: 3/4
  -----------------------------------------------------------------------------
- We are participating in the Sherbet Island Trophy Race. (Round Four, Lap 2/3)
+ We are participating in the Sherbet Island Trophy Race. (Round Four, Lap 3/3)
  =============================================================================
 ```
 <!-- README_SCORE_END -->
