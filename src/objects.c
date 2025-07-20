@@ -80,10 +80,10 @@ s16 gTimeTrialCharacter = 0;
 u8 gHasGhostToSave = FALSE;
 u8 gTimeTrialStaffGhost = FALSE;
 u8 gBeatStaffGhost = FALSE;
-s8 D_800DC73C = 0;
-s8 D_800DC740 = 0;
+s8 gLeadPlayerIndex = 0;
+s8 gTwoActivePlayersInAdventure = FALSE; // Has basically the same purpose as gTwoPlayerAdvRace
 s8 gSwapLeadPlayer = FALSE;
-s8 D_800DC748 = FALSE;
+s8 gIsP2LeadPlayer = FALSE;
 Vertex *gBoostVerts[2] = { 0, 0 };
 Triangle *gBoostTris[2] = { 0, 0 };
 Object *gShieldEffectObject = NULL;
@@ -861,7 +861,7 @@ void clear_object_pointers(void) {
 void free_all_objects(void) {
     s32 i, len;
     timetrial_free_staff_ghost();
-    D_800DC748 = FALSE;
+    gIsP2LeadPlayer = FALSE;
     if (gRollingDemo) {
         rumble_init(TRUE);
     }
@@ -1147,10 +1147,10 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
     gPrevTimeTrialVehicle = D_8011ADC5;
     numPlayers = playerCount + 1;
     gNumRacers = 8;
-    D_800DC740 = 0;
+    gTwoActivePlayersInAdventure = FALSE;
     if (race_is_adventure_2P()) {
         numPlayers = 2;
-        D_800DC740 = 1;
+        gTwoActivePlayersInAdventure = TRUE;
         set_scene_viewport_num(VIEWPORT_LAYOUT_2_PLAYERS);
     }
     if (raceType == RACETYPE_HUBWORLD) {
@@ -1477,7 +1477,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
         gEventCountdown = 0;
     }
     if (raceType == RACETYPE_DEFAULT && (playerCount + 1) == 1 && is_in_adventure_two() == FALSE) {
-        if (race_is_adventure_2P() == FALSE) {
+        if (!race_is_adventure_2P()) {
             for (j = 0; j < 3; j++) {
                 racerEntry->common.objectID = ASSET_OBJECT_ID_POSARROW;
                 racerEntry->common.size = sizeof(LevelObjectEntryCommon);
@@ -1576,26 +1576,39 @@ s8 racetype_demo(void) {
     return gRollingDemo;
 }
 
-s8 func_8000E158(void) {
-    if (D_800DC740 != 0) {
-        return D_800DC73C;
+/**
+ * Returns true if we're in a race started by P2 in adventure mode.
+ */
+s8 is_race_started_by_player_two(void) {
+    if (gTwoActivePlayersInAdventure) {
+        return gLeadPlayerIndex;
     } else {
-        return 0;
+        return FALSE;
     }
 }
 
-s8 func_8000E184(void) {
-    return D_800DC748;
+/**
+ * Returns true if P2 is the lead player in adventure mode.
+ */
+s8 is_player_two_in_control(void) {
+    return gIsP2LeadPlayer;
 }
 
-void func_8000E194(void) {
-    D_800DC73C = 1 - D_800DC73C;
-    D_800DC740 = 0;
+/**
+ * Swaps the lead player index during 2P adventure mode.
+ */
+void toggle_lead_player_index(void) {
+    gLeadPlayerIndex = 1 - gLeadPlayerIndex;
+    gTwoActivePlayersInAdventure = FALSE;
 }
 
-void fontUseFont(void) {
-    D_800DC73C = 0;
-    D_800DC740 = 0;
+/**
+ * Resets the lead player index.
+ * Official name: fontUseFont (why?)
+ */
+void reset_lead_player_index(void) {
+    gLeadPlayerIndex = 0;
+    gTwoActivePlayersInAdventure = FALSE;
 }
 
 /**
@@ -6297,11 +6310,11 @@ void race_check_finish(s32 updateRate) {
                             if (gSwapLeadPlayer) {
                                 gSwapLeadPlayer = FALSE;
                                 swap_lead_player();
-                                if (D_800DC73C != 0) {
-                                    D_800DC748 = TRUE;
+                                if (gLeadPlayerIndex != 0) {
+                                    gIsP2LeadPlayer = TRUE;
                                 }
-                            } else if (D_800DC73C != 0) {
-                                D_800DC748 = TRUE;
+                            } else if (gLeadPlayerIndex != 0) {
+                                gIsP2LeadPlayer = TRUE;
                             }
                         }
                         postrace_start(0, 30);
@@ -6537,11 +6550,11 @@ void race_check_finish(s32 updateRate) {
                     if (gSwapLeadPlayer) {
                         gSwapLeadPlayer = FALSE;
                         swap_lead_player();
-                        if (D_800DC73C) {
-                            D_800DC748 = TRUE;
+                        if (gLeadPlayerIndex) {
+                            gIsP2LeadPlayer = TRUE;
                         }
-                    } else if (D_800DC73C) {
-                        D_800DC748 = TRUE;
+                    } else if (gLeadPlayerIndex) {
+                        gIsP2LeadPlayer = TRUE;
                     }
                 }
                 postrace_start(gFirstTimeFinish, 30);

@@ -4040,7 +4040,8 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     // Decide which player ID to assign to this object. Human players get a value from 0-3.
     // Computer players will be -1.
     if (player >= PLAYER_ONE && player <= PLAYER_FOUR) {
-        if (func_8000E158()) {
+        if (is_race_started_by_player_two()) {
+            //!@bug player ID could be negative if there are more than two players
             player = 1 - player;
         }
         tempRacer->playerIndex = player;
@@ -4297,7 +4298,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         tempVar = tempRacer->playerIndex;
         if (tempRacer->playerIndex != PLAYER_COMPUTER) {
             if (tempRacer->exitObj == 0) {
-                if (func_8000E158()) {
+                if (is_race_started_by_player_two()) {
                     tempVar = 1 - tempVar;
                 }
                 // Cap the joystick tilt and write the button inputs to the current buffer.
