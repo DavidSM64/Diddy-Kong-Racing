@@ -305,7 +305,7 @@ s32 D_80127180;
 Settings *gHudSettings;
 u8 gHudSilverCoinRace;
 u8 gAdventurePlayerFinish;
-u8 D_8012718A;
+u8 gAdvRaceStartedByP2;
 u8 gMinimapOpacityTarget;
 s32 gStopwatchErrorX;
 s32 gStopwatchErrorY;
@@ -430,7 +430,7 @@ void hud_init_element(void) {
     gAdventurePlayerFinish = FALSE;
     D_80126D4C = -100;
     D_80126D50 = rand_range(120, 360);
-    D_8012718A = func_8000E158();
+    gAdvRaceStartedByP2 = is_race_started_by_player_two();
     gStopwatchErrorX = 55;
     gStopwatchErrorY = 179;
     if (osTvType == OS_TV_TYPE_PAL) {
@@ -680,7 +680,7 @@ void hud_render_player(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj,
     Object_Racer *racer;
 
     gHudCurrentViewport = get_current_viewport();
-    if (D_8012718A) {
+    if (gAdvRaceStartedByP2) {
         obj = get_racer_object_by_port(1 - gHudCurrentViewport);
     }
     gHudLevelHeader = level_header();
@@ -708,7 +708,7 @@ void hud_render_player(Gfx **dList, Mtx **mtx, Vertex **vertexList, Object *obj,
             }
             if (gShowHUD == FALSE) {
                 racer = obj->racer;
-                if (D_8012718A) {
+                if (gAdvRaceStartedByP2) {
                     gHudController = 1 - racer->playerIndex;
                 } else {
                     gHudController = racer->playerIndex;
@@ -2600,7 +2600,7 @@ void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate) {
 
     raceType = level_type();
     if (is_in_two_player_adventure() && is_postrace_viewport_active() && gAdventurePlayerFinish == FALSE) {
-        if (func_8000E184()) {
+        if (is_player_two_in_control()) {
             gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_1].pos.y -= 108.0f;
             gCurrentHud->entry[HUD_CHALLENGE_FINISH_POS_2].pos.y -= 108.0f;
             gCurrentHud->entry[HUD_RACE_TIME_NUMBER].pos.y -= 108.0f;

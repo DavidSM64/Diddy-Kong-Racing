@@ -8119,7 +8119,7 @@ s32 menu_file_select_loop(s32 updateRate) {
         }
         gIsInTwoPlayerAdventure = (gNumberOfActivePlayers == 2);
         if (gIsInTwoPlayerAdventure) {
-            fontUseFont();
+            reset_lead_player_index();
         }
         gNumberOfActivePlayers = 1;
         D_800E0FAC = TRUE;
