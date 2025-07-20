@@ -448,7 +448,7 @@ void hud_draw_model(ObjectModel *objModel);
 void hud_element_render(Gfx **dList, Mtx **mtx, Vertex **vtxList, HudElement *hud);
 void hud_main_time_trial(s32, Object*, s32);
 void hud_race_finish_multiplayer(Object_Racer *racer, s32 updateRate);
-void func_800A1E48(Object*, s32 updateRate);
+void hud_battle_portraits(Object*, s32 updateRate);
 void hud_init_element(void);
 
 #endif

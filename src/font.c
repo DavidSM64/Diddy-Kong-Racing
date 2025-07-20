@@ -908,7 +908,7 @@ UNUSED void reset_current_text_offset(s32 dialogueBoxID) {
  * Calls the basic dialogue text draw function passing through the global dialogue box ID.
  * Goes unused.
  */
-UNUSED void func_800C510C(s32 dialogueBoxID, char *text, s32 number, s32 flags) {
+UNUSED void render_global_dialogue_text(s32 dialogueBoxID, char *text, s32 number, s32 flags) {
     render_dialogue_text(dialogueBoxID, gDialogueBoxBackground[dialogueBoxID].xpos,
                          gDialogueBoxBackground[dialogueBoxID].ypos, text, number, flags);
 }
