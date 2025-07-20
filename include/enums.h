@@ -17,6 +17,12 @@ typedef enum SpecialMapId {
     SPECIAL_MAP_ID_NO_LEVEL = -1,
 } SpecialMapId;
 
+typedef enum CharacterSelectStatus {
+    CHARSELECT_STATUS_UNCONFIRMED = 0,
+    CHARSELECT_STATUS_CONFIRMED = 1,
+    CHARSELECT_STATUS_READY = 2,
+} CharacterSelectStatus;
+
 typedef enum Character {
     CHARACTER_KRUNCH,
     CHARACTER_BUMPER,
