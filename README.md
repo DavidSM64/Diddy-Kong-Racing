@@ -9,7 +9,7 @@ As of July 20, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 96.77%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 63.53%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 63.70%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -119,28 +119,28 @@ s32 is_drumstick_unlocked(void) {
 <!-- README_SCORE_BEGIN -->
 As of July 20, 2025, this is our current score:
 ```
- =======================================================================
-                 ADVENTURE ONE (ASM -> C Decompilation)
- ---------------- 96.77% Complete (97.77% NON_MATCHING) ----------------
-                      # Decompiled functions: 1941
-                       # GLOBAL_ASM remaining: 11
-                       # NON_MATCHING functions: 5
-                    # NON_EQUIVALENT WIP functions: 6
- ----------------------------- Game Status -----------------------------
-                Balloons: 46/47, Keys: 4/4, Trophies: 4/5
-                 T.T. Amulets: 4/4, Wizpig Amulets: 4/4
- -----------------------------------------------------------------------
-     We are collecting silver coins in Star City. (7/8 silver coins)
- =======================================================================
-                  ADVENTURE TWO (Cleanup & Documentation)
- --------------------------- 63.53% Complete ---------------------------
-                      # Documented functions: 1242
-                      # Undocumented remaining: 410
- ----------------------------- Game Status -----------------------------
-                Balloons: 30/47, Keys: 3/4, Trophies: 2/5
-                 T.T. Amulets: 3/4, Wizpig Amulets: 3/4
- -----------------------------------------------------------------------
- We are participating in the Trophy Race of Sherbet Island. (Round Four)
- =======================================================================
+ ===============================================================
+             ADVENTURE ONE (ASM -> C Decompilation)
+ ------------ 96.77% Complete (97.77% NON_MATCHING) ------------
+                  # Decompiled functions: 1941
+                   # GLOBAL_ASM remaining: 11
+                   # NON_MATCHING functions: 5
+                # NON_EQUIVALENT WIP functions: 6
+ ------------------------- Game Status -------------------------
+            Balloons: 46/47, Keys: 4/4, Trophies: 4/5
+             T.T. Amulets: 4/4, Wizpig Amulets: 4/4
+ ---------------------------------------------------------------
+ We are collecting silver coins in Star City. (7/8 silver coins)
+ ===============================================================
+              ADVENTURE TWO (Cleanup & Documentation)
+ ----------------------- 63.70% Complete -----------------------
+                  # Documented functions: 1242
+                  # Undocumented remaining: 410
+ ------------------------- Game Status -------------------------
+            Balloons: 30/47, Keys: 3/4, Trophies: 3/5
+             T.T. Amulets: 3/4, Wizpig Amulets: 3/4
+ ---------------------------------------------------------------
+       We are racing Taj in the Plane Challenge. (Lap 1/3)
+ ===============================================================
 ```
 <!-- README_SCORE_END -->
