@@ -1262,7 +1262,7 @@ void hud_main_battle(s32 countdown, Object *obj, s32 updateRate) {
         racerObjs = get_racer_objects(&numRacers);
         switch (gNumActivePlayers) {
             case 1:
-                func_800A1E48(obj, updateRate);
+                hud_battle_portraits(obj, updateRate);
                 break;
             case 2:
                 racersFinished = 0;
@@ -1284,7 +1284,11 @@ void hud_main_battle(s32 countdown, Object *obj, s32 updateRate) {
     }
 }
 
-void func_800A1E48(Object *racerObj, s32 updateRate) {
+/**
+ * Renders the portraits and health in battle mode. Only called if there are 1 or 2 human players.
+ * Portraits are laid out horizontally in 1-player mode and vertically in 2-player mode.
+ */
+void hud_battle_portraits(Object *racerObj, s32 updateRate) {
     s32 pad0;
     s32 i;
     Object_Racer *racer;
@@ -3436,7 +3440,7 @@ void hud_render_general(Gfx **dList, Mtx **mtx, Vertex **vtx, s32 updateRate) {
             cam_set_sprite_anim_mode(SPRITE_ANIM_FRAME_INDEX);
             sprite_opaque(FALSE);
             mtx_ortho(&gHudDL, &gHudMtx);
-            func_800A1E48(0, updateRate);
+            hud_battle_portraits(0, updateRate);
             cam_set_sprite_anim_mode(SPRITE_ANIM_NORMALIZED);
             rendermode_reset(&gHudDL);
             sprite_opaque(TRUE);
