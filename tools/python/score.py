@@ -217,20 +217,6 @@ class ScoreFile:
             if func.isDocumented:
                 size += func.size
         return size
-    
-    def get_size_of_properly_named_functions(self):
-        size = 0
-        for func in self.functions:
-            if func.isProperlyNamed:
-                size += func.size
-        return size
-
-    def get_size_of_functions_with_comments(self):
-        size = 0
-        for func in self.functions:
-            if func.comment != None:
-                size += func.size
-        return size
 
 def main():
     showTopFiles = 0
@@ -258,8 +244,6 @@ def main():
     totalSizeOfDecompiledFunctions = 0
     totalSizeOfDecompiledAndNonMatchingFunctions = 0
     totalSizeOfDocumentedFunctions = 0
-    totalSizeOfProperlyNamedFunctions = 0
-    totalSizeOfCommentedFunctions = 0
     ignoreNumberDocumentedFunctions = 0
     ignoreSizeDocumentedFunctions = 0
     
@@ -283,8 +267,6 @@ def main():
             totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
             totalSizeOfDecompiledAndNonMatchingFunctions += scoreFile.get_size_of_functions_with_nonmatching()
             totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
-            totalSizeOfProperlyNamedFunctions += scoreFile.get_size_of_properly_named_functions()
-            totalSizeOfCommentedFunctions += scoreFile.get_size_of_functions_with_comments()
             scoreFiles.append(scoreFile)
     # Get score properties of libultra functions.
     srcFilenames = FileUtil.get_filenames_from_directory_recursive(LIB_SRC_DIRECTORY, extensions=('.c'))
