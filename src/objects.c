@@ -5701,69 +5701,69 @@ void func_80017E98(void) {
 
 s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *arg5, u8 *arg6) {
     s32 v1;
-    s32 sp70;
-    f32 sp6C, sp68, sp64;
+    s32 isOnAlternateRoute;
+    f32 distX, distY, distZ;
     f32 length;
     f32 sp5C;
     f32 sp58;
     Object_Racer *racer;
     f32 sp50;
-    CheckpointNode *sp4C;
-    CheckpointNode *sp48;
-    CheckpointNode *sp44;
+    CheckpointNode *currentCheckpoint;
+    CheckpointNode *prevCheckpoint;
+    CheckpointNode *altRouteCheckpoint;
 
     if (gNumberOfCheckpoints == 0) {
         return 1;
     }
 
-    sp4C = &gTrackCheckpoints[checkpointIndex];
+    currentCheckpoint = &gTrackCheckpoints[checkpointIndex];
     if (checkpointIndex != 0) {
-        sp48 = &gTrackCheckpoints[checkpointIndex - 1];
+        prevCheckpoint = &gTrackCheckpoints[checkpointIndex - 1];
     } else {
-        sp48 = &gTrackCheckpoints[gNumberOfCheckpoints - 1];
+        prevCheckpoint = &gTrackCheckpoints[gNumberOfCheckpoints - 1];
     }
 
     if (*arg6) {
-        if (sp4C->altRouteID != -1) {
-            sp4C = &gTrackCheckpoints[sp4C->altRouteID];
+        if (currentCheckpoint->altRouteID != -1) {
+            currentCheckpoint = &gTrackCheckpoints[currentCheckpoint->altRouteID];
         }
-        if (sp48->altRouteID != -1) {
-            sp48 = &gTrackCheckpoints[sp48->altRouteID];
-        }
-    }
-
-    sp70 = FALSE;
-    if (!(*arg6) && sp48->altRouteID == -1 && sp4C->altRouteID != -1) {
-        sp44 = &gTrackCheckpoints[sp4C->altRouteID];
-        sp6C = sp44->x - obj->trans.x_position;
-        sp68 = sp44->y - obj->trans.y_position;
-        sp64 = sp44->z - obj->trans.z_position;
-        if (sqrtf(sp6C * sp6C + sp68 * sp68 + sp64 * sp64) < sp44->unk2C) {
-            sp4C = sp44;
-            sp70 = TRUE;
+        if (prevCheckpoint->altRouteID != -1) {
+            prevCheckpoint = &gTrackCheckpoints[prevCheckpoint->altRouteID];
         }
     }
 
-    sp6C = sp4C->x - sp48->x;
-    sp68 = sp4C->y - sp48->y;
-    sp64 = sp4C->z - sp48->z;
-    length = sqrtf(sp6C * sp6C + sp68 * sp68 + sp64 * sp64);
+    isOnAlternateRoute = FALSE;
+    if (!(*arg6) && prevCheckpoint->altRouteID == -1 && currentCheckpoint->altRouteID != -1) {
+        altRouteCheckpoint = &gTrackCheckpoints[currentCheckpoint->altRouteID];
+        distX = altRouteCheckpoint->x - obj->trans.x_position;
+        distY = altRouteCheckpoint->y - obj->trans.y_position;
+        distZ = altRouteCheckpoint->z - obj->trans.z_position;
+        if (sqrtf(distX * distX + distY * distY + distZ * distZ) < altRouteCheckpoint->unk2C) {
+            currentCheckpoint = altRouteCheckpoint;
+            isOnAlternateRoute = TRUE;
+        }
+    }
+
+    distX = currentCheckpoint->x - prevCheckpoint->x;
+    distY = currentCheckpoint->y - prevCheckpoint->y;
+    distZ = currentCheckpoint->z - prevCheckpoint->z;
+    length = sqrtf(distX * distX + distY * distY + distZ * distZ);
     if (length > 0.0) {
-        sp6C *= 1.0f / length;
-        sp68 *= 1.0f / length;
-        sp64 *= 1.0f / length;
+        distX *= 1.0f / length;
+        distY *= 1.0f / length;
+        distZ *= 1.0f / length;
     }
 
-    sp58 = sp4C->rotationXFrac * obj->trans.x_position + sp4C->rotationYFrac * obj->trans.y_position +
-           sp4C->rotationZFrac * obj->trans.z_position + sp4C->unkC;
+    sp58 = currentCheckpoint->rotationXFrac * obj->trans.x_position + currentCheckpoint->rotationYFrac * obj->trans.y_position +
+           currentCheckpoint->rotationZFrac * obj->trans.z_position + currentCheckpoint->unkC;
 
-    sp5C = sp4C->rotationXFrac * sp6C + sp4C->rotationYFrac * sp68 + sp4C->rotationZFrac * sp64;
+    sp5C = currentCheckpoint->rotationXFrac * distX + currentCheckpoint->rotationYFrac * distY + currentCheckpoint->rotationZFrac * distZ;
     sp5C = -sp58 / sp5C;
 
-    sp50 = sp48->rotationXFrac * obj->trans.x_position + sp48->rotationYFrac * obj->trans.y_position +
-           sp48->rotationZFrac * obj->trans.z_position + sp48->unkC;
+    sp50 = prevCheckpoint->rotationXFrac * obj->trans.x_position + prevCheckpoint->rotationYFrac * obj->trans.y_position +
+           prevCheckpoint->rotationZFrac * obj->trans.z_position + prevCheckpoint->unkC;
 
-    length = sp48->rotationXFrac * sp6C + sp48->rotationYFrac * sp68 + sp48->rotationZFrac * sp64;
+    length = prevCheckpoint->rotationXFrac * distX + prevCheckpoint->rotationYFrac * distY + prevCheckpoint->rotationZFrac * distZ;
     length = sp50 / length;
 
     if (sp5C + length != 0.0) {
@@ -5786,38 +5786,38 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
     }
 
     if (sp5C <= 0) {
-        if (sp70) {
+        if (isOnAlternateRoute) {
             *arg6 = TRUE;
-        } else if (sp4C->altRouteID == -1) {
+        } else if (currentCheckpoint->altRouteID == -1) {
             *arg6 = FALSE;
         }
 
-        sp68 = sp4C->rotationXFrac * objX + sp4C->rotationYFrac * objY + sp4C->rotationZFrac * objZ + sp4C->unkC;
-        if (sp68 > 0) {
+        distY = currentCheckpoint->rotationXFrac * objX + currentCheckpoint->rotationYFrac * objY + currentCheckpoint->rotationZFrac * objZ + currentCheckpoint->unkC;
+        if (distY > 0) {
             if (obj->behaviorId == BHV_RACER) {
                 Object_Racer *objRacer = obj->racer;
-                if (sp4C->unk3B != 0) {
-                    objRacer->indicator_type = sp4C->unk3B;
+                if (currentCheckpoint->unk3B != 0) {
+                    objRacer->indicator_type = currentCheckpoint->unk3B;
                     objRacer->indicator_timer = 120;
                 }
             }
 
-            sp48 = sp4C;
+            prevCheckpoint = currentCheckpoint;
             checkpointIndex++;
             if (checkpointIndex == gNumberOfCheckpoints) {
                 checkpointIndex = 0;
             }
 
-            sp4C = &gTrackCheckpoints[checkpointIndex];
+            currentCheckpoint = &gTrackCheckpoints[checkpointIndex];
 
-            sp58 = sp4C->rotationXFrac * obj->trans.x_position + sp4C->rotationYFrac * obj->trans.y_position +
-                   sp4C->rotationZFrac * obj->trans.z_position + sp4C->unkC;
-            sp5C = sp4C->rotationXFrac * sp6C + sp4C->rotationYFrac * sp68 + sp4C->rotationZFrac * sp64;
+            sp58 = currentCheckpoint->rotationXFrac * obj->trans.x_position + currentCheckpoint->rotationYFrac * obj->trans.y_position +
+                   currentCheckpoint->rotationZFrac * obj->trans.z_position + currentCheckpoint->unkC;
+            sp5C = currentCheckpoint->rotationXFrac * distX + currentCheckpoint->rotationYFrac * distY + currentCheckpoint->rotationZFrac * distZ;
             sp5C = -sp58 / sp5C;
 
-            sp50 = sp48->rotationXFrac * obj->trans.x_position + sp48->rotationYFrac * obj->trans.y_position +
-                   sp48->rotationZFrac * obj->trans.z_position + sp48->unkC;
-            length = sp48->rotationXFrac * sp6C + sp48->rotationYFrac * sp68 + sp48->rotationZFrac * sp64;
+            sp50 = prevCheckpoint->rotationXFrac * obj->trans.x_position + prevCheckpoint->rotationYFrac * obj->trans.y_position +
+                   prevCheckpoint->rotationZFrac * obj->trans.z_position + prevCheckpoint->unkC;
+            length = prevCheckpoint->rotationXFrac * distX + prevCheckpoint->rotationYFrac * distY + prevCheckpoint->rotationZFrac * distZ;
             length = sp50 / length;
 
             if (sp5C + length != 0.0) {
