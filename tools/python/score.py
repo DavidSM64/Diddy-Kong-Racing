@@ -123,7 +123,8 @@ class ScoreFileMatch:
     def __init__(self, comment, functionName):
         self.comment = comment
         self.functionName = functionName
-        self.isDocumented = (comment != None) and not functionName.startswith("func_")
+        self.isProperlyNamed = not functionName.startswith("func_")
+        self.isDocumented = (comment != None) and self.isProperlyNamed
         if functionName in MAP_FILE.functionSizes:
             self.size = MAP_FILE.functionSizes[functionName]
         else:
@@ -186,6 +187,20 @@ class ScoreFile:
             if func.isDocumented:
                 count += 1
         return count
+    
+    def get_number_of_properly_named_functions(self):
+        count = 0
+        for func in self.functions:
+            if func.isProperlyNamed:
+                count += 1
+        return count
+    
+    def get_number_of_functions_with_comments(self):
+        count = 0
+        for func in self.functions:
+            if func.comment != None:
+                count += 1
+        return count
         
     def get_size_of_functions(self):
         size = 0
@@ -200,6 +215,20 @@ class ScoreFile:
         size = 0
         for func in self.functions:
             if func.isDocumented:
+                size += func.size
+        return size
+    
+    def get_size_of_properly_named_functions(self):
+        size = 0
+        for func in self.functions:
+            if func.isProperlyNamed:
+                size += func.size
+        return size
+
+    def get_size_of_functions_with_comments(self):
+        size = 0
+        for func in self.functions:
+            if func.comment != None:
                 size += func.size
         return size
 
@@ -221,12 +250,16 @@ def main():
     scoreFiles = []
     totalNumberOfDecompiledFunctions = 0
     totalNumberOfDocumentedFunctions = 0
+    totalNumberOfProperlyNamedFunctions = 0
+    totalNumberOfCommentedFunctions = 0
     totalNumberOfGlobalAsms = 0
     totalNumberOfNonMatching = 0
     totalNumberOfNonEquivalent = 0
     totalSizeOfDecompiledFunctions = 0
     totalSizeOfDecompiledAndNonMatchingFunctions = 0
     totalSizeOfDocumentedFunctions = 0
+    totalSizeOfProperlyNamedFunctions = 0
+    totalSizeOfCommentedFunctions = 0
     ignoreNumberDocumentedFunctions = 0
     ignoreSizeDocumentedFunctions = 0
     
@@ -245,9 +278,13 @@ def main():
             totalNumberOfNonMatching += scoreFile.numNonMatchings
             totalNumberOfNonEquivalent += scoreFile.numNonEquivalents
             totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
+            totalNumberOfCommentedFunctions += scoreFile.get_number_of_functions_with_comments()
+            totalNumberOfProperlyNamedFunctions += scoreFile.get_number_of_properly_named_functions()
             totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
             totalSizeOfDecompiledAndNonMatchingFunctions += scoreFile.get_size_of_functions_with_nonmatching()
             totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
+            totalSizeOfProperlyNamedFunctions += scoreFile.get_size_of_properly_named_functions()
+            totalSizeOfCommentedFunctions += scoreFile.get_size_of_functions_with_comments()
             scoreFiles.append(scoreFile)
     # Get score properties of libultra functions.
     srcFilenames = FileUtil.get_filenames_from_directory_recursive(LIB_SRC_DIRECTORY, extensions=('.c'))
@@ -381,9 +418,11 @@ def main():
         # This will raise an error if writing fails
         fig.write_html(output_path)
         sys.exit(0)
+    
+    displayedNumberOfDocumentedFunctions = totalNumberOfFunctions - ignoreNumberDocumentedFunctions
 
     scoreDisplay = ScoreDisplay()
-    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureOnePercentageWithNonMatching, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfNonMatching, totalNumberOfNonEquivalent, totalNumberOfDocumentedFunctions, (totalNumberOfFunctions - ignoreNumberDocumentedFunctions) - totalNumberOfDocumentedFunctions))
+    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureOnePercentageWithNonMatching, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfNonMatching, totalNumberOfNonEquivalent, totalNumberOfDocumentedFunctions, displayedNumberOfDocumentedFunctions - totalNumberOfDocumentedFunctions, displayedNumberOfDocumentedFunctions - totalNumberOfProperlyNamedFunctions, displayedNumberOfDocumentedFunctions - totalNumberOfCommentedFunctions))
     
     if showTopFiles > 0:
         if showTopFiles > len(scoreFiles):
