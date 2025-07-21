@@ -2554,6 +2554,9 @@ void gParticlePtrList_flush(void) {
     gFreeListCount = 0;
 }
 
+/**
+ * Destroys an object and frees its resources.
+ */
 void obj_destroy(Object *obj, s32 arg1) {
     Object *tempObj;
     Object_Weapon *weapon;
@@ -2800,6 +2803,9 @@ void obj_destroy(Object *obj, s32 arg1) {
     mempool_free(obj);
 }
 
+/**
+ * Updates all objects in the game.
+ */
 void obj_update(s32 updateRate) {
     s32 i;
     s32 j;
