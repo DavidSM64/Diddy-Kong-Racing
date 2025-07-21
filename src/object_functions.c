@@ -4045,7 +4045,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
             }
             break;
         default:
-            if (func_8001E2EC(entry->unkA) != 0) {
+            if (is_bridge_raised(entry->unkA) != 0) {
                 obj->properties.bridgeWhaleRamp.unk0 = (entry->unkD * 2);
             }
             if (obj->properties.bridgeWhaleRamp.unk0 > 0) {
@@ -4061,6 +4061,10 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     obj->interactObj->flags &= ~INTERACT_FLAGS_PUSHING;
 }
 
+/**
+ * Ramp switch init function.
+ * Sets interaction attributes.
+ */
 void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
@@ -4069,9 +4073,14 @@ void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
     obj->properties.rampSwitch.unk0 = entry->unk8;
 }
 
+/**
+ * Ramp switch loop function.
+ * When a player goes through this object, the switch will raise the drawbridge.
+ * The distance is set to 255 so that it doesn't interact with the player again.
+ */
 void obj_loop_rampswitch(Object *obj, UNUSED s32 updateRate) {
     if (obj->interactObj->distance < 45) {
-        func_8001E344(obj->properties.rampSwitch.unk0);
+        start_bridge_timer(obj->properties.rampSwitch.unk0);
     }
     obj->interactObj->distance = 255;
 }

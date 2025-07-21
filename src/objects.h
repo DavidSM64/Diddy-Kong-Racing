@@ -368,8 +368,8 @@ void set_world_shading(f32 ambient, f32 diffuse, s16 angleX, s16 angleY, s16 ang
 void set_shading_properties(ShadeProperties *arg0, f32 ambient, f32 diffuse, s16 angleX, s16 angleY, s16 angleZ);
 void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity);
 s32 *get_misc_asset(s32 index);
-s32 func_8001E2EC(s32 arg0);
-void func_8001E344(s32 arg0);
+s32 is_bridge_raised(s32 arg0);
+void start_bridge_timer(s32 arg0);
 void obj_bridge_pos(s32 timing, f32 *x, f32 *y, f32 *z);
 s16 cutscene_id(void);
 void cutscene_id_set(s32 cutsceneID);
