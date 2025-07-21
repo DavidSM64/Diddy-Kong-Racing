@@ -8643,6 +8643,7 @@ void func_8001F450(void) {
     D_8011AD53 = 1;
 }
 
+// Called from a lot of object loop functions
 s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
     f32 var_f2;
     f32 var_f0;
