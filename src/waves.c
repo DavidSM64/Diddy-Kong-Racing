@@ -749,6 +749,9 @@ void func_800B97A8(s32 blockID, s32 arg1) {
     }
 }
 
+/**
+ * Updates the animations and UV mapping of the waves.
+ */
 void waves_update(s32 updateRate) {
     s32 i;
     s32 j;
@@ -954,6 +957,9 @@ void wave_load_material(TextureHeader *tex, s32 rtile) {
     }
 }
 
+/**
+ * Renders waves in the current viewport.
+ */
 void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
     s32 sp11C;
     Vertex *vtx;
@@ -2365,6 +2371,9 @@ f32 waves_get_y(s32 blockID, s32 arg1, s32 arg2) {
     return y;
 }
 
+/**
+ * Removes a wave generator object from the list.
+ */
 void wavegen_destroy(Object *obj) {
     s32 i;
     s32 k;
@@ -2407,26 +2416,32 @@ void wavegen_destroy(Object *obj) {
     gWaveGenCount--;
 }
 
+/**
+ * Adds a wave generator point.
+ */
 void wavegen_add(Object *obj) {
-    LevelObjectEntry_WaveGenerator *temp_v0;
+    LevelObjectEntry_WaveGenerator *waveGen;
     s32 flags;
 
-    temp_v0 = &obj->level_entry->waveGenerator;
+    waveGen = &obj->level_entry->waveGenerator;
     flags = 0;
-    if (temp_v0->unk10 != 0) {
+    if (waveGen->unk10 != 0) {
         flags = 1;
     }
 
-    if (temp_v0->unk11 != 0) {
+    if (waveGen->unk11 != 0) {
         flags |= 2;
     }
 
-    wavegen_register(obj, obj->trans.x_position, obj->trans.z_position, (f32) temp_v0->waveSize, temp_v0->unk9 << 8,
-                     (f32) temp_v0->unk8 / 16.0, (f32) temp_v0->unkE, (f32) temp_v0->unkC / 16.0, flags);
+    wavegen_register(obj, obj->trans.x_position, obj->trans.z_position, (f32) waveGen->waveSize, waveGen->unk9 << 8,
+                     (f32) waveGen->unk8 / 16.0, (f32) waveGen->unkE, (f32) waveGen->unkC / 16.0, flags);
 }
 
-const char D_800E9228[] = "\nError :: more than eight swells overlap on column %d.";
+const char gWavesOverlapErrorMsg[] = "\nError :: more than eight swells overlap on column %d.";
 
+/**
+ * Registers a new wave generator point with the given properties.
+ */
 WaveGen *wavegen_register(Object *obj, f32 xPos, f32 zPos, f32 waveSize, s32 arg4, f32 arg5, f32 arg6, f32 arg7,
                           s32 flags) {
     f32 stepSize;
