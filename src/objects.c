@@ -5709,7 +5709,7 @@ void checkpoint_update_all(void) {
  * - -100: Racer passed the checkpoint.
  * - Otherwise: No checkpoint has been passed.
  */
-s32 checkpoint_is_passed(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance, u8 *arg6) {
+s32 checkpoint_is_passed(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance, u8 *isOnAlternateRoute) {
     s32 retLength;
     s32 isAltCheckpoint;
     f32 distX, distY, distZ;
