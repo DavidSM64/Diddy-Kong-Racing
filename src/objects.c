@@ -249,7 +249,7 @@ s32 gNumFinishedRacers;
 s8 gFirstTimeFinish;
 s8 D_8011ADC5;
 u32 gBalloonCutsceneTimer;
-s8 (*D_8011ADCC)[8];
+s8 (*gDrawbridgeTimers)[8];
 f32 gObjectOffsetY;
 s8 D_8011ADD4;
 s8 gOverrideDoors;
@@ -728,7 +728,7 @@ void allocate_object_pools(void) {
     gRacersByPort = mempool_alloc_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     gRacersByPosition = mempool_alloc_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     gAINodes = mempool_alloc_safe(sizeof(uintptr_t) * AINODE_COUNT, COLOUR_TAG_BLUE);
-    D_8011ADCC = mempool_alloc_safe(8, COLOUR_TAG_BLUE);
+    gDrawbridgeTimers = mempool_alloc_safe(8, COLOUR_TAG_BLUE);
     D_8011AFF4 = mempool_alloc_safe(sizeof(unk800179D0) * 16, COLOUR_TAG_BLUE);
     gAssetsLvlObjTranslationTable = (s16 *) asset_table_load(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
     gAssetsLvlObjTranslationTableLength = (asset_table_size(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
@@ -828,7 +828,7 @@ void clear_object_pointers(void) {
         (*gAINodes)[i] = NULL;
     }
     for (i = 0; i < 8; i++) {
-        (*D_8011ADCC)[i] = 0;
+        (*gDrawbridgeTimers)[i] = 0;
     }
     for (i = 0; i < 16; i++) {
         D_8011AFF4[i].unk0 = 0;
@@ -8177,19 +8177,25 @@ s32 *get_misc_asset(s32 index) {
     return (s32 *) &gAssetsMiscSection[gAssetsMiscTable[index]];
 }
 
-s32 func_8001E2EC(s32 arg0) {
-    if (arg0 >= 0 && arg0 < 8) {
-        if (D_8011ADCC[0][arg0] > 0) {
-            D_8011ADCC[0][arg0]--;
+/**
+ * If the bridge is raised, decrement its timer and return the remaining time.
+ */
+s32 is_bridge_raised(s32 index) {
+    if (index >= 0 && index < 8) {
+        if (gDrawbridgeTimers[0][index] > 0) {
+            gDrawbridgeTimers[0][index]--;
         }
-        return D_8011ADCC[0][arg0];
+        return gDrawbridgeTimers[0][index];
     }
     return 0;
 }
 
-void func_8001E344(s32 arg0) {
-    if (arg0 >= 0 && arg0 < 8) {
-        D_8011ADCC[0][arg0] = 8;
+/**
+ * Starts the bridge timer when a racer hits the bell switch. 
+ */
+void start_bridge_timer(s32 index) {
+    if (index >= 0 && index < 8) {
+        gDrawbridgeTimers[0][index] = 8;
     }
 }
 

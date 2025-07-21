@@ -7,9 +7,9 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of July 20, 2025, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 96.63%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 96.77%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 63.41%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 63.59%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -121,7 +121,7 @@ As of July 20, 2025, this is our current score:
 ```
  =======================================================================
                  ADVENTURE ONE (ASM -> C Decompilation)
- ---------------- 96.63% Complete (97.63% NON_MATCHING) ----------------
+ ---------------- 96.77% Complete (97.77% NON_MATCHING) ----------------
                       # Decompiled functions: 1941
                        # GLOBAL_ASM remaining: 11
                        # NON_MATCHING functions: 5
@@ -130,12 +130,12 @@ As of July 20, 2025, this is our current score:
                 Balloons: 46/47, Keys: 4/4, Trophies: 4/5
                  T.T. Amulets: 4/4, Wizpig Amulets: 4/4
  -----------------------------------------------------------------------
-     We are collecting silver coins in Star City. (6/8 silver coins)
+     We are collecting silver coins in Star City. (7/8 silver coins)
  =======================================================================
                   ADVENTURE TWO (Cleanup & Documentation)
- --------------------------- 63.41% Complete ---------------------------
-                      # Documented functions: 1241
-                      # Undocumented remaining: 411
+ --------------------------- 63.59% Complete ---------------------------
+                      # Documented functions: 1245
+                      # Undocumented remaining: 407
  ----------------------------- Game Status -----------------------------
                 Balloons: 30/47, Keys: 3/4, Trophies: 2/5
                  T.T. Amulets: 3/4, Wizpig Amulets: 3/4
