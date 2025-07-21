@@ -240,9 +240,9 @@ typedef struct CheckpointNode {
     /* 0x18 */ f32 z;
     /* 0x1C */ f32 scale;
     /* 0x20 */ f32 distance;
-    /* 0x24 */ f32 unk24; // Appears to be exactly the same as distance?
+    /* 0x24 */ f32 altDistance; // Appears to be exactly the same as distance?
     /* 0x28 */ Object *obj;
-    /* 0x2C */ s16 unk2C;
+    /* 0x2C */ s16 checkpointID;
     /* 0x2E */ s8 unk2E[4];
     /* 0x32 */ s8 unk32[4];
     /* 0x36 */ s8 unk36[4];   // Appear to be flags of some sort?
@@ -350,7 +350,7 @@ s32 timetrial_staff_unbeaten(void);
 SIDeviceStatus timetrial_save_player_ghost(s32 controllerIndex);
 u8 has_ghost_to_save(void);
 void set_ghost_none(void);
-f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2);
+f32 racer_calc_distance_to_opponent(Object_Racer *racer1, Object_Racer *racer2);
 CheckpointNode *get_checkpoint_node(s32 checkpointID);
 CheckpointNode *find_next_checkpoint_node(s32 splinePos, s32 arg1);
 s32 get_checkpoint_count(void);
@@ -411,7 +411,7 @@ void racerfx_free(void);
 void func_80016BC4(Object *obj);
 s32 ainode_register(Object *obj);
 void obj_taj_create_balloon(s32 blockID, f32 x, f32 y, f32 z);
-Object *func_8001B7A8(Object_Racer *racer, s32 position, f32 *distance);
+Object *racer_find_nearest_opponent_relative(Object_Racer *racer, s32 position, f32 *distance);
 s32 obj_init_collision(Object *obj, ObjectCollision *colData);
 void func_8000E4E8(s32 index);
 void objFreeAssets(Object *obj, s32 count, s32 objType);
@@ -487,7 +487,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object *, s32, Object *);
 void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4);
 void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
-s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *arg5, u8 *arg6);
+s32 checkpoint_is_passed(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *arg5, u8 *arg6);
 void obj_tex_animate(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);
 void model_init_collision(ObjectModel *);
@@ -495,7 +495,7 @@ void set_temp_model_transforms(Object *);
 void obj_destroy(Object *, s32);
 void func_800135B8(Object *);
 void track_setup_racers(Vehicle, u32, s32);
-void func_80017E98(void);
+void checkpoint_update_all(void);
 void spectate_update(void);
 void func_8001E93C(void);
 void func_80019808(s32 updateRate);

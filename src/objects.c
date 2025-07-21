@@ -292,8 +292,8 @@ s32 gObjectMapIndex;
 Object **gParticlePtrList;
 s32 gFreeListCount;
 CheckpointNode *gTrackCheckpoints; // Array of structs, unknown number of members
-s32 gNumberOfCheckpoints;
-s32 D_8011AED4;
+s32 gNumberOfActiveCheckpoints;
+s32 gNumberOfTotalCheckpoints;
 s16 gTajChallengeType;
 Object *(*gCameraObjList)[CAMCONTROL_COUNT]; // Camera objects with a maximum of 20
 s32 gCameraObjCount;                         // The number of camera objects in the above list
@@ -816,8 +816,8 @@ void clear_object_pointers(void) {
     D_8011AD60 = 0;
     gFreeListCount = 0;
     gCollisionObjectCount = 0;
-    gNumberOfCheckpoints = 0;
-    D_8011AED4 = 0;
+    gNumberOfActiveCheckpoints = 0;
+    gNumberOfTotalCheckpoints = 0;
     gNumRacers = 0;
     D_8011AE78 = 0;
     D_8011AD21 = 0;
@@ -1008,7 +1008,7 @@ void track_spawn_objects(s32 mapID, s32 index) {
         gNumFinishedRacers = 1;
         if (gPathUpdateOff == FALSE) {
             gParticlePtrList_flush();
-            func_80017E98();
+            checkpoint_update_all();
             spectate_update();
             func_8001E93C();
         }
@@ -2914,7 +2914,7 @@ void obj_update(s32 updateRate) {
     }
     if (gPathUpdateOff == FALSE) {
         gParticlePtrList_flush();
-        func_80017E98();
+        checkpoint_update_all();
         spectate_update();
         func_8001E93C();
     }
@@ -5540,18 +5540,21 @@ UNUSED s16 get_taj_challenge_type(void) {
     return gTajChallengeType;
 }
 
-void func_80017E98(void) {
+/**
+ * Updates information pertaining to all checkpoints in the current race.
+ */
+void checkpoint_update_all(void) {
     f32 xDiff;
     f32 zDiff;
     f32 yDiff;
-    s32 temp_v1;
+    s32 tempCheckpointID;
     s32 checkpointNum;
     s32 duplicateCheckpoint;
     s32 breakOut;
     s32 altRouteId;
     s32 i;
-    s32 altId;
-    s32 var_a0;
+    s32 isSorted;
+    s32 checkpointID;
     f32 ox;
     f32 oy;
     f32 oz;
@@ -5560,68 +5563,68 @@ void func_80017E98(void) {
     LevelObjectEntry_Checkpoint *checkpointEntry;
     MtxF mtx;
     ObjectTransform transform;
-    s32 var_t2;
+    s32 inactiveCount;
 
-    var_t2 = 0;
-    gNumberOfCheckpoints = 0;
+    inactiveCount = 0;
+    gNumberOfActiveCheckpoints = 0;
     for (i = 0; i < gObjectCount; i++) {
         obj = gObjPtrList[i];
         if (!(obj->trans.flags & OBJ_FLAGS_PARTICLE) && obj->behaviorId == BHV_CHECKPOINT &&
-            gNumberOfCheckpoints < MAX_CHECKPOINTS) {
+            gNumberOfActiveCheckpoints < MAX_CHECKPOINTS) {
             checkpointEntry = &obj->level_entry->checkpoint;
-            if (checkpointEntry->unk1A == gTajChallengeType) {
-                gTrackCheckpoints[gNumberOfCheckpoints].obj = obj;
-                var_a0 = checkpointEntry->unk9;
-                if (checkpointEntry->unk17) {
-                    var_a0 += 255;
-                    var_t2++;
+            if (checkpointEntry->vehicleType == gTajChallengeType) {
+                gTrackCheckpoints[gNumberOfActiveCheckpoints].obj = obj;
+                checkpointID = checkpointEntry->index;
+                if (checkpointEntry->isInactive) {
+                    checkpointID += 255;
+                    inactiveCount++;
                 }
-                gTrackCheckpoints[gNumberOfCheckpoints].unk2C = var_a0;
-                gTrackCheckpoints[gNumberOfCheckpoints].altRouteID = -1;
-                gNumberOfCheckpoints++;
+                gTrackCheckpoints[gNumberOfActiveCheckpoints].checkpointID = checkpointID;
+                gTrackCheckpoints[gNumberOfActiveCheckpoints].altRouteID = -1;
+                gNumberOfActiveCheckpoints++;
             }
         }
     }
 
     duplicateCheckpoint = FALSE;
     do {
-        altId = TRUE;
+        isSorted = TRUE;
 
-        for (i = 0; i < gNumberOfCheckpoints - 1; i++) {
-            if (gTrackCheckpoints[i].unk2C == gTrackCheckpoints[i + 1].unk2C) {
+        for (i = 0; i < gNumberOfActiveCheckpoints - 1; i++) {
+            if (gTrackCheckpoints[i].checkpointID == gTrackCheckpoints[i + 1].checkpointID) {
                 duplicateCheckpoint = TRUE;
-                checkpointNum = gTrackCheckpoints[i].unk2C;
+                checkpointNum = gTrackCheckpoints[i].checkpointID;
             }
 
-            if (gTrackCheckpoints[i + 1].unk2C < gTrackCheckpoints[i].unk2C) {
-                temp_v1 = gTrackCheckpoints[i].unk2C;
+            if (gTrackCheckpoints[i + 1].checkpointID < gTrackCheckpoints[i].checkpointID) {
+                tempCheckpointID = gTrackCheckpoints[i].checkpointID;
                 obj = gTrackCheckpoints[i].obj;
-                gTrackCheckpoints[i].unk2C = gTrackCheckpoints[i + 1].unk2C;
+                gTrackCheckpoints[i].checkpointID = gTrackCheckpoints[i + 1].checkpointID;
                 gTrackCheckpoints[i].obj = gTrackCheckpoints[i + 1].obj;
-                gTrackCheckpoints[i + 1].unk2C = temp_v1;
+                gTrackCheckpoints[i + 1].checkpointID = tempCheckpointID;
                 gTrackCheckpoints[i + 1].obj = obj;
-                altId = FALSE;
+                isSorted = FALSE;
             }
         }
-    } while (!altId);
-    D_8011AED4 = gNumberOfCheckpoints;
-    gNumberOfCheckpoints -= var_t2;
+    } while (!isSorted);
+    gNumberOfTotalCheckpoints = gNumberOfActiveCheckpoints;
+    gNumberOfActiveCheckpoints -= inactiveCount;
     if (duplicateCheckpoint) {
         set_render_printf_position(20, 220);
         render_printf("Error: Multiple checkpoint no: %d !!\n", checkpointNum);
     }
-    for (i = gNumberOfCheckpoints; i < D_8011AED4; i++) {
-        temp_v1 = gTrackCheckpoints[i].unk2C - 255;
-        for (var_a0 = 0, breakOut = FALSE; var_a0 < gNumberOfCheckpoints && !breakOut; var_a0++) {
-            if (temp_v1 == gTrackCheckpoints[var_a0].unk2C) {
-                gTrackCheckpoints[var_a0].altRouteID = i;
-                gTrackCheckpoints[i].altRouteID = var_a0;
+    for (i = gNumberOfActiveCheckpoints; i < gNumberOfTotalCheckpoints; i++) {
+        tempCheckpointID = gTrackCheckpoints[i].checkpointID - 255;
+        for (checkpointID = 0, breakOut = FALSE; checkpointID < gNumberOfActiveCheckpoints && !breakOut; checkpointID++) {
+            if (tempCheckpointID == gTrackCheckpoints[checkpointID].checkpointID) {
+                gTrackCheckpoints[checkpointID].altRouteID = i;
+                gTrackCheckpoints[i].altRouteID = checkpointID;
                 breakOut = TRUE;
             }
         }
     }
 
-    for (i = 0; i < D_8011AED4; i++) {
+    for (i = 0; i < gNumberOfTotalCheckpoints; i++) {
         checkpoint = &gTrackCheckpoints[i];
         obj = checkpoint->obj;
         checkpointEntry = &obj->level_entry->checkpoint;
@@ -5643,44 +5646,44 @@ void func_80017E98(void) {
         checkpoint->y = obj->trans.y_position;
         checkpoint->z = obj->trans.z_position;
         checkpoint->scale = obj->trans.scale * 2;
-        checkpoint->unk2C = obj->trans.scale * 128.0f;
-        checkpoint->unk24 = 0.0f;
+        checkpoint->checkpointID = obj->trans.scale * 128.0f;
+        checkpoint->altDistance = 0.0f;
         checkpoint->distance = 0.0f;
-        if (i < gNumberOfCheckpoints) {
-            temp_v1 = i + 1;
-            if (temp_v1 == gNumberOfCheckpoints) {
-                temp_v1 = 0;
+        if (i < gNumberOfActiveCheckpoints) {
+            tempCheckpointID = i + 1;
+            if (tempCheckpointID == gNumberOfActiveCheckpoints) {
+                tempCheckpointID = 0;
             }
-            xDiff = obj->trans.x_position - gTrackCheckpoints[temp_v1].obj->trans.x_position;
-            yDiff = obj->trans.y_position - gTrackCheckpoints[temp_v1].obj->trans.y_position;
-            zDiff = obj->trans.z_position - gTrackCheckpoints[temp_v1].obj->trans.z_position;
+            xDiff = obj->trans.x_position - gTrackCheckpoints[tempCheckpointID].obj->trans.x_position;
+            yDiff = obj->trans.y_position - gTrackCheckpoints[tempCheckpointID].obj->trans.y_position;
+            zDiff = obj->trans.z_position - gTrackCheckpoints[tempCheckpointID].obj->trans.z_position;
             checkpoint->distance = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
-            altRouteId = gTrackCheckpoints[temp_v1].altRouteID;
+            altRouteId = gTrackCheckpoints[tempCheckpointID].altRouteID;
             if (altRouteId != -1) {
                 xDiff = obj->trans.x_position - gTrackCheckpoints[altRouteId].obj->trans.x_position;
                 yDiff = obj->trans.y_position - gTrackCheckpoints[altRouteId].obj->trans.y_position;
                 zDiff = obj->trans.z_position - gTrackCheckpoints[altRouteId].obj->trans.z_position;
-                checkpoint->unk24 = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
+                checkpoint->altDistance = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
             } else {
-                checkpoint->unk24 = checkpoint->distance;
+                checkpoint->altDistance = checkpoint->distance;
             }
         } else {
-            temp_v1 = gTrackCheckpoints[i].altRouteID + 1;
-            if (temp_v1 == gNumberOfCheckpoints) {
-                temp_v1 = 0;
+            tempCheckpointID = gTrackCheckpoints[i].altRouteID + 1;
+            if (tempCheckpointID == gNumberOfActiveCheckpoints) {
+                tempCheckpointID = 0;
             }
-            xDiff = obj->trans.x_position - gTrackCheckpoints[temp_v1].obj->trans.x_position;
-            yDiff = obj->trans.y_position - gTrackCheckpoints[temp_v1].obj->trans.y_position;
-            zDiff = obj->trans.z_position - gTrackCheckpoints[temp_v1].obj->trans.z_position;
+            xDiff = obj->trans.x_position - gTrackCheckpoints[tempCheckpointID].obj->trans.x_position;
+            yDiff = obj->trans.y_position - gTrackCheckpoints[tempCheckpointID].obj->trans.y_position;
+            zDiff = obj->trans.z_position - gTrackCheckpoints[tempCheckpointID].obj->trans.z_position;
             checkpoint->distance = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
-            altRouteId = gTrackCheckpoints[temp_v1].altRouteID;
+            altRouteId = gTrackCheckpoints[tempCheckpointID].altRouteID;
             if (altRouteId != -1) {
                 xDiff = obj->trans.x_position - gTrackCheckpoints[altRouteId].obj->trans.x_position;
                 yDiff = obj->trans.y_position - gTrackCheckpoints[altRouteId].obj->trans.y_position;
                 zDiff = obj->trans.z_position - gTrackCheckpoints[altRouteId].obj->trans.z_position;
-                checkpoint->unk24 = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
+                checkpoint->altDistance = sqrtf(((xDiff * xDiff) + (yDiff * yDiff)) + (zDiff * zDiff));
             } else {
-                checkpoint->unk24 = checkpoint->distance;
+                checkpoint->altDistance = checkpoint->distance;
             }
         }
         checkpoint->unk2E[0] = checkpointEntry->unkB;
@@ -5699,20 +5702,27 @@ void func_80017E98(void) {
     }
 }
 
-s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *arg5, u8 *arg6) {
-    s32 v1;
-    s32 isOnAlternateRoute;
+/**
+ * Checks to see whether a racer or homing missile passed a checkpoint.
+ * Return values:
+ * - 0: Homing missile passed the checkpoint.
+ * - -100: Racer passed the checkpoint.
+ * - Otherwise: No checkpoint has been passed.
+ */
+s32 checkpoint_is_passed(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance, u8 *arg6) {
+    s32 retLength;
+    s32 isAltCheckpoint;
     f32 distX, distY, distZ;
     f32 length;
-    f32 sp5C;
-    f32 sp58;
+    f32 nextLength;
+    f32 toNext;
     Object_Racer *racer;
-    f32 sp50;
+    f32 fromPrev;
     CheckpointNode *currentCheckpoint;
     CheckpointNode *prevCheckpoint;
     CheckpointNode *altRouteCheckpoint;
 
-    if (gNumberOfCheckpoints == 0) {
+    if (gNumberOfActiveCheckpoints == 0) {
         return 1;
     }
 
@@ -5720,10 +5730,10 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
     if (checkpointIndex != 0) {
         prevCheckpoint = &gTrackCheckpoints[checkpointIndex - 1];
     } else {
-        prevCheckpoint = &gTrackCheckpoints[gNumberOfCheckpoints - 1];
+        prevCheckpoint = &gTrackCheckpoints[gNumberOfActiveCheckpoints - 1];
     }
 
-    if (*arg6) {
+    if (*isOnAlternateRoute) {
         if (currentCheckpoint->altRouteID != -1) {
             currentCheckpoint = &gTrackCheckpoints[currentCheckpoint->altRouteID];
         }
@@ -5732,15 +5742,15 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
         }
     }
 
-    isOnAlternateRoute = FALSE;
-    if (!(*arg6) && prevCheckpoint->altRouteID == -1 && currentCheckpoint->altRouteID != -1) {
+    isAltCheckpoint = FALSE;
+    if (!(*isOnAlternateRoute) && prevCheckpoint->altRouteID == -1 && currentCheckpoint->altRouteID != -1) {
         altRouteCheckpoint = &gTrackCheckpoints[currentCheckpoint->altRouteID];
         distX = altRouteCheckpoint->x - obj->trans.x_position;
         distY = altRouteCheckpoint->y - obj->trans.y_position;
         distZ = altRouteCheckpoint->z - obj->trans.z_position;
-        if (sqrtf(distX * distX + distY * distY + distZ * distZ) < altRouteCheckpoint->unk2C) {
+        if (sqrtf(distX * distX + distY * distY + distZ * distZ) < altRouteCheckpoint->checkpointID) {
             currentCheckpoint = altRouteCheckpoint;
-            isOnAlternateRoute = TRUE;
+            isAltCheckpoint = TRUE;
         }
     }
 
@@ -5754,24 +5764,24 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
         distZ *= 1.0f / length;
     }
 
-    sp58 = currentCheckpoint->rotationXFrac * obj->trans.x_position + currentCheckpoint->rotationYFrac * obj->trans.y_position +
-           currentCheckpoint->rotationZFrac * obj->trans.z_position + currentCheckpoint->unkC;
+    toNext = currentCheckpoint->rotationXFrac * obj->trans.x_position + currentCheckpoint->rotationYFrac * obj->trans.y_position +
+             currentCheckpoint->rotationZFrac * obj->trans.z_position + currentCheckpoint->unkC;
 
-    sp5C = currentCheckpoint->rotationXFrac * distX + currentCheckpoint->rotationYFrac * distY + currentCheckpoint->rotationZFrac * distZ;
-    sp5C = -sp58 / sp5C;
+    nextLength = currentCheckpoint->rotationXFrac * distX + currentCheckpoint->rotationYFrac * distY + currentCheckpoint->rotationZFrac * distZ;
+    nextLength = -toNext / nextLength;
 
-    sp50 = prevCheckpoint->rotationXFrac * obj->trans.x_position + prevCheckpoint->rotationYFrac * obj->trans.y_position +
-           prevCheckpoint->rotationZFrac * obj->trans.z_position + prevCheckpoint->unkC;
+    fromPrev = prevCheckpoint->rotationXFrac * obj->trans.x_position + prevCheckpoint->rotationYFrac * obj->trans.y_position +
+               prevCheckpoint->rotationZFrac * obj->trans.z_position + prevCheckpoint->unkC;
 
     length = prevCheckpoint->rotationXFrac * distX + prevCheckpoint->rotationYFrac * distY + prevCheckpoint->rotationZFrac * distZ;
-    length = sp50 / length;
+    length = fromPrev / length;
 
-    if (sp5C + length != 0.0) {
-        length = sp5C / (sp5C + length);
+    if (nextLength + length != 0.0) {
+        length = nextLength / (nextLength + length);
     } else {
         length = 0.0f;
     }
-    *arg5 = length;
+    *checkpointDistance = length;
 
     if (obj->behaviorId == BHV_RACER) {
         racer = obj->racer;
@@ -5785,11 +5795,11 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
         }
     }
 
-    if (sp5C <= 0) {
-        if (isOnAlternateRoute) {
-            *arg6 = TRUE;
+    if (nextLength <= 0) {
+        if (isAltCheckpoint) {
+            *isOnAlternateRoute = TRUE;
         } else if (currentCheckpoint->altRouteID == -1) {
-            *arg6 = FALSE;
+            *isOnAlternateRoute = FALSE;
         }
 
         distY = currentCheckpoint->rotationXFrac * objX + currentCheckpoint->rotationYFrac * objY + currentCheckpoint->rotationZFrac * objZ + currentCheckpoint->unkC;
@@ -5804,38 +5814,38 @@ s32 func_800185E4(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ
 
             prevCheckpoint = currentCheckpoint;
             checkpointIndex++;
-            if (checkpointIndex == gNumberOfCheckpoints) {
+            if (checkpointIndex == gNumberOfActiveCheckpoints) {
                 checkpointIndex = 0;
             }
 
             currentCheckpoint = &gTrackCheckpoints[checkpointIndex];
 
-            sp58 = currentCheckpoint->rotationXFrac * obj->trans.x_position + currentCheckpoint->rotationYFrac * obj->trans.y_position +
-                   currentCheckpoint->rotationZFrac * obj->trans.z_position + currentCheckpoint->unkC;
-            sp5C = currentCheckpoint->rotationXFrac * distX + currentCheckpoint->rotationYFrac * distY + currentCheckpoint->rotationZFrac * distZ;
-            sp5C = -sp58 / sp5C;
+            toNext = currentCheckpoint->rotationXFrac * obj->trans.x_position + currentCheckpoint->rotationYFrac * obj->trans.y_position +
+                     currentCheckpoint->rotationZFrac * obj->trans.z_position + currentCheckpoint->unkC;
+            nextLength = currentCheckpoint->rotationXFrac * distX + currentCheckpoint->rotationYFrac * distY + currentCheckpoint->rotationZFrac * distZ;
+            nextLength = -toNext / nextLength;
 
-            sp50 = prevCheckpoint->rotationXFrac * obj->trans.x_position + prevCheckpoint->rotationYFrac * obj->trans.y_position +
-                   prevCheckpoint->rotationZFrac * obj->trans.z_position + prevCheckpoint->unkC;
+            fromPrev = prevCheckpoint->rotationXFrac * obj->trans.x_position + prevCheckpoint->rotationYFrac * obj->trans.y_position +
+                       prevCheckpoint->rotationZFrac * obj->trans.z_position + prevCheckpoint->unkC;
             length = prevCheckpoint->rotationXFrac * distX + prevCheckpoint->rotationYFrac * distY + prevCheckpoint->rotationZFrac * distZ;
-            length = sp50 / length;
+            length = fromPrev / length;
 
-            if (sp5C + length != 0.0) {
-                length = sp5C / (sp5C + length);
+            if (nextLength + length != 0.0) {
+                length = nextLength / (nextLength + length);
             } else {
                 length = 0.0;
             }
-            *arg5 = length;
+            *checkpointDistance = length;
         } else {
-            *arg5 = 0.0;
+            *checkpointDistance = 0.0;
         }
         return 0;
     } else {
-        v1 = length * 100.0f;
-        if (v1 == 0) {
-            v1++;
+        retLength = length * 100.0f;
+        if (retLength == 0) {
+            retLength++;
         }
-        return v1;
+        return retLength;
     }
 }
 
@@ -6067,7 +6077,7 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
     f32 dz;
     CheckpointNode *checkpointNode;
 
-    numCheckpoints = gNumberOfCheckpoints;
+    numCheckpoints = gNumberOfActiveCheckpoints;
     if (numCheckpoints == 0) {
         return FALSE;
     }
@@ -7013,7 +7023,13 @@ void set_ghost_none(void) {
     gHasGhostToSave = FALSE;
 }
 
-Object *func_8001B7A8(Object_Racer *racer, s32 position, f32 *distance) {
+/**
+ * Finds the opponent to this racer in a relative position to them and calculates the distance to them.
+ * The position argument is relative to the racer's current position and represents the number of
+ * places ahead (positive) or behind (negative) the opponent is. So, for instance, if position is 1,
+ * find the opponent one place ahead of the racer; if it's -1, find the opponent one place behind.
+ */
+Object *racer_find_nearest_opponent_relative(Object_Racer *racer, s32 position, f32 *distance) {
     UNUSED s32 pad;
     Object *tempRacerObj;
     position = (racer->racerOrder - position) - 1;
@@ -7024,66 +7040,71 @@ Object *func_8001B7A8(Object_Racer *racer, s32 position, f32 *distance) {
     if (tempRacerObj == NULL) {
         return NULL;
     }
-    *distance = func_8001B834(racer, tempRacerObj->racer);
+    *distance = racer_calc_distance_to_opponent(racer, tempRacerObj->racer);
     return tempRacerObj;
 }
 
-f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
+/**
+ * Calculates the distance between two racers. Traverses through the checkpoints
+ * between the two racers to calculate the total distance.
+ * If the second racer is ahead, the distance is positive, otherwise negative.
+ */
+f32 racer_calc_distance_to_opponent(Object_Racer *racer1, Object_Racer *racer2) {
     Object_Racer *temp_racer;
-    f32 var_f2;
+    f32 totalDistance;
     s32 r1_ccp;
-    UNUSED s32 temp_lo;
-    s32 var_v1;
+    UNUSED s32 pad;
+    s32 reverseOrder;
     s32 checkpointID;
 
-    if (gNumberOfCheckpoints <= 0) {
+    if (gNumberOfActiveCheckpoints <= 0) {
         return 0.0f;
     }
-    var_f2 = 0.0f;
-    var_v1 = FALSE;
+    totalDistance = 0.0f;
+    reverseOrder = FALSE;
     if (racer2->courseCheckpoint < racer1->courseCheckpoint) {
         temp_racer = racer1;
         racer1 = racer2;
         racer2 = temp_racer;
-        var_v1 = TRUE;
+        reverseOrder = TRUE;
     }
-    checkpointID = racer1->checkpoint;
+    checkpointID = racer1->nextCheckpoint;
     for (r1_ccp = racer1->courseCheckpoint; r1_ccp < racer2->courseCheckpoint; r1_ccp++) {
-        var_f2 += gTrackCheckpoints[checkpointID++].distance;
-        if (checkpointID == gNumberOfCheckpoints) {
+        totalDistance += gTrackCheckpoints[checkpointID++].distance;
+        if (checkpointID == gNumberOfActiveCheckpoints) {
             checkpointID = 0;
         }
     }
-    checkpointID = racer1->checkpoint - 1;
+    checkpointID = racer1->nextCheckpoint - 1;
     if (checkpointID < 0) {
-        checkpointID = gNumberOfCheckpoints - 1;
+        checkpointID = gNumberOfActiveCheckpoints - 1;
     }
-    var_f2 += (gTrackCheckpoints[checkpointID].distance * racer1->checkpoint_distance);
-    checkpointID = racer2->checkpoint - 1;
+    totalDistance += (gTrackCheckpoints[checkpointID].distance * racer1->checkpoint_distance);
+    checkpointID = racer2->nextCheckpoint - 1;
     if (checkpointID < 0) {
-        checkpointID = gNumberOfCheckpoints - 1;
+        checkpointID = gNumberOfActiveCheckpoints - 1;
     }
-    var_f2 -= (gTrackCheckpoints[checkpointID].distance * racer2->checkpoint_distance);
-    if (var_v1) {
-        var_f2 = -var_f2;
+    totalDistance -= (gTrackCheckpoints[checkpointID].distance * racer2->checkpoint_distance);
+    if (reverseOrder) {
+        totalDistance = -totalDistance;
     }
-    return var_f2;
+    return totalDistance;
 }
 
-UNUSED f32 func_8001B954(Object_Racer *racer) {
+UNUSED f32 race_calc_distance_to_start_line(Object_Racer *racer) {
     f32 distLeft;
     s32 checkpointID;
 
-    if (gNumberOfCheckpoints <= 0) {
+    if (gNumberOfActiveCheckpoints <= 0) {
         return 0.0f;
     }
     distLeft = 0.0f;
-    for (checkpointID = racer->checkpoint; checkpointID < gNumberOfCheckpoints; checkpointID++) {
+    for (checkpointID = racer->nextCheckpoint; checkpointID < gNumberOfActiveCheckpoints; checkpointID++) {
         distLeft += gTrackCheckpoints[checkpointID].distance;
     }
-    checkpointID = racer->checkpoint - 1;
+    checkpointID = racer->nextCheckpoint - 1;
     if (checkpointID < 0) {
-        checkpointID = gNumberOfCheckpoints - 1;
+        checkpointID = gNumberOfActiveCheckpoints - 1;
     }
     distLeft += (gTrackCheckpoints[checkpointID].distance * racer->checkpoint_distance);
     return distLeft;
@@ -7112,7 +7133,7 @@ CheckpointNode *find_next_checkpoint_node(s32 splinePos, s32 arg1) {
  * Returns the number of active checkpoints in the current level.
  */
 s32 get_checkpoint_count(void) {
-    return gNumberOfCheckpoints;
+    return gNumberOfActiveCheckpoints;
 }
 
 /**
@@ -7174,12 +7195,12 @@ UNUSED void debug_render_checkpoints(Gfx **dList, Mtx **mtx, Vertex **vtx) {
     s32 i;
 
     material_set_no_tex_offset(dList, NULL, RENDER_Z_COMPARE);
-    if (gNumberOfCheckpoints > 3) {
-        for (i = 0; i < gNumberOfCheckpoints; i++) {
+    if (gNumberOfActiveCheckpoints > 3) {
+        for (i = 0; i < gNumberOfActiveCheckpoints; i++) {
             // Ground path
             debug_render_checkpoint_node(i, 0, dList, mtx, vtx);
         }
-        for (i = 0; i < gNumberOfCheckpoints; i++) {
+        for (i = 0; i < gNumberOfActiveCheckpoints; i++) {
             // Air path
             debug_render_checkpoint_node(i, 1, dList, mtx, vtx);
         }
@@ -9670,7 +9691,7 @@ void init_racer_for_challenge(s32 vehicleID) {
     gTajRaceInit = 3;
     racer = get_racer_object(PLAYER_ONE)->racer;
     racer->courseCheckpoint = 0;
-    racer->checkpoint = 0;
+    racer->nextCheckpoint = 0;
     racer->lap = 0;
     racer->unk1BA = 0;
     set_taj_challenge_type(vehicleID);
@@ -9709,7 +9730,7 @@ void mode_init_taj_race(void) {
         racer->wrongWayCounter = 0;
         racer->startInput = 0;
         racer->courseCheckpoint = 0;
-        racer->checkpoint = 0;
+        racer->nextCheckpoint = 0;
         racer->lap = 0;
         racer->countLap = 0;
         racer->lap_times[0] = 0;
@@ -9818,7 +9839,7 @@ void mode_end_taj_race(s32 reason) {
         if (!racer) {}
         racer->raceFinished = 0;
         racer->lap = 0;
-        racer->checkpoint = 0;
+        racer->nextCheckpoint = 0;
         racer->courseCheckpoint = 0;
     } while (++i < gNumRacers);
 
@@ -9878,7 +9899,7 @@ CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
     Object *ptrList;
     s32 i;
 
-    if (gNumberOfCheckpoints == 0) {
+    if (gNumberOfActiveCheckpoints == 0) {
         lastCheckpointNode = NULL;
         for (i = 0; i < gObjectCount; i++) {
             ptrList = gObjPtrList[i];
@@ -9893,7 +9914,7 @@ CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
             }
         }
     } else {
-        lastCheckpointNode = &gTrackCheckpoints[gNumberOfCheckpoints - 1];
+        lastCheckpointNode = &gTrackCheckpoints[gNumberOfActiveCheckpoints - 1];
         obj->trans.x_position = lastCheckpointNode->x - (lastCheckpointNode->rotationZFrac * 35.0f);
         obj->trans.y_position = lastCheckpointNode->y;
         obj->trans.z_position = lastCheckpointNode->z + (lastCheckpointNode->rotationXFrac * 35.0f);
@@ -9912,8 +9933,8 @@ CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
     } else {
         racer->steerVisualRotation = ptrList->trans.rotation.y_rotation;
     }
-    racer->checkpoint = 0;
-    racer->courseCheckpoint = racer->lap * gNumberOfCheckpoints;
+    racer->nextCheckpoint = 0;
+    racer->courseCheckpoint = racer->lap * gNumberOfActiveCheckpoints;
     obj->trans.rotation.y_rotation = racer->steerVisualRotation;
     racer->unkD8[0] = obj->trans.x_position;
     racer->unkD8[1] = obj->trans.y_position + 15.0f;

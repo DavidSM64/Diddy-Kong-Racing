@@ -1238,7 +1238,7 @@ typedef struct Object_Racer {
     /* 0x18C */ s16 unk18C;
     /* 0x18E */ s16 shieldTimer;
     /* 0x190 */ s16 courseCheckpoint;
-    /* 0x192 */ s8 checkpoint;
+    /* 0x192 */ s8 nextCheckpoint;
     /* 0x193 */ s8 lap;
     /* 0x194 */ s8 countLap;
     /* 0x195 */ s8 magnetLevel3;
@@ -1266,7 +1266,7 @@ typedef struct Object_Racer {
     /* 0x1C2 */ s16 unk1C2;
     /* 0x1C4 */ s16 unk1C4;
     /* 0x1C6 */ s16 unk1C6;
-    /* 0x1C8 */ u8 unk1C8;
+    /* 0x1C8 */ u8 isOnAlternateRoute;
     /* 0x1C9 */ u8 unk1C9;
     /* 0x1CA */ s8 unk1CA;
     /* 0x1CB */ s8 unk1CB;
