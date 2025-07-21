@@ -145,7 +145,7 @@ typedef struct LevelObjectEntry_Checkpoint {
     /* 0x14 */ s8 unk14;
     /* 0x15 */ s8 unk15;
     /* 0x16 */ s8 unk16;
-    /* 0x17 */ u8 isInactive;
+    /* 0x17 */ u8 isAltCheckpoint;
     /* 0x18 */ s8 unk18;
     /* 0x19 */ u8 unk19;
     /* 0x1A */ s8 vehicleType;
