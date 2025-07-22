@@ -437,7 +437,7 @@ void obj_init_animobject(Object *, Object *);
 Object *obj_butterfly_node(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis);
 void func_8002125C(Object *obj, LevelObjectEntry_Animation *entry, Object_AnimatedObject *animObj, UNUSED s32 index);
 void func_80021104(Object *obj, Object_AnimatedObject *animObj, LevelObjectEntry_Animation *entry);
-s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,
+s32 homing_rocket_get_next_direction(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,
                   f32 *outZ);
 void func_80016500(Object *obj, Object_Racer *racer);
 void track_spawn_objects(s32, s32);

@@ -5709,7 +5709,8 @@ void checkpoint_update_all(void) {
  * - -100: Racer passed the checkpoint.
  * - Otherwise: No checkpoint has been passed.
  */
-s32 checkpoint_is_passed(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance, u8 *isOnAlternateRoute) {
+s32 checkpoint_is_passed(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance,
+                         u8 *isOnAlternateRoute) {
     s32 retLength;
     s32 isAltCheckpoint;
     f32 distX, distY, distZ;
@@ -5764,16 +5765,20 @@ s32 checkpoint_is_passed(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f
         distZ *= 1.0f / length;
     }
 
-    toNext = currentCheckpoint->rotationXFrac * obj->trans.x_position + currentCheckpoint->rotationYFrac * obj->trans.y_position +
+    toNext = currentCheckpoint->rotationXFrac * obj->trans.x_position +
+             currentCheckpoint->rotationYFrac * obj->trans.y_position +
              currentCheckpoint->rotationZFrac * obj->trans.z_position + currentCheckpoint->unkC;
 
-    nextLength = currentCheckpoint->rotationXFrac * distX + currentCheckpoint->rotationYFrac * distY + currentCheckpoint->rotationZFrac * distZ;
+    nextLength = currentCheckpoint->rotationXFrac * distX + currentCheckpoint->rotationYFrac * distY +
+                 currentCheckpoint->rotationZFrac * distZ;
     nextLength = -toNext / nextLength;
 
-    fromPrev = prevCheckpoint->rotationXFrac * obj->trans.x_position + prevCheckpoint->rotationYFrac * obj->trans.y_position +
+    fromPrev = prevCheckpoint->rotationXFrac * obj->trans.x_position +
+               prevCheckpoint->rotationYFrac * obj->trans.y_position +
                prevCheckpoint->rotationZFrac * obj->trans.z_position + prevCheckpoint->unkC;
 
-    length = prevCheckpoint->rotationXFrac * distX + prevCheckpoint->rotationYFrac * distY + prevCheckpoint->rotationZFrac * distZ;
+    length = prevCheckpoint->rotationXFrac * distX + prevCheckpoint->rotationYFrac * distY +
+             prevCheckpoint->rotationZFrac * distZ;
     length = fromPrev / length;
 
     if (nextLength + length != 0.0) {
@@ -5802,7 +5807,8 @@ s32 checkpoint_is_passed(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f
             *isOnAlternateRoute = FALSE;
         }
 
-        distY = currentCheckpoint->rotationXFrac * objX + currentCheckpoint->rotationYFrac * objY + currentCheckpoint->rotationZFrac * objZ + currentCheckpoint->unkC;
+        distY = currentCheckpoint->rotationXFrac * objX + currentCheckpoint->rotationYFrac * objY +
+                currentCheckpoint->rotationZFrac * objZ + currentCheckpoint->unkC;
         if (distY > 0) {
             if (obj->behaviorId == BHV_RACER) {
                 Object_Racer *objRacer = obj->racer;
@@ -5820,14 +5826,18 @@ s32 checkpoint_is_passed(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f
 
             currentCheckpoint = &gTrackCheckpoints[checkpointIndex];
 
-            toNext = currentCheckpoint->rotationXFrac * obj->trans.x_position + currentCheckpoint->rotationYFrac * obj->trans.y_position +
+            toNext = currentCheckpoint->rotationXFrac * obj->trans.x_position +
+                     currentCheckpoint->rotationYFrac * obj->trans.y_position +
                      currentCheckpoint->rotationZFrac * obj->trans.z_position + currentCheckpoint->unkC;
-            nextLength = currentCheckpoint->rotationXFrac * distX + currentCheckpoint->rotationYFrac * distY + currentCheckpoint->rotationZFrac * distZ;
+            nextLength = currentCheckpoint->rotationXFrac * distX + currentCheckpoint->rotationYFrac * distY +
+                         currentCheckpoint->rotationZFrac * distZ;
             nextLength = -toNext / nextLength;
 
-            fromPrev = prevCheckpoint->rotationXFrac * obj->trans.x_position + prevCheckpoint->rotationYFrac * obj->trans.y_position +
+            fromPrev = prevCheckpoint->rotationXFrac * obj->trans.x_position +
+                       prevCheckpoint->rotationYFrac * obj->trans.y_position +
                        prevCheckpoint->rotationZFrac * obj->trans.z_position + prevCheckpoint->unkC;
-            length = prevCheckpoint->rotationXFrac * distX + prevCheckpoint->rotationYFrac * distY + prevCheckpoint->rotationZFrac * distZ;
+            length = prevCheckpoint->rotationXFrac * distX + prevCheckpoint->rotationYFrac * distY +
+                     prevCheckpoint->rotationZFrac * distZ;
             length = fromPrev / length;
 
             if (nextLength + length != 0.0) {
@@ -6059,9 +6069,12 @@ void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRat
     }
 }
 
-// Rocket Path
-s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,
-                  f32 *outZ) {
+/**
+ * Calculates the direction a homing rocket takes toward the next checkpoint.
+ * Returns true if a direction was calculated, or false if there are no checkpoints.
+ */
+s32 homing_rocket_get_next_direction(Object *obj, s32 checkpoint, u8 isOnAlternateRoute, s32 arg3, s32 arg4,
+                                     f32 checkpointDist, f32 *outX, f32 *outY, f32 *outZ) {
     s32 numCheckpoints;
     s32 checkpointIndex;
     s32 i;
@@ -6086,7 +6099,7 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
         checkpointIndex += numCheckpoints;
     }
     for (i = 0; i < 4; i++) {
-        checkpointNode = find_next_checkpoint_node(checkpointIndex, arg2);
+        checkpointNode = find_next_checkpoint_node(checkpointIndex, isOnAlternateRoute);
         xData[i] = checkpointNode->x + (checkpointNode->scale * checkpointNode->rotationZFrac * arg3);
         yData[i] = checkpointNode->y + (checkpointNode->scale * arg4);
         zData[i] = checkpointNode->z + (checkpointNode->scale * -checkpointNode->rotationXFrac * arg3);
@@ -7121,9 +7134,9 @@ CheckpointNode *get_checkpoint_node(s32 checkpointID) {
  * Takes the position along the checkpoint path, and finds the next applicable node.
  * If an alternative path is available, use that node instead.
  */
-CheckpointNode *find_next_checkpoint_node(s32 splinePos, s32 arg1) {
+CheckpointNode *find_next_checkpoint_node(s32 splinePos, s32 isAlternate) {
     CheckpointNode *checkpointNode = &gTrackCheckpoints[splinePos];
-    if (arg1 != 0 && checkpointNode->altRouteID != -1) {
+    if (isAlternate != 0 && checkpointNode->altRouteID != -1) {
         checkpointNode = &gTrackCheckpoints[checkpointNode->altRouteID];
     }
     return checkpointNode;

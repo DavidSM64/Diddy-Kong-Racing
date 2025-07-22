@@ -4468,8 +4468,8 @@ void update_player_racer(Object *obj, s32 updateRate) {
             racer_sound_update(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         lastCheckpointDist = tempRacer->checkpoint_distance;
-        tempVar = checkpoint_is_passed(tempRacer->nextCheckpoint, obj, xTemp, yTemp, zTemp, &tempRacer->checkpoint_distance,
-                                &tempRacer->isOnAlternateRoute);
+        tempVar = checkpoint_is_passed(tempRacer->nextCheckpoint, obj, xTemp, yTemp, zTemp,
+                                       &tempRacer->checkpoint_distance, &tempRacer->isOnAlternateRoute);
         if (tempVar == -100) {
             racer_update_progress(tempRacer);
         }
@@ -4502,7 +4502,8 @@ void update_player_racer(Object *obj, s32 updateRate) {
             }
             if (is_taj_challenge()) {
                 if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
-                    checkpointNode = find_next_checkpoint_node(tempRacer->nextCheckpoint, tempRacer->isOnAlternateRoute);
+                    checkpointNode =
+                        find_next_checkpoint_node(tempRacer->nextCheckpoint, tempRacer->isOnAlternateRoute);
                     if (!tempRacer->challengeMarker) {
                         newObject.x = 0;
                         newObject.y = 0;
@@ -8831,7 +8832,8 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         }
         lastCheckpointDist = racer->checkpoint_distance;
         countOfObjects = racer->nextCheckpoint;
-        var_t2 = checkpoint_is_passed(racer->nextCheckpoint, obj, xPos, yPos, zPos, &racer->checkpoint_distance, &racer->isOnAlternateRoute);
+        var_t2 = checkpoint_is_passed(racer->nextCheckpoint, obj, xPos, yPos, zPos, &racer->checkpoint_distance,
+                                      &racer->isOnAlternateRoute);
         if (var_t2 == -100) {
             racer_update_progress(racer);
         }

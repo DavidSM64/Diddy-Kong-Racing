@@ -4875,8 +4875,8 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     if (weapon->weaponID == WEAPON_ROCKET_HOMING) {
         numCheckpoints = get_checkpoint_count();
         if (numCheckpoints > 0) {
-            if (checkpoint_is_passed(weapon->checkpoint, obj, posX, posY, posZ, &weapon->checkpointDist, (u8 *) &surface) ==
-                FALSE) {
+            if (checkpoint_is_passed(weapon->checkpoint, obj, posX, posY, posZ, &weapon->checkpointDist,
+                                     (u8 *) &surface) == FALSE) {
                 weapon->checkpoint++;
                 if (weapon->checkpoint >= numCheckpoints) {
                     weapon->checkpoint = 0;
@@ -5026,8 +5026,8 @@ void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon 
         }
         dist = sqrtf(dist + distY);
         if (dist > 300.0f && rocket->checkpoint != -1 && rocket->hitObj == NULL) {
-            sp58 = func_8001955C(obj, rocket->checkpoint, racer->isOnAlternateRoute, rocket->unk14, rocket->unk16,
-                                 rocket->checkpointDist, &diffX, &diffY, &diffZ);
+            sp58 = homing_rocket_get_next_direction(obj, rocket->checkpoint, racer->isOnAlternateRoute, rocket->unk14,
+                                                    rocket->unk16, rocket->checkpointDist, &diffX, &diffY, &diffZ);
             sineY = arctan2_f(diffY, 500.0f) & 0xFFFF;
             shift = 3;
         } else {
