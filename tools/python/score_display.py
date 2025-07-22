@@ -13,6 +13,8 @@ TOTAL_NUMBER_OF_TROPHIES = 5
 
 DEFAULT_MAX_LENGTH = 42
 
+ROUND_NAMES = ['One', 'Two', 'Three', 'Four']
+
 class ScoreDisplay:
     def __init__(self):
         self.progressNodes = readScoreDisplayJson()
@@ -48,22 +50,15 @@ class ScoreDisplay:
         #if nodeType != 'Task':
         #    out['Msg'] += '\n'
         if nodeType == 'Race':
-            out['Msg'] += ' (Lap ' + str(int(currentNodeProgress*3)+1) + '/3)'
+            out['Msg'] += f' (Lap {int(currentNodeProgress*3)+1}/3)'
         elif nodeType == 'Collecting':
             collectingName = self.progressNodes[numberOfCompletedNodes]['collecting']['name']
             collectingMax = self.progressNodes[numberOfCompletedNodes]['collecting']['max']
-            out['Msg'] += ' (' + str(int(currentNodeProgress * collectingMax)) + '/' + str(collectingMax) + ' ' + collectingName + 's)'
+            out['Msg'] += f' ({int(currentNodeProgress * collectingMax)}/{collectingMax} {collectingName}s)'
         elif nodeType == 'SilverCoinsRace':
-            out['Msg'] += ' (' + str(int(currentNodeProgress*9)) + '/8 silver coins)'
+            out['Msg'] += f' ({int(currentNodeProgress*9)}/8 silver coins)'
         elif nodeType == 'TrophyRace':
-            if currentNodeProgress < 0.25:
-                out['Msg'] += ' (Round One)'
-            elif currentNodeProgress < 0.50:
-                out['Msg'] += ' (Round Two)'
-            elif currentNodeProgress < 0.75:
-                out['Msg'] += ' (Round Three)'
-            elif currentNodeProgress < 1.00:
-                out['Msg'] += ' (Round Four)'
+            out['Msg'] += f' (Round {ROUND_NAMES[int(min(currentNodeProgress, 1.0)*4)]}, Lap {int(currentNodeProgress*12)%3+1}/3)'
         elif nodeType == 'Battle':
             if currentNodeProgress < 0.34:
                 out['Msg'] += ' (3 opponents remain)'
@@ -107,7 +102,7 @@ class ScoreDisplay:
         out += self.makeLine(' ', dashLen, status['Msg'])
         return [out, dashLen]
     
-    def getDisplay(self, advOnePer, advOneNonMatchPer, advTwoPer, showFlags=3, totalDecompFunctions=0, totalGlobalAsm=0, totalNonMatching=0, totalNonEquivalent=0, totalDocumented=0, totalUndocumented=0):
+    def getDisplay(self, advOnePer, advOneNonMatchPer, advTwoPer, showFlags=3, totalDecompFunctions=0, totalGlobalAsm=0, totalNonMatching=0, totalNonEquivalent=0, totalDocumented=0, totalUndocumented=0, totalNamedFunc=0, totalUncommented=0):
         advOneStatus = self.getStatus(advOnePer)
         advTwoStatus = self.getStatus(advTwoPer)
         if showFlags == 3:
@@ -142,6 +137,8 @@ class ScoreDisplay:
                 out += self.makeLine('-', dashLen, '{:5.2f}% Complete'.format(advTwoPer))
             out += self.makeLine(' ', dashLen, '# Documented functions: ' + str(totalDocumented))
             out += self.makeLine(' ', dashLen, '# Undocumented remaining: ' + str(totalUndocumented))
+            out += self.makeLine(' ', dashLen, '# Functions named `func_*`: ' + str(totalNamedFunc))
+            out += self.makeLine(' ', dashLen, '# Functions without comments: ' + str(totalUncommented))
             out += advTwoGameStatusDisplay[0]
         out += self.makeLine('=', dashLen)[:-1]
         return out
