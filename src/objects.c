@@ -7104,6 +7104,10 @@ f32 racer_calc_distance_to_opponent(Object_Racer *racer1, Object_Racer *racer2) 
     return totalDistance;
 }
 
+/**
+ * Traverses from the racer's position through the upcoming checkpoints
+ * to the starting line and calculates the total distance.
+ */
 UNUSED f32 race_calc_distance_to_start_line(Object_Racer *racer) {
     f32 distLeft;
     s32 checkpointID;
