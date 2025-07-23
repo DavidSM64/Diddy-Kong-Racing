@@ -3310,9 +3310,9 @@ void render_3d_billboard(Object *obj) {
     if (obj->behaviorId == BHV_BOMB_EXPLOSION) {
         //!@bug Never true, because the type is u8.
         if (obj->opacity > 255) {
-            obj->opacity = obj->properties.bombExplosion.unk4 & 0xFF;
+            obj->opacity = obj->properties.bombExplosion.opacity & 0xFF;
         } else {
-            obj->opacity = (obj->opacity * (obj->properties.bombExplosion.unk4 & 0xFF)) >> 8;
+            obj->opacity = (obj->opacity * (obj->properties.bombExplosion.opacity & 0xFF)) >> 8;
         }
     }
 
@@ -8649,7 +8649,6 @@ void func_8001F450(void) {
     D_8011AD53 = 1;
 }
 
-// Called from a lot of object loop functions
 s32 func_8001F460(Object *arg0, s32 arg1, Object *arg2) {
     f32 var_f2;
     f32 var_f0;

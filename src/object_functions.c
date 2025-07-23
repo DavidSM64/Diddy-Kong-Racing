@@ -1415,9 +1415,6 @@ void play_tt_voice_clip(u16 soundID, s32 interrupt) {
     }
 }
 
-/**
- * Fish init behaviour.
- */
 void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param) {
     Object_Fish *fish;
     s32 pad0[2];
@@ -1513,9 +1510,6 @@ void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param)
     }
 }
 
-/**
- * Fish object loop behaviour.
- */
 void obj_loop_fish(Object *fishObj, s32 updateRate) {
     f32 zThing;
     f32 yThing;
@@ -1659,6 +1653,7 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 updateRate) {
 
 /**
  * Object animator init function.
+ * Sets up the initial properties of the animator, then calls the loop function once.
  * Official name: animInit
  */
 void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 param) {
@@ -1690,9 +1685,6 @@ void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 param)
     obj_loop_animator(obj, 0x20000);
 }
 
-/**
- * Object animator loop function.
- */
 void obj_loop_animator(Object *obj, s32 updateRate) {
     s32 pad[2];
     Object_Animator *animator;
@@ -1785,9 +1777,6 @@ void obj_loop_animator(Object *obj, s32 updateRate) {
     }
 }
 
-/**
- * Object animation init function.
- */
 void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2) {
     Object *animTarget;
     s8 tempOrderIndex;
@@ -1981,6 +1970,7 @@ void obj_loop_vehicleanim(Object *obj, s32 updateRate) {
 
 /**
  * Hit tester init function.
+ * Sets up interaction properties such as flags and hitbox radius.
  * Curiously, the hit tester entry parameter is unused.
  */
 void obj_init_hittester(Object *obj, UNUSED LevelObjectEntry_HitTester *entry) {
@@ -1990,9 +1980,6 @@ void obj_init_hittester(Object *obj, UNUSED LevelObjectEntry_HitTester *entry) {
     obj->interactObj->pushForce = 0;
 }
 
-/**
- * Hit tester loop behaviour.
- */
 void obj_loop_hittester(Object *obj, s32 updateRate) {
     func_8001F460(obj, updateRate, obj);
 }
@@ -2028,6 +2015,7 @@ void obj_init_snowball(Object *obj, UNUSED LevelObjectEntry_Snowball *entry) {
 
 /**
  * Rolling snowball loop behaviour.
+ * Plays sound at the snowball's position, presumably the sound of it rolling.
  */
 void obj_loop_snowball(Object *obj, s32 updateRate) {
     Object_AnimatedObject *animated = obj->animatedObject;
@@ -2207,9 +2195,6 @@ void obj_loop_animcar(Object *obj, s32 updateRate) {
     }
 }
 
-/**
- * Info Point init behaviour.
- */
 void obj_init_infopoint(Object *obj, LevelObjectEntry_InfoPoint *entry) {
     if (entry->hitbox[1] != 0) {
         obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
@@ -2224,9 +2209,6 @@ void obj_init_infopoint(Object *obj, LevelObjectEntry_InfoPoint *entry) {
     obj->trans.rotation.y_rotation = entry->unkB << 10; // Not sure about the values here.
 }
 
-/**
- * Info Point loop behaviour.
- */
 void obj_loop_infopoint(Object *obj, UNUSED s32 updateRate) {
     s16 player;
     ObjectInteraction *interactObj;
@@ -2309,6 +2291,7 @@ void obj_loop_wardensmoke(Object *obj, s32 updateRate) {
 
 /**
  * Bomb Explosion init behaviour.
+ * The properties set up here have mostly to do with the explosion animation, like the scale and the timer.
  */
 void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) {
     LevelObjectEntry_BombExplosion *entry2;
@@ -2317,32 +2300,35 @@ void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) 
     obj->modelIndex = rand_range(0, obj->header->numberOfModelIds - 1);
     entry2 = entry; // Needed for a match.
     obj->properties.bombExplosion.timer = 0;
-    obj->properties.bombExplosion.unk4 = 0xFF;
-    if (entry->unk8) {
-        obj->properties.bombExplosion.unk4 |= (entry2->unk8 << 8) & 0xFF00;
+    obj->properties.bombExplosion.opacity = 0xFF;
+    if (entry->opacity_hi) {
+        obj->properties.bombExplosion.opacity |= (entry2->opacity_hi << 8) & 0xFF00;
     }
     obj->particleEmittersEnabled = OBJ_EMIT_1;
 }
 
 /**
  * Bomb Explosion loop behaviour.
+ * Handles the explosion animation, spawning initially and then scaling down and fading out
+ * near the end, and finally killing the explosion object.
+ * Also spawns particle effects, but only if there are two or fewer human players.
  */
 void obj_loop_bombexplosion(Object *obj, s32 updateRate) {
-    s32 temp_t8;
+    s32 opacity_hi;
 
     obj->properties.bombExplosion.timer += updateRate;
-    temp_t8 = (obj->properties.bombExplosion.unk4 >> 8) & 0xFF;
-    if (obj->properties.bombExplosion.timer > 10 && temp_t8 != 0) {
-        obj->properties.bombExplosion.unk4 ^= (temp_t8 << 8);
+    opacity_hi = (obj->properties.bombExplosion.opacity >> 8) & 0xFF;
+    if (obj->properties.bombExplosion.timer > 10 && opacity_hi != 0) {
+        obj->properties.bombExplosion.opacity ^= (opacity_hi << 8);
         obj_spawn_effect(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position,
-                         ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_NONE, 1.0f, temp_t8 - 1);
+                         ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_NONE, 1.0f, opacity_hi - 1);
     }
     if (obj->properties.bombExplosion.timer < 20) {
         obj->trans.scale = ((obj->properties.bombExplosion.timer / 20.0f) * 10.0f) + 0.5f;
-        obj->properties.bombExplosion.unk4 |= 0xFF;
+        obj->properties.bombExplosion.opacity |= 0xFF;
     } else if (obj->properties.bombExplosion.timer < 0x28) {
         obj->trans.scale = (((obj->properties.bombExplosion.timer - 20) / 20.0f) * 5.0f) + 10.5f;
-        obj->properties.bombExplosion.unk4 = 0x1EF - (obj->properties.bombExplosion.timer * 0xC);
+        obj->properties.bombExplosion.opacity = 0x1EF - (obj->properties.bombExplosion.timer * 0xC);
     } else {
         free_object(obj);
     }
@@ -4141,7 +4127,11 @@ void obj_init_seamonster(UNUSED Object *obj, UNUSED LevelObjectEntry_SeaMonster 
 void obj_loop_seamonster(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
-/* Official name: fogInit(?) */
+/**
+ * Fog changer init function.
+ * Sets the fog's radius.
+ * Official name: fogInit(?)
+ */
 void obj_init_fogchanger(Object *obj, LevelObjectEntry_FogChanger *entry) {
     f32 dist;
     dist = entry->distance * 8.0f;
@@ -5430,26 +5420,26 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
 
     audio = obj->audio;
     audio->soundId = entry->soundId;
-    audio->unk2 = entry->unkA;
-    audio->unkC = entry->unkF;
-    audio->unk6 = entry->unkE;
-    audio->unk4 = entry->unkC;
-    audio->unk5 = entry->unkD;
-    audio->unkD = entry->unk10;
+    audio->range = entry->range;
+    audio->fastFalloff = entry->fastFalloff;
+    audio->pitch = entry->pitch;
+    audio->volume = entry->volume;
+    audio->minVolume = entry->minVolume;
+    audio->priority = entry->priority;
     audio->soundMask = NULL;
     if (sound_is_looped(audio->soundId)) {
-        audspat_point_create(audio->soundId, entry->common.x, entry->common.y, entry->common.z, 9, audio->unk5,
-                             audio->unk4, audio->unk2, audio->unkC, audio->unk6, audio->unkD, &audio->soundMask);
+        audspat_point_create(audio->soundId, entry->common.x, entry->common.y, entry->common.z, 9, audio->minVolume,
+                             audio->volume, audio->range, audio->fastFalloff, audio->pitch, audio->priority, &audio->soundMask);
     } else {
-        audspat_point_create(audio->soundId, entry->common.x, entry->common.y, entry->common.z, 10, audio->unk5,
-                             audio->unk4, audio->unk2, audio->unkC, audio->unk6, audio->unkD, &audio->soundMask);
+        audspat_point_create(audio->soundId, entry->common.x, entry->common.y, entry->common.z, 10, audio->minVolume,
+                             audio->volume, audio->range, audio->fastFalloff, audio->pitch, audio->priority, &audio->soundMask);
     }
     free_object(obj);
 }
 
 /**
  * Audio Line init function.
- * Sets up a line in the audio spatial system, then frees the audio object.
+ * Sets up a polyline in the audio spatial system, then frees the audio object.
  * Official name: audioLineInit
  */
 void obj_init_audioline(Object *obj, LevelObjectEntry_AudioLine *entry) {
@@ -5478,21 +5468,18 @@ void obj_init_audioline(Object *obj, LevelObjectEntry_AudioLine *entry) {
  * Sets up a reverb point in the audio spatial system, then frees the audio object.
  */
 void obj_init_audioreverb(Object *obj, LevelObjectEntry_AudioReverb *entry) {
-    s32 temp;
+    s32 lineID;
     Object_AudioReverb *reverb = obj->audio_reverb;
-    reverb->unk2 = entry->unk8;
-    temp = entry->lineID;
-    reverb->lineID = temp & 0xFF;
-    reverb->unk5 = entry->unkA;
-    audspat_reverb_add_vertex(entry->common.x, entry->common.y, entry->common.z, reverb->unk2, reverb->lineID,
-                              reverb->unk5);
+    reverb->magnitude = entry->magnitude;
+    lineID = entry->lineID;
+    reverb->lineID = lineID & 0xFF;
+    reverb->vertexIndex = entry->vertexIndex;
+    audspat_reverb_add_vertex(entry->common.x, entry->common.y, entry->common.z, reverb->magnitude, reverb->lineID,
+                              reverb->vertexIndex);
     free_object(obj);
 }
 
-/**
- * Texture scroll init function.
- * Official name: texscrollInit
- */
+/* Official name: texscrollInit */
 void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2) {
     Object_TexScroll *texscroll;
     LevelModel *levelModel;
@@ -5516,9 +5503,6 @@ void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2
     }
 }
 
-/**
- * Texture scroll loop function.
- */
 void obj_loop_texscroll(Object *obj, s32 updateRate) {
     s32 pad[2];
     LevelModel *levelModel;
@@ -5614,10 +5598,7 @@ void obj_loop_texscroll(Object *obj, s32 updateRate) {
     }
 }
 
-/**
- * Light point init function.
- * Official name: rgbalightInit
- */
+/* Official name: rgbalightInit */
 void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s32 arg2) {
     obj->light = light_add_from_level_object_entry(obj, entry);
 }
@@ -5811,9 +5792,6 @@ void obj_init_wavegenerator(Object *obj, UNUSED LevelObjectEntry_WaveGenerator *
     wavegen_add(obj);
 }
 
-/**
- * Butterfly init function.
- */
 void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 param) {
     Object_Butterfly *butterfly;
     s32 uMask;
@@ -5878,9 +5856,6 @@ void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butter
     }
 }
 
-/**
- * Butterfly loop function.
- */
 void obj_loop_butterfly(Object *butterflyObj, s32 updateRate) {
     f32 xDiff;
     f32 yDiff;
@@ -6289,9 +6264,6 @@ void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry) {
     midiFade->unk1 = 0;
 }
 
-/**
- * MIDI Fade Point init function.
- */
 void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) {
     Object_MidiFadePoint *midi_fade_point;
     ModelInstance *modInst;
@@ -6363,9 +6335,6 @@ void obj_loop_bubbler(Object *obj, s32 updateRate) {
     }
 }
 
-/**
- * Boost init function.
- */
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost2 *entry) {
     Object_Boost *asset20 = (Object_Boost *) get_misc_asset(ASSET_MISC_20);
     obj->boost = &asset20[entry->racerIndex];
