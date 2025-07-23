@@ -117,7 +117,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
         racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
     }
     sp3C = FALSE;
-    if ((find_next_checkpoint_node(racer->checkpoint, racer->unk1C8))->unk36[racer->unk1CA] == 1) {
+    if ((find_next_checkpoint_node(racer->nextCheckpoint, racer->isOnAlternateRoute))->unk36[racer->unk1CA] == 1) {
         sp3C = TRUE;
     }
     if (obj->animationID != ANIM_BLUEY_DAMAGE) {

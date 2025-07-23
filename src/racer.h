@@ -177,7 +177,7 @@ void drm_checksum_balloon(void);
 void drm_vehicle_traction(void);
 s32 turn_head_towards_object(Object *obj, Object_Racer *racer, Object *targetObj, f32 distance);
 void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, s32 arg2);
-void func_8005C270(Object_Racer *racer);
+void racer_update_progress(Object_Racer *racer);
 f32 handle_racer_top_speed(Object *obj, Object_Racer *racer);
 void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 flags);
 void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s16 xRotation, s16 zRotation);

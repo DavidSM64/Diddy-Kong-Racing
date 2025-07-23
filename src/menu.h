@@ -182,6 +182,12 @@ enum TrackMenuTypes {
     TRACKMENU_TYPE_LOAD_LEVEL
 };
 
+enum CharacterSelectStatus {
+    CHARSELECT_STATUS_UNCONFIRMED,
+    CHARSELECT_STATUS_CONFIRMED,
+    CHARSELECT_STATUS_READY,
+};
+
 #define CHEAT(index) 1 << index
 
 typedef enum Cheats {

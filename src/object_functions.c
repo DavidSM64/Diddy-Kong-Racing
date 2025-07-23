@@ -64,13 +64,13 @@ Triangle D_800DC9D0[8] = {
     { { { 0, 2, 5, 4 } }, { { { 1, 0 } } }, { { { 0, 4 } } }, { { { 0, 0 } } } },
 };
 
-u8 D_800DCA50[8] = { 2, 5, 6, 3, 10, 8, 7, 9 };
-u8 D_800DCA58[9] = { 2, 5, 6, 3, 10, 8, 7, 9, 11 };
-u8 D_800DCA64[9] = { 2, 5, 6, 3, 10, 8, 7, 9, 12 };
-u8 D_800DCA70[10] = { 2, 5, 6, 3, 10, 8, 7, 9, 11, 12 };
-u8 D_800DCA7C[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+u8 gCharacterSelectMainActorIDs[8] = { 2, 5, 6, 3, 10, 8, 7, 9 };
+u8 gCharacterSelectMainActorIDsPlusDrumstick[9] = { 2, 5, 6, 3, 10, 8, 7, 9, 11 };
+u8 gCharacterSelectMainActorIDsPlusTT[9] = { 2, 5, 6, 3, 10, 8, 7, 9, 12 };
+u8 gCharacterSelectAllActorIDs[10] = { 2, 5, 6, 3, 10, 8, 7, 9, 11, 12 };
+u8 gSignHoldingFrames[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-u8 D_800DCA88[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+u8 gSignHoldingIndices[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 s8 D_800DCA94[8] = { 0x00, 0x00, 0x01, 0x01, 0x02, 0x00, 0x00, 0x00 };
 
@@ -2027,21 +2027,25 @@ void obj_loop_snowball(Object *obj, s32 updateRate) {
 UNUSED void obj_init_char_select(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
+/**
+ * Character select loop behaviour.
+ * Animates characters dancing, chooses which player sign they're holding up etc.
+ */
 void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
     s32 i2;
     s32 i;
-    f32 temp_f0;
+    f32 animFrame;
     ObjectModel *objMdl;
     Object_AnimatedObject *charSelect;
     s32 charCount;
-    s32 var_s0;
+    s32 playerIndex;
     s8 *status = NULL;
     ModelInstance *modInst;
-    u8 sp50[4];
-    u8 sp4F;
-    u8 *var_a2;
+    u8 playerSelectIndices[4];
+    u8 numCursors;
+    u8 *actorIDs;
 
-    var_s0 = 0;
+    playerIndex = 0;
     func_8001F460(charSelectObj, updateRate, NULL);
     charSelect = charSelectObj->animatedObject;
     charSelectObj->particleEmittersEnabled = OBJ_EMIT_NONE;
@@ -2051,45 +2055,46 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
             objMdl = modInst->objModel;
             if (is_drumstick_unlocked()) {
                 if (is_tt_unlocked()) {
-                    var_a2 = D_800DCA70;
+                    actorIDs = gCharacterSelectAllActorIDs;
                     charCount = 10;
                 } else {
-                    var_a2 = D_800DCA58;
+                    actorIDs = gCharacterSelectMainActorIDsPlusDrumstick;
                     charCount = 9;
                 }
             } else if (is_tt_unlocked()) {
-                var_a2 = D_800DCA64;
+                actorIDs = gCharacterSelectMainActorIDsPlusTT;
                 charCount = 9;
             } else {
-                var_a2 = D_800DCA50;
+                actorIDs = gCharacterSelectMainActorIDs;
                 charCount = 8;
             }
 
-            for (i = 0; i < charCount && !var_s0; i++) {
-                if (charSelect->unk28 == var_a2[i]) {
-                    var_s0 = 1;
+            for (i = 0; i < charCount && !playerIndex; i++) {
+                if (charSelect->actorIndex == actorIDs[i]) {
+                    playerIndex = 1;
                 }
             }
             i--;
-            if (var_s0) {
+            if (playerIndex) {
                 charSelectObj->animationID = 1;
-                for (var_s0 = 0, sp4F = 0; var_s0 < MAXCONTROLLERS; var_s0++) {
-                    if (get_player_character(var_s0) == i) {
-                        sp50[sp4F++] = var_s0;
+                for (playerIndex = 0, numCursors = 0; playerIndex < MAXCONTROLLERS; playerIndex++) {
+                    if (get_player_character(playerIndex) == i) {
+                        playerSelectIndices[numCursors++] = playerIndex;
                     }
                 }
-                D_800DCA7C[i] += updateRate;
-                if (D_800DCA7C[i] >= 16) {
-                    D_800DCA7C[i] &= 0xF;
-                    D_800DCA88[i]++;
+                gSignHoldingFrames[i] += updateRate;
+                if (gSignHoldingFrames[i] >= 16) {
+                    gSignHoldingFrames[i] &= 0xF;
+                    gSignHoldingIndices[i]++;
                 }
-                if (D_800DCA88[i] >= sp4F) {
-                    D_800DCA88[i] = 0;
+                if (gSignHoldingIndices[i] >= numCursors) {
+                    gSignHoldingIndices[i] = 0;
                 }
-                if (sp4F > 0) {
+                if (numCursors > 0) {
                     status = charselect_status();
-                    for (i2 = 0; i2 < sp4F; i2++) {
-                        if (status[sp50[i2]] == 1) {
+                    for (i2 = 0; i2 < numCursors; i2++) {
+                        if (status[playerSelectIndices[i2]] == CHARSELECT_STATUS_CONFIRMED) {
+                            // Emit particle effects for every player confirming their selection of this character.
                             charSelectObj->particleEmittersEnabled = OBJ_EMIT_1;
                             obj_spawn_particle(charSelectObj, LOGIC_30FPS);
                         }
@@ -2099,7 +2104,7 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
                         // Unneccessary check for textureIndex to be greater than or equal to zero since it's a u8 and
                         // can't be less.
                         if (objMdl->batches[i2].textureIndex >= 0 && objMdl->batches[i2].textureIndex < 4) {
-                            objMdl->batches[i2].textureIndex = sp50[D_800DCA88[i]];
+                            objMdl->batches[i2].textureIndex = playerSelectIndices[gSignHoldingIndices[i]];
                         }
                     }
                     charSelectObj->animationID = 0;
@@ -2108,15 +2113,15 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
             if (charSelectObj->animationID >= 0) {
                 if ((charSelectObj->animationID < objMdl->numberOfAnimations)) {
                     i = (objMdl->animations[charSelectObj->animationID].animLength - 1) << 4;
-                    if (charSelect->unk2C == 1) {
-                        temp_f0 = music_animation_fraction();
-                        if (temp_f0 > 0.5) {
-                            temp_f0 -= 0.5;
-                            temp_f0 *= 2.0;
-                            charSelectObj->animFrame = i - (temp_f0 * i);
+                    if (charSelect->loopType == 1) {
+                        animFrame = music_animation_fraction();
+                        if (animFrame > 0.5) {
+                            animFrame -= 0.5;
+                            animFrame *= 2.0;
+                            charSelectObj->animFrame = i - (animFrame * i);
                         } else {
-                            temp_f0 *= 2;
-                            charSelectObj->animFrame = temp_f0 * i;
+                            animFrame *= 2;
+                            charSelectObj->animFrame = animFrame * i;
                         }
                     }
                 }
@@ -4045,7 +4050,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
             }
             break;
         default:
-            if (func_8001E2EC(entry->unkA) != 0) {
+            if (is_bridge_raised(entry->unkA) != 0) {
                 obj->properties.bridgeWhaleRamp.unk0 = (entry->unkD * 2);
             }
             if (obj->properties.bridgeWhaleRamp.unk0 > 0) {
@@ -4061,6 +4066,10 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     obj->interactObj->flags &= ~INTERACT_FLAGS_PUSHING;
 }
 
+/**
+ * Ramp switch init function.
+ * Sets interaction attributes.
+ */
 void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
@@ -4069,9 +4078,14 @@ void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
     obj->properties.rampSwitch.unk0 = entry->unk8;
 }
 
+/**
+ * Ramp switch loop function.
+ * When a player goes through this object, the switch will raise the drawbridge.
+ * The distance is set to 255 so that it doesn't interact with the player again.
+ */
 void obj_loop_rampswitch(Object *obj, UNUSED s32 updateRate) {
     if (obj->interactObj->distance < 45) {
-        func_8001E344(obj->properties.rampSwitch.unk0);
+        start_bridge_timer(obj->properties.rampSwitch.unk0);
     }
     obj->interactObj->distance = 255;
 }
@@ -4875,8 +4889,8 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     if (weapon->weaponID == WEAPON_ROCKET_HOMING) {
         numCheckpoints = get_checkpoint_count();
         if (numCheckpoints > 0) {
-            if (func_800185E4(weapon->checkpoint, obj, posX, posY, posZ, &weapon->checkpointDist, (u8 *) &surface) ==
-                FALSE) {
+            if (checkpoint_is_passed(weapon->checkpoint, obj, posX, posY, posZ, &weapon->checkpointDist,
+                                     (u8 *) &surface) == FALSE) {
                 weapon->checkpoint++;
                 if (weapon->checkpoint >= numCheckpoints) {
                     weapon->checkpoint = 0;
@@ -5026,8 +5040,8 @@ void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon 
         }
         dist = sqrtf(dist + distY);
         if (dist > 300.0f && rocket->checkpoint != -1 && rocket->hitObj == NULL) {
-            sp58 = func_8001955C(obj, rocket->checkpoint, racer->unk1C8, rocket->unk14, rocket->unk16,
-                                 rocket->checkpointDist, &diffX, &diffY, &diffZ);
+            sp58 = homing_rocket_get_next_direction(obj, rocket->checkpoint, racer->isOnAlternateRoute, rocket->unk14,
+                                                    rocket->unk16, rocket->checkpointDist, &diffX, &diffY, &diffZ);
             sineY = arctan2_f(diffY, 500.0f) & 0xFFFF;
             shift = 3;
         } else {

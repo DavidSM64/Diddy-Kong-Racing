@@ -1546,7 +1546,7 @@ void swap_lead_player(void) {
     u8 *second_racer_data;
 
     input_swap_id();
-    func_8000E194();
+    toggle_lead_player_index();
 
     first_racer_data = (u8 *) (gSettingsPtr->racers);
     second_racer_data = (u8 *) (gSettingsPtr->racers + 1);
