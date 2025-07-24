@@ -87,12 +87,12 @@ typedef struct LevelObjectEntry_Exit {
 typedef struct LevelObjectEntry_Audio {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u16 soundId;
-    /* 0x0A */ u16 unkA;
-    /* 0x0C */ u8 unkC;
-    /* 0x0D */ u8 unkD;
-    /* 0x0E */ u8 unkE;
-    /* 0x0F */ u8 unkF;
-    /* 0x10 */ u8 unk10;
+    /* 0x0A */ u16 range;
+    /* 0x0C */ u8 volume;
+    /* 0x0D */ u8 minVolume;
+    /* 0x0E */ u8 pitch;
+    /* 0x0F */ u8 fastFalloff;
+    /* 0x10 */ u8 priority;
     /* 0x11 */ u8 unk11;
 } LevelObjectEntry_Audio;
 
@@ -205,7 +205,7 @@ typedef struct LevelObjectEntry_AudioSeqLine {
 
 typedef struct LevelObjectEntry_BombExplosion {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s8 unk8;
+    /* 0x08 */ s8 opacity_hi;
 } LevelObjectEntry_BombExplosion;
 
 typedef struct LevelObjectEntry_WBalloonPop {
@@ -224,9 +224,9 @@ typedef struct LevelObjectEntry_SkyControl {
 
 typedef struct LevelObjectEntry_AudioReverb {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
+    /* 0x08 */ u8 magnitude;
     /* 0x09 */ u8 lineID;
-    /* 0x0A */ u8 unkA;
+    /* 0x0A */ u8 vertexIndex;
     /* 0x0A */ u8 unkB;
 } LevelObjectEntry_AudioReverb;
 

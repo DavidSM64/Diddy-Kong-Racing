@@ -131,7 +131,7 @@ typedef struct ObjPropertyInfoPoint {
 
 typedef struct ObjPropertyBombExplosion {
     s32 timer;
-    s32 unk4;
+    s32 opacity;
 } ObjPropertyBombExplosion;
 
 typedef struct ObjPropertyLighthouse {

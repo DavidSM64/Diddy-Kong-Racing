@@ -1083,9 +1083,9 @@ typedef struct Object_AudioLine {
 
 typedef struct Object_AudioReverb {
     /* 0x0 */ u16 pad0;
-    /* 0x2 */ s16 unk2;
+    /* 0x2 */ s16 magnitude;
     /* 0x4 */ u8 lineID;
-    /* 0x5 */ u8 unk5;
+    /* 0x5 */ u8 vertexIndex;
 } Object_AudioReverb;
 
 typedef struct Object_TexScroll {
@@ -1375,14 +1375,14 @@ typedef struct Object_Trigger {
 
 typedef struct Object_Audio {
     /* 0x00 */ u16 soundId;
-    /* 0x02 */ u16 unk2;
-    /* 0x04 */ u8 unk4;
-    /* 0x05 */ u8 unk5;
-    /* 0x06 */ u8 unk6;
+    /* 0x02 */ u16 range;
+    /* 0x04 */ u8 volume;
+    /* 0x05 */ u8 minVolume;
+    /* 0x06 */ u8 pitch;
     /* 0x07 */ u8 unk7;
     /* 0x08 */ struct AudioPoint *soundMask;
-    /* 0x0C */ u8 unkC;
-    /* 0x0D */ u8 unkD;
+    /* 0x0C */ u8 fastFalloff;
+    /* 0x0D */ u8 priority;
 } Object_Audio;
 
 typedef struct Object_MidiFade {
