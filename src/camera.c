@@ -638,7 +638,7 @@ void viewport_main(Gfx **dlist, Mtx **mats) {
     originalCameraID = gActiveCameraID;
     savedCameraID = gActiveCameraID;
 
-    if (func_8000E184() && gViewportLayout == VIEWPORT_LAYOUT_1_PLAYER) {
+    if (is_player_two_in_control() && gViewportLayout == VIEWPORT_LAYOUT_1_PLAYER) {
         gActiveCameraID = 1;
         savedCameraID = 0;
     }

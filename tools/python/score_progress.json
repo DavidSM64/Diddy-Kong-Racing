@@ -76,7 +76,7 @@
         "type": "Task"
     },
     {
-        "msg": "We are participating in the Trophy Race of Dino Domain.",
+        "msg": "We are participating in the Dino Domain Trophy Race.",
         "rewards": { "Trophy": 1 },
         "type": "TrophyRace"
     },
@@ -141,7 +141,7 @@
         "type": "Task"
     },
     {
-        "msg": "We are participating in the Trophy Race of Snowflake Mountain.",
+        "msg": "We are participating in the Snowflake Mountain Trophy Race.",
         "rewards": { "Trophy": 1 },
         "type": "TrophyRace"
     },
@@ -206,7 +206,7 @@
         "type": "Race"
     },
     {
-        "msg": "We are participating in the Trophy Race of Sherbet Island.",
+        "msg": "We are participating in the Sherbet Island Trophy Race.",
         "rewards": { "Trophy": 1 },
         "type": "TrophyRace"
     },
@@ -272,7 +272,7 @@
         "type": "Race"
     },
     {
-        "msg": "We are participating in the Trophy Race of Dragon Forest.",
+        "msg": "We are participating in the Dragon Forest Trophy Race.",
         "rewards": { "Trophy": 1 },
         "type": "TrophyRace"
     },
@@ -327,7 +327,7 @@
         "type": "Race"
     },
     {
-        "msg": "We are participating in the Trophy Race of Future Fun Land.",
+        "msg": "We are participating in the Future Fun Land Trophy Race.",
         "rewards": {},
         "type": "TrophyRace"
     }

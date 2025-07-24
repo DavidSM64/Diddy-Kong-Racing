@@ -69,7 +69,7 @@ u32 D_801241F4;
  * Returns the player ID of the controller. Flips them around in 2 player adventure if the players have been swapped.
  */
 u8 input_get_id(s32 controllerIndex) {
-    if ((controllerIndex == 0 || controllerIndex == 1) && func_8000E158()) {
+    if ((controllerIndex == 0 || controllerIndex == 1) && is_race_started_by_player_two()) {
         controllerIndex = 1 - controllerIndex;
     }
     return input_player_id(controllerIndex);

@@ -9,37 +9,40 @@ As of July 23, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 96.77%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 64.38%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 65.90%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
 
 ## Dependencies
 
-* `gcc`, Version 8.0 or higher
-* `make`, Version 4.2 or higher
-* `python3`
-* `libpcre2-dev` and `libpcre2-8-0` (Not technically required, but will speedup extracting/building some assets.)
-* `gcc-mips-linux-gnu` is optionally used if compiling NON_MATCHING with COMPILER=gcc
+- `gcc`, Version 8.0 or higher
+- `make`, Version 4.2 or higher
+- `python3`
+- `libpcre2-dev` and `libpcre2-8-0` (Not technically required, but will speedup extracting/building some assets.)
+- `gcc-mips-linux-gnu` is optionally used if compiling NON_MATCHING with COMPILER=gcc
 
 `sudo apt install build-essential pkg-config git python3 python3-pip binutils-mips-linux-gnu python3-venv libpcre2-dev libpcre2-8-0`
 
 ## Setup / Building
+
 1. Install the dependencies
 2. Place the ROM file within the `baseroms` directory.  
-    **a.** The name of the ROM file does not matter. It will be detected automatically from an sha1 checksum.  
+   **a.** The name of the ROM file does not matter. It will be detected automatically from an sha1 checksum.
 3. Grab tools: `git submodule update --init --recursive`
 4. Run `make setup` to install the IDO compiler, python venv, and packages required.
 5. Run `make extract` to run splat to extract all required files from the baserom.
 6. Run `make` in the main directory.  
-    **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
+   **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
 
 ### Building on macOS
+
 1. Use homebrew to install dependencies: `brew install make`
 2. Place the ROM file within the `baseroms` directory. See [Setup](#setup--building) above for more info.
 3. Run `gmake` from the main directory. Note that macOS built-in `make` will not work since it does not meet the version requirements.
 
 ### Building other versions
+
 To build other versions of the ROM, just specifcy the region and version in the make command. All examples are below:
 Baserom|REGION|VERSION|Command
 ---|--|---|-
@@ -50,9 +53,10 @@ US 1.1 | US | v80 | `make REGION=us VERSION=v80`
 PAL 1.1 | PAL | v80 | `make REGION=pal VERSION=v80`
 
 ## Modding
+
 If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.  
-Example: `make NON_MATCHING=1 -j4`  
-  
+Example: `make NON_MATCHING=1 -j4`
+
 The `NON_MATCHING` define will include the functions that don't exactly match one-to-one, but should be no different functionality-wise. If you do notice any bugs that occur in a `NON_MATCHING` build that are not in the vanilla game, then please file an issue describing the bug. It would be helpful if you can track down which function is causing the bug, but that is not required.
 
 ## Style Guide
@@ -95,18 +99,20 @@ Example: `./rename.sh D_A4001000 SP_IMEM`
 
 Prints out the current completion percentage of the decomp. You do need to have an `OK` build for this to work properly.
 
-The scoring is split into 2 sections: 
+The scoring is split into 2 sections:
+
 1. Assembly to C Decompilation (Adventure One)
 2. Cleanup and Documentation (Adventure Two)
 
 Show scores for Adventure One & Adventure Two: `./score.sh`  
 Show score for Adventure One only: `./score.sh -a 1`  
 Show score for Adventure Two only: `./score.sh -a 2`  
-Show top 10 files remaining: `./score.sh -t 10`  
+Show top 10 files remaining: `./score.sh -t 10`
 
 To make progress in Adventure 2, a function must be properly named (must not start with `func_`) and also include a doxygen comment above it.
 
 For example:
+
 ```c
 /**
  * Returns 1 if Drumstick is available to use, or 0 if not.
@@ -133,14 +139,16 @@ As of July 23, 2025, this is our current score:
  We are collecting silver coins in Star City. (7/8 silver coins)
  ===============================================================
               ADVENTURE TWO (Cleanup & Documentation)
- ----------------------- 64.38% Complete -----------------------
-                  # Documented functions: 1259
-                  # Undocumented remaining: 393
+ ----------------------- 65.90% Complete -----------------------
+                  # Documented functions: 1280
+                  # Undocumented remaining: 372
+                 # Functions named `func_*`: 238
+                # Functions without comments: 372
  ------------------------- Game Status -------------------------
-            Balloons: 30/47, Keys: 3/4, Trophies: 3/5
+            Balloons: 31/47, Keys: 3/4, Trophies: 3/5
              T.T. Amulets: 3/4, Wizpig Amulets: 3/4
  ---------------------------------------------------------------
-       We are racing Taj in the Plane Challenge. (Lap 2/3)
+           We are racing in Windmill Plains. (Lap 2/3)
  ===============================================================
 ```
 <!-- README_SCORE_END -->

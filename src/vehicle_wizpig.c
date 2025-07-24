@@ -131,7 +131,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
     nextCheckpoint = FALSE;
-    if (find_next_checkpoint_node(racer->checkpoint, racer->unk1C8)->unk36[racer->unk1CA] == 1) {
+    if (find_next_checkpoint_node(racer->nextCheckpoint, racer->isOnAlternateRoute)->unk36[racer->unk1CA] == 1) {
         nextCheckpoint = TRUE;
     }
     racer->x_rotation_offset = -obj->trans.rotation.x_rotation;
