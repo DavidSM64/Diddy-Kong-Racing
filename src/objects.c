@@ -2567,6 +2567,9 @@ void gParticlePtrList_flush(void) {
     gFreeListCount = 0;
 }
 
+/**
+ * Destroys an object and frees its resources.
+ */
 void obj_destroy(Object *obj, s32 arg1) {
     Object *tempObj;
     Object_Weapon *weapon;
@@ -2813,6 +2816,9 @@ void obj_destroy(Object *obj, s32 arg1) {
     mempool_free(obj);
 }
 
+/**
+ * Updates all objects in the game.
+ */
 void obj_update(s32 updateRate) {
     s32 i;
     s32 j;
@@ -3317,9 +3323,9 @@ void render_3d_billboard(Object *obj) {
     if (obj->behaviorId == BHV_BOMB_EXPLOSION) {
         //!@bug Never true, because the type is u8.
         if (obj->opacity > 255) {
-            obj->opacity = obj->properties.bombExplosion.unk4 & 0xFF;
+            obj->opacity = obj->properties.bombExplosion.opacity & 0xFF;
         } else {
-            obj->opacity = (obj->opacity * (obj->properties.bombExplosion.unk4 & 0xFF)) >> 8;
+            obj->opacity = (obj->opacity * (obj->properties.bombExplosion.opacity & 0xFF)) >> 8;
         }
     }
 

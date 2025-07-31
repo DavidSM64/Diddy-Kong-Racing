@@ -9,7 +9,7 @@ As of July 23, 2025, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 96.77%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 65.10%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 65.90%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -139,16 +139,16 @@ As of July 23, 2025, this is our current score:
  We are collecting silver coins in Star City. (7/8 silver coins)
  ===============================================================
               ADVENTURE TWO (Cleanup & Documentation)
- ----------------------- 65.10% Complete -----------------------
-                  # Documented functions: 1262
-                  # Undocumented remaining: 390
+ ----------------------- 65.90% Complete -----------------------
+                  # Documented functions: 1280
+                  # Undocumented remaining: 372
                  # Functions named `func_*`: 238
-                # Functions without comments: 390
+                # Functions without comments: 372
  ------------------------- Game Status -------------------------
-            Balloons: 30/47, Keys: 3/4, Trophies: 3/5
+            Balloons: 31/47, Keys: 3/4, Trophies: 3/5
              T.T. Amulets: 3/4, Wizpig Amulets: 3/4
  ---------------------------------------------------------------
-       We are racing Taj in the Plane Challenge. (Lap 3/3)
+           We are racing in Windmill Plains. (Lap 2/3)
  ===============================================================
 ```
 <!-- README_SCORE_END -->
