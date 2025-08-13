@@ -4695,6 +4695,15 @@ void func_800159C8(Object *arg0, Object *arg1) {
 
     sp9C = sqrtf(sp68 * sp68 + sp64 * sp64 + sp60 * sp60);
 
+#if VERSION == VERSION_80
+    if (sp9C > 4000.0f) {
+        return;
+    }
+    if (sp9C < -4000.0f) {
+        return;
+    }
+#endif
+
     var_v0 = (s32) (f32) (s32) sp9C;
     if (sp58->flags & 0x20) {
         var_v0 >>= 3;
