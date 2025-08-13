@@ -7,9 +7,10 @@
 
 .section .bss
 
+.equ entrypointThreadStackSize, 0x1000
 glabel entrypointThreadStack
-.space 0x1000
-glabel entrypointThreadStackEnd
+.space entrypointThreadStackSize
+.size entrypointThreadStack, entrypointThreadStackSize
 
 .section .text, "ax"
 
@@ -25,10 +26,10 @@ sw         $zero, 0x4($t0)
 bnez       $t1, .clear_bytes
  addi      $t0, $t0, 0x8
 lui        $t2, %hi(mainproc)
-lui        $sp, %hi(entrypointThreadStackEnd)
+lui        $sp, %hi(entrypointThreadStack + entrypointThreadStackSize)
 addiu      $t2, $t2, %lo(mainproc)
 jr         $t2
- addiu     $sp, $sp, %lo(entrypointThreadStackEnd)
+ addiu     $sp, $sp, %lo(entrypointThreadStack + entrypointThreadStackSize)
 nop
 nop
 nop
