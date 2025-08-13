@@ -4650,26 +4650,24 @@ void process_object_interactions(void) {
     }
 }
 
-// https://decomp.me/scratch/Hg44X
-#ifdef NON_EQUIVALENT
 void func_800159C8(Object *arg0, Object *arg1) {
     f32 sp9C;
     f32 sp98;
-    f32 temp_f10; // sp94
+    f32 f14;
     f32 sp90;
     f32 sp8C;
-    f32 sp88;
+    f32 f18;
     f32 sp84;
     f32 sp80;
     f32 sp7C;
-    f32 sp78;
+    f32 f12;
     f32 sp74;
-    f32 var_f2;    // sp70
-    f32 temp_f0_3; // sp6C
+    f32 f2;
+    f32 f0;
     f32 sp68;
     f32 sp64;
     f32 sp60;
-    s32 var_v0; // sp5C
+    s32 var_v0;
     ObjectInteraction *sp58;
     ObjectInteraction *sp54;
     Object_Racer *sp50;
@@ -4684,7 +4682,8 @@ void func_800159C8(Object *arg0, Object *arg1) {
     sp80 = 1 / gObjectUpdateRateF;
 
     if (sp54->unk11 == 1) {
-        if (-sp64 < sp54->unk16 * 10.0f || sp54->unk17 * 10.0f < -sp64) {
+        sp64 = -sp64;
+        if (sp64 < sp54->unk16 * 10.0f || sp54->unk17 * 10.0f < sp64) {
             return;
         }
         sp64 = 0.0f;
@@ -4695,9 +4694,17 @@ void func_800159C8(Object *arg0, Object *arg1) {
     }
 
     sp9C = sqrtf(sp68 * sp68 + sp64 * sp64 + sp60 * sp60);
-    temp_f10 = (s32) sp9C;
 
-    var_v0 = temp_f10;
+#if VERSION == VERSION_80
+    if (sp9C > 4000.0f) {
+        return;
+    }
+    if (sp9C < -4000.0f) {
+        return;
+    }
+#endif
+
+    var_v0 = (s32) (f32) (s32) sp9C;
     if (sp58->flags & 0x20) {
         var_v0 >>= 3;
     }
@@ -4711,7 +4718,7 @@ void func_800159C8(Object *arg0, Object *arg1) {
         sp58->distance = var_v0;
     }
 
-    var_v0 = temp_f10;
+    var_v0 = (s32) (f32) (s32) sp9C;
     if (sp54->flags & 0x20) {
         var_v0 >>= 3;
     }
@@ -4732,48 +4739,47 @@ void func_800159C8(Object *arg0, Object *arg1) {
     sp98 = sp54->hitboxRadius + sp58->hitboxRadius;
 
     sp7C = arg0->trans.x_position - sp58->x_position;
-    sp78 = arg0->trans.y_position - sp58->y_position;
+    f12 = arg0->trans.y_position - sp58->y_position;
     sp74 = arg0->trans.z_position - sp58->z_position;
 
     if (sp54->unk11 == 1) {
-        sp78 = 0.0f;
+        f12 = 0.0f;
     }
 
-    temp_f10 = sp7C * sp7C + sp78 * sp78 + sp74 * sp74;
-    if (temp_f10 > 1.0) {
-        var_f2 =
-            ((arg1->trans.x_position - sp58->x_position) * sp7C + (arg1->trans.y_position - sp58->y_position) * sp78 +
-             (arg1->trans.z_position - sp58->z_position) * sp74) /
-            temp_f10;
-        if (var_f2 >= 0.0f && var_f2 <= 1.0) {
-            sp8C = sp58->x_position + var_f2 * sp7C;
-            sp88 = sp58->y_position + var_f2 * sp78;
-            sp84 = sp58->z_position + var_f2 * sp74;
+    f2 = sp7C * sp7C + f12 * f12 + sp74 * sp74;
+    if (f2 > 1.0) {
+        f2 = ((arg1->trans.x_position - sp58->x_position) * sp7C + (arg1->trans.y_position - sp58->y_position) * f12 +
+              (arg1->trans.z_position - sp58->z_position) * sp74) /
+             f2;
+        if (f2 >= 0.0f && f2 <= 1.0) {
+            sp8C = sp58->x_position + f2 * sp7C;
+            f18 = sp58->y_position + f2 * f12;
+            sp84 = sp58->z_position + f2 * sp74;
             sp9C = sqrtf((sp8C - arg1->trans.x_position) * (sp8C - arg1->trans.x_position) +
-                         (sp88 - arg1->trans.y_position) * (sp88 - arg1->trans.y_position) +
+                         (f18 - arg1->trans.y_position) * (f18 - arg1->trans.y_position) +
                          (sp84 - arg1->trans.z_position) * (sp84 - arg1->trans.z_position));
         }
     }
 
     if (sp9C < sp98 && sp9C > 0.0f) {
         sp8C = sp54->x_position - sp58->x_position;
-        sp88 = sp54->y_position - sp58->y_position;
+        f18 = sp54->y_position - sp58->y_position;
         sp84 = sp54->z_position - sp58->z_position;
         if (sp54->unk11 == 1) {
-            sp88 = 0.0f;
+            f18 = 0.0f;
         }
 
-        temp_f0_3 = sqrtf(sp8C * sp8C + sp88 * sp88 + sp84 * sp84);
-        if (temp_f0_3 > 0.0f) {
-            sp68 = sp8C / temp_f0_3;
-            sp64 = sp88 / temp_f0_3;
-            sp60 = sp84 / temp_f0_3;
+        f0 = sqrtf(sp8C * sp8C + f18 * f18 + sp84 * sp84);
+        if (f0 > 0.0f) {
+            sp68 = sp8C / f0;
+            sp64 = f18 / f0;
+            sp60 = sp84 / f0;
         } else {
             sp68 /= sp9C;
             sp64 /= sp9C;
             sp60 /= sp9C;
         }
-        sp9C = temp_f0_3 - sp9C;
+        sp9C = f0 - sp9C;
         if (sp9C < 0.0f) {
             sp9C = -sp9C;
         }
@@ -4808,13 +4814,11 @@ void func_800159C8(Object *arg0, Object *arg1) {
                     }
                     if (var_v0) {
                         sp54->flags |= 0x40;
-                        var_f2 =
-                            (arg0->trans.x_position * arg0->z_velocity - arg0->trans.z_position * arg0->x_velocity);
-                        var_f2 =
-                            (arg1->trans.x_position * arg0->z_velocity - arg1->trans.z_position * arg0->x_velocity) -
-                            var_f2;
+                        f2 = (arg0->trans.x_position * arg0->z_velocity - arg0->trans.z_position * arg0->x_velocity);
+                        f2 = (arg1->trans.x_position * arg0->z_velocity - arg1->trans.z_position * arg0->x_velocity) -
+                             f2;
                         sp50->unk1D2 = 7;
-                        if (var_f2 >= 0.0f) {
+                        if (f2 >= 0.0f) {
                             sp50->unk120 = arg0->x_velocity * 0.1;
                             sp50->unk11C = -arg0->z_velocity * 0.1;
                         } else {
@@ -4835,17 +4839,16 @@ void func_800159C8(Object *arg0, Object *arg1) {
                 }
                 if (var_v0) {
                     sp54->flags |= 0x40;
-                    var_f2 = arg0->trans.x_position * arg0->z_velocity - arg0->trans.z_position * arg0->x_velocity;
-                    var_f2 =
-                        arg1->trans.x_position * arg0->z_velocity - arg1->trans.z_position * arg0->x_velocity - var_f2;
-                    if (var_f2 >= 0.0f) {
-                        var_f2 = 2.0f;
+                    f2 = arg0->trans.x_position * arg0->z_velocity - arg0->trans.z_position * arg0->x_velocity;
+                    f2 = arg1->trans.x_position * arg0->z_velocity - arg1->trans.z_position * arg0->x_velocity - f2;
+                    if (f2 >= 0.0f) {
+                        f2 = 2.0f;
                     } else {
-                        var_f2 = -2.0f;
+                        f2 = -2.0f;
                     }
                     sp50->unk1D2 = 7;
-                    sp50->unk11C = sp50->ox3 * var_f2 * sp50->velocity;
-                    sp50->unk120 = sp50->oz3 * var_f2 * sp50->velocity;
+                    sp50->unk11C = sp50->ox3 * f2 * sp50->velocity;
+                    sp50->unk120 = sp50->oz3 * f2 * sp50->velocity;
                 }
             }
             if (var_v0 && sp50->playerIndex != -1) {
@@ -4869,7 +4872,7 @@ void func_800159C8(Object *arg0, Object *arg1) {
         sp68 *= sp80;
         sp60 *= sp80;
         if (arg0->behaviorId == 1 && arg1->behaviorId == 1) {
-            sp90 = 1.0f;
+            sp90 = 1.0;
             sp90 += (f32) (sp58->pushForce - sp54->pushForce) * 0.3;
 
             sp50 = arg0->racer;
@@ -4893,9 +4896,9 @@ void func_800159C8(Object *arg0, Object *arg1) {
 
             if (var_v0) {
                 if (sp58->pushForce != 0) {
-                    temp_f0_3 = 2.0 - sp90;
-                    arg0->x_velocity -= sp68 * temp_f0_3;
-                    arg0->z_velocity -= sp60 * temp_f0_3;
+                    f0 = 2.0 - sp90;
+                    arg0->x_velocity -= sp68 * f0;
+                    arg0->z_velocity -= sp60 * f0;
                     func_80016500(arg0, sp50);
                 }
                 arg1->x_velocity += sp68 * sp90;
@@ -4905,9 +4908,6 @@ void func_800159C8(Object *arg0, Object *arg1) {
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_800159C8.s")
-#endif
 
 void func_80016500(Object *obj, Object_Racer *racer) {
     s32 shakeMagnitude;
@@ -8248,7 +8248,7 @@ s32 is_bridge_raised(s32 index) {
 }
 
 /**
- * Starts the bridge timer when a racer hits the bell switch. 
+ * Starts the bridge timer when a racer hits the bell switch.
  */
 void start_bridge_timer(s32 index) {
     if (index >= 0 && index < 8) {
