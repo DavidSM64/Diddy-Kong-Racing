@@ -8808,7 +8808,7 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
     rendermode_reset(&sMenuCurrDisplayList);
 }
 
-// https://decomp.me/scratch/L6qKV
+// https://decomp.me/scratch/bQDRA
 #ifdef NON_MATCHING
 // trackmenu_render_names
 void func_8008FF1C(UNUSED s32 updateRate) {
@@ -8827,6 +8827,7 @@ void func_8008FF1C(UNUSED s32 updateRate) {
     s32 trackY;
     s32 j;
     s32 startIndex;
+    s16 temp;
 
     settings = get_settings();
     trackMenuIds = (s8 *) get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
@@ -8852,12 +8853,13 @@ void func_8008FF1C(UNUSED s32 updateRate) {
             } else {
                 cur->visible = 1;
                 levelName = level_name(level_world_id(trackY + 1));
+                temp = (temp = gTrackSelectIDs[trackY][trackX]); // ????
                 selectedTrack = gTrackSelectIDs[trackY][trackX];
                 cur->hubName = levelName;
                 if (selectedTrack != -1) {
                     cur->trackName = level_name(trackMenuIds[((trackY * 6) + trackX)]);
                     if (trackX == 4) {
-                        if ((((settings->trophies & 0xFFFF) >> (trackY * 2)) & 3) == 3) {
+                        if ((((settings->trophies) >> (trackY * 2)) & 3) == 3) {
                             cur->visible = 2;
                         }
                     } else if ((settings->courseFlagsPtr[trackMenuIds[((trackY * 6) + trackX)]] & 2)) {
