@@ -352,7 +352,7 @@ u8 has_ghost_to_save(void);
 void set_ghost_none(void);
 f32 racer_calc_distance_to_opponent(Object_Racer *racer1, Object_Racer *racer2);
 CheckpointNode *get_checkpoint_node(s32 checkpointID);
-CheckpointNode *find_next_checkpoint_node(s32 splinePos, s32 arg1);
+CheckpointNode *find_next_checkpoint_node(s32 splinePos, s32 isAlternate);
 s32 get_checkpoint_count(void);
 Object **get_racer_objects(s32 *numRacers);
 Object **get_racer_objects_by_port(s32 *numRacers);
@@ -368,8 +368,8 @@ void set_world_shading(f32 ambient, f32 diffuse, s16 angleX, s16 angleY, s16 ang
 void set_shading_properties(ShadeProperties *arg0, f32 ambient, f32 diffuse, s16 angleX, s16 angleY, s16 angleZ);
 void obj_shade_fancy(ObjectModel *model, Object *object, s32 arg2, f32 intensity);
 s32 *get_misc_asset(s32 index);
-s32 is_bridge_raised(s32 arg0);
-void start_bridge_timer(s32 arg0);
+s32 is_bridge_raised(s32 index);
+void start_bridge_timer(s32 index);
 void obj_bridge_pos(s32 timing, f32 *x, f32 *y, f32 *z);
 s16 cutscene_id(void);
 void cutscene_id_set(s32 cutsceneID);
@@ -437,8 +437,8 @@ void obj_init_animobject(Object *, Object *);
 Object *obj_butterfly_node(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis);
 void func_8002125C(Object *obj, LevelObjectEntry_Animation *entry, Object_AnimatedObject *animObj, UNUSED s32 index);
 void func_80021104(Object *obj, Object_AnimatedObject *animObj, LevelObjectEntry_Animation *entry);
-s32 homing_rocket_get_next_direction(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY,
-                  f32 *outZ);
+s32 homing_rocket_get_next_direction(Object *obj, s32 checkpoint, u8 isOnAlternateRoute, s32 arg3, s32 arg4,
+                                     f32 checkpointDist, f32 *outX, f32 *outY, f32 *outZ);
 void func_80016500(Object *obj, Object_Racer *racer);
 void track_spawn_objects(s32, s32);
 u8 timetrial_init_staff_ghost(s32 trackId);
@@ -487,7 +487,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object *, s32, Object *);
 void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4);
 void func_80018CE0(Object *racerObj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
-s32 checkpoint_is_passed(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *arg5, u8 *arg6);
+s32 checkpoint_is_passed(s32 checkpointIndex, Object *obj, f32 objX, f32 objY, f32 objZ, f32 *checkpointDistance,
+                         u8 *isOnAlternateRoute);
 void obj_tex_animate(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);
 void model_init_collision(ObjectModel *);

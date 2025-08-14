@@ -1576,6 +1576,7 @@ negu       $v0, $v0
 jr         $ra
 nop
 .end coss_s16
+.size sins_s16, . - sins_s16
 
 /* Official Name: mathCos */
 leaf coss_2
@@ -1603,6 +1604,7 @@ negu       $v0, $v0
 jr         $ra
 nop
 .end coss_2
+.size sins_2, . - sins_2
 
 leaf calc_dyn_lighting_for_level_segment
 lw         $t1, 0x0($a1)

@@ -2,6 +2,7 @@
 #define _SET_RSP_SEGMENT_H_
 
 #include "PR/gbi.h"
+#include <PR/ultratypes.h>
 
 /**
  * Normally, in F3D, RSP segments go up to 16.

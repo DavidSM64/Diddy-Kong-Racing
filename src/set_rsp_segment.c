@@ -2,6 +2,7 @@
 #include "PR/gbi.h"
 #include "PR/mbi.h"
 #include "PR/R4300.h"
+#include <PR/ultratypes.h>
 
 /**
  * Set the offset for the given address, so the RSP can get the correct physical address.

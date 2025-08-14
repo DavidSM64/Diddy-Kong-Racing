@@ -5443,10 +5443,12 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     audio->soundMask = NULL;
     if (sound_is_looped(audio->soundId)) {
         audspat_point_create(audio->soundId, entry->common.x, entry->common.y, entry->common.z, 9, audio->minVolume,
-                             audio->volume, audio->range, audio->fastFalloff, audio->pitch, audio->priority, &audio->soundMask);
+                             audio->volume, audio->range, audio->fastFalloff, audio->pitch, audio->priority,
+                             &audio->soundMask);
     } else {
         audspat_point_create(audio->soundId, entry->common.x, entry->common.y, entry->common.z, 10, audio->minVolume,
-                             audio->volume, audio->range, audio->fastFalloff, audio->pitch, audio->priority, &audio->soundMask);
+                             audio->volume, audio->range, audio->fastFalloff, audio->pitch, audio->priority,
+                             &audio->soundMask);
     }
     free_object(obj);
 }

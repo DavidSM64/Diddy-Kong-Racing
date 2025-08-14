@@ -57,7 +57,8 @@ void lights_init(s32 count) {
     lights_free();
     gMaxLights = count;
     buffer = (u8 *) mempool_alloc_safe(
-        gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(ObjectLightShadeProperties) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
+        gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(ObjectLightShadeProperties) + sizeof(Vec3f)),
+        COLOUR_TAG_MAGENTA);
 
     temp = gMaxLights;
     gActiveLights = (ObjectLight **) buffer;
@@ -239,7 +240,8 @@ UNUSED void light_toggle(ObjectLight *light) {
 /**
  * Initialises a gradual change of colour for a light source.
  */
-UNUSED void light_setup_colour_change(ObjectLight *light, s32 targetR, s32 diffR, s32 targetG, s32 diffG, s32 targetB, s32 diffB) {
+UNUSED void light_setup_colour_change(ObjectLight *light, s32 targetR, s32 diffR, s32 targetG, s32 diffG, s32 targetB,
+                                      s32 diffB) {
     if (diffR > 0) {
         light->targetColourDiffR = diffR;
         light->targetColourChangeRateR = ((targetR << 0x10) - light->colourR) / diffR;
@@ -484,8 +486,9 @@ void light_update_shading(Object *object) {
 
         for (i = 0; i < gNumActiveLights; i++) {
             light = gActiveLights[i];
-            if ((light->unk2 & objTypeMask) && (light->enabled == TRUE) && (objX >= light->minX) && (light->maxX >= objX) &&
-                (objY >= light->minY) && (light->maxY >= objY) && (objZ >= light->minZ) && (light->maxZ >= objZ)) {
+            if ((light->unk2 & objTypeMask) && (light->enabled == TRUE) && (objX >= light->minX) &&
+                (light->maxX >= objX) && (objY >= light->minY) && (light->maxY >= objY) && (objZ >= light->minZ) &&
+                (light->maxZ >= objZ)) {
                 if (light->unk0 == 0) {
                     if (light->intensity >= 0x10000) {
                         gShadeBuffer[numLights].lightObj = light;
