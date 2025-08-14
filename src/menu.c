@@ -8880,28 +8880,22 @@ void func_8008FF1C(UNUSED s32 updateRate) {
                 cur->copyViewPort = cur->copyViewPort & 0xFF80;
                 if (gMenuDelay == 0) {
                     if (trackY > 0) {
-                        cur->copyViewPort =
-                            (((cur->copyViewPort & 0xFF) | 1) & 0x7F) | (cur->copyViewPort & 0xFF80);
+                        cur->copyViewPort = (((cur->copyViewPort & 0xFF) | 1) & 0x7F) | (cur->copyViewPort & 0xFF80);
                     }
                     if (trackX < 5) {
-                        cur->copyViewPort =
-                            (((cur->copyViewPort & 0xFF) | 2) & 0x7F) | (cur->copyViewPort & 0xFF80);
+                        cur->copyViewPort = (((cur->copyViewPort & 0xFF) | 2) & 0x7F) | (cur->copyViewPort & 0xFF80);
                     }
                     if (trackY < maxTrackY) {
-                        cur->copyViewPort =
-                            (((cur->copyViewPort & 0xFF) | 4) & 0x7F) | (cur->copyViewPort & 0xFF80);
+                        cur->copyViewPort = (((cur->copyViewPort & 0xFF) | 4) & 0x7F) | (cur->copyViewPort & 0xFF80);
                     }
                     if (trackX > 0) {
-                        cur->copyViewPort =
-                            (((cur->copyViewPort & 0xFF) | 8) & 0x7F) | (cur->copyViewPort & 0xFF80);
+                        cur->copyViewPort = (((cur->copyViewPort & 0xFF) | 8) & 0x7F) | (cur->copyViewPort & 0xFF80);
                     }
                     if (trackX == 4 && trackY == 4) {
-                        cur->copyViewPort =
-                            ((cur->copyViewPort & 0xFF & 0xFF) & 0x7D) | (cur->copyViewPort & 0xFF80);
+                        cur->copyViewPort = ((cur->copyViewPort & 0xFF & 0xFF) & 0x7D) | (cur->copyViewPort & 0xFF80);
                     }
                     if (trackX == 5 && trackY == 3) {
-                        cur->copyViewPort =
-                            ((cur->copyViewPort & 0xFF & 0xFF) & 0x7B) | (cur->copyViewPort & 0xFF80);
+                        cur->copyViewPort = ((cur->copyViewPort & 0xFF & 0xFF) & 0x7B) | (cur->copyViewPort & 0xFF80);
                     }
                 }
                 if (trackX == 4) {
