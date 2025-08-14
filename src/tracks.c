@@ -4344,7 +4344,7 @@ void update_fog(s32 viewportCount, s32 updateRate) {
 void apply_fog(s32 playerID) {
     gDPSetFogColor(gTrackDL++, gFogData[playerID].fog.r >> 0x10, gFogData[playerID].fog.g >> 0x10,
                    gFogData[playerID].fog.b >> 0x10, 0xFF);
-    gSPFogPosition(gTrackDL++, gFogData[playerID].fog.near >> 0x10, gFogData[playerID].fog.far >> 0x10);
+    gSPFogPosition(gTrackDL++, (gFogData[playerID].fog.near >> 0x10), (gFogData[playerID].fog.far >> 0x10));
 }
 
 /**

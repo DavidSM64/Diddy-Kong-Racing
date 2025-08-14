@@ -200,10 +200,19 @@
     _g->words.w1 = rgba;                          \
 }
 
-#if defined(F3DDKR_GBI)
- // ?????? - Needed to modify this to work with matching material_init
-#undef TXL2WORDS_4b
-#define TXL2WORDS_4b(txls) ((txls)/16)
-#endif
+// DKR Uses these macros, from later gbi.h files
+#define	gDPSetOtherMode(pkt, mode0, mode1)				\
+{									\
+	Gfx *_g = (Gfx *)(pkt);						\
+									\
+	_g->words.w0 = _SHIFTL(G_RDPSETOTHERMODE,24,8)|_SHIFTL(mode0,0,24);\
+	_g->words.w1 = (unsigned int)(mode1);				\
+}
+
+#define	gsDPSetOtherMode(mode0, mode1)					\
+{{									\
+	_SHIFTL(G_RDPSETOTHERMODE,24,8)|_SHIFTL(mode0,0,24),		\
+	(unsigned int)(mode1)						\
+}}
 
 #endif
