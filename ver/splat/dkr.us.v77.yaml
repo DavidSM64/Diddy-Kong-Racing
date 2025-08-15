@@ -254,11 +254,11 @@ segments:
       - [0xD75A0, c, ../libultra/src/libc/xldtob]
       - [0xD8060, hasm, ../libultra/src/os/setcompare]
       - [0xD8070, c, ../libultra/src/libc/ldiv]
-      - [0xD8200, textbin, ucode_audio]
-      - [0xD90C0, textbin, ucode_boot]
-      - [0xD9190, textbin, ucode_f3ddkr_dram]
-      - [0xDA390, textbin, ucode_f3ddkr_fifo]
-      - [0xDB570, textbin, ucode_f3ddkr_xbus]
+      - [0xD8200, textbin, aspMain]
+      - [0xD90C0, textbin, rspboot]
+      - [0xD9190, textbin, f3ddkr_dram]
+      - [0xDA390, textbin, f3ddkr_fifo]
+      - [0xDB570, textbin, f3ddkr_xbus]
       - [0xDC770, textbin, ucode_unknown_2]
       - [0xDD230, .data, audio]
       - [0xDD280, .data, audiomgr]
@@ -378,11 +378,11 @@ segments:
       - [0xEA410, .rodata, ../libultra/src/gu/sinf]
       - [0xEA460, .rodata, ../libultra/src/libc/xldtob]
       - [0xEA4C0, hasm, ../libultra/src/gu/libm_vals]
-      - { start: 0xEA4D0, type: databin, name: data_audio,       linker_section_order: .rodata }
-      - { start: 0xEA7A0, type: databin, name: data_f3ddkr_dram, linker_section_order: .rodata }
-      - { start: 0xEAFA0, type: databin, name: data_f3ddkr_fifo, linker_section_order: .rodata }
-      - { start: 0xEB7A0, type: databin, name: data_f3ddkr_xbus, linker_section_order: .rodata }
-      - { start: 0xEBFA0, type: databin, name: data_unknown_2,   linker_section_order: .rodata }
+      - { start: 0xEA4D0, type: databin, name: aspMain,       linker_section_order: .rodata }
+      - { start: 0xEA7A0, type: databin, name: f3ddkr_dram, linker_section_order: .rodata }
+      - { start: 0xEAFA0, type: databin, name: f3ddkr_fifo, linker_section_order: .rodata }
+      - { start: 0xEB7A0, type: databin, name: f3ddkr_xbus, linker_section_order: .rodata }
+      - { start: 0xEBFA0, type: databin, name: ucode_unknown_2,   linker_section_order: .rodata }
       - { type: .bss, vram: 0x800EBF60, name: audio }
       - { type: .bss, vram: 0x80115F90, name: audiomgr }
       - { type: .bss, vram: 0x80119BD0, name: audiosfx }

@@ -46,13 +46,11 @@ extern s32 gGfxBufCounter;
 extern s32 gGfxBufCounter2;
 extern s32 gGfxTaskIsRunning;
 
-// Defined in dkr.ld
-extern s8 rspF3DDKRDramStart[];
-extern s8 rspF3DDKRBootStart[];
-extern s8 rspF3DDKRXbusStart[];
-extern s8 rspF3DDKRDataXbusStart[];
-extern s8 rspF3DDKRFifoStart[];
-extern s8 rspF3DDKRDataFifoStart[];
+extern long long int	rspF3DDKRDramStart[], rspF3DDKRDramEnd[];
+extern long long int	rspF3DDKRXbusStart[], rspF3DDKRXbusEnd[];
+extern long long int	rspF3DDKRDataXbusStart[], rspF3DDKRDataXbusEnd[];
+extern long long int	rspF3DDKRFifoStart[], rspF3DDKRFifoEnd[];
+extern long long int	rspF3DDKRDataFifoStart[], rspF3DDKRDataFifoEnd[];
 
 s32 gfxtask_wait(void);
 void bgdraw_primcolour(u8 red, u8 green, u8 blue);

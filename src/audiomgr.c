@@ -325,8 +325,8 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     t->list.t.data_ptr = (u64 *) __am.ACMDList[curAcmdList];
     t->list.t.data_size = (cmdp - __am.ACMDList[curAcmdList]) * sizeof(Acmd);
     t->list.t.type = M_AUDTASK;
-    t->list.t.ucode_boot = (u64 *) rspF3DDKRBootStart;
-    t->list.t.ucode_boot_size = ((int) rspF3DDKRDramStart - (int) rspF3DDKRBootStart);
+    t->list.t.ucode_boot = (u64 *) rspbootTextStart;
+    t->list.t.ucode_boot_size = (s32) ((s32) rspbootTextEnd - (s32) rspbootTextStart);
     t->list.t.flags = OS_TASK_DP_WAIT;
     t->list.t.ucode = (u64 *) aspMainTextStart;
     t->list.t.ucode_data = (u64 *) aspMainDataStart;
