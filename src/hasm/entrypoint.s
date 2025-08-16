@@ -8,7 +8,7 @@
 .section .bss
 
 .equ entrypointThreadStackSize, 0x1000
-glabel entrypointThreadStack
+dlabel entrypointThreadStack
 .space entrypointThreadStackSize
 .size entrypointThreadStack, entrypointThreadStackSize
 

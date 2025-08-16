@@ -7,12 +7,12 @@
 
 .section .bss
 
-glabel __osThreadSave
+dlabel __osThreadSave
 .space 0x1B0
 
 .section .data
 
-glabel __osHwIntTable
+dlabel __osHwIntTable
 .word 0
 .word 0
 .word 0
@@ -21,7 +21,7 @@ glabel __osHwIntTable
 
 .section .rodata
 
-glabel __osIntOffTable
+dlabel __osIntOffTable
 .byte 0x00
 .byte 0x14
 .byte 0x18
@@ -55,7 +55,7 @@ glabel __osIntOffTable
 .byte 0x10
 .byte 0x10
 
-glabel __osIntTable
+dlabel __osIntTable
 .word .L800D3168
 .word .L800D3130
 .word .L800D3110
@@ -221,15 +221,15 @@ leaf __osException
 /* D3ADC 800D2EDC 8C2A9690 */  lw         $t2, %lo(__osIntTable)($at)
 /* D3AE0 800D2EE0 01400008 */  jr         $t2
 /* D3AE4 800D2EE4 00000000 */   nop
-glabel .L800D2EE8
+jlabel .L800D2EE8
 /* D3AE8 800D2EE8 2401DFFF */  addiu      $at, $zero, -0x2001
 /* D3AEC 800D2EEC 1000FFF0 */  b          .L800D2EB0
 /* D3AF0 800D2EF0 02018024 */   and       $s0, $s0, $at
-glabel .L800D2EF4
+jlabel .L800D2EF4
 /* D3AF4 800D2EF4 2401BFFF */  addiu      $at, $zero, -0x4001
 /* D3AF8 800D2EF8 1000FFED */  b          .L800D2EB0
 /* D3AFC 800D2EFC 02018024 */   and       $s0, $s0, $at
-glabel .L800D2F00
+jlabel .L800D2F00
 /* D3B00 800D2F00 40095800 */  mfc0       $t1, $11 /* handwritten instruction */
 /* D3B04 800D2F04 40895800 */  mtc0       $t1, $11 /* handwritten instruction */
 /* D3B08 800D2F08 0C034C79 */  jal        send_mesg
@@ -238,7 +238,7 @@ glabel .L800D2F00
 /* D3B14 800D2F14 34217FFF */  ori        $at, $at, (0xFFFF7FFF & 0xFFFF)
 /* D3B18 800D2F18 1000FFE5 */  b          .L800D2EB0
 /* D3B1C 800D2F1C 02018024 */   and       $s0, $s0, $at
-glabel .L800D2F20
+jlabel .L800D2F20
 /* D3B20 800D2F20 2401F7FF */  addiu      $at, $zero, -0x801
 /* D3B24 800D2F24 02018024 */  and        $s0, $s0, $at
 /* D3B28 800D2F28 240A0004 */  addiu      $t2, $zero, 0x4
@@ -261,7 +261,7 @@ glabel .L800D2F20
 /* D3B68 800D2F68 00000000 */   nop
 /* D3B6C 800D2F6C 1000FFD0 */  b          .L800D2EB0
 /* D3B70 800D2F70 00000000 */   nop
-glabel .L800D2F74
+jlabel .L800D2F74
 /* D3B74 800D2F74 3C08800E */  lui        $t0, %hi(__OSGlobalIntMask)
 /* D3B78 800D2F78 250838AC */  addiu      $t0, $t0, %lo(__OSGlobalIntMask)
 /* D3B7C 800D2F7C 8D080000 */  lw         $t0, 0x0($t0)
@@ -349,7 +349,7 @@ glabel .L800D2F74
 /* D3CA8 800D30A8 2401FBFF */  addiu      $at, $zero, -0x401
 /* D3CAC 800D30AC 1000FF80 */  b          .L800D2EB0
 /* D3CB0 800D30B0 02018024 */   and       $s0, $s0, $at
-glabel .L800D30B4
+jlabel .L800D30B4
 /* D3CB4 800D30B4 8F5B0118 */  lw         $k1, 0x118($k0) /* handwritten instruction */
 /* D3CB8 800D30B8 2401EFFF */  addiu      $at, $zero, -0x1001
 /* D3CBC 800D30BC 3C09800E */  lui        $t1, %hi(__osShutdown)
@@ -374,7 +374,7 @@ glabel .L800D30B4
 /* D3D04 800D3104 0361D824 */  and        $k1, $k1, $at
 /* D3D08 800D3108 10000017 */  b          .L800D3168
 /* D3D0C 800D310C AD5B0118 */   sw        $k1, 0x118($t2) /* handwritten instruction */
-glabel .L800D3110
+jlabel .L800D3110
 /* D3D10 800D3110 2401FDFF */  addiu      $at, $zero, -0x201
 /* D3D14 800D3114 01014024 */  and        $t0, $t0, $at
 /* D3D18 800D3118 40886800 */  mtc0       $t0, $13 /* handwritten instruction */
@@ -383,7 +383,7 @@ glabel .L800D3110
 /* D3D24 800D3124 2401FDFF */  addiu      $at, $zero, -0x201
 /* D3D28 800D3128 1000FF61 */  b          .L800D2EB0
 /* D3D2C 800D312C 02018024 */   and       $s0, $s0, $at
-glabel .L800D3130
+jlabel .L800D3130
 /* D3D30 800D3130 2401FEFF */  addiu      $at, $zero, -0x101
 /* D3D34 800D3134 01014024 */  and        $t0, $t0, $at
 /* D3D38 800D3138 40886800 */  mtc0       $t0, $13 /* handwritten instruction */
@@ -399,7 +399,7 @@ glabel .L800D3130
 /* D3D5C 800D315C 24040050 */   addiu     $a0, $zero, 0x50
 /* D3D60 800D3160 10000001 */  b          .L800D3168
 /* D3D64 800D3164 00000000 */   nop
-glabel .L800D3168
+jlabel .L800D3168
 /* D3D68 800D3168 3C0A800E */  lui        $t2, %hi(__osRunQueue)
 /* D3D6C 800D316C 8D4A4888 */  lw         $t2, %lo(__osRunQueue)($t2)
 /* D3D70 800D3170 8F490004 */  lw         $t1, 0x4($k0) /* handwritten instruction */

@@ -17,6 +17,10 @@ options:
   src_path: src
   build_path: build
   asset_path: assets
+  asm_function_macro: glabel
+  asm_jtbl_label_macro: jlabel
+  asm_data_macro: dlabel
+  asm_emit_size_directive: True
   section_order: [".text", ".data", ".rodata", ".bss"]
   migrate_rodata_to_functions: True
   hasm_in_src_path: True
@@ -378,11 +382,11 @@ segments:
       - [0xEA410, .rodata, ../libultra/src/gu/sinf]
       - [0xEA460, .rodata, ../libultra/src/libc/xldtob]
       - [0xEA4C0, hasm, ../libultra/src/gu/libm_vals]
-      - { start: 0xEA4D0, type: databin, name: aspMain,       linker_section_order: .rodata }
-      - { start: 0xEA7A0, type: databin, name: f3ddkr_dram, linker_section_order: .rodata }
-      - { start: 0xEAFA0, type: databin, name: f3ddkr_fifo, linker_section_order: .rodata }
-      - { start: 0xEB7A0, type: databin, name: f3ddkr_xbus, linker_section_order: .rodata }
-      - { start: 0xEBFA0, type: databin, name: ucode_unknown_2,   linker_section_order: .rodata }
+      - { start: 0xEA4D0, type: databin, name: aspMain,         linker_section_order: .rodata }
+      - { start: 0xEA7A0, type: databin, name: f3ddkr_dram,     linker_section_order: .rodata }
+      - { start: 0xEAFA0, type: databin, name: f3ddkr_fifo,     linker_section_order: .rodata }
+      - { start: 0xEB7A0, type: databin, name: f3ddkr_xbus,     linker_section_order: .rodata }
+      - { start: 0xEBFA0, type: databin, name: ucode_unknown_2, linker_section_order: .rodata }
       - { type: .bss, vram: 0x800EBF60, name: audio }
       - { type: .bss, vram: 0x80115F90, name: audiomgr }
       - { type: .bss, vram: 0x80119BD0, name: audiosfx }

@@ -7,7 +7,7 @@
 
 .section .rodata
 
-glabel __osRcpImTable
+dlabel __osRcpImTable
 /* LUT to convert between MI_INTR and MI_INTR_MASK */
 /* MI_INTR is status for each interrupt whereas    */
 /* MI_INTR_MASK has seperate bits for set/clr      */

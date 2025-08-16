@@ -8,9 +8,9 @@
 .set gp=64     /* allow use of 64-bit general purpose registers */
 
 .section .rodata
-glabel D_800E9550
+dlabel D_800E9550
 .double -0.0
-glabel D_800E9558
+dlabel D_800E9558
 .double -0.0
 
 .section .text, "ax"

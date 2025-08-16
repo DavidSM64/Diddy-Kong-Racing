@@ -17,6 +17,10 @@ options:
   src_path: src
   build_path: build
   asset_path: assets
+  asm_function_macro: glabel
+  asm_jtbl_label_macro: jlabel
+  asm_data_macro: dlabel
+  asm_emit_size_directive: True
   section_order: [".text", ".data", ".rodata", ".bss"]
   migrate_rodata_to_functions: True
   hasm_in_src_path: True
@@ -254,11 +258,11 @@ segments:
       - [0xD7630, c, ../libultra/src/libc/xldtob]
       - [0xD80F0, hasm, ../libultra/src/os/setcompare]
       - [0xD8100, c, ../libultra/src/libc/ldiv]
-      - [0xD8290, textbin, ucode_audio]
-      - [0xD9150, textbin, ucode_boot]
-      - [0xD9220, textbin, ucode_f3ddkr_dram]
-      - [0xDA420, textbin, ucode_f3ddkr_fifo]
-      - [0xDB600, textbin, ucode_f3ddkr_xbus]
+      - [0xD8290, textbin, aspMain]
+      - [0xD9150, textbin, rspboot]
+      - [0xD9220, textbin, f3ddkr_dram]
+      - [0xDA420, textbin, f3ddkr_fifo]
+      - [0xDB600, textbin, f3ddkr_xbus]
       - [0xDC800, textbin, ucode_unknown_2]
       - [0xDD2C0, .data, audio]
       - [0xDD310, .data, audiomgr]
@@ -378,11 +382,11 @@ segments:
       - [0xEA4A0, .rodata, ../libultra/src/gu/sinf]
       - [0xEA4F0, .rodata, ../libultra/src/libc/xldtob]
       - [0xEA550, hasm, ../libultra/src/gu/libm_vals]
-      - { start: 0xEA560, type: databin, name: data_audio,       linker_section_order: .rodata }
-      - { start: 0xEA830, type: databin, name: data_f3ddkr_dram, linker_section_order: .rodata }
-      - { start: 0xEB030, type: databin, name: data_f3ddkr_fifo, linker_section_order: .rodata }
-      - { start: 0xEB830, type: databin, name: data_f3ddkr_xbus, linker_section_order: .rodata }
-      - { start: 0xEC030, type: databin, name: data_unknown_2,   linker_section_order: .rodata }
+      - { start: 0xEA560, type: databin, name: aspMain,         linker_section_order: .rodata }
+      - { start: 0xEA830, type: databin, name: f3ddkr_dram,     linker_section_order: .rodata }
+      - { start: 0xEB030, type: databin, name: f3ddkr_fifo,     linker_section_order: .rodata }
+      - { start: 0xEB830, type: databin, name: f3ddkr_xbus,     linker_section_order: .rodata }
+      - { start: 0xEC030, type: databin, name: ucode_unknown_2, linker_section_order: .rodata }
       - { type: .bss, vram: 0x800EBFF0, name: audio }
       - { type: .bss, vram: 0x80116020, name: audiomgr }
       - { type: .bss, vram: 0x80119C60, name: audiosfx }

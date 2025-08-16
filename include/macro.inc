@@ -8,6 +8,18 @@
 
 .macro glabel label
     .global \label
+    .type \label, @function
+    \label:
+.endm
+
+.macro dlabel label
+    .global \label
+    .type \label, @object
+    \label:
+.endm
+
+.macro jlabel label
+    .global \label
     \label:
 .endm
 
@@ -26,6 +38,7 @@
 
 .macro leaf label
     .global \label
+    .type \label, @function
     \label:
     .ent    \label
 .endm
@@ -33,6 +46,7 @@
 # Used for alternative entries for Sin functions
 .macro altleaf label
     .global \label
+    .type \label, @function
     \label:
     .aent    \label
 .endm
