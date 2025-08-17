@@ -443,7 +443,7 @@ segments:
       - { type: .bss, vram: 0x8012D1A0, name: ../libultra/src/io/sptask }
       - { type: .bss, vram: 0x8012D1E0, name: ../libultra/src/io/piacs }
       - { type: .bss, vram: 0x8012D200, name: ../libultra/src/os/timerintr }
-      - { type: .bss, vram: 0x8012D240, name: ../libultra/src/os/exceptasm }
+      - { type: .bss, vram: 0x8012D240, name: ../libultra/src/debug/kdebugserver }
 
   # TODO: If we can split up the assets bin file to these two files, we can properly
   # define the symbol for __ASSETS_LUT_END even if it changes with custom assets

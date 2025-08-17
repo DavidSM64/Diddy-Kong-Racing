@@ -121,6 +121,7 @@ endif
 AS       = $(CROSS)as
 LD       = $(CROSS)ld
 OBJCOPY  = $(CROSS)objcopy
+STRIP    = $(CROSS)strip
 VENV     = .venv
 PYTHON   = $(VENV)/bin/python3
 GCC      = gcc
@@ -263,6 +264,12 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/io/pimgr.c.o: MIPSISET := -mips1
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/sc/sched.c.o: MIPSISET := -mips1
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/io/motor.c.o: MIPSISET := -mips1
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/audio/env.c.o: MIPSISET := -mips1
+
+# ASM files more often than not need to be compiled with -mips2 -O1, but there are exceptions.
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: MIPSISET := -mips2
+$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/%.s.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIBULTRA_DIR)/src/os/exceptasm.s.o: MIPSISET := -mips3 -32
 
 #Ignore warnings for libultra files
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_WARNINGS := -w
@@ -443,6 +450,15 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | bu
 $(BUILD_DIR)/%.s.o: %.s | build_assets
 	$(call print,Assembling:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $<
+
+# libultra asm files - Compile with the ido compiler
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
+	$(call print,Assembling Libultra:,$<,$@)
+	@$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
+	$(V)$(STRIP) --strip-unneeded $@
+	@if [ "$(MIPSISET)" = "-mips3 -32" ]; then \
+		$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@; \
+	fi
 
 # Specifically override the header file from what splat extracted to be replaced by what we have in the hasm folder
 $(BUILD_DIR)/asm/header.s.o: src/hasm/header.s | build_assets

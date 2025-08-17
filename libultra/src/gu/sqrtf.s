@@ -1,13 +1,25 @@
-.include "macro.inc"
+/**************************************************************************
+ *									  *
+ *		 Copyright (C) 1994, Silicon Graphics, Inc.		  *
+ *									  *
+ *  These coded instructions, statements, and computer programs  contain  *
+ *  unpublished  proprietary  information of Silicon Graphics, Inc., and  *
+ *  are protected by Federal copyright law.  They  may  not be disclosed  *
+ *  to  third  parties  or copied or duplicated in any form, in whole or  *
+ *  in part, without the prior written consent of Silicon Graphics, Inc.  *
+ *									  *
+ **************************************************************************/
 
-/* assembler directives */
-.set noat      /* allow manual use of $at */
-.set noreorder /* don't insert nops after branches */
-.set gp=64     /* allow use of 64-bit general purpose registers */
+/*
+ * Due to compiler bug, it won't insert a sqrt.s opcode in the stream so we
+ * make a function and call it for now. When compiler fixed, also remove the
+ * seperate Makefile rules
+ */
 
-.section .text, "ax"
+#include "sys/asm.h"
+#include "sys/regdef.h"
 
-leaf sqrtf
-jr         $ra
-sqrt.s    $f0, $f12
-.end sqrtf
+LEAF(sqrtf)
+    sqrt.s fv0, fa0
+    j ra
+END(sqrtf)
