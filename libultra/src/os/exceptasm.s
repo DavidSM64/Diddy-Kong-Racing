@@ -460,12 +460,25 @@ savecontext:
      */
     la      t0, __OSGlobalIntMask
     lw      t0, 0(t0)
+#if BUILD_VERSION >= VERSION_H
+    xor     t2, t0, ~0 /* not except not using not */
+    andi    t2, t2, SR_IMASK
+    or      ta0, t1, t2
+    and     t3, k1, ~SR_IMASK
+    or      t3, t3, ta0
+    sw      t3, THREAD_SR(k0)
+    andi    t0, t0, SR_IMASK
+    and     t1, t1, t0
+    and     k1, k1, ~SR_IMASK
+    or      k1, k1, t1
+#else
     xor     t0, t0, ~0 /* not except not using not */
     andi    t0, t0, SR_IMASK
     or      t1, t1, t0
     and     k1, k1, ~SR_IMASK
     or      k1, k1, t1
     sw      k1, THREAD_SR(k0)
+#endif
 savercp:
 
     /* Save the currently masked RCP interrupts. */
@@ -649,6 +662,9 @@ cart:
 
     /* Set up a stack and run the callback */
     jalr    t2
+#if BUILD_VERSION >= VERSION_H
+    li      a0, MESG(OS_EVENT_CART)
+#endif
 
     beqz    v0, 1f
     /* Redispatch immediately if the callback returned nonzero */
@@ -692,7 +708,11 @@ rcp:
     /* Mask out SP interrupt */
     andi    s1, s1, (MI_INTR_SI | MI_INTR_AI | MI_INTR_VI | MI_INTR_PI | MI_INTR_DP)
     lw      ta0, PHYS_TO_K1(SP_STATUS_REG)
-    li      t1, (SP_CLR_INTR)
+#if BUILD_VERSION >= VERSION_H
+    li      t1, (SP_CLR_INTR | SP_CLR_SIG3)
+#else
+    li      t1, SP_CLR_INTR
+#endif
 
     /* Clear interrupt and signal 3 */
     sw      t1, PHYS_TO_K1(SP_STATUS_REG)

@@ -15,7 +15,7 @@ $(eval $(call validate-option,NON_MATCHING,ido gcc))
 # Define a custom boot file if desired to use something other than the vanilla one
 BOOT_CUSTOM ?= mods/boot_custom.bin
 
-LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\"
+LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=VERSION_G -DBUILD_VERSION_STRING=\"2.0G\"
 
 # Whether to hide commands or not
 VERBOSE ?= 0
