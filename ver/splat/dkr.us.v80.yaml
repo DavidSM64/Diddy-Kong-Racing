@@ -443,7 +443,7 @@ segments:
       - { type: .bss, vram: 0x8012D760, name: ../libultra/src/io/sptask }
       - { type: .bss, vram: 0x8012D7A0, name: ../libultra/src/io/piacs }
       - { type: .bss, vram: 0x8012D7C0, name: ../libultra/src/os/timerintr }
-      - { type: .bss, vram: 0x8012D800, name: ../libultra/src/os/exceptasm }
+      - { type: .bss, vram: 0x8012D800, name: ../libultra/src/debug/kdebugserver }
 
   - name: assets
     type: bin
