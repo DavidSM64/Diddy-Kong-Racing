@@ -12,6 +12,10 @@ endif
 COMPILER ?= ido
 $(eval $(call validate-option,NON_MATCHING,ido gcc))
 
+ifneq ($(COMPILER),ido)
+	NON_MATCHING := 1
+endif
+
 # Define a custom boot file if desired to use something other than the vanilla one
 BOOT_CUSTOM ?= mods/boot_custom.bin
 
@@ -451,6 +455,7 @@ $(BUILD_DIR)/%.s.o: %.s | build_assets
 	$(call print,Assembling:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $<
 
+ifeq ($(COMPILER),ido)
 # libultra asm files - Compile with the ido compiler
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
 	$(call print,Assembling Libultra:,$<,$@)
@@ -459,6 +464,12 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
 	@if [ "$(MIPSISET)" = "-mips3 -32" ]; then \
 		$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@; \
 	fi
+else
+# libultra asm files - Compile with the gcc c compiler
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
+	$(call print,Assembling Libultra:,$<,$@)
+	$(CROSS)gcc -x assembler-with-cpp -w -nostdinc -c -G 0 -march=vr4300 -mgp32 -mfp32 -mno-abicalls -DMIPSEB -D_LANGUAGE_ASSEMBLY -D_MIPS_SIM=1 -D_ULTRA64 -DMODERN_CC -c $(C_DEFINES) $(INCLUDE_CFLAGS) -Os -o $@ $<
+endif
 
 # Specifically override the header file from what splat extracted to be replaced by what we have in the hasm folder
 $(BUILD_DIR)/asm/header.s.o: src/hasm/header.s | build_assets
