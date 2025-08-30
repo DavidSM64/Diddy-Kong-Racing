@@ -36,15 +36,15 @@ lldiv_t lldiv(long long num, long long denom) {
 
 
 #ifdef __GNUC__
-u64 __lshrdi3(u64 u, unsigned int b) {
+__attribute__((optimize("O2"))) u64 __lshrdi3(u64 u, unsigned int b) {
     return u >> b;
 }
 
-u64 __ashldi3(u64 u, unsigned int b) {
+__attribute__((optimize("O2"))) u64 __ashldi3(u64 u, unsigned int b) {
     return u << b;
 }
 
-s64 __ashrdi3(s64 u, unsigned int b) {
+__attribute__((optimize("O2"))) s64 __ashrdi3(s64 u, unsigned int b) {
     return u >> b;
 }
 #endif

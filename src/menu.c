@@ -10554,7 +10554,11 @@ void postrace_load(void) {
             gPostRace.unk0_s32++;
             return;
         }
+#ifdef AVOID_UB
+        temp_a0 = gRaceResultsObjectIndices[gPostRace.unk0_s32 - 10];
+#else   // This relies on the data laid out as is in memory, since the var itself is only 2 entries big.
         temp_a0 = D_800E0A10[gPostRace.unk0_s32];
+#endif
         if (temp_a0 == -1) {
             menu_imagegroup_load(gRaceResultsImageIndices);
             menu_racer_portraits();
