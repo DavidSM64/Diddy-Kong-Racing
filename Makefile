@@ -275,14 +275,14 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: MIPSISET := -mips2
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/%.s.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/os/exceptasm.s.o: MIPSISET := -mips3 -32
 
-#Ignore warnings for libultra files
-$(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_WARNINGS := -w
-$(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_CHECK := :
-
 # Allow dollar sign to be used in var names for this file alone
 # It allows us to return the current stack pointer
 $(BUILD_DIR)/$(SRC_DIR)/get_stack_pointer.c.o: OPT_FLAGS += -dollar
 endif
+
+#Ignore warnings for libultra files
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_WARNINGS := -w
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_CHECK := :
 
 ### Targets
 
@@ -459,7 +459,7 @@ ifeq ($(COMPILER),ido)
 # libultra asm files - Compile with the ido compiler
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
 	$(call print,Assembling Libultra:,$<,$@)
-	@$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
+	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
 	$(V)$(STRIP) --strip-unneeded $@
 	@if [ "$(MIPSISET)" = "-mips3 -32" ]; then \
 		$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@; \
@@ -468,7 +468,11 @@ else
 # libultra asm files - Compile with the gcc c compiler
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
 	$(call print,Assembling Libultra:,$<,$@)
-	$(CROSS)gcc -x assembler-with-cpp -w -nostdinc -c -G 0 -march=vr4300 -mgp32 -mfp32 -mno-abicalls -DMIPSEB -D_LANGUAGE_ASSEMBLY -D_MIPS_SIM=1 -D_ULTRA64 -DMODERN_CC -c $(C_DEFINES) $(INCLUDE_CFLAGS) -Os -o $@ $<
+	$(V)$(CROSS)gcc -x assembler-with-cpp \
+	-w -nostdinc -c -G 0 -march=vr4300 -mgp32 -mfp32 -mno-abicalls \
+	-DMIPSEB -D_LANGUAGE_ASSEMBLY -D_MIPS_SIM=1 -D_ULTRA64 -DMODERN_CC -D__USE_ISOC99 \
+	-mips3 -Os -ggdb3 -ffast-math -fno-unsafe-math-optimizations -c $(C_DEFINES) $(INCLUDE_CFLAGS) \
+	-o $@ $<
 endif
 
 # Specifically override the header file from what splat extracted to be replaced by what we have in the hasm folder
