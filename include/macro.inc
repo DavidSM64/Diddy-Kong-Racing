@@ -1,6 +1,11 @@
 # This file is used by modern gas.
 # Defines the expected assembly macros
 
+# Evaluate this file only once in case it's included more than once
+.ifndef _MACRO_INC_GUARD
+.internal _MACRO_INC_GUARD
+.set _MACRO_INC_GUARD, 1
+
 # A function symbol.
 .macro glabel label, visibility=global
     .\visibility \label
@@ -33,7 +38,6 @@
 # A label referenced by a jumptable.
 .macro jlabel label, visibility=global
     .\visibility \label
-    .type \label, @function
     \label:
 .endm
 
@@ -128,3 +132,5 @@
 .set $fs4f,         $f29
 .set $fs5,          $f30
 .set $fs5f,         $f31
+
+.endif
