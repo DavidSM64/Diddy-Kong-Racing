@@ -25,7 +25,7 @@ dlabel D_800E9558
 
 /* TODO: Is there a non-insane way to fix this hack that doesn't involve the user compiling */
 /* a library themselves?                                                                    */
-leaf __umoddi3
+glabel __umoddi3
     sw    $a0, ($sp)
     sw    $a1, 4($sp)
     sw    $a2, 8($sp)
@@ -42,9 +42,9 @@ leaf __umoddi3
     dsra32 $v1, $v1, 0
     jr    $ra
      dsra32 $v0, $v0, 0
-.end __umoddi3
+endlabel __umoddi3
 
-leaf __udivdi3
+glabel __udivdi3
     sw    $a0, ($sp)
     sw    $a1, 4($sp)
     sw    $a2, 8($sp)
@@ -61,9 +61,9 @@ leaf __udivdi3
     dsra32 $v1, $v1, 0
     jr    $ra
      dsra32 $v0, $v0, 0
-.end __udivdi3
+endlabel __udivdi3
 
-leaf __moddi3
+glabel __moddi3
     sw    $a0, ($sp)
     sw    $a1, 4($sp)
     sw    $a2, 8($sp)
@@ -80,9 +80,9 @@ leaf __moddi3
     dsra32 $v1, $v1, 0
     jr    $ra
      dsra32 $v0, $v0, 0
-.end __moddi3
+endlabel __moddi3
 
-leaf __divdi3
+glabel __divdi3
     sw    $a0, ($sp)
     sw    $a1, 4($sp)
     sw    $a2, 8($sp)
@@ -108,9 +108,9 @@ leaf __divdi3
     dsra32 $v1, $v1, 0
     jr    $ra
      dsra32 $v0, $v0, 0
-.end __divdi3
+endlabel __divdi3
 
-leaf __d_to_ll
+glabel __d_to_ll
 /* 0CA730 800C9B30 46206109 */  trunc.l.d $f4, $f12
 /* 0CA734 800C9B34 44222000 */  dmfc1 $v0, $f4
 /* 0CA738 800C9B38 00000000 */  nop   
@@ -118,9 +118,9 @@ leaf __d_to_ll
 /* 0CA740 800C9B40 0003183F */  dsra32 $v1, $v1, 0
 /* 0CA744 800C9B44 03E00008 */  jr    $ra
 /* 0CA748 800C9B48 0002103F */   dsra32 $v0, $v0, 0
-.end __d_to_ll
+endlabel __d_to_ll
 
-leaf __f_to_ll
+glabel __f_to_ll
 /* 0CA74C 800C9B4C 46006109 */  trunc.l.s $f4, $f12
 /* 0CA750 800C9B50 44222000 */  dmfc1 $v0, $f4
 /* 0CA754 800C9B54 00000000 */  nop   
@@ -128,9 +128,9 @@ leaf __f_to_ll
 /* 0CA75C 800C9B5C 0003183F */  dsra32 $v1, $v1, 0
 /* 0CA760 800C9B60 03E00008 */  jr    $ra
 /* 0CA764 800C9B64 0002103F */   dsra32 $v0, $v0, 0
-.end __f_to_ll
+endlabel __f_to_ll
 
-leaf __d_to_ull
+glabel __d_to_ull
 /* 0CA768 800C9B68 444EF800 */  cfc1  $t6, $31
 /* 0CA76C 800C9B6C 24020001 */  li    $v0, 1
 /* 0CA770 800C9B70 44C2F800 */  ctc1  $v0, $31
@@ -174,9 +174,9 @@ leaf __d_to_ull
 /* 0CA7FC 800C9BFC 0003183F */  dsra32 $v1, $v1, 0
 /* 0CA800 800C9C00 03E00008 */  jr    $ra
 /* 0CA804 800C9C04 0002103F */   dsra32 $v0, $v0, 0
-.end __d_to_ull
+endlabel __d_to_ull
 
-leaf __f_to_ull
+glabel __f_to_ull
 /* 0CA808 800C9C08 444EF800 */  cfc1  $t6, $31
 /* 0CA80C 800C9C0C 24020001 */  li    $v0, 1
 /* 0CA810 800C9C10 44C2F800 */  ctc1  $v0, $31
@@ -219,27 +219,27 @@ leaf __f_to_ull
 /* 0CA898 800C9C98 0003183F */  dsra32 $v1, $v1, 0
 /* 0CA89C 800C9C9C 03E00008 */  jr    $ra
 /* 0CA8A0 800C9CA0 0002103F */   dsra32 $v0, $v0, 0
-.end __f_to_ull
+endlabel __f_to_ull
 
-leaf __ll_to_d
+glabel __ll_to_d
 /* 0CA8A4 800C9CA4 AFA40000 */  sw    $a0, ($sp)
 /* 0CA8A8 800C9CA8 AFA50004 */  sw    $a1, 4($sp)
 /* 0CA8AC 800C9CAC DFAE0000 */  ld    $t6, ($sp)
 /* 0CA8B0 800C9CB0 44AE2000 */  dmtc1 $t6, $f4
 /* 0CA8B4 800C9CB4 03E00008 */  jr    $ra
 /* 0CA8B8 800C9CB8 46A02021 */   cvt.d.l $f0, $f4
-.end __ll_to_d
+endlabel __ll_to_d
 
-leaf __ll_to_f
+glabel __ll_to_f
 /* 0CA8BC 800C9CBC AFA40000 */  sw    $a0, ($sp)
 /* 0CA8C0 800C9CC0 AFA50004 */  sw    $a1, 4($sp)
 /* 0CA8C4 800C9CC4 DFAE0000 */  ld    $t6, ($sp)
 /* 0CA8C8 800C9CC8 44AE2000 */  dmtc1 $t6, $f4
 /* 0CA8CC 800C9CCC 03E00008 */  jr    $ra
 /* 0CA8D0 800C9CD0 46A02020 */   cvt.s.l $f0, $f4
-.end __ll_to_f
+endlabel __ll_to_f
 
-leaf __ull_to_d
+glabel __ull_to_d
 /* 0CA8D4 800C9CD4 AFA40000 */  sw    $a0, ($sp)
 /* 0CA8D8 800C9CD8 AFA50004 */  sw    $a1, 4($sp)
 /* 0CA8DC 800C9CDC DFAE0000 */  ld    $t6, ($sp)
@@ -254,9 +254,9 @@ leaf __ull_to_d
 .L800C9D00:
 /* 0CA900 800C9D00 03E00008 */  jr    $ra
 /* 0CA904 800C9D04 00000000 */   nop   
-.end __ull_to_d
+endlabel __ull_to_d
 
-leaf __ull_to_f
+glabel __ull_to_f
 /* 0CA908 800C9D08 AFA40000 */  sw    $a0, ($sp)
 /* 0CA90C 800C9D0C AFA50004 */  sw    $a1, 4($sp)
 /* 0CA910 800C9D10 DFAE0000 */  ld    $t6, ($sp)
@@ -270,6 +270,6 @@ leaf __ull_to_f
 .L800C9D30:
 /* 0CA930 800C9D30 03E00008 */  jr    $ra
 /* 0CA934 800C9D34 00000000 */   nop   
-.end __ull_to_f
+endlabel __ull_to_f
 
 .endif

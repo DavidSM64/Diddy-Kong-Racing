@@ -20,7 +20,9 @@ options:
   asm_function_macro: glabel
   asm_jtbl_label_macro: jlabel
   asm_data_macro: dlabel
-  asm_emit_size_directive: True
+  asm_function_alt_macro: alabel
+  asm_end_label: endlabel
+  asm_emit_size_directive: False
   section_order: [".text", ".data", ".rodata", ".bss"]
   migrate_rodata_to_functions: True
   hasm_in_src_path: True
