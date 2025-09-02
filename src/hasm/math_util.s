@@ -164,7 +164,7 @@ dlabel gArcTanTable
 .section .text, "ax"
 
 /* Official Name: disableInterrupts */
-leaf interrupts_disable
+glabel interrupts_disable
 lui        $t0, %hi(gIntDisFlag)
 lb         $t0, %lo(gIntDisFlag)($t0)
 beqz       $t0, .L8006F534
@@ -177,10 +177,10 @@ nop
 .L8006F534:
 jr         $ra
  nop
-.end interrupts_disable
+endlabel interrupts_disable
 
 /* Official Name: enableInterrupts */
-leaf interrupts_enable
+glabel interrupts_enable
 lui        $t0, %hi(gIntDisFlag)
 lb         $t0, %lo(gIntDisFlag)($t0)
 beqz       $t0, .L8006F55C
@@ -192,23 +192,23 @@ nop
 .L8006F55C:
 jr         $ra
  nop
-.end interrupts_enable
+endlabel interrupts_enable
 
 /* Official Name: setIntDisFlag */
-leaf set_gIntDisFlag
+glabel set_gIntDisFlag
 lui        $at, %hi(gIntDisFlag)
 jr         $ra
  sb        $a0, %lo(gIntDisFlag)($at)
-.end set_gIntDisFlag
+endlabel set_gIntDisFlag
 
 /* Official Name: getIntDisFlag */
-leaf get_gIntDisFlag
+glabel get_gIntDisFlag
 lui        $v0, %hi(gIntDisFlag)
 jr         $ra
  lbu       $v0, %lo(gIntDisFlag)($v0)
-.end get_gIntDisFlag
+endlabel get_gIntDisFlag
 
-leaf mtx_to_mtxs
+glabel mtx_to_mtxs
 ori        $t0, $zero, 0x4
 lui        $t7, 0xFFFF
 .L8006F584:
@@ -235,9 +235,9 @@ bnel       $t0, $zero, .L8006F584
  nop
 jr         $ra
  nop
-.end mtx_to_mtxs
+endlabel mtx_to_mtxs
 
-leaf mtxf_to_mtxs
+glabel mtxf_to_mtxs
 li.s       $at, 65536.0
 mtc1       $at, $f12
 ori        $t0, $zero, 0x4
@@ -266,10 +266,10 @@ bnel       $t0, $zero, .L8006F5EC
  nop
 jr         $ra
  nop
-.end mtxf_to_mtxs
+endlabel mtxf_to_mtxs
 
 /* Official Name: mathMtxXFMF */
-leaf mtxf_transform_point
+glabel mtxf_transform_point
 mtc1       $a1, $f12
 lwc1       $f4, 0x0($a0)
 mtc1       $a2, $f14
@@ -310,10 +310,10 @@ add.s      $f10, $f18, $f6
 add.s      $f4, $f8, $f10
 jr         $ra
  swc1      $f4, 0x0($t8)
-.end mtxf_transform_point
+endlabel mtxf_transform_point
 
 /* Official Name: mathMtxFastXFMF */
-leaf mtxf_transform_dir
+glabel mtxf_transform_dir
 lwc1       $f4, 0x0($a1)
 lwc1       $f10, 0x0($a0)
 lwc1       $f6, 0x4($a1)
@@ -345,10 +345,10 @@ mul.s      $f14, $f8, $f14
 add.s      $f14, $f12, $f14
 jr         $ra
  swc1      $f14, 0x8($a2)
-.end mtxf_transform_dir
+endlabel mtxf_transform_dir
 
 /* Official Name: mathMtxCatF */
-leaf mtxf_mul
+glabel mtxf_mul
 addiu      $sp, $sp, -0x8
 sdc1       $f2, 0x0($sp)
 ori        $t0, $zero, 0x4
@@ -416,10 +416,10 @@ bnel       $t0, $zero, .L8006F774
 ldc1       $f2, 0x0($sp)
 jr         $ra
  addiu     $sp, $sp, 0x8
-.end mtxf_mul
+endlabel mtxf_mul
 
 /* Official Name: mathMtxF2L */
-leaf mtxf_to_mtx
+glabel mtxf_to_mtx
 li.s       $at, 65536.0
 mtc1       $at, $f12
 ori        $t0, $zero, 0x4
@@ -460,39 +460,39 @@ bnel       $t0, $zero, .L8006F87C
  nop
 jr         $ra
  nop
-.end mtxf_to_mtx
+endlabel mtxf_to_mtx
 
 /* Official Name: mathSeed */
-leaf set_rng_seed
+glabel set_rng_seed
 lui        $at, %hi(gCurrentRNGSeed)
 jr         $ra
  sw        $a0, %lo(gCurrentRNGSeed)($at)
-.end set_rng_seed
+endlabel set_rng_seed
 
-leaf save_rng_seed
+glabel save_rng_seed
 lui        $a0, %hi(gCurrentRNGSeed)
 lw         $a0, %lo(gCurrentRNGSeed)($a0)
 lui        $at, %hi(gPrevRNGSeed)
 jr         $ra
  sw        $a0, %lo(gPrevRNGSeed)($at)
-.end save_rng_seed
+endlabel save_rng_seed
 
-leaf load_rng_seed
+glabel load_rng_seed
 lui        $a0, %hi(gPrevRNGSeed)
 lw         $a0, %lo(gPrevRNGSeed)($a0)
 lui        $at, %hi(gCurrentRNGSeed)
 jr         $ra
  sw        $a0, %lo(gCurrentRNGSeed)($at)
-.end load_rng_seed
+endlabel load_rng_seed
 
-leaf get_rng_seed
+glabel get_rng_seed
 lui        $v0, %hi(gCurrentRNGSeed)
 jr         $ra
  lw        $v0, %lo(gCurrentRNGSeed)($v0)
-.end get_rng_seed
+endlabel get_rng_seed
 
 /* Official Name: mathRnd */
-leaf rand_range
+glabel rand_range
 lui        $t0, %hi(gCurrentRNGSeed)
 lw         $t0, %lo(gCurrentRNGSeed)($t0)
 lui        $at, %hi(gCurrentRNGSeed)
@@ -521,10 +521,10 @@ break      7
 .L8006F9B0:
 jr         $ra
  nop
-.end rand_range
+endlabel rand_range
 
 /* Official Name: fastShortReflection */
-leaf vec3s_reflect
+glabel vec3s_reflect
 lh         $t0, 0x0($a0)
 lh         $t3, 0x0($a1)
 lh         $t1, 0x2($a0)
@@ -559,9 +559,9 @@ sra        $t5, $t5, 13
 sub        $t5, $t5, $t0
 jr         $ra
  sh        $t5, 0xA($a0)
-.end vec3s_reflect
+endlabel vec3s_reflect
 
-leaf mtx_to_mtxs_2
+glabel mtx_to_mtxs_2
 ori        $t2, $zero, 0x10
 xor        $t3, $t3, $t3
 .L8006FA48:
@@ -577,9 +577,9 @@ bnel       $t3, $t2, .L8006FA48
  nop
 jr         $ra
  nop
-.end mtx_to_mtxs_2
+endlabel mtx_to_mtxs_2
 
-leaf mtxs_transform_point
+glabel mtxs_transform_point
 lh         $t0, 0x0($a1)
 lw         $t3, 0x0($a0)
 lh         $t1, 0x2($a1)
@@ -638,9 +638,9 @@ add        $t4, $t4, $t3
 sra        $t4, $t4, 16
 jr         $ra
  sh        $t4, 0x4($a1)
-.end mtxs_transform_point
+endlabel mtxs_transform_point
 
-leaf mtxs_transform_dir
+glabel mtxs_transform_dir
 lw         $t3, 0x0($a0)
 lh         $t0, 0x0($a1)
 lh         $t1, 0x2($a1)
@@ -693,9 +693,9 @@ add        $t4, $t4, $t6
 sra        $t4, $t4, 16
 jr         $ra
  sh        $t4, 0x4($a1)
-.end mtxs_transform_dir
+endlabel mtxs_transform_dir
 
-leaf mtxf_from_transform
+glabel mtxf_from_transform
 addiu      $sp, $sp, -0x8
 li.s       $at, 0.0000152587890625 /* (1.0f / 0x10000) */
 sd         $ra, 0x0($sp)
@@ -813,10 +813,10 @@ ld         $ra, 0x0($sp)
 addiu      $sp, $sp, 0x8
 jr         $ra
  nop
-.end mtxf_from_transform
+endlabel mtxf_from_transform
 
 /* Official Name: mathSquashY */
-leaf mtxf_scale_y
+glabel mtxf_scale_y
 mtc1       $a1, $f18
 lwc1       $f16, 0x10($a0)
 mul.s      $f16, $f16, $f18
@@ -828,10 +828,10 @@ lwc1       $f16, 0x18($a0)
 mul.s      $f16, $f16, $f18
 jr         $ra
  swc1      $f16, 0x18($a0)
-.end mtxf_scale_y
+endlabel mtxf_scale_y
 
 /* Official Name: mathTransY */
-leaf mtxf_translate_y
+glabel mtxf_translate_y
 mtc1       $a1, $f16
 lwc1       $f0, 0x10($a0)
 lwc1       $f4, 0x14($a0)
@@ -849,10 +849,10 @@ add.s      $f8, $f8, $f10
 swc1       $f4, 0x34($a0)
 jr         $ra
  swc1      $f8, 0x38($a0)
-.end mtxf_translate_y
+endlabel mtxf_translate_y
 
 /* Official Name: mathRpyXyzMtx */
-leaf mtxf_from_inverse_transform
+glabel mtxf_from_inverse_transform
 addiu      $sp, $sp, -0x8
 li.s       $at, 0.0000152587890625 /* (1.0f / 0x10000) */
 sd         $ra, 0x0($sp)
@@ -974,9 +974,9 @@ ld         $ra, 0x0($sp)
 addiu      $sp, $sp, 0x8
 jr         $ra
  nop
-.end mtxf_from_inverse_transform
+endlabel mtxf_from_inverse_transform
 
-leaf func_80070058
+glabel func_80070058
 addiu      $sp, $sp, -0x8
 li.s       $at, 0.0000152587890625 /* (1.0f / 0x10000) */
 sd         $ra, 0x0($sp)
@@ -1031,9 +1031,9 @@ nop
 mul.s      $f16, $f0, $f8
 jr         $ra
  nop
-.end func_80070058
+endlabel func_80070058
 
-leaf mtxf_billboard
+glabel mtxf_billboard
 addiu      $sp, $sp, -0x8
 or         $t9, $a3, $zero
 li.s       $at, 0.0000152587890625 /* (1.0f / 0x10000) */
@@ -1079,9 +1079,9 @@ ld         $ra, 0x0($sp)
 addiu      $sp, $sp, 0x8
 jr         $ra
  nop
-.end mtxf_billboard
+endlabel mtxf_billboard
 
-leaf vec3s_rotate_rpy
+glabel vec3s_rotate_rpy
 addiu      $sp, $sp, -0x8
 sd         $ra, 0x0($sp)
 or         $a2, $a0, $zero
@@ -1161,10 +1161,10 @@ ld         $ra, 0x0($sp)
 addiu      $sp, $sp, 0x8
 jr         $ra
  nop
-.end vec3s_rotate_rpy
+endlabel vec3s_rotate_rpy
 
 /* Official Name: mathOneFloatRPY */
-leaf vec3f_rotate
+glabel vec3f_rotate
 addiu      $sp, $sp, -0x8
 sd         $ra, 0x0($sp)
 or         $a2, $a0, $zero
@@ -1211,10 +1211,10 @@ ld         $ra, 0x0($sp)
 addiu      $sp, $sp, 0x8
 jr         $ra
  nop
-.end vec3f_rotate
+endlabel vec3f_rotate
 
 /* Official Name: mathOneFloatYPR */
-leaf vec3f_rotate_ypr
+glabel vec3f_rotate_ypr
 addiu      $sp, $sp, -0x8
 sd         $ra, 0x0($sp)
 or         $a2, $a0, $zero
@@ -1261,10 +1261,10 @@ ld         $ra, 0x0($sp)
 addiu      $sp, $sp, 0x8
 jr         $ra
  nop
-.end vec3f_rotate_ypr
+endlabel vec3f_rotate_ypr
 
 /* Official Name: mathOneFloatPY */
-leaf vec3f_rotate_py
+glabel vec3f_rotate_py
 addiu      $sp, $sp, -0x8
 sd         $ra, 0x0($sp)
 or         $a2, $a0, $zero
@@ -1289,10 +1289,10 @@ ld         $ra, 0x0($sp)
 addiu      $sp, $sp, 0x8
 jr         $ra
  nop
-.end vec3f_rotate_py
+endlabel vec3f_rotate_py
 
 /* Official Name: mathXZInTri */
-leaf tri2d_xz_contains_point
+glabel tri2d_xz_contains_point
 lw         $t6, 0x10($sp)
 lh         $t0, 0x0($a2)
 lh         $t1, 0x4($a2)
@@ -1363,10 +1363,10 @@ ori        $v0, $zero, 0x1
 .L800705F0:
 jr         $ra
  nop
-.end tri2d_xz_contains_point
+endlabel tri2d_xz_contains_point
 
 /* Official Name: mathTranslateMtx */
-leaf mtxf_from_translation
+glabel mtxf_from_translation
 or         $t0, $a0, $zero
 addiu      $t1, $t0, 0x40
 .L80070600:
@@ -1384,10 +1384,10 @@ sw         $a1, 0x30($a0)
 sw         $a2, 0x34($a0)
 jr         $ra
  sw        $a3, 0x38($a0)
-.end mtxf_from_translation
+endlabel mtxf_from_translation
 
 /* Official Name: mathScaleMtx */
-leaf mtxf_from_scale
+glabel mtxf_from_scale
 or         $t0, $a0, $zero
 addiu      $t1, $t0, 0x40
 .L80070640:
@@ -1402,9 +1402,9 @@ sw         $a1, 0x0($a0)
 sw         $a2, 0x14($a0)
 jr         $ra
  sw        $a3, 0x28($a0)
-.end mtxf_from_scale
+endlabel mtxf_from_scale
 
-leaf atan2s
+glabel atan2s
 or         $t0, $a0, $a1
 bne        $zero, $t0, .L80070680
  nop
@@ -1471,9 +1471,9 @@ lh         $t0, 0x0($t1)
 addu       $v0, $v0, $t0
 jr         $ra
  andi      $v0, $v0, 0xFFFF
-.end atan2s
+endlabel atan2s
 
-leaf arctan2_f
+glabel arctan2_f
 li.s       $at, 255.0
 mtc1       $at, $f0
 nop
@@ -1486,9 +1486,9 @@ mfc1       $a0, $f12
 mfc1       $a1, $f14
 j          atan2s
  nop
-.end arctan2_f
+endlabel arctan2_f
 
-leaf fix32_sqrt
+glabel fix32_sqrt
 mtc1       $a0, $f0
 li.s       $at, 65536.0
 mtc1       $at, $f2
@@ -1500,18 +1500,18 @@ cvt.w.s    $f0, $f0
 mfc1       $v0, $f0
 jr         $ra
  nop
-.end fix32_sqrt
+endlabel fix32_sqrt
 
-leaf bad_int_sqrt
+glabel bad_int_sqrt
 mtc1       $a0, $f0
 nop
 sqrt.s     $f0, $f0
 mfc1       $v0, $f0
 jr         $ra
  nop
-.end bad_int_sqrt
+endlabel bad_int_sqrt
 
-leaf sins_f
+glabel sins_f
 addiu      $sp, $sp, -0x8
 sd         $ra, 0x0($sp)
 jal        sins_s16
@@ -1525,9 +1525,9 @@ addiu      $sp, $sp, 0x8
 mul.s      $f0, $f0, $f2
 jr         $ra
  nop
-.end sins_f
+endlabel sins_f
 
-leaf coss_f
+glabel coss_f
 addiu      $sp, $sp, -0x8
 sd         $ra, 0x0($sp)
 jal        coss_s16
@@ -1541,15 +1541,15 @@ addiu      $sp, $sp, 0x8
 mul.s      $f0, $f0, $f2
 jr         $ra
  nop
-.end coss_f
+endlabel coss_f
 
 /* Official Name: mathCosInterp */
-leaf coss_s16
+glabel coss_s16
 addiu      $a0, $a0, 0x4000
 /* Fall through */
 
 /* Official Name: mathSinInterp */
-altleaf sins_s16 
+alabel sins_s16 
 sll        $v0, $a0, 17
 bgezl      $v0, .L80070844
 srl        $t2, $a0, 3
@@ -1575,16 +1575,16 @@ negu       $v0, $v0
 .L80070884:
 jr         $ra
 nop
-.end coss_s16
+endlabel coss_s16
 .size sins_s16, . - sins_s16
 
 /* Official Name: mathCos */
-leaf coss_2
+glabel coss_2
 addiu      $a0, $a0, 0x4000
 /* Fall through */
 
 /* Official Name: mathSin */
-altleaf sins_2
+alabel sins_2
 sll        $v0, $a0, 17
 bgezl      $v0, .L800708A4
 srl        $t2, $a0, 3
@@ -1603,10 +1603,10 @@ negu       $v0, $v0
 .L800708C8:
 jr         $ra
 nop
-.end coss_2
+endlabel coss_2
 .size sins_2, . - sins_2
 
-leaf calc_dyn_lighting_for_level_segment
+glabel calc_dyn_lighting_for_level_segment
 lw         $t1, 0x0($a1)
 lw         $t2, 0x4($a1)
 lw         $t3, 0x8($a1)
@@ -1688,9 +1688,9 @@ bnel       $t0, $zero, .L800708F0
  nop
 jr         $ra
  nop
-.end calc_dyn_lighting_for_level_segment
+endlabel calc_dyn_lighting_for_level_segment
 
-leaf func_80070A04
+glabel func_80070A04
 lhu        $t4, 0x2($a2)
 .L80070A08:
 lhu        $t5, 0xE($a2)
@@ -1702,9 +1702,9 @@ bnel       $t0, $zero, .L800708F0
  nop
 jr         $ra
  nop
-.end func_80070A04
+endlabel func_80070A04
 
-leaf area_triangle_2d
+glabel area_triangle_2d
 mtc1       $a2, $f4
 mov.s      $f0, $f12
 mtc1       $a3, $f6
@@ -1749,9 +1749,9 @@ mov.s      $f0, $f2
 .L80070AD0:
 jr         $ra
  sqrt.s    $f0, $f0
-.end area_triangle_2d
+endlabel area_triangle_2d
 
-leaf set_breakpoint
+glabel set_breakpoint
 ori        $a0, $a0, 0x1
 mtc0       $a0, $18
 addiu      $t0, $zero, 0xF
@@ -1763,9 +1763,9 @@ nop
 nop
 jr         $ra
  nop
-.end set_breakpoint
+endlabel set_breakpoint
 
-leaf dmacopy_doubleword
+glabel dmacopy_doubleword
 ld         $t0, 0x0($a0)
 ld         $t1, 0x8($a0)
 addi       $a1, $a1, 0x10
@@ -1775,4 +1775,4 @@ bne        $a1, $a2, dmacopy_doubleword
  sd        $t1, -0x8($a1)
 jr         $ra
  nop
-.end dmacopy_doubleword
+endlabel dmacopy_doubleword
