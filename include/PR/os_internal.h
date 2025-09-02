@@ -30,7 +30,7 @@ extern "C" {
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
 #include "os_internal_reg.h"
-// #include "os_internal_exception.h" //TODO: Why does this include break things?
+#include "os_internal_exception.h"
 #include "os_internal_tlb.h"
 #include "os_internal_si.h"
 #include "os_internal_rsp.h"

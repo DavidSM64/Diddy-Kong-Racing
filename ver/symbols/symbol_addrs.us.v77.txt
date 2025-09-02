@@ -2146,12 +2146,12 @@ lldiv = 0x800D7470;
 ldiv = 0x800D7570;
 
 // ucode_text us v77
-aspMainTextStart = 0x800D7600; // size:0xEC0
-rspF3DDKRBootStart = 0x800D84C0; // size:0xD0
-rspF3DDKRDramStart = 0x800D8590; // size:0x1200
-rspF3DDKRFifoStart = 0x800D9790; // size:0x11E0
-rspF3DDKRXbusStart = 0x800DA970; // size:0x1200
-rspUnknown2Start = 0x800DBB70; // size:0xAC0
+aspMainTextStart = 0x800D7600; // size:0xEC0 name_end:aspMainTextEnd
+rspbootTextStart = 0x800D84C0; // size:0xD0 name_end:rspbootTextEnd
+rspF3DDKRDramStart = 0x800D8590; // size:0x1200 name_end:rspF3DDKRDramEnd
+rspF3DDKRFifoStart = 0x800D9790; // size:0x11E0 name_end:rspF3DDKRFifoEnd
+rspF3DDKRXbusStart = 0x800DA970; // size:0x1200 name_end:rspF3DDKRXbusEnd
+rspUnknown2Start = 0x800DBB70; // size:0xAC0 name_end:rspUnknown2End
 
 // audio.c .data
 gMusicPlayer = 0x800DC630;
@@ -3615,11 +3615,11 @@ _Ldtob_1e8 = 0x800E98B8; // type:f64
 __libm_qnan_f = 0x800E98C0; // type:f64
 
 // ucode_data
-aspMainDataStart = 0x800E98D0; // size:0x2D0
-rspF3DDKRDataDramStart = 0x800E9BA0; // size:0x800
-rspF3DDKRDataFifoStart = 0x800EA3A0; // size:0x800
-rspF3DDKRDataXbusStart = 0x800EABA0; // size:0x800
-rspUnknown2DataStart = 0x800EB3A0; // size:0xBC0
+aspMainDataStart = 0x800E98D0; // size:0x2D0 name_end:aspMainDataEnd
+rspF3DDKRDataDramStart = 0x800E9BA0; // size:0x800 name_end:rspF3DDKRDataDramEnd
+rspF3DDKRDataFifoStart = 0x800EA3A0; // size:0x800 name_end:rspF3DDKRDataFifoEnd
+rspF3DDKRDataXbusStart = 0x800EABA0; // size:0x800 name_end:rspF3DDKRDataXbusEnd
+rspUnknown2DataStart = 0x800EB3A0; // size:0xBC0 name_end:rspUnknown2DataEnd
 
 // audio.c .bss
 gAudioHeapStack = 0x800EBF60; // size:0x29D88

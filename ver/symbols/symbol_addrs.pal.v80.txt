@@ -1983,12 +1983,12 @@ lldiv = 0x800D7A60;
 ldiv = 0x800D7B60;
 
 // ucode_text pal v80
-aspMainTextStart = 0x800D7BF0; // size:0xEC0
-rspF3DDKRBootStart = 0x800D8AB0; // size:0xD0
-rspF3DDKRDramStart = 0x800D8B80; // size:0x1200
-rspF3DDKRFifoStart = 0x800D9D80; // size:0x11F0
-rspF3DDKRXbusStart = 0x800DAF70; // size:0x11F0
-rspUnknown2Start = 0x800DC160; // size:0xAD0
+aspMainTextStart = 0x800D7BF0; // size:0xEC0 name_end:aspMainTextEnd
+rspbootTextStart = 0x800D8AB0; // size:0xD0 name_end:rspbootTextEnd
+rspF3DDKRDramStart = 0x800D8B80; // size:0x1200 name_end:rspF3DDKRDramEnd
+rspF3DDKRFifoStart = 0x800D9D80; // size:0x11F0 name_end:rspF3DDKRFifoEnd
+rspF3DDKRXbusStart = 0x800DAF70; // size:0x11F0 name_end:rspF3DDKRXbusEnd
+rspUnknown2Start = 0x800DC160; // size:0xAD0 name_end:rspUnknown2End
 
 
 sDebugVersionInfoString = 0x800E7730; // type:asciz
@@ -3180,11 +3180,11 @@ Ldtob_Inf = 0x800E9EBC; // type:asciz force_not_migration:true defined:true
 _Genld_0_string = 0x800E9EC0; // type:asciz force_not_migration:true defined:true
 _Ldtob_1e8 = 0x800E9EC8; // type:f64
 __libm_qnan_f = 0x800E9ED0; // type:f64
-aspMainDataStart = 0x800E9EE0; // size:0x2D0
-rspF3DDKRDataDramStart = 0x800EA1B0; // size:0x800
-rspF3DDKRDataFifoStart = 0x800EA9B0; // size:0x800
-rspF3DDKRDataXbusStart = 0x800EB1B0; // size:0x800
-rspUnknown2DataStart = 0x800EB9B0; // size:0xBC0
+aspMainDataStart = 0x800E9EE0; // size:0x2D0 name_end:aspMainDataEnd
+rspF3DDKRDataDramStart = 0x800EA1B0; // size:0x800 name_end:rspF3DDKRDataDramEnd
+rspF3DDKRDataFifoStart = 0x800EA9B0; // size:0x800 name_end:rspF3DDKRDataFifoEnd
+rspF3DDKRDataXbusStart = 0x800EB1B0; // size:0x800 name_end:rspF3DDKRDataXbusEnd
+rspUnknown2DataStart = 0x800EB9B0; // size:0xBC0 name_end:rspUnknown2DataEnd
 gAudioHeapStack = 0x800EC570; // size:0x29D88
 gALHeap = 0x801162F8;
 gSequenceTable = 0x80116308;

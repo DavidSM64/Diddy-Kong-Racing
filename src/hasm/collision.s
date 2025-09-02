@@ -7,15 +7,15 @@
 
 .section .rodata
 
-glabel D_800E5F60
+dlabel D_800E5F60
 .float -0.1
-glabel D_800E5F64
+dlabel D_800E5F64
 .float -0.1
-glabel D_800E5F68
+dlabel D_800E5F68
 .float 0.707
-glabel D_800E5F6C
+dlabel D_800E5F6C
 .float 0.45
-glabel D_800E5F70
+dlabel D_800E5F70
 .float -0.1
 
 .section .text, "ax"

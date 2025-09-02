@@ -12,10 +12,14 @@ endif
 COMPILER ?= ido
 $(eval $(call validate-option,NON_MATCHING,ido gcc))
 
+ifneq ($(COMPILER),ido)
+	NON_MATCHING := 1
+endif
+
 # Define a custom boot file if desired to use something other than the vanilla one
 BOOT_CUSTOM ?= mods/boot_custom.bin
 
-LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=4 -DBUILD_VERSION_STRING=\"2.0G\"
+LIBULTRA_VERSION_DEFINE := -DBUILD_VERSION=VERSION_G -DBUILD_VERSION_STRING=\"2.0G\"
 
 # Whether to hide commands or not
 VERBOSE ?= 0
@@ -121,6 +125,7 @@ endif
 AS       = $(CROSS)as
 LD       = $(CROSS)ld
 OBJCOPY  = $(CROSS)objcopy
+STRIP    = $(CROSS)strip
 VENV     = .venv
 PYTHON   = $(VENV)/bin/python3
 GCC      = gcc
@@ -264,14 +269,20 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/sc/sched.c.o: MIPSISET := -mips1
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/io/motor.c.o: MIPSISET := -mips1
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/audio/env.c.o: MIPSISET := -mips1
 
-#Ignore warnings for libultra files
-$(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_WARNINGS := -w
-$(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_CHECK := :
+# ASM files more often than not need to be compiled with -mips2 -O1, but there are exceptions.
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: MIPSISET := -mips2
+$(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/%.s.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(LIBULTRA_DIR)/src/os/exceptasm.s.o: MIPSISET := -mips3 -32
 
 # Allow dollar sign to be used in var names for this file alone
 # It allows us to return the current stack pointer
 $(BUILD_DIR)/$(SRC_DIR)/get_stack_pointer.c.o: OPT_FLAGS += -dollar
 endif
+
+#Ignore warnings for libultra files
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_WARNINGS := -w
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_CHECK := :
 
 ### Targets
 
@@ -443,6 +454,26 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/ll.c.o: $(LIBULTRA_DIR)/src/libc/ll.c | bu
 $(BUILD_DIR)/%.s.o: %.s | build_assets
 	$(call print,Assembling:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $<
+
+ifeq ($(COMPILER),ido)
+# libultra asm files - Compile with the ido compiler
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
+	$(call print,Assembling Libultra:,$<,$@)
+	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
+	$(V)$(STRIP) --strip-unneeded $@
+	@if [ "$(MIPSISET)" = "-mips3 -32" ]; then \
+		$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@; \
+	fi
+else
+# libultra asm files - Compile with the gcc c compiler
+$(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
+	$(call print,Assembling Libultra:,$<,$@)
+	$(V)$(CROSS)gcc -x assembler-with-cpp \
+	-w -nostdinc -c -G 0 -march=vr4300 -mgp32 -mfp32 -mno-abicalls \
+	-DMIPSEB -D_LANGUAGE_ASSEMBLY -D_MIPS_SIM=1 -D_ULTRA64 -DMODERN_CC -D__USE_ISOC99 \
+	-mips3 -Os -ggdb3 -ffast-math -fno-unsafe-math-optimizations -c $(C_DEFINES) $(INCLUDE_CFLAGS) \
+	-o $@ $<
+endif
 
 # Specifically override the header file from what splat extracted to be replaced by what we have in the hasm folder
 $(BUILD_DIR)/asm/header.s.o: src/hasm/header.s | build_assets
