@@ -2,6 +2,7 @@ BASENAME  = dkr
 REGION  := us
 VERSION  := v77
 NON_MATCHING ?= 0
+DEBUG ?= 0
 
 # NM is shorthand for NON_MATCHING
 ifneq ($(NM),)
@@ -274,11 +275,11 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: MIPSISET := -mips2
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/%.s.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/os/exceptasm.s.o: MIPSISET := -mips3 -32
+endif
 
 # Allow dollar sign to be used in var names for this file alone
 # It allows us to return the current stack pointer
 $(BUILD_DIR)/$(SRC_DIR)/get_stack_pointer.c.o: OPT_FLAGS += -dollar
-endif
 
 #Ignore warnings for libultra files
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_WARNINGS := -w
@@ -294,7 +295,6 @@ endif
 $(GCC_SAFE_FILES): CC := $(CROSS)gcc
 $(GCC_SAFE_FILES): CC_WARNINGS :=
 $(GCC_SAFE_FILES): MIPSISET := -mips3
-$(GCC_SAFE_FILES): OPT_FLAGS := -Os
 $(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING $(INCLUDE_CFLAGS) $(C_DEFINES) \
 	-EB \
 	-march=vr4300 \
@@ -318,6 +318,25 @@ $(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING $(INCLUDE_CFLAGS
 	-fwrapv \
 	-falign-functions=16 \
 	-G 0
+
+ifeq ($(DEBUG),1)
+# The files can't currently be compiled with -O0 for some reason. 
+GCC_O0_UNSAFE_FILES := \
+$(BUILD_DIR)/src/game_text.c.o    \
+$(BUILD_DIR)/src/audiosfx.c.o    \
+$(BUILD_DIR)/src/camera.c.o    \
+$(BUILD_DIR)/src/object_functions.c.o    \
+$(BUILD_DIR)/src/audio_spatial.c.o    \
+$(BUILD_DIR)/src/game.c.o    \
+$(BUILD_DIR)/src/joypad.c.o    \
+$(BUILD_DIR)/src/audio_vehicle.c.o
+# Create a list of files we can safely compile with -O0
+GCC_SAFE_FILES_DEBUG := $(filter-out $(GCC_O0_UNSAFE_FILES),$(GCC_SAFE_FILES))
+$(GCC_O0_UNSAFE_FILES): OPT_FLAGS := -Os -g
+$(GCC_SAFE_FILES_DEBUG): OPT_FLAGS := -O0 -g
+else
+$(GCC_SAFE_FILES): OPT_FLAGS := -Os
+endif
 
 default: all
 
