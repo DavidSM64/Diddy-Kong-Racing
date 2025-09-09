@@ -430,13 +430,15 @@ $(GLOBAL_ASM_O_FILES): CC := $(ASM_PROCESSOR) $(CC) -- $(AS) $(ASFLAGS) --
 $(TARGET).elf: dirs $(LD_SCRIPT) $(O_FILES) | build_assets
 	@$(PRINT) "$(GREEN)Linking: $(BLUE)$@$(NO_COL)\n"
 	$(V)$(LD) $(LD_FLAGS) -o $@
-# # If there's code outside of the first megabyte of data, then the game won't work. This is a check to verify that it's not.
-# 	$(V)bss_addr=$$( $(CROSS)nm $@ | grep main_bss_VRAM | awk '{print $$1}' ); \
-# 	if [ $$((0x$$bss_addr)) -ge $$((0x80100000)) ]; then \
-# 		echo "Error: BSS start address is 0x$$bss_addr, which is after 0x80100000. Game will not boot."; \
-# 		rm $@; \
-# 		exit 1; \
-# 	fi
+# If there's code outside of the first megabyte of data for non Libdragon ipl3, then the game won't work. This is a check to verify that it's not.
+ifneq ($(BOOT_CIC),Libdragon)
+	$(V)bss_addr=$$( $(CROSS)nm $@ | grep main_bss_VRAM | awk '{print $$1}' ); \
+	if [ $$((0x$$bss_addr)) -ge $$((0x80100000)) ]; then \
+		echo "Error: BSS start address is 0x$$bss_addr, which is after 0x80100000. Game will not boot."; \
+		rm $@; \
+		exit 1; \
+	fi
+endif
 
 ifndef PERMUTER
 $(GLOBAL_ASM_O_FILES): $(BUILD_DIR)/%.c.o: %.c | build_assets
