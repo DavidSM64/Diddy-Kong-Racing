@@ -4,11 +4,19 @@
 .word 0x0000000F       /* Clockrate setting */
 .ifdef BOOT_6102
 .word 0x80000400       /* Entrypoint address */
+.else 
+.ifdef BOOT_Libdragon
+.word 0x80000400       /* Entrypoint address */
 .else
 .word 0x80100400       /* Entrypoint address */
 .endif
+.endif
 .word 0x00001447       /* Revision */
 
+.ifdef BOOT_Libdragon
+.word (main_BSS_START - 0x7FFFF400) /* Code size to load */
+.word 0x00000000                    /* Empty */
+.else
 .ifdef VERSION_us_v77
 .word 0x53D440E7       /* Checksum 1 */
 .word 0x7519B011       /* Checksum 2 */
@@ -29,12 +37,9 @@
 .word 0x596E145B       /* Checksum 1 */
 .word 0xF7D9879F       /* Checksum 2 */
 .endif
-
-.ifdef NON_MATCHING
-.word main_BSS_START   /* Unknown 1 */
-.else
-.word 0x00000000       /* Unknown 1 */
 .endif
+
+.word 0x00000000       /* Unknown 1 */
 .word 0x00000000       /* Unknown 2 */
 .ascii "Diddy Kong Racing   " /* Internal name */
 .word 0x00000000       /* Unknown 3 */

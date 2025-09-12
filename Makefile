@@ -1,7 +1,8 @@
-BASENAME  = dkr
+BASENAME  := dkr
 REGION  := us
 VERSION  := v77
 NON_MATCHING ?= 0
+DEBUG ?= 0
 
 # NM is shorthand for NON_MATCHING
 ifneq ($(NM),)
@@ -10,7 +11,11 @@ endif
 
 # Experimental option for nonmatching builds. GCC may not function identically to ido.
 COMPILER ?= ido
-$(eval $(call validate-option,NON_MATCHING,ido gcc))
+
+VALID_COMPILERS := ido gcc
+ifeq (,$(filter $(COMPILER),$(VALID_COMPILERS)))
+	$(error Invalid COMPILER: $(COMPILER). Valid options: $(VALID_COMPILERS))
+endif
 
 ifneq ($(COMPILER),ido)
 	NON_MATCHING := 1
@@ -66,7 +71,7 @@ LIBULTRA_SRC_DIRS += $(LIBULTRA_DIR)/src/libc $(LIBULTRA_DIR)/src/os $(LIBULTRA_
 
 # Files requiring pre/post-processing
 GLOBAL_ASM_C_FILES := $(shell $(GREP) GLOBAL_ASM $(SRC_DIR) </dev/null 2>/dev/null)
-GLOBAL_ASM_O_FILES := $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file).o)
+GLOBAL_ASM_O_FILES := $(patsubst %.c,$(BUILD_DIR)/%.c.o,$(GLOBAL_ASM_C_FILES))
 
 SRC_DIRS = $(SRC_DIR) $(LIBULTRA_SRC_DIRS)
 SYMBOLS_DIR = ver/symbols
@@ -92,19 +97,12 @@ RECOMP_DIR := $(TOOLS_DIR)/ido-recomp/$(DETECTED_OS)
 
 # Files
 
-S_FILES         = $(foreach dir,$(ASM_DIRS) $(HASM_DIRS),$(wildcard $(dir)/*.s))
-C_FILES         = $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
-BIN_FILES       = $(foreach dir,$(BIN_DIRS),$(wildcard $(dir)/*.bin))
-
-O_FILES := $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
-           $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o) \
-           $(foreach file,$(BIN_FILES),$(BUILD_DIR)/$(file).o)
-
+S_FILES    := $(wildcard $(addsuffix /*.s,$(ASM_DIRS) $(HASM_DIRS)))
+C_FILES    := $(wildcard $(addsuffix /*.c,$(SRC_DIRS)))
+BIN_FILES  := $(wildcard $(addsuffix /*.bin,$(BIN_DIRS)))
+O_FILES    := $(patsubst %,$(BUILD_DIR)/%.o,$(S_FILES) $(C_FILES) $(BIN_FILES))
 O_FILES_LD := $(filter-out $(BUILD_DIR)/asm/assets/assets.s.o, \
-	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
-	$(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o))
-
-find-command = $(shell which $(1) 2>/dev/null)
+	$(patsubst %,$(BUILD_DIR)/%.o,$(S_FILES) $(C_FILES)))
 
 # Tools
 
@@ -274,11 +272,11 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: MIPSISET := -mips2
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/%.s.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/os/exceptasm.s.o: MIPSISET := -mips3 -32
+endif
 
 # Allow dollar sign to be used in var names for this file alone
 # It allows us to return the current stack pointer
 $(BUILD_DIR)/$(SRC_DIR)/get_stack_pointer.c.o: OPT_FLAGS += -dollar
-endif
 
 #Ignore warnings for libultra files
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_WARNINGS := -w
@@ -294,7 +292,6 @@ endif
 $(GCC_SAFE_FILES): CC := $(CROSS)gcc
 $(GCC_SAFE_FILES): CC_WARNINGS :=
 $(GCC_SAFE_FILES): MIPSISET := -mips3
-$(GCC_SAFE_FILES): OPT_FLAGS := -Os
 $(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING $(INCLUDE_CFLAGS) $(C_DEFINES) \
 	-EB \
 	-march=vr4300 \
@@ -318,6 +315,12 @@ $(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING $(INCLUDE_CFLAGS
 	-fwrapv \
 	-falign-functions=16 \
 	-G 0
+
+ifeq ($(DEBUG),1)
+$(GCC_SAFE_FILES): OPT_FLAGS := -O0 -g
+else
+$(GCC_SAFE_FILES): OPT_FLAGS := -Os
+endif
 
 default: all
 
@@ -427,6 +430,15 @@ $(GLOBAL_ASM_O_FILES): CC := $(ASM_PROCESSOR) $(CC) -- $(AS) $(ASFLAGS) --
 $(TARGET).elf: dirs $(LD_SCRIPT) $(O_FILES) | build_assets
 	@$(PRINT) "$(GREEN)Linking: $(BLUE)$@$(NO_COL)\n"
 	$(V)$(LD) $(LD_FLAGS) -o $@
+# If there's code outside of the first megabyte of data for non Libdragon ipl3, then the game won't work. This is a check to verify that it's not.
+ifneq ($(BOOT_CIC),Libdragon)
+	$(V)bss_addr=$$( $(CROSS)nm $@ | grep main_bss_VRAM | awk '{print $$1}' ); \
+	if [ $$((0x$$bss_addr)) -ge $$((0x80100000)) ]; then \
+		echo "Error: BSS start address is 0x$$bss_addr, which is after 0x80100000. Game will not boot."; \
+		rm $@; \
+		exit 1; \
+	fi
+endif
 
 ifndef PERMUTER
 $(GLOBAL_ASM_O_FILES): $(BUILD_DIR)/%.c.o: %.c | build_assets
@@ -493,16 +505,12 @@ $(BUILD_DIR)/%.bin.o: %.bin | build_assets
 	$(call print,Linking Binary:,$<,$@)
 	$(V)$(LD) -r -b binary -o $@ $<
 
-$(TARGET).bin: $(TARGET).elf | build_assets
+$(TARGET).z64: $(TARGET).elf | build_assets
 	$(call print,Objcopy:,$<,$@)
 	$(V)$(OBJCOPY) $(OBJCOPYFLAGS) $< $@
 
-$(TARGET).z64: $(TARGET).bin | build_assets
-	$(call print,CopyRom:,$<,$@)
-	$(V)$(PYTHON) $(TOOLS_DIR)/python/CopyRom.py $< $@
-
 ### Settings
-.PHONY: all clean cleanextract default assets
+.PHONY: all clean distclean cleanextract default assets
 SHELL = /bin/bash -e -o pipefail
 
 -include $(BUILD_DIR)/**/*.d

@@ -68,12 +68,14 @@ static void	__scYield(OSSched *s);
 s32 D_800DE730[] = { OSMESG_SWAP_BUFFER, OSMESG_SWAP_BUFFER };
 s32 gBootBlackoutMesg[] = { OSMESG_SWAP_BUFFER, MESG_SKIP_BUFFER_SWAP };
 
+#ifndef NON_MATCHING
 f32 gAudTaskTimer0 = 0;
 f32 gAudTaskTimer1 = 0;
 f32 gAudTaskTimer2 = 0;
 f32 gAudTaskTimer3 = 0;
 
 s32 gRetraceCounter32 = 0;
+#endif
 s32 gCurRSPTaskCounter = 0;
 s32 gCurRDPTaskCounter = 0;
 UNUSED s32 D_800DE75C = 0;
@@ -217,6 +219,7 @@ OSMesgQueue *osScGetInterruptQ(OSSched *sc) {
     return &sc->interruptQ;
 }
 
+#ifndef NON_MATCHING
 /**
  * Official Name: osScGetAudioSPStats
 */
@@ -225,6 +228,7 @@ UNUSED void scGetAudioTaskTimers(f32 *timer0, f32 *timer1, f32 *timer2) {
     *timer1 = gAudTaskTimer2;
     *timer2 = gAudTaskTimer3;
 }
+#endif
 
 /***********************************************************************
  * Scheduler implementation
@@ -367,7 +371,9 @@ void __scHandleRetrace(OSSched *sc) {
         __scExec(sc, sp, dp);
 
     gRetraceCounter64++;
+#ifndef NON_MATCHING
     gRetraceCounter32++;
+#endif
     sc->frameCount+=1; // If you want to make the game 60FPS, change this to 2.
 
     if ((sc->unkTask) && (sc->frameCount >= 2)) {
@@ -417,6 +423,7 @@ void __scHandleRSP(OSSched *sc)
     osLogEvent(l, 510, 3, t, t->state, t->flags);
 #endif
 
+#ifndef NON_MATCHING
     //Rare seems to have edited this function, most specifically here.
     //This should probably have all been behind a debug #ifdef as none of these values are used.
     if (t->list.t.type == M_AUDTASK) {
@@ -435,6 +442,7 @@ void __scHandleRSP(OSSched *sc)
             gAudTaskTimer0 = 0.0f;
         }
     }
+#endif
 
     if ((t->state & OS_SC_YIELD)) {
         if (osSpTaskYielded(&t->list)) {
