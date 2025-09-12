@@ -114,14 +114,6 @@ SECTIONS
     {
         *(.pdr);
     }
-    .mdebug 0 :
-    {
-        *(.mdebug);
-    }
-    .mdebug.abi32 0 :
-    {
-        *(.mdebug.abi32);
-    }
     .debug 0 :
     {
         *(.debug);
@@ -255,6 +247,8 @@ SECTIONS
         *(.note.gnu.build-id);
         *(.interp);
         *(.eh_frame);
+        *(.mdebug);
+        *(.mdebug.abi32);
         *(*);
     }
 }

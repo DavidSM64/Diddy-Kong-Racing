@@ -14,7 +14,7 @@
 .word 0x00001447       /* Revision */
 
 .ifdef BOOT_Libdragon
-.word (main_BSS_START - 0x80000000) /* Code size to load */
+.word (main_BSS_START - 0x7FFFF400) /* Code size to load */
 .word 0x00000000                    /* Empty */
 .else
 .ifdef VERSION_us_v77
