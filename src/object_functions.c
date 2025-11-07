@@ -3374,9 +3374,9 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
     f32 scalef;
 
     if (entry->balloonID == -1) {
-        entry->balloonID = func_8000CC20(obj);
+        entry->balloonID = object_array_add(obj);
     } else {
-        func_8000CBF0(obj, entry->balloonID);
+        object_array_set_at_index(obj, entry->balloonID);
     }
     if (entry->balloonID == -1) {
         rmonPrintf("Illegal door no!!!\n"); // Did the devs just copy-paste the door init function?
@@ -3508,9 +3508,9 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
 
     door = obj->door;
     if (entry->doorID == -1) {
-        entry->doorID = func_8000CC20(obj);
+        entry->doorID = object_array_add(obj);
     } else {
-        func_8000CBF0(obj, entry->doorID);
+        object_array_set_at_index(obj, entry->doorID);
     }
     door->doorID = entry->doorID;
     door->doorType = entry->doorType;
@@ -3876,9 +3876,9 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     Object_Trigger *trigger;
 
     if (entry->index == -1) {
-        entry->index = func_8000CC20(obj);
+        entry->index = object_array_add(obj);
     } else {
-        func_8000CBF0(obj, entry->index);
+        object_array_set_at_index(obj, entry->index);
     }
     if (entry->index == -1) {
         rmonPrintf("Illegal door no!!!\n");
@@ -6616,7 +6616,7 @@ void obj_loop_pigrocketeer(Object *obj, s32 updateRate) {
             boost->unk72 += updateRate;
             boost->unk70 = 2;
             boost->unk74 = 1.0f;
-            func_8000B750(obj, -1, 2, 1, 1);
+            setup_racer_boost_effect(obj, -1, 2, 1, 1);
         }
     }
 }

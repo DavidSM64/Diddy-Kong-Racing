@@ -149,7 +149,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                 boost->unk72 += updateRate;
                 boost->unk70 = 2;
                 boost->unk74 = 1.0f;
-                func_8000B750(obj, -1, 2, 1, 1);
+                setup_racer_boost_effect(obj, -1, 2, 1, 1);
             }
         }
     }

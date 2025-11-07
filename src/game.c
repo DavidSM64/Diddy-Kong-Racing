@@ -458,7 +458,7 @@ void level_load(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     }
     mempool_free(gTempAssetTable);
     aitable_init((s8 *) &gCurrentLevelHeader->AILevelTable);
-    func_8000CBC0();
+    object_array_init();
     gMapId = levelId;
     for (var_s0 = 0; var_s0 < 7; var_s0++) {
         if ((s32) gCurrentLevelHeader->unk74[var_s0] != -1) {

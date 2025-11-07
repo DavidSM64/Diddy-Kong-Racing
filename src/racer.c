@@ -1601,7 +1601,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s8 playerObjectHasMoved;
     f32 var_f6;
 
-    if (func_8000E138()) {
+    if (racetype_has_mixed_vehicles()) {
         updateRateF *= 1.15;
     }
     playerObjectHasMoved = FALSE;
@@ -2573,7 +2573,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s32 pad3;
     s32 pad4;
 
-    if (func_8000E138()) {
+    if (racetype_has_mixed_vehicles()) {
         updateRateF *= 1.09;
     }
     playerObjectMoved = FALSE;

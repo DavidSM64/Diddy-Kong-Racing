@@ -251,7 +251,6 @@ void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param)
 void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry);
 void obj_loop_butterfly(Object *butterflyObj, s32 updateRate);
 s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation);
-void func_8000CBF0(Object *, s32);
 void try_to_collect_egg(Object *, Object_CollectEgg *);
 
 s32 func_8001F3EC(s32);

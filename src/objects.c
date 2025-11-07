@@ -445,7 +445,18 @@ void racerfx_free(void) {
     gParticlePtrList_flush();
 }
 
-void func_8000B38C(Vertex *vertices, Triangle *triangles, ObjectTransform *trans, f32 arg3, f32 arg4, s16 arg5,
+/**
+ * Generates octagonal billboard geometry for boost particle effects.
+ * Creates 8 triangular faces arranged around a center point with rotating texture coordinates.
+ * @param vertices Output array for vertex data (9 vertices: 1 center + 8 perimeter)
+ * @param triangles Output array for triangle data (8 triangles)
+ * @param trans Transform to orient the billboard in 3D space
+ * @param arg3 Size/radius of the octagon
+ * @param arg4 Distance to pull the center vertex along local -Z axis (ring vertices stay on XY plane)
+ * @param arg5 Rotation angle for texture coordinates
+ * @param tex Texture header for width/height information
+ */
+void generate_boost_octagon_geometry(Vertex *vertices, Triangle *triangles, ObjectTransform *trans, f32 arg3, f32 arg4, s16 arg5,
                    TextureHeader *tex) {
     s32 sp80[8];
     s32 i;
@@ -502,7 +513,17 @@ void func_8000B38C(Vertex *vertices, Triangle *triangles, ObjectTransform *trans
     }
 }
 
-void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4) {
+/**
+ * Sets up boost particle effect visuals for a racer based on their vehicle type and boost intensity.
+ * Generates the octagonal geometry and positions the boost effect object relative to the racer.
+ * @param racerObj The racer object receiving the boost effect
+ * @param racerIndex Index of the racer (or -1 to use gBoostObjOverrideID)
+ * @param vehicleIDPrev Previous vehicle ID to determine which boost data to use
+ * @param boostType Boost type bitfield - low 2 bits select size (BOOST_SMALL, BOOST_MEDIUM, BOOST_LARGE),
+ *                  higher bits encode additional states (e.g. BOOST_SMALL_FAST, EMPOWER_BOOST)
+ * @param arg4 If TRUE, resets boost state flag
+ */
+void setup_racer_boost_effect(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boostType, s32 arg4) {
     Vec3f sp74;
     f32 temp_f0;
     f32 var_f2;
@@ -563,7 +584,7 @@ void func_8000B750(Object *racerObj, s32 racerIndex, s32 vehicleIDPrev, s32 boos
                     objTrans.rotation.y_rotation = -0x8000;
                     objTrans.rotation.x_rotation = 0;
                     objTrans.rotation.z_rotation = 0;
-                    func_8000B38C(&gBoostVerts[gBoostVertFlip][gNumOfBoostVerts],
+                    generate_boost_octagon_geometry(&gBoostVerts[gBoostVertFlip][gNumOfBoostVerts],
                                   &gBoostTris[gBoostVertFlip][gNumOfBoostTris], &objTrans, var_f2, temp_f0,
                                   objBoostRacer->unk72 << 12, objBoostType->tex);
                     gBoostEffectObjects[racerIndex]->properties.boost.indexes =
@@ -672,7 +693,7 @@ void racerfx_update(s32 updateRate) {
             }
         }
         if ((boostObj->unk70 > 0) || (boostObj->unk74 > 0.0f)) {
-            func_8000B750((*gRacers)[i], racer->racerIndex, racer->vehicleIDPrev, racer->boostType, 0);
+            setup_racer_boost_effect((*gRacers)[i], racer->racerIndex, racer->vehicleIDPrev, racer->boostType, 0);
         }
         temp = racer->racerIndex;
         gRacerFXData[temp].unk1 += updateRate;
@@ -1017,15 +1038,22 @@ void track_spawn_objects(s32 mapID, s32 index) {
 }
 
 // Reset all values of D_8011AE08 to NULL
-void func_8000CBC0(void) {
+/**
+ * Initializes the object array by setting all entries to NULL.
+ */
+void object_array_init(void) {
     s32 i; // Required to be one line to match
     // clang-format off
     for (i = 0; i < ARRAY_COUNT(D_8011AE08); i++) { D_8011AE08[i] = NULL; }
     // clang-format on
 }
 
-// Set the object value for the given index if it's not already set
-void func_8000CBF0(Object *obj, s32 index) {
+/**
+ * Assigns an object to a specific index in the array if that slot is empty.
+ * @param obj The object to assign
+ * @param index The array index to assign to
+ */
+void object_array_set_at_index(Object *obj, s32 index) {
     if (D_8011AE08[index] == NULL) {
         D_8011AE08[index] = obj;
     } else {
@@ -1033,8 +1061,12 @@ void func_8000CBF0(Object *obj, s32 index) {
     }
 }
 
-// Set the next available value in D_8011AE08, and return it's index value. -1 if it's not set.
-s32 func_8000CC20(Object *obj) {
+/**
+ * Finds the first available slot in the object array and assigns the object to it.
+ * @param obj The object to assign
+ * @return The index where the object was assigned, or -1 if no free slot was found
+ */
+s32 object_array_add(Object *obj) {
     s32 i;
     s32 NextFreeIndex;
 
@@ -1565,7 +1597,11 @@ void instShowBearBar(void) {
     D_800DC708 = 0x8000;
 }
 
-s8 func_8000E138(void) {
+/**
+ * Returns whether the current race has mixed vehicle types.
+ * @return TRUE if racers are using different vehicle types, FALSE otherwise
+ */
+s8 racetype_has_mixed_vehicles(void) {
     return D_8011AD20;
 }
 
@@ -3578,7 +3614,7 @@ void render_3d_model(Object *obj) {
                                 isCargo = FALSE;
                             }
                             if (isCargo) {
-                                func_80012C98(&gObjectCurrDisplayList);
+                                dlist_branch_start(&gObjectCurrDisplayList);
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
                                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity,
                                                 opacity);
@@ -3588,7 +3624,7 @@ void render_3d_model(Object *obj) {
                                                         &gObjectCurrVertexList, loopObj, something, flags);
                             if (isCargo) {
                                 gSPSelectMatrixDKR(gObjectCurrDisplayList++, G_MTX_DKR_INDEX_0);
-                                func_80012CE8(&gObjectCurrDisplayList);
+                                dlist_branch_end(&gObjectCurrDisplayList);
                             }
                         }
                         loopObj->trans.x_position -= vtxX;
@@ -3640,25 +3676,40 @@ void render_3d_model(Object *obj) {
     }
 }
 
-void func_80012C30(void) {
+/**
+ * Resets the display list branch counter.
+ */
+void dlist_branch_reset(void) {
     D_8011ADA4 = 0;
 }
 
-void func_80012C3C(Gfx **dList) {
+/**
+ * Executes all stored display list branches.
+ * @param dList Pointer to the current display list pointer
+ */
+void dlist_branch_execute_all(Gfx **dList) {
     s32 i;
     for (i = 0; i < D_8011ADA4; i++) {
         gSPDisplayList((*dList)++, D_8011AD78[i]);
     }
 }
 
-void func_80012C98(Gfx **dList) {
+/**
+ * Begins a new display list branch by storing a placeholder.
+ * @param dList Pointer to the current display list pointer
+ */
+void dlist_branch_start(Gfx **dList) {
     if (D_8011ADA4 < 9) {
         gSPNoOp((*dList)++); // Placeholder instruction?
         D_8011AD78[D_8011ADA4] = *dList;
     }
 }
 
-void func_80012CE8(Gfx **dList) {
+/**
+ * Ends the current display list branch and increments the branch counter.
+ * @param dList Pointer to the current display list pointer
+ */
+void dlist_branch_end(Gfx **dList) {
     if (D_8011ADA4 < 9) {
         gSPEndDisplayList((*dList)++);
         gSPBranchList(D_8011AD78[D_8011ADA4] - 1, *dList);
