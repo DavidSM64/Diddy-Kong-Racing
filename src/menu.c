@@ -101,7 +101,7 @@ u64 sEepromSettings;
 f32 sBootScreenTimer;
 CharacterSelectData (*gCurrCharacterSelectData)[10];
 s8 gActivePlayersArray[MAXCONTROLLERS]; // Boolean value for each controller if it's active with a player.
-s8 gCharselectStatus[MAXCONTROLLERS];
+enum CharacterSelectStatus gCharselectStatus[MAXCONTROLLERS];
 s8 gPlayersCharacterArray[8]; // -1 = Non active player, or character id if >= 0
 s8 gCharacterIdSlots[8];
 s32 gRankingsPoints[8];
@@ -13598,7 +13598,7 @@ void set_player_selected_vehicle(s32 playerNum, s32 index) {
  * Returns the character select controller ID status.
  * 0 = choosing, 1 = chosen, and then set to 2.
  */
-s8 *charselect_status(void) {
+enum CharacterSelectStatus *charselect_status(void) {
     return gCharselectStatus;
 }
 
