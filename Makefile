@@ -59,7 +59,7 @@ BUILD_DIR = build
 SRC_DIR   = src
 LIBULTRA_DIR = libultra
 ASM_DIRS  = asm asm/data asm/assets asm/nonmatchings
-HASM_DIRS = $(SRC_DIR)/hasm $(LIBULTRA_DIR)/src/os $(LIBULTRA_DIR)/src/gu $(LIBULTRA_DIR)/src/libc
+HASM_DIRS = $(SRC_DIR)/hasm $(SRC_DIR)/hasm/ido $(LIBULTRA_DIR)/src/os $(LIBULTRA_DIR)/src/gu $(LIBULTRA_DIR)/src/libc
 LIBULTRA_SRC_DIRS  = $(LIBULTRA_DIR) $(LIBULTRA_DIR)/src $(LIBULTRA_DIR)/src/audio $(LIBULTRA_DIR)/src/audio/mips1
 LIBULTRA_SRC_DIRS += $(LIBULTRA_DIR)/src/debug $(LIBULTRA_DIR)/src/gu $(LIBULTRA_DIR)/src/io
 LIBULTRA_SRC_DIRS += $(LIBULTRA_DIR)/src/libc $(LIBULTRA_DIR)/src/os $(LIBULTRA_DIR)/src/sc
@@ -275,6 +275,9 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: MIPSISET := -mips2
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/libc/%.s.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/$(LIBULTRA_DIR)/src/os/exceptasm.s.o: MIPSISET := -mips3 -32
 
+# $(BUILD_DIR)/$(SRC_DIR)/hasm/ido/math_util.s.o: OPT_FLAGS := -O2
+# $(BUILD_DIR)/$(SRC_DIR)/hasm/ido/math_util.s.o: MIPSISET := -mips3 -32
+
 # Allow dollar sign to be used in var names for this file alone
 # It allows us to return the current stack pointer
 $(BUILD_DIR)/$(SRC_DIR)/get_stack_pointer.c.o: OPT_FLAGS += -dollar
@@ -464,6 +467,13 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
 	@if [ "$(MIPSISET)" = "-mips3 -32" ]; then \
 		$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@; \
 	fi
+# $(BUILD_DIR)/$(SRC_DIR)/hasm/ido/%.s.o: $(SRC_DIR)/hasm/ido/%.s | build_assets
+# 	$(call print,Assembling IDO:,$<,$@)
+# 	$(V)$(CC) -c $(CFLAGS) $(CC_WARNINGS) $(OPT_FLAGS) $(MIPSISET) -o $@ $<
+# 	$(V)$(STRIP) --strip-unneeded $@
+# 	@if [ "$(MIPSISET)" = "-mips3 -32" ]; then \
+# 		$(PYTHON) $(TOOLS_DIR)/python/patchmips3.py $@ || rm $@; \
+# 	fi
 else
 # libultra asm files - Compile with the gcc c compiler
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
