@@ -207,1090 +207,986 @@ LEAF(get_gIntDisFlag)
 END(get_gIntDisFlag)
 
 LEAF(mtx_to_mtxs)
-ori        t0, zero, 0x4
-lui        t7, 0xFFFF
-.L8006F584:
-lw         t1, 0x0(a0)
-lw         t2, 0x20(a0)
-lw         t3, 0x4(a0)
-lw         t4, 0x24(a0)
-sh         t1, 0x4(a2)
-sh         t2, 0x6(a2)
-sh         t3, 0xC(a2)
-sh         t4, 0xE(a2)
-srl        t1, t1, 16
-srl        t2, t2, 16
-srl        t3, t3, 16
-srl        t4, t4, 16
-addiu      a0, a0, 0x8
-sh         t1, 0x0(a2)
-sh         t2, 0x2(a2)
-sh         t3, 0x8(a2)
-sh         t4, 0xA(a2)
-addi       a2, a2, 0x10
-addiu      t0, t0, -0x1
-bnel       t0, zero, .L8006F584
- NOP
-jr         ra
- NOP
+    ori        t0, zero, 4
+    lui        t7, 0xFFFF
+    .L8006F584:
+    lw         t1, 0x0(a0)
+    lw         t2, 0x20(a0)
+    lw         t3, 0x4(a0)
+    lw         t4, 0x24(a0)
+    sh         t1, 0x4(a1)
+    sh         t2, 0x6(a1)
+    sh         t3, 0xC(a1)
+    sh         t4, 0xE(a1)
+    addiu      a0, a0, 0x8
+    srl        t1, t1, 16
+    srl        t2, t2, 16
+    srl        t3, t3, 16
+    srl        t4, t4, 16
+    sh         t1, 0x0(a1)
+    sh         t2, 0x2(a1)
+    sh         t3, 0x8(a1)
+    sh         t4, 0xA(a1)
+    addi       a1, a1, 0x10
+    addiu      t0, -1
+    bnezl      t0, .L8006F584
+    jr         ra
 END(mtx_to_mtxs)
 
 LEAF(mtxf_to_mtxs)
-li.s       AT, 65536.0
-mtc1       AT, fa0
-ori        t0, zero, 0x4
-.L8006F5EC:
-lwc1       ft0, 0x0(a0)
-lwc1       ft1, 0x4(a0)
-lwc1       ft2, 0x8(a0)
-mul.s      ft0, ft0, fa0
-lwc1       ft3, 0xC(a0)
-addiu      a0, a0, 0x10
-mul.s      ft1, ft1, fa0
-addiu      t0, t0, -0x1
-addiu      a2, a2, 0x10
-mul.s      ft2, ft2, fa0
-NOP
-mul.s      ft3, ft3, fa0
-trunc.w.s  ft0, ft0
-trunc.w.s  ft1, ft1
-swc1       ft0, -0x10(a2)
-trunc.w.s  ft2, ft2
-swc1       ft1, -0xC(a2)
-trunc.w.s  ft3, ft3
-swc1       ft2, -0x8(a2)
-swc1       ft3, -0x4(a2)
-bnel       t0, zero, .L8006F5EC
- NOP
-jr         ra
- NOP
+    li.s       fa0, 65536.0
+    ori        t0, zero, 4
+    .L8006F5EC:
+    lwc1       ft0, 0x0(a0)
+    lwc1       ft1, 0x4(a0)
+    lwc1       ft2, 0x8(a0)
+    mul.s      ft0, ft0, fa0
+    lwc1       ft3, 0xC(a0)
+    addiu      a0, a0, 0x10
+    mul.s      ft1, ft1, fa0
+    addiu      t0, t0, -0x1
+    addiu      a1, a1, 0x10
+    mul.s      ft2, ft2, fa0
+    mul.s      ft3, ft3, fa0
+    trunc.w.s  ft0, ft0
+    trunc.w.s  ft1, ft1
+    swc1       ft0, -0x10(a1)
+    trunc.w.s  ft2, ft2
+    swc1       ft1, -0xC(a1)
+    trunc.w.s  ft3, ft3
+    swc1       ft2, -0x8(a1)
+    swc1       ft3, -0x4(a1)
+    bnezl      t0, .L8006F5EC
+    jr         ra
 END(mtxf_to_mtxs)
 
 /* Official Name: mathMtxXFMF */
 LEAF(mtxf_transform_point)
-mtc1       a2, fa0
-lwc1       ft0, 0x0(a0)
-mtc1       a2, fa1
-lwc1       ft2, 0x10(a0)
-mul.s      ft1, ft0, fa0
-mtc1       a3, ft4
-lwc1       ft0, 0x20(a0)
-mul.s      ft3, ft2, fa1
-lw         t6, 0x10(sp)
-mul.s      ft2, ft0, ft4
-add.s      ft5, ft1, ft3
-lwc1       ft3, 0x30(a0)
-add.s      ft1, ft5, ft2
-add.s      ft0, ft3, ft1
-swc1       ft0, 0x0(t6)
-lwc1       ft5, 0x4(a0)
-lwc1       ft3, 0x14(a0)
-lw         t7, 0x14(sp)
-mul.s      ft2, ft5, fa0
-lwc1       ft5, 0x24(a0)
-mul.s      ft1, ft3, fa1
-add.s      ft0, ft2, ft1
-mul.s      ft3, ft5, ft4
-lwc1       ft1, 0x34(a0)
-add.s      ft2, ft0, ft3
-add.s      ft5, ft1, ft2
-swc1       ft5, 0x0(t7)
-lwc1       ft0, 0x8(a0)
-lwc1       ft1, 0x18(a0)
-lw         t8, 0x18(sp)
-mul.s      ft3, ft0, fa0
-lwc1       ft0, 0x28(a0)
-mul.s      ft2, ft1, fa1
-add.s      ft5, ft3, ft2
-mul.s      ft1, ft0, ft4
-lwc1       ft2, 0x38(a0)
-add.s      ft3, ft5, ft1
-add.s      ft0, ft2, ft3
-jr         ra
- swc1      ft0, 0x0(t8)
+    mtc1       a1, fa0
+    mtc1       a2, fa1
+    mtc1       a3, ft4
+    lwc1       ft0, 0x0(a0)
+    lwc1       ft2, 0x10(a0)
+    mul.s      ft1, ft0, fa0
+    lwc1       ft0, 0x20(a0)
+    mul.s      ft3, ft2, fa1
+    mul.s      ft2, ft0, ft4
+    add.s      ft5, ft1, ft3
+    lwc1       ft3, 0x30(a0)
+    add.s      ft1, ft5, ft2
+    add.s      ft0, ft3, ft1
+    lw         t6,  0x10($sp)
+    swc1       ft0, 0x0(t6)
+    lwc1       ft5, 0x4(a0)
+    lwc1       ft3, 0x14(a0)
+    mul.s      ft2, ft5, fa0
+    lwc1       ft5, 0x24(a0)
+    mul.s      ft1, ft3, fa1
+    add.s      ft0, ft2, ft1
+    mul.s      ft3, ft5, ft4
+    lwc1       ft1, 0x34(a0)
+    add.s      ft2, ft0, ft3
+    add.s      ft5, ft1, ft2
+    lw         t7,  0x14($sp)
+    swc1       ft5, 0x0(t7)
+    lwc1       ft0, 0x8(a0)
+    lwc1       ft1, 0x18(a0)
+    mul.s      ft3, ft0, fa0
+    lwc1       ft0, 0x28(a0)
+    mul.s      ft2, ft1, fa1
+    add.s      ft5, ft3, ft2
+    mul.s      ft1, ft0, ft4
+    lwc1       ft2, 0x38(a0)
+    add.s      ft3, ft5, ft1
+    add.s      ft0, ft2, ft3
+    lw         t8,  0x18($sp)
+    swc1       ft0, 0x0(t8)
+    jr         ra
 END(mtxf_transform_point)
 
 /* Official Name: mathMtxFastXFMF */
 LEAF(mtxf_transform_dir)
-lwc1       ft0, 0x0(a2)
-lwc1       ft3, 0x0(a0)
-lwc1       ft1, 0x4(a2)
-lwc1       fa0, 0x10(a0)
-mul.s      ft3, ft0, ft3
-lwc1       ft2, 0x8(a2)
-lwc1       fa1, 0x20(a0)
-mul.s      fa0, ft1, fa0
-add.s      fa0, ft3, fa0
-mul.s      fa1, ft2, fa1
-lwc1       ft3, 0x4(a0)
-mul.s      ft3, ft0, ft3
-add.s      ft4, fa0, fa1
-lwc1       fa0, 0x14(a0)
-lwc1       fa1, 0x24(a0)
-mul.s      fa0, ft1, fa0
-swc1       ft4, 0x0(a2)
-mul.s      fa1, ft2, fa1
-add.s      fa0, ft3, fa0
-lwc1       ft3, 0x8(a0)
-add.s      ft4, fa0, fa1
-mul.s      ft3, ft0, ft3
-lwc1       fa0, 0x18(a0)
-lwc1       fa1, 0x28(a0)
-swc1       ft4, 0x4(a2)
-mul.s      fa0, ft1, fa0
-add.s      fa0, ft3, fa0
-mul.s      fa1, ft2, fa1
-add.s      fa1, fa0, fa1
-jr         ra
- swc1      fa1, 0x8(a2)
+    lwc1       ft0, 0x0(a1)
+    lwc1       ft1, 0x4(a1)
+    lwc1       ft3, 0x0(a0)
+    lwc1       fa0, 0x10(a0)
+    mul.s      ft3, ft0, ft3
+    lwc1       ft2, 0x8(a1)
+    lwc1       fa1, 0x20(a0)
+    mul.s      fa0, ft1, fa0
+    add.s      fa0, ft3, fa0
+    mul.s      fa1, ft2, fa1
+    lwc1       ft3, 0x4(a0)
+    mul.s      ft3, ft0, ft3
+    add.s      ft4, fa0, fa1
+    lwc1       fa0, 0x14(a0)
+    lwc1       fa1, 0x24(a0)
+    mul.s      fa0, ft1, fa0
+    swc1       ft4, 0x0(a2)
+    mul.s      fa1, ft2, fa1
+    add.s      fa0, ft3, fa0
+    lwc1       ft3, 0x8(a0)
+    add.s      ft4, fa0, fa1
+    mul.s      ft3, ft0, ft3
+    lwc1       fa0, 0x18(a0)
+    lwc1       fa1, 0x28(a0)
+    swc1       ft4, 0x4(a2)
+    mul.s      fa0, ft1, fa0
+    add.s      fa0, ft3, fa0
+    mul.s      fa1, ft2, fa1
+    add.s      fa1, fa0, fa1
+    swc1       fa1, 0x8(a2)
+    jr         ra
 END(mtxf_transform_dir)
 
 /* Official Name: mathMtxCatF */
 LEAF(mtxf_mul)
-addiu      sp, sp, -0x8
-sdc1       fv1, 0x0(sp)
-ori        t0, zero, 0x4
-.L8006F774:
-lwc1       fv1, 0x0(a0)
-lwc1       ft3, 0x0(a2)
-lwc1       ft0, 0x4(a0)
-lwc1       fa0, 0x10(a2)
-mul.s      ft3, fv1, ft3
-lwc1       ft1, 0x8(a0)
-lwc1       fa1, 0x20(a2)
-mul.s      fa0, ft0, fa0
-lwc1       ft2, 0xC(a0)
-lwc1       ft4, 0x30(a2)
-mul.s      fa1, ft1, fa1
-addiu      a0, a0, 0x10
-addiu      a2, a2, 0x10
-mul.s      ft4, ft2, ft4
-addiu      t0, t0, -0x1
-add.s      fa1, fa0, fa1
-lwc1       fa0, 0x14(a2)
-add.s      ft4, ft3, ft4
-lwc1       ft3, 0x4(a2)
-mul.s      ft3, fv1, ft3
-add.s      ft5, fa1, ft4
-lwc1       fa1, 0x24(a2)
-mul.s      fa0, ft0, fa0
-lwc1       ft4, 0x34(a2)
-swc1       ft5, -0x10(a2)
-mul.s      fa1, ft1, fa1
-NOP
-mul.s      ft4, ft2, ft4
-add.s      fa1, fa0, fa1
-lwc1       fa0, 0x18(a2)
-add.s      ft4, ft3, ft4
-lwc1       ft3, 0x8(a2)
-mul.s      ft3, fv1, ft3
-add.s      ft5, fa1, ft4
-lwc1       fa1, 0x28(a2)
-mul.s      fa0, ft0, fa0
-lwc1       ft4, 0x38(a2)
-swc1       ft5, -0xC(a2)
-mul.s      fa1, ft1, fa1
-NOP
-mul.s      ft4, ft2, ft4
-add.s      fa1, fa0, fa1
-lwc1       fa0, 0x1C(a2)
-add.s      ft4, ft3, ft4
-lwc1       ft3, 0xC(a2)
-mul.s      ft3, fv1, ft3
-add.s      ft5, fa1, ft4
-lwc1       fa1, 0x2C(a2)
-mul.s      fa0, ft0, fa0
-lwc1       ft4, 0x3C(a2)
-swc1       ft5, -0x8(a2)
-mul.s      fa1, ft1, fa1
-NOP
-mul.s      ft4, ft2, ft4
-add.s      fa1, fa0, fa1
-add.s      ft4, ft3, ft4
-add.s      ft5, fa1, ft4
-swc1       ft5, -0x4(a2)
-bnel       t0, zero, .L8006F774
- NOP
-ldc1       fv1, 0x0(sp)
-jr         ra
- addiu     sp, sp, 0x8
+    addiu      sp, sp, -8
+    sdc1       fv1, 0(sp)
+    ori        t0, zero, 4
+    .L80048F88:
+    lwc1       fv1, 0x0(a0)
+    lwc1       ft0, 0x4(a0)
+    lwc1       ft1, 0x8(a0)
+    lwc1       ft2, 0xC(a0)
+    lwc1       ft3, 0x0(a1)
+    lwc1       fa0, 0x10(a1)
+    lwc1       fa1, 0x20(a1)
+    lwc1       ft4, 0x30(a1)
+    mul.s      ft3, fv1, ft3
+    mul.s      fa0, ft0, fa0
+    mul.s      fa1, ft1, fa1
+    mul.s      ft4, ft2, ft4
+    add.s      fa1, fa0, fa1
+    add.s      ft4, ft3, ft4
+    lwc1       ft3, 0x4(a1)
+    mul.s      ft3, fv1, ft3
+    add.s      ft5, fa1, ft4
+    lwc1       fa0, 0x14(a1)
+    mul.s      fa0, ft0, fa0
+    lwc1       fa1, 0x24(a1)
+    mul.s      fa1, ft1, fa1
+    add.s      fa1, fa0, fa1
+    lwc1       ft4, 0x34(a1)
+    swc1       ft5, 0x0(a2)
+    lwc1       fa0, 0x18(a1)
+    mul.s      ft4, ft2, ft4
+    add.s      ft4, ft3, ft4
+    lwc1       ft3, 0x08(a1)
+    mul.s      ft3, fv1, ft3
+    add.s      ft5, fa1, ft4
+    mul.s      fa0, ft0, fa0
+    lwc1       fa1, 0x28(a1)
+    lwc1       ft4, 0x38(a1)
+    swc1       ft5, 0x4(a2)
+    mul.s      fa1, ft1, fa1
+    mul.s      ft4, ft2, ft4
+    add.s      fa1, fa0, fa1
+    add.s      ft4, ft3, ft4
+    lwc1       ft3, 0xC(a1)
+    lwc1       fa0, 0x1C(a1)
+    mul.s      ft3, fv1, ft3
+    add.s      ft5, fa1, ft4
+    mul.s      fa0, ft0, fa0
+    lwc1       fa1, 0x2C(a1)
+    lwc1       ft4, 0x3C(a1)
+    swc1       ft5, 0x8(a2)
+    mul.s      fa1, ft1, fa1
+    mul.s      ft4, ft2, ft4
+    add.s      fa1, fa0, fa1
+    add.s      ft4, ft3, ft4
+    add.s      ft5, fa1, ft4
+    swc1       ft5, 0xC(a2)
+    addiu      a0, 0x10
+    addiu      a2, 0x10
+    addiu      t0, -1
+    bnezl      t0, .L80048F88
+    ldc1       fv1, 0(sp)
+    addiu      sp, sp, 8
+    jr         ra
 END(mtxf_mul)
 
 /* Official Name: mathMtxF2L */
 LEAF(mtxf_to_mtx)
-li.s       AT, 65536.0
-mtc1       AT, fa0
-ori        t0, zero, 0x4
-.L8006F87C:
-lwc1       ft0, 0x0(a0)
-lwc1       ft1, 0x4(a0)
-lwc1       ft2, 0x8(a0)
-mul.s      ft0, ft0, fa0
-lwc1       ft3, 0xC(a0)
-addiu      a0, a0, 0x10
-mul.s      ft1, ft1, fa0
-addiu      a2, a2, 0x8
-addiu      t0, t0, -0x1
-mul.s      ft2, ft2, fa0
-NOP
-mul.s      ft3, ft3, fa0
-cvt.w.s    ft0, ft0
-cvt.w.s    ft1, ft1
-mfc1       t1, ft0
-cvt.w.s    ft2, ft2
-mfc1       t2, ft1
-sh         t1, 0x18(a2)
-cvt.w.s    ft3, ft3
-mfc1       t3, ft2
-sh         t2, 0x1A(a2)
-srl        t1, t1, 16
-mfc1       t4, ft3
-sh         t3, 0x1C(a2)
-srl        t2, t2, 16
-sh         t4, 0x1E(a2)
-srl        t3, t3, 16
-srl        t4, t4, 16
-sh         t1, -0x8(a2)
-sh         t2, -0x6(a2)
-sh         t3, -0x4(a2)
-sh         t4, -0x2(a2)
-bnel       t0, zero, .L8006F87C
- NOP
-jr         ra
- NOP
+    li.s       fa0, 65536.0
+    ori        t0, zero, 4 /* Loop counter */
+    .L80049090:
+    lwc1       ft0, 0x0(a0)
+    lwc1       ft1, 0x4(a0)
+    lwc1       ft2, 0x8(a0)
+    lwc1       ft3, 0xC(a0)
+    mul.s      ft0, ft0, fa0
+    mul.s      ft1, ft1, fa0
+    mul.s      ft2, ft2, fa0
+    mul.s      ft3, ft3, fa0
+    cvt.w.s    ft0, ft0
+    cvt.w.s    ft1, ft1
+    cvt.w.s    ft2, ft2
+    cvt.w.s    ft3, ft3
+    mfc1       t1, ft0
+    mfc1       t2, ft1
+    mfc1       t3, ft2
+    mfc1       t4, ft3
+    sh         t1, 0x20(a1)
+    sh         t2, 0x22(a1)
+    sh         t3, 0x24(a1)
+    sh         t4, 0x26(a1)
+    srl        t1, t1, 16
+    srl        t2, t2, 16
+    srl        t3, t3, 16
+    srl        t4, t4, 16
+    sh         t1, 0(a1)
+    sh         t2, 0x2(a1)
+    sh         t3, 0x4(a1)
+    sh         t4, 0x6(a1)
+    addiu      a0, 0x10 /* Increment MtxF pointer by 16 bytes */
+    addiu      a1, 0x8  /* Increment Mtx pointer by 8 bytes */
+    addiu      t0, -1   /* Decrement loop counter */
+    bnezl      t0, .L80049090
+    jr         ra
 END(mtxf_to_mtx)
 
 /* Official Name: mathSeed */
 LEAF(set_rng_seed)
-lui        AT, %hi(gCurrentRNGSeed)
-jr         ra
- sw        a0, %lo(gCurrentRNGSeed)(AT)
+    sw         a0, gCurrentRNGSeed
+    jr         ra
 END(set_rng_seed)
 
 LEAF(save_rng_seed)
-lui        a0, %hi(gCurrentRNGSeed)
-lw         a0, %lo(gCurrentRNGSeed)(a0)
-lui        AT, %hi(gPrevRNGSeed)
-jr         ra
- sw        a0, %lo(gPrevRNGSeed)(AT)
+    lw         a0, gCurrentRNGSeed
+    sw         a0, gPrevRNGSeed
+    jr         ra
 END(save_rng_seed)
 
 LEAF(load_rng_seed)
-lui        a0, %hi(gPrevRNGSeed)
-lw         a0, %lo(gPrevRNGSeed)(a0)
-lui        AT, %hi(gCurrentRNGSeed)
-jr         ra
- sw        a0, %lo(gCurrentRNGSeed)(AT)
+    lw         a0, gPrevRNGSeed
+    sw         a0, gCurrentRNGSeed
+    jr         ra
 END(load_rng_seed)
 
 LEAF(get_rng_seed)
-lui        v0, %hi(gCurrentRNGSeed)
-jr         ra
- lw        v0, %lo(gCurrentRNGSeed)(v0)
+    lw        v0, gCurrentRNGSeed
+    jr         ra
 END(get_rng_seed)
 
 /* Official Name: mathRnd */
 LEAF(rand_range)
-lui        t0, %hi(gCurrentRNGSeed)
-lw         t0, %lo(gCurrentRNGSeed)(t0)
-lui        AT, %hi(gCurrentRNGSeed)
-sub        a2, a2, a0
-dsll32     t1, t0, 31
-dsll       t2, t0, 31
-dsrl       t1, t1, 31
-dsrl32     t2, t2, 0
-dsll32     t3, t0, 12
-or         t1, t1, t2
-dsrl32     t3, t3, 0
-xor        t1, t1, t3
-dsrl       t3, t1, 20
-andi       t3, t3, 0xFFF
-xor        t0, t3, t1
-sw         t0, %lo(gCurrentRNGSeed)(AT)
-addi       a2, a2, 0x1
-subu       t0, t0, a0
-divu       zero, t0, a2
-mflo       t0
-mfhi       v0
-add        v0, v0, a0
-bnez       a2, .L8006F9B0
- NOP
-break      7
-.L8006F9B0:
-jr         ra
- NOP
+    lw         t0, gCurrentRNGSeed
+    sub        a1, a0
+    dsll32     t1, t0, 31
+    dsll       t2, t0, 31
+    dsrl       t1, 31
+    dsrl32     t2, 0
+    dsll32     t3, t0, 12
+    or         t1, t2
+    dsrl32     t3, 0
+    xor        t1, t3
+    dsrl       t3, t1, 20
+    andi       t3, 0xFFF
+    xor        t0, t3, t1
+    sw         t0, gCurrentRNGSeed
+    addi       a1, 1
+    subu       t0, a0
+    divu       t0, a1
+    mfhi       v0
+    add        v0, a0
+    jr         ra
 END(rand_range)
 
 /* Official Name: fastShortReflection */
+/* Does t6 even do anything? */
 LEAF(vec3s_reflect)
-lh         t0, 0x0(a0)
-lh         t3, 0x0(a2)
-lh         t1, 0x2(a0)
-lh         t4, 0x2(a2)
-mult       t0, t3
-lh         t2, 0x4(a0)
-lh         t5, 0x4(a2)
-mflo       t6
-NOP
-NOP
-mult       t1, t4
-mflo       t7
-add        t6, t6, t7
-NOP
-mult       t2, t5
-mflo       t8
-add        t6, t6, t8
-sra        t6, t6, 12
-mult       t6, t3
-mflo       t3
-sra        t3, t3, 13
-sub        t3, t3, t0
-mult       t6, t4
-sh         t3, 0x6(a0)
-mflo       t4
-sra        t4, t4, 13
-sub        t4, t4, t1
-mult       t6, t5
-sh         t4, 0x8(a0)
-mflo       t5
-sra        t5, t5, 13
-sub        t5, t5, t0
-jr         ra
- sh        t5, 0xA(a0)
+    lh         t0, 0x0(a0)
+    lh         t1, 0x2(a0)
+    lh         t2, 0x4(a0)
+    lh         t3, 0x0(a1)
+    lh         t4, 0x2(a1)
+    lh         t5, 0x4(a1)
+    mult       t0, t3
+    mflo       t6
+    mult       t1, t4
+    mflo       t7
+    add        t6, t7
+    mult       t2, t5
+    mflo       t8
+    add        t6, t8
+    sra        t6, 12
+    mult       t6, t3
+    mflo       t3
+    sra        t3, 13
+    sub        t3, t0
+    sh         t3, 0x6(a0)
+    mult       t6, t4
+    mflo       t4
+    sra        t4, 13
+    sub        t4, t1
+    mult       t6, t5
+    sh         t4, 0x8(a0)
+    mflo       t5
+    sra        t5, 13
+    sub        t5, t0
+    sh         t5, 0xA(a0)
+    jr         ra
 END(vec3s_reflect)
 
 LEAF(mtx_to_mtxs_2)
-ori        t2, zero, 0x10
-xor        t3, t3, t3
-.L8006FA48:
-lh         t0, 0x0(a0)
-lhu        t1, 0x20(a0)
-addi       a0, a0, 0x2
-sll        t0, t0, 16
-or         t0, t0, t1
-sw         t0, 0x0(a2)
-addi       a2, a2, 0x4
-addiu      t3, t3, 0x1
-bnel       t3, t2, .L8006FA48
- NOP
-jr         ra
- NOP
+    ori        t2, zero, 0x10
+    xor        t3, t3
+    .L8006FA48:
+    lh         t0, 0x0(a0)
+    lhu        t1, 0x20(a0)
+    addi       a0, 0x2
+    sll        t0, 16
+    or         t0, t1
+    sw         t0, 0x0(a1)
+    addi       a1, 0x4
+    addiu      t3, 0x1
+    bnel       t3, t2, .L8006FA48
+    jr         ra
 END(mtx_to_mtxs_2)
 
 LEAF(mtxs_transform_point)
-lh         t0, 0x0(a2)
-lw         t3, 0x0(a0)
-lh         t1, 0x2(a2)
-lh         t2, 0x4(a2)
-mult       t0, t3
-lw         t3, 0x10(a0)
-mflo       t4
-NOP
-NOP
-mult       t1, t3
-lw         t3, 0x20(a0)
-mflo       t5
-add        t4, t4, t5
-NOP
-mult       t2, t3
-lw         t3, 0x30(a0)
-mflo       t6
-add        t4, t4, t6
-add        t4, t4, t3
-sra        t4, t4, 16
-sh         t4, 0x0(a2)
-lw         t3, 0x4(a0)
-mult       t0, t3
-lw         t3, 0x14(a0)
-mflo       t4
-NOP
-NOP
-mult       t1, t3
-lw         t3, 0x24(a0)
-mflo       t5
-add        t4, t4, t5
-NOP
-mult       t2, t3
-lw         t3, 0x34(a0)
-mflo       t6
-add        t4, t4, t6
-add        t4, t4, t3
-sra        t4, t4, 16
-sh         t4, 0x2(a2)
-lw         t3, 0x8(a0)
-mult       t0, t3
-lw         t3, 0x18(a0)
-mflo       t4
-NOP
-NOP
-mult       t1, t3
-lw         t3, 0x28(a0)
-mflo       t5
-add        t4, t4, t5
-NOP
-mult       t2, t3
-lw         t3, 0x38(a0)
-mflo       t6
-add        t4, t4, t6
-add        t4, t4, t3
-sra        t4, t4, 16
-jr         ra
- sh        t4, 0x4(a2)
+    lh         t0, 0x0(a1)
+    lh         t1, 0x2(a1)
+    lh         t2, 0x4(a1)
+    lw         t3, 0x0(a0)
+    mult       t0, t3
+    lw         t3, 0x10(a0)
+    mflo       t4
+    mult       t1, t3
+    lw         t3, 0x20(a0)
+    mflo       t5
+    mult       t2, t3
+    add        t4, t5
+    lw         t3, 0x30(a0)
+    mflo       t6
+    add        t4, t6
+    add        t4, t3
+    sra        t4, 16
+    sh         t4, 0x0(a1)
+    lw         t3, 0x4(a0)
+    mult       t0, t3
+    lw         t3, 0x14(a0)
+    mflo       t4
+    mult       t1, t3
+    lw         t3, 0x24(a0)
+    mflo       t5
+    add        t4, t5
+    mult       t2, t3
+    lw         t3, 0x34(a0)
+    mflo       t6
+    add        t4, t6
+    add        t4, t3
+    sra        t4, 16
+    sh         t4, 0x2(a1)
+    lw         t3, 0x8(a0)
+    mult       t0, t3
+    lw         t3, 0x18(a0)
+    mflo       t4
+    mult       t1, t3
+    lw         t3, 0x28(a0)
+    mflo       t5
+    add        t4, t5
+    mult       t2, t3
+    lw         t3, 0x38(a0)
+    mflo       t6
+    add        t4, t6
+    add        t4, t3
+    sra        t4, 16
+    sh         t4, 0x4(a1)
+    jr         ra
 END(mtxs_transform_point)
 
 LEAF(mtxs_transform_dir)
-lw         t3, 0x0(a0)
-lh         t0, 0x0(a2)
-lh         t1, 0x2(a2)
-lh         t2, 0x4(a2)
-mult       t0, t3
-lw         t3, 0x10(a0)
-mflo       t4
-NOP
-NOP
-mult       t1, t3
-lw         t3, 0x20(a0)
-mflo       t5
-add        t4, t4, t5
-NOP
-mult       t2, t3
-lw         t3, 0x4(a0)
-mflo       t6
-add        t4, t4, t6
-sra        t4, t4, 16
-mult       t0, t3
-sh         t4, 0x0(a2)
-lw         t3, 0x14(a0)
-mflo       t4
-NOP
-NOP
-mult       t1, t3
-lw         t3, 0x24(a0)
-mflo       t5
-add        t4, t4, t5
-NOP
-mult       t2, t3
-lw         t3, 0x8(a0)
-mflo       t6
-add        t4, t4, t6
-sra        t4, t4, 16
-mult       t0, t3
-sh         t4, 0x2(a2)
-lw         t3, 0x18(a0)
-mflo       t4
-NOP
-NOP
-mult       t1, t3
-lw         t3, 0x28(a0)
-mflo       t5
-add        t4, t4, t5
-NOP
-mult       t2, t3
-mflo       t6
-add        t4, t4, t6
-sra        t4, t4, 16
-jr         ra
- sh        t4, 0x4(a2)
+    lw         t3, 0x0(a0)
+    lh         t0, 0x0(a1)
+    lh         t1, 0x2(a1)
+    lh         t2, 0x4(a1)
+    mult       t0, t3
+    lw         t3, 0x10(a0)
+    mflo       t4
+    mult       t1, t3
+    lw         t3, 0x20(a0)
+    mflo       t5
+    add        t4, t5
+    mult       t2, t3
+    lw         t3, 0x4(a0)
+    mflo       t6
+    add        t4, t6
+    sra        t4, 16
+    mult       t0, t3
+    sh         t4, 0x0(a1)
+    lw         t3, 0x14(a0)
+    mflo       t4
+    mult       t1, t3
+    lw         t3, 0x24(a0)
+    mflo       t5
+    add        t4, t5
+    mult       t2, t3
+    lw         t3, 0x8(a0)
+    mflo       t6
+    add        t4, t6
+    sra        t4, 16
+    mult       t0, t3
+    sh         t4, 0x2(a1)
+    lw         t3, 0x18(a0)
+    mflo       t4
+    mult       t1, t3
+    lw         t3, 0x28(a0)
+    mflo       t5
+    add        t4, t5
+    mult       t2, t3
+    mflo       t6
+    add        t4, t6
+    sra        t4, 16
+    sh         t4, 0x4(a1)
+    jr         ra
 END(mtxs_transform_dir)
 
 LEAF(mtxf_from_transform)
-addiu      sp, sp, -0x8
-li.s       AT, 0.0000152587890625 /* (1.0f / 0x10000) */
-sd         ra, 0x0(sp)
-or         a3, a0, zero
-mtc1       AT, ft5
-jal        sins_s16
- lh        a0, 0x0(a2)
-mtc1       v0, fv0
-lh         a0, 0x0(a2)
-cvt.s.w    fv0, fv0
-mul.s      fv0, fv0, ft5
-jal        coss_s16
- NOP
-mtc1       v0, fv1
-lh         a0, 0x2(a2)
-cvt.s.w    fv1, fv1
-mul.s      fv1, fv1, ft5
-jal        sins_s16
- NOP
-mtc1       v0, ft0
-lh         a0, 0x2(a2)
-cvt.s.w    ft0, ft0
-mul.s      ft0, ft0, ft5
-jal        coss_s16
- NOP
-mtc1       v0, ft1
-lh         a0, 0x4(a2)
-cvt.s.w    ft1, ft1
-mul.s      ft1, ft1, ft5
-jal        sins_s16
- NOP
-mtc1       v0, ft2
-lh         a0, 0x4(a2)
-cvt.s.w    ft2, ft2
-mul.s      ft2, ft2, ft5
-jal        coss_s16
- NOP
-mtc1       v0, ft3
-lw         t2, 0x8(a2)
-sw         zero, 0xC(a3)
-cvt.s.w    ft3, ft3
-sw         zero, 0x1C(a3)
-sw         zero, 0x2C(a3)
-li.s       AT, 1.0
-mul.s      ft3, ft3, ft5
-NOP
-mul.s      ft4, ft0, fv0
-NOP
-mul.s      ft4, ft4, ft2
-NOP
-mul.s      ft5, ft3, fv1
-add.s      ft4, ft4, ft5
-mtc1       t2, ft5
-NOP
-mul.s      ft4, ft4, ft5
-swc1       ft4, 0x0(a3)
-mul.s      ft4, ft2, ft1
-NOP
-mul.s      ft4, ft4, ft5
-swc1       ft4, 0x4(a3)
-mul.s      ft4, ft0, fv1
-NOP
-mul.s      ft4, ft4, ft2
-NOP
-mul.s      ft5, ft3, fv0
-sub.s      ft4, ft4, ft5
-mtc1       t2, ft5
-NOP
-mul.s      ft4, ft4, ft5
-swc1       ft4, 0x8(a3)
-mul.s      ft4, ft0, fv0
-NOP
-mul.s      ft4, ft4, ft3
-NOP
-mul.s      ft5, ft2, fv1
-sub.s      ft4, ft4, ft5
-mtc1       t2, ft5
-NOP
-mul.s      ft4, ft4, ft5
-swc1       ft4, 0x10(a3)
-mul.s      ft4, ft3, ft1
-NOP
-mul.s      ft4, ft4, ft5
-swc1       ft4, 0x14(a3)
-mul.s      ft4, ft0, fv1
-NOP
-mul.s      ft4, ft4, ft3
-NOP
-mul.s      ft5, ft2, fv0
-add.s      ft4, ft4, ft5
-mtc1       t2, ft5
-NOP
-mul.s      ft4, ft4, ft5
-swc1       ft4, 0x18(a3)
-mul.s      ft4, ft1, fv0
-NOP
-mul.s      ft4, ft4, ft5
-swc1       ft4, 0x20(a3)
-mul.s      ft4, ft0, ft5
-neg.s      ft4, ft4
-swc1       ft4, 0x24(a3)
-mul.s      ft4, ft1, fv1
-NOP
-mul.s      ft4, ft4, ft5
-mtc1       AT, ft5
-swc1       ft4, 0x28(a3)
-lw         t0, 0xC(a2)
-sw         t0, 0x30(a3)
-lw         t0, 0x10(a2)
-sw         t0, 0x34(a3)
-lw         t0, 0x14(a2)
-swc1       ft5, 0x3C(a3)
-sw         t0, 0x38(a3)
-ld         ra, 0x0(sp)
-addiu      sp, sp, 0x8
-jr         ra
- NOP
+    addiu      sp, sp, -0x8
+    sd         ra, 0x0(sp)
+
+    move       a3, a0
+    li.s       ft5, 0.0000152587890625 /* (1.0f / 0x10000) */
+    lh         a0, 0x0(a1)
+    jal        sins_s16
+    mtc1       v0, fv0
+    lh         a0, 0x0(a1)
+    cvt.s.w    fv0
+    mul.s      fv0, ft5
+    jal        coss_s16
+    mtc1       v0, fv1
+    lh         a0, 0x2(a1)
+    cvt.s.w    fv1
+    mul.s      fv1, ft5
+    jal        sins_s16
+    mtc1       v0, ft0
+    lh         a0, 0x2(a1)
+    cvt.s.w    ft0
+    mul.s      ft0, ft5
+    jal        coss_s16
+    mtc1       v0, ft1
+    lh         a0, 0x4(a1)
+    cvt.s.w    ft1
+    mul.s      ft1, ft5
+    jal        sins_s16
+    mtc1       v0, ft2
+    lh         a0, 0x4(a1)
+    cvt.s.w    ft2
+    mul.s      ft2, ft5
+    jal        coss_s16
+    mtc1       v0, ft3
+    lw         t2, 0x8(a1)
+    sw         zero, 0xC(a3)
+    cvt.s.w    ft3, ft3
+    sw         zero, 0x1C(a3)
+    sw         zero, 0x2C(a3)
+    mul.s      ft3, ft3, ft5
+    mul.s      ft4, ft0, fv0
+    mul.s      ft4, ft2
+    mul.s      ft5, ft3, fv1
+    add.s      ft4, ft5
+    mtc1       t2, ft5
+    mul.s      ft4, ft5
+    swc1       ft4, 0x0(a3)
+    mul.s      ft4, ft2, ft1
+    mul.s      ft4, ft5
+    swc1       ft4, 0x4(a3)
+    mul.s      ft4, ft0, fv1
+    mul.s      ft4, ft2
+    mul.s      ft5, ft3, fv0
+    sub.s      ft4, ft5
+    mtc1       t2, ft5
+    mul.s      ft4, ft5
+    swc1       ft4, 0x8(a3)
+    mul.s      ft4, ft0, fv0
+    mul.s      ft4, ft3
+    mul.s      ft5, ft2, fv1
+    sub.s      ft4, ft5
+    mtc1       t2, ft5
+    mul.s      ft4, ft5
+    swc1       ft4, 0x10(a3)
+    mul.s      ft4, ft3, ft1
+    mul.s      ft4, ft5
+    swc1       ft4, 0x14(a3)
+    mul.s      ft4, ft0, fv1
+    mul.s      ft4, ft3
+    mul.s      ft5, ft2, fv0
+    add.s      ft4, ft5
+    mtc1       t2, ft5
+    mul.s      ft4, ft5
+    swc1       ft4, 0x18(a3)
+    mul.s      ft4, ft1, fv0
+    mul.s      ft4, ft5
+    swc1       ft4, 0x20(a3)
+    mul.s      ft4, ft0, ft5
+    neg.s      ft4
+    swc1       ft4, 0x24(a3)
+    mul.s      ft4, ft1, fv1
+    mul.s      ft4, ft5
+    swc1       ft4, 0x28(a3)
+    lw         t0, 0xC(a1)
+    sw         t0, 0x30(a3)
+    lw         t0, 0x10(a1)
+    sw         t0, 0x34(a3)
+    lw         t0, 0x14(a1)
+    sw         t0, 0x38(a3)
+    li.s       ft5, 1.0
+    swc1       ft5, 0x3C(a3)
+
+    ld         ra, 0x0(sp)
+    addiu      sp, sp, 0x8
+    jr         ra
 END(mtxf_from_transform)
 
 /* Official Name: mathSquashY */
 LEAF(mtxf_scale_y)
-mtc1       a2, ft5
-lwc1       ft4, 0x10(a0)
-mul.s      ft4, ft4, ft5
-swc1       ft4, 0x10(a0)
-lwc1       ft4, 0x14(a3)
-mul.s      ft4, ft4, ft5
-swc1       ft4, 0x14(a0)
-lwc1       ft4, 0x18(a0)
-mul.s      ft4, ft4, ft5
-jr         ra
- swc1      ft4, 0x18(a0)
+    mtc1       a1, ft5
+
+    lwc1       ft4, 0x10(a0)
+    mul.s      ft4, ft5
+    swc1       ft4, 0x10(a0)
+#ifdef AVOID_UB
+    lwc1       ft4, 0x14(a0)
+#else
+    lwc1       ft4, 0x14(a3) /* UB: Should be a0, and this was actually fixed in JFG */
+#endif
+    mul.s      ft4, ft5
+    swc1       ft4, 0x14(a0)
+
+    lwc1       ft4, 0x18(a0)
+    mul.s      ft4, ft5
+    swc1       ft4, 0x18(a0)
+
+    jr         ra
 END(mtxf_scale_y)
 
 /* Official Name: mathTransY */
 LEAF(mtxf_translate_y)
-mtc1       a2, ft4
-lwc1       fv0, 0x10(a0)
-lwc1       ft0, 0x14(a0)
-lwc1       ft2, 0x18(a0)
-mul.s      fv0, fv0, ft4
-lwc1       fv1, 0x30(a0)
-lwc1       ft1, 0x34(a0)
-mul.s      ft0, ft0, ft4
-lwc1       ft3, 0x38(a0)
-mul.s      ft2, ft2, ft4
-add.s      fv0, fv0, fv1
-add.s      ft0, ft0, ft1
-swc1       fv0, 0x30(a0)
-add.s      ft2, ft2, ft3
-swc1       ft0, 0x34(a0)
-jr         ra
- swc1      ft2, 0x38(a0)
+    mtc1       a1, ft4
+    lwc1       fv0, 0x10(a0)
+    lwc1       ft0, 0x14(a0)
+    lwc1       ft2, 0x18(a0)
+    lwc1       fv1, 0x30(a0)
+    lwc1       ft1, 0x34(a0)
+    lwc1       ft3, 0x38(a0)
+    mul.s      fv0, ft4
+    mul.s      ft0, ft4
+    mul.s      ft2, ft4
+    add.s      fv0, fv1
+    add.s      ft0, ft1
+    add.s      ft2, ft3
+    swc1       fv0, 0x30(a0)
+    swc1       ft0, 0x34(a0)
+    swc1       ft2, 0x38(a0)
+    jr         ra
 END(mtxf_translate_y)
 
 /* Official Name: mathRpyXyzMtx */
 LEAF(mtxf_from_inverse_transform)
-addiu      sp, sp, -0x8
-li.s       AT, 0.0000152587890625 /* (1.0f / 0x10000) */
-sd         ra, 0x0(sp)
-or         a3, a0, zero
-mtc1       AT, ft5
-jal        sins_s16
- lh        a0, 0x0(a2)
-mtc1       v0, fv0
-lh         a0, 0x0(a2)
-cvt.s.w    fv0, fv0
-mul.s      fv0, fv0, ft5
-jal        coss_s16
- NOP
-mtc1       v0, fv1
-lh         a0, 0x2(a2)
-cvt.s.w    fv1, fv1
-mul.s      fv1, fv1, ft5
-jal        sins_s16
- NOP
-mtc1       v0, ft0
-lh         a0, 0x2(a2)
-cvt.s.w    ft0, ft0
-mul.s      ft0, ft0, ft5
-jal        coss_s16
- NOP
-mtc1       v0, ft1
-lh         a0, 0x4(a2)
-cvt.s.w    ft1, ft1
-mul.s      ft1, ft1, ft5
-jal        sins_s16
- NOP
-mtc1       v0, ft2
-lh         a0, 0x4(a2)
-cvt.s.w    ft2, ft2
-mul.s      ft2, ft2, ft5
-jal        coss_s16
- NOP
-mtc1       v0, ft3
-sw         zero, 0xC(a3)
-swc1       ft0, 0x18(a3)
-cvt.s.w    ft3, ft3
-sw         zero, 0x1C(a3)
-sw         zero, 0x2C(a3)
-li.s       AT, 1.0
-mul.s      ft3, ft3, ft5
-NOP
-mul.s      ft4, ft0, ft2
-NOP
-mul.s      ft4, ft4, fv0
-NOP
-mul.s      ft5, fv1, ft3
-sub.s      ft4, ft5, ft4
-swc1       ft4, 0x0(a3)
-mul.s      ft4, ft0, ft3
-NOP
-mul.s      ft4, ft4, fv0
-NOP
-mul.s      ft5, fv1, ft2
-add.s      ft4, ft4, ft5
-swc1       ft4, 0x4(a3)
-mul.s      ft4, fv0, ft1
-neg.s      ft4, ft4
-swc1       ft4, 0x8(a3)
-mul.s      ft4, ft1, ft2
-neg.s      ft4, ft4
-swc1       ft4, 0x10(a3)
-mul.s      ft4, ft1, ft3
-swc1       ft4, 0x14(a3)
-mul.s      ft4, ft0, ft2
-NOP
-mul.s      ft4, ft4, fv1
-NOP
-mul.s      ft5, fv0, ft3
-add.s      ft4, ft4, ft5
-swc1       ft4, 0x20(a3)
-mul.s      ft4, ft0, ft3
-NOP
-mul.s      ft4, ft4, fv1
-NOP
-mul.s      ft5, fv0, ft2
-sub.s      ft4, ft5, ft4
-lwc1       ft5, 0x0(a3)
-swc1       ft4, 0x24(a3)
-mul.s      ft4, fv1, ft1
-swc1       ft4, 0x28(a3)
-lwc1       fv0, 0xC(a2)
-lwc1       fv1, 0x10(a2)
-lwc1       ft4, 0x10(a3)
-mul.s      ft5, ft5, fv0
-lwc1       ft0, 0x14(a2)
-mul.s      ft4, ft4, fv1
-add.s      ft4, ft4, ft5
-lwc1       ft5, 0x20(a3)
-mul.s      ft5, ft5, ft0
-add.s      ft4, ft4, ft5
-lwc1       ft5, 0x4(a3)
-swc1       ft4, 0x30(a3)
-mul.s      ft5, ft5, fv0
-lwc1       ft4, 0x14(a3)
-mul.s      ft4, ft4, fv1
-add.s      ft4, ft4, ft5
-lwc1       ft5, 0x24(a3)
-mul.s      ft5, ft5, ft0
-add.s      ft4, ft4, ft5
-lwc1       ft5, 0x8(a3)
-swc1       ft4, 0x34(a3)
-mul.s      ft5, ft5, fv0
-lwc1       ft4, 0x18(a3)
-mul.s      ft4, ft4, fv1
-add.s      ft4, ft4, ft5
-lwc1       ft5, 0x28(a3)
-mul.s      ft5, ft5, ft0
-add.s      ft4, ft4, ft5
-swc1       ft4, 0x38(a3)
-mtc1       AT, ft4
-NOP
-swc1       ft4, 0x3C(a3)
-ld         ra, 0x0(sp)
-addiu      sp, sp, 0x8
-jr         ra
- NOP
+    addiu      sp, sp, -0x8
+    sd         ra, 0x0(sp)
+
+    move       a3, a0
+    li.s       ft5, 0.0000152587890625 /* (1.0f / 0x10000) */
+    lh         a0, 0x0(a1)
+    jal        sins_s16
+    mtc1       v0, fv0
+    cvt.s.w    fv0
+    mul.s      fv0, ft5
+    lh         a0, 0x0(a1)
+    jal        coss_s16
+    mtc1       v0, fv1
+    cvt.s.w    fv1
+    mul.s      fv1, ft5
+    lh         a0, 0x2(a1)
+    jal        sins_s16
+    mtc1       v0, ft0
+    cvt.s.w    ft0
+    mul.s      ft0, ft5
+    lh         a0, 0x2(a1)
+    jal        coss_s16
+    mtc1       v0, ft1
+    cvt.s.w    ft1
+    mul.s      ft1, ft5
+    lh         a0, 0x4(a1)
+    jal        sins_s16
+    mtc1       v0, ft2
+    cvt.s.w    ft2
+    mul.s      ft2, ft5
+    lh         a0, 0x4(a1)
+    jal        coss_s16
+    mtc1       v0, ft3
+    cvt.s.w    ft3
+    sw         zero, 0xC(a3)
+    swc1       ft0, 0x18(a3)
+    sw         zero, 0x1C(a3)
+    sw         zero, 0x2C(a3)
+    mul.s      ft3, ft5
+    mul.s      ft4, ft0, ft2
+    mul.s      ft4, fv0
+    mul.s      ft5, fv1, ft3
+    sub.s      ft4, ft5, ft4
+    swc1       ft4, 0x0(a3)
+    mul.s      ft4, ft0, ft3
+    mul.s      ft4, fv0
+    mul.s      ft5, fv1, ft2
+    add.s      ft4, ft5
+    swc1       ft4, 0x4(a3)
+    mul.s      ft4, fv0, ft1
+    neg.s      ft4
+    swc1       ft4, 0x8(a3)
+    mul.s      ft4, ft1, ft2
+    neg.s      ft4
+    swc1       ft4, 0x10(a3)
+    mul.s      ft4, ft1, ft3
+    swc1       ft4, 0x14(a3)
+    mul.s      ft4, ft0, ft2
+    mul.s      ft4, fv1
+    mul.s      ft5, fv0, ft3
+    add.s      ft4, ft5
+    swc1       ft4, 0x20(a3)
+    mul.s      ft4, ft0, ft3
+    mul.s      ft4, fv1
+    mul.s      ft5, fv0, ft2
+    sub.s      ft4, ft5, ft4
+    lwc1       ft5, 0x0(a3)
+    swc1       ft4, 0x24(a3)
+    mul.s      ft4, fv1, ft1
+    swc1       ft4, 0x28(a3)
+    lwc1       fv0, 0xC(a1)
+    lwc1       fv1, 0x10(a1)
+    lwc1       ft4, 0x10(a3)
+    mul.s      ft5, fv0
+    lwc1       ft0, 0x14(a1)
+    mul.s      ft4, fv1
+    add.s      ft4, ft5
+    lwc1       ft5, 0x20(a3)
+    mul.s      ft5, ft0
+    add.s      ft4, ft5
+    lwc1       ft5, 0x4(a3)
+    swc1       ft4, 0x30(a3)
+    mul.s      ft5, fv0
+    lwc1       ft4, 0x14(a3)
+    mul.s      ft4, fv1
+    add.s      ft4, ft5
+    lwc1       ft5, 0x24(a3)
+    mul.s      ft5, ft0
+    add.s      ft4, ft5
+    lwc1       ft5, 0x8(a3)
+    swc1       ft4, 0x34(a3)
+    mul.s      ft5, fv0
+    lwc1       ft4, 0x18(a3)
+    mul.s      ft4, fv1
+    add.s      ft4, ft5
+    lwc1       ft5, 0x28(a3)
+    mul.s      ft5, ft0
+    add.s      ft4, ft5
+    swc1       ft4, 0x38(a3)
+    li.s       ft4, 1.0
+    swc1       ft4, 0x3C(a3)
+
+    ld         ra, 0x0(sp)
+    addiu      sp, sp, 0x8
+    jr         ra
 END(mtxf_from_inverse_transform)
 
 LEAF(func_80070058)
-addiu      sp, sp, -0x8
-li.s       AT, 0.0000152587890625 /* (1.0f / 0x10000) */
-sd         ra, 0x0(sp)
-or         a3, a0, zero
-mtc1       AT, ft5
-jal        sins_s16
- lh        a0, 0x0(a2)
-mtc1       v0, fv0
-lh         a0, 0x0(a2)
-cvt.s.w    fv0, fv0
-mul.s      fv0, fv0, ft5
-jal        coss_s16
- NOP
-mtc1       v0, fv1
-lh         a0, 0x2(a2)
-cvt.s.w    fv1, fv1
-mul.s      fv1, fv1, ft5
-jal        sins_s16
- NOP
-mtc1       v0, ft0
-lh         a0, 0x2(a2)
-cvt.s.w    ft0, ft0
-mul.s      ft0, ft0, ft5
-jal        coss_s16
- NOP
-mtc1       v0, ft1
-lh         a0, 0x4(a2)
-cvt.s.w    ft1, ft1
-mul.s      ft1, ft1, ft5
-jal        sins_s16
- NOP
-mtc1       v0, ft2
-lh         a0, 0x4(a2)
-cvt.s.w    ft2, ft2
-mul.s      ft2, ft2, ft5
-jal        coss_s16
- NOP
-mtc1       v0, ft3
-li.s       AT, 1.0
-sw         zero, 0xC(a3)
-cvt.s.w    ft3, ft3
-sw         zero, 0x1C(a3)
-sw         zero, 0x2C(a3)
-mul.s      ft3, ft3, ft5
-mtc1       AT, ft5
-mul.s      fa0, fv0, ft1
-swc1       ft5, 0x3C(a3)
-ld         ra, 0x0(sp)
-addiu      sp, sp, 0x8
-mul.s      fa1, fv1, ft3
-NOP
-mul.s      ft4, fv0, ft2
-jr         ra
- NOP
+    addiu      sp, sp, -0x8
+    sd         ra, 0x0(sp)
+
+    move       a3, a0
+    li.s       ft5, 0.0000152587890625 /* (1.0f / 0x10000) */
+    lh         a0, 0x0(a1)
+    jal        sins_s16
+    mtc1       v0, fv0
+    cvt.s.w    fv0
+    mul.s      fv0, ft5
+    lh         a0, 0x0(a1)
+    jal        coss_s16
+    mtc1       v0, fv1
+    cvt.s.w    fv1
+    mul.s      fv1, ft5
+    lh         a0, 0x2(a1)
+    jal        sins_s16
+    mtc1       v0, ft0
+    cvt.s.w    ft0
+    mul.s      ft0, ft5
+    lh         a0, 0x2(a1)
+    jal        coss_s16
+    mtc1       v0, ft1
+    cvt.s.w    ft1
+    mul.s      ft1, ft5
+    lh         a0, 0x4(a1)
+    jal        sins_s16
+    mtc1       v0, ft2
+    cvt.s.w    ft2
+    mul.s      ft2, ft5
+    lh         a0, 0x4(a1)
+    jal        coss_s16
+    sw         zero, 0xC(a3)
+    sw         zero, 0x1C(a3)
+    sw         zero, 0x2C(a3)
+    mtc1       v0, ft3
+    cvt.s.w    ft3
+    mul.s      ft3, ft5
+    li.s       ft5, 1.0
+    swc1       ft5, 0x3C(a3)
+    mul.s      fa0, fv0, ft1
+    mul.s      fa1, fv1, ft3
+    mul.s      ft4, fv0, ft2
+
+    ld         ra, 0x0(sp)
+    addiu      sp, sp, 0x8
+    jr         ra
 END(func_80070058)
 
 LEAF(mtxf_billboard)
-addiu      sp, sp, -0x8
-or         t9, a3, zero
-li.s       AT, 0.0000152587890625 /* (1.0f / 0x10000) */
-sd         ra, 0x0(sp)
-or         a3, a0, zero
-mtc1       AT, ft5
-jal        sins_s16
- or        a0, a2, zero
-mtc1       v0, ft2
-or         a0, a2, zero
-cvt.s.w    ft2, ft2
-mul.s      ft2, ft2, ft5
-jal        coss_s16
- NOP
-mtc1       v0, ft3
-mtc1       a2, ft4
-li.s       AT, 1.0
-cvt.s.w    ft3, ft3
-swc1       ft4, 0x28(a3)
-sw         zero, 0x8(a3)
-sw         zero, 0xC(a3)
-sw         zero, 0x18(a3)
-sw         zero, 0x1C(a3)
-mul.s      ft3, ft3, ft5
-mtc1       t9, ft5
-sw         zero, 0x20(a3)
-sw         zero, 0x24(a3)
-sw         zero, 0x2C(a3)
-sw         zero, 0x30(a3)
-sw         zero, 0x34(a3)
-mul.s      ft3, ft3, ft4
-sw         zero, 0x38(a3)
-mul.s      ft2, ft2, ft4
-mtc1       AT, ft4
-swc1       ft3, 0x0(a3)
-mul.s      ft3, ft3, ft5
-swc1       ft4, 0x3C(a3)
-swc1       ft2, 0x4(a3)
-neg.s      ft2, ft2
-swc1       ft2, 0x10(a3)
-swc1       ft3, 0x14(a3)
-ld         ra, 0x0(sp)
-addiu      sp, sp, 0x8
-jr         ra
- NOP
+    addiu      sp, sp, -0x8
+    sd         ra, 0x0(sp)
+
+    move       t9, a3
+    move       a3, a0
+    li.s       ft5, 0.0000152587890625 /* (1.0f / 0x10000) */
+    move       a0, a1
+    jal        sins_s16
+    mtc1       v0, ft2
+    move       a0, a1
+    cvt.s.w    ft2
+    mul.s      ft2, ft5
+    jal        coss_s16
+    mtc1       v0, ft3
+    mtc1       a2, ft4
+    cvt.s.w    ft3
+    sw         zero, 0x8(a3)
+    sw         zero, 0xC(a3)
+    sw         zero, 0x18(a3)
+    sw         zero, 0x1C(a3)
+    swc1       ft4, 0x28(a3)
+    mul.s      ft3, ft5
+    mtc1       t9, ft5
+    sw         zero, 0x20(a3)
+    sw         zero, 0x24(a3)
+    sw         zero, 0x2C(a3)
+    sw         zero, 0x30(a3)
+    sw         zero, 0x34(a3)
+    sw         zero, 0x38(a3)
+    mul.s      ft3, ft4
+    mul.s      ft2, ft4
+    li.s       ft4, 1.0
+    swc1       ft3, 0x0(a3)
+    swc1       ft2, 0x4(a3)
+    swc1       ft4, 0x3C(a3)
+    mul.s      ft3, ft5
+    neg.s      ft2, ft2
+    swc1       ft2, 0x10(a3)
+    swc1       ft3, 0x14(a3)
+
+    ld         ra, 0x0(sp)
+    addiu      sp, sp, 0x8
+    jr         ra
 END(mtxf_billboard)
 
 LEAF(vec3s_rotate_rpy)
-addiu      sp, sp, -0x8
-sd         ra, 0x0(sp)
-or         a2, a0, zero
-lh         t3, 0x0(a2)
-lh         t4, 0x2(a2)
-lh         t5, 0x4(a2)
-jal        sins_s16
- lh        a0, 0x0(a2)
-or         t6, v0, zero
-jal        coss_s16
- lh        a0, 0x0(a2)
-mult       t3, t6
-or         t7, v0, zero
-lh         a0, 0x2(a2)
-mflo       t0
-NOP
-NOP
-mult       t4, t6
-mflo       t1
-NOP
-NOP
-mult       t3, t7
-mflo       t3
-sub        t3, t3, t1
-sra        t3, t3, 16
-mult       t4, t7
-mflo       t4
-add        t4, t4, t0
-jal        sins_s16
- sra       t4, t4, 16
-or         t6, v0, zero
-jal        coss_s16
- lh        a0, 0x2(a2)
-mult       t4, t6
-or         t7, v0, zero
-lh         a0, 0x4(a2)
-mflo       t0
-NOP
-NOP
-mult       t5, t6
-mflo       t1
-NOP
-NOP
-mult       t4, t7
-mflo       t4
-sub        t4, t4, t1
-sra        t4, t4, 16
-mult       t5, t7
-mflo       t5
-add        t5, t5, t0
-jal        sins_s16
- sra       t5, t5, 16
-or         t6, v0, zero
-jal        coss_s16
- lh        a0, 0x4(a2)
-mult       t3, t6
-or         t7, v0, zero
-sh         t4, 0x2(a2)
-mflo       t0
-NOP
-NOP
-mult       t5, t6
-mflo       t1
-NOP
-NOP
-mult       t3, t7
-mflo       t3
-add        t3, t3, t1
-sra        t3, t3, 16
-mult       t5, t7
-sh         t3, 0x0(a2)
-mflo       t5
-sub        t5, t5, t0
-sra        t5, t5, 16
-sh         t5, 0x4(a2)
-ld         ra, 0x0(sp)
-addiu      sp, sp, 0x8
-jr         ra
- NOP
+    addiu      sp, sp, -0x8
+    sd         ra, 0x0(sp)
+
+    move       a2, a0
+    lh         t3, 0x0(a1)
+    lh         t4, 0x2(a1)
+    lh         t5, 0x4(a1)
+    lh         a0, 0x0(a2)
+    jal        sins_s16
+    move       t6, v0
+    lh         a0, 0x0(a2)
+    jal        coss_s16
+    mult       t3, t6
+    move       t7, v0
+    mflo       t0
+    mult       t4, t6
+    mflo       t1
+    mult       t3, t7
+    mflo       t3
+    sub        t3, t1
+    sra        t3, 16
+    mult       t4, t7
+    mflo       t4
+    add        t4, t0
+    sra        t4, 16
+    lh         a0, 0x2(a2)
+    jal        sins_s16
+    move       t6, v0
+    lh         a0, 0x2(a2)
+    jal        coss_s16
+    mult       t4, t6
+    move       t7, v0
+    mflo       t0
+    mult       t5, t6
+    mflo       t1
+    mult       t4, t7
+    mflo       t4
+    sub        t4, t1
+    sra        t4, 16
+    mult       t5, t7
+    mflo       t5
+    add        t5, t0
+    sra        t5, 16
+    lh         a0, 0x4(a2)
+    jal        sins_s16
+    move       t6, v0
+    lh         a0, 0x4(a2)
+    jal        coss_s16
+    mult       t3, t6
+    move       t7, v0
+    mflo       t0
+    mult       t5, t6
+    mflo       t1
+    mult       t3, t7
+    mflo       t3
+    add        t3, t1
+    sra        t3, 16
+    mult       t5, t7
+    mflo       t5
+    sub        t5, t0
+    sra        t5, 16
+    sh         t3, 0x0(a1)
+    sh         t4, 0x2(a1)
+    sh         t5, 0x4(a1)
+
+    ld         ra, 0x0(sp)
+    addiu      sp, sp, 0x8
+    jr         ra
 END(vec3s_rotate_rpy)
 
 /* Official Name: mathOneFloatRPY */
 LEAF(vec3f_rotate)
-addiu      sp, sp, -0x8
-sd         ra, 0x0(sp)
-or         a2, a0, zero
-lwc1       ft0, 0x0(a2)
-lwc1       ft1, 0x4(a2)
-lwc1       ft2, 0x8(a2)
-jal        sins_f
- lh        a0, 0x4(a2)
-mul.s      ft3, ft0, fv0
-lh         a0, 0x4(a2)
-mul.s      fa0, ft1, fv0
-jal        coss_f
- NOP
-mul.s      ft0, ft0, fv0
-lh         a0, 0x2(a2)
-mul.s      ft1, ft1, fv0
-sub.s      ft0, ft0, fa0
-jal        sins_f
- add.s     ft1, ft1, ft3
-mul.s      ft3, ft1, fv0
-lh         a0, 0x2(a2)
-mul.s      fa0, ft2, fv0
-jal        coss_f
- NOP
-mul.s      ft1, ft1, fv0
-lh         a0, 0x0(a2)
-mul.s      ft2, ft2, fv0
-sub.s      ft1, ft1, fa0
-jal        sins_f
- add.s     ft2, ft2, ft3
-mul.s      ft3, ft0, fv0
-lh         a0, 0x0(a2)
-mul.s      fa0, ft2, fv0
-jal        coss_f
- NOP
-mul.s      ft0, ft0, fv0
-swc1       ft1, 0x4(a2)
-mul.s      ft2, ft2, fv0
-add.s      ft0, ft0, fa0
-sub.s      ft2, ft2, ft3
-swc1       ft0, 0x0(a2)
-swc1       ft2, 0x8(a2)
-ld         ra, 0x0(sp)
-addiu      sp, sp, 0x8
-jr         ra
- NOP
+    addiu      sp, sp, -0x8
+    sd         ra, 0x0(sp)
+
+    lwc1       ft0, 0x0(a1)
+    lwc1       ft1, 0x4(a1)
+    lwc1       ft2, 0x8(a1)
+    move       a2, a0
+    lh         a0, 0x4(a2)
+    jal        sins_f
+    mul.s      ft3, ft0, fv0
+    mul.s      fa0, ft1, fv0
+    lh         a0, 0x4(a2)
+    jal        coss_f
+    mul.s      ft0, fv0
+    lh         a0, 0x2(a2)
+    mul.s      ft1, fv0
+    sub.s      ft0, fa0
+    add.s      ft1, ft3
+    jal        sins_f
+    mul.s      ft3, ft1, fv0
+    mul.s      fa0, ft2, fv0
+    lh         a0, 0x2(a2)
+    jal        coss_f
+    mul.s      ft1, fv0
+    lh         a0, 0x0(a2)
+    mul.s      ft2, fv0
+    sub.s      ft1, fa0
+    add.s      ft2, ft3
+    jal        sins_f
+    mul.s      ft3, ft0, fv0
+    mul.s      fa0, ft2, fv0
+    lh         a0, 0x0(a2)
+    jal        coss_f
+    mul.s      ft0, fv0
+    swc1       ft1, 0x4(a1)
+    mul.s      ft2, fv0
+    add.s      ft0, fa0
+    sub.s      ft2, ft3
+    swc1       ft0, 0x0(a1)
+    swc1       ft2, 0x8(a1)
+
+    ld         ra, 0x0(sp)
+    addiu      sp, sp, 0x8
+    jr         ra
 END(vec3f_rotate)
 
 /* Official Name: mathOneFloatYPR */
 LEAF(vec3f_rotate_ypr)
-addiu      sp, sp, -0x8
-sd         ra, 0x0(sp)
-or         a2, a0, zero
-lwc1       ft0, 0x0(a2)
-lwc1       ft1, 0x4(a2)
-lwc1       ft2, 0x8(a2)
-jal        sins_f
- lh        a0, 0x0(a2)
-mul.s      ft3, ft0, fv0
-lh         a0, 0x0(a2)
-mul.s      fa0, ft2, fv0
-jal        coss_f
- NOP
-mul.s      ft0, ft0, fv0
-lh         a0, 0x2(a2)
-mul.s      ft2, ft2, fv0
-add.s      ft0, ft0, fa0
-jal        sins_f
- sub.s     ft2, ft2, ft3
-mul.s      ft3, ft1, fv0
-lh         a0, 0x2(a2)
-mul.s      fa0, ft2, fv0
-jal        coss_f
- NOP
-mul.s      ft1, ft1, fv0
-lh         a0, 0x4(a2)
-mul.s      ft2, ft2, fv0
-sub.s      ft1, ft1, fa0
-jal        sins_f
- add.s     ft2, ft2, ft3
-mul.s      ft3, ft0, fv0
-lh         a0, 0x4(a2)
-mul.s      fa0, ft1, fv0
-jal        coss_f
- NOP
-mul.s      ft0, ft0, fv0
-swc1       ft2, 0x8(a2)
-mul.s      ft1, ft1, fv0
-sub.s      ft0, ft0, fa0
-add.s      ft1, ft1, ft3
-swc1       ft0, 0x0(a2)
-swc1       ft1, 0x4(a2)
-ld         ra, 0x0(sp)
-addiu      sp, sp, 0x8
-jr         ra
- NOP
+    addiu      sp, sp, -0x8
+    sd         ra, 0x0(sp)
+
+    lwc1       ft0, 0x0(a1)
+    lwc1       ft1, 0x4(a1)
+    lwc1       ft2, 0x8(a1)
+    move       a2, a0
+    lh         a0, 0x0(a2)
+    jal        sins_f
+    mul.s      ft3, ft0, fv0
+    mul.s      fa0, ft2, fv0
+    lh         a0, 0x0(a2)
+    jal        coss_f
+    mul.s      ft0, fv0
+    lh         a0, 0x2(a2)
+    mul.s      ft2, fv0
+    add.s      ft0, fa0
+    sub.s      ft2, ft3
+    jal        sins_f
+    mul.s      ft3, ft1, fv0
+    mul.s      fa0, ft2, fv0
+    lh         a0, 0x2(a2)
+    jal        coss_f
+    mul.s      ft1, fv0
+    lh         a0, 0x4(a2)
+    mul.s      ft2, fv0
+    sub.s      ft1, fa0
+    add.s      ft2, ft3
+    jal        sins_f
+    mul.s      ft3, ft0, fv0
+    mul.s      fa0, ft1, fv0
+    lh         a0, 0x4(a2)
+    jal        coss_f
+    mul.s      ft0, fv0
+    swc1       ft2, 0x8(a1)
+    mul.s      ft1, fv0
+    sub.s      ft0, fa0
+    add.s      ft1, ft3
+    swc1       ft0, 0x0(a1)
+    swc1       ft1, 0x4(a1)
+
+    ld         ra, 0x0(sp)
+    addiu      sp, sp, 0x8
+    jr         ra
 END(vec3f_rotate_ypr)
 
 /* Official Name: mathOneFloatPY */
 LEAF(vec3f_rotate_py)
-addiu      sp, sp, -0x8
-sd         ra, 0x0(sp)
-or         a2, a0, zero
-lwc1       ft2, 0x8(a2)
-jal        sins_f
- lh        a0, 0x2(a2)
-mul.s      ft1, ft2, fv0
-jal        coss_f
- lh        a0, 0x2(a2)
-mul.s      ft2, ft2, fv0
-neg.s      ft1, ft1
-jal        sins_f
- lh        a0, 0x0(a2)
-mul.s      ft0, ft2, fv0
-jal        coss_f
- lh        a0, 0x0(a2)
-mul.s      ft2, ft2, fv0
-swc1       ft0, 0x0(a2)
-swc1       ft1, 0x4(a2)
-swc1       ft2, 0x8(a2)
-ld         ra, 0x0(sp)
-addiu      sp, sp, 0x8
-jr         ra
- NOP
+    addiu      sp, sp, -0x8
+    sd         ra, 0x0(sp)
+
+    move       a2, a0
+    lwc1       ft2, 0x8(a1)
+    lh         a0, 0x2(a2)
+    jal        sins_f
+    mul.s      ft1, ft2, fv0
+    lh         a0, 0x2(a2)
+    jal        coss_f
+    neg.s      ft1
+    mul.s      ft2, fv0
+    lh         a0, 0x0(a2)
+    jal        sins_f
+    mul.s      ft0, ft2, fv0
+    lh         a0, 0x0(a2)
+    jal        coss_f
+    mul.s      ft2, fv0
+    swc1       ft0, 0x0(a1)
+    swc1       ft1, 0x4(a1)
+    swc1       ft2, 0x8(a1)
+
+    ld         ra, 0x0(sp)
+    addiu      sp, sp, 0x8
+    jr         ra
 END(vec3f_rotate_py)
 
 /* Official Name: mathXZInTri */
 LEAF(tri2d_xz_contains_point)
+.set noreorder
 lw         t6, 0x10(sp)
 lh         t0, 0x0(a2)
 lh         t1, 0x4(a2)
@@ -1301,278 +1197,270 @@ sub        t6, a0, t0
 sub        t7, t3, t1
 multu      t6, t7
 lh         t2, 0x0(a3)
-sub        t9, a2, t1
+sub        t9, a1, t1
 addiu      v0, zero, 0x0
 sub        t8, t2, t0
 ori        a3, zero, 0x1
 mflo       t6
 mflo       t6
-NOP
-NOP
+nop
+nop
 multu      t8, t9
 mflo       t7
 mflo       t8
 sub        t6, t6, t7
 bgezl      t6, .L80070558
- sub       t6, a0, t2
+.set reorder
+sub        t6, a0, t2
 xor        a3, a3, a3
 sub        t6, a0, t2
 .L80070558:
 sub        t7, t5, t3
 multu      t6, t7
 sub        t8, t4, t2
-sub        t9, a2, t3
+sub        t9, a1, t3
 ori        a2, zero, 0x1
 mflo       t6
 mflo       t6
-NOP
-NOP
 multu      t8, t9
 mflo       t7
 mflo       t8
 sub        t6, t6, t7
 bgez       t6, .L80070598
- NOP
 xor        a2, a2, a2
 .L80070598:
 bne        a3, a2, .L800705F0
- NOP
 sub        t6, a0, t4
 sub        t7, t1, t5
 multu      t6, t7
 sub        t8, t0, t4
-sub        t9, a2, t5
-ori        a2, zero, 0x1
+sub        t9, a1, t5
+ori        a1, zero, 0x1
 mflo       t6
 mflo       t6
-NOP
-NOP
 multu      t8, t9
 mflo       t7
 mflo       t8
 sub        t6, t6, t7
 bgez       t6, .L800705E4
- NOP
-xor        a2, a2, a2
+xor        a1, a1, a1
 .L800705E4:
-bne        a2, a2, .L800705F0
- NOP
+bne        a1, a2, .L800705F0
 ori        v0, zero, 0x1
 .L800705F0:
 jr         ra
- NOP
 END(tri2d_xz_contains_point)
 
 /* Official Name: mathTranslateMtx */
 LEAF(mtxf_from_translation)
-or         t0, a0, zero
-addiu      t1, t0, 0x40
-.L80070600:
-addiu      t0, t0, 0x4
-bne        t1, t0, .L80070600
- sw        zero, -0x4(t0)
-li.s       AT, 1.0
-mtc1       AT, ft5
-NOP
-swc1       ft5, 0x0(a0)
-swc1       ft5, 0x14(a0)
-swc1       ft5, 0x28(a0)
-swc1       ft5, 0x3C(a0)
-sw         a2, 0x30(a0)
-sw         a2, 0x34(a0)
-jr         ra
- sw        a3, 0x38(a0)
+    /* Clear matrix */
+    move       t0, a0
+    addiu      t1, t0, 0x40
+    .L80070600:
+    sw         zero, 0(t0)
+    addiu      t0, 4
+    bne        t1, t0, .L80070600
+
+    .set noreorder
+    li.s       ft5, 1.0
+    nop
+    .set reorder
+    swc1       ft5, 0x0(a0)
+    swc1       ft5, 0x14(a0)
+    swc1       ft5, 0x28(a0)
+    swc1       ft5, 0x3C(a0)
+    sw         a1, 0x30(a0)
+    sw         a2, 0x34(a0)
+    sw         a3, 0x38(a0)
+    jr         ra
 END(mtxf_from_translation)
 
 /* Official Name: mathScaleMtx */
 LEAF(mtxf_from_scale)
-or         t0, a0, zero
-addiu      t1, t0, 0x40
-.L80070640:
-addiu      t0, t0, 0x4
-bne        t1, t0, .L80070640
- sw        zero, -0x4(t0)
-li.s       AT, 1.0
-mtc1       AT, ft5
-NOP
-swc1       ft5, 0x3C(a0)
-sw         a2, 0x0(a0)
-sw         a2, 0x14(a0)
-jr         ra
- sw        a3, 0x28(a0)
+    /* Clear matrix */
+    move       t0, a0
+    addiu      t1, t0, 0x40
+    .L80070640:
+    sw         zero, 0(t0)
+    addiu      t0, 4
+    bne        t1, t0, .L80070640
+
+    .set noreorder
+    li.s       ft5, 1.0
+    nop
+    .set reorder
+    swc1       ft5, 0x3C(a0)
+    sw         a1, 0x0(a0)
+    sw         a2, 0x14(a0)
+    sw         a3, 0x28(a0)
+    jr         ra
 END(mtxf_from_scale)
 
 LEAF(atan2s)
-or         t0, a0, a2
-bne        zero, t0, .L80070680
- NOP
-jr         ra
- addiu     v0, zero, 0x0
-.L80070680:
-bltz       a0, .L80070698
- NOP
-bltzl      a2, .L800706B8
- negu      a2, a2
-j          .L800706C8
- addiu     v0, zero, 0x0
-.L80070698:
-bltz       a2, .L800706A8
- negu      a0, a0
-j          .L800706BC
- ori       v0, zero, 0xC000
-.L800706A8:
-negu       a2, a2
-j          .L800706C8
- ori       v0, zero, 0x8000
-negu       a2, a2
-.L800706B8:
-addiu      v0, zero, 0x4000
-.L800706BC:
-xor        a0, a0, a2
-xor        a2, a0, a2
-xor        a0, a0, a2
-.L800706C8:
-subu       t0, a0, a2
-bltzl      t0, .L80070718
- dsll      t0, a0, 11
-dsll       t0, a2, 11
-ddivu      zero, t0, a0
-lui        t1, %hi(gArcTanTable)
-addiu      t1, t1, %lo(gArcTanTable)
-addiu      v0, v0, 0x4000
-bnez       a0, .L800706F4
- NOP
-break      7
-.L800706F4:
-mflo       t0
-mflo       t0
-andi       t0, t0, 0xFFE
-addu       t1, t1, t0
-lh         t0, 0x0(t1)
-subu       v0, v0, t0
-jr         ra
- andi      v0, v0, 0xFFFF
-dsll       t0, a0, 11
-.L80070718:
-ddivu      zero, t0, a2
-lui        t1, %hi(gArcTanTable)
-addiu      t1, t1, %lo(gArcTanTable)
-bnez       a2, .L80070730
- NOP
-break      7
-.L80070730:
-mflo       t0
-mflo       t0
-andi       t0, t0, 0xFFE
-addu       t1, t1, t0
-lh         t0, 0x0(t1)
-addu       v0, v0, t0
-jr         ra
- andi      v0, v0, 0xFFFF
+    or         t0, a0, a1
+    bne        zero, t0, .L80070680
+    li         v0, 0x0
+    jr         ra
+    .L80070680:
+    bltz       a0, .L80070698
+    .set noreorder
+    bltzl      a1, .L800706B8
+    .set reorder
+    negu       a1
+    li         v0, 0x0
+    j          .L800706C8
+    .L80070698:
+    negu       a0
+    bltz       a1, .L800706A8
+    ori        v0, zero, 0xC000
+    j          .L800706BC
+    .L800706A8:
+    negu       a1
+    ori        v0, zero, 0x8000
+    j          .L800706C8
+    negu       a1
+    .L800706B8:
+    li         v0, 0x4000
+    .L800706BC:
+    xor        a0, a1
+    xor        a1, a0, a1
+    xor        a0, a1
+    .L800706C8:
+    subu       t0, a0, a1
+    .set noreorder
+    bltzl      t0, .L80070718
+    .set reorder
+    dsll       t0, a0, 11
+    dsll       t0, a1, 11
+    ddivu      zero, t0, a0
+    .set noreorder
+    la         t1, gArcTanTable
+    addiu      v0, 0x4000
+    bnez       a0, .L800706F4
+    nop
+    .set reorder
+    break      7
+    .L800706F4:
+    mflo       t0
+    mflo       t0
+    andi       t0, 0xFFE
+    addu       t1, t0
+    lh         t0, 0x0(t1)
+    subu       v0, t0
+    andi       v0, 0xFFFF
+    jr         ra
+    dsll       t0, a0, 11
+    .L80070718:
+    ddivu      zero, t0, a1
+    .set noreorder
+    la         t1, gArcTanTable
+    bnez       a1, .L80070730
+    nop
+    .set reorder
+    break      7
+    .L80070730:
+    mflo       t0
+    mflo       t0
+    andi       t0, 0xFFE
+    addu       t1, t0
+    lh         t0, 0x0(t1)
+    addu       v0, t0
+    andi       v0, 0xFFFF
+    jr         ra
 END(atan2s)
 
 LEAF(arctan2_f)
-li.s       AT, 255.0
-mtc1       AT, fv0
-NOP
-mul.s      fa0, fa0, fv0
-NOP
-mul.s      fa1, fa1, fv0
-cvt.w.s    fa0, fa0
-cvt.w.s    fa1, fa1
-mfc1       a0, fa0
-mfc1       a2, fa1
-j          atan2s
- NOP
+    li.s       fv0, 255.0
+    mul.s      fa0, fv0
+    mul.s      fa1, fv0
+    cvt.w.s    fa0
+    cvt.w.s    fa1
+    mfc1       a0, fa0
+    mfc1       a1, fa1
+    j          atan2s
 END(arctan2_f)
 
 LEAF(fix32_sqrt)
-mtc1       a0, fv0
-li.s       AT, 65536.0
-mtc1       AT, fv1
-cvt.s.w    fv0, fv0
-div.s      fv0, fv0, fv1
-sqrt.s     fv0, fv0
-mul.s      fv0, fv0, fv1
-cvt.w.s    fv0, fv0
-mfc1       v0, fv0
-jr         ra
- NOP
+    mtc1       a0, fv0
+    li.s       fv1, 65536.0
+    cvt.s.w    fv0
+    div.s      fv0, fv1
+    sqrt.s     fv0
+    mul.s      fv0, fv1
+    cvt.w.s    fv0
+    mfc1       v0, fv0
+    jr         ra
 END(fix32_sqrt)
 
 LEAF(bad_int_sqrt)
-mtc1       a0, fv0
-NOP
-sqrt.s     fv0, fv0
-mfc1       v0, fv0
-jr         ra
- NOP
+    mtc1       a0, fv0
+    sqrt.s     fv0
+    mfc1       v0, fv0
+    jr         ra
 END(bad_int_sqrt)
 
 LEAF(sins_f)
-addiu      sp, sp, -0x8
-sd         ra, 0x0(sp)
-jal        sins_s16
- NOP
-mtc1       v0, fv0
-li.s       AT, 0.0000152587890625 /* (1.0f / 0x10000) */
-mtc1       AT, fv1
-cvt.s.w    fv0, fv0
-ld         ra, 0x0(sp)
-addiu      sp, sp, 0x8
-mul.s      fv0, fv0, fv1
-jr         ra
- NOP
+    addiu      sp, sp, -0x8
+    sd         ra, 0x0(sp)
+
+    jal        sins_s16
+    mtc1       v0, fv0
+    li.s       fv1, 0.0000152587890625 /* (1.0f / 0x10000) */
+    cvt.s.w    fv0
+    mul.s      fv0, fv1
+
+    ld         ra, 0x0(sp)
+    addiu      sp, sp, 0x8
+    jr         ra
 END(sins_f)
 
 LEAF(coss_f)
-addiu      sp, sp, -0x8
-sd         ra, 0x0(sp)
-jal        coss_s16
- NOP
-mtc1       v0, fv0
-li.s       AT, 0.0000152587890625 /* (1.0f / 0x10000) */
-mtc1       AT, fv1
-cvt.s.w    fv0, fv0
-ld         ra, 0x0(sp)
-addiu      sp, sp, 0x8
-mul.s      fv0, fv0, fv1
-jr         ra
- NOP
+    addiu      sp, sp, -0x8
+    sd         ra, 0x0(sp)
+
+    jal        coss_s16
+    mtc1       v0, fv0
+    li.s       fv1, 0.0000152587890625 /* (1.0f / 0x10000) */
+    cvt.s.w    fv0
+    mul.s      fv0, fv1
+
+    ld         ra, 0x0(sp)
+    addiu      sp, sp, 0x8
+    jr         ra
 END(coss_f)
 
 /* Official Name: mathCosInterp */
 LEAF(coss_s16)
-addiu      a0, a0, 0x4000
-/* Fall through */
+    addiu      a0, a0, 0x4000
+    /* Fall through */
 
 /* Official Name: mathSinInterp */
 XLEAF(sins_s16)
-sll        v0, a0, 17
-bgezl      v0, .L80070844
-srl        t2, a0, 3
-xori       a0, a0, 0x7FFF
-srl        t2, a0, 3
-.L80070844:
-lui        v0, %hi(gSineTable)
-andi       t2, t2, 0x7FE
-addiu      v0, v0, %lo(gSineTable)
-addu       v0, v0, t2
-lhu        t2, 0x2(v0)
-lhu        v0, 0x0(v0)
-andi       t1, a0, 0xF
-sll        a0, a0, 16
-subu       t2, t2, v0
-multu      t2, t1
-sll        v0, v0, 1
-mflo       t2
-srl        t2, t2, 3
-bgez       a0, .L80070884
- addu      v0, v0, t2
-negu       v0, v0
-.L80070884:
-jr         ra
-NOP
+    sll        v0, a0, 17
+    .set noreorder
+    bgezl      v0, .L80070844
+    .set reorder
+    srl        t2, a0, 3
+    xori       a0, 0x7FFF
+    srl        t2, a0, 3
+    .L80070844:
+    andi       t2, 0x7FE
+    la         v0, gSineTable
+    addu       v0, t2
+    lhu        t2, 0x2(v0)
+    lhu        v0, 0x0(v0)
+    andi       t1, a0, 0xF
+    sll        a0, 16
+    subu       t2, v0
+    multu      t2, t1
+    sll        v0, 1
+    mflo       t2
+    srl        t2, 3
+    addu       v0, t2
+    bgez       a0, .L80070884
+    negu       v0
+    .L80070884:
+    jr         ra
 END(coss_s16)
 #ifdef MODERN_CC
 .size sins_s16, . - sins_s16
@@ -1580,201 +1468,185 @@ END(coss_s16)
 
 /* Official Name: mathCos */
 LEAF(coss_2)
-addiu      a0, a0, 0x4000
-/* Fall through */
+    addiu      a0, a0, 0x4000
+    /* Fall through */
 
 /* Official Name: mathSin */
 XLEAF(sins_2)
-sll        v0, a0, 17
-bgezl      v0, .L800708A4
-srl        t2, a0, 3
-xori       a0, a0, 0x7FFF
-srl        t2, a0, 3
-.L800708A4:
-lui        v0, %hi(gSineTable)
-andi       t2, t2, 0x7FE
-addiu      v0, v0, %lo(gSineTable)
-addu       v0, v0, t2
-lhu        v0, 0x0(v0)
-sll        a0, a0, 16
-bgez       a0, .L800708C8
-sll       v0, v0, 1
-negu       v0, v0
-.L800708C8:
-jr         ra
-NOP
+    sll        v0, a0, 17
+    .set noreorder
+    bgezl      v0, .L800708A4
+    .set reorder
+    srl        t2, a0, 3
+    xori       a0, a0, 0x7FFF
+    srl        t2, a0, 3
+    .L800708A4:
+    andi       t2, 0x7FE
+    la         v0, gSineTable
+    addu       v0, t2
+    lhu        v0, 0x0(v0)
+    sll        v0, 1
+    sll        a0, 16
+    bgez       a0, .L800708C8
+    negu       v0
+    .L800708C8:
+    jr         ra
 END(coss_2)
 #ifdef MODERN_CC
 .size sins_2, . - sins_2
 #endif
 
 LEAF(calc_dyn_lighting_for_level_segment)
-lw         t1, 0x0(a2)
-lw         t2, 0x4(a2)
-lw         t3, 0x8(a2)
-lhu        t0, 0x20(a0)
-lw         a2, 0xC(a0)
-lw         a2, 0x2C(a0)
-lw         a0, 0x0(a0)
-xor        v0, v0, v0
-.L800708F0:
-lbu        t4, 0x6(a2)
-addiu      t4, t4, -0xFF
-beql       t4, zero, .L80070A08
- lhu       t4, 0x2(a2)
-beql       v0, zero, .L80070934
- NOP
-ori        t4, zero, 0xA
-multu      v0, t4
-ori        t5, zero, 0xA
-mflo       t4
-addu       a0, a0, t4
-NOP
-multu      v0, t5
-xor        v0, v0, v0
-mflo       t5
-addu       a2, a2, t5
-NOP
-.L80070934:
-lhu        t5, 0x2(a2)
-lhu        t4, 0xE(a2)
-addiu      a2, a2, 0xC
-subu       t4, t4, t5
-.L80070944:
-lh         t5, 0x0(a2)
-lh         t6, 0x2(a2)
-lh         t7, 0x4(a2)
-mult       t5, t1
-lbu        t8, 0x7(a2)
-lbu        a3, 0x6(a2)
-lbu        t9, 0x8(a2)
-sll        t8, t8, 16
-lbu        v1, 0x9(a2)
-or         t8, a3, t8
-mflo       t5
-NOP
-NOP
-mult       t6, t2
-mflo       t6
-add        t5, t5, t6
-NOP
-mult       t7, t3
-mflo       t7
-add        t5, t5, t7
-blez       t5, .L800709B4
- NOP
-srl        t5, t5, 22
-addu       v1, v1, t5
-sltiu      t5, v1, 0x81
-bnez       t5, .L800709B4
- NOP
-ori        v1, zero, 0x80
-.L800709B4:
-multu      v1, t8
-addiu      a2, a2, 0xA
-addiu      t4, t4, -0x1
-addiu      a0, a0, 0xA
-mflo       t8
-srl        t8, t8, 7
-sb         t8, -0x4(a0)
-multu      v1, t9
-srl        t8, t8, 16
-sb         t8, -0x3(a0)
-mflo       t9
-srl        t9, t9, 7
-sb         t9, -0x2(a0)
-bnel       t4, zero, .L80070944
- NOP
-addiu      t0, t0, -0x1
-bnel       t0, zero, .L800708F0
- NOP
-jr         ra
- NOP
+    lw         t1, 0x0(a1)
+    lw         t2, 0x4(a1)
+    lw         t3, 0x8(a1)
+    lhu        t0, 0x20(a0)
+    lw         a2, 0xC(a0)
+    lw         a1, 0x2C(a0)
+    lw         a0, 0x0(a0)
+    xor        v0, v0
+    .L800708F0:
+    lbu        t4, 0x6(a2)
+    addiu      t4, -0xFF
+    .set noreorder
+    beqzl      t4, .L80070A08
+    .set reorder
+    lhu        t4, 0x2(a2)
+    beql       v0, zero, .L80070934
+    ori        t4, zero, 0xA
+    multu      v0, t4
+    ori        t5, zero, 0xA
+    mflo       t4
+    addu       a0, t4
+    multu      v0, t5
+    xor        v0, v0
+    mflo       t5
+    addu       a1, t5
+    .L80070934:
+    lhu        t5, 0x2(a2)
+    lhu        t4, 0xE(a2)
+    addiu      a2, 0xC
+    subu       t4, t5
+    .L80070944:
+    lh         t5, 0x0(a1)
+    lh         t6, 0x2(a1)
+    lh         t7, 0x4(a1)
+    lbu        t8, 0x7(a1)
+    lbu        a3, 0x6(a1)
+    lbu        t9, 0x8(a1)
+    lbu        v1, 0x9(a1)
+    sll        t8, 16
+    or         t8, a3, t8
+    mult       t5, t1
+    mflo       t5
+    mult       t6, t2
+    mflo       t6
+    add        t5, t6
+    mult       t7, t3
+    mflo       t7
+    add        t5, t7
+    blez       t5, .L800709B4
+    srl        t5, 22
+    addu       v1, t5
+    sltiu      t5, v1, 0x81
+    bnez       t5, .L800709B4
+    ori        v1, zero, 0x80
+    .L800709B4:
+    multu      v1, t8
+    addiu      a1, 0xA
+    addiu      t4, -0x1
+    addiu      a0, 0xA
+    mflo       t8
+    srl        t8, 7
+    sb         t8, -0x4(a0)
+    multu      v1, t9
+    srl        t8, 16
+    sb         t8, -0x3(a0)
+    mflo       t9
+    srl        t9, 7
+    sb         t9, -0x2(a0)
+    bnel       t4, zero, .L80070944
+    addiu      t0, t0, -0x1
+    bnel       t0, zero, .L800708F0
+    jr         ra
 END(calc_dyn_lighting_for_level_segment)
 
 LEAF(func_80070A04)
-lhu        t4, 0x2(a2)
-.L80070A08:
-lhu        t5, 0xE(a2)
-addiu      a2, a2, 0xC
-addiu      t0, t0, -0x1
-subu       t4, t5, t4
-addu       v0, v0, t4
-bnel       t0, zero, .L800708F0
- NOP
-jr         ra
- NOP
+    lhu        t4, 0x2(a2)
+    .L80070A08:
+    lhu        t5, 0xE(a2)
+    addiu      a2, 0xC
+    addiu      t0, -0x1
+    subu       t4, t5, t4
+    addu       v0, t4
+    bnel       t0, zero, .L800708F0
+    jr         ra
 END(func_80070A04)
 
 LEAF(area_triangle_2d)
-mtc1       a2, ft0
-mov.s      fv0, fa0
-mtc1       a3, ft1
-sub.s      fa0, ft0, fv0
-mov.s      fv1, fa1
-lwc1       ft2, 0x10(sp)
-sub.s      fa1, ft1, fv1
-mul.s      fa0, fa0, fa0
-lwc1       ft3, 0x14(sp)
-sub.s      ft4, ft2, ft0
-mul.s      fa1, fa1, fa1
-li.s       AT, 0.5
-sub.s      ft5, ft3, ft1
-mul.s      ft4, ft4, ft4
-sub.s      fv0, fv0, ft2
-mul.s      ft5, ft5, ft5
-sub.s      fv1, fv1, ft3
-mul.s      fv0, fv0, fv0
-mtc1       AT, ft3
-add.s      fa0, fa0, fa1
-mul.s      fv1, fv1, fv1
-add.s      ft4, ft4, ft5
-sqrt.s     fa0, fa0
-sqrt.s     ft4, ft4
-add.s      fv0, fv0, fv1
-mtc1       zero, fv1
-add.s      ft5, fa0, ft4
-sqrt.s     fv0, fv0
-add.s      ft5, ft5, fv0
-mul.s      ft5, ft3, ft5
-sub.s      ft0, ft5, fa0
-sub.s      ft2, ft5, fv0
-mul.s      fv0, ft0, ft5
-sub.s      ft1, ft5, ft4
-mul.s      ft1, ft1, ft2
-NOP
-mul.s      fv0, fv0, ft1
-c.lt.s     fv0, fv1
-bc1fl      .L80070AD0
- NOP
-mov.s      fv0, fv1
-.L80070AD0:
-jr         ra
- sqrt.s    fv0, fv0
+    mtc1       a2, ft0
+    mov.s      fv0, fa0
+    mtc1       a3, ft1
+    sub.s      fa0, ft0, fv0
+    mov.s      fv1, fa1
+    lwc1       ft2, 0x10(sp)
+    sub.s      fa1, ft1, fv1
+    mul.s      fa0, fa0
+    lwc1       ft3, 0x14(sp)
+    sub.s      ft4, ft2, ft0
+    mul.s      fa1, fa1
+    sub.s      ft5, ft3, ft1
+    mul.s      ft4, ft4
+    sub.s      fv0, ft2
+    mul.s      ft5, ft5
+    sub.s      fv1, ft3
+    mul.s      fv0, fv0
+    li.s       ft3, 0.5
+    add.s      fa0, fa1
+    mul.s      fv1, fv1
+    add.s      ft4, ft5
+    sqrt.s     fa0
+    sqrt.s     ft4
+    add.s      fv0, fv1
+    mtc1       zero, fv1
+    add.s      ft5, fa0, ft4
+    sqrt.s     fv0
+    add.s      ft5, fv0
+    mul.s      ft5, ft3, ft5
+    sub.s      ft0, ft5, fa0
+    sub.s      ft2, ft5, fv0
+    mul.s      fv0, ft0, ft5
+    sub.s      ft1, ft5, ft4
+    mul.s      ft1, ft2
+    mul.s      fv0, ft1
+    c.lt.s     fv0, fv1
+    bc1fl      .L80070AD0
+    mov.s      fv0, fv1
+    .L80070AD0:
+    sqrt.s     fv0
+    jr         ra
 END(area_triangle_2d)
 
 LEAF(set_breakpoint)
-ori        a0, a0, 0x1
-MTC0(      a0, C0_WATCHLO)
-addiu      t0, zero, 0xF
-MTC0(      t0, C0_WATCHHI)
-NOP
-NOP
-NOP
-NOP
-NOP
-jr         ra
- NOP
+    ori        a0, a0, 0x1
+    MTC0(      a0, C0_WATCHLO)
+    addiu      t0, zero, 0xF
+    MTC0(      t0, C0_WATCHHI)
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    jr         ra
 END(set_breakpoint)
 
 LEAF(dmacopy_doubleword)
-ld         t0, 0x0(a0)
-ld         t1, 0x8(a0)
-addi       a2, a2, 0x10
-addi       a0, a0, 0x10
-sd         t0, -0x10(a2)
-bne        a2, a2, dmacopy_doubleword
- sd        t1, -0x8(a2)
-jr         ra
- NOP
+    ld         t0, 0x0(a0)
+    ld         t1, 0x8(a0)
+    addi       a1, 0x10
+    addi       a0, 0x10
+    sd         t0, -0x10(a1)
+    sd         t1, -0x8(a1)
+    bne        a1, a2, dmacopy_doubleword
+    jr         ra
 END(dmacopy_doubleword)
