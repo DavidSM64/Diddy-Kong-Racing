@@ -309,38 +309,72 @@ LEAF(mtxf_transform_point)
     jr         ra
 END(mtxf_transform_point)
 
-/* Official Name: mathMtxFastXFMF */
+
+/**
+ * Transforms a direction vector in 3D space using the rotation part of a 4×4 matrix.
+ * This function multiplies the input vector by the upper-left 3×3 portion of the matrix mf,
+ * ignoring the translation component. It is used for transforming directions, such as normals,
+ * rather than points.
+ * Official Name: mathMtxFastXFMF
+ * Arguments:
+ *   a0 = pointer to 4x4 matrix (float[4][4])
+ *   a1 = pointer to input direction vector (float[3])
+ *   a2 = pointer to output direction vector (float[3])
+ */
 LEAF(mtxf_transform_dir)
-    lwc1       ft0, 0x0(a1)
-    lwc1       ft1, 0x4(a1)
-    lwc1       ft3, 0x0(a0)
-    lwc1       fa0, 0x10(a0)
-    mul.s      ft3, ft0, ft3
-    lwc1       ft2, 0x8(a1)
-    lwc1       fa1, 0x20(a0)
-    mul.s      fa0, ft1, fa0
+    /* Load input vector components */
+    lwc1       ft0, 0x0(a1)     /* x component */
+    lwc1       ft1, 0x4(a1)     /* y component */
+    lwc1       ft2, 0x8(a1)     /* z component */
+
+    /* Load first column from matrix */
+    lwc1       ft3, 0x0(a0)     /* mf[0][0] */
+    lwc1       fa0, 0x10(a0)    /* mf[1][0] */
+    lwc1       fa1, 0x20(a0)    /* mf[2][0] */
+
+    /* Calculate result.x */
+    mul.s      ft3, ft0, ft3    /* mf[0][0] * x */
+    mul.s      fa0, ft1, fa0    /* mf[1][0] * y */
+    mul.s      fa1, ft2, fa1    /* mf[2][0] * z */
+
     add.s      fa0, ft3, fa0
-    mul.s      fa1, ft2, fa1
-    lwc1       ft3, 0x4(a0)
-    mul.s      ft3, ft0, ft3
     add.s      ft4, fa0, fa1
-    lwc1       fa0, 0x14(a0)
-    lwc1       fa1, 0x24(a0)
-    mul.s      fa0, ft1, fa0
+    
+    /* Load second column from matrix */
+    lwc1       ft3, 0x4(a0)     /* mf[0][1] */
+    lwc1       fa0, 0x14(a0)    /* mf[1][1] */
+    lwc1       fa1, 0x24(a0)    /* mf[2][1] */
+
+    /* Store result.x */
     swc1       ft4, 0x0(a2)
-    mul.s      fa1, ft2, fa1
+
+    /* Calculate result.y */
+    mul.s      ft3, ft0, ft3    /* mf[0][1] * x */
+    mul.s      fa0, ft1, fa0    /* mf[1][1] * y */
+    mul.s      fa1, ft2, fa1    /* mf[2][1] * z */
+
     add.s      fa0, ft3, fa0
-    lwc1       ft3, 0x8(a0)
     add.s      ft4, fa0, fa1
-    mul.s      ft3, ft0, ft3
-    lwc1       fa0, 0x18(a0)
-    lwc1       fa1, 0x28(a0)
+
+    /* Load third column from matrix */
+    lwc1       ft3, 0x8(a0)     /* mf[0][2] */
+    lwc1       fa0, 0x18(a0)    /* mf[1][2] */
+    lwc1       fa1, 0x28(a0)    /* mf[2][2] */
+
+    /* Store result.y */
     swc1       ft4, 0x4(a2)
-    mul.s      fa0, ft1, fa0
+
+    /* Calculate result.z */
+    mul.s      ft3, ft0, ft3    /* mf[0][2] * x */
+    mul.s      fa0, ft1, fa0    /* mf[1][2] * y */
+    mul.s      fa1, ft2, fa1    /* mf[2][2] * z */
+
     add.s      fa0, ft3, fa0
-    mul.s      fa1, ft2, fa1
     add.s      fa1, fa0, fa1
+
+    /* Store result.z */
     swc1       fa1, 0x8(a2)
+    
     jr         ra
 END(mtxf_transform_dir)
 
