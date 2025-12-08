@@ -208,7 +208,7 @@ END(get_gIntDisFlag)
 
 LEAF(mtx_to_mtxs)
     ori        t0, zero, 4
-    lui        t7, 0xFFFF
+    lui        t7, 0xFFFF /* UNUSED */
     .L8006F584:
     lw         t1, 0x0(a0)
     lw         t2, 0x20(a0)
@@ -219,48 +219,53 @@ LEAF(mtx_to_mtxs)
     sh         t3, 0xC(a1)
     sh         t4, 0xE(a1)
     addiu      a0, a0, 0x8
-    srl        t1, t1, 16
-    srl        t2, t2, 16
-    srl        t3, t3, 16
-    srl        t4, t4, 16
+    srl        t1, 16
+    srl        t2, 16
+    srl        t3, 16
+    srl        t4, 16
     sh         t1, 0x0(a1)
     sh         t2, 0x2(a1)
     sh         t3, 0x8(a1)
     sh         t4, 0xA(a1)
-    addi       a1, a1, 0x10
+    addi       a1, 0x10
     addiu      t0, -1
     bnezl      t0, .L8006F584
     jr         ra
 END(mtx_to_mtxs)
 
 LEAF(mtxf_to_mtxs)
-    li.s       fa0, 65536.0
     ori        t0, zero, 4
+    li.s       fa0, 65536.0
     .L8006F5EC:
     lwc1       ft0, 0x0(a0)
     lwc1       ft1, 0x4(a0)
     lwc1       ft2, 0x8(a0)
-    mul.s      ft0, ft0, fa0
     lwc1       ft3, 0xC(a0)
-    addiu      a0, a0, 0x10
-    mul.s      ft1, ft1, fa0
-    addiu      t0, t0, -0x1
-    addiu      a1, a1, 0x10
-    mul.s      ft2, ft2, fa0
-    mul.s      ft3, ft3, fa0
+    mul.s      ft0, fa0
+    mul.s      ft1, fa0
+    mul.s      ft2, fa0
+    mul.s      ft3, fa0
     trunc.w.s  ft0, ft0
     trunc.w.s  ft1, ft1
-    swc1       ft0, -0x10(a1)
     trunc.w.s  ft2, ft2
-    swc1       ft1, -0xC(a1)
     trunc.w.s  ft3, ft3
-    swc1       ft2, -0x8(a1)
-    swc1       ft3, -0x4(a1)
+    swc1       ft0, 0x0(a1)
+    swc1       ft1, 0x4(a1)
+    swc1       ft2, 0x8(a1)
+    swc1       ft3, 0xC(a1)
+    addiu      a0, 0x10
+    addiu      t0, -1
+    addiu      a1, 0x10
     bnezl      t0, .L8006F5EC
     jr         ra
 END(mtxf_to_mtxs)
 
-/* Official Name: mathMtxXFMF */
+/**
+ * Transforms a 3D vector using a 4×4 transformation matrix.
+ * Perfect match to libultra compiled guMtxXFMF using -O3 -mips2
+ * Official name: mathMtxXFMF
+ * void mtxf_transform_point(float mf[4][4], float x, float y, float z, float *ox, float *oy, float *oz);
+ */
 LEAF(mtxf_transform_point)
     mtc1       a1, fa0
     mtc1       a2, fa1
@@ -275,7 +280,7 @@ LEAF(mtxf_transform_point)
     lwc1       ft3, 0x30(a0)
     add.s      ft1, ft5, ft2
     add.s      ft0, ft3, ft1
-    lw         t6,  0x10($sp)
+    lw         t6,  0x10(sp)
     swc1       ft0, 0x0(t6)
     lwc1       ft5, 0x4(a0)
     lwc1       ft3, 0x14(a0)
@@ -287,7 +292,7 @@ LEAF(mtxf_transform_point)
     lwc1       ft1, 0x34(a0)
     add.s      ft2, ft0, ft3
     add.s      ft5, ft1, ft2
-    lw         t7,  0x14($sp)
+    lw         t7,  0x14(sp)
     swc1       ft5, 0x0(t7)
     lwc1       ft0, 0x8(a0)
     lwc1       ft1, 0x18(a0)
@@ -299,7 +304,7 @@ LEAF(mtxf_transform_point)
     lwc1       ft2, 0x38(a0)
     add.s      ft3, ft5, ft1
     add.s      ft0, ft2, ft3
-    lw         t8,  0x18($sp)
+    lw         t8,  0x18(sp)
     swc1       ft0, 0x0(t8)
     jr         ra
 END(mtxf_transform_point)
@@ -340,109 +345,168 @@ LEAF(mtxf_transform_dir)
 END(mtxf_transform_dir)
 
 /* Official Name: mathMtxCatF */
+/* Multiplies two 4x4 floating-point matrices: result = m1 * m2 */
+/* Arguments:
+ *   a0 = pointer to first matrix (m1)
+ *   a1 = pointer to second matrix (m2)
+ *   a2 = pointer to result matrix
+ */
 LEAF(mtxf_mul)
     addiu      sp, sp, -8
-    sdc1       fv1, 0(sp)
-    ori        t0, zero, 4
-    .L80048F88:
-    lwc1       fv1, 0x0(a0)
-    lwc1       ft0, 0x4(a0)
-    lwc1       ft1, 0x8(a0)
-    lwc1       ft2, 0xC(a0)
-    lwc1       ft3, 0x0(a1)
-    lwc1       fa0, 0x10(a1)
-    lwc1       fa1, 0x20(a1)
-    lwc1       ft4, 0x30(a1)
-    mul.s      ft3, fv1, ft3
-    mul.s      fa0, ft0, fa0
-    mul.s      fa1, ft1, fa1
-    mul.s      ft4, ft2, ft4
-    add.s      fa1, fa0, fa1
-    add.s      ft4, ft3, ft4
-    lwc1       ft3, 0x4(a1)
-    mul.s      ft3, fv1, ft3
-    add.s      ft5, fa1, ft4
-    lwc1       fa0, 0x14(a1)
-    mul.s      fa0, ft0, fa0
-    lwc1       fa1, 0x24(a1)
-    mul.s      fa1, ft1, fa1
-    add.s      fa1, fa0, fa1
-    lwc1       ft4, 0x34(a1)
-    swc1       ft5, 0x0(a2)
-    lwc1       fa0, 0x18(a1)
-    mul.s      ft4, ft2, ft4
-    add.s      ft4, ft3, ft4
-    lwc1       ft3, 0x08(a1)
-    mul.s      ft3, fv1, ft3
-    add.s      ft5, fa1, ft4
-    mul.s      fa0, ft0, fa0
-    lwc1       fa1, 0x28(a1)
-    lwc1       ft4, 0x38(a1)
-    swc1       ft5, 0x4(a2)
-    mul.s      fa1, ft1, fa1
-    mul.s      ft4, ft2, ft4
-    add.s      fa1, fa0, fa1
-    add.s      ft4, ft3, ft4
-    lwc1       ft3, 0xC(a1)
-    lwc1       fa0, 0x1C(a1)
-    mul.s      ft3, fv1, ft3
-    add.s      ft5, fa1, ft4
-    mul.s      fa0, ft0, fa0
-    lwc1       fa1, 0x2C(a1)
-    lwc1       ft4, 0x3C(a1)
-    swc1       ft5, 0x8(a2)
-    mul.s      fa1, ft1, fa1
-    mul.s      ft4, ft2, ft4
-    add.s      fa1, fa0, fa1
-    add.s      ft4, ft3, ft4
-    add.s      ft5, fa1, ft4
-    swc1       ft5, 0xC(a2)
-    addiu      a0, 0x10
-    addiu      a2, 0x10
-    addiu      t0, -1
-    bnezl      t0, .L80048F88
-    ldc1       fv1, 0(sp)
+    sdc1       $f2, 0(sp)               /* Save $f2 register */
+    ori        t0, zero, 4              /* Loop counter for 4 rows */
+    
+.mtxf_mul_row_loop:
+    /* Load current row from first matrix (m1) */
+    lwc1       $f2, 0x0(a0)             /* m1[row][0] */
+    lwc1       $f4, 0x4(a0)             /* m1[row][1] */
+    lwc1       $f6, 0x8(a0)             /* m1[row][2] */
+    lwc1       $f8, 0xC(a0)             /* m1[row][3] */
+    
+    /* Load first column from second matrix (m2) */
+    lwc1       $f10, 0x0(a1)            /* m2[0][0] */
+    lwc1       $f12, 0x10(a1)           /* m2[1][0] */
+    lwc1       $f14, 0x20(a1)           /* m2[2][0] */
+    lwc1       $f16, 0x30(a1)           /* m2[3][0] */
+    
+    /* Calculate result[row][0] */
+    mul.s      $f10, $f2, $f10          /* m2[0][0] *= m1[row][0] */
+    mul.s      $f12, $f4, $f12          /* m2[1][0] *= m1[row][1] */
+    mul.s      $f14, $f6, $f14          /* m2[2][0] *= m1[row][2] */
+    mul.s      $f16, $f8, $f16          /* m2[3][0] *= m1[row][3] */
+    add.s      $f14, $f12, $f14         /* m2[2][0] += m2[1][0] */
+    add.s      $f16, $f10, $f16         /* m2[3][0] += m2[0][0] */
+    add.s      $f18, $f14, $f16         /* result[row][0] = m2[2][0] + m2[3][0] */
+    
+    /* Load second column from second matrix (m2) */
+    lwc1       $f10, 0x4(a1)            /* m2[0][1] */
+    lwc1       $f12, 0x14(a1)           /* m2[1][1] */
+    lwc1       $f14, 0x24(a1)           /* m2[2][1] */
+    lwc1       $f16, 0x34(a1)           /* m2[3][1] */
+
+    /* Store result[row][0] */
+    swc1       $f18, 0x0(a2)
+
+    /* Calculate result[row][1] */
+    mul.s      $f10, $f2, $f10          /* m2[0][1] *= m1[row][0] */
+    mul.s      $f12, $f4, $f12          /* m2[1][1] *= m1[row][1] */
+    mul.s      $f14, $f6, $f14          /* m2[2][1] *= m1[row][2] */
+    mul.s      $f16, $f8, $f16          /* m2[3][1] *= m1[row][3] */
+    add.s      $f14, $f12, $f14         /* m2[2][1] += m2[1][1] */
+    add.s      $f16, $f10, $f16         /* m2[3][1] += m2[0][1] */
+    add.s      $f18, $f14, $f16         /* result[row][1] = m2[2][1] + m2[3][1] */
+    
+    /* Load third column from second matrix (m2) */
+    lwc1       $f10, 0x08(a1)           /* m2[0][2] */
+    lwc1       $f12, 0x18(a1)           /* m2[1][2] */
+    lwc1       $f14, 0x28(a1)           /* m2[2][2] */
+    lwc1       $f16, 0x38(a1)           /* m2[3][2] */
+
+    /* Store result[row][1] */
+    swc1       $f18, 0x4(a2)
+
+    /* Calculate result[row][2] */
+    mul.s      $f10, $f2, $f10          /* m2[0][2] *= m1[row][0] */
+    mul.s      $f12, $f4, $f12          /* m2[1][2] *= m1[row][1] */
+    mul.s      $f14, $f6, $f14          /* m2[2][2] *= m1[row][2] */
+    mul.s      $f16, $f8, $f16          /* m2[3][2] *= m1[row][3] */
+    add.s      $f14, $f12, $f14         /* m2[2][2] += m2[1][2] */
+    add.s      $f16, $f10, $f16         /* m2[3][2] += m2[0][2] */
+    add.s      $f18, $f14, $f16         /* result[row][2] = m2[2][2] + m2[3][2] */
+
+    /* Load last column from second matrix (m2) */
+    lwc1       $f10, 0x0C(a1)           /* m2[0][3] */
+    lwc1       $f12, 0x1C(a1)           /* m2[1][3] */
+    lwc1       $f14, 0x2C(a1)           /* m2[2][3] */
+    lwc1       $f16, 0x3C(a1)           /* m2[3][3] */
+
+    /* Store result[row][2] */
+    swc1       $f18, 0x08(a2)
+    
+    /* Calculate result[row][3] */
+    mul.s      $f10, $f2, $f10          /* m2[0][3] *= m1[row][0] */
+    mul.s      $f12, $f4, $f12          /* m2[1][3] *= m1[row][1] */
+    mul.s      $f14, $f6, $f14          /* m2[2][3] *= m1[row][2] */
+    mul.s      $f16, $f8, $f16          /* m2[3][3] *= m1[row][3] */
+    add.s      $f14, $f12, $f14         /* m2[2][3] += m2[1][3] */
+    add.s      $f16, $f10, $f16         /* m2[3][3] += m2[0][3] */
+    add.s      $f18, $f14, $f16         /* result[row][3] = m2[2][3] + m2[3][3] */
+
+    /* Store result[row][3] */
+    swc1       $f18, 0xC(a2)
+    
+    /* Move to next row */
+    addiu      a0, 0x10                 /* Advance m1 pointer to next row */
+    addiu      a2, 0x10                 /* Advance result pointer to next row */
+    addiu      t0, -1                   /* Decrement loop counter */
+    bnezl      t0, .mtxf_mul_row_loop
+    
+    ldc1       $f2, 0(sp)               /* Restore $f2 register */
     addiu      sp, sp, 8
     jr         ra
 END(mtxf_mul)
 
 /* Official Name: mathMtxF2L */
+/* Converts a 4x4 floating-point matrix to fixed-point integer matrix */
+/* Arguments:
+ *   a0 = pointer to source floating-point matrix (MtxF)
+ *   a1 = pointer to destination fixed-point matrix (Mtx)
+ * The function converts float values to 16.16 fixed-point format
+ * and stores them in the N64s matrix format (split high/low words)
+ */
 LEAF(mtxf_to_mtx)
-    li.s       fa0, 65536.0
-    ori        t0, zero, 4 /* Loop counter */
-    .L80049090:
-    lwc1       ft0, 0x0(a0)
-    lwc1       ft1, 0x4(a0)
-    lwc1       ft2, 0x8(a0)
-    lwc1       ft3, 0xC(a0)
-    mul.s      ft0, ft0, fa0
-    mul.s      ft1, ft1, fa0
-    mul.s      ft2, ft2, fa0
-    mul.s      ft3, ft3, fa0
-    cvt.w.s    ft0, ft0
-    cvt.w.s    ft1, ft1
-    cvt.w.s    ft2, ft2
-    cvt.w.s    ft3, ft3
-    mfc1       t1, ft0
-    mfc1       t2, ft1
-    mfc1       t3, ft2
-    mfc1       t4, ft3
-    sh         t1, 0x20(a1)
-    sh         t2, 0x22(a1)
-    sh         t3, 0x24(a1)
-    sh         t4, 0x26(a1)
-    srl        t1, t1, 16
-    srl        t2, t2, 16
-    srl        t3, t3, 16
-    srl        t4, t4, 16
-    sh         t1, 0(a1)
-    sh         t2, 0x2(a1)
-    sh         t3, 0x4(a1)
-    sh         t4, 0x6(a1)
-    addiu      a0, 0x10 /* Increment MtxF pointer by 16 bytes */
-    addiu      a1, 0x8  /* Increment Mtx pointer by 8 bytes */
-    addiu      t0, -1   /* Decrement loop counter */
-    bnezl      t0, .L80049090
+    ori        t0, zero, 4             /* Loop counter for 4 rows */
+    li.s       fa0, 65536.0            /* Scaling factor to convert to 16.16 fixed-point */
+    
+.mtxf_to_mtx_row_loop:
+    /* Load 4 float values from current row */
+    lwc1       ft0, 0x0(a0)            /* Load element [row][0] */
+    lwc1       ft1, 0x4(a0)            /* Load element [row][1] */
+    lwc1       ft2, 0x8(a0)            /* Load element [row][2] */
+    lwc1       ft3, 0xC(a0)            /* Load element [row][3] */
+
+    /* Scale floats to fixed-point by multiplying by 65536.0 */
+    mul.s      ft0, fa0                /* Scale [row][0] */
+    mul.s      ft1, fa0                /* Scale [row][1] */
+    mul.s      ft2, fa0                /* Scale [row][2] */
+    mul.s      ft3, fa0                /* Scale [row][3] */
+
+    /* Convert scaled floats to 32-bit integers */
+    cvt.w.s    ft0                     /* Convert to word (integer) */
+    cvt.w.s    ft1
+    cvt.w.s    ft2
+    cvt.w.s    ft3
+
+    /* Move converted integers to general-purpose registers */
+    mfc1       t1, ft0                 /* Get integer value of [row][0] */
+    mfc1       t2, ft1                 /* Get integer value of [row][1] */
+    mfc1       t3, ft2                 /* Get integer value of [row][2] */
+    mfc1       t4, ft3                 /* Get integer value of [row][3] */
+    
+    /* Store fractional parts (low 16 bits) in second half of Mtx */
+    sh         t1, 0x20(a1)            /* Store low 16 bits of [row][0] */
+    sh         t2, 0x22(a1)            /* Store low 16 bits of [row][1] */
+    sh         t3, 0x24(a1)            /* Store low 16 bits of [row][2] */
+    sh         t4, 0x26(a1)            /* Store low 16 bits of [row][3] */
+    
+    /* Extract integer parts (high 16 bits) */
+    srl        t1, 16                  /* Shift right to get high 16 bits */
+    srl        t2, 16
+    srl        t3, 16
+    srl        t4, 16
+    
+    /* Store integer parts (high 16 bits) in first half of Mtx */
+    sh         t1, 0(a1)               /* Store high 16 bits of [row][0] */
+    sh         t2, 0x2(a1)             /* Store high 16 bits of [row][1] */
+    sh         t3, 0x4(a1)             /* Store high 16 bits of [row][2] */
+    sh         t4, 0x6(a1)             /* Store high 16 bits of [row][3] */
+    
+    /* Advance pointers to next row */
+    addiu      a0, 0x10                /* Advance MtxF pointer to next row (16 bytes) */
+    addiu      a1, 0x8                 /* Advance Mtx pointer by 8 bytes (interleaved format) */
+    addiu      t0, -1                  /* Decrement loop counter */
+    bnezl      t0, .mtxf_to_mtx_row_loop
+
     jr         ra
 END(mtxf_to_mtx)
 
@@ -465,7 +529,7 @@ LEAF(load_rng_seed)
 END(load_rng_seed)
 
 LEAF(get_rng_seed)
-    lw        v0, gCurrentRNGSeed
+    lw         v0, gCurrentRNGSeed
     jr         ra
 END(get_rng_seed)
 
@@ -1643,8 +1707,8 @@ END(set_breakpoint)
 LEAF(dmacopy_doubleword)
     ld         t0, 0x0(a0)
     ld         t1, 0x8(a0)
-    addi       a1, 0x10
     addi       a0, 0x10
+    addi       a1, 0x10
     sd         t0, -0x10(a1)
     sd         t1, -0x8(a1)
     bne        a1, a2, dmacopy_doubleword
