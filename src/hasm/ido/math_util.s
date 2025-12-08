@@ -206,57 +206,103 @@ LEAF(get_gIntDisFlag)
     jr         ra
 END(get_gIntDisFlag)
 
+/**
+ * Converts a Mtx (fixed-point matrix with split integer and fractional parts)
+ * into a 4×4 matrix of 32-bit signed integers, where each element is in 16.16 fixed-point format.
+ *
+ * Arguments:
+ *   a0 = pointer to source fixed-point matrix (Mtx) in N64 format
+ *   a1 = pointer to destination short matrix (Mtxs)
+ * The N64 Mtx format stores matrices as:
+ *   - First 32 bytes: integer parts (high 16 bits)
+ *   - Second 32 bytes: fractional parts (low 16 bits)
+ * This function extracts and recombines them into standard 16-bit shorts
+ */
 LEAF(mtx_to_mtxs)
-    ori        t0, zero, 4
-    lui        t7, 0xFFFF /* UNUSED */
-    .L8006F584:
-    lw         t1, 0x0(a0)
-    lw         t2, 0x20(a0)
-    lw         t3, 0x4(a0)
-    lw         t4, 0x24(a0)
-    sh         t1, 0x4(a1)
-    sh         t2, 0x6(a1)
-    sh         t3, 0xC(a1)
-    sh         t4, 0xE(a1)
-    addiu      a0, a0, 0x8
-    srl        t1, 16
-    srl        t2, 16
-    srl        t3, 16
-    srl        t4, 16
-    sh         t1, 0x0(a1)
-    sh         t2, 0x2(a1)
-    sh         t3, 0x8(a1)
-    sh         t4, 0xA(a1)
+    ori        t0, zero, 4              /* Loop counter for 4 rows */
+    lui        t7, 0xFFFF               /* UNUSED - likely debug/optimization artifact */
+
+.mtx_to_mtxs_row_loop:
+    /* Load pairs of matrix elements (integer and fractional parts) */
+    lw         t1, 0x0(a0)              /* Load elements [row][0] and [row][1] integer parts */
+    lw         t2, 0x20(a0)             /* Load elements [row][0] and [row][1] fractional parts */
+    lw         t3, 0x4(a0)              /* Load elements [row][2] and [row][3] integer parts */
+    lw         t4, 0x24(a0)             /* Load elements [row][2] and [row][3] fractional parts */
+
+    /* Store fractional parts (low 16 bits) first */
+    sh         t1, 0x4(a1)              /* Store fractional part of [row][0] */
+    sh         t2, 0x6(a1)              /* Store fractional part of [row][1] */
+    sh         t3, 0xC(a1)              /* Store fractional part of [row][2] */
+    sh         t4, 0xE(a1)              /* Store fractional part of [row][3] */
+
+    /* Advance source pointer to next pair of elements */
+    addiu      a0, 0x8
+
+    /* Extract integer parts (high 16 bits) by shifting right */
+    srl        t1, 16                   /* Get integer part of [row][0] */
+    srl        t2, 16                   /* Get integer part of [row][1] */
+    srl        t3, 16                   /* Get integer part of [row][2] */
+    srl        t4, 16                   /* Get integer part of [row][3] */
+
+    /* Store integer parts (high 16 bits) */
+    sh         t1, 0x0(a1)              /* Store integer part of [row][0] */
+    sh         t2, 0x2(a1)              /* Store integer part of [row][1] */
+    sh         t3, 0x8(a1)              /* Store integer part of [row][2] */
+    sh         t4, 0xA(a1)              /* Store integer part of [row][3] */
+
+    /* Advance destination pointer to next row (16 bytes = 8 shorts) */
     addi       a1, 0x10
+
+    /* Decrement loop counter and continue if not done */
     addiu      t0, -1
-    bnezl      t0, .L8006F584
+    bnezl      t0, .mtx_to_mtxs_row_loop
+
     jr         ra
 END(mtx_to_mtxs)
 
+/**
+ * Converts a 4×4 matrix of 32-bit floating-point values into a 4×4 matrix
+ * of 32-bit signed fixed-point values in 16.16 format.
+ *
+ * Arguments:
+ *   a0 = pointer to source floating-point matrix (MtxF)
+ *   a1 = pointer to destination 32-bit integer matrix (Mtxs)
+ */
 LEAF(mtxf_to_mtxs)
-    ori        t0, zero, 4
-    li.s       fa0, 65536.0
-    .L8006F5EC:
-    lwc1       ft0, 0x0(a0)
-    lwc1       ft1, 0x4(a0)
-    lwc1       ft2, 0x8(a0)
-    lwc1       ft3, 0xC(a0)
-    mul.s      ft0, fa0
-    mul.s      ft1, fa0
-    mul.s      ft2, fa0
-    mul.s      ft3, fa0
+    ori        t0, zero, 4              /* Loop counter for 4 rows */
+    li.s       fa0, 65536.0             /* Scaling factor to convert to 16.16 fixed-point */
+    
+.mtxf_to_mtxs_row_loop:
+    /* Load 4 float values from current row */
+    lwc1       ft0, 0x0(a0)             /* Load element [row][0] */
+    lwc1       ft1, 0x4(a0)             /* Load element [row][1] */
+    lwc1       ft2, 0x8(a0)             /* Load element [row][2] */
+    lwc1       ft3, 0xC(a0)             /* Load element [row][3] */
+    
+    /* Scale floats to fixed-point (FTOFIX32) */
+    mul.s      ft0, fa0                 /* Scale [row][0] */
+    mul.s      ft1, fa0                 /* Scale [row][1] */
+    mul.s      ft2, fa0                 /* Scale [row][2] */
+    mul.s      ft3, fa0                 /* Scale [row][3] */
+    
+    /* Convert scaled floats to 32-bit integers (truncate towards zero) */
     trunc.w.s  ft0, ft0
     trunc.w.s  ft1, ft1
     trunc.w.s  ft2, ft2
     trunc.w.s  ft3, ft3
-    swc1       ft0, 0x0(a1)
-    swc1       ft1, 0x4(a1)
-    swc1       ft2, 0x8(a1)
-    swc1       ft3, 0xC(a1)
-    addiu      a0, 0x10
-    addiu      t0, -1
-    addiu      a1, 0x10
-    bnezl      t0, .L8006F5EC
+    
+    /* Store converted integers directly to destination */
+    swc1       ft0, 0x0(a1)             /* Store [row][0] as 32-bit int */
+    swc1       ft1, 0x4(a1)             /* Store [row][1] as 32-bit int */
+    swc1       ft2, 0x8(a1)             /* Store [row][2] as 32-bit int */
+    swc1       ft3, 0xC(a1)             /* Store [row][3] as 32-bit int */
+    
+    /* Advance pointers to next row */
+    addiu      a0, 0x10                 /* Advance source pointer to next row (16 bytes) */
+    addiu      t0, -1                   /* Decrement loop counter */
+    addiu      a1, 0x10                 /* Advance destination pointer to next row (16 bytes) */
+    bnezl      t0, .mtxf_to_mtxs_row_loop
+    
     jr         ra
 END(mtxf_to_mtxs)
 
