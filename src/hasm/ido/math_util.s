@@ -370,13 +370,13 @@ LEAF(mtxf_mul)
     lwc1       $f16, 0x30(a1)           /* m2[3][0] */
     
     /* Calculate result[row][0] */
-    mul.s      $f10, $f2, $f10          /* m2[0][0] *= m1[row][0] */
-    mul.s      $f12, $f4, $f12          /* m2[1][0] *= m1[row][1] */
-    mul.s      $f14, $f6, $f14          /* m2[2][0] *= m1[row][2] */
-    mul.s      $f16, $f8, $f16          /* m2[3][0] *= m1[row][3] */
-    add.s      $f14, $f12, $f14         /* m2[2][0] += m2[1][0] */
-    add.s      $f16, $f10, $f16         /* m2[3][0] += m2[0][0] */
-    add.s      $f18, $f14, $f16         /* result[row][0] = m2[2][0] + m2[3][0] */
+    mul.s      $f10, $f2, $f10          /* temp0 = m1[row][0] * m2[0][0] */
+    mul.s      $f12, $f4, $f12          /* temp1 = m1[row][1] * m2[1][0] */
+    mul.s      $f14, $f6, $f14          /* temp2 = m1[row][2] * m2[2][0] */
+    mul.s      $f16, $f8, $f16          /* temp3 = m1[row][3] * m2[3][0] */
+    add.s      $f14, $f12, $f14         /* temp2 = temp1 + temp2 */
+    add.s      $f16, $f10, $f16         /* temp3 = temp0 + temp3 */
+    add.s      $f18, $f14, $f16         /* result[row][0] = temp2 + temp3 */
     
     /* Load second column from second matrix (m2) */
     lwc1       $f10, 0x4(a1)            /* m2[0][1] */
@@ -388,13 +388,13 @@ LEAF(mtxf_mul)
     swc1       $f18, 0x0(a2)
 
     /* Calculate result[row][1] */
-    mul.s      $f10, $f2, $f10          /* m2[0][1] *= m1[row][0] */
-    mul.s      $f12, $f4, $f12          /* m2[1][1] *= m1[row][1] */
-    mul.s      $f14, $f6, $f14          /* m2[2][1] *= m1[row][2] */
-    mul.s      $f16, $f8, $f16          /* m2[3][1] *= m1[row][3] */
-    add.s      $f14, $f12, $f14         /* m2[2][1] += m2[1][1] */
-    add.s      $f16, $f10, $f16         /* m2[3][1] += m2[0][1] */
-    add.s      $f18, $f14, $f16         /* result[row][1] = m2[2][1] + m2[3][1] */
+    mul.s      $f10, $f2, $f10          /* temp0 = m1[row][0] * m2[0][1] */
+    mul.s      $f12, $f4, $f12          /* temp1 = m1[row][1] * m2[1][1] */
+    mul.s      $f14, $f6, $f14          /* temp2 = m1[row][2] * m2[2][1] */
+    mul.s      $f16, $f8, $f16          /* temp3 = m1[row][3] * m2[3][1] */
+    add.s      $f14, $f12, $f14         /* temp2 = temp1 + temp2 */
+    add.s      $f16, $f10, $f16         /* temp3 = temp0 + temp3 */
+    add.s      $f18, $f14, $f16         /* result[row][1] = temp2 + temp3 */
     
     /* Load third column from second matrix (m2) */
     lwc1       $f10, 0x08(a1)           /* m2[0][2] */
@@ -406,13 +406,13 @@ LEAF(mtxf_mul)
     swc1       $f18, 0x4(a2)
 
     /* Calculate result[row][2] */
-    mul.s      $f10, $f2, $f10          /* m2[0][2] *= m1[row][0] */
-    mul.s      $f12, $f4, $f12          /* m2[1][2] *= m1[row][1] */
-    mul.s      $f14, $f6, $f14          /* m2[2][2] *= m1[row][2] */
-    mul.s      $f16, $f8, $f16          /* m2[3][2] *= m1[row][3] */
-    add.s      $f14, $f12, $f14         /* m2[2][2] += m2[1][2] */
-    add.s      $f16, $f10, $f16         /* m2[3][2] += m2[0][2] */
-    add.s      $f18, $f14, $f16         /* result[row][2] = m2[2][2] + m2[3][2] */
+    mul.s      $f10, $f2, $f10          /* temp0 = m1[row][0] * m2[0][2] */
+    mul.s      $f12, $f4, $f12          /* temp1 = m1[row][1] * m2[1][2] */
+    mul.s      $f14, $f6, $f14          /* temp2 = m1[row][2] * m2[2][2] */
+    mul.s      $f16, $f8, $f16          /* temp3 = m1[row][3] * m2[3][2] */
+    add.s      $f14, $f12, $f14         /* temp2 = temp1 + temp2 */
+    add.s      $f16, $f10, $f16         /* temp3 = temp0 + temp3 */
+    add.s      $f18, $f14, $f16         /* result[row][2] = temp2 + temp3 */
 
     /* Load last column from second matrix (m2) */
     lwc1       $f10, 0x0C(a1)           /* m2[0][3] */
@@ -424,13 +424,13 @@ LEAF(mtxf_mul)
     swc1       $f18, 0x08(a2)
     
     /* Calculate result[row][3] */
-    mul.s      $f10, $f2, $f10          /* m2[0][3] *= m1[row][0] */
-    mul.s      $f12, $f4, $f12          /* m2[1][3] *= m1[row][1] */
-    mul.s      $f14, $f6, $f14          /* m2[2][3] *= m1[row][2] */
-    mul.s      $f16, $f8, $f16          /* m2[3][3] *= m1[row][3] */
-    add.s      $f14, $f12, $f14         /* m2[2][3] += m2[1][3] */
-    add.s      $f16, $f10, $f16         /* m2[3][3] += m2[0][3] */
-    add.s      $f18, $f14, $f16         /* result[row][3] = m2[2][3] + m2[3][3] */
+    mul.s      $f10, $f2, $f10          /* temp0 = m1[row][0] * m2[0][3] */
+    mul.s      $f12, $f4, $f12          /* temp1 = m1[row][1] * m2[1][3] */
+    mul.s      $f14, $f6, $f14          /* temp2 = m1[row][2] * m2[2][3] */
+    mul.s      $f16, $f8, $f16          /* temp3 = m1[row][3] * m2[3][3] */
+    add.s      $f14, $f12, $f14         /* temp2 = temp1 + temp2 */
+    add.s      $f16, $f10, $f16         /* temp3 = temp0 + temp3 */
+    add.s      $f18, $f14, $f16         /* result[row][3] = temp2 + temp3 */
 
     /* Store result[row][3] */
     swc1       $f18, 0xC(a2)
