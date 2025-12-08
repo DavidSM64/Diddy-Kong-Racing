@@ -424,9 +424,9 @@ LEAF(mtxf_transform_dir)
     jr         ra
 END(mtxf_transform_dir)
 
-/* Official Name: mathMtxCatF */
-/* Multiplies two 4x4 floating-point matrices: result = m1 * m2 */
-/* Arguments:
+/* Official Name: mathMtxCatF
+ * Multiplies two 4x4 floating-point matrices: result = m1 * m2
+ * Arguments:
  *   a0 = pointer to first matrix (m1)
  *   a1 = pointer to second matrix (m2)
  *   a2 = pointer to result matrix
@@ -526,9 +526,9 @@ LEAF(mtxf_mul)
     jr         ra
 END(mtxf_mul)
 
-/* Official Name: mathMtxF2L */
-/* Converts a 4x4 floating-point matrix to fixed-point integer matrix */
-/* Arguments:
+/* Official Name: mathMtxF2L
+ * Converts a 4x4 floating-point matrix to fixed-point integer matrix
+ * Arguments:
  *   a0 = pointer to source floating-point matrix (MtxF)
  *   a1 = pointer to destination fixed-point matrix (Mtx)
  * The function converts float values to 16.16 fixed-point format
@@ -590,39 +590,50 @@ LEAF(mtxf_to_mtx)
     jr         ra
 END(mtxf_to_mtx)
 
-/* Official Name: mathSeed */
+/* 
+ * gCurrentRNGSeed = num
+ * Official Name: mathSeed
+ */
 LEAF(set_rng_seed)
     sw         a0, gCurrentRNGSeed
     jr         ra
 END(set_rng_seed)
 
+/* gPrevRNGSeed = gCurrentRNGSeed */
 LEAF(save_rng_seed)
     lw         a0, gCurrentRNGSeed
     sw         a0, gPrevRNGSeed
     jr         ra
 END(save_rng_seed)
 
+/* gCurrentRNGSeed = gPrevRNGSeed */
 LEAF(load_rng_seed)
     lw         a0, gPrevRNGSeed
     sw         a0, gCurrentRNGSeed
     jr         ra
 END(load_rng_seed)
 
+/* return gCurrentRNGSeed */
 LEAF(get_rng_seed)
     lw         v0, gCurrentRNGSeed
     jr         ra
 END(get_rng_seed)
 
-/* Official Name: mathRnd */
+/* Official Name: mathRnd
+ * Generates a random integer within the inclusive range [min, max].
+ * Arguments:
+ *   a0 = min
+ *   a1 = max
+ */
 LEAF(rand_range)
     lw         t0, gCurrentRNGSeed
     sub        a1, a0
     dsll32     t1, t0, 31
-    dsll       t2, t0, 31
     dsrl       t1, 31
+    dsll       t2, t0, 31
     dsrl32     t2, 0
-    dsll32     t3, t0, 12
     or         t1, t2
+    dsll32     t3, t0, 12
     dsrl32     t3, 0
     xor        t1, t3
     dsrl       t3, t1, 20
@@ -637,39 +648,69 @@ LEAF(rand_range)
     jr         ra
 END(rand_range)
 
-/* Official Name: fastShortReflection */
-/* Does t6 even do anything? */
+/* Official Name: fastShortReflection
+ * Reflects a vector across a given normal.
+ * Fixed-point notes:
+ *   - Inputs are 16-bit signed fixed-point values.
+ *   - Dot product is accumulated in 32-bit, then shifted right by 12 to rescale.
+ *   - Multiplication by N components is then shifted right by 13, giving final scale.
+ * Arguments:
+ *   a0 = pointer to vector struct containing:
+ *        - input incident vector [x, y, z] at offsets 0x0, 0x2, 0x4
+ *        - output reflected vector will be stored at offsets 0x6, 0x8, 0xA
+ *   a1 = pointer to surface normal vector [nx, ny, nz] at offsets 0x0, 0x2, 0x4
+ */
 LEAF(vec3s_reflect)
-    lh         t0, 0x0(a0)
-    lh         t1, 0x2(a0)
-    lh         t2, 0x4(a0)
-    lh         t3, 0x0(a1)
-    lh         t4, 0x2(a1)
-    lh         t5, 0x4(a1)
-    mult       t0, t3
-    mflo       t6
-    mult       t1, t4
-    mflo       t7
-    add        t6, t7
-    mult       t2, t5
-    mflo       t8
-    add        t6, t8
-    sra        t6, 12
-    mult       t6, t3
-    mflo       t3
-    sra        t3, 13
-    sub        t3, t0
-    sh         t3, 0x6(a0)
-    mult       t6, t4
-    mflo       t4
-    sra        t4, 13
-    sub        t4, t1
-    mult       t6, t5
-    sh         t4, 0x8(a0)
-    mflo       t5
-    sra        t5, 13
-    sub        t5, t0
-    sh         t5, 0xA(a0)
+    /* Load incident vector components (16-bit signed) */
+    lh         t0, 0x0(a0)              /* incident.x */
+    lh         t1, 0x2(a0)              /* incident.y */
+    lh         t2, 0x4(a0)              /* incident.z */
+    
+    /* Load normal vector components (16-bit signed) */
+    lh         t3, 0x0(a1)              /* normal.x */
+    lh         t4, 0x2(a1)              /* normal.y */
+    lh         t5, 0x4(a1)              /* normal.z */
+    
+    /* Calculate dot product: dot = (incident.x * normal.x) + (incident.y * normal.y) + (incident.z * normal.z) */
+    mult       t0, t3                   /* incident.x * normal.x */
+    mflo       t6                       /* dot = result */
+    
+    mult       t1, t4                   /* incident.y * normal.y */
+    mflo       t7                       /* temp = result */
+    add        t6, t7                   /* dot += temp */
+    
+    mult       t2, t5                   /* incident.z * normal.z */
+    mflo       t8                       /* temp = result */
+    add        t6, t8                   /* dot += temp */
+    
+    /* Scale down accumulated dot product (fixed-point normalization) */
+    sra        t6, 12                   /* dot >>= 12 */
+    
+    /* Calculate reflected.x = (dot * normal.x >> 13) - incident.x */
+    mult       t6, t3                   /* (dot * normal.x) */
+    mflo       t3                       /* scaled_normal_x = result */
+    sra        t3, 13                   /* scaled_normal_x >>= 13 */
+    sub        t3, t3, t0               /* reflected.x = scaled_normal_x - incident.x */
+    sh         t3, 0x6(a0)              /* Store reflected.x */
+    
+    /* Calculate reflected.y = (dot * normal.y >> 13) - incident.y */
+    mult       t6, t4                   /* (dot * normal.y) */
+    mflo       t4                       /* scaled_normal_y = result */
+    sra        t4, 13                   /* scaled_normal_y >>= 13 */
+    sub        t4, t4, t1               /* reflected.y = scaled_normal_y - incident.y */
+    sh         t4, 0x8(a0)              /* Store reflected.y */
+    
+    /* Calculate reflected.z = (dot * normal.z >> 13) - incident.z */
+    mult       t6, t5                   /* (dot * normal.z) */
+    mflo       t5                       /* scaled_normal_z = result */
+    sra        t5, 13                   /* scaled_normal_z >>= 13 */
+#ifdef AVOID_UB
+    sub        t5, t5, t2               /* reflected.z = scaled_normal_z - incident.z */
+#else
+    sub        t5, t5, t0               /* !@bug: should subtract incident.z (t2), not incident.x (t0) */
+#endif
+    sh         t5, 0xA(a0)              /* Store reflected.z */
+    
     jr         ra
 END(vec3s_reflect)
 
