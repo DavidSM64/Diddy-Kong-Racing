@@ -714,19 +714,42 @@ LEAF(vec3s_reflect)
     jr         ra
 END(vec3s_reflect)
 
+/**
+ * Converts an N64 microcode matrix (Mtx) into a contiguous 4×4 matrix of
+ * 32-bit signed integers in 16.16 fixed-point format.
+ *
+ * Source (a0): pointer to Mtx laid out as:
+ *   - High 16 bits (integer parts)  at offset 0x00 (16-bit shorts, 16 entries)
+ *   - Low 16 bits  (fractional parts) at offset 0x20 (16-bit shorts, 16 entries)
+ *
+ * Destination (a1): pointer to an array of 16 32-bit words laid out as:
+ *   - For each element i in [0, 15]:
+ *       dest[i] = (high[i] << 16) | (low[i] & 0xFFFF)
+ */
 LEAF(mtx_to_mtxs_2)
-    ori        t2, zero, 0x10
-    xor        t3, t3
-    .L8006FA48:
-    lh         t0, 0x0(a0)
-    lhu        t1, 0x20(a0)
-    addi       a0, 0x2
-    sll        t0, 16
-    or         t0, t1
-    sw         t0, 0x0(a1)
-    addi       a1, 0x4
-    addiu      t3, 0x1
-    bnel       t3, t2, .L8006FA48
+    ori        t2, zero, 16             /* t2 = 16, number of matrix elements to convert */
+    xor        t3, t3                   /* t3 = element index (0..15) */
+
+.mtx_to_mtxs_2_element_loop:
+    /* Load one elements integer and fractional parts from Mtx layout */
+    lh         t0, 0x0(a0)              /* t0 = high 16 bits (integer part) from upper half */
+    lhu        t1, 0x20(a0)             /* t1 = low 16 bits (fractional part) from lower half */
+
+    /* Advance source pointer to next element (both high and low halves use same index) */
+    addi       a0, 0x2                  /* move to next short in both the 0x0 and 0x20 regions */
+
+    /* Pack into 16.16 fixed-point 32-bit value */
+    sll        t0, 16                   /* shift integer part into upper 16 bits */
+    or         t0, t1                   /* combine with fractional low 16 bits */
+
+    /* Store packed 32-bit fixed-point value */
+    sw         t0, 0x0(a1)              /* dest[element] = (high << 16) | low */
+    addi       a1, 0x4                  /* advance destination to next word */
+
+    /* Increment element counter and loop until 16 elements done */
+    addiu      t3, 1                    /* t3++ */
+    bnel       t3, t2, .mtx_to_mtxs_2_element_loop
+
     jr         ra
 END(mtx_to_mtxs_2)
 
