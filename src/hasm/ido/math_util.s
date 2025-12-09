@@ -673,37 +673,29 @@ LEAF(vec3s_reflect)
     lh         t5, 0x4(a1)              /* normal.z */
     
     /* Calculate dot product: dot = (incident.x * normal.x) + (incident.y * normal.y) + (incident.z * normal.z) */
-    mult       t0, t3                   /* incident.x * normal.x */
-    mflo       t6                       /* dot = result */
-    
-    mult       t1, t4                   /* incident.y * normal.y */
-    mflo       t7                       /* temp = result */
-    add        t6, t7                   /* dot += temp */
-    
-    mult       t2, t5                   /* incident.z * normal.z */
-    mflo       t8                       /* temp = result */
-    add        t6, t8                   /* dot += temp */
+    MULS       (t6, t0, t3)             /* x = incident.x * normal.x */    
+    MULS       (t7, t1, t4)             /* y = incident.y * normal.y */
+    MULS       (t8, t2, t5)             /* z = incident.z * normal.z */
+    add        t6, t7                   /* dot  = x + y */
+    add        t6, t8                   /* dot += z */
     
     /* Scale down accumulated dot product (fixed-point normalization) */
     sra        t6, 12                   /* dot >>= 12 */
     
     /* Calculate reflected.x = (dot * normal.x >> 13) - incident.x */
-    mult       t6, t3                   /* (dot * normal.x) */
-    mflo       t3                       /* scaled_normal_x = result */
+    MULS       (t3, t6, t3)             /* scaled_normal_x = (dot * normal.x) */
     sra        t3, 13                   /* scaled_normal_x >>= 13 */
     sub        t3, t3, t0               /* reflected.x = scaled_normal_x - incident.x */
     sh         t3, 0x6(a0)              /* Store reflected.x */
     
     /* Calculate reflected.y = (dot * normal.y >> 13) - incident.y */
-    mult       t6, t4                   /* (dot * normal.y) */
-    mflo       t4                       /* scaled_normal_y = result */
+    MULS       (t4, t6, t4)             /* scaled_normal_y = (dot * normal.y) */
     sra        t4, 13                   /* scaled_normal_y >>= 13 */
     sub        t4, t4, t1               /* reflected.y = scaled_normal_y - incident.y */
     sh         t4, 0x8(a0)              /* Store reflected.y */
     
     /* Calculate reflected.z = (dot * normal.z >> 13) - incident.z */
-    mult       t6, t5                   /* (dot * normal.z) */
-    mflo       t5                       /* scaled_normal_z = result */
+    MULS       (t5, t6, t5)             /* scaled_normal_z = (dot * normal.z) */
     sra        t5, 13                   /* scaled_normal_z >>= 13 */
 #ifdef AVOID_UB
     sub        t5, t5, t2               /* reflected.z = scaled_normal_z - incident.z */
