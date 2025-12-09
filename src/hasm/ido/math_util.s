@@ -759,45 +759,45 @@ LEAF(mtxs_transform_point)
     lh         t2, 0x4(a1)
     lw         t3, 0x0(a0)
     mult       t0, t3
-    lw         t3, 0x10(a0)
     mflo       t4
+    lw         t3, 0x10(a0)
     mult       t1, t3
-    lw         t3, 0x20(a0)
     mflo       t5
+    lw         t3, 0x20(a0)
     mult       t2, t3
-    add        t4, t5
-    lw         t3, 0x30(a0)
     mflo       t6
+    lw         t3, 0x30(a0)
+    add        t4, t5
     add        t4, t6
     add        t4, t3
     sra        t4, 16
     sh         t4, 0x0(a1)
     lw         t3, 0x4(a0)
     mult       t0, t3
-    lw         t3, 0x14(a0)
     mflo       t4
+    lw         t3, 0x14(a0)
     mult       t1, t3
-    lw         t3, 0x24(a0)
     mflo       t5
-    add        t4, t5
+    lw         t3, 0x24(a0)
     mult       t2, t3
-    lw         t3, 0x34(a0)
     mflo       t6
+    lw         t3, 0x34(a0)
+    add        t4, t5
     add        t4, t6
     add        t4, t3
     sra        t4, 16
     sh         t4, 0x2(a1)
     lw         t3, 0x8(a0)
     mult       t0, t3
-    lw         t3, 0x18(a0)
     mflo       t4
+    lw         t3, 0x18(a0)
     mult       t1, t3
-    lw         t3, 0x28(a0)
     mflo       t5
-    add        t4, t5
+    lw         t3, 0x28(a0)
     mult       t2, t3
-    lw         t3, 0x38(a0)
     mflo       t6
+    lw         t3, 0x38(a0)
+    add        t4, t5
     add        t4, t6
     add        t4, t3
     sra        t4, 16
