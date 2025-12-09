@@ -5,6 +5,7 @@
 #include "PR/R4300.h"
 #include "sys/asm.h"
 #include "sys/regdef.h"
+#include "asm_macros.h"
 
 .data
 
@@ -753,103 +754,167 @@ LEAF(mtx_to_mtxs_2)
     jr         ra
 END(mtx_to_mtxs_2)
 
+/**
+ * Transforms a 3D point using a 4×4 matrix in 16.16 fixed-point format.
+ *
+ * This function applies a full affine transformation including translation.
+ * The matrix is stored in column-major order as 16 consecutive 32-bit words.
+ *
+ * Arguments:
+ *   a0 = pointer to 4×4 matrix in 16.16 fixed-point (s32[4][4])
+ *   a1 = pointer to s16[3] point (in/out):
+ *          in:  x = *(s16*)(a1+0), y = *(s16*)(a1+2), z = *(s16*)(a1+4)
+ *          out: transformed x, y, z written back to same locations
+ *
+ * Math (per output component):
+ *   out.x = ((x * m[0][0]) + (y * m[1][0]) + (z * m[2][0]) + m[3][0]) >> 16
+ *   out.y = ((x * m[0][1]) + (y * m[1][1]) + (z * m[2][1]) + m[3][1]) >> 16
+ *   out.z = ((x * m[0][2]) + (y * m[1][2]) + (z * m[2][2]) + m[3][2]) >> 16
+ */
 LEAF(mtxs_transform_point)
-    lh         t0, 0x0(a1)
-    lh         t1, 0x2(a1)
-    lh         t2, 0x4(a1)
+    /* Load input point components (s16) */
+    lh         t0, 0x0(a1)              /* t0 = x */
+    lh         t1, 0x2(a1)              /* t1 = y */
+    lh         t2, 0x4(a1)              /* t2 = z */
+
+    /* -------------------
+     * Compute out.x = x*m[0][0] + y*m[0][1] + z*m[0][2] + m[0][3]
+     * ------------------- */
     lw         t3, 0x0(a0)
-    mult       t0, t3
-    mflo       t4
+    MULS       (t4, t0, t3)             /* out.x  = x * m[0][0] */
+
     lw         t3, 0x10(a0)
-    mult       t1, t3
-    mflo       t5
+    MULS       (t5, t1, t3)
+    add        t4, t5                   /* out.x += y * m[0][1] */
+
     lw         t3, 0x20(a0)
-    mult       t2, t3
-    mflo       t6
+    MULS       (t6, t2, t3)
+    add        t4, t6                   /* out.x += z * m[0][2] */
+
     lw         t3, 0x30(a0)
-    add        t4, t5
-    add        t4, t6
-    add        t4, t3
-    sra        t4, 16
-    sh         t4, 0x0(a1)
+    add        t4, t3                   /* out.x += m[0][3] */
+    sra        t4, 16                   /* out.x >>= 16: convert back from 16.16 */
+    sh         t4, 0x0(a1)              /* store out.x */
+
+    /* -------------------
+     * Compute out.y = x*m[1][0] + y*m[1][1] + z*m[1][2] + m[1][3]
+     * ------------------- */
     lw         t3, 0x4(a0)
-    mult       t0, t3
-    mflo       t4
+    MULS       (t4, t0, t3)             /* out.y  = x * m[0][0] */
+
     lw         t3, 0x14(a0)
-    mult       t1, t3
-    mflo       t5
+    MULS       (t5, t1, t3)
+    add        t4, t5                   /* out.y += y * m[0][1] */
+
     lw         t3, 0x24(a0)
-    mult       t2, t3
-    mflo       t6
+    MULS       (t6, t2, t3)
+    add        t4, t6                   /* out.y += z * m[0][2] */
+
     lw         t3, 0x34(a0)
-    add        t4, t5
-    add        t4, t6
-    add        t4, t3
-    sra        t4, 16
-    sh         t4, 0x2(a1)
+    add        t4, t3                   /* out.y += m[0][3] */
+    sra        t4, 16                   /* out.y >>= 16: convert back from 16.16 */
+    sh         t4, 0x2(a1)              /* store out.y */
+
+    /* -------------------
+     * Compute out.z = x*m[2][0] + y*m[2][1] + z*m[2][2] + m[2][3]
+     * ------------------- */
     lw         t3, 0x8(a0)
-    mult       t0, t3
-    mflo       t4
+    MULS       (t4, t0, t3)             /* out.z  = x * m[0][0] */
+
     lw         t3, 0x18(a0)
-    mult       t1, t3
-    mflo       t5
+    MULS       (t5, t1, t3)
+    add        t4, t5                   /* out.z += y * m[0][1] */
+
     lw         t3, 0x28(a0)
-    mult       t2, t3
-    mflo       t6
+    MULS       (t6, t2, t3)
+    add        t4, t6                   /* out.z += z * m[0][2] */
+
     lw         t3, 0x38(a0)
-    add        t4, t5
-    add        t4, t6
-    add        t4, t3
-    sra        t4, 16
-    sh         t4, 0x4(a1)
+    add        t4, t3                   /* out.z += m[0][3] */
+    sra        t4, 16                   /* out.z >>= 16: convert back from 16.16 */
+    sh         t4, 0x4(a1)              /* store out.z */
+
     jr         ra
 END(mtxs_transform_point)
 
+/**
+ * Transforms a 3D direction vector using a 4×4 matrix in 16.16 fixed-point format.
+ *
+ * Unlike mtxs_transform_point, this function ignores the translation column (m[*][3]),
+ * making it suitable for transforming direction vectors and normals.
+ *
+ * Arguments:
+ *   a0 = pointer to 4×4 matrix in 16.16 fixed-point (s32[4][4])
+ *   a1 = pointer to s16[3] direction vector (in/out):
+ *          in:  x = *(s16*)(a1+0), y = *(s16*)(a1+2), z = *(s16*)(a1+4)
+ *          out: transformed x, y, z written back to same locations
+ *
+ * Math (per output component, no translation):
+ *   out.x = ((x * m[0][0]) + (y * m[1][0]) + (z * m[2][0])) >> 16
+ *   out.y = ((x * m[0][1]) + (y * m[1][1]) + (z * m[2][1])) >> 16
+ *   out.z = ((x * m[0][2]) + (y * m[1][2]) + (z * m[2][2])) >> 16
+ */
 LEAF(mtxs_transform_dir)
-    lw         t3, 0x0(a0)
-    lh         t0, 0x0(a1)
-    lh         t1, 0x2(a1)
-    lh         t2, 0x4(a1)
-    mult       t0, t3
+    lw         t3, 0x0(a0)              /* t3 = m[0][0] */
+
+    /* Load input direction vector components (s16) */
+    lh         t0, 0x0(a1)              /* t0 = x */
+    lh         t1, 0x2(a1)              /* t1 = y */
+    lh         t2, 0x4(a1)              /* t2 = z */
+
+    /* -----------------------------------------
+     * Compute out.x = x*m[0][0] + y*m[0][1] + z*m[0][2]
+     * ----------------------------------------- */
+    MULS       (t4, t0, t3)             /* out.x  = x * m[0][0] */
+
     lw         t3, 0x10(a0)
-    mflo       t4
-    mult       t1, t3
+    MULS       (t5, t1, t3)
+    add        t4, t5                   /* out.x += y * m[0][1] */
+
     lw         t3, 0x20(a0)
-    mflo       t5
-    add        t4, t5
-    mult       t2, t3
-    lw         t3, 0x4(a0)
-    mflo       t6
-    add        t4, t6
-    sra        t4, 16
-    mult       t0, t3
-    sh         t4, 0x0(a1)
+    MULS       (t6, t2, t3)
+    add        t4, t6                   /* out.x += z * m[0][2] */
+
+    sra        t4, 16                   /* out.x >>= 16: convert back from 16.16 */
+
+    /* -----------------------------------------
+     * Compute out.y = x*m[1][0] + y*m[1][1] + z*m[1][2]
+     * ----------------------------------------- */
+    lw         t3, 0x4(a0)              /* t3 = m[0x04] (preload for next row) */
+    sh         t4, 0x0(a1)              /* store out.x (delay slot usage) */
+    MULS       (t4, t0, t3)             /* out.y  = x * m[0][0] */
+
     lw         t3, 0x14(a0)
-    mflo       t4
-    mult       t1, t3
+    MULS       (t5, t1, t3)
+    add        t4, t5                   /* out.y += y * m[0][1] */
+
     lw         t3, 0x24(a0)
-    mflo       t5
-    add        t4, t5
-    mult       t2, t3
+    MULS       (t6, t2, t3)
+    add        t4, t6                   /* out.y += z * m[0][2] */
+
+    sra        t4, 16                   /* out.y >>= 16: convert back from 16.16 */
+
+    /* -----------------------------------------
+     * Compute out.z = x*m[2][0] + y*m[2][1] + z*m[2][2]
+     * ----------------------------------------- */
     lw         t3, 0x8(a0)
-    mflo       t6
-    add        t4, t6
-    sra        t4, 16
-    mult       t0, t3
-    sh         t4, 0x2(a1)
+    sh         t4, 0x2(a1)              /* store out.y (delay slot usage) */
+    MULS       (t4, t0, t3)             /* out.z  = x * m[0][0] */
+
     lw         t3, 0x18(a0)
-    mflo       t4
-    mult       t1, t3
+    MULS       (t5, t1, t3)
+    add        t4, t5                   /* out.z += y * m[0][1] */
+
     lw         t3, 0x28(a0)
-    mflo       t5
-    add        t4, t5
-    mult       t2, t3
-    mflo       t6
-    add        t4, t6
-    sra        t4, 16
-    sh         t4, 0x4(a1)
+    MULS       (t6, t2, t3)
+    add        t4, t6                   /* out.z += z * m[0][2] */
+
+    sra        t4, 16                   /* out.z >>= 16: convert back from 16.16 */
+    sh         t4, 0x4(a1)              /* store out.z */
+
     jr         ra
 END(mtxs_transform_dir)
+
 
 LEAF(mtxf_from_transform)
     addiu      sp, sp, -0x8
