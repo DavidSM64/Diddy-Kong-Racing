@@ -1397,50 +1397,102 @@ LEAF(mtxf_from_inverse_transform)
     jr         ra
 END(mtxf_from_inverse_transform)
 
+/**
+ * Incomplete/stripped matrix setup function.
+ *
+ * This function computes normalized sin/cos values for Euler angles (roll, pitch, yaw)
+ * and initializes only the perspective column of a 4×4 matrix. It also computes
+ * several trig products but does not store them, suggesting this is either:
+ *   - Dead/unused code
+ *   - A stripped version of a larger function
+ *   - An inlined fragment that was partially optimized away
+ *
+ * Arguments:
+ *   a0 = pointer to destination 4×4 float matrix (MtxF)
+ *   a1 = pointer to RPYAngles struct:
+ *          0x00: s16 roll
+ *          0x02: s16 pitch
+ *          0x04: s16 yaw
+ *
+ * Effects on matrix:
+ *   m[0][3] = 0.0f
+ *   m[1][3] = 0.0f
+ *   m[2][3] = 0.0f
+ *   m[3][3] = 1.0f
+ *
+ * Register state on exit (computed but unused):
+ *   fv0 = sinRoll,  fv1 = cosRoll
+ *   ft0 = sinPitch, ft1 = cosPitch
+ *   ft2 = sinYaw,   ft3 = cosYaw
+ *   fa0 = sinRoll * cosPitch
+ *   fa1 = cosRoll * cosYaw
+ *   ft4 = sinRoll * sinYaw
+ */
 LEAF(func_80070058)
     addiu      sp, sp, -0x8
     sd         ra, 0x0(sp)
 
-    move       a3, a0
-    li.s       ft5, 0.0000152587890625 /* (1.0f / 0x10000) */
-    lh         a0, 0x0(a1)
-    jal        sins_s16
-    mtc1       v0, fv0
-    cvt.s.w    fv0
-    mul.s      fv0, ft5
-    lh         a0, 0x0(a1)
-    jal        coss_s16
-    mtc1       v0, fv1
-    cvt.s.w    fv1
-    mul.s      fv1, ft5
-    lh         a0, 0x2(a1)
-    jal        sins_s16
-    mtc1       v0, ft0
-    cvt.s.w    ft0
-    mul.s      ft0, ft5
-    lh         a0, 0x2(a1)
-    jal        coss_s16
-    mtc1       v0, ft1
-    cvt.s.w    ft1
-    mul.s      ft1, ft5
-    lh         a0, 0x4(a1)
-    jal        sins_s16
-    mtc1       v0, ft2
-    cvt.s.w    ft2
-    mul.s      ft2, ft5
-    lh         a0, 0x4(a1)
-    jal        coss_s16
-    sw         zero, 0xC(a3)
-    sw         zero, 0x1C(a3)
-    sw         zero, 0x2C(a3)
-    mtc1       v0, ft3
-    cvt.s.w    ft3
-    mul.s      ft3, ft5
-    li.s       ft5, 1.0
-    swc1       ft5, 0x3C(a3)
-    mul.s      fa0, fv0, ft1
-    mul.s      fa1, fv1, ft3
-    mul.s      ft4, fv0, ft2
+    move       a3, a0                   /* a3 = dest matrix pointer */
+    li.s       ft5, 0.0000152587890625  /* ft5 = 1.0f / 0x10000 (s16 to float scale) */
+
+    /* -----------------------------------------
+     * Compute sin/cos for roll (rotation.x)
+     * ----------------------------------------- */
+    lh         a0, 0x0(a1)              /* a0 = roll angle */
+    jal        sins_s16                 /* v0 = sin(roll) as s16 */
+    mtc1       v0, fv0                  /* fv0 = sin(roll) raw bits */
+    cvt.s.w    fv0                      /* fv0 = (float)sin(roll) */
+    mul.s      fv0, ft5                 /* fv0 = sinRoll (normalized) */
+    lh         a0, 0x0(a1)              /* a0 = roll angle */
+    jal        coss_s16                 /* v0 = cos(roll) as s16 */
+    mtc1       v0, fv1                  /* fv1 = cos(roll) raw bits */
+    cvt.s.w    fv1                      /* fv1 = (float)cos(roll) */
+    mul.s      fv1, ft5                 /* fv1 = cosRoll (normalized) */
+
+    /* -----------------------------------------
+     * Compute sin/cos for pitch (rotation.y)
+     * ----------------------------------------- */
+    lh         a0, 0x2(a1)              /* a0 = pitch angle */
+    jal        sins_s16                 /* v0 = sin(pitch) as s16 */
+    mtc1       v0, ft0                  /* ft0 = sin(pitch) raw bits */
+    cvt.s.w    ft0                      /* ft0 = (float)sin(pitch) */
+    mul.s      ft0, ft5                 /* ft0 = sinPitch (normalized) */
+    lh         a0, 0x2(a1)              /* a0 = pitch angle */
+    jal        coss_s16                 /* v0 = cos(pitch) as s16 */
+    mtc1       v0, ft1                  /* ft1 = cos(pitch) raw bits */
+    cvt.s.w    ft1                      /* ft1 = (float)cos(pitch) */
+    mul.s      ft1, ft5                 /* ft1 = cosPitch (normalized) */
+
+    /* -----------------------------------------
+     * Compute sin/cos for yaw (rotation.z)
+     * ----------------------------------------- */
+    lh         a0, 0x4(a1)              /* a0 = yaw angle */
+    jal        sins_s16                 /* v0 = sin(yaw) as s16 */
+    mtc1       v0, ft2                  /* ft2 = sin(yaw) raw bits */
+    cvt.s.w    ft2                      /* ft2 = (float)sin(yaw) */
+    mul.s      ft2, ft5                 /* ft2 = sinYaw (normalized) */
+    lh         a0, 0x4(a1)              /* a0 = yaw angle */
+    jal        coss_s16                 /* v0 = cos(yaw) as s16 */
+    mtc1       v0, ft3                  /* ft3 = cos(yaw) raw bits */
+    cvt.s.w    ft3                      /* ft3 = (float)cos(yaw) */
+    mul.s      ft3, ft5                 /* ft3 = cosYaw (normalized) */
+
+    /* -----------------------------------------
+     * Compute trig products (unused - no stores)
+     * These would typically be used for rotation matrix elements
+     * ----------------------------------------- */
+    mul.s      fa0, fv0, ft1            /* fa0 = sinRoll * cosPitch */
+    mul.s      fa1, fv1, ft3            /* fa1 = cosRoll * cosYaw */
+    mul.s      ft4, fv0, ft2            /* ft4 = sinRoll * sinYaw */
+
+    /* -----------------------------------------
+     * Initialize perspective column (interleaved with yaw cos)
+     * ----------------------------------------- */
+    li.s       ft5, 1.0                 /* ft5 = 1.0f */
+    sw         zero, 0xC(a3)            /* m[0][3] = 0.0f */
+    sw         zero, 0x1C(a3)           /* m[1][3] = 0.0f */
+    sw         zero, 0x2C(a3)           /* m[2][3] = 0.0f */
+    swc1       ft5, 0x3C(a3)            /* m[3][3] = 1.0f */
 
     ld         ra, 0x0(sp)
     addiu      sp, sp, 0x8
