@@ -908,97 +908,189 @@ LEAF(mtxs_transform_dir)
 END(mtxs_transform_dir)
 
 
+/**
+ * Builds a 4×4 floating-point transformation matrix from an ObjectTransform struct.
+ *
+ * This function constructs a rotation matrix from Euler angles (roll, pitch, yaw)
+ * and applies uniform scaling, then sets the translation column.
+ *
+ * Arguments:
+ *   a0 = pointer to destination 4×4 float matrix (MtxF)
+ *   a1 = pointer to ObjectTransform struct:
+ *          0x00: s16 rotation.x (roll)
+ *          0x02: s16 rotation.y (pitch)
+ *          0x04: s16 rotation.z (yaw)
+ *          0x06: s16 (padding)
+ *          0x08: f32 scale (uniform)
+ *          0x0C: f32 position.x
+ *          0x10: f32 position.y
+ *          0x14: f32 position.z
+ *
+ * The rotation order is: Roll (X) -> Pitch (Y) -> Yaw (Z)
+ *
+ * Matrix layout (column-major):
+ *   [ m00 m01 m02  0  ]   row 0
+ *   [ m10 m11 m12  0  ]   row 1
+ *   [ m20 m21 m22  0  ]   row 2
+ *   [ tx  ty  tz   1  ]   row 3 (translation + homogeneous)
+ */
 LEAF(mtxf_from_transform)
     addiu      sp, sp, -0x8
     sd         ra, 0x0(sp)
 
-    move       a3, a0
-    li.s       ft5, 0.0000152587890625 /* (1.0f / 0x10000) */
-    lh         a0, 0x0(a1)
-    jal        sins_s16
-    mtc1       v0, fv0
-    lh         a0, 0x0(a1)
-    cvt.s.w    fv0
-    mul.s      fv0, ft5
-    jal        coss_s16
-    mtc1       v0, fv1
-    lh         a0, 0x2(a1)
-    cvt.s.w    fv1
-    mul.s      fv1, ft5
-    jal        sins_s16
-    mtc1       v0, ft0
-    lh         a0, 0x2(a1)
-    cvt.s.w    ft0
-    mul.s      ft0, ft5
-    jal        coss_s16
-    mtc1       v0, ft1
-    lh         a0, 0x4(a1)
-    cvt.s.w    ft1
-    mul.s      ft1, ft5
-    jal        sins_s16
-    mtc1       v0, ft2
-    lh         a0, 0x4(a1)
-    cvt.s.w    ft2
-    mul.s      ft2, ft5
-    jal        coss_s16
-    mtc1       v0, ft3
-    lw         t2, 0x8(a1)
-    sw         zero, 0xC(a3)
-    cvt.s.w    ft3, ft3
-    sw         zero, 0x1C(a3)
-    sw         zero, 0x2C(a3)
-    mul.s      ft3, ft3, ft5
+    move       a3, a0                   /* a3 = dest matrix pointer */
+    li.s       ft5, 0.0000152587890625  /* ft5 = 1.0f / 0x10000 (s16 to float scale) */
+
+    /* -----------------------------------------
+     * Compute sin/cos for roll (rotation.x)
+     * ----------------------------------------- */
+    lh         a0, 0x0(a1)              /* a0 = transform->rotation.x (roll angle) */
+    jal        sins_s16                 /* v0 = sin(roll) as s16 */
+    mtc1       v0, fv0                  /* fv0 = sin(roll) as int bits */
+    lh         a0, 0x0(a1)              /* a0 = transform->rotation.x */
+    cvt.s.w    fv0                      /* fv0 = (float)sin(roll) */
+    mul.s      fv0, ft5                 /* fv0 = sinRoll (normalized) */
+    jal        coss_s16                 /* v0 = cos(roll) as s16 */
+    mtc1       v0, fv1                  /* fv1 = cos(roll) as int bits */
+    cvt.s.w    fv1                      /* fv1 = (float)cos(roll) */
+    mul.s      fv1, ft5                 /* fv1 = cosRoll (normalized) */
+
+    /* -----------------------------------------
+     * Compute sin/cos for pitch (rotation.y)
+     * ----------------------------------------- */
+    lh         a0, 0x2(a1)              /* a0 = transform->rotation.y (pitch angle) */
+    jal        sins_s16                 /* v0 = sin(pitch) as s16 */
+    mtc1       v0, ft0                  /* ft0 = sin(pitch) as int bits */
+    lh         a0, 0x2(a1)              /* a0 = transform->rotation.y */
+    cvt.s.w    ft0                      /* ft0 = (float)sin(pitch) */
+    mul.s      ft0, ft5                 /* ft0 = sinPitch (normalized) */
+    jal        coss_s16                 /* v0 = cos(pitch) as s16 */
+    mtc1       v0, ft1                  /* ft1 = cos(pitch) as int bits */
+    cvt.s.w    ft1                      /* ft1 = (float)cos(pitch) */
+    mul.s      ft1, ft5                 /* ft1 = cosPitch (normalized) */
+
+    /* -----------------------------------------
+     * Compute sin/cos for yaw (rotation.z)
+     * ----------------------------------------- */
+    lh         a0, 0x4(a1)              /* a0 = transform->rotation.z (yaw angle) */
+    jal        sins_s16                 /* v0 = sin(yaw) as s16 */
+    mtc1       v0, ft2                  /* ft2 = sin(yaw) as int bits */
+    lh         a0, 0x4(a1)              /* a0 = transform->rotation.z */
+    cvt.s.w    ft2                      /* ft2 = (float)sin(yaw) */
+    mul.s      ft2, ft5                 /* ft2 = sinYaw (normalized) */
+    jal        coss_s16                 /* v0 = cos(yaw) as s16 */
+    mtc1       v0, ft3                  /* ft3 = cos(yaw) as int bits */
+    cvt.s.w    ft3, ft3                 /* ft3 = (float)cos(yaw) */
+    mul.s      ft3, ft5                 /* ft3 = cosYaw (normalized) */
+
+    /* -----------------------------------------
+     * Build rotation matrix with scale applied
+     * 
+     * Register usage at this point:
+     *   fv0 = sinRoll,  fv1 = cosRoll
+     *   ft0 = sinPitch, ft1 = cosPitch
+     *   ft2 = sinYaw,   ft3 = cosYaw
+     *   ft5 = scale factor (loaded below)
+     * ----------------------------------------- */
+    lw         t2, 0x8(a1)              /* t2 = transform->scale (as int bits) */
+    sw         zero, 0xC(a3)            /* m[0][3] = 0.0 */
+    sw         zero, 0x1C(a3)           /* m[1][3] = 0.0 */
+    sw         zero, 0x2C(a3)           /* m[2][3] = 0.0 */
+
+    /* -----------------------------------------
+     * Compute m[0][0] = (sinPitch * sinRoll * sinYaw + cosYaw * cosRoll) * scale
+     * ----------------------------------------- */
     mul.s      ft4, ft0, fv0
-    mul.s      ft4, ft2
-    mul.s      ft5, ft3, fv1
-    add.s      ft4, ft5
-    mtc1       t2, ft5
-    mul.s      ft4, ft5
-    swc1       ft4, 0x0(a3)
-    mul.s      ft4, ft2, ft1
-    mul.s      ft4, ft5
-    swc1       ft4, 0x4(a3)
-    mul.s      ft4, ft0, fv1
-    mul.s      ft4, ft2
-    mul.s      ft5, ft3, fv0
-    sub.s      ft4, ft5
-    mtc1       t2, ft5
-    mul.s      ft4, ft5
-    swc1       ft4, 0x8(a3)
-    mul.s      ft4, ft0, fv0
-    mul.s      ft4, ft3
-    mul.s      ft5, ft2, fv1
-    sub.s      ft4, ft5
-    mtc1       t2, ft5
-    mul.s      ft4, ft5
-    swc1       ft4, 0x10(a3)
-    mul.s      ft4, ft3, ft1
-    mul.s      ft4, ft5
-    swc1       ft4, 0x14(a3)
-    mul.s      ft4, ft0, fv1
-    mul.s      ft4, ft3
-    mul.s      ft5, ft2, fv0
-    add.s      ft4, ft5
-    mtc1       t2, ft5
-    mul.s      ft4, ft5
-    swc1       ft4, 0x18(a3)
-    mul.s      ft4, ft1, fv0
-    mul.s      ft4, ft5
-    swc1       ft4, 0x20(a3)
-    mul.s      ft4, ft0, ft5
-    neg.s      ft4
-    swc1       ft4, 0x24(a3)
-    mul.s      ft4, ft1, fv1
-    mul.s      ft4, ft5
-    swc1       ft4, 0x28(a3)
-    lw         t0, 0xC(a1)
-    sw         t0, 0x30(a3)
-    lw         t0, 0x10(a1)
-    sw         t0, 0x34(a3)
-    lw         t0, 0x14(a1)
-    sw         t0, 0x38(a3)
+    mul.s      ft4, ft4, ft2            /* ft4 = sinPitch * sinRoll * sinYaw */
+    mul.s      ft5, ft3, fv1            /* ft5 = cosYaw * cosRoll */
+    add.s      ft4, ft5                 /* ft4 = (sp*sr*sy + cy*cr) */
+    mtc1       t2, ft5                  /* ft5 = scale (as float bits) */
+    mul.s      ft4, ft5                 /* ft4 *= scale */
+    swc1       ft4, 0x0(a3)             /* m[0][0] = (sp*sr*sy + cy*cr) * scale */
+
+    /* -----------------------------------------
+     * Compute m[0][1] = sinYaw * cosPitch * scale
+     * ----------------------------------------- */
+    mul.s      ft4, ft2, ft1            /* ft4 = sinYaw * cosPitch */
+    mul.s      ft4, ft5                 /* ft4 *= scale */
+    swc1       ft4, 0x4(a3)             /* m[0][1] = sinYaw * cosPitch * scale */
+
+    /* -----------------------------------------
+     * Compute m[0][2] = (sinPitch * cosRoll * sinYaw - cosYaw * sinRoll) * scale
+     * ----------------------------------------- */
+    mul.s      ft4, ft0, fv1            /* ft4 = sinPitch * cosRoll */
+    mul.s      ft4, ft2                 /* ft4 = sinPitch * cosRoll * sinYaw */
+    mul.s      ft5, ft3, fv0            /* ft5 = cosYaw * sinRoll */
+    sub.s      ft4, ft5                 /* ft4 = (sp*cr*sy - cy*sr) */
+    mtc1       t2, ft5                  /* ft5 = scale */
+    mul.s      ft4, ft5                 /* ft4 *= scale */
+    swc1       ft4, 0x8(a3)             /* m[0][2] = result */
+
+    /* -----------------------------------------
+     * Compute m[1][0] = (sinPitch * sinRoll * cosYaw - sinYaw * cosRoll) * scale
+     * ----------------------------------------- */
+    mul.s      ft4, ft0, fv0            /* ft4 = sinPitch * sinRoll */
+    mul.s      ft4, ft3                 /* ft4 = sinPitch * sinRoll * cosYaw */
+    mul.s      ft5, ft2, fv1            /* ft5 = sinYaw * cosRoll */
+    sub.s      ft4, ft5                 /* ft4 = (sp*sr*cy - sy*cr) */
+    mtc1       t2, ft5                  /* ft5 = scale */
+    mul.s      ft4, ft5                 /* ft4 *= scale */
+    swc1       ft4, 0x10(a3)            /* m[1][0] = result */
+
+    /* -----------------------------------------
+     * Compute m[1][1] = cosYaw * cosPitch * scale
+     * ----------------------------------------- */
+    mul.s      ft4, ft3, ft1            /* ft4 = cosYaw * cosPitch */
+    mul.s      ft4, ft5                 /* ft4 *= scale */
+    swc1       ft4, 0x14(a3)            /* m[1][1] = result */
+
+    /* -----------------------------------------
+     * Compute m[1][2] = (sinPitch * cosRoll * cosYaw + sinYaw * sinRoll) * scale
+     * ----------------------------------------- */
+    mul.s      ft4, ft0, fv1            /* ft4 = sinPitch * cosRoll */
+    mul.s      ft4, ft3                 /* ft4 = sinPitch * cosRoll * cosYaw */
+    mul.s      ft5, ft2, fv0            /* ft5 = sinYaw * sinRoll */
+    add.s      ft4, ft5                 /* ft4 = (sp*cr*cy + sy*sr) */
+    mtc1       t2, ft5                  /* ft5 = scale */
+    mul.s      ft4, ft5                 /* ft4 *= scale */
+    swc1       ft4, 0x18(a3)            /* m[1][2] = result */
+
+    /* -----------------------------------------
+     * Compute m[2][0] = cosPitch * sinRoll * scale
+     * ----------------------------------------- */
+    mul.s      ft4, ft1, fv0            /* ft4 = cosPitch * sinRoll */
+    mul.s      ft4, ft5                 /* ft4 *= scale */
+    swc1       ft4, 0x20(a3)            /* m[2][0] = result */
+
+    /* -----------------------------------------
+     * Compute m[2][1] = -sinPitch * scale
+     * ----------------------------------------- */
+    mul.s      ft4, ft0, ft5            /* ft4 = sinPitch * scale */
+    neg.s      ft4                      /* ft4 = -sinPitch * scale */
+    swc1       ft4, 0x24(a3)            /* m[2][1] = result */
+
+    /* -----------------------------------------
+     * Compute m[2][2] = cosPitch * cosRoll * scale
+     * ----------------------------------------- */
+    mul.s      ft4, ft1, fv1            /* ft4 = cosPitch * cosRoll */
+    mul.s      ft4, ft5                 /* ft4 *= scale */
+    swc1       ft4, 0x28(a3)            /* m[2][2] = result */
+
+    /* -----------------------------------------
+     * Set translation column from transform position
+     * ----------------------------------------- */
+    lw         t0, 0xC(a1)              /* t0 = transform->position.x */
+    sw         t0, 0x30(a3)             /* m[3][0] = position.x */
+    lw         t0, 0x10(a1)             /* t0 = transform->position.y */
+    sw         t0, 0x34(a3)             /* m[3][1] = position.y */
+    lw         t0, 0x14(a1)             /* t0 = transform->position.z */
+    sw         t0, 0x38(a3)             /* m[3][2] = position.z */
+
+    /* -----------------------------------------
+     * Set homogeneous coordinate
+     * ----------------------------------------- */
     li.s       ft5, 1.0
-    swc1       ft5, 0x3C(a3)
+    swc1       ft5, 0x3C(a3)            /* m[3][3] = 1.0 */
 
     ld         ra, 0x0(sp)
     addiu      sp, sp, 0x8
@@ -1449,71 +1541,95 @@ LEAF(vec3f_rotate_py)
     jr         ra
 END(vec3f_rotate_py)
 
-/* Official Name: mathXZInTri */
+/**
+ * Tests if a 2D point (x, z) lies inside a triangle defined by three vertices.
+ *
+ * Official Name: mathXZInTri
+ *
+ * Uses the cross-product sign test: for each edge of the triangle, compute
+ * the cross product of (point - vertex) × (next_vertex - vertex). If all
+ * three cross products have the same sign (all positive or all negative),
+ * the point is inside the triangle.
+ *
+ * Arguments:
+ *   a0 = x coordinate of test point
+ *   a1 = z coordinate of test point
+ *   a2 = pointer to Vec3s pointA (uses x at offset 0x0, z at offset 0x4)
+ *   a3 = pointer to Vec3s pointB (uses x at offset 0x0, z at offset 0x4)
+ *   sp+0x10 = pointer to Vec3s pointC (uses x at offset 0x0, z at offset 0x4)
+ *
+ * Returns:
+ *   v0 = 1 if point is inside triangle, 0 otherwise
+ *
+ * Note: The cross product for edge A->B is computed as:
+ *   cross = (x - A.x) * (B.z - A.z) - (B.x - A.x) * (z - A.z)
+ *   sign = (cross >= 0) ? 1 : 0
+ */
 LEAF(tri2d_xz_contains_point)
-.set noreorder
-lw         t6, 0x10(sp)
-lh         t0, 0x0(a2)
-lh         t1, 0x4(a2)
-lh         t3, 0x4(a3)
-lh         t4, 0x0(t6)
-lh         t5, 0x4(t6)
-sub        t6, a0, t0
-sub        t7, t3, t1
-multu      t6, t7
-lh         t2, 0x0(a3)
-sub        t9, a1, t1
-addiu      v0, zero, 0x0
-sub        t8, t2, t0
-ori        a3, zero, 0x1
-mflo       t6
-mflo       t6
-nop
-nop
-multu      t8, t9
-mflo       t7
-mflo       t8
-sub        t6, t6, t7
-bgezl      t6, .L80070558
-.set reorder
-sub        t6, a0, t2
-xor        a3, a3, a3
-sub        t6, a0, t2
-.L80070558:
-sub        t7, t5, t3
-multu      t6, t7
-sub        t8, t4, t2
-sub        t9, a1, t3
-ori        a2, zero, 0x1
-mflo       t6
-mflo       t6
-multu      t8, t9
-mflo       t7
-mflo       t8
-sub        t6, t6, t7
-bgez       t6, .L80070598
-xor        a2, a2, a2
-.L80070598:
-bne        a3, a2, .L800705F0
-sub        t6, a0, t4
-sub        t7, t1, t5
-multu      t6, t7
-sub        t8, t0, t4
-sub        t9, a1, t5
-ori        a1, zero, 0x1
-mflo       t6
-mflo       t6
-multu      t8, t9
-mflo       t7
-mflo       t8
-sub        t6, t6, t7
-bgez       t6, .L800705E4
-xor        a1, a1, a1
-.L800705E4:
-bne        a1, a2, .L800705F0
-ori        v0, zero, 0x1
-.L800705F0:
-jr         ra
+    /* Load pointC from stack and extract all vertex coordinates */
+    lw         t6, 0x10(sp)             /* t6 = pointC */
+    li         v0, 0                    /* v0 = 0 (default: point outside) */
+    lh         t0, 0x0(a2)              /* t0 = A.x */
+    lh         t1, 0x4(a2)              /* t1 = A.z */
+    lh         t2, 0x0(a3)              /* t2 = B.x */
+    lh         t3, 0x4(a3)              /* t3 = B.z */
+    lh         t4, 0x0(t6)              /* t4 = C.x */
+    lh         t5, 0x4(t6)              /* t5 = C.z */
+
+    /* -----------------------------------------
+     * Edge A->B: cross = (x - A.x) * (B.z - A.z) - (B.x - A.x) * (z - A.z)
+     * ----------------------------------------- */
+    sub        t6, a0, t0               /* t6 = x - A.x */
+    sub        t7, t3, t1               /* t7 = B.z - A.z */
+    MUL        (t6, t6, t7)             /* t6 = (x - A.x) * (B.z - A.z) */
+    sub        t8, t2, t0               /* t8 = B.x - A.x */
+    sub        t9, a1, t1               /* t9 = z - A.z */
+    MUL        (t7, t8, t9)             /* t7 and t8 = (B.x - A.x) * (z - A.z) */
+    sub        t6, t7                   /* t6 = cross product for edge A->B */
+    ori        a3, zero, 1              /* a3 = 1 (assume positive) */
+    bgez       t6, .edge_ab_positive
+    xor        a3, a3                   /* a3 = 0 (cross was negative) */
+
+.edge_ab_positive:
+    /* -----------------------------------------
+     * Edge B->C: cross = (x - B.x) * (C.z - B.z) - (C.x - B.x) * (z - B.z)
+     * ----------------------------------------- */
+    sub        t6, a0, t2               /* t6 = x - B.x */
+    sub        t7, t5, t3               /* t7 = C.z - B.z */
+    MUL        (t6, t6, t7)             /* t6 = (x - B.x) * (C.z - B.z) */
+    sub        t8, t4, t2               /* t8 = C.x - B.x */
+    sub        t9, a1, t3               /* t9 = z - B.z */
+    MUL        (t7, t8, t9)             /* t7 and t8 = (C.x - B.x) * (z - B.z) */    
+    sub        t6, t6, t7               /* t6 = cross product for edge B->C */
+    ori        a2, zero, 1              /* a2 = 1 (assume positive) */
+    bgez       t6, .edge_bc_positive
+    xor        a2, a2                   /* a2 = 0 (cross was negative) */
+
+.edge_bc_positive:
+    /* If sign of edge A->B != sign of edge B->C, point is outside */
+    bne        a3, a2, .point_outside
+
+    /* -----------------------------------------
+     * Edge C->A: cross = (x - C.x) * (A.z - C.z) - (A.x - C.x) * (z - C.z)
+     * ----------------------------------------- */
+    sub        t6, a0, t4               /* t6 = x - C.x */
+    sub        t7, t1, t5               /* t7 = A.z - C.z */
+    MUL        (t6, t6, t7)             /* t6 = (x - C.x) * (A.z - C.z) */
+    sub        t8, t0, t4               /* t8 = A.x - C.x */
+    sub        t9, a1, t5               /* t9 = z - C.z */
+    MUL        (t7, t8, t9)             /* t7 and t8 = (A.x - C.x) * (z - C.z) */    
+    sub        t6, t7                   /* t6 = cross product for edge C->A */
+    ori        a1, zero, 1              /* a1 = 1 (assume positive) */
+    bgez       t6, .edge_ca_positive
+    xor        a1, a1                   /* a1 = 0 (cross was negative) */
+
+.edge_ca_positive:
+    /* If sign of edge C->A != sign of edge B->C, point is outside */
+    bne        a1, a2, .point_outside
+    ori        v0, zero, 1              /* All signs match: point is inside */
+
+.point_outside:
+    jr         ra
 END(tri2d_xz_contains_point)
 
 /* Official Name: mathTranslateMtx */
@@ -1657,10 +1773,30 @@ LEAF(fix32_sqrt)
     jr         ra
 END(fix32_sqrt)
 
+/**
+ * Computes the square root of an integer, incorrectly.
+ *
+ * !@bug: This function is broken because it interprets the integer input
+ * as if it were already a floating-point bit pattern, rather than converting
+ * it properly. The `sqrt.s` instruction expects a float, but `mtc1` without
+ * `cvt.s.w` just moves the raw integer bits into the FPU register.
+ *
+ * Arguments:
+ *   a0 = integer value (but treated incorrectly as float bits)
+ *
+ * Returns:
+ *   v0 = garbage result (raw float bits of sqrt interpreted as integer)
+ */
 LEAF(bad_int_sqrt)
-    mtc1       a0, fv0
-    sqrt.s     fv0
-    mfc1       v0, fv0
+    mtc1       a0, fv0      /* !@bug: moves int bits directly, no conversion */
+#ifdef AVOID_UB
+    cvt.s.w    fv0          /* This would fix the bug by converting the int to a float */
+    sqrt.s     fv0          /* compute sqrt */
+    cvt.w.s    fv0          /* convert the float back to an int */
+#else
+    sqrt.s     fv0          /* computes sqrt of garbage float interpretation */
+#endif
+    mfc1       v0, fv0      /* returns raw float bits as integer */
     jr         ra
 END(bad_int_sqrt)
 
