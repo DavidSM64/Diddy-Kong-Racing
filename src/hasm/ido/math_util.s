@@ -208,9 +208,9 @@ LEAF(get_gIntDisFlag)
 END(get_gIntDisFlag)
 
 /**
- * Converts a Mtx (fixed-point matrix with split integer and fractional parts)
- * into a 4×4 matrix of 32-bit signed integers, where each element is in 16.16 fixed-point format.
- *
+ * Converts a Mtx (fixed-point matrix with split integer and fractional parts)
+ * into a 4×4 matrix of 32-bit signed integers, where each element is in 16.16 fixed-point format.
+ *
  * Arguments:
  *   a0 = pointer to source fixed-point matrix (Mtx) in N64 format
  *   a1 = pointer to destination short matrix (Mtxs)
@@ -262,8 +262,8 @@ LEAF(mtx_to_mtxs)
 END(mtx_to_mtxs)
 
 /**
- * Converts a 4×4 matrix of 32-bit floating-point values into a 4×4 matrix
- * of 32-bit signed fixed-point values in 16.16 format.
+ * Converts a 4×4 matrix of 32-bit floating-point values into a 4×4 matrix
+ * of 32-bit signed fixed-point values in 16.16 format.
  *
  * Arguments:
  *   a0 = pointer to source floating-point matrix (MtxF)
@@ -1097,152 +1097,300 @@ LEAF(mtxf_from_transform)
     jr         ra
 END(mtxf_from_transform)
 
-/* Official Name: mathSquashY */
+/**
+ * Scales the Y axis of the given 4×4 transformation matrix by the specified factor.
+ * If this is a model matrix, the operation is equivalent to stretching or squashing
+ * the model along its local Y axis.
+ *
+ * Official Name: mathSquashY
+ *
+ * Arguments:
+ *   a0 = pointer to 4×4 float matrix (MtxF)
+ *   a1 = scale factor (passed as raw float bits in integer register)
+ *
+ * Operation:
+ *   mtx[1][0] *= scale
+ *   mtx[1][1] *= scale
+ *   mtx[1][2] *= scale
+ */
 LEAF(mtxf_scale_y)
-    mtc1       a1, ft5
+    mtc1       a1, ft5                  /* ft5 = scale factor */
 
-    lwc1       ft4, 0x10(a0)
-    mul.s      ft4, ft5
-    swc1       ft4, 0x10(a0)
+    /* Scale mtx[1][0] */
+    lwc1       ft4, 0x10(a0)            /* ft4 = mtx[1][0] */
+    mul.s      ft4, ft5                 /* ft4 *= scale */
+    swc1       ft4, 0x10(a0)            /* store mtx[1][0] */
+
+    /* Scale mtx[1][1] */
 #ifdef AVOID_UB
-    lwc1       ft4, 0x14(a0)
+    lwc1       ft4, 0x14(a0)            /* ft4 = mtx[1][1] */
 #else
-    lwc1       ft4, 0x14(a3) /* UB: Should be a0, and this was actually fixed in JFG */
+    lwc1       ft4, 0x14(a3)            /* !@bug: Should be a0, reads garbage from a3, this was actually fixed in JFG */
 #endif
-    mul.s      ft4, ft5
-    swc1       ft4, 0x14(a0)
+    mul.s      ft4, ft5                 /* ft4 *= scale */
+    swc1       ft4, 0x14(a0)            /* store mtx[1][1] */
 
-    lwc1       ft4, 0x18(a0)
-    mul.s      ft4, ft5
-    swc1       ft4, 0x18(a0)
+    /* Scale mtx[1][2] */
+    lwc1       ft4, 0x18(a0)            /* ft4 = mtx[1][2] */
+    mul.s      ft4, ft5                 /* ft4 *= scale */
+    swc1       ft4, 0x18(a0)            /* store mtx[1][2] */
 
     jr         ra
 END(mtxf_scale_y)
 
-/* Official Name: mathTransY */
+/**
+ * Modifies the matrix by translating its position along the local Y axis.
+ * If this is a model matrix, the operation is equivalent to moving the model
+ * along its local Y axis in model space.
+ *
+ * Official Name: mathTransY
+ *
+ * Arguments:
+ *   a0 = pointer to 4×4 float matrix (MtxF)
+ *   a1 = offset (passed as raw float bits in integer register)
+ *
+ * Operation:
+ *   mtx[3][0] += mtx[1][0] * offset
+ *   mtx[3][1] += mtx[1][1] * offset
+ *   mtx[3][2] += mtx[1][2] * offset
+ *
+ * This moves the translation component of the matrix along the local Y axis
+ * direction by the specified offset amount.
+ */
 LEAF(mtxf_translate_y)
-    mtc1       a1, ft4
-    lwc1       fv0, 0x10(a0)
-    lwc1       ft0, 0x14(a0)
-    lwc1       ft2, 0x18(a0)
-    lwc1       fv1, 0x30(a0)
-    lwc1       ft1, 0x34(a0)
-    lwc1       ft3, 0x38(a0)
-    mul.s      fv0, ft4
-    mul.s      ft0, ft4
-    mul.s      ft2, ft4
-    add.s      fv0, fv1
-    add.s      ft0, ft1
-    add.s      ft2, ft3
-    swc1       fv0, 0x30(a0)
-    swc1       ft0, 0x34(a0)
-    swc1       ft2, 0x38(a0)
+    mtc1       a1, ft4                  /* ft4 = offset */
+
+    /* Load Y-axis basis vector (row 1) */
+    lwc1       fv0, 0x10(a0)            /* fv0 = mtx[1][0] */
+    lwc1       ft0, 0x14(a0)            /* ft0 = mtx[1][1] */
+    lwc1       ft2, 0x18(a0)            /* ft2 = mtx[1][2] */
+
+    /* Load current translation (row 3) */
+    lwc1       fv1, 0x30(a0)            /* fv1 = mtx[3][0] */
+    lwc1       ft1, 0x34(a0)            /* ft1 = mtx[3][1] */
+    lwc1       ft3, 0x38(a0)            /* ft3 = mtx[3][2] */
+
+    /* Scale Y-axis by offset */
+    mul.s      fv0, ft4                 /* fv0 = mtx[1][0] * offset */
+    mul.s      ft0, ft4                 /* ft0 = mtx[1][1] * offset */
+    mul.s      ft2, ft4                 /* ft2 = mtx[1][2] * offset */
+
+    /* Add scaled Y-axis to translation */
+    add.s      fv0, fv1                 /* fv0 = mtx[3][0] + mtx[1][0] * offset */
+    add.s      ft0, ft1                 /* ft0 = mtx[3][1] + mtx[1][1] * offset */
+    add.s      ft2, ft3                 /* ft2 = mtx[3][2] + mtx[1][2] * offset */
+
+    /* Store updated translation */
+    swc1       fv0, 0x30(a0)            /* mtx[3][0] = result */
+    swc1       ft0, 0x34(a0)            /* mtx[3][1] = result */
+    swc1       ft2, 0x38(a0)            /* mtx[3][2] = result */
+
     jr         ra
 END(mtxf_translate_y)
 
-/* Official Name: mathRpyXyzMtx */
+/**
+ * Builds an inverse 4×4 floating-point transformation matrix from an ObjectTransform struct.
+ *
+ * This function constructs the inverse of a rotation matrix from Euler angles (roll, pitch, yaw)
+ * and applies the inverse translation. This is useful for transforming world-space coordinates
+ * into object-local space (e.g., for camera view matrices).
+ *
+ * Official Name: mathRpyXyzMtx
+ *
+ * Arguments:
+ *   a0 = pointer to destination 4×4 float matrix (MtxF)
+ *   a1 = pointer to ObjectTransform struct:
+ *          0x00: s16 rotation.x (roll)
+ *          0x02: s16 rotation.y (pitch)
+ *          0x04: s16 rotation.z (yaw)
+ *          0x06: s16 (padding)
+ *          0x08: f32 scale (UNUSED in this function)
+ *          0x0C: f32 position.x
+ *          0x10: f32 position.y
+ *          0x14: f32 position.z
+ *
+ * The inverse rotation is computed by transposing the rotation matrix.
+ * The inverse translation is: R^T * position (not negated here)
+ *
+ * Register usage after trig calculations:
+ *   fv0 = sinRoll,  fv1 = cosRoll
+ *   ft0 = sinPitch, ft1 = cosPitch
+ *   ft2 = sinYaw,   ft3 = cosYaw
+ *
+ * Matrix layout (row-major):
+ *   [ m00 m01 m02  0  ]   row 0
+ *   [ m10 m11 m12  0  ]   row 1
+ *   [ m20 m21 m22  0  ]   row 2
+ *   [ tx  ty  tz   1  ]   row 3 (inverse translation + homogeneous)
+ */
 LEAF(mtxf_from_inverse_transform)
     addiu      sp, sp, -0x8
     sd         ra, 0x0(sp)
 
-    move       a3, a0
-    li.s       ft5, 0.0000152587890625 /* (1.0f / 0x10000) */
-    lh         a0, 0x0(a1)
-    jal        sins_s16
-    mtc1       v0, fv0
-    cvt.s.w    fv0
-    mul.s      fv0, ft5
-    lh         a0, 0x0(a1)
-    jal        coss_s16
-    mtc1       v0, fv1
-    cvt.s.w    fv1
-    mul.s      fv1, ft5
-    lh         a0, 0x2(a1)
-    jal        sins_s16
-    mtc1       v0, ft0
-    cvt.s.w    ft0
-    mul.s      ft0, ft5
-    lh         a0, 0x2(a1)
-    jal        coss_s16
-    mtc1       v0, ft1
-    cvt.s.w    ft1
-    mul.s      ft1, ft5
-    lh         a0, 0x4(a1)
-    jal        sins_s16
-    mtc1       v0, ft2
-    cvt.s.w    ft2
-    mul.s      ft2, ft5
-    lh         a0, 0x4(a1)
-    jal        coss_s16
-    mtc1       v0, ft3
-    cvt.s.w    ft3
-    sw         zero, 0xC(a3)
-    swc1       ft0, 0x18(a3)
-    sw         zero, 0x1C(a3)
-    sw         zero, 0x2C(a3)
-    mul.s      ft3, ft5
-    mul.s      ft4, ft0, ft2
-    mul.s      ft4, fv0
-    mul.s      ft5, fv1, ft3
-    sub.s      ft4, ft5, ft4
-    swc1       ft4, 0x0(a3)
-    mul.s      ft4, ft0, ft3
-    mul.s      ft4, fv0
-    mul.s      ft5, fv1, ft2
-    add.s      ft4, ft5
-    swc1       ft4, 0x4(a3)
-    mul.s      ft4, fv0, ft1
-    neg.s      ft4
-    swc1       ft4, 0x8(a3)
-    mul.s      ft4, ft1, ft2
-    neg.s      ft4
-    swc1       ft4, 0x10(a3)
-    mul.s      ft4, ft1, ft3
-    swc1       ft4, 0x14(a3)
-    mul.s      ft4, ft0, ft2
-    mul.s      ft4, fv1
-    mul.s      ft5, fv0, ft3
-    add.s      ft4, ft5
-    swc1       ft4, 0x20(a3)
-    mul.s      ft4, ft0, ft3
-    mul.s      ft4, fv1
-    mul.s      ft5, fv0, ft2
-    sub.s      ft4, ft5, ft4
-    lwc1       ft5, 0x0(a3)
-    swc1       ft4, 0x24(a3)
-    mul.s      ft4, fv1, ft1
-    swc1       ft4, 0x28(a3)
-    lwc1       fv0, 0xC(a1)
-    lwc1       fv1, 0x10(a1)
-    lwc1       ft4, 0x10(a3)
-    mul.s      ft5, fv0
-    lwc1       ft0, 0x14(a1)
-    mul.s      ft4, fv1
-    add.s      ft4, ft5
-    lwc1       ft5, 0x20(a3)
-    mul.s      ft5, ft0
-    add.s      ft4, ft5
-    lwc1       ft5, 0x4(a3)
-    swc1       ft4, 0x30(a3)
-    mul.s      ft5, fv0
-    lwc1       ft4, 0x14(a3)
-    mul.s      ft4, fv1
-    add.s      ft4, ft5
-    lwc1       ft5, 0x24(a3)
-    mul.s      ft5, ft0
-    add.s      ft4, ft5
-    lwc1       ft5, 0x8(a3)
-    swc1       ft4, 0x34(a3)
-    mul.s      ft5, fv0
-    lwc1       ft4, 0x18(a3)
-    mul.s      ft4, fv1
-    add.s      ft4, ft5
-    lwc1       ft5, 0x28(a3)
-    mul.s      ft5, ft0
-    add.s      ft4, ft5
-    swc1       ft4, 0x38(a3)
+    move       a3, a0                   /* a3 = dest matrix pointer */
+    li.s       ft5, 0.0000152587890625  /* ft5 = 1.0f / 0x10000 (s16 to float scale) */
+
+    /* -----------------------------------------
+     * Compute sin/cos for roll (rotation.x)
+     * ----------------------------------------- */
+    lh         a0, 0x0(a1)              /* a0 = transform->rotation.x (roll angle) */
+    jal        sins_s16                 /* v0 = sin(roll) as s16 */
+    mtc1       v0, fv0                  /* fv0 = sin(roll) as int bits */
+    cvt.s.w    fv0                      /* fv0 = (float)sin(roll) */
+    mul.s      fv0, ft5                 /* fv0 = sinRoll (normalized) */
+    lh         a0, 0x0(a1)              /* a0 = transform->rotation.x */
+    jal        coss_s16                 /* v0 = cos(roll) as s16 */
+    mtc1       v0, fv1                  /* fv1 = cos(roll) as int bits */
+    cvt.s.w    fv1                      /* fv1 = (float)cos(roll) */
+    mul.s      fv1, ft5                 /* fv1 = cosRoll (normalized) */
+
+    /* -----------------------------------------
+     * Compute sin/cos for pitch (rotation.y)
+     * ----------------------------------------- */
+    lh         a0, 0x2(a1)              /* a0 = transform->rotation.y (pitch angle) */
+    jal        sins_s16                 /* v0 = sin(pitch) as s16 */
+    mtc1       v0, ft0                  /* ft0 = sin(pitch) as int bits */
+    cvt.s.w    ft0                      /* ft0 = (float)sin(pitch) */
+    mul.s      ft0, ft5                 /* ft0 = sinPitch (normalized) */
+    lh         a0, 0x2(a1)              /* a0 = transform->rotation.y */
+    jal        coss_s16                 /* v0 = cos(pitch) as s16 */
+    mtc1       v0, ft1                  /* ft1 = cos(pitch) as int bits */
+    cvt.s.w    ft1                      /* ft1 = (float)cos(pitch) */
+    mul.s      ft1, ft5                 /* ft1 = cosPitch (normalized) */
+
+    /* -----------------------------------------
+     * Compute sin/cos for yaw (rotation.z)
+     * ----------------------------------------- */
+    lh         a0, 0x4(a1)              /* a0 = transform->rotation.z (yaw angle) */
+    jal        sins_s16                 /* v0 = sin(yaw) as s16 */
+    mtc1       v0, ft2                  /* ft2 = sin(yaw) as int bits */
+    cvt.s.w    ft2                      /* ft2 = (float)sin(yaw) */
+    mul.s      ft2, ft5                 /* ft2 = sinYaw (normalized) */
+    lh         a0, 0x4(a1)              /* a0 = transform->rotation.z */
+    jal        coss_s16                 /* v0 = cos(yaw) as s16 */
+    mtc1       v0, ft3                  /* ft3 = cos(yaw) as int bits */
+    cvt.s.w    ft3                      /* ft3 = (float)cos(yaw) */
+    mul.s      ft3, ft5                 /* ft3 = cosYaw (normalized) */
+
+    /* -----------------------------------------
+     * Build inverse rotation matrix (transpose of forward rotation)
+     * 
+     * Register usage at this point:
+     *   fv0 = sinRoll,  fv1 = cosRoll
+     *   ft0 = sinPitch, ft1 = cosPitch
+     *   ft2 = sinYaw,   ft3 = cosYaw
+     * ----------------------------------------- */
+
+    /* Clear perspective column and set m[1][2] = sinPitch */
+    sw         zero, 0xC(a3)            /* m[0][3] = 0.0 */
+    swc1       ft0, 0x18(a3)            /* m[1][2] = sinPitch */
+    sw         zero, 0x1C(a3)           /* m[1][3] = 0.0 */
+    sw         zero, 0x2C(a3)           /* m[2][3] = 0.0 */
+
+    /* -----------------------------------------
+     * m[0][0] = cosRoll * cosYaw - sinPitch * sinYaw * sinRoll
+     * ----------------------------------------- */
+    mul.s      ft4, ft0, ft2            /* ft4 = sinPitch * sinYaw */
+    mul.s      ft4, fv0                 /* ft4 = sinPitch * sinYaw * sinRoll */
+    mul.s      ft5, fv1, ft3            /* ft5 = cosRoll * cosYaw */
+    sub.s      ft4, ft5, ft4            /* ft4 = cosRoll*cosYaw - sinPitch*sinYaw*sinRoll */
+    swc1       ft4, 0x0(a3)             /* m[0][0] = result */
+
+    /* -----------------------------------------
+     * m[0][1] = sinPitch * cosYaw * sinRoll + cosRoll * sinYaw
+     * ----------------------------------------- */
+    mul.s      ft4, ft0, ft3            /* ft4 = sinPitch * cosYaw */
+    mul.s      ft4, fv0                 /* ft4 = sinPitch * cosYaw * sinRoll */
+    mul.s      ft5, fv1, ft2            /* ft5 = cosRoll * sinYaw */
+    add.s      ft4, ft5                 /* ft4 = sinPitch*cosYaw*sinRoll + cosRoll*sinYaw */
+    swc1       ft4, 0x4(a3)             /* m[0][1] = result */
+
+    /* -----------------------------------------
+     * m[0][2] = -sinRoll * cosPitch
+     * ----------------------------------------- */
+    mul.s      ft4, fv0, ft1            /* ft4 = sinRoll * cosPitch */
+    neg.s      ft4                      /* ft4 = -sinRoll * cosPitch */
+    swc1       ft4, 0x8(a3)             /* m[0][2] = result */
+
+    /* -----------------------------------------
+     * m[1][0] = -cosPitch * sinYaw
+     * ----------------------------------------- */
+    mul.s      ft4, ft1, ft2            /* ft4 = cosPitch * sinYaw */
+    neg.s      ft4                      /* ft4 = -cosPitch * sinYaw */
+    swc1       ft4, 0x10(a3)            /* m[1][0] = result */
+
+    /* -----------------------------------------
+     * m[1][1] = cosPitch * cosYaw
+     * ----------------------------------------- */
+    mul.s      ft4, ft1, ft3            /* ft4 = cosPitch * cosYaw */
+    swc1       ft4, 0x14(a3)            /* m[1][1] = result */
+
+    /* -----------------------------------------
+     * m[2][0] = sinPitch * sinYaw * cosRoll + sinRoll * cosYaw
+     * ----------------------------------------- */
+    mul.s      ft4, ft0, ft2            /* ft4 = sinPitch * sinYaw */
+    mul.s      ft4, fv1                 /* ft4 = sinPitch * sinYaw * cosRoll */
+    mul.s      ft5, fv0, ft3            /* ft5 = sinRoll * cosYaw */
+    add.s      ft4, ft5                 /* ft4 = sinPitch*sinYaw*cosRoll + sinRoll*cosYaw */
+    swc1       ft4, 0x20(a3)            /* m[2][0] = result */
+
+    /* -----------------------------------------
+     * m[2][1] = sinRoll * sinYaw - sinPitch * cosYaw * cosRoll
+     * ----------------------------------------- */
+    mul.s      ft4, ft0, ft3            /* ft4 = sinPitch * cosYaw */
+    mul.s      ft4, fv1                 /* ft4 = sinPitch * cosYaw * cosRoll */
+    mul.s      ft5, fv0, ft2            /* ft5 = sinRoll * sinYaw */
+    sub.s      ft4, ft5, ft4            /* ft4 = sinRoll*sinYaw - sinPitch*cosYaw*cosRoll */
+    swc1       ft4, 0x24(a3)            /* m[2][1] = result */
+
+    /* -----------------------------------------
+     * m[2][2] = cosRoll * cosPitch
+     * ----------------------------------------- */
+    mul.s      ft4, fv1, ft1            /* ft4 = cosRoll * cosPitch */
+    swc1       ft4, 0x28(a3)            /* m[2][2] = result */
+
+    /* -----------------------------------------
+     * Load X / Y / Z into fv0, fv1, ft0
+     * ----------------------------------------- */
+    lwc1       fv0, 0xC(a1)             /* fv0 = position.x */
+    lwc1       fv1, 0x10(a1)            /* fv1 = position.y */
+    lwc1       ft0, 0x14(a1)            /* ft0 = position.z */
+
+    /* Compute translation x: tx = m[0][0]*pos.x + m[1][0]*pos.y + m[2][0]*pos.z */
+    lwc1       ft5, 0x0(a3)             /* ft5 = m[0][0] */
+    lwc1       ft4, 0x10(a3)            /* ft4 = m[1][0] */
+    mul.s      ft5, fv0                 /* ft5 = m[0][0] * position.x */
+    mul.s      ft4, fv1                 /* ft4 = m[1][0] * position.y */
+    add.s      ft4, ft5                 /* ft4 = m[0][0]*pos.x + m[1][0]*pos.y */
+    lwc1       ft5, 0x20(a3)            /* ft5 = m[2][0] */
+    mul.s      ft5, ft0                 /* ft5 = m[2][0] * position.z */
+    add.s      ft4, ft5                 /* ft4 = m[0][0]*pos.x + m[1][0]*pos.y + m[2][0]*pos.z */
+    swc1       ft4, 0x30(a3)            /* m[3][0] = translation x */
+
+    /* Compute translation y: ty = m01*pos.x + m11*pos.y + m21*pos.z */
+    lwc1       ft5, 0x4(a3)             /* ft5 = m[0][1] */
+    lwc1       ft4, 0x14(a3)            /* ft4 = m[1][1] */
+    mul.s      ft5, fv0                 /* ft5 = m[0][1] * position.x */
+    mul.s      ft4, fv1                 /* ft4 = m[1][1] * position.y */
+    add.s      ft4, ft5                 /* ft4 = m[0][1]*pos.x + m[1][1]*pos.y */
+    lwc1       ft5, 0x24(a3)            /* ft5 = m[2][1] */
+    mul.s      ft5, ft0                 /* ft5 = m[2][1] * position.z */
+    add.s      ft4, ft5                 /* ft4 = m[0][1]*pos.x + m[1][1]*pos.y + m[2][1]*pos.z */
+    swc1       ft4, 0x34(a3)            /* m[3][1] = translation y */
+
+    /* Compute translation z: tz = m02*pos.x + m12*pos.y + m22*pos.z */
+    lwc1       ft5, 0x8(a3)             /* ft5 = m[0][2] */
+    lwc1       ft4, 0x18(a3)            /* ft4 = m[1][2] */
+    mul.s      ft5, fv0                 /* ft5 = m[0][2] * position.x */
+    mul.s      ft4, fv1                 /* ft4 = m[1][2] * position.y */
+    add.s      ft4, ft5                 /* ft4 = m[0][2]*pos.x + m[1][2]*pos.y */
+    lwc1       ft5, 0x28(a3)            /* ft5 = m[2][2] */
+    mul.s      ft5, ft0                 /* ft5 = m[2][2] * position.z */
+    add.s      ft4, ft5                 /* ft4 = m[0][2]*pos.x + m[1][2]*pos.y + m[2][2]*pos.z */
+    swc1       ft4, 0x38(a3)            /* m[3][2] = translation z */
+
     li.s       ft4, 1.0
-    swc1       ft4, 0x3C(a3)
+    swc1       ft4, 0x3C(a3)            /* m[3][3] = 1.0 */
 
     ld         ra, 0x0(sp)
     addiu      sp, sp, 0x8
@@ -1600,7 +1748,7 @@ LEAF(tri2d_xz_contains_point)
     sub        t8, t4, t2               /* t8 = C.x - B.x */
     sub        t9, a1, t3               /* t9 = z - B.z */
     MUL        (t7, t8, t9)             /* t7 and t8 = (C.x - B.x) * (z - B.z) */    
-    sub        t6, t6, t7               /* t6 = cross product for edge B->C */
+    sub        t6, t7                   /* t6 = cross product for edge B->C */
     ori        a2, zero, 1              /* a2 = 1 (assume positive) */
     bgez       t6, .edge_bc_positive
     xor        a2, a2                   /* a2 = 0 (cross was negative) */
