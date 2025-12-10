@@ -1486,7 +1486,7 @@ LEAF(func_80070058)
     mul.s      ft4, fv0, ft2            /* ft4 = sinRoll * sinYaw */
 
     /* -----------------------------------------
-     * Initialize perspective column (interleaved with yaw cos)
+     * Initialize perspective column
      * ----------------------------------------- */
     li.s       ft5, 1.0                 /* ft5 = 1.0f */
     sw         zero, 0xC(a3)            /* m[0][3] = 0.0f */
@@ -1499,46 +1499,86 @@ LEAF(func_80070058)
     jr         ra
 END(func_80070058)
 
+/**
+ * Builds a billboard matrix for a sprite that always faces the camera.
+ *
+ * The resulting 4×4 matrix applies a rotation around the Z axis (in the XY plane),
+ * followed by non-uniform scaling (uniform in X/Z and scaled by scaleY in Y).
+ *
+ * This is commonly used to render flat sprites that rotate to face the camera
+ * while preserving their upright orientation.
+ *
+ * Arguments:
+ *   a0 = pointer to destination 4×4 float matrix (MtxF)
+ *   a1 = rotation angle (s16, around the view axis / Z rotation)
+ *   a2 = scale (passed as raw float bits in integer register)
+ *   a3 = scaleY (passed as raw float bits in integer register, for non-uniform Y scaling)
+ *
+ * The resulting matrix:
+ *   - Rotates around the Z axis by the given angle
+ *   - Applies uniform scale to X axis
+ *   - Applies scaleY to Y axis (allows stretching/squashing)
+ *   - Z axis uses the base scale value
+ *   - Translation is zeroed (caller must set position separately)
+ *
+ * Matrix layout:
+ *   [ cos*scale    sin*scale           0       0 ]
+ *   [ -sin*scale   cos*scale*scaleY    0       0 ]
+ *   [ 0            0                   scale   0 ]
+ *   [ 0            0                   0       1 ]
+ */
 LEAF(mtxf_billboard)
     addiu      sp, sp, -0x8
     sd         ra, 0x0(sp)
 
-    move       t9, a3
-    move       a3, a0
-    li.s       ft5, 0.0000152587890625 /* (1.0f / 0x10000) */
-    move       a0, a1
-    jal        sins_s16
-    mtc1       v0, ft2
-    move       a0, a1
-    cvt.s.w    ft2
-    mul.s      ft2, ft5
-    jal        coss_s16
-    mtc1       v0, ft3
-    mtc1       a2, ft4
-    cvt.s.w    ft3
-    sw         zero, 0x8(a3)
-    sw         zero, 0xC(a3)
-    sw         zero, 0x18(a3)
-    sw         zero, 0x1C(a3)
-    swc1       ft4, 0x28(a3)
-    mul.s      ft3, ft5
-    mtc1       t9, ft5
-    sw         zero, 0x20(a3)
-    sw         zero, 0x24(a3)
-    sw         zero, 0x2C(a3)
-    sw         zero, 0x30(a3)
-    sw         zero, 0x34(a3)
-    sw         zero, 0x38(a3)
-    mul.s      ft3, ft4
-    mul.s      ft2, ft4
-    li.s       ft4, 1.0
-    swc1       ft3, 0x0(a3)
-    swc1       ft2, 0x4(a3)
-    swc1       ft4, 0x3C(a3)
-    mul.s      ft3, ft5
-    neg.s      ft2, ft2
-    swc1       ft2, 0x10(a3)
-    swc1       ft3, 0x14(a3)
+    move       t9, a3                   /* t9 = scaleY (save before a3 is overwritten) */
+    move       a3, a0                   /* a3 = dest matrix pointer */
+    li.s       ft5, 0.0000152587890625  /* ft5 = 1.0f / 0x10000 (s16 to float scale) */
+
+    /* -----------------------------------------
+     * Compute sin/cos for rotation angle
+     * ----------------------------------------- */
+    move       a0, a1                   /* a0 = rotation angle */
+    jal        sins_s16                 /* v0 = sin(angle) as s16 */
+    mtc1       v0, ft2                  /* ft2 = sin(angle) raw bits */
+    cvt.s.w    ft2                      /* ft2 = (float)sin(angle) */
+    mul.s      ft2, ft5                 /* ft2 = sinAngle (normalized) */
+
+    move       a0, a1                   /* a0 = rotation angle */
+    jal        coss_s16                 /* v0 = cos(angle) as s16 */
+    mtc1       v0, ft3                  /* ft3 = cos(angle) raw bits */
+    cvt.s.w    ft3                      /* ft3 = (float)cos(angle) */
+    mul.s      ft3, ft5                 /* ft3 = cosAngle (normalized) */
+
+    /* -----------------------------------------
+     * Build billboard matrix
+     * ----------------------------------------- */
+    mtc1       a2, ft4                  /* ft4 = scale */
+    mtc1       t9, ft5                  /* ft5 = scaleY */
+    mul.s      ft3, ft4                 /* ft3 = cos * scale */
+    mul.s      ft2, ft4                 /* ft2 = sin * scale */
+
+    sw         zero, 0x8(a3)            /* m[0][2] = 0.0 */
+    sw         zero, 0xC(a3)            /* m[0][3] = 0.0 */
+    sw         zero, 0x18(a3)           /* m[1][2] = 0.0 */
+    sw         zero, 0x1C(a3)           /* m[1][3] = 0.0 */
+    sw         zero, 0x20(a3)           /* m[2][0] = 0.0 */
+    sw         zero, 0x24(a3)           /* m[2][1] = 0.0 */
+    sw         zero, 0x2C(a3)           /* m[2][3] = 0.0 */
+    sw         zero, 0x30(a3)           /* m[3][0] = 0.0 */
+    sw         zero, 0x34(a3)           /* m[3][1] = 0.0 */
+    sw         zero, 0x38(a3)           /* m[3][2] = 0.0 */
+    swc1       ft3, 0x0(a3)             /* m[0][0] = cos * scale */
+    swc1       ft2, 0x4(a3)             /* m[0][1] = sin * scale */
+    swc1       ft4, 0x28(a3)            /* m[2][2] = scale */
+
+    mul.s      ft3, ft5                 /* ft3 = cos * scale * scaleY */
+    neg.s      ft2                      /* ft2 = -(sin * scale) */
+    li.s       ft4, 1.0                 /* ft4 = 1.0f */
+
+    swc1       ft2, 0x10(a3)            /* m[1][0] = -(sin * scale) */
+    swc1       ft3, 0x14(a3)            /* m[1][1] = cos * scale * scaleY */
+    swc1       ft4, 0x3C(a3)            /* m[3][3] = 1.0 */
 
     ld         ra, 0x0(sp)
     addiu      sp, sp, 0x8
