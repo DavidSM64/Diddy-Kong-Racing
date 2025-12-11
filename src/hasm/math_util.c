@@ -645,8 +645,8 @@ void vec3f_rotate_py(Vec3s *rotation, Vec3f *vec) {
 
     z = vec->z;
 
-    vec->x = z * cosX * sinY;
-    vec->y = -z * sinX;
+    vec->x = z * cosY * sinX;
+    vec->y = -z * sinY;
     vec->z = z * cosX * cosY;
 }
 #else
