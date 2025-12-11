@@ -2194,15 +2194,32 @@ LEAF(atan2s)
     jr         ra
 END(atan2s)
 
+/**
+ * Computes the arctangent of two floating-point values, returning an angle in s16 format.
+ *
+ * This is a floating-point wrapper around atan2s. It scales the input floats
+ * by 255.0 and converts them to integers before calling atan2s.
+ *
+ * Arguments:
+ *   fa0 = x coordinate (f32, passed in $f12)
+ *   fa1 = y coordinate (f32, passed in $f14)
+ *
+ * Returns:
+ *   v0 = angle in s16 format (0x0000 = 0°, 0x4000 = 90°, 0x8000 = 180°, 0xC000 = 270°)
+ *
+ * Note: The scaling by 255.0 suggests this function expects normalized inputs
+ * in the range [-1.0, 1.0] or similar, converting them to roughly [-255, 255]
+ * for the integer atan2s function.
+ */
 LEAF(arctan2_f)
-    li.s       fv0, 255.0
-    mul.s      fa0, fv0
-    mul.s      fa1, fv0
-    cvt.w.s    fa0
-    cvt.w.s    fa1
-    mfc1       a0, fa0
-    mfc1       a1, fa1
-    j          atan2s
+    li.s       fv0, 255.0              /* fv0 = 255.0 (scale factor) */
+    mul.s      fa0, fv0                /* fa0 = x * 255.0 */
+    mul.s      fa1, fv0                /* fa1 = y * 255.0 */
+    cvt.w.s    fa0                     /* fa0 = (int)(x * 255.0) */
+    cvt.w.s    fa1                     /* fa1 = (int)(y * 255.0) */
+    mfc1       a0, fa0                 /* a0 = scaled x as integer */
+    mfc1       a1, fa1                 /* a1 = scaled y as integer */
+    j          atan2s                  /* tail call to atan2s(a0, a1) */
 END(arctan2_f)
 
 LEAF(fix32_sqrt)
