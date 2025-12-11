@@ -2103,76 +2103,94 @@ LEAF(mtxf_from_scale)
     jr         ra
 END(mtxf_from_scale)
 
+/**
+ * Computes the arctangent of x/y, returning an angle in s16 format (0-65535 = 0-360°).
+ *
+ * This implements atan2(x, y) using a lookup table for the core arctangent
+ * calculation, with quadrant adjustment based on the signs of x and y.
+ *
+ * Arguments:
+ *   a0 = x coordinate (s32)
+ *   a1 = y coordinate (s32)
+ *
+ * Returns:
+ *   v0 = angle in s16 format (0x0000 = 0°, 0x4000 = 90°, 0x8000 = 180°, 0xC000 = 270°)
+ *
+ * Quadrant handling:
+ *   - Q1 (y >= 0, x >= 0): angle = atan(x/y), base = 0x0000
+ *   - Q2 (y < 0, x >= 0):  angle = 0x8000 - atan(x/y), base = 0x4000
+ *   - Q3 (y < 0, x < 0):   angle = 0x8000 + atan(x/y), base = 0x8000
+ *   - Q4 (y >= 0, x < 0):  angle = -atan(x/y), base = 0xC000
+ */
 LEAF(atan2s)
+    /* Check if both x and y are zero */
     or         t0, a0, a1
-    bne        zero, t0, .L80070680
-    li         v0, 0x0
+    bne        zero, t0, .atan2s_nonzero
+    li         v0, 0                    /* Return 0 if both inputs are zero */
     jr         ra
-    .L80070680:
-    bltz       a0, .L80070698
-    .set noreorder
-    bltzl      a1, .L800706B8
-    .set reorder
-    negu       a1
-    li         v0, 0x0
-    j          .L800706C8
-    .L80070698:
-    negu       a0
-    bltz       a1, .L800706A8
-    ori        v0, zero, 0xC000
-    j          .L800706BC
-    .L800706A8:
-    negu       a1
-    ori        v0, zero, 0x8000
-    j          .L800706C8
-    negu       a1
-    .L800706B8:
-    li         v0, 0x4000
-    .L800706BC:
-    xor        a0, a1
-    xor        a1, a0, a1
-    xor        a0, a1
-    .L800706C8:
-    subu       t0, a0, a1
-    .set noreorder
-    bltzl      t0, .L80070718
-    .set reorder
-    dsll       t0, a0, 11
-    dsll       t0, a1, 11
-    ddivu      zero, t0, a0
-    .set noreorder
+
+.atan2s_nonzero:
+    /* Determine quadrant based on signs of x (a0) and y (a1) */
+    bltz       a0, .atan2s_x_negative
+
+    /* x >= 0: check y sign */
+    bltz       a1, .atan2s_q2
+    li         v0, 0x0                  /* Q1: base angle = 0x0000 */
+    j          .atan2s_compute
+
+.atan2s_x_negative:
+    /* x < 0: make x positive and check y sign */
+    negu       a0                       /* a0 = |x| */
+    bltz       a1, .atan2s_q3
+    li         v0, 0xC000               /* Q4: base angle = 0xC000 (270°) */
+    j          .atan2s_swap_and_compute
+
+.atan2s_q3:
+    /* Quadrant 3: y < 0, x < 0 */
+    negu       a1                       /* a1 = |y| */
+    li         v0, 0x8000               /* Q3: base angle = 0x8000 (180°) */
+    j          .atan2s_compute
+
+.atan2s_q2:
+    /* Quadrant 2: y < 0, x >= 0 */
+    negu       a1                       /* a1 = |y| */
+    li         v0, 0x4000               /* Q2: base angle = 0x4000 (90°) */
+
+.atan2s_swap_and_compute:
+    /* Swap x and y for Q2 and Q4 quadrants (XOR swap) */
+    xor        a0, a0, a1               /* a0 ^= a1 */
+    xor        a1, a0, a1               /* a1 ^= a0 (a1 now has original a0) */
+    xor        a0, a0, a1               /* a0 ^= a1 (a0 now has original a1) */
+
+.atan2s_compute:
+    /* Determine if x < y to decide division order */
+    subu       t0, a0, a1               /* t0 = |x| - |y| */
+    bltz       t0, .atan2s_x_less_than_y
+
+    /* x >= y: compute atan(y/x) and add 90° offset */
+    dsll       t0, a1, 11               /* t0 = y << 11 */
+    ddivu      t0, a0                   /* divide (y << 11) / x */
+    mflo       t0                       /* Duplicate as ddivu already does this */
+    andi       t0, 0xFFE                /* mask to table index (even values only) */
     la         t1, gArcTanTable
-    addiu      v0, 0x4000
-    bnez       a0, .L800706F4
-    nop
-    .set reorder
-    break      7
-    .L800706F4:
-    mflo       t0
-    mflo       t0
-    andi       t0, 0xFFE
-    addu       t1, t0
-    lh         t0, 0x0(t1)
-    subu       v0, t0
-    andi       v0, 0xFFFF
+    addu       t1, t0                   /* t1 = &gArcTanTable[index] */
+    lh         t0, 0x0(t1)              /* t0 = atan table value */
+    addiu      v0, 0x4000               /* add 90° to base angle */
+    subu       v0, t0                   /* angle = base + 90° - atan(y/x) */
+    andi       v0, 0xFFFF               /* mask to 16-bit result */
     jr         ra
-    dsll       t0, a0, 11
-    .L80070718:
-    ddivu      zero, t0, a1
-    .set noreorder
+
+.atan2s_x_less_than_y:
+    /* x < y: compute atan(x/y) directly */
+    dsll       t0, a0, 11               /* t0 = x << 11 */
+    ddivu      t0, a1                   /* divide (x << 11) / y */
+    mflo       t0                       /* Duplicate as ddivu already does this */
+    andi       t0, 0xFFE                /* mask to table index (even values only) */
     la         t1, gArcTanTable
-    bnez       a1, .L80070730
-    nop
-    .set reorder
-    break      7
-    .L80070730:
-    mflo       t0
-    mflo       t0
-    andi       t0, 0xFFE
-    addu       t1, t0
-    lh         t0, 0x0(t1)
-    addu       v0, t0
-    andi       v0, 0xFFFF
+    addu       t1, t0                   /* t1 = &gArcTanTable[index] */
+    lh         t0, 0x0(t1)              /* t0 = atan table value */
+    addu       v0, t0                   /* angle = base + atan(x/y) */
+    andi       v0, 0xFFFF               /* mask to 16-bit result */
     jr         ra
 END(atan2s)
 
