@@ -2222,15 +2222,29 @@ LEAF(arctan2_f)
     j          atan2s                  /* tail call to atan2s(a0, a1) */
 END(arctan2_f)
 
+/**
+ * Computes the square root of a 16.16 fixed-point number.
+ *
+ * This function takes a 32-bit fixed-point number in 16.16 format,
+ * converts it to floating-point, computes the square root, and
+ * converts the result back to 16.16 fixed-point.
+ *
+ * Arguments:
+ *   a0 = input value in 16.16 fixed-point format (s32)
+ *        The value represents: (a0 / 65536.0)
+ *
+ * Returns:
+ *   v0 = sqrt(input) in 16.16 fixed-point format (s32)
+ */
 LEAF(fix32_sqrt)
-    mtc1       a0, fv0
-    li.s       fv1, 65536.0
-    cvt.s.w    fv0
-    div.s      fv0, fv1
-    sqrt.s     fv0
-    mul.s      fv0, fv1
-    cvt.w.s    fv0
-    mfc1       v0, fv0
+    mtc1       a0, fv0                 /* fv0 = input (as raw int bits) */
+    cvt.s.w    fv0                     /* fv0 = (float)a0 */
+    li.s       fv1, 65536.0            /* fv1 = 65536.0 (fixed-point scale) */
+    div.s      fv0, fv1                /* fv0 = a0 / 65536.0 (convert from 16.16) */
+    sqrt.s     fv0                     /* fv0 = sqrt(fv0) */
+    mul.s      fv0, fv1                /* fv0 = sqrt * 65536.0 (convert back to 16.16) */
+    cvt.w.s    fv0                     /* fv0 = (int)fv0 */
+    mfc1       v0, fv0                 /* v0 = result as integer */
     jr         ra
 END(fix32_sqrt)
 
@@ -2250,41 +2264,67 @@ END(fix32_sqrt)
  */
 LEAF(bad_int_sqrt)
     mtc1       a0, fv0      /* !@bug: moves int bits directly, no conversion */
-#ifdef AVOID_UB
-    cvt.s.w    fv0          /* This would fix the bug by converting the int to a float */
-    sqrt.s     fv0          /* compute sqrt */
-    cvt.w.s    fv0          /* convert the float back to an int */
-#else
     sqrt.s     fv0          /* computes sqrt of garbage float interpretation */
-#endif
     mfc1       v0, fv0      /* returns raw float bits as integer */
     jr         ra
 END(bad_int_sqrt)
 
+/**
+ * Computes the sine of an angle, returning a normalized floating-point result.
+ *
+ * This is a floating-point wrapper around sins_s16. It calls the integer
+ * sine function and normalizes the result from the s16 range [-32768, 32767]
+ * to the float range [-1.0, 1.0].
+ *
+ * Arguments:
+ *   a0 = angle in s16 format (0x0000 = 0°, 0x4000 = 90°, 0x8000 = 180°, 0xC000 = 270°)
+ *
+ * Returns:
+ *   fv0 = sin(angle) as float in range [-1.0, 1.0]
+ *
+ * The normalization factor 0.0000152587890625 = 1.0 / 65536.0 = 1.0 / 0x10000
+ * converts the s16 result (which ranges from -32768 to 32767) to a normalized float.
+ */
 LEAF(sins_f)
     addiu      sp, sp, -0x8
     sd         ra, 0x0(sp)
 
-    jal        sins_s16
-    mtc1       v0, fv0
-    li.s       fv1, 0.0000152587890625 /* (1.0f / 0x10000) */
-    cvt.s.w    fv0
-    mul.s      fv0, fv1
+    jal        sins_s16                /* v0 = sin(angle) as s16 */
+    mtc1       v0, fv0                 /* fv0 = sin result (as int bits) */
+    cvt.s.w    fv0                     /* fv0 = (float)v0 */
+    li.s       fv1, 0.0000152587890625 /* fv1 = 1.0f / 0x10000 (normalization factor) */
+    mul.s      fv0, fv1                /* fv0 = sin(angle) normalized to [-1.0, 1.0] */
 
     ld         ra, 0x0(sp)
     addiu      sp, sp, 0x8
     jr         ra
 END(sins_f)
 
+/**
+ * Computes the cosine of an angle, returning a normalized floating-point result.
+ *
+ * This is a floating-point wrapper around coss_s16. It calls the integer
+ * cosine function and normalizes the result from the s16 range [-32768, 32767]
+ * to the float range [-1.0, 1.0].
+ *
+ * Arguments:
+ *   a0 = angle in s16 format (0x0000 = 0°, 0x4000 = 90°, 0x8000 = 180°, 0xC000 = 270°)
+ *
+ * Returns:
+ *   fv0 = cos(angle) as float in range [-1.0, 1.0]
+ *
+ * The normalization factor 0.0000152587890625 = 1.0 / 65536.0 = 1.0 / 0x10000
+ * converts the s16 result (which ranges from -32768 to 32767) to a normalized float.
+ */
 LEAF(coss_f)
     addiu      sp, sp, -0x8
     sd         ra, 0x0(sp)
 
-    jal        coss_s16
-    mtc1       v0, fv0
-    li.s       fv1, 0.0000152587890625 /* (1.0f / 0x10000) */
-    cvt.s.w    fv0
-    mul.s      fv0, fv1
+    jal        coss_s16                /* v0 = cos(angle) as s16 */
+    mtc1       v0, fv0                 /* fv0 = cos result (as int bits) */
+    cvt.s.w    fv0                     /* fv0 = (float)v0 */
+    li.s       fv1, 0.0000152587890625 /* fv1 = 1.0f / 0x10000 (normalization factor) */
+    mul.s      fv0, fv1                /* fv0 = cos(angle) normalized to [-1.0, 1.0] */
 
     ld         ra, 0x0(sp)
     addiu      sp, sp, 0x8
