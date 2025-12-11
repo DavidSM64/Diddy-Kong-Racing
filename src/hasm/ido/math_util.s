@@ -2014,27 +2014,56 @@ LEAF(tri2d_xz_contains_point)
     jr         ra
 END(tri2d_xz_contains_point)
 
-/* Official Name: mathTranslateMtx */
+/**
+ * Creates a 4×4 translation matrix from X, Y, Z coordinates.
+ *
+ * Official Name: mathTranslateMtx
+ *
+ * The resulting matrix is an identity matrix with the translation
+ * components set in the bottom row (row 3).
+ *
+ * Arguments:
+ *   a0 = pointer to destination 4×4 float matrix (MtxF)
+ *   a1 = x translation (passed as raw float bits in integer register)
+ *   a2 = y translation (passed as raw float bits in integer register)
+ *   a3 = z translation (passed as raw float bits in integer register)
+ *
+ * Resulting matrix:
+ *   [ 1  0  0  0 ]
+ *   [ 0  1  0  0 ]
+ *   [ 0  0  1  0 ]
+ *   [ x  y  z  1 ]
+ */
 LEAF(mtxf_from_translation)
-    /* Clear matrix */
-    move       t0, a0
-    addiu      t1, t0, 0x40
-    .L80070600:
-    sw         zero, 0(t0)
-    addiu      t0, 4
-    bne        t1, t0, .L80070600
+    /* -----------------------------------------
+     * Clear entire 64-byte matrix to zero
+     * ----------------------------------------- */
+    move       t0, a0                   /* t0 = current write pointer */
+    addiu      t1, t0, 0x40             /* t1 = end pointer (64 bytes) */
 
+.mtxf_from_translation_clear_loop:
+    sw         zero, 0(t0)              /* clear 4 bytes */
+    addiu      t0, 4                    /* advance pointer */
+    bne        t1, t0, .mtxf_from_translation_clear_loop
+
+    /* -----------------------------------------
+     * Set diagonal elements to 1.0 (identity)
+     * ----------------------------------------- */
+    li.s       ft5, 1.0                 /* ft5 = 1.0f */
     .set noreorder
-    li.s       ft5, 1.0
-    nop
+    swc1       ft5, 0x0(a0)             /* m[0][0] = 1.0 */
+    swc1       ft5, 0x14(a0)            /* m[1][1] = 1.0 */
+    swc1       ft5, 0x28(a0)            /* m[2][2] = 1.0 */
+    swc1       ft5, 0x3C(a0)            /* m[3][3] = 1.0 */
+
+    /* -----------------------------------------
+     * Set translation components (row 3)
+     * ----------------------------------------- */
+    sw         a1, 0x30(a0)             /* m[3][0] = x */
+    sw         a2, 0x34(a0)             /* m[3][1] = y */
     .set reorder
-    swc1       ft5, 0x0(a0)
-    swc1       ft5, 0x14(a0)
-    swc1       ft5, 0x28(a0)
-    swc1       ft5, 0x3C(a0)
-    sw         a1, 0x30(a0)
-    sw         a2, 0x34(a0)
-    sw         a3, 0x38(a0)
+    sw         a3, 0x38(a0)             /* m[3][2] = z */
+
     jr         ra
 END(mtxf_from_translation)
 
