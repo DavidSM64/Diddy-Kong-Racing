@@ -2333,19 +2333,16 @@ END(coss_f)
 
 /* Official Name: mathCosInterp */
 LEAF(coss_s16)
-    addiu      a0, a0, 0x4000
+    addiu      a0, 0x4000
     /* Fall through */
 
 /* Official Name: mathSinInterp */
 XLEAF(sins_s16)
     sll        v0, a0, 17
-    .set noreorder
-    bgezl      v0, .L80070844
-    .set reorder
-    srl        t2, a0, 3
+    bgez       v0, .L80070844
     xori       a0, 0x7FFF
-    srl        t2, a0, 3
     .L80070844:
+    srl        t2, a0, 3
     andi       t2, 0x7FE
     la         v0, gSineTable
     addu       v0, t2
@@ -2376,13 +2373,10 @@ LEAF(coss_2)
 /* Official Name: mathSin */
 XLEAF(sins_2)
     sll        v0, a0, 17
-    .set noreorder
-    bgezl      v0, .L800708A4
-    .set reorder
-    srl        t2, a0, 3
+    bgez       v0, .L800708A4
     xori       a0, a0, 0x7FFF
-    srl        t2, a0, 3
     .L800708A4:
+    srl        t2, a0, 3
     andi       t2, 0x7FE
     la         v0, gSineTable
     addu       v0, t2
@@ -2410,80 +2404,67 @@ LEAF(calc_dyn_lighting_for_level_segment)
     .L800708F0:
     lbu        t4, 0x6(a2)
     addiu      t4, -0xFF
-    .set noreorder
-    beqzl      t4, .L80070A08
-    .set reorder
-    lhu        t4, 0x2(a2)
-    beql       v0, zero, .L80070934
+    beqz       t4, .L80070A08
+    beqzl      v0, .L80070934
     ori        t4, zero, 0xA
-    multu      v0, t4
     ori        t5, zero, 0xA
-    mflo       t4
+    mul        t4, v0, t4
     addu       a0, t4
-    multu      v0, t5
-    xor        v0, v0
-    mflo       t5
+    mul        t5, v0, t5
     addu       a1, t5
+    xor        v0, v0
     .L80070934:
     lhu        t5, 0x2(a2)
     lhu        t4, 0xE(a2)
-    addiu      a2, 0xC
     subu       t4, t5
+    addiu      a2, 0xC
     .L80070944:
     lh         t5, 0x0(a1)
     lh         t6, 0x2(a1)
     lh         t7, 0x4(a1)
-    lbu        t8, 0x7(a1)
     lbu        a3, 0x6(a1)
+    lbu        t8, 0x7(a1)
     lbu        t9, 0x8(a1)
     lbu        v1, 0x9(a1)
     sll        t8, 16
     or         t8, a3, t8
-    mult       t5, t1
-    mflo       t5
-    mult       t6, t2
-    mflo       t6
+    MULS       (t5, t5, t1)
+    MULS       (t6, t6, t2)
+    MULS       (t7, t7, t3)
     add        t5, t6
-    mult       t7, t3
-    mflo       t7
     add        t5, t7
     blez       t5, .L800709B4
     srl        t5, 22
     addu       v1, t5
-    sltiu      t5, v1, 0x81
+    sleu       t5, v1, 0x80
     bnez       t5, .L800709B4
-    ori        v1, zero, 0x80
+    li         v1, 0x80
     .L800709B4:
-    multu      v1, t8
-    addiu      a1, 0xA
-    addiu      t4, -0x1
-    addiu      a0, 0xA
-    mflo       t8
+    mul        t8, v1, t8
     srl        t8, 7
-    sb         t8, -0x4(a0)
-    multu      v1, t9
+    sb         t8, 6(a0)
     srl        t8, 16
-    sb         t8, -0x3(a0)
-    mflo       t9
+    sb         t8, 7(a0)
+    mul        t9, v1, t9
     srl        t9, 7
-    sb         t9, -0x2(a0)
-    bnel       t4, zero, .L80070944
-    addiu      t0, t0, -0x1
-    bnel       t0, zero, .L800708F0
+    sb         t9, 8(a0)
+    addiu      a1, 0xA
+    addiu      t4, -1
+    addiu      a0, 0xA
+    bnezl      t4, .L80070944
+    addiu      t0, -1
+    bnezl      t0, .L800708F0
     jr         ra
-END(calc_dyn_lighting_for_level_segment)
-
-LEAF(func_80070A04)
-    lhu        t4, 0x2(a2)
     .L80070A08:
+    lhu        t4, 0x2(a2)
     lhu        t5, 0xE(a2)
     addiu      a2, 0xC
-    addiu      t0, -0x1
+    addiu      t0, -1
     subu       t4, t5, t4
     addu       v0, t4
-    bnel       t0, zero, .L800708F0
+    bnezl      t0, .L800708F0
     jr         ra
-END(func_80070A04)
+END(calc_dyn_lighting_for_level_segment)
 
 LEAF(area_triangle_2d)
     mtc1       a2, ft0

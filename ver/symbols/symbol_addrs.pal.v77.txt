@@ -1087,7 +1087,6 @@ sins_s16 = 0x80070830;
 coss_2 = 0x8007088C;
 sins_2 = 0x80070890;
 calc_dyn_lighting_for_level_segment = 0x800708D0;
-func_80070A04 = 0x80070A04;
 area_triangle_2d = 0x80070A2C;
 set_breakpoint = 0x80070AD8;
 dmacopy_doubleword = 0x80070B04;
