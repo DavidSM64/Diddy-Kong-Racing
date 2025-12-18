@@ -2541,13 +2541,32 @@ LEAF(set_breakpoint)
     jr         ra
 END(set_breakpoint)
 
+/**
+ * Copies memory in 16-byte chunks using 64-bit load/store instructions.
+ *
+ * This is an optimized memory copy routine that transfers 16 bytes per iteration
+ * using the MIPS 64-bit ld/sd instructions. The function entry point serves as
+ * the loop target, so the copy continues until the destination pointer reaches
+ * the specified end address.
+ *
+ * Arguments:
+ *   a0 = source pointer (must be 8-byte aligned)
+ *   a1 = destination pointer (must be 8-byte aligned)
+ *   a2 = destination end address (copy stops when a1 == a2)
+ *
+ * Note: The caller must ensure:
+ *   - Both source and destination are 8-byte aligned
+ *   - The copy size is a multiple of 16 bytes
+ *   - a2 > a1 (otherwise infinite loop or no-op if equal)
+ */
 LEAF(dmacopy_doubleword)
-    ld         t0, 0x0(a0)
-    ld         t1, 0x8(a0)
-    addi       a0, 0x10
-    addi       a1, 0x10
-    sd         t0, -0x10(a1)
-    sd         t1, -0x8(a1)
-    bne        a1, a2, dmacopy_doubleword
+    /* Function entry is also the loop entry point */
+    ld         t0, 0(a0)                /* t0 = load first doubleword from source */
+    ld         t1, 8(a0)                /* t1 = load second doubleword from source */
+    sd         t0, 0(a1)                /* store first doubleword to destination */
+    sd         t1, 8(a1)                /* store second doubleword to destination */
+    addi       a0, 16                   /* advance source pointer by 16 bytes */
+    addi       a1, 16                   /* advance destination pointer by 16 bytes */
+    bne        a1, a2, dmacopy_doubleword  /* loop until dest == end */
     jr         ra
 END(dmacopy_doubleword)

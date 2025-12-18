@@ -901,7 +901,7 @@ GLOBAL_ASM("asm/math_util/area_triangle_2d.s")
 GLOBAL_ASM("asm/math_util/set_breakpoint.s")
 
 #ifdef NON_MATCHING
-void dmacopy_doubleword(void *src, void *dst, s32 end) {
+void dmacopy_doubleword(void *src, void *dst, u32 end) {
     s32 size = end - (u32) dst;
     memcpy(dst, src, size);
 }
