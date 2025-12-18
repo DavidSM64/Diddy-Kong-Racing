@@ -2438,7 +2438,7 @@ LEAF(calc_dyn_lighting_for_level_segment)
     addu       v1, t5
     sleu       t5, v1, 0x80
     bnez       t5, .L800709B4
-    li         v1, 0x80
+    ori        v1, zero, 0x80
     .L800709B4:
     mul        t8, v1, t8
     srl        t8, 7
