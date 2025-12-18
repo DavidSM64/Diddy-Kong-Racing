@@ -169,14 +169,14 @@ EXPORT(gArcTanTable)
 LEAF(interrupts_disable)
     lb         t0, gIntDisFlag
     .set noreorder
-    beqz       t0, .L8006F534
+    beqz       t0, .interrupts_disable_skip
     .set reorder
     MFC0(      t0, C0_SR)
-    and        t1, t0, -2
+    and        t1, t0, ~SR_IE
     MTC0(      t1, C0_SR)
-    andi       v0, t0, 0x1
+    andi       v0, t0, SR_IE
     NOP
-    .L8006F534:
+    .interrupts_disable_skip:
     jr         ra
 END(interrupts_disable)
 
@@ -184,14 +184,14 @@ END(interrupts_disable)
 LEAF(interrupts_enable)
     lb         t0, gIntDisFlag
     .set noreorder
-    beqz       t0, .L8006F55C
+    beqz       t0, .interrupts_enable_skip
     .set reorder
     MFC0(      t0, C0_SR)
-    or         t0, t0, a0
+    or         t0, a0
     MTC0(      t0, C0_SR)
     NOP
     NOP
-    .L8006F55C:
+    .interrupts_enable_skip:
     jr         ra
 END(interrupts_enable)
 
@@ -2529,9 +2529,9 @@ LEAF(area_triangle_2d)
 END(area_triangle_2d)
 
 LEAF(set_breakpoint)
-    ori        a0, a0, 0x1
+    ori        a0, WATCHLO_WTRAP
     MTC0(      a0, C0_WATCHLO)
-    addiu      t0, zero, 0xF
+    li         t0, WATCHHI_VALIDMASK
     MTC0(      t0, C0_WATCHHI)
     NOP
     NOP
