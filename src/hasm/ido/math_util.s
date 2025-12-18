@@ -2466,47 +2466,65 @@ LEAF(calc_dyn_lighting_for_level_segment)
     jr         ra
 END(calc_dyn_lighting_for_level_segment)
 
+/**
+ * Computes the area of a 2D triangle using Herons formula.
+ *
+ * Arguments:
+ *   fa0 (f12) = x0 (vertex 0 X coordinate)
+ *   fa1 (f14) = z0 (vertex 0 Z coordinate)
+ *   a2       = x1 (vertex 1 X coordinate, passed as float bits in int reg)
+ *   a3       = z1 (vertex 1 Z coordinate, passed as float bits in int reg)
+ *   sp+0x10  = x2 (vertex 2 X coordinate)
+ *   sp+0x14  = z2 (vertex 2 Z coordinate)
+ *
+ * Returns:
+ *   fv0 = area of the triangle (f32)
+ */
 LEAF(area_triangle_2d)
-    mtc1       a2, ft0
-    mov.s      fv0, fa0
-    mtc1       a3, ft1
-    sub.s      fa0, ft0, fv0
-    mov.s      fv1, fa1
-    lwc1       ft2, 0x10(sp)
-    sub.s      fa1, ft1, fv1
-    mul.s      fa0, fa0
-    lwc1       ft3, 0x14(sp)
-    sub.s      ft4, ft2, ft0
-    mul.s      fa1, fa1
-    sub.s      ft5, ft3, ft1
-    mul.s      ft4, ft4
-    sub.s      fv0, ft2
-    mul.s      ft5, ft5
-    sub.s      fv1, ft3
-    mul.s      fv0, fv0
-    li.s       ft3, 0.5
-    add.s      fa0, fa1
-    mul.s      fv1, fv1
-    add.s      ft4, ft5
-    sqrt.s     fa0
-    sqrt.s     ft4
-    add.s      fv0, fv1
-    mtc1       zero, fv1
-    add.s      ft5, fa0, ft4
-    sqrt.s     fv0
-    add.s      ft5, fv0
-    mul.s      ft5, ft3, ft5
-    sub.s      ft0, ft5, fa0
-    sub.s      ft2, ft5, fv0
-    mul.s      fv0, ft0, ft5
-    sub.s      ft1, ft5, ft4
-    mul.s      ft1, ft2
-    mul.s      fv0, ft1
-    c.lt.s     fv0, fv1
-    bc1fl      .L80070AD0
-    mov.s      fv0, fv1
-    .L80070AD0:
-    sqrt.s     fv0
+    mov.s      fv0, fa0                /* fv0 = x0 */
+    mov.s      fv1, fa1                /* fv1 = z0 */
+    mtc1       a2, ft0                 /* ft0 = x1 */
+    mtc1       a3, ft1                 /* ft1 = z1 */
+    lwc1       ft2, 0x10(sp)           /* ft2 = x2 */
+    lwc1       ft3, 0x14(sp)           /* ft3 = z2 */
+
+    sub.s      fa0, ft0, fv0           /* fa0 = dx0 = x1 - x0 */
+    sub.s      fa1, ft1, fv1           /* fa1 = dz0 = z1 - z0 */
+    sub.s      ft4, ft2, ft0           /* ft4 = dx1 = x2 - x1 */
+    sub.s      ft5, ft3, ft1           /* ft5 = dz1 = z2 - z1 */
+    sub.s      fv0, ft2                /* fv0 = dx2 = x0 - x2 */
+    sub.s      fv1, ft3                /* fv1 = dz2 = z0 - z2 */
+    
+    mul.s      fa0, fa0                /* fa0 = dx0 * dx0 */
+    mul.s      fa1, fa1                /* fa1 = dz0 * dz0 */
+    mul.s      ft4, ft4                /* ft4 = dx1 * dx1 */
+    mul.s      ft5, ft5                /* ft5 = dz1 * dz1 */
+    mul.s      fv0, fv0                /* fv0 = dx2 * dx2 */
+    mul.s      fv1, fv1                /* fv1 = dz2 * dz2 */
+    add.s      fa0, fa1                /* fa0 = (dx0 * dx0) + (dz0 * dz0) */
+    add.s      ft4, ft5                /* ft4 = (dx1 * dx1) + (dz1 * dz1) */
+    add.s      fv0, fv1                /* fv0 = (dx2 * dx2) + (dz2 * dz2) */
+    sqrt.s     fa0                     /* fa0 = d0 = sqrt((dx0 * dx0) + (dz0 * dz0)) */
+    sqrt.s     ft4                     /* ft4 = d1 = sqrt((dx1 * dx1) + (dz1 * dz1)) */
+    sqrt.s     fv0                     /* fv0 = d2 = sqrt((dx2 * dx2) + (dz2 * dz2)) */
+    li.s       ft3, 0.5                /* ft3 = 0.5 */
+    add.s      ft5, fa0, ft4           /* ft5 = d0 + d1 */
+    add.s      ft5, fv0                /* ft5 = d0 + d1 + d2 */
+    mul.s      ft5, ft3, ft5           /* ft5 = s = (d0 + d1 + d2) * 0.5 */
+    sub.s      ft0, ft5, fa0           /* ft0 = s - d0 */
+    sub.s      ft1, ft5, ft4           /* ft1 = s - d1 */
+    sub.s      ft2, ft5, fv0           /* ft2 = s - d2 */
+    mul.s      fv0, ft0, ft5           /* fv0 = s * (s - d0) */
+    mul.s      ft1, ft2                /* ft1 = (s - d1) * (s - d2) */
+    mul.s      fv0, ft1                /* fv0 = s * (s-d0) * (s-d1) * (s-d2) */
+
+    mtc1       zero, fv1               /* fv1 = 0.0 */
+    c.lt.s     fv0, fv1                /* compare: fv0 < 0.0? */
+    bc1fl      .area_triangle_2d_positive
+    mov.s      fv0, fv1                /* fv0 = 0.0 (clamp negative to zero) */
+
+.area_triangle_2d_positive:
+    sqrt.s     fv0                     /* fv0 = sqrt(s * (s-d0) * (s-d1) * (s-d2)) = area */
     jr         ra
 END(area_triangle_2d)
 
