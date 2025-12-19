@@ -80,7 +80,7 @@ segments:
       - [0x6ADD0, c, joypad]
       - [0x6B380, c, game]
       - [0x6D000, c, thread3_main]
-      - [0x701F0, hasm, hasm/math_util]
+      - [0x701F0, hasm, hasm/ido/math_util]
       - [0x71810, c, memory]
       - [0x72A10, c, ../libultra/src/io/motor]
       - [0x72F30, c, save_data]
