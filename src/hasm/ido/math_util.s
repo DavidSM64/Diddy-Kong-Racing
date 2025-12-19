@@ -2488,29 +2488,33 @@ LEAF(calc_dyn_lighting_for_level_segment)
     lw         t1, 0x0(a1)
     lw         t2, 0x4(a1)
     lw         t3, 0x8(a1)
+
     lhu        t0, 0x20(a0)
     lw         a2, 0xC(a0)
     lw         a1, 0x2C(a0)
     lw         a0, 0x0(a0)
     xor        v0, v0
-    .L800708F0:
+
+.L800708F0:
     lbu        t4, 0x6(a2)
-    addiu      t4, -0xFF
+    subu       t4, 0xFF
     beqz       t4, .L80070A08
     beqzl      v0, .L80070934
-    ori        t4, zero, 0xA
-    ori        t5, zero, 0xA
+    ori        t4, zero, 10
+    ori        t5, zero, 10
     mul        t4, v0, t4
-    addu       a0, t4
     mul        t5, v0, t5
-    addu       a1, t5
     xor        v0, v0
-    .L80070934:
+    addu       a0, t4
+    addu       a1, t5
+
+.L80070934:
     lhu        t5, 0x2(a2)
     lhu        t4, 0xE(a2)
     subu       t4, t5
     addiu      a2, 0xC
-    .L80070944:
+
+.L80070944:
     lh         t5, 0x0(a1)
     lh         t6, 0x2(a1)
     lh         t7, 0x4(a1)
@@ -2531,7 +2535,8 @@ LEAF(calc_dyn_lighting_for_level_segment)
     sleu       t5, v1, 0x80
     bnez       t5, .L800709B4
     ori        v1, zero, 0x80
-    .L800709B4:
+
+.L800709B4:
     mul        t8, v1, t8
     srl        t8, 7
     sb         t8, 6(a0)
@@ -2541,19 +2546,20 @@ LEAF(calc_dyn_lighting_for_level_segment)
     srl        t9, 7
     sb         t9, 8(a0)
     addiu      a1, 0xA
-    addiu      t4, -1
+    subu       t4, 1
     addiu      a0, 0xA
     bnezl      t4, .L80070944
-    addiu      t0, -1
+    subu       t0, 1
     bnezl      t0, .L800708F0
     jr         ra
-    .L80070A08:
+
+.L80070A08:
     lhu        t4, 0x2(a2)
     lhu        t5, 0xE(a2)
-    addiu      a2, 0xC
-    addiu      t0, -1
     subu       t4, t5, t4
     addu       v0, t4
+    addiu      a2, 0xC
+    subu       t0, 1
     bnezl      t0, .L800708F0
     jr         ra
 END(calc_dyn_lighting_for_level_segment)
