@@ -2431,9 +2431,10 @@ LEAF(coss_s16)
 /* Official Name: mathSinInterp */
 XLEAF(sins_s16)
     sll        v0, a0, 17
-    bgez       v0, .L80070844
+    bgez       v0, .sins_s16_first_half
     xori       a0, 0x7FFF
-    .L80070844:
+
+.sins_s16_first_half:
     srl        t2, a0, 3
     andi       t2, 0x7FE
     la         v0, gSineTable
@@ -2441,16 +2442,16 @@ XLEAF(sins_s16)
     lhu        t2, 0x2(v0)
     lhu        v0, 0x0(v0)
     andi       t1, a0, 0xF
-    sll        a0, 16
     subu       t2, v0
-    multu      t2, t1
-    sll        v0, 1
-    mflo       t2
+    mul        t2, t1
     srl        t2, 3
+    sll        v0, 1
     addu       v0, t2
-    bgez       a0, .L80070884
-    negu       v0
-    .L80070884:
+    sll        a0, 16
+    bgez       a0, .sins_s16_positive  /* if original angle < 180°, keep positive */
+    negu       v0                      /* negate for angles 180° to 360° */
+
+.sins_s16_positive:
     jr         ra
 END(coss_s16)
 #ifdef MODERN_CC
@@ -2459,15 +2460,16 @@ END(coss_s16)
 
 /* Official Name: mathCos */
 LEAF(coss_2)
-    addiu      a0, a0, 0x4000
+    addiu      a0, 0x4000
     /* Fall through */
 
 /* Official Name: mathSin */
 XLEAF(sins_2)
     sll        v0, a0, 17
-    bgez       v0, .L800708A4
-    xori       a0, a0, 0x7FFF
-    .L800708A4:
+    bgez       v0, .sins_2_first_half
+    xori       a0, 0x7FFF
+
+.sins_2_first_half:
     srl        t2, a0, 3
     andi       t2, 0x7FE
     la         v0, gSineTable
@@ -2475,9 +2477,10 @@ XLEAF(sins_2)
     lhu        v0, 0x0(v0)
     sll        v0, 1
     sll        a0, 16
-    bgez       a0, .L800708C8
-    negu       v0
-    .L800708C8:
+    bgez       a0, .sins_2_positive  /* if original angle < 180°, keep positive */
+    negu       v0                    /* negate for angles 180° to 360° */
+
+.sins_2_positive:
     jr         ra
 END(coss_2)
 #ifdef MODERN_CC
