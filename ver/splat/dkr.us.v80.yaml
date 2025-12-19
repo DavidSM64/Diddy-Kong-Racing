@@ -290,7 +290,7 @@ segments:
       - [0xDE470, .data, joypad]
       - [0xDE480, .data, game]
       - [0xDE4B0, .data, thread3_main]
-      - [0xDE5A0, .data, hasm/math_util]
+      - [0xDE5A0, .data, hasm/ido/math_util]
       - [0xDF5B0, .data, save_data]
       - [0xDF610, .data, rcp_dkr]
       - [0xDF8B0, .data, ../libultra/src/sc/sched]
