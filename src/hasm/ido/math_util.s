@@ -165,45 +165,118 @@ EXPORT(gArcTanTable)
 
 .text
 
-/* Official Name: disableInterrupts */
+/**
+ * Disables interrupts by clearing the IE (Interrupt Enable) bit in the CP0 Status register.
+ *
+ * Official Name: disableInterrupts
+ *
+ * This function checks the global interrupt disable flag before modifying
+ * the Status register. If the flag is zero, the function returns early
+ * without modifying anything.
+ *
+ * Arguments:
+ *   None
+ *
+ * Returns:
+ *   v0 = previous state of the IE bit (0 or 1), allowing restoration later
+ *        Only valid if gIntDisFlag was non-zero; undefined otherwise.
+ *
+ * CP0 Status Register (C0_SR) bit 0:
+ *   IE (Interrupt Enable): When set, interrupts are enabled globally.
+ *   Clearing this bit disables all maskable interrupts.
+ *
+ * Note: The NOP after MTC0 is required for CP0 hazard handling.
+ */
 LEAF(interrupts_disable)
-    lb         t0, gIntDisFlag
+    lb         t0, gIntDisFlag          /* t0 = interrupt disable flag */
     .set noreorder
-    beqz       t0, .interrupts_disable_skip
+    beqz       t0, .interrupts_disable_skip  /* if flag == 0, skip disable */
     .set reorder
-    MFC0(      t0, C0_SR)
-    and        t1, t0, ~SR_IE
-    MTC0(      t1, C0_SR)
-    andi       v0, t0, SR_IE
-    NOP
-    .interrupts_disable_skip:
+    MFC0(      t0, C0_SR)               /* t0 = current Status register */
+    and        t1, t0, ~SR_IE           /* t1 = SR with IE bit cleared (mask 0xFFFFFFFE) */
+    MTC0(      t1, C0_SR)               /* write back with interrupts disabled */
+    andi       v0, t0, SR_IE            /* v0 = previous IE bit state */
+    NOP                                 /* CP0 hazard barrier */
+.interrupts_disable_skip:
     jr         ra
 END(interrupts_disable)
 
-/* Official Name: enableInterrupts */
+/**
+ * Restores interrupts by setting the IE (Interrupt Enable) bit in the CP0 Status register.
+ *
+ * Official Name: enableInterrupts
+ *
+ * This function checks the global interrupt disable flag before modifying
+ * the Status register. If the flag is zero, the function returns early
+ * without modifying anything.
+ *
+ * Arguments:
+ *   a0 = interrupt state to restore (typically the value returned by interrupts_disable)
+ *        Bit 0 (IE) will be ORed into the Status register.
+ *
+ * Returns:
+ *   Nothing (void)
+ *
+ * CP0 Status Register (C0_SR) bit 0:
+ *   IE (Interrupt Enable): When set, interrupts are enabled globally.
+ *   Setting this bit enables all unmasked interrupts.
+ *
+ * Note: The two NOPs after MTC0 are required for CP0 hazard handling.
+ * More NOPs may be needed here than in disable because enabling interrupts
+ * can immediately trigger a pending interrupt.
+ */
 LEAF(interrupts_enable)
-    lb         t0, gIntDisFlag
+    lb         t0, gIntDisFlag          /* t0 = interrupt disable flag */
     .set noreorder
-    beqz       t0, .interrupts_enable_skip
+    beqz       t0, .interrupts_enable_skip  /* if flag == 0, skip enable */
     .set reorder
-    MFC0(      t0, C0_SR)
-    or         t0, a0
-    MTC0(      t0, C0_SR)
-    NOP
-    NOP
-    .interrupts_enable_skip:
+    MFC0(      t0, C0_SR)               /* t0 = current Status register */
+    or         t0, a0                   /* t0 = SR with IE bit restored from a0 */
+    MTC0(      t0, C0_SR)               /* write back with interrupts potentially enabled */
+    NOP                                 /* CP0 hazard barrier */
+    NOP                                 /* additional hazard for interrupt latency */
+.interrupts_enable_skip:
     jr         ra
 END(interrupts_enable)
 
-/* Official Name: setIntDisFlag */
+/**
+ * Sets the global interrupt disable flag.
+ *
+ * Official Name: setIntDisFlag
+ *
+ * This flag controls whether interrupts_disable and interrupts_enable
+ * actually modify the CP0 Status register. When the flag is 0, those
+ * functions become no-ops, allowing interrupt control to be globally
+ * disabled for debugging or special system states.
+ *
+ * Arguments:
+ *   a0 = new flag value (0 = disable interrupt control, non-zero = enable)
+ *
+ * Returns:
+ *   Nothing (void)
+ */
 LEAF(set_gIntDisFlag)
-    sb         a0, gIntDisFlag
+    sb         a0, gIntDisFlag          /* store new flag value */
     jr         ra
 END(set_gIntDisFlag)
 
-/* Official Name: getIntDisFlag */
+/**
+ * Gets the current value of the global interrupt disable flag.
+ *
+ * Official Name: getIntDisFlag
+ *
+ * This flag controls whether interrupts_disable and interrupts_enable
+ * actually modify the CP0 Status register. When the flag is 0, those
+ * functions become no-ops.
+ *
+ * Arguments:
+ *   None
+ *
+ * Returns:
+ *   v0 = current flag value (0 = interrupt control disabled, non-zero = enabled)
+ */
 LEAF(get_gIntDisFlag)
-    lbu        v0, gIntDisFlag
+    lbu        v0, gIntDisFlag          /* load flag value (unsigned byte) */
     jr         ra
 END(get_gIntDisFlag)
 
@@ -2528,11 +2601,34 @@ LEAF(area_triangle_2d)
     jr         ra
 END(area_triangle_2d)
 
+/**
+ * Configures a hardware watchpoint to break on memory writes to a specified address.
+ *
+ * Uses the MIPS CP0 WATCHLO/WATCHHI registers to set up a hardware breakpoint
+ * that triggers a Watch exception when a store instruction accesses the
+ * specified physical address.
+ *
+ * Arguments:
+ *   a0 = physical address to watch (low 32 bits)
+ *
+ * WATCHLO register format (CP0 register 18):
+ *   Bits 31-3: Physical address bits [31:3] (8-byte aligned)
+ *   Bit 2:     Reserved
+ *   Bit 1 (R): Watch for read accesses (loads)
+ *   Bit 0 (W): Watch for write accesses (stores)
+ *
+ * WATCHHI register format (CP0 register 19):
+ *   Bits 3-0:  Physical address bits [35:32] for 64-bit addressing
+ *
+ * Note: The NOPs after MTC0 instructions are required to handle CP0 hazards.
+ * The CPU needs pipeline cycles before watchpoint changes take effect.
+ */
 LEAF(set_breakpoint)
-    ori        a0, WATCHLO_WTRAP
-    MTC0(      a0, C0_WATCHLO)
-    li         t0, WATCHHI_VALIDMASK
-    MTC0(      t0, C0_WATCHHI)
+    ori        a0, WATCHLO_WTRAP        /* Set W bit: enable write watchpoint */
+    MTC0(      a0, C0_WATCHLO)          /* Store address + flags to WATCHLO */
+    li         t0, WATCHHI_VALIDMASK    /* t0 = 0xF (high address bits mask) */
+    MTC0(      t0, C0_WATCHHI)          /* Store high address bits to WATCHHI */
+    /* CP0 hazard barrier - pipeline must drain before watchpoint is active */
     NOP
     NOP
     NOP
