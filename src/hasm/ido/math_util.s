@@ -383,7 +383,9 @@ END(mtxf_to_mtxs)
 /**
  * Transforms a 3D vector using a 4×4 transformation matrix.
  * Perfect match to libultra compiled guMtxXFMF using -O3 -mips2
+ *
  * Official name: mathMtxXFMF
+ *
  * void mtxf_transform_point(float mf[4][4], float x, float y, float z, float *ox, float *oy, float *oz);
  */
 LEAF(mtxf_transform_point)
@@ -435,7 +437,9 @@ END(mtxf_transform_point)
  * This function multiplies the input vector by the upper-left 3×3 portion of the matrix mf,
  * ignoring the translation component. It is used for transforming directions, such as normals,
  * rather than points.
+ *
  * Official Name: mathMtxFastXFMF
+ *
  * Arguments:
  *   a0 = pointer to 4x4 matrix (float[4][4])
  *   a1 = pointer to input direction vector (float[3])
@@ -498,8 +502,11 @@ LEAF(mtxf_transform_dir)
     jr         ra
 END(mtxf_transform_dir)
 
-/* Official Name: mathMtxCatF
+/**
  * Multiplies two 4x4 floating-point matrices: result = m1 * m2
+ *
+ * Official Name: mathMtxCatF
+ *
  * Arguments:
  *   a0 = pointer to first matrix (m1)
  *   a1 = pointer to second matrix (m2)
@@ -600,8 +607,11 @@ LEAF(mtxf_mul)
     jr         ra
 END(mtxf_mul)
 
-/* Official Name: mathMtxF2L
+/**
  * Converts a 4x4 floating-point matrix to fixed-point integer matrix
+ *
+ * Official Name: mathMtxF2L
+ *
  * Arguments:
  *   a0 = pointer to source floating-point matrix (MtxF)
  *   a1 = pointer to destination fixed-point matrix (Mtx)
@@ -693,11 +703,17 @@ LEAF(get_rng_seed)
     jr         ra
 END(get_rng_seed)
 
-/* Official Name: mathRnd
- * Generates a random integer within the inclusive range [min, max].
+/**
+ * Generates a random integer within a specified range [min, max].
+ *
+ * Official Name: mathRnd
+ *
  * Arguments:
- *   a0 = min
- *   a1 = max
+ *   a0 = min (inclusive lower bound)
+ *   a1 = max (inclusive upper bound)
+ *
+ * Returns:
+ *   v0 = random integer in range [min, max]
  */
 LEAF(rand_range)
     lw         t0, gCurrentRNGSeed
@@ -722,8 +738,11 @@ LEAF(rand_range)
     jr         ra
 END(rand_range)
 
-/* Official Name: fastShortReflection
+/**
  * Reflects a vector across a given normal.
+ * 
+ * Official Name: fastShortReflection
+ * 
  * Fixed-point notes:
  *   - Inputs are 16-bit signed fixed-point values.
  *   - Dot product is accumulated in 32-bit, then shifted right by 12 to rescale.
