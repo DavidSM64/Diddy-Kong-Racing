@@ -421,7 +421,7 @@ segments:
       - { type: .bss, vram: 0x80126170, name: video }
       - { type: .bss, vram: 0x80126320, name: textures_sprites }
       - { type: .bss, vram: 0x80126390, name: menu }
-      - { type: .bss, vram: 0x80126CD0, name: game_ui }      
+      - { type: .bss, vram: 0x80126CD0, name: game_ui }
       - { type: .bss, vram: 0x801271B0, name: os_yield_data }
       - { type: .bss, vram: 0x80127BB0, name: weather }
       - { type: .bss, vram: 0x80127C80, name: particles }
@@ -433,7 +433,7 @@ segments:
       - { type: .bss, vram: 0x8012A7E0, name: font }
       - { type: .bss, vram: 0x8012A800, name: ../libultra/src/io/pimgr }
       - { type: .bss, vram: 0x8012AAD0, name: gzip }
-      - { type: .bss, vram: 0x8012AAE0, name: ../libultra/src/io/leointerrupt }     
+      - { type: .bss, vram: 0x8012AAE0, name: ../libultra/src/io/leointerrupt }
       - { type: .bss, vram: 0x8012AAF0, name: thread30_bgload }
       - { type: .bss, vram: 0x8012CCC0, name: ../libultra/src/os/initialize }
       - { type: .bss, vram: 0x8012CCD0, name: ../libultra/src/os/seteventmesg }
@@ -447,21 +447,14 @@ segments:
       - { type: .bss, vram: 0x8012D200, name: ../libultra/src/os/timerintr }
       - { type: .bss, vram: 0x8012D240, name: ../libultra/src/debug/kdebugserver }
 
-  # TODO: If we can split up the assets bin file to these two files, we can properly
-  # define the symbol for __ASSETS_LUT_END even if it changes with custom assets
-  # - name: assets_lut
-  #   type: bin
-  #   start: 0xECB60
-  #   follows_vram: main
-
-  # - name: assets
-  #   type: bin
-  #   start: 0xECC30
-  #   follows_vram: main
+  - name: assets.lut
+    type: bin
+    start: 0xECB60
+    follows_vram: main
 
   - name: assets
     type: bin
-    start: 0xECB60
+    start: 0xECC30
     follows_vram: main
 
   - [0xAC9630]

@@ -656,19 +656,22 @@ void JsonHelper::patch_json(const fs::path &dstPath, const fs::path &patchPath) 
 
 /*******************************************************************************************************/
 
-std::unordered_map<fs::path, JsonFile*> _fileCache;
+std::unordered_map<std::string, JsonFile*> _fileCache;
 
 std::optional<std::reference_wrapper<JsonFile>> JsonHelper::get_file(fs::path filepath) {
-    _jsonHelperMutex.lock();
-    if (_fileCache.find(filepath) == _fileCache.end()) {
-        try {
-            _fileCache[filepath] = new JsonFile(filepath.generic_string());
-        } catch (nlohmann::detail::parse_error& ex) {
-            DebugHelper::error_no_throw(ex.what());
-            _jsonHelperMutex.unlock();
-            return std::nullopt;
-        }
+    std::string key = filepath.generic_string();
+    std::lock_guard<std::mutex> lock(_jsonHelperMutex);
+    
+    if (auto it = _fileCache.find(key); it != _fileCache.end()) {
+        return *it->second;
     }
-    _jsonHelperMutex.unlock();
-    return *_fileCache[filepath];
+    
+    try {
+        JsonFile* file = new JsonFile(key);
+        _fileCache.emplace(key, file);
+        return *file;
+    } catch (const nlohmann::detail::parse_error& ex) {
+        DebugHelper::error_no_throw(ex.what());
+        return std::nullopt;
+    }
 }

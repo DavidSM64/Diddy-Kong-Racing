@@ -342,15 +342,20 @@ void AssetBuilder::build_all(const fs::path &dstPath) {
     
     BytesView mainTableView = mainTable.get_view(cContext);
     
-    size_t assetsSize = mainTableView.size() + mainTable.get_size_of_entries();
+    // Write LUT table to separate file
+    fs::path lutPath = dstPath;
+    lutPath.replace_extension(".lut.bin");
     
-    std::vector<uint8_t> outAssets(assetsSize);
+    std::vector<uint8_t> lutData = mainTableView.data_vector();
+    FileHelper::write_binary_file(lutData, lutPath, true);
+    DebugHelper::info("Wrote LUT table to ", lutPath, " (0x", std::hex, lutData.size(), 
+                     " bytes / ", std::dec, lutData.size(), " bytes)");
+    
+    std::vector<uint8_t> outAssets(mainTable.get_size_of_entries()); 
     
     BytesView outAssetsView(outAssets);
     
-    outAssetsView.copy_from(mainTableView, 0); // Put the mainTable at the start of outAssets. 
-    
-    size_t currentAssetsOffset = mainTableView.size();
+    size_t currentAssetsOffset = 0;
     
     // For the map
     std::map<size_t, std::string> offsetToId;
@@ -369,7 +374,8 @@ void AssetBuilder::build_all(const fs::path &dstPath) {
     
     // Write the output file to the destination.
     FileHelper::write_binary_file(outAssets, dstPath, true);
-    DebugHelper::info("Wrote assets to ", dstPath);
+    DebugHelper::info("Wrote assets to ", dstPath, " (0x", std::hex, outAssets.size(), 
+                     " bytes / ", std::dec, outAssets.size(), " bytes)");
     
     // Generate the include/asset_enums.h file
     generate_asset_enums_header_file(collection, sectionIds);

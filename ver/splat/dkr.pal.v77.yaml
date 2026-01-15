@@ -433,7 +433,7 @@ segments:
       - { type: .bss, vram: 0x8012A870, name: font }
       - { type: .bss, vram: 0x8012A890, name: ../libultra/src/io/pimgr }
       - { type: .bss, vram: 0x8012AB60, name: gzip }
-      - { type: .bss, vram: 0x8012AB70, name: ../libultra/src/io/leointerrupt }      
+      - { type: .bss, vram: 0x8012AB70, name: ../libultra/src/io/leointerrupt }
       - { type: .bss, vram: 0x8012AB80, name: thread30_bgload }
       - { type: .bss, vram: 0x8012CD50, name: ../libultra/src/os/initialize }
       - { type: .bss, vram: 0x8012CD60, name: ../libultra/src/os/seteventmesg }
@@ -447,8 +447,14 @@ segments:
       - { type: .bss, vram: 0x8012D290, name: ../libultra/src/os/timerintr }
       - { type: .bss, vram: 0x8012D2D0, name: ../libultra/src/debug/kdebugserver }
 
-  - name: assets
+  - name: assets.lut
     type: bin
     start: 0xECBF0
     follows_vram: main
+
+  - name: assets
+    type: bin
+    start: 0xECCC0
+    follows_vram: main
+
   - [0xAC96C0]
