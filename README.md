@@ -7,30 +7,6 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of January 18, 2026, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;render_text_string
-
-&emsp;&emsp;&emsp;&emsp;get_text_width
-
-&emsp;&emsp;&emsp;&emsp;parse_string_with_number
-
-&emsp;&emsp;&emsp;&emsp;stack_pointer
-
-&emsp;&emsp;&emsp;&emsp;__osContRamRead
-
-&emsp;&emsp;&emsp;&emsp;__osContAddressCrc
-
-&emsp;&emsp;&emsp;&emsp;__osContDataCrc
-
-&emsp;&emsp;&emsp;&emsp;osPfsAllocateFile
-
-&emsp;&emsp;&emsp;&emsp;__osPfsDeclearPage
-
-&emsp;&emsp;&emsp;&emsp;__osContRamWrite
-
-&emsp;&emsp;&emsp;&emsp;osMotorInit
-
-&emsp;&emsp;&emsp;&emsp;__osPfsReleasePages
-
 &emsp;&emsp;&emsp;&emsp;Decomp progress [us.v77]: 96.21%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 65.47%
@@ -149,18 +125,6 @@ s32 is_drumstick_unlocked(void) {
 <!-- README_SCORE_BEGIN -->
 As of January 18, 2026, this is our current score:
 ```
-render_text_string
-get_text_width
-parse_string_with_number
-stack_pointer
-__osContRamRead
-__osContAddressCrc
-__osContDataCrc
-osPfsAllocateFile
-__osPfsDeclearPage
-__osContRamWrite
-osMotorInit
-__osPfsReleasePages
  ===============================================================
          ADVENTURE ONE (ASM -> C Decompilation) [us.v77]
  ------------ 96.21% Complete (97.21% NON_MATCHING) ------------
