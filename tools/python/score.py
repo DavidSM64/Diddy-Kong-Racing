@@ -35,6 +35,7 @@ VALID_VERSIONS = ['us.v77', 'pal.v77', 'jpn.v79', 'us.v80', 'pal.v80']
 
 # Name filtering configuration
 BLACKLIST_NAMES = ['if', 'else', 'switch', 'while', 'for']
+BLACKLIST_JPN_NAMES = ['load_font', 'unload_font']
 WHITELIST_JPN_NAMES = ['func_80082BC8_837C8', 'func_800C6464_C7064', 'func_800C663C_C723C',
     'func_800C67F4_C73F4', 'func_800C6870_C7470', 'func_800C68CC_C74CC', 'fontCreateDisplayList',
     'func_800C7744_C8344', 'func_800C7804_C8404', 'fontConvertString', 'func_800C78E0_C84E0']
@@ -257,16 +258,19 @@ class ScoreFile:
         if func_name in BLACKLIST_NAMES:
             return True
 
-        # Apply version-specific whitelists
         version_parts = self.version.split('.')
         region = version_parts[0]
         ver_num = version_parts[1]
 
-        # Japanese name check
+        # Japanese name blacklist check
+        if region == 'jpn' and func_name in BLACKLIST_JPN_NAMES:
+            return True
+
+        # Japanese name whitelist check
         if region == 'jpn' and func_name in WHITELIST_JPN_NAMES:
             return False
 
-        # Version 79 and above check
+        # Version 79 and above whitelist check
         if ver_num in ['v79', 'v80'] and func_name in WHITELIST_V79_NAMES:
             return False
 
@@ -281,29 +285,38 @@ class ScoreFile:
 
     def get_matches(self):
         matches = re.finditer(FUNCTION_REGEX, self.text, re.MULTILINE)
-        # Filter out the ones based on version-specific rules
+        # Filter out C function names based on version-specific rules and avoid duplicates
+        seen_functions = set()
         filtered_matches = []
+
         for match in matches:
             func_name = match.groups()[2]
             if not self.should_filter_name(func_name):
-                filtered_matches.append(match)
+                if func_name not in seen_functions:
+                    seen_functions.add(func_name)
+                    filtered_matches.append(match)
 
-        for matchNum, match in enumerate(filtered_matches, start=1):
+        for match in filtered_matches:
             groups = match.groups()
             self.functions.append(ScoreFileMatch(groups[0], groups[2], self.version, self.map_file))
+
         matches = re.finditer(GLOBAL_ASM_REGEX, self.text, re.MULTILINE)
-        # Filter out the ones based on version-specific rules
+        # Filter out GLOBAL_ASM based on version-specific rules and avoid duplicates
+        seen_global_asm = set()
         filtered_matches = []
+
         for match in matches:
             func_name = match.groups()[0]
             if not self.should_filter_name(func_name):
-                filtered_matches.append(match)
+                if func_name not in seen_global_asm:
+                    seen_global_asm.add(func_name)
+                    filtered_matches.append(match)
 
-        for matchNum, match in enumerate(filtered_matches, start=1):
+        for match in filtered_matches:
             groups = match.groups()
             self.numGlobalAsms += 1
             try:
-                if groups[0] in self.map_file.functionSizes:
+                if groups[0] in self.map_file.functionSizes and groups[0] not in seen_global_asm:
                     self.unfinishedSize += self.map_file.functionSizes[groups[0]]
             except Exception as e:
                 pass

@@ -7,9 +7,33 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of January 18, 2026, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress [us.v77]: 97.08%
+&emsp;&emsp;&emsp;&emsp;render_text_string
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 65.90%
+&emsp;&emsp;&emsp;&emsp;get_text_width
+
+&emsp;&emsp;&emsp;&emsp;parse_string_with_number
+
+&emsp;&emsp;&emsp;&emsp;stack_pointer
+
+&emsp;&emsp;&emsp;&emsp;__osContRamRead
+
+&emsp;&emsp;&emsp;&emsp;__osContAddressCrc
+
+&emsp;&emsp;&emsp;&emsp;__osContDataCrc
+
+&emsp;&emsp;&emsp;&emsp;osPfsAllocateFile
+
+&emsp;&emsp;&emsp;&emsp;__osPfsDeclearPage
+
+&emsp;&emsp;&emsp;&emsp;__osContRamWrite
+
+&emsp;&emsp;&emsp;&emsp;osMotorInit
+
+&emsp;&emsp;&emsp;&emsp;__osPfsReleasePages
+
+&emsp;&emsp;&emsp;&emsp;Decomp progress [us.v77]: 96.21%
+
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 65.47%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -125,30 +149,42 @@ s32 is_drumstick_unlocked(void) {
 <!-- README_SCORE_BEGIN -->
 As of January 18, 2026, this is our current score:
 ```
- ======================================================
-    ADVENTURE ONE (ASM -> C Decompilation) [us.v77]
- ------- 97.08% Complete (98.08% NON_MATCHING) --------
-              # Decompiled functions: 1937
-               # GLOBAL_ASM remaining: 10
-              # NON_MATCHING functions: 5
-           # NON_EQUIVALENT WIP functions: 5
- -------------------- Game Status ---------------------
-       Balloons: 47/47, Keys: 4/4, Trophies: 4/5
-         T.T. Amulets: 4/4, Wizpig Amulets: 4/4
- ------------------------------------------------------
- We are racing in the rematch against Wizpig. (Lap 1/3)
- ======================================================
-         ADVENTURE TWO (Cleanup & Documentation)
- ------------------ 65.90% Complete -------------------
-              # Documented functions: 1280
-             # Undocumented remaining: 370
-            # Functions named `func_*`: 236
-           # Functions without comments: 370
- -------------------- Game Status ---------------------
-       Balloons: 31/47, Keys: 3/4, Trophies: 3/5
-         T.T. Amulets: 3/4, Wizpig Amulets: 3/4
- ------------------------------------------------------
-      We are racing in Windmill Plains. (Lap 2/3)
- ======================================================
+render_text_string
+get_text_width
+parse_string_with_number
+stack_pointer
+__osContRamRead
+__osContAddressCrc
+__osContDataCrc
+osPfsAllocateFile
+__osPfsDeclearPage
+__osContRamWrite
+osMotorInit
+__osPfsReleasePages
+ ===============================================================
+         ADVENTURE ONE (ASM -> C Decompilation) [us.v77]
+ ------------ 96.21% Complete (97.21% NON_MATCHING) ------------
+                  # Decompiled functions: 1925
+                   # GLOBAL_ASM remaining: 10
+                   # NON_MATCHING functions: 5
+                # NON_EQUIVALENT WIP functions: 5
+ ------------------------- Game Status -------------------------
+            Balloons: 46/47, Keys: 4/4, Trophies: 4/5
+             T.T. Amulets: 4/4, Wizpig Amulets: 4/4
+ ---------------------------------------------------------------
+ We are collecting silver coins in Star City. (4/8 silver coins)
+ ===============================================================
+              ADVENTURE TWO (Cleanup & Documentation)
+ ----------------------- 65.47% Complete -----------------------
+                  # Documented functions: 1279
+                  # Undocumented remaining: 367
+                 # Functions named `func_*`: 236
+                # Functions without comments: 367
+ ------------------------- Game Status -------------------------
+            Balloons: 31/47, Keys: 3/4, Trophies: 3/5
+             T.T. Amulets: 3/4, Wizpig Amulets: 3/4
+ ---------------------------------------------------------------
+           We are racing in Windmill Plains. (Lap 1/3)
+ ===============================================================
 ```
 <!-- README_SCORE_END -->
