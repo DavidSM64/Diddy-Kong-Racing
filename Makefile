@@ -376,14 +376,16 @@ clean_assets:
 cleanall:
 	rm -rf $(BUILD_DIR)
 
-distclean: clean
+distclean_symbols: clean
 	rm -rf $(ASM_DIRS)
 	rm -rf $(BIN_DIRS)
 	rm -f $(SYMBOLS_DIR)/*auto.$(REGION).$(VERSION).txt
 	rm -f ver/$(BASENAME).$(REGION).$(VERSION).ld
+
+distclean: distclean_symbols
 	$(MAKE) -C tools distclean
 
-distcleanall: cleanall
+distcleanall_symbols: cleanall
 	rm -rf asm
 	rm -rf assets
 	rm -f $(SYMBOLS_DIR)/*auto.*.txt
@@ -397,10 +399,12 @@ distcleanall: cleanall
 	rm -f $(SYMBOLS_DIR)/*auto.jpn.v79.txt
 	rm -f $(SYMBOLS_DIR)/*auto.us.v80.txt
 	rm -f $(SYMBOLS_DIR)/*auto.pal.v80.txt
+
+distcleanall: distcleanall_symbols
 	$(MAKE) -C tools distclean
 
 #When you just need to wipe old symbol names and re-extract
-cleanextract: distclean extract
+cleanextract: distclean_symbols extract
 
 #Put the build folder into expected for use with asm-differ. Only run this with a matching build.
 expected: verify
