@@ -16,6 +16,8 @@ As of August 12, 2025, this is our current score:
 
 ## Dependencies
 
+### For Ubuntu/Debian based distros
+
 - `gcc`, Version 8.0 or higher
 - `make`, Version 4.2 or higher
 - `python3`
@@ -23,6 +25,14 @@ As of August 12, 2025, this is our current score:
 - `gcc-mips-linux-gnu` is optionally used if compiling NON_MATCHING with COMPILER=gcc
 
 `sudo apt install build-essential pkg-config git python3 python3-pip binutils-mips-linux-gnu python3-venv libpcre2-dev libpcre2-8-0`
+
+### For Arch based distros
+
+`sudo pacman -Syu --needed base-devel pkgconf git python python-pip python-virtualenv pcre2`
+
+For binutils you can [install this package from the AUR](!https://aur.archlinux.org/packages/mips64-elf-binutils)
+
+`yay -Syu mips64-elf-binutils`
 
 ## Setup / Building
 

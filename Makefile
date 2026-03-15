@@ -189,7 +189,7 @@ INCLUDE_CFLAGS  = -I . -I include -I include/libc  -I include/PR -I include/sys 
 INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/gu -I $(LIBULTRA_DIR)/src/libc -I $(LIBULTRA_DIR)/src/io  -I $(LIBULTRA_DIR)/src/sc
 INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/audio -I $(LIBULTRA_DIR)/src/os
 
-ASFLAGS        = -march=vr4300 -32 -G0 $(ASM_DEFINES) $(INCLUDE_CFLAGS)
+ASFLAGS        = -march=vr4300 -32 -G0 -mabi=32 $(ASM_DEFINES) $(INCLUDE_CFLAGS)
 OBJCOPYFLAGS   = -O binary
 
 # Pad to 12MB if matching, otherwise build to a necessary minimum of 1.004MB
@@ -359,7 +359,7 @@ setup:
 #Installing the splat dependencies
 	$(V)$(PYTHON) -m pip install -r requirements.txt
 	$(V)$(PYTHON) ver/splat/update_baserom_names.py
-	$(V)make -C $(TOOLS_DIR)
+	$(V)$(MAKE) -C $(TOOLS_DIR)
 
 clean:
 	rm -rf $(BUILD_DIR)
@@ -381,6 +381,7 @@ distclean: clean
 	rm -rf $(BIN_DIRS)
 	rm -f $(SYMBOLS_DIR)/*auto.$(REGION).$(VERSION).txt
 	rm -f ver/$(BASENAME).$(REGION).$(VERSION).ld
+	$(MAKE) -C tools distclean
 
 distcleanall: cleanall
 	rm -rf asm
@@ -396,6 +397,7 @@ distcleanall: cleanall
 	rm -f $(SYMBOLS_DIR)/*auto.jpn.v79.txt
 	rm -f $(SYMBOLS_DIR)/*auto.us.v80.txt
 	rm -f $(SYMBOLS_DIR)/*auto.pal.v80.txt
+	$(MAKE) -C tools distclean
 
 #When you just need to wipe old symbol names and re-extract
 cleanextract: distclean extract

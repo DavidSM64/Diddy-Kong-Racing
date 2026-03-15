@@ -3,7 +3,7 @@
 # --- Useful Variables --- #
 
 # This is the specific binutils version that will be downloaded
-binutils=binutils-2.36
+binutils=binutils-2.46.0
 
 # Where the built files will end up. 
 # If this directory doesn't already exist it will be created automatically.
@@ -50,7 +50,7 @@ mkdir $tempFolder
 cd $tempFolder
 
 PRINT_STEP 1 "DOWNLOADING BINUTILS FROM GNU.ORG"
-wget ftp://ftp.gnu.org/gnu/binutils/$binutils.tar.xz
+curl -L -O ftp://ftp.gnu.org/gnu/binutils/$binutils.tar.xz
 
 PRINT_STEP 2 "EXTRACTING TAR FILE"
 tar -xf $binutils.tar.xz
@@ -72,6 +72,7 @@ PRINT_STEP 5 "INSTALLING BUILT FILES"
 INSTALL_FILE ar $binFolder
 INSTALL_FILE objcopy $binFolder
 INSTALL_FILE objdump $binFolder
+RENAME_AND_INSTALL_FILE strip-new $binFolder strip
 RENAME_AND_INSTALL_FILE as-new $gasFolder as
 RENAME_AND_INSTALL_FILE ld-new $ldFolder ld
 
