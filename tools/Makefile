@@ -79,7 +79,7 @@ dkr_assets_tool: $(dkr_assets_tool_OBJ_FILES)
 
 recomp:
 	@echo "Fetching Recomp..."
-	wget https://github.com/decompals/ido-static-recomp/releases/download/v1.2/ido-5.3-recomp-${DETECTED_OS}.tar.gz
+	curl -O -L https://github.com/decompals/ido-static-recomp/releases/download/v1.2/ido-5.3-recomp-${DETECTED_OS}.tar.gz
 	mkdir -p $(RECOMP_DIR)
 	tar xf ido-5.3-recomp-${DETECTED_OS}.tar.gz -C $(RECOMP_DIR)
 	$(RM) ido-5.3-recomp-${DETECTED_OS}.tar.gz
