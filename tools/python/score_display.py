@@ -102,7 +102,7 @@ class ScoreDisplay:
         out += self.makeLine(' ', dashLen, status['Msg'])
         return [out, dashLen]
     
-    def getDisplay(self, advOnePer, advOneNonMatchPer, advTwoPer, showFlags=3, totalDecompFunctions=0, totalGlobalAsm=0, totalNonMatching=0, totalNonEquivalent=0, totalDocumented=0, totalUndocumented=0, totalNamedFunc=0, totalUncommented=0):
+    def getDisplay(self, advOnePer, advOneNonMatchPer, advTwoPer, showFlags=3, version='us.v77', totalDecompFunctions=0, totalGlobalAsm=0, totalNonMatching=0, totalNonEquivalent=0, totalDocumented=0, totalUndocumented=0, totalNamedFunc=0, totalUncommented=0):
         advOneStatus = self.getStatus(advOnePer)
         advTwoStatus = self.getStatus(advTwoPer)
         if showFlags == 3:
@@ -118,7 +118,7 @@ class ScoreDisplay:
         out = ''
         if showFlags & 1:
             out += self.makeLine('=', dashLen)
-            out += self.makeLine(' ', dashLen, 'ADVENTURE ONE (ASM -> C Decompilation)')
+            out += self.makeLine(' ', dashLen, 'ADVENTURE ONE (ASM -> C Decompilation) ' + '[{:s}]'.format(version))
             if advOnePer >= 100.0:
                 out += self.makeLine('-', dashLen, '{:5.1f}% Complete'.format(advOnePer))
             else:
@@ -154,4 +154,3 @@ if __name__ == "__main__":
         adventureSelect = int(args.adventure)
     scoreDisplay = ScoreDisplay()
     print(scoreDisplay.getDisplay(float(args.adventureOnePercentage), float(args.adventureTwoPercentage), adventureSelect))
-    
