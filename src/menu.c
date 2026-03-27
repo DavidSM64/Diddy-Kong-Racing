@@ -3029,6 +3029,10 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
     sMenuGuiOpacity = 255;
 }
 
+/**
+ * Draw text with a drop shadow on a dialogue box.
+ * Note: dialogueBoxID is always -1, so the global dialogue box is always used.
+ */
 #if REGION == REGION_JP
 void draw_text_with_shadow(s32 dialogueBoxID, s32 xPos1, s32 yPos1, s32 xPos2, s32 yPos2, char *text,
                          AlignmentFlags alignment, s32 textColour, s32 alpha) {
