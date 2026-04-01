@@ -40,7 +40,7 @@ As of August 12, 2025, this is our current score:
 
 `sudo pacman -Syu --needed base-devel pkgconf git python python-pip python-virtualenv pcre2 yay`
 
-For binutils you should [install this package from the AUR](!https://aur.archlinux.org/packages/mips64-elf-binutils)
+For binutils you should install this package from the AUR: https://aur.archlinux.org/packages/mips64-elf-binutils
 
 - `base-devel` / `pkgconf` are helper packages needed for make.
 - `git` is used for version control.
