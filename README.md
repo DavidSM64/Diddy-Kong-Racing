@@ -15,7 +15,7 @@ As of August 12, 2025, this is our current score:
 ---
 
 
-## Setup / Building
+## Setup
 
 
 ### Dependencies
@@ -31,8 +31,6 @@ As of August 12, 2025, this is our current score:
 - `python3` is needed to run python scripts
 - `libpcre2-dev` and `libpcre2-8-0` are not technically required, but will speedup extracting/building some assets significantly.
 - `gcc-mips-linux-gnu` is optionally used if compiling NON_MATCHING with COMPILER=gcc
-
----
 
 </details>
 
@@ -51,6 +49,7 @@ For binutils you should [install this package from the AUR](!https://aur.archlin
 - `yay` is not required, but is useful for installing packages from the AUR like the binutils.
     - `yay -Syu mips64-elf-binutils`
 
+    
 </details>
 
 <details>
@@ -61,7 +60,7 @@ For binutils you should [install this package from the AUR](!https://aur.archlin
 2. Install make and pcre2 using homebrew: `brew install make pcre2`
 3. When running make, you MUST use `gmake` not `make`
     - For example, instead of doing `make setup` you would use `gmake setup`.
-
+    
 </details>
 
 <details>
@@ -76,7 +75,7 @@ Windows is not natively supported. We recommend using a linux distro under the W
 - gcc needs to be version 8.0 or higher.
 - make needs to be version 4.2 or higher.
 
----
+### Building
 
 1. Install the dependencies above for your system. Click on the text to reveal the instructions.
 2. Place the ROM file within the `baseroms` directory.  
@@ -88,6 +87,8 @@ Windows is not natively supported. We recommend using a linux distro under the W
    **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
 
 Note: If you are on MacOS, remember to use `gmake` instead of `make`!
+
+---
 
 ### Building other versions
 
