@@ -14,29 +14,71 @@ As of August 12, 2025, this is our current score:
 
 ---
 
-## Dependencies
-
-### For Ubuntu/Debian based distros
-
-- `gcc`, Version 8.0 or higher
-- `make`, Version 4.2 or higher
-- `python3`
-- `libpcre2-dev` and `libpcre2-8-0` (Not technically required, but will speedup extracting/building some assets.)
-- `gcc-mips-linux-gnu` is optionally used if compiling NON_MATCHING with COMPILER=gcc
-
-`sudo apt install build-essential pkg-config git python3 python3-pip binutils-mips-linux-gnu python3-venv libpcre2-dev libpcre2-8-0`
-
-### For Arch based distros
-
-`sudo pacman -Syu --needed base-devel pkgconf git python python-pip python-virtualenv pcre2`
-
-For binutils you can [install this package from the AUR](!https://aur.archlinux.org/packages/mips64-elf-binutils)
-
-`yay -Syu mips64-elf-binutils`
 
 ## Setup / Building
 
-1. Install the dependencies
+
+### Dependencies
+
+<details>
+
+<summary> Ubuntu / Debian based Linux distros </summary>
+
+`sudo apt install build-essential pkg-config git python3 python3-pip binutils-mips-linux-gnu python3-venv libpcre2-dev libpcre2-8-0`
+
+- `build-essential` / `pkg-config` are helper packages needed for make.
+- `git` is used for version control.
+- `python3` is needed to run python scripts
+- `libpcre2-dev` and `libpcre2-8-0` are not technically required, but will speedup extracting/building some assets significantly.
+- `gcc-mips-linux-gnu` is optionally used if compiling NON_MATCHING with COMPILER=gcc
+
+---
+
+</details>
+
+<details>
+
+<summary> Arch based Linux distros </summary>
+
+`sudo pacman -Syu --needed base-devel pkgconf git python python-pip python-virtualenv pcre2 yay`
+
+For binutils you should [install this package from the AUR](!https://aur.archlinux.org/packages/mips64-elf-binutils)
+
+- `base-devel` / `pkgconf` are helper packages needed for make.
+- `git` is used for version control.
+- `python` is needed to run python scripts
+- `pcre2` is not technically required, but will speedup extracting/building some assets significantly.
+- `yay` is not required, but is useful for installing packages from the AUR like the binutils.
+    - `yay -Syu mips64-elf-binutils`
+
+</details>
+
+<details>
+
+<summary> MacOS </summary>
+
+1. Install homebrew from here: https://brew.sh/
+2. Install make and pcre2 using homebrew: `brew install make pcre2`
+3. When running make, you MUST use `gmake` not `make`
+    - For example, instead of doing `make setup` you would use `gmake setup`.
+
+</details>
+
+<details>
+
+<summary> Windows </summary>
+
+Windows is not natively supported. We recommend using a linux distro under the Windows Subsystem for Linux (WSL)
+
+</details>
+
+### Notes
+- gcc needs to be version 8.0 or higher.
+- make needs to be version 4.2 or higher.
+
+---
+
+1. Install the dependencies above for your system. Click on the text to reveal the instructions.
 2. Place the ROM file within the `baseroms` directory.  
    **a.** The name of the ROM file does not matter. It will be detected automatically from an sha1 checksum.
 3. Grab tools: `git submodule update --init --recursive`
@@ -45,11 +87,7 @@ For binutils you can [install this package from the AUR](!https://aur.archlinux.
 6. Run `make` in the main directory.  
    **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
 
-### Building on macOS
-
-1. Use homebrew to install dependencies: `brew install make`
-2. Place the ROM file within the `baseroms` directory. See [Setup](#setup--building) above for more info.
-3. Run `gmake` from the main directory. Note that macOS built-in `make` will not work since it does not meet the version requirements.
+Note: If you are on MacOS, remember to use `gmake` instead of `make`!
 
 ### Building other versions
 
