@@ -45,7 +45,7 @@ for asmDir in ASM_FOLDERS:
 
 # These will automatically be added to the adventure one percentage.
 ASM_LABELS = []
-GLABEL_REGEX = r'glabel|leaf ([0-9A-Za-z_]+)'
+GLABEL_REGEX = r'(?:glabel|leaf) ([0-9A-Za-z_]+)'
 for filename in filelist:
     with open(filename, 'r') as asmFile:
         text = asmFile.read()
