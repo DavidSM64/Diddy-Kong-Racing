@@ -1841,72 +1841,46 @@ void func_800BCC70(LevelModel *model) {
     mempool_free(spA0);
 }
 
-// https://decomp.me/scratch/1AO88
-#ifdef NON_EQUIVALENT
-s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNegPosition, f32 shadowZNegPosition,
-                  f32 shadowXPosition, f32 shadowZPosition) {
+s32 func_800BDC80(s32 arg0, unk8011C3B8* arg1, unk8011C8B8* arg2, f32 shadowXNegPosition, f32 shadowZNegPosition, f32 shadowXPosition, f32 shadowZPosition) {
     s32 colCount;
-    s32 startCol; // sp368
-    s32 startRow; // sp364
-    f32 var_f0;
-    f32 pad_sp35C;
-    s32 endCol;    // sp358
-    s32 endRow;    // sp354
-    s32 colOffset; // sp350
-    s32 rowOffset; // sp34C
-    f32 pad_sp348;
-    f32 pad_sp344;
-    f32 pad_sp340;
-    f32 var_f24;
-    f32 var_f26;
-    f32 pad_sp334;
-    s16 var_a1; // sp332
-    f32 var_f20;
-    f32 var_f22;
-    s16 var_s8;
-    s16 var_s2_s16;
-    s16 var_s3_2;
-    s32 pad_sp27C;
-    s32 pad_sp278;
-    s32 pad_sp274;
-    s32 pad_sp270;
-    s32 var_s0;
-    s32 currentCol;
+    s32 startCol;
+    s32 startRow;
     s32 currentRow;
-    s32 waveCount;
-    s32 temp1_2;
-    s32 temp2_2;
-    s32 pad_sp254;
-    s32 var_a3;
-    s32 pad_sp24C;
-    s32 var_t0;
-    s32 var_v0;
-    unk8011C8B8 *var_v0_4;
-    s32 pad_sp23C;
-    unk8011C3B8 *var_s0_2;
-    s16 spD8[256]; // 16 x 16
+    s32 currentCol;
+    s32 endCol;
+    s32 endRow;
+    s32 colOffset;
+    s32 rowOffset;
+    s32 counter;
+    f32 temp_fs0;
+    f32 temp_fs1;
+    f32 temp_fs3;
+    f32 var_fs0;
+    f32 var_fs1;
+    s16 sp332;
+    s16 spD8[300];
+    s16 temp_fp;
+    s16 temp_s2;
+    s16 var_s3_2;
+    f32 stepX;
+    f32 stepZ;
+    f32 temp_fs2;
+    s32 var_s0;
     s32 var_s2;
     s32 var_s4;
-    f32 steps[2]; // spC8
-    s32 pad_spC4;
-    s32 temp3_2;
-    s32 temp4_2;
-    s32 counter;
-    s32 var_t8;
-    s32 var_t6;
-    s32 pad[3];
+    s32 temp_t0;
 
-    steps[1] = gWaveVtxStepX;
-    steps[0] = gWaveVtxStepZ;
-    var_f24 = (1.0f - gWaveController.unk44) / 127.0f;
-    waveCount = (arg0 * gWaveTileTotal);
-    if (gWaveController.doubleDensity) {
-        var_f22 = 0.5f;
-        steps[1] *= 0.5;
-        steps[0] *= 0.5;
+    temp_t0 = arg0 * gWaveTileTotal;
+    stepX = gWaveVtxStepX;
+    stepZ = gWaveVtxStepZ;
+    temp_fs2 = (1.0f - gWaveController.unk44) / 127.0f;
+    if (gWaveController.doubleDensity != 0) {
+        var_fs1 = 0.5f;
+        stepX *= 0.5;
+        stepZ *= 0.5;
         colCount = gWaveController.subdivisions * 2;
     } else {
-        var_f22 = 1.0f;
+        var_fs1 = 1.0f;
         colCount = gWaveController.subdivisions;
     }
 
@@ -1914,163 +1888,130 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNeg
     shadowZNegPosition -= gWaveModel[arg0].originZ;
     shadowXPosition -= gWaveModel[arg0].originX;
     shadowZPosition -= gWaveModel[arg0].originZ;
-
     if (shadowXNegPosition < 0.0f) {
         startCol = 0;
     } else {
-        startCol = shadowXNegPosition / steps[1];
+        startCol = (s32) (shadowXNegPosition / stepX);
     }
-
-    // 0 instead of 0.0f is "correct" here
-    if (shadowZNegPosition < 0) {
+    if (shadowZNegPosition < 0.0f) {
         startRow = 0;
     } else {
-        startRow = shadowZNegPosition / steps[0];
+        startRow = (s32) (shadowZNegPosition / stepZ);
     }
-
     if (gWaveBoundingBoxW <= shadowXPosition) {
         endCol = colCount;
     } else {
-        endCol = (s32) (shadowXPosition / steps[1]) + 1;
+        endCol = (s32) (shadowXPosition / stepX) + 1;
     }
-
     if (gWaveBoundingBoxH <= shadowZPosition) {
         endRow = colCount;
     } else {
-        endRow = (s32) (shadowZPosition / steps[1]) + 1;
+        endRow = (s32) (shadowZPosition / stepX) + 1;
     }
-
     colOffset = gWaveModel[arg0].unk12 + startCol;
     while (colOffset >= gWaveController.tileCount) {
         colOffset -= gWaveController.tileCount;
     }
-
     rowOffset = gWaveModel[arg0].unk10 + startRow;
     while (rowOffset >= gWaveController.tileCount) {
         rowOffset -= gWaveController.tileCount;
     }
 
-    for (currentRow = startRow, counter = 0; endRow >= currentRow; currentRow++) {
+    for (currentRow = startRow, counter = 0; currentRow <= endRow; currentRow++) {
         var_s0 = colOffset;
+
         var_s2 = (rowOffset * gWaveController.tileCount) + var_s0;
-        var_s4 = waveCount + startCol + (currentRow * colCount);
-        for (currentCol = startCol; endCol >= currentCol; currentCol++) {
-            var_f20 = (gWaveHeightTable[gWaveHeightIndices[var_s2].s[0]] +
-                       gWaveHeightTable[gWaveHeightIndices[var_s2].s[1]]) *
-                      gWaveController.magnitude;
+        var_s4 = temp_t0 + startCol + (currentRow * colCount);
+        for (currentCol = startCol; currentCol <= endCol; currentCol++) {
+
+            var_fs0 = (gWaveHeightTable[gWaveHeightIndices[var_s2].x] + gWaveHeightTable[gWaveHeightIndices[var_s2].y]) * gWaveController.magnitude;
             if (gWaveGenCount > 0) {
-                var_f20 += waves_get_y(arg0, currentCol, currentRow);
-            }
-            var_v0 = D_800E3178[var_s4];
-            if (var_v0 < 0x7F) {
-                var_f20 *= gWaveController.unk44 + (var_v0 * var_f24);
+                var_fs0 += waves_get_y(arg0, currentCol, currentRow);
             }
 
-            // s32 cast below required
-            spD8[counter] = gWaveModel[arg0].originY + (s32) (var_f20 * var_f22);
-
+            if (D_800E3178[var_s4] < 0x7F) {
+                var_fs0 *= gWaveController.unk44 + ((s32)D_800E3178[var_s4] * temp_fs2);
+            }
+            spD8[counter] = gWaveModel[arg0].originY + (s16) (var_fs0 * var_fs1);
             counter++;
-            var_s4++;
             var_s0++;
+            var_s4++;
             var_s2++;
             if (var_s0 >= gWaveController.tileCount) {
                 var_s0 -= gWaveController.tileCount;
                 var_s2 -= gWaveController.tileCount;
             }
         }
-
         rowOffset++;
         if (rowOffset >= gWaveController.tileCount) {
             rowOffset -= gWaveController.tileCount;
         }
     }
 
+    // FAKE
+    temp_fs3 = (stepX * stepZ) * (stepX * stepZ);
     colCount = (endCol - startCol) + 1;
-    var_a1 = gWaveModel[arg0].originZ + (s32) (steps[0] * startRow);
-    var_s3_2 = gWaveModel[arg0].originX + (s32) (steps[1] * startCol);
-    counter = 0;
-    var_s0_2 = &arg1[counter];
-    for (currentRow = startRow; currentRow < endRow; currentRow++) {
-        // 0 .. 15
-        var_a3 = (currentRow - startRow) * colCount;
-        // 1 .. 16
-        var_t0 = ((currentRow - startRow) + 1) * colCount;
+    sp332 = gWaveModel[arg0].originZ + (s16) (startRow * stepZ);
+    
+    for (currentRow = startRow, counter = 0; currentRow < endRow; currentRow++) {
+        temp_fp = gWaveModel[arg0].originZ + (s16) ((currentRow + 1) * stepZ);
+        var_s3_2 = gWaveModel[arg0].originX + (s16) (startCol * stepX);
 
-        var_s8 = gWaveModel[arg0].originZ + (s32) (steps[0] * (currentRow + 1));
-        var_f26 = steps[0] * steps[1];
-        if (startCol < endCol) {
-            currentCol = startCol; // s1
-            do {
-                // v0 = currentCol - startCol as index of spD8
-                // t1 =  -currentCol + startCol as index of spD8
-                var_t6 = (startCol * -1) + currentCol;
-                var_t8 = currentCol - startCol;
-                temp1_2 = var_a3 + var_t8; // s4 current row + col
-                temp2_2 = var_t0 + var_t8; // v1 current row + next col
-                temp3_2 = var_a3 + var_t6; // s5 next row + current col
-                temp4_2 = var_t0 + var_t6; // a0 next row + col
-                pad_spC4 = steps[1] * (currentCol + 1);
-                var_s2_s16 = gWaveModel[arg0].originX + pad_spC4;
-                var_s0_2->x1 = var_s3_2;
-                var_s0_2->x2 = var_s3_2;
-                var_s0_2->x3 = var_s2_s16;
-                var_s0_2->y1 = spD8[temp1_2];
-                var_s0_2->y2 = spD8[temp3_2];
-                var_s0_2->y3 = spD8[temp2_2 + 1];
-                var_s0_2->z1 = var_a1;
-                var_s0_2->z2 = var_s8;
-                var_s0_2->z3 = var_a1;
-                var_f20 = (var_s0_2->y1 - var_s0_2->y3) * steps[0];
-                var_f22 = (var_s0_2->y1 - var_s0_2->y2) * steps[1];
-                var_f0 = sqrtf((var_f20 * var_f20) + (var_f26 * var_f26) + (var_f22 * var_f22));
-                if (var_f0 > 0.0f) {
-                    var_f24 = (1.0f / var_f0);
-                    var_v0_4 = &arg2[counter];
-                    var_v0_4->x = var_f20 * var_f24;
-                    var_v0_4->y = var_f26 * var_f24;
-                    var_v0_4->z = var_f22 * var_f24;
-                    var_v0_4->unkC_union.w =
-                        -((var_v0_4->z * var_s0_2->z1) + ((var_s0_2->x1 * var_v0_4->x) + (var_s0_2->y1 * var_v0_4->y)));
-                    counter++;
-                    var_s0_2++;
-                }
-                var_s0_2->x1 = var_s2_s16;
-                var_s0_2->x2 = var_s3_2;
-                var_s0_2->x3 = var_s2_s16;
-                var_s0_2->y1 = spD8[temp1_2 + 1];
-                var_s0_2->y2 = spD8[temp3_2];
-                var_s0_2->y3 = spD8[temp4_2 + 1];
-                var_s0_2->z1 = var_a1;
-                var_s0_2->z2 = var_s8;
-                var_s0_2->z3 = var_s8;
-                var_f20 = (var_s0_2->y2 - var_s0_2->y3) * steps[0];
-                var_f22 = (var_s0_2->y1 - var_s0_2->y3) * steps[1];
-                var_f0 = sqrtf((var_f20 * var_f20) + (var_f26 * var_f26) + (var_f22 * var_f22));
-                if (var_f0 > 0) {
-                    var_f24 = (1.0f / var_f0);
-                    var_v0_4 = &arg2[counter];
-                    var_v0_4->x = var_f20 * var_f24;
-                    var_v0_4->y = var_f26 * var_f24;
-                    var_v0_4->z = var_f22 * var_f24;
+        for (currentCol = startCol; currentCol < endCol; currentCol++) {
+            temp_s2 = gWaveModel[arg0].originX + (s16) ((currentCol + 1) * stepX);
 
-                    var_v0_4->unkC_union.w =
-                        -((var_v0_4->z * var_s0_2->z1) + ((var_s0_2->x1 * var_v0_4->x) + (var_s0_2->y1 * var_v0_4->y)));
-                    counter++;
-                    var_s0_2++;
-                }
-                currentCol++;
-                var_s3_2 = var_s2_s16;
-            } while (currentCol < endCol);
+            arg1[counter].x1 = var_s3_2;
+            arg1[counter].x2 = var_s3_2;
+            arg1[counter].x3 = temp_s2;
+            arg1[counter].y1 = spD8[(currentCol - startCol) + ((currentRow - startRow) * colCount)];
+            arg1[counter].y2 = spD8[(currentCol - startCol) + (((currentRow - startRow) + 1) * colCount)];
+            arg1[counter].y3 = spD8[((currentCol - startCol) + 1) + ((currentRow - startRow) * colCount)];
+            arg1[counter].z1 = sp332;
+            arg1[counter].z2 = temp_fp;
+            arg1[counter].z3 = sp332;
+            temp_fs0 = (arg1[counter].y1 - arg1[counter].y3) * stepZ;
+            temp_fs3 = stepX * stepZ;
+            temp_fs1 = (arg1[counter].y1 - arg1[counter].y2) * stepX;
+            temp_fs2 = sqrtf((temp_fs0 * temp_fs0) + (temp_fs3 * temp_fs3) + (temp_fs1 * temp_fs1));
+            if (temp_fs2 > 0.0f) {
+                temp_fs2 = 1 / temp_fs2;
+                arg2[counter].x = temp_fs0 * temp_fs2;
+                arg2[counter].y = temp_fs3 * temp_fs2;
+                arg2[counter].z = temp_fs1 * temp_fs2;
+
+                arg2[counter].unkC_union.w = -((arg1[counter].x1 * arg2[counter].x) + (arg1[counter].y1 * arg2[counter].y) + (arg1[counter].z1 * arg2[counter].z));
+                counter++;
+            }
+            arg1[counter].x1 = temp_s2;
+            arg1[counter].x2 = var_s3_2;
+            arg1[counter].x3 = temp_s2;
+            arg1[counter].y1 = spD8[((currentCol - startCol) + 1) + ((currentRow - startRow) * colCount)];
+            arg1[counter].y2 = spD8[(currentCol - startCol) + (((currentRow - startRow) + 1) * colCount)];
+            arg1[counter].y3 = spD8[((currentCol - startCol) + 1) + (((currentRow - startRow) + 1) * colCount)];
+            arg1[counter].z1 = sp332;
+            arg1[counter].z2 = temp_fp;
+            arg1[counter].z3 = temp_fp;
+            temp_fs0 = (arg1[counter].y2 - arg1[counter].y3) * stepZ;
+            temp_fs3 = stepX * stepZ;
+            temp_fs1 = (arg1[counter].y1 - arg1[counter].y3) * stepX;
+            temp_fs2 = sqrtf((temp_fs0 * temp_fs0) + (temp_fs3 * temp_fs3) + (temp_fs1 * temp_fs1));
+            if (temp_fs2 > 0.0f) {
+                temp_fs2 = 1 / temp_fs2;
+                arg2[counter].x = temp_fs0 * temp_fs2;
+                arg2[counter].y = temp_fs3 * temp_fs2;
+                arg2[counter].z = temp_fs1 * temp_fs2;
+
+                arg2[counter].unkC_union.w = -((arg1[counter].x1 * arg2[counter].x) + (arg1[counter].y1 * arg2[counter].y) + (arg1[counter].z1 * arg2[counter].z));
+                counter++;
+            }
+
+            var_s3_2 = temp_s2;
         }
-
-        var_a1 = var_s8;
+        sp332 = temp_fp;
     }
 
     return counter;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BDC80.s")
-#endif
 
 Object_Log *obj_wave_init(s32 blockID, f32 x, f32 z) {
     f32 spE4;

@@ -5204,16 +5204,14 @@ void obj_collision_transform(Object *obj) {
     colData->collidedObj = NULL;
 }
 
-// https://decomp.me/scratch/S3kHf
-#ifdef NON_MATCHING
 s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *arg4, f32 *arg5, s8 *surface) {
     ModelInstance *modInst;
     s32 sp170;
     s32 sp16C;
     s32 sp168;
-    s32 j; // fp // sp164
+    s32 j;
     s32 sp160;
-    f32 dist; // sp15C
+    f32 dist;
     Object *sp158;
     ObjectModel *sp154;
     f32 temp;
@@ -5347,24 +5345,14 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *ar
     }
 
     arg2[0] = 0;
-    if (sp168 & 1) {
-        arg2[0]++;
+    for (i = 0; i < 4; i++) {
+        if (sp168 & (1 << i)) {
+            arg2[0]++;
+        }
     }
-    if (sp168 & 2) {
-        arg2[0]++;
-    }
-    if (sp168 & 4) {
-        arg2[0]++;
-    }
-    if (sp168 & 8) {
-        arg2[0]++;
-    }
+
     return sp168;
 }
-
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/collision_objectmodel.s")
-#endif
 
 unk800179D0 *func_8001790C(Object *arg0, Object *arg1) {
     unk800179D0 *entry;
