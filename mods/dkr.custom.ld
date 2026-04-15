@@ -84,6 +84,20 @@ SECTIONS
     main_ROM_END = __romPos;
     main_VRAM_END = .;
 
+    assets_lut_ROM_START = __romPos;
+    assets_lut_VRAM = ADDR(.assets_lut);
+    .assets_lut main_VRAM_END : AT(assets_lut_ROM_START) SUBALIGN(16)
+    {
+        FILL(0x00000000);
+        assets_lut_DATA_START = .;
+        build/assets/assets.lut.bin.o(.data);
+        assets_lut_DATA_END = .;
+        assets_lut_DATA_SIZE = ABSOLUTE(assets_lut_DATA_END - assets_lut_DATA_START);
+    }
+    __romPos += SIZEOF(.assets_lut);
+    assets_lut_ROM_END = __romPos;
+    assets_lut_VRAM_END = .;
+
     assets_ROM_START = __romPos;
     assets_VRAM = ADDR(.assets);
     .assets main_VRAM_END : AT(assets_ROM_START) SUBALIGN(16)

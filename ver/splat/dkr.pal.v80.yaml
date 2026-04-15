@@ -447,8 +447,14 @@ segments:
       - { type: .bss, vram: 0x8012D850, name: ../libultra/src/os/timerintr }
       - { type: .bss, vram: 0x8012D890, name: ../libultra/src/debug/kdebugserver }
 
-  - name: assets
+  - name: assets.lut
     type: bin
     start: 0xED170
     follows_vram: main
+
+  - name: assets
+    type: bin
+    start: 0xED240
+    follows_vram: main
+
   - [0xB8D060]

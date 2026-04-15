@@ -190,7 +190,7 @@ INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/gu -I $(LIBULTRA_DIR)/src/libc -I $(LIB
 INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/audio -I $(LIBULTRA_DIR)/src/os
 INCLUDE_CFLAGS += -I $(SRC_DIR)/hasm -I $(SRC_DIR)/hasm/ido
 
-ASFLAGS        = -march=vr4300 -32 -G0 $(ASM_DEFINES) $(INCLUDE_CFLAGS)
+ASFLAGS        = -march=vr4300 -32 -G0 -mabi=32 $(ASM_DEFINES) $(INCLUDE_CFLAGS)
 OBJCOPYFLAGS   = -O binary
 
 # Pad to 12MB if matching, otherwise build to a necessary minimum of 1.004MB
@@ -363,7 +363,7 @@ setup:
 #Installing the splat dependencies
 	$(V)$(PYTHON) -m pip install -r requirements.txt
 	$(V)$(PYTHON) ver/splat/update_baserom_names.py
-	$(V)make -C $(TOOLS_DIR)
+	$(V)$(MAKE) -C $(TOOLS_DIR)
 
 clean:
 	rm -rf $(BUILD_DIR)
@@ -380,13 +380,16 @@ clean_assets:
 cleanall:
 	rm -rf $(BUILD_DIR)
 
-distclean: clean
+distclean_symbols: clean
 	rm -rf $(ASM_DIRS)
 	rm -rf $(BIN_DIRS)
 	rm -f $(SYMBOLS_DIR)/*auto.$(REGION).$(VERSION).txt
 	rm -f ver/$(BASENAME).$(REGION).$(VERSION).ld
 
-distcleanall: cleanall
+distclean: distclean_symbols
+	$(MAKE) -C tools distclean
+
+distcleanall_symbols: cleanall
 	rm -rf asm
 	rm -rf assets
 	rm -f $(SYMBOLS_DIR)/*auto.*.txt
@@ -401,8 +404,11 @@ distcleanall: cleanall
 	rm -f $(SYMBOLS_DIR)/*auto.us.v80.txt
 	rm -f $(SYMBOLS_DIR)/*auto.pal.v80.txt
 
+distcleanall: distcleanall_symbols
+	$(MAKE) -C tools distclean
+
 #When you just need to wipe old symbol names and re-extract
-cleanextract: distclean extract
+cleanextract: distclean_symbols extract
 
 #Put the build folder into expected for use with asm-differ. Only run this with a matching build.
 expected: verify

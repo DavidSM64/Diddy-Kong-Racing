@@ -162,20 +162,21 @@ bool FileHelper::is_zip_file(const fs::path &path) {
 
 // mutex to help prevent possible data-races.
 std::mutex _sha1CacheMutex;
-std::unordered_map<fs::path, std::string> _fileSha1Cache;
+std::unordered_map<fs::path, std::string, PathHash> _fileSha1Cache;
 
 std::string FileHelper::get_sha1_of_file(const fs::path& path) {
-    _sha1CacheMutex.lock();
-    if(_fileSha1Cache.find(path) != _fileSha1Cache.end()) {
-        _sha1CacheMutex.unlock();
+    std::lock_guard<std::mutex> lock(_sha1CacheMutex);
+    
+    if (auto it = _fileSha1Cache.find(path); it != _fileSha1Cache.end()) {
         // Found in cache.
-        return _fileSha1Cache[path];
+        return it->second;
     }
     // Not in cache, so must calculate the result.
     SHA1 sha1;
-    _fileSha1Cache[path] = sha1.from_file(path.generic_string());
-    _sha1CacheMutex.unlock();
-    return _fileSha1Cache[path];
+    return _fileSha1Cache.emplace(
+        path,
+        sha1.from_file(path.generic_string())
+    ).first->second;
 }
 
 std::vector<fs::path> FileHelper::get_files_from_directory(const fs::path &dirPath, bool recursive) {

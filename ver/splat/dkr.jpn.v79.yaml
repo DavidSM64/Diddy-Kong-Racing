@@ -421,7 +421,7 @@ segments:
       - { type: .bss, vram: 0x80127C00, name: video }
       - { type: .bss, vram: 0x80127DB0, name: textures_sprites }
       - { type: .bss, vram: 0x80127E20, name: menu }
-      - { type: .bss, vram: 0x80128780, name: game_ui }      
+      - { type: .bss, vram: 0x80128780, name: game_ui }
       - { type: .bss, vram: 0x80128C60, name: os_yield_data }
       - { type: .bss, vram: 0x80129660, name: weather }
       - { type: .bss, vram: 0x80129730, name: particles }
@@ -433,7 +433,7 @@ segments:
       - { type: .bss, vram: 0x8012C290, name: font }
       - { type: .bss, vram: 0x8012C2E0, name: ../libultra/src/io/pimgr }
       - { type: .bss, vram: 0x8012C5B0, name: gzip }
-      - { type: .bss, vram: 0x8012C5C0, name: ../libultra/src/io/leointerrupt }     
+      - { type: .bss, vram: 0x8012C5C0, name: ../libultra/src/io/leointerrupt }
       - { type: .bss, vram: 0x8012C5D0, name: thread30_bgload }
       - { type: .bss, vram: 0x8012E7A0, name: ../libultra/src/os/initialize }
       - { type: .bss, vram: 0x8012E7B0, name: ../libultra/src/os/seteventmesg }
@@ -447,8 +447,14 @@ segments:
       - { type: .bss, vram: 0x8012ECE0, name: ../libultra/src/os/timerintr }
       - { type: .bss, vram: 0x8012ED20, name: ../libultra/src/debug/kdebugserver }
 
-  - name: assets
+  - name: assets.lut
     type: bin
     start: 0xEE5D0
     follows_vram: main
+
+  - name: assets
+    type: bin
+    start: 0xEE6A0
+    follows_vram: main
+
   - [0xB8E4E0]

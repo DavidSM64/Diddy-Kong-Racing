@@ -5,28 +5,79 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of August 12, 2025, this is our current score:
+As of April 14, 2026, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 97.10%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 97.04%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 65.90%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
 
-## Dependencies
 
-- `gcc`, Version 8.0 or higher
-- `make`, Version 4.2 or higher
-- `python3`
-- `libpcre2-dev` and `libpcre2-8-0` (Not technically required, but will speedup extracting/building some assets.)
-- `gcc-mips-linux-gnu` is optionally used if compiling NON_MATCHING with COMPILER=gcc
+## Setup
+
+
+### Dependencies
+
+<details>
+
+<summary> Ubuntu / Debian based Linux distros </summary>
 
 `sudo apt install build-essential pkg-config git python3 python3-pip binutils-mips-linux-gnu python3-venv libpcre2-dev libpcre2-8-0`
 
-## Setup / Building
+- `build-essential` / `pkg-config` are helper packages needed for make.
+- `git` is used for version control.
+- `python3` is needed to run python scripts
+- `libpcre2-dev` and `libpcre2-8-0` are not technically required, but will speedup extracting/building some assets significantly.
+- `gcc-mips-linux-gnu` is optionally used if compiling NON_MATCHING with COMPILER=gcc
 
-1. Install the dependencies
+</details>
+
+<details>
+
+<summary> Arch based Linux distros </summary>
+
+`sudo pacman -Syu --needed base-devel pkgconf git python python-pip python-virtualenv pcre2 yay`
+
+For binutils you should install this package from the AUR: https://aur.archlinux.org/packages/mips64-elf-binutils
+
+- `base-devel` / `pkgconf` are helper packages needed for make.
+- `git` is used for version control.
+- `python` is needed to run python scripts
+- `pcre2` is not technically required, but will speedup extracting/building some assets significantly.
+- `yay` is not required, but is useful for installing packages from the AUR like the binutils.
+    - `yay -Syu mips64-elf-binutils`
+
+    
+</details>
+
+<details>
+
+<summary> MacOS </summary>
+
+1. Install homebrew from here: https://brew.sh/
+2. Install make and pcre2 using homebrew: `brew install make pcre2`
+3. When running make, you MUST use `gmake` not `make`
+    - For example, instead of doing `make setup` you would use `gmake setup`.
+    
+</details>
+
+<details>
+
+<summary> Windows </summary>
+
+Windows is not natively supported. We recommend using a linux distro under the Windows Subsystem for Linux (WSL)
+
+</details>
+
+### Notes
+- gcc needs to be version 8.0 or higher.
+- make needs to be version 4.2 or higher.
+
+### Building
+
+1. Install the dependencies above for your system. Click on the text to reveal the instructions.
 2. Place the ROM file within the `baseroms` directory.  
    **a.** The name of the ROM file does not matter. It will be detected automatically from an sha1 checksum.
 3. Grab tools: `git submodule update --init --recursive`
@@ -35,11 +86,9 @@ As of August 12, 2025, this is our current score:
 6. Run `make` in the main directory.  
    **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
 
-### Building on macOS
+Note: If you are on MacOS, remember to use `gmake` instead of `make`!
 
-1. Use homebrew to install dependencies: `brew install make`
-2. Place the ROM file within the `baseroms` directory. See [Setup](#setup--building) above for more info.
-3. Run `gmake` from the main directory. Note that macOS built-in `make` will not work since it does not meet the version requirements.
+---
 
 ### Building other versions
 
@@ -123,15 +172,15 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of August 12, 2025, this is our current score:
+As of April 14, 2026, this is our current score:
 ```
  ======================================================
          ADVENTURE ONE (ASM -> C Decompilation)
- ------- 97.10% Complete (98.10% NON_MATCHING) --------
-              # Decompiled functions: 1942
-               # GLOBAL_ASM remaining: 10
-              # NON_MATCHING functions: 5
-           # NON_EQUIVALENT WIP functions: 5
+ ------- 97.04% Complete (97.84% NON_MATCHING) --------
+              # Decompiled functions: 1913
+               # GLOBAL_ASM remaining: 8
+              # NON_MATCHING functions: 4
+           # NON_EQUIVALENT WIP functions: 4
  -------------------- Game Status ---------------------
        Balloons: 47/47, Keys: 4/4, Trophies: 4/5
          T.T. Amulets: 4/4, Wizpig Amulets: 4/4
@@ -141,9 +190,9 @@ As of August 12, 2025, this is our current score:
          ADVENTURE TWO (Cleanup & Documentation)
  ------------------ 65.90% Complete -------------------
               # Documented functions: 1280
-             # Undocumented remaining: 372
-            # Functions named `func_*`: 238
-           # Functions without comments: 372
+             # Undocumented remaining: 343
+            # Functions named `func_*`: 208
+           # Functions without comments: 343
  -------------------- Game Status ---------------------
        Balloons: 31/47, Keys: 3/4, Trophies: 3/5
          T.T. Amulets: 3/4, Wizpig Amulets: 3/4
