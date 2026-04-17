@@ -64,7 +64,7 @@ void mtxf_from_translation(MtxF *mtx, f32 x, f32 y, f32 z);
 void mtxf_from_scale(MtxF *mtx, f32 scaleX, f32 scaleY, f32 scaleZ);
 s32 atan2s(s32 xDelta, s32 zDelta);
 f32 area_triangle_2d(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2);
-void dmacopy_doubleword(void *src, void *dst, s32 end);
+void dmacopy_doubleword(void *src, void *dst, u32 end);
 StackInfo *stack_pointer(void);
 /**
  * Zero out the interrupt mask. This stops this thread

@@ -645,8 +645,8 @@ void vec3f_rotate_py(Vec3s *rotation, Vec3f *vec) {
 
     z = vec->z;
 
-    vec->x = z * cosX * sinY;
-    vec->y = -z * sinX;
+    vec->x = z * cosY * sinX;
+    vec->y = -z * sinY;
     vec->z = z * cosX * cosY;
 }
 #else
@@ -746,6 +746,10 @@ static u16 atan2_lookup(f32 y, f32 x) {
 
 s32 atan2s(s32 xDelta, s32 zDelta) {
     u16 ret;
+
+    if (xDelta == 0 && yDelta == 0) {
+        return 0;
+    }
 
     if (xDelta >= 0) {
         if (zDelta >= 0) {
@@ -897,7 +901,7 @@ GLOBAL_ASM("asm/math_util/area_triangle_2d.s")
 GLOBAL_ASM("asm/math_util/set_breakpoint.s")
 
 #ifdef NON_MATCHING
-void dmacopy_doubleword(void *src, void *dst, s32 end) {
+void dmacopy_doubleword(void *src, void *dst, u32 end) {
     s32 size = end - (u32) dst;
     memcpy(dst, src, size);
 }
