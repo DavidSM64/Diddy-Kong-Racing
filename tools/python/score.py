@@ -9,6 +9,9 @@ from score_treemap import ScoreTreemap
 ASM_FOLDERS = [
     './asm',
     './src/hasm',
+]
+
+LIB_ASM_FOLDERS = [
     './libultra/src/gu',
     './libultra/src/libc',
     './libultra/src/os',
@@ -30,43 +33,56 @@ BLACKLIST_C = [
     'kdebugserver.c',
 ]
 
-# Version configuration
-VALID_VERSIONS = ['us.v77', 'pal.v77', 'jpn.v79', 'us.v80', 'pal.v80']
+class ScoreUtil:
+    def build_asm_filelist(include_lib=True):
+        filelist = []
+        asm_folders_to_scan = ASM_FOLDERS.copy()
 
-# Name filtering configuration
-BLACKLIST_NAMES = ['if', 'else', 'switch', 'while', 'for']
-BLACKLIST_JPN_NAMES = ['load_font', 'unload_font']
-WHITELIST_JPN_NAMES = ['func_80082BC8_837C8', 'func_800C6464_C7064', 'func_800C663C_C723C',
-    'func_800C67F4_C73F4', 'func_800C6870_C7470', 'func_800C68CC_C74CC', 'fontCreateDisplayList',
-    'func_800C7744_C8344', 'func_800C7804_C8404', 'fontConvertString', 'func_800C78E0_C84E0']
-WHITELIST_V79_NAMES = ['dmacopy_internal', 'rumble_enable']
+        if include_lib:
+            asm_folders_to_scan.extend(LIB_ASM_FOLDERS)
 
-filelist = []
+        for asmDir in asm_folders_to_scan:
+            if os.path.exists(asmDir):
+                for root, dirs, files in os.walk(asmDir):
+                    for file in files:
+                        fullPath = os.path.join(root, file)
+                        skipThis = False
+                        for blackListEntry in BLACKLIST:
+                            if blackListEntry in fullPath:
+                                skipThis = True
+                                break
+                        if not skipThis and fullPath.endswith('.s'):
+                            filelist.append(fullPath)
+        return filelist
 
-for asmDir in ASM_FOLDERS:
-    for root, dirs, files in os.walk(asmDir):
-        for file in files:
-            fullPath = os.path.join(root,file)
+    def build_asm_labels(filelist):
+        ASM_LABELS = []
+        GLABEL_REGEX = r'(?i)\b(?:glabel|leaf|xleaf)\s*(?:\()?([0-9A-Za-z_]+)(?:\))?'
+
+        for filename in filelist:
+            with open(filename, 'r') as asmFile:
+                text = asmFile.read()
+                matches = re.finditer(GLABEL_REGEX, text, re.MULTILINE)
+                for matchNum, match in enumerate(matches, start=1):
+                    name = match.group(1)
+                    if name and name not in ASM_LABELS:
+                        ASM_LABELS.append(name)
+        return ASM_LABELS
+
+    def filter_filenames(filenames, blacklist):
+        filtered = []
+        for filename in filenames:
             skipThis = False
-            for blackListEntry in BLACKLIST:
-                if blackListEntry in fullPath:
+            for blackListEntry in blacklist:
+                if blackListEntry in filename:
                     skipThis = True
                     break
-            if not skipThis and fullPath.endswith('.s'):
-                filelist.append(fullPath)
+            if not skipThis:
+                filtered.append(filename)
+        return filtered
 
-# These will automatically be added to the adventure one percentage.
-ASM_LABELS = []
-GLABEL_REGEX = r'(?i)\b(?:glabel|leaf|xleaf)\s*(?:\()?([0-9A-Za-z_]+)(?:\))?'
-
-for filename in filelist:
-    with open(filename, 'r') as asmFile:
-        text = asmFile.read()
-        matches = re.finditer(GLABEL_REGEX, text, re.MULTILINE)
-        for matchNum, match in enumerate(matches, start=1):
-            name = match.group(1)
-            if name and name not in ASM_LABELS:
-                ASM_LABELS.append(name)
+# Version configuration
+VALID_VERSIONS = ['us.v77', 'pal.v77', 'jpn.v79', 'us.v80', 'pal.v80']
 
 BUILD_DIRECTORY = './build'
 SRC_DIRECTORY = './src'
@@ -192,8 +208,6 @@ class DkrMapFile:
 
                     self.functionSizes[symbol] = next_address - address
 
-                self.numFunctions = len(functions)
-
         except FileNotFoundError:
             print("You must build a rom before it can be scored!")
             sys.exit()
@@ -208,7 +222,15 @@ class DkrMapFile:
                 return True
         return False
 
-class ScoreFileMatch:
+# Name filtering configuration
+BLACKLIST_NAMES = ['if', 'else', 'switch', 'while', 'for']
+BLACKLIST_JPN_NAMES = ['load_font', 'unload_font']
+WHITELIST_JPN_NAMES = ['func_80082BC8_837C8', 'func_800C6464_C7064', 'func_800C663C_C723C',
+    'func_800C67F4_C73F4', 'func_800C6870_C7470', 'func_800C68CC_C74CC', 'fontCreateDisplayList',
+    'func_800C7744_C8344', 'func_800C7804_C8404', 'fontConvertString', 'func_800C78E0_C84E0']
+WHITELIST_V79_NAMES = ['dmacopy_internal', 'rumble_enable']
+
+class FunctionMatch:
     def __init__(self, comment, functionName, version, map_file):
         self.comment = comment
         self.functionName = functionName
@@ -229,7 +251,8 @@ class ScoreFile:
         self.version = version
         self.map_file = map_file
         self.read_file()
-        self.get_matches()
+        self.extract_functions()
+        self.extract_global_asms()
 
     def read_file(self):
         with open(self.path, "r") as inFile:
@@ -244,7 +267,7 @@ class ScoreFile:
             # Filter out the ones based on version-specific rules
             self.nonEquivalents = []
             for ne in all_nonEquivalents:
-                if not self.should_filter_name(ne):
+                if not self.filter_name_by_version(ne):
                     self.nonEquivalents.append(ne)
 
             self.nonEquivalentsSizes = 0
@@ -254,7 +277,7 @@ class ScoreFile:
             self.numNonEquivalents = len(self.nonEquivalents)
             self.text = re.sub(WIP_REGEX, r"GLOBAL_ASM(\1)", self.text)
 
-    def should_filter_name(self, func_name):
+    def filter_name_by_version(self, func_name):
         if func_name in BLACKLIST_NAMES:
             return True
 
@@ -283,41 +306,43 @@ class ScoreFile:
 
         return False
 
-    def get_matches(self):
+    def filter_unique_by_name(self, matches, name_group_index=2):
+        seen_names = set()
+        filtered_matches = []
+
+        for match in matches:
+            func_name = match.groups()[name_group_index]
+            if not self.filter_name_by_version(func_name):
+                if func_name not in seen_names:
+                    seen_names.add(func_name)
+                    filtered_matches.append(match)
+
+        return filtered_matches
+
+    def create_function_match(self, match):
+        groups = match.groups()
+        comment = groups[0]
+        function_name = groups[2]
+
+        return FunctionMatch(comment, function_name, self.version, self.map_file)
+
+    def extract_functions(self):
         matches = re.finditer(FUNCTION_REGEX, self.text, re.MULTILINE)
-        # Filter out C function names based on version-specific rules and avoid duplicates
-        seen_functions = set()
-        filtered_matches = []
-
-        for match in matches:
-            func_name = match.groups()[2]
-            if not self.should_filter_name(func_name):
-                if func_name not in seen_functions:
-                    seen_functions.add(func_name)
-                    filtered_matches.append(match)
+        filtered_matches = self.filter_unique_by_name(matches, 2)
 
         for match in filtered_matches:
-            groups = match.groups()
-            self.functions.append(ScoreFileMatch(groups[0], groups[2], self.version, self.map_file))
+            self.functions.append(self.create_function_match(match))
 
+    def extract_global_asms(self):
         matches = re.finditer(GLOBAL_ASM_REGEX, self.text, re.MULTILINE)
-        # Filter out GLOBAL_ASM based on version-specific rules and avoid duplicates
-        seen_global_asm = set()
-        filtered_matches = []
-
-        for match in matches:
-            func_name = match.groups()[0]
-            if not self.should_filter_name(func_name):
-                if func_name not in seen_global_asm:
-                    seen_global_asm.add(func_name)
-                    filtered_matches.append(match)
+        filtered_matches = self.filter_unique_by_name(matches, 0)
 
         for match in filtered_matches:
-            groups = match.groups()
             self.numGlobalAsms += 1
             try:
-                if groups[0] in self.map_file.functionSizes and groups[0] not in seen_global_asm:
-                    self.unfinishedSize += self.map_file.functionSizes[groups[0]]
+                func_name = match.groups()[0]
+                if func_name in self.map_file.functionSizes:
+                    self.unfinishedSize += self.map_file.functionSizes[func_name]
             except Exception as e:
                 pass
 
@@ -370,95 +395,117 @@ def main():
     parser.add_argument("-s", "--summary", help="(Optional) Only prints the percentages for adventure 1 and 2", action='store_true')
     parser.add_argument("--treemap", help="(Optional) Generates a treemap .html file", nargs='?', const="treemap.html", metavar="path/to/treemap-file.html")
     parser.add_argument("-v", "--version", help="(Optional) Select version", choices=VALID_VERSIONS, default="us.v77")
+    parser.add_argument("--nolib", help="(Optional) Exclude libultra code from scoring calculation", action='store_true')
     args = parser.parse_args()
+
     adventureSelect = 3 # Show both adventures by default
     if args.adventure != None:
         adventureSelect = int(args.adventure)
     if args.top != None:
         showTopFiles = int(args.top)
 
+    include_lib = not args.nolib
+
+    asm_filelist = ScoreUtil.build_asm_filelist(include_lib)
+    ASM_LABELS = ScoreUtil.build_asm_labels(asm_filelist)
+
     MAP_FILE = DkrMapFile(args.version)
     selectedVersion = MAP_FILE.version
     codeSize = MAP_FILE.code_size
 
     scoreFiles = []
-    totalNumberOfDecompiledFunctions = 0
-    totalNumberOfDocumentedFunctions = 0
-    totalNumberOfProperlyNamedFunctions = 0
-    totalNumberOfCommentedFunctions = 0
-    totalNumberOfGlobalAsms = 0
-    totalNumberOfNonMatching = 0
-    totalNumberOfNonEquivalent = 0
-    totalSizeOfDecompiledFunctions = 0
-    totalSizeOfDecompiledAndNonMatchingFunctions = 0
-    totalSizeOfDocumentedFunctions = 0
-    ignoreNumberDocumentedFunctions = 0
-    ignoreSizeDocumentedFunctions = 0
 
+    # Adventure one counts (decompilation progress)
+    adv1_decompiled = 0
+    adv1_handwritten_asms = 0
+    adv1_global_asms = 0
+    adv1_non_matching = 0
+    adv1_non_equivalent = 0
+    adv1_size = 0
+    adv1_size_with_nonmatching = 0
+
+    # Adventure two counts (documentation progress)
+    adv2_total_functions = 0
+    adv2_documented = 0
+    adv2_properly_named = 0
+    adv2_commented = 0
+    adv2_size_documented = 0
+
+    # Track libultra sizes for percentage calculations
+    libSizeFunctions = 0
+    libSizeFunctionsWithNonMatching = 0
+
+    # Regular source files
     srcFilenames = FileUtil.get_filenames_from_directory_recursive(SRC_DIRECTORY, extensions=('.c'))
-    filtered_src_filenames = []
-
-    for filename in srcFilenames:
-        skipThis = False
-        for blackListEntry in BLACKLIST_C:
-            if blackListEntry in filename:
-                skipThis = True
-                break
-        if not skipThis:
-            filtered_src_filenames.append(filename)
+    filtered_src_filenames = ScoreUtil.filter_filenames(srcFilenames, BLACKLIST_C)
 
     for filename in filtered_src_filenames:
-        # Get score properties of dkr functions.
         scoreFile = ScoreFile(SRC_DIRECTORY + '/' + filename, selectedVersion, MAP_FILE)
-        totalNumberOfDecompiledFunctions += len(scoreFile.functions)
-        totalNumberOfGlobalAsms += scoreFile.numGlobalAsms
-        totalNumberOfNonMatching += scoreFile.numNonMatchings
-        totalNumberOfNonEquivalent += scoreFile.numNonEquivalents
-        totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
-        totalNumberOfCommentedFunctions += scoreFile.get_number_of_functions_with_comments()
-        totalNumberOfProperlyNamedFunctions += scoreFile.get_number_of_properly_named_functions()
-        totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
-        totalSizeOfDecompiledAndNonMatchingFunctions += scoreFile.get_size_of_functions_with_nonmatching()
-        totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
+
+        # Adventure one
+        adv1_decompiled += len(scoreFile.functions)
+        adv1_global_asms += scoreFile.numGlobalAsms
+        adv1_non_matching += scoreFile.numNonMatchings
+        adv1_non_equivalent += scoreFile.numNonEquivalents
+        adv1_size += scoreFile.get_size_of_functions()
+        adv1_size_with_nonmatching += scoreFile.get_size_of_functions_with_nonmatching()
+
+        # Adventure two
+        adv2_total_functions += len(scoreFile.functions)
+        adv2_documented += scoreFile.get_number_of_documented_functions()
+        adv2_commented += scoreFile.get_number_of_functions_with_comments()
+        adv2_properly_named += scoreFile.get_number_of_properly_named_functions()
+        adv2_size_documented += scoreFile.get_size_of_documented_functions()
+
         scoreFiles.append(scoreFile)
 
-    # Get score properties of libultra functions.
+    # Libultra source files
     srcFilenames = FileUtil.get_filenames_from_directory_recursive(LIB_SRC_DIRECTORY, extensions=('.c'))
-    filtered_lib_filenames = []
-
-    for filename in srcFilenames:
-        skipThis = False
-        for blackListEntry in BLACKLIST_C:
-            if blackListEntry in filename:
-                skipThis = True
-                break
-        if not skipThis:
-            filtered_lib_filenames.append(filename)
+    filtered_lib_filenames = ScoreUtil.filter_filenames(srcFilenames, BLACKLIST_C)
 
     for filename in filtered_lib_filenames:
         scoreFile = ScoreFile(LIB_SRC_DIRECTORY + '/' + filename, selectedVersion, MAP_FILE)
-        totalNumberOfDecompiledFunctions += len(scoreFile.functions)
-        totalNumberOfGlobalAsms += scoreFile.numGlobalAsms
-        ignoreNumberDocumentedFunctions += scoreFile.get_number_of_functions()
-        totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
-        totalSizeOfDecompiledAndNonMatchingFunctions += scoreFile.get_size_of_functions_with_nonmatching()
-        ignoreSizeDocumentedFunctions += scoreFile.get_size_of_functions()
+
+        # Track lib sizes for percentage calculations
+        libSizeFunctions += scoreFile.get_size_of_functions()
+        libSizeFunctionsWithNonMatching += scoreFile.get_size_of_functions_with_nonmatching()
+
+        # Only add to adventure one counts if include_lib is True
+        if include_lib:
+            adv1_decompiled += len(scoreFile.functions)
+            adv1_global_asms += scoreFile.numGlobalAsms
+            adv1_size += scoreFile.get_size_of_functions()
+            adv1_size_with_nonmatching += scoreFile.get_size_of_functions_with_nonmatching()
+
         scoreFiles.append(scoreFile)
 
+    # Handwritten ASM functions
     for asm_function in ASM_LABELS:
         if asm_function in MAP_FILE.functionSizes:
-            totalNumberOfDecompiledFunctions += 1 # Consider hand written asm as "decompiled"
+            adv1_handwritten_asms += 1
             asmFuncSize = MAP_FILE.functionSizes[asm_function]
-            totalSizeOfDecompiledFunctions += asmFuncSize
-            totalSizeOfDecompiledAndNonMatchingFunctions += asmFuncSize
+            adv1_size += asmFuncSize
+            adv1_size_with_nonmatching += asmFuncSize
 
-    totalNumberOfFunctions = totalNumberOfDecompiledFunctions + totalNumberOfGlobalAsms
-    adventureOnePercentage = (totalSizeOfDecompiledFunctions / codeSize) * 100
-    adventureOnePercentageWithNonMatching = (totalSizeOfDecompiledAndNonMatchingFunctions / codeSize) * 100
-    adventureTwoPercentage = (totalSizeOfDocumentedFunctions / (codeSize - ignoreSizeDocumentedFunctions)) * 100
+    # Calculate percentages
+    if include_lib:
+        code_size_for_adv1 = codeSize
+    else:
+        code_size_for_adv1 = codeSize - libSizeFunctions
+
+    adventureOnePercentage = (adv1_size / code_size_for_adv1) * 100
+    adventureOnePercentageWithNonMatching = (adv1_size_with_nonmatching / code_size_for_adv1) * 100
+
+    our_code_size = codeSize - libSizeFunctions
+    adventureTwoPercentage = (adv2_size_documented / our_code_size) * 100
+
+    totalUndocumented = adv2_total_functions - adv2_documented
+    totalFuncNamed = adv2_total_functions - adv2_properly_named
+    totalUncommented = adv2_total_functions - adv2_commented
 
     if args.summary:
-        print(f"Decomp progress [{selectedVersion}]: {adventureOnePercentage:5.2f}%")
+        lib_status = " (excluding libultra)" if args.nolib else ""
+        print(f"Decomp progress [{selectedVersion}]{lib_status}: {adventureOnePercentage:5.2f}%")
         print(f"Documentation progress: {adventureTwoPercentage:5.2f}%")
         sys.exit(0)
 
@@ -473,11 +520,26 @@ def main():
         )
         sys.exit(0)
 
-    displayedNumberOfDocumentedFunctions = totalNumberOfFunctions - ignoreNumberDocumentedFunctions
-
+    # Display the results
     scoreDisplay = ScoreDisplay()
-    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureOnePercentageWithNonMatching, adventureTwoPercentage, adventureSelect, selectedVersion, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfNonMatching, totalNumberOfNonEquivalent, totalNumberOfDocumentedFunctions, displayedNumberOfDocumentedFunctions - totalNumberOfDocumentedFunctions, displayedNumberOfDocumentedFunctions - totalNumberOfProperlyNamedFunctions, displayedNumberOfDocumentedFunctions - totalNumberOfCommentedFunctions))
+    print(scoreDisplay.getDisplay(
+        adventureOnePercentage,
+        adventureOnePercentageWithNonMatching,
+        adventureTwoPercentage,
+        adventureSelect,
+        selectedVersion,
+        adv1_decompiled,           # Decompiled functions
+        adv1_handwritten_asms,     # Handwritten ASM functions
+        adv1_global_asms,          # GLOBAL_ASM remaining
+        adv1_non_matching,         # NON_MATCHING functions
+        adv1_non_equivalent,       # NON_EQUIVALENT WIP functions
+        adv2_documented,           # Documented functions
+        totalUndocumented,         # Undocumented remaining
+        totalFuncNamed,            # Functions named `func_*`
+        totalUncommented           # Functions without comments
+    ))
 
+    # Show top files if requested
     if showTopFiles > 0:
         if showTopFiles > len(scoreFiles):
             showTopFiles = len(scoreFiles)
@@ -485,7 +547,7 @@ def main():
         files = []
         for file in scoreFiles:
             files.append([file.path, file.unfinishedSize, file.get_size_of_functions()])
-        files.sort(key=lambda x:x[1], reverse=True) # Sort by Size, Largest to Smallest
+        files.sort(key=lambda x: x[1], reverse=True)  # Sort by Size, Largest to Smallest
         for i in range(0, showTopFiles):
             percentageRemaining = (files[i][1] / codeSize) * 100
             percentageDone = (files[i][2] / codeSize) * 100
@@ -494,4 +556,5 @@ def main():
                 funcName = funcName[funcName.rindex('/') + 1:]
             print("", funcName, (" " * (24 - len(funcName))), "| {:5.2f}% | {:5.2f}% |".format(percentageRemaining, percentageDone))
 
-main()
+if __name__ == "__main__":
+    main()
