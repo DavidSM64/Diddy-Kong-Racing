@@ -4,7 +4,6 @@ import argparse
 import os
 from file_util import FileUtil
 from score_display import ScoreDisplay
-from score_treemap import ScoreTreemap
 
 ASM_FOLDERS = [
     './asm',
@@ -390,7 +389,7 @@ def main():
     showTopFiles = 0
 
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument("-t", "--top", help="(Optional) Shows the top N files remaining.")
+    parser.add_argument("-t", "--top", help="(Optional) Shows the top N files remaining (default: 10)", nargs='?', const=10, type=int, default=0)
     parser.add_argument("-a", "--adventure", help="(Optional) Only shows adventure 1 or 2 based on passed in value.", choices=['1', '2'])
     parser.add_argument("-s", "--summary", help="(Optional) Only prints the percentages for adventure 1 and 2", action='store_true')
     parser.add_argument("--treemap", help="(Optional) Generates a treemap .html file", nargs='?', const="treemap.html", metavar="path/to/treemap-file.html")
@@ -510,6 +509,7 @@ def main():
         sys.exit(0)
 
     if args.treemap:
+        from score_treemap import ScoreTreemap
         scoreTreemap = ScoreTreemap(MAP_FILE)
         output_path = args.treemap if args.treemap != "" else "treemap.html"
         scoreTreemap.generateTreemap(
@@ -520,7 +520,16 @@ def main():
         )
         sys.exit(0)
 
-    # Display the results
+    if showTopFiles > 0:
+        from score_top import ScoreTop
+        scoreTop = ScoreTop(MAP_FILE)
+        scoreTop.display_top_files(
+            scoreFiles,
+            showTopFiles,
+            args.nolib
+        )
+        sys.exit(0)
+
     scoreDisplay = ScoreDisplay()
     print(scoreDisplay.getDisplay(
         adventureOnePercentage,
@@ -538,23 +547,6 @@ def main():
         totalFuncNamed,            # Functions named `func_*`
         totalUncommented           # Functions without comments
     ))
-
-    # Show top files if requested
-    if showTopFiles > 0:
-        if showTopFiles > len(scoreFiles):
-            showTopFiles = len(scoreFiles)
-        print('======= TOP FILES ======== |  TODO  |  DONE  |')
-        files = []
-        for file in scoreFiles:
-            files.append([file.path, file.unfinishedSize, file.get_size_of_functions()])
-        files.sort(key=lambda x: x[1], reverse=True)  # Sort by Size, Largest to Smallest
-        for i in range(0, showTopFiles):
-            percentageRemaining = (files[i][1] / codeSize) * 100
-            percentageDone = (files[i][2] / codeSize) * 100
-            funcName = files[i][0]
-            if '/' in funcName:
-                funcName = funcName[funcName.rindex('/') + 1:]
-            print("", funcName, (" " * (24 - len(funcName))), "| {:5.2f}% | {:5.2f}% |".format(percentageRemaining, percentageDone))
 
 if __name__ == "__main__":
     main()
