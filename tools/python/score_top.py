@@ -1,14 +1,10 @@
-# score_top.py
-
 import os
 
 class ScoreTop:
     def __init__(self, map_file):
         self.map_file = map_file
     
-    def display_top_files(self, scoreFiles, showTopFiles, exclude_lib=False):
-        """Display top N C files with remaining GLOBAL_ASM work"""
-        
+    def display_top_files(self, scoreFiles, showTopFiles, exclude_lib=False):        
         # Build list of files with their TODO and DONE sizes
         files_data = []
         total_todo_size = 0

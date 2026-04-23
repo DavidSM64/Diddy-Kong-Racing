@@ -7,8 +7,7 @@ class ScoreTreemap:
     def __init__(self, map_file):
         self.map_file = map_file
 
-    def generateTreemapData(self, score_files, code_size):
-        """Prepare data for treemap visualization."""
+    def generateTreemapData(self, score_files, code_size, exclude_lib):
         labels = ["Decomp"]
         parents = [None]
         values = [0]
@@ -16,6 +15,9 @@ class ScoreTreemap:
         legends = [None]
 
         for scoreFile in score_files:
+            if exclude_lib and '/libultra/' in scoreFile.path:
+                continue
+
             parentName = scoreFile.path.replace('./src/', '')
 
             for func in scoreFile.functions:
@@ -60,17 +62,20 @@ class ScoreTreemap:
 
         return labels, parents, values, colours, legends
 
-    def generateTreemap(self, score_files, output_path, selected_version, code_size):
+    def generateTreemap(self, score_files, output_path, selected_version, code_size, exclude_lib=False):
         print(f"Generating progress treemap, outputting file to {output_path}")
 
         # Prepare data
         labels, parents, values, colours, legends = self.generateTreemapData(
-            score_files, code_size
+            score_files, code_size, exclude_lib
         )
 
         # Calculate statistics for each parent file
         file_stats = {}
         for scoreFile in score_files:
+            if exclude_lib and '/libultra/' in scoreFile.path:
+                continue
+
             parentName = scoreFile.path.replace('./src/', '')
             file_stats[parentName] = {
                 'matched': 0,  # Total matched functions (includes documented)
@@ -128,8 +133,6 @@ class ScoreTreemap:
                         stat_lines.append(f"Non matching functions: {stats['non matching']}")
                     if stats['non equivalent'] > 0:
                         stat_lines.append(f"Non equivalent functions: {stats['non equivalent']}")
-                    #if stats['N/A'] > 0:
-                    #    stat_lines.append(f"Unknown status: {stats['N/A']}")
 
                     hover_text += "<br>".join(stat_lines)
                     hover_texts.append(hover_text)

@@ -478,6 +478,8 @@ def main():
 
         scoreFiles.append(scoreFile)
 
+    asmSizeFunctions = 0
+
     # Handwritten ASM functions
     for asm_function in ASM_LABELS:
         if asm_function in MAP_FILE.functionSizes:
@@ -485,6 +487,7 @@ def main():
             asmFuncSize = MAP_FILE.functionSizes[asm_function]
             adv1_size += asmFuncSize
             adv1_size_with_nonmatching += asmFuncSize
+            asmSizeFunctions += asmFuncSize
 
     # Calculate percentages
     if include_lib:
@@ -516,7 +519,8 @@ def main():
             scoreFiles,
             output_path,
             selectedVersion,
-            codeSize
+            code_size_for_adv1 - asmSizeFunctions,
+            args.nolib
         )
         sys.exit(0)
 
