@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of April 14, 2026, this is our current score:
+As of May 10, 2026, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 97.04%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 97.00%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 65.90%
 <!-- README_SCORE_SUMMARY_END -->
@@ -172,15 +172,15 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of April 14, 2026, this is our current score:
+As of May 10, 2026, this is our current score:
 ```
  ======================================================
          ADVENTURE ONE (ASM -> C Decompilation)
- ------- 97.04% Complete (97.84% NON_MATCHING) --------
-              # Decompiled functions: 1913
-               # GLOBAL_ASM remaining: 8
+ ------- 97.00% Complete (97.81% NON_MATCHING) --------
+              # Decompiled functions: 1869
+               # GLOBAL_ASM remaining: 7
               # NON_MATCHING functions: 4
-           # NON_EQUIVALENT WIP functions: 4
+           # NON_EQUIVALENT WIP functions: 3
  -------------------- Game Status ---------------------
        Balloons: 47/47, Keys: 4/4, Trophies: 4/5
          T.T. Amulets: 4/4, Wizpig Amulets: 4/4
@@ -190,9 +190,9 @@ As of April 14, 2026, this is our current score:
          ADVENTURE TWO (Cleanup & Documentation)
  ------------------ 65.90% Complete -------------------
               # Documented functions: 1280
-             # Undocumented remaining: 343
-            # Functions named `func_*`: 208
-           # Functions without comments: 343
+             # Undocumented remaining: 298
+            # Functions named `func_*`: 162
+           # Functions without comments: 298
  -------------------- Game Status ---------------------
        Balloons: 31/47, Keys: 3/4, Trophies: 3/5
          T.T. Amulets: 3/4, Wizpig Amulets: 3/4

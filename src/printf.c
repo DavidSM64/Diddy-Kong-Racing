@@ -593,13 +593,13 @@ int vsprintf(char *s, const char *fmt, va_list args) {
 	        case 'E':
 	        {
                 s32 showDash;
-                s32 a05;
+                s32 unused2;
                 f64 f02;
                 f64 f16;
                 f64 f0;
                 f64 spD0;
                 s32 unused;
-                s32 s4;
+                s32 exponent;
 
                 showDash = FALSE;
                 if (gSprintfSpacingCode) {
@@ -622,25 +622,25 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 }
 
                 if (spD0 == 0.0) {
-                    s4 = 0;
+                    exponent = 0;
                     f16 = 1.0;
                 } else if (spD0 < 1.0){
-                    s4 = 0;
+                    exponent = 0;
                     f16 = 1.0;
                     while (spD0 < f16) {
                         f16 /= 10.0;
-                        s4--;
+                        exponent--;
                     }
                 }
 
                 if (spD0 >= 1.0) {
-                    s4 = 0;
+                    exponent = 0;
                     f16 = 1.0;
                     f0 = 10.0;
                     while (f0 <= spD0) {
                         f16 = f0;
                         f0 *= 10.0;
-                        s4++;
+                        exponent++;
                     }
                 }
 
@@ -653,10 +653,10 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 spD0 += f02;
                 if (spD0 >= f16 * 10.0) {
                     f16 = f16 * 10.0;
-                    s4++;
+                    exponent++;
                 }
 
-                a1 = (showDash || showsign || space) + prec + (prec > 0 || alt) + (s4 >= 100) + 5 ;
+                a1 = (showDash || showsign || space) + prec + (prec > 0 || alt) + (exponent >= 100) + 5 ;
 
                 if (!left && pad == ' ') {
                     while (width-- > a1) {
@@ -703,19 +703,19 @@ int vsprintf(char *s, const char *fmt, va_list args) {
 
                 outchar(fc);
 
-                if (s4 < 0) {
-                    s4 = -s4;
+                if (exponent < 0) {
+                    exponent = -exponent;
                     outchar('-');
                 } else {
                     outchar('+');
                 }
 
-                if (s4 >= 100) {
-                    outchar('0' + (s4 / 100));
+                if (exponent >= 100) {
+                    outchar('0' + (exponent / 100));
                 }
 
-                outchar('0' + ((s4 / 10) % 10));
-                outchar('0' + (s4 % 10));
+                outchar('0' + ((exponent / 10) % 10));
+                outchar('0' + (exponent % 10));
 
                 if (left) {
                     while (width-- > a1) {
@@ -732,9 +732,9 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 f64 f12 = 1.0;
                 f64 f14;
                 f64 f2;
-                s32 pad_spE4;
+                s32 length;
                 s32 showDash;
-                s32 a05;
+                s32 unused2;
                 s32 i;
                 f64 spD0;
 
@@ -773,9 +773,9 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     digit++;
                 }
 
-                pad_spE4 = (showDash || showsign || space) + (prec > 0 || alt) + digit + prec;
+                length = (showDash || showsign || space) + (prec > 0 || alt) + digit + prec;
                 if (!left && pad == ' ') {
-                    while (width-- > pad_spE4) {
+                    while (width-- > length) {
                         outchar(pad);
                     }
                 }
@@ -789,7 +789,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 }
 
                 if (!left && pad == '0') {
-                    while (width-- > pad_spE4) {
+                    while (width-- > length) {
                         outchar(pad);
                     }
                 }
@@ -820,7 +820,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 }
 
                 if (left) {
-                    while (pad_spE4 < width--) {
+                    while (width-- > length) {
                         outchar(' ');
                     }
                 }
