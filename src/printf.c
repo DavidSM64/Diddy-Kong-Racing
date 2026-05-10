@@ -213,9 +213,9 @@ UNUSED int sprintf(char *s, const char *format, ...) {
         (*s++) = x; \
     } while (0)
 
-#define PAD(x)          \
+#define PAD(x)            \
     while (width-- > 0) { \
-        outchar(x);     \
+        outchar(x);       \
     }
 
 #define HAVE_LONGLONG 1
