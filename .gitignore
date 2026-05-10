@@ -80,3 +80,4 @@ tools/ido-recomp
 *.DS_Store
 tools/binutils
 *.d
+treemap.html
