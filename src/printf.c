@@ -159,7 +159,6 @@ s32 gDebugBoundsY2;
 s32 gDebugFontTexture;
 u16 gDebugScreenWidth;
 u16 gDebugScreenHeight;
-UNUSED s32 D_80127CD4;
 char gDebugPrintBufferStart[0x900];
 char *gDebugPrintBufferEnd;
 
@@ -167,9 +166,6 @@ char *gDebugPrintBufferEnd;
 
 const char _itoa_lower_digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
 const char _itoa_upper_digits[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const char _vsprintf_emptystr[] = "";
-const char _vsprintf_null[] = "(null)";
-const char _vsprintf_nil[] = "(nil)";
 
 /**
  * Standard C Library function that converts integers to strings.
@@ -217,10 +213,9 @@ UNUSED int sprintf(char *s, const char *format, ...) {
         (*s++) = x; \
     } while (0)
 
-#define PAD(x)          \
-    while (width > 0) { \
-        width--;        \
-        outchar(x);     \
+#define PAD(x)            \
+    while (width-- > 0) { \
+        outchar(x);       \
     }
 
 #define HAVE_LONGLONG 1
@@ -240,10 +235,10 @@ UNUSED int sprintf(char *s, const char *format, ...) {
 // Returns the total number of characters written.
 int vsprintf(char *s, const char *fmt, va_list args) {
     /* Pointer into the format string.  */
-    char *f;
+    const char *f;
 
     /* The string describing the size of groups of digits.  */
-    char *grouping;
+    const char *grouping;
 
     /* Number of characters written.  */
     int done = 0;
@@ -285,7 +280,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
         s64 signed_num;
 
         /* String to be written.  */
-        char *str;
+        const char *str;
 
         char work[BUFSIZ];
 
@@ -526,9 +521,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     }
 
                     if (!left && pad == ' ') {
-                        while (width-- > 0) {
-                            outchar(' ');
-                        }
+                        PAD(' ');
                     }
 
                     if (is_neg) {
@@ -545,9 +538,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     }
 
                     if (!left && pad == '0') {
-                        while (width-- > 0) {
-                            outchar('0');
-                        }
+                        PAD('0');
                     }
 
                     /* Write the number.  */
@@ -556,9 +547,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     }
 
                     if (left) {
-                        while (width-- > 0) {
-                            outchar(' ');
-                        }
+                        PAD(' ');
                     }
                 }
                 break;
@@ -815,16 +804,17 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 break;
 
             case 's': {
+                static const char null[] = "(null)";
                 s32 len;
 
                 nextarg(str, char *);
                 if (str == NULL) {
                     /* Write "(null)" if there's space.  */
-                    if (prec == -1 || prec >= (int) sizeof(_vsprintf_null) - 1) {
-                        str = _vsprintf_null;
-                        len = sizeof(_vsprintf_null) - 1;
+                    if (prec == -1 || prec >= (int) sizeof(null) - 1) {
+                        str = null;
+                        len = sizeof(null) - 1;
                     } else {
-                        str = _vsprintf_emptystr;
+                        str = "";
                         len = 0;
                     }
                 } else {
@@ -837,18 +827,14 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 width -= len;
 
                 if (!left) {
-                    while (width-- > 0) {
-                        outchar(' ');
-                    }
+                    PAD(' ');
                 }
                 while (len-- > 0) {
                     outchar(*str++);
                 }
 
                 if (left) {
-                    while (width-- > 0) {
-                        outchar(' ');
-                    }
+                    PAD(' ');
                 }
             } break;
 
@@ -867,22 +853,19 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                         goto number;
                     } else {
                         /* Write "(nil)" for a nil pointer.  */
-                        char *p;
+                        static const char nil[] = "(nil)";
+                        register const char *p;
 
-                        width -= sizeof(_vsprintf_nil) - 1;
+                        width -= sizeof(nil) - 1;
                         if (!left) {
-                            while (width-- > 0) {
-                                outchar(' ');
-                            }
+                            PAD(' ');
                         }
-                        grouping = _vsprintf_nil;
+                        grouping = nil;
                         while (*grouping != '\0') {
                             outchar(*grouping++);
                         }
                         if (left) {
-                            while (width-- > 0) {
-                                outchar(' ');
-                            }
+                            PAD(' ');
                         }
                     }
                 }
