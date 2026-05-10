@@ -155,8 +155,12 @@ The scoring is split into 2 sections:
 
 Show scores for Adventure One & Adventure Two: `./score.sh`  
 Show score for Adventure One only: `./score.sh -a 1`  
-Show score for Adventure Two only: `./score.sh -a 2`  
-Show top 10 files remaining: `./score.sh -t 10`
+Show score for Adventure Two only: `./score.sh -a 2` 
+Show score for another version (default: us.v77): `./score.sh -v VERSION`
+Show score percentage summary: `./score.sh -s`  
+Show score without libultra progress in Adventure One: `./score.sh --nolib`  
+Show top files remaining (default: 10): `./score.sh -t TOP`
+Show treemap view in a file (default: treemap.html): `./score.sh --treemap TREEMAP`
 
 To make progress in Adventure 2, a function must be properly named (must not start with `func_`) and also include a doxygen comment above it.
 
