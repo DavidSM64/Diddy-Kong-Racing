@@ -4,7 +4,7 @@ import argparse
 def readScoreDisplayJson(filename='./tools/python/score_progress.json'):
     with open(filename, 'r') as inFile:
         return json.loads(inFile.read())
-        
+
 TOTAL_NUMBER_OF_BALLOONS = 47
 TOTAL_NUMBER_OF_KEYS = 4
 TOTAL_NUMBER_OF_TT_AMULETS = 4
@@ -18,7 +18,7 @@ ROUND_NAMES = ['One', 'Two', 'Three', 'Four']
 class ScoreDisplay:
     def __init__(self):
         self.progressNodes = readScoreDisplayJson()
-        
+
     def getStatus(self, percentage):
         if percentage >= 100.0:
             return {
@@ -47,8 +47,6 @@ class ScoreDisplay:
                 out[reward] += rewards[reward]
         out['Msg'] = self.progressNodes[numberOfCompletedNodes]['msg']
         nodeType = self.progressNodes[numberOfCompletedNodes]['type']
-        #if nodeType != 'Task':
-        #    out['Msg'] += '\n'
         if nodeType == 'Race':
             out['Msg'] += f' (Lap {int(currentNodeProgress*3)+1}/3)'
         elif nodeType == 'Collecting':
@@ -67,7 +65,7 @@ class ScoreDisplay:
             elif currentNodeProgress < 1.00:
                 out['Msg'] += ' (1 opponent remains)'
         return out
-        
+
     def makeLine(self, char, length, title=None):
         if title == None:
             return ' ' + (char * length) + '\n'
@@ -85,7 +83,7 @@ class ScoreDisplay:
             else:
                 return ' ' + (char * leftLength) + ' ' + title + \
                         (' ' + char * rightLength if char != ' ' else '') + '\n'
-        
+
     def getGameStatusDisplay(self, status, dashLen):
         out = ''
         out += self.makeLine('-', dashLen, 'Game Status')
@@ -101,8 +99,8 @@ class ScoreDisplay:
         out += self.makeLine('-', dashLen)
         out += self.makeLine(' ', dashLen, status['Msg'])
         return [out, dashLen]
-    
-    def getDisplay(self, advOnePer, advOneNonMatchPer, advTwoPer, showFlags=3, totalDecompFunctions=0, totalGlobalAsm=0, totalNonMatching=0, totalNonEquivalent=0, totalDocumented=0, totalUndocumented=0, totalNamedFunc=0, totalUncommented=0):
+
+    def getDisplay(self, advOnePer, advOneNonMatchPer, advTwoPer, showFlags=3, version='us.v77', totalDecompFunctions=0, totalHandrwittenAsm=0, totalGlobalAsm=0, totalNonMatching=0, totalNonEquivalent=0, totalDocumented=0, totalUndocumented=0, totalNamedFunc=0, totalUncommented=0):
         advOneStatus = self.getStatus(advOnePer)
         advTwoStatus = self.getStatus(advTwoPer)
         if showFlags == 3:
@@ -118,12 +116,13 @@ class ScoreDisplay:
         out = ''
         if showFlags & 1:
             out += self.makeLine('=', dashLen)
-            out += self.makeLine(' ', dashLen, 'ADVENTURE ONE (ASM -> C Decompilation)')
+            out += self.makeLine(' ', dashLen, 'ADVENTURE ONE (ASM -> C Decompilation) ' + '[{:s}]'.format(version))
             if advOnePer >= 100.0:
                 out += self.makeLine('-', dashLen, '{:5.1f}% Complete'.format(advOnePer))
             else:
                 out += self.makeLine('-', dashLen, '{:5.2f}% Complete ({:5.2f}% NON_MATCHING)'.format(advOnePer, advOneNonMatchPer))
             out += self.makeLine(' ', dashLen, '# Decompiled functions: ' + str(totalDecompFunctions))
+            out += self.makeLine(' ', dashLen, '# Handwritten ASM functions: ' + str(totalHandrwittenAsm))
             out += self.makeLine(' ', dashLen, '# GLOBAL_ASM remaining: ' + str(totalGlobalAsm))
             out += self.makeLine(' ', dashLen, '# NON_MATCHING functions: ' + str(totalNonMatching))
             out += self.makeLine(' ', dashLen, '# NON_EQUIVALENT WIP functions: ' + str(totalNonEquivalent))
@@ -142,7 +141,7 @@ class ScoreDisplay:
             out += advTwoGameStatusDisplay[0]
         out += self.makeLine('=', dashLen)[:-1]
         return out
-        
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
     parser.add_argument("adventureOnePercentage", help="Value within [0.0, 100.0] that describes how complete the decomp is.")
@@ -153,5 +152,4 @@ if __name__ == "__main__":
     if args.adventure != None:
         adventureSelect = int(args.adventure)
     scoreDisplay = ScoreDisplay()
-    print(scoreDisplay.getDisplay(float(args.adventureOnePercentage), float(args.adventureTwoPercentage), adventureSelect))
-    
+    print(scoreDisplay.getDisplay(float(args.adventureOnePercentage), float(args.adventureOnePercentage), float(args.adventureTwoPercentage), adventureSelect))
