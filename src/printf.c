@@ -237,32 +237,6 @@ UNUSED int sprintf(char *s, const char *format, ...) {
 
 #define isdigit(c) ((c >= '0') && (c <= '9'))
 
-#define outchar(x)  \
-    do {            \
-        done++;     \
-        (*s++) = x; \
-    } while (0)
-
-#define PAD(x)          \
-    while (width > 0) { \
-        width--;        \
-        outchar(x);     \
-    }
-
-#define HAVE_LONGLONG 1
-
-#define PTR void *
-
-/* Cast the next arg, of type ARGTYPE, into CASTTYPE, and put it in VAR.  */
-#define castarg(var, argtype, casttype) var = (casttype) va_arg(args, argtype)
-
-/* Get the next arg, of type TYPE, and put it in VAR.  */
-#define nextarg(var, type) castarg(var, type, type)
-
-#define BUFSIZ 100
-
-#define isdigit(c) ((c >= '0') && (c <= '9'))
-
 // Returns the total number of characters written.
 int vsprintf(char *s, const char *fmt, va_list args) {
     /* Pointer into the format string.  */
