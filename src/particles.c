@@ -288,22 +288,19 @@ void init_particle_assets(void) {
 }
 
 /**
- * https://decomp.me/scratch/z60XZ
- *
  * Allocate buffers for particle objects.
  * Generate particle shapes.
  * Load sprites from the dummy sprite ID list.
  */
-#ifdef NON_MATCHING
 void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, s32 maxSpriteParticles,
                            s32 maxLineParticles, s32 maxPointParticles, s32 unused_arg) {
-    s32 allocSize;
+    s16 *assetBuffer;
     s32 i;
-    s16 *asset2F;
-    ParticleModel *modelPtr;
-    Vertex *sp54;
-    Triangle *sp50;
-    s32 pad;
+    s32 temp_var;
+    s32 fake_0;
+    Vertex *verticesTemp;
+    Triangle *trianglesTemp;
+    ParticleModel *particleModelsBuffer;
 
     gParticleOverrideColor->word = 0;
 
@@ -322,6 +319,7 @@ void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, 
     if (maxPointParticles < 0) {
         maxPointParticles = 0x40;
     }
+
     gMaxTriangleParticles = maxTriangleParticles;
     gTriangleParticleBufferFull = FALSE;
     gMaxRectangleParticles = maxRectangleParticles;
@@ -332,122 +330,113 @@ void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, 
     gLineParticleBufferFull = FALSE;
     gMaxPointParticles = maxPointParticles;
     gPointParticleBufferFull = FALSE;
-
     free_particle_vertices_triangles();
-    allocSize = 0;
-    allocSize += maxTriangleParticles * 3;
-    allocSize += maxRectangleParticles << 2;
-    allocSize += maxLineParticles * 3 * 2;
-    allocSize += maxPointParticles << 4;
-    allocSize *= sizeof(Vertex);
-    gParticleVertexBuffer = mempool_alloc_safe(allocSize, COLOUR_TAG_SEMITRANS_GREY);
 
-    // @fake
-    // i = maxPointParticles <= 0;
-    i = 0;
-    allocSize = 0;
-    allocSize += maxTriangleParticles;
-    allocSize += maxRectangleParticles << 1;
-    allocSize += i;
-    allocSize *= sizeof(Triangle);
-    gParticleTriangleBuffer = mempool_alloc_safe(allocSize, COLOUR_TAG_SEMITRANS_GREY);
+    gParticleVertexBuffer =
+        (Vertex *) mempool_alloc_safe(((maxTriangleParticles * 3) + (maxRectangleParticles * 4) + (unused_arg * 0) +
+                                       (maxLineParticles * 6) + (maxPointParticles * 16)) *
+                                          sizeof(Vertex),
+                                      COLOUR_TAG_SEMITRANS_GREY);
+
+    // @fake - 0 is required at start of allocation size calculation for match
+    fake_0 = 0;
+    gParticleTriangleBuffer = (Triangle *) mempool_alloc_safe(
+        (fake_0 + maxTriangleParticles + (maxRectangleParticles * 2) + (unused_arg * 0)) * sizeof(Triangle),
+        COLOUR_TAG_SEMITRANS_GREY);
+
     D_800E2CDC = 0;
-
     free_particle_buffers();
+
     if (gMaxTriangleParticles > 0) {
         gNumTriangleParticles = 0;
-        allocSize = maxTriangleParticles * (sizeof(Particle) + sizeof(ParticleModel));
-        gTriangleParticleBuffer = mempool_alloc_safe(allocSize, COLOUR_TAG_SEMITRANS_GREY);
+        gTriangleParticleBuffer = (Particle *) mempool_alloc_safe(
+            maxTriangleParticles * (sizeof(Particle) + sizeof(ParticleModel)), COLOUR_TAG_SEMITRANS_GREY);
     }
     if (gMaxRectangleParticles > 0) {
         gNumRectangleParticles = 0;
-        allocSize = maxRectangleParticles * (sizeof(Particle) + sizeof(ParticleModel));
-        gRectangleParticleBuffer = mempool_alloc_safe(allocSize, COLOUR_TAG_SEMITRANS_GREY);
+        gRectangleParticleBuffer = (Particle *) mempool_alloc_safe(
+            maxRectangleParticles * (sizeof(Particle) + sizeof(ParticleModel)), COLOUR_TAG_SEMITRANS_GREY);
     }
     if (gMaxSpriteParticles > 0) {
         gNumSpriteParticles = 0;
-        allocSize = maxSpriteParticles * sizeof(Particle);
-        gSpriteParticleBuffer = mempool_alloc_safe(allocSize, COLOUR_TAG_SEMITRANS_GREY);
+        gSpriteParticleBuffer =
+            (Particle *) mempool_alloc_safe(maxSpriteParticles * sizeof(Particle), COLOUR_TAG_SEMITRANS_GREY);
     }
     if (gMaxLineParticles > 0) {
         gNumLineParticles = 0;
-        allocSize = maxLineParticles * (sizeof(Particle) + sizeof(ParticleModel));
-        gLineParticleBuffer = mempool_alloc_safe(allocSize, COLOUR_TAG_SEMITRANS_GREY);
+        gLineParticleBuffer = (Particle *) mempool_alloc_safe(
+            maxLineParticles * (sizeof(Particle) + sizeof(ParticleModel)), COLOUR_TAG_SEMITRANS_GREY);
     }
     if (gMaxPointParticles > 0) {
         gNumPointParticles = 0;
-        allocSize = maxPointParticles * (sizeof(PointParticle) + sizeof(ParticleModel));
-        gPointParticleBuffer = mempool_alloc_safe(allocSize, COLOUR_TAG_SEMITRANS_GREY);
+        gPointParticleBuffer = (PointParticle *) mempool_alloc_safe(
+            maxPointParticles * (sizeof(PointParticle) + sizeof(ParticleModel)), COLOUR_TAG_SEMITRANS_GREY);
     }
 
-    // *0 is "fake", the asm does << 3 and << 4 on zero
-    sp54 = &gParticleVertexBuffer[maxTriangleParticles * 0];
-    sp50 = &gParticleTriangleBuffer[maxTriangleParticles * 0];
+    // @fake - buffer indexes are required to be multiplied by 0 to match
+    fake_0 = 0;
+    verticesTemp = (&gParticleVertexBuffer[gMaxTriangleParticles * fake_0]);
+    trianglesTemp = (&gParticleTriangleBuffer[gMaxTriangleParticles * fake_0]);
 
-    modelPtr = (ParticleModel *) &gTriangleParticleBuffer[gMaxTriangleParticles];
+    particleModelsBuffer =
+        (ParticleModel *) ((u8 *) gTriangleParticleBuffer + (gMaxTriangleParticles * (sizeof(Particle))));
     for (i = 0; i < gMaxTriangleParticles; i++) {
-        gTriangleParticleBuffer[i].model = &modelPtr[i];
-        init_triangle_particle_model(gTriangleParticleBuffer[i].model, &sp54, &sp50);
+        gTriangleParticleBuffer[i].model = &particleModelsBuffer[i];
+        init_triangle_particle_model(gTriangleParticleBuffer[i].model, &verticesTemp, &trianglesTemp);
     }
 
-    modelPtr = (ParticleModel *) &gRectangleParticleBuffer[gMaxRectangleParticles];
+    particleModelsBuffer =
+        (ParticleModel *) ((u8 *) gRectangleParticleBuffer + (gMaxRectangleParticles * sizeof(Particle)));
     for (i = 0; i < gMaxRectangleParticles; i++) {
-        gRectangleParticleBuffer[i].model = &modelPtr[i];
-        init_rectangle_particle_model(gRectangleParticleBuffer[i].model, &sp54, &sp50);
+        gRectangleParticleBuffer[i].model = &particleModelsBuffer[i];
+        init_rectangle_particle_model(gRectangleParticleBuffer[i].model, &verticesTemp, &trianglesTemp);
     }
 
-    modelPtr = (ParticleModel *) &gLineParticleBuffer[gMaxLineParticles];
+    particleModelsBuffer = (ParticleModel *) (((u8 *) gLineParticleBuffer) + (gMaxLineParticles * sizeof(Particle)));
     for (i = 0; i < gMaxLineParticles; i++) {
-        gLineParticleBuffer[i].model = &modelPtr[i];
-        sp50 = gLineParticleTriangles;
-        init_line_particle_model(gLineParticleBuffer[i].model, &sp54, &sp50);
+        gLineParticleBuffer[i].model = &particleModelsBuffer[i];
+        trianglesTemp = gLineParticleTriangles;
+        init_line_particle_model(gLineParticleBuffer[i].model, &verticesTemp, &trianglesTemp);
     }
 
-    modelPtr = (ParticleModel *) &gPointParticleBuffer[gMaxPointParticles];
+    particleModelsBuffer =
+        (ParticleModel *) (((u8 *) gPointParticleBuffer) + (gMaxPointParticles * sizeof(PointParticle)));
     for (i = 0; i < gMaxPointParticles; i++) {
-        gPointParticleBuffer[i].base.model = &modelPtr[i];
-        sp50 = gPointParticleTriangles;
-        init_point_particle_model(gPointParticleBuffer[i].base.model, &sp54, &sp50);
+        gPointParticleBuffer[i].base.model = &particleModelsBuffer[i];
+        trianglesTemp = gPointParticleTriangles;
+        init_point_particle_model(gPointParticleBuffer[i].base.model, &verticesTemp, &trianglesTemp);
     }
 
     for (i = 0; i < gMaxTriangleParticles; i++) {
         gTriangleParticleBuffer[i].kind = PARTICLE_KIND_NONE;
     }
-
     for (i = 0; i < gMaxRectangleParticles; i++) {
         gRectangleParticleBuffer[i].kind = PARTICLE_KIND_NONE;
     }
-
     for (i = 0; i < gMaxSpriteParticles; i++) {
         gSpriteParticleBuffer[i].kind = PARTICLE_KIND_NONE;
     }
-
     for (i = 0; i < gMaxLineParticles; i++) {
         gLineParticleBuffer[i].kind = PARTICLE_KIND_NONE;
     }
-
     for (i = 0; i < gMaxPointParticles; i++) {
         gPointParticleBuffer[i].base.kind = PARTICLE_KIND_NONE;
     }
 
     if (gParticleDummys == NULL) {
-        asset2F = (s16 *) asset_table_load(ASSET_DUMMY_PARTICLE_IDS);
+        assetBuffer = (s16 *) asset_table_load(ASSET_DUMMY_PARTICLE_IDS);
         gParticleDummyCount = 0;
-        while (asset2F[gParticleDummyCount] != -1) {
+        while (assetBuffer[gParticleDummyCount] != -1) {
             gParticleDummyCount++;
         }
 
         gParticleDummys = mempool_alloc_safe(gParticleDummyCount * 4, COLOUR_TAG_BLUE);
         for (i = 0; i < gParticleDummyCount; i++) {
-            gParticleDummys[i] = (Sprite *) tex_load_sprite(asset2F[i] & 0x3FFF, 1);
+            gParticleDummys[i] = (Sprite *) tex_load_sprite(assetBuffer[i] & 0x3FFF, 1);
         }
-
-        mempool_free(asset2F);
+        mempool_free(assetBuffer);
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/particles/init_particle_buffers.s")
-#endif
 
 /**
  * Generate a triangle shaped particle mesh.
