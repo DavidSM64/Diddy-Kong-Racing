@@ -159,7 +159,6 @@ s32 gDebugBoundsY2;
 s32 gDebugFontTexture;
 u16 gDebugScreenWidth;
 u16 gDebugScreenHeight;
-UNUSED s32 D_80127CD4;
 char gDebugPrintBufferStart[0x900];
 char *gDebugPrintBufferEnd;
 
@@ -214,10 +213,9 @@ UNUSED int sprintf(char *s, const char *format, ...) {
         (*s++) = x; \
     } while (0)
 
-#define PAD(x)          \
-    while (width > 0) { \
-        width--;        \
-        outchar(x);     \
+#define PAD(x)            \
+    while (width-- > 0) { \
+        outchar(x);       \
     }
 
 #define HAVE_LONGLONG 1
@@ -234,18 +232,13 @@ UNUSED int sprintf(char *s, const char *format, ...) {
 
 #define isdigit(c) ((c >= '0') && (c <= '9'))
 
-/**
- * https://decomp.me/scratch/zoSu7
- * Official name: vsprintf
- */
-#ifdef NON_EQUIVALENT
 // Returns the total number of characters written.
 int vsprintf(char *s, const char *fmt, va_list args) {
     /* Pointer into the format string.  */
-    char *f;
+    const char *f;
 
     /* The string describing the size of groups of digits.  */
-    UNUSED char *grouping;
+    const char *grouping;
 
     /* Number of characters written.  */
     int done = 0;
@@ -287,9 +280,9 @@ int vsprintf(char *s, const char *fmt, va_list args) {
         s64 signed_num;
 
         /* String to be written.  */
-        char *str;
+        const char *str;
 
-        char work[BUFSIZ]; // sp17B
+        char work[BUFSIZ];
 
         s32 a1;
         s32 i;
@@ -489,7 +482,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 /* Number of base BASE.  */
                 {
                     char *w;
-                    char *workend = &work[sizeof(work) - 1]; // spF8
+                    char *workend = &work[sizeof(work) - 1];
 
                     if (gSprintfSpacingCode) {
                         outchar(0x84);
@@ -504,13 +497,12 @@ int vsprintf(char *s, const char *fmt, va_list args) {
 
                     /* Put the number in WORK.  */
                     w = _itoa(num, workend + 1, base, fc == 'X') - 1;
-                    v1 = workend - w;
-                    width -= v1;
-                    prec -= v1;
+                    width -= workend - w;
+                    prec -= workend - w;
 
                     if (alt && base == 8 && prec <= 0) {
                         *w-- = '0';
-                        --width;
+                        width--;
                     }
 
                     if (prec > 0) {
@@ -525,13 +517,11 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     }
 
                     if (is_neg || showsign || space) {
-                        --width;
+                        width--;
                     }
 
                     if (!left && pad == ' ') {
-                        while (width-- > 0) {
-                            outchar(' ');
-                        }
+                        PAD(' ');
                     }
 
                     if (is_neg) {
@@ -548,9 +538,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     }
 
                     if (!left && pad == '0') {
-                        while (width-- > 0) {
-                            outchar('0');
-                        }
+                        PAD('0');
                     }
 
                     /* Write the number.  */
@@ -559,25 +547,23 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     }
 
                     if (left) {
-                        while (width-- > 0) {
-                            outchar(' ');
-                        }
+                        PAD(' ');
                     }
                 }
                 break;
 
             case 'e':
             case 'E': {
-                s32 dash; // a1 in this scope
-                s32 a05;
+                s32 showDash;
+                s32 unused2;
                 f64 f02;
                 f64 f16;
                 f64 f0;
                 f64 spD0;
-                s32 pad2;
-                s32 s4; // spC8
+                s32 unused;
+                s32 exponent;
 
-                dash = FALSE; // should probably use dash here instead
+                showDash = FALSE;
                 if (gSprintfSpacingCode) {
                     outchar(0x84);
                 }
@@ -593,50 +579,46 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 }
 
                 if (*((s8 *) &spD0) < 0) {
-                    dash = TRUE;
+                    showDash = TRUE;
                     spD0 = -spD0;
                 }
 
                 if (spD0 == 0.0) {
-                    s4 = 0;
+                    exponent = 0;
                     f16 = 1.0;
                 } else if (spD0 < 1.0) {
-                    s4 = 0;
+                    exponent = 0;
                     f16 = 1.0;
                     while (spD0 < f16) {
                         f16 /= 10.0;
-                        s4--;
+                        exponent--;
                     }
                 }
 
                 if (spD0 >= 1.0) {
-                    s4 = 0;
+                    exponent = 0;
                     f16 = 1.0;
                     f0 = 10.0;
-
                     while (f0 <= spD0) {
                         f16 = f0;
                         f0 *= 10.0;
-                        s4++;
+                        exponent++;
                     }
                 }
 
                 f02 = f16 * 0.5;
 
-                for (i = prec; i > 0; i--) {
+                for (digit = prec; digit > 0; digit--) {
                     f02 /= 10.0;
                 }
 
                 spD0 += f02;
                 if (spD0 >= f16 * 10.0) {
                     f16 = f16 * 10.0;
-                    s4++;
+                    exponent++;
                 }
 
-                // @fake
-                digit = dash != 0;
-                a1 = (dash || showsign || space) + prec + (prec > 0 || alt) + (s4 >= 100);
-                a1 += 5;
+                a1 = (showDash || showsign || space) + prec + (prec > 0 || alt) + (exponent >= 100) + 5;
 
                 if (!left && pad == ' ') {
                     while (width-- > a1) {
@@ -644,7 +626,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     }
                 }
 
-                if (dash) {
+                if (showDash) {
                     outchar('-');
                 } else if (showsign) {
                     outchar('+');
@@ -670,37 +652,32 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     outchar('.');
                 }
 
-                if (prec > 0) {
-                    do {
-                        digit = '0';
-                        while (spD0 >= f16) {
-                            spD0 -= f16;
-                            digit++;
-                        }
-                        outchar(digit);
-                        f16 /= 10.0;
-                    } while (--prec > 0);
+                while (prec > 0) {
+                    digit = '0';
+                    while (spD0 >= f16) {
+                        spD0 -= f16;
+                        digit++;
+                    }
+                    outchar(digit);
+                    f16 /= 10.0;
+                    prec--;
                 }
 
                 outchar(fc);
 
-                if (s4 < 0) {
-                    s4 = -s4;
-                    v1 = '0' + ((s4 / 10) % 10);
-                    a0 = '0' + (s4 % 10);
+                if (exponent < 0) {
+                    exponent = -exponent;
                     outchar('-');
                 } else {
-                    v1 = '0' + ((s4 / 10) % 10);
-                    a0 = '0' + (s4 % 10);
                     outchar('+');
                 }
 
-                if (s4 >= 100) {
-                    outchar('0' + s4 / 100);
+                if (exponent >= 100) {
+                    outchar('0' + (exponent / 100));
                 }
 
-                outchar(v1);
-                outchar(a0);
+                outchar('0' + ((exponent / 10) % 10));
+                outchar('0' + (exponent % 10));
 
                 if (left) {
                     while (width-- > a1) {
@@ -716,14 +693,13 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 f64 f12 = 1.0;
                 f64 f14;
                 f64 f2;
-                s32 pad_spE4;
-                s32 dash;
-                s32 a05;
-                s32 v010;
+                s32 length;
+                s32 showDash;
+                s32 unused2;
+                s32 i;
                 f64 spD0;
 
-                dash = FALSE;
-                f14 = 10.0;
+                showDash = FALSE;
 
                 if (gSprintfSpacingCode) {
                     outchar(0x84);
@@ -732,7 +708,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     prec = 6;
                 }
 
-                for (v010 = 0; v010 < prec; v010++) {
+                for (digit = 0; digit < prec; digit++) {
                     f12 /= 10.0;
                 }
 
@@ -743,31 +719,29 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 }
 
                 if (spD0 < 0.0) {
-                    dash = TRUE;
+                    showDash = TRUE;
                     spD0 = -spD0;
                 }
 
                 spD0 += f12 * 0.5;
 
-                v010 = 1;
+                digit = 1;
                 f2 = 1.0;
-                if (spD0 >= 10.0) {
-                    do {
-                        f2 = f14;
-                        f14 *= 10.0;
-                        v010++;
-                    } while (spD0 >= f14);
+                f14 = 10.0;
+                while (spD0 >= f14) {
+                    f2 = f14;
+                    f14 *= 10.0;
+                    digit++;
                 }
 
-                a1 = (dash || showsign || space) + (prec > 0 || alt) + v010 + prec;
-
+                length = (showDash || showsign || space) + (prec > 0 || alt) + digit + prec;
                 if (!left && pad == ' ') {
-                    while (width-- > a1) {
+                    while (width-- > length) {
                         outchar(pad);
                     }
                 }
 
-                if (dash) {
+                if (showDash) {
                     outchar('-');
                 } else if (showsign) {
                     outchar('+');
@@ -776,7 +750,7 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 }
 
                 if (!left && pad == '0') {
-                    while (width-- > a1) {
+                    while (width-- > length) {
                         outchar(pad);
                     }
                 }
@@ -795,20 +769,19 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                     outchar('.');
                 }
 
-                if (prec > 0) {
-                    do {
-                        digit = '0';
-                        while (spD0 >= f2) {
-                            spD0 -= f2;
-                            digit++;
-                        }
-                        outchar(digit);
-                        f2 /= 10.0;
-                    } while (--prec > 0);
+                while (prec > 0) {
+                    digit = '0';
+                    while (spD0 >= f2) {
+                        spD0 -= f2;
+                        digit++;
+                    }
+                    outchar(digit);
+                    f2 /= 10.0;
+                    prec--;
                 }
 
                 if (left) {
-                    while (width-- > a1) {
+                    while (width-- > length) {
                         outchar(' ');
                     }
                 }
@@ -831,42 +804,37 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                 break;
 
             case 's': {
-                static char null[] = "(null)";
+                static const char null[] = "(null)";
                 s32 len;
 
                 nextarg(str, char *);
-
                 if (str == NULL) {
                     /* Write "(null)" if there's space.  */
                     if (prec == -1 || prec >= (int) sizeof(null) - 1) {
                         str = null;
-                        a0 = sizeof(null) - 1;
+                        len = sizeof(null) - 1;
                     } else {
                         str = "";
-                        a0 = 0;
+                        len = 0;
                     }
                 } else {
-                    a0 = strlen(str);
+                    len = strlen(str);
                 }
 
-                if (prec != -1 && prec < a0) {
-                    a0 = prec;
+                if (prec != -1 && prec < len) {
+                    len = prec;
                 }
-                width -= a0;
+                width -= len;
 
                 if (!left) {
-                    while (width-- > 0) {
-                        outchar(' ');
-                    }
+                    PAD(' ');
                 }
-                while (a0-- > 0) {
+                while (len-- > 0) {
                     outchar(*str++);
                 }
 
                 if (left) {
-                    while (width-- > 0) {
-                        outchar(' ');
-                    }
+                    PAD(' ');
                 }
             } break;
 
@@ -880,27 +848,24 @@ int vsprintf(char *s, const char *fmt, va_list args) {
                         base = 16;
                         fc = 'x';
                         alt = 1;
-                        num = (u64) (unsigned long int) ptr;
+                        num = (unsigned long int) ptr;
                         is_neg = 0;
                         goto number;
                     } else {
                         /* Write "(nil)" for a nil pointer.  */
-                        static char nil[] = "(nil)";
-                        register char *p;
+                        static const char nil[] = "(nil)";
+                        register const char *p;
 
                         width -= sizeof(nil) - 1;
                         if (!left) {
-                            while (width-- > 0) {
-                                outchar(' ');
-                            }
+                            PAD(' ');
                         }
-                        for (p = nil; *p != '\0';) {
-                            outchar(*p++);
+                        grouping = nil;
+                        while (*grouping != '\0') {
+                            outchar(*grouping++);
                         }
                         if (left) {
-                            while (width-- > 0) {
-                                outchar(' ');
-                            }
+                            PAD(' ');
                         }
                     }
                 }
@@ -934,15 +899,9 @@ int vsprintf(char *s, const char *fmt, va_list args) {
             outchar(0x83);
         }
     }
-    *s = 0;
+    *s = '\0';
     return done;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/printf/vsprintf.s")
-const char D_800E8C50[] = "";
-const char D_800E8C54[] = "(null)";
-const char D_800E8C5C[] = "(nil)";
-#endif
 
 /**
  * Load the font textures for the debug text, then set the buffer to the beginning.

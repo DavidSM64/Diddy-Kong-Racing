@@ -7,7 +7,7 @@ All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fd
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of June 18, 2026, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress [us.v77]: 96.91%
+&emsp;&emsp;&emsp;&emsp;Decomp progress [us.v77]: 97.50%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 65.69%
 <!-- README_SCORE_SUMMARY_END -->
@@ -155,12 +155,12 @@ The scoring is split into 2 sections:
 
 Show scores for Adventure One & Adventure Two: `./score.sh`  
 Show score for Adventure One only: `./score.sh -a 1`  
-Show score for Adventure Two only: `./score.sh -a 2` 
-Show score for another version (default: us.v77): `./score.sh -v VERSION`
+Show score for Adventure Two only: `./score.sh -a 2`  
+Show score for another version (default: us.v77): `./score.sh -v VERSION`  
 Show score percentage summary: `./score.sh -s`  
 Show score without libultra progress in Adventure One: `./score.sh --nolib`  
-Show top files remaining (default: 10): `./score.sh -t TOP`
-Show treemap view in a file (default: treemap.html): `./score.sh --treemap TREEMAP`
+Show top files remaining (default: 10): `./score.sh -t TOP`  
+Show treemap view in a file (default: treemap.html): `./score.sh --treemap TREEMAP`  
 
 To make progress in Adventure 2, a function must be properly named (must not start with `func_`) and also include a doxygen comment above it.
 
@@ -178,31 +178,31 @@ s32 is_drumstick_unlocked(void) {
 <!-- README_SCORE_BEGIN -->
 As of June 18, 2026, this is our current score:
 ```
- ===============================================================
-         ADVENTURE ONE (ASM -> C Decompilation) [us.v77]
- ------------ 96.91% Complete (97.51% NON_MATCHING) ------------
-                  # Decompiled functions: 1845
-                 # Handwritten ASM functions: 85
-                    # GLOBAL_ASM remaining: 7
-                   # NON_MATCHING functions: 3
-                # NON_EQUIVALENT WIP functions: 4
- ------------------------- Game Status -------------------------
-            Balloons: 46/47, Keys: 4/4, Trophies: 4/5
-             T.T. Amulets: 4/4, Wizpig Amulets: 4/4
- ---------------------------------------------------------------
- We are collecting silver coins in Star City. (8/8 silver coins)
- ===============================================================
-              ADVENTURE TWO (Cleanup & Documentation)
- ----------------------- 65.69% Complete -----------------------
-                  # Documented functions: 1280
-                  # Undocumented remaining: 276
-                 # Functions named `func_*`: 143
-                # Functions without comments: 276
- ------------------------- Game Status -------------------------
-            Balloons: 31/47, Keys: 3/4, Trophies: 3/5
-             T.T. Amulets: 3/4, Wizpig Amulets: 3/4
- ---------------------------------------------------------------
-           We are racing in Windmill Plains. (Lap 2/3)
- ===============================================================
+ ======================================================
+    ADVENTURE ONE (ASM -> C Decompilation) [us.v77]
+ ------- 97.50% Complete (98.10% NON_MATCHING) --------
+              # Decompiled functions: 1846
+            # Handwritten ASM functions: 85
+               # GLOBAL_ASM remaining: 6
+              # NON_MATCHING functions: 3
+           # NON_EQUIVALENT WIP functions: 3
+ -------------------- Game Status ---------------------
+       Balloons: 47/47, Keys: 4/4, Trophies: 4/5
+         T.T. Amulets: 4/4, Wizpig Amulets: 4/4
+ ------------------------------------------------------
+ We are racing in the rematch against Wizpig. (Lap 2/3)
+ ======================================================
+         ADVENTURE TWO (Cleanup & Documentation)
+ ------------------ 65.69% Complete -------------------
+              # Documented functions: 1280
+             # Undocumented remaining: 277
+            # Functions named `func_*`: 143
+           # Functions without comments: 277
+ -------------------- Game Status ---------------------
+       Balloons: 31/47, Keys: 3/4, Trophies: 3/5
+         T.T. Amulets: 3/4, Wizpig Amulets: 3/4
+ ------------------------------------------------------
+      We are racing in Windmill Plains. (Lap 2/3)
+ ======================================================
 ```
 <!-- README_SCORE_END -->
