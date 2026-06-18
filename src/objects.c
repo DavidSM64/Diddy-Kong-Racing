@@ -4998,11 +4998,11 @@ void func_80016748(Object *obj0, Object *obj1) {
             obj1Interact = obj1->interactObj;
             mtxf_from_transform((MtxF *) obj1TransformMtx, &obj1->trans);
             for (i = 0; i < objModel->unk20; i += 2) {
-                xDiff = obj1->curVertData[objModel->unk1C[i]].x;
-                yDiff = obj1->curVertData[objModel->unk1C[i]].y;
-                zDiff = obj1->curVertData[objModel->unk1C[i]].z;
+                xDiff = obj1->curVertData[objModel->collisionSpheres[i]].x;
+                yDiff = obj1->curVertData[objModel->collisionSpheres[i]].y;
+                zDiff = obj1->curVertData[objModel->collisionSpheres[i]].z;
                 mtxf_transform_point((float(*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
-                temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->trans.scale) * 50.0;
+                temp = (((f32) objModel->collisionSpheres[i + 1] / 64) * obj1->trans.scale) * 50.0;
                 xDiff -= obj0->trans.x_position;
                 yDiff -= obj0->trans.y_position;
                 zDiff -= obj0->trans.z_position;

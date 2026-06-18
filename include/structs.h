@@ -650,7 +650,7 @@ typedef struct ObjectModel {
     /* 0x14 */ s16 *attachPoints; // (Vehicle parts, Egg) Indices positions (stored in vertices).
     /* 0x18 */ s16 numberOfAttachPoints;
     /* 0x1A */ s16 unk1A;
-    /* 0x1C */ s16 *unk1C; //collisionSpheres; // Used in func_80016748. Data is a pair of s16 values.
+    /* 0x1C */ s16 *collisionSpheres; // Used in func_80016748. Data is a pair of s16 values.
     /* 0x20 */ s16 unk20; //collisionSpheresSize; // Should be an even number.
     /* 0x22 */ s16 numberOfTextures;
     /* 0x24 */ s16 numberOfVertices;
