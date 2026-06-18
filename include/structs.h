@@ -666,7 +666,7 @@ typedef struct ObjectModel {
     /* 0x40 */ Vec3s *normals;
     /* 0x44 */ ObjectModel_44 *animations;
     /* 0x48 */ s16 numberOfAnimations;
-    /* 0x4A */ s16 unk4A;//numberOfAnimatedVertices; // Number of animated vertices
+    /* 0x4A */ s16 numberOfAnimatedVertices;
     /* 0x4C */ s32 *unk4C;//animatedVertexIndices; // Animated vertices list.
     /* 0x50 */ s16 unk50;//hasAnimatedTexture;  // Game only checks if this is zero or not.
     /* 0x52 */ s16 texOffsetUpdateRate; // Set to the current updaterate for the first model.

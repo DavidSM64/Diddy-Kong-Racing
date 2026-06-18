@@ -219,7 +219,7 @@ ModelInstance *model_instance_init(ObjectModel *model, s32 flags) {
 
     if (model->numberOfAnimations != 0 && (flags & OBJECT_BEHAVIOUR_ANIMATION)) {
         temp = ((model->numberOfVertices * 2) * sizeof(Vertex)) + sizeof(ModelInstance);
-        result = (ModelInstance *) mempool_alloc((model->unk4A * 6) + temp, COLOUR_TAG_BLUE);
+        result = (ModelInstance *) mempool_alloc((model->numberOfAnimatedVertices * 6) + temp, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
