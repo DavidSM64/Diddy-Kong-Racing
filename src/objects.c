@@ -4997,7 +4997,7 @@ void func_80016748(Object *obj0, Object *obj1) {
             obj0Interact = obj0->interactObj;
             obj1Interact = obj1->interactObj;
             mtxf_from_transform((MtxF *) obj1TransformMtx, &obj1->trans);
-            for (i = 0; i < objModel->unk20; i += 2) {
+            for (i = 0; i < objModel->collisionSpheresSize; i += 2) {
                 xDiff = obj1->curVertData[objModel->collisionSpheres[i]].x;
                 yDiff = obj1->curVertData[objModel->collisionSpheres[i]].y;
                 zDiff = obj1->curVertData[objModel->collisionSpheres[i]].z;
