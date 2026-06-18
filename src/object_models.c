@@ -148,7 +148,7 @@ ModelInstance *object_model_init(s32 modelID, s32 flags) {
     objMdl->batches = (TriangleBatchInfo *) ((s32) objMdl->batches + (u8 *) objMdl);
     objMdl->attachPoints = (s16 *) ((s32) objMdl->attachPoints + (u8 *) objMdl);
     objMdl->collisionSpheres = (s16 *) ((s32) objMdl->collisionSpheres + (u8 *) objMdl);
-    objMdl->unk4C = (s32 *) ((s32) objMdl->unk4C + (u8 *) objMdl);
+    objMdl->animatedVertexIndices = (s32 *) ((s32) objMdl->animatedVertexIndices + (u8 *) objMdl);
     objMdl->references = 1;
     objMdl->collisionFacets = NULL;
     objMdl->collisionPlanes = NULL;
