@@ -6963,10 +6963,10 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
             scaleZ = 0;
             if (obj->modelInstances[obj->modelIndex] != NULL) {
                 model = obj->modelInstances[obj->modelIndex]->objModel;
-                if (obj->header->unk58 > -1 && obj->header->unk58 < model->unk18) {
+                if (obj->header->unk58 > -1 && obj->header->unk58 < model->numberOfAttachPoints) {
                     if (obj->curVertData != NULL) {
                         heldObjData = obj->curVertData;
-                        heldObjData += model->unk14[obj->header->unk58];
+                        heldObjData += model->attachPoints[obj->header->unk58];
                         scaleY = heldObjData->y;
                         scaleY *= obj->trans.scale;
                         scaleZ = heldObjData->z;

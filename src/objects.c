@@ -2983,15 +2983,15 @@ void obj_tex_animate(Object *obj, s32 updateRate) {
     TriangleBatchInfo *batches;
     s32 offset;
     TextureHeader *tex;
-    s16 temp_s5;
+    s16 textureIsAnimated;
     s32 batchNumber;
     ModelInstance *modInst;
 
     modInst = obj->modelInstances[obj->modelIndex];
     model = modInst->objModel;
     batches = model->batches;
-    temp_s5 = model->unk50;
-    for (batchNumber = 0; temp_s5 > 0 && batchNumber < model->numberOfBatches; batchNumber++) {
+    textureIsAnimated = model->hasAnimatedTexture;
+    for (batchNumber = 0; textureIsAnimated > 0 && batchNumber < model->numberOfBatches; batchNumber++) {
         if (batches[batchNumber].flags & RENDER_TEX_ANIM) {
             if (batches[batchNumber].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 tex = model->textures[batches[batchNumber].textureIndex].texture;
@@ -3014,7 +3014,7 @@ void obj_door_number(ObjectModel *model, Object *obj) {
     s32 i;
     TriangleBatchInfo *batch;
 
-    if (model->unk50 <= 0) {
+    if (model->hasAnimatedTexture <= 0) {
         return;
     }
 
@@ -3483,7 +3483,7 @@ void render_3d_model(Object *obj) {
         if (obj->behaviorId == BHV_DOOR) {
             obj_door_number(objModel, obj);
         }
-        if (objModel->texOffsetUpdateRate && objModel->unk50 > 0) {
+        if (objModel->texOffsetUpdateRate && objModel->hasAnimatedTexture > 0) {
             obj_tex_animate(obj, objModel->texOffsetUpdateRate);
             modInst->objModel->texOffsetUpdateRate = 0;
         }
@@ -3546,11 +3546,11 @@ void render_3d_model(Object *obj) {
                 loopObj = obj->attachPoints->obj[i];
                 if (!(loopObj->trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->attachPoints->unk2C[i];
-                    if (index >= 0 && index < objModel->unk18) {
+                    if (index >= 0 && index < objModel->numberOfAttachPoints) {
                         something = loopObj->sprites[loopObj->modelIndex];
-                        vtxX = obj->curVertData[objModel->unk14[index]].x;
-                        vtxY = obj->curVertData[objModel->unk14[index]].y;
-                        vtxZ = obj->curVertData[objModel->unk14[index]].z;
+                        vtxX = obj->curVertData[objModel->attachPoints[index]].x;
+                        vtxY = obj->curVertData[objModel->attachPoints[index]].y;
+                        vtxZ = obj->curVertData[objModel->attachPoints[index]].z;
                         loopObj->trans.x_position += vtxX;
                         loopObj->trans.y_position += vtxY;
                         loopObj->trans.z_position += vtxZ;
@@ -3603,12 +3603,12 @@ void render_3d_model(Object *obj) {
             loopObj = racerObj->held_obj;
             if (loopObj != NULL) {
                 index = obj->header->unk58;
-                if (index >= 0 && index < objModel->unk18) {
+                if (index >= 0 && index < objModel->numberOfAttachPoints) {
                     flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
                     something = loopObj->sprites[loopObj->modelIndex];
-                    vtxX = obj->curVertData[objModel->unk14[index]].x;
-                    vtxY = obj->curVertData[objModel->unk14[index]].y;
-                    vtxZ = obj->curVertData[objModel->unk14[index]].z;
+                    vtxX = obj->curVertData[objModel->attachPoints[index]].x;
+                    vtxY = obj->curVertData[objModel->attachPoints[index]].y;
+                    vtxZ = obj->curVertData[objModel->attachPoints[index]].z;
                     loopObj->trans.x_position += (vtxX - loopObj->trans.x_position) * 0.25;
                     loopObj->trans.y_position += (vtxY - loopObj->trans.y_position) * 0.25;
                     loopObj->trans.z_position += (vtxZ - loopObj->trans.z_position) * 0.25;
@@ -4997,12 +4997,12 @@ void func_80016748(Object *obj0, Object *obj1) {
             obj0Interact = obj0->interactObj;
             obj1Interact = obj1->interactObj;
             mtxf_from_transform((MtxF *) obj1TransformMtx, &obj1->trans);
-            for (i = 0; i < objModel->unk20; i += 2) {
-                xDiff = obj1->curVertData[objModel->unk1C[i]].x;
-                yDiff = obj1->curVertData[objModel->unk1C[i]].y;
-                zDiff = obj1->curVertData[objModel->unk1C[i]].z;
-                mtxf_transform_point((float(*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
-                temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->trans.scale) * 50.0;
+            for (i = 0; i < objModel->collisionSpheresSize; i += 2) {
+                xDiff = obj1->curVertData[objModel->collisionSpheres[i]].x;
+                yDiff = obj1->curVertData[objModel->collisionSpheres[i]].y;
+                zDiff = obj1->curVertData[objModel->collisionSpheres[i]].z;
+                mtxf_transform_point((float (*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                temp = (((f32) objModel->collisionSpheres[i + 1] / 64) * obj1->trans.scale) * 50.0;
                 xDiff -= obj0->trans.x_position;
                 yDiff -= obj0->trans.y_position;
                 zDiff -= obj0->trans.z_position;

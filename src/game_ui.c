@@ -1787,10 +1787,10 @@ void hud_stopwatch_face(u8 arg0, u8 arg1, u8 animID, u8 arg3, u8 arg4) {
                     modInst->objModel->batches[i].textureIndex = arg0;
                     if (arg0 == 4) {
                         modInst->objModel->batches[i].flags |= (RENDER_UNK_0800000 | RENDER_TEX_ANIM);
-                        modInst->objModel->unk50 = 1;
+                        modInst->objModel->hasAnimatedTexture = TRUE;
                     } else {
                         modInst->objModel->batches[i].flags &= ~(RENDER_UNK_0800000 | RENDER_TEX_ANIM);
-                        modInst->objModel->unk50 = 0;
+                        modInst->objModel->hasAnimatedTexture = FALSE;
                     }
                     numberOfBatches = modInst->objModel->numberOfBatches;
                 } else if (D_80126D65 == modInst->objModel->batches[i].textureIndex) {

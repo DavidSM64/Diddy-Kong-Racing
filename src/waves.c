@@ -1841,7 +1841,8 @@ void func_800BCC70(LevelModel *model) {
     mempool_free(spA0);
 }
 
-s32 func_800BDC80(s32 arg0, unk8011C3B8* arg1, unk8011C8B8* arg2, f32 shadowXNegPosition, f32 shadowZNegPosition, f32 shadowXPosition, f32 shadowZPosition) {
+s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNegPosition, f32 shadowZNegPosition,
+                  f32 shadowXPosition, f32 shadowZPosition) {
     s32 colCount;
     s32 startCol;
     s32 startRow;
@@ -1924,13 +1925,15 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8* arg1, unk8011C8B8* arg2, f32 shadowXNeg
         var_s4 = temp_t0 + startCol + (currentRow * colCount);
         for (currentCol = startCol; currentCol <= endCol; currentCol++) {
 
-            var_fs0 = (gWaveHeightTable[gWaveHeightIndices[var_s2].x] + gWaveHeightTable[gWaveHeightIndices[var_s2].y]) * gWaveController.magnitude;
+            var_fs0 =
+                (gWaveHeightTable[gWaveHeightIndices[var_s2].x] + gWaveHeightTable[gWaveHeightIndices[var_s2].y]) *
+                gWaveController.magnitude;
             if (gWaveGenCount > 0) {
                 var_fs0 += waves_get_y(arg0, currentCol, currentRow);
             }
 
             if (D_800E3178[var_s4] < 0x7F) {
-                var_fs0 *= gWaveController.unk44 + ((s32)D_800E3178[var_s4] * temp_fs2);
+                var_fs0 *= gWaveController.unk44 + ((s32) D_800E3178[var_s4] * temp_fs2);
             }
             spD8[counter] = gWaveModel[arg0].originY + (s16) (var_fs0 * var_fs1);
             counter++;
@@ -1952,7 +1955,7 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8* arg1, unk8011C8B8* arg2, f32 shadowXNeg
     temp_fs3 = (stepX * stepZ) * (stepX * stepZ);
     colCount = (endCol - startCol) + 1;
     sp332 = gWaveModel[arg0].originZ + (s16) (startRow * stepZ);
-    
+
     for (currentRow = startRow, counter = 0; currentRow < endRow; currentRow++) {
         temp_fp = gWaveModel[arg0].originZ + (s16) ((currentRow + 1) * stepZ);
         var_s3_2 = gWaveModel[arg0].originX + (s16) (startCol * stepX);
@@ -1979,7 +1982,9 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8* arg1, unk8011C8B8* arg2, f32 shadowXNeg
                 arg2[counter].y = temp_fs3 * temp_fs2;
                 arg2[counter].z = temp_fs1 * temp_fs2;
 
-                arg2[counter].unkC_union.w = -((arg1[counter].x1 * arg2[counter].x) + (arg1[counter].y1 * arg2[counter].y) + (arg1[counter].z1 * arg2[counter].z));
+                arg2[counter].unkC_union.w =
+                    -((arg1[counter].x1 * arg2[counter].x) + (arg1[counter].y1 * arg2[counter].y) +
+                      (arg1[counter].z1 * arg2[counter].z));
                 counter++;
             }
             arg1[counter].x1 = temp_s2;
@@ -2001,7 +2006,9 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8* arg1, unk8011C8B8* arg2, f32 shadowXNeg
                 arg2[counter].y = temp_fs3 * temp_fs2;
                 arg2[counter].z = temp_fs1 * temp_fs2;
 
-                arg2[counter].unkC_union.w = -((arg1[counter].x1 * arg2[counter].x) + (arg1[counter].y1 * arg2[counter].y) + (arg1[counter].z1 * arg2[counter].z));
+                arg2[counter].unkC_union.w =
+                    -((arg1[counter].x1 * arg2[counter].x) + (arg1[counter].y1 * arg2[counter].y) +
+                      (arg1[counter].z1 * arg2[counter].z));
                 counter++;
             }
 

@@ -316,7 +316,7 @@ void update_vehicle_particles(Object *racerObj, s32 updateRate);
 Particle* create_line_particle(Object* obj, ParticleEmitter* emitter);
 void scroll_particle_textures(s32 updateRate); // Non Matching
 void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, s32 maxSpriteParticles,
-                           s32 maxLineParticles, s32 maxPointParticles, s32 arg5); // Non Matching
+                           s32 maxLineParticles, s32 maxPointParticles, s32 unused_arg); // Non Matching
 void move_particle_basic_parent(Particle *);
 void move_particle_attached_to_parent(Particle *);
 void move_particle_with_acceleration(Particle *);

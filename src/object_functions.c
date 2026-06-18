@@ -1915,11 +1915,11 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
 
                 for (i = 0; i < wizShipObj->attachPoints->count; i++) {
                     index = wizShipObj->attachPoints->unk2C[i];
-                    if ((index >= 0) && (index < wizShipModel->unk18)) {
+                    if ((index >= 0) && (index < wizShipModel->numberOfAttachPoints)) {
                         if (wizShipObj->curVertData != NULL) {
-                            posX = wizShipObj->curVertData[wizShipModel->unk14[index]].x;
-                            posY = wizShipObj->curVertData[wizShipModel->unk14[index]].y;
-                            posZ = wizShipObj->curVertData[wizShipModel->unk14[index]].z;
+                            posX = wizShipObj->curVertData[wizShipModel->attachPoints[index]].x;
+                            posY = wizShipObj->curVertData[wizShipModel->attachPoints[index]].y;
+                            posZ = wizShipObj->curVertData[wizShipModel->attachPoints[index]].z;
                             mtxf_transform_point(shipMtx, posX, posY, posZ, &posX, &posY, &posZ);
                             newObject.x = posX;
                             newObject.y = posY;
