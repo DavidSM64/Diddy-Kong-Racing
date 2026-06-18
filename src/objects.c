@@ -2983,15 +2983,15 @@ void obj_tex_animate(Object *obj, s32 updateRate) {
     TriangleBatchInfo *batches;
     s32 offset;
     TextureHeader *tex;
-    s16 temp_s5;
+    s16 textureIsAnimated;
     s32 batchNumber;
     ModelInstance *modInst;
 
     modInst = obj->modelInstances[obj->modelIndex];
     model = modInst->objModel;
     batches = model->batches;
-    temp_s5 = model->unk50;
-    for (batchNumber = 0; temp_s5 > 0 && batchNumber < model->numberOfBatches; batchNumber++) {
+    textureIsAnimated = model->hasAnimatedTexture;
+    for (batchNumber = 0; textureIsAnimated > 0 && batchNumber < model->numberOfBatches; batchNumber++) {
         if (batches[batchNumber].flags & RENDER_TEX_ANIM) {
             if (batches[batchNumber].textureIndex != TEX_INDEX_NO_TEXTURE) {
                 tex = model->textures[batches[batchNumber].textureIndex].texture;
@@ -3014,7 +3014,7 @@ void obj_door_number(ObjectModel *model, Object *obj) {
     s32 i;
     TriangleBatchInfo *batch;
 
-    if (model->unk50 <= 0) {
+    if (model->hasAnimatedTexture <= 0) {
         return;
     }
 
@@ -3483,7 +3483,7 @@ void render_3d_model(Object *obj) {
         if (obj->behaviorId == BHV_DOOR) {
             obj_door_number(objModel, obj);
         }
-        if (objModel->texOffsetUpdateRate && objModel->unk50 > 0) {
+        if (objModel->texOffsetUpdateRate && objModel->hasAnimatedTexture > 0) {
             obj_tex_animate(obj, objModel->texOffsetUpdateRate);
             modInst->objModel->texOffsetUpdateRate = 0;
         }

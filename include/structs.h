@@ -668,7 +668,7 @@ typedef struct ObjectModel {
     /* 0x48 */ s16 numberOfAnimations;
     /* 0x4A */ s16 numberOfAnimatedVertices;
     /* 0x4C */ s32 *animatedVertexIndices;
-    /* 0x50 */ s16 unk50;//hasAnimatedTexture;  // Game only checks if this is zero or not.
+    /* 0x50 */ s16 hasAnimatedTexture; // Set as a boolean, but read like it can be greater than 1.
     /* 0x52 */ s16 texOffsetUpdateRate; // Set to the current updaterate for the first model.
     /* 0x54 */ u8 pad[0x2C];
 } ObjectModel;
