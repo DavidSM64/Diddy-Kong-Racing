@@ -647,16 +647,17 @@ typedef struct ObjectModel {
     /* 0x08 */ Triangle *triangles;
     /* 0x0C */ CollisionFacetPlanes *collisionFacets;
     /* 0x10 */ f32 *collisionPlanes;
-    /* 0x14 */ s16 *unk14;
-    /* 0x18 */ s16 unk18;
+    /* 0x14 */ s16 *attachPoints; // (Vehicle parts, Egg) Indices positions (stored in vertices).
+    /* 0x18 */ s16 unk18; //numberOfAttachPoints;
     /* 0x1A */ s16 unk1A;
-    /* 0x1C */ s16 *unk1C;
-    /* 0x20 */ s16 unk20;
+    /* 0x1C */ s16 *unk1C; //collisionSpheres; // Used in func_80016748. Data is a pair of s16 values.
+    /* 0x20 */ s16 unk20; //collisionSpheresSize; // Should be an even number.
     /* 0x22 */ s16 numberOfTextures;
     /* 0x24 */ s16 numberOfVertices;
     /* 0x26 */ s16 numberOfTriangles;
     /* 0x28 */ s16 numberOfBatches;
-    /* 0x2A */ u8 pad2A[6];
+    /* 0x2A */ u8 pad2A[2];
+    /* 0x2C */ s32 fileSize; // Size of the model file (including the header)
     /* 0x30 */ s16 references;
     /* 0x32 */ s16 collisionFacetCount;
     /* 0x34 */ u8 pad34[4];
@@ -665,9 +666,9 @@ typedef struct ObjectModel {
     /* 0x40 */ Vec3s *normals;
     /* 0x44 */ ObjectModel_44 *animations;
     /* 0x48 */ s16 numberOfAnimations;
-    /* 0x4A */ s16 unk4A;
-    /* 0x4C */ s32 *unk4C;
-    /* 0x50 */ s16 unk50;
+    /* 0x4A */ s16 unk4A;//numberOfAnimatedVertices; // Number of animated vertices
+    /* 0x4C */ s32 *unk4C;//animatedVertexIndices; // Animated vertices list.
+    /* 0x50 */ s16 unk50;//hasAnimatedTexture;  // Game only checks if this is zero or not.
     /* 0x52 */ s16 texOffsetUpdateRate; // Set to the current updaterate for the first model.
     /* 0x54 */ u8 pad[0x2C];
 } ObjectModel;

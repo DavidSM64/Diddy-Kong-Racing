@@ -3548,9 +3548,9 @@ void render_3d_model(Object *obj) {
                     index = obj->attachPoints->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
                         something = loopObj->sprites[loopObj->modelIndex];
-                        vtxX = obj->curVertData[objModel->unk14[index]].x;
-                        vtxY = obj->curVertData[objModel->unk14[index]].y;
-                        vtxZ = obj->curVertData[objModel->unk14[index]].z;
+                        vtxX = obj->curVertData[objModel->attachPoints[index]].x;
+                        vtxY = obj->curVertData[objModel->attachPoints[index]].y;
+                        vtxZ = obj->curVertData[objModel->attachPoints[index]].z;
                         loopObj->trans.x_position += vtxX;
                         loopObj->trans.y_position += vtxY;
                         loopObj->trans.z_position += vtxZ;
@@ -3606,9 +3606,9 @@ void render_3d_model(Object *obj) {
                 if (index >= 0 && index < objModel->unk18) {
                     flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
                     something = loopObj->sprites[loopObj->modelIndex];
-                    vtxX = obj->curVertData[objModel->unk14[index]].x;
-                    vtxY = obj->curVertData[objModel->unk14[index]].y;
-                    vtxZ = obj->curVertData[objModel->unk14[index]].z;
+                    vtxX = obj->curVertData[objModel->attachPoints[index]].x;
+                    vtxY = obj->curVertData[objModel->attachPoints[index]].y;
+                    vtxZ = obj->curVertData[objModel->attachPoints[index]].z;
                     loopObj->trans.x_position += (vtxX - loopObj->trans.x_position) * 0.25;
                     loopObj->trans.y_position += (vtxY - loopObj->trans.y_position) * 0.25;
                     loopObj->trans.z_position += (vtxZ - loopObj->trans.z_position) * 0.25;
