@@ -3035,7 +3035,7 @@ void draw_menu_elements(s32 state, MenuElement *elems, f32 scale) {
  */
 #if REGION == REGION_JP
 void draw_text_with_shadow(s32 dialogueBoxID, s32 xPos1, s32 yPos1, s32 xPos2, s32 yPos2, char *text,
-                         AlignmentFlags alignment, s32 textColour, s32 alpha) {
+                           AlignmentFlags alignment, s32 textColour, s32 alpha) {
     s32 opacity;
     opacity = textColour & 0xFF;
 
@@ -6853,7 +6853,7 @@ void charselect_render_text(UNUSED s32 updateRate) {
             }
 #if REGION == REGION_JP
             draw_text_with_shadow(-1, SCREEN_WIDTH_HALF, yPos, 1, 3, "OK?", ALIGN_MIDDLE_CENTER,
-                                COLOUR_RGBA32(255, 255, 255, 255), 0);
+                                  COLOUR_RGBA32(255, 255, 255, 255), 0);
 #else
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, "OK?", ALIGN_MIDDLE_CENTER);
 #endif
@@ -9461,7 +9461,7 @@ void trackmenu_setup_render(UNUSED s32 updateRate) {
                 }
 #if REGION == REGION_JP
                 draw_text_with_shadow(-1, SCREEN_WIDTH_HALF, regionOffset + 172, 1, 3, "OK?", ALIGN_MIDDLE_CENTER,
-                                    COLOUR_RGBA32(255, 255, 255, 255), 0);
+                                      COLOUR_RGBA32(255, 255, 255, 255), 0);
 #else
                 draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, regionOffset + 172, "OK?", ALIGN_MIDDLE_CENTER);
 #endif
@@ -9983,7 +9983,7 @@ void adventuretrack_render(UNUSED s32 updateRate, s32 arg1, s32 arg2) {
                         set_text_colour(255, 255, 255, 0, 255);
 #if REGION == REGION_JP
                         draw_text_with_shadow(-1, SCREEN_WIDTH_HALF, yOffset + 172, 1, 3, "OK?", ALIGN_MIDDLE_CENTER,
-                                            COLOUR_RGBA32(255, 255, 255, 255), 0);
+                                              COLOUR_RGBA32(255, 255, 255, 255), 0);
 #else
                         draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yOffset + 172, "OK?", ALIGN_MIDDLE_CENTER);
 #endif
@@ -10557,7 +10557,7 @@ void postrace_load(void) {
         }
 #ifdef AVOID_UB
         temp_a0 = gRaceResultsObjectIndices[gPostRace.unk0_s32 - 10];
-#else   // This relies on the data laid out as is in memory, since the var itself is only 2 entries big.
+#else // This relies on the data laid out as is in memory, since the var itself is only 2 entries big.
         temp_a0 = D_800E0A10[gPostRace.unk0_s32];
 #endif
         if (temp_a0 == -1) {
@@ -11325,7 +11325,7 @@ void results_render(UNUSED s32 updateRate, f32 opacity) {
         x2 = offsetX;
 #if REGION == REGION_JP
         draw_text_with_shadow(-1, time - 40, y2 + offsetY + 2, 2, 2, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER,
-                            COLOUR_RGBA32(255, 255, 255, 255), 0);
+                              COLOUR_RGBA32(255, 255, 255, 255), 0);
 #else
         set_text_colour(0, 0, 0, 255, 255);
         draw_text(&sMenuCurrDisplayList, time - 32, y2 + offsetY + 4, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER);

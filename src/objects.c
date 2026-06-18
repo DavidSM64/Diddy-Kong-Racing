@@ -5001,7 +5001,7 @@ void func_80016748(Object *obj0, Object *obj1) {
                 xDiff = obj1->curVertData[objModel->collisionSpheres[i]].x;
                 yDiff = obj1->curVertData[objModel->collisionSpheres[i]].y;
                 zDiff = obj1->curVertData[objModel->collisionSpheres[i]].z;
-                mtxf_transform_point((float(*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                mtxf_transform_point((float (*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
                 temp = (((f32) objModel->collisionSpheres[i + 1] / 64) * obj1->trans.scale) * 50.0;
                 xDiff -= obj0->trans.x_position;
                 yDiff -= obj0->trans.y_position;
