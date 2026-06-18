@@ -3546,7 +3546,7 @@ void render_3d_model(Object *obj) {
                 loopObj = obj->attachPoints->obj[i];
                 if (!(loopObj->trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->attachPoints->unk2C[i];
-                    if (index >= 0 && index < objModel->unk18) {
+                    if (index >= 0 && index < objModel->numberOfAttachPoints) {
                         something = loopObj->sprites[loopObj->modelIndex];
                         vtxX = obj->curVertData[objModel->attachPoints[index]].x;
                         vtxY = obj->curVertData[objModel->attachPoints[index]].y;
@@ -3603,7 +3603,7 @@ void render_3d_model(Object *obj) {
             loopObj = racerObj->held_obj;
             if (loopObj != NULL) {
                 index = obj->header->unk58;
-                if (index >= 0 && index < objModel->unk18) {
+                if (index >= 0 && index < objModel->numberOfAttachPoints) {
                     flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
                     something = loopObj->sprites[loopObj->modelIndex];
                     vtxX = obj->curVertData[objModel->attachPoints[index]].x;
