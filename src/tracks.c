@@ -2491,149 +2491,135 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     return gTrackWaves[index]->type;
 }
 
-// https://decomp.me/scratch/5Useu
-#ifdef NON_EQUIVALENT
 s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***arg3) {
-    LevelModelSegment *currentSegment;
     LevelModelSegmentBoundingBox *currentBoundingBox;
     Triangle *tri;
     Vertex *vert;
-    s32 pad;
+    s16 temp_a2;
+    s32 currentVerticesOffset;
+    LevelModelSegment *currentSegment;
+    s32 j;
+    s32 segmentCount;
+    s16 vert1X;
+    s16 vert1Z;
     s16 vert2X;
     s16 vert2Z;
-    s16 temp_a2;
     s16 vert3X;
-    s32 sp108;
     s16 vert3Z;
-    s16 vert1X;
-    s32 pad2;
-    s32 currentVerticesOffset;
     s32 nextFaceOffset;
-    s32 currentFaceOffset;
-    s16 vert1Z;
     s16 var_a1;
+    s32 currentFaceOffset;
     s32 faceNum;
     s16 var_s1;
     s16 var_t0;
     s16 var_t1;
-    s8 surface;
     s32 XInInt;
     s32 ZInInt;
-    s32 temp_ra_1;
-    s32 temp_ra_2;
-    s32 temp_ra_3;
-    s32 spB0[8];
+    s32 side1;
+    s32 side2;
+    s32 side3;
+    s32 segmentsInside[8];
     s32 yOutCount;
     s32 batchNum;
     s32 i;
-    s32 var_v0;
     s32 stopSorting;
-    TriangleBatchInfo *currentBatch;
-    s32 pad3;
-    Vec4f tempVec4f;
+    f32 A, B, C, D;
     s32 temp;
-    s32 var_fp;
+    s32 surfaceType;
+    s32 unused_bool;
+    s32 pad;
     WaterProperties *wave;
-    WaterProperties *wave2;
+    WaterProperties **waves;
 
+    unused_bool = FALSE;
     D_8011D308 = 0;
     *arg3 = NULL;
-
-    sp108 = get_inside_segment_count_xz(xIn, zIn, spB0);
-    if (sp108 == 0 || sp108 >= 8) {
+    XInInt = xIn;
+    ZInInt = zIn;
+    segmentCount = get_inside_segment_count_xz(XInInt, ZInInt, segmentsInside);
+    if (segmentCount == 0 || segmentCount >= 8) {
         return 0;
     }
 
     yOutCount = 0;
+    for (i = 0; i < segmentCount; i++) {
+        currentSegment = &gCurrentLevelModel->segments[segmentsInside[i]];
+        currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[segmentsInside[i]];
 
-    for (var_fp = 0; var_fp < sp108; var_fp++) {
-        currentSegment = &gCurrentLevelModel->segments[spB0[var_fp]];
-        currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[spB0[var_fp]];
         var_a1 = 1;
         var_s1 = 0;
-        XInInt = xIn;
-        ZInInt = zIn;
 
         temp_a2 = ((currentBoundingBox->x2 - currentBoundingBox->x1) >> 3) + 1;
         var_t0 = temp_a2 + currentBoundingBox->x1;
         var_t1 = currentBoundingBox->x1;
-        for (i = 0; i < 8; i++) {
+
+        for (j = 0; j < 8; j++) {
             if (var_t0 >= XInInt && XInInt >= var_t1) {
                 var_s1 |= var_a1;
             }
             var_t0 += temp_a2;
             var_t1 += temp_a2;
-            var_a1 *= 2;
+            var_a1 <<= 1;
         }
 
-        // Same as above, but for Z
         temp_a2 = ((currentBoundingBox->z2 - currentBoundingBox->z1) >> 3) + 1;
-        // @fake for s3 vs s2
-        if (1) {}
         var_t0 = temp_a2 + currentBoundingBox->z1;
         var_t1 = currentBoundingBox->z1;
-        for (i = 0; i < 8; i++) {
+
+        for (j = 0; j < 8; j++) {
             if (var_t0 >= ZInInt && ZInInt >= var_t1) {
                 var_s1 |= var_a1;
             }
             var_t0 += temp_a2;
             var_t1 += temp_a2;
-            var_a1 *= 2;
+            var_a1 <<= 1;
         }
 
         for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
-            currentBatch = &currentSegment->batches[batchNum];
-            surface = gCurrentLevelModel->textures[currentBatch->textureIndex].surfaceType;
-            currentFaceOffset = currentBatch->facesOffset;
-            currentVerticesOffset = currentBatch->verticesOffset;
-            nextFaceOffset = currentBatch[1].facesOffset;
-
-            if (surface != SURFACE_WATER_CALM && surface != SURFACE_WATER_UNK_F &&
-                (currentBatch->flags & (RENDER_HIDDEN | RENDER_NO_COLLISION))) {
+            surfaceType = gCurrentLevelModel->textures[currentSegment->batches[batchNum].textureIndex].surfaceType;
+            currentFaceOffset = currentSegment->batches[batchNum].facesOffset;
+            currentVerticesOffset = currentSegment->batches[batchNum].verticesOffset;
+            nextFaceOffset = currentSegment->batches[batchNum + 1].facesOffset;
+            if ((surfaceType != SURFACE_WATER_CALM && surfaceType != SURFACE_WATER_UNK_F) &&
+                (currentSegment->batches[batchNum].flags & (RENDER_HIDDEN | RENDER_NO_COLLISION))) {
                 currentFaceOffset = nextFaceOffset;
             }
-
             for (faceNum = currentFaceOffset; faceNum < nextFaceOffset; faceNum++) {
                 if (var_s1 == (currentSegment->unk10[faceNum] & var_s1)) {
                     tri = &currentSegment->triangles[faceNum];
-
                     vert = &currentSegment->vertices[tri->verticesArray[1] + currentVerticesOffset];
                     vert1X = vert->x;
                     vert1Z = vert->z;
-
                     vert = &currentSegment->vertices[tri->verticesArray[2] + currentVerticesOffset];
                     vert2X = vert->x;
                     vert2Z = vert->z;
-
                     vert = &currentSegment->vertices[tri->verticesArray[3] + currentVerticesOffset];
                     vert3X = vert->x;
                     vert3Z = vert->z;
-
-                    temp_ra_1 =
-                        (((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0;
-                    temp_ra_2 =
-                        (((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0;
-                    temp_ra_3 =
-                        (((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0;
-                    if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
+                    side1 = (((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0;
+                    side2 = (((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0;
+                    side3 = (((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0;
+                    if (side1 == side2 && side2 != side3) {
                         temp = currentSegment->collisionFacets[faceNum].basePlaneIndex;
-                        tempVec4f.x = currentSegment->collisionPlanes[temp * 4 + 0];
-                        tempVec4f.y = currentSegment->collisionPlanes[temp * 4 + 1];
-                        tempVec4f.z = currentSegment->collisionPlanes[temp * 4 + 2];
-                        tempVec4f.w = currentSegment->collisionPlanes[temp * 4 + 3];
-                        if (tempVec4f.y != 0.0) {
-                            D_8011D128[yOutCount].type = surface;
-                            D_8011D128[yOutCount].waveHeight =
-                                -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
-                            D_8011D128[yOutCount].rot.x = tempVec4f.x;
-                            D_8011D128[yOutCount].rot.y = tempVec4f.y;
-                            D_8011D128[yOutCount].rot.z = tempVec4f.z;
+                        A = currentSegment->collisionPlanes[(temp * 4) + 0];
+                        B = currentSegment->collisionPlanes[(temp * 4) + 1];
+                        C = currentSegment->collisionPlanes[(temp * 4) + 2];
+                        D = currentSegment->collisionPlanes[(temp * 4) + 3];
+                        if (B != 0.0) {
+                            D_8011D128[yOutCount].type = surfaceType;
+                            D_8011D128[yOutCount].waveHeight = -((((A * xIn) + (C * zIn)) + D) / B);
+                            D_8011D128[yOutCount].rot.x = A;
+                            D_8011D128[yOutCount].rot.y = B;
+                            D_8011D128[yOutCount].rot.z = C;
                             yOutCount++;
-
                             if (yOutCount >= 20) {
                                 batchNum = currentSegment->numberOfBatches;
                                 faceNum = nextFaceOffset;
-                                var_fp = sp108;
+                                i = segmentCount;
+                            } else if (unused_bool) {
+                                // Fake to set to this to basically any variable in currentSegment as a break for
+                                // optimization. This code should never run.
+                                currentSegment->numberOfBatches = 1;
                             }
                         }
                     }
@@ -2642,13 +2628,12 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
         }
     }
 
-    // @diff gCurrentLevelModel is stored in a0? Might be fixed if the bottom for and do-while is fixed
     if (levelSegmentIndex >= 0 && levelSegmentIndex < gCurrentLevelModel->numberOfSegments) {
         currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
         D_8011D128[yOutCount].type = SURFACE_WATER_WAVY;
         if (currentSegment->hasWaves && gWaveBlockCount != 0) {
-            D_8011D128[yOutCount].waveHeight =
-                func_800BB2F4(levelSegmentIndex, xIn, zIn, &(yOutCount + D_8011D128)->rot);
+            wave = yOutCount + D_8011D128; // fake?
+            D_8011D128[yOutCount].waveHeight = func_800BB2F4(levelSegmentIndex, xIn, zIn, &wave->rot);
         } else {
             D_8011D128[yOutCount].waveHeight = currentSegment->unk38;
             D_8011D128[yOutCount].rot.x = 0.0f;
@@ -2658,33 +2643,32 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
         yOutCount++;
     }
 
+    waves = gTrackWaves;
+    wave = D_8011D128;
+
     // clang-format off
-    for (var_v0 = 0; var_v0 < yOutCount; var_v0++) {\
-        wave = &D_8011D128[var_v0];\
-        gTrackWaves[var_v0] = wave;\
-    }
+    for (j = 0; j < yOutCount; j++) { waves[j] = &wave[j]; }
     // clang-format on
 
     do {
         stopSorting = TRUE;
-        for (var_v0 = 0; var_v0 < yOutCount - 1; var_v0++) {
-            wave = gTrackWaves[var_v0 + 1]; // @fake?
-            if (gTrackWaves[var_v0]->waveHeight < gTrackWaves[var_v0 + 1]->waveHeight) {
+
+        for (j = 0; j < (yOutCount - 1); j++) {
+            if (waves[j]->waveHeight < waves[j + 1]->waveHeight) {
                 stopSorting = FALSE;
-                wave = gTrackWaves[var_v0];
-                gTrackWaves[var_v0] = gTrackWaves[var_v0 + 1];
-                gTrackWaves[var_v0 + 1] = wave;
+                wave = waves[j];
+                waves[j] = waves[j + 1];
+                waves[j + 1] = wave;
             }
         }
+
     } while (!stopSorting);
 
     *arg3 = gTrackWaves;
     D_8011D308 = yOutCount;
+
     return yOutCount;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002B0F4.s")
-#endif
 
 s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3) {
     LevelModelSegment *seg;
