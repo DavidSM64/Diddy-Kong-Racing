@@ -2491,8 +2491,6 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     return gTrackWaves[index]->type;
 }
 
-// https://decomp.me/scratch/ixBV9
-#ifdef NON_MATCHING
 s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***arg3) {
     LevelModelSegmentBoundingBox *currentBoundingBox;
     Triangle *tri;
@@ -2500,7 +2498,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
     s16 temp_a2;
     s32 currentVerticesOffset;
     LevelModelSegment *currentSegment;
-    s32 pad;
+    s32 j;
     s32 segmentCount;
     s16 vert1X;
     s16 vert1Z;
@@ -2524,15 +2522,16 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
     s32 yOutCount;
     s32 batchNum;
     s32 i;
-    s32 pad2;
     s32 stopSorting;
     f32 A, B, C, D;
     s32 temp;
     s32 surfaceType;
-    s32 j;
+    s32 unused_bool;
+    s32 pad;
     WaterProperties *wave;
     WaterProperties **waves;
 
+    unused_bool = FALSE;
     D_8011D308 = 0;
     *arg3 = NULL;
     XInInt = xIn;
@@ -2546,11 +2545,11 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
     for (i = 0; i < segmentCount; i++) {
         currentSegment = &gCurrentLevelModel->segments[segmentsInside[i]];
         currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[segmentsInside[i]];
+
         var_a1 = 1;
         var_s1 = 0;
 
-        currentVerticesOffset = currentBoundingBox->x2 - currentBoundingBox->x1; // fake?
-        temp_a2 = (currentVerticesOffset >> 3) + 1;
+        temp_a2 = ((currentBoundingBox->x2 - currentBoundingBox->x1) >> 3) + 1;
         var_t0 = temp_a2 + currentBoundingBox->x1;
         var_t1 = currentBoundingBox->x1;
 
@@ -2600,7 +2599,6 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
                     side1 = (((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0;
                     side2 = (((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0;
                     side3 = (((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0;
-                    if (1) {}
                     if (side1 == side2 && side2 != side3) {
                         temp = currentSegment->collisionFacets[faceNum].basePlaneIndex;
                         A = currentSegment->collisionPlanes[(temp * 4) + 0];
@@ -2618,6 +2616,10 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
                                 batchNum = currentSegment->numberOfBatches;
                                 faceNum = nextFaceOffset;
                                 i = segmentCount;
+                            } else if (unused_bool) {
+                                // Fake to set to this to basically any variable in currentSegment as a break for
+                                // optimization. This code should never run.
+                                currentSegment->numberOfBatches = 1;
                             }
                         }
                     }
@@ -2667,9 +2669,6 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
 
     return yOutCount;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002B0F4.s")
-#endif
 
 s32 func_8002B9BC(Object *obj, f32 *arg1, Vec3f *arg2, s32 arg3) {
     LevelModelSegment *seg;
