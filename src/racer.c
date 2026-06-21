@@ -4377,7 +4377,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             gCameraObject = cam_get_active_camera_no_cutscenes();
         }
         gRacerWaveCount =
-            func_8002B0F4(obj->segmentID, obj->trans.x_position, obj->trans.z_position, &gRacerCurrentWave);
+            get_level_segment_waves(obj->segmentID, obj->trans.x_position, obj->trans.z_position, &gRacerCurrentWave);
         if (gRacerWaveCount) {
             for (i = 0; i < gRacerWaveCount; i++) {
                 if (gRacerCurrentWave[i]->type == SURFACE_WATER_UNK_F) {
@@ -8798,7 +8798,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
             gRacerWaveCount = 0;
         } else {
             gRacerWaveCount =
-                func_8002B0F4(obj->segmentID, obj->trans.x_position, obj->trans.z_position, &gRacerCurrentWave);
+                get_level_segment_waves(obj->segmentID, obj->trans.x_position, obj->trans.z_position, &gRacerCurrentWave);
         }
         set_collision_mode(COLLISION_MODE_DEFAULT);
         if (racer->approachTarget != NULL || gRaceStartTimer != 0 || racer->bubbleTrapTimer > 0) {

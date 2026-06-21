@@ -1375,7 +1375,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             break;
     }
     obj->trans.y_position = tempPosY;
-    index = func_8002B0F4(obj->segmentID, obj->trans.x_position, obj->trans.z_position, &water);
+    index = get_level_segment_waves(obj->segmentID, obj->trans.x_position, obj->trans.z_position, &water);
     if (index != 0) {
         index--;
         while (index >= 0) {
@@ -3137,7 +3137,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             break;
     }
     obj->trans.y_position = tempPosY;
-    var_a2 = func_8002B0F4(obj->segmentID, obj->trans.x_position, obj->trans.z_position, &water);
+    var_a2 = get_level_segment_waves(obj->segmentID, obj->trans.x_position, obj->trans.z_position, &water);
     if (var_a2 != 0) {
         var_a2--;
         while (var_a2 >= 0) {

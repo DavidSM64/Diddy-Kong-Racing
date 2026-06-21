@@ -162,7 +162,7 @@ void free_track(void);
 void void_check(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex);
 s32 func_80027568(void);
 s32 track_init_collision(LevelModelSegment *);
-s32 func_8002B0F4(s32, f32 xIn, f32 zIn,
+s32 get_level_segment_waves(s32, f32 xIn, f32 zIn,
                   WaterProperties ***); // Definitely not triple pointer, but easiest way to fix warns.
 void ttcam_update(s32);
 void trackbg_render_flashy(void);
