@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of June 21, 2026, this is our current score:
+As of July 7, 2026, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress [us.v77]: 97.75%
+&emsp;&emsp;&emsp;&emsp;Decomp progress [us.v77]: 97.91%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 65.69%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 65.97%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -176,15 +176,15 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of June 21, 2026, this is our current score:
+As of July 7, 2026, this is our current score:
 ```
  ======================================================
     ADVENTURE ONE (ASM -> C Decompilation) [us.v77]
- ------- 97.75% Complete (98.35% NON_MATCHING) --------
-              # Decompiled functions: 1847
+ ------- 97.91% Complete (98.35% NON_MATCHING) --------
+              # Decompiled functions: 1848
             # Handwritten ASM functions: 85
-               # GLOBAL_ASM remaining: 5
-              # NON_MATCHING functions: 3
+               # GLOBAL_ASM remaining: 4
+              # NON_MATCHING functions: 2
            # NON_EQUIVALENT WIP functions: 2
  -------------------- Game Status ---------------------
        Balloons: 47/47, Keys: 4/4, Trophies: 4/5
@@ -193,8 +193,8 @@ As of June 21, 2026, this is our current score:
  We are racing in the rematch against Wizpig. (Lap 2/3)
  ======================================================
          ADVENTURE TWO (Cleanup & Documentation)
- ------------------ 65.69% Complete -------------------
-              # Documented functions: 1280
+ ------------------ 65.97% Complete -------------------
+              # Documented functions: 1281
              # Undocumented remaining: 278
             # Functions named `func_*`: 144
            # Functions without comments: 278
