@@ -949,7 +949,7 @@ void rain_render_splashes(s32 updateRate) {
                         randFloat = (f32) rand_range(50, 500);
                         xPos = (sins_f(randYRot) * randFloat) + racer->trans.x_position;
                         zPos = (coss_f(randYRot) * randFloat) + racer->trans.z_position;
-                        i = func_8002B0F4(get_level_segment_index_from_position(xPos, racer->trans.y_position, zPos),
+                        i = get_level_segment_waves(get_level_segment_index_from_position(xPos, racer->trans.y_position, zPos),
                                           xPos, zPos, &waterProps);
                         if (i != 0) {
                             var_f2 = 1000.0f;

@@ -2491,7 +2491,11 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     return gTrackWaves[index]->type;
 }
 
-s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***arg3) {
+/**
+ * Finds the waves in the current level segment, sorts them by height, outputs the sorted list into
+ * waterProps and returns the number of waves.
+ */
+s32 get_level_segment_waves(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***waterProps) {
     LevelModelSegmentBoundingBox *currentBoundingBox;
     Triangle *tri;
     Vertex *vert;
@@ -2533,7 +2537,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
 
     unused_bool = FALSE;
     D_8011D308 = 0;
-    *arg3 = NULL;
+    *waterProps = NULL;
     XInInt = xIn;
     ZInInt = zIn;
     segmentCount = get_inside_segment_count_xz(XInInt, ZInInt, segmentsInside);
@@ -2664,7 +2668,7 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
 
     } while (!stopSorting);
 
-    *arg3 = gTrackWaves;
+    *waterProps = gTrackWaves;
     D_8011D308 = yOutCount;
 
     return yOutCount;
