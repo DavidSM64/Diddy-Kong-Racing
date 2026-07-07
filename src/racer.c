@@ -8241,7 +8241,11 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
     angle = arctan2_f(diffX, diffZ) - (racer->steerVisualRotation & 0xFFFF) - 0x8000;
     WRAP(angle, -0x8000, 0x8000);
-    if (angle > 0x4000 || angle < -0x4000) {
+    if ((angle > 0x4000 || angle < -0x4000)
+#if VERSION >= VERSION_79
+        && racer->raceFinished == FALSE
+#endif
+    ) {
         if (racer->wrongWayCounter < 200 && racer->velocity <= -1.0) {
             racer->wrongWayCounter += updateRate;
         }
