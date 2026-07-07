@@ -8135,8 +8135,6 @@ void set_position_goal_from_path(UNUSED Object *obj, Object_Racer *racer, f32 *x
     *z = catmull_rom_interpolation(splineZ, destReached, magnitude);
 }
 
-// https://decomp.me/scratch/uUmRq
-#ifdef NON_MATCHING
 void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     UNUSED f32 pad;
     UNUSED f32 pad2;
@@ -8221,7 +8219,10 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
         posZ[i] = temp_v0_4->z + ((temp_v0_4->scale * (-temp_v0_4->rotationXFrac)) * racer->unk1BA);
         counter++;
         if (counter == temp_v0) {
-            counter = 0;
+            // @fake
+            if (1) {
+                counter = 0;
+            }
         }
     }
     splineIndex = FALSE;
@@ -8251,11 +8252,12 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     diffX = diffZ;
     diffZ = -diffY;
 
-    splinePos = obj->trans.x_position;
-    distance = obj->trans.z_position;
-    pad = ((splinePos * diffX) + (diffZ * distance));
-    pad2 = -((tempZ * diffZ) + (diffX * tempX));
-    diffX = -((pad + pad2) / divisor);
+    pad = (tempZ * diffZ) + (diffX * tempX);
+    pad = -pad;
+
+    diffX = -(((obj->trans.x_position * diffX) + (diffZ * obj->trans.z_position) + pad) / divisor);
+    pad3 = pad;
+
     if (diffX > 5.0f) {
         diffX = 5.0f;
     }
@@ -8272,9 +8274,6 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
     racer->unk1BC += (s32) diffY;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80059208.s")
-#endif
 
 /**
  * Writes a human readable time to the passed arguments.
