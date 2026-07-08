@@ -8136,14 +8136,14 @@ void set_position_goal_from_path(UNUSED Object *obj, Object_Racer *racer, f32 *x
 }
 
 void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
-    UNUSED f32 pad;
-    UNUSED f32 pad2;
-    s32 temp_v0;
-    CheckpointNode *temp_v0_4;
+    f32 ftemp;
+    UNUSED s32 pad;
+    s32 checkpointCount;
+    CheckpointNode *tempCheckpointNode;
     f32 posX[5];
     f32 posY[5];
     f32 posZ[5];
-    UNUSED f32 pad3;
+    f32 unusedFtemp;
     f32 tempX;
     s32 counter;
     f32 tempY;
@@ -8159,11 +8159,11 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     s32 splineIndex;
     s32 i;
 
-    temp_v0 = get_checkpoint_count();
-    if (temp_v0 == 0) {
+    checkpointCount = get_checkpoint_count();
+    if (checkpointCount == 0) {
         return;
     }
-    if ((level_id() == 0) && (racer->nextCheckpoint >= temp_v0)) {
+    if ((level_id() == 0) && (racer->nextCheckpoint >= checkpointCount)) {
         racer->lap = 0;
         racer->nextCheckpoint = 0;
         racer->courseCheckpoint = 0;
@@ -8172,25 +8172,25 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (splinePos < -0.2) {
         racer->nextCheckpoint--;
         if (racer->nextCheckpoint < 0) {
-            racer->nextCheckpoint += temp_v0;
+            racer->nextCheckpoint += checkpointCount;
             if (racer->lap > 0) {
                 racer->lap--;
             }
         }
-        if (racer->courseCheckpoint > -0x7D00) {
+        if (racer->courseCheckpoint > -32000) {
             racer->courseCheckpoint--;
         }
         if (racer->isOnAlternateRoute) {
-            temp_v0_4 = get_checkpoint_node(racer->nextCheckpoint);
-            if (temp_v0_4->altRouteID == -1) {
+            tempCheckpointNode = get_checkpoint_node(racer->nextCheckpoint);
+            if (tempCheckpointNode->altRouteID == -1) {
                 racer->isOnAlternateRoute = FALSE;
             }
             angle = racer->nextCheckpoint - 1;
             if (angle < 0) {
-                angle += temp_v0;
+                angle += checkpointCount;
             }
-            temp_v0_4 = get_checkpoint_node(angle);
-            if (temp_v0_4->altRouteID == -1) {
+            tempCheckpointNode = get_checkpoint_node(angle);
+            if (tempCheckpointNode->altRouteID == -1) {
                 racer->isOnAlternateRoute = FALSE;
             }
         }
@@ -8199,26 +8199,26 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (splinePos < 0.0f) {
         splinePos = 0.0f;
     }
-    temp_v0_4 = find_next_checkpoint_node(racer->nextCheckpoint, racer->isOnAlternateRoute);
-    scale = temp_v0_4->scale;
+    tempCheckpointNode = find_next_checkpoint_node(racer->nextCheckpoint, racer->isOnAlternateRoute);
+    scale = tempCheckpointNode->scale;
     counter = racer->nextCheckpoint - 1;
     if (counter < 0) {
-        counter = temp_v0 - 1;
+        counter = checkpointCount - 1;
     }
-    temp_v0_4 = get_checkpoint_node(counter);
-    distance = temp_v0_4->scale;
-    divisor = ((scale - temp_v0_4->scale) * splinePos) + distance;
+    tempCheckpointNode = get_checkpoint_node(counter);
+    distance = tempCheckpointNode->scale;
+    divisor = ((scale - tempCheckpointNode->scale) * splinePos) + distance;
     counter = racer->nextCheckpoint - 2;
     if (counter < 0) {
-        counter += temp_v0;
+        counter += checkpointCount;
     }
     for (i = 0; (i < 5) ^ 0; i++) {
-        temp_v0_4 = find_next_checkpoint_node(counter, racer->isOnAlternateRoute);
-        posX[i] = temp_v0_4->x + ((temp_v0_4->scale * temp_v0_4->rotationZFrac) * racer->unk1BA);
-        posY[i] = temp_v0_4->y + (temp_v0_4->scale * racer->unk1BC);
-        posZ[i] = temp_v0_4->z + ((temp_v0_4->scale * (-temp_v0_4->rotationXFrac)) * racer->unk1BA);
+        tempCheckpointNode = find_next_checkpoint_node(counter, racer->isOnAlternateRoute);
+        posX[i] = tempCheckpointNode->x + ((tempCheckpointNode->scale * tempCheckpointNode->rotationZFrac) * racer->unk1BA);
+        posY[i] = tempCheckpointNode->y + (tempCheckpointNode->scale * racer->unk1BC);
+        posZ[i] = tempCheckpointNode->z + ((tempCheckpointNode->scale * (-tempCheckpointNode->rotationXFrac)) * racer->unk1BA);
         counter++;
-        if (counter == temp_v0) {
+        if (counter == checkpointCount) {
             // @fake
             if (1) {
                 counter = 0;
@@ -8252,30 +8252,21 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     } else {
         racer->wrongWayCounter = 0;
     }
+
     diffY = diffX;
     diffX = diffZ;
     diffZ = -diffY;
 
-    pad = (tempZ * diffZ) + (diffX * tempX);
-    pad = -pad;
+    ftemp = (tempZ * diffZ) + (diffX * tempX);
+    ftemp = -ftemp;
 
-    diffX = -(((obj->trans.x_position * diffX) + (diffZ * obj->trans.z_position) + pad) / divisor);
-    pad3 = pad;
-
-    if (diffX > 5.0f) {
-        diffX = 5.0f;
-    }
-    if (diffX < -5.0f) {
-        diffX = -5.0f;
-    }
+    diffX = -(((obj->trans.x_position * diffX) + (diffZ * obj->trans.z_position) + ftemp) / divisor);
+    unusedFtemp = ftemp;
+    CLAMP(diffX, -5.0f, 5.0f)
     racer->unk1BA += (s32) diffX;
+
     diffY = (obj->trans.y_position - tempY) / divisor;
-    if (diffY > 100.0f) {
-        diffY = 100.0f;
-    }
-    if (diffY < -100.0f) {
-        diffY = -100.0f;
-    }
+    CLAMP(diffY, -100.0f, 100.0f)
     racer->unk1BC += (s32) diffY;
 }
 
