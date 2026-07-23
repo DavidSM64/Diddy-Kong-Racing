@@ -1351,8 +1351,6 @@ void set_skydome_visbility(s32 renderSky) {
     gSceneRenderSkyDome = renderSky;
 }
 
-// https://decomp.me/scratch/E1DFy
-#ifdef NON_MATCHING
 // This function creates the flashy sky effect in the wizpig 2 race.
 void trackbg_render_flashy(void) {
     Triangle *tris;
@@ -1383,10 +1381,10 @@ void trackbg_render_flashy(void) {
     s16 vertY;
     s16 vTempCoord;
     s16 uTempCoord;
-    LevelHeader_70 *levelHeader;
-    LevelHeader_70 *var_t2; // sp7C
-    LevelHeader_70 *sp78;
-    TextureHeader *texHeader; // sp74
+    LevelHeader_70 *pad2;
+    LevelHeader_70 *var_t2;      // sp7C
+    LevelHeader_70 *levelHeader; // sp78
+    TextureHeader *texHeader;    // sp74
     s32 pad[4];
 
     verts = gTrackVtxPtr;
@@ -1401,47 +1399,51 @@ void trackbg_render_flashy(void) {
 
     scaledXSin = xSin * 1280.0f;
     scaledXCos = xCos * 1280.0f;
+    pad_sp100 = 2.0f * scaledXSin;
     xPositions[0] = -scaledXCos - (xSin * 1280.0f);
     zPositions[0] = -scaledXCos + (xSin * 1280.0f);
     xPositions[1] = scaledXCos - (xSin * 1280.0f);
     zPositions[1] = -scaledXCos - (xSin * 1280.0f);
-    xPositions[2] = scaledXCos + (xSin * 1280.0f);
+    xPositions[2] = scaledXCos + scaledXSin;
     zPositions[2] = scaledXCos - (xSin * 1280.0f);
     xPositions[3] = -scaledXCos + (xSin * 1280.0f);
-    zPositions[3] = scaledXCos + scaledXSin;
+    zPositions[3] = scaledXCos + (xSin * 1280.0f);
     xPositions[4] = 0.0f;
     zPositions[4] = 0.0f;
 
-    zPositions[5] = scaledXSin - (2.0f * scaledXCos);
-    xPositions[6] = scaledXCos - (2.0f * scaledXSin);
-    zPositions[6] = -(2.0f * scaledXCos) - scaledXSin;
-    xPositions[5] = -scaledXCos - (2.0f * scaledXSin);
-    xPositions[7] = scaledXCos + (2.0f * scaledXSin);
-    zPositions[7] = (2.0f * scaledXCos) - scaledXSin;
-    xPositions[8] = -scaledXCos + (2.0f * scaledXSin);
-    zPositions[8] = (2.0f * scaledXCos) + scaledXSin;
+    xPositions[5] = -(xCos * 1280.0f) - (2.0f * scaledXSin);
+    zPositions[5] = scaledXSin + -(2.0f * (xCos * 1280.0f));
+    xPositions[6] = (xCos * 1280.0f) - (2.0f * scaledXSin);
+    zPositions[6] = -(2.0f * (xCos * 1280.0f)) - scaledXSin;
+    xPositions[7] = (xCos * 1280.0f) + (2.0f * scaledXSin);
+    zPositions[7] = (2.0f * (xCos * 1280.0f)) - scaledXSin;
+    xPositions[8] = -(xCos * 1280.0f) + (2.0f * scaledXSin);
+    zPositions[8] = (2.0f * (xCos * 1280.0f)) + scaledXSin;
 
-    var_f14 = 1280.0f;
-    var_f14 *= 0.25f;
+    scaledXCos = 1280.0f;
+    var_f14 = scaledXCos * 0.25f;
 
     var_a1 = texHeader->width * 16 * gCurrentLevelHeader2->unkA0;
     var_a2 = texHeader->height * 16 * gCurrentLevelHeader2->unkA1;
 
-    var_v0 = ((s32) (camera->trans.x_position * (var_f14 / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) & uCoordMask;
-    var_v1 = ((s32) (camera->trans.z_position * (var_f14 / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) & vCoordMask;
+    var_v0 = ((s32) (camera->trans.x_position * ((scaledXCos * 0.25f) / var_a1)) + (gCurrentLevelHeader2->unkA8 >> 4)) &
+             uCoordMask;
+    var_v1 = ((s32) (camera->trans.z_position * ((scaledXCos * 0.25f) / var_a2)) + (gCurrentLevelHeader2->unkAA >> 4)) &
+             vCoordMask;
 
     var_f14 = var_a1 * xCos;
     pos.z = var_a1 * xCos;
     pos.x = var_a1 * xCos;
     var_f16 = var_a2 * xSin;
     xCos = var_f16;
+    pad_sp108 = var_f16;
 
     // @fake
     var_a2 = texHeader->height * 16 * gCurrentLevelHeader2->unkA1;
 
-    uCoords[0] = (s16) (-var_f14 - xCos) + var_v0;
+    uCoords[0] = (s16) (-var_f14 - pad_sp108) + var_v0;
     vCoords[0] = (s16) (var_f16 - var_f14) + var_v1;
-    uCoords[1] = (s16) (var_f14 - xCos) + var_v0;
+    uCoords[1] = (s16) (var_f14 - pad_sp108) + var_v0;
     vCoords[1] = (s16) (-var_f14 - var_f16) + var_v1;
     uCoords[2] = (s16) (var_f14 + var_f16) + var_v0;
     vCoords[2] = (s16) (var_f14 - var_f16) + var_v1;
@@ -1455,7 +1457,7 @@ void trackbg_render_flashy(void) {
     vCoords[5] = (s16) (var_f16 - (2.0f * var_f14)) + var_v1;
     uCoords[6] = (s16) (var_f14 - (2.0f * xCos)) + var_v0;
     vCoords[6] = (s16) ((-(2.0f * var_f14)) - var_f16) + var_v1;
-    uCoords[7] = (s16) ((2.0f * xCos) + pos.z) + var_v0;
+    uCoords[7] = (s16) (pos.f[2] + (2.0f * xCos)) + var_v0;
     vCoords[7] = (s16) ((2.0f * pos.x) - var_f16) + var_v1;
     uCoords[8] = (s16) ((2.0f * xCos) - pos.z) + var_v0;
     vCoords[8] = (s16) ((2.0f * pos.x) + var_f16) + var_v1;
@@ -1471,7 +1473,6 @@ void trackbg_render_flashy(void) {
             levelHeader = var_t2;
         }
     } else {
-        levelHeader = sp78; // @bug? sp78 is never set
         var_t2 = NULL;
     }
 
@@ -1526,9 +1527,6 @@ void trackbg_render_flashy(void) {
     gTrackVtxPtr = verts;
     gTrackTriPtr = tris;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/trackbg_render_flashy.s")
-#endif
 
 /**
  * Instead of drawing the skydome with textures, draw a solid coloured background.
