@@ -5410,7 +5410,9 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
     s32 counter;
     s32 spF8; // f8
     s32 var_s6;
-    f32 A2, C2;
+    CollisionFacetPlanes *node;
+    s32 triIndex;
+    s32 closestTri;
     f32 A; // e4
     f32 B; // e0
     f32 C; // dc
@@ -5425,10 +5427,6 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
     f32 x2; // a4
     f32 y2; // a0
     f32 z2; // 9c
-    CollisionNode *node;
-    f32 dx, dy, dz;
-    s32 triIndex;
-    s32 closestTri;
 
     spF8 = 0;
     planes = arg0->collisionPlanes;
@@ -5438,38 +5436,34 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
         x1 = arg6[i];
         y1 = arg7[i];
         z1 = arg8[i];
+        y3 = arg3[i];
+        z3 = arg4[i];
+        sum2 = arg5[i];
         spC0 = arg9[i] * argB;
 
         counter = 0;
         do {
             redoLoop = FALSE;
-            x2 = arg3[i];
-            y2 = arg4[i];
-            z2 = arg5[i];
+            x2 = y3;
+            y2 = z3;
+            z2 = sum2;
 
             for (j = 0; j < arg0->collisionFacetCount; j++) {
-                node = (CollisionNode *) &arg0->collisionFacets[j];
-                triIndex = node->colPlaneIndex;
+                node = &arg0->collisionFacets[j];
+                triIndex = node->basePlaneIndex;
 
                 A = planes[4 * triIndex + 0];
                 B = planes[4 * triIndex + 1];
                 C = planes[4 * triIndex + 2];
                 D = planes[4 * triIndex + 3];
 
-                A2 = A * x2;
-                sum1 = A2;
-                sum1 += B * y2;
-                C2 = C * z2;
-                sum1 += C2;
-                sum1 = D + sum1;
-                sum1 -= spC0;
-
-                sum2 = planes[4 * triIndex + 0] * x1;
-                sum2 += planes[4 * triIndex + 1] * y1;
-                sum2 += planes[4 * triIndex + 2] * z1;
+                sum2 = A * x2 + B * y2;
+                sum1 = sum2 + C * z2 + D - spC0;
+                sum2 = A * x1 + B * y1 + C * z1;
                 sum2 += D;
                 sum2 -= spC0;
                 if (sum1 >= -0.1 && sum2 < -0.1) {
+                    var_a2 = TRUE;
                     if (sum1 != sum2) {
                         t = sum1 / (sum1 - sum2);
                     } else {
@@ -5478,17 +5472,17 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                     x3 = (x1 - x2) * t + x2;
                     y3 = (y1 - y2) * t + y2;
                     z3 = (z1 - z2) * t + z2;
-                    var_a2 = TRUE;
 
                     for (k = 0; k < 3 && var_a2 == TRUE; k++) {
-                        closestTri = node->closestTri[k];
+                        closestTri = node->edgeBisectorPlane[k];
 
-                        A1 = planes[4 * closestTri + 0] * x3;
-                        B1 = planes[4 * closestTri + 1] * y3;
-                        C1 = planes[4 * closestTri + 2] * z3;
+                        A1 = planes[4 * closestTri + 0];
+                        B1 = planes[4 * closestTri + 1];
+                        C1 = planes[4 * closestTri + 2];
                         D1 = planes[4 * closestTri + 3];
 
-                        if (A1 + B1 + C1 + D1 > 4.0f) {
+                        t = A1 * x3 + B1 * y3 + C1 * z3 + D1;
+                        if (t > 4.0f) {
                             var_a2 = FALSE;
                         }
                     }
@@ -5496,7 +5490,7 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                     if (var_a2) {
                         redoLoop = TRUE;
                         if (B > 0.707) {
-                            y1 = (spC0 - (A2 + C2 + D)) / B;
+                            y1 = (spC0 - (A * x1 + C * z1 + D)) / B;
                         } else {
                             x1 -= sum2 * A;
                             y1 -= sum2 * B;
@@ -5517,6 +5511,9 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                     }
                 }
             }
+            sum2 = z2;
+            z3 = y2;
+            y3 = x2;
         } while (redoLoop);
 
         if (counter > 0) {
