@@ -147,10 +147,12 @@ void cam_init(void) {
 
     WAIT_ON_IOBUSY(stat);
 
+#ifdef ANTI_TAMPER
     // 0xB0000578 is a direct read from the ROM as opposed to RAM
     if (((D_B0000578 & 0xFFFF) & 0xFFFF) != 0x8965) {
         gAntiPiracyViewport = TRUE;
     }
+#endif
 
     guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR,
                    CAMERA_SCALE);
