@@ -636,10 +636,10 @@ LEAF(mtxf_to_mtx)
     mul.s      ft3, fa0                /* Scale [row][3] */
 
     /* Convert scaled floats to 32-bit integers */
-    cvt.w.s    ft0                     /* Convert to word (integer) */
-    cvt.w.s    ft1
-    cvt.w.s    ft2
-    cvt.w.s    ft3
+    cvt.w.s    ft0, ft0                /* Convert to word (integer) */
+    cvt.w.s    ft1, ft1
+    cvt.w.s    ft2, ft2
+    cvt.w.s    ft3, ft3
 
     /* Move converted integers to general-purpose registers */
     mfc1       t1, ft0                 /* Get integer value of [row][0] */
@@ -1040,11 +1040,11 @@ LEAF(mtxf_from_transform)
     jal        sins_s16                 /* v0 = sin(roll) as s16 */
     mtc1       v0, fv0                  /* fv0 = sin(roll) as int bits */
     lh         a0, 0x0(a1)              /* a0 = transform->rotation.x */
-    cvt.s.w    fv0                      /* fv0 = (float)sin(roll) */
+    cvt.s.w    fv0, fv0                 /* fv0 = (float)sin(roll) */
     mul.s      fv0, ft5                 /* fv0 = sinRoll (normalized) */
     jal        coss_s16                 /* v0 = cos(roll) as s16 */
     mtc1       v0, fv1                  /* fv1 = cos(roll) as int bits */
-    cvt.s.w    fv1                      /* fv1 = (float)cos(roll) */
+    cvt.s.w    fv1, fv1                 /* fv1 = (float)cos(roll) */
     mul.s      fv1, ft5                 /* fv1 = cosRoll (normalized) */
 
     /* -----------------------------------------
@@ -1054,11 +1054,11 @@ LEAF(mtxf_from_transform)
     jal        sins_s16                 /* v0 = sin(pitch) as s16 */
     mtc1       v0, ft0                  /* ft0 = sin(pitch) as int bits */
     lh         a0, 0x2(a1)              /* a0 = transform->rotation.y */
-    cvt.s.w    ft0                      /* ft0 = (float)sin(pitch) */
+    cvt.s.w    ft0, ft0                 /* ft0 = (float)sin(pitch) */
     mul.s      ft0, ft5                 /* ft0 = sinPitch (normalized) */
     jal        coss_s16                 /* v0 = cos(pitch) as s16 */
     mtc1       v0, ft1                  /* ft1 = cos(pitch) as int bits */
-    cvt.s.w    ft1                      /* ft1 = (float)cos(pitch) */
+    cvt.s.w    ft1, ft1                 /* ft1 = (float)cos(pitch) */
     mul.s      ft1, ft5                 /* ft1 = cosPitch (normalized) */
 
     /* -----------------------------------------
@@ -1068,7 +1068,7 @@ LEAF(mtxf_from_transform)
     jal        sins_s16                 /* v0 = sin(yaw) as s16 */
     mtc1       v0, ft2                  /* ft2 = sin(yaw) as int bits */
     lh         a0, 0x4(a1)              /* a0 = transform->rotation.z */
-    cvt.s.w    ft2                      /* ft2 = (float)sin(yaw) */
+    cvt.s.w    ft2, ft2                 /* ft2 = (float)sin(yaw) */
     mul.s      ft2, ft5                 /* ft2 = sinYaw (normalized) */
     jal        coss_s16                 /* v0 = cos(yaw) as s16 */
     mtc1       v0, ft3                  /* ft3 = cos(yaw) as int bits */
@@ -1328,12 +1328,12 @@ LEAF(mtxf_from_inverse_transform)
     lh         a0, 0x0(a1)              /* a0 = transform->rotation.x (roll angle) */
     jal        sins_s16                 /* v0 = sin(roll) as s16 */
     mtc1       v0, fv0                  /* fv0 = sin(roll) as int bits */
-    cvt.s.w    fv0                      /* fv0 = (float)sin(roll) */
+    cvt.s.w    fv0, fv0                 /* fv0 = (float)sin(roll) */
     mul.s      fv0, ft5                 /* fv0 = sinRoll (normalized) */
     lh         a0, 0x0(a1)              /* a0 = transform->rotation.x */
     jal        coss_s16                 /* v0 = cos(roll) as s16 */
     mtc1       v0, fv1                  /* fv1 = cos(roll) as int bits */
-    cvt.s.w    fv1                      /* fv1 = (float)cos(roll) */
+    cvt.s.w    fv1, fv1                 /* fv1 = (float)cos(roll) */
     mul.s      fv1, ft5                 /* fv1 = cosRoll (normalized) */
 
     /* -----------------------------------------
@@ -1342,12 +1342,12 @@ LEAF(mtxf_from_inverse_transform)
     lh         a0, 0x2(a1)              /* a0 = transform->rotation.y (pitch angle) */
     jal        sins_s16                 /* v0 = sin(pitch) as s16 */
     mtc1       v0, ft0                  /* ft0 = sin(pitch) as int bits */
-    cvt.s.w    ft0                      /* ft0 = (float)sin(pitch) */
+    cvt.s.w    ft0, ft0                 /* ft0 = (float)sin(pitch) */
     mul.s      ft0, ft5                 /* ft0 = sinPitch (normalized) */
     lh         a0, 0x2(a1)              /* a0 = transform->rotation.y */
     jal        coss_s16                 /* v0 = cos(pitch) as s16 */
     mtc1       v0, ft1                  /* ft1 = cos(pitch) as int bits */
-    cvt.s.w    ft1                      /* ft1 = (float)cos(pitch) */
+    cvt.s.w    ft1, ft1                 /* ft1 = (float)cos(pitch) */
     mul.s      ft1, ft5                 /* ft1 = cosPitch (normalized) */
 
     /* -----------------------------------------
@@ -1356,12 +1356,12 @@ LEAF(mtxf_from_inverse_transform)
     lh         a0, 0x4(a1)              /* a0 = transform->rotation.z (yaw angle) */
     jal        sins_s16                 /* v0 = sin(yaw) as s16 */
     mtc1       v0, ft2                  /* ft2 = sin(yaw) as int bits */
-    cvt.s.w    ft2                      /* ft2 = (float)sin(yaw) */
+    cvt.s.w    ft2, ft2                 /* ft2 = (float)sin(yaw) */
     mul.s      ft2, ft5                 /* ft2 = sinYaw (normalized) */
     lh         a0, 0x4(a1)              /* a0 = transform->rotation.z */
     jal        coss_s16                 /* v0 = cos(yaw) as s16 */
     mtc1       v0, ft3                  /* ft3 = cos(yaw) as int bits */
-    cvt.s.w    ft3                      /* ft3 = (float)cos(yaw) */
+    cvt.s.w    ft3, ft3                 /* ft3 = (float)cos(yaw) */
     mul.s      ft3, ft5                 /* ft3 = cosYaw (normalized) */
 
     /* -----------------------------------------
@@ -1533,12 +1533,12 @@ LEAF(func_80070058)
     lh         a0, 0x0(a1)              /* a0 = roll angle */
     jal        sins_s16                 /* v0 = sin(roll) as s16 */
     mtc1       v0, fv0                  /* fv0 = sin(roll) raw bits */
-    cvt.s.w    fv0                      /* fv0 = (float)sin(roll) */
+    cvt.s.w    fv0, fv0                 /* fv0 = (float)sin(roll) */
     mul.s      fv0, ft5                 /* fv0 = sinRoll (normalized) */
     lh         a0, 0x0(a1)              /* a0 = roll angle */
     jal        coss_s16                 /* v0 = cos(roll) as s16 */
     mtc1       v0, fv1                  /* fv1 = cos(roll) raw bits */
-    cvt.s.w    fv1                      /* fv1 = (float)cos(roll) */
+    cvt.s.w    fv1, fv1                 /* fv1 = (float)cos(roll) */
     mul.s      fv1, ft5                 /* fv1 = cosRoll (normalized) */
 
     /* -----------------------------------------
@@ -1547,12 +1547,12 @@ LEAF(func_80070058)
     lh         a0, 0x2(a1)              /* a0 = pitch angle */
     jal        sins_s16                 /* v0 = sin(pitch) as s16 */
     mtc1       v0, ft0                  /* ft0 = sin(pitch) raw bits */
-    cvt.s.w    ft0                      /* ft0 = (float)sin(pitch) */
+    cvt.s.w    ft0, ft0                 /* ft0 = (float)sin(pitch) */
     mul.s      ft0, ft5                 /* ft0 = sinPitch (normalized) */
     lh         a0, 0x2(a1)              /* a0 = pitch angle */
     jal        coss_s16                 /* v0 = cos(pitch) as s16 */
     mtc1       v0, ft1                  /* ft1 = cos(pitch) raw bits */
-    cvt.s.w    ft1                      /* ft1 = (float)cos(pitch) */
+    cvt.s.w    ft1, ft1                 /* ft1 = (float)cos(pitch) */
     mul.s      ft1, ft5                 /* ft1 = cosPitch (normalized) */
 
     /* -----------------------------------------
@@ -1561,12 +1561,12 @@ LEAF(func_80070058)
     lh         a0, 0x4(a1)              /* a0 = yaw angle */
     jal        sins_s16                 /* v0 = sin(yaw) as s16 */
     mtc1       v0, ft2                  /* ft2 = sin(yaw) raw bits */
-    cvt.s.w    ft2                      /* ft2 = (float)sin(yaw) */
+    cvt.s.w    ft2, ft2                 /* ft2 = (float)sin(yaw) */
     mul.s      ft2, ft5                 /* ft2 = sinYaw (normalized) */
     lh         a0, 0x4(a1)              /* a0 = yaw angle */
     jal        coss_s16                 /* v0 = cos(yaw) as s16 */
     mtc1       v0, ft3                  /* ft3 = cos(yaw) raw bits */
-    cvt.s.w    ft3                      /* ft3 = (float)cos(yaw) */
+    cvt.s.w    ft3, ft3                 /* ft3 = (float)cos(yaw) */
     mul.s      ft3, ft5                 /* ft3 = cosYaw (normalized) */
 
     /* -----------------------------------------
@@ -1633,13 +1633,13 @@ LEAF(mtxf_billboard)
     move       a0, a1                   /* a0 = rotation angle */
     jal        sins_s16                 /* v0 = sin(angle) as s16 */
     mtc1       v0, ft2                  /* ft2 = sin(angle) raw bits */
-    cvt.s.w    ft2                      /* ft2 = (float)sin(angle) */
+    cvt.s.w    ft2, ft2                 /* ft2 = (float)sin(angle) */
     mul.s      ft2, ft5                 /* ft2 = sinAngle (normalized) */
 
     move       a0, a1                   /* a0 = rotation angle */
     jal        coss_s16                 /* v0 = cos(angle) as s16 */
     mtc1       v0, ft3                  /* ft3 = cos(angle) raw bits */
-    cvt.s.w    ft3                      /* ft3 = (float)cos(angle) */
+    cvt.s.w    ft3, ft3                 /* ft3 = (float)cos(angle) */
     mul.s      ft3, ft5                 /* ft3 = cosAngle (normalized) */
 
     /* -----------------------------------------
@@ -2307,8 +2307,8 @@ LEAF(arctan2_f)
     li.s       fv0, 255.0              /* fv0 = 255.0 (scale factor) */
     mul.s      fa0, fv0                /* fa0 = x * 255.0 */
     mul.s      fa1, fv0                /* fa1 = y * 255.0 */
-    cvt.w.s    fa0                     /* fa0 = (int)(x * 255.0) */
-    cvt.w.s    fa1                     /* fa1 = (int)(y * 255.0) */
+    cvt.w.s    fa0, fa0                /* fa0 = (int)(x * 255.0) */
+    cvt.w.s    fa1, fa1                /* fa1 = (int)(y * 255.0) */
     mfc1       a0, fa0                 /* a0 = scaled x as integer */
     mfc1       a1, fa1                 /* a1 = scaled y as integer */
     j          atan2s                  /* tail call to atan2s(a0, a1) */
@@ -2330,12 +2330,12 @@ END(arctan2_f)
  */
 LEAF(fix32_sqrt)
     mtc1       a0, fv0                 /* fv0 = input (as raw int bits) */
-    cvt.s.w    fv0                     /* fv0 = (float)a0 */
+    cvt.s.w    fv0, fv0                /* fv0 = (float)a0 */
     li.s       fv1, 65536.0            /* fv1 = 65536.0 (fixed-point scale) */
     div.s      fv0, fv1                /* fv0 = a0 / 65536.0 (convert from 16.16) */
-    sqrt.s     fv0                     /* fv0 = sqrt(fv0) */
+    sqrt.s     fv0, fv0                /* fv0 = sqrt(fv0) */
     mul.s      fv0, fv1                /* fv0 = sqrt * 65536.0 (convert back to 16.16) */
-    cvt.w.s    fv0                     /* fv0 = (int)fv0 */
+    cvt.w.s    fv0, fv0                /* fv0 = (int)fv0 */
     mfc1       v0, fv0                 /* v0 = result as integer */
     jr         ra
 END(fix32_sqrt)
@@ -2356,7 +2356,7 @@ END(fix32_sqrt)
  */
 LEAF(bad_int_sqrt)
     mtc1       a0, fv0      /* !@bug: moves int bits directly, no conversion */
-    sqrt.s     fv0          /* computes sqrt of garbage float interpretation */
+    sqrt.s     fv0, fv0     /* computes sqrt of garbage float interpretation */
     mfc1       v0, fv0      /* returns raw float bits as integer */
     jr         ra
 END(bad_int_sqrt)
@@ -2383,7 +2383,7 @@ LEAF(sins_f)
 
     jal        sins_s16                /* v0 = sin(angle) as s16 */
     mtc1       v0, fv0                 /* fv0 = sin result (as int bits) */
-    cvt.s.w    fv0                     /* fv0 = (float)v0 */
+    cvt.s.w    fv0, fv0                /* fv0 = (float)v0 */
     li.s       fv1, 0.0000152587890625 /* fv1 = 1.0f / 0x10000 (normalization factor) */
     mul.s      fv0, fv1                /* fv0 = sin(angle) normalized to [-1.0, 1.0] */
 
@@ -2414,7 +2414,7 @@ LEAF(coss_f)
 
     jal        coss_s16                /* v0 = cos(angle) as s16 */
     mtc1       v0, fv0                 /* fv0 = cos result (as int bits) */
-    cvt.s.w    fv0                     /* fv0 = (float)v0 */
+    cvt.s.w    fv0, fv0                /* fv0 = (float)v0 */
     li.s       fv1, 0.0000152587890625 /* fv1 = 1.0f / 0x10000 (normalization factor) */
     mul.s      fv0, fv1                /* fv0 = cos(angle) normalized to [-1.0, 1.0] */
 
@@ -2605,9 +2605,9 @@ LEAF(area_triangle_2d)
     add.s      fa0, fa1                /* fa0 = (dx0 * dx0) + (dz0 * dz0) */
     add.s      ft4, ft5                /* ft4 = (dx1 * dx1) + (dz1 * dz1) */
     add.s      fv0, fv1                /* fv0 = (dx2 * dx2) + (dz2 * dz2) */
-    sqrt.s     fa0                     /* fa0 = d0 = sqrt((dx0 * dx0) + (dz0 * dz0)) */
-    sqrt.s     ft4                     /* ft4 = d1 = sqrt((dx1 * dx1) + (dz1 * dz1)) */
-    sqrt.s     fv0                     /* fv0 = d2 = sqrt((dx2 * dx2) + (dz2 * dz2)) */
+    sqrt.s     fa0, fa0                /* fa0 = d0 = sqrt((dx0 * dx0) + (dz0 * dz0)) */
+    sqrt.s     ft4, ft4                /* ft4 = d1 = sqrt((dx1 * dx1) + (dz1 * dz1)) */
+    sqrt.s     fv0, fv0                /* fv0 = d2 = sqrt((dx2 * dx2) + (dz2 * dz2)) */
     li.s       ft3, 0.5                /* ft3 = 0.5 */
     add.s      ft5, fa0, ft4           /* ft5 = d0 + d1 */
     add.s      ft5, fv0                /* ft5 = d0 + d1 + d2 */
@@ -2625,7 +2625,7 @@ LEAF(area_triangle_2d)
     mov.s      fv0, fv1                /* fv0 = 0.0 (clamp negative to zero) */
 
 .area_triangle_2d_positive:
-    sqrt.s     fv0                     /* fv0 = sqrt(s * (s-d0) * (s-d1) * (s-d2)) = area */
+    sqrt.s     fv0, fv0                /* fv0 = sqrt(s * (s-d0) * (s-d1) * (s-d2)) = area */
     jr         ra
 END(area_triangle_2d)
 

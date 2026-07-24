@@ -55,7 +55,9 @@ extern "C" {
     x:
 #else
 #define XLEAF(x)    \
-    .globl  x
+    .globl  x      ;\
+    .ent    x,     ;\
+    x:
 #endif
 
 #ifdef BBPLAYER

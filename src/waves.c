@@ -19,8 +19,8 @@ Vec2s *gWaveHeightIndices = NULL; // holds some sort of index?
 TexCoords *gWaveUVTable = NULL;
 f32 *D_800E304C[9] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-Vertex *gWaveVertices[4][1] = { { NULL }, { NULL } };
-Triangle *gWaveTriangles[4][1] = { { NULL }, { NULL }, { NULL }, { NULL } };
+Vertex *gWaveVertices[4] = { NULL, NULL, NULL, NULL };
+Triangle *gWaveTriangles[4] = { NULL, NULL, NULL, NULL };
 Triangle D_800E3090[4] = {
     { { { BACKFACE_DRAW, 0, 2, 1 } }, { { { 0, 0 } } }, { { { 0, 0 } } }, { { { 0, 0 } } } },
     { { { BACKFACE_DRAW, 1, 2, 3 } }, { { { 0, 0 } } }, { { { 0, 0 } } }, { { { 0, 0 } } } },
@@ -133,8 +133,8 @@ void waves_free(void) {
     FREE_MEM(gWaveHeightIndices);
     FREE_MEM(gWaveUVTable);
     FREE_MEM(D_800E304C[0]);
-    FREE_MEM(gWaveVertices[0][0]);
-    FREE_MEM(gWaveTriangles[0][0]);
+    FREE_MEM(gWaveVertices[0]);
+    FREE_MEM(gWaveTriangles[0]);
     FREE_TEX(gWaveTextureHeader);
     FREE_MEM(D_800E30D4);
     FREE_MEM(gWaveModel);
@@ -170,23 +170,23 @@ void waves_alloc(void) {
     temp = (gWaveController.subdivisions + 1);
     allocSize = (temp * 250 * (gWaveController.subdivisions + 1));
     if (gWavePlayerCount != 2) { // 1 player
-        gWaveVertices[0][0] = (Vertex *) mempool_alloc_safe(allocSize << 1, COLOUR_TAG_CYAN);
-        gWaveVertices[1][0] = (Vertex *) (((u32) gWaveVertices[0][0]) + allocSize);
+        gWaveVertices[0] = (Vertex *) mempool_alloc_safe(allocSize << 1, COLOUR_TAG_CYAN);
+        gWaveVertices[1] = (Vertex *) (((u32) gWaveVertices[0]) + allocSize);
     } else { // 2 Player
-        gWaveVertices[0][0] = (Vertex *) mempool_alloc_safe(allocSize << 2, COLOUR_TAG_CYAN);
-        gWaveVertices[1][0] = (Vertex *) (((u32) gWaveVertices[0][0]) + allocSize);
-        gWaveVertices[2][0] = (Vertex *) (((u32) gWaveVertices[1][0]) + allocSize);
-        gWaveVertices[3][0] = (Vertex *) (((u32) gWaveVertices[2][0]) + allocSize);
+        gWaveVertices[0] = (Vertex *) mempool_alloc_safe(allocSize << 2, COLOUR_TAG_CYAN);
+        gWaveVertices[1] = (Vertex *) (((u32) gWaveVertices[0]) + allocSize);
+        gWaveVertices[2] = (Vertex *) (((u32) gWaveVertices[1]) + allocSize);
+        gWaveVertices[3] = (Vertex *) (((u32) gWaveVertices[2]) + allocSize);
     }
     allocSize = (gWaveController.subdivisions * 32) * gWaveController.subdivisions;
     if (gWavePlayerCount != 2) { // 1 Player
-        gWaveTriangles[0][0] = mempool_alloc_safe(allocSize << 1, COLOUR_TAG_CYAN);
-        gWaveTriangles[1][0] = (Triangle *) (((u32) gWaveTriangles[0][0]) + allocSize);
+        gWaveTriangles[0] = mempool_alloc_safe(allocSize << 1, COLOUR_TAG_CYAN);
+        gWaveTriangles[1] = (Triangle *) (((u32) gWaveTriangles[0]) + allocSize);
     } else { // 2 Player
-        gWaveTriangles[0][0] = (Triangle *) mempool_alloc_safe(allocSize << 2, COLOUR_TAG_CYAN);
-        gWaveTriangles[1][0] = (Triangle *) (((u32) gWaveTriangles[0][0]) + allocSize);
-        gWaveTriangles[2][0] = (Triangle *) (((u32) gWaveTriangles[1][0]) + allocSize);
-        gWaveTriangles[3][0] = (Triangle *) (((u32) gWaveTriangles[2][0]) + allocSize);
+        gWaveTriangles[0] = (Triangle *) mempool_alloc_safe(allocSize << 2, COLOUR_TAG_CYAN);
+        gWaveTriangles[1] = (Triangle *) (((u32) gWaveTriangles[0]) + allocSize);
+        gWaveTriangles[2] = (Triangle *) (((u32) gWaveTriangles[1]) + allocSize);
+        gWaveTriangles[3] = (Triangle *) (((u32) gWaveTriangles[2]) + allocSize);
     }
     gWaveTextureHeader = load_texture(gWaveController.textureId);
 }
@@ -304,19 +304,19 @@ void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
             do {
                 for (j_2 = 0; gWaveController.subdivisions >= j_2; j_2++) {
                     for (k = 0; k < playerCount; k++) {
-                        gWaveVertices[0][k][var_s5].x = (j_2 * gWaveVtxStepX) + 0.5;
-                        gWaveVertices[0][k][var_s5].z = (i_2 * gWaveVtxStepZ) + 0.5;
+                        gWaveVertices[k][var_s5].x = (j_2 * gWaveVtxStepX) + 0.5;
+                        gWaveVertices[k][var_s5].z = (i_2 * gWaveVtxStepZ) + 0.5;
                         // this is only 0 for hot top volcano
                         if (gWaveController.xlu == FALSE) {
-                            gWaveVertices[0][k][var_s5].r = 255;
-                            gWaveVertices[0][k][var_s5].g = 255;
-                            gWaveVertices[0][k][var_s5].b = 255;
+                            gWaveVertices[k][var_s5].r = 255;
+                            gWaveVertices[k][var_s5].g = 255;
+                            gWaveVertices[k][var_s5].b = 255;
                         } else {
-                            gWaveVertices[0][k][var_s5].r = 0;
-                            gWaveVertices[0][k][var_s5].g = 0;
-                            gWaveVertices[0][k][var_s5].b = 0;
+                            gWaveVertices[k][var_s5].r = 0;
+                            gWaveVertices[k][var_s5].g = 0;
+                            gWaveVertices[k][var_s5].b = 0;
                         }
-                        gWaveVertices[0][k][var_s5].a = 255;
+                        gWaveVertices[k][var_s5].a = 255;
                     }
                     var_s5++;
                 }
@@ -330,15 +330,15 @@ void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
     for (i_2 = 0; i_2 < gWaveController.subdivisions; i_2++) {
         for (j_2 = 0; j_2 < gWaveController.subdivisions; j_2++) {
             for (k = 0; k < playerCount; k++) {
-                gWaveTriangles[0][k][var_s5].flags = BACKFACE_DRAW;
-                gWaveTriangles[0][k][var_s5].vi0 = j_2;
-                gWaveTriangles[0][k][var_s5].vi1 = (j_2 + gWaveController.subdivisions) + 1;
-                gWaveTriangles[0][k][var_s5].vi2 = j_2 + 1;
+                gWaveTriangles[k][var_s5].flags = BACKFACE_DRAW;
+                gWaveTriangles[k][var_s5].vi0 = j_2;
+                gWaveTriangles[k][var_s5].vi1 = (j_2 + gWaveController.subdivisions) + 1;
+                gWaveTriangles[k][var_s5].vi2 = j_2 + 1;
                 var_s5++;
-                gWaveTriangles[0][k][var_s5].flags = BACKFACE_DRAW;
-                gWaveTriangles[0][k][var_s5].vi0 = j_2 + 1;
-                gWaveTriangles[0][k][var_s5].vi1 = (j_2 + gWaveController.subdivisions) + 1;
-                gWaveTriangles[0][k][var_s5].vi2 = (j_2 + gWaveController.subdivisions) + 2;
+                gWaveTriangles[k][var_s5].flags = BACKFACE_DRAW;
+                gWaveTriangles[k][var_s5].vi0 = j_2 + 1;
+                gWaveTriangles[k][var_s5].vi1 = (j_2 + gWaveController.subdivisions) + 1;
+                gWaveTriangles[k][var_s5].vi2 = (j_2 + gWaveController.subdivisions) + 2;
                 var_s5--;
             }
             var_s5 += 2;
@@ -348,37 +348,37 @@ void waves_init(LevelModel *model, LevelHeader *header, s32 playerCount) {
 
     var_s5 = (gWaveController.subdivisions + 1) * gWaveController.subdivisions;
     for (i = 0; i < ARRAY_COUNT(D_8012A028); i++) {
-        D_8012A028[i][0].x = gWaveVertices[i][0][0].x;
+        D_8012A028[i][0].x = gWaveVertices[i][0].x;
         D_8012A028[i][0].y = 0;
-        D_8012A028[i][0].z = gWaveVertices[i][0][0].z;
-        D_8012A028[i][0].r = gWaveVertices[i][0][0].r;
-        D_8012A028[i][0].g = gWaveVertices[i][0][0].g;
-        D_8012A028[i][0].b = gWaveVertices[i][0][0].b;
-        D_8012A028[i][0].a = gWaveVertices[i][0][0].a;
+        D_8012A028[i][0].z = gWaveVertices[i][0].z;
+        D_8012A028[i][0].r = gWaveVertices[i][0].r;
+        D_8012A028[i][0].g = gWaveVertices[i][0].g;
+        D_8012A028[i][0].b = gWaveVertices[i][0].b;
+        D_8012A028[i][0].a = gWaveVertices[i][0].a;
 
-        D_8012A028[i][1].x = gWaveVertices[i][0][gWaveController.subdivisions].x;
+        D_8012A028[i][1].x = gWaveVertices[i][gWaveController.subdivisions].x;
         D_8012A028[i][1].y = 0;
-        D_8012A028[i][1].z = gWaveVertices[i][0][gWaveController.subdivisions].z;
-        D_8012A028[i][1].r = gWaveVertices[i][0][gWaveController.subdivisions].r;
-        D_8012A028[i][1].g = gWaveVertices[i][0][gWaveController.subdivisions].g;
-        D_8012A028[i][1].b = gWaveVertices[i][0][gWaveController.subdivisions].b;
-        D_8012A028[i][1].a = gWaveVertices[i][0][gWaveController.subdivisions].a;
+        D_8012A028[i][1].z = gWaveVertices[i][gWaveController.subdivisions].z;
+        D_8012A028[i][1].r = gWaveVertices[i][gWaveController.subdivisions].r;
+        D_8012A028[i][1].g = gWaveVertices[i][gWaveController.subdivisions].g;
+        D_8012A028[i][1].b = gWaveVertices[i][gWaveController.subdivisions].b;
+        D_8012A028[i][1].a = gWaveVertices[i][gWaveController.subdivisions].a;
 
-        D_8012A028[i][2].x = gWaveVertices[i][0][var_s5].x;
+        D_8012A028[i][2].x = gWaveVertices[i][var_s5].x;
         D_8012A028[i][2].y = 0;
-        D_8012A028[i][2].z = gWaveVertices[i][0][var_s5].z;
-        D_8012A028[i][2].r = gWaveVertices[i][0][var_s5].r;
-        D_8012A028[i][2].g = gWaveVertices[i][0][var_s5].g;
-        D_8012A028[i][2].b = gWaveVertices[i][0][var_s5].b;
-        D_8012A028[i][2].a = gWaveVertices[i][0][var_s5].a;
+        D_8012A028[i][2].z = gWaveVertices[i][var_s5].z;
+        D_8012A028[i][2].r = gWaveVertices[i][var_s5].r;
+        D_8012A028[i][2].g = gWaveVertices[i][var_s5].g;
+        D_8012A028[i][2].b = gWaveVertices[i][var_s5].b;
+        D_8012A028[i][2].a = gWaveVertices[i][var_s5].a;
 
-        D_8012A028[i][3].x = gWaveVertices[i][0][var_s5 + gWaveController.subdivisions].x;
+        D_8012A028[i][3].x = gWaveVertices[i][var_s5 + gWaveController.subdivisions].x;
         D_8012A028[i][3].y = 0;
-        D_8012A028[i][3].z = gWaveVertices[i][0][var_s5 + gWaveController.subdivisions].z;
-        D_8012A028[i][3].r = gWaveVertices[i][0][var_s5 + gWaveController.subdivisions].r;
-        D_8012A028[i][3].g = gWaveVertices[i][0][var_s5 + gWaveController.subdivisions].g;
-        D_8012A028[i][3].b = gWaveVertices[i][0][var_s5 + gWaveController.subdivisions].b;
-        D_8012A028[i][3].a = gWaveVertices[i][0][var_s5 + gWaveController.subdivisions].a;
+        D_8012A028[i][3].z = gWaveVertices[i][var_s5 + gWaveController.subdivisions].z;
+        D_8012A028[i][3].r = gWaveVertices[i][var_s5 + gWaveController.subdivisions].r;
+        D_8012A028[i][3].g = gWaveVertices[i][var_s5 + gWaveController.subdivisions].g;
+        D_8012A028[i][3].b = gWaveVertices[i][var_s5 + gWaveController.subdivisions].b;
+        D_8012A028[i][3].a = gWaveVertices[i][var_s5 + gWaveController.subdivisions].a;
     }
 
     func_800BCC70(model);
@@ -604,7 +604,7 @@ void func_800B92F4(s32 blockID, s32 viewportID) {
         }
 
         sp84 = D_8012A5E8[k].unk6;
-        vertices = &gWaveVertices[gWaveVertexFlip + viewportID][0][sp90 * sp98];
+        vertices = &gWaveVertices[gWaveVertexFlip + viewportID][sp90 * sp98];
         sp98 = D_800E30E4[sp98];
         vertexIdx = 0;
         for (i = 0; i <= gWaveController.subdivisions; i++) {
@@ -704,7 +704,7 @@ void func_800B97A8(s32 blockID, s32 arg1) {
         }
 
         var_a0 = D_8012A5E8[k].unk6;
-        vertices = &gWaveVertices[gWaveVertexFlip + arg1][0][spA0 * spA8];
+        vertices = &gWaveVertices[gWaveVertexFlip + arg1][spA0 * spA8];
         spA8 = D_800E30E4[spA8];
         for (i = 0, vertexIdx = 0; i <= gWaveController.subdivisions; i++) {
             var_s1 = D_8012A5E8[k].unk4;
@@ -816,18 +816,18 @@ void waves_update(s32 updateRate) {
     for (i = 0; i < gWaveController.subdivisions; i++) {
         for (j = 0; j < gWaveController.subdivisions; j++) {
             for (k = 0; k < var_t2; k++) {
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0].uv0.u = gWaveUVTable[var_t5].u;
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0].uv0.v = gWaveUVTable[var_t5 + 1].v;
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0].uv1.u = gWaveUVTable[var_ra].u;
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0].uv1.v = gWaveUVTable[var_ra].v;
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0].uv2.u = gWaveUVTable[var_t5 + 1].u;
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0].uv2.v = gWaveUVTable[var_t5 + 1].v;
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0 + 1].uv0.u = gWaveUVTable[var_t5 + 1].u;
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0 + 1].uv0.v = gWaveUVTable[var_t5 + 1].v;
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0 + 1].uv1.u = gWaveUVTable[var_ra].u;
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0 + 1].uv1.v = gWaveUVTable[var_ra + 1].v;
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0 + 1].uv2.u = gWaveUVTable[var_ra + 1].u;
-                gWaveTriangles[gWaveVertexFlip][k << 1][var_s0 + 1].uv2.v = gWaveUVTable[var_ra + 1].v;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0].uv0.u = gWaveUVTable[var_t5].u;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0].uv0.v = gWaveUVTable[var_t5 + 1].v;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0].uv1.u = gWaveUVTable[var_ra].u;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0].uv1.v = gWaveUVTable[var_ra].v;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0].uv2.u = gWaveUVTable[var_t5 + 1].u;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0].uv2.v = gWaveUVTable[var_t5 + 1].v;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0 + 1].uv0.u = gWaveUVTable[var_t5 + 1].u;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0 + 1].uv0.v = gWaveUVTable[var_t5 + 1].v;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0 + 1].uv1.u = gWaveUVTable[var_ra].u;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0 + 1].uv1.v = gWaveUVTable[var_ra + 1].v;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0 + 1].uv2.u = gWaveUVTable[var_ra + 1].u;
+                gWaveTriangles[gWaveVertexFlip + (k << 1)][var_s0 + 1].uv2.v = gWaveUVTable[var_ra + 1].v;
             }
             var_t5++;
             var_ra++;
@@ -1052,9 +1052,8 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
                             numVerts = gWaveController.subdivisions + 1;
                             var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
                             for (j = 0; j < gWaveController.subdivisions; j++) {
-                                vtx = &gWaveVertices[gWaveVertexFlip + viewportID][0][var_t0];
-                                tri = &gWaveTriangles[gWaveVertexFlip + viewportID][0]
-                                                     [j * (gWaveController.subdivisions << 1)];
+                                vtx = &gWaveVertices[gWaveVertexFlip + viewportID][var_t0];
+                                tri = &gWaveTriangles[gWaveVertexFlip + viewportID][j * (gWaveController.subdivisions << 1)];
 
                                 gSPVertexDKR(gWaveDL++, OS_K0_TO_PHYSICAL(vtx), numVerts << 1, 0);
                                 gSPPolygon(gWaveDL++, OS_K0_TO_PHYSICAL(tri), numTris, TRIN_ENABLE_TEXTURE);
@@ -1078,8 +1077,8 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
                 numVerts = gWaveController.subdivisions + 1;
                 var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
                 for (j = 0; j < gWaveController.subdivisions; j++) {
-                    vtx = &gWaveVertices[gWaveVertexFlip + viewportID][0][var_t0];
-                    tri = &gWaveTriangles[gWaveVertexFlip + viewportID][0][j * (gWaveController.subdivisions << 1)];
+                    vtx = &gWaveVertices[gWaveVertexFlip + viewportID][var_t0];
+                    tri = &gWaveTriangles[gWaveVertexFlip + viewportID][j * (gWaveController.subdivisions << 1)];
 
                     gSPVertexDKR(gWaveDL++, OS_K0_TO_PHYSICAL(vtx), numVerts << 1, 0);
                     gSPPolygon(gWaveDL++, OS_K0_TO_PHYSICAL(tri), numTris, TRIN_ENABLE_TEXTURE);
