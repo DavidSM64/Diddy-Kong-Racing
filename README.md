@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 All versions are supported, and the US 1.0 version (SHA1 = 0cb115d8716dbbc2922fda38e533b9fe63bb9670) of the game is the default if not specified.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of July 23, 2026, this is our current score:
+As of July 24, 2026, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress [us.v77]: 98.19%
+&emsp;&emsp;&emsp;&emsp;Decomp progress [us.v77]: 99.38%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 65.97%
 <!-- README_SCORE_SUMMARY_END -->
@@ -176,33 +176,33 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of July 23, 2026, this is our current score:
+As of July 24, 2026, this is our current score:
 ```
- ======================================================
-    ADVENTURE ONE (ASM -> C Decompilation) [us.v77]
- ------- 98.19% Complete (98.35% NON_MATCHING) --------
-              # Decompiled functions: 1849
-            # Handwritten ASM functions: 85
-               # GLOBAL_ASM remaining: 3
-              # NON_MATCHING functions: 1
-           # NON_EQUIVALENT WIP functions: 2
- -------------------- Game Status ---------------------
-       Balloons: 47/47, Keys: 4/4, Trophies: 4/5
-         T.T. Amulets: 4/4, Wizpig Amulets: 4/4
- ------------------------------------------------------
- We are racing in the rematch against Wizpig. (Lap 3/3)
- ======================================================
-         ADVENTURE TWO (Cleanup & Documentation)
- ------------------ 65.97% Complete -------------------
-              # Documented functions: 1281
-             # Undocumented remaining: 279
-            # Functions named `func_*`: 144
-           # Functions without comments: 279
- -------------------- Game Status ---------------------
-       Balloons: 31/47, Keys: 3/4, Trophies: 3/5
-         T.T. Amulets: 3/4, Wizpig Amulets: 3/4
- ------------------------------------------------------
-      We are racing in Windmill Plains. (Lap 2/3)
- ======================================================
+ ===============================================================================
+                 ADVENTURE ONE (ASM -> C Decompilation) [us.v77]
+ -------------------- 99.38% Complete (99.55% NON_MATCHING) --------------------
+                          # Decompiled functions: 1863
+                         # Handwritten ASM functions: 85
+                            # GLOBAL_ASM remaining: 2
+                           # NON_MATCHING functions: 1
+                        # NON_EQUIVALENT WIP functions: 1
+ --------------------------------- Game Status ---------------------------------
+                    Balloons: 47/47, Keys: 4/4, Trophies: 4/5
+                     T.T. Amulets: 4/4, Wizpig Amulets: 4/4
+ -------------------------------------------------------------------------------
+ We are participating in the Future Fun Land Trophy Race. (Round Three, Lap 2/3)
+ ===============================================================================
+                      ADVENTURE TWO (Cleanup & Documentation)
+ ------------------------------- 65.97% Complete -------------------------------
+                          # Documented functions: 1280
+                          # Undocumented remaining: 294
+                         # Functions named `func_*`: 145
+                        # Functions without comments: 294
+ --------------------------------- Game Status ---------------------------------
+                    Balloons: 31/47, Keys: 3/4, Trophies: 3/5
+                     T.T. Amulets: 3/4, Wizpig Amulets: 3/4
+ -------------------------------------------------------------------------------
+                   We are racing in Windmill Plains. (Lap 2/3)
+ ===============================================================================
 ```
 <!-- README_SCORE_END -->
