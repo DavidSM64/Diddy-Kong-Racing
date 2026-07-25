@@ -233,11 +233,11 @@ s32 D_8011AD5C;
 s32 D_8011AD60;
 s32 *gAssetsObjectHeadersTable;
 s32 gAssetsObjectHeadersTableLength;
-s32 *gAssetsMiscSection;
-s32 *gAssetsMiscTable;
-s32 D_8011AD74;
+s32 *gAssetsMiscSection; // Official Name: Ftables
+s32 *gAssetsMiscTable; // Official Name: Findex
+UNUSED s32 D_8011AD74;
 Gfx *D_8011AD78[10];
-s32 gAssetsMiscTableLength;
+s32 gAssetsMiscTableLength; // Official Name: Fmax
 s16 D_8011ADA4;
 f32 gObjectUpdateRateF;
 s32 gPathUpdateOff;
