@@ -501,13 +501,9 @@ typedef struct TrackRenderDetails {
   /* 0x0A */ s16 yOff;
   /* 0x0C */ u8 visible;
   /* 0x0D */ u8 opacity;
-    union {
-        struct {
-            /* 0x0E */ u8 copyViewPort;
-            /* 0x0F */ u8 border;
-        };
-        /* 0x0E */ u16 viewPort;
-    };
+  /* 0x0E */ u32 vp1 : 1; 
+  /* 0x0E */ u32 vp2 : 7;
+  /* 0x0F */ u8 border;
 } TrackRenderDetails;
 
 extern s32 gShowControllerPakMenu;
