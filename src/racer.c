@@ -2524,7 +2524,7 @@ f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3,
     return velocity;
 }
 
-// Plane physics, largest function in DKR.
+// Plane physics
 void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     s32 pad5;
     s32 pad7;
@@ -2563,7 +2563,11 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     f32 var_f6;
     s32 racerTrickType;
     f32 segmentXVelocity;
-    f32 sp60[4]; // Should be MtxF, but produces a worse score.
+#ifdef AVOID_UB
+    MtxF sp60;
+#else
+    f32 sp60[4]; // Should be MtxF, but it throws off the stack.
+#endif
     s8 playerObjectMoved;
     s32 steerVisualRotationOffset;
     Object_Boost *boostObj;
@@ -2584,13 +2588,12 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
 
     spA2 = FALSE;
     if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->vehicleIDPrev != VEHICLE_WIZPIG && gRacerWaveCount != 0) {
-        // UNMATCHED
         var_t9 = (var_t9 = gRacerWaveCount - 1);
         for (var_a0 = gRacerWaveCount - 1;
              var_a0 >= 0 && gRacerCurrentWave[var_a0]->waveHeight < obj->trans.y_position + 5; var_a0--) {
-            if (gRacerWaveCount - 1) {}
-            if (gRacerWaveCount - 1) {}
-            if (gRacerWaveCount - 1) {}
+            if (gRacerWaveCount - 1) {} // fake
+            if (gRacerWaveCount - 1) {} // more fake
+            if (gRacerWaveCount - 1) {} // even more fake
         }
 
         if (var_a0 == gRacerWaveCount - 1) {
@@ -2602,7 +2605,6 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (var_f2 > 100.0f) {
             racer->drift_direction = 0;
         }
-        // previously var_f0
         racerVelocity = -racer->velocity;
         if (racerVelocity < 0.0f) {
             racerVelocity = 0.0f;
@@ -2611,7 +2613,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             spA2 = TRUE;
         }
         if (racer->drift_direction == 0 && var_f2 < 38 && racerVelocity >= 8.0) {
-            if ((!racerSteerAngle)) {}
+            if (!racerSteerAngle) {} // fakematch
             racer->drift_direction = 1;
         }
         if (racer->trickType == 1 || racer->trickType == -1 || gRacerCurrentWave[var_a0 + 1]->rot.y < 0.4) {
@@ -2635,7 +2637,9 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     D_8011D550 = 0;
 
-    gCurrentCarSteerVel = (var_f0 > 0.0f) * 0;
+    if (var_f0 > 0.0f) {} // Fake
+
+    gCurrentCarSteerVel = 0;
 
     D_8011D558 = 0;
     spE8 = obj->trans.x_position;
@@ -2720,9 +2724,9 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
     mtxf_from_transform((MtxF *) &sp60, &gCurrentRacerTransform);
-    mtxf_transform_point(&sp60, 0.0f, 0.0f, 1.0f, &racer->ox1, &racer->oy1, &racer->oz1);
-    mtxf_transform_point(&sp60, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
-    mtxf_transform_point(&sp60, 0.0f, 1.0f, 0.0f, &racer->ox2, &racer->oy2, &racer->oz2);
+    mtxf_transform_point((float (*)[4]) sp60, 0.0f, 0.0f, 1.0f, &racer->ox1, &racer->oy1, &racer->oz1);
+    mtxf_transform_point((float (*)[4]) sp60, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
+    mtxf_transform_point((float (*)[4]) sp60, 0.0f, 1.0f, 0.0f, &racer->ox2, &racer->oy2, &racer->oz2);
     if (racer->approachTarget == NULL) {
         apply_plane_tilt_anim(updateRate, obj, racer);
     }
@@ -2743,8 +2747,6 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         var_f20 = 4;
     }
     spA3 = FALSE;
-    // This line (or somewhere here about) seems to be culprit as it incorrectly uses $f12 instead of $f2
-    // This may or may not cause $20 to be swapped with $f2
     var_f20 = 1.0 - (var_f20 / 4.0);
     var_f2 = (gCurrentCourseHeight - 50.0) - obj->trans.y_position;
     if (racer->trickType < 2 && racer->trickType >= -1 && var_f2 < 0) {
@@ -2772,9 +2774,8 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (var_f14 > 12.0f) {
         var_f14 = 12.0f;
     }
-    racerMiscAssetIdx = var_f14;      // racerMiscAssetIdx = Integer part of var_f14
-    var_f0 = var_f14 - (s32) var_f14; // var_f0 = fractional part of var_f14
-    // UNMATCHED
+    racerMiscAssetIdx = var_f14;
+    var_f0 = var_f14 - (s32) var_f14;
     var_f14 = (gCurrentRacerMiscAssetPtr[racerMiscAssetIdx + 1] * var_f0) +
               (gCurrentRacerMiscAssetPtr[racerMiscAssetIdx] * (1.0 - var_f0));
     spD4 = 0.01f;
@@ -2813,7 +2814,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             racerBrake *= 0.3;
         }
         racer->trickType = 0;
-        if (gCurrentRacerInput & B_BUTTON && gNumViewports < 3) {
+        if (gCurrentRacerInput & B_BUTTON && gNumViewports <= 2) {
             obj->particleEmittersEnabled = OBJ_EMIT_1 | OBJ_EMIT_2;
         }
         gCurrentStickY = ((f32) gCurrentStickY) * (1.0 - var_f20);
@@ -2888,7 +2889,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             if (racer->throttleReleased != 0) {
                 racer->boostType |= EMPOWER_BOOST;
             }
-            rumble_set(racer->playerIndex, 8);
+            rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
             racer->zipperDirCorrection = 0;
         } else {
             obj->x_velocity *= 0.75;
@@ -2903,8 +2904,6 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         if (racer->groundedWheels != 0 || racer->unk1F1 == 2) {
             racer->unk1F1 = 2;
-            // s0.162 = x_rot_offset
-            // s0.164 = z_rot_offset
             temp_t7 = updateRate << 11;
             racer->x_rotation_offset -= temp_t7;
             var_t0 = racer->z_rotation_offset;
@@ -3145,7 +3144,6 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             obj->particleEmittersEnabled |= OBJ_EMIT_3 | OBJ_EMIT_4;
         }
     }
-    // This line looks unmatched
     var_f0 = handle_racer_top_speed(obj, racer);
     var_f14 = var_f14 * var_f0;
     var_f14 *= 1.8;
@@ -3188,7 +3186,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->x_velocity -= racer->ox1 * var_f20;
         obj->y_velocity -= racer->oy1 * var_f20;
         obj->z_velocity -= racer->oz1 * var_f20;
-    var_f20 = racer->lateral_velocity * racer->lateral_velocity * spD4;
+        var_f20 = racer->lateral_velocity * racer->lateral_velocity * spD4;
         if (racer->lateral_velocity < 0) {
             var_f20 = -var_f20;
         }
@@ -3301,7 +3299,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
     mtxf_from_inverse_transform((MtxF *) &sp60, &gCurrentRacerTransform);
-    mtxf_transform_point(&sp60, obj->x_velocity, obj->y_velocity, obj->z_velocity, &racer->lateral_velocity,
+    mtxf_transform_point((float (*)[4]) sp60, obj->x_velocity, obj->y_velocity, obj->z_velocity, &racer->lateral_velocity,
                          &racer->unk34, &racer->velocity);
     if (obj->attachPoints != NULL && obj->attachPoints->count >= 3) {
         temp_v0_obj = obj->attachPoints->obj[2];
