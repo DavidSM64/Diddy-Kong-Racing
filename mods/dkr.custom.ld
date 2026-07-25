@@ -39,6 +39,7 @@ SECTIONS
         build/src/hasm/entrypoint.s.o(.text);
         build/src*.o(.text);
         build/libultra/src*.o(.text);
+        build/src/hasm/libgcc.c.o(.text);
         build/asm/data/aspMain.s.o(.text);
         build/asm/data/rspboot.s.o(.text);
         build/asm/data/f3ddkr_dram.s.o(.text);

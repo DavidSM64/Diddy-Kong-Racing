@@ -95,6 +95,9 @@ RECOMP_DIR := $(TOOLS_DIR)/ido-recomp/$(DETECTED_OS)
 S_FILES         = $(foreach dir,$(ASM_DIRS) $(HASM_DIRS),$(wildcard $(dir)/*.s))
 C_FILES         = $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
 BIN_FILES       = $(foreach dir,$(BIN_DIRS),$(wildcard $(dir)/*.bin))
+ifeq ($(COMPILER),gcc)
+  C_FILES      += $(SRC_DIR)/hasm/libgcc.c
+endif
 
 O_FILES := $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o) \
@@ -105,21 +108,27 @@ O_FILES_LD := $(filter-out $(BUILD_DIR)/asm/assets/assets.s.o, \
 	$(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o))
 
 find-command = $(shell which $(1) 2>/dev/null)
+find-mips-prefix = $(shell test -n "$(call find-command,$(1)-ld)" && test -n "$(call find-command,$(1)-gcc)" && echo $(1))
+
+MIPS_PREFIX_CANDIDATES := mips64-elf mips-n64 mips64 mips-linux-gnu mips64-linux-gnu mips64-none-elf mips mips-suse-linux
+define _find-mips-toolchain-internal
+$(eval DETECTED_PREFIX :=)
+$(eval _unused := $(foreach prefix,$(MIPS_PREFIX_CANDIDATES),\
+  $(if $(DETECTED_PREFIX),,\
+    $(if $(call find-mips-prefix,$(prefix)),\
+      $(eval DETECTED_PREFIX := $(prefix)-)))))
+$(DETECTED_PREFIX)
+endef
 
 # Tools
 
-ifeq ($(shell type mips-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
-	CROSS := mips-linux-gnu-
-else ifeq ($(shell type mips64-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
-	CROSS := mips64-linux-gnu-
-else ifeq ($(shell type mips64-elf-ld >/dev/null 2>/dev/null; echo $$?), 0)
-	CROSS := mips64-elf-
-else
+CROSS := $(strip $(call _find-mips-toolchain-internal))
 # No binutil packages were found, so we have to download the source & build it.
+ifeq ($(CROSS),)
 ifeq ($(wildcard $(TOOLS_DIR)/binutils/.*),)
-	DUMMY != $(TOOLS_DIR)/get-binutils.sh >&2 || echo FAIL
+    DUMMY != $(TOOLS_DIR)/get-binutils.sh >&2 || echo FAIL
 endif
-	CROSS := $(TOOLS_DIR)/binutils/mips64-elf-
+    CROSS := $(TOOLS_DIR)/binutils/mips64-elf-
 endif
 
 AS       = $(CROSS)as
@@ -485,6 +494,13 @@ else
 # libultra asm files - Compile with the gcc c compiler
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
 	$(call print,Assembling Libultra:,$<,$@)
+	$(V)$(CROSS)gcc -x assembler-with-cpp \
+	-w -nostdinc -c -G 0 -march=vr4300 -mgp32 -mfp32 -mno-abicalls \
+	-DMIPSEB -D_LANGUAGE_ASSEMBLY -D_MIPS_SIM=1 -D_ULTRA64 -DMODERN_CC -D__USE_ISOC99 \
+	-mips3 -Os -ggdb3 -ffast-math -fno-unsafe-math-optimizations -c $(C_DEFINES) $(INCLUDE_CFLAGS) \
+	-o $@ $<
+$(BUILD_DIR)/$(SRC_DIR)/hasm/ido/%.s.o: $(SRC_DIR)/hasm/ido/%.s | build_assets
+	$(call print,Assembling HASM:,$<,$@)
 	$(V)$(CROSS)gcc -x assembler-with-cpp \
 	-w -nostdinc -c -G 0 -march=vr4300 -mgp32 -mfp32 -mno-abicalls \
 	-DMIPSEB -D_LANGUAGE_ASSEMBLY -D_MIPS_SIM=1 -D_ULTRA64 -DMODERN_CC -D__USE_ISOC99 \

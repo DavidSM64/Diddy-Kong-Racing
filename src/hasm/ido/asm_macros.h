@@ -4,7 +4,7 @@
 */
 #define MULS(rd, rs, rt) \
     mult   rs, rt; \
-    mflo   rd \
+    mflo   rd
 
 /* 
     I think they accidentally used mul instead of mult.
@@ -14,4 +14,4 @@
 */
 #define MUL(rd, rs, rt) \
     mul    rs, rt; \
-    mflo   rd /* (mul pseudo-op already does this, but original has it) */ \
+    mflo   rd /* (mul pseudo-op already does this, but original has it) */

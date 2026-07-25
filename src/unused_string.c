@@ -107,6 +107,7 @@ UNUSED int strncasecmp(const char *s1, const char *s2, size_t n) {
  * c: char to fill with
  * n: size of area to clear
  */
+#ifndef NON_MATCHING
 UNUSED void *memset(void *s, int c, size_t n) {
     unsigned char *ret = s;
 
@@ -115,3 +116,4 @@ UNUSED void *memset(void *s, int c, size_t n) {
     }
     return s;
 }
+#endif
