@@ -69,6 +69,9 @@ GLOBAL_ASM_C_FILES := $(shell $(GREP) GLOBAL_ASM $(SRC_DIR) </dev/null 2>/dev/nu
 GLOBAL_ASM_O_FILES := $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file).o)
 
 SRC_DIRS = $(SRC_DIR) $(LIBULTRA_SRC_DIRS)
+ifeq ($(NON_MATCHING),1)
+  SRC_DIRS += $(SRC_DIR)/gcc
+endif
 SYMBOLS_DIR = ver/symbols
 
 TOOLS_DIR = tools
@@ -95,9 +98,6 @@ RECOMP_DIR := $(TOOLS_DIR)/ido-recomp/$(DETECTED_OS)
 S_FILES         = $(foreach dir,$(ASM_DIRS) $(HASM_DIRS),$(wildcard $(dir)/*.s))
 C_FILES         = $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
 BIN_FILES       = $(foreach dir,$(BIN_DIRS),$(wildcard $(dir)/*.bin))
-ifeq ($(COMPILER),gcc)
-  C_FILES      += $(SRC_DIR)/hasm/libgcc.c
-endif
 
 O_FILES := $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file).o) \
            $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file).o) \
