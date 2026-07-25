@@ -9,7 +9,7 @@ As of July 25, 2026, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress [us.v77]: 100.00%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 66.74%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 66.58%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -189,31 +189,31 @@ s32 is_drumstick_unlocked(void) {
 <!-- README_SCORE_BEGIN -->
 As of July 25, 2026, this is our current score:
 ```
- =============================================
+ ===========================================
  ADVENTURE ONE (ASM -> C Decompilation) [us.v77]
- -------------- 100.0% Complete --------------
-         # Decompiled functions: 1864
-        # Handwritten ASM functions: 85
-           # GLOBAL_ASM remaining: 0
-          # NON_MATCHING functions: 0
-       # NON_EQUIVALENT WIP functions: 0
- ---------------- Game Status ----------------
-   Balloons: 47/47, Keys: 4/4, Trophies: 5/5
-    T.T. Amulets: 4/4, Wizpig Amulets: 4/4
- ---------------------------------------------
-                  COMPLETED!
- =============================================
-     ADVENTURE TWO (Cleanup & Documentation)
- -------------- 66.74% Complete --------------
-         # Documented functions: 1287
-         # Undocumented remaining: 577
-        # Functions named `func_*`: 150
-       # Functions without comments: 577
- ---------------- Game Status ----------------
-   Balloons: 32/47, Keys: 3/4, Trophies: 3/5
-    T.T. Amulets: 3/4, Wizpig Amulets: 3/4
- ---------------------------------------------
- We are racing in Greenwood Village. (Lap 1/3)
- =============================================
+ ------------- 100.0% Complete -------------
+        # Decompiled functions: 1864
+       # Handwritten ASM functions: 85
+          # GLOBAL_ASM remaining: 0
+         # NON_MATCHING functions: 0
+      # NON_EQUIVALENT WIP functions: 0
+ --------------- Game Status ---------------
+  Balloons: 47/47, Keys: 4/4, Trophies: 5/5
+   T.T. Amulets: 4/4, Wizpig Amulets: 4/4
+ -------------------------------------------
+                 COMPLETED!
+ ===========================================
+    ADVENTURE TWO (Cleanup & Documentation)
+ ------------- 66.58% Complete -------------
+        # Documented functions: 1280
+        # Undocumented remaining: 294
+       # Functions named `func_*`: 147
+      # Functions without comments: 294
+ --------------- Game Status ---------------
+  Balloons: 31/47, Keys: 3/4, Trophies: 3/5
+   T.T. Amulets: 3/4, Wizpig Amulets: 3/4
+ -------------------------------------------
+ We are racing in Windmill Plains. (Lap 3/3)
+ ===========================================
 ```
 <!-- README_SCORE_END -->

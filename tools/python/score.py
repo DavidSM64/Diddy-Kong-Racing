@@ -404,7 +404,7 @@ def main():
         'global_asm': 0,
     }
 
-    def process_score_file(score_file):
+    def process_score_file(score_file, is_lib=False):
         # Track functions in this file
         for func in score_file.functions:
             if func.function_name in map_file.function_sizes:
@@ -424,17 +424,18 @@ def main():
         adv1['non_equivalent'] += score_file.num_non_equivalents
 
         # Adventure two counts
-        adv2['total'] += score_file.function_count()
-        adv2['documented'] += score_file.documented_count()
-        adv2['commented'] += score_file.commented_count()
-        adv2['properly_named'] += score_file.properly_named_count()
-        adv2['size_documented'] += score_file.documented_size()
+        if not is_lib:
+            adv2['total'] += score_file.function_count()
+            adv2['documented'] += score_file.documented_count()
+            adv2['commented'] += score_file.commented_count()
+            adv2['properly_named'] += score_file.properly_named_count()
+            adv2['size_documented'] += score_file.documented_size()
 
     # Process main C files
     src_files = FileUtil.get_filenames_from_directory_recursive(SRC_DIRECTORY, extensions=('.c'))
     for filename in ScoreUtil.filter_filenames(src_files, BLACKLIST_C):
         score_file = ScoreFile(f'{SRC_DIRECTORY}/{filename}', selected_version, map_file)
-        process_score_file(score_file)
+        process_score_file(score_file, is_lib=False)
         score_files.append(score_file)
 
     # Process libultra C files
@@ -442,7 +443,7 @@ def main():
     for filename in ScoreUtil.filter_filenames(lib_files, BLACKLIST_C):
         score_file = ScoreFile(f'{LIB_SRC_DIRECTORY}/{filename}', selected_version, map_file)
         if include_lib:
-            process_score_file(score_file)
+            process_score_file(score_file, is_lib=True)
         score_files.append(score_file)
 
     # Process ASM files
