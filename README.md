@@ -36,6 +36,17 @@ As of July 24, 2026, this is our current score:
 
 <details>
 
+<summary> Fedora based Linux distros </summary>
+
+Most dependencies should already be installed by default (in fedora 44). Only thing needed was pcre2.
+
+`sudo dnf install pcre2 pcre2-devel`
+
+</details>
+
+
+<details>
+
 <summary> Arch based Linux distros </summary>
 
 `sudo pacman -Syu --needed base-devel pkgconf git python python-pip python-virtualenv pcre2 yay`
