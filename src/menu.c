@@ -8813,11 +8813,6 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
 }
 
 // trackmenu_render_names
-// Indexing gTrackSelectRenderDetails directly (rather than walking a pointer)
-// is what lets uopt prove the hubName store cannot alias gTrackSelectIDs, which
-// is what puts that store in the branch delay slot. The literal -1 inner bound
-// gives uopt the trip count, so the index still strength-reduces to a single
-// advancing pointer. Both are required to match.
 void func_8008FF1C(UNUSED s32 updateRate) {
     s32 i; // sp7C
     char *pad0;
