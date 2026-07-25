@@ -5398,8 +5398,6 @@ u32 func_800179D0(void) {
 #endif
 }
 
-// https://decomp.me/scratch/xNAlf
-#ifdef NON_EQUIVALENT
 s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, f32 *arg5, f32 *arg6, f32 *arg7,
                   f32 *arg8, f32 *arg9, s8 *argA, f32 argB) {
     f32 *planes;
@@ -5408,7 +5406,7 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
     f32 t;
     u32 var_a2; // u32 required here to force loading 1 instead of a3 into it
     s32 counter;
-    s32 spF8; // f8
+    s32 spF8;
     s32 var_s6;
     CollisionFacetPlanes *node;
     s32 triIndex;
@@ -5419,10 +5417,10 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
     f32 D; // d8
     f32 A1, B1, C1, D1;
     s32 redoLoop;
-    f32 spC0; // c0
-    f32 x1;   // bc
+    f32 spC0;
+    f32 x1;
     f32 y1;
-    f32 z1; // b4
+    f32 z1;
     f32 x3, y3, z3;
     f32 x2; // a4
     f32 y2; // a0
@@ -5485,7 +5483,6 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                         if (t > 4.0f) {
                             var_a2 = FALSE;
                         }
-                    }
 
                     if (var_a2) {
                         redoLoop = TRUE;
@@ -5496,20 +5493,33 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
                             y1 -= sum2 * B;
                             z1 -= sum2 * C;
                         }
-                        counter++;
-                        if (counter > 10) {
-                            redoLoop = FALSE;
-                            x1 = x2;
-                            y1 = y2;
-                            z1 = z2;
+
+                        if (var_a2) {
+                            redoLoop = TRUE;
+                            if (B > 0.707) {
+                                y1 = (spC0 - (A * x1 + C * z1 + D)) / B;
+                            } else {
+                                x1 -= sum2 * A;
+                                y1 -= sum2 * B;
+                                z1 -= sum2 * C;
+                            }
+                            counter++;
+                            if (counter > 10) {
+                                redoLoop = FALSE;
+                                x1 = x2;
+                                y1 = y2;
+                                z1 = z2;
+                            }
+                            argA[i] = 0;
+                            arg6[i] = x1;
+                            arg7[i] = y1;
+                            arg8[i] = z1;
+
+                            j = arg0->collisionFacetCount; // break
                         }
-                        argA[i] = 0;
-                        arg6[i] = x1;
-                        arg7[i] = y1;
-                        arg8[i] = z1;
-                        j = arg0->collisionFacetCount; // break
                     }
-                }
+                    j++;
+                } while (j < arg0->collisionFacetCount);
             }
             sum2 = z2;
             z3 = y2;
@@ -5525,9 +5535,6 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
 
     return spF8;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017A18.s")
-#endif
 
 /**
  * Sets the active Taj challenge.

@@ -511,5 +511,5 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 f32 func_8001C6C4(Object_NPC *, Object *, f32, f32, s32);
 s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, Vec3f *arg3, f32* arg4, f32* arg5, s8* surface);
 s32 func_80017A18(ObjectModel *, s32, s32 *, f32 *, f32 *, f32 *, f32 *, f32 *, f32 *, f32 *, s8 *argA,
-                  f32); // NON EQUIVALENT
+                  f32);
 #endif
