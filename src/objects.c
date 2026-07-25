@@ -234,7 +234,7 @@ s32 D_8011AD60;
 s32 *gAssetsObjectHeadersTable;
 s32 gAssetsObjectHeadersTableLength;
 s32 *gAssetsMiscSection; // Official Name: Ftables
-s32 *gAssetsMiscTable; // Official Name: Findex
+s32 *gAssetsMiscTable;   // Official Name: Findex
 UNUSED s32 D_8011AD74;
 Gfx *D_8011AD78[10];
 s32 gAssetsMiscTableLength; // Official Name: Fmax
@@ -5397,8 +5397,9 @@ u32 func_800179D0(void) {
 #endif
 }
 
-s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *numCollisions, f32 *originPointsX, f32 *originPointsY, f32 *originPointsZ, f32 *targetPointsX, f32 *targetPointsY,
-                  f32 *targetPointsZ, f32 *collisionRadii, s8 *surfaces, f32 scale) {
+s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *numCollisions, f32 *originPointsX, f32 *originPointsY,
+                  f32 *originPointsZ, f32 *targetPointsX, f32 *targetPointsY, f32 *targetPointsZ, f32 *collisionRadii,
+                  s8 *surfaces, f32 scale) {
     f32 *planes;
     s32 i, j, k;
     f32 sum1, sum2;

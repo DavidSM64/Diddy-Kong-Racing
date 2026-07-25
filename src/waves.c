@@ -1053,7 +1053,8 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
                             var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
                             for (j = 0; j < gWaveController.subdivisions; j++) {
                                 vtx = &gWaveVertices[gWaveVertexFlip + viewportID][var_t0];
-                                tri = &gWaveTriangles[gWaveVertexFlip + viewportID][j * (gWaveController.subdivisions << 1)];
+                                tri = &gWaveTriangles[gWaveVertexFlip + viewportID]
+                                                     [j * (gWaveController.subdivisions << 1)];
 
                                 gSPVertexDKR(gWaveDL++, OS_K0_TO_PHYSICAL(vtx), numVerts << 1, 0);
                                 gSPPolygon(gWaveDL++, OS_K0_TO_PHYSICAL(tri), numTris, TRIN_ENABLE_TEXTURE);

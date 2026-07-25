@@ -8873,7 +8873,8 @@ void trackmenu_render_names(UNUSED s32 updateRate) {
                 gTrackSelectRenderDetails[k].yOff = ((-trackY * gTrackSelectViewportY) - gTrackSelectY);
                 gTrackSelectRenderDetails[k].opacity = 0xFF;
                 if ((trackX == gSelectedTrackX) && (trackY == gSelectedTrackY)) {
-                    gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 0x80;
+                    gTrackSelectRenderDetails[k].copyViewPort =
+                        (gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 0x80;
                     if (gOpacityDecayTimer < 32) {
                         gTrackSelectRenderDetails[k].opacity = gOpacityDecayTimer * 8;
                     }
@@ -8883,22 +8884,34 @@ void trackmenu_render_names(UNUSED s32 updateRate) {
                 gTrackSelectRenderDetails[k].copyViewPort = gTrackSelectRenderDetails[k].copyViewPort & 0xFF80;
                 if (gMenuDelay == 0) {
                     if (trackY > 0) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 1) & 0x7F);
+                        gTrackSelectRenderDetails[k].copyViewPort =
+                            (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) |
+                            (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 1) & 0x7F);
                     }
                     if (trackX < 5) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 2) & 0x7F);
+                        gTrackSelectRenderDetails[k].copyViewPort =
+                            (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) |
+                            (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 2) & 0x7F);
                     }
                     if (trackY < maxTrackY) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 4) & 0x7F);
+                        gTrackSelectRenderDetails[k].copyViewPort =
+                            (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) |
+                            (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 4) & 0x7F);
                     }
                     if (trackX > 0) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 8) & 0x7F);
+                        gTrackSelectRenderDetails[k].copyViewPort =
+                            (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) |
+                            (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 8) & 0x7F);
                     }
                     if (trackX == 4 && trackY == 4) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | ((gTrackSelectRenderDetails[k].copyViewPort & 0xFF & 0xFF) & 0x7D);
+                        gTrackSelectRenderDetails[k].copyViewPort =
+                            (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) |
+                            ((gTrackSelectRenderDetails[k].copyViewPort & 0xFF & 0xFF) & 0x7D);
                     }
                     if (trackX == 5 && trackY == 3) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | ((gTrackSelectRenderDetails[k].copyViewPort & 0xFF & 0xFF) & 0x7B);
+                        gTrackSelectRenderDetails[k].copyViewPort =
+                            (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) |
+                            ((gTrackSelectRenderDetails[k].copyViewPort & 0xFF & 0xFF) & 0x7B);
                     }
                 }
                 if (trackX == 4) {

@@ -2734,8 +2734,8 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (((var_v0 ^ 0) == PLAYER_COMPUTER) && (gCurrentPlayerIndex != PLAYER_COMPUTER)) {
         gCurrentRacerHandlingStat = 1.4f;
     }
-    var_f20 = (obj->x_velocity * obj->x_velocity) + (obj->z_velocity * obj->z_velocity) +
-              (obj->y_velocity * obj->y_velocity);
+    var_f20 =
+        (obj->x_velocity * obj->x_velocity) + (obj->z_velocity * obj->z_velocity) + (obj->y_velocity * obj->y_velocity);
     var_f20 = sqrtf(var_f20) - 2.0;
     if (racer->vehicleID >= VEHICLE_BOSSES) {
         var_f20 = ((var_f20 - 2.0) / 2.0);
@@ -3299,8 +3299,8 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
     mtxf_from_inverse_transform((MtxF *) &sp60, &gCurrentRacerTransform);
-    mtxf_transform_point((float (*)[4]) sp60, obj->x_velocity, obj->y_velocity, obj->z_velocity, &racer->lateral_velocity,
-                         &racer->unk34, &racer->velocity);
+    mtxf_transform_point((float (*)[4]) sp60, obj->x_velocity, obj->y_velocity, obj->z_velocity,
+                         &racer->lateral_velocity, &racer->unk34, &racer->velocity);
     if (obj->attachPoints != NULL && obj->attachPoints->count >= 3) {
         temp_v0_obj = obj->attachPoints->obj[2];
         temp_v0_obj->trans.rotation.y_rotation = 0x4000;
@@ -8207,9 +8207,11 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
     for (i = 0; (i < 5) ^ 0; i++) {
         tempCheckpointNode = find_next_checkpoint_node(counter, racer->isOnAlternateRoute);
-        posX[i] = tempCheckpointNode->x + ((tempCheckpointNode->scale * tempCheckpointNode->rotationZFrac) * racer->unk1BA);
+        posX[i] =
+            tempCheckpointNode->x + ((tempCheckpointNode->scale * tempCheckpointNode->rotationZFrac) * racer->unk1BA);
         posY[i] = tempCheckpointNode->y + (tempCheckpointNode->scale * racer->unk1BC);
-        posZ[i] = tempCheckpointNode->z + ((tempCheckpointNode->scale * (-tempCheckpointNode->rotationXFrac)) * racer->unk1BA);
+        posZ[i] = tempCheckpointNode->z +
+                  ((tempCheckpointNode->scale * (-tempCheckpointNode->rotationXFrac)) * racer->unk1BA);
         counter++;
         if (counter == checkpointCount) {
             // @fake
@@ -8784,8 +8786,8 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
             racer->buoyancy = 0;
             gRacerWaveCount = 0;
         } else {
-            gRacerWaveCount =
-                get_level_segment_waves(obj->segmentID, obj->trans.x_position, obj->trans.z_position, &gRacerCurrentWave);
+            gRacerWaveCount = get_level_segment_waves(obj->segmentID, obj->trans.x_position, obj->trans.z_position,
+                                                      &gRacerCurrentWave);
         }
         set_collision_mode(COLLISION_MODE_DEFAULT);
         if (racer->approachTarget != NULL || gRaceStartTimer != 0 || racer->bubbleTrapTimer > 0) {
