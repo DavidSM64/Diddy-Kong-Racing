@@ -1243,7 +1243,7 @@ u8 gTrackSelectBgData[295] = {
 };
 Vertex *gTrackSelectBgVertices[2] = { NULL, NULL };
 Triangle *gTrackSelectBgTriangles[2] = { NULL, NULL };
-char *gQMarkPtr = "?";
+char *gDefaultTrackName = "?";
 
 // Boolean. Set to TRUE once in the Track Select menu, then
 //   set to FALSE when leaving the menu.
@@ -8498,7 +8498,7 @@ s32 menu_track_select_loop(s32 updateRate) {
 
     switch (gTrackmenuType) {
         case TRACKMENU_TYPE_RESET_CURSOR:
-            func_8008FF1C(updateRate);
+            trackmenu_render_names(updateRate);
             trackmenu_track_view(updateRate);
             trackmenu_input(updateRate);
             break;
@@ -8812,8 +8812,7 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
     rendermode_reset(&sMenuCurrDisplayList);
 }
 
-// trackmenu_render_names
-void func_8008FF1C(UNUSED s32 updateRate) {
+void trackmenu_render_names(UNUSED s32 updateRate) {
     s32 i; // sp7C
     char *pad0;
     char *pad1;
@@ -8823,7 +8822,7 @@ void func_8008FF1C(UNUSED s32 updateRate) {
     char *levelName;
     s32 maxTrackY;
     s8 *trackMenuIds;
-    Settings *settings; // sp58
+    Settings *settings;
     TrackRenderDetails *pad3;
     s32 trackX;
     s32 trackY;
@@ -8868,7 +8867,7 @@ void func_8008FF1C(UNUSED s32 updateRate) {
                         gTrackSelectRenderDetails[k].visible = 2;
                     }
                 } else {
-                    gTrackSelectRenderDetails[k].trackName = gQMarkPtr;
+                    gTrackSelectRenderDetails[k].trackName = gDefaultTrackName;
                 }
                 gTrackSelectRenderDetails[k].xOff = ((trackX * 320) - gTrackSelectX);
                 gTrackSelectRenderDetails[k].yOff = ((-trackY * gTrackSelectViewportY) - gTrackSelectY);

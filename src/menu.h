@@ -714,7 +714,7 @@ void postrace_start(s32 finishState, s32 worldID);
 void load_menu_text(s32 language); // Non Matching
 s32 menu_controller_pak_loop(s32 updateRate);
 void menu_game_select_init(void);
-void func_8008FF1C(s32 updateRate);
+void trackmenu_render_names(s32 updateRate);
 void trackmenu_input(s32 updateRate);
 void filename_trim(char *input, char *output);
 void menu_ghost_data_init(void);
