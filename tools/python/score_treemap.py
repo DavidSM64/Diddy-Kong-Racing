@@ -15,36 +15,40 @@ class ScoreTreemap:
         legends = [None]
 
         for scoreFile in score_files:
-            if exclude_lib and '/libultra/' in scoreFile.path:
+            if exclude_lib and '/libultra/' in scoreFile.filepath:
                 continue
 
-            parentName = scoreFile.path.replace('./src/', '')
+            parentName = scoreFile.filepath.replace('./src/', '')
 
             for func in scoreFile.functions:
                 color = '#92ac68'
                 legend = 'matched'
-                if func.isDocumented:
+                if func.is_documented:
                     color = 'green'
                     legend = 'documented'
 
-                labels.append(func.functionName)
+                labels.append(func.function_name)
                 parents.append(parentName)
                 values.append(func.size)
                 colours.append(color)
                 legends.append(legend)
 
-            matches = re.finditer(GLOBAL_ASM_REGEX, scoreFile.text, re.MULTILINE)
+            # Use the stored text from the file
+            with open(scoreFile.filepath, 'r') as f:
+                text = f.read()
+            
+            matches = re.finditer(GLOBAL_ASM_REGEX, text, re.MULTILINE)
             for match in matches:
                 funcName = match.groups()[0]
-                if funcName in self.map_file.functionSizes:
-                    size = self.map_file.functionSizes[funcName]
+                if funcName in self.map_file.function_sizes:
+                    size = self.map_file.function_sizes[funcName]
 
                     color = "grey"
                     legend = "N/A"
-                    if funcName in scoreFile.nonMatchings:
+                    if funcName in scoreFile.non_matchings:
                         color = 'orange'
                         legend = "non matching"
-                    elif funcName in scoreFile.nonEquivalents:
+                    elif funcName in scoreFile.non_equivalents:
                         color = 'red'
                         legend = "non equivalent"
 
@@ -73,35 +77,35 @@ class ScoreTreemap:
         # Calculate statistics for each parent file
         file_stats = {}
         for scoreFile in score_files:
-            if exclude_lib and '/libultra/' in scoreFile.path:
+            if exclude_lib and '/libultra/' in scoreFile.filepath:
                 continue
 
-            parentName = scoreFile.path.replace('./src/', '')
+            parentName = scoreFile.filepath.replace('./src/', '')
             file_stats[parentName] = {
-                'matched': 0,  # Total matched functions (includes documented)
-                'documented': 0,  # Only documented functions
+                'matched': 0,           # Total matched functions
+                'documented': 0,        # Only documented functions
                 'non matching': 0,
                 'non equivalent': 0,
                 'N/A': 0
             }
 
             # Count all matched functions (both documented and non-documented)
-            matched_count = 0
             for func in scoreFile.functions:
-                matched_count += 1  # All functions in scoreFile.functions are matched
-                if func.isDocumented:
+                file_stats[parentName]['matched'] += 1
+                if func.is_documented:
                     file_stats[parentName]['documented'] += 1
 
-            file_stats[parentName]['matched'] = matched_count
-
-            # Count non-matched functions
-            matches = re.finditer(GLOBAL_ASM_REGEX, scoreFile.text, re.MULTILINE)
+            # Count non-matched functions from GLOBAL_ASM
+            with open(scoreFile.filepath, 'r') as f:
+                text = f.read()
+            
+            matches = re.finditer(GLOBAL_ASM_REGEX, text, re.MULTILINE)
             for match in matches:
                 funcName = match.groups()[0]
-                if funcName in self.map_file.functionSizes:
-                    if funcName in scoreFile.nonMatchings:
+                if funcName in self.map_file.function_sizes:
+                    if funcName in scoreFile.non_matchings:
                         file_stats[parentName]['non matching'] += 1
-                    elif funcName in scoreFile.nonEquivalents:
+                    elif funcName in scoreFile.non_equivalents:
                         file_stats[parentName]['non equivalent'] += 1
                     else:
                         file_stats[parentName]['N/A'] += 1
@@ -113,7 +117,6 @@ class ScoreTreemap:
             value = values[i]
 
             if label == "Decomp":
-                # Decomp root should have no label
                 hover_texts.append("")
             elif value == 0:
                 # Parent nodes (file names) - show statistics
@@ -121,13 +124,10 @@ class ScoreTreemap:
                     stats = file_stats[label]
                     hover_text = f"<b>{label}</b><br>"
 
-                    # Add each statistic only if it's > 0
                     stat_lines = []
                     if stats['matched'] > 0:
-                        # Show total matched functions (includes documented)
                         stat_lines.append(f"Decompiled functions: {stats['matched']}")
                     if stats['documented'] > 0:
-                        # Documented is a subset of matched
                         stat_lines.append(f"Documented functions: {stats['documented']}")
                     if stats['non matching'] > 0:
                         stat_lines.append(f"Non matching functions: {stats['non matching']}")
@@ -140,22 +140,22 @@ class ScoreTreemap:
                     hover_texts.append(f"<b>{label}</b>")
             else:
                 # Function nodes - show size information
-                percent = value / code_size * 100
+                percent = (value / code_size * 100) if code_size > 0 else 0
                 hover_texts.append(f"<b>{label}</b><br>{value} bytes ({percent:.2f}%)")
 
-        # Filter out 0-byte values for the treemap (but keep them for structure)
-        display_values = [v if v > 0 else 1 for v in values]  # Use 1 as minimal value for parent nodes
+        # Filter out 0-byte values for the treemap
+        display_values = [v if v > 0 else 1 for v in values]
 
         # Create the treemap figure
         fig = go.Figure(go.Treemap(
             labels=labels,
             parents=parents,
-            values=display_values,  # Use filtered values
+            values=display_values,
             text=hover_texts,
             hovertemplate='%{text}<extra></extra>',
             marker=dict(colors=colours),
             root_color="lightgrey",
-            textinfo="none"  # Hide default text labels
+            textinfo="none"
         ))
 
         # Add custom legend using annotations
@@ -180,7 +180,7 @@ class ScoreTreemap:
             ))
 
         fig.update_layout(
-            margin=dict(t=50, l=25, r=150, b=25),  # Extra right margin for legend
+            margin=dict(t=50, l=25, r=150, b=25),
             title=f"Decomp Progress [{selected_version}]",
             annotations=annotations
         )

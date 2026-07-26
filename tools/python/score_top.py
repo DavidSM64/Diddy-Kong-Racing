@@ -12,15 +12,16 @@ class ScoreTop:
         
         for scoreFile in scoreFiles:
             # Skip libultra files if exclude_lib is True
-            if exclude_lib and '/libultra/' in scoreFile.path:
+            if exclude_lib and '/libultra/' in scoreFile.filepath:
                 continue
             
             # Skip non-C files or files without path
-            if not scoreFile.path.endswith('.c'):
+            if not scoreFile.filepath.endswith('.c'):
                 continue
             
-            todo_size = scoreFile.unfinishedSize  # GLOBAL_ASM functions still need work
-            done_size = scoreFile.get_size_of_functions()  # Decompiled functions
+            # GLOBAL_ASM functions still need work (these are the remaining ASM)
+            todo_size = scoreFile.global_asm_size
+            done_size = scoreFile.total_size()  # Decompiled C functions
             
             # Only include files that have some work (TODO or DONE)
             if todo_size > 0 or done_size > 0:
@@ -38,8 +39,8 @@ class ScoreTop:
                     continue
                 
                 files_data.append({
-                    'name': os.path.basename(scoreFile.path),
-                    'path': scoreFile.path,
+                    'name': os.path.basename(scoreFile.filepath),
+                    'path': scoreFile.filepath,
                     'todo_size': todo_size,
                     'done_size': done_size,
                     'total_size': total_file_size,
@@ -51,7 +52,7 @@ class ScoreTop:
                 total_done_size += done_size
         
         if not files_data:
-            print("\n✓ No C files with remaining GLOBAL_ASM found!")
+            print("No C files with remaining GLOBAL_ASM found!")
             return
         
         # Sort by TODO size (largest first) - files that need most work
