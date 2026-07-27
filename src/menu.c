@@ -8812,6 +8812,9 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
     rendermode_reset(&sMenuCurrDisplayList);
 }
 
+/**
+ * Render the names of the worlds and tracks in the track selection menu.
+ */
 void trackmenu_render_names(UNUSED s32 updateRate) {
     s32 i;
     char *pad0;
