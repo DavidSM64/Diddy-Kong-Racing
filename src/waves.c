@@ -2230,7 +2230,7 @@ f32 obj_wave_height(Object_Log *log, s32 updateRate) {
             var_t0 += log->unkE[(log->unk4 >> 1) + 1];
         }
         if (log->unk2 > 0) {
-            var_t0 <<= (log->unk2 + 0x1F);
+            var_t0 <<= (log->unk2 - 1);
         } else {
             var_t0 >>= 1;
         }
