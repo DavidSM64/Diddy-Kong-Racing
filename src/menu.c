@@ -1243,7 +1243,7 @@ u8 gTrackSelectBgData[295] = {
 };
 Vertex *gTrackSelectBgVertices[2] = { NULL, NULL };
 Triangle *gTrackSelectBgTriangles[2] = { NULL, NULL };
-char *gQMarkPtr = "?";
+char *gDefaultTrackName = "?";
 
 // Boolean. Set to TRUE once in the Track Select menu, then
 //   set to FALSE when leaving the menu.
@@ -8498,7 +8498,7 @@ s32 menu_track_select_loop(s32 updateRate) {
 
     switch (gTrackmenuType) {
         case TRACKMENU_TYPE_RESET_CURSOR:
-            func_8008FF1C(updateRate);
+            trackmenu_render_names(updateRate);
             trackmenu_track_view(updateRate);
             trackmenu_input(updateRate);
             break;
@@ -8812,24 +8812,24 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
     rendermode_reset(&sMenuCurrDisplayList);
 }
 
-// trackmenu_render_names
-void func_8008FF1C(UNUSED s32 updateRate) {
-    s32 i; // sp7C
-    char *pad0;
-    char *pad1;
-    s32 pad2;
+/**
+ * Render the names of the worlds and tracks in the track selection menu.
+ */
+void trackmenu_render_names(UNUSED s32 updateRate) {
+    s32 i;
+    UNUSED s32 pad[3];
     s32 trackSelectX;
     s32 trackSelectY;
     char *levelName;
     s32 maxTrackY;
     s8 *trackMenuIds;
-    Settings *settings; // sp58
-    TrackRenderDetails *pad3;
+    Settings *settings;
+    UNUSED s32 pad1;
     s32 trackX;
     s32 trackY;
     s32 j;
     s32 startIndex;
-    s16 pad4;
+    UNUSED s32 pad2;
     s32 k;
 
     settings = get_settings();
@@ -8868,38 +8868,38 @@ void func_8008FF1C(UNUSED s32 updateRate) {
                         gTrackSelectRenderDetails[k].visible = 2;
                     }
                 } else {
-                    gTrackSelectRenderDetails[k].trackName = gQMarkPtr;
+                    gTrackSelectRenderDetails[k].trackName = gDefaultTrackName;
                 }
                 gTrackSelectRenderDetails[k].xOff = ((trackX * 320) - gTrackSelectX);
                 gTrackSelectRenderDetails[k].yOff = ((-trackY * gTrackSelectViewportY) - gTrackSelectY);
                 gTrackSelectRenderDetails[k].opacity = 0xFF;
                 if ((trackX == gSelectedTrackX) && (trackY == gSelectedTrackY)) {
-                    gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 0x80;
+                    gTrackSelectRenderDetails[k].vp1 = 1;
                     if (gOpacityDecayTimer < 32) {
                         gTrackSelectRenderDetails[k].opacity = gOpacityDecayTimer * 8;
                     }
                 } else {
-                    gTrackSelectRenderDetails[k].copyViewPort = gTrackSelectRenderDetails[k].copyViewPort & 0xFF7F;
+                    gTrackSelectRenderDetails[k].vp1 = 0;
                 }
-                gTrackSelectRenderDetails[k].copyViewPort = gTrackSelectRenderDetails[k].copyViewPort & 0xFF80;
+                gTrackSelectRenderDetails[k].vp2 = 0;
                 if (gMenuDelay == 0) {
                     if (trackY > 0) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 1) & 0x7F);
+                        gTrackSelectRenderDetails[k].vp2 |= 1;
                     }
                     if (trackX < 5) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 2) & 0x7F);
+                        gTrackSelectRenderDetails[k].vp2 |= 2;
                     }
                     if (trackY < maxTrackY) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 4) & 0x7F);
+                        gTrackSelectRenderDetails[k].vp2 |= 4;
                     }
                     if (trackX > 0) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | (((gTrackSelectRenderDetails[k].copyViewPort & 0xFF) | 8) & 0x7F);
+                        gTrackSelectRenderDetails[k].vp2 |= 8;
                     }
                     if (trackX == 4 && trackY == 4) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | ((gTrackSelectRenderDetails[k].copyViewPort & 0xFF & 0xFF) & 0x7D);
+                        gTrackSelectRenderDetails[k].vp2 &= ~2;
                     }
                     if (trackX == 5 && trackY == 3) {
-                        gTrackSelectRenderDetails[k].copyViewPort = (gTrackSelectRenderDetails[k].copyViewPort & 0xFF80) | ((gTrackSelectRenderDetails[k].copyViewPort & 0xFF & 0xFF) & 0x7B);
+                        gTrackSelectRenderDetails[k].vp2 &= ~4;
                     }
                 }
                 if (trackX == 4) {
@@ -8925,9 +8925,9 @@ void func_8008FF1C(UNUSED s32 updateRate) {
             trackmenu_render_2D(gTrackSelectRenderDetails[i].xOff, gTrackSelectRenderDetails[i].yOff,
                                 gTrackSelectRenderDetails[i].hubName, gTrackSelectRenderDetails[i].trackName,
                                 gTrackSelectRenderDetails[i].opacity, gTrackSelectRenderDetails[i].border,
-                                ((u32) gTrackSelectRenderDetails[i].viewPort) >> 0xF,
+                                gTrackSelectRenderDetails[i].vp1,
                                 (gTrackSelectRenderDetails[i].visible == 1) ? D_800E05D4 : D_800E05F4,
-                                gTrackSelectRenderDetails[i].copyViewPort & 0x7F);
+                                gTrackSelectRenderDetails[i].vp2);
         }
     }
     gTrackSelectVertsFlip = 1 - gTrackSelectVertsFlip;

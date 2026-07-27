@@ -478,7 +478,6 @@ void obj_shade_fast(ObjectModel *model, Object *obj, f32 intensity);
  */
 s32 obj_animate(Object *obj);
 
-// Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void decrypt_magic_codes(s32 *data, s32 length);
@@ -507,9 +506,9 @@ CheckpointNode *func_800230D0(Object *, Object_Racer *);
 void obj_update(s32 updateRate);
 void func_800159C8(Object *, Object *);
 void obj_door_number(ObjectModel *, Object *);
-s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
+s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 f32 func_8001C6C4(Object_NPC *, Object *, f32, f32, s32);
 s32 collision_objectmodel(Object *obj, s32 arg1, s32* arg2, Vec3f *arg3, f32* arg4, f32* arg5, s8* surface);
-s32 func_80017A18(ObjectModel *, s32, s32 *, f32 *, f32 *, f32 *, f32 *, f32 *, f32 *, f32 *, s8 *argA,
-                  f32);
+s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *numCollisions, f32 *originPointsX, f32 *originPointsY, f32 *originPointsZ, f32 *targetPointsX, f32 *targetPointsY,
+                  f32 *targetPointsZ, f32 *collisionRadii, s8 *surfaces, f32 scale);
 #endif

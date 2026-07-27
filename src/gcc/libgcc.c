@@ -14,8 +14,9 @@
 #if defined(__GNUC__) && !defined(CC_CHECK)
 void *memset(void *dest, int val, size_t len) {
     unsigned char *ptr = dest;
-    while (len-- > 0)
+    while (len-- > 0) {
         *ptr++ = val;
+    }
     return dest;
 }
 
@@ -38,14 +39,16 @@ int memcmp(const void *s1, const void *s2, size_t n) {
 void *memmove(void *dest, const void *src, size_t len) {
     char *d = dest;
     const char *s = src;
-    if (d < s)
-        while (len--)
+    if (d < s) {
+        while (len--) {
             *d++ = *s++;
-    else {
+        }
+    } else {
         char *lasts = (char *) s + (len - 1);
         char *lastd = (char *) d + (len - 1);
-        while (len--)
+        while (len--) {
             *lastd-- = *lasts--;
+        }
     }
     return dest;
 }

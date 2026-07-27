@@ -42,7 +42,7 @@ s32 sBlackScreenTimer;
 u16 *gVideoCurrFramebuffer; // Official Name: currentScreen
 u16 *gVideoLastFramebuffer; // Official Name: otherScreen
 u16 *gVideoCurrDepthBuffer;
-u16 *gVideoLastDepthBuffer; // Official Name: otherZbuf
+u16 *gVideoLastDepthBuffer;
 u8 D_801262E4;
 UNUSED OSMesg D_801262E8[8];
 u8 gVideoDeltaCounter;
@@ -132,6 +132,7 @@ s32 fb_size(void) {
  * It first checks the TV type ad then will set the properties of the VI
  * depending on the gVideoModeIndex value.
  * Most of these go unused, as the value is always 1.
+ * Official Name: viSetTiming
  */
 void fb_init_vi(void) {
     s32 viModeTableIndex;
@@ -219,6 +220,8 @@ void fb_init_vi(void) {
             osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAF1]);
             break;
     }
+    // Could have just called this once like in JFG:
+    // osViSetSpecialFeatures(OS_VI_DIVOT_ON | OS_VI_DITHER_FILTER_ON | OS_VI_GAMMA_OFF);
     osViSetSpecialFeatures(OS_VI_DIVOT_ON);
     osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON);
     osViSetSpecialFeatures(OS_VI_GAMMA_OFF);
@@ -261,10 +264,11 @@ void fb_alloc(s32 index) {
 /**
  * Sets the video counters to their default values.
  * Another renmant from an unused system.
+ * Official Name: viFrameRateReset
  */
 void video_delta_reset(void) {
     gVideoDeltaCounter = 0;
-    gVideoDeltaTime = 2;
+    gVideoDeltaTime = LOGIC_30FPS;
 }
 
 /**
@@ -273,6 +277,7 @@ void video_delta_reset(void) {
  * This function also has a section where it counts a timer that goes no higher
  * than an update magnitude of 2. It's only purpose is to be used as a divisor
  * in the unused function, vi_refresh_rate.
+ * Official Name: viFrameSync
  */
 s32 fb_update(s32 mesg) {
     u8 tempUpdateRate;

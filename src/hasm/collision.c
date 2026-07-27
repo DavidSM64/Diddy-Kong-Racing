@@ -133,7 +133,7 @@ void generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets
             }
 
             // Skip hidden surfaces for non-vehicle objects (e.g., projectiles, pickups)
-            if (vehicleID == -1 && (seg->batches[batchIndex].flags & RENDER_HIDDEN)) {
+            if (vehicleID == VEHICLE_NO_OVERRIDE && (seg->batches[batchIndex].flags & RENDER_HIDDEN)) {
                 continue;
             }
 

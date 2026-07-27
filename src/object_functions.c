@@ -442,7 +442,7 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
     dir.z = obj->trans.z_position + (obj->z_velocity * updateRateF);
     radius = 9.0f;
 
-    generate_collision_candidates(1, &obj->trans.position, &dir, -1);
+    generate_collision_candidates(1, &obj->trans.position, &dir, VEHICLE_NO_OVERRIDE);
     hasCollision = FALSE;
     resolve_collisions(&obj->trans.position, &dir, &radius, &surface, 1, &hasCollision);
     if (hasCollision) {
@@ -730,7 +730,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
             targetPos.f[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
             targetPos.f[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
             radius = 9.0f;
-            generate_collision_candidates(1, &obj->trans.position, &targetPos, -1);
+            generate_collision_candidates(1, &obj->trans.position, &targetPos, VEHICLE_NO_OVERRIDE);
             hasCollision = FALSE;
             surface = SURFACE_DEFAULT;
             resolve_collisions(&obj->trans.position, &targetPos, &radius, &surface, 1, &hasCollision);
@@ -4408,7 +4408,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             targetPos.f[1] = obj->trans.y_position + (obj->y_velocity * updateRateF);
             targetPos.f[2] = obj->trans.z_position + (obj->z_velocity * updateRateF);
             radius = 8.0f;
-            generate_collision_candidates(1, &obj->trans.position, &targetPos, -1);
+            generate_collision_candidates(1, &obj->trans.position, &targetPos, VEHICLE_NO_OVERRIDE);
             hasCollision = 0;
             resolve_collisions(&obj->trans.position, &targetPos, &radius, &surface, 1, &hasCollision);
             obj->x_velocity = (targetPos.f[0] - obj->trans.x_position) / updateRateF;
@@ -4914,7 +4914,7 @@ void weapon_projectile(Object *obj, s32 updateRate) {
     offset.z = obj->trans.z_position + (obj->z_velocity * updateRateF);
     if (weapon->weaponID != WEAPON_MAGNET_LEVEL_3) {
         radius = 16.0f;
-        generate_collision_candidates(1, &obj->trans.position, &offset, -1);
+        generate_collision_candidates(1, &obj->trans.position, &offset, VEHICLE_NO_OVERRIDE);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
         resolve_collisions(&obj->trans.position, &offset, &radius, &surface, 1, &hasCollision);
@@ -5218,7 +5218,7 @@ void weapon_trap(Object *weaponObj, s32 updateRate) {
         intendedPos.y = weaponObj->trans.y_position + (weaponObj->y_velocity * updateRateF);
         intendedPos.z = weaponObj->trans.z_position + (weaponObj->z_velocity * updateRateF);
         radius = 9.0f;
-        generate_collision_candidates(1, &weaponObj->trans.position, &intendedPos, -1);
+        generate_collision_candidates(1, &weaponObj->trans.position, &intendedPos, VEHICLE_NO_OVERRIDE);
         hasCollision = FALSE;
         surface = SURFACE_NONE;
         resolve_collisions(&weaponObj->trans.position, &intendedPos, &radius, &surface, 1, &hasCollision);

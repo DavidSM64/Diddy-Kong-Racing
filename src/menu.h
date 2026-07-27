@@ -501,13 +501,9 @@ typedef struct TrackRenderDetails {
   /* 0x0A */ s16 yOff;
   /* 0x0C */ u8 visible;
   /* 0x0D */ u8 opacity;
-    union {
-        struct {
-            /* 0x0E */ u8 copyViewPort;
-            /* 0x0F */ u8 border;
-        };
-        /* 0x0E */ u16 viewPort;
-    };
+  /* 0x0E */ u32 vp1 : 1; 
+  /* 0x0E */ u32 vp2 : 7;
+  /* 0x0F */ u8 border;
 } TrackRenderDetails;
 
 extern s32 gShowControllerPakMenu;
@@ -714,7 +710,7 @@ void postrace_start(s32 finishState, s32 worldID);
 void load_menu_text(s32 language); // Non Matching
 s32 menu_controller_pak_loop(s32 updateRate);
 void menu_game_select_init(void);
-void func_8008FF1C(s32 updateRate);
+void trackmenu_render_names(s32 updateRate);
 void trackmenu_input(s32 updateRate);
 void filename_trim(char *input, char *output);
 void menu_ghost_data_init(void);

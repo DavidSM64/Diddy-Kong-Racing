@@ -1053,7 +1053,8 @@ void waves_render(Gfx **dList, Mtx **mtx, s32 viewportID) {
                             var_t0 = ((sp104 & 0xFF) - 1) * numVerts * numVerts;
                             for (j = 0; j < gWaveController.subdivisions; j++) {
                                 vtx = &gWaveVertices[gWaveVertexFlip + viewportID][var_t0];
-                                tri = &gWaveTriangles[gWaveVertexFlip + viewportID][j * (gWaveController.subdivisions << 1)];
+                                tri = &gWaveTriangles[gWaveVertexFlip + viewportID]
+                                                     [j * (gWaveController.subdivisions << 1)];
 
                                 gSPVertexDKR(gWaveDL++, OS_K0_TO_PHYSICAL(vtx), numVerts << 1, 0);
                                 gSPPolygon(gWaveDL++, OS_K0_TO_PHYSICAL(tri), numTris, TRIN_ENABLE_TEXTURE);
@@ -2229,7 +2230,7 @@ f32 obj_wave_height(Object_Log *log, s32 updateRate) {
             var_t0 += log->unkE[(log->unk4 >> 1) + 1];
         }
         if (log->unk2 > 0) {
-            var_t0 <<= (log->unk2 + 0x1F);
+            var_t0 <<= (log->unk2 - 1);
         } else {
             var_t0 >>= 1;
         }
