@@ -11,7 +11,7 @@
 
 // Self-hosted libc memory functions, gcc assumes these exist even in a freestanding
 // environment and there is no way to tell it otherwise.
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(CC_CHECK)
 void *memset(void *dest, int val, size_t len) {
     unsigned char *ptr = dest;
     while (len-- > 0) {
