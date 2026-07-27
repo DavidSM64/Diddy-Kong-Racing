@@ -8817,21 +8817,19 @@ void trackmenu_render_2D(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
  */
 void trackmenu_render_names(UNUSED s32 updateRate) {
     s32 i;
-    char *pad0;
-    char *pad1;
-    s32 pad2;
+    UNUSED s32 pad[3];
     s32 trackSelectX;
     s32 trackSelectY;
     char *levelName;
     s32 maxTrackY;
     s8 *trackMenuIds;
     Settings *settings;
-    TrackRenderDetails *pad3;
+    UNUSED s32 pad1;
     s32 trackX;
     s32 trackY;
     s32 j;
     s32 startIndex;
-    s16 pad4;
+    UNUSED s32 pad2;
     s32 k;
 
     settings = get_settings();
