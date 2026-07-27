@@ -1,4 +1,4 @@
-#ifndef NON_MATCHING
+#ifndef __GNUC__
 long long __d_to_ll(double d) {
     return d;
 }
