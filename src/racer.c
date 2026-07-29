@@ -2588,7 +2588,7 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
 
     spA2 = FALSE;
     if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->vehicleIDPrev != VEHICLE_WIZPIG && gRacerWaveCount != 0) {
-        var_t9 = (var_t9 = gRacerWaveCount - 1);
+        var_t9 = gRacerWaveCount - 1;
         for (var_a0 = gRacerWaveCount - 1;
              var_a0 >= 0 && gRacerCurrentWave[var_a0]->waveHeight < obj->trans.y_position + 5; var_a0--) {
             if (gRacerWaveCount - 1) {} // fake
@@ -8959,35 +8959,30 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
 }
 
 void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
-    f32 temp_f0;
+    s32 j;
     s32 checkpointIdx;
     s32 checkpointCount;
     CheckpointNode *checkpoint;
-    LevelModel *model;
-    f32 var_f28;
-    f32 checkpointX[4];
-    s32 j;
-    f32 checkpointY[4];
-    f32 var_f12;
-    f32 checkpointZ[4];
+    s32 i;
+    f32 checkpointX[5];
+    f32 checkpointY[5];
+    f32 checkpointZ[5];
     s32 checkpointSplineIdx;
     f32 checkpointDistance;
-    UNUSED f32 pad1;
-    UNUSED f32 pad2;
-    f32 spB8[4];
+    f32 var_f28;
+    f32 spB8[5];
+    f32 spA4[5];
     f32 var_f26;
-    f32 spA4[4];
-    UNUSED f32 pad3;
     f32 sp9C;
     f32 sp98;
     f32 sp94;
-    f32 checkpointPositionOffset;
-    f32 tempRacerVelocity;
+    f32 checkpointPositionOffset; // sp90
+    f32 tempRacerVelocity; // sp8C
     f32 var_f24;
-    s32 i;
+    f32 var_f12;
     LevelHeader *levelHeader;
 #if VERSION == VERSION_80
-    UNUSED f32 pad4;
+    LevelModel *model;
 #endif
 
     gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACERACCELERATION_UNKNOWN0);
@@ -9096,10 +9091,10 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         var_f28 -= racer->unk70;
         if (j == 0) {
             checkpointSplineIdx = 0;
-            checkpointPositionOffset =
+            var_f12 =
                 sqrtf((var_f24 * var_f24) + (var_f26 * var_f26) + (var_f28 * var_f28)) / updateRateF;
-            if (checkpointPositionOffset != 0.0f) {
-                racer->unkAC *= (tempRacerVelocity / checkpointPositionOffset);
+            if (var_f12 != 0.0f) {
+                racer->unkAC *= (tempRacerVelocity / var_f12);
             } else {
                 j = -1;
                 racer->unkAC += 0.01;
@@ -9115,9 +9110,9 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     var_f28 = racer->unk70 - obj->trans.z_position;
     checkpointPositionOffset = sqrtf((var_f24 * var_f24) + (var_f28 * var_f28)) / updateRateF;
     if (checkpointPositionOffset > 35.0) {
-        temp_f0 = (35.0 / checkpointPositionOffset);
-        var_f24 *= temp_f0;
-        var_f28 *= temp_f0;
+        var_f12 = (35.0 / checkpointPositionOffset);
+        var_f24 *= var_f12;
+        var_f28 *= var_f12;
     }
     racer->checkpoint_distance = (1.0 - checkpointDistance);
     if (checkpointSplineIdx != 0) {
@@ -9145,11 +9140,11 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     racer->unk1BA = spB8[1] + ((spB8[2] - spB8[1]) * checkpointDistance);
     racer->unk1BC = spA4[1] + ((spA4[2] - spA4[1]) * checkpointDistance);
-    temp_f0 = sqrtf((sp9C * sp9C) + (sp94 * sp94));
-    if (temp_f0 != 0.0f) {
-        sp9C /= temp_f0;
-        sp98 /= temp_f0;
-        sp94 /= temp_f0;
+    checkpointDistance = sqrtf((sp9C * sp9C) + (sp94 * sp94));
+    if (checkpointDistance != 0.0f) {
+        sp9C /= checkpointDistance;
+        sp98 /= checkpointDistance;
+        sp94 /= checkpointDistance;
         racer->steerVisualRotation = arctan2_f(sp9C, sp94) - 0x8000;
         obj->trans.rotation.y_rotation = racer->steerVisualRotation;
         obj->trans.rotation.x_rotation = arctan2_f(sp98, 1.0f);
@@ -9159,8 +9154,8 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     racer->unk1BE = racer->steerVisualRotation;
     racer->unk1C0 = obj->trans.rotation.x_rotation;
     if (move_object(obj, var_f24, var_f26, var_f28)) {
-        if (1) {}
 #if VERSION < VERSION_80
+        if (1) {}
         obj->trans.x_position += var_f24;
         obj->trans.y_position += var_f26;
         obj->trans.z_position += var_f28;
