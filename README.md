@@ -24,13 +24,14 @@ As of July 25, 2026, this is our current score:
 
 <summary> Ubuntu / Debian based Linux distros </summary>
 
-`sudo apt install build-essential pkg-config git python3 python3-pip binutils-mips-linux-gnu python3-venv libpcre2-dev libpcre2-8-0`
+`sudo apt install build-essential libssl-dev pkg-config git curl python3 python3-pip binutils-mips-linux-gnu gcc-mips-linux-gnu python3-venv libpcre2-dev libpcre2-8-0`
 
 - `build-essential` / `pkg-config` are helper packages needed for make.
 - `git` is used for version control.
+- `curl` downloads the IDO recomp during setup.
 - `python3` is needed to run python scripts
 - `libpcre2-dev` and `libpcre2-8-0` are not technically required, but will speedup extracting/building some assets significantly.
-- `gcc-mips-linux-gnu` is optionally used if compiling NON_MATCHING with COMPILER=gcc
+- `gcc-mips-linux-gnu` is used when compiling a non-matching build with `COMPILER=gcc`.
 
 </details>
 
@@ -97,27 +98,45 @@ Windows is not natively supported. We recommend using a linux distro under the W
 6. Run `make` in the main directory.  
    **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
 
+The resulting ROM is written to `build/dkr.<region>.<version>.z64`. Run that ROM in a compatible Nintendo 64 emulator or on supported hardware; this repository does not produce a native desktop executable.
+
 Note: If you are on MacOS, remember to use `gmake` instead of `make`!
 
 ---
 
 ### Building other versions
 
-To build other versions of the ROM, just specifcy the region and version in the make command. All examples are below:
-Baserom|REGION|VERSION|Command
----|--|---|-
-US 1.0 | US | v77 | `make REGION=us VERSION=v77`
-PAL 1.0 | PAL | v77 | `make REGION=pal VERSION=v77`
-JPN 1.0 | JPN | v79 | `make REGION=jpn VERSION=v79`
-US 1.1 | US | v80 | `make REGION=us VERSION=v80`
-PAL 1.1 | PAL | v80 | `make REGION=pal VERSION=v80`
+To build another version of the ROM, pass the same region and version to both the extraction and build commands:
+
+Baserom|REGION|VERSION|Extraction|Build
+---|--|---|---|-
+US 1.0 | US | v77 | `make cleanextract REGION=us VERSION=v77` | `make REGION=us VERSION=v77`
+PAL 1.0 | PAL | v77 | `make cleanextract REGION=pal VERSION=v77` | `make REGION=pal VERSION=v77`
+JPN 1.0 | JPN | v79 | `make cleanextract REGION=jpn VERSION=v79` | `make REGION=jpn VERSION=v79`
+US 1.1 | US | v80 | `make cleanextract REGION=us VERSION=v80` | `make REGION=us VERSION=v80`
+PAL 1.1 | PAL | v80 | `make cleanextract REGION=pal VERSION=v80` | `make REGION=pal VERSION=v80`
 
 ## Modding
 
-If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.  
-Example: `make NON_MATCHING=1 -j4`
+If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command:
+
+```sh
+make clean
+make NON_MATCHING=1 -j4
+```
 
 The `NON_MATCHING` define will include the functions that don't exactly match one-to-one, but should be no different functionality-wise. If you do notice any bugs that occur in a `NON_MATCHING` build that are not in the vanilla game, then please file an issue describing the bug. It would be helpful if you can track down which function is causing the bug, but that is not required.
+
+To compile the game code with GCC instead of IDO, use a MIPS cross-compiler:
+
+```sh
+make clean
+make COMPILER=gcc -j4
+```
+
+`COMPILER=gcc` automatically enables `NON_MATCHING`. It requires a compatible MIPS GCC in your `PATH`; the host GCC or Clang compiler is only used for syntax checks. There is no Clang target compiler option.
+
+Always run `make clean` when switching between matching, `NON_MATCHING`, and GCC builds because they share the `build` directory.
 
 ## Style Guide
 

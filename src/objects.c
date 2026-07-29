@@ -1512,7 +1512,7 @@ void track_setup_racers(Vehicle vehicle, u32 entranceID, s32 playerCount) {
             // Taj will teleport straight to the player to initiate a challenge.
             if (j) {
                 set_taj_voice_line(SOUND_VOICE_TAJ_CHALLENGE_RACE);
-                settings->tajFlags |= 1 << (j + 31);
+                settings->tajFlags |= 1 << (j - 1);
                 set_taj_status(TAJ_TELEPORT);
                 set_next_taj_challenge_menu(j);
                 safe_mark_write_save_file(get_save_file_index());

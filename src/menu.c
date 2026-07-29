@@ -44,6 +44,10 @@
 // The bss section needs to stay above the data section!
 // Otherwise the bss variables will get reordered, which is bad.
 
+#ifdef AVOID_UB
+#define TRACK_SELECT_ROWS 5
+#endif
+
 // A huge unfortunate issue has occurred which seems to have reordered the BSS for JP... Not sure why.
 #if REGION == REGION_JP
 // START OF JPN BSS ORDER
@@ -183,10 +187,16 @@ unk80126878 D_80126878[8];
 f32 D_801268D8;
 UNUSED s32 D_801268DC; // Set to 0 during the title screen, never read.
 s32 gOpeningNameID;
+#ifdef AVOID_UB
+// The fifth row overlaps gFFLUnlocked and the two words after it in the matching BSS.
+s16 gTrackSelectIDs[TRACK_SELECT_ROWS][6];
+#define gFFLUnlocked gTrackSelectIDs[4][0]
+#else
 s16 gTrackSelectIDs[4][6]; // Track Select values?
 s16 gFFLUnlocked;
 UNUSED s32 D_80128464;
 UNUSED s32 D_80128468;
+#endif
 s32 gTrackSelectVertsFlip;
 UNUSED s32 D_80126928; // Set to 64, but never used.
 UNUSED s32 D_8012692C; // Set to 32, but never used.
@@ -397,10 +407,16 @@ f32 D_801268D8;
 UNUSED s32 D_801268DC; // Set to 0 during the title screen, never read.
 s32 gOpeningNameID;
 UNUSED s32 D_801268E4;
+#ifdef AVOID_UB
+// The fifth row overlaps gFFLUnlocked and the two words after it in the matching BSS.
+s16 gTrackSelectIDs[TRACK_SELECT_ROWS][6];
+#define gFFLUnlocked gTrackSelectIDs[4][0]
+#else
 s16 gTrackSelectIDs[4][6]; // Track Select values?
 s16 gFFLUnlocked;
 UNUSED s32 D_8012691C;
 UNUSED s32 D_80126920;
+#endif
 s32 gTrackSelectVertsFlip;
 UNUSED s32 D_80126928; // Set to 64, but never used.
 UNUSED s32 D_8012692C; // Set to 32, but never used.
