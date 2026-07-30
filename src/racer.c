@@ -115,14 +115,6 @@ FadeTransition gDoorFadeTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_
 
 /*******************************/
 
-/************ .rodata ************/
-
-const char gRacerDebugCoords[] = "%.1f,%.1f,%.1f\n";
-UNUSED const char gChecksumOverflowString[] = "Chk ovflow!!\n";
-UNUSED const char gRacerBackString[] = "Back\n";
-
-/*********************************/
-
 /************ .bss ************/
 
 f32 gCurrentCourseHeight;
@@ -4214,7 +4206,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         // Print player 1's coordinates to the screen if the debug cheat is enabled.
         if (gRaceStartTimer == 0 && tempRacer->playerIndex == PLAYER_ONE) {
             if (get_filtered_cheats() & CHEAT_PRINT_COORDS) {
-                render_printf(gRacerDebugCoords, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
+                render_printf("%.1f,%.1f,%.1f\n", obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
             }
         }
         set_render_printf_background_colour(0, 0, 0, 128);
@@ -9012,17 +9004,8 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
 
     if (racer->vehicleID == VEHICLE_HOVERCRAFT) {
         i = (racer->unk1BE & 0xFFFF) - (racer->unk1C2 & 0xFFFF);
-        if (i > 0x8000) {
-            i -= 0xFFFF;
-        }
-
-        if (i < -0x8000) {
-            i += 0xFFFF;
-        }
-
-        if (i < 0) {
-            i = -i;
-        }
+        WRAP(i, -0x8000, 0x8000);
+        i = ABS(i);
 
         i -= 200;
         if (i < 0) {
@@ -9049,6 +9032,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
 
     if (checkpointIdx >= checkpointCount) {
+        stubbed_printf("Chk ovflow!!\n");
         checkpointIdx -= checkpointCount;
     }
 
@@ -9065,6 +9049,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         checkpointIdx++;
         if (checkpointIdx == checkpointCount) {
             checkpointIdx = 0;
+            stubbed_printf("Back\n");
         }
     }
 

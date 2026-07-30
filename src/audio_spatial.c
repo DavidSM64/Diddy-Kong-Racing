@@ -818,7 +818,7 @@ u8 audspat_reverb_get_strength_at_point(ReverbLine *line, f32 x, f32 y, f32 z) {
                 projection = 0.0f;
             }
 
-            if (ABS2(dy * projection + y1 - y) < 2.0f && ABS2(dz * projection + z1 - z) < 2.0f) {
+            if (ABS(dy * projection + y1 - y) < 2.0f && ABS(dz * projection + z1 - z) < 2.0f) {
                 segmentFound = TRUE;
                 distanceAlong += projection * segmentLength;
             } else {

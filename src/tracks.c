@@ -897,12 +897,10 @@ void func_80026C14(s16 arg0, s16 arg1, s32 arg2) {
 }
 
 void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
-    UNUSED s32 pad[7];
     unk8011D478 *next;
     unk8011D478 *curr;
     s16 temp3;
     s16 temp4;
-    f32 diff_unk0;
     f32 curr_unk0;
     f32 curr_unk2;
     f32 next_unk0;
@@ -910,13 +908,12 @@ void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
     s32 noSwap;
     s16 i;
     s16 j;
+    f32 sp94[20];
+    f32 sp6C[10];
+    s8 sp60[10];
     s8 temp;
     s8 temp0;
     s8 temp1;
-    UNUSED f32 temp2;
-    f32 sp94[10];
-    f32 sp6C[10];
-    s8 sp60[10];
     s8 swapByte;
 
     if (arg0 >= 10 || arg0 == 0) {
@@ -934,11 +931,10 @@ void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3) {
         if (curr_unk0 == next_unk0) {
             return;
         }
-        diff_unk0 = (curr_unk0 - next_unk0);
-        sp94[j++] = ((next_unk2 - curr_unk2) * ((curr_unk0 - arg3) / diff_unk0)) + curr_unk2;
+        sp94[j++] = ((next_unk2 - curr_unk2) * ((curr_unk0 - arg3) / ((curr_unk0 - next_unk0)))) + curr_unk2;
         sp6C[i] = sp94[j - 1];
         sp60[i] = i;
-        sp94[j++] = ((curr_unk2 - next_unk2) * ((arg2 - next_unk0) / diff_unk0)) + next_unk2;
+        sp94[j++] = ((curr_unk2 - next_unk2) * ((arg2 - next_unk0) / ((curr_unk0 - next_unk0)))) + next_unk2;
         sp6C[i] += sp94[j - 1];
         i++;
     }
