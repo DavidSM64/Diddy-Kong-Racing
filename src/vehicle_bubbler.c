@@ -2,13 +2,10 @@
 
 #include "audio.h"
 #include "camera.h"
-#include "macros.h"
 #include "math_util.h"
 #include "objects.h"
 #include "particles.h"
-#include "printf.h"
 #include "racer.h"
-#include "types.h"
 
 /************ .data ************/
 

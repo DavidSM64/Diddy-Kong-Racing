@@ -5,14 +5,12 @@
 #include "audio_vehicle.h"
 #include "fade_transition.h"
 #include "game.h"
-#include "macros.h"
 #include "math_util.h"
 #include "menu.h"
 #include "objects.h"
 #include "particles.h"
 #include "structs.h"
 #include "thread3_main.h"
-#include "types.h"
 
 /************ .data ************/
 

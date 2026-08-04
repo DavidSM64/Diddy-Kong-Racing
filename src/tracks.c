@@ -15,7 +15,6 @@
 #include "menu.h"
 #include "objects.h"
 #include "particles.h"
-#include "PR/gu.h"
 #include "PRinternal/viint.h"
 #include "racer.h"
 #include "structs.h"

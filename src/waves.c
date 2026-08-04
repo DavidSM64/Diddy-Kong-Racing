@@ -5,7 +5,6 @@
 #include "memory.h"
 #include "objects.h"
 #include "PRinternal/viint.h"
-#include "printf.h"
 #include "racer.h"
 #include "textures_sprites.h"
 #include "tracks.h"

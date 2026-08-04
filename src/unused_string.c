@@ -3,18 +3,18 @@
 
 /**
  * Copy a string to a given location.
- * Return the address of the destrination.
+ * Return the address of the destination.
  */
-UNUSED char *strcpy(char *src, const char *dest) {
-    char *ret = src;
+UNUSED char *strcpy(char *dest, const char *src) {
+    char *ret = dest;
 
-    while ((*src++ = *dest++) != '\0') {}
+    while ((*dest++ = *src++) != '\0') {}
     return ret;
 }
 
 /**
  * Append a string to the end of a given string.
- * Return the address of the destrination.
+ * Return the address of the destination.
  */
 UNUSED char *strcat(char *dest, const char *src) {
     char *ret = dest;

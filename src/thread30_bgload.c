@@ -1,5 +1,4 @@
 #include "thread30_bgload.h"
-#include "game.h"
 #include "macros.h"
 #include "stacks.h"
 #include "thread3_main.h"
