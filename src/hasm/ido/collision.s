@@ -20,11 +20,21 @@ EXPORT(D_800E5F6C)
 EXPORT(D_800E5F70)
     .float -0.1
 
-.set noat
-
 .text
 
 #define sizeOfVec3f 0xC
+#define sizeOfLevelModelSegmentBoundingBox 0xC
+#define sizeOfLevelModelSegment 0x44
+
+#define minX s5
+#define maxX s4
+#define minZ s3
+#define maxZ s2
+#define x1 t0
+#define z1 t1
+#define x2 t2
+#define z2 t3
+#define vehicleID s6
 
 LEAF(generate_collision_candidates)
     addiu      sp, sp, -0x70
@@ -38,11 +48,11 @@ LEAF(generate_collision_candidates)
     sw         s0, 0x14(sp)
     li         t0, 100000
     li         t1, -100000
-    move       s5, t0 # s5 = minX
-    move       s4, t1 # s4 = maxX
-    move       s3, t0 # s3 = minZ
-    move       s2, t1 # s2 = maxZ
-    move       s6, a3 # s6 = vehicleID
+    move       minX, t0 # s5 = minX
+    move       maxX, t1 # s4 = maxX
+    move       minZ, t0 # s3 = minZ
+    move       maxZ, t1 # s2 = maxZ
+    move       vehicleID, a3 # s6 = vehicleID
     beqz       a0, .zero_numPoints # Skip if no collision candidates
     sll        t0, a0, 3 # t0 = a0 * 8
     sll        t1, a0, 2 # t1 = a0 * 4
@@ -57,117 +67,110 @@ LEAF(generate_collision_candidates)
     trunc.w.s  fv1, fv1
     trunc.w.s  ft0, ft0
     trunc.w.s  ft1, ft1
-    mfc1       t0, fv0 /* t0 = x1 = (s32) origins[i].x */
-    mfc1       t1, fv1 /* t1 = z1 = (s32) origins[i].z */
-    mfc1       t2, ft0 /* t2 = x2 = (s32) targets[i].x */
-    mfc1       t3, ft1 /* t3 = z2 = (s32) targets[i].z */
-    bge        s4, t0, .skip_maxX_update
-    move       s4, t0  /* maxX = x1 */
+    mfc1       x1, fv0 /* t0 = x1 = (s32) origins[i].x */
+    mfc1       z1, fv1 /* t1 = z1 = (s32) origins[i].z */
+    mfc1       x2, ft0 /* t2 = x2 = (s32) targets[i].x */
+    mfc1       z2, ft1 /* t3 = z2 = (s32) targets[i].z */
+    bge        maxX, x1, .skip_maxX_update
+    move       maxX, x1  /* maxX = x1 */
 .skip_maxX_update:
-    ble        s5, t0, .skip_minX_update
-    move       s5, t0  /* minX = x1 */
+    ble        minX, x1, .skip_minX_update
+    move       minX, x1  /* minX = x1 */
 .skip_minX_update:
-    bge        s2, t1, .skip_maxZ_update
-    move       s2, t1  /* maxZ = z1 */
+    bge        maxZ, z1, .skip_maxZ_update
+    move       maxZ, z1  /* maxZ = z1 */
 .skip_maxZ_update:
-    ble        s3, t1, .skip_minZ_update
-    move       s3, t1  /* minZ = z1 */
+    ble        minZ, z1, .skip_minZ_update
+    move       minZ, z1  /* minZ = z1 */
 .skip_minZ_update:
-    bge        s4, t2, .skip_maxX_update2
-    move       s4, t2  /* maxX = x2 */
+    bge        maxX, x2, .skip_maxX_update2
+    move       maxX, x2  /* maxX = x2 */
 .skip_maxX_update2:
-    ble        s5, t2, .skip_minX_update2
-    move       s5, t2  /* minX = x2 */
+    ble        minX, x2, .skip_minX_update2
+    move       minX, x2  /* minX = x2 */
 .skip_minX_update2:
-    bge        s2, t3, .skip_maxZ_update2
-    move       s2, t3  /* maxZ = z2 */
+    bge        maxZ, z2, .skip_maxZ_update2
+    move       maxZ, z2  /* maxZ = z2 */
 .skip_maxZ_update2:
-    bge        t3, s3, .skip_minZ_update2
-    move       s3, t3  /* minZ = z2 */
+    ble        minZ, z2, .skip_minZ_update2
+    move       minZ, z2  /* minZ = z2 */
 .skip_minZ_update2:
     addiu     a1, a1, sizeOfVec3f /* Advance to the next origin pointer */
     addiu     a2, a2, sizeOfVec3f /* Advance to the next target pointer */
     blt       a1, a0, .for_loop_start
 .zero_numPoints:
-.set noreorder
-    addiu      s5, s5, -0x14
-    addiu      s4, s4, 0x14
-    slt        $at, s4, s5
-    addiu      s3, s3, -0x14
-    beqz       $at, .L80031270
-    addiu     s2, s2, 0x14
-    move       t0, s5
-    move       s5, s4
-    move       s4, t0
-.L80031270:
-    slt        $at, s2, s3
-    beqz       $at, .L80031288
-    nop
-    move       t0, s3
-    move       s3, s2
-    move       s2, t0
-.L80031288:
+    /* Expand the bounding box by 20 units in all directions */
+    addiu      minX, -20
+    addiu      maxX, 20
+    addiu      minZ, -20
+    addiu      maxZ, 20
+    /* if (maxX >= minX) swap min and max x */
+    bge        maxX, minX, .skip_swap_x
+    move       t0, minX
+    move       minX, maxX
+    move       maxX, t0
+.skip_swap_x:
+    /* if (maxZ >= minZ) swap min and max z */
+    bge        maxZ, minZ, .skip_swap_z
+    move       t0, minZ
+    move       minZ, maxZ
+    move       maxZ, t0
+.skip_swap_z:
     lui        t0, %hi(gCurrentLevelModel)
     lw         t0, %lo(gCurrentLevelModel)(t0)
-    addi       s1, sp, 0x34 /* handwritten instruction */
-    addi       s0, sp, 0x48 /* handwritten instruction */
-    lh         t7, 0x1A(t0)
+    addi       s1, sp, 0x34 /* s16 grid_mask[10]; */
+    addi       s0, sp, 0x48 /* LevelModelSegment *segments[10]; */
     move       t8, zero
-    lw         a0, 0x8(t0)
-    beqz       t7, .L80031334
-    lw        t6, 0x4(t0)
-.L800312AC:
-    lh         v0, 0x6(a0)
-    lh         v1, 0x0(a0)
-    addiu      v0, v0, 0x5
-    slt        $at, v0, s5
-    bnez       $at, .L80031324
-    addiu     v1, v1, -0x5
-    slt        $at, s4, v1
-    bnel       $at, zero, .L80031328
-    addiu     t7, t7, -0x1
-    lh         t0, 0xA(a0)
-    lh         t1, 0x4(a0)
-    addiu      t0, t0, 0x5
-    slt        $at, t0, s3
-    bnez       $at, .L80031324
-    addiu     t1, t1, -0x5
-    slt        $at, s2, t1
-    bnel       $at, zero, .L80031328
-    addiu     t7, t7, -0x1
-    move       a1, s5
-    move       a2, s3
-    move       a3, s4
+    lw         a0, 0x8(t0)   /* a0 = &gCurrentLevelModel->segmentsBoundingBoxes */
+    lw         t6, 0x4(t0)   /* t6 = &gCurrentLevelModel->segments */
+    lh         t7, 0x1A(t0)  /* t7 = gCurrentLevelModel->numberOfSegments */
+    beqz       t7, .end_loop /* Skip loop if no segments */
+.start_of_loop:
+    lh         v1, 0x0(a0) /* v1 = segmentBoundingBox->x1 */
+    lh         v0, 0x6(a0) /* v0 = segmentBoundingBox->x2 */
+    addiu      v0, 5       /* v0 = x2 + 5 */
+    addiu      v1, -5      /* v1 = x1 - 5 */
+    blt        v0, minX, .continue_loop
+    blt        maxX, v1, .continue_loop
+    lh         t1, 0x4(a0) /* t1 = segmentBoundingBox->z1 */
+    lh         t0, 0xA(a0) /* t0 = segmentBoundingBox->z2 */
+    addiu      t1, -5      /* t1 = z1 - 5 */
+    addiu      t0, 5       /* t0 = z2 + 5 */
+    blt        t0, minZ, .continue_loop
+    blt        maxZ, t1, .continue_loop
+    move       a1, minX
+    move       a2, minZ
+    move       a3, maxX
+    sw         maxZ, 0x10(sp)
     jal        compute_grid_overlap_mask
-    sw        s2, 0x10(sp)
-    sh         v0, 0x0(s1)
-    addiu      t8, t8, 0x1
-    addiu      $at, zero, 0xA
-    sw         t6, 0x0(s0)
-    addiu      s1, s1, 0x2
-    beq        t8, $at, .L80031334
-    addiu     s0, s0, 0x4
-.L80031324:
-    addiu      t7, t7, -0x1
-.L80031328:
-    addiu      a0, a0, 0xC
-    bnez       t7, .L800312AC
-    addiu     t6, t6, 0x44
-.L80031334:
+    sh         v0, 0x0(s1) /* *s1 = gridOverlapMask */
+    sw         t6, 0x0(s0) /* *s0 = pointer for &gCurrentLevelModel->segments[i] */
+    addiu      s1, 0x2 /* s1 = gridOverlapMask++ */
+    addiu      s0, 4 /* segments++ */
+    addiu      t8, 1 /* counter++ */
+    beq        t8, 10, .end_loop
+.continue_loop:
+    addiu      t7, -1
+    addiu      a0, sizeOfLevelModelSegmentBoundingBox
+    addiu      t6, sizeOfLevelModelSegment
+    bnez       t7, .start_of_loop
+.end_loop:
+.set noreorder
     beqz       t8, .L800314A8
-    or        s3, zero, zero
+    move       s3, zero /* j = 0 */
     lui        a0, %hi(gCurrentLevelModel)
     lw         a0, %lo(gCurrentLevelModel)(a0)
     lui        s2, %hi(gCollisionCandidates)
     lui        t9, %hi(gCollisionSurfaces)
-    addi       s1, sp, 0x34 /* handwritten instruction */
-    sll        t8, t8, 1
+    addi       s1, sp, 0x34 /* s16 grid_mask[10]; */
+    sll        t8, 1
     lw         s2, %lo(gCollisionCandidates)(s2)
     lw         t9, %lo(gCollisionSurfaces)(t9)
-    addi       s0, sp, 0x48 /* handwritten instruction */
-    add        t8, s1, t8 /* handwritten instruction */
+    addi       s0, sp, 0x48
+    add        t8, s1, t8
     lw         a0, 0x0(a0)
 .L80031368:
+.set noat
     lw         t7, 0x0(s0)
     lui        $at, (0x7FFFFFFF >> 16)
     ori        $at, $at, (0x7FFFFFFF & 0xFFFF)
@@ -179,17 +182,17 @@ LEAF(generate_collision_candidates)
     addiu      s3, s3, 0x1
     sll        v0, t0, 3
     sll        v1, t0, 2
-    add        t3, v0, v1 /* handwritten instruction */
+    add        t3, v0, v1
     addiu      s2, s2, 0x4
     addiu      t9, t9, 0x1
-    add        t3, t3, t5 /* handwritten instruction */
+    add        t3, t3, t5
     addiu      t4, t5, 0xC
 .L800313A8:
     lw         t0, 0x8(t5)
     andi       v0, t0, 0x200
     bnez       v0, .L80031488
     addiu     $at, zero, -0x1
-    bnel       s6, $at, .L800313D0
+    bnel       vehicleID, $at, .L800313D0
     lbu       v1, 0x0(t5)
     andi       v0, t0, 0x100
     bnel       v0, zero, .L8003148C
@@ -201,17 +204,17 @@ LEAF(generate_collision_candidates)
     beql       v1, $at, .L8003141C
     lh        t0, 0x4(t5)
     sll        v1, v1, 3
-    add        v1, v1, a0 /* handwritten instruction */
+    add        v1, v1, a0
     lb         t2, 0x7(v1)
     addiu      $at, zero, 0xB
     beq        t2, $at, .L80031488
     addiu     $at, zero, 0x2
-    bne        s6, $at, .L80031408
+    bne        vehicleID, $at, .L80031408
     addiu     $at, zero, 0x11
     beql       t2, $at, .L8003148C
     addiu     t5, t5, 0xC
 .L80031408:
-    beqz       s6, .L80031418
+    beqz       vehicleID, .L80031418
     addiu     $at, zero, 0x12
     beql       t2, $at, .L8003148C
     addiu     t5, t5, 0xC
@@ -224,9 +227,9 @@ LEAF(generate_collision_candidates)
     sll        t1, t1, 1
     sll        v0, t0, 1
     sll        v1, t0, 3
-    add        a1, a2, t1 /* handwritten instruction */
-    add        a2, a2, v0 /* handwritten instruction */
-    add        a3, a3, v1 /* handwritten instruction */
+    add        a1, a2, t1
+    add        a2, a2, v0
+    add        a3, a3, v1
 .L80031440:
     lh         t0, 0x0(a2)
     and        t0, t0, t6
@@ -279,7 +282,7 @@ LEAF(compute_grid_overlap_mask)
     beqz       a0, .L800315F8
     or        v0, zero, zero
     lh         t0, 0x0(a0)
-    lw         t5, 0x10(sp)
+    lw         t5, 0x10(sp) /* maxZ from generate_collision_candidates */
     lh         t1, 0x4(a0)
     slt        $at, a3, t0
     lh         t2, 0x6(a0)
@@ -319,14 +322,14 @@ LEAF(compute_grid_overlap_mask)
     slt        $at, t3, a2
     .L80031568:
     beql       $at, zero, .L80031578
-    sub       t2, t2, t0 /* handwritten instruction */
+    sub       t2, t2, t0
     or         a2, t3, zero
-    sub        t2, t2, t0 /* handwritten instruction */
+    sub        t2, t2, t0
     .L80031578:
     sra        t2, t2, 3
     addiu      t2, t2, 0x1
     addiu      v1, zero, 0x1
-    add        t4, t2, t0 /* handwritten instruction */
+    add        t4, t2, t0
     .L80031588:
     slt        $at, t4, a1
     bnez       $at, .L800315A0
@@ -338,13 +341,13 @@ LEAF(compute_grid_overlap_mask)
     sll        v1, v1, 1
     .L800315A4:
     slti       $at, v1, 0x100
-    add        t4, t4, t2 /* handwritten instruction */
+    add        t4, t4, t2
     bnez       $at, .L80031588
-    add       t0, t0, t2 /* handwritten instruction */
-    sub        t2, t3, t1 /* handwritten instruction */
+    add       t0, t0, t2
+    sub        t2, t3, t1
     sra        t2, t2, 3
     addiu      t2, t2, 0x1
-    add        t4, t2, t1 /* handwritten instruction */
+    add        t4, t2, t1
     or         t0, t1, zero
     .L800315C8:
     slt        $at, t4, a2
@@ -358,9 +361,9 @@ LEAF(compute_grid_overlap_mask)
     .L800315E4:
     lui        $at, (0x10000 >> 16)
     slt        $at, v1, $at
-    add        t4, t4, t2 /* handwritten instruction */
+    add        t4, t4, t2
     bnez       $at, .L800315C8
-    add       t0, t0, t2 /* handwritten instruction */
+    add       t0, t0, t2
     .L800315F8:
     jr         ra
     nop
