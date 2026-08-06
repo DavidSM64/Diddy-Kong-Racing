@@ -28,7 +28,7 @@ extern s32 gNumCollisionCandidates;
  * Then, terrain segments overlapping this rectangle are identified, and eligible triangles within them are selected.
  * Triangle batches are filtered based on visibility, surface type, and collision flags.
  */
-void generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets, s32 vehicleID) {
+s32 generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets, s32 vehicleID) {
     s32 minX, maxX, minZ, maxZ;
     s32 counter;
     LevelModelSegment *segments[10];
@@ -123,7 +123,7 @@ void generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets
         LevelModelSegment *seg = segments[i];
 
         // Insert the segment pointer encoded with MSB = 0 to differentiate from collision facets
-        gCollisionCandidates[j] = (s32) K0_TO_PHYS(seg);
+        gCollisionCandidates[j] = (s32) (((u32) seg) & 0x7FFFFFFF); // Clear the sign bit
         j++;
 
         for (batchIndex = 0; batchIndex < seg->numberOfBatches; batchIndex++) {
@@ -176,6 +176,8 @@ void generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets
 
 out:
     gNumCollisionCandidates = j;
+
+    return 0;
 }
 #else
 GLOBAL_ASM("asm/collision/generate_collision_candidates.s")

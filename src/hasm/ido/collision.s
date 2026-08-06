@@ -53,6 +53,14 @@ EXPORT(D_800E5F70)
 #define z2 t3
 #define vehicleID s6
 
+/**
+ * Populates a list of triangle candidates that will be tested for collision in resolve_collisions.
+ * Calculates a single bounding rectangle that contains all origin and target points.
+ * Then, terrain segments overlapping this rectangle are identified, and eligible triangles within them are selected.
+ * Triangle batches are filtered based on visibility, surface type, and collision flags.
+ *
+ * void generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets, s32 vehicleID);
+ */
 LEAF(generate_collision_candidates)
     addiu      sp, sp, -0x70
     sw         ra, 0x30(sp)
@@ -173,7 +181,7 @@ LEAF(generate_collision_candidates)
     bnez       t7, .start_of_loop
 .end_loop:
     move       s3, zero /* j = 0 */
-    beqz       t8, .L800314A8
+    beqz       t8, .return_generate_collision_candidates
     lui        a0, %hi(gCurrentLevelModel)
     lw         a0, %lo(gCurrentLevelModel)(a0)
     lui        s2, %hi(gCollisionCandidates)
@@ -230,12 +238,12 @@ LEAF(generate_collision_candidates)
     lh         t1, 0x4(t4)
     lw         a2, 0x10(t7)
     lw         a3, 0x14(t7)
-    sll        t1, t1, 1
     sll        v0, t0, 1
     sll        v1, t0, 3
+    sll        t1, 1
     add        a1, a2, t1
-    add        a2, a2, v0
-    add        a3, a3, v1
+    add        a2, v0
+    add        a3, v1
 .L80031440:
     lh         t0, 0x0(a2)
     and        t0, t0, t6
@@ -244,25 +252,25 @@ LEAF(generate_collision_candidates)
     beqz       v0, .L8003147C
     beqz       v1, .L8003147C
     sw         a3, 0x0(s2)
-    addiu      s3, 0x1
     sb         t2, 0x0(t9)
-    addiu      s2, 0x4
-    addiu      t9, t9, 0x1
-    beq        s3, MAX_COLLISION_CANDIDATES, .L800314A8
+    addiu      s2, 4
+    addiu      s3, 1
+    addiu      t9, 1
+    beq        s3, MAX_COLLISION_CANDIDATES, .return_generate_collision_candidates
 .L8003147C:
-    addiu      a2, a2, 0x2
-    addiu      a3, a3, 0x8
+    addiu      a2, 2
+    addiu      a3, 8
     blt        a2, a1, .L80031440
 .L8003148C:
+    addiu      t4, sizeOfTriangleBatchInfo
     addiu      t5, sizeOfTriangleBatchInfo
-    addiu      t4, t4, 0xC
     blt        t5, t3, .start_of_inner_loop
-    addiu      s1, s1, 0x2
-    addiu      s0, s0, 0x4
+    addiu      s1, 2
+    addiu      s0, 4
     blt        s1, t8, .start_of_candidate_loop
-.L800314A8:
-    lw         ra, 0x30(sp)
+.return_generate_collision_candidates:
     sw         s3, gNumCollisionCandidates
+    lw         ra, 0x30(sp)
     lw         s6, 0x2C(sp)
     lw         s5, 0x28(sp)
     lw         s4, 0x24(sp)
@@ -270,8 +278,8 @@ LEAF(generate_collision_candidates)
     lw         s2, 0x1C(sp)
     lw         s1, 0x18(sp)
     lw         s0, 0x14(sp)
-    or         v0, zero, zero
-    addiu      sp, sp, 0x70
+    move       v0, zero /* Return 0 - But it's never used. */
+    addiu      sp, 0x70
     jr         ra
 END(generate_collision_candidates)
 
