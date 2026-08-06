@@ -22,9 +22,26 @@ EXPORT(D_800E5F70)
 
 .text
 
+#define RENDER_HIDDEN 0x100
+#define RENDER_NO_COLLISION 0x200
+
+#define SURFACE_WATER_CALM 11
+#define SURFACE_INVIS_WALL 17
+#define SURFACE_UNK12 18
+
+#define VEHICLE_NO_OVERRIDE -1
+#define VEHICLE_CAR 1
+#define VEHICLE_PLANE 2
+
+#define TEX_INDEX_NO_TEXTURE 0xFF
+
+#define MAX_COLLISION_CANDIDATES 500
+
 #define sizeOfVec3f 0xC
 #define sizeOfLevelModelSegmentBoundingBox 0xC
 #define sizeOfLevelModelSegment 0x44
+#define sizeOfTriangleBatchInfo 0xC
+#define sizeOfTextureInfo 0x8
 
 #define minX s5
 #define maxX s4
@@ -155,72 +172,61 @@ LEAF(generate_collision_candidates)
     addiu      t6, sizeOfLevelModelSegment
     bnez       t7, .start_of_loop
 .end_loop:
-.set noreorder
-    beqz       t8, .L800314A8
     move       s3, zero /* j = 0 */
+    beqz       t8, .L800314A8
     lui        a0, %hi(gCurrentLevelModel)
     lw         a0, %lo(gCurrentLevelModel)(a0)
     lui        s2, %hi(gCollisionCandidates)
-    lui        t9, %hi(gCollisionSurfaces)
-    addi       s1, sp, 0x34 /* s16 grid_mask[10]; */
-    sll        t8, 1
     lw         s2, %lo(gCollisionCandidates)(s2)
+    lui        t9, %hi(gCollisionSurfaces)
     lw         t9, %lo(gCollisionSurfaces)(t9)
-    addi       s0, sp, 0x48
-    add        t8, s1, t8
-    lw         a0, 0x0(a0)
-.L80031368:
-.set noat
-    lw         t7, 0x0(s0)
-    lui        $at, (0x7FFFFFFF >> 16)
-    ori        $at, $at, (0x7FFFFFFF & 0xFFFF)
-    lh         t6, 0x0(s1)
-    and        v0, t7, $at
-    sw         v0, 0x0(s2)
-    lh         t0, 0x20(t7)
-    lw         t5, 0xC(t7)
-    addiu      s3, s3, 0x1
+    addi       s1, sp, 0x34 /* s16 grid_mask[10]; */
+    addi       s0, sp, 0x48 /* LevelModelSegment *segments[10]; */
+    sll        t8, 1 /* t8 = counter * 2 */
+    add        t8, s1, t8 /* t8 = &grid_mask[counter] */
+    lw         a0, 0x0(a0) /* a0 = gCurrentLevelModel->textures */
+.start_of_candidate_loop:
+    lw         t7, 0x0(s0) /* t7 = pointer for segments[i] */
+    lh         t6, 0x0(s1) /* t6 = grid_mask[counter] */
+    and        v0, t7, 0x7FFFFFFF /* v0 = seg & 0x7FFFFFFF: clear sign bit to tag as segment (non-negative)  */
+    sw         v0, 0x0(s2) /* gCollisionCandidates[j] = tagged segment ptr (MSB=0; facets stay negative) */
+    lh         t0, 0x20(t7) /* t0 = segments[i].numberOfBatches */
+    lw         t5, 0xC(t7)  /* t5 = segments[i].batches (current batch) */
+#if (sizeOfTriangleBatchInfo != 0xC)
+    /* Do this in case sizeOfTriangleBatchInfo changes in the future. */
+    mul        t3, t0, sizeOfTriangleBatchInfo
+#else
     sll        v0, t0, 3
     sll        v1, t0, 2
-    add        t3, v0, v1
-    addiu      s2, s2, 0x4
-    addiu      t9, t9, 0x1
-    add        t3, t3, t5
-    addiu      t4, t5, 0xC
-.L800313A8:
-    lw         t0, 0x8(t5)
-    andi       v0, t0, 0x200
-    bnez       v0, .L80031488
-    addiu     $at, zero, -0x1
-    bnel       vehicleID, $at, .L800313D0
-    lbu       v1, 0x0(t5)
-    andi       v0, t0, 0x100
-    bnel       v0, zero, .L8003148C
-    addiu     t5, t5, 0xC
-    lbu        v1, 0x0(t5)
+    add        t3, v0, v1 /* t3 = numberOfBatches * 12 (sizeof(TriangleBatchInfo)) */
+#endif
+    add        t3, t3, t5 /* t3 = &batches[numberOfBatches] (loop end) */
+    addiu      s3, 1 /* j++ */
+    addiu      s2, 4 /* Advance to the next gCollisionCandidates value */
+    addiu      t9, 1 /* Advance to the next gCollisionSurfaces value */
+    addiu      t4, t5, sizeOfTriangleBatchInfo /* t4 = &batches[1] (the batchIndex+1 batch) */
+.start_of_inner_loop:
+    lw         t0, 0x8(t5) /* t0 = batch->flags */
+    andi       v0, t0, RENDER_NO_COLLISION
+    bnez       v0, .L8003148C
+    bne        vehicleID, VEHICLE_NO_OVERRIDE, .L800313D0
+    andi       v0, t0, RENDER_HIDDEN
+    bnez       v0, .L8003148C
 .L800313D0:
-    addiu      $at, zero, 0xFF
-    or         t2, zero, zero
-    beql       v1, $at, .L8003141C
-    lh        t0, 0x4(t5)
-    sll        v1, v1, 3
-    add        v1, v1, a0
-    lb         t2, 0x7(v1)
-    addiu      $at, zero, 0xB
-    beq        t2, $at, .L80031488
-    addiu     $at, zero, 0x2
-    bne        vehicleID, $at, .L80031408
-    addiu     $at, zero, 0x11
-    beql       t2, $at, .L8003148C
-    addiu     t5, t5, 0xC
+    lbu        v1, 0x0(t5) /* v1 = batch->textureIndex */
+    move       t2, zero /* t2 = 0 */
+    beq        v1, TEX_INDEX_NO_TEXTURE, .skip_no_texture /* Skip batches with no texture, since the surface type is stored in the texture data */
+    mul        v1, sizeOfTextureInfo
+    add        v1, a0 /* v1 = &textures[textureIndex] */
+    lb         t2, 0x7(v1) /* t2 = textures[textureIndex].surfaceType */
+    beq        t2, SURFACE_WATER_CALM, .L8003148C
+    bne        vehicleID, VEHICLE_PLANE, .L80031408
+    beq        t2, SURFACE_INVIS_WALL, .L8003148C
 .L80031408:
-    beqz       vehicleID, .L80031418
-    addiu     $at, zero, 0x12
-    beql       t2, $at, .L8003148C
-    addiu     t5, t5, 0xC
-.L80031418:
+    beqz       vehicleID, .skip_no_texture
+    beq        t2, SURFACE_UNK12, .L8003148C
+.skip_no_texture:
     lh         t0, 0x4(t5)
-.L8003141C:
     lh         t1, 0x4(t4)
     lw         a2, 0x10(t7)
     lw         a3, 0x14(t7)
@@ -234,37 +240,29 @@ LEAF(generate_collision_candidates)
     lh         t0, 0x0(a2)
     and        t0, t0, t6
     andi       v0, t0, 0xFF
-    beqz       v0, .L80031478
-    andi      v1, t0, 0xFF00
-    beql       v1, zero, .L8003147C
-    addiu     a2, a2, 0x2
+    andi       v1, t0, 0xFF00
+    beqz       v0, .L8003147C
+    beqz       v1, .L8003147C
     sw         a3, 0x0(s2)
-    addiu      s3, s3, 0x1
-    addiu      $at, zero, 0x1F4
+    addiu      s3, 0x1
     sb         t2, 0x0(t9)
-    addiu      s2, s2, 0x4
-    beq        s3, $at, .L800314A8
-    addiu     t9, t9, 0x1
-.L80031478:
-    addiu      a2, a2, 0x2
+    addiu      s2, 0x4
+    addiu      t9, t9, 0x1
+    beq        s3, MAX_COLLISION_CANDIDATES, .L800314A8
 .L8003147C:
-    slt        $at, a2, a1
-    bnez       $at, .L80031440
-    addiu     a3, a3, 0x8
-.L80031488:
-    addiu      t5, t5, 0xC
+    addiu      a2, a2, 0x2
+    addiu      a3, a3, 0x8
+    blt        a2, a1, .L80031440
 .L8003148C:
-    slt        $at, t5, t3
-    bnez       $at, .L800313A8
-    addiu     t4, t4, 0xC
+    addiu      t5, sizeOfTriangleBatchInfo
+    addiu      t4, t4, 0xC
+    blt        t5, t3, .start_of_inner_loop
     addiu      s1, s1, 0x2
-    slt        $at, s1, t8
-    bnez       $at, .L80031368
-    addiu     s0, s0, 0x4
+    addiu      s0, s0, 0x4
+    blt        s1, t8, .start_of_candidate_loop
 .L800314A8:
     lw         ra, 0x30(sp)
-    lui        $at, %hi(gNumCollisionCandidates)
-    sw         s3, %lo(gNumCollisionCandidates)($at)
+    sw         s3, gNumCollisionCandidates
     lw         s6, 0x2C(sp)
     lw         s5, 0x28(sp)
     lw         s4, 0x24(sp)
@@ -273,11 +271,12 @@ LEAF(generate_collision_candidates)
     lw         s1, 0x18(sp)
     lw         s0, 0x14(sp)
     or         v0, zero, zero
+    addiu      sp, sp, 0x70
     jr         ra
-    addiu     sp, sp, 0x70
 END(generate_collision_candidates)
-.set noreorder
 
+.set noreorder
+.set noat
 LEAF(compute_grid_overlap_mask)
     beqz       a0, .L800315F8
     or        v0, zero, zero
