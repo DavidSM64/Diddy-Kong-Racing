@@ -357,30 +357,36 @@ LEAF(compute_grid_overlap_mask)
     jr         ra
 END(compute_grid_overlap_mask)
 
-.set noat
-
+/**
+ * Resolves collisions for a list of moving objects against previously identified collision candidates.
+ * For each object, the function checks whether the path from `origin` to `target` intersects any collision plane.
+ * If so, it adjusts the `target` position to resolve the collision, updates surface type, and sets output flags.
+ * Returns a bitmask indicating which objects experienced a collision.
+ *
+ * s32 resolve_collisions(Vec3f *origin, Vec3f *target, f32 *radius, s8 *surface, s32 numEntries, s32 *numCollisions)
+ */
 LEAF(resolve_collisions)
+    sb         zero, 0x0(sp)
     li         t0, 1
     sb         t0, 0x1(sp)
-    lw         t0, gNumCollisionCandidates
-    sb         zero, 0x0(sp)
     sw         zero, gHitWall /* gHitWall = false */
+    lw         t0, gNumCollisionCandidates
     beqz       t0, .no_collision_candidates
-    .L80031620:
+.L80031620:
     move       t6, zero
-    .L80031624:
+.L80031624:
     move       t7, zero
     lw         t5, gCollisionSurfaces
     lw         t1, gCollisionCandidates
     lw         t0, gNumCollisionCandidates
-    .L80031640:
+.L80031640:
     lw         t2, 0x0(t1)
     blez       t2, .L80031660
     lui        t3, 0x8000
     or         t3, t3, t2
     lw         t3, 0x18(t3)
     j          .L80031948
-    .L80031660:
+.L80031660:
     lhu        v0, 0x0(t2)
     sll        v0, 4
     addu       v0, t3
@@ -430,7 +436,7 @@ LEAF(resolve_collisions)
     c.ueq.s    ft2, ft3
     bc1t       .L80031734
     div.s      ft3, ft4, ft2
-    .L80031734:
+.L80031734:
     mul.s      fv0, ft3
     lwc1       ft1, 0x0(a0)
     mul.s      fv1, ft3
@@ -442,14 +448,14 @@ LEAF(resolve_collisions)
     add.s      fv1, ft1, fv1
     lwc1       ft1, 0x8(a0)
     add.s      ft0, ft1, ft0
-    .L80031764:
+.L80031764:
     lhu        v1, 0x2(t2)
     move       t8, zero
     andi       t9, v1, 0x8000
     beqz       t9, .L80031784
     andi       v1, 0x7FFF
     li         t8, 1
-    .L80031784:
+.L80031784:
     sll        v1, 4
     addu       v1, t3
     lwc1       ft1, 0x0(v1)
@@ -464,7 +470,7 @@ LEAF(resolve_collisions)
     add.s      ft1, ft2
     beqz       t8, .L800317BC
     neg.s      ft1, ft1
-    .L800317BC:
+.L800317BC:
     c.ole.s    ft1, ft3
     bc1f      .L80031948
     addiu      t2, 2
@@ -493,7 +499,7 @@ LEAF(resolve_collisions)
     div.s      fv1, fv0, fv1
     lwc1       fv0, 0x0(a1)
     j          .L800318C8
-    .L80031848:
+.L80031848:
     lwc1       ft3, D_800E5F6C
     c.olt.s    fv1, ft3
     bc1f       .L800318A0
@@ -507,7 +513,7 @@ LEAF(resolve_collisions)
     swc1       ft1, gCollisionNormalY
     lwc1       ft1, 0x8(v0)
     swc1       ft1, gCollisionNormalZ
-    .L800318A0:
+.L800318A0:
     mul.s      fv0, ft5
     mul.s      fv1, ft5
     mul.s      ft0, ft5
@@ -517,7 +523,7 @@ LEAF(resolve_collisions)
     sub.s      fv1, ft1, fv1
     lwc1       ft1, 0x8(a1)
     sub.s      ft0, ft1, ft0
-    .L800318C8:
+.L800318C8:
     lw         v1, gHitWall
     bnez       v1, .L80031900
     lwc1       ft1, 0x0(v0)
@@ -526,12 +532,12 @@ LEAF(resolve_collisions)
     swc1       ft1, gCollisionNormalY
     lwc1       ft1, 0x8(v0)
     swc1       ft1, gCollisionNormalZ
-    .L80031900:
+.L80031900:
     lb         t4, 0x0(t5)
     lb         v0, 0x0(a3)
     bge        v0, t4, .L80031918
     sb         t4, 0x0(a3)
-    .L80031918:
+.L80031918:
     addiu      t6, 1
     li         t7, 1
     ble        t6, 10, .L80031934
@@ -539,43 +545,43 @@ LEAF(resolve_collisions)
     lwc1       fv0, 0x0(a0)
     lwc1       fv1, 0x4(a0)
     lwc1       ft0, 0x8(a0)
-    .L80031934:
+.L80031934:
     swc1       fv0, 0x0(a1)
     swc1       fv1, 0x4(a1)
     swc1       ft0, 0x8(a1)
     j          .L80031954
-    .L80031948:
+.L80031948:
     addiu      t5, 1
     addiu      t1, 4
     addiu      t0, -1
     bnez       t0, .L80031640
-    .L80031954:
+.L80031954:
     bnez       t7, .L80031624
     lbu        t2, 0x1(sp)
     beqz       t6, .L80031980
     lw         t1, 0x14(sp)
     lw         t0, 0x0(t1)
-    addiu      t0, t0, 0x1
+    addiu      t0, 1
     sw         t0, 0x0(t1)
     lbu        t0, 0x0(sp)
-    or         t0, t0, t2
+    or         t0, t2
     sb         t0, 0x0(sp)
-    .L80031980:
-    sll        t2, t2, 1
+.L80031980:
+    sll        t2, 1
     sb         t2, 0x1(sp)
-    or         t6, zero, zero
-    .L8003198C:
+    move       t6, zero
+.L8003198C:
     move       t7, zero
     lw         t1, gCollisionCandidates
     lw         t0, gNumCollisionCandidates
-    .L800319A0:
+.L800319A0:
     lw         t2, 0x0(t1)
     blez       t2, .L800319C0
     lui        t3, 0x8000
     or         t3, t2
     lw         t3, 0x18(t3)
     j          .L80031B1C
-    .L800319C0:
+.L800319C0:
     lhu        v0, 0x0(t2)
     sll        v0, 4
     addu       v0, t3
@@ -607,30 +613,30 @@ LEAF(resolve_collisions)
     lwc1       fv0, 0x0(a1)
     lwc1       fv1, 0x4(a1)
     lwc1       ft0, 0x8(a1)
-    addiu      t4, zero, 0x3
-    .L80031A48:
+    li         t4, 3
+.L80031A48:
     lhu        v1, 0x2(t2)
     move       t8, zero
     andi       t9, v1, 0x8000
     beqz       t9, .L80031A68
     andi       v1, 0x7FFF
     li         t8, 1
-    .L80031A68:
+.L80031A68:
     sll        v1, 4
     addu       v1, t3
-    lwc1       ft1, 0(v1)
-    lwc1       ft2, 4(v1)
+    lwc1       ft1, 0x0(v1)
+    lwc1       ft2, 0x4(v1)
     mul.s      ft1, fv0, ft1
     mul.s      ft2, fv1, ft2
-    add.s      ft1, ft1, ft2
+    add.s      ft1, ft2
     lwc1       ft2, 0x8(v1)
     mul.s      ft2, ft0, ft2
-    add.s      ft1, ft1, ft2
+    add.s      ft1, ft2
     lwc1       ft2, 0xC(v1)
-    add.s      ft1, ft1, ft2
+    add.s      ft1, ft2
     beqz       t8, .L80031AA0
     neg.s      ft1, ft1
-    .L80031AA0:
+.L80031AA0:
     c.ole.s    ft1, ft3
     bc1f       .L80031B1C
     addiu      t4, -1
@@ -638,33 +644,33 @@ LEAF(resolve_collisions)
     bnez       t4, .L80031A48
     lwc1       fv0, 0x0(v0)
     lwc1       fv1, 0x4(v0)
-    lwc1       ft1, 0x0(a1)
-    mul.s      fv0, fv0, ft5
     lwc1       ft0, 0x8(v0)
-    addiu      t6, 1
-    mul.s      fv1, fv1, ft5
-    li         t7, 1
-    mul.s      ft0, ft0, ft5
+    mul.s      fv0, ft5
+    mul.s      fv1, ft5
+    mul.s      ft0, ft5
+    lwc1       ft1, 0x0(a1)
     sub.s      fv0, ft1, fv0
     lwc1       ft1, 0x4(a1)
     sub.s      fv1, ft1, fv1
     lwc1       ft1, 0x8(a1)
     sub.s      ft0, ft1, ft0
+    addiu      t6, 1
+    li         t7, 1
     ble        t6, 10, .L80031B08
     move       t7, zero
     lwc1       fv0, 0x0(a0)
     lwc1       fv1, 0x4(a0)
     lwc1       ft0, 0x8(a0)
-    .L80031B08:
+.L80031B08:
     swc1       fv0, 0x0(a1)
     swc1       fv1, 0x4(a1)
     swc1       ft0, 0x8(a1)
     j          .L80031B24
-    .L80031B1C:
+.L80031B1C:
     addiu      t0, -1
     addiu      t1, 4
     bnez       t0, .L800319A0
-    .L80031B24:
+.L80031B24:
     bnez       t7, .L8003198C
     lw         t0, 0x10(sp)
     addiu      t0, -1
