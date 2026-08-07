@@ -7,19 +7,6 @@
 #include "sys/regdef.h"
 #include "asm_macros.h"
 
-.rdata
-
-EXPORT(D_800E5F60)
-    .float -0.1
-EXPORT(D_800E5F64)
-    .float -0.1
-EXPORT(D_800E5F68)
-    .float 0.707
-EXPORT(D_800E5F6C)
-    .float 0.45
-EXPORT(D_800E5F70)
-    .float -0.1
-
 .text
 
 #define RENDER_HIDDEN 0x100
@@ -383,7 +370,7 @@ LEAF(resolve_collisions)
     lw         t2, 0x0(t1)
     blez       t2, .L80031660
     lui        t3, 0x8000
-    or         t3, t3, t2
+    or         t3, t2
     lw         t3, 0x18(t3)
     j          .L80031948
 .L80031660:
@@ -405,9 +392,9 @@ LEAF(resolve_collisions)
     add.s      ft5, ft2, ft1
     lwc1       ft2, 0x0(a2)
     sub.s      ft5, ft2
-    lwc1       ft2, D_800E5F60
+    li.s       ft2, -0.1
     c.olt.s    ft5, ft2
-    bc1f      .L80031948
+    bc1f      .L80031948 /* if (ft5 >= -0.1) */
     lwc1       ft2, 0x0(a0)
     lwc1       ft3, 0x4(a0)
     lwc1       ft4, 0x8(a0)
@@ -419,7 +406,7 @@ LEAF(resolve_collisions)
     add.s      ft4, ft2, ft1
     lwc1       ft2, 0x0(a2)
     sub.s      ft4, ft2
-    lwc1       ft2, D_800E5F64
+    li.s       ft2, -0.1
     c.olt.s    ft4, ft2
     bc1t       .L80031948
     lwc1       ft2, 0x0(a0)
@@ -431,26 +418,26 @@ LEAF(resolve_collisions)
     lwc1       ft2, 0x8(a0)
     lwc1       ft3, 0x8(a1)
     sub.s      ft0, ft3, ft2
-    mtc1       zero, ft3
+    li.s       ft3, 0.0
     sub.s      ft2, ft4, ft5
     c.ueq.s    ft2, ft3
     bc1t       .L80031734
     div.s      ft3, ft4, ft2
 .L80031734:
     mul.s      fv0, ft3
-    lwc1       ft1, 0x0(a0)
     mul.s      fv1, ft3
-    addiu      t4, zero, 0x3
     mul.s      ft0, ft3
     li.s       ft3, 4.0
+    lwc1       ft1, 0x0(a0)
     add.s      fv0, ft1, fv0
     lwc1       ft1, 0x4(a0)
     add.s      fv1, ft1, fv1
     lwc1       ft1, 0x8(a0)
     add.s      ft0, ft1, ft0
+    li         t4, 3
 .L80031764:
-    lhu        v1, 0x2(t2)
     move       t8, zero
+    lhu        v1, 0x2(t2)
     andi       t9, v1, 0x8000
     beqz       t9, .L80031784
     andi       v1, 0x7FFF
@@ -476,7 +463,7 @@ LEAF(resolve_collisions)
     addiu      t2, 2
     addiu      t4, -1
     bnez       t4, .L80031764
-    lwc1       fv0, D_800E5F68
+    li.s       fv0, 0.707
     lwc1       fv1, 0x4(v0)
     lwc1       ft0, 0x8(v0)
     c.ult.s    fv1, fv0
@@ -490,17 +477,17 @@ LEAF(resolve_collisions)
     mul.s      fv0, ft1, fv0
     lwc1       ft1, 0x8(a1)
     mul.s      ft0, ft1, ft0
+    add.s      fv0, ft0
     lwc1       ft1, 0xC(v0)
-    add.s      fv0, fv0, ft0
-    lwc1       ft0, 0x8(a1)
-    add.s      fv0, fv0, ft1
+    add.s      fv0, ft1
     lwc1       ft1, 0x0(a2)
     sub.s      fv0, ft1, fv0
     div.s      fv1, fv0, fv1
     lwc1       fv0, 0x0(a1)
+    lwc1       ft0, 0x8(a1)
     j          .L800318C8
 .L80031848:
-    lwc1       ft3, D_800E5F6C
+    li.s       ft3, 0.45
     c.olt.s    fv1, ft3
     bc1f       .L800318A0
     lw         v1, gCollisionMode
@@ -600,7 +587,7 @@ LEAF(resolve_collisions)
     add.s      ft5, ft2, ft1
     lwc1       ft2, 0x0(a2)
     sub.s      ft5, ft2
-    lwc1       ft2, D_800E5F70
+    li.s       ft2, -0.1
     c.olt.s    ft5, ft2
     bc1f       .L80031B1C
     li.s       ft3, 3.0
@@ -615,8 +602,8 @@ LEAF(resolve_collisions)
     lwc1       ft0, 0x8(a1)
     li         t4, 3
 .L80031A48:
-    lhu        v1, 0x2(t2)
     move       t8, zero
+    lhu        v1, 0x2(t2)
     andi       t9, v1, 0x8000
     beqz       t9, .L80031A68
     andi       v1, 0x7FFF
@@ -625,8 +612,8 @@ LEAF(resolve_collisions)
     sll        v1, 4
     addu       v1, t3
     lwc1       ft1, 0x0(v1)
-    lwc1       ft2, 0x4(v1)
     mul.s      ft1, fv0, ft1
+    lwc1       ft2, 0x4(v1)
     mul.s      ft2, fv1, ft2
     add.s      ft1, ft2
     lwc1       ft2, 0x8(v1)
@@ -639,8 +626,8 @@ LEAF(resolve_collisions)
 .L80031AA0:
     c.ole.s    ft1, ft3
     bc1f       .L80031B1C
-    addiu      t4, -1
     addiu      t2, 2
+    addiu      t4, -1
     bnez       t4, .L80031A48
     lwc1       fv0, 0x0(v0)
     lwc1       fv1, 0x4(v0)
@@ -667,17 +654,17 @@ LEAF(resolve_collisions)
     swc1       ft0, 0x8(a1)
     j          .L80031B24
 .L80031B1C:
-    addiu      t0, -1
     addiu      t1, 4
+    addiu      t0, -1
     bnez       t0, .L800319A0
 .L80031B24:
     bnez       t7, .L8003198C
-    lw         t0, 0x10(sp)
-    addiu      t0, -1
     addiu      a0, 0xC
     addiu      a1, 0xC
     addiu      a2, 4
     addiu      a3, 1
+    lw         t0, 0x10(sp)
+    addiu      t0, -1
     sw         t0, 0x10(sp)
     bnez       t0, .L80031620
 .no_collision_candidates:
