@@ -301,16 +301,13 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_CHECK := :
 
 ### Targets
 
+# COMPILER=gcc: build every C file with gcc instead of IDO.
 ifeq ($(COMPILER),gcc)
-	DUMMY != $(PYTHON) $(TOOLS_DIR)/python/gcc_generate.py gcc_safe_files.mk
-	include gcc_safe_files.mk
-endif
-
-$(GCC_SAFE_FILES): CC := $(CROSS)gcc
-$(GCC_SAFE_FILES): CC_WARNINGS :=
-$(GCC_SAFE_FILES): MIPSISET := -mips3
-$(GCC_SAFE_FILES): OPT_FLAGS := -Os
-$(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING $(INCLUDE_CFLAGS) $(C_DEFINES) \
+CC := $(CROSS)gcc
+CC_WARNINGS :=
+MIPSISET := -mips3
+OPT_FLAGS := -Os
+CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING $(INCLUDE_CFLAGS) $(C_DEFINES) \
 	-EB \
 	-march=vr4300 \
 	-mabi=32 \
@@ -333,6 +330,7 @@ $(GCC_SAFE_FILES): CFLAGS := -DNDEBUG -DAVOID_UB -DNON_MATCHING $(INCLUDE_CFLAGS
 	-fwrapv \
 	-falign-functions=16 \
 	-G 0
+endif
 
 default: all
 
@@ -497,14 +495,14 @@ else
 $(BUILD_DIR)/$(LIBULTRA_DIR)/%.s.o: $(LIBULTRA_DIR)/%.s | build_assets
 	$(call print,Assembling Libultra:,$<,$@)
 	$(V)$(CROSS)gcc -x assembler-with-cpp \
-	-w -nostdinc -c -G 0 -march=vr4300 -mgp32 -mfp32 -mno-abicalls \
+	-w -nostdinc -c -G 0 -march=vr4300 -mabi=32 -mgp32 -mfp32 -mno-abicalls \
 	-DMIPSEB -D_LANGUAGE_ASSEMBLY -D_MIPS_SIM=1 -D_ULTRA64 -DMODERN_CC -D__USE_ISOC99 \
 	-mips3 -Os -ggdb3 -ffast-math -fno-unsafe-math-optimizations -c $(C_DEFINES) $(INCLUDE_CFLAGS) \
 	-o $@ $<
 $(BUILD_DIR)/$(SRC_DIR)/hasm/ido/%.s.o: $(SRC_DIR)/hasm/ido/%.s | build_assets
 	$(call print,Assembling HASM:,$<,$@)
 	$(V)$(CROSS)gcc -x assembler-with-cpp \
-	-w -nostdinc -c -G 0 -march=vr4300 -mgp32 -mfp32 -mno-abicalls \
+	-w -nostdinc -c -G 0 -march=vr4300 -mabi=32 -mgp32 -mfp32 -mno-abicalls \
 	-DMIPSEB -D_LANGUAGE_ASSEMBLY -D_MIPS_SIM=1 -D_ULTRA64 -DMODERN_CC -D__USE_ISOC99 \
 	-mips3 -Os -ggdb3 -ffast-math -fno-unsafe-math-optimizations -c $(C_DEFINES) $(INCLUDE_CFLAGS) \
 	-o $@ $<

@@ -179,8 +179,6 @@ out:
 
     return 0;
 }
-#else
-GLOBAL_ASM("asm/collision/generate_collision_candidates.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -270,8 +268,6 @@ s32 compute_grid_overlap_mask(LevelModelSegmentBoundingBox *bbox, s32 x1, s32 z1
 
     return mask;
 }
-#else
-GLOBAL_ASM("asm/collision/compute_grid_overlap_mask.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -505,6 +501,4 @@ s32 resolve_collisions(Vec3f *origin, Vec3f *target, f32 *radius, s8 *surface, s
 
     return collisionMask;
 }
-#else
-GLOBAL_ASM("asm/collision/resolve_collisions.s")
 #endif
