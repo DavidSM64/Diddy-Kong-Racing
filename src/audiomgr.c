@@ -5,7 +5,6 @@
 #include "memory.h"
 #include "objects.h"
 #include "PR/abi.h"
-#include "rcp_dkr.h"
 #include "stacks.h"
 #include "video.h"
 

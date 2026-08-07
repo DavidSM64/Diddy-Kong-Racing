@@ -1,12 +1,9 @@
 #include "borders.h"
 
 #include "camera.h"
-#include "f3ddkr.h"
 #include "game.h"
 #include "game_ui.h"
-#include "macros.h"
 #include "structs.h"
-#include "types.h"
 #include "video.h"
 
 /**

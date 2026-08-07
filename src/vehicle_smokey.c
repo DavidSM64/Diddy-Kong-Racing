@@ -3,13 +3,10 @@
 #include "audio.h"
 #include "audio_spatial.h"
 #include "camera.h"
-#include "macros.h"
 #include "math_util.h"
-#include "object_functions.h"
 #include "objects.h"
 #include "particles.h"
 #include "racer.h"
-#include "types.h"
 
 /************ .data ************/
 
