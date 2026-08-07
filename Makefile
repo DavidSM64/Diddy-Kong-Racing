@@ -287,6 +287,8 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/src/os/exceptasm.s.o: MIPSISET := -mips3 -32
 
 $(BUILD_DIR)/$(SRC_DIR)/hasm/ido/math_util.s.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/$(SRC_DIR)/hasm/ido/math_util.s.o: MIPSISET := -mips3 -32
+$(BUILD_DIR)/$(SRC_DIR)/hasm/ido/collision.s.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/$(SRC_DIR)/hasm/ido/collision.s.o: MIPSISET := -mips3 -32
 
 # Allow dollar sign to be used in var names for this file alone
 # It allows us to return the current stack pointer

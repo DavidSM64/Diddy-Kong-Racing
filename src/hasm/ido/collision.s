@@ -283,98 +283,82 @@ LEAF(generate_collision_candidates)
     jr         ra
 END(generate_collision_candidates)
 
-.set noreorder
-.set noat
+/**
+ * Computes the overlap between a rectangle and a segment's bounding box, returning a 16-bit grid mask.
+ * The bounding box is divided into an 8x8 grid. The function determines which grid columns (X) and rows (Z)
+ * the input rectangle intersects.
+ * The resulting 16-bit mask encodes this information:
+ * - lower 8 bits represent intersections along the X-axis (1 bit per column),
+ * - upper 8 bits represent intersections along the Z-axis (1 bit per row).
+ *
+ * s32 compute_grid_overlap_mask(LevelModelSegmentBoundingBox *bbox, s32 x1, s32 z1, s32 x2, s32 z2)
+ */
 LEAF(compute_grid_overlap_mask)
-    beqz       a0, .L800315F8
-    or        v0, zero, zero
-    lh         t0, 0x0(a0)
-    lw         t5, 0x10(sp) /* maxZ from generate_collision_candidates */
-    lh         t1, 0x4(a0)
-    slt        $at, a3, t0
-    lh         t2, 0x6(a0)
-    beqz       $at, .L80031504
-    lh        t3, 0xA(a0)
-    or         a3, t0, zero
-    .L80031504:
-    slt        $at, a1, t0
-    beql       $at, zero, .L80031518
-    slt       $at, t5, t1
-    or         a1, t0, zero
-    slt        $at, t5, t1
-    .L80031518:
-    beql       $at, zero, .L80031528
-    slt       $at, a2, t1
-    or         t5, t1, zero
-    slt        $at, a2, t1
-    .L80031528:
-    beql       $at, zero, .L80031538
-    slt       $at, t2, a3
-    or         a2, t1, zero
-    slt        $at, t2, a3
-    .L80031538:
-    beql       $at, zero, .L80031548
-    slt       $at, t2, a1
-    or         a3, t2, zero
-    slt        $at, t2, a1
-    .L80031548:
-    beql       $at, zero, .L80031558
-    slt       $at, t3, t5
-    or         a1, t2, zero
-    slt        $at, t3, t5
-    .L80031558:
-    beql       $at, zero, .L80031568
-    slt       $at, t3, a2
-    or         t5, t3, zero
-    slt        $at, t3, a2
-    .L80031568:
-    beql       $at, zero, .L80031578
-    sub       t2, t2, t0
-    or         a2, t3, zero
-    sub        t2, t2, t0
-    .L80031578:
-    sra        t2, t2, 3
-    addiu      t2, t2, 0x1
-    addiu      v1, zero, 0x1
+    move       v0, zero
+    beqz       a0, .bbox_null
+    lw         t5, 0x10(sp) /* arg4 = z2 */
+    lh         t0, 0x0(a0) /* bbox->x1 */
+    lh         t1, 0x4(a0) /* bbox->z1 */
+    lh         t2, 0x6(a0) /* bbox->x2 */
+    lh         t3, 0xA(a0) /* bbox->z2 */
+    bge        a3, t0, .L80031504
+    move       a3, t0
+.L80031504:
+    bge        a1, t0, .L80031518
+    move       a1, t0
+.L80031518:
+    bge        t5, t1, .L80031528
+    move       t5, t1
+.L80031528:
+    bge        a2, t1, .L80031538
+    move       a2, t1
+.L80031538:
+    bge        t2, a3, .L80031548
+    move       a3, t2
+.L80031548:
+    bge        t2, a1, .L80031558
+    move       a1, t2
+.L80031558:
+    bge        t3, t5, .L80031568
+    move       t5, t3
+.L80031568:
+    bge        t3, a2, .L80031578
+    move       a2, t3
+.L80031578:
+    sub        t2, t0
+    sra        t2, 3
+    addiu      t2, 1
+    li         v1, 1
     add        t4, t2, t0
-    .L80031588:
-    slt        $at, t4, a1
-    bnez       $at, .L800315A0
-    slt       $at, a3, t0
-    bnel       $at, zero, .L800315A4
-    sll       v1, v1, 1
+.L80031588:
+    blt        t4, a1, .L800315A4
+    blt        a3, t0, .L800315A4
     or         v0, v0, v1
-    .L800315A0:
-    sll        v1, v1, 1
-    .L800315A4:
-    slti       $at, v1, 0x100
-    add        t4, t4, t2
-    bnez       $at, .L80031588
-    add       t0, t0, t2
+.L800315A4:
+    sll        v1, 1
+    add        t4, t2
+    add        t0, t2
+    ble        v1, 0xFF, .L80031588
     sub        t2, t3, t1
-    sra        t2, t2, 3
-    addiu      t2, t2, 0x1
+    sra        t2, 3
+    addiu      t2, 1
     add        t4, t2, t1
-    or         t0, t1, zero
-    .L800315C8:
-    slt        $at, t4, a2
-    bnez       $at, .L800315E0
-    slt       $at, t5, t0
-    bnel       $at, zero, .L800315E4
-    sll       v1, v1, 1
-    or         v0, v0, v1
-    .L800315E0:
-    sll        v1, v1, 1
-    .L800315E4:
-    lui        $at, (0x10000 >> 16)
-    slt        $at, v1, $at
-    add        t4, t4, t2
-    bnez       $at, .L800315C8
-    add       t0, t0, t2
-    .L800315F8:
+    move       t0, t1
+.L800315C8:
+    blt        t4, a2, .L800315E4
+    blt        t5, t0, .L800315E4
+    or         v0, v1
+.L800315E4:
+    sll        v1, 1
+    add        t4, t2
+    add        t0, t2
+    blt        v1, 0x10000, .L800315C8
+.bbox_null:
     jr         ra
-    nop
 END(compute_grid_overlap_mask)
+
+.set noat
+.set noreorder
 
 LEAF(resolve_collisions)
     addiu      t0, zero, 0x1
