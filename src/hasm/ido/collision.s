@@ -358,75 +358,64 @@ LEAF(compute_grid_overlap_mask)
 END(compute_grid_overlap_mask)
 
 .set noat
-.set noreorder
 
 LEAF(resolve_collisions)
-    addiu      t0, zero, 0x1
+    li         t0, 1
     sb         t0, 0x1(sp)
-    lui        t0, %hi(gNumCollisionCandidates)
-    lw         t0, %lo(gNumCollisionCandidates)(t0)
-    lui        $at, %hi(gHitWall)
+    lw         t0, gNumCollisionCandidates
     sb         zero, 0x0(sp)
-    beqz       t0, .L80031B4C
-    sw        zero, %lo(gHitWall)($at)
+    sw         zero, gHitWall /* gHitWall = false */
+    beqz       t0, .no_collision_candidates
     .L80031620:
-    or         t6, zero, zero
+    move       t6, zero
     .L80031624:
-    lui        t5, %hi(gCollisionSurfaces)
-    lui        t1, %hi(gCollisionCandidates)
-    lui        t0, %hi(gNumCollisionCandidates)
-    or         t7, zero, zero
-    lw         t5, %lo(gCollisionSurfaces)(t5)
-    lw         t1, %lo(gCollisionCandidates)(t1)
-    lw         t0, %lo(gNumCollisionCandidates)(t0)
+    move       t7, zero
+    lw         t5, gCollisionSurfaces
+    lw         t1, gCollisionCandidates
+    lw         t0, gNumCollisionCandidates
     .L80031640:
     lw         t2, 0x0(t1)
-    blezl      t2, .L80031660
-    lhu       v0, 0x0(t2)
+    blez       t2, .L80031660
     lui        t3, 0x8000
     or         t3, t3, t2
-    j          .L80031944
-    lw        t3, 0x18(t3)
-    lhu        v0, 0x0(t2)
+    lw         t3, 0x18(t3)
+    j          .L80031948
     .L80031660:
+    lhu        v0, 0x0(t2)
+    sll        v0, 4
+    addu       v0, t3
+    lwc1       fv0, 0x0(v0)
+    lwc1       fv1, 0x4(v0)
+    lwc1       ft0, 0x8(v0)
+    lwc1       ft1, 0xC(v0)
     lwc1       ft2, 0x0(a1)
     lwc1       ft3, 0x4(a1)
-    sll        v0, v0, 4
-    addu       v0, v0, t3
-    lwc1       fv0, 0(v0)
-    lwc1       fv1, 4(v0)
-    lwc1       ft0, 8(v0)
-    mul.s      ft2, ft2, fv0
     lwc1       ft4, 0x8(a1)
-    lwc1       ft1, 0xC(v0)
-    mul.s      ft3, ft3, fv1
-    lui        $at, %hi(D_800E5F60)
-    mul.s      ft4, ft4, ft0
-    add.s      ft2, ft2, ft3
-    add.s      ft2, ft2, ft4
+    mul.s      ft2, fv0
+    mul.s      ft3, fv1
+    mul.s      ft4, ft0
+    add.s      ft2, ft3
+    add.s      ft2, ft4
     add.s      ft5, ft2, ft1
     lwc1       ft2, 0x0(a2)
-    sub.s      ft5, ft5, ft2
-    lwc1       ft2, %lo(D_800E5F60)($at)
+    sub.s      ft5, ft2
+    lwc1       ft2, D_800E5F60
     c.olt.s    ft5, ft2
-    bc1fl      .L80031948
-    addiu     t0, t0, -0x1
+    bc1f      .L80031948
     lwc1       ft2, 0x0(a0)
     lwc1       ft3, 0x4(a0)
     lwc1       ft4, 0x8(a0)
-    mul.s      ft2, ft2, fv0
-    lui        $at, %hi(D_800E5F64)
-    mul.s      ft3, ft3, fv1
-    add.s      ft2, ft2, ft3
-    mul.s      ft4, ft4, ft0
-    add.s      ft2, ft2, ft4
+    mul.s      ft2, fv0
+    mul.s      ft3, fv1
+    add.s      ft2, ft3
+    mul.s      ft4, ft0
+    add.s      ft2, ft4
     add.s      ft4, ft2, ft1
     lwc1       ft2, 0x0(a2)
-    sub.s      ft4, ft4, ft2
-    lwc1       ft2, %lo(D_800E5F64)($at)
+    sub.s      ft4, ft2
+    lwc1       ft2, D_800E5F64
     c.olt.s    ft4, ft2
-    bc1tl      .L80031948
-    addiu     t0, t0, -0x1
+    bc1t       .L80031948
     lwc1       ft2, 0x0(a0)
     lwc1       ft3, 0x0(a1)
     sub.s      fv0, ft3, ft2
@@ -440,16 +429,14 @@ LEAF(resolve_collisions)
     sub.s      ft2, ft4, ft5
     c.ueq.s    ft2, ft3
     bc1t       .L80031734
-    nop
     div.s      ft3, ft4, ft2
     .L80031734:
-    mul.s      fv0, fv0, ft3
+    mul.s      fv0, ft3
     lwc1       ft1, 0x0(a0)
-    lui        $at, (0x40800000 >> 16)
-    mul.s      fv1, fv1, ft3
+    mul.s      fv1, ft3
     addiu      t4, zero, 0x3
-    mul.s      ft0, ft0, ft3
-    mtc1       $at, ft3
+    mul.s      ft0, ft3
+    li.s       ft3, 4.0
     add.s      fv0, ft1, fv0
     lwc1       ft1, 0x4(a0)
     add.s      fv1, ft1, fv1
@@ -457,51 +444,42 @@ LEAF(resolve_collisions)
     add.s      ft0, ft1, ft0
     .L80031764:
     lhu        v1, 0x2(t2)
-    or         t8, zero, zero
+    move       t8, zero
     andi       t9, v1, 0x8000
-    beql       t9, zero, .L80031784
-    sll       v1, v1, 4
-    andi       v1, v1, 0x7FFF
-    addiu      t8, zero, 0x1
-    sll        v1, v1, 4
+    beqz       t9, .L80031784
+    andi       v1, 0x7FFF
+    li         t8, 1
     .L80031784:
-    addu       v1, v1, t3
-    lwc1       ft1, 0(v1)
-    lwc1       ft2, 4(v1)
+    sll        v1, 4
+    addu       v1, t3
+    lwc1       ft1, 0x0(v1)
+    lwc1       ft2, 0x4(v1)
     mul.s      ft1, fv0, ft1
-    nop
     mul.s      ft2, fv1, ft2
-    add.s      ft1, ft1, ft2
+    add.s      ft1, ft2
     lwc1       ft2, 0x8(v1)
     mul.s      ft2, ft0, ft2
-    add.s      ft1, ft1, ft2
+    add.s      ft1, ft2
     lwc1       ft2, 0xC(v1)
+    add.s      ft1, ft2
     beqz       t8, .L800317BC
-    add.s     ft1, ft1, ft2
     neg.s      ft1, ft1
     .L800317BC:
     c.ole.s    ft1, ft3
-    bc1fl      .L80031948
-    addiu     t0, t0, -0x1
-    addiu      t4, t4, -0x1
+    bc1f      .L80031948
+    addiu      t2, 2
+    addiu      t4, -1
     bnez       t4, .L80031764
-    addiu     t2, t2, 0x2
-    lui        $at, %hi(D_800E5F68)
-    lwc1       fv0, %lo(D_800E5F68)($at)
+    lwc1       fv0, D_800E5F68
     lwc1       fv1, 0x4(v0)
     lwc1       ft0, 0x8(v0)
     c.ult.s    fv1, fv0
     lwc1       fv0, 0x0(v0)
     bc1t       .L80031848
-    nop
     lb         v1, 0x0(t5)
-    addiu      $at, zero, 0x4
-    beq        v1, $at, .L80031848
-    nop
-    lui        v1, %hi(gCollisionMode)
-    lw         v1, %lo(gCollisionMode)(v1)
+    beq        v1, 4, .L80031848
+    lw         v1, gCollisionMode
     bnez       v1, .L80031848
-    nop
     lwc1       ft1, 0x0(a1)
     mul.s      fv0, ft1, fv0
     lwc1       ft1, 0x8(a1)
@@ -513,88 +491,68 @@ LEAF(resolve_collisions)
     lwc1       ft1, 0x0(a2)
     sub.s      fv0, ft1, fv0
     div.s      fv1, fv0, fv1
+    lwc1       fv0, 0x0(a1)
     j          .L800318C8
-    lwc1      fv0, 0x0(a1)
     .L80031848:
-    lui        $at, %hi(D_800E5F6C)
-    lwc1       ft3, %lo(D_800E5F6C)($at)
+    lwc1       ft3, D_800E5F6C
     c.olt.s    fv1, ft3
     bc1f       .L800318A0
-    nop
-    lui        v1, %hi(gCollisionMode)
-    lw         v1, %lo(gCollisionMode)(v1)
-    addiu      $at, zero, 0x2
-    beq        v1, $at, .L800318A0
-    nop
-    addiu      v1, zero, 0x1
-    lui        $at, %hi(gHitWall)
-    sw         v1, %lo(gHitWall)($at)
+    lw         v1, gCollisionMode
+    beq        v1, 2, .L800318A0
+    li         v1, 1
+    sw         v1, gHitWall
     lwc1       ft1, 0x0(v0)
-    lui        $at, %hi(gCollisionNormalX)
-    swc1       ft1, %lo(gCollisionNormalX)($at)
+    swc1       ft1, gCollisionNormalX
     lwc1       ft1, 0x4(v0)
-    lui        $at, %hi(gCollisionNormalY)
-    swc1       ft1, %lo(gCollisionNormalY)($at)
+    swc1       ft1, gCollisionNormalY
     lwc1       ft1, 0x8(v0)
-    lui        $at, %hi(gCollisionNormalZ)
-    swc1       ft1, %lo(gCollisionNormalZ)($at)
+    swc1       ft1, gCollisionNormalZ
     .L800318A0:
-    mul.s      fv0, fv0, ft5
+    mul.s      fv0, ft5
+    mul.s      fv1, ft5
+    mul.s      ft0, ft5
     lwc1       ft1, 0x0(a1)
-    mul.s      fv1, fv1, ft5
-    nop
-    mul.s      ft0, ft0, ft5
     sub.s      fv0, ft1, fv0
     lwc1       ft1, 0x4(a1)
     sub.s      fv1, ft1, fv1
     lwc1       ft1, 0x8(a1)
     sub.s      ft0, ft1, ft0
     .L800318C8:
-    lui        v1, %hi(gHitWall)
-    lw         v1, %lo(gHitWall)(v1)
-    bnel       v1, zero, .L80031900
-    lb        t4, 0x0(t5)
+    lw         v1, gHitWall
+    bnez       v1, .L80031900
     lwc1       ft1, 0x0(v0)
-    lui        $at, %hi(gCollisionNormalX)
-    swc1       ft1, %lo(gCollisionNormalX)($at)
+    swc1       ft1, gCollisionNormalX
     lwc1       ft1, 0x4(v0)
-    lui        $at, %hi(gCollisionNormalY)
-    swc1       ft1, %lo(gCollisionNormalY)($at)
+    swc1       ft1, gCollisionNormalY
     lwc1       ft1, 0x8(v0)
-    lui        $at, %hi(gCollisionNormalZ)
-    swc1       ft1, %lo(gCollisionNormalZ)($at)
-    lb         t4, 0x0(t5)
+    swc1       ft1, gCollisionNormalZ
     .L80031900:
+    lb         t4, 0x0(t5)
     lb         v0, 0x0(a3)
-    slt        $at, v0, t4
-    beql       $at, zero, .L80031918
-    addiu     t6, t6, 0x1
+    bge        v0, t4, .L80031918
     sb         t4, 0x0(a3)
-    addiu      t6, t6, 0x1
     .L80031918:
-    slti       $at, t6, 0xB
-    bnez       $at, .L80031934
-    addiu     t7, zero, 0x1
-    or         t7, zero, zero
+    addiu      t6, 1
+    li         t7, 1
+    ble        t6, 10, .L80031934
+    move       t7, zero
     lwc1       fv0, 0x0(a0)
     lwc1       fv1, 0x4(a0)
     lwc1       ft0, 0x8(a0)
     .L80031934:
     swc1       fv0, 0x0(a1)
     swc1       fv1, 0x4(a1)
+    swc1       ft0, 0x8(a1)
     j          .L80031954
-    swc1      ft0, 0x8(a1)
-    .L80031944:
-    addiu      t0, t0, -0x1
     .L80031948:
-    addiu      t5, t5, 0x1
+    addiu      t5, 1
+    addiu      t1, 4
+    addiu      t0, -1
     bnez       t0, .L80031640
-    addiu     t1, t1, 0x4
     .L80031954:
     bnez       t7, .L80031624
-    nop
+    lbu        t2, 0x1(sp)
     beqz       t6, .L80031980
-    lbu       t2, 0x1(sp)
     lw         t1, 0x14(sp)
     lw         t0, 0x0(t1)
     addiu      t0, t0, 0x1
@@ -607,128 +565,116 @@ LEAF(resolve_collisions)
     sb         t2, 0x1(sp)
     or         t6, zero, zero
     .L8003198C:
-    lui        t1, %hi(gCollisionCandidates)
-    lui        t0, %hi(gNumCollisionCandidates)
-    or         t7, zero, zero
-    lw         t1, %lo(gCollisionCandidates)(t1)
-    lw         t0, %lo(gNumCollisionCandidates)(t0)
+    move       t7, zero
+    lw         t1, gCollisionCandidates
+    lw         t0, gNumCollisionCandidates
     .L800319A0:
     lw         t2, 0x0(t1)
-    blezl      t2, .L800319C0
-    lhu       v0, 0x0(t2)
+    blez       t2, .L800319C0
     lui        t3, 0x8000
-    or         t3, t3, t2
-    j          .L80031B18
-    lw        t3, 0x18(t3)
-    lhu        v0, 0x0(t2)
+    or         t3, t2
+    lw         t3, 0x18(t3)
+    j          .L80031B1C
     .L800319C0:
-    lwc1       ft2, 0x0(a1)
-    lwc1       ft3, 0x4(a1)
-    sll        v0, v0, 4
-    addu       v0, v0, t3
+    lhu        v0, 0x0(t2)
+    sll        v0, 4
+    addu       v0, t3
     lwc1       fv0, 0x0(v0)
     lwc1       fv1, 0x4(v0)
     lwc1       ft0, 0x8(v0)
-    mul.s      ft2, ft2, fv0
-    lwc1       ft4, 0x8(a1)
     lwc1       ft1, 0xC(v0)
-    mul.s      ft3, ft3, fv1
-    lui        $at, %hi(D_800E5F70)
-    mul.s      ft4, ft4, ft0
-    add.s      ft2, ft2, ft3
-    add.s      ft2, ft2, ft4
+    lwc1       ft2, 0x0(a1)
+    lwc1       ft3, 0x4(a1)
+    lwc1       ft4, 0x8(a1)
+    mul.s      ft2, fv0
+    mul.s      ft3, fv1
+    mul.s      ft4, ft0
+    add.s      ft2, ft3
+    add.s      ft2, ft4
     add.s      ft5, ft2, ft1
     lwc1       ft2, 0x0(a2)
-    sub.s      ft5, ft5, ft2
-    lwc1       ft2, %lo(D_800E5F70)($at)
+    sub.s      ft5, ft2
+    lwc1       ft2, D_800E5F70
     c.olt.s    ft5, ft2
-    bc1f       .L80031B18
-    lui       $at, (0x40400000 >> 16)
-    mtc1       $at, ft3
+    bc1f       .L80031B1C
+    li.s       ft3, 3.0
     lwc1       ft2, 0x0(a2)
-    add.s      ft2, ft2, ft3
+    add.s      ft2, ft3
     neg.s      ft2, ft2
     c.ole.s    ft5, ft2
-    bc1t       .L80031B18
-    lui       $at, (0x40800000 >> 16)
-    mtc1       $at, ft3
+    bc1t       .L80031B1C
+    li.s       ft3, 4.0
     lwc1       fv0, 0x0(a1)
     lwc1       fv1, 0x4(a1)
     lwc1       ft0, 0x8(a1)
     addiu      t4, zero, 0x3
     .L80031A48:
     lhu        v1, 0x2(t2)
-    or         t8, zero, zero
+    move       t8, zero
     andi       t9, v1, 0x8000
-    beql       t9, zero, .L80031A68
-    sll       v1, v1, 4
-    andi       v1, v1, 0x7FFF
-    addiu      t8, zero, 0x1
-    sll        v1, v1, 4
+    beqz       t9, .L80031A68
+    andi       v1, 0x7FFF
+    li         t8, 1
     .L80031A68:
-    addu       v1, v1, t3
-    lwc1       ft1, 0x0(v1)
-    lwc1       ft2, 0x4(v1)
+    sll        v1, 4
+    addu       v1, t3
+    lwc1       ft1, 0(v1)
+    lwc1       ft2, 4(v1)
     mul.s      ft1, fv0, ft1
-    nop
     mul.s      ft2, fv1, ft2
     add.s      ft1, ft1, ft2
     lwc1       ft2, 0x8(v1)
     mul.s      ft2, ft0, ft2
     add.s      ft1, ft1, ft2
     lwc1       ft2, 0xC(v1)
+    add.s      ft1, ft1, ft2
     beqz       t8, .L80031AA0
-    add.s     ft1, ft1, ft2
     neg.s      ft1, ft1
     .L80031AA0:
     c.ole.s    ft1, ft3
-    bc1fl      .L80031B1C
-    addiu     t0, t0, -0x1
-    addiu      t4, t4, -0x1
+    bc1f       .L80031B1C
+    addiu      t4, -1
+    addiu      t2, 2
     bnez       t4, .L80031A48
-    addiu     t2, t2, 0x2
     lwc1       fv0, 0x0(v0)
     lwc1       fv1, 0x4(v0)
     lwc1       ft1, 0x0(a1)
     mul.s      fv0, fv0, ft5
     lwc1       ft0, 0x8(v0)
-    addiu      t6, t6, 0x1
+    addiu      t6, 1
     mul.s      fv1, fv1, ft5
-    slti       $at, t6, 0xB
-    addiu      t7, zero, 0x1
+    li         t7, 1
     mul.s      ft0, ft0, ft5
     sub.s      fv0, ft1, fv0
     lwc1       ft1, 0x4(a1)
     sub.s      fv1, ft1, fv1
     lwc1       ft1, 0x8(a1)
-    bnez       $at, .L80031B08
-    sub.s     ft0, ft1, ft0
-    or         t7, zero, zero
+    sub.s      ft0, ft1, ft0
+    ble        t6, 10, .L80031B08
+    move       t7, zero
     lwc1       fv0, 0x0(a0)
     lwc1       fv1, 0x4(a0)
     lwc1       ft0, 0x8(a0)
     .L80031B08:
     swc1       fv0, 0x0(a1)
     swc1       fv1, 0x4(a1)
+    swc1       ft0, 0x8(a1)
     j          .L80031B24
-    swc1      ft0, 0x8(a1)
-    .L80031B18:
-    addiu      t0, t0, -0x1
     .L80031B1C:
+    addiu      t0, -1
+    addiu      t1, 4
     bnez       t0, .L800319A0
-    addiu     t1, t1, 0x4
     .L80031B24:
     bnez       t7, .L8003198C
-    nop
     lw         t0, 0x10(sp)
-    addiu      a0, a0, 0xC
-    addiu      a1, a1, 0xC
-    addiu      t0, t0, -0x1
-    addiu      a2, a2, 0x4
-    addiu      a3, a3, 0x1
+    addiu      t0, -1
+    addiu      a0, 0xC
+    addiu      a1, 0xC
+    addiu      a2, 4
+    addiu      a3, 1
+    sw         t0, 0x10(sp)
     bnez       t0, .L80031620
-    sw        t0, 0x10(sp)
-    .L80031B4C:
+.no_collision_candidates:
+    lb         v0, 0x0(sp)
     jr         ra
-    lb        v0, 0x0(sp)
 END(resolve_collisions)
