@@ -28,12 +28,19 @@ s8 gAntiPiracyViewport = FALSE;
 
 #define SCISSOR_INTERLACE G_SC_NON_INTERLACE
 
+#ifdef AVOID_UB
+// viewport_reset uses index 4 for the full-screen viewport.
+ScreenViewport gScreenViewports[5] = {
+    { DEFAULT_VIEWPORT }, { DEFAULT_VIEWPORT }, { DEFAULT_VIEWPORT }, { DEFAULT_VIEWPORT }, { DEFAULT_VIEWPORT },
+};
+#else
 ScreenViewport gScreenViewports[4] = {
     { DEFAULT_VIEWPORT },
     { DEFAULT_VIEWPORT },
     { DEFAULT_VIEWPORT },
     { DEFAULT_VIEWPORT },
 };
+#endif
 
 u32 gViewportWithBG = FALSE;
 
