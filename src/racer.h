@@ -213,8 +213,8 @@ void racer_update_eggs(Object **racerObjs);
 void timetrial_ghost_write(Object *obj, s32 updateRate);
 void func_80046524(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);
 void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF);
-void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate);
-void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* racerObj, Object_Racer* racer);  /* extern */
+void update_racer_collision(Object *racerObj, Object_Racer *racer, s32 updateRate);
+void update_car(s32 updateRate, f32 updateRateF, Object* racerObj, Object_Racer* racer);  /* extern */
 
 //Non Matching
 s32 timetrial_ghost_read(Object *obj);
@@ -228,6 +228,6 @@ void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
 void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate);
 Object *func_8005698C(Object *racerObj, Object_Racer *racer, f32 *outDistance);
 void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF);
-void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF);
+void update_player_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF);
 
 #endif

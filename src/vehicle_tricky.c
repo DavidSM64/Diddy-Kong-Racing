@@ -111,7 +111,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
 
-    func_8004F7F4(updateRate, updateRateF, obj, racer);
+    update_car(updateRate, updateRateF, obj, racer);
     *startTimer = tempStartTimer;
     racer->lateral_velocity = 0.0f;
     racer->headAngle = tempHeadAngle;
