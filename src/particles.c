@@ -789,11 +789,11 @@ void update_vehicle_particles(Object *racerObj, s32 updateRate) {
     Object_Racer *racer;
     ParticleDescriptor *descriptor;
     s32 opacity;
-    s32 temp_v1;
+    s32 colourWeight;
     s32 i;
     ParticleEmitter *new_var;
 
-    s32 var_t1;
+    s32 alphaWeight;
     s32 someBool;
     s8 vehicleId;
     u32 emittersEnabled;
@@ -820,29 +820,29 @@ void update_vehicle_particles(Object *racerObj, s32 updateRate) {
                         if (opacity > 0) {
                             descriptor = gParticlesAssetTable[racerObj->particleEmitter[i].descriptorID];
                             alphaPtr = &gCounterSteerDustColours[i].a;
-                            var_t1 = 4;
+                            alphaWeight = 4; // The shift amount for below; needed to match.
                             if (opacity > 32) {
                                 opacity = 32;
                             }
-                            var_t1 = opacity << var_t1;
-                            temp_v1 = var_t1 - ((opacity * opacity) >> 2);
+                            alphaWeight = opacity << alphaWeight;
+                            colourWeight = alphaWeight - ((opacity * opacity) >> 2);
                             gParticleOverrideColor[0].word =
-                                ((((gCounterSteerDustColours[i].r - descriptor->colour.r) * temp_v1) >> 8) +
+                                ((((gCounterSteerDustColours[i].r - descriptor->colour.r) * colourWeight) >> 8) +
                                  descriptor->colour.r)
                                 << 24;
                             gParticleOverrideColor[0].word |=
                                 (descriptor->colour.g +
-                                 ((((gCounterSteerDustColours[i].g - descriptor->colour.g) * temp_v1)) >> 8))
+                                 ((((gCounterSteerDustColours[i].g - descriptor->colour.g) * colourWeight)) >> 8))
                                 << 16;
                             gParticleOverrideColor[0].word |=
                                 (descriptor->colour.b +
-                                 ((((gCounterSteerDustColours[i].b - descriptor->colour.b) * temp_v1)) >> 8))
+                                 ((((gCounterSteerDustColours[i].b - descriptor->colour.b) * colourWeight)) >> 8))
                                 << 8;
                             if (opacity > 16) {
-                                var_t1 = 256;
+                                alphaWeight = 256;
                             }
                             opacity = descriptor->colour.a;
-                            gParticleOverrideColor[0].word |= opacity + (((*alphaPtr - opacity) * var_t1) >> 8);
+                            gParticleOverrideColor[0].word |= opacity + (((*alphaPtr - opacity) * alphaWeight) >> 8);
                         }
                     } else {
                         // Tire marks
