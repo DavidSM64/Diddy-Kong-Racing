@@ -100,7 +100,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
     racer->vehicleID = VEHICLE_SMOKEY;
-    func_80049794(updateRate, updateRateF, obj, racer);
+    update_plane(updateRate, updateRateF, obj, racer);
     racer->vehicleID = racer->vehicleIDPrev;
     *startTimer = headAngleRange;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;

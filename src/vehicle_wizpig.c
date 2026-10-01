@@ -100,7 +100,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
     racer->vehicleID = VEHICLE_WIZPIG;
-    func_80049794(updateRate, updateRateF, obj, racer);
+    update_plane(updateRate, updateRateF, obj, racer);
     racer->vehicleID = racer->vehicleIDPrev;
     *startTimer = tempStartTimer;
     obj->particleEmittersEnabled = OBJ_EMIT_NONE;

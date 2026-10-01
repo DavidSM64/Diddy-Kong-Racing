@@ -1187,18 +1187,18 @@ typedef struct Object_Racer {
     /* 0x0BC */ f32 unkBC;
     /* 0x0C0 */ f32 buoyancy;
     /* 0x0C4 */ f32 unkC4;
-    /* 0x0C8 */ f32 unkC8;
+    /* 0x0C8 */ f32 cameraLateralOffset; // Sideways shift of the chase camera, towards the inside of a powerslide.
     /* 0x0CC */ f32 unkCC;
     /* 0x0D0 */ f32 unkD0;
     /* 0x0D4 */ f32 unkD4;
-    /* 0x0D8 */ f32 unkD8[12];
+    /* 0x0D8 */ f32 collisionSpherePos[12]; // Where each collision sphere (x, y, z) ended up last frame.
     /* 0x108 */ struct Object *exitObj;
     /* 0x10C */ s32 driftHeadingOffset; // Added to the car's heading for its velocity; eases to drift_direction << 13.
     /* 0x110 */ s32 unk110;
     /* 0x114 */ s32 unk114;
     /* 0x118 */ struct VehicleSoundData *vehicleSound;
-    /* 0x11C */ f32 unk11C;
-    /* 0x120 */ f32 unk120;
+    /* 0x11C */ f32 crashBounceX; // Velocity added while crashTimer runs.
+    /* 0x120 */ f32 crashBounceZ;
     /* 0x124 */ f32 unk124;
     /* 0x128 */ s32 lap_times[5]; // mode_init_taj_race implies there should be at least 5 lap times.
     /* 0x13C */ s32 unk13C;
@@ -1218,7 +1218,7 @@ typedef struct Object_Racer {
     /* 0x168 */ s16 unk168;
     /* 0x16A */ s16 headAngle;
     /* 0x166 */ s16 headAngleTarget;
-    /* 0x16E */ s16 unk16E;
+    /* 0x16E */ s16 counterSteerTimer; // Ticks steering against a powerslide (signed); past 80 the racer spins out.
     /* 0x170 */ s16 unk170;
     /* 0x172 */ s8 balloon_type;
     /* 0x173 */ s8 balloon_quantity;
@@ -1245,8 +1245,8 @@ typedef struct Object_Racer {
     /* 0x196 */ s16 cameraYaw;
     /* 0x198 */ s16 unk198;
     /* 0x19A */ s16 unk19A;
-    /* 0x19C */ s16 unk19C;
-    /* 0x19E */ s16 unk19E;
+    /* 0x19C */ s16 crashYawStep; // Turn direction (+/- 2048) the last head-on crash pushes the racer.
+    /* 0x19E */ s16 cameraYawOffset; // Yaw the camera still trails behind after a reversing turn-around.
     /* 0x1A0 */ s16 steerVisualRotation;
     /* 0x1A2 */ s16 y_rotation_vel;
     /* 0x1A4 */ s16 x_rotation_vel;
@@ -1275,8 +1275,8 @@ typedef struct Object_Racer {
     /* 0x1CE */ u8 unk1CE;
     /* 0x1CF */ s8 eggHudCounter;
     /* 0x1D0 */ s8 spectateCamID;
-    /* 0x1D1 */ s8 unk1D1;
-    /* 0x1D2 */ s8 unk1D2;
+    /* 0x1D1 */ s8 stickShakeX; // Random stick X offset that shakes the car while braking.
+    /* 0x1D2 */ s8 crashTimer; // Set to 7 by a crash into a wall or another racer; A is ignored until it runs out.
     /* 0x1D3 */ s8 boostTimer;
     /* 0x1D4 */ s8 unk1D4;
     /* 0x1D5 */ s8 unk1D5;

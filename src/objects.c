@@ -4815,13 +4815,13 @@ void func_800159C8(Object *arg0, Object *arg1) {
                         f2 = (arg0->trans.x_position * arg0->z_velocity - arg0->trans.z_position * arg0->x_velocity);
                         f2 = (arg1->trans.x_position * arg0->z_velocity - arg1->trans.z_position * arg0->x_velocity) -
                              f2;
-                        sp50->unk1D2 = 7;
+                        sp50->crashTimer = 7;
                         if (f2 >= 0.0f) {
-                            sp50->unk120 = arg0->x_velocity * 0.1;
-                            sp50->unk11C = -arg0->z_velocity * 0.1;
+                            sp50->crashBounceZ = arg0->x_velocity * 0.1;
+                            sp50->crashBounceX = -arg0->z_velocity * 0.1;
                         } else {
-                            sp50->unk120 = -arg0->x_velocity * 0.1;
-                            sp50->unk11C = arg0->z_velocity * 0.1;
+                            sp50->crashBounceZ = -arg0->x_velocity * 0.1;
+                            sp50->crashBounceX = arg0->z_velocity * 0.1;
                         }
                     }
                 }
@@ -4844,9 +4844,9 @@ void func_800159C8(Object *arg0, Object *arg1) {
                     } else {
                         f2 = -2.0f;
                     }
-                    sp50->unk1D2 = 7;
-                    sp50->unk11C = sp50->ox3 * f2 * sp50->velocity;
-                    sp50->unk120 = sp50->oz3 * f2 * sp50->velocity;
+                    sp50->crashTimer = 7;
+                    sp50->crashBounceX = sp50->ox3 * f2 * sp50->velocity;
+                    sp50->crashBounceZ = sp50->oz3 * f2 * sp50->velocity;
                 }
             }
             if (var_v0 && sp50->playerIndex != -1) {
@@ -9945,18 +9945,18 @@ CheckpointNode *func_800230D0(Object *obj, Object_Racer *racer) {
     racer->nextCheckpoint = 0;
     racer->courseCheckpoint = racer->lap * gNumberOfMainCheckpoints;
     obj->trans.rotation.y_rotation = racer->steerVisualRotation;
-    racer->unkD8[0] = obj->trans.x_position;
-    racer->unkD8[1] = obj->trans.y_position + 15.0f;
-    racer->unkD8[2] = obj->trans.z_position;
-    racer->unkD8[3] = obj->trans.x_position;
-    racer->unkD8[4] = obj->trans.y_position + 15.0f;
-    racer->unkD8[5] = obj->trans.z_position;
-    racer->unkD8[6] = obj->trans.x_position;
-    racer->unkD8[7] = obj->trans.y_position + 15.0f;
-    racer->unkD8[8] = obj->trans.z_position;
-    racer->unkD8[9] = obj->trans.x_position;
-    racer->unkD8[10] = obj->trans.y_position + 15.0f;
-    racer->unkD8[11] = obj->trans.z_position;
+    racer->collisionSpherePos[0] = obj->trans.x_position;
+    racer->collisionSpherePos[1] = obj->trans.y_position + 15.0f;
+    racer->collisionSpherePos[2] = obj->trans.z_position;
+    racer->collisionSpherePos[3] = obj->trans.x_position;
+    racer->collisionSpherePos[4] = obj->trans.y_position + 15.0f;
+    racer->collisionSpherePos[5] = obj->trans.z_position;
+    racer->collisionSpherePos[6] = obj->trans.x_position;
+    racer->collisionSpherePos[7] = obj->trans.y_position + 15.0f;
+    racer->collisionSpherePos[8] = obj->trans.z_position;
+    racer->collisionSpherePos[9] = obj->trans.x_position;
+    racer->collisionSpherePos[10] = obj->trans.y_position + 15.0f;
+    racer->collisionSpherePos[11] = obj->trans.z_position;
     obj->interactObj->x_position = obj->trans.x_position;
     obj->interactObj->y_position = obj->trans.y_position;
     obj->interactObj->z_position = obj->trans.z_position;

@@ -136,7 +136,9 @@ ColourRGBA gVehicleTrackMarkColors[16] = {
     { { { 0, 0, 0, 0 } } },        // SURFACE_UNK0F
 };
 
-ColourRGBA D_800E2EC4[10] = {
+// What the car's dust puffs (emitters 0-9, a left/right pair per surface, see gSurfaceFlagTable) darken to while
+// counter-steering a powerslide. Most are a quarter of the puff's own colour; all are fully opaque.
+ColourRGBA gCounterSteerDustColours[10] = {
     { { { 64, 64, 64, 255 } } },  { { { 64, 64, 64, 255 } } },  { { { 0, 45, 0, 255 } } },
     { { { 0, 45, 0, 255 } } },    { { { 64, 60, 10, 255 } } },  { { { 64, 60, 10, 255 } } },
     { { { 64, 64, 255, 255 } } }, { { { 64, 64, 255, 255 } } }, { { { 64, 64, 64, 255 } } },
@@ -808,15 +810,16 @@ void update_vehicle_particles(Object *racerObj, s32 updateRate) {
             switch (vehicleId) {
                 case VEHICLE_CAR:
                     if (i >= 0 && i < 10) {
-                        // Dust effects for vehicle ?
-                        opacity = racer->unk16E;
+                        // Dust puffs from the rear wheels darken while counter-steering a powerslide: from 24 ticks
+                        // they blend towards gCounterSteerDustColours, fully by 56, warning of the spinout at 80.
+                        opacity = racer->counterSteerTimer;
                         if (opacity < 0) {
                             opacity = -opacity;
                         }
                         opacity -= 24;
                         if (opacity > 0) {
                             descriptor = gParticlesAssetTable[racerObj->particleEmitter[i].descriptorID];
-                            alphaPtr = &D_800E2EC4[i].a;
+                            alphaPtr = &gCounterSteerDustColours[i].a;
                             var_t1 = 4;
                             if (opacity > 32) {
                                 opacity = 32;
@@ -824,13 +827,16 @@ void update_vehicle_particles(Object *racerObj, s32 updateRate) {
                             var_t1 = opacity << var_t1;
                             temp_v1 = var_t1 - ((opacity * opacity) >> 2);
                             gParticleOverrideColor[0].word =
-                                ((((D_800E2EC4[i].r - descriptor->colour.r) * temp_v1) >> 8) + descriptor->colour.r)
+                                ((((gCounterSteerDustColours[i].r - descriptor->colour.r) * temp_v1) >> 8) +
+                                 descriptor->colour.r)
                                 << 24;
                             gParticleOverrideColor[0].word |=
-                                (descriptor->colour.g + ((((D_800E2EC4[i].g - descriptor->colour.g) * temp_v1)) >> 8))
+                                (descriptor->colour.g +
+                                 ((((gCounterSteerDustColours[i].g - descriptor->colour.g) * temp_v1)) >> 8))
                                 << 16;
                             gParticleOverrideColor[0].word |=
-                                (descriptor->colour.b + ((((D_800E2EC4[i].b - descriptor->colour.b) * temp_v1)) >> 8))
+                                (descriptor->colour.b +
+                                 ((((gCounterSteerDustColours[i].b - descriptor->colour.b) * temp_v1)) >> 8))
                                 << 8;
                             if (opacity > 16) {
                                 var_t1 = 256;
