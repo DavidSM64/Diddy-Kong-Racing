@@ -836,10 +836,9 @@ typedef struct ObjectHeader {
     /* 0x58 */ s8 unk58;
     /* 0x59 */ u8 pad59;
     /* 0x5A */ s8 numLightSources;
-    /* 0x5B */ u8 unk5B;
-    /* 0x5C */ u8 unk5C;
-    /* 0x5D */ u8 unk5D; // Misc Asset index?
-    /* 0x5E */ u8 pad5E[0x2];
+    /* 0x5B */ u8 miscAssetCount;
+    // Misc asset indices used by this object. Racers: [0] acceleration curve, [1] the four collision spheres.
+    /* 0x5C */ u8 miscAssetIds[4];
     /* 0x60 */ char internalName[16];
     /* 0x70 */ u8 unk70;
     /* 0x71 */ u8 directionalPointLighting; // If enabled, the model is lit from the direction of the light source; if
@@ -1194,7 +1193,7 @@ typedef struct Object_Racer {
     /* 0x0D4 */ f32 unkD4;
     /* 0x0D8 */ f32 unkD8[12];
     /* 0x108 */ struct Object *exitObj;
-    /* 0x10C */ s32 unk10C;
+    /* 0x10C */ s32 driftHeadingOffset; // Added to the car's heading for its velocity; eases to drift_direction << 13.
     /* 0x110 */ s32 unk110;
     /* 0x114 */ s32 unk114;
     /* 0x118 */ struct VehicleSoundData *vehicleSound;

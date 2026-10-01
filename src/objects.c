@@ -3105,10 +3105,8 @@ s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 e
     s32 soundId;
 
     ret = 0;
-    if (arg1 < obj->header->unk5B) {
-        // TODO: Figure this one out better. The index could be something like this:
-        // obj->header->internalName[arg1 - 4]
-        asset = (s8 *) get_misc_asset(*(&obj->header->unk5C + arg1));
+    if (arg1 < obj->header->miscAssetCount) {
+        asset = (s8 *) get_misc_asset(obj->header->miscAssetIds[arg1]);
         asset0 = asset[0];
         shakeDist = (asset[1] & 0xFF) * 8.0f;
         shakeMagnitude = asset[2];
@@ -4921,7 +4919,7 @@ void func_80016500(Object *obj, Object_Racer *racer) {
     angle = racer->steerVisualRotation;
     if (racer->vehicleID == VEHICLE_CAR) {
         if (racer->drift_direction != 0) {
-            angle += racer->unk10C;
+            angle += racer->driftHeadingOffset;
             angle = (s16) angle;
         }
     }
