@@ -211,8 +211,8 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number);
 void update_player_racer(Object *obj, s32 updateRate);
 void racer_update_eggs(Object **racerObjs);
 void timetrial_ghost_write(Object *obj, s32 updateRate);
-void func_80046524(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);
-void func_80053750(Object *objRacer, Object_Racer *racer, f32 updateRateF);
+void update_hovercraft(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);
+void animate_racer_wheels(Object *objRacer, Object_Racer *racer, f32 updateRateF);
 void update_racer_collision(Object *racerObj, Object_Racer *racer, s32 updateRate);
 void update_car(s32 updateRate, f32 updateRateF, Object* racerObj, Object_Racer* racer);  /* extern */
 
@@ -220,7 +220,7 @@ void update_car(s32 updateRate, f32 updateRateF, Object* racerObj, Object_Racer*
 s32 timetrial_ghost_read(Object *obj);
 void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32, f32);
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
-void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
+void update_plane(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
 void func_8004CC20(s32 updateRate, f32 updateRateF, Object *racerObj, Object_Racer *racer); /* extern */
 void racer_ai_challenge(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate);
 void racer_ai_eggs(Object *obj, Object_Racer *racer, s32 updateRate);
