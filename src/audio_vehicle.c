@@ -9,9 +9,7 @@
 #include "math_util.h"
 #include "objects.h"
 #include "PR/libaudio.h"
-#include "printf.h"
 #include "racer.h"
-#include "types.h"
 
 /************ .data ************/
 

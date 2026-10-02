@@ -2,11 +2,9 @@
 
 #include "audio.h"
 #include "camera.h"
-#include "macros.h"
 #include "objects.h"
 #include "particles.h"
 #include "racer.h"
-#include "types.h"
 
 /************ .data ************/
 

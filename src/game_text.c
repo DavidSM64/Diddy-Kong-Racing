@@ -2,7 +2,6 @@
 #include "asset_loading.h"
 #include "camera.h"
 #include "common.h"
-#include "game.h"
 #include "joypad.h"
 #include "memory.h"
 #include "menu.h"
@@ -86,6 +85,7 @@ void init_dialogue_text(void) {
 
 /**
  * Close screen dialogue and free the text currently loaded into it.
+ * Official Name: subtitlesFree
  */
 void free_message_box(void) {
     mempool_free(gCurrentMessageText[0]);
@@ -96,6 +96,7 @@ void free_message_box(void) {
 
 /**
  * Toggle an override that prevents subtitles from showing.
+ * Official Name: subtitlesEnable
  */
 void set_subtitles(s32 setting) {
     gSubtitleSetting = setting;
@@ -193,7 +194,7 @@ void find_next_subtitle(void) {
         new_var2 = gCurrentTextProperties[0];
         if (gCurrentTextProperties[0] == 10) {
             gCurrentTextProperties++;
-        } else if (new_var2 == 12) {
+        } else if (new_var2 == '\f') { // FORM FEED
             gCurrentTextProperties++;
             done = TRUE;
         }
@@ -206,6 +207,7 @@ void find_next_subtitle(void) {
 /**
  * Handle the subtitle system from here.
  * Slowly show the text, tick down the timer, find the next message or close the box, then render.
+ * Official Name: subtitlesTick
  */
 void process_subtitles(s32 updateRate) {
     if (gSubtitleSetting == FALSE) {
@@ -298,6 +300,7 @@ void set_delayed_text(s32 textID, f32 delay) {
  * Set the current text index based on the entry.
  * Start certain behaviours based on the header,
  * like showing a subtitle, or opening an onscreen text box.
+ * Official Name: subtitleStart
  */
 void set_current_text(s32 textID) {
     char **entries;

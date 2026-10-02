@@ -1,6 +1,5 @@
 #include "thread0_epc.h"
 #include "common.h"
-#include "joypad.h"
 #include "macros.h"
 #include "menu.h"
 #include "objects.h"

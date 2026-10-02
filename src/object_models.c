@@ -37,6 +37,7 @@ s32 D_8011D644;
 
 /**
  * Allocate memory for object model ID's and animation tables.
+ * Official Name: modInitModels
  */
 void allocate_object_model_pools(void) {
     s32 i;
@@ -73,6 +74,7 @@ void allocate_object_model_pools(void) {
  * Load the associated model ID and assign it to the objects gfx data.
  * Also loads textures and animations.
  * v79 and newer have a bugfix that revert the cache count if allocation fails.
+ * Official Name: modLoadModel
  */
 ModelInstance *object_model_init(s32 modelID, s32 flags) {
     s32 i;

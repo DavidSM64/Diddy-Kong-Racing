@@ -1,0 +1,673 @@
+#ifdef MODERN_CC
+.set gp=64
+#endif
+
+#include "PR/R4300.h"
+#include "sys/asm.h"
+#include "sys/regdef.h"
+#include "asm_macros.h"
+
+.text
+
+#define RENDER_HIDDEN 0x100
+#define RENDER_NO_COLLISION 0x200
+
+#define SURFACE_WATER_CALM 11
+#define SURFACE_INVIS_WALL 17
+#define SURFACE_UNK12 18
+
+#define VEHICLE_NO_OVERRIDE -1
+#define VEHICLE_CAR 1
+#define VEHICLE_PLANE 2
+
+#define TEX_INDEX_NO_TEXTURE 0xFF
+
+#define MAX_COLLISION_CANDIDATES 500
+
+#define sizeOfVec3f 0xC
+#define sizeOfLevelModelSegmentBoundingBox 0xC
+#define sizeOfLevelModelSegment 0x44
+#define sizeOfTriangleBatchInfo 0xC
+#define sizeOfTextureInfo 0x8
+
+#define minX s5
+#define maxX s4
+#define minZ s3
+#define maxZ s2
+#define x1 t0
+#define z1 t1
+#define x2 t2
+#define z2 t3
+#define vehicleID s6
+
+/**
+ * Populates a list of triangle candidates that will be tested for collision in resolve_collisions.
+ * Calculates a single bounding rectangle that contains all origin and target points.
+ * Then, terrain segments overlapping this rectangle are identified, and eligible triangles within them are selected.
+ * Triangle batches are filtered based on visibility, surface type, and collision flags.
+ *
+ * void generate_collision_candidates(s32 numPoints, Vec3f *origins, Vec3f *targets, s32 vehicleID);
+ */
+LEAF(generate_collision_candidates)
+    addiu      sp, sp, -0x70
+    sw         ra, 0x30(sp)
+    sw         s6, 0x2C(sp)
+    sw         s5, 0x28(sp)
+    sw         s4, 0x24(sp)
+    sw         s3, 0x20(sp)
+    sw         s2, 0x1C(sp)
+    sw         s1, 0x18(sp)
+    sw         s0, 0x14(sp)
+    li         t0, 100000
+    li         t1, -100000
+    move       minX, t0 # s5 = minX
+    move       maxX, t1 # s4 = maxX
+    move       minZ, t0 # s3 = minZ
+    move       maxZ, t1 # s2 = maxZ
+    move       vehicleID, a3 # s6 = vehicleID
+    beqz       a0, .zero_numPoints # Skip if no collision candidates
+    sll        t0, a0, 3 # t0 = a0 * 8
+    sll        t1, a0, 2 # t1 = a0 * 4
+    add        a0, t0, t1 # a0 = a0 * 12
+    add        a0, a0, a1 # a0 = forLoopEnd = a1 + (numPoints * sizeof(Vec3f))
+.for_loop_start: # for (i = 0; i < numPoints; i++)
+    lwc1       fv0, 0x0(a1) /* fv0 = origins[i].x */
+    lwc1       fv1, 0x8(a1) /* fv1 = origins[i].z */
+    lwc1       ft0, 0x0(a2) /* ft0 = targets[i].x */
+    lwc1       ft1, 0x8(a2) /* ft1 = targets[i].z */
+    trunc.w.s  fv0, fv0
+    trunc.w.s  fv1, fv1
+    trunc.w.s  ft0, ft0
+    trunc.w.s  ft1, ft1
+    mfc1       x1, fv0 /* t0 = x1 = (s32) origins[i].x */
+    mfc1       z1, fv1 /* t1 = z1 = (s32) origins[i].z */
+    mfc1       x2, ft0 /* t2 = x2 = (s32) targets[i].x */
+    mfc1       z2, ft1 /* t3 = z2 = (s32) targets[i].z */
+    bge        maxX, x1, .skip_maxX_update
+    move       maxX, x1  /* maxX = x1 */
+.skip_maxX_update:
+    ble        minX, x1, .skip_minX_update
+    move       minX, x1  /* minX = x1 */
+.skip_minX_update:
+    bge        maxZ, z1, .skip_maxZ_update
+    move       maxZ, z1  /* maxZ = z1 */
+.skip_maxZ_update:
+    ble        minZ, z1, .skip_minZ_update
+    move       minZ, z1  /* minZ = z1 */
+.skip_minZ_update:
+    bge        maxX, x2, .skip_maxX_update2
+    move       maxX, x2  /* maxX = x2 */
+.skip_maxX_update2:
+    ble        minX, x2, .skip_minX_update2
+    move       minX, x2  /* minX = x2 */
+.skip_minX_update2:
+    bge        maxZ, z2, .skip_maxZ_update2
+    move       maxZ, z2  /* maxZ = z2 */
+.skip_maxZ_update2:
+    ble        minZ, z2, .skip_minZ_update2
+    move       minZ, z2  /* minZ = z2 */
+.skip_minZ_update2:
+    addiu     a1, a1, sizeOfVec3f /* Advance to the next origin pointer */
+    addiu     a2, a2, sizeOfVec3f /* Advance to the next target pointer */
+    blt       a1, a0, .for_loop_start
+.zero_numPoints:
+    /* Expand the bounding box by 20 units in all directions */
+    addiu      minX, -20
+    addiu      maxX, 20
+    addiu      minZ, -20
+    addiu      maxZ, 20
+    /* if (maxX >= minX) swap min and max x */
+    bge        maxX, minX, .skip_swap_x
+    move       t0, minX
+    move       minX, maxX
+    move       maxX, t0
+.skip_swap_x:
+    /* if (maxZ >= minZ) swap min and max z */
+    bge        maxZ, minZ, .skip_swap_z
+    move       t0, minZ
+    move       minZ, maxZ
+    move       maxZ, t0
+.skip_swap_z:
+    lui        t0, %hi(gCurrentLevelModel)
+    lw         t0, %lo(gCurrentLevelModel)(t0)
+    addi       s1, sp, 0x34 /* s16 grid_mask[10]; */
+    addi       s0, sp, 0x48 /* LevelModelSegment *segments[10]; */
+    move       t8, zero
+    lw         a0, 0x8(t0)   /* a0 = &gCurrentLevelModel->segmentsBoundingBoxes */
+    lw         t6, 0x4(t0)   /* t6 = &gCurrentLevelModel->segments */
+    lh         t7, 0x1A(t0)  /* t7 = gCurrentLevelModel->numberOfSegments */
+    beqz       t7, .end_loop /* Skip loop if no segments */
+.start_of_loop:
+    lh         v1, 0x0(a0) /* v1 = segmentBoundingBox->x1 */
+    lh         v0, 0x6(a0) /* v0 = segmentBoundingBox->x2 */
+    addiu      v0, 5       /* v0 = x2 + 5 */
+    addiu      v1, -5      /* v1 = x1 - 5 */
+    blt        v0, minX, .continue_loop
+    blt        maxX, v1, .continue_loop
+    lh         t1, 0x4(a0) /* t1 = segmentBoundingBox->z1 */
+    lh         t0, 0xA(a0) /* t0 = segmentBoundingBox->z2 */
+    addiu      t1, -5      /* t1 = z1 - 5 */
+    addiu      t0, 5       /* t0 = z2 + 5 */
+    blt        t0, minZ, .continue_loop
+    blt        maxZ, t1, .continue_loop
+    move       a1, minX
+    move       a2, minZ
+    move       a3, maxX
+    sw         maxZ, 0x10(sp)
+    jal        compute_grid_overlap_mask
+    sh         v0, 0x0(s1) /* *s1 = gridOverlapMask */
+    sw         t6, 0x0(s0) /* *s0 = pointer for &gCurrentLevelModel->segments[i] */
+    addiu      s1, 0x2 /* s1 = gridOverlapMask++ */
+    addiu      s0, 4 /* segments++ */
+    addiu      t8, 1 /* counter++ */
+    beq        t8, 10, .end_loop
+.continue_loop:
+    addiu      t7, -1
+    addiu      a0, sizeOfLevelModelSegmentBoundingBox
+    addiu      t6, sizeOfLevelModelSegment
+    bnez       t7, .start_of_loop
+.end_loop:
+    move       s3, zero /* j = 0 */
+    beqz       t8, .return_generate_collision_candidates
+    lui        a0, %hi(gCurrentLevelModel)
+    lw         a0, %lo(gCurrentLevelModel)(a0)
+    lui        s2, %hi(gCollisionCandidates)
+    lw         s2, %lo(gCollisionCandidates)(s2)
+    lui        t9, %hi(gCollisionSurfaces)
+    lw         t9, %lo(gCollisionSurfaces)(t9)
+    addi       s1, sp, 0x34 /* s16 grid_mask[10]; */
+    addi       s0, sp, 0x48 /* LevelModelSegment *segments[10]; */
+    sll        t8, 1 /* t8 = counter * 2 */
+    add        t8, s1, t8 /* t8 = &grid_mask[counter] */
+    lw         a0, 0x0(a0) /* a0 = gCurrentLevelModel->textures */
+.start_of_candidate_loop:
+    lw         t7, 0x0(s0) /* t7 = pointer for segments[i] */
+    lh         t6, 0x0(s1) /* t6 = grid_mask[counter] */
+    and        v0, t7, 0x7FFFFFFF /* v0 = seg & 0x7FFFFFFF: clear sign bit to tag as segment (non-negative)  */
+    sw         v0, 0x0(s2) /* gCollisionCandidates[j] = tagged segment ptr (MSB=0; facets stay negative) */
+    lh         t0, 0x20(t7) /* t0 = segments[i].numberOfBatches */
+    lw         t5, 0xC(t7)  /* t5 = segments[i].batches (current batch) */
+#if (sizeOfTriangleBatchInfo != 0xC)
+    /* Do this in case sizeOfTriangleBatchInfo changes in the future. */
+    mul        t3, t0, sizeOfTriangleBatchInfo
+#else
+    sll        v0, t0, 3
+    sll        v1, t0, 2
+    add        t3, v0, v1 /* t3 = numberOfBatches * 12 (sizeof(TriangleBatchInfo)) */
+#endif
+    add        t3, t3, t5 /* t3 = &batches[numberOfBatches] (loop end) */
+    addiu      s3, 1 /* j++ */
+    addiu      s2, 4 /* Advance to the next gCollisionCandidates value */
+    addiu      t9, 1 /* Advance to the next gCollisionSurfaces value */
+    addiu      t4, t5, sizeOfTriangleBatchInfo /* t4 = &batches[1] (the batchIndex+1 batch) */
+.start_of_inner_loop:
+    lw         t0, 0x8(t5) /* t0 = batch->flags */
+    andi       v0, t0, RENDER_NO_COLLISION
+    bnez       v0, .L8003148C
+    bne        vehicleID, VEHICLE_NO_OVERRIDE, .L800313D0
+    andi       v0, t0, RENDER_HIDDEN
+    bnez       v0, .L8003148C
+.L800313D0:
+    lbu        v1, 0x0(t5) /* v1 = batch->textureIndex */
+    move       t2, zero /* t2 = 0 */
+    beq        v1, TEX_INDEX_NO_TEXTURE, .skip_no_texture /* Skip batches with no texture, since the surface type is stored in the texture data */
+    mul        v1, sizeOfTextureInfo
+    add        v1, a0 /* v1 = &textures[textureIndex] */
+    lb         t2, 0x7(v1) /* t2 = textures[textureIndex].surfaceType */
+    beq        t2, SURFACE_WATER_CALM, .L8003148C
+    bne        vehicleID, VEHICLE_PLANE, .L80031408
+    beq        t2, SURFACE_INVIS_WALL, .L8003148C
+.L80031408:
+    beqz       vehicleID, .skip_no_texture
+    beq        t2, SURFACE_UNK12, .L8003148C
+.skip_no_texture:
+    lh         t0, 0x4(t5)
+    lh         t1, 0x4(t4)
+    lw         a2, 0x10(t7)
+    lw         a3, 0x14(t7)
+    sll        v0, t0, 1
+    sll        v1, t0, 3
+    sll        t1, 1
+    add        a1, a2, t1
+    add        a2, v0
+    add        a3, v1
+.L80031440:
+    lh         t0, 0x0(a2)
+    and        t0, t0, t6
+    andi       v0, t0, 0xFF
+    andi       v1, t0, 0xFF00
+    beqz       v0, .L8003147C
+    beqz       v1, .L8003147C
+    sw         a3, 0x0(s2)
+    sb         t2, 0x0(t9)
+    addiu      s2, 4
+    addiu      s3, 1
+    addiu      t9, 1
+    beq        s3, MAX_COLLISION_CANDIDATES, .return_generate_collision_candidates
+.L8003147C:
+    addiu      a2, 2
+    addiu      a3, 8
+    blt        a2, a1, .L80031440
+.L8003148C:
+    addiu      t4, sizeOfTriangleBatchInfo
+    addiu      t5, sizeOfTriangleBatchInfo
+    blt        t5, t3, .start_of_inner_loop
+    addiu      s1, 2
+    addiu      s0, 4
+    blt        s1, t8, .start_of_candidate_loop
+.return_generate_collision_candidates:
+    sw         s3, gNumCollisionCandidates
+    lw         ra, 0x30(sp)
+    lw         s6, 0x2C(sp)
+    lw         s5, 0x28(sp)
+    lw         s4, 0x24(sp)
+    lw         s3, 0x20(sp)
+    lw         s2, 0x1C(sp)
+    lw         s1, 0x18(sp)
+    lw         s0, 0x14(sp)
+    move       v0, zero /* Return 0 - But it's never used. */
+    addiu      sp, 0x70
+    jr         ra
+END(generate_collision_candidates)
+
+/**
+ * Computes the overlap between a rectangle and a segment's bounding box, returning a 16-bit grid mask.
+ * The bounding box is divided into an 8x8 grid. The function determines which grid columns (X) and rows (Z)
+ * the input rectangle intersects.
+ * The resulting 16-bit mask encodes this information:
+ * - lower 8 bits represent intersections along the X-axis (1 bit per column),
+ * - upper 8 bits represent intersections along the Z-axis (1 bit per row).
+ *
+ * s32 compute_grid_overlap_mask(LevelModelSegmentBoundingBox *bbox, s32 x1, s32 z1, s32 x2, s32 z2)
+ */
+LEAF(compute_grid_overlap_mask)
+    move       v0, zero
+    beqz       a0, .bbox_null
+    lw         t5, 0x10(sp) /* arg4 = z2 */
+    lh         t0, 0x0(a0) /* bbox->x1 */
+    lh         t1, 0x4(a0) /* bbox->z1 */
+    lh         t2, 0x6(a0) /* bbox->x2 */
+    lh         t3, 0xA(a0) /* bbox->z2 */
+    bge        a3, t0, .L80031504
+    move       a3, t0
+.L80031504:
+    bge        a1, t0, .L80031518
+    move       a1, t0
+.L80031518:
+    bge        t5, t1, .L80031528
+    move       t5, t1
+.L80031528:
+    bge        a2, t1, .L80031538
+    move       a2, t1
+.L80031538:
+    bge        t2, a3, .L80031548
+    move       a3, t2
+.L80031548:
+    bge        t2, a1, .L80031558
+    move       a1, t2
+.L80031558:
+    bge        t3, t5, .L80031568
+    move       t5, t3
+.L80031568:
+    bge        t3, a2, .L80031578
+    move       a2, t3
+.L80031578:
+    sub        t2, t0
+    sra        t2, 3
+    addiu      t2, 1
+    li         v1, 1
+    add        t4, t2, t0
+.L80031588:
+    blt        t4, a1, .L800315A4
+    blt        a3, t0, .L800315A4
+    or         v0, v0, v1
+.L800315A4:
+    sll        v1, 1
+    add        t4, t2
+    add        t0, t2
+    ble        v1, 0xFF, .L80031588
+    sub        t2, t3, t1
+    sra        t2, 3
+    addiu      t2, 1
+    add        t4, t2, t1
+    move       t0, t1
+.L800315C8:
+    blt        t4, a2, .L800315E4
+    blt        t5, t0, .L800315E4
+    or         v0, v1
+.L800315E4:
+    sll        v1, 1
+    add        t4, t2
+    add        t0, t2
+    blt        v1, 0x10000, .L800315C8
+.bbox_null:
+    jr         ra
+END(compute_grid_overlap_mask)
+
+/**
+ * Resolves collisions for a list of moving objects against previously identified collision candidates.
+ * For each object, the function checks whether the path from `origin` to `target` intersects any collision plane.
+ * If so, it adjusts the `target` position to resolve the collision, updates surface type, and sets output flags.
+ * Returns a bitmask indicating which objects experienced a collision.
+ *
+ * s32 resolve_collisions(Vec3f *origin, Vec3f *target, f32 *radius, s8 *surface, s32 numEntries, s32 *numCollisions)
+ */
+LEAF(resolve_collisions)
+    sb         zero, 0x0(sp)
+    li         t0, 1
+    sb         t0, 0x1(sp)
+    sw         zero, gHitWall /* gHitWall = false */
+    lw         t0, gNumCollisionCandidates
+    beqz       t0, .no_collision_candidates
+.L80031620:
+    move       t6, zero
+.L80031624:
+    move       t7, zero
+    lw         t5, gCollisionSurfaces
+    lw         t1, gCollisionCandidates
+    lw         t0, gNumCollisionCandidates
+.L80031640:
+    lw         t2, 0x0(t1)
+    blez       t2, .L80031660
+    lui        t3, 0x8000
+    or         t3, t2
+    lw         t3, 0x18(t3)
+    j          .L80031948
+.L80031660:
+    lhu        v0, 0x0(t2)
+    sll        v0, 4
+    addu       v0, t3
+    lwc1       fv0, 0x0(v0)
+    lwc1       fv1, 0x4(v0)
+    lwc1       ft0, 0x8(v0)
+    lwc1       ft1, 0xC(v0)
+    lwc1       ft2, 0x0(a1)
+    lwc1       ft3, 0x4(a1)
+    lwc1       ft4, 0x8(a1)
+    mul.s      ft2, fv0
+    mul.s      ft3, fv1
+    mul.s      ft4, ft0
+    add.s      ft2, ft3
+    add.s      ft2, ft4
+    add.s      ft5, ft2, ft1
+    lwc1       ft2, 0x0(a2)
+    sub.s      ft5, ft2
+    li.s       ft2, -0.1
+    c.olt.s    ft5, ft2
+    bc1f      .L80031948 /* if (ft5 >= -0.1) */
+    lwc1       ft2, 0x0(a0)
+    lwc1       ft3, 0x4(a0)
+    lwc1       ft4, 0x8(a0)
+    mul.s      ft2, fv0
+    mul.s      ft3, fv1
+    add.s      ft2, ft3
+    mul.s      ft4, ft0
+    add.s      ft2, ft4
+    add.s      ft4, ft2, ft1
+    lwc1       ft2, 0x0(a2)
+    sub.s      ft4, ft2
+    li.s       ft2, -0.1
+    c.olt.s    ft4, ft2
+    bc1t       .L80031948
+    lwc1       ft2, 0x0(a0)
+    lwc1       ft3, 0x0(a1)
+    sub.s      fv0, ft3, ft2
+    lwc1       ft2, 0x4(a0)
+    lwc1       ft3, 0x4(a1)
+    sub.s      fv1, ft3, ft2
+    lwc1       ft2, 0x8(a0)
+    lwc1       ft3, 0x8(a1)
+    sub.s      ft0, ft3, ft2
+    li.s       ft3, 0.0
+    sub.s      ft2, ft4, ft5
+    c.ueq.s    ft2, ft3
+    bc1t       .L80031734
+    div.s      ft3, ft4, ft2
+.L80031734:
+    mul.s      fv0, ft3
+    mul.s      fv1, ft3
+    mul.s      ft0, ft3
+    li.s       ft3, 4.0
+    lwc1       ft1, 0x0(a0)
+    add.s      fv0, ft1, fv0
+    lwc1       ft1, 0x4(a0)
+    add.s      fv1, ft1, fv1
+    lwc1       ft1, 0x8(a0)
+    add.s      ft0, ft1, ft0
+    li         t4, 3
+.L80031764:
+    move       t8, zero
+    lhu        v1, 0x2(t2)
+    andi       t9, v1, 0x8000
+    beqz       t9, .L80031784
+    andi       v1, 0x7FFF
+    li         t8, 1
+.L80031784:
+    sll        v1, 4
+    addu       v1, t3
+    lwc1       ft1, 0x0(v1)
+    lwc1       ft2, 0x4(v1)
+    mul.s      ft1, fv0, ft1
+    mul.s      ft2, fv1, ft2
+    add.s      ft1, ft2
+    lwc1       ft2, 0x8(v1)
+    mul.s      ft2, ft0, ft2
+    add.s      ft1, ft2
+    lwc1       ft2, 0xC(v1)
+    add.s      ft1, ft2
+    beqz       t8, .L800317BC
+    neg.s      ft1, ft1
+.L800317BC:
+    c.ole.s    ft1, ft3
+    bc1f      .L80031948
+    addiu      t2, 2
+    addiu      t4, -1
+    bnez       t4, .L80031764
+    li.s       fv0, 0.707
+    lwc1       fv1, 0x4(v0)
+    lwc1       ft0, 0x8(v0)
+    c.ult.s    fv1, fv0
+    lwc1       fv0, 0x0(v0)
+    bc1t       .L80031848
+    lb         v1, 0x0(t5)
+    beq        v1, 4, .L80031848
+    lw         v1, gCollisionMode
+    bnez       v1, .L80031848
+    lwc1       ft1, 0x0(a1)
+    mul.s      fv0, ft1, fv0
+    lwc1       ft1, 0x8(a1)
+    mul.s      ft0, ft1, ft0
+    add.s      fv0, ft0
+    lwc1       ft1, 0xC(v0)
+    add.s      fv0, ft1
+    lwc1       ft1, 0x0(a2)
+    sub.s      fv0, ft1, fv0
+    div.s      fv1, fv0, fv1
+    lwc1       fv0, 0x0(a1)
+    lwc1       ft0, 0x8(a1)
+    j          .L800318C8
+.L80031848:
+    li.s       ft3, 0.45
+    c.olt.s    fv1, ft3
+    bc1f       .L800318A0
+    lw         v1, gCollisionMode
+    beq        v1, 2, .L800318A0
+    li         v1, 1
+    sw         v1, gHitWall
+    lwc1       ft1, 0x0(v0)
+    swc1       ft1, gCollisionNormalX
+    lwc1       ft1, 0x4(v0)
+    swc1       ft1, gCollisionNormalY
+    lwc1       ft1, 0x8(v0)
+    swc1       ft1, gCollisionNormalZ
+.L800318A0:
+    mul.s      fv0, ft5
+    mul.s      fv1, ft5
+    mul.s      ft0, ft5
+    lwc1       ft1, 0x0(a1)
+    sub.s      fv0, ft1, fv0
+    lwc1       ft1, 0x4(a1)
+    sub.s      fv1, ft1, fv1
+    lwc1       ft1, 0x8(a1)
+    sub.s      ft0, ft1, ft0
+.L800318C8:
+    lw         v1, gHitWall
+    bnez       v1, .L80031900
+    lwc1       ft1, 0x0(v0)
+    swc1       ft1, gCollisionNormalX
+    lwc1       ft1, 0x4(v0)
+    swc1       ft1, gCollisionNormalY
+    lwc1       ft1, 0x8(v0)
+    swc1       ft1, gCollisionNormalZ
+.L80031900:
+    lb         t4, 0x0(t5)
+    lb         v0, 0x0(a3)
+    bge        v0, t4, .L80031918
+    sb         t4, 0x0(a3)
+.L80031918:
+    addiu      t6, 1
+    li         t7, 1
+    ble        t6, 10, .L80031934
+    move       t7, zero
+    lwc1       fv0, 0x0(a0)
+    lwc1       fv1, 0x4(a0)
+    lwc1       ft0, 0x8(a0)
+.L80031934:
+    swc1       fv0, 0x0(a1)
+    swc1       fv1, 0x4(a1)
+    swc1       ft0, 0x8(a1)
+    j          .L80031954
+.L80031948:
+    addiu      t5, 1
+    addiu      t1, 4
+    addiu      t0, -1
+    bnez       t0, .L80031640
+.L80031954:
+    bnez       t7, .L80031624
+    lbu        t2, 0x1(sp)
+    beqz       t6, .L80031980
+    lw         t1, 0x14(sp)
+    lw         t0, 0x0(t1)
+    addiu      t0, 1
+    sw         t0, 0x0(t1)
+    lbu        t0, 0x0(sp)
+    or         t0, t2
+    sb         t0, 0x0(sp)
+.L80031980:
+    sll        t2, 1
+    sb         t2, 0x1(sp)
+    move       t6, zero
+.L8003198C:
+    move       t7, zero
+    lw         t1, gCollisionCandidates
+    lw         t0, gNumCollisionCandidates
+.L800319A0:
+    lw         t2, 0x0(t1)
+    blez       t2, .L800319C0
+    lui        t3, 0x8000
+    or         t3, t2
+    lw         t3, 0x18(t3)
+    j          .L80031B1C
+.L800319C0:
+    lhu        v0, 0x0(t2)
+    sll        v0, 4
+    addu       v0, t3
+    lwc1       fv0, 0x0(v0)
+    lwc1       fv1, 0x4(v0)
+    lwc1       ft0, 0x8(v0)
+    lwc1       ft1, 0xC(v0)
+    lwc1       ft2, 0x0(a1)
+    lwc1       ft3, 0x4(a1)
+    lwc1       ft4, 0x8(a1)
+    mul.s      ft2, fv0
+    mul.s      ft3, fv1
+    mul.s      ft4, ft0
+    add.s      ft2, ft3
+    add.s      ft2, ft4
+    add.s      ft5, ft2, ft1
+    lwc1       ft2, 0x0(a2)
+    sub.s      ft5, ft2
+    li.s       ft2, -0.1
+    c.olt.s    ft5, ft2
+    bc1f       .L80031B1C
+    li.s       ft3, 3.0
+    lwc1       ft2, 0x0(a2)
+    add.s      ft2, ft3
+    neg.s      ft2, ft2
+    c.ole.s    ft5, ft2
+    bc1t       .L80031B1C
+    li.s       ft3, 4.0
+    lwc1       fv0, 0x0(a1)
+    lwc1       fv1, 0x4(a1)
+    lwc1       ft0, 0x8(a1)
+    li         t4, 3
+.L80031A48:
+    move       t8, zero
+    lhu        v1, 0x2(t2)
+    andi       t9, v1, 0x8000
+    beqz       t9, .L80031A68
+    andi       v1, 0x7FFF
+    li         t8, 1
+.L80031A68:
+    sll        v1, 4
+    addu       v1, t3
+    lwc1       ft1, 0x0(v1)
+    mul.s      ft1, fv0, ft1
+    lwc1       ft2, 0x4(v1)
+    mul.s      ft2, fv1, ft2
+    add.s      ft1, ft2
+    lwc1       ft2, 0x8(v1)
+    mul.s      ft2, ft0, ft2
+    add.s      ft1, ft2
+    lwc1       ft2, 0xC(v1)
+    add.s      ft1, ft2
+    beqz       t8, .L80031AA0
+    neg.s      ft1, ft1
+.L80031AA0:
+    c.ole.s    ft1, ft3
+    bc1f       .L80031B1C
+    addiu      t2, 2
+    addiu      t4, -1
+    bnez       t4, .L80031A48
+    lwc1       fv0, 0x0(v0)
+    lwc1       fv1, 0x4(v0)
+    lwc1       ft0, 0x8(v0)
+    mul.s      fv0, ft5
+    mul.s      fv1, ft5
+    mul.s      ft0, ft5
+    lwc1       ft1, 0x0(a1)
+    sub.s      fv0, ft1, fv0
+    lwc1       ft1, 0x4(a1)
+    sub.s      fv1, ft1, fv1
+    lwc1       ft1, 0x8(a1)
+    sub.s      ft0, ft1, ft0
+    addiu      t6, 1
+    li         t7, 1
+    ble        t6, 10, .L80031B08
+    move       t7, zero
+    lwc1       fv0, 0x0(a0)
+    lwc1       fv1, 0x4(a0)
+    lwc1       ft0, 0x8(a0)
+.L80031B08:
+    swc1       fv0, 0x0(a1)
+    swc1       fv1, 0x4(a1)
+    swc1       ft0, 0x8(a1)
+    j          .L80031B24
+.L80031B1C:
+    addiu      t1, 4
+    addiu      t0, -1
+    bnez       t0, .L800319A0
+.L80031B24:
+    bnez       t7, .L8003198C
+    addiu      a0, 0xC
+    addiu      a1, 0xC
+    addiu      a2, 4
+    addiu      a3, 1
+    lw         t0, 0x10(sp)
+    addiu      t0, -1
+    sw         t0, 0x10(sp)
+    bnez       t0, .L80031620
+.no_collision_candidates:
+    lb         v0, 0x0(sp)
+    jr         ra
+END(resolve_collisions)

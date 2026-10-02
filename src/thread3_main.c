@@ -9,7 +9,6 @@
 #include "borders.h"
 #include "camera.h"
 #include "common.h"
-#include "f3ddkr.h"
 #include "fade_transition.h"
 #include "font.h"
 #include "game.h"
@@ -17,8 +16,6 @@
 #include "game_ui.h"
 #include "gzip.h"
 #include "joypad.h"
-#include "lights.h"
-#include "macros.h"
 #include "main.h"
 #include "math_util.h"
 #include "memory.h"
@@ -26,7 +23,6 @@
 #include "object_models.h"
 #include "objects.h"
 #include "particles.h"
-#include "PR/os_internal.h"
 #include "PRinternal/viint.h"
 #include "printf.h"
 #include "racer.h"
@@ -73,7 +69,7 @@ s8 sAntiPiracyTriggered = FALSE;
 UNUSED s32 D_800DD378 = 1;
 s32 gSaveDataFlags = 0; // Official Name: load_save_flags
 s32 gScreenStatus = OSMESG_SWAP_BUFFER;
-s32 sControllerStatus = 0;
+s32 sControllerStatus = 0; // Official Name: joyfail
 UNUSED s32 D_800DD388 = 0;
 s8 gSkipGfxTask = FALSE;
 s8 gDrumstickSceneLoadTimer = 0;
